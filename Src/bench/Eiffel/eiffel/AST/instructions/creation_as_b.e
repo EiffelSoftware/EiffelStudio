@@ -40,6 +40,7 @@ feature -- Type check, byte code and dead code removal
 			export_status: EXPORT_I;
 			create_info: CREATE_INFO;
 			create_type: CREATE_TYPE;
+			create_formal_type: CREATE_FORMAL_TYPE
 			create_feat: CREATE_FEAT;
 			feature_type, local_type: TYPE_A;
 			local_b: LOCAL_B;
@@ -56,9 +57,9 @@ feature -- Type check, byte code and dead code removal
 			vtug: VTUG;
 			not_supported: NOT_SUPPORTED;
 			gen_type: GEN_TYPE_A;
-
 			formal_type: FORMAL_A
 			formal_dec: FORMAL_DEC_AS_B
+			formal_position: INTEGER
 			constraint_type: TYPE_A
 			class_type: CL_TYPE_A
 			valid_formal_creation: BOOLEAN
@@ -92,8 +93,9 @@ feature -- Type check, byte code and dead code removal
 
 			if creation_type.is_formal then
 				formal_type ?= creation_type
+				formal_position := formal_type.position
 					-- Get the corresponding constraint type of the current class
-				formal_dec := context.a_class.generics.i_th (formal_type.position)
+				formal_dec := context.a_class.generics.i_th (formal_position)
 				if formal_dec.constraint /= Void then
 					constraint_type := formal_dec.constraint_type
 					class_type ?= constraint_type
@@ -256,28 +258,23 @@ feature -- Type check, byte code and dead code removal
 			context.supplier_ids.extend (depend_unit);
 
 				-- Compute creation information
-			if type /= Void then
-				!!create_type;
+			if formal_type /= Void then
+				!! create_formal_type.make (formal_position)
+				create_info := create_formal_type
+			elseif type /= Void then
+				!! create_type
 				create_type.set_type (creation_type.type_i);
 				create_info := create_type;
 			elseif access.is_result then
 				feature_type ?= context.a_feature.type;
-				if feature_type.is_formal then
-					create_info := class_type.create_info
-				else
-					create_info := feature_type.create_info;
-				end
+				create_info := feature_type.create_info;
 			elseif access.is_local then
 				local_b ?= access;
 				local_type := context.local_ith (local_b.position).type;
-				if local_type.is_formal then
-					create_info := class_type.create_info
-				else
-					create_info := local_type.create_info;
-				end
+				create_info := local_type.create_info;
 			elseif access.is_attribute then
 				attribute_b ?= access;
-				!!create_feat;
+				!! create_feat;
 				create_feat.set_feature_id (attribute_b.attribute_id);
 				create_feat.set_feature_name (attribute_b.attribute_name);
 				create_info := create_feat;

@@ -4,6 +4,7 @@
 class DESC_UNIT
 
 inherit
+
 	ARRAY [ENTRY]
 		rename
 			make as array_make
@@ -18,6 +19,7 @@ inherit
 		end
 
 creation
+
 	make
 
 feature -- Creation
@@ -32,7 +34,7 @@ feature -- Creation
 
 feature -- Generation
 
-	generate (f: INDENT_FILE) is
+	generate (f: INDENT_FILE; cnt : COUNTER) is
 			-- C code of Current descriptor unit
 			--|Note1: Currently the feature type is written for all the 
 			--|features when in practice it is used rather seldom. Try
@@ -43,8 +45,9 @@ feature -- Generation
 		require
 			file_not_void: f /= Void
 			file_exists: f.exists
+			valid_counter: cnt /= Void
 		local
-			i: INTEGER
+			i,j: INTEGER
 			re: ROUT_ENTRY
 			ae: ATTR_ENTRY
 			entry_item: ENTRY
@@ -68,6 +71,15 @@ feature -- Generation
 						f.putint (re.real_body_index.id - 1);
 						f.putstring (", (int16) ");
 						f.putint (re.static_feature_type_id - 1);
+
+						if re.is_generic then
+							f.putstring (", gen_type");
+							f.putint (cnt.value);
+							j := cnt.next
+						else           
+							f.putstring (", (int16 *) 0");
+						end;
+
 						f.putstring ("},");
 					else
 						ae ?= entry_item
@@ -80,6 +92,15 @@ feature -- Generation
 							f.putint (ae.workbench_offset);
 							f.putstring (", (int16) ");
 							f.putint (ae.static_feature_type_id - 1);
+
+							if ae.is_generic then
+								f.putstring (", gen_type");
+								f.putint (cnt.value);
+								j := cnt.next
+							else           
+								f.putstring (", (int16 *) 0");
+							end;
+
 							f.putstring ("},");
 						end
 					end;
@@ -88,7 +109,7 @@ feature -- Generation
 						-- is not polymorphic.
 					f.putstring ("%N%T{(uint16) ");
 					f.putint (Invalid_index);
-					f.putstring (", (int16) -1},")
+					f.putstring (", (int16) -1, (int16 *) 0},")
 				end;
 				i := i + 1
 			end;
@@ -106,7 +127,7 @@ feature -- Generation
 			file_not_void: f /= Void
 			file_exists: f.exists
 		local
-			i: INTEGER;
+			i,j: INTEGER;
 			re: ROUT_ENTRY;
 			ae: ATTR_ENTRY
 			nb: INTEGER
@@ -137,6 +158,17 @@ feature -- Generation
 						f.putstring ("].type = (int16) (");
 						f.putstring (re.generated_static_feature_type_id);
 						f.putstring (");%N")
+						f.putstring ("%Tdesc[");
+						f.putint (nb);
+						f.putstring ("].gen_type = ");
+
+						if re.is_generic then
+							f.putstring ("{");
+							f.putstring (re.gen_type_string);
+							f.putstring ("-1};%N")
+						else
+							f.putstring ("(int16 *) 0;%N")
+						end
 					else
 						ae ?= entry_item
 						if ae /= Void then
@@ -153,6 +185,17 @@ feature -- Generation
 							f.putstring ("].type = (int16) (");
 							f.putstring (ae.generated_static_feature_type_id);
 							f.putstring (");%N")
+							f.putstring ("%Tdesc[");
+							f.putint (nb);
+							f.putstring ("].gen_type = ");
+
+							if ae.is_generic then
+								f.putstring ("{");
+								f.putstring (ae.gen_type_string);
+								f.putstring ("-1};%N")
+							else
+								f.putstring ("(int16 *) 0;%N")
+							end
 						end
 					end;
 				else
@@ -165,6 +208,54 @@ feature -- Generation
 					f.putstring (";%N%Tdesc[");
 					f.putint (nb);
 					f.putstring ("].type = (int16) -1;%N")
+					f.putstring ("%Tdesc[");
+					f.putint (nb);
+					f.putstring ("].gen_type = (int16 *) 0;%N")
+				end;
+				i := i + 1
+			end;
+		end;
+
+	generate_generic (f : INDENT_FILE; cnt : COUNTER) is
+			-- C code for generic types in Current descriptor unit
+		require
+			file_not_void: f /= Void
+			file_exists: f.exists
+			valid_counter : cnt /= Void
+		local
+			i, j: INTEGER;
+			re: ROUT_ENTRY;
+			ae: ATTR_ENTRY
+			entry_item: ENTRY
+			local_copy: like Current
+		do
+			from
+				local_copy := Current
+				i := lower
+			until
+				i > upper
+			loop
+				entry_item := local_copy.item (i)
+				if entry_item /= Void and then entry_item.is_generic then
+					re ?= entry_item
+					if re /= Void then
+						f.putstring ("static int16 gen_type");
+						f.putint (cnt.value);
+						j := cnt.next;
+						f.putstring (" [] = {");
+						f.putstring (re.gen_type_string);
+						f.putstring ("-1};%N")
+					else
+						ae ?= entry_item
+						if ae /= Void then
+							f.putstring ("static int16 gen_type");
+							f.putint (cnt.value);
+							j := cnt.next;
+							f.putstring (" [] = {");
+							f.putstring (ae.gen_type_string);
+							f.putstring ("-1};%N")
+						end
+					end;
 				end;
 				i := i + 1
 			end;
@@ -178,7 +269,7 @@ feature -- Melting
 			-- Format:
 			--    1) Id of origin class (short)
 			--    2) Number of elements (short)
-			--    3) Sequence of pairs (short, short)
+			--    3) Sequence of triples (short, short, list_of_short)
 		local
 			i: INTEGER;
 			re: ROUT_ENTRY;
@@ -209,6 +300,12 @@ feature -- Melting
 							-- of the feature.
 						ba.append_short_integer (re.real_body_index.id - 1);
 						ba.append_short_integer (re.static_feature_type_id -1);
+
+						if re.is_generic then
+							re.make_gen_type_byte_code (ba)
+						end;
+
+						ba.append_short_integer (-1)
 					else
 						ae ?= entry_item
 						if ae /= Void then
@@ -218,7 +315,14 @@ feature -- Melting
 								-- the feature.
 							ba.append_short_integer (ae.workbench_offset);
 							ba.append_short_integer (ae.static_feature_type_id - 1);
+
+							if ae.is_generic then
+								ae.make_gen_type_byte_code (ba)
+							end;
+
+							ba.append_short_integer (-1)
 						else
+							ba.append_short_integer (-1);
 							ba.append_short_integer (-1);
 							ba.append_short_integer (-1)
 						end
@@ -226,6 +330,7 @@ feature -- Melting
 				else
 						-- The entry corresponds to a routine that
 						-- is not polymorphic.
+					ba.append_short_integer (-1);
 					ba.append_short_integer (-1);
 					ba.append_short_integer (-1)
 				end;

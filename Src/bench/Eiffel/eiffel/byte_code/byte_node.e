@@ -189,4 +189,47 @@ feature -- Concurrent Eiffel
 			Result := False;
 		end
 
+feature -- Generic conformance
+
+	generate_block_open is
+			-- Open a new C block.
+		do
+			generated_file.putchar ('{')
+			generated_file.new_line
+			generated_file.indent
+		end
+
+	generate_block_close is
+			-- Close C block.
+		do
+			generated_file.new_line
+			generated_file.exdent
+			generated_file.putchar ('}')
+			generated_file.new_line
+		end
+
+	generate_gen_type_conversion (gtype : GEN_TYPE_I) is
+			-- Generate code for converting type id arrays
+			-- into single id's.
+		require
+			valid_type : gtype /= Void
+		do
+			generated_file.putstring ("int16 typarr [] = {")
+			generated_file.putstring (gtype.gen_type_string (context.final_mode))
+			generated_file.putstring ("-1};")
+			generated_file.new_line
+			generated_file.putstring ("int16 typres;")
+			generated_file.new_line
+			generated_file.new_line
+			generated_file.putstring ("typres = RTCID(")
+
+			generated_file.putstring (context.Current_register.register_name) 
+
+			generated_file.putstring (", ")
+			generated_file.putint (gtype.generated_id (context.final_mode))
+			generated_file.putstring (", typarr);")
+			generated_file.new_line
+			generated_file.new_line
+		end
+
 end

@@ -40,6 +40,9 @@ feature
 			expr: EXPR_B;
 			require_meta: BOOLEAN
 		do
+			-- We need 'Current'
+			context.mark_current_used;
+
 			real_ty ?= context.real_type (type);
 			target_gen_type := real_ty.meta_generic.item (1);
 			get_register;
@@ -136,18 +139,21 @@ feature {NONE} -- C code generation
 			-- Generate the object creation of 
 			-- manifest array.
 		do
+			generate_block_open;
+			generate_gen_type_conversion (real_ty);
 			print_register;
 			generated_file.putstring (" = ");
-			generated_file.putstring ("RTLN(");
-			if workbench_mode then
-				generated_file.putstring ("RTUD(");
-				generated_file.putstring (real_ty.associated_class_type.id.generated_id);
-				generated_file.putchar (')');
-			else
-				generated_file.putint (real_ty.type_id - 1);
-			end;
-			generated_file.putstring (gc_rparan_comma);
+			generated_file.putstring ("RTLN(typres);");
+--            if workbench_mode then
+--                generated_file.putstring ("RTUD(");
+--                generated_file.putstring (real_ty.associated_class_type.id.generated_id);
+--                generated_file.putchar (')');
+--            else
+--                generated_file.putint (real_ty.type_id - 1);
+--            end;
+--            generated_file.putstring (gc_rparan_comma);
 			generated_file.new_line;
+			generate_block_close;
 		end;
 
 	fill_array (target_type: TYPE_I) is

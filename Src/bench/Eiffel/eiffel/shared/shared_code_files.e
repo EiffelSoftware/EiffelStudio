@@ -74,6 +74,12 @@ feature {NONE}
 			!!Result.make (gen_file_name (final_mode, Econform));
 		end;
 
+	Parent_f (final_mode: BOOLEAN): INDENT_FILE is
+			-- File where the parent tables are generated.
+		do
+			!!Result.make (gen_file_name (final_mode, Eparents));
+		end;
+
 	Plug_f (final_mode: BOOLEAN): INDENT_FILE is
 			-- File miscellenaeous datas are generated for the run-time
 		do

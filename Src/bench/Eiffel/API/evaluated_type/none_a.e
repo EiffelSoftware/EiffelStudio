@@ -55,7 +55,7 @@ feature {COMPILER_EXPORTER}
 	create_info: CREATE_TYPE is
 			-- Byte code information for entity type creation
 		do
-			!!Result
+			!! Result
 			Result.set_type (type_i)
 		end
 

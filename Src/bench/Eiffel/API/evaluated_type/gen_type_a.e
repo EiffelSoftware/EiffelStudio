@@ -203,19 +203,23 @@ feature {COMPILER_EXPORTER} -- Primitives
 		local
 			i, count: INTEGER
 			meta_generic: META_GENERIC
+			true_generics: ARRAY [TYPE_I]
 		do
 			from
 				i := 1
 				count := generics.count
 				!!meta_generic.make (count)
+				!!true_generics.make (1, count)
 				!!Result
 				Result.set_base_id (base_class_id)
 				Result.set_meta_generic (meta_generic)
+				Result.set_true_generics (true_generics)
 				Result.set_is_expanded (is_expanded)
 			until
 				i > count
 			loop
 				meta_generic.put (generics.item (i).meta_type, i)
+				true_generics.put (generics.item (i).type_i, i)
 				i := i + 1
 			end
 		end
@@ -669,16 +673,16 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 			Result.set_generics (gens)
 		end
 
-    storage_info_with_name (classc: CLASS_C): S_GEN_TYPE_INFO is
-            -- Storage info for Current type in class `classc'
-            -- and store the name of the class for Current
+	storage_info_with_name (classc: CLASS_C): S_GEN_TYPE_INFO is
+			-- Storage info for Current type in class `classc'
+			-- and store the name of the class for Current
 		local
 			gens: FIXED_LIST [S_TYPE_INFO]
 			count, i: INTEGER
-            ass_classc: CLASS_C
-            class_name: STRING
-        do
-            ass_classc := associated_class
+			ass_classc: CLASS_C
+			class_name: STRING
+		do
+			ass_classc := associated_class
 			class_name := clone (ass_classc.name)
 			!! Result.make (class_name, ass_classc.id.id)
 			count := generics.count
@@ -694,7 +698,7 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 				i := i + 1
 			end
 			Result.set_generics (gens)
-        end
+		end
 
 feature {NONE} -- Error generation
 

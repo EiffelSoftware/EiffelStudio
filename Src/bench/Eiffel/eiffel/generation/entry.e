@@ -29,7 +29,6 @@ feature -- from ENTRY
 	type: TYPE_I
 			-- Result type fo the entry
 
-
 	set_type_id (i: INTEGER) is
 			-- Assign `i' to `type_id'.
 		do
@@ -153,6 +152,34 @@ feature -- from ENTRY
 			) then
 				Result := class_type.type_id;
 			end;
+		end;
+
+	is_generic : BOOLEAN is
+			-- Is `type' a generic type?
+		local
+			gtype : GEN_TYPE_I
+		do
+			gtype ?= type;
+			Result := (gtype /= Void)
+		end;
+
+	gen_type_string : STRING is
+			-- List of type id's of generic type 
+			-- separated by commas.
+		require
+			is_generic : is_generic
+		do
+			Result := type.gen_type_string (False) -- Necessarily in WB mode!
+		ensure
+			exists : Result /= Void
+		end;
+
+	make_gen_type_byte_code (ba: BYTE_ARRAY) is
+			-- Make byte code for type of current entry.
+		require
+			is_generic : is_generic
+		do
+			type.make_gen_type_byte_code (ba)
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is

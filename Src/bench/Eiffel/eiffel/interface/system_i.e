@@ -209,6 +209,12 @@ feature -- Properties
 			--| Once melted, it is kept in memory so it won't be re-processed
 			--| each time
 
+	melted_parent_table: CHARACTER_ARRAY
+			-- Byte array representation of the melted parent
+			-- table.
+			--| Once melted, it is kept in memory so it won't be re-processed
+			--| each time
+
 	frozen_level: INTEGER
 			-- Frozen level
 
@@ -1457,6 +1463,7 @@ end
 					-- Update the execution table
 				execution_table.make_update (melted_file)
 				make_conformance_table_byte_code (melted_file)
+				make_parent_table_byte_code (melted_file)
 				make_option_table (melted_file)
 				make_rout_info_table (melted_file)
 				make_update_descriptors (melted_file)
@@ -1615,6 +1622,7 @@ end
 				-- Trigger the recompuation of the conformance table
 				-- byte code
 			melted_conformance_table := Void
+			melted_parent_table := Void
 		end
 
 	make_conformance_table_byte_code (file: RAW_FILE) is
@@ -1670,6 +1678,48 @@ end
 			to_append.store (file)
 
 		end
+
+	make_parent_table_byte_code (file: RAW_FILE) is
+			-- Generates parent tables byte code in `file'.
+		local
+			i, nb: INTEGER;
+			cl_type: CLASS_TYPE;
+			to_append: CHARACTER_ARRAY;
+		do
+			Byte_array.clear
+
+			if is_conformance_table_melted then
+				if melted_parent_table = Void then
+						-- Compute `melted_parent_table'.
+					Byte_array.append ('%/001/')
+					from
+						i := 1
+						nb := Type_id_counter.value
+					until
+						i > nb
+					loop
+						cl_type := class_types.item (i)
+						if cl_type /= Void then
+								-- Classes could be removed
+							cl_type.make_parent_table_byte_code (Byte_array)
+						end
+						i := i + 1
+					end
+
+						-- End mark
+					Byte_array.append_short_integer (-1)
+
+					melted_parent_table := Byte_array.character_array
+				end
+				to_append := melted_parent_table
+			else
+				Byte_array.append ('%U')
+				to_append := Byte_array.character_array
+			end
+
+				-- Put the parent table in `file'.
+			to_append.store (file)
+		end;
 
 	make_option_table (file: RAW_FILE) is
 			-- Generate byte code for the option table.
@@ -1969,43 +2019,47 @@ end
 			degree_message := "Generation of auxiliary files"
 			deg_output := Degree_output
 
-			deg_output.display_degree_output (degree_message, 11, 11)
+			deg_output.display_degree_output (degree_message, 12, 12)
 			generate_skeletons
 
-			deg_output.display_degree_output (degree_message, 10, 11)
+			deg_output.display_degree_output (degree_message, 11, 12)
 			generate_cecil
 
-			deg_output.display_degree_output (degree_message, 9, 11)
+			deg_output.display_degree_output (degree_message, 10, 12)
 			t.generate_conformance_table
 			is_conformance_table_melted := False
 			melted_conformance_table := Void
+			melted_parent_table      := Void
 
-			deg_output.display_degree_output (degree_message, 8, 11)
-			t.generate_plug
+			deg_output.display_degree_output (degree_message, 9, 12)
+			generate_parent_tables
 
 			deg_output.display_degree_output (degree_message, 8, 12)
-			t.generate_dynamic_lib_file
+			t.generate_plug
 
 			deg_output.display_degree_output (degree_message, 7, 12)
+			t.generate_dynamic_lib_file
+
+			deg_output.display_degree_output (degree_message, 6, 12)
 			generate_init_file
 
-			deg_output.display_degree_output (degree_message, 6, 11)
+			deg_output.display_degree_output (degree_message, 5, 12)
 			generate_option_file
 			address_table.generate (False)
 
-			deg_output.display_degree_output (degree_message, 5, 11)
+			deg_output.display_degree_output (degree_message, 4, 12)
 			generate_rout_info_table
 
-			deg_output.display_degree_output (degree_message, 4, 11)
+			deg_output.display_degree_output (degree_message, 3, 12)
 			generate_pattern_table
 
-			deg_output.display_degree_output (degree_message, 3, 11)
+			deg_output.display_degree_output (degree_message, 2, 12)
 			generate_dispatch_table
 
-			deg_output.display_degree_output (degree_message, 2, 11)
+			deg_output.display_degree_output (degree_message, 1, 12)
 			generate_exec_table
 
-			deg_output.display_degree_output (degree_message, 0, 11)
+			deg_output.display_degree_output (degree_message, 0, 12)
 			t.generate_make_file
 
 				-- Create an empty update file ("melted.eif")
@@ -2372,12 +2426,16 @@ feature -- Generation
 			deg_output.display_degree_output (degree_message, 5, 10)
 			t.generate_conformance_table
 
-				-- Routine table generation
+				-- Generation of the parent table
 			deg_output.display_degree_output (degree_message, 4, 10)
+			generate_parent_tables
+
+				-- Routine table generation
+			deg_output.display_degree_output (degree_message, 3, 10)
 			generate_routine_table
 
 				-- Generate plug with run-time.
-			deg_output.display_degree_output (degree_message, 3, 10)
+			deg_output.display_degree_output (degree_message, 2, 10)
 			t.generate_plug
 			--generate_plug
 
@@ -2581,6 +2639,84 @@ end
 			Reference_file.putstring ("%N};%N")
 			Reference_file.close
 		end
+
+	generate_parent_tables is
+			-- Generates parent tables.
+		local
+			i, nb, cid   : INTEGER;
+			cl_type      : CLASS_TYPE;
+			parents_file : INDENT_FILE;
+			final_mode   : BOOLEAN;
+			max_id       : INTEGER;
+			used_ids     : ARRAY [BOOLEAN]
+		do
+			final_mode := byte_context.final_mode;
+
+			parents_file := parent_f (final_mode);
+			parents_file.open_write;
+			parents_file.putstring ("#include %"eif_struct.h%"%N%N");
+
+			max_id := 0;
+
+			from
+				i := 1;
+				nb := Type_id_counter.value;
+			until
+				i > nb
+			loop
+				cl_type := class_types.item (i);
+				if cl_type /= Void then
+					cl_type.generate_parent_table (parents_file, final_mode);
+					cid := cl_type.type.generated_id (final_mode);
+
+					if cid > max_id then
+						max_id := cid;
+					end
+				end;
+				i := i + 1;
+			end;
+
+			-- Now create 'used_ids' array and fill it
+
+			!!used_ids.make (0, max_id);
+
+			from
+				i := 1;
+				nb := Type_id_counter.value;
+			until
+				i > nb
+			loop
+				cl_type := class_types.item (i);
+				if cl_type /= Void then
+					cid := cl_type.type.generated_id (final_mode);
+					used_ids.put (True, cid);
+				end;
+				i := i + 1;
+			end;
+
+			parents_file.putstring ("int    egc_partab_size_init = ")
+			parents_file.putint (max_id);
+			parents_file.putstring (";%N");
+			parents_file.putstring ("struct eif_par_types *egc_partab_init[] = {%N");
+
+			from
+				i := 0
+			until
+				i > max_id
+			loop
+				if used_ids.item (i) then
+					parents_file.putstring ("&par");
+					parents_file.putint (i);
+				else
+					parents_file.putstring ("(struct eif_par_types *)0");
+				end;
+				parents_file.putstring (",%N");
+				i := i + 1;
+			end;
+			parents_file.putstring ("(struct eif_par_types *)0};%N");
+			parents_file.close;
+			parents_file := Void;
+		end;
 
 	generate_skeletons is
 			-- Generate skeletons of class types
@@ -3196,13 +3332,13 @@ feature -- Pattern table generation
 				static_type_id_counter.generate_offsets (Initialization_file)
 				execution_table.counter.generate_offsets (Initialization_file)
 				dispatch_table.counter.generate_offsets (Initialization_file)
-				Initialization_file.putstring ("egc_rcorigin = ")
+				Initialization_file.putstring ("int32 egc_rcorigin = ")
 				Initialization_file.putint (rcorigin)
-				Initialization_file.putstring (";%Negc_rcdt = ")
+				Initialization_file.putstring (";%Nint32 egc_rcdt = ")
 				Initialization_file.putint (dtype)
-				Initialization_file.putstring (";%Negc_rcoffset = ")
+				Initialization_file.putstring (";%Nint32 egc_rcoffset = ")
 				Initialization_file.putint (rcoffset)
-				Initialization_file.putstring (";%Negc_rcarg = ")
+				Initialization_file.putstring (";%Nint32 egc_rcarg = ")
 				if has_argument then
 					Initialization_file.putstring ("1")
 				else

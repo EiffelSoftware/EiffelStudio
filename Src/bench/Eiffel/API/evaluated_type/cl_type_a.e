@@ -350,7 +350,7 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 	create_info: CREATE_TYPE is
 			-- Byte code information for entity type creation
 		do
-			!!Result
+			!! Result
 			Result.set_type (type_i)
 		end
 

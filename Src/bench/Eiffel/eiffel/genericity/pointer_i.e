@@ -6,7 +6,8 @@ inherit
 			dump,
 			is_feature_pointer,
 			same_as,
-			description, sk_value, hash_code, generate_cecil_value
+			description, sk_value, hash_code, generate_cecil_value,
+			generated_id
 		end
 
 feature
@@ -111,6 +112,14 @@ feature
 	type_a: POINTER_A is
 		do
 			!!Result
+		end
+
+feature -- Generic conformance
+
+	generated_id (final_mode : BOOLEAN) : INTEGER is
+
+		do
+			Result := -8        -- Code for POINTER
 		end
 
 end

@@ -8,7 +8,7 @@ inherit
 			is_numeric,
 			same_as,
 			description, sk_value, generate_cecil_value, hash_code,
-			byte_code_cast
+			byte_code_cast, generated_id
 		end
 
 	BYTE_CONST
@@ -124,6 +124,14 @@ feature
 	type_a: REAL_A is
 		do
 			!!Result
+		end
+
+feature -- Generic conformance
+
+	generated_id (final_mode : BOOLEAN) : INTEGER is
+
+		do
+			Result := -5        -- Code for REAL
 		end
 
 end

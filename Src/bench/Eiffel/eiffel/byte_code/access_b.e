@@ -560,6 +560,7 @@ feature -- Byte code generation
 			basic_type: BASIC_I
 			target_type: TYPE_I
 			cl_type: CL_TYPE_I
+			gen_type: GEN_TYPE_I
 		do
 			target_type := Context.real_type (type)
 			check
@@ -585,6 +586,13 @@ feature -- Byte code generation
 					-- Append the target static type
 				cl_type ?= target_type
 				ba.append_short_integer (cl_type.type_id - 1)
+
+				gen_type ?= cl_type
+
+				if gen_type /= Void then
+					gen_type.make_gen_type_byte_code (ba)
+				end
+				ba.append_short_integer (-1)
 			end
 		end
 
@@ -666,8 +674,8 @@ feature -- concurrent Eiffel
 	
 feature -- Concurrent Eiffel
 
-    reset_added_gc_hooks is
-        do
-        end
+	reset_added_gc_hooks is
+		do
+		end
 
 end

@@ -107,6 +107,8 @@ feature {NONE}
 
 	Eoption: STRING is "eoption"
 
+	Eparents: STRING is "eparents"
+
 	Epattern: STRING is "epattern"
 
 	Eplug: STRING is "eplug"

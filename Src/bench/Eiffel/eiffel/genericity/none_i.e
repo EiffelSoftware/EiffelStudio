@@ -5,7 +5,7 @@ inherit
 		redefine
 			dump, is_none, is_void, is_bit, is_basic, same_as,
 			description, sk_value, generate_cecil_value, hash_code,
-			cecil_value, append_signature
+			cecil_value, append_signature, generated_id
 		end
 
 	TYPE_C
@@ -143,6 +143,14 @@ feature
 			-- C type
 		do
 			Result ?= Current
+		end
+
+feature -- Generic conformance
+
+	generated_id (final_mode : BOOLEAN) : INTEGER is
+
+		do
+			Result := -9        -- Code for NONE
 		end
 
 end

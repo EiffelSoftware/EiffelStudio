@@ -285,7 +285,7 @@ feature
 			generate_postcondition
 
 			if system.has_separate then
-	               	-- Free separate parameters
+				   	-- Free separate parameters
 				free_separate_parameters
 			end
 
@@ -404,6 +404,7 @@ feature
 			type_i: TYPE_I
 			cl_type_i: CL_TYPE_I
 			bit_i: BIT_I
+			gen_type: GEN_TYPE_I
 			creation_feature: FEATURE_I
 			class_type: CLASS_TYPE
 			written_class: CLASS_C
@@ -424,18 +425,33 @@ feature
 					if context.local_vars.item(i) then
 						if type_i.is_expanded then
 							cl_type_i ?= type_i
+
+							gen_type  ?= cl_type_i
+
+							if gen_type /= Void then
+								generate_block_open
+								generate_gen_type_conversion (gen_type)
+							end
 							context.local_var.set_position (i)
 							context.local_var.print_register_by_name
 							exp_type_id := cl_type_i.expanded_type_id - 1
 							if context.workbench_mode then
 									-- RTLX is a macro used to create
 									-- expanded types
-								f.putstring (" = RTLX(RTUD(")
-								f.putstring (cl_type_i.associated_expanded_class_type.id.generated_id)
-								f.putchar (')')
+								if gen_type /= Void then
+									f.putstring (" = RTLX(typres")
+								else
+									f.putstring (" = RTLX(RTUD(")
+									f.putstring (cl_type_i.associated_expanded_class_type.id.generated_id)
+									f.putchar (')')
+								end
 							else
-								f.putstring (" = RTLN(")
-								f.putint (exp_type_id)
+								if gen_type /= Void then
+									f.putstring (" = RTLN(typres")
+								else
+									f.putstring (" = RTLN(")
+									f.putint (exp_type_id)
+								end
 								class_type := cl_type_i.associated_class_type
 								creation_feature := class_type.associated_class.creation_feature
 								if creation_feature /= Void then
@@ -453,6 +469,10 @@ feature
 								end
 							end
 							f.putstring (gc_rparan_comma)
+
+							if gen_type /= Void then
+								generate_block_close
+							end
 							f.new_line
 						elseif type_i.is_bit then
 							bit_i ?= type_i; -- Cannot fail
@@ -472,16 +492,31 @@ feature
 				if type_i.is_expanded then
 					cl_type_i ?= type_i
 					exp_type_id := cl_type_i.expanded_type_id - 1
+
+					gen_type  ?= cl_type_i
+
+					if gen_type /= Void then
+						generate_block_open
+						generate_gen_type_conversion (gen_type)
+					end
 					context.result_var.print_register_by_name
 					if context.workbench_mode then
 							-- RTLX is a macro used to create
 							-- expanded types
-						f.putstring (" = RTLX(RTUD(")
-						f.putstring (cl_type_i.associated_expanded_class_type.id.generated_id)
-						f.putchar (')')
+						if gen_type /= Void then
+							f.putstring (" = RTLX(typres")
+						else
+							f.putstring (" = RTLX(RTUD(")
+							f.putstring (cl_type_i.associated_expanded_class_type.id.generated_id)
+							f.putchar (')')
+						end
 					else
-						f.putstring (" = RTLN(")
-						f.putint (exp_type_id)
+						if gen_type /= Void then
+							f.putstring (" = RTLN(typres")
+						else
+							f.putstring (" = RTLN(")
+							f.putint (exp_type_id)
+						end
 						class_type := cl_type_i.associated_class_type
 						creation_feature := class_type.associated_class.creation_feature
 						if creation_feature /= Void then
@@ -499,6 +534,10 @@ feature
 						end
 					end
 					f.putstring (gc_rparan_comma)
+
+					if gen_type /= Void then
+						generate_block_close
+					end
 					f.new_line
 				elseif type_i.is_bit then
 					bit_i ?= type_i; -- Cannot fail
@@ -1499,36 +1538,36 @@ feature -- Concurrent Eiffel
 			reg: REGISTRABLE
 			f: INDENT_FILE
 		do
-            	-- Free separate parameters
-            if arguments /= Void then
-                from 
+				-- Free separate parameters
+			if arguments /= Void then
+				from 
 					!!var_name.make(10)
-                    i := arguments.lower
-                    count := arguments.count + i - 1
+					i := arguments.lower
+					count := arguments.count + i - 1
 					f := generated_file
-                until
-                    i > count
-                loop
-                    if
+				until
+					i > count
+				loop
+					if
 						real_type(arguments.item(i)).is_separate 
 						and then separate_call_on_argument (i)
 					then
-                        var_name.wipe_out
-                        var_name.append("arg")
-                        var_name.append(i.out);                            
-                        reg := context.associated_register_table.item(var_name)
-	                    f.putstring ("CURFSO(")
-                        if reg /= Void then
-                            reg.print_register_by_name
+						var_name.wipe_out
+						var_name.append("arg")
+						var_name.append(i.out);                            
+						reg := context.associated_register_table.item(var_name)
+						f.putstring ("CURFSO(")
+						if reg /= Void then
+							reg.print_register_by_name
 						else
-                        	f.putstring (var_name)
+							f.putstring (var_name)
 						end
-                        f.putstring (");")
-                        f.new_line
-                    end
-                    i := i + 1
-                end
-            end
+						f.putstring (");")
+						f.new_line
+					end
+					i := i + 1
+				end
+			end
 		end
 
 	free_partial_sep_paras (idx: INTEGER) is 
@@ -1540,48 +1579,48 @@ feature -- Concurrent Eiffel
 			reg: REGISTRABLE
 			f: INDENT_FILE
 		do
-            	-- Free separate parameters
-            if arguments /= Void then
-                from 
+				-- Free separate parameters
+			if arguments /= Void then
+				from 
 					!!var_name.make(10)
-                    i := arguments.lower
-                    count := arguments.count + i - 1
+					i := arguments.lower
+					count := arguments.count + i - 1
 					f := generated_file
-                until
-                    i >= idx or i > count
-                loop
-                    if
+				until
+					i >= idx or i > count
+				loop
+					if
 						real_type(arguments.item(i)).is_separate 
 						and then separate_call_on_argument (i)
 					then
-                        var_name.wipe_out
-                        var_name.append("arg")
-                        var_name.append(i.out);                            
-                        reg := context.associated_register_table.item(var_name)
-	                    f.putstring ("CURFSO(")
-                        if reg /= Void then
-                            reg.print_register_by_name
+						var_name.wipe_out
+						var_name.append("arg")
+						var_name.append(i.out);                            
+						reg := context.associated_register_table.item(var_name)
+						f.putstring ("CURFSO(")
+						if reg /= Void then
+							reg.print_register_by_name
 						else
-                        	f.putstring (var_name)
-                        end
-                      	f.putstring (");")
-                       	f.new_line
-                    end
-                    i := i + 1
-                end
-            end
+							f.putstring (var_name)
+						end
+					  	f.putstring (");")
+					   	f.new_line
+					end
+					i := i + 1
+				end
+			end
 		end
 
 	separate_call_on_argument (i: INTEGER): BOOLEAN is
-            -- Is argument `i' used in a separate call?
+			-- Is argument `i' used in a separate call?
 		local
 			s: like separate_calls
-        do
+		do
 			s := separate_calls
-            if s /= Void and then i>= s.lower and i <= s.upper then
-                Result := s @ i
-            end
-        end
+			if s /= Void and then i>= s.lower and i <= s.upper then
+				Result := s @ i
+			end
+		end
 
 	separate_calls: ARRAY [BOOLEAN]
 			-- Record separate calls on arguments

@@ -148,6 +148,16 @@ feature
 			no_formal_in_Result: not Result.has_formal
 		end
 
+	complete_instantiation_in (other: GEN_TYPE_I): TYPE_I is
+			-- Instantiation of Current in context of `other'
+			-- Actual generics of reference type are kept.
+		require
+			good_argument: other /= Void
+			other_is_data: not other.has_formal
+		do
+			Result := Current
+		end
+
 	c_type: TYPE_C is
 			-- Corresponding C type: either LONG_I, CHAR_I, DOUBLE_I,
 			-- REFERENCE_I, FLOAT_I
@@ -184,4 +194,27 @@ feature -- Array optimization
 		do
 		end
 
+feature -- Generic conformance
+
+	generated_id (final_mode : BOOLEAN) : INTEGER is
+			-- Mode dependent type id - just for convenience
+		do
+			Result := -10       -- Invalid type id.
+		end
+
+	gen_type_string (final_mode : BOOLEAN) : STRING is
+			-- Mode dependent sequence of type id's separated by commas.
+		do
+			!!Result.make (0)
+			Result.append_integer (generated_id (final_mode))
+			Result.append (", ")
+		ensure
+			exists : Result /= Void
+		end
+
+	make_gen_type_byte_code (ba : BYTE_ARRAY) is
+			-- Put type id's in byte array.
+		do
+			ba.append_short_integer (generated_id (False))
+		end
 end

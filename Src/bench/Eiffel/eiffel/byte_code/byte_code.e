@@ -533,6 +533,7 @@ feature -- Byte code generation
 			local_list: LINKED_LIST [TYPE_I]
 			bit_i: BIT_I
 			expanded_type: CL_TYPE_I
+			gen_type: GEN_TYPE_I
 			inh_assert: INHERITED_ASSERTION
 			feat: FEATURE_I
 			cl_name: STRING
@@ -695,6 +696,13 @@ feature -- Byte code generation
 							expanded_type ?= formal_type
 							Temp_byte_code_array.append_short_integer
 										(expanded_type.expanded_type_id - 1)
+							gen_type ?= expanded_type
+
+							if gen_type /= Void then
+								gen_type.make_gen_type_byte_code 
+										(Temp_byte_code_array)
+							end
+							Temp_byte_code_array.append_short_integer(-1)
 						end
 					end
 					i := i + 1

@@ -16,10 +16,7 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is
-		do
-			Result := 6;
-		end;
+	subcode: INTEGER is 6
 
 	creation_feature: E_FEATURE;
 			-- Creation feature involved

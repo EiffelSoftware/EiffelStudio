@@ -40,7 +40,7 @@ feature
 		do
 			precursor_type := p_type
 		ensure
-			precursor_set: precursor_type = p_type
+			precursor_set : precursor_type = p_type
 		end
 		
 	set_parameters (p: like parameters) is
@@ -112,8 +112,6 @@ feature -- Context type
 
 	context_type: TYPE_I is
 			-- Context type of the access (properly instantiated)
-		local
-			a_parent: NESTED_B;
 		do
 			if precursor_type = Void then
 				Result := {CALL_ACCESS_B} Precursor
@@ -379,7 +377,7 @@ feature -- Inlining
 				end
 
 				gen_type_i.set_meta_generic (m)
---				gen_type_i.set_true_generics (true_gen)
+				gen_type_i.set_true_generics (true_gen)
 				Result := gen_type_i
 			end
 		end

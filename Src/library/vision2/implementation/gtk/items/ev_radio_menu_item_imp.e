@@ -32,6 +32,14 @@ feature {NONE} -- Initialization
 			C.gtk_check_menu_item_set_show_toggle (c_object, True)
 		end
 
+feature -- Access
+
+	peers: LINKED_LIST [like interface] is
+			-- List of all radio items in the group `Current' is in.
+		do
+			check to_be_implemented: False end
+		end
+
 feature {NONE} -- Implementation
 
 	interface: EV_RADIO_MENU_ITEM
@@ -59,6 +67,9 @@ end -- class EV_RADIO_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/02/24 01:41:41  king
+--| Added peers to make compile, needs implementing
+--|
 --| Revision 1.14  2000/02/22 20:03:40  brendel
 --| Removed old implementation, since grouping is now handled by
 --| EV_MENU_ITEM_LIST_IMP.

@@ -76,6 +76,67 @@ long n1, n2;
     return ((n1 >= 0) ^ (n2 > 0)) ? n1 / n2: ((n1 % n2) ? n1 / n2 + 1: n1 / n2);
 }
 
+/*
+ * Character conversions
+ */
+
+
+public char chupper(c)
+char c;
+{
+	return toupper(c);
+}
+
+public char chlower(c)
+char c;
+{
+	return tolower(c);
+}
+
+public int chis_upper(c)
+char c;
+{
+	return isupper(c);
+}
+
+public int chis_lower(c)
+char c;
+{
+	return islower(c);
+}
+
+public int chis_digit(c)
+char c;
+{
+	return isdigit(c);
+}
+
+public int chis_alpha(c)
+char c;
+{
+	return isalpha(c);
+}
+
+public long eschar_size()
+{
+	return ALIGN*CHRSIZ;
+}
+
+public long esreal_size()
+{
+	return ALIGN*FLTSIZ;
+}
+
+public long esint_size()
+{
+	return ALIGN*LNGSIZ;
+}
+
+public long esdouble_size()
+{
+	return ALIGN*DBLSIZ;
+}
+
 public char *arycpy(area, i, j, k)
 char *area;
 long i, j, k;

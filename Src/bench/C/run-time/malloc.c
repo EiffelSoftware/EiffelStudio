@@ -173,7 +173,9 @@ extern char *to_chunk();				/* Base address of partial 'to' chunk */
 extern void erembq();					/* Quick insertion in moved set */
 
 extern struct stack moved_set;			/* Describes the new generation */
+#ifndef __WATCOMC__
 extern int errno;						/* System calls error report */
+#endif
 extern int cc_for_speed;				/* Optimized for speed or for memory */
 extern struct chunk *last_from;			/* Last 'from' chunk used by plsc() */
 extern struct sc_zone ps_from;			/* Partial scavenging 'from' zone */
@@ -330,7 +332,7 @@ long nbitems;		/* New number of items wanted */
 	 */
 
 	epush(&loc_stack, &ptr);	/* Object may move if GC called */
-	object = xrealloc(ptr, elem_size * nbitems + LNGPAD(2), GC_ON | GC_FREE);
+	object = xrealloc(ptr, (unsigned int)(elem_size * nbitems + LNGPAD(2)), GC_ON | GC_FREE);
 	if ((char *) 0 == object) {
 		eraise("special reallocation", EN_MEM);
 		return (char *) 0;
@@ -859,7 +861,11 @@ int type;
 		 * from sbrk(). Every failure is handled as a "no more memory"
 		 * condition.
 		 */
+#ifdef __WATCOMC__
+		oldbrk = (union overhead *) malloc(asked);
+#else
 		oldbrk = (union overhead *) sbrk(asked);
+#endif
 
 #ifdef DEBUG
 		dprintf(2)("add_core: kernel responded: %s (oldbrk: 0x%lx)\n",
@@ -975,7 +981,10 @@ private int free_last_chunk()
 	struct chunk last_desc;	/* A copy of the overhead part from last chunk */
 	uint32 i;				/* Index in hash table where block is stored */
 	uint32 r;				/* To compute hashing index for released block */
-	
+
+#ifndef HAS_SMART_SBRK
+	return -5;
+#else	
 	last_chk = cklst.ck_tail;			/* Last chunk in memory */
 	if (last_chk == (struct chunk *) 0)	/* No more chunk */
 		return -4;						/* Make sure a failure is reported */
@@ -1035,11 +1044,13 @@ private int free_last_chunk()
 	 * was not correctly determined by Configure--RAM.
 	 */
 
+#ifndef __WATCOMC__
 	brk = sbrk(0);						/* Fetch current break value */
 	if (brk != last_addr) {				/* There *is* something */
 		SIGRESUME;						/* End of critical section */
 		return -2;						/* Sorry, cannot shrink data segment */
 	}
+#endif
 	
 	/* Save a copy of the informations held in the header of the last chunk:
 	 * once the sbrk() system call is run, those data won't be able to be
@@ -1074,6 +1085,12 @@ private int free_last_chunk()
 	 * negative value, bringing the memory used by the chunk back to the kernel.
 	 */
 
+#ifdef __WATCOMC__
+    free (last_chk);
+    if (i != -1)
+       connect_free_list (arena, i);
+    SIGRESUME;
+#else
 	status = (int) sbrk(-nbytes);		/* Shrink process's data segment */
 	if (status == -1) {					/* System call failed */
 		if (i != -1)						/* Was removed from free list */
@@ -1081,6 +1098,7 @@ private int free_last_chunk()
 		SIGRESUME;							/* End of critical section */
 		return -1;							/* Propagate failure */
 	}
+#endif
 
 #ifdef DEBUG
 	dprintf(1+2)("free_last_chunk: shrinking succeeded, new break at 0x%lx\n",
@@ -1148,6 +1166,7 @@ private int free_last_chunk()
 	SIGRESUME;							/* Critical section ends */
 
 	return 0;			/* Signals no error */
+#endif
 }
 
 private char *set_up(selected, nbytes)
@@ -2124,7 +2143,7 @@ private int create_scavenge_zones()
 	if ((char *) 0 == (from = xmalloc(GS_ZONE_SZ, C_T, GC_OFF)))
 		return -1;
 	if ((char *) 0 == (to = xmalloc(GS_ZONE_SZ, C_T, GC_OFF))) {
-		free(from);
+		xfree(from);
 		return -1;
 	}
 
@@ -2654,13 +2673,13 @@ unsigned int max_dt;
 		if (arena == ps_to.sc_arena)
 			continue;			/* Skip 'to' zone since it is always empty */
 
-		check_chunk(chunk, arena, CHUNK_T);
+		check_chunk((char *)chunk, arena, CHUNK_T);
 	}
 
 	/* If generation scavenging is active, check 'from' zone */
 
 	if (gen_scavenge & GS_ON)
-		check_chunk(&sc_from, sc_from.sc_arena, ZONE_T);
+		check_chunk((char *)&sc_from, sc_from.sc_arena, ZONE_T);
 
 	printf("memck: checking done.\n", max_dtype);
 	fflush(stdout);				/* Make sure we always see messages */

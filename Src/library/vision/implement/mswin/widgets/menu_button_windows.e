@@ -23,7 +23,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_menu_b: MENU_B; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_menu_b: MENU_B; man: BOOLEAN; oui_parent: MENU) is
 		do
 			!! private_attributes
 			text := a_menu_b.identifier
@@ -125,7 +125,13 @@ feature {NONE} -- Inapplicable
 		end
 
 	wel_item: POINTER
+
+	disable_default_processing is
+		do
+		end
+
 	wel_font: WEL_FONT
+
 	wel_set_font (f:WEL_FONT) is
 		do
 		end

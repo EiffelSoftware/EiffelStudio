@@ -104,7 +104,7 @@ feature {NONE} -- Initialization
 		do
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y]
-			a_row_number := (a_y // row_height) + 1
+			a_row_number := (a_y // (row_height + 1)) + 1
 			if a_row_number <= count then
 				clicked_row := ev_children @ a_row_number
 			end

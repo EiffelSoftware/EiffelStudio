@@ -48,13 +48,16 @@ create
 	
 feature {NONE} -- Initialization
 
+	--| FIXME, constants are now no longer undoable.
+	--| Hence the commented sections in this class.
+
 	make (constant: GB_CONSTANT) is
 			-- Create `Current' with `child' to be removed from `parent' at
 			-- position `position'.
 		require
 			constant_not_void: constant /= Void
 		do
-			history.cut_off_at_current_position
+		--	history.cut_off_at_current_position
 			internal_constant := constant
 		ensure
 			constant_recorded: internal_constant /= Void
@@ -70,9 +73,9 @@ feature -- Basic Operation
 			editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 		do
 			Constants.remove_constant (internal_constant)
-			if not history.command_list.has (Current) then
-				history.add_command (Current)
-			end
+--			if not history.command_list.has (Current) then
+--				history.add_command (Current)
+--			end
 			editors := all_editors
 			from
 				editors.start
@@ -94,35 +97,35 @@ feature -- Basic Operation
 			directory_constant: GB_DIRECTORY_CONSTANT
 			editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 		do
-			if internal_constant.type.is_equal (Integer_constant_type) then
-				integer_constant ?= internal_constant
-				Constants.add_integer (integer_constant)
-			elseif internal_constant.type.is_equal (String_constant_type) then
-				string_constant ?= internal_constant
-				Constants.add_string (string_constant)
-			elseif internal_constant.type.is_equal (Pixmap_constant_type) then
-				pixmap_constant ?= internal_constant
-				Constants.add_pixmap (pixmap_constant)
-			elseif internal_constant.type.is_equal (Directory_constant_type) then
-				directory_constant ?= internal_constant
-				Constants.add_directory (directory_constant)
-			end
-			editors := all_editors
-			from
-				editors.start
-			until
-				editors.off
-			loop
-				editors.i_th (editors.index).constant_added (internal_constant)
-				editors.forth
-			end
-			command_handler.update
+--			if internal_constant.type.is_equal (Integer_constant_type) then
+--				integer_constant ?= internal_constant
+--				Constants.add_integer (integer_constant)
+--			elseif internal_constant.type.is_equal (String_constant_type) then
+--				string_constant ?= internal_constant
+--				Constants.add_string (string_constant)
+--			elseif internal_constant.type.is_equal (Pixmap_constant_type) then
+--				pixmap_constant ?= internal_constant
+--				Constants.add_pixmap (pixmap_constant)
+--			elseif internal_constant.type.is_equal (Directory_constant_type) then
+--				directory_constant ?= internal_constant
+--				Constants.add_directory (directory_constant)
+--			end
+--			editors := all_editors
+--			from
+--				editors.start
+--			until
+--				editors.off
+--			loop
+--				editors.i_th (editors.index).constant_added (internal_constant)
+--				editors.forth
+--			end
+--			command_handler.update
 		end
 		
 	textual_representation: STRING is
 			-- Text representation of command executed.
 		do
-			Result := internal_constant.type + " constant named " + internal_constant.name + " remove from project."
+		--	Result := internal_constant.type + " constant named " + internal_constant.name + " remove from project."
 		end
 
 feature {NONE} -- Implementation

@@ -48,13 +48,16 @@ create
 	
 feature {NONE} -- Initialization
 
+	--| FIXME, constants are now no longer undoable.
+	--| Hence the commented sections in this class.
+
 	make (constant: GB_CONSTANT) is
 			-- Create `Current' with `child' to be removed from `parent' at
 			-- position `position'.
 		require
 			constant_not_void: constant /= Void
 		do
-			history.cut_off_at_current_position
+		--	history.cut_off_at_current_position
 			internal_constant := constant
 		ensure
 			constant_recorded: internal_constant /= Void
@@ -94,9 +97,9 @@ feature -- Basic Operation
 				editors.forth
 			end
 			
-			if not history.command_list.has (Current) then
-				history.add_command (Current)
-			end
+		--	if not history.command_list.has (Current) then
+		--		history.add_command (Current)
+		--	end
 			command_handler.update
 		end
 		
@@ -107,23 +110,23 @@ feature -- Basic Operation
 		local
 			editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 		do
-			Constants.remove_constant (internal_constant)
-			editors := all_editors
-			from
-				editors.start
-			until
-				editors.off
-			loop
-				editors.i_th (editors.index).constant_removed (internal_constant)
-				editors.forth
-			end
-			command_handler.update
+--			Constants.remove_constant (internal_constant)
+--			editors := all_editors
+--			from
+--				editors.start
+--			until
+--				editors.off
+--			loop
+--				editors.i_th (editors.index).constant_removed (internal_constant)
+--				editors.forth
+--			end
+--			command_handler.update
 		end
 		
 	textual_representation: STRING is
 			-- Text representation of command exectuted.
 		do
-			Result := internal_constant.type + " constant named " + internal_constant.name + " added to project."
+		--	Result := internal_constant.type + " constant named " + internal_constant.name + " added to project."
 		end
 
 feature {NONE} -- Implementation

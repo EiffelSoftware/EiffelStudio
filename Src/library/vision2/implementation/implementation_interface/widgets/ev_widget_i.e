@@ -287,8 +287,33 @@ Result := True
 		end		
 		
 feature -- Event - command association
+	
+	add_button_press_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		deferred
+		end
+	
+	
+	add_button_release_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		deferred
+		end
+			
+	add_motion_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		deferred
+		end
+	
+	add_delete_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		deferred
+		end
 
-	add_command (event: EV_EVENT; command: EV_COMMAND; 
+	add_enter_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		deferred
+		end
+	
+	add_leave_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		deferred
+		end
+	
+	add_command (event: STRING; command: EV_COMMAND; 
 		     arguments: EV_ARGUMENTS) is
 			-- Add `command' at the end of the list of
 			-- actions to be executed when the 'event'

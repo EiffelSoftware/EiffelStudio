@@ -215,8 +215,39 @@ feature -- Resizing
 		end
 
 feature -- Event - command association
+	
+	add_button_press_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		do
+			add_command ("button_press_event", command, arguments)
+		end
+	
+	
+	add_button_release_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		do
+			add_command ("button_release_event", command, arguments)
+		end
+			
+	add_motion_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		do
+			add_command ("motion_notify_event", command, arguments)
+		end
+	
+	add_delete_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		do
+			add_command ("delete_event", command, arguments)
+		end
+	
+	add_enter_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		do
+			add_command ("enter_notify_event", command, arguments)
+		end
+	
+	add_leave_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		do
+			add_command ("leave_notify_event", command, arguments)
+		end
 
-	add_command (event: EV_EVENT; command: EV_COMMAND; 
+	add_command (event: STRING; command: EV_COMMAND; 
 		     arguments: EV_ARGUMENTS) is
 			-- Add `command' at the end of the list of
 			-- actions to be executed when the 'event'
@@ -228,13 +259,15 @@ feature -- Event - command association
 		local
 			a: ANY
                 do
-			a := event.type.to_c
+			a := event.to_c
 			-- check if to use gtk signals or x events
-			last_command_id := c_gtk_signal_connect (widget,
-                                                                $a,
-                                                                command.execute_address,
-                                                                $command,
-                                                                $arguments)
+			last_command_id := 
+				c_gtk_signal_connect (widget,
+						      $a,
+						      command.execute_address,
+						      $command,
+						      $arguments,
+						      arguments.set_event_data_address)
 		end
 
 

@@ -419,6 +419,9 @@ feature -- Byte code generation
 					-- is not none
 				if source_type.is_none then
 					ba.append (Bc_exp_excep);
+				elseif source_type.is_bit then
+					ba.append (bit_assign_code);	
+					assignment := True;
 				else
 					ba.append (assign_code);
 					assignment := True;
@@ -450,6 +453,13 @@ feature -- Byte code generation
 			is_creatable
 		do
 			-- Do nothing
+		end;
+
+	bit_assign_code: CHARACTER is
+			-- Bits assignment byte code
+			-- (By default it is the assign_code)
+		do
+			Result := assign_code	
 		end;
 
 	assign_code: CHARACTER is

@@ -20,13 +20,10 @@ inherit
 		end
 	COMMAND;
 	WINDOWS;
-	ERROR_POPUPER
-		redefine
-			continue_after_popdown
-		end
+	ERROR_POPUPER;
 	QUEST_POPUPER
 		redefine
-			continue_after_popdown
+			continue_after_question_popdown
 		end;
 	CLOSEABLE
 
@@ -50,7 +47,7 @@ feature {NONE, CMD_ED_POPUP_CLASS_NAME, CMD_INH_HOLE, CMD_EDIT_HOLE, CMD_ED_GENE
 				text_editor.set_text (edited_command.eiffel_text)
 			end;
 		end;
- 
+
 feature -- Geometry
 
 	set_geometry is
@@ -86,6 +83,11 @@ feature
  
 	labels: LABEL_BOX
 		-- Labels of edited command
+
+	update_parent_symbol is
+		do
+			inherit_hole.update_symbol
+		end;
  
 feature -- Editing
 
@@ -119,6 +121,7 @@ feature -- Editing
 			current_command := Void
 			edited_command := Void
 			edit_hole.set_empty_symbol		
+			update_parent_symbol;
 		end
 
 	empty: BOOLEAN is
@@ -148,6 +151,7 @@ feature -- Editing
 				set_read_only_command (pr_cmd)
 				edit_hole.set_full_symbol
 			end;
+			update_parent_symbol;
 			update_title
 		end;
 
@@ -339,7 +343,7 @@ feature {NONE} -- Interface
 			-- (currently only context stones)
 			-- may be dropped
 
-	label_text: LABEL_TEXT_FIELD
+	label_text: TEXT;
 			-- Text field used to specify
 			-- labels of currently edited
 			-- command
@@ -419,6 +423,7 @@ feature {NONE}
 			!! argument_sw.make (Widget_names.scroll1, argument_form)
 			!! arguments.make (Widget_names.icon_box1, argument_sw, Current)
 			!! label_text.make (Widget_names.label, label_form)
+			label_text.set_single_line_mode;
 			!! new_label.make (Widget_names.new_label_label, label_form)
 			!! label_sw.make (Widget_names.scroll2, label_form)
 			!! labels.make (Widget_names.icon_box3, label_sw, Current)
@@ -549,12 +554,21 @@ feature {NONE}
 			--	 . To toggle between non-undoable and doable
 		local
 			non_undo_cmd: CMD_NON_UNDOABLE
-			undo_cmd: CMD_UNDOABLE
+			undo_cmd: CMD_UNDOABLE;
+			id: IDENTIFIER
 		do
 			if (argument = label_text) then
-				if	not label_text.text.empty then
-					add_label
-					label_text.set_text ("")
+				if not label_text.text.empty then
+					!! id.make (label_text.text.count);
+					id.append (label_text.text);
+					if id.is_valid then
+						add_label
+						label_text.set_text ("")
+					else
+						error_box.popup (Current, 
+							Messages.invalid_feature_name_er, 
+							label_text.text)
+					end
 				end
 			elseif (argument = undoable_t and then
 						(edited_command /= Void)) then
@@ -588,16 +602,18 @@ feature {USER_CMD}
 			end
 		end
 
-
 feature -- Top shell features
 
-	continue_after_popdown (box: MESSAGE_D ok: BOOLEAN) is
+	continue_after_question_popdown (ok: BOOLEAN) is
 		do
-			if (box = question_box) then
-				if ok then
-					text_editor.set_text (edited_command.template)
-				end
+			if ok then
+				text_editor.set_text (edited_command.template)
 			end
 		end
+
+	popuper_parent: COMPOSITE is
+		do
+			Result := Current
+		end;
 
 end

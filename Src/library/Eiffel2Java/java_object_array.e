@@ -10,9 +10,10 @@ inherit
 	JAVA_ARRAY
 
 create
-	make
+	make,
+	make_from_pointer
 	
-feature
+feature -- Initialization
 
 	make (size: INTEGER; element_name: STRING) is
 			-- create a new Java array and an Eiffel accessor object
@@ -21,42 +22,47 @@ feature
 			size_ok: size > 0
 			element_ok: element_name /= Void
 		local
-			element_type : JAVA_CLASS
+			element_type: JAVA_CLASS
 		do
 			element_type := jni.find_class (element_name)
-			jarray := c_new_object_array (jni.envp, size, element_type.java_class_id, default_pointer)
+			jarray := jni.new_object_array (size, element_type.java_class_id, default_pointer)
+			create jvalue.make
 		ensure
 			array_ok: jarray /= default_pointer	
 		end
 
+feature -- Access
+
 	item (index: INTEGER): JAVA_OBJECT is
 			-- object at index-th position
 		require
-			valid_index (index)
+			valid_index: valid_index (index)
 		local
 			jo: POINTER		   
 		do
-			jo := c_get_object_array_element (jni.envp, jarray, index)
-			-- find the correspponding Eiffel object or create a new one
+			jo := jni.get_object_array_element (jarray, index)
+				-- Find the correspponding Eiffel object or create a new one
 			if jo /= default_pointer then
-				Result := jni.java_object_table.item (jo.hash_code)
+				Result := jni.java_object_table.item (jo)
 				if Result = Void then
-					!!Result.make_from_pointer (jo)
+					create Result.make_from_pointer (jo)
 				end
 			end
 		end
 
-	put (litem: JAVA_OBJECT; index: INTEGER) is
+feature -- Element change
+
+	put (an_item: JAVA_OBJECT; index: INTEGER) is
 			-- put an object at index
 		require
-			valid_index (index)
+			valid_index: valid_index (index)
 		do
-			c_set_object_array_element (jni.envp, jarray, index, litem.java_object_id)
+			jni.set_object_array_element (jarray, index, an_item.java_object_id)
+		ensure
+			inserted: equal (item (index), an_item)
 		end
 
-
 end
-
 
 --|----------------------------------------------------------------
 --| Eiffel2Java: library of reusable components for ISE Eiffel.

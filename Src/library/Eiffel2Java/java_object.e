@@ -10,14 +10,21 @@ class
 	JAVA_OBJECT
 
 inherit
+	JAVA_ENTITY
+		redefine
+			is_equal
+		end
+	
 	SHARED_JNI_ENVIRONMENT
-	JAVA_EXTERNALS
+		redefine
+			is_equal
+		end
 
 create
 	create_instance,
 	make_from_pointer
 
-feature -- creation
+feature -- Initialization
 
 	make_from_pointer (jobject: POINTER) is
 			-- Create an Eiffel proxy, give a pointer to a Java object
@@ -28,11 +35,13 @@ feature -- creation
 			clsp: POINTER	
 		do
 			java_object_id := jobject
-			-- Figure out out class
-			clsp := c_get_object_class (jni.envp, jobject)
+
+				-- Figure out out class
+			clsp := jni.get_class (jobject)
 			jclass := jni.find_class_by_pointer (clsp)
-			-- Add to the Eiffel/java object table
-			jni.java_object_table.put (Current, java_object_id.hash_code)
+
+				-- Add to the Eiffel/java object table
+			jni.java_object_table.put (Current, java_object_id)
 		end
 
 	create_instance (my_cls: JAVA_CLASS; sig: STRING; args: JAVA_ARGS) is
@@ -58,15 +67,13 @@ feature -- creation
 			end
 			if constructor_id /= default_pointer then
 				debug ("java")
-					io.putstring ("JAVA_OBJECT: creating new object jni=")
-					io.putstring (jni.envp.out)
-					io.putstring (" Class=")
+					io.putstring ("JAVA_OBJECT: creating new object Class=")
 					io.putstring (jclass.java_class_id.out)
 					io.putstring (" Constructor ID=")
 					io.putstring (constructor_id.out)
 					io.new_line
 				end
-				java_object_id := c_new_object (jni.envp, jclass.java_class_id, 
+				java_object_id := jni.new_object (jclass.java_class_id, 
 												constructor_id, argsp)
 			end
 			if java_object_id = default_pointer then
@@ -74,11 +81,19 @@ feature -- creation
 				io.putstring (my_cls.name)
 				io.new_line
 			else
-				jni.java_object_table.put (Current, java_object_id.hash_code)
+				jni.java_object_table.put (Current, java_object_id)
 			end
 		ensure
 			created: java_object_id /= default_pointer	
 		end
+
+feature -- Access
+
+	java_object_id: POINTER
+			-- Reference to java object.
+
+	jclass: JAVA_CLASS
+			-- Associated java class.
 
 feature -- Status report
 
@@ -87,8 +102,17 @@ feature -- Status report
 		do
 			Result := java_object_id /= default_pointer
 		end
-		
-feature -- method id's
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' attached to an object considered
+			-- equal to current object?
+		do
+			Result := java_object_id = other.java_object_id
+		end
+
+feature -- Reflection
 
 	method_id (method_name: STRING; signature: STRING): POINTER is
 			-- Find the method_id for "method_name" with signature 
@@ -96,139 +120,133 @@ feature -- method id's
 		require
 			(method_name /= Void) and (signature /= Void)
 		local
-			method_name_to_c: ANY
-			signature_to_c: ANY
+			method_name_to_c, signature_to_c: C_STRING
 		do
-			method_name_to_c := method_name.to_c
-			signature_to_c := signature.to_c
-			Result := c_get_method_id (jni.envp, jclass.java_class_id, 
-									   $method_name_to_c, $signature_to_c)
+			create method_name_to_c.make (method_name)
+			create signature_to_c.make (signature)
+			Result := jni.get_method_id (jclass.java_class_id, 
+									   method_name_to_c.item, signature_to_c.item)
 		ensure
 			method_exists: Result /= default_pointer	
 		end
 
-feature -- call object's methods
+	field_id (lname: STRING; sig: STRING): POINTER is
+			-- Get the java field id used to set/get this field
+		local
+			lname_to_c, sig_to_c: C_STRING
+		do
+			create lname_to_c.make (lname)
+			create sig_to_c.make (sig)
+			Result := jni.get_field_id (jclass.java_class_id, 
+									  lname_to_c.item, sig_to_c.item)
+		end
+
+feature -- Calls
 
 	void_method (mid: POINTER; args: JAVA_ARGS) is
 			-- Call a Java procedure with method_id "mid" and 
 			-- arguments "args.
-		require
-			valid_method: mid /= default_pointer
 		local
 			argsp: POINTER
 		do
 			if args /= Void then
 				argsp := args.to_c
 			end
-			c_call_void_method (jni.envp, java_object_id, mid, argsp)
+			jni.call_void_method (java_object_id, mid, argsp)
 		end
 
 	string_method (mid: POINTER; args: JAVA_ARGS): STRING is
 			-- Call an instance function that returns a STRING.
-		require
-			valid_method: mid /= default_pointer
 		local
 			argsp: POINTER
 		do
 			if args /= Void then
 				argsp := args.to_c
 			end
-			Result := c_call_string_method (jni.envp, java_object_id, mid, argsp)
+			Result := jni.call_string_method (java_object_id, mid, argsp)
 		end
 
 	integer_method (mid: POINTER; args: JAVA_ARGS): INTEGER is
 			-- Call an instance function that returns an INTEGER.
-		require
-			valid_method: mid /= default_pointer
 		local
 			argsp: POINTER
 		do
 			if args /= Void then
 				argsp := args.to_c
 			end
-			Result := c_call_int_method (jni.envp, java_object_id, mid, argsp)
+			Result := jni.call_int_method (java_object_id, mid, argsp)
 		end
 
-	short_method (mid: POINTER; args: JAVA_ARGS): INTEGER is
+	short_method (mid: POINTER; args: JAVA_ARGS): INTEGER_16 is
 			-- Call an instance function that returns a Short (in 
 			-- Eiffel we still return an INTEGER).
-		require
-			valid_method: mid /= default_pointer
 		local
 			argsp: POINTER
 		do
 			if args /= Void then
 				argsp := args.to_c
 			end
-			Result := c_call_short_method (jni.envp, java_object_id, mid, argsp)
+			Result := jni.call_short_method (java_object_id, mid, argsp)
 		end
 
-	long_method (mid: POINTER; args: JAVA_ARGS) is
+	long_method (mid: POINTER; args: JAVA_ARGS): INTEGER_64 is
 			-- Call an instance function that returns an Long. This 
 			-- function is not implemented. 
 		local
-			ex: expanded EXCEPTIONS
+			argsp: POINTER
 		do
-			io.putstring ("Not a legal call,%N")
-			ex.raise ("Not implemented")
+			if args /= Void then
+				argsp := args.to_c
+			end
+			Result := jni.call_long_method (java_object_id, mid, argsp)
 		end
 
 	double_method (mid: POINTER; args: JAVA_ARGS): DOUBLE is
 			-- Call an instance function that returns a DOUBLE.
-		require
-			valid_method: mid /= default_pointer
 		local
 			argsp: POINTER
 		do
 			if args /= Void then
 				argsp := args.to_c
 			end
-			Result := c_call_double_method (jni.envp, java_object_id, mid, argsp)
+			Result := jni.call_double_method (java_object_id, mid, argsp)
 		end
 
 	float_method (mid: POINTER; args: JAVA_ARGS): REAL is
 			-- Call an instance function that returns a REAL.
-		require
-			valid_method: mid /= default_pointer
 		local
 			argsp: POINTER
 		do
 			if args /= Void then
 				argsp := args.to_c
 			end
-			Result := c_call_float_method (jni.envp, java_object_id, mid, argsp)
+			Result := jni.call_float_method (java_object_id, mid, argsp)
 		end
 
 	char_method (mid: POINTER; args: JAVA_ARGS): CHARACTER is
 			-- Call an instance function that returns a char
-		require
-			valid_method: mid /= default_pointer
 		local
 			argsp: POINTER
 		do
 			if args /= Void then
 				argsp := args.to_c
 			end
-			Result := c_call_char_method (jni.envp, java_object_id, mid, argsp)
+			Result := jni.call_char_method (java_object_id, mid, argsp)
 		end
 
 	boolean_method (mid: POINTER; args: JAVA_ARGS): BOOLEAN is
 			-- Call an instance function that returns a boolean
-		require
-			valid_method: mid /= default_pointer
 		local
 			argsp: POINTER
 		do
 			if args /= Void then
 				argsp := args.to_c
 			end
-			Result := c_call_boolean_method (jni.envp, java_object_id, mid, argsp)
+			Result := jni.call_boolean_method (java_object_id, mid, argsp)
 		end
 
 	object_method (lmethod_id: POINTER; args: JAVA_ARGS): JAVA_OBJECT is
 			-- Call an instance function that returns a java object
-		require
-			valid_method_id: lmethod_id /= default_pointer
 		local
 			argp: POINTER
 			jo: POINTER
@@ -236,186 +254,168 @@ feature -- call object's methods
 			if args /= Void then
 				argp := args.to_c
 			end
-			jo := c_call_object_method (jni.envp, java_object_id, lmethod_id, argp)
+			jo := jni.call_object_method (java_object_id, lmethod_id, argp)
 			if jo /= default_pointer then
 				-- Check global table to see if we have an Eiffel 
 				-- proxy for this object
-				Result := jni.java_object_table.item (jo.hash_code)
+				Result := jni.java_object_table.item (jo)
 				if Result = Void then
 					!!Result.make_from_pointer (jo)
 				end
 			end
 		end
 
-
-	byte_method (mid: POINTER; args: JAVA_ARGS): CHARACTER is
+	byte_method (mid: POINTER; args: JAVA_ARGS): INTEGER_8 is
 			-- Call an instance function that return a byte
-			-- ( 8-bit integer (signed) ), in Eiffel return
-			-- a CHARACTER
-		require
-			valid_method: mid /= default_pointer
+			-- ( 8-bit integer (signed)), in Eiffel return
+			-- a INTEGER_8
 		local
 			argsp: POINTER
 		do
 			if args /= Void then
 				argsp := args.to_c
 			end
-			Result := c_call_byte_method (jni.envp, java_object_id, mid, argsp)
+			Result := jni.call_byte_method (java_object_id, mid, argsp)
 		end
 
-feature -- attribute IDs
-
-	field_id (lname: STRING; sig: STRING): POINTER is
-			-- Get the java field id used to set/get this field
-		require
-			(lname /= Void) and (sig /= Void)
-		local 
-			lname_to_c: ANY
-			sig_to_c: ANY
-		do
-			lname_to_c := lname.to_c
-			sig_to_c := sig.to_c
-			Result := c_get_field_id (jni.envp, jclass.java_class_id, 
-									  $lname_to_c, $sig_to_c)
-		end
-
-feature -- access object's attributes
+feature -- Attributes
 
 	integer_attribute (fid: POINTER): INTEGER is
-			-- access to an integer attribute
+			-- Access to an integer attribute
 		do
-			Result := c_get_integer_field (jni.envp, java_object_id, fid)
+			Result := jni.get_integer_field (java_object_id, fid)
 		end
 
 	string_attribute (fid: POINTER): STRING is
-			-- access to a String attribute
+			-- Access to a String attribute
 		do
-			Result := c_get_string_field (jni.envp, java_object_id, fid)
+			Result := jni.get_string_field (java_object_id, fid)
 		end
 
 	object_attribute (fid: POINTER): JAVA_OBJECT is
-			-- access to a java object attribute
+			-- Access to a java object attribute
 		local
 			jo: POINTER
 		do
-			jo := c_get_object_field (jni.envp, java_object_id, fid)
+			jo := jni.get_object_field (java_object_id, fid)
 			if jo /= default_pointer then
 				-- Check global table to see if we have an Eiffel 
 				-- proxy for this object
-				Result := jni.java_object_table.item (jo.hash_code)
+				Result := jni.java_object_table.item (jo)
 				if Result = Void then
-					!!Result.make_from_pointer (jo)
+					create Result.make_from_pointer (jo)
 				end
 			end
 		end
 
 	boolean_attribute (fid: POINTER): BOOLEAN is
-			-- access to a boolean attribute
+			-- Access to a boolean attribute
 		do
-			Result := c_get_boolean_field (jni.envp, java_object_id, fid)
+			Result := jni.get_boolean_field (java_object_id, fid)
 		end
 
 	char_attribute (fid: POINTER): CHARACTER is
-			-- access to a 'char' attribute
+			-- Access to a 'char' attribute
 		do
-			Result := c_get_char_field (jni.envp, java_object_id, fid)
+			Result := jni.get_char_field (java_object_id, fid)
 		end
 
 	float_attribute (fid: POINTER): REAL is
-			-- access to a 'float' attribute, returns a REAL
+			-- Access to a 'float' attribute, returns a REAL
 		do
-			Result := c_get_float_field (jni.envp, java_object_id, fid)
+			Result := jni.get_float_field (java_object_id, fid)
 		end
 
 	double_attribute (fid: POINTER): DOUBLE is
-			-- access to a double attribute
+			-- Access to a double attribute
 		do
-			Result := c_get_double_field (jni.envp, java_object_id, fid)
+			Result := jni.get_double_field (java_object_id, fid)
 		end
 	
-	byte_attribute (fid: POINTER): CHARACTER is
-			-- access to a 'byte' attribute, returns a CHARACTER
+	byte_attribute (fid: POINTER): INTEGER_8 is
+			-- Access to a 'byte' attribute, returns a INTEGER_8
 		do
-			Result := c_get_byte_field (jni.envp, java_object_id, fid)
+			Result := jni.get_byte_field (java_object_id, fid)
 		end
 
-	short_attribute (fid: POINTER): INTEGER is
-			-- access to a 'short' attribute, returns a INTEGER
+	short_attribute (fid: POINTER): INTEGER_16 is
+			-- Access to a 'short' attribute, returns a INTEGER_16
 		do
-			Result := c_get_short_field (jni.envp, java_object_id, fid)
+			Result := jni.get_short_field (java_object_id, fid)
 		end
 
-feature -- setting object's attribute
+	long_attribute (fid: POINTER): INTEGER_64 is
+			-- Access to a 'long' attribute, returns a INTEGER_64
+		do
+			Result := jni.get_long_field (java_object_id, fid)
+		end
+
+feature -- Attributes setting
 
 	set_integer_attribute (fid: POINTER; value: INTEGER) is
-			-- set an 'integer' attribute to 'value'
+			-- Set an 'integer' attribute to 'value'
 		do
-			c_set_integer_field (jni.envp, java_object_id, fid, value)
+			jni.set_integer_field (java_object_id, fid, value)
 		end
 
 	set_string_attribute (fid: POINTER; value: STRING) is
-			-- set a 'String' attribute to 'value'
-		local
-			c_string: ANY
+			-- Set a 'String' attribute to 'value'
 		do
-			c_string := value.to_c
-			c_set_string_field (jni.envp, java_object_id, fid, $c_string)
+			jni.set_string_field (java_object_id, fid, value)
 		end
 	
 	set_object_attribute (fid: POINTER; value: JAVA_OBJECT) is
-			-- set a java object attribute to 'value'
+			-- Set a java object attribute to 'value'
 		do	
-			c_set_object_field (jni.envp, java_object_id, fid, value.java_object_id)
+			jni.set_object_field (java_object_id, fid, value.java_object_id)
 		end
 
 	set_boolean_attribute (fid: POINTER; value: BOOLEAN) is
-			-- set a 'boolean' attribute to 'value'
+			-- Set a 'boolean' attribute to 'value'
 		do
-			c_set_boolean_field (jni.envp, java_object_id, fid, value)
+			jni.set_boolean_field (java_object_id, fid, value)
 		end
 
 	set_char_attribute (fid: POINTER; value: CHARACTER) is 
-			-- set a 'char' attribute to 'value'
+			-- Set a 'char' attribute to 'value'
 		do
-			c_set_char_field (jni.envp, java_object_id, fid, value)
+			jni.set_char_field (java_object_id, fid, value)
 		end
 
 	set_float_attribute (fid: POINTER; value: REAL) is
-			-- set a 'float' attribute to 'value'
+			-- Set a 'float' attribute to 'value'
 		do
-			c_set_float_field (jni.envp, java_object_id, fid, value)
+			jni.set_float_field (java_object_id, fid, value)
 		end
 
 	set_double_attribute (fid: POINTER; value: DOUBLE) is
-			-- set a 'double' attribute to 'value'
+			-- Set a 'double' attribute to 'value'
 		do
-			c_set_double_field (jni.envp, java_object_id, fid, value)
+			jni.set_double_field (java_object_id, fid, value)
 		end
 	
-	set_byte_attribute (fid: POINTER; value: CHARACTER) is
-			-- set a 'byte' attribute to 'value'
+	set_byte_attribute (fid: POINTER; value: INTEGER_8) is
+			-- Set a 'byte' attribute to 'value'
 		do
-			c_set_byte_field (jni.envp, java_object_id, fid, value)
+			jni.set_byte_field (java_object_id, fid, value)
 		end
 
-	set_short_attribute (fid: POINTER; value: INTEGER) is
-			-- set a 'short' attribute to 'value'
+	set_short_attribute (fid: POINTER; value: INTEGER_16) is
+			-- Set a 'short' attribute to 'value'
 		do
-			c_set_short_field (jni.envp, java_object_id, fid, value)
+			jni.set_short_field (java_object_id, fid, value)
 		end
 
-feature {JNI_ENVIRONMENT, JAVA_OBJECT, JAVA_OBJECT_ARRAY, JAVA_OBJECT_TABLE, JAVA_ARGS}
-
-	java_object_id: POINTER
-
-	jclass: JAVA_CLASS
+	set_long_attribute (fid: POINTER; value: INTEGER_64) is
+			-- Set a 'short' attribute to 'value'
+		do
+			jni.set_long_field (java_object_id, fid, value)
+		end
 
 invariant
-
 	valid_proxy: java_object_id /= default_pointer
 
 end
-
 
 --|----------------------------------------------------------------
 --| Eiffel2Java: library of reusable components for ISE Eiffel.

@@ -10,37 +10,54 @@ inherit
 	JAVA_ARRAY
 
 create
-	make
+	make,
+	make_from_pointer
 	
-feature
+feature -- Initialization
 
-	make (size: INTEGER ) is
-			-- create a new Java array and an Eiffel accessor object
+	make (size: INTEGER) is
+			-- Create a new Java array and an Eiffel accessor object
 			-- Note: Java arrays are indexed from zero
 		require
 			size_ok: size > 0		
 		do
-			jarray := c_new_char_array (jni.envp, size)
+			jarray := jni.new_char_array (size)
+			create jvalue.make
 		ensure
 			array_ok: jarray /= default_pointer	
 		end
 
+feature -- Access
+
 	item (index: INTEGER): CHARACTER is
-			-- item at "index"
+			-- Item at `index'.
 		require
-			valid_index (index)
+			valid_index: valid_index (index)
+		local
+			l_array_ptr: POINTER
 		do
-			Result := c_get_char_array_element (jni.envp, jarray, index )					
+			l_array_ptr := jni.get_char_array_elements (jarray, default_pointer)
+			jvalue.make_by_pointer (l_array_ptr + index * sizeof_jchar)
+			Result := jvalue.char_value
+			jni.release_char_array_elements (jarray, l_array_ptr, 0)
 		end
 
-	put (litem: CHARACTER; index: INTEGER) is
-			-- put item at "index"
-		require
-			valid_index (index)
-		do
-			c_set_char_array_element (jni.envp, jarray, index, litem)
-		end
+feature -- Element change
 
+	put (an_item: CHARACTER; index: INTEGER) is
+			-- Put `an_item' at `index'. 
+		require
+			valid_index: valid_index (index)
+		local
+			l_array_ptr: POINTER
+		do
+			l_array_ptr := jni.get_char_array_elements (jarray, default_pointer)
+			jvalue.make_by_pointer (l_array_ptr + index * sizeof_jchar)
+			jvalue.set_char_value (an_item)
+			jni.release_char_array_elements (jarray, l_array_ptr, 0)
+		ensure
+			inserted: item (index) = an_item
+		end
 
 end
 

@@ -11,19 +11,19 @@ create
 feature {NONE} -- Initialization
 
 	make is
-			-- create a table for Eiffel proxies of Java object
+			-- Create a table for Eiffel proxies of Java object
 		do
 			create table.make (511)
 		end
 
 feature -- Access
 
-	item (jobject: POINTER): JAVA_OBJECT is
+	item (object: POINTER): JAVA_OBJECT is
 			-- find a Eiffel proxy for an Java object
 		require
-			jobject_not_void: jobject /= default_pointer
+			object_not_void: object /= default_pointer
 		do
-			Result := table.item (jobject)
+			Result := table.item (object)
 		end
 
 feature -- Element change
@@ -31,8 +31,8 @@ feature -- Element change
 	put (object: JAVA_OBJECT) is
 			-- Add a new object to the table
 		require
-			jobject_not_void: object /= Void
-			jobject_alive: object.exists
+			object_not_void: object /= Void
+			object_alive: object.exists
 		local
 			it: JAVA_OBJECT
 			ex: EXCEPTIONS
@@ -51,7 +51,7 @@ feature -- Element change
 feature {NONE}
 
 	table: HASH_TABLE [JAVA_OBJECT, POINTER]
-			-- table of objects
+			-- Table of objects
 
 invariant
 	table_not_void: table /= Void

@@ -11,8 +11,8 @@ class
 feature -- Access
 
 	jni: JNI_ENVIRONMENT is
-			-- returns the standard JNI enviroment. It uses the value of
-			-- CLASS_PATH environment variable to initialize the JVM
+			-- Standard JNI enviroment. It uses value of
+			-- CLASS_PATH environment variable to initialize JVM.
 		local
 			class_path: STRING
 			jvm: JAVA_VM
@@ -23,25 +23,24 @@ feature -- Access
 				-- First obtain the value of the CLASSPATH environment 
 				-- variable
 			class_path := exec.get ("CLASSPATH")
-			if class_path = Void or else class_path.count = 0 then
-				!!ex
+			if class_path = Void then
+				create ex
 				ex.raise ("Can't get CLASSPATH")
 			end
-			debug ("java")
-				io.putstring ("CLASSPATH=")
-				io.putstring (class_path)
-				io.new_line
+			debug ("java_vm")
+				io.error.putstring ("CLASSPATH=")
+				io.error.putstring (class_path)
+				io.error.new_line
 			end
 
 				-- Next create the JVM and get the JNI environment
-			!!jvm.make
-			Result := jvm.create_vm (class_path)
+			create jvm.make (class_path)
+			Result := jvm.jni
 		ensure
-			Result /= Void
+			jni_not_void: Result /= Void
 		end
 
 end
-
 
 --|----------------------------------------------------------------
 --| Eiffel2Java: library of reusable components for ISE Eiffel.

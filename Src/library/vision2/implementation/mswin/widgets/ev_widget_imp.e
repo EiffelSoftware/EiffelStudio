@@ -88,12 +88,12 @@ feature -- Access
 
 	pointer_position: EV_COORDINATES is
 			-- Position of the screen pointer relative to `Current'.
+		local
+			wel_point: WEL_POINT
 		do
-			--|FIXME
-			check
-				False
-			end
-			create Result
+			create wel_point.make (0, 0)
+			wel_point.set_cursor_position
+			create Result.set (wel_point.x - interface.screen_x, wel_point.y - interface.screen_y)
 		end
 
 	pointer_style: EV_CURSOR is
@@ -906,6 +906,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.71  2000/05/01 23:28:47  rogers
+--| Implemented pointer_position.
+--|
 --| Revision 1.70  2000/05/01 19:33:59  pichery
 --| Added feature `is_control_in_window' used
 --| to determine if a certain control is contained

@@ -3,13 +3,16 @@
 class READ_INFO 
 
 inherit
+	SERVER_INFO
+		rename
+			position as offset
+		redefine
+			trace
+		end
 
 	COMPILER_EXPORTER
 	
 feature -- Access
-
-	offset: INTEGER;
-			-- Offset in file
 
 	class_id: CLASS_ID;
 			-- Id of the class

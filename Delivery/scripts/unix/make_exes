@@ -4,6 +4,7 @@
 remtrace Update all source files.
 cd $EIFFEL_SRC
 exprt -r $DEFAULT_CVS_TAG -d Eiffel Eiffel
+exprt -r $DEFAULT_CVS_TAG -d build2 Src/build2
 exprt -r $DEFAULT_CVS_TAG -d C runtime
 exprt -r $DEFAULT_CVS_TAG -d dotnet Src/dotnet
 exprt -r $DEFAULT_CVS_TAG -d C_library Src/C_library
@@ -81,3 +82,15 @@ if [ ! -f quick_finalize.tar.gz ]; then
 fi
 clean_project
 move quick_finalize.tar.gz $EXPORT_DIR
+
+#remtrace Recompile EiffelBuild
+#cd $EIFFEL_SRC/build2
+#clean_project
+#finalize ace.ace
+#tgz_ccode build
+#if [ ! -f build.tar.gz ]; then
+#	echo Could not finalize a new EiffelBuild
+##	CANCEL
+#fi
+#clean_project
+#move build.tar.gz $EXPORT_DIR

@@ -127,6 +127,9 @@ feature -- Access
 
 	creation_message: STRING is
 			-- Creation message for wizard output
+		local
+			l_description: STRING
+			l_property: WIZARD_PROPERTY_DESCRIPTOR
 		do
 			create Result.make (256)
 			Result.append ("Processing ")
@@ -140,43 +143,51 @@ feature -- Access
 			Result.append (guid.to_string)
 			Result.append (")")
 			if inherited_interface /= Void then
-				Result.append ("%N%Tinherit from ")
+				Result.append ("%R%N%Tinherit from ")
 				Result.append (inherited_interface.name)
 			end
 			if not description.is_empty then
-				Result.append ("%N%T-- ")
+				Result.append ("%R%N%T%T-- ")
 				Result.append (description)
 			end
 			from
 				functions_start
 				if not functions_after then
-					Result.append ("%N%TFunctions")
+					Result.append ("%R%N%TFunctions:")
 				end				
 			until
 				functions_after
 			loop
 				if not functions_item.is_renaming_clause then
-					Result.append ("%N%T")
+					Result.append ("%R%N%T%T")
 					Result.append (functions_item.to_string)
-					Result.append ("%N%T%T-- ")
-					Result.append (functions_item.description)
+					l_description := functions_item.description
+					if l_description /= Void and then not l_description.is_empty then
+						Result.append ("%R%N%T%T%T-- ")
+						Result.append (l_description)
+					end
 				end
 				functions_forth
 			end
 			from
 				properties.start
 				if not properties.after then
-					Result.append ("%N%TProperties")
+					Result.append ("%R%N%TProperties:")
 				end				
 			until
 				properties.after
 			loop
-				Result.append ("%N%T")
-				Result.append (properties.item.to_string)
-				Result.append ("%N%T%T-- ")
-				Result.append (properties.item.description)
+				l_property := properties.item
+				Result.append ("%R%N%T%T")
+				Result.append (l_property.to_string)
+				l_description := l_property.description
+				if l_description /= Void and then not l_description.is_empty then
+					Result.append ("%R%N%T%T%T-- ")
+					Result.append (l_property.description)
+				end
 				properties.forth
 			end
+			Result.append ("%R%N")
 		end
 
 	feature_eiffel_names: LIST [STRING]

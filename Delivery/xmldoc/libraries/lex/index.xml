@@ -1,9 +1,9 @@
-<document output="studio" title="EiffelLex and EiffelParse">
+<document output="studio" title="EiffelLex">
 	<meta_data/>
 	<paragraph>
 		<paragraph> Type: Library
 			<line_break/> Platform: Any
-			<line_break/> Version: 5.0
+			<line_break/> Version: 5.5
 			<line_break/>
 		</paragraph>
 		<paragraph> See: 
@@ -12,12 +12,6 @@
 					<link>
 						<url>content/index.xml</url>
 						<label>Content</label>
-					</link>
-				</item>
-				<item>
-					<link>
-						<url>samples/index.xml</url>
-						<label>Samples</label>
 					</link>
 				</item>
 				<item>

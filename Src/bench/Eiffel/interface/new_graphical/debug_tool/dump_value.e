@@ -61,7 +61,7 @@ inherit
 		end
 
 create
-	make_boolean, make_character, make_integer, make_integer_64, make_real,
+	make_boolean, make_character, make_integer_32, make_integer_64, make_real,
 	make_double, make_pointer, make_object,	make_manifest_string,
 	make_string_for_dotnet, make_object_for_dotnet, make_bits,
 	make_expanded_object
@@ -88,7 +88,7 @@ feature -- Initialization
 			type /= Type_unknown
 		end
 
-	make_integer(value: INTEGER; dtype: CLASS_C) is
+	make_integer_32 (value: INTEGER; dtype: CLASS_C) is
 			-- make a integer item initialized to `value'
 		do
 			value_integer := value

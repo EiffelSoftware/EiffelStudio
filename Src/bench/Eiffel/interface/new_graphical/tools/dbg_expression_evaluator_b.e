@@ -295,7 +295,7 @@ feature -- EXPR_B evaluation
 				if l_integer.size = 64 		then
 					tmp_result_value := integer_64_to_dump_value (l_integer.integer_64_value)
 				else
-					tmp_result_value := integer_to_dump_value (l_integer.integer_32_value)
+					tmp_result_value := integer_32_to_dump_value (l_integer.integer_32_value)
 				end
 			elseif a_value_i.is_string		then
 				l_string ?= a_value_i
@@ -870,7 +870,7 @@ feature -- Concrete evaluation
 					val := cv_cst.value
 					tmp_result_static_type := cv_cst.type.associated_class
 					if val.is_integer then
-						 create tmp_result_value.make_integer (val.to_integer, tmp_result_static_type);
+						 create tmp_result_value.make_integer_32 (val.to_integer, tmp_result_static_type);
 					elseif val.is_real then
 						 create tmp_result_value.make_real (val.to_real, tmp_result_static_type);
 					elseif val.is_double then
@@ -1492,10 +1492,10 @@ feature {NONE} -- Dump value helpers
 			create Result.make_manifest_string (v, system.string_class.compiled_class)			
 		end
 		
-	integer_to_dump_value (v: INTEGER): DUMP_VALUE is
+	integer_32_to_dump_value (v: INTEGER): DUMP_VALUE is
 			-- Convert a INTEGER value `v' to the corresponding DUMP_VALUE	
 		do
-			create Result.make_integer (v, system.integer_32_class.compiled_class)						
+			create Result.make_integer_32 (v, system.integer_32_class.compiled_class)						
 		end
 		
 	integer_64_to_dump_value (v: INTEGER_64): DUMP_VALUE is

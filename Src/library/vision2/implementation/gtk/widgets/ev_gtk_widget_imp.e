@@ -164,9 +164,17 @@ feature {EV_ANY_I} -- Implementation
 
 	set_composite_widget_pointer_style (a_cursor_ptr: POINTER) is
 			-- Used to set the gdkcursor for composite widgets.
+		local
+			a_window: POINTER
 		do
-			feature {EV_GTK_EXTERNALS}.gdk_window_set_cursor (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget), a_cursor_ptr)
-			feature {EV_GTK_EXTERNALS}.gdk_window_set_cursor (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), a_cursor_ptr)
+			a_window := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget)
+			if a_window /= default_pointer then
+				feature {EV_GTK_EXTERNALS}.gdk_window_set_cursor (a_window, a_cursor_ptr)
+			end
+			a_window := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object)
+			if a_window /= default_pointer then
+				feature {EV_GTK_EXTERNALS}.gdk_window_set_cursor (a_window, a_cursor_ptr)
+			end
 		end
 
 	pointer_style: EV_CURSOR

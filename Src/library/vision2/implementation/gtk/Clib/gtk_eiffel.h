@@ -47,6 +47,7 @@ typedef  struct callback_data {
     EIF_PROC set_event_data;
     char mouse_button;
     char double_click;
+    gpointer extra_data;
 } callback_data_t;
 
 
@@ -87,7 +88,8 @@ gint c_gtk_signal_connect (GtkObject *widget,
 			   EIF_POINTER ev_data_imp,
 			   EIF_PROC event_data_rtn,
 			   char mouse_button,
-			   char double_click);
+			   char double_click,
+			   gpointer extra_data);
 
 /*------------------------------------------------------------------------------
  Connect a call back to a widget/event pair
@@ -399,20 +401,26 @@ void c_gtk_table_set_spacing_if_needed (GtkWidget *widget		  );
 
 
 /*==============================================================================
- gtk_tree functions
+ gtk_ctree functions
 ==============================================================================*/
 
+/* Routine to create a GtkCTreeNode which is a EV_TREE_ITEM */
+EIF_POINTER c_gtk_ctree_insert_node (GtkCTree *, GtkCTreeNode*, GtkCTreeNode*, gchar *, guint8, GdkPixmap*, GdkBitmap*, gboolean, gboolean);
+
 /* Routine to know if a tree item is expanded */
-EIF_BOOLEAN c_gtk_tree_item_expanded (GtkWidget *widget);
-
-/* Routine to know if a tree item is selected */
-EIF_BOOLEAN c_gtk_tree_item_is_selected (GtkWidget *tree, GtkWidget *treeItem);
+EIF_BOOLEAN c_gtk_ctree_item_is_expanded (GtkCTreeNode *node);
 
 /* Routine to set the selection mode of the tree to SINGLE */
-void c_gtk_tree_set_single_selection_mode (GtkWidget *tree);
+void c_gtk_ctree_set_single_selection_mode (GtkCTree *ctree);
 
 /* Routine to set the selection mode of the tree to SINGLE */
-EIF_POINTER c_gtk_tree_selected_item (GtkWidget *tree);
+EIF_POINTER c_gtk_ctree_selected_item (GtkCTree *ctree);
+
+/* Routine to set the pixmap and text. */
+void c_gtk_ctree_item_set_pixtext (GtkCTree *ctree, GtkCTreeNode *node, gint column, GtkPixmap *pixmap, gchar *txt, guint8 spacing);
+
+/* Routine that gives the position of the node in the ctree. */
+EIF_INTEGER c_gtk_ctree_item_get_position_in_tree (GtkCTree *ctree, GtkCTreeNode *node);
 
 /*==============================================================================
  gtk_text functions

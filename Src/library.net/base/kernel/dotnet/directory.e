@@ -196,7 +196,7 @@ feature -- Conversion
 			until
 				i = c
 			loop
-				Result.extend (create {STRING}.make_from_cil (ent.item (i).remove (0, dc)))
+				Result.extend (create {STRING}.make_from_cil (ent.item (i).remove (0, dc + 1)))
 				i := i + 1
 			end
 		end

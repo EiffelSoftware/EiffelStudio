@@ -1643,7 +1643,7 @@ feature {NONE} -- Externals
 		update_fields_routine: EV_PIXMAP_IMP_DELEGATE
 		) is
 		external
-			"C | %"load_pixmap.h%""
+			"C signature (char *, void *) use %"load_pixmap.h%""
 		end
 
 invariant

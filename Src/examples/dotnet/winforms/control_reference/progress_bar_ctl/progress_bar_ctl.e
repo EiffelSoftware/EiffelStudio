@@ -219,8 +219,13 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 		do
 			if not retried then
+				if timed_progress /= Void then
+					timed_progress.interrupt
+					timed_progress := Void
+				end
 				if components /= Void then
-					components.dispose	
+					components.dispose
+					components := Void
 				end
 			end
 			Precursor {WINFORMS_FORM}(a_disposing)

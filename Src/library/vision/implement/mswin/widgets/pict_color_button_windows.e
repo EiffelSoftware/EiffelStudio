@@ -33,7 +33,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 creation
 	make
 
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 					pixmap_y := (4 + ((internal_height - bitmap.height) // 2)).max (4)
 					a_dc.draw_bitmap (bitmap, pixmap_x, pixmap_y, internal_width, internal_height)
 				else
-					a_dc.draw_bitmap (bitmap, 2, 2, internal_width, internal_height)
+					a_dc.draw_bitmap (bitmap, 3, 3, internal_width, internal_height)
 				end
 			end
 		end

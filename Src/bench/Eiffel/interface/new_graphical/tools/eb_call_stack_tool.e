@@ -1,6 +1,6 @@
 indexing
 	description: "Tool that displays the call stack during a debugging session."
-	author: "Xavier Rousselot"
+	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -67,21 +67,98 @@ feature {NONE} -- Initialization
 			development_window: EB_DEVELOPMENT_WINDOW
 			box: EV_VERTICAL_BOX
 			box2: EV_VERTICAL_BOX
+			box_extra: EV_VERTICAL_BOX
+			box_exception: EV_HORIZONTAL_BOX
+			tb_exception: EV_TOOL_BAR
+			tb_but_exception: EV_TOOL_BAR_BUTTON
+			box_thread: EV_HORIZONTAL_BOX
+			box_stop_clause: EV_HORIZONTAL_BOX
+			t_label: EV_LABEL
+			special_label_col: EV_COLOR
 		do
 			development_window ?= manager
 			create stack_list
 			stack_list.disable_multiple_selection
 			create box
 			create box2
+
+			
 			box2.set_padding (3)
+			
+			special_label_col := (create {EV_STOCK_COLORS}).blue
+				--| Thread box
+			create box_thread
+
+			create t_label.make_with_text (" Thread = ")
+			t_label.align_text_left
+			t_label.set_foreground_color (special_label_col)
+			box_thread.extend (t_label)
+			box_thread.disable_item_expand (t_label)
+			
+			create thread_id
+			thread_id.align_text_left
+			thread_id.set_foreground_color (special_label_col)
+			thread_id.set_text ("..Unknown..")
+			thread_id.pointer_enter_actions.extend (agent bold_this_label (True, thread_id))
+			thread_id.pointer_leave_actions.extend (agent bold_this_label (False, thread_id))			
+			thread_id.pointer_button_press_actions.extend (agent select_call_stack_thread (thread_id, ?,?,?,?,?,?,?,?))
+			box_thread.extend (thread_id)
+
+			create t_label.make_with_text (" -- Click to change. ")
+			t_label.disable_sensitive
+			t_label.align_text_right
+			t_label.set_foreground_color (special_label_col)
+			
+			box_thread.extend (t_label)
+			box_thread.disable_item_expand (t_label)
+			
+				--| Stop cause (step completed ...)
+			create box_stop_clause
+			create t_label.make_with_text (" Status = ")
+			t_label.align_text_left
+			t_label.set_foreground_color (special_label_col)
+			
+			box_stop_clause.extend (t_label)
+			box_stop_clause.disable_item_expand (t_label)
+			box_stop_clause.set_foreground_color (special_label_col)
+			
 			create stop_cause
-			stop_cause.align_text_left
-			box2.extend (stop_cause)
-			box2.disable_item_expand (stop_cause)
+			stop_cause.align_text_left			
+			box_stop_clause.extend (stop_cause)
+			
+				--| Exception message
+			create box_exception
 			create exception
---			exception.align_text_left
-			box2.extend (exception)
-			box2.disable_item_expand (exception)
+			box_exception.extend (exception)
+			create tb_exception
+			create tb_but_exception
+			tb_but_exception.set_pixmap (pixmaps.icon_pretty_print)
+			tb_but_exception.pointer_button_press_actions.extend (agent show_call_stack_message)
+			tb_exception.extend (tb_but_exception)
+			box_exception.extend (tb_exception)
+			box_exception.disable_item_expand (tb_exception)
+
+				--| Extra box
+			create box_extra
+			create extra_stack_info
+			extra_stack_info.align_text_left
+			extra_stack_info.set_foreground_color (special_label_col)
+
+			box_extra.extend (extra_stack_info)
+
+				--| Top box2
+			box2.extend (box_stop_clause)
+			box2.disable_item_expand (stop_cause)
+
+			box2.extend (box_extra)
+			box2.disable_item_expand (box_extra)
+
+			box2.extend (box_thread)
+			box2.disable_item_expand (box_thread)
+
+			box2.extend (box_exception)
+			box2.disable_item_expand (box_exception)
+
 			box.extend (box2)
 			box.disable_item_expand (box2)
 			if Application.status /= Void then
@@ -136,6 +213,11 @@ feature -- Access
 	widget: EV_WIDGET
 			-- Widget representing Current.
 
+	extra_stack_info: EV_LABEL
+
+	thread_id: EV_LABEL
+			-- Thread Identifier
+
 	stop_cause: EV_LABEL
 			-- Why did the execution stop? (encountered breakpoint, raised exception,...)
 
@@ -165,6 +247,15 @@ feature -- Access
 		end
 
 feature -- Status setting
+
+	set_callstack_thread (tid: INTEGER) is
+		do
+			if application.status.current_thread_id /= tid then
+				application.status.set_current_thread_id (tid)
+				application.status.reload_call_stack
+				real_update
+			end
+		end
 
 	set_stone (a_stone: STONE) is
 			-- Assign `a_stone' as new stone.
@@ -198,6 +289,8 @@ feature -- Status setting
 			stack_list.wipe_out
 			if Application.status /= Void then
 				display_stop_cause
+				refresh_threads_info
+				extra_stack_info.remove_text
 			end
 			ev_application.idle_actions.prune_all (update_agent)
 			ev_application.idle_actions.extend (update_agent)
@@ -249,30 +342,47 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			stack: EIFFEL_CALL_STACK
 			tmp_list: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
+			l_row: EV_MULTI_COLUMN_LIST_ROW
+			e_st_elt: EIFFEL_CALL_STACK_ELEMENT
+			rows_to_disable: LINKED_LIST [EV_MULTI_COLUMN_LIST_ROW]
+			l_status: APPLICATION_STATUS
 		do
-			ev_application.idle_actions.prune_all (update_agent)			
-			if Application.status /= Void then
-				application.status.update				
+			ev_application.idle_actions.prune_all (update_agent)
+			l_status := application.status
+			if l_status /= Void then
+				l_status.update
 				display_stop_cause
+				refresh_threads_info
 				stack_list.wipe_out
-				stack := Application.status.where
+				stack := l_status.call_stack (l_status.current_thread_id)
 				if
-					Application.is_stopped and then
+					l_status.is_stopped and then
 					stack /= Void
 				then
+					refresh_extra_stack_info
+					
 					create tmp_list.make (stack.count)
 					save_call_stack_cmd.enable_sensitive
 					from
 						stack.start
+						create rows_to_disable.make
 						i := 1
 					until
 						stack.after
 					loop
-						tmp_list.extend (element_to_row (stack.item, i))
+						l_row := element_to_row (stack.item, i)
+						tmp_list.extend (l_row)
+						e_st_elt ?= stack
+						if e_st_elt = Void then
+							rows_to_disable.extend (l_row)
+						end
 						i := i + 1
 						stack.forth
 					end
 					stack_list.append (tmp_list)
+					if not rows_to_disable.is_empty then
+						rows_to_disable.do_all (agent {EV_MULTI_COLUMN_LIST_ROW}.disable_select )
+					end
 				else
 					save_call_stack_cmd.disable_sensitive
 				end
@@ -283,14 +393,16 @@ feature {NONE} -- Implementation
 			-- Fill in the `stop_cause' label with a message describing the application status.
 		local
 			m: STRING
+			l_status: APPLICATION_STATUS
 		do
-			if not Application.status.is_stopped then
+			l_status := Application.status
+			if not l_status.is_stopped then
 				stop_cause.set_text (Interface_names.l_System_running)
 				exception.remove_text
 				exception.remove_tooltip
 			else -- Application is stopped.
 				create m.make (100)
-				inspect Application.status.reason
+				inspect l_status.reason
 				when Pg_step then
 					stop_cause.set_text (Interface_names.l_Stepped)
 					m.append (Interface_names.l_Stepped)
@@ -307,13 +419,13 @@ feature {NONE} -- Implementation
 					stop_cause.set_text (Interface_names.l_Explicit_exception_pending)
 					m.append (Interface_names.l_Explicit_exception_pending)
 					m.append (": ")
-					m.append (exception_text)
+					m.append (exception_tag_text)
 					display_exception
 				when Pg_viol then
 					stop_cause.set_text (Interface_names.l_Implicit_exception_pending)
 					m.append (Interface_names.l_Implicit_exception_pending)
 					m.append (": ")
-					m.append (exception_text)
+					m.append (exception_tag_text)
 					display_exception
 				when Pg_new_breakpoint then
 					stop_cause.set_text (Interface_names.l_New_breakpoint)
@@ -331,12 +443,48 @@ feature {NONE} -- Implementation
 		local
 			m: STRING
 		do
-			m := exception_text
-			exception.set_text (m)
+			m := exception_tag_text
+--			exception.set_text (m)
 --| FIXME jfiat [2004/03/19] : NewFeature keep only first line of exception text for callstack_tool
 --| We'll enable this, once we have an exception window to display the full message
---			exception.set_text (first_line_of (m))
+			exception.set_text (first_line_of (m))
 			exception.set_tooltip (m)
+		end
+		
+	show_call_stack_message (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+		local
+			dlg: EB_DEBUGGER_EXCEPTION_DIALOG
+		do
+			create dlg
+			dlg.set_exception_tag (exception_tag_text)
+			dlg.set_exception_message (exception_message_text)
+			dlg.show_modal_to_window (Debugger_manager.debugging_window.window)
+		end		
+		
+	refresh_threads_info is
+			-- 
+		local
+			ctid: INTEGER
+		do
+			ctid := application.status.current_thread_id
+			thread_id.set_text ("0x" + ctid.to_hex_string)
+			thread_id.set_data (ctid)
+		end
+		
+	refresh_extra_stack_info is
+			-- 
+		local
+			cse_dotnet: CALL_STACK_ELEMENT_DOTNET
+		do
+				-- TO BE PERFORMED AFTER `current_execution_stack_number' is set
+				-- ie after STONE DROPPED ...
+			if application.is_dotnet then
+				extra_stack_info.remove_text
+				cse_dotnet ?= application.status.current_call_stack_element
+				if cse_dotnet /= Void then
+					extra_stack_info.set_text (" Module = " + cse_dotnet.dotnet_module_name)
+				end
+			end
 		end
 		
 	first_line_of (m: STRING): STRING is
@@ -358,19 +506,21 @@ feature {NONE} -- Implementation
 			one_line: Result /= Void and then (not Result.has ('%R') and not Result.has ('%N'))			
 		end
 
-	exception_text: STRING is
+	exception_tag_text: STRING is
 			-- Text corresponding to the current exception.
 		local
 			e: EXCEPTIONS
 			s: STRING
+			l_status: APPLICATION_STATUS
 		do
 			create Result.make (100)
+			l_status := Application.status
 			if not Application.is_dotnet then
 				Result.append ("Code: ")
-				Result.append (Application.status.exception_code.out)
+				Result.append (l_status.exception_code.out)
 				Result.append (" (")
 				create e
-				s := e.meaning (Application.status.exception_code)
+				s := e.meaning (l_status.exception_code)
 				if s = Void then
 					s := "Undefined"
 				end
@@ -378,7 +528,7 @@ feature {NONE} -- Implementation
 				Result.append (")")				
 			end
 			Result.append (" Tag: ")
-			s := Application.status.exception_tag
+			s := l_status.exception_tag
 			if s /= Void then
 				Result.append_string (s)				
 			end
@@ -389,6 +539,17 @@ feature {NONE} -- Implementation
 --		ensure
 --			one_line: Result /= Void and then (not Result.has ('%R') and not Result.has ('%N'))
 		end
+		
+	exception_message_text: STRING is
+			-- Text corresponding to the current exception.
+		do
+			if application.is_dotnet then
+				Result := application.imp_dotnet.exception_to_string
+			end
+			if Result = Void then
+				Result := exception_tag_text
+			end
+		end	
 
 	on_element_drop (st: CALL_STACK_STONE) is
 			-- Change stack level to the one described by `st'.
@@ -399,64 +560,104 @@ feature {NONE} -- Implementation
 	element_to_row (elem: CALL_STACK_ELEMENT; level: INTEGER): EB_MULTI_COLUMN_LIST_ROW is
 			-- Display information about associated routine.
 		local
-			c: CLASS_C
 			dc, oc: CLASS_C
 			l_tooltip: STRING
-			l_nb_stack_out: STRING
+			l_nb_stack: INTEGER
+			e_cse: EIFFEL_CALL_STACK_ELEMENT
+			l_feature_info: STRING
+			l_class_info: STRING
+			l_orig_class_info: STRING
+			l_breakindex_info: STRING
+			l_obj_address_info: STRING			
 		do
 			create Result
-			c := elem.dynamic_class
-				-- Print object address
-			if c /= Void then
-				create l_tooltip.make (10)
-				if elem.is_melted then
-					Result.extend (elem.routine_name + "*")
-					l_tooltip.append_string ("." + elem.routine_name + "*")
-				else
-					Result.extend (elem.routine_name)
-					l_tooltip.append_string (elem.routine_name)
+			create l_tooltip.make (10)
+			
+			e_cse ?= elem
+
+				--| Routine name
+			l_feature_info := elem.routine_name
+			l_tooltip.append_string (l_feature_info)
+			
+					--| Class name
+			l_class_info := elem.class_name
+			l_tooltip.prepend_string ("{" + l_class_info + "}")
+
+				--| Break Index
+			l_breakindex_info := elem.break_index.out
+
+				--| Object address
+			l_obj_address_info := elem.object_address
+			
+			if e_cse /= Void then
+					--| Routine name
+				if e_cse.is_melted then
+					l_feature_info.append_string ("*")
 				end
-				dc := elem.dynamic_class
-				l_tooltip.prepend_string ("{" + dc.name_in_upper + "}")
-				Result.extend (dc.name_in_upper)
---				Result.extend (elem.break_index.out)
---				Result.extend (elem.object_address)
-				oc := elem.origin_class
+
+					--| Origin class
+				dc := e_cse.dynamic_class
+				oc := e_cse.origin_class
 				if oc /= Void and then not oc.is_equal (dc) then
-					l_tooltip.prepend_string (" (from " + oc.name_in_upper + ")")
-					Result.extend (oc.name_in_upper)
+					l_orig_class_info := oc.name_in_upper
+					l_tooltip.prepend_string (" (from " + l_orig_class_info + ")")
 				else
-					Result.extend (Interface_names.l_Same_class_name)
+					l_orig_class_info := Interface_names.l_Same_class_name
 				end
 
-				l_nb_stack_out := Application.status.where.count.out
-				Result.set_tooltip ((elem.level_in_stack).out + "/" + l_nb_stack_out + ": " + l_tooltip)
-
+					--| Specific GUI behavior
 				Result.set_pebble_function (agent pebble_from_x_y (?, ?, level))
 				Result.set_accept_cursor (Cursors.cur_Setstop)
-				Result.set_data (level)
 				Result.pointer_button_press_actions.extend (agent select_element(?,?,?,?,?,?,?,?,level))
-				if level = Application.current_execution_stack_number then
-					Result.set_pixmap (Pixmaps.Icon_green_arrow)
-					arrowed_level := level
-				end
-			else
---				io.put_string ("Void dclass")
+
+			else --| It means, this is an EXTERNAL_CALL_STACK_ELEMENT
+				l_orig_class_info := ""
+--				Result.disable_select
+			end
+
+				--| Tooltip addition
+			l_nb_stack := Application.status.current_call_stack.count
+			l_tooltip.prepend_string ((elem.level_in_stack).out + "/" + l_nb_stack.out + ": ")
+			l_tooltip.append_string (" @ " + l_breakindex_info)
+			l_tooltip.append_string (" <0x" + l_obj_address_info + ">")			
+			Result.set_tooltip (l_tooltip)
+			
+				--| Fill columns
+			Result.extend (l_feature_info)
+			Result.extend (l_class_info)
+--			Result.extend (elem.break_index.out)
+--			Result.extend (elem.object_address)
+			Result.extend (l_orig_class_info)
+
+				--| Set GUI behavior			
+			Result.set_data (level)
+			if level = Application.current_execution_stack_number then
+				Result.set_pixmap (Pixmaps.Icon_green_arrow)
+				arrowed_level := level
+			elseif e_cse /= Void then
+				Result.set_pixmap (Pixmaps.Icon_arrow_empty)
 			end
 		end
 
-	select_element (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER; level: INTEGER) is
-			-- Set `a_stone' in the development window.
+	select_element_by_level (level: INTEGER) is
+			-- Set stone in the  develpment window.
 		require
 			valid_level: level > 0 and level <= stack_list.count
 		local
 			st: CALL_STACK_STONE
 		do
+			create st.make (level)
+			if st.is_valid then
+				debugger_manager.launch_stone (st)
+				refresh_extra_stack_info
+			end
+		end		
+
+	select_element (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER; level: INTEGER) is
+			-- Set `a_stone' in the development window.
+		do
 			if a_button = 1 then
-				create st.make (level)
-				if st.is_valid then
-					debugger_manager.launch_stone (st)
-				end
+				select_element_by_level (level)
 			end
 		end
 
@@ -464,25 +665,23 @@ feature {NONE} -- Implementation
 			-- If `a_key' is enter, set the selected stack element as the new stone.
 		local
 			level: INTEGER_REF
-			conv_st: CALL_STACK_STONE
 		do
 			if a_key.code = Key_enter then
 				if stack_list.selected_item /= Void then
 					level ?= stack_list.selected_item.data
-					create conv_st.make (level.item)
-					debugger_manager.launch_stone (conv_st)
+					select_element_by_level (level.item)
 				end
 			end
 		end
-
+		
 	pebble_from_x_y (x, y, line: INTEGER): CALL_STACK_STONE is
 			-- Returns the call_stack_stone of line `line'.
 		require
 			valid_line: line > 0 and line <= stack_list.count
 		local
-			elem: CALL_STACK_ELEMENT
+			elem: EIFFEL_CALL_STACK_ELEMENT
 		do
-			elem := application.status.where.i_th (line)
+			elem ?= application.status.current_call_stack.i_th (line)
 			if
 				elem /= Void and then
 				elem.dynamic_class /= Void and then
@@ -554,7 +753,7 @@ feature {NONE} -- Implementation
 				create fn.make_create_read_write (fd.file_name)
 				create stt.make
 					--| We generate the call stack.
-				Application.status.where.display_stack (stt)
+				Application.status.current_call_stack.display_stack (stt)
 					--| We put it in the file.
 				fn.put_string (stt.image)
 				fn.close
@@ -569,6 +768,45 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
+		
+	select_call_stack_thread (lab: EV_LABEL; x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+		local
+			m: EV_MENU
+			mi: EV_MENU_ITEM
+			tid: INTEGER
+			i: INTEGER
+			arr: ARRAY [INTEGER]
+			wd: EV_WARNING_DIALOG
+			l_item_text: STRING
+			l_status: APPLICATION_STATUS
+		do
+			l_status := Application.status
+			arr := l_status.all_thread_ids
+			if arr /= Void and then not arr.is_empty then
+				create m
+				from
+					i := arr.lower
+				until
+					i > arr.upper
+				loop
+					tid := arr @ i
+					l_item_text := "0x" + tid.to_hex_string
+					create mi
+					if tid = l_status.current_thread_id then
+						mi.set_pixmap (pixmaps.icon_green_arrow)
+					end					
+					mi.set_text (l_item_text)
+					mi.set_data (tid)
+					mi.select_actions.extend (agent set_callstack_thread (tid))
+					m.extend (mi)
+					i := i + 1
+				end
+				m.show_at (lab, 0, thread_id.height)
+			else
+				create wd.make_with_text ("Sorry no information available on Threads for now")
+				wd.show
+			end
+		end		
 
 feature {NONE} -- Implementation: set stack depth command
 
@@ -682,6 +920,21 @@ feature {NONE} -- Implementation: set stack depth command
 			end
 			close_dialog
 			debugger_manager.set_maximum_stack_depth (nb)
+		end
+
+feature {NONE} -- Implementation, cosmetic
+
+	bold_this_label (is_bold: BOOLEAN; lab: EV_LABEL) is
+		local
+			f: EV_FONT
+		do
+			f := lab.font
+			if is_bold  then
+				f.set_weight (feature {EV_FONT_CONSTANTS}.weight_bold)
+			else
+				f.set_weight (feature {EV_FONT_CONSTANTS}.weight_regular)				
+			end
+			lab.set_font (f)
 		end
 
 end -- class EB_CALL_STACK_TOOL

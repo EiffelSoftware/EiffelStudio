@@ -1,8 +1,7 @@
 indexing
 
 	description: 
-		"Implementation of XmStringTable. The associated C `handle' %
-		%will not be collected automatically."
+		"Implementation of XmStringTable. ";
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -10,8 +9,16 @@ indexing
 class
 	MEL_STRING_TABLE
 
+inherit
+
+	MEL_MEMORY
+		rename
+			make_from_existing as mem_make_from_existing
+		end
+
 creation
-	make_from_existing, make
+	make,
+	make_from_existing
 
 feature {NONE} -- Initialization
 
@@ -40,30 +47,30 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	handle: POINTER;
-			-- Associated C Pointer to XmStringTable structure
-
 	count: INTEGER;
 			-- Number of elements in table
 
-	item (i: INTEGER): MEL_SHARED_STRING is
-			-- Get a MEL_SHARED_STRING item at position `i'
+	item (i: INTEGER): MEL_STRING is
+			-- Get a string value (that is shared, i.e will not be
+			-- collected automatically) at position `i'
 		require
 			valid_range: i > 0 and then i <= count;	
 		do
 			!! Result.make_from_existing (get_i_th_table (handle, i))
 		ensure
-			non_void_result: Result /= Void
+			non_void_result: Result /= Void and then Result.shared
 		end;
 
 	item_string (i: INTEGER): STRING is
-			-- Eiffel string at position `i'
+			-- Eiffel string at position `i' (string value return
+			-- will not be freed)
 		require
 			valid_range: i > 0 and then i <= count;	
 		local
-			ms: MEL_SHARED_STRING
+			ms: MEL_STRING
 		do
 			!! ms.make_from_existing (get_i_th_table (handle, i));
+			ms.set_shared;
 			Result := ms.to_eiffel_string
 		ensure
 			non_void_result: Result /= Void
@@ -71,14 +78,15 @@ feature -- Access
 
 feature -- Element change
 
-	put (ms: MEL_SHARED_STRING; i: INTEGER) is
+	put (ms: MEL_STRING; i: INTEGER) is
 			-- Put a motif string `ms' at position `i'
 			-- in current table.
 			--| `ms' will not be collected automatically.
 		require
 			i_large_enough: i > 0
 			i_small_enough: i <= count;
-			valid_ms: ms /= Void and then not ms.is_destroyed
+			valid_ms: ms /= Void and then not ms.is_destroyed;
+			ms_is_shared: ms.shared
 		do
 			xm_list_put (handle, ms.handle, i)
 		end;
@@ -86,39 +94,28 @@ feature -- Element change
 	put_string (str: STRING; i: INTEGER) is
 			-- Put an eiffel string `str' at position `i'
 			-- in current table.
-			--| A MEL_SHARED_STRING is created.
+			--| A mel string with `shared' set to True is created.
 		require
 			valid_str: str /= Void 
 			i_large_enough: i > 0
 			i_small_enough: i <= count;
 		local
-			ms: MEL_SHARED_STRING
+			ms: MEL_STRING
 		do
 			!! ms.make_localized (str);
+			ms.set_shared;
 			xm_list_put (handle, ms.handle, i);
-		end;
-
-feature -- Status report
-
-	is_destroyed: BOOLEAN is
-			-- Is the table destroyed?
-		do
-			Result := (handle = default_pointer) 
 		end;
 
 feature -- Removal
 
-	free is
+	destroy is
 			-- Free the memory used by the xmStringTable and its
-			-- contents.
-		require
-			exists: not is_destroyed
+			-- string contents using XmStringFree.
 		do
 			free_xm_string_table (handle, count);
 			handle := default_pointer;
 			count := 0
-		ensure
-			is_destroyed: is_destroyed
 		end;
 
 feature {NONE} -- External features

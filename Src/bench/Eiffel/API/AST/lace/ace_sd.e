@@ -147,7 +147,8 @@ feature -- Lace compilation
 			found: BOOLEAN;
 			d_option: D_OPTION_SD;
 			value: OPT_VAL_SD;
-			vd38: VD38
+			vd38: VD38;
+			vd44: VD44;
 		do
 			if melt_only and then not System.precompilation then
 				Result := Default_precompiled_location
@@ -162,6 +163,10 @@ feature -- Lace compilation
 						if found then
 							!!vd38;
 							Error_handler.insert_error (vd38);
+							Error_handler.raise_error;
+						elseif System.precompilation then
+							!!vd44;
+							Error_handler.insert_error (vd44);
 							Error_handler.raise_error;
 						else
 							found := True;

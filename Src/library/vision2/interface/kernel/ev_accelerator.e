@@ -59,7 +59,7 @@ feature -- Access
 		do
 			Result := implementation.key
 		ensure
-			bridge_ok: Result = implementation.key
+			bridge_ok: equal (Result, implementation.key)
 		end
 
 	shift_required: BOOLEAN is
@@ -222,6 +222,9 @@ end -- class EV_ACCELERATOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/03/21 20:12:19  brendel
+--| Improved postcodition on `key'.
+--|
 --| Revision 1.11  2000/03/16 17:17:49  brendel
 --| disable_control_key -> disable_control_required.
 --|

@@ -87,6 +87,7 @@ cluster
 
 	-- Switch
 		switch:				"$BENCH/Eiffel/batch_bench/batch";
+		melt_only_switch:	"$BENCH/Eiffel/batch_bench/professional";
 
 	-- Case
 		case_common:		"$BENCH/Eiffel/case_storage/common";
@@ -102,6 +103,6 @@ external
 		"$(BENCH)/C/parsing/eiffel/libeiffel.a";
 		"$(BENCH)/C/parsing/lace/liblace.a";
 		"$(BENCH)/C/parsing/shared/libparsing.a";
-		"$(BENCH)/C/platform/libplatform.a";
+		"$(BENCH)/C/platform/libplatform.a"
 
 end

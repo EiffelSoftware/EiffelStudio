@@ -222,14 +222,6 @@ int c_gtk_get_text_max_length (GtkWidget* text);
 #define c_gtk_combo_entry(p)      (((GtkCombo*)p)->entry)  /*GtkWidget**/
 #define c_gtk_combo_list(p)      (((GtkCombo*)p)->list)  /*GtkWidget**/
 
-/********************************
- *
- * Some routines for containers
- *
- ********************************/
-
-/* Show the children of widget recursively */
-void c_gtk_widget_show_children (GtkWidget *widget);
 
 /********************************
  *
@@ -255,7 +247,6 @@ void c_gtk_pixmap_read_from_xpm ( GtkPixmap *pixmap,
  ********************************/
 
 /* List : add a listItem to a list */
-void c_gtk_add_list_item (GtkWidget *list, GtkWidget *item);
 void c_gtk_list_item_select (GtkWidget *item);
 void c_gtk_list_item_unselect (GtkWidget *item);
 gint c_gtk_list_selection_mode (GtkWidget *item);

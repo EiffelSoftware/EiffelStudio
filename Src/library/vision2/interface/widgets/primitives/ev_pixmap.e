@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			y_coordinate_valid: a_y > 0
 		do
 			default_create
-			implementation.set_size (a_x, a_y)
+			set_size (a_x, a_y)
 		end
 
 feature -- Status setting
@@ -109,6 +109,9 @@ end -- class EV_PIXMAP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/02/16 20:16:15  pichery
+--| - implemented set_size for EV_PIXMAP under windows.
+--|
 --| Revision 1.14  2000/02/14 11:40:53  oconnor
 --| merged changes from prerelease_20000214
 --|

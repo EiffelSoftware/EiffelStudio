@@ -39,7 +39,8 @@ inherit
 			fill_pie_slice,
 			interface,
 			initialize,
-			dc
+			dc,
+			set_size
 		end
 
 	WEL_DIB_COLORS_CONSTANTS
@@ -66,7 +67,7 @@ feature {NONE} -- Initialization
 			create bitmap_dc.make_by_dc (s_dc)
 			create bmp.make_compatible (s_dc, 1, 1)
 			bitmap_dc.select_bitmap (bmp)
-
+			s_dc.release
 			{EV_DRAWING_AREA_IMP} Precursor
 		end
 
@@ -108,6 +109,22 @@ feature -- Status setting
 			check
 				not_yet_implemented: False
 			end
+		end
+
+	set_size (w, h: INTEGER) is
+		local
+			bmp: WEL_BITMAP
+			s_dc: WEL_SCREEN_DC
+		do
+			bitmap_dc.unselect_bitmap
+
+			create s_dc
+			s_dc.get
+			create bitmap_dc.make_by_dc (s_dc)
+			create bmp.make_compatible (s_dc, w, h)
+			bitmap_dc.select_bitmap (bmp)
+			s_dc.release
+			Precursor (w, h)
 		end
 
 feature -- Measurement
@@ -389,6 +406,9 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/02/16 20:16:15  pichery
+--| - implemented set_size for EV_PIXMAP under windows.
+--|
 --| Revision 1.14  2000/02/16 18:08:52  pichery
 --| implemented the newly added features: redraw_rectangle, clear_and_redraw, clear_and_redraw_rectangle
 --|

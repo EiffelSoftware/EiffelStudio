@@ -119,23 +119,30 @@ feature -- Access
 			l_overload_params: LIST [PARAMETER_ENUMERATOR]
 		do
 			l_feature := internal_target_feature (target, location_name, file_name, use_overloading)
-			l_overloads_count := l_feature.overloads_count + 1
-			create l_descriptions.make (1, <<1>>, <<l_overloads_count>>)
-			create l_return_types.make (1, <<1>>, <<l_overloads_count>>)
-			create l_params.make (1, <<1>>, <<l_overloads_count>>)
-			l_descriptions.put (l_feature.description, <<1>>)
-			l_return_types.put (l_feature.return_type, <<1>>)
-			l_params.put (l_feature.parameters, <<1>>)
-			l_overload_descriptions := l_feature.overloads_descriptions
-			l_overload_return_types := l_feature.overloads_return_types
-			l_overload_params := l_feature.overloads_parameters
-			append_list_to_com_array (l_overload_return_types, l_return_types, 2)
-			append_list_to_com_array (l_overload_descriptions, l_descriptions, 2)
-			append_list_to_com_array (l_feature.overloads_parameters, l_params, 2)
-			feature_name.put (l_feature.name)
-			descriptions.set_string_array (l_descriptions)
-			return_types.set_string_array (l_return_types)
-			params.set_unknown_array (l_params)
+			if l_feature /= Void then
+				l_overloads_count := l_feature.overloads_count + 1
+				create l_descriptions.make (1, <<1>>, <<l_overloads_count>>)
+				create l_return_types.make (1, <<1>>, <<l_overloads_count>>)
+				create l_params.make (1, <<1>>, <<l_overloads_count>>)
+				l_descriptions.put (l_feature.description, <<1>>)
+				l_return_types.put (l_feature.return_type, <<1>>)
+				l_params.put (l_feature.parameters, <<1>>)
+				l_overload_descriptions := l_feature.overloads_descriptions
+				l_overload_return_types := l_feature.overloads_return_types
+				l_overload_params := l_feature.overloads_parameters
+				append_list_to_com_array (l_overload_return_types, l_return_types, 2)
+				append_list_to_com_array (l_overload_descriptions, l_descriptions, 2)
+				append_list_to_com_array (l_feature.overloads_parameters, l_params, 2)
+				feature_name.put (l_feature.name)
+				descriptions.set_string_array (l_descriptions)
+				return_types.set_string_array (l_return_types)
+				params.set_unknown_array (l_params)
+			else
+				feature_name.put ("")
+                descriptions.set_string_array (create {ECOM_ARRAY [STRING]}.make_empty)
+                return_types.set_string_array (create {ECOM_ARRAY [STRING]}.make_empty)
+                params.set_unknown_array (create {ECOM_ARRAY [ECOM_INTERFACE]}.make_empty)
+			end				
 		end
 
     target_features (target, location_name: STRING; location_type: INTEGER; file_name: STRING; use_overloading: BOOLEAN; return_names, return_signatures, return_image_indexes: ECOM_VARIANT) is

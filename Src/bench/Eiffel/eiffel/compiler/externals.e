@@ -1,21 +1,52 @@
 indexing
 	description: "[
-		C Externals names used by system. Useful for controling
-		introduction of a new external in system which trigger a freeze
-		operation.
+		List of all C external features in IL code generation.
+		For each class ID we have a SEARCH_TABLE [INTEGER] that
+		represents all external names ID in class ID.
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EXTERNALS 
+class
+	EXTERNALS 
 
 inherit
-	HASH_TABLE [EXTERNAL_INFO, INTEGER]
-		rename
-			make as extend_table_make
+	HASH_TABLE [SEARCH_TABLE [INTEGER], INTEGER]
+		export
+			{NONE} all
+			{EXTERNALS} search, found, found_item, put
+			{ANY} has, remove, count
 		end
-		
-	SHARED_NAMES_HEAP
+	
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
+
+	SHARED_DECLARATIONS
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
+
+	SHARED_BYTE_CONTEXT
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
+
+	SHARED_CODE_FILES
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
+	
+	SHARED_INCLUDE
 		export
 			{NONE} all
 		undefine
@@ -25,191 +56,239 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Insertion/Removal
 
-	make is
+	add_external (ext: EXTERNAL_I) is
+			-- Add `ext' in Current.
+		require
+			is_c_external: ext.is_c_external
+		local
+			l_s: SEARCH_TABLE [INTEGER]
 		do
-			extend_table_make (Chunk)
-			duplicate
+			l_s := item (ext.written_in)
+			if l_s = Void then
+				create l_s.make (1)
+				force (l_s, ext.written_in)
+			end
+			l_s.force (ext.feature_name_id)
 		end
 
-feature -- Access
-
-	duplication: like Current
-			-- Duplication of current array
-
-feature -- Status
-
-	equiv: BOOLEAN is
-			-- Check if current object is equivalent to
-			-- duplication
+	remove_external (ext: EXTERNAL_I) is
+			-- Remove `ext' in Current.
 		require
-			duplication_exists: duplication /= Void
+			is_c_external: ext.is_c_external
+			has_entry: has (ext.written_in)
+		local
+			l_s: SEARCH_TABLE [INTEGER]
+		do
+			l_s := item (ext.written_in)
+			if l_s /= Void then
+				l_s.remove (ext.feature_name_id)
+				if l_s.is_empty then
+					remove (ext.written_in)
+				end
+			end
+		end
+
+feature -- Freeze externals.
+
+	freeze is
+			-- Save current version for later comparison for `is_equivalent'.
+		local
+			l_other: like Current
 		do
 			from
-				Result := True
+				create l_other.make (count)
 				start
 			until
-				after or else not Result
+				after
 			loop
-				Result := duplication.has (key_for_iteration) or else
-						-- If name has been added and removed, no
-						-- refreezing is needed.
-					item_for_iteration.occurrence = 0
-				debug
-					if not Result then
-						io.error.putstring ("EXTERNALS.equiv: False on ")
-						io.error.putstring (Names_heap.item (key_for_iteration))
-						io.error.putstring (" duplication.has: ")
-						io.error.putbool (duplication.has (key_for_iteration))
-						io.error.putstring (" item_for_iteration.occurrence: ")
-						io.error.putint (item_for_iteration.occurrence)
-						io.error.new_line
+				l_other.put (clone (item_for_iteration), key_for_iteration)
+				forth
+			end
+			old_externals := l_other
+		ensure
+			is_equivalent: is_equivalent
+		end
+
+feature -- Comparison
+
+	is_equivalent: BOOLEAN is
+			-- Is `Current' equivalent to last saved version of Current? That is to say for each
+			-- class, external name set is identical to previous one.
+		local
+			l_list, l_other_list: SEARCH_TABLE [INTEGER]
+			l_other: like Current
+		do
+			l_other := old_externals
+			Result := l_other = Void
+			if not Result then
+				from
+					Result := True
+					start
+				until
+					after or not Result
+				loop
+					l_other.search (key_for_iteration)
+					if l_other.found then
+						l_list := item_for_iteration
+						l_other_list := l_other.found_item
+						check
+							l_list_not_void: l_list /= Void
+							l_other_list_not_void: l_other_list /= Void
+						end
+						if l_list.count = l_other_list.count then
+							from
+								l_list.start
+							until
+								l_list.after or not Result
+							loop
+								Result := l_other_list.has (l_list.item_for_iteration)
+								l_list.forth
+							end
+						else
+							Result := False
+						end
+					else
+						Result := False
 					end
+					forth
+				end
+			end
+		end
+
+	
+feature -- Code generation
+
+	generate_il is
+			-- Generate C encapsulation for all calls.
+		local
+			buffer, header_buffer: GENERATION_BUFFER
+			external_file, header_file: INDENT_FILE
+			final_mode: BOOLEAN
+			l_extension: STRING
+			l_class: CLASS_C
+			l_types: TYPE_LIST
+		do
+			from
+				is_cpp := False
+				final_mode := context.final_mode
+				buffer := context.generation_buffer
+				header_buffer := context.header_generation_buffer
+				buffer.set_is_il_generation (True)
+				header_buffer.set_is_il_generation (True)
+				context.set_buffer (buffer)
+				context.set_header_buffer (header_buffer)
+				extern_declarations.wipe_out
+				buffer.putstring ("#include %"eif_eiffel.h%"%N")
+				buffer.putstring ("#include %"lib" + System.name + ".h%"%N")
+				buffer.start_c_specific_code
+				header_buffer.putstring ("#include %"eif_eiffel.h%"%N")
+				header_buffer.start_c_specific_code
+				start
+			until
+				after
+			loop
+				l_class := System.class_of_id (key_for_iteration)
+				if l_class.has_types then
+					from
+						l_types := l_class.types
+						l_types.start
+					until
+						l_types.after
+					loop
+						generate_class_il (item_for_iteration, l_class, l_types.item, buffer)					
+						l_types.forth
+					end
+					buffer.new_line
 				end
 				forth
 			end
-		end
-	
-feature -- Basic operatios
+			buffer.end_c_specific_code
+			header_buffer.end_c_specific_code
 
-	duplicate is
-			-- Duplicate of Current object
-		do
-			duplication := clone (Current)
+			create header_file.make_open_write (
+				full_file_name ("lib" + System.name + ".h", final_mode))
+			if not Shared_include_queue.is_empty then
+				extern_declarations.generate_header_files (header_buffer)
+			end
+			header_file.put_string (header_buffer)
+			header_file.close
+
+			if is_cpp then
+				l_extension := ".cpp"
+			else
+				l_extension := ".c"
+			end
+			
+			create external_file.make_open_write (
+				full_file_name ("lib" + System.name + l_extension, final_mode))
+			external_file.put_string (buffer)
+			external_file.close
+			
+				-- Clean allocated data.
+			extern_declarations.wipe_out
+			buffer.clear_all
+			header_buffer.clear_all		
 		end
-	
-	add_occurrence (external_name_id: INTEGER) is
-			-- Add one occurrence of `external_name'.
-		require
-			good_argument: external_name_id > 0
+		
+feature {NONE} -- Implementation
+
+	generate_class_il (a_s: SEARCH_TABLE [INTEGER]; class_c: CLASS_C; class_type: CLASS_TYPE; buffer: GENERATION_BUFFER) is
+			-- Generate C il code
 		local
-			info: EXTERNAL_INFO
-		do
-			info := item (external_name_id)
-			if info = Void then
-				create info
-				put (info, external_name_id)
-			end
-			info.add_occurrence
-			debug
-				io.error.putstring ("After add_occurrence (")
-				io.error.putstring (Names_heap.item (external_name_id))
-				io.error.putstring (")%N")
-				trace
-			end
-		end
-
-	remove_occurrence (external_name_id: INTEGER) is
-			--Remove one occurrence of `external_name'.
-		require
-			good_argument: 	external_name_id > 0
-			has_occurrence:	has (external_name_id)
-			--good_occurrence: item (external_name).occurrence > 0
-		local
-			info: EXTERNAL_INFO
-		do
-			info := item (external_name_id)
-			if info.occurrence /= 0 then
-				info.remove_occurrence
-			end
-			debug
-				io.error.putstring ("After remove_occurrence (")
-				io.error.putstring (Names_heap.item (external_name_id))
-				io.error.putstring (")%N")
-				trace
-			end
-		end
-
-	freeze is
-			-- Freeze external table
-		local
-			available_keys: like current_keys
-			i, nb: INTEGER
-			external_name_id: INTEGER
-			info: EXTERNAL_INFO
-		do
-			debug
-				io.error.putstring ("Freezing externals%N")
-				trace
-			end
-			from
-				available_keys := current_keys
-				i := 1
-				nb := available_keys.count
-			until
-				i > nb
-			loop
-				external_name_id := available_keys.item (i)
-				info := item (external_name_id)
-				if info.occurrence <= 0 then
-					remove (external_name_id)
-				else
-					if info.is_valid then
-						info.reset_real_body_id
-					end
-				end
-				i := i + 1
-			end
-				-- Make a duplication
-			duplicate
-		end
-
-feature {NONE} -- Constants
-
-	Chunk: INTEGER is 50
-			-- Array chunk
-
-feature -- Merging
-
-	append (other: like Current) is
-			-- Add externals of `other' to `Current'.
-			-- Used for precompilation merging.
-		local
-			external_name_id: INTEGER
+			ext: EXTERNAL_I
+			feat_tbl: FEATURE_TABLE
 		do
 			from
-				other.start
+				feat_tbl := class_c.feature_table
+				context.init (class_type)
+				a_s.start
 			until
-				other.after
+				a_s.after
 			loop
-				external_name_id := other.key_for_iteration
-				if has (external_name_id) then
-					add_occurrence (external_name_id)
-				else
-					put (other.item_for_iteration, external_name_id)
-				end
-				other.forth
+				ext ?= feat_tbl.item_id (a_s.item_for_iteration)
+				is_cpp := is_cpp or else ext.extension.is_cpp
+				ext.generate (class_type, buffer)
+				a_s.forth
 			end
-			duplicate
 		end
 
-feature -- Debug
+feature {NONE} -- Path
 
-	trace is
+	full_file_name (base_file_name: STRING; final: BOOLEAN): STRING is
+			-- Generated file name prefix
 		local
-			available_keys: like current_keys
-			i, nb: INTEGER
-			external_name_id: INTEGER
-			info: EXTERNAL_INFO
+			f_name: FILE_NAME
+			dir_name: DIRECTORY_NAME
+			finished_file: PLAIN_TEXT_FILE
+			finished_file_name: FILE_NAME
 		do
-			from
-				io.error.putstring ("************** Externals ***************%N")
-				available_keys := current_keys
-				i := 1
-				nb := available_keys.count
-			until
-				i > nb
-			loop
-				external_name_id := available_keys.item (i)
-				info := item (external_name_id)
-				io.error.putstring ("Function name: ")
-				io.error.putstring (Names_heap.item (external_name_id))
-				io.error.new_line
-				io.error.putint (info.occurrence)
-				io.error.new_line
-				i := i + 1
+			if final then
+				Result := final_generation_path
+			else
+				Result := workbench_generation_path
+			end
+
+			create dir_name.make_from_string (Result)
+			create f_name.make_from_string (dir_name)
+			f_name.set_file_name (base_file_name)
+			Result := f_name
+
+			create finished_file_name.make_from_string (dir_name)
+			finished_file_name.set_file_name (Finished_file_for_make)
+			create finished_file.make (finished_file_name)
+			if finished_file.exists and then finished_file.is_writable then
+				finished_file.delete	
 			end
 		end
+		
+	is_cpp: BOOLEAN
+			-- Does current has some C++ externals?
+
+feature {NONE} -- Previous version
+
+	old_externals: like Current
+			-- Old version of Current.
 
 end -- class EXTERNALS

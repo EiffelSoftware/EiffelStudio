@@ -604,7 +604,7 @@ feature {EDITOR_CURSOR} -- Handle text modifications
 			update_vertical_scrollbar
 		end
 
-feature {EB_COMMAND, EB_SEARCH_PERFORMER} -- Edition Operations on text
+feature {EB_COMMAND, EB_SEARCH_PERFORMER, EB_DEVELOPMENT_WINDOW} -- Edition Operations on text
 
 	cut_selection is
 			-- Copy current selection to clipboard and remove it.

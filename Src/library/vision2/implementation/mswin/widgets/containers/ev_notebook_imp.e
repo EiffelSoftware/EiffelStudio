@@ -791,6 +791,8 @@ feature {NONE} -- Implementation
 			v_imp.wel_set_parent (Current)
 			v_imp.set_top_level_window_imp (top_level_window_imp)
 			notify_change (Nc_minsize, v_imp)
+				-- Call `new_item_actions' on `Current'.
+			new_item_actions.call ([v])
 		end
 
 	remove_i_th (i: INTEGER) is
@@ -931,6 +933,9 @@ end -- EV_NOTEBOOK_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.61  2001/07/02 21:02:36  rogers
+--| `insert_i_th' now calls the `new_item_actions'.
+--|
 --| Revision 1.60  2001/07/02 18:14:36  rogers
 --| Correct fix for last commit. Removed `correctr_child_sensitivity' as the
 --| `remove_item_actions' already call a feature which does this. The problem

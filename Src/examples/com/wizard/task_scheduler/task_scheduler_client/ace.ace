@@ -1,0 +1,16 @@
+system
+	task_scheduler
+
+root
+	TASK_SCHEDULER: "make"
+
+default
+	assertion (all)
+	precompiled ("..\generated\clent")
+	
+cluster
+	
+	root_cluster: ".";
+
+
+end

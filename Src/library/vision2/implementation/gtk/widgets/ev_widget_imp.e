@@ -15,8 +15,6 @@ inherit
 
 	EV_PND_SOURCE_IMP
 
-	EV_PND_TARGET_IMP
-
         EV_GTK_EXTERNALS
 	EV_GTK_TYPES_EXTERNALS
 	EV_GTK_WIDGETS_EXTERNALS
@@ -99,6 +97,13 @@ feature -- Access
 			-- Parent container of this widget. The same than
 			-- parent but with a different type.
 	
+	resize_type: INTEGER
+			-- How the widget resize itself in the cell
+			-- 0 : no resizing, the widget move
+			-- 1 : only the width changes
+			-- 2 : only the height changes
+			-- 3 : both width and height change
+
 feature -- Status report
 
 	destroyed: BOOLEAN is
@@ -123,6 +128,20 @@ feature -- Status report
 			-- Is current widget visible on the screen?
                 do
                         Result := c_gtk_widget_displayed (widget)
+		end
+
+	horizontal_resizable: BOOLEAN is
+			-- Does the widget change its width when the parent
+			-- want to resize the widget
+		do
+			Result := (resize_type = 1) or (resize_type = 3)	
+		end
+
+	vertical_resizable: BOOLEAN is
+			-- Does the widget change its width when the parent
+			-- want to resize the widget
+		do
+			Result := (resize_type = 2) or (resize_type = 3)	
 		end
 
 feature -- Status setting
@@ -161,6 +180,22 @@ feature -- Status setting
 		do
 				-- to be tested
 			gtk_widget_grab_focus (widget)
+		end
+
+	set_capture is
+			-- Grab all the mouse and keyboard events.
+		do
+			check
+				To_be_implemented: False
+			end
+		end
+
+	release_capture is
+			-- Ungrab all the mouse and keyboard events.
+		do
+			check
+				To_be_implemented: False
+			end
 		end
 
 	set_insensitive (flag: BOOLEAN) is

@@ -197,6 +197,8 @@ feature -- C code generation
 			l_buf.put_new_line
 			l_buf.put_string ("EIF_EXIT_C;")
 			l_buf.put_new_line
+			l_buf.put_string ("RTGC;")
+			l_buf.put_new_line
 			l_buf.put_string ("eif_thr_mutex_unlock (")
 			l_buf.put_string (l_mutex_name)
 			l_buf.put_string (");")
@@ -259,6 +261,8 @@ feature {NONE} -- Implementation
 			buf.put_string (");")
 			buf.put_new_line
 			buf.put_string ("EIF_EXIT_C;")
+			buf.put_new_line
+			buf.put_string ("RTGC;")
 			buf.put_new_line
 				-- Double-Checked Locking on `done' is safe, because
 				-- `done' is marked volatile.

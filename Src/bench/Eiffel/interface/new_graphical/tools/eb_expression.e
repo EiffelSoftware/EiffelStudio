@@ -307,7 +307,6 @@ feature -- Status report
 			i: INTEGER
 			prev_class: CLASS_C
 			prev_cluster: CLUSTER_I
-			r: BOOLEAN
 		do
 			check
 				not is_equality_test and not is_non_equality_test

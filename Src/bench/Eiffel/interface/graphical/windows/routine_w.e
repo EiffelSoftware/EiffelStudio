@@ -115,48 +115,45 @@ feature -- Stone updating
 
 	process_class (a_stone: CLASSC_STONE) is
 		local
-			--c: E_CLASS;
-			--ris: ROUT_ID_SET;
-			--i: INTEGER;
-			--rout_id: INTEGER;
-			--fi: E_FEATURE;
-			--fs: FEATURE_STONE;
-			--temp: STRING
+			c: E_CLASS;
+			ris: ROUT_ID_SET;
+			i: INTEGER;
+			rout_id: ROUTINE_ID;
+			fi: E_FEATURE;
+			fs: FEATURE_STONE;
+			temp: STRING
 		do
-			--ris := stone.e_feature.rout_id_set;
-			--c := a_stone.e_class;
-			--from
-				--i := 1
-			--until
-				--i > ris.count
-			--loop
-				--rout_id := ris.item (i);
-				--if rout_id < 0 then
-					--rout_id := - rout_id
-				--end;
-				--fi := c.feature_with_rout_id (rout_id);
-				--if (fi /= Void) then
-					--i := ris.count
-				--end
-				--i := i + 1
-			--end
-			--if (fi /= Void) then
-				--!! fs.make (fi, a_stone.e_class);
-				--process_feature (fs);
-			--else
-				--temp := a_stone.e_class.name_in_upper;
-				--temp.prepend ("No version of current feature for class ");
-				--error_window.clear_window;
-				--error_window.put_string ("No version of feature ")
-				--stone.e_feature.append_name
-							--(error_window,
-							--stone.e_feature.written_class);
-				--error_window.put_string ("%N   for class ");
-				--a_stone.e_class.append_name (error_window);
-				--error_window.new_line;
-				--error_window.display;
-				--project_tool.raise;
-			--end;
+			ris := stone.e_feature.rout_id_set;
+			c := a_stone.e_class;
+			from
+				i := 1
+			until
+				i > ris.count
+			loop
+				rout_id := ris.item (i);
+				fi := c.feature_with_rout_id (rout_id);
+				if (fi /= Void) then
+					i := ris.count
+				end
+				i := i + 1
+			end
+			if (fi /= Void) then
+				!! fs.make (fi, a_stone.e_class);
+				process_feature (fs);
+			else
+				temp := a_stone.e_class.name_in_upper;
+				temp.prepend ("No version of current feature for class ");
+				error_window.clear_window;
+				error_window.put_string ("No version of feature ")
+				stone.e_feature.append_name
+							(error_window,
+							stone.e_feature.written_class);
+				error_window.put_string ("%N   for class ");
+				a_stone.e_class.append_name (error_window);
+				error_window.new_line;
+				error_window.display;
+				project_tool.raise;
+			end;
 		end;
 	
 feature -- Graphical Interface
@@ -200,7 +197,7 @@ feature -- Graphical Interface
 				build_format_bar;
 				!! command_bar.make (new_name, global_form);
 				build_command_bar;
-				text_window.set_last_format (default_format);
+				text_window.set_last_format_2 (default_format);
 			attach_all	
 		end
 
@@ -351,17 +348,21 @@ feature {NONE} -- Implementation; Graphical Interface
 			future_cmd: SHOW_FUTURE;
 			future_button: EB_BUTTON;
 			stop_cmd: SHOW_BREAKPOINTS;
-			stop_button: EB_BUTTON
+			stop_button: EB_BUTTON;
+			text_cmd: SHOW_TEXT;
+			text_button: EB_BUTTON
 		do
-			!! showtext_command.make (format_bar, text_window);
-			format_bar.attach_top (showtext_command, 0);
-			format_bar.attach_left (showtext_command, 0);
+			!! text_cmd.make (text_window);
+			!! text_button.make (text_cmd, format_bar);
+			!! showtext_frmt_holder.make (text_cmd, text_button);
+			format_bar.attach_top (text_button, 0);
+			format_bar.attach_left (text_button, 0);
 
 			!! rout_flat_cmd.make (text_window);
 			!! rout_flat_button.make (rout_flat_cmd, format_bar);
 			!! showflat_frmt_holder.make (rout_flat_cmd, rout_flat_button);
 			format_bar.attach_top (rout_flat_button, 0);
-			format_bar.attach_left_widget (showtext_command, rout_flat_button, 0);
+			format_bar.attach_left_widget (text_button, rout_flat_button, 0);
 
 			!! rout_cli_cmd.make (text_window);
 			!! rout_cli_button.make (rout_cli_cmd, format_bar);

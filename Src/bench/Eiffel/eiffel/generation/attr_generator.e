@@ -19,7 +19,7 @@ feature -- Initialzation
 				-- Let's finish C code generation of current block.
 			current_buffer.end_c_specific_code
 
-			file.put_string ("#include %"eif_macros.h%"%N%N")
+			file.put_string ("#include %"eif_eiffel.h%"%N%N")
 		end
 
 end

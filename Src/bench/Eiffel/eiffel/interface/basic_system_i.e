@@ -33,10 +33,10 @@ feature -- Access
 	integer_32_class, integer_64_class: CLASS_I
 			-- Class INTEGER 8, 16, 32 and 64 btis
 
-	real_class: CLASS_I
+	real_32_class: CLASS_I
 			-- Class REAL
 
-	double_class: CLASS_I
+	real_64_class: CLASS_I
 			-- Class DOUBLE
 
 	pointer_class: CLASS_I
@@ -90,10 +90,10 @@ feature -- Access: XX_REF classes
 	integer_32_ref_class, integer_64_ref_class: CLASS_I
 			-- Class INTEGER_REF 8, 16, 32 and 64 bits
 
-	real_ref_class: CLASS_I
+	real_32_ref_class: CLASS_I
 			-- Class REAL_REF
 
-	double_ref_class: CLASS_I
+	real_64_ref_class: CLASS_I
 			-- Class DOUBLE_REF
 
 	pointer_ref_class: CLASS_I
@@ -246,24 +246,24 @@ feature -- Status report
 			valid_result: Result > 0
 		end
 
-	double_ref_type_id: INTEGER is
+	real_64_ref_type_id: INTEGER is
 			-- Dynamic type_id of class DOUBLE_REF
 		require
-			double_ref_class_exists: double_ref_class /= Void
-			compiled: double_ref_class.is_compiled
+			real_64_ref_class_exists: real_64_ref_class /= Void
+			compiled: real_64_ref_class.is_compiled
 		do
-			Result := double_ref_class.compiled_class.types.first.type_id
+			Result := real_64_ref_class.compiled_class.types.first.type_id
 		ensure
 			valid_result: Result > 0
 		end
 
-	real_ref_type_id: INTEGER is
+	real_32_ref_type_id: INTEGER is
 			-- Dynamic type_id of class REAL_REF
 		require
-			real_ref_class_exists: real_ref_class /= Void
-			compiled: real_ref_class.is_compiled
+			real_32_ref_class_exists: real_32_ref_class /= Void
+			compiled: real_32_ref_class.is_compiled
 		do
-			Result := real_ref_class.compiled_class.types.first.type_id
+			Result := real_32_ref_class.compiled_class.types.first.type_id
 		ensure
 			valid_result: Result > 0
 		end
@@ -408,24 +408,24 @@ feature -- Settings
 			integer_64_class_set: n = 64 implies integer_64_class = c
 		end
 
-	set_real_class (c: CLASS_I) is
-			-- Assign `c' to `real_class'.
+	set_real_32_class (c: CLASS_I) is
+			-- Assign `c' to `real_32_class'.
 		require
 			c_not_void: c /= Void
 		do
-			real_class := c
+			real_32_class := c
 		ensure
-			real_class_set: real_class = c
+			real_32_class_set: real_32_class = c
 		end
 
-	set_double_class (c: CLASS_I) is
-			-- Assign `c' to `double_class'.
+	set_real_64_class (c: CLASS_I) is
+			-- Assign `c' to `real_64_class'.
 		require
 			c_not_void: c /= Void
 		do
-			double_class := c
+			real_64_class := c
 		ensure
-			double_class_set: double_class = c
+			real_64_class_set: real_64_class = c
 		end
 
 	set_pointer_class (c: CLASS_I) is
@@ -613,24 +613,24 @@ feature -- Settings: XX_REF classes
 			integer_64_ref_class_set: n = 64 implies integer_64_ref_class = c
 		end
 
-	set_real_ref_class (c: CLASS_I) is
-			-- Assign `c' to `real_ref_class'.
+	set_real_32_ref_class (c: CLASS_I) is
+			-- Assign `c' to `real_32_ref_class'.
 		require
 			c_not_void: c /= Void
 		do
-			real_ref_class := c
+			real_32_ref_class := c
 		ensure
-			real_ref_class_set: real_ref_class = c
+			real_32_ref_class_set: real_32_ref_class = c
 		end
 
-	set_double_ref_class (c: CLASS_I) is
-			-- Assign `c' to `double_ref_class'.
+	set_real_64_ref_class (c: CLASS_I) is
+			-- Assign `c' to `real_64_ref_class'.
 		require
 			c_not_void: c /= Void
 		do
-			double_ref_class := c
+			real_64_ref_class := c
 		ensure
-			double_ref_class_set: double_ref_class = c
+			real_64_ref_class_set: real_64_ref_class = c
 		end
 
 	set_pointer_ref_class (c: CLASS_I) is

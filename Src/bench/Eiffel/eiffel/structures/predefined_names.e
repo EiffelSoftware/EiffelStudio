@@ -35,8 +35,8 @@ feature -- Constants
 	eif_wide_char_name_id: INTEGER is 25
 	eif_boolean_name_id: INTEGER is 26
 	eif_pointer_name_id: INTEGER is 27
-	eif_real_name_id: INTEGER is 28
-	eif_double_name_id: INTEGER is 29
+	eif_real_32_name_id: INTEGER is 28
+	eif_real_64_name_id: INTEGER is 29
 	eif_plug_header_name_id: INTEGER is 30
 	eif_misc_header_name_id: INTEGER is 31
 	eif_out_header_name_id: INTEGER is 32
@@ -133,6 +133,7 @@ feature -- Constants
 	get_hash_code_name_id: INTEGER is 123
 	equals_name_id: INTEGER is 124
 	three_way_comparison_name_id: INTEGER is 125
+	ctype_header_name_id: INTEGER is 126
 			-- Predefined name IDs constants
 
 end -- class PREDEFINED_NAMES

@@ -1,6 +1,6 @@
 -- Internal representation of class DOUBLE
 
-class DOUBLE_B 
+class REAL_64_B 
 
 inherit
 	CLASS_B
@@ -13,10 +13,10 @@ create
 	
 feature 
 
-	actual_type: DOUBLE_A is
+	actual_type: REAL_64_A is
 			-- Actual double type
 		once
-			Result := Double_type
+			Result := Real_64_type
 		end;
 
 end

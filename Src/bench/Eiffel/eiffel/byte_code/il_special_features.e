@@ -55,8 +55,8 @@ feature -- Access
 				inspect 
 					type_of (target_type)
 				when
-					boolean_type, character_type, integer_type, real_type,
-					double_type, pointer_type
+					boolean_type, character_type, integer_type, real_32_type,
+					real_64_type, pointer_type
 				then
 					Result := basic_type_table.has (feat.feature_name_id)
 					function_type := basic_type_table.found_item
@@ -110,7 +110,7 @@ feature -- IL code generation
 			type_not_void: type /= Void
 		local
 			f_type: INTEGER
-			long: LONG_I
+			long: INTEGER_I
 		do
 			f_type := function_type
 			inspect f_type
@@ -167,9 +167,9 @@ feature -- IL code generation
 				inspect type_of (type)
 				when integer_type then
 					il_generator.put_integer_constant (type, 1)
-				when double_type then
+				when real_64_type then
 					il_generator.put_double_constant (1.0)
-				when Real_type then
+				when real_32_type then
 					il_generator.put_double_constant (1.0)
 					il_generator.convert_to_real
 				end
@@ -216,10 +216,10 @@ feature -- IL code generation
 				parameters.generate_il
 				il_generator.generate_binary_operator (il_plus)
 				
-			when to_real_type then
+			when to_real_32_type then
 				il_generator.convert_to_real
 
-			when to_double_type then
+			when to_real_64_type then
 				il_generator.convert_to_double
 			
 			when out_type then
@@ -287,9 +287,9 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
  			Result.put (max_type, max_name_id)
  			Result.put (min_type, min_name_id)
  			Result.put (offset_type, infix_plus_name_id)
- 			Result.put (to_real_type, truncated_to_real_name_id)
- 			Result.put (to_real_type, to_real_name_id)
- 			Result.put (to_double_type, to_double_name_id)
+ 			Result.put (to_real_32_type, truncated_to_real_name_id)
+ 			Result.put (to_real_32_type, to_real_name_id)
+ 			Result.put (to_real_64_type, to_double_name_id)
  			Result.put (out_type, out_name_id)
  			Result.put (hash_code_type, hash_code_name_id)
  			Result.put (hash_code_type, code_name_id)
@@ -342,12 +342,12 @@ feature -- Fast access to feature name
 	to_integer_16_type: INTEGER is 25
 	to_integer_64_type: INTEGER is 26
 	is_equal_type: INTEGER is 27
-	to_real_type: INTEGER is 28
+	to_real_32_type: INTEGER is 28
 	to_character_type: INTEGER is 29
 	From_integer_to_enum_type: INTEGER is 30
 	From_enum_to_integer_type: INTEGER is 31
 	is_digit_type: INTEGER is 32
-	to_double_type: INTEGER is 33
+	to_real_64_type: INTEGER is 33
 	three_way_comparison_type: INTEGER is 34
 	max_type_id: INTEGER is 34
 
@@ -493,8 +493,8 @@ feature {NONE} -- Type information
 	character_type: INTEGER is 2
 	integer_type: INTEGER is 3
 	pointer_type: INTEGER is 4
-	real_type: INTEGER is 5
-	double_type: INTEGER is 6
+	real_32_type: INTEGER is 5
+	real_64_type: INTEGER is 6
 	any_type: INTEGER is 7
 	unknown_type: INTEGER is 8
 			-- Constant defining type
@@ -510,27 +510,17 @@ feature {NONE} -- Type information
 		do
 			inspect
 				t.hash_code
-			when Character_code, Wide_char_code then
-				Result := character_type
-
-			when Boolean_code then
-				Result := boolean_type
-
+			when Character_code, Wide_char_code then Result := character_type
+			when Boolean_code then Result := boolean_type
 			when
 				Integer8_code, Integer16_code,
 				Integer32_code, Integer64_code
 			then
 				Result := integer_type
 			
-			when Real_code then
-				Result := real_type
-
-			when Double_code then
-				Result := double_type
-
-			when Pointer_code then
-				Result := pointer_type
-
+			when Real_32_code then	Result := real_32_type
+			when Real_64_code then Result := real_64_type
+			when Pointer_code then Result := pointer_type
 			else
 				if t.base_class.is_class_any then
 					Result := any_type
@@ -541,7 +531,7 @@ feature {NONE} -- Type information
 		ensure
 			valid_type: Result = boolean_type or else Result = character_type or else
 						Result = integer_type or else Result = pointer_type or else
-						Result = real_type or else Result = double_type or else 
+						Result = real_32_type or else Result = real_64_type or else 
 						Result = any_type or else Result = unknown_type
 		end
 

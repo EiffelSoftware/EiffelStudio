@@ -1,6 +1,6 @@
 -- Internal representation of class REAL
 
-class REAL_B 
+class REAL_32_B 
 
 inherit
 
@@ -15,10 +15,10 @@ create
 	
 feature 
 
-	actual_type: REAL_A is
+	actual_type: REAL_32_A is
 			-- actual real type
 		once
-			Result := Real_type
+			Result := Real_32_type
 		end;
 
 end

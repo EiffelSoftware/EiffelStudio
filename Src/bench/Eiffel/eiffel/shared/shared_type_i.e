@@ -31,37 +31,37 @@ feature -- Access
 			create Result
 		end
 
-	int8_c_type: LONG_I is
+	int8_c_type: INTEGER_I is
 			-- int8 C type
 		once
 			create Result.make (8)
 		end
 
-	int16_c_type: LONG_I is
+	int16_c_type: INTEGER_I is
 			-- int16 C type
 		once
 			create Result.make (16)
 		end
 
-	int32_c_type, long_c_type: LONG_I is
-			-- long C type
+	int32_c_type: INTEGER_I is
+			-- int32 C type
 		once
 			create Result.make (32)
 		end
 
-	int64_c_type: LONG_I is
+	int64_c_type: INTEGER_I is
 			-- int64 C type
 		once
 			create Result.make (64)
 		end
 
-	Float_c_type: FLOAT_I is
+	real32_c_type: REAL_32_I is
 			-- Float C type
 		once
 			create Result
 		end
 
-	Double_c_type: DOUBLE_I is
+	real64_c_type: REAL_64_I is
 			-- Double C type
 		once
 			create Result

@@ -17,13 +17,13 @@ feature {NONE}
 	Integer_level: INTEGER is 7
 	Integer_32_level: INTEGER is 7
 		
-	Real_level: INTEGER is 8
+	Real_32_level: INTEGER is 8
 
 	Pointer_level: INTEGER is 9
 
 	Integer_64_level: INTEGER is 10
 
-	Double_level: INTEGER is 11
+	Real_64_level: INTEGER is 11
 
 	Bits_level: INTEGER is 12
 

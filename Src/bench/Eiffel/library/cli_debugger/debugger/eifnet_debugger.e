@@ -826,13 +826,13 @@ feature -- Specific function evaluation
 	reference_real_icd_class: ICOR_DEBUG_CLASS is
 			-- ICorDebugClass for `reference REAL'
 		do
-			Result := icor_debug_class (float_c_type.associated_reference_class_type)
+			Result := icor_debug_class (real32_c_type.associated_reference_class_type)
 		end	
 
 	reference_real_set_item_method: ICOR_DEBUG_FUNCTION is
 			-- ICorDebugFunction for `reference REAL'.set_item
 		do
-			Result := icd_function_by_name (float_c_type.associated_reference_class_type, "set_item")
+			Result := icd_function_by_name (real32_c_type.associated_reference_class_type, "set_item")
 		ensure
 			Result /= Void
 		end		
@@ -840,13 +840,13 @@ feature -- Specific function evaluation
 	reference_double_icd_class: ICOR_DEBUG_CLASS is
 			-- ICorDebugClass for `reference DOUBLE'
 		do
-			Result := icor_debug_class (double_c_type.associated_reference_class_type)
+			Result := icor_debug_class (real64_c_type.associated_reference_class_type)
 		end
 		
 	reference_double_set_item_method: ICOR_DEBUG_FUNCTION is
 			-- ICorDebugFunction for `reference DOUBLE'.set_item
 		do
-			Result := icd_function_by_name (double_c_type.associated_reference_class_type, "set_item")
+			Result := icd_function_by_name (real64_c_type.associated_reference_class_type, "set_item")
 		ensure
 			Result /= Void
 		end

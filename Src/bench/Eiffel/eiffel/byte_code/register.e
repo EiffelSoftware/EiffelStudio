@@ -78,14 +78,14 @@ feature
 				Result.append ("ti64_");
 			when C_ref then
 				Result.append ("tp");
-			when C_float then
-				Result.append ("tf");
+			when C_real32 then
+				Result.append ("tr32_");
 			when C_char then
 				Result.append ("tc");
 			when C_wide_char then
 				Result.append ("twc");
-			when C_double then
-				Result.append ("td");
+			when C_real64 then
+				Result.append ("tr64_");
 			when C_pointer then
 				Result.append ("ta");
 			end;

@@ -601,8 +601,8 @@ feature {COMPILER_EXPORTER} -- Implementation
 			l_actions.put (agent system.set_integer_class (?, 16), "INTEGER_16")
 			l_actions.put (agent system.set_integer_class (?, 32), "INTEGER")
 			l_actions.put (agent system.set_integer_class (?, 64), "INTEGER_64")
-			l_actions.put (agent system.set_real_class, "REAL")
-			l_actions.put (agent system.set_double_class, "DOUBLE")
+			l_actions.put (agent system.set_real_32_class, "REAL")
+			l_actions.put (agent system.set_real_64_class, "DOUBLE")
 			l_actions.put (agent system.set_pointer_class, "POINTER")
 			l_actions.put (agent system.set_typed_pointer_class, "TYPED_POINTER")
 			l_actions.put (agent system.set_string_class, "STRING")
@@ -622,8 +622,8 @@ feature {COMPILER_EXPORTER} -- Implementation
 			l_actions.put (agent system.set_integer_ref_class (?, 16), "INTEGER_16_REF")   
 			l_actions.put (agent system.set_integer_ref_class (?, 32), "INTEGER_REF")   
 			l_actions.put (agent system.set_integer_ref_class (?, 64), "INTEGER_64_REF")   
-			l_actions.put (agent system.set_real_ref_class, "REAL_REF")   
-			l_actions.put (agent system.set_double_ref_class, "DOUBLE_REF")   
+			l_actions.put (agent system.set_real_32_ref_class, "REAL_REF")   
+			l_actions.put (agent system.set_real_64_ref_class, "DOUBLE_REF")   
 			l_actions.put (agent system.set_pointer_ref_class, "POINTER_REF") 
 
 			if not system.il_generation then

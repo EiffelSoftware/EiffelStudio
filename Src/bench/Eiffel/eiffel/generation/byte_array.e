@@ -10,7 +10,7 @@ inherit
 		rename
 			make as basic_make
 		end
-	SHARED_SIZE
+	PLATFORM
 		export
 			{NONE} all
 		end
@@ -162,11 +162,11 @@ feature -- Element change
 		local
 			new_position: INTEGER
 		do
-			new_position := position + Int8_size
+			new_position := position + integer_8_bytes
 			if new_position >= count then
 				resize (count + Chunk)
 			end
-			($area + position).memory_copy ($i, Int8_size)
+			($area + position).memory_copy ($i, integer_8_bytes)
 			position := new_position
 		end
 
@@ -175,11 +175,11 @@ feature -- Element change
 		local
 			new_position: INTEGER
 		do
-			new_position := position + Int16_size
+			new_position := position + integer_16_bytes
 			if new_position >= count then
 				resize (count + Chunk)
 			end
-			($area + position).memory_copy ($i, Int16_size)
+			($area + position).memory_copy ($i, integer_16_bytes)
 			position := new_position
 		end
 
@@ -209,11 +209,11 @@ feature -- Element change
 		local
 			new_position: INTEGER
 		do
-			new_position := position + Int32_size
+			new_position := position + integer_32_bytes
 			if new_position >= count then
 				resize (count + Chunk)
 			end
-			($area + position).memory_copy ($i, Int32_size)
+			($area + position).memory_copy ($i, integer_32_bytes)
 			position := new_position
 		end
 
@@ -222,11 +222,11 @@ feature -- Element change
 		local
 			new_position: INTEGER
 		do
-			new_position := position + Int64_size
+			new_position := position + integer_64_bytes
 			if new_position >= count then
 				resize (count + Chunk)
 			end
-			($area + position).memory_copy ($i, Int64_size)
+			($area + position).memory_copy ($i, integer_64_bytes)
 			position := new_position
 		end
 
@@ -235,11 +235,11 @@ feature -- Element change
 		local
 			new_position: INTEGER
 		do
-			new_position := position + Double_size
+			new_position := position + real_64_bytes
 			if new_position >= count then
 				resize (count + Chunk)
 			end
-			($area + position).memory_copy ($d, Double_size)
+			($area + position).memory_copy ($d, real_64_bytes)
 			position := new_position
 		end
 
@@ -276,7 +276,7 @@ feature -- Element change
 
 				-- Resize if necessary
 			nb_uint32 := ca_bsize(bcount)
-			new_position := position + nb_uint32 * Uint32_size
+			new_position := position + nb_uint32 * natural_32_bytes
 			if new_position >= count then
 				resize ((new_position \\ Chunk + 1) * Chunk)
 			end
@@ -316,23 +316,21 @@ feature -- Element change
 			inspect
 				t.c_type.level
 			when C_char then
-				new_position := position + Char_size
+				new_position := position + character_bytes
 			when C_int8 then
-				new_position := position + Int8_size
+				new_position := position + integer_8_bytes
 			when C_int16, C_wide_char then
-				new_position := position + Int16_size
+				new_position := position + integer_16_bytes
 			when C_int32 then
-				new_position := position + Int32_size
+				new_position := position + integer_32_bytes
 			when C_int64 then
-				new_position := position + Int64_size
-			when C_float then
-				new_position := position + Float_size
-			when C_double then
-				new_position := position + Double_size
-			when C_pointer then
-				new_position := position + Pointer_size
-			when C_ref then
-				new_position := position + Reference_size
+				new_position := position + integer_64_bytes
+			when C_real32 then
+				new_position := position + real_32_bytes
+			when C_real64 then
+				new_position := position + real_64_bytes
+			when C_pointer, C_ref then
+				new_position := position + pointer_bytes
 			else
 					-- Void type
 				new_position := position
@@ -363,7 +361,7 @@ feature -- Forward and backward jump managment
 			pos := position
 			position := forward_marks.item
 			forward_marks.remove
-			append_integer (pos - position - Int32_size)
+			append_integer (pos - position - integer_32_bytes)
 			position := pos
 		end
 
@@ -385,7 +383,7 @@ feature -- Forward and backward jump managment
 			pos := position
 			position := forward_marks2.item
 			forward_marks2.remove
-			append_integer (pos - position - Int32_size)
+			append_integer (pos - position - integer_32_bytes)
 			position := pos
 		end
 
@@ -407,7 +405,7 @@ feature -- Forward and backward jump managment
 			pos := position
 			position := forward_marks3.item
 			forward_marks3.remove
-			append_integer (pos - position - Int32_size)
+			append_integer (pos - position - integer_32_bytes)
 			position := pos
 		end
 
@@ -429,7 +427,7 @@ feature -- Forward and backward jump managment
 			pos := position
 			position := forward_marks4.item
 			forward_marks4.remove
-			append_integer (pos - position - Int32_size)
+			append_integer (pos - position - integer_32_bytes)
 			position := pos
 		end
 
@@ -445,7 +443,7 @@ feature -- Forward and backward jump managment
 	write_backward is
 			-- Write a backward jump
 		do
-			append_integer (- position - Int32_size + backward_marks.item)
+			append_integer (- position - integer_32_bytes + backward_marks.item)
 			backward_marks.remove
 		end
 
@@ -461,7 +459,7 @@ feature -- Forward and backward jump managment
 	write_retry is
 			-- Write a retry offset
 		do
-			append_integer (- position - Int32_size + retry_position)
+			append_integer (- position - integer_32_bytes + retry_position)
 		end
 
 	prepend (other: BYTE_ARRAY) is
@@ -520,12 +518,12 @@ feature {BYTE_ARRAY} -- Access
 
 feature {NONE} -- Externals
 
-	Uint32_size: INTEGER is
+	natural_32_bytes: INTEGER is
 			-- Size of uint32 type
 		external
 			"C [macro %"eif_eiffel.h%"]"
 		alias
-			"sizeof(uint32)"
+			"sizeof(EIF_NATURAL_32)"
 		end
 
 	ca_bsize (bit_count: INTEGER): INTEGER is
@@ -545,6 +543,6 @@ feature {NONE} -- Externals
 invariant
 	position_greater_than_zero: position >= 0
 	position_less_than_size: position < count
-	integer_32_valid: Int32_size = Uint32_size
+	integer_32_valid: integer_32_bytes = natural_32_bytes
 
 end

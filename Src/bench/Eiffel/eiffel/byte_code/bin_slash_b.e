@@ -50,7 +50,7 @@ feature -- C code generation
 			-- Print expression value
 		do
 			if left.type.is_long and then right.type.is_long then
-				buffer.put_string (" ((EIF_DOUBLE)");
+				buffer.put_string (" ((EIF_REAL_64)");
 				left.print_register;
 				generate_operator;
 				right.print_register;

@@ -141,7 +141,7 @@ feature
 		end;
 	
 	putreal (r: REAL) is
-			-- Writes float `r'.
+			-- Writes real `r'.
 		do
 			emit_tabs;
 			file_putreal (r);

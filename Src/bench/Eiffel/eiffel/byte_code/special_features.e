@@ -85,10 +85,10 @@ feature -- Byte code special generation
 			when to_integer_64_type then
 				ba.append (Bc_cast_long)
 				ba.append_integer (64)
-			when to_double_type then
-				ba.append (Bc_cast_double)
-			when to_real_type then
-				ba.append (Bc_cast_float)
+			when to_real_64_type then
+				ba.append (Bc_cast_real64)
+			when to_real_32_type then
+				ba.append (Bc_cast_real32)
 			when max_type then
 				ba.append (Bc_basic_operations)
 				ba.append (Bc_max)
@@ -161,11 +161,11 @@ feature -- C special code generation
 			when to_integer_64_type then
 				buffer.put_string ("(EIF_INTEGER_64) ")
 				target.print_register
-			when to_double_type then
-				buffer.put_string ("(EIF_DOUBLE) ")
+			when to_real_64_type then
+				buffer.put_string ("(EIF_REAL_64) ")
 				target.print_register
-			when to_real_type then
-				buffer.put_string ("(EIF_REAL) ")
+			when to_real_32_type then
+				buffer.put_string ("(EIF_REAL_32) ")
 				target.print_register
 			when offset_type then
 				generate_offset (buffer, type_of (basic_type), target, parameter)
@@ -231,8 +231,8 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.to_integer_name_id)
 			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.to_integer_32_name_id)
 			Result.put (to_integer_64_type, feature {PREDEFINED_NAMES}.to_integer_64_name_id)
-			Result.put (to_double_type, feature {PREDEFINED_NAMES}.to_double_name_id)
-			Result.put (to_real_type, feature {PREDEFINED_NAMES}.to_real_name_id)
+			Result.put (to_real_64_type, feature {PREDEFINED_NAMES}.to_double_name_id)
+			Result.put (to_real_32_type, feature {PREDEFINED_NAMES}.to_real_name_id)
 			Result.put (offset_type, feature {PREDEFINED_NAMES}.infix_plus_name_id)
 			Result.put (default_type, feature {PREDEFINED_NAMES}.default_name_id)
 			Result.put (bit_and_type, feature {PREDEFINED_NAMES}.bit_and_name_id)
@@ -295,8 +295,8 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.to_integer_name_id)
 			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.to_integer_32_name_id)
 			Result.put (to_integer_64_type, feature {PREDEFINED_NAMES}.to_integer_64_name_id)
-			Result.put (to_double_type, feature {PREDEFINED_NAMES}.to_double_name_id)
-			Result.put (to_real_type, feature {PREDEFINED_NAMES}.to_real_name_id)
+			Result.put (to_real_64_type, feature {PREDEFINED_NAMES}.to_double_name_id)
+			Result.put (to_real_32_type, feature {PREDEFINED_NAMES}.to_real_name_id)
 			Result.put (three_way_comparison_type, feature {PREDEFINED_NAMES}.three_way_comparison_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
 		end
@@ -338,8 +338,8 @@ feature {NONE} -- Fast access to feature name
 	lower_type: INTEGER is 32
 	is_digit_type: INTEGER is 33
 	memory_calloc: INTEGER is 34
-	to_double_type: INTEGER is 35
-	to_real_type: INTEGER is 36
+	to_real_64_type: INTEGER is 35
+	to_real_32_type: INTEGER is 36
 	three_way_comparison_type: INTEGER is 37
 	max_type_id: INTEGER is 37
 
@@ -383,15 +383,15 @@ feature {NONE} -- C code generation
 			valid_function_type: f_type = lower_type or f_type = upper_type
 		do
 			if function_type = lower_type then
-				buffer.put_string ("chlower(")
+				buffer.put_string ("(EIF_CHARACTER) tolower(")
 			else
-				buffer.put_string ("chupper(")
+				buffer.put_string ("(EIF_CHARACTER) toupper(")
 			end
 			target.print_register
 			buffer.put_character (')')
 
-				-- Add `eif_misc.h' for C compilation where `chlower' and `chupper' are declared.
-			shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_misc_header_name_id)
+				-- Add `ctype.h' for C compilation where `tolower' and `toupper' are declared.
+			shared_include_queue.put (feature {PREDEFINED_NAMES}.ctype_header_name_id)
 		end
 
 	generate_is_digit (buffer: GENERATION_BUFFER;
@@ -403,12 +403,13 @@ feature {NONE} -- C code generation
 			target_not_void: target /= Void
 			character_type: type_of (basic_type) = character_type
 		do
-			buffer.put_string ("chis_digit(")
+			buffer.put_string ("EIF_TEST(isdigit(")
 			target.print_register
 			buffer.put_character (')')
+			buffer.put_character (')')
 
-				-- Add `eif_misc.h' for C compilation where `chlower' and `chupper' are declared.
-			shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_misc_header_name_id)
+				-- Add `ctype.h' for C compilation where `isdigit' is declared.
+			shared_include_queue.put (feature {PREDEFINED_NAMES}.ctype_header_name_id)
 		end
 
 	generate_equal (buffer: GENERATION_BUFFER; target, parameter: REGISTRABLE) is
@@ -493,10 +494,10 @@ feature {NONE} -- C code generation
 					end
 				when pointer_type then
 					buffer.put_string ("c_outp(")
-				when real_type then
-					buffer.put_string ("c_outr(")
-				when double_type then
-					buffer.put_string ("c_outd(")
+				when real_32_type then
+					buffer.put_string ("c_outr32(")
+				when real_64_type then
+					buffer.put_string ("c_outr64(")
 				end
 				target.print_register
 				buffer.put_character (')')
@@ -555,9 +556,9 @@ feature {NONE} -- C code generation
 				end
 			when pointer_type then
 				buffer.put_string (" RTMS_EX(%"POINTER%", 7)")
-			when real_type then
+			when real_32_type then
 				buffer.put_string (" RTMS_EX(%"REAL%", 4)")
-			when double_type then
+			when real_64_type then
 				buffer.put_string (" RTMS_EX(%"DOUBLE%", 6)")
 			end
 		end
@@ -585,10 +586,10 @@ feature {NONE} -- C code generation
 				when 32 then buffer.put_string ("eif_max_int32 (")					
 				when 64 then buffer.put_string ("eif_max_int64 (")
 				end
-			when real_type then
-				buffer.put_string ("eif_max_real (")
-			when Double_type then
-				buffer.put_string ("eif_max_double (")
+			when real_32_type then
+				buffer.put_string ("eif_max_real32 (")
+			when real_64_type then
+				buffer.put_string ("eif_max_real64 (")
 			end
 			
 			target.print_register
@@ -623,10 +624,10 @@ feature {NONE} -- C code generation
 				when 32 then buffer.put_string ("eif_min_int32 (")					
 				when 64 then buffer.put_string ("eif_min_int64 (")
 				end
-			when real_type then
-				buffer.put_string ("eif_min_real (")
-			when Double_type then
-				buffer.put_string ("eif_min_double (")
+			when real_32_type then
+				buffer.put_string ("eif_min_real32 (")
+			when real_64_type then
+				buffer.put_string ("eif_min_real64 (")
 			end
 			
 			target.print_register
@@ -661,10 +662,10 @@ feature {NONE} -- C code generation
 				when 32 then buffer.put_string ("eif_twc_int32 (")					
 				when 64 then buffer.put_string ("eif_twc_int64 (")
 				end
-			when real_type then
-				buffer.put_string ("eif_twc_real (")
-			when Double_type then
-				buffer.put_string ("eif_twc_double (")
+			when real_32_type then
+				buffer.put_string ("eif_twc_real32 (")
+			when real_64_type then
+				buffer.put_string ("eif_twc_real64 (")
 			end
 			
 			target.print_register
@@ -692,10 +693,10 @@ feature {NONE} -- C code generation
 				when 32 then buffer.put_string ("eif_abs_int32 (")					
 				when 64 then buffer.put_string ("eif_abs_int64 (")
 				end
-			when real_type then
-				buffer.put_string ("eif_abs_real (")
-			when Double_type then
-				buffer.put_string ("eif_abs_double (")
+			when real_32_type then
+				buffer.put_string ("eif_abs_real32 (")
+			when real_64_type then
+				buffer.put_string ("eif_abs_real64 (")
 			end
 			
 			target.print_register
@@ -839,14 +840,14 @@ feature {NONE} -- C code generation
 		require
 			buffer_not_void: buffer /= Void
 			valid_type_of_basic: type_of_basic = integer_type or else
-								 type_of_basic = real_type or else
-								 type_of_basic = double_type
+								 type_of_basic = real_32_type or else
+								 type_of_basic = real_64_type
 		do
 			inspect
 				type_of_basic
 			when integer_type then
 				buffer.put_string ("0")
-			when real_type, double_type then
+			when real_32_type, real_64_type then
 				buffer.put_string ("0.0")
 			end
 		end
@@ -857,14 +858,14 @@ feature {NONE} -- C code generation
 		require
 			buffer_not_void: buffer /= Void
 			valid_type_of_basic: type_of_basic = integer_type or else
-								 type_of_basic = real_type or else
-								 type_of_basic = double_type
+								 type_of_basic = real_32_type or else
+								 type_of_basic = real_64_type
 		do
 			inspect
 				type_of_basic
 			when integer_type then
 				buffer.put_string ("1")
-			when real_type, double_type then
+			when real_32_type, real_64_type then
 				buffer.put_string ("1.0")
 			end
 		end
@@ -875,8 +876,8 @@ feature {NONE} -- Type information
 	character_type: INTEGER is 2
 	integer_type: INTEGER is 3
 	pointer_type: INTEGER is 4
-	real_type: INTEGER is 5
-	double_type: INTEGER is 6
+	real_32_type: INTEGER is 5
+	real_64_type: INTEGER is 6
 			-- Constant defining type
 
 	integer_size: INTEGER
@@ -891,7 +892,7 @@ feature {NONE} -- Type information
 			b_not_void: b /= Void
 			b_not_bit: not b.is_bit
 		local
-			long: LONG_I
+			long: INTEGER_I
 			t: TYPED_POINTER_I
 		do
 			inspect b.hash_code
@@ -913,8 +914,8 @@ feature {NONE} -- Type information
 				integer_size := long.size
 
 			when Pointer_code then Result := pointer_type
-			when Real_code then Result := real_type
-			when Double_code then Result := double_type
+			when Real_32_code then Result := real_32_type
+			when Real_64_code then Result := real_64_type
 			
 			else
 				t ?= b
@@ -925,7 +926,7 @@ feature {NONE} -- Type information
 		ensure
 			valid_type: Result = boolean_type or else Result = character_type or else
 						Result = integer_type or else Result = pointer_type or else
-						Result = real_type or else Result = double_type
+						Result = real_32_type or else Result = real_64_type
 		end
 
 end

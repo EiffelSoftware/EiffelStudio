@@ -3,12 +3,12 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class FLOAT_I
+class REAL_32_I
 
 inherit
 	BASIC_I
 		redefine
-			is_float,
+			is_real_32,
 			is_numeric,
 			same_as, element_type, il_convert_from,
 			description, sk_value, hash_code,
@@ -36,14 +36,14 @@ create
 feature {NONE} -- Initialization
 
 	default_create is
-			-- Initialize instance of FLOAT_I.
+			-- Initialize instance of REAL_32_I.
 		do
-			make (system.real_class.compiled_class.class_id)
+			make (system.real_32_class.compiled_class.class_id)
 		end
 
 feature -- Access
 
-	description: REAL_DESC is
+	description: REAL_32_DESC is
 			-- Type description for skeleton
 		do
 			create Result
@@ -52,16 +52,16 @@ feature -- Access
 	hash_code: INTEGER is
 			-- Hash code for current type
 		once
-			Result := Real_code
+			Result := Real_32_code
 		end
 
 	sk_value: INTEGER is
 			-- Generate SK value associated to the current type.
 		do
-			Result := Sk_float
+			Result := Sk_real32
 		end
 
-	type_a: REAL_A is
+	type_a: REAL_32_A is
 		do
 			create Result
 		end
@@ -75,25 +75,25 @@ feature -- Access
 	tuple_code: INTEGER_8 is
 			-- Tuple code for class type
 		do
-			Result := feature {SHARED_GEN_CONF_LEVEL}.real_tuple_code
+			Result := feature {SHARED_GEN_CONF_LEVEL}.real_32_tuple_code
 		end
 
 	level: INTEGER is
 			-- Internal code for generation
 		do
-			Result := C_float
+			Result := C_real32
 		end
 
 	reference_type: CL_TYPE_I is
 			-- Assocated reference type of Current.
 		do
-			create Result.make (system.real_ref_class.compiled_class.class_id)
+			create Result.make (system.real_32_ref_class.compiled_class.class_id)
 		end
 
 feature -- Status report
 
-	is_float: BOOLEAN is True
-			-- Is the type a float type ?
+	is_real_32: BOOLEAN is True
+			-- Is the type a REAL_32 type ?
 
 	is_numeric: BOOLEAN is True
 			-- Is the type a numeric one ?
@@ -102,7 +102,7 @@ feature -- Status report
 			-- `other' if `other' is heavier than Current,
 			-- Current otherwise.
 		do
-			if other.is_double then
+			if other.is_real_64 then
 				Result := other
 			else
 				Result := Current
@@ -114,7 +114,7 @@ feature -- Comparison
 	same_as (other: TYPE_I): BOOLEAN is
 			-- Is `other' equal to Current ?
 		do
-			Result := other.is_float
+			Result := other.is_real_32
 		end
 
 feature -- Byte code generation
@@ -122,12 +122,12 @@ feature -- Byte code generation
 	generate_byte_code_cast (ba: BYTE_ARRAY) is
 			-- Code for interpreter cast
 		do
-			ba.append (Bc_cast_float)
+			ba.append (Bc_cast_real32)
 		end
 
 feature -- C code generation
 
-	c_string: STRING is "EIF_REAL"
+	c_string: STRING is "EIF_REAL_32"
 			-- String generated for the type.
 		
 	union_tag: STRING is "farg"
@@ -136,13 +136,13 @@ feature -- C code generation
 			-- Generate discriminant of C structure "item" associated
 			-- to the current C type in `buffer'.
 		do
-			buffer.put_string ("it_float")
+			buffer.put_string ("it_real32")
 		end
 
 	generate_sk_value (buffer: GENERATION_BUFFER) is
 			-- Generate SK value associated to current C type in `buffer'.
 		do
-			buffer.put_string ("SK_FLOAT")
+			buffer.put_string ("SK_REAL32")
 		end
 
 feature -- IL code generation
@@ -150,7 +150,7 @@ feature -- IL code generation
 	il_convert_from (source: TYPE_I) is
 			-- Generate convertion from Current to `source' if needed.
 		do
-			if not source.is_float then
+			if not source.is_real_32 then
 				il_generator.convert_to (Current)
 			end
 		end
@@ -160,9 +160,9 @@ feature
 	make_default_byte_code (ba: BYTE_ARRAY) is
 			-- Generate default value of basic type on stack.
 		do
-				-- For precision purpose, `Bc_float' accepts
+				-- For precision purpose, `Bc_real32' accepts
 				-- a double value.
-			ba.append (Bc_float)
+			ba.append (Bc_real32)
 			ba.append_double (0.0)
 		end 
 

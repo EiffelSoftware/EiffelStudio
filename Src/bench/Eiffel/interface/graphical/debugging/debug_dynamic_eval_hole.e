@@ -357,12 +357,12 @@ feature {NONE} -- Implementation
 				io.readline
 				create Result.make_character(io.last_string @ 1)
 
-			when Sk_float then
+			when Sk_real32 then
 				io.put_string("Enter a REAL value: ")
 				io.readline
 				create Result.make_real(io.last_string.to_real)
 
-			when Sk_double then
+			when Sk_real64 then
 				io.put_string("Enter a DOUBLE value: ")
 				io.readline
 				create Result.make_double(io.last_string.to_double)

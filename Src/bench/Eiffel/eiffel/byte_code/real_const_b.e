@@ -23,7 +23,7 @@ feature -- Evaluation
 	evaluate: VALUE_I is
 			-- Evaluation of Current.
 		do
-			create {REAL_VALUE_I} Result.make_double (value.to_double)
+			create {REAL_VALUE_I} Result.make_real_64 (value.to_double)
 		end
 
 feature -- Status report
@@ -37,7 +37,7 @@ feature -- Status report
 	type: TYPE_I is
 			-- Float type
 		once
-			Result := Double_c_type
+			Result := real64_c_type
 		end
 
 feature -- Settings
@@ -83,7 +83,7 @@ feature -- Byte code generation
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a real manifest constant.
 		do
-			ba.append (Bc_double)
+			ba.append (Bc_real64)
 			ba.append_double (value.to_double)
 		end
 

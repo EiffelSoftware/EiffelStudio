@@ -74,9 +74,9 @@ feature -- Access
 			elseif l_name.is_equal (Wide_char_name) then
 				Result := system.Wide_char_class.compiled_class
 			elseif l_name.is_equal (Double_name) then
-				Result := system.Double_class.compiled_class
+				Result := system.real_64_class.compiled_class
 			elseif l_name.is_equal (Real_name) then
-				Result := system.Real_class.compiled_class
+				Result := system.real_32_class.compiled_class
 			elseif l_name.is_equal (Pointer_name) then
 				Result := system.Pointer_class.compiled_class
 			end

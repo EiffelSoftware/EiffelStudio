@@ -15,9 +15,8 @@ feature {NONE}
 	Integer32_code:		INTEGER is 6
 	Integer64_code:		INTEGER is 7
 
-	Real_code:			INTEGER is 8
-
-	Double_code:		INTEGER is 9
+	Real_32_code:		INTEGER is 8
+	Real_64_code:		INTEGER is 9
 
 	Pointer_code:		INTEGER is 10
 	

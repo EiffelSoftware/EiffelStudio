@@ -113,7 +113,7 @@ feature -- IL code generation
 			if check_assertion and then variant_part /= Void then
 					-- Initialization of the variant control variable
 				local_list := context.local_list
-				context.add_local (Long_c_type)
+				context.add_local (int32_c_type)
 				variant_local_number := local_list.count
 				il_generator.put_dummy_local_info (variant_part.type, variant_local_number)
 			end
@@ -209,7 +209,7 @@ feature -- Byte code generation
 			if variant_part /= Void then
 					-- Initialization of the variant control variable
 				local_list := context.local_list
-				context.add_local (Long_c_type)
+				context.add_local (int32_c_type)
 				variant_local_number := local_list.count
 				ba.append (Bc_init_variant)
 				ba.append_short_integer (variant_local_number)

@@ -112,13 +112,13 @@ feature -- Access
 	Real_class: CLASS_I is
 			-- Class REAL
 		once
-			Result := System.real_class
+			Result := System.real_32_class
 		end;
 
 	Double_class: CLASS_I is
 			-- Class DOUBLE
 		once
-			Result := System.double_class
+			Result := System.real_64_class
 		end;
 
 	Pointer_class: CLASS_I is

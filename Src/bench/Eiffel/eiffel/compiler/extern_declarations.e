@@ -147,16 +147,6 @@ feature -- Settings
 			end
 		end
 
-	generate_header (buffer: GENERATION_BUFFER) is
-			-- Generate the run-time header file includes
-		require
-			buffer_not_void: buffer /= Void
-		do
-			buffer.put_string ("%N#include %"eif_portable.h%"%N%
-					%#include %"eif_macros.h%"%N%N")
-			buffer.start_c_specific_code
-		end
-
 	generate (buffer: GENERATION_BUFFER) is
 			-- Generate declarations in a file of name `file_name'.
 		require
@@ -236,7 +226,6 @@ feature -- Settings
 				buffer.put_string ("_gen_type [];")
 				local_type_tables.forth
 			end
-			buffer.end_c_specific_code
 		end
 
 feature {NONE} -- Attributes

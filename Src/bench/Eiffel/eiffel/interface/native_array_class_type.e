@@ -153,9 +153,9 @@ feature -- IL code generation
 					type_kind := il_i2
 				when C_int64 then
 					type_kind := il_i8
-				when C_float then
+				when C_real32 then
 					type_kind := il_r4
-				when C_double then
+				when C_real64 then
 					type_kind := il_r8
 				when C_pointer then
 					type_kind := il_i

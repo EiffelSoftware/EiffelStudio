@@ -112,7 +112,7 @@ feature -- Initialization
 			-- make a real item initialized to `value'
 		do
 			value_real := value
-			type := Type_real
+			type := type_real_32
 			dynamic_class := dtype
 		ensure
 			type /= Type_unknown
@@ -122,7 +122,7 @@ feature -- Initialization
 			-- make a double item initialized to `value'
 		do
 			value_double := value
-			type := Type_double
+			type := type_real_64
 			dynamic_class := dtype
 		ensure
 			type /= Type_unknown
@@ -706,9 +706,9 @@ feature -- Action
 					send_integer_value(value_integer)
 				when Type_integer_64 then
 					send_integer_64_value (value_integer_64)
-				when Type_real then
+				when type_real_32 then
 					send_real_value(value_real)
-				when Type_double then
+				when type_real_64 then
 					send_double_value(value_double)
 				when Type_pointer then
 					send_ptr_value(value_pointer)
@@ -826,9 +826,9 @@ feature -- Access
 				Result := value_integer.out
 			when Type_integer_64 then
 				Result := value_integer_64.out
-			when Type_real then
+			when type_real_32 then
 				Result := value_real.out
-			when Type_double then
+			when type_real_64 then
 				Result := value_double.out
 			when Type_bits then
 				Result := value_bits
@@ -910,8 +910,8 @@ feature {DUMP_VALUE, EB_OBJECT_TREE_ITEM, EIFNET_EXPORTER, DBG_EXPRESSION_EVALUA
 	is_type_boolean       : BOOLEAN is do Result := type = Type_boolean end
 --	is_type_character     : BOOLEAN is do Result := type = Type_character end
 --	is_type_integer       : BOOLEAN is do Result := type = Type_integer end
---	is_type_real          : BOOLEAN is do Result := type = Type_real end
---	is_type_double        : BOOLEAN is do Result := type = Type_double end
+--	is_type_real          : BOOLEAN is do Result := type = type_real_32 end
+--	is_type_double        : BOOLEAN is do Result := type = type_real_64 end
 --	is_type_bits          : BOOLEAN is do Result := type = Type_bits end
 --	is_type_pointer       : BOOLEAN is do Result := type = Type_pointer end
 

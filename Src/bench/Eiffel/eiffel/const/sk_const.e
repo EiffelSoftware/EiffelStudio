@@ -21,23 +21,20 @@ feature {NONE}
 	Sk_int8: INTEGER is 0x0c000000
 			-- Defined in eif_struct.h as SK_INT8
 
-	Sk_int: INTEGER is 0x10000000
-			-- Defined in eif_struct.h as SK_INT
-
 	Sk_int32: INTEGER is 0x10000000
 			-- Defined in eif_struct.h as SK_INT32
 
 	Sk_int16: INTEGER is 0x14000000
 			-- Defined in eif_struct.h as SK_INT16
 
-	Sk_float: INTEGER is 0x18000000
-			-- Defined in eif_struct.h as SK_FLOAT
+	Sk_real32: INTEGER is 0x18000000
+			-- Defined in eif_struct.h as SK_REAL32
 
 	Sk_wchar: INTEGER is 0x1c000000
 			-- Defined in eif_struct.h as SK_WCHAR
 
-	Sk_double: INTEGER is 0x20000000
-			-- Defined in eif_struct.h as SK_DOUBLE
+	Sk_real64: INTEGER is 0x20000000
+			-- Defined in eif_struct.h as SK_REAL64
 
 	Sk_int64: INTEGER is 0x24000000
 			-- Defined in eif_struct.h as SK_INT64

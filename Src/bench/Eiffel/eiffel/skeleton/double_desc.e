@@ -3,20 +3,20 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class DOUBLE_DESC 
+class REAL_64_DESC 
 
 inherit
 	ATTR_DESC
 		rename
-			Double_level as level,
-			Double_c_type as type_i
+			real_64_level as level,
+			real64_c_type as type_i
 		end
 	
 feature -- Access
 
 	sk_value: INTEGER is
 		do
-			Result := Sk_double
+			Result := Sk_real64
 		end
 
 feature -- Code generation
@@ -25,7 +25,7 @@ feature -- Code generation
 			-- Generate type code for current attribute description in
 			-- `buffer'.
 		do
-			buffer.put_string ("SK_DOUBLE")
+			buffer.put_string ("SK_REAL64")
 		end
 
 feature -- Debug

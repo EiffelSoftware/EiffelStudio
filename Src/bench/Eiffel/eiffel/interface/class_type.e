@@ -587,10 +587,8 @@ feature -- Generation
 					header_buffer.put_string ("%N#define ")
 					header_buffer.put_string (already_included_header)
 					header_buffer.put_new_line
-					Extern_declarations.generate_header (header_buffer)
-				else
-					header_buffer.start_c_specific_code
 				end
+				header_buffer.start_c_specific_code
 
 				buffer.open_write_c
 
@@ -677,6 +675,7 @@ feature -- Generation
 
 				if final_mode then
 					Extern_declarations.generate (header_buffer)
+					header_buffer.end_c_specific_code
 					Extern_declarations.generate_header_files (headers)
 					Extern_declarations.wipe_out
 
@@ -688,6 +687,7 @@ feature -- Generation
 					extern_decl_file.close
 				else
 					Extern_declarations.generate (header_buffer)
+					header_buffer.end_c_specific_code
 					Extern_declarations.generate_header_files (header_buffer)
 					Extern_declarations.wipe_out
 				end

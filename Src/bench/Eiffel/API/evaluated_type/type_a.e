@@ -57,14 +57,14 @@ feature -- Properties
 			-- Do nothing
 		end
 
-	is_real: BOOLEAN is
-			-- Is the current actual type a real type ?
+	is_real_32: BOOLEAN is
+			-- Is the current actual type a real 32 bits type ?
 		do
 			-- Do nothing
 		end
 
-	is_double: BOOLEAN is
-			-- Is the current actual type a double type ?
+	is_real_64: BOOLEAN is
+			-- Is the current actual type a real 64 bits type ?
 		do
 			-- Do nothing
 		end

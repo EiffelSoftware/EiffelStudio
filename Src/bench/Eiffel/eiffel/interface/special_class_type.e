@@ -633,9 +633,9 @@ feature -- IL code generation
 				il_generator.put_dummy_local_info (l_element_type, l_element)
 				
 					-- Variable to store index where element will be stored in SPECIAL.
-				Byte_context.add_local (Long_c_type)
+				Byte_context.add_local (int32_c_type)
 				l_index := Byte_context.local_list.count
-				il_generator.put_dummy_local_info (Long_c_type, l_index)
+				il_generator.put_dummy_local_info (int32_c_type, l_index)
 				
 				Il_generator.generate_local_assignment (l_index)
 				Il_generator.generate_local_assignment (l_element)

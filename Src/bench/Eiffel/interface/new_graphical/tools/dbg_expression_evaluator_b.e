@@ -305,12 +305,12 @@ feature -- EXPR_B evaluation
 			elseif a_value_i.is_character	then
 				l_char ?= a_value_i
 				tmp_result_value := character_to_dump_value (l_char.character_value)				
-			elseif a_value_i.is_real		then
+			elseif a_value_i.is_real_32		then
 				l_real ?= a_value_i
-				tmp_result_value := real_to_dump_value (l_real.real_value)				
-			elseif a_value_i.is_double		then
+				tmp_result_value := real_to_dump_value (l_real.real_32_value)				
+			elseif a_value_i.is_real_64		then
 				l_real ?= a_value_i
-				tmp_result_value := double_to_dump_value (l_real.double_value)				
+				tmp_result_value := double_to_dump_value (l_real.real_64_value)				
 --			elseif a_value_i.is_bit			then
 			else
 				set_error_not_implemented (a_value_i.generator + " : sorry not yet ready")
@@ -1515,13 +1515,13 @@ feature {NONE} -- Dump value helpers
 	real_to_dump_value (v: REAL): DUMP_VALUE is
 			-- Convert a REAL value `v' to the corresponding DUMP_VALUE	
 		do
-			create Result.make_real (v, system.real_class.compiled_class)						
+			create Result.make_real (v, system.real_32_class.compiled_class)						
 		end
 		
 	double_to_dump_value (v: DOUBLE): DUMP_VALUE is
 			-- Convert a DOUBLE value `v' to the corresponding DUMP_VALUE	
 		do
-			create Result.make_double (v, system.double_class.compiled_class)						
+			create Result.make_double (v, system.real_64_class.compiled_class)						
 		end		
 
 feature {NONE} -- compiler helpers

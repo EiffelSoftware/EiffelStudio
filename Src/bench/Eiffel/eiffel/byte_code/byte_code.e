@@ -846,7 +846,7 @@ feature -- Byte code generation
 					-- The once mark
 				Temp_byte_code_array.append ('%/001/')
 					-- Allocate space for once key
-				Temp_byte_code_array.allocate_space (Long_c_type)
+				Temp_byte_code_array.allocate_space (int32_c_type)
 			else
 					-- Not a once routine
 				Temp_byte_code_array.append ('%U')

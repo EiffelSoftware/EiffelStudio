@@ -348,7 +348,7 @@ feature -- Byte code generation
 					-- The once mark
 				ba.append ('%/001/')
 					-- Allocate space for once key
-				ba.allocate_space (Long_c_type)
+				ba.allocate_space (int32_c_type)
 			else
 					-- Not a once routine
 				ba.append ('%U')

@@ -57,10 +57,21 @@ feature -- Basic Operations
 			-- Draw pixmap
 		local
 			fi: FILE_NAME
+			retried: BOOLEAN
+			info_dialog: EV_INFORMATION_DIALOG
 		do
-			create fi.make_from_string (wizard_pixmaps_path)
-			fi.extend (pixmap_location)
-			pixmap.set_with_named_file (fi)
+			if not retried then
+				create fi.make_from_string (wizard_pixmaps_path)
+				fi.extend (pixmap_location)
+				pixmap.set_with_named_file (fi)
+			end
+		rescue
+			if not retried then
+				create info_dialog.make_with_text ("Unable to open the pixmap named%N%""+fi+"%"")
+				info_dialog.show_modal_to_window (first_window)
+				retried := True
+				retry
+			end
 		end
 
 	proceed_with_current_info is

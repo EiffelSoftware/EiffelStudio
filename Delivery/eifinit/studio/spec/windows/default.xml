@@ -564,7 +564,7 @@
 			<TEXT DESCRIPTION="Display confirmation dialog for C compilation on freeze operation">confirm_freeze<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display confirmation dialog for C compilation on finalize operation">confirm_finalize<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display confirmation dialog for assertions on finalize operation">confirm_finalize_assertions<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Display confirmation dialog for finalizing a .NET precompiled library">confirm_finalize_precompile<BOOLEAN>True</BOOLEAN>
+			<TEXT DESCRIPTION="Display confirmation dialog for finalizing a .NET precompiled library">confirm_finalize_precompile<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display confirmation dialog on compilation when some files have not been saved">confirm_save_before_compile<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display confirmation dialog on clearing breakpoints">confirm_clear_breakpoints<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display confirmation dialog when starting the application without stopping at breakpoints">confirm_ignore_all_breakpoints<BOOLEAN>True</BOOLEAN></TEXT>
@@ -576,7 +576,6 @@
 			<TEXT DESCRIPTION="Display dialog before killing a debugged application">confirm_kill<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display dialog when editing the same class in two development windows">already_editing_class<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display dialog while running an external command">executing_command<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Display confirmation dialog for finalize operation on .NET precompile projects">confirm_finalize_precompile<BOOLEAN>True</BOOLEAN></TEXT>
 		</TOPIC>
 	</TOPIC>
 	<TOPIC TOPIC_ID="Dynamic_data" ICON="icon_preferences_folder" VISIBILITY="hidden">

@@ -11,7 +11,7 @@ inherit
 
 	HOLE
 		redefine
-			receive, registered
+			receive, registered, compatible
 		end;
 	DRAG_SOURCE
 		rename
@@ -46,6 +46,13 @@ feature -- Access
 		do
 			Result := True
 		end;
+
+	compatible (a_stone: STONE): BOOLEAN is
+			-- Is the hole compatible with `a_stone'
+		do
+			Result := associated_command.stone_type = Any_type or else
+				associated_command.compatible (a_stone)
+		end
 
 feature -- Properties
 

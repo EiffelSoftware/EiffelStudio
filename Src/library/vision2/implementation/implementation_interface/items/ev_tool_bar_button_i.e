@@ -30,6 +30,27 @@ feature -- Access
 			Result ?= {EV_SIMPLE_ITEM_I} Precursor
 		end
 
+feature -- Access
+
+	gray_pixmap: EV_PIXMAP is
+			-- Image displayed on `Current'.
+		deferred
+		end
+
+feature -- Element change
+
+	set_gray_pixmap (a_gray_pixmap: EV_PIXMAP) is
+			-- Assign `a_gray_pixmap' to `gray_pixmap'.
+		require
+			gray_pixmap_not_void: a_gray_pixmap /= Void
+		deferred
+		end
+
+	remove_gray_pixmap is
+			-- Make `pixmap' `Void'.
+		deferred
+		end
+
 feature -- Status report
 
 	is_sensitive: BOOLEAN is
@@ -80,6 +101,10 @@ end -- class EV_TOOL_BAR_BUTTON_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/20 23:36:20  pichery
+--| - Added gray pixmap notion. Added the possibility to attach a gray pixmap
+--|   to a button.
+--|
 --| Revision 1.12  2000/02/22 18:39:40  oconnor
 --| updated copyright date and formatting
 --|

@@ -65,17 +65,27 @@ feature -- Access
 			Result := parent_imp.internal_get_index (Current) + 1
 		end
 
-       set_parent (par: like parent) is
-                       -- Make `par' the new parent of the widget.
-                       -- `par' can be Void then the parent is the screen.
-               do
-				if par /= Void then
-					parent_imp ?= par.implementation
-	                      parent_imp.auto_size
-				else
-					parent_imp := Void
-				end
-               end
+	set_parent (par: like parent) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+		do
+			if par /= Void then
+				parent_imp ?= par.implementation
+				parent_imp.auto_size
+			else
+				parent_imp := Void
+			end
+		end
+
+	gray_pixmap: EV_PIXMAP
+
+	gray_pixmap_imp: EV_PIXMAP_IMP is
+			-- Implementation of the gray pixmap contained 
+		do
+			if gray_pixmap /= Void then
+				Result ?= gray_pixmap.implementation
+			end
+		end
 
 feature -- Status report
 
@@ -130,6 +140,27 @@ feature -- Element change
 			if parent_imp /= Void then
 				parent_imp.internal_reset_button (Current)
 			end
+		end
+
+	set_gray_pixmap (pix: EV_PIXMAP) is
+			-- Make `pix' the new pixmap of the widget.
+			-- We need to destroy the dc that comes with it,
+			-- because a bitmap can be linked to only one dc
+			-- at a time.
+		do
+ 			remove_gray_pixmap
+ 			create gray_pixmap
+ 			gray_pixmap.copy (pix)
+
+			if parent_imp /= Void then
+				parent_imp.internal_reset_button (Current)
+			end
+		end
+
+	remove_gray_pixmap is
+			-- Make `gray_pixmap' `Void'.
+		do
+			gray_pixmap := Void
 		end
 
 feature -- Event : command association
@@ -262,6 +293,10 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/20 23:34:56  pichery
+--| - Added gray pixmap notion. Added the possibility to attach a gray pixmap
+--|   to a button.
+--|
 --| Revision 1.13  2000/02/23 02:18:53  brendel
 --| Removed redefine of `set_text'. Added feature `text'.
 --|

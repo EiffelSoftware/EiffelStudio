@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-feature {NONE} -- Constants
+feature -- Constants
 
 	v1_0: STRING is "v1.0.3705"
 			-- Version number of v1.0 of Microsoft .NET
@@ -253,6 +253,11 @@ feature {NONE} -- Constants
 	v1_1: STRING is "v1.1.4322"
 			-- Version number of v1.1 of Microsoft .NET
 			
+	v1_2: STRING is "v1.2.30617"
+			-- Temporary version number of the v1.2 of Microsoft .NET
+
+feature {NONE} -- Constants
+
 	runtime_root_key: STRING is "InstallRoot"
 			-- Name of key specifiying where runtimes are installed.
 	

@@ -67,17 +67,36 @@ fullrd studio\help\defaults\unix
 fullrd studio\spec\unix
 remtrace eifinit
 exprt -r %DEFAULT_CVS_TAG -d eifinit Delivery/eifinit
+remtrace .NET libraries
+exprt -r %DEFAULT_CVS_TAG -d library.net Src/library.net
 remtrace examples
 exprt -r %DEFAULT_CVS_TAG -d examples Src/examples
 cd examples
 fullrd eiffeltest
 fullrd math
 fullrd matisse
+fullrd store\matisse
 fullrd old_com
 fullrd old_matisse
 fullrd vision
 fullrd build
 fullrd dotnet\registration
+cd vision2
+fullrd Boxes
+fullrd drawing_area
+fullrd ev_list
+fullrd fake_event
+fullrd figure
+fullrd hello_world
+fullrd menu
+fullrd multicolumn_list
+fullrd pixmap
+fullrd split_area
+fullrd test_all_widgets
+fullrd test_events
+fullrd tests
+fullrd tutorial
+cd ..
 cd ..
 remtrace precomp
 safe_md %INSTALL_DIR\precomp
@@ -100,7 +119,7 @@ remtrace root
 exprt -l -r %DEFAULT_CVS_TAG Delivery/
 move Delivery\*.* . >>& %INSTALL_LOG
 fullrd Delivery >>& %INSTALL_LOG
-fullrf INSTALL VERSION README make_install compile_libraries
+fullrf INSTALL README make_install compile_libraries
 
 remtrace Borland files
 gunzip bcc55.tar.gz

@@ -58,6 +58,7 @@ remtrace parse
 exprt -r $DEFAULT_CVS_TAG -d parse Src/examples/parse
 remtrace store
 exprt -r $DEFAULT_CVS_TAG -d store Src/examples/store
+fullrd store/matisse
 remtrace thread
 exprt -r $DEFAULT_CVS_TAG -d thread Src/examples/thread
 remtrace time

@@ -75,7 +75,6 @@ fullrf %INSTALL_DIR\releases\home\lib\msc\ebench.lib
 copy %EIFFEL_SRC\C\run-time\*.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
 copy %EIFFEL_SRC\C\eif_confmagic.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
 copy %EIFFEL_SRC\C\console\eif_econsole.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
-copy %EIFFEL_SRC\C\platform\eif_commands.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
 cd %EIFFEL_SRC
 
 remtrace Compile the commercial run-times

@@ -1,10 +1,21 @@
 class ARRAY_OPTIMIZER
 
 inherit
+	FEAT_ITERATOR
+		rename
+			make as old_make
+		end
+	FEAT_ITERATOR
+		redefine
+			make
+		select
+			make
+		end;
 	SHARED_OPTIMIZATION_TABLES;
-	SHARED_SERVER;
-	SHARED_TMP_SERVER;
-	SHARED_BYTE_CONTEXT
+	SHARED_INST_CONTEXT;
+	SHARED_BYTE_CONTEXT;
+	SHARED_ENCODER;
+	SHARED_TABLE
 
 creation
 	make
@@ -18,7 +29,7 @@ feature
 			!!optimized_features.make;
 			optimized_features.compare_objects;
 
-			!!used_table.make (1, System.body_id_counter.value);
+			old_make;
 
 			!!context_stack.make
 		end
@@ -274,6 +285,7 @@ feature
 								-- defined in calls a.f
 							Context.init (a_class.types.first);
 							Context.set_byte_code (byte_code);
+							Inst_context.set_cluster (a_class.cluster);
 
 							current_feature_optimized := False;
 							byte_code := byte_code.optimized_byte_node;
@@ -283,12 +295,13 @@ feature
 								optimized_features.extend (opt_unit);
 									-- Store the new byte code
 								tmp_opt_byte_server.put (byte_code);
---debug ("OPTIMIZATION")
+debug ("RECORD")
+	io.error.new_line;
 	io.error.putstring (a_class.class_name);
 	io.error.putstring (" ");
 	io.error.putstring (a_feature.feature_name);
 	io.error.putstring (" is recorded%N");
---end
+end
 							end;
 
 							check
@@ -331,6 +344,90 @@ feature -- Contexts
 			context_stack.remove
 		end;
 
+	array_item_type (id: INTEGER): TYPE_C is
+		local
+			array_type: CL_TYPE_I
+			type_a: TYPE_A
+			bc: BYTE_CODE
+			array_type_a: TYPE_A
+
+			debug_on: BOOLEAN
+		do
+debug_on := System.current_class.class_name.is_equal ("cl_type_a");
+
+			bc := context.byte_code;
+			if id = 0 then
+					-- Result
+				array_type ?= bc.result_type
+			elseif id < 0 then
+					-- local
+				array_type ?= bc.locals.item (-id)
+			else
+					-- Argument
+				array_type ?= bc.arguments.item (id)
+			end
+if debug_on then
+	if array_type = Void then
+		io.error.putstring ("VOID TYPE");
+	else
+		array_type.trace
+	end
+end;
+			array_type_a := array_type.type_a;
+if debug_on then
+	if array_type = Void then
+		io.error.putstring ("VOID TYPE");
+	else
+		array_type.trace
+	end
+end;
+			type_a ?= array_type.base_class.
+					feature_table.origin_table.item (item_rout_id).type;
+if debug_on then
+	if type_a = Void then
+		io.error.putstring ("VOID TYPE");
+	else
+		type_a.trace
+	end
+end;
+			type_a := type_a.instantiation_in
+				(array_type_a, array_type.base_class.id)
+if debug_on then
+    if type_a = Void then
+        io.error.putstring ("VOID TYPE");
+    else
+        type_a.trace
+    end
+end;
+
+				--(array_type_a, System.current_class.id)
+			Result := type_a.type_i.c_type
+		end
+
+	generate_plug_declarations (plug_file: INDENT_FILE) is
+		do
+			generate_feature_table (plug_file, "eif_lower_table", lower_rout_id);
+			generate_feature_table (plug_file, "eif_area_table", area_rout_id);
+		end;
+
+	generate_feature_table (plug_file: INDENT_FILE; table_name: STRING; rout_id: INTEGER) is
+		local
+			entry: POLY_TABLE [ENTRY]
+			temp: STRING
+		do
+			entry := Eiffel_table.item_id (rout_id);
+			temp := Encoder.table_name (rout_id);
+			Plug_file.putstring ("extern long ");
+			Plug_file.putstring (temp);
+			Plug_file.putstring ("[];%Nlong *");
+			Plug_file.putstring (table_name);
+			Plug_file.putstring (" = ");
+			Plug_file.putstring (temp);
+			Plug_file.putstring (" - ");
+			Plug_file.putstring ((entry.min_type_id - 1).out);
+			Plug_file.putstring (";%N");
+		end;
+
 feature {NONE} -- Contexts
 
 	context_stack: LINKED_STACK [OPTIMIZATION_CONTEXT];
@@ -363,221 +460,50 @@ feature -- Detection of safe/unsafe features
 
 feature {NONE} -- Detection of safe/unsafe features
 
-	mark (f: FEATURE_I; static_class: CLASS_C) is
-			-- Mark feature and its redefinitions
-		require
-			not_is_attribute: not f.is_attribute;
+	propagate_feature (written_class: CLASS_C; original_feature: FEATURE_I;
+						depend_list: FEATURE_DEPENDANCE) is
 		local
-			rout_id_val, other_body_id: INTEGER;
-			descendant_class: CLASS_C;
-			descendant_feature: FEATURE_I;
-			des_feat_table: FEATURE_TABLE;
-			des_orig_table: SELECT_TABLE;
-			table: ROUT_UNIT_TABLE;
-			body_table: BODY_INDEX_TABLE;
-			unit: ROUT_UNIT;
-			redef_unit: TRAVERSAL_UNIT;
-			inh_assert: INH_ASSERT_INFO;
-			i, nb: INTEGER;
-			ancestor_feature: FEATURE_I;
-			written_class, ancestor_class: CLASS_C;
-			c: CURSOR;
-		do
-			mark_and_record (f, static_class);
-
-			rout_id_val := f.rout_id_set.first;
-
-			check
-				(not Tmp_poly_server.has (rout_id_val)) implies f.is_deferred;
-					-- Case for an non existing routine table: a deferred
-					-- feature without any implementation in descendant classes
-					-- leads to NO routine table.
-			end;
-
-			if Tmp_poly_server.has (rout_id_val) then
-					-- If routine id available: this is not a deferred feature
-					-- without any implementation
-				written_class := f.written_class;
-				table ?= Tmp_poly_server.item (rout_id_val);
-				check
-					table_exists: table /= Void;
-				end;
-				from
-					body_table := System.body_index_table;
-					table.start
-				until
-					table.after
-				loop
-					unit := table.item;
-					if System.class_of_id (unit.id).conform_to (written_class) then
-						c := table.cursor;
-						other_body_id := body_table.item (unit.body_index);
-						if not bid_rid_is_marked (other_body_id, rout_id_val) then
-							descendant_class := System.class_of_id (unit.id);
-							des_feat_table := descendant_class.feature_table;
-							des_orig_table := des_feat_table.origin_table;
-							descendant_feature := des_orig_table.item(rout_id_val);
-							if not  (descendant_feature.is_none_attribute
-									or else
-									descendant_class.is_basic)
-							then
-								if descendant_feature.is_attribute then
-									mark_alive (descendant_feature);
-								else
-									mark_and_record
-										(descendant_feature, descendant_class);
-								end;
-							end;
-						end;
-						table.go_to (c);
-					end;
-					table.forth
-				end;
-			end;
-		end;
-
-	mark_and_record (feat: FEATURE_I; actual_class: CLASS_C) is
-			-- Mark feature `feat' alive.
-		require
-			feat_exists: feat /= Void;
-			actual_class_exists: actual_class /= Void;
-			consistency: actual_class.conform_to (feat.written_class);
-		local
-			depend_list: FEATURE_DEPENDANCE;
 			depend_unit: DEPEND_UNIT;
-			depend_feature, original_feature: FEATURE_I;
-			written_class, static_class: CLASS_C;
-			just_born, unsafe: BOOLEAN;
+			depend_feature: FEATURE_I;
+			static_class: CLASS_C;
+			unsafe: BOOLEAN;
 		do
-			just_born := not is_alive (feat);
-				-- Mark feature alive
-			mark_alive (feat);
-
-			if just_born then
-
-					-- Take care of dependances
-				written_class := feat.written_class;
-				if actual_class = written_class then
-					original_feature := feat;
-				else
-					original_feature :=
-						written_class.feature_table.feature_of_body_id
-																(feat.body_id);
-					check
-						original_feature_exists: original_feature /= Void
-					end;
-				end;
-debug ("MARKING")
-    io.error.putstring (original_feature.feature_name);
-    io.error.putstring (" from ");
-    io.error.putstring (written_class.class_name);
-    io.error.new_line;
-end;
-				depend_list := Depend_server.item (written_class.id).item
-										(original_feature.feature_name);
-				if depend_list /= Void then
-					from
-						depend_list.start;
-					until
-						depend_list.after or else unsafe
-					loop
-						depend_unit := depend_list.item;
-						if not depend_unit.is_special then
-							static_class := System.class_of_id (depend_unit.id);
-							depend_feature := static_class.feature_table.feature_of_feature_id
-														(depend_unit.feature_id);
-							if
-								not (depend_feature.is_attribute or else is_marked (depend_feature))
-							then
-debug ("MARKING")
+			from
+				depend_list.start;
+			until
+				depend_list.after or else unsafe
+			loop
+				depend_unit := depend_list.item;
+				if not depend_unit.is_special then
+					static_class := System.class_of_id (depend_unit.id);
+					depend_feature := static_class.feature_table.feature_of_feature_id
+												(depend_unit.feature_id);
+					if
+						not (depend_feature.is_attribute or else is_marked (depend_feature))
+					then
+debug ("OPTIMIZATION")
 	io.error.putstring ("Propagated to ");
 	io.error.putstring (depend_feature.feature_name);
 	io.error.putstring (" from ");
 	io.error.putstring (static_class.class_name);
 	io.error.new_line;
 end;
-								mark (depend_feature, static_class);
-							end;
-								-- get the status ...
-							if unsafe_body_ids.has (depend_feature.body_id) then
-								unsafe := True;
-								unsafe_body_ids.extend (original_feature.body_id);
+						mark (depend_feature, static_class);
+					end;
+						-- get the status ...
+					if unsafe_body_ids.has (depend_feature.body_id) then
+						unsafe := True;
+						unsafe_body_ids.extend (original_feature.body_id);
 debug ("OPTIMIZATION")
 	io.error.putstring (original_feature.feature_name);
 	io.error.putstring (" from ");
-	io.error.putstring (actual_class.class_name);
+	io.error.putstring (written_class.class_name);
 	io.error.putstring (" calls unsafe features!!!!!%N");
 end;
-							end;
-						end;
-						depend_list.forth
 					end;
 				end;
+				depend_list.forth
 			end;
-		end;
-
-	mark_alive (feat: FEATURE_I) is
-			-- Record feature `feat'
-		require
-			good_argument: feat /= Void
-		local
-			class_name: STRING;
-			temp: ROUT_ID_SET
-		do
-debug ("MARKING")
-				-- Verbose
-			io.error.putstring ("%TMarking ");
-			io.error.putstring (feat.feature_name);
-			io.error.putstring (" from ");
-			class_name := clone (feat.written_class.class_name)
-			class_name.to_upper;
-			io.error.putstring (class_name);
-			io.error.new_line;
-end;
-			temp := used_table.item (feat.body_id);
-			if (temp = Void) then
-				!! temp.make (1);
-				used_table.put (temp, feat.body_id);
-			end;
-			temp.force (feat.rout_id_set.first);
-		end;
-
-	used_table: ARRAY [ROUT_ID_SET];
-
-feature
-
-	is_marked (feat: FEATURE_I): BOOLEAN is
-		require
-			good_argument: feat /= Void
-		local
-			temp: ROUT_ID_SET
-		do
-			temp := used_table.item (feat.body_id);
-			Result := (temp /= Void) and then
-				temp.has (feat.rout_id_set.first)
-		end;
-
-	bid_rid_is_marked (bid, rid: INTEGER): BOOLEAN is
-		local
-			temp: ROUT_ID_SET
-		do
-			temp := used_table.item (bid);
-			Result := (temp /= Void) and then
-				temp.has (rid)
-		end;
-
-	is_alive (feat: FEATURE_I): BOOLEAN is
-			-- Is the feature `feat' already recorded ?
-		require
-			good_argument: feat /= Void
-		do
-			Result := is_body_alive (feat.body_id)
-		end;
-
-	is_body_alive (body_id: INTEGER): BOOLEAN is
-			-- Is the body id recorded in the `used_table' ?
-		do
-			Result := (used_table.item (body_id) /= Void)
 		end;
 
 end

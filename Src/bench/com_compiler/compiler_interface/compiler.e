@@ -12,7 +12,10 @@ inherit
 			make,
 			is_successful,
 			compile,
-			compiler_version
+			finalize,
+			freezing_occurred,
+			compiler_version,
+			Freeze_command_name
 		end
 		
 	SHARED_EIFFEL_PROJECT
@@ -82,6 +85,41 @@ feature -- Basic Operations
 		rescue
 			rescued := True
 			retry
+		end
+		
+	finalize is
+			-- Finalize
+		local
+			rescued: BOOLEAN
+		do
+			is_successful := False
+			if not rescued then
+				if not Eiffel_project.is_compiling then
+					Eiffel_project.finalize (False)
+				end
+			else
+				event_output_string ("Compilation stopped%N")
+			end
+		rescue
+			rescued := True
+			retry
+		end
+		
+	freezing_occurred: BOOLEAN is
+			-- Did last compile warrant a call to finish_freezing?
+		do
+			if Eiffel_project.Workbench.successful then
+				Result := Eiffel_project.freezing_occurred
+			end
+		end
+		
+	Freeze_command_name: STRING is
+			-- Retrieve environment variable `a_env'.
+		local
+			freeze_command: STRING
+		once
+			freeze_command := Eiffel_project.Freeze_command_name
+			Result := freeze_command + ".exe"
 		end
 		
 end -- class COMPILER

@@ -26,7 +26,7 @@ feature -- Initialization
 	make (s: STRING; c: COMMAND; a: ANY) is
 		require
 			s_exists: s /= Void
-			s_meaningful: not s.empty
+			s_meaningful: not s.is_empty
 		do
 			translation := s
 			parse (s)
@@ -148,7 +148,7 @@ feature {WIDGET_IMP, ACCELERABLE_WINDOWS} -- Implementation
 			end
 			modifier.to_lower
 			no_modifier := true
-			if not modifier.empty then
+			if not modifier.is_empty then
 				if modifier.index_of ('s',1) > 0 then
 					shift_required := true
 					no_modifier := false
@@ -174,7 +174,7 @@ feature {WIDGET_IMP, ACCELERABLE_WINDOWS} -- Implementation
 				place := place + 1
 			end
 			action.to_lower
-			if not action.empty then
+			if not action.is_empty then
 				if action.substring_index ("up",1) > 0 then
 					direction_up := true
 				end

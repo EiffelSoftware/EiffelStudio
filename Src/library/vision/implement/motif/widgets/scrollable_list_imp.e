@@ -188,7 +188,7 @@ feature  -- Element change
 		local
 			list: MEL_STRING_TABLE
 		do
-			if not other.empty and then not is_destroyed then
+			if not other.is_empty and then not is_destroyed then
 				list := make_merge_list (other);
 				add_items (list, index);
 				list.destroy
@@ -202,7 +202,7 @@ feature  -- Element change
 		local
 			list: MEL_STRING_TABLE
 		do
-			if not other.empty and then not is_destroyed then
+			if not other.is_empty and then not is_destroyed then
 				list := make_merge_list (other);
 				add_items (list, index + 1);
 				list.destroy
@@ -344,7 +344,7 @@ feature  -- Status report
 			its: like selected_items
 		do
 			its := selected_items;
-			if not its.empty then
+			if not its.is_empty then
 				Result := its.first
 			end
 		end;
@@ -374,7 +374,7 @@ feature  -- Status report
 			pos: like selected_positions
 		do
 			pos := selected_positions;
-			if not pos.empty then
+			if not pos.is_empty then
 				Result := pos.first
 			end
 		end;
@@ -630,7 +630,7 @@ feature {NONE} -- Implementation
 			i: INTEGER;
 			value: STRING
 		do
-			if not other.empty then
+			if not other.is_empty then
 				!! Result.make (other.count);
 				from
 					other.start;

@@ -43,7 +43,7 @@ feature -- Status setting
 			-- conventions.
 		require
 			translation_not_void: translation /= Void
-			translatiom_not_empty: not translation.empty
+			translatiom_not_empty: not translation.is_empty
 		local
 			a_translation: STRING
 			i: INTEGER

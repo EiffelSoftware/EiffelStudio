@@ -70,7 +70,7 @@ feature -- Status report
 		require
 			exists: not destroyed;
 			valid_array: a_stackable_array /= Void and then
-					not a_stackable_array.empty;
+					not a_stackable_array.is_empty;
 		local
 			index1: INTEGER;
 		do

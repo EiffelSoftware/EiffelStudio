@@ -48,7 +48,7 @@ feature -- Status report
 			-- The joining of widget name, resource name and resource value
 			-- to form the resource string;
 		require
-			valid_resource_name: resource_name /= Void and then not resource_name.empty;
+			valid_resource_name: resource_name /= Void and then not resource_name.is_empty;
 		do
 			Result := implementation.resource_string;
 		end;
@@ -58,7 +58,7 @@ feature -- Status setting
 	set_resource_name (a_name: STRING) is
 			-- Set the resource name 
 		require
-			valid_name: a_name /= Void and then not a_name.empty;
+			valid_name: a_name /= Void and then not a_name.is_empty;
 		do
 			implementation.set_resource_name (a_name);
 		ensure
@@ -68,7 +68,7 @@ feature -- Status setting
 	set_resource_value (a_value: STRING) is
 			-- set the resource value
 		require
-			valid_name: a_value /= Void and then not a_value.empty;
+			valid_name: a_value /= Void and then not a_value.is_empty;
 		do
 			implementation.set_resource_value (a_value);
 		ensure
@@ -78,7 +78,7 @@ feature -- Status setting
 	set_widget_name (a_name: STRING) is
 			-- Set the widget name
 		require
-			valid_name: a_name /= Void and then not a_name.empty;
+			valid_name: a_name /= Void and then not a_name.is_empty;
 		do
 			implementation.set_widget_name (a_name);
 		ensure

@@ -237,7 +237,7 @@ feature  -- Access
 		do
 			if selected then
 				if multiple_selection then
-					if not private_selected_positions.empty then
+					if not private_selected_positions.is_empty then
 						Result := i_th (private_selected_positions.first)
 					end
 				else
@@ -274,7 +274,7 @@ feature  -- Access
 			-- 0 if nothing is selected			
 		do
 			if multiple_selection then
-				if not private_selected_positions.empty then
+				if not private_selected_positions.is_empty then
 					Result := private_selected_positions.first
 				end
 			else
@@ -765,7 +765,7 @@ feature {NONE} -- Implementation
 			-- Change the selection, if added element affected it
 			if
 				multiple_selection and then
-				not private_selected_positions.empty and then pos < private_selected_positions.first or else
+				not private_selected_positions.is_empty and then pos < private_selected_positions.first or else
 				not multiple_selection and then pos < private_selected_position
 			then
 				update_private_selection

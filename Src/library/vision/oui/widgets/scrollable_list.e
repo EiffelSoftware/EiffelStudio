@@ -127,7 +127,7 @@ feature -- Access
 	first: like item is
 			-- Item at first position
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 		do
 			Result := implementation.first
 		end
@@ -171,7 +171,7 @@ feature -- Access
 	last: like item is
 			-- Item at last position
 		require 
-			not_empty: not empty
+			not_empty: not is_empty
 		do
 			Result := implementation.last
 		end
@@ -195,7 +195,7 @@ feature -- Status report
 		do
 			Result := implementation.has (v)
 		ensure
-			not_found_in_empty: Result implies not empty
+			not_found_in_empty: Result implies not is_empty
 		end
 
 feature -- Measurement
@@ -228,11 +228,11 @@ feature -- Cursor movement
 
 	finish is
 			-- Move cursor to last position.
-			-- (No effect if empty)
+			-- (No effect if is_empty)
 		do
 			implementation.finish
 		ensure
-			at_last: not empty implies islast
+			at_last: not is_empty implies islast
 		end
 
 	forth is
@@ -292,11 +292,11 @@ feature -- Cursor movement
 
 	start is
 			-- Move cursor to first position.
-			-- (No effect if empty)
+			-- (No effect if is_empty)
 		do
 			implementation.start
 		ensure
-			at_first: not empty implies isfirst
+			at_first: not is_empty implies isfirst
 		end
 
 feature -- Element change
@@ -356,7 +356,7 @@ feature -- Element change
 		ensure 
 			new_count: count = old count + old other.count
 			new_index: index = old index + old other.count
-			other_is_empty: other.empty
+			other_is_empty: other.is_empty
 		end
 
 	merge_right (other: ARRAYED_LIST [SCROLLABLE_LIST_ELEMENT]) is
@@ -371,7 +371,7 @@ feature -- Element change
 		ensure
 			new_count: count = old count + old other.count
 			same_index: index = old index
-			other_is_empty: other.empty
+			other_is_empty: other.is_empty
 		end
 
 	put (v: like item) is
@@ -479,7 +479,7 @@ feature -- Removal
 		do
 			implementation.remove
 		ensure
-			after_when_empty: empty implies after
+			after_when_empty: is_empty implies after
 		end
 
 	remove_left is
@@ -515,7 +515,7 @@ feature -- Removal
 			implementation.wipe_out
 		ensure
 			is_before: before
-			wiped_out: empty
+			wiped_out: is_empty
 		end
 
 	remove_click_action, remove_selection_action (a_command: COMMAND; argument: ANY) is
@@ -549,10 +549,18 @@ feature -- Status report
 			Result := implementation.changeable_comparison_criterion
 		end
 
-	empty: BOOLEAN is
+	is_empty: BOOLEAN is
 			-- Is structure empty?
 		do
-			Result := implementation.empty
+			Result := implementation.is_empty
+		end
+
+	empty: BOOLEAN is
+			-- Is structure empty?
+		obsolete
+			"Use `is_empty' instead"
+		do
+			Result := is_empty
 		end
 
 	exhausted: BOOLEAN is
@@ -580,7 +588,7 @@ feature -- Status report
 		do
 			Result := implementation.isfirst
 		ensure 
-			valid_position: Result implies not empty
+			valid_position: Result implies not is_empty
 		end
 
 	islast: BOOLEAN is
@@ -588,7 +596,7 @@ feature -- Status report
 		do
 			Result := implementation.islast
 		ensure 
-			valid_position: Result implies not empty
+			valid_position: Result implies not is_empty
 		end
 
 	object_comparison: BOOLEAN is
@@ -876,17 +884,17 @@ invariant
 	non_negative_index: not destroyed implies (index >= 0)
 	index_small_enough: not destroyed implies (index <= count + 1)
 	off_definition: not destroyed implies (off = ((index = 0) or (index = count + 1)))
-	isfirst_definition: not destroyed implies (isfirst = ((not empty) and (index = 1)))
-	islast_definition: not destroyed implies (islast = ((not empty) and (index = count)))
+	isfirst_definition: not destroyed implies (isfirst = ((not is_empty) and (index = 1)))
+	islast_definition: not destroyed implies (islast = ((not is_empty) and (index = count)))
 	item_corresponds_to_index: not destroyed implies ((not off) implies (item = i_th (index)))
 	writable_constraint: not destroyed implies (writable implies readable)
-	empty_constraint: not destroyed implies (empty implies (not readable) and (not writable))
+	empty_constraint: not destroyed implies (is_empty implies (not readable) and (not writable))
 	not_both: not destroyed implies (not (after and before))
-	empty_property: not destroyed implies (empty implies (after or before))
+	empty_property: not destroyed implies (is_empty implies (after or before))
 	before_constraint: not destroyed implies (before implies off)
 	after_constraint: not destroyed implies (after implies off)
-	empty_constraint: not destroyed implies (empty implies off)
-	empty_definition: not destroyed implies (empty = (count = 0))
+	empty_constraint: not destroyed implies (is_empty implies off)
+	empty_definition: not destroyed implies (is_empty = (count = 0))
 	non_negative_count: not destroyed implies (count >= 0)
 	extendible: not destroyed implies extendible
 

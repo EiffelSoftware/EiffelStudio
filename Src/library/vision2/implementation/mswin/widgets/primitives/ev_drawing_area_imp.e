@@ -149,6 +149,23 @@ feature {NONE} -- Implementation
 	in_paint: BOOLEAN
 			-- Are we inside an onPaint event?
 
+	release_dc is
+			-- Release the dc if not already released
+		do
+			if internal_paint_dc.exists then
+				internal_paint_dc.release
+			end
+		end
+
+	get_dc is
+			-- Get the dc if not already get.
+		do
+			if not internal_paint_dc.exists then
+				internal_paint_dc.get
+				internal_paint_dc.set_background_transparent
+			end
+		end
+
 	to_be_cleared: BOOLEAN
 			-- Should the area be cleared?
 
@@ -188,12 +205,11 @@ feature {NONE} -- Implementation
 			in_paint := True
 			
 				-- Initialise the device for painting.
-			dc.set_background_opaque
 			dc.set_background_transparent
-			set_drawing_mode (Ev_drawing_mode_copy)
-			set_line_width (1)
-			reset_pen
-			reset_brush
+			internal_initialized_pen := False
+			internal_initialized_background_brush := False
+			internal_initialized_brush := False
+			internal_initialized_text_color := False
 
 				-- Call registered onPaint actions
 			interface.expose_actions.call ([
@@ -203,7 +219,7 @@ feature {NONE} -- Implementation
 				invalid_rect.height
 				])
 
-				-- Switch back the dc fron paint_dc to screen_dc.
+				-- Switch back the dc from paint_dc to screen_dc.
 			internal_paint_dc := screen_dc
 			in_paint := False
 		end
@@ -294,10 +310,6 @@ feature {NONE} -- Implementation
 	flush is
 			-- Update immediately the screen if needed
 		do
-			--| for better performance, we can't use a rename in the
-			--| inheritance clause instead.
-			--| Not done currently because that make the compiler
-			--| 4.6.010 crashing.
 			update
 		end
 
@@ -376,9 +388,9 @@ feature -- Drawing primitives
 			-- and release the device context.
 		do
 			if not in_paint then
-				dc.get
+				get_dc
 				Precursor
-				dc.release
+				release_dc
 			else
 				Precursor
 			end
@@ -389,9 +401,9 @@ feature -- Drawing primitives
 			-- and release the device context.
 		do
 			if not in_paint then
-				dc.get
+				get_dc
 				Precursor (x1, y1, x2, y2)
-				dc.release
+				release_dc
 			else
 				Precursor (x1, y1, x2, y2)
 			end
@@ -402,9 +414,9 @@ feature -- Drawing primitives
 			-- and release the device context.
 		do
 			if not in_paint then
-				dc.get
+				get_dc
 				Precursor (a_x, a_y)
-				dc.release
+				release_dc
 			else
 				Precursor (a_x, a_y)
 			end
@@ -415,9 +427,9 @@ feature -- Drawing primitives
 			-- and release the device context.
 		do
 			if not in_paint then
-				dc.get
+				get_dc
 				Precursor (a_x, a_y, a_text)
-				dc.release
+				release_dc
 			else
 				Precursor (a_x, a_y, a_text)
 			end
@@ -428,9 +440,9 @@ feature -- Drawing primitives
 			-- and release the device context.
 		do
 			if not in_paint then
-				dc.get
+				get_dc
 				Precursor (x1, y2, x2, y2)
-				dc.release
+				release_dc
 			else
 				Precursor (x1, y2, x2, y2)
 			end
@@ -441,9 +453,9 @@ feature -- Drawing primitives
 			-- and release the device context.
 		do
 			if not in_paint then
-				dc.get
+				get_dc
 				Precursor (x1, y1, x2, y2)
-				dc.release
+				release_dc
 			else
 				Precursor (x1, y1, x2, y2)
 			end
@@ -460,7 +472,7 @@ feature -- Drawing primitives
 			-- and release the device context.
 		do
 			if not in_paint then
-				dc.get
+				get_dc
 				Precursor (
 					a_x,
 					a_y,
@@ -469,7 +481,7 @@ feature -- Drawing primitives
 					a_start_angle,
 					an_aperture
 				)
-				dc.release
+				release_dc
 			else
 				Precursor (
 					a_x,
@@ -487,9 +499,9 @@ feature -- Drawing primitives
 			-- and release the device context.
 		do
 			if not in_paint then
-				dc.get
+				get_dc
 				Precursor (a_x, a_y, a_pixmap)
-				dc.release
+				release_dc
 			else
 				Precursor (a_x, a_y, a_pixmap)
 			end
@@ -500,9 +512,9 @@ feature -- Drawing primitives
 			-- and release the device context.
 		do
 			if not in_paint then
-				dc.get
+				get_dc
 				Precursor (a_x, a_y, a_width, a_height)
-				dc.release
+				release_dc
 			else
 				Precursor (a_x, a_y, a_width, a_height)
 			end
@@ -513,9 +525,9 @@ feature -- Drawing primitives
 			-- and release the device context.
 		do
 			if not in_paint then
-				dc.get
+				get_dc
 				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius)
-				dc.release
+				release_dc
 			else
 				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius)
 			end
@@ -526,9 +538,9 @@ feature -- Drawing primitives
 			-- and release the device context.
 		do
 			if not in_paint then
-				dc.get
+				get_dc
 				Precursor (points, is_closed)
-				dc.release
+				release_dc
 			else
 				Precursor (points, is_closed)
 			end
@@ -540,10 +552,10 @@ feature -- Drawing primitives
 			-- and release the device context.
 		do
 			if not in_paint then
-				dc.get
+				get_dc
 				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius,
 							a_start_angle, an_aperture)
-				dc.release
+				release_dc
 			else
 				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius,
 							a_start_angle, an_aperture)
@@ -555,9 +567,9 @@ feature -- Drawing primitives
 			-- and release the device context.
 		do
 			if not in_paint then
-				dc.get
+				get_dc
 				Precursor (a_x, a_y, a_width, a_height)
-				dc.release
+				release_dc
 			else
 				Precursor (a_x, a_y, a_width, a_height)
 			end
@@ -568,9 +580,9 @@ feature -- Drawing primitives
 			-- and release the device context.
 		do
 			if not in_paint then
-				dc.get
+				get_dc
 				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius)
-				dc.release
+				release_dc
 			else
 				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius)
 			end
@@ -581,9 +593,9 @@ feature -- Drawing primitives
 			-- and release the device context.
 		do
 			if not in_paint then
-				dc.get
+				get_dc
 				Precursor (points)
-				dc.release
+				release_dc
 			else
 				Precursor (points)
 			end
@@ -595,10 +607,10 @@ feature -- Drawing primitives
 			-- and release the device context.
 		do
 			if not in_paint then
-				dc.get
+				get_dc
 				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius, 
 							a_start_angle, an_aperture)
-				dc.release
+				release_dc
 			else
 				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius,
 							a_start_angle, an_aperture)
@@ -640,6 +652,12 @@ end -- class EV_DRAWING_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2000/04/13 00:22:30  pichery
+--| - Changed the get and release of the dc.
+--| - Fixed bug that reseted the drawing area when
+--|   on_paint was called
+--| - Cosmetics
+--|
 --| Revision 1.39  2000/03/25 01:27:41  rogers
 --| Redefined on_left_button_down, on_middle_button_down and on_right_button_down to set the focus to `Current'.
 --|

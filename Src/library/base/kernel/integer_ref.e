@@ -263,6 +263,30 @@ feature -- Basic operations
 			create Result.make (item, other)
 		end
 
+feature -- Bit operations
+
+	bit_and (i: like Current): like Current is
+			-- Bitwise and between Current' and `i'.
+		local
+			n, exp, src, res: INTEGER
+		do
+			from
+				n := 0
+				exp := 1
+				src := i.item
+			until
+				n = 32
+			loop
+				if (src // exp) \\ 2 = 1 and then (item // exp) \\ 2 = 1 then
+					res := res + exp
+				end
+				exp := exp * 2
+				n := n + 1
+			end
+			create Result
+			Result.set_item (res)
+		end
+
 feature -- Output
 
 	out: STRING is

@@ -1,10 +1,10 @@
 <HTML>
 	<HEAD>
-		
+
 <META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
-		
+
 <TITLE>FINITE Flat contracts</TITLE>
-		
+
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
@@ -18,7 +18,7 @@
 
 <SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../base_net/reference/kernel/finite.html">FINITE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="finite.html">FINITE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
 
 <BR>
 
@@ -26,23 +26,23 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_has"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/container.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_has"><A CLASS="efeature" HREF="container.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="boolean.html">BOOLEAN</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Does structure include </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment">?</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (Reference or object equality,</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> based on </SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/container.html#f_object_comparison">object_comparison</A><SPAN CLASS="ecomment">.</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> based on </SPAN><A CLASS="efeature" HREF="container.html#f_object_comparison">object_comparison</A><SPAN CLASS="ecomment">.</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> if True use </SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/any.html#f_is_equal">is_equal</A><SPAN CLASS="ecomment"> else</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> if True use </SPAN><A CLASS="efeature" HREF="any.html#f_is_equal">is_equal</A><SPAN CLASS="ecomment"> else</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/any.html#f_reference_equal">reference_equal</A><SPAN CLASS="ecomment">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="efeature" HREF="any.html#f_reference_equal">reference_equal</A><SPAN CLASS="ecomment">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/container.html">CONTAINER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="container.html">CONTAINER</A><SPAN CLASS="ecomment">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/container.html">CONTAINER</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="container.html">CONTAINER</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_found_in_empty</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="../../../base_net/reference/kernel/boolean.html#f__infix_implies">implies</A> <A CLASS="ekeyword" HREF="../../../base_net/reference/kernel/boolean.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/container.html#f_is_empty">is_empty</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_found_in_empty</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="boolean.html#f__infix_implies">implies</A> <A CLASS="ekeyword" HREF="boolean.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="container.html#f_is_empty">is_empty</A><BR>
 
 </A> &nbsp; &nbsp; &nbsp;<BR>
 
@@ -50,7 +50,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_count"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/finite.html#f_count">count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/integer.html">INTEGER</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_count"><A CLASS="efeature" HREF="finite.html#f_count">count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="integer.html">INTEGER</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of items</SPAN><BR>
 
@@ -60,39 +60,39 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_changeable_comparison_criterion"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/container.html#f_changeable_comparison_criterion">changeable_comparison_criterion</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_changeable_comparison_criterion"><A CLASS="efeature" HREF="container.html#f_changeable_comparison_criterion">changeable_comparison_criterion</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="boolean.html">BOOLEAN</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> May </SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/container.html#f_object_comparison">object_comparison</A><SPAN CLASS="ecomment"> be changed?</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> May </SPAN><A CLASS="efeature" HREF="container.html#f_object_comparison">object_comparison</A><SPAN CLASS="ecomment"> be changed?</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (Answer: yes by default.)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/container.html">CONTAINER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="container.html">CONTAINER</A><SPAN CLASS="ecomment">)</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_full"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/box.html#f_full">full</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_full"><A CLASS="efeature" HREF="box.html#f_full">full</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="boolean.html">BOOLEAN</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is structure filled to capacity?</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/box.html">BOX</A><SPAN CLASS="ecomment">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="box.html">BOX</A><SPAN CLASS="ecomment">)</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_is_empty"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/container.html#f_is_empty">is_empty</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_is_empty"><A CLASS="efeature" HREF="container.html#f_is_empty">is_empty</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="boolean.html">BOOLEAN</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is there no element?</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/container.html">CONTAINER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="container.html">CONTAINER</A><SPAN CLASS="ecomment">)</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_object_comparison"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/container.html#f_object_comparison">object_comparison</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_object_comparison"><A CLASS="efeature" HREF="container.html#f_object_comparison">object_comparison</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="boolean.html">BOOLEAN</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Must search operations use </SPAN><SPAN CLASS="equoted">equal</SPAN><SPAN CLASS="ecomment"> rather than </SPAN><SPAN CLASS="equoted">=</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> for comparing references? (Default: no, use </SPAN><SPAN CLASS="equoted">=</SPAN><SPAN CLASS="ecomment">.)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/container.html">CONTAINER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="container.html">CONTAINER</A><SPAN CLASS="ecomment">)</SPAN><BR>
 
 </A> &nbsp; &nbsp; &nbsp;<BR>
 
@@ -100,39 +100,39 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_compare_objects"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/container.html#f_compare_objects">compare_objects</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_compare_objects"><A CLASS="efeature" HREF="container.html#f_compare_objects">compare_objects</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Ensure that future search operations will use </SPAN><SPAN CLASS="equoted">equal</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> rather than </SPAN><SPAN CLASS="equoted">=</SPAN><SPAN CLASS="ecomment"> for comparing references.</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/container.html">CONTAINER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="container.html">CONTAINER</A><SPAN CLASS="ecomment">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/container.html">CONTAINER</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="container.html">CONTAINER</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../../../base_net/reference/kernel/container.html#f_changeable_comparison_criterion">changeable_comparison_criterion</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="container.html#f_changeable_comparison_criterion">changeable_comparison_criterion</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/container.html">CONTAINER</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="container.html">CONTAINER</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../../../base_net/reference/kernel/container.html#f_object_comparison">object_comparison</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="container.html#f_object_comparison">object_comparison</A><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_compare_references"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/container.html#f_compare_references">compare_references</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_compare_references"><A CLASS="efeature" HREF="container.html#f_compare_references">compare_references</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Ensure that future search operations will use </SPAN><SPAN CLASS="equoted">=</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> rather than </SPAN><SPAN CLASS="equoted">equal</SPAN><SPAN CLASS="ecomment"> for comparing references.</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/container.html">CONTAINER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="container.html">CONTAINER</A><SPAN CLASS="ecomment">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/container.html">CONTAINER</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="container.html">CONTAINER</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../../../base_net/reference/kernel/container.html#f_changeable_comparison_criterion">changeable_comparison_criterion</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="container.html#f_changeable_comparison_criterion">changeable_comparison_criterion</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/container.html">CONTAINER</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="container.html">CONTAINER</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reference_comparison</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base_net/reference/kernel/boolean.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/container.html#f_object_comparison">object_comparison</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reference_comparison</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="boolean.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="container.html#f_object_comparison">object_comparison</A><BR>
 
 </A> &nbsp; &nbsp; &nbsp;<BR>
 
@@ -140,11 +140,11 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_linear_representation"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/container.html#f_linear_representation">linear_representation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/linear.html">LINEAR</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_linear_representation"><A CLASS="efeature" HREF="container.html#f_linear_representation">linear_representation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="linear.html">LINEAR</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Representation as a linear structure</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/container.html">CONTAINER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="container.html">CONTAINER</A><SPAN CLASS="ecomment">)</SPAN><BR>
 
 </A> &nbsp; &nbsp; &nbsp;<BR>
 
@@ -152,11 +152,11 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_implementation"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/container.html#f_implementation">implementation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/support/system_collections_icollection.html">SYSTEM_COLLECTIONS_ICOLLECTION</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_implementation"><A CLASS="efeature" HREF="container.html#f_implementation">implementation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass">SYSTEM_COLLECTIONS_ICOLLECTION</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Object for .NET access and implementation</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/container.html">CONTAINER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="container.html">CONTAINER</A><SPAN CLASS="ecomment">)</SPAN><BR>
 
 </A> &nbsp; &nbsp; &nbsp;<BR>
 

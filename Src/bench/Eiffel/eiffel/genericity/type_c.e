@@ -120,7 +120,7 @@ feature
 			good_argument: file /= Void;
 			good_context: file.is_open_write or else file.is_open_append;
 		deferred
-		end; -- generate_union
+		end;
 
 	generate_sk_value (file: INDENT_FILE) is
 			-- Generate SK value associated to current C type in `file'.
@@ -132,6 +132,16 @@ feature
 
 	c_string: STRING is
 			-- String generated for the type.
+		deferred
+		end
+
+	separate_get_macro: STRING is
+			-- String generated to access the argument to a separate call
+		deferred
+		end
+
+	separate_send_macro: STRING is
+			-- String generated to return the result of a separate call
 		deferred
 		end
 

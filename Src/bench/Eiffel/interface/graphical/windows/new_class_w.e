@@ -119,7 +119,6 @@ feature
 	work (argument: ANY) is
 		local
 			f_name: FILE_NAME;
-			fname: STRING;
 			file: PLAIN_TEXT_FILE;
 			str: STRING;
 			base_name: STRING
@@ -132,18 +131,17 @@ feature
 					class_i.set_class_name (class_name);
 					!!f_name.make_from_string (cluster.path);
 					f_name.set_file_name (file_name);
-					fname := f_name.path;
 					base_name := file_name;
-					!!file.make (fname);
+					!!file.make (f_name);
 					class_i.set_base_name (base_name);
 					class_i.set_cluster (cluster);
 					class_i.set_date;
-					if cluster.classes.has (fname) then
+					if cluster.classes.has (f_name) then
 						warner (class_text).gotcha_call (w_Class_already_in_cluster (class_name));
 					elseif
 						(not file.exists and then not file.is_creatable)
 					then
-						warner (class_text).gotcha_call (w_Cannot_create_file (fname))
+						warner (class_text).gotcha_call (w_Cannot_create_file (f_name))
 					else 
 						stone := class_i.stone;
 						if not file.exists then
@@ -162,13 +160,13 @@ feature
 							not (file.is_readable and then file.is_plain)
 						then
 							popdown;
-							warner (class_text).gotcha_call (w_Cannot_read_file (fname))
+							warner (class_text).gotcha_call (w_Cannot_read_file (f_name))
 						else
 								--| Reading in existing file (created outside
 								--| ebench). Ask for confirmation
 							popdown;
 							warner (class_text).custom_call
-								(Current, w_File_exists_edit_it (fname),
+								(Current, w_File_exists_edit_it (f_name),
 								" Edit ", "Select another file", Void)
 						end;
 					end;

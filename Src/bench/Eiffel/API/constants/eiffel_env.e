@@ -63,7 +63,7 @@ feature {NONE}
 		once
 			!!dir_name.make_from_string (Eiffel3_dir_name);
 			dir_name.extend_from_array (<<"precomp", "spec", Execution_environment.get ("PLATFORM"), "base">>);
-			Result := dir_name.path
+			Result := dir_name
 		end;
 
 	filter_path: STRING is
@@ -72,9 +72,9 @@ feature {NONE}
 		once
 			!!file_name.make_from_string (Eiffel3_dir_name);
 			file_name.extend_from_array (<<"bench", "filters">>);
-			Result := resources.get_string (r_Filter_path, file_name.path);
+			Result := resources.get_string (r_Filter_path, file_name);
 			if Result.empty then
-				Result := file_name.path
+				Result := file_name
 			end
 		end;
 
@@ -84,9 +84,9 @@ feature {NONE}
 		once
 			!!file_name.make;
 			file_name.set_directory ("tmp");
-			Result := resources.get_string (r_Tmp_directory, file_name.path);
+			Result := resources.get_string (r_Tmp_directory, file_name);
 			if Result.empty then
-				Result := file_name.path
+				Result := file_name
 			end
 		end;
 

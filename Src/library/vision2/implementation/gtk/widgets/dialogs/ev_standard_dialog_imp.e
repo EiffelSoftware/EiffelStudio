@@ -75,6 +75,7 @@ feature -- Status setting
 	show_modal_to_window (a_window: EV_WINDOW) is
 			-- Show the dialog and wait until the user closes it.
 		do
+			user_clicked_ok := False
 			set_blocking_window (a_window)
 			selected_button := Void
 			C.gtk_widget_show (c_object)
@@ -157,9 +158,13 @@ feature {NONE} -- Implementation
 	on_ok is
 			-- Close window and call action sequence.
 		do
+			user_clicked_ok := True
 			selected_button := "OK"
 			C.gtk_widget_hide (c_object)
 		end
+		
+	user_clicked_ok: BOOLEAN
+		-- Has the user explicitly cancelled the dialog.
 
 	interface: EV_STANDARD_DIALOG
 
@@ -186,6 +191,9 @@ end -- class EV_STANDARD_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2001/06/29 22:26:47  king
+--| Added user_clicked_ok functionality
+--|
 --| Revision 1.14  2001/06/22 00:50:04  king
 --| Now using initialize precursor
 --|

@@ -77,6 +77,12 @@ feature -- Basic operation
 			set_widget_tabs
 			tab_list.extend(primitive_tab)
 		end
+	set_dialog_tabs is
+			-- Sets the dialog tabs
+		do
+			set_widget_tabs
+			tab_list.extend(standard_dialog_tab)
+		end
 		
 	set_gauge_tabs is
 			-- Sets the gauge tabs
@@ -278,6 +284,23 @@ feature -- Basic operation
 			create Result.make (Void)
 		end
 
+	drawing_area_tab: DRAWING_AREA_TAB is
+			-- Creation of the drawing area tab.
+		once
+			create Result.make (Void)
+		end
+
+	drawable_tab: DRAWABLE_TAB is
+			-- Creation of the drawable tab.
+		once
+			create Result.make (Void)
+		end
+
+	standard_dialog_tab: STANDARD_DIALOG_TAB is
+			-- Creation of the standard dialog tab.
+		once
+			create Result.make (Void)
+		end
 
 
 

@@ -255,7 +255,7 @@ feature -- Basic Operation
 						end
 						if is_consumed_field (l_field) then
 							l_fields.extend (consumed_field (l_field))
-							if is_public_field (l_field) then
+							if is_public_field (l_field) and not is_init_only_field (l_field) then
 								l_procedures.extend (attribute_setter_feature (l_field, l_fields.last.eiffel_name))
 							end
 						end
@@ -1155,8 +1155,8 @@ feature {NONE} -- Added features for ENUM types.
 			l_arg: CONSUMED_ARGUMENT
 		do		
 			l_eiffel_name := "set_" + a_field_name
-			create l_arg.make ( "a_value", "a_value", internal_referenced_type)
-			create Result.make_attribute_setter ( l_eiffel_name,
+			create l_arg.make ( "a_value", "a_value", referenced_type_from_type (a_field.field_type))
+			create Result.make_attribute_setter (l_eiffel_name,
 												l_arg,
 												internal_referenced_type)
 		end

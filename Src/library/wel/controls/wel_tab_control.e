@@ -107,6 +107,13 @@ feature -- Access
 	sheet_rect: WEL_RECT is
 			-- Client area of each tab sheet
 			-- (excluding the labeled index)
+			-- Windows require in multiline mode to have at least
+			-- two element in the notebook to have access to this
+			-- data or to be currently showing the tab control.
+			-- If this condition are not satisfied, Windows will raise
+			-- a segmentation violation.
+		require
+			exists: exists
 		do
 			Result := client_rect
 			cwin_send_message (item, Tcm_adjustrect, 0, Result.to_integer)
@@ -188,7 +195,6 @@ feature -- Element change
 				an_item.to_integer)
 			window := an_item.window
 			if window /= Void and then window.exists then
-				window.move_and_resize (sheet_rect.left, sheet_rect.top, sheet_rect.width, sheet_rect.height, True)
 				if index = 0 then
 					window.show
 				else

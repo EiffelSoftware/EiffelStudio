@@ -28,12 +28,14 @@ feature -- Initialization
 			dotnet_name := a_consumed_member.dotnet_name
 			arguments := a_consumed_member.arguments
 			declared_type := a_consumed_member.declared_type
---			return_type := a_consumed_member.return_type
+			return_type := a_consumed_member.return_type
+			internal_flags := a_consumed_field.internal_flags
 		ensure
 			dotnet_name_set: dotnet_name = a_consumed_member.dotnet_name
 			arguments_set: arguments = a_consumed_member.arguments
 			declared_type_set: declared_type = a_consumed_member.declared_type
 			return_type_set: return_type = a_consumed_member.return_type
+			internal_flags_set: internal_flags := a_consumed_member.internal_flags
 		end
 
 feature -- Implementation

@@ -8,8 +8,11 @@ class
 	COMPARABLE_CONSUMED_PROCEDURE
 
 inherit
-	CONSUMED_FUNCTION
-	
+	CONSUMED_PROCEDURE
+		export
+			{COMPARABLE_CONSUMED_PROCEDURE}internal_flags;
+		end
+
 	COMPARABLE
 		undefine
 			default_create, is_equal, copy
@@ -29,6 +32,7 @@ feature -- Initialization
 			arguments := a_consumed_procedure.arguments
 			declared_type := a_consumed_procedure.declared_type
 			return_type := a_consumed_procedure.return_type
+			internal_flags := a_consumed_procedure.internal_flags
 		ensure
 			eiffel_name_set: eiffel_name = a_consumed_procedure.eiffel_name
 			dotnet_name_set: dotnet_name = a_consumed_procedure.dotnet_name

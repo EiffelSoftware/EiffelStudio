@@ -144,12 +144,6 @@ feature -- Access
 			Result := System.special_class
 		end;
 
-	To_special_class: CLASS_I is
-			-- Class TO_SPECIAL
-		once
-			Result := System.to_special_class
-		end;
-
 	Bit_class: CLASS_I is
 			-- Class BIT_REF
 		once

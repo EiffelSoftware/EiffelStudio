@@ -16,9 +16,7 @@ feature	-- Initialization
 	make is
 			-- Create the COM component to access assembly data
 		do
-				-- Initialize COM if not done yet.
-			(create {CLI_COM}).initialize_com
-			create assembly_interface.make
+			assembly_interface := (create {FUSION_FACTORY}).new_fusion_support
 			initialize
 		end
 		
@@ -28,6 +26,8 @@ feature	-- Initialization
 			if exists then
 				assemblies := assembly_interface.assemblies
 			end
+		ensure
+			assemblies_not_void: exists implies assemblies /= Void
 		end
 
 feature -- Access
@@ -35,7 +35,7 @@ feature -- Access
 	exists: BOOLEAN is
 			-- Does interface exist?
 		do
-			Result := assembly_interface.exists
+			Result := assembly_interface /= Void
 		end
 
 	assembly_name: STRING is
@@ -66,6 +66,8 @@ feature -- Cursor Movement
 
 	start is
 			-- Move cursor to start of assembly list
+		require
+			exists: exists
 		do
 			pos := 0
 			item := assemblies.i_th (pos)
@@ -73,6 +75,8 @@ feature -- Cursor Movement
 		
 	forth is
 			-- Move cursor to next assembly
+		require
+			exists: exists
 		do
 			if not after then
 				pos := pos + 1
@@ -81,17 +85,21 @@ feature -- Cursor Movement
 		ensure
 			moved: not old after implies old pos = pos - 1
 		end
-		
-feature -- Status Report
 
 	go_i_th (i_th: INTEGER) is
 			-- Move cursor to 'i_th' position
+		require
+			exists: exists
 		do
 			item := assemblies.i_th (i_th)
 		end	
 
+feature -- Status Report
+
 	after: BOOLEAN is
 			-- Is there no valid position to the right of the cursor
+		require
+			exists: exists
 		do
 			Result := (pos + 1) = (assemblies.count - 1)
 		end
@@ -101,6 +109,7 @@ feature -- Status Report
 		require
 			location_not_void: a_loc /= Void
 			location_not_empty: not a_loc.string.is_empty
+			exists: exists
 		do			
 			Result := assembly_interface.signed (create {UNI_STRING}.make (a_loc))
 		end
@@ -111,8 +120,10 @@ feature -- Status Report
 		require
 			location_not_void: a_loc /= Void
 			location_not_empty: not a_loc.string.is_empty
+			exists: exists
 		do
-			item := assembly_interface.get_assembly_info_from_assembly (create {UNI_STRING}.make (a_loc))
+			item := assembly_interface.get_assembly_info_from_assembly (
+				create {UNI_STRING}.make (a_loc))
 		end
 
 feature {NONE} -- Implementation
@@ -130,7 +141,6 @@ feature {NONE} -- Implementation
 			-- Cursor position
 
 invariant
-	interface_not_void: assembly_interface /= Void
-	assemblies_not_void: assemblies /= Void
+	assemblies_not_void: exists implies (assembly_interface /= Void and then assemblies /= Void)
 
 end -- class IL_ASSEMBLY_FACADE

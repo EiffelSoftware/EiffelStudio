@@ -26,6 +26,8 @@ feature	-- Initialization
 			check 
 				False
 			end
+		ensure
+			assemblies_not_void: exists implies assemblies /= Void
 		end
 
 feature -- Access
@@ -73,6 +75,9 @@ feature -- Access
 feature -- Cursor Movement
 
 	go_i_th (i_th: INTEGER) is
+			-- Move cursor to 'i_th' position
+		require
+			exists: exists
 		do 
 			check 
 				False
@@ -81,6 +86,8 @@ feature -- Cursor Movement
 
 	start is
 			-- Move cursor to start of assembly list
+		require
+			exists: exists
 		do
 			check 
 				False
@@ -89,6 +96,8 @@ feature -- Cursor Movement
 		
 	forth is
 			-- Move cursor to next assembly
+		require
+			exists: exists
 		do
 			check 
 				False
@@ -99,6 +108,8 @@ feature -- Status Report
 
 	after: BOOLEAN is
 			-- Is there no valid position to the right of the cursor
+		require
+			exists: exists
 		do
 			check 
 				False
@@ -107,6 +118,10 @@ feature -- Status Report
 		
 	signed (a_loc: STRING): BOOLEAN is
 			-- Is assembly at 'a_loc' signed?
+		require
+			location_not_void: a_loc /= Void
+			location_not_empty: not a_loc.string.is_empty
+			exists: exists
 		do
 			check 
 				False
@@ -116,6 +131,10 @@ feature -- Status Report
 	get_assembly_info_from_assembly (a_loc: STRING) is
 			-- Retrieve assembly information structure for assembly at
 			-- location 'a_loc' and make 'item' result
+		require
+			location_not_void: a_loc /= Void
+			location_not_empty: not a_loc.string.is_empty
+			exists: exists
 		do
 			check 
 				False

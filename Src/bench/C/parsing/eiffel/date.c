@@ -29,6 +29,7 @@ EIF_INTEGER eif_date(char *path)
 	static struct stat info;
 	static struct timeb current_time;
 
+#ifdef EIF_WIN32
 	ftime (&current_time);
 	if (current_time.dstflag == 1)
 			/* We are not in the same daylight saving zone (here we are in summer) and thus in order
@@ -36,6 +37,7 @@ EIF_INTEGER eif_date(char *path)
 			 * from the given time */
 		return (-1 == stat(path,&info)) ? (EIF_INTEGER) 0L : ((EIF_INTEGER) info.st_mtime - 3600);
 	else
+#endif
 			/* Since we are in the default daylight saving zone, we just use the value given by the
 			 * operating system */
 		return (-1 == stat(path,&info)) ? (EIF_INTEGER) 0L : (EIF_INTEGER) info.st_mtime;
@@ -48,6 +50,7 @@ EIF_BOOLEAN eif_file_has_changed(char *path, EIF_INTEGER date)
 	static struct stat info;
 	static struct timeb current_time;
 
+#ifdef EIF_WIN32
 	ftime (&current_time);
 	if (current_time.dstflag == 1)
 			/* We are not in the same daylight saving zone (here we are in summer) and thus in order
@@ -55,6 +58,7 @@ EIF_BOOLEAN eif_file_has_changed(char *path, EIF_INTEGER date)
 			 * from the given time */
 		return (stat(path,&info) == -1) ? EIF_TRUE :  EIF_TEST(date != ((EIF_INTEGER) info.st_mtime - 3600));
 	else
+#endif
 			/* Since we are in the default daylight saving zone, we just use the value given by the
 			 * operating system */
 		return (stat(path,&info) == -1) ? EIF_TRUE :  EIF_TEST(date != (EIF_INTEGER) info.st_mtime);

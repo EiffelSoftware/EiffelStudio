@@ -165,7 +165,7 @@ feature -- Implementation
 			toolbar: EV_TOOL_BAR_IMP
 			tbutton: EV_TOOL_BAR_BUTTON_IMP
 			mc_list: EV_MULTI_COLUMN_LIST_IMP
-			tree: EV_TREE_IMP
+			--FIXME when tree is released tree: EV_TREE_IMP
 			tg: EV_PICK_AND_DROPABLE
 			widget_pointed: EV_WIDGET_IMP
 		do
@@ -186,12 +186,12 @@ feature -- Implementation
 						wel_point.screen_to_client (mc_list)
 					--| FIXME	tg := mc_list.find_item_at_position (wel_point.x, wel_point.y).interface
 					else
-						tree ?= widget_pointed
-						if tree /= Void then
-							wel_point.screen_to_client (tree)
-							tg := tree.find_item_at_position (wel_point.x, wel_point.y).interface
-						end
-					end
+			--FIXME when tree is released tree ?= widget_pointed
+			--			if tree /= Void then
+			--				wel_point.screen_to_client (tree)
+			--				tg := tree.find_item_at_position (wel_point.x, wel_point.y).interface
+			--			end
+			--		end
 				end
 				if tg = Void then
 					tg := widget_pointed.interface
@@ -300,6 +300,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/02/19 07:51:49  oconnor
+--| temp removal or ref to EV_TREE
+--|
 --| Revision 1.13  2000/02/19 07:07:54  oconnor
 --| released
 --|

@@ -16,6 +16,7 @@ inherit
 		redefine
 			child_has_resized,
 			height,
+			on_size,
 			set_form_height,
 			set_form_width,
 			set_size,
@@ -29,7 +30,8 @@ inherit
 		redefine
 			child_has_resized,
 			height,
-			realize, 
+			realize,
+			on_size,
 			set_form_height,
 			set_form_width,
 			set_size,
@@ -81,9 +83,10 @@ inherit
 			on_destroy,
 			on_set_cursor,
 			on_key_up,
+			on_size,
+			on_move,
 			on_key_down
 		redefine
-			on_size,
 			class_name
 		end
 
@@ -259,6 +262,7 @@ feature {NONE} -- Implementation
 			box_exists: private_box.exists
 		do
 			private_box.resize ((new_width).max (0), (new_height).max (0))
+			resize_actions.execute (Current, Void)
 		end
 
 	class_name: STRING is

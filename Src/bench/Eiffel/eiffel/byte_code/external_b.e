@@ -72,6 +72,7 @@ feature -- Routines for externals
 		do
 			feature_name := f.feature_name;
 			feature_id := f.feature_id;
+			routine_id := f.rout_id_set.first
 		end;
 
 	set_external_name (s: STRING) is
@@ -352,12 +353,11 @@ feature -- Inlining
 feature -- Concurrent Eiffel
 
 	attach_loc_to_sep: BOOLEAN is
-		-- Does the feature call attach a local object to separate formal
-		-- parameter?
+			-- Does the feature call attach a local object to separate formal
+			-- parameter?
 		local
 			p: PARAMETER_B;
 		do
-			Result := false;
 			if parameters /= Void then
 				from
 					parameters.start

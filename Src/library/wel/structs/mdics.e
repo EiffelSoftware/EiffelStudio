@@ -40,10 +40,6 @@ feature {NONE} -- Initialization
 			class_name_set: class_name.is_equal (a_class_name)
 			title_set: title.is_equal (a_title)
 			owner_set: owner.item = main_args.current_instance.item
-			x_set: x = Cw_usedefault
-			y_set: y = Cw_usedefault
-			width_set: width = Cw_usedefault
-			height_set: height = Cw_usedefault
 			style_set: style = 0
 			lparam_set: lparam = default_pointer
 		end
@@ -151,32 +147,24 @@ feature -- Element change
 			-- Set `x' with `a_x'
 		do
 			cwel_mdi_cs_set_x (item, a_x)
-		ensure
-			x_set: x = a_x
 		end
 
 	set_y (a_y: INTEGER) is
 			-- Set `y' with `a_y'
 		do
 			cwel_mdi_cs_set_y (item, a_y)
-		ensure
-			y_set: y = a_y
 		end
 
 	set_width (a_width: INTEGER) is
 			-- Set `width' with `a_width'
 		do
 			cwel_mdi_cs_set_width (item, a_width)
-		ensure
-			width_set: width = a_width
 		end
 
 	set_height (a_height: INTEGER) is
 			-- Set `height' with `a_height'
 		do
 			cwel_mdi_cs_set_height (item, a_height)
-		ensure
-			height_set: height = a_height
 		end
 
 	set_style (a_style: INTEGER) is

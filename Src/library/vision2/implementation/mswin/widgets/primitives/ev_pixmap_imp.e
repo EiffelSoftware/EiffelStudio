@@ -14,7 +14,19 @@ inherit
 		rename
 			dc as internal_dc
 		redefine
-			internal_dc
+			internal_dc,
+			clear_rect,
+			draw_point,
+			draw_text,
+			draw_segment,
+			draw_straight_line,
+			draw_polyline,
+			draw_rectangle,
+			draw_arc,
+			draw_pixmap,
+			fill_polygon,
+			fill_rectangle,
+			fill_arc
 		end
 
 	WEL_DIB_COLORS_CONSTANTS
@@ -256,6 +268,129 @@ feature -- Implementation
 			create monochrome_dc.make
 			create Result.make_compatible (monochrome_dc, width, height)
 			monochrome_dc.select_bitmap (Result)
+		end
+
+feature -- Redefinitions for updating the parent when there is one
+
+	clear_rect (left, top, right, bottom: INTEGER) is
+			-- Clear the rectangular area defined by
+			-- `a_left', `a_top', `a_right', `a_bottom'.
+		do
+			{EV_DRAWABLE_IMP} Precursor (left, top, right, bottom)
+			redraw (left, top, right, bottom)
+		end
+
+	draw_point (pt: EV_COORDINATES) is
+			-- Draw `a_point'.
+		do
+			{EV_DRAWABLE_IMP} Precursor (pt)
+			redraw (pt.x, pt.y, pt.x + 1, pt.y + 1)
+		end
+
+	draw_text (pt: EV_COORDINATES; text: STRING) is
+			-- Draw text
+		do
+			{EV_DRAWABLE_IMP} Precursor (pt, text)
+			redraw (pt.x, pt.y - internal_dc.string_height (text), pt.x + internal_dc.string_width (text), pt.y)
+		end
+
+	draw_segment (pt1, pt2: EV_COORDINATES) is
+			-- Draw a segment between `pt1' and `pt2'.
+		local
+			x1, x2, y1, y2: INTEGER
+		do
+			x1 := pt1.x
+			x2 := pt2.x
+			y1 := pt1.y
+			y2 := pt2.y
+			internal_dc.move_to (x1, y1)
+			internal_dc.line_to (x2, y2)
+			redraw (x1.min (x2), y1.min (y2), x1.max (x2) + 1, y1.max (y2) + 1)
+		end
+
+	draw_straight_line (pt1, pt2: EV_COORDINATES) is
+			-- Draw an infinite line traversing `pt1' and `pt2'.
+			-- Do not work
+		do
+			{EV_DRAWABLE_IMP} Precursor (pt1, pt2)
+			redraw (0, 0, width, height) -- To do
+		end
+
+	draw_polyline (pts: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is
+			-- Draw a polyline, close it automatically if `is_closed'.
+		do
+			{EV_DRAWABLE_IMP} Precursor (pts, is_closed)
+			redraw (0, 0, width, height) -- Probably more efficient to keep it this way.
+		end
+
+	draw_rectangle (pt: EV_COORDINATES; w, h: INTEGER; orientation: REAL) is
+			-- Draw a rectangle whose center is `pt' and size is `w' and `h'
+			-- and that has the orientation `orientation'.
+		local
+			radius: INTEGER
+		do
+			{EV_DRAWABLE_IMP} Precursor (pt, w, h, orientation)
+			radius := (w.max (h) // 2) + 2
+			redraw (pt.x - radius, pt.y - radius, pt.x + radius, pt.y + radius)
+		end
+
+	draw_arc (pt: EV_COORDINATES; r1, r2: INTEGER; start_angle, aperture, orientation: REAL; style: INTEGER) is
+			-- Draw an arc centered in `pt' with a great radius of `r1' and a small radius
+			-- of `r2' beginnning at `start_angle' and finishing at `start_angle + aperture'
+			-- and with an orientation of `orientation' using the style `style'.
+			-- The meaning of the style is the following :
+			--   -1 : no link between the first and the last point
+			--    0 : the first point is linked to the last point
+			--    1 : the first and the last point are linked to the center `pt'
+		local
+			radius: INTEGER
+		do
+			{EV_DRAWABLE_IMP} Precursor (pt, r1, r2, start_angle, aperture, orientation, style)
+			radius := r1.max (r2) + 1
+			redraw (pt.x - radius, pt.y - radius, pt.x + radius, pt.y + radius)
+		end
+
+	draw_pixmap (pt: EV_COORDINATES; pix : EV_PIXMAP) is
+			-- Copy `pix' into the drawable at the point `pt'.
+		do
+			{EV_DRAWABLE_IMP} Precursor (pt, pix)
+			redraw (pt.x, pt.y, pt.x + pix.width, pt.y + pix.height)
+		end
+
+feature -- Filling operations
+
+	fill_polygon (pts: ARRAY [EV_COORDINATES]) is
+			 -- Fill a polygon.
+		do
+			{EV_DRAWABLE_IMP} Precursor (pts)
+			redraw (0, 0, width, height) -- Probably more efficient to keep it this way.
+		end
+
+	fill_rectangle (pt: EV_COORDINATES; w, h: INTEGER; orientation: REAL) is
+			-- Fill a rectangle whose center is `pt' and size is `w' and `h'
+			-- with an orientation `orientation'.
+		local
+			radius: INTEGER
+		do
+			{EV_DRAWABLE_IMP} Precursor (pt, w, h, orientation)
+			radius := (w.max (h) // 2) + 2
+			redraw (pt.x - radius, pt.y - radius, pt.x + radius, pt.y + radius)
+		end 
+
+	fill_arc (pt: EV_COORDINATES; r1, r2 : INTEGER; start_angle, aperture, orientation: REAL; style: INTEGER) is
+			-- Fill an arc centered in `pt' with a great radius of `r1' and a small radius
+			-- of `r2' beginnning at `start_angle' and finishing at `start_angle + aperture'
+			-- and with an orientation of `orientation' using the style `style'.
+			-- The meaning of the style is the following :
+			--   -1 : no link between the first and the last point
+			--    0 : the first point is linked to the last point
+			--    1 : the first and the last point are linked to the center `pt'
+		local
+			radius: INTEGER
+		do
+			{EV_DRAWABLE_IMP} Precursor (pt, r1, r2, start_angle, aperture, orientation, style)
+			radius := r1.max (r2) + 1
+			redraw (pt.x - radius, pt.y - radius, pt.x + radius, pt.y + radius)
 		end
 
 invariant

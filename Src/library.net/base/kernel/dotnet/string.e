@@ -45,6 +45,10 @@ create
 	make_from_string,
 	make_from_c,
 	make_from_cil
+	
+convert
+	make_from_cil ({SYSTEM_STRING}),
+	to_cil: {SYSTEM_STRING}
 
 feature -- Initialization
 

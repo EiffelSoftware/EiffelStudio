@@ -9,10 +9,14 @@ indexing
 class PRECURSOR_AS
 
 inherit
-
 	ACCESS_AS
 		redefine
 			is_equivalent
+		end
+
+	CLICKABLE_AST
+		redefine
+			is_precursor
 		end
 
 feature {NONE} -- Initialization
@@ -47,6 +51,9 @@ feature -- Properties
 		do
 --FIXME
 		end
+
+	is_precursor: BOOLEAN is True
+			-- Precursor makes reference to a class
 
 feature -- Comparison
 

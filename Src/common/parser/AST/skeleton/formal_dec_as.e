@@ -21,6 +21,7 @@ feature {NONE} -- Initialization
 		do
 			formal_name ?= yacc_arg (0)
 			constraint ?= yacc_arg (1)
+			creation_constraint ?= yacc_arg (2)
 			position := yacc_int_arg (0)
 		ensure then
 			formal_name_exists: formal_name /= Void
@@ -33,6 +34,9 @@ feature -- Properties
 
 	constraint: TYPE
 			-- Constraint of the formal generic
+
+	creation_constraint: CREATE_AS
+			-- Constraint on the creation routine
 
 feature -- Comparison
 

@@ -75,7 +75,7 @@ feature -- Conveniences
 
 feature {EXTERNAL_LANG_AS} -- Implementation
 
-	frozen parse is
+	parse is
 			-- Parse the external extension.
 		do
 			parse_special_part

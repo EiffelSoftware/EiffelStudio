@@ -28,11 +28,7 @@ EIF_INTEGER wel_editstream_buffer_size = 0;
 EIF_BOOLEAN wel_editstream_in;
 /* Is the operation stream_in? */
 
-DWORD CALLBACK cwel_editstream_callback (dwCookie, pbBuff, cb, pcb)
-DWORD dwCookie;
-LPBYTE pbBuff;
-LONG cb;
-LONG FAR * pcb;
+DWORD CALLBACK cwel_editstream_callback (DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG FAR * pcb)
 {
 	/*
 	 * The control calls the this callback function repeatedly, transferring
@@ -75,8 +71,8 @@ LONG FAR * pcb;
 
 /*
 --|-------------------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1995, Interactive Software Engineering, Inc.
+--| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1995-1997, Interactive Software Engineering, Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|
 --| 270 Storke Road, Suite 7, Goleta, CA 93117 USA

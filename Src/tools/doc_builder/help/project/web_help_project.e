@@ -71,7 +71,11 @@ feature {NONE} -- Implementation
 			replace_token (l_text, html_filter_token, full_filter_text)
 			l_file.close
 			create l_filename.make_from_string (shared_constants.application_constants.temporary_help_directory.string)
-			l_filename.extend (toc.name)
+			if (create {PLAIN_TEXT_FILE}.make (toc.name)).exists then
+				l_filename.extend (l_util.file_no_extension (l_util.short_name (toc.name)))
+			else						
+				l_filename.extend (toc.name)	
+			end
 			create l_dir.make (l_filename.string)
 			if not l_dir.exists then
 				l_dir.create_dir
@@ -105,7 +109,11 @@ feature {NONE} -- Implementation
 				create l_file.make (l_filename)				
 				if l_file.exists then
 					create l_filename.make_from_string (shared_constants.application_constants.temporary_help_directory.string)
-					l_filename.extend (toc.name)
+					if (create {PLAIN_TEXT_FILE}.make (toc.name)).exists then
+						l_filename.extend (l_util.file_no_extension (l_util.short_name (toc.name)))
+					else						
+						l_filename.extend (toc.name)	
+					end
 					l_filename.extend (resource_files.item)
 					create l_src_file.make_create_read_write (l_filename.string)
 					l_src_file.close

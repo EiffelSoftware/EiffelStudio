@@ -62,10 +62,10 @@ feature -- Status report
 		end
 
 	has_error: BOOLEAN
-			-- Has an error occured during last database operation?
+			-- Has an error occurred during last database operation?
 
 	error_message: STRING
-			-- Error message if an error occured during last
+			-- Error message if an error occurred during last
 			-- database operation.
 
 	select_query_prepared: BOOLEAN

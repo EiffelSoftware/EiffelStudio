@@ -197,12 +197,12 @@ feature -- Status Settings
 			a_string: STRING
 		do
 			a_string := clone (txt)
-			previous_caret_position := caret_position
-			set_caret_position (wel_text_length + 1)
+			previous_caret_position := internal_caret_position
+			internal_set_caret_position (wel_text_length)
 				-- Replace "%N" with "%R%N" for Windows.
 			convert_string (a_string)
 			replace_selection (a_string)
-			set_caret_position (previous_caret_position)
+			internal_set_caret_position (previous_caret_position)
 		end
 
 	freeze is

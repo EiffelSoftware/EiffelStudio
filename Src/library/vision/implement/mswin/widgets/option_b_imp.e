@@ -11,7 +11,8 @@ inherit
 	BUTTON_IMP
 		redefine
 			realized,
-			unrealize
+			unrealize,
+			set_widget_default
 		end
 
 	OPTION_B_I
@@ -35,6 +36,29 @@ feature -- Initialization
 		do
 			opt_pull := opw
 		end
+
+feature 
+
+	set_widget_default is
+   			-- Set the defaults for current widget.
+   		do
+ 			if managed and then parent.realized then
+ 				realize
+					--| FIXME!! Removed here the call to 
+					--| parent.child_has_resized because it
+					--| could lead to crashes. Crashes occurs
+					--| when the associated OPT_PULL is not 
+					--| realized. To reproduce the crash:
+					--| . On a window, put a ROW_COLUMN inside
+					--| a SCROLLED_W
+					--| . Add a button that, when pressed, 
+					--| creates a form in the ROW_COLUMN with
+					--| at least an OPT_PULL inside
+ 			elseif parent.realized and then not managed then
+ 				realize
+ 				set_managed (False)
+ 			end
+ 		end
 
 
 feature -- Access

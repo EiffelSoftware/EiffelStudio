@@ -256,6 +256,7 @@ feature {NONE} -- Implementation: access
 			put ("ascii_char") check found_item = ascii_char_name_id end
 			put ("internal_clone") check found_item = internal_clone_name_id end
 			put ("internal_copy") check found_item = internal_copy_name_id end
+			put ("put_value_at") check found_item = put_value_at_name_id end
 		end
 		
 invariant

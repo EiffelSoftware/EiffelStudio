@@ -315,7 +315,8 @@ feature {CASE_CLASS_INFO} -- Case storage output
 			type_info: S_TYPE_INFO
 			name: STRING
 		do
-			name := class_name.string_value
+			!! name.make (1)
+			name.make_from_string (class_name.string_value)
 			name.to_upper
 			!! Result.make (name)
 			Result.set_reversed_engineered

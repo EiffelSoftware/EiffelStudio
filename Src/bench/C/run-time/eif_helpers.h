@@ -30,6 +30,46 @@
 extern "C" {
 #endif
 
+/* Special conversion from EIF_NATURAL_64 to EIF_REAL_32 and EIF_REAL_64 as it is not
+ * supported by all C compilers. */
+rt_private EIF_REAL_32 eif_uint64_to_real32 (EIF_NATURAL_64 v) {
+#ifdef HAS_BUILTIN_CONVERSION_FROM_UINT64_TO_FLOATING_POINT
+	return (EIF_REAL_32) v;
+#else
+	EIF_INTEGER_64 l_val = (EIF_INTEGER_64) v;
+
+	if (l_val >= 0) {
+		return (EIF_REAL_32) l_val;
+	} else {
+		EIF_INTEGER_64 l_val = (EIF_INTEGER_64) (v >> 2);
+		if ((v % 2) == 0) {
+			return ((EIF_REAL_32) l_val) + ((EIF_REAL_32) l_val);
+		} else {
+			return ((EIF_REAL_32) l_val) + ((EIF_REAL_32) l_val) + (EIF_REAL_32) 1.0;
+		}
+	}
+#endif
+}
+
+rt_private EIF_REAL_64 eif_uint64_to_real64 (EIF_NATURAL_64 v) {
+#ifdef HAS_BUILTIN_CONVERSION_FROM_UINT64_TO_FLOATING_POINT
+	return (EIF_REAL_64) v;
+#else
+	EIF_INTEGER_64 l_val = (EIF_INTEGER_64) v;
+
+	if (l_val >= 0) {
+		return (EIF_REAL_64) l_val;
+	} else {
+		EIF_INTEGER_64 l_val = (EIF_INTEGER_64) (v >> 2);
+		if ((v % 2) == 0) {
+			return ((EIF_REAL_64) l_val) + ((EIF_REAL_64) l_val);
+		} else {
+			return ((EIF_REAL_64) l_val) + ((EIF_REAL_64) l_val) + (EIF_REAL_64) 1.0;
+		}
+	}
+#endif
+}
+
 /* Absolute value computation */
 rt_private EIF_INTEGER_8 eif_abs_int8 (EIF_INTEGER_8 i) {
 	return (i > 0 ? i : -i);
@@ -51,6 +91,18 @@ rt_private EIF_REAL_64 eif_abs_real64 (EIF_REAL_64 d) {
 }
 
 /* Max computation */
+rt_private EIF_NATURAL_8 eif_max_uint8 (EIF_NATURAL_8 i, EIF_NATURAL_8 j) {
+	return (i > j ? i : j);
+}
+rt_private EIF_NATURAL_16 eif_max_uint16 (EIF_NATURAL_16 i, EIF_NATURAL_16 j) {
+	return (i > j ? i : j);
+}
+rt_private EIF_NATURAL_32 eif_max_uint32 (EIF_NATURAL_32 i, EIF_NATURAL_32 j) {
+	return (i > j ? i : j);
+}
+rt_private EIF_NATURAL_64 eif_max_uint64 (EIF_NATURAL_64 i, EIF_NATURAL_64 j) {
+	return (i > j ? i : j);
+}
 rt_private EIF_INTEGER_8 eif_max_int8 (EIF_INTEGER_8 i, EIF_INTEGER_8 j) {
 	return (i > j ? i : j);
 }
@@ -77,6 +129,18 @@ rt_private EIF_REAL_64 eif_max_real64 (EIF_REAL_64 i, EIF_REAL_64 j) {
 }
 
 /* Min computation */
+rt_private EIF_NATURAL_8 eif_min_uint8 (EIF_NATURAL_8 i, EIF_NATURAL_8 j) {
+	return (i < j ? i : j);
+}
+rt_private EIF_NATURAL_16 eif_min_uint16 (EIF_NATURAL_16 i, EIF_NATURAL_16 j) {
+	return (i < j ? i : j);
+}
+rt_private EIF_NATURAL_32 eif_min_uint32 (EIF_NATURAL_32 i, EIF_NATURAL_32 j) {
+	return (i < j ? i : j);
+}
+rt_private EIF_NATURAL_64 eif_min_uint64 (EIF_NATURAL_64 i, EIF_NATURAL_64 j) {
+	return (i < j ? i : j);
+}
 rt_private EIF_INTEGER_8 eif_min_int8 (EIF_INTEGER_8 i, EIF_INTEGER_8 j) {
 	return (i < j ? i : j);
 }
@@ -103,29 +167,41 @@ rt_private EIF_REAL_64 eif_min_real64 (EIF_REAL_64 i, EIF_REAL_64 j) {
 }
 
 /* Three way comparison computation */
-rt_private EIF_INTEGER_8 eif_twc_int8 (EIF_INTEGER_8 i, EIF_INTEGER_8 j) {
+rt_private EIF_INTEGER_32 eif_twc_uint8 (EIF_NATURAL_8 i, EIF_NATURAL_8 j) {
 	return (i < j ? -1 : (j < i) ? 1 : 0);
 }
-rt_private EIF_INTEGER_16 eif_twc_int16 (EIF_INTEGER_16 i, EIF_INTEGER_16 j) {
+rt_private EIF_INTEGER_32 eif_twc_uint16 (EIF_NATURAL_16 i, EIF_NATURAL_16 j) {
+	return (i < j ? -1 : (j < i) ? 1 : 0);
+}
+rt_private EIF_INTEGER_32 eif_twc_uint32 (EIF_NATURAL_32 i, EIF_NATURAL_32 j) {
+	return (i < j ? -1 : (j < i) ? 1 : 0);
+}
+rt_private EIF_INTEGER_32 eif_twc_uint64 (EIF_NATURAL_64 i, EIF_NATURAL_64 j) {
+	return (i < j ? -1 : (j < i) ? 1 : 0);
+}
+rt_private EIF_INTEGER_32 eif_twc_int8 (EIF_INTEGER_8 i, EIF_INTEGER_8 j) {
+	return (i < j ? -1 : (j < i) ? 1 : 0);
+}
+rt_private EIF_INTEGER_32 eif_twc_int16 (EIF_INTEGER_16 i, EIF_INTEGER_16 j) {
 	return (i < j ? -1 : (j < i) ? 1 : 0);
 }
 rt_private EIF_INTEGER_32 eif_twc_int32 (EIF_INTEGER_32 i, EIF_INTEGER_32 j) {
 	return (i < j ? -1 : (j < i) ? 1 : 0);
 }
-rt_private EIF_INTEGER_64 eif_twc_int64 (EIF_INTEGER_64 i, EIF_INTEGER_64 j) {
+rt_private EIF_INTEGER_32 eif_twc_int64 (EIF_INTEGER_64 i, EIF_INTEGER_64 j) {
 	return (i < j ? -1 : (j < i) ? 1 : 0);
 }
-rt_private EIF_CHARACTER eif_twc_char (EIF_CHARACTER i, EIF_CHARACTER j) {
+rt_private EIF_INTEGER_32 eif_twc_char (EIF_CHARACTER i, EIF_CHARACTER j) {
 	return (i < j ? -1 : (j < i) ? 1 : 0);
 }
-rt_private EIF_WIDE_CHAR eif_twc_wide_char (EIF_WIDE_CHAR i, EIF_WIDE_CHAR j) {
+rt_private EIF_INTEGER_32 eif_twc_wide_char (EIF_WIDE_CHAR i, EIF_WIDE_CHAR j) {
 	return (i < j ? -1 : (j < i) ? 1 : 0);
 }
-rt_private EIF_REAL_32 eif_twc_real32 (EIF_REAL_32 i, EIF_REAL_32 j) {
-	return (i < j ? -1.0f : (j < i) ? 1.0f : 0.0f);
+rt_private EIF_INTEGER_32 eif_twc_real32 (EIF_REAL_32 i, EIF_REAL_32 j) {
+	return (i < j ? -1 : (j < i) ? 1 : 0);
 }
-rt_private EIF_REAL_64 eif_twc_real64 (EIF_REAL_64 i, EIF_REAL_64 j) {
-	return (i < j ? -1.0 : (j < i) ? 1.0 : 0.0);
+rt_private EIF_INTEGER_32 eif_twc_real64 (EIF_REAL_64 i, EIF_REAL_64 j) {
+	return (i < j ? -1 : (j < i) ? 1 : 0);
 }
 
 

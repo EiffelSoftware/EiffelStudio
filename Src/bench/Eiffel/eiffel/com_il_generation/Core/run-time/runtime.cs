@@ -35,7 +35,7 @@ feature -- Assertions
 	public static bool in_assertion ()
 		// Is checking of assertions needed?
 	{
-		return (!internal_is_assertion_checked || internal_in_assertion);
+		return (internal_is_assertion_skipped || internal_in_assertion);
 	}
 
 	public static void set_in_assertion (bool val)
@@ -47,8 +47,8 @@ feature -- Assertions
 	public static bool check_assert (bool val)
 		// Enable or disable checking of assertions?
 	{
-		bool tmp = internal_is_assertion_checked;
-		internal_is_assertion_checked = val;
+		bool tmp = !internal_is_assertion_skipped;
+		internal_is_assertion_skipped = !val;
 		return tmp;
 	}
 
@@ -89,11 +89,9 @@ feature -- Assertions
 		return Result;
 	}
 
+	[ThreadStatic]
 	public static string assertion_tag;
 		// Tag of last checked assertion
-
-	public static int assertion_code;
-		// Code of last checked assertion
 
 	public static void assertion_initialize (RuntimeTypeHandle type_handle)
 		// Initializes runtime datastructure for assembly associated with
@@ -184,6 +182,7 @@ feature -- Assertions
 /*
 feature -- Exceptions
 */
+	[ThreadStatic]
 	public static Exception last_exception;
 		// Last raised exception in `rescue' clause.
 
@@ -215,9 +214,11 @@ feature {NONE} -- Implementations: Assertions
 		// Equivalent of an HASH_TABLE [Boolean, RuntimeTypeHandle]
 		// For each type we have processed, key is True.
 
-	private static bool internal_is_assertion_checked = true;
-		// Are assertions checked?
+	[ThreadStatic]
+	private static bool internal_is_assertion_skipped = false;
+		// Are assertions skipped?
 
+	[ThreadStatic]
 	private static bool internal_in_assertion = false;
 		// Flag used during assertion checking to make sure
 		// that assertions are not checked within an assertion

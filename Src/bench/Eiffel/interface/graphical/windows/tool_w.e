@@ -435,7 +435,8 @@ feature -- Update
 				editable_text_window.hide	
 			end
 		ensure
-			read_only_shown: read_only_text_window.shown
+			read_only_shown: read_only_text_window /= editable_text_window implies
+					read_only_text_window.shown
 		end
 
 	set_editable_text is

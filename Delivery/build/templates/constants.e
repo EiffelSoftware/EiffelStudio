@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	CONSTANTS
+	<CLASS_NAME>
 	
 feature {NONE} -- Initialization
 
@@ -152,4 +152,4 @@ feature {NONE} -- Implementation
 invariant
 	all_constants_not_void: all_constants /= Void
 
-end -- class CONSTANTS
+end -- class <CLASS_NAME>

@@ -129,7 +129,7 @@ feature
 			f: INDENT_FILE;
 		do
 			!!f.make (file_name);
-			f.open_write;
+			f.open_append;
 
 				-- generate the include files required by externals
 			generate_header_files (f);

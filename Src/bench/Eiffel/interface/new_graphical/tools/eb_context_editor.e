@@ -62,6 +62,11 @@ inherit
 			default_create
 		end
 		
+	EV_SHARED_APPLICATION
+		undefine
+			default_create
+		end
+		
 create
 	make_with_tool
 
@@ -107,6 +112,8 @@ feature {NONE} -- Initialization
 			force_directed_layout.stop_actions.extend (agent on_force_stop)
 			force_directed_layout.set_theta (50)
 			
+			create shortcut_table.make (20)
+			
 			init_commands
 			build_tool_bar
 			disable_toolbar
@@ -121,6 +128,7 @@ feature {NONE} -- Initialization
 			add_observer ("descendant_depth", Current)
 
 			development_window.editor_tool.text_area.add_edition_observer (Current)
+			area.key_press_actions.extend (agent on_key_pressed)
 		end
 
 	init_commands is
@@ -238,7 +246,18 @@ feature {NONE} -- Initialization
 			tb_commands.extend (toggle_uml_cmd)
 			tb_commands.extend (force_settings_cmd)
 			custom_toolbar := retrieve_diagram_toolbar (tb_commands)
-
+			
+			from
+				tb_commands.start
+			until
+				tb_commands.after
+			loop
+				if tb_commands.item.accelerator /= Void then
+					extend_shortcut_table (tb_commands.item.accelerator)
+				end
+				tb_commands.forth
+			end
+			
 			custom_toolbar.update_toolbar
 			bar_bar.extend (custom_toolbar.widget)
 			bar_bar.disable_item_expand (custom_toolbar.widget)
@@ -2010,12 +2029,65 @@ feature {EB_CONTEXT_TOOL, EIFFEL_WORLD} -- XML Output
 			
 			zoom_selector.show_as_text ((world.scale_factor * 100).rounded)
 		end
+		
+feature {NONE} -- Implementation keyboard shortcuts
+
+	on_key_pressed (a_key: EV_KEY) is
+			-- A key was pressed while focus is on `area'.
+		local
+			accelerators: LIST [EV_ACCELERATOR]
+			l_item: EV_ACCELERATOR
+			alt_pressed, ctrl_pressed, shift_pressed: BOOLEAN
+		do
+			accelerators := shortcut_table.item (a_key.code)
+			if accelerators /= Void then
+				alt_pressed := ev_application.alt_pressed
+				ctrl_pressed := ev_application.ctrl_pressed
+				shift_pressed := ev_application.shift_pressed
+				from
+					accelerators.start
+				until
+					accelerators.after
+				loop
+					l_item := accelerators.item
+					if 
+						l_item.alt_required = alt_pressed and then
+					 	l_item.control_required = ctrl_pressed and then
+					 	l_item.shift_required = shift_pressed
+					 then
+						l_item.actions.call (Void)
+					end
+					accelerators.forth
+				end
+			end
+		end
+		
+	shortcut_table: HASH_TABLE [LIST[EV_ACCELERATOR], INTEGER]
+			-- List of accelerators and key codes.
+	
+	extend_shortcut_table (an_accelerator: EV_ACCELERATOR) is
+			-- Add `an_accelerator' to `shortcut_table'.
+		require
+			an_accelerator_exists: an_accelerator /= Void
+		local
+			l_list: LIST [EV_ACCELERATOR]
+		do
+			l_list := shortcut_table.item (an_accelerator.key.code)
+			if l_list /= Void then
+				l_list.extend (an_accelerator)
+			else
+				create {ARRAYED_LIST [EV_ACCELERATOR]} l_list.make (1)
+				l_list.extend (an_accelerator)
+				shortcut_table.put (l_list, an_accelerator.key.code)
+			end
+		end
 
 invariant
 	world_cell_not_void: world_cell /= Void
 	area_not_void: area /= Void
 	area_as_widget_not_void: area_as_widget /= Void
 	projector_not_void: projector /= Void
+	shortcut_table_not_void: shortcut_table /= Void
 
 end -- class EB_CONTEXT_EDITOR
 

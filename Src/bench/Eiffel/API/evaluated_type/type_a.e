@@ -94,21 +94,26 @@ feature -- Properties
 		end
 
 	is_expanded: BOOLEAN is
-			-- Is the current actual type an expanded/basic one ?
-		do
-			Result := is_true_expanded or else is_basic
-		end
-
-	is_true_expanded: BOOLEAN is
-			-- Is the current actual type an expanded one only?
+			-- Is the current actual type an expanded one ?
 		do
 			-- Do nothing
+		end
+		
+	is_true_expanded: BOOLEAN is
+			-- Is current actual type an expanded one which is not basic?
+		do
+			Result := is_expanded and not is_basic
 		end
 
 	is_basic: BOOLEAN is
 			-- Is the current actual type a basic type ?
 		do
 			-- Do nothing
+		end
+		
+	is_external: BOOLEAN is
+			-- Is current type based on an external one?
+		do
 		end
 
 	is_separate: BOOLEAN is
@@ -158,6 +163,18 @@ feature -- Properties
 		do
 			-- Do nothing
 		end
+		
+	is_named_type: BOOLEAN is
+			-- Is it a named type?
+		do
+		end
+
+	is_full_named_type: BOOLEAN is
+			-- Is it a full named type?
+		do
+		ensure
+			is_full_named_type_consistent: Result implies is_named_type
+		end
 
 feature -- Access
 
@@ -184,6 +201,13 @@ feature -- Access
 	actual_type: TYPE_A is
 			-- Actual type of the interpreted type
 			--| *** FIXME this will become obsolete
+		do
+			Result := Current
+		end
+		
+	reference_actual_type: TYPE_A is
+			-- `actual_type' if not `is_expanded'.
+			-- Otherwise associated reference of `actual type'
 		do
 			Result := Current
 		end
@@ -247,22 +271,39 @@ feature {COMPILER_EXPORTER} -- Access
 			-- Do nothing
 		end
 
-	check_const_gen_conformance (target_type: TYPE_A; a_class: CLASS_C) is
+	check_const_gen_conformance (a_gen_type: GEN_TYPE_A; a_target_type: TYPE_A; a_class: CLASS_C; i: INTEGER) is
+			-- Is `Current' a valid generic parameter at position `i' of `gen_type'?
+		require
+			a_gen_type_not_void: a_gen_type /= Void
+			a_target_type_not_void: a_target_type /= Void
+			a_class_not_void: a_class /= Void
+			i_non_negative: i > 0
 		local
-			vtcg5: VTCG5
+			l_vtcg7: VTCG7
 		do
-			if not conform_to (target_type) then
-				create vtcg5
-				vtcg5.set_class (a_class)
-				vtcg5.set_actual_type (Current)
-				vtcg5.set_constraint_type (target_type)
-				Error_handler.insert_error (vtcg5)
+			if not conform_to (a_target_type) then
+					-- FIXME: Manu 02/04/2004 We should be checking convertibility here,
+					-- but for the moment it is not yet possible because this check is done
+					-- before we do degree 4. What we need to implement is the ability
+					-- to check converitibility without having to go through a full
+					-- degree 4
+				reset_constraint_error_list
+				generate_constraint_error (a_gen_type, Current, a_target_type, i)
+				create l_vtcg7
+				l_vtcg7.set_in_constraint (True)
+				l_vtcg7.set_class (a_class)
+				l_vtcg7.set_error_list (constraint_error_list)
+				l_vtcg7.set_parent_type (a_gen_type)
+				Error_handler.insert_error (l_vtcg7)
 			end
 		end
 
 	check_conformance (target_name: STRING; target_type: TYPE_A) is
 			-- Check if Current conforms to `other'.
 			-- If not, insert error into Error handler.
+		require
+			target_name_not_void: target_name /= Void
+			target_type_not_void: target_type /= Void
 		local
 			vjar: VJAR
 		do
@@ -280,33 +321,20 @@ feature {COMPILER_EXPORTER} -- Access
 			-- Does Current conform to `other' ?
 		require
 			other_not_void: other /= Void
-		do
-			Result := internal_conform_to (other, False)
-		end
-
-	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
-			-- Does Current conform to `other' ?
-			-- [If `in_generics' is set, we are within generic parameters].
-		require
-			good_argument: other /= Void
 		deferred
 		end
 
-	redeclaration_conform_to (other: TYPE_A): BOOLEAN is
-			-- Does Current conform to `other' for a redeclaration ?
+	convert_to (a_context_class: CLASS_C; a_target_type: TYPE_A): BOOLEAN is
+			-- Does current convert to `a_target_type' in `a_context_class'?
+			-- Update `last_conversion_info' of AST_CONTEXT.
 		require
-			other_not_void: other /= Void
-		do
-			Result := internal_conform_to (other, True)
-		end
-
-	convert_to (a_class: CLASS_C; other: TYPE_A): BOOLEAN is
-			-- Does current convert to `other' in context of `a_class'?
-		require
-			a_class_not_void: a_class /= Void
-			other_not_void: other /= Void
+			a_context_class_not_void: a_context_class /= Void
+			a_target_type_not_void: a_target_type /= Void
 		do
 			Result := False
+			context.set_last_conversion_info (Void)
+		ensure
+			context_set: Result implies context.last_conversion_info /= Void
 		end
 		
 	has_formal_generic: BOOLEAN is
@@ -397,7 +425,7 @@ feature {COMPILER_EXPORTER} -- Access
 			act_type: TYPE_A
 		do
 			act_type := actual_type
-			Result := act_type.is_true_expanded and then
+			Result := act_type.is_expanded and then
 						act_type.associated_class.is_deferred
 		end
 
@@ -410,44 +438,27 @@ feature {COMPILER_EXPORTER} -- Access
 		local
 			a_class: CLASS_C
 			creators: HASH_TABLE [EXPORT_I, STRING]
-			creation_name: STRING
-			creation_feature: FEATURE_I
+			l_export: EXPORT_I
 		do
-			if is_true_expanded then
+			if is_expanded then
 				a_class := associated_class
-				if a_class.is_true_external then
+				if a_class.is_external then
 					Result := True
 				else
 					creators := a_class.creators
 					if creators = Void then
 						Result := True
-					elseif creators.count = 1 then
-						creators.start
-						creation_name := creators.key_for_iteration
-						creation_feature :=
-										a_class.feature_table.item (creation_name)
-						Result := creation_feature.argument_count = 0 and then
-							creators.item_for_iteration.valid_for (class_c)
-					else 
-						Result := False
+					else
+						creators.search (a_class.default_create_feature.feature_name)
+						if creators.found then
+							l_export := creators.found_item
+							Result := l_export.valid_for (class_c)
+						end
 					end
 				end
 			else
 				Result := True
 			end
-		end
-
-	heaviest (a_type: TYPE_A): TYPE_A is
-			-- Heaviest numeric type for balancing rule.
-		require
-			type_not_void: a_type /= Void
-			numeric_or_bit_type:
-				(is_numeric and then a_type.is_numeric) or
-				(is_bits and then a_type.is_bits)
-		do
-		ensure
-			heaviest_not_void: Result /= Void
-			heaviest_known: Result = Current or Result = a_type
 		end
 
 	create_info: CREATE_INFO is
@@ -499,6 +510,64 @@ feature {COMPILER_EXPORTER}
 			-- Reconstitute text
 		do
 			ctxt.put_string (dump)
+		end
+
+feature {NONE} -- Implementation
+
+	delayed_convert_constraint_check (
+			context_class: CLASS_C;
+			gen_type: GEN_TYPE_A
+			to_check, constraint_type: TYPE_A;
+			i: INTEGER;
+			in_constraint: BOOLEAN)
+		is
+			-- Check that if we have class A [G -> ANY] and we found A [X] where
+			-- X is expanded, then it exists a conversion routine from X to reference X
+			-- and that `reference X' conforms to the constraint ANY.
+			-- Delayed because could not be done during degree 4 since information
+			-- about conversion routine is usually not yet computed.
+		require
+			context_class_not_void: context_class /= Void
+			gen_type_not_void: gen_type /= Void
+			to_check_not_void: to_check /= Void
+			constraint_type_not_void: constraint_type /= Void
+			to_check_is_expanded: to_check.is_expanded
+			constraint_type_is_reference: not constraint_type.is_expanded
+		local
+			l_ref: TYPE_A
+			l_vtcg7: VTCG7
+		do
+			reset_constraint_error_list
+			if context_class.is_valid and to_check.is_valid then
+				l_ref := to_check.reference_actual_type
+				if
+					not (to_check.convert_to (context_class, l_ref) and
+					l_ref.conform_to (constraint_type))
+				then
+					generate_constraint_error (gen_type, to_check, constraint_type, i)
+						-- The feature listed in the creation constraint have
+						-- not been declared in the constraint class.
+					create l_vtcg7
+					l_vtcg7.set_in_constraint (in_constraint)
+					l_vtcg7.set_class (context_class)
+					l_vtcg7.set_error_list (constraint_error_list)
+					l_vtcg7.set_parent_type (gen_type)
+					Error_handler.insert_error (l_vtcg7)
+				end
+			end
+		end
+
+	generate_constraint_error (gen_type: GEN_TYPE_A; current_type, constraint_type: TYPE_A; position: INTEGER) is
+			-- Build the error corresponding to the VTCG error
+		local
+			constraint_info: CONSTRAINT_INFO
+		do
+			create constraint_info
+			constraint_info.set_type (gen_type)
+			constraint_info.set_actual_type (current_type)
+			constraint_info.set_formal_number (position)
+			constraint_info.set_constraint_type (constraint_type)
+			constraint_error_list.extend (constraint_info)
 		end
 
 end -- class TYPE_A

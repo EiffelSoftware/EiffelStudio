@@ -160,5 +160,19 @@ feature -- Basic operations
 				containable_unparented: containable.parent = Void
 			end
 		end
+		
+	fake_cancel_button (a_dialog: EV_DIALOG; action: PROCEDURE [ANY, TUPLE]) is
+			-- Place a cancel button in `a_dialog',
+			-- and then remove it, so that we have
+			-- a cross on the window.
+		local
+			button: EV_BUTTON
+		do
+			create button
+			a_dialog.extend (button)
+			button.select_actions.extend (action)
+			a_dialog.set_default_cancel_button (button)
+			a_dialog.prune_all (button)
+		end
 
 end -- class GB_UTILITIES

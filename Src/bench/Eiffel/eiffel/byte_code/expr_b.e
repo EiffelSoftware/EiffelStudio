@@ -84,7 +84,7 @@ feature -- Il code generation
 	generate_il_eiffel_metamorphose (a_type: TYPE_I) is
 			-- Generate a metamorphose of `a_type' into a _REF type.
 		require
-			a_type_is_basic: a_type.is_expanded
+			a_type_is_expanded: a_type.is_expanded
 		local
 			local_number: INTEGER
 			l_cl_type: CL_TYPE_I
@@ -98,7 +98,7 @@ feature -- Il code generation
 				-- through the `set_item' routine.
 
 			l_cl_type ?= a_type
-			l_is_basic := l_cl_type.is_basic
+			l_is_basic := l_cl_type.is_basic and not l_cl_type.is_bit
 
 			if l_is_basic then
 					-- Assign value to a temporary local variable.

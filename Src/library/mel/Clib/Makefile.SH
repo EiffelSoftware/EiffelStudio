@@ -21,6 +21,7 @@ LIBS = $libs
 MTLIBS = $mtlibs
 MAKE = make
 MKDEP = $mkdep \$(DPFLAGS) --
+MKDIR = $mkdir -p
 MV = $mv
 RANLIB = $ranlib
 RM = $rm -f
@@ -33,6 +34,9 @@ MEL_LIBS = libMel.a libmtMel.a libMel.so libmtMel.so
 $spitshell >>Makefile <<'!NO!SUBS!'
 
 all: $(MEL_LIBS)
+	$(MKDIR) ../spec/$(ISE_PLATFORM)/lib
+	$(MV) $? ../spec/$(ISE_PLATFORM)/lib
+	make clobber
 
 #libMel.a
 

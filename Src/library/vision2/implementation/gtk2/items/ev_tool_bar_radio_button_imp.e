@@ -94,11 +94,13 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 	radio_group: POINTER is
+			-- Pointer to the GSList used for holding the radio grouping of `Current'
 		do
 			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_radio_tool_button_get_group (visual_widget)
 		end
 
 	interface: EV_TOOL_BAR_RADIO_BUTTON
+			-- Interface of `Current'
 
 end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 

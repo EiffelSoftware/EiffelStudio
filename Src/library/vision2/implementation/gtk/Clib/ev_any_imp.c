@@ -16,6 +16,8 @@
 
 void (*ev_any_imp_c_object_dispose) (EIF_REFERENCE);
 
+rt_private void c_eif_wean (gpointer data);
+
 EIF_REFERENCE c_ev_any_imp_get_eif_reference_from_object_id (GtkWidget* c_object)
         // Retrieve EIF_REFERENCE from object_id in `c_object'.
         // Returns NULL if Eiffel object has been reaped by the GC.
@@ -150,7 +152,7 @@ void c_ev_any_imp_set_gtk_controls_object_life (GtkWidget* c_object)
                 GTK_OBJECT (c_object),
                 "eif_object",
                 eif_object,
-                (GtkDestroyNotify) eif_wean
+                (GtkDestroyNotify) c_eif_wean
             );
     
             if (c_ev_any_imp_eif_object_references_c_object (c_object)) {
@@ -311,6 +313,11 @@ gboolean c_ev_any_imp_invariant (GtkWidget* c_object)
     );
 }
 
+rt_private void c_eif_wean (gpointer data)
+	/* Call `eif_wean' on Eiffel object represented by `data'. */
+{
+	EIF_REFERENCE ref = eif_wean ((EIF_OBJECT) data);
+}
 //------------------------------------------------------------------------------
 // EiffelVision2: library of reusable components for ISE Eiffel.
 // Copyright (C) 1986-1999 Interactive Software Engineering Inc.
@@ -332,6 +339,10 @@ gboolean c_ev_any_imp_invariant (GtkWidget* c_object)
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.8  2001/06/26 19:01:15  manus
+// Added `c_eif_wean' which is an encapsulation of `eif_wean' that has the correct
+// signature for `GtkDestroyNotify'.
+//
 // Revision 1.7  2001/06/07 23:07:59  rogers
 // Merged DEVEL branch into Main trunc.
 //

@@ -16,8 +16,12 @@ feature -- Basic operation.
 	action_sequence_info_to_string (info: GB_ACTION_SEQUENCE_INFO): STRING is
 			-- `Result' is string representation of `info'.
 			-- Reverse operation of `string_to_action_sequence_info'
+		require
+			info_not_void: info /= Void
 		do
 			Result := info.name + " " + info.class_name + " " + info.feature_name
+		ensure
+			Result_not_void: Result /= Void
 		end
 		
 	string_to_action_sequence_info (string: STRING): GB_ACTION_SEQUENCE_INFO is
@@ -53,6 +57,8 @@ feature -- Basic operation.
 			a_type := (action_sequences.types) @ matched_index
 			
 			create Result.make_with_details (a_name, a_class_name, a_type, a_feature_name)
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 end -- class GB_EVENT_UTILITIES

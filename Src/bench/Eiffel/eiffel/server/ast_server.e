@@ -22,8 +22,8 @@ feature
 			!! Result.make
 		end
 
-	Size_limit: INTEGER is 100
-			-- Size of the AST_SERVER file (100 Ko)
+	Size_limit: INTEGER is 200
+			-- Size of the AST_SERVER file (200 Ko)
 
 	Chunk: INTEGER is 150
 			-- Size of a HASH_TABLE block

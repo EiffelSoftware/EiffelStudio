@@ -60,10 +60,10 @@ feature
 
 feature -- Server parameters
 
-	Size_limit: INTEGER is 100
-			-- Size of the TMP_POLY_SERVER file (100 Ko)
+	Size_limit: INTEGER is 300
+			-- Size of the TMP_POLY_SERVER file (300 Ko)
 
-	Chunk: INTEGER is 150
+	Chunk: INTEGER is 3000
 			-- Size of a HASH_TABLE block
 
 end

@@ -21,6 +21,8 @@ inherit
 			fill_calls_list, replicate
 		end
 
+	SHARED_TYPES
+
 feature -- Attribute
 
 	feature_name: FEATURE_NAME_B;

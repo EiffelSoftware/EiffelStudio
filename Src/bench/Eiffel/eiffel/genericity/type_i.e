@@ -2,157 +2,157 @@ deferred class TYPE_I
 
 inherit
 
-	HASHABLE;
-	SHARED_CODE_FILES;
-	SHARED_HASH_CODE;
-	SHARED_WORKBENCH;
-	SHARED_TYPE_I;
-	SK_CONST;
+	HASHABLE
+	SHARED_CODE_FILES
+	SHARED_HASH_CODE
+	SHARED_WORKBENCH
+	SHARED_TYPE_I
+	SK_CONST
 	COMPILER_EXPORTER
 
 feature
 
 	append_signature (st: STRUCTURED_TEXT) is
 		deferred
-		end;
+		end
 
 	dump (file: FILE) is
 			-- Debug purpose
 		deferred
-		end;
+		end
 
 	trace is
 			-- Debug purpose
 		do
-			dump (io.error);
-		end;
+			dump (io.error)
+		end
 
 	same_as (other: TYPE_I): BOOLEAN is
 			-- Is `other' equal to Current ?
 		require
-			good_argument: other /= Void;
+			good_argument: other /= Void
 		do
-		end;
+		end
 
 	is_valid: BOOLEAN is
 			-- Is the associated class still in the system ?
 		do
-			Result := True;
-		end;
+			Result := True
+		end
 
 	is_void: BOOLEAN is
 			-- Is the type a void one (i.e expression has NO type) ?
 		do
 			-- Do nothing
-		end;
+		end
 
 	is_long: BOOLEAN is
 			-- Is the type a long type ?
 		do
 			-- Do nothing
-		end;
+		end
 
 	is_boolean: BOOLEAN is
 			-- Is the type a boolean type
 		do
 			-- Do nothing
-		end;
+		end
 
 	is_char: BOOLEAN is
 			-- Is the type a char type ?
 		do
 			-- Do nothing
-		end;
+		end
 
 	is_float: BOOLEAN is
 			-- Is the type a float type ?
 		do
 			-- Do nothing
-		end;
+		end
 
 	is_double: BOOLEAN is
 			-- is the type a double type ?
 		do
 			-- Do nothing
-		end;
+		end
 
 	is_basic: BOOLEAN is
 			-- Is the type a basic type ?
 		do
 			-- Do nothing
-		end;
+		end
 
 	is_reference: BOOLEAN is
 			-- Is the type a reference type ?
 		do
 			-- Do nothing
-		end;
+		end
 
 	is_formal: BOOLEAN is
 			-- Is the type a formal type ?
 		do
 			-- Do nothing
-		end;
+		end
 
 	is_bit: BOOLEAN is
 			-- Is the type a bit type ?
 		do
 			-- Do nothing
-		end;
+		end
 	
 	is_none: BOOLEAN is
 			-- Is the type a none type ?
 		do
 			-- Do nothing
-		end;
+		end
 
 	is_expanded: BOOLEAN is
 			-- Is the type an expanded one ?
 		do
 			-- Do nothing
-		end;
+		end
 
 	is_separate: BOOLEAN is
 			-- Is the type a separate one ?
 		do
 			-- Do nothing
-		end;
+		end
 
 	is_feature_pointer: BOOLEAN is
 			-- Is the type a feature pointer one ?
 		do
 			-- Do nothing
-		end;
+		end
 
 	is_numeric: BOOLEAN is
 			-- is the type a simple numeric one ?
 		do
 			-- Do nothing
-		end;
+		end
 
 	has_formal: BOOLEAN is
 			-- Has the type some formal in its structure ?
 		do
 			-- Do nothing
-		end;
+		end
 
 	instantiation_in (other: GEN_TYPE_I): TYPE_I is
 			-- Instantiation of Current in context of `other'
 			-- FIXME: other not used in most implementors, and causes a crash when compiling generic expandeds
 		require
-			good_argument: other /= Void;
-			other_is_data: not other.has_formal;
+			good_argument: other /= Void
+			other_is_data: not other.has_formal
 		do
-			Result := Current;
+			Result := Current
 		ensure
 			no_formal_in_Result: not Result.has_formal
-		end;
+		end
 
 	c_type: TYPE_C is
 			-- Corresponding C type: either LONG_I, CHAR_I, DOUBLE_I,
 			-- REFERENCE_I, FLOAT_I
 		deferred
-		end;
+		end
 
 	description: ATTR_DESC is
 			-- Descritpion of type for skeletons
@@ -167,12 +167,12 @@ feature
 	sk_value: INTEGER is
 			-- Generate SK value associated to the current type.
 		deferred
-		end;
+		end
 
 	cecil_value: INTEGER is
 			-- Generate type value for cecil (byte_code)
 		deferred
-		end;
+		end
 
 feature -- Array optimization
 
@@ -182,6 +182,6 @@ feature -- Array optimization
 
 	conforms_to_array: BOOLEAN is
 		do
-		end;
+		end
 
 end

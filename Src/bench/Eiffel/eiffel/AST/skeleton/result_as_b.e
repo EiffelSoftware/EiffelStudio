@@ -1,12 +1,11 @@
 indexing
-
-	description:
-		"Abstract description to access to `Result'. %
-		%Version for Bench.";
+	description:"Abstract description to access to `Result'. %
+				%Version for Bench.";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class RESULT_AS_B
+class
+	RESULT_AS_B
 
 inherit
 
@@ -17,6 +16,8 @@ inherit
 			type_check, byte_node, 
 			replicate
 		end
+
+	SHARED_TYPES
 
 feature -- Type check, byte code and dead code removal
 

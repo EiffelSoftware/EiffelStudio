@@ -6,10 +6,10 @@ inherit
 		undefine
 			parse_special_part, is_macro
 		redefine
-			extension_i, byte_node
+			extension_i, byte_node, need_encapsulation
 		end
 
-feature
+feature -- Get the macro extension
 
 	extension_i (external_as: EXTERNAL_AS): C_MACRO_EXTENSION_I is
 			-- EXTERNAL_EXT_I corresponding to current extension
@@ -18,6 +18,11 @@ feature
 			init_extension_i (Result)
 			Result.set_special_file_name (special_file_name)
 		end
+
+feature -- Encapsulation
+
+	need_encapsulation: BOOLEAN is True
+			-- A macro needs to be encapsulated for polymorphic purpose.
 
 feature -- Byte code
 

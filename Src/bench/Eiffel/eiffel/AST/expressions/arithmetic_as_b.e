@@ -1,25 +1,23 @@
 indexing
-
-	description: "Binary arithmetic operation. Version for Bench.";
-	date: "$Date$";
+	description: "Binary arithmetic operation. Version for Bench."
+	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ARITHMETIC_AS_B
+deferred
+	class ARITHMETIC_AS_B
 
 inherit
-
 	ARITHMETIC_AS
 		redefine
 			left, right
-		end; 
+		end
 
 	BINARY_AS_B
 		undefine
 			operator_is_keyword, balanced_result,
 			balanced, operator_is_special
 		redefine
-			balanced, balanced_result, operator_is_special,
-			operator_is_keyword, left, right
+			left, right
 		end
 
 feature

@@ -3,24 +3,24 @@
 class AST_CONTEXT 
 
 inherit
-
 	EXTEND_STACK [TYPE_A]
 		rename
 			make as extend_stack_make
 		export
 			{ACCESS_FEAT_AS_B, PRECURSOR_AS_B} i_th
 		end
+
 	SHARED_SERVER
 		undefine
 			is_equal, copy, setup
-		end;
+		end
+
 	COMPILER_EXPORTER
 		undefine
 			is_equal, copy, setup
-		end;
+		end
 
 creation
-
 	make
 	
 feature 
@@ -287,7 +287,7 @@ feature
 			end;
 		end;
 
--- Managing the type stack
+feature -- Managing the type stack
 
 	pop (n: INTEGER) is
 			-- Pop `n' element of the stack
@@ -393,7 +393,7 @@ feature {STD_BYTE_CODE} -- Concurrent Eiffel
 	separate_calls: ARRAY [BOOLEAN]
 			-- Record separate calls on arguments
 
-feature
+feature -- Debugging
 
 	trace is
 			-- Trace the type stack

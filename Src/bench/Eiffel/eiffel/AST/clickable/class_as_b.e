@@ -1,72 +1,60 @@
 indexing
 
-	description: "Abstract description of an Eiffel class. Version for Bench.";
-	date: "$Date$";
+	description: "Abstract description of an Eiffel class. Version for Bench."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class CLASS_AS_B
 
 inherit
-
-	CLASS_AS
-		rename
-			set as abstract_set
-		redefine
-			class_name, obsolete_message, indexes,
-			generics, parents, creators, features,
-			invariant_part, suppliers,
-			associated_eiffel_class
-		end
 	CLASS_AS
 		redefine
 			class_name, obsolete_message, indexes,
 			generics, parents, creators, features,
 			invariant_part, suppliers, set,
 			associated_eiffel_class
-		select
-			set
-		end;
+		end
 
 	AST_EIFFEL_B
 		redefine
 			format
-		end;
+		end
 
-	IDABLE;
+	IDABLE
 
 	SHARED_INST_CONTEXT
 
 feature -- Attributes
 
-	id: CLASS_ID;
+	id: CLASS_ID
 			-- Class id
 
-	class_name: ID_AS_B;
+	class_name: ID_AS_B
 			-- Class name
 
-	obsolete_message: STRING_AS_B;
+	obsolete_message: STRING_AS_B
 			-- Obsolete message clause 
 			-- (Void if was not present)
 
-	indexes: EIFFEL_LIST_B [INDEX_AS_B];
+	indexes: EIFFEL_LIST_B [INDEX_AS_B]
 			-- Index clause
 
-	generics: EIFFEL_LIST_B [FORMAL_DEC_AS_B];
+	generics: EIFFEL_LIST_B [FORMAL_DEC_AS_B]
 			-- Formal generic parameter list
 
-	parents: EIFFEL_LIST_B [PARENT_AS_B];
+	parents: EIFFEL_LIST_B [PARENT_AS_B]
 			-- Inheritance clause
 
-	creators: EIFFEL_LIST_B [CREATE_AS_B];
+	creators: EIFFEL_LIST_B [CREATE_AS_B]
 			-- Creators
 
-	features: EIFFEL_LIST_B [FEATURE_CLAUSE_AS_B];
+	features: EIFFEL_LIST_B [FEATURE_CLAUSE_AS_B]
 			-- Feature list
 
-	invariant_part: INVARIANT_AS_B;
+	invariant_part: INVARIANT_AS_B
 			-- Class invariant
 
-	suppliers: SUPPLIERS_AS_B;
+	suppliers: SUPPLIERS_AS_B
 			-- Supplier types
 
 feature -- Initialization
@@ -76,7 +64,7 @@ feature -- Initialization
 		local
 			click_class_name: CLICK_AST
 		do
-			abstract_set;
+			{CLASS_AS} precursor
 
 				-- Check for Concurrent Eiffel
 			if is_separate and not System.Concurrent_eiffel then
@@ -84,18 +72,18 @@ feature -- Initialization
 			end
 
 				-- Click list management
-			click_list ?= yacc_arg (8);
-			click_class_name ?= click_list.first;
-			click_class_name.set_node (Current);
-		end;
+			click_list ?= yacc_arg (8)
+			click_class_name ?= click_list.first
+			click_class_name.set_node (Current)
+		end
 
 feature {COMPILER_EXPORTER} -- Setting
 
 	set_id (i: CLASS_ID) is
 			-- Assign `i' to `id'.
 		do
-			id := i;
-		end;
+			id := i
+		end
 
 feature {CLASS_C, COMPILED_CLASS_INFO} -- Class information
 
@@ -103,21 +91,21 @@ feature {CLASS_C, COMPILED_CLASS_INFO} -- Class information
 			-- Compiled information about the class produced after
 			-- parsing (useful for second pass).
 		local
-			parent_list: PARENT_LIST;
+			parent_list: PARENT_LIST
 		do
-			!!Result;
+			!!Result
 			if parents /= Void then
-				!!parent_list.make_filled (parents.count);
+				!!parent_list.make_filled (parents.count)
 			elseif not ("general").is_equal (class_name) then
-				!!parent_list.make_filled (1);
+				!!parent_list.make_filled (1)
 			else
-				!!parent_list.make (0);
-			end;
-			Result.set_parents (parent_list);
+				!!parent_list.make (0)
+			end
+			Result.set_parents (parent_list)
 				-- List `parent_list' will be filled by feature `init'
 				-- of CLASS_C
-			Result.set_creators (creators);
-		end;
+			Result.set_creators (creators)
+		end
 
 feature -- Stoning
  
@@ -125,116 +113,116 @@ feature -- Stoning
 		do
 			Result := Universe.class_named 
 						(class_name, 
-						reference_class.cluster).compiled_eclass;
-		end;
+						reference_class.cluster).compiled_eclass
+		end
 
-	click_list: CLICK_LIST;
+	click_list: CLICK_LIST
 
 feature -- Formatting
 
 	format (ctxt: FORMAT_CONTEXT_B) is
 		local
-			s: STRING;
+			s: STRING
 		do
-			ctxt.put_front_text_item (ti_Before_class_declaration);
-			ctxt.prepare_class_text;
+			ctxt.put_front_text_item (ti_Before_class_declaration)
+			ctxt.prepare_class_text
 			if indexes /= void and not indexes.empty then
-				ctxt.put_text_item (ti_Before_indexing);
-				ctxt.put_text_item (ti_Indexing_keyword);
-				ctxt.indent;
-				ctxt.new_line;
+				ctxt.put_text_item (ti_Before_indexing)
+				ctxt.put_text_item (ti_Indexing_keyword)
+				ctxt.indent
+				ctxt.new_line
 				if ctxt.is_short then
-					ctxt.set_separator (Void);
+					ctxt.set_separator (Void)
 				else
-					ctxt.set_separator (ti_Semi_colon);
-				end;
-				ctxt.set_new_line_between_tokens;
-				indexes.format (ctxt);
-				ctxt.put_text_item (ti_After_indexing);
-				ctxt.exdent;
-				ctxt.new_line;
-				ctxt.new_line;
-			end;
+					ctxt.set_separator (ti_Semi_colon)
+				end
+				ctxt.set_new_line_between_tokens
+				indexes.format (ctxt)
+				ctxt.put_text_item (ti_After_indexing)
+				ctxt.exdent
+				ctxt.new_line
+				ctxt.new_line
+			end
 
-			ctxt.put_text_item (ti_Before_class_header);
+			ctxt.put_text_item (ti_Before_class_header)
 			if is_expanded then
-				ctxt.put_text_item (ti_Expanded_keyword);
+				ctxt.put_text_item (ti_Expanded_keyword)
 				ctxt.put_space
 			elseif is_deferred then
-				ctxt.put_text_item (ti_Deferred_keyword);
+				ctxt.put_text_item (ti_Deferred_keyword)
 				ctxt.put_space
-			end;
-			ctxt.put_text_item (ti_Class_keyword);
-			ctxt.put_space;
+			end
+			ctxt.put_text_item (ti_Class_keyword)
+			ctxt.put_space
 			if ctxt.is_short then
 				ctxt.put_text_item (ti_Interface_keyword)
-				ctxt.indent;
-				ctxt.new_line;
-			end;
+				ctxt.indent
+				ctxt.new_line
+			end
 			ctxt.put_classi (ctxt.class_c.lace_class);	
-			ctxt.put_text_item (ti_After_class_header);
+			ctxt.put_text_item (ti_After_class_header)
 			if ctxt.is_short then
 				ctxt.exdent
-			end;
+			end
 
 			if generics /= Void then
-				ctxt.put_space;
-				ctxt.put_text_item_without_tabs (ti_Before_formal_generics);
-				ctxt.put_text_item_without_tabs (ti_L_bracket);
-				ctxt.set_space_between_tokens;
-				ctxt.set_separator (ti_Comma);
-				generics.format (ctxt);
-				ctxt.put_text_item_without_tabs (ti_R_bracket);
+				ctxt.put_space
+				ctxt.put_text_item_without_tabs (ti_Before_formal_generics)
+				ctxt.put_text_item_without_tabs (ti_L_bracket)
+				ctxt.set_space_between_tokens
+				ctxt.set_separator (ti_Comma)
+				generics.format (ctxt)
+				ctxt.put_text_item_without_tabs (ti_R_bracket)
 				ctxt.put_text_item_without_tabs (ti_After_formal_generics)
-			end;
-			ctxt.new_line;
+			end
+			ctxt.new_line
 			if ctxt.is_clickable_format and obsolete_message /= Void then
-				ctxt.new_line;
-				ctxt.put_text_item (ti_Before_obsolete);
-				ctxt.put_text_item_without_tabs (ti_Obsolete_keyword);
-				ctxt.put_space;
-				obsolete_message.format (ctxt);
-				ctxt.put_text_item_without_tabs (ti_After_obsolete);
-				ctxt.new_line;
-			end;
+				ctxt.new_line
+				ctxt.put_text_item (ti_Before_obsolete)
+				ctxt.put_text_item_without_tabs (ti_Obsolete_keyword)
+				ctxt.put_space
+				obsolete_message.format (ctxt)
+				ctxt.put_text_item_without_tabs (ti_After_obsolete)
+				ctxt.new_line
+			end
 			if ctxt.is_clickable_format and parents /= Void then
-				ctxt.new_line;
-				ctxt.put_text_item (ti_Before_inheritance);
-				ctxt.put_text_item_without_tabs (ti_Inherit_keyword);
-				ctxt.indent;
-				ctxt.new_line;
-				ctxt.set_new_line_between_tokens;
-				ctxt.set_separator (ti_Semi_colon);
-				ctxt.set_classes (ctxt.class_c, ctxt.class_c);
-				parents.format (ctxt);
-				ctxt.set_classes (Void, Void);
-				ctxt.put_text_item (ti_After_inheritance);
-				ctxt.new_line;
-				ctxt.exdent;
-			end;
+				ctxt.new_line
+				ctxt.put_text_item (ti_Before_inheritance)
+				ctxt.put_text_item_without_tabs (ti_Inherit_keyword)
+				ctxt.indent
+				ctxt.new_line
+				ctxt.set_new_line_between_tokens
+				ctxt.set_separator (ti_Semi_colon)
+				ctxt.set_classes (ctxt.class_c, ctxt.class_c)
+				parents.format (ctxt)
+				ctxt.set_classes (Void, Void)
+				ctxt.put_text_item (ti_After_inheritance)
+				ctxt.new_line
+				ctxt.exdent
+			end
 
-			ctxt.new_line;
+			ctxt.new_line
 
 			if creators /= Void then
-				ctxt.put_text_item (ti_Before_creators);
-				ctxt.continue_on_failure;
-				creators.format (ctxt);
+				ctxt.put_text_item (ti_Before_creators)
+				ctxt.continue_on_failure
+				creators.format (ctxt)
 				if not ctxt.last_was_printed then
-					ctxt.put_text_item (ti_Creation_keyword);
-					ctxt.new_line;
-				end;
-				ctxt.put_text_item (ti_After_creators);
-				ctxt.new_line;
+					ctxt.put_text_item (ti_Creation_keyword)
+					ctxt.new_line
+				end
+				ctxt.put_text_item (ti_After_creators)
+				ctxt.new_line
 			end;		
 			ctxt.format_categories;	
 			ctxt.format_invariants;	
-			ctxt.put_text_item (ti_Before_class_end);
-			ctxt.put_text_item (ti_End_keyword);
-			ctxt.end_class_text;
-			ctxt.put_text_item (ti_After_class_end);
+			ctxt.put_text_item (ti_Before_class_end)
+			ctxt.put_text_item (ti_End_keyword)
+			ctxt.end_class_text
+			ctxt.put_text_item (ti_After_class_end)
 			ctxt.put_text_item (ti_After_class_declaration)
-			ctxt.new_line;
-		end;
+			ctxt.new_line
+		end
 
 feature {AST_REGISTRATION} -- Implementation
 
@@ -243,17 +231,17 @@ feature {AST_REGISTRATION} -- Implementation
 			-- invariant in `ast_reg'.
 		local
 			f: like features;	
-			fc, next_fc: FEATURE_CLAUSE_AS_B;
-			inv_adapter: INVARIANT_ADAPTER;
-			e_file: EIFFEL_FILE;
-			l_count: INTEGER;
-			feature_list: EIFFEL_LIST_B [FEATURE_AS_B];
-			i: INTEGER;
+			fc, next_fc: FEATURE_CLAUSE_AS_B
+			inv_adapter: INVARIANT_ADAPTER
+			e_file: EIFFEL_FILE
+			l_count: INTEGER
+			feature_list: EIFFEL_LIST_B [FEATURE_AS_B]
+			i: INTEGER
 		do
-			f := features;
+			f := features
 			if f /= Void then
 				l_count := f.count;	
-				i := 1;
+				i := 1
 				if ast_reg.already_extracted_comments then
 					-- This means that the comments are already 
 					-- extracted so there is no record additional 
@@ -262,53 +250,53 @@ feature {AST_REGISTRATION} -- Implementation
 					until
 						i > l_count
 					loop
-						fc := f.i_th (i);
+						fc := f.i_th (i)
 							-- Register all the features.
-						fc.register_features (ast_reg);
+						fc.register_features (ast_reg)
 							-- Now Register feature clause.
-						ast_reg.register_feature_clause (fc);
-						i := i + 1;
+						ast_reg.register_feature_clause (fc)
+						i := i + 1
 					end
 				else
-					e_file := ast_reg.eiffel_file;
+					e_file := ast_reg.eiffel_file
 					-- This means we are registering non precompiled
 					-- features for an eiffel project or we are
 					-- current precompiling features.
 					from
 						if l_count > 0 then
-							fc := f.i_th (1);
+							fc := f.i_th (1)
 						end
 					until
 						i > l_count
 					loop
-						i := i + 1;
+						i := i + 1
 						if i > l_count then
-							e_file.set_next_feature_clause (Void);
+							e_file.set_next_feature_clause (Void)
 						else
-							next_fc := f.i_th (i);
-							e_file.set_next_feature_clause (next_fc);
-						end;
-						e_file.set_current_feature_clause (fc);
+							next_fc := f.i_th (i)
+							e_file.set_next_feature_clause (next_fc)
+						end
+						e_file.set_current_feature_clause (fc)
 							-- Need to set next feature if it exists
 							-- for extracting feature clause comments.
 						feature_list := fc.features;	
 							-- Register all the features.
-						fc.register_features (ast_reg);
+						fc.register_features (ast_reg)
 							-- Now Register feature clause.
 						if feature_list.empty then
-							e_file.set_next_feature (Void);
+							e_file.set_next_feature (Void)
 						else
-							e_file.set_next_feature (feature_list.i_th (1));
-						end;
-						ast_reg.register_feature_clause (fc);
-						fc := next_fc;
+							e_file.set_next_feature (feature_list.i_th (1))
+						end
+						ast_reg.register_feature_clause (fc)
+						fc := next_fc
 					end
 				end
-			end;
+			end
 			if invariant_part /= Void then
 				ast_reg.register_invariant (invariant_part)
 			end
-		end;
+		end
 
 feature {CASE_CLASS_INFO} -- Case storage output
 
@@ -318,60 +306,60 @@ feature {CASE_CLASS_INFO} -- Case storage output
 		require
 			valid_classc: classc /= Void
 		local
-			g_l: FIXED_LIST [S_GENERIC_DATA];
-			i_l: FIXED_LIST [S_TAG_DATA];
-			s_chart: S_CLASS_CHART;
-			gen: FORMAL_DEC_AS_B;
-			gen_name: STRING;
-			gen_data: S_GENERIC_DATA;
-			type_info: S_TYPE_INFO;
-			name: STRING;
+			g_l: FIXED_LIST [S_GENERIC_DATA]
+			i_l: FIXED_LIST [S_TAG_DATA]
+			s_chart: S_CLASS_CHART
+			gen: FORMAL_DEC_AS_B
+			gen_name: STRING
+			gen_data: S_GENERIC_DATA
+			type_info: S_TYPE_INFO
+			name: STRING
 		do
-			name := class_name.string_value;
-			name.to_upper;
-			!! Result.make (name);
-			Result.set_reversed_engineered;
+			name := class_name.string_value
+			name.to_upper
+			!! Result.make (name)
+			Result.set_reversed_engineered
 			if indexes /= Void then
-				!! s_chart;
+				!! s_chart
 				from
-					!! i_l.make_filled (indexes.count);
-					i_l.start;
+					!! i_l.make_filled (indexes.count)
+					i_l.start
 					indexes.start
 				until
 					indexes.after
 				loop
-					i_l.replace (indexes.item.storage_info);
-					i_l.forth;
+					i_l.replace (indexes.item.storage_info)
+					i_l.forth
 					indexes.forth
 				end
-				s_chart.set_indexes (i_l);
-				Result.set_chart (s_chart);
-			end;
+				s_chart.set_indexes (i_l)
+				Result.set_chart (s_chart)
+			end
 			if generics /= Void then
-				!! g_l.make_filled (generics.count);
+				!! g_l.make_filled (generics.count)
 				from
-					generics.start;
+					generics.start
 					g_l.start
 				until
 					generics.after
 				loop
-					gen := generics.item;
-					!! gen_name.make (0);
-					gen_name.append (gen.formal_name);
-					gen_name.to_upper;
+					gen := generics.item
+					!! gen_name.make (0)
+					gen_name.append (gen.formal_name)
+					gen_name.to_upper
 					if gen.constraint = Void then
 						!! gen_data.make (gen_name, Void)
 					else
-						type_info := gen.constraint_type.storage_info (classc);
+						type_info := gen.constraint_type.storage_info (classc)
 						!! gen_data.make (gen_name, type_info)
-					end;
-					g_l.replace (gen_data);
-					g_l.forth;
+					end
+					g_l.replace (gen_data)
+					g_l.forth
 					generics.forth
-				end;
-				Result.set_generics (g_l);
-			end;
-		end;
+				end
+				Result.set_generics (g_l)
+			end
+		end
 
 feature {CLASS_C} -- Update
 

@@ -22,8 +22,7 @@ feature
 
 	need_encapsulation: BOOLEAN is
 			-- Does this language extension need an encapsulation?
-		do
-			Result := True
+		deferred
 		end
 
 feature -- Type check

@@ -8,7 +8,7 @@ inherit
 		undefine
 			is_deferred, has_instruction, index_of_instruction
 		redefine
-			is_deferred, byte_node
+			byte_node
 		end
 
 feature -- byte code

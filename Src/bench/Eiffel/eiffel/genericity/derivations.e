@@ -1,17 +1,17 @@
 -- Table recording all the derivations of all the generic classes indexed by class id
 
-class DERIVATIONS
+class
+	DERIVATIONS
 
 inherit
+	HASH_TABLE [FILTER_LIST, CLASS_ID]
 
-	HASH_TABLE [FILTER_LIST, CLASS_ID];
 	COMPILER_EXPORTER
 		undefine
 			is_equal, copy
 		end
 
 creation
-
 	make
 
 feature

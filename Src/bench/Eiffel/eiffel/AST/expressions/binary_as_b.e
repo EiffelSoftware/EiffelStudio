@@ -7,17 +7,16 @@ indexing
 deferred class BINARY_AS_B
 
 inherit
-
 	BINARY_AS
 		redefine
 			left, right
-		end;
+		end
 
 	EXPR_AS_B
 		redefine
 			type_check, byte_node, format,
 			fill_calls_list, replicate
-		end;
+		end
 
 	SHARED_ARG_TYPES
 

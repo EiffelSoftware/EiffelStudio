@@ -55,8 +55,8 @@ feature
 			end; 
 		end;
 
-	Size_limit: INTEGER is 200
-			-- Size of the FEAT_TBL_SERVER file (200 Ko)
+	Size_limit: INTEGER is 400
+			-- Size of the FEAT_TBL_SERVER file (400 Ko)
 
 	Chunk: INTEGER is 150
 			-- Size of a HASH_TABLE block

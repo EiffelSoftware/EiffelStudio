@@ -115,69 +115,67 @@ feature
 				!!vgcp1;
 				vgcp1.set_class (a_class);
 				Error_handler.insert_error (vgcp1);
-			elseif creators.i_th (1).feature_list = Void then
-					--| no creation routines (i.e. not allowed
-					--| to create instances of `a_class').
-				!!Result.make (0);
 			else
 				from
-					!!Result.make (creators.count);
+					!! Result.make (creators.count);
 					creators.start;
 				until
 					creators.after
 				loop
-					from
-						c_reation := creators.item;
-						clients := c_reation.clients;
-						if clients /= Void then
-							export_status := clients.export_status;
-						else
-							export_status := Export_all;
-						end;
-						feature_list := c_reation.feature_list;
-						feature_list.start
-					until
-						feature_list.after
-					loop
-						feature_name := feature_list.item.internal_name;
-						a_feature := feat_table.item (feature_name);
-						if a_feature = Void then
-							!!vgcp2;
-							vgcp2.set_class (a_class);
-							vgcp2.set_feature_name (feature_name);
-							Error_handler.insert_error (vgcp2);
-						else
-							if Result.has (feature_name) then
-								!!vgcp3;
-								vgcp3.set_class (a_class);
-								vgcp3.set_feature_name (feature_name);
-								Error_handler.insert_error (vgcp3);
+					c_reation := creators.item;
+					if c_reation.feature_list /= Void then
+						from
+							clients := c_reation.clients;
+							if clients /= Void then
+								export_status := clients.export_status;
 							else
-								Result.put (export_status, feature_name);
+								export_status := Export_all;
 							end;
-							if not a_feature.type.is_void then
-								!!vgcp21;
-								vgcp21.set_class (a_class);
-								vgcp21.set_feature_name (feature_name);
-								Error_handler.insert_error (vgcp21);
+							feature_list := c_reation.feature_list;
+							feature_list.start
+						until
+							feature_list.after
+						loop
+							feature_name := feature_list.item.internal_name;
+							a_feature := feat_table.item (feature_name);
+							if a_feature = Void then
+								!!vgcp2;
+								vgcp2.set_class (a_class);
+								vgcp2.set_feature_name (feature_name);
+								Error_handler.insert_error (vgcp2);
+							else
+								if Result.has (feature_name) then
+									!!vgcp3;
+									vgcp3.set_class (a_class);
+									vgcp3.set_feature_name (feature_name);
+									Error_handler.insert_error (vgcp3);
+								else
+									Result.put (export_status, feature_name);
+								end;
+								if not a_feature.type.is_void then
+									!!vgcp21;
+									vgcp21.set_class (a_class);
+									vgcp21.set_feature_name (feature_name);
+									Error_handler.insert_error (vgcp21);
+								end;
+								if a_class.is_expanded 
+									and then
+									(
+										Result.count > 1
+										or else
+										a_feature.argument_count > 0
+									)
+								then
+									!!vgcp4;
+									vgcp4.set_class (a_class);
+									vgcp4.set_feature_name (feature_name);
+									Error_handler.insert_error (vgcp4);
+									Error_handler.checksum
+								end;
 							end;
-							if a_class.is_expanded 
-								and then
-								(
-									Result.count > 1
-									or else
-									a_feature.argument_count > 0
-								)
-							then
-								!!vgcp4;
-								vgcp4.set_class (a_class);
-								vgcp4.set_feature_name (feature_name);
-								Error_handler.insert_error (vgcp4);
-								Error_handler.checksum
-							end;
+							feature_list.forth;
 						end;
-						feature_list.forth;
-					end;
+					end
 					creators.forth;
 				end;
 			end;

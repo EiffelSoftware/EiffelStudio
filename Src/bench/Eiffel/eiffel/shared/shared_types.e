@@ -5,49 +5,43 @@ feature {NONE}
 	Integer_type: INTEGER_A is
 			-- Actual integer type
 		once
-			!!Result;
-		end;
+			!! Result
+		end
 
 	Boolean_type: BOOLEAN_A is
 			-- Actual boolean type
 		once
-			!!Result;
-		end;
+			!! Result
+		end
 
 	Character_type: CHARACTER_A is
 			-- Actual integer type
 		once
-			!!Result;
-		end;
+			!! Result
+		end
 
 	Real_type: REAL_A is
 			-- Actual real type
 		once
-			!!Result;
-		end;
+			!! Result
+		end
 
 	Double_type: DOUBLE_A is
 			-- Actual double type
 		once
-			!!Result;
-		end;
+			!! Result
+		end
 
 	Void_type: VOID_A is
 			-- Actual void type
 		once
-			!!Result;
-		end;
-
-	None_type: NONE_A is
-			-- Actual NONE type
-		once
-			!!Result;
-		end;
+			!! Result
+		end
 
 	Pointer_type: POINTER_A is
 			-- Actual pointer type
 		once
-			!!Result;
-		end;
+			!! Result
+		end
 
 end

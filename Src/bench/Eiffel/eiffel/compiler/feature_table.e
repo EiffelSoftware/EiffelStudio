@@ -2,75 +2,64 @@
 -- the real feature name available in the corresponding classes, and of items
 -- the feature id corresponding to the names (id of instance of FEATURE_I).
 
-class FEATURE_TABLE 
+class
+	FEATURE_TABLE 
 
 inherit
-
 	IDABLE
 		rename
-			same_type as general_same_type,
 			id as feat_tbl_id,
 			set_id as set_feat_tbl_id
 		undefine
 			copy, is_equal
-		end;
+		end
+
 	EXTEND_TABLE [FEATURE_I, STRING]
-		rename
-			same_type as general_same_type
 		export {CLASS_C, COMPILED_CLASS_INFO}
-			pos_for_iter
+			iteration_position
 		end
+
 	SHARED_WORKBENCH
-		rename
-			same_type as general_same_type
 		undefine
 			copy, is_equal
-		end;
+		end
+
 	SHARED_TABLE
-		rename
-			same_type as general_same_type
 		undefine
 			copy, is_equal
-		end;
+		end
+
 	SHARED_ERROR_HANDLER
-		rename
-			same_type as general_same_type
 		undefine
 			copy, is_equal
-		end;
+		end
+
 	SHARED_BODY_ID
-		rename
-			same_type as general_same_type
 		undefine
 			copy, is_equal
 		end
+
 	SH_DEBUG
-		rename
-			same_type as general_same_type
 		undefine
 			copy, is_equal
 		end
+
 	SHARED_ARRAY_BYTE
-		rename
-			same_type as general_same_type
 		undefine
 			copy, is_equal
 		end
+
 	SHARED_SERVER
-		rename
-			same_type as general_same_type
 		undefine
 			copy, is_equal
-		end;
+		end
+
 	COMPILER_EXPORTER
-        rename
-            same_type as general_same_type
 		undefine
 			copy, is_equal
 		end	
 
 creation
-
 	make
 	
 feature 
@@ -202,7 +191,7 @@ end;
 			depend_unit: DEPEND_UNIT;
 			external_i: EXTERNAL_I;
 			propagate_feature: BOOLEAN;
-			same_interface, same_type: BOOLEAN;
+			same_interface, has_same_type: BOOLEAN;
 		do
 				-- Iteration on the features of the current feature
 				-- table.
@@ -220,10 +209,10 @@ end;
 					-- New feature
 				new_feature_i := other.item (feature_name);
 				if new_feature_i /= Void then
-					same_type := True;
+					has_same_type := True;
 					same_interface := old_feature_i.same_interface (new_feature_i)
 					if not same_interface then
-						same_type := old_feature_i.same_type (new_feature_i);
+						has_same_type := old_feature_i.same_class_type (new_feature_i);
 					end;
 				end;
 					-- First condition, `other' must have the feature
@@ -304,7 +293,7 @@ end;
 				if 	new_feature_i /= Void
 					and then
 					(old_feature_i.is_attribute /= new_feature_i.is_attribute or else
-					 not same_type)
+					 not has_same_type)
 				then
 						-- Detect an attribute changed into a function.
 					if depend_unit = Void then
@@ -444,7 +433,7 @@ end;
 			until
 				after
 			loop
-				pos := pos_for_iter
+				pos := iteration_position
 				feature_i := item_for_iteration;
 				if feature_i.is_deferred then
 					deferred_found := True;
@@ -515,7 +504,7 @@ end;
 			feat: FEATURE_I;
 			pos: INTEGER
 		do
-			pos := pos_for_iter
+			pos := iteration_position
 			from
 				start
 			until
@@ -536,7 +525,7 @@ end;
 			feat: FEATURE_I;
 			pos: INTEGER
 		do
-			pos := pos_for_iter
+			pos := iteration_position
 			from
 				start
 			until
@@ -557,7 +546,7 @@ end;
 			feat: FEATURE_I;
 			pos: INTEGER
 		do
-			pos := pos_for_iter
+			pos := iteration_position
 			from
 				start
 			until
@@ -801,34 +790,29 @@ feature -- API
 	api_table: E_FEATURE_TABLE is
 			-- API table of features
 		local
-			cont: like content;
-			i, c: INTEGER;
 			c_id: CLASS_ID;
 			feat: FEATURE_I;
-			other_content: ARRAY [E_FEATURE];
 		do
-			!! Result;
-			c_id := feat_tbl_id;
-			Result.basic_copy_from (Current);
-			Result.set_class_id (c_id);
 			from
-				cont := content;
-				c := cont.count;
-				!! other_content.make (0, c);
-				i := 0
+				!! Result.make (count)
+				if object_comparison then
+					Result.compare_objects
+				else
+					Result.compare_references
+				end	
+				c_id := feat_tbl_id
+				Result.set_class_id (c_id)
+				start
 			until
-				i >= c	
+				after
 			loop
-				feat := cont.item (i);
+				feat := item_for_iteration
 				if feat /= Void then
-					other_content.put (feat.api_feature (c_id), i);
-				end;
-				i := i + 1
-			end;
-			Result.set_content (other_content);
-			Result.set_deleted_marks (clone (deleted_marks));
-			Result.set_keys (clone (keys));
-		end;
+					Result.put (feat.api_feature (c_id), key_for_iteration)
+				end
+				forth
+			end
+		end
 
     written_in_features: LIST [E_FEATURE] is
             -- List of features defined in current class

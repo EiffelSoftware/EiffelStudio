@@ -14,14 +14,14 @@ inherit
 	ACCESS_ID_AS
 		redefine
 			feature_name, parameters
-		end;
+		end
 
 	ACCESS_INV_AS_B
 		rename
 			access_type as feature_access_type
 		redefine
 			feature_name, parameters, is_argument
-		end;
+		end
 
 	ACCESS_INV_AS_B
 		redefine

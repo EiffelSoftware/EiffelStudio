@@ -11,7 +11,7 @@ inherit
 		undefine
 			balanced
 		redefine
-			balanced, left, right
+			left, right
 		end
 
 feature -- Properties

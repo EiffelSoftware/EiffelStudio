@@ -19,36 +19,39 @@ feature -- Initialization
 			non_void_xml_file_path: xml_file_path /= Void
 		end
 		
-	initialize (an_xml_file: STRING) is
+	initialize (an_assembly_name: STRING) is
 			-- Set `xml_file' with `an_xml_file' and create an instance of MEMBER_XML_PARSER.
 		require
-			non_void_an_xml_file: an_xml_file /= Void
-			not_empty_an_xml_file: not an_xml_file.is_empty
+			non_void_an_assembly_name: an_assembly_name /= Void
+			not_empty_an_assembly_name: not an_assembly_name.is_empty
 		local
 			f: RAW_FILE
 			retried: BOOLEAN
 		do
-			if not retried then
-				xml_file_path := an_xml_file
+			if not retried and then not Member_parser_table.has (an_assembly_name) then
 				create member_parser.make
-
+				xml_file_path := path_to_assembly (an_assembly_name)
 				create f.make_open_read (xml_file_path)
 				f.read_stream (f.count)
 				if f.last_string /= Void then
 					member_parser.parse_string (f.last_string)
 					member_parser.set_end_of_file
 					if not member_parser.is_correct then
-						-- print ("%NErrors detected%N")
-						-- print (member_parser.last_error_description)
+						--print ("%NErrors detected%N")
+						--print (member_parser.last_error_description)
 					else
-						-- print ("%NNo errors detected%N")
+						--print ("%NNo errors detected%N")
 					end
 				else
-					-- print ("File has no content%N")
+					print ("File has no content%N")
 				end
+				Member_parser_table.put (member_parser, an_assembly_name)
+			elseif not Member_parser_table.has (an_assembly_name) then
+				Member_parser_table.put (Void, an_assembly_name)
 			end
 		ensure
-			xml_file_path_set: xml_file_path = an_xml_file
+			xml_file_path_set: xml_file_path = path_to_assembly (an_assembly_name)
+--			Member_parser_table_set: Member_parser_table.has (an_assembly_name)
 		rescue
 			retried := True
 			retry
@@ -57,42 +60,83 @@ feature -- Initialization
 
 feature {NONE} -- Access
 
-	member_parser: MEMBER_XML_PARSER
-			-- Member parser
+	member_parser_table: HASH_TABLE [MEMBER_XML_PARSER, STRING] is
+			-- Caching member_parser already calculated.
+		once
+			create Result.make (20)
+		ensure
+			non_void_result: Result /= Void
+		end
 
-feature -- Access
+	member_parser: MEMBER_XML_PARSER
+			-- Current member parser.
 
 	xml_file_path: STRING
-			-- Path to xml document.
+			-- Path to current xml document.
 
 
 feature -- Basic Operations
 
-	find_type (a_full_dotnet_type: STRING): MEMBER_INFORMATION is
+	find_type (assembly_type: CONSUMED_ASSEMBLY; a_full_dotnet_type: STRING): MEMBER_INFORMATION is
 			-- Find comments relative to `a_full_dotnet_type'.
 		require else
-			initialized: not xml_file_path.is_empty
+			non_void_assembly_type: assembly_type /= Void
 			non_void_a_full_dotnet_type: a_full_dotnet_type /= Void
 			not_empty_a_full_dotnet_type: not a_full_dotnet_type.is_empty
+		local
+			l_assembly_name: STRING
 		do
+			l_assembly_name := assembly_type.name
+			if not Member_parser_table.has (l_assembly_name) then
+				initialize (l_assembly_name)
+			else
+				xml_file_path := path_to_assembly (l_assembly_name)
+				member_parser := Member_parser_table.item (l_assembly_name)
+			end
+			if not xml_file_path.is_empty and member_parser /= Void then
+				
+			end
 			Result := find_member (a_full_dotnet_type, "")
 		end
 
-	find_feature (a_full_dotnet_type: STRING; a_member_signature: STRING): MEMBER_INFORMATION is
+	find_feature (assembly_type: CONSUMED_ASSEMBLY; a_full_dotnet_type: STRING; a_member_signature: STRING): MEMBER_INFORMATION is
 			-- Find comments of feature of `a_full_dotnet_type' corresponding to `a_feature_signature'.
 			-- Constructor signature: #ctor[(TYPE,TYPE,...)]
 			-- Feature signature: feature_name[(TYPE,TYPE,...)]
 			-- Attribute signature: attribute_name
 		require else
-			initialized: not xml_file_path.is_empty
+			non_void_assembly_type: assembly_type /= Void
 			non_void_a_full_dotnet_type: a_full_dotnet_type /= Void
 			not_empty_a_full_dotnet_type: not a_full_dotnet_type.is_empty
 			non_void_a_member_signature: a_member_signature /= Void
 			not_empty_a_member_signature: not a_member_signature.is_empty
 			valid_dotnet_signature: is_valid_dotnet_signature (a_member_signature)
+		local
+			l_assembly_name: STRING
 		do
+			l_assembly_name := assembly_type.name
+			if not Member_parser_table.has (l_assembly_name) then
+				initialize (l_assembly_name)
+			else
+				xml_file_path := path_to_assembly (l_assembly_name)
+				member_parser := Member_parser_table.item (l_assembly_name)
+			end
 			Result := find_member (a_full_dotnet_type, a_member_signature)
 		end
+
+	path_to_assembly (an_assembly_name: STRING): STRING is
+			-- path to assembly.
+		require
+			non_void_an_assembly_name: an_assembly_name /= Void
+			not_empty_an_assembly_name: not an_assembly_name.is_empty
+		do
+			create Result.make_from_string ((create {EAC_COMMON_PATH}).dotnet_framework_path + an_assembly_name + ".xml")
+		ensure
+			non_void_result: Result /= Void
+		end
+		
+
+feature -- Status Setting
 
 	is_valid_dotnet_signature (a_feature_signature: STRING): BOOLEAN is
 			-- Is `a_feature_signature' correct?
@@ -122,6 +166,46 @@ feature -- Basic Operations
 				end
 			end			
 		end
+
+feature {NONE} -- Status Setting
+
+	is_valid_feature_name (a_feature_name: STRING): BOOLEAN is
+			-- Is `a_feature_name' valid?
+		require
+			non_void_a_feature_name: a_feature_name /= Void
+			not_empty_a_feature_name: not a_feature_name.is_empty
+		do
+			if a_feature_name.has (' ') or a_feature_name.has ('.') or a_feature_name.has (')') then
+				Result := False
+			else
+				Result := True
+			end
+		end
+
+	is_valid_parameters (parameters: STRING): BOOLEAN is
+			-- Is `parameters' has a valid format?
+			--| Rules : if empty return True.
+			--|			else
+			--|				must start and finish with '(' and ')' and must contain something between parantheses.
+						
+		require
+			non_void_parameters: parameters /= Void
+		do
+			if parameters.is_empty then
+				Result := True
+			else
+				if parameters.has (' ') or parameters.has (';') then
+					Result := False
+				else
+					if parameters.item (1).is_equal ('(') and parameters.item (parameters.count).is_equal (')') then
+						if parameters.count > 2 then
+							Result := True
+						end
+					end
+				end
+			end
+		end
+
 
 feature {NONE} -- Implementation
 
@@ -171,43 +255,6 @@ feature {NONE} -- Implementation
 					end
 				else
 					--print ("File has no content%N")
-				end
-			end
-		end
-		
-	is_valid_feature_name (a_feature_name: STRING): BOOLEAN is
-			-- Is `a_feature_name' valid?
-		require
-			non_void_a_feature_name: a_feature_name /= Void
-			not_empty_a_feature_name: not a_feature_name.is_empty
-		do
-			if a_feature_name.has (' ') or a_feature_name.has ('.') or a_feature_name.has (')') then
-				Result := False
-			else
-				Result := True
-			end
-		end
-
-	is_valid_parameters (parameters: STRING): BOOLEAN is
-			-- Is `parameters' has a valid format?
-			--| Rules : if empty return True.
-			--|			else
-			--|				must start and finish with '(' and ')' and must contain something between parantheses.
-						
-		require
-			non_void_parameters: parameters /= Void
-		do
-			if parameters.is_empty then
-				Result := True
-			else
-				if parameters.has (' ') or parameters.has (';') then
-					Result := False
-				else
-					if parameters.item (1).is_equal ('(') and parameters.item (parameters.count).is_equal (')') then
-						if parameters.count > 2 then
-							Result := True
-						end
-					end
 				end
 			end
 		end

@@ -160,6 +160,9 @@
 					<item>
 						<bold>EV_WINDOW</bold> - Now setting and querying focus works in all circumstances with all window types
 					</item>
+					<item>
+						<bold>EV_DRAWABLE</bold> - Fixed mask handling for draw_sub_pixmap to work with non-zero 'area' coordinates
+					</item>
 				</list>
 			</item>
 		</list>

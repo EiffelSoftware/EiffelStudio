@@ -32,16 +32,68 @@
       <h2>Added keywords:</h2>
       <ul>
         <li><b><font color="#0000FF"><a href="../Eiffel/language/precursor_construct.html">Precursor</a></font></b></li>
+        <li>Tilde operator: new symbol used by the Agent mechanism.</li>
         <li><b><font color="#0000FF">create</font></b>: Instead of using the
-          famous exclamation mark to create an object</li>
-        <li>Tilde operator: see section about Agents below for more details.</li>
+          famous exclamation mark to create an instance of a class, you can use
+          the keyword `<b><font color="#0000FF">create</font></b>'. Below you
+          will find a correspondence table between the old and the new syntax.
+          The old syntax is still valid, but at some points ISE will remove it
+          from its implementation:<br>
+          <center>
+          <table border="1" cellspacing="0">
+          	<tr><td bgcolor="#FFFFCC" width="50%">Old syntax</td><td bgcolor="#FFFFCC" width="50%">New
+                syntax</td></tr>
+          	<tr><td bgcolor="#FFFFFF" width="50%"><b>!! </b> a</td><td bgcolor="#FFFFFF" width="50%"><b>create</b> a</td></tr>
+          	<tr><td bgcolor="#FFFFFF" width="50%"><b>!! </b> a.make</td><td bgcolor="#FFFFFF" width="50%"><b>create</b>
+                a.make</td></tr>
+          	<tr><td bgcolor="#FFFFFF" width="50%"><b>!</b>B<b>!</b> a</td><td bgcolor="#FFFFFF" width="50%"><b>create</b> {B}
+                a</td></tr>
+          	<tr><td bgcolor="#FFFFFF" width="50%"><b>!</b>B<b>!</b> a.make</td><td bgcolor="#FFFFFF" width="50%"><b>create</b>
+                {B} a.make</td></tr>
+          </table>
+          </center>
+          </li>
       </ul>
       <p>&nbsp;</p>
       <h2>Added semantics:</h2>
       <ul>
         <li><a href="../Eiffel/language/generic_creation.html">generic creation</a></li>
+        <li>expression creation: you can now create an object within an
+          expression. For example, you want to create an object and pass it as
+          an argument to a function. Before you had to create a local variables,
+          to create the object and pass it to the function. Now, you simply need
+          to pass to the function the creation expression. Here a small example:
+          <center>
+          <br>
+          <table border="1" cellspacing="0">
+          	<tr><td bgcolor="#FFFFCC">Old method</td><td bgcolor="#FFFFCC">New method</td></tr>
+          	<tr><td bgcolor="#FFFFFF"><pre>local
+	a: STRING
+do
+	!! a.make (10)
+	f (a)
+end</pre>
+              </td><td bgcolor="#FFFFFF">
+               <pre>do
+	f (create {STRING}.make (10))
+end</pre>
+              </td></tr>
+          </table>
+          </center>
+          This is also very useful since it can also improve the power of assertions.
+          </li>
+        <li>mutually recursive constraints: one can now write class A [H,
+          G-&gt;H] or class B [H -&gt; C, G -&gt; ARRAY [H]]. As a result, the
+          declaration A [D, E] is valid only if E is a descendant of D. In the
+          same maner, the declaration B [E, ARRAY [D]] is not valid, if E is a
+          descendant of D.</li>
+        <li><a href="../Eiffel/language/tuples.html">Tuples</a></li>
+        <li><a href="../Eiffel/language/agents.html">Agents</a></li>
       </ul>
-      <p>&nbsp;</td>
+      <p>&nbsp;
+      <h2>Added external support</h2>
+      <p>Look at the page for <a href="externals.html#structs">C</a> and <a href="c++.html">C++</a>
+      with the introduction of `struct' and C++ externals encapsulation.</td>
   </tr>
 </table>
 &nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>

@@ -66,7 +66,7 @@ guint c_io_watcher_add_watch_callback (EIF_OBJECT io_watcher, gint handle)
 				g_channel,
 				G_PRIORITY_DEFAULT_IDLE,
 				G_IO_IN,
-				(GIOFunc) c_io_watcher_marshal,
+				c_io_watcher_marshal,
 				eif_adopt (io_watcher),
 				(GDestroyNotify) eif_wean
 			);

@@ -22,12 +22,12 @@ feature {NONE} -- Initialization
 			make_container (par)
 			set_minimum_size (400, 300)
 --			set_border_width (4)
-			Create title.make_with_text (Current, name)
+			create title.make_with_text (Current, name)
 			title.set_minimum_height (50)
 			set_child_expandable (title, False)
 			tool := a_tool
-			Create resources.make
-			Create raise_cmd.make (Current)
+			create resources.make
+			create raise_cmd.make (Current)
 		end
 
 feature -- Initialization
@@ -40,7 +40,8 @@ feature -- Initialization
 		local
 			res: EB_RESOURCE_DISPLAY
 		do
-			if shown then
+--			if shown then
+			if displayed then
 				from
 					resources.start
 				until
@@ -163,8 +164,8 @@ feature -- Output
 			res: EB_RESOURCE_DISPLAY
 		do
 --			holder.set_selected (True)
---			if not displayed then
-			if not shown then
+			if not displayed then
+--			if not shown then
 				from
 					resources.start
 				until

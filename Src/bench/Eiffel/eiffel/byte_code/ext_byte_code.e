@@ -66,31 +66,31 @@ feature -- Byte code generation
 	generate_compound is
 			-- Call the external function
 		local
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
-			f := generated_file
+			buf := buffer
 			if context.result_used or postcondition /= Void or context.has_invariant then
-				f.putstring ("Result = ");
+				buf.putstring ("Result = ");
 			else
-				f.putstring ("return ");
+				buf.putstring ("return ");
 			end;
-			f.putstring (external_name);
-			f.putchar ('(');
+			buf.putstring (external_name);
+			buf.putchar ('(');
 			generate_arguments;
-			f.putchar (')');
-			f.putchar (';');
-			f.new_line;
+			buf.putchar (')');
+			buf.putchar (';');
+			buf.new_line;
 		end;
 
 	generate_return_exp is
 			-- Generate the final return
 		local
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
 			if context.result_used or postcondition /= Void or context.has_invariant then
-				f := generated_file
-				f.putstring ("return Result;");
-				f.new_line;
+				buf := buffer
+				buf.putstring ("return Result;");
+				buf.new_line;
 			end;
 		end;
 

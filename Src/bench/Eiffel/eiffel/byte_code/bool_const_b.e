@@ -28,9 +28,9 @@ feature
 			-- Print boolean constant
 		do
 			if value then
-				generated_file.putstring ("(char) 1");
+				buffer.putstring ("(char) 1");
 			else
-				generated_file.putstring ("(char) 0");
+				buffer.putstring ("(char) 0");
 			end;
 		end;
 

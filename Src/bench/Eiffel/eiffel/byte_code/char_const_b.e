@@ -28,12 +28,12 @@ feature
 	print_register is
 			-- Print the character constant
 		local
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
-			f := generated_file
-			f.putstring ("(EIF_CHARACTER) %'");
-			f.escape_char (value);
-			f.putchar ('%'');
+			buf := buffer
+			buf.putstring ("(EIF_CHARACTER) %'");
+			buf.escape_char (value);
+			buf.putchar ('%'');
 		end;
 
 	used (r: REGISTRABLE): BOOLEAN is

@@ -23,25 +23,27 @@ feature
 			-- Generate then interval
 		local
 			low, up: CHARACTER;
+			buf: GENERATION_BUFFER
 		do
 				-- Do not use "lower > up" as exit test since `low'
 				-- will be out of bounds when `up' is the greatest
 				-- allowed character.
 			from
+				buf := buffer
 				low := lower.generation_value;
 				up := upper.generation_value;
-				generated_file.putstring ("case '");
-				generated_file.escape_char (low);
-				generated_file.putstring ("':");
-				generated_file.new_line;
+				buf.putstring ("case '");
+				buf.escape_char (low);
+				buf.putstring ("':");
+				buf.new_line;
 			until
 				low = up
 			loop
 				low := low + 1;
-				generated_file.putstring ("case '");
-				generated_file.escape_char (low);
-				generated_file.putstring ("':");
-				generated_file.new_line;
+				buf.putstring ("case '");
+				buf.escape_char (low);
+				buf.putstring ("':");
+				buf.new_line;
 			end;
 		end;
 

@@ -35,21 +35,21 @@ feature
 		local
 			cl_type_i: CL_TYPE_I;
 			gen_type_i: GEN_TYPE_I;
-			gen_file: INDENT_FILE;
+			buffer: GENERATION_BUFFER;
 		do
-			gen_file := context.generated_file;
+			buffer := context.buffer;
 			cl_type_i := type_to_create;
 			gen_type_i ?= cl_type_i;
-			gen_file.putstring ("RTCA(arg");
-			gen_file.putint (position);
-			gen_file.putstring (gc_comma);
+			buffer.putstring ("RTCA(arg");
+			buffer.putint (position);
+			buffer.putstring (gc_comma);
 
 			if gen_type_i /= Void then
-				gen_file.putstring ("typres");
+				buffer.putstring ("typres");
 			else
-				gen_file.putint (cl_type_i.type_id - 1);
+				buffer.putint (cl_type_i.type_id - 1);
 			end
-			gen_file.putchar (')');
+			buffer.putchar (')');
 		end;
 
 feature -- Byte code generation
@@ -89,13 +89,13 @@ feature -- Generic conformance
 			end
 		end
 
-	generate_cid (f : INDENT_FILE; final_mode : BOOLEAN) is
+	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
 
 		do
-			f.putint (-11)
-			f.putstring (", RTCA(arg")
-			f.putint (position)
-			f.putstring (",-10), ")
+			buffer.putint (-11)
+			buffer.putstring (", RTCA(arg")
+			buffer.putint (position)
+			buffer.putstring (",-10), ")
 		end
 
 	make_gen_type_byte_code (ba : BYTE_ARRAY) is

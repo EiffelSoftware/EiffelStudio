@@ -116,8 +116,10 @@ feature
 		local
 			target_type: TYPE_I;
 			is_expanded: BOOLEAN;
-			gen_type   : GEN_TYPE_I
+			gen_type: GEN_TYPE_I
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 			generate_line_info;
 
 			target_type := Context.real_type (target.type);
@@ -136,28 +138,28 @@ feature
 				end;
 				if call /= Void then
 					if target_type.is_separate then
-						generated_file.putstring ("while (CURRSO(");
+						buf.putstring ("while (CURRSO(");
 						print_register;
-						generated_file.putstring (")) {};");
-						generated_file.new_line;
+						buf.putstring (")) {};");
+						buf.new_line;
 						call.generate;
-						generated_file.putstring ("CURFSO(");
+						buf.putstring ("CURFSO(");
 						print_register;
-						generated_file.putstring (");");
-						generated_file.new_line;
+						buf.putstring (");");
+						buf.new_line;
 					elseif target_type.is_basic then
 						generate_register_assignment;
-						target_type.c_type.generate_cast (generated_file);
-						generated_file.putstring ("0;");
-						generated_file.new_line;
+						target_type.c_type.generate_cast (buf);
+						buf.putstring ("0;");
+						buf.new_line;
 					elseif target_type.is_expanded then
-						generated_file.putstring ("RTXA(");
-						generated_file.putstring ("RTLN(");
+						buf.putstring ("RTXA(");
+						buf.putstring ("RTLN(");
 						info.generate;
-						generated_file.putstring ("), ");
+						buf.putstring ("), ");
 						print_register;
-						generated_file.putstring (gc_rparan_comma);
-						generated_file.new_line;
+						buf.putstring (gc_rparan_comma);
+						buf.new_line;
 						call.generate_creation_call;
 					else
 						generate_register_assignment;
@@ -176,13 +178,13 @@ feature
 					(context.byte_code.compound.first /= Current
 					or call /= Void)
 				then
-					generated_file.new_line;
+					buf.new_line;
 				end;
-				generated_file.putstring ("return ");
+				buf.putstring ("return ");
 				if call /= Void then
 					print_register;
-					generated_file.putchar (';');
-					generated_file.new_line;
+					buf.putchar (';');
+					buf.new_line;
 				else
 					generate_creation;
 				end;
@@ -190,27 +192,27 @@ feature
 				if target_type.is_separate then
 					generate_creation_for_separate_object(target_type);
 					if call /= Void then
-						generated_file.putstring ("while (CURRSO(");
+						buf.putstring ("while (CURRSO(");
 						print_register;
-						generated_file.putstring (")) {};");
-						generated_file.new_line;
+						buf.putstring (")) {};");
+						buf.new_line;
 						call.generate_creation_call;
-						generated_file.putstring ("CURFSO(");
+						buf.putstring ("CURFSO(");
 						print_register;
-						generated_file.putstring (");");
-						generated_file.new_line;
+						buf.putstring (");");
+						buf.new_line;
 					end;
 						-- We had to get a register because RTAR evaluates its
 						-- arguments more than once.
 					if not target.is_predefined then
 							-- Target is an attribute then
-						generated_file.putstring ("RTAR(");
+						buf.putstring ("RTAR(");
 						print_register;
-						generated_file.putstring (gc_comma);
+						buf.putstring (gc_comma);
 						context.Current_register.print_register_by_name;
-						generated_file.putchar (')');
-						generated_file.putchar (';');
-						generated_file.new_line;
+						buf.putchar (')');
+						buf.putchar (';');
+						buf.new_line;
 					end;
 					generate_assignment (is_expanded);
 				elseif not target_type.is_basic then
@@ -220,23 +222,23 @@ feature
 						generate_creation;
 					elseif target.is_predefined then
 						-- For expanded copy value.
-						generated_file.putstring ("RTXA(");
-						generated_file.putstring ("RTLN(");
+						buf.putstring ("RTXA(");
+						buf.putstring ("RTLN(");
 						info.generate;
-						generated_file.putstring ("), ");
+						buf.putstring ("), ");
 						print_register;
-						generated_file.putstring (gc_rparan_comma);
-						generated_file.new_line;
+						buf.putstring (gc_rparan_comma);
+						buf.new_line;
 					else
 						-- We had to get a regiser because RTAR evaluates its
 						-- arguments more than once.
 						-- We create the expanded and assign it to the
 						-- register.
 						print_register;
-						generated_file.putstring (" = RTLN(");
+						buf.putstring (" = RTLN(");
 						info.generate;
-						generated_file.putstring (gc_rparan_comma);
-						generated_file.new_line;
+						buf.putstring (gc_rparan_comma);
+						buf.new_line;
 					end;
 					if call /= Void then
 						call.generate_creation_call;
@@ -245,35 +247,38 @@ feature
 						-- arguments more than once.
 					if not target.is_predefined then
 							-- Target is an attribute then
-						generated_file.putstring ("RTAR(");
+						buf.putstring ("RTAR(");
 						print_register;
-						generated_file.putstring (gc_comma);
+						buf.putstring (gc_comma);
 						context.Current_register.print_register_by_name;
-						generated_file.putchar (')');
-						generated_file.putchar (';');
-						generated_file.new_line;
+						buf.putchar (')');
+						buf.putchar (';');
+						buf.new_line;
 					end;
 					generate_assignment (is_expanded);
 					generate_creation_invariant;	
 				else
 					generate_register_assignment;
-					target_type.c_type.generate_cast (generated_file);
-					generated_file.putstring ("0;");
-					generated_file.new_line;
+					target_type.c_type.generate_cast (buf);
+					buf.putstring ("0;");
+					buf.new_line;
 				end;
 			end
 			info.generate_end (Current)
 		end;
 
 	generate_creation_invariant is
+		local
+			buf: GENERATION_BUFFER
 		do
 			if context.workbench_mode or else
 				context.assertion_level.check_invariant
 			then
-				generated_file.putstring ("RTCI(");
+				buf := buffer
+				buf.putstring ("RTCI(");
 				print_register;
-				generated_file.putstring (gc_rparan_comma);
-				generated_file.new_line;
+				buf.putstring (gc_rparan_comma);
+				buf.new_line;
 			end
 		end;
 
@@ -281,36 +286,42 @@ feature
 			-- Generate the register assignment left side
 		do
 			print_register;
-			generated_file.putstring (" = ");
+			buffer.putstring (" = ");
 		end;
 
 	generate_creation is
 			-- Generate the creation in register
+		local
+			buf: GENERATION_BUFFER
 		do
-			generated_file.putstring ("RTLN(");
+			buf := buffer
+			buf.putstring ("RTLN(");
 			info.generate;
-			generated_file.putstring (gc_rparan_comma);
-			generated_file.new_line;
+			buf.putstring (gc_rparan_comma);
+			buf.new_line;
 		end;
 
 	generate_assignment (is_expanded: BOOLEAN) is
 			-- Generate the assignment in the target, in case we had to get
 			-- a temporary register.
+		local
+			buf: GENERATION_BUFFER
 		do
 			if register /= target then
+				buf := buffer
 				if not is_expanded then
 					target.print_register;
-					generated_file.putstring (" = ");
+					buf.putstring (" = ");
 					print_register;
 				else
-					generated_file.putstring ("RTXA(");
+					buf.putstring ("RTXA(");
 					print_register;
-					generated_file.putstring (gc_comma);
+					buf.putstring (gc_comma);
 					target.print_register;
-					generated_file.putchar (')');
+					buf.putchar (')');
 				end;
-				generated_file.putchar (';');
-				generated_file.new_line;
+				buf.putchar (';');
+				buf.new_line;
 			end;
 		end;
 
@@ -321,26 +332,28 @@ feature -- Concurrent Eiffel
 		local 
 			cl_type: CL_TYPE_I;
 			feat: FEATURE_B
+			buf: GENERATION_BUFFER
 		do
-			generated_file.putstring ("CURCCI(%"");
+			buf := buffer
+			buf.putstring ("CURCCI(%"");
 			cl_type ?= target_type -- can't be failed 
 			check
 				is_cl_type_i: cl_type /= Void
 			end;
-			generated_file.putstring (cl_type.associated_class_type.associated_class.name_in_upper);
-			generated_file.putstring ("%", %"");
+			buf.putstring (cl_type.associated_class_type.associated_class.name_in_upper);
+			buf.putstring ("%", %"");
 			if call /= Void then
 				feat ?= call.message;
-				generated_file.putstring (feat.feature_name);
+				buf.putstring (feat.feature_name);
 			else 
-				generated_file.putstring ("_no_cf");
+				buf.putstring ("_no_cf");
 			end;
-			generated_file.putstring ("%");");
-			generated_file.new_line;
-			generated_file.putstring ("CURCC(");
+			buf.putstring ("%");");
+			buf.new_line;
+			buf.putstring ("CURCC(");
 			print_register;
-			generated_file.putstring (");");
-			generated_file.new_line
+			buf.putstring (");");
+			buf.new_line
 	end
 
 end

@@ -137,51 +137,56 @@ feature
 		end;
 
 	generate is
-			-- Generate C code in `generated_file'.
+			-- Generate C code in `buffer'.
+		local
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 			generate_line_info;
 				-- Outstanding of if..then..else..end
-			generated_file.new_line;
+			buf.new_line;
 			condition.generate;
-			generated_file.putstring (gc_if_l_paran);
+			buf.putstring (gc_if_l_paran);
 			condition.print_register;
-			generated_file.putstring (") {");
-			generated_file.new_line;
+			buf.putstring (") {");
+			buf.new_line;
 			if compound /= Void then
-				generated_file.indent;
+				buf.indent;
 				compound.generate;
-				generated_file.exdent;
+				buf.exdent;
 			end;
-			generated_file.putchar ('}');
+			buf.putchar ('}');
 			if elsif_list /= Void then
 				elsif_list.generate;
 			end;
 			if else_part /= Void then
-				generated_file.putstring (" else {");
-				generated_file.new_line;
-				generated_file.indent;
+				buf.putstring (" else {");
+				buf.new_line;
+				buf.indent;
 				else_part.generate;
-				generated_file.exdent;
-				generated_file.putchar ('}');
+				buf.exdent;
+				buf.putchar ('}');
 			end;
 			generate_closing_brakets;
-			generated_file.new_line;
+			buf.new_line;
 				-- Leave one blank line after the construct
-			generated_file.new_line;
+			buf.new_line;
 		end;
 
 	generate_closing_brakets is
 			-- Generate one closing braket for each generated elsif
 		local
 			i: INTEGER;
+			buf: GENERATION_BUFFER
 		do
 			if elsif_list /= Void then
 				from
+					buf := buffer
 					i := elsif_list.count;
 				until
 					i = 0
 				loop
-					generated_file.putchar ('}');
+					buf.putchar ('}');
 					i := i - 1;
 				end;
 			end;

@@ -38,40 +38,40 @@ feature -- Code generation
 	generate is
 			-- Generate C code for the access.
 		local
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
 			generate_parameters (current_register)
 			if register /= No_register then
-				f := generated_file
+				buf := buffer
 						-- Procedures have a void return type
 				if register /= Void then
 					register.print_register
-					f.putstring (" = RTLN(")
+					buf.putstring (" = RTLN(")
 					info.generate
 						-- Generate creation information
-					f.putstring (");")
-					f.new_line
+					buf.putstring (");")
+					buf.new_line
 --					if register.is_separate and then
 --						not context.real_type(type).is_separate then
---						f.putstring ("CURLTS(")
+--						buf.putstring ("CURLTS(")
 --					end
 				end
 				do_generate (register)
 --				if  register /= Void and then register.is_separate and then
 --					not context.real_type(type).is_separate then
---					f.putstring (")")
+--					buf.putstring (")")
 --				end
-				f.putchar (';')
-				f.new_line
+				buf.putchar (';')
+				buf.new_line
 
 				if
 					context.workbench_mode
 					or else context.assertion_level.check_invariant
 				then
-					f.putstring ("RTCI(")
+					buf.putstring ("RTCI(")
 					register.print_register
-					f.putstring (gc_rparan_comma)
-					f.new_line
+					buf.putstring (gc_rparan_comma)
+					buf.new_line
 				end
 
 				if System.has_separate then

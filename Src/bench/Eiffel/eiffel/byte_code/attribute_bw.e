@@ -41,26 +41,26 @@ feature
 			r_id: ROUTINE_ID;
 			rout_info: ROUT_INFO;
 			base_class: CLASS_C
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
-			f := generated_file
+			buf := buffer
 			is_nested := not is_first;
 			type_i := real_type (type);
 			type_c := type_i.c_type;
 			if not type_i.is_expanded and then not type_c.is_bit then
 					-- For dereferencing, we need a star...
-				f.putchar ('*');
+				buf.putchar ('*');
 					-- ...followed by the appropriate access cast
-				type_c.generate_access_cast (f);
+				type_c.generate_access_cast (buf);
 			end;
-			f.putchar ('(');
+			buf.putchar ('(');
 			reg.print_register;
 			if reg.is_predefined or reg.register /= No_register then
-				f.putstring (gc_plus);
+				buf.putstring (gc_plus);
 			else
-				f.putstring (" +");
-				f.new_line;
-				f.indent;
+				buf.putstring (" +");
+				buf.new_line;
+				buf.indent;
 			end;
 			base_class := typ.base_class;
 			if
@@ -68,38 +68,38 @@ feature
 				base_class.is_precompiled
 			then
 				if is_nested then
-					f.putstring ("RTVPA(");
+					buf.putstring ("RTVPA(");
 				else
-					f.putstring ("RTWPA(");
+					buf.putstring ("RTWPA(");
 				end;
 				r_id := base_class.feature_table.item
 					(attribute_name).rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
-				rout_info.origin.generated_id (f);
-				f.putstring (gc_comma);
-				f.putint (rout_info.offset)
+				rout_info.origin.generated_id (buf);
+				buf.putstring (gc_comma);
+				buf.putint (rout_info.offset)
 			else
 				if is_nested then
-					f.putstring ("RTVA(");
+					buf.putstring ("RTVA(");
 				else
-					f.putstring ("RTWA(");
+					buf.putstring ("RTWA(");
 				end;
-				f.putint (typ.associated_class_type.id.id - 1);
-				f.putstring (gc_comma);
-				f.putint (real_feature_id);
+				buf.putint (typ.associated_class_type.id.id - 1);
+				buf.putstring (gc_comma);
+				buf.putint (real_feature_id);
 			end;
-			f.putstring (gc_comma);
+			buf.putstring (gc_comma);
 			if is_nested then
-				f.putchar ('"');
-				f.putstring (attribute_name);
-				f.putstring ("%", ");
+				buf.putchar ('"');
+				buf.putstring (attribute_name);
+				buf.putstring ("%", ");
 				reg.print_register;
 			else
 				context.generate_current_dtype;
 			end;
-			f.putstring ("))");
+			buf.putstring ("))");
 			if not (reg.is_predefined or reg.register /= No_register) then
-			  f.exdent;
+			  buf.exdent;
 			end;
 		end;
 	

@@ -93,27 +93,27 @@ feature
 		end;
 
 	generate is
-			-- Generate C code in `generated_file'.
+			-- Generate C code in `buffer'.
 		local
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
-			f := generated_file
+			buf := buffer
 			generate_line_info;
-			f.putstring (" else {");
-			f.new_line;
-			f.indent;
+			buf.putstring (" else {");
+			buf.new_line;
+			buf.indent;
 			expr.generate;
-			f.exdent;
-			f.putstring (gc_if_l_paran);
+			buf.exdent;
+			buf.putstring (gc_if_l_paran);
 			expr.print_register;
-			f.putstring (") {");
-			f.new_line;
+			buf.putstring (") {");
+			buf.new_line;
 			if compound /= Void then
-				f.indent;
+				buf.indent;
 				compound.generate;
-				f.exdent;
+				buf.exdent;
 			end;
-			f.putchar ('}');
+			buf.putchar ('}');
 		end;
 
 feature -- Array optimization

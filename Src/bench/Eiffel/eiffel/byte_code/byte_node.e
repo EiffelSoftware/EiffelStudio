@@ -48,21 +48,18 @@ feature -- Eiffel source line information
 	generate_line_info is
 			-- Generate source line information.
 		do
-			-- Note: This should be made conditional
-			-- (i.e. a LACE option) later (MS).
-
 			if System.line_generation then
-				generated_file.putstring ("%N#line ")
-				generated_file.putint (line_number)
-				generated_file.new_line
+				buffer.putstring ("%N#line ")
+				buffer.putint (line_number)
+				buffer.new_line
 			end
 		end
 feature 
 
-	generated_file: INDENT_FILE is
+	buffer: GENERATION_BUFFER is
 			-- Generated file
 		do
-			Result := context.generated_file;
+			Result := context.buffer;
 		end;
 
 	real_type (typ: TYPE_I): TYPE_I is
@@ -94,7 +91,7 @@ feature
 		end;
 	
 	generate is
-			-- Generate C code in `generated_file'
+			-- Generate C code in `buffer'
 		do
 		end;
 
@@ -194,18 +191,18 @@ feature -- Generic conformance
 	generate_block_open is
 			-- Open a new C block.
 		do
-			generated_file.putchar ('{')
-			generated_file.new_line
-			generated_file.indent
+			buffer.putchar ('{')
+			buffer.new_line
+			buffer.indent
 		end
 
 	generate_block_close is
 			-- Close C block.
 		do
-			generated_file.new_line
-			generated_file.exdent
-			generated_file.putchar ('}')
-			generated_file.new_line
+			buffer.new_line
+			buffer.exdent
+			buffer.putchar ('}')
+			buffer.new_line
 		end
 
 	generate_gen_type_conversion (gtype : GEN_TYPE_I) is
@@ -216,30 +213,30 @@ feature -- Generic conformance
 		do
 			if gtype.is_explicit then
 				-- Optimize: Use static array
-				generated_file.putstring ("static int16 typarr [] = {")
+				buffer.putstring ("static int16 typarr [] = {")
 			else
-				generated_file.putstring ("int16 typarr [] = {")
+				buffer.putstring ("int16 typarr [] = {")
 			end
 
-			generated_file.putint (context.current_type.generated_id (context.final_mode))
-			generated_file.putstring (", ")
-			gtype.generate_cid (generated_file, context.final_mode, True)
-			generated_file.putstring ("-1};")
-			generated_file.new_line
-			generated_file.putstring ("int16 typres;")
-			generated_file.new_line
-			generated_file.putstring ("static int16 typcache = -1;")
-			generated_file.new_line
-			generated_file.new_line
-			generated_file.putstring ("typres = RTCID(&typcache,")
+			buffer.putint (context.current_type.generated_id (context.final_mode))
+			buffer.putstring (", ")
+			gtype.generate_cid (buffer, context.final_mode, True)
+			buffer.putstring ("-1};")
+			buffer.new_line
+			buffer.putstring ("int16 typres;")
+			buffer.new_line
+			buffer.putstring ("static int16 typcache = -1;")
+			buffer.new_line
+			buffer.new_line
+			buffer.putstring ("typres = RTCID(&typcache,")
 
 			context.Current_register.print_register_by_name
 
-			generated_file.putstring (", ")
-			generated_file.putint (gtype.generated_id (context.final_mode))
-			generated_file.putstring (", typarr);")
-			generated_file.new_line
-			generated_file.new_line
+			buffer.putstring (", ")
+			buffer.putint (gtype.generated_id (context.final_mode))
+			buffer.putstring (", typarr);")
+			buffer.new_line
+			buffer.new_line
 		end
 
 end

@@ -41,10 +41,9 @@ feature
 	print_register is
 			-- Print register.
 		require else
-			file_exists: context.generated_file /= Void;
 			register_exists: regnum /= 0;
 		do
-			context.generated_file.putstring (register_name);
+			context.buffer.putstring (register_name);
 		end;
 
 end

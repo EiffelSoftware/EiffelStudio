@@ -122,13 +122,13 @@ end
 			One_parameter: parameters.count = 1
 		local
 			expr: EXPR_B
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
 			reg.print_register
-			f := generated_file
-			f.putchar (' ')
-			f.putstring (special_routines.c_operation)
-			f.putchar (' ')
+			buf := buffer
+			buf.putchar (' ')
+			buf.putstring (special_routines.c_operation)
+			buf.putchar (' ')
 			expr := parameters.first; -- Cannot fail
 			expr.print_register
 		end
@@ -202,35 +202,35 @@ end
 			entry: POLY_TABLE [ENTRY]
 			rout_table: ROUT_TABLE
 			type_c: TYPE_C
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
 			entry := Eiffel_table.poly_table (rout_id)
-			f := generated_file
+			buf := buffer
 			if entry = Void then
 					-- Call to a deferred feature without implementation
-				f.putchar ('(')
-				real_type (type).c_type.generate_function_cast (f, <<>>)
-				f.putstring (" RTNR)")
+				buf.putchar ('(')
+				real_type (type).c_type.generate_function_cast (buf, <<>>)
+				buf.putstring (" RTNR)")
 			elseif precursor_type = Void and then entry.is_polymorphic (typ.type_id) then
 					-- The call is polymorphic, so generate access to the
 					-- routine table. The dereferenced function pointer has
 					-- to be enclosed in parenthesis.
 				table_name := rout_id.table_name
-				f.putchar ('(')
-				real_type (type).c_type.generate_function_cast (f, argument_types)
-				f.putchar ('(')
-				f.putstring (table_name)
-				f.putchar ('-')
-				f.putint (entry.min_used - 1)
-				f.putstring (")[")
+				buf.putchar ('(')
+				real_type (type).c_type.generate_function_cast (buf, argument_types)
+				buf.putchar ('(')
+				buf.putstring (table_name)
+				buf.putchar ('-')
+				buf.putint (entry.min_used - 1)
+				buf.putstring (")[")
 				if reg.is_current then
 					context.generate_current_dtype
 				else
-					f.putstring (gc_upper_dtype_lparan)
+					buf.putstring (gc_upper_dtype_lparan)
 					reg.print_register
-					f.putchar (')')
+					buf.putchar (')')
 				end
-				f.putstring ("])")
+				buf.putstring ("])")
 					-- Mark routine id used
 				Eiffel_table.mark_used (rout_id)
 					-- Remember extern declaration
@@ -254,15 +254,15 @@ end
 						Extern_declarations.add_routine (type_c, internal_name)
 					end
 
-					f.putchar ('(')
-					type_c.generate_function_cast (f, argument_types)
-					f.putstring (internal_name)
-					f.putchar (')')
+					buf.putchar ('(')
+					type_c.generate_function_cast (buf, argument_types)
+					buf.putstring (internal_name)
+					buf.putchar (')')
 				else
 						-- Call to a deferred feature without implementation
-					f.putchar ('(')
-					real_type (type).c_type.generate_function_cast (f, <<>>)
-					f.putstring (" RTNR)")
+					buf.putchar ('(')
+					real_type (type).c_type.generate_function_cast (buf, <<>>)
+					buf.putstring (" RTNR)")
 				end
 			end
 		end
@@ -274,10 +274,10 @@ end
 			para: PARAMETER_B
 			para_type: TYPE_I
 			loc_idx: INTEGER
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
 			if parameters /= Void then
-				f := generated_file
+				buf := buffer
 				if system.has_separate then
 					from
 						parameters.start
@@ -286,14 +286,14 @@ end
 					loop
 						expr := parameters.item;	-- Cannot fail
 						para ?= expr
-						f.putstring (gc_comma)
+						buf.putstring (gc_comma)
 						if para /= Void and then para.stored_register.register_name /= Void then
 							loc_idx := context.local_index (para.stored_register.register_name)
 							para_type := real_type(para.attachment_type)
 							if para_type /= Void and then para_type.is_separate then
-								f.putstring ("l[")
-								f.putint (context.ref_var_used + loc_idx)
-								f.putstring ("]")
+								buf.putstring ("l[")
+								buf.putint (context.ref_var_used + loc_idx)
+								buf.putstring ("]")
 							else
 								expr.print_register
 							end
@@ -309,7 +309,7 @@ end
 						parameters.after
 					loop
 						expr := parameters.item;	-- Cannot fail
-						f.putstring (gc_comma)
+						buf.putstring (gc_comma)
 						expr.print_register
 						parameters.forth
 					end
@@ -358,10 +358,10 @@ feature -- Concurrent Eiffel
 			para_type: TYPE_I
 			i: INTEGER
 			loc_idx: INTEGER
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
 			if parameters /= Void then
-				f := generated_file
+				buf := buffer
 				from
 					parameters.start
 					i := 0
@@ -371,56 +371,56 @@ feature -- Concurrent Eiffel
 					expr ?= parameters.item;    -- Cannot fail
 					para_type := real_type(expr.attachment_type)
 					if para_type.is_boolean then
-						f.putstring ("CURPB(")
+						buf.putstring ("CURPB(")
 						expr.print_register
-						f.putstring (", ")
-						f.putint (i)
-						f.putstring (");")
-						f.new_line
+						buf.putstring (", ")
+						buf.putint (i)
+						buf.putstring (");")
+						buf.new_line
 					elseif para_type.is_long then
-						f.putstring ("CURPI(")
+						buf.putstring ("CURPI(")
 						expr.print_register
-						f.putstring (", ")
-						f.putint (i)
-						f.putstring (");")
-						f.new_line
+						buf.putstring (", ")
+						buf.putint (i)
+						buf.putstring (");")
+						buf.new_line
 					elseif para_type.is_feature_pointer then
-						f.putstring ("CURPP(")
+						buf.putstring ("CURPP(")
 						expr.print_register
-						f.putstring (", ")
-						f.putint (i)
-						f.putstring (");")
-						f.new_line
+						buf.putstring (", ")
+						buf.putint (i)
+						buf.putstring (");")
+						buf.new_line
 					elseif para_type.is_char then
-						f.putstring ("CURPC(")
+						buf.putstring ("CURPC(")
 						expr.print_register
-						f.putstring (", ")
-						f.putint (i)
-						f.putstring (");")
-						f.new_line
+						buf.putstring (", ")
+						buf.putint (i)
+						buf.putstring (");")
+						buf.new_line
 					elseif para_type.is_double then
-						f.putstring ("CURPD(")
+						buf.putstring ("CURPD(")
 						expr.print_register
-						f.putstring (", ")
-						f.putint (i)
-						f.putstring (");")
-						f.new_line
+						buf.putstring (", ")
+						buf.putint (i)
+						buf.putstring (");")
+						buf.new_line
 					elseif para_type.is_float then
-						f.putstring ("CURPR(")
+						buf.putstring ("CURPR(")
 						expr.print_register
-						f.putstring (", ")
-						f.putint (i)
-						f.putstring (");")
-						f.new_line
+						buf.putstring (", ")
+						buf.putint (i)
+						buf.putstring (");")
+						buf.new_line
 					elseif para_type.is_reference and not para_type.is_separate then
-						f.putstring ("CURPO(")
+						buf.putstring ("CURPO(")
 						expr.print_register
-						f.putstring (", ")
-						f.putint (i)
-						f.putstring (");")
-						f.new_line
+						buf.putstring (", ")
+						buf.putint (i)
+						buf.putstring (");")
+						buf.new_line
 					elseif para_type.is_separate then
-						f.putstring ("CURPSO(")
+						buf.putstring ("CURPSO(")
 --                    expr.print_register
 						if expr.stored_register.register_name /= Void then
 							loc_idx := context.local_index (expr.stored_register.register_name)
@@ -428,17 +428,17 @@ feature -- Concurrent Eiffel
 							loc_idx := -1
 						end
 						if loc_idx /= -1 then
-							f.putstring ("l[")
-							f.putint (context.ref_var_used + loc_idx)
-							f.putstring ("]")
+							buf.putstring ("l[")
+							buf.putint (context.ref_var_used + loc_idx)
+							buf.putstring ("]")
 						else
 							-- It'll be the case when the value is "Void"
 							expr.print_register
 						end
-						f.putstring (", ")
-						f.putint (i)
-						f.putstring (");")
-						f.new_line
+						buf.putstring (", ")
+						buf.putint (i)
+						buf.putstring (");")
+						buf.new_line
 					end
 					i := i + 1
 					parameters.forth

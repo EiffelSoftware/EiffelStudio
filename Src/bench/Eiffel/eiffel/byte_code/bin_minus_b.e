@@ -25,19 +25,19 @@ feature
 	generate_operator is
 			-- Generate the operator
 		do
-			generated_file.putstring (" - ");
+			buffer.putstring (" - ");
 		end;
 
 	generate_simple is
 			-- Generate a simple assignment operation
 		do
-			generated_file.putstring (" -= ");
+			buffer.putstring (" -= ");
 		end;
 
 	generate_plus_plus is
 			-- Generate a --
 		do
-			generated_file.putstring ("--");
+			buffer.putstring ("--");
 		end;
 
 end

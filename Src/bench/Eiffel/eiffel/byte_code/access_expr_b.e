@@ -113,9 +113,9 @@ feature
 				(expr.register = Void or expr.register = No_register)
 				and then not expr.is_simple_expr
 			then
-				generated_file.putchar ('(');
+				buffer.putchar ('(');
 				expr.print_register;
-				generated_file.putchar (')');
+				buffer.putchar (')');
 			else
 					-- No need for parenthesis if expression is held in a
 					-- register (e.g. a semi-strict boolean op).

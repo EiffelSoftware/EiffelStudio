@@ -191,7 +191,7 @@ feature -- Generation
 			i, count: INTEGER
 			expr: EXPR_B;
 			current_t: CL_TYPE_I
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 			local_inliner: INLINER
 		do
 			feat_bl_generate_parameters (gen_reg)
@@ -199,14 +199,14 @@ feature -- Generation
 			local_inliner := inliner
 			local_inliner.set_inlined_feature (Current);
 
-			f := generated_file
-			f.putchar ('{');
-			f.new_line;
+			buf := buffer
+			buf.putchar ('{');
+			buf.new_line;
 
-			f.putstring ("/* INLINED CODE (");
-			f.putstring (feature_name);
-			f.putstring (") */");
-			f.new_line;
+			buf.putstring ("/* INLINED CODE (");
+			buf.putstring (feature_name);
+			buf.putstring (") */");
+			buf.new_line;
 
 			if parameters /= Void then
 					-- Assign the parameter values to the registers
@@ -219,10 +219,10 @@ feature -- Generation
 					if (not temporary_parameters.item (i)) then
 						expr := parameters.item;
 						argument_regs.item (i).print_register;
-						f.putstring (" = ");
+						buf.putstring (" = ");
 						expr.print_register;
-						f.putchar (';');
-						f.new_line
+						buf.putchar (';');
+						buf.new_line
 					end;
 					parameters.forth;
 					i := i + 1
@@ -255,7 +255,7 @@ feature -- Generation
 			if not is_current_temporary then
 
 				current_register.print_register;
-				f.putstring (" = ");
+				buf.putstring (" = ");
 
 				-- `print_register' on `gen_reg' must be generated
 				-- with the old context
@@ -264,10 +264,10 @@ feature -- Generation
 				Context.set_inlined_current_register (Void);
 				
 				gen_reg.print_register;
-				f.putchar (';');
-				f.new_line
+				buf.putchar (';');
+				buf.new_line
 				
-				f.new_line
+				buf.new_line
 				
 				Context.set_current_type (current_t);
 				Context.set_inlined_current_register (current_reg);
@@ -276,13 +276,13 @@ feature -- Generation
 
 			if inlined_dt_current > 1 then
 				context.set_inlined_dt_current (inlined_dt_current);
-				f.putchar ('{');
-				f.new_line;
-				f.putstring ("int inlined_dtype = ");
-				f.putstring (gc_upper_dtype_lparan);
+				buf.putchar ('{');
+				buf.new_line;
+				buf.putstring ("int inlined_dtype = ");
+				buf.putstring (gc_upper_dtype_lparan);
 				current_reg.print_register_by_name;
-				f.putstring (");");
-				f.new_line
+				buf.putstring (");");
+				buf.new_line
 			end;
 
 			if compound /= Void then
@@ -290,18 +290,18 @@ feature -- Generation
 			end
 
 			if inlined_dt_current > 1 then
-				f.putchar ('}');
-				f.new_line
+				buf.putchar ('}');
+				buf.new_line
 				context.set_inlined_dt_current (0);
 			end
 
 			Context.set_inlined_current_register (Void);
 
-			f.putstring ("/* END INLINED CODE */");
-			f.new_line;
+			buf.putstring ("/* END INLINED CODE */");
+			buf.new_line;
 
-			f.putchar ('}');
-			f.new_line;
+			buf.putchar ('}');
+			buf.new_line;
 
 			Context.set_current_type (caller_type);
 			caller_type := Void;
@@ -320,7 +320,7 @@ feature -- Generation
 		end
 
 	generate_metamorphose_end (gen_reg, meta_reg: REGISTRABLE; class_type: CL_TYPE_I;
-		basic_type: BASIC_I; file: INDENT_FILE) is
+		basic_type: BASIC_I; buf: GENERATION_BUFFER) is
 			-- Generate final portion of C code.
 		do
 			generate_end (gen_reg, class_type, class_type.is_separate)
@@ -503,14 +503,14 @@ feature {NONE} -- Registers
 
 	reset_register_value (reg: REGISTER) is
 		local
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
 			reg.print_register;
-			f := generated_file
-			f.putstring (" = ");
-			reg.c_type.generate_cast (f);
-			f.putstring (" 0;");
-			f.new_line;
+			buf := buffer
+			buf.putstring (" = ");
+			reg.c_type.generate_cast (buf);
+			buf.putstring (" 0;");
+			buf.new_line;
 		end
 
 	inlined_dt_current: INTEGER;

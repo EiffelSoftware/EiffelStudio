@@ -16,7 +16,9 @@ feature
 		local
 			class_c: CLASS_C
 			workbench_mode: BOOLEAN
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 			generate_line_info
 
 				-- Clean up the trace and profiling stacks
@@ -24,17 +26,17 @@ feature
 			class_c := Context.associated_class
 			if workbench_mode or else class_c.trace_level.is_yes then
 					-- Trace clean-up
-				generated_file.putstring ("RTTS;")
-				generated_file.new_line
+				buf.putstring ("RTTS;")
+				buf.new_line
 			end
 			if workbench_mode or else class_c.profile_level.is_yes then
 					-- Profiling clean-up
-				generated_file.putstring ("RTPS;")
-				generated_file.new_line
+				buf.putstring ("RTPS;")
+				buf.new_line
 			end
 
-			generated_file.putstring ("RTER;")
-			generated_file.new_line
+			buf.putstring ("RTER;")
+			buf.new_line
 		end
 
 	make_byte_code (ba: BYTE_ARRAY) is

@@ -67,57 +67,57 @@ feature
 			r_id: ROUTINE_ID;
 			rout_info: ROUT_INFO;
 			is_boolean: BOOLEAN
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
 			is_nested := not is_first;
-			f := generated_file
+			buf := buffer
 
 			is_boolean :=  type.is_boolean;
 			if is_boolean then
-				f.putstring ("EIF_TEST((");
+				buf.putstring ("EIF_TEST((");
 			else
-				f.putchar ('(');
+				buf.putchar ('(');
 			end;
-			real_type (type).c_type.generate_function_cast (f, argument_types);
+			real_type (type).c_type.generate_function_cast (buf, argument_types);
 			if	
 				Compilation_modes.is_precompiling or else
 				typ.base_class.is_precompiled
 			then
 				if is_nested and need_invariant then
-					f.putstring ("RTVPF(");
+					buf.putstring ("RTVPF(");
 				else
-					f.putstring ("RTWPF(");
+					buf.putstring ("RTWPF(");
 				end;
 				r_id := typ.base_class.feature_table.item
 					(feature_name).rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
-				rout_info.origin.generated_id (f);
-				f.putstring (gc_comma);
-				f.putint (rout_info.offset);
+				rout_info.origin.generated_id (buf);
+				buf.putstring (gc_comma);
+				buf.putint (rout_info.offset);
 			else
 				if is_nested and need_invariant then
-					f.putstring ("RTVF(");
+					buf.putstring ("RTVF(");
 				else
-					f.putstring ("RTWF(");
+					buf.putstring ("RTWF(");
 				end;
-				f.putint (typ.associated_class_type.id.id - 1);
-				f.putstring (gc_comma);
-				f.putint (real_feature_id);
+				buf.putint (typ.associated_class_type.id.id - 1);
+				buf.putstring (gc_comma);
+				buf.putint (real_feature_id);
 			end;
-			f.putstring (gc_comma);
+			buf.putstring (gc_comma);
 			if not is_nested then
 				context.generate_current_dtype;
 			elseif need_invariant then
-				f.putchar ('"');
-				f.putstring (feature_name);
-				f.putstring ("%", ");
+				buf.putchar ('"');
+				buf.putstring (feature_name);
+				buf.putstring ("%", ");
 				reg.print_register;
 			else
-				f.putstring (gc_upper_dtype_lparan);
+				buf.putstring (gc_upper_dtype_lparan);
 				reg.print_register;
-				f.putchar (')');
+				buf.putchar (')');
 			end;
-			f.putstring ("))");
+			buf.putstring ("))");
 		end;
 
 end

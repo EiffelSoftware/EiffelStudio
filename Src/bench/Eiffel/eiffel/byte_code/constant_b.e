@@ -99,7 +99,7 @@ feature
 			if context.workbench_mode then
 				access.print_register;
 			else
-				value.generate (generated_file);
+				value.generate (buffer);
 			end;
 		end;
 

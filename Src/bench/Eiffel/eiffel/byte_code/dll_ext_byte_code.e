@@ -68,203 +68,212 @@ feature {NONE} -- Internal generation
 
 	generate_dll16_body is
 			-- Generate body for dll16 (Windows)
+		local
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 				-- Declare local variables required by the call
-			generated_file.putstring ("HANDLE a_result;")
-			generated_file.new_line
-			generated_file.putstring ("FARPROC fp;")
-			generated_file.new_line
-			generated_file.putstring ("HINDIR handle;")
-			generated_file.new_line
+			buf.putstring ("HANDLE a_result;")
+			buf.new_line
+			buf.putstring ("FARPROC fp;")
+			buf.new_line
+			buf.putstring ("HINDIR handle;")
+			buf.new_line
 			if not result_type.is_void then
-				result_type.c_type.generate (generated_file)
-				generated_file.putstring (" Result;")
-				generated_file.new_line
+				result_type.c_type.generate (buf)
+				buf.putstring (" Result;")
+				buf.new_line
 			end
-			generated_file.new_line
+			buf.new_line
 
 				-- Now comes the body
-			generated_file.putstring ("a_result = eif_load_dll(")
-			generated_file.putstring (special_file_name)
-			generated_file.putstring (");")
-			generated_file.new_line
-			generated_file.putstring ("if (a_result < 32) eraise(%"Can not load library%",EN_PROG);")
-			generated_file.new_line
-			generated_file.putstring ("fp = GetProcAddress(a_result, ")
+			buf.putstring ("a_result = eif_load_dll(")
+			buf.putstring (special_file_name)
+			buf.putstring (");")
+			buf.new_line
+			buf.putstring ("if (a_result < 32) eraise(%"Can not load library%",EN_PROG);")
+			buf.new_line
+			buf.putstring ("fp = GetProcAddress(a_result, ")
 			if external_name.is_integer then
-				generated_file.putstring ("MAKEINTRESOURCE (MAKELONG (")
-				generated_file.putstring (external_name)
-				generated_file.putstring (", 0))")
+				buf.putstring ("MAKEINTRESOURCE (MAKELONG (")
+				buf.putstring (external_name)
+				buf.putstring (", 0))")
 			else
-				generated_file.putchar ('"')
-				generated_file.putstring (external_name)
-				generated_file.putchar ('"')
+				buf.putchar ('"')
+				buf.putstring (external_name)
+				buf.putchar ('"')
 			end
-			generated_file.putstring (");")
-			generated_file.new_line
-			generated_file.putstring ("if (fp == NULL) eraise(%"Can not find function%",EN_PROG);")
-			generated_file.new_line
-			generated_file.putstring ("handle = GetIndirectFunctionHandle(fp")
+			buf.putstring (");")
+			buf.new_line
+			buf.putstring ("if (fp == NULL) eraise(%"Can not find function%",EN_PROG);")
+			buf.new_line
+			buf.putstring ("handle = GetIndirectFunctionHandle(fp")
 			if arguments /= Void then
-				generated_file.putchar (',')
+				buf.putchar (',')
 				generate_type_list
 			end
-			generated_file.putstring (", INDIR_ENDLIST);")
-			generated_file.new_line
-			generated_file.putstring ("if (handle == NULL) eraise(%"Can not allocate function handle%",EN_PROG);")
-			generated_file.new_line
+			buf.putstring (", INDIR_ENDLIST);")
+			buf.new_line
+			buf.putstring ("if (handle == NULL) eraise(%"Can not allocate function handle%",EN_PROG);")
+			buf.new_line
 
 			if not result_type.is_void then
-				generated_file.putstring ("Result = ")
+				buf.putstring ("Result = ")
 			end
-			generated_file.putstring ("InvokeIndirectFunction(handle")
+			buf.putstring ("InvokeIndirectFunction(handle")
 			if arguments /= Void then
-				generated_file.putchar (',')
+				buf.putchar (',')
 				generate_arguments
 			end
-			generated_file.putstring (");")
-			generated_file.new_line
+			buf.putstring (");")
+			buf.new_line
 			if not result_type.is_void then
-				generated_file.putstring ("return ")
+				buf.putstring ("return ")
 				if has_return_type then
-					generated_file.putchar ('(')
-					generated_file.putstring (return_type)
-					generated_file.putchar (')')
-					generated_file.putchar (' ')
+					buf.putchar ('(')
+					buf.putstring (return_type)
+					buf.putchar (')')
+					buf.putchar (' ')
 				end
-				generated_file.putstring ("Result;")
-				generated_file.new_line
+				buf.putstring ("Result;")
+				buf.new_line
 			end
 		end
 
 	generate_dll32_body is
 			-- Generate body for an external of type dll32
+		local
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 				-- Declare local variables required by the call
-			generated_file.putstring ("HANDLE a_result;")
-			generated_file.new_line
-			generated_file.putstring ("FARPROC fp;")
-			generated_file.new_line
-			generated_file.putstring ("HINDIR hindir1;")
-			generated_file.new_line
+			buf.putstring ("HANDLE a_result;")
+			buf.new_line
+			buf.putstring ("FARPROC fp;")
+			buf.new_line
+			buf.putstring ("HINDIR hindir1;")
+			buf.new_line
 			if not result_type.is_void then
-				result_type.c_type.generate (generated_file)
-				generated_file.putstring (" Result;")
-				generated_file.new_line
+				result_type.c_type.generate (buf)
+				buf.putstring (" Result;")
+				buf.new_line
 			end
-			generated_file.new_line
+			buf.new_line
 
 				-- Now comes the body
-			generated_file.putstring ("a_result = eif_load_dll(")
-			generated_file.putstring (special_file_name)
-			generated_file.putstring (");")
-			generated_file.new_line
-			generated_file.putstring ("if (a_result < 32) eraise(%"Can not load library%",EN_PROG);")
-			generated_file.new_line
-			generated_file.putstring ("fp = GetProcAddress(a_result,%"Win386LibEntry%");")
-			generated_file.new_line
-			generated_file.putstring ("if (fp == NULL) eraise(%"Can not find entry point%",EN_PROG);")
-			generated_file.new_line
-			generated_file.putstring ("hindir1 = GetIndirectFunctionHandle (fp")
+			buf.putstring ("a_result = eif_load_dll(")
+			buf.putstring (special_file_name)
+			buf.putstring (");")
+			buf.new_line
+			buf.putstring ("if (a_result < 32) eraise(%"Can not load library%",EN_PROG);")
+			buf.new_line
+			buf.putstring ("fp = GetProcAddress(a_result,%"Win386LibEntry%");")
+			buf.new_line
+			buf.putstring ("if (fp == NULL) eraise(%"Can not find entry point%",EN_PROG);")
+			buf.new_line
+			buf.putstring ("hindir1 = GetIndirectFunctionHandle (fp")
 			if arguments /= Void then
-				generated_file.putchar (',')
+				buf.putchar (',')
 				generate_type_list
 			end
-			generated_file.putstring (", INDIR_WORD, INDIR_ENDLIST);")
-			generated_file.new_line
-			generated_file.putstring ("if (hindir1 == NULL) eraise(%"Can not allocate function handle%",EN_PROG);")
-			generated_file.new_line
+			buf.putstring (", INDIR_WORD, INDIR_ENDLIST);")
+			buf.new_line
+			buf.putstring ("if (hindir1 == NULL) eraise(%"Can not allocate function handle%",EN_PROG);")
+			buf.new_line
 			if not result_type.is_void then
-				generated_file.putstring ("Result = ")
+				buf.putstring ("Result = ")
 			end
-			generated_file.putstring ("InvokeIndirectFunction(hindir1")
+			buf.putstring ("InvokeIndirectFunction(hindir1")
 			if arguments /= Void then
-				generated_file.putchar (',')
+				buf.putchar (',')
 				generate_arguments
 			end
-			generated_file.putchar (',')
-			generated_file.putstring (external_name)
-			generated_file.putstring (");")
-			generated_file.new_line
+			buf.putchar (',')
+			buf.putstring (external_name)
+			buf.putstring (");")
+			buf.new_line
 			if not result_type.is_void then
-				generated_file.putstring ("return ")
+				buf.putstring ("return ")
 				if has_return_type then
-					generated_file.putchar ('(')
-					generated_file.putstring (return_type)
-					generated_file.putchar (')')
-					generated_file.putchar (' ')
+					buf.putchar ('(')
+					buf.putstring (return_type)
+					buf.putchar (')')
+					buf.putchar (' ')
 				end
-				generated_file.putstring ("Result;")
-				generated_file.new_line
+				buf.putstring ("Result;")
+				buf.new_line
 			end
 		end
 
 	generate_dllwin32_body is
 			-- Generate body for an external of type dllwin32
+		local
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 				-- FIXME: remove extern declaration
-			generated_file.putstring ("extern HANDLE eif_load_dll(char*);")
-			generated_file.new_line
+			buf.putstring ("extern HANDLE eif_load_dll(char*);")
+			buf.new_line
 
 				-- Declare local variables required by the call
-			generated_file.putstring ("HANDLE a_result;")
-			generated_file.new_line
+			buf.putstring ("HANDLE a_result;")
+			buf.new_line
 
-			result_type.c_type.generate (generated_file)
-			generated_file.putstring ("(*fp)();")
-			generated_file.new_line
+			result_type.c_type.generate (buf)
+			buf.putstring ("(*fp)();")
+			buf.new_line
 
 			if not result_type.is_void then
-				result_type.c_type.generate (generated_file)
-				generated_file.putstring (" Result;")
-				generated_file.new_line
+				result_type.c_type.generate (buf)
+				buf.putstring (" Result;")
+				buf.new_line
 			end
 			
-			generated_file.new_line
+			buf.new_line
 
 				-- Now comes the body
-			generated_file.putstring ("a_result = eif_load_dll(")
-			generated_file.putstring (special_file_name)
-			generated_file.putstring (");")
-			generated_file.new_line
-			generated_file.putstring ("if (a_result == NULL) eraise(%"Can not load library%",EN_PROG);")
-			generated_file.new_line
-			generated_file.putstring ("fp = ")
-			result_type.c_type.generate_function_cast (generated_file, argument_types)
-			generated_file.putstring ("GetProcAddress(a_result,")
+			buf.putstring ("a_result = eif_load_dll(")
+			buf.putstring (special_file_name)
+			buf.putstring (");")
+			buf.new_line
+			buf.putstring ("if (a_result == NULL) eraise(%"Can not load library%",EN_PROG);")
+			buf.new_line
+			buf.putstring ("fp = ")
+			result_type.c_type.generate_function_cast (buf, argument_types)
+			buf.putstring ("GetProcAddress(a_result,")
 			if dll_index > -1 then 
-				generated_file.putstring ("MAKEINTRESOURCE (")
-				generated_file.put_integer (dll_index)
-				generated_file.putstring (")")
+				buf.putstring ("MAKEINTRESOURCE (")
+				buf.putint (dll_index)
+				buf.putstring (")")
 			else
-				generated_file.putchar ('"')
-				generated_file.putstring (external_name)
-				generated_file.putchar ('"')
+				buf.putchar ('"')
+				buf.putstring (external_name)
+				buf.putchar ('"')
 			end
-			generated_file.putstring (");")
+			buf.putstring (");")
 
-			generated_file.new_line
-			generated_file.putstring ("if (fp == NULL) eraise(%"Can not find entry point%",EN_PROG);")
-			generated_file.new_line
+			buf.new_line
+			buf.putstring ("if (fp == NULL) eraise(%"Can not find entry point%",EN_PROG);")
+			buf.new_line
 			if not result_type.is_void then
-				generated_file.putstring ("Result = ")
+				buf.putstring ("Result = ")
 			end
-			generated_file.putstring ("(fp)(")
+			buf.putstring ("(fp)(")
 			if arguments /= Void then
 				generate_arguments_with_cast
 			end
-			generated_file.putstring (");")
-			generated_file.new_line
+			buf.putstring (");")
+			buf.new_line
 			if not result_type.is_void then
-				generated_file.putstring ("return ")
+				buf.putstring ("return ")
 				if has_return_type then
-					generated_file.putchar ('(')
-					generated_file.putstring (return_type)
-					generated_file.putchar (')')
-					generated_file.putchar (' ')
+					buf.putchar ('(')
+					buf.putstring (return_type)
+					buf.putchar (')')
+					buf.putchar (' ')
 				end
-				generated_file.putstring ("Result;")
-				generated_file.new_line
+				buf.putstring ("Result;")
+				buf.new_line
 			end
 		end
 
@@ -272,20 +281,22 @@ feature {NONE} -- Internal generation
 			-- Generate a list of the types held in the signature, for the dll
 		local
 			i, count: INTEGER
+			buf: GENERATION_BUFFER
 		do
 			if arguments /= Void then
 				from
+					buf := buffer
 					i := arguments.lower
 					count := arguments.count
 				until
 					i > count
 				loop
-					generated_file.putstring ("INDIR_")
-					generated_file.putstring (argument_types.item (i))
+					buf.putstring ("INDIR_")
+					buf.putstring (argument_types.item (i))
 					i := i + 1
 
 					if i <= count then
-						generated_file.putstring (", ")
+						buf.putstring (", ")
 					end
 				end
 			end

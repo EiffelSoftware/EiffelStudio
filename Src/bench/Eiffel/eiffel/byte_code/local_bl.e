@@ -76,7 +76,7 @@ feature
 			if c_type.is_pointer then
 				print_register_by_name;
 			else
-				generated_file.putstring (register_name);
+				buffer.putstring (register_name);
 			end;
 		end;
 

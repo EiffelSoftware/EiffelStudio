@@ -49,7 +49,7 @@ feature
 			i: INTEGER;
 			body_id: BODY_ID;
 			internal_name: STRING;
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
 				-- Set the control flag for enlarging the assertions
 			context.set_assertion_type (In_invariant);
@@ -68,27 +68,27 @@ feature
 			internal_name := body_id.feature_name
 				(System.class_type_of_id (context.current_type.type_id).id);
 
-			f := generated_file
-			f.generate_function_signature ("void", internal_name,
-					True, Context.extern_declaration_file,
+			buf := buffer
+			buf.generate_function_signature ("void", internal_name,
+					True, Context.header_buffer,
 					<<"Current", "where">>, <<"EIF_REFERENCE", "int">>);
 
-			f.indent;
+			buf.indent;
 
 				-- Generation of temporary variables under the control
 				-- of the GC
 			context.generate_temporary_ref_variables;
 				-- Dynamic type of Current
 			if context.dt_current > 1 then
-				f.putstring ("int dtype = Dtype(Current);");
-				f.new_line;
+				buf.putstring ("int dtype = Dtype(Current);");
+				buf.new_line;
 			end;
 
 				-- Generation of the local variable array
 			i := context.ref_var_used;
 			if i > 0 then
-				f.putstring ("RTLD;");
-				f.new_line;
+				buf.putstring ("RTLD;");
+				buf.new_line;
 			end;
 
 				-- Generate temporary variables not under the control
@@ -96,7 +96,7 @@ feature
 			context.generate_temporary_nonref_variables;
 			
 				-- Separate declarations and body with a blank line
-			f.new_line;
+			buf.new_line;
 
 				-- Generate GC hooks
 			context.generate_gc_hooks (True);
@@ -106,11 +106,11 @@ feature
 				-- Remove gc hooks
 			i := context.ref_var_used;
 			if i > 0 then
-				f.putstring ("RTLE;%N");
+				buf.putstring ("RTLE;%N");
 			end;
 				-- End of C routine
-			f.exdent;
-			f.putstring ("}%N%N");
+			buf.exdent;
+			buf.putstring ("}%N%N");
 		end;
 
 feature -- Byte code geenration

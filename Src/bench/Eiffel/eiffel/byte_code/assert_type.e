@@ -20,7 +20,7 @@ feature
 	In_invariant: INTEGER is 6;
 			-- Class invariant
 
-	generated_file: INDENT_FILE is
+	buffer: GENERATION_BUFFER is
 			-- File used for C code generation
 		deferred
 		end;
@@ -30,17 +30,17 @@ feature
 		do
 			inspect i
 			when In_precondition then
-				generated_file.putstring ("EX_PRE");
+				buffer.putstring ("EX_PRE");
 			when In_postcondition then
-				generated_file.putstring ("EX_POST");
+				buffer.putstring ("EX_POST");
 			when In_check then
-				generated_file.putstring ("EX_CHECK");
+				buffer.putstring ("EX_CHECK");
 			when In_loop_invariant then
-				generated_file.putstring ("EX_LINV");
+				buffer.putstring ("EX_LINV");
 			when In_loop_variant then
-				generated_file.putstring ("EX_VAR");
+				buffer.putstring ("EX_VAR");
 			when In_invariant then
-				generated_file.putstring ("(where ? EX_CINV:EX_INVC)");
+				buffer.putstring ("(where ? EX_CINV:EX_INVC)");
 			end;
 		end;
 

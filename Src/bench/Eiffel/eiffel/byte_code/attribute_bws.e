@@ -22,38 +22,38 @@ feature
             base_class: CLASS_C
 			cl_type: CL_TYPE_I
 			evaluated_type: TYPE_I
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
         do
-			f := generated_file
-			f.putstring ("if (on_local_processor(")
+			buf := buffer
+			buf.putstring ("if (on_local_processor(")
 			reg.print_register
-			f.putstring (")) {")
-			f.new_line
-			f.indent
+			buf.putstring (")) {")
+			buf.new_line
+			buf.indent
 	
 			evaluated_type := Context.real_type (type)
 			cl_type ?= evaluated_type
 
 			if cl_type.is_boolean then
-				f.putstring("CURPB(")
+				buf.putstring("CURPB(")
 			elseif cl_type.is_char then
-				f.putstring("CURPC(")
+				buf.putstring("CURPC(")
 			elseif cl_type.is_double then
-				f.putstring("CURPD(")
+				buf.putstring("CURPD(")
 			elseif cl_type.is_float then
-				f.putstring("CURPR(")
+				buf.putstring("CURPR(")
 			elseif cl_type.is_long then
-				f.putstring("CURPI(")
+				buf.putstring("CURPI(")
 			elseif cl_type.is_feature_pointer then
-				f.putstring("CURPP(")
+				buf.putstring("CURPP(")
 			elseif cl_type.is_expanded then
-				f.putstring("CURPO(")
+				buf.putstring("CURPO(")
 				-- FIXCONCURRENCY: We should make a clone here.
 			elseif cl_type.is_separate then
-				f.putstring("CURPSO(")
+				buf.putstring("CURPSO(")
 			else
 			-- if cl_type.is_reference and not cl_type.is_separate then
-				f.putstring("CURPSO(CURLTS(")
+				buf.putstring("CURPSO(CURLTS(")
 			end
 
             is_nested := not is_first
@@ -61,19 +61,19 @@ feature
             type_c := type_i.c_type
             if not type_i.is_expanded and then not type_c.is_bit then
                     -- For dereferencing, we need a star...
-                f.putchar ('*')
+                buf.putchar ('*')
                     -- ...followed by the appropriate access cast
-                type_c.generate_access_cast (f)
+                type_c.generate_access_cast (buf)
             end
-            f.putstring ("(CURPROXY_OBJ(")
+            buf.putstring ("(CURPROXY_OBJ(")
             reg.print_register
-            f.putstring (")")
+            buf.putstring (")")
             if reg.is_predefined or reg.register /= No_register then
-                f.putstring (gc_plus)
+                buf.putstring (gc_plus)
             else
-                f.putstring (" +")
-                f.new_line
-                f.indent
+                buf.putstring (" +")
+                buf.new_line
+                buf.indent
             end
             base_class := typ.base_class
             if
@@ -81,69 +81,69 @@ feature
                 base_class.is_precompiled
             then
                 if is_nested then
-                    f.putstring ("RTVPA(")
+                    buf.putstring ("RTVPA(")
                 else
-                    f.putstring ("RTWPA(")
+                    buf.putstring ("RTWPA(")
                 end
                 r_id := base_class.feature_table.item
                     (attribute_name).rout_id_set.first
                 rout_info := System.rout_info_table.item (r_id)
-                rout_info.origin.generated_id (f)
-                f.putstring (gc_comma)
-                f.putint (rout_info.offset)
+                rout_info.origin.generated_id (buf)
+                buf.putstring (gc_comma)
+                buf.putint (rout_info.offset)
             else
                 if is_nested then
-                    f.putstring ("RTVA(")
+                    buf.putstring ("RTVA(")
                 else
-                    f.putstring ("RTWA(")
+                    buf.putstring ("RTWA(")
                 end
-                f.putint (typ.associated_class_type.id.id - 1)
-                f.putstring (gc_comma)
-                f.putint (real_feature_id)
+                buf.putint (typ.associated_class_type.id.id - 1)
+                buf.putstring (gc_comma)
+                buf.putint (real_feature_id)
             end
-            f.putstring (gc_comma)
+            buf.putstring (gc_comma)
             if is_nested then
-                f.putchar ('"')
-                f.putstring (attribute_name)
-                f.putstring ("%", ")
-                f.putstring ("CURPROXY_OBJ(")
+                buf.putchar ('"')
+                buf.putstring (attribute_name)
+                buf.putstring ("%", ")
+                buf.putstring ("CURPROXY_OBJ(")
                 reg.print_register
-                f.putstring (")")
+                buf.putstring (")")
             else
                 context.generate_current_dtype
             end
-            f.putstring ("))")
+            buf.putstring ("))")
             if not (reg.is_predefined or reg.register /= No_register) then
-              f.exdent
+              buf.exdent
             end
 	
 			if not(cl_type.is_separate or cl_type.is_long or cl_type.is_feature_pointer or cl_type.is_boolean or cl_type.is_char or cl_type.is_double or cl_type.is_float or cl_type.is_expanded) then
-                f.putstring(")")
+                buf.putstring(")")
             end
-			f.putstring (", 0);")
+			buf.putstring (", 0);")
 	
-			f.new_line
-			f.exdent
-			f.putstring ("}")
-			f.new_line
-			f.putstring ("else {")
-			f.new_line
-			f.indent
-			f.putstring ("CURSARI(constant_execute_query, oid_of_sep_obj(")
+			buf.new_line
+			buf.exdent
+			buf.putstring ("}")
+			buf.new_line
+			buf.putstring ("else {")
+			buf.new_line
+			buf.indent
+			buf.putstring ("CURSARI(constant_execute_query, oid_of_sep_obj(")
 			reg.print_register
-			f.putstring ("), constant_attribute, %"")
-			f.putstring(base_class.name_in_upper)
-			f.putstring("%", %"")
-			f.putstring(attribute_name)
-			f.putstring ("%", 0);")
-			f.new_line
-			f.putstring ("CURSG(")
+			buf.putstring ("), constant_attribute, %"")
+			buf.putstring(base_class.name_in_upper)
+			buf.putstring("%", %"")
+			buf.putstring(attribute_name)
+			buf.putstring ("%", 0);")
+			buf.new_line
+			buf.putstring ("CURSG(")
 			reg.print_register
-			f.putstring (");")
-			f.new_line
-			f.exdent
-			f.putstring ("}")
-			f.new_line
+			buf.putstring (");")
+			buf.new_line
+			buf.exdent
+			buf.putstring ("}")
+			buf.new_line
 		end
 	
 end

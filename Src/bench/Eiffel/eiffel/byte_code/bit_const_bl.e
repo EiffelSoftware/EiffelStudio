@@ -49,13 +49,16 @@ feature
 
 	generate is
 			-- Generate the string
+		local
+			buf: GENERATION_BUFFER
 		do
 			if register /= No_register then
 				register.print_register
-				generated_file.putstring (" = ")
+				buf := buffer
+				buf.putstring (" = ")
 				generate_bit
-				generated_file.putchar (';')
-				generated_file.new_line
+				buf.putchar (';')
+				buf.new_line
 			end
 		end
 
@@ -71,15 +74,18 @@ feature
 
 	generate_bit is
 			-- Generate the bit constant (created Eiffel object)
+		local
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 				-- RTMB is the macro used to create Eiffel strings from C ones
-			generated_file.putstring ("RTMB(")
-			generated_file.putchar('"')
-			generated_file.escape_string (value)
-			generated_file.putchar ('"')
-			generated_file.putstring(", ")
-			generated_file.put_integer (value.count)
-			generated_file.putchar(')')
+			buf.putstring ("RTMB(")
+			buf.putchar('"')
+			buf.escape_string (value)
+			buf.putchar ('"')
+			buf.putstring(", ")
+			buf.putint (value.count)
+			buf.putchar(')')
 		end
 
 	is_simple_expr: BOOLEAN is True

@@ -88,39 +88,41 @@ feature
 		local
 			id: INTEGER;
 			r_name: STRING
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 			if array_desc /= Void then
-				generated_file.putchar ('{');
-				generated_file.new_line;
+				buf.putchar ('{');
+				buf.new_line;
 				from
 					array_desc.start
 				until
 					array_desc.after
 				loop
-					generated_file.putstring ("RTAD(");
+					buf.putstring ("RTAD(");
 					id := array_desc.item;
 					r_name := external_reg_name (id);
-					generated_file.putstring (r_name);
-					generated_file.putstring (gc_rparan_comma);
+					buf.putstring (r_name);
+					buf.putstring (gc_rparan_comma);
 							-- The Dtype has not been declared before
 					if
 						already_generated_offsets = Void
 					or else 
 						not already_generated_offsets.has (id)
 					then
-						generated_file.putstring (" RTADTYPE(");
-						generated_file.putstring (r_name);
-						generated_file.putstring (gc_rparan_comma);
+						buf.putstring (" RTADTYPE(");
+						buf.putstring (r_name);
+						buf.putstring (gc_rparan_comma);
 					end;
-					generated_file.new_line;
+					buf.new_line;
 					array_desc.forth
 				end
-				generated_file.new_line;
+				buf.new_line;
 			end
 			if generated_offsets /= Void then
 				if array_desc = Void then
-					generated_file.putchar ('{');
-					generated_file.new_line;
+					buf.putchar ('{');
+					buf.new_line;
 				end;
 				from
 					generated_offsets.start
@@ -128,15 +130,15 @@ feature
 					generated_offsets.after
 				loop
 					r_name := external_reg_name (generated_offsets.item);
-					generated_file.putstring ("RTADTYPE(");
-					generated_file.putstring (r_name);
-					generated_file.putstring ("); RTADOFFSETS(");
-					generated_file.putstring (r_name);
-					generated_file.putstring (gc_rparan_comma);
-					generated_file.new_line;
+					buf.putstring ("RTADTYPE(");
+					buf.putstring (r_name);
+					buf.putstring ("); RTADOFFSETS(");
+					buf.putstring (r_name);
+					buf.putstring (gc_rparan_comma);
+					buf.new_line;
 					generated_offsets.forth
 				end
-				generated_file.new_line;
+				buf.new_line;
 			end
 		end;
 
@@ -144,7 +146,9 @@ feature
 		local
 			id: INTEGER;
 			r_name: STRING
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 			if array_desc /= Void then
 				from
 					array_desc.start
@@ -157,23 +161,23 @@ feature
 					or else
 						not already_generated_offsets.has (id)
 					then
-						generated_file.putstring ("RTAI(");
+						buf.putstring ("RTAI(");
 					else
 							-- We can use the offset definitions
-						generated_file.putstring ("RTAIOFF(");
+						buf.putstring ("RTAIOFF(");
 					end
 					System.remover.array_optimizer.array_item_type (id).
-						generate (generated_file);
-					generated_file.putstring (gc_comma);
-					generated_file.putstring (external_reg_name (id));
-					generated_file.putstring (gc_comma);
-					generated_file.putstring (register_acces (id));
-					generated_file.putstring (gc_rparan_comma);
-					generated_file.new_line;
+						generate (buf);
+					buf.putstring (gc_comma);
+					buf.putstring (external_reg_name (id));
+					buf.putstring (gc_comma);
+					buf.putstring (register_acces (id));
+					buf.putstring (gc_rparan_comma);
+					buf.new_line;
 
 					array_desc.forth
 				end
-				generated_file.new_line;
+				buf.new_line;
 			end;
 			if generated_offsets /= Void then
 				from
@@ -183,43 +187,45 @@ feature
 				loop
 					id := generated_offsets.item;
 					r_name := external_reg_name (id);
-					generated_file.putstring ("RTAIOFFSETS(");
-					generated_file.putstring (r_name);
-					generated_file.putstring (gc_comma);
-					generated_file.putstring (register_acces (id));
-					generated_file.putstring (gc_rparan_comma);
-					generated_file.new_line;
+					buf.putstring ("RTAIOFFSETS(");
+					buf.putstring (r_name);
+					buf.putstring (gc_comma);
+					buf.putstring (register_acces (id));
+					buf.putstring (gc_rparan_comma);
+					buf.new_line;
 					generated_offsets.forth
 				end
-				generated_file.new_line;
+				buf.new_line;
 			end
 		end;
 
 	generate_free is
 		local
 			id: INTEGER
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 			if array_desc /= Void then
 				from
 					array_desc.start
 				until
 					array_desc.after
 				loop
-					generated_file.putstring ("RTAF(");
+					buf.putstring ("RTAF(");
 					id := array_desc.item
-					generated_file.putstring (external_reg_name (id));
-					generated_file.putstring (gc_comma);
-					generated_file.putstring (register_acces (id));
-					generated_file.putstring (gc_rparan_comma);
-					generated_file.new_line;
+					buf.putstring (external_reg_name (id));
+					buf.putstring (gc_comma);
+					buf.putstring (register_acces (id));
+					buf.putstring (gc_rparan_comma);
+					buf.new_line;
 					array_desc.forth
 				end
-				generated_file.new_line;
-				generated_file.putchar ('}');
-				generated_file.new_line;
+				buf.new_line;
+				buf.putchar ('}');
+				buf.new_line;
 			elseif generated_offsets /= Void then
-				generated_file.putchar ('}');
-				generated_file.new_line;
+				buf.putchar ('}');
+				buf.new_line;
 			end
 		end;
 

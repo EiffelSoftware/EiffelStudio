@@ -54,13 +54,16 @@ feature
 			-- Generate the parameter, and then the protection. Of course, the
 			-- scheme relies on the property that every parameter is stored in
 			-- a register (no Void_register propagation).
+		local
+			buf: GENERATION_BUFFER
 		do
 			expr.generate;
 			register.print_register;
-			generated_file.putstring (" = RTHP(");
+			buf := buffer
+			buf.putstring (" = RTHP(");
 			expr.print_register;
-			generated_file.putstring (gc_rparan_comma);
-			generated_file.new_line;
+			buf.putstring (gc_rparan_comma);
+			buf.new_line;
 		end;
 	
 	enlarged: like Current is

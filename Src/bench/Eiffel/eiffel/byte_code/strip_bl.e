@@ -40,48 +40,52 @@ feature
 			-- Generate expression
 		local
 			cl_type: CLASS_TYPE
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 			cl_type := Context.class_type;
-			generated_file.putchar ('{');
-			generated_file.new_line;
-			generated_file.indent;
-			generated_file.putstring ("static char *items[");
-			generated_file.putstring ("] = { ");
+			buf.putchar ('{');
+			buf.new_line;
+			buf.indent;
+			buf.putstring ("static char *items[");
+			buf.putstring ("] = { ");
 			generate_attribute_names_list;
-			generated_file.putstring (" };");
-			generated_file.new_line;
+			buf.putstring (" };");
+			buf.new_line;
 			print_register;
-			generated_file.putstring (" = ");
-			generated_file.putstring ("RTST(");
+			buf.putstring (" = ");
+			buf.putstring ("RTST(");
 			Context.Current_register.print_register_by_name;
-			generated_file.putstring (gc_comma);
-			generated_file.putint (cl_type.type_id - 1);
-			generated_file.putstring (", items, ");
-			generated_file.putint (feature_ids.count);
-			generated_file.putstring ("L);");
-			generated_file.new_line;
-			generated_file.exdent;
-			generated_file.putstring (" }");
-			generated_file.new_line;
+			buf.putstring (gc_comma);
+			buf.putint (cl_type.type_id - 1);
+			buf.putstring (", items, ");
+			buf.putint (feature_ids.count);
+			buf.putstring ("L);");
+			buf.new_line;
+			buf.exdent;
+			buf.putstring (" }");
+			buf.new_line;
 		end;
 
 	generate_attribute_names_list is
 			-- Generate routine ids (from feature ids) as a C list.
 		local
 			attr_names: LINKED_LIST [STRING];	
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 			attr_names := attribute_names;
 			from
 				attr_names.start
 			until
 				attr_names.after
 			loop
-				generated_file.putchar ('"');
-				generated_file.putstring (attr_names.item);
-				generated_file.putchar ('"');
+				buf.putchar ('"');
+				buf.putstring (attr_names.item);
+				buf.putchar ('"');
 				attr_names.forth;
 				if not attr_names.after then
-					generated_file.putstring (gc_comma);
+					buf.putstring (gc_comma);
 				end;	
 			end;
 		end;

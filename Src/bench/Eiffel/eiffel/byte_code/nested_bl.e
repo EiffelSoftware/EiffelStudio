@@ -356,9 +356,9 @@ end
 			message_target: ACCESS_B
 			value_type: TYPE_I
 			cl_type: CL_TYPE_I
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
-			f := generated_file
+			buf := buffer
 			message_target := message.target
 				-- Put parameters, if any, in temporary registers
 			message_target.generate_parameters (reg)
@@ -370,7 +370,7 @@ end
 					-- Otherwise, we have to generate it now.
 				if register /= Void and register /= No_register	and not real_type(target.type).is_separate then
 					register.print_register
-					f.putstring (" = ")
+					buf.putstring (" = ")
 				end
 					-- If register is No_register, then the call will be
 					-- generated directly by a call to `print_register'.
@@ -378,52 +378,52 @@ end
 				if register /= No_register then
 					message_target.generate_on (reg)
 					if not real_type(target.type).is_separate then
-						f.putchar (';')
-						f.new_line
+						buf.putchar (';')
+						buf.new_line
 					end
 				end
 					-- Now, we process separate feature call which return a basic data
 					-- or separate object.
 				if register /= Void and register /= No_register and real_type(target.type).is_separate then
 					register.print_register
-					f.putstring (" = ")
+					buf.putstring (" = ")
 					value_type := context.real_type(message.target.type)
 --					value_type := message.target.context_type
 --					value_type := context.real_type(message.type)
 --					value_type := context.real_type(type)
 					if value_type.is_boolean then
-						f.putstring ("CURGB(0);")
+						buf.putstring ("CURGB(0);")
 					elseif value_type.is_char then
-						f.putstring ("CURGC(0);")
+						buf.putstring ("CURGC(0);")
 					elseif value_type.is_double then
-						f.putstring ("CURGD(0);")
+						buf.putstring ("CURGD(0);")
 					elseif value_type.is_float then
-						f.putstring ("CURGR(0);")
+						buf.putstring ("CURGR(0);")
 					elseif value_type.is_long then
-						f.putstring ("CURGI(0);")
+						buf.putstring ("CURGI(0);")
 					elseif value_type.is_feature_pointer then
-						f.putstring ("CURGP(0);")
+						buf.putstring ("CURGP(0);")
 					elseif value_type.is_expanded then
-						f.putstring ("CURGO(0);")
+						buf.putstring ("CURGO(0);")
 					else
 					-- if value_type.is_separate or value_type.is_reference then
-						f.putstring ("CURGSO(0);")
+						buf.putstring ("CURGSO(0);")
 					end	
 					
-					f.new_line
+					buf.new_line
 				end
 			else
 				if register /= Void and register /= No_register then
 					register.print_register
-					f.putstring (" = ")
+					buf.putstring (" = ")
 				end
 					-- If register is No_register, then the call will be
 					-- generated directly by a call to `print_register'.
 					-- Otherwise, we have to generate it now.
 				if register /= No_register then
 					message_target.generate_on (reg)
-					f.putchar (';')
-					f.new_line
+					buf.putchar (';')
+					buf.new_line
 				end
 			end
 			message_target.reset_added_gc_hooks

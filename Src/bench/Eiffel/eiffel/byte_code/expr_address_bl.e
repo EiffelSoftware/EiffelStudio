@@ -58,14 +58,17 @@ feature
  
 	generate is
 			-- Generate expression
+		local
+			buf: GENERATION_BUFFER
 		do
 			expr.generate;
 			if register /= Void then
 				register.print_register;
-				generated_file.putstring (" = ");
+				buf := buffer
+				buf.putstring (" = ");
 				expr.print_register;
-				generated_file.putchar (';');
-				generated_file.new_line
+				buf.putchar (';');
+				buf.new_line
 			end
 		end;
  
@@ -73,6 +76,7 @@ feature
 			-- Print expression value
 		local
 			r: REGISTRABLE
+			buf: GENERATION_BUFFER
 		do
 			if register /= Void then
 				r := register
@@ -80,9 +84,10 @@ feature
 				r := expr
 			end
 			if expr.type.is_basic then
-				generated_file.putstring ("(char *)&(");
+				buf := buffer
+				buf.putstring ("(char *)&(");
 				r.print_register;
-				generated_file.putchar (')');
+				buf.putchar (')');
 			else
 				r.print_register;
 			end

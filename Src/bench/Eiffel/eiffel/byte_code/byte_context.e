@@ -71,11 +71,11 @@ feature
 	original_class_type: CLASS_TYPE
 			-- class type we are generating
 
-	generated_file: INDENT_FILE
-			-- File used for code generation
+	buffer: GENERATION_BUFFER
+			-- Buffer used for code generation
 
-	extern_declaration_file: INDENT_FILE
-			-- File used for extern declaration generation
+	header_buffer: GENERATION_BUFFER
+			-- Buffer used for extern declaration generation
 
 	inherited_assertion: INHERITED_ASSERTION
 			-- Used to record inherited assertions
@@ -98,16 +98,16 @@ feature
 			!!inherited_assertion.make
 		end
 
-	set_generated_file (f: like generated_file) is
-			-- Assign `f' to `generated_file'.
+	set_buffer (b: like buffer) is
+			-- Assign `b' to `buffer'.
 		do
-			generated_file := f
+			buffer := b
 		end
 
-	set_extern_declaration_file (f: like generated_file) is
-			-- Assign `f' to `extern_declaration_file'.
+	set_header_buffer (b: like header_buffer) is
+			-- Assign `b' to `header_buffer'.
 		do
-			extern_declaration_file := f
+			header_buffer := b
 		end
 
 	non_gc_tmp_vars: INTEGER
@@ -494,16 +494,16 @@ feature
 			--|Note: the semi-colon is added, otherwise C compilers
 			--|complain when there are no instructions after the label.
 		do
-			generated_file.exdent
-			generated_file.putstring ("body:;")
-			generated_file.new_line
-			generated_file.indent
+			buffer.exdent
+			buffer.putstring ("body:;")
+			buffer.new_line
+			buffer.indent
 		end
 
 	print_body_label is
 			-- Print label "body"
 		do
-			generated_file.putstring ("body")
+			buffer.putstring ("body")
 		end
 
 	generate_current_label is
@@ -517,11 +517,11 @@ feature
 		require
 			label_exists: l > 0
 		do
-			generated_file.exdent
+			buffer.exdent
 			print_label (l)
-			generated_file.putchar (':')
-			generated_file.new_line
-			generated_file.indent
+			buffer.putchar (':')
+			buffer.new_line
+			buffer.indent
 		end
 
 	print_current_label is
@@ -535,8 +535,8 @@ feature
 		require
 			label_exists: l > 0
 		do
-			generated_file.putstring ("label_")
-			generated_file.putint (l)
+			buffer.putstring ("label_")
+			buffer.putint (l)
 		end
 
 	set_local_index (s: STRING; r: REGISTRABLE) is
@@ -761,13 +761,13 @@ feature
 			-- Generate the dynamic type of `Current'
 		do
 			if inlined_dt_current > 1 then
-				generated_file.putstring ("inlined_dtype")
+				buffer.putstring ("inlined_dtype")
 			elseif dt_current > 1 then
-				generated_file.putstring (gc_dtype)
+				buffer.putstring (gc_dtype)
 			else
-				generated_file.putstring (gc_upper_dtype_lparan)
+				buffer.putstring (gc_upper_dtype_lparan)
 				Current_register.print_register_by_name
-				generated_file.putchar (')')
+				buffer.putchar (')')
 			end
 		end
 
@@ -814,10 +814,10 @@ feature
 				until
 					i > j
 				loop
-					generated_file.putstring ("char *xp")
-					generated_file.putint (i)
-					generated_file.putchar (';')
-					generated_file.new_line
+					buffer.putstring ("char *xp")
+					buffer.putint (i)
+					buffer.putchar (';')
+					buffer.new_line
 					i := i + 1
 				end
 			end
@@ -830,21 +830,21 @@ feature
 			inspect
 				ctype
 			when C_long then
-				generated_file.putstring ("EIF_INTEGER ti")
+				buffer.putstring ("EIF_INTEGER ti")
 			when C_ref then
-				generated_file.putstring ("EIF_REFERENCE tp")
+				buffer.putstring ("EIF_REFERENCE tp")
 			when C_float then
-				generated_file.putstring ("EIF_REAL tf")
+				buffer.putstring ("EIF_REAL tf")
 			when C_char then
-				generated_file.putstring ("EIF_CHARACTER tc")
+				buffer.putstring ("EIF_CHARACTER tc")
 			when C_double then
-				generated_file.putstring ("EIF_DOUBLE td")
+				buffer.putstring ("EIF_DOUBLE td")
 			when C_pointer then
-				generated_file.putstring ("EIF_POINTER ta")
+				buffer.putstring ("EIF_POINTER ta")
 			end
-			generated_file.putint (num)
-			generated_file.putchar (';')
-			generated_file.new_line
+			buffer.putint (num)
+			buffer.putchar (';')
+			buffer.new_line
 		end
 
 	generate_gc_hooks (compound_or_post: BOOLEAN) is
@@ -878,13 +878,13 @@ feature
 				-- The hooks are only needed if there is at least one reference
 			if nb_refs > 0 then
 				if compound_or_post or else byte_code.rescue_clause = Void then
-					generated_file.putstring ("RTLI(")
+					buffer.putstring ("RTLI(")
 				else
-					generated_file.putstring ("RTXI(")
+					buffer.putstring ("RTXI(")
 				end
-				generated_file.putint (nb_refs)
-				generated_file.putstring (gc_rparan_comma)
-				generated_file.new_line
+				buffer.putint (nb_refs)
+				buffer.putstring (gc_rparan_comma)
+				buffer.new_line
 				if system.has_separate then
 					reset_added_gc_hooks
 				end
@@ -903,65 +903,65 @@ feature
 						real_type (argument_b.type).is_expanded and exp_args > 1
 					then
 						-- Expanded cloning protocol
-						generated_file.putstring ("if (RTIE(")
-						generated_file.putstring (rname)
-						generated_file.putstring (")) {")
-						generated_file.new_line
-						generated_file.indent
+						buffer.putstring ("if (RTIE(")
+						buffer.putstring (rname)
+						buffer.putstring (")) {")
+						buffer.new_line
+						buffer.indent
 						nb_exp := expanded_number (argument_b.position) - 1
-						generated_file.putstring ("idx[")
-						generated_file.putint (nb_exp)
-						generated_file.putstring ("] = RTOF(arg")
-						generated_file.putint (argument_b.position)
-						generated_file.putstring (gc_rparan_comma)
-						generated_file.new_line
-						generated_file.putstring ("l[")
-						generated_file.putint (position)
-						generated_file.putstring ("] = RTEO(arg")
-						generated_file.putint (argument_b.position)
-						generated_file.putstring (gc_rparan_comma)
-						generated_file.new_line
-						generated_file.exdent
-						generated_file.putstring (gc_lacc_else_r_acc)
-						generated_file.new_line
-						generated_file.indent
-						generated_file.putstring ("l[")
-						generated_file.putint (position)
-						generated_file.putstring ("] = ")
-						generated_file.putstring (rname)
-						generated_file.putchar (';')
-						generated_file.new_line
-						generated_file.putstring ("idx[")
-						generated_file.putint (nb_exp)
-						generated_file.putstring ("] = -1;")
-						generated_file.new_line
-						generated_file.exdent
-						generated_file.putchar ('}')
+						buffer.putstring ("idx[")
+						buffer.putint (nb_exp)
+						buffer.putstring ("] = RTOF(arg")
+						buffer.putint (argument_b.position)
+						buffer.putstring (gc_rparan_comma)
+						buffer.new_line
+						buffer.putstring ("l[")
+						buffer.putint (position)
+						buffer.putstring ("] = RTEO(arg")
+						buffer.putint (argument_b.position)
+						buffer.putstring (gc_rparan_comma)
+						buffer.new_line
+						buffer.exdent
+						buffer.putstring (gc_lacc_else_r_acc)
+						buffer.new_line
+						buffer.indent
+						buffer.putstring ("l[")
+						buffer.putint (position)
+						buffer.putstring ("] = ")
+						buffer.putstring (rname)
+						buffer.putchar (';')
+						buffer.new_line
+						buffer.putstring ("idx[")
+						buffer.putint (nb_exp)
+						buffer.putstring ("] = -1;")
+						buffer.new_line
+						buffer.exdent
+						buffer.putchar ('}')
 					else
-						generated_file.putstring ("l[")
-						generated_file.putint (position)
-						generated_file.putstring ("] = ")
+						buffer.putstring ("l[")
+						buffer.putint (position)
+						buffer.putstring ("] = ")
 						if 	((reg.is_predefined or reg.is_temporary)
 							and not (reg.is_current or reg.is_argument)
 							and not (reg.is_result and compound_or_post))
 						then
-							generated_file.putstring ("(char *) 0")
+							buffer.putstring ("(char *) 0")
 						else
 							if (reg.c_type.is_bit) and (reg.is_argument) then
 								-- Clone argument if it is bit
-								generated_file.putstring ("RTCB(")
-								generated_file.putstring (rname)
-								generated_file.putchar (')')
+								buffer.putstring ("RTCB(")
+								buffer.putstring (rname)
+								buffer.putchar (')')
 							else
-								generated_file.putstring (rname)
+								buffer.putstring (rname)
 							end
 						end
-						generated_file.putchar (';')
+						buffer.putchar (';')
 					end
-					generated_file.new_line
+					buffer.new_line
 					hash_table.forth
 				end
-				generated_file.new_line
+				buffer.new_line
 			end
 		end
 
@@ -998,11 +998,11 @@ feature
 			vars := ref_var_used
 			if vars > 0 then
 				if byte_code.rescue_clause /= Void then
-					generated_file.putstring ("RTXE;")
-					generated_file.new_line
+					buffer.putstring ("RTXE;")
+					buffer.new_line
 				else
-					generated_file.putstring ("RTLE;")
-					generated_file.new_line
+					buffer.putstring ("RTLE;")
+					buffer.new_line
 				end
 			end
 		end
@@ -1124,8 +1124,8 @@ feature -- Concurrent Eiffel
 	print_concurrent_label is
 			-- Print label number `cur_label'.
 		do
-			generated_file.putstring ("cur_label_")
-			generated_file.putint (label)
+			buffer.putstring ("cur_label_")
+			buffer.putint (label)
 		end
 
 	reset_added_gc_hooks is 
@@ -1137,11 +1137,11 @@ feature -- Concurrent Eiffel
 			until
 				i < 0
 			loop
-				generated_file.putstring ("l[")
-				generated_file.putint (ref_var_used + i)
-				generated_file.putstring ("] = ")
-				generated_file.putstring ("(char *) 0;")
-				generated_file.new_line
+				buffer.putstring ("l[")
+				buffer.putint (ref_var_used + i)
+				buffer.putstring ("] = ")
+				buffer.putstring ("(char *) 0;")
+				buffer.new_line
 				i := i - 1
 			end
 		end
@@ -1155,8 +1155,8 @@ feature -- Concurrent Eiffel
 
 	print_reservation_label is
 		do
-			generated_file.putstring ("res_label_")
-			generated_file.putint (reservation_label)
+			buffer.putstring ("res_label_")
+			buffer.putint (reservation_label)
 		end
 
 end

@@ -48,14 +48,17 @@ feature -- Code generation
 	is_special: BOOLEAN is True
 
 	generate is
+		local
+			buf: GENERATION_BUFFER
 		do
 			generate_include_files
 			if not shared_include_queue.has (class_header_file) then
 				shared_include_queue.extend (class_header_file)
 				if not context.final_mode then
-					generated_file.putstring ("#include ")
-					generated_file.putstring (class_header_file)
-					generated_file.new_line
+					buf := buffer
+					buf.putstring ("#include ")
+					buf.putstring (class_header_file)
+					buf.new_line
 				end
 			end
 			generate_signature
@@ -64,57 +67,59 @@ feature -- Code generation
 	generate_body is
 		local
 			i, count: INTEGER
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 				-- Check for null pointer to C++ object in workbench mode
 			if not Context.final_mode then
 				inspect
 					type
 				when standard, data_member then
-					generated_file.putstring ("if ((")
-					generated_file.putstring (class_name)
-					generated_file.putstring ("*) arg1 == NULL) RTET(%"")
-					generated_file.putstring (class_name)
-					generated_file.putstring ("::")
-					generated_file.putstring (external_name)
-					generated_file.putstring ("%", EN_VOID);")
-					generated_file.new_line
-					generated_file.new_line
+					buf.putstring ("if ((")
+					buf.putstring (class_name)
+					buf.putstring ("*) arg1 == NULL) RTET(%"")
+					buf.putstring (class_name)
+					buf.putstring ("::")
+					buf.putstring (external_name)
+					buf.putstring ("%", EN_VOID);")
+					buf.new_line
+					buf.new_line
 				else
 				end
 			end
 			if not result_type.is_void then
-				generated_file.putstring ("return ")
+				buf.putstring ("return ")
 			end
 			--if has_return_type then
-				--generated_file.putchar ('(')
-				--generated_file.putstring (return_type)
-				--generated_file.putchar (')')
-				--generated_file.putchar (' ')
+				--buf.putchar ('(')
+				--buf.putstring (return_type)
+				--buf.putchar (')')
+				--buf.putchar (' ')
 			if result_type /= Void then
-				result_type.c_type.generate_cast (generated_file)
+				result_type.c_type.generate_cast (buf)
 			else
-				generated_file.putstring ("(void)")
+				buf.putstring ("(void)")
 			end
 
-			generated_file.putchar ('(')
+			buf.putchar ('(')
 			inspect
 				type
 			when standard, data_member then
-				generated_file.putstring ("((")
-				generated_file.putstring (class_name)
-				generated_file.putstring ("*) arg1)->")
-				generated_file.putstring (external_name)
+				buf.putstring ("((")
+				buf.putstring (class_name)
+				buf.putstring ("*) arg1)->")
+				buf.putstring (external_name)
 			when static, static_data_member then
-				generated_file.putstring (class_name)
-				generated_file.putstring ("::")
-				generated_file.putstring (external_name)
+				buf.putstring (class_name)
+				buf.putstring ("::")
+				buf.putstring (external_name)
 			when new then
-				generated_file.putstring ("new ")
-				generated_file.putstring (class_name)
+				buf.putstring ("new ")
+				buf.putstring (class_name)
 			when delete then
-				generated_file.putstring ("delete ((")
-				generated_file.putstring (class_name)
-				generated_file.putstring ("*)arg1)")
+				buf.putstring ("delete ((")
+				buf.putstring (class_name)
+				buf.putstring ("*)arg1)")
 			end
 
 			inspect
@@ -125,17 +130,19 @@ feature -- Code generation
 				generate_arguments_with_cast
 			end
 
-			generated_file.putchar (')')
-			generated_file.putchar (';')
-			generated_file.new_line
+			buf.putchar (')')
+			buf.putchar (';')
+			buf.new_line
 		end
 
 	generate_basic_arguments_with_cast is
 			-- Generate C arguments, if any, with casts if there's a signature
 		local
 			i, j, count: INTEGER
+			buf: GENERATION_BUFFER
 		do
 			from
+				buf := buffer
 				j := 1
 				count := arguments.count
 				if type = standard then
@@ -149,15 +156,15 @@ feature -- Code generation
 				i > count
 			loop
 				if j > 1 then
-					generated_file.putstring (gc_comma)
+					buf.putstring (gc_comma)
 				end
 				if has_arg_list then
-					generated_file.putchar ('(')
-					generated_file.putstring (argument_types.item (j))
-					generated_file.putstring (") ")
+					buf.putchar ('(')
+					buf.putstring (argument_types.item (j))
+					buf.putstring (") ")
 				end
-				generated_file.putstring ("arg")
-				generated_file.putint (i)
+				buf.putstring ("arg")
+				buf.putint (i)
 				i := i + 1
 				j := j + 1
 			end

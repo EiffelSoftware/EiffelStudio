@@ -26,18 +26,20 @@ feature
 			is_good_range: is_good_range
 		local
 			low, up: INTEGER;
+			buf: GENERATION_BUFFER
 		do
 			from
+				buf := buffer
 				low := lower.generation_value;
 				up := upper.generation_value;
 			until
 				low > up
 			loop
-				generated_file.putstring ("case ");
-				generated_file.putint (low);
-				generated_file.putchar ('L');
-				generated_file.putchar (':');
-				generated_file.new_line;
+				buf.putstring ("case ");
+				buf.putint (low);
+				buf.putchar ('L');
+				buf.putchar (':');
+				buf.new_line;
 				low := low + 1;
 			end;
 		end;

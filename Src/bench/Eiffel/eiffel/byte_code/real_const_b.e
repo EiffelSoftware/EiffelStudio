@@ -30,7 +30,7 @@ feature
 	print_register is
 			-- Print real value
 		do
-			generated_file.putstring (value);
+			buffer.putstring (value);
 		end;
 
 	used (r: REGISTRABLE): BOOLEAN is

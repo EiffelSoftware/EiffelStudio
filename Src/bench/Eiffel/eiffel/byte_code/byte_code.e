@@ -220,15 +220,15 @@ feature
 			end
 		end
 
-	feature_origin (f: INDENT_FILE) is
+	feature_origin (buf: GENERATION_BUFFER) is
 			-- Value of the dynamic type where the feature is written
 		do
 			if Context.workbench_mode then
-				f.putstring ("RTUD(")
-				context.class_type.id.generated_id (f)
-				f.putchar (')')
+				buf.putstring ("RTUD(")
+				context.class_type.id.generated_id (buf)
+				buf.putchar (')')
 			else
-				f.putint (context.class_type.type_id - 1)
+				buf.putint (context.class_type.type_id - 1)
 			end
 		end
 
@@ -272,22 +272,22 @@ feature
 		local
 			i, count: INTEGER
 			a: like argument_names
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
 			from
 				a := argument_names
 				i := 1
 				count := a.count
-				f := generated_file
+				buf := buffer
 				if i <= count then
-					f.putstring (a @ i)
+					buf.putstring (a @ i)
 					i := i + 1
 				end
 			until
 				i > count
 			loop
-				f.putstring (gc_comma)
-				f.putstring (a @ i)
+				buf.putstring (gc_comma)
+				buf.putstring (a @ i)
 				i := i + 1
 			end
 		end
@@ -338,29 +338,29 @@ feature
 			i, count: INTEGER
 			a_types: like argument_types
 			a_names: like argument_names
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
 			from
 				a_types := argument_types
 				a_names := argument_names
 				i := 1
 				count := argument_names.count
-				f := generated_file
+				buf := buffer
 				if i <= count then
-					f.putstring (argument_types @ i)
-					f.putchar (' ')
-					f.putstring (argument_names @ i)
-					f.putchar (';')
+					buf.putstring (argument_types @ i)
+					buf.putchar (' ')
+					buf.putstring (argument_names @ i)
+					buf.putchar (';')
 					i := i + 1
 				end
 			until
 				i > count
 			loop
-				f.putstring (gc_comma)
-				f.putstring (argument_types @ i)
-				f.putchar (' ')
-				f.putstring (argument_names @ i)
-				f.putchar (';')
+				buf.putstring (gc_comma)
+				buf.putstring (argument_types @ i)
+				buf.putchar (' ')
+				buf.putstring (argument_names @ i)
+				buf.putchar (';')
 				i := i + 1
 			end
 		end
@@ -405,25 +405,25 @@ feature
 			temp_class_type: CLASS_TYPE
 			inh_assert: INHERITED_ASSERTION
 			item: UN_OLD_BL
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
 			inh_assert := Context.inherited_assertion
 			if
 				Context.has_postcondition and then (old_expressions /= Void
 				or else inh_assert.has_old_expression)
 			then
-				f := generated_file
+				buf := buffer
 				if Context.workbench_mode then
-					f.putstring ("if (RTAL & CK_ENSURE) {")
-					f.new_line
-					f.indent
+					buf.putstring ("if (RTAL & CK_ENSURE) {")
+					buf.new_line
+					buf.indent
 				else
-					f.putstring ("if (~in_assertion) {");					
-					f.new_line
-					f.indent
+					buf.putstring ("if (~in_assertion) {");					
+					buf.new_line
+					buf.indent
 				end
-				f.putstring ("in_assertion = ~0;")
-				f.new_line
+				buf.putstring ("in_assertion = ~0;")
+				buf.new_line
 				if old_expressions /= Void then
 					from
 						old_expressions.start
@@ -440,12 +440,12 @@ feature
 					inh_assert.generate_old_variables
 				end
 
-				f.putstring ("in_assertion = 0;")
-				f.new_line
+				buf.putstring ("in_assertion = 0;")
+				buf.new_line
 				
-				f.exdent
-				f.putchar ('}')
-				f.new_line
+				buf.exdent
+				buf.putchar ('}')
+				buf.new_line
 			end
 		end
 

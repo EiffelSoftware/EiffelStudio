@@ -47,13 +47,16 @@ feature
 
 	print_register_by_name is
 			-- Generates the C representation of a register
+		local
+			buffer: GENERATION_BUFFER
 		do
+			buffer := context.buffer
 			if context.need_gc_hooks then
-				context.generated_file.putstring ("l[");
-				context.generated_file.putint (context.local_index (register_name));
-				context.generated_file.putchar (']');
+				buffer.putstring ("l[");
+				buffer.putint (context.local_index (register_name));
+				buffer.putchar (']');
 			else
-				context.generated_file.putstring (register_name);
+				buffer.putstring (register_name);
 			end;
 		end;
 

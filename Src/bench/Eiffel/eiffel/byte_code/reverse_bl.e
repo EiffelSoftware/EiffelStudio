@@ -94,9 +94,9 @@ feature
 		local
 			cl_type_i: CL_TYPE_I;
 			gen_type : GEN_TYPE_I
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
-			f := generated_file
+			buf := buffer
 			generate_line_info;
 				-- First pre-compute the source and put it in the register
 				-- so that we can use it inside macro (where the argument is
@@ -120,59 +120,59 @@ feature
 				and not register_for_metamorphosis
 			then
 				print_register;
-				f.putstring (" = ");
+				buf.putstring (" = ");
 				source.print_register;
-				f.putchar (';');
-				f.new_line;
+				buf.putchar (';');
+				buf.new_line;
 			end;
 				-- If last is in result, generate a return instruction.
 			if last_in_result then
 				context.byte_code.finish_compound;
 				if last_instruction then
-					f.new_line;
+					buf.new_line;
 				end;
-				f.putstring ("return ");
+				buf.putstring ("return ");
 			else
 					-- Perform aging tests when necessary
 				if how /= None_assignment and not target.is_predefined then
 				   source_print_register;
-					f.putstring (" = RTRM(");
+					buf.putstring (" = RTRM(");
 					source_print_register;
-					f.putstring (gc_comma);
+					buf.putstring (gc_comma);
 					context.Current_register.print_register_by_name;
-					f.putchar (')');
-					f.putchar (';');
-					f.new_line;
+					buf.putchar (')');
+					buf.putchar (';');
+					buf.new_line;
 				end;
 				target.print_register;
-				f.putstring (" = ");
+				buf.putstring (" = ");
 			end;
 			if how /= None_assignment then
-				f.putstring ("RTRV(");
+				buf.putstring ("RTRV(");
 -- FIXME!!!! use something similar to CREATE_INFO in CREATION_BL
 					-- It so happens that reverse assignments are only allowed
 					-- on reference types.
 
 				if gen_type = Void then
 					if context.final_mode then
-						f.putint (cl_type_i.type_id - 1);
+						buf.putint (cl_type_i.type_id - 1);
 					else
-						f.putstring ("RTUD(");
-						cl_type_i.associated_class_type.id.generated_id (f)
-						f.putchar (')');
+						buf.putstring ("RTUD(");
+						cl_type_i.associated_class_type.id.generated_id (buf)
+						buf.putchar (')');
 					end;
 				else
-					f.putstring ("typres");
+					buf.putstring ("typres");
 				end;
 
-				f.putstring (gc_comma);
+				buf.putstring (gc_comma);
 				source_print_register;
-				f.putchar (')');
+				buf.putchar (')');
 			else
-				f.putstring ("(char *) 0");
+				buf.putstring ("(char *) 0");
 			end;
-			f.putchar (';');
-			f.new_line;
+			buf.putchar (';');
+			buf.new_line;
 
 			if gen_type /= Void then
 				-- We need to close the C block.

@@ -26,7 +26,7 @@ feature
 	generate_operator is
 			-- Generate the operator
 		do
-			generated_file.putstring (" && ");
+			buffer.putstring (" && ");
 		end;
 
 	

@@ -66,9 +66,9 @@ feature
 			table_name: STRING;
 			rout_info: ROUT_INFO;
 			gen_type: GEN_TYPE_I;
-			gen_file: INDENT_FILE
+			buffer: GENERATION_BUFFER
 		do
-			gen_file := context.generated_file;
+			buffer := context.buffer;
 			if context.final_mode then
 				table := Eiffel_table.poly_table (rout_id);
 				if table.has_one_type then
@@ -76,30 +76,30 @@ feature
 					gen_type ?= table.first.type
 
 					if gen_type /= Void then
-						gen_file.putstring ("typres")
+						buffer.putstring ("typres")
 					else
-						gen_file.putint (table.first.feature_type_id - 1)
+						buffer.putint (table.first.feature_type_id - 1)
 					end
 				else
 						-- Attribute is polymorphic
 					table_name := rout_id.type_table_name;
 
-					gen_file.putstring ("RTFCID(")
-					gen_file.putint (context.current_type.generated_id (context.final_mode))
-					gen_file.putchar (',')
-					gen_file.putchar ('(');
-					gen_file.putstring (table_name);
-					gen_file.putchar ('-');
-					gen_file.putint (table.min_type_id - 1);
-					gen_file.putstring ("), (");
+					buffer.putstring ("RTFCID(")
+					buffer.putint (context.current_type.generated_id (context.final_mode))
+					buffer.putchar (',')
+					buffer.putchar ('(');
+					buffer.putstring (table_name);
+					buffer.putchar ('-');
+					buffer.putint (table.min_type_id - 1);
+					buffer.putstring ("), (");
 
-					gen_file.putstring (table_name);
-					gen_file.putstring ("_gen_type");
-					gen_file.putchar ('-');
-					gen_file.putint (table.min_type_id - 1);
-					gen_file.putstring ("), ");
+					buffer.putstring (table_name);
+					buffer.putstring ("_gen_type");
+					buffer.putchar ('-');
+					buffer.putint (table.min_type_id - 1);
+					buffer.putstring ("), ");
 					context.Current_register.print_register_by_name
-					gen_file.putchar (')')
+					buffer.putchar (')')
 
 						-- Side effect. This is not nice but
 						-- unavoidable.
@@ -113,24 +113,24 @@ feature
 					Compilation_modes.is_precompiling or
 					context.current_type.base_class.is_precompiled
 				then
-					gen_file.putstring ("RTWPCT(");
-					context.class_type.id.generated_id (gen_file)
-					gen_file.putstring (gc_comma)
+					buffer.putstring ("RTWPCT(");
+					context.class_type.id.generated_id (buffer)
+					buffer.putstring (gc_comma)
 					rout_info := System.rout_info_table.item (rout_id);
-					rout_info.origin.generated_id (gen_file)
-					gen_file.putstring (gc_comma);
-					gen_file.putint (rout_info.offset)
+					rout_info.origin.generated_id (buffer)
+					buffer.putstring (gc_comma);
+					buffer.putint (rout_info.offset)
 				else
-					gen_file.putstring ("RTWCT(");
-					gen_file.putint
+					buffer.putstring ("RTWCT(");
+					buffer.putint
 						(context.current_type.associated_class_type.id.id - 1);
-					gen_file.putstring (gc_comma);
-					gen_file.putint (feature_id);
+					buffer.putstring (gc_comma);
+					buffer.putint (feature_id);
 				end;
-				gen_file.putstring (gc_comma);
+				buffer.putstring (gc_comma);
 				context.Current_register.print_register_by_name
 
-				gen_file.putchar (')');
+				buffer.putchar (')');
 			end;
 		end;
 
@@ -168,7 +168,7 @@ feature -- Genericity
 			end
 		end
 
-	generate_cid (f : INDENT_FILE; final_mode : BOOLEAN) is
+	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
 
 		local
 			table: POLY_TABLE [ENTRY];
@@ -177,7 +177,7 @@ feature -- Genericity
 			gen_type: GEN_TYPE_I;
 			type_set: ROUT_ID_SET
 		do
-			f.putstring ("-13, ")
+			buffer.putstring ("-13, ")
 			if context.final_mode then
 				table := Eiffel_table.poly_table (rout_id)
 
@@ -185,7 +185,7 @@ feature -- Genericity
 					-- Creation with `like_feature' where feature is
 					-- deferred and has no effective version anywhere.
 					-- Create anything - cannot be called anyway.
-					f.putstring ("-10, -10, ")
+					buffer.putstring ("-10, -10, ")
 				else
 					-- Feature has at least one effective version	
 					if table.has_one_type then
@@ -193,31 +193,31 @@ feature -- Genericity
 						gen_type ?= table.first.type
 	
 						if gen_type /= Void then
-							f.putstring ("-10, ")
-							gen_type.generate_cid (f, final_mode, True)
+							buffer.putstring ("-10, ")
+							gen_type.generate_cid (buffer, final_mode, True)
 						else
-							f.putint (table.first.feature_type_id - 1)
-							f.putstring (", ")
+							buffer.putint (table.first.feature_type_id - 1)
+							buffer.putstring (", ")
 						end
 					else
 							-- Attribute is polymorphic
 						table_name := rout_id.type_table_name
 	
-						f.putstring ("RTFCID(")
-						f.putint (context.current_type.generated_id (context.final_mode))
-						f.putstring (",(")
-						f.putstring (table_name)
-						f.putstring ("-")
-						f.putint (table.min_type_id - 1)
-						f.putstring ("), (")
+						buffer.putstring ("RTFCID(")
+						buffer.putint (context.current_type.generated_id (context.final_mode))
+						buffer.putstring (",(")
+						buffer.putstring (table_name)
+						buffer.putstring ("-")
+						buffer.putint (table.min_type_id - 1)
+						buffer.putstring ("), (")
 	
-						f.putstring (table_name)
-						f.putstring ("_gen_type")
-						f.putstring ("-")
-						f.putint (table.min_type_id - 1)
-						f.putstring ("), ")
-						f.putstring (context.Current_register.register_name)
-						f.putstring ("), ")
+						buffer.putstring (table_name)
+						buffer.putstring ("_gen_type")
+						buffer.putstring ("-")
+						buffer.putint (table.min_type_id - 1)
+						buffer.putstring ("), ")
+						buffer.putstring (context.Current_register.register_name)
+						buffer.putstring ("), ")
 	
 							-- Side effect. This is not nice but
 							-- unavoidable.
@@ -241,22 +241,22 @@ feature -- Genericity
 					Compilation_modes.is_precompiling or
 					context.current_type.base_class.is_precompiled
 				then
-					f.putstring ("RTWPCT(")
-					context.class_type.id.generated_id (f)
-					f.putstring (gc_comma)
+					buffer.putstring ("RTWPCT(")
+					context.class_type.id.generated_id (buffer)
+					buffer.putstring (gc_comma)
 					rout_info := System.rout_info_table.item (rout_id)
-					rout_info.origin.generated_id (f)
-					f.putstring (gc_comma)
-					f.putint (rout_info.offset)
+					rout_info.origin.generated_id (buffer)
+					buffer.putstring (gc_comma)
+					buffer.putint (rout_info.offset)
 				else
-					f.putstring ("RTWCT(")
-					f.putint (context.current_type.associated_class_type.id.id - 1)
-					f.putstring (gc_comma)
-					f.putint (feature_id)
+					buffer.putstring ("RTWCT(")
+					buffer.putint (context.current_type.associated_class_type.id.id - 1)
+					buffer.putstring (gc_comma)
+					buffer.putint (feature_id)
 				end
-				f.putstring (gc_comma)
-				f.putstring (context.Current_register.register_name)
-				f.putstring ("), ")
+				buffer.putstring (gc_comma)
+				buffer.putstring (context.Current_register.register_name)
+				buffer.putstring ("), ")
 			end
 		end
 

@@ -57,28 +57,30 @@ feature
 			-- Generate the assertions
 		local
 			workbench_mode: BOOLEAN;
+			buf: GENERATION_BUFFER
 		do
 			generate_line_info;
 
 			if check_list /= Void then
+				buf := buffer
 				workbench_mode := context.workbench_mode;
 				context.set_assertion_type (In_check);
 				if workbench_mode then
-					generated_file.putstring ("if (RTAL & CK_CHECK) {");
-					generated_file.new_line;
-					generated_file.indent;
+					buf.putstring ("if (RTAL & CK_CHECK) {");
+					buf.new_line;
+					buf.indent;
 					check_list.generate;
-					generated_file.exdent;
-					generated_file.putchar ('}');
-					generated_file.new_line;
+					buf.exdent;
+					buf.putchar ('}');
+					buf.new_line;
 				elseif context.assertion_level.check_check then
-					generated_file.putstring ("if (~in_assertion) {");
-					generated_file.new_line;
-					generated_file.indent;
+					buf.putstring ("if (~in_assertion) {");
+					buf.new_line;
+					buf.indent;
 					check_list.generate;
-					generated_file.exdent;
-					generated_file.putchar ('}');
-					generated_file.new_line;
+					buf.exdent;
+					buf.putchar ('}');
+					buf.new_line;
 				end;
 			end;
 		end;

@@ -470,7 +470,7 @@ feature -- Update
 
 feature {CMD_INSTANCE} -- Update
 
-	add_argument (an_argument: ARG_INSTANCE) is
+	add_argument_icon (an_argument: ARG_INSTANCE) is
 			-- Add a formal argument in the argument box.
 		do
 			arguments.extend (an_argument)
@@ -492,7 +492,33 @@ feature {CMD_INSTANCE} -- Update
 			arguments.remove
 		end
 
-feature {ARG_INST_ICON}
+feature {ARG_HOLE} -- Argument
+
+	add_argument (ts: TYPE_STONE) is
+			-- Add a formal argument to Currently edited
+			-- command. If several instances exist, the user
+			-- has to choose between creating a new command, editing
+			-- the current command (and update every instance) or
+			-- cancelling the operation.
+		local
+			new_argument: ARG
+			add_argument_cmd: CMD_ADD_ARGUMENT
+			user_command: USER_CMD
+		do
+			user_command ?= edited_command
+			if user_command /= Void then
+ 				if user_command.has_descendents then
+ 					popup_error_box (Messages.instance_add_arg_er)
+ 				else
+					!! add_argument_cmd.make (Current)
+					!! new_argument.session_init (ts)
+					add_argument_cmd.set_element (new_argument)
+					add_argument_cmd.execute (user_command)	
+				end
+			end
+		end
+
+feature {ARG_INST_ICON} -- Argument
 
 	remove_argument (arg_inst: ARG_INSTANCE; arg_icon: ARG_INST_ICON) is
 			-- Remove a local argument.

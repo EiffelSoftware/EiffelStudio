@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 			class_as: CLASS_AS
 			basic_as: BASIC_TYPE
 			cl_type_as: CLASS_TYPE_AS
-			ss, s, text: STRING
+			s, text: STRING
 			cur_disp, disp: INTEGER
 			is_occurrence_found: BOOLEAN
 		do
@@ -174,7 +174,6 @@ feature {NONE} -- Implementation
 				text := ctm.text
 				click_list := ctm.class_as.click_list
 				disp := a_search_string.count - a_replace_string.count
-				ss := a_search_string.as_lower
 
 				from
 					click_list.start
@@ -200,7 +199,7 @@ feature {NONE} -- Implementation
 						end
 					end
 
-					if s /= Void and then s.is_equal (ss) then
+					if s /= Void and then s.is_equal (a_search_string) then
 						text.replace_substring (
 							a_replace_string,
 							click_item.start_position + 1 + cur_disp,

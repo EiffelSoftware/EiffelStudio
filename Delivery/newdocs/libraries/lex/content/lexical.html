@@ -19,7 +19,7 @@
 
 		<P>Besides recognizing the tokens, it is usually necessary to recognize the deeper syntactic structure of the text. This process is called <B>parsing</B> or <B>syntax analysis</B> and is studied in the next chapter.</P>
 
-		<P>Figure 1 shows the inheritance structure of the classes discussed in this chapter. Class <A CLASS="eclass" HREF="../reference/l_interface.html">L_INTERFACE</A> has also been included although we will only study it in the next chapter; it belongs to the Parse library, where it takes care of the interface between parsing and lexical analysis.</P>
+		<P>Figure 1 shows the inheritance structure of the classes discussed in this chapter. Class <A CLASS="eclass" HREF="/libraries/lex/reference/parse/l_interface_chart.html">L_INTERFACE</A> has also been included although we will only study it in the next chapter; it belongs to the Parse library, where it takes care of the interface between parsing and lexical analysis.</P>
 
 		<IMG SRC="figure1.png">
 		<P CLASS="figuretitle">Figure 1: Lexical classes</P>
@@ -55,50 +55,52 @@
 
 		<H3>Overview of the classes</H3>
 
-		<P>For the user of the Lex libraries, the classes of most direct interest are <A CLASS="eclass" HREF="../reference/token.html">TOKEN</A>, <A CLASS="eclass" HREF="../reference/lexical.html">LEXICAL</A>, <A CLASS="eclass" HREF="../reference/metalex.html">METALEX</A> and <A CLASS="eclass" HREF="../reference/scanning.html">SCANNING</A>.</P>
+		<P>For the user of the Lex libraries, the classes of most direct interest are <A CLASS="eclass" HREF="/libraries/lex/reference/lex/token_chart.html">TOKEN</A>, <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lexical_chart.html">LEXICAL</A>, <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html"><A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A></A> and <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A>.</P>
 
-		<P>An instance of TOKEN describes a token read from an input file being analyzed, with such properties as the token type, the corresponding string and the position in the text (line, column) where it was found.</P>
+		<P>An instance of <A CLASS="eclass" HREF="/libraries/lex/reference/lex/token_chart.html">TOKEN</A> describes a token read from an input file being analyzed, with such properties as the token type, the corresponding string and the position in the text (line, column) where it was found.</P>
 
-		<P>An instance of LEXICAL is a lexical analyzer for a certain lexical grammar. Given a reference to such an instance, say analyzer, you may analyze an input text through calls to the features of class LEXICAL, for example:</P>
+		<P>An instance of <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lexical_chart.html">LEXICAL</A> is a lexical analyzer for a certain lexical grammar. Given a reference to such an instance, say analyzer, you may analyze an input text through calls to the features of class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lexical_chart.html">LEXICAL</A>, for example:</P>
 
-		<CODE><SPAN CLASS="efeature">analyzer</SPAN>.<A CLASS="efeature" HREF="../reference/lexical#f_get_token">get_token</A></CODE>
+		<CODE>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_analyzer">analyzer</A>.<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_get_token">get_token</A>
+		</CODE>
 
-		<P>Class METALEX defines facilities for building such lexical analyzers. In particular, it provides features for reading the grammar from a file and building the corresponding analyzer. Classes that need to build and use lexical analyzers may be written as descendants of METALEX to benefit from its general-purpose facilities.</P>
+		<P>Class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html"><A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A></A> defines facilities for building such lexical analyzers. In particular, it provides features for reading the grammar from a file and building the corresponding analyzer. Classes that need to build and use lexical analyzers may be written as descendants of <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html"><A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A></A> to benefit from its general-purpose facilities.</P>
 
-		<P>Class SCANNING is one such descendant of METALEX. It contains all the facilities needed to build an ordinary lexical analyzer and apply it to the analysis of input texts. Because these facilities are simpler to use and are in most cases sufficient, SCANNING will be discussed first; the finer-grain facilities of METALEX are described towards the end of this chapter.</P>
+		<P>Class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A> is one such descendant of <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html"><A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A></A>. It contains all the facilities needed to build an ordinary lexical analyzer and apply it to the analysis of input texts. Because these facilities are simpler to use and are in most cases sufficient, <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A> will be discussed first; the finer-grain facilities of <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A> are described towards the end of this chapter.</P>
 
-		<P>These classes internally rely on others, some of which may be useful for more advanced applications. LEX_BUILDER, one of the supporting classes, will be introduced after METALEX.</P>
+		<P>These classes internally rely on others, some of which may be useful for more advanced applications. <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lex_builder_chart.html"><A CLASS="eclass" HREF="/libraries/lex/reference/lex/lex_builder_chart.html">LEX_BUILDER</A></A>, one of the supporting classes, will be introduced after <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A>.</P>
 
 		<H3>Library example</H3>
 
-		<P>The ISE Eiffel 3 delivery includes (in the examples/library/lex subdirectory) a simple example using the Lexical Library classes. The example applies Lex library facilities to the analysis of a language which is none other than Eiffel itself.</P>
+		<P>The [BENCH] delivery includes (in the examples/library/lex subdirectory) a simple example using the Lexical Library classes. The example applies Lex library facilities to the analysis of a language which is none other than Eiffel itself.</P>
 
-		<P>The root class of that example, EIFFEL_SCAN, is only a few lines long; it relies on the general mechanism provided by SCANNING (see below). The actual lexical grammar is given by a lexical grammar file (a concept explained below): the file of name eiffel_regular in the same directory.</P>
+		<P>The root class of that example, EIFFEL_SCAN, is only a few lines long; it relies on the general mechanism provided by <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A> (see below). The actual lexical grammar is given by a lexical grammar file (a concept explained below): the file of name eiffel_regular in the same directory.</P>
 
 		<H3>Dealing with finite automata</H3>
 
-		<P>Lexical analysis relies on the theory of finite automata. The most advanced of the classes discussed in this chapter, LEX_BUILDER, relies on classes describing various forms of automata:</P>
+		<P>Lexical analysis relies on the theory of finite automata. The most advanced of the classes discussed in this chapter, <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lex_builder_chart.html">LEX_BUILDER</A>, relies on classes describing various forms of automata:</P>
 
 		<UL>
-			<LI>DFA: deterministic finite automata.</LI>
-			<LI>PDFA: partially deterministic finite automata.</LI>
-			<LI>NDFA: non-deterministic finite automata.</LI>
-			<LI>AUTOMATON, the most general: finite automata.</LI>
-			<LI>FIXED_AUTOMATON, LINKED_AUTOMATON.</LI>
+			<LI><A CLASS="eclass" HREF="/libraries/lex/reference/lex/dfa_chart.html">DFA</A>: deterministic finite automata.</LI>
+			<LI><A CLASS="eclass" HREF="/libraries/lex/reference/lex/pdfa_chart.html">PDFA</A>: partially deterministic finite automata.</LI>
+			<LI><A CLASS="eclass" HREF="/libraries/lex/reference/lex/ndfa_chart.html">NDFA</A>: non-deterministic finite automata.</LI>
+			<LI><A CLASS="eclass" HREF="/libraries/lex/reference/lex/automaton_chart.html">AUTOMATON</A>, the most general: finite automata.</LI>
+			<LI><A CLASS="eclass" HREF="/libraries/lex/reference/lex/fixed_automaton_chart.html">FIXED_AUTOMATON</A>, <A CLASS="eclass" HREF="/libraries/lex/reference/lex/linked_automaton_chart.html">LINKED_AUTOMATON</A>.</LI>
 		</UL>
 
-		<P>These classes may also be useful for systems that need to manipulate finite automata for applications other than lexical analysis. The interface of LEX_BUILDER, which includes the features from AUTOMATON, NDFA and PDFA, will provide the essential information.</P>
+		<P>These classes may also be useful for systems that need to manipulate finite automata for applications other than lexical analysis. The interface of <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lex_builder_chart.html">LEX_BUILDER</A>, which includes the features from <A CLASS="eclass" HREF="/libraries/lex/reference/lex/automaton_chart.html">AUTOMATON</A>, <A CLASS="eclass" HREF="/libraries/lex/reference/lex/ndfa_chart.html">NDFA</A> and <A CLASS="eclass" HREF="/libraries/lex/reference/lex/pdfa_chart.html">PDFA</A>, will provide the essential information.</P>
 
 		<H2>TOKENS</H2>
 
-		<P>A lexical analyzer built through any of the techniques described in the rest of this chapter will return tokens - instances of class TOKEN. Here are the most important features of this class:</P>
+		<P>A lexical analyzer built through any of the techniques described in the rest of this chapter will return tokens - instances of class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/token_chart.html">TOKEN</A>. Here are the most important features of this class:</P>
 
 		<UL>
-			<LI><A CLASS="efeature" HREF="../reference/token.html#f_string_value">string_value</A>: a string giving the token’s contents.</LI>
-			<LI><A CLASS="efeature" HREF="../reference/token.html#f_type">type</A>: an integer giving the code of the token’s type. The possible token types and associated integer codes are specified during the process of building the lexical analyzer in one of the ways described below.</LI>
-			<LI><A CLASS="efeature" HREF="../reference/token.html#f_is_keyword">is_keyword</A>: a boolean indicating whether the token is a keyword.</A>
-			<LI><A CLASS="efeature" HREF="../reference/token.html#f_keyword_code">keyword_code</A>: an integer, meaningful only if is_keyword is true, and identifying the keyword by the code that was given to it during the process of building the analyzer.</LI>
-			<LI><A CLASS="efeature" HREF="../reference/token.html#f_line_number">line_number</A>, <A CLASS="efeature" HREF="../reference/token.html#f_column_number">column_number</A>: two integers indicating where the token appeared in the input text.</LI>
+			<LI><A CLASS="efeature" HREF="/libraries/lex/reference/lex/token.html#f_string_value">string_value</A>: a string giving the token’s contents.</LI>
+			<LI><A CLASS="efeature" HREF="/libraries/lex/reference/lex/token.html#f_type">type</A>: an integer giving the code of the token’s type. The possible token types and associated integer codes are specified during the process of building the lexical analyzer in one of the ways described below.</LI>
+			<LI><A CLASS="efeature" HREF="/libraries/lex/reference/lex/token.html#f_is_keyword">is_keyword</A>: a boolean indicating whether the token is a keyword.</A>
+			<LI><A CLASS="efeature" HREF="/libraries/lex/reference/lex/token.html#f_keyword_code">keyword_code</A>: an integer, meaningful only if is_keyword is true, and identifying the keyword by the code that was given to it during the process of building the analyzer.</LI>
+			<LI><A CLASS="efeature" HREF="/libraries/lex/reference/lex/token.html#f_line_number">line_number</A>, <A CLASS="efeature" HREF="/libraries/lex/reference/lex/token.html#f_column_number">column_number</A>: two integers indicating where the token appeared in the input text.</LI>
 		</UL>
 
 		<H2>BUILDING AND USING LEXICAL ANALYZERS</H2>
@@ -106,27 +108,27 @@
 		<P>The general method for performing lexical analysis is the following.</P>
 
 		<OL>
-			<LI>Create an instance of LEXICAL, giving a lexical analyzer for the desired grammar.</LI>
+			<LI>Create an instance of <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lexical_chart.html">LEXICAL</A>, giving a lexical analyzer for the desired grammar.</LI>
 			<LI>Store the analyzer into a file.</LI>
 			<LI>Retrieve the analyzer from the file.</LI>
-			<LI>Use the analyzer to analyze the tokens of one or more input texts by calling the various features of class LEXICAL on this object.</LI>
+			<LI>Use the analyzer to analyze the tokens of one or more input texts by calling the various features of class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lexical_chart.html">LEXICAL</A> on this object.</LI>
 		</OL>
 
-		<P>Steps 2 and 3 are obviously unnecessary if this process is applied as a single sequence. But in almost all practical cases you will want to use the same grammar to analyze many different input texts. Then steps 1 and 2 will be performed once and for all as soon as the lexical grammar is known, yielding an instance of LEXICAL that step 2 stores into a file; then in every case that requires analyzing a text you will simply retrieve the analyzer and apply it, performing steps 3 and 4 only.</P>
+		<P>Steps 2 and 3 are obviously unnecessary if this process is applied as a single sequence. But in almost all practical cases you will want to use the same grammar to analyze many different input texts. Then steps 1 and 2 will be performed once and for all as soon as the lexical grammar is known, yielding an instance of <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lexical_chart.html">LEXICAL</A> that step 2 stores into a file; then in every case that requires analyzing a text you will simply retrieve the analyzer and apply it, performing steps 3 and 4 only.</P>
 
-		<P>The simplest way to store and retrieve the instance of LEXICAL and all related objects is to use the facilities of class STORABLE: procedure store and one of the retrieval procedures. To facilitate this  process, LEXICAL inherits from STORABLE.</P>
+		<P>The simplest way to store and retrieve the instance of <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lexical_chart.html">LEXICAL</A> and all related objects is to use the facilities of class <A CLASS="eclass" HREF="/libraries/base/reference/kernel/storable_chart.html">STORABLE</A>: procedure store and one of the retrieval procedures. To facilitate this  process, <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lexical_chart.html">LEXICAL</A> inherits from <A CLASS="eclass" HREF="/libraries/base/reference/kernel/storable_chart.html">STORABLE</A>.</P>
 
-		<P>The next sections explain how to perform these various steps. In the most common case, the best technique is to inherit from class SCANNING, which provides a framework for retrieving an analyzer file if it exists, creating it from a grammar description otherwise, and proceed with the lexical analysis of one or more input texts.</P>
+		<P>The next sections explain how to perform these various steps. In the most common case, the best technique is to inherit from class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A>, which provides a framework for retrieving an analyzer file if it exists, creating it from a grammar description otherwise, and proceed with the lexical analysis of one or more input texts.</P>
 
-		<H2>LEXICAL GRAMMAR FILES AND CLASS SCANNING</H2>
+		<H2>LEXICAL GRAMMAR FILES AND CLASS <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A></H2>
 
-		<P>Class SCANNING may be used as an ancestor by classes that need to perform lexical analysis. When using SCANNING you will need a <B>lexical grammar file</B> that contains the description of the lexical grammar. Since it is easy to edit and adapt a file without modifying the software proper, this technique provides flexibility and supports the incremental development and testing of lexical analyzers.</P>
+		<P>Class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A> may be used as an ancestor by classes that need to perform lexical analysis. When using <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A> you will need a <B>lexical grammar file</B> that contains the description of the lexical grammar. Since it is easy to edit and adapt a file without modifying the software proper, this technique provides flexibility and supports the incremental development and testing of lexical analyzers.</P>
 
-		<H3>The <A CLASS="efeature" HREF="../reference/scanning.html#f_build">build</A> procedure</H3>
+		<H3>The <A CLASS="efeature" HREF="/libraries/lex/reference/lex/scanning.html#f_build">build</A> procedure</H3>
 
-		<P>To obtain a lexical analyzer in a descendant of class SCANNING, use the procedure</P>
+		<P>To obtain a lexical analyzer in a descendant of class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning.html.html">SCANNING</A>, use the procedure</P>
 
-		<CODE><A CLASS="efeature" HREF="../reference/scanning.html#f_build">build</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">store_file_name</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">grammar_file_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></CODE>
+		<CODE><A CLASS="efeature" HREF="/libraries/lex/reference/lex/scanning.html#f_build">build</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">store_file_name</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">grammar_file_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></CODE>
 
 		<P>If no file of name <SPAN CLASS="elocal">store_file_name</SPAN> exists, then build reads the lexical grammar from the file of name <SPAN CLASS="elocal">grammar_file_name</SPAN>, builds the corresponding lexical analyzer, and stores it into <SPAN CLASS="elocal">store_file_name</SPAN>.</P>
 
@@ -134,15 +136,15 @@
 
 		<H3>Lexical grammar files</H3>
 
-		<P>A lexical grammar file (to be used as second argument to build, corresponding to grammar_file_name) should conform to a simple structure, of which the file eiffel_regular in the examples directory provides a good illustration.</P>
+		<P>A lexical grammar file (to be used as second argument to build, corresponding to <SPAN CLASS="elocal">grammar_file_name</SPAN>) should conform to a simple structure, of which the file <I>eiffel_regular</I> in the examples directory provides a good illustration.</P>
 
 		<P>Here is the general form:</P>
 
 		<CODE><I>
-		Token_type_1 Regular_expression_1<BR>
-		Token_type_2 Regular_expression_2<BR>
+		Token_type_1 &nbsp; Regular_expression_1<BR>
+		Token_type_2 &nbsp; Regular_expression_2<BR>
 		...<BR>
-		Token_type_m Regular_expression_m<BR>
+		Token_type_m &nbsp; Regular_expression_m<BR>
 		<BR>
 		<B>-- Keywords</B><BR>
 		<BR>
@@ -172,71 +174,72 @@
 
 		<H3>Using a lexical analyzer</H3>
 
-		<P>Once <A CLASS="efeature" HREF="../reference/scanning.html#f_build">build</A> has given you an analyzer, you may use it to analyze input texts through calls to the procedure</P>
+		<P>Once <A CLASS="efeature" HREF="/libraries/lex/reference/lex/scanning.html#f_build">build</A> has given you an analyzer, you may use it to analyze input texts through calls to the procedure</P>
 
 		<CODE>
-		<A CLASS="efeature" HREF="../reference/scanning.html#f_analyze">analyze</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">input_file_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/lex/scanning.html#f_analyze">analyze</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">input_file_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
 		</CODE>
 
-		<P>This will read in and process successive input tokens. Procedure <A CLASS="efeature" HREF="../reference/scanning.html#f_analyze">analyze</A> will apply to each of these tokens the action of procedure <A CLASS="efeature" HREF="../reference/scanning.html#f_do_a_token">do_a_token</A>. As defined in SCANNING, this procedure prints out information on the token: its string value, its type, whether it is a keyword and if so its code. You may redefine it in any descendant class so as to perform specific actions on each token.</P>
+		<P>This will read in and process successive input tokens. Procedure <A CLASS="efeature" HREF="/libraries/lex/reference/lex/scanning.html#f_analyze">analyze</A> will apply to each of these tokens the action of procedure <A CLASS="efeature" HREF="/libraries/lex/reference/lex/scanning.html#f_do_a_token">do_a_token</A>. As defined in <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A>, this procedure prints out information on the token: its string value, its type, whether it is a keyword and if so its code. You may redefine it in any descendant class so as to perform specific actions on each token.</P>
 
-		<P>The initial action <A CLASS="efeature" HREF="../reference/scanning.html#f_begin_analysis">begin_analysis</A>, which by default prints a header, and the terminal action <A CLASS="efeature" HREF="../reference/scanning.html#f_begin_analysis">end_analysis</A>, which by default does nothing, may also be redefined.</P>
+		<P>The initial action <A CLASS="efeature" HREF="/libraries/lex/reference/lex/scanning.html#f_begin_analysis">begin_analysis</A>, which by default prints a header, and the terminal action <A CLASS="efeature" HREF="/libraries/lex/reference/lex/scanning.html#f_end_analysis">end_analysis</A>, which by default does nothing, may also be redefined.</P>
 
-		<P>To build lexical analyzers which provide a higher degree of flexibility, use METALEX or LEX_BUILDER, as described in the last part of this chapter.</P>
+		<P>To build lexical analyzers which provide a higher degree of flexibility, use <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A> or <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lex_builder_chart.html">LEX_BUILDER</A>, as described in the last part of this chapter.</P>
 
 		<H2>ANALYZING INPUT</H2>
 
 		<P>Let us look more precisely at how we can use a lexical analyzer to analyze an input text.</P>
 
-		<H3>Class LEXICAL</H3>
+		<H3>Class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lexical_chart.html">LEXICAL</A></H3>
 
-		<P>Procedure <A CLASS="efeature" HREF="../reference/scanning.html#f_analyze">analyze</A> takes care of the most common needs of lexical analysis. But if you need more advanced lexical analysis facilities you will need an instance of class LEXICAL (a direct instance of LEXICAL itself or of one of its proper descendants). If you are using class SCANNING as described above, you will have access to such an
-		instance through the attribute <A CLASS="efeature" HREF="../reference/lexical.html#f_analyzer">analyzer</A>.</P>
+		<P>Procedure <A CLASS="efeature" HREF="/libraries/lex/reference/lex/scanning.html#f_analyze">analyze</A> takes care of the most common needs of lexical analysis. But if you need more advanced lexical analysis facilities you will need an instance of class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lexical_chart.html">LEXICAL</A> (a direct instance of <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lexical_chart.html">LEXICAL</A> itself or of one of its proper descendants). If you are using class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A> as described above, you will have access to such an instance through the attribute <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_analyzer">analyzer</A>.</P>
 
-		<P>This discussion will indeed assume that you have an entity attached to an instance of LEXICAL. The name of that entity is assumed to be <A CLASS="efeature" HREF="../reference/lexical.html#f_analyzer">analyzer</A>, although it does not need to be the attribute from SCANNING. You can apply to that <A CLASS="efeature" HREF="../reference/lexical.html#f_analyzer">analyzer</A> the various exported features features of class LEXICAL, explained below. All the calls described
-		below should use <A CLASS="efeature" HREF="../reference/lexical.html#f_analyzer">analyzer</A> as their target, as in</P>
+		<P>This discussion will indeed assume that you have an entity attached to an instance of <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lexical_chart.html">LEXICAL</A>. The name of that entity is assumed to be <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_analyzer">analyzer</A>, although it does not need to be the attribute from <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A>. You can apply to that <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_analyzer">analyzer</A> the various exported features features of class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lexical_chart.html">LEXICAL</A>, explained below. All the calls described
+		below should use <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_analyzer">analyzer</A> as their target, as in</P>
 
 		<CODE>
-		<A CLASS="efeature" HREF="../reference/lexical.html#f_analyzer">analyzer</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../reference/scanning.html#f_set_file">set_file</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"my_file_name"</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_analyzer">analyzer</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/scanning.html#f_set_file">set_file</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"my_file_name"</SPAN><SPAN CLASS="esymbol">)</SPAN>
 		</CODE>
 
 		<H3>Creating, retrieving and storing an analyzer</H3>
 
 		<P>To create a new analyzer, use</P>
 
-		<CODE><SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">analyzer</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../reference/lexical.html#f_make_new">make_new</A></CODE>
+		<CODE><SPAN CLASS="ekeyword">create</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_analyzer">analyzer</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_make_new">make_new</A></CODE>
 
-		<P>You may also retrieve an analyzer from a previous session. LEXICAL is a descendant from STORABLE, so you can use feature retrieved for that purpose. In a descendant of STORABLE, simply write</P>
+		<P>You may also retrieve an analyzer from a previous session. <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lexical_chart.html">LEXICAL</A> is a descendant from <A CLASS="eclass" HREF="/libraries/base/reference/kernel/storable_chart.html">STORABLE</A>, so you can use feature <A CLASS="efeature" HREF="/libraries/base/reference/kernel/storable.html#f_retrieved">retrieved</A> for that purpose. In a descendant of <A CLASS="eclass" HREF="/libraries/base/reference/kernel/storable_chart.html">STORABLE</A>, simply write</P>
 
-		<CODE><SPAN CLASS="efeature">analyzer</SPAN> <SPAN CLASS="esymbol">?=</SPAN> <A CLASS="efeature" HREF="../../base/reference/storable.html#f_retreived">retreived</A></CODE>
+		<CODE><A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_analyzer">analyzer</A> <SPAN CLASS="esymbol">?=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/storable.html#f_retrieved">retrieved</A></CODE>
 
-		<P>If you do not want to make the class a descendant of STORABLE, use the creation procedure make of LEXICAL, not to be confused with make_new above:</P>
+		<P>If you do not want to make the class a descendant of <A CLASS="eclass" HREF="/libraries/base/reference/kernel/storable_chart.html">STORABLE</A>, use the creation procedure <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_make">make</A> of <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lexical_chart.html">LEXICAL</A>, not to be confused with <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_make_new">make_new</A> above:</P>
 
-		<CODE><SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">analyzer</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../reference/lexical.html#f_make">make</A><BR>
-		<SPAN CLASS="efeature">analyzer</SPAN> <SPAN CLASS="esymbol">?=</SPAN> <SPAN CLASS="efeature">analyzer</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../base/reference/storable.html#f_retreived">retreived</A></CODE>
+		<CODE><SPAN CLASS="ekeyword">create</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_analyzer">analyzer</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_make">make</A><BR>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_analyzer">analyzer</A> <SPAN CLASS="esymbol">?=</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_analyzer">analyzer</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/storable.html#f_retrieved">retrieved</A></CODE>
 
 		<H3>Choosing a document</H3>
 
-		<P>To analyze a text, call <A CLASS="efeature">set_file</A> or <A CLASS="efeature">set_string</A> to specify the document to be parsed. With the first call, the analysis will be applied to a file; with the second, to a string.</P>
+		<P>To analyze a text, call <A CLASS="efeature" HREF="/libraries/lex/reference/lex/text_filler.html#f_set_file">set_file</A> or <A CLASS="efeature" HREF="/libraries/lex/reference/lex/text_filler.html#f_set_string">set_string</A> to specify the document to be parsed. With the first call, the analysis will be applied to a file; with the second, to a string.</P>
 
-		<P CLASS="note"><B>Note</B>: if you use procedure analyze of SCANNING, you do not need any such call, since analyze calls <A CLASS="efeature">set_file</A> on the file name passed as argument.</P>
+		<P CLASS="note"><B>Note</B>: if you use procedure analyze of <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A>, you do not need any such call, since analyze calls <A CLASS="efeature" HREF="/libraries/lex/reference/lex/text_filler.html#f_set_file">set_file</A> on the file name passed as argument.</P>
 
 		<H3>Obtaining the tokens</H3>
 
-		<P>The basic procedure for analyzing successive tokens in the text is get_token, which reads in one token and sets up various attributes of the analyzer to record properties of that token:</P>
+		<P>The basic procedure for analyzing successive tokens in the text is <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_get_token">get_token</A>, which reads in one token and sets up various attributes of the analyzer to record properties of that token:</P>
 
 		<UL>
-			<LI>last_token, a function of type TOKEN, which provides all necessary information on the last token read.</LI>
-			<LI>token_line_number and token_column_number, to know where the token is in the text. These queries return results of type INTEGER.</LI>
-			<LI>token_type, giving the regular expression type, identified by its integer number (which is the value No_token if no correct token was recognized).</LI>
-			<LI>other_possible_tokens, an array giving all the other possible token types of the last token. (If token_type is No_token the array is empty.)</LI>
-			<LI>end_of_text, a boolean attribute used to record whether the end of text has been reached. If so, subsequent calls to get_token will have no effect.</LI>
+			<LI><A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_last_token">last_token</A>, a function of type <A CLASS="eclass" HREF="/libraries/lex/reference/lex/token_chart.html">TOKEN</A>, which provides all necessary information on the last token read.</LI>
+			<LI><A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_token_line_number">token_line_number</A> and <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_token_column_number">token_column_number</A>, to know where the token is in the text. These queries return results of type <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A>.</LI>
+			<LI><A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_token_type">token_type</A>, giving the regular expression type, identified by its integer number (which is the value <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_no_token">No_token</A> if no correct token was recognized).</LI>
+			<LI><A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_other_possible_tokens">other_possible_tokens</A>, an array giving all the other possible token types of the last token. (If token_type is <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_no_token">No_token</A> the array is empty.)</LI>
+			<LI><A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_end_of_text">end_of_text</A>, a boolean attribute used to record whether the end of text has been reached. If so, subsequent calls to <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_get_token">get_token</A> will have no effect.</LI>
 		</UL>
 
-		<P>Procedure get_token recognizes the longest possible token. So if &lt;, = and &lt;= are all regular expressions in the grammar, the analyzer recognizes &lt;= as one token, rather than	&lt; followed by =. You can use other_possible_tokens to know what shorter tokens were recognized but not retained.</P>
+		<P>Procedure <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_get_token">get_token</A> recognizes the longest possible token. So if &lt;, = and &lt;= are all regular expressions in the grammar, the analyzer recognizes &lt;= as one token, rather than	&lt; followed by =. You can use <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_other_possible_tokens">other_possible_tokens</A> to know what shorter tokens were recognized but not retained.</P>
 
-		<P>If it fails to recognize a regular expression, get_token sets token_type to No_token
+		<P>If it fails to recognize a regular expression, <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_get_token">get_token</A> sets <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_token_type">token_type</A> to <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_no_token">No_token</A>
 		and advances the input cursor by one character.</P>
+
+<!-- links checked until here --------------------------------->
 
 		<H3>The basic scheme</H3>
 
@@ -258,13 +261,13 @@ loop
 end
 end_analysis</PRE></CODE>
 
-		<P>This scheme is used by procedure analyze of class SCANNING, so that in standard cases you may simply inherit from that class and redefine procedures begin_analysis, do_a_token and end_analysis. If you are not inheriting from SCANNING, these names simply denote procedures that you must provide.</P>
+		<P>This scheme is used by procedure analyze of class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A>, so that in standard cases you may simply inherit from that class and redefine procedures begin_analysis, do_a_token and end_analysis. If you are not inheriting from <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A>, these names simply denote procedures that you must provide.</P>
 
 		<H2>REGULAR EXPRESSIONS</H2>
 
 		<P>The Lex library supports a powerful set of construction mechanisms for describing the various types of tokens present in common languages such as programming languages, specification languages or just text formats. These mechanisms are called regular expressions; any regular expression describes a set of possible tokens, called the specimens of the regular expression.</P>
 
-		<P>Let us now study the format of regular expressions. This format is used in particular for the lexical grammar files needed by class SCANNING and (as seen below) by procedure read_grammar of class METALEX.Theeiffel_regular grammar file in the examples directory provides an extensive example.</P>
+		<P>Let us now study the format of regular expressions. This format is used in particular for the lexical grammar files needed by class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A> and (as seen below) by procedure read_grammar of class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A>.Theeiffel_regular grammar file in the examples directory provides an extensive example.</P>
 
 		<P>Each regular expression denotes a set of tokens. For example, the first regular expression seen above,<BR>
 		<CODE>'0'..'9'</CODE><BR>
@@ -369,7 +372,7 @@ end_analysis</PRE></CODE>
 
 		<P>This would be inconvenient. To simplify the task of language description, and also to improve the efficiency of the lexical analysis process, it is usually preferable to treat keywords as a separate category.</P>
 
-		<P>If you are using class SCANNING and hence a lexical grammar file, the list of keywords, if any, must appear at the end of the file, one per line, preceded by a line that simply reads</P>
+		<P>If you are using class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A> and hence a lexical grammar file, the list of keywords, if any, must appear at the end of the file, one per line, preceded by a line that simply reads</P>
 
 		<P><I><B>-- Keywords</B></I></P>
 
@@ -390,7 +393,7 @@ end_analysis</PRE></CODE>
 
 		<P CLASS="warning"><B>Caution</B>: every keyword in the keyword section must be a specimen of one of the token types defined for the grammar, and that token type must be the last one defined in the lexical grammar file, just before the Keywords line. So in Eiffel where the keywords have the same lexical structure as identifiers, the last line before the keywords must be the definition of the token type Identifier, as shown above.</P>
 
-		<P CLASS="note"><B>Note</B>: the rule that all keywords must be specimens of one token type is a matter of convenience and simplicity, and only applies if you are using SCANNING and lexical grammar files. There is no such restriction if you rely directly on the more general facilities provided by METALEX or LEX_BUILDER. Then different keywords may be specimens of different regular expressions; you will have to specify the token type of every keyword, as explained later in this chapter.</P>
+		<P CLASS="note"><B>Note</B>: the rule that all keywords must be specimens of one token type is a matter of convenience and simplicity, and only applies if you are using <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A> and lexical grammar files. There is no such restriction if you rely directly on the more general facilities provided by <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A> or <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lex_builder_chart.html">LEX_BUILDER</A>. Then different keywords may be specimens of different regular expressions; you will have to specify the token type of every keyword, as explained later in this chapter.</P>
 
 		<H3>Case sensitivity</H3>
 
@@ -398,39 +401,39 @@ end_analysis</PRE></CODE>
 
 		<P>The regular expression syntax introduced above offers a special notation to specify that a particular expression is case-sensitive: <I>~exp</I>, where <I>exp</I> is a regular expression. For example, <I>~('A'..'Z')</I> only covers single-upper-case-letter tokens. But for all other kinds of expression letter case is not taken into account.</P>
 
-		<P>You may change this default behavior through a set of procedures introduced in class LEX_BUILDER and hence available in its descendants METALEX and SCANNING.</P>
+		<P>You may change this default behavior through a set of procedures introduced in class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lex_builder_chart.html">LEX_BUILDER</A> and hence available in its descendants <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A> and <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A>.</P>
 
 		<P>To make subsequent regular expressions case-sensitive, call the procedure</P>
 
-		<CODE><A CLASS="efeature" HREF="../reference/lex_builder.html#f_ignore_case">ignore_case</A></CODE>
+		<CODE><A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_ignore_case">ignore_case</A></CODE>
 
 		<P>To revert to the default mode where case is not significant, call the procedure</P>
 
-		<CODE><A CLASS="efeature" HREF="../reference/lex_builder.html#f_distinguish_case">distinguish_case</A></CODE>
+		<CODE><A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_distinguish_case">distinguish_case</A></CODE>
 
 		<P>Each of these procedures remains in effect until the other one is called, so that you only need one call to define the desired behavior.</P>
 
 		<P>For keywords, the policy is less tolerant. A single rule is applied to the entire grammar: keywords are either all case-sensitive or all case-insensitive. To make all keywords case-sensitive, call</P>
 
-		<CODE><A CLASS="efeature" HREF="../reference/lex_builder.html#f_keywords_distinguish_case">keywords_distinguish_case</A></CODE>
+		<CODE><A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_keywords_distinguish_case">keywords_distinguish_case</A></CODE>
 
 		<P>The inverse call, corresponding to the default rule, is</P>
 
-		<CODE><A CLASS="efeature" HREF="../reference/lex_builder.html#f_keywords_ignore_case">keywords_distinguish_case</A></CODE>
+		<CODE><A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_keywords_ignore_case">keywords_distinguish_case</A></CODE>
 
-		<P>Either of these calls must be executed before you define any keywords; if you are using SCANNING, this means before calling procedure build. Once set, the keyword case-sensitivity policy cannot be changed.</P>
+		<P>Either of these calls must be executed before you define any keywords; if you are using <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A>, this means before calling procedure build. Once set, the keyword case-sensitivity policy cannot be changed.</P>
 
-		<H2>USING METALEX TO BUILD A LEXICAL ANALYZER</H2>
+		<H2>USING <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A> TO BUILD A LEXICAL ANALYZER</H2>
 
 		<P>(You may skip the rest of this chapter if you only need simple lexical facilities.)</P>
 
-		<P>Class SCANNING, as studied above, relies on a class METALEX. In some cases, you may prefer to use the features of METALEX directly. Since SCANNING inherits from METALEX, anything you do with METALEX can in fact be done with SCANNING, but you may wish to stay with just METALEX if you do not need the additional features of SCANNING.</P>
+		<P>Class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A>, as studied above, relies on a class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A>. In some cases, you may prefer to use the features of <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A> directly. Since <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A> inherits from <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A>, anything you do with <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A> can in fact be done with <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A>, but you may wish to stay with just <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A> if you do not need the additional features of <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A>.</P>
 
-		<H3>Steps in using METALEX</H3>
+		<H3>Steps in using <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A></H3>
 
-		<P>METALEX has an attribute analyzer which will be attached to a lexical analyzer. This class provides tools for building a lexical analyzer incrementally through explicit feature calls; you can still use a lexical grammar file, but do not have to.</P>
+		<P><A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A> has an attribute analyzer which will be attached to a lexical analyzer. This class provides tools for building a lexical analyzer incrementally through explicit feature calls; you can still use a lexical grammar file, but do not have to.</P>
 
-		<P>The following extract from a typical descendant of METALEX illustrates the process of building a lexical analyzer in this way:</P>
+		<P>The following extract from a typical descendant of <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A> illustrates the process of building a lexical analyzer in this way:</P>
 
 		<CODE>
 		Upper_identifier, Lower_identifier, Decimal_constant, Octal_constant, Word: INTEGER is unique<BR>
@@ -449,7 +452,7 @@ end_analysis</PRE></CODE>
 		make_analyzer<BR>
 		</CODE>
 
-		<P>This example follows the general scheme of building a lexical analyzer with the features of METALEX, in a class that will normally be a descendant of METALEX:</P>
+		<P>This example follows the general scheme of building a lexical analyzer with the features of <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A>, in a class that will normally be a descendant of <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A>:</P>
 
 		<OL>
 			<LI>Set options, such as case sensitivity.</LI>
@@ -458,7 +461,7 @@ end_analysis</PRE></CODE>
 			<LI>"Freeze" the analyzer by a call to <A CLASS="efeature">make_analyzer</A>.</LI>
 		</OL>
 
-		<P>To perform steps 2 to 4 in a single shot and generate a lexical analyzer from a lexical grammar file, as with SCANNING, you may use the procedure</P>
+		<P>To perform steps 2 to 4 in a single shot and generate a lexical analyzer from a lexical grammar file, as with <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A>, you may use the procedure</P>
 
 		<CODE>
 		<A CLASS="efeature">read_grammar</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">grammar_file_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass">STRING</A><SPAN CLASS="esymbol">)</SPAN>
@@ -480,7 +483,7 @@ end_analysis</PRE></CODE>
 		<A CLASS="efeature">put_nameless_expression</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"$W"</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature">Word</A><SPAN CLASS="esymbol">)</SPAN>
 		</CODE>
 
-		<P>Procedure <A CLASS="efeature">declare_keyword</A> records a keyword. The first argument is a string containing the keyword; the second argument is the regular expression of which the keyword must be a specimen. The example shows that here - in contrast with the rule enforced by SCANNING - not all keywords need be specimens of the same regular expression.</P>
+		<P>Procedure <A CLASS="efeature">declare_keyword</A> records a keyword. The first argument is a string containing the keyword; the second argument is the regular expression of which the keyword must be a specimen. The example shows that here - in contrast with the rule enforced by <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A> - not all keywords need be specimens of the same regular expression.</P>
 
 		<P>The calls seen so far record a number of regular expressions and keywords, but do not give us a lexical analyzer yet. To obtain a usable lexical analyzer, you must call</P>
 
@@ -494,15 +497,15 @@ end_analysis</PRE></CODE>
 
 		<P>Remember that if you use procedure <A CLASS="efeature">read_grammar</A>, you need not worry about <A CLASS="efeature">make_analyzer</A>, as the former procedure calls the latter.
 
-		<P>Another important feature of class METALEX is procedure <A CLASS="efeature">store_analyzer</A>, which stores the analyzer into a file whose name is passed as argument, for use by later lexical analysis sessions. To retrieve the analyzer, simply use procedure <A CLASS="efeature">retrieve_analyzer</A>, again with a file name as argument.</P>
+		<P>Another important feature of class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A> is procedure <A CLASS="efeature">store_analyzer</A>, which stores the analyzer into a file whose name is passed as argument, for use by later lexical analysis sessions. To retrieve the analyzer, simply use procedure <A CLASS="efeature">retrieve_analyzer</A>, again with a file name as argument.</P>
 
-		<H2>BUILDING A LEXICAL ANALYZER WITH LEX_BUILDER</H2>
+		<H2>BUILDING A LEXICAL ANALYZER WITH <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lex_builder_chart.html">LEX_BUILDER</A></H2>
 
-		<P>To have access to the most general set of lexical analysis mechanisms, you may use class LEX_BUILDER, which gives you an even finer grain of control than METALEX. This is not necessary in simple applications.</P>
+		<P>To have access to the most general set of lexical analysis mechanisms, you may use class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lex_builder_chart.html">LEX_BUILDER</A>, which gives you an even finer grain of control than <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A>. This is not necessary in simple applications.</P>
 
 		<H3>Building a lexical analyzer</H3>
 
-		<P>LEX_BUILDER enables you to build a lexical analyzer by describing successive token types and keywords. This is normally done in a descendant of LEX_BUILDER. For each token type, you call a procedure that builds an object, or <B>tool</B>, representing the associated regular expression.</P>
+		<P><A CLASS="eclass" HREF="/libraries/lex/reference/lex/lex_builder_chart.html">LEX_BUILDER</A> enables you to build a lexical analyzer by describing successive token types and keywords. This is normally done in a descendant of <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lex_builder_chart.html">LEX_BUILDER</A>. For each token type, you call a procedure that builds an object, or <B>tool</B>, representing the associated regular expression.</P>
 
 		<P>For the complete list of available procedures, refer to the flat-short form of the class; there is one procedure for every category of regular expression studied earlier in this chapter. Two typical examples of calls are:</P>
 
@@ -517,7 +520,7 @@ end_analysis</PRE></CODE>
 
 		<H3>An example</H3>
 
-		<P>The following extract from a typical descendant of LEX_BUILDER illustrates how to create a tool representing the identifiers of an Eiffel-like language.</P>
+		<P>The following extract from a typical descendant of <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lex_builder_chart.html">LEX_BUILDER</A> illustrates how to create a tool representing the identifiers of an Eiffel-like language.</P>
 
 		<CODE><PRE>
 Identifier, Letter, Digit, Underlined, Suffix, Suffix_list: INTEGER

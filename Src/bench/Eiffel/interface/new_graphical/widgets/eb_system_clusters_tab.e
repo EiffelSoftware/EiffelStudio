@@ -746,7 +746,7 @@ feature {NONE} -- Initialization
 			hbox.extend (button)
 			hbox.disable_item_expand (button)
 
-			create button.make_with_text_and_action ("Delete", ~delete_cluster)
+			create button.make_with_text_and_action ("Remove", ~delete_cluster)
 			hbox.extend (button)
 			hbox.disable_item_expand (button)
 			

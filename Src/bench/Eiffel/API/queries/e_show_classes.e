@@ -9,12 +9,10 @@ indexing
 class E_SHOW_CLASSES
 
 inherit
-
 	E_OUTPUT_CMD;
 	SHARED_EIFFEL_PROJECT
 
 creation
-
 	make, do_nothing
 
 feature -- Execution

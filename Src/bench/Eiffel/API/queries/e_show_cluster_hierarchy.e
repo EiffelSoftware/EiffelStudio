@@ -8,12 +8,11 @@ indexing
 class E_SHOW_CLUSTER_HIERARCHY
 
 inherit
+	E_OUTPUT_CMD
 
-	E_OUTPUT_CMD;
 	SHARED_EIFFEL_PROJECT
 
 creation
-
 	make, do_nothing
 
 feature -- Execution

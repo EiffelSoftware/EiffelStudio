@@ -1,5 +1,8 @@
 
-class BEURK_HEXER obsolete "Beurk Beurk Beurk"
+class BEURK_HEXER
+
+obsolete
+	"Beurk Beurk Beurk"
 
 feature {NONE}
 
@@ -9,30 +12,29 @@ feature {NONE}
 			temp: STRING;
 			char: CHARACTER
 		do
-			temp := clone (s); temp.to_lower;
+			temp := clone (s)
+			temp.to_lower;
 			nb := temp.count
+
 			if nb >= 2 and then temp.item (2) = 'x' then
 				i := 3
 			else
 				i := 1
-			end;
+			end
+
 			from
 			until
 				i > nb
 			loop
-				Result := Result * 16 ;
-				char := temp.item (i);
-				if
-					char >= '0'
-				and then
-					char <= '9'
-				then
+				Result := Result * 16
+				char := temp.item (i)
+				if char >= '0' and then char <= '9' then
 					Result := Result + (char |-| '0')
 				else
 					Result := Result + (char |-| 'a' + 10)
 				end
 				i:= i + 1
 			end
-		end;
+		end
  
 end

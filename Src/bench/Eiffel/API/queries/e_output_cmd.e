@@ -13,7 +13,8 @@ inherit
 	E_CMD
 		redefine
 			executable
-		end;
+		end
+
 	SHARED_TEXT_ITEMS
 
 feature -- Properties

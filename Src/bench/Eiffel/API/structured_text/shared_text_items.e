@@ -264,6 +264,22 @@ feature {NONE} -- Filter marks
 
 feature {NONE} -- Keywords
 
+	ti_and_keyword: KEYWORD_TEXT is
+			-- "and" keyword
+		once
+			create Result.make ("and")
+		ensure
+			ti_and_keyword_not_void: Result /= Void
+		end
+	
+	ti_and_then_keyword: KEYWORD_TEXT is
+			-- "and then" keyword
+		once
+			create Result.make ("and then")
+		ensure
+			ti_and_then_keyword_not_void: Result /= Void
+		end
+
 	ti_Agent_keyword: KEYWORD_TEXT is
 			-- "agent" keyword
 		once
@@ -354,6 +370,12 @@ feature {NONE} -- Keywords
 			create Result.make ("ensure")
 		end
 
+	ti_ensure_then_keyword: KEYWORD_TEXT is
+			-- "ensure then" keyword
+		once
+			create Result.make ("ensure then")
+		end
+
 	ti_Expanded_keyword: KEYWORD_TEXT is
 			-- "expanded" keyword
 		once
@@ -400,6 +422,14 @@ feature {NONE} -- Keywords
 			-- "if" keyword
 		once
 			create Result.make ("if")
+		end
+
+	ti_implies_keyword: KEYWORD_TEXT is
+			-- "implies" keyword
+		once
+			create Result.make ("implies")
+		ensure
+			ti_implies_keyword_not_void: Result /= Void
 		end
 
 	ti_Indexing_keyword: KEYWORD_TEXT is
@@ -462,6 +492,14 @@ feature {NONE} -- Keywords
 			create Result.make ("loop")
 		end
 
+	ti_not_keyword: KEYWORD_TEXT is
+			-- "not" keyword
+		once
+			create Result.make ("not")
+		ensure
+			ti_not_keyword_not_void: Result /= Void
+		end
+
 	ti_Obsolete_keyword: KEYWORD_TEXT is
 			-- "obsolete" keyword
 		once
@@ -478,6 +516,22 @@ feature {NONE} -- Keywords
 			-- "once" keyword
 		once
 			create Result.make ("once")
+		end
+
+	ti_or_keyword: KEYWORD_TEXT is
+			-- "or" keyword
+		once
+			create Result.make ("or")
+		ensure
+			ti_or_keyword_not_void: Result /= Void
+		end
+
+	ti_or_else_keyword: KEYWORD_TEXT is
+			-- "or else" keyword
+		once
+			create Result.make ("or else")
+		ensure
+			ti_or_else_keyword_not_void: Result /= Void
 		end
 
 	ti_Precursor_keyword: KEYWORD_TEXT is
@@ -514,6 +568,12 @@ feature {NONE} -- Keywords
 			-- "require" keyword
 		once
 			create Result.make ("require")
+		end
+
+	ti_require_else_keyword: KEYWORD_TEXT is
+			-- "require else" keyword
+		once
+			create Result.make ("require else")
 		end
 
 	ti_Rescue_keyword: KEYWORD_TEXT is
@@ -592,6 +652,14 @@ feature {NONE} -- Keywords
 			-- "when" keyword
 		once
 			create Result.make ("when")
+		end
+
+	ti_xor_keyword: KEYWORD_TEXT is
+			-- "xor" keyword
+		once
+			create Result.make ("xor")
+		ensure
+			ti_xor_keyword_not_void: Result /= Void
 		end
 
 feature {NONE} -- Symbol names

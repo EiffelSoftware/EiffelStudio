@@ -86,18 +86,35 @@ feature -- Element Change
 
 feature -- Event : command association
 
-	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
-			-- Make `cmd' the executed command when the item is 
-			-- activated.
-		do check false end
+	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is activated.
+		do
+			check false end
 		end	
 
-	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
-			-- Make `cmd' the executed command when the item is
-			-- unactivated.
-		do check false end
+	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is deactivated.
+		do
+			check false end
 		end
 
+feature -- Event -- removing command association
+
+	remove_activate_commands is
+			-- Empty the list of commands to be executed
+			-- when the item is activated.
+		do			
+			check false end
+		end	
+
+	remove_deactivate_commands is
+			-- Empty the list of commands to be executed
+			-- when the item is deactivated.
+		do
+			check false end
+		end
 
 feature {EV_MULTI_COLUMN_LIST_IMP} -- Implementation
 

@@ -311,4 +311,15 @@ feature -- Element change
 			add (l_item)
 		end;
 
+	add_column_number (column_num: INTEGER) is
+			-- Add column number `i' to structure text.
+		require
+			positive_ints: column_num > 0
+		local
+			cs: COLUMN_TEXT
+		do
+			!! cs.make (column_num);
+			add (cs)
+		end;
+
 end -- class STRUCTURED_TEXT

@@ -1,13 +1,11 @@
 indexing
-	description:
-		"Control over thread execution."
+	description: "Control over thread execution."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	THREAD_CONTROL
-
 
 feature -- Basic operations
 
@@ -35,7 +33,6 @@ feature -- Basic operations
 			thread_wait ($terminated)
 		end
 
-
 	native_join (term: POINTER) is
 			-- Same as `join' except that the low-level architecture-dependant
 			-- routine is used. The thread must not be created detached.
@@ -43,12 +40,10 @@ feature -- Basic operations
 			thread_join (term)
 		end
 
-
 feature {NONE} -- Implementation
 
 	terminated: BOOLEAN
 			-- True if the thread has terminated.
-
 
 feature {NONE} -- Externals
 

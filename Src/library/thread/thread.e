@@ -26,14 +26,14 @@ feature -- Basic operations
 	launch is
 			-- Initialize a new thread running `execute'.
 		do
-			create_thread (Current, $thr_main)
+			create_thread ($Current, $thr_main)
 			thread_id := last_created_thread
 		end
 
 	launch_with_attributes (attr: THREAD_ATTRIBUTES) is
 			-- Initialize a new thread running `execute', using attributes.
 		do
-			create_thread_with_args (Current, $thr_main,
+			create_thread_with_args ($Current, $thr_main,
 						attr.priority, attr.scheduling_policy, attr.detached)
 			thread_id := last_created_thread
 		end
@@ -48,20 +48,20 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	create_thread (current_obj: like Current; init_func: POINTER) is
+	create_thread (current_obj: POINTER; init_func: POINTER) is
 			-- Initialize and start thread.
 		external
-			"C | %"eif_threads.h%""
+			"C signature (EIF_REFERENCE, EIF_POINTER) use %"eif_threads.h%""
 		alias
 			"eif_thr_create"
 		end
 
-	create_thread_with_args (current_obj: like Current; init_func: POINTER;
+	create_thread_with_args (current_obj: POINTER; init_func: POINTER;
 					priority, policy: INTEGER; detach: BOOLEAN) is
 			-- Initialize and start thread, after setting its priority
 			-- and scheduling policy.
 		external
-			"C | %"eif_threads.h%""
+			"C signature (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER, EIF_INTEGER, EIF_BOOLEAN) use %"eif_threads.h%""
 		alias
 			"eif_thr_create_with_args"
 		end

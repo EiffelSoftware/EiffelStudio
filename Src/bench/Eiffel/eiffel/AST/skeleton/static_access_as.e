@@ -112,7 +112,6 @@ feature -- Type check, byte code and dead code removal
 	type_check is
 			-- Type checking of a static access.
 		local
-			l_gen_type: GEN_TYPE_A
 			l_type: TYPE_A
 			vsta1: VSTA1
 			vtug: VTUG
@@ -134,10 +133,7 @@ feature -- Type check, byte code and dead code removal
 				end
 			end
 
-			if l_type.has_generics then
-				l_gen_type ?= l_type
-				Instantiator.dispatch (l_gen_type, context.current_class)
-			end
+			Instantiator.dispatch (l_type, context.current_class)
 
 				-- Check validity of call.
 			Precursor {ACCESS_FEAT_AS}

@@ -9,8 +9,9 @@
 #include "portable.h"
 #include "macros.h"
 #include "plug.h"
+#include "eiffel.h"			/* For Windows and OS2 */
+
 #ifdef EIF_WINDOWS
-#include "eiffel.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #endif
@@ -32,7 +33,7 @@
 #undef TRUE
 #define TRUE ((EIF_BOOLEAN) '\01')
 
-#ifdef EIF_WINDOWS
+#if defined EIF_WINDOWS || defined EIF_OS2
 EIF_BOOLEAN c_is_file_valid (EIF_POINTER);
 EIF_BOOLEAN c_is_directory_name_valid (EIF_POINTER);
 EIF_BOOLEAN c_is_volume_name_valid (EIF_POINTER);
@@ -44,7 +45,7 @@ EIF_BOOLEAN c_is_directory_valid(p)
 EIF_POINTER p;
 {
 		/* Test to see if `p' is a well constructed directory path */
-#ifdef EIF_WINDOWS
+#if defined EIF_WINDOWS || defined EIF_OS2
 	char *s, *c;
 	int i, len, last_bslash;
 
@@ -120,7 +121,7 @@ EIF_POINTER p;
 				return (EIF_BOOLEAN) (GetDriveType (drive) != 0);
 			}			
 	return FALSE;
-#elif defined(EIF_WIN32)
+#elif defined (EIF_WIN32)
 	char rootpath[4];
 		/* Test to see if `p' is a valid volume name */
 	if (p)
@@ -132,6 +133,8 @@ EIF_POINTER p;
 			return (EIF_BOOLEAN) (GetDriveType (rootpath) != 1);
 			}
 	return FALSE;
+#elif defined EIF_OS2
+	return TRUE;
 #else
 	return FALSE;
 #endif
@@ -140,7 +143,7 @@ EIF_POINTER p;
 EIF_BOOLEAN c_is_file_name_valid (p)
 EIF_POINTER p;
 {
-#ifdef EIF_WINDOWS
+#if defined EIF_WINDOWS || defined EIF_OS2
 #ifdef EIF_WIN_3_1
 #define MAX_FILE_LEN 12
 #else
@@ -194,7 +197,7 @@ EIF_BOOLEAN c_is_extension_valid (p)
 EIF_POINTER p;
 {
 		/* Test to see if `p' is a valid extension */
-#ifdef EIF_WINDOWS
+#if defined EIF_WINDOWS || defined EIF_OS2
 #ifdef EIF_WIN_3_1
 	if ((p == NULL) || (strlen(p) > 3) || (strchr (p, '.') != 0) )
 		return FALSE;
@@ -213,7 +216,7 @@ EIF_BOOLEAN c_is_file_valid (p)
 EIF_POINTER p;
 {
 		/* Test to see if `p' is a well constructed file name (with directory part) */
-#ifdef EIF_WINDOWS
+#if defined EIF_WINDOWS || defined EIF_OS2
 	char *s, *c;
 	int i, len;
 
@@ -239,7 +242,7 @@ EIF_BOOLEAN c_is_directory_name_valid (p)
 EIF_POINTER p;
 {
 		/* Test to see if `p' is a valid directory name (no parent directory part) */
-#ifdef EIF_WINDOWS
+#if defined EIF_WINDOWS || defined EIF_OS2
 	return c_is_file_name_valid (p);
 #elif defined (__VMS)
 	/* For VMS, allow  "subdir" or  "[.subdir]" or "dev:[sub.subdir]" */
@@ -287,7 +290,7 @@ EIF_POINTER v;
         (eif_strset)(string, strlen ((char *)p));
 #else	/* not vms */
 	if (*((char *)p) != '\0')
-#ifdef EIF_WINDOWS
+#if defined EIF_WINDOWS || defined EIF_OS2
 		strcat ((char *)p, "\\");
 #else
 		strcat ((char *)p, "/");
@@ -310,7 +313,7 @@ EIF_POINTER v;
 	strcat ((char *)p,"]");
 	(eif_strset)(string, strlen ((char *)p));
 #else
-#ifdef EIF_WINDOWS
+#if defined EIF_WINDOWS || defined EIF_OS2
 	strcat ((char *)p, "\\");
 #else
 	strcat ((char *)p, "/");
@@ -329,7 +332,7 @@ EIF_POINTER v;
 	if (*((char *)p) == '\0'){
 		strcat ((char *)p, (char *)v);
 	} else {
-#ifdef EIF_WINDOWS
+#if defined EIF_WINDOWS || defined EIF_OS2
 		strcat ((char *)p, "\\");
 #elif !defined (__VMS)		/* no separator for vms */
 		strcat ((char *)p, "/");
@@ -343,7 +346,7 @@ EIF_POINTER v;
 EIF_BOOLEAN eif_case_sensitive_path_names()
 {
 		/* Are path names case sensitive? */
-#ifdef EIF_WINDOWS
+#if defined EIF_WINDOWS || defined EIF_OS2
 	return FALSE;
 #elif defined (__VMS)
 	return FALSE;
@@ -393,7 +396,7 @@ EIF_REFERENCE eif_home_directory_name()
 EIF_REFERENCE eif_root_directory_name()
 {
 		/* String representation of the root directory */
-#ifdef EIF_WINDOWS
+#if defined EIF_WINDOWS || defined EIF_OS2
 	return RTMS("\\");
 #elif defined (__VMS)
 	return RTMS("[000000]");

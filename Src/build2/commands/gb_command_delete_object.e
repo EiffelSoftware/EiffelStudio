@@ -55,6 +55,7 @@ feature -- Basic Operation
 			-- the system to its previous state.
 		do
 			object_handler.add_object (parent_layout_item.object, child_layout_item.object, position)
+			command_handler.update
 		end
 		
 	textual_representation: STRING is

@@ -50,6 +50,7 @@ feature -- Basic Operation
 			-- Must restore state to that before `execute'.
 		do
 			object_handler.replace_object_type (layout_item.object, original_type)
+			command_handler.update
 		end
 		
 feature -- Access 

@@ -27,35 +27,34 @@ inherit
 
 feature 
 
-	melt (class_type: CLASS_TYPE; feat_tbl: FEATURE_TABLE) is
-			-- Melt the feature
+
+	dispatch_unit (melted_feat: FEATURE_I; class_type: CLASS_TYPE; 
+					feat_tbl: FEATURE_TABLE): DISPATCH_UNIT is
+			-- Dispatch unit for `melted_feat'. 
 		require
 			good_argument: not (class_type = Void or else feat_tbl = Void);
 			consistency:	class_type.associated_class
 							=
 							feat_tbl.associated_class;
 		local
-			dispatch_unit: DISPATCH_UNIT;
 			execution_unit: EXECUTION_UNIT;
 			external_unit: EXT_EXECUTION_UNIT;
 			info: EXTERNAL_INFO;
-			melted_feature: FEATURE_I
 		do
-			melted_feature := associated_feature (feat_tbl);
 				-- Evaluation of the dispatch unit of the
 				-- feature: attribute `real_body_id' will be set to
 				-- the `real_body_id' of the execution unit.
-			!!dispatch_unit.make (class_type, melted_feature);
-			Dispatch_table.put (dispatch_unit);
-			dispatch_unit := Dispatch_table.last_unit;
+			!!Result.make (class_type, melted_feat);
+			Dispatch_table.put (Result);
+			Result := Dispatch_table.last_unit;
 
 				-- Evaluation of the execution unit
-			execution_unit := melted_feature.execution_unit (class_type);
+			execution_unit := melted_feat.execution_unit (class_type);
 			Execution_table.put (execution_unit);
 			execution_unit := Execution_table.last_unit;
 
 				-- Udpdate of the dispatch and execution tables
-			dispatch_unit.set_execution_unit (execution_unit);
+			Result.set_execution_unit (execution_unit);
 
 				-- Update the external table
 			if execution_unit.is_external then
@@ -66,8 +65,27 @@ feature
 				info := Externals.item (external_unit.external_name);
 				info.set_execution_unit (external_unit);
 			end;
+		end;
 
-			melted_feature.melt (dispatch_unit, execution_unit);
+	update_dispatch_unit (class_type: CLASS_TYPE; feat_tbl: FEATURE_TABLE) is
+			-- Update dispatch unit. 
+		local
+			melted_feat: FEATURE_I;
+			disp_unit: DISPATCH_UNIT;
+		do
+			melted_feat := associated_feature (feat_tbl);
+			disp_unit := dispatch_unit (melted_feat, class_type, feat_tbl);
+		end;
+
+	melt (class_type: CLASS_TYPE; feat_tbl: FEATURE_TABLE) is
+			-- Melt the feature
+		local
+			melted_feat: FEATURE_I;
+			disp_unit: DISPATCH_UNIT;
+		do
+			melted_feat := associated_feature (feat_tbl);
+			disp_unit := dispatch_unit (melted_feat, class_type, feat_tbl);
+			melted_feat.melt (disp_unit, disp_unit.execution_unit);
 		end;
 
 	associated_feature (feat_tbl: FEATURE_TABLE): FEATURE_I is

@@ -637,12 +637,14 @@ file.putstring ("' */");
 			until
 				after
 			loop
-				io.error.putstring ("%Tfeature name: ");
 				it := item_for_iteration;
+if it.written_class > System.any_class.compiled_class then
+				io.error.putstring ("%Tfeature name: ");
 				io.error.putstring (it.feature_name);
 				io.error.new_line;
 				io.error.putstring (it.generator);
 				io.error.new_line;
+end;
 				forth;
 			end;
 		end;

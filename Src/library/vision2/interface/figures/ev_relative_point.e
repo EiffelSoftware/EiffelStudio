@@ -29,6 +29,8 @@ inherit
 		end
 
 	IDENTIFIED
+		export
+			{NONE} free_id, id_freed
 		undefine
 			default_create,
 			is_equal,

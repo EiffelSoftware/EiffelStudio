@@ -24,7 +24,7 @@ feature {NONE} -- Implementation
 			-- Redraw `Current'.
 		do
 			if expose_actions_internal /= Void then
-				expose_actions_internal.call ([an_x, a_y, a_width, a_height, parent_grid_i.drawable])
+				expose_actions_internal.call ([an_x, a_y, a_width, a_height, parent_i.drawable])
 			end
 		end
 		

@@ -28,13 +28,9 @@ feature -- Initialization
 			-- Initialize the window.
 		local
 			debug_tip_cmd: DEBUG_TOOLTIP_CMD
-			imp: TEXT_FIELD_IMP
 		do
 			text_field_make ("", a_parent);
-			!! debug_tip_cmd
-			imp ?= implementation
-			imp.set_motion_verify_callback (debug_tip_cmd, Void)
-			imp.disable_verify_bell
+			!! debug_tip_cmd.make (implementation)
 			add_activate_action (Current, Void);
 			tool := a_tool
 		end;

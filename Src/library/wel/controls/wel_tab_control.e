@@ -499,6 +499,14 @@ feature {NONE} -- Externals
 		alias
 			"WC_TABCONTROL"
 		end
+		
+	cwin_set_item_size (hwnd: POINTER; cx, cy: INTEGER) is
+			-- Change the parent of the given child
+		external
+			"C [macro <commctrl.h>] (HWND, EIF_INTEGER, EIF_INTEGER)"
+		alias
+			"TabCtrl_SetItemSize"
+		end
 
 end -- class WEL_TAB_CONTROL
 

@@ -64,7 +64,7 @@ rt_shared  void eif_cecil_init ();
 #endif	/* EIF_THREADS */
 
 /* Null pointer */
-rt_private	const void *eif_default_pointer = NULL;
+rt_private void *eif_default_pointer = NULL;
 /* Function declarations */
 rt_private int cid_to_dtype(EIF_TYPE_ID cid);		/* Converts a class ID into a dynamic type */
 rt_private int locate(EIF_REFERENCE object, char *name);			/* Locate attribute by name in skeleton */
@@ -315,6 +315,7 @@ rt_public EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid)
 	else
 #ifndef DLE
 		xraise(MTC EN_DOL);
+		return (EIF_REFERENCE_FUNCTION) 0;	/* NOT REACHED */
 #else
 	if (body_id < dle_level)
 			/* Static melted routine */
@@ -437,7 +438,7 @@ rt_public void *eifaddr(EIF_REFERENCE object, char *name, int * const ret)
 			eraise ("Unknown attribute", EN_PROG);
 		if (ret != NULL) 
 			*ret = EIF_NO_ATTRIBUTE;	/* Set "*ret" */
-		return &eif_default_pointer;	/* NOTREACHED */	
+		return &eif_default_pointer;
 	}
 
 	if (ret != NULL)

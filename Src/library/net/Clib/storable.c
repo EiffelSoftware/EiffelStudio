@@ -260,13 +260,27 @@ rt_public void eif_net_independent_store(EIF_INTEGER file_desc, char *object)
 #ifndef EIF_IL_DLL
 	socket_fides = file_desc;
 
+#ifdef RECOVERABLE_SCAFFOLDING
+	if (eif_is_new_recoverable_format) {
+#endif
 	rt_init_store(
-			store_write,
-		   	net_char_write,
-			idr_flush,
-			ist_write,
-			imake_header,
-			INDEPEND_ACCOUNT);
+		store_write,
+		net_char_write,
+		idr_flush,
+		ist_write,
+		rmake_header,
+		RECOVER_ACCOUNT);
+#ifdef RECOVERABLE_SCAFFOLDING
+	} else {
+	rt_init_store(
+		store_write,
+		net_char_write,
+		idr_flush,
+		ist_write,
+		imake_header,
+		INDEPEND_ACCOUNT);
+}
+#endif
 
 	independent_free_store (object);
 	rt_reset_store();

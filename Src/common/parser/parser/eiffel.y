@@ -663,7 +663,13 @@ New_exports_opt: -- Empty
 	;
 
 New_exports: TE_EXPORT New_export_list
-			{ $$ := $2 }
+			{
+				if $2.is_empty then
+					$$ := Void
+				else
+					$$ := $2
+				end
+			}
 	|	TE_EXPORT ASemi
 			-- { $$ := Void }
 	;
@@ -671,20 +677,30 @@ New_exports: TE_EXPORT New_export_list
 New_export_list: New_export_item
 			{
 				$$ := new_eiffel_list_export_item_as (Initial_new_export_list_size)
-				$$.extend ($1)
+				if $1 /= Void then
+					$$.extend ($1)
+				end
 			}
 	|	New_export_list New_export_item
 			{
 				$$ := $1
-				$$.extend ($2)
+				if $2 /= Void then
+					$$.extend ($2)
+				end
 			}
 	;
 
 New_export_item: Client_list Feature_set ASemi
-			{ $$ := new_export_item_as (new_client_as ($1), $2) }
+			{
+				if $2 /= Void then
+					$$ := new_export_item_as (new_client_as ($1), $2)
+				end
+			}
 	;
 
-Feature_set: TE_ALL
+Feature_set: -- Empty
+			-- { $$ := Void }
+	|	TE_ALL
 			{ $$ := new_all_as }
 	|	Feature_list
 			{ $$ := new_feature_list_as ($1) }

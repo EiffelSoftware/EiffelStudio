@@ -10,7 +10,7 @@ class FEATURE_ADAPTER
 
 inherit
 
-	COMPARABLE;
+	PART_COMPARABLE;
 	SHARED_FORMAT_INFO
 		undefine 
 			is_equal
@@ -30,6 +30,13 @@ feature -- Properties
 	target_feature: FEATURE_I;
 			-- Target feature where ast must be adapted to
 
+	source_class: CLASS_C;
+			-- Source class of ast (used when source_feature
+			-- and target_feature are not found)
+
+	comments: EIFFEL_COMMENTS;
+			-- Comments for ast
+
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
@@ -43,7 +50,7 @@ feature -- Element change
 	register (feature_as: FEATURE_AS_B; format_reg: FORMAT_REGISTRATION) is
 			-- Initialize and register Current adapter (if possible)
 			-- with ast `feature_ast' and evaluate the source and target
-			-- feature.
+			-- feature. Also set comments to `c'.
 		require
 			valid_ast: feature_as /= Void;
 			valid_format_reg: format_reg /= Void
@@ -54,7 +61,7 @@ feature -- Element change
 			eiffel_list, names: EIFFEL_LIST_B [FEATURE_NAME_B];
 			i, l_count: INTEGER
 			list: ARRAYED_LIST [FEATURE_I];
-			feat: FEATURE_I;
+			t_feat: FEATURE_I;
 			rep_table: EXTEND_TABLE [ARRAYED_LIST [FEATURE_I], INTEGER];
 			f_name: FEATURE_NAME_B;
 		do
@@ -96,18 +103,21 @@ feature -- Element change
 					until
 						list.after
 					loop
-						feat := list.item;	
+						t_feat := list.item;	
 						new_feature_as := clone (feature_as);
 						!! adapter;
 						f_name := clone (names.first)
-						f_name.set_name (feat.feature_name);
+						f_name.set_name (source_feature.feature_name);
 						!! eiffel_list.make (1);
 						eiffel_list.put_i_th (f_name, 1);
 						new_feature_as.set_feature_names (eiffel_list);
-						adapter.replicate_feature (source_feature, 
-										feat, new_feature_as, format_reg);
+						adapter.replicate_feature (source_feature,
+										t_feat, new_feature_as, format_reg);
 						list.forth
-					end
+					end;
+						-- Reset entry just in case we have
+						-- synomyn features
+					rep_table.force (Void, source_feature.body_index);
 				end
 			end;
 		end;
@@ -118,27 +128,26 @@ feature -- Output
 	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Format Current feature into `ctxt'.
 		do
-			ctxt.init_feature_context (source_feature, 
-						target_feature, ast);
-				-- For troff format
-			ctxt.prepare_feature (target_feature.feature_name,
-					target_feature.is_prefix, target_feature.is_infix);
+			if target_feature /= Void then
+				ctxt.init_feature_context (source_feature, 
+							target_feature, ast);
+			else
+				ctxt.init_uncompiled_feature_context (source_class, ast);
+			end;
+			ctxt.set_feature_comments (comments);
 			ast.format (ctxt);
 		end;
 
 feature {FEATURE_ADAPTER} -- Implementation
 
-	replicate_feature (s_feat, t_feat: FEATURE_I; 
+	replicate_feature (s_feat, t_feat: FEATURE_I;
 				f_ast: like ast; format_reg: FORMAT_REGISTRATION) is
-			-- Replicated feature information for current adapter.
-			-- Also register the feature.
+			-- Replicated feature information from `feat_adapter'
+			-- with target_feature `t_feat' in `format_reg'.
 		require
 			valid_features: s_feat /= Void and then t_feat /= Void;
 			valid_ast: f_ast /= Void
 			valid_format_reg: format_reg /= Void
-		local
-			rout_id: INTEGER;
-			select_table: SELECT_TABLE;
 		do
 			ast := f_ast;
 			source_feature := s_feat;
@@ -180,6 +189,9 @@ feature {NONE} -- Implementation
 						-- and are refering to the same body
 					register_feature (t_feat, False, format_reg);
 				end
+			else
+					-- Newly added feature which hasn't been compiled
+				register_uncompiled_feature (format_reg)
 			end;
 		end;
 
@@ -192,7 +204,10 @@ feature {NONE} -- Implementation
 			feat: FEATURE_I
 		do
 			feat := format_reg.target_feature_table.item (name.internal_name);
-			if feat /= Void then
+			if feat = Void then
+					-- Newly added feature which hasn't been compiled
+				register_uncompiled_feature (format_reg)
+			else
 				body_index := feat.body_index;
 				source_feature := feat;
 				target_feature := feat;
@@ -218,13 +233,22 @@ feature {NONE} -- Implementation
 				if not is_short or else
 					not feat.is_obsolete
 				then
+					comments := format_reg.feature_comments (ast);
 					if is_replicated then
-						format_reg.register_replicated_feature (Current);
+						format_reg.record_replicated_feature (Current);
 					else
-						format_reg.register_feature (Current)
-					end
+						format_reg.record_feature (Current);
+					end;
 				end;
 			end;
+		end;
+
+	register_uncompiled_feature (format_reg: FORMAT_REGISTRATION) is
+			-- Register uncompiled feature.
+		do
+			comments := format_reg.feature_comments (ast);
+			source_class := format_reg.current_class;
+			format_reg.record_feature (Current)
 		end;
 
 feature -- Case storage output
@@ -238,7 +262,7 @@ feature -- Case storage output
 			i: INTEGER;
 			feature_comments: S_FREE_TEXT_DATA;
 			f_name: STRING;
-			comment: EIFFEL_COMMENTS
+			c: EIFFEL_COMMENTS;
 		do
 			!! f_name.make (0);
 			f_name.append (target_feature.feature_name);
@@ -246,23 +270,20 @@ feature -- Case storage output
 			Result.set_reversed_engineered;
 			ast.store_information (Result);
 			target_feature.store_case_information (Result);
-			if Result.comments = Void then
-				comment := ast.comment;
-				if comment /= Void and comment.count > 0 then
-					text := comment.text;
-					!! feature_comments.make (comment.count)
-					from
-						i := 1;
-						feature_comments.start
-					until
-						i > comment.count
-					loop
-						feature_comments.replace (clone (text.item (i)));
-						feature_comments.forth
-						i := i + 1
-					end
-					Result.set_comments (feature_comments)
+			c := comments;
+			if c /= Void then
+				!! feature_comments.make (comments.count)
+				from
+					c.start;
+					feature_comments.start
+				until
+					c.after
+				loop
+					feature_comments.replace (c.item);
+					feature_comments.forth;
+					c.forth
 				end
+				Result.set_comments (feature_comments)
 			end
 		end
 

@@ -21,6 +21,12 @@ inherit
 			copy
 		end
 
+	HASHABLE
+		undefine
+			is_equal,
+			copy
+		end
+
 create
 	make,
 	make_root
@@ -53,6 +59,52 @@ feature -- Creation
 			has_valid_id: attribute_by_name (Id_string).value.to_integer > 0
 			has_title: has_attribute_by_name (Title_string)
 		end	
+
+feature -- Retrieval
+
+	element_by_title_location (a_titles: ARRAY [STRING]): like Current is
+			-- Element at title location of `titles'.  Loop through elements
+			-- of Current and match title strings.  
+		require
+			titles_not_void: a_titles /= Void
+			titles_not_empty: not a_titles.is_empty
+		local
+			cnt: INTEGER
+			l_curr_el,
+			l_par_el: like Current
+			l_elements: DS_LIST [XM_ELEMENT]
+			l_matches: ARRAYED_LIST [like Current]
+			l_new_titles: like a_titles
+			l_first_item: STRING
+		do						
+			from
+				l_elements := elements
+				create l_matches.make (a_titles.count)
+				l_first_item := a_titles.item (a_titles.lower)
+				l_elements.start				
+			until
+				l_elements.after
+			loop				
+				l_curr_el ?= l_elements.item_for_iteration
+				if 
+					l_curr_el.has_attribute_by_name (Title_string) and then							
+					l_curr_el.attribute_by_name (Title_string).value.is_equal (l_first_item)
+				then
+					l_matches.extend (l_curr_el)
+				end
+				l_elements.forth
+			end
+			if not l_matches.is_empty then		
+				create l_new_titles.make_from_array (a_titles.subarray (a_titles.lower + 1, a_titles.upper))
+						-- Limitation:  currently only take the FIRST match, so won't work
+						-- where nodes have same titles on same level
+				if not l_new_titles.is_empty then
+					Result := l_matches.first.element_by_title_location  (l_new_titles)
+				else
+					Result := l_matches.first
+				end
+			end
+		end
 		
 feature -- Query		
 	
@@ -169,5 +221,13 @@ feature -- Access
 			
 	title: STRING
 			-- Title attribute
+	
+feature {NONE} -- Implementation
+
+	hash_code: INTEGER is
+			-- Hash Code
+		do
+			Result := id	
+		end		
 	
 end -- class XML_TABLE_OF_CONTENTS_NODE

@@ -458,7 +458,7 @@ feature {NONE} -- Sorting
 			end			
 		end		
 
-	move_nodes_list: HASH_TABLE [XML_TABLE_OF_CONTENTS_NODE, STRING]
+	move_nodes_list: HASH_TABLE [STRING, XML_TABLE_OF_CONTENTS_NODE]
 			-- Nodes which need moving to new toc location
 
 	new_indexes: ARRAYED_LIST [INTEGER] is
@@ -483,8 +483,7 @@ feature {NONE} -- Element Change
 				l_elements.after
 			loop
 				l_el ?= l_elements.item_for_iteration
-				if not l_el.is_file then
-					--target.put_last (l_el)					
+				if not l_el.is_file then				
 					move_element (l_el, target)
 				end
 				l_elements.forth
@@ -500,7 +499,9 @@ feature {NONE} -- Element Change
 			l_elements: DS_LIST [XM_ELEMENT]
 			l_doc: DOCUMENT
 			l_filtered_doc: FILTERED_DOCUMENT
-			l_new_location,l_url: STRING
+			l_new_location, 
+			l_url,
+			l_title: STRING
 		do
 			l_el ?= a_element
 			if l_el /= Void then
@@ -519,20 +520,22 @@ feature {NONE} -- Element Change
 									-- As document can be shown in toc retrieve filter specific information from it	
 							if l_doc.is_valid_xml then
 								l_filtered_doc := Shared_project.filter_manager.filtered_document (l_doc)
-								a_element.attribute_by_name (Title_string).set_value (l_filtered_doc.title)
+								l_title := l_filtered_doc.title
+								a_element.attribute_by_name (Title_string).set_value (l_title)
+								l_el.set_title (l_title)
 							else
 								a_element.attribute_by_name (Title_string).set_value (l_doc.title)
+								l_el.set_title (l_doc.title)
 							end
 							
 									-- Move node if it needs moving.  Currently the node is added to a move list
 									-- and then moved AFTER all filtering and sorting.
-							if l_doc.is_valid_to_schema then
+							if l_doc.is_valid_to_schema then						
 								l_new_location := l_filtered_doc.toc_location
-								if l_new_location /= Void then
-									move_nodes_list.extend (l_el, l_new_location)
+								if l_new_location /= Void and then not l_new_location.is_empty then
+									move_nodes_list.extend (l_new_location, l_el)
 								end
-							end
-							
+							end							
 						end					
 					end
 					
@@ -599,14 +602,14 @@ feature {NONE} -- Element Change
 					end
 				end
 				
-						-- Check if has index and make as root node if sort options require
+					-- Check if has index and make as root node if sort options require
 				if not l_el.is_root_node and then make_root_from_index and then l_el.has_index then						
 					make_index (l_el)
 				end
 				
-						-- Now all sub-elements are filtered the element may be empty even though
-						-- it was not before.  Check if is empty and prepare to remove if sort options
-						-- require it.
+					-- Now all sub-elements are filtered the element may be empty even though
+					-- it was not before.  Check if is empty and prepare to remove if sort options
+					-- require it.
 				if filter_empty_elements and then not l_el.is_file and then not l_el.has_child then								
 					l_remove := True
 				end			
@@ -619,56 +622,121 @@ feature {NONE} -- Element Change
 		end
 		
 	move_nodes is
-			-- Move nodes in `move_nodes_list' to appropriate location
+			-- Move nodes in `move_nodes_list' to appropriate location.
+			-- Note: This index sorting assumes that any index node which requires moving
+			-- will be moved to unique location in respect to other index nodex which need
+			-- moving.  If 2 nodes attempt to move to the same location, only one will be
+			-- in the resulting TOC, and which one is not guaranteed.
 		local
-			l_target_el,
+			l_location,
+			l_url: STRING
+			l_data_location: DATA_STRING
 			l_src_el: XML_TABLE_OF_CONTENTS_NODE
-			l_name_array: ARRAY [STRING]
-			l_cnt: INTEGER
-		do
+			l_index_locations: SORTED_TWO_WAY_LIST [DATA_STRING]
+			l_element_hash_table: HASH_TABLE [XML_TABLE_OF_CONTENTS_NODE, STRING]
+		do		
+					-- Sort indexes.  We sort indexes so an index is not moved before a
+					-- a parent index is.  			
+			from
+				create l_index_locations.make
+				create l_element_hash_table.make (move_nodes_list.count)
+				l_element_hash_table.compare_objects
+				move_nodes_list.start
+			until
+				move_nodes_list.after
+			loop
+				l_location := move_nodes_list.item_for_iteration
+				l_src_el := move_nodes_list.key_for_iteration				
+				if l_src_el.is_index then
+					l_url := l_src_el.url					
+					create l_data_location.make_from_string (l_location)					
+					l_data_location.set_data (l_url)
+					l_index_locations.extend (l_data_location)
+					l_element_hash_table.extend (l_src_el, l_url)
+				end
+				move_nodes_list.forth
+			end
+			l_index_locations.sort
+			
+					-- Move indexes.  We move them before other nodes so another node is not
+					-- moved before parent node (index) exists.
+			from
+				l_index_locations.start
+				
+			until
+				l_index_locations.after
+			loop
+				l_data_location := l_index_locations.item
+				l_url ?= l_data_location.data
+				l_src_el := l_element_hash_table.item (l_url)	
+				move_node (l_data_location, l_src_el)
+				l_index_locations.forth
+			end
+			
+					-- Move other files
 			from
 				move_nodes_list.start
 			until
 				move_nodes_list.after
-			loop			
-				l_name_array := directory_array (move_nodes_list.key_for_iteration)
-				if l_name_array /= Void then
-						-- Loop through the TOC node names to retrieve the element 
-						-- which we wish to move our source element to					
---					l_target_el ?= root_element.element_by_title (l_name_array.item (1))
-					from
-						l_cnt := 2
-					until
-						l_cnt > l_name_array.count or l_target_el = Void
-					loop
-						l_target_el ?= l_target_el.element_by_name (l_name_array.item (l_cnt))
-						l_cnt := l_cnt + 1
-					end
-				end
-						
-						-- Move the element.  If there is no target, do not move it.
-				if l_target_el /= Void then
-					l_src_el := move_nodes_list.item_for_iteration
-					move_element (l_src_el, l_target_el)					
-				end				
-				
+			loop
+				l_src_el := move_nodes_list.key_for_iteration
+				if not l_src_el.is_index then
+					l_location := move_nodes_list.item_for_iteration
+					move_node (l_location, l_src_el)
+				end			
 				move_nodes_list.forth
 			end
 		end		
+		
+	move_node (new_location: STRING; src_el: XML_TABLE_OF_CONTENTS_NODE) is
+			-- Move node `src_el' to toc defined `new_location'
+		local
+			l_location: STRING
+			l_name_array: ARRAY [STRING]
+			l_target_el,
+			l_src_el: XML_TABLE_OF_CONTENTS_NODE
+		do	
+			l_location := new_location
+			if not (l_location.item (l_location.count).is_equal ('\') or l_location.item (l_location.count).is_equal ('/')) then
+				l_location.append_character ('/')
+			end
+			l_name_array := directory_array (l_location)
+			if l_name_array /= Void then
+						-- Find the target node
+				l_target_el ?= root_element
+				if l_target_el /= Void then
+					l_target_el ?= l_target_el.element_by_title_location (l_name_array)
+				end
+			end
+						
+					-- Move the element.  If there is no target, do not move it.
+			if l_target_el /= Void then
+				move_element (src_el, l_target_el)
+				if l_target_el.is_index then
+					l_target_el.set_name (Folder_string)
+				end
+				src_el.parent.delete (src_el)
+			end			
+		end		
+		
+	pseudo_overrides: BOOLEAN is True
+			-- If pseudo name is present in document does it override filename/direcory name
+			-- for alphabetical ordering?
 		
 	sort_element_alphabetically (a_element: XM_ELEMENT) is
 			-- Sort `a_element' sub elements alphabetically
 		require
 			has_children: not a_element.is_empty
 		local			
-			l_name: STRING
+			l_name: STRING			
 			l_element, l_parent_element: XML_TABLE_OF_CONTENTS_NODE
 			l_elements: DS_LIST [XM_ELEMENT]			
-			l_sorted_element_list: ARRAYED_LIST [XM_ELEMENT]
+			l_sorted_element_list: DS_ARRAYED_LIST [XM_ELEMENT]
 			l_sorted_list: SORTED_TWO_WAY_LIST [STRING]
 			l_temp_hash: HASH_TABLE [XM_ELEMENT, STRING]
 			l_doc: DOCUMENT
 			l_filtered_doc: FILTERED_DOCUMENT
+			l_saved_attributes: DS_LINEAR [XM_ATTRIBUTE]
 		do
 			l_parent_element ?= a_element
 			if l_parent_element /= Void then				
@@ -679,22 +747,35 @@ feature {NONE} -- Element Change
 					create l_sorted_list.make
 					create l_sorted_element_list.make (l_elements.count)
 					create l_temp_hash.make (l_elements.count)
+					l_temp_hash.compare_objects
 					l_elements.start
 				until
 					l_elements.after
 				loop
-					l_element ?= l_elements.item_for_iteration					
+					l_element ?= l_elements.item_for_iteration			
 					
 					if l_element.url /= Void then
-								-- First try for pseudo name
-						l_name := l_element.url
-						l_doc := Shared_document_manager.document_by_name (l_name)
-						if l_doc /= Void then
-							l_filtered_doc := Shared_project.filter_manager.filtered_document (l_doc)
-							l_name := l_filtered_doc.pseudo_name
+						if Pseudo_overrides then
+									-- Try for pseudo name
+							l_doc := Shared_document_manager.document_by_name (l_element.url)
+							if l_doc /= Void then
+								l_filtered_doc := Shared_project.filter_manager.filtered_document (l_doc)
+								l_name := l_filtered_doc.pseudo_name															
+							end
 						end
-					else							
-								-- Since has no file url use the title
+						if l_name = Void then
+									-- No pseudo name specified, use filename
+							l_name := short_name (l_filtered_doc.name)
+						end
+					end							
+					
+					if l_name /= Void then
+						if l_name.is_equal (shared_constants.application_constants.index_file_name) then	
+								-- Is index file, so use directory name
+							l_name := short_name (directory_no_file_name (l_filtered_doc.name))
+						end
+					else
+							-- No filename, use title
 						l_name := l_element.title
 					end
 					
@@ -702,11 +783,12 @@ feature {NONE} -- Element Change
 					l_temp_hash.extend (l_element, l_name)
 					l_elements.forth
 					
-					if not l_element.is_empty then
+							-- Process sub element if there are any
+					if not l_element.elements.is_empty then
 						sort_element_alphabetically (l_element)
 					end	
 				end
-						-- Sort the extracted names in the list
+						-- Sort the extracted names in the list alphabetically
 				l_sorted_list.sort
 				
 						-- With the sorted name list sort the elements via the temp hash
@@ -716,18 +798,20 @@ feature {NONE} -- Element Change
 					l_sorted_list.after
 				loop
 					l_element ?= l_temp_hash.item (l_sorted_list.item)
-					l_sorted_element_list.extend (l_element)
+					l_sorted_element_list.put_last (l_element)
 					l_sorted_list.forth
 				end
 				
 						-- Now remove the elements from the parent and add them back in sorted form
-				l_parent_element.wipe_out
 				from
 					l_sorted_element_list.start
 				until
 					l_sorted_element_list.after
 				loop
-					l_parent_element.put_last (l_sorted_element_list.item)
+					l_saved_attributes := l_parent_element.attributes
+					l_parent_element.wipe_out
+					l_parent_element.append (l_saved_attributes, 1)
+					l_parent_element.extend (l_sorted_element_list, l_saved_attributes.count + 1)
 					l_sorted_element_list.forth
 				end
 			end
@@ -755,7 +839,8 @@ feature {NONE} -- Element Change
 					a_el.set_url (l_el.attribute_by_name (Url_string).value)
 							-- Remove the node and then check it if it now empty, and if so make a file node
 							-- rather than a folder node
-					remove_node (node_by_id (l_el.id))	
+					remove_node (node_by_id (l_el.id))
+					remove_node (l_el)
 					if a_el.elements.is_empty then
 						a_el.set_name (File_string)
 					end					
@@ -765,21 +850,6 @@ feature {NONE} -- Element Change
 				l_elements.forth
 			end
 		end
-
-feature -- temporary
-write_to_file (s: STRING) is
-	local
-		f: PLAIN_TEXT_FILE
-	do
-		create f.make ("C:\std.txt")
-		if not f.exists then
-			f.create_read_write
-			f.close
-		end
-		f.open_append
-		f.putstring (s + "%N")
-		f.close
-	end
 
 invariant
 	has_name: filename /= Void and then not	filename.is_empty

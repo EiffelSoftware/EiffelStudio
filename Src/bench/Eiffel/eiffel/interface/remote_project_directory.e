@@ -135,7 +135,7 @@ feature -- Check
 			check_project_directory
 		end;
 
-feature {COMPILER_EXPORTER} -- Update
+feature {COMPILER_EXPORTER, E_PROJECT} -- Update
 
 	update_path is
 			-- Interpret environment variables in directory name.

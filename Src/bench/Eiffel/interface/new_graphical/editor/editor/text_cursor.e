@@ -613,10 +613,15 @@ feature -- Transformation
 			if (line.previous /= Void) or else (token.previous /= Void)
 					or else (pos_in_token > 1) then
 				go_left_char
+				associated_window.history.record_back_delete (associated_window.cursor.item)
 				delete_char
 			end
 		end
-
+--| FIXME
+--| Christophe, 3 feb 2000
+--| The call to `record_back_delete' should not be made in this class.
+--| It is done now because it is the only point we know wether a
+--| deletion is actually made.
 
 	insert_eol is
 		local

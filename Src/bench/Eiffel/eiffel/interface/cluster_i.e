@@ -1062,9 +1062,12 @@ feature {COMPILER_EXPORTER} -- Element change
 							-- its previous location
 						a_class := classes.found_item
 							-- We only process precompiled clusters only if they contain
-							-- a non-compiled class.
+							-- a non-compiled class. We do not remove external classes
+							-- from ASSEMBLY_I as they cannot be removed and replaced by
+							-- a class from the override since we cannot change an assembly.
 						if
-							(not is_precompiled or else not a_class.is_compiled)
+							(not is_precompiled or else not a_class.is_compiled) and
+							not a_class.is_external_class
 						then
 							classes.remove (a_class.name)
 							overriden_classes.put (a_class, a_class.name)

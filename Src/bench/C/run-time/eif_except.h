@@ -103,10 +103,12 @@ extern "C" {
 #define EN_RETR		23			/* Retrieval error */
 #define EN_PROG		24			/* Developer exception */
 #define EN_FATAL	25			/* Eiffel run-time fatal error */
+#define EN_DOL		26			/* $ applied to melted feature */
+#define EN_ISE_IO	27			/* I/O error raised by the ISE Eiffel runtime */
+
 #define EN_OSTK		97			/* Run-time exception catching */
 #define EN_ILVL		98			/* In level: pseudo-type for execution trace */
 #define EN_OLVL		99			/* Out level: pseudo-type for execution trace */
-#define EN_DOL		26			/* $ applied to melted feature */
 
 /* Maximum number of internal exceptions (EN_NEX) defined in
  * eif_constants.h

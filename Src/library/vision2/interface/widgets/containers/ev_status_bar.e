@@ -68,6 +68,9 @@ end -- class EV_STATUS_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/04/04 21:27:21  oconnor
+--| formatting
+--|
 --| Revision 1.14  2000/03/17 01:23:34  oconnor
 --| formatting and layout
 --|
@@ -118,7 +121,6 @@ end -- class EV_STATUS_BAR
 --|
 --| Revision 1.9.2.3  1999/11/02 17:20:13  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

@@ -76,6 +76,7 @@ feature -- Properties
 	exception_stack_managed,
 	force_recompile,
 	generate_eac_metadata,
+	manifest_integers_as_integer_32,
 	msil_generation,
 	msil_generation_type,
 	msil_culture,
@@ -174,6 +175,7 @@ feature {NONE} -- Codes and names.
 			Result.force (ise_gc_runtime, "ise_gc_runtime")
 			Result.force (java_generation, "java_generation")
 			Result.force (line_generation, "line_generation")
+			Result.force (manifest_integers_as_integer_32, "manifest_integers_as_integer_32")
 			Result.force (msil_assembly_compatibility, "msil_assembly_compatibility")
 			Result.force (msil_culture, "msil_culture")
 			Result.force (msil_full_name, "msil_full_name")
@@ -494,6 +496,15 @@ feature {COMPILER_EXPORTER}
 						System.set_has_multithreaded (False)
 					elseif value.is_yes or else value.is_all then
 						System.set_has_multithreaded (True)
+					else
+						error_found := True
+					end
+
+				when manifest_integers_as_integer_32 then
+					if value.is_no then
+						System.set_manifest_integers_as_integer_32 (False)
+					elseif value.is_yes then
+						System.set_manifest_integers_as_integer_32 (True)
 					else
 						error_found := True
 					end

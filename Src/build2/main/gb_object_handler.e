@@ -357,19 +357,24 @@ feature -- Basic operation
 			display_win: GB_DISPLAY_WINDOW
 			builder_win: GB_BUILDER_WINDOW
 		do
-			create layout_item.make (an_object)
+			if an_object.layout_item = Void then
+				create layout_item.make (an_object)
+				an_object.set_layout_item (layout_item)
+				an_object.build_drop_actions_for_layout_item (an_object.layout_item)
+			end
 				-- We must only add the layout item if there is
 				-- no window currently displayed.
 			if layout_constructor.is_empty then
 				layout_constructor.add_root_item (layout_item)	
 			end
-			an_object.set_layout_item (layout_item)
-			an_object.build_drop_actions_for_layout_item (an_object.layout_item)
+			
 			create display_win
 			titled_window ?= display_win
 			titled_window.set_size (Default_window_dimension, Default_window_dimension)
-			an_object.create_object_from_type
-			an_object.build_display_object
+			if an_object.object = Void then
+				an_object.create_object_from_type
+				an_object.build_display_object
+			end
 			create display_win
 			insert_into_window (an_object.object, display_win)
 			create builder_win

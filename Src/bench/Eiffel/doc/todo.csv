@@ -84,7 +84,7 @@ debugger,,,,,,
 ,3,Debugger loses focus when running the application,Xavier,DBG0015,,
 ,4,Exception text field is too short,Xavier,DBG0016,Xavier,1
 ,2,"Add a ""Remove all breakpoints except this one"" in the breakpoint context menu",Julian,DBG0017,,
-
+,?,Gray out the step into command when it is not possible to step into,Julian,DBG0018,,
 
 
 
@@ -133,7 +133,9 @@ compiler,,,,
 ,2,Remove classes that are never instantiated from the system (warning: they may be instantiated outside Eiffel code or in a STORABLE),Xavier,CMP0027
 ,4,Remove the extra indirection in non generic polymorphic calls,Xavier,CMP0028
 ,3,Improve the management of SPECIAL[expanded],Xavier,CMP0029
-
+,4,Remove deferred classes from the polymorphic tables (and when available also optionally remove classes that are never instantiated),Xavier,CMP0030
+,3,Drag down the code of features into the nearest common ancestor to all classes that use the feature. Optionally drag the code down to all classes that use the feature (flat out all classes). This should remove polymorphic calls inside features (but increase the code size),Emmanuel,CMP0031
+,3,Make the finalization independent from the workbench mode: this would remove bugs (cf DH) and facilitate some optimizations,Xavier,CMP0032
 
 
 

@@ -26,11 +26,8 @@ feature {ICOR_EXPORTER} -- Access
 			i: INTEGER
 			l_icor: G
 			retried: BOOLEAN
---			l_platform: PLATFORM
 			l_pointer_size: INTEGER
 		do
---			create l_platform
---			l_pointer_size := l_platform.Pointer_bytes
 			l_pointer_size := (create {PLATFORM}).Pointer_bytes
 
 			if not retried then
@@ -51,8 +48,6 @@ feature {ICOR_EXPORTER} -- Access
 					end
 				end
 			end
-		ensure
---			check_last_call_succeed
 		rescue
 			print ("Error in IcorDebugXyzEnum->Next() %N")
 			Result := Void

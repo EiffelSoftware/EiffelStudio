@@ -19,7 +19,7 @@ inherit
 			create_pixmap_place
 		end
         
-creation
+create
 	make,
 	make_with_text
 
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			create_text_label ("")
                 end
 
-	create_pixmap_place is
+	create_pixmap_place (pix_imp: EV_PIXMAP_IMP) is
 			-- prepare the place for the pixmap in the `box'.
 			-- For that, we add a pixmap with a default gdk pixmap
 			-- in the `box'.
@@ -48,7 +48,8 @@ feature {NONE} -- Initialization
 			pixmap_imp: EV_PIXMAP_IMP
 		do
 			-- create the pixmap with a default xpm.
-			pixmap_widget := c_gtk_pixmap_create_empty (box)
+--			pixmap_widget := c_gtk_pixmap_create_empty (box)
+			pixmap_widget := c_gtk_pixmap_create_empty (pix_imp.create_window)
 
 			-- Set the pixmap in the `box'.
 			gtk_box_pack_start (GTK_BOX (box), pixmap_widget, False, False, 0)
@@ -59,18 +60,18 @@ feature {NONE} -- Initialization
 
 end -- class EV_CHECK_BUTTON_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!----------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!----------------------------------------------------------------

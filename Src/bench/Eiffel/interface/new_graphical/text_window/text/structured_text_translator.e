@@ -363,7 +363,7 @@ feature -- Text processing
 		do
 			create tok.make (t.error_text, tab_size_cell)
 			create stone.make (t.syntax_error)
-			tok.set_pebble (stone)
+--			tok.set_pebble (stone)
 			last_line.append_token (tok)
 		end
 

@@ -149,7 +149,7 @@ feature -- Access
 			Result.extend ("enable_user_resize")
 			Result.extend ("has")
 			Result.extend ("lock_update")
-			Result.extend ("lower_ba")
+			Result.extend ("lower_bar")
 			Result.extend ("maximum_dimension")
 			Result.extend ("maximum_height")
 			Result.extend ("maximum_width")

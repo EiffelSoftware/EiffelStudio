@@ -191,7 +191,7 @@ feature -- Changing
 	set_background_color (new_color: COLOR) is
 			-- Set `background_color' to `a_color'.
 		do
-			old_set_background_color (new_color);
+			old_set_background_color (new_color)
 			set_scrolled_text_background_color (implementation, 
 				Graphical_resources.text_background_color.actual_value)
 		end;
@@ -447,9 +447,7 @@ feature -- Update
 				if last_warner /= Void then
 					last_warner.popdown
 				end;
-				cur_pos := character_position 
-							(but_data.absolute_x - real_x,
-							but_data.absolute_y - real_y);
+				cur_pos := character_position (but_data.absolute_x - real_x, but_data.absolute_y - real_y);
 				update_focus (cur_pos);
 				highlight_focus;
 			end

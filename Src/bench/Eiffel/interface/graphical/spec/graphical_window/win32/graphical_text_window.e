@@ -87,7 +87,6 @@ inherit
 		end
 
 creation
-
 	make,
 	make_from_tool
 

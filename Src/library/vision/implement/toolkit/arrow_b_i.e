@@ -11,9 +11,6 @@ deferred class ARROW_B_I
 inherit
 
 	BUTTON_I
-
-
-
 	
 feature 
 

@@ -60,6 +60,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_WIDGET_LIST_IMP}
 			selected_item_index_internal := 0
+			initialize_pixmaps
 		end
 
 feature -- Access
@@ -80,25 +81,48 @@ feature -- Access
 	item_tab (an_item: EV_WIDGET): EV_NOTEBOOK_TAB is
 			-- Tab associated with `an_item'.
 		do
-			--| FIXME IEK Implement this
+			create Result.make_with_widgets (interface, an_item)
 		end
 
 	item_text (an_item: like item): STRING is
 			-- Label of `an_item'.
 		local
 			item_imp: EV_WIDGET_IMP
+			a_list, a_label: POINTER
 		do
 			item_imp ?= an_item.implementation
-			check
-                		an_item_has_implementation: item_imp /= Void
+
+			a_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (feature {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object))
+			if feature {EV_GTK_EXTERNALS}.g_list_length (a_list) = 1 then
+				-- We only have a label stored
+				a_label := feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 0)
+			else
+				-- We have both a pixmap and a label
+				a_label := feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 1)
 			end
+
 			create Result.make_from_c (feature {EV_GTK_EXTERNALS}.gtk_label_struct_label (
-				feature {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (
-					visual_widget,
-					item_imp.c_object
-				)
+				a_label
 			))
+			feature {EV_GTK_EXTERNALS}.g_list_free (a_list)
 		end
+
+	item_pixmap (an_item: like item): EV_PIXMAP is
+			-- 
+		local
+			item_imp: EV_WIDGET_IMP
+			a_tab_label, a_list: POINTER
+		do
+			item_imp ?= an_item.implementation
+			a_tab_label := feature {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
+			a_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (a_tab_label)
+			if feature {EV_GTK_EXTERNALS}.g_list_length (a_list) = 2 then
+				-- Our pixmap is set
+				create Result
+			end
+			feature {EV_GTK_EXTERNALS}.g_list_free (a_list)
+		end
+		
 
 feature -- Status report
 
@@ -132,7 +156,7 @@ feature -- Status report
 		end
 			
 	selected_item_index: INTEGER is
-			-- 
+			-- Page index of selected item
 		do
 			if count > 0 then
 				Result := selected_item_index_internal
@@ -221,18 +245,40 @@ feature -- Element change
 		local
 			item_imp: EV_WIDGET_IMP
 			a_cs: EV_GTK_C_STRING
+			a_hbox, a_label: POINTER
 		do
 			item_imp ?= an_item.implementation
-			check
-				an_item_has_implementation: item_imp /= Void
-			end
 			create a_cs.make (a_text)
-			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_label_text (
-				visual_widget,
-				item_imp.c_object,
-				a_cs.item
-			)
+			
+			a_hbox := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+			a_label := feature {EV_GTK_EXTERNALS}.gtk_label_new (a_cs.item)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (a_label)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (a_hbox)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (a_hbox, a_label)
+			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_label (visual_widget, item_imp.c_object, a_hbox)
 		end
+
+	set_item_pixmap (an_item: like item; a_pixmap: EV_PIXMAP) is
+			-- 
+		local
+			item_imp: EV_WIDGET_IMP
+			a_hbox, a_list, a_pix: POINTER
+			a_pix_imp: EV_PIXMAP_IMP
+		do
+			item_imp ?= an_item.implementation
+			a_hbox := feature {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
+			a_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (a_hbox)
+			if  feature {EV_GTK_EXTERNALS}.g_list_length (a_list) = 2 then
+				-- We already have a pixmap present so we remove it
+				feature {EV_GTK_EXTERNALS}.gtk_container_remove (a_hbox, feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 0))
+			end
+			a_pix_imp ?= a_pixmap.implementation
+			a_pix := feature {EV_GTK_EXTERNALS}.gtk_image_new_from_pixbuf (a_pix_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height))
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (a_pix)
+			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (a_hbox, a_pix, False, False, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_box_reorder_child (a_hbox, a_pix, 0)
+		end
+		
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 

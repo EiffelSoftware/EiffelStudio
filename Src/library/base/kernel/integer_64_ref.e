@@ -233,23 +233,10 @@ feature -- Basic operations
 			result_exists: Result /= Void
 		end
 
-	infix "^" (other: NUMERIC): DOUBLE is
+	infix "^" (other: DOUBLE): DOUBLE is
 			-- Integer power of Current by `other'
-		local
-			integer_value: INTEGER_REF
-			real_value: REAL_REF
-			double_value: DOUBLE_REF
 		do
-			integer_value ?= other
-			real_value ?= other
-			double_value ?= other
-			if integer_value /= Void then
-				Result := item ^ integer_value.item
-			elseif real_value /= Void then
-				Result := item ^ real_value.item
-			elseif double_value /= Void then
-				Result := item ^ double_value.item
-			end
+			Result := item ^ other
 		end
 
 feature -- Conversion
@@ -291,6 +278,18 @@ feature -- Conversion
 			-- Return `item'.
 		do
 			Result := item
+		end
+
+	frozen to_real: REAL is
+			-- Convert `item' into a REAL
+		do
+			Result := item.to_real
+		end
+
+	frozen to_double: DOUBLE is
+			-- Convert `item' into a DOUBLE
+		do
+			Result := item.to_double
 		end
 
 	to_hex_string: STRING is

@@ -44,15 +44,10 @@ feature -- Status report
 		end
 
 	is_integer: BOOLEAN is
-			-- Is the constant an integer constant ?
+			-- Is the constant an integer or natural constant ?
 		do
 		end
 		
-	is_natural: BOOLEAN is
-			-- Is constant a natural constant ?
-		do
-		end
-
 	is_boolean: BOOLEAN is
 			-- Is the constant a real constant ?
 		do
@@ -144,6 +139,7 @@ feature -- Multi-branch instruction processing
 			-- Inspect value of the given `value_type'
 		require
 			value_type_not_void: value_type /= Void
+			is_valid_inspect_type: value_type.is_character or value_type.is_integer or value_type.is_natural
 			is_valid_inspect_value: valid_type (value_type)
 		do
 			-- Do nothing here.

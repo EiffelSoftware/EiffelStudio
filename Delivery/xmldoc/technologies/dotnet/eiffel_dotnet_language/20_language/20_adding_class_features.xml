@@ -43,49 +43,49 @@
 				<label>Eiffel Classes</label>
 			</link>:
 			<code_block>
-indexing
-    description: Objects that model lists
-    revision: $Revision$
+<keyword>indexing</keyword>
+	description<symbol>:</symbol> Objects that model lists
+	revision<symbol>:</symbol> <symbol>$</symbol>Revision<symbol>:</symbol> <feature_name>1</feature_name>.<feature_name>5</feature_name> <symbol>$</symbol>
 
-class
-    OLD_FASHIONED_LIST [G]
+<keyword>class</keyword>
+	<class_name>OLD_FASHIONED_LIST</class_name> <symbol>[</symbol><class_name>G</class_name><symbol>]</symbol>
 
-obsolete "This class is obsolete, use LINKED_LIST [G] instead"
+<keyword>obsolete</keyword> "<string>This class is obsolete, use LINKED_LIST [G] instead</string>"
 
-inherit
-    DYNAMIC_LIST [G]
+<keyword>inherit</keyword>
+	<class_name>DYNAMIC_LIST</class_name> <symbol>[</symbol><class_name>G</class_name><symbol>]</symbol>
 
-create
-    make
+<keyword>create</keyword>
+	make
 
-feature -- Initialization
+<keyword>feature</keyword> -- Initialization
 
-    make is
-            -- Create an empty list.
-        do
-            before := True
-        ensure is_before: before
-        end
+	<feature_name>make</feature_name> <keyword>is</keyword>
+			<comment>-- Create an empty list.</comment>
+		<keyword>do</keyword>
+			before <symbol>:</symbol><symbol>=</symbol> True
+			<keyword>ensure</keyword> is_before<symbol>:</symbol> before
+		<keyword>end</keyword>
 
-feature -- Access
+<keyword>feature</keyword> -- Access
 
-    item: G is
-            -- Current item
-        do
-            Result := active.item
-        end
+	<feature_name>item</feature_name><symbol>:</symbol> <class_name>G</class_name> <keyword>is</keyword>
+			<comment>-- Current item</comment>
+		<keyword>do</keyword>
+			Result <symbol>:</symbol><symbol>=</symbol> <feature_name>active</feature_name>.<feature_name>item</feature_name>
+		<keyword>end</keyword>
 
-    first: like item is
-            -- Item at first position
-        do
-            Result := first_element.item
-        end
-                (other features omitted)
+	<feature_name>first</feature_name><symbol>:</symbol> <keyword>like</keyword> <feature_name>item</feature_name> <keyword>is</keyword>
+			<comment>-- Item at first position</comment>
+		<keyword>do</keyword>
+			Result <symbol>:</symbol><symbol>=</symbol> <feature_name>first_element</feature_name>.<feature_name>item</feature_name>
+		<keyword>end</keyword>
+	<symbol>(</symbol>other features omitted<symbol>)</symbol>
 
-invariant
-    before_constraint: before implies (active = first_element)
-    after_constraint: after implies (active = last_element)
-end
+<keyword>invariant</keyword>
+	before_constraint<symbol>:</symbol> before <keyword>implies</keyword> <symbol>(</symbol>active <symbol>=</symbol> first_element<symbol>)</symbol>
+	after_constraint<symbol>:</symbol> after <keyword>implies</keyword> <symbol>(</symbol>active <symbol>=</symbol> last_element<symbol>)</symbol>
+<keyword>end</keyword>
 </code_block>
 		</paragraph>
 		<paragraph>The example shows three of the features ( 
@@ -103,8 +103,8 @@ end
 			</code>. In fact we can just about guarantee that there are other features of this class. Remember the inheritance part of the class:
 		</paragraph>
 		<code_block>
-	inherit
-		DYNAMIC_LIST [G]
+	<keyword>inherit</keyword>
+		<class_name>DYNAMIC_LIST</class_name> <symbol>[</symbol><class_name>G</class_name><symbol>]</symbol>
 </code_block>
 		<paragraph>This means that every feature in 
 			<code>
@@ -233,62 +233,62 @@ end
 		</heading>
 		<paragraph>Here is another example class. Again this class contrived, so it does not do anyhing worthwhile except show you what different types of features look like. This class has an attribute and a constant attribute, and functions and procedures both with and without arguments.</paragraph>
 		<code_block>
-class
-    SOME_CLASS
+<keyword>class</keyword>
+	<class_name>SOME_CLASS</class_name>
 
-create
-    make,
-    make_with_arguments
+<keyword>create</keyword>
+	<feature_name>make</feature_name>,
+	<feature_name>make_with_arguments</feature_name>
 
-feature -- Initialization
+<keyword>feature</keyword> <comment>-- Initialization</comment>
 
-    make is
-            -- Creation procedure
-        do
-            an_attribute := 5
-        end
+	<feature_name>make</feature_name> <keyword>is</keyword>
+			<comment>-- Creation procedure</comment>
+		<keyword>do</keyword>
+			an_attribute <symbol>:</symbol><symbol>=</symbol> 5
+		<keyword>end</keyword>
 
-    make_with_arguments (hour: INTEGER; minute: INTEGER; second: INTEGER) is
-            -- Another creation procedure
-        do
-            an_attribute := second + (minute * 60) + (hour * 3600)
-        end
+	<feature_name>make_with_arguments</feature_name> <symbol>(</symbol>hour<symbol>:</symbol> <class_name>INTEGER</class_name>; minute<symbol>:</symbol> <class_name>INTEGER</class_name>; second<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
+			<comment>-- Another creation procedure</comment>
+		<keyword>do</keyword>
+			<feature_name>an_attribute</feature_name> <symbol>:</symbol><symbol>=</symbol> second <symbol>+</symbol> <symbol>(</symbol>minute * 60<symbol>)</symbol> <symbol>+</symbol> <symbol>(</symbol>hour * 3600<symbol>)</symbol>
+		<keyword>end</keyword>
 
-feature -- Access
+<keyword>feature</keyword> <comment>-- Access</comment>
 
-    an_attribute: INTEGER
-            -- An attribute of type INTEGER
+	<feature_name>an_attribute</feature_name><symbol>:</symbol> <class_name>INTEGER</class_name>
+			<comment>-- An attribute of type INTEGER</comment>
 
-    another_attribute: INTEGER is 46
-            -- A constant attribute
+	<feature_name>another_attribute</feature_name><symbol>:</symbol> <class_name>INTEGER</class_name> <keyword>is</keyword> 46
+			<comment>-- A constant attribute</comment>
 
-    a_function: STRING is
-            -- A function without arguments
-        do
-            Result := an_attribute.out
-        end
+	<feature_name>a_function</feature_name><symbol>:</symbol> <class_name>STRING</class_name> <keyword>is</keyword>
+			<comment>-- A function without arguments</comment>
+		<keyword>do</keyword>
+			Result <symbol>:</symbol><symbol>=</symbol> <feature_name>an_attribute</feature_name>.<feature_name>out</feature_name>
+		<keyword>end</keyword>
 
-    another_function (an_int: INTEGER): INTEGER is
-            -- A function with arguments
-        do
-            Result := an_attribute + an_int
-        end
+	<feature_name>another_function</feature_name> <symbol>(</symbol>an_int<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol><symbol>:</symbol> <class_name>INTEGER</class_name> <keyword>is</keyword>
+			<comment>-- A function with arguments</comment>
+		<keyword>do</keyword>
+			Result <symbol>:</symbol><symbol>=</symbol> <feature_name>an_attribute</feature_name> <symbol>+</symbol> an_int
+		<keyword>end</keyword>
 
-feature -- Basic Operations
+<keyword>feature</keyword> <comment>-- Basic Operations
+</comment>
+	<feature_name>a_procedure</feature_name> <keyword>is</keyword>
+			<comment>-- A procedure with no arguments</comment>
+		<keyword>do</keyword>
+			<feature_name>an_attribute</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>an_attribute</feature_name> <symbol>+</symbol> 5
+		<keyword>end</keyword>
 
-    a_procedure is
-            -- A procedure with no arguments
-        do
-            an_attribute := an_attribute + 5
-        end
+	<feature_name>another_procedure</feature_name> <symbol>(</symbol>an_int<symbol>:</symbol> <class_name>INTEGER</class_name>; another_int<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
+			<comment>-- A procedure with arguments</comment>
+		<keyword>do</keyword>
+			<feature_name>an_attribute</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>an_attribute</feature_name> <symbol>+</symbol> an_int <symbol>+</symbol> another_int
+		<keyword>end</keyword>
 
-    another_procedure (an_int: INTEGER; another_int: INTEGER) is
-            -- A procedure with arguments
-        do
-            an_attribute := an_attribute + an_int + another_int
-        end
-
-end -- Class SOME_CLASS
+<keyword>end</keyword><comment> -- Class SOME_CLASS</comment>
 </code_block>
 		<heading>
 			<size>3</size>Feature Declaration
@@ -307,11 +307,11 @@ end -- Class SOME_CLASS
 		</list>
 		<paragraph>Let's dissect one feature and identify its parts:</paragraph>
 		<code_block>
-    another_function (an_int: INTEGER): INTEGER is
-            -- A function with arguments
-        do
-            Result := an_attribute + an_int
-        end
+	another_function <symbol>(</symbol>an_int<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol><symbol>:</symbol> <class_name>INTEGER</class_name> <keyword>is</keyword>
+			<comment>-- A function with arguments</comment>
+		<keyword>do</keyword>
+			Result <symbol>:</symbol><symbol>=</symbol> <feature_name>an_attribute</feature_name> <symbol>+</symbol> an_int
+		<keyword>end</keyword>
 </code_block>
 		<paragraph>In this feature:</paragraph>
 		<list ordered="false">
@@ -383,33 +383,33 @@ end -- Class SOME_CLASS
 		<paragraph>All of the sections except the Routine Body are optional.</paragraph>
 		<paragraph>Here is another feature, a routine, which has all of these except obsolete and rescue.</paragraph>
 		<code_block>
-insert_text_header_item (a_label: STRING;
-        a_width, a_format: INTEGER; insert_after_item_no: INTEGER) is
-            -- Insert a text item to the header control
-            --     after the `insert_item_item_no' item.
-    require
-        exists: exists
-        label_not_void: a_label /= Void
-        insert_after_item_no_positive: insert_after_item_no &gt;= 0
-    local
-        hd_item: WEL_HD_ITEM
-    do
-        create hd_item.make
-        hd_item.set_text (a_label)
-        hd_item.set_width (a_width)
-        hd_item.set_format (a_format)
-        insert_header_item (hd_item, insert_after_item_no)
-    ensure
-        item_count_increased: item_count = old item_count + 1
-end
+	insert_text_header_item <symbol>(</symbol>a_label<symbol>:</symbol> <class_name>STRING</class_name>;
+		a_width, a_format<symbol>:</symbol> <class_name>INTEGER</class_name>; insert_after_item_no<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
+			<comment>-- Insert a text item to the header control</comment>
+			<comment>--     after the `insert_item_item_no' item.</comment>
+		<keyword>require</keyword>
+			exists<symbol>:</symbol> exists
+			label_not_void<symbol>:</symbol> a_label <symbol>/</symbol><symbol>=</symbol> Void
+			insert_after_item_no_positive<symbol>:</symbol> insert_after_item_no &gt;<symbol>=</symbol> 0
+		<keyword>local</keyword>
+			hd_item<symbol>:</symbol> <class_name>WEL_HD_ITEM</class_name>
+		<keyword>do</keyword>
+			<keyword>create</keyword> hd_item.<feature_name>make</feature_name>
+			hd_item.<feature_name>set_text</feature_name> <symbol>(</symbol>a_label<symbol>)</symbol>
+			hd_item.<feature_name>set_width</feature_name> <symbol>(</symbol>a_width<symbol>)</symbol>
+			hd_item.<feature_name>set_format</feature_name> <symbol>(</symbol>a_format<symbol>)</symbol>
+			<feature_name>insert_header_item </feature_name><symbol>(</symbol>hd_item, insert_after_item_no<symbol>)</symbol>
+		<keyword>ensure</keyword>
+			item_count_increased<symbol>:</symbol> item_count <symbol>=</symbol> <keyword>old</keyword> item_count <symbol>+</symbol> 1
+	<keyword>end</keyword>
 </code_block>
 		<paragraph>Using this example, let's identify and discuss the different sections.</paragraph>
 		<heading>
 			<size>3</size>Header Comment
 		</heading>
 		<code_block>
-            -- Insert a text item to the header control
-            --     after the `insert_item_item_no' item.
+			<comment>-- Insert a text item to the header control</comment>
+			<comment>--     after the `insert_item_item_no' item.</comment>
 </code_block>
 		<paragraph>Although the feature's header comment is optional, most Eiffel programmers and their technical  managers feel that it should never be omitted. Header comments are included by some language processing tools in specialized views of classes. Header comments are almost always short, usually no more than a few lines. Header comments serve to provide a natural language description of what the feature will do (in the case of features that are 
 			<link>
@@ -443,10 +443,10 @@ end
 			<size>3</size>Precondition
 		</heading>
 		<code_block>
-    require
-        exists: exists
-        label_not_void: a_label /= Void
-        insert_after_item_no_positive: insert_after_item_no &gt;= 0
+		<keyword>require</keyword>
+			exists<symbol>:</symbol> exists
+			label_not_void<symbol>:</symbol> a_label <symbol>/</symbol><symbol>=</symbol> Void
+			insert_after_item_no_positive<symbol>:</symbol> insert_after_item_no &gt;<symbol>=</symbol> 0
 </code_block>
 		<paragraph>The precondition part of a feature is introduced by the keyword " 
 			<code>
@@ -461,8 +461,8 @@ end
 			<size>3</size>Local Declarations
 		</heading>
 		<code_block>
-    local
-        hd_item: WEL_HD_ITEM
+		<keyword>local</keyword>
+			hd_item<symbol>:</symbol> <class_name>WEL_HD_ITEM</class_name>
 </code_block>
 		<paragraph>This part contains the declarations for any "local entities" used by the feature. Sometimes the computation accomplished in a feature requires the use of entities which are only temporary. It would not be appropriate to make these attributes of the class. So, instead we can use local entities, which have scope only within the feature in which they are declared. In the example, 
 			<code>
@@ -482,12 +482,12 @@ end
 			<size>3</size>Routine Body
 		</heading>
 		<code_block>
-    do
-        create hd_item.make
-        hd_item.set_text (a_label)
-        hd_item.set_width (a_width)
-        hd_item.set_format (a_format)
-        insert_header_item (hd_item, insert_after_item_no)
+		<keyword>do</keyword>
+			<keyword>create</keyword> hd_item.<feature_name>make</feature_name>
+			hd_item.<feature_name>set_text</feature_name> <symbol>(</symbol>a_label<symbol>)</symbol>
+			hd_item.<feature_name>set_width</feature_name> <symbol>(</symbol>a_width<symbol>)</symbol>
+			hd_item.<feature_name>set_format</feature_name> <symbol>(</symbol>a_format<symbol>)</symbol>
+			<feature_name>insert_header_item </feature_name><symbol>(</symbol>hd_item, insert_after_item_no<symbol>)</symbol>
 </code_block>
 		<paragraph>This is the routine body for a fairly typical effective, internal routine. It contains the instructions that get the job done for the feature. You may notice that experienced Eiffel programmers rarely write routine bodies that are more than a few lines long. The reason for this is more that just intuitive. This phenomenon will be explained in the section 
 			<link>
@@ -500,13 +500,12 @@ end
 			<size>4</size>External Routines
 		</heading>
 		<code_block>
-cwin_tooltips_class: POINTER is
-    external
-        "C [macro ] : EIF_POINTER"
-    alias
-        "TOOLTIPS_CLASS"
-end
-
+	<feature_name>cwin_tooltips_class</feature_name><symbol>:</symbol> <class_name>POINTER</class_name> <keyword>is</keyword>
+		<keyword>external</keyword>
+			"<string>C [macro ] : EIF_POINTER</string>"
+		<keyword>alias</keyword>
+			"<string>TOOLTIPS_CLASS</string>"
+		<keyword>end</keyword>
 </code_block>
 		<paragraph>The routine body above is for an "external" routine. External routines are used to represent within Eiffel classes, routines that are written in other languages.</paragraph>
 		<tip>
@@ -520,8 +519,8 @@ end
 			<size>4</size>Once Routines
 		</heading>
 		<code_block>
-    once
-    	Result := some_computation
+	<keyword>once</keyword>
+		Result <symbol>:=</symbol> <feature_name>some_computation</feature_name>
 </code_block>
 		<paragraph>This is the routine body of a "once" routine, specifically a "once function". A once routine is introduced by the keyword " 
 			<code>
@@ -537,7 +536,7 @@ end
 			<size>4</size>Deferred Routines
 		</heading>
 		<code_block>
-	deferred
+	<keyword>deferred</keyword>
 </code_block>
 		<paragraph>The body for a deferred routine is simply the keyword " 
 			<code>
@@ -545,16 +544,16 @@ end
 			</code>". Below is the deferred routine body in the context of an entire feature.
 		</paragraph>
 		<code_block>
-set_position (new_position: INTEGER) is
-            -- Set `position' with `new_position'
-    require
-        exists: exists
-        valid_minimum: new_position &gt;= minimum
-        valid_maximum: new_position &lt;= maximum
-    deferred
-    ensure
-        position_set: position = new_position
-end
+	<feature_name>set_position</feature_name> <symbol>(</symbol>new_position<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
+			<comment>-- Set `position' with `new_position'</comment>
+		<keyword>require</keyword>
+			exists<symbol>:</symbol> <feature_name>exists</feature_name>
+			valid_minimum: new_position <symbol>&gt;=</symbol> <feature_name>minimum</feature_name>
+			valid_maximum: new_position <symbol>&lt;=</symbol> <feature_name>maximum</feature_name>
+		<keyword>deferred
+		ensure</keyword>
+			position_set<symbol>:</symbol> <feature_name>position</feature_name> <symbol>=</symbol> new_position
+		<keyword>end</keyword>
 </code_block>
 		<paragraph>As we learned in 
 			<link>
@@ -570,8 +569,8 @@ end
 			<size>3</size>Postcondition
 		</heading>
 		<code_block>
-    ensure
-        item_count_increased: item_count = old item_count + 1
+	<keyword>ensure</keyword>
+		item_count_increased<symbol>:</symbol> <feature_name>item_count</feature_name> <symbol>=</symbol> <keyword>old</keyword> item_count <symbol>+</symbol> 1
 </code_block>
 		<paragraph>The postcondition part of a routine is introduced by the keyword " 
 			<code>
@@ -595,27 +594,27 @@ end
 			</link> . Until then, you can see what a rescue part looks like in the feature below.
 		</paragraph>
 		<code_block>
-bind is
-            -- Bind socket to local address in `address'.
-    require
-        socket_exists: exists
-        valid_local_address: address /= Void
-    local
-        ext: ANY
-        retried: BOOLEAN
-    do
-        if not retried then
-            ext := address.socket_address
-            c_bind (descriptor, $ext, address.count)
-            is_open_read := True
-        end
-    rescue
-        if not assertion_violation then
-            is_open_read := False
-            retried := True
-            retry
-        end
-end
+	<feature_name>bind</feature_name> <keyword>is</keyword>
+			<comment>-- Bind socket to local address in `address'.</comment>
+		<keyword>require</keyword>
+			socket_exists<symbol>:</symbol> exists
+			valid_local_address<symbol>:</symbol> address <symbol>/</symbol><symbol>=</symbol> Void
+		<keyword>local</keyword>
+			ext<symbol>:</symbol> <class_name>ANY</class_name>
+			retried<symbol>:</symbol> <class_name>BOOLEAN</class_name>
+		<keyword>do</keyword>
+			<keyword>if</keyword> <keyword>not</keyword> retried <keyword>then</keyword>
+				ext <symbol>:</symbol><symbol>=</symbol> <feature_name>address</feature_name>.<feature_name>socket_address</feature_name>
+				c_bind <symbol>(</symbol>descriptor, <symbol>$</symbol>ext, <feature_name>address</feature_name>.<feature_name>count</feature_name><symbol>)</symbol>
+				<feature_name>is_open_read</feature_name> <symbol>:</symbol><symbol>=</symbol> True
+			<keyword>end</keyword>
+		<keyword>rescue</keyword>
+			<keyword>if</keyword> <keyword>not</keyword> <feature_name>assertion_violation</feature_name> <keyword>then</keyword>
+				<feature_name>is_open_read</feature_name> <symbol>:</symbol><symbol>=</symbol> False
+				retried <symbol>:</symbol><symbol>=</symbol> True
+			<keyword>retry</keyword>
+			<keyword>end</keyword>
+		<keyword>end</keyword>
 </code_block>
 		<heading>
 			<size>2</size>Making Features Available to Clients
@@ -624,52 +623,47 @@ end
 		<paragraph>Control of the export of features inherited from ancestors is done by using the "export" keyword. Export of inherited features will be discussed in Inheritance.</paragraph>
 		<paragraph>Control of the export of immediate features (those features introduced in the text of a class) is done with the "feature" clause. We have encountered the feature clause already:</paragraph>
 		<code_block>
-feature -- Access
+<keyword>feature</keyword> <comment>-- Access</comment>
 
+	<feature_name>an_attribute</feature_name><symbol>:</symbol> <class_name>INTEGER</class_name>
+			<comment>-- An attribute of type INTEGER</comment>
 
-    an_attribute: INTEGER
-            -- An attribute of type INTEGER
+	<feature_name>another_attribute</feature_name><symbol>:</symbol> <class_name>INTEGER</class_name> <keyword>is</keyword> 46
+			<comment>-- A constant attribute</comment>
 
-    another_attribute: INTEGER is 46
-            -- A constant attribute
+	<feature_name>a_function</feature_name><symbol>:</symbol> <class_name>STRING</class_name> <keyword>is</keyword>
+			<comment>-- A function without arguments</comment>
+		<keyword>do</keyword>
+			Result <symbol>:</symbol><symbol>=</symbol> <feature_name>an_attribute</feature_name>.<feature_name>out</feature_name>
+		<keyword>end</keyword>
 
-    a_function: STRING is
-            -- A function without arguments
-        do
-            Result := an_attribute.out
+	<feature_name>another_function</feature_name> <symbol>(</symbol>an_int<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol><symbol>:</symbol> <class_name>INTEGER</class_name> <keyword>is</keyword>
+			<comment>-- A function with arguments</comment>
+		<keyword>do</keyword>
+			Result <symbol>:</symbol><symbol>=</symbol> <feature_name>an_attribute</feature_name> <symbol>+</symbol> an_int
+		<keyword>end</keyword>
 
-        end
+<keyword>feature</keyword> <comment>-- Basic Operations</comment>
 
-    another_function (an_int: INTEGER): INTEGER is
-            -- A function with arguments
-        do
-            Result := an_attribute + an_int
+	<feature_name>a_procedure</feature_name> <keyword>is</keyword>
+			<comment>-- A procedure with no arguments</comment>
+		<keyword>do</keyword>
+			<feature_name>an_attribute </feature_name><symbol>:</symbol><symbol>=</symbol> <feature_name>an_attribute</feature_name> <symbol>+</symbol> 5
+		<keyword>end</keyword>
 
-        end
-
-
-feature -- Basic Operations
-
-
-    a_procedure is
-            -- A procedure with no arguments
-        do
-            an_attribute := an_attribute + 5
-        end
-
-    another_procedure (an_int: INTEGER; another_int: INTEGER) is
-            -- A procedure with arguments
-        do
-            an_attribute := an_attribute + an_int + another_int
-        end
+	<feature_name>another_procedure</feature_name> <symbol>(</symbol>an_int<symbol>:</symbol> <class_name>INTEGER</class_name>; another_int<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
+			<comment>-- A procedure with arguments</comment>
+		<keyword>do</keyword>
+			<feature_name>an_attribute</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>an_attribute</feature_name> <symbol>+</symbol> an_int <symbol>+</symbol> another_int
+		<keyword>end</keyword>
 </code_block>
 		<paragraph>A feature clause like the ones in the example above means that all the features that follow, until the next feature clause are exported to clients based on any class. Techically, this</paragraph>
 		<code_block>
-	feature -- Basic Operations
+	<keyword>feature</keyword> <comment>-- Basic Operations</comment>
 </code_block>
 		<paragraph>is equivalent to</paragraph>
 		<code_block>
-	feature {ANY} -- Basic Operations
+	<keyword>feature</keyword><symbol> {</symbol><class_name>ANY</class_name><symbol>}</symbol> -- <comment>Basic Operations</comment>
 </code_block>
 		<paragraph>which means that the following features are available to clients which conform to class 
 			<code>
@@ -684,7 +678,7 @@ feature -- Basic Operations
 		</paragraph>
 		<paragraph>Inside the braces is a list of classes which are eligible as clients.</paragraph>
 		<code_block>
-	feature {STRING_HANDLER} -- Implementation
+	<keyword>feature </keyword><symbol>{</symbol><class_name>STRING_HANDLER</class_name><symbol>}</symbol> <comment>-- Implementation</comment>
 </code_block>
 		<paragraph>Features following this example from class 
 			<code>
@@ -696,7 +690,7 @@ feature -- Basic Operations
 		</paragraph>
 		<paragraph>As stated above, you can put a list of class names in the braces:</paragraph>
 		<code_block>
-	feature {CLASS_A, CLASS_B, CLASS_C} -- Semi-private features
+	<keyword>feature</keyword> <symbol>{</symbol><class_name>CLASS_A</class_name>, <class_name>CLASS_B</class_name>, <class_name>CLASS_C</class_name><symbol>}</symbol> <comment>-- Semi-private features</comment>
 </code_block>
 		<paragraph>Often features which are solely for implementation should not be seen or used by clients of any type. You can ensure this by exporting to class 
 			<code>
@@ -704,7 +698,7 @@ feature -- Basic Operations
 			</code>, the class from which no other class can inherit:
 		</paragraph>
 		<code_block>
-	feature {NONE} -- Implementation
+	<keyword>feature</keyword> <symbol>{</symbol><class_name>NONE</class_name><symbol>}</symbol> <comment>-- Implementation</comment>
 </code_block>
 		<heading>
 			<size>2</size>Eiffel Instructions and Control Structures
@@ -714,7 +708,7 @@ feature -- Basic Operations
 			<size>3</size>Creation
 		</heading>
 		<code_block>
-	create hd_item.make
+	<keyword>create</keyword> <feature_name>hd_item.make</feature_name>
 </code_block>
 		<paragraph>We discussed creation procedures and the process of bringing new objects into being in 
 			<link>
@@ -729,7 +723,7 @@ feature -- Basic Operations
 			<size>3</size>Procedure Call
 		</heading>
 		<code_block>
-	hd_item.set_text (a_label)
+	<feature_name>hd_item.set_text</feature_name> <symbol>(</symbol><feature_name>a_label</feature_name><symbol>)</symbol>
 </code_block>
 		<paragraph>The application of a feature to an object constitutes an instruction if the feature is a procedure.</paragraph>
 		<heading>
@@ -744,7 +738,7 @@ feature -- Basic Operations
 			</code>:
 		</paragraph>
 		<code_block>
-	is_open_read := False
+	<feature_name>is_open_read</feature_name> <symbol>:=</symbol> False
 </code_block>
 		<paragraph>In this instruction, an attribute of type 
 			<code>
@@ -770,7 +764,7 @@ feature -- Basic Operations
 			</code>. This is in contrast to what happens with reference types.
 		</paragraph>
 		<code_block>
-	my_string := some_other_string
+	<feature_name>my_string</feature_name> <symbol>:=</symbol> <feature_name>some_other_string</feature_name>
 </code_block>
 		<paragraph>In this assignment, we will assume that both entities are type 
 			<code>
@@ -814,7 +808,7 @@ feature -- Basic Operations
 			</code>".
 		</paragraph>
 		<code_block>
-	x := y
+	<feature_name>x</feature_name> <symbol>:=</symbol> <feature_name>y</feature_name>
 </code_block>
 		<paragraph>then the rule says that this assignment is valid only if the type of 
 			<code>
@@ -879,13 +873,13 @@ feature -- Basic Operations
 			<size>3</size>Conditional
 		</heading>
 		<code_block>
-            if l_c.is_digit then
-                l_state := 2
-            elseif l_c = '-' or l_c = '+' then
-                l_state := 1
-            else
-                l_state := 3
-            end
+	<keyword>if</keyword> <feature_name>l_c</feature_name>.<feature_name>is_digit</feature_name> <keyword>then</keyword>
+		<feature_name>l_state</feature_name> <symbol>:</symbol><symbol>=</symbol> 2
+	<keyword>elseif</keyword> l_c <symbol>=</symbol> <symbol>'</symbol>-<symbol>'</symbol> <keyword>or</keyword> l_c <symbol>=</symbol> <symbol>'</symbol><symbol>+</symbol><symbol>'</symbol> <keyword>then</keyword>
+		<feature_name>l_state</feature_name> <symbol>:</symbol><symbol>=</symbol> 1
+	<keyword>else</keyword>
+		<feature_name>l_state</feature_name> <symbol>:</symbol><symbol>=</symbol> 3
+	<keyword>end</keyword>
 </code_block>
 		<paragraph>Conditionals in Eiffel use at a minimum the keywords " 
 			<code>
@@ -908,16 +902,16 @@ feature -- Basic Operations
 			<size>3</size>Loop
 		</heading>
 		<code_block>
-           	from
-			                i := lower
-			            until
-			                i &gt; upper
-			            loop
-			                if item (i) /= Void and then v.is_equal (item (i)) then
-			                    Result := Result + 1
-			                end
-			                i := i + 1
-      		end
+	<keyword>from</keyword>
+		<feature_name>i</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>lower</feature_name>
+	<keyword>until</keyword>
+		<feature_name>i</feature_name> <symbol>&gt;</symbol> <feature_name>upper</feature_name>
+	<keyword>loop</keyword>
+		<keyword>if</keyword><feature_name> item</feature_name> <symbol>(</symbol>i<symbol>)</symbol> <symbol>/</symbol><symbol>=</symbol> Void <keyword>and</keyword> <keyword>then</keyword> <feature_name>v</feature_name>.<feature_name>is_equal</feature_name> <symbol>(</symbol><feature_name>item</feature_name> <symbol>(</symbol>i<symbol>)</symbol><symbol>)</symbol> <keyword>then</keyword>
+			Result <symbol>:</symbol><symbol>=</symbol> Result <symbol>+</symbol> 1
+		<keyword>end</keyword>
+		<feature_name>i</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>i</feature_name> <symbol>+</symbol> 1
+      	<keyword>end</keyword>
 </code_block>
 		<paragraph>There is only one structure for loops in Eiffel. In its typical form it uses the four keywords " 
 			<code>

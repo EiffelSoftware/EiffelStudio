@@ -5,6 +5,7 @@
 #include "config.h"
 #include "size.h" /* for LNGSIZ */
 #ifdef EIF_WIN32
+#define FD_SETSIZE 256
 #define WIN32_LEAN_AND_MEAN
 #include <winsock.h>
 #define EWOULDBLOCK WSAEWOULDBLOCK
@@ -593,6 +594,11 @@ EIF_INTEGER timeout, timeoutm;
 
 #if defined EIF_WIN32 || defined EIF_OS2
 	do_init();
+	if (!rmask && !wmask && !emask) {
+		if (timeout != -1) 
+			Sleep(timeout*1000 + timeoutm);
+		return 0;
+	}
 #endif
 	if (timeout == -1) {
 #ifdef EIF_WIN32

@@ -466,12 +466,12 @@ feature -- Access
 					-- comments about why this needs to be done when the root key is HKEY_PERFORMANCE_DATA.
 				from
 					create l_ext.make (l_size)
-					l_res := cwin_reg_query_value_ex (key, l_name.item, l_null, l_null, l_ext.item, $l_size)
+					l_res := cwin_reg_query_value_ex (key, l_name.item, l_null, $l_type, l_ext.item, $l_size)
 				until
 					l_res = error_success or l_res /= error_more_data
 				loop
 					create l_ext.make (l_size)
-					l_res := cwin_reg_query_value_ex (key, l_name.item, l_null, l_null, l_ext.item, $l_size)
+					l_res := cwin_reg_query_value_ex (key, l_name.item, l_null, $l_type, l_ext.item, $l_size)
 				end
 					
 				if l_res = error_success then

@@ -17,6 +17,12 @@ feature
 	make is
 			-- Creation
 		do
+debug ("CACHE_SERVER")
+	io.new_line
+	io.putstring (generator)
+	io.putstring (" has a cache of ")
+	io.putint (cache_size)
+end
 			queue_make (Cache_size);
 			in_index := 0;
 			out_index := 0;

@@ -961,6 +961,7 @@ end
 			end
 			private_melt := False
 			first_compilation := False
+			il_quick_finalization := False
 		end
 
 	process_degree_5 is

@@ -456,7 +456,7 @@ rt_private void rec_twrite(register EIF_REFERENCE object, int tab)
 	EIF_GET_CONTEXT
 	unsigned int count = RT_SPECIAL_COUNT (object);
 	unsigned int i = 1;
-	int16 dftype = Dftype (object);
+	int16 dftype = (int16) Dftype (object);
 
 	REQUIRE("Is tuple", HEADER(object)->ov_flags & EO_TUPLE);
 

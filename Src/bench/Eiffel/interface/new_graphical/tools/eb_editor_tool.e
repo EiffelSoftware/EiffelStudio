@@ -34,7 +34,6 @@ feature {NONE} -- Initialization
 		do
 			create explorer_bar_item.make (explorer_bar, widget, title, False)
 			explorer_bar.add (explorer_bar_item)
-			explorer_bar.repack_widgets
 		end
 
 feature -- Access

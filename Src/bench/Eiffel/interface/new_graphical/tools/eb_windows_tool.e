@@ -37,7 +37,6 @@ feature {NONE} -- Initialization
 				explorer_bar_item.set_pixmap (pixmap)
 			end
 			explorer_bar.add (explorer_bar_item)
-			explorer_bar.repack_widgets
 		end
 
 feature -- Access

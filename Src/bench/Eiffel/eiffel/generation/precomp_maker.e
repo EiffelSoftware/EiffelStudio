@@ -8,7 +8,8 @@ inherit
 		redefine
 			generate_compilation_rule, system_name,
 			remove_after_partial, generate_additional_rules,
-			init_objects_baskets, add_eiffel_objects
+			init_objects_baskets, add_eiffel_objects,
+			generate_D_object_macros
 		end;
 		
 creation
@@ -59,11 +60,26 @@ feature
 
 	generate_additional_rules is
 		do
-			Make_file.putstring ("%Tld -r -o preobj.o ");
-			generate_C_object_macros;
-			Make_file.new_line;
+			if
+				not (object_baskets.count = 1 and then
+				object_baskets.item (1).empty)
+			then
+					-- `object_baskets' may be empty when
+					-- merging several precompilations.
+				System.set_has_precompiled_preobj (True);
+				Make_file.putstring ("%Tld -r -o preobj.o ");
+				generate_C_object_macros;
+				Make_file.new_line
+			else
+				System.set_has_precompiled_preobj (False)
+			end;
 			Make_file.putstring ("%Tld -r -o descobj.o ");
-			if System.uses_precompiled then
+			if
+				System.uses_precompiled and
+				Desc_generator.file_counter = 0
+			then
+					-- Uses precompilations but is not the result
+					-- of the merging of precompilations.
 				Make_file.putstring (Precompilation_descobj);
 				Make_file.putchar (' ')
 			end;
@@ -128,5 +144,13 @@ feature
 				classes.forth
 			end;
 		end;
+
+	generate_D_object_macros is
+			-- Generate the D object macros.
+		do
+			generate_basket_objects (descriptor_baskets, Descriptor_suffix);
+				-- Add merged descriptors, if any.
+			generate_merged_descriptors (".o")
+		end
 
 end

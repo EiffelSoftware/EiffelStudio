@@ -142,7 +142,7 @@ feature -- IL code generation
 			if not is_included then
 				i := i + 1
 			end
-			if generation_value /= 0 then
+			if i /= 0 then
 				il_generator.put_integer_32_constant (i)
 				il_generator.generate_binary_operator (feature {IL_CONST}.il_minus)
 			end

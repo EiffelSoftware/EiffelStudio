@@ -8,7 +8,7 @@ class NATIVE_ARRAY_B
 inherit
 	CLASS_C
 		redefine
-			check_validity, new_type, is_native_array, partial_actual_type
+			check_validity, new_type, is_native_array, partial_actual_type, actual_type
 		end
 
 	SPECIAL_CONST
@@ -114,6 +114,37 @@ feature -- Generic derivation
 					-- Melt all the code written in the associated class of the new class type
 				melt_all
 			end
+		end
+
+feature -- Actual class type
+
+	actual_type: CL_TYPE_A is
+			-- Actual type of the class
+		local
+			i, nb: INTEGER
+			actual_generic: ARRAY [FORMAL_A]
+			formal: FORMAL_A
+			l_formal_dec: FORMAL_DEC_AS
+		do
+			if generics = Void then
+				create Result.make (class_id)
+			else
+				from
+					i := 1
+					nb := generics.count
+					create actual_generic.make (1, nb)
+					create {NATIVE_ARRAY_TYPE_A} Result.make (class_id, actual_generic)
+				until
+					i > nb
+				loop
+					l_formal_dec := generics.i_th (i)
+					create formal.make (l_formal_dec.is_reference, l_formal_dec.is_expanded, i)
+					actual_generic.put (formal, i)
+					i := i + 1
+				end
+			end
+				-- Note that NATIVE_ARRAY is not expanded by default
+			Result.set_is_expanded (is_expanded)
 		end
 
 feature {CLASS_TYPE_AS} -- Actual class type

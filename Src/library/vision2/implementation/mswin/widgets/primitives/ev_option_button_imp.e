@@ -15,9 +15,10 @@ inherit
 
 	EV_MENU_HOLDER_IMP
 		undefine
-			add_menu,
-			remove_menu,
 			add_menu_ok
+		redefine
+			add_menu,
+			remove_menu
 		end
 
 	EV_BUTTON_IMP
@@ -31,7 +32,6 @@ inherit
 		redefine
 			on_bn_clicked,
 			default_style,
-			set_parent,
 			make
 		end
 
@@ -98,16 +98,6 @@ feature -- Status setting
 		do
 			check
 				not_yet_implemented: False
-			end
-		end
-
-	set_parent (par: EV_CONTAINER) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-		do
-			{EV_BUTTON_IMP} Precursor (par)
-			if parent_imp /= Void then
-				ev_children := parent_imp.menu_items
 			end
 		end
 

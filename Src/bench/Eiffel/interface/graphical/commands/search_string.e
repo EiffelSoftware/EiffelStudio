@@ -8,7 +8,6 @@ indexing
 class SEARCH_STRING 
 
 inherit
-
 	PIXMAP_COMMAND
 		rename
 			init as make
@@ -25,18 +24,18 @@ feature -- Close window
 			if search_window /= Void then
 				search_window.close
 			end
-		end; 
+		end
 
 feature -- Properties
 
-	search_window: SEARCH_W;
+	search_window: SEARCH_W
 			-- The search window.
 
 	symbol: PIXMAP is 
 			-- Pixmap for the button.
 		once 
 			Result := Pixmaps.bm_Search
-		end;
+		end
 
 feature {NONE} -- Implementation
 
@@ -44,29 +43,29 @@ feature {NONE} -- Implementation
 			-- Popup seach window in `tool'.
 		do
 			if search_window = Void then
-				!! search_window.make (tool);
-			end;
+				!! search_window.make (tool)
+			end
 			search_window.call
-		end;
+		end
 
 feature {NONE} -- Attributes
 
 	name: STRING is
 			-- Name of the command.
-		do
+		once
 			Result := Interface_names.f_Find
 		end
 
 	menu_name: STRING is
 			-- Name used in menu entry
-		do
+		once
 			Result := Interface_names.m_Find
-		end;
+		end
 
 	accelerator: STRING is
 			-- Accelerator action for menu entry
-		do
+		once
 			Result := Interface_names.a_Find
-		end;
+		end
 
 end -- class SEARCH_STRING

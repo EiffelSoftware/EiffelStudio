@@ -19,7 +19,6 @@ inherit
 			freeze_command_arguments,
 			remove_file_locks,
 			has_signable_generation,
-			expand_path,
 			can_run,
 			set_display_warnings,
 			set_discard_assertions,
@@ -85,91 +84,6 @@ feature -- Access
 		
 	output_pipe_name: STRING
 		-- name of pipe for output
-
-	expand_path (a_path: STRING): STRING is
-			-- Epxand all env vars in 'a_path'
-		require else
-			non_void_path: a_path /= Void
-		local
-			var: STRING
-			formatted_var: STRING
-			dollar_pos: INTEGER
-			slash_pos: INTEGER
-			parth_pos: INTEGER
-			next_dollar_pos: INTEGER
-			env_var: STRING
-			env: EXECUTION_ENVIRONMENT
-		do
-			create env
-			Result := clone(a_path)
-			
-			if not Result.is_empty then
-				Result.replace_substring_all ("/", "\")
-				
-				dollar_pos := Result.index_of ('$', 1)
-				if dollar_pos > 0 then
-					from 
-					until
-						dollar_pos = 0
-					loop
-						-- look for '\'
-						slash_pos := Result.index_of ('\', dollar_pos + 1)
-						
-						-- now look for ) and return the first
-						-- allows for $(ENV)Ext\...
-						parth_pos := Result.index_of (')', dollar_pos + 1)
-						
-						-- look or $ as path could be $var1$var2
-						next_dollar_pos := Result.index_of ('$', dollar_pos + 1)
-	
-						if slash_pos > 0 then
-							if parth_pos > 0 then
-								slash_pos := slash_pos.min (parth_pos + 1)
-							end
-							if next_dollar_pos > 0 then
-								slash_pos := slash_pos.min (next_dollar_pos)
-							end
-						elseif parth_pos > 0 then
-							if next_dollar_pos > 0 then
-								slash_pos := parth_pos.min (next_dollar_pos)
-							else
-								slash_pos := parth_pos + 1
-							end
-						else
-							if next_dollar_pos > 0 then
-								slash_pos := next_dollar_pos
-							else
-								slash_pos := Result.count + 1
-							end
-						end
-						
-						var := Result.substring (dollar_pos, slash_pos - 1)
-						
-						-- remove the () and $
-						formatted_var := clone(var);
-						formatted_var.prune_all('(')
-						formatted_var.prune_all(')')
-						formatted_var.prune_all_leading('$')
-						
-						env_var := env.get (formatted_var)
-						if env_var /= Void and then env_var.count > 0 then
-							Result.replace_substring_all (var, env_var)
-						end
-						if dollar_pos + 1 <= Result.count then
-							dollar_pos := Result.index_of ('$', dollar_pos + 1)
-						else
-							dollar_pos := 0
-						end
-					end
-				end
-			end
-		end
-		
-	shrink_path (a_path: STRING): STRING is
-			-- Shrink the given path to use the common know Eiffel env vars
-		do
-			Result := clone (a_path)
-		end
 	
 	has_signable_generation: BOOLEAN is
 			-- Does the compiler allow for assemblies to be signed

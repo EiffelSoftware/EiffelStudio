@@ -19,7 +19,7 @@
 
 		<P>Besides recognizing the tokens, it is usually necessary to recognize the deeper syntactic structure of the text. This process is called <B>parsing</B> or <B>syntax analysis</B> and is studied in the next chapter.</P>
 
-		<P>Figure 1 shows the inheritance structure of the classes discussed in this chapter. Class <A CLASS="eclass" HREF="/libraries/lex/reference/parse/l_interface_chart.html">L_INTERFACE</A> has also been included although we will only study it in the next chapter; it belongs to the Parse library, where it takes care of the interface between parsing and lexical analysis.</P>
+		<P>Figure 1 shows the inheritance structure of the classes discussed in this chapter. Class <A CLASS="eclass" HREF="/libraries/lex/reference/parse/l_interface_chart.html">L_INTERFACE</A> has also been included although we will only study it in the <A HREF="parsing.html">next chapter</A>; it belongs to the Parse library, where it takes care of the interface between parsing and lexical analysis.</P>
 
 		<IMG SRC="figure1.png">
 		<P CLASS="figuretitle">Figure 1: Lexical classes</P>
@@ -239,35 +239,33 @@
 		<P>If it fails to recognize a regular expression, <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_get_token">get_token</A> sets <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_token_type">token_type</A> to <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_no_token">No_token</A>
 		and advances the input cursor by one character.</P>
 
-<!-- links checked until here --------------------------------->
-
 		<H3>The basic scheme</H3>
 
 		<P>Here is the most common way of using the preceding facilities:</P>
 
-		<CODE><PRE>
-from
-	set_file ("text_directory/text_to_be_parsed")
-		-- Or: set_string ("string to parse")
-	begin_analysis
-until
-	end_of_text
-loop
-	analyzer.get_token
-	if analyzer.token_type = No_token then
-		go_on
-	end
-	do_a_token (lexical.last_token)
-end
-end_analysis</PRE></CODE>
+		<CODE>
+		<SPAN CLASS="ekeyword">from</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; <A CLASS="efeature" HREF="/libraries/lex/reference/lex/text_filler.html#f_set_file">set_file</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"text_directory/text_to_be_parsed"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="ecomment">-- Or: set_string ("string to parse")</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; <A CLASS="efeature" HREF="/libraries/lex/reference/lex/scanning.html#f_begin_analysis">begin_analysis</A><BR>
+		<SPAN CLASS="ekeyword">until</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_end_of_text">end_of_text</A><BR>
+		<SPAN CLASS="ekeyword">loop</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_analyzer">analyzer</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_get_token">get_token</A><BR>
+		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_analyzer">analyzer</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_token_type">token_type</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_no_token">No_token</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_go_on">go_on</A><BR>
+		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">end</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; <A CLASS="efeature" HREF="/libraries/lex/reference/lex/scanning.html#f_do_a_token">do_a_token</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="efeature">lexical</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_last_token">last_token</A><SPAN CLASS="esymbol">)</SPAN><BR>
+		<SPAN CLASS="ekeyword">end</SPAN><BR>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/lex/scanning.html#f_end_analysis">end_analysis</A></CODE>
 
-		<P>This scheme is used by procedure analyze of class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A>, so that in standard cases you may simply inherit from that class and redefine procedures begin_analysis, do_a_token and end_analysis. If you are not inheriting from <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A>, these names simply denote procedures that you must provide.</P>
+		<P>This scheme is used by procedure <A CLASS="efeature" HREF="/libraries/lex/reference/lex/scanning.html#f_analyze">analyze</A> of class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A>, so that in standard cases you may simply inherit from that class and redefine procedures <A CLASS="efeature" HREF="/libraries/lex/reference/lex/scanning.html#f_begin_analysis">begin_analysis</A>, <A CLASS="efeature" HREF="/libraries/lex/reference/lex/scanning.html#f_do_a_token">do_a_token</A> and <A CLASS="efeature" HREF="/libraries/lex/reference/lex/scanning.html#f_end_analysis">end_analysis</A>. If you are not inheriting from <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A>, these names simply denote procedures that you must provide.</P>
 
 		<H2>REGULAR EXPRESSIONS</H2>
 
-		<P>The Lex library supports a powerful set of construction mechanisms for describing the various types of tokens present in common languages such as programming languages, specification languages or just text formats. These mechanisms are called regular expressions; any regular expression describes a set of possible tokens, called the specimens of the regular expression.</P>
+		<P>The Lex library supports a powerful set of construction mechanisms for describing the various types of tokens present in common languages such as programming languages, specification languages or just text formats. These mechanisms are called <B>regular expressions</B>; any regular expression describes a set of possible tokens, called the <B>specimens</B> of the regular expression.</P>
 
-		<P>Let us now study the format of regular expressions. This format is used in particular for the lexical grammar files needed by class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A> and (as seen below) by procedure read_grammar of class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A>.Theeiffel_regular grammar file in the examples directory provides an extensive example.</P>
+		<P>Let us now study the format of regular expressions. This format is used in particular for the lexical grammar files needed by class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A> and (as seen below) by procedure <A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_read_grammar">read_grammar</A> of class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A>. The <I>eiffel_regular</I> grammar file in the examples directory provides an extensive example.</P>
 
 		<P>Each regular expression denotes a set of tokens. For example, the first regular expression seen above,<BR>
 		<CODE>'0'..'9'</CODE><BR>
@@ -275,7 +273,7 @@ end_analysis</PRE></CODE>
 
 		<H3>Basic expressions</H3>
 
-		<P>A character expression, written 'character' where character is a single character, describes a set of tokens with just one element: the one-character token character.For example, '0' describes the set containing the single-digit single token 0.</P>
+		<P>A character expression, written <I>'character'</I> where <I>character</I> is a single character, describes a set of tokens with just one element: the one-character token character. For example, <I>'0'</I> describes the set containing the single-digit single token <I>0</I>.</P>
 
 		<P>Cases in which character is not a printable character use the following conventions:
 
@@ -391,7 +389,7 @@ end_analysis</PRE></CODE>
 		... Other reserved words ...
 		</CODE>
 
-		<P CLASS="warning"><B>Caution</B>: every keyword in the keyword section must be a specimen of one of the token types defined for the grammar, and that token type must be the last one defined in the lexical grammar file, just before the Keywords line. So in Eiffel where the keywords have the same lexical structure as identifiers, the last line before the keywords must be the definition of the token type Identifier, as shown above.</P>
+		<P CLASS="warning"><B>Caution</B>: every keyword in the keyword section must be a specimen of one of the token types defined for the grammar, and that token type must be the last one defined in the lexical grammar file, just before the <I><B>Keywords</B></I> line. So in Eiffel where the keywords have the same lexical structure as identifiers, the last line before the keywords must be the definition of the token type <I>Identifier</I>, as shown above.</P>
 
 		<P CLASS="note"><B>Note</B>: the rule that all keywords must be specimens of one token type is a matter of convenience and simplicity, and only applies if you are using <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A> and lexical grammar files. There is no such restriction if you rely directly on the more general facilities provided by <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A> or <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lex_builder_chart.html">LEX_BUILDER</A>. Then different keywords may be specimens of different regular expressions; you will have to specify the token type of every keyword, as explained later in this chapter.</P>
 
@@ -419,9 +417,9 @@ end_analysis</PRE></CODE>
 
 		<P>The inverse call, corresponding to the default rule, is</P>
 
-		<CODE><A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_keywords_ignore_case">keywords_distinguish_case</A></CODE>
+		<CODE><A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_keywords_ignore_case">keywords_ignore_case</A></CODE>
 
-		<P>Either of these calls must be executed before you define any keywords; if you are using <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A>, this means before calling procedure build. Once set, the keyword case-sensitivity policy cannot be changed.</P>
+		<P>Either of these calls must be executed before you define any keywords; if you are using <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A>, this means before calling procedure <A CLASS="efeature" HREF="/libraries/lex/reference/lex/scanning.html#f_build">build</A>. Once set, the keyword case-sensitivity policy cannot be changed.</P>
 
 		<H2>USING <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A> TO BUILD A LEXICAL ANALYZER</H2>
 
@@ -436,20 +434,20 @@ end_analysis</PRE></CODE>
 		<P>The following extract from a typical descendant of <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A> illustrates the process of building a lexical analyzer in this way:</P>
 
 		<CODE>
-		Upper_identifier, Lower_identifier, Decimal_constant, Octal_constant, Word: INTEGER is unique<BR>
-		...<BR>
-		distinguish_case<BR>
-		keywords_distinguish_case<BR>
-		put_expression ("+('0'..'7'"), Octal_constant, "Octal")<BR>
-		put_expression ("'a'..'z' *('a'..'z'|'0'..'9'|'_')", Lower_identifier, "Lower")<BR>
-		put_expression ("'A'..'Z' *('A'..'Z'|'0'..'9'|'_' )", Upper_identifier, "Upper")<BR>
-		dollar_w (Word)<BR>
-		...<BR>
-		put_keyword ("begin", Lower_identifier)<BR>
-		put_keyword ("end", Lower_identifier)<BR>
-		put_keyword ("THROUGH", Upper_identifier)<BR>
-		...<BR>
-		make_analyzer<BR>
+		<SPAN CLASS="efeature">Upper_identifier</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="efeature">Lower_identifier</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="efeature">Decimal_constant</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="efeature">Octal_constant</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="efeature">Word</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="ekeyword">unique</SPAN><BR>
+		<SPAN CLASS="esymbol">...</SPAN><BR>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_distinguish_case">distinguish_case</A><BR>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_keywords_distinguish_case">keywords_distinguish_case</A><BR>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_put_expression">put_expression</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"+('0'..'7'"</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="efeature">Octal_constant</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="estring">"Octal"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_put_expression">put_expression</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"'a'..'z' *('a'..'z'|'0'..'9'|'_')"</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="efeature">Lower_identifier</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="estring">"Lower"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_put_expression">put_expression</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"'A'..'Z' *('A'..'Z'|'0'..'9'|'_' )"</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="efeature">Upper_identifier</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="estring">"Upper"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		<SPAN CLASS="efeature">dollar_w</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="efeature">Word</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		<SPAN CLASS="esymbol">...</SPAN><BR>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_put_keyword">put_keyword</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"begin"</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="efeature">Lower_identifier</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_put_keyword">put_keyword</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"end"</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="efeature">Lower_identifier</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_put_keyword">put_keyword</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"THROUGH"</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="efeature">Upper_identifier</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		<SPAN CLASS="esymbol">...</SPAN><BR>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_make_analyzer">make_analyzer</A><BR>
 		</CODE>
 
 		<P>This example follows the general scheme of building a lexical analyzer with the features of <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A>, in a class that will normally be a descendant of <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A>:</P>
@@ -458,46 +456,46 @@ end_analysis</PRE></CODE>
 			<LI>Set options, such as case sensitivity.</LI>
 			<LI>Record regular expressions.</LI>
 			<LI>Record keywords (this may be interleaved with step 2.)</LI>
-			<LI>"Freeze" the analyzer by a call to <A CLASS="efeature">make_analyzer</A>.</LI>
+			<LI>"Freeze" the analyzer by a call to <A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_make_analyzer">make_analyzer</A>.</LI>
 		</OL>
 
 		<P>To perform steps 2 to 4 in a single shot and generate a lexical analyzer from a lexical grammar file, as with <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A>, you may use the procedure</P>
 
 		<CODE>
-		<A CLASS="efeature">read_grammar</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">grammar_file_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass">STRING</A><SPAN CLASS="esymbol">)</SPAN>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_read_grammar">read_grammar</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">grammar_file_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
 		</CODE>
 
-		<P>In this case all the expressions and keywords are taken from the file of name <SPAN CLASS="elocal">grammar_file_name</SPAN> rather than passed explicitly as arguments to the procedures of the class. You do not need to call <A CLASS="efeature">make_analyzer</A>, since <A CLASS="efeature">read_grammar</A> includes such a call.</P>
+		<P>In this case all the expressions and keywords are taken from the file of name <SPAN CLASS="elocal">grammar_file_name</SPAN> rather than passed explicitly as arguments to the procedures of the class. You do not need to call <A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_make_analyzer">make_analyzer</A>, since <A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_read_grammar">read_grammar</A> includes such a call.</P>
 
-		<P>The rest of this discussion assumes that the four steps are executed individually as shown above, rather than as a whole using <A CLASS="efeature">read_grammar</A>.
+		<P>The rest of this discussion assumes that the four steps are executed individually as shown above, rather than as a whole using <A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_read_grammar">read_grammar</A>.
 
 		<H3>Recording token types and regular expressions</H3>
 
 		<P>As shown by the example, each token type, defined by a regular expression, must be assigned an integer code. Here the developer has chosen to use Unique constant values so as not to worry about selecting values for these codes manually, but you may select any values that are convenient or mnemonic. The values have no effect other than enabling you to keep track of the various lexical categories. Rather than using literal values directly, it is preferable to rely on symbolic constants, Unique or not, which will be more mnemonic.</P>
 
-		<P>Procedure <A CLASS="efeature">put_expression</A> records a regular expression. The first argument is the expression itself, given as a string built according to the rules seen earlier in this chapter. The second argument is the integer code for the expression. The third argument is a string which gives a name identifying the expression. This is useful mostly for debugging purposes; there is also a procedure <A CLASS="efeature">put_nameless_expression</A> which does not have this argument and is otherwise identical to <A CLASS="efeature">put_expression</A>.</P>
+		<P>Procedure <A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_put_expression">put_expression</A> records a regular expression. The first argument is the expression itself, given as a string built according to the rules seen earlier in this chapter. The second argument is the integer code for the expression. The third argument is a string which gives a name identifying the expression. This is useful mostly for debugging purposes; there is also a procedure <A CLASS="efeature" HREF="/libraries/lex/reference/lex/high_builder.html#f_put_nameless_expression">put_nameless_expression</A> which does not have this argument and is otherwise identical to <A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_put_expression">put_expression</A>.</P>
 
 		<P>Procedure <A CLASS="efeature">dollar_w</A> corresponds to the <I><B>$W</B></I> syntax for regular expressions. Here an equivalent call would have been</P>
 
 		<CODE>
-		<A CLASS="efeature">put_nameless_expression</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"$W"</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature">Word</A><SPAN CLASS="esymbol">)</SPAN>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/lex/high_builder.html#f_put_nameless_expression">put_nameless_expression</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"$W"</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature">Word</A><SPAN CLASS="esymbol">)</SPAN>
 		</CODE>
 
-		<P>Procedure <A CLASS="efeature">declare_keyword</A> records a keyword. The first argument is a string containing the keyword; the second argument is the regular expression of which the keyword must be a specimen. The example shows that here - in contrast with the rule enforced by <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A> - not all keywords need be specimens of the same regular expression.</P>
+		<P>Procedure <SPAN CLASS="efeature">declare_keyword</SPAN> records a keyword. The first argument is a string containing the keyword; the second argument is the regular expression of which the keyword must be a specimen. The example shows that here - in contrast with the rule enforced by <A CLASS="eclass" HREF="/libraries/lex/reference/lex/scanning_chart.html">SCANNING</A> - not all keywords need be specimens of the same regular expression.</P>
 
 		<P>The calls seen so far record a number of regular expressions and keywords, but do not give us a lexical analyzer yet. To obtain a usable lexical analyzer, you must call</P>
 
 		<CODE>
-		<A CLASS="efeature">make_analyzer</A>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_make_analyzer">make_analyzer</A>
 		</CODE>
 
-		<P>After that call, you may not record any new regular expression or keyword. The analyzer is usable through attribute <A CLASS="efeature">analyzer</A>.
+		<P>After that call, you may not record any new regular expression or keyword. The analyzer is usable through attribute <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_analyzer">analyzer</A>.
 
-		<P CLASS="note"><B>Note</B>: for readers knowledgeable in the theory of lexical analysis: one of the most important effects of the call to <A CLASS="efeature">make_analyzer</A> is to transform the non-deterministic finite automaton resulting from calls such as the ones above into a deterministic finite automaton.</P>
+		<P CLASS="note"><B>Note</B>: for readers knowledgeable in the theory of lexical analysis: one of the most important effects of the call to <A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_make_analyzer">make_analyzer</A> is to transform the non-deterministic finite automaton resulting from calls such as the ones above into a deterministic finite automaton.</P>
 
-		<P>Remember that if you use procedure <A CLASS="efeature">read_grammar</A>, you need not worry about <A CLASS="efeature">make_analyzer</A>, as the former procedure calls the latter.
+		<P>Remember that if you use procedure <A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_read_grammar">read_grammar</A>, you need not worry about <A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_make_analyzer">make_analyzer</A>, as the former procedure calls the latter.
 
-		<P>Another important feature of class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A> is procedure <A CLASS="efeature">store_analyzer</A>, which stores the analyzer into a file whose name is passed as argument, for use by later lexical analysis sessions. To retrieve the analyzer, simply use procedure <A CLASS="efeature">retrieve_analyzer</A>, again with a file name as argument.</P>
+		<P>Another important feature of class <A CLASS="eclass" HREF="/libraries/lex/reference/lex/metalex_chart.html">METALEX</A> is procedure <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_store_analyzer">store_analyzer</A>, which stores the analyzer into a file whose name is passed as argument, for use by later lexical analysis sessions. To retrieve the analyzer, simply use procedure <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_retrieve_analyzer">retrieve_analyzer</A>, again with a file name as argument.</P>
 
 		<H2>BUILDING A LEXICAL ANALYZER WITH <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lex_builder_chart.html">LEX_BUILDER</A></H2>
 
@@ -510,51 +508,62 @@ end_analysis</PRE></CODE>
 		<P>For the complete list of available procedures, refer to the flat-short form of the class; there is one procedure for every category of regular expression studied earlier in this chapter. Two typical examples of calls are:</P>
 
 		<CODE>
-		<A CLASS="efeature">interval</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="echar">'a'</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="echar">'z'</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_interval">interval</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="echar">'a'</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="echar">'z'</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ecomment">-- Create an interval tool</SPAN><BR><BR>
-		<A CLASS="efeature">union</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature">Letter</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature">Underlined</A><SPAN CLASS="esymbol">)</SPAN><BR>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_union">union</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature">Letter</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature">Underlined</A><SPAN CLASS="esymbol">)</SPAN><BR>
 		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ecomment">-- Create a union tool</SPAN>
 		</CODE>
 
-		<P>Every such procedure call also assigns an integer index to the tool it creates; this number is available through the attribute <A CLASS="efeature">last_created_tool</A>. You will need to record it into an integer entity, for example <I>Identifier</I> or <I>Letter</I>.
+		<P>Every such procedure call also assigns an integer index to the tool it creates; this number is available through the attribute <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_last_created_tool">last_created_tool</A>. You will need to record it into an integer entity, for example <I>Identifier</I> or <I>Letter</I>.
 
 		<H3>An example</H3>
 
 		<P>The following extract from a typical descendant of <A CLASS="eclass" HREF="/libraries/lex/reference/lex/lex_builder_chart.html">LEX_BUILDER</A> illustrates how to create a tool representing the identifiers of an Eiffel-like language.</P>
 
-		<CODE><PRE>
-Identifier, Letter, Digit, Underlined, Suffix, Suffix_list: INTEGER
+		<CODE>
+		<SPAN CLASS="efeature">Identifier</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="efeature">Letter</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="efeature">Digit</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="efeature">Underlined</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="efeature">Suffix</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="efeature">Suffix_list</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><BR>
+		<BR>
+		<SPAN CLASS="efeature">build_identifier</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">do</SPAN><BR>
 
-build_identifier is
-	do
-		interval ('a', 'z'); Letter := last_created_tool
-		interval ('0', '9'); Digit := last_created_tool
-		interval ('_', '_'); Underlined := last_created_tool
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_interval">interval</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="echar">'a'</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="echar">'z'</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">;</SPAN>
+		<SPAN CLASS="efeature">Letter</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_last_created_tool">last_created_tool</A><BR>
 
-		union (Digit, Underlined); Suffix := last_created_tool
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_interval">interval</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="echar">'0'</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="echar">'9'</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">;</SPAN>
+		<SPAN CLASS="efeature">Digit</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_last_created_tool">last_created_tool</A><BR>
 
-		iteration (Suffix); Suffix_list := last_created_tool
-		append (Letter, Suffix_list); Identifier := last_created_tool
-	end</PRE></CODE>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_interval">interval</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="echar">'_'</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="echar">'_'</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">;</SPAN>
+		<SPAN CLASS="efeature">Underlined</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_last_created_tool">last_created_tool</A><BR>
 
-		<P>Each token type is characterized by a number in the <A CLASS="efeature">tool_list</A>. Each tool has a name, recorded in <A CLASS="efeature">tool_names</A>, which gives a readable form of the corresponding regular expression. You can use it to check that you are building the right tool.
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_union">union</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="efeature">Digit</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="efeature">Underlined</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">;</SPAN>
+		<SPAN CLASS="efeature">Suffix</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_last_created_tool">last_created_tool</A><BR>
+
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_iteration">iteration</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="efeature">Suffix</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">;</SPAN>
+		<SPAN CLASS="efeature">Suffix_list</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_last_created_tool">last_created_tool</A><BR>
+
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_append">append</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="efeature">Letter</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="efeature">Suffix_list</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">;</SPAN>
+		<SPAN CLASS="efeature">Identifier</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_last_created_tool">last_created_tool</A><BR>
+
+		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">end</SPAN></CODE>
+
+		<P>Each token type is characterized by a number in the <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_tool_list">tool_list</A>. Each tool has a name, recorded in <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_tool_names">tool_names</A>, which gives a readable form of the corresponding regular expression. You can use it to check that you are building the right tool.
 
 		<H3>Selecting visible tools</H3>
 
-		<P>In the preceding example, only some of the tools, such as <A CLASS="efeature">Identifier</A>, are of interest to the clients. Others, such as <A CLASS="efeature">Suffix</A> and <A CLASS="efeature">Suffix_list</A>, only play an auxiliary role.</P>
+		<P>In the preceding example, only some of the tools, such as <I>Identifier</I>, are of interest to the clients. Others, such as <I>Suffix</I> and <I>Suffix_list</I>, only play an auxiliary role.</P>
 
-		<P>When you create a tool, it is by default invisible to clients. To make it visible, use procedure <A CLASS="efeature">select_tool</A>. Clients will need a number identifying it; to set this number, use procedure associate. For example the above extract may be followed by:</P>
+		<P>When you create a tool, it is by default invisible to clients. To make it visible, use procedure <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_select_tool">select_tool</A>. Clients will need a number identifying it; to set this number, use procedure <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_associate">associate</A>. For example the above extract may be followed by:</P>
 
 		<CODE>
-		select_tool (Identifier)<BR>
-		associate (Identifier, 34)<BR>
-		put_keyword ("class", Identifier)<BR>
-		put_keyword ("end", Identifier)<BR>
-		put_keyword ("feature", Identifier)<BR>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_select_tool">select_tool</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="efeature">Identifier</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_associate">associate</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="efeature">Identifier</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="enumber">34</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_put_keyword">put_keyword</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"class"</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="efeature">Identifier</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_put_keyword">put_keyword</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"end"</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="efeature">Identifier</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_put_keyword">put_keyword</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"feature"</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="efeature">Identifier</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 		</CODE>
 
-		<P>If the analysis encounters a token that belongs to two or more different selected regular expressions, the one entered last takes over. Others are recorded in the array <A CLASS="efeature">other_possible_tokens</A>.</P>
+		<P>If the analysis encounters a token that belongs to two or more different selected regular expressions, the one entered last takes over. Others are recorded in the array <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lexical.html#f_other_possible_tokens">other_possible_tokens</A>.</P>
 
-		<P>If you do not explicitly give an integer value to a regular expression, its default value is its rank in <A CLASS="efeature">tool_list</A>.
+		<P>If you do not explicitly give an integer value to a regular expression, its default value is its rank in <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_tool_list">tool_list</A>.
 	</BODY>
 </HTML>

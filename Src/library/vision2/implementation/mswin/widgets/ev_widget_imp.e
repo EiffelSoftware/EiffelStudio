@@ -39,6 +39,8 @@ inherit
 			Key_up as Key_up_arrow
 		end
 
+	EV_WIDGET_ACTION_SEQUENCES_IMP
+
 	WEL_WINDOWS_ROUTINES
 		export
 			{NONE} all
@@ -54,28 +56,6 @@ inherit
 			{NONE} all
 		end
 	
-	WEL_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_HT_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_WM_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_TME_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	EV_WIDGET_ACTION_SEQUENCES_IMP
-
 feature {NONE} -- Initialization
 
 	initialize  is
@@ -290,7 +270,7 @@ feature -- Status report
 	is_show_requested: BOOLEAN is
 			-- Is `Current' displayed in its parent?
 		do
-			Result := flag_set (style, Wel_window_constants.Ws_visible)
+			Result := flag_set (style, feature {WEL_WINDOW_CONSTANTS}.Ws_visible)
 		end
 
 	managed: BOOLEAN is true
@@ -333,7 +313,7 @@ feature -- Status setting
 		local
 			p_imp: like parent_imp
 		do
-			show_window (wel_item, Wel_window_constants.Sw_show)
+			show_window (wel_item, feature {WEL_WINDOW_CONSTANTS}.Sw_show)
 			p_imp := parent_imp
 			if p_imp /= Void then
 				p_imp.notify_change (Nc_minsize, Current)
@@ -345,7 +325,7 @@ feature -- Status setting
 		local
 			p_imp: like parent_imp
 		do
-			show_window (wel_item, Wel_window_constants.Sw_hide)
+			show_window (wel_item, feature {WEL_WINDOW_CONSTANTS}.Sw_hide)
 			p_imp := parent_imp
 			if p_imp /= Void then
 				p_imp.notify_change (Nc_minsize, Current)
@@ -642,7 +622,7 @@ feature {NONE} -- Implementation
 			-- Process `msg' which has not been processed by
 			-- `process_message'.
 		do
-			if msg = Wm_mouseleave then
+			if msg = (feature {WEL_WINDOW_CONSTANTS}.Wm_mouseleave) then
 				on_mouse_leave
 				Cursor_on_widget.put (Void)
 			end
@@ -695,7 +675,7 @@ feature {NONE} -- Implementation
 					-- message when the pointer leaves `Current'. 
 				create track_mouse.make
 				track_mouse.set_hwndtrack (wel_item)
-				track_mouse.set_dwflags (tme_leave)
+				track_mouse.set_dwflags (feature {WEL_TME_CONSTANTS}.tme_leave)
 				track_mouse_successful := track_mouse_event (track_mouse)
 				check
 					mouse_successfully_tracking: track_mouse_successful = True
@@ -915,7 +895,7 @@ feature {NONE} -- Implementation, cursor of the widget
 			if application_imp.pick_and_drop_source /= Void then
 				disable_default_processing	
 			elseif
-				(hit_code = Htnowhere or else hit_code = Htclient)
+				(hit_code = (feature {WEL_HT_CONSTANTS}.Htnowhere) or else hit_code = (feature {WEL_HT_CONSTANTS}.Htclient))
 				and then cursor_pixmap /= Void
 			then
 				cursor_imp ?= cursor_pixmap.implementation
@@ -1061,7 +1041,7 @@ feature -- Deferred features
 		do
 			Result := background_color_imp
 			if Result = Void then
-				create Result.make_system (Wel_color_constants.Color_btnface)
+				create Result.make_system (feature {WEL_COLOR_CONSTANTS}.Color_btnface)
 			end
 		end
 

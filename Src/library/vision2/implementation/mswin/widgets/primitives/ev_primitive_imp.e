@@ -112,10 +112,10 @@ feature -- Basic operations
 			-- widget. Need to be called in the feature on_key_down when the
 			-- control needs to process this kind of keys.
 		do
-			if virtual_key = Wel_input_constants.Vk_tab and then 
-				flag_set (style, Wel_window_constants.Ws_tabstop)
+			if virtual_key = (feature {WEL_INPUT_CONSTANTS}.Vk_tab) and then 
+				flag_set (style, feature {WEL_WINDOW_CONSTANTS}.Ws_tabstop)
 			then
-				tab_action (not key_down (Wel_input_constants.Vk_shift))
+				tab_action (not key_down (feature {WEL_INPUT_CONSTANTS}.Vk_shift))
 			end
 		end
 
@@ -124,11 +124,11 @@ feature -- Basic operations
 			-- widget. Need to be called in the feature on_key_down when the
 			-- control need to process this kind of keys.
 		do
-			if virtual_key = Wel_input_constants.Vk_tab then
-				tab_action (not key_down (Wel_input_constants.Vk_shift))
-			elseif virtual_key = Wel_input_constants.Vk_down then
+			if virtual_key = (feature {WEL_INPUT_CONSTANTS}.Vk_tab) then
+				tab_action (not key_down (feature {WEL_INPUT_CONSTANTS}.Vk_shift))
+			elseif virtual_key = (feature {WEL_INPUT_CONSTANTS}.Vk_down) then
 				arrow_action (True)
-			elseif virtual_key = Wel_input_constants.Vk_up then
+			elseif virtual_key = (feature {WEL_INPUT_CONSTANTS}.Vk_up) then
 				arrow_action (False)
 			end
 		end

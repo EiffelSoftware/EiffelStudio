@@ -36,26 +36,11 @@ inherit
 
 	EV_SHARED_GDI_OBJECTS
 
-	WEL_ODT_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_TVN_CONSTANTS
-		export
-			{NONE} all
-		end
-
 	WEL_HWND_CONSTANTS
 		export
 			{NONE} all
 		end
 
-	WEL_LIST_VIEW_CONSTANTS
-		export
-			{NONE} all
-		end
-		
 	EV_MENU_CONTAINER_IMP
 		export
 			{NONE} all
@@ -69,12 +54,12 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'. Precusor and create new_item_actions.
 		do
 			create radio_group.make
-			new_item_actions.extend (~disable_widget_sensitivity)
-			new_item_actions.extend (~add_radio_button)
-			new_item_actions.extend (~update_tab_ordering_for_dialog)
+			new_item_actions.extend (agent disable_widget_sensitivity)
+			new_item_actions.extend (agent add_radio_button)
+			new_item_actions.extend (agent update_tab_ordering_for_dialog)
 			create remove_item_actions
-			remove_item_actions.extend (~enable_widget_sensitivity)
-			remove_item_actions.extend (~remove_radio_button)
+			remove_item_actions.extend (agent enable_widget_sensitivity)
+			remove_item_actions.extend (agent remove_radio_button)
 			Precursor {EV_WIDGET_IMP}
 		end
 
@@ -366,7 +351,7 @@ feature {NONE} -- WEL Implementation
 			tree: EV_TREE_IMP
 			tooltip: WEL_TOOLTIP
 		do
-			if info.code = Tvn_getinfotip then
+			if info.code = (feature {WEL_TVN_CONSTANTS}.Tvn_getinfotip) then
 					-- Create the relevent WEL_TOOLTIP_TEXT.
 				create tooltip_text.make_by_nmhdr (info)
 					-- Retrieve tree view get info tip structure.
@@ -389,7 +374,7 @@ feature {NONE} -- WEL Implementation
 						tooltip_text.set_text (temp_node.tooltip)
 					end
 				end
-			elseif info.code = Lvn_marqueebegin then
+			elseif info.code = (feature {WEL_LIST_VIEW_CONSTANTS}.Lvn_marqueebegin) then
 					-- A message has been received from an EV_LIST notifying
 					-- us that a bounding box selection is beginning. We
 					-- return 1 to override this behaviour.

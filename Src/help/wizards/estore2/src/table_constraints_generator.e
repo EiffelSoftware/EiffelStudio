@@ -17,6 +17,19 @@ class
 inherit
 	WIZARD_SPECIFIC
 
+create
+	make
+
+feature -- Initialization
+
+	make is
+			-- Initialize.
+		do
+			create db_subset_selection.make (db_manager)
+			db_subset_selection.set_object (create {USER_CONSTRAINTS}.make)
+			db_subset_selection.set_extract_function (~table_name_from_user_constraints)
+		end
+
 feature -- Status report
 
 	repository_set: BOOLEAN is
@@ -26,6 +39,12 @@ feature -- Status report
 			Result := table_name /= Void
 		end
 		
+	scope_tables_set: BOOLEAN is
+			-- Are scope tables set?
+		do
+			Result := db_subset_selection.valid_values /= Void
+		end
+
 	generated: BOOLEAN
 			-- Have constraint definitions been generated?
 	
@@ -86,11 +105,23 @@ feature -- Basic operations
 			not_generated: not generated
 		end
 
+	set_scope_tables (s_scope_tables: ARRAYED_LIST [STRING]) is
+			-- Set `rep_list' table names as tables seen by the table which
+			-- constraints will be generated.
+		require
+			not_void: s_scope_tables /= Void
+		do
+			db_subset_selection.set_valid_values (s_scope_tables)
+		ensure
+			scope_tables_set: scope_tables_set
+		end
+
 	generate is
 			-- Generate table constraints description using
 			-- repository.
 		require
 			repository_set: repository_set
+			scope_tables_set: scope_tables_set
 		do
 			generate_to_create_ht
 			generate_id_name
@@ -104,6 +135,9 @@ feature {NONE} -- Implementation
 
 	table_name: STRING
 			-- Table name.
+	
+	scope_tables: ARRAYED_LIST [STRING]
+			-- Names of tables seen by the table.
 	
 	constraint_information (constraint_id: STRING): USER_CONS_COLUMNS is
 			-- Constraint information of constraint with `constraint_id'.
@@ -126,26 +160,20 @@ feature {NONE} -- Implementation
 
 	constraints_from_type_and_table (c_type, table: STRING): ARRAYED_LIST [USER_CONSTRAINTS] is
 			-- Constraint list matching `type' and `table'.
-		local
-			obj: USER_CONSTRAINTS
-			q: STRING
 		do
-			create obj.make
-			q := select_with_type_and_table (c_type, table)
-			Result := db_manager.load_list_with_select (q, obj)
+			db_subset_selection.set_query (select_with_type_and_table (c_type, table))
+			db_subset_selection.load_result
+			Result := db_subset_selection.database_result_list
 		end
-		
+
 	constraints_from_foreign_key_ref (ref_constraint_name: STRING): ARRAYED_LIST [USER_CONSTRAINTS] is
 			-- List of constraints referencing `ref_constraint_name'.
-		local
-			obj: USER_CONSTRAINTS
-			q: STRING
 		do
-			create obj.make
-			q := select_with_ref_constraint_name (ref_constraint_name)
-			Result := db_manager.load_list_with_select (q, obj)
+			db_subset_selection.set_query (select_with_ref_constraint_name (ref_constraint_name))
+			db_subset_selection.load_result
+			Result := db_subset_selection.database_result_list
 		end
-	
+
 	select_with_constraint_name (cons_name: STRING): STRING is
 			-- Select query on table USER_CONS_COLUMNS qualified
 			-- by 'constraint_name'.
@@ -219,12 +247,11 @@ feature {NONE} -- Implementation
 				to_create_ht := Odbc_message
 			end
 		end
-		
+
 	generate_id_name is
 			-- Generate `id_name'.
 		local
 			cons_list: ARRAYED_LIST [USER_CONSTRAINTS]
-			cons_descr: USER_CONS_COLUMNS
 		do
 				-- Assume that there is no ID constraint.
 			id_constraint := Void
@@ -239,7 +266,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	generate_to_delete_ht is
 			-- Generate description of `to_delete_htable'.
 		local
@@ -283,13 +310,13 @@ feature {NONE} -- Implementation
 				to_delete_ht := Odbc_message
 			end
 		end
-		
+
 	Odbc_message: STRING is "-- Please enter definition here.%N"
 			-- Message for ODBC.
-	
+
 	No_id: STRING is "No_id"
 			-- No ID value.
-			
+
 	to_initcap (string: STRING) is
 			-- Change lower case `string' to `string' with initial capital character.
 		require
@@ -301,5 +328,18 @@ feature {NONE} -- Implementation
 			initial := initial.upper
 			string.put (initial, 1)
 		end
+
+	db_subset_selection: DB_SUBSET_SELECTION [USER_CONSTRAINTS, STRING]
+			-- Tool to carry out database selection with a criterion constraint.
+
+	table_name_from_user_constraints (uc: USER_CONSTRAINTS): STRING is
+			-- Extracts table name frmo user constraints.
+		do
+			Result := uc.table_name
+			Result.to_upper
+		end
+
+invariant
+	db_subset_selection_created: db_subset_selection /= Void
 
 end -- class TABLE_CONSTRAINTS_GENERATOR

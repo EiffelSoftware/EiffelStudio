@@ -26,6 +26,11 @@ extern "C" {
 #define SOLVED 		1		/* Flag for solved reference in a rt_struct struture */
 #define UNSOLVED	0		/* ........ an unsolved ............................ */
 
+/* Internal representation of the different kinds of storage */
+#define BASIC_STORE '\0'
+#define GENERAL_STORE '\01'
+#define INDEPENDENT_STORE '\02'
+
 /*
  * In case of an unsolved reference, a structure rt_cell contain the
  * description of it, i.e the key in the hash table where the parent 

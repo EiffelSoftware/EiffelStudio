@@ -49,11 +49,6 @@
 
 /*#define DEBUG 1 /**/
 
-/* Internal representation of the different kinds of storage */
-#define BASIC_STORE '\0'
-#define GENERAL_STORE '\01'
-#define INDEPENDENT_STORE '\02'
-
 /* Size of the buffer to retrieve an object */
 #define RETRIEVE_BUFFER_SIZE 262144L
 

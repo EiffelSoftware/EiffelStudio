@@ -314,13 +314,12 @@ feature -- Basic operations
 			-- Destroy the window and quit the application
 			-- if `Current' is the application's main window.
 		do
-			exists := False
-			unregister_window (Current)
 			if application_main_window.is_application_main_window (Current) then
 				cwin_post_quit_message (0)
 			else
 				cwin_destroy_window (item)
 			end
+			destroy_item
 		end
 
 	draw_menu is
@@ -864,8 +863,7 @@ feature {NONE} -- Implementation
 			-- application's main window.
 		do
 			on_destroy
-			exists := False
-			unregister_window (Current)
+			destroy_item
 			if application_main_window.is_application_main_window (Current) then
 				cwin_post_quit_message (0)
 			end

@@ -31,10 +31,14 @@ inherit
 		redefine
 			interface,
 			list_widget,
-			visual_widget
+			visual_widget,
+			add_to_container,
+			remove_i_th
 		end
 	
 	EV_LIST_ITEM_LIST_ACTION_SEQUENCES_IMP
+	
+	EV_KEY_CONSTANTS
 
 feature {NONE} -- Initialization
 
@@ -77,9 +81,14 @@ feature {NONE} -- Initialization
 				Void
 			)
 			temp_sig_id := c_signal_connect (
-					visual_widget,
-					eiffel_to_c ("button-press-event"),
-					~list_press
+					list_widget,
+					eiffel_to_c ("leave-notify-event"),
+					~set_is_out (True)
+			)
+			temp_sig_id := c_signal_connect (
+					list_widget,
+					eiffel_to_c ("enter-notify-event"),
+					~set_is_out (False)
 			)
 			temp_sig_id := c_signal_connect (
 					visual_widget,
@@ -91,9 +100,14 @@ feature {NONE} -- Initialization
 					eiffel_to_c ("focus-out-event"),
 					~lose_focus
 			)
+			temp_sig_id := c_signal_connect (
+					visual_widget,
+					eiffel_to_c ("button-press-event"),
+					~on_list_clicked
+			)
 			gtk_widget_set_flags (visual_widget, C.GTK_CAN_FOCUS_ENUM)
 		end
-
+		
 	select_callback (n_args: INTEGER; args: POINTER) is
 			-- Called when a list item is selected.
 		require
@@ -115,29 +129,7 @@ feature {NONE} -- Initialization
 			--	C.set_gtk_adjustment_struct_value (v_adjustment, item_alloc_y)
 			--	C.gtk_scrolled_window_set_vadjustment (c_object, v_adjustment)
 			--end
-			if previous_selected_item_imp /= Void and then
-			previous_selected_item_imp.parent = interface and then
-			previous_selected_item_imp /= l_item then
-				if previous_selected_item_imp.deselect_actions_internal /= Void then
-					previous_selected_item_imp.deselect_actions_internal.call ([])
-				end
-			end
-			
-			if l_item.parent /= Void and then l_item.is_selected then
-					-- Parent check due to bug in combo box.
-				if l_item.select_actions_internal /= Void then
-					l_item.select_actions_internal.call ([])
-				end
-				if select_actions_internal /= Void then
-					select_actions_internal.call ([l_item.interface])
-				end
-				previous_selected_item_imp := l_item
-			elseif l_item.parent /= Void then
-				if deselect_actions_internal /= Void then
-					deselect_actions_internal.call ([l_item.interface])
-				end
-				previous_selected_item_imp := Void
-			end		
+			call_select_actions (l_item)
 		end
 
 	deselect_callback (n_args: INTEGER; args: POINTER) is
@@ -187,6 +179,12 @@ feature -- Status report
 			if list_pointer /= NULL then
 				Result := C.g_list_length (list_pointer) > 0
 			end
+		end
+		
+	has_focus: BOOLEAN is
+			-- Does the list have the focus?
+		do
+			Result := internal_has_focus
 		end
 
 feature -- Status setting
@@ -252,56 +250,165 @@ feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 	
 feature {NONE} -- Implementation
 
-	list_press is
+	call_select_actions (selected_item_imp: EV_LIST_ITEM_IMP) is
+			-- Call `select_actions'.
+		do
+			if previous_selected_item_imp /= Void and then
+				previous_selected_item_imp.parent = interface and then
+				previous_selected_item_imp /= selected_item_imp then
+				if previous_selected_item_imp.deselect_actions_internal /= Void then
+					previous_selected_item_imp.deselect_actions_internal.call ([])
+				end
+			end
+			
+			if selected_item_imp.parent /= Void and then selected_item_imp.is_selected then
+					-- Parent check due to bug in combo box.
+				if selected_item_imp.select_actions_internal /= Void then
+					selected_item_imp.select_actions_internal.call ([])
+				end
+				if select_actions_internal /= Void then
+					select_actions_internal.call ([selected_item_imp.interface])
+				end
+				previous_selected_item_imp := selected_item_imp
+			elseif selected_item_imp.parent /= Void then
+				if deselect_actions_internal /= Void then
+					deselect_actions_internal.call ([selected_item_imp.interface])
+				end
+				previous_selected_item_imp := Void
+			end
+		end
+
+	remove_i_th (an_index: INTEGER) is
+		local
+			f_i: EV_LIST_ITEM
+			item_imp: EV_LIST_ITEM_IMP
+		do
+			f_i := focused_item
+			if f_i /= Void and then f_i.is_equal (i_th (an_index)) then
+				list_has_been_clicked := True
+				if count > 1 then
+					if index < count then
+						item_imp ?= i_th (index + 1).implementation
+					else
+						item_imp ?= i_th (index - 1).implementation
+					end
+					item_imp.set_focus
+					Precursor (an_index)
+				else
+					Precursor (an_index)
+					set_focus
+				end
+				list_has_been_clicked := False
+			else
+				Precursor (an_index)
+			end
+		end
+		
+	add_to_container (v: like item) is
+			-- Add `v' to end of list.
+			-- (from EV_ITEM_LIST_IMP)
+			-- (export status {NONE})
+		local
+			v_imp: EV_ITEM_IMP
+			temp_sig_id: INTEGER
+		do
+			v_imp ?= v.implementation
+			check
+				v_imp_not_void: v_imp /= void
+			end
+			C.gtk_container_add (list_widget, v_imp.c_object)
+--			gtk_widget_unset_flags (v_imp.c_object, C.GTK_CAN_FOCUS_ENUM)
+			temp_sig_id := c_signal_connect (
+				v_imp.c_object,
+				eiffel_to_c ("button-press-event"),
+				~on_item_clicked
+				)
+			temp_sig_id := c_signal_connect (
+				v_imp.c_object,
+				eiffel_to_c ("focus-out-event"),
+				~lose_focus
+				)
+			real_signal_connect (
+				v_imp.c_object,
+				"key-press-event",
+				~on_key_pressed,
+				~key_event_translate
+			)	
+			v_imp.key_press_actions.extend (~on_key_pressed)
+		end
+
+	on_key_pressed (ev_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
+			-- Called when a list item is selected.
+		local
+			f_item: EV_LIST_ITEM
+		do
+			f_item := focused_item
+			if count = 0 or else ev_key = Void or else f_item = Void then
+				arrow_used := False
+			elseif ev_key.code = Key_up then
+				start
+				arrow_used := not item.is_equal (f_item)
+			elseif ev_key.code = Key_down then
+				go_i_th (count)
+				arrow_used := not item.is_equal (f_item)
+			end
+			on_key_event (ev_key, a_key_string, a_key_press)
+		end
+		
+	on_item_clicked is
+			-- One of the item has been clicked.
+		do
+				-- When the user clicks on one of the items of the list
+				-- this routine is called, then `lose_focus', then `attain_focus'
+				-- then `on_list_clicked'. `list_has_been_clicked' will prevent the 
+				-- `focus_out_actions' from being called.
+			list_has_been_clicked := True
+		end
+	
+	on_list_clicked is
+			-- The list was clicked.
 		do
 			if not has_focus then
 				set_focus	
 			end
-print ("List pressed%N")
+			list_has_been_clicked := False
 		end
 
 	attain_focus is
+			-- The list has just grabbed the focus.
 		do
-			top_level_window_imp.set_focus_widget (Current)
-print ("List has focus%N")
-			if focus_in_actions_internal /= Void then
-				focus_in_actions_internal.call ([])				
+			if not internal_has_focus then
+				internal_has_focus := True
+				top_level_window_imp.set_focus_widget (Current)
+				if focus_in_actions_internal /= Void then
+					focus_in_actions_internal.call ([])				
+				end
 			end
 		end
 
 	lose_focus is
+			-- The list has just lost the focus.
 		do
-print ("List has lost focus%N")
-			top_level_window_imp.set_focus_widget (Void)
-			if not has_focus and focus_out_actions_internal /= Void then
-				focus_out_actions_internal.call ([])
-			end
-		end
-		
-	has_focus: BOOLEAN is
-			-- 
-		local
-			a_selected_imp: EV_LIST_ITEM_IMP
-			a_selected: EV_LIST_ITEM
-			a_selected_gtk_obj: POINTER
-		do
-			a_selected := selected_item
-				-- This is a hack to avoid loss of focus on list item click.
-			if a_selected /= Void then
-				a_selected_imp ?= a_selected.implementation
-				a_selected_gtk_obj := a_selected_imp.c_object
-			end
-			if Precursor {EV_PRIMITIVE_IMP} or else gtk_widget_has_focus (a_selected_gtk_obj) then
-				Result := True
-				if selected_item /= Void then
-					print (selected_item.text + "%N")
+				-- This routine is called when an item loses the focus too.
+				-- The follwing test prevent call to `focus_out_actions' when
+				-- the user has only changed the selected item.
+			if not has_capture
+					and then
+				(is_out or else not button_is_pressed)
+					and then
+				not list_has_been_clicked
+					and then
+				not arrow_used
+			then
+				internal_has_focus := False
+				top_level_window_imp.set_focus_widget (Void)
+				if not has_focus and focus_out_actions_internal /= Void then
+					focus_out_actions_internal.call ([])
 				end
 			end
+			arrow_used := False
 		end
 		
-
-feature {NONE} -- Implementation
-
 	create_focus_in_actions: EV_FOCUS_ACTION_SEQUENCE is
 			-- 	
 		do
@@ -313,7 +420,59 @@ feature {NONE} -- Implementation
 		do
 			create Result
 		end
+
+	focused_item: EV_LIST_ITEM is
+			-- item of the list which has currently the focus.
+		local
+			item_imp: EV_LIST_ITEM_IMP
+			indx: INTEGER
+		do
+			indx := index
+			from
+				start
+			until
+				index > count
+			loop
+				item_imp ?= item.implementation
+				if item_imp /= Void and then gtk_widget_has_focus (item_imp.c_object) then
+					Result := item
+				end
+				forth
+			end
+			index := indx
+		ensure
+			index = old index
+		end
+
+	button_is_pressed:BOOLEAN is
+			-- Is one of the mouse buttons pressed?
+		local
+			temp_mask, temp_x, temp_y: INTEGER
+			button_pressed_mask: INTEGER
+			temp_ptr: POINTER
+		do
+			temp_ptr := C.gdk_window_get_pointer (default_pointer, $temp_x, $temp_y, $temp_mask)
+			button_pressed_mask := C.gdk_button1_mask_enum + C.gdk_button2_mask_enum + C.gdk_button3_mask_enum
+			Result := (temp_mask.bit_and (button_pressed_mask)).to_boolean
+		end	
 		
+	is_out: BOOLEAN
+		-- Is the mouse pointer over the list?
+		
+	set_is_out (a_value: BOOLEAN) is
+			-- Assign `a_value' to `is_out'.
+		do
+			is_out := a_value
+		end
+		
+	internal_has_focus: BOOLEAN
+		
+	list_has_been_clicked: BOOLEAN
+		-- Are we between "item_clicked" and "list_clicked" event.
+		
+	arrow_used: BOOLEAN
+		-- Has the user just used up or down arrows to change the focused item?
+	
 end -- class EV_LIST_ITEM_LIST_IMP
 
 --!-----------------------------------------------------------------------------
@@ -337,8 +496,8 @@ end -- class EV_LIST_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.3  2001/06/07 23:08:07  rogers
---| Merged DEVEL branch into Main trunc.
+--| Revision 1.4  2001/06/08 22:07:54  etienne
+--| Made the focus work.
 --|
 --| Revision 1.1.2.16  2001/06/05 01:36:10  king
 --| Uncommented focus code, needs fixing

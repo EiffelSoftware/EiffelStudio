@@ -1,0 +1,41 @@
+system
+	"assembly_resolver"
+
+root
+	AR_EXAMPLE: "make"
+
+default
+	assertion (no)
+	msil_generation (yes)
+	msil_generation_type ("exe")
+	console_application (yes)
+	msil_clr_version ("v1.1.4322")
+	line_generation (yes)
+
+cluster
+	all example: "${EIFFEL_SRC}\dotnet\helpers\assembly_resolver"
+		exclude
+			"CVS";
+		end
+
+	all base:		"${EIFFEL_SRC}\library\base"
+		exclude
+			"CVS"; "table_eiffel3"; "desc"; "classic";
+		end
+
+	all base_net: "${EIFFEL_SRC}\library.net\base"
+
+assembly
+	mscorlib:	"$ISE_DOTNET_FRAMEWORK\mscorlib.dll"
+		
+	system_:	"$ISE_DOTNET_FRAMEWORK\System.dll"
+		prefix
+			"SYSTEM_DLL_"
+		end
+
+	system_xml:	"$ISE_DOTNET_FRAMEWORK\System.Xml.dll"
+		prefix
+			"XML_"
+		end
+
+end

@@ -971,41 +971,52 @@ feature -- Element change
 			ccom_set_variant (initializer, a_value.item)
 		end
 
-	set_unknown_interface (a_value: ECOM_UNKNOWN_INTERFACE) is
+	set_unknown_interface (a_value: ECOM_INTERFACE) is
 			-- Set IUnknown interface value.
 		require
 			non_void: a_value /= Void
-			valid: a_value.item /= default_pointer
+		local
+			a_stub: ECOM_STUB
 		do
+			if (a_value.item = default_pointer) then
+				a_stub ?= a_value
+				if a_stub /= Void then
+					a_stub.create_item
+				end
+			end
 			ccom_set_unknown_interface (initializer, a_value.item)
 		end
 
-	set_unknown_interface_reference (a_value: CELL[ECOM_UNKNOWN_INTERFACE]) is
+	set_unknown_interface_reference (a_value: CELL[ECOM_INTERFACE]) is
 			-- Set IUnknown interface reference value.
 		require
 			non_void: a_value /= Void
-			valid_interface: a_value.item /= Void
-			valid: a_value.item.item /= default_pointer
 		do
-			ccom_set_unknown_interface_reference (initializer, a_value.item.item)
+			ccom_set_unknown_interface_reference (initializer, a_value.item)
 		end
 
-	set_dispatch_interface (a_value: ECOM_AUTOMATION_INTERFACE) is
+	set_dispatch_interface (a_value: ECOM_INTERFACE) is
 			-- Set IDispatch interface value.
 		require
 			non_void: a_value /= Void
-			valid_interface: a_value.item /= default_pointer
+		local
+			a_stub: ECOM_STUB
 		do
+			if (a_value.item = default_pointer) then
+				a_stub ?= a_value
+				if a_stub /= Void then
+					a_stub.create_item
+				end
+			end
 			ccom_set_dispatch_interface (initializer, a_value.item)
 		end
 
-	set_dispatch_interface_reference (a_value: CELL[ECOM_AUTOMATION_INTERFACE]) is
+	set_dispatch_interface_reference (a_value: CELL[ECOM_INTERFACE]) is
 			-- Set IDispatch interface reference value.
 		require
 			non_void: a_value /= Void
-			valid_interface: a_value.item /= Void and a_value.item.item /= default_pointer
 		do
-			ccom_set_dispatch_interface_reference (initializer, a_value.item.item)
+			ccom_set_dispatch_interface_reference (initializer, a_value.item)
 		end
 
 	set_integer4_array (a_value: ECOM_ARRAY [INTEGER]) is
@@ -1764,9 +1775,9 @@ feature {NONE} -- Externals
 			"C++ [ecom_variant %"E_variant.h%"](): EIF_POINTER"
 		end
 
-	ccom_set_unknown_interface_reference (a_ptr: POINTER; a: POINTER) is
+	ccom_set_unknown_interface_reference (a_ptr: POINTER; an_interface: ECOM_INTERFACE) is
 		external
-			"C++ [ecom_variant %"E_variant.h%"](IUnknown *)"
+			"C++ [ecom_variant %"E_variant.h%"](EIF_OBJECT)"
 		end
 
 	ccom_dispatch_interface (a_ptr: POINTER):  POINTER is
@@ -1784,9 +1795,9 @@ feature {NONE} -- Externals
 			"C++ [ecom_variant %"E_variant.h%"](): EIF_POINTER"
 		end
 
-	ccom_set_dispatch_interface_reference (a_ptr: POINTER; a_value: POINTER) is
+	ccom_set_dispatch_interface_reference (a_ptr: POINTER; an_interface: ECOM_INTERFACE) is
 		external
-			"C++ [ecom_variant %"E_variant.h%"](IDispatch *)"
+			"C++ [ecom_variant %"E_variant.h%"](EIF_OBJECT)"
 		end
 
 	ccom_safearray_unsigned_integer (a_ptr: POINTER): ECOM_ARRAY[INTEGER] is

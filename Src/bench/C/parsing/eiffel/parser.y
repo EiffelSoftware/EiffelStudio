@@ -167,7 +167,7 @@ External_name Internal Local_declarations Precondition
 Instruction1 
 Postcondition Assertion_clause Type Class_type Existing_generics
 Actual_generics
-Formal_generics Formal_generic Constraint Conditional Elsif Elsif_part
+Formal_generics Formal_generic Constraint Creation_constraint Conditional Elsif Elsif_part
 Else_part When_part Multi_branch Loop Invariant Variant Debug Debug_keys
 Retry Rescue Assignment Reverse_assignment Creators Creation_clause
 Creation Creation_type Creation_target Creation_call Expression Actual_parameter
@@ -870,20 +870,23 @@ Formal_generic_list:
 	;
 
 Formal_generic:
-	TE_ID {strcpy(generic_name, token_str);} Constraint
-		{generic_inc(); $$ = create_generic(generic_name, $3);}
+	TE_ID {strcpy(generic_name, token_str);} Constraint Creation_constraint
+		{generic_inc(); $$ = create_generic(generic_name, $3, $4);}
     ;
 
 Constraint:
+	/* empty */
 	{$$ = NULL;}
- /*
-   | TE_CONSTRAIN Class_type TE_CREATION {list_init();} Feature_list
-		{$$ = create_node2(CREATE_AS, NULL,list_new(CONSTRUCT_LIST_AS));}
-		{$$ = $2;}
-*/
     | TE_CONSTRAIN Class_type 
 		{$$ = $2;}
     ;
+
+Creation_constraint:
+	/* empty */
+	{ $$ = NULL;}
+	| TE_CREATION {list_init ();} Feature_list
+		{$$ = create_node2 (CREATE_AS, NULL, list_new (CONSTRUCT_LIST_AS));}	
+	;
 
 /*
  * Instructions

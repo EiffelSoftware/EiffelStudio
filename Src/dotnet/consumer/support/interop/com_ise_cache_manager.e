@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 	make is
 			-- create an instance of ISE_CACHE_MANAGER
 		do
-			initialize
+			is_initialized := False
 		end
 		
 feature -- Access
@@ -31,6 +31,8 @@ feature -- Access
 			Result := impl.is_successful
 		end
 		
+	is_initialized: BOOLEAN 
+			-- has COM object been initialized?
 	
 	last_error_message: SYSTEM_STRING is
 			-- last error message
@@ -41,16 +43,35 @@ feature -- Access
 feature -- Basic Oprtations
 
 	initialize is
-			-- initialize the object
+			-- initialize the object using default path to EAC
+		require
+			not_already_initialized: not is_initialized
 		do
 			create impl.make
+			is_initialized := True
+		ensure
+			current_initialized: is_initialized
 		end
 		
+	initialize_with_path (a_path: SYSTEM_STRING) is
+			-- initialize object with path to specific EAC
+		require
+			not_already_initialized: not is_initialized
+			non_void_path: a_path /= Void
+			valid_path: a_path.length > 0
+			path_exists: (create {DIRECTORY}.make (create {STRING}.make_from_cil (a_path))).exists
+		do
+			create impl.make_with_path (create {STRING}.make_from_cil (a_path))
+			is_initialized := True
+		ensure
+			current_initialized: is_initialized
+		end
 
 	consume_gac_assembly (aname, aversion, aculture, akey: SYSTEM_STRING) is
 			-- consume an assembly from the gac defined by
 			-- "'aname', Version='aversion', Culture='aculture', PublicKeyToken='akey'"
 		require
+			current_initialized: is_initialized
 			non_void_name: aname /= Void
 			non_void_version: aversion /= Void
 			non_void_culture: aculture /= Void
@@ -73,6 +94,7 @@ feature -- Basic Oprtations
 	consume_local_assembly (apath, adest: SYSTEM_STRING) is
 			-- consume a local assembly from 'apath' into 'adest'
 		require
+			current_initialized: is_initialized
 			non_void_path: apath /= Void
 			non_void_dest: adest /= Void
 			path_exists: (create {RAW_FILE}.make (create {STRING}.make_from_cil(apath))).exists
@@ -88,6 +110,7 @@ feature -- Basic Oprtations
 	relative_folder_name (aname, aversion, aculture, akey: SYSTEM_STRING): SYSTEM_STRING is
 			-- retruns the relative path to an assembly
 		require
+			current_initialized: is_initialized
 			non_void_name: aname /= Void
 			non_void_version: aversion /= Void
 			non_void_culture: aculture /= Void
@@ -113,6 +136,7 @@ feature -- Basic Oprtations
 	assembly_info_from_assembly (apath: SYSTEM_STRING): COM_ASSEMBLY_INFORMATION is
 			-- retrieve a local assembly's information
 		require
+			current_initialized: is_initialized
 			non_void_path: apath /= Void
 			non_empty_path: apath.length > 0
 		local
@@ -128,9 +152,5 @@ feature {NONE} -- Implementation
 
 	impl: ISE_CACHE_MANAGER
 		-- impl to the cache manager
-		
-
-invariant
---	non_void_impl: impl /= Void
 
 end -- class COM_ISE_CACHE_MANAGER

@@ -74,6 +74,7 @@ feature -- Initialization
 			unique_id := 1	
 			set_filter (manager.shared_project.filter_manager.filter_by_description ("Unfiltered"))
 			set_title (root_string)
+			code_nodes.clear_all
 		end
 
 feature -- Access	

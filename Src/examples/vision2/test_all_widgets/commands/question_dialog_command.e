@@ -18,7 +18,7 @@ feature -- Command execution
 		local
 			dialog: EV_QUESTION_DIALOG
 		do
-			!! dialog.make_default(arg.first, "Am I a dialog box?", "Question box")
+			!! dialog.make_default(arg.first, "Question box", "Am I a dialog box?")
 		end
 
 end -- class QUESTION_DIALOG_COMMAND

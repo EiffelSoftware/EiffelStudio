@@ -18,7 +18,7 @@ feature -- Command execution
 		local
 			dialog: EV_ERROR_DIALOG
 		do
-			!! dialog.make_default (arg.first, "This is an error message!", "Error box")
+			!! dialog.make_default (arg.first, "Error box", "This is an error message!")
 		end
 
 end -- class ERROR_DIALOG_COMMAND

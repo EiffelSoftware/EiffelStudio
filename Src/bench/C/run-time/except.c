@@ -70,7 +70,7 @@
  * multiple exceptions occurred and we entered different rescue clauses, we
  * have to store the exception levels along with the unsolved exceptions.
  */
-rt_public struct xstack eif_stack = {		/* Calling stack */ /* %%zmt */
+rt_public struct xstack eif_stack = {		/* Calling stack */
 	(struct stxchunk *) 0,				/* st_hd */
 	(struct stxchunk *) 0,				/* st_tl */
 	(struct stxchunk *) 0,				/* st_cur */
@@ -78,7 +78,7 @@ rt_public struct xstack eif_stack = {		/* Calling stack */ /* %%zmt */
 	(struct ex_vect *) 0,				/* st_end */
 	(struct ex_vect *) 0,				/* st_bot */
 };
-rt_public struct xstack eif_trace = {		/* Exception trace */ /* %%zmt */
+rt_public struct xstack eif_trace = {		/* Exception trace */
 	(struct stxchunk *) 0,				/* st_hd */
 	(struct stxchunk *) 0,				/* st_tl */
 	(struct stxchunk *) 0,				/* st_cur */
@@ -98,7 +98,7 @@ rt_public unsigned char ex_ign[EN_NEX];	/* Item set to 1 to ignore exception */ 
 /* Stack of current exception flags. This is used to control the assertion
  * checking (e.g. disable it when already in assertion checking).
  */
-rt_public struct eif_except exdata = {		/* %%zmt */
+rt_public struct eif_except exdata = {
 	1,				/* ex_chk */
 	0,				/* ex_val */
 	0,				/* ex_nomem */
@@ -106,10 +106,10 @@ rt_public struct eif_except exdata = {		/* %%zmt */
 	0,				/* ex_orig */
 	(char *) 0,		/* ex_tag */
 	(char *) 0,		/* ex_otag */
-	(char *) 0,	 /* ex_rt */
-	(char *) 0,	 /* ex_ort */
-	0,			  /* ex_class */
-	0,			  /* ex_oclass */
+	(char *) 0,		/* ex_rt */
+	(char *) 0,		/* ex_ort */
+	0,				/* ex_class */
+	0,				/* ex_oclass */
 };
 
 #ifdef WORKBENCH
@@ -1543,7 +1543,7 @@ rt_public void esfail(EIF_CONTEXT_NOARG)
 #ifdef EIF_WIN32
 	eif_console_cleanup();
 #endif
-		
+
 	EIF_END_GET_CONTEXT
 }
 
@@ -2668,7 +2668,7 @@ rt_public char *eename(long ex)
 	}
 }
 
-rt_public void eecatch(EIF_CONTEXT long ex)		/* %%zmt never called in C dir. */
+rt_public void eecatch(EIF_CONTEXT long ex)
 {
 	EIF_GET_CONTEXT
 	/* Catch exception `ex' */
@@ -2681,7 +2681,7 @@ rt_public void eecatch(EIF_CONTEXT long ex)		/* %%zmt never called in C dir. */
 	EIF_END_GET_CONTEXT
 }
 
-rt_public void eeignore(EIF_CONTEXT long ex)	/* %%zmt never called in C dir. */
+rt_public void eeignore(EIF_CONTEXT long ex)
 {
 	EIF_GET_CONTEXT
 

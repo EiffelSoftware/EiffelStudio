@@ -8,7 +8,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	EV_CHECK_MENU_ITEM
 
 inherit
@@ -60,7 +60,7 @@ feature -- Status setting
 		require
 			exists: not destroyed
 		do
-			implementation.toggle
+			set_state (not state)
 		ensure
 			state_is_true: state = not old state
 		end

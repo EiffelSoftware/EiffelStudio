@@ -128,7 +128,7 @@ feature -- Access
 			-- The `ev_children' array has to contain
 			-- the same rows in the same order than in the gtk
 			-- part.
-			result := parent_imp.ev_children.index_of (Current, 1)
+			Result := parent_imp.ev_children.index_of (Current, 1)
 		end
 
 	background_color: EV_COLOR is
@@ -341,24 +341,30 @@ feature -- Event : command association
 			-- Add `cmd' to the list of commands to be executed
 			-- when the item is selected.
 		local
-			ev_data: EV_EVENT_DATA		
+--			ev_data: EV_EVENT_DATA
 		do
-			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
+--			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
 
-			-- We need the index so we pass it as the mouse button (Temporary: Alex.) XXXX.
-			add_command_with_event_data (parent_imp.widget, "select_row", cmd, arg, ev_data, index - 1, False, default_pointer)
+--			-- We need the index so we pass it as the mouse button (Temporary: Alex.) XXXX.
+--			add_command_with_event_data (parent_imp.widget, "select_row", cmd, arg, ev_data, index - 1, False, default_pointer)
+
+			-- We need the index so we pass it as the extra_data.
+			add_command (parent_imp.widget, "select_row", cmd, arg, c_integer_to_pointer (index))
 		end	
 
 	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when the item is unselected.
 		local
-			ev_data: EV_EVENT_DATA		
+--			ev_data: EV_EVENT_DATA		
 		do
-			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
+--			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
 
-			-- We need the index so we pass it as the mouse button (Temporary: Alex.) XXXX.
-			add_command_with_event_data (parent_imp.widget, "unselect_row", cmd, arg, ev_data, index - 1, False, default_pointer)
+--			-- We need the index so we pass it as the mouse button (Temporary: Alex.) XX.
+--			add_command_with_event_data (parent_imp.widget, "unselect_row", cmd, arg, ev_data, index - 1, False, default_pointer)
+
+			-- We need the index so we pass it as the extra_data.
+			add_command (parent_imp.widget, "unselect_row", cmd, arg, c_integer_to_pointer (index))
 		end
 
 feature -- Event -- removing command association

@@ -780,8 +780,9 @@ feature {NONE} -- Implementation, cursor of the widget
 			-- Wm_setcursor message.
 			-- See class WEL_HT_CONSTANTS for valid `hit_code' values.
 		do
-			if cursor_imp /= Void then --hit_code = Htclient then
+			if cursor_imp /= Void then
 				cursor_imp.set
+				set_message_return_value (1)
 				disable_default_processing
 			end
 		end
@@ -989,6 +990,10 @@ feature -- Deferred features
 		end	
 
 	disable_default_processing is
+		deferred
+		end
+
+	set_message_return_value (v: INTEGER) is
 		deferred
 		end
 

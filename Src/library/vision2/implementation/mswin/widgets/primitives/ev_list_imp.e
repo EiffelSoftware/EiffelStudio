@@ -144,7 +144,7 @@ feature -- Access
 			local_selected_index: INTEGER
 		do
 			local_selected_index := wel_selected_item
-			if local_selected_index > 0 then
+			if local_selected_index >= 0 then
 				Result := (ev_children @ (local_selected_index + 1)).interface
 			end
 		end
@@ -152,9 +152,13 @@ feature -- Access
 	selected_items: ARRAYED_LIST [EV_LIST_ITEM] is
 			-- Currently selected items.
 		do
+			if not internal_selected_items_uptodate then
+				internal_selected_items := retrieve_selected_items
+				internal_selected_items_uptodate := True
+			end
 			Result := clone (internal_selected_items)
 		ensure then
-			valid_result: valid_selected_items (Result)
+			valid_result: Result.is_equal(retrieve_selected_items)
 		end
 
 feature -- Status setting
@@ -177,12 +181,16 @@ feature -- Status setting
 			local_selected_items: like selected_items
 		do
 			local_selected_items := internal_selected_items
-			from 
+			from
+				local_selected_items.start
 			until
-				local_selected_items.empty
+				local_selected_items.after
 			loop
-				local_selected_items.first.disable_select
+				local_selected_items.item.disable_select
+				local_selected_items.forth
 			end
+
+			internal_selected_items.wipe_out
 		end
 
 	enable_multiple_selection is
@@ -350,29 +358,26 @@ feature {EV_ANY_I} -- Implementation
 			item_imp: EV_LIST_ITEM_IMP
 			item_interface: EV_LIST_ITEM
 		do
-			internal_selected_items_uptodate := False
 			if info.uchanged = Lvif_state and info.isubitem = 0 then
 				if flag_set(info.unewstate, Lvis_selected) and
 						not flag_set(info.uoldstate, Lvis_selected) then
 						-- Item is being selected
+					internal_selected_items_uptodate := False
 					item_imp := ev_children @ (info.iitem + 1)
 					item_interface := item_imp.interface
-					internal_selected_items.extend (item_interface)
 					item_imp.interface.select_actions.call ([])
 					interface.select_actions.call ([item_interface])
 
 				elseif flag_set(info.uoldstate, Lvis_selected) and
 					not flag_set(info.unewstate, Lvis_selected) then
 						-- Item is being unselected
+					internal_selected_items_uptodate := False
 					item_imp := ev_children @ (info.iitem + 1)
 					item_interface := item_imp.interface
-					internal_selected_items.prune_all (item_interface)
 					item_imp.interface.deselect_actions.call ([])
 					interface.deselect_actions.call ([item_interface])
 				end
-
 			end
-			internal_selected_items_uptodate := True
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
@@ -413,7 +418,7 @@ feature {EV_ANY_I} -- Implementation
 feature {NONE} -- Implementation
 
 	internal_selected_items_uptodate: BOOLEAN
-			-- Is `internal_selected_items' up-to-date?
+			-- Is `internal_selected_items' sorted?
 
 	internal_selected_items: like selected_items
 			-- Cached version of all selected items.
@@ -424,17 +429,18 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			interf: EV_LIST_ITEM
 			c: like ev_children
+			wel_sel_items: like wel_selected_items
 		do
 			create Result.make (selected_count)
 			c := ev_children
+			wel_sel_items := wel_selected_items
 			from
 				i := 0
 			until
 				i = selected_count
 			loop
-				interf ?= (c @ (wel_selected_items @ i + 1)).interface
+				interf ?= (c @ (wel_sel_items @ i + 1)).interface
 				Result.extend (interf)
-				Result.finish
 				i := i + 1
 			end		
 		end
@@ -544,6 +550,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.73  2000/04/19 03:12:29  pichery
+--| Fixed bugs
+--|
 --| Revision 1.72  2000/04/19 02:23:25  pichery
 --| Changed postcondition in `selected_items'.
 --|

@@ -9,7 +9,18 @@ inherit
 	BASIC_A
 		redefine
 			is_pointer, type_i, associated_class, same_as,
-			internal_conform_to
+			default_create
+		end
+
+create
+	default_create
+
+feature {NONE} -- Initialization
+
+	default_create is
+			-- Initialize new instance of POINTER_A.
+		do
+			make (associated_class.class_id)
 		end
 
 feature -- Property
@@ -28,23 +39,13 @@ feature {COMPILER_EXPORTER}
 	type_i: POINTER_I is
 			-- Pointer C type
 		do
-			create Result
+			Result := pointer_c_type
 		end
 
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
 		do
 			Result := other.is_pointer
-		end
-
-	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
-			-- Does `other' conform to Current ?
-		do
-			if in_generics then
-				Result := other.is_pointer
-			else
-				Result := Precursor {BASIC_A} (other, False)
-			end
 		end
 
 end -- class POINTER_A

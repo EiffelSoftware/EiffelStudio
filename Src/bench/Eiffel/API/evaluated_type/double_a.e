@@ -9,7 +9,18 @@ inherit
 	BASIC_A
 		redefine
 			is_double, associated_class, same_as,
-			is_numeric, heaviest, internal_conform_to
+			is_numeric, default_create
+		end
+
+create
+	default_create
+
+feature {NONE} -- Initialization
+
+	default_create is
+			-- Initialize new instance of DOUBLE_A.
+		do
+			make (associated_class.class_id)
 		end
 
 feature -- Property
@@ -33,30 +44,13 @@ feature -- Access
 
 feature {COMPILER_EXPORTER}
 
-	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
-			-- Does `other' conform to Current ?
-		do
-			if in_generics then
-				Result := other.is_double
-			else
-				Result := Precursor {BASIC_A} (other, False) 
-					or else other.actual_type.is_real
-			end
-		end
-
 	is_numeric: BOOLEAN is True
 			-- Is the current type a numeric type ?
-
-	heaviest (t: TYPE_A): TYPE_A is
-			-- Heaviest numeric type for balancing rule.
-		do
-			Result := Current
-		end
 
 	type_i: DOUBLE_I is
 			-- C type
 		do
-			create Result
+			Result := double_c_type
 		end
 
 end -- class DOUBLE_A

@@ -66,36 +66,40 @@ feature {NONE} -- Basic operation
 
 							-- A first loop to see who will have a rest.
 							-- The loop is different is the window grow or reduce.
-							if rate >= 0 then
-								from
-									ev_children.go_i_th (index)
-								until
-									ev_children.index = modulo(index - 1, ev_children.count) or
-									modulo(ev_children.index - index, ev_children.count) = total_rest
-								loop
-									if not ev_children.item.shown then
-										total_rest := total_rest + 1
+							-- This loop is necessary only if there are some
+							-- hidden children.
+							if childvisible_nb /= ev_children.count then
+								if rate >= 0 then
+									from
+										ev_children.go_i_th (index)
+									until
+										ev_children.index = modulo(index - 1, ev_children.count) or
+										modulo(ev_children.index - index, ev_children.count) = total_rest
+									loop
+										if not ev_children.item.shown then
+											total_rest := total_rest + 1
+										end
+										if ev_children.islast then
+											ev_children.start
+										else
+											ev_children.forth
+										end
 									end
-									if ev_children.islast then
-										ev_children.start
-									else
-										ev_children.forth
-									end
-								end
-							else
-								from
-									ev_children.go_i_th (modulo (index - 1, ev_children.count))
-								until
-									ev_children.index = index or
-										modulo(ev_children.index - index, ev_children.count) > total_rest
-								loop
-									if not ev_children.item.shown then
-										total_rest := total_rest - 1
-									end
-									if ev_children.isfirst then
-										ev_children.finish
-									else
-										ev_children.back
+								else
+									from
+										ev_children.go_i_th (modulo (index - 1, ev_children.count))
+									until
+										ev_children.index = index or
+											modulo(ev_children.index - index, ev_children.count) > total_rest
+									loop
+										if not ev_children.item.shown then
+											total_rest := total_rest - 1
+										end
+										if ev_children.isfirst then
+											ev_children.finish
+										else
+											ev_children.back
+										end
 									end
 								end
 							end
@@ -124,41 +128,45 @@ feature {NONE} -- Basic operation
 		
 							-- A first loop to see who will have a rest.
 							-- The loop is different is the window grow or reduce.
-							if rate >= 0 then
-								from
-									ev_children.go_i_th (index)
-								until
-									ev_children.index = modulo (index - 1, ev_children.count) or
-										modulo(ev_children.index - index, ev_children.count) = total_rest
-								loop
-									if not ev_children.item.shown or not ev_children.item.expandable then
-										total_rest := total_rest + 1
+							-- This loop is necessary only if there are some
+							-- hidden or not expandable children. 
+							if childvisible_nb /= ev_children.count or childexpand_nb /= ev_children.count then
+								if rate >= 0 then
+									from
+										ev_children.go_i_th (index)
+									until
+										ev_children.index = modulo (index - 1, ev_children.count) or
+											modulo(ev_children.index - index, ev_children.count) = total_rest
+									loop
+										if not ev_children.item.shown or not ev_children.item.expandable then
+											total_rest := total_rest + 1
+										end
+										if ev_children.islast then
+											ev_children.start
+										else
+											ev_children.forth
+										end
 									end
-									if ev_children.islast then
-										ev_children.start
-									else
-										ev_children.forth
-									end
-								end
-							else
-								from
-									ev_children.go_i_th (modulo (index - 1, ev_children.count))
-								until
-									ev_children.index = index or
-										modulo(ev_children.index - index, ev_children.count) > total_rest
-								loop
-									if not ev_children.item.shown or not ev_children.item.expandable then
-										total_rest := total_rest - 1
-									end
-									if ev_children.isfirst then
-										ev_children.finish
-									else
-										ev_children.back
+								else
+									from
+										ev_children.go_i_th (modulo (index - 1, ev_children.count))
+									until
+										ev_children.index = index or
+											modulo(ev_children.index - index, ev_children.count) > total_rest
+									loop
+										if not ev_children.item.shown or not ev_children.item.expandable then
+											total_rest := total_rest - 1
+										end
+										if ev_children.isfirst then
+											ev_children.finish
+										else
+											ev_children.back
+										end
 									end
 								end
 							end
 						end
-	
+
 						-- Then, we ask the children to move and resize.
 						-- Be carefull to the expanded child.
 						from

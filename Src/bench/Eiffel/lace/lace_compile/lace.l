@@ -192,6 +192,10 @@ X		([a-z]|[A-Z]|[0-9]|_)
 				current_position.go_to (11)
 				last_token := LAC_PRECOMPILED
 			}
+[pP][rR][eE][fF][iI][xX] {
+				current_position.go_to (6)
+				last_token := LAC_PREFIX
+			}
 [rR][eE][nN][aA][mM][eE]	{
 				current_position.go_to (6)
 				last_token := LAC_RENAME

@@ -30,6 +30,7 @@ while (<>) {
 	$create_args = "";
 	$init_code = "";
 	$filter_comment = "";
+	$redefine = "";
 	# Ignore empty lines, those starting with whitespace and comments.
 	if (!/^[\n 	#].*/) {
 		chomp;
@@ -127,27 +128,29 @@ while (<>) {
 			$fargs = $wrapper_argss{$source};
 			chop ($fargs);
 			chop ($fargs);
-			$filter_code = "\nfeature {NONE} -- Filtering\n\n\tfliter ($fargs) is\n\t\tdo\n\t\t\tif a_$f";
+			$filter_code = "\nfeature {NONE} -- Filtering\n\n\tfilter ($fargs) is\n\t\tdo\n\t\t\tif a_$f";
 			foreach $f (@fs) {
 				$filter_code = "$filter_code and $f ";
 			}
-			$filter_code = "$filter_code then\n\t\t\t\tcall ($arg_name_list";
+			$filter_code = "$filter_code then\n\t\t\t\tcall ([$arg_name_list";
 			$source_class = "$source\_ACTION_SEQUENCE";
 			$_ = $source_class;
 			tr/[a-z]/[A-Z]/;
 			$source_class = $_;
 			
-			$filter_code = "$filter_code )\n\t\t\tend\n\t\tend\n\n\tsource: $source_class\n";
+			$filter_code = "$filter_code])\n\t\t\tend\n\t\tend\n\n\tsource: $source_class\n";
 			$create_args = "(a_source: $source_class) ";
 			$filter_init = "\n\t\t\tsource := a_source";
-			$init_code = "\n\tinitialize is\n\t\t\t-- Connect to the event source we filter.\n\t\t\t-- (Not called until an action is added.)\n\t\tdo\n\t\t\tsource.extend (~filter)\n\t\t\taction_sequence_initialize\n\t\tend\n";
+			$init_code = "\n\tinitialize is\n\t\t\t-- Connect to the event source we filter.\n\t\t\t-- (Not called until an action is added.)\n\t\trequire else\n\t\t\tnot_already_called: not is_initialized\n\t\tdo\n\t\t\tsource.extend (~filter)\n\t\t\tPrecursor\n\t\tend\n";
 			$filter_comment = "\n\t\t\t-- This sequence will be one action in `a_source'.";
 		}
 
 		if ($create_args eq "") {
 			$make_name = "default_create";
+			$redefine = "default_create";
 		} else {
 			$make_name = "make";
+			$redefine = "initialize";
 		}
 
 		# Open our output file.
@@ -169,7 +172,8 @@ class $classname
 inherit $parent [$data_type]
 		rename
 			make as $parent_lower\_make
-			intialize as $parent_lower\_intialize
+		redefine
+			$redefine
 		end
 
 creation
@@ -208,6 +212,9 @@ EOT
 #===============================================================================
 #
 # $Log$
+# Revision 1.10  1999/10/29 16:37:04  oconnor
+# fixed broken filter code
+#
 # Revision 1.9  1999/10/28 23:01:16  oconnor
 # rearanged filter generation/init a little
 #

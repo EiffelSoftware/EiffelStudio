@@ -8,6 +8,13 @@ class
 
 feature -- Externals
 
+	frozen gtk_widget_set_minimum_size (a_widget: POINTER; a_width, a_height: INTEGER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_widget_set_usize ((GtkWidget*) $a_widget, (gint) $a_width, (gint) $a_height)"
+		end
+
 	frozen gtk_window_dialog_enum: INTEGER is
 		external
 			"C inline use <gtk/gtk.h>"

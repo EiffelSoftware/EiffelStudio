@@ -6,6 +6,7 @@
 
 
 import "oaidl.idl";
+#include "ise_compiler_guid.h"
 
 interface IEiffelProject;
 interface IEiffelCompletionInfo;
@@ -35,8 +36,14 @@ interface IEnumParameter;
 interface IEiffelParameterDescriptor;
 interface IEiffelHTMLDocGenerator;
 interface IEiffelHTMLDocEvents;
+//interface IEiffelExceptionManager;
+interface IEiffelException;
 enum tagEIF_ENTITY_IMAGES;
 enum tagEIF_FEATURE_TYPES;
+enum tagEIF_EXCEPTIONS;
+enum tagEIF_PROJECT_TYPES;
+enum tagEIF_ASSERTIONS;
+enum tagEIF_CLUSTER_NAMESPACE_GENERATION;
 
 // IDispatch IDs
 enum
@@ -88,13 +95,51 @@ enum
     ISECompilerID_generate
 };
 
-typedef enum __EIF_COMPILATION_TYPES
+typedef enum tagEIF_EXCEPTIONS
 {
-    EIF_COMPT_is_application,
-    EIF_COMPT_is_library,
-    EIF_COMPT_is_precompilation
+    EIF_EXCEPTIONS_Unspecified = 0,
+    EIF_EXCEPTIONS_Successful = 1,
+    EIF_EXCEPTIONS_NoProjectLoaded = 2,
+    EIF_EXCEPTIONS_ProjectIncompatible = 3,
+    EIF_EXCEPTIONS_ProjectFileCorrupted = 4,
+    EIF_EXCEPTIONS_UnableToRemoveProject = 5,
+    EIF_EXCEPTIONS_UnableToCreateProject = 5,
+    EIF_EXCEPTIONS_InvalidAceFile = 7,
+    EIF_EXCEPTIONS_ProjectNotCompiled = 8,
+    EIF_EXCEPTIONS_AceFileDoesNotExists = 9,
+    EIF_EXCEPTIONS_ProjectAlreadyInitialized = 10,
+    EIF_EXCEPTIONS_ProjectIncomplete = 11,
+    EIF_EXCEPTIONS_IOError = 12,
+    EIF_EXCEPTIONS_NonDotnetProject = 13
 
-} EIF_COMPILATION_TYPES;
+} EIF_EXCEPTIONS;
+
+// Assertion levels
+typedef enum tagEIF_ASSERTIONS
+{
+  EIF_ASSERTIONS_None = 0,
+  EIF_ASSERTIONS_Require = 1,
+  EIF_ASSERTIONS_Ensure = 2,
+  EIF_ASSERTIONS_Check = 4,
+  EIF_ASSERTIONS_Invariant = 8,
+  EIF_ASSERTIONS_Loop = 16
+}EIF_ASSERTIONS;
+
+typedef enum tagEIF_CLUSTER_NAMESPACE_GENERATION
+{
+  EIF_CLUSTER_NAMESPACE_GENERATION_None = 0,
+  EIF_CLUSTER_NAMESPACE_GENERATION_ClusterName = 1,
+  EIF_CLUSTER_NAMESPACE_GENERATION_FullClusterName = 2
+}EIF_CLUSTER_NAMESPACE_GENERATION;
+
+// Project types
+typedef enum tagEIF_PROJECT_TYPES
+{
+  EIF_PROJECT_TYPES_ConsoleApplication = 0,
+  EIF_PROJECT_TYPES_WindowsApplication,
+  EIF_PROJECT_TYPES_ClassLibrary,
+  EIF_PROJECT_TYPES_PrecompiledLibrary
+}EIF_PROJECT_TYPES;
 
 // Eiffel Entities Image Indexes
 typedef enum tagEIF_ENTITY_IMAGES
@@ -130,12 +175,35 @@ typedef enum tagEIF_FEATURE_TYPES
 
 [
   oleautomation,
+  uuid (GUID_IEiffelException),
+  helpstring ("A single exception object")
+]
+interface IEiffelException: IUnknown
+{
+  [id(0x0), helpstring ("Get inner exception"), propget]
+  HRESULT inner_exception ([out, retval] IEiffelException** a_result);
+  
+  [id(0x1), helpstring ("Get exception message"), propget]
+  HRESULT message ([out, retval] BSTR* a_result);
+  
+  [id(0x2), helpstring ("Retrieve exception type"), propget]
+  HRESULT exception_code ([out, retval] EIF_EXCEPTIONS* a_result);
+}
+
+[
+  oleautomation,
   uuid (53E4FF57-2F3C-4ed2-8B08-89AF6E2C10BA),
   helpstring ("Eiffel Project.")
 ]
 interface IEiffelProject: IUnknown
 {
-  [helpstring ("Retrieve project.")]
+  [helpstring ("Retrieve Eiffel Project")]
+  HRESULT retrieve_eiffel_project ([in] BSTR a_project_file_name);
+
+  [helpstring ("Create new Eiffel project.")]
+  HRESULT create_eiffel_project ([in] BSTR a_ace_file_name, [in] BSTR a_project_directory_path);
+
+  [helpstring ("Retrieve project. Obsolete")]
   HRESULT retrieve_project ([in] BSTR a_project_file_name);
 
   [helpstring ("Create new project.")]
@@ -153,8 +221,11 @@ interface IEiffelProject: IUnknown
   [helpstring ("Is project valid?")]
   HRESULT valid_project ([out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("Last error message.")]
+  [helpstring ("Last error message")]
   HRESULT last_error_message ([out, retval] BSTR * return_value);
+  
+  [helpstring ("Last exception raised")]
+  HRESULT last_exception ([out, retval] IEiffelException** a_result);
 
   [helpstring ("Compiler.")]
   HRESULT compiler ([out, retval] IEiffelCompiler ** return_value);
@@ -925,53 +996,47 @@ interface IEiffelProjectProperties: IDispatch
   [id (104), propput, helpstring ("Creation routine name.")]
   HRESULT creation_routine ([in] BSTR a_routine);
 
-  [id (121), propget, helpstring ("Compilation type.")]
-  HRESULT compilation_type ([out, retval] EIF_COMPILATION_TYPES * return_value);
+  [propget, helpstring ("Namespace generation for cluster")]
+  HRESULT namespace_generation ([out, retval] EIF_CLUSTER_NAMESPACE_GENERATION* penuClusterNamespaceGeneration);
 
-  [id (121), propput, helpstring ("Compilation type.")]
-  HRESULT compilation_type ([in] EIF_COMPILATION_TYPES new_value);
+  [propput, helpstring ("Namespace generation for cluster")]
+  HRESULT namespace_generation ([in] EIF_CLUSTER_NAMESPACE_GENERATION enuClusterNamespaceGeneration);
+  
+  [id (118), propget, helpstring ("Default namespace.")]
+  HRESULT default_namespace ([out, retval] BSTR * return_value);
 
-  [id (122), propget, helpstring ("Is console application?")]
-  HRESULT console_application ([out, retval] VARIANT_BOOL * return_value);
+  [id (118), propput, helpstring ("Default namespace.")]
+  HRESULT default_namespace ([in] BSTR a_namespace);
 
-  [id (122), propput, helpstring ("Is console application?")]
-  HRESULT console_application ([in] VARIANT_BOOL new_value);
+  [propget, helpstring ("Project type")]
+  HRESULT project_type ([out, retval] EIF_PROJECT_TYPES* penumProjectType);
 
-  [id (105), propget, helpstring ("Should preconditions be evaluated?")]
-  HRESULT evaluate_require ([out, retval] VARIANT_BOOL * return_value);
+  [propput, helpstring ("Project type")]
+  HRESULT project_type ([in] EIF_PROJECT_TYPES enumProjectType);
+  
+  [propget, helpstring (".NET Naming convention")]
+  HRESULT dot_net_naming_convention ([out, retval] VARIANT_BOOL* pvbNamingConvention);
 
-  [id (105), propput, helpstring ("Should preconditions be evaluated?")]
-  HRESULT evaluate_require ([in] VARIANT_BOOL new_value);
-
-  [id (106), propget, helpstring ("Should postconditions be evaluated?")]
-  HRESULT evaluate_ensure ([out, retval] VARIANT_BOOL * return_value);
-
-  [id (106), propput, helpstring ("Should postconditions be evaluated?")]
-  HRESULT evaluate_ensure ([in] VARIANT_BOOL new_value);
-
-  [id (107), propget, helpstring ("Should check assertions be evaluated?")]
-  HRESULT evaluate_check ([out, retval] VARIANT_BOOL * return_value);
-
-  [id (107), propput, helpstring ("Should check assertions be evaluated?")]
-  HRESULT evaluate_check ([in] VARIANT_BOOL new_value);
-
-  [id (108), propget, helpstring ("Should loop assertions be evaluated?")]
-  HRESULT evaluate_loop ([out, retval] VARIANT_BOOL * return_value);
-
-  [id (108), propput, helpstring ("Should loop assertions be evaluated?")]
-  HRESULT evaluate_loop ([in] VARIANT_BOOL new_value);
-
-  [id (109), propget, helpstring ("Should class invariants be evaluated?")]
-  HRESULT evaluate_invariant ([out, retval] VARIANT_BOOL *return_value);
-
-  [id (109), propput, helpstring ("Should class invariants be evaluated?")]
-  HRESULT evaluate_invariant ([in] VARIANT_BOOL new_value);
+  [propput, helpstring (".NET Naming convention")]
+  HRESULT dot_net_naming_convention ([in] VARIANT_BOOL pvbNamingConvention);
 
   [id (111), propget, helpstring ("Generate debug info?")]
-  HRESULT debug_info ([out, retval] VARIANT_BOOL * return_value);
+  HRESULT generate_debug_info ([out, retval] VARIANT_BOOL * return_value);
 
   [id (111), propput, helpstring ("Generate debug info?")]
-  HRESULT debug_info ([in] VARIANT_BOOL new_value);
+  HRESULT generate_debug_info ([in] VARIANT_BOOL new_value);
+
+  [id (120), propget, helpstring ("Precompiled file.")]
+  HRESULT precompiled_library ([out, retval] BSTR * return_value);
+
+  [id (120), propput, helpstring ("Precompiled file.")]
+  HRESULT precompiled_library([in] BSTR new_value);
+
+  [propget, helpstring ("Project assertions")]
+  HRESULT assertions ([out, retval] ULONG* pAssertions);
+  
+  [propput, helpstring ("Project assertions")]
+  HRESULT assertions ([in] ULONG pAssertions);
 
   [id (112), propget, helpstring ("Project Clusters.")]
   HRESULT clusters ([out, retval] IEiffelSystemClusters ** return_value);
@@ -979,20 +1044,8 @@ interface IEiffelProjectProperties: IDispatch
   [id (117), propget, helpstring ("Externals.")]
   HRESULT externals ([out, retval] IEiffelSystemExternals ** return_value);
 
-  [id (118), propget, helpstring ("Default namespace.")]
-  HRESULT default_namespace ([out, retval] BSTR * return_value);
-
-  [id (118), propput, helpstring ("Default namespace.")]
-  HRESULT default_namespace ([in] BSTR a_namespace);
-
   [id (119), propget, helpstring ("Assemblies.")]
   HRESULT assemblies ([out, retval] IEiffelSystemAssemblies ** return_value);
-
-  [id (120), propget, helpstring ("Precompiled file.")]
-  HRESULT precompiled ([out, retval] BSTR * return_value);
-
-  [id (120), propput, helpstring ("Precompiled file.")]
-  HRESULT precompiled ([in] BSTR new_value);
 
   [id (133), propget, helpstring ("Project title.")]
   HRESULT title ([out, retval] BSTR * return_value);
@@ -1036,17 +1089,23 @@ interface IEiffelProjectProperties: IDispatch
   [id (139), propput, helpstring ("Project copyright.")]
   HRESULT copyright ([in] BSTR new_value);
 
+  [id (141), propget, helpstring ("Asembly culture.")]
+  HRESULT culture ([out, retval] BSTR * return_value);
+
+  [id (141), propput, helpstring ("Asssembly culture.")]
+  HRESULT culture ([in] BSTR new_value);
+
   [id (140), propget, helpstring ("Asembly signing key file name.")]
   HRESULT key_file_name ([out, retval] BSTR * return_value);
 
   [id (140), propput, helpstring ("Assembly signing key file name.")]
   HRESULT key_file_name ([in] BSTR new_value);
 
-  [id (141), propget, helpstring ("Asembly culture.")]
-  HRESULT culture ([out, retval] BSTR * return_value);
-
-  [id (141), propput, helpstring ("Asssembly culture.")]
-  HRESULT culture ([in] BSTR new_value);
+  [propget, helpstring ("Project working directory")]
+  HRESULT working_directory ([out, retval] BSTR* pbstrWorkingDirectory);
+  
+  [propput, helpstring ("Project working directory")]
+  HRESULT working_directory ([in] BSTR bstrWorkingDirectory);
 
   [id (142), helpstring ("Apply changes")]
   HRESULT Apply ();
@@ -1357,8 +1416,14 @@ library eiffel_compiler
   interface IEiffelParameterDescriptor;
   interface IEiffelHTMLDocGenerator;
   interface IEiffelHTMLDocEvents;
+  //interface IEiffelExceptionManager;
+  interface IEiffelException;
   enum tagEIF_ENTITY_IMAGES;
   enum tagEIF_FEATURE_TYPES;
+  enum tagEIF_EXCEPTIONS;
+  enum tagEIF_PROJECT_TYPES;
+  enum tagEIF_ASSERTIONS;
+  enum tagEIF_CLUSTER_NAMESPACE_GENERATION;
 
   [
     uuid (28F511DB-0CCE-44c5-9DD5-E93066C0B00F)

@@ -44,20 +44,46 @@ feature -- Access
 	update_attribute_editor is
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
+		local
+			list_item: EV_LIST_ITEM
+			constant_context: GB_CONSTANT_CONTEXT
 		do
-			if first.pixmap_exists then
-				add_pixmap_to_pixmap_container (clone (first))
-				for_all_objects (agent {EV_PIXMAP}.enable_pixmap_exists)
-				modify_button.set_text (Clear_text)
-				modify_button.set_tooltip (Clear_tooltip)
-			elseif first.pixmap_path = Void then 
-				modify_button.set_text (Set_with_named_file_text)
-				modify_button.set_tooltip (Set_with_named_file_tooltip)
+			constant_context := object.constants.item (type + Pixmap_path_string)
+			if constant_context /= Void then
+				constants_button.select_actions.block
+				constants_button.enable_select
+				constants_button.select_actions.resume
+				list_item := list_item_with_matching_text (constants_combo_box, constant_context.constant.name)
+				check
+					list_item_not_void: list_item /= Void
+				end
+				list_item.select_actions.block
+				list_item.enable_select
+				list_item.select_actions.resume
+				if last_selected_constant = Void then
+					last_selected_constant := constant_context.constant
+				end
+				switch_constants_mode
 			else
-				create error_label.make_with_text (pixmap_missing_string)
-				error_label.set_tooltip (first.pixmap_path)
-				pixmap_container.extend (error_label)
-				for_all_objects (agent {EV_PIXMAP}.disable_pixmap_exists)
+				constants_button.select_actions.block
+				constants_button.disable_select
+				switch_constants_mode
+				constants_button.select_actions.resume
+				if first.pixmap_path /= Void and then first.pixmap_exists then
+					add_pixmap_to_pixmap_container (clone (first))
+					for_all_objects (agent {EV_PIXMAP}.enable_pixmap_exists)
+					modify_button.set_text (Clear_text)
+					modify_button.set_tooltip (Clear_tooltip)
+				elseif first.pixmap_path = Void then 
+					modify_button.set_text (Set_with_named_file_text)
+					modify_button.set_tooltip (Set_with_named_file_tooltip)
+					pixmap_container.wipe_out
+				else
+					create error_label.make_with_text (pixmap_missing_string)
+					error_label.set_tooltip (first.pixmap_path)
+					pixmap_container.extend (error_label)
+					for_all_objects (agent {EV_PIXMAP}.disable_pixmap_exists)
+				end
 			end
 		end
 		
@@ -80,7 +106,7 @@ feature {NONE} -- Implementation
 			shown_once, opened_file: BOOLEAN
 			error_dialog: EV_WARNING_DIALOG
 		do
-			if first.pixmap_path = Void then
+			if not constants_button.is_selected and then first.pixmap_path = Void then
 				from
 					create dialog
 				until

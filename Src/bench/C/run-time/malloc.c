@@ -1069,7 +1069,7 @@ rt_private union overhead *add_core(register unsigned int nbytes, int type)
 			break;							/* OK, we got it */
 #else /* !HAS_SBRK */
 
-		oldbrk = (union overhead *) eif_malloc (asked); /* Use malloc() */
+		oldbrk = (union overhead *) malloc (asked); /* Use malloc() */
 
 #ifdef DEBUG
 		dprintf(2)("add_core: kernel responded: %s (oldbrk: 0x%lx)\n",

@@ -35,22 +35,10 @@ feature -- Access
 	attribute_editor: GB_OBJECT_EDITOR_ITEM is
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
-		local
-			label: EV_LABEL
 		do
 			Result := Precursor {GB_EV_ANY}
-			create label.make_with_text (Minimum_width_string)
-			Result.extend (label)
-			create minimum_width
-			Result.extend (minimum_width)
-			minimum_width.return_actions.extend (agent set_minimum_width)
-			minimum_width.return_actions.extend (agent update_editors)
-			create label.make_with_text (Minimum_height_string)
-			Result.extend (label)
-			create minimum_height
-			Result.extend (minimum_height)
-			minimum_height.return_actions.extend (agent set_minimum_height)
-			minimum_height.return_actions.extend (agent update_editors)
+			create minimum_width_entry.make (Current, Result, "Minimum_width", agent set_minimum_width (?), agent valid_minimum_dimension (?))
+			create minimum_height_entry.make (Current, Result, "Minimum_height", agent set_minimum_height (?), agent valid_minimum_dimension (?))
 			
 			update_attribute_editor
 			
@@ -62,14 +50,8 @@ feature -- Access
 			-- Update status of `attribute_editor' to reflect information
 			-- from `first'.
 		do
-			minimum_width.return_actions.block
-			minimum_height.return_actions.block
-		
-			minimum_height.set_text (first.minimum_height.out)
-			minimum_width.set_text (first.minimum_width.out)
-		
-			minimum_width.return_actions.resume
-			minimum_height.return_actions.resume
+			minimum_height_entry.set_text (first.minimum_height.out)
+			minimum_width_entry.set_text (first.minimum_width.out)
 		end
 
 feature {GB_CODE_GENERATOR} -- Output
@@ -130,29 +112,29 @@ feature {GB_XML_STORE} -- Output
 
 feature {NONE} -- Implementation
 
-	minimum_width, minimum_height: EV_TEXT_FIELD
-		-- Entry fields for `attribute_editor'.
+	minimum_width_entry, minimum_height_entry: GB_INTEGER_INPUT_FIELD
+		-- Input widgets for `minimum_width' and `minimum_height'.
 		
-	set_minimum_height is
-			-- Update property `minimum_height' on all items in `objects'.
-		local
-			value: INTEGER
+	set_minimum_width (integer: INTEGER) is
+			-- Update property `minimum_width' on the first of `objects'.
+		require
+			first_not_void: first /= Void
 		do
-			if not minimum_height.text.is_empty and then minimum_height.text.is_integer then
-				value := minimum_height.text.to_integer
-				for_first_object (agent {EV_WIDGET}.set_minimum_height (value))
-			end
+			for_first_object (agent {EV_WIDGET}.set_minimum_width (integer))
 		end
 		
-	set_minimum_width is
-			-- Update property `minimum_width' on all items in `objects'.
-		local
-			value: INTEGER
+	valid_minimum_dimension (value: INTEGER): BOOLEAN is
+			-- Is `value' a valid minimum_width or minimum_height?
 		do
-			if not minimum_width.text.is_empty and then minimum_width.text.is_integer then
-				value := minimum_width.text.to_integer
-				for_first_object (agent {EV_WIDGET}.set_minimum_width (value))
-			end
+			Result := value >= 0
+		end
+		
+	set_minimum_height (integer: INTEGER) is
+			-- Update property `minimum_height' on first of `objects'.
+		require
+			first_not_void: first /= Void
+		do
+			for_first_object (agent {EV_WIDGET}.set_minimum_height (integer))
 		end
 
 	Minimum_width_string: STRING is "Minimum_width"

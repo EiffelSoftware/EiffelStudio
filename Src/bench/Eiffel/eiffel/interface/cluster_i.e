@@ -1083,8 +1083,14 @@ end;
 		require
 			is_override_cluster: is_override_cluster
 		local
+			l_classes: like classes
 			l_class: CLASS_I
 		do
+			if is_recursive then
+				l_classes := classes
+				update_with_all_classes
+			end
+
 			from
 				classes.start
 			until
@@ -1098,6 +1104,10 @@ end;
 					l_class.set_date
 				end
 				classes.forth
+			end
+
+			if is_recursive then
+				reset_classes (l_classes)
 			end
 		end
 
@@ -1422,7 +1432,7 @@ end;
 			end
 		end
 
-feature {CLUSTER_SD, ACE_SD} -- `all' adaptation
+feature {CLUSTER_SD} -- `all' adaptation
 
 	update_with_all_classes is
 			-- Fill `classes' with all classes in subclusters.

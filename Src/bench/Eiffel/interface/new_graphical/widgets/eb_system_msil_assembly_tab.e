@@ -36,7 +36,16 @@ feature -- Access
 
 	local_assembly_list: EV_MULTI_COLUMN_LIST
 			-- List of assembly used in Current project.
-
+			
+	name_edition_window: EV_DIALOG
+			-- Currently displayed edition window for cluster name
+	
+	prefix_edition_window: EV_DIALOG
+			-- Currently displayed edition window for cluster prefix		
+			
+	name_change_item_widget: EV_TEXT_FIELD
+	
+	prefix_change_item_widget: EV_TEXT_FIELD
 
 feature -- Parent access
 
@@ -147,6 +156,7 @@ feature {NONE} -- Filling
 							list_row.extend (assembly.public_key_token)
 						end
 						local_assembly_list.extend (list_row)
+						--list_row.pointer_double_press_actions.force_extend (agent on_list_item_selected)
 					else
 							-- Add GAC reference row
 						create list_row
@@ -179,30 +189,32 @@ feature -- Checking
 feature -- Actions
 
 	add_gac_assembly_reference (assembly_list: EV_MULTI_COLUMN_LIST) is
-			-- Add items selected in 'assembly_list' to the 'gac_assembly_list' references
+			-- Add item selected in 'assembly_list' to the 'gac_assembly_list' references
 		require
 			list_not_void: assembly_list /= Void
 		local
-			selected_items: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW]
-			list_row: EV_MULTI_COLUMN_LIST_ROW
+			--selected_items: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW]
+			list_row, selected_item: EV_MULTI_COLUMN_LIST_ROW
+			assembly_interface: IL_ASSEMBLY_FACADE
 		do			
-			from
-				selected_items := assembly_list.selected_items
-				selected_items.start
-			until
-				selected_items.after
-			loop
+			create assembly_interface.make
+			selected_item := assembly_list.selected_item
+			if selected_item /= Void then
+				assembly_interface.go_i_th (assembly_list.index_of (selected_item, 1) - 1)
 				create list_row
-				list_row.extend ("A_cluster_name")
-				list_row.extend ("A_prefix")
-				list_row.extend (selected_items.item @ 1)
-				list_row.extend (selected_items.item @ 2)
-				list_row.extend (selected_items.item @ 3)
-				list_row.extend (selected_items.item @ 4)
-				gac_assembly_list.extend (list_row)	
-				selected_items.forth
-			end
-			populate_gac_assembly_dialog (assembly_list)
+				list_row.extend (unique_assembly_cluster_name ("GAC",
+									selected_item @ 1,
+									selected_item @ 2,
+									selected_item @ 3,
+									selected_item @ 4))
+				list_row.extend ("")
+				list_row.extend (selected_item @ 1)
+				list_row.extend (selected_item @ 2)
+				list_row.extend (selected_item @ 3)
+				list_row.extend (selected_item @ 4)
+				gac_assembly_list.extend (list_row)
+				populate_gac_assembly_dialog (assembly_list)
+			end	
 		end
 
 	remove_gac_assembly_reference is
@@ -273,66 +285,13 @@ feature -- Actions
 			populate_gac_assembly_dialog (assembly_list)			
 			gac_dialog.show_modal_to_window (system_window.window)
 		end
-		
-	show_prefix_dialog (a_list: EV_MULTI_COLUMN_LIST) is
-			-- Display the dialog to add a prefix
-		local
-			prefix_dialog: EV_DIALOG
-			vbox, item_box: EV_VERTICAL_BOX
-			hbox: EV_HORIZONTAL_BOX
-			label: EV_LABEL
-			ok_button, cancel_button: EV_BUTTON
-			prefix_text: EV_TEXT_FIELD
-			error_dialog: EV_INFORMATION_DIALOG
-		do			
-			if a_list.selected_item = Void then
-				create error_dialog.make_with_text ("No Assembly selected")
-				error_dialog.show
-			else
-				create prefix_dialog
-				prefix_dialog.set_title ("Add Prefix")	
-				
-				create vbox
-				vbox.set_border_width (Layout_constants.Small_border_size)
-				vbox.set_padding (Layout_constants.Small_padding_size)
-	
-				create item_box
-				item_box.set_padding (Layout_constants.Tiny_padding_size)
-				create label.make_with_text ("Prefix:")
-				label.align_text_left
-				create prefix_text
-				item_box.extend (label)
-				item_box.disable_item_expand (label)
-				item_box.extend (prefix_text)
-				vbox.extend (item_box)
-	
-				create hbox
-				hbox.set_padding (Layout_constants.Tiny_padding_size)
-				create ok_button.make_with_text_and_action 
-					("Ok", agent add_prefix (prefix_text, a_list))
-				ok_button.set_minimum_width (80)
-				create cancel_button.make_with_text_and_action ("Cancel", agent prefix_dialog.destroy)
-				cancel_button.set_minimum_width (80)
-				hbox.extend (ok_button)
-				hbox.extend (cancel_button)
-				hbox.disable_item_expand (ok_button)
-				hbox.disable_item_expand (cancel_button)
-				vbox.extend (hbox)
-				vbox.disable_item_expand (hbox)
-	
-				prefix_dialog.extend (vbox)
-				prefix_dialog.set_size (150, 75)			
-				prefix_dialog.show_modal_to_window (system_window.window)
-			end			
-		end	
-	
+
 	add_local_assembly_reference is
 			-- Open the browse dialog for adding of local assembly reference
 		local
 			fd: EV_FILE_OPEN_DIALOG
 			list_row: EV_MULTI_COLUMN_LIST_ROW
-			fusion_support: FUSION_SUPPORT
-			assembly_info: FUSION_SUPPORT_ASSEMBLY_INFO
+			assembly_interface: IL_ASSEMBLY_FACADE
 		do
 			create fd
 			fd.set_filter ("*.*")
@@ -343,16 +302,22 @@ feature -- Actions
 					or (fd.file_name.substring_index (".exe", fd.file_name.count - 4) > 0) then
 							-- Initialize COM.
 						(create {CLI_COM}).initialize_com
-						create fusion_support.make
-						if fusion_support.signed (create {UNI_STRING}.make (fd.file_name)) then
-							assembly_info := fusion_support.get_assembly_info_from_assembly (create {UNI_STRING}.make (fd.file_name))	
+						create assembly_interface.make
+						if assembly_interface.signed 
+								(create {STRING}.make_from_string (fd.file_name)) then
+							assembly_interface.get_assembly_info_from_assembly 
+								(create {STRING}.make_from_string (fd.file_name))
 							create list_row
-							list_row.extend ("A_cluster_name")
-							list_row.extend ("A_prefix")
+							list_row.extend (unique_assembly_cluster_name ("local",
+												assembly_interface.assembly_name,
+												assembly_interface.assembly_version,
+												assembly_interface.assembly_culture,
+												assembly_interface.assembly_public_key_token))
+							list_row.extend ("")
 							list_row.extend (fd.file_name)
-							list_row.extend (assembly_info.version)
-							list_row.extend (assembly_info.culture)
-							list_row.extend (assembly_info.public_key_token)
+							list_row.extend (assembly_interface.assembly_version)
+							list_row.extend (assembly_interface.assembly_culture)
+							list_row.extend (assembly_interface.assembly_public_key_token)
 							local_assembly_list.extend (list_row)
 						end
 				end
@@ -372,7 +337,91 @@ feature -- Actions
 				end
 				local_assembly_list.forth
 			end
-		end	
+		end
+		
+	on_list_item_selected is
+			-- User has double clicked list row so set up dialogs for in-place editing
+		local
+			name_column_width,
+			prefix_column_width,
+			name_x, name_y,
+			prefix_x, prefix_y: INTEGER
+			change_dialog: EV_UNTITLED_DIALOG
+			a_list: EV_MULTI_COLUMN_LIST
+		do
+			if gac_assembly_list.has_focus then
+				a_list := gac_assembly_list
+			else
+				a_list := local_assembly_list
+			end
+
+			name_column_width := gac_assembly_list.column_width (1)
+			prefix_column_width := gac_assembly_list.column_width (2)
+			
+			create change_dialog
+			change_dialog.disable_user_resize
+			create name_change_item_widget
+			name_change_item_widget.focus_out_actions.extend (agent on_assembly_item_deselected)
+			name_change_item_widget.change_actions.extend (agent update_actions)
+			change_dialog.extend (name_change_item_widget)
+			name_edition_window := change_dialog				
+			name_x := a_list.screen_x + 1
+			name_y := a_list.screen_y + 
+						a_list.index_of (a_list.selected_item, 1) * 
+						a_list.row_height
+			name_edition_window.set_position (name_x, name_y)
+			name_edition_window.set_size (name_column_width - 2, a_list.row_height - 5)
+			name_edition_window.show_relative_to_window (system_window.window)
+			
+			create change_dialog
+			change_dialog.disable_user_resize
+			create prefix_change_item_widget
+			prefix_change_item_widget.focus_out_actions.extend (agent on_assembly_item_deselected)
+			prefix_change_item_widget.change_actions.extend (agent update_actions)
+			change_dialog.extend (prefix_change_item_widget)
+			prefix_edition_window := change_dialog			
+			prefix_x := a_list.screen_x + name_column_width + 1
+			prefix_y := a_list.screen_y + 
+						a_list.index_of (a_list.selected_item, 1) * 
+						a_list.row_height
+			prefix_edition_window.set_position (prefix_x, prefix_y)
+			prefix_edition_window.set_size (prefix_column_width - 2, a_list.row_height - 10)
+			prefix_edition_window.show_relative_to_window (system_window.window)
+		end
+		
+	on_assembly_item_deselected is
+			-- Clear any in-place editing dialogs since row has lost focus and also
+			-- set row data to reflect newly entered text
+		do
+			if prefix_edition_window /= Void and name_edition_window /= Void and then not
+				(name_edition_window.has_focus or prefix_edition_window.has_focus) and then
+					prefix_edition_window.is_displayed and name_edition_window.is_displayed then
+						name_edition_window.hide
+						name_edition_window := Void
+						prefix_edition_window.hide
+						prefix_edition_window := Void
+			end
+		end
+		
+	update_actions is
+			--  
+		do
+			if gac_assembly_list.selected_item /= Void then
+				if not name_change_item_widget.text.is_empty then
+					gac_assembly_list.selected_item.put_i_th (name_change_item_widget.text, 1)
+				end
+				if not prefix_change_item_widget.text.is_empty then
+					gac_assembly_list.selected_item.put_i_th (prefix_change_item_widget.text, 2)
+				end
+			elseif local_assembly_list.selected_item /= Void then		
+				if not name_change_item_widget.text.is_empty then
+					local_assembly_list.selected_item.put_i_th (name_change_item_widget.text, 1)
+				end
+				if not prefix_change_item_widget.text.is_empty then
+					local_assembly_list.selected_item.put_i_th (prefix_change_item_widget.text, 2)
+				end
+			end
+		end
 
 feature {NONE} -- Initialization
 
@@ -386,7 +435,7 @@ feature {NONE} -- Initialization
 			default_create
 			
 			extend (msil_assembly_info ("GAC", agent show_gac_assembly_dialog, agent remove_gac_assembly_reference))
-			extend (msil_assembly_info ("Local", agent add_local_assembly_reference, agent remove_local_assembly_reference))
+			extend (msil_assembly_info ("local", agent add_local_assembly_reference, agent remove_local_assembly_reference))
 
 			msil_specific_widgets.extend (Current)
 		end
@@ -411,7 +460,7 @@ feature {NONE} -- Initialization
 			vbox, item_box: EV_VERTICAL_BOX
 			hbox: EV_HORIZONTAL_BOX
 			cell: EV_CELL
-			add_button, remove_button, prefix_button: EV_BUTTON
+			add_button, remove_button: EV_BUTTON
 		do
 			create vbox
 			vbox.set_border_width (Layout_constants.Small_border_size)
@@ -425,10 +474,10 @@ feature {NONE} -- Initialization
 				gac_assembly_list.set_column_titles 
 					(<<"Cluster Name", "Prefix", "Name", "Version", "Culture", "Public Key">>)
 				gac_assembly_list.disable_multiple_selection
-				create prefix_button.make_with_text_and_action 
-					("Set prefix...", agent show_prefix_dialog (gac_assembly_list))
+				gac_assembly_list.pointer_double_press_actions.force_extend (agent on_list_item_selected)
+				gac_assembly_list.focus_out_actions.force_extend (agent on_assembly_item_deselected)
 				item_box.extend (gac_assembly_list)
-			elseif a_assembly_type.is_equal ("Local") then
+			elseif a_assembly_type.is_equal ("local") then
 				create Result.make_with_text ("Local Assembly References")
 				create local_assembly_list
 				local_assembly_list.set_column_titles 
@@ -437,8 +486,8 @@ feature {NONE} -- Initialization
 				local_assembly_list.set_column_width (0, 4)
 				local_assembly_list.set_column_width (0, 5)
 				local_assembly_list.set_column_width (0, 6)
-				create prefix_button.make_with_text_and_action 
-					("Set prefix...", agent show_prefix_dialog (local_assembly_list))
+				local_assembly_list.pointer_double_press_actions.force_extend (agent on_list_item_selected)
+				local_assembly_list.focus_out_actions.force_extend (agent on_assembly_item_deselected)
 				item_box.extend (local_assembly_list)
 			end
 			
@@ -448,14 +497,11 @@ feature {NONE} -- Initialization
 			create hbox
 			hbox.set_padding (Layout_constants.Tiny_padding_size)
 			create cell
-			prefix_button.set_minimum_width (80)
 			add_button.set_minimum_width (80)
 			remove_button.set_minimum_width (80)
-			hbox.extend (prefix_button)
 			hbox.extend (cell)
 			hbox.extend (add_button)
 			hbox.extend (remove_button)
-			hbox.disable_item_expand (prefix_button)
 			hbox.disable_item_expand (add_button)
 			hbox.disable_item_expand (remove_button)
 			vbox.extend (hbox)
@@ -495,25 +541,19 @@ feature -- Implementation
 		require
 			list_not_void: assembly_list /= Void
 		local
-			fusion_support: FUSION_SUPPORT
-			assemblies: FUSION_SUPPORT_ASSEMBLIES
-			curr_assembly: FUSION_SUPPORT_ASSEMBLY_INFO
-			lower_bound, upper_bound: INTEGER
+			assembly_interface: IL_ASSEMBLY_FACADE
 			list_row: EV_MULTI_COLUMN_LIST_ROW
 			add_to_gac_dialog: BOOLEAN
 		do
 			(create {CLI_COM}).initialize_com
 
-			create fusion_support.make
-			assemblies := fusion_support.assemblies
+			create assembly_interface.make
 			from
 				assembly_list.wipe_out
-				lower_bound := 0
-				upper_bound := assemblies.count
+				assembly_interface.start
 			until
-				lower_bound = upper_bound
+				assembly_interface.after
 			loop
-				curr_assembly := assemblies.i_th (lower_bound)
 				from
 					gac_assembly_list.start
 					add_to_gac_dialog := True
@@ -521,10 +561,10 @@ feature -- Implementation
 					gac_assembly_list.after or not add_to_gac_dialog
 				loop
 					list_row := gac_assembly_list.item
-						if list_row.i_th (3).is_equal (curr_assembly.name) then
-							if list_row.i_th (4).is_equal (curr_assembly.version) then
-								if list_row.i_th (5).is_equal (curr_assembly.culture) then 
-									if list_row.i_th (6).is_equal (curr_assembly.public_key_token) then
+						if list_row.i_th (3).is_equal (assembly_interface.assembly_name) then
+							if list_row.i_th (4).is_equal (assembly_interface.assembly_version) then
+								if list_row.i_th (5).is_equal (assembly_interface.assembly_culture) then 
+									if list_row.i_th (6).is_equal (assembly_interface.assembly_public_key_token) then
 										add_to_gac_dialog := False
 									end
 								end
@@ -534,19 +574,14 @@ feature -- Implementation
 				end
 				if add_to_gac_dialog then
 					create list_row
-					list_row.extend (curr_assembly.name)
-					list_row.extend (curr_assembly.version)
-					list_row.extend (curr_assembly.culture)
-					list_row.extend (curr_assembly.public_key_token)
+					list_row.extend (assembly_interface.assembly_name)
+					list_row.extend (assembly_interface.assembly_version)
+					list_row.extend (assembly_interface.assembly_culture)
+					list_row.extend (assembly_interface.assembly_public_key_token)
 					assembly_list.extend (list_row)
 				end
-				lower_bound := lower_bound + 1
+				assembly_interface.forth
 			end
-		end
-		
-	valid_cluster_name (a_cluster_name: STRING) is
-			-- Is 'a_cluster_name' valid for the current project?
-		do	
 		end
 		
 	add_prefix (a_prefix: EV_TEXT_FIELD; a_list: EV_MULTI_COLUMN_LIST) is
@@ -558,7 +593,86 @@ feature -- Implementation
 			a_list.selected_item.replace (a_prefix.text)
 			a_prefix.parent.parent.parent.destroy
 		end
+	
+	unique_assembly_cluster_name (ass_type, a_name, a_culture, a_version, a_public_key: STRING): STRING is
+			-- Produce a unique cluster name from assembly details relative to 'a_list'
+		local
+			i: INTEGER
+			finished: BOOLEAN
+			current_cluster_names: ARRAYED_LIST [STRING]
+			temp_id_string: STRING
+		do
+			from
+				i := 1
+				current_cluster_names := cluster_names (ass_type)
+			until	
+				i = 5 or finished
+			loop
+				inspect i
+				when 1 then
+					if a_name.is_empty then 
+						create temp_id_string.make_from_string ("Assembly")
+					else
+						create temp_id_string.make_from_string (a_name)
+					end
+				when 2 then
+					if not a_version.is_empty then
+						temp_id_string.append (a_version)
+					end
+				when 3 then
+					if not a_culture.is_empty then
+						temp_id_string.append (a_culture)
+					end	
+				when 4 then		
+					if not a_public_key.is_empty then
+						temp_id_string.append (a_public_key)
+					end		
+				end
+				if current_cluster_names.has (temp_id_string) then
+					i := i + 1
+				else
+					finished := True
+				end			
+			end
+			from
+				i := 1
+				temp_id_string.replace_substring_all (".", "_")
+			until
+				i = temp_id_string.count
+			loop
+				if not (temp_id_string.item (i).is_alpha or 
+						temp_id_string.item (i).is_digit or
+						temp_id_string.item (i).is_equal ('_')) then
+					temp_id_string.replace_substring ("%%", i, i)
+				end
+				i := i + 1
+			end
+			temp_id_string.replace_substring_all ("%%", "")
+			Result := temp_id_string
+		end
 		
+	cluster_names (ass_type: STRING): ARRAYED_LIST [STRING] is
+			-- Get the cluster names for referenced assemblies of type 'ass_type'
+		local
+			a_list: EV_MULTI_COLUMN_LIST
+		do
+			if ass_type.is_equal ("local") then
+				a_list := local_assembly_list
+			elseif ass_type.is_equal ("GAC") then
+				a_list := gac_assembly_list
+			end
+			
+			from
+				create Result.make (a_list.count)
+				a_list.start
+			until
+				a_list.after
+			loop
+				Result.extend (a_list.item @ (1))
+				a_list.forth
+			end
+		end
+	
 invariant
 	widgets_not_void:
 		gac_assembly_list /= Void and

@@ -60,15 +60,15 @@ feature -- Formatting
 						if stone.clickable then
 							display_temp_header (stone)
 --							create mp.set_watch_cursor
+							tool.text_window.freeze
 							tool.text_window.clear_window
-							tool.text_window.hide
 							tool.text_window.set_editable (True)
 							tool.set_stone (stone)
 							tool.set_file_name (file_name (stone))
 							display_info (stone)
 							tool.text_window.set_position (1)
 							tool.text_window.set_editable (False)
-							tool.text_window.show
+							tool.text_window.thaw
 							tool.set_last_format (Current)
 							filtered := false
 							display_header (stone)

@@ -7,6 +7,12 @@ indexing
 
 class WINDOW_MGR 
 
+inherit
+	WINDOWS
+		rename
+			explain_window as win_explain
+		end
+
 creation
 
 	make
@@ -41,25 +47,29 @@ feature -- Properties
 	routine_window: ROUTINE_W is
 			-- Make a routine window 
 		do
-			Result := routine_win_mgr.top_shell_editor
+			Result := routine_win_mgr.top_shell_editor;
+			Project_tool.add_routine_entry (Result)
 		end;
 
 	class_window: CLASS_W is
 			-- Make a class window 
 		do
-			Result := class_win_mgr.top_shell_editor
+			Result := class_win_mgr.top_shell_editor;
+			Project_tool.add_class_entry (Result)
 		end;
 
-	object_window: OBJECT_W is
+	dialog_object_window: OBJECT_W is
 			-- Make an object window
 		do
-			Result := object_win_mgr.top_shell_editor
+			Result := object_win_mgr.form_d_editor;
+			Project_tool.add_object_entry (Result)
 		end;
 
 	explain_window: EXPLAIN_W is
 			-- Create a context editor
 		do
-			Result := explain_win_mgr.top_shell_editor
+			Result := explain_win_mgr.top_shell_editor;
+			Project_tool.add_explain_entry (Result)
 		end;
 
 	class_windows_count: INTEGER is
@@ -129,7 +139,15 @@ feature -- Graphical Interface
 			class_win_mgr.show_editors;
 			object_win_mgr.show_editors;
 			explain_win_mgr.show_editors;
-		end
+		end;
+
+	close_all_editors is
+		do
+			routine_win_mgr.close_editors;
+			class_win_mgr.close_editors;
+			object_win_mgr.close_editors;
+			explain_win_mgr.close_editors
+		end;
 
 	raise_class_windows is
 		do

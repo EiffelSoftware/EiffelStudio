@@ -85,10 +85,10 @@ feature {NONE} -- Initialization
 			create classes.make (0)
 		ensure
 			cluster_name_set: cluster_name = a.cluster_name
-			assembly_name_set: assembly_name = a.assembly_name
-			version_set: version = a.version
-			culture: culture = a.culture
-			public_key_token: public_key_token = a.public_key_token
+			assembly_name_set: not is_local implies (assembly_name = a.assembly_name)
+			version_set: not is_local implies version = a.version
+			culture: not is_local implies culture = a.culture
+			public_key_token: not is_local implies public_key_token = a.public_key_token
 		end
 
 feature -- Comparison

@@ -201,7 +201,7 @@ feature
 					end;
 					extension.generate_header_files
 
-						-- Now generate the right name to call the external
+						-- Generate the right name to call the external
 						-- In the case of a signature or a macro, the call will be direct
 						-- In the case of a dll, the encapsulation will be called (encoded name)
 					extension.generate_external_name (buf, external_name, typ, type_c);
@@ -221,22 +221,26 @@ feature
 						end
 						buf.putstring (external_name);
 					else
-						local_argument_types := argument_types
 						if extension /= Void and then extension.has_signature then
 							if extension.has_return_type then
 								buf.putchar ('(')
 								buf.putstring (extension.return_type)
 								buf.putchar (')')
 							end
-							buf.putstring (external_name);
+								-- Generate the right name to call the external
+								-- In the case of a signature or a macro, the call will be direct
+								-- In the case of a dll, the encapsulation will be called (encoded name)
+							extension.generate_external_name (buf, external_name, typ, type_c);
 						else
+							local_argument_types := argument_types
 							buf.putchar ('(')
 							type_c.generate_function_cast (buf, local_argument_types);
 							buf.putstring (external_name);
 							buf.putchar (')')
+								-- Remember external routine declaration
+							Extern_declarations.add_routine_with_signature (type_c,
+															external_name, local_argument_types);
 						end
-							-- Remember external routine declaration
-						Extern_declarations.add_routine_with_signature (type_c, external_name, local_argument_types);
 					end;
 				end;
 			end;

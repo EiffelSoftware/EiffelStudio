@@ -22,7 +22,7 @@ feature -- Initialization
 			first_window.set_title ("DYNAMIC_LIST test")
 			create vb
 			first_window.extend (vb)
-			create test.make (create {EV_HORIZONTAL_BOX}, "EV_HORIZONTAL_BOX", ~item_generator)
+			create test.make ("EV_HORIZONTAL_BOX", ~list_generator, ~item_generator)
 			create butt.make_with_text ("Perform test.")
 			butt.press_actions.extend (~perform)
 			vb.extend (butt)
@@ -31,7 +31,7 @@ feature -- Initialization
 			vb.extend (results_label)			
 			vb.disable_child_expand (results_label)
 			create desc_label
-			vb.extend (desc_label)			
+			vb.extend (desc_label)
 		end
 
 	butt: EV_BUTTON
@@ -47,6 +47,11 @@ feature -- Initialization
 			-- The test.
 
 	item_generator: EV_BUTTON is
+		do
+			create Result
+		end
+
+	list_generator: EV_HORIZONTAL_BOX is
 		do
 			create Result
 		end

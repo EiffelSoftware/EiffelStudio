@@ -235,7 +235,8 @@ feature {NONE} -- Implementation
 				close
 				if returned_value /= dictionary.Cancel then
 					create emitter.make_neweiffelclassgenerator
-					if destination_path_text_box.text /= Void then
+					if destination_path_text_box.text /= Void and then destination_path_text_box.text.length > 0 then
+						put_environment_variable
 						ok_button.set_enabled (False)
 						cancel_button.set_enabled (False)
 						emitter.importassemblywithdependancies (assembly, destination_path_text_box.text)
@@ -274,7 +275,8 @@ feature {NONE} -- Implementation
 				close
 				if returned_value /= dictionary.Cancel then
 					create emitter.make_neweiffelclassgenerator
-					if destination_path_text_box.text /= Void then
+					if destination_path_text_box.text /= Void and then destination_path_text_box.text.length > 0 then
+						put_environment_variable
 						ok_button.set_enabled (False)
 						cancel_button.set_enabled (False)
 						emitter.importassemblywithoutdependancies (assembly, destination_path_text_box.text)

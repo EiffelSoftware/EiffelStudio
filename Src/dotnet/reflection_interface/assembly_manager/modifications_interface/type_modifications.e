@@ -21,91 +21,89 @@ feature {NONE} -- Initialization
 			non_void_features_modifications: features_modifications /= Void
 		end
 
-	make_from_info (a_name: like external_name) is
+	make_from_info (an_old_name: like old_name) is
 			-- Initialize attributes.
 		indexing
 			external_name: "MakeFromInfo"
 		require
-			non_void_name: a_name /= Void
-			not_empty_name: a_name.length > 0
+			non_void_name: an_old_name /= Void
+			not_empty_name: an_old_name.length > 0
 		do
-			set_external_name (a_name)
+			set_old_name (an_old_name)
 			create features_modifications.make
 		ensure
-			external_name_set: external_name.equals_string (a_name)
+			old_name_set: old_name.equals_string (an_old_name)
 			non_void_features_modifications: features_modifications /= Void
 		end
 		
 feature -- Access
 	
-	external_name: STRING
-			-- External name
+	old_name: STRING
+			-- Old class name
 		indexing
-			external_name: "ExternalName"
+			external_name: "OldName"
 		end
 		
-	new_class_name: STRING
+	new_name: STRING
 			-- New class name
 		indexing
-			external_name: "NewClassName"
+			external_name: "NewName"
 		end
 		
 	features_modifications: SYSTEM_COLLECTIONS_HASHTABLE
 			-- Features modifications
-			-- | Key: Instance of `SYSTEM_REFLECTION_METHODINFO'
-			-- | Value: New feature name
+			-- | Key: Instance of `EIFFEL_FEATURE'
+			-- | Value: Instance of `FEATURE_MODIFICATIONS'
 		indexing
 			external_name: "FeaturesModifications"
 		end
 
 feature -- Status Setting
 
-	set_external_name (a_name: like external_name) is
-			-- Set `external_name' with `a_name'.
+	set_old_name (an_old_name: like old_name) is
+			-- Set `old_name' with `an_old_name'.
 		indexing
-			external_name: "SetExternalName"
+			external_name: "SetOldName"
 		require
-			non_void_name: a_name /= Void
-			not_empty_name: a_name.length > 0
+			non_void_name: an_old_name /= Void
+			not_empty_name: an_old_name.length > 0
 		do
-			external_name := a_name
+			old_name := an_old_name
 		ensure
-			external_name_set: external_name.equals_string (a_name)
+			old_name_set: old_name.equals_string (an_old_name)
 		end
 	
-	set_new_class_name (a_name: like new_class_name) is
-			-- Set `new_class_name' with `a_name'.
+	set_new_name (a_name: like new_name) is
+			-- Set `new_name' with `a_name'.
 		indexing
-			external_name: "SetNewClassName"
+			external_name: "SetNewName"
 		require
 			non_void_name: a_name /= Void
-			not_empty_name: a_name.length > 0
 		do
-			new_class_name := a_name
+			new_name := a_name
 		ensure
-			new_class_name_set: new_class_name.equals_string (a_name)
+			new_name_set: new_name.equals_string (a_name)
 		end
 
 feature -- Basic Operations
 
-	add_feature_modification (a_feature_info: SYSTEM_REFLECTION_METHODINFO; new_feature_name: STRING) is
-			-- Add `new_feature_name' to `features_modifications' with key `a_feature_info'.
-			-- If `a_feature_info' is already in table, the existing value will be replaced by `new_feature_name'.
+	add_feature_modification (a_feature: ISE_REFLECTION_EIFFELFEATURE; feature_modification: FEATURE_MODIFICATIONS) is
+			-- Add `feature_modification' to `features_modifications' with key `a_feature'.
+			-- If `a_feature' is already in table, the existing value will be replaced by `feature_modifications'.
 		indexing
 			external_name: "AddFeatureModification"
 		require
-			non_void_feature_modification: a_feature_info /= Void
-			non_void_feature_name: new_feature_name /= Void
-			not_empty_feature_name: new_feature_name.length > 0
+			non_void_feature: a_feature /= Void
+			non_void_feature_modification: feature_modification /= Void
 		do
-			if features_modifications.containskey (a_feature_info) then
-				features_modifications.add (a_feature_info, new_feature_name)
+			if not features_modifications.containskey (a_feature) then
+				features_modifications.add (a_feature, feature_modification)
 			else
-				features_modifications.remove (a_feature_info)
-				features_modifications.add (a_feature_info, new_feature_name)
+				features_modifications.remove (a_feature)
+				features_modifications.add (a_feature, feature_modification)
 			end
 		ensure
-			feature_modification_added: features_modifications.containsvalue (new_feature_name)
+			feature_modification_added: features_modifications.containsvalue (feature_modification)
 		end
 		
 invariant

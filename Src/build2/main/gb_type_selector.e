@@ -77,7 +77,7 @@ feature -- Basic operation
 		end
 		
 
-feature {GB_LAYOUT_NODE, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_EV_BOX} -- Basic operations
+feature {GB_LAYOUT_NODE, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_EV_BOX_EDITOR_CONSTRUCTOR} -- Basic operations
 
 	update_drop_actions_for_all_children  (an_object: GB_OBJECT) is
 			-- Generate correct drop_actions for every child in `Current' when

@@ -95,6 +95,22 @@ feature
 			Result := parent_type.base_type;
 		end;
 
+	has_renamed (feature_name: STRING): BOOLEAN is
+			-- Is the current parent renamed a feature to `feature_name' ?
+		do
+			if renaming /= Void then
+				from
+					renaming.start
+				until
+					renaming.after or else Result
+				loop
+					Result := renaming.item_for_iteration.is_equal
+								(feature_name);
+					renaming.forth
+				end
+			end;
+		end;
+
 	is_renaming (feature_name: STRING): BOOLEAN is
 			-- Is the current parent renaming `feature_name' ?
 		do

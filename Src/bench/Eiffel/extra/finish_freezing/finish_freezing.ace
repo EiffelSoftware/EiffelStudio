@@ -27,7 +27,7 @@ default
 	assertion (no);
 	multithreaded (no);
 	console_application (yes);
---	inlining (yes);
+	inlining (yes);
 --	inlining_size ("4");
 --	array_optimization (yes);
 

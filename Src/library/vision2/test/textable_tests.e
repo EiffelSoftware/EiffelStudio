@@ -29,41 +29,62 @@ feature -- Initialization
 			tests: LINKED_LIST [EV_TEXTABLE_TEST]
 			tst: EV_TEXTABLE_TEST
 			fail: BOOLEAN
+			hb: EV_HORIZONTAL_BOX
 		do
 			create tests.make
-			create tst.make ("EV_TREE_ITEM", create {EV_TREE_ITEM}, create {EV_TREE})
+			create tst.make_with_item ("EV_TREE_ITEM", create {EV_TREE_ITEM},
+				create {EV_TREE})
 			tests.extend (tst)
-			create tst.make ("EV_STATUS_BAR_ITEM", create {EV_STATUS_BAR_ITEM}, create {EV_STATUS_BAR})
+			create tst.make_with_item ("EV_STATUS_BAR_ITEM",
+				create {EV_STATUS_BAR_ITEM},
+				create {EV_STATUS_BAR})
 			tests.extend (tst)
-			create tst.make ("EV_TOOL_BAR_BUTTON", create {EV_TOOL_BAR_BUTTON}, create {EV_TOOL_BAR})
+			create tst.make_with_item ("EV_TOOL_BAR_BUTTON",
+				create {EV_TOOL_BAR_BUTTON},
+				create {EV_TOOL_BAR})
 			tests.extend (tst)
-			create tst.make ("EV_TOOL_BAR_TOGGLE_BUTTON", create {EV_TOOL_BAR_TOGGLE_BUTTON}, create {EV_TOOL_BAR})
+			create tst.make_with_item ("EV_TOOL_BAR_TOGGLE_BUTTON",
+				create {EV_TOOL_BAR_TOGGLE_BUTTON}, create {EV_TOOL_BAR})
 			tests.extend (tst)
-			create tst.make ("EV_TOOL_BAR_RADIO_BUTTON", create {EV_TOOL_BAR_RADIO_BUTTON}, create {EV_TOOL_BAR})
+			create tst.make_with_item ("EV_TOOL_BAR_RADIO_BUTTON",
+				create {EV_TOOL_BAR_RADIO_BUTTON}, create {EV_TOOL_BAR})
 			tests.extend (tst)
-			create tst.make ("EV_MENU_ITEM", create {EV_MENU_ITEM}, create {EV_MENU})
+			create tst.make_with_item ("EV_MENU_ITEM", create {EV_MENU_ITEM},
+				create {EV_MENU})
 			tests.extend (tst)
-			create tst.make ("EV_RADIO_MENU_ITEM", create {EV_RADIO_MENU_ITEM}, create {EV_MENU})
+			create tst.make_with_item ("EV_RADIO_MENU_ITEM",
+				create {EV_RADIO_MENU_ITEM},
+				create {EV_MENU})
 			tests.extend (tst)
-			create tst.make ("EV_CHECK_MENU_ITEM", create {EV_CHECK_MENU_ITEM}, create {EV_MENU})
+			create tst.make_with_item ("EV_CHECK_MENU_ITEM",
+				create {EV_CHECK_MENU_ITEM},
+				create {EV_MENU})
 			tests.extend (tst)
-			create tst.make ("EV_MENU", create {EV_MENU}, create {EV_MENU})
+			create tst.make_with_item ("EV_MENU", create {EV_MENU},
+				create {EV_MENU_BAR})
 			tests.extend (tst)
-			create tst.make ("EV_LIST_ITEM", create {EV_LIST_ITEM}, create {EV_LIST})
+			create tst.make_with_item ("EV_LIST_ITEM", create {EV_LIST_ITEM},
+				create {EV_LIST})
 			tests.extend (tst)
-			create tst.make ("EV_LABEL", create {EV_LABEL}, create {EV_HORIZONTAL_BOX})
+			create hb
+			first_window.extend (hb)
+			create tst.make_with_widget ("EV_LABEL", create {EV_LABEL}, hb)
 			tests.extend (tst)
-			create tst.make ("EV_FRAME", create {EV_FRAME}, create {EV_HORIZONTAL_BOX})
+			create tst.make_with_widget ("EV_FRAME", create {EV_FRAME}, hb)
 			tests.extend (tst)
-			create tst.make ("EV_BUTTON", create {EV_BUTTON}, create {EV_HORIZONTAL_BOX})
+			create tst.make_with_widget ("EV_BUTTON", create {EV_BUTTON}, hb)
 			tests.extend (tst)
-			create tst.make ("EV_RADIO_BUTTON", create {EV_RADIO_BUTTON}, create {EV_HORIZONTAL_BOX})
+			create tst.make_with_widget ("EV_RADIO_BUTTON",
+				create {EV_RADIO_BUTTON}, hb)
 			tests.extend (tst)
-			create tst.make ("EV_TOGGLE_BUTTON", create {EV_TOGGLE_BUTTON}, create {EV_HORIZONTAL_BOX})
+			create tst.make_with_widget ("EV_TOGGLE_BUTTON",
+				create {EV_TOGGLE_BUTTON}, hb)
 			tests.extend (tst)
-			create tst.make ("EV_CHECK_BUTTON", create {EV_CHECK_BUTTON}, create {EV_HORIZONTAL_BOX})
+			create tst.make_with_widget ("EV_CHECK_BUTTON",
+				create {EV_CHECK_BUTTON}, hb)
 			tests.extend (tst)
-			create tst.make ("EV_OPTION_BUTTON", create {EV_OPTION_BUTTON}, create {EV_HORIZONTAL_BOX})
+			create tst.make_with_widget ("EV_OPTION_BUTTON",
+				create {EV_OPTION_BUTTON}, hb)
 			tests.extend (tst)
 
 			from
@@ -72,7 +93,7 @@ feature -- Initialization
 				tests.after
 			loop
 				tests.item.execute
-				print (tests.item.description "%N")
+				print (tests.item.description + "%N")
 				if not tests.item.test_successful then
 					fail := True
 				end

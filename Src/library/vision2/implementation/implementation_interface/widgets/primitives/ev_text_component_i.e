@@ -44,6 +44,13 @@ feature -- Access
 
 feature -- Status report
 
+	is_editable: BOOLEAN is
+			-- Is the text editable
+		require
+			exists: not destroyed
+		deferred
+		end
+
 	position: INTEGER is
 			-- Current position of the caret.
 		require
@@ -115,6 +122,7 @@ feature -- Status setting
 			exist: not destroyed			
 			position_large_enough: pos >= 1
 			position_small_enough: pos <= text_length + 1
+			is_editable: is_editable
 		deferred
 		end
 	
@@ -125,6 +133,7 @@ feature -- Element change
 		require
 			exist: not destroyed			
 			valid_text: txt /= Void
+			is_editable: is_editable
 		deferred
 		ensure
 			text_set: text.is_equal (txt)
@@ -135,6 +144,7 @@ feature -- Element change
 		require
 			exists: not destroyed
 			valid_text: txt /= Void
+			is_editable: is_editable
 		deferred
 		end
 	
@@ -143,6 +153,7 @@ feature -- Element change
 		require
 			exist: not destroyed			
 			valid_text: txt /= Void
+			is_editable: is_editable
 		deferred
 		ensure
 			text_appended:
@@ -153,6 +164,7 @@ feature -- Element change
 		require
 			exist: not destroyed			
 			valid_text: txt /= Void
+			is_editable: is_editable
 		deferred
 		ensure
 			text_prepended:
@@ -211,6 +223,7 @@ feature -- Basic operation
 		require
 			exist: not destroyed
 			has_selection: has_selection
+			is_editable: is_editable
 		deferred
 		ensure
 			has_no_selection: not has_selection
@@ -225,6 +238,7 @@ feature -- Basic operation
 		require
 			exists: not destroyed
 			has_selection: has_selection
+			is_editable: is_editable
 		deferred
 		end
 
@@ -246,6 +260,9 @@ feature -- Basic operation
 			-- If the Clipboard is empty, it does nothing. 
 		require
 			exists: not destroyed
+			index_large_enough: index >= 1
+			index_small_enough: index <= text_length + 1
+			is_editable: is_editable
 		deferred
 		end
 

@@ -13,35 +13,31 @@ default
 	use_all_cluster_name_as_namespace (yes)
 	msil_generation_type ("exe")
 	check_vape (yes)
-	console_application (no)
+	console_application (yes)
 
 cluster
 	root_cluster:		"$ISE_EIFFEL\examples\vision2\widgets"
 
-
 	all base:		"$ISE_EIFFEL\library\base"
 		exclude
-			"table_eiffel3"; "classic"
+			"table_eiffel3"; "desc"; "classic"; 
 		end
 
 	all base_net:		"$ISE_EIFFEL\library.net\base"
+
+	all wel:		"$ISE_EIFFEL\library\wel"
 		exclude
-			"CVS"
+			"spec"; "clib"; "classic"; 
 		end
 
 	all wel_net:		"$ISE_EIFFEL\library.net\wel"
 
-	all vision2_net:		"$ISE_EIFFEL\library.net\vision2"
-
-	all wel:		"$ISE_EIFFEL\library\wel"
-		exclude
-			"classic"
-		end
-
 	all vision2:		"$ISE_EIFFEL\library\vision2"
 		exclude
-			"gtk"; "EIFGEN"; "tmp"; "temp"; "release"; "obsolete"; "bench_used"; "classic"; "ev_pixmap_imp_loader.e";
+			"gtk"; "Clib"; "gtk"; "assign_attempt.e"; "ev_pixmap_imp_loader.e";
 		end
+		
+	all vision2_net:	"$ISE_EIFFEL\library.net\vision2"	
 
 assembly
 	mscorlib:	"$ISE_DOTNET_FRAMEWORK\mscorlib.dll"
@@ -54,66 +50,6 @@ assembly
 	system_xml:	"$ISE_DOTNET_FRAMEWORK\System.Xml.dll"
 		prefix
 			"XML_"
-		end
-
-	data:	"$ISE_DOTNET_FRAMEWORK\System.Data.dll"
-		prefix
-			"DATA_"
-		end
-
-	winforms:	"$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll"
-		prefix
-			"WINFORMS_"
-		end
-
-	cscompmgd:	"$ISE_DOTNET_FRAMEWORK\cscompmgd.dll"
-		prefix
-			"CSCOMPMGD_"
-		end
-
-	"System.Drawing":	"$ISE_DOTNET_FRAMEWORK\system.drawing.dll"
-		prefix
-			"DRAWING_"
-		end
-
-	"Microsoft.VisualC":	"$ISE_DOTNET_FRAMEWORK\microsoft.visualc.dll"
-		prefix
-			"MICROSOFT_VISUALC_"
-		end
-
-	"System.DirectoryServices":	"$ISE_DOTNET_FRAMEWORK\system.directoryservices.dll"
-		prefix
-			"SYSTEM_DIRECTORYSERVICES_"
-		end
-
-	"System.Runtime.Serialization.Formatters.Soap":	"$ISE_DOTNET_FRAMEWORK\system.runtime.serialization.formatters.soap.dll"
-		prefix
-			"SYSTEM_RUNTIME_SERIALIZATION_FORMATTERS_SOAP_"
-		end
-
-	"System.Web.RegularExpressions":	"$ISE_DOTNET_FRAMEWORK\system.web.regularexpressions.dll"
-		prefix
-			"SYSTEM_WEB_REGULAREXPRESSIONS_"
-		end
-
-	"System.Web":	"$ISE_DOTNET_FRAMEWORK\system.web.dll"
-		prefix
-			"SYSTEM_WEB_"
-		end
-
-	"System.Runtime.Remoting":	"$ISE_DOTNET_FRAMEWORK\system.runtime.remoting.dll"
-		prefix
-			"SYSTEM_RUNTIME_REMOTING_"
-		end
-
-	"System.EnterpriseServices":	"$ISE_DOTNET_FRAMEWORK\system.enterpriseservices.dll"
-		prefix
-			"SYSTEM_ENTERPRISESERVICES_"
-		end
-
-	"Accessibility":	"$ISE_DOTNET_FRAMEWORK\Accessibility.dll"
-		prefix
-			"ACCESSIBILITY_"
 		end
 
 external

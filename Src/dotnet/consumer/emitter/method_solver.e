@@ -31,59 +31,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (meth: METHOD_INFO) is
+	make (meth: METHOD_INFO; get_property: BOOLEAN) is
 			-- Set `internal_method' with `meth'.
 		require
 			non_void_method: meth /= Void
 		do
 			internal_method := meth
+			is_get_property := get_property
 			arguments := solved_arguments (meth)
 		ensure
 			method_set: internal_method = meth
 			arguments_set: arguments /= Void
 		end
 
-feature -- Status Report
-
-	is_infix: BOOLEAN is
-			-- Is function an infix function?
-		require
-			is_function: is_function
-		do
-			if not internal_is_infix_set then
-				internal_is_infix := internal_method.get_name.get_length > 3 and then
-						internal_method.get_is_special_name and then
-						internal_method.get_name.starts_with (Operator_name_prefix.to_cil) and then
-						internal_method.get_parameters.item (0).get_parameter_type.equals_type (internal_method.get_reflected_type)
-				internal_is_infix_set := True
-			end
-			Result := internal_is_infix
-		end
-
-	is_prefix: BOOLEAN is
-			-- Is function a prefix function?
-		require
-			is_function: is_function
-		do
-			if not internal_is_prefix_set then
-				internal_is_prefix := internal_method.get_name.get_length > 3 and then
-						internal_method.get_is_special_name and then
-						internal_method.get_name.starts_with (Operator_name_prefix.to_cil) and then
-						internal_method.get_parameters.count = 1
-				internal_is_prefix_set := True
-			end
-			Result := internal_is_prefix
-		end
-		
-	is_function: BOOLEAN is
-			-- Is method a function?
-		do
-			if not internal_is_function_set then
-				internal_is_function := not internal_method.get_return_type.equals_type (Void_type)
-				internal_is_function_set := True
-			end
-			Result := internal_is_function
-		end
 		
 feature -- Access
 
@@ -99,44 +59,8 @@ feature -- Access
 	arguments: ARRAY [CONSUMED_ARGUMENT]
 			-- Method arguments
 
-	consumed_procedure: CONSUMED_PROCEDURE is
-			-- Consumed procedure
-		require
-			is_procedure: not is_function
-			name_set: eiffel_name /= Void
-		do
-			create Result.make (
-				eiffel_name,
-				create {STRING}.make_from_cil (internal_method.get_name),
-				arguments,
-				internal_method.get_is_final,
-				internal_method.get_is_static,
-				internal_method.get_is_abstract,
-				internal_method.get_is_public,
-				is_property_or_event,
-				referenced_type_from_type (internal_method.get_declaring_type))		
-		end
-	
-	consumed_function: CONSUMED_FUNCTION is
-			-- Consumed function
-		require
-			is_function: is_function
-			name_set: eiffel_name /= Void
-		do
-			create Result.make (
-				eiffel_name,
-				create {STRING}.make_from_cil (internal_method.get_name),
-				arguments,
-				referenced_type_from_type (internal_method.get_return_type),
-				internal_method.get_is_final,
-				internal_method.get_is_static,
-				internal_method.get_is_abstract,
-				is_infix,
-				is_prefix,
-				internal_method.get_is_public,
-				is_property_or_event,
-				referenced_type_from_type (internal_method.get_declaring_type))			
-		end
+	is_get_property: BOOLEAN
+			-- Is getter method of a property?
 		
 feature -- Element Settings
 
@@ -163,53 +87,5 @@ feature {METHOD_SOLVER, OVERLOAD_SOLVER} -- Implementation
 	internal_method: METHOD_INFO
 			-- Method to be consumed
 
-feature {NONE} -- Implementation
-
-	is_property_or_event: BOOLEAN is
-			-- Is `internal_method' a property or event related feature?
-		require
-			non_void_internal_method: internal_method /= Void
-		do
-			Result := internal_method.get_is_special_name and (
-				dotnet_name.substring_index ("set_", 1) = 1 or
-				dotnet_name.substring_index ("get_", 1) = 1 or
-				dotnet_name.substring_index ("add_", 1) = 1 or
-				dotnet_name.substring_index ("remove_", 1) = 1 or
-				dotnet_name.substring_index ("raise_", 1) = 1)
-		ensure
-			definition: Result implies internal_method.get_is_special_name and (
-					dotnet_name.substring_index ("set_", 1) = 1 or
-					dotnet_name.substring_index ("get_", 1) = 1 or
-					dotnet_name.substring_index ("add_", 1) = 1 or
-					dotnet_name.substring_index ("remove_", 1) = 1 or
-					dotnet_name.substring_index ("raise_", 1) = 1)
-		end
-		
-	Void_type: TYPE is
-			-- Void .NET type
-		once
-			Result := feature {TYPE}.get_type_string (("System.Void").to_cil)
-		end
-
-	Operator_name_prefix: STRING is "op_"
-			-- Special prefix for .NET operators
-
-	internal_is_prefix_set: BOOLEAN
-			-- Was `internal_is_prefix' calculated?
-	
-	internal_is_prefix: BOOLEAN
-			-- Cached value for `is_prefix'
-	
-	internal_is_infix_set: BOOLEAN
-			-- Was `internal_is_infix' calculated?
-		
-	internal_is_infix: BOOLEAN
-			-- Cached value for `is_infix'
-	
-	internal_is_function_set: BOOLEAN
-			-- Was `internal_is_function' calculated?
-	
-	internal_is_function: BOOLEAN
-			-- Cached value for `is_function'
 
 end -- class METHOD_SOLVER

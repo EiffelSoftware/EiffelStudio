@@ -8,7 +8,10 @@ class
 	WEL_CLIENT_DC
 
 inherit
-	WEL_DISPLAY_DC	
+	WEL_DISPLAY_DC
+		redefine
+			destroy_item
+		end
 
 creation
 	make,
@@ -76,9 +79,12 @@ feature {NONE} -- Implementation
 feature {NONE} -- Removal
 
 	destroy_item is
+			-- Delete the current device context.
 		local
-			p: POINTER
+			p: POINTER	-- Default_pointer
 		do
+				-- Protect the call to DeleteDC, because `destroy_item' can 
+				-- be called by the GC so without assertions.
 			if item /= p then
 				unselect_all
 				cwin_release_dc (hwindow, item)

@@ -149,6 +149,7 @@ feature -- Status report
 			Result := implementation.column_alignment (a_column)
 		ensure
 			bridge_ok: Result.is_equal (implementation.column_alignment (a_column))
+			result_not_void: Result /= void
 		end
 
 feature -- Status setting

@@ -86,6 +86,7 @@ feature -- Initialization
 			add_default_callbacks;
 			set_accelerators;
 			!! matcher.make_empty;
+			set_foreground_color (g_String_text_fg_color);
 			set_scrolled_text_background_color (implementation, g_Bg_color)
 			old_set_font (g_String_text_font)
 		end;

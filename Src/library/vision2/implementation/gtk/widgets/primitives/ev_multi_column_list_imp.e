@@ -36,13 +36,13 @@ inherit
 
 	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW]
 		redefine
-		--	item,
 			i_th,
 			count,
 			remove_i_th,
 			reorder_child,
 			add_to_container,
 			destroy,
+			list_widget,
 			interface
 		end
 
@@ -856,6 +856,8 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
+	list_widget: POINTER
+
 	interface: EV_MULTI_COLUMN_LIST
 
 end -- class EV_MULTI_COLUMN_LIST_IMP
@@ -881,6 +883,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.62  2000/04/06 23:27:42  brendel
+--| Added list_widget.
+--|
 --| Revision 1.61  2000/04/05 22:37:41  king
 --| Basic implementation of row PND
 --|

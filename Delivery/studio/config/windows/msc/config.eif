@@ -23,10 +23,10 @@ wkoptimize: "-Od -Zi"
 optimize: "-Ox"
 
 -- compiler flags
-ccflags: "-w -YX -Fp..\estudio.pch -nologo -DNONAMELESSUNION $(ISE_CFLAGS)"
-mtccflags: "-w -YX -Fp..\estudio.pch -nologo -DNONAMELESSUNION -MT -DEIF_THREADS $(ISE_CFLAGS)"
-cppflags: "-w -YX -Fp..\estudio.pch -nologo -DNONAMELESSUNION $(ISE_CFLAGS)"
-mtcppflags: "-w -YX -Fp..\estudio.pch -nologo -DNONAMELESSUNION -MT -DEIF_THREADS $(ISE_CFLAGS)"
+ccflags: "-w -nologo -DNONAMELESSUNION $(ISE_CFLAGS)"
+mtccflags: "-w -nologo -DNONAMELESSUNION -MT -DEIF_THREADS $(ISE_CFLAGS)"
+cppflags: "-w -nologo -DNONAMELESSUNION $(ISE_CFLAGS)"
+mtcppflags: "-w -nologo -DNONAMELESSUNION -MT -DEIF_THREADS $(ISE_CFLAGS)"
 shared_flags: "-DEIF_USE_DLL"
 il_flags: "-MT -DEIF_IL_DLL"
 

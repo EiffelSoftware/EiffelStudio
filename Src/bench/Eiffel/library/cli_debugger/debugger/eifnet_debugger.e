@@ -220,10 +220,16 @@ feature -- Termination monitoring ...
 	monitor_process_termination_on_exit is
 			-- Check if the debugging is done and continue the termination
 		do
-			if exit_process_occurred and then not is_dbg_synchronizing then
+			if 
+				timer_monitor_process_termination_on_exit /= Void 
+				and then exit_process_occurred 
+				and then not is_dbg_synchronizing 
+			then
 				destroy_monitoring_of_process_termination_on_exit
 				--FIXME JFIAT:  try to reuse timer object !
 				Application.process_termination
+
+				--| else This means, Process_termination had already been called (from kill)
 			end
 		end
 
@@ -283,6 +289,7 @@ feature -- Debugging session Termination ...
 				notify_exit_process_occurred
 			else
 				eif_debug_display ("[EIFDBG] could not find ICorDebugController object ...")
+				notify_exit_process_occurred
 				on_exit_process
 			end
 		end

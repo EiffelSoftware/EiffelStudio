@@ -1608,23 +1608,17 @@ rt_private void interpret(int flag, int where)
 		{
 			EIF_REFERENCE new_obj;						/* New object */
 			unsigned long stagval;
-			short has_args, has_open, has_closed;
-			struct item *addr, *true_addr, *aargs, *aopen, *aclosed;
+			short has_args, has_open;
+			struct item *addr, *true_addr, *aargs, *aopen;
 			EIF_REFERENCE args, open, closed;
 
 			args = open = closed = (EIF_REFERENCE) 0;
 			has_args = get_short(); /* Do we have an argument tuple? */
 			has_open = get_short(); /* Do we have an open map array? */
-			has_closed = get_short(); /* Do we have a closed map array? */
 			type = get_short();
 			type = get_compound_id(MTC icurrent->it_ref,(short)type);
 			true_addr = opop();  /* True address of routine */
 			addr = opop();  /* Address of routine */
-			if (has_closed)
-			{
-				aclosed = opop();
-				closed = (EIF_REFERENCE) (aclosed->it_ref);
-			}
 			if (has_open)
 			{
 				aopen = opop();
@@ -1637,7 +1631,7 @@ rt_private void interpret(int flag, int where)
 			}
 			stagval = tagval;
 				/* Create new object */
-			new_obj = RTLNR((int16)type, addr->it_ptr, true_addr->it_ptr, args, open, closed);
+			new_obj = RTLNR2((int16)type, addr->it_ptr, true_addr->it_ptr, args, open);
 
 			last = iget();				/* Push a new value onto the stack */
 			last->type = SK_REF;

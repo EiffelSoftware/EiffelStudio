@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 			set_c_object (C.gtk_viewport_new (NULL, NULL))
 			viewport := c_object
 			C.gtk_viewport_set_shadow_type (c_object, Gtk_shadow_none_enum)
+			C.gtk_widget_set_usize (c_object, 1, 1) -- Hack needed to prevent viewport resize on item resize.
 		end	
 
 feature -- Access
@@ -106,6 +107,9 @@ end -- class EV_VIEWPORT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2001/06/19 17:30:44  king
+--| Added usize hack to prevent item resize problem
+--|
 --| Revision 1.5  2001/06/07 23:08:06  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

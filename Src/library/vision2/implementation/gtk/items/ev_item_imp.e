@@ -126,12 +126,10 @@ feature {EV_ANY_IMP} -- Implementation
 	destroy is
 			-- Destroy `Current'
 		do
-			if not is_destroyed then
-				if parent_imp /= Void then
-						parent_imp.interface.prune_all (interface)
-				end
-				Precursor {EV_ANY_IMP}
+			if parent_imp /= Void then
+					parent_imp.interface.prune_all (interface)
 			end
+			Precursor {EV_ANY_IMP}
 		end
 
 	item_parent_imp: EV_ITEM_LIST_IMP [EV_ITEM]

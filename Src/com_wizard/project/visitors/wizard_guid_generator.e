@@ -22,8 +22,7 @@ feature -- Basic operations
 			valid_name: not a_name.is_empty
 		do
 			create Result.make (100)
-			Result.append (Iid_type)
-			Result.append ("_")
+			Result.append ("IID_")
 			Result.append (a_name)
 			if 
 				not a_name.is_equal ("IDispatch") and
@@ -56,17 +55,11 @@ feature -- Basic operations
 				not a_name.is_equal ("IProvideClassInfo") and
 				not a_name.is_equal ("IProvideClassInfo2")
 			then
-				Result.append ("static ")
-				Result.append (Const)
-				Result.append (Space)
-				Result.append (Iid_type)
-				Result.append (Space)
+				Result.append ("static const IID ")
 				Result.append (iid_name (a_name))
-				Result.append (Space)
-				Result.append (Equal_sign)
-				Result.append (Space)
+				Result.append (" = ")
 				Result.append (a_guid.to_definition_string)
-				Result.append (Semicolon)
+				Result.append_character (';')
 			end
 		ensure
 			non_void_definition: Result /= Void

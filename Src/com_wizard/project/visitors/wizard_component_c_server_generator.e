@@ -199,7 +199,7 @@ feature -- Basic Operations
 		local
 			l_body: STRING
 		do
-			create l_body.make (10000)
+			create l_body.make (2000)
 			l_body.append ("%TEIF_PROCEDURE eiffel_procedure;%N%T")
 			l_body.append ("eiffel_procedure = eif_procedure (%"set_item%", type_id);%N%N%T")
 			l_body.append ("(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))eiffel_procedure) (eif_access (eiffel_object), NULL);%N%T")
@@ -244,16 +244,7 @@ feature -- Basic Operations
 			func_writer.set_result_type (Std_method_imp)
 			func_writer.set_signature ("unsigned int itinfo, LCID lcid, ITypeInfo **pptinfo")
 			func_writer.set_body (l_body)
-
-			check
-				valid_func_writer: func_writer.can_generate
-			end
-
 			cpp_class_writer.add_function (func_writer, Public)
-
-			check
-				writer_added: cpp_class_writer.functions.item (Public).has (func_writer)
-			end
 		end
 		
 	add_get_type_info_count_function is
@@ -273,16 +264,7 @@ feature -- Basic Operations
 			func_writer.set_result_type (Std_method_imp)
 			func_writer.set_signature ("unsigned int * pctinfo")
 			func_writer.set_body (l_body)
-
-			check
-				valid_func_writer: func_writer.can_generate
-			end
-
 			cpp_class_writer.add_function (func_writer, Public)
-
-			check
-				writer_added: cpp_class_writer.functions.item (Public).has (func_writer)
-			end
 		end
 
 	add_get_ids_of_names_function (a_component: WIZARD_COMPONENT_DESCRIPTOR) is
@@ -301,16 +283,7 @@ feature -- Basic Operations
 			func_writer.set_result_type (Std_method_imp)
 			func_writer.set_signature ("REFIID riid, OLECHAR ** rgszNames, unsigned int cNames, LCID lcid, DISPID *rgdispid")
 			func_writer.set_body (l_body)
-
-			check
-				valid_func_writer: func_writer.can_generate
-			end
-
 			cpp_class_writer.add_function (func_writer, Public)
-
-			check
-				writer_added: cpp_class_writer.functions.item (Public).has (func_writer)
-			end
 		end
 
 	dispatch_invoke_function (a_component: WIZARD_COMPONENT_DESCRIPTOR) is
@@ -364,16 +337,7 @@ feature -- Basic Operations
 			body_code.append ("return S_OK;")
 
 			func_writer.set_body (body_code)
-
-			check
-				valid_func_writer: func_writer.can_generate
-			end
-
 			cpp_class_writer.add_function (func_writer, Public)
-
-			check
-				writer_added: cpp_class_writer.functions.item (Public).has (func_writer)
-			end
 		end
 
 	invoke_function_case_item (interface_desc: WIZARD_INTERFACE_DESCRIPTOR): STRING is
@@ -517,14 +481,8 @@ feature -- Basic Operations
 		require
 			non_void_descriptor: func_desc /= Void
 		do
-			create Result.make (10000)
-			Result.append (New_line_tab_tab_tab)
-			Result.append (If_keyword)
-			Result.append (Space_open_parenthesis)
-			Result.append ("wFlags ")
-			Result.append (Ampersand)
-			Result.append (" (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF)")
-			Result.append (Close_parenthesis)
+			create Result.make (2000)
+			Result.append ("%N%T%T%Tif (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))")
 			Result.append (function_case_body (func_desc))
 		end
 
@@ -533,14 +491,8 @@ feature -- Basic Operations
 		require
 			non_void_descriptor: func_desc /= Void
 		do
-			create Result.make (10000)
-			Result.append (New_line_tab_tab_tab)
-			Result.append (If_keyword)
-			Result.append (Space_open_parenthesis)
-			Result.append ("wFlags ")
-			Result.append (Ampersand)
-			Result.append (" (DISPATCH_PROPERTYGET | DISPATCH_METHOD)")
-			Result.append (Close_parenthesis)
+			create Result.make (2000)
+			Result.append ("%N%T%T%Tif (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))")
 			Result.append (function_case_body (func_desc))
 		end
 
@@ -566,16 +518,11 @@ feature -- Basic Operations
 			valid_body_start: a_case_body.substring_index ("%N%T%T%T%<", 1) = 1 or a_case_body.substring_index ("%N%T%T%Tif", 1) = 1
 		do
 			create Result.make (1000)
-			Result.append (New_line_tab_tab)
-			Result.append (Case)
-			Result.append (Space)
+			Result.append ("%N%T%Tcase ")
 			Result.append_integer (a_case_member_id)
-			Result.append (Colon)
+			Result.append_character (':')
 			Result.append (a_case_body)
-			Result.append (New_line_tab_tab_tab)
-			Result.append (Break)
-			Result.append (Semicolon)
-			Result.append (New_line)
+			Result.append ("%N%T%T%Tbreak;%N")
 		ensure
 			non_void_code: Result /= Void
 			non_empty_code: not Result.is_empty
@@ -604,30 +551,13 @@ feature -- Basic Operations
 
 			create l_body.make (500)
 			l_body.append (lock_module)
-			l_body.append (Tab)
-			l_body.append (Return)
-			l_body.append (Space)
-			l_body.append (Interlocked_increment)
-			l_body.append (Space_open_parenthesis)
-			l_body.append (Ampersand)
-			l_body.append (Ref_count)
-			l_body.append (Close_parenthesis)
-			l_body.append (Semicolon)
+			l_body.append ("%T return InterlockedIncrement (&ref_count);")
 
 			func_writer.set_name ("AddRef")
 			func_writer.set_comment ("Increment reference count")
 			func_writer.set_result_type (Ulong_std_method_imp)
 			func_writer.set_body (l_body)
-
-			check
-				valid_func_writer: func_writer.can_generate
-			end
-
 			cpp_class_writer.add_function (func_writer, Public)
-
-			check
-				writer_added: cpp_class_writer.functions.item (Public).has (func_writer)
-			end
 		end
 
 	check_type_info (a_component: WIZARD_COMPONENT_DESCRIPTOR): STRING is
@@ -640,121 +570,34 @@ feature -- Basic Operations
 		do
 			type_lib := a_component.type_library_descriptor
 			
-			create Result.make (10000)
-			Result.append (Tab)
+			create Result.make (2000)
 
-			-- if ( pTypeInfo == 0)
-			Result.append (If_keyword)
-			Result.append (Space_open_parenthesis)
-			Result.append (Type_info_variable_name)
-			Result.append (C_equal)
-			Result.append (Zero)
-			Result.append (Close_parenthesis)
-			Result.append (New_line_tab)
-			Result.append (Open_curly_brace)
-			Result.append (New_line_tab_tab)
+			Result.append ("%Tif (pTypeInfo == 0)%N%T{%N%T%T")
+			Result.append ("HRESULT tmp_hr = 0;%N%T%T")
+			Result.append ("ITypeLib *pTypeLib = 0;%N%T%T")
 
-			-- HRESULT tmp_hr = 0;
-			Result.append (Hresult)
-			Result.append (Space)
-			Result.append (Tmp_clause)
-			Result.append (Hresult_variable_name)
-			Result.append (Space_equal_space)
-			Result.append (Zero)
-			Result.append (Semicolon)
-			Result.append (New_line_tab_tab)
-
-			-- ITypeLib *pTypeLib = 0;
-			Result.append (Type_lib_type)
-			Result.append (Type_lib_variable_name)
-			Result.append (Space_equal_space)
-			Result.append (Zero)
-			Result.append (Semicolon)
-			Result.append (New_line_tab_tab)
-
-
-			--tmp_hr = LoadRegTypeLib ('guid','major_version_num', 'minor_version_num', 'locale_id', pTypeLib)
-
-			Result.append (Tmp_clause)
-			Result.append (Hresult_variable_name)
-			Result.append (Space_equal_space)
-			Result.append ("LoadRegTypeLib")
-			Result.append (Space_open_parenthesis)
+			-- tmp_hr = LoadRegTypeLib ('guid','major_version_num', 'minor_version_num', 'locale_id', pTypeLib)
+			Result.append ("tmp_hr = LoadRegTypeLib (")
 			Result.append (libid_name (type_lib.name))
-			Result.append (Comma_space)
+			Result.append (", ")
 			Result.append_integer (type_lib.major_version_number)
-			Result.append (Comma_space)
+			Result.append (", ")
 			Result.append_integer (type_lib.minor_version_number)
-			Result.append (Comma_space)
+			Result.append (", ")
 			Result.append_integer (type_lib.lcid)
-			Result.append (Comma_space)
-			Result.append (Ampersand)
-			Result.append (Type_lib_variable_name)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab_tab)
+			Result.append (", &pTypeLib);%N%T%T")
 
-			-- if (FAILED(tmp_hr))
-			Result.append (If_keyword)
-			Result.append (Space_open_parenthesis)
-			Result.append (Failed)
-			Result.append (Open_parenthesis)
-			Result.append (Tmp_clause)
-			Result.append (Hresult_variable_name)
-			Result.append (Close_parenthesis)
-			Result.append (Close_parenthesis)
-			Result.append (New_line_tab_tab)
-			Result.append (tab)
+			Result.append ("if (FAILED(tmp_hr))%N%T%T%T")
+			Result.append ("return tmp_hr;%N%T%T")
 
-			Result.append (Return)
-			Result.append (Space)
-			Result.append (Tmp_clause)
-			Result.append (Hresult_variable_name)
-			Result.append (semicolon)
-			Result.append (New_line_tab_tab)
-
-			-- tmm_hr = pTypeLib->GetTypeInfoOfGuid (guid, pTypeInfo)
-			Result.append (Tmp_clause)
-			Result.append (Hresult_variable_name)
-			Result.append (Space_equal_space)
-			Result.append (Type_lib_variable_name)
-			Result.append (Struct_selection_operator)
-			Result.append (Get_type_info_of_guid)
-			Result.append (Space_open_parenthesis)
+			-- tmp_hr = pTypeLib->GetTypeInfoOfGuid ('guid', &pTypeInfo)
+			Result.append ("tmp_hr = pTypeLib->GetTypeInfoOfGuid (")
 			Result.append (iid_name (default_dispinterface_name (a_component)))
-			Result.append (Comma_space)
-			Result.append (Ampersand)
-			Result.append (Type_info_variable_name)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab_tab)
+			Result.append (", &pTypeInfo);%N%T%T")
 
-			-- pTypeLib->Release ();
-			
-			Result.append (Type_lib_variable_name + Release_function)
-			Result.append (New_line_tab_tab)
-			
-			-- If (FAILED(tmp_hr))
-			Result.append (If_keyword)
-			Result.append (Space_open_parenthesis)
-			Result.append (Failed)
-			Result.append (Open_parenthesis)
-			Result.append (Tmp_clause)
-			Result.append (Hresult_variable_name)
-			Result.append (Close_parenthesis)
-			Result.append (Close_parenthesis)
-			Result.append (New_line_tab_tab_tab)
-			Result.append (Return)
-			Result.append (Space)
-			Result.append (Tmp_clause)
-			Result.append (Hresult_variable_name)
-			Result.append (semicolon)
-			Result.append (New_line_tab)
-			-- }
-
-			Result.append (Close_curly_brace)
-			Result.append (New_line_tab)
-		
+			Result.append ("pTypeLib->Release ();%N%T%T")
+			Result.append ("if (FAILED(tmp_hr))%N%T%T%T")
+			Result.append ("return tmp_hr;%N%T}%N%T")
 		end
 
 	add_release_function is
@@ -765,133 +608,45 @@ feature -- Basic Operations
 		do
 			create func_writer.make
 			
-			create l_body.make (10000)
+			create l_body.make (2000)
 			l_body.append (unlock_module)
-			l_body.append (Tab)
-			l_body.append (Long_macro)
-			l_body.append (Space)
-			l_body.append ("res")
-			l_body.append (Space_equal_space)
-			l_body.append (Interlocked_decrement)
-			l_body.append (Space_open_parenthesis)
-			l_body.append (Ampersand)
-			l_body.append (Ref_count)
-			l_body.append (Close_parenthesis)
-			l_body.append (Semicolon)
-			l_body.append (New_line_tab)
-
-			l_body.append (If_keyword)
-			l_body.append (Space)
-			l_body.append (Open_parenthesis)
-			l_body.append ("res")
-			l_body.append (Space)
-			l_body.append (C_equal)
-			l_body.append (Space)
-			l_body.append (Zero)
-			l_body.append (Close_parenthesis)
-			l_body.append (New_line_tab)
-
-			l_body.append (Open_curly_brace)
-			l_body.append (New_line_tab_tab)
-
+			l_body.append ("%TLONG res = InterlockedDecrement (&ref_count);%N%T")
+			l_body.append ("if (res == 0)%N%T{%N%T%T")
 			if dispatch_interface then
-				l_body.append (If_keyword)
-				l_body.append (Space)
-				l_body.append (Open_parenthesis)
-				l_body.append (Type_info_variable_name)
-				l_body.append (Space)
-				l_body.append (C_not_equal)
-				l_body.append (Null)
-				l_body.append (Close_parenthesis)
-				l_body.append (New_line_tab_tab)
-
-				l_body.append (Open_curly_brace)
-				l_body.append (New_line_tab_tab_tab)
-
-				l_body.append (Type_info_variable_name)
-				l_body.append (Struct_selection_operator)
-				l_body.append ("Release")
-				l_body.append (Space_open_parenthesis)
-				l_body.append (Close_parenthesis)
-				l_body.append (Semicolon)
-				l_body.append (New_line_tab_tab_tab)
-
-				l_body.append (Type_info_variable_name)
-				l_body.append (Space_equal_space)
-				l_body.append (Null)
-				l_body.append (Semicolon)
-				l_body.append (New_line_tab_tab)
-
-				l_body.append (Close_curly_brace)
-				l_body.append (New_line_tab_tab)
+				l_body.append ("if (pTypeInfo != NULL)%N%T%T{%N%T%T%T")
+				l_body.append ("pTypeInfo->Release();%N%T%T%T")
+				l_body.append ("pTypeInfo = NULL;%N%T%T}%N%T%T")
 			end
-
-			l_body.append (Delete)
-			l_body.append (Space)
-			l_body.append (This)
-			l_body.append (Semicolon)
-			l_body.append (New_line_tab)
-
-			l_body.append (Close_curly_brace)
-			l_body.append (New_line_tab)
-
-			l_body.append (Return)
-			l_body.append (Space)
-			l_body.append ("res")
-			l_body.append (Semicolon)
+			l_body.append ("delete this;%N%T}%N%T")
+			l_body.append ("return res;")
 
 			func_writer.set_name ("Release")
 			func_writer.set_comment ("Decrement reference count")
 			func_writer.set_result_type (Ulong_std_method_imp)
 			func_writer.set_body (l_body)
-
-			check
-				valid_func_writer: func_writer.can_generate
-			end
-
 			cpp_class_writer.add_function (func_writer, Public)
-
-			check
-				writer_added: cpp_class_writer.functions.item (Public).has (func_writer)
-			end
 		end
 
-	case_body_in_query_interface (interface_name, interface_namespace, interface_id: STRING): STRING is
+	case_body_in_query_interface (a_name, a_namespace, a_id: STRING): STRING is
 			-- Case body in QueryInterface function implemenatation.
 		require
-			non_void_interface_name: interface_name /= Void
-			valid_interface_name: not interface_name.is_empty
-			non_void_interface_id: interface_id /= Void
-			valid_interface_id: not interface_id.is_empty
+			non_void_interface_name: a_name /= Void
+			valid_interface_name: not a_name.is_empty
+			non_void_interface_id: a_id /= Void
+			valid_interface_id: not a_id.is_empty
 		do
 			create Result.make (200)
-			Result.append (If_keyword)
-			Result.append (Space_open_parenthesis)
-			Result.append (Riid)
-			Result.append (C_equal)
-			Result.append (interface_id)
-			Result.append (Close_parenthesis)
-			Result.append (New_line_tab_tab)
-			Result.append (Star_ppv)
-			Result.append (Space_equal_space)
-			Result.append (Static_cast)
-			Result.append (Less)
-			if 
-				interface_namespace /= Void and then
-				not interface_namespace.is_empty
-			then
-				Result.append (interface_namespace)
+			Result.append ("if (riid == ")
+			Result.append (a_id)
+			Result.append (")%N%T%T")
+			Result.append ("*ppv = static_cast<")
+			if a_namespace /= Void and then not a_namespace.is_empty then
+				Result.append (a_namespace)
 				Result.append ("::")
 			end
-			Result.append (interface_name)
-			Result.append (Asterisk)
-			Result.append (More)
-			Result.append (Open_parenthesis)
-			Result.append (This)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-			Result.append (Else_keyword)
+			Result.append (a_name)
+			Result.append ("*>(this);%N%T")
+			Result.append ("else")
 		ensure
 			non_void_body: Result /= Void
 			valid_body: not Result.is_empty

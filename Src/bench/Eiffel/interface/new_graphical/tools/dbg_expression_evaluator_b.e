@@ -589,6 +589,12 @@ feature -- EXPR_B evaluation
 					else
 						evaluate_static_function (ef, params)
 					end
+				elseif fi.is_attribute then
+					if tmp_target /= Void then
+						evaluate_attribute (tmp_target.value_address, tmp_target, ef)
+					else
+						evaluate_attribute (context_address, tmp_target, ef)
+					end				
 				else
 					set_error_expression (a_external_b.generator +  " => ERROR during evaluation of external call " + a_external_b.feature_name)
 				end	

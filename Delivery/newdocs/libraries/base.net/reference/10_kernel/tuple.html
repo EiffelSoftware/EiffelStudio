@@ -1,0 +1,265 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+		
+<TITLE>TUPLE Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Implementation of </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/tuple.html">TUPLE</A><SPAN CLASS="estring">"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../base_net/reference/kernel/tuple.html">TUPLE</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">create</SPAN> <BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_boolean_item"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_boolean_item">boolean_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Boolean item at </SPAN><SPAN CLASS="equoted">index</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_valid_index">valid_index</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">is_boolean</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_is_boolean_item">is_boolean_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_character_item"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_character_item">character_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/character.html">CHARACTER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Character item at </SPAN><SPAN CLASS="equoted">index</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_valid_index">valid_index</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">is_character</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_is_character_item">is_character_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_double_item"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_double_item">double_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/double.html">DOUBLE</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Double item at </SPAN><SPAN CLASS="equoted">index</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_valid_index">valid_index</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">is_numeric</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_is_numeric_item">is_numeric_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_integer_item"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_integer_item">integer_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/integer.html">INTEGER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Integer item at </SPAN><SPAN CLASS="equoted">index</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_valid_index">valid_index</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">is_integer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_is_integer_item">is_integer_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_real_item"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_real_item">real_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/real.html">REAL</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> real item at </SPAN><SPAN CLASS="equoted">index</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_valid_index">valid_index</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">is_real_or_integer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_is_real_item">is_real_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN> <A CLASS="ekeyword" HREF="../../../base_net/reference/kernel/boolean.html#f__infix_or_else">or else</A> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_is_integer_item">is_integer_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_valid_index"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_valid_index">valid_index</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">i</SPAN><SPAN CLASS="ecomment"> a valid index to access object at position </SPAN><SPAN CLASS="equoted">i-th</SPAN><SPAN CLASS="ecomment">?</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Type queries</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_is_boolean_item"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_is_boolean_item">is_boolean_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is item at </SPAN><SPAN CLASS="equoted">index</SPAN><SPAN CLASS="ecomment"> a BOOLEAN?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_valid_index">valid_index</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_is_character_item"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_is_character_item">is_character_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is item at </SPAN><SPAN CLASS="equoted">index</SPAN><SPAN CLASS="ecomment"> a CHARACTER?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_valid_index">valid_index</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_is_double_item"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_is_double_item">is_double_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is item at </SPAN><SPAN CLASS="equoted">index</SPAN><SPAN CLASS="ecomment"> a DOUBLE?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_valid_index">valid_index</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_is_integer_item"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_is_integer_item">is_integer_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is item at </SPAN><SPAN CLASS="equoted">index</SPAN><SPAN CLASS="ecomment"> an INTEGER?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_valid_index">valid_index</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_is_numeric_item"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_is_numeric_item">is_numeric_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is item at </SPAN><SPAN CLASS="equoted">index</SPAN><SPAN CLASS="ecomment"> a number?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_valid_index">valid_index</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_is_real_item"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_is_real_item">is_real_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is item at </SPAN><SPAN CLASS="equoted">index</SPAN><SPAN CLASS="ecomment"> a REAL?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_valid_index">valid_index</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_is_reference_item"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_is_reference_item">is_reference_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is item at </SPAN><SPAN CLASS="equoted">index</SPAN><SPAN CLASS="ecomment"> a REFERENCE?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_valid_index">valid_index</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_is_uniform"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_is_uniform">is_uniform</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Are all items of the same basic type or all of reference type?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">yes_if_empty</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">0</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">implies</SPAN> <SPAN CLASS="ereserved">Result</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_is_uniform_boolean"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_is_uniform_boolean">is_uniform_boolean</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Are all items of type BOOLEAN?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">yes_if_empty</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">0</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">implies</SPAN> <SPAN CLASS="ereserved">Result</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_is_uniform_character"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_is_uniform_character">is_uniform_character</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Are all items of type CHARACTER?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">yes_if_empty</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">0</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">implies</SPAN> <SPAN CLASS="ereserved">Result</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_is_uniform_double"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_is_uniform_double">is_uniform_double</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Are all items of type DOUBLE?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">yes_if_empty</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">0</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">implies</SPAN> <SPAN CLASS="ereserved">Result</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_is_uniform_integer"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_is_uniform_integer">is_uniform_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Are all items of type INTEGER?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">yes_if_empty</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">0</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">implies</SPAN> <SPAN CLASS="ereserved">Result</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_is_uniform_real"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_is_uniform_real">is_uniform_real</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Are all items of type REAL?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">yes_if_empty</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">0</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">implies</SPAN> <SPAN CLASS="ereserved">Result</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_is_uniform_reference"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_is_uniform_reference">is_uniform_reference</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Are all items of reference type?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">yes_if_empty</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">0</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">implies</SPAN> <SPAN CLASS="ereserved">Result</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">invariant</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">area_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/tuple.html#f_area">area</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/any.html#f_void">void</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>TUPLE<BR>
+
+</BODY>
+
+</HTML>
+<BR>
+

@@ -184,7 +184,7 @@ feature -- Element change
 			set_bits: bits = a_bits
 		end
 
-feature {WEL_STRUCTURE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

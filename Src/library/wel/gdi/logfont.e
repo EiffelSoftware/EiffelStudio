@@ -740,7 +740,7 @@ feature -- Status setting
 			Result := Lf_facesize
 		end
 
-feature {WEL_STRUCTURE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

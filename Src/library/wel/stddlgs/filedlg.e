@@ -319,7 +319,7 @@ feature {NONE} -- Implementation
 	Max_title_length: INTEGER is 256
 			-- Maximum title length
 
-feature {NONE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

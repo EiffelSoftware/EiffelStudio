@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 			cwel_choose_color_set_hwndowner (item, a_parent.item)
 		end
 
-feature {NONE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

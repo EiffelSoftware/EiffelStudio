@@ -5,47 +5,28 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
+	note: "The gap in the numbers correspond to the pick and drop events%
+			% EV_PND_EVENTS_CONSTANTS_IMP."
 
 class
 	EV_WIDGET_EVENTS_CONSTANTS_IMP
 
 feature -- General events for widgets
 
-	Cmd_button_one_press: INTEGER is 1
-			-- The first button of the mouse is pressed
-
-	Cmd_button_two_press: INTEGER is 2
-			-- The second button of the mouse is pressed
-
-	Cmd_button_three_press: INTEGER is 3
-			-- The third button of the mouse is pressed
-
-	Cmd_button_one_release: INTEGER is 4
-			-- The first button of the mouse is released
-
-	Cmd_button_two_release: INTEGER is 5
-			-- The second button of the mouse is released
-
-	Cmd_button_three_release: INTEGER is 6
-			-- The third button of the mouse is released
-
-	Cmd_button_one_dblclk: INTEGER is 7
+	Cmd_button_one_dblclk: INTEGER is 1
 			-- The first button of the mouse is double-clicked
 
-	Cmd_button_two_dblclk: INTEGER is 8
+	Cmd_button_two_dblclk: INTEGER is 2
 			-- The second button of the mouse is double-clicked
 
-	Cmd_button_three_dblclk: INTEGER is 9
+	Cmd_button_three_dblclk: INTEGER is 3
 			-- The third button of the mouse is double-clicked
 
-	Cmd_key_press: INTEGER is 10
+	Cmd_key_press: INTEGER is 11
 			-- A key of the keyboard is pressed
 
-	Cmd_key_release: INTEGER is 11
+	Cmd_key_release: INTEGER is 12
 			-- A key of the keyboard is released
-
-	Cmd_motion_notify: INTEGER is 12
-			-- The pointer of the mouse moved inside the widget
 
 	Cmd_enter_notify: INTEGER is 13
 			-- The pointer of the mouse entered the widget

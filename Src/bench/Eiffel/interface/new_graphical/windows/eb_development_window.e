@@ -1609,12 +1609,12 @@ feature -- Menu Building
 				tools_menu.extend (command_menu_item)
 			end
 
-			if debugger_manager.display_dotnet_cmd then   
-			  		-- Import .Net Assembly   
-			  	command_menu_item := eac_browser_cmd.new_menu_item   
-				add_recyclable (command_menu_item)   
-				tools_menu.extend (command_menu_item)   
-            end 
+			if debugger_manager.display_dotnet_cmd then
+					-- Import .Net Assembly
+				command_menu_item := eac_browser_cmd.new_menu_item
+				add_recyclable (command_menu_item)
+				tools_menu.extend (command_menu_item)
+			end 
 
 				-- Separator -------------------------------------------------
 			tools_menu.extend (create {EV_MENU_SEPARATOR})
@@ -2381,10 +2381,8 @@ feature {NONE} -- Implementation
 				end
 					-- Update the address manager if needed.
 				address_manager.refresh
-				if
-					new_class_stone /= Void
-				then
-					-- class stone was dropped
+				if new_class_stone /= Void then
+						-- class stone was dropped
 					create class_file.make (new_class_stone.class_i.file_name)
 					class_text_exists := class_file.exists
 					feature_stone ?= a_stone
@@ -2444,7 +2442,9 @@ feature {NONE} -- Implementation
 							end
 						else
 							editor_tool.text_area.clear_window
-							editor_tool.text_area.display_message (Warning_messages.w_file_not_exist (new_class_stone.class_i.file_name))
+							editor_tool.text_area.display_message (
+								Warning_messages.w_file_not_exist (
+									new_class_stone.class_i.file_name))
 						end
 					end
 					if conv_classc = Void then
@@ -2679,33 +2679,35 @@ feature {NONE} -- Implementation
 			
 			if type_changed then
 					-- Toggle stone flag.
-            	is_stone_external := not is_stone_external
-            end 
+				is_stone_external := not is_stone_external
+			end 
 
 			if cst /= Void then
 				address_manager.enable_formatters
 				if is_stone_external then
-					-- Change formatters to .NET sensitivity (from normal).
+						-- Change formatters to .NET sensitivity (from normal).
 					enable_dotnet_formatters
 					if type_changed then
 						managed_main_formatters.i_th (4).enable_select
 					end
 				else
-					if changed then                                 
-                      	address_manager.disable_formatters 
-     		        else
-     		        	--managed_main_formatters.first.disable_sensitive
-     		   		end
+					if changed then
+						address_manager.disable_formatters 
+					else
+						--managed_main_formatters.first.disable_sensitive
+					end
 				end
 			elseif cist /= Void and is_stone_external then
 					-- Change formatters to .NET sensitivity (from normal).
-					enable_dotnet_formatters
-					if type_changed then
-						managed_main_formatters.i_th (4).enable_select
-					end
-			else			
+				enable_dotnet_formatters
+				if type_changed then
+					managed_main_formatters.i_th (4).enable_select
+				end
+			else
 				address_manager.disable_formatters
-				managed_main_formatters.first.execute
+				if cist /= stone then
+					managed_main_formatters.first.execute
+				end
 			end
 		end
 

@@ -26,7 +26,9 @@ cdd %TEMP%\vision2_wizard\EIFGEN\F_Code
 echo -----------------------------------------------------------------
 echo ------- Compress generated executable file ----------------------
 echo -----------------------------------------------------------------
-upx wizard.exe
+iff not defined WIN64
+	upx wizard.exe
+endiff
 echo -----------------------------------------------------------------
 echo ------- Copying generated executable file into Delivery ---------
 echo -----------------------------------------------------------------

@@ -75,10 +75,8 @@ feature {NONE}
 		local
 			val_32: INTEGER
 			val_64: INTEGER_64
-			
 		do
-			print (pointer_bytes.out + "%N")
-			if Pointer_bytes = 8 then
+			if Pointer_bytes = Integer_64_bytes then
 				val_64 := hex_to_integer_64 (s)
 				($Result).memory_copy ($val_64, Pointer_bytes)
 			else

@@ -38,12 +38,8 @@ feature
 					buf.putstring ("RTJB;")
 					buf.new_line
 				end
-				buf.exdent
-				Context.print_current_label
+				Context.generate_current_label_definition
 				Context.inc_label
-				buf.putchar (':')
-				buf.new_line
-				buf.indent
 				if first_generated then
 					buf.putstring ("RTCK;")
 					buf.new_line

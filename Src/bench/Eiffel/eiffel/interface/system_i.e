@@ -4064,6 +4064,37 @@ feature -- Debug purpose
 			end;
 		end;
 
+feature -- Document processing
+
+	No_word: STRING is "no";
+
+	document_path: DIRECTORY_NAME is
+			-- Path specified for the documents directory for classes.
+			-- Void result implies no document generation
+		local
+			tmp: STRING
+		do
+			tmp := private_document_path;
+			if tmp = Void then
+				Result := Documentation_path
+			elseif not tmp.is_equal (No_word) then
+				!! Result.make_from_string (tmp)
+			end;
+		end
+
+	set_document_path (a_path: like document_path) is
+			-- Set `document_path' to `a_path'
+		do
+			private_document_path := a_path
+		ensure
+			set: document_path = a_path
+		end;
+
+feature {NONE} -- Document processing
+
+	private_document_path: STRING
+			-- Path specified in Ace for the documents directory
+
 feature {SYSTEM_I} -- Implementation
 
 	private_freeze: BOOLEAN;

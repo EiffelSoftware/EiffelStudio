@@ -34,6 +34,17 @@ feature {TEXT_ITEM} -- Implementation
 		deferred
 		end;
 
+	process_comment_text (text: COMMENT_TEXT) is
+			-- Process comment text. 
+		do
+			process_basic_text (text)
+		end;
+
+	process_quoted_text (text: QUOTED_TEXT) is
+			-- Process the quoted `text' within a comment.
+		deferred
+		end;
+
 	process_clickable_text (t: CLICKABLE_TEXT) is
 			-- Process basic text `t'.
 		do

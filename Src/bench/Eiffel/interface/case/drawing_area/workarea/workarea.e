@@ -17,7 +17,7 @@ inherit
 
 	CONSTANTS
 
-	ONCES
+	ONCES 
 
 creation
 
@@ -80,12 +80,14 @@ feature {NONE} -- Initialization
 				set_cli_sup_link_command
 				set_create_class_command	
 	
-				!! inverted_painter;
+				!! inverted_painter
 				inverted_painter.set_drawing (Current);
 			end
 		end
 
 feature -- Drag and drop
+
+	not_useful: BOOLEAN -- has to be removed.
 
 	active_entity_data: DATA is
 			-- Return the current pointed data.
@@ -175,7 +177,7 @@ feature -- components
 	workarea_make_cluster_com: WORKAREA_MAKE_CLUSTER_COM
 		-- Add new cluster command
 
-	inverted_painter: PATCH_PAINTER;
+	inverted_painter: PATCH_PAINTER
 		-- Painer
 
 	refresh_upper_left: EV_COORDINATES
@@ -430,11 +432,11 @@ feature -- Setting
 	setup_inverted_painter is
 		do
 			if inverted_painter /= Void then
-				inverted_painter.set_logical_mode (10);
-				inverted_painter.set_subwindow_mode (1);
-				inverted_painter.set_line_width (2);
+				inverted_painter.set_logical_mode (10)
+				inverted_painter.set_subwindow_mode (1)
+				inverted_painter.set_line_width (2)
 					-- solid line
-				inverted_painter.set_line_style (0);
+				inverted_painter.set_line_style (0)
 			end
 		end;
 
@@ -1548,9 +1550,9 @@ feature -- Output
 			w, h: INTEGER
 		do
 			if not to_refresh.empty then
-				if refresh_clip.upper_left /= Void then
-					inverted_painter.draw_rectangle (refresh_clip.upper_left.x - 2, refresh_clip.upper_left.y -2, refresh_clip.width +4, refresh_clip.height+4)
-				end
+				--if refresh_clip.upper_left /= Void then
+				--	inverted_painter.draw_rectangle (refresh_clip.upper_left.x - 2, refresh_clip.upper_left.y -2, refresh_clip.width +4, refresh_clip.height+4)
+				--end
 				refresh_upper_left.set (to_refresh.up_left_x - 1,
 						to_refresh.up_left_y - 1)
 				w := to_refresh.down_right_x - to_refresh.up_left_x + 2

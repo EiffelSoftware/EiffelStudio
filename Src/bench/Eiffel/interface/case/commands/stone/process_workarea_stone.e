@@ -129,7 +129,7 @@ feature -- Execution
 							to_wa.highlight_linkable (graph_class);
 							--Windows.restore_cursor;
 						else
-							windows_manager.popup_error (Message_keys.workarea_hidden_class, Void, analysis_window);
+							windows_manager.popup_error ("E4", Void, analysis_window);
 						end;
 					else
 							-- Stone comes from another workarea

@@ -10,6 +10,9 @@ indexing
 
 class MESSAGE_DATA 
 
+obsolete
+	"Use class CONTEXT_DATA instead."
+
 inherit
 
 	CONTEXT_DATA

@@ -9,6 +9,9 @@ indexing
 
 class PROPERT_DATA 
 
+obsolete
+	"Use class CONTEXT_DATA instead."
+
 inherit
 
 	CONTEXT_DATA

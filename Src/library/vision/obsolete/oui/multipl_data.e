@@ -9,6 +9,9 @@ indexing
 
 class MULTIPL_DATA 
 
+obsolete
+	"Use class CONTEXT_DATA instead."
+
 inherit 
 
 	SINGLE_DATA

@@ -11,6 +11,9 @@ indexing
 
 class CIRCREQ_DATA 
 
+obsolete
+	"Use class CONTEXT_DATA instead."
+
 inherit
 
 	CIRCNOT_DATA

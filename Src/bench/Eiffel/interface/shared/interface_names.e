@@ -874,6 +874,7 @@ feature -- Title part
 	t_Select_cluster: STRING is					"Select cluster"
 	t_Select_color: STRING is					"Select color"
 	t_Select_feature: STRING is					"Select feature"
+	t_Select_creation_feature: STRING is		"Select creation feature"
 	t_Select_location: STRING is				"Select location"
 	t_Select_object: STRING is					"Select object"
 	t_Shell_command: STRING is					"Shell Command: "

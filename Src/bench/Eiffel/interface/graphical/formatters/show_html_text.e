@@ -79,7 +79,6 @@ feature -- Formatting
 			cur: CURSOR;
 			routine_w: ROUTINE_W;
 			st: STRUCTURED_TEXT
-			g_text: GRAPHICAL_TEXT_WINDOW
 		do
 			if not retried then
 				classc_stone ?= stone;
@@ -142,10 +141,6 @@ feature -- Formatting
 							text_window.process_text (st);
 							text_window.display
 						else	
-							g_text ?= text_window
-							if g_text /= Void then
-								g_text.hide_text_window
-							end
 							text_window.set_text (stone_text)
 						end;
 						tool.update_save_symbol;
@@ -166,9 +161,6 @@ feature -- Formatting
 						end;
 
 						text_to_html (text_window)
-						if g_text /= Void then
-							g_text.show_text_window
-						end
 
 						if cur /= Void then
 							text_window.go_to (cur)
@@ -266,17 +258,19 @@ feature {NONE}
 							i := click_array.lower
 							count := click_array.upper
 							g_window.set_changed (True)
+							g_window.implementation.hide_selection
 							top_position := g_window.implementation.top_character_position
 						until
 							i > count or else click_array.item (i) = Void
 						loop
 							click_item := click_array.item (i)
-							g_window.set_selection (click_item.start_position, click_item.end_position)
+							g_window.implementation.wel_set_selection (click_item.start_position, click_item.end_position)
 							g_window.implementation.set_character_format_word (g_window.html_format);
 							i := i + 1
 						end
 						g_window.implementation.set_top_character_position (top_position)
-						g_window.implementation.set_selection (top_position, top_position)
+						g_window.implementation.wel_set_selection (top_position, top_position)
+						g_window.implementation.show_selection
 						g_window.set_changed (False)
 					end
 				end

@@ -12,10 +12,44 @@ inherit
 	EV_DRAWABLE_I
 
 	EV_PRIMITIVE_I
+		redefine
+			set_default_options
+		end
 
 	EV_PIXMAPABLE_I
 
-feature {NONE} -- Initialization
+feature -- Status setting
+
+	set_default_options is
+			-- Initialize the options of the widget.
+		do
+			set_expand (False)
+			set_vertical_resize (False)
+			set_horizontal_resize (False)
+		end
+
+feature -- Event - command association
+
+	add_resize_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of action to be executed when
+			-- current area is resized.
+			-- `arg' will be passed to `cmd' whenever it is
+			-- invoked as a callback.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		deferred
+		end
+
+feature -- Event - command removal
+
+	remove_resize_commands is
+			-- Remove the list of commands to be executed when
+			-- current area is resized.
+		require
+			exists: not destroyed
+		deferred
+		end
 
 end -- class EV_DRAWING_AREA_I
 

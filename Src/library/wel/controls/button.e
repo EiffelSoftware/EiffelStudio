@@ -27,8 +27,10 @@ feature {NONE} -- Initialization
 			a_parent_not_void: a_parent /= Void
 			a_parent_exists: a_parent.exists
 			a_name_not_void: a_name /= Void
-			width_large_enough: a_width >= minimal_width
-			height_large_enough: a_height >= minimal_height
+			a_width_small_enough: a_width <= maximal_width
+			a_width_large_enough: a_width >= minimal_width
+			a_height_small_enough: a_height <= maximal_height
+			a_height_large_enough: a_height >= minimal_height
 		do
 			internal_window_make (a_parent, a_name,
 				default_style,

@@ -1,24 +1,14 @@
-indexing	
-	description: 
-		"EiffelVision tree item. Item that can be put in a tree.%
-		% A tree item is also a tree-item container because if%
-		% we create a tree-item with a tree-item as parent, the%
-		% parent will become a subtree."
-	status: "See notice at end of class"
-	id: "$$"
+indexing
+	description: "Eiffel Vision status bar item."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EV_TREE_ITEM
+	EV_STATUS_BAR_ITEM
 
 inherit
 	EV_ITEM
-		redefine
-			implementation
-		end
-
-	EV_TREE_ITEM_CONTAINER
 		redefine
 			implementation
 		end
@@ -31,44 +21,44 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_TREE_ITEM_CONTAINER) is
+	make (par: EV_STATUS_BAR) is
 			-- Create the widget with `par' as parent.
 		do
-			!EV_TREE_ITEM_IMP! implementation.make
+			!EV_STATUS_BAR_ITEM_IMP! implementation.make
 			implementation.set_interface (Current)
 			set_parent (par)
 		end
 
-	make_with_text (par: EV_TREE_ITEM_CONTAINER; txt: STRING) is
+	make_with_text (par: EV_STATUS_BAR; txt: STRING) is
 			-- Create an item with `par' as parent and `txt'
 			-- as text.
 		do
-			!EV_TREE_ITEM_IMP! implementation.make_with_text (txt)
+			!EV_STATUS_BAR_ITEM_IMP! implementation.make_with_text (txt)
 			implementation.set_interface (Current)
 			set_parent (par)
 		end
 
-	make_with_pixmap (par: EV_TREE_ITEM_CONTAINER; pix: EV_PIXMAP) is
+	make_with_pixmap (par: EV_STATUS_BAR; pix: EV_PIXMAP) is
 			-- Create an item with `par' as parent and `pix'
 			-- as pixmap.
 		do
-			!EV_TREE_ITEM_IMP! implementation.make_with_pixmap (pix)
+			!EV_STATUS_BAR_ITEM_IMP! implementation.make_with_pixmap (pix)
 			implementation.set_interface (Current)
 			set_parent (par)
 		end
 
-	make_with_all (par: EV_TREE_ITEM_CONTAINER; txt: STRING; pix: EV_PIXMAP) is
+	make_with_all (par: EV_STATUS_BAR; txt: STRING; pix: EV_PIXMAP) is
 			-- Create an item with `par' as parent, `txt' as text
 			-- and `pix' as pixmap.
 		do
-			!EV_TREE_ITEM_IMP! implementation.make_with_all (txt, pix)
+			!EV_STATUS_BAR_ITEM_IMP! implementation.make_with_all (txt, pix)
 			implementation.set_interface (Current)
 			set_parent (par)
 		end
 
 feature -- Access
 
-	parent: EV_TREE_ITEM_CONTAINER is
+	parent: EV_STATUS_BAR is
 			-- Parent of the current item.
 		require
 			exists: not destroyed
@@ -76,27 +66,34 @@ feature -- Access
 			Result := implementation.parent
 		end
 
-feature -- Status report
+feature -- Measurement
 
-	is_selected: BOOLEAN is
-			-- Is the item selected?
+	width: INTEGER is
+			-- The width of the item in the status bar.
 		require
 			exists: not destroyed
 		do
-			Result := implementation.is_selected
+			Result := implementation.width
 		end
 
-	is_expanded: BOOLEAN is
-			-- is the item expanded?
+feature -- Status setting
+
+	set_width (value: INTEGER) is
+			-- Make `value' the new width of the item.
+			-- If -1, then the item reach the right of the status
+			-- bar.
 		require
 			exists: not destroyed
+			valid_value: value >= 0 or value = -1
 		do
-			Result := implementation.is_expanded
+			implementation.set_width (value)
+		ensure
+			width_set: width = value
 		end
 
 feature -- Element change
 
-	set_parent (par: EV_TREE_ITEM_CONTAINER) is
+	set_parent (par: EV_STATUS_BAR) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
 		require
@@ -107,34 +104,11 @@ feature -- Element change
 			parent_set: parent = par
 		end
 
-feature -- Event : command association
+feature {NONE} -- Implementation
 
-	add_subtree_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the selection subtree is expanded or collapsed.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			implementation.add_subtree_command (cmd, arg)
-		end
+	implementation: EV_STATUS_BAR_ITEM_I
 
-feature -- Event -- removing command association
-
-	remove_subtree_commands is
-			-- Empty the list of commands to be executed when
-			-- the selection subtree is expanded or collapsed.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_subtree_commands
-		end
-
-feature {EV_TREE_ITEM_CONTAINER, EV_TREE_ITEM_CONTAINER_I} -- Implementation
-
-	implementation: EV_TREE_ITEM_I
-
-end -- class EV_TREE_ITEM
+end -- class EV_STATUS_BAR_ITEM
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
@@ -151,4 +125,3 @@ end -- class EV_TREE_ITEM
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
-

@@ -1416,7 +1416,16 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		ensure
 			result_positive: result >= 0
 		end
-	
+		
+	redraw_item (an_item: EV_GRID_ITEM_I) is
+			-- Redraw area of `an_item' if visible.
+		require
+			an_item_not_void: an_item /= Void
+		do
+			fixme ("Do we need to check if item is visible? There may be no effect to simply invalidate the area...")
+			drawable.redraw_rectangle (an_item.virtual_x_position - (internal_client_x - viewport_x_offset) , an_item.virtual_y_position - (internal_client_y - viewport_y_offset), an_item.column.width, an_item.row.height)
+		end
+
 	redraw_client_area is
 			-- Redraw complete visible client area of `Current'.
 		do
@@ -1974,7 +1983,7 @@ feature {NONE} -- Drawing implementation
 				viewport_y_offset := 0
 				viewport.set_y_offset (viewport_y_offset)
 				redraw_client_area
-			elseif (internal_client_y < last_vertical_scroll_bar_value) and ((internal_client_y - last_vertical_scroll_bar_value) + (current_buffer_position)) <= 0 then
+			elseif (internal_client_y < last_vertical_scroll_bar_value) and ((internal_client_y - last_vertical_scroll_bar_value) + (current_buffer_position)) < 0 then
 				viewport_y_offset := buffer_space
 				viewport.set_y_offset (viewport_y_offset)
 				redraw_client_area
@@ -2181,7 +2190,7 @@ feature {NONE} -- Event handling
 				if pointed_item /= Void then
 					pointer_motion_actions_internal.call ([a_x + internal_client_x - viewport_x_offset, a_y + internal_client_y - viewport_y_offset, pointed_item.interface])
 				else
-					pointer_motion_actions_internal.call ([a_x + internal_client_x - viewport_x_offset, a_y + internal_client_y- viewport_y_offset, Void])
+					pointer_motion_actions_internal.call ([a_x + internal_client_x - viewport_x_offset, a_y + internal_client_y - viewport_y_offset, Void])
 				end
 			end
 		end

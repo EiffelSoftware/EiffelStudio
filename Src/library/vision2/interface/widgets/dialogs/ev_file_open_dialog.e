@@ -32,6 +32,51 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
+		
+feature -- Status report
+
+	multiple_selection_enabled: BOOLEAN is
+			-- Can more than one filename be selected?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.multiple_selection_enabled
+		ensure
+			bridge_ok: Result = implementation.multiple_selection_enabled
+		end
+		
+	file_names: ARRAYED_LIST [STRING] is
+			-- Full names of currently selected files including path.
+			-- No particular order is guaranteed.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.file_names
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+feature -- Status setting
+
+	enable_multiple_selection is
+			-- Allow more than one filename to be selected.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_multiple_selection	
+		ensure
+			multiple_selection_enabled: multiple_selection_enabled
+		end
+
+	disable_multiple_selection is
+			-- Allow only one filename to be selected.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.disable_multiple_selection
+		ensure
+			not_multiple_selection_enabled: not multiple_selection_enabled
+		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
@@ -45,6 +90,9 @@ feature {NONE} -- Implementation
 		do
 			create {EV_FILE_OPEN_DIALOG_IMP} implementation.make (Current)
 		end
+
+invariant
+	file_name_consistent_with_file_names: not file_names.is_empty implies file_names.first.is_equal (file_name)
 
 end -- class EV_FILE_OPEN_DIALOG
 

@@ -28,6 +28,7 @@ public class EiffelClassGenerator: Globals
 		String Path;
 		ArrayList Dependencies;
 		int i;
+		Assembly Dependency;
 		
 		assembly = Assembly.LoadFrom( FileName );
 		if( PathName == null )
@@ -48,7 +49,11 @@ public class EiffelClassGenerator: Globals
 		Done = new ArrayList();
 		Dependencies = LoadExternalAssemblies( assembly );
 		for( i = 0; i < Dependencies.Count; i ++ )
-			ImportAssemblyWithoutDependancies( ( Assembly )Dependencies [i], PathName, NameFormatter.EiffelFormatting, NameFormatter.XmlGeneration );
+		{
+			Dependency = ( Assembly )Dependencies [i];
+			NameFormatter.XmlGeneration = IsSigned( Dependency );	
+			ImportAssemblyWithoutDependancies( Dependency, PathName, NameFormatter.EiffelFormatting, NameFormatter.XmlGeneration, true );
+		}
 	}	
 	
 	
@@ -62,11 +67,11 @@ public class EiffelClassGenerator: Globals
 		ArrayList Dependencies;
 		int i;
 		
-		ImportAssemblyWithoutDependancies( assembly, PathName, EiffelFormatting, true );
+		ImportAssemblyWithoutDependancies( assembly, PathName, EiffelFormatting, true, false );
 		Done = new ArrayList();
 		Dependencies = LoadExternalAssemblies( assembly );
 		for( i = 0; i < Dependencies.Count; i ++ )
-			ImportAssemblyWithoutDependancies( ( Assembly )Dependencies [i], PathName, EiffelFormatting, true );
+			ImportAssemblyWithoutDependancies( ( Assembly )Dependencies [i], PathName, EiffelFormatting, true, true );
 	}
 	
 	// Generate Eiffel code from XML files corresponding to assemblies in `ImportedAssemblies'.
@@ -82,14 +87,14 @@ public class EiffelClassGenerator: Globals
  */ 	
 
 	// Import `assembly' without any dependencies.
-	virtual protected void ImportAssemblyWithoutDependancies( Assembly assembly, String PathName, bool EiffelFormatting, bool XmlGeneration )
+	virtual protected void ImportAssemblyWithoutDependancies( Assembly assembly, String PathName, bool EiffelFormatting, bool XmlGeneration, bool IsDependency )
 	{
 		Emitter emitter;
 		String Path;
 		bool Imported;
 		
 		Imported = IsAssemblyImported( assembly );
-		if( !Imported || NameFormatter.XmlGeneration ) 
+		if( !Imported ||( ( NameFormatter.XmlGeneration )&&( !IsDependency ) ) )
 		{
 			if( !Imported )
 			{
@@ -932,6 +937,20 @@ public class EiffelClassGenerator: Globals
 			}
 		}
 		return assemblies;
+	}
+	
+	// Is `assembly' signed?
+	virtual protected bool IsSigned( Assembly assembly )
+	{
+		AssemblyName AName;
+		Array Key;
+		
+		AName = assembly.GetName();
+		Key = AName.GetPublicKey();
+		if( Key != null )
+			return( Key.Length > 0 );
+		else
+			return false;		
 	}
 	
 	// Loaded assemblies, used in `LoadExternalAssemblies'

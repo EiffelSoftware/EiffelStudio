@@ -85,12 +85,11 @@ feature -- Element change
 		require
 			min_i: i >= 0
 		local
-			old_count, pos: INTEGER
+			old_count: INTEGER
 		do
 			old_count := count
-			pos := i
-			if (pos >= old_count) then
-				resize (pos.max (old_count + old_count * 30 // 100))
+			if (i >= old_count) then
+				resize (i.max (old_count + old_count * 30 // 100))
 			end
 			put (v, i)
 		ensure

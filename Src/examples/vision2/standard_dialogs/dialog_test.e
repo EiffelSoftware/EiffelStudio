@@ -27,23 +27,23 @@ feature -- Initialization
 			create but.make_with_text ("dialog test")
 			first_window.extend (but)
 			but.press_actions.extend (~on_click)
+			create fdlg
+			create odlg
 		end
 
+	fdlg: EV_FILE_SAVE_DIALOG
+	odlg: EV_FILE_OPEN_DIALOG
+
 	on_click is
-		local
-			qdlg: EV_QUESTION_DIALOG
-			wdlg: EV_WARNING_DIALOG
-			idlg: EV_INFORMATION_DIALOG
-			edlg: EV_ERROR_DIALOG
 		do
-			create idlg.make_with_text ("This is your text%NThis toooo")
-			idlg.show_modal
-			create wdlg.make_with_text ("I warned you...")
-			wdlg.show_modal
-			create edlg.make_with_text ("Sorrrry you has an firus on you're c-drive.")
-			edlg.show_modal
-			create qdlg.make_with_text ("Does it work?")
-			qdlg.show_modal			
+			fdlg.show_modal
+			io.put_string ("Path: " + fdlg.file_path + "%N")
+			io.put_string ("Name: " + fdlg.file_title + "%N")
+			io.put_string ("Full: " + fdlg.file_name + "%N")
+			odlg.show_modal
+			io.put_string ("Path: " + fdlg.file_path + "%N")
+			io.put_string ("Name: " + fdlg.file_title + "%N")
+			io.put_string ("Full: " + fdlg.file_name + "%N")
 		end
 
 	first_window: EV_TITLED_WINDOW is

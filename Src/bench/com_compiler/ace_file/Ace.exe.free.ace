@@ -2,7 +2,7 @@ system
 	cec
 
 root
-	ecom_ise_registration: make
+	ECOM_EIFFEL_SOFTWARE_COMPILER_REGISTRATION: make
 
 default
 	il_verifiable (yes)

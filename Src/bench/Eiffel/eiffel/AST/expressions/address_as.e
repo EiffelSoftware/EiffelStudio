@@ -93,8 +93,7 @@ feature -- Type check, byte code and dead code removal
 
 			if access.is_feature then
 				a_feature := context.feature_table.item(feature_name.internal_name)
-				!! address
-				address.init (context.current_class.class_id, a_feature)
+				create address.make (context.current_class.class_id, a_feature)
 				Result := address
 			else
 				!! hector.make (access)

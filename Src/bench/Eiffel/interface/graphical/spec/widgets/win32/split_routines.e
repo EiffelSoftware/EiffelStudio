@@ -50,7 +50,7 @@ feature -- Basic routines
 			a_dc.line (a_x + 5, a_y1, a_x + 5, a_y2)
 		end
 
-	draw_horizontal_split (a_dc: WEL_DC; a_x1, a_x2, a_y: INTEGER) is
+	draw_horizontal_split (a_dc: WEL_DC; a_y, a_x1, a_x2: INTEGER) is
 			-- Draw an horizontal split at 'a_y' from `a_x1' to `a_x2'
 			-- on `a_dc'
 		require
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 			result_exists: Result.exists
 		end
-
+	
 	shadow_pen: WEL_PEN is
 			-- Pen with the shadow color
 		local

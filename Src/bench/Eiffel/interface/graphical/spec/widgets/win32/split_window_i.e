@@ -9,22 +9,26 @@ indexing
 class SPLIT_WINDOW_I
 
 inherit
-	MANAGER_IMP
+	FORM_IMP
 		rename
+			make as form_make,
 			cursor as manager_cursor
+		undefine
+			class_name,
+			on_horizontal_scroll_control,
+			on_vertical_scroll_control
 		redefine
-			set_size,
-			on_set_cursor,
-			on_size,
-			on_left_button_up,
-			on_left_button_down,
-			on_mouse_move,
-			set_widget_default,
-			child_has_resized
-		end;
+			set_size, on_set_cursor, on_size,
+			on_left_button_up, on_left_button_down,
+			on_mouse_move, set_widget_default,
+			child_has_resized, realize_current,
+			on_paint
+		end
+
 	WEL_CONTROL_WINDOW
 		rename
-			make as control_window_make,
+			make as wel_make,
+			make_top as wel_make_top,
 			show as wel_show,
 			hide as wel_hide,
 			destroy as wel_destroy,
@@ -47,48 +51,41 @@ inherit
 			release_capture as wel_release_capture,
 			item as wel_item,
 			children as wel_children,
-			set_menu as wel_set_menu
+			set_menu as wel_set_menu,
+			menu as wel_menu,
+			draw_menu as wel_draw_menu
 		undefine
-			on_right_button_up,
-			on_left_button_down,
-			on_left_button_up,
-			on_right_button_down,
-			on_mouse_move,
-			on_set_cursor,
-			on_size,
-			on_hide,
-			on_show,
-			on_move,
-			on_menu_command,
-			on_key_up,
-			on_key_down,
-			on_destroy,
-			on_draw_item,
-			class_background
+			on_right_button_up, on_right_button_down,
+			on_set_cursor, on_size,
+			on_hide, on_show, on_move,
+			on_menu_command, on_key_up, on_key_down,
+			on_destroy, on_draw_item, class_background
 		redefine
-			on_left_button_down,
-			on_left_button_up,
-			on_mouse_move,
-			on_paint,
-			on_size,
-			on_set_cursor
-		end;
+			on_left_button_down, on_left_button_up,
+			on_mouse_move, on_paint,
+			on_size, on_set_cursor
+		end
+
 	WEL_IDC_CONSTANTS
 		export
 			{NONE} all
-		end;
+		end
+
 	WEL_HT_CONSTANTS
 		export
 			{NONE} all
-		end;
+		end
+
 	WEL_BIT_OPERATIONS
 		export
 			{NONE} all
-		end;
+		end
+
 	WEL_SIZE_CONSTANTS
 		export
 			{NONE} all
-		end;
+		end
+
 	SPLIT_ROUTINES
 		export
 			{NONE} all
@@ -99,16 +96,17 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_window: SPLIT_WINDOW; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_window: SPLIT_WINDOW; oui_parent: COMPOSITE; vertical: BOOLEAN) is
 			-- Create a Windows specific horizontal split window.
 		require
-			a_window_not_void: a_window /= Void;
+			a_window_not_void: a_window /= Void
 			oui_parent_not_void: oui_parent /= Void
 		do
-			!! private_attributes;
-			parent ?= oui_parent.implementation;
-			top_split_visible := False;
-			bottom_split_visible := False;
+			!! private_attributes
+			parent ?= oui_parent.implementation
+			split_visible := True
+			is_vertical := vertical
+			form_make (a_window, True, oui_parent)
 		end
 
 	realize_current is
@@ -116,14 +114,21 @@ feature {NONE} -- Initialization
 		local
 			pi: WEL_COMPOSITE_WINDOW
 		do
-			pi ?= parent;
-			control_window_make (pi, "");
-			private_attributes.set_height (pi.height);
-			private_attributes.set_width (pi.width);
-			top_split_visible := False;
-			bottom_split_visible := False;
-			top_split_position := pi.height;
-			bottom_split_position := pi.height
+			pi ?= parent
+			wel_make (pi, "")
+			set_height (pi.height)
+			set_width (pi.width)
+			split_visible := True
+
+			if is_vertical then
+				split_size := pi.width
+			else
+				split_size := pi.height
+			end
+
+			split_position := split_size // 2
+
+			{FORM_IMP} Precursor
 		end
 
 feature -- Setting
@@ -131,7 +136,7 @@ feature -- Setting
 	set_widget_default is
 			-- Set default values for Current
 		do
-		end;
+		end
 
 	set_size (new_width, new_height: INTEGER) is
 			-- Set the size of Current to `new_width', `new_height'.
@@ -141,40 +146,34 @@ feature -- Setting
 				private_attributes.width /= new_width or else
 				private_attributes.height /= new_height
 			then
-				private_attributes.set_width (new_width);
-				private_attributes.set_height (new_height);
+				private_attributes.set_width (new_width)
+				private_attributes.set_height (new_height)
 				if exists then
-					resize (new_width, new_height);
-					if bottom_split_visible then
-						if bottom_split_position > new_height then
-							bottom_split_position := new_height - split_width
-						end
+					resize (new_width, new_height)
+
+					if is_vertical then
+						split_size := new_width
 					else
-						bottom_split_position := new_height
-					end;
-					if top_split_visible then
-						if top_split_position > bottom_split_position then
-							top_split_position := bottom_split_position - split_width
-						end
-					else
-						top_split_position := bottom_split_position
-					end;
-					if
-						top_child /= Void and then top_child.managed
-					then
-						resize_top_child
-					end;
-					if
-						middle_child /= Void and then middle_child.managed
-					then
-						resize_middle_child
-					end;
-					if
-						bottom_child /= Void and then bottom_child.managed
-					then
-						resize_bottom_child
+						split_size := new_height
 					end
-				end;
+
+					if split_visible then
+						if split_position > split_size then
+							split_position := split_size - split_width
+						end
+					else
+						split_position := split_size
+					end
+
+					if first_child /= Void and then first_child.managed then
+						resize_first_child
+					end
+
+					if second_child /= Void and then second_child.managed then
+						resize_second_child
+					end
+				end
+
 				if parent /= Void then
 					parent.child_has_resized
 				end
@@ -183,207 +182,101 @@ feature -- Setting
 
 feature -- Access
 
-	top_child: SPLIT_WINDOW_CHILD;
-			-- Child above the top most split
+	first_child: SPLIT_WINDOW_CHILD
+			-- Child above the top most split if not `is_vertical'
+			-- Child next the left most split otherwise
 
-	middle_child: SPLIT_WINDOW_CHILD;
-			-- Child between the two splits
+	second_child: SPLIT_WINDOW_CHILD
+			-- Child below the bottom most split if not `is_vertical'
+			-- Child next the right most split otherwise
 
-	bottom_child: SPLIT_WINDOW_CHILD;
-			-- Child below the bottom most split
-
-	top_split_position: INTEGER;
+	split_position: INTEGER
 			-- Position of the top split relative to Current
 
-	bottom_split_position: INTEGER
-			-- Position of the bottom split relative to Current
+	split_size: INTEGER
+			-- Size of the split window.
+			--| Depending on the value of `is_vertical', it can be the
+			--| height or the width
+
+	is_vertical: BOOLEAN
+			-- Is the split made vertically?
 
 feature -- Sizing policy
 
 	child_has_resized is
 			-- Respond to resizing from children.
 		do
+			if first_child /= Void and then first_child.managed then
+				resize_first_child
+			end
+			
 			if
-				top_child /= Void and then
-				top_child.managed
+				second_child /= Void and then
+				second_child.managed and then
+				split_visible
 			then
-				resize_top_child
-			end;
-			if
-				middle_child /= Void and then
-				middle_child.managed and then
-				top_split_visible
-			then
-				resize_middle_child
-			end;
-			if
-				bottom_child /= Void and then
-				bottom_child.managed and then
-				bottom_split_visible
-			then
-				resize_bottom_child
+				resize_second_child
 			end
 		end
 
 feature -- Element change
 
-	set_top_position (a_top_position: INTEGER) is
-			-- Set the `top_split_position' to `a_top_position'.
-		require
-			exists: exists
-		do
-			top_split_position := a_top_position;
-			resize_top_child;
-			resize_middle_child;
-			invalidate_without_background
-		ensure
-			top_split_position_set: top_split_position = a_top_position
-		end
-
-	set_bottom_position (a_bottom_position: INTEGER) is
-			-- Set the `bottom_split_position' to `a_bottom_position'.
-		require
-			exists: exists
-		do
-			bottom_split_position := a_bottom_position;
-			resize_middle_child;
-			resize_bottom_child;
-			invalidate_without_background
-		ensure
-			botttom_split_position_set: bottom_split_position = a_bottom_position
-		end
-
-	swap_top_children is
-			-- Swap top and middle children.
-		local
-			temporary_child: SPLIT_WINDOW_CHILD
-		do
-			temporary_child := top_child
-			top_child := middle_child
-			middle_child := temporary_child
-			resize_top_child
-			resize_middle_child
-		ensure
-			top_child_set: top_child = old middle_child
-			middle_child_set: middle_child = old top_child
-		end
-
-	swap_bottom_children is
-			-- Swap middle and bottom children.
-		local
-			temporary_child: SPLIT_WINDOW_CHILD
-		do
-			temporary_child := middle_child
-			middle_child := bottom_child
-			bottom_child := temporary_child
-			resize_middle_child
-			resize_bottom_child
-		ensure
-			middle_child_set: middle_child = old bottom_child
-			bottom_child_set: bottom_child = old middle_child
-		end
-
-	set_top_child (a_window: like top_child) is
-			-- set `top_child' to `a_window'.
-		require
-			a_window_not_void: a_window /= Void
-		local
-			old_child: like top_child
-		do
-			old_child := top_child;
-			top_child := a_window
-		ensure
-			top_child_set: top_child = a_window
-		end
-
-	set_middle_child (a_window: like middle_child) is
-			-- Set `middle_child' to `a_window'.
-		require
-			a_window_not_void: a_window /= Void;
-		do
-			middle_child := a_window;
-			top_split_visible := True
-		ensure
-			middle_child_set: middle_child = a_window
-		end
-
-	set_bottom_child (a_window: like bottom_child) is
-			-- set `bottom_child' to `a_window'.
+	set_first_child (a_window: SPLIT_WINDOW_CHILD) is
+			-- set `first_child' to `a_window'.
 		require
 			a_window_not_void: a_window /= Void
 		do
-			bottom_child := a_window;
-			bottom_split_visible := True
+			first_child := a_window
 		ensure
-			bottom_child_set: bottom_child = a_window
-		end;
+			first_child_set: first_child = a_window
+		end
 
-	add_child (a_window: like bottom_child) is
+	set_second_child (a_window: SPLIT_WINDOW_CHILD) is
+			-- set `second_child' to `a_window'.
+		require
+			a_window_not_void: a_window /= Void
+		do
+			second_child := a_window
+			split_visible := True
+		ensure
+			second_child_set: second_child = a_window
+		end
+
+	add_child (a_window: SPLIT_WINDOW_CHILD) is
 			-- Add `a_window' as currently lowest child.
 		require
 			a_window_not_void: a_window /= Void
 		do
-			if top_child = Void then
-				set_top_child (a_window)
-			elseif middle_child = Void then
-				set_middle_child (a_window)
+			if first_child = Void then
+				set_first_child (a_window)
 			else
-				set_bottom_child (a_window)
+				set_second_child (a_window)
 			end
-		end;
+		end
 
 	add_managed_child (a_window: SPLIT_WINDOW_CHILD) is
 			-- Add `a_window' as managed.
 		do
-			if a_window = middle_child then
-				top_split_visible := True;
-				if not bottom_split_visible then
-					bottom_split_position := height + a_window.height
-				else
-					top_split_position := bottom_split_position;
-					bottom_split_position := bottom_split_position + a_window.height
-				end;
-				resize_middle_child
-			elseif a_window = bottom_child then
-				bottom_split_visible := True
-				if not top_split_visible then
-					top_split_position := bottom_split_position
-				end;
-				resize_bottom_child
-			end;
-		end;
+			if a_window = second_child then
+				split_visible := True
+				resize_second_child
+			end
+		end
 
 	remove_managed_child (a_window: SPLIT_WINDOW_CHILD) is
 			-- Remove `a_window' as managed.
 		do
-			if a_window = middle_child then
-				remove_middle_child
-			elseif a_window = bottom_child then
-				remove_bottom_child
+			if a_window = second_child then
+				remove_second_child
 			end
-		end;
+		end
 
-	remove_middle_child is
-			-- Remove `middle_child' from the display.
+	remove_second_child is
+			-- Remove `second_child' from the display.
 		do
-			bottom_split_position := top_split_position
-			top_split_visible := False;
-			resize_bottom_child
-		end;
-
-	remove_bottom_child is
-			-- Remove `bottom_child' from the display.
-		do
-			bottom_split_position := height;
-			if not top_split_visible then
-				top_split_position := bottom_split_position
-			end;
-			bottom_split_visible := False;
-			if middle_child /= Void and then middle_child.managed then
-				resize_middle_child
-			else
-				resize_top_child
-			end
+			split_position := split_size
+			split_visible := False
+			resize_first_child
 		end
 
 feature {SPLIT_WINDOW_CHILD} -- Element change
@@ -391,139 +284,100 @@ feature {SPLIT_WINDOW_CHILD} -- Element change
 	remove_child (a_child: SPLIT_WINDOW_CHILD) is
 			-- Remove `a_child' from the display.
 		do
-			if a_child = middle_child then
-				remove_middle_child
-			elseif a_child = bottom_child then
-				remove_bottom_child
+			if a_child = second_child then
+				remove_second_child
 			end
 		end
 
-feature {NONE} -- Implementation
+feature -- {NONE} -- Implementation
 
-	resize_top_child is
+	resize_first_child is
 			-- Resize the top child to the correct dimensions.
 		require
 			exists: exists
 		do
-			top_child.set_size (width, top_split_position.max
-					(top_child.implementation.minimal_height))
-		end;
+			if is_vertical then
+				first_child.set_size (split_position, height)
+			else
+				first_child.set_size (width, split_position)
+			end
+		end
 
-	resize_middle_child is
-			-- Resize `middle_child' to the correct dimensions.
-		require
-			exists: exists
-		do
-			middle_child.set_x_y (0, top_split_position + split_width);
-			middle_child.set_size (width, bottom_split_position -
-					(top_split_position + split_width).max
-					(middle_child.implementation.minimal_height))
-		end;
-
-	resize_bottom_child is
+	resize_second_child is
 			-- Resize the bottom child to the correct dimensions.
 		require
 			exists: exists
 		do
-			bottom_child.set_x_y (0, bottom_split_position + split_width);
-			bottom_child.set_size (width,
-				(height - bottom_split_position - split_width).max
-				(bottom_child.implementation.minimal_height))
+			if is_vertical then
+				second_child.set_x_y (split_position + split_width, 0)
+				second_child.set_size (width - split_position - split_width, height)
+			else
+				second_child.set_x_y (0, split_position + split_width)
+				second_child.set_size (width, height - split_position - split_width)
+			end
 		end
 
-	draw_top_split (a_dc: WEL_DC) is
+	draw_split (a_dc: WEL_DC) is
 			-- Draw the top split on `a_dc'.
 		require
-			exists: exists;
-			a_dc_not_void: a_dc /= Void;
+			exists: exists
+			a_dc_not_void: a_dc /= Void
 			a_dc_exists: a_dc.exists
 		do
-			if top_split_visible then
-				draw_horizontal_split (a_dc, 0, width, top_split_position)
+			if split_visible then
+				if is_vertical then
+					draw_vertical_split (a_dc, split_position, 0, height)
+				else
+					draw_horizontal_split (a_dc, split_position, 0, width)
+				end
 			end
 		end
 
-	draw_bottom_split (a_dc: WEL_DC) is
-			-- Draw the top split on `a_dc'.
-		require
-			exists: exists;
-			a_dc_not_void: a_dc /= Void;
-			a_dc_exists: a_dc.exists
-		do
-			if bottom_split_visible then
-				draw_horizontal_split (a_dc, 0, width, bottom_split_position)
-			end
-		end
-
-	invert_top_split (a_dc: WEL_DC) is
+	invert_split (a_dc: WEL_DC) is
 			-- Invert the split on `a_dc'.
 		require
-			exists: exists;
-			a_dc_not_void: a_dc /= Void;
+			exists: exists
+			a_dc_not_void: a_dc /= Void
 			a_dc_exists: a_dc.exists
 		do
-			if top_split_visible then
-				invert_rectangle (a_dc, 0, top_split_position, width, top_split_position + split_width - 1)
+			if split_visible then
+				if is_vertical then
+					invert_rectangle (a_dc, split_position, 0, split_position + split_width - 1, height)
+				else	
+					invert_rectangle (a_dc, 0, split_position, width, split_position + split_width - 1)
+				end
 			end
 		end
 
-	invert_bottom_split (a_dc: WEL_DC) is
-			-- Invert the split on `a_dc'.
-		require
-			exists: exists;
-			a_dc_not_void: a_dc /= Void;
-			a_dc_exists: a_dc.exists
-		do
-			if bottom_split_visible then
-				invert_rectangle (a_dc, 0, bottom_split_position, width, bottom_split_position + split_width - 1)
-			end
-		end
-
-	split_width: INTEGER is
+	split_width: INTEGER is 6
 			-- Width of either split
-		once
-			Result := 6
-		ensure
-			positive_result: result >= 0
-		end
 
 	on_mouse_move (code, a_x, a_y: INTEGER) is
 			-- Respond to a mouse move message.
 		local
 			new_position: INTEGER
+			value: INTEGER
+			limit_value: INTEGER
 		do
 			if button_down then
-				if splitting_top then
-					new_position := a_y - split_width // 2;
+				if is_vertical then
+					value := a_x
+				else
+					value := a_y
+				end
+
+				if is_splitting then
+					new_position := value - split_width // 2
 					if new_position < 0 then
 						new_position := 0
 					end
-					if new_position > bottom_split_position - split_width then
-						new_position := bottom_split_position - split_width
+					if new_position > split_size - split_width then
+						new_position := split_size - split_width
 					end
-					if top_split_position /= new_position then
-						invert_top_split (window_dc);
-						top_split_position := new_position;
-						invert_top_split (window_dc)
-					end
-				elseif splitting_bottom then
-					new_position := a_y - split_width // 2
-					if top_split_visible then
-						if new_position < top_split_position + split_width then
-							new_position := top_split_position + split_width
-						end
-					else
-						if new_position < 0 then
-							new_position := 0
-						end
-					end;
-					if new_position > height - split_width then
-						new_position := height - split_width
-					end;
-					if bottom_split_position /= new_position then
-						invert_bottom_split (window_dc)
-						bottom_split_position := new_position
-						invert_bottom_split (window_dc)
+					if split_position /= new_position then
+						invert_split (window_dc)
+						split_position := new_position
+						invert_split (window_dc)
 					end
 				end
 			end
@@ -531,123 +385,95 @@ feature {NONE} -- Implementation
 
 	on_left_button_down (keys, a_x, a_y: INTEGER) is
 			-- Respond to a left button down message.
+		local
+			value: INTEGER
 		do
-			if top_split_visible and then on_top_split (a_y) then
-				!! window_dc.make (Current);
-				window_dc.get;
-				top_split_position := a_y - split_width // 2;
-				invert_top_split (window_dc);
-				!! cursor.make_by_predefined_id (Idc_sizens);
-				wel_set_capture;
-				button_down := True;
-				splitting_top := True;
-				splitting_bottom := False
-			elseif bottom_split_visible and then on_bottom_split (a_y) then
-				!! window_dc.make (Current);
-				window_dc.get;
-				bottom_split_position := a_y - split_width // 2;
-				invert_bottom_split (window_dc);
-				!! cursor.make_by_predefined_id (Idc_sizens);
-				wel_set_capture;
-				button_down := True;
-				splitting_top := False;
-				splitting_bottom := True
+			if is_vertical then
+				value := a_x
+				!! cursor.make_by_predefined_id (Idc_sizewe)
+			else
+				!! cursor.make_by_predefined_id (Idc_sizens)
+				value := a_y
+			end
+
+			if split_visible and then on_split (value) then
+				!! window_dc.make (Current)
+				window_dc.get
+				split_position := value - split_width // 2
+				invert_split (window_dc)
+				wel_set_capture
+				button_down := True
+				is_splitting := True
 			end
 		end
 
 	on_left_button_up (keys, a_x, a_y: INTEGER) is
 			-- Respond to a left button up message.
+		local
+			value: INTEGER
+			limit_value: INTEGER
 		do
 			if button_down then
-				if splitting_top then
-					top_split_position := a_y - split_width // 2;
-					if top_split_position < 0 then
-						top_split_position := 0
+				if is_vertical then
+					value := a_x
+				else
+					value := a_y
+				end
+
+				if is_splitting then
+					split_position := value - split_width // 2
+					if split_position < 0 then
+						split_position := 0
 					end
-					if top_split_position > bottom_split_position - split_width then
-						top_split_position := bottom_split_position - split_width
-					end;
-					resize_top_child;
-					resize_middle_child;
-					draw_top_split (window_dc);
-					window_dc.release;
-					window_dc := Void;
-					wel_release_capture
-				elseif splitting_bottom then
-					bottom_split_position := a_y - split_width // 2;
-					if top_split_visible then
-						if bottom_split_position < top_split_position + split_width then
-							bottom_split_position := top_split_position + split_width
-						end
-					else
-						if bottom_split_position < 0 then
-							bottom_split_position := 0
-						end
-					end;
-					if bottom_split_position > height - split_width then
-						bottom_split_position := height - split_width
-					end;
-					if not top_split_visible then
-						top_split_position := bottom_split_position
-					end;
-					if middle_child /= Void and then middle_child.managed then
-						resize_middle_child
-					else
-						resize_top_child
-					end;
-					resize_bottom_child;
-					draw_bottom_split (window_dc);
-					window_dc.release;
-					window_dc := Void;
+					if split_position > split_size - split_width then
+						split_position := split_size - split_width
+					end
+
+					resize_first_child
+					resize_second_child
+					draw_split (window_dc)
+					window_dc.release
+					window_dc := Void
 					wel_release_capture
 				end
-			end;
-			button_down := False;
-			splitting_top := False;
-			splitting_bottom := False
+			end
+			button_down := False
+			is_splitting := False
 		end
 
 	on_paint (a_paint_dc: WEL_PAINT_DC; a_rect: WEL_RECT) is
 			-- Respond to a paint message.
 		do
-			draw_top_split (a_paint_dc);
-			draw_bottom_split (a_paint_dc)
+			if split_visible then
+				draw_split (a_paint_dc)
+			end
 		end
 
 	on_size (code, a_width, a_height: INTEGER) is
 			-- Respond to a resize message.
 		do
-			if
-				not flag_set (code, Size_minimized)
-			then
-				if bottom_split_visible then
-					if bottom_split_position > a_height then
-						bottom_split_position := a_height - split_width
+			if not flag_set (code, Size_minimized) then
+
+				if is_vertical then
+					split_size := a_width
+				else
+					split_size := a_height
+				end
+
+				if split_visible then
+					if split_position > split_size then
+						split_position := split_size - split_width
 					end
 				else
-					bottom_split_position := a_height
-				end;
-				if top_split_visible then
-					if top_split_position > bottom_split_position then
-						top_split_position := bottom_split_position - split_width
-					end
-				else
-					top_split_position := bottom_split_position
-				end;
-				if
-					top_child /= Void and then top_child.managed
-				then
-					resize_top_child
-				end;
-				if
-					middle_child /= Void and then middle_child.managed
-				then
-					resize_middle_child
-				end;
-				if
-					bottom_child /= Void and then bottom_child.managed
-				then
-					resize_bottom_child
+					split_position := split_size
+				end
+
+				if first_child /= Void and then first_child.managed then
+					resize_first_child
+				end
+
+				if second_child /= Void and then second_child.managed then
+					resize_second_child
 				end
 			end
 		end
@@ -656,31 +482,38 @@ feature {NONE} -- Implementation
 			-- Respond to a cursor message.
 		local
 			point: WEL_POINT
+			pos: INTEGER
 		do
 			!! point.make (0, 0)
 			point.set_cursor_position
 			point.screen_to_client (Current)
-			if on_top_split (point.y) or else on_bottom_split (point.y) then
-				!! cursor.make_by_predefined_id (Idc_sizens)
+			if is_vertical then
+				pos := point.x
+			else
+				pos := point.y
+			end
+
+			if on_split (pos) then
+				if is_vertical then
+					!! cursor.make_by_predefined_id (Idc_sizewe)
+				else
+					!! cursor.make_by_predefined_id (Idc_sizens)
+				end
 			else
 				cursor := Void
 			end
+
 			if cursor /= Void and then code = Htclient then
 				cursor.set
 				disable_default_processing
 			end
 		end
 
-	on_top_split (a_y: INTEGER): BOOLEAN is
-			-- Is a point with `a_y' as Y coordinate on the split?
+	on_split (value: INTEGER): BOOLEAN is
+			-- Is a point with `value' as the coordinate on the split?
 		do
-			Result := (a_y >= top_split_position) and then (a_y < top_split_position + split_width)
-		end
-
-	on_bottom_split (a_y: INTEGER): BOOLEAN is
-			-- Is a point with `a_y' as Y coordinate on the split?
-		do
-			Result := (a_y >= bottom_split_position) and then (a_y < bottom_split_position + split_width)
+			Result := (value >= split_position)
+					and then (value < split_position + split_width)
 		end
 
 	window_dc: WEL_WINDOW_DC
@@ -692,16 +525,10 @@ feature {NONE} -- Implementation
 	button_down: BOOLEAN
 			-- Is the mouse button down moving the split?
 
-	splitting_top: BOOLEAN
+	is_splitting: BOOLEAN
 			-- Is `button_down' and `on_top_split' True?
 
-	splitting_bottom: BOOLEAN
-			-- Is `button_down' and `on_bottom_split' True?
-
-	top_split_visible: BOOLEAN;
-			-- Is the highest split visible?
-
-	bottom_split_visible: BOOLEAN
-			-- Is the lowest split visible?
+	split_visible: BOOLEAN
+			-- Is the split visible?
 
 end -- class SPLIT_WINDOW_I

@@ -63,8 +63,7 @@ feature -- Basic operations
 		do
 			if not rescued then
 				if
-					(create {EV_ENVIRONMENT}).application /= Void and then
-					(create {EV_ENVIRONMENT}).application.ctrl_pressed
+					ev_application /= Void and then ev_application.ctrl_pressed
 				then
 						-- Small addition to force a GC cycle when `we' want
 						-- to see if objects are indeed collected when we

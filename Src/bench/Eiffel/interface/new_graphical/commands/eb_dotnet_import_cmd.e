@@ -18,7 +18,7 @@ inherit
 		export
 			{NONE} all
 		end
-
+		
 create
 	make
 
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 	on_refresh is
 			-- Action performed while ISE Assembly Manager is active to refresh EiffelStudio development window
 		do
-			(create {EV_ENVIRONMENT}).application.process_events
+			ev_application.process_events
 		end
 		
 end -- class EB_DOTNET_IMPORT_CMD

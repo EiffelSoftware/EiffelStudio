@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (en, dn: STRING; pub, has_getter, has_setter: BOOLEAN; type, decl_type: CONSUMED_REFERENCED_TYPE) is
+	make (en, dn: STRING; has_getter, has_setter, pub, stat: BOOLEAN; type, decl_type: CONSUMED_REFERENCED_TYPE) is
 			-- Initialize event.
 		require
 			non_void_eiffel_name: en /= Void
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 									"get_" + dn,
 									create {ARRAY [CONSUMED_ARGUMENT]}.make (1, 0),
 									type,
-									False, False, False, False, False, pub, True,
+									False, stat, False, False, False, pub, True,
 									decl_type)
 			end
 			if has_setter then
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 									"set_" + en,
 									"set_" + dn,
 									args,
-									False, False, False, pub, True,
+									False, stat, False, pub, True,
 									decl_type)
 			end
 		ensure

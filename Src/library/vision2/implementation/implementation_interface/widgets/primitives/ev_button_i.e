@@ -17,7 +17,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-        make (par: EV_CONTAINER) is
+        make_with_label (par: EV_CONTAINER; txt: STRING) is
                         -- Create a push button implementation.
 		deferred
                 end	

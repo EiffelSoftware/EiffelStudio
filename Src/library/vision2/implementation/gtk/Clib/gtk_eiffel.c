@@ -147,12 +147,6 @@ GtkWidget *c_gtk_pixmap_create_from_xpm (GtkWidget *widget, char *fname)
     return (gtk_pixmap_new (pixmap, mask));
 }
 
-/* Return a state of a toggle button */
-int c_gtk_toggle_button_active (GtkWidget *button) 
-{
-    return (GTK_TOGGLE_BUTTON(button)->active);
-}
-
 /* Set widget flags */
 void c_gtk_widget_set_flags (GtkWidget *widget, int flags) 
 {
@@ -381,6 +375,17 @@ c_gtk_widget_show_children (GtkWidget *widget)
 			       NULL);
 }
 
+/* Toggle button */
+
+/* Return a state of a toggle button */
+EIF_BOOLEAN c_gtk_toggle_button_active (GtkWidget *button) 
+{
+    return (GTK_TOGGLE_BUTTON(button)->active);
+}
+
+
+
+				/* static functions */
 static void
 c_gtk_widget_show_children_recurse (GtkWidget *widget,
                                   gpointer   client_data)
@@ -388,5 +393,6 @@ c_gtk_widget_show_children_recurse (GtkWidget *widget,
     gtk_widget_show (widget);
     c_gtk_widget_show_children (widget);
 }
+
 
 

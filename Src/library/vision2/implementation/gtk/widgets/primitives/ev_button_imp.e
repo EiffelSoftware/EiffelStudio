@@ -13,25 +13,29 @@ class
 inherit
         EV_BUTTON_I
         
+	EV_PRIMITIVE_IMP
+	
 	EV_BAR_ITEM_IMP
         
 	EV_TEXT_CONTAINER_IMP
         
 creation
 
-        make
+        make_with_label
 
 feature {NONE} -- Initialization
-
-        make (par: EV_CONTAINER) is
+	
+	make (par: EV_CONTAINER) is
+		do
+			make_with_label (par, "")
+		end
+		
+        make_with_label (par: EV_CONTAINER; txt: STRING) is
                         -- Create a gtk push button.
                 local
                         a: ANY
-			s: STRING
 		do
-			!!s.make (0)
-			s := ""
-			a ?= s.to_c
+			a ?= txt.to_c
                         widget := gtk_button_new_with_label ($a)
                 end
 	

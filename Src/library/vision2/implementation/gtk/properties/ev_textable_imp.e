@@ -13,9 +13,9 @@ deferred class
 inherit
 	EV_TEXT_CONTAINER_I
 	
-	EV_PRIMITIVE_IMP
-	
 	EV_FONTABLE_IMP
+	
+	EV_GTK_EXTERNALS
 
 feature -- Access
 

@@ -168,6 +168,7 @@ feature {NONE} -- Initialization
 				add_syntactical_supplier (parent_type)
 			elseif external_class.is_interface then
 					-- Force inheritance to `System.Object' for interfaces.
+				is_interface := True
 				parent_class := System.system_object_class.compiled_class
 				pars.extend (parent_class.actual_type)
 				parent_class.add_descendant (Current)
@@ -270,14 +271,12 @@ feature {NONE} -- Initialization
 			l_none_export: EXPORT_NONE_I
 			l_feat_arg: FEAT_ARG
 			l_names_heap: like Names_heap
-			l_is_interface: BOOLEAN
 		do
 			from
 				i := a_features.lower
 				nb := a_features.upper
 				l_orig_tbl := a_feat_tbl.origin_table
 				l_creators := creators
-				l_is_interface := external_class.is_interface
 				l_names_heap := Names_heap
 				create l_all_export
 				create l_none_export
@@ -307,7 +306,7 @@ feature {NONE} -- Initialization
 						create l_attribute.make
 						l_feat := l_attribute
 					end
-				elseif l_is_interface or l_member.is_deferred then
+				elseif l_member.is_deferred then
 					if l_member.has_return_value then
 						create {DEF_FUNC_I} l_deferred
 					else

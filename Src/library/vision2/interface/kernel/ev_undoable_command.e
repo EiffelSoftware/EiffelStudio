@@ -48,7 +48,7 @@ feature -- Basic operation
 		require
 			valid_history: history /= Void
 		do
-			history.record (Current)
+			history.record (clone (Current))
 		end
 
 	failed: BOOLEAN is

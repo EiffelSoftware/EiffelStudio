@@ -282,14 +282,6 @@ feature -- Status setting
 	on_project_loaded is
 			-- A new project has been loaded. Enable all controls.
 		do
-			if has_case then
-				editor.widget.enable_sensitive
-			end
-			class_view.widget.enable_sensitive
-			feature_view.widget.enable_sensitive
-			if has_metrics then
-				metrics.widget.enable_sensitive
-			end
 		end
 
 	on_project_unloaded is
@@ -297,15 +289,6 @@ feature -- Status setting
 			-- Disable all control contained in the context tool
 			-- (output window excepted).
 		do
-			if has_case then
-				editor.widget.disable_sensitive
-			end
-			class_view.widget.disable_sensitive
-			feature_view.widget.disable_sensitive
-			if has_metrics then
-				metrics.widget.disable_sensitive
-			end
-			address_manager.on_project_unloaded
 		end
 
 	set_focus is

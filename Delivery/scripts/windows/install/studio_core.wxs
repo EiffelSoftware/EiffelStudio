@@ -814,6 +814,8 @@
                 <File Id="V110" Name="ICON_D~5.PNG" LongName="icon_debug_run_continue_text_color.png" />
                 <File Id="icon_debug_run_continue_color.png" Name="ICON_D~6.PNG" LongName="icon_debug_run_continue_color.png" />
                 <File Id="V112" Name="ICON_T~4.PNG" LongName="icon_toggle_signature_vsmall_color.png" />
+                <File Id="icon_static_object_symbol.png" Name="IC162A~1.PNG" LongName="icon_static_object_symbol.png" />
+                <File Id="icon_static_external_symbol.png" Name="ICA682~1.PNG" LongName="icon_static_external_symbol.png" />
               </Component>
             </Directory>
             <Directory Id="ico" Name="ico">
@@ -1053,7 +1055,9 @@
                 <File Id="V111" Name="ICON_D~9.ICO" LongName="icon_debug_run_continue_text_color.ico" />
                 <File Id="V113" Name="ICON_T~6.ICO" LongName="icon_toggle_signature_vsmall_color.ico" />
                 <File Id="icon_super_cluster_color.ico" Name="IC3CE0~2.ICO" LongName="icon_super_cluster_color.ico" />
-                <File Id="icon_bparrow_color.ico1" Name="ICB7EC~2.ICO" LongName="icon_bparrow_color.ico" />
+                <File Id="icon_bparrow_color.ico" Name="ICB7EC~2.ICO" LongName="icon_bparrow_color.ico" />
+                <File Id="icon_static_external_symbol.ico" Name="IC5ECA~1.ICO" LongName="icon_static_external_symbol.ico" />
+                <File Id="icon_static_object_symbol.ico" Name="ICBD62~1.ICO" LongName="icon_static_object_symbol.ico" />
               </Component>
             </Directory>
             <Directory Id="cursor" Name="cursor">

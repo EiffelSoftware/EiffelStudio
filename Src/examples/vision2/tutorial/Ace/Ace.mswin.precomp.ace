@@ -1,0 +1,24 @@
+system
+
+	tutorial
+
+root
+
+	tutorial (main): "make"
+
+default
+
+	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\vision2")
+	assertion (all)
+
+cluster
+
+--------------- Tutorial clusters
+
+	tutorial:					"$EIFFEL4\examples\vision2\tutorial"
+	main (tutorial):			"$\main"
+	demo_items (tutorial):		"$\demo_items"
+	demo_windows (tutorial):	"$\demo_windows"
+	demo_tabs (tutorial):		"$\demo_tabs"
+
+end

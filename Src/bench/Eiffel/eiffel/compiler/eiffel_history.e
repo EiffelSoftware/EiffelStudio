@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			-- Initialization
 		do
 			{CACHE} Precursor;
-			!!used.make (1);
+			!! used.make (Default_size);
 		end;
 
 feature 
@@ -71,7 +71,7 @@ feature
 			-- Wipe out the structure
 		do
 			{CACHE} Precursor;
-			!!used.make (1);
+			!! used.make (Default_size);
 		end;
 
 feature {EIFFEL_HISTORY} -- Implementation

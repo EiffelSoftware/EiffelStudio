@@ -16,7 +16,9 @@ inherit
 			add_cluster,
 			store,
 			cluster_tree,
-			change_cluster_name
+			flat_clusters,
+			change_cluster_name,
+			get_cluster_fullname
 		end
 	
 	LACE_AST_FACTORY
@@ -91,7 +93,15 @@ feature -- Access
 				create Result.make (clusters_impl)
 			end
 		end
-
+		
+	flat_clusters: CLUSTER_PROP_ENUMERATOR is
+			-- Clusters in flat form
+		do
+			if clusters_table /= Void then
+				create Result.make (clusters_table.linear_representation)
+			end
+		end
+		
 feature -- Basic Operations
 
 	store is
@@ -287,6 +297,24 @@ feature -- Basic Operations
 		do
 			Result := cluster_table_by_id.item (cluster_id)
 		end
+
+	get_cluster_fullname (cluster_name: STRING): STRING is
+			-- Get the clusters full name from its simple name
+		local
+			cluster: CLUSTER_PROPERTIES
+			parent_name: STRING
+		do
+			Result := ""
+			cluster ?= clusters_table.item (cluster_name)
+			if cluster /= Void then
+				Result := cluster_name.clone(cluster_name)
+				if cluster.has_parent then
+					Result.prepend_character('.')
+					Result.prepend(get_cluster_fullname(cluster.parent_name))
+				end				
+			end
+		end
+		
 
 feature -- Element change
 

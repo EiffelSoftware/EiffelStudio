@@ -205,15 +205,15 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			temp_ptr: POINTER
 		do
 			if not is_destroyed then
-			temp_ptr_ref ?= a_page.item (1)
-			temp_ptr := temp_ptr_ref.item
-			selected_item_index := C.gtk_notebook_page_num (
-				c_object,
-				C.gtk_notebook_page_struct_child (temp_ptr)
-			) + 1
-			if selection_actions_internal /= Void then
-				selection_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
-			end
+				temp_ptr_ref ?= a_page.item (1)
+				temp_ptr := temp_ptr_ref.item
+				selected_item_index := C.gtk_notebook_page_num (
+					c_object,
+					C.gtk_notebook_page_struct_child (temp_ptr)
+				) + 1
+				if selection_actions_internal /= Void then
+					selection_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
+				end
 			end
 		end
 		
@@ -223,7 +223,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Set `an_item's text empty.
 		do
 			Precursor (an_item_imp)
-			set_item_text (an_item_imp.interface, "")
+			set_item_text (an_item_imp.interface, "      ")
 		end
 
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is

@@ -286,8 +286,8 @@ feature -- Basic operations
 			create column_widths.make (8)
 			column_widths.extend (0)
 			
-			expand_pixmap := grid.expand_pixmap
-			collapse_pixmap := grid.collapse_pixmap
+			expand_pixmap := grid.expand_node_pixmap
+			collapse_pixmap := grid.collapse_node_pixmap
 
 			
 			tree_node_spacing := grid.tree_node_spacing

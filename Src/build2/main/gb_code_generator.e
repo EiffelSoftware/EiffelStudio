@@ -84,7 +84,7 @@ feature -- Basic operation
 				build_application_file
 			end
 			
-			root_element := current_document.root_element
+			root_element ?= current_document.first
 			from
 				root_element.start
 			until

@@ -233,6 +233,8 @@ feature -- Update
 			set_editable_text;
 			show_editable_text;
 			text_window.set_text (a_file.laststring);
+			set_file_name (a_file_name);
+			set_mode_for_editing;
 			update_save_symbol;
 			reset_stone
 		ensure
@@ -286,11 +288,6 @@ feature {NONE} -- Implementation; Graphical Interface
 			quit_button: EB_BUTTON;
 			quit_menu_entry: EB_MENU_ENTRY;
 			exit_menu_entry: EB_MENU_ENTRY;
-			change_font_cmd: CHANGE_FONT;
-			change_font_menu_entry: EB_MENU_ENTRY;
-			search_cmd: SEARCH_STRING;
-			search_button: EB_BUTTON;
-			search_menu_entry: EB_MENU_ENTRY;
 			open_cmd: OPEN_SYSTEM;
 			open_button: EB_BUTTON;
 			open_menu_entry: EB_MENU_ENTRY;
@@ -303,34 +300,27 @@ feature {NONE} -- Implementation; Graphical Interface
 			sep: SEPARATOR
 		do
 
-			!! open_cmd.make (text_window);
+			!! open_cmd.make (Current);
 			!! open_button.make (open_cmd, edit_bar);
 			!! open_menu_entry.make (open_cmd, file_menu);
 			!! open_cmd_holder.make (open_cmd, open_button, open_menu_entry);
-			!! save_cmd.make (text_window);
+			!! save_cmd.make (Current);
 			!! save_button.make (save_cmd, edit_bar);
 			!! save_menu_entry.make (save_cmd, file_menu);
 			!! save_cmd_holder.make (save_cmd, save_button, save_menu_entry);
-			!! save_as_cmd.make (text_window);
+			!! save_as_cmd.make (Current);
 			!! save_as_button.make (save_as_cmd, edit_bar);
 			!! save_as_menu_entry.make (save_as_cmd, file_menu);
 			!! save_as_cmd_holder.make (save_as_cmd, save_as_button, save_as_menu_entry);
 			!! sep.make (new_name, file_menu);
-			!! quit_cmd.make (text_window);
+			!! quit_cmd.make (Current);
 			!! quit_button.make (quit_cmd, edit_bar);
 			!! quit_menu_entry.make (quit_cmd, file_menu);
 			!! quit.make (quit_cmd, quit_button, quit_menu_entry);
 			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu);
 			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command);
 			exit_cmd_holder.set_menu_entry (exit_menu_entry);
-			!! change_font_cmd.make (text_window);
-			!! change_font_menu_entry.make (change_font_cmd, preference_menu);
-			!! change_font_cmd_holder.make_plain (change_font_cmd);
-			change_font_cmd_holder.set_menu_entry (change_font_menu_entry);
-			!! search_cmd.make (Current);
-			!! search_button.make (search_cmd, edit_bar);
-			!! search_menu_entry.make (search_cmd, edit_menu);
-			!! search_cmd_holder.make (search_cmd, search_button, search_menu_entry);
+			build_edit_menu (edit_bar)
 		end;
 
 	build_widgets is
@@ -389,27 +379,27 @@ feature {NONE} -- Implementation; Graphical Interface
 		do
 
 				-- First we create all the objects needed for the attachments.
-			!! showtext_cmd.make (text_window);
+			!! showtext_cmd.make (Current);
 			!! showtext_button.make (showtext_cmd, format_bar);
 			!! showtext_menu_entry.make (showtext_cmd, format_menu);
 			!! showtext_frmt_holder.make (showtext_cmd, showtext_button, showtext_menu_entry);
-			!! list_cmd.make (text_window);
+			!! list_cmd.make (Current);
 			!! list_button.make (list_cmd, format_bar);
 			!! list_menu_entry.make (list_cmd, format_menu);
 			!! showlist_frmt_holder.make (list_cmd, list_button, list_menu_entry);
-			!! showclass_cmd.make (text_window);
+			!! showclass_cmd.make (Current);
 			!! showclass_button.make (showclass_cmd, format_bar);
 			!! showclass_menu_entry.make (showclass_cmd, format_menu);
 			!! showclasses_frmt_holder.make (showclass_cmd, showclass_button, showclass_menu_entry);
-			!! stat_cmd.make (text_window);
+			!! stat_cmd.make (Current);
 			!! stat_button.make (stat_cmd, format_bar);
 			!! stat_menu_entry.make (stat_cmd, format_menu);
 			!! showstatistics_frmt_holder.make (stat_cmd, stat_button, stat_menu_entry);
-			!! mod_cmd.make (text_window);
+			!! mod_cmd.make (Current);
 			!! mod_button.make (mod_cmd, format_bar);
 			!! mod_menu_entry.make (mod_cmd, format_menu);
 			!! showmodified_frmt_holder.make (mod_cmd, mod_button, mod_menu_entry);
-			!! showindex_cmd.make (text_window);
+			!! showindex_cmd.make (Current);
 			!! showindex_button.make (showindex_cmd, format_bar);
 			!! showindex_menu_entry.make (showindex_cmd, format_menu);
 			!! showindexing_frmt_holder.make (showindex_cmd, showindex_button, showindex_menu_entry);
@@ -432,13 +422,13 @@ feature {NONE} -- Implementation; Graphical Interface
 	build_command_menu is
 		local
 			shell_cmd: SHELL_COMMAND;
-			shell_button: EB_BUTTON;
+			shell_button: EB_BUTTON_HOLE;
 			shell_menu_entry: EB_MENU_ENTRY;
 			case_storage_cmd: CASE_STORAGE;
 			case_storage_button: EB_BUTTON;
 			case_storage_menu_entry: EB_MENU_ENTRY;
 		do
-			!! shell_cmd.make (text_window);
+			!! shell_cmd.make (Current);
 			!! shell_button.make (shell_cmd, edit_bar);
 			shell_button.add_button_press_action (3, shell_cmd, Void);
 			!! shell_menu_entry.make (shell_cmd, special_menu);

@@ -243,7 +243,7 @@ feature -- Status setting
 				else
 					pulldown ?= widget
 					if pulldown /= Void then
-						pulldown.create
+						pulldown.create_menu
 						if pulldown.managed then
 							append_popup (pulldown, pulldown.menu_button.text)
 						end
@@ -320,7 +320,7 @@ feature -- Element change
 				else
 					mp ?= w
 					if mp /= Void then
-						mp.create
+						mp.create_menu
 						mp.put_children_in_menu
 						m ?= w.parent
 						m.insert_popup (mp, index_of (mp) -

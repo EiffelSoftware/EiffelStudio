@@ -8,10 +8,10 @@ class ATTRIBUTE_I
 inherit
 	ENCAPSULATED_I
 		redefine
-			transfer_to, process_pattern, unselected, extension,
+			transfer_to, unselected, extension,
 			new_rout_entry, melt, access_for_feature, generate, new_rout_id,
-			in_pass3, is_none_attribute, set_type, type, is_attribute,
-			has_entry, undefinable, check_expanded
+			in_pass3, set_type, type, is_attribute,
+			undefinable, check_expanded
 		end
 
 	SHARED_DECLARATIONS
@@ -43,18 +43,6 @@ feature
 
 	is_attribute: BOOLEAN is True
 			-- is the feature an attribute ?
-
-	is_none_attribute: BOOLEAN is
-			-- Has the attribute a NONE type ?
-		do
-			Result := type.actual_type.is_none
-		end
-
-	has_entry: BOOLEAN is
-			-- Has the attribute an associated polymorphic unit ?
-		do
-			Result := not is_none_attribute
-		end
 
 	extension: IL_EXTENSION_I
 			-- Deferred external information
@@ -115,11 +103,12 @@ feature -- Element Change
 			solved_type: TYPE_A
 		do
 			Precursor {ENCAPSULATED_I} (class_c)
-			solved_type ?= type
+			solved_type ?= type.actual_type
 			if
 				solved_type.is_true_expanded and then
 				solved_type.associated_class = class_c and then
-				(extension = Void or else extension.type /= feature {SHARED_IL_CONSTANTS}.static_field_type)
+				(extension = Void or else
+					extension.type /= feature {SHARED_IL_CONSTANTS}.static_field_type)
 			then
 				create vlec
 				vlec.set_class (solved_type.associated_class)
@@ -154,8 +143,8 @@ feature -- Element Change
 		require else
 			valid_file: buffer /= Void
 		do
-			if (not is_none_attribute) and then used then
-				-- Generation of a routine to access the attribute
+			if used then
+					-- Generation of a routine to access the attribute
 				generate_attribute_access (class_type, buffer)
 			end
 		end
@@ -272,14 +261,6 @@ feature -- Element Change
 			other.set_type (type)
 			other.set_has_function_origin (has_function_origin)
 			extension := other.extension
-		end
-
-	process_pattern is
-			-- Process pattern
-		do
-			if not is_none_attribute then
-				Precursor {ENCAPSULATED_I}
-			end
 		end
 
 	melt (exec: EXECUTION_UNIT) is

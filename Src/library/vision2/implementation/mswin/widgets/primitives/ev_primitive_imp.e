@@ -59,6 +59,15 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	on_first_display is
+			-- Called by the top_level window when it is displayed
+			-- for the first time.
+			-- Do nothing for a primitive
+		do
+		end
+
 feature {NONE} -- Deferred features
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is

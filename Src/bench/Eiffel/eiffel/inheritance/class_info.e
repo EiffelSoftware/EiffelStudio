@@ -10,7 +10,6 @@
 class CLASS_INFO 
 
 inherit
-
 	SHARED_ERROR_HANDLER;
 	SHARED_EXPORT_STATUS;
 	SHARED_SERVER
@@ -20,7 +19,7 @@ inherit
 	IDABLE;
 	COMPILER_EXPORTER
 
-feature 
+feature -- Access
 
 	id: CLASS_ID;
 			-- Class id
@@ -41,42 +40,6 @@ feature
 
 	unique_values: HASH_TABLE [INTEGER, STRING];
 			-- Stores the values of the unique attributes
-
-	set_id (i: CLASS_ID) is
-			-- Assign `i' to `id'.
-		do
-			id := i;
-		end;
-
-	set_invariant_info (i: like invariant_info) is
-			-- Assign `i' to `invariant_info'.
-		do
-			invariant_info := i;
-		end;
-
-	set_parents (p: like parents) is
-			-- Assign `p' to `parents'.
-		do	
-			parents := p;
-		end;
-
-	set_index (i: like index) is
-			-- Assign `i' to `index'.
-		do
-			index := i;
-		end;
-
-	set_creators (c: like creators) is
-			-- Assign `c' to `creators'.
-		do
-			creators := c;
-		end;
-
-	set_unique_values (u: HASH_TABLE [INTEGER, STRING]) is
-			-- Assign `u' to `unique_values'.
-		do
-			unique_values := u;
-		end;
 
 	features: EIFFEL_LIST [FEATURE_CLAUSE_AS] is
 			-- Feature abstract syntax
@@ -179,6 +142,44 @@ feature
 					creators.forth;
 				end;
 			end;
+		end;
+
+feature -- Settings
+
+	set_id (i: CLASS_ID) is
+			-- Assign `i' to `id'.
+		do
+			id := i;
+		end;
+
+	set_invariant_info (i: like invariant_info) is
+			-- Assign `i' to `invariant_info'.
+		do
+			invariant_info := i;
+		end;
+
+	set_parents (p: like parents) is
+			-- Assign `p' to `parents'.
+		do	
+			parents := p;
+		end;
+
+	set_index (i: like index) is
+			-- Assign `i' to `index'.
+		do
+			index := i;
+		end;
+
+	set_creators (c: like creators) is
+			-- Assign `c' to `creators'.
+		do
+			creators := c;
+		end;
+
+	set_unique_values (u: HASH_TABLE [INTEGER, STRING]) is
+			-- Assign `u' to `unique_values'.
+		do
+			unique_values := u;
 		end;
 
 end

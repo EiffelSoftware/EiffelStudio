@@ -16,6 +16,13 @@ inherit
 	
 feature -- Windowing
 
+	set_override (flag: BOOLEAN) is
+		local
+			ext_name: ANY;
+		do
+			implementation.set_override (flag);
+		end;
+
 	allow_resize is
 			-- Allow geometry resize to all geometry requests
 			-- from its children.

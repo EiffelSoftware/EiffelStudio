@@ -52,6 +52,14 @@ feature {ALL_CURS_X}
 
 feature 
 
+	set_override (flag: BOOLEAN) is
+		local
+			ext_name: ANY;
+		do
+			ext_name := MoverrideRedirect.to_c;
+			set_boolean (screen_object, flag, $ext_name);
+		end;
+
 	forbid_resize is
 			-- Forbid geometry resize to all geometry requests
 			-- from its children.

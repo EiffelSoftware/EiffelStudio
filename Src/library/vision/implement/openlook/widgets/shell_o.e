@@ -21,6 +21,9 @@ inherit
 		end
 
 feature 
+	set_override (flag: BOOLEAN) is
+		do
+		end;
 
 	allow_resize is
 			-- Allow geometry resize to all geometry requests

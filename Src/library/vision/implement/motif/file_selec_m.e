@@ -254,7 +254,7 @@ feature
 			until
 				current_position = last_position
 			loop
-				Result.add_left (get_i_th_table (xt_table,
+				Result.put_left (get_i_th_table (xt_table,
 												current_position));
 				current_position := current_position + 1
 			end
@@ -277,7 +277,7 @@ feature
 			until
 				current_position = last_position
 			loop
-				Result.add_left (get_i_th_table (xt_table,
+				Result.put_left (get_i_th_table (xt_table,
 												current_position));
 				current_position := current_position + 1
 			end
@@ -431,16 +431,26 @@ feature
 		do
 			xt_manage_child (xt_parent (xm_file_selection_box_get_child (screen_object, MDIALOG_LIST)));
 		end;
+		
 
-	set_file_sel_mask(choice: INTEGER) is
-			-- choice = 1  directory only
-			-- choice = 2  files only
-			-- choice = 3 all
-		require else
-			choice_in_range: (choice >= 1 and choice <= 3)
+	set_directory_selection is
+            -- Sets selection to directories only.
 		do
-			set_xt_unsigned_char (screen_object, choice, MfileTypeMask);
-		end;			
+			set_xt_unsigned_char (screen_object, 1, MfileTypeMask)
+		end;
+
+	set_file_selection is
+			-- Sets selection to files (default value). 
+		do
+			set_xt_unsigned_char (screen_object, 2, MfileTypeMask)
+		end;
+
+	set_all_selection is
+		 -- Sets selection to files and directories.
+		do
+			 set_xt_unsigned_char (screen_object, 3, MfileTypeMask)
+		end;
+
 	
 feature {NONE}
 

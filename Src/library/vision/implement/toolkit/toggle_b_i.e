@@ -39,7 +39,7 @@ feature
 			-- Assign False to `state'
 		deferred
 		ensure
-			state_is_false: not state
+			--state_is_false: not state
 		end; -- disarm
 
 	remove_value_changed_action (a_command: COMMAND; argument: ANY) is

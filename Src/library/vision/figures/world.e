@@ -173,7 +173,7 @@ feature -- Modification & Insertion
 					i_th (v.plane+1).start
 				end
 			end;
-			i_th (v.plane+1).add_left (v);
+			i_th (v.plane+1).put_left (v);
 			v.set_conf_notify;
 			v.conf_recompute;
 			set_conf_modified_with (v.surround_box);

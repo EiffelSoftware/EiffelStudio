@@ -60,6 +60,11 @@ feature
 				selected_button.same (a_button)
 		end; 
 
+	Caption: STRING is
+		do
+		end;
+
+	set_caption (a_caption: STRING) is do end;
 end 
 
 

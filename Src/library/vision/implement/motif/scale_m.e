@@ -386,7 +386,7 @@ feature
 			vas: STRING;
 		do
 			nw := new_width;
-			if text = Void or else text.empty and not is_value_shown then
+			if (text = Void or else text.empty) and not is_value_shown then
 				p_set_width (nw);
 			elseif is_horizontal then
 					p_set_width (nw);

@@ -163,14 +163,6 @@ feature
 			end
 		end;
 
-feature {NONE}
-
-	screen: SCREEN_I is
-			-- Screen of widget
-		deferred
-		ensure
-			not (Result = Void)
-		end;
 
 feature 
 

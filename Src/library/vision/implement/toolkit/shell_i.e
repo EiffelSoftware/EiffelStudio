@@ -20,6 +20,12 @@ inherit
 	
 feature 
 
+	set_override (flag: BOOLEAN) is
+		require 
+			valid_flag: flag /= Void;
+		deferred
+		end;
+
 	allow_resize is
 			-- Allow geometry resize to all geometry requests
 			-- from its children.

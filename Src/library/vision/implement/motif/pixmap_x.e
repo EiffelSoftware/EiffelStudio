@@ -224,7 +224,7 @@ feature
 				Result := c_resource_bitmap (arx_pixmap, a_screen.screen_object);
 				bitmaps.finish;
 				!! a_resource.make (a_screen, Result, true);
-				bitmaps.add_right (a_resource)
+				bitmaps.put_right (a_resource)
 			else
 				Result := a_resource.identifier
 			end
@@ -245,7 +245,7 @@ feature
 				Result := c_resource_pixmap (arx_pixmap, a_screen.screen_object);
 				!! a_resource.make (a_screen, Result, true);
 				finish;
-				add_right (a_resource);
+				put_right (a_resource);
 				Result := c_real_pixmap (Result)
 			else
 				Result := c_real_pixmap (a_resource.identifier)

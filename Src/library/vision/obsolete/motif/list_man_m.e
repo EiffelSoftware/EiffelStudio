@@ -183,7 +183,7 @@ feature
 			until
 				current_position = last_position
 			loop
-				Result.add_left (get_i_th_table (motif_table, current_position));
+				Result.put_left (get_i_th_table (motif_table, current_position));
 				current_position := current_position + 1
 			end
 		end;
@@ -733,7 +733,7 @@ feature
 			until
 				current_position = last_position
 			loop
-				Result.add_left (get_i_th_table (motif_table, current_position));
+				Result.put_left (get_i_th_table (motif_table, current_position));
 				current_position := current_position + 1
 			end
 		end;
@@ -768,7 +768,7 @@ feature
 				current_position = last_position
 			loop
 				a_position := get_int_table (motif_table, current_position);
-				Result.add_left (a_position);
+				Result.put_left (a_position);
 				current_position := current_position+1
 			end;
 			c_free (motif_table)

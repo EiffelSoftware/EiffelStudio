@@ -48,7 +48,7 @@ feature
 			end;
 			!!command_info.make (a_command, an_argument);
 			finish;
-			add_right (command_info);
+			put_right (command_info);
 		ensure then
 			not empty;
 			is_call_back_set;

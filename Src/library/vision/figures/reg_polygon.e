@@ -136,10 +136,10 @@ feature -- Modification & Insertion
 		do
 			radius := real_to_integer (a_size*cos (180.0/number_of_sides)/2);
 			set_conf_modified
-			io.putint (a_size)
-			io.putstring ("<- a_size size_of_side ->")
-			io.putint (size_of_side)
-			io.new_line
+			--io.putint (a_size)
+			--io.putstring ("<- a_size size_of_side ->")
+			--io.putint (size_of_side)
+			--io.new_line
 		ensure
 			--rounding_error_allowance: a_size - 1 <= size_of_side and size_of_side <= a_size + 1
 		end;

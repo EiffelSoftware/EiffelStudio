@@ -21,10 +21,13 @@ inherit
 			make
 		redefine
 			define_cursor_if_shell, undefine_cursor_if_shell
+		select
+			cc_set_pixmap
 		end;
 
 	DIALOG_M
 		rename
+			c_set_pixmap as c_c_set_pixmap,
 			xt_window as d_xt_window,
 			x_define_cursor as d_x_define_cursor,
 			set_boolean as d_set_boolean,

@@ -74,6 +74,18 @@ feature -- Option Menu
 			Result := option_button
 		end;
 
+	caption: STRING is
+		do
+			Result := implementation.caption;
+		end
+
+	set_caption (a_caption: STRING) is
+		require
+			valid_caption: a_caption /= Void;
+		do
+			implementation.set_caption (a_caption);
+		end;
+
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 

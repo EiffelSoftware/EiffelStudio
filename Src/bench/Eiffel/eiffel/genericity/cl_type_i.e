@@ -437,9 +437,13 @@ feature -- Generic conformance for IL
 			-- creation instruction.
 		do
 			if use_info and then cr_info /= Void then
-					-- It's an ancored type 
+					-- It's an anchored type, we call feature
+					-- that will tell us the real type of the 
+					-- anchor in the context of Current.
+				cr_info.generate_il_type
+			else
+				il_generator.generate_class_type_instance (Current)
 			end	
-			il_generator.generate_class_type_instance (Current)
 		end
 
 feature -- Output

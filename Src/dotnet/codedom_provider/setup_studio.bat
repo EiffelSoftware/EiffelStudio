@@ -8,32 +8,44 @@ IF "%1"=="/release" GOTO RELEASE
 
 :DEBUG
 MKDIR build_studio_debug
-MKDIR build_studio_debug\EiffelSoftware.CodeDomBase
-MKDIR build_studio_debug\EiffelSoftware.CodeDomVision2
-MKDIR build_studio_debug\EiffelSoftware.CacheBrowser
+MKDIR build_studio_debug\EiffelSoftware.CodeDom.Base
+MKDIR build_studio_debug\EiffelSoftware.CodeDom.Vision2
+MKDIR build_studio_debug\EiffelSoftware.CodeDom.CacheBrowser
 MKDIR build_studio_debug\EiffelSoftware.CodeDom
+MKDIR build_studio_debug\EiffelSoftware.CodeDom.Splitter
 MKDIR build_studio_debug\ecdpman
+MKDIR build_studio_debug\esplitter
+MKDIR build_studio_debug\esplit
 
-COPY configuration\base.debug.ace build_studio_debug\EiffelSoftware.CodeDomBase\ace.ace
-COPY configuration\vision2.debug.ace build_studio_debug\EiffelSoftware.CodeDomVision2\ace.ace
-COPY configuration\cache_browser.debug.ace build_studio_debug\EiffelSoftware.CacheBrowser\ace.ace
+COPY configuration\base.debug.ace build_studio_debug\EiffelSoftware.CodeDom.Base\ace.ace
+COPY configuration\vision2.debug.ace build_studio_debug\EiffelSoftware.CodeDom.Vision2\ace.ace
+COPY configuration\cache_browser.debug.ace build_studio_debug\EiffelSoftware.CodeDom.CacheBrowser\ace.ace
 COPY configuration\codedom_provider.debug.ace build_studio_debug\EiffelSoftware.CodeDom\ace.ace
+COPY configuration\esplitter.common.debug.ace build_studio_debug\EiffelSoftware.CodeDom.Splitter\ace.ace
 COPY configuration\manager.debug.ace build_studio_debug\ecdpman\ace.ace
+COPY configuration\esplitter.gui.debug.ace build_studio_debug\esplitter\ace.ace
+COPY configuration\esplitter.text.debug.ace build_studio_debug\esplit\ace.ace
 GOTO END
 
 :RELEASE
 MKDIR build_studio
-MKDIR build_studio\EiffelSoftware.CodeDomBase
-MKDIR build_studio\EiffelSoftware.CodeDomVision2
-MKDIR build_studio\EiffelSoftware.CacheBrowser
+MKDIR build_studio\EiffelSoftware.CodeDom.Base
+MKDIR build_studio\EiffelSoftware.CodeDom.Vision2
+MKDIR build_studio\EiffelSoftware.CodeDom.CacheBrowser
 MKDIR build_studio\EiffelSoftware.CodeDom
+MKDIR build_studio\EiffelSoftware.CodeDom.Splitter
 MKDIR build_studio\ecdpman
+MKDIR build_studio\esplitter
+MKDIR build_studio\esplit
 
-COPY configuration\base.ace build_studio\EiffelSoftware.CodeDomBase\ace.ace
-COPY configuration\vision2.ace build_studio\EiffelSoftware.CodeDomVision2\ace.ace
-COPY configuration\cache_browser.ace build_studio\EiffelSoftware.CacheBrowser\ace.ace
+COPY configuration\base.ace build_studio\EiffelSoftware.CodeDom.Base\ace.ace
+COPY configuration\vision2.ace build_studio\EiffelSoftware.CodeDom.Vision2\ace.ace
+COPY configuration\cache_browser.ace build_studio\EiffelSoftware.CodeDom.CacheBrowser\ace.ace
 COPY configuration\codedom_provider.ace build_studio\EiffelSoftware.CodeDom\ace.ace
+COPY configuration\esplitter.common.ace build_studio\EiffelSoftware.CodeDom.Splitter\ace.ace
 COPY configuration\manager.ace build_studio\ecdpman\ace.ace
+COPY configuration\esplitter.gui.ace build_studio\esplitter\ace.ace
+COPY configuration\esplitter.text.ace build_studio\esplit\ace.ace
 
 :END
 ECHO Done setting up EiffelStudio Eiffel CodeDom Provider projects.

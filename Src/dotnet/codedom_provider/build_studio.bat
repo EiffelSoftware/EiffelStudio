@@ -8,79 +8,117 @@ SET PATH=%PATH%;%ISE_EIFFEL%\studio\spec\windows\bin
 
 IF "%1"=="/release" GOTO CDREL
 IF NOT EXIST build_studio_debug CALL setup_studio.bat %1
-CD build_studio_debug\EiffelSoftware.CodeDomBase
+CD build_studio_debug\EiffelSoftware.CodeDom.Base
 GOTO BASE
 
 :CDREL
 IF NOT EXIST build_studio CALL setup_studio.bat %1
-CD build_studio\EiffelSoftware.CodeDomBase
+CD build_studio\EiffelSoftware.CodeDom.Base
 
 :BASE
-IF EXIST EIFGEN RD /Q /S EIFGEN
-IF EXIST *.epr DEL /Q /F *.epr
+REM IF EXIST EIFGEN RD /Q /S EIFGEN
+REM IF EXIST *.epr DEL /Q /F *.epr
 ECHO -
-ECHO COMPILING CodeDomBase
+ECHO COMPILING CodeDom.Base
 ECHO -
-ec -ace ace.ace -precompile -finalize -c_compile
-IF EXIST EIFGEN\F_code\EiffelSoftware.CodeDomBase.dll GOTO CACHE
-ECHO Compilation failed !! (no EiffelSoftware.CodeDomBase.dll was generated in build_studio\EiffelSoftware.CodeDomBase\EIFGEN\F_code)
+REM ec -ace ace.ace -precompile -finalize -c_compile
+IF EXIST EIFGEN\F_code\EiffelSoftware.CodeDom.Base.dll GOTO CACHE
+ECHO Compilation failed !! (no EiffelSoftware.CodeDom.Base.dll was generated in build_studio\EiffelSoftware.CodeDom.Base\EIFGEN\F_code)
 GOTO END
 
 :CACHE
 CD ..
-CD EiffelSoftware.CacheBrowser
-IF EXIST EIFGEN RD /Q /S EIFGEN
-IF EXIST *.epr DEL /Q /F *.epr
+CD EiffelSoftware.CodeDom.CacheBrowser
+REM IF EXIST EIFGEN RD /Q /S EIFGEN
+REM IF EXIST *.epr DEL /Q /F *.epr
 ECHO -
 ECHO COMPILING Eiffel Cache Browser
 ECHO -
-ec -ace ace.ace -precompile -finalize -c_compile
-IF EXIST EIFGEN\F_code\EiffelSoftware.CacheBrowser.dll GOTO PROVIDER
-ECHO Compilation failed !! (no EiffelSoftware.CacheBrowser.dll was generated in build_studio\EiffelSoftware.CacheBrowser\EIFGEN\F_code)
+REM ec -ace ace.ace -precompile -finalize
+IF EXIST EIFGEN\F_code\EiffelSoftware.CodeDom.CacheBrowser.dll GOTO PROVIDER
+ECHO Compilation failed !! (no EiffelSoftware.CodeDom.CacheBrowser.dll was generated in build_studio\EiffelSoftware.CodeDom.CacheBrowser\EIFGEN\F_code)
 GOTO END
 
 :PROVIDER
 CD ..
 CD EiffelSoftware.CodeDom
-IF EXIST EIFGEN RD /Q /S EIFGEN
-IF EXIST *.epr DEL /Q /F *.epr
+REM IF EXIST EIFGEN RD /Q /S EIFGEN
+REM IF EXIST *.epr DEL /Q /F *.epr
 ECHO -
 ECHO COMPILING Eiffel CodeDom Provider
 ECHO -
-ec -ace ace.ace -finalize -c_compile
+REM ec -ace ace.ace -finalize
 IF EXIST EIFGEN\F_code\EiffelSoftware.CodeDom.dll GOTO VISION2
 ECHO Compilation failed !! (no EiffelSoftware.CodeDom.dll was generated in build_studio\EiffelSoftware.CodeDom\EIFGEN\F_code)
 GOTO END
 
 :VISION2
 CD ..
-CD EiffelSoftware.CodeDomVision2
-IF EXIST EIFGEN RD /Q /S EIFGEN
-IF EXIST *.epr DEL /Q /F *.epr
+CD EiffelSoftware.CodeDom.Vision2
+REM IF EXIST EIFGEN RD /Q /S EIFGEN
+REM IF EXIST *.epr DEL /Q /F *.epr
 ECHO -
-ECHO COMPILING CodeDomVision2
+ECHO COMPILING CodeDom.Vision2
 ECHO -
-ec -ace ace.ace -precompile -finalize -c_compile
-IF EXIST EIFGEN\F_code\EiffelSoftware.CodeDomVision2.dll GOTO MANAGER
-ECHO Compilation failed !! (no EiffelSoftware.CodeDomVision2.dll was generated in build_studio\EiffelSoftware.CodeDomVision2\EIFGEN\F_code)
+REM ec -ace ace.ace -precompile -finalize -c_compile
+IF EXIST EIFGEN\F_code\EiffelSoftware.CodeDom.Vision2.dll GOTO SPLITDLL
+ECHO Compilation failed !! (no EiffelSoftware.CodeDom.Vision2.dll was generated in build_studio\EiffelSoftware.CodeDom.Vision2\EIFGEN\F_code)
+GOTO END
+
+:SPLITDLL
+CD ..
+CD EiffelSoftware.CodeDom.Splitter
+REM IF EXIST EIFGEN RD /Q /S EIFGEN
+REM IF EXIST *.epr DEL /Q /F *.epr
+ECHO -
+ECHO COMPILING CodeDom.Splitter
+ECHO -
+REM ec -ace ace.ace -precompile -finalize
+IF EXIST EIFGEN\F_code\EiffelSoftware.CodeDom.Splitter.dll GOTO MANAGER
+ECHO Compilation failed !! (no EiffelSoftware.CodeDom.Splitter.dll was generated in build_studio\EiffelSoftware.CodeDom.Splitter\EIFGEN\F_code)
 GOTO END
 
 :MANAGER
 CD ..
 CD ecdpman
-IF EXIST EIFGEN RD /Q /S EIFGEN
-IF EXIST *.epr DEL /Q /F *.epr
+REM IF EXIST EIFGEN RD /Q /S EIFGEN
+REM IF EXIST *.epr DEL /Q /F *.epr
 ECHO -
 ECHO COMPILING Eiffel CodeDom Manager
 ECHO -
 COPY ..\..\manager\ecdpman.ico .
 COPY ..\..\manager\ecdpman.rc .
-
-ec -ace ace.ace -finalize -c_compile
-IF EXIST EIFGEN\F_code\ecdpman.exe GOTO END
+REM ec -ace ace.ace -finalize
+IF EXIST EIFGEN\F_code\ecdpman.exe GOTO SPLITTER
 ECHO Compilation failed !! (no ecdpman.exe was generated in build_studio\ecdpman\EIFGEN\F_code)
 GOTO END
 
-:END
+:SPLITTER
+CD ..
+CD esplitter
+REM IF EXIST EIFGEN RD /Q /S EIFGEN
+REM IF EXIST *.epr DEL /Q /F *.epr
+ECHO -
+ECHO COMPILING eSplitter
+ECHO -
+REM ec -ace ace.ace -finalize
+IF EXIST EIFGEN\F_code\esplitter.exe GOTO SPLIT
+ECHO Compilation failed !! (no esplitter.exe was generated in build_studio\esplitter\EIFGEN\F_code)
+GOTO END
+
+:SPLIT
+CD ..
+CD esplit
+IF EXIST EIFGEN RD /Q /S EIFGEN
+IF EXIST *.epr DEL /Q /F *.epr
+ECHO -
+ECHO COMPILING eSplit
+ECHO -
+ec -ace ace.ace -finalize
+IF EXIST EIFGEN\F_code\esplit.exe GOTO END
+ECHO Compilation failed !! (no esplit.exe was generated in build_studio\esplit\EIFGEN\F_code)
+GOTO END
+
 CD ..\..
+:END
 ECHO Done compiling EiffelStudio Eiffel CodeDom Provider projects.

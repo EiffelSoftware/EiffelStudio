@@ -40,7 +40,7 @@ feature -- Access
 			-- Is the feature in the table?
 		do
 			if class_has_dollar_operator (class_id) then
-				Result := item (class_id).has (feature_id)
+				Result := found_item.has (feature_id)
 			end
 debug ("DOLLAR")
 	io.putstring ("ADDRESS_TABLE.has ")
@@ -71,10 +71,10 @@ debug ("DOLLAR")
 end
 				-- The encapsulation needs to be generated
 				-- Freeze the system
-			System.set_freeze (True)
+			System.set_freeze
 
 			if class_has_dollar_operator (class_id) then
-				sorted_set := item (class_id)
+				sorted_set := found_item
 			else
 				!! sorted_set.make
 				put (sorted_set, class_id)
@@ -249,7 +249,7 @@ feature {NONE} -- Generation
 							gen_file.putstring (a_type.id.address_table_name (i))
 							gen_file.putstring (",%N")
 						else
-							gen_file.putstring ("(fnptr) 0,%N")
+							gen_file.putstring ("(char *(*)()) 0,%N")
 						end
 						i := i + 1
 					end
@@ -283,7 +283,7 @@ feature {NONE} -- Generation
 							gen_file.putstring ("eif_address_t")
 							gen_file.putint (a_type.id.id)
 							gen_file.putstring (" - ")
-							gen_file.putint (item (a_class.id).first)
+							gen_file.putint (found_item.first)
 							gen_file.putstring (",%N")
 						else
 							gen_file.putstring ("(fnptr *) 0,%N")

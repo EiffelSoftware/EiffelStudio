@@ -17,6 +17,10 @@ inherit
 			parent
 		end
 
+create
+	default_create,
+	make_with_text
+
 feature -- Access
 
 	parent: EV_STATUS_BAR is
@@ -84,6 +88,9 @@ end -- class EV_STATUS_BAR_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/03/13 22:11:44  king
+--| Defined creation procedures
+--|
 --| Revision 1.15  2000/03/01 20:28:52  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|

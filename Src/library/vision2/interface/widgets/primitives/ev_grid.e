@@ -9,7 +9,8 @@ class
 inherit
 	EV_CELL
 		rename
-			item as cell_item
+			item as cell_item,
+			pointer_motion_actions as grid_pointer_motion_actions
 		redefine
 			implementation,
 			create_implementation,
@@ -88,9 +89,21 @@ feature -- Access
 			a_row_positive: a_row > 0
 			a_row_less_than_row_count: a_row <= row_count
 		do
+			fixme ("Re-implement to return Void when not set")
 			Result := implementation.item (a_column, a_row)
 		ensure
 			item_not_void: Result /= Void
+		end
+		
+	item_at_virtual_position (a_virtual_x, a_virtual_y: INTEGER): EV_GRID_ITEM is
+			-- Cell at virtual position `a_virtual_x', `a_virtual_y' or
+			-- `Void' if none.
+		require
+			not_destroyed: not is_destroyed
+			virtual_x_valid: a_virtual_x >=0 and a_virtual_x <= virtual_width
+			virtual_y_valid: a_virtual_y >=0 and a_virtual_y <= virtual_height
+		do
+			Result := implementation.item_at_virtual_position (a_virtual_x, a_virtual_y)
 		end
 
 	selected_columns: ARRAYED_LIST [EV_GRID_COLUMN] is
@@ -339,7 +352,31 @@ feature -- Access
 		ensure
 			viewable_height_valid: viewable_height >= 0 and viewable_height <= height
 		end
-	
+		
+	viewable_x_offset: INTEGER is
+			-- Horizontal distance in pixels from the left edge of `Current' to
+			-- the left edge of the viewable area (defined by `viewable_width', `viewable_height')
+			-- in which all content is displayed.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.viewable_x_offset
+		ensure
+			viewable_x_offset_valid: Result >=0 and Result <= width
+		end
+			
+	viewable_y_offset: INTEGER is
+			-- Vertical distance in pixels from the top edge of `Current' to
+			-- the top edge of the viewable area (defined by `viewable_width', `viewable_height')
+			-- in which all content is displayed.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.viewable_y_offset
+		ensure
+			viewable_y_offset_valid: Result >=0 and Result <= height
+		end
+
 feature -- Status setting
 
 	enable_tree is

@@ -86,7 +86,7 @@ feature -- Status report
 				Sb_gettext, index,
 				cwel_pointer_to_integer (a_wel_string.item))
 			Result := a_wel_string.string
-			Result.head (nb)
+			Result.keep_head (nb)
 		ensure
 			result_not_void: Result /= Void
 			consistent_count: Result.count =

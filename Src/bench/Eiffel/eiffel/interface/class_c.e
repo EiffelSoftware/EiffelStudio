@@ -288,7 +288,7 @@ feature -- Action
 						c_file_name.extend (object_name)
 
 						create object_name.make (12)
-						object_name.append (base_file_name)
+						object_name.append (cl_type.base_file_name)
 						object_name.append_character (Descriptor_file_suffix)
 						object_name.append (Dot_c)
 						finished_file_name := clone (c_file_name)
@@ -317,7 +317,7 @@ feature -- Action
 						finished_file_name := clone (c_file_name)
 						cpp_file_name := clone (c_file_name)
 						create object_name.make (12)
-						object_name.append (base_file_name)
+						object_name.append (cl_type.base_file_name)
 						object_name.append (Dot_c)
 						c_file_name.set_file_name (object_name)
 						create file.make (c_file_name)

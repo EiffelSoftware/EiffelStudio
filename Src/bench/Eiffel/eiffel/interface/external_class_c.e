@@ -133,11 +133,18 @@ feature -- Initialization
 			create l_orig_tbl.make (nb)
 			l_feat_tbl.set_origin_table (l_orig_tbl)
 
+				-- To store overloaded features.
+			create overloaded_names.make (10)
+
 				-- Initializes feature table.
 			process_features (l_feat_tbl, l_fields)
 			process_features (l_feat_tbl, l_constructors)
 			process_features (l_feat_tbl, l_procedures)
 			process_features (l_feat_tbl, l_functions)
+
+				-- Clean `overloaded_names' to remove non-overloaded routines.
+			clean_overloaded_names
+			l_feat_tbl.set_overloaded_names (overloaded_names)
 
 				-- Update creators to Void when no creators are available
 				-- on an expanded class.
@@ -205,6 +212,49 @@ feature -- Access
 				lace_class.assembly.referenced_assemblies.item (c.assembly_id) /= Void
 		do
 			Result := internal_type_from_consumed_type (False, c)
+		end
+
+feature {NONE} -- Implementation: Overloading
+
+	overloaded_names: HASH_TABLE [ARRAYED_LIST [INTEGER], INTEGER]
+			-- Store overloaded features if any indexed by their name ID.
+
+	clean_overloaded_names is
+			-- Remove single entries of `overloaded_names'.
+		require
+			overloaded_names_not_void: overloaded_names /= Void
+		local
+			l_result: like overloaded_names
+			l_count: INTEGER
+		do
+			from
+				overloaded_names.start
+			until
+				overloaded_names.after
+			loop
+				if overloaded_names.item_for_iteration.count > 1 then
+					l_count := l_count + 1
+				end
+				overloaded_names.forth
+			end
+
+			if l_count > 0 then
+				from
+					create l_result.make (l_count)
+					overloaded_names.start
+				until
+					overloaded_names.after
+				loop
+					if overloaded_names.item_for_iteration.count > 1 then
+						l_result.put (overloaded_names.item_for_iteration,
+							overloaded_names.key_for_iteration)
+					end
+					overloaded_names.forth
+				end
+				overloaded_names := l_result
+			else
+				overloaded_names := Void
+			end
 		end
 
 feature -- Status report
@@ -380,7 +430,7 @@ feature {NONE} -- Initialization
 			l_args: ARRAY [CONSUMED_ARGUMENT]
 			l_arg: CONSUMED_ARGUMENT
 			l_arg_ids: ARRAY [INTEGER]
-			i, j, k, l, m, nb, l_record_pos: INTEGER
+			i, j, k, l, m, nb, l_record_pos, l_id: INTEGER
 			l_orig_tbl: SELECT_TABLE
 			l_creators: like creators
 			l_external_type, l_written_type: CL_TYPE_A
@@ -395,6 +445,8 @@ feature {NONE} -- Initialization
 			l_none_export: EXPORT_NONE_I
 			l_feat_arg: FEAT_ARG
 			l_names_heap: like Names_heap
+			l_list: ARRAYED_LIST [INTEGER]
+			l_name: STRING
 		do
 			from
 				i := a_features.lower
@@ -615,6 +667,20 @@ feature {NONE} -- Initialization
 				end
 				a_feat_tbl.put (l_feat, l_feat.feature_name_id)
 				l_orig_tbl.put (l_feat, l_feat.rout_id_set.first)
+
+				l_name := l_member.dotnet_eiffel_name
+				l_names_heap.put (l_name)
+				l_id := l_names_heap.found_item
+
+				if overloaded_names.has (l_id) then
+					l_list := overloaded_names.item (l_id)
+					l_list.extend (l_feat.feature_name_id)
+				else
+					create l_list.make (10)
+					l_list.extend (l_feat.feature_name_id)
+					overloaded_names.put (l_list, l_id)
+				end
+
 				i := i + 1
 			end
 		end

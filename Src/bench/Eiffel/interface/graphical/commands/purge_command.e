@@ -4,7 +4,6 @@ class PURGE_COMMAND
 
 inherit
  
-	SHARED_WORKBENCH;
 	COMMAND_W
 		redefine
 			execute

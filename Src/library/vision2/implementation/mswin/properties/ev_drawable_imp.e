@@ -706,8 +706,8 @@ feature {NONE} -- Basic operations
 			Result := Pi / 180
 		end
 
---feature {NONE} -- To check -- Temp
-feature
+feature -- To check -- Temp
+
 	set_no_clip is
 			-- Remove all clip area.
 		local

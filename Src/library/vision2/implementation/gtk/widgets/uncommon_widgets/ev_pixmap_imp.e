@@ -220,6 +220,7 @@ feature -- Element change
 			maskgc: POINTER
 			color: POINTER
 			bool: BOOLEAN
+			colormap: POINTER
 		do
 			if error_code /= Loadpixmap_error_noerror then
 				(create {EXCEPTIONS}).raise ("Could not load image file.")
@@ -252,7 +253,11 @@ feature -- Element change
 			C.gdk_draw_rectangle (gdkmask, maskgc, 1, 0, 0, pixmap_width, pixmap_height)
 
 			color := C.c_gdk_color_struct_allocate
-			bool := C.gdk_color_white (system_colormap, color)
+			colormap := C.gdk_colormap_new (
+				C.gdk_visual_get_best_with_depth (1),
+				True.to_integer
+			)
+			bool := C.gdk_color_white (colormap, color)
 			C.gdk_gc_set_foreground (maskgc, color)
 
 			p := alpha_data
@@ -271,6 +276,7 @@ feature -- Element change
 			end
 
 			C.gdk_gc_destroy (maskgc)
+			C.gdk_colormap_unref (colormap)
 			C.c_gdk_color_struct_free (color)
 			set_pixmap (gdkpix, gdkmask)
 		end
@@ -450,6 +456,9 @@ end -- EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/04/19 18:07:18  oconnor
+--| use propper color map in update_fields
+--|
 --| Revision 1.30  2000/04/14 16:53:50  oconnor
 --| initial implementation of loading mask for pixmap
 --|

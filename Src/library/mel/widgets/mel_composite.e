@@ -17,39 +17,143 @@ inherit
 		end;
 
 	MEL_WIDGET
-		redefine
+		rename
+			object_clean_up as old_object_clean_up,
+			destroy as obj_destroy
+		export
+			{NONE} old_object_clean_up, obj_destroy
+		redefine	
 			clean_up
 		end
 
+	MEL_WIDGET
+		redefine	
+			clean_up, object_clean_up, destroy
+		select
+			object_clean_up, destroy
+		end
+
+creation
+
+	make_from_existing
+
+creation {MEL_COMPOSITE}
+
+	make_for_descendents
+
 feature -- Access
 
-	children: ARRAYED_LIST [MEL_OBJECT] is
-			-- The list of the widgets used by MEL.
+	mel_popup_children: ARRAYED_LIST [MEL_SHELL];
+			-- List of popup children
+			--| `xt_destroy' automatically destroys all children including popups.
+			--| A list was need since `children' doesn't record popup children
+			--| and MEL needs all the children for proper cleanup in the 
+			--| widget manager and callback structures.
+
+	is_form: BOOLEAN is
+			-- Is Current a form?
+		do
+		end;
+
+	children: FIXED_LIST [POINTER] is
+			-- List of the children widgets `screen_object'
+			-- (Does not include popup children)
+		require
+			exists: not is_destroyed
+		local
+			c_list: POINTER;
+			c_count: INTEGER;
+			i: INTEGER
+		do
+			c_list := c_get_children (screen_object, XmNchildren);
+			c_count := children_count;
+			!! Result.make (c_count);
+			from
+				i := 1
+			until
+				i > c_count
+			loop
+				Result.put_i_th (c_get_i_th_widget_child (c_list.item, i), i)
+				i := i + 1
+			end;
+		ensure
+			valid_result: Result /= Void and then Result.count = children.count
+		end;
+
+	mel_children: ARRAYED_LIST [MEL_OBJECT] is
+			-- List of children widgets recorded in MEL
+			-- (This list may vary from `children' since a widget
+			-- may have been created in C without being recorded in MEL.)
+			-- (Does not include popup children)
 		require
 			exists: not is_destroyed
 		local
 			a_screen_object: POINTER;
+			c_list: FIXED_LIST [POINTER]
 			an_object: MEL_OBJECT;
-			i, temp: INTEGER
+			temp: INTEGER
 		do
-			temp := children_count;
+			c_list := children;
+			temp := c_list.count;
 			!! Result.make (temp);
 			if temp > 0 then
 				from
-					i := 0
+					c_list.start
 				until
-					i = temp
+					c_list.after
 				loop
-					i := i + 1;
-					a_screen_object := get_i_th_widget_child (screen_object, i);
+					a_screen_object := c_list.item;
 					an_object := Mel_widgets.item (a_screen_object);
 					if an_object /= Void then
 						Result.extend (an_object)
 					end
+					c_list.forth
+				end
+			end;
+		ensure
+			children_list_not_void: Result /= Void
+		end;
+
+	descendents: ARRAYED_LIST [POINTER] is
+			-- List of all descendents of current composite
+			-- (Does not include popup children)
+		do
+			!! Result.make (20);
+			descendents_of (Current, Result)
+		end;
+
+	mel_descendents: ARRAYED_LIST [MEL_OBJECT] is
+			-- List of descendents of current composite recorded in MEL
+			-- (This list may vary from `children' since a widget
+			-- may have been created in C without being recorded in MEL.
+			-- Does not include popup children)
+		require
+			exists: not is_destroyed
+		local
+			a_screen_object: POINTER;
+			mel_object: MEL_OBJECT;
+			temp: INTEGER;
+			c_list: ARRAYED_LIST [POINTER]
+		do
+			c_list := descendents;
+			temp := c_list.count;
+			!! Result.make (temp);
+			if temp > 0 then
+				from
+					c_list.start
+				until
+					c_list.after
+				loop
+					a_screen_object := c_list.item;
+					mel_object := Mel_widgets.item (a_screen_object);
+					if mel_object /= Void then
+						Result.extend (mel_object)
+					end
+					c_list.forth
 				end
 			end
 		ensure
-			children_list_not_void: Result /= Void
+			descendents_list_not_void: Result /= Void
 		end;
 
 feature -- Measurement
@@ -76,32 +180,211 @@ feature -- Measurement
 			children_count_large_enough: Result >= 0
 		end;
 
+feature -- Removal
+
+    destroy is
+            -- Destroy the associated screen object and all its
+			-- children including popups.
+		local
+			ds: MEL_DIALOG_SHELL
+		do
+			obj_destroy;
+			if created_dialog_automatically then
+				ds ?= parent;
+				--ds.remove_itself_from_pare
+			end
+		end
+
 feature {NONE} -- Implementation
 
-	clean_up is
-			-- Clean up the is_destroyed widget's data structure.
+	created_dialog_automatically: BOOLEAN is
+			-- Was the dialog shell created automatically?
+		do
+		end;
+
+	make_for_descendents (a_screen_object: POINTER) is
+			-- Make a composite for calculating descendents
+		require
+			not_null: a_screen_object /= default_pointer;
+			is_composite: xt_is_composite (a_screen_object)
+		do
+			screen_object := a_screen_object
+		end;
+
+	all_children_destroyed (list: ARRAYED_LIST [POINTER]): BOOLEAN is
+			-- Are all the children destroyed?
+		local
+			mel_object: MEL_OBJECT
+		do
+			from
+				Result := screen_object = default_pointer;
+				list.start
+			until
+				list.after or else not Result
+			loop
+				mel_object := Mel_widgets.item (list.item);
+				Result := mel_object = Void;
+				list.forth
+			end
+		end
+
+	descendents_of (a_comp: MEL_COMPOSITE; list: ARRAYED_LIST [POINTER]) is
+			-- List of all descendents of current composite
+		require
+			valid_comp: a_comp /= Void;
+			valid_list: list /= Void
+		local
+			c_list: like children;
+			w: POINTER;
+			mel_comp: MEL_COMPOSITE
+		do
+			c_list := a_comp.children;
+			from
+				c_list.start
+			until
+				c_list.after
+			loop
+				w := c_list.item;
+				list.extend (w);
+				if xt_is_composite (w) then
+					!! mel_comp.make_for_descendents (w)
+					descendents_of (mel_comp, list)
+				end
+				c_list.forth
+			end;
+		end;
+
+feature {MEL_OBJECT}
+
+	frozen clean_up is
+			-- Clean up the is_destroyed widget's data structure
+			-- and its children.
 		local
 			children_list: ARRAYED_LIST [MEL_OBJECT];
+			a_child: MEL_OBJECT;
+			old_descendents: ARRAYED_LIST [POINTER]
 		do
-			children_list := children;
-			if not children_list.empty then
-				from
-					children_list.start
-				until
-					children_list.after
-				loop
-					children_list.item.clean_up;
-					children_list.forth
+			debug ("MEL")
+				old_descendents := descendents
+			end;
+			children_list := mel_descendents;
+			from
+				children_list.start
+			until
+				children_list.after
+			loop
+				a_child := children_list.item;
+				a_child.object_clean_up;
+				check
+					child_cleaned: a_child.is_destroyed 
+				end
+				children_list.forth
+			end
+			if created_dialog_automatically then
+				check
+					parent_exists: parent /= Void
+				end
+				parent.object_clean_up
+				check
+					parent_cleaned: parent.is_destroyed 
 				end
 			end;
-			object_clean_up
+			if not is_destroyed then
+					-- This check is needed in cases for recursive clean_up of children
+					-- in the one of the children is a MEL_SCROLLED_TEXT or
+					-- MEL_SCROLLED_LIST.
+				object_clean_up;
+			end
+			debug ("MEL")
+				if all_children_destroyed (old_descendents) then
+					io.error.putstring ("Object cleanned up properly")
+				else
+					io.error.putstring ("**** Object NOT cleanned up properly")
+				end
+				io.error.new_line
+			end;
+		end;
+
+	object_clean_up is
+			-- Clean up object widget data structures.
+		do	
+			old_object_clean_up;
+			if mel_popup_children /= Void then	
+				from
+					mel_popup_children.start
+				until
+					mel_popup_children.after
+				loop
+					mel_popup_children.item.clean_up;
+					mel_popup_children.forth
+				end
+				mel_popup_children := Void
+			end;
+		end
+
+feature {MEL_WIDGET_MANAGER, MEL_SHELL}
+
+	add_popup_child (a_popup: MEL_SHELL) is
+			-- Add `a_popup' shell to `mel_popup_children'
+		require
+			not_has_popup: mel_popup_children = Void or else 
+					not mel_popup_children.has (a_popup)
+		do
+			if mel_popup_children = Void then
+				!! mel_popup_children.make (1);
+			end;
+			mel_popup_children.extend (a_popup)
+		ensure
+			has_popup: mel_popup_children.has (a_popup)
+		end;
+
+	remove_popup_child (a_popup: MEL_SHELL) is
+			-- Remove `a_popup' shell from `mel_popup_children'
+		require
+			has_popup: mel_popup_children /= Void and then
+					mel_popup_children.has (a_popup)
+		do
+			mel_popup_children.start;
+			mel_popup_children.prune (a_popup);
+			if mel_popup_children.empty then
+				mel_popup_children := Void
+			end;
+		ensure
+			not_has_popup: mel_popup_children = Void or else 
+					not mel_popup_children.has (a_popup)
 		end;
 
 feature {NONE} -- External features
 
-	get_i_th_widget_child (a_scr_obj: POINTER; index: INTEGER): POINTER is
+	c_get_i_th_widget_child (a_scr_obj: POINTER; index: INTEGER): POINTER is
 		external
 			"C"
+		end;
+
+	c_get_children (a_scr_obj: POINTER; resource: POINTER): POINTER is
+		external
+			"C"
+		end;
+
+	x_circulate_up (display_ptr: POINTER; a_window: POINTER) is
+		external
+			"C [macro <X11/Xlib.h>] (Display *, Window)"
+		alias
+			"XCirculateSubwindowsUp"
+		end;
+
+	x_circulate_down (display_ptr: POINTER; a_window: POINTER) is
+		external
+			"C [macro <X11/Xlib.h>] (Display *, Window)"
+		alias
+			"XCirculateSubwindowsDown"
+		end;
+
+	x_restack_windows (display_ptr: POINTER; w_list: POINTER; n: INTEGER) is
+		external
+			"C [macro <X11/Xlib.h>] (Display *, Window *, int)"
+		alias
+			"XRestackWindows"
 		end;
 
 end -- class MEL_COMPOSITE

@@ -52,7 +52,7 @@ feature -- Insertion
 			if has (rout_id) then
 					-- The routine id has been recorded 
 					-- earlier.
-				info := item (rout_id)
+				info := found_item
 				if not info.origin.is_equal (org.id) then
 						-- The origin of the routine has changed
 						-- a new offset must be computed, and the
@@ -85,7 +85,7 @@ feature -- Offset processing
 				counter.set_value (-1)
 				offset_counters.put (counter, class_id)
 			else
-				counter := offset_counters.item (class_id)
+				counter := offset_counters.found_item
 			end
 			Result := counter.next
 		end
@@ -123,7 +123,7 @@ feature -- Query features
 		do
 			if offset_counters.has (class_id) then
 				-- Offsets start from 0.
-				Result := offset_counters.item (class_id).value + 1
+				Result := offset_counters.found_item.value + 1
 			end
 		end
 

@@ -18,13 +18,14 @@ feature -- Access
 
 	file_name: STRING is
 			-- Full name of currently selected file including path.
-			-- `Void' if user did not click "OK".
+			-- `empty' if user did not click "OK".
 		require
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.file_name
 		ensure
-			bridge_ok: Result /= Void implies
+			file_name_not_void: Result /= Void
+			bridge_ok: not Result.is_empty implies
 				Result.is_equal (implementation.file_name)
 		end
 
@@ -52,25 +53,27 @@ feature -- Status report
 
 	file_title: STRING is
 			-- `file_name' without its path.
-			-- `Void' if user did not click "OK".
+			-- is_empty if user did not click "OK".
 		require
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.file_title
 		ensure
-			bridge_ok: Result /= Void implies
+			file_title_not_void: Result /= Void
+			bridge_ok: not Result.is_empty implies
 				Result.is_equal (implementation.file_title)
 		end
 
 	file_path: STRING is
 			-- Path of `file_name'.
-			-- `Void' if user did not click "OK".
+			-- is_empty if user did not click "OK".
 		require
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.file_path
 		ensure
-			bridge_ok: Result /= Void implies
+			file_path_not_void: Result /= Void
+			bridge_ok: not Result.is_empty implies
 				Result.is_equal (implementation.file_path)
 		end
 
@@ -95,7 +98,7 @@ feature -- Element change
 		do
 			implementation.set_file_name (a_name)
 		ensure
-			assigned: file_name.is_equal (a_name)
+			assigned: not file_name.is_empty implies file_name.is_equal (a_name)
 		end
 
 	set_start_directory (a_path: STRING) is

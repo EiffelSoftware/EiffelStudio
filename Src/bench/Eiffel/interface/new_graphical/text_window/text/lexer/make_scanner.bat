@@ -1,3 +1,3 @@
-%EIFFEL_SRC%\library\gobo\bin\gelex --version
-%EIFFEL_SRC%\library\gobo\bin\gelex -z editor_eiffel_scanner.l
-%EIFFEL_SRC%\library\gobo\bin\gelex -z editor_basic_scanner.l
+%GOBO%\bin\gelex --version
+%GOBO%\bin\gelex -z editor_eiffel_scanner.l
+%GOBO%\bin\gelex -z editor_basic_scanner.l

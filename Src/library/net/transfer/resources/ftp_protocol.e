@@ -142,6 +142,7 @@ feature -- Status setting
 			else
 				if not passive_mode then
 					create data_socket.make_server_by_port (0)
+					data_socket.set_timeout (timeout)
 					data_socket.listen (1)
 				end
 				if send_transfer_command then
@@ -235,9 +236,11 @@ feature {NONE} -- Status setting
 		do
 			if is_proxy_used then
 				create proxy_connection.make (address)
+				proxy_connection.set_timeout (timeout)
 			else
 				create main_socket.make_client_by_port
 					(address.port, address.host)
+				main_socket.set_timeout (timeout)
 				main_socket.connect
 			end
 		rescue

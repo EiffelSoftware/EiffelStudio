@@ -246,24 +246,14 @@ feature {NONE} -- Implementation
 			defined_mode: Read_only <= transfer_mode and
 						transfer_mode <= Write_only
 		local
-			retval: INTEGER
 			m: BOOLEAN
 		do
 			m := (transfer_mode = Read_only)
-			retval := c_select_poll_with_timeout (s.descriptor, m, timeout)
-			if retval = 0 then 
+			if not s.ready_for_reading then
 				error_code := Connection_timeout 
 			end
 		end
 
-feature {NONE} -- Externals
-
-	c_select_poll_with_timeout (fd: INTEGER; is_read_mode: BOOLEAN;
-								timeout_secs: INTEGER): INTEGER is
-		external
-			"C"
-		end
-		
 invariant
 
 	main_socket_ok: (main_socket /= Void and not error) implies 

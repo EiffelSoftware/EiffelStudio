@@ -48,7 +48,9 @@ feature -- Schema
 			-- Set `schema' to 'a_name'
 		do
 			schema := a_schema
-			application_window.render_schema
+			if shared_constants.application_constants.is_gui_mode then				
+				application_window.render_schema	
+			end
 		ensure
 			schema_set: schema = a_schema
 		end		

@@ -815,7 +815,7 @@ feature {NONE} -- Retrieval
 			precomp_r: PRECOMP_R
 			e_project: like Current
 			p_eif: PROJECT_EIFFEL_FILE
-			precomp_dirs: EXTEND_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
+			precomp_dirs: HASH_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
 			remote_dir: REMOTE_PROJECT_DIRECTORY
 		do
 			set_error_status (Ok_status)

@@ -34,7 +34,8 @@ inherit
 			set_first_line_displayed,
 			scroll_only,
 			set_offset,
-			on_key_down
+			on_key_down,
+			scrolling_quantum
 		end
 
 	EB_SHARED_MANAGERS
@@ -1161,6 +1162,16 @@ feature {NONE} -- retrieving backup
 		end
 
 feature {NONE} -- Implementation
+
+	scrolling_quantum: INTEGER is
+			-- Number of lines to scroll per mouse wheel scroll increment.
+		do
+			if Editor_preferences.mouse_wheel_scroll_full_page then
+				Result := number_of_lines_displayed - 2
+			else
+				Result := Editor_preferences.mouse_wheel_scroll_size
+			end
+		end
 
 	maximum_top_line_index: INTEGER is
 			-- Number of the last possible line that can be displayed

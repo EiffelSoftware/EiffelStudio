@@ -669,7 +669,7 @@ feature {NONE} -- WEL Implementation
 		do
 			show_current_selection
 			notify_change (2 + 1)
-			--| FIXME execute_command (Cmd_switch, Void)			
+			interface.selection_actions.call ([])			
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
@@ -961,6 +961,9 @@ end -- EV_NOTEBOOK_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.55  2000/04/28 21:53:45  rogers
+--| Connected selection_actions,  as selecting a tab by clicking did not call them.
+--|
 --| Revision 1.54  2000/04/28 21:42:54  rogers
 --| Fixed child resizing bug when new tab is selected.
 --|

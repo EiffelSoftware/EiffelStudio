@@ -14,6 +14,7 @@ OBJ = 	registry.obj \
 		diskspace.obj \
 		dynload.obj \
 		mousehook.obj \
+		choose_folder.obj \
 		wel_thr_init.obj
 
 

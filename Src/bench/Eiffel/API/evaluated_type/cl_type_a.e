@@ -357,7 +357,7 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 	storage_info (classc: CLASS_C): S_CLASS_TYPE_INFO is
 			-- Storage info for Current type in class `classc'
 		do
-			!! Result.make (Void, associated_class.id.id)
+			!! Result.make (Void, associated_class.id)
 		end
 
 	storage_info_with_name (classc: CLASS_C): S_CLASS_TYPE_INFO is
@@ -369,7 +369,7 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 		do
 			ass_classc := associated_class
 			class_name := clone (ass_classc.name)
-			!! Result.make (class_name, ass_classc.id.id)
+			!! Result.make (class_name, ass_classc.id)
 		end
 
 end -- class CL_TYPE_A

@@ -31,6 +31,7 @@ interface IEnumIncludePaths;
 interface IEnumObjectFiles;
 interface IEnumAssembly;
 interface IEnumCompletionEntry;
+interface IEiffelHTMLDocGenerator;
 
 // IDispatch IDs
 enum
@@ -71,7 +72,13 @@ enum
     EIFFELCLUSTERPROP_UseSysDefault,
     EIFFELCLUSTERPROP_All,
     EIFFELCLUSTERPROP_IsLibrary,
-    EIFFELCLUSTERPROP_Override
+    EIFFELCLUSTERPROP_Override,
+
+    ISECompilerID_add_exclude_cluster,
+    ISECompilerID_remove_exclude_cluster,
+    ISECompilerID_project,
+    ISECompilerID_generation_dir,
+    ISECompilerID_generate
 };
 
 typedef enum __EIF_COMPILATION_TYPES
@@ -127,6 +134,9 @@ interface IEiffelProject: IUnknown
 
   [helpstring ("Completion information")]
   HRESULT completion_information ([out, retval] IEiffelCompletionInfo ** return_value);
+
+  [propget, helpstring ("Help documentation generator")]
+  HRESULT html_doc_generator ([out, retval] IEiffelHTMLDocGenerator ** return_value);
 };
 //---------------------------------------------------------------------
 
@@ -172,6 +182,9 @@ interface IEiffelCompiler: IUnknown
 
   [helpstring ("Finalize.")]
   HRESULT finalize ();
+
+  [helpstring ("Precompile.")]
+  HRESULT precompile ();
 
   [helpstring ("Was last compilation successful?")]
   HRESULT is_successful ([out, retval] VARIANT_BOOL * return_value);
@@ -1135,6 +1148,40 @@ interface IEiffelSystemExternals: IDispatch
 //---------------------------------------------------------------------
 
 [
+  dual, object,
+  uuid (30626121-3DF8-41f2-81B9-6F554A0F7D5C),
+  helpstring ("Eiffel Project HTML Document generator.")
+]
+interface IEiffelHTMLDocGenerator: IDispatch
+{
+
+  [id(ISECompilerID_add_exclude_cluster), helpstring("Add excluded cluster")]
+  HRESULT add_excluded_cluster ([in] BSTR cluster_to_exclude);
+
+  [id(ISECompilerID_remove_exclude_cluster), helpstring("Remove excluded cluster")]
+  HRESULT remove_excluded_cluster ([in] BSTR excluded_cluster);
+
+  [helpstring("is the project incompatible?")]
+  HRESULT is_incompatible ([out, retval] VARIANT_BOOL * return_value);
+
+  [helpstring("is the project corrupted?")]
+  HRESULT is_corrupted ([out, retval] VARIANT_BOOL * return_value);
+
+  [propget, helpstring("the last error")]
+  HRESULT last_error ([out, retval] BSTR * return_value);
+
+  [id(ISECompilerID_project), helpstring("Load a compiled project")]
+  HRESULT load_project ([in] BSTR project_dir, [out, retval] VARIANT_BOOL * return_value);
+
+  [id(ISECompilerID_generate), helpstring("Generate the documentation.")]
+  HRESULT generate ([in] BSTR generation_dir);
+
+};
+
+//---------------------------------------------------------------------
+
+
+[
   uuid (A81CA1A9-3EEF-4e47-BEAE-C16325EEFA3F)
 ]
 library eiffel_compiler
@@ -1165,6 +1212,7 @@ library eiffel_compiler
   interface IEnumObjectFiles;
   interface IEnumAssembly;
   interface IEnumCompletionEntry;
+  interface IEiffelHTMLDocGenerator;
 
   [
     uuid (28F511DB-0CCE-44c5-9DD5-E93066C0B00F)
@@ -1191,6 +1239,14 @@ library eiffel_compiler
   coclass CEiffelCompletionInfo
   {
     [default] interface IEiffelCompletionInfo;
+  };
+
+  [
+    uuid (6B905ED7-196A-464c-86C9-16063A314945)
+  ]
+  coclass CEiffelHTMLDocGenerator
+  {
+    [default] interface IEiffelHTMLDocGenerator;
   };
 
 };

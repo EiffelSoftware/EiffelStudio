@@ -21,7 +21,7 @@ feature -- Event handling
 			-- Attach to GTK "clicked" signal.
 		do
 			create Result
-			real_signal_connect (visual_widget, "clicked", agent gtk_marshal.button_select_intermediary (c_object), Void)
+			real_signal_connect (visual_widget, "clicked", agent (App_implementation.gtk_marshal).button_select_intermediary (c_object), Void)
 		end
 
 --	Gtk_signal_clicked: INTEGER is

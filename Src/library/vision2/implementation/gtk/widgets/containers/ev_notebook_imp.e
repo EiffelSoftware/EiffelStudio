@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_notebook_new ())
-			real_signal_connect (c_object, "switch-page", agent Gtk_marshal.on_notebook_page_switch_intermediary (c_object, ?), agent Gtk_marshal.page_switch_translate)
+			real_signal_connect (c_object, "switch-page", agent (App_implementation.gtk_marshal).on_notebook_page_switch_intermediary (c_object, ?), agent (App_implementation.gtk_marshal).page_switch_translate)
 		end
 
 	initialize is
@@ -210,7 +210,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 				C.gtk_notebook_page_struct_child (temp_ptr)
 			) + 1
 			if selection_actions_internal /= Void then
-				selection_actions_internal.call (empty_tuple)
+				selection_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
 			end
 			end
 		end

@@ -62,8 +62,8 @@ feature -- Implementation
 			real_signal_connect (
 				c_object,
 				"button-press-event",
-				agent gtk_marshal.start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
-				default_translate
+				agent (App_implementation.gtk_marshal).start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
+				App_implementation.default_translate
 			)
 			button_press_connection_id := last_signal_connection_id
 			is_transport_enabled := True
@@ -183,8 +183,8 @@ feature -- Implementation
 					real_signal_connect (
 						c_object,
 						"motion-notify-event",
-						agent Gtk_marshal.add_grab_cb_intermediary (c_object),
-						default_translate
+						agent (App_implementation.gtk_marshal).add_grab_cb_intermediary (c_object),
+						App_implementation.default_translate
 					)
 					grab_callback_connection_id := last_signal_connection_id
 
@@ -210,8 +210,8 @@ feature -- Implementation
 					real_signal_connect (
 						c_object,
 						"button-press-event",
-						agent Gtk_marshal.end_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
-						default_translate
+						agent (App_implementation.gtk_marshal).end_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
+						App_implementation.default_translate
 					)
 					button_press_connection_id := last_signal_connection_id
 					if set_to_drag_and_drop then
@@ -221,8 +221,8 @@ feature -- Implementation
 						real_signal_connect (
 							c_object,
 							"button-release-event",
-							agent Gtk_marshal.end_transport_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?),
-							default_translate
+							agent (App_implementation.gtk_marshal).end_transport_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?),
+							App_implementation.default_translate
 						)
 						button_release_connection_id := last_signal_connection_id
 					end
@@ -230,22 +230,22 @@ feature -- Implementation
 					real_signal_connect (
 						c_object,
 						"motion-notify-event",
-						agent Gtk_marshal.temp_execute_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?),
-						default_translate
+						agent (App_implementation.gtk_marshal).temp_execute_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?),
+						App_implementation.default_translate
 					)
 					motion_notify_connection_id := last_signal_connection_id
 					real_signal_connect (
 						c_object,
 						"enter_notify_event",
-						agent Gtk_marshal.signal_emit_stop_intermediary (c_object, "enter_notify_event"),
-						default_translate
+						agent (App_implementation.gtk_marshal).signal_emit_stop_intermediary (c_object, "enter_notify_event"),
+						App_implementation.default_translate
 					)
 					enter_notify_connection_id := last_signal_connection_id
 					real_signal_connect (
 						c_object,
 						"leave_notify_event",
-						agent Gtk_marshal.signal_emit_stop_intermediary (c_object, "leave_notify_event"),
-						default_translate
+						agent (App_implementation.gtk_marshal).signal_emit_stop_intermediary (c_object, "leave_notify_event"),
+						App_implementation.default_translate
 					)
 					leave_notify_connection_id := last_signal_connection_id
 					check
@@ -256,7 +256,7 @@ feature -- Implementation
 							mode_is_drag_and_drop implies
 							button_release_connection_id > 0
 					end
-					Gtk_marshal.signal_emit_stop_intermediary (c_object, "button-press-event")
+					(App_implementation.gtk_marshal).signal_emit_stop_intermediary (c_object, "button-press-event")
 
 				elseif ready_for_pnd_menu (a_button) then
 					app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
@@ -326,24 +326,6 @@ feature -- Implementation
 				signal_disconnect (grab_callback_connection_id)
 				grab_callback_connection_id := 0
 			end
-			target := pointed_target
-			if
-				able_to_transport (a_button)
-			then
-				if target /= Void then
-					target.drop_actions.call ([pebble])
-				end
-			end
-			if pick_ended_actions_internal /= Void then
-				pick_ended_actions_internal.call ([target])
-			end
-			enable_transport
-			interface.pointer_motion_actions.resume
-
-			post_drop_steps
-
-			call_press_actions (target, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-			
 			if not is_destroyed then
 				if pointer_style /= Void then
 					internal_set_pointer_style (pointer_style)
@@ -355,7 +337,22 @@ feature -- Implementation
 				C.gtk_widget_draw (c_object, NULL)
 				C.gtk_widget_draw (visual_widget, NULL)				
 			end
-			
+			target := pointed_target
+			if
+				able_to_transport (a_button)
+			then
+				if target /= Void then
+					target.drop_actions.call ([pebble])
+				end
+			end
+			if pick_ended_actions_internal /= Void then
+				pick_ended_actions_internal.call ([target])
+			end
+
+			enable_transport
+			interface.pointer_motion_actions.resume
+			post_drop_steps
+			call_press_actions (target, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)			
 			check
 				motion_notify_not_connected: motion_notify_connection_id = 0
 				enter_notify_not_connected: enter_notify_connection_id = 0

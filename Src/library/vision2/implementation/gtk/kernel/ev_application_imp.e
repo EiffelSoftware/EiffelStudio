@@ -98,6 +98,8 @@ feature {NONE} -- Initialization
 			is_destroyed := True
 		end
 		
+feature {EV_ANY_IMP} -- Access
+		
 	gtk_marshal: EV_GTK_CALLBACK_MARSHAL
 		-- Marshal object for all gtk signal emission event handling.
 
@@ -388,6 +390,11 @@ feature {EV_ANY_I, EV_FONT_IMP} -- Implementation
 		once
 			temp_style := C.gtk_widget_struct_style (default_gtk_window)
 			Result := C.gdk_font_struct_ascent (C.gtk_style_struct_font (temp_style)) + 1
+		end
+		
+	default_translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE] is		
+		once
+			Result := agent gtk_marshal.gdk_event_to_tuple
 		end
 		
 feature -- External implementation

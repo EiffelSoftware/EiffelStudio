@@ -105,8 +105,11 @@ feature {EV_ANY_IMP} -- Key Event intermediary agent routines
 
 	on_key_event_intermediary (a_c_object: POINTER; a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- Key event
+		local
+			a_widget: EV_WIDGET_IMP
 		do
-			c_get_eif_reference_from_object_id (a_c_object).on_key_event (a_key, a_key_string, a_key_press)
+			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
+			a_widget.on_key_event (a_key, a_key_string, a_key_press)
 		end
 
 feature {EV_ANY_IMP} -- List and list item intermediary agent routines
@@ -228,20 +231,29 @@ feature {EV_ANY_IMP} -- Widget intermediary agent routines
 
 	on_size_allocate_intermediate (a_c_object: POINTER; a_x, a_y, a_width, a_height: INTEGER) is
 			-- Size allocate happened on widget
+		local
+			a_widget: EV_WIDGET_IMP
 		do
-			c_get_eif_reference_from_object_id (a_c_object).on_size_allocate (a_x, a_y, a_width, a_height)
+			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
+			a_widget.on_size_allocate (a_x, a_y, a_width, a_height)
 		end
 
 	widget_focus_in_intermediary (a_c_object: POINTER) is
 			-- Focus in
+		local
+			a_widget: EV_WIDGET_IMP
 		do
-			c_get_eif_reference_from_object_id (a_c_object).on_focus_changed (True)
+			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
+			a_widget.on_focus_changed (True)
 		end
 		
 	widget_focus_out_intermediary (a_c_object: POINTER) is
 			-- Focus out
+		local
+			a_widget: EV_WIDGET_IMP
 		do
-			c_get_eif_reference_from_object_id (a_c_object).on_focus_changed (False)
+			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
+			a_widget.on_focus_changed (False)
 		end	
 
 feature {EV_ANY_IMP} -- Text component intermediary agent routines
@@ -281,16 +293,22 @@ feature {EV_ANY_IMP} -- Button intermediary agent routines
 		
 	connect_button_press_switch_intermediary (a_c_object: POINTER) is
 			-- Connect button switch 
+		local
+			a_widget: EV_WIDGET_IMP
 		do
-			c_get_eif_reference_from_object_id (a_c_object).connect_button_press_switch
+			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
+			a_widget.connect_button_press_switch
 		end	
 		
 	button_press_switch_intermediary (a_c_object: POINTER; a_type: INTEGER;	a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER) is
 			--  Call to switch between type of button press event
+		local
+			a_widget: EV_WIDGET_IMP
 		do
-			c_get_eif_reference_from_object_id (a_c_object).button_press_switch 
+			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
+			a_widget.button_press_switch 
 				(a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 		end
 		
@@ -575,9 +593,9 @@ feature {EV_GTK_CALLBACK_MARSHAL, EV_ANY_IMP} -- Tuple optimizations
 			Result := []
 		end
 
-feature {NONE} -- Externals
+feature {EV_ANY_IMP} -- Externals
 
-	c_get_eif_reference_from_object_id (a_c_object: POINTER): EV_WIDGET_IMP is
+	c_get_eif_reference_from_object_id (a_c_object: POINTER): EV_ANY_IMP is
 			-- Get Eiffel object from `a_c_object'.
 		external
 			"C (GtkWidget*): EIF_REFERENCE | %"ev_any_imp.h%""

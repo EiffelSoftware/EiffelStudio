@@ -154,7 +154,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	create_return_actions: EV_NOTIFY_ACTION_SEQUENCE is
 		do
 			create Result
-			real_signal_connect (entry_widget, "activate", agent gtk_marshal.text_field_return_intermediary (c_object), Void)
+			real_signal_connect (entry_widget, "activate", agent (App_implementation.gtk_marshal).text_field_return_intermediary (c_object), Void)
 		end
 
 feature {EV_TEXT_FIELD_I} -- Implementation

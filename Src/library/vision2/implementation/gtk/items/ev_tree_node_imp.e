@@ -275,7 +275,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			remove_dummy_node
 			is_expanded := True
 			if expand_actions_internal /= Void then
-				expand_actions_internal.call (empty_tuple)
+				expand_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
 			end
 		end
 
@@ -284,7 +284,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 		do
 			is_expanded := False
 			if collapse_actions_internal /= Void then
-				collapse_actions_internal.call (empty_tuple)
+				collapse_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
 			end
 		end
 

@@ -576,7 +576,7 @@ feature {NONE} -- Implementation
 			maximum_width := 32000
 			maximum_height := 32000
 			
-			signal_connect_true ("delete_event", agent gtk_marshal.on_window_close_request (c_object))
+			signal_connect_true ("delete_event", agent (App_implementation.gtk_marshal).on_window_close_request (c_object))
 			initialize_client_area
 			enable_user_resize
 			default_height := -1

@@ -16,8 +16,7 @@ inherit
 	EV_GAUGE_IMP
 		redefine
 			interface,
-			set_leap,
-			disconnect_all_signals
+			set_leap
 		end
 
 feature -- Element change
@@ -34,13 +33,6 @@ feature -- Element change
 			end
 		ensure then
 			range_same: value_range.is_equal (old value_range)
-		end
-
-feature {NONE} -- Implementation
-
-	disconnect_all_signals is 
-		do
-			--| FIXME Hack needed to prevent gtk warnings.
 		end
 
 feature {EV_ANY_I} -- Implementation

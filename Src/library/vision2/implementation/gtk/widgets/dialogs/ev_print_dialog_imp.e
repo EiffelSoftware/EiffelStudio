@@ -164,7 +164,7 @@ feature {NONE} -- Initialization
 			extend (main_dialog_container)
 			disable_user_resize
 
-			signal_connect_true ("delete_event", agent gtk_marshal.on_window_close_request (c_object))
+			signal_connect_true ("delete_event", agent (App_implementation.gtk_marshal).on_window_close_request (c_object))
 			cancel_btn.select_actions.extend (agent on_cancel)
 			print_btn.select_actions.extend (agent on_ok)
 			print_btn_imp ?= print_btn.implementation

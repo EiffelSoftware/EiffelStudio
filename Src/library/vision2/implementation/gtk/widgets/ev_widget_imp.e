@@ -69,8 +69,8 @@ feature {NONE} -- Initialization
 			real_signal_connect (
 				c_object,
 				"button-press-event",
-				agent gtk_marshal.start_drag_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
-				default_translate
+				agent (App_implementation.gtk_marshal).start_drag_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
+				App_implementation.default_translate
 			)
 			--button_press_connection_id := last_signal_connection_id
 		ensure then
@@ -124,17 +124,17 @@ feature {NONE} -- Initialization
 				--| "configure-event" only happens for windows,
 				--| so we connect to the "size-allocate" function.
 			if C.gtk_is_window (c_object) then
-				real_signal_connect (c_object, "configure-event", agent gtk_marshal.on_size_allocate_intermediate (c_object, ?, ?, ?, ?), size_allocate_translate_agent)
+				real_signal_connect (c_object, "configure-event", agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (c_object, ?, ?, ?, ?), size_allocate_translate_agent)
 			else
-				real_signal_connect (c_object, "size-allocate", agent gtk_marshal.on_size_allocate_intermediate (c_object, ?, ?, ?, ?), size_allocate_translate_agent)
+				real_signal_connect (c_object, "size-allocate", agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (c_object, ?, ?, ?, ?), size_allocate_translate_agent)
 			end
 	
-			on_key_event_intermediary_agent := agent gtk_marshal.on_key_event_intermediary (c_object, ?, ?, ?)
+			on_key_event_intermediary_agent := agent (App_implementation.gtk_marshal).on_key_event_intermediary (c_object, ?, ?, ?)
 			real_signal_connect (visual_widget, "key_press_event", on_key_event_intermediary_agent, key_event_translate_agent)
 			real_signal_connect (visual_widget, "key_release_event", on_key_event_intermediary_agent, key_event_translate_agent)
 				--| "button-press-event" is a special case, see below.
 				
-			connect_button_press_switch_agent := agent gtk_marshal.connect_button_press_switch_intermediary (c_object)
+			connect_button_press_switch_agent := agent (App_implementation.gtk_marshal).connect_button_press_switch_intermediary (c_object)
 			pointer_button_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)
 			pointer_double_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)
 			if not pointer_button_press_actions.is_empty or not pointer_double_press_actions.is_empty then
@@ -183,7 +183,7 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			--| See comment in `button_press_switch' above.
 		do
 			if not button_press_switch_is_connected then
-				signal_connect ("button-press-event", agent gtk_marshal.button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), default_translate)
+				signal_connect ("button-press-event", agent (App_implementation.gtk_marshal).button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), App_implementation.default_translate)
 				button_press_switch_is_connected := True
 			end
 		end
@@ -244,9 +244,9 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- if `a_has_focus' then `Current' has just received focus.
 		do
 			if a_has_focus then
-				focus_in_actions_internal.call (Gtk_marshal.Empty_tuple)
+				focus_in_actions_internal.call ((App_implementation.gtk_marshal).Empty_tuple)
 			else
-				focus_out_actions_internal.call (Gtk_marshal.Empty_tuple)
+				focus_out_actions_internal.call ((App_implementation.gtk_marshal).Empty_tuple)
 			end
 		end
 
@@ -278,9 +278,6 @@ feature -- Access
 
 	pointer_style: EV_CURSOR
 			-- Cursor displayed when the pointer is over this widget.
-
-	popup_menu: EV_MENU
-			-- Menu popped up when button 3 is pressed on widget.
 
 	screen_x: INTEGER is
 			-- Horizontal offset relative to screen.
@@ -497,26 +494,6 @@ feature -- Element change
 			internal_set_minimum_size (a_minimum_width, a_minimum_height)
 		end
 
-	set_popup_menu (a_menu: EV_MENU) is
-			-- Pop up `a_menu' when button 3 is pressed on widget.
-		do
-			check
-				to_be_implemented: False
-			end
-		--	popup_menu := a_menu
-		--	C.gtk_signal_connect_object (
-		--		c_object, agent show_popup_menu, popup_menu)
-		end
-
-	remove_popup_menu is
-			-- Do not pop up the menu.
-		do
-			check
-				to_be_implemented: False
-			end
-		--	popup_menu := Void
-		end
-
 feature -- Measurement
 	
 	x_position: INTEGER is
@@ -688,13 +665,13 @@ feature {NONE} -- Agent functions.
 	key_event_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
 			-- 
 		once
-			Result := agent gtk_marshal.key_event_translate
+			Result := agent (App_implementation.gtk_marshal).key_event_translate
 		end
 		
 	size_allocate_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
 			-- 
 		once
-			Result := agent gtk_marshal.size_allocate_translate
+			Result := agent (App_implementation.gtk_marshal).size_allocate_translate
 		end
 
 feature {NONE} -- Implementation
@@ -787,31 +764,6 @@ feature {NONE} -- Implementation
 
 	in_resize_event: BOOLEAN
 			-- Is `interface.resize_actions' being executed?
-
-	set_bounds (a_x, a_y, a_width, a_height: INTEGER) is
-			-- Set horizontal offset relative to parent `x_position'.
-			-- Set vertical offset relative to parent `y_position'.
-			-- Set the horizontal size to `a_width'.
-			-- Set the vertical size to `a_height'.
-		require
-			a_width_positive_or_zero: a_width >= 0
-			a_height_positive_or_zero: a_height >= 0
-		local
-			alloc_struct: POINTER
-		do
-			alloc_struct := C.c_gtk_allocation_struct_allocate
-			C.set_gtk_allocation_struct_x (alloc_struct, a_x)
-			C.set_gtk_allocation_struct_y (alloc_struct, a_y)
- 			C.set_gtk_allocation_struct_width (alloc_struct, a_width)
-			C.set_gtk_allocation_struct_height (alloc_struct, a_height)
-			C.gtk_widget_size_allocate (c_object, alloc_struct)
-			C.c_gtk_allocation_struct_free (alloc_struct)
-		ensure
-			x_position_assigned: x_position = a_x
-			y_position_assigned: y_position = a_y
-			width_assigned: width = minimum_width or else width = a_width
-			height_assigned: height = minimum_height or else height = a_height
-		end
 
 feature {EV_ANY_I} -- Contract Support
 

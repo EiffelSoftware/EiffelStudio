@@ -46,25 +46,25 @@ feature -- Initialize
 			real_signal_connect (
 					list_widget,
 					"leave-notify-event",
-					agent gtk_marshal.list_proximity_intermediary (c_object, True),
+					agent (App_implementation.gtk_marshal).list_proximity_intermediary (c_object, True),
 					size_allocate_translate_agent
 			)
 			real_signal_connect (
 					list_widget,
 					"enter-notify-event",
-					agent gtk_marshal.list_proximity_intermediary (c_object, False),
+					agent (App_implementation.gtk_marshal).list_proximity_intermediary (c_object, False),
 					size_allocate_translate_agent
 			)
 			real_signal_connect (
 					visual_widget,
 					"focus-in-event",
-					agent gtk_marshal.widget_focus_in_intermediary (c_object),
+					agent (App_implementation.gtk_marshal).widget_focus_in_intermediary (c_object),
 					size_allocate_translate_agent
 			)
 			real_signal_connect (
 					visual_widget,
 					"focus-out-event",
-					agent gtk_marshal.widget_focus_out_intermediary (c_object),
+					agent (App_implementation.gtk_marshal).widget_focus_out_intermediary (c_object),
 					size_allocate_translate_agent
 			)
 			disable_multiple_selection
@@ -159,7 +159,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 				has_focus := True
 				top_level_window_imp.set_focus_widget (Current)
 				if focus_in_actions_internal /= Void then
-					focus_in_actions_internal.call (empty_tuple)				
+					focus_in_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)				
 				end
 			end
 		end
@@ -178,7 +178,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 				has_focus := False
 				top_level_window_imp.set_focus_widget (Void)
 				if not has_focus and focus_out_actions_internal /= Void then
-					focus_out_actions_internal.call (empty_tuple)
+					focus_out_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
 				end
 			end
 			arrow_used := False
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 			l_item: EV_LIST_ITEM_IMP
 		do
 			switch_to_browse_mode_if_necessary		
-		 	l_item ?= eif_object_from_c (gtk_marshal.gtk_value_pointer (args))
+		 	l_item ?= eif_object_from_c ((App_implementation.gtk_marshal).gtk_value_pointer (args))
 			call_select_actions (l_item)
 		end
 
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 			real_signal_connect (
 				v_imp.c_object,
 				"focus-out-event",
-				agent gtk_marshal.on_list_focus_intermediary (c_object, False),
+				agent (App_implementation.gtk_marshal).on_list_focus_intermediary (c_object, False),
 				size_allocate_translate_agent
 				)
 		end

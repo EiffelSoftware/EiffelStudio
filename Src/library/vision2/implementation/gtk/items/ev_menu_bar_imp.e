@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object (C.gtk_menu_bar_new)
 			C.gtk_menu_bar_set_shadow_type (c_object, C.GTK_SHADOW_NONE_ENUM)
-			C.gtk_widget_set_usize (c_object, 0, 8 + default_font_height)
+			C.gtk_widget_set_usize (c_object, 0, 8 + App_implementation.default_font_height)
 			C.gtk_widget_show (c_object)
 		end
 		

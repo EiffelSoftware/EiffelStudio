@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 	initialize is
 		do
-			real_signal_connect (c_object, "show", agent gtk_marshal.accelerator_actions_internal_intermediary (c_object), Void)
+			real_signal_connect (c_object, "show", agent (App_implementation.gtk_marshal).accelerator_actions_internal_intermediary (c_object), Void)
 			is_initialized := True
 		end
 

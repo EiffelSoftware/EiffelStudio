@@ -173,11 +173,15 @@ feature -- Output
 			l_elt: ICOR_DEBUG_VALUE
 			l_att_debug_value: ABSTRACT_DEBUG_VALUE
 			i: INTEGER
+			nb_items: INTEGER
 		do			
 			if capacity > 0 then
 				set_sp_bounds (a_slice_min, (capacity - 1).min (a_slice_max))
 				if sp_lower <= sp_upper then
-					items.resize (sp_upper - sp_lower + 1)
+					nb_items := sp_upper - sp_lower + 1
+					if nb_items >= items.capacity then
+						items.resize (nb_items)
+					end
 					get_array_value
 					from
 						i := sp_lower
@@ -198,4 +202,3 @@ feature -- Output
 		end
 
 end -- class EIFNET_DEBUG_NATIVE_ARRAY_VALUE
-

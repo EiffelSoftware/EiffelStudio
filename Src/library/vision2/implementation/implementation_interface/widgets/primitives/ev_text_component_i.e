@@ -27,9 +27,9 @@ feature {EV_WIDGET} -- Initialization
 			set_expand (True)
 			set_vertical_resize (True)
 			set_horizontal_resize (True)
-			!! color.make_rgb (255, 200, 200)
+			!! color.make_rgb (255, 255, 255)
 			set_background_color (color)
-			!! color.make_rgb (0, 255, 255)
+			!! color.make_rgb (0, 0, 0)
 			set_foreground_color (color)
 		end
 

@@ -169,7 +169,7 @@ RT_LNK void file_go(FILE *f, EIF_INTEGER pos);
 RT_LNK void file_recede(FILE *f, EIF_INTEGER pos);
 RT_LNK void file_move(FILE *f, EIF_INTEGER pos);
 RT_LNK EIF_INTEGER stat_size(void);
-RT_LNK EIF_BOOLEAN file_creatable(char *path);
+RT_LNK EIF_BOOLEAN file_creatable(char *path, EIF_INTEGER length);
 RT_LNK EIF_INTEGER file_fd(FILE *f);
 RT_LNK char *file_owner(int uid);
 RT_LNK char *file_group(int gid);

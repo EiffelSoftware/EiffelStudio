@@ -27,7 +27,7 @@ feature
 	full_symbol: PIXMAP is
 			-- Icon for the class tool
 		once
-			Result := pixmap_file_content ("class_dot.bm");
+			Result := bm_Class_dot
 		end;
 
 	icon_symbol: PIXMAP is

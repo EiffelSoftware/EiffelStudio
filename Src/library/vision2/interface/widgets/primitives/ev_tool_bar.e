@@ -27,16 +27,6 @@ create
 	default_create,
 	make_for_test
 
-feature -- Status Setting
-
-	merge_radio_button_groups (other: EV_TOOL_BAR) is
-			-- Merge `Current' radio button group with that of `other'.
-		require
-			other_not_void: other /= Void
-		do
-			implementation.connect_radio_grouping (other)
-		end
-
 feature {NONE} -- Implementation
 
 	create_implementation is
@@ -79,6 +69,9 @@ end -- class EV_TOOL_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/04/11 23:32:46  king
+--| Removed merge_radio_button_groups
+--|
 --| Revision 1.13  2000/04/05 21:16:23  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

@@ -1124,6 +1124,16 @@ end
 					invariant_changed :=
 						not propagators.melted_empty_intersection (f_suppliers)
 				end
+
+				if not invariant_changed then
+						-- Force a change on invariant only if it still exist and if line
+						-- debugging is turned on. Not doing so could make obsolete
+						-- line information on non-changed features.
+						-- This should also be done for IL code generation, otherwise
+						-- debug info is inconsistent.
+					invariant_changed := invariant_feature /= Void and then
+						(System.line_generation or System.il_generation)
+				end
 				if invariant_changed then
 					if invariant_feature = Void then
 						create invariant_feature.make (Current)

@@ -32,9 +32,18 @@ feature {NONE} -- Implementation
 		local
 			v_imp: EV_WIDGET_IMP
 			wel_win: WEL_WINDOW
+			pix_imp: EV_PIXMAP_I
 		do
 			ev_children.go_i_th (i)
 			v_imp ?= v.implementation
+
+				-- If the widget is a pixmap, then
+				-- promote it if necessarry.
+			if v_imp = Void then
+				pix_imp ?= v.implementation
+				pix_imp.on_parented
+				v_imp ?= v.implementation
+			end
 			check
 				v_imp_not_void: v /= Void
 			end
@@ -96,6 +105,10 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/04/12 01:30:21  pichery
+--| - added pixmap promoting when adding
+--|   a pixmap in a container
+--|
 --| Revision 1.18  2000/04/06 00:06:57  brendel
 --| Corrected argument of action sequence.
 --|

@@ -23,6 +23,7 @@ inherit
 	SAFE_ASSEMBLY_LOADER
 		export
 			{NONE} all
+			{ANY} release_cached_assemblies
 		end
 
 	CACHE_MANAGER_ERRORS
@@ -86,10 +87,12 @@ feature -- Basic Oprtations
 			last_error_message := ""
 			
 			add_to_eac := True
-			l_assembly := feature {ASSEMBLY}.load_string (fully_quantified_name (a_name, a_version, a_culture, a_key))
-			assembly_resolver.add_resolver_path_from_assembly (l_assembly)
-			add_assembly_to_eac (l_assembly.location)
-			assembly_resolver.remove_resolver_path_from_assembly (l_assembly)
+			l_assembly := load_assembly_from_full_name (fully_quantified_name (a_name, a_version, a_culture, a_key))
+			if l_assembly /= Void then
+				assembly_resolver.add_resolver_path_from_assembly (l_assembly)
+				add_assembly_to_eac (l_assembly.location)
+				assembly_resolver.remove_resolver_path_from_assembly (l_assembly)
+			end
 		ensure
 			successful: is_successful
 		end
@@ -117,7 +120,6 @@ feature -- Basic Oprtations
 
 			add_to_eac := True
 			from
-				l_paths := a_path.split (';')
 				l_paths.start
 			until
 				l_paths.after
@@ -140,12 +142,13 @@ feature -- Basic Oprtations
 			l_assembly: ASSEMBLY
 			l_ca: CONSUMED_ASSEMBLY
 		do
-			l_assembly := feature {ASSEMBLY}.load_string (fully_quantified_name (a_name, a_version, a_culture, a_key))	
-		
-			l_ca := cache_writer.consumed_assembly_from_path (l_assembly.location)
-			if l_ca /= Void then
-				Result := relative_assembly_path_from_consumed_assembly (l_ca)
-				Result.prune_all_trailing ('\')
+			l_assembly := load_assembly_from_full_name (fully_quantified_name (a_name, a_version, a_culture, a_key))
+			if l_assembly /= Void then
+				l_ca := cache_writer.consumed_assembly_from_path (l_assembly.location)
+				if l_ca /= Void then
+					Result := relative_assembly_path_from_consumed_assembly (l_ca)
+					Result.prune_all_trailing ('\')
+				end
 			end
 		end
 		
@@ -168,7 +171,7 @@ feature -- Basic Oprtations
 			end
 		end
 
-	assembly_info_from_assembly (a_path: STRING): CONSUMED_ASSEMBLY is
+	assembly_info_from_path (a_path: STRING): CONSUMED_ASSEMBLY is
 			-- retrieve a local assembly's information.
 			-- If assembly has already been consumed then function will
 			-- return found matching CONSUMED_ASSEMBLY. 
@@ -178,20 +181,8 @@ feature -- Basic Oprtations
 		require
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
-		local
-			l_assembly: ASSEMBLY
 		do
-			if cache_reader.is_assembly_in_cache (a_path, False) then
-				Result := cache_writer.consumed_assembly_from_path (a_path)	
-			end
-			if Result = Void then
-				l_assembly := load_from_gac_or_path (a_path)
-				if l_assembly /= Void then
-					Result := cache_writer.consumed_assembly_from_path (l_assembly.location)		
-				end
-			end
-		ensure
-			non_void_result: Result /= Void
+			Result := cache_writer.consumed_assembly_from_path (a_path)	
 		end		
 
 feature {NONE} -- Basic Operations

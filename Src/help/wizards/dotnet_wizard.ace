@@ -7,8 +7,6 @@ root
 default
 	msil_assembly_compatibility ("None")
 	assertion (no)
-	arguments ("D:\Eiffel52\studio\wizards\new_projects\dotnet -callback c:\test.txt")
-	arguments (" ")
 	disabled_debug (yes)
 	disabled_debug ("dlg_dispatcher")
 	disabled_debug ("vision2_windows")
@@ -33,11 +31,11 @@ default
 	dead_code_removal (yes)
 	exception_trace (yes)
 	inlining (no)
+	arguments ("D:\Dev\Eiffel53\studio\wizards\new_projects\dotnet -callback E:\Delivery\studio\wizards\new_projects\dotnet\resources\template_callback_filename")
 
 
 cluster
 	root_cluster:		"$EIFFEL_SRC\help\wizards"
-
 
 	all dotnet_wizard (root_cluster):		"$\edotnet"
 

@@ -49,59 +49,60 @@ feature
 			cecil_basket: LINKED_LIST [STRING]
 		do
 			cecil_basket := cecil_rt_basket
-			cecil_basket.extend ("network.o"); cecil_basket.forth
-			cecil_basket.extend ("wmath.o"); cecil_basket.forth
-			cecil_basket.extend ("wmalloc.o"); cecil_basket.forth
-			cecil_basket.extend ("wgarcol.o"); cecil_basket.forth
-			cecil_basket.extend ("wlocal.o"); cecil_basket.forth
-			cecil_basket.extend ("wexcept.o"); cecil_basket.forth
-			cecil_basket.extend ("wstore.o"); cecil_basket.forth
-			cecil_basket.extend ("wretrieve.o"); cecil_basket.forth
-			cecil_basket.extend ("whash.o"); cecil_basket.forth
-			cecil_basket.extend ("wtraverse.o"); cecil_basket.forth
-			cecil_basket.extend ("whashin.o"); cecil_basket.forth
-			cecil_basket.extend ("wtools.o"); cecil_basket.forth
-			cecil_basket.extend ("winternal.o"); cecil_basket.forth
-			cecil_basket.extend ("wplug.o"); cecil_basket.forth
-			cecil_basket.extend ("wcopy.o"); cecil_basket.forth
-			cecil_basket.extend ("wequal.o"); cecil_basket.forth
-			cecil_basket.extend ("wlmalloc.o"); cecil_basket.forth
-			cecil_basket.extend ("wout.o"); cecil_basket.forth
-			cecil_basket.extend ("wtimer.o"); cecil_basket.forth
-			cecil_basket.extend ("wurgent.o"); cecil_basket.forth
-			cecil_basket.extend ("wsig.o"); cecil_basket.forth
-			cecil_basket.extend ("whector.o"); cecil_basket.forth
-			cecil_basket.extend ("wcecil.o"); cecil_basket.forth
-			cecil_basket.extend ("wbits.o"); cecil_basket.forth
-			cecil_basket.extend ("wfile.o"); cecil_basket.forth
-			cecil_basket.extend ("wdir.o"); cecil_basket.forth
-			cecil_basket.extend ("wstring.o"); cecil_basket.forth
-			cecil_basket.extend ("wmisc.o"); cecil_basket.forth
-			cecil_basket.extend ("wpattern.o"); cecil_basket.forth
-			cecil_basket.extend ("werror.o"); cecil_basket.forth
-			cecil_basket.extend ("wumain.o"); cecil_basket.forth
-			cecil_basket.extend ("wmemory.o"); cecil_basket.forth
-			cecil_basket.extend ("wargv.o"); cecil_basket.forth
-			cecil_basket.extend ("wboolstr.o"); cecil_basket.forth
-			cecil_basket.extend ("wsearch.o"); cecil_basket.forth
-			cecil_basket.extend ("wmain.o"); cecil_basket.forth
-			cecil_basket.extend ("debug.o"); cecil_basket.forth
-			cecil_basket.extend ("interp.o"); cecil_basket.forth
-			cecil_basket.extend ("woption.o"); cecil_basket.forth
-			cecil_basket.extend ("update.o"); cecil_basket.forth
-			cecil_basket.extend ("wbench.o"); cecil_basket.forth
-			cecil_basket.extend ("wrun_idr.o"); cecil_basket.forth
-			cecil_basket.extend ("compress.o"); cecil_basket.forth
-			cecil_basket.extend ("console.o"); cecil_basket.forth
-			cecil_basket.extend ("wpath_name.o"); cecil_basket.forth
-			cecil_basket.extend ("wobject_id.o"); cecil_basket.forth
-			cecil_basket.extend ("wdle.o"); cecil_basket.forth
-			cecil_basket.extend ("weif_threads.o"); cecil_basket.forth
-			cecil_basket.extend ("eif_rw_lock.o"); cecil_basket.forth
-			cecil_basket.extend ("wgen_conf.o"); cecil_basket.forth
-			cecil_basket.extend ("wrout_obj.o"); cecil_basket.forth
-			cecil_basket.extend ("eif_once.o"); cecil_basket.forth
-			cecil_basket.extend ("weif_project.o"); cecil_basket.forth
+			cecil_basket.extend ("network.o"); cecil_basket.finish
+			cecil_basket.extend ("wmath.o"); cecil_basket.finish
+			cecil_basket.extend ("wmalloc.o"); cecil_basket.finish
+			cecil_basket.extend ("wgarcol.o"); cecil_basket.finish
+			cecil_basket.extend ("wlocal.o"); cecil_basket.finish
+			cecil_basket.extend ("wexcept.o"); cecil_basket.finish
+			cecil_basket.extend ("wstore.o"); cecil_basket.finish
+			cecil_basket.extend ("wretrieve.o"); cecil_basket.finish
+			cecil_basket.extend ("whash.o"); cecil_basket.finish
+			cecil_basket.extend ("wtraverse.o"); cecil_basket.finish
+			cecil_basket.extend ("whashin.o"); cecil_basket.finish
+			cecil_basket.extend ("wtools.o"); cecil_basket.finish
+			cecil_basket.extend ("winternal.o"); cecil_basket.finish
+			cecil_basket.extend ("wplug.o"); cecil_basket.finish
+			cecil_basket.extend ("wcopy.o"); cecil_basket.finish
+			cecil_basket.extend ("wequal.o"); cecil_basket.finish
+			cecil_basket.extend ("wlmalloc.o"); cecil_basket.finish
+			cecil_basket.extend ("wout.o"); cecil_basket.finish
+			cecil_basket.extend ("wtimer.o"); cecil_basket.finish
+			cecil_basket.extend ("wurgent.o"); cecil_basket.finish
+			cecil_basket.extend ("wsig.o"); cecil_basket.finish
+			cecil_basket.extend ("whector.o"); cecil_basket.finish
+			cecil_basket.extend ("wcecil.o"); cecil_basket.finish
+			cecil_basket.extend ("wbits.o"); cecil_basket.finish
+			cecil_basket.extend ("wfile.o"); cecil_basket.finish
+			cecil_basket.extend ("wdir.o"); cecil_basket.finish
+			cecil_basket.extend ("wstring.o"); cecil_basket.finish
+			cecil_basket.extend ("wmisc.o"); cecil_basket.finish
+			cecil_basket.extend ("wpattern.o"); cecil_basket.finish
+			cecil_basket.extend ("werror.o"); cecil_basket.finish
+			cecil_basket.extend ("wumain.o"); cecil_basket.finish
+			cecil_basket.extend ("wmemory.o"); cecil_basket.finish
+			cecil_basket.extend ("wargv.o"); cecil_basket.finish
+			cecil_basket.extend ("wboolstr.o"); cecil_basket.finish
+			cecil_basket.extend ("wsearch.o"); cecil_basket.finish
+			cecil_basket.extend ("wmain.o"); cecil_basket.finish
+			cecil_basket.extend ("debug.o"); cecil_basket.finish
+			cecil_basket.extend ("interp.o"); cecil_basket.finish
+			cecil_basket.extend ("woption.o"); cecil_basket.finish
+			cecil_basket.extend ("update.o"); cecil_basket.finish
+			cecil_basket.extend ("wbench.o"); cecil_basket.finish
+			cecil_basket.extend ("wrun_idr.o"); cecil_basket.finish
+			cecil_basket.extend ("compress.o"); cecil_basket.finish
+			cecil_basket.extend ("console.o"); cecil_basket.finish
+			cecil_basket.extend ("wpath_name.o"); cecil_basket.finish
+			cecil_basket.extend ("wobject_id.o"); cecil_basket.finish
+			cecil_basket.extend ("wdle.o"); cecil_basket.finish
+			cecil_basket.extend ("weif_threads.o"); cecil_basket.finish
+			cecil_basket.extend ("eif_rw_lock.o"); cecil_basket.finish
+			cecil_basket.extend ("wgen_conf.o"); cecil_basket.finish
+			cecil_basket.extend ("wrout_obj.o"); cecil_basket.finish
+			cecil_basket.extend ("eif_once.o"); cecil_basket.finish
+			cecil_basket.extend ("weif_project.o"); cecil_basket.finish
+			cecil_basket.extend ("eif_special_table.o"); cecil_basket.finish
 		end;
 
 	add_eiffel_objects is
@@ -149,7 +150,7 @@ feature
 									file_name.append (".o");
 									string_list := object_baskets.item (packet_nb)
 									string_list.extend (file_name)
-									string_list.forth
+									string_list.finish
 
 										-- Descriptor file
 									!!file_name.make (16);
@@ -158,7 +159,7 @@ feature
 									file_name.append (".o");
 									string_list := descriptor_baskets.item (packet_nb)
 									string_list.extend (file_name)
-									string_list.forth
+									string_list.finish
 								end;
 
 							end;

@@ -431,6 +431,16 @@ feature -- Element change
 			end
 		end
 
+	set_item (an_item: WEL_TREE_VIEW_ITEM) is
+			-- Set some or all of a tree view item's attributes.
+		require
+			exists: exists
+			item_exists: an_item /= Void and then an_item.exists
+			valid_item: has_item (an_item)
+			has_items: count > 0
+		do
+			cwin_send_message (item, Tvm_setitem, 0, an_item.to_integer)
+		end
 
 feature -- Notifications
 

@@ -195,6 +195,8 @@ feature -- Access
 					%			ECOM_ULARGE_INTEGER;%N%
 					%			ECOM_UNKNOWN_INTERFACE;%N%
 					%			ECOM_AUTOMATION_INTERFACE;%N%
+					%			ECOM_STUB;%N%
+					%			ECOM_QUERIABLE;%N%
 					%		end;%N%N")
 
 		end
@@ -513,6 +515,9 @@ feature -- Basic operations
 					end
 				else
 					a_cluster.prune (';')
+					if a_cluster.substring_index ("end", 1) >= a_cluster.count - 3 then
+						a_cluster.head (a_cluster.substring_index ("end", 1) - 1)
+					end
 					a_cluster.insert (
 						"%N%T%Tvisible%N%
 						%%T%T%T" + shared_wizard_environment.eiffel_class_name + ";%N%

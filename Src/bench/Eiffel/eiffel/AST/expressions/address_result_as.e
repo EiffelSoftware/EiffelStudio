@@ -46,9 +46,9 @@ feature -- Type check, byte code and dead code removal
 			vrle3: VRLE3
 			veen2a: VEEN2A
 		do
-			if context.level2 then
+			if context.level2 or else context.feature_type.conform_to (void_type) then
 					-- It means that we are in a location where `Result' is not
-					-- acceptable (e.g. an invariant).
+					-- acceptable (e.g. an invariant, or within the body of a procedure).
 				create vrle3
 				context.init_error (vrle3)
 				Error_handler.insert_error (vrle3)

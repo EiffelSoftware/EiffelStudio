@@ -73,11 +73,20 @@ feature {NONE} -- Initialization
 				create arguments_internal.make (0)
 			end
 			create parameters.make (arguments_internal)
-			return_type := void_keyword
+			if return_type = Void then -- Might have been set by `make_with_return_type'
+				return_type := void_keyword				
+			end
 			set_feature_type (a_feature_type)
 			create {ARRAYED_LIST [PARAMETER_ENUMERATOR]} overloads_parameters.make (0)
 			create {ARRAYED_LIST [STRING]} overloads_return_types.make (0)
 			create {ARRAYED_LIST [STRING]} overloads_descriptions.make (0)
+		ensure
+			is_external_set: is_external = a_is_external
+			name_set: internal_name = a_name
+			feature_name_set: feature_name = a_name
+			file_name_set: file_name.is_equal (a_file_name.as_lower)
+			description_set: description = a_description
+			arguments_set: a_arguments /= Void implies arguments_internal = a_arguments
 		end
 		
 	make_with_return_type (a_name: like name; a_arguments: like arguments_internal; a_return_type: like return_type; a_feature_type: INTEGER; a_description: like description; a_file_name: like file_name; a_start_position: like start_position) is
@@ -93,6 +102,8 @@ feature {NONE} -- Initialization
 		do
 			make (a_name, a_arguments, a_feature_type, a_description, a_file_name, a_start_position) 
 			return_type := a_return_type
+		ensure
+			return_type_set: return_type = a_return_type
 		end
 		
 feature -- Access

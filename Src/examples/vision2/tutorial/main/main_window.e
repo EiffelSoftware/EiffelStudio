@@ -5,8 +5,8 @@ indexing
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-class 
+
+class
 	MAIN_WINDOW
 
 inherit
@@ -14,6 +14,8 @@ inherit
 		redefine
 			make_top_level
 		end
+
+	EV_COMMAND
 
 creation
 	make_top_level
@@ -29,8 +31,11 @@ feature --Access
 	sbar: EV_STATUS_BAR
 			-- A status bar
 
+	case_class: CASE_CLASS
+			-- A class to include all the classes in the system.
+
 feature -- Initialization
-	
+
 	make_top_level is
 			-- Create the main window.
 		local
@@ -42,10 +47,11 @@ feature -- Initialization
 			label: EV_LABEL
 			color: EV_COLOR
 			bc: EV_BASIC_COLORS
+			sitem: EV_STATUS_BAR_ITEM
 		do
 			{EV_WINDOW} Precursor
+			set_minimum_size (720, 420)
 			set_title ("Tutorial of EiffelVision")
-			set_minimum_width (300)
 			!! split.make (Current)
 
 			-- We set the menu
@@ -54,11 +60,17 @@ feature -- Initialization
 
 			-- We set the status bar
 			!! sbar.make (Current)
+			!! sitem.make_with_text (sbar, "Processing...")
+			sitem.set_width (150)
+			!! sitem.make_with_text (sbar, "Here is some information")
+			sitem.set_width (-1)
 
 			-- We set the tree
 			!! vbox.make (split)
+			split.set_position (200)
 			!! label.make_with_text (vbox, "Vision hierarchy")
 			label.set_expand (False)
+			label.set_center_alignment
 			!! tree.make (vbox)
 			tree.set_minimum_size (200, 250)
 			fill_tree
@@ -74,7 +86,6 @@ feature -- Initialization
 			notebook.append_page (item.class_page, "Class text")
 			item.destroy
 			notebook.set_minimum_size (250, 250)
-			set_minimum_size (600, 400)
 		end
 
 feature -- Features needed for the status bar of the window.
@@ -85,20 +96,19 @@ feature -- Menu Features
 	fill_menu is
 		local
 			menu: EV_MENU
-			submenu: EV_MENU_ITEM
 			menu_item: EV_MENU_ITEM
+			check_item: EV_CHECK_MENU_ITEM
 		do
 			!! menu.make_with_text (mbar, "Categories")
 			!! menu_item.make_with_text (menu, "Widgets")
 			!! menu_item.make_with_text (menu, "Events")
 			!! menu_item.make_with_text (menu, "Properties")
 
-			!! menu.make_with_text (mbar, "menu 2")
-			!! menu_item.make_with_text (menu, "item 1")
-			!! menu_item.make_with_text (menu, "item 2")
-			!! submenu.make_with_text (menu, "submenu")
-			!! menu_item.make_with_text (submenu, "item 1")
-			!! menu_item.make_with_text (submenu, "item 2")
+			!! menu.make_with_text (mbar, "View")
+			!! check_item.make_with_text (menu, "Demo")
+			!! check_item.make_with_text (menu, "Documentation")
+			!! check_item.make_with_text (menu, "Text")
+			!! check_item.make_with_text (menu, "Control Window")
 		end
 
 feature -- Tree features
@@ -122,7 +132,11 @@ feature -- Tree features
 			!! dialog.make_with_text (widgets, "common dialogs")
 			!! uncommon.make_with_text (widgets, "uncommon widgets")
 
-			-- The demo
+			-- The demos
+			!ACCELERATOR_ITEM! demo.make (kernel)
+			!CURSOR_ITEM! demo.make (kernel)
+			!TIMEOUT_ITEM! demo.make (kernel)
+
 			!PIXEL_ITEM! demo.make (figures)
 			!SEGMENT_ITEM! demo.make (figures)
 			!STRAIGHT_LINE_ITEM! demo.make (figures)
@@ -137,7 +151,8 @@ feature -- Tree features
 			!RECTANGLE_ITEM! demo.make (figures)
 			!SLICE_ITEM! demo.make (figures)
 			!TEXT_FIGURE_ITEM! demo.make (figures)
-			!PICTURE_ITEM! demo.make (figures)
+-- Do not work
+--			!PICTURE_ITEM! demo.make (figures)
 
 			!BUTTON_ITEM! demo.make (primitive)
 			!OPTION_ITEM! demo.make (primitive)
@@ -151,6 +166,8 @@ feature -- Tree features
 --	This example does not work on gtk yet
 			!DRAWING_ITEM! demo.make (primitive)
 			!RICH_ITEM! demo.make (primitive)
+			!TOOLBAR_ITEM! demo.make (primitive)
+			!PROGRESS_ITEM! demo.make (primitive)
 
 			!WINDOW_ITEM! demo.make (container)
 			!DIALOG_ITEM! demo.make (container)
@@ -165,14 +182,27 @@ feature -- Tree features
 
 --	This example does not work on gtk yet
 			!POPUP_ITEM! demo.make (uncommon)
+			!PIXMAP_ITEM! demo.make (uncommon)
 
 			!ERROR_ITEM! demo.make (dialog)
 			!QUESTION_ITEM! demo.make (dialog)
 			!INFORMATION_ITEM! demo.make (dialog)
 			!WARNING_ITEM! demo.make (dialog)
---	This example does not work on gtk yet
+--	These examples do not work on gtk yet
 			!OPEN_FILE_ITEM! demo.make (dialog)
 			!SAVE_FILE_ITEM! demo.make (dialog)
+			!DIRECTORY_ITEM! demo.make (dialog)
+			!COLOR_SELECTION_ITEM! demo.make (dialog)
+			!ACCELERATOR_SELECTION_ITEM! demo.make (dialog)
+		end
+
+feature -- Temp
+
+	execute (arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA) is
+			-- Show and hide the window
+		do
+--			hide
+--			show
 		end
 
 end -- class MAIN_WINDOW

@@ -25,6 +25,7 @@ feature -- Basic operations
 			-- Generate client feature
 		local
 			ccom_func_name: STRING
+			c_type: STRING
 		do
 			func_desc := a_descriptor
 
@@ -57,7 +58,14 @@ feature -- Basic operations
 			feature_writer.set_body (client_body (ccom_func_name))
 
 			external_feature_writer.set_external
-			external_feature_writer.set_body (external_client_body (a_component_descriptor.c_type_name, a_component_descriptor.c_header_file_name))
+
+			create c_type.make (50)
+			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.empty then
+				c_type.append (a_component_descriptor.namespace)
+				c_type.append ("::")
+			end
+			c_type.append (a_component_descriptor.c_type_name)
+			external_feature_writer.set_body (external_client_body (c_type, a_component_descriptor.c_header_file_name))
 		end
 
 feature {NONE} -- Implementation
@@ -211,7 +219,6 @@ feature {NONE} -- Implementation
 		local
  			arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
 			tmp_string: STRING
-			data_type: INTEGER
 			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
@@ -279,7 +286,6 @@ feature {NONE} -- Implementation
 			non_void_name: func_name /= Void
 			valid_name: not func_name.empty
 		local
-			data_type: INTEGER
  			arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
 			tmp_string, local_variable: STRING
 			visitor: WIZARD_DATA_TYPE_VISITOR

@@ -95,16 +95,6 @@
 				<param name="Name" value="Guided tour">
 				<param name="Local" value="dotnet\reflection_interface\docs\guided_tour\index.html">
 				</OBJECT>
-			<UL>
-				<LI> <OBJECT type="text/sitemap">
-					<param name="Name" value="First step: Imported a signed assembly to the Eiffel assembly cache">
-					<param name="Local" value="dotnet\reflection_interface\docs\guided_tour\01_import_a_signed_assembly_to_the_EAC\index.html">
-					</OBJECT>
-				<LI> <OBJECT type="text/sitemap">
-					<param name="Name" value="Second step: Editing an imported assembly">
-					<param name="Local" value="dotnet\reflection_interface\docs\guided_tour\10_edit_an_imported_assembly\index.html">
-					</OBJECT>
-			</UL>
 			<LI> <OBJECT type="text/sitemap">
 				<param name="Name" value="How To's">
 				<param name="Local" value="dotnet\reflection_interface\docs\how_to_s\index.html">

@@ -52,8 +52,7 @@ void E_IType_Info::ccom_get_containing_type_lib ()
 	hr = pTypeInfo->GetContainingTypeLib (&pContainingTypeLib, (unsigned int *)&index);
 	if (hr != S_OK)
 	{
-		//Formatter  f;
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		com_eraise (f.c_format_message (hr), EN_PROG);
 	}
 };
 //---------------------------------------------------------------------
@@ -72,8 +71,7 @@ EIF_POINTER E_IType_Info::ccom_address_of_member (EIF_INTEGER memid, EIF_INTEGER
 	hr = pTypeInfo->AddressOfMember ((MEMBERID) memid, (INVOKEKIND) invkind, &Result);
 	if (hr != S_OK)
 	{
-		//Formatter  f;
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		com_eraise (f.c_format_message (hr), EN_PROG);
 	}
 	return (EIF_POINTER) Result;
 };
@@ -92,8 +90,7 @@ EIF_POINTER E_IType_Info::ccom_create_instance (EIF_POINTER outer, EIF_POINTER r
 	hr = pTypeInfo->CreateInstance ((IUnknown *) outer, (REFIID) refiid, &Result);
 	if (hr != S_OK)
 	{
-		//Formatter  f;
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		com_eraise (f.c_format_message (hr), EN_PROG);
 	}
 	return (EIF_POINTER) Result;	
 };
@@ -135,8 +132,7 @@ EIF_REFERENCE E_IType_Info::ccom_get_dll_entry (EIF_INTEGER memid, EIF_INTEGER i
 				&bstr_dll_name, &bstr_entry_point, &ordinal);
 	if (hr != S_OK)
 	{
-		//Formatter  f;
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		com_eraise (f.c_format_message (hr), EN_PROG);
 	}
 
 	dll_name = bstr_to_eif_obj (bstr_dll_name);
@@ -183,8 +179,7 @@ EIF_REFERENCE E_IType_Info::ccom_get_documentation (EIF_INTEGER memid)
 			&HelpContext, &BstrHelpFile);
 	if (hr != S_OK)
 	{
-		//Formatter  f;
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		com_eraise (f.c_format_message (hr), EN_PROG);
 	}
 
 	name = bstr_to_eif_obj (BstrName);
@@ -215,13 +210,12 @@ FUNCDESC * E_IType_Info::ccom_get_func_desc (EIF_INTEGER an_index)
 //Retieves FUNCDESC structure with information about specified function.
 {
 	HRESULT hr;
-	FUNCDESC * p_funcdesc = 0;
+	FUNCDESC * p_funcdesc = NULL;
 
 	hr = pTypeInfo->GetFuncDesc (an_index, &p_funcdesc);
 	if (hr != S_OK)
 	{
-		//Formatter  f;
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		com_eraise (f.c_format_message (hr), EN_PROG);
 	}
 	save_func_desc (p_funcdesc);
 	return p_funcdesc;
@@ -246,8 +240,7 @@ EIF_REFERENCE E_IType_Info::ccom_get_ids_of_names (EIF_POINTER names, EIF_INTEGE
 	hr = pTypeInfo->GetIDsOfNames ((OLECHAR **)names, count, p_memid);
 	if (hr != S_OK)
 	{
-		//Formatter  f;
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		com_eraise (f.c_format_message (hr), EN_PROG);
 	}
 
 	eif_array_id = eif_type_id ("ARRAY[INTEGER]");
@@ -276,8 +269,7 @@ EIF_INTEGER E_IType_Info::ccom_get_impl_type_flags (EIF_INTEGER an_index)
 	hr = pTypeInfo->GetImplTypeFlags (an_index, (int *)&Result);
 	if (hr != S_OK)
 	{
-		//Formatter  f;
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		com_eraise (f.c_format_message (hr), EN_PROG);
 	}
 	return Result;
 };
@@ -294,8 +286,7 @@ EIF_REFERENCE E_IType_Info::ccom_get_mops (EIF_INTEGER memid)
 	hr = pTypeInfo->GetMops ((MEMBERID)memid, &mops);
 	if (hr != S_OK)
 	{
-		//Formatter  f;
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		com_eraise (f.c_format_message (hr), EN_PROG);
 	}
 	Result = bstr_to_eif_obj (mops);
 	return eif_wean (Result);
@@ -357,8 +348,7 @@ ITypeInfo * E_IType_Info::ccom_get_ref_type_info (EIF_INTEGER handle)
 	hr = pTypeInfo->GetRefTypeInfo ((HREFTYPE)handle, &pTInfo);
 	if (hr != S_OK)
 	{
-		//Formatter  f;
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		com_eraise (f.c_format_message (hr), EN_PROG);
 	}
 	return pTInfo;
 };
@@ -379,8 +369,7 @@ EIF_INTEGER E_IType_Info::ccom_get_ref_type_of_impl_type (EIF_INTEGER an_index)
 	hr = pTypeInfo->GetRefTypeOfImplType (an_index, &ref_type);
 	if (hr != S_OK)
 	{
-		//Formatter  f;
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		com_eraise (f.c_format_message (hr), EN_PROG);
 	}
 	return (EIF_INTEGER)ref_type;
 };
@@ -395,8 +384,7 @@ TYPEATTR * E_IType_Info::ccom_get_type_attr ()
 	hr = pTypeInfo->GetTypeAttr (&pTypeAttr);
 	if (hr != S_OK)
 	{
-		//Formatter  f;
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		com_eraise (f.c_format_message (hr), EN_PROG);
 	}
 	return pTypeAttr;
 };
@@ -406,14 +394,13 @@ ITypeComp * E_IType_Info::ccom_get_type_comp ()
 
 // Retrieves ITypeComp interface for type description.
 {
-	HRESULT hr;
-	ITypeComp * p_type_comp;
+	HRESULT hr = 0;
+	ITypeComp * p_type_comp = NULL;
 
 	hr = pTypeInfo->GetTypeComp (&p_type_comp);
 	if (hr != S_OK)
 	{
-		//Formatter  f;
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		com_eraise (f.c_format_message (hr), EN_PROG);
 	}
 	return p_type_comp;
 };
@@ -429,8 +416,7 @@ VARDESC * E_IType_Info::ccom_get_var_desc (EIF_INTEGER an_index)
 	hr = pTypeInfo->GetVarDesc (an_index, &p_var_desc);
 	if (hr != S_OK)
 	{
-		//Formatter  f;
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		com_eraise (f.c_format_message (hr), EN_PROG);
 	}
 	save_var_desc (p_var_desc);
 	return p_var_desc;
@@ -463,8 +449,7 @@ void E_IType_Info::ccom_invoke (EIF_POINTER p_instance, EIF_INTEGER memid,
 							(unsigned int *) &arg_err);
 	if (hr != S_OK)
 	{
-		//Formatter  f;
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		com_eraise (f.c_format_message (hr), EN_PROG);
 	}
 };
 //-----------------------------------------------------------------------------
@@ -473,7 +458,14 @@ void E_IType_Info::ccom_release_func_desc (FUNCDESC * p_func_desc)
 
 // Releases FUNCDESC structure previously returned by `ccom_get_func_desc'
 {
-	pTypeInfo->ReleaseFuncDesc ((FUNCDESC *)p_func_desc);
+	if ((p_func_desc->funckind == FUNC_VIRTUAL) ||
+		(p_func_desc->funckind == FUNC_PUREVIRTUAL) ||
+		(p_func_desc->funckind == FUNC_NONVIRTUAL) ||
+		(p_func_desc->funckind == FUNC_STATIC) ||
+		(p_func_desc->funckind == FUNC_DISPATCH))
+	{
+		pTypeInfo->ReleaseFuncDesc ((FUNCDESC *)p_func_desc);
+	}
 };
 //-----------------------------------------------------------------------------
 
@@ -538,10 +530,16 @@ void E_IType_Info::release_func_descs ()
 // Release all FUNCDESC structures
 {
 	FUNCDESCLISTITEM * tmp = 0;
+	int i = 0;
 
 	while (FuncDescList.head != NULL)
 	{
-		ccom_release_func_desc (FuncDescList.head->item);
+		if (FuncDescList.head->item != NULL) 
+		{
+			i = i + 1;
+			ccom_release_func_desc (FuncDescList.head->item);
+			FuncDescList.head->item = NULL;
+		}
 		tmp = FuncDescList.head;
 		FuncDescList.head = FuncDescList.head->next;
 		free (tmp);
@@ -558,7 +556,11 @@ void E_IType_Info::release_var_descs ()
 
 	while (VarDescList.head != NULL)
 	{
-		ccom_release_var_desc (VarDescList.head->item);
+		if (VarDescList.head->item != NULL)
+		{
+			ccom_release_var_desc (VarDescList.head->item);
+			VarDescList.head->item = NULL;
+		}
 		tmp = VarDescList.head;
 		VarDescList.head = VarDescList.head->next;
 		free (tmp);

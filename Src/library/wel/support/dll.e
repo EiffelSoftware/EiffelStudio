@@ -27,8 +27,6 @@ feature {NONE} -- Initialization
 		do
 			a := dll_name.to_c
 			item := cwin_load_library ($a)
-		ensure
-			exists: exists
 		end
 
 feature -- Access

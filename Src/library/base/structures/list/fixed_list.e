@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		"Lists with fixed numbers of items, implemented by arrays";
+		"Lists with fixed maximum numbers of items, implemented by arrays";
 
 	status: "See notice at end of class";
 	names: fixed, sequence;
@@ -32,7 +32,11 @@ class FIXED_LIST [G] inherit
 			move,
 			start,
 			finish,
-			go_i_th
+			go_i_th,
+			put,
+			remove
+		select
+			extendible
 		end;
 
 	ARRAY [G]
@@ -41,7 +45,8 @@ class FIXED_LIST [G] inherit
 			put as put_i_th,
 			item as i_th,
 			force as force_i_th,
-			bag_put as put
+			bag_put as put,
+			extendible as array_extendible
 		export
 			{NONE}
 				all;
@@ -59,9 +64,9 @@ class FIXED_LIST [G] inherit
 			{FIXED_LIST}
 				array_make
 		undefine
-			linear_representation, put, resizable
+			count, linear_representation, put, resizable
 		redefine
-			extendible
+			full, extend, prunable
 		end;
 
 	FIXED [G]
@@ -82,7 +87,7 @@ feature -- Initialization
 			array_make (1, n);
 		ensure
 			is_before: before;
-			new_count: count = n
+			new_count: count = 0
 		end;
 
 feature -- Access
@@ -114,9 +119,27 @@ feature -- Access
 			!ARRAYED_LIST_CURSOR! Result.make (index)
 		end;
 
+	count: INTEGER
+
 feature -- Status report
 
-	extendible: BOOLEAN is false;
+	extendible: BOOLEAN is
+			-- May new items be added?
+		do
+			Result := (count < capacity)
+		end
+
+	prunable: BOOLEAN is
+			-- May items be removed?
+		do
+			Result := not empty
+		end
+
+	full: BOOLEAN is
+			-- Is the list full?
+		do
+			Result := count = capacity
+		end
 
 	valid_cursor (p: CURSOR): BOOLEAN is
 			-- Is `p' a valid cursor?
@@ -186,10 +209,51 @@ feature -- Cursor movement
 
 feature -- Element change
 
+	put (v: like first) is
+			-- Replace current item by `v'.
+			-- (Synonym for `replace')
+		require else
+			true
+		do
+			replace (v)
+		end
+
 	replace (v: like first) is
 			-- Replace current item by `v'.
 		do
 			put_i_th (v, index)
+		end;
+
+	extend (v: like item) is
+			-- Add `v' to end.
+			-- Move index to the current item.
+		do
+			count := count + 1
+			index := count
+			force_i_th (v, count)
+		end
+
+	remove is
+			-- Remove current item.
+			-- Move cursor to right neighbor
+			-- (or `after' if no right neighbor)
+		local
+			i,j: INTEGER;
+			default_value: G;
+		do
+			if not off then
+				from
+					i := index - 1;
+				until
+					i >= count - 1
+				loop
+					j := i + 1;
+					area.put (area.item (j), i);
+					i := j;
+				end;
+				put_i_th (default_value, count);
+				count := count - 1
+			end
 		end;
 
 feature -- Transformation
@@ -228,13 +292,12 @@ feature -- Duplication
 			index := pos;
 		end;
 
-feature {NONE} 	-- Inapplicable
+feature {NONE} -- Implementation
 
 	force (v: like item) is
+			-- Not used since extend is not always applicable.
 		do
-			-- Inapplicable: requires extendible
 		end;
-
 
 end -- class FIXED_LIST
 

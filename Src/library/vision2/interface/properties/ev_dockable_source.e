@@ -1,9 +1,13 @@
 indexing
 	description: "[
-		Objects that represent the source of a dockable transport. The dockable
-		mechanism allows a component to be dragged by the user to an EV_DOCKABLE_TARGET
+		Objects that represent source of a dockable transport. The dockable
+		mechanism allows a component to be dragged by a user to an EV_DOCKABLE_TARGET
 		that has been enabled to receive transport.
+		
+		`drop_started_actions' are fired immediately after a transport begins from `Current'.
+		It is not possible to override the transport from within these actions.
 		]"
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -25,7 +29,8 @@ feature -- Status report
 
 	is_dockable: BOOLEAN is		
 			-- Is `Current' dockable?
-			-- If `True', then may be dragged. 
+			-- If `True', then `Current' may be dragged
+			-- from its current parent. 
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -42,16 +47,20 @@ feature -- Status report
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.real_source
+		ensure
+			bridge_ok: Result = implementation.real_source
 		end
 		
 	is_external_docking_enabled: BOOLEAN is
 			-- Is `Current' able to be docked into an EV_DOCKABLE_DIALOG
 			-- When there is no valid EV_DRAGABLE_TARGET upon completion
-			-- of the transport?
+			-- of transport?
 		require
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.is_external_docking_enabled
+		ensure
+			bridge_ok: Result = implementation.is_external_docking_enabled
 		end
 
 feature -- Status setting
@@ -100,9 +109,10 @@ feature -- Status setting
 		end
 		
 	enable_external_docking is
-			-- Allow `Current' to be docked into an EV_DOCKABLE_DIALOG
+			-- Assign `True' to `is_external_docking_enabled'.
+			-- Allows `Current' to be docked into an EV_DOCKABLE_DIALOG
 			-- When there is no valid EV_DRAGABLE_TARGET upon completion
-			-- of the transport.
+			-- of transport.
 		require
 			not_destroyed: not is_destroyed
 			is_dockable: is_dockable
@@ -113,9 +123,10 @@ feature -- Status setting
 		end
 		
 	disable_external_docking is
+			-- Assign `False' to `is_external_docking_enabled'.
 			-- Forbid `Current' to be docked into an EV_DOCKABLE_DIALOG
 			-- When there is no valid EV_DRAGABLE_TARGET upon completion
-			-- of the transport.
+			-- of transport.
 		require
 			not_destroyed: not is_destroyed
 			is_dockable: is_dockable
@@ -128,7 +139,8 @@ feature -- Status setting
 feature -- Contract support
 
 	source_has_current_recursive (source: EV_DOCKABLE_SOURCE): BOOLEAN is
-			-- Does `source' recursively contain `Current'.
+			-- Does `source' recursively contain `Current'?
+			-- As seen by parenting structure.
 		require
 			not_destroyed: not is_destroyed
 			source_not_void: source /= Void
@@ -150,10 +162,36 @@ feature -- Contract support
 				Result := container.has_recursive (widget)
 			end
 		end
+		
+	parent_of_source_allows_docking: BOOLEAN is
+			-- Does parent of source to be transported
+			-- allow current to be dragged out? (See `real_source')
+			-- Not all Vision2 containers are currently supported by this
+			-- mechanism, only descendents of EV_DOCKABLE_TARGET
+			-- are supported.
+		local
+			widget: EV_WIDGET
+			dockable_target: EV_DOCKABLE_TARGET
+		do
+			if real_source /= Void then
+				widget ?= real_source
+			else
+				widget ?= Current
+			end
+			if widget /= Void and then widget.parent /= Void then
+				dockable_target ?= widget.parent
+				if dockable_target /= Void then
+					Result := True
+				end
+			end
+		end
 
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_DOCKABLE_SOURCE_I
+	
+invariant
+	parent_permits_docking: is_dockable implies parent_of_source_allows_docking
 
 end -- class EV_DOCKABLE_SOURCE
 

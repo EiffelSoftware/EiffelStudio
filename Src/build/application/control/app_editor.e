@@ -43,17 +43,20 @@ feature {NONE} -- Initialization
 
 			create vbox.make (Current)
 			create toolbar.make (vbox)
-			create split_area.make (vbox)
 
+			create split_area.make (vbox)
 			create vbox.make (split_area)
+			create drawing_sw.make (split_area)
+			split_area.set_position (Resources.app_list_width)
+
+				--| lists box
 			create state_label.make_with_text (vbox, Widget_names.state_name)
 			state_label.set_expand (False)
 			create state_list.make (vbox, Current)
 			create transition_label.make_with_text (vbox, Widget_names.transition_name)
 			transition_label.set_expand (False)
 			create transition_list.make (vbox)
-
-			create drawing_sw.make (split_area)
+				--| drawing area
 			create drawing_area.make (drawing_sw)
 
 			set_values
@@ -66,11 +69,12 @@ feature {NONE} -- Initialization
 			create lines.make (drawing_area)
 			create figures.make (drawing_area)
 
---			initialize_window_attributes
+				--| initialize window attributes
+			set_x_y (Resources.app_ed_x, Resources.app_ed_y)
+			set_size (Resources.app_ed_width, Resources.app_ed_height)
 			transition_list.set_single_selection
 			state_list.set_single_selection
 			drawing_area.set_background_color (Resources.app_dr_area_color)
-			drawing_area.set_size (Resources.app_dr_area_width, Resources.app_dr_area_height)
 			set_default_selected
 		end
 
@@ -268,11 +272,6 @@ feature -- Drawing area
 			Result := w >= drawing_sw.width and then h >= drawing_sw.height
 		end
 
-	set_drawing_area_size (w, h: INTEGER) is
-		do
-			drawing_area.set_size (w, h)
-		end
-
 	set_initial_state (s: BUILD_STATE) is
 			-- Set `a_circle' to init_state_circle and update
 			-- initial_state of the transition graph.
@@ -432,13 +431,17 @@ feature {STATE_LINE} -- List of labels for a transition
 			if source /= Void and then dest /= Void then
 				tran_list := transitions.selected_labels (source, dest)
 				create popup_m.make (Current)
-				from
-					tran_list.start
-				until
-					tran_list.after
-				loop
-					create elmt.make_with_text (popup_m, tran_list.item)
-					tran_list.forth
+				if tran_list.empty then
+					create elmt.make_with_text (popup_m, "No transition")
+				else
+					from
+						tran_list.start
+					until
+						tran_list.after
+					loop
+						create elmt.make_with_text (popup_m, tran_list.item)
+						tran_list.forth
+					end
 				end
 					--XX Use the position of the mouse (EV_SCREEN).
 				popup_m.show_at_position (100, 100)

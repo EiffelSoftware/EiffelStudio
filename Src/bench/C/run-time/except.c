@@ -1,11 +1,11 @@
 /*
 
- ######  #    #   ####   ######  #####    #####           ####
- #        #  #   #    #  #       #    #     #            #    #
- #####     ##    #       #####   #    #     #            #
- #         ##    #       #       #####      #     ###    #
- #        #  #   #    #  #       #          #     ###    #    #
- ######  #    #   ####   ######  #          #     ###     ####
+ ######  #	#   ####   ######  #####	#####		   ####
+ #		#  #   #	#  #	   #	#	 #			#	#
+ #####	 ##	#	   #####   #	#	 #			#
+ #		 ##	#	   #	   #####	  #	 ###	#
+ #		#  #   #	#  #	   #		  #	 ###	#	#
+ ######  #	#   ####   ######  #		  #	 ###	 ####
 
 	Exception handling routines.
 
@@ -106,10 +106,10 @@ rt_public struct eif_except exdata = {
 	0,				/* ex_orig */
 	(char *) 0,		/* ex_tag */
 	(char *) 0,		/* ex_otag */
-    (char *) 0,     /* ex_rt */
-    (char *) 0,     /* ex_ort */
-    0,              /* ex_class */
-    0,              /* ex_oclass */
+	(char *) 0,	 /* ex_rt */
+	(char *) 0,	 /* ex_ort */
+	0,			  /* ex_class */
+	0,			  /* ex_oclass */
 };
 
 #ifdef WORKBENCH
@@ -150,7 +150,7 @@ rt_private void exception(int how);		/* Debugger hook */
 rt_private print_history_table = ~0;   /* Enable/disable printing of hist. table */
 
 /* Eiffel interface */
-rt_private char eedefined(long ex);          /* Is exception code valid? */
+rt_private char eedefined(long ex);		  /* Is exception code valid? */
 
 /* Stack handling routines */
 rt_public void expop(register1 struct xstack *stk);				/* Pops an execution vector off */
@@ -175,7 +175,12 @@ rt_private void dump_stack(void (*append_trace)(char *));			/* Dump the Eiffel t
 rt_private void ds_stderr(char *line);			/* Wrapper to dump stack to stderr */
 rt_private void ds_string(char *line);			/* Wrapper to dump stack to a string */
 rt_public EIF_REFERENCE stack_trace_string(void);	/* Exception trace string */
-rt_private char *extend_trace_string(char *line);	/* Extend exception trace string */
+rt_private void extend_trace_string(char *line);	/* Extend exception trace string */
+rt_public SMART_STRING ex_string = {	/* Container of the exception trace */
+	NULL,	/* No area */
+	0L,		/* No byte used yet */
+	0L		/* Null length */
+};
 
 /* Pre-defined exception tags (29 chars max please, otherwise truncated).
  * A final point is added at the end. Here is a 29 chars string template:
@@ -765,7 +770,7 @@ rt_public void eraise(char *tag, long num)
 	 */
 	
 	struct ex_vect *trace;		/* The stack trace entry */
-	struct ex_vect *vector;     /* The stack trace entry */
+	struct ex_vect *vector;	 /* The stack trace entry */
 	char *tg, *obj;
 	int type;
 
@@ -834,41 +839,41 @@ rt_public void eraise(char *tag, long num)
 		echtg = tag;
 	}
 
-    vector = extop(&eif_stack);     /* Vector at top of stack */
-    if (vector == (struct ex_vect *) 0) {
-        echrt = (char *) 0;     /* Null routine name */
-        echclass = 0;          /* Null class name */
-    } else {
-        if (in_assertion) {
-            tg = vector->ex_name;
-            type = vector->ex_type;
-            if (type == EX_CINV)
-                obj = vector->ex_oid;
-            expop(&eif_stack);
-            vector = extop(&eif_stack);
-            if (vector == (struct ex_vect *) 0) {   /* Stack is full now */
-                echrt = (char *) 0;     /* Null routine name */
-                echclass = 0;          /* Null class name */
-            } else {
-                echrt = vector->ex_rout;    /* Record routine name */
-                echclass = vector->ex_orig; /* Record class name */
-                vector = exget(&eif_stack);
-                if (vector == (struct ex_vect *) 0) {   /* Stack is full now */
-                    echmem |= MEM_FULL;                 /* Signal it */
-                    if (num != EN_OMEM)                 /* If not already there */
-                        enomem();                       /* Raise an out of memory */
-                } else {
-                    vector->ex_type = type;     /* Restore type */
-                    vector->ex_name = tg;       /* Restore tag */
-                    if (type == EX_CINV)
-                        vector->ex_oid = obj;   /* Restore object id if in invariant */
-                }
-            }
-        } else {
-            echrt = vector->ex_rout;    /* Record routine name */
-            echclass = vector->ex_orig; /* Record class name */
-        }
-    }
+	vector = extop(&eif_stack);	 /* Vector at top of stack */
+	if (vector == (struct ex_vect *) 0) {
+		echrt = (char *) 0;	 /* Null routine name */
+		echclass = 0;		  /* Null class name */
+	} else {
+		if (in_assertion) {
+			tg = vector->ex_name;
+			type = vector->ex_type;
+			if (type == EX_CINV)
+				obj = vector->ex_oid;
+			expop(&eif_stack);
+			vector = extop(&eif_stack);
+			if (vector == (struct ex_vect *) 0) {   /* Stack is full now */
+				echrt = (char *) 0;	 /* Null routine name */
+				echclass = 0;		  /* Null class name */
+			} else {
+				echrt = vector->ex_rout;	/* Record routine name */
+				echclass = vector->ex_orig; /* Record class name */
+				vector = exget(&eif_stack);
+				if (vector == (struct ex_vect *) 0) {   /* Stack is full now */
+					echmem |= MEM_FULL;				 /* Signal it */
+					if (num != EN_OMEM)				 /* If not already there */
+						enomem();					   /* Raise an out of memory */
+				} else {
+					vector->ex_type = type;	 /* Restore type */
+					vector->ex_name = tg;	   /* Restore tag */
+					if (type == EX_CINV)
+						vector->ex_oid = obj;   /* Restore object id if in invariant */
+				}
+			}
+		} else {
+			echrt = vector->ex_rout;	/* Record routine name */
+			echclass = vector->ex_orig; /* Record class name */
+		}
+	}
 
 	trace->ex_where = echrt;		/* Save routine in trace for exorig */
 	trace->ex_from = echclass;			/* Save class in trace for exorig */
@@ -902,8 +907,8 @@ rt_public void eviol(void)
 	
 	struct ex_vect *vector;			/* The stack vector entry at the top */
 	int code;						/* Exception code */
-	int type;                   /* Exception type */
-	char *obj;                  /* Object */
+	int type;				   /* Exception type */
+	char *obj;				  /* Object */
 
 	/* Derive exception code from the information held in the top level vector
 	 * in the Eiffel call stack. If the exception is ignored, pop the offending
@@ -919,45 +924,45 @@ rt_public void eviol(void)
 	}
 
 
-    /* `eviol' will only be called after `exasrt'. Thus, only the tag
-     * and type will be saved temporarily whilst retrieving
-     * the routine and class name.
-     *
+	/* `eviol' will only be called after `exasrt'. Thus, only the tag
+	 * and type will be saved temporarily whilst retrieving
+	 * the routine and class name.
+	 *
 	 * Set up 'echtg' to be the tag of the current exception, if one can be
 	 * computed, otherwise it is a null pointer. This will be used by the
 	 * debugger in its stop notification request.
 	 */
 
-	SIGBLOCK;           /* Critical section, protected against signals */
+	SIGBLOCK;		   /* Critical section, protected against signals */
 
 	echval = code;				/* Keep track of the last exception code */
 	echtg = vector->ex_name;	/* Record exception tag, if any */
-    type = vector->ex_type;     /* Record exception type */
-    if (type == EX_CINV)        /* if in invariant */
-        obj = vector->ex_oid;   /*      record object */
+	type = vector->ex_type;	 /* Record exception type */
+	if (type == EX_CINV)		/* if in invariant */
+		obj = vector->ex_oid;   /*	  record object */
 
-    expop(&eif_stack);          /* Remove vector */
+	expop(&eif_stack);		  /* Remove vector */
 
-    vector = extop(&eif_stack); /* Execution vector at top of stack */
-    if (vector == (struct ex_vect *) 0) {
-        echrt = (char *) 0;     /* Null routine name */
-        echclass =  0;          /* Null class name */
-    } else {
-        echrt = vector->ex_rout;    /* Record routine name */
-        echclass = vector->ex_orig; /* Record class name */
-    }
+	vector = extop(&eif_stack); /* Execution vector at top of stack */
+	if (vector == (struct ex_vect *) 0) {
+		echrt = (char *) 0;	 /* Null routine name */
+		echclass =  0;		  /* Null class name */
+	} else {
+		echrt = vector->ex_rout;	/* Record routine name */
+		echclass = vector->ex_orig; /* Record class name */
+	}
 
-    vector = exget(&eif_stack);  /* Get brand new vector on the Eiffel stack */
-    if (vector == (struct ex_vect *) 0) {   /* No more memory */
-        echmem |= MEM_FULL;
-        xraise(EN_MEM);
-        return;                             /* Critical exception */
-    }
+	vector = exget(&eif_stack);  /* Get brand new vector on the Eiffel stack */
+	if (vector == (struct ex_vect *) 0) {   /* No more memory */
+		echmem |= MEM_FULL;
+		xraise(EN_MEM);
+		return;							 /* Critical exception */
+	}
 
-    vector->ex_type = type;     /* Restore type */
-    vector->ex_name = echtg;    /* Restore tag */
-    if (type == EX_CINV)
-        vector->ex_oid = obj;   /* Restore object id if in invariant */
+	vector->ex_type = type;	 /* Restore type */
+	vector->ex_name = echtg;	/* Restore tag */
+	if (type == EX_CINV)
+		vector->ex_oid = obj;   /* Restore object id if in invariant */
 
 	/* Maintain the notion of original exception at this level, despite any
 	 * extra implicit raises, by recomputing the code each time. Due to the
@@ -1107,8 +1112,8 @@ rt_private char *backtrack(void)
 			 */
 			echval = EN_RESC;			/* Exception in rescue clause */
 			echtg = (char *) 0;			/* No associated tag */
-			echrt = top->ex_rout;       /* Associated routine */
-			echclass = top->ex_orig;    /* Associated class */
+			echrt = top->ex_rout;	   /* Associated routine */
+			echclass = top->ex_orig;	/* Associated class */
 			break;
 		case EX_HDLR:					/* Signal handler routine failed */
 			/* Push an "end of level" pseudo-record on the exception trace stack
@@ -1331,21 +1336,21 @@ rt_private void exorig(void)
 		if (eif_trace.st_hd == (struct stxchunk *) 0) {		/* No stack yet */
 			echorg = echval;				/* Original is current exception */
 			echotag = echtg;				/* As well as original tag */
-			echort = echrt;                 /* As well as original routine */
-			echoclass = echclass;           /* As well as original class */
+			echort = echrt;				 /* As well as original routine */
+			echoclass = echclass;		   /* As well as original class */
 			return;
 		}
 		top = eif_trace.st_hd->sk_arena;	/* This is the bottom */
 		if (top == eif_trace.st_top) {		/* Empty stack (yes, can happen) */
 			echorg = echval;				/* Original is current exception */
 			echotag = echtg;				/* As well as original tag */
-			echort = echrt;                 /* As well as original routine */
-			echoclass = echclass;           /* As well as original class */
+			echort = echrt;				 /* As well as original routine */
+			echoclass = echclass;		   /* As well as original class */
 		} else {
 			echorg = top->ex_type;			/* Get original exception code */
 			echotag = extag(top);			/* And recompute tag */
-			echort = echrt;                 /* As well as original routine */
-			echoclass = echclass;           /* As well as original class */
+			echort = echrt;				 /* As well as original routine */
+			echoclass = echclass;		   /* As well as original class */
 		}
 		return;
 	}
@@ -1369,7 +1374,7 @@ rt_private void exorig(void)
 			if (poped == 0) {			/* First one, nothing at this level */
 				echorg = echval;		/* Current exception is original */
 				echotag = echtg;		/* (implicitely raised from eviol) */
-				echort = echrt;         /* As well as original routine */
+				echort = echrt;		 /* As well as original routine */
 				echoclass = echclass;   /* As well as original class */
 				break;
 			}
@@ -1377,7 +1382,7 @@ rt_private void exorig(void)
 			top = extop(&eif_trace);	/* Fetch record */
 			echorg = top->ex_type;		/* Original exception code */
 			echotag = extag(top);		/* Recompute exception tag */
-			echort = echrt;         	/* As well as original routine */
+			echort = echrt;		 	/* As well as original routine */
 			echoclass = echclass;   	/* As well as original class */
 			break;
 		}
@@ -1395,15 +1400,15 @@ rt_private void exorig(void)
 	else if (echorg == 0) {
 		echorg = EN_OMEM;				/* Default exception */
 		echotag = (char *) 0;			/* No known tag */
-		echort = (char *) 0;            /* No known routine */
-		echoclass = 0;                  /* No known class */
+		echort = (char *) 0;			/* No known routine */
+		echoclass = 0;				  /* No known class */
 	}
 #else
 	if (echorg == 0) {
 		echorg = EN_OMEM;				/* Default exception */
 		echotag = (char *) 0;			/* No known tag */
-		echort = (char *) 0;            /* No known routine */
-		echoclass = 0;                  /* No known class */
+		echort = (char *) 0;			/* No known routine */
+		echoclass = 0;				  /* No known class */
 	}
 #endif
 
@@ -1434,10 +1439,10 @@ rt_private char *extag(struct ex_vect *trace)
 		echtg = trace->ex_name;
 	}
 
-    echrt = trace->ex_where;    /* Associated routine */
-    echclass = trace->ex_from;      /* Associated class */
+	echrt = trace->ex_where;	/* Associated routine */
+	echclass = trace->ex_from;	  /* Associated class */
 
-    return echtg;
+	return echtg;
 }
 
 rt_public void esfail(void)
@@ -1617,8 +1622,8 @@ rt_public void fatal_error(char *msg)
 			trace->ex_type = EN_FATAL;
 	}
 	echtg = msg;					/* Associated tag */
-	echrt = (char *) 0;             /* No routine name */
-    echclass = 0;                   /* No current class */
+	echrt = (char *) 0;			 /* No routine name */
+	echclass = 0;				   /* No current class */
 	esfail();						/* Raise system failure and stack dump */
 
 #ifdef EIF_WINDOWS
@@ -1764,50 +1769,65 @@ rt_private void find_call(void)
 
 rt_private void ds_stderr (char *line)
 {
-	print_err_msg (stderr, "%s", line);
+	/* Print the string 'line' to the standard output */
+
+	print_err_msg(stderr, "%s", line);
 }
 
 rt_private void ds_string(char *line)
 {
-	(void) extend_trace_string(line);
+	/* Wrapper to dump the exception stack to the string ex_string */
+
+	extend_trace_string(line);
 }
 
-rt_private char *extend_trace_string(char *line)
+rt_private void extend_trace_string(char *line)
 {
-	static long size = 0L;
-	static long used = 0L;
-	static char *area = NULL;
-
-	if (!line) {
-		size = 0L;
-		used = 0L;
-		free(area);
-		return NULL;
-	}
-	if ((size - used) > (long) strlen(line)) {
-		strcpy (area + used, line);
-		used += strlen(line);
+	/* Appends the string line to the exception string. Memory reallocation is
+	 * performed if necessary.
+	 */
+	if ((ex_string.size - ex_string.used) > (long) strlen(line)) {
+		strcpy (ex_string.area + ex_string.used, line);
+		ex_string.used += strlen(line);
 	} else {
-		size += strlen(line) + BUFSIZ;
-		area = (char *) realloc (area, size);
-		if(area) {
-			strcpy (area + used, line);
-			used += strlen(line);
+		ex_string.size += strlen(line) + BUFSIZ;
+		ex_string.area = (char *) realloc(ex_string.area, ex_string.size);
+		if(ex_string.area) {
+			strcpy (ex_string.area + ex_string.used, line);
+			ex_string.used += strlen(line);
 		} else
 			enomem();
 	}
-	return (area);
 }
 
 rt_public EIF_REFERENCE stack_trace_string (void)
 {
-	(void) extend_trace_string(NULL);
-	dump_stack(ds_string);
-	return (EIF_REFERENCE) RTMS(extend_trace_string(""));
+    /* Initialize the SMART_STRING structure supposed to receive the exception
+     * stack, dump the exception stack into it and return an Eiffel string.
+     */
+ 
+    /* Clean the area from a previous call. */
+    if (ex_string.area)
+        free(ex_string.area);
+ 
+    /* Prepare the structure for a new trace */
+    ex_string.area = NULL;
+    ex_string.used = 0L;
+    ex_string.size = 0L;
+ 
+    /* Dump the exception stack into this structure by using the
+     * wrapper ds_string().
+     */
+    dump_stack(ds_string);
+ 
+    /* Return the string to Eiffel */
+    return (EIF_REFERENCE) RTMS(ex_string.area);
 }
 
 rt_private void dump_trace_stack(void)
 {
+	/* Wrapper to dump the exception stack to stderr */
+
 	dump_stack(ds_stderr);
 }
 
@@ -2007,7 +2027,7 @@ rt_private void print_top(void (*append_trace)(char *))
 		} else
 			sprintf(buf, "(From %.15s)", Origin(except.from));
 
-	sprintf(buffer, "<%08X>          %-22.22s %-29.29s ",
+	sprintf(buffer, "<%08X>		  %-22.22s %-29.29s ",
 		except.obj_id, buf, exception_string(code));
 	append_trace(buffer);
 		
@@ -2466,32 +2486,32 @@ rt_public char *eeotag(void)
 
 rt_public char *eeorout(void)
 {
-    /* Return the routine of the first exception at this nesting level */
+	/* Return the routine of the first exception at this nesting level */
 
-    if (echorg == 0)        /* No original exception */
-        return (char *) 0;
+	if (echorg == 0)		/* No original exception */
+		return (char *) 0;
 
-    if (echort != (char *) 0)
-        return makestr(echort, strlen(echort)); /* Last exception tag */
+	if (echort != (char *) 0)
+		return makestr(echort, strlen(echort)); /* Last exception tag */
 
-    return (char *) 0;
+	return (char *) 0;
 }
 
 rt_public char *eeoclass(void)
 {
-    /* Return the class of the first exception at this nesting level */
+	/* Return the class of the first exception at this nesting level */
 
-    char *cl_name;
+	char *cl_name;
 
-    if (echorg == 0)        /* No original exception */
-        return (char *) 0;
+	if (echorg == 0)		/* No original exception */
+		return (char *) 0;
 
-    if (echoclass != 0) {
-        cl_name = Origin(echoclass);
-        return makestr(cl_name, strlen(cl_name)); /* Last exception tag */
-    }
+	if (echoclass != 0) {
+		cl_name = Origin(echoclass);
+		return makestr(cl_name, strlen(cl_name)); /* Last exception tag */
+	}
 
-    return (char *) 0;
+	return (char *) 0;
 }
 
 rt_public long eelcode(void)
@@ -2512,83 +2532,83 @@ rt_public char *eeltag(void)
 
 rt_public char *eelrout(void)
 {
-    /* Return the routine of the last exception */
+	/* Return the routine of the last exception */
 
-    if (echval == 0)        /* No current exception */
-        return (char *) 0;
+	if (echval == 0)		/* No current exception */
+		return (char *) 0;
 
-    if (echrt != (char *) 0)
-        return makestr(echrt, strlen(echrt)); /* Last exception tag */
+	if (echrt != (char *) 0)
+		return makestr(echrt, strlen(echrt)); /* Last exception tag */
 
-    return (char *) 0;
+	return (char *) 0;
 }
 
 rt_public char *eelclass(void)
 {
-    /* Return the class of the last exception */
+	/* Return the class of the last exception */
 
-    char *cl_name;
+	char *cl_name;
 
-    if (echval == 0)        /* No current exception */
-        return (char *) 0;
+	if (echval == 0)		/* No current exception */
+		return (char *) 0;
 
-    if (echclass != 0) {
-        cl_name = Origin(echclass);
-        return makestr(cl_name, strlen(cl_name)); /* Last exception tag */
-    }
+	if (echclass != 0) {
+		cl_name = Origin(echclass);
+		return makestr(cl_name, strlen(cl_name)); /* Last exception tag */
+	}
 
-    return (char *) 0;
+	return (char *) 0;
 }
 
 rt_public void eetrace(char b)
 {
-    /* Enable/diable printing of the history table */
+	/* Enable/diable printing of the history table */
 
-    if (b == (char) 1)
-        print_history_table = ~0;
-    else
-        print_history_table = 0;
+	if (b == (char) 1)
+		print_history_table = ~0;
+	else
+		print_history_table = 0;
 }
 
 rt_public char *eename(long ex) 
 {
-    /* Return the english description for exeception `ex' */
+	/* Return the english description for exeception `ex' */
 
-    char *ex_string;
+	char *ex_string;
 
-    if (eedefined(ex) == (char) 1){
-        ex_string = exception_string(ex);
-        return makestr(ex_string, strlen(ex_string));
-    }
+	if (eedefined(ex) == (char) 1){
+		ex_string = exception_string(ex);
+		return makestr(ex_string, strlen(ex_string));
+	}
 }
 
 rt_public void eecatch(long ex)
 {
-    /* Catch exception `ex' */
+	/* Catch exception `ex' */
 
-    if (eedefined(ex) == (char) 1){
-        ex_ign[ex] = 0;
-        if (ex == EN_FLOAT)
-            (void) signal(SIGFPE, exfpe);
-    }
+	if (eedefined(ex) == (char) 1){
+		ex_ign[ex] = 0;
+		if (ex == EN_FLOAT)
+			(void) signal(SIGFPE, exfpe);
+	}
 
 }
 
 rt_public void eeignore(long ex)
 {
-    /* Ignore exception `ex' */
-    if (eedefined(ex) == (char) 1){
-        ex_ign[ex] = 1;
-        if (ex == EN_FLOAT)
-            (void) signal(SIGFPE, SIG_IGN);
-    }
+	/* Ignore exception `ex' */
+	if (eedefined(ex) == (char) 1){
+		ex_ign[ex] = 1;
+		if (ex == EN_FLOAT)
+			(void) signal(SIGFPE, SIG_IGN);
+	}
 }
 
 rt_private char eedefined(long ex)
 {
-    /* Is exception `ex' defined? */
+	/* Is exception `ex' defined? */
 
-    return ((ex > 0 && ex <= EN_NEX)? (char) 1 : (char) 0);
+	return ((ex > 0 && ex <= EN_NEX)? (char) 1 : (char) 0);
 }
 
 #ifdef TEST
@@ -2793,9 +2813,9 @@ rt_private Signal_t emergency(int sig)
 
 
 /*---------------------------------------------*/
-/*                                             */
+/*											 */
 /* The  following is used by Concurrent Eiffel */
-/*                                             */
+/*											 */
 /*---------------------------------------------*/
 #ifdef CONCURRENT_EIFFEL
 rt_private void cur_print_top(void);		/* Prints top value of the stack for Concurrency*/
@@ -2811,292 +2831,292 @@ rt_private char *cur_branch_exit =
 "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ back to level %d ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
 
 void get_call_stack(void) {
-    char buf[200];
-    if (echmem & MEM_FSTK) {
-        extend_string(&_concur_call_stack, "\nDue to a lack of memory, the sequence is incomplete near the end");
-    }
-    if (echmem & MEM_FULL) {
-        if (echmem & MEM_FSTK) {
-            extend_string(&_concur_call_stack, "\nMoreover, an 'out of memory' may have led to an untrustworthy stack");
-        } else {
-            extend_string(&_concur_call_stack, ".\nHowever, an 'out of memory' occurred and might have spoilt the stack");
-        }
-    }
-    if (echmem & MEM_PANIC) {
-        extend_string(&_concur_call_stack, "\nNB: The raised panic may have induced completely inconsistent information");
-    }
-    echmem |= MEM_PANIC;
-    (void) backtrack();
+	char buf[200];
+	if (echmem & MEM_FSTK) {
+		extend_string(&_concur_call_stack, "\nDue to a lack of memory, the sequence is incomplete near the end");
+	}
+	if (echmem & MEM_FULL) {
+		if (echmem & MEM_FSTK) {
+			extend_string(&_concur_call_stack, "\nMoreover, an 'out of memory' may have led to an untrustworthy stack");
+		} else {
+			extend_string(&_concur_call_stack, ".\nHowever, an 'out of memory' occurred and might have spoilt the stack");
+		}
+	}
+	if (echmem & MEM_PANIC) {
+		extend_string(&_concur_call_stack, "\nNB: The raised panic may have induced completely inconsistent information");
+	}
+	echmem |= MEM_PANIC;
+	(void) backtrack();
 
-    /* Dump the Eiffel exception trace stack once a system failure has occurred .
-     * Due to the upside-down nature of this stack, we need to use the 'st_bot'
-     * field of the xstack structure.
-     */
+	/* Dump the Eiffel exception trace stack once a system failure has occurred .
+	 * Due to the upside-down nature of this stack, we need to use the 'st_bot'
+	 * field of the xstack structure.
+	 */
 
-    /* Initializes the eif_trace structure's field st_bot correctly. It is the
-     * current bottom of the stack, which appears to be the topmost exception
-     * to be printed by this dumping routine...
-     */
-    eif_trace.st_bot = eif_trace.st_hd->sk_arena;   /* Very first item */
-   eif_trace.st_cur = eif_trace.st_hd;             /* Is now where bottom is */
-    eif_trace.st_end = eif_trace.st_cur->sk_end;
+	/* Initializes the eif_trace structure's field st_bot correctly. It is the
+	 * current bottom of the stack, which appears to be the topmost exception
+	 * to be printed by this dumping routine...
+	 */
+	eif_trace.st_bot = eif_trace.st_hd->sk_arena;   /* Very first item */
+   eif_trace.st_cur = eif_trace.st_hd;			 /* Is now where bottom is */
+	eif_trace.st_end = eif_trace.st_cur->sk_end;
 
-    /* Print header of history table */
-    extend_string(&_concur_call_stack, cur_failed);
-    sprintf(buf, "\n%-19.19s %-22.22s %-29.29s %-6.6s",
-        "Class / Object", "Routine", "Nature of exception", "Effect");
-    extend_string(&_concur_call_stack, buf);
+	/* Print header of history table */
+	extend_string(&_concur_call_stack, cur_failed);
+	sprintf(buf, "\n%-19.19s %-22.22s %-29.29s %-6.6s",
+		"Class / Object", "Routine", "Nature of exception", "Effect");
+	extend_string(&_concur_call_stack, buf);
 
-    extend_string(&_concur_call_stack, cur_failed);
+	extend_string(&_concur_call_stack, cur_failed);
 
-    /* Print body of history table. A little look-ahead is necessary, in order
-     * to give meaningful routine names and effects (retried, rescued, cur_failed).
-     */
+	/* Print body of history table. A little look-ahead is necessary, in order
+	 * to give meaningful routine names and effects (retried, rescued, cur_failed).
+	 */
 
-    except.previous = 0;        /* Previous exception code */
-    cur_recursive_dump(0);          /* Recursive dump, starting at level 0 */
+	except.previous = 0;		/* Previous exception code */
+	cur_recursive_dump(0);		  /* Recursive dump, starting at level 0 */
 
 }
 
 cur_recursive_dump(register1 int level)
 {
-    char buf[200];
-    /* Prints the stack trace of a given level. Whenever a new level is reached ,
-     * we call us recursively, hence the name of the routine. The exception
-     * structure is saved (on the C stack) before entering in the recursion.
-     * While the calling stack cannot be inconsistant (otherwise it's a panic),
-     * the exception stack may well be, in case we ran out of memory.
-     */
+	char buf[200];
+	/* Prints the stack trace of a given level. Whenever a new level is reached ,
+	 * we call us recursively, hence the name of the routine. The exception
+	 * structure is saved (on the C stack) before entering in the recursion.
+	 * While the calling stack cannot be inconsistant (otherwise it's a panic),
+	 * the exception stack may well be, in case we ran out of memory.
+	 */
 
-    struct ex_vect *trace;      /* Call on top of the stack */
+	struct ex_vect *trace;	  /* Call on top of the stack */
 
-    for (
-        find_call(), trace = eif_trace.st_bot;
-        trace != eif_trace.st_top;
-        trace = eif_trace.st_bot
-    ) {
-        except.code = trace->ex_type;   /* Record exception code */
-        except.tag = (char *) 0;        /* No tag by default */
+	for (
+		find_call(), trace = eif_trace.st_bot;
+		trace != eif_trace.st_top;
+		trace = eif_trace.st_bot
+	) {
+		except.code = trace->ex_type;   /* Record exception code */
+		except.tag = (char *) 0;		/* No tag by default */
 
-        switch (trace->ex_type) {
-        case EN_ILVL:                   /* Entering new level */
-            /* The stack may end with such a beast, so detect this and return
-             * if we reached the last item in the stack.
-             */
-            (void) exnext();            /* Skip pseudo-vector "New level" */
-            if (exend())
-                return;                 /* Exit if at the end of the stack */
-            sprintf(buf, cur_branch_enter, trace->ex_lvl);
-            extend_string(&_concur_call_stack, buf);
-            extend_string(&_concur_call_stack, cur_failed);
-            recursive_dump(level + 1);  /* Dump the new level */
-            sprintf(buf, cur_branch_exit, level);
-            extend_string(&_concur_call_stack, buf);
-            extend_string(&_concur_call_stack, cur_failed);
-            find_call();                /* Restore global exception structure */
-            break;
-        case EN_OLVL:                   /* Exiting a level */
-            (void) exnext();            /* Skip pseudo-vector "Exit level" */
-            return;                     /* Recursion level decreases */
-            /* NOTREACHED */
-        case EN_RES:                    /* Resumption attempt */
-        case EN_FAIL:                   /* Routine call */
-        case EN_RESC:                   /* Exception in rescue */
-            cur_print_top();                /* Print exception trace */
-            find_call();                /* Look for new enclosing call */
-            break;
-        case EN_SIG:                    /* Signal received */
-            except.tag = signame(trace->ex_sig);
-            cur_print_top();
-            break;
-        case EN_SYS:                    /* Operating system error */
-        case EN_IO:                     /* I/O error */
-            except.tag = error_tag(trace->ex_errno);
-            cur_print_top();
-            break;
-        case EN_CINV:                   /* Class invariant violated */
-            except.obj_id = trace->ex_oid;  /* Do we need this? */
-            /* Fall through */
-        case EN_PRE:                    /* Precondition violated */
-            except.tag = trace->ex_name;
-            cur_print_top();
-            find_call();                /* Restore correct object ID */
-            break;
-        case EN_BYE:
-        case EN_FATAL:
-            except.tag = echtg;         /* Tag for panic or fatal error */
-            cur_print_top();
-            break;
-        default:
-            except.tag = trace->ex_name;
-            cur_print_top();
-        }
-    }
+		switch (trace->ex_type) {
+		case EN_ILVL:				   /* Entering new level */
+			/* The stack may end with such a beast, so detect this and return
+			 * if we reached the last item in the stack.
+			 */
+			(void) exnext();			/* Skip pseudo-vector "New level" */
+			if (exend())
+				return;				 /* Exit if at the end of the stack */
+			sprintf(buf, cur_branch_enter, trace->ex_lvl);
+			extend_string(&_concur_call_stack, buf);
+			extend_string(&_concur_call_stack, cur_failed);
+			recursive_dump(level + 1);  /* Dump the new level */
+			sprintf(buf, cur_branch_exit, level);
+			extend_string(&_concur_call_stack, buf);
+			extend_string(&_concur_call_stack, cur_failed);
+			find_call();				/* Restore global exception structure */
+			break;
+		case EN_OLVL:				   /* Exiting a level */
+			(void) exnext();			/* Skip pseudo-vector "Exit level" */
+			return;					 /* Recursion level decreases */
+			/* NOTREACHED */
+		case EN_RES:					/* Resumption attempt */
+		case EN_FAIL:				   /* Routine call */
+		case EN_RESC:				   /* Exception in rescue */
+			cur_print_top();				/* Print exception trace */
+			find_call();				/* Look for new enclosing call */
+			break;
+		case EN_SIG:					/* Signal received */
+			except.tag = signame(trace->ex_sig);
+			cur_print_top();
+			break;
+		case EN_SYS:					/* Operating system error */
+		case EN_IO:					 /* I/O error */
+			except.tag = error_tag(trace->ex_errno);
+			cur_print_top();
+			break;
+		case EN_CINV:				   /* Class invariant violated */
+			except.obj_id = trace->ex_oid;  /* Do we need this? */
+			/* Fall through */
+		case EN_PRE:					/* Precondition violated */
+			except.tag = trace->ex_name;
+			cur_print_top();
+			find_call();				/* Restore correct object ID */
+			break;
+		case EN_BYE:
+		case EN_FATAL:
+			except.tag = echtg;		 /* Tag for panic or fatal error */
+			cur_print_top();
+			break;
+		default:
+			except.tag = trace->ex_name;
+			cur_print_top();
+		}
+	}
 }
 
 rt_private void cur_print_top(void)
 {
-    /* Prints the exception trace described by the top frame of the exception
-     * stack and the exception context built.
-     * The exception tag is limited to 26 characters, the class name to 19 and
-     * the routine name to 22 characters. These should be #defined--RAM, FIXME.
-     */
+	/* Prints the exception trace described by the top frame of the exception
+	 * stack and the exception context built.
+	 * The exception tag is limited to 26 characters, the class name to 19 and
+	 * the routine name to 22 characters. These should be #defined--RAM, FIXME.
+	 */
 
-    char cur_buf[200];
-    char buf[30];               /* To pre-compute the (From orig) string */
-    char code = except.code;    /* Exception's code */
-    struct ex_vect *top;        /* Top of stack */
+	char cur_buf[200];
+	char buf[30];			   /* To pre-compute the (From orig) string */
+	char code = except.code;	/* Exception's code */
+	struct ex_vect *top;		/* Top of stack */
 
-    /* Do not print anything if the retry flag is on and the previous exception
-     * was not not a routine failure nor a resumption attempt cur_failed. Indeed,
-     * the exception that led to a retry has already been printed and we do
-     * not want to see two successive 'retry' lines.
-     * Similarily, a rescued routine fails, and is not 'rescued' at the end
-     * of the rescue clause.
-     */
-    if (
-        except.retried &&           /* Call has been retried */
-        except.previous != 0 &&     /* Something has been already printed */
-        except.previous != EN_FAIL && except.previous != EN_RES
-    ) {
-        (void) exnext();        /* Remove the top */
-        return;                 /* We already printed the retry line */
-    }
+	/* Do not print anything if the retry flag is on and the previous exception
+	 * was not not a routine failure nor a resumption attempt cur_failed. Indeed,
+	 * the exception that led to a retry has already been printed and we do
+	 * not want to see two successive 'retry' lines.
+	 * Similarily, a rescued routine fails, and is not 'rescued' at the end
+	 * of the rescue clause.
+	 */
+	if (
+		except.retried &&		   /* Call has been retried */
+		except.previous != 0 &&	 /* Something has been already printed */
+		except.previous != EN_FAIL && except.previous != EN_RES
+	) {
+		(void) exnext();		/* Remove the top */
+		return;				 /* We already printed the retry line */
+	}
 
-    except.previous = code;     /* Update previous exception code */
+	except.previous = code;	 /* Update previous exception code */
 
-    if (except.tag)
-        sprintf(buf, "%.28s:", except.tag);
-    else
-        buf[0] = '\0';
+	if (except.tag)
+		sprintf(buf, "%.28s:", except.tag);
+	else
+		buf[0] = '\0';
 
-    if (except.from >= 0)
-        if (except.obj_id) {
-            int obj_dtype = Dtype(except.obj_id);
+	if (except.from >= 0)
+		if (except.obj_id) {
+			int obj_dtype = Dtype(except.obj_id);
 
-            if (obj_dtype>=0 && obj_dtype < scount) {
-                sprintf(cur_buf, "\n%-19.19s %-22.22s %-29.29s",
-                    Class(except.obj_id), except.rname, buf);
-                extend_string(&_concur_call_stack, cur_buf);
-            }
-            else {
-                sprintf(cur_buf, "\n%-19.19s %-22.22s %-29.29s",
-                    "Invalid object", except.rname, buf);
-                extend_string(&_concur_call_stack, cur_buf);
-            }
-        }
-        else {
-            sprintf(cur_buf, "\n%-19.19s %-22.22s %-29.29s",
-                "Invalid object", except.rname, buf);
-            extend_string(&_concur_call_stack, cur_buf);
-        }
-    else {
-        sprintf(cur_buf, "\n%-19.19s %-22.22s %-29.29s",
-            "RUN-TIME", except.rname, buf);
-        extend_string(&_concur_call_stack, cur_buf);
-    }
+			if (obj_dtype>=0 && obj_dtype < scount) {
+				sprintf(cur_buf, "\n%-19.19s %-22.22s %-29.29s",
+					Class(except.obj_id), except.rname, buf);
+				extend_string(&_concur_call_stack, cur_buf);
+			}
+			else {
+				sprintf(cur_buf, "\n%-19.19s %-22.22s %-29.29s",
+					"Invalid object", except.rname, buf);
+				extend_string(&_concur_call_stack, cur_buf);
+			}
+		}
+		else {
+			sprintf(cur_buf, "\n%-19.19s %-22.22s %-29.29s",
+				"Invalid object", except.rname, buf);
+			extend_string(&_concur_call_stack, cur_buf);
+		}
+	else {
+		sprintf(cur_buf, "\n%-19.19s %-22.22s %-29.29s",
+			"RUN-TIME", except.rname, buf);
+		extend_string(&_concur_call_stack, cur_buf);
+	}
 
-    /* There is no need to compute the origin of a routine if it is the same
-     * as the current class. To detect this, we do pointer comparaison to
-     * statically allocated strings (faster than a strcmp).
-     * As a matter of style, the macros 'Class', 'System' etc... are not
-     * all uppercased because there is no side effect, and they could be
-     * functions--RAM.
-     */
+	/* There is no need to compute the origin of a routine if it is the same
+	 * as the current class. To detect this, we do pointer comparaison to
+	 * statically allocated strings (faster than a strcmp).
+	 * As a matter of style, the macros 'Class', 'System' etc... are not
+	 * all uppercased because there is no side effect, and they could be
+	 * functions--RAM.
+	 */
 
-    buf[0] = '\0';
+	buf[0] = '\0';
 
-    if (except.from >= 0)
-        if (except.obj_id) {
-            if (except.from != Dtype(except.obj_id))
-                sprintf(buf, "(From %.15s)", Origin(except.from));
-        } else
-            sprintf(buf, "(From %.15s)", Origin(except.from));
+	if (except.from >= 0)
+		if (except.obj_id) {
+			if (except.from != Dtype(except.obj_id))
+				sprintf(buf, "(From %.15s)", Origin(except.from));
+		} else
+			sprintf(buf, "(From %.15s)", Origin(except.from));
 
-    sprintf(cur_buf, "\n<%08X>          %-22.22s %-29.29s ",
-        except.obj_id, buf, exception_string(code));
-    extend_string(&_concur_call_stack, cur_buf);
+	sprintf(cur_buf, "\n<%08X>		  %-22.22s %-29.29s ",
+		except.obj_id, buf, exception_string(code));
+	extend_string(&_concur_call_stack, cur_buf);
 
-    /* Start panic effect when we reach the EN_BYE record */
-    if (code == EN_BYE)
-        echval = EN_BYE;
+	/* Start panic effect when we reach the EN_BYE record */
+	if (code == EN_BYE)
+		echval = EN_BYE;
 
-    /* Start fatal effect when we reach the EN_FATAL record */
-    if (code == EN_FATAL)
-        echval = EN_FATAL;
+	/* Start fatal effect when we reach the EN_FATAL record */
+	if (code == EN_FATAL)
+		echval = EN_FATAL;
 
-    (void) exnext();            /* Can safely be removed */
-
-
-    /* Here is an informal discussion about the "Effect" keywords which may
-     * appear in the stack trace: "Retry" is the last exception that occurred
-     * before 'retry' was reached. Similarily, "Rescue" signals the last
-     * exception after entering in a rescue clause. "Pass" signals exceptions
-     * which are not directly followed by a call in the trace. In effect, they
-     * raise an exception somewhere but do not 'fail'. "Fail" appears everywhere
-     * else, unless it is the last exception, in which case we "Exit"--RAM.
-     */
-
-    if (echval == EN_BYE) {     /* A run-time panic was raised */
-        if (except.last)
-            extend_string(&_concur_call_stack, cur_failed); /* Good bye! */
-        else {
-            sprintf(cur_buf, "Panic%s", cur_failed);   /* Panic propagation */
-            extend_string(&_concur_call_stack, cur_buf);
-        }
-        return;
-    } else if (echval == EN_FATAL) {
-        if (except.last) {
-            sprintf(cur_buf, "Bye%s", cur_failed); /* Good bye! */
-            extend_string(&_concur_call_stack, cur_buf);
-        }
-        else {
-            sprintf(cur_buf, "Fatal%s", cur_failed);   /* Fatal propagation */
-            extend_string(&_concur_call_stack, cur_buf);
-        }
-        return;
-    } else if (except.last) {                       /* Last record => exit */
-        sprintf(cur_buf, "Exit%s", cur_failed);
-        extend_string(&_concur_call_stack, cur_buf);
-        return;
-    } else if (code == EN_FAIL || code == EN_RES) {
-        if (except.retried) {
-            sprintf(cur_buf, "Retry%s", cur_retried);
-            extend_string(&_concur_call_stack, cur_buf);
-        }
-        else if (except.rescued) {
-            sprintf(cur_buf, "Rescue%s", cur_failed);
-            extend_string(&_concur_call_stack, cur_buf);
-        }
-        else {
-            sprintf(cur_buf, "Fail%s", cur_failed);
-            extend_string(&_concur_call_stack, cur_buf);
-        }
-        return;
-    }
-
-    /* We need some lookhead to exactely print retry or rescue once. We want
-     * to print a "retry" or "rescue" if and only if the next record in the
-     * stack (pointed at by 'top') is a retry or routine record.
-     */
-
-    top = eif_trace.st_bot;     /* Look ahead */
-    code = top->ex_type;
+	(void) exnext();			/* Can safely be removed */
 
 
-    if (code == EN_FAIL || code == EN_RES) {
-        if (except.retried) {
-            sprintf(cur_buf, "Retry%s", cur_retried);
-            extend_string(&_concur_call_stack, cur_buf);
-        }
-        else {
-            sprintf(cur_buf, "Fail%s", cur_failed);
-            extend_string(&_concur_call_stack, cur_buf);
-        }
-    } else {
-        sprintf(cur_buf, "Pass%s", cur_failed);
-        extend_string(&_concur_call_stack, cur_buf);
-    }
+	/* Here is an informal discussion about the "Effect" keywords which may
+	 * appear in the stack trace: "Retry" is the last exception that occurred
+	 * before 'retry' was reached. Similarily, "Rescue" signals the last
+	 * exception after entering in a rescue clause. "Pass" signals exceptions
+	 * which are not directly followed by a call in the trace. In effect, they
+	 * raise an exception somewhere but do not 'fail'. "Fail" appears everywhere
+	 * else, unless it is the last exception, in which case we "Exit"--RAM.
+	 */
+
+	if (echval == EN_BYE) {	 /* A run-time panic was raised */
+		if (except.last)
+			extend_string(&_concur_call_stack, cur_failed); /* Good bye! */
+		else {
+			sprintf(cur_buf, "Panic%s", cur_failed);   /* Panic propagation */
+			extend_string(&_concur_call_stack, cur_buf);
+		}
+		return;
+	} else if (echval == EN_FATAL) {
+		if (except.last) {
+			sprintf(cur_buf, "Bye%s", cur_failed); /* Good bye! */
+			extend_string(&_concur_call_stack, cur_buf);
+		}
+		else {
+			sprintf(cur_buf, "Fatal%s", cur_failed);   /* Fatal propagation */
+			extend_string(&_concur_call_stack, cur_buf);
+		}
+		return;
+	} else if (except.last) {					   /* Last record => exit */
+		sprintf(cur_buf, "Exit%s", cur_failed);
+		extend_string(&_concur_call_stack, cur_buf);
+		return;
+	} else if (code == EN_FAIL || code == EN_RES) {
+		if (except.retried) {
+			sprintf(cur_buf, "Retry%s", cur_retried);
+			extend_string(&_concur_call_stack, cur_buf);
+		}
+		else if (except.rescued) {
+			sprintf(cur_buf, "Rescue%s", cur_failed);
+			extend_string(&_concur_call_stack, cur_buf);
+		}
+		else {
+			sprintf(cur_buf, "Fail%s", cur_failed);
+			extend_string(&_concur_call_stack, cur_buf);
+		}
+		return;
+	}
+
+	/* We need some lookhead to exactely print retry or rescue once. We want
+	 * to print a "retry" or "rescue" if and only if the next record in the
+	 * stack (pointed at by 'top') is a retry or routine record.
+	 */
+
+	top = eif_trace.st_bot;	 /* Look ahead */
+	code = top->ex_type;
+
+
+	if (code == EN_FAIL || code == EN_RES) {
+		if (except.retried) {
+			sprintf(cur_buf, "Retry%s", cur_retried);
+			extend_string(&_concur_call_stack, cur_buf);
+		}
+		else {
+			sprintf(cur_buf, "Fail%s", cur_failed);
+			extend_string(&_concur_call_stack, cur_buf);
+		}
+	} else {
+		sprintf(cur_buf, "Pass%s", cur_failed);
+		extend_string(&_concur_call_stack, cur_buf);
+	}
 }
 
 #endif

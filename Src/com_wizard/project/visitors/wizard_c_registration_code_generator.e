@@ -153,6 +153,7 @@ feature -- Basic operations
 				c_writer.add_other (dll_register_server_macro)
 				c_writer.add_other (dll_unregister_server_macro)
 				c_writer.add_other (dll_can_unload_now_macro)
+				c_writer.add_other ("RT_LNK HINSTANCE eif_hInstance;")
 
 
 				c_writer.add_function (dll_unlock_module_feature)
@@ -811,57 +812,14 @@ feature {NONE} -- Implementation
 	dll_module_file_name_set_up: STRING is
 			-- Code to set up module file name
 		do
-			-- getcwd (file_name, MAX_PATH);
-			Result := clone (Get_current_directory_function)
+			-- GetModuleFileName (eif_hInstance, 'module_file_name', MAX_PATH)
+			Result := "GetModuleFileName"
 			Result.append (Space_open_parenthesis)
+			Result.append ("eif_hInstance")
+			Result.append (Comma_space)
 			Result.append (Module_file_name)
 			Result.append (Comma_space)
-			Result.append (Max_path)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-
-			-- strcpy (file_name + strlen (file_name), "\\");
-			Result.append (New_line_tab)
-			Result.append (String_copy_function)
-			Result.append (Space_open_parenthesis)
-			Result.append (Module_file_name)
-			Result.append (Plus)
-			Result.append (String_length_function)
-			Result.append (Space_open_parenthesis)
-			Result.append (Module_file_name)
-			Result.append (Close_parenthesis)
-			Result.append (Comma_space)
-			Result.append ("%"\\%"")
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-
-			-- strcpy (file_name + strlen (file_name), egc_system_name);
-			Result.append (New_line_tab)
-			Result.append (String_copy_function)
-			Result.append (Space_open_parenthesis)
-			Result.append (Module_file_name)
-			Result.append (Plus)
-			Result.append (String_length_function)
-			Result.append (Space_open_parenthesis)
-			Result.append (Module_file_name)
-			Result.append (Close_parenthesis)
-			Result.append (Comma_space)
-			Result.append ("egc_system_name")
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-
-			-- strcpy (file_name + strlen (file_name), ".dll");
-			Result.append (New_line_tab)
-			Result.append (String_copy_function)
-			Result.append (Space_open_parenthesis)
-			Result.append (Module_file_name)
-			Result.append (Plus)
-			Result.append (String_length_function)
-			Result.append (Space_open_parenthesis)
-			Result.append (Module_file_name)
-			Result.append (Close_parenthesis)
-			Result.append (Comma_space)
-			Result.append ("%".dll%"")
+			Result.append ("MAX_PATH")
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
 

@@ -225,14 +225,24 @@ feature {NONE}
 			the_behavior: BEHAVIOR
 		do
 			the_stone ?= dropped
-			if the_stone /= Void and current_state /= Void then
-				!! the_behavior.make
-				current_state.add (Current, the_behavior)
-				the_behavior.set_context (Current)
-				the_behavior.set_internal_name ("")
+			if the_stone /= Void then
+				if current_state = Void then
+					main_panel.set_current_state (app_editor.initial_state_circle.data)
+				end
+				current_state.find_input (Current)
+				if current_state.after then					
+					!! the_behavior.make
+					the_behavior.set_context (Current)
+					the_behavior.set_internal_name ("")
+					current_state.add (Current, the_behavior)
+				else
+					the_behavior := current_state.output.data
+				end
 				the_behavior.set_input_data (default_event)
 				the_behavior.set_output_data (the_stone.data)
 				the_behavior.drop_pair
+				the_behavior.reset_input_data
+				the_behavior.reset_output_data
 			end
 		end
 

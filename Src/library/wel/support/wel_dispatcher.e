@@ -108,8 +108,9 @@ feature {NONE} -- Implementation
 			end
 			if msg = Wm_initdialog then
 				window := windows.item (cwel_temp_dialog_value)
-				window.increment_level
 				if window /= Void then
+					window.increment_level
+	
 					-- Special case for the message
 					-- Wm_initdialog. We set the hwnd value
 					-- to the object because this value
@@ -123,12 +124,13 @@ feature {NONE} -- Implementation
 					window.set_item (hwnd)
 					register_window (window)
 					Result := window.process_message (hwnd, msg, wparam, lparam)
+					window.decrement_level
 				end
 				Result := 1
 			else
 				window := windows.item (hwnd)
-				window.increment_level
 				if window /= Void then
+					window.increment_level
 --					window.reset_window_processing
 					last_result := window.process_message (hwnd, msg, wparam, lparam)
 					if window.has_return_value then
@@ -140,9 +142,9 @@ feature {NONE} -- Implementation
 							Result := 0
 						end
 					end
+					window.decrement_level
 				end
 			end
-			window.decrement_level
 		end
 
 feature {NONE} -- Implementation

@@ -107,10 +107,6 @@ feature {NONE} -- initalization
 			else
 				is_local := True
 			end
-			if is_prefix_read_only then
-				-- force setting of known prefix
-				assembly_sd.set_prefix_name (new_id_sd (assembly_prefix, True))
-			end
 		end
 
 feature -- Status setting
@@ -142,7 +138,7 @@ feature -- Access
 	is_prefix_read_only: BOOLEAN is
 			-- can assembly's prefix be changed?
 		do
-			Result := known_prefixes.has (format_hash_assembly_name (assembly_name, assembly_public_key_token))
+			Result := False
 		end
 
 	assembly_prefix: STRING is
@@ -244,10 +240,13 @@ feature {NONE} -- Implementation
 			-- key: name + public key token
 			-- value: prefix
 		do
-			create Result.make (13)
+			create Result.make (7)
 			Result.put ("SYSTEM_DLL_", format_hash_assembly_name ("System", "b77a5c561934e089"))
 			Result.put ("XML_", format_hash_assembly_name ("System.Xml", "b77a5c561934e089"))
 			Result.put ("WINFORMS_", format_hash_assembly_name ("System.Windows.Forms", "b77a5c561934e089"))
+			Result.put ("DATA_", format_hash_assembly_name ("System.Data", "b77a5c561934e089"))
+			Result.put ("DRWAING_", format_hash_assembly_name ("System.Drawing", "b03f5f7f11d50a3a"))
+			Result.put ("WEB_", format_hash_assembly_name ("System.Web", "b03f5f7f11d50a3a"))
 		end
 		
 			

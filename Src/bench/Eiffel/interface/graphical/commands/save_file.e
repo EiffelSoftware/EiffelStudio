@@ -9,9 +9,12 @@ class SAVE_FILE
 
 inherit
 
-	PIXMAP_COMMAND
+	TWO_STATE_CMD
+		rename
+			true_state_symbol as unmodified_pixmap,
+			false_state_symbol as modified_pixmap
 		redefine
-			licence_checked
+			licence_checked, modified_pixmap
 		end
 
 creation
@@ -28,10 +31,16 @@ feature -- Initialization
 
 feature -- Properties
 
-	symbol: PIXMAP is 
+	unmodified_pixmap: PIXMAP is 
 			-- Pixmap for the button.
 		once 
 			Result := bm_Save 
+		end;
+
+	modified_pixmap: PIXMAP is
+			-- Pixmap for the button.
+		once
+			Result := bm_Dark_save
 		end;
 
 feature {NONE} -- Implementation

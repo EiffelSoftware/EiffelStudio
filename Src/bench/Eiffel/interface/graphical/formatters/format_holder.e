@@ -8,7 +8,9 @@ indexing
 class FORMAT_HOLDER
 
 inherit
-	EB_HOLDER
+	TWO_STATE_CMD_HOLDER
+		rename
+			change_state as set_selected
 		redefine
 			associated_menu_entry, set_selected,
 			associated_command, associated_button

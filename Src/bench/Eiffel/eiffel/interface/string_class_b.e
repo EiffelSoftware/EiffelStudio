@@ -23,35 +23,25 @@ feature
 		local
 			set_count_feat: FEATURE_I;
 			internal_hash_code_feat: ATTRIBUTE_I
-			stop, error, done: BOOLEAN;
+			error, done: BOOLEAN;
 			special_error: SPECIAL_ERROR;
 			creat_feat: FEATURE_I;
-			to_special_p, parent_t: CL_TYPE_A
+			area_feature: FEATURE_I
 		do
-			if not System.il_generation then
-					-- First check if class inherits directly from parent
-					-- TO_SPECIAL [CHARACTER]
-				from
-					parents.start
-					to_special_p := To_special_parent
-				until
-					parents.after or else stop
-				loop
-					parent_t := parents.item
-					stop := parent_t.same_type (to_special_p) and then
-						to_special_p.is_equivalent (parent_t)
-					parents.forth;
-				end;
-				if not stop then
-					create special_error.make (Case_4, Current);
-					Error_handler.insert_error (special_error);
-				end;
+				-- Check if class has an attribute `area' of type SPECIAL [CHARACTER].
+			area_feature ?= feature_table.item_id (Names_heap.area_name_id)
+			if
+				(area_feature = Void)
+				or else not area_type.same_as (area_feature.type.actual_type)
+			then
+				create special_error.make (string_case_1, Current)
+				Error_handler.insert_error (special_error)
 			end
-			
+
 				-- Second check if class has only one reference attribute
 				-- only (which is necessary `area' then).
 			if types.first.skeleton.nb_reference /= 1 then
-				create special_error.make (Case_5, Current);
+				create special_error.make (string_case_2, Current);
 				Error_handler.insert_error (special_error);
 			end;
 			
@@ -66,8 +56,8 @@ feature
 				loop
 					creat_feat := feature_table.item (creators.key_for_iteration);
 					if
-						creat_feat.feature_name_id = Make_signature.feature_name_id and then
-						creat_feat.same_signature (Make_signature)
+						creat_feat.feature_name_id = names_heap.make_name_id and then
+						creat_feat.same_signature (make_signature)
 					then
 						done := True
 					else
@@ -77,7 +67,7 @@ feature
 				error := not done
 			end;
 			if error then
-				create special_error.make (Case_6, Current);
+				create special_error.make (string_case_3, Current);
 				Error_handler.insert_error (special_error);
 			end;
 
@@ -85,42 +75,35 @@ feature
 			set_count_feat := feature_table.item_id (Names_heap.set_count_name_id);
 			if 	set_count_feat = Void
 				or else
-				(not set_count_feat.same_signature (Set_count_signature))
+				(not set_count_feat.same_signature (set_count_signature))
 				or else
 				not (set_count_feat.written_in = class_id)
 			then
-				create special_error.make (Case_17, Current);
+				create special_error.make (string_case_4, Current);
 				Error_handler.insert_error (special_error);
 			end;
 
 			if not System.il_generation then
 					-- Presence of attribute `internal_hash_code'.
-				internal_hash_code_feat ?= feature_table.item_id (Names_heap.internal_hash_code_name_id)
+				internal_hash_code_feat ?=
+					feature_table.item_id (Names_heap.internal_hash_code_name_id)
 				if
 					internal_hash_code_feat = Void or else
 					not internal_hash_code_feat.type.same_as (Integer_type)
 				then
-					create special_error.make (Case_17_bis, Current)
+					create special_error.make (string_case_5, Current)
 					Error_handler.insert_error (special_error)
 				end
 			end
 		end
 
-	To_special_parent: GEN_TYPE_A is
-			-- Parent type TO_SPECIAL [CHARACTER];
-		local
-			gen: ARRAY [TYPE_A];
-		once
-			create gen.make (1, 1)
-			gen.put (Character_type, 1)
-			create Result.make (System.to_special_id, gen)
-		end;
+feature {NONE} -- Implementation
 
-	Make_signature: DYN_PROC_I is
+	make_signature: DYN_PROC_I is
 			-- Required signature for feature `make' of class STRING
 		local
 			args: FEAT_ARG;
-		once
+		do
 			create args.make (1);
 			args.put_i_th (Integer_type, 1);
 			create Result;
@@ -128,11 +111,25 @@ feature
 			Result.set_feature_name_id (Names_heap.make_name_id);
 		end;
 
-	Set_count_signature: DYN_PROC_I is
+	area_type: GEN_TYPE_A is
+			-- Type SPECIAL [CHARACTER]
+		local
+			f: CHARACTER_A
+			gen: ARRAY [TYPE_A]
+		do
+			create f.make (False)
+			create gen.make (1, 1)
+			gen.put (f, 1)
+			create Result.make (System.special_id, gen)
+		ensure
+			area_type_not_void: area_type /= Void
+		end
+
+	set_count_signature: DYN_PROC_I is
 			-- Required signature for `set_count' of class STRING
 		local
 			args: FEAT_ARG;
-		once
+		do
 			create args.make (1);
 			args.put_i_th (Integer_type, 1);
 			create Result;

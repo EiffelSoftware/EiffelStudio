@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			-- Create the fixed container.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_fixed_new)
+			set_c_object (feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_fixed_new)
 		end
 
 feature -- Status setting

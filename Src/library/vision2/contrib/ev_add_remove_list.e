@@ -88,7 +88,6 @@ feature {NONE} -- GUI building
 		local
 			hbox: EV_HORIZONTAL_BOX
 			button: EV_BUTTON
-			label: EV_LABEL
 		do
 			create list
 			create text_field

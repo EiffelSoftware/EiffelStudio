@@ -43,6 +43,9 @@ feature -- Properties
 	width: INTEGER;
 			-- Width of figure
 
+	text_position: INTEGER
+			-- Text position of `text'
+
 feature -- Access
 
 	contains (p: COORD_XY): BOOLEAN is
@@ -75,12 +78,13 @@ feature -- Setting
 			set: stone = a_stone
 		end
 
-	set_text (a_text: STRING) is
+	set_text_info (a_text: STRING; tp: like text_position) is
 			-- Set `text' to `a_text'.
 		require
 			a_text_exists: a_text /= Void
 		do
-			text := a_text
+			text := a_text;
+			text_position := tp
 		end; 
 
 	append_text (a_text: STRING) is
@@ -124,38 +128,6 @@ feature -- Output
 				d.set_foreground_gc_color (foreground_color (values));
 			end;
 			d.draw_string (d, 
-					base_left_x - x_offset,
-					base_left_y - y_offset, 	
-					text);
-		end;
-
-	select_clickable (d: DRAWING_X; 
-			values: GRAPHICAL_VALUES;
-			x_offset, y_offset: INTEGER) is
-			-- Select current figure.
-		require
-			drawable: d /= Void and then d.is_drawable
-		do
-			d.set_drawing_font (font (values));
-			d.set_background_gc_color (values.selected_clickable_bg_color);
-			d.set_foreground_gc_color (values.selected_clickable_fg_color);
-			d.draw_image_string (d, 
-					base_left_x - x_offset,
-					base_left_y - y_offset, 	
-					text);
-		end;
-
-	unselect_clickable (d: DRAWING_X; 
-			values: GRAPHICAL_VALUES;
-			x_offset, y_offset: INTEGER) is
-			-- Un select current figure.
-		require
-			drawable: d /= Void and then d.is_drawable
-		do
-			d.set_drawing_font (font (values));
-			d.set_background_gc_color (values.text_background_color);
-			d.set_foreground_gc_color (foreground_color (values));
-			d.draw_image_string (d, 
 					base_left_x - x_offset,
 					base_left_y - y_offset, 	
 					text);

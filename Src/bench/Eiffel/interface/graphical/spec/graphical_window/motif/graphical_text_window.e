@@ -30,7 +30,8 @@ inherit
 			set_background_color as old_set_background_color,
 			execute as old_execute,
 			total_width as maximum_width,
-			total_height as current_y
+			total_height as current_y,
+			clear_text as clear_drawing_area
 		undefine
 			copy, setup, context_data_useful
 		end;
@@ -40,7 +41,8 @@ inherit
 			lower as area_lower,
 			cursor as area_cursor,
 			total_width as maximum_width,
-			total_height as current_y
+			total_height as current_y,
+			clear_text as clear_drawing_area
 		undefine
 			copy, setup, context_data_useful
 		redefine
@@ -76,6 +78,8 @@ feature {NONE} -- Initialization
 			!! text.make (0);
 			init_graphical_values;
 			old_set_background_color (text_background_color);
+			set_foreground_color (text_foreground_color);
+			set_tab_length (8);
 			clear_window
 		end;
 
@@ -86,6 +90,9 @@ feature {NONE} -- Initialization
 			if background_color /= text_background_color then
 				old_set_background_color (text_background_color);
 			end;
+			if foreground_color /= text_foreground_color then
+				set_foreground_color (text_foreground_color);
+			end;
 			clear_window; -- Will initialize the values
 		end;
 
@@ -93,6 +100,9 @@ feature -- Properties
 
 	text: STRING;
 			-- Textual text 
+
+	selected_clickable_text: TEXT_FIGURE;
+			-- Clickable text selected
 
 	is_editable: BOOLEAN is
 			-- Are we able to edit text? (no)
@@ -226,12 +236,11 @@ feature -- Output
 	clear_window is
 			-- Reset the content of window.
 		do
-			!! current_line.make (Current);
 			text_position := 0;
 			current_x := initial_x_position;
 			x_offset := 0;
 			y_offset := 0;
-			clear;
+			clear_drawing_area;
 			update_scroll_position (vertical_scrollbar, 0);
 			update_scroll_position (horizontal_scrollbar, 0);
 			horizontal_scrollbar.set_value (0);
@@ -287,9 +296,8 @@ end
 	deselect_all is
 			-- Deselect current text.
 		do
+			clear_selection;
 			if selected_clickable_text /= Void then
-				selected_clickable_text.unselect_clickable 
-					(drawing, Current, x_offset, y_offset)
 				if highlighted_line /= Void and then 
 					highlighted_line.has (selected_clickable_text) 
 				then
@@ -327,6 +335,7 @@ end
 					(drawing, Current, False, x_offset, y_offset)
 			end;
 			find_line (button_data);
+			highlighted_line := current_line;
 			if highlighted_line /= Void then
 				highlighted_line.update_highlighted_line
 					(drawing, Current, True, x_offset, y_offset)
@@ -341,9 +350,8 @@ feature -- Update
 		do
 			deselect_all;
 			find_clickable_figure_with_stone (a_stone)
-			if selected_clickable_text /= Void then
-				selected_clickable_text.select_clickable 
-					(drawing, Current, x_offset, y_offset)
+			if current_text /= Void then
+				highlight_text (current_text)
 			end
 		end;
 
@@ -370,9 +378,9 @@ feature -- Update
 		do
 			deselect_all;
 			find_clickable (but_data);
+			selected_clickable_text := current_text;
 			if selected_clickable_text /= Void then
-				selected_clickable_text.select_clickable 
-					(drawing, Current, x_offset, y_offset)
+				highlight_text (current_text)
 			end;
 		end;
 
@@ -421,7 +429,7 @@ end
 				stopped or else i = c
 			loop
 				line := a.item (i);
-				if (line.bottom_left_y) >= y_coord then
+				if (line.base_left_y) >= y_coord then
 					stopped := True
 				else
 					i := i + 1
@@ -435,7 +443,7 @@ end
 					stopped or else i = c
 				loop
 					line := a.item (i);
-					if (line.bottom_left_y) > y_coord then
+					if (line.base_left_y) > y_coord then
 						stopped := True
 					else
 debug ("DRAWING")
@@ -448,9 +456,8 @@ end
 					i := i + 1
 				end
 			end;
-			if selected_clickable_text /= Void then
-				selected_clickable_text.select_clickable 
-					(drawing, Current, x_offset, y_offset)
+			if not highlight_points.empty then
+				highlight_selection	
 			end;
 				-- Flush the drawing queue
 			drawing.display.flush;
@@ -612,8 +619,82 @@ feature {NONE} -- Implementation
 			end;
 		end;
 
-invariant
+feature {NONE} -- Selection implementation
 
-	non_void_current_line: current_line /= Void
+	height_offset: INTEGER is
+			-- Height offset of line
+		do
+			Result := maximum_height_per_line - maximum_descent_per_line
+		end;
+
+	select_word (button_data: BUTTON_DATA) is
+			-- Select a word.
+		do
+			find_text (button_data);
+			if current_text /= Void then
+				highlight_text (current_text)
+			end
+		end;
+
+	select_line (button_data: BUTTON_DATA) is
+			-- Select a line.
+		local
+			mp: MEL_POINT;	
+			w: INTEGER
+		do
+			find_line (button_data);
+			if current_line /= Void then
+				if maximum_width < width then
+					w := width
+				else
+					w := maximum_width
+				end;
+				add_highlight_point
+					(0, current_line.base_left_y - height_offset - y_offset);
+				add_highlight_point (w, 0);
+				add_highlight_point (0, maximum_height_per_line);
+				add_highlight_point (-w, 0);
+			
+				highlight_selection;
+				update_selected_text (current_line.text)
+			end
+		end;
+
+	select_all is
+			-- Select all the text.
+		local
+			w: INTEGER
+		do
+			is_select_all := True;
+			if maximum_width < width then
+				w := width
+			else
+				w := maximum_width
+			end;
+			add_highlight_point (0, 0);
+			add_highlight_point (w, 0);
+			add_highlight_point (0, height);
+			add_highlight_point (-w, 0);
+
+			highlight_selection;
+			update_selected_text (text)
+		end;
+
+	highlight_text (a_text: TEXT_FIGURE) is
+			-- Highlight a_text.
+		local
+			txt: STRING
+		do
+			txt := a_text.text;
+			add_highlight_point (a_text.base_left_x, a_text.base_left_y - height_offset - y_offset);
+			add_highlight_point (a_text.width, 0);
+			add_highlight_point (0, maximum_height_per_line);
+			add_highlight_point (-a_text.width, 0);
+
+			highlight_selection;
+			if txt /= Void then
+				update_selected_text (txt)
+			end
+		end;
 
 end -- class GRAPHICAL_TEXT_WINDOW

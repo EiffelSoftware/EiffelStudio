@@ -45,27 +45,52 @@ feature -- Properties
 			Result := figures.maximum_height_per_line
 		end;
 
-	bottom_left_y: INTEGER;
-			-- Bottom y coordinate of line
+	base_left_y: INTEGER;
+			-- Base y coordinate of line
 
 feature -- Access
 
 	contains (p: COORD_XY): BOOLEAN is
 			-- Does line contain point `p' between the
-			-- the top and bottom of line?
+			-- the top and base of line?
 		do
-			Result := p.y <= bottom_left_y and p.y >= bottom_left_y - height
+			Result := p.y <= base_left_y and p.y >= base_left_y - height
 		end;
 
 feature -- Setting
 
-	set_bottom_left_y (i: like bottom_left_y) is
-			-- Set `bottom_left_y' to `y'.
+	set_base_left_y (i: like base_left_y) is
+			-- Set `base_left_y' to `y'.
 		do
-			bottom_left_y := i
+			base_left_y := i
 		end;
 
 feature -- Access
+
+
+	text_figure (p: COORD_XY): TEXT_FIGURE is
+			-- Text figure that contain point `p'.
+		require
+			valid_point: p /= Void
+		local
+			a: like area;
+			i, c: INTEGER;
+			last_fig, fig: TEXT_FIGURE
+		do
+			from
+				c := count;
+				a := area;
+				i := 0
+			until
+				Result /= Void or else i >= c
+			loop
+				fig := a.item (i);
+				if fig.contains (p) then
+					Result := fig
+				end;
+				i := i + 1
+			end;
+		end;
 
 	clickable_figure (p: COORD_XY): TEXT_FIGURE is
 			-- Text figure that contain point `p'.
@@ -255,6 +280,32 @@ feature -- Output
 			end;
 		end;
 
+	text: STRING is
+			-- Text displayed in this line
+		local
+			a: like area;
+			i, c: INTEGER;
+			txt: STRING
+		do
+			!! Result.make (0);
+			c := count;
+			a := area;
+			if c > 0 then
+				Result.append (figures.tabs_from_pixel (a.item (0).base_left_x));
+				from
+					i := 0
+				until
+					i = c
+				loop
+					txt := a.item (i).text;
+					if txt /= Void then -- Can be void for breakpoints
+						Result.append (txt);
+					end
+					i := i + 1
+				end
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	highlight_line (d: DRAWING_X; 
@@ -279,7 +330,7 @@ feature {NONE} -- Implementation
 				-- Coords are upper left corner for mel
 			d.mel_fill_rectangle (d, 
 				padded_width, 
-				bottom_left_y - y_offset + 
+				base_left_y - y_offset + 
 				figures.maximum_descent_per_line - 
 				figures.maximum_height_per_line, 
 				width, height)

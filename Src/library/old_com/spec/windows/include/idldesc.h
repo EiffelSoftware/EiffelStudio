@@ -13,4 +13,4 @@
 
 #define eole2_idldesc_idl_flags(_ptr_) ((EIF_INTEGER) (((IDLDESC*)_ptr_)->wIDLFlags))
 		
-#endif /* IDL_DESC */
+#endif /* IDL_DESC TOTO*/

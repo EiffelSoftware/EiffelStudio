@@ -10,22 +10,11 @@ inherit
 		export
 			{ANY} merge, Tmp_body_server
 		redefine
-			item, ontable, updated_id, change_id, trace, make
+			item, ontable, updated_id, change_id, trace
 		end
 
 creation
 	make
-
-
-feature -- Initialisation
-
-	make is
-		-- Creation
-		do
-			{READ_SERVER}Precursor
-			!! cache.make
-		end
-
 	
 feature 
 
@@ -52,8 +41,11 @@ end;
 end;
 		end;
 
-	cache: BODY_CACHE 
+	cache: BODY_CACHE is
 			-- Cache for routine tables
+		once
+			!! Result.make
+		end
 		
 	item (an_id: BODY_ID): FEATURE_AS is
 			-- Body of id `an_id'. Look first in the temporary

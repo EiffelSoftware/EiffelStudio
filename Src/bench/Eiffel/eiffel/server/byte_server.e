@@ -6,21 +6,11 @@ class
 inherit
 	COMPILER_SERVER [BYTE_CODE, BODY_ID]
 		redefine
-			disk_item, has, item, ontable, updated_id, change_id, make
+			disk_item, has, item, ontable, updated_id, change_id
 		end
 
 creation
 	make
-
-feature -- Initialisation
-
-	make is
-		-- Creation
-		do
-			{COMPILER_SERVER}Precursor
-			!! cache.make
-		end
-
 
 feature -- Update
 
@@ -44,8 +34,11 @@ feature -- Update
 			Result := t.byte_id
 		end
 
-	cache: BYTE_CACHE 
+	cache: BYTE_CACHE is
 			-- Cache for routine tables
+		once
+			!! Result.make
+		end
 	
 feature -- Access
 

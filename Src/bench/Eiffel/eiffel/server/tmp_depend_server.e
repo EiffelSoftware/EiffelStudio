@@ -6,23 +6,10 @@ class TMP_DEPEND_SERVER
 
 inherit
 	DELAY_SERVER [CLASS_DEPENDANCE, CLASS_ID]
-		redefine 
-			make
-		end
 
 creation
 	make
 
-feature -- Initialisation
-
-	make is
-		-- Creation
-		do
-			{DELAY_SERVER}Precursor
-			!! cache.make
-		end
-
-	
 feature 
 
 	id (t: CLASS_DEPENDANCE): CLASS_ID is
@@ -31,8 +18,11 @@ feature
 			Result := t.id
 		end
 
-	cache: DEPEND_CACHE 
+	cache: DEPEND_CACHE is
 			-- Cache for routine tables
+		once
+			!! Result.make
+		end
 
 	Delayed: SEARCH_TABLE [CLASS_ID] is
 			-- Cache for delayed items

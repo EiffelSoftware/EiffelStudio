@@ -5,22 +5,10 @@ class TMP_M_FEATURE_SERVER
 inherit
 
 	DELAY_SERVER [MELT_FEATURE, REAL_BODY_ID]
-		redefine
-			make
-		end
+
 
 creation
 	make
-
-feature -- Initialisation
-
-	make is
-		-- Creation
-		do
-			{DELAY_SERVER}Precursor
-			!! cache.make
-		end
-
 
 feature 
 
@@ -30,8 +18,11 @@ feature
 			Result := t.real_body_id
 		end
 
-	cache: M_FEATURE_CACHE 
+	cache: M_FEATURE_CACHE is
 			-- Cache for routine tables
+		once
+			!! Result.make
+		end
 
 	Delayed: SEARCH_TABLE [REAL_BODY_ID] is
 			-- Cache for delayed items

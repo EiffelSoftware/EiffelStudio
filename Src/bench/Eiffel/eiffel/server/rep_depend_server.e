@@ -6,25 +6,19 @@ class
 inherit
 	COMPILER_SERVER [REP_CLASS_DEPEND, CLASS_ID]
 		redefine
-			disk_item, has, item, make
+			disk_item, has, item
 		end
 
 creation
 	make
 
-feature -- Initialisation
-
-	make is
-		-- Creation
-		do
-			{COMPILER_SERVER}Precursor
-			!! cache.make
-		end
-
 feature -- Access
 
-	cache: REP_DEPEND_CACHE 
+	cache: REP_DEPEND_CACHE is
 			-- Cache for routine tables
+		once
+			!! Result.make
+		end
 	
 	id (t: REP_CLASS_DEPEND): CLASS_ID is
 			-- Id associated with `t'

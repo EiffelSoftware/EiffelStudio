@@ -4,23 +4,9 @@ class TMP_M_FEAT_TBL_SERVER
 
 inherit
 	DELAY_SERVER [MELTED_FEATURE_TABLE, TYPE_ID]
-		redefine
-			make
-		end
 
 creation
 	make
-
-feature -- Initialisation
-
-	make is
-		-- Creation
-		do
-			{DELAY_SERVER}Precursor
-			!! cache.make
-		end
-
-
 	
 feature 
 
@@ -30,8 +16,11 @@ feature
 			Result := t.type_id
 		end
 
-	cache: M_FEAT_TBL_CACHE 
+	cache: M_FEAT_TBL_CACHE is
 			-- Cache for routine tables
+		once
+			!! Result.make
+		end
 
 	Delayed: SEARCH_TABLE [TYPE_ID] is
 			-- Cache for delayed items

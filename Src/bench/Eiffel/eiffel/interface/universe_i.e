@@ -454,12 +454,13 @@ feature {COMPILER_EXPORTER} -- Implementation
 		require
 			system_exists: system /= Void
 		local
+			l_ext_class: EXTERNAL_CLASS_I
 			l_class: CLASS_I
 		do
 			if system.il_generation then
-				l_class := unique_class ("system_object")
-				if l_class /= Void then
-					system.set_system_object_class (l_class)
+				l_ext_class ?= unique_class ("system_object")
+				if l_ext_class /= Void then
+					system.set_system_object_class (l_ext_class)
 				end
 			end
 			l_class := unique_class ("any")

@@ -523,7 +523,6 @@ FILE *f;
 	errno = 0;
 	if (1 != fread (&i, sizeof (EIF_INTEGER), 1, f))
 		eio();
-	swallow_nl(f);
 
 	return i;
 }
@@ -538,7 +537,6 @@ FILE *f;
 	errno = 0;
 	if (1 != fread (&r, sizeof (EIF_REAL), 1, f))
 		eio();
-	swallow_nl(f);
 
 	return r;
 }
@@ -553,7 +551,6 @@ FILE *f;
 	errno = 0;
 	if (1 != fread (&d, sizeof(EIF_DOUBLE), 1, f))
 		eio();
-	swallow_nl(f);
 
 	return d;
 }

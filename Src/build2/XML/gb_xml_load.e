@@ -88,15 +88,12 @@ feature -- Basic operation
 		check
 			display_window_hidden: not display_window.is_show_requested
 			builder_window_hidden: not builder_window.is_show_requested
-		end
-
+		end		
 				-- Load and parse file `filename'.
 			load_and_parse_xml_file (filename)
 			
 				-- Build deferred parts.
 			deferred_builder.build
-			
-			expand_all_registered_objects
 
 				-- As we have just loaded the project, the
 				-- system should know that it has not been modifified
@@ -361,6 +358,9 @@ feature {NONE} -- Implementation
 				-- Update all names in `window_selector' to ensure that
 				-- they are current after the load.
 			Window_selector.update_displayed_names
+				-- Now expand the layout selector item, so that the window is displayed as
+				-- it was when last edited.
+			Layout_constructor.update_expanded_state_from_root_object		
 		end
 
 	load_and_parse_xml_file (a_filename:STRING) is

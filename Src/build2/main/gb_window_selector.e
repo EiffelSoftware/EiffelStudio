@@ -250,8 +250,10 @@ feature -- Access
 		local
 			layout_item: GB_WINDOW_SELECTOR_ITEM
 			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			l_cursor, l_cursor2: CURSOR
 		do
 			create Result.make (2)
+			l_cursor ?= cursor
 			from
 				start
 			until
@@ -265,6 +267,7 @@ feature -- Access
 					check
 						item_was_directory: directory_item /= Void
 					end
+					l_cursor2 ?= directory_item.cursor
 					from
 						directory_item.start
 					until
@@ -277,11 +280,14 @@ feature -- Access
 						Result.extend (layout_item.object)
 						directory_item.forth
 					end
+					directory_item.go_to (l_cursor2)
 				end
 				forth
 			end
+			go_to (l_cursor)
 		ensure
 			result_not_void: Result /= Void
+			position_not_changed: index = old index
 		end
 		
 	directory_of_window (selector_item: GB_WINDOW_SELECTOR_ITEM): GB_WINDOW_SELECTOR_DIRECTORY_ITEM is
@@ -372,7 +378,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 					-- that the root window will be moved out of the directory, as you may not delete the
 					-- root window.
 				create warning_dialog.make_initialized (2, preferences.Show_deleting_final_directory_warning, "The directory contains the root window which will be moved from the directory.%NOther windows will be deleted. Are you sure that you wish to remove this directory?", "Do not show again, and always move root window from directory.")
-				warning_dialog.set_ok_action (agent actual_delete_directory (selected_directory))
+				warning_dialog.set_ok_action (agent actual_delete_directory (a_directory))
 				warning_dialog.show_modal_to_window (parent_window (Current))
 
 			elseif not a_directory.is_empty and then Preferences.boolean_resource_value (preferences.Show_deleting_directories_warning , True) then
@@ -380,7 +386,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 					-- as if we are here, we know that there are other window objects not contained in the directory,
 					-- so just before the deletion, we can set one of these to be the root window.
 				create warning_dialog.make_initialized (2, preferences.Show_deleting_directories_warning, "The directory %"" + a_directory.text + "%" contains one or more windows.%NAre you sure that you wish these windows to be deleted with the dialog?", "do not show again, and always delete windows contained.")
-				warning_dialog.set_ok_action (agent actual_delete_directory (selected_directory))
+				warning_dialog.set_ok_action (agent actual_delete_directory (a_directory))
 				warning_dialog.show_modal_to_window (parent_window (Current))
 			else
 				actual_delete_directory (a_directory)
@@ -467,10 +473,18 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 			if an_object.layout_item = Void then
 				object_handler.add_new_window (an_object)			
 				create selector_item.make_with_object (an_object)
-				-- Ensure that when the item is selected, the layout constructor is updated
-				-- to reflect this.
+					-- Ensure that when the item is selected, the layout constructor is updated
+					-- to reflect this.
 				selector_item.select_actions.extend (agent selected_window_changed (selector_item))
+					-- Now select new object as root if there are no other windows.
+				if objects.is_empty then
+					change_root_window_to (an_object)
+				end
 				extend (an_object.window_selector_item)
+					-- If this is the only window contained, select it.
+				if objects.count = 1 then
+					an_object.window_selector_item.enable_select
+				end
 			else
 				if not (an_object.window_selector_item.parent = Window_selector) then
 						-- Do nothing if attempting to move from `Current' to `Current'.
@@ -520,6 +534,46 @@ feature {GB_COMMAND_MOVE_WINDOW} -- Implementation
 			move_file_between_directories (original_directory, new_directory, window_item.object.name.as_lower + ".e")
 			move_file_between_directories (original_directory, new_directory, (window_item.object.name + Class_implementation_extension).as_lower + ".e")
 		end
+		
+feature {GB_WINDOW_SELECTOR_ITEM} -- Implementation
+
+	update_for_removal (a_window_item: GB_WINDOW_SELECTOR_ITEM) is
+			--
+		local
+			all_objects: ARRAYED_LIST [GB_OBJECT]
+			current_index: INTEGER
+			window_object: GB_TITLED_WINDOW_OBJECT
+		do
+			
+				-- If `a_window_item' is selected, the next item
+				-- in `Current' must be selected.
+			if a_window_item.is_selected then
+				all_objects := objects
+				check
+					a_window_item_still_contained: all_objects.has (a_window_item.object)
+				end
+				current_index := all_objects.index_of (a_window_item.object, 1)
+				if all_objects.count > 1 then
+					current_index := current_index + 1
+					if current_index > all_objects.count then
+						current_index := 1
+					end
+					window_object ?= all_objects.i_th (current_index)
+					window_object.window_selector_item.enable_select
+				end
+					-- Now must check to see if there are any windows.
+					-- If not, the display and builder windows must be hidden.
+				if all_objects.count = 1 then
+					check
+						removal_consistent: all_objects.first = a_window_item.object
+					end
+					command_handler.Show_hide_builder_window_command.safe_disable_selected
+					Command_handler.Show_hide_display_window_command.safe_disable_selected
+				end
+				Command_handler.update
+			end			
+		end
+		
 
 feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 
@@ -741,11 +795,13 @@ feature {GB_XML_LOAD} -- Implementation
 
 	mark_first_window_as_root is
 			-- Ensure first window in `Current' is marked as
-			-- the root windwo for the project.
+			-- the root window for the project.
+		require
+			objects_not_empty: not objects.is_empty
 		do
 			change_root_window_to (objects.first)
 		ensure
-			has_root_window: Object_handler.root_window_object /= Void
+			has_root_window_if_not_empty: Object_handler.root_window_object /= Void
 		end
 
 feature {NONE} -- Implementation

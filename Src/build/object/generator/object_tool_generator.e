@@ -205,7 +205,11 @@ feature {NONE} -- GUI attributes
 feature -- Command execution
 
 	execute (arg: ANY) is
+		local
+			mp: MOUSE_PTR
 		do
+			!! mp
+			mp.set_watch_shape
 			if arg = First then
 				include_queries
 			elseif arg = Second then
@@ -215,6 +219,7 @@ feature -- Command execution
 			elseif arg = Fourth then
 				exclude_all_queries
 			end
+			mp.restore
 		end
 
 	include_queries is

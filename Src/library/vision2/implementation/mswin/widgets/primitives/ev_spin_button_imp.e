@@ -61,7 +61,8 @@ inherit
 			pointer_leave_actions,
 			pointer_motion_actions,
 			resize_actions,
-			tooltip_window
+			tooltip_window,
+			on_set_focus
 		end
 
 	WEL_CONTROL_WINDOW
@@ -598,6 +599,14 @@ feature {EV_TEXT_FIELD_IMP} -- Implementation
 		
 feature {NONE} -- Implementation
 
+	on_set_focus is
+			-- Called when a `Wm_setfocus' message is recieved.
+		do
+				-- No need to call precursor because calling `set_focus'
+				-- on the text will call the focus_in action sequence.
+			internal_text_field.set_focus
+		end
+		
 	translate_text is
 			-- Take a string and translate it to the corresponding
 			-- integer value. If it is not in the range or if it

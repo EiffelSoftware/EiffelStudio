@@ -264,7 +264,9 @@ rt_public EIF_REFERENCE root_obj = (EIF_REFERENCE) 0;
 
 #endif /* !EIF_THREADS */
 
+#ifndef NDEBUG
 rt_private int nb_items(register1 struct stack *);	
+#endif
 									/* Number of items held in a stack */
 #ifdef EIF_REM_SET_OPTIMIZATION
 rt_shared int is_in_rem_set (EIF_REFERENCE obj);	/* Is obj in rem_set? */
@@ -340,8 +342,10 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG);	/* The name says it all,
 rt_private EIF_REFERENCE mark_expanded(EIF_REFERENCE root, EIF_REFERENCE (*marker) (EIF_REFERENCE));		/* Marks expanded reference in stack */
 rt_private void update_moved_set(void);	/* Update the moved set (young objects) */
 rt_private void update_rem_set(void);		/* Update remembered set */
+#ifndef NDEBUG
 rt_private int refers_new_object_not_updated(register EIF_REFERENCE object);
 rt_private int	all_subreferences_processed (EIF_REFERENCE root);
+#endif	/* !NDEBUG */
 rt_shared int refers_new_object(register EIF_REFERENCE object);		/* Does an object refers to young ones ? */
 rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root);			/* Generation scavenging on an object */
 rt_private void swap_gen_zones(void);		/* Exchange 'from' and 'to' zones */
@@ -933,6 +937,7 @@ rt_public void reclaim(void)
 
 	full_sweep();				/* Reclaim ALL the objects in the system */
 
+	spt_free (special_rem_set);	/* Free special_rem_set */
 	eif_free (EIF_once_values); /* have been allocated with eif_malloc */
 #ifdef EIF_THREADS 
 	if (eif_thr_is_root ())
@@ -2658,7 +2663,6 @@ EIF_REFERENCE nget(register1 struct stack *stk)
 	/* Pop the top item of *stk */
 	EIF_GET_CONTEXT
 	register1 EIF_REFERENCE *top = stk->st_top;		/* The top of the stack */
-	/*	register2 EIF_REFERENCE *saved_top = top;	/* Save current top of stack */
 	register3 EIF_REFERENCE *arena;					/* Base address of current chunk */
 	register4 struct stchunk *s;
 
@@ -3702,8 +3706,8 @@ rt_private void find_to_space(struct sc_zone *to)
 	EIF_GET_CONTEXT
 	register1 int std_size = eif_chunk_size - sizeof(struct chunk);
 	register2 struct chunk *cur;	/* Current chunk we are considering */
-	register3 uint32 flags;			/* Malloc info flags */
-	register4 EIF_REFERENCE arena;			/* Where chunk's arena starts */
+	register3 uint32 flags = 0;		/* Malloc info flags */
+	register4 EIF_REFERENCE arena = (EIF_REFERENCE) 0;	/* Where chunk's arena starts */
 
 	for (cur = cklst.eck_tail; cur != (struct chunk *) 0; cur = cur->ck_lprev) {
 		if (cur->ck_length != std_size)		/* Not a standard sized chunk */
@@ -3724,6 +3728,8 @@ rt_private void find_to_space(struct sc_zone *to)
 
 	if (cur == (struct chunk *) 0)		/* Did not find any suitable chunk */
 		return;
+	assert (flags != 0); 	/* flags must be initailized. */
+	assert (arena != (EIF_REFERENCE) 0);	/* Arena must be initialized. */ 
 
 	/* Initialize scavenging zone. Note that the arena of the zone starts at
 	 * the header of the first block, but we save the malloc flags so that we
@@ -5505,7 +5511,6 @@ rt_private int update_special_rem_set(void)
 	long 					*hkeys;		/* Index of remembered items table. */
 	char 					**hvalues;	/* Special old object pointers table. */
 	long 					offset;		/* Index of item. */
-	uint32					flags;		/* Eiffel flags of current object. */
 
 	/* Initializations. */
 
@@ -5532,7 +5537,7 @@ rt_private int update_special_rem_set(void)
 	moving &= GC_PART | GC_GEN ;		/* Is this a Full collection,
 										   which moves objects?	*/
 
-	new_table = (struct special_table *) malloc (sizeof (struct special_table));
+	new_table = (struct special_table *) eif_malloc (sizeof (struct special_table));
 	if (new_table == (struct special_table *) 0)	
 		enomem();	/* Could not allocate struct. */
 
@@ -5867,7 +5872,7 @@ rt_private int update_special_rem_set(void)
 	assert (special_rem_set->count <= old_count);			/* Must be less elements in new special set. */
 #endif	/* !NDEBUG */
 
-	free (new_table);
+	eif_free (new_table);
 
 #ifndef NDEBUG
 	 /**************************** Postconditions *********************/
@@ -6062,6 +6067,7 @@ rt_shared int eif_promote_special (register EIF_REFERENCE object)
 }	/* eif_promote_special () */
 #endif	/* EIF_REM_SET_OPTIMIZATION */
 
+#ifndef NDEBUG
 rt_private int	all_subreferences_processed (EIF_REFERENCE root)
 	/* Check that all the subreferences under root (root included)
 	 * have been processed by some marking. Check is done at the first
@@ -6138,8 +6144,10 @@ rt_private int	all_subreferences_processed (EIF_REFERENCE root)
 	EIF_END_GET_CONTEXT
 	return 1;	/* Passed successfully. */	
 }	/* all_subreferences_processed () */
+#endif	/* !NDEBUG */
 
 
+#ifndef NDEBUG
 rt_private int refers_new_object_not_updated(register EIF_REFERENCE object)
 {
 	/* Does 'object' directly refers to a new object? Stop as soon as the
@@ -6176,6 +6184,7 @@ rt_private int refers_new_object_not_updated(register EIF_REFERENCE object)
 
 	return 0;		/* Object does not reference any new object */
 }
+#endif	/* !NDEBUG */
 
 rt_shared int refers_new_object(register EIF_REFERENCE object)
 {
@@ -6354,7 +6363,7 @@ rt_public void 	special_erembq (EIF_REFERENCE obj, EIF_INTEGER offst)
 	if (special_rem_set == (struct special_table *)	0)
 			/* Initialize it. */
 	{
-		special_rem_set = (struct special_table *) malloc (sizeof (struct special_table));
+		special_rem_set = (struct special_table *) eif_malloc (sizeof (struct special_table));
 		if (special_rem_set == (struct special_table *) 0)
 			enomem();
 

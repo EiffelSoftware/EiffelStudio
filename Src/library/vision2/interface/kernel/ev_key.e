@@ -66,7 +66,7 @@ feature -- Status report
 	is_keypad: BOOLEAN is
 			-- Is `code' a key on the keypad?
 		do
-			Result := code >= Key_numpad0 and then code <= Key_num_decimal
+			Result := code >= Key_numpad_0 and then code <= Key_numpad_decimal
 		end
 
 	is_number: BOOLEAN is
@@ -92,8 +92,8 @@ feature -- Contract support
 	is_valid_accelerator: BOOLEAN is
 			-- Is `code' accepted as accelerator key code?
 		do
-			Result := code < Key_shift and then code > Key_right_meta and then
-				code /= Key_printscreen
+			Result := True
+			--| All current key constants are valid.
 		end
 
 feature -- Standard Output
@@ -101,8 +101,7 @@ feature -- Standard Output
 	out: STRING is
 			-- Readable representation of `code'.
 		do
-			--| FIXME To be implemented
-			Result := code.out
+			Result := key_strings @ code
 		end
 
 invariant
@@ -131,6 +130,9 @@ end -- class EV_KEY
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.2  2000/03/17 18:43:41  brendel
+--| *** empty log message ***
+--|
 --| Revision 1.1  2000/03/15 19:39:18  brendel
 --| Initial.
 --|

@@ -11,21 +11,30 @@ feature -- Updates
 
 	on_class_added (a_class: CLASS_I) is
 			-- `a_class' has been added.
+		require
+			a_class_not_void: a_class /= Void
 		do
 		end
 
 	on_class_changed (a_class: CLASS_I) is
 			-- `a_class' has changed. Should not happen.
+		require
+			a_class_not_void: a_class /= Void
 		do
 		end
 
 	on_class_removed (a_class: CLASS_I) is
 			-- `a_class' has been removed. 
+		require
+			a_class_not_void: a_class /= Void
 		do
 		end
 
 	on_class_moved (a_class: CLASS_I; old_cluster: CLUSTER_I) is
 			-- `a_class' has been moved away from `old_cluster'.
+		require
+			a_class_not_void: a_class /= Void
+			old_cluster_not_void: old_cluster /= Void
 		do
 		end
 

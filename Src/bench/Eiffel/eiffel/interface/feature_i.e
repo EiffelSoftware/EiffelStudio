@@ -1033,6 +1033,20 @@ feature -- IL code generation
 			end
 		end
 
+	custom_attributes: BYTE_LIST [BYTE_NODE] is
+			-- Custom attributes of Current if any.
+		local
+			byte_code: BYTE_CODE
+			l_cas: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
+		do
+			if not is_attribute and then not is_external then
+				if Byte_server.has (body_index) then
+					byte_code := Byte_server.item (body_index)
+					Result := byte_code.custom_attributes
+				end
+			end
+		end
+
 feature -- Byte code computation
 
 	compute_byte_code (has_default_rescue: BOOLEAN) is

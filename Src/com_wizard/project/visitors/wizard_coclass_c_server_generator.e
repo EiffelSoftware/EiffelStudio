@@ -149,11 +149,6 @@ feature {NONE} -- Implementation
 			-- Name of default dispinterface.
 		do
 			if 
-				a_coclass_descriptor.default_source_dispinterface_name /= Void and then
-				not a_coclass_descriptor.default_source_dispinterface_name.empty
-			then
-				Result := clone (a_coclass_descriptor.default_source_dispinterface_name)
-			elseif 
 				a_coclass_descriptor.source_interface_descriptors /= Void and then
 				not a_coclass_descriptor.source_interface_descriptors.empty
 			then
@@ -357,47 +352,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	case_body_in_query_interface (interface_name, interface_namespace, interface_id: STRING): STRING is
-			-- Case body in QueryInterface function implemenatation.
-		require
-			non_void_interface_name: interface_name /= Void
-			valid_interface_name: not interface_name.empty
-			non_void_interface_id: interface_id /= Void
-			valid_interface_id: not interface_id.empty
-		do
-			create Result.make (200)
-			Result.append (If_keyword)
-			Result.append (Space_open_parenthesis)
-			Result.append (Riid)
-			Result.append (C_equal)
-			Result.append (interface_id)
-			Result.append (Close_parenthesis)
-			Result.append (New_line_tab_tab)
-			Result.append (Star_ppv)
-			Result.append (Space_equal_space)
-			Result.append (Static_cast)
-			Result.append (Less)
-			if 
-				interface_namespace /= Void and then
-				not interface_namespace.empty
-			then
-				Result.append (interface_namespace)
-				Result.append ("::")
-			end
-			Result.append (interface_name)
-			Result.append (Asterisk)
-			Result.append (More)
-			Result.append (Open_parenthesis)
-			Result.append (This)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-			Result.append (Else_keyword)
-		ensure
-			non_void_body: Result /= Void
-			valid_body: not Result.empty
-		end
-	
 	add_source_functions (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Add source functions.
 		require

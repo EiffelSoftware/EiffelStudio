@@ -36,14 +36,14 @@ feature {NONE} -- Initialization
 			code: EV_CURSOR_CODE
 		do
 			create code.make
-			make_by_predefined_id (code.standard)
+			make_by_predefined_id (cwel_integer_to_pointer (code.standard))
 		end
 
 	make_by_code (code: INTEGER) is
 			-- Create a cursor with the appearance corresponding
 			-- to `value'. See class EV_CURSOR_CODE fo the code.
 		do
-			make_by_predefined_id (code)
+			make_by_predefined_id (cwel_integer_to_pointer (code))
 		end
 
 	make_by_pixmap (pix: EV_PIXMAP) is

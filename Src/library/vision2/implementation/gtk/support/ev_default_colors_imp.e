@@ -8,11 +8,7 @@ class
 	EV_STOCK_COLORS_IMP
 
 inherit
-	C_GTK_WIDGET
-
-	C_GTK_STYLE_STRUCT
-
-	C_GDK_COLOR_STRUCT
+	EV_C_UTIL
 
 feature -- Access
 
@@ -22,10 +18,10 @@ feature -- Access
 			r, g, b: INTEGER
 			color: POINTER
 		do
-			color := gtk_style_struct_bg (gtk_widget_get_default_style)
-			r := gdk_color_struct_red (color)
-			g := gdk_color_struct_green (color)
-			b := gdk_color_struct_blue (color)
+			color := C.gtk_style_struct_bg (C.gtk_widget_get_default_style)
+			r := C.gdk_color_struct_red (color)
+			g := C.gdk_color_struct_green (color)
+			b := C.gdk_color_struct_blue (color)
 			create Result
 			Result.set_rgb_with_16_bit (r, g, b)
 		end
@@ -36,10 +32,10 @@ feature -- Access
 			r, g, b: INTEGER
 			color: POINTER
 		do
-			color := gtk_style_struct_fg (gtk_widget_get_default_style)
-			r := gdk_color_struct_red (color)
-			g := gdk_color_struct_green (color)
-			b := gdk_color_struct_blue (color)
+			color := C.gtk_style_struct_fg (C.gtk_widget_get_default_style)
+			r := C.gdk_color_struct_red (color)
+			g := C.gdk_color_struct_green (color)
+			b := C.gdk_color_struct_blue (color)
 			create Result
 			Result.set_rgb_with_16_bit (r, g, b)
 		end
@@ -52,10 +48,10 @@ feature -- Access
 			color: POINTER
 		do
 --| FIXME, can you implement it Sam ?
-			color := gtk_style_struct_fg (gtk_widget_get_default_style)
-			r := gdk_color_struct_red (color)
-			g := gdk_color_struct_green (color)
-			b := gdk_color_struct_blue (color)
+			color := C.gtk_style_struct_fg (C.gtk_widget_get_default_style)
+			r := C.gdk_color_struct_red (color)
+			g := C.gdk_color_struct_green (color)
+			b := C.gdk_color_struct_blue (color)
 			create Result
 			Result.set_rgb_with_16_bit (r, g, b)
 		end
@@ -68,10 +64,10 @@ feature -- Access
 			color: POINTER
 		do
 --| FIXME, can you implement it Sam ?
-			color := gtk_style_struct_fg (gtk_widget_get_default_style)
-			r := gdk_color_struct_red (color)
-			g := gdk_color_struct_green (color)
-			b := gdk_color_struct_blue (color)
+			color := C.gtk_style_struct_fg (C.gtk_widget_get_default_style)
+			r := C.gdk_color_struct_red (color)
+			g := C.gdk_color_struct_green (color)
+			b := C.gdk_color_struct_blue (color)
 			create Result
 			Result.set_rgb_with_16_bit (r, g, b)
 		end

@@ -260,7 +260,7 @@ feature -- Default cursors
 
 feature {NONE} -- Externals
 
-	C: EV_C_EXTERNALS is
+	C: EV_GTK_EXTERNALS is
 		once
 			create Result
 		end

@@ -95,6 +95,14 @@ feature -- Status report
 		deferred
 		end
 
+	title_shown: BOOLEAN is
+			-- True if the title row is shown.
+			-- False if the title row is not shown.
+		require
+			exist: not destroyed
+		deferred
+		end
+
 feature -- Status setting
 
 	select_item (index: INTEGER) is

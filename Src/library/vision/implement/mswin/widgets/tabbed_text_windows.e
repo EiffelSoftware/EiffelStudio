@@ -15,7 +15,6 @@ inherit
 			make as make_text
 		redefine
 			realize,
-			default_style,
 			tab_length
 		end
 
@@ -50,6 +49,7 @@ feature -- Initialization
 				resize_for_shell
 				wc ?= parent
 				wel_make (wc, text, x, y, width, height, id_default)
+				set_control_options
 				set_text_limit (90000)
 				set_tab_length (tab_length)
 				if private_background_color /= Void then
@@ -97,28 +97,6 @@ feature -- Status report
 
 	tab_length: INTEGER
 			-- Size for each tabulation
-
-feature {NONE} -- Implementation
-
-	default_style: INTEGER is
-			-- Default style for creation.
-		do
-			Result := Ws_child + Ws_visible + Ws_border
-				   + Es_nohidesel + Es_left + Es_disablenoscroll
-				   + Es_multiline + Es_autovscroll + Es_savesel
-			if not is_word_wrap_mode then
-				Result := Result + Es_autohscroll
-			end
-			if is_read_only then
-				Result := Result + Es_readonly
-			end
-			if is_horizontal_scrollbar then
-				Result := Result + Ws_hscroll
-			end
-			if is_vertical_scrollbar then
-				Result := Result + Ws_vscroll
-			end
-		end
 
 end -- class TABBED_TEXT_WINDOWS
 

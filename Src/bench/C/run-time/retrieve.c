@@ -2169,14 +2169,14 @@ rt_private long get_expanded_pos (uint32 o_type, uint32 num_attrib)
 #endif
 }
 
-int char_read(char *pointer, int size)
+rt_private int char_read(char *pointer, int size)
 {
 	EIF_GET_CONTEXT
 	return read(r_fides, pointer, size);
 	EIF_END_GET_CONTEXT
 }
 
-int stream_read(char *pointer, int size)
+rt_private int stream_read(char *pointer, int size)
 {
 	EIF_GET_CONTEXT
 

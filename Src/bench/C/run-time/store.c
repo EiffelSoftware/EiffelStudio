@@ -1549,7 +1549,7 @@ void store_write(void)
 		eise_io("Store: incorrect compression size.");
 }
 
-void st_write_cid (uint32 dftype)
+rt_private void st_write_cid (uint32 dftype)
 
 {
 	int16 *cidarr, count;
@@ -1565,7 +1565,7 @@ void st_write_cid (uint32 dftype)
 		buffer_write ((char *) (cidarr+1), count * sizeof (int16));
 }
 
-void ist_write_cid (uint32 dftype)
+rt_private void ist_write_cid (uint32 dftype)
 
 {
 	int16 *cidarr;

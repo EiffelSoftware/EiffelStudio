@@ -127,6 +127,10 @@ x: <span class="eclass">X</span>
 		<span class="ekeyword">end</span></pre>
           <li>Fixed issue with <span class="efeature">deep_equal</span> on <span class="eclass">ARRAY</span> of expanded types which was 
           returning <span class="ekeyword">False</span> where it should have returned <span class="ekeyword">True</span>.</li>
+          <li>Fixed code generation issue with double constants where code below 
+          was not producing the expected result of 1e+030:
+          <pre>	<span class="efeature">value</span>: <span class="eclass">DOUBLE</span> is 1.0e15
+	<span class="efeature">print</span> (<span class="efeature">value</span> * <span class="efeature">value</span>)          </pre></li>
           <li>Fixed issue in melted code where computation such as <span class="eclass">INTEGER_X</span> // 
           <span class="eclass">INTEGER_Y</span> will either crash or give an incorrect computation where X 
           and Y represents integers that are either 8, 16, 32 or 64 bits long and X &lt; Y.</li>

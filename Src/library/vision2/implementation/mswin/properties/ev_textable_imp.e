@@ -40,6 +40,20 @@ feature -- Status setting
 			set_text ("")
 		end
 
+feature {EV_ANY_I}
+
+	safe_text: STRING is
+			-- Convenience function for Windows implementation.
+			-- Returns `text' but if `Void' returns empty string.
+		do
+			Result := text
+			if Result = Void then
+				Result := ""
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
 feature -- Inapplicable
 
 	set_default_minimum_size is
@@ -70,6 +84,9 @@ end -- class EV_TEXTABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/02/25 18:03:26  brendel
+--| Added feature `safe_text' that never returns a Void string.
+--|
 --| Revision 1.14  2000/02/19 05:44:59  oconnor
 --| released
 --|

@@ -531,6 +531,10 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			end
 			reset_content
 			index := 0
+
+				-- We must now force the list to recompute the need
+				-- for a horizontal scroll bar.
+			set_column_width (-1, 0)
 		end
 
 feature {EV_LIST_ITEM_IMP} -- Pixmap handling

@@ -46,7 +46,7 @@ feature
 
 	set_state (s: STRING) is
 		local
-			state: STATE
+			state: BUILD_STATE
 		do
 			state := Shared_app_graph.state (s);		
 			if state /= Void then
@@ -73,9 +73,9 @@ feature {NONE}
 			update_behavior_editor (dropped.data)
 		end;
 
-	update_behavior_editor (s: STATE) is
+	update_behavior_editor (s: BUILD_STATE) is
 		local
-			prev_s: STATE;
+			prev_s: BUILD_STATE;
 			prev_b, b: BEHAVIOR;
 			c: CONTEXT
 		do

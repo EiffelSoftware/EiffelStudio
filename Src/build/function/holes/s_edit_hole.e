@@ -40,7 +40,7 @@ feature {NONE}
 
 feature
 			
-	data: STATE is
+	data: BUILD_STATE is
 		do
 			Result := function_editor.edited_function
 		end;
@@ -54,7 +54,7 @@ feature {NONE}
 
 	process_state (dropped: STATE_STONE) is
 		local
-			state: STATE
+			state: BUILD_STATE
 		do
 			state := dropped.data;
 			if

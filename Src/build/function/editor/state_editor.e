@@ -66,7 +66,7 @@ feature -- Input/output
 
 feature -- Edited features
 
-	edited_function: STATE;
+	edited_function: BUILD_STATE;
 
 	set_edited_function (f: like edited_function) is
 		do

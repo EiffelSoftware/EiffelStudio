@@ -62,7 +62,7 @@ feature
 	set_state (s: STRING) is
 			-- Set current state to `s'.
 		local
-			state: STATE
+			state: BUILD_STATE
 		do
 			state := Shared_app_graph.state (s)
 			if state /= Void then
@@ -97,7 +97,7 @@ feature {NONE}
 			states_wnd.popup (Shared_app_graph.state_names)
 		end
 
-	update_main_panel (s: STATE) is
+	update_main_panel (s: BUILD_STATE) is
 			-- Update the main panel.
 		do
 			main_panel.set_current_state (s)

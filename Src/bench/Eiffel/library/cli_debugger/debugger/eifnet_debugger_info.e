@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that represents the dotnet debuggeur information"
+	description: "Objects that represents the dotnet debugger information"
 	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -100,6 +100,9 @@ feature -- Reset
 				--| StepComplete |--
 			last_step_complete_reason   := 0
 			last_exception_is_handled   := False
+
+				--| Debugger Error
+			reset_debugger_error
 			
 				--| Param   |--
 			param_arguments := Void
@@ -313,6 +316,28 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Access
 			-- hasn't had a chance to be processed by the application.  If
 			-- last_exception_handled is False, this is an unhandled exception which will
 			-- terminate the process.			
+
+feature -- Debugger error
+
+	debugger_error_occured: BOOLEAN
+
+	debugger_error_code: INTEGER
+
+	debugger_error_hr: INTEGER
+
+	notify_debugger_error (a_error_hr, a_error_code: INTEGER) is
+		do
+			debugger_error_occured := True
+			debugger_error_hr := a_error_hr
+			debugger_error_code := a_error_code
+		end
+
+	reset_debugger_error is
+		do
+			debugger_error_occured := False
+			debugger_error_hr := 0
+			debugger_error_code := 0
+		end
 
 feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 

@@ -16,6 +16,15 @@ inherit
 			implementation,
 			is_in_default_state
 		end
+		
+	EV_DOCKABLE_TARGET
+		undefine
+			is_equal,
+			is_in_default_state
+		redefine
+			implementation,
+			is_in_default_state
+		end
 
 	EV_ITEM_LIST [EV_TOOL_BAR_ITEM]
 		redefine

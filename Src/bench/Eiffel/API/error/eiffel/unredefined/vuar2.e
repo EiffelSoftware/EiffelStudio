@@ -1,7 +1,7 @@
 indexing
 
 	description: 
-		"Error for a feature call: type mismatch one one argument.";
+		"Error for a feature call: type mismatch on one argument.";
 	date: "$Date$";
 	revision: "$Revision $"
 

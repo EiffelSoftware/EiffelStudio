@@ -13,7 +13,7 @@ inherit
 	SCROLLED_TEXT_WINDOWS
 		redefine
 			realize,
-                        default_style
+			default_style
 		end
 
 creation

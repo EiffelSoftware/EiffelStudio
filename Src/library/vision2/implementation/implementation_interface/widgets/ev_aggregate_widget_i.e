@@ -19,7 +19,7 @@ deferred class
 inherit
 	EV_WIDGET_I
 
-feature {EV_ANY_I} -- Access
+feature {EV_ANY} -- Access
 
 	box: EV_HORIZONTAL_BOX
 			-- Contains elements displayed.
@@ -47,6 +47,9 @@ end -- class EV_AGGREGATE_WIDGET_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2000/02/21 20:00:19  rogers
+--| Box is now exported to EV_ANY instead of EV_ANY_I.
+--|
 --| Revision 1.2  2000/02/14 12:05:09  oconnor
 --| added from prerelease_20000214
 --|

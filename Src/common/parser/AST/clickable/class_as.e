@@ -96,6 +96,32 @@ feature -- Properties
 
 feature -- Access
 
+	feature_clause_of_feature (f: FEATURE_AS): INTEGER is
+			-- Number of feature clause containing feature `f'.
+			-- 0 if `f' is not in Current class.
+		local
+			saved: INTEGER
+			name: STRING
+			fc: FEATURE_CLAUSE_AS
+		do
+			if features /= Void then
+				saved := features.index
+				from
+					features.start
+				until
+					features.after
+				loop
+					fc := features.item
+					if fc.has_feature (f) then
+						Result := features.index
+						features.finish
+					end
+					features.forth
+				end
+				features.go_i_th (saved)
+			end;
+		end
+
 	feature_with_name (n: STRING): FEATURE_AS is
 			-- Feature ast with internal name `n'
 		local
@@ -175,6 +201,84 @@ feature -- Comparison
 					other.forth
 				end
 			end	
+		end
+
+feature {COMPILER_EXPORTER} -- Element change
+
+	add_feature_to_feature_clause (fc_num: INTEGER; f: FEATURE_AS) is
+			-- Add feature `f' to feature clause number `fc_num'
+		require
+			fc_num_ok: features.valid_index (fc_num)
+		local
+			saved, feat_count, offset: INTEGER
+		do
+			saved := features.index
+			features.go_i_th (fc_num)
+			features.item.add_feature (f)
+			features.forth
+			from
+				offset := f.end_position - f.start_position + 4
+					--| feature size + 1 semicolumn + 2 new lines
+			until
+				features.off
+			loop
+				features.item.update_positions_with_offset (offset)
+				features.forth
+			end
+			if features.valid_cursor_index (saved) then
+				features.go_i_th (saved)
+			end
+		end
+
+	remove_feature_from_feature_clause (fc_num: INTEGER; f: FEATURE_AS) is
+			-- Remove feature `f' from feature clause number `fc_num'
+		require
+			fc_num_ok: features.valid_index (fc_num)
+		local
+			index, offset: INTEGER
+		do
+			index := features.index
+			features.go_i_th (fc_num)
+			features.item.remove_feature (f)
+			features.forth
+			from
+				offset := - (f.end_position - f.start_position + 4) --%%%%
+					--| feature size + 1 semicolumn + 2 new lines
+	
+			until
+				features.off
+			loop
+				features.item.update_positions_with_offset (offset)
+				features.forth
+			end
+			if features.valid_cursor_index (index) then
+				features.go_i_th (index)
+			end
+		end
+
+	replace_feature_of_feature_clause (fc_num: INTEGER; old_f, new_f: FEATURE_AS) is
+			-- Replace feature `old_f' in feature clause number `fc_num'
+			-- by feature `new_f'
+		require
+			fc_num_ok: features.valid_index (fc_num)
+		local
+			index, offset: INTEGER
+		do
+			index := features.index
+			features.go_i_th (fc_num)
+			features.item.replace_feature (old_f, new_f)
+			features.forth
+			from
+				offset := (new_f.end_position - old_f.end_position) --%%%%
+			until
+				features.off
+			loop
+				features.item.update_positions_with_offset (offset)
+				features.forth
+			end
+			if features.valid_cursor_index (index) then
+				features.go_i_th (index)
+			end
 		end
 
 feature {COMPILER_EXPORTER} -- Output

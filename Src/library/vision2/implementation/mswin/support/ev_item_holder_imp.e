@@ -20,11 +20,6 @@ inherit
 
 feature -- Access
 
-	interface: EV_ANY is
-			-- Interface of the current implementation
-		deferred
-		end
-
 	current_widget: EV_WIDGET is
 			-- Current widget related to the container
 		local

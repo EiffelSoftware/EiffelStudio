@@ -2756,7 +2756,10 @@ feature -- Dispatch and execution tables generation
 feature -- Main file generation
 
 	generate_main_file is
+		local
+			Main_file: UNIX_FILE;
 		do
+			Main_file := Main_f (byte_context.final_mode);
 			Main_file.open_write;
 
 			Main_file.putstring ("%N%
@@ -2801,10 +2804,12 @@ feature -- Main file generation
 			static_type: INTEGER;
 			feature_id: INTEGER;
 			has_argument: BOOLEAN;
-			i, nb: INTEGER
+			i, nb: INTEGER;
+			Initialization_file: UNIX_FILE
 		do
 
 			final_mode := byte_context.final_mode;
+			Initialization_file := Init_f (final_mode);
 
 			root_cl := root_class.compiled_class;
 			cl_type := root_cl.types.first;

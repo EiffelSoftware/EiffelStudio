@@ -18,6 +18,9 @@ feature {NONE} -- Initialization
 	make is
 			-- New instance of a IMetaDataDispenser.
 		do
+				-- Initialize COM.
+			(create {CLI_COM}).initialize_com
+
 			item := new_md_dispenser
 		end
 

@@ -14,34 +14,34 @@
 				effect as inserting it once.
 			<H2>Deferred classes</H2>
 				The most general class describing sets is
-				<A HREF="../../reference/structures/set/set.html">SET</A>. The
+				<A HREF="../../reference/structures/set/set_chart.html">SET</A>. The
 				usual operations of set theory such as union and intersection have
 				been relegated to
-				<A HREF="../../reference/structures/set/subset.html">SUBSET</A>,
-				an heir of <A HREF="../../reference/structures/set/set.html">SET</A>.
+				<A HREF="../../reference/structures/set/subset_chart.html">SUBSET</A>,
+				an heir of <A HREF="../../reference/structures/set/set_chart.html">SET</A>.
 				This enables a class to inherit from
-				<A HREF="../../reference/structures/set/set.html">SET</A> without
+				<A HREF="../../reference/structures/set/set_chart.html">SET</A> without
 				having to effect these operations if it satisfies the basic set property
 				but has no convenient implementation of the subset operations.
 			<H2>Sets without a notion of order</H2>
-				<A HREF="../../reference/structures/set/linked_set.html">LINKED_SET</A>
+				<A HREF="../../reference/structures/set/linked_set_chart.html">LINKED_SET</A>
 				provides a basic implementation of
-				<A HREF="../../reference/structures/set/set.html">SET</A> by
+				<A HREF="../../reference/structures/set/set_chart.html">SET</A> by
 				linked lists.
 			<H2>Sets of comparable elements and sorted sets</H2>
 				The deferred class
-				<A HREF="../../reference/structures/set/comparable_set.html">COMPARABLE_SET</A>,
+				<A HREF="../../reference/structures/set/comparable_set_chart.html">COMPARABLE_SET</A>,
 				declared as
 			<P CLASS="code">
 				<SPAN CLASS="ekeyword">deferred class</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				<A HREF="../../reference/structures/set/comparable_set.html">COMPARABLE_SET</A>
-				[G -> <A HREF="../../reference/kernel/comparable.html">COMPARABLE</A>]<BR>
+				<A HREF="../../reference/structures/set/comparable_set_chart.html">COMPARABLE_SET</A>
+				[G -> <A HREF="../../reference/kernel/comparable_chart.html">COMPARABLE</A>]<BR>
 				<BR><SPAN CLASS="ekeyword">inherit</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;
 				<A HREF="../../reference/structures/set/subset.html">SUBSET</A> [G]<BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				<A HREF="../../reference/structures/set/comparable_struct.html">COMPARABLE_STRUCT</A> [G]<BR>
+				<A HREF="../../reference/structures/set/comparable_struct_chart.html">COMPARABLE_STRUCT</A> [G]<BR>
 				...
 			</P>
 			<P>
@@ -50,15 +50,15 @@
 				<A HREF="../../reference/structures/set/comparable_set.html#f_min">min</A> and
 				<A HREF="../../reference/structures/set/comparable_set.html#f_max">max</A>.<BR>
 				Two implementations of
-				<A HREF="../../reference/structures/set/comparable_set.html">COMPARABLE_SET</A>
+				<A HREF="../../reference/structures/set/comparable_set_chart.html">COMPARABLE_SET</A>
 				are provided. One,
-				<A HREF="../../reference/structures/set/two_way_sorted_set.html">TWO_WAY_SORTED_SET</A>,
+				<A HREF="../../reference/structures/set/two_way_sorted_set_chart.html">TWO_WAY_SORTED_SET</A>,
 				uses sorted two-way lists. The other,
-				<A HREF="../../reference/structures/set/binary_search_tree_set.html">BINARY_SEARCH_TREE_SET</A>,
+				<A HREF="../../reference/structures/set/binary_search_tree_set_chart.html">BINARY_SEARCH_TREE_SET</A>,
 				uses binary search trees.<BR>
 				If the items are partially rather than totally ordered, you may use the class
-				<A HREF="../../reference/structures/set/part_sorted_set.html">PART_SORTED_SET</A>
-				[G -&gt; <A HREF="../../reference/kernel/part_comparable.html">PART_COMPARABLE</A>],
+				<A HREF="../../reference/structures/set/part_sorted_set_chart.html">PART_SORTED_SET</A>
+				[G -&gt; <A HREF="../../reference/kernel/part_comparable_chart.html">PART_COMPARABLE</A>],
 				which uses a two-way sorted list implementation.
 	</BODY>
 </HTML>

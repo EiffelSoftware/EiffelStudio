@@ -16,51 +16,51 @@
 				clusters of classes:
 			<UL>
 				<LI>The first cluster contains the universal class defining facilities accessible to all
-					other classes: <A CLASS="eclass" HREF="../../reference/kernel/any.html">ANY</A>.
+					other classes: <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A>.
 					Every developer-defined class is a descendant of this class.
 				<LI>The second cluster includes classes whose facilities are directly related to
 					language concepts:
 					<UL>
 						<LI>Classes describing the basic types:
-						<A CLASS="eclass" HREF="../../reference/kernel/boolean.html">BOOLEAN</A>,
-						<A CLASS="eclass" HREF="../../reference/kernel/character.html">CHARACTER</A>,
-						<A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A>,
-						<A CLASS="eclass" HREF="../../reference/kernel/real.html">REAL</A>
+						<A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A>,
+						<A CLASS="eclass" HREF="../../reference/kernel/character_chart.html">CHARACTER</A>,
+						<A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A>,
+						<A CLASS="eclass" HREF="../../reference/kernel/real_chart.html">REAL</A>
 						and
-						<A CLASS="eclass" HREF="../../reference/kernel/double.html">DOUBLE</A>
-						<LI>Arrays: class <A CLASS="eclass" HREF="../../reference/kernel/array.html">ARRAY</A>
-						<LI>Strings: class <A CLASS="eclass" HREF="../../reference/kernel/string.html">STRING</A>
-						<LI>Basic facilities: class <A CLASS="eclass" HREF="../../reference/kernel/basic_routines.html">BASIC_ROUTINES</A>
+						<A CLASS="eclass" HREF="../../reference/kernel/double_chart.html">DOUBLE</A>
+						<LI>Arrays: class <A CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</A>
+						<LI>Strings: class <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A>
+						<LI>Basic facilities: class <A CLASS="eclass" HREF="../../reference/kernel/basic_routines_chart.html">BASIC_ROUTINES</A>
 					</UL>
 				<LI>The third cluster provides input and output facilities:
 					<UL>
-						<LI><A CLASS="eclass" HREF="../../reference/kernel/std_files.html">STD_FILES</A>
+						<LI><A CLASS="eclass" HREF="../../reference/kernel/std_files_chart.html">STD_FILES</A>
 						offers basic mechanisms, sufficient for simple input and output.
-						<LI><A CLASS="eclass" HREF="../../reference/kernel/file.html">FILE</A>
+						<LI><A CLASS="eclass" HREF="../../reference/kernel/file_chart.html">FILE</A>
 						describes the notion of sequential file, viewed as a sequence of characters
 						and fully integrated in the data structure library.
-						<LI><A CLASS="eclass" HREF="../../reference/kernel/directory.html">DIRECTORY</A>
+						<LI><A CLASS="eclass" HREF="../../reference/kernel/directory_chart.html">DIRECTORY</A>
 						gives properties of directories (files serving as collections of other files).
 					</UL>
-				<LI>The next cluster, through class <A CLASS="eclass" HREF="../../reference/kernel/storable.html">STORABLE</A>,
+				<LI>The next cluster, through class <A CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">STORABLE</A>,
 				makes it possible to store object structures on persistent storage and retrieve them later. This facility can also be used to
 				transmit object structures through pipes or over a network.
 				<LI>The last cluster provides access to internal properties of the compiler and environment, useful for applications that need some fine-tuning of the basic mechanisms:
 					<UL>
-						<LI>Class <A CLASS="eclass" HREF="../../reference/kernel/exceptions.html">EXCEPTIONS</A>
-						(complemented by <A CLASS="eclass" HREF="../../reference/kernel/unix_signals.html">UNIX_SIGNALS</A>
+						<LI>Class <A CLASS="eclass" HREF="../../reference/kernel/exceptions_chart.html">EXCEPTIONS</A>
+						(complemented by <A CLASS="eclass" HREF="../../reference/kernel/unix_signals_chart.html">UNIX_SIGNALS</A>
 						for Unix-type platforms) provides control over the exception handling mechanism, in particular
 						for applications that need to handle different types of exception in different ways.
-						<LI>Similarly, classes <A CLASS="eclass" HREF="../../reference/kernel/memory.html">MEMORY</A>
-						and <A CLASS="eclass" HREF="../../reference/kernel/gc_info.html">GC_INFO</A> provide ways to control the garbage
+						<LI>Similarly, classes <A CLASS="eclass" HREF="../../reference/kernel/memory_chart.html">MEMORY</A>
+						and <A CLASS="eclass" HREF="../../reference/kernel/gc_info_chart.html">GC_INFO</A> provide ways to control the garbage
 						collector and tailor it to specific needs.
-						<LI>Class <A CLASS="eclass" HREF="../../reference/kernel/arguments.html">ARGUMENTS</A> gives access to the
+						<LI>Class <A CLASS="eclass" HREF="../../reference/kernel/arguments_chart.html">ARGUMENTS</A> gives access to the
 						command-line arguments.
 					</UL>
 			</UL>
         <h2>UNIVERSAL CLASS AND ITS FEATURES</h2>
         <p>The Eiffel inheritance mechanism is set up in such a way that every class is a
-        descendant of a Kernel Library class called <A CLASS="eclass" HREF="../../reference/kernel/any.html">ANY</A>.
+        descendant of a Kernel Library class called <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A>.
         The features of this class provide a number of generally applicable facilities covering such needs as comparison, copying and
         rudimentary input and output.</p>
         <h3> The structure of universal classes</h3>
@@ -68,10 +68,10 @@
         of the form<br>
         <code>
         <SPAN CLASS="ekeyword">inherit</SPAN><br>
- 		 &nbsp;&nbsp; <A CLASS="eclass" HREF="../../reference/kernel/any.html">ANY</A></p>
+ 		 &nbsp;&nbsp; <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A></p>
  		 </code><br>
-        <p>As a result, every developer-defined class is a descendant of <A CLASS="eclass" HREF="../../reference/kernel/any.html">ANY</A>.
-        You may introduce your own project specific features in <A CLASS="eclass" HREF="../../reference/kernel/any.html">ANY</A>
+        <p>As a result, every developer-defined class is a descendant of <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A>.
+        You may introduce your own project specific features in <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A>
         so that all the classes of your system will be able to use these
         features.</p>
         <h3>Using the universal classes</h3>
@@ -81,7 +81,7 @@
         <SPAN CLASS="ekeyword">class</SPAN><br>
         &nbsp;&nbsp; <SPAN CLASS="eclass">C</SPAN><br>
         <SPAN CLASS="ekeyword">inherit</SPAN><br>
-        &nbsp;&nbsp; <A CLASS="eclass" HREF="../../reference/kernel/any.html">ANY</A><br>
+        &nbsp;&nbsp; <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">rename</SPAN><br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_out">out</A>
         <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="efeature">basic_out</SPAN><br>
@@ -93,7 +93,7 @@
         &nbsp;&nbsp;&nbsp;...<br>
         <SPAN CLASS="ekeyword">end</SPAN>
         </code><br>
-        <p>The features of <A CLASS="eclass" HREF="../../reference/kernel/any.html">ANY</A>
+        <p>The features of <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A>
         are usable in both qualified and unqualified form. For example, the argumentless function out, which produces a printable representation of any object,
         may be called under either of the forms<br>
         <code>
@@ -104,22 +104,22 @@
         which assumes that a is not void, yields a printable representation of the object attached
         to a.</p>
         <h3>Input and output features</h3>
-        <p>Some of the features of <A CLASS="eclass" HREF="../../reference/kernel/any.html">ANY</A>
+        <p>Some of the features of <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A>
         cover common input and output needs.<br>
         Feature <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_io">io</A>,
-        of type <A CLASS="eclass" HREF="../../reference/kernel/std_files.html">STD_FILES</A>,
+        of type <A CLASS="eclass" HREF="../../reference/kernel/std_files_chart.html">STD_FILES</A>,
         gives access to standard input and output facilities.
         For example,
         <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_io">io</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/kernel/std_files.html#f_input">input</A>
         is the standard input file and
         <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_io">io</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/kernel/std_files.html#f_new_line">new_line</A>
         will print a line feed on the standard output. Feature io is declared as a once function which, when first called,
-        returns the value of an instance of <A CLASS="eclass" HREF="../../reference/kernel/std_files.html">STD_FILES</A>
+        returns the value of an instance of <A CLASS="eclass" HREF="../../reference/kernel/std_files_chart.html">STD_FILES</A>
         that provides access to the standard input, the standard output and the error output. As a result, io is never void, so that
         operations such as
         <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_io">io</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/kernel/std_files.html#f_new_line">new_line</A>
         are always possible.<br>
-        Function out, of type <A CLASS="eclass" HREF="../../reference/kernel/string.html">STRING</A>,
+        Function out, of type <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A>,
         is a universal mechanism for obtaining a simple
         external representation of any object. For non-void <SPAN CLASS="elocal">x</SPAN> of any type, the string
         <SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_out">out</A>
@@ -185,10 +185,10 @@
         <SPAN CLASS="elocal">a</SPAN><SPAN CLASS="esymbol">.</SPAN><a CLASS="efeature" HREF="../../reference/kernel/any.html#f_is_equal">is_equal</a>
         <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">)</SPAN>  for non-void <SPAN CLASS="elocal">a</SPAN>).
         You will find such redefinitions in a number of classes of the Base libraries. For example an instance of
-        <A CLASS="eclass" HREF="../../reference/kernel/string.html">STRING</A> is a string
+        <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A> is a string
         descriptor containing a reference to the actual character sequence, not that sequence
         itself, so that what the default equal compares and the default copy copies is the
-        descriptor, not the string. Class <A CLASS="eclass" HREF="../../reference/kernel/string.html">STRING</A>
+        descriptor, not the string. Class <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A>
         redefines these routines to yield the semantics
         normally expected by string clients; the frozen variants <a CLASS="efeature" HREF="../../reference/kernel/any.html#f_standard_copy">standard_copy</a>
         and <a CLASS="efeature" HREF="../../reference/kernel/any.html#f_standard_equal">standard_equal</a>, originally declared as synonyms to equal and copy, remain available with the
@@ -231,39 +231,39 @@
         <h2 align="left">
         Basic types
         </h2>
-    <p align="left">The basic types <a CLASS="eclass" HREF="../../reference/kernel/boolean.html">BOOLEAN</a>,
-    <a CLASS="eclass" HREF="../../reference/kernel/character.html">CHARACTER</a>,
-    <a CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</a>, <a CLASS="eclass" HREF="../../reference/kernel/real.html">REAL</a>
-    and <a CLASS="eclass" HREF="../../reference/kernel/double.html">DOUBLE</a> are defined
+    <p align="left">The basic types <a CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</a>,
+    <a CLASS="eclass" HREF="../../reference/kernel/character_chart.html">CHARACTER</a>,
+    <a CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</a>, <a CLASS="eclass" HREF="../../reference/kernel/real_chart.html">REAL</a>
+    and <a CLASS="eclass" HREF="../../reference/kernel/double_chart.html">DOUBLE</a> are defined
     by classes of the Kernel library.<br>
-    In reading the class specifications for the numeric types <a CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</a>,
-    <a CLASS="eclass" HREF="../../reference/kernel/real.html">REAL</a> and <a CLASS="eclass" HREF="../../reference/kernel/double.html">DOUBLE</a>, you might think that the type declarations are too restrictive. For example the
-    addition operation in class <a CLASS="eclass" HREF="../../reference/kernel/real.html">REAL</a>
+    In reading the class specifications for the numeric types <a CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</a>,
+    <a CLASS="eclass" HREF="../../reference/kernel/real_chart.html">REAL</a> and <a CLASS="eclass" HREF="../../reference/kernel/double.html">DOUBLE</a>, you might think that the type declarations are too restrictive. For example the
+    addition operation in class <a CLASS="eclass" HREF="../../reference/kernel/real_chart.html">REAL</a>
     reads<br>
         <code>
         <SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"+" (</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN>
-        <a CLASS="eclass" HREF="../../reference/kernel/real.html">REAL</a><SPAN CLASS="esymbol">):</SPAN>
-        <a CLASS="eclass" HREF="../../reference/kernel/real.html">REAL</a>
+        <a CLASS="eclass" HREF="../../reference/kernel/real_chart.html">REAL</a><SPAN CLASS="esymbol">):</SPAN>
+        <a CLASS="eclass" HREF="../../reference/kernel/real_chart.html">REAL</a>
         </code><br>
     <p align="left">but there is actually no problem here. A language convention applicable to all arithmetic
     expressions, the Balancing rule, states that in any such expression all operands are
-    considered to be converted to the heaviest type, where <a CLASS="eclass" HREF="../../reference/kernel/double.html">DOUBLE</a>
-    is heavier than <a CLASS="eclass" HREF="../../reference/kernel/real.html">REAL</a>
-    and <a CLASS="eclass" HREF="../../reference/kernel/real.html">REAL</a> is heavier than
-    <a CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</a>. So
+    considered to be converted to the heaviest type, where <a CLASS="eclass" HREF="../../reference/kernel/double_chart.html">DOUBLE</a>
+    is heavier than <a CLASS="eclass" HREF="../../reference/kernel/real_chart.html">REAL</a>
+    and <a CLASS="eclass" HREF="../../reference/kernel/real_chart.html">REAL</a> is heavier than
+    <a CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</a>. So
     mixed-type arithmetic, consistent with common practice, is possible and indeed frequent.
         </p>
         <h3 align="left">
  Arrays
         </h3>
         <p>
-        To create and manipulate one-dimensional arrays, use class <a CLASS="eclass" HREF="../../reference/kernel/array.html">ARRAY</a>
+        To create and manipulate one-dimensional arrays, use class <a CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</a>
         of the Kernel Library. Arrays are not primitive language elements; instead, they are handled through class
-        <a CLASS="eclass" HREF="../../reference/kernel/array.html">ARRAY</a>. This class is “normal” in the sense that it may be used just as any other class
+        <a CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</a>. This class is “normal” in the sense that it may be used just as any other class
         by client and descendant classes. It is also somewhat special, however, in that the Eiffel
         compiler knows about it and uses this knowledge to generate efficient code for array
         operations.<br>
-        To create an instance of <a CLASS="eclass" HREF="../../reference/kernel/array.html">ARRAY</a>, use the creation instruction
+        To create an instance of <a CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</a>, use the creation instruction
         <br>
         <code>
         <SPAN CLASS="ekeyword">create</SPAN>
@@ -317,7 +317,7 @@
         Optimizing array computations</h3>
         <p class="warning">
         <b>
-        CAUTION</b>: Although <a CLASS="eclass" HREF="../../reference/kernel/array.html">ARRAY</a>
+        CAUTION</b>: Although <a CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</a>
         benefits from an efficient implementation, its more advanced
         facilities such as resizing do not come for free. For extensive computations on large
         arrays, an optimization may be desirable, bypassing these facilities. The technique
@@ -327,15 +327,15 @@
         application is numerical computation or some other area requiring high-performance
         array manipulations.</p>
         <p>
-        The optimization relies on the class <a CLASS="eclass" HREF="../../reference/kernel/special.html">SPECIAL</a>, used internally by
-        <a CLASS="eclass" HREF="../../reference/kernel/array.html">ARRAY</a> but of no
+        The optimization relies on the class <a CLASS="eclass" HREF="../../reference/kernel/special_chart.html">SPECIAL</a>, used internally by
+        <a CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</a> but of no
         direct interest to client developers in most common uses. With the declarations
         <br>
         <code>
-        <SPAN CLASS="elocal">my_array</SPAN><SPAN CLASS="esymbol">:</SPAN> <a CLASS="eclass" HREF="../../reference/kernel/array.html">ARRAY</a>
+        <SPAN CLASS="elocal">my_array</SPAN><SPAN CLASS="esymbol">:</SPAN> <a CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</a>
         <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">SOME_TYPE</SPAN><SPAN CLASS="esymbol">]</SPAN><br>
         <SPAN CLASS="elocal">direct_access</SPAN><SPAN CLASS="esymbol">:</SPAN>
-        <a CLASS="eclass" HREF="../../reference/kernel/special.html">SPECIAL</a>
+        <a CLASS="eclass" HREF="../../reference/kernel/special_chart.html">SPECIAL</a>
         <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">SOME_TYPE</SPAN><SPAN CLASS="esymbol">]</SPAN><br>
         </code>
         <br>
@@ -366,16 +366,16 @@
         <SPAN CLASS="ekeyword">end</SPAN><br>
         </code>
         This replaces an original loop where the operations were on <SPAN CLASS="elocal">my_array</SPAN>. Feature area
-        of <a CLASS="eclass" HREF="../../reference/kernel/array.html">ARRAY</a> gives direct access to the special object, an instance of
-        <a CLASS="eclass" HREF="../../reference/kernel/special.html">SPECIAL</a>, containing
+        of <a CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</a> gives direct access to the special object, an instance of
+        <a CLASS="eclass" HREF="../../reference/kernel/special_chart.html">SPECIAL</a>, containing
         the array values. Features
         <A CLASS="efeature" HREF="../../reference/kernel/array.html#f_put">put</A>
         and
         <A CLASS="efeature" HREF="../../reference/kernel/array.html#f_item">item</A>
-        are available in <a CLASS="eclass" HREF="../../reference/kernel/special.html">SPECIAL</a>
-        as in <a CLASS="eclass" HREF="../../reference/kernel/array.html">ARRAY</a>,
+        are available in <a CLASS="eclass" HREF="../../reference/kernel/special_chart.html">SPECIAL</a>
+        as in <a CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</a>,
         but without the preconditions; in other words, you will not get any bounds checking.
-        Instances of <a CLASS="eclass" HREF="../../reference/kernel/special.html">SPECIAL</a>
+        Instances of <a CLASS="eclass" HREF="../../reference/kernel/special_chart.html">SPECIAL</a>
         are always indexed from zero, in contrast with arrays, whose lower bound is arbitrary, 1 being the most common value. But rather than performing
         index translations (that is to say, subtracting
         <SPAN CLASS="elocal">my_array</SPAN><SPAN CLASS="esymbol">.</SPAN>lower
@@ -388,7 +388,7 @@
         subtractions.<br>
         It is important to note that this optimization, if at all necessary, should at most affect
         a few loops in a large system. You should always begin by writing your software using
-        the normal <a CLASS="eclass" HREF="../../reference/kernel/array.html">ARRAY</a>
+        the normal <a CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</a>
         facilities; then once you have the certainty that the software is
         correct, if you detect that a large array computation is hampering the efficiency of the
         system, you may apply the above technique to get the fastest performance out of that
@@ -397,15 +397,15 @@
         <h3>
         Strings</h3>
         <p>
-        Strings are handled by class <a CLASS="eclass" HREF="../../reference/kernel/string.html">STRING</a>, similar in many respects to
-        <a CLASS="eclass" HREF="../../reference/kernel/array.html">ARRAY</a>. Strings are of arbitrary size. The make creation procedure takes an integer
+        Strings are handled by class <a CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</a>, similar in many respects to
+        <a CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</a>. Strings are of arbitrary size. The make creation procedure takes an integer
         argument, as in<br>
         <code>
         <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN>
         <SPAN CLASS="elocal">s1</SPAN><SPAN CLASS="esymbol">,</SPAN>
         <SPAN CLASS="elocal">s2</SPAN><SPAN CLASS="esymbol">,</SPAN>
         <SPAN CLASS="elocal">s3</SPAN><SPAN CLASS="esymbol">:</SPAN>
-        <a CLASS="eclass" HREF="../../reference/kernel/string.html">STRING</a><br>
+        <a CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</a><br>
         ...<br>
         <SPAN CLASS="ekeyword">create</SPAN>
         <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/kernel/string.html#f_make">make</A>
@@ -417,7 +417,7 @@
         <h3>
         String descriptor</h3>
         <p>
-        The object attached at run-time to an entity such declared of type <a CLASS="eclass" HREF="../../reference/kernel/string.html">STRING</a>
+        The object attached at run-time to an entity such declared of type <a CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</a>
         is not the actual sequence of characters but a string descriptor, which contains a
         reference to the actual string contents.<br>
         As a result, four assignment or assignment-like operations are possible:
@@ -445,20 +445,20 @@
     <p class="figuretitle">fig. 1: Effect of string assignment and copy
     operations</p>
         <p>
-    <a CLASS="eclass" HREF="../../reference/kernel/basic_routines.html">BASIC_ROUTINES</a>
+    <a CLASS="eclass" HREF="../../reference/kernel/basic_routines_chart.html">BASIC_ROUTINES</a>
     provides a number of conversion functions, such as <a CLASS="efeature" HREF="../../reference/kernel/basic_routines.html#f_charconv">charconv</a>.</p>
         <h2>FILES, INPUT, OUTPUT</h2>
         <p>A few classes of the Kernel Library support file manipulation, input and output:
-        <a CLASS="eclass" HREF="../../reference/kernel/std_files.html">STD_FILES</a>,
-        <a CLASS="eclass" HREF="../../reference/kernel/file.html">FILE</a>, <a CLASS="eclass" HREF="../../reference/kernel/directory.html">DIRECTORY</a>
-        and <a CLASS="eclass" HREF="../../reference/kernel/unix_file_info.html">UNIX_FILE_INFO</a>. For simple
-        applications it suffices to use <a CLASS="eclass" HREF="../../reference/kernel/std_files.html">STD_FILES</a>, but to understand the concepts better it is
+        <a CLASS="eclass" HREF="../../reference/kernel/std_files_chart.html">STD_FILES</a>,
+        <a CLASS="eclass" HREF="../../reference/kernel/file_chart.html">FILE</a>, <a CLASS="eclass" HREF="../../reference/kernel/directory.html">DIRECTORY</a>
+        and <a CLASS="eclass" HREF="../../reference/kernel/unix_file_info_chart.html">UNIX_FILE_INFO</a>. For simple
+        applications it suffices to use <a CLASS="eclass" HREF="../../reference/kernel/std_files_chart.html">STD_FILES</a>, but to understand the concepts better it is
         preferable to look first at the other two.</p>
         <h3>General files</h3>
-        <p><a CLASS="eclass" HREF="../../reference/kernel/file.html">FILE</a> describes the notion of sequential file viewed as a data structure which fits in the
+        <p><a CLASS="eclass" HREF="../../reference/kernel/file_chart.html">FILE</a> describes the notion of sequential file viewed as a data structure which fits in the
         general taxonomy of EiffelBase.<br>
         The class declaration defines files as unbounded sequences of characters. This
-        means that you will find in <a CLASS="eclass" HREF="../../reference/kernel/file.html">FILE</a>
+        means that you will find in <a CLASS="eclass" HREF="../../reference/kernel/file_chart.html">FILE</a>
         all the operations on sequential data structures that you have come to know and love by reading this documentation - at least, all
         that apply. Just as stacks and linked lists, files have put, extend, has, item and so on.
         More specific to files are the typed input and output operations. For output, you will
@@ -507,59 +507,59 @@
         <SPAN CLASS="elocal">my_ file</SPAN><SPAN CLASS="esymbol">.</SPAN><a CLASS="efeature" HREF="../../reference/kernel/file.html#f_is_readable">is_readable</a>
         <SPAN CLASS="ekeyword">then</SPAN>...</p>
         <p>
-        <a CLASS="eclass" HREF="../../reference/kernel/file.html">FILE</a> is a deferred class. Various implementations are possible. A quite detailed one is
-        <a CLASS="eclass" HREF="../../reference/kernel/file.html">PLAIN_TEXT_FILE</a>, which adds many features for accessing
+        <a CLASS="eclass" HREF="../../reference/kernel/file_chart.html">FILE</a> is a deferred class. Various implementations are possible. A quite detailed one is
+        <a CLASS="eclass" HREF="../../reference/kernel/file_chart.html">PLAIN_TEXT_FILE</a>, which adds many features for accessing
         reading and writing data from/to a file.<br>
-        <a CLASS="eclass" HREF="../../reference/kernel/unix_file_info.html">UNIX_FILE_INFO</a>
+        <a CLASS="eclass" HREF="../../reference/kernel/unix_file_info_chart.html">UNIX_FILE_INFO</a>
         describes objects that contain internal information, such as protection mode and size, about a file.<br>
-        The class <a CLASS="eclass" HREF="../../reference/kernel/directory.html">DIRECTORY</a>
+        The class <a CLASS="eclass" HREF="../../reference/kernel/directory_chart.html">DIRECTORY</a>
         describes those files which are directories - nodes in the tree describing the file structure.</p>
         <h3>
         Basic input and output</h3>
         <p>
         Regardless of the operating system that you use, for simple input and output
-        <a CLASS="eclass" HREF="../../reference/kernel/std_files.html">STD_FILES</a>
+        <a CLASS="eclass" HREF="../../reference/kernel/std_files_chart.html">STD_FILES</a>
         is sufficient. You may inherit from that class to gain direct access to its features;
-        or you may declare an entity of type <a CLASS="eclass" HREF="../../reference/kernel/std_files.html">STD_FILES</a>. But remember that a feature of this
+        or you may declare an entity of type <a CLASS="eclass" HREF="../../reference/kernel/std_files_chart.html">STD_FILES</a>. But remember that a feature of this
         type is always available: <a CLASS="efeature" HREF="../../reference/kernel/any.html#f_io">io</a>, from class
-        <a CLASS="eclass" HREF="../../reference/kernel/any.html">ANY</a>. Thanks to this feature you may include
+        <a CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</a>. Thanks to this feature you may include
         simple input and output in any class, with instructions such as<br>
         <code>
         <a CLASS="efeature" HREF="../../reference/kernel/any.html#f_io">io</a><SPAN CLASS="esymbol">.</SPAN><a CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_put_string">put_string</a>
         <SPAN CLASS="esymbol">(&quot;</SPAN><SPAN CLASS="estring">My message</SPAN><SPAN CLASS="esymbol">")</SPAN>
         </code><br>
-        <p><a CLASS="eclass" HREF="../../reference/kernel/std_files.html">STD_FILES</a>
+        <p><a CLASS="eclass" HREF="../../reference/kernel/std_files_chart.html">STD_FILES</a>
         defines three default files through features <a CLASS="efeature" HREF="../../reference/kernel/std_files.html#f_input">input</a>,
         <a CLASS="efeature" HREF="../../reference/kernel/std_files.html#f_output">output</a>and
         <a CLASS="efeature" HREF="../../reference/kernel/std_files.html#f_error">error</a>.
         These features are Once functions, so that the first reference to any one of them will
         automatically create the corresponding file descriptor and open the associated file.<br>
         To simplify the writing of common input and output operations, the most frequently
-        used features of class <a CLASS="eclass" HREF="../../reference/kernel/file.html">FILE</a>
+        used features of class <a CLASS="eclass" HREF="../../reference/kernel/file_chart.html">FILE</a>
         - for reading and writing integers, reals and so on, as discussed next - have been repeated in
-        <a CLASS="eclass" HREF="../../reference/kernel/std_files.html">STD_FILES</a>
+        <a CLASS="eclass" HREF="../../reference/kernel/std_files_chart.html">STD_FILES</a>
         so as to apply to the default input and output. Procedure <a CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_put_string">put_string</a>
         in the example at the beginning of this section is typical: it writes its output on the standard output. More generally,
-        <a CLASS="eclass" HREF="../../reference/kernel/std_files.html">STD_FILES</a>
-        has all the <SPAN CLASS="efeature">put_xxx</SPAN>, <SPAN CLASS="efeature">read_xxx</SPAN> and <SPAN CLASS="efeature">last_xxx</SPAN> features of <a CLASS="eclass" HREF="../../reference/kernel/file.html">FILE</a>.</p>
+        <a CLASS="eclass" HREF="../../reference/kernel/std_files_chart.html">STD_FILES</a>
+        has all the <SPAN CLASS="efeature">put_xxx</SPAN>, <SPAN CLASS="efeature">read_xxx</SPAN> and <SPAN CLASS="efeature">last_xxx</SPAN> features of <a CLASS="eclass" HREF="../../reference/kernel/file_chart.html">FILE</a>.</p>
         <h2>PERSISTENCE, STORAGE AND RETRIEVAL</h2>
         <p>Most object-oriented applications need the ability to store object structures on persistent
         storage for later retrieval, and to transfer such object structures to other applications.<br>
-        Class <a CLASS="eclass" HREF="../../reference/kernel/storable.html">STORABLE</a>
+        Class <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">STORABLE</a>
         addresses this need.</p>
         <h3>Persistence completeness</h3>
         <p>A fundamental requirement on object persistence mechanisms is the <i> Persistence
         Completeness</i> rule, stated as follows in Eiffel: The Language:<br>
-        Whenever a routine of class <a CLASS="eclass" HREF="../../reference/kernel/storable.html">STORABLE</a>
+        Whenever a routine of class <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">STORABLE</a>
         stores an object into an external file, it stores with it the dependents of that object. Whenever
         one of the associated retrieval routines retrieves a previously stored object, it also retrieves all its dependents.<br>
         Storing an object just by itself would usually result in wrong semantics: most
         objects contain references to other objects, which must also be stored and retrieved with
         it. The persistence completeness rule ensures that this is always the case. It also means,
-        of course, that the features of <a CLASS="eclass" HREF="../../reference/kernel/storable.html">STORABLE</a>
+        of course, that the features of <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">STORABLE</a>
         must do much more than simple input and&nbsp; output; they must perform complete traversals of object structures.</p>
         <h3>Using the storage and retrieval facilities</h3>
-        <p>Class <a CLASS="eclass" HREF="../../reference/kernel/storable.html">STORABLE</a>
+        <p>Class <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">STORABLE</a>
         is meant to be used as ancestor. You can use its features in any descendant <SPAN CLASS="eclass">C</SPAN>; for example a routine of <SPAN CLASS="eclass">C</SPAN> may contain a call of the form
         <A CLASS="efeature" HREF="../../reference/kernel/storable.html#f_basic_store">basic_store</A>
         <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">my_descriptor</SPAN><SPAN CLASS="esymbol">).<br>
@@ -567,10 +567,10 @@
         the file denoted by my_descriptor.<br>
         Although
         <A CLASS="efeature" HREF="../../reference/kernel/storable.html#f_basic_store">basic_store</A>
-        and other procedures of <a CLASS="eclass" HREF="../../reference/kernel/storable.html">STORABLE</a>will in general process
+        and other procedures of <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">STORABLE</a>will in general process
         objects of many different types, only the generating class of the structure’s initial object,
         <SPAN CLASS="eclass">C</SPAN> in our example, needs to be a descendant of
-        <a CLASS="eclass" HREF="../../reference/kernel/storable.html">STORABLE</a>.</p>
+        <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">STORABLE</a>.</p>
         <h3>Varieties of store operations</h3>
         <p>Two variants of the store operation are supported: basic store and general store. Basic
         store produces more compact structures in the resulting files, and is slightly faster; but
@@ -584,7 +584,7 @@
         The result of <a CLASS="efeature" HREF="../../reference/kernel/storable.html#f_general_store">general_store</a>
         is still platform-dependent; the representation of numbers, in particular, is determined by the underlying machine architecture. A third variant called
         <a CLASS="efeature" HREF="../../reference/kernel/storable.html#f_independent_store">independent_store</a>
-        will be added in the future to <a CLASS="eclass" HREF="../../reference/kernel/storable.html">STORABLE</a>, using an entirely platform-independent
+        will be added in the future to <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">STORABLE</a>, using an entirely platform-independent
         storage format; then a system running on a computer with a certain architecture
         will be able to retrieve, without any explicit conversion operation, object structures stored by a
         system running on a machine of a completely different architecture. With
@@ -597,7 +597,7 @@
         will figure out, from the format of the stored structure, whether it was stored by
         <A CLASS="efeature" HREF="../../reference/kernel/storable.html#f_basic_store">basic_store</A>
         or <a CLASS="efeature" HREF="../../reference/kernel/storable.html#f_general_store">general_store</a>, and will decode it accordingly.<br>
-        Feature retrieved returns a result of type <a CLASS="eclass" HREF="../../reference/kernel/storable.html">STORABLE</a>
+        Feature retrieved returns a result of type <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">STORABLE</a>
         and is typically used through an assignment attempt of the form<br>
         <code>
         <SPAN CLASS="local">x</SPAN> <SPAN CLASS="esymbol">?=</SPAN>
@@ -606,11 +606,11 @@
         </code><br>
         <p>The assignment attempt is necessary because <a CLASS="efeature" HREF="../../reference/kernel/storable.html#f_retrieved">retrieved</a>
         returns a result of type
-        <a CLASS="eclass" HREF="../../reference/kernel/storable.html">STORABLE</a>&nbsp;
-        whereas the type of <SPAN CLASS="elocal">x</SPAN> will be based on a proper descendant of <a CLASS="eclass" HREF="../../reference/kernel/storable.html">STORABLE</a>.
+        <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">STORABLE</a>&nbsp;
+        whereas the type of <SPAN CLASS="elocal">x</SPAN> will be based on a proper descendant of <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">STORABLE</a>.
         If the structure in the file has been corrupted and retrieved is unable to do its job, it
-        will trigger an exception. The code for that exception in class <a CLASS="eclass" HREF="../../reference/kernel/exceptions.html">EXCEPTIONS</a>
-        (which inherits it from <a CLASS="eclass" HREF="../../reference/kernel/excep_const.html">EXCEP_CONST</a>
+        will trigger an exception. The code for that exception in class <a CLASS="eclass" HREF="../../reference/kernel/exceptions_chart.html">EXCEPTIONS</a>
+        (which inherits it from <a CLASS="eclass" HREF="../../reference/kernel/excep_const_chart.html">EXCEP_CONST</a>
         and is discussed in the next section, together with the notion of exception code) is
         <SPAN CLASS="efeature">Retrieve_exception</SPAN>.</p>
         <h2>ACCESS TO INTERNAL PROPERTIES</h2>
@@ -619,13 +619,13 @@
         arguments. In less common cases you may require low-level access to internal
         properties of objects.</p>
         <h3>Exception handling</h3>
-        <p>Class <a CLASS="eclass" HREF="../../reference/kernel/exceptions.html">EXCEPTIONS</a>
-        enables you to control the handling of exceptions. <a CLASS="eclass" HREF="../../reference/kernel/unix_signals.html">UNIX_SIGNALS</a>, discussed next, complements it for the special case of fine-grain signal
+        <p>Class <a CLASS="eclass" HREF="../../reference/kernel/exceptions_chart.html">EXCEPTIONS</a>
+        enables you to control the handling of exceptions. <a CLASS="eclass" HREF="../../reference/kernel/unix_signals_chart.html">UNIX_SIGNALS</a>, discussed next, complements it for the special case of fine-grain signal
         handling on Unix or Unix-like platforms. Both are meant to be inherited by any class
         that needs their facilities.<br>
         The basic exception mechanism treats all exceptions in the same way. In some cases
         it may be useful to discriminate in a Rescue clause between the various possible causes.<br>
-        Class <a CLASS="eclass" HREF="../../reference/kernel/exceptions.html">EXCEPTIONS</a>
+        Class <a CLASS="eclass" HREF="../../reference/kernel/exceptions_chart.html">EXCEPTIONS</a>
         provides the features to do this. Each kind of exception has an integer code, which you can use through several features:</p>
         <ul>
           <li>The integer-valued query <a CLASS="efeature" HREF="../../reference/kernel/exceptions.html#f_exception">exception</a>
@@ -642,16 +642,16 @@
         </ul>
         <p>The class also provides a set of constant integer-valued attributes which denote the
         various possible codes, such as No_more_memory, Routine_ failure and Precondition_violation. So you can test the value of exception against these codes if you need to
-        ascertain the precise nature of an exception. To keep <a CLASS="eclass" HREF="../../reference/kernel/exceptions.html">EXCEPTIONS</a>
-        simple these constant attributes are declared in a class <a CLASS="eclass" HREF="../../reference/kernel/excep_const.html">EXCEP_CONST</a>, of which
-        <a CLASS="eclass" HREF="../../reference/kernel/exceptions.html">EXCEPTIONS</a>
+        ascertain the precise nature of an exception. To keep <a CLASS="eclass" HREF="../../reference/kernel/exceptions_chart.html">EXCEPTIONS</a>
+        simple these constant attributes are declared in a class <a CLASS="eclass" HREF="../../reference/kernel/excep_const_chart.html">EXCEP_CONST</a>, of which
+        <a CLASS="eclass" HREF="../../reference/kernel/exceptions_chart.html">EXCEPTIONS</a>
         is an heir.<br>
         Another occasional requirement is for a mechanism to trigger an exception
         explicitly. Procedure <a CLASS="efeature" HREF="../../reference/kernel/exceptions.html#f_raise">raise</a>
         answers this needs; the argument, a string, is the tag chosen for the exception. The code in this case is Developer_exception; the query
         <a CLASS="efeature" HREF="../../reference/kernel/exceptions.html#f_is_developer_exception">is_developer_exception</a>
         will return true; and the tag is accessible through feature <a CLASS="efeature" HREF="../../reference/kernel/exceptions.html#f_tag_name">tag_name</a>.<br>
-        You will notice in the interface specification for <a CLASS="eclass" HREF="../../reference/kernel/exceptions.html">EXCEPTIONS</a>
+        You will notice in the interface specification for <a CLASS="eclass" HREF="../../reference/kernel/exceptions_chart.html">EXCEPTIONS</a>
         that for some properties of the latest exception there are two features, one with a name such as
         <a CLASS="efeature" HREF="../../reference/kernel/exceptions.html#f_exception">exception</a>
         or <a CLASS="efeature" HREF="../../reference/kernel/exceptions.html#f_recipient_name">recipient_name</a>
@@ -672,7 +672,7 @@
         exception code for precondition violations. So you have the choice between exploring
         the properties of the original exception, or those of the resulting routine failures. Just
         make sure you know what you are looking for.</p>
-        <p>As you will see from the header comments in the flat-short form of class <a CLASS="eclass" HREF="../../reference/kernel/exceptions.html">EXCEPTIONS</a>, the queries that return detailed information about an exception, such as
+        <p>As you will see from the header comments in the flat-short form of class <a CLASS="eclass" HREF="../../reference/kernel/exceptions_chart.html">EXCEPTIONS</a>, the queries that return detailed information about an exception, such as
         <a CLASS="efeature" HREF="../../reference/kernel/exceptions.html#f_assertion_violation">assertion_violation</a>, all give an answer determined by
         <a CLASS="efeature" HREF="../../reference/kernel/exceptions.html#f_original_exception">original_exception</a>
         rather than <a CLASS="efeature" HREF="../../reference/kernel/exceptions.html#f_exception">exception</a>, since when the two are different (that is to say, when you handle the
@@ -680,14 +680,14 @@
         is always
         <SPAN CLASS="efeature">Routine_failure</SPAN> and there is nothing more to say about it.</p>
         <h3>Signal handling</h3>
-        <p>The features of class <a CLASS="eclass" HREF="../../reference/kernel/exceptions.html">EXCEPTIONS</a>
+        <p>The features of class <a CLASS="eclass" HREF="../../reference/kernel/exceptions_chart.html">EXCEPTIONS</a>
         enable you to determine whether a certain
         exception is a signal - an operating system event such as may result from a child
         process that disappears, a window that is resized, a user that hits the Break key and
         many others. But they do not give you more details because the exact set of possible
         signals is highly platform-dependent.<br>
-        Class <a CLASS="eclass" HREF="../../reference/kernel/unix_signals.html">UNIX_SIGNALS</a>
-        complements <a CLASS="eclass" HREF="../../reference/kernel/excep_const.html">EXCEP_CONST</a>
+        Class <a CLASS="eclass" HREF="../../reference/kernel/unix_signals_chart.html">UNIX_SIGNALS</a>
+        complements <a CLASS="eclass" HREF="../../reference/kernel/excep_const_chart.html">EXCEP_CONST</a>
         by providing codes for the signals of Unix and similar systems, such as Sigkill for the “kill” signal and Sigbus for
         bus error.<br>
         Query <a CLASS="efeature" HREF="../../reference/kernel/exceptions.html#f_is_defined">is_defined</a>
@@ -695,21 +695,21 @@
         <SPAN CLASS="elocal">some_signal</SPAN> is an integer code, will
         determine whether some_signal is supported on the platform.<br>
         A class whose routines need to perform specific processing depending on the nature
-        of signals received should inherit from <a CLASS="eclass" HREF="../../reference/kernel/unix_signals.html">UNIX_SIGNALS</a>, or a similar class for another
+        of signals received should inherit from <a CLASS="eclass" HREF="../../reference/kernel/unix_signals_chart.html">UNIX_SIGNALS</a>, or a similar class for another
         platform.<br>
-        Because signal codes are platform-dependent, the features of <a CLASS="eclass" HREF="../../reference/kernel/unix_signals.html">UNIX_SIGNALS</a>
+        Because signal codes are platform-dependent, the features of <a CLASS="eclass" HREF="../../reference/kernel/unix_signals_chart.html">UNIX_SIGNALS</a>
         are
         implemented as once functions - computed on the first call - rather than constants,
         although this makes no difference to clients.</p>
         <h3>Memory management</h3>
-        <p>Class <a CLASS="eclass" HREF="../../reference/kernel/memory.html">MEMORY</a>, like <a CLASS="eclass" HREF="../../reference/kernel/exceptions.html">EXCEPTIONS</a>, is meant to be used as an ancestor by classes that
+        <p>Class <a CLASS="eclass" HREF="../../reference/kernel/memory_chart.html">MEMORY</a>, like <a CLASS="eclass" HREF="../../reference/kernel/exceptions.html">EXCEPTIONS</a>, is meant to be used as an ancestor by classes that
         need its facilities. It offers a number of features for controlling memory management
         and fine-tuning the garbage collection mechanism, a key component of the ISE Eiffel
         environment.<br>
         One of the most useful features in this class is dispose. This procedure describes
         actions to be applied to an unreachable object just before the garbage collector reclaims
-        it. By default, as declared in <a CLASS="eclass" HREF="../../reference/kernel/memory.html">MEMORY</a>, the procedure does nothing; but you may
-        redefine it in a proper descendant of <a CLASS="eclass" HREF="../../reference/kernel/memory.html">MEMORY</a>
+        it. By default, as declared in <a CLASS="eclass" HREF="../../reference/kernel/memory_chart.html">MEMORY</a>, the procedure does nothing; but you may
+        redefine it in a proper descendant of <a CLASS="eclass" HREF="../../reference/kernel/memory_chart.html">MEMORY</a>
         to describe dispose actions. Normally such actions will involve freeing external resources: for example a class describing file
         descriptors may redefine dispose so that whenever a descriptor object is garbage-collected
         the corresponding file will be closed.</p>
@@ -718,7 +718,7 @@
         structure may themselves have become unreachable: these instructions could conflict with the
         garbage collector’s operations and cause catastrophic behavior. The legitimate use of dispose
         redefinitions is for disposing of non-Eiffel resources.</p>
-        <p>Other features of <a CLASS="eclass" HREF="../../reference/kernel/memory.html">MEMORY</a>
+        <p>Other features of <a CLASS="eclass" HREF="../../reference/kernel/memory_chart.html">MEMORY</a>
         provide direct control over the operation of the garbage collector. You can in particular stop garbage collection through a call to
         <A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_collection_off">collection_off</A>,
         and restart it through a call to
@@ -726,7 +726,7 @@
         By default, garbage collection is always on (a testimony to its authors’ trust in its efficiency).
         Garbage collection is normally incremental, so as not to disrupt the application in a
         perceptible way. To start a complete garbage collection mechanism - reclaiming all
-        unused objects - call procedure full_collect. The remaining features of <a CLASS="eclass" HREF="../../reference/kernel/memory.html">MEMORY</a>
+        unused objects - call procedure full_collect. The remaining features of <a CLASS="eclass" HREF="../../reference/kernel/memory_chart.html">MEMORY</a>
         enable finer control of the collection<br>
         mechanism and are useful in special cases only. You will even find a free procedure
         providing brave (and competent) developers with a mechanism for reclaiming
@@ -734,8 +734,8 @@
         <a CLASS="eclass" HREF="../../reference/kernel/mem_info.html">MEM_INFO</a>, the result type for query
         <a CLASS="efeature" HREF="../../reference/kernel/memory.html#f_memory_statistics">memory_statistics</a>
         in
-        <a CLASS="eclass" HREF="../../reference/kernel/memory.html">MEMORY</a>, describes objects
-        containing information collected about memory usage. The features of <a CLASS="eclass" HREF="../../reference/kernel/gc_info.html">GC_INFO</a>
+        <a CLASS="eclass" HREF="../../reference/kernel/memory_chart.html">MEMORY</a>, describes objects
+        containing information collected about memory usage. The features of <a CLASS="eclass" HREF="../../reference/kernel/gc_info_chart.html">GC_INFO</a>
         provide statistics about the garbage collector’s operation.</p>
         <h3>Command-line arguments</h3>
         <p>Writing, assembling and compiling a system yields an executable command. The
@@ -749,13 +749,13 @@
         values passed as command arguments.<br>
         A language mechanism is available for that purpose: the Root Class rule indicates
         that the creation procedure of the root class may have a single argument (in the Eiffel
-        sense of argument to a routine) of type <a CLASS="eclass" HREF="../../reference/kernel/array.html">ARRAY</a>
-        [<a CLASS="eclass" HREF="../../reference/kernel/string.html">STRING</a><SPAN CLASS="esymbol">]</SPAN>. The corresponding array of
+        sense of argument to a routine) of type <a CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</a>
+        [<a CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</a><SPAN CLASS="esymbol">]</SPAN>. The corresponding array of
         strings will be initialized at the beginning of the system’s execution with the values
         entered as arguments to that execution of the command.<br>
         Although this facility suffices in many cases, it is not always convenient if you
         suddenly need to access the command arguments in a class that is far-away from the
-        root. An alternative mechanism, class <a CLASS="eclass" HREF="../../reference/kernel/arguments.html">ARGUMENTS</a>, is available. Once again, this is a
+        root. An alternative mechanism, class <a CLASS="eclass" HREF="../../reference/kernel/arguments_chart.html">ARGUMENTS</a>, is available. Once again, this is a
         class from which you should inherit if you need its facilities. It has just two exported
         features:</p>
         <ul>

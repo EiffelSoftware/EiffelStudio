@@ -14,27 +14,27 @@
 			routines determined at execution time through their name and libraries, and
 			call these routines with the appropriate arguments.
 		<P>
-			Two classes, <A HREF="../../reference/desc/spec/win32/dll_32.html">DLL_32</A> and
-			<A HREF="../../reference/desc/spec/win32/dll_32_routine.html">DLL_32_ROUTINE</A>
+			Two classes, <A HREF="../../reference/desc/spec/win32/dll_32_chart.html">DLL_32</A> and
+			<A HREF="../../reference/desc/spec/win32/dll_32_routine_chart.html">DLL_32_ROUTINE</A>
 			, supported by an auxiliary class
-			<A HREF="../../reference/desc/general/shared_library_constants.html">
+			<A HREF="../../reference/desc/general/shared_library_constants_chart.html">
 			SHARED_LIBRARY_CONSTANTS</A> provide the basis for DESC under	Windows:
 		<UL>
 			<LI>An instance of class
-			<A HREF="../../reference/desc/spec/win32/dll_32.html">DLL_32</A> describes
+			<A HREF="../../reference/desc/spec/win32/dll_32_chart.html">DLL_32</A> describes
 			a 32-bit Dynamically Linked Library. This class is a descendant of the deferred
-			class <A HREF="../../reference/desc/general/shared_library.html">
+			class <A HREF="../../reference/desc/general/shared_library_chart.html">
 			SHARED_LIBRARY</A>, covering the platform-independent notion of shared
 			library.
 			<LI>An instance of class
-			<A HREF="../../reference/desc/spec/win32/dll_32_routine.html">DLL_32_ROUTINE</A>
+			<A HREF="../../reference/desc/spec/win32/dll_32_routine_chart.html">DLL_32_ROUTINE</A>
 			describes a routine from a 32-bit DLL. Predictably, this class has an attribute of type
-			<A HREF="../../reference/desc/spec/win32/dll_32.html">DLL_32</A> describing the
+			<A HREF="../../reference/desc/spec/win32/dll_32_chart.html">DLL_32</A> describing the
 			library to which the routine belongs. It has a deferred ancestor
-			<A HREF="../../reference/desc/general/shared_library_routine.html">
+			<A HREF="../../reference/desc/general/shared_library_routine_chart.html">
 			SHARED_LIBRARY_ROUTINE</A> capturing the platform-independent notion of
 			shared library routine.
-			<LI><A HREF="../../reference/desc/general/shared_library_constants.html">
+			<LI><A HREF="../../reference/desc/general/shared_library_constants_chart.html">
 			SHARED_LIBRARY_CONSTANTS</A> introduces a few declarations useful for
 			dealing with shared libraries and routines, in particular a few integer constants
 			describing error codes and type codes. It is an ancestor to both of the preceding
@@ -45,10 +45,10 @@
 			The basic sequence of instructions to use the DESC mechanism is the following:
 		<OL>
 			<LI><A HREF="library.html">Create</A> a library object (an instance of
-			<A HREF="../../reference/desc/spec/win32/dll_32.html">DLL_32</A>, providing the
+			<A HREF="../../reference/desc/spec/win32/dll_32_chart.html">DLL_32</A>, providing the
 			library's name as argument to the creation procedure.
 			<LI><A HREF="routine.html">Create</A> a routine object (an instance of
-			<A HREF="../../reference/desc/spec/win32/dll_32_routine.html">DLL_32_ROUTINE</A>
+			<A HREF="../../reference/desc/spec/win32/dll_32_routine_chart.html">DLL_32_ROUTINE</A>
 			), providing the library object, the routine's name or index in the library, and the
 			routine's signature - number of arguments, types of arguments, type of result
 			if any - as arguments to the creation procedure.

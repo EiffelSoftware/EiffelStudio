@@ -68,7 +68,7 @@
 				customers is declared as
 			<P CLASS="code">
 				<SPAN CLASS="elocal">customers</SPAN><SPAN CLASS="esymbol">:</SPAN>
-				<A HREF="../../reference/structures/list/list.html">LIST</A>
+				<A HREF="../../reference/structures/list/list_chart.html">LIST</A>
 				<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">CUSTOMER</SPAN><SPAN CLASS="esymbol">]</SPAN>
 			</P>
 			<P>
@@ -112,7 +112,7 @@
 			<P>
 				Here, given with its full implementation, is a typical Iteration library routine: the
 				procedure <A CLASS="efeature"	 HREF="../../reference/structures/iteration/linear_iterator.html#f_until_do">until_do</A> from
-				<A HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>, the class
+				<A HREF="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>, the class
 				defining iteration mechanisms	on linear (sequential) structures.
 			<P CLASS="code">
 				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_until_do">until_do</A>
@@ -175,7 +175,7 @@
 				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_test">test</A>:
 			<P CLASS="code">
 				<SPAN CLASS="efeature">test</SPAN><SPAN CLASS="esymbol">:</SPAN>
-				<A HREF ="../../reference/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+				<A HREF ="../../reference/kernel/boolean_chart.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Test to be applied to
 				<A CLASS="efeature" HREF="../../reference/structures/traversing/linear.html#f_item">item</A>
 				 at current position in</SPAN><BR>
@@ -235,8 +235,8 @@
 				<SPAN CLASS="eclass">PARAGRAPH</SPAN> with a procedure <SPAN CLASS="efeature">resize</SPAN>,
 				and a boolean-valued attribute <SPAN CLASS="efeature">modified</SPAN> which indicates
 				whether a paragraph has been modified. Class <SPAN CLASS="eclass">TEXT</SPAN> inherits
-				from <A CLASS="eclass" HREF="../../reference/structures/list/linked_list.html">LINKED_LIST</A> and
-				so is a descendant of <A CLASS="eclass" HREF="../../reference/structures/traversing/linear.html">LINEAR</A>:
+				from <A CLASS="eclass" HREF="../../reference/structures/list/linked_list_chart.html">LINKED_LIST</A> and
+				so is a descendant of <A CLASS="eclass" HREF="../../reference/structures/traversing/linear_chart.html">LINEAR</A>:
 			<P CLASS="code">
 				<SPAN CLASS="ekeyword">class</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">TEXT</SPAN><BR><BR>
@@ -256,7 +256,7 @@
 				<SPAN CLASS="ekeyword">class</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">TEXT_PROCESSOR</SPAN><BR><BR>
 				<SPAN CLASS="ekeyword">inherit</SPAN><BR>
-				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>
+				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html_chart">LINEAR_ITERATOR</A>
 				<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">PARAGRAPH</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">redefine</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_item_action">item_action</A>,
@@ -278,7 +278,7 @@
 				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">item_test</SPAN>
 				<SPAN CLASS="ekeyword">(</SPAN><SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol":></SPAN>
 				<SPAN CLASS="eclass">PARAGRAPH</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN>
-				<A CLASS="eclass" HREF="../../reference/kernel/boolean.html">BOOLEAN</A>
+				<A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A>
 				<SPAN CLASS="ekeyword">is</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Has
 				<SPAN CLASS="elocal">p</SPAN> been modified?</SPAN><BR>
@@ -305,7 +305,7 @@
 			<UL>
 				<LI>To set its argument <SPAN CLASS="elocal">t</SPAN> as the iteration target, it uses procedure
 				<SPAN CLASS="efeature">set</SPAN>. (This procedure is from class
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator_chart.html">ITERATOR</A>
 				which passes it on to all iterator classes.)
 				<LI>Then it simply calls
 				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_until_do">until_do</A>
@@ -337,15 +337,15 @@
 				There are only four Iteration classes, whose simple inheritance structure appeared at the
 				beginning of this chapter.
 			<UL>
-				<LI><A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A>,
+				<LI><A CLASS="eclass" HREF="../../reference/structures/iteration/iterator_chart.html">ITERATOR</A>,
 				a deferred class which describes the most general notion.
-				<LI><A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>,
+				<LI><A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>,
 				for iterating over linear structures and chains.
-				<LI><A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator.html">TWO_WAY_CHAIN_ITERATOR</A>,
+				<LI><A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator_chart.html">TWO_WAY_CHAIN_ITERATOR</A>,
 				a repeated heir of
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>,
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>,
 				for iterating in either direction over a bilinear structure.
-				<LI><A CLASS="eclass" HREF="../../reference/structures/iteration/cursor_tree_iterator.html">CURSOR_TREE_ITERATOR</A>,
+				<LI><A CLASS="eclass" HREF="../../reference/structures/iteration/cursor_tree_iterator_chart.html">CURSOR_TREE_ITERATOR</A>,
 				for iterating over trees.
 			</UL>
 			<P>
@@ -355,24 +355,24 @@
 				Each one of the iterator classes is paired with a traversal class (or	two in one case):<BR>
 				<CENTER><TABLE>
 					<TR>
-						<TD><A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A></TD>
-						<TD><A CLASS="eclass" HREF="../../reference/structures/traversing/traversable.html">TRAVERSABLE</A></TD>
+						<TD><A CLASS="eclass" HREF="../../reference/structures/iteration/iterator_chart.html">ITERATOR</A></TD>
+						<TD><A CLASS="eclass" HREF="../../reference/structures/traversing/traversable_chart.html">TRAVERSABLE</A></TD>
 					</TR>
 					<TR>
-						<TD><A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A></TD>
-						<TD><A CLASS="eclass" HREF="../../reference/structures/traversing/linear.html">LINEAR</A></TD>
+						<TD><A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A></TD>
+						<TD><A CLASS="eclass" HREF="../../reference/structures/traversing/linear_chart.html">LINEAR</A></TD>
 					</TR>
 					<TR>
-						<TD><A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator.html">TWO_WAY_CHAIN_ITERATOR</A></TD>
-						<TD><A CLASS="eclass" HREF="../../reference/structures/list/two_way_list.html">TWO_WAY_LIST</A></TD>
+						<TD><A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator_chart.html">TWO_WAY_CHAIN_ITERATOR</A></TD>
+						<TD><A CLASS="eclass" HREF="../../reference/structures/list/two_way_list_chart.html">TWO_WAY_LIST</A></TD>
 					</TR>
 					<TR>
-						<TD><A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator.html">TWO_WAY_CHAIN_ITERATOR</A></TD>
-						<TD><A CLASS="eclass" HREF="../../reference/structures/list/two_way_list.html">TWO_WAY_LIST</A>, <A CLASS="eclass" HREF="../../reference/structures/list/two_way_list.html">TWO_WAY_CIRCULAR</A></TD>
+						<TD><A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator_chart.html">TWO_WAY_CHAIN_ITERATOR</A></TD>
+						<TD><A CLASS="eclass" HREF="../../reference/structures/list/two_way_list_chart.html">TWO_WAY_LIST</A>, <A CLASS="eclass" HREF="../../reference/structures/list/two_way_list.html">TWO_WAY_CIRCULAR</A></TD>
 					</TR>
 					<TR>
-						<TD><A CLASS="eclass" HREF="../../reference/structures/iteration/cursor_tree_iterator.html">CURSOR_TREE_ITERATOR</A></TD>
-						<TD><A CLASS="eclass" HREF="../../reference/structures/cursor_tree/cursor_tree.html">CURSOR_TREE</A></TD>
+						<TD><A CLASS="eclass" HREF="../../reference/structures/iteration/cursor_tree_iterator_chart.html">CURSOR_TREE_ITERATOR</A></TD>
+						<TD><A CLASS="eclass" HREF="../../reference/structures/cursor_tree/cursor_tree_chart.html">CURSOR_TREE</A></TD>
 					</TR>
 				</TABLE></CENTER><BR>
 				Each iterator class relies on the corresponding traversal class to provide the features
@@ -381,26 +381,26 @@
 				Of course the data structure class used in connection with a given iterator class does not need to
 				be the iterator’s exact correspondent as given by the above table; it may be any one of its
 				descendants. For example you may use
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>
 				to iterate over data structures	described not just by
-				<A CLASS="eclass" HREF="../../reference/structures/traversing/linear.html">LINEAR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/traversing/linear_chart.html">LINEAR</A>
 				but also by such descendants as
-				<A CLASS="eclass" HREF="../../reference/structures/list/list.html">LIST</A>, <A CLASS="eclass" HREF="../../reference/structures/list/linked_list.html">LINKED_LIST</A>,
-				<A CLASS="eclass" HREF="../../reference/structures/list/arrayed_list.html">ARRAYED_LIST</A>,
+				<A CLASS="eclass" HREF="../../reference/structures/list/list_chart.html">LIST</A>, <A CLASS="eclass" HREF="../../reference/structures/list/linked_list_chart.html">LINKED_LIST</A>,
+				<A CLASS="eclass" HREF="../../reference/structures/list/arrayed_list_chart.html">ARRAYED_LIST</A>,
 				or even
-				<A CLASS="eclass" HREF="../../reference/structures/list/two_way_list.html">TWO_WAY_LIST</A>
+				<A CLASS="eclass" HREF="../../reference/structures/list/two_way_list_chart.html">TWO_WAY_LIST</A>
 				if you do not need the backward iteration features (for which you will have to use
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator.html">TWO_WAY_CHAIN_ITERATOR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator_chart.html">TWO_WAY_CHAIN_ITERATOR</A>
 				).
 			<H3>General iteration facilities</H3>
 			<P>
 				Class
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator_chart.html">ITERATOR</A>
 				defines the features that apply to all forms of iterator.<BR>
 				An iterator will always apply to a certain target structure. The target is introduced in
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A> by the feature
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator_chart.html">ITERATOR</A> by the feature
 				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A>:
-				<A CLASS="eclass" HREF="../../reference/structures/traversing/traversable.html">TRAVERSABLE</A> [G]<BR>
+				<A CLASS="eclass" HREF="../../reference/structures/traversing/traversable_chart.html">TRAVERSABLE</A> [G]<BR>
 				Both the iterator classes and the traversal classes are generic, with a formal generic
 				parameter G. The actual generic parameters will be matched through the choice of
 				iteration target: for a generic derivation of the form
@@ -410,18 +410,18 @@
 				for the same	<SPAN CLASS="eclass">ACTUAL_TYPE</SPAN>, where
 				<SPAN CLASS="eclass">SOME_TRAVERSABLE</SPAN> is the traversal class matching
 				<SPAN CLASS="eclass">SOME_ITERATOR</SPAN> according to the preceding table
-				(<A CLASS="eclass" HREF="../../reference/structures/traversing/linear.html">LINEAR</A>
+				(<A CLASS="eclass" HREF="../../reference/structures/traversing/linear_chart.html">LINEAR</A>
 				for
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>
 				and so on), or one of its proper descendants.<BR>
 				Each of the proper descendants of
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator_chart.html">ITERATOR</A>
 				redefines the type of target to the matching proper descendant of
-				<A CLASS="eclass" HREF="../../reference/structures/traversing/traversable.html">TRAVERSABLE</A>,
+				<A CLASS="eclass" HREF="../../reference/structures/traversing/traversable_chart.html">TRAVERSABLE</A>,
 				to cover more specific variants of the iteration target, For example in
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A> the feature is redefined to be of
-				type <A CLASS="eclass" HREF="../../reference/structures/traversing/linear.html">LINEAR</A>.
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A> the feature is redefined to be of
+				type <A CLASS="eclass" HREF="../../reference/structures/traversing/linear_chart.html">LINEAR</A>.
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator_chart.html">ITERATOR</A>
 				also introduces the procedure for selecting a target:
 			<P CLASS="code">
 				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_set">set</A>
@@ -446,7 +446,7 @@
 			</P>
 			<P>
 				Next
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator_chart.html">ITERATOR</A>
 				introduces the routines describing the elementary action and test
 				that will be applied to items of the iteration targets:
 			<P CLASS="code">
@@ -484,7 +484,7 @@
 			</P>
 			<P CLASS="code">
 				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_test">test</A><SPAN CLASS="esymbol">:</SPAN>
-				<A CLASS="eclass" HREF="../../reference/kernel/boolean.html">BOOLEAN</A>
+				<A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A>
 				<SPAN CLASS="ekeyword">is</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Test to be applied to
 				<A CLASS="efeature" HREF="../../reference/structures/traversing/linear.html#f_item">item</A>
@@ -524,16 +524,16 @@
 				may engage in strange behavior. No such risk exists if you only redefine item_action, which
 				may change the contents of items but not the structure itself.<BR>
 				Another feature introduced in
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator_chart.html">ITERATOR</A>
 				is the query
 				invariant_value,
 				describing invariant properties that must be ensured at the beginning of any iteration and preserved
 				by every iteration step. As declared in
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator_chart.html">ITERATOR</A>
 				this query always returns true, but proper descendants can redefine it to describe more interesting
 				invariant properties.<BR>
 				Finally,
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator_chart.html">ITERATOR</A>
 				introduces in deferred form the general iteration routines applicable to all iteration variants.
 				They include two queries corresponding to the quantifiers of first-order predicate calculus:
 			<UL>
@@ -568,7 +568,7 @@
 			<P>
 				All these features, and most of the other iteration features introduced in proper
 				descendants of
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator_chart.html">ITERATOR</A>
 				and described next, have no argument. Information about the target of iteration comes
 				from feature
 				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A>,
@@ -580,13 +580,13 @@
 				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_test">item_test</A>.
 			<H3>Linear and chain iteration</H3>
 			<P>
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>,
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>,
 				an effective class, refines the iteration mechanisms for cases in	which the target is a linear
 				structure, such as a list in any implementation or a circular chain.<BR>
 				The class effects all the deferred features inherited from
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A>,
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator_chart.html">ITERATOR</A>,
 				taking advantage of the linear traversal mechanisms present in the corresponding traversal class,
-				<A CLASS="eclass" HREF="../../reference/structures/traversing/linear.html">LINEAR</A>.
+				<A CLASS="eclass" HREF="../../reference/structures/traversing/linear_chart.html">LINEAR</A>.
 				Here for example is the effecting of
 				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_do_if">do_if</A>:
 			<P CLASS="code">
@@ -619,7 +619,7 @@
 				which, together with
 				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_off">off</A>,
 				have for convenience been carried over to
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>
 				from their counterparts in
 				<A CLASS="eclass" HREF="../../reference/structures/traversing/linear.html">LINEAR</A>,
 				with feature declarations such as
@@ -639,15 +639,15 @@
 			<P>
 				and similarly for the others.<BR>
 				In addition to effecting the general iteration features from
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A>,
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator_chart.html">ITERATOR</A>,
 				class
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>
 				introduces iteration features that apply to the specific case of linear structures:
 			<UL>
 				<LI>
 				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_search">search</A>
 				<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">:</SPAN>
-				<A CLASS="eclass" HREF="../../reference/kernel/boolean.html">BOOLEAN</A>)
+				<A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A>)
 				moves the iteration to the first position satisfying test if <SPAN CLASS="elocal">b</SPAN>
 				is true, or not satisfying test if <SPAN CLASS="elocal">b</SPAN> is false. This use of a boolean argument to
 				switch between two opposite semantics is not part of the recommended style, and
@@ -666,7 +666,7 @@
 				<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">starting</SPAN><SPAN CLASS="esymbol">,</SPAN>
 				<SPAN CLASS="elocal">number</SPAN><SPAN CLASS="esymbol">,</SPAN>
 				<SPAN CLASS="elocal">step</SPAN><SPAN CLASS="esymbol">:</SPAN>
-				<A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A>).
+				<A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A>).
 				<LI>Since with a linear target the iterator can advance the cursor step by step, the
 				basic iteration operations are complemented by variants which pick up from the
 				position reached by the last call:
@@ -680,9 +680,9 @@
 			<H3>Two-way iteration</H3>
 			<P>
 				Class
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator.html">TWO_WAY_CHAIN_ITERATOR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator_chart.html">TWO_WAY_CHAIN_ITERATOR</A>
 				has all the features of
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>,
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>,
 				to which it adds features for iterating backward as well as forward.<BR>
 				The class introduces commands
 				<A CLASS="efeature" HREF="../../reference/structures/iteration/two_way_chain_iterator.html#f_finish">finish</A> and
@@ -697,25 +697,25 @@
 				command reverse to reverse the direction of future iteration operations, and a query backward
 				to find out the direction currently in force.<BR>
 				Contrary to what one might at first imagine, class
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator.html">TWO_WAY_CHAIN_ITERATOR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator_chart.html">TWO_WAY_CHAIN_ITERATOR</A>
 				is extremely short and simple; its <SPAN CLASS="ekeyword">Feature</SPAN> clause only contains the declarations of two
 				features,
 				<A CLASS="efeature" HREF="../../reference/structures/iteration/two_way_chain_iterator.html#f_finish">finish</A> and
 				<A CLASS="efeature" HREF="../../reference/structures/iteration/two_way_chain_iterator.html#f_back">back</A>.<BR>
 				The trick is to use repeated inheritance.
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator.html">TWO_WAY_CHAIN_ITERATOR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator_chart.html">TWO_WAY_CHAIN_ITERATOR</A>
 				inherits twice from
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>;
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>;
 				the first inheritance branch yields the forward iteration features,
 				the second yields those for backward iteration. There is
 				no need for any explicit declaration or redeclaration of iteration features. Here is the
 				entire class text that yields this result:
 			<P CLASS="code">
 				<SPAN CLASS="ekeyword">class</SPAN><BR>
-				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator.html">TWO_WAY_CHAIN_ITERATOR</A>
+				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator_chart.html">TWO_WAY_CHAIN_ITERATOR</A>
 				<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">G</SPAN><SPAN CLASS="esymbol">]</SPAN><BR><BR>
 				<SPAN CLASS="ekeyword">inherit</SPAN><BR>
-				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>
+				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>
 				<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">G</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">redefine</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_target">target</A><BR>
@@ -735,7 +735,7 @@
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_continue_for">continue_for</A><SPAN CLASS="esymbol">,</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_continue_search">continue_search</A><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR><BR>
-				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>
+				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>
 				<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">G</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">rename</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_start">start</A>
@@ -785,7 +785,7 @@
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR><BR>
 				<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">-- Status report</SPAN><BR><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/two_way_chain_iterator.html#f_target">target</A><SPAN CLASS="esymbol">:</SPAN>
-				<A CLASS="eclass" HREF="../../reference/structures/traversing/bilinear.html">BILINEAR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/traversing/bilinear_chart.html">BILINEAR</A>
 				<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">G</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- The structure to which iteration features will</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- apply</SPAN><BR><BR>
@@ -811,15 +811,15 @@
 			<H3>Tree iteration</H3>
 			<P>
 				Tree iterations, provided by class
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/cursor_tree_iterator.html">CURSOR_TREE_ITERATOR</A>,
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/cursor_tree_iterator_chart.html">CURSOR_TREE_ITERATOR</A>,
 				work on trees of the cursor tree form; only with this form of tree are traversal operations possible.
 				Three forms of iteration are provided: preorder, postorder and breadth-first. They
 				correspond to the three traversal policies described in the discussion of trees.
 				Here too it would seem that a rather lengthy class is needed, but repeated
 				inheritance works wonders.<BR>
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/cursor_tree_iterator.html">CURSOR_TREE_ITERATOR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/cursor_tree_iterator_chart.html">CURSOR_TREE_ITERATOR</A>
 				simply inherits three times from
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>,
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>,
 				renaming the features appropriately in each case:
 			<UL>
 				<LI><SPAN CLASS="efeature">pre_do_all</SPAN>,
@@ -834,7 +834,7 @@
 			</UL>
 			<P>
 				All it needs to do then is to redefine the type of target to be
-				<A CLASS="eclass" HREF="../../reference/structures/cursor_tree/cursor_tree.html">CURSOR_TREE</A>
+				<A CLASS="eclass" HREF="../../reference/structures/cursor_tree/cursor_tree_chart.html">CURSOR_TREE</A>
 				<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">G</SPAN><SPAN CLASS="esymbol">]</SPAN>,
 				and to redefine six features: the three renamed
 				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_start">start</A>
@@ -875,25 +875,25 @@
 				<SPAN CLASS="elocal">t</SPAN> must correspond to	the iteration class selected as ancestor of
 				<SPAN CLASS="eclass">PROCESSOR</SPAN>:
 				for
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>
 				it must be a descendant of
-				<A CLASS="eclass" HREF="../../reference/structures/traversing/linear.html">LINEAR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/traversing/linear_chart.html">LINEAR</A>
 				(such as
-				<A CLASS="eclass" HREF="../../reference/structures/list/linked_list.html">LINKED_LIST</A>,
-				<A CLASS="eclass" HREF="../../reference/structures/list/arrayed_list.html">ARRAYED_LIST</A>,
-				<A CLASS="eclass" HREF="../../reference/structures/list/linked_circular.html">LINKED_CIRCULAR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/list/linked_list_chart.html">LINKED_LIST</A>,
+				<A CLASS="eclass" HREF="../../reference/structures/list/arrayed_list_chart.html">ARRAYED_LIST</A>,
+				<A CLASS="eclass" HREF="../../reference/structures/list/linked_circular_chart.html">LINKED_CIRCULAR</A>
 				or any other list or circular chain classes); for
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator.html">TWO_WAY_CHAIN_ITERATOR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator_chart.html">TWO_WAY_CHAIN_ITERATOR</A>
 				it must be a descendant of
-				<A CLASS="eclass" HREF="../../reference/structures/traversing/bilinear.html">BILINEAR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/traversing/bilinear_chart.html">BILINEAR</A>
 				such as
-				<A CLASS="eclass" HREF="../../reference/structures/list/two_way_list.html">TWO_WAY_LIST</A>
+				<A CLASS="eclass" HREF="../../reference/structures/list/two_way_list_chart.html">TWO_WAY_LIST</A>
 				or
-				<A CLASS="eclass" HREF="../../reference/structures/list/two_way_list.html">TWO_WAY_CIRCULAR</A>;
+				<A CLASS="eclass" HREF="../../reference/structures/list/two_way_list_chart.html">TWO_WAY_CIRCULAR</A>;
 				for
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/cursor_tree_iterator.html">CURSOR_TREE_ITERATOR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/cursor_tree_iterator_chart.html">CURSOR_TREE_ITERATOR</A>
 				it must be a descendant of
-				<A CLASS="eclass" HREF="../../reference/structures/cursor_tree/cursor_tree.html">CURSOR_TREE</A>.
+				<A CLASS="eclass" HREF="../../reference/structures/cursor_tree/cursor_tree_chart.html">CURSOR_TREE</A>.
 				In all cases the actual generic parameters of the iterator class and of	the data structure class must be compatible.
 				Then the iteration proper is obtained simply by calling the appropriate procedure, without any qualification
 				or arguments, for example:
@@ -921,18 +921,18 @@
 				One way to obtain several iteration schemes is a simple extension to the single
 				descendant technique. You can use repeated inheritance to provide two or more variants.
 				We have in fact already encountered the technique when studying how to derive
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator.html">TWO_WAY_CHAIN_ITERATOR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator_chart.html">TWO_WAY_CHAIN_ITERATOR</A>
 				and
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/cursor_tree_iterator.html">CURSOR_TREE_ITERATOR</A>
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/cursor_tree_iterator_chart.html">CURSOR_TREE_ITERATOR</A>
 				from
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>.
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>.
 				The general pattern, applied here to just two iteration schemes but easily generalized to
 				more, is straightforward:
 			<P CLASS="code">
 				<SPAN CLASS="ekeyword">class</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">DUAL_PROCESSOR</SPAN><BR><BR>
 				<SPAN CLASS="ekeyword">inherit</SPAN><BR>
-				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>
+				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>
 				<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">SOME_TYPE</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">rename</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_action">item_action</A>
@@ -946,7 +946,7 @@
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">select</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">action1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="efeature">test1</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR><BR>
-				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>
+				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>
 				<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">SOME_TYPE</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">rename</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_action">item_action</A>
@@ -965,7 +965,7 @@
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">test1</SPAN><SPAN CLASS="esymbol">:</SPAN>
-				<A CLASS="eclass" HREF="../../reference/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+				<A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Test for the first scheme</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<BR>
@@ -976,7 +976,7 @@
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">test2</SPAN><SPAN CLASS="esymbol">:</SPAN>
-				<A CLASS="eclass" HREF="../../reference/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+				<A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Test for the second scheme</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<BR>
@@ -1059,7 +1059,7 @@
 				<SPAN CLASS="ekeyword">class</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">COMPLEX_FIGURE_ITERATOR</SPAN><BR><BR>
 				<SPAN CLASS="ekeyword">inherit</SPAN><BR>
-				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">redefine</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_target">target</A><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR><BR>

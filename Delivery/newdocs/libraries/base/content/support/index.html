@@ -12,17 +12,17 @@
     belong to the kernel.</p>
     <h2> Conversions, mathematical properties and ASCII characters</h2>
     <p>A few utility classes complement the <a href="../kernel/index.html">kernel</a>
-    facilities. <a CLASS="eclass" HREF="../../reference/support/primes.html">PRIMES</a>,
-    <a CLASS="eclass" HREF="../../reference/support/random.html">RANDOM</a> and <a CLASS="eclass" HREF="../../reference/support/fibonacci.html">FIBONACCI</a>
+    facilities. <a CLASS="eclass" HREF="../../reference/support/primes_chart.html">PRIMES</a>,
+    <a CLASS="eclass" HREF="../../reference/support/random_chart.html">RANDOM</a> and <a CLASS="eclass" HREF="../../reference/support/fibonacci_chart.html">FIBONACCI</a>
     are part of the data structure taxonomy; the others are meant to be used as ancestors by classes needing their features.<br>
  Two classes provide basic mathematical functions such as logarithms and trigonometric functions:
-    <a CLASS="eclass" HREF="../../reference/support/single_math.html">SINGLE_MATH</a>
-    for single precision and <a CLASS="eclass" HREF="../../reference/support/double_math.html">DOUBLE_MATH</a>
-    for the double-precision variants. <a CLASS="eclass" HREF="../../reference/support/math_const.html">MATH_CONST</a>
+    <a CLASS="eclass" HREF="../../reference/support/single_math_chart.html">SINGLE_MATH</a>
+    for single precision and <a CLASS="eclass" HREF="../../reference/support/double_math_chart.html">DOUBLE_MATH</a>
+    for the double-precision variants. <a CLASS="eclass" HREF="../../reference/support/math_const_chart.html">MATH_CONST</a>
     contains mathematical constants: <SPAN CLASS="esymbol">p</SPAN>, the square root of two, Euler’s constant <SPAN CLASS="esymbol">e</SPAN>.<br>
- <a CLASS="eclass" HREF="../../reference/support/primes.html">PRIMES</a>, <a CLASS="eclass" HREF="../../reference/support/random.html">RANDOM</a>
-        and <a CLASS="eclass" HREF="../../reference/support/fibonacci.html">FIBONACCI</a>
-        are data structure classes - heirs of <a CLASS="eclass" HREF="../../reference/support/countable_sequence.html">COUNTABLE_SEQUENCE</a>. In all of these classes function
+ <a CLASS="eclass" HREF="../../reference/support/primes_chart.html">PRIMES</a>, <a CLASS="eclass" HREF="../../reference/support/random_chart.html">RANDOM</a>
+        and <a CLASS="eclass" HREF="../../reference/support/fibonacci_chart.html">FIBONACCI</a>
+        are data structure classes - heirs of <a CLASS="eclass" HREF="../../reference/support/countable_sequence_chart.html">COUNTABLE_SEQUENCE</a>. In all of these classes function
     <a CLASS="efeature" HREF="../../reference/support/countable_sequence.html#f_i_th">i_th</a>
     takes an integer
         argument <SPAN CLASS="elocal">i</SPAN> and will return the i-th element of the sequence under consideration - prime
@@ -34,7 +34,7 @@
         <a CLASS="efeature" HREF="../../reference/support/random.html#f_set_seed">set_seed</a> will define the seed to be used for starting the pseudo-random sequence.
         </p>
         <h2>Internal object structures</h2>
-        <p>Class <a CLASS="eclass" HREF="../../reference/support/internal.html">INTERNAL</a>
+        <p>Class <a CLASS="eclass" HREF="../../reference/support/internal_chart.html">INTERNAL</a>
         provides low-level access to internal object structures. It, too, is
         meant to be used as ancestor by classes needing its features.<br>
         Here are some of the most useful calls and what they yield, <SPAN CLASS="elocal">obj</SPAN> being an entity
@@ -59,7 +59,7 @@
           <li><a CLASS="efeature" HREF="../../reference/support/internal.html#f_field">field</a>
             <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN>, <SPAN CLASS="elocal">obj</SPAN><SPAN CLASS="esymbol">)</SPAN>:
              the value of the i-th field of <SPAN CLASS="elocal">O</SPAN>, if a reference; declared of type
-          <A CLASS="eclass" HREF="../../reference/support/any.html">ANY</A>
+          <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A>
             in the class.</li>
           <li><SPAN CLASS="efeature">yy_field</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN>, <SPAN CLASS="elocal">obj</SPAN><SPAN CLASS="esymbol">)</SPAN> where
           <SPAN CLASS="efeature">yy</SPAN> is boolean, character, integer, real or double: the value
@@ -74,7 +74,7 @@
         lowest level of an interface between an Eiffel application and external tools (such as a
         database management system), and this requires passing to those tools information
         about the internals of Eiffel objects, you almost certainly should not use
-        <a CLASS="eclass" HREF="../../reference/support/internal.html">INTERNAL</a>.
+        <a CLASS="eclass" HREF="../../reference/support/internal_chart.html">INTERNAL</a>.
         </p>
 	</BODY>
 </HTML>

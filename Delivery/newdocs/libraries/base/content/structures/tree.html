@@ -62,22 +62,22 @@
 			node as being both:
 		<UL>
 			<LI>A list: the list of its children.
-			<LI>A list cell (similar to a <A HREF="../../reference/structures/list/linkable.html">LINKABLE
-			</A> or <A HREF="../../reference/structures/list/bi_linkable.html">BI_LINKABLE</A> for
+			<LI>A list cell (similar to a <A HREF="../../reference/structures/list/linkable_chart.html">LINKABLE
+			</A> or <A HREF="../../reference/structures/list/bi_linkable_chart.html">BI_LINKABLE</A> for
 			one-way and two-way linked lists), paired with the node’s siblings.
 		</UL>
 		This yields a simple definition of trees by multiple inheritance from
-		<A HREF="../../reference/structures/list/list.html">LIST</A> and
-		<A HREF="../../reference/structures/list/cell.html">CELL</A>.
+		<A HREF="../../reference/structures/list/list_chart.html">LIST</A> and
+		<A HREF="../../reference/structures/list/cell_chart.html">CELL</A>.
 		<H3>Dynamic recursive trees</H3>
 		<P>
 			An example of dynamic tree structure is provided by class
-			<A HREF="../../reference/structures/tree/two_way_tree.html">TWO_WA Y_TREE</A>, an heir
-			of both <A HREF="../../reference/structures/list/two_way_list.html">TWO_WAY_LIST</A>
-			and <A HREF="../../reference/structures/list/bi_linkable.html">BI_LINKABLE</A>.
-			There is also <A HREF="../../reference/structures/tree/linked_tree.html">LINKED_TREE</A>,
+			<A HREF="../../reference/structures/tree/two_way_tree_chart.html">TWO_WA Y_TREE</A>, an heir
+			of both <A HREF="../../reference/structures/list/two_way_list_chart.html">TWO_WAY_LIST</A>
+			and <A HREF="../../reference/structures/list/bi_linkable_chart.html">BI_LINKABLE</A>.
+			There is also <A HREF="../../reference/structures/tree/linked_tree_chart.html">LINKED_TREE</A>,
 			which inherits from LINKED_LIST and LINKABLE, but
-			<A HREF="../../reference/structures/tree/two_way_tree.html">TWO_WA Y_TREE</A>
+			<A HREF="../../reference/structures/tree/two_way_tree_chart.html">TWO_WA Y_TREE</A>
 			is generally preferable since children of a node often needs to be traversed both
 			ways; the notion of order is usually less significant here than for lists.
 			Such a form of definition is a particularly effective way of conveying the
@@ -91,10 +91,10 @@
 			</P>
 			This will attach my_tree to a new one-node tree, with root_value at the root node.
 			Here my_tree must be declared of type
-			<A HREF="../../reference/structures/tree/two_way_tree.html">TWO_WA Y_TREE</A>
+			<A HREF="../../reference/structures/tree/two_way_tree_chart.html">TWO_WA Y_TREE</A>
 			[MY_TYPE] for some type MY_TYPE, and root_value must be of type MY_TYPE.<BR>
 			A class with a similar interface but using arrays rather than lists to represent nodes
-			is also available: <A HREF="../../reference/structures/tree/arrayed_tree.html">ARRAYED_TREE
+			is also available: <A HREF="../../reference/structures/tree/arrayed_tree_chart.html">ARRAYED_TREE
 			</A>. This class is more efficient in both time and space for trees whose nodes have
 			many children that are accessed randomly, if relatively few child insertions occur after
 			node creation. Here the creation procedure indicates the initial number of children:
@@ -109,12 +109,12 @@
 			with the previous kinds of tree, the newly created node initially has no children.
 		<H3>Fixed trees</H3>
 		<P>
-			<A HREF="../../reference/structures/tree/two_way_tree.html">
+			<A HREF="../../reference/structures/tree/two_way_tree_chart.html">
 				TWO_WA Y_TREE</A> is useful for fully dynamic trees, in which a node may get new
 			children at any time. For some applications, the number of children of a tree, although
 			still arbitrary, is set for each node when the node is created, and will not change after
 			that. Of course, some children may be absent; the corresponding entries will be void
-			references. Class <A HREF="../../reference/structures/tree/fixed_tree.html">FIXED_TREE</A>
+			references. Class <A HREF="../../reference/structures/tree/fixed_tree_chart.html">FIXED_TREE</A>
 			provides the basic mechanism; as you may have guessed, the implementation associates
 			with each node an array of its children, arrays usually being the right structure when a
 			collection of objects is known not to change size after creation.
@@ -128,7 +128,7 @@
 			The root will have the associated value root value and will have how_many_
 			children children, all initially void. Unlike the argument max_estimated_children for
 			the creation procedure of
-			<A HREF="../../reference/structures/tree/arrayed_tree.html">ARRAYED_TREE</A>
+			<A HREF="../../reference/structures/tree/arrayed_tree_chart.html">ARRAYED_TREE</A>
 			, the value of how_many_children is the final arity of the newly created node; since
 			it set separately for each node on creation, the various nodes of a tree can have
 			different arities, as illustrated on the above figure.
@@ -136,13 +136,13 @@
 		<P>
 			Whether fixed or dynamic, recursive trees fully enjoy their dual origin. This means in
 			particular that each node is viewed as a list of its children, and can apply to this list the
-			features inherited from <A HREF="../../reference/structures/list/list.html">LIST</A>,
+			features inherited from <A HREF="../../reference/structures/list/list_chart.html">LIST</A>,
 			appropriately renamed; for example:<BR>
 			<A HREF="../../reference/structures/tree/dynamic_tree.html#f_child_put_left">child_put_left</A><BR>
 			<A HREF="../../reference/structures/tree/dynamic_tree.html#f_child_forth">child_forth</A><BR>
 			<A HREF="../../reference/structures/tree/dynamic_tree.html#f_child_put">child_put</A><BR>
 			and so on. Feature <A HREF="../../reference/structures/tree/dynamic_tree.html#f_count">count</A>,
-			inherited from <A HREF="../../reference/structures/list/list.html">LIST</A>, indicates
+			inherited from <A HREF="../../reference/structures/list/list_chart.html">LIST</A>, indicates
 			the number of children; it is renamed arity to conform to accepted
 			tree terminology. (The word is a substantived form of the “ary” adjective ending, as in
 			“ternary”, “quaternary” and so on, which yielded the expression “n-ary”.)
@@ -152,7 +152,7 @@
 			although either or both of these children may be void.
 		<H3>Basic binary trees</H3>
 		<P>
-			Class <A HREF="../../reference/structures/tree/binary_tree.html">BINARY_TREE</A>
+			Class <A HREF="../../reference/structures/tree/binary_tree_chart.html">BINARY_TREE</A>
 			describes binary trees.<BR><BR>
 			<CENTER><IMG SRC="binary_tree.png" ALT="binary_tree"/></CENTER><BR><BR>
 			The children are represented by features
@@ -172,14 +172,14 @@
 			deprived of the tree rooted at <I>fr</I>. If you start from a tree rather than a forest the binary
 			tree’s root will have no right child.<BR>
 			Function <A HREF="../../reference/structures/tree/tree.html#f_binary_representation">binary_representation</A>,
-			in <A HREF="../../reference/structures/tree/tree.html">TREE</A>, creates a binary tree
+			in <A HREF="../../reference/structures/tree/tree_chart.html">TREE</A>, creates a binary tree
 			representation (the function’s result) obtained from the current tree.<BR>
 			Procedure <A HREF="../../reference/structures/tree/dynamic_tree.html#f_fill_from_binary">fill_ from_binary</A>,
-			in	<A HREF="../../reference/structures/tree/dynamic_tree.html">DYNAMIC_TREE</A>,
+			in	<A HREF="../../reference/structures/tree/dynamic_tree_chart.html">DYNAMIC_TREE</A>,
 			reconstructs a tree from a binary tree representation passed as	argument.
 		<H3>Binary search trees</H3>
 		<P>
-			Class <A HREF="../../reference/structures/tree/binary_search_tree.html">BINARY_SEARCH_TREE</A>
+			Class <A HREF="../../reference/structures/tree/binary_search_tree_chart.html">BINARY_SEARCH_TREE</A>
 			describes binary search trees, an implementation of	bags which is appropriate for comparable items.<BR>
 			Binary search trees rely for insertion on a policy whereby any item less than the
 			root is inserted (recursively) into the left subtree, and any item greater than the root into
@@ -200,7 +200,7 @@
 			incompatible with the presence of a global cursor.
 			In situations where you need such a cursor, enabling you to move freely from a
 			node to its children, siblings and parents, you may use class
-			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html">CURSOR_TREE</A> and its
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree_chart.html">CURSOR_TREE</A> and its
 			descendants.
 		<H3>The conceptual model</H3>
 		<P>
@@ -214,7 +214,7 @@
 		<H3>Operations on cursor trees</H3>
 		<P>
 			The cursor supported by instances of
-			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html">CURSOR_TREE</A> has
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree_chart.html">CURSOR_TREE</A> has
 			a position referring to a node of the tree, which is then considered to be the active node,
 			or is off the tree. The different off positions are:
 			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_above">above</A>
@@ -296,7 +296,7 @@
 		<H3>Manipulating the cursor explicitly</H3>
 		<P>
 			The cursor attached to a cursor tree is not just a conceptual notion but an actual object,
-			of type <A HREF="../../reference/structures/cursors/cursor.html">CURSOR</A>.
+			of type <A HREF="../../reference/structures/cursors/cursor_chart.html">CURSOR</A>.
 			You may use the query cursor to obtain a reference to the current cursor. Procedure
 			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_go_to">go_to</A>
 			takes a cursor as argument and brings the tree’s cursor to the node identified by
@@ -307,7 +307,7 @@
 			traversal.<BR>
 			A traversal is a certain policy for ordering all the nodes in a tree - usually to apply
 			an operation to all these nodes in the resulting order.
-			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html">CURSOR_TREE</A> and its
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree_chart.html">CURSOR_TREE</A> and its
 			descendants support three forms of traversal: preorder, postorder and breadth-first.
 			They correspond to the most commonly used traversal policies on trees, illustrated on
 			the figure (where the children of each node are assumed to be ordered from left to

@@ -26,11 +26,11 @@ ev_geometry: for geometry related events; x: INTEGER; y: INTEGER; width: INTEGER
 
 ev_pnd_start: for pick and drop transport start events; x: INTEGER; y: INTEGER
 
-ev_list_item_select: for list item selection events; index: INTEGER; item: EV_LIST_ITEM
+ev_list_item_select: for list item selection events; item: EV_LIST_ITEM
 
-ev_tree_item_select: for tree item selection events; index: INTEGER; item: EV_TREE_ITEM
+ev_tree_item_select: for tree item selection events; item: EV_TREE_ITEM
 
-ev_multi_column_list_row_select: for multi column list row selection events; index: INTEGER; item: EV_MULTI_COLUMN_LIST_ROW
+ev_multi_column_list_row_select: for multi column list row selection events; item: EV_MULTI_COLUMN_LIST_ROW
 
 # FIXME
 # Here we could pass the previous focused widget: previous: EV_WIDGET

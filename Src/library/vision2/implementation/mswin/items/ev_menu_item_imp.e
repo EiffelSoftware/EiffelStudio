@@ -10,10 +10,13 @@ class
 inherit
 	EV_MENU_ITEM_I
 		redefine
-			interface
+			interface,
+			parent
 		end
 		
 	EV_SIMPLE_ITEM_IMP
+		undefine
+			parent
 		redefine
 			interface
 		end
@@ -70,6 +73,8 @@ feature -- Element change
 		do
 			if a_parent /= Void then
 				parent_imp ?= a_parent.implementation
+			else
+				parent_imp := Void
 			end
 		end
 
@@ -83,6 +88,14 @@ feature -- Element change
 feature {NONE} -- Implementation
 
 	parent_imp: EV_MENU_ITEM_LIST_IMP
+
+	parent: EV_MENU_ITEM_LIST is
+			-- Item list containing `Current'.
+		do
+			if parent_imp /= Void then
+				Result ?= parent_imp.interface
+			end
+		end
 
 feature {EV_ANY_I} -- Implementation
 
@@ -116,6 +129,9 @@ end -- class EV_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/02/24 01:44:43  brendel
+--| Fixed parenting.
+--|
 --| Revision 1.28  2000/02/23 02:14:35  brendel
 --| Revised. Implemented.
 --|

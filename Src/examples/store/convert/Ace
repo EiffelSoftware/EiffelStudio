@@ -29,7 +29,7 @@ cluster
 external
 
 	Object: "$(EIFFEL3)/library/lex/spec/$(PLATFORM)/lib/lex.a";
-		"-L$(EIFFEL3)/library/store/spec/$(PLATFORM)";
+		"-L$(EIFFEL3)/library/store/spec/$(PLATFORM)/lib";
 		"-lsys_time";
 		"-lsupport"
 

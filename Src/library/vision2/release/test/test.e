@@ -256,7 +256,7 @@ feature
 				hbox.enable_homogeneous
 				vbox.extend (hbox)
 				from i := 1 until i > 3 or n > a_count loop
-					test_subject := a_i_th (n)
+					test_subject := a_i_th.item ([n])
 					if test_subject /= Void then
 						create wbox
 						wbox.set_padding (3)
@@ -505,6 +505,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/04/26 23:20:06  brendel
+--| Fixed agent call.
+--|
 --| Revision 1.35  2000/04/26 23:11:43  brendel
 --| Removed non_widgets_frame.
 --| Started new implementation of non-widgets test similar to widget frame.

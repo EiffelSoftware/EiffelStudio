@@ -29,10 +29,11 @@ feature {NONE, EAR_BUTTON}
 	trans_text: TEXT_FIELD;
 	save_b: PUSH_B;
 	negate_t: TOGGLE_B;
+	only_t: TOGGLE_B;
 
 	close is
 		do
-			reset;
+			clear;
 			popdown
 		end;
 
@@ -49,13 +50,14 @@ feature
 
 feature {NONE}
 
+	transl_hole: TRANSL_HOLE;
+
 	make is
 		local
 			close_button: CLOSE_WINDOW_BUTTON;
 			del_com: DELETE_WINDOW;
 			ear_icon: EAR_BUTTON;
 			sep1: SEPARATOR;
-			transl_hole: TRANSL_HOLE;
 			form: FORM
 		do
 			shell_make (Widget_names.translation_editor, Eb_screen);
@@ -69,6 +71,7 @@ feature {NONE}
 			!! transl_hole.make (Current, form);
 			!! ear_icon.make (Current, form);
 			!! negate_t.make (Widget_names.negate_name, form);
+			!! only_t.make (Widget_names.only_name, form);
 			!! sep1.make (Widget_names.separator, form);
 			!! trans_text.make (Widget_names.textField, form);
 			!! save_b.make (Widget_names.save_name, form);
@@ -91,8 +94,11 @@ feature {NONE}
 			form.attach_top_widget (sep1, save_b, 5);
 			form.attach_left_widget (ear_icon, save_b, 10);
 			form.attach_left (negate_t, 10);
+			form.attach_left_widget (negate_t, only_t, 5);
 			form.attach_top_widget (ear_icon, negate_t, 5);
+			form.attach_top_widget (ear_icon, only_t, 5);
 			form.attach_top_widget (negate_t, trans_text, 5);
+			form.attach_top_widget (only_t, trans_text, 5);
 			form.attach_left (trans_text, 5);
 			form.attach_right (trans_text, 5);
 			form.attach_bottom (trans_text, 5);
@@ -100,6 +106,7 @@ feature {NONE}
 			trans_text.add_activate_action (Current, trans_text);
 			transl_hole.add_activate_action (Current, transl_hole);
 			negate_t.add_activate_action (Current, negate_t);
+			only_t.add_activate_action (Current, only_t);
 			save_b.add_activate_action (Current, save_b);
 			trans_text.set_text ("");
 			!! del_com.make (Current);
@@ -128,6 +135,7 @@ feature
 		require
 			not_void_trans: trans /= Void
 		do
+			transl_hole.set_full_symbol;
 			edited_translation := trans;
 			edited_translation.set_editor (Current);
 			trans_text.set_text (edited_translation.text);
@@ -152,8 +160,9 @@ feature
 			set_icon_name (tmp);	
 		end;
 
-	reset is
+	clear is
 		do
+			transl_hole.set_empty_symbol;
 			if edited_translation /= Void then
 				reset_title;
 				edited_translation.reset;
@@ -180,23 +189,39 @@ feature {NONE}
 					transl_set_text.set_text (trans_text.text);
 					transl_set_text.execute (edited_translation);
 				elseif (argument = negate_t) then
-					if negate_t.state then
-						if trans_text.text.empty then
-							trans_text.append ("~")	
-						else
-							if ('~' /= trans_text.text.item (1)) then
-								trans_text.insert ("~", 0);
-								update_title
-							end
-						end
-					else
-						if (trans_text.text.item (1).is_equal ('~'))  then
-							trans_text.replace (0, 1, "");
-							update_title
-						end
-					end
+					replace_trans_text (negate_t.state, "~")
+				elseif (argument = only_t) then
+					replace_trans_text (only_t.state, "!")
 				end;
 			end;
+		end;
+
+	replace_trans_text (state: BOOLEAN; s: STRING) is
+		require
+			valid_s: s /= Void;
+			valid_s_count: s.count = 1
+		do
+			if state then
+				if trans_text.text.empty then
+					trans_text.text.append (s)	
+				else
+					if (s.item (1) /= trans_text.text.item (1)) and then
+						(trans_text.text.count = 1 or else
+							s.item (1) /= trans_text.text.item (2))
+					then
+						trans_text.insert (s, 0);
+						update_title
+					end
+				end
+			elseif trans_text.text.count > 0 then
+				if (trans_text.text.item (1) = s.item (1))  then
+					trans_text.replace (0, 1, "");
+					update_title
+				elseif (trans_text.text.item (2) = s.item (2)) then
+					trans_text.replace (0, 2, "");
+					update_title
+				end
+			end
 		end;
 
 end

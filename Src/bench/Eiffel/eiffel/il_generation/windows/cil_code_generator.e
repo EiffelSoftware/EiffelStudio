@@ -640,40 +640,43 @@ feature -- Generation Structure
 					i > nb
 				loop
 					l_type := l_types.item (i)
-					if l_type /= Void and then l_type.is_generated then
-						l_module := il_module (l_type)
-						
-						file_token.search (l_module)
-						if file_token.found then
-							l_file_token := file_token.found_item
-						else
-							l_file_token := define_file (main_module,
-								l_module.module_file_name, l_module.module_name,
-								feature {MD_FILE_FLAGS}.Has_meta_data)
-							file_token.put (l_file_token, l_module)
+					if l_type /= Void then
+						if not l_type.associated_class.is_external then
+							define_assertion_level (l_type)
 						end
-						
-						define_assertion_level (l_type)
-
-						l_uni_string.set_string (l_type.full_il_type_name)
-						l_token := md_emit.define_exported_type (l_uni_string, l_file_token,
-							l_type.last_type_token, feature {MD_TYPE_ATTRIBUTES}.Public)
-						
-						if l_type.implementation_id /= l_type.static_type_id then
-							l_uni_string.set_string (l_type.full_il_implementation_type_name)
+						if l_type.is_generated then
+							l_module := il_module (l_type)
+							
+							file_token.search (l_module)
+							if file_token.found then
+								l_file_token := file_token.found_item
+							else
+								l_file_token := define_file (main_module,
+									l_module.module_file_name, l_module.module_name,
+									feature {MD_FILE_FLAGS}.Has_meta_data)
+								file_token.put (l_file_token, l_module)
+							end
+							
+							l_uni_string.set_string (l_type.full_il_type_name)
 							l_token := md_emit.define_exported_type (l_uni_string, l_file_token,
-								l_type.last_implementation_type_token,
-								feature {MD_TYPE_ATTRIBUTES}.Public)
-						end
+								l_type.last_type_token, feature {MD_TYPE_ATTRIBUTES}.Public)
+							
+							if l_type.implementation_id /= l_type.static_type_id then
+								l_uni_string.set_string (l_type.full_il_implementation_type_name)
+								l_token := md_emit.define_exported_type (l_uni_string, l_file_token,
+									l_type.last_implementation_type_token,
+									feature {MD_TYPE_ATTRIBUTES}.Public)
+							end
 
-						l_class := l_type.associated_class	
-						if
-							not l_class.is_deferred and
-							(l_class.creators = Void or else not l_class.creators.is_empty)
-						then
-							l_uni_string.set_string (l_type.full_il_create_type_name)
-							l_token := md_emit.define_exported_type (l_uni_string, l_file_token,
-								l_type.last_create_type_token, feature {MD_TYPE_ATTRIBUTES}.Public)
+							l_class := l_type.associated_class	
+							if
+								not l_class.is_deferred and
+								(l_class.creators = Void or else not l_class.creators.is_empty)
+							then
+								l_uni_string.set_string (l_type.full_il_create_type_name)
+								l_token := md_emit.define_exported_type (l_uni_string, l_file_token,
+									l_type.last_create_type_token, feature {MD_TYPE_ATTRIBUTES}.Public)
+							end
 						end
 					end
 					i := i + 1
@@ -742,16 +745,22 @@ feature -- Generation Structure
 			class_type_not_void: class_type /= Void
 		local
 			l_assert_ca: MD_CUSTOM_ATTRIBUTE
+			l_type_name: STRING
 		do
 			check
 				main_module_not_void: main_module /= Void
 			end
 			create l_assert_ca.make
 			if class_type.implementation_id /= class_type.static_type_id then
-				l_assert_ca.put_string (class_type.full_il_implementation_type_name)
+				l_type_name := class_type.full_il_implementation_type_name
 			else
-				l_assert_ca.put_string (class_type.full_il_type_name)
+				l_type_name := class_type.full_il_type_name
 			end
+			if class_type.is_precompiled then
+				l_type_name.append (", ")
+				l_type_name.append (class_type.assembly_info.full_name)
+			end
+			l_assert_ca.put_string (l_type_name)
 			l_assert_ca.put_integer_32 (class_type.associated_class.assertion_level.level)
 			l_assert_ca.put_integer_16 (0)
 			define_custom_attribute (main_module.associated_assembly_token,

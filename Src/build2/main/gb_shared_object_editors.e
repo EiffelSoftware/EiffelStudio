@@ -88,6 +88,29 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	update_all_editors_by_calling_feature (vision2_object: EV_ANY; calling_object_editor: GB_OBJECT_EDITOR; p: PROCEDURE [EV_ANY, TUPLE]) is
+			-- For all editors, update by calling `p' on the editor.
+		local
+			local_all_editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
+			local_item: GB_OBJECT_EDITOR
+		do
+			local_all_editors := all_editors
+			from
+				local_all_editors.start
+			until
+				local_all_editors.off
+			loop
+				local_item := local_all_editors.item
+					-- We must only update the other editors referencing `vision2_object', not `calling_object_editor'.
+					-- If `local_item' `object' is `Void' then the editor is empty, so there is nothing to do.
+				if local_item /= calling_object_editor and then local_item.object /= Void then
+					--local_all_editors.item.update_event_selection_button_text
+					p.call ([local_all_editors.item])
+				end
+				local_all_editors.forth
+			end
+		end
+		
 	rebuild_associated_editors (vision2_object: EV_ANY) is
 			-- For all editors referencing `vision2_object', rebuild any associated object editors.
 		local

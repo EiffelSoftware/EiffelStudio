@@ -12,7 +12,8 @@ expanded class BOOLEAN
 inherit
 	BOOLEAN_REF
 
-create {NONE}
+create
+	default_create
 
 indexing
 

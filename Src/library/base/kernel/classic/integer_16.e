@@ -9,7 +9,8 @@ expanded class INTEGER_16 inherit
 
 	INTEGER_16_REF
 
-create {NONE}
+create
+	default_create
 
 indexing
 

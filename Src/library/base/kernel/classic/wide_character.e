@@ -10,6 +10,9 @@ expanded class
 inherit
 	WIDE_CHARACTER_REF
 
+create
+	default_create
+
 indexing
 
 	library: "[

@@ -11,7 +11,8 @@ expanded class INTEGER inherit
 
 	INTEGER_REF
 
-create {NONE}
+create
+	default_create
 
 indexing
 

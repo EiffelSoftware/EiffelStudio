@@ -10,7 +10,8 @@ indexing
 expanded class REAL inherit
 	REAL_REF
 
-create {NONE}
+create
+	default_create
 
 indexing
 

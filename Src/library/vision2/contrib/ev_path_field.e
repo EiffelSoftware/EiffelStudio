@@ -158,7 +158,8 @@ feature {NONE} -- Actions
 		do
 			create fd
 			if filter /= Void then
-				fd.set_filter (filter)
+				fd.filters.extend ([filter, "Files of type (" + filter + ")"])
+				fd.filters.extend (["*.*", "All Files (*.*)"])
 			end
 			fd.set_title ("Select a file")
 			start_directory := field.text

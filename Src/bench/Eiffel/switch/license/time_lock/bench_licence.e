@@ -121,7 +121,7 @@ feature -- Info
 			create encoder.make_with_key (key)
 
 				-- Get the stored expiration date
-			date_name := clone (environment.get ("BENCH_TRIAL_50"))
+			date_name := clone (environment.get ("BENCH_TRIAL_51"))
 
 			if date_name /= Void and then date_name.count > 0 then
 				check
@@ -142,7 +142,7 @@ feature -- Info
 					Result := time + Max_days_in_seconds
 					date_name := encoder.encrypt (Result.out)
 				end
-				environment.put (date_name, "BENCH_TRIAL_50")
+				environment.put (date_name, "BENCH_TRIAL_51")
 			end
 			encoder.terminate
 		end
@@ -206,7 +206,7 @@ feature {NONE} -- Implementation
 	waiting_time: INTEGER is
 			-- Number of seconds to wait before executing a command in the Trial edition.
 		do
-			Result := ((25 / Max_days) * number_of_days + 5).rounded
+			Result := ((25 / Max_days) * number_of_days + Max_waiting_time).rounded
 		end
 
 	number_of_days: INTEGER is
@@ -235,11 +235,11 @@ feature {NONE} -- Constants
 	Max_days: INTEGER is 60
 			-- Numbers of days of evaluation
 		
-	Min_waiting_time: INTEGER is 5
-	Max_waiting_time: INTEGER is 30
+	Min_waiting_time: INTEGER is 1
+	Max_waiting_time: INTEGER is 2
 			-- Time to wait before being able to use environment.
 
-	Default_waiting_time: INTEGER is 15
+	Default_waiting_time: INTEGER is 1
 			-- Number of seconds to wait before using $EiffelGraphicalCompiler$ for the first time.
 
 	Is_beta: BOOLEAN is False

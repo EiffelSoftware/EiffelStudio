@@ -127,6 +127,8 @@ feature {AST_EIFFEL} -- Output
 				ctxt.put_text_item (Ti_L_curly)
 				ctxt.format_ast (class_type)
 				ctxt.put_text_item (Ti_R_curly)
+				ctxt.put_space
+				ctxt.put_text_item (Ti_question)
 			else
 				if expression /= Void then
 						-- Closed operand on an expression

@@ -106,6 +106,7 @@ feature -- Constants
 	eif_helpers_header_name_id: INTEGER is 96
 	native_array_name_id: INTEGER is 97
 	to_string_name_id: INTEGER is 98
+	to_cil_name_id: INTEGER is 99
 	
 			-- Predefined name IDs constants
 

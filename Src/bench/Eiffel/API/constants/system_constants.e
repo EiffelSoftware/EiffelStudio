@@ -149,6 +149,16 @@ feature {NONE}
 
 	W_code: STRING is "W_code"
 
+	Pixmap_suffix: STRING is
+			-- Suffix for pixmaps (bmp for windows - xpm for motif).
+		once
+			if Platform_constants.is_windows then
+				Result := "bmp"
+			else
+				Result := "xpm"
+			end
+		end
+
 feature {NONE}
 
 	Max_non_encrypted: INTEGER is 2

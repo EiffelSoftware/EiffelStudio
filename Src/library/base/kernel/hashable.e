@@ -23,7 +23,7 @@ feature -- Access
 			hashable: is_hashable
 		deferred
 		ensure
-			good_hash_value: Result > 0
+			good_hash_value: Result >= 0
 		end;
 
 feature -- Status report

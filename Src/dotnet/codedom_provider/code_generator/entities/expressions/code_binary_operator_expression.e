@@ -24,7 +24,6 @@ feature {NONE} -- Initialization
 		require
 			non_void_left_operand: a_left_operand /= Void
 			non_void_right_operand: a_right_operand /= Void
-			non_void_operator: a_operator /= Void
 		do
 			left_operand := a_left_operand
 			right_operand := a_right_operand

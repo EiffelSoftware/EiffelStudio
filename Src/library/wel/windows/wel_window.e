@@ -1817,7 +1817,6 @@ feature {NONE} -- Removal
 			-- meaning that `destroy' has not been called. We need to call it.
 		local
 			p, hwnd, null: POINTER
-			object_id: INTEGER
 		do
 			hwnd := item
 			if is_window (hwnd) then

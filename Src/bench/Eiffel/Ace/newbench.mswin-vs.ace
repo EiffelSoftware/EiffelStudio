@@ -24,6 +24,133 @@ default
 
 
 cluster
+	all compiler_tests:		"$EIFFEL_SRC\com_compiler\compiler_tests"
+		exclude
+			"CVS"; 
+		end
+
+	all com_generated:		"$EIFFEL_SRC\com_compiler"
+		exclude
+			"EIFGEN"; "to_replace"; "generated"; "cvs"; "Clib";
+			"ace_file"; "idl"; "Client_Only"; "generated_client";
+			"compiler_tests"; "eb_flat_short_data.e"
+		visible
+			ieiffel_compiler_events_impl_proxy
+				end
+			ieiffel_project_impl_proxy
+				end
+			ieiffel_compiler_impl_proxy
+				end
+			ieiffel_system_browser_impl_proxy
+				end
+			ieiffel_cluster_descriptor_impl_proxy
+				end
+			ieiffel_class_descriptor_impl_proxy
+				end
+			ieiffel_feature_descriptor_impl_proxy
+				end
+			ieiffel_project_properties_impl_proxy
+				end
+			ieiffel_cluster_properties_impl_proxy
+				end
+			ieiffel_htmldoc_generator_impl_proxy
+				end
+			ecom_ise_registration
+				end
+			ceiffel_project_coclass_imp
+				end
+			ceiffel_compiler_coclass_imp
+				end
+			ieiffel_project_impl_stub
+				end
+			ieiffel_compiler_impl_stub
+				end
+			ieiffel_system_browser_impl_stub
+				end
+			ieiffel_cluster_descriptor_impl_stub
+				end
+			ieiffel_class_descriptor_impl_stub
+				end
+			ieiffel_feature_descriptor_impl_stub
+				end
+			ieiffel_project_properties_impl_stub
+				end
+			ieiffel_cluster_properties_impl_stub
+				end
+			ieiffel_htmldoc_generator_impl_stub
+				end
+			ieiffel_system_externals_impl_stub
+				end
+			ieiffel_system_assemblies_impl_stub
+				end
+			ieiffel_assembly_properties_impl_stub
+				end
+			ieiffel_htmldoc_generator_impl_stub
+				end
+			class_descriptor
+				end
+			cluster_descriptor
+				end
+			cluster_properties
+				end
+			compiler
+				end
+			com_degree_output
+				end
+			com_error_window
+				end
+			feature_descriptor
+				end
+			project_manager
+				end
+			project_properties
+				end
+			system_browser
+				end
+			system_clusters
+				end
+			class_enumerator
+				end
+			cluster_enumerator
+				end
+			feature_enumerator
+				end
+			cluster_prop_enumerator
+				end
+			cluster_excludes_enumerator
+				end
+			assembly_enumerator
+				end
+			include_paths_enumerator
+				end
+			object_files_enumerator
+				end
+			system_externals
+				end
+			system_assemblies
+				end
+			assembly_properties
+				end
+			completion_information
+				end
+			completion_entry_enumerator
+				end
+			html_doc_generator
+				end
+			ieiffel_htmldoc_events_impl_stub
+				end
+			ieiffel_htmldoc_events_impl_proxy
+				end
+			ieiffel_htmldoc_events_interface
+				end
+			variable_descriptor
+				end
+			parameter_enumerator
+				end
+			parameter_descriptor
+				end
+		end
+
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
 			"table"; "desc"; "CVS"; 
@@ -176,90 +303,11 @@ cluster
 	all compiler:		"$EIFFEL_SRC\Eiffel\eiffel"
 		exclude
 			"CVS"; "unix"; "Clib"; "Core"; "junk"; "kernel"; 
-		option
-			assertion (no): com_il_code_generator, il_code_generator, il_code_generator_i, il_generator, il_label, il_label_factory, il_meta_data_generator
-			assertion (check): com_il_code_generator, il_code_generator, il_code_generator_i, il_generator, il_label, il_label_factory, il_meta_data_generator
 		end
 
 	all compiler_api:		"$EIFFEL_SRC\Eiffel\API"
 		exclude
 			"CVS"; 
-		end
-
-	all com_generated:		"$EIFFEL_SRC\com_compiler"
-		exclude
-			"to_replace"; "generated"; "CVS"; 
-		visible
-			ieiffel_compiler_events_impl_proxy
-				end
-			ieiffel_project_impl_proxy
-				end
-			ieiffel_compiler_impl_proxy
-				end
-			ieiffel_system_browser_impl_proxy
-				end
-			ieiffel_cluster_descriptor_impl_proxy
-				end
-			ieiffel_class_descriptor_impl_proxy
-				end
-			ieiffel_feature_descriptor_impl_proxy
-				end
-			ieiffel_project_properties_impl_proxy
-				end
-			ieiffel_cluster_properties_impl_proxy
-				end
-			ecom_eif_compiler_registration
-				end
-			ceiffel_project_coclass_imp
-				end
-			ceiffel_compiler_coclass_imp
-				end
-			ieiffel_project_impl_stub
-				end
-			ieiffel_compiler_impl_stub
-				end
-			ieiffel_system_browser_impl_stub
-				end
-			ieiffel_cluster_descriptor_impl_stub
-				end
-			ieiffel_class_descriptor_impl_stub
-				end
-			ieiffel_feature_descriptor_impl_stub
-				end
-			ieiffel_project_properties_impl_stub
-				end
-			ieiffel_cluster_properties_impl_stub
-				end
-			class_descriptor
-				end
-			cluster_descriptor
-				end
-			cluster_properties
-				end
-			compiler
-				end
-			com_degree_output
-				end
-			com_error_window
-				end
-			feature_descriptor
-				end
-			project_manager
-				end
-			project_properties
-				end
-			system_browser
-				end
-			system_clusters
-				end
-			class_enumerator
-				end
-			cluster_enumerator
-				end
-			feature_enumerator
-				end
-			cluster_prop_enumerator
-				end
 		end
 
 	all helpers:		"$EIFFEL_SRC\library\helpers"
@@ -309,6 +357,18 @@ cluster
 	all xml_deserializer:		"$EIFFEL_SRC\Eiffel\library\xml_deserializer"
 
 	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
+
+	activation_checker:		"$EIFFEL_SRC\Eiffel\library\activation\enterprise"
+
+	all keygen: 			"$EIFFEL_SRC\library\keygen"
+		exclude
+			"eiffel_studio_52"; "unix"; "CVS"
+		end
+									
+	all assembly_info:		"$EIFFEL_SRC\dotnet\eac_browser\src"
+		exclude
+			"cache.e"; "CVS"
+		end
 
 external
 

@@ -549,6 +549,17 @@ feature -- Bridge to EIFNET_DEBUGGER_INFO
 		
 feature -- Easy access
 
+	icor_debug_module_for (a_class_type: CLASS_TYPE): ICOR_DEBUG_MODULE is
+			-- ICorDebugModule for `a_class_type'
+		require
+			a_class_type_not_void: a_class_type /= Void
+		local
+			l_class_module_name: STRING			
+		do
+			l_class_module_name := Il_debug_info_recorder.module_file_name_for_class (a_class_type)
+			Result := icor_debug_module (l_class_module_name)
+		end
+
 	icor_debug_class (a_class_type: CLASS_TYPE): ICOR_DEBUG_CLASS is
 		require
 			arg_class_type_void: a_class_type /= Void
@@ -564,19 +575,6 @@ feature -- Easy access
 		end
 		
 feature -- Function Evaluation
-			
-	icd_class (ct: CLASS_TYPE): ICOR_DEBUG_CLASS is
-			-- ICorDebugClass for class type `ct'
-		local
-			l_mod_name: STRING
-			l_token: INTEGER
-			l_icd_module: ICOR_DEBUG_MODULE
-		do
-			l_mod_name := il_debug_info_recorder.module_file_name_for_class (ct)					
-			l_token := il_debug_info_recorder.class_token (l_mod_name, ct)
-			l_icd_module := icor_debug_module (l_mod_name)
-			Result := l_icd_module.get_class_from_token (l_token)
-		end
 		
 	icd_function_by_name (ct: CLASS_TYPE; a_f_name: STRING): ICOR_DEBUG_FUNCTION is
 			-- ICorDebugClass for `a_class_c'.`a_f_name'
@@ -599,17 +597,10 @@ feature -- Function Evaluation
 		
 	feature_token (ct: CLASS_TYPE; a_f_name: STRING): INTEGER is
 		local
-			l_mod_name: STRING
 			l_icd_module: ICOR_DEBUG_MODULE
-			l_md_import: MD_IMPORT
-			l_class_token: INTEGER
 		do
-			l_mod_name := il_debug_info_recorder.module_file_name_for_class (ct)
-			l_icd_module := icor_debug_module (l_mod_name)
-			l_md_import := l_icd_module.interface_md_import
-			
-			l_class_token := l_md_import.find_type_def_by_name (ct.full_il_implementation_type_name, 0)
-			Result := l_md_import.find_member (l_class_token, a_f_name)
+			l_icd_module := icor_debug_module_for (ct)
+			Result := l_icd_module.md_member_token_by_names (ct.full_il_implementation_type_name, a_f_name)
 		end
 		
 	icd_function_by_token (ct: CLASS_TYPE; a_f_token: INTEGER): ICOR_DEBUG_FUNCTION is
@@ -617,11 +608,9 @@ feature -- Function Evaluation
 		require
 			feature_token_valid: a_f_token > 0
 		local
-			l_mod_name: STRING
 			l_icd_module: ICOR_DEBUG_MODULE
 		do
-			l_mod_name := il_debug_info_recorder.module_file_name_for_class (ct)
-			l_icd_module := icor_debug_module (l_mod_name)
+			l_icd_module := icor_debug_module_for (ct)
 			Result := l_icd_module.get_function_from_token (a_f_token)
 		end			
 	
@@ -631,13 +620,13 @@ feature -- Function Evaluation
 			ct: CLASS_TYPE
 		do
 			ct := Eiffel_system.String_class.compiled_class.types.first
-			Result := icd_class (ct)
+			Result := icor_debug_class (ct)
 		end
 
 	reference_integer_32_icd_class: ICOR_DEBUG_CLASS is
 			-- ICorDebugClass for `reference INTEGER'
 		do
-			Result := icd_class (int32_c_type.associated_reference_class_type)
+			Result := icor_debug_class (int32_c_type.associated_reference_class_type)
 		end	
 		
 	reference_integer_32_set_item_method: ICOR_DEBUG_FUNCTION is
@@ -651,7 +640,7 @@ feature -- Function Evaluation
 	reference_real_icd_class: ICOR_DEBUG_CLASS is
 			-- ICorDebugClass for `reference REAL'
 		do
-			Result := icd_class (float_c_type.associated_reference_class_type)
+			Result := icor_debug_class (float_c_type.associated_reference_class_type)
 		end	
 
 	reference_real_set_item_method: ICOR_DEBUG_FUNCTION is
@@ -665,7 +654,7 @@ feature -- Function Evaluation
 	reference_double_icd_class: ICOR_DEBUG_CLASS is
 			-- ICorDebugClass for `reference DOUBLE'
 		do
-			Result := icd_class (double_c_type.associated_reference_class_type)
+			Result := icor_debug_class (double_c_type.associated_reference_class_type)
 		end
 		
 	reference_double_set_item_method: ICOR_DEBUG_FUNCTION is
@@ -679,7 +668,7 @@ feature -- Function Evaluation
 	reference_boolean_icd_class: ICOR_DEBUG_CLASS is
 			-- ICorDebugClass for `reference BOOLEAN'
 		do
-			Result := icd_class (boolean_c_type.associated_reference_class_type)
+			Result := icor_debug_class (boolean_c_type.associated_reference_class_type)
 		end
 		
 	reference_boolean_set_item_method: ICOR_DEBUG_FUNCTION is
@@ -693,7 +682,7 @@ feature -- Function Evaluation
 	reference_character_icd_class: ICOR_DEBUG_CLASS is
 			-- ICorDebugClass for `reference CHARACTER'
 		do
-			Result := icd_class (char_c_type.associated_reference_class_type)
+			Result := icor_debug_class (char_c_type.associated_reference_class_type)
 		end	
 		
 	reference_character_set_item_method: ICOR_DEBUG_FUNCTION is

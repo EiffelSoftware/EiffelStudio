@@ -42,24 +42,6 @@ extern "C" {
 #define ex_from		exu.exua.exua_from
 #define ex_oid		exu.exua.exua_oid
 
-/* Structure used to record general flags. These are the value to take into
- * account for the last exception that occurred, which might not be in the
- * stack yet if manually or system raised.
- */
-struct eif_except {
-	unsigned char ex_val;	/* Exception code (raised) */
-	unsigned char ex_nomem;	/* An "Out of memory" exception occurred */
-	unsigned char ex_nsig;	/* Number of last signal received */
-	unsigned int ex_level;	/* Exception level (rescue branches) */
-	unsigned char ex_org;	/* Original exception at this level */
- 	char *ex_tag;			/* Assertion tag */
-	char *ex_otag;			/* Tag associated with original exception */
-	char *ex_rt;			/* Routine associated with current exception */
-	char *ex_ort;			/* Routine associated with original exception */
-	int ex_class;			/* Class associated with current exception */
-	int ex_oclass;			/* Class associated with original exception */
-};
-
 /* Short names for easier access */
 #define echmem		exdata.ex_nomem
 #define echtg		exdata.ex_tag

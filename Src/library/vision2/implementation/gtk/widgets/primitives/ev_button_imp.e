@@ -24,7 +24,8 @@ inherit
 			foreground_color_pointer,
 			on_focus_changed,
 			needs_event_box,
-			event_widget
+			event_widget,
+			enable_sensitive
 		end
  
 	EV_PIXMAPABLE_IMP
@@ -63,7 +64,14 @@ create
 feature {NONE} -- Initialization
 
 	needs_event_box: BOOLEAN is True
-	
+
+	enable_sensitive is
+			-- Enable sensitivity of button
+		do
+			Precursor {EV_PRIMITIVE_IMP}
+			feature {EV_GTK_EXTERNALS}.gtk_button_set_relief (visual_widget, feature {EV_GTK_EXTERNALS}.gtk_relief_normal_enum)
+		end
+
 	event_widget: POINTER is
 			-- Pointer to the GtkWidget that handles the widget events
 		do

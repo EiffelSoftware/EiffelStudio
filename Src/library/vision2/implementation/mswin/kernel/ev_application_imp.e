@@ -34,6 +34,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_WS_CONSTANTS
+		export
+			{NONE} all
+		end
+
 creation
 	make
 
@@ -137,6 +142,22 @@ feature -- Basic operation
 			-- Exit the application
 		do
 			main_window.destroy
+		end
+
+	splash_pixmap (pix: EV_PIXMAP) is
+			-- Show the splash screen pixmap `pix'.
+		local
+			metric: WEL_SYSTEM_METRICS
+			splash: EV_UNTITLED_WINDOW_IMP
+		do
+			create metric
+			create splash.make
+			splash.set_background_pixmap (pix)
+			splash.set_style (Ws_popup + Ws_overlapped + Ws_clipchildren + Ws_clipsiblings)
+			splash.move ((metric.full_screen_client_area_width - pix.width) // 2, (metric.full_screen_client_area_height - pix.height) // 2)
+			splash.set_minimum_size (pix.width, pix.height)
+			splash_screen := splash
+			splash.show
 		end
 
 feature -- Implementation

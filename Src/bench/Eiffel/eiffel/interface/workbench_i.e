@@ -41,6 +41,9 @@ feature -- Attributes
 	precompiled_driver: FILE_NAME
 			-- Full file name of the precompilation driver
 
+	melted_file_name: STRING
+			-- File name of the melted file used by the precompilation driver.
+
 	compilation_counter: INTEGER
 			-- Number of recompilations
 
@@ -80,6 +83,17 @@ feature -- Conveniences
 			precompiled_driver := pd
 		ensure
 			assigned: precompiled_driver = pd
+		end
+
+	set_melted_file_name (update_file_name: like melted_file_name) is
+			-- Set `melted_file_name' to `upate_file_name'.
+		require
+			update_file_name_not_void: update_file_name /= Void
+			update_file_name_exists: update_file_name.count > 0
+		do
+			melted_file_name := clone (update_file_name)
+		ensure
+			assigned: melted_file_name.is_equal (update_file_name)
 		end
 
 feature -- Initialization

@@ -73,6 +73,7 @@ feature
 						sys.set_has_precompiled_preobj (False);
 						Workbench.precompiled_directories.force (project_dir, sys.compilation_id);
 						Workbench.set_precompiled_driver (project_dir.precompiled_driver);
+						Workbench.set_melted_file_name (project_dir.system_name);
 						set_precomp_dir;
 						sys.init_counters;
 						if merge_project_names /= Void then

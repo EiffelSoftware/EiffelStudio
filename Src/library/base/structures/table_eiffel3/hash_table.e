@@ -72,6 +72,8 @@ feature -- Access
 
 	has (key: H): BOOLEAN is
 			-- Is there an item in the table with key `key'?
+		require
+			valid_key: valid_key (key)
 		local
 			old_control: INTEGER
 			default_value: G
@@ -402,7 +404,7 @@ feature -- Element change
 			-- If `key' is present, replace corresponding item by `new',
 			-- if not, insert item `new' with key `key'.
 			-- Make `inserted' true.
-		require else
+		require
 			valid_key (key)
 		do
 			internal_search (key)
@@ -450,6 +452,25 @@ feature -- Element change
 			changed: replaced implies not has (old_key)
 		end
 
+	merge (other: HASH_TABLE [G, H]) is
+			-- Merge `other' into Current. If `other' has some elements
+			-- with same key as in `Current', replace them by one from
+			-- `other'.
+		require
+			other_not_void: other /= Void
+		do
+			from
+				other.start
+			until
+				other.after
+			loop
+				force (other.item_for_iteration, other.key_for_iteration)
+				other.forth
+			end
+		ensure
+			inserted: other.current_keys.linear_representation.for_all (~has)
+		end
+		
 feature -- Removal
 
 	remove (key: H) is

@@ -227,7 +227,9 @@ feature -- Pngs
 					pixmaps_by_name.put (Result, a_name)
 				else
 					update_warning_dialog_text (pixmap_file_name (a_name))
-					pixmap_warning_dialog.show
+					if not pixmap_warning_dialog.is_destroyed and then not pixmap_warning_dialog.is_show_requested then
+						pixmap_warning_dialog.show	
+					end
 					Result := icon_delete_small @ 1
 				end
 			end

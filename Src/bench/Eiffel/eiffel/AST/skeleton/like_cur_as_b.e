@@ -20,12 +20,11 @@ inherit
 
 feature
 
-	actual_type: TYPE_A is
+	actual_type: UNEVALUATED_LIKE_TYPE is
 			-- Useless
 		do
-			-- Do nothing
-		ensure then
-			False
+			!! Result.make ("Current");
+			Result.set_like_current
 		end;
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): LIKE_CURRENT is

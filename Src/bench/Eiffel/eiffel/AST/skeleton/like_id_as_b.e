@@ -42,12 +42,10 @@ feature
 
 feature -- Implementation of inherited deferred features
 
-	actual_type: TYPE_A is
-			-- Useless
+	actual_type: UNEVALUATED_LIKE_TYPE is
+			-- Create an UNEVALUATED_LIKE_TYPE
 		do
-			-- Do nothing
-		ensure then
-			False
+			!! Result.make (anchor)
 		end;
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): TYPE_A is

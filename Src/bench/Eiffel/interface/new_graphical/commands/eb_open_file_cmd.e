@@ -54,6 +54,7 @@ feature {NONE} -- Implementation
 			fod: EV_FILE_OPEN_DIALOG
 			arg: EV_ARGUMENT1 [EV_FILE_OPEN_DIALOG]
 			qd: EV_QUESTION_DIALOG
+			csd: EB_CONFIRM_SAVE_DIALOG
 			class_i: CLASS_I
 			classi_stone: CLASSI_STONE
 			classc_stone: CLASSC_STONE
@@ -61,8 +62,7 @@ feature {NONE} -- Implementation
 			if argument = Void then
 				-- First click on open
 				if tool.text_window.changed then
---					warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
---						Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
+					create csd.make_and_launch (tool, Current, argument)
 				else
 					create fod.make (tool.parent)
 					fod.set_filter (<<"Eiffel Class File (*.e)">>, <<"*.e">>)

@@ -25,18 +25,11 @@ feature -- Callbacks
 	exit_anyway is
 			-- The user has been warned that he will lose his stuff
 		do
---			tool.destroy
 			tool_supervisor.remove (tool)
 		end
 
-	save_changes (argument: ANY) is
-		do
---			if tool.save_cmd /= Void then
---				tool.save_cmd.execute (Void)
---			end
-
-			exit_anyway
-		end
+	user_warned: BOOLEAN
+			-- Has user been warned that he could lose the changes?
 
 feature -- Properties
 
@@ -51,16 +44,11 @@ feature {NONE} -- Implementation
 	execute (argument: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Quit cautiously a file.
 		local
---			d: EV_DIALOG
-			qd: EV_QUESTION_DIALOG
-			cmd: EV_ROUTINE_COMMAND
+			csd: EB_CONFIRM_SAVE_DIALOG
 		do
-			if tool.text_window.changed then
-				create qd.make_with_text (tool.parent, Interface_names.t_Warning, Warning_messages.w_File_changed)
-				qd.show_yes_no_cancel_buttons
-				qd.show
---				warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
---						Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
+			if (not user_warned) and then tool.text_window.changed then
+				create csd.make_and_launch (tool, Current, argument)
+				user_warned := True
 			else
 				exit_anyway
 			end

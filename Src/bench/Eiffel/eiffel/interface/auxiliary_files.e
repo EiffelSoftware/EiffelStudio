@@ -23,6 +23,11 @@ inherit
 			{NONE} all
 		end
 		
+	SHARED_TYPE_I
+		export
+			{NONE} all
+		end
+		
 create
 	make
 
@@ -190,7 +195,11 @@ feature -- Dynamic Library file
 
 									----- Routine function
 									buffer.putstring ("%Nextern ")
-									return_type := cecil_type(dl_exp.routine.type).twin
+									if dl_exp.routine.type /= Void then
+										return_type := dl_exp.routine.type.type_i.c_type.c_string
+									else
+										return_type := "void"
+									end
 									buffer.putstring (return_type)
 										
 									buffer.putstring (" ")
@@ -203,7 +212,7 @@ feature -- Dynamic Library file
 											args.after
 										loop
 											buffer.putstring (", ")
-											buffer.putstring (cecil_type(args.item))
+											args.item.type_i.c_type.generate (buffer)
 											if not args.item.is_basic then
 												nb_ref := nb_ref + 1
 											end
@@ -229,8 +238,7 @@ feature -- Dynamic Library file
 										until
 											argument_names.after
 										loop
-											buffer.putstring (cecil_type(args.i_th (argument_names.index)))
-											buffer.putstring(" ")
+											args.i_th (argument_names.index).type_i.c_type.generate (buffer)
 											buffer.putstring(argument_names.item)
 											if not argument_names.islast then
 												buffer.putstring(", ")
@@ -367,43 +375,6 @@ feature -- Dynamic Library file
 				create C_dynamic_lib_file.make_c_code_file (gen_file_name (context.final_mode, "edynlib"));
 				buffer.put_in_file (C_dynamic_lib_file)
 				C_dynamic_lib_file.close
-			end
-		end
-
-feature {NONE} -- DYNAMIC_LIB features
-
-	cecil_type (type:TYPE_A): STRING is
-		local
-			int_a: INTEGER_A
-			char_a: CHARACTER_A
-		do
-			if type = Void then
-				Result := "void"
-			elseif type.is_integer then
-				Result := "EIF_INTEGER_"
-				int_a ?= type
-				Result.append_integer (int_a.size)
-			elseif type.is_boolean then
-				Result := "EIF_BOOLEAN"
-			elseif type.is_real then
-				Result := "EIF_REAL"
-			elseif type.is_double then
-				Result := "EIF_DOUBLE"
-			elseif type.is_character then
-				char_a ?= type
-				if char_a.is_wide then
-					Result := "EIF_WIDE_CHAR"
-				else
-					Result := "EIF_CHARACTER"
-				end
-			elseif type.is_bits then
-				Result := "EIF_BIT"
-			elseif type.is_true_expanded then
-				Result := "EIF_EXPANDED"
-			elseif type.is_pointer then
-				Result := "EIF_POINTER"
-			else
-				Result := "EIF_REFERENCE"
 			end
 		end
 
@@ -764,47 +735,47 @@ feature -- Plug and Makefile file
 			local_system := System
 
 			buffer.putstring ("%N%Tegc_int8_ref_dtype = ")
-			buffer.putint (system.integer_ref_dtype (8) - 1)
+			buffer.putint (int8_c_type.reference_type.type_id - 1)
 			buffer.putstring (";%N%Tegc_int16_ref_dtype = ")
-			buffer.putint (system.integer_ref_dtype (16) - 1)
+			buffer.putint (int16_c_type.reference_type.type_id - 1)
 			buffer.putstring (";%N%Tegc_int32_ref_dtype = ")
-			buffer.putint (system.integer_ref_dtype (32) - 1)
+			buffer.putint (int32_c_type.reference_type.type_id  - 1)
 			buffer.putstring (";%N%Tegc_int64_ref_dtype = ")
-			buffer.putint (system.integer_ref_dtype (64) - 1)
+			buffer.putint (int64_c_type.reference_type.type_id  - 1)
 			buffer.putstring (";%N%Tegc_bool_ref_dtype = ")
-			buffer.putint (system.boolean_ref_dtype - 1)
+			buffer.putint (boolean_c_type.reference_type.type_id - 1)
 			buffer.putstring (";%N%Tegc_real_ref_dtype = ")
-			buffer.putint (system.real_ref_dtype - 1)
+			buffer.putint (float_c_type.reference_type.type_id - 1)
 			buffer.putstring (";%N%Tegc_char_ref_dtype = ")
-			buffer.putint (system.character_ref_dtype - 1)
+			buffer.putint (char_c_type.reference_type.type_id - 1)
 			buffer.putstring (";%N%Tegc_wchar_ref_dtype = ")
-			buffer.putint (system.wide_char_ref_dtype - 1)
+			buffer.putint (wide_char_c_type.reference_type.type_id - 1)
 			buffer.putstring (";%N%Tegc_doub_ref_dtype = ")
-			buffer.putint (system.double_ref_dtype - 1)
+			buffer.putint (double_c_type.reference_type.type_id - 1)
 			buffer.putstring (";%N%Tegc_point_ref_dtype = ")
-			buffer.putint (system.pointer_ref_dtype - 1)
+			buffer.putint (pointer_c_type.reference_type.type_id - 1)
 			buffer.putstring (";%N");	
 
 			buffer.putstring ("%N%Tegc_int8_dtype = ")
-			buffer.putint (system.integer_8_class.compiled_class.types.first.type_id - 1)
+			buffer.putint (int8_c_type.type_id - 1)
 			buffer.putstring (";%N%Tegc_int16_dtype = ")
-			buffer.putint (system.integer_16_class.compiled_class.types.first.type_id - 1)
+			buffer.putint (int16_c_type.type_id - 1)
 			buffer.putstring (";%N%Tegc_int32_dtype = ")
-			buffer.putint (system.integer_32_class.compiled_class.types.first.type_id - 1)
+			buffer.putint (int32_c_type.type_id - 1)
 			buffer.putstring (";%N%Tegc_int64_dtype = ")
-			buffer.putint (system.integer_64_class.compiled_class.types.first.type_id - 1)
+			buffer.putint (int64_c_type.type_id - 1)
 			buffer.putstring (";%N%Tegc_bool_dtype = ")
-			buffer.putint (system.boolean_class.compiled_class.types.first.type_id - 1)
+			buffer.putint (boolean_c_type.type_id - 1)
 			buffer.putstring (";%N%Tegc_real_dtype = ")
-			buffer.putint (system.real_class.compiled_class.types.first.type_id - 1)
+			buffer.putint (float_c_type.type_id - 1)
 			buffer.putstring (";%N%Tegc_char_dtype = ")
-			buffer.putint (system.character_class.compiled_class.types.first.type_id - 1)
+			buffer.putint (char_c_type.type_id - 1)
 			buffer.putstring (";%N%Tegc_wchar_dtype = ")
-			buffer.putint (system.wide_char_class.compiled_class.types.first.type_id - 1)
+			buffer.putint (wide_char_c_type.type_id - 1)
 			buffer.putstring (";%N%Tegc_doub_dtype = ")
-			buffer.putint (system.double_class.compiled_class.types.first.type_id - 1)
+			buffer.putint (double_c_type.type_id - 1)
 			buffer.putstring (";%N%Tegc_point_dtype = ")
-			buffer.putint (system.pointer_class.compiled_class.types.first.type_id - 1)
+			buffer.putint (pointer_c_type.type_id - 1)
 			buffer.putstring (";%N");	
 
 		end

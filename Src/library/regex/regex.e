@@ -20,7 +20,7 @@ inherit
 	 dispose
       end
 
-creation {REGEX_COMPILER}
+create {REGEX_COMPILER}
 
    make
 

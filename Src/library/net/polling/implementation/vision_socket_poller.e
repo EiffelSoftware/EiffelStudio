@@ -8,7 +8,7 @@ inherit
 
 	COMMAND
 
-creation
+create
 	make, make_active
 
 feature -- Initialization

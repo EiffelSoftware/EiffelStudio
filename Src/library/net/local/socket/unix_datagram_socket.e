@@ -30,7 +30,7 @@ inherit
 			address as socket_address
 		end
 
-creation
+create
 
 	make, make_bound, make_targeted
 

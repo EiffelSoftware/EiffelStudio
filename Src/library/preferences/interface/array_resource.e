@@ -15,7 +15,7 @@ inherit
 			set_value, value
 		end
 
-creation
+create
 	make, 
 	make_from_string
 

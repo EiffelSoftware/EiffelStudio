@@ -15,7 +15,7 @@ inherit
 
 	SOCKET_RESOURCES
 
-creation
+create
 
 	make, make_read_only, make_write_only, make_exception_only
 

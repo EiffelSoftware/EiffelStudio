@@ -29,11 +29,11 @@ inherit
 			is_valid_peer_address, create_from_descriptor
 		end
 
-creation {NETWORK_STREAM_SOCKET}
+create {NETWORK_STREAM_SOCKET}
 
 	create_from_descriptor
 
-creation
+create
 
 	make, make_client_by_port, make_server_by_port
 

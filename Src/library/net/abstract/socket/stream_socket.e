@@ -18,7 +18,7 @@ inherit
 			support_storable
 		end
 
-creation {STREAM_SOCKET}
+create {STREAM_SOCKET}
 
 	create_from_descriptor
 

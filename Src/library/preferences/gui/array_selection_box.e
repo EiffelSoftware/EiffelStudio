@@ -13,7 +13,7 @@ inherit
 			resource
 		end
 
-creation
+create
 	make
 
 feature -- Implementation

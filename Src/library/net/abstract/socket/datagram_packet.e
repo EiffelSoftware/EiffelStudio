@@ -13,7 +13,7 @@ inherit
 			make, valid_position, put_element, element
 		end
 
-creation
+create
 
 	make
 

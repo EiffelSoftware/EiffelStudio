@@ -29,11 +29,11 @@ inherit
 			name
 		end
 
-creation {UNIX_STREAM_SOCKET}
+create {UNIX_STREAM_SOCKET}
 
 	create_from_descriptor
 
-creation
+create
 
 	make, make_client, make_server
 

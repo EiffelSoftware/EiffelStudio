@@ -180,15 +180,15 @@ feature -- Initialization
 					insert_item (private_list.i_th (i), -1)
 					i := i + 1
 				end
-				if private_visible_item_count > 0 then
+				if private_visible_item_count > 1 then
 					set_visible_item_count (private_visible_item_count)
-				elseif not fixed_size_flag then 
-					set_visible_item_count (private_visible_item_count)
+				elseif not has_height and not fixed_size then 
 					if count > 0 then
-						set_visible_item_count (count.max (1)) 
+						set_visible_item_count (count) 
 					else
 						set_visible_item_count (1)
 					end
+					has_height := false
 				end
 				if multiple_selection then
 					from
@@ -202,13 +202,11 @@ feature -- Initialization
 						private_selected_positions.forth
 					end
 				else
-					if private_selected_position >0 then
+					if private_selected_position > 0 then
 						select_i_th (private_selected_position)
 					end
 				end
-				if parent.shown then
-					shown := true
-				end
+				shown := true
 				if parent.wel_shown then
 					wel_show
 				end
@@ -307,6 +305,7 @@ feature -- Removal
 			a_visible_count: INTEGER
 			old_height: INTEGER
 		do
+			has_height := True
 			old_height := height
 			private_attributes.set_height (new_height)
 			if realized then
@@ -341,6 +340,7 @@ feature -- Removal
 		local
 			a_visible_count: INTEGER
 		do
+			has_height := True
 			private_attributes.set_height (new_height)
 			private_attributes.set_width (new_width)
 			if realized then
@@ -671,14 +671,14 @@ feature {NONE} -- Implementation
 		once
 			Result := Ws_child + Ws_group +
 				Ws_tabstop + Ws_border + Ws_vscroll +
-				Lbs_notify
+				Lbs_notify + Ws_visible
 		end
 
 	Multiple_select_style: INTEGER is
 		once
 			Result := Ws_child + Ws_group +
 				Ws_tabstop + Ws_border + Ws_vscroll +
-				Lbs_notify + Lbs_multiplesel
+				Lbs_notify + Lbs_multiplesel + Ws_visible
 		end
 
 	on_lbn_selchange is

@@ -72,8 +72,6 @@ feature -- Error messages
 feature -- Question messages
 
 	Exit_qu: STRING is "Do you wish to exit?";
-	Internal_error_qu: STRING is 
-		"Internal Error: %%X!%NProject may be unstable.%NDo you wish to continue?";
 	Overwrite_qu: STRING is "Ok to discard existing project %N%%X%N(including generated Eiffel code)?";
 	Project_exists_qu: STRING is "An EiffelBuild project exists in %N%%X";
 	Retrieve_crash_qu: STRING is 
@@ -85,7 +83,7 @@ feature -- Question messages
 	Create_project_qu: STRING is "Application not saved, create a new application ?"
 	Save_as_project_qu: STRING is "Application not saved, save application as ...?"
 	Not_eb_project_qu: STRING is 
-			"Project directory :%N%%X%N is not an Eiffel build project!%
+			"Project directory :%N%%X%N does not contain an Eiffel build project!%
 			%%NDo you wish to create this project?";
 
 end

@@ -166,6 +166,14 @@ feature -- Element Change
 			update
 		end
 
+	set_tooltip (a_tooltip: STRING) is
+			-- Assign `a_tooltip' to `tooltip'.
+		do
+		end
+
+	tooltip: STRING
+			-- Tooltip displayed on `Current'.
+
 feature -- Basic operations
 
 	update is

@@ -37,13 +37,16 @@ feature -- Initialization
 					execute
 				else
 					raise_error
-				end;
+				end
 			else
 				handle_exception
 			end
 		rescue
-			retried := True;
-			retry
+			retried := True
+			if debug_mode then
+				response_header.send_trace(exception_trace)
+				retry
+			end
 		end
 
 feature -- Miscellanous

@@ -33,6 +33,7 @@
 #include "eif_err_msg.h"
 #include "eif_error.h"
 #include "eif_project.h"
+#include "rt_wbench.h"
 
 #ifdef EIF_THREADS
 #include "rt_threads.h"

@@ -140,7 +140,7 @@ RT_LNK int scount;				/* Numner of dynamic types */
 struct desc_info {						/* Descriptor information */
 	uint16 info;						/* Body index or attribute offset */
 	int16 type;							/* Feature type */
-	int16 *gen_type;							/* Generics, if any */
+	int16 *gen_type;					/* Generics, if any */
 };
 
 struct rout_info {						/* Routine information */

@@ -44,7 +44,6 @@ feature {NONE} -- Initialization
 		require
 			window_not_void: window /= Void
 		local
-			parent_item: EV_TREE_ITEM
 			dir: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
 			history.cut_off_at_current_position
@@ -102,9 +101,7 @@ feature -- Basic Operation
 			-- the system to its previous state.
 		local
 			window_object: GB_TITLED_WINDOW_OBJECT
-			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
-			file_name: FILE_NAME
-				original_directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			original_directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 			new_directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
 			window_object ?= Object_handler.deep_object_from_id (original_id)
@@ -132,7 +129,6 @@ feature -- Basic Operation
 	textual_representation: STRING is
 			-- Text representation of command exectuted.
 		local
-			window_name: STRING
 			window_object: GB_TITLED_WINDOW_OBJECT
 			current_text: STRING
 		do

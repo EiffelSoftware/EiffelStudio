@@ -304,8 +304,6 @@ feature -- Status setting
 		require
 			directory_item_not_void: directory_item /= Void
 			directory_item_not_parented: directory_item.parent = Void
-		local
-			command_add_directory: GB_COMMAND_ADD_DIRECTORY
 		do
 			extend (directory_item)
 		ensure
@@ -327,7 +325,6 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 			directory_of_root_window: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 			original_root_index, new_root_index: INTEGER
 			titled_window_object: GB_TITLED_WINDOW_OBJECT
-			temp_file_name: FILE_NAME
 			command_delete_directory: GB_COMMAND_DELETE_DIRECTORY
 		do
 			perform_delete := True

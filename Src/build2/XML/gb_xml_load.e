@@ -150,7 +150,6 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			gb_ev_any: GB_EV_ANY
 			current_name: STRING
 			window_object: GB_TITLED_WINDOW_OBJECT
-			layout_constructor_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
 			if titled_window_object = Void then

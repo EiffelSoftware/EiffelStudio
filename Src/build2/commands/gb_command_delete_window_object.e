@@ -81,9 +81,7 @@ feature -- Basic Operation
 			-- Execute `Current'.
 		local
 			window_object: GB_TITLED_WINDOW_OBJECT
-			file_name: FILE_NAME
-			full_implementation_file_name, full_file_name: FILE_NAME
-			file_location: FILE_NAME
+			full_file_name, file_location: FILE_NAME
 		do
 			window_object ?= Object_handler.deep_object_from_id (original_id)
 			check

@@ -112,8 +112,6 @@ feature -- Implementation
 			-- Add representation of `an_object' to `Current'.
 		require
 			an_object_not_void: an_object /= Void
-		local
-			directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
 			if an_object.window_selector_item = Void then
 				window_selector.add_new_object (an_object)

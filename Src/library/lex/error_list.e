@@ -26,9 +26,9 @@ feature -- Initialization
 			-- Create list.
 		do
 			linked_list_make;
-			display := True
-		ensure
-			display_enabled: display
+			debug ("lex_output")
+				display := True
+			end		
 		end; 
 
 feature -- Status setting
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 	output: STD_FILES is
 			-- Standard error output if the messages are to be displayed.
 		once
-			 create Result;
+			create Result;
 			Result.set_error_default
 		end;
 

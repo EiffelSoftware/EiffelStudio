@@ -21,7 +21,7 @@ feature -- Initialization
 	build (store_file_name, grammar_file_name: STRING) is
 			-- Create a lexical analyzer.
 			-- If `store_file_name' is the name of an existing file,
-			-- use  analyzer stored in that file.
+			-- use analyzer stored in that file.
 			-- Otherwise read grammar from `grammar_file_name',
 			-- create an analyzer, and store it in `store_file_name'.
 		require
@@ -74,11 +74,13 @@ feature -- Output
 			-- It may be redefined in descendants
 			-- for specific processing.
 		do
+			debug ("lex_output")
 				io.new_line;
 				io.new_line;
 				io.put_string ("--------------- LEXICAL ANALYSIS: ----");
 				io.new_line;
 				io.new_line
+			end
 		end;
 
 	do_a_token (read_token: TOKEN) is
@@ -92,19 +94,21 @@ feature -- Output
 		local
 			type: INTEGER
 		do
-			type := read_token.type;
-			if read_token.keyword_code /= -1 then
-				io.put_string ("Keyword:  ");
-				io.put_string (read_token.string_value);
-				io.put_string (" Code: ");
-				io.put_integer (read_token.keyword_code);
-				io.new_line
-			elseif type /= 0 then
-				io.put_string ("Token type ");
-				io.put_integer (read_token.type);
-				io.put_string (": ");
-				io.put_string (read_token.string_value);
-				io.new_line
+			debug ("lex_output")
+				type := read_token.type;
+				if read_token.keyword_code /= -1 then
+					io.put_string ("Keyword:  ");
+					io.put_string (read_token.string_value);
+					io.put_string (" Code: ");
+					io.put_integer (read_token.keyword_code);
+					io.new_line
+				elseif type /= 0 then
+					io.put_string ("Token type ");
+					io.put_integer (read_token.type);
+					io.put_string (": ");
+					io.put_string (read_token.string_value);
+					io.new_line
+				end
 			end
 		end 
 

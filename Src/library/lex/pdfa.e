@@ -208,45 +208,47 @@ feature -- Output
 			set: FIXED_INTEGER_SET;
 			epsilon_list: LINKED_LIST[INTEGER]
 		do
-			from
-			until
-				index = nb_states
-			loop
-				index := index + 1;
-				io.put_string (" State # ");
-				io.put_integer (index);
-				if final_array.item (index) /= 0 then
-					io.put_string (" final state of token type: ");
-					io.put_integer (final_array.item (index));
-				end;
-				io.new_line;
-				io.put_string (" Epsilon transitions to: ");
-				epsilon_list := item (index);
-				if epsilon_list /= Void then
-					from
-						epsilon_list.start
-					until
-						epsilon_list.after or epsilon_list.is_empty
-					loop
-						io.put_integer (epsilon_list.item);
-						io.put_string (" ");
-						epsilon_list.forth
-					end
-				end;
-				io.put_string ("%N Inputs with a transition to the following state:%N");
+			debug ("lex_output")
 				from
-					input_doc := -1
 				until
-					input_doc = greatest_input
+					index = nb_states
 				loop
-					input_doc := input_doc + 1;
-					set := input_array.item (input_doc);
-					if set /= Void and then set.has (index) then
-						io.put_integer (input_doc);
-						io.new_line
-					end
-				end;
-				io.new_line
+					index := index + 1;
+					io.put_string (" State # ");
+					io.put_integer (index);
+					if final_array.item (index) /= 0 then
+						io.put_string (" final state of token type: ");
+						io.put_integer (final_array.item (index));
+					end;
+					io.new_line;
+					io.put_string (" Epsilon transitions to: ");
+					epsilon_list := item (index);
+					if epsilon_list /= Void then
+						from
+							epsilon_list.start
+						until
+							epsilon_list.after or epsilon_list.is_empty
+						loop
+							io.put_integer (epsilon_list.item);
+							io.put_string (" ");
+							epsilon_list.forth
+						end
+					end;
+					io.put_string ("%N Inputs with a transition to the following state:%N");
+					from
+						input_doc := -1
+					until
+						input_doc = greatest_input
+					loop
+						input_doc := input_doc + 1;
+						set := input_array.item (input_doc);
+						if set /= Void and then set.has (index) then
+							io.put_integer (input_doc);
+							io.new_line
+						end
+					end;
+					io.new_line
+				end
 			end
 		end 
 

@@ -140,7 +140,7 @@ feature -- Transformation
 			end
 			dfa := dstates.lcopy
 			initial_final_designation
-			debug
+			debug ("lex_output")
 				dfa.trace
 			end
 		ensure
@@ -224,7 +224,7 @@ feature {NONE} -- Implementation
 			index, last_index: INTEGER;
 			current_tree, new_tree: FIXED_TREE [INTEGER]
 		do
-			debug
+			debug ("lex_output")
 				set.print
 			end
 			last_index := set.largest
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 			until
 				index > last_index
 			loop
-				debug
+				debug ("lex_output")
 					io.put_string ("Arity: ")
 					io.put_integer (current_tree.arity)
 					io.new_line

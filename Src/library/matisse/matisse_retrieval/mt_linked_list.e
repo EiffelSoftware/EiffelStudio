@@ -41,7 +41,7 @@ inherit
 			copy, is_equal
 		end
 
-creation
+create
 	make
 	
 feature -- Element change
@@ -52,7 +52,7 @@ feature -- Element change
 		local
 			p: like first_element
 		do
-			{LINKED_LIST} Precursor (v)
+			Precursor {LINKED_LIST} (v)
 			if v /= Void and then is_persistent then
 				check_persistence (v)
 				mt_remove_ignore_nosuchsucc (v)
@@ -66,7 +66,7 @@ feature -- Element change
 		local
 			p: like first_element
 		do
-			{LINKED_LIST} Precursor (v)
+			Precursor {LINKED_LIST} (v)
 			if v /= Void and then is_persistent then
 				check_persistence (v)
 				mt_remove_ignore_nosuchsucc (v)
@@ -116,7 +116,7 @@ feature -- Element change
 		local
 			p: like first_element
 		do
-			{LINKED_LIST} Precursor (v)
+			Precursor {LINKED_LIST} (v)
 			if v /= Void and then is_persistent then
 				check_persistence (v)
 				mt_remove_ignore_nosuchsucc (v)			
@@ -134,7 +134,7 @@ feature -- Element change
 			if active.item /= Void and then is_persistent then
 				mt_remove (active.item)
 			end
-			{LINKED_LIST} Precursor (v)
+			Precursor {LINKED_LIST} (v)
 			if v /= Void and then is_persistent then
 				check_persistence (v)
 				mt_remove_ignore_nosuchsucc (v)
@@ -150,7 +150,7 @@ feature -- Element change
 			-- Merge `other' into current structure before cursor
 			-- position. Do not move cursor. Empty `other'.
 		do
-			{LINKED_LIST} Precursor (other)
+			Precursor {LINKED_LIST} (other)
 			if is_persistent then
 				from 
 					other.start
@@ -168,7 +168,7 @@ feature -- Element change
 			-- Merge `other' into current structure after cursor
 			-- position. Do not move cursor. Empty `other'.
 		do
-			{LINKED_LIST} Precursor (other)
+			Precursor {LINKED_LIST} (other)
 			if is_persistent then
 				from 
 					other.start
@@ -192,7 +192,7 @@ feature -- Removal
 			current_item: G
 		do
 			current_item := active.item
-			{LINKED_LIST} Precursor
+			Precursor {LINKED_LIST}
 			if current_item /= Void then
 				mt_remove (current_item)
 			end
@@ -218,21 +218,20 @@ feature -- Removal
 			else
 				to_be_removed := active.right.item
 			end
-			{LINKED_LIST} Precursor
+			Precursor {LINKED_LIST}
 			if to_be_removed /= Void then
 				mt_remove (to_be_removed)
 			end
 		end
-	
+
 	wipe_out is
 			-- Remove all items.
 		do
-			{LINKED_LIST} Precursor
+			Precursor {LINKED_LIST}
 			mt_remove_all
 		end
 
 feature {NONE} -- Implementation
-
 
 	mt_put_at_loading (v: G; i: INTEGER) is
 		do
@@ -243,12 +242,12 @@ feature {NONE} -- Implementation
 			-- Do nothing
 		do
 		end
-		
+
 	wipe_out_at_reverting is
 		do
 			list_wipe_out
 		end
-		
+
 end -- class MT_LINKED_LIST
 
 

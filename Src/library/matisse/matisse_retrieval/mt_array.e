@@ -42,7 +42,7 @@ inherit
 			is_equal, copy, consistent, setup
 		end
 
-creation
+create
 	make
 
 feature -- Access
@@ -84,8 +84,8 @@ feature -- Access
 			-- Copy items of `other' within bounds `start_pos' and `end_pos'
 			-- to current array starting at index `index_pos'.
 		local
-			other_area: like area;
-			other_lower, i: INTEGER;
+			other_area: like area
+			other_lower, i: INTEGER
 			start0, end0, index0: INTEGER
 		do
 			if is_persistent then
@@ -98,11 +98,11 @@ feature -- Access
 					i := i + 1
 				end
 			end
-			other_area := other.area;
-			other_lower := other.lower;
-			start0 := start_pos - other_lower;
-			end0 := end_pos - other_lower;
-			index0 := index_pos - lower;
+			other_area := other.area
+			other_lower := other.lower
+			start0 := start_pos - other_lower
+			end0 := end_pos - other_lower
+			index0 := index_pos - lower
 			spsubcopy ($other_area, $area, start0, end0, index0)
 			if is_persistent then
 				mt_set_all
@@ -112,9 +112,9 @@ feature -- Access
 	clear_all is
 			-- Reset all items to default values.
 		do
-			{ARRAY} Precursor
+			Precursor {ARRAY}
 			mt_remove_all
-		end;
+		end
 
 	wipe_out is
 			-- Make array empty.
@@ -127,7 +127,7 @@ feature -- Access
 			-- May items be removed? (Answer: yes.)
 		do
 			Result := True
-		end;
+		end
 
 feature -- Inapplicable
 
@@ -148,12 +148,12 @@ feature {NONE} -- Implementation
 		do
 			resize (lower, lower + new_size - 1)
 		end
-	
+
 	wipe_out_at_reverting is
 		do
 			discard_items
 		end
-	
+
 end -- class MT_ARRAY
 
 

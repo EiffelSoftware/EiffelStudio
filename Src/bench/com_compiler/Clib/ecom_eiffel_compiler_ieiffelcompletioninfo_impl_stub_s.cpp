@@ -122,17 +122,17 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelCompletionInfo_impl_stub::target_featu
 	EIF_OBJECT tmp_return_names = NULL;
 	if (return_names != NULL)
 	{
-		tmp_return_names = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_234 (return_names));
+		tmp_return_names = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_239 (return_names));
 	}
 	EIF_OBJECT tmp_return_signatures = NULL;
 	if (return_signatures != NULL)
 	{
-		tmp_return_signatures = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_235 (return_signatures));
+		tmp_return_signatures = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_240 (return_signatures));
 	}
 	EIF_OBJECT tmp_return_image_indexes = NULL;
 	if (return_image_indexes != NULL)
 	{
-		tmp_return_image_indexes = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_236 (return_image_indexes));
+		tmp_return_image_indexes = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_241 (return_image_indexes));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
@@ -188,7 +188,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelCompletionInfo_impl_stub::target_featu
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_51 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_57 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else

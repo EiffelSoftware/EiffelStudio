@@ -203,404 +203,43 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::set_creat
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::compilation_type(  /* [out, retval] */ long * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::namespace_generation(  /* [out, retval] */ long * penu_cluster_namespace_generation )
 
 /*-----------------------------------------------------------
-	Compilation type.
+	Namespace generation for cluster
 -----------------------------------------------------------*/
 {
 	ECATCH;
 
 	
 	EIF_INTEGER_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_integer_function ("compilation_type", type_id);
+	eiffel_function = eif_integer_function ("namespace_generation", type_id);
 	EIF_INTEGER tmp_value = 0;
 	if (eiffel_function != NULL)
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
-		tmp_value = eif_field (eif_access (eiffel_object), "compilation_type", EIF_INTEGER);
-	*return_value = (long)tmp_value;
+		tmp_value = eif_field (eif_access (eiffel_object), "namespace_generation", EIF_INTEGER);
+	*penu_cluster_namespace_generation = (long)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::set_compilation_type(  /* [in] */ long return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::set_namespace_generation(  /* [in] */ long penu_cluster_namespace_generation )
 
 /*-----------------------------------------------------------
-	Compilation type.
+	Namespace generation for cluster
 -----------------------------------------------------------*/
 {
 	ECATCH;
 
-	EIF_INTEGER tmp_return_value = (EIF_INTEGER)return_value;
+	EIF_INTEGER tmp_penu_cluster_namespace_generation = (EIF_INTEGER)penu_cluster_namespace_generation;
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
-	eiffel_procedure = eif_procedure ("set_compilation_type", type_id);
+	eiffel_procedure = eif_procedure ("set_namespace_generation", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER))eiffel_procedure) (eif_access (eiffel_object), (EIF_INTEGER)tmp_return_value);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::console_application(  /* [out, retval] */ VARIANT_BOOL * return_value )
-
-/*-----------------------------------------------------------
-	Is console application?
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	
-	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_boolean_function ("console_application", type_id);
-	EIF_BOOLEAN tmp_value = 0;
-	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
-	else
-		tmp_value = eif_field (eif_access (eiffel_object), "console_application", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::set_console_application(  /* [in] */ VARIANT_BOOL return_value )
-
-/*-----------------------------------------------------------
-	Is console application?
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	EIF_BOOLEAN tmp_return_value = rt_ce.ccom_ce_boolean (return_value);
-	
-	EIF_PROCEDURE eiffel_procedure = 0;
-	eiffel_procedure = eif_procedure ("set_console_application", type_id);
-
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_return_value);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::evaluate_require(  /* [out, retval] */ VARIANT_BOOL * return_value )
-
-/*-----------------------------------------------------------
-	Should preconditions be evaluated?
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	
-	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_boolean_function ("evaluate_require", type_id);
-	EIF_BOOLEAN tmp_value = 0;
-	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
-	else
-		tmp_value = eif_field (eif_access (eiffel_object), "evaluate_require", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::set_evaluate_require(  /* [in] */ VARIANT_BOOL return_value )
-
-/*-----------------------------------------------------------
-	Should preconditions be evaluated?
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	EIF_BOOLEAN tmp_return_value = rt_ce.ccom_ce_boolean (return_value);
-	
-	EIF_PROCEDURE eiffel_procedure = 0;
-	eiffel_procedure = eif_procedure ("set_evaluate_require", type_id);
-
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_return_value);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::evaluate_ensure(  /* [out, retval] */ VARIANT_BOOL * return_value )
-
-/*-----------------------------------------------------------
-	Should postconditions be evaluated?
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	
-	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_boolean_function ("evaluate_ensure", type_id);
-	EIF_BOOLEAN tmp_value = 0;
-	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
-	else
-		tmp_value = eif_field (eif_access (eiffel_object), "evaluate_ensure", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::set_evaluate_ensure(  /* [in] */ VARIANT_BOOL return_value )
-
-/*-----------------------------------------------------------
-	Should postconditions be evaluated?
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	EIF_BOOLEAN tmp_return_value = rt_ce.ccom_ce_boolean (return_value);
-	
-	EIF_PROCEDURE eiffel_procedure = 0;
-	eiffel_procedure = eif_procedure ("set_evaluate_ensure", type_id);
-
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_return_value);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::evaluate_check(  /* [out, retval] */ VARIANT_BOOL * return_value )
-
-/*-----------------------------------------------------------
-	Should check assertions be evaluated?
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	
-	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_boolean_function ("evaluate_check", type_id);
-	EIF_BOOLEAN tmp_value = 0;
-	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
-	else
-		tmp_value = eif_field (eif_access (eiffel_object), "evaluate_check", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::set_evaluate_check(  /* [in] */ VARIANT_BOOL return_value )
-
-/*-----------------------------------------------------------
-	Should check assertions be evaluated?
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	EIF_BOOLEAN tmp_return_value = rt_ce.ccom_ce_boolean (return_value);
-	
-	EIF_PROCEDURE eiffel_procedure = 0;
-	eiffel_procedure = eif_procedure ("set_evaluate_check", type_id);
-
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_return_value);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::evaluate_loop(  /* [out, retval] */ VARIANT_BOOL * return_value )
-
-/*-----------------------------------------------------------
-	Should loop assertions be evaluated?
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	
-	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_boolean_function ("evaluate_loop", type_id);
-	EIF_BOOLEAN tmp_value = 0;
-	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
-	else
-		tmp_value = eif_field (eif_access (eiffel_object), "evaluate_loop", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::set_evaluate_loop(  /* [in] */ VARIANT_BOOL return_value )
-
-/*-----------------------------------------------------------
-	Should loop assertions be evaluated?
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	EIF_BOOLEAN tmp_return_value = rt_ce.ccom_ce_boolean (return_value);
-	
-	EIF_PROCEDURE eiffel_procedure = 0;
-	eiffel_procedure = eif_procedure ("set_evaluate_loop", type_id);
-
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_return_value);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::evaluate_invariant(  /* [out, retval] */ VARIANT_BOOL * return_value )
-
-/*-----------------------------------------------------------
-	Should class invariants be evaluated?
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	
-	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_boolean_function ("evaluate_invariant", type_id);
-	EIF_BOOLEAN tmp_value = 0;
-	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
-	else
-		tmp_value = eif_field (eif_access (eiffel_object), "evaluate_invariant", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::set_evaluate_invariant(  /* [in] */ VARIANT_BOOL return_value )
-
-/*-----------------------------------------------------------
-	Should class invariants be evaluated?
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	EIF_BOOLEAN tmp_return_value = rt_ce.ccom_ce_boolean (return_value);
-	
-	EIF_PROCEDURE eiffel_procedure = 0;
-	eiffel_procedure = eif_procedure ("set_evaluate_invariant", type_id);
-
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_return_value);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::debug_info(  /* [out, retval] */ VARIANT_BOOL * return_value )
-
-/*-----------------------------------------------------------
-	Generate debug info?
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	
-	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_boolean_function ("debug_info", type_id);
-	EIF_BOOLEAN tmp_value = 0;
-	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
-	else
-		tmp_value = eif_field (eif_access (eiffel_object), "debug_info", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::set_debug_info(  /* [in] */ VARIANT_BOOL return_value )
-
-/*-----------------------------------------------------------
-	Generate debug info?
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	EIF_BOOLEAN tmp_return_value = rt_ce.ccom_ce_boolean (return_value);
-	
-	EIF_PROCEDURE eiffel_procedure = 0;
-	eiffel_procedure = eif_procedure ("set_debug_info", type_id);
-
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_return_value);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::clusters(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelSystemClusters * * return_value )
-
-/*-----------------------------------------------------------
-	Project Clusters.
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	
-	EIF_REFERENCE_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_reference_function ("clusters", type_id);
-	EIF_REFERENCE tmp_value = 0;
-	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
-	else
-		tmp_value = eif_field (eif_access (eiffel_object), "clusters", EIF_REFERENCE);
-	if (tmp_value != NULL)
-	{
-		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_159 (eif_access (tmp_object));
-		eif_wean (tmp_object);
-	}
-	else
-		*return_value = NULL;
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::externals(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelSystemExternals * * return_value )
-
-/*-----------------------------------------------------------
-	Externals.
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	
-	EIF_REFERENCE_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_reference_function ("externals", type_id);
-	EIF_REFERENCE tmp_value = 0;
-	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
-	else
-		tmp_value = eif_field (eif_access (eiffel_object), "externals", EIF_REFERENCE);
-	if (tmp_value != NULL)
-	{
-		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_162 (eif_access (tmp_object));
-		eif_wean (tmp_object);
-	}
-	else
-		*return_value = NULL;
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER))eiffel_procedure) (eif_access (eiffel_object), (EIF_INTEGER)tmp_penu_cluster_namespace_generation);
 	
 	END_ECATCH;
 	return S_OK;
@@ -663,6 +302,294 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::set_defau
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::project_type(  /* [out, retval] */ long * penum_project_type )
+
+/*-----------------------------------------------------------
+	Project type
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_INTEGER_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_integer_function ("project_type", type_id);
+	EIF_INTEGER tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "project_type", EIF_INTEGER);
+	*penum_project_type = (long)tmp_value;
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::set_project_type(  /* [in] */ long penum_project_type )
+
+/*-----------------------------------------------------------
+	Project type
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_INTEGER tmp_penum_project_type = (EIF_INTEGER)penum_project_type;
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("set_project_type", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER))eiffel_procedure) (eif_access (eiffel_object), (EIF_INTEGER)tmp_penum_project_type);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::dot_net_naming_convention(  /* [out, retval] */ VARIANT_BOOL * pvb_naming_convention )
+
+/*-----------------------------------------------------------
+	.NET Naming convention
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_boolean_function ("dot_net_naming_convention", type_id);
+	EIF_BOOLEAN tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "dot_net_naming_convention", EIF_BOOLEAN);
+	*pvb_naming_convention = rt_ec.ccom_ec_boolean (tmp_value);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::set_dot_net_naming_convention(  /* [in] */ VARIANT_BOOL pvb_naming_convention )
+
+/*-----------------------------------------------------------
+	.NET Naming convention
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_BOOLEAN tmp_pvb_naming_convention = rt_ce.ccom_ce_boolean (pvb_naming_convention);
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("set_dot_net_naming_convention", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_pvb_naming_convention);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::generate_debug_info(  /* [out, retval] */ VARIANT_BOOL * return_value )
+
+/*-----------------------------------------------------------
+	Generate debug info?
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_boolean_function ("generate_debug_info", type_id);
+	EIF_BOOLEAN tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "generate_debug_info", EIF_BOOLEAN);
+	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::set_generate_debug_info(  /* [in] */ VARIANT_BOOL return_value )
+
+/*-----------------------------------------------------------
+	Generate debug info?
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_BOOLEAN tmp_return_value = rt_ce.ccom_ce_boolean (return_value);
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("set_generate_debug_info", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_return_value);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::precompiled_library(  /* [out, retval] */ BSTR * return_value )
+
+/*-----------------------------------------------------------
+	Precompiled file.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_REFERENCE_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_reference_function ("precompiled_library", type_id);
+	EIF_REFERENCE tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "precompiled_library", EIF_REFERENCE);
+	if (tmp_value != NULL)
+	{
+		EIF_OBJECT tmp_object = eif_protect (tmp_value);
+		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		eif_wean (tmp_object);
+	}
+	else
+		*return_value = NULL;
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::set_precompiled_library(  /* [in] */ BSTR return_value )
+
+/*-----------------------------------------------------------
+	Precompiled file.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_OBJECT tmp_return_value = NULL;
+	if (return_value != NULL)
+	{
+		tmp_return_value = eif_protect (rt_ce.ccom_ce_bstr (return_value));
+	}
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("set_precompiled_library", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_return_value != NULL) ? eif_access (tmp_return_value) : NULL));
+	if (tmp_return_value != NULL)
+		eif_wean (tmp_return_value);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::assertions(  /* [out, retval] */ ULONG * p_assertions )
+
+/*-----------------------------------------------------------
+	Project assertions
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_INTEGER_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_integer_function ("assertions", type_id);
+	EIF_INTEGER tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "assertions", EIF_INTEGER);
+	*p_assertions = (ULONG)tmp_value;
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::set_assertions(  /* [in] */ ULONG p_assertions )
+
+/*-----------------------------------------------------------
+	Project assertions
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_INTEGER tmp_p_assertions = (EIF_INTEGER)p_assertions;
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("set_assertions", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER))eiffel_procedure) (eif_access (eiffel_object), (EIF_INTEGER)tmp_p_assertions);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::clusters(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelSystemClusters * * return_value )
+
+/*-----------------------------------------------------------
+	Project Clusters.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_REFERENCE_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_reference_function ("clusters", type_id);
+	EIF_REFERENCE tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "clusters", EIF_REFERENCE);
+	if (tmp_value != NULL)
+	{
+		EIF_OBJECT tmp_object = eif_protect (tmp_value);
+		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_165 (eif_access (tmp_object));
+		eif_wean (tmp_object);
+	}
+	else
+		*return_value = NULL;
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::externals(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelSystemExternals * * return_value )
+
+/*-----------------------------------------------------------
+	Externals.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_REFERENCE_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_reference_function ("externals", type_id);
+	EIF_REFERENCE tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "externals", EIF_REFERENCE);
+	if (tmp_value != NULL)
+	{
+		EIF_OBJECT tmp_object = eif_protect (tmp_value);
+		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_168 (eif_access (tmp_object));
+		eif_wean (tmp_object);
+	}
+	else
+		*return_value = NULL;
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::assemblies(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelSystemAssemblies * * return_value )
 
 /*-----------------------------------------------------------
@@ -682,67 +609,11 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::assemblie
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_166 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_171 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
 		*return_value = NULL;
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::precompiled(  /* [out, retval] */ BSTR * return_value )
-
-/*-----------------------------------------------------------
-	Precompiled file.
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	
-	EIF_REFERENCE_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_reference_function ("precompiled", type_id);
-	EIF_REFERENCE tmp_value = 0;
-	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
-	else
-		tmp_value = eif_field (eif_access (eiffel_object), "precompiled", EIF_REFERENCE);
-	if (tmp_value != NULL)
-	{
-		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
-		eif_wean (tmp_object);
-	}
-	else
-		*return_value = NULL;
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::set_precompiled(  /* [in] */ BSTR return_value )
-
-/*-----------------------------------------------------------
-	Precompiled file.
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	EIF_OBJECT tmp_return_value = NULL;
-	if (return_value != NULL)
-	{
-		tmp_return_value = eif_protect (rt_ce.ccom_ce_bstr (return_value));
-	}
-	
-	EIF_PROCEDURE eiffel_procedure = 0;
-	eiffel_procedure = eif_procedure ("set_precompiled", type_id);
-
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_return_value != NULL) ? eif_access (tmp_return_value) : NULL));
-	if (tmp_return_value != NULL)
-		eif_wean (tmp_return_value);
 	
 	END_ECATCH;
 	return S_OK;
@@ -1141,6 +1012,62 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::set_copyr
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::culture(  /* [out, retval] */ BSTR * return_value )
+
+/*-----------------------------------------------------------
+	Asembly culture.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_REFERENCE_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_reference_function ("culture", type_id);
+	EIF_REFERENCE tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "culture", EIF_REFERENCE);
+	if (tmp_value != NULL)
+	{
+		EIF_OBJECT tmp_object = eif_protect (tmp_value);
+		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		eif_wean (tmp_object);
+	}
+	else
+		*return_value = NULL;
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::set_culture(  /* [in] */ BSTR return_value )
+
+/*-----------------------------------------------------------
+	Asembly culture.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_OBJECT tmp_return_value = NULL;
+	if (return_value != NULL)
+	{
+		tmp_return_value = eif_protect (rt_ce.ccom_ce_bstr (return_value));
+	}
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("set_culture", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_return_value != NULL) ? eif_access (tmp_return_value) : NULL));
+	if (tmp_return_value != NULL)
+		eif_wean (tmp_return_value);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::key_file_name(  /* [out, retval] */ BSTR * return_value )
 
 /*-----------------------------------------------------------
@@ -1197,56 +1124,56 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::set_key_f
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::culture(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::working_directory(  /* [out, retval] */ BSTR * pbstr_working_directory )
 
 /*-----------------------------------------------------------
-	Asembly culture.
+	Project working directory
 -----------------------------------------------------------*/
 {
 	ECATCH;
 
 	
 	EIF_REFERENCE_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_reference_function ("culture", type_id);
+	eiffel_function = eif_reference_function ("working_directory", type_id);
 	EIF_REFERENCE tmp_value = 0;
 	if (eiffel_function != NULL)
 		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
-		tmp_value = eif_field (eif_access (eiffel_object), "culture", EIF_REFERENCE);
+		tmp_value = eif_field (eif_access (eiffel_object), "working_directory", EIF_REFERENCE);
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_working_directory = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_working_directory = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::set_culture(  /* [in] */ BSTR return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::set_working_directory(  /* [in] */ BSTR pbstr_working_directory )
 
 /*-----------------------------------------------------------
-	Asembly culture.
+	Project working directory
 -----------------------------------------------------------*/
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_return_value = NULL;
-	if (return_value != NULL)
+	EIF_OBJECT tmp_pbstr_working_directory = NULL;
+	if (pbstr_working_directory != NULL)
 	{
-		tmp_return_value = eif_protect (rt_ce.ccom_ce_bstr (return_value));
+		tmp_pbstr_working_directory = eif_protect (rt_ce.ccom_ce_bstr (pbstr_working_directory));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
-	eiffel_procedure = eif_procedure ("set_culture", type_id);
+	eiffel_procedure = eif_procedure ("set_working_directory", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_return_value != NULL) ? eif_access (tmp_return_value) : NULL));
-	if (tmp_return_value != NULL)
-		eif_wean (tmp_return_value);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_pbstr_working_directory != NULL) ? eif_access (tmp_pbstr_working_directory) : NULL));
+	if (tmp_pbstr_working_directory != NULL)
+		eif_wean (tmp_pbstr_working_directory);
 	
 	END_ECATCH;
 	return S_OK;
@@ -1394,6 +1321,824 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::Invoke( D
 					}
 					return DISP_E_EXCEPTION;
 				}
+			}
+			break;
+
+		case 117:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				ecom_eiffel_compiler::IEiffelSystemExternals * result = 0;
+				
+				hr = externals (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 9;
+					pVarResult->pdispVal = result;
+				}
+					
+			}
+			break;
+
+		case 118:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				BSTR result = 0;
+				
+				hr = default_namespace (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 8;
+					pVarResult->bstrVal = result;
+				}
+					
+			}
+			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
+			{
+				if (pDispParams->cArgs != 1)
+					return DISP_E_BADPARAMCOUNT;
+
+				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
+
+				VARTYPE vt_type [] = {8};
+
+				if (cNamedArgs >0)
+					for (i = 0; i < cNamedArgs; i++)
+					{
+						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
+					}
+
+				for (i = cArgs; i > cNamedArgs; i--)
+				{
+					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
+				}
+
+				
+				if (tmp_value [0]->vt != 8)
+				{
+					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 8);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 0;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
+				
+				hr = set_default_namespace ( arg_0);
+				
+				if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				CoTaskMemFree (tmp_value);
+			}
+			break;
+
+		case 119:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				ecom_eiffel_compiler::IEiffelSystemAssemblies * result = 0;
+				
+				hr = assemblies (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 9;
+					pVarResult->pdispVal = result;
+				}
+					
+			}
+			break;
+
+		case 1610743814:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				long result = 0;
+				
+				hr = namespace_generation (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 3;
+					pVarResult->lVal = result;
+				}
+					
+			}
+			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
+			{
+				if (pDispParams->cArgs != 1)
+					return DISP_E_BADPARAMCOUNT;
+
+				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
+
+				VARTYPE vt_type [] = {3};
+
+				if (cNamedArgs >0)
+					for (i = 0; i < cNamedArgs; i++)
+					{
+						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
+					}
+
+				for (i = cArgs; i > cNamedArgs; i--)
+				{
+					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
+				}
+
+				
+				if (tmp_value [0]->vt != 3)
+				{
+					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 3);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 0;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				long arg_0 = (long)tmp_value [0]->lVal;
+				
+				hr = set_namespace_generation ( arg_0);
+				
+				if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				CoTaskMemFree (tmp_value);
+			}
+			break;
+
+		case 1610743818:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				long result = 0;
+				
+				hr = project_type (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 3;
+					pVarResult->lVal = result;
+				}
+					
+			}
+			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
+			{
+				if (pDispParams->cArgs != 1)
+					return DISP_E_BADPARAMCOUNT;
+
+				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
+
+				VARTYPE vt_type [] = {3};
+
+				if (cNamedArgs >0)
+					for (i = 0; i < cNamedArgs; i++)
+					{
+						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
+					}
+
+				for (i = cArgs; i > cNamedArgs; i--)
+				{
+					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
+				}
+
+				
+				if (tmp_value [0]->vt != 3)
+				{
+					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 3);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 0;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				long arg_0 = (long)tmp_value [0]->lVal;
+				
+				hr = set_project_type ( arg_0);
+				
+				if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				CoTaskMemFree (tmp_value);
+			}
+			break;
+
+		case 1610743820:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				VARIANT_BOOL result = 0;
+				
+				hr = dot_net_naming_convention (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 11;
+					pVarResult->boolVal = result;
+				}
+					
+			}
+			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
+			{
+				if (pDispParams->cArgs != 1)
+					return DISP_E_BADPARAMCOUNT;
+
+				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
+
+				VARTYPE vt_type [] = {11};
+
+				if (cNamedArgs >0)
+					for (i = 0; i < cNamedArgs; i++)
+					{
+						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
+					}
+
+				for (i = cArgs; i > cNamedArgs; i--)
+				{
+					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
+				}
+
+				
+				if (tmp_value [0]->vt != 11)
+				{
+					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 11);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 0;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
+				
+				hr = set_dot_net_naming_convention ( arg_0);
+				
+				if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				CoTaskMemFree (tmp_value);
+			}
+			break;
+
+		case 134:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				BSTR result = 0;
+				
+				hr = description (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 8;
+					pVarResult->bstrVal = result;
+				}
+					
+			}
+			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
+			{
+				if (pDispParams->cArgs != 1)
+					return DISP_E_BADPARAMCOUNT;
+
+				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
+
+				VARTYPE vt_type [] = {8};
+
+				if (cNamedArgs >0)
+					for (i = 0; i < cNamedArgs; i++)
+					{
+						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
+					}
+
+				for (i = cArgs; i > cNamedArgs; i--)
+				{
+					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
+				}
+
+				
+				if (tmp_value [0]->vt != 8)
+				{
+					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 8);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 0;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
+				
+				hr = set_description ( arg_0);
+				
+				if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				CoTaskMemFree (tmp_value);
+			}
+			break;
+
+		case 120:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				BSTR result = 0;
+				
+				hr = precompiled_library (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 8;
+					pVarResult->bstrVal = result;
+				}
+					
+			}
+			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
+			{
+				if (pDispParams->cArgs != 1)
+					return DISP_E_BADPARAMCOUNT;
+
+				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
+
+				VARTYPE vt_type [] = {8};
+
+				if (cNamedArgs >0)
+					for (i = 0; i < cNamedArgs; i++)
+					{
+						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
+					}
+
+				for (i = cArgs; i > cNamedArgs; i--)
+				{
+					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
+				}
+
+				
+				if (tmp_value [0]->vt != 8)
+				{
+					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 8);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 0;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
+				
+				hr = set_precompiled_library ( arg_0);
+				
+				if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				CoTaskMemFree (tmp_value);
+			}
+			break;
+
+		case 1610743849:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				BSTR result = 0;
+				
+				hr = working_directory (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 8;
+					pVarResult->bstrVal = result;
+				}
+					
+			}
+			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
+			{
+				if (pDispParams->cArgs != 1)
+					return DISP_E_BADPARAMCOUNT;
+
+				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
+
+				VARTYPE vt_type [] = {8};
+
+				if (cNamedArgs >0)
+					for (i = 0; i < cNamedArgs; i++)
+					{
+						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
+					}
+
+				for (i = cArgs; i > cNamedArgs; i--)
+				{
+					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
+				}
+
+				
+				if (tmp_value [0]->vt != 8)
+				{
+					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 8);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 0;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
+				
+				hr = set_working_directory ( arg_0);
+				
+				if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				CoTaskMemFree (tmp_value);
+			}
+			break;
+
+		case 139:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				BSTR result = 0;
+				
+				hr = copyright (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 8;
+					pVarResult->bstrVal = result;
+				}
+					
+			}
+			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
+			{
+				if (pDispParams->cArgs != 1)
+					return DISP_E_BADPARAMCOUNT;
+
+				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
+
+				VARTYPE vt_type [] = {8};
+
+				if (cNamedArgs >0)
+					for (i = 0; i < cNamedArgs; i++)
+					{
+						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
+					}
+
+				for (i = cArgs; i > cNamedArgs; i--)
+				{
+					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
+				}
+
+				
+				if (tmp_value [0]->vt != 8)
+				{
+					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 8);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 0;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
+				
+				hr = set_copyright ( arg_0);
+				
+				if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				CoTaskMemFree (tmp_value);
 			}
 			break;
 
@@ -1583,1047 +2328,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::Invoke( D
 			}
 			break;
 
-		case 105:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				VARIANT_BOOL result = 0;
-				
-				hr = evaluate_require (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 11;
-					pVarResult->boolVal = result;
-				}
-					
-			}
-			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
-			{
-				if (pDispParams->cArgs != 1)
-					return DISP_E_BADPARAMCOUNT;
-
-				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
-
-				VARTYPE vt_type [] = {11};
-
-				if (cNamedArgs >0)
-					for (i = 0; i < cNamedArgs; i++)
-					{
-						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
-					}
-
-				for (i = cArgs; i > cNamedArgs; i--)
-				{
-					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
-				}
-
-				
-				if (tmp_value [0]->vt != 11)
-				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 11);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 0;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
-				
-				hr = set_evaluate_require ( arg_0);
-				
-				if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				CoTaskMemFree (tmp_value);
-			}
-			break;
-
-		case 106:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				VARIANT_BOOL result = 0;
-				
-				hr = evaluate_ensure (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 11;
-					pVarResult->boolVal = result;
-				}
-					
-			}
-			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
-			{
-				if (pDispParams->cArgs != 1)
-					return DISP_E_BADPARAMCOUNT;
-
-				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
-
-				VARTYPE vt_type [] = {11};
-
-				if (cNamedArgs >0)
-					for (i = 0; i < cNamedArgs; i++)
-					{
-						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
-					}
-
-				for (i = cArgs; i > cNamedArgs; i--)
-				{
-					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
-				}
-
-				
-				if (tmp_value [0]->vt != 11)
-				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 11);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 0;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
-				
-				hr = set_evaluate_ensure ( arg_0);
-				
-				if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				CoTaskMemFree (tmp_value);
-			}
-			break;
-
-		case 107:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				VARIANT_BOOL result = 0;
-				
-				hr = evaluate_check (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 11;
-					pVarResult->boolVal = result;
-				}
-					
-			}
-			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
-			{
-				if (pDispParams->cArgs != 1)
-					return DISP_E_BADPARAMCOUNT;
-
-				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
-
-				VARTYPE vt_type [] = {11};
-
-				if (cNamedArgs >0)
-					for (i = 0; i < cNamedArgs; i++)
-					{
-						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
-					}
-
-				for (i = cArgs; i > cNamedArgs; i--)
-				{
-					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
-				}
-
-				
-				if (tmp_value [0]->vt != 11)
-				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 11);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 0;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
-				
-				hr = set_evaluate_check ( arg_0);
-				
-				if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				CoTaskMemFree (tmp_value);
-			}
-			break;
-
-		case 108:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				VARIANT_BOOL result = 0;
-				
-				hr = evaluate_loop (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 11;
-					pVarResult->boolVal = result;
-				}
-					
-			}
-			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
-			{
-				if (pDispParams->cArgs != 1)
-					return DISP_E_BADPARAMCOUNT;
-
-				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
-
-				VARTYPE vt_type [] = {11};
-
-				if (cNamedArgs >0)
-					for (i = 0; i < cNamedArgs; i++)
-					{
-						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
-					}
-
-				for (i = cArgs; i > cNamedArgs; i--)
-				{
-					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
-				}
-
-				
-				if (tmp_value [0]->vt != 11)
-				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 11);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 0;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
-				
-				hr = set_evaluate_loop ( arg_0);
-				
-				if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				CoTaskMemFree (tmp_value);
-			}
-			break;
-
-		case 109:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				VARIANT_BOOL result = 0;
-				
-				hr = evaluate_invariant (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 11;
-					pVarResult->boolVal = result;
-				}
-					
-			}
-			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
-			{
-				if (pDispParams->cArgs != 1)
-					return DISP_E_BADPARAMCOUNT;
-
-				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
-
-				VARTYPE vt_type [] = {11};
-
-				if (cNamedArgs >0)
-					for (i = 0; i < cNamedArgs; i++)
-					{
-						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
-					}
-
-				for (i = cArgs; i > cNamedArgs; i--)
-				{
-					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
-				}
-
-				
-				if (tmp_value [0]->vt != 11)
-				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 11);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 0;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
-				
-				hr = set_evaluate_invariant ( arg_0);
-				
-				if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				CoTaskMemFree (tmp_value);
-			}
-			break;
-
-		case 111:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				VARIANT_BOOL result = 0;
-				
-				hr = debug_info (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 11;
-					pVarResult->boolVal = result;
-				}
-					
-			}
-			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
-			{
-				if (pDispParams->cArgs != 1)
-					return DISP_E_BADPARAMCOUNT;
-
-				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
-
-				VARTYPE vt_type [] = {11};
-
-				if (cNamedArgs >0)
-					for (i = 0; i < cNamedArgs; i++)
-					{
-						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
-					}
-
-				for (i = cArgs; i > cNamedArgs; i--)
-				{
-					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
-				}
-
-				
-				if (tmp_value [0]->vt != 11)
-				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 11);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 0;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
-				
-				hr = set_debug_info ( arg_0);
-				
-				if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				CoTaskMemFree (tmp_value);
-			}
-			break;
-
-		case 112:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				ecom_eiffel_compiler::IEiffelSystemClusters * result = 0;
-				
-				hr = clusters (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 9;
-					pVarResult->pdispVal = result;
-				}
-					
-			}
-			break;
-
-		case 117:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				ecom_eiffel_compiler::IEiffelSystemExternals * result = 0;
-				
-				hr = externals (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 9;
-					pVarResult->pdispVal = result;
-				}
-					
-			}
-			break;
-
-		case 118:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				BSTR result = 0;
-				
-				hr = default_namespace (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 8;
-					pVarResult->bstrVal = result;
-				}
-					
-			}
-			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
-			{
-				if (pDispParams->cArgs != 1)
-					return DISP_E_BADPARAMCOUNT;
-
-				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
-
-				VARTYPE vt_type [] = {8};
-
-				if (cNamedArgs >0)
-					for (i = 0; i < cNamedArgs; i++)
-					{
-						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
-					}
-
-				for (i = cArgs; i > cNamedArgs; i--)
-				{
-					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
-				}
-
-				
-				if (tmp_value [0]->vt != 8)
-				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 8);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 0;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
-				
-				hr = set_default_namespace ( arg_0);
-				
-				if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				CoTaskMemFree (tmp_value);
-			}
-			break;
-
-		case 119:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				ecom_eiffel_compiler::IEiffelSystemAssemblies * result = 0;
-				
-				hr = assemblies (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 9;
-					pVarResult->pdispVal = result;
-				}
-					
-			}
-			break;
-
-		case 120:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				BSTR result = 0;
-				
-				hr = precompiled (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 8;
-					pVarResult->bstrVal = result;
-				}
-					
-			}
-			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
-			{
-				if (pDispParams->cArgs != 1)
-					return DISP_E_BADPARAMCOUNT;
-
-				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
-
-				VARTYPE vt_type [] = {8};
-
-				if (cNamedArgs >0)
-					for (i = 0; i < cNamedArgs; i++)
-					{
-						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
-					}
-
-				for (i = cArgs; i > cNamedArgs; i--)
-				{
-					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
-				}
-
-				
-				if (tmp_value [0]->vt != 8)
-				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 8);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 0;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
-				
-				hr = set_precompiled ( arg_0);
-				
-				if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				CoTaskMemFree (tmp_value);
-			}
-			break;
-
-		case 121:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				long result = 0;
-				
-				hr = compilation_type (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 3;
-					pVarResult->lVal = result;
-				}
-					
-			}
-			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
-			{
-				if (pDispParams->cArgs != 1)
-					return DISP_E_BADPARAMCOUNT;
-
-				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
-
-				VARTYPE vt_type [] = {3};
-
-				if (cNamedArgs >0)
-					for (i = 0; i < cNamedArgs; i++)
-					{
-						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
-					}
-
-				for (i = cArgs; i > cNamedArgs; i--)
-				{
-					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
-				}
-
-				
-				if (tmp_value [0]->vt != 3)
-				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 3);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 0;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				long arg_0 = (long)tmp_value [0]->lVal;
-				
-				hr = set_compilation_type ( arg_0);
-				
-				if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				CoTaskMemFree (tmp_value);
-			}
-			break;
-
-		case 122:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				VARIANT_BOOL result = 0;
-				
-				hr = console_application (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 11;
-					pVarResult->boolVal = result;
-				}
-					
-			}
-			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
-			{
-				if (pDispParams->cArgs != 1)
-					return DISP_E_BADPARAMCOUNT;
-
-				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
-
-				VARTYPE vt_type [] = {11};
-
-				if (cNamedArgs >0)
-					for (i = 0; i < cNamedArgs; i++)
-					{
-						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
-					}
-
-				for (i = cArgs; i > cNamedArgs; i--)
-				{
-					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
-				}
-
-				
-				if (tmp_value [0]->vt != 11)
-				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 11);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 0;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
-				
-				hr = set_console_application ( arg_0);
-				
-				if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				CoTaskMemFree (tmp_value);
-			}
-			break;
-
 		case 133:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
@@ -2694,99 +2398,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::Invoke( D
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				
 				hr = set_title ( arg_0);
-				
-				if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				CoTaskMemFree (tmp_value);
-			}
-			break;
-
-		case 134:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				BSTR result = 0;
-				
-				hr = description (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 8;
-					pVarResult->bstrVal = result;
-				}
-					
-			}
-			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
-			{
-				if (pDispParams->cArgs != 1)
-					return DISP_E_BADPARAMCOUNT;
-
-				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
-
-				VARTYPE vt_type [] = {8};
-
-				if (cNamedArgs >0)
-					for (i = 0; i < cNamedArgs; i++)
-					{
-						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
-					}
-
-				for (i = cArgs; i > cNamedArgs; i--)
-				{
-					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
-				}
-
-				
-				if (tmp_value [0]->vt != 8)
-				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 8);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 0;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
-				
-				hr = set_description ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -3182,15 +2793,15 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::Invoke( D
 			}
 			break;
 
-		case 139:
+		case 1610743826:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
 					return DISP_E_BADPARAMCOUNT;
 
-				BSTR result = 0;
+				ULONG result = 0;
 				
-				hr = copyright (&result);
+				hr = assertions (&result);
 				
 				if (FAILED (hr))
 				{
@@ -3212,8 +2823,8 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::Invoke( D
 				if (pVarResult != NULL)
 				{
 					VariantClear (pVarResult);
-					pVarResult->vt = 8;
-					pVarResult->bstrVal = result;
+					pVarResult->vt = 19;
+					pVarResult->ulVal = result;
 				}
 					
 			}
@@ -3224,7 +2835,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::Invoke( D
 
 				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
 
-				VARTYPE vt_type [] = {8};
+				VARTYPE vt_type [] = {19};
 
 				if (cNamedArgs >0)
 					for (i = 0; i < cNamedArgs; i++)
@@ -3238,9 +2849,9 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::Invoke( D
 				}
 
 				
-				if (tmp_value [0]->vt != 8)
+				if (tmp_value [0]->vt != 19)
 				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 8);
+					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 19);
 					if (FAILED (hr))
 				{
 					CoTaskMemFree (tmp_value);
@@ -3249,9 +2860,9 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::Invoke( D
 				}
 			
 				}
-				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
+				ULONG arg_0 = (ULONG)tmp_value [0]->ulVal;
 				
-				hr = set_copyright ( arg_0);
+				hr = set_assertions ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -3272,6 +2883,136 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::Invoke( D
 					return DISP_E_EXCEPTION;
 				}
 				CoTaskMemFree (tmp_value);
+			}
+			break;
+
+		case 111:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				VARIANT_BOOL result = 0;
+				
+				hr = generate_debug_info (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 11;
+					pVarResult->boolVal = result;
+				}
+					
+			}
+			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
+			{
+				if (pDispParams->cArgs != 1)
+					return DISP_E_BADPARAMCOUNT;
+
+				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
+
+				VARTYPE vt_type [] = {11};
+
+				if (cNamedArgs >0)
+					for (i = 0; i < cNamedArgs; i++)
+					{
+						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
+					}
+
+				for (i = cArgs; i > cNamedArgs; i--)
+				{
+					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
+				}
+
+				
+				if (tmp_value [0]->vt != 11)
+				{
+					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 11);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 0;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
+				
+				hr = set_generate_debug_info ( arg_0);
+				
+				if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				CoTaskMemFree (tmp_value);
+			}
+			break;
+
+		case 112:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				ecom_eiffel_compiler::IEiffelSystemClusters * result = 0;
+				
+				hr = clusters (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 9;
+					pVarResult->pdispVal = result;
+				}
+					
 			}
 			break;
 

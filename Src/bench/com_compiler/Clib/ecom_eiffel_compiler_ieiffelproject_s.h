@@ -27,6 +27,16 @@ class IEiffelProject;
 extern "C" {
 #endif
 
+#ifndef __ecom_eiffel_compiler_IEiffelException_FWD_DEFINED__
+#define __ecom_eiffel_compiler_IEiffelException_FWD_DEFINED__
+namespace ecom_eiffel_compiler
+{
+class IEiffelException;
+}
+#endif
+
+
+
 #ifndef __ecom_eiffel_compiler_IEiffelCompiler_FWD_DEFINED__
 #define __ecom_eiffel_compiler_IEiffelCompiler_FWD_DEFINED__
 namespace ecom_eiffel_compiler
@@ -90,7 +100,19 @@ public:
 	~IEiffelProject () {};
 
 	/*-----------------------------------------------------------
-	Retrieve project.
+	Retrieve Eiffel Project
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP retrieve_eiffel_project(  /* [in] */ BSTR a_project_file_name ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Create new Eiffel project.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP create_eiffel_project(  /* [in] */ BSTR a_ace_file_name, /* [in] */ BSTR a_project_directory_path ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Retrieve project. Obsolete
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP retrieve_project(  /* [in] */ BSTR a_project_file_name ) = 0;
 
@@ -126,9 +148,15 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Last error message.
+	Last error message
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP last_error_message(  /* [out, retval] */ BSTR * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Last exception raised
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP last_exception(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelException * * a_result ) = 0;
 
 
 	/*-----------------------------------------------------------

@@ -20,17 +20,14 @@ feature -- Redefined
 
 	consumed_type (t: TYPE): CONSUMED_TYPE is
 			-- Consumed type corresponding to `t'.
-		local
-			i: INTEGER
 		do
-			i := t.full_name.get_hash_code
-			Types_cache.search (i)
+			Types_cache.search (t.full_name)
 			if types_cache.found then
 				Result := types_cache.found_item
 			else
 				Result := Precursor {CACHE_READER} (t)
 				if Result /= Void then
-					types_cache.put (Result, i)
+					types_cache.put (Result, t.full_name)
 				end
 			end
 		end
@@ -40,14 +37,13 @@ feature -- Redefined
 		local
 			i: INTEGER
 		do
-			i := aname.full_name.get_hash_code
-			Assembly_types_cache.search (i)
+			Assembly_types_cache.search (aname.full_name)
 			if Assembly_types_cache.found then
 				Result := Assembly_types_cache.found_item
 			else
 				Result := Precursor {CACHE_READER} (aname)
 				if Result /= Void then
-					Assembly_types_cache.put (Result, i)
+					Assembly_types_cache.put (Result, aname.full_name)
 				end
 			end
 		end
@@ -63,7 +59,6 @@ feature -- Initialization
 		local
 			l_raw_file: RAW_FILE
 			l_consumed_types: LINKED_LIST [CONSUMED_TYPE]
-			l_index: INTEGER
 		do
 			if feature {SYSTEM_FILE}.exists (a_path.to_cil) then
 				create l_raw_file.make (a_path)
@@ -75,10 +70,9 @@ feature -- Initialization
 					until
 						l_consumed_types.after
 					loop
-						l_index := l_consumed_types.item.dotnet_name.to_cil.get_hash_code
-						Types_cache.search (l_index)
+						Types_cache.search (l_consumed_types.item.dotnet_name)
 						if not Types_cache.found then
-							Types_cache.put (l_consumed_types.item, l_index)
+							Types_cache.put (l_consumed_types.item, l_consumed_types.item.dotnet_name)
 						end
 						l_consumed_types.forth
 					end
@@ -339,19 +333,18 @@ feature -- Access
 			constructors: ARRAY [CONSUMED_CONSTRUCTOR]
 			properties: ARRAY [CONSUMED_PROPERTY]
 			events: ARRAY [CONSUMED_EVENT]
-			i: INTEGER
 			ca: CONSUMED_ASSEMBLY
+			i: INTEGER
 		do
 			create Result.make
 
-			i := t.full_name.get_hash_code
-			Types_cache.search (i)
+			Types_cache.search (t.full_name)
 			if Types_cache.found then
 				ct := types_cache.found_item
 			else
 				ct := consumed_type (t)
 				if ct /= Void then
-					types_cache.put (ct, i)
+					types_cache.put (ct, t.full_name)
 				end
 			end
 			if ct /= Void then
@@ -418,13 +411,13 @@ feature -- Access
 
 feature -- Implementation
 
-	Types_cache: CACHE [CONSUMED_TYPE, INTEGER] is
+	Types_cache: CACHE [CONSUMED_TYPE, STRING] is
 			-- Cache for loaded types
 		once
 			create Result.make (Max_cache_items)
 		end
 
-	Assembly_types_cache: CACHE [CONSUMED_ASSEMBLY_TYPES, INTEGER] is
+	Assembly_types_cache: CACHE [CONSUMED_ASSEMBLY_TYPES, STRING] is
 			-- Cache of assembly types
 		once
 			create Result.make (15)

@@ -125,7 +125,7 @@ EIF_REFERENCE Font21_impl_proxy::ccom_name()
 	{
 		char * hresult_error = f.c_format_message (hr);
 		char * arg_no = 0;
-		_itoa (nArgErr, arg_no, 10);
+		itoa (nArgErr, arg_no, 10);
 		char * arg_name = "Argument No: ";
 		int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
 		char * message;
@@ -195,7 +195,7 @@ void Font21_impl_proxy::ccom_set_name( EIF_OBJECT a_value )
 	{
 		char * hresult_error = f.c_format_message (hr);
 		char * arg_no = 0;
-		_itoa (nArgErr, arg_no, 10);
+		itoa (nArgErr, arg_no, 10);
 		char * arg_name = "Argument No: ";
 		int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
 		char * message;
@@ -253,7 +253,7 @@ EIF_REFERENCE Font21_impl_proxy::ccom_size()
 	{
 		char * hresult_error = f.c_format_message (hr);
 		char * arg_no = 0;
-		_itoa (nArgErr, arg_no, 10);
+		itoa (nArgErr, arg_no, 10);
 		char * arg_name = "Argument No: ";
 		int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
 		char * message;
@@ -321,7 +321,7 @@ void Font21_impl_proxy::ccom_set_size( CURRENCY * a_value )
 	{
 		char * hresult_error = f.c_format_message (hr);
 		char * arg_no = 0;
-		_itoa (nArgErr, arg_no, 10);
+		itoa (nArgErr, arg_no, 10);
 		char * arg_name = "Argument No: ";
 		int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
 		char * message;
@@ -379,7 +379,7 @@ EIF_BOOLEAN Font21_impl_proxy::ccom_bold()
 	{
 		char * hresult_error = f.c_format_message (hr);
 		char * arg_no = 0;
-		_itoa (nArgErr, arg_no, 10);
+		itoa (nArgErr, arg_no, 10);
 		char * arg_name = "Argument No: ";
 		int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
 		char * message;
@@ -449,7 +449,7 @@ void Font21_impl_proxy::ccom_set_bold( EIF_BOOLEAN a_value )
 	{
 		char * hresult_error = f.c_format_message (hr);
 		char * arg_no = 0;
-		_itoa (nArgErr, arg_no, 10);
+		itoa (nArgErr, arg_no, 10);
 		char * arg_name = "Argument No: ";
 		int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
 		char * message;
@@ -507,7 +507,7 @@ EIF_BOOLEAN Font21_impl_proxy::ccom_italic()
 	{
 		char * hresult_error = f.c_format_message (hr);
 		char * arg_no = 0;
-		_itoa (nArgErr, arg_no, 10);
+		itoa (nArgErr, arg_no, 10);
 		char * arg_name = "Argument No: ";
 		int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
 		char * message;
@@ -577,7 +577,7 @@ void Font21_impl_proxy::ccom_set_italic( EIF_BOOLEAN a_value )
 	{
 		char * hresult_error = f.c_format_message (hr);
 		char * arg_no = 0;
-		_itoa (nArgErr, arg_no, 10);
+		itoa (nArgErr, arg_no, 10);
 		char * arg_name = "Argument No: ";
 		int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
 		char * message;
@@ -635,7 +635,7 @@ EIF_BOOLEAN Font21_impl_proxy::ccom_underline()
 	{
 		char * hresult_error = f.c_format_message (hr);
 		char * arg_no = 0;
-		_itoa (nArgErr, arg_no, 10);
+		itoa (nArgErr, arg_no, 10);
 		char * arg_name = "Argument No: ";
 		int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
 		char * message;
@@ -705,7 +705,7 @@ void Font21_impl_proxy::ccom_set_underline( EIF_BOOLEAN a_value )
 	{
 		char * hresult_error = f.c_format_message (hr);
 		char * arg_no = 0;
-		_itoa (nArgErr, arg_no, 10);
+		itoa (nArgErr, arg_no, 10);
 		char * arg_name = "Argument No: ";
 		int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
 		char * message;
@@ -763,7 +763,7 @@ EIF_BOOLEAN Font21_impl_proxy::ccom_strikethrough()
 	{
 		char * hresult_error = f.c_format_message (hr);
 		char * arg_no = 0;
-		_itoa (nArgErr, arg_no, 10);
+		itoa (nArgErr, arg_no, 10);
 		char * arg_name = "Argument No: ";
 		int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
 		char * message;
@@ -833,7 +833,7 @@ void Font21_impl_proxy::ccom_set_strikethrough( EIF_BOOLEAN a_value )
 	{
 		char * hresult_error = f.c_format_message (hr);
 		char * arg_no = 0;
-		_itoa (nArgErr, arg_no, 10);
+		itoa (nArgErr, arg_no, 10);
 		char * arg_name = "Argument No: ";
 		int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
 		char * message;
@@ -891,7 +891,7 @@ EIF_INTEGER Font21_impl_proxy::ccom_weight()
 	{
 		char * hresult_error = f.c_format_message (hr);
 		char * arg_no = 0;
-		_itoa (nArgErr, arg_no, 10);
+		itoa (nArgErr, arg_no, 10);
 		char * arg_name = "Argument No: ";
 		int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
 		char * message;
@@ -961,7 +961,7 @@ void Font21_impl_proxy::ccom_set_weight( EIF_INTEGER a_value )
 	{
 		char * hresult_error = f.c_format_message (hr);
 		char * arg_no = 0;
-		_itoa (nArgErr, arg_no, 10);
+		itoa (nArgErr, arg_no, 10);
 		char * arg_name = "Argument No: ";
 		int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
 		char * message;
@@ -1019,7 +1019,7 @@ EIF_INTEGER Font21_impl_proxy::ccom_charset()
 	{
 		char * hresult_error = f.c_format_message (hr);
 		char * arg_no = 0;
-		_itoa (nArgErr, arg_no, 10);
+		itoa (nArgErr, arg_no, 10);
 		char * arg_name = "Argument No: ";
 		int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
 		char * message;
@@ -1089,7 +1089,7 @@ void Font21_impl_proxy::ccom_set_charset( EIF_INTEGER a_value )
 	{
 		char * hresult_error = f.c_format_message (hr);
 		char * arg_no = 0;
-		_itoa (nArgErr, arg_no, 10);
+		itoa (nArgErr, arg_no, 10);
 		char * arg_name = "Argument No: ";
 		int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
 		char * message;

@@ -215,7 +215,7 @@ feature -- Duplication
 		local
 			pos: INTEGER
 		do
-			!!Result.make (min (count - index + 1, n));
+			!!Result.make (n.min (count - index + 1));
 			from
 				Result.start;
 				pos := index

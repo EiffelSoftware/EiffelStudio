@@ -31,6 +31,7 @@ feature {NONE} -- Implementation
 	on_menu_command (menu_id: INTEGER) is
 		local
 			rect: WEL_RECT
+			msg_box: WEL_MSG_BOX
 		do
 			inspect
 				menu_id
@@ -46,8 +47,9 @@ feature {NONE} -- Implementation
 					printer_dc.end_page
 					printer_dc.end_document
 				else
-					error_message_box ("Unable to print. %
-						%There is no default printer.")
+					!!msg_box.make
+					msg_box.error_message_box (Current, "Unable to print. %
+						%There is no default printer.", "No default printer")
 				end
 			end
 		end

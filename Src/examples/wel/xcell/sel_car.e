@@ -45,20 +45,24 @@ feature {NONE} -- Implementation
 
 	on_ok is
 			-- Ok button is pressed
+		local
+			msg_box: WEL_MSG_BOX
 		do
 			if number_edit.text.is_integer then
 				if number_edit.text.to_integer < 1 or number_edit.text.to_integer > 52 then
-					information_message_box ("You can only select a number of cards%N%
-						%within the range of 1-52.", "Information")
+					!!msg_box.make
+					msg_box.information_message_box (Current, "You can only select %
+						%a number of cards%Nwithin the range of 1-52.", "Information")
 					number_edit.set_text (no_cards.out)
 				else
 					no_cards := number_edit.text.to_integer
 					terminate (Idok)
 				end
 			else
-					information_message_box ("This field requires %
+				!!msg_box.make
+				msg_box.information_message_box (Current, "This field requires %
 						%a number.", "Information")
-					number_edit.set_text (no_cards.out)
+				number_edit.set_text (no_cards.out)
 			end
 
 		end

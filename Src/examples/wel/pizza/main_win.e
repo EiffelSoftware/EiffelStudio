@@ -35,9 +35,12 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	closeable: BOOLEAN is
+		local
+			msg_box: WEL_MSG_BOX
 		do
-			Result := message_box ("Do you want to exit?", "Exit",
-				Mb_yesno + Mb_iconquestion) = Idyes
+			!!msg_box.make
+			msg_box.question_message_box(Current, "Do you want to exit?", "Exit")
+			Result := msg_box.message_box_result = Idyes
 		end
 
 	on_menu_command (menu_id: INTEGER) is

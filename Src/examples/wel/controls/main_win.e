@@ -185,9 +185,12 @@ feature {NONE} -- Implementation
 		end
 
 	closeable: BOOLEAN is
+		local
+			msg_box: WEL_MSG_BOX
 		do
-			Result := message_box ("Do you want to exit?", "Exit",
-				Mb_yesno + Mb_iconquestion) = Idyes
+			!!msg_box.make
+			msg_box.question_message_box (Current, "Do you want to exit?", "Exit")
+			Result := msg_box.message_box_result = Idyes
 		end
 
 	text_info: STRING is
@@ -326,6 +329,8 @@ feature {NONE} -- Implementation
 		end
 
 	menu_list_box_count_item is
+		local
+			msg_box: WEL_MSG_BOX
 		do
 			text_info.wipe_out
 			text_info.append_integer (list_box.count)
@@ -334,18 +339,23 @@ feature {NONE} -- Implementation
 			else
 				text_info.append (" item is present.")
 			end
-			information_message_box (text_info, "Count item")
+			!!msg_box.make
+			msg_box.information_message_box (Current, text_info, "Count item")
 		end
 
 	menu_list_box_current_item is
+		local
+			msg_box: WEL_MSG_BOX
 		do
 			if list_box.selected then
 				text_info.wipe_out
 				text_info.append (list_box.selected_string)
 				text_info.append (" is selected.")
-				information_message_box (text_info, "Current item")
+				!!msg_box.make
+				msg_box.information_message_box (Current, text_info, "Current item")
 			else
-				error_message_box ("No item selected.")
+				!!msg_box.make
+				msg_box.information_message_box (Current, text_info, "Count item")
 			end
 		end
 
@@ -381,6 +391,8 @@ feature {NONE} -- Implementation
 		end
 
 	menu_mul_count_item is
+		local
+			msg_box: WEL_MSG_BOX
 		do
 			text_info.wipe_out
 			text_info.append_integer (list_box_mul.count)
@@ -389,13 +401,15 @@ feature {NONE} -- Implementation
 			else
 				text_info.append (" item is present.")
 			end
-			information_message_box (text_info, "Count item")
+			!!msg_box.make
+			msg_box.information_message_box (Current, text_info, "Count item")
 		end
 
 	menu_mul_current_item is
 		local
 			i: INTEGER
 			array_items: ARRAY [STRING]
+			msg_box: WEL_MSG_BOX
 		do
 			if list_box_mul.count_selected_items > 0 then
 				text_info.wipe_out
@@ -416,9 +430,11 @@ feature {NONE} -- Implementation
 				else
 					text_info.append (" is selected.")
 				end
-				information_message_box (text_info, "Current item")
+				!!msg_box.make
+				msg_box.information_message_box (Current, text_info, "Current item")
 			else
-				error_message_box ("No item selected.")
+				!!msg_box.make
+				msg_box.error_message_box (Current, "No item selected.", "Error")
 			end
 		end
 
@@ -459,6 +475,8 @@ feature {NONE} -- Implementation
 		end
 
 	menu_combo_box_count_item is
+		local
+			msg_box: WEL_MSG_BOX
 		do
 			text_info.wipe_out
 			text_info.append_integer (combo_box.count)
@@ -467,18 +485,23 @@ feature {NONE} -- Implementation
 			else
 				text_info.append (" item is present.")
 			end
-			information_message_box (text_info, "Count item")
+			!!msg_box.make
+			msg_box.information_message_box (Current, text_info, "Count item")
 		end
 
 	menu_combo_box_current_item is
+		local
+			msg_box: WEL_MSG_BOX
 		do
 			if combo_box.selected then
 				text_info.wipe_out
 				text_info.append (combo_box.selected_string)
 				text_info.append (" is selected.")
-				information_message_box (text_info, "Current item")
+				!!msg_box.make
+				msg_box.information_message_box (Current, text_info, "Current item")
 			else
-				error_message_box ("No item selected.")
+				!!msg_box.make
+				msg_box.error_message_box (Current, "No item selected.", "Error")
 			end
 		end
 
@@ -563,16 +586,22 @@ feature {NONE} -- Implementation
 		end
 
 	menu_edit_text_length is
+		local
+			msg_box: WEL_MSG_BOX
 		do
 			text_info.wipe_out
 			text_info.append ("The length is ")
 			text_info.append_integer (edit.text_length)
-			information_message_box (text_info, "Text length")
+			!!msg_box.make
+			msg_box.information_message_box (Current, text_info, "Text length")
 		end
 
 	menu_edit_current_text is
+		local
+			msg_box: WEL_MSG_BOX
 		do
-			information_message_box (edit.text, "Current text")
+			!!msg_box.make
+			msg_box.information_message_box (Current, edit.text, "Current text")
 		end
 
 	menu_multi_edit_create is
@@ -609,16 +638,22 @@ feature {NONE} -- Implementation
 		end
 
 	menu_multi_edit_text_length is
+		local
+			msg_box: WEL_MSG_BOX
 		do
 			text_info.wipe_out
 			text_info.append ("The length is ")
 			text_info.append_integer (multi_edit.text_length)
-			information_message_box (text_info, "Text length")
+			!!msg_box.make
+			msg_box.information_message_box (Current, text_info, "Text length")
 		end
 
 	menu_multi_edit_current_text is
+		local
+			msg_box: WEL_MSG_BOX
 		do
-			information_message_box (multi_edit.text, "Current text")
+			!!msg_box.make
+			msg_box.information_message_box (Current, multi_edit.text, "Current text")
 		end
 
 	menu_scroll_bar_create is
@@ -684,6 +719,8 @@ feature {NONE} -- Implementation
 		end
 
 	menu_radio_state is
+		local
+			msg_box: WEL_MSG_BOX
 		do
 			text_info.wipe_out
 			text_info.append (radio1.text)
@@ -700,7 +737,8 @@ feature {NONE} -- Implementation
 			else
 				text_info.append ("unchecked.")
 			end
-			information_message_box (text_info, "State")
+			!!msg_box.make
+			msg_box.information_message_box (Current, text_info, "State")
 		end
 
 	menu_check_create is
@@ -724,6 +762,8 @@ feature {NONE} -- Implementation
 		end
 
 	menu_check_state is
+		local
+			msg_box: WEL_MSG_BOX
 		do
 			text_info.wipe_out
 			text_info.append (bcheck1.text)
@@ -740,7 +780,8 @@ feature {NONE} -- Implementation
 			else
 				text_info.append ("unchecked.")
 			end
-			information_message_box (text_info, "State")
+			!!msg_box.make
+			msg_box.information_message_box (Current, text_info, "State")
 		end
 
 	Title: STRING is "WEL Controls"

@@ -31,10 +31,14 @@ feature {NONE} -- Implementation
 
 	closeable: BOOLEAN is
 			-- When the user can close the window?
+		local
+			msg_box: WEL_MSG_BOX
 		do
 			if file_menu.item_checked (Confirmation_id) then
-				Result := message_box ("Do you want to exit?",
-					"Exit", Mb_yesno + Mb_iconquestion) = Idyes
+				!! msg_box.make
+				msg_box.question_message_box (Current, 
+							"Do you want to exit?", "Exit")
+				Result := msg_box.message_box_result = Idyes
 			else
 				Result := True
 			end
@@ -42,6 +46,8 @@ feature {NONE} -- Implementation
 
 	on_menu_command (menu_id: INTEGER) is
 			-- `menu_id' has been selected
+		local
+				msg_box: WEL_MSG_BOX
 		do
 			inspect
 				menu_id
@@ -56,11 +62,14 @@ feature {NONE} -- Implementation
 					file_menu.check_item (Confirmation_id)
 				end
 			when Open_id then
-				information_message_box ("Option `Open' selected.", "Open")
+				!! msg_box.make
+				msg_box.information_message_box (Current, "Option `Open' selected.", "Open")
 			when Save_id then
-				information_message_box ("Option `Save' selected.", "Save")
+				!! msg_box.make
+				msg_box.information_message_box (Current, "Option `Save' selected.", "Save")
 			when Delete_id then
-				information_message_box ("Option `Delete' selected.", "Delete")
+				!! msg_box.make
+				msg_box.information_message_box (Current, "Option `Delete' selected.", "Delete")
 			else
 			end
 		end

@@ -138,6 +138,8 @@ feature {NONE} -- Implementation
 
 	on_menu_command (menu_id: INTEGER) is
 			-- `menu_id' has been selected.
+		local 
+			msg_box:WEL_MSG_BOX
 		do
 			inspect
 				menu_id
@@ -145,9 +147,11 @@ feature {NONE} -- Implementation
 				lines.wipe_out
 				invalidate
 			when Cmd_open then
-				warning_message_box ("Feature not implemented.", "Open")
+				!!msg_box.make
+				msg_box.warning_message_box (Current, "Feature not implemented.", "Open")
 			when Cmd_save then
-				warning_message_box ("Feature not implemented.", "Save")
+				!!msg_box.make
+				msg_box.warning_message_box (Current, "Feature not implemented.", "Save")
 			when Cmd_exit then
 				if closeable then
 					destroy
@@ -165,9 +169,13 @@ feature {NONE} -- Implementation
 
 	closeable: BOOLEAN is
 			-- Does the user want to quit?
+		local
+			msg_box: WEL_MSG_BOX
 		do
-			Result := question_message_box ("Do you want to quit?",
+			!!msg_box.make
+			msg_box.question_message_box (Current, "Do you want to quit?",
 				"Quit")
+			Result := msg_box.message_box_result = Idyes
 		end
 
 	main_menu: WEL_MENU is

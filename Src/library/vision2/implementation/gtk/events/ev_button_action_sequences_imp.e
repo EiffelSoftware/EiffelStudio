@@ -12,7 +12,12 @@ deferred class
 inherit
 	EV_BUTTON_ACTION_SEQUENCES_I
 
-EV_ANY_IMP undefine dispose, destroy end
+	EV_ANY_IMP
+		undefine
+			needs_event_box,
+			dispose,
+			destroy
+		end
 
 feature -- Event handling
 

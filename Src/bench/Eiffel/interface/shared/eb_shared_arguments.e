@@ -55,6 +55,8 @@ feature -- Access
 							else
 								Result := ""
 							end
+						else
+							Result := ""
 						end
 					else
 						Result := ""

@@ -283,5 +283,4 @@ feature {NONE} -- Implementation
 	Select_tooltip: STRING is "Select pixmap"
 		-- Tooltip on `modify_button' when able to remove pixmap.
 
-
 end -- class GB_EV_PIXMAPABLE

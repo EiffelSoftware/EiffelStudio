@@ -1,7 +1,7 @@
 indexing
 	description:
 		"A simple example of using class ACTION_SEQUENCE %
-		% Tests pause, block and resume (not exahustivly) %
+		% Tests pause, block and resume (not completely) %
 		% Tests nested calls to ACTION_SEQUENCE.call %
 		% Has example of a simple wrapper to allow easy binding."
 	status:

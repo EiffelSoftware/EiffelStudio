@@ -17,7 +17,6 @@ ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::IEiffelSystemBrowser_impl_
 	eiffel_object = eif_adopt (eif_obj);
 	type_id = eif_type (eiffel_object);
 	
-	LockModule ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -28,7 +27,6 @@ ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::~IEiffelSystemBrowser_impl
 
 	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))eiffel_procedure) (eif_access (eiffel_object), NULL);
 	eif_wean (eiffel_object);
-	UnlockModule ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -163,8 +161,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::cluster_descr
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
 		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_24 (eif_access (tmp_object));
-		if (*return_value != NULL)
-			(*return_value)->AddRef ();
 		eif_wean (tmp_object);
 	}
 	else
@@ -202,8 +198,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::class_descrip
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
 		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_27 (eif_access (tmp_object));
-		if (*return_value != NULL)
-			(*return_value)->AddRef ();
 		eif_wean (tmp_object);
 	}
 	else
@@ -246,8 +240,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::feature_descr
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
 		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_30 (eif_access (tmp_object));
-		if (*return_value != NULL)
-			(*return_value)->AddRef ();
 		eif_wean (tmp_object);
 	}
 	else
@@ -268,6 +260,7 @@ STDMETHODIMP_(ULONG) ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::Relea
 	Decrement reference count
 -----------------------------------------------------------*/
 {
+	UnlockModule ();
 	LONG res = InterlockedDecrement (&ref_count);
 	if (res  ==  0)
 	{
@@ -283,6 +276,7 @@ STDMETHODIMP_(ULONG) ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::AddRe
 	Increment reference count
 -----------------------------------------------------------*/
 {
+	LockModule ();
 	return InterlockedIncrement (&ref_count);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

@@ -48,6 +48,8 @@ feature {NONE} -- Initialization
 				n := n + 1
 			end
 			create internal_invalid_rectangle
+			set_deny_cursor (Default_deny_cursor)
+			set_accept_cursor (Default_accept_cursor)
 		end
 
 feature -- Access
@@ -240,6 +242,15 @@ feature -- Status report
 				Result := internal_is_sensitive
 			end
 		end
+		
+	accept_cursor: EV_CURSOR
+			-- Accept cursor set by user.
+			-- To be displayed when the screen pointer is over a target that accepts
+			-- `pebble' during pick and drop.
+
+	deny_cursor: EV_CURSOR
+		-- Deny cursor set by user.
+		-- To be displayed when the screen pointer is not over a valid target.
 
 feature -- Element change
 
@@ -545,12 +556,6 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
-	Default_pixmaps: EV_STOCK_PIXMAPS is
-			-- Eiffel Vision bitmaps.
-		once
-			create Result
-		end
-
 	Id_counter: INTEGER_REF is
 			-- Last assigned `draw_id'.
 		once
@@ -577,15 +582,6 @@ feature {NONE} -- Implementation
 		end
 
 feature {EV_WIDGET_PROJECTOR} -- Implementation
-
-	accept_cursor: EV_CURSOR
-			-- Accept cursor set by user.
-			-- To be displayed when the screen pointer is over a target that accepts
-			-- `pebble' during pick and drop.
-
-	deny_cursor: EV_CURSOR
-		-- Deny cursor set by user.
-		-- To be displayed when the screen pointer is not over a valid target.
 
 	Default_accept_cursor: EV_CURSOR is
 			-- Used in lieu of a user defined `accept_cursor'.

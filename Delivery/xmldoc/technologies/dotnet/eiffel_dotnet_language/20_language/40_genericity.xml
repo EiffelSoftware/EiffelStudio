@@ -54,67 +54,66 @@
 			</code>, the class from which all others inherit.
 		</paragraph>
 		<code_block>
-class
-    LIST_OF_THINGS
-       .
-       .
+<keyword>class</keyword>
+	<class_name>LIST_OF_THINGS</class_name>
+		.
+		.
 
-feature   -- Access
+<keyword>feature</keyword>   <comment>-- Access</comment>
 
-    item: ANY
-            -- The thing currently pointed to by cursor
+	<feature_name>item</feature_name><symbol>:</symbol> <class_name>ANY</class_name>
+			<comment>-- The thing currently pointed to by cursor</comment>
 
-       .
+		.
 
-feature   -- Element change
+<keyword>feature</keyword>   <comment>-- Element change</comment>
 
-    put (new_item: ANY)
-            -- Add `new_item' at the end of the list
-       .
-       .
-
+	<feature_name>put</feature_name> <symbol>(</symbol>new_item<symbol>:</symbol> <class_name>ANY</class_name><symbol>)</symbol>
+			<comment>-- Add `new_item' at the end of the list</comment>
+		.
+		.
 </code_block>
 		<paragraph>This will work, but has some definite disadvantages. Suppose you choose to use this class to maintain a list of cats in one of your classes. You might make this declaration:</paragraph>
 		<code_block>
-    my_cats: LIST_OF_THINGS
-            -- A list of my cats
+	<feature_name>my_cats</feature_name><symbol>:</symbol> <class_name>LIST_OF_THINGS</class_name>
+			<comment>-- A list of my cats</comment>
 </code_block>
 		<paragraph>Then you could add individual instances to the list:</paragraph>
 		<code_block>
-    fluffy, twinkie: CAT
-       .
-       .
-        my_cats.put (fluffy)
-        my_cats.put (twinkie)
+	<feature_name>fluffy</feature_name>, <feature_name>twinkie</feature_name><symbol>:</symbol> <class_name>CAT</class_name>
+		.
+		.
+	<feature_name>my_cats</feature_name>.<feature_name>put</feature_name> <symbol>(</symbol><feature_name>fluffy</feature_name><symbol>)</symbol>
+	<feature_name>my_cats</feature_name>.<feature_name>put</feature_name> <symbol>(</symbol><feature_name>twinkie</feature_name><symbol>)</symbol>
 </code_block>
 		<paragraph>One problem with this type of list is that the type system will not help you keep from doing something pathological like:</paragraph>
 		<code_block>
-    fluffy, twinkie: CAT
-    thor: PSYCHOTIC_HYDROPHOBIC_CAT_HATING_DOG
-       .
-       .
-        my_cats.put (fluffy)
-        my_cats.put (twinkie)
-        my_cats.put (thor)
+	<feature_name>fluffy</feature_name>, <feature_name>twinkie</feature_name><symbol>:</symbol> <class_name>CAT</class_name>
+	<feature_name>thor</feature_name><symbol>:</symbol> <class_name>PSYCHOTIC_HYDROPHOBIC_CAT_HATING_DOG</class_name>
+		.
+		.
+	<feature_name>my_cats</feature_name>.<feature_name>put</feature_name> <symbol>(</symbol><feature_name>fluffy</feature_name><symbol>)</symbol>
+	<feature_name>my_cats</feature_name>.<feature_name>put</feature_name> <symbol>(</symbol><feature_name>twinkie</feature_name><symbol>)</symbol>
+	<feature_name>my_cats</feature_name>.<feature_name>put</feature_name> <symbol>(</symbol><feature_name>thor</feature_name><symbol>)</symbol>
 </code_block>
-		<paragraph>Another problem is that to do any CAT things with an item in the list, you must reattach it to a CAT entity. The following is invalid.</paragraph>
+		<paragraph>Another problem is that to do any <code><class_name>CAT</class_name></code> things with an item in the list, you must reattach it to a <code><class_name>CAT</class_name></code> entity. The following is invalid.</paragraph>
 		<code_block>
-	my_cats.item.purr                     -- Is invalid
+	<feature_name>my_cats</feature_name>.<feature_name>item</feature_name>.<feature_name>purr</feature_name>	<comment>-- Is invalid</comment>
 </code_block>
-		<paragraph>This is because "item" is type ANY and although it may be currently attached to an instance of CAT, the static typing system cannot guarantee that. So you must use assignment attempt as we saw in the polymorphism example in 
+		<paragraph>This is because "item" is type <code><class_name>ANY</class_name></code> and although it may be currently attached to an instance of <code><class_name>CAT</class_name></code>, the static typing system cannot guarantee that. So you must use assignment attempt as we saw in the polymorphism example in 
 			<link>
 				<url>../../eiffel_dotnet_language/20_language/30_inheritance.xml</url>
 				<label>Inheritance</label>
 			</link>.
 		</paragraph>
 		<code_block>
-    some_cat: CAT
-        .
-        .
-        some_cat ?= my_cats.item
-        if some_cat /= Void then
-            some_cat.purr
-        end
+	<feature_name>some_cat</feature_name><symbol>:</symbol> <class_name>CAT</class_name>
+		.
+		.
+	<feature_name>some_cat</feature_name> <symbol>?<symbol>=</symbol></symbol> <feature_name>my_cats</feature_name>.<feature_name>item</feature_name>
+	<keyword>if</keyword> <feature_name>some_cat</feature_name> <symbol>/<symbol>=</symbol></symbol> Void <keyword>then</keyword>
+		<feature_name>some_cat</feature_name>.<feature_name>purr</feature_name>
+	<keyword>end</keyword>
 </code_block>
 		<paragraph>You can see that this type of list has its drawbacks. Of course you could build a 
 			<code>
@@ -159,19 +158,19 @@ feature   -- Element change
 			</code>.
 		</paragraph>
 		<code_block>
-class
-    LIST [G]
-        .
-        .
-feature   -- Access
-    item: G
-            -- The item currently pointed to by cursor
-       .
-feature   -- Element change
-    put (new_item: G)
-            -- Add `new_item' at the end of the list
-       .
-       .
+<keyword>class</keyword>
+	<class_name>LIST</class_name> <symbol>[</symbol><class_name>G</class_name><symbol>]</symbol>
+		.
+		.
+<keyword>feature</keyword>   <comment>-- Access</comment>
+	<feature_name>item</feature_name><symbol>:</symbol> <class_name>G</class_name>
+			<comment>-- The item currently pointed to by cursor</comment>
+		.
+<keyword>feature</keyword>   <comment>-- Element change</comment>
+	<feature_name>put</feature_name> <symbol>(</symbol>new_item<symbol>:</symbol> <class_name>G</class_name><symbol>)</symbol>
+			<comment>-- Add `new_item' at the end of the list</comment>
+		.
+		.
 </code_block>
 		<paragraph>We could declare feature 
 			<code>
@@ -197,27 +196,27 @@ feature   -- Element change
 			</code>.
 		</paragraph>
 		<code_block>
-    my_cats: LIST [CAT]
-            -- A list of my cats
-    fluffy, twinkie: CAT
-       .
-       .
-        my_cats.put (fluffy)
-        my_cats.put (twinkie)
-       .
-        my_cats.item.purr          -- Valid now
+	<feature_name>my_cats</feature_name><symbol>:</symbol> <class_name>LIST</class_name> <symbol>[</symbol><class_name>CAT</class_name><symbol>]</symbol>
+		<comment>-- A list of my cats</comment>
+	<feature_name>fluffy</feature_name>, <feature_name>twinkie</feature_name><symbol>:</symbol> <class_name>CAT</class_name>
+		.
+		.
+	<feature_name>my_cats</feature_name>.<feature_name>put</feature_name> <symbol>(</symbol><feature_name>fluffy</feature_name><symbol>)</symbol>
+	<feature_name>my_cats</feature_name>.<feature_name>put</feature_name> <symbol>(</symbol><feature_name>twinkie</feature_name><symbol>)</symbol>
+		.
+	<feature_name>my_cats</feature_name>.<feature_name>item</feature_name>.<feature_name>purr</feature_name>	<comment>-- Valid now</comment>
 </code_block>
 		<paragraph>The following would no longer be valid:</paragraph>
 		<code_block>
-    my_cats: LIST [CAT]
-            -- A list of my cats
+	<feature_name>my_cats</feature_name><symbol>:</symbol> <class_name>LIST</class_name> <symbol>[</symbol><class_name>CAT</class_name><symbol>]</symbol>
+			<comment>-- A list of my cats</comment>
 
-    thor: PSYCHOTIC_HYDROPHOBIC_CAT_HATING_DOG
+	<feature_name>thor</feature_name><symbol>:</symbol> <class_name>PSYCHOTIC_HYDROPHOBIC_CAT_HATING_DOG</class_name>
 
-       .
-       .
+		.
+		.
 
-        my_cats.put (thor)         -- Is invalid
+	<feature_name>my_cats</feature_name>.<feature_name>put</feature_name> <symbol>(</symbol><feature_name>thor</feature_name><symbol>)</symbol>	 <comment>-- Is invalid</comment>
 </code_block>
 		<heading>
 			<size>2</size>Constrained Genericity
@@ -252,8 +251,8 @@ feature   -- Element change
 			</code>
 		</paragraph>
 		<code_block>
-class
-    SORTED_LIST [G]
+<keyword>class</keyword>
+	<class_name>SORTED_LIST</class_name> <symbol>[</symbol><class_name>G</class_name><symbol>]</symbol>
 </code_block>
 		<paragraph>there would be no guarantee that ordering operations, like "&lt;" and "&gt;" could be applied to all types that could be listed. An Eiffel facility called "constrained genericity" will solve this problemfor us. In the case of 
 			<code>
@@ -261,8 +260,8 @@ class
 			</code>, we would add to the formal generic part as follows.
 		</paragraph>
 		<code_block>
-class
-    SORTED_LIST [G -&gt; COMPARABLE]
+<keyword>class</keyword>
+	<class_name>SORTED_LIST</class_name> <symbol>[</symbol><class_name>G</class_name> -&gt; <class_name>COMPARABLE</class_name><symbol>]</symbol>
 </code_block>
 		<paragraph>You may remember from 
 			<link>

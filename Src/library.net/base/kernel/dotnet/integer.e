@@ -24,12 +24,6 @@ inherit
 
 create {NONE}
 
-feature -- Access
-
-	frozen min_value: INTEGER is 0x80000000
-
-	frozen max_value: INTEGER is 0x7fffffff
-
 feature -- Basic Operations
 
 	frozen get_type_code: TYPE_CODE is

@@ -67,7 +67,7 @@
 #include <sys/select.h>
 #endif
 
-#ifdef I_NETINET_I
+#ifdef I_NETINET_IN
 #include <netinet/in.h>
 #endif
 

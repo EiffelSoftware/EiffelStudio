@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that input cluster directories"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -88,7 +87,7 @@ feature {NONE} -- Implementation
 			str_buffer: STRING
 			is_object, is_include_path: BOOLEAN
 		do
-			create str_buffer.make (0)
+			create str_buffer.make (200)
 			from
 				raw_data.start
 			until

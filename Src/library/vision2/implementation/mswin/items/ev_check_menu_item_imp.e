@@ -19,17 +19,30 @@ inherit
 	EV_SELECT_MENU_ITEM_IMP
 		redefine
 			on_activate,
-			interface
+			interface,
+			initialize
 		end
 	
 create
 	make
 
+feature {NONE} -- Initialization
+
+	initialize is
+			-- Initialize with state not `is_selected'.
+		do
+			Precursor
+			is_selected := False
+		end
+
 feature -- Status setting
 
 	disable_select is
 		do
-			parent_imp.uncheck_item (id)
+			is_selected := False
+			if has_parent then
+				parent_imp.uncheck_item (id)
+			end
 		end
 
 	toggle is
@@ -45,6 +58,7 @@ feature -- Status setting
 feature {NONE} -- Implementation
 
 	on_activate is
+			-- Invert the state and call `Precursor'.
 		do
 			toggle
 			Precursor
@@ -75,6 +89,11 @@ end -- class EV_CHECK_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/02/25 20:27:57  brendel
+--| Default state: is_selected.
+--| In disable_select, the call to parent_imp is now protected with
+--| conditional has_parent.
+--|
 --| Revision 1.15  2000/02/24 20:35:38  brendel
 --| Changed to comply with interface.
 --|

@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 				launch
 			elseif (command_line.argument_array @ 2).as_lower.is_equal (Visual_studio_project_argument) then
 				check
-					four_arguments: command_line.argument_array.count = 5
+					five_arguments: command_line.argument_array.count = 6
 				end
 						-- Now create the project_settings.
 				create project_settings.make_with_default_values
@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 					-- And set them as the build settings.
 				system_status.set_current_project (project_settings)
 				system_status.enable_wizard_system
-				create wizard_manager.make_and_launch
+				create wizard_manager.make_and_launch ((command_line.argument_array @ 5).to_integer)
 			end
 		end
 		

@@ -13,7 +13,9 @@ inherit
 		redefine
 			make_by_pointer
 		end
-		
+	
+	MD_TOKEN_TYPES
+
 create
 	make_by_pointer
 
@@ -59,6 +61,7 @@ feature -- Save
 			-- Save current assembly to file `f_name'.
 		require
 			f_name_not_void: f_name /= Void
+			f_name_not_empty: not f_name.is_empty
 		do
 			last_call_success := c_save (item, f_name.item, 0)
 		ensure
@@ -72,6 +75,7 @@ feature -- Definition: access
 			-- Get token reference on referenced assembly `assembly_name'.
 		require
 			assembly_name_not_void: assembly_name /= Void
+			assembly_name_not_empty: not assembly_name.is_empty
 			assembly_info_not_void: assembly_info /= Void
 		do
 			Result := assembly_emitter.define_assembly_ref (assembly_name,
@@ -82,6 +86,13 @@ feature -- Definition: access
 		
 	define_type_ref (type_name: UNI_STRING; resolution_scope: INTEGER): INTEGER is
 			-- Compute new token for `type_name' located in `resolution_scope'.
+		require
+			type_name_not_void: type_name /= Void
+			type_name_not_empty: not type_name.is_empty
+			resolution_scope_valid:
+				(resolution_scope & Md_mask = Md_module_ref) or
+				(resolution_scope & Md_mask = Md_assembly_ref) or
+				(resolution_scope & Md_mask = Md_type_ref)
 		do
 			last_call_success := c_define_type_ref_by_name (item, resolution_scope,
 				type_name.item, $Result)
@@ -91,44 +102,51 @@ feature -- Definition: access
 			end
 		ensure
 			success: last_call_success = 0
+			result_valid: Result & Md_mask = Md_type_ref
 		end
 
 	define_member_ref (method_name: UNI_STRING; in_class_token: INTEGER;
-			signature: MD_SIGNATURE): INTEGER
+			a_signature: MD_SIGNATURE): INTEGER
 		is
 			-- Create reference to member in class `in_class_token'.
 		require
 			method_name_not_void: method_name /= Void
-			signature_not_void: signature /= Void
+			method_name_not_empty: not method_name.is_empty
+			in_class_token_valid: in_class_token & Md_mask = Md_type_ref
+			signature_not_void: a_signature /= Void
 		do
 			last_call_success := c_define_member_ref (item, in_class_token,
-				method_name.item, signature.item.item, signature.count, $Result)
+				method_name.item, a_signature.item.item, a_signature.count, $Result)
 
 			if last_call_success = feature {MD_ERRORS}.meta_s_duplicate then
 				last_call_success := 0
 			end
 		ensure
 			success: last_call_success = 0
-			result_valid: Result > 0
+			result_valid: Result & Md_mask = Md_member_ref
 		end
 		
-	define_module_ref (name: UNI_STRING): INTEGER is
-			-- Define a reference to a module of name `name'.
+	define_module_ref (a_name: UNI_STRING): INTEGER is
+			-- Define a reference to a module of name `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
 		do
-			last_call_success := c_define_module_ref (item, name.item, $Result)
+			last_call_success := c_define_module_ref (item, a_name.item, $Result)
 		ensure
 			success: last_call_success = 0
-			result_valid: Result > 0		
+			result_valid: Result & Md_mask = Md_module_ref	
 		end
 		
 feature -- Definition: creation
 
-	define_assembly (assembly_name: UNI_STRING; assembly_flags:
-			INTEGER; assembly_info: MD_ASSEMBLY_INFO; public_key: MD_PUBLIC_KEY): INTEGER
+	define_assembly (assembly_name: UNI_STRING; assembly_flags: INTEGER;
+			assembly_info: MD_ASSEMBLY_INFO; public_key: MD_PUBLIC_KEY): INTEGER
 		is
 			-- Define a new assembly.
 		require
 			assembly_name_not_void: assembly_name /= Void
+			assembly_name_not_empty: not assembly_name.is_empty
 			assembly_info_not_void: assembly_info /= Void
 			valid_flags: public_key /= Void implies assembly_flags &
 				feature {MD_ASSEMBLY_FLAGS}.public_key = feature {MD_ASSEMBLY_FLAGS}.public_key
@@ -136,7 +154,7 @@ feature -- Definition: creation
 			Result := assembly_emitter.define_assembly (assembly_name, assembly_flags,
 				assembly_info, public_key)
 		ensure
-			valid_result: Result > 0
+			valid_result: Result & Md_mask = Md_assembly
 		end
 		
 	define_type (type_name: UNI_STRING; flags: INTEGER; extend_token: INTEGER;
@@ -146,6 +164,13 @@ feature -- Definition: creation
 			-- base class `extend_token' and implements interfaces `implements'.
 		require
 			type_name_not_void: type_name /= Void
+			type_name_not_empty: not type_name.is_empty
+			extend_token_valid:
+				(extend_token & Md_mask = Md_type_def) or
+				(extend_token & Md_mask = Md_type_ref) or
+				(extend_token & Md_mask = Md_type_spec)
+			--implements_valid: for_all (implemements.item (i) is a Md_type_def, Md_type_ref
+			--	or Md_type_spec.
 		local
 			a: ANY	
 		do
@@ -159,32 +184,57 @@ feature -- Definition: creation
 			end
 		ensure
 			success: last_call_success = 0
-			result_valid: Result > 0
+			result_valid: Result & Md_mask = Md_type_def
 		end
 
+	define_exported_type (type_name: UNI_STRING; implementation_token: INTEGER;
+			type_def_token: INTEGER; type_flags: INTEGER): INTEGER
+		is
+				-- Create a row in ExportedType table.
+		require
+			type_name_not_void: type_name /= Void
+			type_name_not_empty: not type_name.is_empty
+			implementation_token_valid:
+				(implementation_token & Md_mask = Md_file) or
+				(implementation_token & Md_mask = Md_exported_type)
+			type_def_token_valid: type_def_token & Md_mask = Md_type_def
+		do
+			Result := assembly_emitter.define_exported_type (type_name, implementation_token,
+				type_def_token, type_flags)
+		ensure
+			valid_result: Result & Md_mask = Md_exported_type
+		end
+			
 	define_method (method_name: UNI_STRING; in_class_token: INTEGER;
-			method_flags: INTEGER; signature: MD_METHOD_SIGNATURE;
+			method_flags: INTEGER; a_signature: MD_METHOD_SIGNATURE;
 			impl_flags: INTEGER): INTEGER
 		is
 			-- Create new method in class `in_class_token'.
 		require
 			method_name_not_void: method_name /= Void
-			signature_not_void: signature /= Void
+			method_name_not_void: not method_name.is_empty
+			in_class_token_valid: in_class_token & Md_mask = Md_type_def
+			signature_not_void: a_signature /= Void
 		do
 			last_call_success := c_define_method (item, in_class_token,
-				method_name.item, method_flags, signature.item.item, signature.count,
+				method_name.item, method_flags, a_signature.item.item, a_signature.count,
 				0, impl_flags, $Result)
 		ensure
 			success: last_call_success = 0
-			result_valid: Result > 0
+			result_valid: Result & Md_mask = Md_method_def
 		end
 
 	define_method_impl (in_class_token, method_token, used_method_declaration_token: INTEGER) is
 			-- Define a method impl from `used_method_declaration_token' from inherited
-			-- class to method `method_token' defined in `in_class_tojen'.
+			-- class to method `method_token' defined in `in_class_token'.
 		require
-			valid_tokens: in_class_token /= 0 and method_token /= 0 and
-				used_method_declaration_token /= 0
+			in_class_token_valid: in_class_token & Md_mask = Md_type_def
+			method_token_valid:
+				(method_token & Md_mask = Md_method_def) or
+				(method_token & Md_mask = Md_member_ref)
+			used_method_declaration_token_valid:
+				(used_method_declaration_token & Md_mask = Md_method_def) or
+				(used_method_declaration_token & Md_mask = Md_member_ref)
 		do
 			last_call_success := c_define_method_impl (item, in_class_token, method_token,
 				used_method_declaration_token)
@@ -197,7 +247,12 @@ feature -- Definition: creation
 		is
 			-- Further specification of a pinvoke method location defined by `method_token'.
 		require
+			method_token_valid:
+				(method_token & Md_mask = Md_field_def) or
+				(method_token & Md_mask = Md_method_def)
 			import_name_not_void: import_name /= Void
+			import_name_not_empty: not import_name.is_empty
+			module_ref_valid: module_ref & Md_mask = Md_module_ref
 		do
 			last_call_success := c_define_pinvoke_map (item, method_token,
 				mapping_flags, import_name.item, module_ref)
@@ -210,47 +265,50 @@ feature -- Definition: creation
 		is
 			-- Create a new parameter specification token for method `in_method_token'.
 		require
-			valid_in_method_token: in_method_token /= 0
+			in_method_token_valid: in_method_token & Md_mask = Md_method_def
 			param_name_not_void: param_name /= Void
-			valid_pos: param_pos >= 0
+			param_name_not_empty: not param_name.is_empty
+			pos_valid: param_pos >= 0
 		do
 			last_call_success := c_define_param (item, in_method_token, param_pos,
 				param_name.item, param_flags, 0, default_pointer, 0, $Result)
 		ensure
 			success: last_call_success = 0
-			result_valid: Result > 0
+			result_valid: Result & Md_mask = Md_param_def
 		end
 
 	define_field (field_name: UNI_STRING; in_class_token: INTEGER;
-			field_flags: INTEGER; signature: MD_FIELD_SIGNATURE): INTEGER
+			field_flags: INTEGER; a_signature: MD_FIELD_SIGNATURE): INTEGER
 		is
 			-- Create a new field in class `in_class_token'.
 		require
 			field_name_not_void: field_name /= Void
-			signature_not_void: signature /= Void
+			field_name_not_empty: not field_name.is_empty
+			in_class_token_valid: in_class_token & Md_mask = Md_type_def
+			signature_not_void: a_signature /= Void
 		do
 			last_call_success := c_define_field (item, in_class_token,
-				field_name.item, field_flags, signature.item.item, signature.count,
+				field_name.item, field_flags, a_signature.item.item, a_signature.count,
 				0, default_pointer, 0, $Result)
 		ensure
 			success: last_call_success = 0
-			result_valid: Result > 0
+			result_valid: Result & Md_mask = Md_field_def
 		end
 
-	define_signature (signature: MD_LOCAL_SIGNATURE): INTEGER is
-			-- Define a new token for `signature'. To be used only for
+	define_signature (a_signature: MD_LOCAL_SIGNATURE): INTEGER is
+			-- Define a new token for `a_signature'. To be used only for
 			-- local signature.
 		require
-			signature_not_void: signature /= Void
+			signature_not_void: a_signature /= Void
 		do
-			last_call_success := c_define_signature (item, signature.item.item,
-				signature.count, $Result)
+			last_call_success := c_define_signature (item, a_signature.item.item,
+				a_signature.count, $Result)
 			if last_call_success = feature {MD_ERRORS}.meta_s_duplicate then
 				last_call_success := 0
 			end
 		ensure
 			success: last_call_success = 0
-			result_valid: Result > 0
+			result_valid: Result & Md_mask = Md_signature
 		end
 
 	define_string (str: UNI_STRING): INTEGER is
@@ -261,20 +319,24 @@ feature -- Definition: creation
 			last_call_success := c_define_user_string (item, str.item, str.count, $Result)
 		ensure
 			success: last_call_success = 0
-			result_valid: Result > 0
+			result_valid: Result & Md_mask = Md_string
 		end
 
 	define_custom_attribute (owner, constructor: INTEGER; ca: MD_CUSTOM_ATTRIBUTE): INTEGER is
 			-- Define a new token for `ca' applied on token `owner' with using `constructor'
 			-- as creation procedure.
 		require
+			owner_valid: True -- Any type of token is accepted.
+			constructor_valid:
+				(constructor & Md_mask = Md_member_ref) or
+				(constructor & Md_mask = Md_method_def)
 			ca_not_void: ca /= Void
 		do
 			last_call_success := c_define_custom_attribute (item, owner, constructor,
 				ca.item.item, ca.count, $Result)
 		ensure
 			success: last_call_success = 0
-			result_valid: Result > 0
+			result_valid: Result & Md_mask = Md_custom_attribute
 		end
 
 feature -- Settings
@@ -283,6 +345,7 @@ feature -- Settings
 			-- Set name of current generated module to `a_name'.
 		require
 			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
 		do
 			last_call_success := c_set_module_props (item, a_name.item)
 		ensure
@@ -291,6 +354,9 @@ feature -- Settings
 
 	set_method_rva (method_token, rva: INTEGER) is
 			-- Set RVA of `method_token' to `rva'.
+		require
+			method_token_valid: method_token & Md_mask = Md_method_def
+			rvas_valid: rva >= 0
 		do
 			last_call_success := c_set_rva (item, method_token, rva)
 		ensure
@@ -325,7 +391,7 @@ feature {NONE} -- Implementation
 		end
 
 	c_define_field (an_item: POINTER; type_token: INTEGER; name: POINTER;
-			flags: INTEGER; signature: POINTER; sig_length: INTEGER;
+			flags: INTEGER; a_signature: POINTER; sig_length: INTEGER;
 			default_value_type: INTEGER; data: POINTER; data_length: INTEGER;
 			method_token: POINTER): INTEGER
 		is
@@ -342,7 +408,7 @@ feature {NONE} -- Implementation
 		end
 
 	c_define_member_ref (an_item: POINTER; type_token: INTEGER; name: POINTER;
-			signature: POINTER; sig_length: INTEGER; member_token: POINTER): INTEGER
+			a_signature: POINTER; sig_length: INTEGER; member_token: POINTER): INTEGER
 		is
 			-- Call `IMetaDataEmit->DefineMemberRef'.
 		external
@@ -357,7 +423,7 @@ feature {NONE} -- Implementation
 		end
 
 	c_define_method (an_item: POINTER; type_token: INTEGER; name: POINTER;
-			flags: INTEGER; signature: POINTER; sig_length: INTEGER;
+			flags: INTEGER; a_signature: POINTER; sig_length: INTEGER;
 			code_rva: INTEGER; impl_flags: INTEGER; method_token: POINTER): INTEGER
 		is
 			-- Call `IMetaDataEmit->DefineMethod'.
@@ -422,7 +488,7 @@ feature {NONE} -- Implementation
 			"DefinePinvokeMap"
 		end
 
-	c_define_signature (an_item: POINTER; signature: POINTER;
+	c_define_signature (an_item: POINTER; a_signature: POINTER;
 			sig_length: INTEGER; sig_token: POINTER): INTEGER
 		is
 			-- Call `IMetaDataEmit->GetTokenFromSig'. See doc on unmanaged

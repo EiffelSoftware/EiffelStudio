@@ -114,6 +114,7 @@ feature -- Access
 			parent: CLUSTER_I
 			subs: ARRAYED_LIST [CLUSTER_I]
 			ust: URL_STRING_TEXT
+			l_indexes: EIFFEL_LIST [INDEX_AS]
 		do
 			create Result.make
 			Result.add (ti_Before_class_declaration)
@@ -130,10 +131,10 @@ feature -- Access
 			Result.add_new_line
 			Result.add_new_line;
 
-			(create {CLASS_AS}).format_indexes (
-				create {FORMAT_CONTEXT}.make_for_appending (Result),
-				cluster.indexes
-			)
+			l_indexes := cluster.indexes
+			if l_indexes /= Void then
+				(create {FORMAT_CONTEXT}.make_for_appending (Result)).format_ast (l_indexes)
+			end
 
 			parent := cluster.parent_cluster
 			if parent /= Void then
@@ -503,8 +504,8 @@ feature {NONE} -- Implementation
 		local
 			s_as: STRING_AS
 		do
-			create s_as
 			if s.substring_index ("%%N", 1) > 0 then
+				create s_as.initialize ("", 0, 0, 0)
 				s_as.append_nice_multilined (s, text, 2)
 			else
 				text.add_indexing_string (s)

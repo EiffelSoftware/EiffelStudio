@@ -90,7 +90,7 @@ void c_get_address (int32 n, char *obj, fnptr rout)
 {
 	/* Initialize Eiffel-yacc interface for dynamic type `n'. */
 
-	yy_dt_array[n] = Dtype(obj);
+	yy_dt_array[n] = Dftype(obj);
 	init_array[n] = rout;
 }
 
@@ -387,27 +387,27 @@ void set_dtype1(char *obj)
 {
 	/* Assign to `feature_as_dtype' the dynamic type of `obj'. */
 
-	feature_as_dtype = Dtype(obj);
+	feature_as_dtype = Dftype(obj);
 }
 
 void set_dtype2(char *obj)
 {
 	/* Assign to `invariant_as_dtype' the dynamic type of `obj'. */
 
-	invariant_as_dtype = Dtype(obj);
+	invariant_as_dtype = Dftype(obj);
 }
 
 char is_feature_as(char *obj)
 {
 	/* Is `obj' an instance of FEATURE_AS ? */
 
-	return (Dtype(obj) == feature_as_dtype) ? '\01' : '\0';
+	return (Dftype(obj) == feature_as_dtype) ? '\01' : '\0';
 }
 
 char is_invariant_as(char *obj)
 {
 	/* Is `obj' an instance of INVARIANT_AS ? */
 
-    return (Dtype(obj) == invariant_as_dtype) ? '\01' : '\0';
+    return (Dftype(obj) == invariant_as_dtype) ? '\01' : '\0';
 }
 

@@ -19,7 +19,8 @@ inherit
 	EV_TEXT_COMPONENT_IMP
 		redefine
 			on_key_down,
-			interface
+			interface,
+			initialize
 		end
 
 	WEL_SINGLE_LINE_EDIT
@@ -88,6 +89,12 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			wel_make (default_parent, "", 0, 0, 0, 0, 0)
+		end
+
+	initialize is
+		do
+			wel_set_font (create {WEL_DEFAULT_GUI_FONT}.make)
+			{EV_TEXT_COMPONENT_IMP} Precursor
 		end
 
 feature {NONE} -- WEL Implementation
@@ -235,6 +242,11 @@ end -- class EV_TEXT_FIELD_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/04/21 01:24:19  pichery
+--| Changed the default font for
+--| EV_TEXT_FIELD.
+--| It's no more the crappy system font.
+--|
 --| Revision 1.36  2000/04/18 17:13:00  rogers
 --| Added wel_window_parent fix.
 --|

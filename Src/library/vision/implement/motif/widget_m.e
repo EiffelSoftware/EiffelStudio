@@ -75,7 +75,7 @@ feature {NONE}
 	parent_screen_object (a_widget: WIDGET; index: INTEGER): POINTER is
 		do
 			Result := widget_manager.parent_using_index
-						(a_widget, index).implementation.screen_object
+						(a_widget, index - 1).implementation.screen_object
 		end;
 
 feature

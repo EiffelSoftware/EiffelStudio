@@ -23,7 +23,7 @@ feature {NONE} -- Implementation
 				-- Create `label' using `make_with_text'.
 			create table
 			create button.make_with_text ("A button")
-			table.put (button, 1, 1, 1, 1)
+			table.put_at_position (button, 1, 1, 1, 1)
 			
 			widget := table
 		end

@@ -366,7 +366,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			loop
 				d := l.item;
 				if d.option.is_valid then
-					if d.option.is_system_level then
+					if d.option.is_system_level_only then
 						!!vd36;
 						vd36.set_cluster (context.current_cluster);
 						vd36.set_option_name (d.option.option_name);

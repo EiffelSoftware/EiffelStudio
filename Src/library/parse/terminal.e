@@ -1,10 +1,10 @@
 indexing
 
 	description:
-		"Constructs to be parsed by lexical analysis classes";
+		"Constructs to be parsed by lexical analysis classes"
 
-	status: "See notice at end of class";
-	date: "$Date$";
+	status: "See notice at end of class"
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class TERMINAL  inherit
@@ -19,7 +19,7 @@ deferred class TERMINAL  inherit
 
 feature -- Access
 
-	token: TOKEN; 
+	token: TOKEN
 			-- Token associated with terminal
 
 feature -- Status report
@@ -35,7 +35,7 @@ feature {NONE} -- Implementation
 			-- Void
 			-- (Meaningless for terminal constructs)
 		once 
-		end; 
+		end
 
 	left_recursion: BOOLEAN is False;
 
@@ -43,12 +43,12 @@ feature {NONE} -- Implementation
 			-- Do nothing.
 			-- (Meaningless for terminal constructs)
 		do
-		end; 
+		end
 
 	expand is
 			-- Do nothing.
 		do
-		end; 
+		end
 
 	parse_body is
 			-- Parse a terminal construct.
@@ -61,18 +61,18 @@ feature {NONE} -- Implementation
 			else
 				complete := False
 			end
-		end; 
+		end
 
 	token_correct: BOOLEAN is
 			-- Is token recognized?
 		do  
 			Result := document.token.type = token_type
-		end; 
+		end 
 
    action is
 			-- To be redefined in descendants.
 		do
-		end; 
+		end 
 
 	in_action is
 			-- Do nothing.

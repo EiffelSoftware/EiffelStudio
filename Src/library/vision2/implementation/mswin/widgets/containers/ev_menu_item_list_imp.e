@@ -9,8 +9,14 @@ deferred class
 	
 inherit
 	EV_MENU_ITEM_LIST_I
+		redefine
+			interface
+		end
 
 	EV_ITEM_LIST_IMP [EV_MENU_ITEM]
+		redefine
+			interface
+		end
 
 	WEL_MENU
 		rename
@@ -301,11 +307,16 @@ feature {EV_ANY_I, EV_POPUP_MENU_HANDLER} -- Implementation
 					sub_menu.menu_item_clicked (an_id)
 				elseif menu_item.id = an_id then
 					menu_item.on_activate
+					interface.item_select_actions.call ([menu_item.interface])
 				end
 				ev_children.forth
 			end
 			ev_children.go_to (cur)
 		end
+
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_MENU_ITEM_LIST
 
 end -- class EV_MENU_ITEM_LIST_IMP
 
@@ -330,6 +341,9 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/03/23 01:05:06  brendel
+--| Now calls item_select_actions.
+--|
 --| Revision 1.9  2000/03/22 23:48:45  brendel
 --| Exported menu_item_clicked to EV_POPUP_MENU_HANDLER.
 --| Removed stupid comment about performance.

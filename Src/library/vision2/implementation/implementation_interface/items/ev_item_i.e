@@ -60,7 +60,7 @@ feature -- Access
 			has_parent: parent_imp /= Void
 		deferred
 		ensure
-			valid_index: index >= 0 and index <= parent.count
+			valid_index: index >= 1 and index <= parent.count + 1
 		end
 
 feature -- Element change

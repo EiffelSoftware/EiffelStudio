@@ -276,7 +276,7 @@ feature {NONE} -- Inapplicable
 		end
 
 invariant
-	all_radio_buttons_connected: all_radio_buttons_connected
+	all_radio_buttons_connected: is_useable implies all_radio_buttons_connected
 
 end -- class EV_CONTAINER
 
@@ -301,6 +301,9 @@ end -- class EV_CONTAINER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/03/08 20:06:06  brendel
+--| Fixed invariant.
+--|
 --| Revision 1.23  2000/03/01 18:56:01  brendel
 --| Added deferred feature `readable'.
 --| Added precndition `readable' on `item'.

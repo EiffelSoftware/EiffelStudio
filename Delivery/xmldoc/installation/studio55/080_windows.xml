@@ -4,7 +4,7 @@
 		<heading><size>2</size>Requirements</heading>
 		<paragraph>
 			<table>
-				<row><cell><bold>Computer/Processor</bold></cell><cell>PC with 300 MHz or higher Pentium II class processor or equivalent recommended (single or dual processor system).</cell></row>
+				<row><cell><bold>Computer/Processor</bold></cell><cell>PC with 300 MHz or higher Pentium II class processor or equivalent recommended.</cell></row>
 				<row><cell><bold>Operating System</bold></cell><cell>Windows NT/2000/XP/2003 (.NET support is for Microsoft Windows 2000, XP and 2003 only).</cell></row>
 				<row><cell><bold>Memory</bold></cell><cell>256 Mb of RAM or higher (512Mb recommended).</cell></row>
 				<row><cell><bold>Hard Disk</bold></cell><cell>250Mb uncompressed hard disk space (500Mb recommended).  Hard disk space requirements will vary depending on configuration; custom installation choices may require more or less space. Space required for installation of the Microsoft .NET Framework will also be required.</cell></row>

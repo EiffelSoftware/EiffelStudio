@@ -4,7 +4,7 @@
 		<heading><size>2</size>Requirements</heading>
 		<paragraph>
 			<table>
-				<row><cell><bold>Computer/Processor</bold></cell><cell>PC with 300 MHz or higher Pentium II class processor or equivalent recommended (single or dual processor system).</cell></row>
+				<row><cell><bold>Computer/Processor</bold></cell><cell>PC with 300 MHz or higher Pentium II class processor or equivalent recommended.</cell></row>
 				<row><cell><bold>Operating System</bold></cell><cell>Fedora Core 2, Slackware 10 or any Linux system with glibc 2.3 and either Gnome 2.6 or GTK+ 2.4.</cell></row>
 				<row><cell><bold>Memory</bold></cell><cell>256 MB of RAM (512Mb recommended).</cell></row>
 				<row><cell><bold>Hard Disk</bold></cell><cell>400Mb uncompressed hard disk space (700Mb recommended).</cell></row>

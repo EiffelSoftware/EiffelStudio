@@ -21,6 +21,8 @@ feature -- Initialization
 			a_query_window_not_void: a_query_window /= Void
 		do
 			query_window := a_query_window
+		ensure
+			query_window_set: query_window.is_equal (a_query_window)
 		end
 
 feature -- Command Execution
@@ -32,11 +34,10 @@ feature -- Command Execution
 			selected_subqueries: LINKED_LIST [EV_LIST_ITEM]
 			selected_subquery: EB_SUBQUERY_ITEM
 		do
-			!! string_arg.make(0)
 			string_arg := arg.first
 			if query_window.active_query_window.count > 0 then
 				from
-					selected_subqueries ?= query_window.active_query_window.selected_items
+					selected_subqueries := query_window.active_query_window.selected_items
 					selected_subqueries.start
 				until
 					selected_subqueries.after
@@ -45,8 +46,8 @@ feature -- Command Execution
 					check
 						valid_entry: selected_subquery /= Void
 					end
-					if selected_subquery.index > 1 then
-						query_window.all_operators.go_i_th (selected_subquery.index - 1)
+					if selected_subquery.number > 1 then
+						query_window.all_operators.go_i_th (selected_subquery.number - 1)
 						query_window.all_operators.item.change_operator (string_arg)
 					end
 					selected_subqueries.forth
@@ -64,15 +65,15 @@ feature -- Command Execution
 					check
 						valid_entry: selected_subquery /= Void
 					end	
-					if selected_subquery.index > 1 then
-						query_window.all_operators.go_i_th (selected_subquery.index - 1)
+					if selected_subquery.number > 1 then
+						query_window.all_operators.go_i_th (selected_subquery.number - 1)
 						query_window.all_operators.item.change_operator (string_arg)
 					end
 					selected_subqueries.forth
 				end
 			end
 
-			query_window.update_query_form
+			query_window.update_query_frame
 		end
 
 feature {NONE} -- Attributes

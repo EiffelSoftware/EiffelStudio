@@ -54,7 +54,6 @@ feature {NONE} -- Focusable
 
 feature {NONE} -- Execute
 
-
 	work (argument: ANY) is
 		local
 			pw: SAVE_AS_PROJ_WIN	
@@ -63,10 +62,6 @@ feature {NONE} -- Execute
 				!!pw.make ("Save project as...", main_panel.base)
 				pw.popup
 			end
-		end
-
-	continue_after_popdown (box: MESSAGE_D ok: BOOLEAN) is
-		do
 		end
 
 end

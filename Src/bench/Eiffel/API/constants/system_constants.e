@@ -23,7 +23,6 @@ feature {NONE}
 		once
 			c := Directory_separator;
 			!!Result.make (0);
-			Result.extend (c);
 			Result.append ("bench");
 			Result.extend (c);
 			Result.append ("help");

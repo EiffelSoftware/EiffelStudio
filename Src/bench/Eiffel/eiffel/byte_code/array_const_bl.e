@@ -11,7 +11,7 @@ inherit
 			free_register, unanalyze
 		end;
 	SHARED_TABLE;
-    SHARED_DECLARATIONS;
+	SHARED_DECLARATIONS;
 	
 feature 
 
@@ -85,46 +85,70 @@ feature
 			-- Generate expression
 		local
 			real_ty: GEN_TYPE_I;
+			workbench_mode: BOOLEAN;
+			target_gen_type: TYPE_I;
 		do
 			real_ty ?= context.real_type (type);
-			generate_array_creation (real_ty);
-			if context.workbench_mode then
+			target_gen_type := real_ty.meta_generic.item (1);
+			workbench_mode := context.workbench_mode;
+			generate_array_creation (real_ty, workbench_mode);
+			if workbench_mode then
 				generate_wk_array_make (real_ty)
 			else
 				generate_final_array_make (real_ty)
 			end;
-			fill_array (real_ty);
+			fill_array (target_gen_type);
 		end;
 
 feature {NONE} -- C code generation
 
-	generate_array_creation (real_ty: GEN_TYPE_I) is
+	generate_array_creation (real_ty: GEN_TYPE_I; workbench_mode: BOOLEAN) is
 			-- Generate the object creation of 
 			-- manifest array.
 		do
 			print_register;
 			generated_file.putstring (" = ");
 			generated_file.putstring ("RTLN(");
-			generated_file.putint (real_ty.type_id - 1);
+			if workbench_mode then
+				generated_file.putstring ("RTUD(");
+				generated_file.putint (real_ty.associated_class_type.id - 1);
+				generated_file.putchar (')');
+			else
+				generated_file.putint (real_ty.type_id - 1);
+			end;
 			generated_file.putstring (");");
 			generated_file.new_line;
 		end;
 
-	fill_array (real_ty: GEN_TYPE_I) is
+	fill_array (target_type: TYPE_I) is
 			-- Generate the registers for the expressions
 			-- to fill the manifest array.
 		local
 			expr: EXPR_B;
 			actual_type: TYPE_I;
 			basic_i: BASIC_I;
-			metamorphosed: BOOLEAN
+			metamorphosed: BOOLEAN;
+			is_expanded: BOOLEAN
 		do
+			is_expanded := target_type.is_expanded;
 			array_area_reg.print_register;
-			generated_file.putstring (" = *");
-			real_ty.c_type.generate_access_cast (generated_file);
+			generated_file.putstring (" = * (char **) ");
 			print_register;
 			generated_file.putchar (';');
 			generated_file.new_line;
+			if (is_expanded and then expressions.count > 0) then
+				generated_file.putchar ('{');
+				generated_file.new_line;
+				generated_file.indent;
+				generated_file.putstring ("long elem_size;");
+				generated_file.new_line;
+				generated_file.putstring ("elem_size = *(long *) (");
+				array_area_reg.print_register;
+				generated_file.putstring (" + (HEADER(");
+				array_area_reg.print_register;
+				generated_file.putstring (")->ov_size & B_SIZE) - LNGPAD(2) + sizeof(long));");
+				generated_file.new_line;
+			end;
 			from
 				expressions.start
 			until
@@ -134,36 +158,48 @@ feature {NONE} -- C code generation
 				expr ?= expressions.item;
 				actual_type := context.real_type (expr.type);
 				if need_metamorphosis (actual_type) then
-					if actual_type.is_expanded then
-						-- Expanded objects are cloned
-						metamorphose_reg.print_register;
-                		generated_file.putstring (" = ");
-                		generated_file.putstring ("RTCL(");
-                		metamorphose_reg.print_register;
-                		generated_file.putchar(')');
-					else
-						basic_i ?= actual_type;
-						basic_i.metamorphose 
-							(metamorphose_reg, expr, generated_file, context.workbench_mode);
-					end;
+					basic_i ?= actual_type;
+					basic_i.metamorphose 
+						(metamorphose_reg, expr, generated_file, context.workbench_mode);
 					generated_file.putchar (';');
 					generated_file.new_line;
 					metamorphosed := True
 				else
 					expr.generate;
 				end;
-				generated_file.putstring ("*(");
-				real_ty.c_type.generate_access_cast (generated_file);
-				array_area_reg.print_register;
-				generated_file.putstring (")++ = ");
-				if metamorphosed then
-					metamorphose_reg.print_register
-				else
+				if is_expanded then
+					generated_file.putstring ("ecopy(");
 					expr.print_register;
+					generated_file.putstring (", ");
+					array_area_reg.print_register;
+					generated_file.putstring (" + OVERHEAD);");
+					generated_file.new_line;
+					array_area_reg.print_register;
+					generated_file.putstring (" += elem_size");
+				else
+					generated_file.putstring ("*");
+					target_type.c_type.generate_access_cast (generated_file);
+					array_area_reg.print_register;
+					generated_file.putstring (" = ");
+					if metamorphosed then
+						metamorphose_reg.print_register
+					else
+						expr.print_register;
+					end;
+					generated_file.putchar (';');
+					generated_file.new_line;
+					array_area_reg.print_register;
+					generated_file.putstring (" += ");
+					target_type.c_type.generate_size (generated_file);
 				end;
-				generated_file.putstring (";");
+				generated_file.putchar (';'); 
 				generated_file.new_line;
 				expressions.forth;
+			end;
+			if (is_expanded and expressions.count > 0) then
+				generated_file.exdent;
+				generated_file.putchar ('}');
+				generated_file.new_line;
 			end;
 		end;
 
@@ -200,13 +236,14 @@ feature {NONE} -- C code generation
 			feat_i := f_table.item ("make");
 			feat_id := feat_i.feature_id;
 			generated_file.putstring ("((void (*)())");
-			generated_file.putstring ("RTWF(");
+			generated_file.putstring (" RTWF(");
 			generated_file.putint (real_ty.associated_class_type.id - 1);
 			generated_file.putstring (", ");
 			generated_file.putint (feat_id);
 			generated_file.putstring (", ");
-			generated_file.putint (real_ty.type_id - 1);
-			generated_file.putstring ("))");
+			generated_file.putstring ("Dtype(");
+			print_register;
+			generated_file.putstring (")))");
 			generate_array_make_arguments;
 		end;
 

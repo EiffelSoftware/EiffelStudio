@@ -1,7 +1,7 @@
 class E_SHOW_PROFILE_QUERY
 
 inherit
-	E_CMD
+	E_OUTPUT_CMD
 		rename
 			make as e_cmd_make
 		redefine
@@ -13,7 +13,7 @@ creation
 
 feature -- Initialization
 
-	make (new_output: CLICK_WINDOW;
+	make (new_output: OUTPUT_WINDOW;
 		profiler_query: PROFILER_QUERY;
 		profiler_options: PROFILER_OPTIONS) is
 			-- Create the object and use `new_output'

@@ -113,6 +113,10 @@ va_dcl		/* Variable number of arguments (no ; needed) */
 	va_start(ap);				/* Start processing of argument list */
 	class = va_arg(ap, char *);	/* The first argument is a class name */
 
+#ifdef DEBUG
+	printf ("eifgid: computing EIF_TYPE_ID of %s\n", class);
+#endif
+
 	/* Now do a first search in the ce_gtype H-table to know how many generic
 	 * parameters we have to get from the stack. If the class is not found,
 	 * then either it is not a generic type or it was not declared as visible.
@@ -122,6 +126,9 @@ va_dcl		/* Variable number of arguments (no ; needed) */
 	type = (struct gt_info *) ct_value(&ce_gtype, class);
 	if ((struct gt_info *) 0 == type) {	/* Not found in H-table */
 		va_end(ap);						/* End processing of argument list */
+#ifdef DEBUG
+	printf ("eifgid: class not found in the ce_gtype table\n");
+#endif
 		return EIF_NO_TYPE;				/* Error condition */
 	}
 
@@ -132,10 +139,19 @@ va_dcl		/* Variable number of arguments (no ; needed) */
 	 */
 
 	gen_param = type->gt_param;			/* Number of generic parameters */
+#ifdef DEBUG
+	printf ("eifgid: nb of generics = %d\n", gen_param);
+#endif
 	for (i = 0; i < gen_param; i++) {
 		type_id = va_arg(ap, EIF_TYPE_ID);		/* Get a type ID from stack */
+#ifdef DEBUG
+	printf ("eifgid: type_id = %d\n", type_id);
+#endif
 		if (0 == ((uint32) type_id & SK_REF))	/* A pure reference type */
 			type_id = SK_DTYPE;					/* Force meta-type reference */
+#ifdef DEBUG
+	printf ("eifgid: type_id = %d\n", type_id);
+#endif
 		gtype[i] = type_id;						/* Build our generic array */
 	}
 	va_end(ap);				/* End processing of argument list */
@@ -175,11 +191,17 @@ va_dcl		/* Variable number of arguments (no ; needed) */
 	 * we have to count how many items we inspected and divide by the number
 	 * of generic parameters. The 't' variable points one location after the
 	 * match, hence the '-1' in the formula below.
+	 * No it doesn't, the instruction  "t -= gen_param" brings it back
+	 * exactly where it should be -- FRED
 	 */
 	
 	i = (t - type->gt_gen) / gen_param;
 
-	return type->gt_type[i - 1];	/* The requested generic type ID */
+#ifdef DEBUG
+	printf ("eifgid: i = %d\n", i);
+#endif
+
+	return type->gt_type[i];		/* The requested generic type ID */
 }
 
 /*

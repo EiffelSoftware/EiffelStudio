@@ -27,7 +27,7 @@ feature -- Basic Operations
 			info: CACHE_INFO
 			consumer: ASSEMBLY_CONSUMER
 			cr: CACHE_READER
-			dir: DIRECTORY
+			dir: DIRECTORY_INFO
 			retried: BOOLEAN
 			l_string_tuple: TUPLE [STRING]
 			l_assembly: ASSEMBLY
@@ -36,22 +36,29 @@ feature -- Basic Operations
 		do
 			if not retried then
 				create cr
-				create dir.make (cr.absolute_assembly_path_from_location (create {STRING}.make_from_cil (assembly.location)))
+				if not cr.is_initialized then
+					cr.initialize
+				end
+				l_directory_name := cr.absolute_assembly_path_from_location (create {STRING}.make_from_cil (assembly.location))
+				create dir.make (l_directory_name.to_cil)
+				check
+					non_void_assembly_directory: dir /= Void
+				end
 
 				create consumer
 					-- Only consume the assembly if it has been modified 
 					-- or is not allready in the Eiffel assembly cache
-				if consumer.is_assembly_modified (assembly, dir.name) then
+				if consumer.is_assembly_modified (assembly, l_directory_name) then
 					if dir.exists then
-						dir.recursive_delete
+						dir.delete_boolean (True)
 					else
 						l_new_assembly := True
 					end
-					dir.create_dir
+					dir.create_
 					consumer.set_status_printer (status_printer)
 					consumer.set_error_printer (error_printer)
 					consumer.set_status_querier (status_querier)
-					consumer.set_destination_path (dir.name)
+					consumer.set_destination_path (l_directory_name)
 					consumer.consume (assembly)
 					
 					if not consumer.successful then
@@ -59,7 +66,6 @@ feature -- Basic Operations
 					elseif l_new_assembly then
 						-- Update info.xml with new assembly
 						info := cr.info
-						create l_directory_name.make_from_string (dir.name)
 						l_directory_name.remove_tail (1)
 						l_directory_name.remove_head (l_directory_name.last_index_of ((create {OPERATING_ENVIRONMENT}).Directory_separator, l_directory_name.count))
 		 				info.add_assembly ( create {CONSUMED_ASSEMBLY_INFO}.make (
@@ -79,8 +85,6 @@ feature -- Basic Operations
 						status_printer.call (l_string_tuple)
 					end
 				end
-			else
-				set_error (Assembly_not_found_error, create {STRING}.make_from_cil (assembly.get_name.name))
 			end
 		rescue
 			retried := True
@@ -116,7 +120,7 @@ feature -- Basic Operations
 			retried := True
 			retry
 		end
-		
+
 	update_info (info: CACHE_INFO) is
 			-- Update EAC information file with `info'.
 		require

@@ -31,9 +31,31 @@ feature -- Basic operations
 			ci: CLASS_I
 			i: INTEGER
 			fi: FEATURE_I
+			overloaded_names: HASH_TABLE [ARRAYED_LIST [INTEGER], INTEGER]
+			overloaded_feat, temp_list: ARRAYED_LIST [INTEGER]
 		do
 			ci := table.associated_class.lace_class
 			if ci /= Void then
+				overloaded_names := table.overloaded_names
+				if overloaded_names /= Void then
+					from
+						create overloaded_feat.make (overloaded_names.count * 4) -- Guessing 4 overloads per overloaded members
+						overloaded_names.start
+					until
+						overloaded_names.after
+					loop
+						temp_list := overloaded_names.item_for_iteration
+						from
+							temp_list.start
+						until
+							temp_list.after
+						loop
+							temp_list.forth
+							overloaded_feat.extend (temp_list.item)
+						end
+						overloaded_names.forth
+					end
+				end
 				create Result.make (1, table.count)
 				from
 					i := 1
@@ -42,13 +64,13 @@ feature -- Basic operations
 					table.after
 				loop
 					fi := table.item_for_iteration
-					if is_listed (fi, class_i, ci) then
+					if is_listed (fi, class_i, ci) and not (use_overloading and overloaded_feat /= Void and then overloaded_feat.has (fi.feature_id)) then
 						Result.put (create {FEATURE_DESCRIPTOR}.make_with_class_i_and_feature_i (ci, fi), i)
 						i := i + 1
 					end
 					table.forth
 				end
-				if Result.index_set.valid_index (i - 1) then
+				if Result.lower <= i - 1 and i - 1 <= Result.upper then
 					Result := Result.subarray (1, i - 1)
 					Result.sort	
 				else

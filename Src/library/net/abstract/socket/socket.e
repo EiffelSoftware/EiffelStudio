@@ -225,7 +225,7 @@ feature -- Misc.
 
 feature -- Ouput
 
-	new_line is
+	put_new_line, new_line is
 			-- Write a "new_line" character to socket.
 		require else
 			socket_exists: exists;

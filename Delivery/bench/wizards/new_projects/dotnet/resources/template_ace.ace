@@ -10,7 +10,7 @@ root
 
 default
 	assertion (no)
-	il_generation ("exe")
+	il_generation ("<FL_APPLICATION_TYPE>")
 	line_generation (no)
 
 cluster
@@ -24,6 +24,6 @@ cluster
 		end
 
 		-- .NET System
-	<FL_SELECTED_CLUSTERS>
+	all external_assemblies ($root_cluster): "external_assemblies"
 
 end

@@ -133,7 +133,7 @@ feature -- Element change
 		require
 			exist: not destroyed			
 			valid_text: txt /= Void
-			is_editable: is_editable
+--			is_editable: is_editable
 		deferred
 		ensure
 			text_set: text.is_equal (txt)

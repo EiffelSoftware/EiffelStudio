@@ -12,7 +12,9 @@ class
 inherit
 	EV_CELL_IMP
 		rename
-			item as cell_item
+			item as cell_item,
+			pointer_motion_actions as cell_pointer_motion_actions,
+			pointer_motion_actions_internal as cell_pointer_motion_actions_internal
 		redefine
 			interface,
 			initialize,

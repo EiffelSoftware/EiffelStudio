@@ -59,6 +59,7 @@ feature {GB_COMMAND_DELETE_WINDOW_OBJECT} -- Implementation
 		local
 			parent_item: EV_TREE_NODE_LIST
 			original_index: INTEGER
+			window_selector: GB_WINDOW_SELECTOR
 		do
 			parent_item ?= parent
 			if parent_item /= Void then
@@ -67,6 +68,14 @@ feature {GB_COMMAND_DELETE_WINDOW_OBJECT} -- Implementation
 					item_contained_in_parent: parent_item.has (Current)
 				end
 				original_index := parent_item.index
+				window_selector ?= parent_item
+				if window_selector = Void then
+					window_selector ?= parent_item.parent
+				end
+				check
+					parent_was_window_selector: window_selector /= Void
+				end
+				window_selector.update_for_removal (Current)
 				parent_item.prune (Current)
 				parent_item.go_i_th (original_index.min (parent_item.count))
 			end

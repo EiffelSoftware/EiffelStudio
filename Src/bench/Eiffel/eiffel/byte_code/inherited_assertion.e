@@ -204,7 +204,11 @@ feature -- Inherited precondition
 			valid_arg1: ct /= Void
 			valid_arg2: bc /= Void
 			valid_prec: bc.precondition /= Void
-			not_have_ct: not has_prec_type (ct)
+			not_duplicated: not precondition_body_indices.has (bc.body_index)
+				-- The same `ct' can be added as a precondition class type
+				-- multiple times when several features of `ct' are merged 
+				-- into one, so check only that the precondition comes from
+				-- different features regardless of `ct'.
 		do
 			precondition_types.extend (ct)
 			precondition_list.extend (bc.precondition)
@@ -411,7 +415,11 @@ feature -- inherited postcondition
 			valid_arg1: ct /= Void
 			valid_arg2: bc /= Void
 			valid_post: bc.postcondition /= Void
-			not_have_ct: not has_post_type (ct)
+			not_duplicated: not postcondition_body_indices.has (bc.body_index)
+				-- The same `ct' can be added as a postcondition class type
+				-- multiple times when several features of `ct' are merged 
+				-- into one, so check only that the postcondition comes from
+				-- different features regardless of `ct'.
 		do
 			postcondition_types.extend (ct)
 			postcondition_list.extend (bc.postcondition)

@@ -127,6 +127,13 @@ char **argv;
 	strcat(ewb_path, platform);
 	strcat(ewb_path, EWB);				/* Append process name */
 
+	/* FIXME
+		FIXME
+		FIXME
+		FIXME
+		FIXME
+		check that es3 exists
+	*/
 	sp = spawn_child(ewb_path, &pid);	/* Bring workbench to life */
 	if (sp == (STREAM *) 0)	{			/* Could not do it */
 		print_err_msg(stderr, "%s: could not launch %s\n", progname, ewb_path);

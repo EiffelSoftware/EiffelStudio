@@ -301,8 +301,8 @@ feature {NONE} -- WEL Implementation
 			-- In the following code, `hexa_number' and `string_bitmap'
 			-- are hexadecimal representations of the bitmap. 
 			-- Here follows the representation of the picture:
-			-- binary: 0 / 1     hexa : 40 / 00     decimal : 128 / 0
-			--         1 / 0            80 / 00                64 / 0
+			-- binary: 1 / 0     hexa : 80 / 00     decimal : 128 / 0
+			--         0 / 1            40 / 00                64 / 0
 		local
 			bitmap: WEL_BITMAP
 			log: WEL_LOG_BITMAP

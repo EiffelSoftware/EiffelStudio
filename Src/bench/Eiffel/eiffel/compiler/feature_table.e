@@ -73,6 +73,13 @@ inherit
 			copy, is_equal
 		end
 
+	SHARED_EXTERNALS
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
+
 creation
 	make
 	
@@ -311,20 +318,23 @@ end;
 				end;
 
 				if 	old_feature_i.written_in = feat_tbl_id then
-					if old_feature_i.is_external then
+					if old_feature_i.is_c_external then
+						debug ("ACTIVITY")
+							io.error.putstring ("Remove external: ");
+							io.error.putstring (old_feature_i.feature_name);
+							io.error.new_line;
+						end;
+						if System.il_generation then
+							Il_c_externals.remove_external (old_feature_i)
+						end
 							-- Delete one occurrence of an external feature
 						external_i ?= old_feature_i;
-debug ("ACTIVITY")
-	io.error.putstring ("Remove external: ");
-	io.error.putstring (old_feature_i.feature_name);
-	io.error.new_line;
-end;
 						if not external_i.encapsulated then
 								-- If the external is encapsulated then it was not added to
 								-- the list of new externals in inherit_table. Same thing
 								-- if it has to be removed
 							pass_control.remove_external (external_i.external_name_id);
-						end;
+						end						
 					end;
 					if 	new_feature_i = Void
 						or else

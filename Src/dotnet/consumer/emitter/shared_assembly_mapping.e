@@ -22,14 +22,23 @@ feature -- Access
 			name: STRING
 			am: like assembly_mapping
 		do
-			create name.make_from_cil (t.get_assembly.to_string)
-			am := assembly_mapping
-			am.search (name)
-			if am.found then
-				if t.get_is_array then
-					create {CONSUMED_ARRAY_TYPE} Result.make (create {STRING}.make_from_cil (t.get_full_name.substring_int32_int32 (0, t.get_full_name.get_length - 3)), am.found_item)
-				else
-					create Result.make (create {STRING}.make_from_cil (t.get_full_name), am.found_item)
+			if t.get_is_by_ref then
+				Result := referenced_type_from_type (t.get_element_type)
+			else
+				create name.make_from_cil (t.get_assembly.to_string)
+				am := assembly_mapping
+				am.search (name)
+				if am.found then
+					if t.get_is_array then
+						create {CONSUMED_ARRAY_TYPE} Result.make (
+							create {STRING}.make_from_cil (
+								t.get_full_name.substring_int32_int32 (0,
+								t.get_full_name.get_length - 2)),
+							am.found_item)
+					else
+						create Result.make (create {STRING}.make_from_cil (t.get_full_name),
+							am.found_item)
+					end
 				end
 			end
 		end

@@ -8,6 +8,9 @@ class
 	PUSH_BUTTON_WINDOWS
 
 inherit
+
+	ACCELERABLE_WINDOWS
+
 	BUTTON_WINDOWS
 		rename
 			set_managed as widget_set_managed
@@ -211,13 +214,6 @@ feature -- Status report
 	realized: BOOLEAN
 			-- Is this widget realized?
 
-	has_accelerator: BOOLEAN
-			-- Is there an accelerator key associated with
-			-- this widget?
-
-	accelerator_text: STRING
-			-- Text of accelerator.
-
 	insensitive: BOOLEAN is
 			-- Is Current insensitive?
 		do
@@ -230,17 +226,6 @@ feature -- Status report
 					Result := private_attributes.insensitive
 				end
 			end
-		end
-
-feature -- Status setting
-
-	set_accelerator_action (a_translation: STRING) is
-			-- Set the accerlator action (modifiers and key to use as a shortcut
-			-- in selecting a button) to `a_translation'.
-			-- `a_translation' must be specified with the X toolkit conventions.
-		do
-			accelerator_text := a_translation
-			has_accelerator := True
 		end
 
 feature -- Removal
@@ -268,12 +253,6 @@ feature -- Removal
 				actions_manager_list.deregister (ww)
 				wid_list.forth
 			end
-		end
-
-	remove_accelerator_action is
-			-- Remove the accelerator action.
-		do
-			has_accelerator := False
 		end
 	
 feature {NONE} -- Notification

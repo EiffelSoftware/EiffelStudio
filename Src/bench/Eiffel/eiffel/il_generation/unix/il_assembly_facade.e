@@ -64,6 +64,13 @@ feature -- Access
 
 feature -- Cursor Movement
 
+	go_i_th (i_th: INTEGER) is
+		do 
+			check 
+				False
+			end
+		end
+
 	start is
 			-- Move cursor to start of assembly list
 		do

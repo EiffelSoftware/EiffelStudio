@@ -203,6 +203,8 @@ feature
 
 	draw is
 		do
+			drawing.set_foreground_gc_color (foreground_color);
+			drawing.set_background_gc_color (background_color);
 			drawing.draw_image_text (base_left, text)
 		end;
 

@@ -6,7 +6,7 @@
 		</paragraph>
 		<paragraph>
 			<image>
-				<url>../../../../images/eiffelstudio/dialogs_and_wizards/stack_overflow_dlg.png</url>
+				<url>/images/eiffelstudio/dialogs_and_wizards/stack_overflow_dlg.png</url>
 			</image>
 		</paragraph>
 		<paragraph>By default a warning is issued when the debugged program reaches a stack depth of 1,000 elements.</paragraph>

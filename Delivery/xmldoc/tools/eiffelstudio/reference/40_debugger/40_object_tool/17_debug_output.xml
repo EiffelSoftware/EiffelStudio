@@ -28,7 +28,7 @@
 		<tip>
 			<bold>Tip</bold>: If an object has a long string output or an output with carriage returns, for instance, pick-and-drop it to the expanded display command 
 			<image>
-				<url>../../../../../images/eiffelstudio/icons/icon_expand_string_color.gif</url>
+				<url>/images/eiffelstudio/icons/icon_expand_string_color.gif</url>
 			</image> in the object tool.
 		</tip>
 	</paragraph></document>

@@ -93,6 +93,7 @@ feature {NONE} -- Initialization
 							else
 								environment.set_is_in_process
 							end
+							environment.set_cleanup (l_valid_options.has ("-p"))
 							if l_definition_file /= Void then
 								if l_definition_file.substring_index (".idl", l_definition_file.count - 3) = l_definition_file.count - 3 then
 									environment.set_idl_file_name (l_definition_file)
@@ -212,8 +213,10 @@ feature {NONE} -- Private Access
 				    "-g,--compilec#Compile generated C code.",
 				    "-l,--compileeiffel#Compile eiffel code, also compile C code (implies -g).",
 				    "-b,--backup#Backup overriden files by adding extension '.bac'.",
+				    "-p,--cleanup#Cleanup destination folder prior to generation.",
 				    "-n,--nologo#Do not display copyright information.",
-				    "(-c|-s|-e)">>
+				    "(-c|-s|-e)",
+				    "(-p|-b)>>
 		end
 	
 	exe_name: STRING

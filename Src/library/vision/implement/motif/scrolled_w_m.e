@@ -101,11 +101,11 @@ feature
 			ext_name: ANY;
 			pix: POINTER
 		do
-			if not (foreground_color = Void) then
-				color_implementation ?= foreground_color.implementation;
+			if fg_color /= Void then
+				color_implementation ?= fg_color.implementation;
 				color_implementation.remove_object (Current)
 			end;
-			foreground_color := a_color;
+			fg_color := a_color;
 			color_implementation ?= a_color.implementation;
 			color_implementation.put_object (Current);
 			pix := color_implementation.pixel (screen);

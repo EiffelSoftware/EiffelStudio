@@ -17,8 +17,20 @@ inherit
 
 feature 
 
-	foreground_color: COLOR;
+	foreground_color: COLOR is
 			-- Color used for the foreground_color
+		local
+			fg_color_x: COLOR_X
+		do
+			if fg_color = Void then
+				!! fg_color.make;
+				fg_color_x ?= fg_color.implementation;
+				fg_color_x.set_pixel (xt_pixel (screen_object, Mforeground_color));
+			end;
+			Result := fg_color;
+		ensure
+			color_exists: Result /= Void
+		end;
 
 	set_foreground_color (a_color: COLOR) is
 			-- Set `foreground_color' to `a_color'.
@@ -28,11 +40,11 @@ feature
 			color_implementation: COLOR_X;	
 			ext_name: ANY
 		do
-			if not (foreground_color = Void) then
+			if fg_color /= Void then
 				color_implementation ?= foreground_color.implementation;
 				color_implementation.remove_object (Current)
 			end;
-			foreground_color := a_color;
+			fg_color := a_color;
 			color_implementation ?= a_color.implementation;
 			color_implementation.put_object (Current);
 			ext_name := Mforeground_color.to_c;
@@ -40,6 +52,11 @@ feature
 		ensure
 			foreground_color = a_color
 		end;
+
+feature {NONE}
+
+	fg_color: COLOR;
+			-- foreground_color color
 
 feature {COLOR_X}
 

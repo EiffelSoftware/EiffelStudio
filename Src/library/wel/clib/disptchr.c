@@ -11,7 +11,7 @@
  * `cwel_dialog_procedure' receives messages from dialog boxes.
  * These 2 functions call the routines `window_procedure' and
  * `dialog_procedure' respectively from the Eiffel class WEL_DISPATCHER.
- * -- PK.  
+ * -- PK.
  */
 
 #ifndef __WEL_DISPATCHER__

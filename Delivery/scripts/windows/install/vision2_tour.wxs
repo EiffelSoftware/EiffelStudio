@@ -1,0 +1,460 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
+  <Module Id="vision2_tour" Guid="85FA3E69-7DD6-4B30-9EBD-994B605EC147" Language="0" Version="5.5">
+	<Package Id="85FA3E69-7DD6-4B30-9EBD-994B605EC147" Keywords="MergeModule, MSI, Database" Description="Vision2Tour" Manufacturer="ISE Inc." InstallerVersion="200" Languages="1033" Compressed="yes" SummaryCodepage="0" />
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Component Id="Registry" Guid="232839E5-2B6C-4AAA-866A-899685E51D46">
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel55\vision2_tour" Name="ISE_PLATFORM" Value="windows" Id="registry1" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel55\vision2_tour" Name="ISE_EIFFEL" Value="[Application]" KeyPath="yes" Id="registry" />
+      </Component>
+      <Directory Id="ProgramMenuFolder" Name="Redist">
+        <Directory Id="EiffelStudio_5.5" Name="EIFFEL~2" LongName="EiffelStudio 5.5">
+          <Directory Id="Documentation1" Name="DOCUME~2" LongName="Documentation">
+            <Component Id="Documentation1" Guid="81D37F1B-9598-4251-8DDA-FD90F76FF79A" KeyPath="yes">
+              <Shortcut Id="VISION1.EXEvision2_tour.exe" Directory="Documentation1" Name="EIFFEL~1" LongName="EiffelVision2 Tour" Target="[#vision2_tour.exe]" Description="EiffelVision2 overview presentation" Hotkey="0" Show="normal" />
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+	  <Directory Id="Application" Name=".">
+        <Directory Id="vision2_tour" Name="VISION~1" LongName="vision2_tour">
+          <Component Id="vision2_tour" Guid="0E8DAE43-1031-414A-A9CE-7EC5C95BFDE4">
+            <File Id="readme.html" Name="README~1.HTM" LongName="readme.html" KeyPath="yes" />
+		</Component>
+	<!--
+          <Directory Id="flatshort" Name="FLATSH~1" LongName="flatshort">
+            <Component Id="flatshort" Guid="5754CA71-FC52-4FDB-8E3B-779BBC6B2E60">
+				<File Id="ev_horizontal_box_flatshort.rtf" Name="EV_HOR~1.RTF" LongName="ev_horizontal_box_flatshort.rtf" KeyPath="yes" />
+				<File Id="ev_notebook_flatshort.rtf" Name="EV_NOT~1.RTF" LongName="ev_notebook_flatshort.rtf" />
+				<File Id="ev_button_flatshort.rtf" Name="EV_BUT~1.RTF" LongName="ev_button_flatshort.rtf" />
+				<File Id="V5" Name="EV_VER~4.RTF" LongName="ev_vertical_scroll_bar_flatshort.rtf" />
+				<File Id="ev_tool_bar_flatshort.rtf" Name="EV_TOO~1.RTF" LongName="ev_tool_bar_flatshort.rtf" />
+				<File Id="ev_checkable_list_flatshort.rtf" Name="EV_CHE~1.RTF" LongName="ev_checkable_list_flatshort.rtf" />
+				<File Id="ev_scrollable_area_flatshort.rtf" Name="EV_SCR~1.RTF" LongName="ev_scrollable_area_flatshort.rtf" />
+				<File Id="V7" Name="EV8524~1.RTF" LongName="ev_horizontal_separator_flatshort.rtf" />
+				<File Id="ev_text_field_flatshort.rtf" Name="EV_TEX~1.RTF" LongName="ev_text_field_flatshort.rtf" />
+				<File Id="ev_password_field_flatshort.rtf" Name="EV_PAS~1.RTF" LongName="ev_password_field_flatshort.rtf" />
+				<File Id="ev_table_flatshort.rtf" Name="EV_TAB~1.RTF" LongName="ev_table_flatshort.rtf" />
+				<File Id="ev_spin_button_flatshort.rtf" Name="EV_SPI~1.RTF" LongName="ev_spin_button_flatshort.rtf" />
+				<File Id="V9" Name="EVA3AF~1.RTF" LongName="ev_horizontal_split_area_flatshort.rtf" />
+				<File Id="ev_vertical_separator_flatshort.rtf" Name="EVAC46~1.RTF" LongName="ev_vertical_separator_flatshort.rtf" />
+				<File Id="ev_label_flatshort.rtf" Name="EV_LAB~1.RTF" LongName="ev_label_flatshort.rtf" />
+				<File Id="ev_vertical_range_flatshort.rtf" Name="EV_VER~3.RTF" LongName="ev_vertical_range_flatshort.rtf" />
+				<File Id="ev_frame_flatshort.rtf" Name="EV_FRA~1.RTF" LongName="ev_frame_flatshort.rtf" />
+				<File Id="ev_tree_flatshort.rtf" Name="EV_TRE~1.RTF" LongName="ev_tree_flatshort.rtf" />
+				<File Id="ev_toggle_button_flatshort.rtf" Name="EV_TOG~1.RTF" LongName="ev_toggle_button_flatshort.rtf" />
+				<File Id="ev_pixmap_flatshort.rtf" Name="EV_PIX~1.RTF" LongName="ev_pixmap_flatshort.rtf" />
+				<File Id="V13" Name="EV_HOR~2.RTF" LongName="ev_horizontal_progress_bar_flatshort.rtf" />
+				<File Id="ev_viewport_flatshort.rtf" Name="EV_VIE~1.RTF" LongName="ev_viewport_flatshort.rtf" />
+				<File Id="ev_text_flatshort.rtf" Name="EV_TEX~2.RTF" LongName="ev_text_flatshort.rtf" />
+			  <File Id="ev_radio_button_flatshort.rtf" Name="EV_RAD~1.RTF" LongName="ev_radio_button_flatshort.rtf" />
+			  <File Id="ev_combo_box_flatshort.rtf" Name="EV_COM~1.RTF" LongName="ev_combo_box_flatshort.rtf" />
+			  <File Id="ev_list_flatshort.rtf" Name="EV_LIS~1.RTF" LongName="ev_list_flatshort.rtf" />
+			  <File Id="V17" Name="EVC2C1~1.RTF" LongName="ev_vertical_split_area_flatshort.rtf" />
+			  <File Id="V18" Name="EV_HOR~4.RTF" LongName="ev_horizontal_scroll_bar_flatshort.rtf" />
+			  <File Id="ev_horizontal_range_flatshort.rtf" Name="EV_HOR~3.RTF" LongName="ev_horizontal_range_flatshort.rtf" />
+			  <File Id="V23" Name="EV_VER~2.RTF" LongName="ev_vertical_progress_bar_flatshort.rtf" />
+			  <File Id="ev_drawing_area_flatshort.rtf" Name="EV_DRA~1.RTF" LongName="ev_drawing_area_flatshort.rtf" />
+			  <File Id="ev_check_button_flatshort.rtf" Name="EV_CHE~2.RTF" LongName="ev_check_button_flatshort.rtf" />
+			  <File Id="ev_cell_flatshort.rtf" Name="EV_CEL~1.RTF" LongName="ev_cell_flatshort.rtf" />
+			  <File Id="ev_vertical_box_flatshort.rtf" Name="EV_VER~1.RTF" LongName="ev_vertical_box_flatshort.rtf" />
+			  <File Id="ev_multi_column_list_flatshort.rtf" Name="EV_MUL~1.RTF" LongName="ev_multi_column_list_flatshort.rtf" />
+			  <File Id="ev_fixed_flatshort.rtf" Name="EV_FIX~1.RTF" LongName="ev_fixed_flatshort.rtf" />
+            </Component>
+		</Directory>
+		-->
+          <Directory Id="templates" Name="TEMPLA~1" LongName="templates">
+            <Component Id="templates" Guid="72593478-561B-45E6-A483-7CCD2D161E36">
+              <File Id="application_template.e" Name="APPLIC~1.E" LongName="application_template.e" KeyPath="yes" />
+              <File Id="build_class_template.e" Name="BUILD_~1.E" LongName="build_class_template.e" />
+              <File Id="common_test.e24" Name="COMMON~2.E" LongName="common_test.e" />
+            </Component>
+            <Directory Id="generation_only" Name="GENERA~1" LongName="generation_only">
+              <Component Id="generation_only" Guid="D6FFA04B-9784-434C-ADA2-8A83C9B6E006">
+                <File Id="common_test.e" Name="COMMON~1.E" LongName="common_test.e" KeyPath="yes" />
+              </Component>
+            </Directory>
+            <Directory Id="windows1" Name="windows">
+              <Component Id="windows1" Guid="705A7642-1678-4D9C-9680-86715557CF90">
+                <File Id="ace_template.ace" Name="ACE_TE~1.ACE" LongName="ace_template.ace" KeyPath="yes" />
+              </Component>
+            </Directory>
+            <Directory Id="unix" Name="unix">
+              <Component Id="unix" Guid="368BD467-8EE7-4848-B77D-EEBA14A1E4D1">
+                <File Id="ace_template.ace20" Name="ACE_TE~2.ACE" LongName="ace_template.ace" KeyPath="yes" />
+              </Component>
+            </Directory>
+          </Directory>
+          <Directory Id="bitmaps" Name="bitmaps">
+            <Directory Id="png" Name="png">
+              <Component Id="png" Guid="38C37533-C73C-4F8B-9712-F293DA62C4BA">
+                <File Id="size_down.png" Name="SIZE_D~1.PNG" LongName="size_down.png" />
+                <File Id="testing.png" Name="testing.png" />
+                <File Id="properties.png" Name="PROPER~1.PNG" LongName="properties.png" />
+                <File Id="documentation.png" Name="DOCUME~1.PNG" LongName="documentation.png" />
+                <File Id="size_up.png" Name="size_up.png" />
+                <File Id="image1.png" Name="image1.png" />
+                <File Id="image2.png" Name="image2.png" />
+                <File Id="ev_menu_separator.png" Name="EV_MEN~3.PNG" LongName="ev_menu_separator.png" KeyPath="yes" />
+                <File Id="ev_combo_box.png" Name="EV_COM~1.PNG" LongName="ev_combo_box.png" />
+                <File Id="icon_object_symbol.png" Name="ICON_O~2.PNG" LongName="icon_object_symbol.png" />
+                <File Id="icon_new_class_color.png" Name="ICON_N~1.PNG" LongName="icon_new_class_color.png" />
+                <File Id="icon_display_window_color.png" Name="ICON_D~2.PNG" LongName="icon_display_window_color.png" />
+                <File Id="icon_component_build_view_color.png" Name="IC1A54~1.PNG" LongName="icon_component_build_view_color.png" />
+                <File Id="icon_builder_window_color.png" Name="ICON_B~1.PNG" LongName="icon_builder_window_color.png" />
+                <File Id="ev_tree.png" Name="ev_tree.png" />
+                <File Id="ev_check_menu_item.png" Name="EV_CHE~3.PNG" LongName="ev_check_menu_item.png" />
+                <File Id="ev_button.png" Name="EV_BUT~1.PNG" LongName="ev_button.png" />
+                <File Id="containers.png" Name="CONTAI~1.PNG" LongName="containers.png" />
+                <File Id="widgets.png" Name="widgets.png" />
+                <File Id="V6" Name="IC4C92~1.PNG" LongName="icon_component_display_view_color.png" />
+                <File Id="icon_build_window_color.png" Name="ICON_B~2.PNG" LongName="icon_build_window_color.png" />
+                <File Id="ev_tool_bar_toggle_button.png" Name="EVAF99~1.PNG" LongName="ev_tool_bar_toggle_button.png" />
+                <File Id="ev_tool_bar.png" Name="EV_TOO~1.PNG" LongName="ev_tool_bar.png" />
+                <File Id="ev_spin_button.png" Name="EV_SPI~1.PNG" LongName="ev_spin_button.png" />
+                <File Id="ev_horizontal_box.png" Name="EV_HOR~1.PNG" LongName="ev_horizontal_box.png" />
+                <File Id="ev_container.png" Name="EV_CON~1.PNG" LongName="ev_container.png" />
+                <File Id="icon_new_editor_color.png" Name="ICON_N~2.PNG" LongName="icon_new_editor_color.png" />
+                <File Id="icon_component_viewer_color.png" Name="IC91B7~1.PNG" LongName="icon_component_viewer_color.png" />
+                <File Id="ev_viewport.png" Name="EV_VIE~1.PNG" LongName="ev_viewport.png" />
+                <File Id="ev_list_item.png" Name="EV_LIS~1.PNG" LongName="ev_list_item.png" />
+                <File Id="icon_minimize_color.png" Name="ICON_M~2.PNG" LongName="icon_minimize_color.png" />
+                <File Id="icon_maximize_color.png" Name="ICON_M~1.PNG" LongName="icon_maximize_color.png" />
+                <File Id="ev_vertical_range.png" Name="EV_VER~3.PNG" LongName="ev_vertical_range.png" />
+                <File Id="ev_horizontal_split_area.png" Name="EV2EC1~1.PNG" LongName="ev_horizontal_split_area.png" />
+                <File Id="primitives.png" Name="PRIMIT~1.PNG" LongName="primitives.png" />
+                <File Id="ev_vertical_split_area.png" Name="EVE1BD~1.PNG" LongName="ev_vertical_split_area.png" />
+                <File Id="ev_vertical_separator.png" Name="EV946D~1.PNG" LongName="ev_vertical_separator.png" />
+                <File Id="ev_vertical_progress_bar.png" Name="EV_VER~2.PNG" LongName="ev_vertical_progress_bar.png" />
+                <File Id="ev_text.png" Name="ev_text.png" />
+                <File Id="ev_menu_item.png" Name="EV_MEN~2.PNG" LongName="ev_menu_item.png" />
+                <File Id="ev_menu_bar.png" Name="EV_MEN~1.PNG" LongName="ev_menu_bar.png" />
+                <File Id="ev_frame.png" Name="ev_frame.png" />
+                <File Id="icon_code_generation_color.png" Name="ICON_C~4.PNG" LongName="icon_code_generation_color.png" />
+                <File Id="ev_tool_bar_separator.png" Name="EV_TOO~4.PNG" LongName="ev_tool_bar_separator.png" />
+                <File Id="ev_horizontal_range.png" Name="EV_HOR~3.PNG" LongName="ev_horizontal_range.png" />
+                <File Id="ev_check_button.png" Name="EV_CHE~2.PNG" LongName="ev_check_button.png" />
+                <File Id="items.png" Name="items.png" />
+                <File Id="ev_menu.png" Name="ev_menu.png" />
+                <File Id="icon_system_color.png" Name="ICON_S~2.PNG" LongName="icon_system_color.png" />
+                <File Id="icon_restore_color.png" Name="ICON_R~2.PNG" LongName="icon_restore_color.png" />
+                <File Id="ev_table.png" Name="ev_table.png" />
+                <File Id="ev_radio_button.png" Name="EV_RAD~1.PNG" LongName="ev_radio_button.png" />
+                <File Id="ev_horizontal_scroll_bar.png" Name="EV_HOR~4.PNG" LongName="ev_horizontal_scroll_bar.png" />
+                <File Id="ev_fixed.png" Name="ev_fixed.png" />
+                <File Id="ev_drawing_area.png" Name="EV_DRA~1.PNG" LongName="ev_drawing_area.png" />
+                <File Id="ev_cell.png" Name="ev_cell.png" />
+                <File Id="ev_tree_item.png" Name="EV_TRE~1.PNG" LongName="ev_tree_item.png" />
+                <File Id="icon_redo_color.png" Name="ICON_R~1.PNG" LongName="icon_redo_color.png" />
+                <File Id="icon_delete_small_color.png" Name="ICON_D~1.PNG" LongName="icon_delete_small_color.png" />
+                <File Id="icon_cmd_history_color.png" Name="ICON_C~2.PNG" LongName="icon_cmd_history_color.png" />
+                <File Id="ev_vertical_scroll_bar.png" Name="EV_VER~4.PNG" LongName="ev_vertical_scroll_bar.png" />
+                <File Id="ev_vertical_box.png" Name="EV_VER~1.PNG" LongName="ev_vertical_box.png" />
+                <File Id="ev_tool_bar_button.png" Name="EV_TOO~2.PNG" LongName="ev_tool_bar_button.png" />
+                <File Id="ev_scrollable_area.png" Name="EV_SCR~1.PNG" LongName="ev_scrollable_area.png" />
+                <File Id="icon_save_color.png" Name="ICON_S~1.PNG" LongName="icon_save_color.png" />
+                <File Id="V16" Name="ICON_D~3.PNG" LongName="icon_display_window_window_color.png" />
+                <File Id="icon_component_window_color.png" Name="IC5FB5~1.PNG" LongName="icon_component_window_color.png" />
+                <File Id="icon_close_color.png" Name="ICON_C~1.PNG" LongName="icon_close_color.png" />
+                <File Id="ev_tool_bar_radio_button.png" Name="EV_TOO~3.PNG" LongName="ev_tool_bar_radio_button.png" />
+                <File Id="ev_checkable_list.png" Name="EV_CHE~1.PNG" LongName="ev_checkable_list.png" />
+                <File Id="bm_about.png" Name="bm_about.png" />
+                <File Id="icon_object_window_color.png" Name="ICON_O~3.PNG" LongName="icon_object_window_color.png" />
+                <File Id="ev_pixmap.png" Name="EV_PIX~1.PNG" LongName="ev_pixmap.png" />
+                <File Id="ev_notebook.png" Name="EV_NOT~1.PNG" LongName="ev_notebook.png" />
+                <File Id="icon_undo_color.png" Name="ICON_U~1.PNG" LongName="icon_undo_color.png" />
+                <File Id="icon_object_editor_color.png" Name="ICON_O~1.PNG" LongName="icon_object_editor_color.png" />
+                <File Id="ev_horizontal_progress_bar.png" Name="EV_HOR~2.PNG" LongName="ev_horizontal_progress_bar.png" />
+                <File Id="ev_titled_window.png" Name="EV_TIT~1.PNG" LongName="ev_titled_window.png" />
+                <File Id="ev_password_field.png" Name="EV_PAS~1.PNG" LongName="ev_password_field.png" />
+                <File Id="ev_multi_column_list.png" Name="EV_MUL~1.PNG" LongName="ev_multi_column_list.png" />
+                <File Id="icon_cmd_history_title_color.png" Name="ICON_C~3.PNG" LongName="icon_cmd_history_title_color.png" />
+                <File Id="ev_radio_menu_item.png" Name="EV_RAD~2.PNG" LongName="ev_radio_menu_item.png" />
+                <File Id="ev_list.png" Name="ev_list.png" />
+                <File Id="ev_horizontal_separator.png" Name="EVD088~1.PNG" LongName="ev_horizontal_separator.png" />
+                <File Id="ev_toggle_button.png" Name="EV_TOG~1.PNG" LongName="ev_toggle_button.png" />
+                <File Id="ev_text_field.png" Name="EV_TEX~1.PNG" LongName="ev_text_field.png" />
+                <File Id="ev_label.png" Name="ev_label.png" />
+                <File Id="icon_expand_all_small_color.png" Name="ICON_E~1.PNG" LongName="icon_expand_all_small_color.png" />
+                <File Id="ev_dialog.png" Name="EV_DIA~1.PNG" LongName="ev_dialog.png" />
+                <File Id="icon_titled_window_main_color.png" Name="ICON_T~1.PNG" LongName="icon_titled_window_main_color.png" />
+                <File Id="icon_cluster_symbol_color.png" Name="ICON_C~5.PNG" LongName="icon_cluster_symbol_color.png" />
+                <File Id="icon_new_cluster_small_color.png" Name="ICON_N~3.PNG" LongName="icon_new_cluster_small_color.png" />
+                <File Id="V25" Name="ICON_T~2.PNG" LongName="icon_titled_window_main_small_color.png" />
+                <File Id="icon_view_small_color.png" Name="ICON_V~1.PNG" LongName="icon_view_small_color.png" />
+                <File Id="icon_preference_window.png" Name="ICON_P~3.PNG" LongName="icon_preference_window.png" />
+                <File Id="icon_preferences_root.png" Name="ICON_P~2.PNG" LongName="icon_preferences_root.png" />
+                <File Id="icon_preferences_folder.png" Name="ICON_P~1.PNG" LongName="icon_preferences_folder.png" />
+                <File Id="icon_missing_pixmap_small_color.png" Name="ICON_M~3.PNG" LongName="icon_missing_pixmap_small_color.png" />
+                <File Id="icon_format_onces_color.png" Name="ICON_F~1.PNG" LongName="icon_format_onces_color.png" />
+                <File Id="lightbulb.png" Name="LIGHTB~1.PNG" LongName="lightbulb.png" />
+                <File Id="icon_string_small_color.png" Name="ICON_S~3.PNG" LongName="icon_string_small_color.png" />
+                <File Id="icon_integer_small_color.png" Name="ICON_I~1.PNG" LongName="icon_integer_small_color.png" />
+                <File Id="ev_rich_text.png" Name="EV_RIC~1.PNG" LongName="ev_rich_text.png" />
+              </Component>
+            </Directory>
+            <Directory Id="ico" Name="ico" />
+          </Directory>
+          <Directory Id="tests" Name="tests">
+            <Directory Id="viewport" Name="viewport">
+              <Component Id="viewport" Guid="7EAF0ECB-92C7-41B2-BCC5-A14B1BE27AB0">
+                <File Id="viewport_offset_test.e" Name="VIEWPO~2.E" LongName="viewport_offset_test.e" KeyPath="yes" />
+                <File Id="viewport_advanced_offset_test.e" Name="VIEWPO~1.E" LongName="viewport_advanced_offset_test.e" />
+                <File Id="viewport_small_item_test.e" Name="VIEWPO~3.E" LongName="viewport_small_item_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="vertical_range" Name="VERTIC~1" LongName="vertical_range">
+              <Component Id="vertical_range" Guid="626D4EC5-F8A4-48F2-87B0-939B0623739A">
+                <File Id="vertical_range_value_test.e" Name="VERTIC~3.E" LongName="vertical_range_value_test.e" KeyPath="yes" />
+                <File Id="vertical_range_simple_test.e" Name="VERTIC~6.E" LongName="vertical_range_simple_test.e" />
+                <File Id="vertical_range_adjusting_test.e" Name="VERTIC~E.E" LongName="vertical_range_adjusting_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="tool_bar" Name="tool_bar">
+              <Component Id="tool_bar" Guid="B8FBB21B-4FF2-430A-9BFC-EB5E99305671">
+                <File Id="tool_bar_toggle_button_test.e" Name="TO3B63~1.E" LongName="tool_bar_toggle_button_test.e" KeyPath="yes" />
+                <File Id="tool_bar_radio_button_test.e" Name="TOOL_B~4.E" LongName="tool_bar_radio_button_test.e" />
+                <File Id="tool_bar_combo_box_test.e" Name="TOOL_B~2.E" LongName="tool_bar_combo_box_test.e" />
+                <File Id="tool_bar_basic_test.e" Name="TOOL_B~1.E" LongName="tool_bar_basic_test.e" />
+                <File Id="tool_bar_pixmap_test.e" Name="TOOL_B~3.E" LongName="tool_bar_pixmap_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="table" Name="table">
+              <Component Id="table" Guid="5B46760A-9B2F-4319-A83A-C6AB8B510740">
+                <File Id="table_single_child_test.e" Name="TABLE_~2.E" LongName="table_single_child_test.e" KeyPath="yes" />
+                <File Id="table_three_children_test.e" Name="TABLE_~4.E" LongName="table_three_children_test.e" />
+                <File Id="table_spacing_test.e" Name="TABLE_~3.E" LongName="table_spacing_test.e" />
+                <File Id="table_many_children_test.e" Name="TABLE_~1.E" LongName="table_many_children_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="password_field" Name="PASSWO~1" LongName="password_field">
+              <Component Id="password_field" Guid="8E85E07B-49B4-4158-B644-CAAB7BBE6C58">
+                <File Id="password_field_basic_test.e" Name="PASSWO~1.E" LongName="password_field_basic_test.e" KeyPath="yes" />
+                <File Id="V12" Name="PASSWO~2.E" LongName="password_field_validate_entry_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="horizontal_progress_bar" Name="HORIZO~1" LongName="horizontal_progress_bar">
+              <Component Id="horizontal_progress_bar" Guid="88DD7321-F935-4F23-B716-96FD431B1235">
+                <File Id="V11" Name="HORIZO~5.E" LongName="horizontal_progress_bar_adjusting_test.e" KeyPath="yes" />
+                <File Id="V14" Name="HORIZO~A.E" LongName="horizontal_progress_bar_simple_test.e" />
+                <File Id="V21" Name="HORIZO~D.E" LongName="horizontal_progress_bar_segmentation_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="frame" Name="frame">
+              <Component Id="frame" Guid="5EF4F039-AD8B-45E4-A043-B7BACEF126CF">
+                <File Id="frame_style_test.e" Name="FRAME_~2.E" LongName="frame_style_test.e" KeyPath="yes" />
+                <File Id="frame_basic_test.e" Name="FRAME_~1.E" LongName="frame_basic_test.e" />
+                <File Id="frame_text_alignment_test.e" Name="FRAME_~3.E" LongName="frame_text_alignment_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="tree" Name="tree">
+              <Component Id="tree" Guid="94D521B5-2A8D-4023-BEF4-4AD25EC899E6">
+                <File Id="tree_expand_test.e" Name="TREE_E~1.E" LongName="tree_expand_test.e" KeyPath="yes" />
+                <File Id="tree_dynamic_test.e" Name="TREE_D~1.E" LongName="tree_dynamic_test.e" />
+                <File Id="tree_pixmap_test.e" Name="TREE_P~1.E" LongName="tree_pixmap_test.e" />
+                <File Id="tree_basic_test.e" Name="TREE_B~1.E" LongName="tree_basic_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="spin_button" Name="SPIN_B~1" LongName="spin_button">
+              <Component Id="spin_button" Guid="6B82F011-D383-42B1-967B-D50A88376EB9">
+                <File Id="spin_button_basic_test.e" Name="SPIN_B~1.E" LongName="spin_button_basic_test.e" KeyPath="yes" />
+                <File Id="spin_button_range_test.e" Name="SPIN_B~2.E" LongName="spin_button_range_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="multi_column_list" Name="MULTI_~1" LongName="multi_column_list">
+              <Component Id="multi_column_list" Guid="BDDD741B-C695-4329-9392-1D8D5837FAAE">
+                <File Id="multi_column_list_basic_test.e" Name="MULTI_~1.E" LongName="multi_column_list_basic_test.e" KeyPath="yes" />
+                <File Id="V10" Name="MULTI_~3.E" LongName="multi_column_list_multiple_selection_test.e" />
+                <File Id="multi_column_list_pixmap_test.e" Name="MULTI_~4.E" LongName="multi_column_list_pixmap_test.e" />
+                <File Id="V19" Name="MULTI_~2.E" LongName="multi_column_list_column_resizing_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="label" Name="label">
+              <Component Id="label" Guid="4E05248B-AC5B-4480-8F05-B398011EE9CE">
+                <File Id="label_text_alignment_test.e" Name="LABEL_~3.E" LongName="label_text_alignment_test.e" KeyPath="yes" />
+                <File Id="label_basic_test.e" Name="LABEL_~1.E" LongName="label_basic_test.e" />
+                <File Id="label_multi_line_test.e" Name="LABEL_~2.E" LongName="label_multi_line_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="horizontal_scroll_bar" Name="HORIZO~2" LongName="horizontal_scroll_bar">
+              <Component Id="horizontal_scroll_bar" Guid="7951117D-3C2E-4BEC-9CC0-80926BE4932C">
+                <File Id="horizontal_scroll_bar_simple_test.e" Name="HORIZO~6.E" LongName="horizontal_scroll_bar_simple_test.e" KeyPath="yes" />
+                <File Id="V20" Name="HORIZO~C.E" LongName="horizontal_scroll_bar_adjusting_test.e" />
+                <File Id="horizontal_scroll_bar_value_test.e" Name="HORIZO~F.E" LongName="horizontal_scroll_bar_value_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="horizontal_box" Name="HORIZO~3" LongName="horizontal_box">
+              <Component Id="horizontal_box" Guid="AA00ABB0-9CCF-44FF-834A-FF6BE0536DE0">
+                <File Id="horizontal_box_border_width_test.e" Name="HORIZO~4.E" LongName="horizontal_box_border_width_test.e" KeyPath="yes" />
+                <File Id="horizontal_box_padding_width_test.e" Name="HORIZO~8.E" LongName="horizontal_box_padding_width_test.e" />
+                <File Id="V22" Name="HORIZO~E.E" LongName="horizontal_box_disable_item_expand_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="fixed" Name="fixed">
+              <Component Id="fixed" Guid="87E93130-C7C1-4055-857B-05FE85AAC6A2">
+                <File Id="fixed_increase_item_position_test.e" Name="FIXED_~1.E" LongName="fixed_increase_item_position_test.e" KeyPath="yes" />
+                <File Id="fixed_z_order_test.e" Name="FIXED_~4.E" LongName="fixed_z_order_test.e" />
+                <File Id="fixed_set_item_position_test.e" Name="FIXED_~3.E" LongName="fixed_set_item_position_test.e" />
+                <File Id="fixed_pixmap_test.e" Name="FIXED_~2.E" LongName="fixed_pixmap_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="combo_box" Name="COMBO_~1" LongName="combo_box">
+              <Component Id="combo_box" Guid="DCE0E988-BA14-48F6-A878-E854D40BC8DB">
+                <File Id="combo_box_pixmap_test.e" Name="COMBO_~1.E" LongName="combo_box_pixmap_test.e" KeyPath="yes" />
+                <File Id="combo_box_simple_test.e" Name="COMBO_~2.E" LongName="combo_box_simple_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="vertical_progress_bar" Name="VERTIC~2" LongName="vertical_progress_bar">
+              <Component Id="vertical_progress_bar" Guid="4B66F83B-7675-49A2-A34A-1222B1DCB66C">
+                <File Id="V" Name="VERTIC~2.E" LongName="vertical_progress_bar_segmentation_test.e" KeyPath="yes" />
+                <File Id="V2" Name="VERTIC~1.E" LongName="vertical_progress_bar_adjusting_test.e" />
+                <File Id="vertical_progress_bar_simple_test.e" Name="VERTIC~A.E" LongName="vertical_progress_bar_simple_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="toggle_button" Name="TOGGLE~1" LongName="toggle_button">
+              <Component Id="toggle_button" Guid="4EA5AA2C-A1A3-4154-846D-68B32FB8BAA7">
+                <File Id="toggle_button_pixmap_test.e" Name="TOGGLE~2.E" LongName="toggle_button_pixmap_test.e" KeyPath="yes" />
+                <File Id="toggle_button_is_selected_test.e" Name="TOGGLE~1.E" LongName="toggle_button_is_selected_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="button" Name="button">
+              <Component Id="button" Guid="B329C942-024F-457F-B37C-B7910C3EC569">
+                <File Id="button_select_actions_test.e" Name="BUTTON~2.E" LongName="button_select_actions_test.e" KeyPath="yes" />
+                <File Id="button_pixmap_test.e" Name="BUTTON~1.E" LongName="button_pixmap_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="vertical_separator" Name="VERTIC~3" LongName="vertical_separator">
+              <Component Id="vertical_separator" Guid="F4EC912C-CF85-40DC-8754-00815CABD505">
+                <File Id="vertical_separator_basic_test.e" Name="VERTIC~8.E" LongName="vertical_separator_basic_test.e" KeyPath="yes" />
+              </Component>
+            </Directory>
+            <Directory Id="scrollable_area" Name="SCROLL~1" LongName="scrollable_area">
+              <Component Id="scrollable_area" Guid="43744E86-AFDD-4B24-AC1E-7F7EDD76BA7E">
+                <File Id="scrollable_area_large_item_test.e" Name="SCROLL~1.E" LongName="scrollable_area_large_item_test.e" KeyPath="yes" />
+                <File Id="scrollable_area_small_item_test.e" Name="SCROLL~2.E" LongName="scrollable_area_small_item_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="drawing_area" Name="DRAWIN~1" LongName="drawing_area">
+              <Component Id="drawing_area" Guid="E9BA470C-31BC-4523-93C1-D928073CEF5F">
+                <File Id="drawing_area_expose_actions_test.e" Name="DRAWIN~2.E" LongName="drawing_area_expose_actions_test.e" KeyPath="yes" />
+                <File Id="drawing_area_clipped_test.e" Name="DRAWIN~1.E" LongName="drawing_area_clipped_test.e" />
+                <File Id="drawing_area_simple_drawing_test.e" Name="DRAWIN~3.E" LongName="drawing_area_simple_drawing_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="notebook" Name="notebook">
+              <Component Id="notebook" Guid="FDC7656C-5E57-484B-A0A9-1F2C53CC2A13">
+                <File Id="notebook_item_text_test.e" Name="NOTEBO~2.E" LongName="notebook_item_text_test.e" KeyPath="yes" />
+                <File Id="notebook_selection_actions_test.e" Name="NOTEBO~3.E" LongName="notebook_selection_actions_test.e" />
+                <File Id="notebook_extend_test.e" Name="NOTEBO~1.E" LongName="notebook_extend_test.e" />
+                <File Id="notebook_tab_position_test.e" Name="NOTEBO~4.E" LongName="notebook_tab_position_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="horizontal_split_area" Name="HORIZO~4" LongName="horizontal_split_area">
+              <Component Id="horizontal_split_area" Guid="4EF19F77-301E-4A5D-952D-5694E1EF82D1">
+                <File Id="horizontal_split_area_extend_test.e" Name="HORIZO~9.E" LongName="horizontal_split_area_extend_test.e" KeyPath="yes" />
+                <File Id="V15" Name="HORIZO~B.E" LongName="horizontal_split_area_single_child_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="radio_button" Name="RADIO_~1" LongName="radio_button">
+              <Component Id="radio_button" Guid="88786437-54E8-4BFE-AD39-3298B7278046">
+                <File Id="radio_button_basic_test.e" Name="RADIO_~1.E" LongName="radio_button_basic_test.e" KeyPath="yes" />
+                <File Id="radio_button_multiple_test.e" Name="RADIO_~3.E" LongName="radio_button_multiple_test.e" />
+                <File Id="radio_button_selected_test.e" Name="RADIO_~4.E" LongName="radio_button_selected_test.e" />
+                <File Id="radio_button_grouping_test.e" Name="RADIO_~2.E" LongName="radio_button_grouping_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="pixmap" Name="pixmap">
+              <Component Id="pixmap" Guid="2D45AA62-C412-4E8A-BF6F-59E1BB31F920">
+                <File Id="pixmap_drawing_test.e" Name="PIXMAP~2.E" LongName="pixmap_drawing_test.e" KeyPath="yes" />
+                <File Id="pixmap_basic_test.e" Name="PIXMAP~1.E" LongName="pixmap_basic_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="cell" Name="cell">
+              <Component Id="cell" Guid="E1AC7139-C5CA-443C-B567-D5186C08627A">
+                <File Id="cell_basic_test.e" Name="CELL_B~2.E" LongName="cell_basic_test.e" KeyPath="yes" />
+                <File Id="cell_as_padding_test.e" Name="CELL_A~1.E" LongName="cell_as_padding_test.e" />
+                <File Id="cell_background_pixmap_test.e" Name="CELL_B~1.E" LongName="cell_background_pixmap_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="vertical_scroll_bar" Name="VERTIC~4" LongName="vertical_scroll_bar">
+              <Component Id="vertical_scroll_bar" Guid="6EF123FD-960B-421E-9BBB-AA6B5E707A5F">
+                <File Id="V8" Name="VERTIC~7.E" LongName="vertical_scroll_bar_adjusting_test.e" KeyPath="yes" />
+                <File Id="vertical_scroll_bar_value_test.e" Name="VERTIC~9.E" LongName="vertical_scroll_bar_value_test.e" />
+                <File Id="vertical_scroll_bar_simple_test.e" Name="VERTIC~D.E" LongName="vertical_scroll_bar_simple_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="vertical_box" Name="VERTIC~5" LongName="vertical_box">
+              <Component Id="vertical_box" Guid="8877C310-2FEF-4896-BF97-1D77F9F90EEB">
+                <File Id="V3" Name="VERTIC~4.E" LongName="vertical_box_disable_item_expand_test.e" KeyPath="yes" />
+                <File Id="vertical_box_border_width_test.e" Name="VERTIC~B.E" LongName="vertical_box_border_width_test.e" />
+                <File Id="vertical_box_padding_width_test.e" Name="VERTIC~C.E" LongName="vertical_box_padding_width_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="list" Name="list">
+              <Component Id="list" Guid="BF786B8B-7EDF-40F4-8910-003B8D5B6D87">
+                <File Id="list_pixmap_test.e" Name="LIST_P~1.E" LongName="list_pixmap_test.e" KeyPath="yes" />
+                <File Id="list_basic_test.e" Name="LIST_B~1.E" LongName="list_basic_test.e" />
+                <File Id="list_multiple_selection_test.e" Name="LIST_M~1.E" LongName="list_multiple_selection_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="vertical_split_area" Name="VERTIC~6" LongName="vertical_split_area">
+              <Component Id="vertical_split_area" Guid="4BCA817C-5AF2-45C5-93CB-A7235C79F229">
+                <File Id="V4" Name="VERTIC~5.E" LongName="vertical_split_area_single_child_test.e" KeyPath="yes" />
+                <File Id="vertical_split_area_extend_test.e" Name="VERTIC~F.E" LongName="vertical_split_area_extend_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="horizontal_range" Name="HORIZO~5" LongName="horizontal_range">
+              <Component Id="horizontal_range" Guid="785831A0-8EE2-4316-B3C1-1D1426E53090">
+                <File Id="horizontal_range_simple_test.e" Name="HORIZO~2.E" LongName="horizontal_range_simple_test.e" KeyPath="yes" />
+                <File Id="horizontal_range_adjusting_test.e" Name="HORIZO~3.E" LongName="horizontal_range_adjusting_test.e" />
+                <File Id="horizontal_range_value_test.e" Name="HORIZO~7.E" LongName="horizontal_range_value_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="text" Name="text">
+              <Component Id="text" Guid="11F512BA-FC2B-4C5C-A064-9351D8010DCC">
+                <File Id="text_scroll_to_line_test.e" Name="TEXT_S~1.E" LongName="text_scroll_to_line_test.e" KeyPath="yes" />
+                <File Id="text_basic_test.e" Name="TEXT_B~1.E" LongName="text_basic_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="check_button" Name="CHECK_~1" LongName="check_button">
+              <Component Id="check_button" Guid="AEE6113A-5CF2-40AF-8FFE-76529917DC50">
+                <File Id="check_button_select_actions_test.e" Name="CHECK_~1.E" LongName="check_button_select_actions_test.e" KeyPath="yes" />
+                <File Id="check_button_simple_test.e" Name="CHECK_~2.E" LongName="check_button_simple_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="checkable_list" Name="CHECKA~1" LongName="checkable_list">
+              <Component Id="checkable_list" Guid="BAC9AB39-E322-4C3D-B726-C4B738CA3213">
+                <File Id="checkable_list_pixmap_test.e" Name="CHECKA~2.E" LongName="checkable_list_pixmap_test.e" KeyPath="yes" />
+                <File Id="checkable_list_basic_test.e" Name="CHECKA~1.E" LongName="checkable_list_basic_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="text_field" Name="TEXT_F~1" LongName="text_field">
+              <Component Id="text_field" Guid="B230C95B-B904-4229-8C83-E92CDBAD90FC">
+                <File Id="text_field_validate_entry_test.e" Name="TEXT_F~2.E" LongName="text_field_validate_entry_test.e" KeyPath="yes" />
+                <File Id="text_field_basic_test.e" Name="TEXT_F~1.E" LongName="text_field_basic_test.e" />
+              </Component>
+            </Directory>
+            <Directory Id="horizontal_separator" Name="HORIZO~6" LongName="horizontal_separator">
+              <Component Id="horizontal_separator" Guid="84D0E60A-A247-457E-9184-B9EC49F3C098">
+                <File Id="horizontal_separator_basic_test.e" Name="HORIZO~1.E" LongName="horizontal_separator_basic_test.e" KeyPath="yes" />
+              </Component>
+            </Directory>
+          </Directory>
+          <Directory Id="spec" Name="spec">
+            <Directory Id="windows" Name="windows">
+              <Directory Id="bin" Name="bin">
+                <Component Id="wel_hook.dll" Guid="E734C5C6-261A-435A-ADC3-625B85E44881">
+                  <File Id="wel_hook.dll" Name="wel_hook.dll" KeyPath="yes" />
+                </Component>
+                <Component Id="VISION1.EXE" Guid="ED8D2B15-007F-4611-9E13-4C5201289287">
+                  <File Id="vision2_tour.exe" Name="VISION~1.EXE" LongName="vision2_tour.exe" KeyPath="yes" />
+                </Component>
+              </Directory>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+    <UI />
+  </Module>
+</Wix>

@@ -1,0 +1,1619 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
+  <Module Id="base_libraries" Guid="4004275F-B3A3-4A76-A234-BE50E5C3382A" Language="0" Version="5.5">
+    <Package Id="4004275F-B3A3-4A76-A234-BE50E5C3382A" Keywords="MergeModule, MSI, Database" Description="Base libraries" Manufacturer="ISE Inc." InstallerVersion="200" Languages="0" Compressed="yes" SummaryCodepage="0" Comments="Base libraries" />
+	<Directory Id="TARGETDIR" Name="SourceDir">
+	  <Directory Id="Application" Name=".">
+        <Directory Id="examples" Name="examples">
+          <Directory Id="Eiffel2Java7" Name="EIFFEL~2" LongName="Eiffel2Java">
+            <Component Id="Eiffel2Java7" Guid="F773D936-6807-412B-BF82-B50280516FC4">
+              <File Id="Ace.unix.ace88" Name="ACEUNI~5.ACE" LongName="Ace.unix.ace" KeyPath="yes" />
+              <File Id="test.java" Name="TEST~1.JAV" LongName="test.java" />
+              <File Id="Ace.mswin.ace89" Name="ACEMSW~5.ACE" LongName="Ace.mswin.ace" />
+              <File Id="root_class.e90" Name="ROOT_C~6.E" LongName="root_class.e" />
+              <File Id="Ace.dotnet.ace" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+              <File Id="test.class" Name="TEST~1.CLA" LongName="test.class" />
+            </Component>
+          </Directory>
+          <Directory Id="lex8" Name="lex">
+            <Component Id="lex8" Guid="8D294AD8-D609-4F7E-8ADA-58F5BC153E83">
+              <File Id="eiffel_scan.e" Name="EIFFEL~1.E" LongName="eiffel_scan.e" KeyPath="yes" />
+              <File Id="sample_file.e" Name="SAMPLE~1.E" LongName="sample_file.e" />
+              <File Id="eiffel_regular" Name="EIFFEL~1" LongName="eiffel_regular" />
+              <File Id="Ace.ace91" Name="Ace.ace" />
+              <File Id="Readme92" Name="Readme" />
+            </Component>
+          </Directory>
+          <Directory Id="net9" Name="net">
+            <Component Id="net9" Guid="2CB60A57-7427-4CC1-AA7D-2276545B360C">
+              <File Id="Readme.txt86" Name="Readme.txt" KeyPath="yes" />
+            </Component>
+            <Directory Id="polling10" Name="polling">
+              <Directory Id="common13" Name="common">
+                <Component Id="common13" Guid="9B2C118C-1208-40C7-B188-EBE7C0173D37">
+                  <File Id="datagram_reader.e" Name="DATAGR~3.E" LongName="datagram_reader.e" KeyPath="yes" />
+                </Component>
+              </Directory>
+              <Directory Id="client17" Name="client">
+                <Component Id="client17" Guid="D73F3510-44A0-49F2-BDD4-3EE47001798C">
+                  <File Id="client.e102" Name="client.e" KeyPath="yes" />
+                  <File Id="Ace.unix.ace103" Name="ACEUNI~8.ACE" LongName="Ace.unix.ace" />
+                  <File Id="client_datagram_writer.e" Name="CLIENT~1.E" LongName="client_datagram_writer.e" />
+                  <File Id="Ace.mswin.ace117" Name="ACEMSW~B.ACE" LongName="Ace.mswin.ace" />
+                </Component>
+              </Directory>
+              <Directory Id="server19" Name="server">
+                <Component Id="server19" Guid="A3848C87-6CF6-43F0-861E-5523AA4ED971">
+                  <File Id="server.e105" Name="server.e" KeyPath="yes" />
+                  <File Id="server_datagram_writer.e" Name="SERVER~1.E" LongName="server_datagram_writer.e" />
+                  <File Id="Ace.mswin.ace116" Name="ACEMSW~A.ACE" LongName="Ace.mswin.ace" />
+                  <File Id="Ace.unix.ace119" Name="ACEUNI~F.ACE" LongName="Ace.unix.ace" />
+                </Component>
+              </Directory>
+            </Directory>
+            <Directory Id="advanced" Name="advanced">
+              <Directory Id="common11" Name="common">
+                <Component Id="common11" Guid="2E917329-7392-4967-B484-2888232E61D3">
+                  <File Id="message.e94" Name="message.e" KeyPath="yes" />
+                  <File Id="connection.e" Name="CONNEC~1.E" LongName="connection.e" />
+                </Component>
+              </Directory>
+              <Directory Id="chat" Name="chat">
+                <Component Id="chat" Guid="AB0BE89D-B3FE-4AA3-951D-19E1670B9B61">
+                  <File Id="chat.e" Name="chat.e" KeyPath="yes" />
+                  <File Id="Ace.unix.ace111" Name="ACEUNI~B.ACE" LongName="Ace.unix.ace" />
+                </Component>
+              </Directory>
+              <Directory Id="join" Name="join">
+                <Component Id="join" Guid="829C418D-A38B-4985-AA59-BF0AB8FD841D">
+                  <File Id="join.e" Name="join.e" KeyPath="yes" />
+                  <File Id="Ace.unix.ace110" Name="ACEUNI~A.ACE" LongName="Ace.unix.ace" />
+                </Component>
+              </Directory>
+            </Directory>
+            <Directory Id="two_mach" Name="two_mach">
+              <Directory Id="client12" Name="client">
+                <Component Id="client12" Guid="0FF7BE68-7C3A-4608-9949-0BA577E12D1E">
+                  <File Id="client.e95" Name="client.e" KeyPath="yes" />
+                  <File Id="Ace.mswin.ace106" Name="ACEMSW~9.ACE" LongName="Ace.mswin.ace" />
+                  <File Id="Ace.unix.ace118" Name="ACEUNI~E.ACE" LongName="Ace.unix.ace" />
+                </Component>
+              </Directory>
+              <Directory Id="server" Name="server">
+                <Component Id="server" Guid="DC41B6C3-D0F4-4044-94C1-EB8D5D64FA16">
+                  <File Id="server.e96" Name="server.e" KeyPath="yes" />
+                  <File Id="Ace.mswin.ace99" Name="ACEMSW~7.ACE" LongName="Ace.mswin.ace" />
+                  <File Id="Ace.unix.ace107" Name="ACEUNI~9.ACE" LongName="Ace.unix.ace" />
+                </Component>
+              </Directory>
+              <Directory Id="common18" Name="common">
+                <Component Id="common18" Guid="D800712A-0DB1-4621-A0DB-B6A98C7D2D1B">
+                  <File Id="message.e104" Name="message.e" KeyPath="yes" />
+                </Component>
+              </Directory>
+            </Directory>
+            <Directory Id="transport" Name="TRANSP~1" LongName="transport">
+              <Directory Id="smtp" Name="smtp">
+                <Component Id="smtp" Guid="1A00FA14-D481-4137-9944-13E00FE5AE44">
+                  <File Id="smtp_client.e" Name="SMTP_C~1.E" LongName="smtp_client.e" KeyPath="yes" />
+                  <File Id="Ace.mswin.ace7" Name="ACEMSW~A.ACE" LongName="Ace.mswin.ace" />
+                  <File Id="Ace.unix.ace8" Name="ACEUNI~A.ACE" LongName="Ace.unix.ace" />
+                </Component>
+              </Directory>
+            </Directory>
+            <Directory Id="predef" Name="predef">
+              <Directory Id="common" Name="common">
+                <Component Id="common" Guid="CFE13808-A9FC-4EBC-9C5D-0D90DA44A6D0">
+                  <File Id="message.e" Name="message.e" KeyPath="yes" />
+                </Component>
+              </Directory>
+              <Directory Id="server14" Name="server">
+                <Component Id="server14" Guid="0E337867-779A-4DA2-9F4F-9DCC70B98998">
+                  <File Id="Ace.unix.ace97" Name="ACEUNI~7.ACE" LongName="Ace.unix.ace" KeyPath="yes" />
+                  <File Id="Ace.mswin.ace98" Name="ACEMSW~6.ACE" LongName="Ace.mswin.ace" />
+                  <File Id="server.e115" Name="server.e" />
+                </Component>
+              </Directory>
+              <Directory Id="client16" Name="client">
+                <Component Id="client16" Guid="DA0B0FEB-A98C-47DB-BE37-4997766D1E28">
+                  <File Id="client.e113" Name="client.e" KeyPath="yes" />
+                  <File Id="Ace.unix.ace114" Name="ACEUNI~D.ACE" LongName="Ace.unix.ace" />
+                  <File Id="Ace.mswin.ace87" Name="ACEMSW~A.ACE" LongName="Ace.mswin.ace" />
+                </Component>
+              </Directory>
+            </Directory>
+            <Directory Id="same_mach" Name="SAME_M~1" LongName="same_mach">
+              <Directory Id="client" Name="client">
+                <Component Id="client" Guid="ED91F1BE-297B-4E91-AB76-E75786929A3B">
+                  <File Id="Ace.unix.ace93" Name="ACEUNI~6.ACE" LongName="Ace.unix.ace" KeyPath="yes" />
+                  <File Id="client.e109" Name="client.e" />
+                </Component>
+              </Directory>
+              <Directory Id="common15" Name="common">
+                <Component Id="common15" Guid="C56D804A-EE16-41C9-A1E9-6AEC02F606DE">
+                  <File Id="message.e100" Name="message.e" KeyPath="yes" />
+                </Component>
+              </Directory>
+              <Directory Id="server20" Name="server">
+                <Component Id="server20" Guid="0CF8474E-4F8F-4AE5-AC40-050BD888C01A">
+                  <File Id="Ace.unix.ace112" Name="ACEUNI~C.ACE" LongName="Ace.unix.ace" KeyPath="yes" />
+                  <File Id="server.e85" Name="server.e" />
+                </Component>
+              </Directory>
+            </Directory>
+          </Directory>
+          <Directory Id="parse21" Name="parse">
+            <Component Id="parse21" Guid="A9F09EED-0131-4611-8E5B-672EAFD54FA5">
+              <File Id="int_constant.e" Name="INT_CO~1.E" LongName="int_constant.e" KeyPath="yes" />
+              <File Id="term.e" Name="term.e" />
+              <File Id="constants.e" Name="CONSTA~1.E" LongName="constants.e" />
+              <File Id="test_file" Name="TEST_F~1" LongName="test_file" />
+              <File Id="simple_var.e" Name="SIMPLE~1.E" LongName="simple_var.e" />
+              <File Id="product.e" Name="product.e" />
+              <File Id="polynom.e" Name="polynom.e" />
+              <File Id="nested.e" Name="nested.e" />
+              <File Id="variables.e" Name="VARIAB~1.E" LongName="variables.e" />
+              <File Id="process.e" Name="process.e" />
+              <File Id="Ace.ace120" Name="Ace.ace" />
+              <File Id="var.e" Name="var.e" />
+              <File Id="polynom_info.e" Name="POLYNO~1.E" LongName="polynom_info.e" />
+              <File Id="line.e" Name="line.e" />
+              <File Id="diff.e" Name="diff.e" />
+              <File Id="poly_lex.e" Name="poly_lex.e" />
+              <File Id="poly_integer.e" Name="POLY_I~1.E" LongName="poly_integer.e" />
+              <File Id="identifier.e" Name="IDENTI~3.E" LongName="identifier.e" />
+              <File Id="sum.e" Name="sum.e" />
+              <File Id="Readme121" Name="Readme" />
+            </Component>
+          </Directory>
+          <Directory Id="store26" Name="store">
+            <Component Id="store26" Guid="A1B47710-E80A-40EC-855E-956ACB7A510A">
+              <File Id="Readme204" Name="Readme" KeyPath="yes" />
+            </Component>
+            <Directory Id="Utilities" Name="UTILIT~1" LongName="Utilities">
+              <Component Id="Utilities" Guid="EC774366-1461-4BA8-91DC-1AF234411671">
+                <File Id="orders.e" Name="orders.e" KeyPath="yes" />
+                <File Id="human.e" Name="human.e" />
+                <File Id="book2.e" Name="book2.e" />
+                <File Id="customer.e170" Name="customer.e" />
+                <File Id="country.e" Name="country.e" />
+                <File Id="book.e" Name="book.e" />
+                <File Id="result" Name="result" />
+                <File Id="Readme199" Name="Readme" />
+              </Component>
+              <Directory Id="odbc27" Name="odbc">
+                <Component Id="odbc27" Guid="DAD86A4C-91F8-4D11-8EE2-7C66D449C34C">
+                  <File Id="test_i.e" Name="test_i.e" KeyPath="yes" />
+                  <File Id="action_1_i.e169" Name="ACTION~8.E" LongName="action_1_i.e" />
+                  <File Id="action_2_i.e174" Name="ACTION~9.E" LongName="action_2_i.e" />
+                  <File Id="rdb_handle.e193" Name="RDB_HA~4.E" LongName="rdb_handle.e" />
+                </Component>
+              </Directory>
+              <Directory Id="ingres28" Name="ingres">
+                <Component Id="ingres28" Guid="8642ABC5-BFC0-4CD9-8E13-0EF5EEF03A4B">
+                  <File Id="rdb_handle.e" Name="RDB_HA~1.E" LongName="rdb_handle.e" KeyPath="yes" />
+                  <File Id="test_i.e156" Name="test_i.e" />
+                  <File Id="action_1_i.e187" Name="ACTION~A.E" LongName="action_1_i.e" />
+                  <File Id="action_2_i.e189" Name="ACTION~B.E" LongName="action_2_i.e" />
+                </Component>
+              </Directory>
+              <Directory Id="sybase29" Name="sybase">
+                <Component Id="sybase29" Guid="C0026815-C7F1-4B6E-9E72-7BEE5695EB7B">
+                  <File Id="action_1_i.e" Name="ACTION~2.E" LongName="action_1_i.e" KeyPath="yes" />
+                  <File Id="action_2_i.e" Name="ACTION~3.E" LongName="action_2_i.e" />
+                  <File Id="rdb_handle.e167" Name="RDB_HA~2.E" LongName="rdb_handle.e" />
+                  <File Id="test_i.e186" Name="test_i.e" />
+                </Component>
+              </Directory>
+              <Directory Id="oracle30" Name="oracle">
+                <Component Id="oracle30" Guid="4C2AE60A-0306-4692-AD33-D47EE75397FD">
+                  <File Id="action_1_i.e162" Name="ACTION~5.E" LongName="action_1_i.e" KeyPath="yes" />
+                  <File Id="action_2_i.e168" Name="ACTION~7.E" LongName="action_2_i.e" />
+                  <File Id="rdb_handle.e188" Name="RDB_HA~3.E" LongName="rdb_handle.e" />
+                  <File Id="test_i.e200" Name="test_i.e" />
+                </Component>
+              </Directory>
+            </Directory>
+            <Directory Id="rm2oom" Name="rm2oom">
+              <Component Id="rm2oom" Guid="3C640042-EFA9-45D9-8818-533496D8C9F0">
+                <File Id="mapper.e" Name="mapper.e" KeyPath="yes" />
+                <File Id="Ace.sybase.windows.ace139" Name="ACESYB~8.ACE" LongName="Ace.sybase.windows.ace" />
+                <File Id="Ace.odbc.windows.ace140" Name="ACEODB~2.ACE" LongName="Ace.odbc.windows.ace" />
+                <File Id="Ace.oracle.windows.ace144" Name="ACEORA~9.ACE" LongName="Ace.oracle.windows.ace" />
+                <File Id="Ace.ingres.unix.ace148" Name="ACEING~7.ACE" LongName="Ace.ingres.unix.ace" />
+                <File Id="mapODBC.e" Name="mapODBC.e" />
+                <File Id="Ace.sybase.unix.ace176" Name="ACESYB~D.ACE" LongName="Ace.sybase.unix.ace" />
+                <File Id="Ace.ingres.windows.ace177" Name="ACEING~G.ACE" LongName="Ace.ingres.windows.ace" />
+                <File Id="Ace.oracle.unix.ace196" Name="ACEORA~H.ACE" LongName="Ace.oracle.unix.ace" />
+                <File Id="Ace.odbc.dotnet.ace7" Name="ACEODB~F.ACE" LongName="Ace.odbc.dotnet.ace" />
+                <File Id="Readme218" Name="Readme" />
+              </Component>
+            </Directory>
+            <Directory Id="oom2rm" Name="oom2rm">
+              <Component Id="oom2rm" Guid="E93BB3FB-0ACF-4D37-BC36-93110BBA12A5">
+                <File Id="sql_column.e" Name="SQL_CO~1.E" LongName="sql_column.e" KeyPath="yes" />
+                <File Id="Ace.ingres.unix.ace" Name="ACEING~1.ACE" LongName="Ace.ingres.unix.ace" />
+                <File Id="Ace.sybase.windows.ace133" Name="ACESYB~6.ACE" LongName="Ace.sybase.windows.ace" />
+                <File Id="Ace.oracle.windows.ace134" Name="ACEORA~6.ACE" LongName="Ace.oracle.windows.ace" />
+                <File Id="Ace.odbc.windows.ace141" Name="ACEODB~3.ACE" LongName="Ace.odbc.windows.ace" />
+                <File Id="sample.e" Name="sample.e" />
+                <File Id="Ace.sybase.unix.ace150" Name="ACESYB~9.ACE" LongName="Ace.sybase.unix.ace" />
+                <File Id="Ace.ingres.windows.ace164" Name="ACEING~D.ACE" LongName="Ace.ingres.windows.ace" />
+                <File Id="sql_table.e" Name="SQL_TA~1.E" LongName="sql_table.e" />
+                <File Id="keys.e" Name="keys.e" />
+                <File Id="Ace.oracle.unix.ace178" Name="ACEORA~B.ACE" LongName="Ace.oracle.unix.ace" />
+                <File Id="support_class.e" Name="SUPPOR~1.E" LongName="support_class.e" />
+                <File Id="model_traversal.e" Name="MODEL_~1.E" LongName="model_traversal.e" />
+                <File Id="Readme197" Name="Readme" />
+                <File Id="print_request.e" Name="PRINT_~1.E" LongName="print_request.e" />
+                <File Id="translate.e" Name="TRANSL~1.E" LongName="translate.e" />
+                <File Id="model.e" Name="model.e" />
+                <File Id="Ace.odbc.dotnet.ace4" Name="ACEODB~C.ACE" LongName="Ace.odbc.dotnet.ace" />
+              </Component>
+            </Directory>
+            <Directory Id="nesting2" Name="nesting2">
+              <Component Id="nesting2" Guid="676322C6-B170-4098-89B2-53DF5A070DA8">
+                <File Id="Ace.sybase.windows.ace" Name="ACESYB~2.ACE" LongName="Ace.sybase.windows.ace" KeyPath="yes" />
+                <File Id="Ace.oracle.windows.ace" Name="ACEORA~2.ACE" LongName="Ace.oracle.windows.ace" />
+                <File Id="test.e128" Name="test.e" />
+                <File Id="Ace.ingres.unix.ace129" Name="ACEING~3.ACE" LongName="Ace.ingres.unix.ace" />
+                <File Id="testODBC.e" Name="testODBC.e" />
+                <File Id="Ace.ingres.windows.ace149" Name="ACEING~8.ACE" LongName="Ace.ingres.windows.ace" />
+                <File Id="Ace.sybase.unix.ace151" Name="ACESYB~A.ACE" LongName="Ace.sybase.unix.ace" />
+                <File Id="action_1_i.e157" Name="ACTION~4.E" LongName="action_1_i.e" />
+                <File Id="Readme165" Name="Readme" />
+                <File Id="action_2_i.e166" Name="ACTION~6.E" LongName="action_2_i.e" />
+                <File Id="Ace.odbc.windows.ace172" Name="ACEODB~6.ACE" LongName="Ace.odbc.windows.ace" />
+                <File Id="Ace.oracle.unix.ace179" Name="ACEORA~C.ACE" LongName="Ace.oracle.unix.ace" />
+                <File Id="action_1.e" Name="action_1.e" />
+                <File Id="action_2.e" Name="action_2.e" />
+                <File Id="Ace.odbc.dotnet.ace3" Name="ACEODB~B.ACE" LongName="Ace.odbc.dotnet.ace" />
+              </Component>
+            </Directory>
+            <Directory Id="st_proc" Name="st_proc">
+              <Component Id="st_proc" Guid="2BD89CA2-E082-4C02-8AC4-131F41C705DE">
+                <File Id="runner_ora.e" Name="RUNNER~2.E" LongName="runner_ora.e" KeyPath="yes" />
+                <File Id="Ace.oracle.unix.ace" Name="ACEORA~1.ACE" LongName="Ace.oracle.unix.ace" />
+                <File Id="runODBC.e" Name="runODBC.e" />
+                <File Id="runner_ing.e" Name="RUNNER~1.E" LongName="runner_ing.e" />
+                <File Id="Ace.ingres.windows.ace143" Name="ACEING~5.ACE" LongName="Ace.ingres.windows.ace" />
+                <File Id="Ace.ingres.unix.ace175" Name="ACEING~F.ACE" LongName="Ace.ingres.unix.ace" />
+                <File Id="runner.e" Name="runner.e" />
+                <File Id="Ace.sybase.windows.ace194" Name="ACESYB~G.ACE" LongName="Ace.sybase.windows.ace" />
+                <File Id="Ace.oracle.windows.ace195" Name="ACEORA~G.ACE" LongName="Ace.oracle.windows.ace" />
+                <File Id="Readme201" Name="Readme" />
+                <File Id="Ace.sybase.unix.ace202" Name="ACESYB~H.ACE" LongName="Ace.sybase.unix.ace" />
+                <File Id="Ace.odbc.windows.ace203" Name="ACEODB~8.ACE" LongName="Ace.odbc.windows.ace" />
+                <File Id="Ace.odbc.dotnet.ace8" Name="ACEODB~G.ACE" LongName="Ace.odbc.dotnet.ace" />
+              </Component>
+            </Directory>
+            <Directory Id="nesting" Name="nesting">
+              <Component Id="nesting" Guid="00FA9F46-8900-4444-A051-D5F9537BF1AE">
+                <File Id="Readme123" Name="Readme" KeyPath="yes" />
+                <File Id="Ace.ingres.windows.ace" Name="ACEING~2.ACE" LongName="Ace.ingres.windows.ace" />
+                <File Id="Ace.oracle.unix.ace135" Name="ACEORA~7.ACE" LongName="Ace.oracle.unix.ace" />
+                <File Id="testODBC.e145" Name="testODBC.e" />
+                <File Id="Ace.odbc.windows.ace146" Name="ACEODB~4.ACE" LongName="Ace.odbc.windows.ace" />
+                <File Id="test.e180" Name="test.e" />
+                <File Id="Ace.sybase.windows.ace181" Name="ACESYB~E.ACE" LongName="Ace.sybase.windows.ace" />
+                <File Id="Ace.oracle.windows.ace182" Name="ACEORA~D.ACE" LongName="Ace.oracle.windows.ace" />
+                <File Id="Ace.ingres.unix.ace184" Name="ACEING~H.ACE" LongName="Ace.ingres.unix.ace" />
+                <File Id="action_1.e192" Name="action_1.e" />
+                <File Id="action_2.e198" Name="action_2.e" />
+                <File Id="Ace.sybase.unix.ace205" Name="ACESYB~I.ACE" LongName="Ace.sybase.unix.ace" />
+                <File Id="Ace.odbc.dotnet.ace1" Name="ACEODB~B.ACE" LongName="Ace.odbc.dotnet.ace" />
+              </Component>
+            </Directory>
+            <Directory Id="insert" Name="insert">
+              <Component Id="insert" Guid="22A6BB77-09C2-43CB-8F4D-0C2997ED06A2">
+                <File Id="Ace.sybase.windows.ace124" Name="ACESYB~3.ACE" LongName="Ace.sybase.windows.ace" KeyPath="yes" />
+                <File Id="Ace.oracle.windows.ace125" Name="ACEORA~3.ACE" LongName="Ace.oracle.windows.ace" />
+                <File Id="Ace.odbc.windows.ace" Name="ACEODB~1.ACE" LongName="Ace.odbc.windows.ace" />
+                <File Id="Readme130" Name="Readme" />
+                <File Id="inserter.e" Name="inserter.e" />
+                <File Id="Ace.sybase.unix.ace" Name="ACESYB~1.ACE" LongName="Ace.sybase.unix.ace" />
+                <File Id="Ace.ingres.windows.ace152" Name="ACEING~9.ACE" LongName="Ace.ingres.windows.ace" />
+                <File Id="Ace.oracle.unix.ace158" Name="ACEORA~A.ACE" LongName="Ace.oracle.unix.ace" />
+                <File Id="insODBC.e" Name="insODBC.e" />
+                <File Id="Ace.ingres.unix.ace206" Name="ACEING~I.ACE" LongName="Ace.ingres.unix.ace" />
+                <File Id="Ace.odbc.dotnet.ace2" Name="ACEODB~A.ACE" LongName="Ace.odbc.dotnet.ace" />
+              </Component>
+            </Directory>
+            <Directory Id="esql" Name="esql">
+              <Component Id="esql" Guid="FC477E93-B8B9-4AA2-A31E-122CA2133146">
+                <File Id="Ace.sybase.windows.ace126" Name="ACESYB~4.ACE" LongName="Ace.sybase.windows.ace" KeyPath="yes" />
+                <File Id="Ace.oracle.windows.ace127" Name="ACEORA~4.ACE" LongName="Ace.oracle.windows.ace" />
+                <File Id="Ace.ingres.unix.ace136" Name="ACEING~4.ACE" LongName="Ace.ingres.unix.ace" />
+                <File Id="esql.e" Name="esql.e" />
+                <File Id="Readme153" Name="Readme" />
+                <File Id="Ace.sybase.unix.ace154" Name="ACESYB~B.ACE" LongName="Ace.sybase.unix.ace" />
+                <File Id="Ace.ingres.windows.ace155" Name="ACEING~A.ACE" LongName="Ace.ingres.windows.ace" />
+                <File Id="Ace.oracle.unix.ace183" Name="ACEORA~E.ACE" LongName="Ace.oracle.unix.ace" />
+                <File Id="esqlODBC.e" Name="esqlODBC.e" />
+                <File Id="Ace.odbc.windows.ace207" Name="ACEODB~9.ACE" LongName="Ace.odbc.windows.ace" />
+                <File Id="Ace.odbc.dotnet.ace5" Name="ACEODB~D.ACE" LongName="Ace.odbc.dotnet.ace" />
+              </Component>
+            </Directory>
+            <Directory Id="select" Name="select">
+              <Component Id="select" Guid="80EE9D15-99B4-4EFC-BDA5-1531462C6788">
+                <File Id="data.sql.sybase" Name="DATASQ~1.SYB" LongName="data.sql.sybase" KeyPath="yes" />
+                <File Id="Ace.sybase.windows.ace131" Name="ACESYB~5.ACE" LongName="Ace.sybase.windows.ace" />
+                <File Id="Ace.oracle.windows.ace132" Name="ACEORA~5.ACE" LongName="Ace.oracle.windows.ace" />
+                <File Id="Readme138" Name="Readme" />
+                <File Id="data.sql.odbc" Name="DATASQ~1.ODB" LongName="data.sql.odbc" />
+                <File Id="Ace.ingres.unix.ace147" Name="ACEING~6.ACE" LongName="Ace.ingres.unix.ace" />
+                <File Id="selODBC.e" Name="selODBC.e" />
+                <File Id="data.sql.ingres" Name="DATASQ~1.ING" LongName="data.sql.ingres" />
+                <File Id="Ace.ingres.windows.ace163" Name="ACEING~C.ACE" LongName="Ace.ingres.windows.ace" />
+                <File Id="data.sql.oracle" Name="DATASQ~1.ORA" LongName="data.sql.oracle" />
+                <File Id="Ace.sybase.unix.ace171" Name="ACESYB~C.ACE" LongName="Ace.sybase.unix.ace" />
+                <File Id="Ace.oracle.unix.ace190" Name="ACEORA~F.ACE" LongName="Ace.oracle.unix.ace" />
+                <File Id="Ace.odbc.windows.ace191" Name="ACEODB~7.ACE" LongName="Ace.odbc.windows.ace" />
+                <File Id="selector.e" Name="selector.e" />
+                <File Id="Ace.odbc.dotnet.ace" Name="ACEODB~A.ACE" LongName="Ace.odbc.dotnet.ace" />
+              </Component>
+            </Directory>
+            <Directory Id="convert" Name="convert">
+              <Component Id="convert" Guid="4A0FFB00-9163-48F3-A446-47B961948805">
+                <File Id="example1.dat" Name="example1.dat" KeyPath="yes" />
+                <File Id="Ace.sybase.windows.ace137" Name="ACESYB~7.ACE" LongName="Ace.sybase.windows.ace" />
+                <File Id="parser.e" Name="parser.e" />
+                <File Id="example2.dat" Name="example2.dat" />
+                <File Id="Ace.oracle.windows.ace142" Name="ACEORA~8.ACE" LongName="Ace.oracle.windows.ace" />
+                <File Id="Readme159" Name="Readme" />
+                <File Id="Ace.odbc.windows.ace160" Name="ACEODB~5.ACE" LongName="Ace.odbc.windows.ace" />
+                <File Id="Ace.ingres.unix.ace161" Name="ACEING~B.ACE" LongName="Ace.ingres.unix.ace" />
+                <File Id="Ace.ingres.windows.ace173" Name="ACEING~E.ACE" LongName="Ace.ingres.windows.ace" />
+                <File Id="Ace.sybase.unix.ace185" Name="ACESYB~F.ACE" LongName="Ace.sybase.unix.ace" />
+                <File Id="Ace.oracle.unix.ace208" Name="ACEORA~I.ACE" LongName="Ace.oracle.unix.ace" />
+                <File Id="Ace.odbc.dotnet.ace6" Name="ACEODB~E.ACE" LongName="Ace.odbc.dotnet.ace" />
+              </Component>
+            </Directory>
+          </Directory>
+          <Directory Id="base1" Name="base">
+            <Directory Id="support2" Name="support">
+              <Component Id="support2" Guid="5259A871-BC09-40D4-90E6-557DAE5A1DCE">
+                <File Id="Ace.mswin.ace" Name="ACEMSW~1.ACE" LongName="Ace.mswin.ace" KeyPath="yes" />
+                <File Id="formatting.e" Name="FORMAT~3.E" LongName="formatting.e" />
+                <File Id="Ace.unix.ace" Name="ACEUNI~1.ACE" LongName="Ace.unix.ace" />
+                <File Id="demo_driver.e" Name="DEMO_D~1.E" LongName="demo_driver.e" />
+                <File Id="countables.e" Name="COUNTA~3.E" LongName="countables.e" />
+              </Component>
+            </Directory>
+            <Directory Id="desc32" Name="desc-32">
+              <Component Id="desc32" Guid="B2A9330E-0030-4E85-9510-4D1DF2D2CD4E">
+                <File Id="testdesc.lib" Name="testdesc.lib" KeyPath="yes" />
+                <File Id="readme.txt" Name="readme.txt" />
+                <File Id="makefile.m41" Name="makefile.m" />
+                <File Id="Ace.ace42" Name="Ace.ace" />
+                <File Id="testdesc.c" Name="testdesc.c" />
+                <File Id="test.e" Name="test.e" />
+                <File Id="test.rc" Name="test.rc" />
+                <File Id="make.bat" Name="make.bat" />
+                <File Id="test.ico" Name="test.ico" />
+              </Component>
+              <Component Id="testdesc.dll" Guid="310573C5-22B6-43B7-9C47-3419F32A3277">
+                <File Id="testdesc.dll" Name="testdesc.dll" KeyPath="yes" />
+              </Component>
+            </Directory>
+            <Directory Id="structures3" Name="STRUCT~2" LongName="structures">
+              <Component Id="structures3" Guid="BCCC07C6-7211-4C81-A00B-BEA9C619410B">
+                <File Id="mbsts.e" Name="mbsts.e" KeyPath="yes" />
+                <File Id="Ace.mswin.ace43" Name="ACEMSW~2.ACE" LongName="Ace.mswin.ace" />
+                <File Id="two_way_tree_demo.e" Name="TWO_WA~8.E" LongName="two_way_tree_demo.e" />
+                <File Id="Readme45" Name="Readme" />
+                <File Id="binary_tree_demo.e" Name="BINARY~4.E" LongName="binary_tree_demo.e" />
+                <File Id="my_slp.e" Name="my_slp.e" />
+                <File Id="sort_demo.e" Name="SORT_D~1.E" LongName="sort_demo.e" />
+                <File Id="demo_driver.e47" Name="DEMO_D~2.E" LongName="demo_driver.e" />
+                <File Id="binary_search_tree_demo.e" Name="BINARY~5.E" LongName="binary_search_tree_demo.e" />
+                <File Id="structures.e" Name="STRUCT~1.E" LongName="structures.e" />
+                <File Id="msls.e" Name="msls.e" />
+                <File Id="top_demo.e" Name="top_demo.e" />
+                <File Id="sorted_set_demo.e" Name="SORTED~4.E" LongName="sorted_set_demo.e" />
+                <File Id="set_demo.e" Name="set_demo.e" />
+                <File Id="priority_queue_demo.e" Name="PRIORI~2.E" LongName="priority_queue_demo.e" />
+                <File Id="mls.e" Name="mls.e" />
+                <File Id="Ace.unix.ace49" Name="ACEUNI~3.ACE" LongName="Ace.unix.ace" />
+              </Component>
+            </Directory>
+            <Directory Id="calculator" Name="CALCUL~1" LongName="calculator">
+              <Component Id="calculator" Guid="E4095D0A-CBD4-4600-B2BB-34E0CEBA465C">
+                <File Id="interface.e" Name="INTERF~1.E" LongName="interface.e" KeyPath="yes" />
+                <File Id="quit.e" Name="quit.e" />
+                <File Id="divide.e" Name="divide.e" />
+                <File Id="Ace.mswin.ace44" Name="ACEMSW~3.ACE" LongName="Ace.mswin.ace" />
+                <File Id="minus.e" Name="minus.e" />
+                <File Id="help.e" Name="help.e" />
+                <File Id="empty.e" Name="empty.e" />
+                <File Id="state.e46" Name="state.e" />
+                <File Id="set_up.e" Name="set_up.e" />
+                <File Id="question.e" Name="question.e" />
+                <File Id="calculator.e" Name="CALCUL~1.E" LongName="calculator.e" />
+                <File Id="Ace.unix.ace48" Name="ACEUNI~2.ACE" LongName="Ace.unix.ace" />
+                <File Id="multiply.e" Name="multiply.e" />
+                <File Id="Readme50" Name="Readme" />
+                <File Id="plus.e" Name="plus.e" />
+              </Component>
+            </Directory>
+          </Directory>
+          <Directory Id="cecil" Name="cecil">
+            <Directory Id="C2Eiffel" Name="C2Eiffel">
+              <Directory Id="array5" Name="array">
+                <Component Id="array5" Guid="111128FA-5C96-4C52-8338-5779A2828E51">
+                  <File Id="root_class.e56" Name="ROOT_C~2.E" LongName="root_class.e" KeyPath="yes" />
+                  <File Id="Makefile.SH57" Name="Makefile.SH" />
+                  <File Id="my_array.e" Name="my_array.e" />
+                  <File Id="Ace.ace73" Name="Ace.ace" />
+                  <File Id="Makefile.msc78" Name="Makefile.msc" />
+                  <File Id="main.c79" Name="main.c" />
+                  <File Id="Makefile.bcb85" Name="Makefile.bcb" />
+                </Component>
+              </Directory>
+              <Directory Id="string6" Name="string">
+                <Component Id="string6" Guid="6EF7BB5E-9ADE-406E-970D-C43103484E0E">
+                  <File Id="main.c59" Name="main.c" KeyPath="yes" />
+                  <File Id="Ace.ace63" Name="Ace.ace" />
+                  <File Id="Makefile.msc68" Name="Makefile.msc" />
+                  <File Id="Makefile.SH69" Name="Makefile.SH" />
+                  <File Id="Makefile.bcb76" Name="Makefile.bcb" />
+                  <File Id="root_class.e84" Name="ROOT_C~5.E" LongName="root_class.e" />
+                </Component>
+              </Directory>
+            </Directory>
+            <Directory Id="Eiffel2C" Name="Eiffel2C">
+              <Directory Id="string" Name="string">
+                <Component Id="string" Guid="6BBF9EBA-21A0-47A6-A667-3DE7DDB845E5">
+                  <File Id="root_class.e" Name="ROOT_C~1.E" LongName="root_class.e" KeyPath="yes" />
+                  <File Id="Makefile.SH52" Name="Makefile.SH" />
+                  <File Id="Makefile.win60" Name="Makefile.win" />
+                  <File Id="fext.c66" Name="fext.c" />
+                  <File Id="Ace.ace67" Name="Ace.ace" />
+                  <File Id="fext.h77" Name="fext.h" />
+                </Component>
+              </Directory>
+              <Directory Id="object" Name="object">
+                <Component Id="object" Guid="3D67FD44-9F43-4FC6-A421-44B140CBB0D2">
+                  <File Id="Makefile.win" Name="Makefile.win" KeyPath="yes" />
+                  <File Id="object.e" Name="object.e" />
+                  <File Id="fext.c58" Name="fext.c" />
+                  <File Id="Makefile.SH61" Name="Makefile.SH" />
+                  <File Id="Ace.ace62" Name="Ace.ace" />
+                  <File Id="fext.h71" Name="fext.h" />
+                  <File Id="root_class.e80" Name="ROOT_C~3.E" LongName="root_class.e" />
+                </Component>
+              </Directory>
+              <Directory Id="array" Name="array">
+                <Component Id="array" Guid="92D40C0C-C280-48EB-8453-A806197EF296">
+                  <File Id="Makefile.win54" Name="Makefile.win" KeyPath="yes" />
+                  <File Id="Makefile.SH55" Name="Makefile.SH" />
+                  <File Id="fext.c70" Name="fext.c" />
+                  <File Id="Ace.ace72" Name="Ace.ace" />
+                  <File Id="fext.h81" Name="fext.h" />
+                  <File Id="root_class.e82" Name="ROOT_C~4.E" LongName="root_class.e" />
+                </Component>
+              </Directory>
+            </Directory>
+            <Directory Id="thread4" Name="thread">
+              <Directory Id="bank_account" Name="BANK_A~1" LongName="bank_account">
+                <Component Id="bank_account" Guid="A7D7E4C8-74F2-4E8A-B1D7-9BA0E6403A20">
+                  <File Id="customer.e" Name="customer.e" KeyPath="yes" />
+                  <File Id="Makefile.SH51" Name="Makefile.SH" />
+                  <File Id="main.c" Name="main.c" />
+                  <File Id="withdrawer.e" Name="WITHDR~1.E" LongName="withdrawer.e" />
+                  <File Id="fext.c" Name="fext.c" />
+                  <File Id="post_office.e" Name="POST_O~1.E" LongName="post_office.e" />
+                  <File Id="bank_account.e" Name="BANK_A~1.E" LongName="bank_account.e" />
+                  <File Id="Makefile.msc64" Name="Makefile.msc" />
+                  <File Id="cecil.lnk" Name="cecil.lnk" />
+                  <File Id="Ace.ace65" Name="Ace.ace" />
+                  <File Id="saver.e" Name="saver.e" />
+                  <File Id="fext.h" Name="fext.h" />
+                  <File Id="Makefile.bcb74" Name="Makefile.bcb" />
+                  <File Id="depositor.e" Name="DEPOSI~1.E" LongName="depositor.e" />
+                  <File Id="spender.e" Name="spender.e" />
+                </Component>
+              </Directory>
+            </Directory>
+            <Directory Id="ceciltest" Name="CECIL-~1" LongName="cecil-test">
+              <Component Id="ceciltest" Guid="148F570E-5E5C-42A8-ADB5-82CC74D63943">
+                <File Id="Makefile.msc" Name="Makefile.msc" KeyPath="yes" />
+                <File Id="Ace.ace53" Name="Ace.ace" />
+                <File Id="Makefile.bcb" Name="Makefile.bcb" />
+                <File Id="main.c75" Name="main.c" />
+                <File Id="main.e" Name="main.e" />
+                <File Id="Makefile.SH83" Name="Makefile.SH" />
+              </Component>
+            </Directory>
+          </Directory>
+          <Directory Id="cpp" Name="cpp">
+            <Directory Id="mystring" Name="mystring">
+              <Component Id="mystring" Guid="785F9014-3017-41A9-9AF6-0540BD130357">
+                <File Id="Ace.mswin.ace86" Name="ACEMSW~4.ACE" LongName="Ace.mswin.ace" KeyPath="yes" />
+                <File Id="test_cpp.ico" Name="test_cpp.ico" />
+                <File Id="test_cpp.rc" Name="test_cpp.rc" />
+                <File Id="mystring.cpp" Name="mystring.cpp" />
+                <File Id="mystring.e" Name="mystring.e" />
+                <File Id="mystring.h" Name="mystring.h" />
+                <File Id="Ace.unix.ace87" Name="ACEUNI~4.ACE" LongName="Ace.unix.ace" />
+                <File Id="test_cpp.e" Name="test_cpp.e" />
+              </Component>
+            </Directory>
+          </Directory>
+          <Directory Id="studio" Name="studio">
+            <Directory Id="tour" Name="tour">
+              <Component Id="tour" Guid="B25021FD-E2D8-4B3B-BBC9-F221A5D36222">
+                <File Id="invalid.e" Name="invalid.e" KeyPath="yes" />
+                <File Id="parent.e" Name="parent.e" />
+                <File Id="Ace.mswin.ace210" Name="ACEMSW~C.ACE" LongName="Ace.mswin.ace" />
+                <File Id="Ace.unix.ace215" Name="ACEUNI~I.ACE" LongName="Ace.unix.ace" />
+                <File Id="testroot.e" Name="testroot.e" />
+                <File Id="heir.e" Name="heir.e" />
+              </Component>
+            </Directory>
+            <Directory Id="objtour" Name="objtour">
+              <Component Id="objtour" Guid="597E8F61-469E-4F9D-BB51-07327D3E5CBF">
+                <File Id="Ace.unix.ace209" Name="ACEUNI~G.ACE" LongName="Ace.unix.ace" KeyPath="yes" />
+                <File Id="Ace.mswin.ace214" Name="ACEMSW~E.ACE" LongName="Ace.mswin.ace" />
+                <File Id="other.e" Name="other.e" />
+                <File Id="starter.e" Name="starter.e" />
+              </Component>
+            </Directory>
+            <Directory Id="debuggin" Name="debuggin">
+              <Component Id="debuggin" Guid="FFB682BD-8D22-4FBC-A7FB-919C0E3E6DD2">
+                <File Id="example.e" Name="example.e" KeyPath="yes" />
+                <File Id="object.e211" Name="object.e" />
+                <File Id="Ace.mswin.ace212" Name="ACEMSW~D.ACE" LongName="Ace.mswin.ace" />
+                <File Id="Ace.unix.ace213" Name="ACEUNI~H.ACE" LongName="Ace.unix.ace" />
+              </Component>
+            </Directory>
+          </Directory>
+          <Directory Id="thread31" Name="thread">
+            <Directory Id="fancy" Name="fancy">
+              <Component Id="fancy" Guid="254926FD-B823-47D2-824A-8E4ABCD51686">
+                <File Id="fancy.rc" Name="fancy.rc" KeyPath="yes" />
+                <File Id="app_ids.e" Name="app_ids.e" />
+                <File Id="demo_win.e" Name="demo_win.e" />
+                <File Id="demo_cmd.e" Name="demo_cmd.e" />
+                <File Id="app_ids.h" Name="app_ids.h" />
+                <File Id="rectdemo_win.e" Name="RECTDE~2.E" LongName="rectdemo_win.e" />
+                <File Id="rectdemo_cmd.e" Name="RECTDE~1.E" LongName="rectdemo_cmd.e" />
+                <File Id="fancy.ico" Name="fancy.ico" />
+                <File Id="exit_control.e" Name="EXIT_C~1.E" LongName="exit_control.e" />
+                <File Id="main_window.e" Name="MAIN_W~1.E" LongName="main_window.e" />
+                <File Id="client_window.e" Name="CLIENT~2.E" LongName="client_window.e" />
+                <File Id="application.e" Name="APPLIC~1.E" LongName="application.e" />
+                <File Id="ovaldemo_win.e" Name="OVALDE~2.E" LongName="ovaldemo_win.e" />
+                <File Id="ovaldemo_cmd.e" Name="OVALDE~1.E" LongName="ovaldemo_cmd.e" />
+                <File Id="ace.dotnet.ace" Name="ACEDOT~4.ACE" LongName="ace.dotnet.ace" />
+                <File Id="ace.mswin.ace" Name="ACEMSW~A.ACE" LongName="ace.mswin.ace" />
+              </Component>
+            </Directory>
+            <Directory Id="race" Name="race">
+              <Component Id="race" Guid="7767B1E1-B2EE-4B49-AAEE-8325424BC645">
+                <File Id="race.e" Name="race.e" KeyPath="yes" />
+                <File Id="Readme216" Name="Readme" />
+                <File Id="runner.e218" Name="runner.e" />
+                <File Id="Ace.ace219" Name="Ace.ace" />
+                <File Id="Ace.dotnet.ace9" Name="ACEDOT~2.ACE" LongName="Ace.dotnet.ace" />
+              </Component>
+            </Directory>
+            <Directory Id="producer_consumer" Name="PRODUC~1" LongName="producer_consumer">
+              <Component Id="producer_consumer" Guid="67F0E144-8979-41EC-A4C2-929CE7670C8F">
+                <File Id="producer.e" Name="producer.e" KeyPath="yes" />
+                <File Id="Readme217" Name="Readme" />
+                <File Id="pc.e" Name="pc.e" />
+                <File Id="Ace.ace220" Name="Ace.ace" />
+                <File Id="consumer.e" Name="consumer.e" />
+                <File Id="pc_buffer.e" Name="PC_BUF~1.E" LongName="pc_buffer.e" />
+                <File Id="Ace.dotnet.ace10" Name="ACEDOT~3.ACE" LongName="Ace.dotnet.ace" />
+              </Component>
+            </Directory>
+          </Directory>
+          <Directory Id="time32" Name="time">
+            <Directory Id="calculator33" Name="CALCUL~2" LongName="calculator">
+              <Component Id="calculator33" Guid="778E8B87-BB21-4061-BD56-2A8BD88F737F">
+                <File Id="Ace.mswin.ace221" Name="ACEMSW~F.ACE" LongName="Ace.mswin.ace" KeyPath="yes" />
+                <File Id="readme" Name="readme" />
+                <File Id="set_date.e" Name="set_date.e" />
+                <File Id="command_date.e" Name="COMMAN~1.E" LongName="command_date.e" />
+                <File Id="add_year.e" Name="add_year.e" />
+                <File Id="calculator.e222" Name="CALCUL~2.E" LongName="calculator.e" />
+                <File Id="Ace.unix.ace223" Name="ACEUNI~J.ACE" LongName="Ace.unix.ace" />
+                <File Id="add_month.e" Name="ADD_MO~1.E" LongName="add_month.e" />
+                <File Id="add_day.e" Name="add_day.e" />
+                <File Id="add_week.e" Name="add_week.e" />
+              </Component>
+            </Directory>
+          </Directory>
+          <Directory Id="web1" Name="web">
+            <Directory Id="basic" Name="basic">
+              <Component Id="basic" Guid="C3E651AB-CDD6-43FA-8300-B8F0E1EAAA2D">
+                <File Id="Ace.ace221" Name="Ace.ace" KeyPath="yes" />
+                <File Id="sample.e222" Name="sample.e" />
+                <File Id="sample.html" Name="SAMPLE~1.HTM" LongName="sample.html" />
+              </Component>
+            </Directory>
+          </Directory>
+        </Directory>
+        <Directory Id="library" Name="library">
+          <Directory Id="base" Name="base">
+            <Component Id="base" Guid="7417F67F-4937-4A3D-A969-FB60478E6FE7">
+              <File Id="indexing.txt" Name="indexing.txt" KeyPath="yes" />
+            </Component>
+            <Directory Id="support" Name="support">
+              <Component Id="support" Guid="D553A2F4-74F7-402B-B6A4-EED3A99779C0">
+                <File Id="random.e" Name="random.e" KeyPath="yes" />
+                <File Id="countable_sequence.e" Name="COUNTA~2.E" LongName="countable_sequence.e" />
+                <File Id="fibonacci.e" Name="FIBONA~1.E" LongName="fibonacci.e" />
+                <File Id="format_integer.e" Name="FORMAT~2.E" LongName="format_integer.e" />
+                <File Id="memory_stream.e" Name="MEMORY~1.E" LongName="memory_stream.e" />
+                <File Id="debug_output.e" Name="DEBUG_~1.E" LongName="debug_output.e" />
+                <File Id="ascii.e" Name="ascii.e" />
+                <File Id="primes.e" Name="primes.e" />
+                <File Id="math_const.e" Name="MATH_C~1.E" LongName="math_const.e" />
+                <File Id="format_double.e" Name="FORMAT~1.E" LongName="format_double.e" />
+                <File Id="memory_structure.e" Name="MEMORY~3.E" LongName="memory_structure.e" />
+                <File Id="c_string.e" Name="c_string.e" />
+                <File Id="mismatch_corrector.e" Name="MISMAT~2.E" LongName="mismatch_corrector.e" />
+              </Component>
+              <Directory Id="classic" Name="classic">
+                <Component Id="classic" Guid="F1698B0E-6DE9-4F73-B1B1-9A025B540686">
+                  <File Id="bool_string.e" Name="BOOL_S~1.E" LongName="bool_string.e" KeyPath="yes" />
+                  <File Id="identified.e" Name="IDENTI~1.E" LongName="identified.e" />
+                  <File Id="operating_environment.e" Name="OPERAT~1.E" LongName="operating_environment.e" />
+                  <File Id="profiling_setting.e" Name="PROFIL~1.E" LongName="profiling_setting.e" />
+                  <File Id="execution_environment.e" Name="EXECUT~1.E" LongName="execution_environment.e" />
+                  <File Id="internal.e" Name="internal.e" />
+                  <File Id="identified_controller.e" Name="IDENTI~2.E" LongName="identified_controller.e" />
+                  <File Id="double_math.e" Name="DOUBLE~2.E" LongName="double_math.e" />
+                  <File Id="single_math.e" Name="SINGLE~1.E" LongName="single_math.e" />
+                  <File Id="mismatch_information.e" Name="MISMAT~1.E" LongName="mismatch_information.e" />
+                  <File Id="class_name_translations.e" Name="CLASS_~1.E" LongName="class_name_translations.e" />
+                  <File Id="managed_pointer.e1" Name="MANAGE~1.E" LongName="managed_pointer.e" />
+                </Component>
+              </Directory>
+            </Directory>
+            <Directory Id="kernel" Name="kernel">
+              <Component Id="kernel" Guid="2FEF5439-326D-499C-9E2C-44EA40A4F414">
+                <File Id="integer_ref.e" Name="INBBE7~1.E" LongName="integer_ref.e" KeyPath="yes" />
+                <File Id="comparable.e" Name="COMPAR~1.E" LongName="comparable.e" />
+                <File Id="mem_const.e" Name="MEM_CO~1.E" LongName="mem_const.e" />
+                <File Id="io_medium.e" Name="IO_MED~1.E" LongName="io_medium.e" />
+                <File Id="excep_const.e" Name="EXCEP_~1.E" LongName="excep_const.e" />
+                <File Id="part_comparable.e" Name="PART_C~1.E" LongName="part_comparable.e" />
+                <File Id="integer_64_ref.e" Name="INTEGE~3.E" LongName="integer_64_ref.e" />
+                <File Id="to_special.e" Name="TO_SPE~1.E" LongName="to_special.e" />
+                <File Id="seq_string.e" Name="SEQ_ST~1.E" LongName="seq_string.e" />
+                <File Id="integer_interval.e" Name="INTEGE~4.E" LongName="integer_interval.e" />
+                <File Id="std_files.e" Name="STD_FI~1.E" LongName="std_files.e" />
+                <File Id="string_handler.e" Name="STRING~1.E" LongName="string_handler.e" />
+                <File Id="integer_16_ref.e" Name="INTEGE~1.E" LongName="integer_16_ref.e" />
+                <File Id="hashable.e" Name="hashable.e" />
+                <File Id="integer_8_ref.e" Name="INTEGE~5.E" LongName="integer_8_ref.e" />
+                <File Id="numeric.e" Name="numeric.e" />
+              </Component>
+              <Directory Id="classic1" Name="classic">
+                <Component Id="classic1" Guid="5428EF01-4C20-4B89-91D3-AC8BFC9A9EFB">
+                  <File Id="unix_signals.e" Name="UNIX_S~1.E" LongName="unix_signals.e" KeyPath="yes" />
+                  <File Id="gc_info.e" Name="gc_info.e" />
+                  <File Id="plain_text_file.e" Name="PLAIN_~1.E" LongName="plain_text_file.e" />
+                  <File Id="pointer.e" Name="pointer.e" />
+                  <File Id="function.e" Name="function.e" />
+                  <File Id="character_ref.e" Name="CHARAC~2.E" LongName="character_ref.e" />
+                  <File Id="boolean_ref.e" Name="BOOLEA~1.E" LongName="boolean_ref.e" />
+                  <File Id="arguments.e" Name="ARGUME~1.E" LongName="arguments.e" />
+                  <File Id="tuple.e" Name="tuple.e" />
+                  <File Id="memory.e" Name="memory.e" />
+                  <File Id="ise_runtime.e" Name="ISE_RU~1.E" LongName="ise_runtime.e" />
+                  <File Id="raw_file.e" Name="raw_file.e" />
+                  <File Id="console.e" Name="console.e" />
+                  <File Id="stream.e" Name="stream.e" />
+                  <File Id="integer_64.e" Name="INTEGE~2.E" LongName="integer_64.e" />
+                  <File Id="double.e" Name="double.e" />
+                  <File Id="declarator.e" Name="DECLAR~1.E" LongName="declarator.e" />
+                  <File Id="bit_ref.e" Name="bit_ref.e" />
+                  <File Id="wide_character_ref.e" Name="WIDE_C~2.E" LongName="wide_character_ref.e" />
+                  <File Id="integer.e" Name="integer.e" />
+                  <File Id="directory_name.e" Name="DIRECT~2.E" LongName="directory_name.e" />
+                  <File Id="string.e" Name="string.e" />
+                  <File Id="storable.e" Name="storable.e" />
+                  <File Id="mem_info.e" Name="mem_info.e" />
+                  <File Id="file.e" Name="file.e" />
+                  <File Id="character.e" Name="CHARAC~1.E" LongName="character.e" />
+                  <File Id="boolean.e" Name="boolean.e" />
+                  <File Id="basic_routines.e" Name="BASIC_~1.E" LongName="basic_routines.e" />
+                  <File Id="array.e" Name="array.e" />
+                  <File Id="real_ref.e" Name="real_ref.e" />
+                  <File Id="wide_character.e" Name="WIDE_C~1.E" LongName="wide_character.e" />
+                  <File Id="unix_file_info.e" Name="UNIX_F~1.E" LongName="unix_file_info.e" />
+                  <File Id="special.e" Name="special.e" />
+                  <File Id="real.e" Name="real.e" />
+                  <File Id="procedure.e" Name="PROCED~1.E" LongName="procedure.e" />
+                  <File Id="path_name.e" Name="PATH_N~1.E" LongName="path_name.e" />
+                  <File Id="exceptions.e" Name="EXCEPT~1.E" LongName="exceptions.e" />
+                  <File Id="double_ref.e" Name="DOUBLE~1.E" LongName="double_ref.e" />
+                  <File Id="integer_8.e" Name="INTEGE~6.E" LongName="integer_8.e" />
+                  <File Id="integer_16.e" Name="INTEGE~7.E" LongName="integer_16.e" />
+                  <File Id="directory.e" Name="DIRECT~1.E" LongName="directory.e" />
+                  <File Id="file_name.e" Name="FILE_N~1.E" LongName="file_name.e" />
+                  <File Id="any.e" Name="any.e" />
+                  <File Id="pointer_ref.e" Name="POINTE~1.E" LongName="pointer_ref.e" />
+                  <File Id="platform.e" Name="platform.e" />
+                  <File Id="routine.e" Name="routine.e" />
+                  <File Id="typed_pointer.e" Name="TYPED_~1.E" LongName="typed_pointer.e" />
+                  <File Id="disposable.e" Name="DISPOS~1.E" LongName="disposable.e" />
+                </Component>
+              </Directory>
+            </Directory>
+            <Directory Id="event" Name="event">
+              <Component Id="event" Guid="D379D8C8-A3F8-4E5B-9DE2-02D240CAF6E2">
+                <File Id="interactive_list.e" Name="INTERA~1.E" LongName="interactive_list.e" KeyPath="yes" />
+                <File Id="active_integer_interval.e" Name="ACTIVE~1.E" LongName="active_integer_interval.e" />
+                <File Id="action_sequence.e" Name="ACTION~1.E" LongName="action_sequence.e" />
+                <File Id="active_list.e" Name="ACTIVE~2.E" LongName="active_list.e" />
+              </Component>
+            </Directory>
+            <Directory Id="structures" Name="STRUCT~1" LongName="structures">
+              <Directory Id="table_eiffel3" Name="TABLE_~1" LongName="table_eiffel3">
+                <Component Id="table_eiffel3" Guid="3B4999AB-4FAF-4282-B7CC-DD38E346F405">
+                  <File Id="array2.e" Name="array2.e" KeyPath="yes" />
+                  <File Id="hash_table.e2" Name="HASH_T~3.E" LongName="hash_table.e" />
+                </Component>
+              </Directory>
+              <Directory Id="list" Name="list">
+                <Component Id="list" Guid="7A5601D3-7D7A-4BC3-8017-00F811B8016F">
+                  <File Id="arrayed_list.e" Name="ARRAYE~2.E" LongName="arrayed_list.e" KeyPath="yes" />
+                  <File Id="two_way_list.e" Name="TWO_WA~2.E" LongName="two_way_list.e" />
+                  <File Id="two_way_circular.e" Name="TWO_WA~1.E" LongName="two_way_circular.e" />
+                  <File Id="sorted_two_way_list.e" Name="SORTED~2.E" LongName="sorted_two_way_list.e" />
+                  <File Id="fixed_list.e" Name="FIXED_~2.E" LongName="fixed_list.e" />
+                  <File Id="dynamic_circular.e" Name="DYNAMI~2.E" LongName="dynamic_circular.e" />
+                  <File Id="bi_linkable.e" Name="BI_LIN~1.E" LongName="bi_linkable.e" />
+                  <File Id="linked_list.e" Name="LINKED~6.E" LongName="linked_list.e" />
+                  <File Id="dynamic_chain.e" Name="DYNAMI~3.E" LongName="dynamic_chain.e" />
+                  <File Id="arrayed_circular.e" Name="ARRAYE~5.E" LongName="arrayed_circular.e" />
+                  <File Id="chain.e" Name="chain.e" />
+                  <File Id="part_sorted_list.e" Name="PART_S~2.E" LongName="part_sorted_list.e" />
+                  <File Id="linkable.e" Name="linkable.e" />
+                  <File Id="multi_array_list.e" Name="MULTI_~1.E" LongName="multi_array_list.e" />
+                  <File Id="list.e" Name="list.e" />
+                  <File Id="dynamic_list.e" Name="DYNAMI~4.E" LongName="dynamic_list.e" />
+                  <File Id="linked_circular.e" Name="LINKED~8.E" LongName="linked_circular.e" />
+                  <File Id="sorted_list.e" Name="SORTED~3.E" LongName="sorted_list.e" />
+                  <File Id="part_sorted_two_way_list.e" Name="PART_S~3.E" LongName="part_sorted_two_way_list.e" />
+                  <File Id="circular.e" Name="circular.e" />
+                  <File Id="cell.e" Name="cell.e" />
+                  <File Id="sequence.e" Name="sequence.e" />
+                </Component>
+              </Directory>
+              <Directory Id="cursors" Name="cursors">
+                <Component Id="cursors" Guid="250EC1EC-EE29-4A67-89EF-C664B2F83C7A">
+                  <File Id="arrayed_list_cursor.e" Name="ARRAYE~1.E" LongName="arrayed_list_cursor.e" KeyPath="yes" />
+                  <File Id="compact_tree_cursor.e" Name="COMPAC~1.E" LongName="compact_tree_cursor.e" />
+                  <File Id="recursive_tree_cursor.e" Name="RECURS~1.E" LongName="recursive_tree_cursor.e" />
+                  <File Id="linked_tree_cursor.e" Name="LINKED~2.E" LongName="linked_tree_cursor.e" />
+                  <File Id="hash_table_cursor.e" Name="HASH_T~2.E" LongName="hash_table_cursor.e" />
+                  <File Id="circular_cursor.e" Name="CIRCUL~1.E" LongName="circular_cursor.e" />
+                  <File Id="cursor.e" Name="cursor.e" />
+                  <File Id="two_way_tree_cursor.e" Name="TWO_WA~5.E" LongName="two_way_tree_cursor.e" />
+                  <File Id="multar_list_cursor.e" Name="MULTAR~1.E" LongName="multar_list_cursor.e" />
+                  <File Id="linked_list_cursor.e" Name="LINKED~9.E" LongName="linked_list_cursor.e" />
+                </Component>
+              </Directory>
+              <Directory Id="tree" Name="tree">
+                <Component Id="tree" Guid="7AA26A75-5EDF-4B79-B9DE-98790B62629B">
+                  <File Id="dynamic_tree.e" Name="DYNAMI~1.E" LongName="dynamic_tree.e" KeyPath="yes" />
+                  <File Id="fixed_tree.e" Name="FIXED_~1.E" LongName="fixed_tree.e" />
+                  <File Id="tree.e" Name="tree.e" />
+                  <File Id="linked_tree.e" Name="LINKED~4.E" LongName="linked_tree.e" />
+                  <File Id="arrayed_tree.e" Name="ARRAYE~3.E" LongName="arrayed_tree.e" />
+                  <File Id="two_way_tree.e" Name="TWO_WA~4.E" LongName="two_way_tree.e" />
+                  <File Id="binary_tree.e" Name="BINARY~2.E" LongName="binary_tree.e" />
+                  <File Id="binary_search_tree.e" Name="BINARY~3.E" LongName="binary_search_tree.e" />
+                </Component>
+              </Directory>
+              <Directory Id="table" Name="table">
+                <Component Id="table" Guid="56050468-5224-42C0-83BC-F85CB8122D59">
+                  <File Id="array2.e1" Name="array2.e" KeyPath="yes" />
+                  <File Id="hash_table.e" Name="HASH_T~1.E" LongName="hash_table.e" />
+                </Component>
+              </Directory>
+              <Directory Id="storage" Name="storage">
+                <Component Id="storage" Guid="A175CE4B-B8B9-47B4-80A5-706D04A2E9A6">
+                  <File Id="countable.e" Name="COUNTA~1.E" LongName="countable.e" KeyPath="yes" />
+                  <File Id="resizable.e" Name="RESIZA~1.E" LongName="resizable.e" />
+                  <File Id="infinite.e" Name="infinite.e" />
+                  <File Id="bounded.e" Name="bounded.e" />
+                  <File Id="box.e" Name="box.e" />
+                  <File Id="unbounded.e" Name="UNBOUN~1.E" LongName="unbounded.e" />
+                  <File Id="fixed.e" Name="fixed.e" />
+                  <File Id="finite.e" Name="finite.e" />
+                </Component>
+              </Directory>
+              <Directory Id="traversing" Name="TRAVER~1" LongName="traversing">
+                <Component Id="traversing" Guid="7C59F3E5-0E9A-4E3C-BBC4-A833D644741A">
+                  <File Id="bilinear.e" Name="bilinear.e" KeyPath="yes" />
+                  <File Id="traversable.e" Name="TRAVER~1.E" LongName="traversable.e" />
+                  <File Id="linear.e" Name="linear.e" />
+                  <File Id="hierarchical.e" Name="HIERAR~1.E" LongName="hierarchical.e" />
+                </Component>
+              </Directory>
+              <Directory Id="set" Name="set">
+                <Component Id="set" Guid="7BC1BA80-A9F6-400D-97F2-2375614A3B94">
+                  <File Id="linked_set.e" Name="LINKED~1.E" LongName="linked_set.e" KeyPath="yes" />
+                  <File Id="part_sorted_set.e" Name="PART_S~1.E" LongName="part_sorted_set.e" />
+                  <File Id="binary_search_tree_set.e" Name="BINARY~1.E" LongName="binary_search_tree_set.e" />
+                  <File Id="arrayed_set.e" Name="ARRAYE~4.E" LongName="arrayed_set.e" />
+                  <File Id="traversable_subset.e" Name="TRAVER~2.E" LongName="traversable_subset.e" />
+                  <File Id="comparable_set.e" Name="COMPAR~2.E" LongName="comparable_set.e" />
+                  <File Id="linear_subset.e" Name="LINEAR~1.E" LongName="linear_subset.e" />
+                  <File Id="two_way_sorted_set.e" Name="TWO_WA~6.E" LongName="two_way_sorted_set.e" />
+                  <File Id="set.e" Name="set.e" />
+                  <File Id="subset.e" Name="subset.e" />
+                </Component>
+                <Directory Id="strategies" Name="STRATE~1" LongName="strategies">
+                  <Component Id="strategies" Guid="25286753-BCA0-430C-AD11-6927319F6A44">
+                    <File Id="subset_strategy_tree.e" Name="SUBSET~4.E" LongName="subset_strategy_tree.e" KeyPath="yes" />
+                    <File Id="subset_strategy_generic.e" Name="SUBSET~2.E" LongName="subset_strategy_generic.e" />
+                    <File Id="subset_strategy_hashable.e" Name="SUBSET~3.E" LongName="subset_strategy_hashable.e" />
+                    <File Id="subset_strategy.e" Name="SUBSET~1.E" LongName="subset_strategy.e" />
+                  </Component>
+                </Directory>
+              </Directory>
+              <Directory Id="cursor_tree" Name="CURSOR~1" LongName="cursor_tree">
+                <Component Id="cursor_tree" Guid="1BB273B9-6175-4972-8260-770C268DAFCD">
+                  <File Id="two_way_cursor_tree.e" Name="TWO_WA~3.E" LongName="two_way_cursor_tree.e" KeyPath="yes" />
+                  <File Id="cursor_tree.e" Name="CURSOR~1.E" LongName="cursor_tree.e" />
+                  <File Id="recursive_cursor_tree.e" Name="RECURS~2.E" LongName="recursive_cursor_tree.e" />
+                  <File Id="linked_cursor_tree.e" Name="LINKED~7.E" LongName="linked_cursor_tree.e" />
+                  <File Id="compact_cursor_tree.e" Name="COMPAC~2.E" LongName="compact_cursor_tree.e" />
+                </Component>
+              </Directory>
+              <Directory Id="dispenser" Name="DISPEN~1" LongName="dispenser">
+                <Component Id="dispenser" Guid="ED689178-F4DD-402E-B906-6C94D8717791">
+                  <File Id="linked_stack.e" Name="LINKED~3.E" LongName="linked_stack.e" KeyPath="yes" />
+                  <File Id="linked_priority_queue.e" Name="LINKED~5.E" LongName="linked_priority_queue.e" />
+                  <File Id="heap_priority_queue.e" Name="HEAP_P~1.E" LongName="heap_priority_queue.e" />
+                  <File Id="bounded_queue.e" Name="BOUNDE~1.E" LongName="bounded_queue.e" />
+                  <File Id="priority_queue.e" Name="PRIORI~1.E" LongName="priority_queue.e" />
+                  <File Id="arrayed_queue.e" Name="ARRAYE~6.E" LongName="arrayed_queue.e" />
+                  <File Id="queue.e" Name="queue.e" />
+                  <File Id="bounded_stack.e" Name="BOUNDE~2.E" LongName="bounded_stack.e" />
+                  <File Id="dispenser.e" Name="DISPEN~1.E" LongName="dispenser.e" />
+                  <File Id="arrayed_stack.e" Name="ARRAYE~7.E" LongName="arrayed_stack.e" />
+                  <File Id="linked_queue.e" Name="LINKED~A.E" LongName="linked_queue.e" />
+                  <File Id="stack.e" Name="stack.e" />
+                </Component>
+              </Directory>
+              <Directory Id="access" Name="access">
+                <Component Id="access" Guid="E5E6F441-153E-4F60-88A3-4EB605B85182">
+                  <File Id="active.e" Name="active.e" KeyPath="yes" />
+                  <File Id="bag.e" Name="bag.e" />
+                  <File Id="cursor_structure.e" Name="CURSOR~2.E" LongName="cursor_structure.e" />
+                  <File Id="collection.e" Name="COLLEC~1.E" LongName="collection.e" />
+                  <File Id="indexable.e" Name="INDEXA~1.E" LongName="indexable.e" />
+                  <File Id="table.e" Name="table.e" />
+                  <File Id="container.e" Name="CONTAI~1.E" LongName="container.e" />
+                </Component>
+              </Directory>
+              <Directory Id="sort" Name="sort">
+                <Component Id="sort" Guid="1E603E7B-4519-4A5A-BCED-894B00B54924">
+                  <File Id="sorted_struct.e" Name="SORTED~1.E" LongName="sorted_struct.e" KeyPath="yes" />
+                  <File Id="comparable_struct.e" Name="COMPAR~3.E" LongName="comparable_struct.e" />
+                </Component>
+              </Directory>
+              <Directory Id="iteration" Name="ITERAT~1" LongName="iteration">
+                <Component Id="iteration" Guid="61E0DEE2-67B1-434B-BF7E-A743FED1D0CC">
+                  <File Id="cursor_tree_iterator.e" Name="CURSOR~3.E" LongName="cursor_tree_iterator.e" KeyPath="yes" />
+                  <File Id="iterator.e" Name="iterator.e" />
+                  <File Id="two_way_chain_iterator.e" Name="TWO_WA~7.E" LongName="two_way_chain_iterator.e" />
+                  <File Id="linear_iterator.e" Name="LINEAR~2.E" LongName="linear_iterator.e" />
+                </Component>
+              </Directory>
+            </Directory>
+            <Directory Id="desc" Name="desc">
+              <Directory Id="general" Name="general">
+                <Component Id="general" Guid="A8CF4BEC-CF0F-4C77-B212-DB6743A3D1A5">
+                  <File Id="shared_library_routine.e" Name="SHARED~3.E" LongName="shared_library_routine.e" KeyPath="yes" />
+                  <File Id="shared_library_constants.e" Name="SHARED~2.E" LongName="shared_library_constants.e" />
+                  <File Id="shared_library.e" Name="SHARED~1.E" LongName="shared_library.e" />
+                </Component>
+              </Directory>
+              <Directory Id="spec" Name="spec">
+                <Directory Id="win32" Name="win32">
+                  <Component Id="win32" Guid="2116631F-99BA-4C7B-879A-1B0D004D7714">
+                    <File Id="dll_32_routine.e" Name="DLL_32~1.E" LongName="dll_32_routine.e" KeyPath="yes" />
+                    <File Id="dll_32.e" Name="dll_32.e" />
+                  </Component>
+                </Directory>
+              </Directory>
+            </Directory>
+          </Directory>
+          <Directory Id="Eiffel2Java" Name="EIFFEL~1" LongName="Eiffel2Java">
+            <Component Id="Eiffel2Java" Guid="D8E10D8D-A82F-4D95-BD01-40D16FE11949">
+              <File Id="java_double_array.e" Name="JAVA_D~1.E" LongName="java_double_array.e" KeyPath="yes" />
+              <File Id="java_int_array.e" Name="JAVA_I~1.E" LongName="java_int_array.e" />
+              <File Id="java_short_array.e" Name="JAVA_S~1.E" LongName="java_short_array.e" />
+              <File Id="java_char_array.e" Name="JAVA_C~1.E" LongName="java_char_array.e" />
+              <File Id="java_class.e" Name="JAVA_C~2.E" LongName="java_class.e" />
+              <File Id="java_array.e" Name="JAVA_A~2.E" LongName="java_array.e" />
+              <File Id="java_args.e" Name="JAVA_A~1.E" LongName="java_args.e" />
+              <File Id="java_object_table.e" Name="JAVA_O~3.E" LongName="java_object_table.e" />
+              <File Id="java_object_array.e" Name="JAVA_O~2.E" LongName="java_object_array.e" />
+              <File Id="jni_environment.e" Name="JNI_EN~1.E" LongName="jni_environment.e" />
+              <File Id="java_object.e" Name="JAVA_O~1.E" LongName="java_object.e" />
+              <File Id="java_vm.e" Name="java_vm.e" />
+              <File Id="java_long_array.e" Name="JAVA_L~1.E" LongName="java_long_array.e" />
+              <File Id="java_byte_array.e" Name="JAVA_B~2.E" LongName="java_byte_array.e" />
+              <File Id="java_boolean_array.e" Name="JAVA_B~1.E" LongName="java_boolean_array.e" />
+              <File Id="shared_jni_environment.e" Name="SHARED~4.E" LongName="shared_jni_environment.e" />
+              <File Id="java_float_array.e" Name="JAVA_F~1.E" LongName="java_float_array.e" />
+              <File Id="java_entity.e" Name="JAVA_E~1.E" LongName="java_entity.e" />
+            </Component>
+            <Directory Id="structures4" Name="STRUCT~3" LongName="structures">
+              <Component Id="structures4" Guid="E85311E4-C404-43F3-BE4E-6F284D36E40A">
+                <File Id="java_vm_init_args.e" Name="JAVA_V~2.E" LongName="java_vm_init_args.e" KeyPath="yes" />
+                <File Id="java_value.e" Name="JAVA_V~1.E" LongName="java_value.e" />
+                <File Id="java_sizes.e" Name="JAVA_S~2.E" LongName="java_sizes.e" />
+                <File Id="java_vm_option.e" Name="JAVA_V~3.E" LongName="java_vm_option.e" />
+              </Component>
+            </Directory>
+            <Directory Id="spec12" Name="spec">
+              <Directory Id="bcb16" Name="bcb">
+                <Directory Id="lib17" Name="lib" />
+              </Directory>
+              <Directory Id="msc14" Name="msc">
+                <Directory Id="lib15" Name="lib" />
+              </Directory>
+            </Directory>
+            <Directory Id="Clib" Name="Clib" />
+          </Directory>
+          <Directory Id="lex" Name="lex">
+            <Component Id="lex" Guid="0FB26E97-8DEF-4E67-93EE-2AB49546C6D9">
+              <File Id="fixed_integer_set.e" Name="FIXED_~3.E" LongName="fixed_integer_set.e" KeyPath="yes" />
+              <File Id="text_filler.e" Name="TEXT_F~1.E" LongName="text_filler.e" />
+              <File Id="ndfa.e" Name="ndfa.e" />
+              <File Id="linked_dfa.e" Name="LINKED~B.E" LongName="linked_dfa.e" />
+              <File Id="token.e" Name="token.e" />
+              <File Id="fixed_automaton.e" Name="FIXED_~4.E" LongName="fixed_automaton.e" />
+              <File Id="state_of_dfa.e" Name="STATE_~1.E" LongName="state_of_dfa.e" />
+              <File Id="dfa.e" Name="dfa.e" />
+              <File Id="lex_builder.e" Name="LEX_BU~1.E" LongName="lex_builder.e" />
+              <File Id="lex_array.e" Name="LEX_AR~1.E" LongName="lex_array.e" />
+              <File Id="fixed_dfa.e" Name="FIXED_~5.E" LongName="fixed_dfa.e" />
+              <File Id="automaton.e" Name="AUTOMA~1.E" LongName="automaton.e" />
+              <File Id="scanning.e" Name="scanning.e" />
+              <File Id="linked_automaton.e" Name="LINKED~C.E" LongName="linked_automaton.e" />
+              <File Id="lexical.e" Name="lexical.e" />
+              <File Id="state.e" Name="state.e" />
+              <File Id="high_builder.e" Name="HIGH_B~1.E" LongName="high_builder.e" />
+              <File Id="error_list.e" Name="ERROR_~1.E" LongName="error_list.e" />
+              <File Id="pdfa.e" Name="pdfa.e" />
+              <File Id="metalex.e" Name="metalex.e" />
+            </Component>
+          </Directory>
+          <Directory Id="parse" Name="parse">
+            <Component Id="parse" Guid="64EF9957-9011-43B6-8CBE-878082BF1A04">
+              <File Id="input.e" Name="input.e" KeyPath="yes" />
+              <File Id="construct.e" Name="CONSTR~1.E" LongName="construct.e" />
+              <File Id="repetition.e" Name="REPETI~1.E" LongName="repetition.e" />
+              <File Id="aggregate.e" Name="AGGREG~1.E" LongName="aggregate.e" />
+              <File Id="keyword.e" Name="keyword.e" />
+              <File Id="terminal.e" Name="terminal.e" />
+              <File Id="choice.e" Name="choice.e" />
+              <File Id="l_interface.e" Name="L_INTE~1.E" LongName="l_interface.e" />
+            </Component>
+          </Directory>
+          <Directory Id="store" Name="store">
+            <Component Id="store" Guid="AFEBEED9-7EF8-461D-A54D-5691F6EE9DB8">
+              <File Id="Readme" Name="Readme" KeyPath="yes" />
+              <File Id="Version" Name="Version" />
+            </Component>
+            <Directory Id="interface" Name="INTERF~1" LongName="interface">
+              <Component Id="interface" Guid="74F4D0C6-A08B-4584-85BF-8EB2F43FE148">
+                <File Id="db_control.e" Name="DB_CON~1.E" LongName="db_control.e" KeyPath="yes" />
+                <File Id="db_tuple.e" Name="db_tuple.e" />
+                <File Id="db_result.e" Name="DB_RES~1.E" LongName="db_result.e" />
+                <File Id="db_repository.e" Name="DB_REP~1.E" LongName="db_repository.e" />
+                <File Id="db_dyn_change.e" Name="DB_DYN~1.E" LongName="db_dyn_change.e" />
+                <File Id="db_proc.e" Name="db_proc.e" />
+                <File Id="db_all_types.e" Name="DB_ALL~1.E" LongName="db_all_types.e" />
+                <File Id="db_dyn_selection.e" Name="DB_DYN~2.E" LongName="db_dyn_selection.e" />
+                <File Id="Readme26" Name="Readme" />
+                <File Id="db_expression.e" Name="DB_EXP~1.E" LongName="db_expression.e" />
+                <File Id="db_data_sql.e" Name="DB_DAT~1.E" LongName="db_data_sql.e" />
+                <File Id="db_type.e" Name="db_type.e" />
+                <File Id="db_data.e" Name="db_data.e" />
+                <File Id="db_store.e" Name="db_store.e" />
+                <File Id="db_selection.e" Name="DB_SEL~1.E" LongName="db_selection.e" />
+                <File Id="db_change.e" Name="DB_CHA~1.E" LongName="db_change.e" />
+              </Component>
+            </Directory>
+            <Directory Id="converter" Name="CONVER~1" LongName="converter">
+              <Component Id="converter" Guid="82AA157F-84CD-452E-AFC5-952C9805C8B9">
+                <File Id="ec_lex.e" Name="ec_lex.e" KeyPath="yes" />
+                <File Id="ec_field.e" Name="ec_field.e" />
+                <File Id="file2dbms.e" Name="FILE2D~1.E" LongName="file2dbms.e" />
+                <File Id="converter.e" Name="CONVER~1.E" LongName="converter.e" />
+                <File Id="ec_parse.e" Name="ec_parse.e" />
+                <File Id="ec_types.e" Name="ec_types.e" />
+                <File Id="ec_descriptor.e" Name="EC_DES~1.E" LongName="ec_descriptor.e" />
+              </Component>
+            </Directory>
+            <Directory Id="support17" Name="support">
+              <Component Id="support17" Guid="C6CA4899-A297-4804-94A8-308FA2BFDE24">
+                <File Id="sql_scan.e" Name="sql_scan.e" KeyPath="yes" />
+                <File Id="general_appl.e" Name="GENERA~1.E" LongName="general_appl.e" />
+                <File Id="db_format.e" Name="DB_FOR~1.E" LongName="db_format.e" />
+                <File Id="db_exec_use.e" Name="DB_EXE~1.E" LongName="db_exec_use.e" />
+                <File Id="numeric_null_value.e" Name="NUMERI~1.E" LongName="numeric_null_value.e" />
+                <File Id="db_status.e" Name="DB_STA~1.E" LongName="db_status.e" />
+                <File Id="string_hdl.e" Name="STRING~2.E" LongName="string_hdl.e" />
+                <File Id="db_status_use.e" Name="DB_STA~2.E" LongName="db_status_use.e" />
+                <File Id="db_action.e" Name="DB_ACT~1.E" LongName="db_action.e" />
+                <File Id="db_exec.e" Name="db_exec.e" />
+                <File Id="ext_internal.e" Name="EXT_IN~1.E" LongName="ext_internal.e" />
+                <File Id="action.e" Name="action.e" />
+                <File Id="handle.e" Name="handle.e" />
+                <File Id="parameter_hdl.e" Name="PARAME~1.E" LongName="parameter_hdl.e" />
+                <File Id="handle_use.e" Name="HANDLE~2.E" LongName="handle_use.e" />
+                <File Id="db_constant.e" Name="DB_CON~2.E" LongName="db_constant.e" />
+              </Component>
+              <Directory Id="Clib21" Name="Clib" />
+            </Directory>
+            <Directory Id="save" Name="save">
+              <Component Id="save" Guid="CCA52022-D3BD-463D-A462-2B89A85AA8E2">
+                <File Id="basic_storer" Name="BASIC_~1" LongName="basic_storer" KeyPath="yes" />
+              </Component>
+            </Directory>
+            <Directory Id="install" Name="install">
+              <Component Id="install" Guid="1E84C01D-AC43-432D-8D65-515AC49EB0C0">
+                <File Id="Readme29" Name="Readme" KeyPath="yes" />
+              </Component>
+            </Directory>
+            <Directory Id="spec11" Name="spec">
+              <Directory Id="bcb12" Name="bcb">
+                <Directory Id="lib24" Name="lib">
+                  <Component Id="lib24" Guid="88DA2D1B-1EEA-46C0-A7E5-7F37B2627A6D">
+                    <File Id="odbc_store.lib35" Name="ODBC_S~3.LIB" LongName="odbc_store.lib" />
+                    <File Id="oracle_store.lib2" Name="ORACLE~2.LIB" LongName="oracle_store.lib" />
+                    <File Id="il_odbc_store.lib" Name="IL_ODB~1.LIB" LongName="il_odbc_store.lib" KeyPath="yes" />
+                  </Component>
+                </Directory>
+              </Directory>
+              <Directory Id="msc13" Name="msc">
+                <Directory Id="lib23" Name="lib">
+                  <Component Id="lib23" Guid="5FD4A935-31BD-4B5C-8911-C704A2B6915D">
+                    <File Id="odbc_store.lib" Name="ODBC_S~1.LIB" LongName="odbc_store.lib" KeyPath="yes" />
+                    <File Id="oracle_store.lib" Name="ORACLE~1.LIB" LongName="oracle_store.lib" />
+                    <File Id="il_odbc_store.lib1" Name="IL_ODB~2.LIB" LongName="il_odbc_store.lib" />
+                  </Component>
+                </Directory>
+              </Directory>
+            </Directory>
+            <Directory Id="generation" Name="GENERA~1" LongName="generation">
+              <Directory Id="generator" Name="GENERA~2" LongName="generator">
+                <Component Id="generator" Guid="C6076634-1A59-4442-8ADA-ED6AFA00DDC1">
+                  <File Id="db_class_generator.e" Name="DB_CLA~1.E" LongName="db_class_generator.e" KeyPath="yes" />
+                  <File Id="db_template_tags.e" Name="DB_TEM~1.E" LongName="db_template_tags.e" />
+                  <File Id="db_table_class_generator.e" Name="DB_TAB~3.E" LongName="db_table_class_generator.e" />
+                  <File Id="db_access_class_generator.e" Name="DB_ACC~1.E" LongName="db_access_class_generator.e" />
+                </Component>
+              </Directory>
+              <Directory Id="tables_access" Name="TABLES~1" LongName="tables_access">
+                <Component Id="tables_access" Guid="C3171E5C-CC3C-4E73-A8E4-582928A68B94">
+                  <File Id="db_table_manager.e" Name="DB_TAB~4.E" LongName="db_table_manager.e" KeyPath="yes" />
+                </Component>
+                <Directory Id="abstract19" Name="abstract">
+                  <Component Id="abstract19" Guid="B8CB7BCB-36E5-4C25-9E68-365F01FCFC72">
+                    <File Id="db_table_description.e" Name="DB_TAB~1.E" LongName="db_table_description.e" KeyPath="yes" />
+                    <File Id="db_tables_access.e" Name="DB_TAB~2.E" LongName="db_tables_access.e" />
+                    <File Id="db_table.e" Name="db_table.e" />
+                    <File Id="abstract_db_table_manager.e" Name="ABSTRA~1.E" LongName="abstract_db_table_manager.e" />
+                    <File Id="db_tables_access_use.e" Name="DB_TAB~5.E" LongName="db_tables_access_use.e" />
+                  </Component>
+                </Directory>
+              </Directory>
+            </Directory>
+            <Directory Id="precomp" Name="precomp">
+              <Directory Id="spec10" Name="spec">
+                <Directory Id="solaris" Name="solaris">
+                  <Directory Id="store25" Name="store">
+                    <Component Id="store25" Guid="8EE92B04-7D52-487B-A2A8-BC50D513B627">
+                      <File Id="Ace.ace25" Name="Ace.ace" KeyPath="yes" />
+                    </Component>
+                  </Directory>
+                </Directory>
+                <Directory Id="windows" Name="windows">
+                  <Directory Id="store22" Name="store">
+                    <Component Id="store22" Guid="2FA12007-7271-4DB7-A3C9-C35409952861">
+                      <File Id="Ace.ace" Name="Ace.ace" KeyPath="yes" />
+                    </Component>
+                  </Directory>
+                </Directory>
+              </Directory>
+            </Directory>
+            <Directory Id="mapping" Name="mapping">
+              <Directory Id="keys" Name="keys">
+                <Component Id="keys" Guid="2A1A6C70-E9B7-4255-AC5B-EC3679DF7262">
+                  <File Id="key.e" Name="key.e" KeyPath="yes" />
+                  <File Id="multi_key.e" Name="MULTI_~2.E" LongName="multi_key.e" />
+                  <File Id="integer_key.e" Name="INTEGE~8.E" LongName="integer_key.e" />
+                  <File Id="basic_key.e" Name="BASIC_~2.E" LongName="basic_key.e" />
+                </Component>
+              </Directory>
+            </Directory>
+            <Directory Id="dbms" Name="dbms">
+              <Directory Id="support14" Name="support">
+                <Component Id="support14" Guid="1F8D3D79-A2E3-4814-A0CC-F5EB00ABCFF9">
+                  <File Id="handle_spec.e" Name="HANDLE~1.E" LongName="handle_spec.e" KeyPath="yes" />
+                  <File Id="database_proc.e" Name="DA4067~1.E" LongName="database_proc.e" />
+                  <File Id="database_selection.e" Name="DADEEC~1.E" LongName="database_selection.e" />
+                  <File Id="database_double.e" Name="DA88F1~1.E" LongName="database_double.e" />
+                  <File Id="database_status.e" Name="DA9AB9~1.E" LongName="database_status.e" />
+                  <File Id="database_format.e" Name="DA5C92~1.E" LongName="database_format.e" />
+                  <File Id="database_string.e" Name="DA9E23~1.E" LongName="database_string.e" />
+                  <File Id="types.e" Name="types.e" />
+                  <File Id="database_data.e" Name="DA4C0B~1.E" LongName="database_data.e" />
+                  <File Id="database_appl.e" Name="DATABA~2.E" LongName="database_appl.e" />
+                  <File Id="database_store.e" Name="DA587A~1.E" LongName="database_store.e" />
+                  <File Id="database_integer.e" Name="DAEA91~1.E" LongName="database_integer.e" />
+                  <File Id="database_character.e" Name="DA1877~1.E" LongName="database_character.e" />
+                  <File Id="database_boolean.e" Name="DATABA~3.E" LongName="database_boolean.e" />
+                  <File Id="db.e" Name="db.e" />
+                  <File Id="database_real.e" Name="DA147B~1.E" LongName="database_real.e" />
+                  <File Id="database_datetime.e" Name="DAC65C~1.E" LongName="database_datetime.e" />
+                  <File Id="login.e" Name="login.e" />
+                  <File Id="database_string_ex.e" Name="DA2288~1.E" LongName="database_string_ex.e" />
+                  <File Id="database_control.e" Name="DAD828~1.E" LongName="database_control.e" />
+                  <File Id="database_all_types.e" Name="DATABA~1.E" LongName="database_all_types.e" />
+                  <File Id="database.e" Name="database.e" />
+                  <File Id="database_repository.e" Name="DAE1DE~1.E" LongName="database_repository.e" />
+                  <File Id="database_dyn_selection.e" Name="DA74BE~1.E" LongName="database_dyn_selection.e" />
+                  <File Id="database_dyn_change.e" Name="DA85A4~1.E" LongName="database_dyn_change.e" />
+                  <File Id="database_change.e" Name="DATABA~4.E" LongName="database_change.e" />
+                  <File Id="database_tuple.e" Name="DA5C40~1.E" LongName="database_tuple.e" />
+                  <File Id="columns.e" Name="columns.e" />
+                  <File Id="Readme33" Name="Readme" />
+                  <File Id="database_manager.e" Name="DAE079~1.E" LongName="database_manager.e" />
+                </Component>
+              </Directory>
+              <Directory Id="rdbms" Name="rdbms">
+                <Directory Id="oracle" Name="oracle">
+                  <Component Id="oracle" Guid="B3D99514-1B8A-4A2A-9C7A-026963BCB872">
+                    <File Id="oracle.e" Name="oracle.e" KeyPath="yes" />
+                    <File Id="Readme13" Name="Readme" />
+                  </Component>
+                  <Directory Id="Clib18" Name="Clib">
+                    <Component Id="Clib18" Guid="9C3299CD-62DE-4062-911A-E71E2F0252F5">
+                      <File Id="oracle.h" Name="oracle.h" KeyPath="yes" />
+                      <File Id="make_msc.bat15" Name="make_msc.bat" />
+                      <File Id="makefile.b16" Name="makefile.b" />
+                      <File Id="make_bcb.bat32" Name="make_bcb.bat" />
+                      <File Id="oracle.c" Name="oracle.c" />
+                      <File Id="Makefile.SH39" Name="Makefile.SH" />
+                      <File Id="makefile.m40" Name="makefile.m" />
+                      <File Id="oracle.obj" Name="oracle.obj" />
+                      <File Id="oracle_store.lib3" Name="ORACLE~3.LIB" LongName="oracle_store.lib" />
+                    </Component>
+                  </Directory>
+                </Directory>
+                <Directory Id="odbc" Name="odbc">
+                  <Component Id="odbc" Guid="1E1142FB-9F73-40A6-94C3-5DBA96193C47">
+                    <File Id="odbc.e" Name="odbc.e" KeyPath="yes" />
+                    <File Id="Readme14" Name="Readme" />
+                    <File Id="db_para_odbc.e" Name="DB_PAR~1.E" LongName="db_para_odbc.e" />
+                  </Component>
+                  <Directory Id="Clib16" Name="Clib">
+                    <Component Id="Clib16" Guid="99952F5F-3FA6-45F6-BDCC-1B4BFF7846F2">
+                      <File Id="makefile.b10" Name="makefile.b" />
+                      <File Id="odbc.c" Name="odbc.c" />
+                      <File Id="make_bcb.bat19" Name="make_bcb.bat" />
+                      <File Id="odbc.h" Name="odbc.h" />
+                      <File Id="odbc.readme" Name="ODBC~1.REA" LongName="odbc.readme" />
+                      <File Id="makefile.m34" Name="makefile.m" />
+                      <File Id="make_msc.bat41" Name="make_msc.bat" />
+                      <File Id="Makefile.SH" Name="Makefile.SH" KeyPath="yes" />
+                    </Component>
+                  </Directory>
+                </Directory>
+                <Directory Id="sybase" Name="sybase">
+                  <Component Id="sybase" Guid="428F6AE1-D518-4BCF-9100-D2502011F4E2">
+                    <File Id="Readme11" Name="Readme" KeyPath="yes" />
+                    <File Id="sybase.e" Name="sybase.e" />
+                  </Component>
+                  <Directory Id="Clib15" Name="Clib">
+                    <Component Id="Clib15" Guid="58A3310C-F239-4BF2-9646-78D8DC3DAA31">
+                      <File Id="sybase.h" Name="sybase.h" KeyPath="yes" />
+                      <File Id="make_msc.bat12" Name="make_msc.bat" />
+                      <File Id="Makefile.m" Name="Makefile.m" />
+                      <File Id="Makefile.SH18" Name="Makefile.SH" />
+                      <File Id="Makefile.b" Name="Makefile.b" />
+                      <File Id="sybase.c" Name="sybase.c" />
+                      <File Id="make_bcc.bat" Name="make_bcc.bat" />
+                    </Component>
+                  </Directory>
+                </Directory>
+                <Directory Id="ingres" Name="ingres">
+                  <Component Id="ingres" Guid="FA45708C-C239-4B03-8F95-1FC80ED9E963">
+                    <File Id="Readme42" Name="Readme" KeyPath="yes" />
+                    <File Id="ingres.e" Name="ingres.e" />
+                  </Component>
+                  <Directory Id="Clib20" Name="Clib">
+                    <Component Id="Clib20" Guid="481874ED-6CB3-4D92-A843-FD11307995E3">
+                      <File Id="ingres.MEMO" Name="INGRES~1.MEM" LongName="ingres.MEMO" KeyPath="yes" />
+                      <File Id="ingres.h" Name="ingres.h" />
+                      <File Id="Makefile.m20" Name="Makefile.m" />
+                      <File Id="make_msc.bat22" Name="make_msc.bat" />
+                      <File Id="ingres.README" Name="INGRES~1.REA" LongName="ingres.README" />
+                      <File Id="Makefile.b31" Name="Makefile.b" />
+                      <File Id="make_bcc.bat36" Name="make_bcc.bat" />
+                      <File Id="ingres.c" Name="ingres.c" />
+                      <File Id="ingres.sc" Name="ingres.sc" />
+                      <File Id="Makefile.SH84" Name="Makefile.SH" />
+                    </Component>
+                  </Directory>
+                </Directory>
+              </Directory>
+            </Directory>
+            <Directory Id="dataview" Name="dataview">
+              <Directory Id="processing" Name="PROCES~1" LongName="processing">
+                <Component Id="processing" Guid="04565F90-5B56-4212-BEF8-663B1D88EB18">
+                  <File Id="dv_tablerow_fields.e" Name="DV_TAB~3.E" LongName="dv_tablerow_fields.e" KeyPath="yes" />
+                  <File Id="dv_value_list_redirector.e" Name="DV_VAL~1.E" LongName="dv_value_list_redirector.e" />
+                  <File Id="dv_tablerow_id_provider.e" Name="DV_TAB~4.E" LongName="dv_tablerow_id_provider.e" />
+                  <File Id="dv_control_navigator.e" Name="DV_CON~1.E" LongName="dv_control_navigator.e" />
+                  <File Id="dv_component.e" Name="DV_COM~2.E" LongName="dv_component.e" />
+                  <File Id="dv_value_redirector.e" Name="DV_VAL~2.E" LongName="dv_value_redirector.e" />
+                  <File Id="dv_tablerows_component.e" Name="DVCFA6~1.E" LongName="dv_tablerows_component.e" />
+                  <File Id="dv_database_handle.e" Name="DV_DAT~1.E" LongName="dv_database_handle.e" />
+                  <File Id="dv_creator.e" Name="DV_CRE~1.E" LongName="dv_creator.e" />
+                  <File Id="dv_typed_searcher.e" Name="DV_TYP~1.E" LongName="dv_typed_searcher.e" />
+                  <File Id="dv_tablerows_navigator.e" Name="DVE7EB~1.E" LongName="dv_tablerows_navigator.e" />
+                  <File Id="dv_messages.e" Name="DV_MES~1.E" LongName="dv_messages.e" />
+                  <File Id="dv_choice_creator.e" Name="DV_CHO~1.E" LongName="dv_choice_creator.e" />
+                  <File Id="dv_located_value_redirector.e" Name="DV_LOC~1.E" LongName="dv_located_value_redirector.e" />
+                  <File Id="dv_table_component.e" Name="DV_TAB~5.E" LongName="dv_table_component.e" />
+                  <File Id="dv_tablerow_field.e" Name="DV_TAB~6.E" LongName="dv_tablerow_field.e" />
+                  <File Id="dv_searcher.e" Name="DV_SEA~1.E" LongName="dv_searcher.e" />
+                  <File Id="dv_interactive_searcher.e" Name="DV_INT~1.E" LongName="dv_interactive_searcher.e" />
+                </Component>
+              </Directory>
+              <Directory Id="graphical" Name="GRAPHI~1" LongName="graphical">
+                <Component Id="graphical" Guid="4D344F77-921D-4F5A-AF06-2B5E8E0F0DC1">
+                  <File Id="dv_combo_box.e" Name="DV_COM~1.E" LongName="dv_combo_box.e" KeyPath="yes" />
+                  <File Id="dv_text_field.e" Name="DV_TEX~1.E" LongName="dv_text_field.e" />
+                  <File Id="dv_text.e" Name="dv_text.e" />
+                  <File Id="dv_selection_window.e" Name="DV_SEL~1.E" LongName="dv_selection_window.e" />
+                  <File Id="dv_factory.e" Name="DV_FAC~1.E" LongName="dv_factory.e" />
+                  <File Id="dv_check_button.e" Name="DV_CHE~1.E" LongName="dv_check_button.e" />
+                  <File Id="dv_radio_button.e" Name="DV_RAD~1.E" LongName="dv_radio_button.e" />
+                  <File Id="dv_string_list.e" Name="DV_STR~1.E" LongName="dv_string_list.e" />
+                  <File Id="dv_frame.e" Name="dv_frame.e" />
+                  <File Id="dv_tablerow_multilist.e" Name="DV_TAB~2.E" LongName="dv_tablerow_multilist.e" />
+                  <File Id="dv_label.e" Name="dv_label.e" />
+                  <File Id="dv_box.e" Name="dv_box.e" />
+                  <File Id="dv_horizontal_box.e" Name="DV_HOR~1.E" LongName="dv_horizontal_box.e" />
+                  <File Id="dv_button.e" Name="DV_BUT~1.E" LongName="dv_button.e" />
+                  <File Id="dv_vertical_box.e" Name="DV_VER~1.E" LongName="dv_vertical_box.e" />
+                  <File Id="dv_titled_widget.e" Name="DV_TIT~1.E" LongName="dv_titled_widget.e" />
+                </Component>
+              </Directory>
+              <Directory Id="user_interactions" Name="USER_I~1" LongName="user_interactions">
+                <Component Id="user_interactions" Guid="3BB926F0-D81A-4450-A6EF-80B73D222C2A">
+                  <File Id="dv_sensitive_integer.e" Name="DV_SEN~3.E" LongName="dv_sensitive_integer.e" KeyPath="yes" />
+                  <File Id="dv_sensitive_control.e" Name="DV_SEN~2.E" LongName="dv_sensitive_control.e" />
+                  <File Id="dv_tablerow_list.e" Name="DV_TAB~1.E" LongName="dv_tablerow_list.e" />
+                  <File Id="dv_sensitive_string.e" Name="DV_SEN~4.E" LongName="dv_sensitive_string.e" />
+                  <File Id="dv_sensitive_check.e" Name="DV_SEN~1.E" LongName="dv_sensitive_check.e" />
+                </Component>
+              </Directory>
+            </Directory>
+          </Directory>
+          <Directory Id="thread" Name="thread">
+            <Component Id="thread" Guid="7B320094-02FD-41FD-8807-0FAA49BA1F33">
+              <File Id="object_owner.e" Name="OBJECT~1.E" LongName="object_owner.e" />
+              <File Id="proxy.e" Name="proxy.e" KeyPath="yes" />
+              <File Id="worker_thread.e" Name="WORKER~1.E" LongName="worker_thread.e" />
+            </Component>
+            <Directory Id="classic2" Name="classic">
+              <Component Id="classic2" Guid="5619F2E3-678A-4E5D-845A-05F2BA056C2B">
+                <File Id="thread_attributes.e1" Name="THREAD~1.E" LongName="thread_attributes.e" KeyPath="yes" />
+                <File Id="thread_control.e2" Name="THREAD~2.E" LongName="thread_control.e" />
+                <File Id="thread.e3" Name="thread.e" />
+                <File Id="semaphore.e4" Name="SEMAPH~1.E" LongName="semaphore.e" />
+                <File Id="mutex.e5" Name="mutex.e" />
+                <File Id="condition_variable.e6" Name="CONDIT~1.E" LongName="condition_variable.e" />
+                <File Id="read_write_lock.e" Name="READ_W~1.E" LongName="read_write_lock.e" />
+              </Component>
+            </Directory>
+          </Directory>
+          <Directory Id="time" Name="time">
+            <Component Id="time" Guid="FEFB58F4-B488-4948-BCF3-2F669FBC88C5">
+              <File Id="time_duration.e" Name="TIME_D~1.E" LongName="time_duration.e" KeyPath="yes" />
+              <File Id="date_validity_checker.e" Name="DATE_V~1.E" LongName="date_validity_checker.e" />
+              <File Id="date_time_value.e" Name="DACEE1~1.E" LongName="date_time_value.e" />
+              <File Id="date_time_duration.e" Name="DATE_T~2.E" LongName="date_time_duration.e" />
+              <File Id="c_date.e" Name="c_date.e" />
+              <File Id="time_set.e" Name="time_set.e" />
+              <File Id="group_element.e" Name="GROUP_~1.E" LongName="group_element.e" />
+              <File Id="date_duration.e" Name="DATE_D~1.E" LongName="date_duration.e" />
+              <File Id="absolute.e" Name="absolute.e" />
+              <File Id="time_utility.e" Name="TIME_U~1.E" LongName="time_utility.e" />
+              <File Id="interval.e" Name="interval.e" />
+              <File Id="time_value.e" Name="TIME_V~2.E" LongName="time_value.e" />
+              <File Id="time_constants.e" Name="TIME_C~1.E" LongName="time_constants.e" />
+              <File Id="date_measurement.e" Name="DATE_M~1.E" LongName="date_measurement.e" />
+              <File Id="date_value.e" Name="DATE_V~2.E" LongName="date_value.e" />
+              <File Id="date_time_set.e" Name="DATE_T~5.E" LongName="date_time_set.e" />
+              <File Id="date_time_measurement.e" Name="DATE_T~6.E" LongName="date_time_measurement.e" />
+              <File Id="time_validity_checker.e" Name="TIME_V~1.E" LongName="time_validity_checker.e" />
+              <File Id="date_set.e" Name="date_set.e" />
+              <File Id="date_time.e" Name="DATE_T~7.E" LongName="date_time.e" />
+              <File Id="Readme44" Name="Readme" />
+              <File Id="date_time_validity_checker.e" Name="DAB620~1.E" LongName="date_time_validity_checker.e" />
+              <File Id="Version46" Name="Version" />
+              <File Id="duration.e" Name="duration.e" />
+              <File Id="time.e" Name="time.e" />
+              <File Id="time_measurement.e" Name="TIME_M~1.E" LongName="time_measurement.e" />
+              <File Id="date_constants.e" Name="DATE_C~1.E" LongName="date_constants.e" />
+              <File Id="date.e" Name="date.e" />
+            </Component>
+            <Directory Id="format" Name="format">
+              <Component Id="format" Guid="168E7591-1605-48B0-B60A-6E3A4BB8F1BC">
+                <File Id="date_time_code.e" Name="DATE_T~1.E" LongName="date_time_code.e" KeyPath="yes" />
+                <File Id="Readme43" Name="Readme" />
+                <File Id="date_time_code_string.e" Name="DATE_T~3.E" LongName="date_time_code_string.e" />
+                <File Id="date_time_parser.e" Name="DATE_T~9.E" LongName="date_time_parser.e" />
+                <File Id="date_time_language_constants.e" Name="DATE_T~B.E" LongName="date_time_language_constants.e" />
+                <File Id="find_separator_facility.e" Name="FIND_S~1.E" LongName="find_separator_facility.e" />
+                <File Id="code_validity_checker.e" Name="CODE_V~1.E" LongName="code_validity_checker.e" />
+              </Component>
+              <Directory Id="german" Name="german">
+                <Component Id="german" Guid="D3CD73CD-45CC-4A85-A53B-FBF50498B108">
+                  <File Id="date_time_tools.e" Name="DATE_T~4.E" LongName="date_time_tools.e" KeyPath="yes" />
+                </Component>
+              </Directory>
+              <Directory Id="french" Name="french">
+                <Component Id="french" Guid="A2AF2BA4-534D-4973-8253-496B2C107AC1">
+                  <File Id="date_time_tools.e45" Name="DATE_T~8.E" LongName="date_time_tools.e" KeyPath="yes" />
+                </Component>
+              </Directory>
+              <Directory Id="english" Name="english">
+                <Component Id="english" Guid="D9C7552D-7899-4A43-941A-F4425CE57F73">
+                  <File Id="date_time_tools.e47" Name="DATE_T~A.E" LongName="date_time_tools.e" KeyPath="yes" />
+                </Component>
+              </Directory>
+            </Directory>
+          </Directory>
+          <Directory Id="net" Name="net">
+            <Directory Id="mail" Name="mail">
+              <Component Id="mail" Guid="7BEDC3C6-6A21-4509-B031-7260172FAD85">
+                <File Id="transfer_error.e" Name="TRANSF~1.E" LongName="transfer_error.e" KeyPath="yes" />
+                <File Id="sending_protocol.e" Name="SENDIN~1.E" LongName="sending_protocol.e" />
+                <File Id="email_protocol.e" Name="EMAIL_~2.E" LongName="email_protocol.e" />
+                <File Id="email_constants.e" Name="EMAIL_~1.E" LongName="email_constants.e" />
+                <File Id="protocol_resource.e" Name="PROTOC~1.E" LongName="protocol_resource.e" />
+                <File Id="memory_resource.e" Name="MEMORY~2.E" LongName="memory_resource.e" />
+                <File Id="smtp_protocol.e" Name="SMTP_P~1.E" LongName="smtp_protocol.e" />
+                <File Id="mailer.e" Name="mailer.e" />
+                <File Id="email_resource.e" Name="EMAIL_~3.E" LongName="email_resource.e" />
+                <File Id="retrieving_protocol.e" Name="RETRIE~1.E" LongName="retrieving_protocol.e" />
+                <File Id="header.e" Name="header.e" />
+                <File Id="email.e" Name="email.e" />
+              </Component>
+            </Directory>
+            <Directory Id="Clib3" Name="Clib">
+              <Component Id="Clib3" Guid="96AE4591-F8EE-4E35-902F-E83041373791">
+                <File Id="netvmsdef.h" Name="NETVMS~1.H" LongName="netvmsdef.h" KeyPath="yes" />
+                <File Id="local.c" Name="local.c" />
+                <File Id="bitmask.h" Name="bitmask.h" />
+                <File Id="make_msc.bat3" Name="make_msc.bat" />
+                <File Id="network.c" Name="network.c" />
+                <File Id="makefile.m" Name="makefile.m" />
+                <File Id="makefile.bmt" Name="makefile.bmt" />
+                <File Id="storable.c" Name="storable.c" />
+                <File Id="make_bcb.bat7" Name="make_bcb.bat" />
+                <File Id="makefile.b" Name="makefile.b" />
+                <File Id="network_r.c" Name="NETWOR~1.C" LongName="network_r.c" />
+                <File Id="syncpoll.c" Name="syncpoll.c" />
+                <File Id="Makefile.SH9" Name="Makefile.SH" />
+                <File Id="hostname.c" Name="hostname.c" />
+                <File Id="makefile.mmt" Name="makefile.mmt" />
+                <File Id="makefile.il" Name="makefile.il" />
+                <File Id="makefile.b.il" Name="MAKEFI~1.IL" LongName="makefile.b.il" />
+              </Component>
+            </Directory>
+            <Directory Id="local" Name="local">
+              <Directory Id="socket" Name="socket">
+                <Component Id="socket" Guid="9440C8DD-F50D-4DBA-8706-948EDC30516E">
+                  <File Id="unix_socket_address.e" Name="UNIX_S~2.E" LongName="unix_socket_address.e" KeyPath="yes" />
+                  <File Id="unix_socket.e" Name="UNIX_S~4.E" LongName="unix_socket.e" />
+                  <File Id="unix_stream_socket.e" Name="UNIX_S~5.E" LongName="unix_stream_socket.e" />
+                  <File Id="unix_datagram_socket.e" Name="UNIX_D~1.E" LongName="unix_datagram_socket.e" />
+                </Component>
+              </Directory>
+              <Directory Id="client_server9" Name="CLIENT~3" LongName="client_server">
+                <Component Id="client_server9" Guid="3CB821FA-29EC-470D-AB60-FCB1B52FC0EC">
+                  <File Id="unix_server.e" Name="UNIX_S~3.E" LongName="unix_server.e" KeyPath="yes" />
+                  <File Id="unix_client.e" Name="UNIX_C~1.E" LongName="unix_client.e" />
+                </Component>
+              </Directory>
+            </Directory>
+            <Directory Id="polling" Name="polling">
+              <Directory Id="abstract5" Name="abstract">
+                <Component Id="abstract5" Guid="97C0BE17-38B7-403D-A51E-230F1FF5A568">
+                  <File Id="poll_mask.e" Name="POLL_M~1.E" LongName="poll_mask.e" KeyPath="yes" />
+                  <File Id="socket_poller.e" Name="SOCKET~3.E" LongName="socket_poller.e" />
+                  <File Id="poll_command.e" Name="POLL_C~1.E" LongName="poll_command.e" />
+                  <File Id="medium_poller.e" Name="MEDIUM~1.E" LongName="medium_poller.e" />
+                </Component>
+              </Directory>
+              <Directory Id="implementation" Name="IMPLEM~1" LongName="implementation">
+                <Component Id="implementation" Guid="54E3F432-EAA8-48C7-BA73-ED8E3B34B50E">
+                  <File Id="vision_socket_poller.e" Name="VISION~1.E" LongName="vision_socket_poller.e" KeyPath="yes" />
+                  <File Id="wel_socket_poller.e" Name="WEL_SO~1.E" LongName="wel_socket_poller.e" />
+                  <File Id="mel_socket_poller.e" Name="MEL_SO~1.E" LongName="mel_socket_poller.e" />
+                </Component>
+              </Directory>
+            </Directory>
+            <Directory Id="spec2" Name="spec">
+              <Directory Id="msc" Name="msc">
+                <Directory Id="lib" Name="lib">
+                  <Component Id="lib" Guid="EAA91601-93AE-4694-81F7-DB29C981BAA8">
+                    <File Id="mtnet.lib" Name="mtnet.lib" KeyPath="yes" />
+                    <File Id="net.lib8" Name="net.lib" />
+                    <File Id="ilnet.lib2" Name="ilnet.lib" />
+                  </Component>
+                </Directory>
+              </Directory>
+              <Directory Id="bcb" Name="bcb">
+                <Directory Id="lib7" Name="lib">
+                  <Component Id="lib7" Guid="E9027B4D-22C1-4575-8D49-9E23B879314C">
+                    <File Id="net.lib" Name="net.lib" KeyPath="yes" />
+                    <File Id="mtnet.lib6" Name="mtnet.lib" />
+                    <File Id="ilnet.lib" Name="ilnet.lib" />
+                  </Component>
+                </Directory>
+              </Directory>
+            </Directory>
+            <Directory Id="transfer" Name="transfer">
+              <Directory Id="transactions" Name="TRANSA~1" LongName="transactions">
+                <Component Id="transactions" Guid="52F819CE-4B29-4F27-97C1-762A396BBE3D">
+                  <File Id="transaction_container.e" Name="TRANSA~2.E" LongName="transaction_container.e" KeyPath="yes" />
+                  <File Id="transfer_manager.e" Name="TRANSF~3.E" LongName="transfer_manager.e" />
+                  <File Id="transfer_manager_builder.e" Name="TRANSF~4.E" LongName="transfer_manager_builder.e" />
+                  <File Id="single_transaction.e" Name="SINGLE~3.E" LongName="single_transaction.e" />
+                  <File Id="data_resource_factory.e" Name="DATA_R~1.E" LongName="data_resource_factory.e" />
+                  <File Id="transaction.e" Name="TRANSA~1.E" LongName="transaction.e" />
+                  <File Id="multiple_transaction.e" Name="MULTIP~1.E" LongName="multiple_transaction.e" />
+                  <File Id="transfer_manager_builder_impl.e" Name="TRANSF~5.E" LongName="transfer_manager_builder_impl.e" />
+                </Component>
+              </Directory>
+              <Directory Id="addresses" Name="ADDRES~1" LongName="addresses">
+                <Component Id="addresses" Guid="0152646E-7489-42CD-8493-539A1F1EC4F5">
+                  <File Id="http_url.e" Name="http_url.e" KeyPath="yes" />
+                  <File Id="proxy_information.e" Name="PROXY_~1.E" LongName="proxy_information.e" />
+                  <File Id="file_url.e" Name="file_url.e" />
+                  <File Id="host_validity_checker.e" Name="HOST_V~1.E" LongName="host_validity_checker.e" />
+                  <File Id="url.e" Name="url.e" />
+                  <File Id="network_resource_url.e" Name="NETWOR~5.E" LongName="network_resource_url.e" />
+                  <File Id="ftp_url.e" Name="ftp_url.e" />
+                </Component>
+                <Directory Id="comparators" Name="COMPAR~1" LongName="comparators">
+                  <Component Id="comparators" Guid="BCFF50E7-334C-4532-BFA9-786ACE055776">
+                    <File Id="character_set.e" Name="CHARAC~3.E" LongName="character_set.e" KeyPath="yes" />
+                    <File Id="single_character_comparator.e" Name="SINGLE~2.E" LongName="single_character_comparator.e" />
+                    <File Id="comparator.e" Name="COMPAR~4.E" LongName="comparator.e" />
+                    <File Id="comparator_builder_impl.e" Name="COMPAR~5.E" LongName="comparator_builder_impl.e" />
+                    <File Id="range_comparator.e" Name="RANGE_~1.E" LongName="range_comparator.e" />
+                    <File Id="comparator_builder.e" Name="COMPAR~6.E" LongName="comparator_builder.e" />
+                  </Component>
+                </Directory>
+              </Directory>
+              <Directory Id="resources" Name="RESOUR~1" LongName="resources">
+                <Component Id="resources" Guid="37A8943B-11A8-4B02-B495-54A8DB903907">
+                  <File Id="transfer_command_constants.e" Name="TRANSF~2.E" LongName="transfer_command_constants.e" KeyPath="yes" />
+                  <File Id="data_resource_factory_impl.e" Name="DATA_R~3.E" LongName="data_resource_factory_impl.e" />
+                  <File Id="network_resource.e" Name="NETWOR~2.E" LongName="network_resource.e" />
+                  <File Id="ftp_protocol.e" Name="FTP_PR~1.E" LongName="ftp_protocol.e" />
+                  <File Id="file_protocol.e" Name="FILE_P~1.E" LongName="file_protocol.e" />
+                  <File Id="data_resource_error_constants.e" Name="DATA_R~2.E" LongName="data_resource_error_constants.e" />
+                  <File Id="http_protocol.e" Name="HTTP_P~1.E" LongName="http_protocol.e" />
+                  <File Id="data_resource.e" Name="DATA_R~4.E" LongName="data_resource.e" />
+                </Component>
+              </Directory>
+            </Directory>
+            <Directory Id="network" Name="network">
+              <Directory Id="client_server4" Name="CLIENT~2" LongName="client_server">
+                <Component Id="client_server4" Guid="77AE0B32-46C3-4567-98A0-BF93506962C5">
+                  <File Id="network_client.e" Name="NETWOR~1.E" LongName="network_client.e" KeyPath="yes" />
+                  <File Id="network_server.e" Name="NETWOR~3.E" LongName="network_server.e" />
+                </Component>
+              </Directory>
+              <Directory Id="socket8" Name="socket">
+                <Component Id="socket8" Guid="BEA9A313-7740-4590-BED1-BE78CCECABE1">
+                  <File Id="host_address.e" Name="HOST_A~1.E" LongName="host_address.e" KeyPath="yes" />
+                  <File Id="network_socket.e" Name="NETWOR~4.E" LongName="network_socket.e" />
+                  <File Id="network_datagram_socket.e" Name="NETWOR~6.E" LongName="network_datagram_socket.e" />
+                  <File Id="network_stream_socket.e" Name="NETWOR~7.E" LongName="network_stream_socket.e" />
+                  <File Id="network_socket_address.e" Name="NETWOR~8.E" LongName="network_socket_address.e" />
+                </Component>
+              </Directory>
+            </Directory>
+            <Directory Id="abstract" Name="abstract">
+              <Directory Id="client_server" Name="CLIENT~1" LongName="client_server">
+                <Component Id="client_server" Guid="FC0238EA-CA29-435C-9AF6-9CEE9982E2B0">
+                  <File Id="server.e" Name="server.e" KeyPath="yes" />
+                  <File Id="client.e" Name="client.e" />
+                </Component>
+              </Directory>
+              <Directory Id="socket6" Name="socket">
+                <Component Id="socket6" Guid="6AD447C9-0783-41CF-8ACF-246B631A8555">
+                  <File Id="datagram_socket.e" Name="DATAGR~2.E" LongName="datagram_socket.e" KeyPath="yes" />
+                  <File Id="socket_address.e" Name="SOCKET~1.E" LongName="socket_address.e" />
+                  <File Id="packet.e" Name="packet.e" />
+                  <File Id="socket_resources.e" Name="SOCKET~2.E" LongName="socket_resources.e" />
+                  <File Id="stream_socket.e" Name="STREAM~1.E" LongName="stream_socket.e" />
+                  <File Id="datagram_packet.e" Name="DATAGR~1.E" LongName="datagram_packet.e" />
+                  <File Id="socket.e" Name="socket.e" />
+                </Component>
+              </Directory>
+            </Directory>
+          </Directory>
+          <Directory Id="web" Name="web">
+            <Directory Id="stdio" Name="stdio">
+              <Component Id="stdio" Guid="52352DD5-5956-4E3D-A8FF-B5FA29713D1A">
+                <File Id="stdin.e" Name="stdin.e" KeyPath="yes" />
+                <File Id="shared_stdin.e" Name="SHARED~5.E" LongName="shared_stdin.e" />
+                <File Id="shared_stdout.e" Name="SHARED~6.E" LongName="shared_stdout.e" />
+                <File Id="stdout.e" Name="stdout.e" />
+              </Component>
+            </Directory>
+            <Directory Id="table26" Name="table">
+              <Component Id="table26" Guid="D4613A57-AE04-4307-AE65-8B87A7726C25">
+                <File Id="html_table_constants.e" Name="HTML_T~2.E" LongName="html_table_constants.e" KeyPath="yes" />
+                <File Id="html_table.e" Name="HTML_T~1.E" LongName="html_table.e" />
+              </Component>
+            </Directory>
+            <Directory Id="html" Name="html">
+              <Component Id="html" Guid="95053248-F106-4D4E-B9B2-124AB82D7838">
+                <File Id="html_page.e" Name="HTML_P~1.E" LongName="html_page.e" KeyPath="yes" />
+                <File Id="html_constants.e" Name="HTML_C~1.E" LongName="html_constants.e" />
+                <File Id="html.e" Name="html.e" />
+                <File Id="html_generator.e" Name="HTML_G~1.E" LongName="html_generator.e" />
+                <File Id="html_text.e" Name="HTML_T~3.E" LongName="html_text.e" />
+              </Component>
+            </Directory>
+            <Directory Id="cgi_handling" Name="CGI_HA~1" LongName="cgi_handling">
+              <Component Id="cgi_handling" Guid="6C20A123-47FE-4669-90E8-803209C0A85F">
+                <File Id="cgi_environment.e" Name="CGI_EN~1.E" LongName="cgi_environment.e" KeyPath="yes" />
+                <File Id="cgi_interface.e" Name="CGI_IN~2.E" LongName="cgi_interface.e" />
+                <File Id="cgi_in_and_out.e" Name="CGI_IN~1.E" LongName="cgi_in_and_out.e" />
+              </Component>
+            </Directory>
+            <Directory Id="cgi_facilities" Name="CGI_FA~1" LongName="cgi_facilities">
+              <Component Id="cgi_facilities" Guid="934390B9-B77D-4801-86DB-2F5C4DB099BD">
+                <File Id="cgi_common_status_types.e" Name="CGI_CO~1.E" LongName="cgi_common_status_types.e" KeyPath="yes" />
+                <File Id="cgi_response_header.e" Name="CGI_RE~1.E" LongName="cgi_response_header.e" />
+                <File Id="cgi_error_handling.e" Name="CGI_ER~1.E" LongName="cgi_error_handling.e" />
+              </Component>
+            </Directory>
+            <Directory Id="form" Name="form">
+              <Component Id="form" Guid="181F03C6-878D-4930-89D4-49307FCD814A">
+                <File Id="html_form_constants.e" Name="HTML_F~2.E" LongName="html_form_constants.e" KeyPath="yes" />
+                <File Id="html_form_select_option.e" Name="HTDBC7~1.E" LongName="html_form_select_option.e" />
+                <File Id="html_form_input.e" Name="HTML_F~3.E" LongName="html_form_input.e" />
+                <File Id="cgi_forms.e" Name="CGI_FO~1.E" LongName="cgi_forms.e" />
+                <File Id="html_form_select.e" Name="HTML_F~4.E" LongName="html_form_select.e" />
+                <File Id="html_form_textarea.e" Name="HT0549~1.E" LongName="html_form_textarea.e" />
+                <File Id="html_form.e" Name="HTML_F~1.E" LongName="html_form.e" />
+              </Component>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+  </Module>
+</Wix>

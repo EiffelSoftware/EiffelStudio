@@ -11,11 +11,11 @@ set DEFAULT_CVS_TAG=HEAD
 REM NB: The following directory will be erased!
 set TMP_EIFFEL_SRC=g:\tmpdev
 REM Where the new delivery is set up. Warning: if it exists, the directory will be erased!
-set INSTALL_DIR=f:\InstalledEiffel52
+set INSTALL_DIR=f:\InstalledEiffel55
 REM Where Visual C++ is installed (to recompile the run-time)
 set C_COMPILER_PATH=d:\\apps\\MSVC\\VC98
 REM Get where hhc and wfwi are located, to be able to compile the documentation and the delivery.
-set PATH=%PATH;"D:\apps\HTMLHelp";"d:\apps\Wise"
+set PATH=%PATH;"D:\apps\HTMLHelp";"d:\apps\Wise;e:\src\wix\bin"
 
 REM OK The rest is private, no need for you to see it :)
 

@@ -1,0 +1,3 @@
+candle %1.wxs
+light /b %INSTALL_DIR %1.wixobj -out MSMs\%1.msm
+del %1.wixobj

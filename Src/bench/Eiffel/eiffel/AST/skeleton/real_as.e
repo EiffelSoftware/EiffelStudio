@@ -22,6 +22,7 @@ feature {AST_FACTORY} -- Initialization
 			r_not_void: r /= Void
 		do
 			value := r
+			value.replace_substring_all ("_","")
 		ensure
 			value_set: value = r
 		end

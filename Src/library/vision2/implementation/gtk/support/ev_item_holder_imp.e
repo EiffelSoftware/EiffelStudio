@@ -16,13 +16,15 @@ feature -- Access
 
 	count: INTEGER is
 			-- Number of direct children of the holder.
-		deferred
+		do
+			Result := ev_children.count
 		end
 
 	get_item (index: INTEGER): EV_ITEM is
 			-- Give the item of the list at the zero-base
 			-- `index'.
-		deferred
+		do
+			Result ?= (ev_children.i_th (index)).interface
 		end
 
 feature -- Element change
@@ -36,7 +38,22 @@ feature -- Basic operations
 
 	find_item_by_data (data: ANY): EV_ITEM is
 			-- Find a child with data equal to `data'.
-		deferred
+		local
+			list: ARRAYED_LIST [EV_ITEM_IMP]
+			litem: EV_ITEM
+		do
+			from
+				list := ev_children
+				list.start
+			until
+				list.after or Result /= Void
+			loop
+				litem ?= list.item.interface
+				if litem.data.is_equal (data) then
+					Result ?= litem
+				end
+				list.forth
+			end
 		end
 
 feature {EV_ITEM_HOLDER_IMP} -- Implementation

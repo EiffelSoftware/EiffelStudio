@@ -27,10 +27,11 @@ feature {TTY_RESOURCES} -- Initialization
 	initialize (rt: RESOURCE_TABLE) is
 			-- Initialize all resources valid for Current.
 		do
-			!! tool_width.make ("system_tool_width", rt, 440);
-			!! tool_height.make ("system_tool_height", rt, 500);
-			!! command_bar.make ("system_tool_command_bar", rt, true);
-			!! format_bar.make ("system_tool_format_bar", rt, true);
+			!! tool_width.make ("system_tool_width", rt, 440)
+			!! tool_height.make ("system_tool_height", rt, 500)
+			!! command_bar.make ("system_tool_command_bar", rt, true)
+			!! format_bar.make ("system_tool_format_bar", rt, true)
+			!! parse_ace_after_saving.make ("parse_ace_after_saving", rt, True)
 			--!! hidden_clusters.make ("hidden_clusters", rt, <<>>)
 		end
 
@@ -44,10 +45,11 @@ feature -- Validation
 
 feature -- Resources
 
-	tool_width: INTEGER_RESOURCE;
-	tool_height: INTEGER_RESOURCE;
-	command_bar: BOOLEAN_RESOURCE;
-	format_bar: BOOLEAN_RESOURCE;
+	tool_width: INTEGER_RESOURCE
+	tool_height: INTEGER_RESOURCE
+	command_bar: BOOLEAN_RESOURCE
+	format_bar: BOOLEAN_RESOURCE
+	parse_ace_after_saving: BOOLEAN_RESOURCE
 	--hidden_clusters: ARRAY_RESOURCE
 
 end -- class SYSTEM_CATEGORY

@@ -16,6 +16,7 @@
 
 #include "eif_threads.h"
 #include "rt_globals.h"
+#include "rt_timer.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -128,8 +129,10 @@ extern int eif_is_synchronized (void);
 		time_t l_seconds = timeout / 1000;	/* `timeout' is in second */ \
 		long l_nano_seconds = (timeout % 1000) * 1000000;	/* Reminder in nanoseconds */ \
 		struct timespec tspec; \
-		tspec.tv_sec = time(NULL) + l_seconds; \
-		tspec.tv_nsec = l_nano_seconds; \
+		struct timeval now; \
+		gettime(&now); \
+		tspec.tv_sec = now.tv_sec + l_seconds; \
+		tspec.tv_nsec = now.tv_usec * 1000 + l_nano_seconds; \
 		res = pthread_cond_timedwait (pcond, pmutex, &tspec); \
 		if (res && !((res == ETIMEDOUT) || (res == ETIME))) eraise (msg, EN_EXT); \
 		result_success = (res != ETIMEDOUT ? 1 : 0); \

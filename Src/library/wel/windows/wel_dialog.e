@@ -262,8 +262,11 @@ feature {NONE} -- Implementation
 			Result := ""
 		end
 
-	default_style: INTEGER is 0
+	default_style: INTEGER is
 			-- No style
+		do
+			Result := 0
+		end
 
 feature {WEL_CONTROL} -- Implementation
 

@@ -15,7 +15,8 @@ inherit
 
 	EV_STANDARD_DIALOG_IMP
 		redefine
-			interface
+			interface,
+			initialize
 		end
 
 	EV_C_UTIL
@@ -46,7 +47,8 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Connect action sequences to button signals.
 		do
-			signal_connect_true ("delete_event", ~on_cancel)
+			Precursor {EV_STANDARD_DIALOG_IMP}
+			is_initialized := False
 			real_signal_connect (
 				gtk_color_selection_dialog_struct_ok_button (c_object),
 				"clicked",
@@ -170,6 +172,9 @@ end -- class EV_COLOR_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2001/06/22 00:49:27  king
+--| Calling initialize Precursor
+--|
 --| Revision 1.10  2001/06/07 23:08:06  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

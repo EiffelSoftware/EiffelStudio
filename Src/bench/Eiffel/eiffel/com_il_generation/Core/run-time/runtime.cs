@@ -223,17 +223,23 @@ feature -- Equality
 		Hashtable traversed_objects;
 		Boolean Result;
 
-			// `traversed_objects' is a correspondance between processed
-			// objects reachable from `obj' and newly created one that
-			// are reachable from `target'.
-		traversed_objects = new Hashtable (100);
-		
-			// Add `o2' and associates it with `o1' to
-			// resolve future references to `o2' into `o1'.
-		traversed_objects.Add (o2, o1);
+		if (o1 == o2) {
+			Result = true;
+		} else if ((o1 == null) || (o2 == null)) {
+			Result = false;
+		} else {
+				// `traversed_objects' is a correspondance between processed
+				// objects reachable from `obj' and newly created one that
+				// are reachable from `target'.
+			traversed_objects = new Hashtable (100);
+			
+				// Add `o2' and associates it with `o1' to
+				// resolve future references to `o2' into `o1'.
+			traversed_objects.Add (o2, o1);
 
-			// Performs deep traversal.
-		Result = internal_deep_equal (o1, o2, traversed_objects);
+				// Performs deep traversal.
+			Result = internal_deep_equal (o1, o2, traversed_objects);
+		}
 
 		return Result;
 	}

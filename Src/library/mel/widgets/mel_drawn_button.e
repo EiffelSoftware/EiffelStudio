@@ -46,12 +46,21 @@ feature -- Initialization
 
 feature -- Status report
 
-	is_multiclick_keep: BOOLEAN is
+	is_multiclick_kept: BOOLEAN is
 			-- Are the successive button clicks processed?
 		require
 			exists: not is_destroyed
 		do
 			Result := get_xt_unsigned_char (screen_object, XmNmultiClick) = XmMULTICLICK_KEEP
+		end;
+
+	is_multiclick_discarded: BOOLEAN is
+			-- Are the successive button clicks discard?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_unsigned_char 
+				(screen_object, XmNmultiClick) = XmMULTICLICK_DISCARD
 		end;
 
 	is_push_button_enabled: BOOLEAN is
@@ -63,79 +72,121 @@ feature -- Status report
 		end;
 
 	is_shadow_in: BOOLEAN is
-			-- Does Current appear inset?
+			-- Is Current widget appear inset?
 		require
 			exists: not is_destroyed
-		local
-			shadowtype: INTEGER
 		do
-			shadowtype := get_xt_unsigned_char (screen_object, XmNshadowType);
-			Result := (shadowtype = XmSHADOW_IN) or (shadowtype = XmSHADOW_ETCHED_IN)
+			Result := (get_xt_unsigned_char
+					(screen_object, XmNshadowType) = XmSHADOW_IN)
 		end;
 
-	is_shadow_etched: BOOLEAN is
-			-- Does the widget appear with a double line shadow?
+	is_shadow_out: BOOLEAN is
+			-- Is Current widget appear raised?
 		require
 			exists: not is_destroyed
-		local
-			shadowtype: INTEGER
 		do
-			shadowtype := get_xt_unsigned_char (screen_object, XmNshadowType);
-			Result := (shadowtype = XmSHADOW_ETCHED_IN) or (shadowtype = XmSHADOW_ETCHED_OUT)
+			Result := (get_xt_unsigned_char
+					(screen_object, XmNshadowType) = XmSHADOW_OUT)
+		end;
+
+	is_shadow_etched_in: BOOLEAN is
+			-- Does Current appear with a double line shadow inset?
+		require
+			exists: not is_destroyed
+		do
+			Result := (get_xt_unsigned_char
+						(screen_object, XmNshadowType) = XmSHADOW_ETCHED_IN)
+		end;
+
+	is_shadow_etched_out: BOOLEAN is
+			-- Does Current appear with a double line shadow raised?
+		require
+			exists: not is_destroyed
+		do
+			Result := (get_xt_unsigned_char
+						(screen_object, XmNshadowType) = XmSHADOW_ETCHED_OUT)
 		end;
 
 feature -- Satus setting
 
-	set_multiclick_keep (b: BOOLEAN) is
-			-- Set `multiclick_keep' to `b'.
+	set_multiclick_to_keep is
+			-- Set `is_multiclick_keep' to True.
 		require
 			exists: not is_destroyed
 		do
-			if b then
-				set_xt_unsigned_char (screen_object, XmNmultiClick, XmMULTICLICK_KEEP)
-			else
-				set_xt_unsigned_char (screen_object, XmNmultiClick, XmMULTICLICK_DISCARD)
-			end
+			set_xt_unsigned_char (screen_object, XmNmultiClick, XmMULTICLICK_KEEP)
 		ensure
-			button_clicks_kept: is_multiclick_keep = b
+			keep_successive_clicks: is_multiclick_kept
 		end;
 
-	set_push_button_enabled (b: BOOLEAN) is
-			-- Set `is_push_button_enabled' to `b'.
+	set_multiclick_to_discard is
+			-- Set `is_multiclick_keep' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNpushButtonEnabled, b)
+			set_xt_unsigned_char (screen_object, XmNmultiClick, XmMULTICLICK_DISCARD)
 		ensure
-			push_button_is_enabled: is_push_button_enabled = b
+			discard_successive_clicks: is_multiclick_discarded
 		end;
 
-	set_shadow_in (b: BOOLEAN) is
-			-- Set `is_shadow_in' to `b' and `is_shadow_etched' to False.
+	enable_push_button is
+			-- Set `is_push_button_enabled' to True.
 		require
 			exists: not is_destroyed
 		do
-			if b then
-				set_xt_unsigned_char (screen_object, XmNshadowType, XmSHADOW_IN)
-			else
-				set_xt_unsigned_char (screen_object, XmNshadowType, XmSHADOW_OUT)
-			end
+			set_xt_boolean (screen_object, XmNpushButtonEnabled, True)
 		ensure
-			shadow_type_set: is_shadow_in = b and not is_shadow_etched
+			push_button_is_enabled: is_push_button_enabled 
 		end;
 
-	set_shadow_etched_in (b: BOOLEAN) is
-			-- Set `is_shadow_in' to `b' and `is_shadow_etched' to True.
+	disable_push_button is
+			-- Set `is_push_button_enabled' to False.
 		require
 			exists: not is_destroyed
 		do
-			if b then
-				set_xt_unsigned_char (screen_object, XmNshadowType, XmSHADOW_ETCHED_IN)
-			else
-				set_xt_unsigned_char (screen_object, XmNshadowType, XmSHADOW_ETCHED_OUT)
-			end
+			set_xt_boolean (screen_object, XmNpushButtonEnabled, False)
 		ensure
-			shadow_type_set: is_shadow_etched = True and is_shadow_in = b
+			push_button_is_disabled: not is_push_button_enabled 
+		end;
+
+	set_shadow_in is
+			-- Set `is_shadow_in' to True.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNshadowType, XmSHADOW_IN)
+		ensure
+			is_shadow_in: is_shadow_in
+		end;
+
+	set_shadow_out is
+			-- Set `is_shadow_in' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNshadowType, XmSHADOW_OUT)
+		ensure
+			is_shadow_out: is_shadow_out
+		end;
+
+	set_shadow_etched_in is
+			-- Set `is_shadow_etched_in' to True.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNshadowType, XmSHADOW_ETCHED_IN)
+		ensure
+			is_shadow_etched_in: is_shadow_etched_in
+		end;
+
+	set_shadow_etched_out is
+			-- Set `is_shadow_etched_out' to True.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNshadowType, XmSHADOW_ETCHED_OUT)
+		ensure
+			is_shadow_etched_out: is_shadow_etched_out
 		end;
 
 feature -- Element change

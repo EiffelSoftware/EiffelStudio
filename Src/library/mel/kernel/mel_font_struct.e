@@ -31,9 +31,9 @@ feature {NONE} -- Initialization
 			ext_name := a_font_name.to_c;
 			display_handle := a_display.handle;
 			handle := x_load_query_font (display_handle, $ext_name);
-			shared := True
+			is_shared := True
 		ensure
-			shared: shared
+			is_shared: is_shared
 		end;
 
 feature -- Access

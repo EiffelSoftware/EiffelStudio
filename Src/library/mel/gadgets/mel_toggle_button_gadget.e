@@ -95,7 +95,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	select_insensitive_pixmap: MEL_PIXMAP is
@@ -107,7 +107,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	select_pixmap: MEL_PIXMAP is
@@ -119,7 +119,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	spacing: INTEGER is

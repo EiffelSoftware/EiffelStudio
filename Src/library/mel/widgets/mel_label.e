@@ -138,7 +138,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	pixmap: MEL_PIXMAP is
@@ -150,10 +150,10 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
-	is_string: BOOLEAN is
+	is_type_string: BOOLEAN is
 			-- Is Current a string rather than a pixmap?
 		require
 			exists: not is_destroyed
@@ -161,7 +161,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNlabelType) = XmSTRING
 		end;
 
-	is_pixmap: BOOLEAN is
+	is_type_pixmap: BOOLEAN is
 			-- Is Current a pixmap rather than a string?
 		require
 			exists: not is_destroyed
@@ -329,14 +329,24 @@ feature -- Status setting
 			set: mnemonic_char_set.is_equal (a_string)
 		end;
 
-	set_recomputing_size_allowed (b: BOOLEAN) is
-			-- Set `is_recomputing_size_allowed' to `b'.
+	allow_recompute_size is
+			-- Set `is_recomputing_size_allowed' to `True'.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNrecomputeSize, b)
+			set_xt_boolean (screen_object, XmNrecomputeSize, True)
 		ensure
-			recompute_size_allowed: is_recomputing_size_allowed = b
+			recompute_size_allowed: is_recomputing_size_allowed
+		end;
+
+	forbid_recompute_size is
+			-- Set `is_recomputing_size_allowed' to `False'.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNrecomputeSize, False)
+		ensure
+			recompute_size_not_allowed: not is_recomputing_size_allowed
 		end;
 
 	set_beginning_alignment is
@@ -395,18 +405,24 @@ feature -- Status setting
 			pixmap_set: pixmap.is_equal (a_pixmap)
 		end;
 
-	set_type_string (b: BOOLEAN) is
-			-- Set the type of Current to string.
+	set_type_string is
+			-- Set the type of the label to a String.
 		require
 			exists: not is_destroyed
 		do
-			if b then
-				set_xt_unsigned_char (screen_object, XmNlabelType, XmSTRING)
-			else
-				set_xt_unsigned_char (screen_object, XmNlabelType, XmPIXMAP)
-			end
+			set_xt_unsigned_char (screen_object, XmNlabelType, XmSTRING)
 		ensure
-			type_set: is_string = b and is_pixmap = not b
+			type_set: is_type_string
+		end;
+
+	set_type_pixmap is
+			-- Set the type of the label to Pixmap.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNlabelType, XmPIXMAP)
+		ensure
+			type_set: is_type_pixmap
 		end;
 
 	set_margin_bottom (a_value: INTEGER) is
@@ -475,19 +491,26 @@ feature -- Status setting
 			value_set: margin_width = a_value
 		end;
 
-	set_string_direction_l_to_r (b: BOOLEAN) is
-			-- Set `is_string_direction_l_to_r' to `b'.
+	set_string_direction_l_to_r is
+			-- Set the direction in which to draw the string to left to right.
 		require
 			exists: not is_destroyed
 		do
-			if b then
-				set_xm_string_direction (screen_object, XmNstringDirection, XmSTRING_DIRECTION_L_TO_R)
-			else
-				set_xm_string_direction (screen_object, XmNstringDirection, XmSTRING_DIRECTION_R_TO_L)
-			end
+			set_xm_string_direction (screen_object, XmNstringDirection, XmSTRING_DIRECTION_L_TO_R)
 		ensure
-			string_direction_set: is_string_direction_l_to_r = b
+			string_direction_set: is_string_direction_l_to_r
 		end;
+
+	set_string_direction_r_to_l is
+			-- Set the direction in which to draw the string to right to left.
+		require
+			exists: not is_destroyed
+		do
+			set_xm_string_direction (screen_object, XmNstringDirection, XmSTRING_DIRECTION_R_TO_L)
+		ensure
+			string_direction_set: not is_string_direction_l_to_r
+		end;
+
 
 feature {NONE} -- Implementation
 

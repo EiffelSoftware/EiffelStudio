@@ -43,7 +43,7 @@ feature -- Access
 				Result.set_shared
 			end
         ensure
-            Result_is_shared: Result /= Void implies Result.shared
+            Result_is_shared: Result /= Void implies Result.is_shared
 		end;
 
 	item_length: INTEGER is

@@ -130,6 +130,15 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNscrollBarDisplayPolicy) = XmSTATIC
 		end;
 
+	is_scroll_bar_display_policy_as_needed: BOOLEAN is
+			-- Is the vertical scroll bar always shown?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_unsigned_char 	
+				(screen_object, XmNscrollBarDisplayPolicy) = XmAS_NEEDED
+		end;
+
 	scroll_bar_placement_top_left: BOOLEAN is
 			-- Are the scroll bars shown at the top and the left side?
 		require
@@ -235,18 +244,24 @@ feature -- Status setting
 			vertical_scroll_bar_set: vertical_scroll_bar.is_equal (a_scroll_bar)
 		end;
 
-	set_scroll_bar_display_policy_static (b: BOOLEAN) is
-			-- Set `scroll_bar_display_policy_static' to `b'.
+	set_scroll_bar_display_policy_static is
+			-- Set `scroll_bar_display_policy_static' to True.
 		require
 			exists: not is_destroyed
 		do
-			if b then
-				set_xt_unsigned_char (screen_object, XmNscrollBarDisplayPolicy, XmSTATIC)
-			else
-				set_xt_unsigned_char (screen_object, XmNscrollBarDisplayPolicy, XmAS_NEEDED)
-			end
+			set_xt_unsigned_char (screen_object, XmNscrollBarDisplayPolicy, XmSTATIC)
 		ensure
-			display_policy_set: is_scroll_bar_display_policy_static = b
+			display_policy_is_static: is_scroll_bar_display_policy_static 
+		end;
+
+	set_scroll_bar_display_policy_as_needed is
+			-- Set `scroll_bar_display_policy_as_needed' to True.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNscrollBarDisplayPolicy, XmAS_NEEDED)
+		ensure
+			display_policy_as_need: is_scroll_bar_display_policy_as_needed
 		end;
 
 	set_scroll_bar_placement_top_left is

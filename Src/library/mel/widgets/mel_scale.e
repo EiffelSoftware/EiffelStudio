@@ -131,7 +131,7 @@ feature -- Status report
 			decimal_points_larger_enough: Result >= 0
 		end
 
-	is_highlighted_on_enter: BOOLEAN is
+	is_highlighted_on_entry: BOOLEAN is
 			-- Is Current highlighted when the input focus enters Current's window?
 		require
 			exists: not is_destroyed
@@ -187,22 +187,48 @@ feature -- Status report
 			Result := orientation = XmHORIZONTAL
 		end;
 
+	is_vertical: BOOLEAN is
+			-- Is scale orientation vertical?
+		require
+			exists: not is_destroyed
+		do
+			Result := orientation = XmVERTICAL
+		end;
+
 	is_maximum_on_top: BOOLEAN is
 			-- Is processing direction top?
 		require
-			exists: not is_destroyed
+			exists: not is_destroyed;
 			vertical: not is_horizontal
 		do
 			Result := processing_direction = XmMAX_ON_TOP
 		end;
 
+	is_maximum_on_bottom: BOOLEAN is
+			-- Is processing direction bottom?
+		require
+			exists: not is_destroyed;
+			vertical: not is_horizontal
+		do
+			Result := processing_direction = XmMAX_ON_BOTTOM
+		end;
+
 	is_maximum_on_left: BOOLEAN is
 			-- Is processing direction left?
 		require
-			exists: not is_destroyed
+			exists: not is_destroyed;
 			is_horizontal: is_horizontal
 		do
 			Result := processing_direction = XmMAX_ON_LEFT
+		end;
+
+	is_maximum_on_right: BOOLEAN is
+			-- Is processing direction right?
+		require
+			exists: not is_destroyed;
+			is_horizontal: is_horizontal
+		do
+			Result := processing_direction = XmMAX_ON_RIGHT
 		end;
 
 	is_value_shown: BOOLEAN is
@@ -258,14 +284,24 @@ feature -- Status setting
 			value_set: scale_multiple = a_granularity
 		end;
 
-	set_highlighted_on_enter (b: BOOLEAN) is
-			-- Set `is_highlighted_on_enter'.
+	set_highlight_on_entry is
+			-- Set `is_highlighted_on_entry' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNhighlightOnEnter, b)
+			set_xt_boolean (screen_object, XmNhighlightOnEnter, True)
 		ensure
-			highlighted_on_enter: is_highlighted_on_enter = b
+			highlighted_on_enter: is_highlighted_on_entry
+		end;
+
+	no_highlight_on_entry is
+			-- Set `is_highlighted_on_entry' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNhighlightOnEnter, False)
+		ensure
+			do_not_highlight_on_enter: not is_highlighted_on_entry 
 		end;
 
 	set_highlight_thickness (a_thickness: INTEGER) is
@@ -315,48 +351,68 @@ feature -- Status setting
 			height_set: scale_height = a_height
 		end;
 
-	set_horizontal (b: BOOLEAN) is
-			-- Set `is_horizontal' to `b'.
+	set_horizontal is
+			-- Set `is_horizontal' to True.
 		require
 			exists: not is_destroyed
 		do
-			if b then
-				set_xt_unsigned_char (screen_object, XmNorientation, XmHORIZONTAL)
-			else
-				set_xt_unsigned_char (screen_object, XmNorientation, XmVERTICAL)
-			end
+			set_xt_unsigned_char (screen_object, XmNorientation, XmHORIZONTAL)
 		ensure
-			value_set: is_horizontal = b
+			is_horizontal: is_horizontal
 		end;
 
-	set_maximum_on_top (b: BOOLEAN) is
-			-- Set `is_maximum_on_top' to `b'.
+	set_vertical is
+			-- Set `is_horizontal' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNorientation, XmVERTICAL)
+		ensure
+			is_vertical: is_vertical 
+		end;
+
+	set_maximum_on_top is
+			-- Set `is_maximum_on_top' to True.
 		require
 			exists: not is_destroyed;
 			vertical: not is_horizontal
 		do
-			if b then
-				set_xt_unsigned_char (screen_object, XmNprocessingDirection, XmMAX_ON_TOP)
-			else
-				set_xt_unsigned_char (screen_object, XmNprocessingDirection, XmMAX_ON_BOTTOM)
-			end
+			set_xt_unsigned_char (screen_object, XmNprocessingDirection, XmMAX_ON_TOP)
 		ensure
-			value_set: is_maximum_on_top = b
+			is_maximum_on_top: is_maximum_on_top 
 		end
 
-	set_maximum_on_left (b: BOOLEAN) is
-			-- Set `is_maximum_on_left' to `b'.
+	set_maximum_on_bottom is
+			-- Set `is_maximum_on_bottom' to True.
+		require
+			exists: not is_destroyed;
+			vertical: not is_horizontal
+		do
+			set_xt_unsigned_char (screen_object, XmNprocessingDirection, XmMAX_ON_BOTTOM)
+		ensure
+			is_maximum_on_bottom: is_maximum_on_bottom 
+		end
+
+	set_maximum_on_left is
+			-- Set `is_maximum_on_left' to True.
 		require
 			exists: not is_destroyed;
 			is_horizontal: is_horizontal
 		do
-			if b then
-				set_xt_unsigned_char (screen_object, XmNprocessingDirection, XmMAX_ON_LEFT)
-			else
-				set_xt_unsigned_char (screen_object, XmNprocessingDirection, XmMAX_ON_RIGHT)
-			end
+			set_xt_unsigned_char (screen_object, XmNprocessingDirection, XmMAX_ON_LEFT)
 		ensure
-			value_set: is_maximum_on_left = b
+			is_maximum_on_left: is_maximum_on_left
+		end
+
+	set_maximum_on_right is
+			-- Set `is_maximum_on_right' to True.
+		require
+			exists: not is_destroyed;
+			is_horizontal: is_horizontal
+		do
+			set_xt_unsigned_char (screen_object, XmNprocessingDirection, XmMAX_ON_RIGHT)
+		ensure
+			is_maximum_on_right: is_maximum_on_right
 		end
 
 	set_maximum (a_maximum: INTEGER) is
@@ -404,14 +460,24 @@ feature -- Status setting
 			value_set: value = a_value
 		end;
 
-	set_value_shown (b: BOOLEAN) is
-			-- Set `is_value_shown' to `b'.
+	show_value is
+			-- Set `is_value_shown' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNshowValue, b)
+			set_xt_boolean (screen_object, XmNshowValue, True)
 		ensure
-			is_value_shown: is_value_shown = b
+			value_is_shown: is_value_shown 
+		end;
+
+	hide_value is
+			-- Set `is_value_shown' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNshowValue, False)
+		ensure
+			value_is_hidden: not is_value_shown 
 		end;
 
 feature -- Element change

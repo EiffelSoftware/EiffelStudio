@@ -27,7 +27,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	top_shadow_color: MEL_PIXEL is
@@ -40,7 +40,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	bottom_shadow_pixmap: MEL_PIXMAP is
@@ -53,7 +53,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	top_shadow_pixmap: MEL_PIXMAP is
@@ -66,7 +66,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	foreground, foreground_color: MEL_PIXEL is
@@ -78,7 +78,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	highlight_color: MEL_PIXEL is
@@ -90,7 +90,7 @@ feature -- Status report
 		ensure
 			valid_result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	highlight_pixmap: MEL_PIXMAP is
@@ -102,7 +102,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	initial_focus: MEL_OBJECT is
@@ -130,10 +130,20 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xm_string_direction (screen_object, XmNstringDirection) = XmSTRING_DIRECTION_L_TO_R
+			Result := get_xm_string_direction 
+				(screen_object, XmNstringDirection) = XmSTRING_DIRECTION_L_TO_R
 		end;
 
-	traversal: BOOLEAN is
+	is_string_direction_r_to_l: BOOLEAN is
+			-- Are the strings displayed from right to left?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xm_string_direction 
+				(screen_object, XmNstringDirection) = XmSTRING_DIRECTION_R_TO_L
+		end;
+
+	traversal_on: BOOLEAN is
 			-- Is traversal possible?
 		require
 			exists: not is_destroyed
@@ -324,28 +334,46 @@ feature -- Status setting
 			shadow_thickness_set: shadow_thickness = a_thickness
 		end;
 
-	set_string_direction_l_to_r (b: BOOLEAN) is
-			-- Set the direction in which to draw strings from left to right.
+	set_string_direction_l_to_r is
+			-- Set the direction in which to draw the string to left to right.
 		require
 			exists: not is_destroyed
 		do
-			if b then
-				set_xm_string_direction (screen_object, XmNstringDirection, XmSTRING_DIRECTION_L_TO_R)
-			else
-				set_xm_string_direction (screen_object, XmNstringDirection, XmSTRING_DIRECTION_R_TO_L)
-			end
+			set_xm_string_direction (screen_object,
+						XmNstringDirection, XmSTRING_DIRECTION_L_TO_R)
 		ensure
-			string_direction_set: is_string_direction_l_to_r = b
+			is_string_direction_l_to_r: is_string_direction_l_to_r
 		end;
 
-	set_traversal (b: BOOLEAN) is
-			-- Set `traversal' to `b'.
+	set_string_direction_r_to_l is
+			-- Set the direction in which to draw the string to right to left.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNtraversalOn, b)
+			set_xm_string_direction (screen_object,
+						XmNstringDirection, XmSTRING_DIRECTION_R_TO_L)
 		ensure
-			traversal_set: traversal = b
+			is_string_direction_r_to_l: is_string_direction_r_to_l
+		end;
+
+	set_traversal_on is
+			-- Set `traversal_on' to True.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNtraversalOn, True)
+		ensure
+			traversal_on: traversal_on
+		end;
+
+	set_traversal_off is
+			-- Set `traversal_on' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNtraversalOn, False)
+		ensure
+			traversal_off: not traversal_on
 		end;
 
 	set_unit_pixel is

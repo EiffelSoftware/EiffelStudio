@@ -79,21 +79,39 @@ feature -- Status report
 		end;
 
 	is_shadow_in: BOOLEAN is
-			-- Does Current appear inset?
+			-- Is Current widget appear inset?
 		require
 			exists: not is_destroyed
 		do
-			Result := (get_xt_unsigned_char (screen_object, XmNshadowType) = XmSHADOW_IN) or
-					  (get_xt_unsigned_char (screen_object, XmNshadowType) = XmSHADOW_ETCHED_IN)
+			Result := (get_xt_unsigned_char 
+					(screen_object, XmNshadowType) = XmSHADOW_IN) 
 		end;
 
-	is_shadow_etched: BOOLEAN is
-			-- Does Current appear with a double line shadow?
+	is_shadow_out: BOOLEAN is
+			-- Is Current widget appear raised?
 		require
 			exists: not is_destroyed
 		do
-			Result := (get_xt_unsigned_char (screen_object, XmNshadowType) = XmSHADOW_ETCHED_IN) or
-					  (get_xt_unsigned_char (screen_object, XmNshadowType) = XmSHADOW_ETCHED_OUT)
+			Result := (get_xt_unsigned_char 
+					(screen_object, XmNshadowType) = XmSHADOW_OUT)
+		end;
+
+	is_shadow_etched_in: BOOLEAN is
+			-- Does Current appear with a double line shadow inset?
+		require
+			exists: not is_destroyed
+		do
+			Result := (get_xt_unsigned_char 
+						(screen_object, XmNshadowType) = XmSHADOW_ETCHED_IN) 
+		end;
+
+	is_shadow_etched_out: BOOLEAN is
+			-- Does Current appear with a double line shadow raised?
+		require
+			exists: not is_destroyed
+		do
+			Result := (get_xt_unsigned_char 
+						(screen_object, XmNshadowType) = XmSHADOW_ETCHED_OUT)
 		end;
 
 feature -- Status setting
@@ -120,32 +138,44 @@ feature -- Status setting
 			margin_width_set: margin_width = a_width
 		end;
 
-	set_shadow_in (b: BOOLEAN) is
-			-- Set `is_shadow_in' to `b' and `is_shadow_etched' to False.
+	set_shadow_in is
+			-- Set `is_shadow_in' to True.
 		require
 			exists: not is_destroyed
 		do
-			if b then
-				set_xt_unsigned_char (screen_object, XmNshadowType, XmSHADOW_IN)
-			else
-				set_xt_unsigned_char (screen_object, XmNshadowType, XmSHADOW_OUT)
-			end
+			set_xt_unsigned_char (screen_object, XmNshadowType, XmSHADOW_IN)
 		ensure
-			shadow_type_set: is_shadow_in = b and not is_shadow_etched
+			is_shadow_in: is_shadow_in 
 		end;
 
-	set_shadow_etched_in (b: BOOLEAN) is
-			-- Set `is_shadow_in' to `b' and `is_shadow_etched' to True.
+	set_shadow_out is
+			-- Set `is_shadow_in' to False.
 		require
 			exists: not is_destroyed
 		do
-			if b then
-				set_xt_unsigned_char (screen_object, XmNshadowType, XmSHADOW_ETCHED_IN)
-			else
-				set_xt_unsigned_char (screen_object, XmNshadowType, XmSHADOW_ETCHED_OUT)
-			end
+			set_xt_unsigned_char (screen_object, XmNshadowType, XmSHADOW_OUT)
 		ensure
-			shadow_type_set: is_shadow_in = b and is_shadow_etched
+			is_shadow_out: is_shadow_out 
+		end;
+
+	set_shadow_etched_in is
+			-- Set `is_shadow_etched_in' to True.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNshadowType, XmSHADOW_ETCHED_IN)
+		ensure
+			is_shadow_etched_in: is_shadow_etched_in
+		end;
+
+	set_shadow_etched_out is
+			-- Set `is_shadow_etched_out' to True.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNshadowType, XmSHADOW_ETCHED_OUT)
+		ensure
+			is_shadow_etched_out: is_shadow_etched_out
 		end;
 
 feature {NONE} -- Implementation

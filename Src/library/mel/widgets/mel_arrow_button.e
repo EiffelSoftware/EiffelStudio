@@ -83,13 +83,22 @@ feature -- Status report
 			Result := XmARROW_RIGHT = arrow_direction
 		end;
 
-	is_multiclick_keep: BOOLEAN is
+	is_multiclick_kept: BOOLEAN is
 			-- Are the successive button clicks processed?
 		require
 			exists: not is_destroyed
 		do
 			Result := get_xt_unsigned_char (screen_object, XmNmultiClick) = XmMULTICLICK_KEEP
 		end;
+
+    is_multiclick_discarded: BOOLEAN is
+            -- Are the successive button clicks discard?
+        require
+            exists: not is_destroyed
+        do
+            Result := get_xt_unsigned_char 
+                (screen_object, XmNmultiClick) = XmMULTICLICK_DISCARD
+        end;
 
 feature -- Status setting
 
@@ -133,18 +142,24 @@ feature -- Status setting
 			set: is_right
 		end;
 
-	set_multiclick_keep_to (b: BOOLEAN) is
-			-- Set `is_multiclick_keep' to `b'.
+	set_multiclick_to_keep is
+			-- Set `is_multiclick_kept' to True.
 		require
 			exists: not is_destroyed
 		do
-			if b then
-				set_xt_unsigned_char (screen_object, XmNmultiClick, XmMULTICLICK_KEEP)
-			else
-				set_xt_unsigned_char (screen_object, XmNmultiClick, XmMULTICLICK_DISCARD)
-			end
+			set_xt_unsigned_char (screen_object, XmNmultiClick, XmMULTICLICK_KEEP)
 		ensure
-			keep_successive_clicks: is_multiclick_keep = b
+			keep_successive_clicks: is_multiclick_kept
+		end;
+
+	set_multiclick_to_discard is
+			-- Set `is_multiclick_discarded' to True.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNmultiClick, XmMULTICLICK_DISCARD)
+		ensure
+			discard_successive_clicks: is_multiclick_discarded
 		end;
 
 feature -- Element change

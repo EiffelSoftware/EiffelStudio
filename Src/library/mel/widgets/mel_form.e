@@ -123,14 +123,24 @@ feature  -- Status setting
 			vertical_spacing_set: vertical_spacing = a_height
 		end;
 
-	set_rubber_positioning (b: BOOLEAN) is
-			-- Set `is_rubber_positioning' to `b'.
+	enable_rubber_positioning is
+			-- Set `is_rubber_positioning' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNrubberPositioning, b)
+			set_xt_boolean (screen_object, XmNrubberPositioning, True)
 		ensure
-			rubber_positioning_enabled: is_rubber_positioning = b
+			rubber_positioning_enabled: is_rubber_positioning 
+		end;
+
+	disable_rubber_positioning is
+			-- Set `is_rubber_positioning' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNrubberPositioning, False)
+		ensure
+			rubber_positioning_disabled: not is_rubber_positioning 
 		end;
 
 feature {NONE} -- External features

@@ -53,7 +53,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	arm_pixmap: MEL_PIXMAP is
@@ -65,7 +65,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	default_button_shadow_thickness: INTEGER is
@@ -86,12 +86,22 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNfillOnArm)
 		end;
 
-	is_multiclick_keep: BOOLEAN is
-			-- Are successive button clicks kept?
+	is_multiclick_kept: BOOLEAN is
+			-- Are the successive button clicks processed?
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_unsigned_char (screen_object, XmNmultiClick) = XmMULTICLICK_KEEP
+			Result := get_xt_unsigned_char 
+				(screen_object, XmNmultiClick) = XmMULTICLICK_KEEP
+		end;
+
+	is_multiclick_discarded: BOOLEAN is
+			-- Are the successive button clicks discard?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_unsigned_char
+				(screen_object, XmNmultiClick) = XmMULTICLICK_DISCARD
 		end;
 
 	show_as_default: INTEGER is
@@ -143,28 +153,44 @@ feature -- Status setting
 			shadow_thickness_set: default_button_shadow_thickness = a_width
 		end;
 
-	set_filled_on_arm (b: BOOLEAN) is
-			-- Set `filled_on_arm' to `b'.
+	fill_on_arm is
+			-- Set `filled_on_arm' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNfillOnArm, b)
+			set_xt_boolean (screen_object, XmNfillOnArm, True)
 		ensure
-			value_set: is_filled_on_arm = b
+			is_filled_on_arm: is_filled_on_arm 
 		end;
 
-	set_multiclick_keep (b: BOOLEAN) is
-			-- Set `is_multiclick_keep' to `b'.
+	no_fill_on_arm is
+			-- Set `filled_on_arm' to False.
 		require
 			exists: not is_destroyed
 		do
-			if b then
-				set_xt_unsigned_char (screen_object, XmNmultiClick, XmMULTICLICK_KEEP)
-			else
-				set_xt_unsigned_char (screen_object, XmNmultiClick, XmMULTICLICK_DISCARD)
-			end
+			set_xt_boolean (screen_object, XmNfillOnArm, False)
 		ensure
-			multiclick_keep_set: is_multiclick_keep = b
+			is_not_filled_on_arm: not is_filled_on_arm 
+		end;
+
+	set_multiclick_to_keep is
+			-- Set `is_multiclick_kept' to True.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNmultiClick, XmMULTICLICK_KEEP)
+		ensure
+			keep_successive_clicks: is_multiclick_kept
+		end;
+
+	set_multiclick_to_discard is
+			-- Set `is_multiclick_discard' to True.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNmultiClick, XmMULTICLICK_DISCARD)
+		ensure
+			discard_successive_clicks: is_multiclick_discarded
 		end;
 
 	set_show_as_default (a_width: INTEGER) is

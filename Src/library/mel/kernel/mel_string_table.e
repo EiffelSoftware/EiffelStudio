@@ -58,7 +58,7 @@ feature -- Access
 		do
 			!! Result.make_from_existing (get_i_th_table (handle, i))
 		ensure
-			non_void_result: Result /= Void and then Result.shared
+			non_void_result: Result /= Void and then Result.is_shared
 		end;
 
 	item_string (i: INTEGER): STRING is
@@ -86,7 +86,7 @@ feature -- Element change
 			i_large_enough: i > 0
 			i_small_enough: i <= count;
 			valid_ms: ms /= Void and then not ms.is_destroyed;
-			ms_is_shared: ms.shared
+			ms_is_shared: ms.is_shared
 		do
 			xm_list_put (handle, ms.handle, i)
 		end;

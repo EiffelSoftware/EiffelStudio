@@ -163,14 +163,24 @@ feature -- Status setting
 			is_unmanaged: parent /= Void implies not is_managed
 		end;
 
-	set_sensitive (b: BOOLEAN) is
-			-- Set `is_sensitive' to `b'.
+	set_sensitive is
+			-- Set `is_sensitive' to True.
 		require
 			exists: not is_destroyed
 		do
-			xt_set_sensitive (screen_object, b)
+			xt_set_sensitive (screen_object, True)
 		ensure
-			is_sensitive: is_sensitive = b
+			is_sensitive: is_sensitive 
+		end;
+
+	set_insensitive is
+			-- Set `is_sensitive' to False.
+		require
+			exists: not is_destroyed
+		do
+			xt_set_sensitive (screen_object, False)
+		ensure
+			not_sensitive: not is_sensitive 
 		end;
 
 	map, show is

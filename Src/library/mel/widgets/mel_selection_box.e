@@ -314,7 +314,7 @@ feature -- Status report
 			Result.set_shared
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	list_label_string: MEL_STRING is
@@ -337,7 +337,7 @@ feature -- Status report
 			Result_large_enough: Result >= 0
 		end;
 
-	are_buttons_minimized: BOOLEAN is
+	buttons_minimized: BOOLEAN is
 			-- Keep the buttons their preferred size?
 		require
 			exists: not is_destroyed
@@ -539,32 +539,44 @@ feature -- Status setting
 			list_visible_item_count_set: list_visible_item_count = a_count
 		end;
 
-	set_buttons_minimized (b: BOOLEAN) is
-			-- Set `are_buttons_minimized' to `b'.
+	minimize_button is
+			-- Set `buttons_minimized' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNminimizeButtons, b)
+			set_xt_boolean (screen_object, XmNminimizeButtons, True)
 		ensure
-			buttons_are_minimized: are_buttons_minimized = b
+			buttons_minimized: buttons_minimized
 		end;
 
-	set_must_match (b: BOOLEAN) is
-			-- Set `must_match' to `b'.
+	maximize_button is
+			-- Set `buttons_minimized' to False.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNmustMatch, b)
+			set_xt_boolean (screen_object, XmNminimizeButtons, False)
 		ensure
-			must_match_enabled: must_match = b
+			buttons_maximized: not buttons_minimized
 		end;
 
-	set_text_accelerators is
-			-- Set `text_accelerators'.
+	enable_must_match is
+			-- Set `must_match' to True.
 		require
 			exists: not is_destroyed
 		do
+			set_xt_boolean (screen_object, XmNmustMatch, True)
 		ensure
+			must_match_enabled: must_match 
+		end;
+
+	disable_must_match is
+			-- Set `must_match' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNmustMatch, False)
+		ensure
+			must_match_disabled: not must_match 
 		end;
 
 	set_text_columns (a_number: INTEGER) is

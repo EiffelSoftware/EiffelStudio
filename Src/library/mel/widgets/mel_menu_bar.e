@@ -14,10 +14,10 @@ inherit
 	MEL_ROW_COLUMN
 		export
 			{NONE} menu_history, mnemonic, mnemonic_char_set, is_popup_enabled,
-			radio_behavior, is_working_area, is_menu_bar, is_menu_popup,
+			is_radio_behavior, is_working_area, is_menu_bar, is_menu_popup,
 			is_menu_option, is_menu_pulldown, is_tear_off_enabled,
 			set_menu_history, set_mnemonic, set_mnemonic_char_set,
-			set_popup_enabled, set_radio_behavior
+			enable_popup, disable_popup, enable_radio_behavior, disable_radio_behavior
 		redefine
 			make
 		end

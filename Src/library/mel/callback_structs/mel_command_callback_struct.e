@@ -38,7 +38,7 @@ feature -- Access
 			Result.set_shared
 		ensure
 			Result_not_void: Result /= Void;
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	length: INTEGER is

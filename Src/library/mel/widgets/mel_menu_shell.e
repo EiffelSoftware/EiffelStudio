@@ -65,7 +65,7 @@ feature -- Status report
 			Result := get_xm_font_list (screen_object, XmNbuttonFontList)
 		ensure
 			Result_is_valid: Result /= Void and then Result.is_valid
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	default_font_list: MEL_FONT_LIST is
@@ -76,7 +76,7 @@ feature -- Status report
 			Result := get_xm_font_list (screen_object, XmNdefaultFontList)
 		ensure
 			Result_is_valid: Result /= Void and then Result.is_valid;
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	label_font_list: MEL_FONT_LIST is
@@ -87,7 +87,7 @@ feature -- Status report
 			Result := get_xm_font_list (screen_object, XmNlabelFontList)
 		ensure
 			Result_is_valid: Result /= Void and then Result.is_valid;
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 feature -- Status setting

@@ -13,11 +13,13 @@ inherit
 
 	MEL_ROW_COLUMN
 		export
-			{NONE} menu_help_widget, is_popup_enabled, radio_behavior,
+			{NONE} menu_help_widget, is_popup_enabled, is_radio_behavior,
 			is_working_area, is_menu_bar, is_menu_popup, is_menu_option,
 			is_menu_pulldown, is_tear_off_enabled,
-			set_menu_help_widget, set_popup_enabled, 
-			set_radio_behavior, set_tear_off_enabled
+			set_menu_help_widget, 
+			enable_popup, disable_popup,
+			enable_radio_behavior, disable_radio_behavior,
+			set_tear_off_to_enabled, set_tear_off_to_disabled
 		redefine
 			make
 		end
@@ -90,14 +92,6 @@ feature -- Status report
             Result ?= get_xt_widget (screen_object, XmNsubMenuId)
         end;
 
-	is_recomputing_size_allowed: BOOLEAN is
-			-- Is Current allowed to recompute its size?
-		require
-			exists: not is_destroyed
-		do
-			Result := button_gadget.is_recomputing_size_allowed
-		end
-
 feature -- Status setting
 
     set_sub_menu (a_widget: MEL_PULLDOWN_MENU) is
@@ -110,16 +104,6 @@ feature -- Status setting
         ensure
             sub_menu_set: sub_menu.is_equal (a_widget)
         end;
-
-	set_recomputing_size_allowed (b: BOOLEAN) is
-			-- Set `is_recomputing_size_allowed' to `b'.
-		require
-			exists: not is_destroyed
-		do
-			button_gadget.set_recomputing_size_allowed (b)
-		ensure
-			recompute_size_allowed: is_recomputing_size_allowed = b
-		end;
 
 feature {NONE} -- Implementation
 

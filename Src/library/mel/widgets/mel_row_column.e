@@ -200,8 +200,7 @@ feature -- Status report
 		end;
 
 	is_homogeneous: BOOLEAN is
-			-- Must all the children belong to the same widget class, the one that
-			-- is defined by `entry_class'?
+			-- Must all the children belong to the same widget class?
 		require
 			exists: not is_destroyed
 		do
@@ -279,6 +278,14 @@ feature -- Status report
 			Result := orientation = XmHORIZONTAL
 		end;
 
+	is_vertical: BOOLEAN is
+			-- Is scale orientation vertical?
+		require
+			exists: not is_destroyed
+		do
+			Result := orientation = XmVERTICAL
+		end;
+
 	packing_tight: BOOLEAN is
 			-- Is the method of spacing the items in Current tight?
 		require
@@ -311,7 +318,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNpopupEnabled)
 		end;
 
-	radio_behavior: BOOLEAN is
+	is_radio_behavior: BOOLEAN is
 			-- Acts Current like a radio box?
 		require
 			exists: not is_destroyed
@@ -319,7 +326,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNradioBehavior)
 		end;
 
-	radio_always_one: BOOLEAN is
+	is_radio_always_one: BOOLEAN is
 			-- Must one toggle always be selected?
 		require
 			exists: not is_destroyed
@@ -327,14 +334,20 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNradioAlwaysOne)
 		end;
 
-	resize_height: BOOLEAN is
-			-- Will resize height requests be made?
+	is_height_resizable: BOOLEAN is
+			-- Will all text always be shown (i.e. expand as the text grows
+			-- instead of displaying a scroll bar)?
+		require
+			exists: not is_destroyed
 		do
 			Result := get_xt_boolean (screen_object, XmNresizeHeight)
 		end;
 
-	resize_width: BOOLEAN is
-			-- Will resize width requests be made?
+	is_width_resizable: BOOLEAN is
+			-- Will all text always be shown (i.e. expand as the text grows
+			-- instead of displaying a scroll bar)?
+		require
+			exists: not is_destroyed
 		do
 			Result := get_xt_boolean (screen_object, XmNresizeWidth)
 		end;
@@ -398,32 +411,59 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_unsigned_char (screen_object, XmNtearOffModel) = XmTEAR_OFF_ENABLED
+			Result := get_xt_unsigned_char 
+				(screen_object, XmNtearOffModel) = XmTEAR_OFF_ENABLED
+		end;
+
+	is_tear_off_disabled: BOOLEAN is
+			-- Is the tear-off behavior enabled for Current?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_unsigned_char 
+				(screen_object, XmNtearOffModel) = XmTEAR_OFF_DISABLED
 		end;
 
 feature -- Status setting
 
-	set_adjust_last (b: BOOLEAN) is
-			-- Set `adjust_last' to `b'.
+	enable_adjust_last is
+			-- The last row will be expanded so as to be flush with the edge.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNadjustLast, b)
+			set_xt_boolean (screen_object, XmNadjustLast, True)
 		ensure
-			adjust_last_disabled: adjust_last = b
+			adjust_last_enabled: adjust_last 
 		end;
 
-	set_adjust_margin (b: BOOLEAN) is
-			-- Set `adjust_margin' to `b'.
-			-- aligned with other text in its row. Otherwize,
-			-- the text in each row won't be aligned with other
-			-- text in its row.
+	disable_adjust_last is
+			-- The last row won't be expanded so as to be flush with the edge.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNadjustMargin, b)
+			set_xt_boolean (screen_object, XmNadjustLast, False)
 		ensure
-			adjust_margint_enabled: adjust_margin = b
+			adjust_last_disabled: not adjust_last 
+		end;
+
+	enable_adjust_margin is
+			-- The text in each row will be aligned with other text in its row.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNadjustMargin, True)
+		ensure
+			adjust_margint_enabled: adjust_margin 
+		end;
+
+	disable_adjust_margin is
+			-- The text in each row won't be aligned with other text in its row.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNadjustMargin, False)
+		ensure
+			adjust_margint_disabled: not adjust_margin 
 		end;
 
 	set_entry_alignment_beginning is
@@ -506,32 +546,44 @@ feature -- Status setting
 			entry_vertical_alignment_contents_top_set: entry_vertical_alignment_contents_top
 		end;
 
-	set_entry_class is
-			-- Set the widget class to which the children must belong.
+	enable_alignment is
+			-- Set `is_aligned' to True.
 		require
 			exists: not is_destroyed
 		do
+			set_xt_boolean (screen_object, XmNisAligned, True)
 		ensure
+			alignment_enabled: is_aligned 
 		end;
 
-	set_alignment (b: BOOLEAN) is
-			-- Set `is_aligned' to `b'.
+	disable_alignment is
+			-- Set `is_aligned' to False.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNisAligned, b)
+			set_xt_boolean (screen_object, XmNisAligned, False)
 		ensure
-			alignment_enabled: is_aligned = b
+			alignment_disabled: not is_aligned 
 		end;
 
-	set_is_homogeneous (b: BOOLEAN) is
-			-- Set `is_homogeneous' to `b'.
+	set_homogeneous is
+			-- Set `is_homogeneous' to False.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNisHomogeneous, b)
+			set_xt_boolean (screen_object, XmNisHomogeneous, True)
 		ensure
-			homogeneous_set: is_homogeneous = b
+			homogeneous_set: is_homogeneous
+		end;
+
+	set_heterogeneous is
+			-- Set `is_homogeneous' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNisHomogeneous, False)
+		ensure
+			heterogeneous_set: not is_homogeneous 
 		end;
 
 	set_menu_accelerator (a_string: STRING) is
@@ -611,38 +663,64 @@ feature -- Status setting
 			num_columns_set: num_columns = a_number
 		end;
 
-	set_resize_height (b: BOOLEAN) is
-			-- Set `resize_height' to `b'.
+	enable_resize_height is
+			-- Set `is_height_resizable' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNresizeHeight, b)
+			set_xt_boolean (screen_object, XmNresizeHeight, True)
 		ensure
-			resize_height_set: resize_height = b
+			resize_height_enabled: is_height_resizable
 		end;
 
-	set_resize_width (b: BOOLEAN) is
-			-- Set `resize_width' to `b'.
+	disable_resize_height is
+			-- Set `is_height_resizable' to False.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNresizeWidth, b)
+			set_xt_boolean (screen_object, XmNresizeHeight, False)
 		ensure
-			resize_width_set: resize_width = b
+			resize_height_disabled: not is_height_resizable
 		end;
 
-	set_horizontal (b: BOOLEAN) is
-			-- Set `is_horizontal' to `b'.
+	enable_resize_width is
+			-- Set `is_width_resizable' to True.
 		require
 			exists: not is_destroyed
 		do
-			if b then
-				set_xt_unsigned_char (screen_object, XmNorientation, XmHORIZONTAL)
-			else
-				set_xt_unsigned_char (screen_object, XmNorientation, XmVERTICAL)
-			end
+			set_xt_boolean (screen_object, XmNresizeWidth, True)
 		ensure
-			value_set: is_horizontal = b
+			resize_width_enabled: is_width_resizable
+		end;
+
+	disable_resize_width is
+			-- Set `is_width_resizable' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNresizeWidth, False)
+		ensure
+			resize_width_disabled: not is_width_resizable
+		end;
+
+	set_horizontal is
+			-- Set `is_horizontal' to True.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNorientation, XmHORIZONTAL)
+		ensure
+			is_horizontal: is_horizontal
+		end;
+
+	set_vertical is
+			-- Set `is_horizontal' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNorientation, XmVERTICAL)
+		ensure
+			is_vertical: is_vertical
 		end;
 
 	set_packing_tight is
@@ -675,48 +753,64 @@ feature -- Status setting
 			packing_none_set: packing_none
 		end;
 
-	set_popup_enabled (b: BOOLEAN) is
-			-- Set `is_popup_enabled' to `b'.
+	enable_popup is
+			-- Set `popup_enabled' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNpopupEnabled, b)
+			set_xt_boolean (screen_object, XmNpopupEnabled, True)
 		ensure
-			popup_is_enabled: is_popup_enabled = b
+			popup_is_enabled: is_popup_enabled 
 		end;
 
-	set_radio_always_one (b: BOOLEAN) is
-			-- Set `radio_always_one' to `b'.
+	disable_popup is
+			-- Set `popup_enabled' to False.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNradioAlwaysOne, b)
+			set_xt_boolean (screen_object, XmNpopupEnabled, False)
 		ensure
-			radio_always_one_set: radio_always_one = b
+			popup_is_disabled: not is_popup_enabled 
 		end;
 
-	set_radio_behavior (b: BOOLEAN) is
-			-- Set `radio_behavior' to `b'.
+	enable_radio_behavior is
+			-- Set `is_radio_behavior' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNradioBehavior, b)
+			set_xt_boolean (screen_object, XmNradioBehavior, True)
 		ensure
-			radio_behavior_set: radio_behavior = b
+			radio_behavior_enabled: is_radio_behavior 
 		end;
 
-	set_tear_off_enabled (b: BOOLEAN) is
-			-- Set `is_tear_off_enabled' to `b'.
+	disable_radio_behavior is
+			-- Set `is_radio_behavior' to False.
 		require
 			exists: not is_destroyed
 		do
-			if b then
-				set_xt_unsigned_char (screen_object, XmNtearOffModel, XmTEAR_OFF_ENABLED)
-			else
-				set_xt_unsigned_char (screen_object, XmNtearOffModel, XmTEAR_OFF_DISABLED)
-			end
+			set_xt_boolean (screen_object, XmNradioBehavior, False)
 		ensure
-			tear_off_is_enabled: is_tear_off_enabled = b
+			radio_behavior_disabled: not is_radio_behavior 
+		end;
+
+	set_tear_off_to_enabled is
+			-- Set `is_tear_off_enabled' to True.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNtearOffModel, XmTEAR_OFF_ENABLED)
+		ensure
+			tear_off_is_enabled: is_tear_off_enabled
+		end;
+
+	set_tear_off_to_disabled is
+			-- Set `is_tear_off_disabled' to True.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNtearOffModel, XmTEAR_OFF_DISABLED)
+		ensure
+			tear_off_is_disabled: is_tear_off_disabled 
 		end;
 
 feature -- Resizing

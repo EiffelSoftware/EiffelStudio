@@ -451,14 +451,24 @@ feature -- Status setting
 			filter_label_string_set: filter_label_string.is_equal (a_compound_string)
 		end;
 
-	set_list_updated (b: BOOLEAN) is
-			-- Set `list_updated' to `b'.
+	set_list_updated is
+			-- Set `list_updated' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNlistUpdated, b)
+			set_xt_boolean (screen_object, XmNlistUpdated, True)
 		ensure
-			list_update_validated: is_list_updated = b
+			list_is_updated: is_list_updated 
+		end;
+
+	unset_list_updated is
+			-- Set `list_updated' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNlistUpdated, False)
+		ensure
+			list_is_not_updated: not is_list_updated 
 		end;
 
 	set_no_match_string (a_compound_string: MEL_STRING) is

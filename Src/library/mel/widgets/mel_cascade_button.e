@@ -72,7 +72,7 @@ feature -- Satus report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	mapping_delay: INTEGER is

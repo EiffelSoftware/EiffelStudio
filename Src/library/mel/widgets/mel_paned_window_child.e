@@ -29,7 +29,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNskipAdjust)
 		end;
 
-	is_allowed_to_resize: BOOLEAN is
+	allow_pane_to_resize: BOOLEAN is
 			-- Is Current widget allowed to resize in the paned window?
 		require
 			exists: not is_destroyed;
@@ -74,15 +74,26 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_allowed_to_resize (b: BOOLEAN) is
-			-- Set `is_allowed_to_resize' to `b'.
+	allow_pane_resize is
+			-- Set `allow_pane_to_resize' to True.
 		require
 			exists: not is_destroyed;
 			parent_is_paned_window: parent.is_paned_window
 		do
-			set_xt_boolean (screen_object, XmNallowResize, b)
+			set_xt_boolean (screen_object, XmNallowResize, True)
 		ensure
-			allowed_to_resize_set: is_allowed_to_resize = b
+			allowed_to_resize: allow_pane_to_resize 
+		end;
+
+	forbid_pane_resize is
+			-- Set `allow_pane_to_resize' to False.
+		require
+			exists: not is_destroyed;
+			parent_is_paned_window: parent.is_paned_window
+		do
+			set_xt_boolean (screen_object, XmNallowResize, False)
+		ensure
+			forbidden_to_resize: not allow_pane_to_resize 
 		end;
 
 	set_pane_minimum (a_dimension: INTEGER) is
@@ -136,15 +147,26 @@ feature -- Status setting
 			is_at_the_end: pane_position_index = parent.children_count
 		end;
 
-	set_skip_adjustment (b: BOOLEAN) is
-			-- Set `skip_adjustment' to `b'.
+	enable_skip_adjustment is
+			-- Set `skip_adjustment' to True.
 		require
 			exists: not is_destroyed;
 			parent_is_paned_window: parent.is_paned_window
 		do
-			set_xt_boolean (screen_object, XmNskipAdjust, b)
+			set_xt_boolean (screen_object, XmNskipAdjust, True)
 		ensure
-			skip_adjustment_set: skip_adjustment = b
+			skip_adjustment_enabled: skip_adjustment 
+		end;
+
+	disable_skip_adjustment is
+			-- Set `skip_adjustment' to False.
+		require
+			exists: not is_destroyed;
+			parent_is_paned_window: parent.is_paned_window
+		do
+			set_xt_boolean (screen_object, XmNskipAdjust, False)
+		ensure
+			skip_adjustment_disabled: not skip_adjustment 
 		end;
 
 end -- class MEL_PANED_WINDOW

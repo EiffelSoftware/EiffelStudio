@@ -50,10 +50,10 @@ feature {NONE} -- Initialization
 			then
 				depth := c_depth
 			end;
-			shared := True	
+			is_shared := True	
 		ensure
 			set: display_handle = a_drawable.display_handle;
-			shared: shared
+			is_shared: is_shared
 		end;
 
 	make_from_existing (a_display: MEL_DISPLAY; a_handle: POINTER; a_depth: INTEGER) is
@@ -67,11 +67,11 @@ feature {NONE} -- Initialization
 			identifier := a_handle;
 			display_handle := a_display.handle;
 			depth := a_depth;
-			shared := True
+			is_shared := True
 		ensure
 			set: identifier = a_handle and then depth = a_depth;
 			has_valid_display: has_valid_display;
-			shared: shared
+			is_shared: is_shared
 		end;
 
 feature -- Access

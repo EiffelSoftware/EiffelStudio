@@ -167,14 +167,24 @@ feature -- Status setting
 			margin_width_set: margin_width = a_width
 		end;
 
-	set_refigure_mode (b: BOOLEAN) is
-			-- Set `refigure_mode' to `b'.
+	enable_refigure_mode is
+			-- Set `is_refigure_mode' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNrefigureMode, b)
+			set_xt_boolean (screen_object, XmNrefigureMode, True)
 		ensure
-			refigure_mode_enabled: is_refigure_mode = b
+			refigure_mode_enabled: is_refigure_mode 
+		end;
+
+	disable_refigure_mode is
+			-- Set `is_refigure_mode' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNrefigureMode, False)
+		ensure
+			refigure_mode_disabled: not is_refigure_mode 
 		end;
 
 	set_sash_height (a_height: INTEGER) is
@@ -220,14 +230,24 @@ feature -- Status setting
 			sash_shadow_thickness_set: sash_shadow_thickness = a_thickness
 		end;
 
-	set_separator (b: BOOLEAN) is
-			-- Set `separator_on' to `b'.
+	enable_separator is
+			-- Set `is_separator_on' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNseparatorOn, b)
+			set_xt_boolean (screen_object, XmNseparatorOn, True)
 		ensure
-			separator_enabled: is_separator_on = b
+			separator_enabled: is_separator_on 
+		end;
+
+	disable_separator is
+			-- Set `is_separator_on' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNseparatorOn, False)
+		ensure
+			separator_disabled: not is_separator_on 
 		end;
 
 	set_spacing (a_distance: INTEGER) is

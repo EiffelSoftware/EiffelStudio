@@ -91,12 +91,20 @@ feature -- Pointer access
 
 feature -- Status setting
 
-	set_do_it (b: BOOLEAN) is
-			-- Set `do_it' to `b'.
+	set_do_it is
+			-- Set `do_it' to True.
 		do
-			c_text_set_do_it (b, handle)
+			c_text_set_do_it (True, handle)
 		ensure
-			set: do_it = b
+			do_it: do_it 
+		end;
+
+	unset_do_it is
+			-- Set `do_it' to false.
+		do
+			c_text_set_do_it (False, handle)
+		ensure
+			not_do_it: do_it 
 		end;
 
 feature {NONE} -- Implementation

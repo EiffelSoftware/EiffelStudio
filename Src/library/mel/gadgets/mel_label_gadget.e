@@ -138,7 +138,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	pixmap: MEL_PIXMAP is
@@ -150,7 +150,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	is_type_string: BOOLEAN is
@@ -311,14 +311,24 @@ feature -- Status setting
 			accelerator_text_set: accelerator_text.is_equal (a_compound_string)
 		end;
 
-	set_recomputing_size_allowed (b: BOOLEAN) is
-			-- Set `is_recomputing_size_allowed' to `b'.
+	allow_recompute_size is
+			-- Set `is_recomputing_size_allowed' to `True'.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNrecomputeSize, b)
+			set_xt_boolean (screen_object, XmNrecomputeSize, True)
 		ensure
-			recompute_size_allowed: is_recomputing_size_allowed = b
+			recompute_size_allowed: is_recomputing_size_allowed
+		end;
+
+	forbid_recompute_size is
+			-- Set `is_recomputing_size_allowed' to `False'.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNrecomputeSize, False)
+		ensure
+			recompute_size_not_allowed: not is_recomputing_size_allowed
 		end;
 
 	set_beginning_alignment is

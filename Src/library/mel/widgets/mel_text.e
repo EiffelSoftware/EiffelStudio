@@ -52,12 +52,20 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNautoShowCursorPosition)
 		end;
 
-	single_line_edit_mode: BOOLEAN is
+	is_single_line_edit_mode: BOOLEAN is
 			-- Is single line editing enabled?
 		require
 			exists: not is_destroyed
 		do
 			Result := get_xt_int (screen_object, XmNeditMode) = XmSINGLE_LINE_EDIT
+		end;
+
+	is_multi_line_edit_mode: BOOLEAN is
+			-- Is multi line editing enabled?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_int (screen_object, XmNeditMode) = XmMULTI_LINE_EDIT
 		end;
 
 	source: MEL_TEXT_SOURCE is
@@ -80,7 +88,7 @@ feature -- Status report
 			top_character_large_enough: Result >=0
 		end;
 
-	resize_height: BOOLEAN is
+	is_height_resizable: BOOLEAN is
 			-- Will all text always be shown (i.e. expand as the text grows
 			-- instead of displaying a scroll bar)?
 		require
@@ -99,7 +107,7 @@ feature -- Status report
 			rows_large_enough: Result >= 0
 		end;
 
-	word_wrap: BOOLEAN is
+	is_word_wrapped: BOOLEAN is
 			-- Is word wrap enabled?
 		require
 			exists: not is_destroyed
@@ -109,28 +117,44 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_auto_show_cursor_position (b: BOOLEAN) is
-			-- Set `auto_show_cursor_position' to `b'.
+	show_auto_cursor_position is
+			-- Set `is_auto_show_cursor_position' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNautoShowCursorPosition, b)
+			set_xt_boolean (screen_object, XmNautoShowCursorPosition, True)
 		ensure
-			auto_show_set: is_auto_show_cursor_position = b
+			auto_cursor_position_shown: is_auto_show_cursor_position
 		end;
 
-	set_single_line_edit_mode (b: BOOLEAN) is
-			-- Set `single_line_edit_mode' to `b'.
+	hide_auto_show_cursor_position is
+			-- Set `auto_show_cursor_position' to False.
 		require
 			exists: not is_destroyed
 		do
-			if b then
-				set_xt_int (screen_object, XmNeditMode, XmSINGLE_LINE_EDIT)
-			else
-				set_xt_int (screen_object, XmNeditMode, XmMULTI_LINE_EDIT)
-			end
+			set_xt_boolean (screen_object, XmNautoShowCursorPosition, False)
 		ensure
-			single_line_edit_set: single_line_edit_mode = b
+			auto_cursor_position_hidden: not is_auto_show_cursor_position
+		end;
+
+	set_single_line_edit_mode is
+			-- Set `is_single_line_edit_mode' to True.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_int (screen_object, XmNeditMode, XmSINGLE_LINE_EDIT)
+		ensure
+			is_single_line_edit_mode: is_single_line_edit_mode
+		end;
+
+	set_multi_line_edit_mode is
+			-- Set `is_multi_line_edit_mode' to True.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_int (screen_object, XmNeditMode, XmMULTI_LINE_EDIT)
+		ensure
+			is_multi_line_edit: is_multi_line_edit_mode
 		end;
 
 	set_top_character (a_position: INTEGER) is
@@ -155,16 +179,6 @@ feature -- Status setting
 			text_source_set: source.is_equal (a_text_source)
 		end;
 
-	set_resize_height (b: BOOLEAN) is
-			-- Set `resize_height' to `b'.
-		require
-			exists: not is_destroyed
-		do
-			set_xt_boolean (screen_object, XmNresizeHeight, b)
-		ensure
-			resize_height_set: resize_height = b
-		end;
-
 	set_rows (a_height: INTEGER) is
 			-- Set `rows' to `a_height'.
 	   require
@@ -176,14 +190,44 @@ feature -- Status setting
 			rows_set: rows = a_height
 		end;
 
-	set_word_wrap (b: BOOLEAN) is
-			-- Set `word_wrap' to `b'.
+	enable_word_wrap is
+			-- Set `word_wrap' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNwordWrap, b)
+			set_xt_boolean (screen_object, XmNwordWrap, True)
 		ensure
-			word_wrap_enabled: word_wrap = b
+			word_wrap_enabled: is_word_wrapped
+		end;
+
+	disable_work_wrap is
+			-- Set `word_wrap' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNwordWrap, False)
+		ensure
+			word_wrap_disabled: is_word_wrapped
+		end;
+
+	enable_resize_height is
+			-- Set `is_height_resizable' to True.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNresizeHeight, True)
+		ensure
+			resize_height_enabled: is_height_resizable
+		end;
+
+	disable_resize_height is
+			-- Set `is_height_resizable' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNresizeHeight, False)
+		ensure
+			resize_height_disabled: not is_height_resizable
 		end;
 
 	enable_redisplay is
@@ -225,33 +269,33 @@ feature {NONE} -- Implementation
 			"XmTextDisableRedisplay"
 		end;
 
-    xm_text_get_top_character (w: POINTER): INTEGER is
-        external
-            "C [macro <Xm/Text.h>] (Widget): EIF_INTEGER"
-        alias
-            "XmTextGetTopCharacter"
-        end;
+	xm_text_get_top_character (w: POINTER): INTEGER is
+		external
+			"C [macro <Xm/Text.h>] (Widget): EIF_INTEGER"
+		alias
+			"XmTextGetTopCharacter"
+		end;
 
-    xm_text_set_top_character (w: POINTER; char_pos: INTEGER) is
-        external
-            "C [macro <Xm/Text.h>] (Widget, XmTextPosition)"
-        alias
-            "XmTextSetTopCharacter"
-        end;
+	xm_text_set_top_character (w: POINTER; char_pos: INTEGER) is
+		external
+			"C [macro <Xm/Text.h>] (Widget, XmTextPosition)"
+		alias
+			"XmTextSetTopCharacter"
+		end;
 
-    xm_text_get_source (w: POINTER): POINTER is
-        external
-            "C [macro <Xm/Text.h>] (Widget): EIF_POINTER"
-        alias
-            "XmTextGetSource"
-        end;
+	xm_text_get_source (w: POINTER): POINTER is
+		external
+			"C [macro <Xm/Text.h>] (Widget): EIF_POINTER"
+		alias
+			"XmTextGetSource"
+		end;
 
-    xm_text_set_source (w: POINTER; s: POINTER; top_c, cur_p: INTEGER) is
-        external
-            "C [macro <Xm/Text.h>] (Widget, XmTextSource, XmTextPosition, XmTextPosition) "
-        alias
-            "XmTextSetSource"
-        end;
+	xm_text_set_source (w: POINTER; s: POINTER; top_c, cur_p: INTEGER) is
+		external
+			"C [macro <Xm/Text.h>] (Widget, XmTextSource, XmTextPosition, XmTextPosition) "
+		alias
+			"XmTextSetSource"
+		end;
 
 end -- class MEL_TEXT
 

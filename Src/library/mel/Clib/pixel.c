@@ -198,4 +198,3 @@ EIF_INTEGER y_hot;
 				x_hot, y_hot);
 
 }
-

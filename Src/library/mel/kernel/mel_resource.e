@@ -2,7 +2,7 @@ indexing
 
 	description: 
 		"Abstract class for Motif resources that has been allocated %
-		%for a `display'. All descendents sets `shared' to True at %
+		%for a `display'. All descendents sets `is_shared' to True at %
 		%creation. This means that the user must call `destroy' or %
 		%`set_unshared' and not reference it to free the resource.";
 	status: "See notice at end of class.";
@@ -32,21 +32,21 @@ feature {NONE} -- Initialization
 		do
 			handle := a_handle;
 			display_handle := a_display.handle;
-			shared := True;
+			is_shared := True;
 		ensure
 			set: handle = a_handle;
 			has_valid_display: has_valid_display;
-			shared: shared
+			is_shared: is_shared
 		end;
 
     make_from_existing_handle (a_handle: POINTER) is
             -- Initialize `a_handle' to `handle;.
         do
             handle := a_handle;
-			shared := True
+			is_shared := True
         ensure then
             set: handle = a_handle;
-			shared: shared
+			is_shared: is_shared
         end;
 
 feature -- Access

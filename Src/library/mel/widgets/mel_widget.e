@@ -62,7 +62,7 @@ feature -- Status Report
 		ensure
 			background_color_created: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	background_pixmap: MEL_PIXMAP is
@@ -74,7 +74,7 @@ feature -- Status Report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	depth: INTEGER is
@@ -128,15 +128,24 @@ feature -- Status setting
 			x_propagate_event (screen_object, False)
 		end;
 
-
-	set_map_when_managed (b: BOOLEAN) is
-			-- Set `is_mapped_when_managed' to `b'.
+	map_when_managed is
+			-- Set `is_mapped_when_managed' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNmappedWhenManaged, b)
+			set_xt_boolean (screen_object, XmNmappedWhenManaged, True)
 		ensure
-			is_mapped_when_managed: is_mapped_when_managed = b
+			is_mapped_when_managed: is_mapped_when_managed 
+		end;
+
+	no_map_when_managed is
+			-- Set `is_mapped_when_managed' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNmappedWhenManaged, False)
+		ensure
+			not_mapped_when_managed: not is_mapped_when_managed 
 		end;
 
 feature -- Transformation

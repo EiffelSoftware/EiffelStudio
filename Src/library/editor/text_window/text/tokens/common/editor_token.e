@@ -189,7 +189,7 @@ feature -- Width & height
 
 	update_width is
 			-- update value of `width'
-		do
+		do	
 		end
 
 feature {EDITOR_TOKEN} -- Properties used to display the token

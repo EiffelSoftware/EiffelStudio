@@ -44,7 +44,31 @@ feature {EB_PREFERENCES} -- Initialization
 			panel_manager.refresh_all
 		end
 
+	update_font is
+			-- Font was changed, must redraw tokens due to possible width change.
+		do
+			line_height_cell.put (calculate_line_height)
+			font_offset_cell.put (line_height_font.ascent)
+			from
+				panel_manager.panels.start
+			until
+				panel_manager.panels.after
+			loop
+				if panel_manager.panels.item /= Void then					
+					panel_manager.panels.item.reload_text
+				end
+				panel_manager.panels.forth
+			end			
+			update
+		end
+
 feature -- Value
+		
+	smart_identation: BOOLEAN is
+			-- Is smart identation enabled?
+		do
+			Result := smart_identation_preference.value
+		end	
 		
 	tabulation_spaces: INTEGER is
 			-- Number of spaces characters in a tabulation.  
@@ -217,6 +241,12 @@ feature -- Value
 			Result := highlight_color_preference.value
 		end
 		
+	cursor_line_highlight_color: EV_COLOR is
+			-- Background color used to highlight line with cursor in it
+		do
+			Result := cursor_line_highlight_color_preference.value
+		end	
+		
 	highlight_document_changes: BOOLEAN is
 			-- Should editor highlight changes in document between saves?
 		do
@@ -318,7 +348,12 @@ feature {NONE} -- Preferences
 	     	
     highlight_color_preference : COLOR_PREFERENCE
 
+	cursor_line_highlight_color_preference : COLOR_PREFERENCE
+
 	highlight_document_changes_preference: BOOLEAN_PREFERENCE
+
+	smart_identation_preference: BOOLEAN_PREFERENCE
+			-- Is smart identation enabled?	
 
 feature -- Misc
 
@@ -410,10 +445,13 @@ feature {NONE} -- Preference Strings
 	operator_background_color_string: STRING is "editor.operator_background_color" 
 			-- Background color used to display operator	
 		
-	breakpoint_background_color_string: STRING is "editor.breakpoint_background_color" 
-			-- Background color used to display breakpoints	
-
 	highlight_color_string: STRING is "editor.highlight_color" 
+	
+	cursor_line_highlight_color_string: STRING is "editor.cursor_line_highlight_color" 
+
+	smart_identation_string: STRING is "editor.smart_identation"
+			-- Is smart identation enabled?	
+
 
 feature {NONE} -- Implementation
 		
@@ -426,6 +464,7 @@ feature {NONE} -- Implementation
 			
 				-- Preferences
 				
+			smart_identation_preference := l_manager.new_boolean_resource_value (l_manager, smart_identation_string, True)	
 			tabulation_spaces_preference := l_manager.new_integer_resource_value (l_manager, tabulation_spaces_string, 4)	
 			left_margin_width_preference := l_manager.new_integer_resource_value (l_manager, left_margin_width_string, 10)		
 			margin_background_color_preference := l_manager.new_color_resource_value (l_manager, margin_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))		
@@ -462,6 +501,7 @@ feature {NONE} -- Implementation
 			number_text_color_preference := l_manager.new_color_resource_value (l_manager, number_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (128, 0, 255))
 			number_background_color_preference := l_manager.new_color_resource_value (l_manager, number_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			highlight_color_preference := l_manager.new_color_resource_value (l_manager, highlight_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 128))
+			cursor_line_highlight_color_preference := l_manager.new_color_resource_value (l_manager, cursor_line_highlight_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 128, 128))
 			
 			tabulation_spaces_preference.change_actions.extend (agent update)
 			left_margin_width_preference.change_actions.extend (agent update)
@@ -473,7 +513,8 @@ feature {NONE} -- Implementation
 			mouse_wheel_scroll_size_preference.change_actions.extend (agent update)
 			blinking_cursor_preference.change_actions.extend (agent update)
 			automatic_update_preference.change_actions.extend (agent update)			
-			editor_font_preference.change_actions.extend (agent update)
+			editor_font_preference.change_actions.extend (agent update_font)
+			keyword_font_preference.change_actions.extend (agent update_font)
 			header_font_preference.change_actions.extend (agent update)
 		end
 

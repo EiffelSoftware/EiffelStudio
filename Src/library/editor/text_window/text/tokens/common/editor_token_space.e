@@ -9,6 +9,9 @@ class
 
 inherit
 	EDITOR_TOKEN_BLANK
+		redefine
+			update_width
+		end
 
 create
 	make
@@ -34,10 +37,6 @@ feature -- Initialisation
 feature -- Width & Height
 
 	width: INTEGER
--- is
---		do
---			Result := length * space_width
---		end
 
 	get_substring_width(n: INTEGER): INTEGER is
 			-- Conpute the width in pixels of the first
@@ -55,6 +54,13 @@ feature -- Width & Height
 			Result := a_width // space_width + 1
 		end
 
+	update_width is
+			-- update value of `width'
+		do
+			-- FIXME: take into account if invisible symbols are displayed or not to compute the correct width
+			width := get_substring_width (image.count)
+		end
+	
 feature {NONE} -- Implementation
 
 	display_blanks (d_x, d_y: INTEGER; device: EV_PIXMAP; selected: BOOLEAN; char_start, char_end: INTEGER; panel: TEXT_PANEL): INTEGER is

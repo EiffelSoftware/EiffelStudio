@@ -14,6 +14,12 @@ feature -- Access
 		do
 			Result := line_height_cell.item
 		end
+		
+	font_offset: INTEGER is
+			-- 
+		do
+			Result := font_offset_cell.item
+		end	
 
 	font: EV_FONT is
 			-- Font used in the editor
@@ -80,22 +86,23 @@ feature {EDITOR_DATA} -- Implementation
 
 	line_height_cell: CELL [INTEGER] is
 			-- Cached version of `line_height'.
-		local
-			loc_font: EV_FONT
-			loc_line_height: INTEGER
-		once
-			loc_font := line_height_font
-			loc_line_height := loc_font.height + loc_font.height // 6 + 1
-			create Result.put (loc_line_height)
+		once			
+			create Result.put (calculate_line_height)
 		end
 
-	font_offset: INTEGER is
+	font_offset_cell: CELL [INTEGER] is
 			-- Number of pixels from top of line to beginning of drawing operation
+		once
+			create Result.put (line_height_font.ascent)
+		end
+		
+	calculate_line_height: INTEGER is
+			-- Calculate the line height based on current font sizes
 		local
 			loc_font: EV_FONT
-		once
+		do
 			loc_font := line_height_font
-			Result := loc_font.ascent
-		end
+			Result := loc_font.height + loc_font.height // 6 + 1
+		end		
 
 end -- class EB_SHARED_EDITOR_FONT

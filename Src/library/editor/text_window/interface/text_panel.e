@@ -87,8 +87,6 @@ feature {NONE} -- Initialization
 			offset := 0
 			
 			create margin.make_with_panel (Current)
-			margin_cell.extend (margin.widget)
-			set_display_margin (True)
 
 			editor_area.expose_actions.extend (agent on_repaint)
 			editor_area.resize_actions.extend (agent on_size)
@@ -115,8 +113,6 @@ feature {NONE} -- Initialization
 				-- Set up the screen.
 			create buffered_screen.make_with_size (editor_area.width, corrected_buffered_screen_height (editor_area.height))
 			buffered_screen.set_background_color (editor_preferences.normal_background_color)
---			buffered_screen.set_size (editor_area.width, corrected_buffered_screen_height (editor_area.height))
---			buffered_screen.set_background_color (editor_preferences.normal_background_color)
 			create left_margin_buffered_screen.make_with_size (left_margin_width, editor_area.height)														
 		end
 
@@ -171,6 +167,13 @@ feature -- Status Setting
 		require
 			text_not_void: a_text /= Void
 		do
+			if a_text.reading_text_finished and then a_text /= Void and then a_text.text /= Void then
+				if a_text.text.count >= 50 then
+					print ("setting text panel text with: " + a_text.text.substring (1, 50) + "%N")
+				else
+					print ("setting text panel text with: " + a_text.text.substring (1, a_text.text.count) + "%N")
+				end
+			end			
 			text_displayed := a_text			
 		end		
 		
@@ -199,8 +202,6 @@ feature -- Status Setting
 		
 	setup_editor (first_line_to_display: INTEGER) is
 			-- Update `Current' to display at line `first_line_to_display' on current text.
-		local
-			i: INTEGER
 		do
 			first_line_displayed := first_line_to_display
 			vertical_scrollbar.set_value (1)
@@ -209,13 +210,13 @@ feature -- Status Setting
 			vertical_scrollbar.enable_sensitive
 			update_vertical_scrollbar
 			update_horizontal_scrollbar
-			update_width			
+			update_width
 			set_editor_width (editor_width)
 			update_horizontal_scrollbar						
 			refresh_now
 			margin.setup_margin
 		end	
-		
+				
 feature -- Query
 
 	editor_x: INTEGER
@@ -335,7 +336,14 @@ feature -- Status setting
 	        -- Toggle line number display in Current and update display
 	   	do
 	   	 	line_numbers_visible := not line_numbers_visible
+	   	 	if line_numbers_visible and then margin_cell.is_empty then
+	   	 		margin_cell.put (margin.widget)
+	   	 	elseif not line_numbers_visible and then not margin_cell.is_empty then	   	 		
+	   	 		margin_cell.prune (margin.widget)
+	   	 	end
 	   	   	refresh_now
+	   	ensure
+	   		widget_displayed: line_numbers_visible implies not margin_cell.is_empty
 	   	end	
 	   	
 	toggle_view_invisible_symbols is
@@ -353,14 +361,6 @@ feature -- Status setting
 			if editor_area.is_displayed then
 				editor_area.set_focus
 			end
-		end
-
-	set_display_margin (a_flag: BOOLEAN) is
-			-- Set `display_margin' to `a_flag'?		
-		do
-			display_margin := a_flag
-		ensure
-			value_set: display_margin = a_flag
 		end
 	
 feature -- Basic Operations
@@ -402,9 +402,16 @@ feature -- Basic Operations
 			vertical_scrollbar.set_value (1)
 		end
 
+	redraw_current_screen is
+			-- Redraw the current screen.  Do not scroll or move the cursor, just redraw.
+		do
+			set_first_line_displayed (first_line_displayed, True)
+		end		
+
 	load_file (a_filename: STRING) is
 	        -- Load contents of `a_filename'
 		require
+			filename_not_void: a_filename /= Void
 		local
 		    l_file: RAW_FILE
 		    l_doc_type: STRING
@@ -421,8 +428,12 @@ feature -- Basic Operations
   	   		create l_file.make (a_filename)
   	   		if l_file.exists then
   	   		    l_file.open_read
-  	   		    l_file.read_stream (l_file.count)
-  	   		    load_text (l_file.last_string)
+  	   		    if l_file.is_empty then
+  	   		    	load_text ("")	
+  	   		    else  	   		    	
+	  	   		    l_file.read_stream (l_file.count)
+	  	   		    load_text (l_file.last_string)	
+  	   		    end
   	   		    l_file.close
   	   		    create file_name.make_from_string (a_filename)
   	   		    date_of_file_when_loaded := l_file.date
@@ -452,7 +463,24 @@ feature -- Basic Operations
 				-- Setup the editor to load first page
 			setup_editor (1)
 		end	
-	
+			
+	reload_text is
+			-- Recompute token informationfor for loaded text.
+		local
+			l_line: EDITOR_LINE
+			l_line_index: INTEGER
+		do
+			from
+				l_line_index := 1
+			until
+				l_line_index > text_displayed.number_of_lines
+			loop
+				text_displayed.update_line (l_line_index)
+				l_line_index := l_line_index + 1
+			end			
+			redraw_current_screen
+		end		
+			
 feature -- Graphical interface
 
 	pointer_style: EV_CURSOR is
@@ -558,7 +586,7 @@ feature -- Status Setting
 			-- If `a_width' is greater than `editor_width', assign `a_width' to `editor_width'
 			-- update display if necessary.
 		do
-			editor_width := a_width.max (editor_width)
+			editor_width := a_width.max (editor_width) + right_buffer_width
 			if editor_width > buffered_screen.width then
 				buffered_screen.set_size (editor_width, corrected_buffered_screen_height (editor_area.height))
 				update_buffered_screen (0, editor_area.height)
@@ -578,34 +606,32 @@ feature -- Status Setting
 		do			
 			prev_line := first_line_displayed
 			diff := fld - first_line_displayed
-			if diff /= 0 then
-				first_line_displayed := fld					
-				if diff.abs < number_of_lines_displayed then
-					if diff < 0 then
-							-- Scrolling up
-						y_offset := buffered_screen.height + diff * line_height
-						create zone.make (0, 0, buffered_screen.width, y_offset)
-						buffered_screen.draw_sub_pixmap (0, - diff * line_height, buffered_screen, zone)
-						create zone.make (0, 0, left_margin_width, y_offset)
-						left_margin_buffered_screen.draw_sub_pixmap (0, - diff * line_height, left_margin_buffered_screen, zone)
-						update_buffered_screen (0, - diff * line_height)
-					elseif diff > 0 then						
-							-- Scrolling down							
-						y_offset := diff * line_height
-						create zone.make (0, y_offset, buffered_screen.width, buffered_screen.height)
-						buffered_screen.draw_sub_pixmap (0, 0, buffered_screen, zone)
-						create zone.make (0, y_offset, left_margin_width, left_margin_buffered_screen.height)
-						left_margin_buffered_screen.draw_sub_pixmap (0, 0, left_margin_buffered_screen, zone)
-						update_buffered_screen (buffered_screen.height - y_offset - line_modulo (buffered_screen.height), y_offset + buffered_screen.height)
-					end
-					update_display
-				else
-					editor_area.redraw
-				end					
-					-- Setup the new vertical position.
-				vertical_scrollbar.set_value (first_line_displayed)
-				margin.synchronize_with_text_panel (prev_line)
-			end			
+			first_line_displayed := fld					
+			if diff.abs < number_of_lines_displayed then
+				if diff < 0 then
+						-- Scrolling up
+					y_offset := buffered_screen.height + diff * line_height
+					create zone.make (0, 0, buffered_screen.width, y_offset)
+					buffered_screen.draw_sub_pixmap (0, - diff * line_height, buffered_screen, zone)
+					create zone.make (0, 0, left_margin_width, y_offset)
+					left_margin_buffered_screen.draw_sub_pixmap (0, - diff * line_height, left_margin_buffered_screen, zone)
+					update_buffered_screen (0, - diff * line_height)
+				elseif diff >= 0 then						
+						-- Scrolling down							
+					y_offset := diff * line_height
+					create zone.make (0, y_offset, buffered_screen.width, buffered_screen.height)
+					buffered_screen.draw_sub_pixmap (0, 0, buffered_screen, zone)
+					create zone.make (0, y_offset, left_margin_width, left_margin_buffered_screen.height)
+					left_margin_buffered_screen.draw_sub_pixmap (0, 0, left_margin_buffered_screen, zone)
+					update_buffered_screen (buffered_screen.height - y_offset - line_modulo (buffered_screen.height), y_offset + buffered_screen.height)
+				end
+				update_display
+			else
+				editor_area.redraw
+			end					
+				-- Setup the new vertical position.
+			vertical_scrollbar.set_value (first_line_displayed)
+			margin.synchronize_with_text_panel (prev_line)			
 		end
 
 	set_offset (an_offset: INTEGER) is
@@ -1111,6 +1137,8 @@ feature {MARGIN} -- Implementation
 
 	internal_reference_window: like reference_window
 			-- Window which error dialogs will be shown relative to.		
+
+	right_buffer_width: INTEGER is 50
 
 feature -- Memory management
 

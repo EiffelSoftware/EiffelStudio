@@ -40,9 +40,8 @@ feature {NONE} -- Initialization
 			is_static := stat
 			entity_make (en, pub, decl_type)
 			if has_getter then
-				create getter.make (
-									"get_" + en,
-									"get_" + dn,
+				create getter.make (	en,
+									dn,
 									create {ARRAY [CONSUMED_ARGUMENT]}.make (1, 0),
 									type,
 									False, stat, False, False, False, pub, True,

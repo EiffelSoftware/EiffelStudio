@@ -115,7 +115,7 @@ feature -- Element change
 			variant
 				local_children.count - local_children.index
 			until
-				local_children.off
+				local_children.after
 			loop
 				local_children.item.realize
 				local_children.forth

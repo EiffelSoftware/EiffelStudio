@@ -27,6 +27,8 @@ inherit
 		redefine
 			wel_make
 		end
+		
+	WEL_CAPABILITIES_CONSTANTS
 
 create
 	make
@@ -64,6 +66,10 @@ feature -- Access
 			if private_dc /= Void then
 				private_dc.set_shared
 				Result.set_printer_context (private_dc.item)
+				Result.set_horizontal_resolution (((dc.width / dc.device_caps (logical_pixels_x)) * 72).rounded - 1)
+				Result.set_vertical_resolution (((dc.height / dc.device_caps (logical_pixels_y)) * 72).rounded - 1)
+					-- Subtract the -1 as print projector coordinates are 0 based.
+					-- 72 is fixed in the implementation as the DPI.
 			end
 		end
 

@@ -34,13 +34,6 @@ feature -- Properties
 	type: TYPE;
 			-- Type
 
-feature {ROUTINE_AS} -- Incrementality
-
-	reset is
-		do
-			id_list.start
-		end;
-
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is

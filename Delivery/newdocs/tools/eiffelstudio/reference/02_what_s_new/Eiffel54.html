@@ -19,6 +19,22 @@
         </ul>
 		<h2>Libraries</h2>
         <h3>EiffelBase</h3>
+        <p>&nbsp;</p>
+        <h3>EiffelNet</h3>
+        <ul>
+          <li>Fixed bug in <span class="efeature">set_delay</span> and <span class="efeature">set_nodelay</span>
+           in <span class="eclass">NETWORK_STREAM_SOCKET</span>, because their implementations were inverted.</li>
+        </ul>
+        <h3>EiffelTime</h3>
+        <ul>
+          <li>Improved speed of <span class="eclass">DATE</span> and <span class="eclass">TIME</span> comparison.</li>
+          <li>In <span class="eclass">DATE_VALUE</span> added 
+          <span class="efeature">ordered_compact_date</span> and made <span class="efeature">compact_date</span> 
+          obsolete.</li>
+          <li>In <span class="eclass">DATE </span>added <span class="efeature">make_by_ordered_compact_date</span> and
+          <span class="efeature">make_by_compact_date</span> obsolete.</li>
+          <li>In <span class="eclass">DATE_VALIDITY_CHECKER</span> added <span class="efeature">ordered_compact_date_valid</span>.</li>
+        </ul>
         <h3>EiffelVision2</h3>
         <ul>
           <li>

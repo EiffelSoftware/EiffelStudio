@@ -67,7 +67,7 @@ feature -- Initialization
 
 	on_parented is
 			-- `Current' has just been added to a container
-		deferred
+		do
 		end
 
 feature  -- Duplication
@@ -103,6 +103,9 @@ end -- class EV_PIXMAP_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/04/12 02:16:29  oconnor
+--| made on_parent concrete
+--|
 --| Revision 1.16  2000/04/12 01:26:45  pichery
 --| - removed synonym `stretch_image' for `stretch'
 --| - added on_parented (only used on Windows)
@@ -152,7 +155,6 @@ end -- class EV_PIXMAP_I
 --|
 --| Revision 1.10.2.2  1999/11/02 17:20:07  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

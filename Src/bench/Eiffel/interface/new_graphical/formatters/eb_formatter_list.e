@@ -27,6 +27,11 @@ feature -- Access
 		deferred
 		end
 
+	text_format: EB_FORMATTER is
+			-- text_format, if there is one.
+		deferred
+		end
+
 feature -- Constants
 
 	separators: LINKED_LIST [INTEGER] is

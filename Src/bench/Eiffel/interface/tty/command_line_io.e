@@ -104,7 +104,7 @@ feature -- Input/output
 				get_name
 			end
 			get_last_input
-			last_input.to_lower
+			last_input.to_upper
 			if last_input.is_empty then
 				abort := True
 			end

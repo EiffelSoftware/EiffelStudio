@@ -93,8 +93,8 @@ feature -- Dynamic Library file
 		local
 			dynamic_lib_exports: HASH_TABLE [LINKED_LIST[DYNAMIC_LIB_EXPORT_FEATURE],INTEGER]
 			dl_exp:DYNAMIC_LIB_EXPORT_FEATURE
-			Dynamic_lib_def_file: INDENT_FILE
-			dynamic_lib_def_file_name: STRING
+			dynamic_lib_def_file: INDENT_FILE
+			dynamic_lib_def_file_name: FILE_NAME
 			C_dynamic_lib_file: INDENT_FILE
 			C_dynamic_lib_file_name: STRING
 
@@ -115,6 +115,8 @@ feature -- Dynamic Library file
 			def_buffer.clear_all
 
 			dynamic_lib_exports:= system.eiffel_dynamic_lib.dynamic_lib_exports
+			system_name:= clone(system.eiffel_system.name)
+
 			if dynamic_lib_exports /= Void and then not dynamic_lib_exports.empty then
 				-- Generation of the header of the C_dynamic_lib_file
 					buffer.putstring("/*****************%N")
@@ -125,7 +127,7 @@ feature -- Dynamic Library file
 
 					buffer.putstring("%N")
 
-				-- Generation of the header of the Dynamic_lib_def_file
+				-- Generation of the header of the dynamic_lib_def_file
 					def_buffer.putstring("LIBRARY ")
 					def_buffer.putstring(system_name)
 					def_buffer.putstring(".dll%N")
@@ -378,11 +380,16 @@ feature -- Dynamic Library file
 					dynamic_lib_exports.forth
 				end
 
-				system_name:= clone(system.eiffel_system.name)
-				dynamic_lib_def_file_name.append_string(".def")
-				!! Dynamic_lib_def_file.make_open_write (gen_file_name (context.final_mode, system_name))
-				Dynamic_lib_def_file.put_string (def_buffer)
-				Dynamic_lib_def_file.close
+				system_name.append_string(".def")
+				if context.final_mode then
+					!! dynamic_lib_def_file_name.make_from_string (Final_generation_path)
+				else
+					!! dynamic_lib_def_file_name.make_from_string (Workbench_generation_path)
+				end
+				dynamic_lib_def_file_name.set_file_name (system_name)
+				!! dynamic_lib_def_file.make_open_write (dynamic_lib_def_file_name)
+				dynamic_lib_def_file.put_string (def_buffer)
+				dynamic_lib_def_file.close
 
 				!! C_dynamic_lib_file.make_open_write (gen_file_name (context.final_mode, "edynlib"));
 				C_dynamic_lib_file.put_string (buffer)

@@ -202,7 +202,6 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 		do
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y]
-
 				-- Mouse Wheel implementation.
 			if a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
 				mouse_wheel_delta := 1
@@ -304,10 +303,9 @@ feature {EV_WIDGET_IMP} -- Position retrieval
 			a_aux_info: POINTER
 			i: INTEGER
 		do
-			
 			if is_displayed then	
 					i := feature {EV_GTK_EXTERNALS}.gdk_window_get_origin (
-						feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
+						feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget),
 				    	$a_x, NULL)
 					Result := a_x
 			else
@@ -327,7 +325,7 @@ feature {EV_WIDGET_IMP} -- Position retrieval
 		do
 			if is_displayed then
 					i := feature {EV_GTK_EXTERNALS}.gdk_window_get_origin (
-						feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
+						feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget),
 				    	NULL, $a_y)
 					Result := a_y
 			else

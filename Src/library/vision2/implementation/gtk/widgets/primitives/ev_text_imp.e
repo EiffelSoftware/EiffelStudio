@@ -20,12 +20,14 @@ inherit
 		redefine
 			interface,
 			set_caret_position,
-			insert_text
+			insert_text,
+			visual_widget
 		end
 		
 	EV_FONTABLE_IMP
 		redefine
-			interface
+			interface,
+			visual_widget
 		end
 
 create
@@ -43,6 +45,12 @@ feature {NONE} -- Initialization
 			C.gtk_widget_show (entry_widget)
 			C.gtk_container_add (c_object, entry_widget)
 			C.gtk_text_set_editable (entry_widget, True)
+		end
+		
+	visual_widget: POINTER is
+			-- The widget the user sees on the screen.
+		do
+			Result := entry_widget
 		end
 
 feature -- Access

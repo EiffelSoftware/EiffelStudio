@@ -58,7 +58,7 @@ feature -- Window Properties
 			-- it always exists, but sometimes it is included in the edit bar.
 
 	format_bar_menu_item: EV_CHECK_MENU_ITEM
-			-- menu entry allowing to set if the format bar is shown or not.
+			-- Menu entry allowing to set if the format bar is shown or not
 
 	format_bar_is_used: BOOLEAN is
 			-- Do the tool need an effective format_bar?
@@ -153,11 +153,18 @@ feature -- Update
 				f := last_format
 				old_do_format := f.do_format
 				f.set_do_format (true)
-				if history.item.origin_text /= Void then
-					f.format (history.item)
+				if history.item /= Void then
+--					if not (history.item.same_as (stone)) then
+--						set_stone (history.item)
+--					else
+						f.format
+--					end
 				else
-					f.format (stone)
+					f.format
 				end
+--| FIXME
+--| Christophe, 10 nov 1999
+--| Has to know in witch cases stone has to be changed.
 				f.set_do_format (old_do_format)
 			else
 				history.synchronize

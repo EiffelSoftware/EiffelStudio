@@ -418,6 +418,7 @@ char* c_gtk_window_title(GtkWindow* window);
 ==============================================================================*/
 
 void c_gtk_style_default_bg_color (EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* b);
+void c_gtk_style_default_fg_color (EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* b);
 
 /*#define c_gtk_style_base_color_blue(p) \
 	((((GtkStyle*)p)->base[GTK_STATE_NORMAL].blue)/257)

@@ -51,6 +51,12 @@ feature -- Status report
 
 feature -- Status setting
 
+	set_parent (par: like parent) is
+			-- Make `par' the new parent of the widget.
+		do
+			parent_imp ?= par.implementation
+		end
+
 	destroy is
 			-- Destroy the actual object.
 		do
@@ -58,14 +64,16 @@ feature -- Status setting
 			internal_text := Void
 		end
 
-	set_selected (flag: BOOLEAN) is
-			-- Select the item if `flag', unselect it otherwise.
+	enable_select is
+			-- Select Current.
 		do
- 			if flag then
- 				parent_imp.internal_select (Current)
- 			else
-				parent_imp.internal_deselect (Current)
- 			end
+			parent_imp.internal_select (Current)
+		end
+
+	disable_select is
+			-- Deselect Current.
+		do
+			parent_imp.internal_deselect (Current)
 		end
 
 feature -- Element Change
@@ -211,6 +219,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/03/03 00:19:50  rogers
+--| Implemented set_parent and split set_selected into enable_select and disable_select.
+--|
 --| Revision 1.19  2000/02/19 06:34:12  oconnor
 --| removed old command stuff
 --|

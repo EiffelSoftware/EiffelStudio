@@ -7,17 +7,10 @@ indexing
 class
 	SHARED
 
-feature -- Access
+inherit
+	PROJECT_SHARED
 
-	db_manager: DATABASE_MANAGER is
-			-- Database manager. Allows to perform
-			-- connection, deconnection, request and 
-			-- query execution.
-		once
-			Create Result
-		ensure
-			exists: Result /= Void
-		end
+feature -- Access
 
 	first_window:  WIZARD_WINDOW is
 			-- Main Window ( i.e. the wizard window frame )

@@ -11,11 +11,21 @@ class
 inherit
 	STATE_WINDOW
 		redefine
-			proceed_with_current_info
+			proceed_with_current_info,
+			make
 		end
 
 creation
 	make
+
+feature -- Initialization
+
+	make (an_info: like state_information) is
+			-- Initialize with 'an_info'
+		do
+			precursor(an_info)
+			is_final_state := TRUE
+		end
 
 feature -- basic Operations
 
@@ -72,8 +82,6 @@ feature -- basic Operations
 				generate_example
 			end
 			progress_text.set_text(" ")
-			first_window.previous_b.disable_sensitive
-			first_window.next_b.set_text("Exit")
 		end
 
 	proceed_with_current_info is 
@@ -94,6 +102,8 @@ feature -- Processing
 			f_name: FILE_NAME
 			s1: STRING
 		do
+			s1 := clone(s)
+			s.replace_substring_all(" ","_")
 			notify_user("generating class "+s)
 			Create rep.make(s)
 			rep.load
@@ -135,9 +145,10 @@ feature -- Processing
 			until
 				repositories.after
 			loop
-				s2 := repositories.item.repository_name
+				s2 := clone(repositories.item.repository_name)
 				repository_name := clone(s2)
 				repository_name.to_lower
+				repository_name.replace_substring_all(" ","_")
 				s.append("%N%T"+repository_name+"_repository: DB_REPOSITORY is")
 				s.append("%N%T%T%T-- Load the repository '"+repository_name+"'")
 				s.append("%N%T%Tonce%N%T%T%TCreate Result.make(%""+s2+"%")")
@@ -200,7 +211,7 @@ feature -- Processing
 			f1,f_name: FILE_NAME
 			fi: PLAIN_TEXT_FILE
 			s: STRING
-			example_generator: EXAMPLE_GENERATOR
+			example_generator: EXAMPLE_GENERATOR 
 			root_generator: ROOT_GENERATOR
 		do
 			notify_user("Generating Example...")

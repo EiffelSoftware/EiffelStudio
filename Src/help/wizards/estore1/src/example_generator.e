@@ -65,25 +65,35 @@ feature -- Initialization
 		require
 			tuple_exists: qu /= Void
 		local
-			s1,s2,s3: STRING
+			s1,s2,s3,s4: STRING
 			s11,s22: STRING
 		do
 			s1 ?= qu.item(1)
 			s2 ?= qu.item(2)
 			s3 ?= qu.item(3)
+			s4 := clone(s1)
+			s4.to_upper
+			s4.replace_substring_all(" ","_")
 			s11 := clone(s1)
 			s22 := clone(s2)
 			s11.to_lower
 			s22.to_lower
 			a_request_name := "get_"+s11+"_with_"+s22
-			Result_string.append("%N%T"+a_request_name+": LINKED_LIST["+s1+"] is%N")
+			Result_string.append("%N%T"+a_request_name+": LINKED_LIST["+s4+"] is%N")
 			Result_string.append("%T%T%T-- Request Example%N")
 			Result_string.append("%T%Tlocal%N")
-			Result_string.append("%T%T%Tobj:"+s1+"%N")
+			Result_string.append("%T%T%Tobj:"+s4+"%N")
 			Result_string.append("%T%Tdo%N")
 			Result_string.append("%T%T%TCreate obj.make%N")
-			a_request := "select * from "+s1+" where "+s2+"="+s3
-			Result_string.append("%T%T%TResult := db_manager.load_list(%""+a_request)
+			a_request := "select * from "
+			if s1.has(' ') then
+				-- This is due to ODBC which accepts table name with spaces.
+				a_request:= a_request + "["+s1+"]"
+			else
+				a_request:=a_request +s1
+			end
+			a_request := a_request + " where "+s2+"="+s3
+			Result_string.append("%T%T%TResult := db_manager.load_list(%"")
 			Result_string.append(a_request+"%", obj)%N")
 			Result_string.append("%T%Tensure%N")
 			Result_string.append("%T%T%Texists: Result /= Void%N")

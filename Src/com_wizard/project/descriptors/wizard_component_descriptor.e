@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Component"
 	status: "See notice at end of class";
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,40 +10,6 @@ deferred class
 inherit
 	WIZARD_TYPE_DESCRIPTOR
 
-feature -- Access
-
-feature -- Measurement
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
-feature -- Basic operations
-
-feature -- Obsolete
-
-feature -- Inapplicable
-
-feature {NONE} -- Implementation
-
-invariant
-	invariant_clause: -- Your invariant here
 
 end -- class WIZARD_COMPONENT_DESCRIPTOR
 

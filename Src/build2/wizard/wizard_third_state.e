@@ -19,6 +19,8 @@ inherit
 	GB_WIDGET_UTILITIES
 	
 	GB_SHARED_SYSTEM_STATUS
+	
+	GB_CONSTANTS
 
 create
 	make
@@ -77,8 +79,8 @@ feature {NONE} -- Implementation
 	display_state_text is
 			-- Set the messages for this state.
 		do
-			title.set_text ("Add Your Title Here (Step 4).")
-			subtitle.set_text ("Add your subtitle here.")
+			title.set_text ("Code generation")
+			subtitle.set_text ("Select generation options.")
 			message.set_text ("Please select desired code generation options.")
 		end
 		

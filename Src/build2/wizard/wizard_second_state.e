@@ -127,8 +127,8 @@ feature {NONE} -- Implementation
 	display_state_text is
 			-- Set the messages for this state.
 		do
-			title.set_text ("Add Your Title Here (Step 3).")
-			subtitle.set_text ("Add your subtitle here.")
+			title.set_text ("System information")
+			subtitle.set_text ("Enter system information.")
 			message.set_text ("Please enter the following system information.")
 		end
 		

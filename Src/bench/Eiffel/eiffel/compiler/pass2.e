@@ -96,7 +96,6 @@ end;
 					extra_check_list.extend (current_class)
 				end;
 				changed_classes.start;
-				changed_classes.compare_references
 				changed_classes.search (pass_c);
 				if not changed_classes.after then
 					changed_classes.remove;

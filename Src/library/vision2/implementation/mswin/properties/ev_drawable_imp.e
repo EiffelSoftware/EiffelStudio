@@ -234,6 +234,7 @@ feature -- Element change
 			-- Set to Void to use `background_color' to fill.
 		do
 			tile := a_pixmap
+			internal_initialized_brush := False
 		end
 
 	remove_tile is

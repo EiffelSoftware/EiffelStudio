@@ -1,0 +1,16 @@
+<document title="Release notes of EiffelStudio 5.5" output="studio">
+	<meta_data>
+		<help/>
+	</meta_data>
+	<paragraph>
+		<heading><size>2</size>Graphical environment</heading>
+			<heading><size>3</size>Improvements</heading>
+		<heading><size>2</size>Debugger</heading>
+		<heading><size>2</size>EiffelBuild</heading>
+		<heading><size>2</size>Compiler</heading>
+		<list ordered="false">
+			<item>Click <link><url>../30_compiler/60_version_history/05_55_release/00_54_to_55_changes.xml</url><label>here</label></link> for the compiler release notes.</item>
+		</list>
+		<heading><size>2</size>Libraries</heading>
+	</paragraph>
+</document>

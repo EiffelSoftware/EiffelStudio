@@ -249,17 +249,20 @@ feature -- Measurement
 	occurrences (c: CHARACTER): INTEGER is
 			-- Number of times `c' appears in the string
 		local
-			counter: INTEGER
+			counter, nb: INTEGER
+			a: SPECIAL [CHARACTER]
 		do
 			from
-				counter := 1
+				counter := 0
+				nb := count - 1
+				a := area
 			until
-				counter > count
+				counter > nb
 			loop
-				if item (counter) = c then
+				if a.item (counter) = c then
 					Result := Result + 1
-				end;
-				counter := counter + 1;
+				end
+				counter := counter + 1
 			end
 		end;
 

@@ -206,7 +206,7 @@ feature -- Access
 			-- display in the layout constructor to be decoupled from the
 			-- actual widget structure.		
 		
-feature {GB_EV_BOX_EDITOR_CONSTRUCTOR} -- Basic operation
+feature {GB_EV_BOX_EDITOR_CONSTRUCTOR, GB_COMMAND_CHANGE_TYPE} -- Basic operation
 
 	enable_expanded_in_box is
 			-- Ensure `expanded_in_box' is `True'.
@@ -298,51 +298,11 @@ feature {GB_LAYOUT_CONSTRUCTOR_ITEM, GB_OBJECT_HANDLER, GB_WINDOW_SELECTOR} -- S
 			layout_item_object_set: layout_item.object = Current
 		end
 		
-feature {GB_OBJECT_HANDLER, GB_COMMAND_DELETE_OBJECT, GB_OBJECT, GB_COMMAND_ADD_OBJECT} -- Status setting
-
---	unparent is
---			-- Removed `Current' from its parents. All representations
---			-- of `an_object' must be removed from their parents to
---			-- concide with this change.
---		do
---		--	unparent_ev_object (object)
---		--	unparent_ev_object (display_object)
---
---		--	layout_item.unparent
---		--	parent_object.remove_child_object (Current)
---			parent_object.remove_child (Current)
---			
---				-- Notify the system that we have modified something.
---			system_status.enable_project_modified
---			command_handler.update
---		ensure
---			layout_item_parent_void: layout_item.parent = Void
---		end
-
-feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_DELETE_OBJECT, GB_COMMAND_ADD_OBJECT} -- Status setting
-
-	unparent_during_type_change is
-			-- Removed `Current' from its parent during a type change.
-			-- We keep the existing layout item of the original widget which
-			-- allows us to access the new object in the history after the type
-			-- change has completed.
-		do
-			unparent_ev_object (object)
-			unparent_ev_object (display_object)
-			
-				-- Notify the system that we have modified something.
-			system_status.enable_project_modified
-			command_handler.update
-		end
-		
 	remove_child (an_object: GB_OBJECT) is
 			-- Removed `an_object' and all its representations from `Current'.
 		require
 			contained: children.has (an_object)
-	--	local
-	--		cursor: CURSOR
 		do
-	--		cursor := layout_item.cursor
 			unparent_ev_object (an_object.object)
 			unparent_ev_object (an_object.display_object)
 	
@@ -352,7 +312,6 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_DELETE_OBJECT, GB_COMMAND_ADD_
 				-- Notify the system that we have modified something.
 			system_status.enable_project_modified
 			command_handler.update
-	--		layout_item.go_to (cursor)
 		ensure
 			not_contained: not children.has (an_object)
 		end

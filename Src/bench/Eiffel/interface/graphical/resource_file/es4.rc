@@ -1,99 +1,148 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
 #include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
 
-#define DLG_SELECTDIR                   100
-#define ID_LA_DIR                       101
-#define Dlg_graphical_degree_output     101
-#define ID_CB_LASTDIR                   102
-#define ID_CB_DRIVE                     103
-#define ID_LB_DIR                       104
-#define IDD_REPLACEDIALOG               108
-#define Prg_compilation_progress        1000
-#define Txt_degree                      1001
-#define Txt_entity                      1002
-#define Txt_current_degree              1003
-#define Txt_nbr_to_go                   1004
-#define Txt_current_entity              1005
-#define Txt_current_nbr_to_go           1006
-#define ID_FINDNEXT                     3000
-#define ID_REPLACEALL                   3002
-#define IDC_FINDEDIT                    3007
-#define IDC_REPLACEEDIT                 3008
-#define IDC_WORDCHECK                   3009
-#define IDC_CASECHECK                   3010
-#define ID_REPLACE                      3011
-#define IDC_RADIOUP                     3014
-#define IDC_RADIODOWN                   3015
-#define IDC_RADIOBOX                    3016
-#define ID_FINDSTATIC                   3017
-#define ID_REPLACESTATIC                3018
-#define Txt_percentage                  3019
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
 
-#define Project_icon					1
-Project_icon ICON "es4.ico"
-#define Object_icon						2
-Object_icon ICON "es4.ico"
-#define Feature_icon					3
-Feature_icon ICON "es4.ico"
-#define Explain_icon					4
-Explain_icon ICON "es4.ico"
-#define Class_icon						5
-Class_icon ICON "es4.ico"
-#define System_icon						6
-System_icon ICON "es4.ico"
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
 
-DLG_SELECTDIR DIALOG DISCARDABLE  20, 20, 173, 188
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+Project_icon            ICON    DISCARDABLE     "es4.ico"
+Object_icon             ICON    DISCARDABLE     "es4.ico"
+Feature_icon            ICON    DISCARDABLE     "es4.ico"
+Explain_icon            ICON    DISCARDABLE     "es4.ico"
+Class_icon              ICON    DISCARDABLE     "es4.ico"
+System_icon             ICON    DISCARDABLE     "es4.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+DLG_SELECTDIR DIALOG DISCARDABLE  20, 20, 236, 191
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Select directory"
 FONT 8, "HELV"
 BEGIN
-    LTEXT           "",ID_LA_DIR,6,48,161,8
+    LTEXT           "Current dir",ID_LA_DIR,6,48,226,8,SS_NOPREFIX
     LTEXT           "&Choice",-1,6,5,82,8
-    COMBOBOX        ID_CB_LASTDIR,6,15,161,95,CBS_DROPDOWN | WS_GROUP |
-                    WS_TABSTOP| WS_HSCROLL
-    LTEXT           "&Directories:",-1,6,36,72,8
-    LISTBOX         ID_LB_DIR,6,62,82,89,LBS_SORT | WS_VSCROLL | WS_GROUP | 
+    COMBOBOX        ID_CB_LASTDIR,6,14,227,95,CBS_DROPDOWN | WS_HSCROLL | 
+                    WS_GROUP | WS_TABSTOP
+    LTEXT           "&Directories:",-1,6,36,42,8
+    LISTBOX         ID_LB_DIR,6,62,158,89,LBS_SORT | WS_VSCROLL | WS_GROUP | 
                     WS_TABSTOP
     LTEXT           "Dri&ves",-1,6,155,36,8
     COMBOBOX        ID_CB_DRIVE,6,165,82,53,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_GROUP | WS_TABSTOP
-    DEFPUSHBUTTON   "OK",IDOK,116,62,51,15,WS_GROUP
-    PUSHBUTTON      "Cancel",IDCANCEL,116,82,51,15,WS_GROUP
+    DEFPUSHBUTTON   "OK",IDOK,177,62,51,15,WS_GROUP
+    PUSHBUTTON      "Cancel",IDCANCEL,177,84,51,15,WS_GROUP
 END
 
-IDD_REPLACEDIALOG DIALOG 10, 10, 228, 82
+IDD_REPLACEDIALOG DIALOG DISCARDABLE  10, 10, 228, 82
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Replace"
 FONT 8, "MS Sans Serif"
-{
- PUSHBUTTON "Replace &All", ID_REPLACEALL, 178,40,46,16
- PUSHBUTTON "Close", IDCANCEL, 178,58,46,16
- PUSHBUTTON "&Replace", ID_REPLACE, 178,23,46,14
- DEFPUSHBUTTON "&Find Next", ID_FINDNEXT, 178,4,46,16
- LTEXT "Fi&nd what:", ID_FINDSTATIC, 8,10,37,8, SS_LEFT
- EDITTEXT IDC_FINDEDIT, 55,9,116,11, ES_AUTOHSCROLL | ES_LEFT
- LTEXT "Re&place with:", ID_REPLACESTATIC, 8, 28, 46, 9
- EDITTEXT IDC_REPLACEEDIT, 55,26,116,12, ES_AUTOHSCROLL | WS_DISABLED | WS_BORDER | WS_TABSTOP
- CHECKBOX "Match &whole word only", IDC_WORDCHECK, 8,50,86,10, BS_AUTOCHECKBOX |
- WS_TABSTOP
- CHECKBOX "Match &case", IDC_CASECHECK, 8,65,49,9, BS_AUTOCHECKBOX | WS_TABSTOP
- GROUPBOX "Direction", IDC_RADIOBOX, 101,49,69,29
- CONTROL "&Up", IDC_RADIOUP, "Button", BS_AUTORADIOBUTTON, 107,58,21,14
- CONTROL "&Down", IDC_RADIODOWN, "Button", BS_AUTORADIOBUTTON, 135,58,29,14
-}
+BEGIN
+    EDITTEXT        IDC_FINDEDIT,55,9,116,11,ES_AUTOHSCROLL
+    EDITTEXT        IDC_REPLACEEDIT,55,26,116,12,ES_AUTOHSCROLL | 
+                    WS_DISABLED
+    DEFPUSHBUTTON   "&Find Next",ID_FINDNEXT,178,4,46,16
+    PUSHBUTTON      "&Replace",ID_REPLACE,178,23,46,14
+    PUSHBUTTON      "Replace &All",ID_REPLACEALL,178,40,46,16
+    PUSHBUTTON      "Close",IDCANCEL,178,58,46,16
+    LTEXT           "Fi&nd what:",ID_FINDSTATIC,8,10,37,8
+    LTEXT           "Re&place with:",ID_REPLACESTATIC,8,28,46,9
+    CONTROL         "Match &whole word only",IDC_WORDCHECK,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,8,50,86,10
+    CONTROL         "Match &case",IDC_CASECHECK,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,8,65,49,9
+    CONTROL         "&Up",IDC_RADIOUP,"Button",BS_AUTORADIOBUTTON,107,58,21,
+                    14
+    CONTROL         "&Down",IDC_RADIODOWN,"Button",BS_AUTORADIOBUTTON,135,58,
+                    29,14
+    GROUPBOX        "Direction",IDC_RADIOBOX,101,49,69,29
+END
 
-Dlg_graphical_degree_output DIALOGEX 0, 0, 183, 79
+Dlg_graphical_degree_output DIALOGEX 0, 0, 236, 81
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Dialog"
 FONT 8, "MS Sans Serif"
 BEGIN
-    PUSHBUTTON      "Cancel",IDCANCEL,67,58,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,100,58,50,14
     CONTROL         "Progress1",Prg_compilation_progress,"msctls_progress32",
-                    0x0,9,40,142,11,WS_EX_STATICEDGE
-    LTEXT           "text degree",Txt_degree,9,7,59,10
-    LTEXT           "100 %",Txt_percentage,155,42,21,10
-    LTEXT           "current degree",Txt_current_degree,69,7,102,10
-    LTEXT           "Current entity",Txt_current_entity,69,16,102,10
-    LTEXT           "text entity",Txt_entity,9,16,59,10
-    LTEXT           "current nbr togo",Txt_current_nbr_to_go,69,25,102,10
-    LTEXT           "nbr togo text",Txt_nbr_to_go,9,25,59,10
+                    0x0,9,40,197,11,WS_EX_STATICEDGE
+    LTEXT           "text degree",Txt_degree,6,6,79,10
+    LTEXT           "text entity",Txt_entity,6,16,79,10
+    LTEXT           "nbr togo text",Txt_nbr_to_go,6,25,79,10
+    LTEXT           "Current degree",Txt_current_degree,89,6,145,10
+    LTEXT           "Current entity",Txt_current_entity,89,16,145,10
+    LTEXT           "Current nbr togo",Txt_current_nbr_to_go,89,25,145,10
+    LTEXT           "100 %",Txt_percentage,209,41,21,10
 END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

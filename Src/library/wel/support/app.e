@@ -18,12 +18,15 @@ feature {NONE} -- Initialization
 			-- set the application's main window and run
 			-- the application.
 		do
+			runable := True
 			set_application (Current)
 			create_dispatcher
 			init_instance
 			init_application
 			set_application_main_window (main_window)
-			run
+			if runable then
+				run
+			end
 		end
 
 feature -- Access
@@ -63,6 +66,21 @@ feature -- Status report
 			-- Is the idle action enabled?
 			-- (False by default)
 
+	runable: BOOLEAN
+			-- Can the application be run?
+			-- (True by default)
+			-- The user may want to set `runable' to False
+			-- if the application can not be executed.
+
+	is_dialog: BOOLEAN is
+			-- Is the main window a dialog box?
+		local
+			d: WEL_DIALOG
+		do
+			d ?= application_main_window
+			Result := d /= Void
+		end
+
 feature -- Status setting
 
 	enable_idle_action is
@@ -88,6 +106,7 @@ feature -- Basic operations
 	run is
 			-- Create `main_window' and start the message loop.
 		require
+			runable: runable
 			main_window_not_void: application_main_window /= Void
 			parent_main_window_is_void: application_main_window.parent = Void
 		local
@@ -151,7 +170,7 @@ feature {NONE} -- Implementation
 							done := True
 						else
 							dlg := cwin_get_last_active_popup (main_window.item)
-							if dlg /= main_window.item then
+							if dlg /= main_window.item or is_dialog then
 								msg.process_dialog_message (dlg)
 								if not msg.last_boolean_result then
 									msg.translate
@@ -187,7 +206,7 @@ feature {NONE} -- Implementation
 							done := True
 						else
 							dlg := cwin_get_last_active_popup (main_window.item)
-							if dlg /= main_window.item then
+							if dlg /= main_window.item or is_dialog then
 								msg.process_dialog_message (dlg)
 								if not msg.last_boolean_result then
 									msg.translate

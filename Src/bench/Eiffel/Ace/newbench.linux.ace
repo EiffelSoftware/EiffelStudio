@@ -184,7 +184,7 @@ cluster
 external
 	include_path:
 		"\$(EIFFEL_SRC)/C/bench",
-		"\$(EIFFEL_SRC)/C/platform"
+		"\$(EIFFEL_SRC)/C/platform",
 		"\$(EIFFEL_SRC)/C/liman/shared",
 		"\$(EIFFEL_SRC)/library/event/Clib",
 		"\$(EIFFEL_SRC)/library/gobo/library/kernel/include",
@@ -210,6 +210,7 @@ external
 		"$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/load_pixmap.o `gtk-config --libs`",
 		"$(EIFFEL_SRC)/C_library/libpng/libpng.a",
 		"$(EIFFEL_SRC)/C_library/zlib/libz.a",
-		"$(EIFFEL_SRC)/C/minilzo/minilzo.o"
+		"$(EIFFEL_SRC)/C/minilzo/minilzo.o",
+		"-L/usr/X11R6/lib/ -lXt -lXtst"
 
 end

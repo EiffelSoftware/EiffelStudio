@@ -176,7 +176,7 @@ feature -- Code generation
 			end
 		end
 
-	built_in_enlarged: like Current is
+	built_in_enlarged: EXPR_B is
 			-- Binary op enlarged node
 		do
 			left := left.enlarged

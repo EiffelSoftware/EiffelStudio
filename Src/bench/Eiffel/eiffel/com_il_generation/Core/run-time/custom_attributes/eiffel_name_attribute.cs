@@ -10,7 +10,6 @@ using System;
 namespace EiffelSoftware.Runtime.CA
 {
 
-[CLSCompliantAttribute (false)]
 [AttributeUsage (AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
 [Serializable]
 public class EIFFEL_NAME_ATTRIBUTE : Attribute

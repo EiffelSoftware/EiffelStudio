@@ -10,7 +10,7 @@ inherit
 			has_postcondition, has_precondition, is_ensure_then,
 			is_require_else, is_procedure, argument_names, arguments,
 			obsolete_message, assert_id_set, set_assert_id_set,
-			check_local_names
+			check_local_names, duplicate_arguments
 		end;
 	FEATURE_I
 		redefine
@@ -18,7 +18,7 @@ inherit
 			has_postcondition, has_precondition, is_ensure_then,
 			is_require_else, is_procedure, argument_names, arguments,
 			obsolete_message, assert_id_set, set_assert_id_set,
-			check_local_names
+			check_local_names, duplicate_arguments
 		select
 			transfer_to
 		end
@@ -90,12 +90,19 @@ feature
 		do
 			obsolete_message := s;
 		end;
- 
 
 	argument_names: EIFFEL_LIST [ID_AS] is
 			-- Argument names
 		do
 			Result := arguments.argument_names;
+		end;
+
+	duplicate_arguments is
+			-- Do a clone of the arguments (for replication)
+		do
+			if arguments /= Void then
+				arguments := arguments.twin
+			end;
 		end;
 
 	init_assertion_flags (content: ROUTINE_AS) is
@@ -115,6 +122,9 @@ feature
 			Result := twin;
 			if arguments /= Void then
 				Result.set_arguments (arguments.twin);
+			end;
+			if type /= Void then
+				Result.set_type (type.twin);
 			end;
 		end;
 
@@ -177,6 +187,7 @@ feature
 			other.set_obsolete_message (obsolete_message);
 			other.set_has_precondition (has_precondition);
 			other.set_has_postcondition (has_postcondition);
+			other.set_assert_id_set (assert_id_set);
 		end;
 
 	check_local_names is
@@ -185,8 +196,10 @@ feature
 		local
 			body: FEATURE_AS;
 		do
-			body := Body_server.item (body_id);
-			body.check_local_names;
+			if not is_replicated then	
+				body := Body_server.item (body_Id);
+				body.check_local_names;
+			end;
 		end;
 
 end

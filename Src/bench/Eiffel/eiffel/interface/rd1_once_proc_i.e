@@ -8,11 +8,13 @@ inherit
 		rename
 			transfer_to as d_once_proc_transfer_to
 		redefine
-			code_id
+			code_id, is_replicated, is_code_replicated,
+			set_is_code_replicated
 		end;
 	D_ONCE_PROC_I
 		redefine
-			code_id, transfer_to
+			code_id, transfer_to, is_replicated,
+			is_code_replicated, set_is_code_replicated
 		select
 			transfer_to
 		end;
@@ -35,4 +37,16 @@ feature
 			f.set_code_id (code_id);
 		end;
 
+    is_code_replicated: BOOLEAN;
+            -- Is Current feature code replicated
+ 
+    is_replicated: BOOLEAN is True;
+            -- Is Current feature conceptually replicated (True)
+ 
+    set_is_code_replicated is  
+            -- Set `is_code_replicated' to True. 
+		do
+			is_code_replicated := True;
+		end;
+ 
 end

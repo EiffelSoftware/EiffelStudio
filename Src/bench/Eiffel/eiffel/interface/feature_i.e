@@ -206,6 +206,12 @@ feature
 			Result := twin
 		end;
 
+	duplicate_arguments is
+			-- Do a clone of the arguments (for replication)
+		do
+			-- Do nothing
+		end;
+
 feature -- Incrementality
 
 	equiv (other: FEATURE_I): BOOLEAN is
@@ -353,6 +359,29 @@ feature -- Conveniences
 			-- Has the current feature some formal arguments ?
 		do
 			Result := arguments /= Void
+		end;
+
+	set_is_code_replicated is
+			-- Set current feature to be code replicated.
+		require
+			valid_feature: is_replicated
+		do
+			-- Do nothing
+		end;
+
+	is_code_replicated: BOOLEAN is
+			-- Is Current feature code replicated?
+			--| This is very important for retrieval
+			--| of the body as from the correct	
+			--| server (Body_server or Rep_feat_server).
+		do
+			-- Do nothing
+		end;
+
+	is_replicated: BOOLEAN is
+			-- Is Current feature conceptually replicated?
+		do
+			-- Do nothig
 		end;
 
 	is_procedure: BOOLEAN is
@@ -571,10 +600,22 @@ feature -- Check
 		local
 			body: FEATURE_AS;
 				-- Body of the feature
+			bd: INTEGER
 		do
 			record_suppliers (context.supplier_ids);
 				-- Take the body in the body server
-			body := Body_server.item (body_id);
+			bd := body_id;
+			if is_code_replicated then
+io.error.putstring ("feature - name: ");
+io.error.putstring (feature_name);
+io.error.new_line;
+io.error.putstring ("type check - body id: ");
+io.error.putint (body_id);
+io.error.new_line;
+				body := Rep_feat_server.item (bd);
+			else
+				body := Body_server.item (bd);
+			end;
 				-- make the type check
 			body.type_check;
 		end;
@@ -596,16 +637,20 @@ feature -- Byte code computation
 	compute_byte_code is
 			-- Compute byte code for melted feature
 		require
-			in_pass3
+			in_pass3: in_pass3;
 		local
 			body: FEATURE_AS;
 				-- Body of the feature
-			byte_code: BYTE_CODE;
 			i: INTEGER;
+			byte_code: BYTE_CODE
 		do
 			i := body_id;
 				-- Take the body in the body server
-			body := Body_server.item (i);
+			if not is_code_replicated then
+				body := Body_server.item (i);
+			else
+				body := Rep_feat_server.item (i);
+			end;
 				-- Process byte code
 			byte_code := body.byte_node;
 			byte_code.set_byte_id (i);
@@ -654,7 +699,11 @@ feature -- Byte code computation
 	execution_unit (cl_type: CLASS_TYPE): EXECUTION_UNIT is
 			-- Execution unit
 		do
-			!!Result.make (cl_type, Current);
+			if is_code_replicated then
+				!REP_EXECUTION_UNIT!Result.make (cl_type, Current);
+			else
+				!!Result.make (cl_type, Current);
+			end
 		end;
 
 	change_body_id is
@@ -668,8 +717,13 @@ feature -- Byte code computation
 			old_body_id := body_id;
 			new_body_id := System.body_id_counter.next;
 				-- Update the server using `old_body_id'
-			Body_server.change_key (new_body_id, old_body_id);
-			Tmp_body_server.change_key (new_body_id, old_body_id);
+			if not is_code_replicated then
+				Body_server.change_key (new_body_id, old_body_id);
+				Tmp_body_server.change_key (new_body_id, old_body_id);
+			else
+				Rep_feat_server.change_key (new_body_id, old_body_id);
+				Tmp_rep_feat_server.change_key (new_body_id, old_body_id);
+			end;
 			Byte_server.change_key (new_body_id, old_body_id);
 			Tmp_byte_server.change_key (new_body_id, old_body_id);
 				-- Update the body index table
@@ -1252,6 +1306,7 @@ feature -- Undefinition
 			Result.set_arguments (arguments);
 			Result.set_written_in (written_in);
 			Result.set_rout_id_set (rout_id_set);
+			Result.set_assert_id_set (assert_id_set);
 			Result.set_is_selected (is_selected);
 			Result.set_is_infix (is_infix);
 			Result.set_is_prefix (is_prefix);
@@ -1432,7 +1487,7 @@ feature -- C code generation
 		require
 			valid_file: file /= Void;
 			file_open_for_writing: file.is_open_write or file.is_open_append;
-			written_in_type: class_type.associated_class = written_class;
+			written_in_type: class_type.associated_class.id = generation_class_id;
 			not_deferred: not is_deferred;
 		local
 			byte_code: BYTE_CODE;
@@ -1464,8 +1519,20 @@ feature -- Debug purpose
 			io.error.putchar (' ');
 			rout_id_set.trace;
 			io.error.putstring (" {");
+			io.error.putstring ("fid = ");
+			io.error.putint (feature_id);
+			io.error.putstring ("}");;
+			io.error.putstring (" {");
+			io.error.putstring ("body_index = ");
+			io.error.putint (body_index);
+			io.error.putstring ("}");;
+			io.error.putstring (" {");
 			io.error.putstring ("body_id = ");
-			io.error.putint (body_id);
+			if body_index /= 0 and then Body_index_table.has (body_index) then
+				io.error.putint (body_id);
+			else
+				io.error.putint (0)
+			end;
 			io.error.putstring ("}%N");;
 		end;
 

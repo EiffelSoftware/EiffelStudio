@@ -73,6 +73,21 @@ LPARAM lparam;
 		return FALSE;
 }
 
+BOOL cwel_wait_message (void)
+{
+	/*
+	 * Shell around `WaitMessage' since this function does not return anything
+	 * under Windows 3.1x.
+	 */
+
+#ifdef WIN32
+	return WaitMessage ();
+#else
+	WaitMessage ();
+	return TRUE;
+#endif
+}
+
 /*
 --|-------------------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel 3.

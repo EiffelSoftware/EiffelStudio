@@ -1360,7 +1360,7 @@ feature {NONE} -- Externals
 			si: POINTER) is
 			-- SDK GetTextExtentPoint
 		external
-			"C [macro <wel.h>] (HDC, LPCTSTR, int, LPSIZE)"
+			"C [macro <wel.h>] (HDC, LPCSTR, int, LPSIZE)"
 		alias
 			"GetTextExtentPoint"
 		end

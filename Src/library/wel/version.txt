@@ -1,5 +1,5 @@
-Windows Eiffel Library, Version 1.1, November 28, 1995.
+Windows Eiffel Library, Version 1.2, January 9, 1996.
 
-Copyright (c) Interactive Software Engineering Inc., 1995
+Copyright (c) Interactive Software Engineering Inc., 1995-1996
 Use subject to restrictions of customer license.
 Duplication prohibited except under terms of customer license.

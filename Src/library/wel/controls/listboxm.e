@@ -117,11 +117,22 @@ feature -- Status report
 			exits: exists
 		local
 			a: ANY
+			i: INTEGER
+			result_count: INTEGER
 		do
 			!! Result.make (0, count_selected_items - 1)
-			a := Result.to_c
-			cwin_send_message (item, Lb_getselitems,
-				Result.count, cwel_pointer_to_integer ($a))
+				--| LB_GETSELITEMS cannot be used as it is
+				--| not available under Win 3.1
+			from
+			until
+				i = count
+			loop
+				if is_selected (i) then
+					Result.put (i, result_count)
+					result_count := result_count + 1
+				end
+				i := i + 1
+			end
 		ensure
 			result_not_void: Result /= Void
 			count_ok: Result.count = count_selected_items

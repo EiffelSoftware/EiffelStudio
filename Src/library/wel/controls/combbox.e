@@ -10,7 +10,8 @@ deferred class
 inherit
 	WEL_CONTROL
 		redefine
-			process_notification
+			process_notification,
+			text_length
 		end
 
 	WEL_CB_CONSTANTS
@@ -238,6 +239,17 @@ feature -- Status report
 				0, cwel_pointer_to_integer (Result.item))
 		ensure
 			result_not_void: Result /= Void
+		end
+
+	text_length: INTEGER is
+			-- Text length
+		do
+			Result := cwin_get_window_text_length (item)
+			--| Windows 3.1x fix: Windows returns -1
+			--| when 0 is expected.
+			if Result = -1 then
+				Result := 0
+			end
 		end
 
 feature -- Measurement

@@ -29,6 +29,7 @@ feature -- Access
 			generate_ace_file (project_name)
 			generate_application_file (test_name)
 			generate_test_file (project_name, widget_type)
+			generate_common_test
 		end
 		
 feature {NONE} -- Implementation
@@ -55,6 +56,7 @@ feature {NONE} -- Implementation
 			ace_text := ace_template_file.last_string
 			ace_template_file.close
 			add_generated_string (ace_text, project_name, "<PROJECT_NAME>")
+			add_generated_string (ace_text, current_generation_directory.name, "<PROJECT_LOCATION>")
 			create filename.make_from_string (current_generation_directory.name)
 			filename.extend (ace_file_name)
 			create ace_template_file.make (filename.out)
@@ -87,6 +89,30 @@ feature {NONE} -- Implementation
 			application_template_file.start
 			application_template_file.putstring (application_text)
 			application_template_file.close
+		end
+		
+	generate_common_test is
+			-- Generate the common test file.
+		local
+			common_template_file: PLAIN_TEXT_FILE
+			filename: FILE_NAME
+			common_text: STRING
+		do
+			create filename.make_from_string (current_working_directory)
+			filename.extend ("templates")
+			filename.extend (Common_test_file_name)
+			create common_template_file.make_open_read (filename)
+			common_template_file.start
+			common_template_file.read_stream (common_template_file.count)
+			common_text := common_template_file.last_string
+			common_template_file.close
+			create filename.make_from_string (current_generation_directory.name)
+			filename.extend (common_test_file_name)
+			create common_template_file.make (filename.out)
+			common_template_file.open_write
+			common_template_file.start
+			common_template_file.putstring (common_text)
+			common_template_file.close
 		end
 		
 	generate_test_file (test_name, widget_type: STRING) is

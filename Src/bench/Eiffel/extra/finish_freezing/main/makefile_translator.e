@@ -14,7 +14,6 @@ feature -- Initialization
 			platform := env.get ("PLATFORM")
 			compiler := env.get ("COMPILER")
 
-			eobj_count := 1
 			uses_precompiled := False
 
 			if eiffel4 = Void or else eiffel4.empty then
@@ -111,9 +110,6 @@ feature -- Access
 	compiler: STRING
 			-- COMPILER environment variable
 			
-	eobj_count: INTEGER
-			-- The number of EOBJ# parts
-
 	uses_precompiled: BOOLEAN
 
 	directory_separator: STRING
@@ -548,7 +544,7 @@ feature {NONE} -- Translation
 			dir: STRING -- the directory
 			filename: STRING -- the filename of the sub makefile
 			number: INTEGER -- the number of the Eobj file
-			F_done, D_done, C_done, is_emain, is_E1_makefile: BOOLEAN
+			C_done, is_emain, is_E1_makefile: BOOLEAN
 			emain_line: STRING
 			min: INTEGER
 		do
@@ -679,7 +675,7 @@ feature {NONE} -- Translation
 
 				makefile.putstring (options.get_string ("objects_text", Void))
 			until
-				dir.item (1) = 'E' or else dependent_directories.after
+				dependent_directories.after
 			loop		
 				makefile.putstring (dir)
 				makefile.putstring (directory_separator)
@@ -705,15 +701,7 @@ feature {NONE} -- Translation
 			until
 				dir.item (1) = 'E' or else dependent_directories.after
 			loop		
-				if not F_done and then dir.item (1) = 'F' then
-					F_done := true
-					makefile.putstring ("%N%N");
-					makefile.putstring (options.get_string ("f_objects_text", Void))
-				elseif not D_done and then dir.item (1) = 'D' then
-					D_done := true
-					makefile.putstring ("%N%N");
-					makefile.putstring (options.get_string ("d_objects_text", Void))
-				elseif not C_done and then dir.item (1) = 'C' then
+				if not C_done and then dir.item (1) = 'C' then
 					C_done := true
 					makefile.putstring ("%N%N");
 					makefile.putstring (options.get_string ("c_objects_text", Void))
@@ -734,22 +722,9 @@ feature {NONE} -- Translation
 				end
 			end
 
-			-- The 3 next clauses are to avoid to have an empty D_OBJECT.  --JOC--
 			if not C_done then
 				makefile.putstring ("%N%N");
 				makefile.putstring (options.get_string ("c_objects_text", Void))
-				makefile.putstring (" %"%" %N")
-			end
-
-			if not D_done then
-				makefile.putstring ("%N%N");
-				makefile.putstring (options.get_string ("d_objects_text", Void))
-				makefile.putstring (" %"%" %N")
-			end
-
-			if not F_done then
-				makefile.putstring ("%N%N");
-				makefile.putstring (options.get_string ("f_objects_text", Void))
 				makefile.putstring (" %"%" %N")
 			end
 
@@ -881,23 +856,12 @@ feature {NONE} -- Translation
 
 				dir := dependent_directories.item
 
-				if dir.item (1) = 'E' then
-					selected_object := clone (options.get_string ("eobj_text", Void))
-					if eobj_count /= 1 then
-						selected_object.append_integer (eobj_count)
-					end
-					selected_object.append_character (')')
-
-					eobj_count := eobj_count+1
-				else
-					selected_object := clone (options.get_string ("objects__text", Void))
-				end
+				selected_object := clone (options.get_string ("objects__text", Void))
 				
 				lastline.replace_substring_all ("$obj", selected_object)
 
 				if precompile then
 					lastline.replace_substring_all ("$dir_obj", env.current_working_directory)
-					read_next
 				else
 					lastline.replace_substring_all ("$dir_obj", dir)
 				end

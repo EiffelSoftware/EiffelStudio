@@ -157,13 +157,30 @@ feature
 		end;
 
 	generate_other_objects is
+		local
+			precomp: like Precompilation_directories
 		do
 			if System.uses_precompiled then
 				Make_file.putstring ("%T%T");
-				Make_file.putstring (Precompilation_preobj);
+				Make_file.putstring
+					(Precompilation_descobj);
 				Make_file.putchar (' ');
 				Make_file.putchar (Continuation);
 				Make_file.new_line;
+				from
+					precomp := Precompilation_directories;
+					precomp.start 
+				until
+					precomp.after
+				loop
+					Make_file.putstring ("%T%T");
+					Make_file.putstring
+						(precomp.item_for_iteration.precompiled_preobj);
+					Make_file.putchar (' ');
+					Make_file.putchar (Continuation);
+					Make_file.new_line;
+					precomp.forth
+				end
 			end;
 		end;
 

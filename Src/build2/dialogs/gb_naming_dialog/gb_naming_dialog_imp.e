@@ -35,6 +35,7 @@ feature {NONE}-- Initialization
 			Precursor {EV_DIALOG}
 			initialize_constants
 			
+				-- Create all widgets.
 			create l_ev_vertical_box_1
 			create l_ev_vertical_box_2
 			create prompt_label
@@ -47,6 +48,7 @@ feature {NONE}-- Initialization
 			create l_ev_cell_3
 			create cancel_button
 			
+				-- Build_widget_structure.
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_vertical_box_2)
 			l_ev_vertical_box_2.extend (prompt_label)
@@ -78,12 +80,14 @@ feature {NONE}-- Initialization
 			cancel_button.set_text (cancel_button_text)
 			cancel_button.set_minimum_width (default_button_width)
 			
+				--Connect events.
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
 				-- Call `user_initialization'.
 			user_initialization
 		end
+
 feature -- Access
 
 	prompt_label: EV_LABEL
@@ -104,4 +108,5 @@ feature {NONE} -- Implementation
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	end -- class GB_NAMING_DIALOG_IMP
+	
+end -- class GB_NAMING_DIALOG_IMP

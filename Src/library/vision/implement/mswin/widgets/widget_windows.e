@@ -304,7 +304,8 @@ feature -- Status setting
 			-- Raise current to top of peer stacking order
 		do
 			if exists then
-				set_z_order (hwnd_top)
+				set_z_order (Hwnd_top)
+				wel_set_focus
 			end
 		end;
 

@@ -110,6 +110,10 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			if Generation /= Void then
 				Generation.adapt
 			end;
+
+			if Compilation_modes.is_precompiling then
+				update_document_path
+			end
 		end;
 
 	process_external_clause is
@@ -326,6 +330,27 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				cluster_list.after
 			loop
 				cluster_list.item.reset_options;
+				cluster_list.forth;
+			end;
+		end;
+
+	update_document_path is
+			-- Update the document path for each cluster.
+			-- This is required so when the precompile is read in, it
+			-- will use the default documentation path used during
+			-- precompilation.
+		require
+			is_precompiling: Compilation_modes.is_precompiling;
+		local
+			cluster_list: LINKED_LIST [CLUSTER_I];
+		do
+			from
+				cluster_list := Universe.clusters;
+				cluster_list.start;
+			until
+				cluster_list.after
+			loop
+				cluster_list.item.update_document_path;
 				cluster_list.forth;
 			end;
 		end;

@@ -107,33 +107,38 @@ feature -- Assertions
 			ASSERTIONS.CHECK ("There should be an assembly", a != null);
 		#endif
 
-		object [] cas = a.GetCustomAttributes (typeof (ASSERTION_LEVEL_ATTRIBUTE), false);
-		if ((cas != null) && (cas.Length > 0)) {
-			l_same_level = true;
-			l_computed = false;
-			l_common_level = ASSERTION_LEVEL_ENUM.no;
-			foreach (object ca in cas) {
-				level_attribute = (ASSERTION_LEVEL_ATTRIBUTE) ca;
-				l_current_level = level_attribute.assertion_level;
-				assertion_levels.Add (
-					level_attribute.class_type,			// key
-					l_current_level);	// value
-				if (!l_computed) {
-					l_common_level = l_current_level;
-					l_computed = true;
-				} else {
-					if (l_same_level) {
-						l_same_level = (l_common_level == l_current_level);
+		try {
+			object [] cas = a.GetCustomAttributes (typeof (ASSERTION_LEVEL_ATTRIBUTE), false);
+			if ((cas != null) && (cas.Length > 0)) {
+				l_same_level = true;
+				l_computed = false;
+				l_common_level = ASSERTION_LEVEL_ENUM.no;
+				foreach (object ca in cas) {
+					level_attribute = (ASSERTION_LEVEL_ATTRIBUTE) ca;
+					l_current_level = level_attribute.assertion_level;
+					assertion_levels.Add (
+						level_attribute.class_type,			// key
+						l_current_level);	// value
+					if (!l_computed) {
+						l_common_level = l_current_level;
+						l_computed = true;
+					} else {
+						if (l_same_level) {
+							l_same_level = (l_common_level == l_current_level);
+						}
 					}
 				}
-			}
-			if (l_same_level) {
-				global_assertion_level = l_common_level;
-				is_global_assertion_level_set = true;
+				if (l_same_level) {
+					global_assertion_level = l_common_level;
+					is_global_assertion_level_set = true;
+				} else {
+					is_global_assertion_level_set = false;
+				}
 			} else {
-				is_global_assertion_level_set = false;
+				global_assertion_level = ASSERTION_LEVEL_ENUM.no;
+				is_global_assertion_level_set = true;
 			}
-		} else {
+		} catch {
 			global_assertion_level = ASSERTION_LEVEL_ENUM.no;
 			is_global_assertion_level_set = true;
 		}

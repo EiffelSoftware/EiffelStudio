@@ -89,8 +89,8 @@ feature {NONE}-- Initialization
 			create compile_box
 			create compile_padding_cell
 			create compile_buttons_box
-			create compile_eiffel_check_button
 			create compile_c_code_check_button
+			create compile_eiffel_check_button
 			create backup_box
 			create backup_label
 			create backup_inner_box
@@ -169,8 +169,8 @@ feature {NONE}-- Initialization
 			compilation_box.extend (compile_box)
 			compile_box.extend (compile_padding_cell)
 			compile_box.extend (compile_buttons_box)
-			compile_buttons_box.extend (compile_eiffel_check_button)
 			compile_buttons_box.extend (compile_c_code_check_button)
+			compile_buttons_box.extend (compile_eiffel_check_button)
 			generation_options_box.extend (backup_box)
 			backup_box.extend (backup_label)
 			backup_box.extend (backup_inner_box)
@@ -196,12 +196,6 @@ feature {NONE}-- Initialization
 			help_menu_item.set_text ("Help")
 			help_menu_item.set_pixmap (help_png)
 			about_menu_item.set_text ("About")
-			notebook.set_item_text (settings_box, "General Settings")
-			notebook.set_item_text (generation_options_outter_box, "Generation Options")
-			notebook.set_item_text (output_box, "Output")
-			notebook.item_tab (settings_box).set_pixmap (settings_png)
-			notebook.item_tab (generation_options_outter_box).set_pixmap (settings_png)
-			notebook.item_tab (output_box).set_pixmap (output_png)
 			settings_box.set_padding_width (5)
 			settings_box.disable_item_expand (settings_inner_box)
 			settings_box.disable_item_expand (settings_bottom_box)
@@ -274,11 +268,12 @@ feature {NONE}-- Initialization
 			compile_label.align_text_left
 			compile_box.disable_item_expand (compile_padding_cell)
 			compile_padding_cell.set_minimum_width (10)
-			compile_buttons_box.disable_item_expand (compile_eiffel_check_button)
 			compile_buttons_box.disable_item_expand (compile_c_code_check_button)
+			compile_buttons_box.disable_item_expand (compile_eiffel_check_button)
+			compile_c_code_check_button.enable_select
+			compile_c_code_check_button.set_text ("Compile C code")
 			compile_eiffel_check_button.enable_select
-			compile_eiffel_check_button.set_text ("Do not compile Eiffel code")
-			compile_c_code_check_button.set_text ("Do not compile C code")
+			compile_eiffel_check_button.set_text ("Compile Eiffel code")
 			backup_box.set_padding_width (5)
 			backup_box.disable_item_expand (backup_label)
 			backup_box.disable_item_expand (backup_inner_box)
@@ -316,8 +311,8 @@ feature {NONE}-- Initialization
 			next_button.select_actions.extend (agent on_next)
 			in_process_radio_button.select_actions.extend (agent on_select_in_process)
 			out_of_process_radio_button.select_actions.extend (agent on_select_out_of_process)
+			compile_c_code_check_button.select_actions.extend (agent on_select_compile_c)
 			compile_eiffel_check_button.select_actions.extend (agent on_select_compile_eiffel)
-			compile_c_code_check_button.select_actions.extend (agent on_no_c_compilation)
 			cleanup_radio_button.select_actions.extend (agent on_select_cleanup)
 			backup_radio_button.select_actions.extend (agent on_select_backup)
 			overwrite_radio_button.select_actions.extend (agent on_select_overwrite)
@@ -336,8 +331,8 @@ feature -- Access
 	project_box: WIZARD_FIELD_BOX
 	notebook: EV_NOTEBOOK
 	destination_folder_box: WIZARD_FOLDER_PATH_BOX
-	compile_eiffel_check_button,
-	compile_c_code_check_button: EV_CHECK_BUTTON
+	compile_c_code_check_button,
+	compile_eiffel_check_button: EV_CHECK_BUTTON
 	separator: EV_HORIZONTAL_SEPARATOR
 	file_menu, help_menu: EV_MENU
 	com_client_project_radio_button,
@@ -444,13 +439,13 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
-	on_select_compile_eiffel is
-			-- Called by `select_actions' of `compile_eiffel_check_button'.
+	on_select_compile_c is
+			-- Called by `select_actions' of `compile_c_code_check_button'.
 		deferred
 		end
 	
-	on_no_c_compilation is
-			-- Called by `select_actions' of `compile_c_code_check_button'.
+	on_select_compile_eiffel is
+			-- Called by `select_actions' of `compile_eiffel_check_button'.
 		deferred
 		end
 	

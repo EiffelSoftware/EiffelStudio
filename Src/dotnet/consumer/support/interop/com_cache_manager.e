@@ -55,6 +55,7 @@ feature -- Basic Exportations
 			clr_version := a_clr_version
 			eac_path := a_path
 			create cr.make (a_clr_version)
+			cr.set_internal_eiffel_path (eac_path)
 			if not cr.is_initialized then
 				(create {EIFFEL_XML_SERIALIZER}).serialize (
 				create {CACHE_INFO}.make (a_clr_version),

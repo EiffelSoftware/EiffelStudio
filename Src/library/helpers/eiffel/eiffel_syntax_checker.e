@@ -7,6 +7,9 @@ indexing
 class
 	EIFFEL_SYNTAX_CHECKER
 
+inherit
+	SYNTAX_STRINGS
+
 feature -- Status report
 
 	is_valid_class_name (cn: STRING): BOOLEAN is
@@ -23,6 +26,24 @@ feature -- Status report
 			name_not_void: cn /= Void
 		do
 			Result := True
+		end
+
+	is_valid_feature_name (fn: STRING): BOOLEAN is
+			-- Is `fn' a valid feature name?
+		require
+			name_not_void: fn /= Void
+		do
+			Result := is_valid_identifier (fn) or
+					-- Is `fn' a prefix operator?
+				((fn.count > Prefix_str.count + 1) and then
+				 ((fn.substring_index_in_bounds (Prefix_str, 1, Prefix_str.count) = 1) and
+				  (fn.item (fn.count) = '%"') and
+				  (is_valid_operator (fn.substring (Prefix_str.count + 1, fn.count - Quote_str.count))))) or
+				  	-- Is `fn' an infix operator?
+				((fn.count > Infix_str.count + 1) and then
+				 ((fn.substring_index_in_bounds (Infix_str, 1, Infix_str.count) = 1) and
+				  (fn.item (fn.count) = '%"') and
+				  (is_valid_operator (fn.substring (Infix_str.count + 1, fn.count - Quote_str.count)))))
 		end
 
 	is_valid_system_name (cn: STRING): BOOLEAN is
@@ -83,6 +104,41 @@ feature -- Status report
 				Result := cc.is_alpha or cc.is_digit or free_operators_characters.has (cc)
 				i := i + 1
 			end
+		ensure then
+			Result implies not basic_operators.has (op);
+		end
+
+	is_constant (s: STRING): BOOLEAN is
+			-- Is `s' a valid Eiffel constant?
+		do
+			Result := 	is_integer_constant (s) or
+						is_double_constant (s) or
+						is_string_constant (s) or
+						is_boolean_constant (s)
+		end
+
+	is_integer_constant (s: STRING): BOOLEAN is
+			-- Is `s' a valid Eiffel constant?
+		do
+			Result := s.is_integer
+		end
+
+	is_double_constant (s: STRING): BOOLEAN is
+			-- Is `s' a valid Eiffel constant?
+		do
+			Result := s.is_double
+		end
+
+	is_string_constant (s: STRING): BOOLEAN is
+			-- Is `s' a valid Eiffel constant?
+		do
+			Result := s.count >= 2 and then (s.item (1) = '%"' and s.item (s.count) = '%"')
+		end
+
+	is_boolean_constant (s: STRING): BOOLEAN is
+			-- Is `s' a valid Eiffel constant?
+		do
+			Result := s.is_boolean
 		end
 
 	basic_operators: LIST [STRING] is
@@ -134,6 +190,26 @@ feature -- Status report
 			Result.extend ('\')
 			Result.extend ('$')
 			Result.extend ('_')
+			Result.extend ('!')
+			Result.extend ('%'')
+			Result.extend ('(')
+			Result.extend (')')
+			Result.extend ('+')
+			Result.extend (',')
+			Result.extend ('.')
+			Result.extend (':')
+			Result.extend (';')
+			Result.extend ('<')
+			Result.extend ('>')
+			Result.extend ('=')
+			Result.extend ('?')
+			Result.extend ('[')
+			Result.extend (']')
+			Result.extend ('^')
+			Result.extend ('`')
+			Result.extend ('{')
+			Result.extend ('}')
+			Result.extend ('~')
 		end
 
 end -- class EIFFEL_SYNTAX_CHECKER

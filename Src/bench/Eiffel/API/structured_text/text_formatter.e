@@ -94,7 +94,7 @@ feature
 		do
 		end;
 
-	process_filter_item (t: filter_item) is
+	process_filter_item (t: FILTER_ITEM) is
 		do
 		end;
 

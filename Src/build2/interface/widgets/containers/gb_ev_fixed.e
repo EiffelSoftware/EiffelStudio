@@ -84,6 +84,7 @@ feature -- Access
 				-- If world /= Void, then the layout window has been shown 
 				-- at least once, so this is a temporary fix.
 			if world /= Void then
+				list.remove_selection
 				draw_widgets
 			end
 		end
@@ -374,6 +375,11 @@ feature {NONE} -- Implementation
 				first.off
 			loop
 				create list_item.make_with_text (class_name (first.item))
+					-- We must update all other editors referencing `object'.
+					-- when an item is selected.
+				list_item.select_actions.extend (agent update_editors)
+					-- We must also re-draw the widgets when a selection changes,
+					-- as the selected widget should be highlighted.
 				list_item.select_actions.extend (agent draw_widgets)
 				list_item.set_data (first.item)
 				list.extend (list_item)
@@ -433,12 +439,18 @@ feature {NONE} -- Implementation
 			relative_pointa, relative_pointb: EV_RELATIVE_POINT
 			figure_rectangle: EV_FIGURE_RECTANGLE
 		do
+				-- Reset `selected_item_index' as it is not
+				-- local.
+			selected_item_index := 0
+			
 				-- Remove all previous figures from `world'.
 			world.wipe_out
+			
 				-- We must  draw the grid if necessary.
 			if grid_visible_control.is_selected then
 				draw_grid	
 			end	
+			
 			from
 				first.start
 			until
@@ -459,14 +471,14 @@ feature {NONE} -- Implementation
 			end
 			
 			if selected_item_index > 0 then
-						first.go_i_th (selected_item_index)
-						create relative_pointa.make_with_position (first.item.x_position, first.item.y_position)
-						create relative_pointb.make_with_position (first.item.x_position + first.item.width, first.item.y_position + first.item.height)
-						create figure_rectangle.make_with_points (relative_pointa, relative_pointb)
-						figure_rectangle.remove_background_color
-						figure_rectangle.set_foreground_color (red)
-						world.extend (figure_rectangle)
-					end
+				first.go_i_th (selected_item_index)
+				create relative_pointa.make_with_position (first.item.x_position, first.item.y_position)
+				create relative_pointb.make_with_position (first.item.x_position + first.item.width, first.item.y_position + first.item.height)
+				create figure_rectangle.make_with_points (relative_pointa, relative_pointb)
+				figure_rectangle.remove_background_color
+				figure_rectangle.set_foreground_color (red)
+				world.extend (figure_rectangle)
+			end
 					
 			projector.project
 		end
@@ -513,6 +525,7 @@ feature {NONE} -- Implementation
 			first.set_item_x_position (widget, x_pos)
 			second := objects @ 2
 			second.set_item_x_position (second @ first.index_of (widget, 1), x_pos)
+			must_update_editors := True
 		end
 		
 	set_y_position (widget: EV_WIDGET; y_pos: INTEGER) is
@@ -523,6 +536,7 @@ feature {NONE} -- Implementation
 			first.set_item_y_position (widget, y_pos)
 			second := objects @ 2
 			second.set_item_y_position (second @ first.index_of (widget, 1), y_pos)
+			must_update_editors := True
 		end
 		
 	set_item_width (widget: EV_WIDGET; new_width: INTEGER) is
@@ -533,6 +547,7 @@ feature {NONE} -- Implementation
 			first.set_item_width (widget, new_width)
 			second := objects @ 2
 			second.set_item_width (second @ first.index_of (widget, 1), new_width)
+			must_update_editors := True
 		end
 		
 	set_item_height (widget: EV_WIDGET; new_height: INTEGER) is
@@ -543,6 +558,7 @@ feature {NONE} -- Implementation
 			first.set_item_height (widget, new_height)
 			second := objects @ 2
 			second.set_item_height (second @ first.index_of (widget, 1), new_height)
+			must_update_editors := True
 		end	
 		
 
@@ -668,6 +684,9 @@ feature {NONE} -- Implementation
 					set_y_position (widget, 0)
 				end
 				draw_widgets
+			end
+			if must_update_editors then
+				update_editors
 			end
 		end
 		
@@ -1085,5 +1104,10 @@ feature {NONE} -- Attributes
 	height_string: STRING is "Children_height"
 	
 	width_string: STRING is "Children_width"
+	
+	must_update_editors: BOOLEAN
+		-- Should we update all other editors?
+		-- Used in `track_movement', so we can update other
+		-- windows when widgets size and position changes.
 			
 end -- class GB_EV_FIXED

@@ -61,9 +61,7 @@ feature -- Comparing
 			wildcard_matcher: KMP_WILD
 		do
 			if has_wildcards (value) then
-				!! wildcard_matcher.make_empty;
-				wildcard_matcher.set_text (value);
-				wildcard_matcher.set_pattern (item_value);
+				!! wildcard_matcher.make (item_value, value);
 				wildcard_matcher.search_for_pattern;
 				Result := wildcard_matcher.found
 			else

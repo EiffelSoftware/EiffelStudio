@@ -67,7 +67,7 @@ feature -- Access
 
 feature -- Status report
 
-	valid_text_alignement_constant (c: INTEGER): BOOLEAN is
+	valid_text_alignment_constant (c: INTEGER): BOOLEAN is
 			-- Is `c' a valid text alignment constant?
 		do
 			Result := c = Ta_noupdatecp or else
@@ -76,6 +76,31 @@ feature -- Status report
 				c = Ta_right or else
 				c = Ta_center or else
 				c = Ta_top or else
+				c = Ta_bottom or else
+				c = Ta_baseline
+		end
+		
+	valid_text_alignement_constant (c: INTEGER): BOOLEAN is
+			-- Is `c' a valid text alignment constant?
+		obsolete
+			"Use valid_text_alignment_constant instead."
+		do
+			Result := valid_text_alignment_constant (c)
+		end
+		
+		
+	valid_htext_alignment_constant (c: INTEGER): BOOLEAN is
+			-- Is `c' a valid text alignment constant for horizontal positioning?
+		do
+			Result := c = Ta_left or else
+				c = Ta_right or else
+				c = Ta_center
+		end
+		
+	valid_vtext_alignment_constant (c: INTEGER): BOOLEAN is
+			-- Is `c' a valid text alignment constant for vertical positioning?
+		do
+			Result := c = Ta_top or else
 				c = Ta_bottom or else
 				c = Ta_baseline
 		end

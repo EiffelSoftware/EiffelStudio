@@ -67,9 +67,9 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 		/* except.c */
 	struct xstack eif_stack;		/* Calling stack (rt_public) */
 	struct xstack eif_trace;		/* Unsolved exception trace */
-	struct eif_except exdata;		/* Exception handling global flags */
+	struct eif_exception exdata;		/* Exception handling global flags */
 	unsigned char ex_ign[EN_NEX];	/* Item set to 1 to ignore exception */ /* %%zmt not extern... */
-	struct exprint eif_except;		/* Where exception has been raised */
+	struct exprint eif_except_cx;		/* Where exception has been raised */
 	int print_history_table;		/* Enable/disable printing of hist. table */
 	SMART_STRING ex_string;			/* Container of the exception trace */
 
@@ -204,7 +204,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 #define eif_trace		(eif_globals->eif_trace)	/* rt_public */
 #define ex_ign			(eif_globals->ex_ign)		/* rt_public */
 #define exdata			(eif_globals->exdata)		/* rt_public */
-#define eif_except		(eif_globals->eif_except)		/* rt_private */
+#define eif_except		(eif_globals->eif_except_cx)		/* rt_private */
 #define print_history_table (eif_globals->print_history_table)   /* rt_private */
 #define ex_string		(eif_globals->ex_string)	/* rt_public */
 #ifdef WORKBENCH
@@ -354,7 +354,7 @@ extern char *exception_trace_string;
 /* Exported data structures (used by the generated C code) */
 extern struct xstack eif_stack;	/* Stack of all the Eiffel calls */
 extern struct xstack eif_trace;	/* Unsolved exception trace */
-extern struct eif_except exdata;	/* Exception handling global flags */
+extern struct eif_exception exdata;	/* Exception handling global flags */
 
 
 	/* garcol.h */

@@ -670,39 +670,39 @@ feature {NONE} -- Implementation
 					when Pointer_type then
 						a_pointer ?= an_obj
 						Result := a_pointer
-						
+
 					when Character_type then
 						a_char ?= an_obj
 						Result := a_char
-						
+
 					when Boolean_type then
 						a_boolean ?= an_obj
 						Result := a_boolean
-						
+
 					when Integer_8_type then
 						an_int8 ?= an_obj
 						Result := an_int8
-						
+
 					when Integer_16_type then
 						an_int16 ?= an_obj
 						Result := an_int16
-						
+
 					when Integer_32_type then
 						an_int32 ?= an_obj
 						Result := an_int32
-						
+
 					when Integer_64_type then
 						an_int64 ?= an_obj
 						Result := an_int64
-						
+
 					when Real_type then
 						a_real ?= an_obj
 						Result := a_real
-						
+
 					when Double_type then
 						a_double ?= an_obj
 						Result := a_double
-						
+
 					else
 						check
 							not_supported: False
@@ -817,6 +817,7 @@ feature {NONE} -- Implementation
 			c, i: INTEGER
 			l_members: like known_members
 			l_types: like known_types
+			l_cv_f_name: STRING
 		do
 			l_members := Known_members
 			l_members.search (type_id)
@@ -839,7 +840,12 @@ feature {NONE} -- Implementation
 					loop
 						cv_f ?= allm.item (i)
 						cv_p ?= allm.item (i)
-						if cv_f /= Void or cv_p /= Void then
+						if cv_f /= Void then
+							create l_cv_f_name.make_from_cil (cv_f.name)
+							if not l_cv_f_name.is_equal ("$$____type") then
+								Result.extend (create {CLI_CELL [MEMBER_INFO]}.put (allm.item(i)))
+							end
+						elseif cv_p /= Void then
 							Result.extend (create {CLI_CELL [MEMBER_INFO]}.put (allm.item(i)))
 						end
 						i := i + 1

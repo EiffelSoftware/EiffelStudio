@@ -61,7 +61,7 @@ feature -- Basic Operations
 				if not Eiffel_project.is_compiling then
 					Eiffel_project.Workbench.recompile
 					if Eiffel_project.Workbench.successful then
-						is_successful :=True
+						is_successful := True
 					end
 				end
 			else

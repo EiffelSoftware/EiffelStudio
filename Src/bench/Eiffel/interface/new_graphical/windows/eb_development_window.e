@@ -12,6 +12,7 @@ inherit
 		redefine
 			make,
 			init_size_and_position,
+			window_displayed,
 			init_commands,
 			build_menu_bar,
 			build_menus,
@@ -121,6 +122,16 @@ feature {NONE} -- Initialization
 			-- Create a new development window and expand the context tool.
 		do
 			make
+				-- Perform window setting from `show_actions', as the
+				-- resizing executed as a result only works correctly
+				-- while the window is displayed.
+			window.show_actions.extend (agent set_context_mode)
+		end
+		
+	set_context_mode is
+			-- Set `current' into context mode, that is the context tool
+			-- maximized, and the non editor panel is hidden.
+		do
 			if not context_tool.shown then
 				context_tool.show
 			end
@@ -128,13 +139,17 @@ feature {NONE} -- Initialization
 				toggle_stone_cmd.execute
 			end
 			context_tool.explorer_bar_item.maximize
+			close_all_bars_except (right_panel)
 		end
 
 	make_as_editor is
 			-- Create a new development window and expand the editor tool.
 		do
 			make
-			editor_tool.explorer_bar_item.maximize
+				-- Perform window setting from `show_actions', as the resizing executed
+				-- must be performed after `current' is displayed.
+			window.show_actions.extend (agent (editor_tool.explorer_bar_item).maximize)
+			window.show_actions.extend (agent close_all_bars_except (right_panel))
 		end
 
 	make is
@@ -159,7 +174,7 @@ feature {NONE} -- Initialization
 			container.disable_item_expand (toolbars_area)
 
 				-- Update widgets visibilities
-			update
+			window.show_actions.extend (agent update)
 			status_bar.remove_cursor_position
 			address_manager.set_output_line (status_bar.label)
 
@@ -180,6 +195,8 @@ feature {NONE} -- Initialization
 				-- Create feature position table
 			create feature_positions.make (1)
 			feature_positions.compare_objects
+			
+			window.move_actions.force_extend (agent window_moved)
 
 			initialized := True
 			is_destroying := False
@@ -195,7 +212,11 @@ feature {NONE} -- Initialization
 			default_width := width.min (screen.width)
 			default_height := height.min (screen.height)
 			window.set_size (default_width, default_height)
-
+		end
+		
+	window_displayed is
+			-- `Current' has been displayed on screen.
+		do
 				-- Maximize window if needed.
 			if is_maximized then
 				window.maximize
@@ -554,6 +575,11 @@ feature {NONE} -- Initialization
 			editor_tool.text_area.add_edition_observer(Current)
 			editor_tool.text_area.drop_actions.set_veto_pebble_function (agent can_drop)
 			editor_tool.text_area.add_cursor_observer (Current)
+			
+				-- The minimim height masks a bug on windows to do with the sizing of the editors
+				-- scroll bars, which were affecting the resizing although they should not have done so.
+				-- Having a default minimum height on the editor is perfectly reasonable.
+			editor_tool.widget.set_minimum_height (20)
 			add_recyclable (editor_tool)
 
 				-- Build the context tool
@@ -1866,6 +1892,8 @@ feature -- Resource Update
 
 			left_panel.load_from_resource (left_panel_layout)
 			right_panel.load_from_resource (right_panel_layout)
+			splitter_position := left_panel_width
+			update_splitters
 		end
 
 	update_splitters is
@@ -1876,8 +1904,6 @@ feature -- Resource Update
 			if panel.full then
 				panel.set_split_position (splitter_position.max (panel.minimum_split_position))
 			end
-			left_panel.refresh_splitter
-			right_panel.refresh_splitter
 		end
 
 	register is
@@ -2090,6 +2116,26 @@ feature -- Window management
 		do
 			address_manager.set_focus
 		end
+		
+	save_layout is
+			-- Store layout of `current'.
+		do
+				-- Now save the windows's layout, but only if the
+				-- debugger is not displayed in `Current'. By saving the layout,
+				-- we ensure that future windows may use exactly the same layout.
+				-- If the debugger is displayed, the previopus layout is already saved,
+				-- and this is the one that must be used, as only one debugger is ever displayed.
+			if (Application.is_running and debugger_manager.debugging_window /= Current) or not application.is_running then
+				save_left_panel_layout (left_panel.save_to_resource)
+				save_right_panel_layout (right_panel.save_to_resource)
+				save_left_panel_width (panel.split_position)
+					-- Save width & height.
+				save_size (window.width, window.height, window.is_maximized)
+			end
+			save_search_tool_options (search_tool)
+				-- Commit saves
+			save_resources
+		end
 
 feature -- Tools & Controls
 
@@ -2243,7 +2289,7 @@ feature {EB_FEATURES_TOOL, EB_FEATURES_TREE, DOTNET_CLASS_AS, DOTNET_CLASS_CONTE
 	feature_positions: HASH_TABLE [INTEGER, E_FEATURE]
 			-- Features indexed by line position in class text (for .NET features).
 
-feature {EB_WINDOW_MANAGER} -- Window management / Implementation
+feature {EB_WINDOW_MANAGER} -- Window management / Implementation	
 
 	destroy_imp is
 			-- Destroy window.
@@ -2251,8 +2297,20 @@ feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 				-- To avoid reentrance
 			if not is_destroying then
 				is_destroying := True
-				save_left_panel_layout (left_panel.save_to_resource)
-				save_right_panel_layout (right_panel.save_to_resource)
+				if Application.is_running and then debugger_manager.debugging_window = Current
+				then
+					set_array_resource ("left_debug_layout_new", left_panel.save_to_resource)
+					set_array_resource ("right_debug_layout_new", right_panel.save_to_resource)
+					debugger_manager.save_original_layout
+				else
+					save_left_panel_layout (left_panel.save_to_resource)
+					save_right_panel_layout (right_panel.save_to_resource)
+				end
+				save_left_panel_width (panel.split_position)
+					-- Save width & height.
+				save_size (window.width, window.height, window.is_maximized)
+				left_panel.wipe_out
+				right_panel.wipe_out
 				save_search_tool_options (search_tool)
 				hide
 
@@ -2270,20 +2328,6 @@ feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 				address_manager.recycle
 				project_customizable_toolbar.recycle
 				Precursor {EB_TOOL_MANAGER}
-
-					-- These components are automatically recycled through `add_recyclable'.
-	--			cluster_tool.recycle
-	--			context_tool.recycle
-	--			editor_tool.recycle
-	--			favorites_tool.recycle
-	--			features_tool.recycle
-	--			search_tool.recycle
-	--			windows_tool.recycle
-
-				-- The compile menu is never created !!!
-	--			compile_menu.destroy
-	--			debug_menu.destroy
-	--			project_menu.destroy
 
 				managed_class_formatters.wipe_out
 				managed_feature_formatters.wipe_out
@@ -3186,7 +3230,78 @@ feature {EB_TOOL} -- Implementation / Commands
 				favorites_tool.show
 			end
 		end
+		
+feature {EB_TOOL_WINDOW, EB_EXPLORER_BAR} -- Floating tool handling
 
+	all_tool_windows: ARRAYED_LIST [EB_TOOL_WINDOW]
+		-- All tool windows under the control of `Current'.
+	
+	add_tool_window (a_tool_window: EB_TOOL_WINDOW) is
+			-- Add `a_tool_window' to `all_tool_windows', ensuring it is
+			-- then under the control of `Current'.
+		require
+			a_tool_window_not_void: a_tool_window /= Void
+		do
+			if all_tool_windows = Void then
+				create all_tool_windows.make (2)
+			end
+			all_tool_windows.extend (a_tool_window)
+		ensure
+			extended: all_tool_windows.has (a_tool_window)
+			count_increased: all_tool_windows.count =  old all_tool_windows.count + 1
+		end
+		
+	remove_tool_window (a_widget: EV_WIDGET) is
+			-- Remove tool window associate with `a_widget'.
+		require
+			a_widget_not_void: a_widget /= Void
+		do
+			if all_tool_windows /= Void then
+				from
+					all_tool_windows.start
+				until
+					all_tool_windows.off
+				loop
+					if all_tool_windows.item.tool = a_widget then
+						all_tool_windows.remove
+						all_tool_windows.finish
+					end
+					all_tool_windows.forth
+				end
+			end
+		ensure
+			count_decreased: all_tool_windows.count =  old all_tool_windows.count - 1
+		end
+		
+	window_moved (x_pos, y_pos: INTEGER) is
+			-- `Current' has been moved, so move all associated tool windows within `all_tool_windows'.
+		local
+			tool_window: EB_TOOL_WINDOW
+		do
+			if all_tool_windows /= Void then
+				from
+					all_tool_windows.start
+				until
+					all_tool_windows.off
+				loop
+					tool_window := all_tool_windows.item
+					if boolean_resource_value ("dock_tracking", True) then
+						tool_window.window.move_actions.block
+						tool_window.window.set_x_position (x_pos + tool_window.x_position)
+						tool_window.window.set_y_position (y_pos + tool_window.y_position)
+						tool_window.window.move_actions.resume
+					else
+							-- If we are not performing dock tracking, we must update the relative position
+							-- of the tool window, so that if dock tracking is enabled, the relative
+							-- positions are correct.
+						tool_window.set_x_position ( tool_window.window.screen_x - x_pos)
+						tool_window.set_y_position ( tool_window.window.screen_y - y_pos)
+					end
+					all_tool_windows.forth
+				end
+			end
+		end
+		
 feature {NONE} -- external edition handling
 
 	on_focus is

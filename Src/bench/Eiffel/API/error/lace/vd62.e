@@ -1,7 +1,7 @@
 indexing
 	description: "[
-		Error when Ace file refers to an assembly which is not
-		generated.
+		Error when XML representation of a class that belongs to an assembly
+		is missing from the Eiffel assembly cache.
 		]"
 	date: "$Date$"
 	revision: "$Revision$"

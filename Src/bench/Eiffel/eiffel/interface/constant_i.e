@@ -204,8 +204,7 @@ feature -- C code generation
 						buffer.put_integer (class_id)
 						buffer.put_string (" + ")
 						buffer.put_integer (local_byte_context.once_index)
-						buffer.put_string ("),PResult)) return *PResult;")
-						buffer.put_string (";%N%
+						buffer.put_string ("),PResult)) return *PResult;%N%
 							%%TPResult = (EIF_REFERENCE *) RTOC(0);%N%
 							%%TMTOS(*(EIF_once_values + EIF_oidx_off")
 						buffer.put_integer (class_id)
@@ -234,30 +233,30 @@ feature -- C code generation
 						header_buffer.put_string (internal_name)
 						header_buffer.put_string ("_result;")
 						header_buffer.put_new_line
-						header_buffer.put_string ("extern EIF_BOOLEAN ")
-						header_buffer.put_string (internal_name)
-						header_buffer.put_string ("_done;")
+						header_buffer.put_string ("RTOSH(");
+						header_buffer.put_string (internal_name);
+						header_buffer.put_character (')');
 						header_buffer.put_new_line
 						header_buffer.put_new_line
 					
 						buffer.indent
 						buffer.put_string ("if (")
 						buffer.put_string (internal_name)
-						buffer.put_string ("_done) return ")
+						buffer.put_string ("_succeeded) return ")
 						buffer.put_string (internal_name)
 						buffer.put_string ("_result;")
 						buffer.put_new_line
 						buffer.put_string (internal_name)
-						buffer.put_string ("_done = EIF_TRUE;")
+						buffer.put_string ("_succeeded = EIF_TRUE;")
+						buffer.put_new_line
+						buffer.put_string ("RTOC_NEW(")
+						buffer.put_string (internal_name)
+						buffer.put_string ("_result);")
 						buffer.put_new_line
 						buffer.put_string (internal_name)
 						buffer.put_string ("_result = ")
 						value.generate (buffer)
 						buffer.put_character (';')
-						buffer.put_new_line
-						buffer.put_string ("RTOC_NEW(")
-						buffer.put_string (internal_name)
-						buffer.put_string ("_result);")
 						buffer.put_new_line
 						buffer.put_string ("return ")
 						buffer.put_string (internal_name)
@@ -278,9 +277,9 @@ feature -- C code generation
 					buffer.put_string (internal_name)
 					buffer.put_string ("_result = NULL;")
 					buffer.put_new_line
-					buffer.put_string ("EIF_BOOLEAN ")
-					buffer.put_string (internal_name)
-					buffer.put_string ("_done = EIF_FALSE;")
+					buffer.put_string ("RTOSD(");
+					buffer.put_string (internal_name);
+					buffer.put_character (')');
 					buffer.put_new_line
 					buffer.put_new_line
 				end

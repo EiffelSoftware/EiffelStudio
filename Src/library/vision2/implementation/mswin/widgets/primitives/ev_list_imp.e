@@ -110,19 +110,6 @@ feature {NONE} -- Initialization
 			!! ev_children.make (2)
 		end	
 
-feature -- Access
-
-	selected_item: EV_LIST_ITEM is
-			-- Item which is currently selected, for a multiple
-			-- selection, it gives the last selected item.
-		do
-			if not multiple_selection_enabled and selected then
-				Result ?= (ev_children.i_th (selected_index + 1)).interface
-			else
-				Result ?= interface.selected_items.first	
-			end
-		end
-
 feature -- Status report
 
 	selected: BOOLEAN is
@@ -535,6 +522,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2000/02/29 23:13:24  rogers
+--| Removed selected_item as it is no longer platform dependent, it now comes from EV_LIST_I.
+--|
 --| Revision 1.41  2000/02/29 19:35:21  rogers
 --| Selected item now returns the first item that is selected in the list when multiple selection is enabled.
 --|

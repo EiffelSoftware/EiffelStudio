@@ -295,6 +295,8 @@ feature
 				else
 					add_in_log (class_type, external_name)
 				end
+			else
+				system.removed_log_file.add (class_type, feature_name)				
 			end
 		end
 

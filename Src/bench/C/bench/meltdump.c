@@ -110,6 +110,7 @@ static  void    prepare_types ()
 	(void) rlong ();	/* root_class_updt */
 	(void) rlong ();	/* class types count */
 	(void) rlong ();	/* class count */
+	(void) rlong ();	/* number of original routine bodies */
 	(void) rlong ();	/* prof enabled */
 
 
@@ -283,8 +284,9 @@ static  void    analyze_file ()
 
 	print_line ();
 
-	fprintf (mfp,"Nr. of class types : %ld\n", rlong ());
-	fprintf (mfp,"Nr. of classes     : %ld\n", rlong ());
+	fprintf (mfp,"Nr. of class types             : %ld\n", rlong ());
+	fprintf (mfp,"Nr. of classes                 : %ld\n", rlong ());
+	fprintf (mfp,"Nr. of original routine bodies : %ld\n", rlong ());
 
 	print_line ();
 
@@ -707,67 +709,39 @@ static  void    analyze_parents ()
 static  void    analyze_cecil ()
 
 {
-	int     i;
-	short   slen, tsize, nb_generics, nb_types;
+	int     i, j;
+	short   slen, tsize, nb_generics, nb_types, dynamic_type;
+	char    *s;
 
 	printf ("Analyzing Cecil\n");
 
-	tsize = rshort ();
-
-	fprintf (mfp,"Non generic table size  : %d\n", (int) tsize);
-
-	i = (int) tsize;
-
-	while (i--)
-	{
-		fprintf (mfp,"   Name : ");
-
-		slen = rshort ();
-
-		while (slen--)
-			fprintf (mfp,"%c", rchar ());
-
-		fprintf (mfp,"\n");
-	}
-
-	rseq ((int) (tsize * sizeof (uint32)));
-
-	tsize = rshort ();
-
-	fprintf (mfp,"generic table size      : %d\n", (int) tsize);
-
-	i = (int) tsize;
-
-	while (i--)
-	{
-		fprintf (mfp,"   Name : ");
-
-		slen = rshort ();
-
-		while (slen--)
-			fprintf (mfp,"%c", rchar ());
-
-		fprintf (mfp,"\n");
-	}
-
-	i = (int) tsize;
-
-	while (i--)
-	{
-		nb_generics = rshort ();
-		fprintf (mfp,"    Generics : %d\n", (int) nb_generics);
-
-		if (nb_generics)
-		{
-			nb_types = rshort ();
-
-			fprintf (mfp,"    Types    : %d\n", (int) nb_types);
-
-			rseq ((int) (nb_generics * nb_types * sizeof (int32)));
-			rseq ((int) (nb_types * sizeof (int16)));
+	/* Print two tables: non-gneric and generic */
+	for (j = 0, s = "Non generic table size : %d\n"; j < 2; j ++, s = "Generic table size     : %d\n") {
+		tsize = rshort ();
+		fprintf (mfp, s, (int) tsize);
+		i = (int) tsize;
+		while (i--) {
+			fprintf (mfp,"   Name : ");
+			slen = rshort ();
+			while (slen--) {
+				fprintf (mfp,"%c", rchar ());
+			}
+			fprintf (mfp,"\n");
+		}
+		i = (int) tsize;
+		while (i--) {
+			nb_generics = rshort ();
+			dynamic_type = rshort ();
+			fprintf (mfp,"    Dynamic type : %d, Generics : %d\n", (int) dynamic_type, (int) nb_generics);
+			if (nb_generics)
+			{
+				nb_types = rshort ();
+				fprintf (mfp,"    Types    : %d\n", (int) nb_types);
+				rseq ((int) (nb_generics * nb_types * sizeof (int32)));
+				rseq ((int) (nb_types * sizeof (int16)));
+			}
 		}
 	}
-
 	print_line ();
 }
 /*------------------------------------------------------------------*/

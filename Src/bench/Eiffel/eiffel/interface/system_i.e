@@ -905,7 +905,8 @@ end
 				freeze_system
 				private_freeze := False
 			end
-			if il_generation then
+			if il_generation and not degree_minus_1.is_empty then
+				Degree_minus_1.wipe_out
 				generate_il
 			end
 			first_compilation := False
@@ -1579,7 +1580,7 @@ feature -- IL code generation
 			il_generator: IL_GENERATOR
 		do
 			create il_generator.make (Degree_output)
-			il_generator.generate
+			il_generator.generate 
 			if il_c_externals.count > 0 then
 				if in_final_mode then
 					create {FINAL_MAKER} makefile_generator.make
@@ -1849,84 +1850,88 @@ feature -- Final mode generation
 			retried: BOOLEAN
 		do
 			if not retried and is_finalization_needed then
-					-- Set `Server_control' to remove right away extra unused
-					-- files (especially done for the TMP_POLY_SERVER).
-				Server_controler.set_remove_right_away (True)
-
-					-- Initialize `TMP_POLY_SERVER' and `TMP_OPT_BYTE_SERVER'
-				Tmp_poly_server.make
-				Tmp_opt_byte_server.make
-
-				keep_assertions := keep_assert and then Lace.has_assertions
-
-					-- Save the value of `remover_off'
-					-- and `exception_stack_managed'
-				old_remover_off := remover_off
-				old_exception_stack_managed := exception_stack_managed
-				old_inlining_on := inlining_on
-				old_array_optimization_on := array_optimization_on
-
-					-- Should dead code be removed?
-				if not remover_off then
-					remover_off := keep_assertions
-				end
-
-				if not exception_stack_managed then
-					exception_stack_managed := keep_assertions
-				end
-
-				inlining_on := inlining_on and not remover_off
-				array_optimization_on := array_optimization_on and not remover_off
-
 					-- Set the generation mode in final mode
 				byte_context.set_final_mode
-
-				process_degree_minus_2
-				
-					-- Clean Memory
-				create mem
-				mem.full_collect
-				mem.full_coalesce
-
-					-- Dead code removal
-				if not remover_off then
-					deg_output := Degree_output
-					deg_output.put_start_dead_code_removal_message
-					remove_dead_code
-					deg_output.put_end_dead_code_removal_message
+		
+				if il_generation then
+					generate_il
+				else
+						-- Set `Server_control' to remove right away extra unused
+						-- files (especially done for the TMP_POLY_SERVER).
+					Server_controler.set_remove_right_away (True)
+		
+						-- Initialize `TMP_POLY_SERVER' and `TMP_OPT_BYTE_SERVER'
+					Tmp_poly_server.make
+					Tmp_opt_byte_server.make
+		
+					keep_assertions := keep_assert and then Lace.has_assertions
+		
+						-- Save the value of `remover_off'
+						-- and `exception_stack_managed'
+					old_remover_off := remover_off
+					old_exception_stack_managed := exception_stack_managed
+					old_inlining_on := inlining_on
+					old_array_optimization_on := array_optimization_on
+		
+						-- Should dead code be removed?
+					if not remover_off then
+						remover_off := keep_assertions
+					end
+		
+					if not exception_stack_managed then
+						exception_stack_managed := keep_assertions
+					end
+		
+					inlining_on := inlining_on and not remover_off
+					array_optimization_on := array_optimization_on and not remover_off
+		
+					process_degree_minus_2
+					
+						-- Clean Memory
+					create mem
+					mem.full_collect
+					mem.full_coalesce
+		
+						-- Dead code removal
+					if not remover_off then
+						deg_output := Degree_output
+						deg_output.put_start_dead_code_removal_message
+						remove_dead_code
+						deg_output.put_end_dead_code_removal_message
+					end
+					tmp_opt_byte_server.flush
+		
+					-- FIXME
+					--process_dynamic_types
+		
+						-- Generation of C files associated to the classes of
+						-- the system.
+					Eiffel_table.start_degree_minus_3 (History_control.max_rout_id)
+					process_degree_minus_3
+					Eiffel_table.finish_degree_minus_3
+		
+					generate_main_finalized_eiffel_files
+		
+						-- Clean Eiffel table
+					Eiffel_table.wipe_out
+					Tmp_poly_server.clear
+					Tmp_opt_byte_server.clear
+		
+					remover := Void
+		
+						-- Set `Server_control' not to remove right away extra unused
+						-- files (especially done for the TMP_POLY_SERVER, but since we
+						-- are back now to a normal compilation we should not remove the
+						-- useless files).
+					Server_controler.set_remove_right_away (False)
+		
+						-- Restore previous value
+					remover_off := old_remover_off
+					exception_stack_managed := old_exception_stack_managed
+					inlining_on := old_inlining_on
+					array_optimization_on := old_array_optimization_on
 				end
-				tmp_opt_byte_server.flush
-
-				-- FIXME
-				--process_dynamic_types
-
-					-- Generation of C files associated to the classes of
-					-- the system.
-				Eiffel_table.start_degree_minus_3 (History_control.max_rout_id)
-				process_degree_minus_3
-				Eiffel_table.finish_degree_minus_3
-
-				generate_main_finalized_eiffel_files
-
-					-- Clean Eiffel table
-				Eiffel_table.wipe_out
-				Tmp_poly_server.clear
-				Tmp_opt_byte_server.clear
-
-				remover := Void
-
-					-- Set `Server_control' not to remove right away extra unused
-					-- files (especially done for the TMP_POLY_SERVER, but since we
-					-- are back now to a normal compilation we should not remove the
-					-- useless files).
-				Server_controler.set_remove_right_away (False)
-
-					-- Restore previous value
-				remover_off := old_remover_off
-				exception_stack_managed := old_exception_stack_managed
-				inlining_on := old_inlining_on
-				array_optimization_on := old_array_optimization_on
-
+		
 					-- Clean `finalization_needed' tag from all CLASS_C
 				clean_finalization_tag
 				private_finalize := False

@@ -40,7 +40,7 @@ feature -- Initialization
 			list.set_single_selection;
 			allow_resize;
 			set_exclusive_grab;
-			list.add_single_action (Current, Void);
+			list.add_click_action (Current, Void);
 			set_composite_attributes (Current)
 			map_widget := a_parent;
 		end;
@@ -63,18 +63,31 @@ feature
 	selected_item: STRING is
 			-- Selected item
 		do
-			Result := list.selected_item
+			Result := list.selected_item.value
 		end;
 
 	popup (command: COMMAND_W; name_list: LIST [STRING]) is
 			-- Fill the choice window with `name_list' and
 			-- pop it up at the pointer position.
+		local
+			str: SCROLLABLE_LIST_STRING_ELEMENT
 		do
 			caller := command;
 			list.wipe_out;
-			list.put_right ("-- cancel --");
+			!! str.make (0);
+			str.append ("-- cancel --");
+			list.put_right (str);
 			list.forth;
-			list.merge_right (name_list);
+			from
+				name_list.start
+			until
+				name_list.after
+			loop
+				!! str.make (0);
+				str.append (name_list.item);
+				list.put_right (str);
+				name_list.forth
+			end
 			if list.count >= 15 then
 				list.set_visible_item_count (15);
 			else
@@ -107,7 +120,7 @@ feature
 
 feature {NONE} -- Properties
 
-	list: SCROLL_LIST;
+	list: SCROLLABLE_LIST;
 
 	caller: COMMAND_W;
 			-- Command who calls `Current'
@@ -126,8 +139,6 @@ feature {NONE} -- Implementation
 			-- on the screen.
 		do
 			set_x_y (map_widget.real_x, map_widget.real_y);
-			--os_popup; -- FIXME: bug in Vision????
-			--popdown;
 			if real_x + width > screen.width then
 				set_x (screen.width - width)
 			end;

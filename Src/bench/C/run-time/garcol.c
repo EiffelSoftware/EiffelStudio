@@ -971,9 +971,6 @@ rt_public void reclaim(void)
 	eif_free_dlls();
 #endif
 
-#ifdef DEBUG
-	dprintf(1)("reclaim: ready to die!\n");
-#endif
 
 #ifdef EIF_THREADS
 
@@ -1000,38 +997,41 @@ rt_public void reclaim(void)
 	  eif_children_mutex = (EIF_MUTEX_TYPE *) 0;
 	}
 
-	/* Free Thread context, may not necessary exist in MT-Cecil. */
-	if (eif_thr_context) {	/* Is there a thread context? */
-					
-		eif_free (eif_thr_context->tid); /* Free id of the current thread */
-		eif_free (eif_thr_context);		/* Thread context passed by parent */
-	}
-	eif_free (eif_globals);			/* Global variables specific to the current
-									 * thread of the run-time */
-
 	/* The TSD is managed in a different way under VxWorks: each thread
 	 * must call taskVarAdd upon initialization and taskVarDelete upon
 	 * termination.  It was impossible to call taskVarDelete using the same
 	 * model as on other platforms unless creating a new macro that would
 	 * be useful only for VxWorks. It is easier to do the following:
 	 */
+
+	if (eif_thr_is_root ())	{	/* Is this the root thread */
+		eif_free (eif_globals);			
+						/* Global variables specific to the current thread */
+		assert (!eif_thr_context);
+#ifdef LMALLOC_CHECK
+		eif_lm_display ();
+		eif_lm_free ();
+#endif	/* LMALLOC_CHECK */
+	} else {
+		eif_free (eif_thr_context->tid); /* Free id of the current thread */
+		eif_free (eif_thr_context);		/* Thread context passed by parent */
+		eif_free (eif_globals);			
+						/* Global variables specific to the current thread */
+	}	
 #ifdef VXWORKS
 	if (taskVarDelete(0,(int *)&(eif_global_key))) 
 	  eif_thr_panic("Problem with taskVarDelete\n");
 #endif	/* VXWORKS */
-#endif /* EIF_THREADS */
-
-#ifdef LMALLOC_CHECK
-#ifdef EIF_THREADS
-	if (eif_thr_is_root ())	{
-		eif_lm_display ();
-		eif_lm_free ();
-	}
 #else	/* EIF_THREADS */
+	eif_free (eif_globals);			/* Global variables specific to the current
+									 * thread of the run-time */
+#ifdef LMALLOC_CHECK
 	eif_lm_display ();
 	eif_lm_free ();
-#endif	/* EIF_THREADS */
 #endif	/* LMALLOC_CHECK */
+#endif	/* EIF_THREADS */
+
+
 	EIF_END_GET_CONTEXT
 }
 

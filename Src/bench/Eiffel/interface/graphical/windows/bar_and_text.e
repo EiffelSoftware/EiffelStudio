@@ -79,8 +79,6 @@ feature -- Standard Interface
 
 	build_widgets is
 			-- Build system widget.
-		local
-			sep: SEPARATOR
 		do
 			create_toolbar (global_form);
 			

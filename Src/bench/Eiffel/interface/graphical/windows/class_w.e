@@ -509,8 +509,6 @@ feature -- Formats
 feature -- Grahpical Interface
 
 	build_widgets is
-		local
-			sep: SEPARATOR
 		do
 			create_toolbar (global_form);
 

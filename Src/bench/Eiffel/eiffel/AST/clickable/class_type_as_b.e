@@ -175,7 +175,7 @@ feature -- Conveniences
 				c_class.set_has_expanded;
 				a_class.set_is_used_as_expanded
 				if System.in_pass3 then
-					!!d.make (a_class.id, -2);
+					!!d.make_expanded_unit (a_class.id);
 					context.supplier_ids.extend (d);
 					f := a_class.creation_feature;
 					if f /= Void then

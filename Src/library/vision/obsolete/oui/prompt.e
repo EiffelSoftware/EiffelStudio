@@ -17,7 +17,7 @@ inherit
 			implementation
 		end
 
-creation
+create
 
 	make, make_unmanaged
 

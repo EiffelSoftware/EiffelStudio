@@ -21,7 +21,7 @@ inherit
 			position, item
 		end
 
-creation
+create
 
 	make
 

@@ -28,7 +28,7 @@ inherit
 			implementation as list_imp
 		end
 
-creation
+create
 
 	make, make_unmanaged, make_fixed_size, make_fixed_size_unmanaged
 

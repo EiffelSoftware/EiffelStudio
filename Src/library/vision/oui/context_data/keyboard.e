@@ -11,7 +11,7 @@ class
 
 	KEYBOARD 
 
-creation
+create
 
 	make
 
@@ -22,7 +22,7 @@ feature -- Initialization
 			-- the state of modifier keys.
 		do
 			if nb_modifiers >= 1 then
-				!!modifiers.make (1, nb_modifiers)
+				create modifiers.make (1, nb_modifiers)
 			end;
 		end;
 

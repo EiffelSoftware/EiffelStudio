@@ -21,7 +21,7 @@ inherit
 			make as circnot_data_make
 		end
 
-creation
+create
 
 	make
 

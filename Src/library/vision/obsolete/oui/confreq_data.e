@@ -21,7 +21,7 @@ inherit
 			make as confnot_data_make
 		end
 
-creation
+create
 
 	make
 

@@ -16,7 +16,7 @@ inherit
 			make as motion_make
 		end
 
-creation
+create
 
 	make
 

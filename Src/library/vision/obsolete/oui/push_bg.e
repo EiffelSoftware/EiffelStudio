@@ -22,7 +22,7 @@ inherit
 			implementation, is_valid
 		end
 
-creation
+create
 
 	make
 

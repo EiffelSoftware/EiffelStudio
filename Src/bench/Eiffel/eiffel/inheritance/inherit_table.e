@@ -414,6 +414,9 @@ end;
 				-- class.
 			a_class.update_generic_features
 
+				-- Find main_parent of current class.
+			compute_main_parent
+
 				-- Put the resulting table in the temporary feature table
 				-- server.
 			Tmp_feat_tbl_server.put (resulting_table);
@@ -833,15 +836,24 @@ end;
 				else
 						-- Take the previous feature id
 					feature_i.set_feature_id (old_feature.feature_id);
-					if not (old_feature.written_in = a_class.class_id) then
+					if old_feature.written_in /= a_class.class_id then
 							-- It is a new feature, we need to create a new
 							-- body index.
 						feature_i.set_body_index (Body_index_counter.next_id);
 
 							-- Update server information
-						read_info := body_table.item (old_feature.body_index)
-						body_table.remove (old_feature.body_index)
-						body_table.force (read_info, feature_i.body_index);	
+						if old_feature.body_index > 0 then
+							read_info := body_table.item (old_feature.body_index)
+							body_table.remove (old_feature.body_index)
+						else
+							check
+								old_feature_is_il_external: old_feature.extension /= Void
+									and then old_feature.extension.is_il
+							end
+							read_info := body_table.item (external_body_index)
+							body_table.remove (external_body_index)
+						end
+						body_table.force (read_info, feature_i.body_index)
 					else
 						feature_i.set_body_index (old_feature.body_index);
 						if
@@ -960,7 +972,8 @@ end;
 
 							--and then Result.same_interface (feature_i);
 						if is_the_same and unique_feature /= Void then
-							is_the_same := feature_i.is_unique and then unique_feature.same_value (feature_i)
+							is_the_same := feature_i.is_unique and then
+								unique_feature.same_value (feature_i)
 						end;
 debug ("ACTIVITY")
 	if not is_the_same then
@@ -981,7 +994,8 @@ end;
 					Result.set_rout_id_set (clone (feature_i.rout_id_set));
 					Result.set_is_selected (feature_i.is_selected);
 				end;
-				if not is_the_same or else
+				if
+					not is_the_same or else
 					(supplier_status_modified and then
 					not Degree_4.changed_status.disjoint (feature_i.suppliers))
 							-- The status of one of the suppliers of the feature has changed
@@ -999,8 +1013,18 @@ debug ("ACTIVITY")
 end;
 
 						-- Update `read_info' in BODY_SERVER
-					body_table.force (read_info, feature_i.body_index);	
-					Tmp_body_server.reactivate (body_index)
+					if body_index > 0 then
+						body_table.force (read_info, body_index)
+						Tmp_body_server.reactivate (body_index)
+					else
+						check
+							feature_is_il_external: feature_i.extension /= Void
+								and then feature_i.extension.is_il
+						end
+						body_table.force (read_info, external_body_index)
+							-- No need to reactivate it, since it never existed
+							-- at the first place.
+					end
 
 						-- Insert the changed feature in the table of
 						-- changed features of class `a_class'.
@@ -1390,6 +1414,56 @@ end;
 				Tmp_inv_ast_server.remove_id (class_id);
 			end;
 		end;
+
+feature {NONE} -- Implementation
+
+	compute_main_parent is
+			-- Set `number_of_features' and `main_parent' of `a_class'
+		local
+			l_feat_tbl: FEATURE_TABLE
+			l_parent, l_main_parent: CLASS_C
+			l_number_of_features, l_max: INTEGER
+		do
+			from
+				parents.start
+			until
+				parents.after
+			loop
+				l_parent := parents.item.parent
+				l_number_of_features := l_parent.feature_table.count
+				if l_parent.is_single or (l_parent.is_external and not l_parent.is_interface) then
+						-- We cannot optimize here, we have to take it
+						-- as main parent even if there is no feature in it.
+					l_main_parent := l_parent
+					parents.finish
+				else
+					if l_number_of_features > l_max then
+						l_main_parent := parents.item.parent
+						l_max := l_number_of_features
+					end
+				end
+				parents.forth
+			end
+			check
+				l_max > 0
+				l_main_parent /= Void
+			end
+			a_class.set_main_parent (l_main_parent)
+			a_class.set_number_of_features (l_max)
+		ensure
+			main_parent_set: a_class.main_parent /= Void
+		end
+
+feature {NONE} -- Temporary body index
+
+	external_body_index: INTEGER is
+			-- Dummy body index to be used when someone redefine an external feature
+			-- with no body (i.e. an IL external).
+		once
+			Result := Body_index_counter.next_id
+		ensure
+			external_body_index_positive: Result > 0
+		end
 
 end
 

@@ -14,13 +14,13 @@ feature {NONE}
 		local
 			file_name: STRING;
 		do
-			!!file_name.make (generation_path.count + 8);
-			file_name.append (generation_path);
-			file_name.append ("/Esize.");
+			!!file_name.make (Workbench_generation_path.count + 8);
 			if final_mode then
-				file_name.append ("x")
+				file_name.append (Final_generation_path);
+				file_name.append ("/Esize.x")
 			else
-				file_name.append ("c")
+				file_name.append (Workbench_generation_path);
+				file_name.append ("/Esize.c")
 			end;
 			!!Result.make (file_name);
 		end;
@@ -30,8 +30,8 @@ feature {NONE}
 		local
 			file_name: STRING;
 		once
-			!!file_name.make (generation_path.count + 10);
-			file_name.append (generation_path);
+			!!file_name.make (Final_generation_path.count + 10);
+			file_name.append (Final_generation_path);
 			file_name.append ("/Ehisto.c");
 			!!Result.make (file_name);
 		end;
@@ -41,53 +41,69 @@ feature {NONE}
 		local
 			file_name: STRING;
 		once
-			!!file_name.make (generation_path.count + 7);
-			file_name.append (generation_path);
+			!!file_name.make (Final_generation_path.count + 7);
+			file_name.append (Final_generation_path);
 			file_name.append ("/Eref.c");
 			!!Result.make (file_name);
 		end;
 
-	Skeleton_file: UNIX_FILE is
+	Skeleton_f (final_mode: BOOLEAN): UNIX_FILE is
 			-- File where the skeletons correponding to the
 			-- Eiffel class types are generated
 		local
 			file_name: STRING;
-		once
-			!!file_name.make (generation_path.count + 10);
-			file_name.append (generation_path);
+		do
+			!!file_name.make (Final_generation_path.count + 10);
+			if final_mode then
+				file_name.append (Final_generation_path);
+			else
+				file_name.append (Workbench_generation_path);
+			end;
 			file_name.append ("/Eskelet.c");
 			!!Result.make (file_name);
 		end;
 
-	Cecil_file: UNIX_FILE is
+	Cecil_f (final_mode: BOOLEAN): UNIX_FILE is
 			-- File where the datas for visible classes are generated
 		local
 			file_name: STRING;
-		once
-			!!file_name.make (generation_path.count + 10);
-			file_name.append (generation_path);
+		do
+			!!file_name.make (Final_generation_path.count + 10);
+			if final_mode then
+				file_name.append (Final_generation_path);
+			else
+				file_name.append (Workbench_generation_path);
+			end;
 			file_name.append ("/Evisib.c");
 			!!Result.make (file_name);
 		end;
 
-	Conformance_file: UNIX_FILE is
+	Conformance_f (final_mode: BOOLEAN): UNIX_FILE is
 			-- File where the conformance tables are generated.
 		local
 			file_name: STRING;
-		once
-			!!file_name.make (generation_path.count + 12);
-			file_name.append (generation_path);
+		do
+			!!file_name.make (Final_generation_path.count + 10);
+			if final_mode then
+				file_name.append (Final_generation_path);
+			else
+				file_name.append (Workbench_generation_path);
+			end;
 			file_name.append ("/Econform.c");
 			!!Result.make (file_name);
 		end;
 
-	Plug_file: UNIX_FILE is
+	Plug_f (final_mode: BOOLEAN): UNIX_FILE is
 			-- File miscellenaeous datas are generated for the run-time
 		local
 			file_name: STRING;
-		once
-			!!file_name.make (generation_path.count + 12);
-			file_name.append (generation_path);
+		do
+			!!file_name.make (Final_generation_path.count + 10);
+			if final_mode then
+				file_name.append (Final_generation_path);
+			else
+				file_name.append (Workbench_generation_path);
+			end;
 			file_name.append ("/Eplug.c");
 			!!Result.make (file_name);
 		end;
@@ -98,8 +114,8 @@ feature {NONE}
 		local
 			file_name: STRING;
 		once
-			!!file_name.make (generation_path.count + 12);
-			file_name.append (generation_path);
+			!!file_name.make (Workbench_generation_path.count + 12);
+			file_name.append (Workbench_generation_path);
 			file_name.append ("/Epattern.c");
 			!!Result.make (file_name);
 		end;
@@ -109,8 +125,8 @@ feature {NONE}
 		local
 			file_name: STRING;
 		once
-			!!file_name.make (generation_path.count + 12);
-			file_name.append (generation_path);
+			!!file_name.make (Workbench_generation_path.count + 12);
+			file_name.append (Workbench_generation_path);
 			file_name.append ("/Eoption.c");
 			!!Result.make (file_name);
 		end;
@@ -120,30 +136,23 @@ feature {NONE}
 		local
 			file_name: STRING;
 		once
-			!!file_name.make (generation_path.count + 12);
-			file_name.append (generation_path);
+			!!file_name.make (Workbench_generation_path.count + 12);
+			file_name.append (Workbench_generation_path);
 			file_name.append ("/Ecall.c");
 			!!Result.make (file_name);
 		end;
 
-	Initialization_file: UNIX_FILE is
+	Main_f (final_mode: BOOLEAN): UNIX_FILE is
 			-- File where the C routine `c_main' is generated
 		local
 			file_name: STRING;
-		once
-			!!file_name.make (generation_path.count + 12);
-			file_name.append (generation_path);
-			file_name.append ("/Einit.c");
-			!!Result.make (file_name);
-		end;
-
-	Main_file: UNIX_FILE is
-			-- File where the C routine `c_main' is generated
-		local
-			file_name: STRING;
-		once
-			!!file_name.make (generation_path.count + 12);
-			file_name.append (generation_path);
+		do
+			!!file_name.make (Final_generation_path.count + 10);
+			if final_mode then
+				file_name.append (Final_generation_path);
+			else
+				file_name.append (Workbench_generation_path);
+			end;
 			file_name.append ("/Emain.c");
 			!!Result.make (file_name);
 		end;
@@ -153,8 +162,8 @@ feature {NONE}
 		local
 			file_name: STRING;
 		once
-			!!file_name.make (generation_path.count + 14);
-			file_name.append (generation_path);
+			!!file_name.make (Workbench_generation_path.count + 14);
+			file_name.append (Workbench_generation_path);
 			file_name.append ("/Edispatch.c");
 			!!Result.make (file_name);
 		end;
@@ -164,19 +173,23 @@ feature {NONE}
 		local
 			file_name: STRING;
 		once
-			!!file_name.make (generation_path.count + 14);
-			file_name.append (generation_path);
+			!!file_name.make (Workbench_generation_path.count + 14);
+			file_name.append (Workbench_generation_path);
 			file_name.append ("/Efrozen.c");
 			!!Result.make (file_name);
 		end;
 
-	Make_file: UNIX_FILE is
+	Make_f (final_mode: BOOLEAN): UNIX_FILE is
 			-- Makefile for C compilation
 		local
 			file_name: STRING;
-		once
-			!!file_name.make (generation_path.count + 14);
-			file_name.append (generation_path);
+		do
+			!!file_name.make (Final_generation_path.count + 10);
+			if final_mode then
+				file_name.append (Final_generation_path);
+			else
+				file_name.append (Workbench_generation_path);
+			end;
 			file_name.append ("/Makefile.SH");
 			!!Result.make (file_name);
 		end;
@@ -186,8 +199,8 @@ feature {NONE}
 		local
 			file_name: STRING;
 		once
-			!!file_name.make (generation_path.count + 6);
-			file_name.append (generation_path);
+			!!file_name.make (Workbench_generation_path.count + 6);
+			file_name.append (Workbench_generation_path);
 			file_name.append ("/.UPDT");
 			!!Result.make (file_name);
 		end

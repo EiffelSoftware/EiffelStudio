@@ -53,7 +53,7 @@ feature -- Identfication
 		end;
 
 
-feature --
+feature -- Free options
 
 	is_valid: BOOLEAN is
 		do
@@ -61,6 +61,11 @@ feature --
 		end;
 
 	is_system_level: BOOLEAN is
+		do
+			-- Do nothing
+		end;
+
+	is_precompiled: BOOLEAN is
 		do
 			-- Do nothing
 		end;

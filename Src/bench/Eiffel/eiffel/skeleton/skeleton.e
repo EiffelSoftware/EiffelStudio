@@ -607,6 +607,11 @@ feature
 			ba.append_integer (workbench_offset);
 		end;
 
+	Skeleton_file: UNIX_FILE is
+		do
+			Result := System.Skeleton_file
+		end;
+
 	generate_name_array is
 			-- Generate static C array of attributes names in the
 			-- skeleton file.

@@ -56,7 +56,7 @@ feature {NONE}
 					-- Application is not running. Start it.
 				if project_tool.initialized then
 					!!application_path.make (50);
-					application_path.append (Generation_path);
+					application_path.append (Workbench_generation_path);
 					application_path.append ("/");
 					application_path.append (System.system_name);
 --io.putstring ("Pop up prompt window to ask for arguments%N");

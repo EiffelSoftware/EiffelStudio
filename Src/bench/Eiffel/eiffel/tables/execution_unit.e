@@ -51,7 +51,8 @@ feature
 			-- Is the executino unit still valid ?
 		local
 			written_type: CL_TYPE_I;
-			written_class: CLASS_C
+			written_class: CLASS_C;
+			s: SORTED_SET [INTEGER];
 		do
 			written_class := System.class_of_id (written_in);
 			if written_class /= Void and then
@@ -69,16 +70,13 @@ feature
 						-- having undergone a "body id change". In that case the
 						-- body id is not valid if the system has an equivalent
 						-- one which is different.
-					elseif (System.onbidt.item (body_id) = body_id) then
-						Result := server_has
+					else
+						s := class_type.valid_body_ids;
+							-- valid_body_ids is void for the first compilation
+						Result := (s = Void) or else (s.has (body_id));
 					end;
 				end;
 			end;
-		end;
-
-	server_has: BOOLEAN is
-		do
-			Result := Body_server.has (body_id)
 		end;
 
 	is_external: BOOLEAN is

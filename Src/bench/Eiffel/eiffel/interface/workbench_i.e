@@ -20,6 +20,9 @@ feature -- Attributes
 	lace: LACE_I;
 			-- Current lace description
 
+	precompiled_directory_name: STRING;
+			-- Name of the precompiled directory
+
 feature -- Conveniences
 
 	set_universe (u: like universe) is
@@ -40,13 +43,17 @@ feature -- Conveniences
 			lace := l;
 		end;
 
+	set_precompiled_directory_name (s: STRING) is
+		do
+			precompiled_directory_name := s;
+		end;
+
 feature -- Creation feature
 
 	make is
 		do
 			!!universe.make;
 			!!system;
-			system.make;
 			!!lace;
 			init;
 		end;
@@ -82,7 +89,7 @@ feature -- Creation feature
 
 feature -- Commands
 
-	 recompile is
+	recompile is
 			-- Incremental recompilation
 		require
 			system_exists: system /= Void;

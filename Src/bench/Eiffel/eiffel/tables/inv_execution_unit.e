@@ -32,7 +32,7 @@ feature
 			assoc: CLASS_C;
 		do
 			assoc := associated_class;
-			Result := assoc /= Void and then Inv_byte_server.has (assoc.id);
+			Result := assoc /= Void and then assoc.has_invariant
 		end;
 
 	associated_class: CLASS_C is

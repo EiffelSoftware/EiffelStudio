@@ -5,7 +5,7 @@ inherit
 	OPTION_SD
 		redefine
 			set, process_system_level_options, is_system_level,
-			is_valid, is_free_option
+			is_valid, is_free_option, is_precompiled
 		end
 
 feature
@@ -38,8 +38,16 @@ feature
 			Result := True
 		end;
 
-	dead_code, exception_stack_managed, collect,
-	chained_assertions, code_replication: INTEGER is UNIQUE;
+	is_precompiled: BOOLEAN is
+		do
+			Result := is_valid and then
+				valid_options.item (option_name) = precompilation
+		end;
+
+feature {NONE}
+
+	dead_code, exception_stack_managed, collect, precompilation,
+	code_replication: INTEGER is UNIQUE;
 
 	valid_options: HASH_TABLE [INTEGER, STRING] is
 			-- Possible values for free operators
@@ -48,9 +56,11 @@ feature
 			Result.force (dead_code, "dead_code_removal");
 			Result.force (collect, "collect");
 			Result.force (exception_stack_managed, "exception_stack_managed");
-			Result.force (chained_assertions, "chained_assertions");
+			Result.force (precompilation, "precompiled");
 			Result.force (code_replication, "code_replication");
 		end;
+
+feature
 
 	adapt ( value: OPT_VAL_SD;
 			classes:EXTEND_TABLE [CLASS_I, STRING];
@@ -96,6 +106,11 @@ feature
 				elseif value.is_yes then
 					System.set_code_replication_off (False);
 				else
+					error_found := True;
+				end;
+			when precompilation then
+					-- Do nothing: the normal case has already been solved
+				if not value.is_name then
 					error_found := True;
 				end;
 			else

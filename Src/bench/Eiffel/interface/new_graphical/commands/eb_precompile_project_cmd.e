@@ -123,29 +123,12 @@ feature {NONE} -- Implementation
 		require
 			non_void_lace: lace /= Void
 		local
-			d_options: LACE_LIST [D_OPTION_SD]
-			fopt: FREE_OPTION_SD
 			l_ast: ACE_SD
 		do
 			l_ast := lace.parsed_ast
 				-- `l_ast' could be Void if Ace is not valid.
 			if l_ast /= Void then
-				d_options := l_ast.defaults
-			end
-			if d_options /= Void then
-				from 
-					d_options.start
-				until
-					d_options.after
-				loop
-					if d_options.item.option.is_free_option then
-						fopt ?= d_options.item.option
-						if fopt.code = feature {FREE_OPTION_SD}.msil_generation then
-							Result := d_options.item.value.is_yes
-						end	
-					end
-					d_options.forth
-				end
+				Result := l_ast.is_dotnet_project
 			end
 		end
 

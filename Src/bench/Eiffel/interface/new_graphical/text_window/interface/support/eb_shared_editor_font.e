@@ -53,18 +53,34 @@ feature {NONE} -- Implementation
 			create Result.put (loc_font_width)
 		end
 
+	line_height_font: EV_FONT is
+			-- Font used to calculate line height
+		do
+			if keyword_font_cell.item.height > font_cell.item.height then
+				Result := keyword_font_cell.item
+			else
+				Result := font_cell.item
+			end
+		end
+
 	line_height_cell: CELL [INTEGER] is
 			-- Cached version of `line_height'.
 		local
-			loc_font_height: INTEGER
+			loc_font: EV_FONT
 			loc_line_height: INTEGER
 		once
-				-- FIXME: Manu 07/01/2002: what is the signification of this?
-				-- Is this empiric or is that we way we should compute the height
-				-- of a line?
-			loc_font_height := font.height
-			loc_line_height := loc_font_height + (loc_font_height // 4) + 1
+			loc_font := line_height_font
+			loc_line_height := loc_font.height + loc_font.height // 6 + 1
 			create Result.put (loc_line_height)
+		end
+
+	font_offset: INTEGER is
+			-- Number of pixels from top of line to beginning of drawing operation
+		local
+			loc_font: EV_FONT
+		once
+			loc_font := line_height_font
+			Result := loc_font.ascent
 		end
 
 end -- class EB_SHARED_EDITOR_FONT

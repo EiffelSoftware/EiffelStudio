@@ -71,6 +71,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_HWND_CONSTANTS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -96,6 +101,7 @@ feature {NONE} -- Initialization
 			first_choice_dialog.activate
 			set_message_output (create {WIZARD_MESSAGE_OUTPUT})
 			message_output.set_output_window (Current)
+			set_z_order (Hwnd_top)
 		end
 
 feature -- GUI Elements

@@ -32,6 +32,7 @@ feature -- Access
 	Destination_folder_browse_button_constant: INTEGER is 1012
 	Progress_dialog_constant: INTEGER is 121
 	Wizard_final_dialog_constant: INTEGER is 104
+	Wizard_splash_dialog_constant: INTEGER is 125
 	Wizard4_bitmap_constant: INTEGER is 117
 	Launch_string_constant: INTEGER is 5
 	Generate_string_constant: INTEGER is 6

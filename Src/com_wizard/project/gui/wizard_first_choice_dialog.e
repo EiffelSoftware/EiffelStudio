@@ -53,20 +53,19 @@ feature -- Behavior
 	on_ok is
 			-- Record values of buttons.
 		do
-			if open_project_radio.checked then
-				new_project := False
-				Precursor {WEL_MODAL_DIALOG}
-			else
-				new_project := True
-				Precursor {WEL_MODAL_DIALOG}
-			end
+			new_project := not open_project_radio.checked
+			Precursor {WEL_MODAL_DIALOG}
 		end
 
 	on_wm_destroy is
 			-- Open project if needed
 		do
-			if not new_project then
-				parent.on_menu_command (Open_string_constant)
+			if ok_pushed then
+				if new_project then
+					parent.on_menu_command (Launch_string_constant)
+				else
+					parent.on_menu_command (Open_string_constant)
+				end
 			end
 			Precursor {WEL_MODAL_DIALOG}
 		end

@@ -184,7 +184,7 @@ FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "&Next >",IDOK,180,160,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,235,160,50,14
-    CONTROL         114,Wizard1_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
+    CONTROL         124,Wizard0_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
                     SS_SUNKEN,5,5,100,145
     CONTROL         "Open an existing project",Open_Project_Check,"Button",
                     BS_AUTORADIOBUTTON | WS_TABSTOP,125,45,140,10
@@ -196,6 +196,14 @@ BEGIN
                     225,10
     LTEXT           "What would you like to do?",Title_Question_Static,115,
                     25,220,10
+END
+
+Splash_screen_dialog DIALOGEX 0, 0, 215, 133
+STYLE DS_CENTER | WS_POPUP
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         127,Splash_bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE,0,
+                    0,215,133,WS_EX_DLGMODALFRAME
 END
 
 
@@ -262,6 +270,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 174
     END
+
+    Splash_screen_dialog, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 223
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 139
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -302,6 +318,8 @@ Wizard1_Bitmap          BITMAP  DISCARDABLE     "Wizard1.bmp"
 Wizard2_Bitmap          BITMAP  DISCARDABLE     "Wizard2.bmp"
 Wizard3_Bitmap          BITMAP  DISCARDABLE     "Wizard3.bmp"
 Wizard4_Bitmap          BITMAP  DISCARDABLE     "Wizard4.bmp"
+Wizard0_Bitmap          BITMAP  DISCARDABLE     "wizard0.bmp"
+Splash_bitmap           BITMAP  DISCARDABLE     "WizardSplash.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

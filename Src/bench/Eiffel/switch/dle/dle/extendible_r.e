@@ -6,7 +6,6 @@ inherit
 
 	WINDOWS;
 	SHARED_WORKBENCH;
-	SHARED_ENV;
 	SHARED_ERROR_HANDLER;
 	SHARED_RESCUE_STATUS;
 	PROJECT_CONTEXT;
@@ -20,27 +19,26 @@ feature
 	retrieve_extendible (extendible_project_name: STRING) is
 			-- Initialize the system with information contained in 
 			-- the dynamically extendible project directory.
+		require
+			project_name_not_void: extendible_project_name /= Void
 		local
 			project_name: STRING;
 			project_dir: REMOTE_PROJECT_DIRECTORY;
 			project: E_PROJECT;
 			project_eif: RAW_FILE;
-			freeze: BOOLEAN;
 			workb: WORKBENCH_I;	
 			precomp_r: PRECOMP_R;
 			v9ds: V9DS;
 			dle_system: DLE_SYSTEM_I
 		do
 			if not retried then
-				project_name := Environ.interpret (extendible_project_name);
-				!! project_dir.make (project_name);
+				!! project_dir.make (extendible_project_name);
 
 				project_dir.check_extendible;
 				Error_handler.checksum;
 
 				if project_dir.is_valid then
-					Extendible_directory.make_from_string (project_name);
-					!! project_eif.make_open_read (Extendible_file_name);
+					!! project_eif.make_open_read (project_dir.project_eif);
 					project ?= Eiffel_project.retrieved (project_eif);
 					project_eif.close;
 
@@ -51,9 +49,14 @@ feature
 					if workb /= Void and then 
 						workb.system.extendible
 					then
-						Workbench.set_precompiled_directory_name 
-									(workb.precompiled_directory_name);
-						Workbench.set_extendible_directory_name (project_name);
+						Workbench.set_precompiled_directories 
+									(workb.precompiled_directories);
+						Workbench.set_precompiled_driver
+									(workb.precompiled_driver);
+						Workbench.set_precompiled_descobj
+									(workb.precompiled_descobj);
+						Workbench.set_extendible_directory (project_dir);
+						set_extendible_dir;
 						Universe.copy (workb.universe);
 							-- Do not call the once function `System' directly
 							-- since it's value will be replaced later on
@@ -66,16 +69,16 @@ io.error.new_line
 end;
 						Eiffel_project.set_system (project.system);
 						dle_system.extending (workb.system);
-						dle_system.init_counters;
 						if dle_system.uses_precompiled then
 							!! precomp_r;
 							precomp_r.set_precomp_dir
 						end;
+						dle_system.init_counters;
 						dle_system.server_controler.init;
 						Universe.update_cluster_paths
 					else
 						!! v9ds;
-						v9ds.set_path (project_name);
+						v9ds.set_path (project_dir.name);
 						Error_handler.insert_error (v9ds);
 						Error_handler.raise_error
 					end
@@ -89,7 +92,7 @@ end;
 				end;
 				retried := False;
 				!! v9ds;
-				v9ds.set_path (project_name);
+				v9ds.set_path (project_dir.name);
 				Error_handler.insert_error (v9ds);
 				Error_handler.raise_error
 			end
@@ -102,9 +105,12 @@ end;
 
 	set_extendible_dir is
 			-- Creates the once function `Extendible_directory'
+		local
+			extendible_dir: REMOTE_PROJECT_DIRECTORY
 		do
-			Extendible_directory.make_from_string 
-							(workbench.extendible_directory_name);
+			extendible_dir := Workbench.extendible_directory;
+			extendible_dir.update_path;
+			Extendible_directory.copy (extendible_dir)
 		end;
 			
 end

@@ -375,6 +375,32 @@ feature  -- Status report
 			end
 		end;
 
+feature  -- Default action callbacks
+		add_default_action (a_command: COMMAND; argument: ANY) is
+				-- Add `a_command' to the list of actions to
+				-- execute when items are selected with double
+				-- click or by pressing `RETURN' in current
+				-- scroll list.
+			local
+				list: VISION_COMMAND_LIST
+			do
+				list := vision_command_list (default_action_command)
+					if list = Void then
+					!! list.make;
+					set_default_action_callback (list, Void)
+				end;
+				list.add_command (a_command, argument)
+			end;
+
+		remove_default_action is 
+				-- Remove all actions executed when items are
+				-- selected with double click or by pressing
+				-- `RETURN' in current scroll list.
+			local
+			do
+				remove_default_action_callback 
+			end;
+
 feature  -- Status setting
 
 	add_click_action (a_command: COMMAND; argument: ANY) is

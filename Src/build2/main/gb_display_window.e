@@ -50,6 +50,15 @@ feature -- Initialization
 			set_icon_pixmap (icon)
 		end
 		
+feature {GB_CLOSE_PROJECT_COMMAND} -- Status setting
+
+	restore_to_default is
+			-- Restore `Current' to its default state after creation
+			-- and intialization.
+		do
+			restore_titled_window (Current, gb_display_window_title)
+		end
+		
 feature -- Access
 
 	icon: EV_PIXMAP is

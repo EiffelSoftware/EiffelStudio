@@ -80,4 +80,13 @@ feature -- Status setting
 			drop_actions.set_veto_pebble_function (agent object.can_add_child (?))		
 		end
 		
+feature {GB_CLOSE_PROJECT_COMMAND} -- Status setting
+
+	restore_to_default is
+			-- Restore `Current' to its default state after creation
+			-- and intialization.
+		do
+			restore_titled_window (Current, gb_builder_window_title)
+		end
+		
 end -- class GB_BUILDER_WINDOW

@@ -50,7 +50,6 @@ feature -- Initialization
 			!! private_attributes
 			a_file_sel_dialog.set_dialog_imp (Current)
 			title := clone (a_file_sel_dialog.identifier)
-			!! directory.make (0)
 		end
 
 	realize is
@@ -58,7 +57,7 @@ feature -- Initialization
 		do
 			realized := true
 				-- set initial focus
-			if initial_focus /= void then
+			if initial_focus /= Void then
 				initial_focus.wel_set_focus
 			end
 		end
@@ -89,6 +88,9 @@ feature -- Access
 
 	pattern: STRING 
 		-- Pattern used for file selection
+
+	pattern_name: STRING 
+		-- Name of the pattern used for file selection
 
 	title: STRING 
 		-- Title of dialog
@@ -162,7 +164,7 @@ feature -- Status setting
 				wel_file_dialog.add_flag (Ofn_nochangedir)
 				wel_file_dialog.set_title (title)
 				if pattern /= Void then
-					wel_file_dialog.set_filter (<<pattern>>, <<"search pattern">>)
+					wel_file_dialog.set_filter (<<pattern_name>>, <<pattern>>)
 				end
 				if directory = Void then
 					wel_file_dialog.set_initial_directory_as_current
@@ -172,9 +174,10 @@ feature -- Status setting
 				realized := True
 				wel_file_dialog.activate (wc)
 				if wel_file_dialog.selected then
-					ok_actions.execute (Current, Void)
+					!! directory.make (0)
 					directory.set (wel_file_dialog.file_name,
-						1, wel_file_dialog.file_name_offset)
+							1, wel_file_dialog.file_name_offset)
+					ok_actions.execute (Current, Void)
 				else
 					cancel_actions.execute (Current, Void)
 				end
@@ -192,6 +195,12 @@ feature -- Status setting
 			-- Set the pattern to `s'
 		do
 			pattern := s
+		end
+
+	set_pattern_name (s: STRING) is
+			-- Set `pattern_name' to `s'
+		do
+			pattern_name := s
 		end
 
 	set_filter (s: STRING) is

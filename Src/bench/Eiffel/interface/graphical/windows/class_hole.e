@@ -53,7 +53,7 @@ feature -- Pick & Throw
 					if a_stone.stone_type = Routine_type then
 						feature_stone ?= a_stone;		--| Cannot fail!
 						if not feature_stone.is_valid then
-							warner (Project_tool.text_window).gotcha_call
+							warner (Project_tool).gotcha_call
 									(w_Feature_not_compiled);
 							invalid := true;
 						end

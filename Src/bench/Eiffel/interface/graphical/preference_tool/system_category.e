@@ -30,12 +30,14 @@ feature {RESOURCES} -- Initialization
 		do
 			!! automatic_backup.make (r_AutomaticBackup,
 					rt.get_boolean (r_AutomaticBackup, False));
-			!! temporary_dir.make (r_Filter_path,
-					rt.get_string (r_Filter_path, "/tmp"));
+			!! temporary_dir.make (r_Tmp_directory,
+					rt.get_string (r_Tmp_directory, "/tmp"));
 			!! profiler_dir.make (r_Profiler_path,
 					rt.get_string (r_Profiler_path, "$EIFFEL3/bench/profiler"));
 			!! filter_dir.make (r_Filter_path,
 					rt.get_string (r_Filter_path, "$EIFFEL3/bench/filters"));
+			!! history_size.make (r_History_size,
+					rt.get_integer (r_History_size, 10))
 		end
 
 feature -- Validation
@@ -53,17 +55,17 @@ feature -- Access
 		do
 			!! Result.make;
 			Result.extend (temporary_dir);
-			Result.extend (profiler_dir)
+			Result.extend (profiler_dir);
+			Result.extend (filter_dir);
+			Result.extend (history_size)
 		end
 
 feature -- Resources
 
 	automatic_backup: BOOLEAN_RESOURCE;
-
 	temporary_dir: STRING_RESOURCE;
-
 	profiler_dir: STRING_RESOURCE;
-
-	filter_dir: STRING_RESOURCE
+	filter_dir: STRING_RESOURCE;
+	history_size: INTEGER_RESOURCE
 
 end -- class SYSTEM_CATEGORY

@@ -41,7 +41,7 @@ extern char *getenv(const char *);			/* Get environment variable value */
 extern Malloc_t malloc(register unsigned int nbytes);		/* Memory allocation */
 rt_public unsigned TIMEOUT;		/* Time out for interprocess communications */
 
-rt_public struct d_flags d_data = {	/* Internal daemon's flags */
+rt_public struct d_flags daemon_data = {	/* Internal daemon's flags */
 	(unsigned int) 0,	/* d_rqst */
 	(unsigned int) 0,	/* d_sent */
 	(STREAM *) 0,		/* d_cs */
@@ -138,8 +138,8 @@ rt_public void main(int argc, char **argv)
 		exit(1);
 	}
 
-	d_data.d_cs = sp;				/* Record workbench stream */
-	d_data.d_ewb = (int) pid;		/* And keep track of the child pid */
+	daemon_data.d_cs = sp;				/* Record workbench stream */
+	daemon_data.d_ewb = (int) pid;		/* And keep track of the child pid */
 	prt_init();						/* Initialize IDR filters */
 	dwide_listen();					/* Enter server mode... */
 

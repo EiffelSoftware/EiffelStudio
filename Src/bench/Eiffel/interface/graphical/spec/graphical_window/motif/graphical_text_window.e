@@ -34,7 +34,7 @@ inherit
 			total_height as current_y,
 			clear_text as clear_drawing_area
 		undefine
-			copy, setup, context_data_useful
+			is_equal, copy, setup, context_data_useful
 		end;
 	SCROLLED_DRAWING_AREA
 		rename
@@ -45,7 +45,7 @@ inherit
 			total_height as current_y,
 			clear_text as clear_drawing_area
 		undefine
-			copy, setup, context_data_useful
+			is_equal, copy, setup, context_data_useful
 		redefine
 			set_background_color, execute
 		select

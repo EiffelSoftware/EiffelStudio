@@ -286,6 +286,9 @@ feature -- Compiler Warnings
 	Missing_assembly: INTEGER is 10006
 			-- Assembly is missing
 
+	Precompile_failed: INTEGER is 10007
+			-- Precompilation failed
+
 feature -- Compiler Information
 
 end -- class CODE_EVENTS_IDS

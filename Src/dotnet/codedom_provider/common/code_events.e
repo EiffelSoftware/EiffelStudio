@@ -306,6 +306,8 @@ feature {NONE} -- Implementation
 						Could_not_copy)
 			Result.extend (["Missing Assembly", "compiler", "Could not find assembly `{1}'", Warning],
 						Missing_assembly)
+			Result.extend (["Precompilation Failed", "compiler", "Could not precompile ace file `{1}' in cache `{2}'", Warning],
+						Precompile_failed)
 
 			-- Overwriting existing Eiffel source file
 

@@ -161,7 +161,7 @@ feature -- Access
 			index_small_enough: i <= count;
 			index_large_enough: i > 0;
 		do
-			Result := area.item (i).code
+			Result := area.item (i-1).code
 		end;
 
 	hash_code: INTEGER is

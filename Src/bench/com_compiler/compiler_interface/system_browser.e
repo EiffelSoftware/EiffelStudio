@@ -87,7 +87,7 @@ feature -- Access
 	system_clusters: CLUSTER_ENUMERATOR is
 			-- List of system's top-level clusters.
 		local
-			list: LINKED_LIST [CLUSTER_I]
+			list: LIST [CLUSTER_I]
 			cluster_desc: CLUSTER_DESCRIPTOR
 			res: ARRAYED_LIST [IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE]
 		do
@@ -112,7 +112,7 @@ feature -- Access
 	cluster_count: INTEGER is
 			-- Number of top-level clusters in system.
 		local
-			list: LINKED_LIST [CLUSTER_I]
+			list: LIST [CLUSTER_I]
 		do
 			if Eiffel_project.initialized then
 				list := Eiffel_universe.clusters
@@ -150,15 +150,33 @@ feature -- Basic Operations
 			-- Void if no matches.
 		local
 			matching_classes: LIST [CLASS_I]
+			index: INTEGER
+			a_name: STRING
 		do
-			if Eiffel_project.initialized and then class_name1 /= Void then
-				matching_classes := Eiffel_universe.compiled_classes_with_name (class_name1)
-				if not matching_classes.is_empty then
-						--| FIXME What if matching_classes.count > 1 ?
-					if matching_classes.first.compiled then
+			classes_descriptors.search (class_name1)
+			if classes_descriptors.found then
+				Result := classes_descriptors.found_item
+			else
+				if Eiffel_project.initialized and then class_name1 /= Void then
+					index := class_name1.last_index_of ('[', class_name1.count)
+					if index > 0 then
+						a_name := class_name1.substring (1, index - 1)
+						from
+						until
+							a_name.item (a_name.count) /= ' '
+						loop
+							a_name.keep_head (a_name.count - 1)
+						end
+					else
+						a_name := class_name1
+					end
+					matching_classes := Eiffel_universe.compiled_classes_with_name (a_name)
+					if not matching_classes.is_empty then
+							--| FIXME What if matching_classes.count > 1 ?
 						create {CLASS_DESCRIPTOR} Result.make_with_class_i (matching_classes.first)
 					end
 				end
+				classes_descriptors.put (Result, class_name1)
 			end
 		end
 
@@ -276,6 +294,14 @@ feature -- Basic Operations
 				end
 				create Result.make (res)
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	classes_descriptors: HASH_TABLE [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE, STRING] is
+			-- Buffer of class descriptors used in `class_descriptor'
+		once
+			create Result.make (10)
 		end
 		
 end -- class SYSTEM_BROWSER

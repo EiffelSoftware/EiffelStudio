@@ -48,6 +48,7 @@ feature {NONE} -- Initialization
 			a_cancel_button := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_add_button (c_object, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_stock_cancel_enum, feature {EV_GTK_EXTERNALS}.gtk_response_cancel_enum)
 			a_ok_button := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_add_button (c_object, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_stock_ok_enum, feature {EV_GTK_EXTERNALS}.gtk_response_accept_enum)
 			
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_set_local_only (c_object, True)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_set_default_response (c_object, feature {EV_GTK_EXTERNALS}.gtk_response_accept_enum)
 			
 			real_signal_connect (
@@ -113,7 +114,7 @@ feature -- Status report
 		do
 			if not file_name.is_empty then
 				Result := file_name.twin
-				Result.keep_head	(Result.count - Result.mirrored.index_of ('/', 1) + 1)
+				Result.keep_head (Result.count - Result.mirrored.index_of ('/', 1) + 1)
 			else
 				Result := ""
 			end

@@ -6,15 +6,13 @@ indexing
 	revision: "$Revision$"
 	
 deferred class 
-	EV_DYNAMIC_LIST_I [G -> EV_CONTAINABLE]
+	EV_DYNAMIC_LIST_I [reference G -> EV_CONTAINABLE]
 
 inherit
 	EV_ANY_I
 		redefine
 			interface
 		end
-
-	ASSIGN_ATTEMPT [G]
 
 feature -- Access
 
@@ -446,18 +444,6 @@ feature {NONE} -- Implementation
 		deferred
 		ensure
 			count_decreased: count = old count - 1
-		end
-
-feature {EV_ANY_I} -- Implementation
-
-	imp_to_int (imp: EV_ANY_I): G is
-			-- `interface' of `imp'.
-		require
-			imp_not_void: imp /= Void
-		do
-			Result := attempt (imp.interface)
-		ensure
-			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation

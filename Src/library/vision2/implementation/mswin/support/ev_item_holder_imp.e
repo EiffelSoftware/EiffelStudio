@@ -10,7 +10,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EV_ITEM_LIST_IMP [G -> EV_ITEM]
+	EV_ITEM_LIST_IMP [reference G -> EV_ITEM]
 
 inherit
 	EV_ITEM_LIST_I [G]
@@ -42,25 +42,13 @@ feature {NONE} -- Implementation
 			-- Insert `v' at position `i'.
 		local
 			v_imp: EV_ITEM_IMP
-			l_parent: EV_ITEM_LIST_IMP [EV_ITEM]
 		do
 			v_imp ?= v.implementation
 			check
 				v_imp_not_void: v /= Void
 			end
 			Precursor {EV_DYNAMIC_LIST_IMP} (v, i)
-				-- Assignment attempt is needed because on the left hand side
-				-- we have EV_ITEM_LIST_IMP [EV_ITEM] and on the right hand side
-				-- we have EV_ITEM_LIST_IMP [G]. If `G' was always a reference we
-				-- would not need it, but since this is not yet supported in
-				-- the Eiffel language we use the reverse assignment knowing that
-				-- it cannot fail since all descendants of EV_ITEM are guaranteed
-				-- by our implementation to be reference.
-			l_parent ?= Current
-			check
-				l_parent_not_void: l_parent /= Void
-			end
-			v_imp.set_parent_imp (l_parent)
+			v_imp.set_parent_imp (Current)
 			insert_item (v_imp, i)
 			v_imp.on_parented
 			new_item_actions.call ([v_imp.interface])

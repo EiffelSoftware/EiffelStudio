@@ -91,6 +91,49 @@ feature -- Comparison
 			end
 		end
 	
+feature -- Output
+
+	append_to (st: STRUCTURED_TEXT) is
+			-- Append a representation of `Current' to `st'.
+		local
+			ci: CLASS_I
+			cts: LIST [STRING]
+			cis: LIST [CLASS_I]
+		do
+			from
+				start
+			until
+				after
+			loop
+				cts := item.clients
+				if not (cts.count = 1 and then cts.first.is_equal ("any")) then
+					st.add_string (S_l_curly)
+					from
+						cts.start
+					until
+						cts.after
+					loop
+						cis := Universe.classes_with_name (cts.item)
+						ci := Void
+						if cis /= Void and then not cis.is_empty then
+							ci := cis.first
+						end
+						if ci /= Void then
+							st.add_class (ci)
+						else
+							st.add_string (cts.item.as_upper)
+						end
+						cts.forth
+						if not cts.after then
+							st.add_string (", ")
+						end
+					end
+					st.add_string (S_r_curly)
+				end
+				forth
+			end
+		end
+
 feature {COMPILER_EXPORTER}
 
 	equiv (other: EXPORT_I): BOOLEAN is

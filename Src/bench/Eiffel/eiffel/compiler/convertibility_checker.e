@@ -351,7 +351,7 @@ feature -- Initialization/Checking
 					-- conversion
 				if
 					System.il_generation and then
-					(not a_source_type.is_external or a_source_type.is_basic) and
+					(not a_source_type.is_external or a_source_type.is_expanded) and
 					a_target_type.is_external
 				then
 						-- Special conversion between eiffel types and SYSTEM_OBJECT.

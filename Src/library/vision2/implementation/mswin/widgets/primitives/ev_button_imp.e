@@ -53,6 +53,7 @@ inherit
 			set_text as wel_set_text,
 			destroy as wel_destroy
 		undefine
+			window_process_message,
 			remove_command,
 			set_width,
 			set_height,
@@ -127,8 +128,11 @@ feature -- Status setting
 			end
 
 			-- Finaly, we set the minimum values.
-			set_minimum_width (w)
-			set_minimum_height (h)
+			internal_set_minimum_width (w)
+			internal_set_minimum_height (h)
+			if parent_imp /= Void then
+				notify_change (1 + 2)
+			end
 		end
 
 feature -- Element change

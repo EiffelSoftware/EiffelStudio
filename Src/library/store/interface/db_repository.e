@@ -85,7 +85,7 @@ feature -- Access
 		do
 			Result := implementation.column_number
 		ensure
-			Result >0
+			Result >= 0
 		end
 
 feature -- Basic operations

@@ -266,7 +266,9 @@ feature {NONE} -- Status setting
 			max_index := field_count (obj)
 -- FIXME: Jacques, comments removed according to matisse library			
 		ensure
-			max_index = field_count (obj)
+-- Davids: You don't need to force the user to map exactly the same number of Attributes in the 
+--			Table and in the corresponding class
+--			max_index = field_count (obj)
 --			
 		end
 

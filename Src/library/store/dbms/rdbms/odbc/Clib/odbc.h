@@ -41,7 +41,7 @@ extern char *warn_message;
 #define SQL_HANDLE_DBC      2
 #endif
 
-#ifndef SQL_HANDLE_SMTM
+#ifndef SQL_HANDLE_SMTM		
 #define SQL_HANDLE_SMTM		3
 #endif
 
@@ -118,8 +118,7 @@ typedef void *          SQLPOINTER;
 #define ERROR_MESSAGE_SIZE    450 /* the max length of error message */
 #define WARN_MESSAGE_SIZE     450 /* the max length of warning message */
 #define MAX_ERROR_MSG         200 /* the max length of tempory error message */
-
-#define MAX_DESCRIPTOR        30  /* Max descriptor available simultaneously */
+#define MAX_DESCRIPTOR        10  /* Max descriptor available simultaneously */
 
 
 #define NO_MORE_ROWS          100 /* No more row is fetched by FETCH operation */
@@ -133,10 +132,12 @@ typedef void *          SQLPOINTER;
 
 /* the following are lengthes of some data types in EiffelStore on ODBC */
 #define DB_DATE_LEN                             26
-#define DB_MAX_NAME_LEN                 	40
+#define DB_MAX_NAME_LEN                 	40      
 #define DB_MAX_TABLE_LEN			50
 #define DB_MAX_COLS                             300
-#define DB_MAX_STRING_LEN			254
+// Added by David
+//#define DB_MAX_STRING_LEN			254
+#define DB_MAX_STRING_LEN			1024
 #define DB_QUOTER_LEN				5
 #define DB_NAME_SEP_LEN				5
 #define DB_MAX_QUALIFIER_LEN			150
@@ -154,9 +155,9 @@ typedef void *          SQLPOINTER;
 
 /* the following are some flags  */
 #define ODBC_SQL                0
-#define ODBC_CATALOG_COL        1
-#define ODBC_CATALOG_TAB        2
-#define ODBC_CATALOG_PROC       3
+#define ODBC_CATALOG_COL        1       
+#define ODBC_CATALOG_TAB        2       
+#define ODBC_CATALOG_PROC       3       
 #define ODBC_TIME		0
 #define ODBC_DATE		1
 #define ODBC_TIMESTAMP		2
@@ -183,7 +184,7 @@ extern void enomem ();
 
 /*
 **  Description:
-**      The SQLDA is a structure for holding data descriptions, used by
+**      The SQLDA is a structure for holding data descriptions, used by 
 **      EiffelStore on ODBC run-time system during execution of
 **      dynamic SQL statements.
 **

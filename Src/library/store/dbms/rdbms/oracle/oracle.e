@@ -252,7 +252,11 @@ feature -- For DATABASE_REPOSITORY
 	Selection_string (rep_qualifier, rep_owner, rep_name: STRING): STRING is 
 		do
 			repository_name := rep_name
-			Result := "SELECT * FROM ALL_TAB_COLUMNS WHERE Table_Name =:rep order by Column_ID"
+					-- This query request all the Tables of the database
+--			Result := "SELECT * FROM ALL_TAB_COLUMNS WHERE Table_Name =:rep order by Column_ID"
+					-- This query retrieve only the tables that the user can access.
+					-- By default we should use this query.
+			Result := "SELECT * FROM USER_TAB_COLUMNS WHERE Table_Name =:rep order by Column_ID"
 		end
 	
 	sql_string: STRING is "VARCHAR2("

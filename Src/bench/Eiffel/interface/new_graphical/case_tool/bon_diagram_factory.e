@@ -51,7 +51,7 @@ feature {EB_CONTEXT_EDITOR} -- Drawing
 	draw_bon_cs_figure_agent: PROCEDURE [ANY, TUPLE [EV_FIGURE]] is
 			-- Routine to add to projector.
 		once
-			Result := ~draw_bon_cs_figure
+			Result := agent draw_bon_cs_figure
 		end
 
 	draw_bon_cs_figure (bcs: BON_CLIENT_SUPPLIER_FIGURE) is
@@ -62,7 +62,7 @@ feature {EB_CONTEXT_EDITOR} -- Drawing
 	draw_bon_inheritance_figure_agent: PROCEDURE [ANY, TUPLE [EV_FIGURE]] is
 			-- Routine to add to projector.
 		once
-			Result := ~draw_bon_inheritance_figure
+			Result := agent draw_bon_inheritance_figure
 		end
 
 	draw_bon_inheritance_figure (ihf: BON_INHERITANCE_FIGURE) is
@@ -73,7 +73,7 @@ feature {EB_CONTEXT_EDITOR} -- Drawing
 	draw_bon_class_figure_agent: PROCEDURE [ANY, TUPLE [EV_FIGURE]] is
 			-- Routine to add to projector.
 		once
-			Result := ~draw_bon_class_figure
+			Result := agent draw_bon_class_figure
 		end
 
 	draw_bon_class_figure (cf: BON_CLASS_FIGURE) is
@@ -84,7 +84,7 @@ feature {EB_CONTEXT_EDITOR} -- Drawing
 	draw_bon_cluster_figure_agent: PROCEDURE [ANY, TUPLE [EV_FIGURE]] is
 			-- Routine to add to projector.
 		once
-			Result := ~draw_bon_cluster_figure
+			Result := agent draw_bon_cluster_figure
 		end
 
 	draw_bon_cluster_figure (cf: BON_CLUSTER_FIGURE) is

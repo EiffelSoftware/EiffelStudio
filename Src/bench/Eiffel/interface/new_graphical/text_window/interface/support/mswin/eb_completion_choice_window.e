@@ -89,14 +89,14 @@ feature {NONE}-- Initialization
 				vbox.disable_item_expand (to_be_inserted)
 				vbox.extend (choice_list)
 				extend (vbox)
-				to_be_inserted.key_press_actions.extend (~on_key_pressed)
-				to_be_inserted.change_actions.extend (~on_text_edited)
+				to_be_inserted.key_press_actions.extend (agent on_key_pressed)
+				to_be_inserted.change_actions.extend (agent on_text_edited)
 				enable_user_resize
-				focus_in_actions.extend (~on_focus)
-				focus_out_actions.extend (~on_lose_focus)
-				to_be_inserted.focus_out_actions.extend (~on_lose_focus)
-				choice_list.focus_out_actions.extend (~on_lose_focus)
-				choice_list.pointer_button_release_actions.extend (~mouse_selection)
+				focus_in_actions.extend (agent on_focus)
+				focus_out_actions.extend (agent on_lose_focus)
+				to_be_inserted.focus_out_actions.extend (agent on_lose_focus)
+				choice_list.focus_out_actions.extend (agent on_lose_focus)
+				choice_list.pointer_button_release_actions.extend (agent mouse_selection)
 			end
 			if not choice_list.is_empty then
 				choice_list.first.enable_select

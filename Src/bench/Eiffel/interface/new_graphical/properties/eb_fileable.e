@@ -212,7 +212,7 @@ feature {NONE} -- Execution
 				create f.make (file_name)
 				if f.exists and then f.date > last_saving_date then
 					create qd.make_with_text ("File has been changed by another tool/editor%NDo you want to load the changes?")
-					qd.button ("Yes").select_actions.extend (~revert)
+					qd.button ("Yes").select_actions.extend (agent revert)
 					qd.button ("Cancel").hide
 					set_last_saving_date (f.date)
 				end

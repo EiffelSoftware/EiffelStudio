@@ -93,9 +93,9 @@ feature {NONE} -- Initialization
 			extend (inheritance_mover_layer)
 			create label_mover_layer
 			extend (label_mover_layer)
-			drop_actions.extend (~on_class_drop)
-			drop_actions.extend (~on_new_class_drop)
-			drop_actions.extend (~on_cluster_drop)
+			drop_actions.extend (agent on_class_drop)
+			drop_actions.extend (agent on_new_class_drop)
+			drop_actions.extend (agent on_cluster_drop)
 			Xml_routines.reset_valid_tags
 		end
 
@@ -1549,8 +1549,8 @@ feature {NONE} -- Implementation
 					check clf_not_void: clf /= Void end
 					context_editor.history.do_named_undoable (
 						Interface_names.t_Diagram_include_class_cmd,
-						~include_dropped_class_in_cluster (cf, a_x, a_y, new_clf, True),
-						~remove_dropped_class_in_cluster (cf, new_clf))
+						agent include_dropped_class_in_cluster (cf, a_x, a_y, new_clf, True),
+						agent remove_dropped_class_in_cluster (cf, new_clf))
 					context_editor.update_bounds (Current)
 				end
 			end
@@ -1691,8 +1691,8 @@ feature {NONE} -- Events
 				include_dropped_class_in_cluster (cf, drop_x, drop_y, new_clf, True)
 				context_editor.history.register_named_undoable (
 					Interface_names.t_Diagram_include_class_cmd,
-					~include_dropped_class_in_cluster (cf, drop_x, drop_y, new_clf, False),
-					~remove_dropped_class_in_cluster (cf, new_clf))
+					agent include_dropped_class_in_cluster (cf, drop_x, drop_y, new_clf, False),
+					agent remove_dropped_class_in_cluster (cf, new_clf))
 				context_editor.update_bounds (Current)
 			end
 		end

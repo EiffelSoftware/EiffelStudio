@@ -89,7 +89,7 @@
 			</code>), as well as other assertion constructs studied later (see 
 			<link>
 				<url>tutorial-11.xml</url><anchor_name>38021</anchor_name>
-				<label>"Instructions", page 84</label>
+				<label>Chapter 10, "Other Mechanisms"</label>
 			</link>): loop invariants and variants, check instructions.
 		</paragraph>
 		<paragraph>Here is a partial update of class 
@@ -268,10 +268,10 @@
 		<note>In such a case, a 
 			<code>
 				<keyword>check</keyword>
-			</code> instruction as introduced later (
+			</code> instruction as introduced later (see 
 			<link>
 				<url>tutorial-11.xml</url><anchor_name>38021</anchor_name>
-				<label>"Instructions", page 84</label>
+				<label>Chapter 10, "Other Mechanisms"</label>
 			</link>) is recommended if the reason for omitting the test is non-trivial.
 		</note>
 		<heading>
@@ -343,18 +343,18 @@
 				</code>, plus 
 				<code>
 					<keyword>check</keyword>
-				</code> instructions, loop invariants and loop variants (
+				</code> instructions, loop invariants and loop variants (see 
 				<link>
 					<url>tutorial-11.xml</url><anchor_name>38021</anchor_name>
-					<label>"Exception handling", page 46</label>
+					<label>Chapter 10, "Other Mechanisms"</label>
 				</link>).
 			</item>
 		</list>
 		</paragraph>
-		<paragraph>An assertion violation, if detected at run time under one of these options other than the first, will cause an exception (
+		<paragraph>An assertion violation, if detected at run time under one of these options other than the first, will cause an exception (see 
 			<link>
 				<url>tutorial-09.xml</url><anchor_name>10722</anchor_name>
-				<label>"Instructions", page 84</label>
+				<label>Chapter 10, "Other Mechanisms"</label>
 			</link>). Unless the software has an explicit "retry" plan as explained in the discussion of exceptions, the violation will cause produce an exception trace and cause termination (or, in EiffelStudio, a return to the environment's browsing and debugging facilities at the point of failure). If present, the label of the violated sub clause will be displayed, to help identify the problem.
 		</paragraph>
 		<paragraph>The default is 
@@ -362,10 +362,10 @@
 				<keyword>require</keyword>
 			</code>. This is particularly interesting in connection with the Eiffel method's insistence on reuse: with libraries such as EiffelBase, richly equipped with preconditions expressing terms of use, an error in the <bold>client software</bold> will often lead, for example through an incorrect argument, to violating one of these preconditions. A somewhat paradoxical consequence is that even an application developer who does not apply the method too well (out of carelessness, haste, indifference or ignorance) will still benefit from the presence of contracts in someone else's library code.
 		</paragraph>
-		<paragraph>During development and testing, assertion monitoring should be turned on at the highest possible level. Combined with static typing and the immediate feedback of compilation techniques such as the Melting Ice Technology, this permits the development process mentioned in the section 
+		<paragraph>During development and testing, assertion monitoring should be turned on at the highest possible level. Combined with static typing and the immediate feedback of compilation techniques such as the Melting Ice Technology, this permits the development process mentioned in 
 			<link>
 				<url>tutorial-04.xml</url><anchor_name>94733</anchor_name>
-				<label>"Quality and functionality", page 10</label>
+				<label>Chapter 3, "The Software Process in Eiffel"</label>
 			</link>, where errors are exterminated at birth. No one who has not practiced the method in a real project can imagine how many mistakes are found in this way; surprisingly often, a violation will turn out to affect an assertion that was just included for goodness' sake, the developer being convinced that it could never "possibly" fail to be satisfied.
 		</paragraph>
 		<paragraph>By providing a precise reference (the description of what the software is supposed to do) against which to assess the reality (what the software actually does), Design by Contract&amp;#153; profoundly transforms the activities of debugging, testing and quality assurance. </paragraph>
@@ -450,20 +450,20 @@
 			</code> variants seen in 
 			<link>
 				<url>tutorial-06.xml</url><anchor_name>91180</anchor_name>
-				<label>"External software", page 16</label>
+				<label>Chapter 5, "The Static Picture: System Organization"</label>
 			</link> above and 
 			<link>
 				<url>tutorial-11.xml</url><anchor_name>71816</anchor_name>
-				<label>"Once routines and shared objects", page 82</label>
+				<label>Chapter 10, "Other Mechanisms"</label>
 			</link> below); assertion subclauses involving non-exported features; and some keywords not useful in the documentation, such as 
 			<code>
 				<keyword>is</keyword>
 			</code> for a routine.
 		</paragraph>
-		<paragraph>In accordance with the Uniform Access principle (page 
+		<paragraph>In accordance with the Uniform Access principle (see 
 			<link>
 				<url>tutorial-07.xml</url><anchor_name>UNIFORM ACCESS</anchor_name>
-				<label>19</label>
+				<label>Chapter 6, "The Dynamic Structure: Execution Model"</label>
 			</link>), the Contract Form does not distinguish between attributes and argument-less queries. In the above example, 
 			<code>
 				<feature_name>balance</feature_name>
@@ -484,10 +484,10 @@
 		</list>
 		</paragraph>
 		<paragraph>The Contract Form is only one of the relevant views. EiffelStudio, for example, generates graphical representations of system structures, to show classes and their relations -- client, inheritance -- according to the conventions of BON (the Business Object Notation). In accordance with the principles of seamlessness and reversibility, EiffelStudio lets you both work on the text, producing the graphics on the fly, or work on the graphics, updating the text on the fly; you can alternate as you wish between these two modes. The resulting process is quite different from more traditional approaches based on separate tools: an analysis and CASE workbench, often based on UML, to deal with an initial "bubble-and-arrow" description; and a separate programming environment, to deal with implementation aspects only. In Eiffel the environment provides consistent, seamless support from beginning to end. </paragraph>
-		<paragraph>The Contract Form -- or its variant the Flat-Contract Form, which takes account of inheritance (
+		<paragraph>The Contract Form -- or its variant the Flat-Contract Form, which takes account of inheritance (see 
 			<link>
 				<url>tutorial-10.xml</url><anchor_name>11134</anchor_name>
-				<label>"Flat and Flat-Contract Forms", page 72</label>
+				<label>Chapter 9, "Inheritance"</label>
 			</link>) are the standard form of library documentation, used extensively, for example, in the book 
 			<span>
 				<link>
@@ -698,10 +698,10 @@
 		</code>, which provides queries such as 
 		<code>
 			<feature_name>exception</feature_name>
-		</code>, giving the code for the last exception, and symbolic names (
+		</code>, giving the code for the last exception, and symbolic names (see 
 		<link>
 			<url>tutorial-11.xml</url><anchor_name>94304</anchor_name>
-			<label>"Constant and unique attributes", page 83</label>
+			<label>Chapter 10, "Other Mechanisms"</label>
 		</link>) for all such codes, such as 
 		<code>
 			<feature_name>No_more_memory</feature_name>
@@ -727,16 +727,16 @@
 		<paragraph>The Design by Contract&amp;#153; ideas pervade the Eiffel method. In addition to the applications just mentioned, they have two particularly important consequences:
 		<line_break/>
 		<list ordered="false">
-			<item> They make it possible to use Eiffel for analysis and design. At a high level of abstraction, it is necessary to be precise too. With the exception of BON, object-oriented analysis and design methods tend to favor abstraction over precision. Thanks to assertions, it is possible to express precise properties of a system ("At what speed should the alarm start sounding?") without making any commitment to implementation. The discussion of deferred classes (
+			<item> They make it possible to use Eiffel for analysis and design. At a high level of abstraction, it is necessary to be precise too. With the exception of BON, object-oriented analysis and design methods tend to favor abstraction over precision. Thanks to assertions, it is possible to express precise properties of a system ("At what speed should the alarm start sounding?") without making any commitment to implementation. The discussion of deferred classes (see 
 				<link>
 					<url>tutorial-10.xml</url><anchor_name>48949</anchor_name>
-					<label>"Applications of deferred classes", page 60</label>
+					<label>Chapter 9, "Inheritance"</label>
 				</link>) will show how to write a purely descriptive, non-software model in Eiffel, using contracts to describe the essential properties of a system without any computer or software aspect.
 			</item>
 			<item> Assertions also serve to control the power of inheritance-related mechanisms -- redeclaration, polymorphism, dynamic binding -- and channel them to correct uses by assigning the proper semantic limits. See 
 				<link>
 					<url>tutorial-10.xml</url><anchor_name>83610</anchor_name>
-					<label>"Inheritance and contracts", page 66</label>
+					<label>Chapter 9, "Inheritance"</label>
 				</link>.
 			</item>
 		</list>

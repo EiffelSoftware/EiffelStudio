@@ -538,6 +538,7 @@ feature {NONE} -- Implementation
 			attribute_editor_box.disable_item_expand (name_field)
 			
 			create separator
+			separator.set_minimum_height (Object_editor_padding_width * 2)
 			attribute_editor_box.extend (separator)
 			attribute_editor_box.disable_item_expand (separator)
 			

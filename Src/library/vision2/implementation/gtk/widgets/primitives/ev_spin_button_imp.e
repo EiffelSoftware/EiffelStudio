@@ -20,7 +20,8 @@ inherit
 			set_default_colors
 		redefine
 			interface,
-			initialize
+			initialize,
+			make
 		end
 
 	EV_TEXT_FIELD_IMP
@@ -38,8 +39,7 @@ feature {NONE} -- Implementation
 	make (an_interface: like interface) is
 			-- Create the spin button.
 		do
-			base_make (an_interface)
-			adjustment := C.gtk_adjustment_new (1, 1, 100, 1, 10, 10)
+			{EV_GAUGE_IMP} Precursor (an_interface)
 			set_c_object (C.gtk_spin_button_new (adjustment, 0, 0))
 
 			-- Set the entry widget from EV_TEXT_FIELD
@@ -79,6 +79,9 @@ end -- class EV_SPIN_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/02/16 04:01:53  brendel
+--| Redefines make from EV_GAUGE_IMP.
+--|
 --| Revision 1.7  2000/02/15 16:34:31  brendel
 --| Fixed bug in initialization found after adding `is_in_default_state' in
 --| interface classes.

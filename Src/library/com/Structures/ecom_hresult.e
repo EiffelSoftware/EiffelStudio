@@ -57,7 +57,7 @@ feature -- Access
 			error_messages: WEL_WINDOWS_ERROR_MESSAGES
 		do
 			Result := ccom_format_message (formatter, item)
-			Result.tail (Result.count - 10)
+			Result.keep_tail (Result.count - 10)
 			Result.left_adjust
 			Result.right_adjust
 			

@@ -33,6 +33,7 @@ inherit
 			make,
 			on_key_down,
 			on_mouse_move,
+			set_default_minimum_size,
 			initialize,
 			interface
 		end
@@ -300,6 +301,21 @@ feature {EV_LIST_ITEM_I} -- Implementation
 				litem.to_integer)
 		end
 
+	set_default_minimum_size is
+			-- Called after creation. Set the current size and
+			-- notify the parent.
+		local
+			gui_font: WEL_DEFAULT_GUI_FONT
+			log_font: WEL_LOG_FONT
+		do
+			create gui_font.make
+			log_font := wel_font.log_font
+			internal_set_minimum_size (
+				log_font.width.abs * 15 + 7, -- 15 characters wide
+				log_font.height.abs	* 3 + 7	 -- 3 characters tall
+				)
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	find_item_at_position (x_pos, y_pos: INTEGER): EV_LIST_ITEM_IMP is
@@ -537,6 +553,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.78  2000/04/27 23:03:28  pichery
+--| Added set_default_minimum_size
+--|
 --| Revision 1.77  2000/04/27 17:51:18  pichery
 --| Cosmetics
 --|

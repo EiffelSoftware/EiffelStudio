@@ -125,7 +125,9 @@ feature -- Values
 	current_stack_element: CALL_STACK_ELEMENT is
 			-- Current call stack element being displayed
 		do
-			if Application.current_execution_stack_number > 0 then
+			if
+				where.valid_index (Application.current_execution_stack_number)
+			then
 				Result := where.i_th (Application.current_execution_stack_number)				
 			end
 		end

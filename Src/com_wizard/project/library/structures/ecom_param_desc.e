@@ -13,7 +13,7 @@ inherit
 	ECOM_PARAM_FLAGS
 
 creation
-	make, make_by_pointer
+	make, make_from_pointer
 
 feature -- Access
 
@@ -22,7 +22,7 @@ feature -- Access
 		require
 			has_fopt_and_fhasdefault (flags)
 		do
-			!! Result.make_by_pointer (ccom_paramdesc_default (item))
+			!! Result.make_from_pointer (ccom_paramdesc_default (item))
 		end
 
 	flags: INTEGER is
@@ -39,6 +39,14 @@ feature -- Measurement
 			-- Size of PARAMDESC structure
 		do
 			Result := c_size_of_param_desc
+		end
+
+feature {NONE} -- Initialization
+
+	make_from_pointer (a_pointer: POINTER) is
+			-- Make from pointer.
+		do
+			make_by_pointer (a_pointer)
 		end
 
 feature {NONE} -- Externals

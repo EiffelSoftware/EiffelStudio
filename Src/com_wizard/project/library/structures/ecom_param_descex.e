@@ -11,7 +11,7 @@ inherit
 	ECOM_STRUCTURE
 
 creation
-	make, make_by_pointer
+	make, make_from_pointer
 
 feature -- Access
 
@@ -34,6 +34,14 @@ feature -- Measurement
 			-- Size of PARAMDESCEX structure
 		do
 			Result := c_size_of_param_descex
+		end
+
+feature {NONE} -- Initialization
+
+	make_from_pointer (a_pointer: POINTER) is
+			-- Make from pointer.
+		do
+			make_by_pointer (a_pointer)
 		end
 
 feature {NONE} -- Externals

@@ -21,14 +21,14 @@ inherit
 		end
 
 creation
-	make, make_by_pointer
+	make, make_from_pointer
 
 feature -- Access
 
 	guid: ECOM_GUID is
 			-- GUID of type information
 		do
-			!! Result.make_by_pointer (ccom_typeattr_guid (item))
+			!! Result.make_from_pointer (ccom_typeattr_guid (item))
 		end
 
 	lcid: INTEGER is
@@ -124,13 +124,13 @@ feature -- Access
 		require
 			type_kind = Tkind_alias
 		do
-			!! Result.make_by_pointer (ccom_typeattr_alias_typedesc (item))
+			!! Result.make_from_pointer (ccom_typeattr_alias_typedesc (item))
 		end
 
 	idl_desc: ECOM_IDL_DESC is
 			-- IDL attribute
 		do
-			!! Result.make_by_pointer (ccom_typeattr_idl_attributes (item))
+			!! Result.make_from_pointer (ccom_typeattr_idl_attributes (item))
 		end
 
 feature -- Measurement
@@ -139,6 +139,14 @@ feature -- Measurement
 			-- Size of TYPEDESC structure
 		do
 			Result := c_size_of_type_attr 
+		end
+
+feature {NONE} -- Initialization
+
+	make_from_pointer (a_pointer: POINTER) is
+			-- Make from pointer.
+		do
+			make_by_pointer (a_pointer)
 		end
 
 feature {NONE} -- Implementation

@@ -19,7 +19,7 @@ inherit
 
 creation
 	make,
-	make_by_pointer
+	make_from_pointer
 
 feature -- Access
 
@@ -50,7 +50,7 @@ feature -- Access
 	elem_desc: ECOM_ELEM_DESC is
 			-- Corresponding ELEMDESC structure
 		do
-			!! Result.make_by_pointer (ccom_vardesc_elemdesc (item))
+			!! Result.make_from_pointer (ccom_vardesc_elemdesc (item))
 		end
 
 	var_flags: INTEGER is
@@ -94,6 +94,14 @@ feature -- Measurement
 			-- Size of VARDESC structure
 		do
 			Result := c_size_of_var_desc
+		end
+
+feature {NONE} -- Initialization
+
+	make_from_pointer (a_pointer: POINTER) is
+			-- Make from pointer.
+		do
+			make_by_pointer (a_pointer)
 		end
 
 feature {NONE} -- Implementation

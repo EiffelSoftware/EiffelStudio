@@ -12,14 +12,14 @@ inherit
 
 creation
 	make,
-	make_by_pointer
+	make_from_pointer
 
 feature -- Access
 
 	guid: ECOM_GUID is
 			-- GUID
 		do
-			!! Result.make_by_pointer (ccom_custdataitem_guid (item))
+			!! Result.make_from_pointer (ccom_custdataitem_guid (item))
 		ensure
 			Result /= Void
 		end
@@ -41,6 +41,12 @@ feature -- Measurement
 		end
 
 feature {NONE} -- Externals
+
+	make_from_pointer (a_pointer: POINTER) is
+			-- Make from pointer.
+		do
+			make_by_pointer (a_pointer)
+		end
 
 	c_size_of_cust_data_item: INTEGER is
 		external 

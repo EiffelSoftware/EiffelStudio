@@ -14,7 +14,7 @@ inherit
 
 creation
 	make,
-	make_by_pointer
+	make_from_pointer
 
 
 feature -- Access
@@ -22,7 +22,7 @@ feature -- Access
 	type_desc: ECOM_TYPE_DESC is
 			-- Array elements type
 		do
-			!! Result.make_by_pointer (ccom_arraydesc_typedesc (item))
+			!! Result.make_from_pointer (ccom_arraydesc_typedesc (item))
 		end
 
 	count_dimension: INTEGER is
@@ -43,6 +43,14 @@ feature -- Measurement
 			-- Size of TYPEDESC structure
 		do
 			Result := c_size_of_array_desc
+		end
+
+feature {NONE} -- Initialization
+
+	make_from_pointer (a_pointer: POINTER) is
+			-- Make from pointer.
+		do
+			make_by_pointer (a_pointer)
 		end
 
 feature {NONE} -- externals

@@ -21,6 +21,11 @@
 
 #ifdef EIF_WIN32
 #define ACTIVE_TM	1		/* Active checks performed every 1 seconds */
+#elif defined EIF_VMS
+#define ACTIVE_TM	5		/* Active checks performed every 5 seconds */
+#include <lib$routines.h>
+#include <jpidef.h>
+#include <ssdef.h>
 #else
 #define ACTIVE_TM	10		/* Active checks performed every 10 seconds */
 #endif
@@ -32,6 +37,9 @@ rt_private int active_check(STREAM *sp, HANDLE pid);	/* Monitor connection to de
 rt_private int active_check(STREAM *sp, int pid);	/* Monitor connection to detect child death */
 #endif
 #endif
+
+extern void dexit (int);
+
 
 rt_public void dwide_listen(void)
 {
@@ -206,7 +214,29 @@ rt_private int active_check(STREAM *sp, int pid)
 #ifdef EIF_WIN32
 	if (WaitForSingleObject (pid, 0) == WAIT_OBJECT_0)
   		return 1;
-#else
+#elif defined EIF_VMS
+	/* VMS does has PIDCHECK, but only on V7.0 or later, and	*/
+	/* only when the _POSIX_EXIT feature test macro is set.		*/
+	{
+	    VMS_STS st; int schstate;
+	    /* just check to see if process is still alive. Use a datum kept in PCB */
+	    /* (in nonpaged pool) for minimum overhead */
+	    st = lib$getjpi(&JPI$_STATE, &pid, 0, &schstate, 0,0);
+	    if (st == SS$_SUSPENDED) st = 1;
+	    if ((st&1) != 1) {
+#ifdef USE_ADD_LOG
+		if (st != SS$_NONEXPR) {
+		    vaxc$errno = st;
+		    add_log(2,"Trouble getting info for process (%d): %d (%s)",
+			pid, st, strerror(EVMSERR, st));
+		}
+#endif /* USE_ADD_LOG */
+		    (void) rem_input(readfd(sp));	/* Remove its input */
+		    return 1;
+	    }
+	}
+
+#else /* not EIF_VMS */
 #ifdef PIDCHECK
 	if (-1 == kill(pid, 0)) {			/* If kill fails, the pid is gone */
 		(void) rem_input(readfd(sp));	/* Remove its input */

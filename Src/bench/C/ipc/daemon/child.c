@@ -11,7 +11,11 @@
 */
 
 #include "eif_config.h"
+#ifdef __VMS	/* must come before eif_portable here */
+#include "ipcvms.h"
+#endif
 #include "eif_portable.h"
+
 #include "eif_err_msg.h"
 
 #include <sys/types.h>
@@ -46,6 +50,7 @@
 #define PIPE_WRITE	1		/* File descriptor used for writing */
 
 extern unsigned TIMEOUT;	/* Time to let the child initialize */
+extern void dexit (int);
 
 /* To fight SIGPIPE signals */
 rt_private jmp_buf env;		/* Environment saving for longjmp() */
@@ -278,9 +283,35 @@ rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
 
 #else	/* #ifdef EIF_WIN32 */
 
-		/* The fork and exec stuff: a classic */
+#ifdef EIF_VMS
+    /* VMS has no fork(). It does have vfork, which sets up the context	*/
+    /* for a subsequent exec call. vfork and exec work together like	*/
+    /* setjmp and longjmp. When control returns from vfork the first	*/
+    /* time, the return value (child process id) is zero, and the	*/
+    /* context is set up for a subsequent vfork, but the child process	*/
+    /* has not yet been created. After a successful exec call, the	*/
+    /* child process is created and control returns (in the parent) to	*/
+    /* the statement following the vfork call, with the return value	*/
+    /* now set to the child's process id. Therefore, all the setup that	*/
+    /* is performed in the default case in the switch statement below	*/
+    /* (which is supposed to happen after the child process is created)	*/
+    /* must be deferred until after the exec call.			*/
+    /*									*/
+    /* In the child process, control never returns here, because a new	*/
+    /* image is started by the exec call. For VMS, the code in the	*/
+    /* child process case of the switch below that closes pipes must be	*/
+    /* executed in the IDENTIFY routine.				*/
+
+	pid = vfork();
+	/* control returns here after a successful exec[v] call */
+
+#else	/* (not) EIF_VMS */
+
+	    /* The fork and exec stuff: a classic */
 
 	pid = (Pid_t) fork();		/* That's where we fork */
+
+#endif /* EIF_VMS */
 
 	switch (pid) {
 	case -1:		/* Error */
@@ -290,12 +321,18 @@ rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
 #endif
 		perror("fork");
 		dexit(1);
+
 	case 0:			/* Child process */
 #ifdef USE_ADD_LOG
 		close_log();					/* Logfile should not cross exec() */
 #endif
+
+#ifndef EIF_VMS	/* can't do this on VMS, child not created yet (not till exec) */
 		close(pdn[PIPE_WRITE]);
 		close(pup[PIPE_READ]);
+		close(pdn[PIPE_WRITE]);
+		close(pup[PIPE_READ]);
+#endif
 		/* Start duping first allocated pipe, otherwise good luck!--RAM.
 		 * Be careful about the case where the pipe you want to dup on is
 		 * already used by the other pipe.
@@ -335,21 +372,32 @@ rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
 #endif
 				dexit (1);
 			}
+
+#ifdef EIF_VMS
+			if ((appname = rindex (meltpath, ']'))) 
+				*(++appname) = 0;
+			else strcpy (meltpath, "[]");
+#else	    /* this calls rindex twice, why? */
 			appname = rindex (meltpath, '/');
 			if (appname = rindex (meltpath, '/')) *appname = 0;
 			else strcpy (meltpath, ".");
+#endif /* EIF_VMS */
+
 			envstring = (char *)malloc (strlen (meltpath)
 				+ strlen ("MELT_PATH=") + 1);
 			if (!envstring){
 #ifdef USE_ADD_LOG
-                add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
+			    add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
 #endif
-                dexit (1);
-            }
+			    dexit (1);
+			}
 			sprintf (envstring, "MELT_PATH=%s", meltpath);
 			putenv (envstring);
-
+#ifdef EIF_VMS
+			execv(argv[0], argv);
+#else
 			execvp(argv[0], argv);
+#endif
 			print_err_msg(stderr,"ERROR could not launch '%s'", argv[0]);
 #ifdef USE_ADD_LOG
 			reopen_log();
@@ -363,7 +411,9 @@ rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
 #endif
 		dexit(1);
 	default:		/* Parent process */
+#ifndef EIF_VMS
 		sleep(1);	/* Let child initialize or print error */
+#endif
 		close(pdn[PIPE_READ]);
 		close(pup[PIPE_WRITE]);
 		/* Reset those file descriptors to the lowest possible number, just to

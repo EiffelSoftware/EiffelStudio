@@ -30,6 +30,7 @@
 #include "select.h"
 #include "com.h"
 #include "stream.h"
+#include "transfer.h"		/* for swallow() */
 #include "eif_logfile.h"
 #include "idrf.h"
 #include "rqst_idrs.h"
@@ -37,6 +38,10 @@
 #include <string.h>
 #include <signal.h>
 #include <stdlib.h>
+
+#ifdef EIF_VMS
+#include "ipcvms.h"
+#endif
 
 #ifdef EIF_WIN32
 #define OTHER(x) ((x) == daemon_data.d_cs ? daemon_data.d_as : daemon_data.d_cs)
@@ -178,6 +183,14 @@ rt_private void dprocess_request(int s, Request *rqst)
 #endif
 		interrupted = FALSE;
 		break;
+
+#ifdef EIF_VMS	/* this is probably no longer necessary */
+	case STOPPED:	/* application is stopped at a brkpoint */
+		send_packet(writefd(OTHER(s)), rqst);
+		IPCVMS_WAKE_EWB(writefd(OTHER(s)));
+		break;
+#endif
+
 	case RESUME:			/* Debugger asking to resume application */
 		interrupted = FALSE;
 		/* Fall through */	/* i.e. send the request to application */
@@ -440,9 +453,16 @@ rt_private void run_command(int s)
 #endif
   	   dexit (1);
      }
+
+#ifdef __VMS
+     appname = rindex (meltpath, ']');
+     if (appname = rindex (meltpath, ']')) *appname = 0;
+     else strcpy (meltpath, "[]");
+#else
      appname = rindex (meltpath, '/');
      if (appname = rindex (meltpath, '/')) *appname = 0;
      else strcpy (meltpath, ".");
+#endif
      envstring = (char *)malloc (strlen (meltpath)
    		 + strlen ("MELT_PATH=") + 1);
      if (!envstring){
@@ -453,7 +473,7 @@ rt_private void run_command(int s)
 	 }
      sprintf (envstring, "MELT_PATH=%s", meltpath);
      putenv (envstring);
-#ifdef BSD
+#if defined BSD || defined EIF_VMS
 	signal (SIGCHLD, SIG_DFL);
 #elif defined (SIGCLD)
 	signal (SIGCLD, SIG_DFL);
@@ -486,7 +506,7 @@ rt_private void run_command(int s)
 	status = system(cmd);				/* Run command via /bin/sh */
 #endif
 
-#ifdef BSD
+#if defined BSD || defined EIF_VMS
     signal (SIGCHLD, SIG_IGN);
 #elif defined (SIGCLD)
     signal (SIGCLD, SIG_IGN);
@@ -563,7 +583,8 @@ rt_private void run_asynchronous(int s, Request *rqst)
 	}
 	chdir(current_dir);
 	free(current_dir);
-#else
+
+#elif !defined EIF_VMS	/* VMS needs a higher level abstraction for async system() */
 	switch (fork()) {
 	case -1:				/* Cannot fork */
 #ifdef USE_ADD_LOG
@@ -587,6 +608,7 @@ rt_private void run_asynchronous(int s, Request *rqst)
 	default:
 		return;				/* Parent returns immediately */
 	}
+#endif /* not VMS (skip fork/parent code if VMS) */
 
 /* child */
     meltpath = (char *) (strdup (cmd));
@@ -596,9 +618,15 @@ rt_private void run_asynchronous(int s, Request *rqst)
 #endif
            dexit (1);
      }
+
+#ifdef EIF_VMS
+     if (appname = rindex (meltpath, ']')) *appname = 0;
+     else strcpy (meltpath, "[]");
+#else
      appname = rindex (meltpath, '/');
      if (appname = rindex (meltpath, '/')) *appname = 0;
      else strcpy (meltpath, ".");
+#endif
      envstring = (char *)malloc (strlen (meltpath)
                  + strlen ("MELT_PATH=") + 1);
      if (!envstring){
@@ -609,16 +637,32 @@ rt_private void run_asynchronous(int s, Request *rqst)
          }
      sprintf (envstring, "MELT_PATH=%s", meltpath);
      putenv (envstring);
-#ifdef BSD
+#if defined BSD || defined __VMS
         signal (SIGCHLD, SIG_DFL);
 #else
         signal (SIGCLD, SIG_DFL);
 #endif
+
+#ifndef EIF_VMS
 	status = system(cmd);				/* Run command via /bin/sh */
+#else	/* VMS */
+	status = ipcvms_spawn(cmd, 1);
+#endif	/* EIF_VMS */
+
 	if (status == 0)
 		dans.rq_opaque.op_second = AK_OK;	/* Command completed sucessfully */
 	else
 		dans.rq_opaque.op_second = AK_ERROR;	/* Comamnd failed */
+
+#ifdef EIF_VMS
+	if (status) {  /* command failed */
+	    char *pgmname = ipcvms_get_progname(NULL);
+	    fprintf (stderr, "%s: %s: \n-- error from system() call: %d\n"
+	    "-- failed cmd: \"%s\" -- %s\n", 
+	    pgmname, __FILE__, errno, cmd, strerror(errno));
+	}
+	return;	    /* skip send ack packet, Fred says not done anymore */
+#else /* not VMS */
 
 /*
  * Asynchronous commands do not send command status back anymore
@@ -630,8 +674,8 @@ rt_private void run_asynchronous(int s, Request *rqst)
 	add_log(12, "child exiting");
 #endif
 	exit(0);							/* Child is exiting properly */
+#endif /* EIF_VMS */
 	/* NOTREACHED */
-#endif
 }
 
 #ifdef EIF_WIN32
@@ -749,7 +793,7 @@ rt_public void dead_app(void)
 	 * of `waitpid' to be suspended if the child process is still
 	 * running (just in case!)).
 	 */
-#ifndef EIF_WIN32
+#if !defined EIF_WIN32 && !defined EIF_VMS
 	child_pid = waitpid((Pid_t) daemon_data.d_app, &status, WNOHANG);
 #endif
 

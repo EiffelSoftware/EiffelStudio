@@ -31,7 +31,7 @@ inherit
 		end
 	
 creation
-	make, make_from_id
+	make, make_from_names, make_from_id
 	
 feature
 

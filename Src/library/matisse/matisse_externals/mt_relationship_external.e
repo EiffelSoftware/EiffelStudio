@@ -12,6 +12,12 @@ feature {NONE} -- Implementation MT_RELATIONSHIP
 			"C"
 		end -- c_get_relationship_from_name
 
+	c_get_relationship_from_names (name, class_name: POINTER): INTEGER is
+			-- Use GetClassRelationship.
+		external
+			"C"
+		end -- c_get_relationship_from_name
+
 	c_check_relationship (rid, oid: INTEGER)  is
 			-- Use Mt_CheckRelationship.
 		external

@@ -174,7 +174,7 @@ EIF_INTEGER c_get_byte_list_elements(EIF_INTEGER oid, EIF_INTEGER aid, MtU8 * bu
 {
 	MtSize num_elts = count;
 	
-	Result = Mt_GetListElts(oid, aid, MT_U8_LIST, buffer, &num_elts, offset);
+	Result = Mt_GetListElements(oid, aid, MT_U8_LIST, buffer, &num_elts, offset);
 	CHECK_STS(Result);
 	return num_elts;
 }
@@ -693,6 +693,14 @@ EIF_INTEGER c_get_attribute(attribute_name)
 	return(aid);
 }
 
+EIF_INTEGER c_get_attribute_from_names(char *attribute_name, char *class_name)
+{
+	MtKey aid;
+	Result = MtGetClassAttribute(&aid,class_name,attribute_name);
+	CHECK_STS(Result);
+	return(aid);
+}
+
 /*
  * c_get_attribute_ignore_nosuchatt(char * attribute_name)
  *
@@ -769,7 +777,7 @@ void c_set_value_byte_list_elements(EIF_INTEGER oid, EIF_INTEGER aid,
 	if (offset == 0) 
 		CHECK_STS(Mt_SetValue(oid, aid, type, NULL, 0));
 	
-	Result = Mt_SetListElts(oid, aid, type, (MtU8 *) buffer, count, offset, a_bool);
+	Result = Mt_SetListElements(oid, aid, type, (MtU8 *) buffer, count, offset, a_bool);
 	CHECK_STS(Result);
 }
 
@@ -1648,6 +1656,15 @@ EIF_INTEGER c_get_relationship_from_name(char * name)
 	Result = MtGetRelationship(&key,name);
 	CHECK_STS(Result);
 	return(key);
+}
+
+EIF_INTEGER c_get_relationship_from_names(char * name, char * class_name)
+{
+		MtKey key;
+		
+		Result = MtGetClassRelationship(&key, class_name, name);
+		CHECK_STS(Result);
+		return(key);
 }
 
 /* Mt_CheckRelationship */

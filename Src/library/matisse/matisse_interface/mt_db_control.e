@@ -75,7 +75,6 @@ feature -- Basic operations
 		local
 			tmp: INTEGER
 		do
-
 			inspect session_state
 			when Mt_Noconnection then
 			when Mt_Inited then
@@ -91,6 +90,7 @@ feature -- Basic operations
 			when Mt_Transaction then
 			end -- inspect
 			session_database.disconnected
+			is_connected := False
 		ensure
 			no_connection: not is_connected
 		end
@@ -214,7 +214,7 @@ feature -- Status session
 			not_void: a_word /= Void
 			not_empty: not a_word.empty
 		do
-			database_name := clone (a_word)
+			password := clone (a_word)
 		end
 	
 	set_priority (a_priority: INTEGER) is

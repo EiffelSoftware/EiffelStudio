@@ -167,7 +167,7 @@ feature
 				i := i + 1
 			end
 			
-			!! has_default_att.make ("HASH_TABLE__has_default")
+			!! has_default_att.make_from_names ("has_default", "HASH_TABLE")
 			if has_default then
 				has_default_att.set_boolean_value (Current, True)
 				all_keys.put (default_key, count)
@@ -187,13 +187,13 @@ feature
 				has_default_att.set_boolean_value (Current, False)
 			end
 			
-			!! index_att.make ("HASH_TABLE__value_index")
+			!! index_att.make_from_names ("value_index", "HASH_TABLE")
 			index_att.set_integer_array_value (Current, indexes)
 			
-			!! key_att.make ("HASH_TABLE__att_keys")
+			!! key_att.make_from_names ("att_keys", "HASH_TABLE")
 			key_att.set_dynamic_value (Current, all_keys)
 			
-			!! value_rs.make ("HASH_TABLE__obj_values")
+			!! value_rs.make_from_names ("obj_values", "HASH_TABLE")
 			if values_count = 0 then
 				!! all_values.make (1, 0)
 				a_linear ?= all_values.linear_representation
@@ -211,7 +211,7 @@ feature {NONE}
 		local
 			att: MT_ATTRIBUTE
 		do
-			!! att.make ("HASH_TABLE__att_keys")
+			!! att.make_from_names ("att_keys", "HASH_TABLE")
 			Result ?= att.get_value (Current)
 		end
 	
@@ -219,7 +219,7 @@ feature {NONE}
 		local
 			rel: MT_MULTI_RELATIONSHIP
 		do
-			!! rel.make ("HASH_TABLE__obj_values")
+			!! rel.make_from_names ("obj_values", "HASH_TABLE")
 			Result ?= successors (rel)
 		end
 end -- class MT_RA_HASH_TABLE

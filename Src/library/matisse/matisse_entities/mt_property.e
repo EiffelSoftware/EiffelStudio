@@ -54,4 +54,13 @@ feature -- Schema
 			eif_field_index := i
 		end
 
+	class_oid: INTEGER
+		-- 'class_id' is oid of the class where the current property (attribute 
+		-- or relationship) is defined.
+		-- At the moment, this is used only by relationship. 98.11.21 K. Nakao
+	
+	set_class_oid (an_id: INTEGER) is
+		do
+			class_oid := an_id
+		end
 end -- class MT_PROPERTY

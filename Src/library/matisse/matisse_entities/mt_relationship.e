@@ -17,16 +17,18 @@ inherit
 		end
 
 	MT_RELATIONSHIP_EXTERNAL
-		undefine is_equal end
+		undefine 
+			is_equal 
+		end
 		
 creation
-
-	make, make_from_id
+	make, make_from_names, make_from_id
 
 feature {NONE} -- Initialization
 
 	make (relationship_name: STRING) is
-			-- Get relationship from database
+			-- Get relationship from database.
+			-- An error raised if `relationship_name' is not unique in the schema.
 		require
 			string_not_void: relationship_name /= Void
 			string_not_empty: not relationship_name.empty
@@ -37,6 +39,22 @@ feature {NONE} -- Initialization
 			oid := c_get_relationship_from_name ($relationship_name_to_c)
 		end
 
+	make_from_names (relationship_name, cl_name: STRING) is
+			-- Get relationship from database.
+		require
+			rel_not_void: relationship_name /= Void
+			rel_not_empty: not relationship_name.empty
+			cl_not_void: cl_name /= Void
+			cl_not_empty: not cl_name.empty
+		local
+			relationship_name_to_c: ANY
+			cl_name_to_c: ANY
+		do
+			relationship_name_to_c := relationship_name.to_c
+			cl_name_to_c := cl_name.to_c
+			oid := c_get_relationship_from_names ($relationship_name_to_c, $cl_name_to_c)
+		end
+				
 feature {MT_OBJECT_REL_STREAM, MT_OBJECT_IREL_STREAM, MT_CLASS} -- Initialization
 
 	make_from_id (rel_id: INTEGER) is
@@ -216,5 +234,6 @@ feature -- Storing
 				a_linear.forth
 			end
 		end
+
 
 end -- class MT_RELATIONSHIP

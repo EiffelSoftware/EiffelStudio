@@ -35,35 +35,34 @@ feature
 	execute is
 			-- Execution of the pass level 4.
 		local
-			pass_c: PASS4_C;
+			pass4_c: PASS4_C;
 			deg_output: DEGREE_OUTPUT
+			classes_left: INTEGER
 		do
 			if System.freeze then
-            	deg_output := Degree_output;
-            	deg_output.put_start_degree (Degree_number, changed_classes.count)
-				from
+	      		from
+      				deg_output := Degree_output
+					classes_left := changed_classes.count
+	      	      	deg_output.put_start_degree (Degree_number, classes_left)
+					changed_classes.start
 				until
-					changed_classes.empty
+					changed_classes.after
 				loop
-	debug ("COUNT")
-		io.error.putstring ("[");
-		io.error.putint (changed_classes.count);
-		io.error.putstring ("] ");
-	end;
-					pass_c := changed_classes.first;
-					System.set_current_class (pass_c.associated_class);
-					pass_c.update_dispatch_table (deg_output, changed_classes.count);
-					changed_classes.start;
-					changed_classes.search (pass_c);
-					if not changed_classes.after then
-						changed_classes.remove;
-					end;
-				end;
-				deg_output.put_end_degree;
-				System.set_current_class (Void);
+					pass4_c := changed_classes.item
+					System.set_current_class (pass4_c.associated_class)
+					pass4_c.update_dispatch_table (deg_output, classes_left)
+					classes_left := classes_left - 1
+
+					changed_classes.forth
+				end
+
+				deg_output.put_end_degree
+				System.set_current_class (Void)
 			else
 				old_execute
-			end;
+			end
+
+			changed_classes.wipe_out
 		end;
 	
 end

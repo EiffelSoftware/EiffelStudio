@@ -91,8 +91,8 @@ feature -- Properties
 	last_class: CLASS_I
 			-- Last class subject to a query
 
-	override_cluster_name: STRING
-			-- Tag of the (optional) override cluster.
+	override_cluster_names: SEARCH_TABLE [STRING]
+			-- List of all override clusters in system.
 
 feature -- Access
 
@@ -224,53 +224,34 @@ feature -- Access
 			l_ignore: LINKED_LIST [CLUSTER_I]
 		do
 			l_ignore := a_cluster.ignore
-			if
-				has_override_cluster and then
-				(l_ignore = Void or else not l_ignore.has (override_cluster))
-			then
-				real_name := class_name
-				rename_clause := a_cluster.rename_clause_for (override_cluster)
-				if rename_clause /= Void then
-						-- Evaluation of the real name of the class
-					renamings := rename_clause.renamings
-					if renamings.has (class_name) then
-						real_name := renamings.found_item
-					elseif renamings.has_item (class_name) then
-						real_name := Has_been_renamed
-					end
-				end
-				Result := override_cluster.classes.item (real_name)
-			end
-			if Result = Void then
-					-- First look for a renamed class in `a_cluster'
-				Result := a_cluster.renamed_class (class_name)
+				-- First look for a renamed class in `a_cluster'
+			Result := a_cluster.renamed_class (class_name)
 
-				if Result = Void then
-					from
-						old_cursor := clusters.cursor
-						clusters.start
-					until
-						clusters.after or else Result /= Void
-					loop
-						l_cluster := clusters.item
-						if l_ignore = Void or else not l_ignore.has (l_cluster) then
-							real_name := class_name
-							rename_clause := a_cluster.rename_clause_for (l_cluster)
-							if rename_clause /= Void then
-									-- Evaluation of the real name of the class
-								renamings := rename_clause.renamings
-								if renamings.has (class_name) then
-									real_name := renamings.found_item
-								elseif renamings.has_item (class_name) then
-									real_name := Has_been_renamed
-								end
+			if Result = Void then
+				from
+					old_cursor := clusters.cursor
+					clusters.start
+				until
+					clusters.after or else Result /= Void
+				loop
+					l_cluster := clusters.item
+					if l_ignore = Void or else not l_ignore.has (l_cluster) then
+						real_name := class_name
+						rename_clause := a_cluster.rename_clause_for (l_cluster)
+						if rename_clause /= Void then
+								-- Evaluation of the real name of the class
+							renamings := rename_clause.renamings
+							if renamings.has (class_name) then
+								real_name := renamings.found_item
+							elseif renamings.has_item (class_name) then
+								real_name := Has_been_renamed
 							end
-							Result := l_cluster.classes.item (real_name)
 						end
-						clusters.forth
+						Result := l_cluster.classes.item (real_name)
 					end
-					clusters.go_to (old_cursor)
+					clusters.forth
 				end
+				clusters.go_to (old_cursor)
 			end
 		end
 
@@ -355,10 +336,25 @@ feature -- Access
 	has_override_cluster: BOOLEAN is
 			-- Is there a cluster with the override flag on?
 		do
-			Result := override_cluster_name /= void
+			Result := override_cluster_names /= Void and then
+				not override_cluster_names.is_empty
+		ensure
+			override_cluster_names_status: Result implies override_cluster_names /= Void
 		end
 
-	override_cluster: CLUSTER_I is
+	has_override_cluster_of_name (a_name: STRING): BOOLEAN is
+			-- Is there a cluster of name `a_name' with the override flag on?
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
+		do
+			Result := override_cluster_names /= Void and then
+				override_cluster_names.has (a_name)
+		ensure
+			override_cluster_names_status: Result implies override_cluster_names /= Void
+		end
+
+	override_clusters: ARRAYED_LIST [CLUSTER_I] is
 			-- Override cluster in the universe.
 		require
 			has_override_cluster: has_override_cluster
@@ -368,9 +364,19 @@ feature -- Access
 				-- Saving position
 			c := clusters.cursor
 			
-			Result := cluster_of_name (override_cluster_name)
+			from
+				create Result.make (override_cluster_names.count)
+				override_cluster_names.start
+			until
+				override_cluster_names.after
+			loop
+				Result.extend (cluster_of_name (override_cluster_names.item_for_iteration))
+				override_cluster_names.forth
+			end
 
 			clusters.go_to (c)
+		ensure
+			override_cluster_not_void: Result /= Void and then not Result.is_empty
 		end
 
 feature -- Update
@@ -381,6 +387,14 @@ feature -- Update
 			assemblies_to_be_added := Void
 		ensure
 			assemblies_to_be_added_reset: assemblies_to_be_added = Void
+		end
+
+	reset_override_clusters is
+			-- Reset `override_cluster_names'.
+		do
+			override_cluster_names := Void
+		ensure
+			override_cluster_names_reset: override_cluster_names = Void
 		end
 		
 	add_new_assembly_in_ace (an_assembly: ASSEMBLY_I) is
@@ -436,10 +450,16 @@ feature {COMPILER_EXPORTER} -- Implementation
 			last_class := c
 		end
 
-	set_override_cluster_name (cluster_name: STRING) is
-			-- Set `override_cluster_name' to `cluster_name'.
+	add_override_cluster_name (cluster_name: STRING) is
+			-- Extend `override_cluster_names' with `cluster_name'.
+		require
+			cluster_name_not_void: cluster_name /= Void
+			cluster_name_not_empty: not cluster_name.is_empty
 		do
-			override_cluster_name := cluster_name
+			if override_cluster_names = Void then
+				create override_cluster_names.make (5)
+			end
+			override_cluster_names.force (cluster_name)
 		end
 
 	insert_cluster (c: CLUSTER_I) is
@@ -457,7 +477,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 		do
 			from
 				make
-				override_cluster_name := other.override_cluster_name
+				override_cluster_names := clone (other.override_cluster_names)
 				other.clusters.start
 			until
 				other.clusters.after
@@ -471,7 +491,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
-			Result := equal (override_cluster_name, other.override_cluster_name)
+			Result := equal (override_cluster_names, other.override_cluster_names)
 			from
 				clusters.start
 				other.clusters.start
@@ -752,7 +772,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			rename_clause: RENAME_I
 			renamings: HASH_TABLE [STRING, STRING]
 			vscn: VSCN
-			new_class, override_class, precompiled_class: CLASS_I
+			new_class: CLASS_I
 			error_list: LINKED_LIST [VSCN]
 			l_ignore: LINKED_LIST [CLUSTER_I]
 		do
@@ -792,27 +812,13 @@ feature {COMPILER_EXPORTER} -- Implementation
 							end
 							error_list.extend (vscn)
 						end
-						if l_cluster.is_override_cluster then
-							override_class := new_class
-						end
-						if l_cluster.is_precompiled then
-							precompiled_class := new_class
-						end
 					end
 				end
 				clusters.forth
 			end
 
-			if override_class /= Void then
-				last_class := override_class
-			end
-
-			if
 					-- Conflict detected
-				error_list /= Void and then
-					-- No override or conflict override/precompiled class
-				(override_class = Void or else precompiled_class /= Void)
-			then
+			if error_list /= Void then
 				from
 					error_list.start
 				until
@@ -821,6 +827,8 @@ feature {COMPILER_EXPORTER} -- Implementation
 					error_handler.insert_error (error_list.item)
 					error_list.forth
 				end
+				last_class := Void
+				error_handler.raise_error
 			end
 		end
 
@@ -846,54 +854,60 @@ feature {COMPILER_EXPORTER} -- Implementation
 			end
 		end
 
-	process_override_cluster is
+	process_override_clusters is
 			-- incrementality of the override_cluster option
 		local
-			old_universe: UNIVERSE_I
-			old_tag: STRING
-			old_cluster: CLUSTER_I
-			classes: HASH_TABLE [CLASS_I, STRING]
-			a_class: CLASS_C
-			ovc    : CLUSTER_I
+			l_ovcs: like override_clusters
+			l_cluster: CLUSTER_I
+			l_old_universe: like Current
+			l_cluster_name: STRING
+			l_class: CLASS_C
+			l_classes: HASH_TABLE [CLASS_I, STRING]
 		do
 			if has_override_cluster then
 					-- Remove classes which are overridden
-				ovc := override_cluster
+				l_ovcs := override_clusters
 
-				if ovc /= Void then
+				from
+					l_ovcs.start
+				until
+					l_ovcs.after
+				loop
+					l_cluster := l_ovcs.item
 					from
 						clusters.start
 					until
 						clusters.after
 					loop
-						if clusters.item /= ovc then
-							clusters.item.process_overrides (ovc)
+						if not clusters.item.is_override_cluster then
+							clusters.item.process_overrides (l_cluster)
 						end
 						clusters.forth
 					end
+					l_ovcs.forth
 				end
 			end
+		end
 
-			old_universe := lace.old_universe
-			if old_universe /= Void and then old_universe.has_override_cluster then
-				old_tag := old_universe.override_cluster_name
-				if not equal (old_tag, override_cluster_name) then
-					if has_cluster_of_name (old_tag) then
-						old_cluster := cluster_of_name (old_tag)
-						from
-							classes := old_cluster.classes
-							classes.start
-						until
-							classes.after
-						loop
-							a_class := classes.item_for_iteration.compiled_class
-							if a_class /= void then
-								a_class.recompile_syntactical_clients
-							end
-							classes.forth
-						end
-					end
-				end
+	rebuild_override_fast is
+			-- Performed during a recompile without degree 6. We simply analyzes
+			-- content of override clusters to find modified classes outside environment.
+		require
+			has_override_cluster: has_override_cluster
+		local
+			l_ovcs: like override_clusters
+			l_ovc: CLUSTER_I
+		do
+				-- Remove classes which are overridden
+			l_ovcs := override_clusters
+
+			from
+				l_ovcs.start
+			until
+				l_ovcs.after
+			loop
+				l_ovcs.item.rebuild_override
+				l_ovcs.forth
 			end
 		end
 

@@ -54,6 +54,9 @@ feature -- Access
 	Temporary_input_file_name: STRING is "Input_File"
 			-- Input file
 
+	Standard_abort_value: INTEGER is 10
+			-- Standard abort value
+
 feature -- Element Change
 
 	set_shared_wizard_environment (an_environment: WIZARD_ENVIRONMENT) is

@@ -190,9 +190,11 @@ feature
 					Project_read_only.set_item (false)
 				elseif is_project_readable then
 					Project_read_only.set_item (true);
+					project_tool.set_initialized;
 					warner (text_window).custom_call (Current, 
 							w_Read_only_project, " OK ", "Exit", Void)
 				else
+					project_tool.set_initialized;
 					warner (text_window).custom_call (Current, 
 							w_Cannot_open_project, Void, "Exit", Void)
 				end;

@@ -596,7 +596,7 @@ feature {NONE} -- Execution
 					if output_line /= Void then
 						output_line.remove_text
 					end
-					if is_valid_class_name (ctxt) then
+					if (create {IDENTIFIER_CHECKER}).is_valid (ctxt) then
 						create new_class_win.make_default (parent)
 						new_class_win.set_stone_when_finished
 						new_class_win.call (class_address.text)
@@ -1808,30 +1808,6 @@ feature {NONE} -- open new class
 		do
 			create st.make (current_feature)
 			parent.advanced_set_stone (st)
-		end
-
-	is_valid_class_name (cl_name: STRING): BOOLEAN is
-			-- Check that name `cl_name' is a valid class name.
-		local
-			cn: STRING
-			cchar: CHARACTER
-			i: INTEGER
-		do
-			cn := cl_name
-			if cn = Void or else cn.is_empty or else not (cn @ 1).is_alpha then
-				Result := False
-			else
-				Result := True
-				from
-					i := 2
-				until
-					i > cn.count or not Result
-				loop
-					cchar := (cn @ i)
-					Result := cchar.is_alpha or cchar.is_digit or cchar = '_'
-					i := i + 1
-				end
-			end
 		end
 
 feature {NONE} -- Implementation of the clickable labels for `header_info'

@@ -101,15 +101,7 @@ feature -- Status report
 		local
 			i: INTEGER
 		do
-			Result := not a_name.is_empty
-			from
-				i := 1
-			until
-				not Result or i > a_name.count
-			loop
-				Result := valid_character (a_name @ i)
-				i := i + 1
-			end
+			Result := (create {IDENTIFIER_CHECKER}).is_valid (a_name)
 			--| FIXME May not be a formal generic in any of the classes involved.
 		end
 
@@ -144,12 +136,6 @@ feature {NONE} -- Implementation
 				cl.forth
 			end
 			Progress_dialog.hide
-		end
-
-	valid_character (c: CHARACTER): BOOLEAN is
-			-- Is `c' a valid character in a class name?
-		do
-			Result := c.is_alpha or c.is_digit or c = '_'
 		end
 
 	search_replace (a_class: CLASS_I; a_search_string, a_replace_string: STRING) is

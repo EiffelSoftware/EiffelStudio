@@ -51,6 +51,7 @@ inherit
 			set_column_width as wel_set_column_width,
 			get_column_width as wel_get_column_width,
 			set_column_title as wel_set_column_title,
+			column_count as wel_column_count,
 			item as wel_item,
 			move as wel_move,
 			enabled as is_sensitive, 
@@ -84,19 +85,9 @@ inherit
 			on_lvn_columnclick,
 			on_lvn_itemchanged,
 			on_size,
+			on_notify,
 			default_style,
-			default_ex_style,
 			process_message
-		end
-
-	WEL_LVHT_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_LVS_EX_CONSTANTS
-		export
-			{NONE} all
 		end
 
 create
@@ -114,16 +105,24 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Initialize with precursors.
+		local
+			wel_column: WEL_LIST_VIEW_COLUMN
 		do
 			{EV_PRIMITIVE_IMP} Precursor
 			{EV_MULTI_COLUMN_LIST_I} Precursor
 			{EV_ITEM_LIST_IMP} Precursor
-			add_column
-			create image_list.make (16, 16, Ilc_color24, True)
-				-- Create image list with all images 16 by 16 pixels
-			set_image_list(image_list)
-				-- Associate the image list with the tree.
-			create current_image_list_info.make (4)
+
+				-- Create the last column
+			create wel_column.make
+			wel_column.set_width (Lvscw_autosize_useheader)
+			wel_column.set_text ("")
+			insert_column (wel_column, 0)
+
+				-- Set the WEL extended view style
+			if comctl32_version >= version_470 then
+				set_extended_view_style (get_extended_view_style + 
+					Lvs_ex_fullrowselect)
+			end
 		end
 
 feature -- Access
@@ -140,12 +139,12 @@ feature -- Access
 			-- Currently selected items.
 		local
 			i: INTEGER
-			interf: EV_MULTI_COLUMN_LIST_ROW
-			c: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
+			interf: like selected_item
+			c: like ev_children
 		do
 			from
 				c := ev_children
-				!! Result.make
+				create Result.make
 				i := 0
 			until
 				i = selected_count
@@ -158,6 +157,15 @@ feature -- Access
 
 	row_height: INTEGER
 			-- Height in pixels of each row.
+
+	column_count: INTEGER is
+			-- Number of columns filled by the user
+			--
+			-- The WEL implementation has one more column
+			-- at the end of all columns.
+		do
+			Result := (wel_column_count - 1).max(0)
+		end
 
 feature -- Status report
 
@@ -187,10 +195,10 @@ feature -- Status setting
 	clear_selection is
 			-- Make `selected_items' empty.
 		local
-			c: LINKED_LIST [EV_MULTI_COLUMN_LIST_ROW]
+			c: like selected_items
 		do
+			c := selected_items
 			from
-				c := selected_items
 				c.start
 			until
 				c.after
@@ -267,29 +275,49 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
+	setup_image_list(a_width, a_height: INTEGER) is
+			-- Create the image list and associate it
+			-- to the control if it's not already done.
+		do
+				-- Create image list with all images 16 by 16 pixels
+			create image_list.make_with_size (a_width, a_height)
+
+				-- Associate the image list with the multicolumn list.
+			set_image_list(image_list)
+			set_small_image_list(image_list)
+		ensure
+			image_list_not_void: image_list /= Void
+		end
+
 	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP) is
 			-- Set row `a_row' pixmap to `a_pixmap'.
 		local
-			p_imp: EV_PIXMAP_IMP
-			item_value: INTEGER
-			temp_row: EV_MULTI_COLUMN_LIST_ROW_IMP
+			pixmap_imp		: EV_PIXMAP_IMP_STATE
+			image_index		: INTEGER
+			wel_row			: WEL_LIST_VIEW_ITEM
 		do
-			p_imp ?= a_pixmap.implementation
-			if p_imp.icon /= Void then
-				item_value := cwel_pointer_to_integer (p_imp.icon.item)
-					-- Assign `icon.item' to `item_value'
-				if not current_image_list_info.has (item_value) then
-					image_list.add_icon (p_imp.icon)
-					image_list.add_icon (p_imp.icon)
-					image_list.add_icon (p_imp.icon)
-					current_image_list_info.extend ([1, 1], item_value)
-				end
+			pixmap_imp ?= a_pixmap.implementation
+
+				-- Create the imagelist and associate it
+				-- to the control if it's not already done.
+			if image_list = Void then
+				setup_image_list (pixmap_imp.width, pixmap_imp.height)
 			end
-			--|FIXME I think we should now tell the list view that an item has
-			--| been updated. How do we do this?
-			temp_row ?= i_th (a_row).implementation
-			temp_row.set_image (1)
-			replace_item (temp_row)
+
+			image_list.add_pixmap (pixmap_imp)
+			image_index := image_list.last_position
+
+				-- Retrieve the first item of the row
+			wel_row := wel_get_item (a_row - 1, 0)
+
+				-- Add image to the item
+			wel_row.set_image (image_index)
+
+				-- Reflect the change in Windows.
+			replace_item (wel_row)
+
+				-- Update the display
+			invalidate
 		end
 
 	set_text_on_position (a_x, a_y: INTEGER; a_text: STRING) is
@@ -304,7 +332,7 @@ feature {NONE} -- Implementation
 		do
 			from
 			until
-				column_count > a_columns
+				column_count >= a_columns
 			loop
 				add_column
 			end
@@ -316,6 +344,7 @@ feature {NONE} -- Implementation
 			wel_column: WEL_LIST_VIEW_COLUMN
 			col_width: INTEGER
 			col_text: STRING
+			col_index: INTEGER
 		do
 			if column_widths.count > column_count then
 				col_width := column_widths @ (column_count + 1)
@@ -329,10 +358,15 @@ feature {NONE} -- Implementation
 				col_text := ""
 			end
 
+			col_index := column_count.max(0)
+
 			create wel_column.make
 			wel_column.set_width (col_width)
 			wel_column.set_text (col_text)
-			append_column (wel_column)
+
+			insert_column (wel_column, col_index)
+			wel_set_column_width (col_width, col_index)
+			wel_set_column_width (Lvscw_autosize_useheader, col_index + 1)
 		end
 
 	column_title_changed (a_title: STRING; a_column: INTEGER) is
@@ -360,10 +394,6 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	last_column_width_setting: INTEGER
-		-- The width that the last column was set to by the user.
-		--| See compute_column_widths. 
-
 	find_item_at_position (x_pos, y_pos: INTEGER):
 		EV_MULTI_COLUMN_LIST_ROW_IMP is
 			-- Find the item at the given position.
@@ -373,9 +403,8 @@ feature -- Access
 			info: WEL_LV_HITTESTINFO
 		do
 			create pt.make (16, y_pos)
-			--|FIXME 16 is used as it will always be within the selected part
-			--| of the row. Need to make the whole row selectable, see the
-			--| extended style in this class. However, this is not working yet.
+				-- 16 is used as it will always be within the selected part
+				-- of the row.
 			create info.make_with_point (pt)
 			cwin_send_message (wel_item, Lvm_hittest, 0, info.to_integer)
 			if flag_set (info.flags, Lvht_onitemlabel)
@@ -386,12 +415,6 @@ feature -- Access
 		end
 
 feature -- Status report
-
-	selected: BOOLEAN is
-			-- Is at least one item selected ?
-		do
-			Result := selected_count >= 1
-		end
 
 	has_headers: BOOLEAN is
 			-- True if there is a header line to give titles
@@ -405,10 +428,10 @@ feature -- Element change
 	clear_items is
 			-- Clear all the items of the list.
 		local
-			c: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
+			c: like ev_children
 		do
+			c := ev_children
 			from
-				c := ev_children
 				c.start
 			until
 				c.after
@@ -420,43 +443,6 @@ feature -- Element change
 			c.wipe_out
 		end
 
-	compute_column_widths is
-			-- Re-compute column widths to fill parent.
-			--| This feature is require in order to fix a bug with the sizing
-			--| of the columns. The last column needs to always fill the
-			--| remaining space in `Current' and this feature will do that.
-			--| `Last_column_width_setting' holds the last size that the user
-			--| assigned to the last column, and when the width of `Current'
-			--| is reduced, if we reduce the width of the last column, then we
-			--| should never reduce it below this size.
-		local
-			current_width: INTEGER
-				-- Width of `Current'.
-			counter: INTEGER
-		do
-			current_width := width
-				-- assign `width' to `current_width'
-			from
-				counter := 1
-			until
-				counter = column_count + 1
-			loop
-				-- For every column in the mc list.
-				if counter = column_count then
-					if current_width > last_column_width_setting then
-						wel_set_column_width 
-							(current_width, counter - 1)
-					elseif current_width < column_width (counter)
-						then 
-						wel_set_column_width
-							(last_column_width_setting, counter - 1)
-					end
-				end
-				current_width := current_width - column_width (counter)
-				counter := counter + 1
-			end
-		end
-
 feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 
 	insert_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP; an_index: INTEGER) is
@@ -464,10 +450,16 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 		local
 			list: LINKED_LIST [STRING]
 			litem: WEL_LIST_VIEW_ITEM
-			rw: INTEGER
+			counter: INTEGER
 			first_string: STRING
+			columns_to_add: INTEGER
 		do
 			list := item_imp.interface
+
+				-- Add the new columns if some are needed
+			expand_column_count_to (list.count)
+
+				-- Put the items in the listview.
 			from
 				list.start
 				if list.after then
@@ -508,7 +500,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 		local
 			an_index: INTEGER
 		do
-			-- First, we remove the child from the graphical component
+				-- First, we remove the child from the graphical component
 			an_index := ev_children.index_of (item_imp, 1) - 1
 			delete_item (an_index)
 		end
@@ -566,6 +558,12 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 
 feature {NONE} -- WEL Implementation
 
+	computing_column_width: BOOLEAN
+			-- Are we in the function `compute_column_width'?
+			--
+			-- This flag is used to avoid reentrance in the function 
+			-- `compute_column_width'. 
+
 	internal_propagate_pointer_press
 		(event_id, x_pos, y_pos, button: INTEGER) is
 			-- Propagate `event_id' to the good item. 
@@ -601,12 +599,103 @@ feature {NONE} -- WEL Implementation
 			wparam, lparam: INTEGER): INTEGER is
 			-- Call the routine `on_*' corresponding to the
 			-- message `msg'.
+		local
+			wel_window_pos: WEL_WINDOW_POS
 		do
-			if msg = Wm_paint then
-				compute_column_widths
+			inspect msg
+			when Wm_windowposchanging then
+				create wel_window_pos.make_by_pointer (
+					cwel_integer_to_pointer(lparam)
+					)
+				on_wm_windowposchanging (wel_window_pos)
+			when Wm_windowposchanged then
+				create wel_window_pos.make_by_pointer (
+					cwel_integer_to_pointer(lparam)
+					)
+				on_wm_windowposchanged (wel_window_pos)
+--|--------------------------------------------------------
+--| FIXME ARNAUD: Handle This message to avoid flickering
+--| while resizing.
+--|--------------------------------------------------------
+--			when Wm_erasebkgnd then
+--				disable_default_processing
+--				set_message_return_value (1)
 			else
-				Result := {WEL_LIST_VIEW} Precursor (hwnd, msg,
-					wparam, lparam)
+				Result := Precursor (hwnd, msg, wparam, lparam)
+			end
+		end
+
+	update_last_column_width is
+		do
+			computing_column_width := True -- Set reentrance flag.
+
+			wel_set_column_width (Lvscw_autosize_useheader, wel_column_count - 1)
+
+			computing_column_width := False -- remove reentrance flag.
+		end
+
+	on_wm_windowposchanging (window_pos: WEL_WINDOW_POS) is
+			-- The WM_WINDOWPOSCHANGING message is sent to a 
+			-- window whose size, position, or place in the 
+			-- Z order is about to change as a result of a 
+			-- call to the SetWindowPos function or another 
+			-- window-management function.
+			--
+			-- Arnaud: We handle here the resize event before
+			-- it actually occurs. We only recompute the
+			-- column widths if the size is decreasing. If the
+			-- size is increasing, recomputing the last column
+			-- width with the future size would cause the 
+			-- appearance of an horizontal scrollbar because
+			-- the window has not yet its future size.
+			-- Increasing size width is handled in 
+			-- `on_wm_windowposchanged'.
+		do
+			if (not computing_column_width) and is_displayed then
+					-- window_pos.width holds the future
+					-- width of the window.
+				if window_pos.width - width < 0 then
+					update_last_column_width
+--					compute_column_widths (window_pos.width)
+				end
+			end
+		end
+
+	on_wm_windowposchanged (window_pos: WEL_WINDOW_POS) is
+			-- The WM_WINDOWPOSCHANGED message is sent to 
+			-- a window whose size, position, or place in 
+			-- the Z order has changed as a result of a call 
+			-- to the SetWindowPos function or another 
+			-- window-management function.
+			--
+			-- Called to avoid the appearance of an horizontal
+			-- scrollbar. See `on_wm_windowposchanging' for more
+			-- details.
+		do
+			if (not computing_column_width) and is_displayed then
+					-- window_pos.width holds the future
+					-- width of the window.
+--				compute_column_widths (window_pos.width)
+				update_last_column_width
+			end
+		end
+
+	on_notify (control_id: INTEGER; info: WEL_NMHDR) is
+			-- The WM_NOTIFY message is sent by a common control 
+			-- to its parent window when an event has occurred 
+			-- or the control requires some information. 
+		local
+			code: INTEGER
+		do
+			code := info.code
+			if (code = Hdn_itemchangeda) or (code = Hdn_itemchangedw)
+			   and (not computing_column_width)
+			then
+					-- A column header has changed. Its size may 
+					-- being changed. So we recompute the width 
+					-- of the last column.
+--				compute_column_widths (width)
+				update_last_column_width
 			end
 		end
 	
@@ -615,13 +704,7 @@ feature {NONE} -- WEL Implementation
 		do
 			Result := Ws_child + Ws_visible + Ws_group 
 				+ Ws_tabstop + Ws_border + Ws_clipchildren
-				+ Lvs_report
-		end
-
-	default_ex_style: INTEGER is
-			-- Extended style of the list view.
-		do
-			Result := Lvs_ex_fullrowselect
+				+ Lvs_report + Lvs_showselalways
 		end
 
 	on_lvn_columnclick (info: WEL_NM_LIST_VIEW) is
@@ -686,13 +769,8 @@ feature {NONE} -- WEL Implementation
 
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 
-	image_list: WEL_IMAGE_LIST
-			-- WEL image list to store all images required by items.
-
-	current_image_list_info: HASH_TABLE [TUPLE [INTEGER, INTEGER], INTEGER]
-			-- A list of all items in the image list and their positions.
-			-- [[position in image list, number of items pointing to this
-			-- image], windows pointer].
+	image_list: EV_IMAGE_LIST_IMP
+			-- Image list to store all images required by items.
 
 feature {NONE} -- Feature that should be directly implemented by externals
 
@@ -768,6 +846,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.91  2000/04/25 01:22:46  pichery
+--| Entire refactoring - Improvement.
+--|
 --| Revision 1.90  2000/04/21 19:37:23  rogers
 --| Useful comments on compute_column_widths and last_column
 --| width_setting. Formatted all long lines.

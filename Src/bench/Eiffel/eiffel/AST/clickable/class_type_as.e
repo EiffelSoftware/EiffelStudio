@@ -71,10 +71,16 @@ feature -- Access
 			end
 		end
 
-	is_tuple : BOOLEAN is
+	is_tuple (a_class_i: CLASS_I): BOOLEAN is
 			-- Is it a TUPLE type?
 		do
-			Result := class_name.string_value.is_equal ("tuple")
+			Result := System.tuple_class = a_class_i
+		end
+
+	is_native_array (a_class_i: CLASS_I): BOOLEAN is
+			-- Is it a NATIVE_ARRAY type?
+		do
+			Result := System.native_array_class = a_class_i
 		end
 
 feature -- Conveniences
@@ -82,25 +88,27 @@ feature -- Conveniences
 	solved_type_for_format (feat_table: FEATURE_TABLE; f: FEATURE_I): CL_TYPE_A is
 			-- Track expanded classes
 		local
-			a_class: CLASS_C
-			a_classi: CLASS_I
+			l_class: CLASS_C
+			l_class_i: CLASS_I
 			actual_generic: ARRAY [TYPE_A]
 			i, count: INTEGER
 			type_a: TYPE_A
 			abort: BOOLEAN
 		do
-			a_classi := Universe.class_named (class_name, Inst_context.cluster)
-			if a_classi /= Void and then a_classi.compiled_class /= Void then
-				a_class := a_classi.compiled_class
+			l_class_i := Universe.class_named (class_name, Inst_context.cluster)
+			if l_class_i /= Void and then l_class_i.compiled_class /= Void then
+				l_class := l_class_i.compiled_class
 				if generics /= Void then
 					from
 						i := 1
 						count := generics.count
 						create actual_generic.make (1, count)
-						if is_tuple then
-							create {TUPLE_TYPE_A} Result.make (a_class.class_id, actual_generic)
+						if is_tuple (l_class_i) then
+							create {TUPLE_TYPE_A} Result.make (l_class.class_id, actual_generic)
+						elseif is_native_array (l_class_i) then
+							create {NATIVE_ARRAY_TYPE_A} Result.make (l_class.class_id, actual_generic)
 						else
-							create {GEN_TYPE_A} Result.make (a_class.class_id, actual_generic)
+							create {GEN_TYPE_A} Result.make (l_class.class_id, actual_generic)
 						end
 					until
 						i > count or else abort
@@ -114,18 +122,18 @@ feature -- Conveniences
 						i := i + 1
 					end
 				else
-					if is_tuple then
+					if is_tuple (l_class_i) then
 						create actual_generic.make (1, 0)
-						create {TUPLE_TYPE_A} Result.make (a_class.class_id, actual_generic)
+						create {TUPLE_TYPE_A} Result.make (l_class.class_id, actual_generic)
 					else
-						create Result.make (a_class.class_id)
+						create Result.make (l_class.class_id)
 					end
 				end
 
 				if abort then
 					Result := Void
 				else
-					Result.set_is_true_expanded (a_class.is_expanded)
+					Result.set_is_true_expanded (l_class.is_expanded)
 				end
 			end
 		end
@@ -133,21 +141,23 @@ feature -- Conveniences
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): CL_TYPE_A is
 			-- Track expanded classes
 		local
-			a_class: CLASS_C
+			l_class: CLASS_C
 			actual_generic: ARRAY [TYPE_A]
 			i, count: INTEGER
 		do
-			a_class := Universe.class_named (class_name, Inst_context.cluster).compiled_class
+			l_class := Universe.class_named (class_name, Inst_context.cluster).compiled_class
 
 			if generics /= Void then
 				from
 					i := 1
 					count := generics.count
 					create actual_generic.make (1, count)
-					if is_tuple then
-						create {TUPLE_TYPE_A} Result.make (a_class.class_id, actual_generic)
+					if is_tuple (l_class.lace_class) then
+						create {TUPLE_TYPE_A} Result.make (l_class.class_id, actual_generic)
+					elseif is_native_array (l_class.lace_class) then
+						create {NATIVE_ARRAY_TYPE_A} Result.make (l_class.class_id, actual_generic)
 					else
-						create {GEN_TYPE_A} Result.make (a_class.class_id, actual_generic)
+						create {GEN_TYPE_A} Result.make (l_class.class_id, actual_generic)
 					end
 				until
 					i > count
@@ -157,25 +167,25 @@ feature -- Conveniences
 					i := i + 1
 				end
 			else
-				if is_tuple then
+				if is_tuple (l_class.lace_class) then
 					create actual_generic.make (1, 0)
-					create {TUPLE_TYPE_A} Result.make (a_class.class_id, actual_generic)
+					create {TUPLE_TYPE_A} Result.make (l_class.class_id, actual_generic)
 				end
 			end
 
 			if Result = Void then
-				create Result.make (a_class.class_id)
+				create Result.make (l_class.class_id)
 			end
 
 				-- Base type class is expanded
-			Result.set_is_true_expanded (a_class.is_expanded)
-			if a_class.is_expanded then
-				record_exp_dependance (a_class)
+			Result.set_is_true_expanded (l_class.is_expanded)
+			if l_class.is_expanded then
+				record_exp_dependance (l_class)
 			end
 				-- Base type class is expanded
-			Result.set_is_separate (a_class.is_separate)
-			if a_class.is_separate then
-				record_separate_dependance (a_class)
+			Result.set_is_separate (l_class.is_separate)
+			if l_class.is_separate then
+				record_separate_dependance (l_class)
 			end
 		end
 
@@ -218,27 +228,29 @@ feature -- Conveniences
 	actual_type: CL_TYPE_A is
 			-- Actual class type without processing like types
 		local
-			a_class: CLASS_C
-			a_class_i: CLASS_I
+			l_class: CLASS_C
+			l_class_i: CLASS_I
 			actual_generic: ARRAY [TYPE_A]
 			i, count: INTEGER
 			a_cluster: CLUSTER_I
 		do
 			a_cluster := Inst_context.cluster
-			a_class_i := Universe.class_named (class_name, a_cluster)
+			l_class_i := Universe.class_named (class_name, a_cluster)
 				-- Bug fix: `append_signature' can be called on invalid
 				-- types by the error mechanism
-			if a_class_i /= Void and then a_class_i.compiled_class /= Void then
-				a_class := a_class_i.compiled_class
+			if l_class_i /= Void and then l_class_i.compiled_class /= Void then
+				l_class := l_class_i.compiled_class
 				if generics /= Void then
 					from
 						i := 1
 						count := generics.count
 						create actual_generic.make (1, count)
-						if is_tuple then
-							create {TUPLE_TYPE_A} Result.make  (a_class.class_id, actual_generic)
+						if is_tuple (l_class_i) then
+							create {TUPLE_TYPE_A} Result.make  (l_class.class_id, actual_generic)
+						elseif is_native_array (l_class_i) then
+							create {NATIVE_ARRAY_TYPE_A} Result.make (l_class.class_id, actual_generic)
 						else
-							create {GEN_TYPE_A} Result.make (a_class.class_id, actual_generic)
+							create {GEN_TYPE_A} Result.make (l_class.class_id, actual_generic)
 						end
 					until
 						i > count
@@ -247,20 +259,20 @@ feature -- Conveniences
 						i := i + 1
 					end
 				else
-					if is_tuple then
+					if is_tuple (l_class_i) then
 						create actual_generic.make (1, 0)
-						create {TUPLE_TYPE_A} Result.make (a_class.class_id, actual_generic)
+						create {TUPLE_TYPE_A} Result.make (l_class.class_id, actual_generic)
 					end
 				end
 
 				if Result = Void then
-					create Result.make (a_class.class_id)
+					create Result.make (l_class.class_id)
 				end
 
 						-- Base type class is expanded
-				Result.set_is_true_expanded (a_class.is_expanded)
-				if a_class.is_expanded then
-					record_exp_dependance (a_class)
+				Result.set_is_true_expanded (l_class.is_expanded)
+				if l_class.is_expanded then
+					record_exp_dependance (l_class)
 				end
 			end
 		end
@@ -295,7 +307,7 @@ feature -- Conveniences
 					Error_handler.insert_error (vtct)
 					error_handler.raise_error
 				else
-					is_tuple_type := is_tuple
+					is_tuple_type := is_tuple (class_i)
 					associated_class := class_i.compiled_class
 					cl_generics := associated_class.generics
 						-- TUPLEs can have any number of generics

@@ -1,6 +1,8 @@
 class DLE_LICENSE inherit
 
 	ISE_LICENCE
+		rename
+			make as ise_make
 		redefine
 			handle_error
 		end;
@@ -19,19 +21,15 @@ feature
 
 feature
 
-	dle_registered: BOOLEAN is
-			-- Does the current license support DLE mechanism?
+	make is
 		do
-				-- Make sure there is no interference with
-				-- the Bench regular license.
---!!!!!!!!!! FIXME !!!!!!!!!!!!!!!
-			discard_licence;
-			set_version (3.5);
-			set_application_name ("eiffeldle");
-			get_licence;
-			Result := licensed;
-			discard
-		end;
+			ise_make
+			set_version (3.5)
+			set_application_name ("eiffeldle")
+			get_licence
+		end
+
+feature
 
 	handle_error is
 		do

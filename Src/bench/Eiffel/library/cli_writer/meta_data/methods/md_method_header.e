@@ -19,8 +19,8 @@ feature -- Saving
 			-- Write to stream `m' at position `pos'.
 		require
 			m_not_void: m /= Void
-			valid_pos: pos >=0 and pos < m.size
-			enough_space: m.size >= pos + size
+			valid_pos: pos >=0 and pos < m.count
+			enough_space: m.count >= pos + size
 		deferred
 		end
 		

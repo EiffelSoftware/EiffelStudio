@@ -76,7 +76,13 @@ feature
 			id := rout_id.id
 
 				-- Get the array corresponding to the searched value
-			bool_array := is_polymorphic_table.item (id)
+				-- if it is a valid `rout_id', if not `bool_array' is
+				-- set to `Void' because we we have most probably a
+				-- case of a deferred feature without implementation
+				-- (This will be verified later).
+			if id <= is_polymorphic_table.upper then
+				bool_array := is_polymorphic_table.item (id)
+			end
 
 			if bool_array /= null then
 					-- We already have computed something for this polymorphic
@@ -133,6 +139,7 @@ feature
 				else
 						-- In case there is no polymorphic table associated to `rout_id'
 						-- we don't do anything and next time we will go to the same place.
+						-- Most probably a deferred feature without implementation
 					Result := -2
 				end
 			end

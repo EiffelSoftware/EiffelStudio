@@ -562,7 +562,7 @@ feature {GB_ID_COMPRESSOR}
 			id := conversion_data @ id
 		end
 
-feature {GB_COMMAND_NAME_CHANGE, GB_COMPONENT, GB_OBJECT_HANDLER, GB_OBJECT} -- Basic operation
+feature {GB_COMMAND_NAME_CHANGE, GB_COMPONENT, GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_CHANGE_TYPE} -- Basic operation
 
 	set_name (new_name: STRING) is
 			-- Assign `new_name' to `name'.

@@ -85,6 +85,13 @@ feature -- Pngs
 		once
 			Result := build_classic_pixmap ("new_editor")
 		end
+		
+	Icon_open_file: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("open_file")
+		end
 
 	Icon_new_class: ARRAY [EV_PIXMAP] is
 			-- Array containing both the color & the gray pixmap

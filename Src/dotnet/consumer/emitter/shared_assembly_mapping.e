@@ -20,6 +20,7 @@ feature -- Access
 			non_void_type: t /= Void
 		local
 			name: STRING
+			l_name: SYSTEM_STRING
 			am: like assembly_mapping
 		do
 			if t.get_is_by_ref then
@@ -30,11 +31,11 @@ feature -- Access
 				am.search (name)
 				if am.found then
 					if t.get_is_array then
+						l_name := t.get_full_name
 						create {CONSUMED_ARRAY_TYPE} Result.make (
-							create {STRING}.make_from_cil (
-								t.get_full_name.substring_integer_32_integer_32 (0,
-								t.get_full_name.get_length - 2)),
-							am.found_item)
+							create {STRING}.make_from_cil (t.get_full_name),
+							am.found_item,
+							referenced_type_from_type (t.get_element_type))
 					else
 						create Result.make (create {STRING}.make_from_cil (t.get_full_name),
 							am.found_item)

@@ -9,11 +9,11 @@
 	<paragraph>
 		<paragraph>   The EiffelVision library offers an object-oriented framework for graphical user interface (GUI) development. Using EiffelVision, developers can access all necessary GUI components, called 
 			<link>
-				<url>/libraries/vision2/content//index.xml</url>
+				<url>/libraries/vision2/content/10_widgets/index.xml</url>
 				<label>widgets</label>
 			</link> (buttons, windows, list views) as well as truly graphical elements such as points, lines, arcs, polygons and the like -- to develop a modern, functional and good-looking graphical interactive application.  
 		</paragraph>
-		<paragraph>  EiffelVision has played a major role in  Eiffel Software  Eiffel and provided numerous Eiffel projects with a powerful, portable graphics development platform.  EiffelStudio is totally reliant on EiffelVision for its graphical  elements and overall interaction with the user. </paragraph>
+		<paragraph>  EiffelVision has played a major role at Eiffel Software and provided numerous Eiffel projects with a powerful, portable graphics development platform.  EiffelStudio is totally reliant on EiffelVision for its graphical  elements and overall interaction with the user. </paragraph>
 		<list ordered="false">
 			<item>
 				<link>

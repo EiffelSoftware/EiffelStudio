@@ -49,21 +49,21 @@ feature -- Initialization
 
 					-- Read the resource files
 				if resources /= Void then end;
-				!! new_resources.initialize;
 
 				if argument_count = 1 and then
 					argument (1).is_equal ("-bench")
 				then
 					Eiffel_project.set_batch_mode (False);
 					init_connection;
-					if toolkit = Void then end;
 					if init_licence then
+						if toolkit = Void then end;
 						init_windowing;
 						iterate
 					end;
 				else
 					Eiffel_project.set_batch_mode (True);
 					if init_licence then
+						!! new_resources.initialize;
 						start_batch_compiler;
 						discard_licence;
 					end;

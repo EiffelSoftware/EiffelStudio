@@ -11,13 +11,16 @@ cluster
 	root_cluster:	"."
 
 		-- EiffelBase
-	all base: 		"$(ISE_EIFFEL)\library\base"
+	all base: 		"$ISE_EIFFEL\library\base"
 		exclude
 			"table_eiffel3"
 		end
 
 		-- WEL
-	all wel:		"$(ISE_EIFFEL)\library\wel"
+	all wel:		"$ISE_EIFFEL\library\wel"
+		exclude
+			"extra"
+		end
 
 external
 	include_path:	"$(ISE_EIFFEL)\library\wel\spec\$(ISE_PLATFORM)\include"

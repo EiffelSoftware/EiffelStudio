@@ -67,8 +67,7 @@ feature
 				new_y := 0
 			end;
 			set_x_y (new_x, new_y);
-			file_sel_d_popup;
-			raise
+			file_sel_d_popup
 		end;
 
 	call (a_command: COMMAND_W) is

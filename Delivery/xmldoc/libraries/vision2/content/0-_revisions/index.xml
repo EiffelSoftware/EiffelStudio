@@ -18,12 +18,8 @@
 			<item>
 				<bold>EV_TEXT</bold>
 				<list ordered="false">
-					<item>
-						Weakened a number of preconditions that required a non empty final line, which was unecessary. Removed the obsolete feature `put_new_line' and made `last_line_not_empty' obsolete as it is unecessary and can be queried via `line'.
-					</item>
-					<item>
-						Added `line_number_from_position' which returns the line on which a paticular caret position resides.
-					</item>
+					<item>Weakened a number of preconditions that required a non empty final line, which was unecessary. Removed the obsolete feature `put_new_line' and made `last_line_not_empty' obsolete as it is unecessary and can be queried via `line'.</item>
+					<item>Added `line_number_from_position' which returns the line on which a paticular caret position resides.</item>
 				</list>
 			</item>
 			<item>
@@ -76,24 +72,20 @@
 						<bold>EV_WINDOW</bold> - `move_actions' was always passing positive values for the x and y coordinates of the window, even if they should have been negative.
 					</item>
 					<item>
-						<bold>EV_FONT</bold> - Fixed bug when using `preferred_families' after creating a font via `make_with_values'. The family that was specified was previously ignored.
-    					</item>
-					<item> 	<bold>EV_SCROLL_BAR</bold> - Fixed handling of scroll bars with upper values greater than 32,000. Previously, dragging the bar of a scroll bar past this limit, corrupted the position of the bar and the `value'.
+						<bold>EV_FONT</bold> - Fixed bug when using `preferred_families' after creating a font via `make_with_values'. The family that was specified was previously ignored.    
+					</item>
+					<item> 
+						<bold>EV_SCROLL_BAR</bold> - Fixed handling of scroll bars with upper values greater than 32,000. Previously, dragging the bar of a scroll bar past this limit, corrupted the position of the bar and the `value'.
 					</item>
 					<item>
 						<bold>EV_TEXT</bold>
 						<list ordered="false">
-							<item>
-								Corrected `last_position_from_line_number' which was returning an incorrect position when there were multiple lines of text contained, and you queried the final line.
-							</item>
-							<item>
-								Modified `insert_text' so that the control is no longer scrolled to the top as a result. The original position is now maintained wherever possible.
-							</item>	
-							<item>
-								Corrected handling of selection for caret positions greater than 64,000 characters. The following features were broken when using caret positions greater than 64,000: `caret_position', `has_selection', `selection_start' and `selection_end'
-							</item>
+							<item>Corrected `last_position_from_line_number' which was returning an incorrect position when there were multiple lines of text contained, and you queried the final line.</item>
+							<item>Modified `insert_text' so that the control is no longer scrolled to the top as a result. The original position is now maintained wherever possible.</item>
+							<item>Corrected handling of selection for caret positions greater than 64,000 characters. The following features were broken when using caret positions greater than 64,000: `caret_position', `has_selection', `selection_start' and `selection_end'</item>
 						</list>
 					</item>
+					<item><bold>EV_SPIN_BUTTON</bold> - Corrected positioning in parent container. In many situations, the spin button mis-behaved and would be moved to the 0x0 pixel position in the parent.</item>
 				</list>
 			</item>
 			<item>

@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			my_window.add_mdi_child_activate (create {EVENT_HANDLER}.make (Current, $MDIChildActivated))
 
 			-- Add File Menu
-			mi_file := main_menu.get_menu_items.add (("&File").to_cil)
+			mi_file := main_menu.menu_items.add (("&File").to_cil)
 			mi_file.set_merge_order (0)
 			mi_file.set_merge_type (feature {WINFORMS_MENU_MERGE}.merge_items)
 
@@ -45,16 +45,16 @@ feature {NONE} -- Initialization
 			create miExit.make_from_text_and_on_click_and_shortcut (("E&xit").to_cil, create {EVENT_HANDLER}.make (Current, $FileExit_Clicked), feature {WINFORMS_SHORTCUT}.ctrl_X)
 			miExit.set_merge_order (110)
 
-			dummy := mi_file.get_menu_items.add_menu_item (miAddDoc)
-			dummy := mi_file.get_menu_items.add (("-").to_cil)     --  Gives us a seperator
-			dummy := mi_file.get_menu_items.add_menu_item (miExit)
+			dummy := mi_file.menu_items.add_menu_item (miAddDoc)
+			dummy := mi_file.menu_items.add (("-").to_cil)     --  Gives us a seperator
+			dummy := mi_file.menu_items.add_menu_item (miExit)
 
 			-- Add Window Menu
-			miWindow := main_menu.get_menu_items.add (("&Window").to_cil)
+			miWindow := main_menu.menu_items.add (("&Window").to_cil)
 			miWindow.set_merge_order (10)
-			dummy := miWindow.get_menu_items.add_string_event_handler (("&Cascade").to_cil, create {EVENT_HANDLER}.make (Current, $WindowCascade_Clicked))
-			dummy := miWindow.get_menu_items.add_string_event_handler (("Tile &Horizontal").to_cil, create {EVENT_HANDLER}.make (Current, $WindowTileH_Clicked))
-			dummy := miWindow.get_menu_items.add_string_event_handler (("Tile &Vertical").to_cil, create {EVENT_HANDLER}.make (Current, $WindowTileV_Clicked))
+			dummy := miWindow.menu_items.add_string_event_handler (("&Cascade").to_cil, create {EVENT_HANDLER}.make (Current, $WindowCascade_Clicked))
+			dummy := miWindow.menu_items.add_string_event_handler (("Tile &Horizontal").to_cil, create {EVENT_HANDLER}.make (Current, $WindowTileH_Clicked))
+			dummy := miWindow.menu_items.add_string_event_handler (("Tile &Vertical").to_cil, create {EVENT_HANDLER}.make (Current, $WindowTileV_Clicked))
 			miWindow.set_mdi_list (True)  -- Adds the MDI Window List to the bottom of the menu
 
 --			add_document -- Add an initial doc
@@ -100,18 +100,18 @@ feature {NONE} -- Implementation
 			l_size.make_from_width_and_height (5, 13)
 			my_window.set_auto_scale_base_size (l_size)
 			l_size.make_from_width_and_height (450, 200)
-			my_window.set_client_size_size (l_size)
+			my_window.set_client_size (l_size)
 
 			create main_menu.make
 			my_window.set_menu (main_menu)
 			
-			status_bar_1.set_back_color (feature {DRAWING_SYSTEM_COLORS}.get_control)
+			status_bar_1.set_back_color (feature {DRAWING_SYSTEM_COLORS}.control)
 			l_point.make_from_x_and_y (0, 180)
 			status_bar_1.set_location (l_point)
 			l_size.make_from_width_and_height (450, 20)
 			status_bar_1.set_size (l_size)
 			status_bar_1.set_tab_index (1)
-			my_window.get_controls.add (status_bar_1)
+			my_window.controls.add (status_bar_1)
 		end
 
 
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 				doc: DOCUMENT
 			do
 				window_count := window_count + 1 
-				create doc.make_with_name ((("").to_cil).concat_string_string (("Document ").to_cil, window_count.to_string))
+				create doc.make_with_name ((("").to_cil).concat_string_string (("Document ").to_cil, window_count.out.to_cil))
 --				doc.set_mdi_parent (Current)
 --				doc.show
 			end
@@ -143,10 +143,10 @@ feature {NONE} -- Implementation
 		MDIChildActivated (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
 				-- One of the MDI Child windows has been activated
 			do
-				if my_window.get_active_mdi_child.equals (Void) then
+				if my_window.active_mdi_child.equals (Void) then
 					status_bar_1.set_text (("").to_cil)
 				else
-					status_bar_1.set_text (my_window.get_active_mdi_child.get_text)
+					status_bar_1.set_text (my_window.active_mdi_child.text)
 				end
 			end
 		

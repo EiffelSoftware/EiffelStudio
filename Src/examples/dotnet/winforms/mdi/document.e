@@ -42,30 +42,30 @@ feature {NONE} -- Initialization
 			rich_text_box.set_text (doc_name)
 
 			-- Add File Menu
-			mi_file := main_menu.get_menu_items.add (("&File").to_cil)
+			mi_file := main_menu.menu_items.add (("&File").to_cil)
 			mi_file.set_merge_type (feature {WINFORMS_MENU_MERGE}.merge_items)
 			mi_file.set_merge_order (0)
 
-			miLoadDoc := main_menu.get_menu_items.add_string_event_handler ((("").to_cil).concat_string_string_string (("&Load Document (").to_cil, doc_name, (")").to_cil), create {EVENT_HANDLER}.make (Current, $LoadDocument_Clicked)) --= mi_file.MenuItems.Add("&Load Document (" + doc_name + ")", new EventHandler(this.LoadDocument_Clicked))
+			miLoadDoc := main_menu.menu_items.add_string_event_handler ((("").to_cil).concat_string_string_string (("&Load Document (").to_cil, doc_name, (")").to_cil), create {EVENT_HANDLER}.make (Current, $LoadDocument_Clicked)) --= mi_file.MenuItems.Add("&Load Document (" + doc_name + ")", new EventHandler(this.LoadDocument_Clicked))
 			miLoadDoc.set_merge_order (105)
 
 			-- Add Formatting Menu
-			mi_format := main_menu.get_menu_items.add ((("").to_cil).concat_string_string_string (("F&ormat (").to_cil, doc_name, (")").to_cil))
+			mi_format := main_menu.menu_items.add ((("").to_cil).concat_string_string_string (("F&ormat (").to_cil, doc_name, (")").to_cil))
 			mi_format.set_merge_type (feature {WINFORMS_MENU_MERGE}.add)
 			mi_format.set_merge_order (5)
 
 			-- Font Face sub-menu
-			create mmi_sans_serif.make_from_text_and_on_click ((("").to_cil).concat_string_string (("&1. ").to_cil, sans_serif_font_family.get_name), create {EVENT_HANDLER}.make (Current, $FormatFont_Clicked))
+			create mmi_sans_serif.make_from_text_and_on_click ((("").to_cil).concat_string_string (("&1. ").to_cil, sans_serif_font_family.name), create {EVENT_HANDLER}.make (Current, $FormatFont_Clicked))
 			mmi_sans_serif.set_checked (True) 
 			mmi_sans_serif.set_default_item (True) 
-			create mmi_serif.make_from_text_and_on_click ((("").to_cil).concat_string_string (("&2. ").to_cil, serif_font_family.get_name), create {EVENT_HANDLER}.make (Current, $FormatFont_Clicked))
-			create mmi_mono_space.make_from_text_and_on_click ((("").to_cil).concat_string_string (("&3. ").to_cil, mono_space_font_family.get_name), create {EVENT_HANDLER}.make (Current, $FormatFont_Clicked))
+			create mmi_serif.make_from_text_and_on_click ((("").to_cil).concat_string_string (("&2. ").to_cil, serif_font_family.name), create {EVENT_HANDLER}.make (Current, $FormatFont_Clicked))
+			create mmi_mono_space.make_from_text_and_on_click ((("").to_cil).concat_string_string (("&3. ").to_cil, mono_space_font_family.name), create {EVENT_HANDLER}.make (Current, $FormatFont_Clicked))
 
 			create l_array_menu_item.make (3)
 			l_array_menu_item.put (0, mmi_sans_serif)
 			l_array_menu_item.put (1, mmi_serif)
 			l_array_menu_item.put (2, mmi_mono_space)
-			dummy := mi_format.get_menu_items.add_string_menu_item_array (("Font &Face").to_cil, l_array_menu_item)
+			dummy := mi_format.menu_items.add_string_menu_item_array (("Font &Face").to_cil, l_array_menu_item)
 
 
 			-- Font Size sub-menu
@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 			l_array_menu_item.put (0, mmi_small)
 			l_array_menu_item.put (1, mmi_medium)
 			l_array_menu_item.put (2, mmi_large)
-			dummy := mi_format.get_menu_items.add_string_menu_item_array (("Font &Size").to_cil, l_array_menu_item)
+			dummy := mi_format.menu_items.add_string_menu_item_array (("Font &Size").to_cil, l_array_menu_item)
 
 
 			dummy := my_window.show_dialog
@@ -135,11 +135,11 @@ feature {NONE} -- Implementation
 			l_size.make_from_width_and_height (5, 13)
 			my_window.set_auto_scale_base_size (l_size)
 			l_size.make_from_width_and_height (392, 117)
-			my_window.set_client_size_size (l_size)
+			my_window.set_client_size (l_size)
 			create main_menu.make
 			my_window.set_menu (main_menu)
 
-			my_window.get_controls.add (rich_text_box)		
+			my_window.controls.add (rich_text_box)		
 		end
 
 
@@ -166,7 +166,7 @@ feature {NONE} -- Implementation
 		local
 			dummy: WINFORMS_DIALOG_RESULT
 		do
-			dummy := feature {WINFORMS_MESSAGE_BOX}.show (my_window.get_text)
+			dummy := feature {WINFORMS_MESSAGE_BOX}.show (my_window.text)
 		end
 
 	FormatFont_Clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 			mi_main_format_size_checked.set_checked (False)
 			mi_context_format_size_checked.set_checked (False)
 
-			font_size_string := mi_clicked.get_text
+			font_size_string := mi_clicked.text
 
 			if font_size_string.equals (("&Small").to_cil) then
 				mi_main_format_size_checked := mmi_small

@@ -27,7 +27,6 @@ feature -- Access
 			Result.extend ("EV_MULTI_COLUMN_LIST_ACTION_SEQUENCES")
 			Result.extend ("EV_MULTI_COLUMN_LIST_ROW_ACTION_SEQUENCES")
 			Result.extend ("EV_NOTEBOOK_ACTION_SEQUENCES")
-			Result.extend ("EV_PICK_AND_DROPABLE_ACTION_SEQUENCES")
 			Result.extend ("EV_PIXMAP_ACTION_SEQUENCES")
 			Result.extend ("EV_STANDARD_DIALOG_ACTION_SEQUENCES")
 			Result.extend ("EV_TEXT_COMPONENT_ACTION_SEQUENCES")
@@ -38,7 +37,7 @@ feature -- Access
 			Result.extend ("EV_WIDGET_ACTION_SEQUENCES")
 			Result.extend ("EV_WINDOW_ACTION_SEQUENCES")
 		ensure
-			Result_ok: Result /= Void and Result.count = 22	
+			Result_ok: Result /= Void and Result.count = 21
 		end
 		
 	action_sequence_list: ARRAYED_LIST [STRING] is

@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 	
 feature -- Status report
 	
-	pressed: BOOLEAN is
+	state: BOOLEAN is
                         -- Is toggle pressed
                 do
 			Result := c_gtk_toggle_button_active (widget)
@@ -41,7 +41,7 @@ feature -- Status report
 	
 feature -- Status setting
 
-        set_pressed (button_pressed: BOOLEAN) is
+        set_state (button_pressed: BOOLEAN) is
                         -- Set Current toggle on and set
                         -- pressed to True.
                 do

@@ -62,75 +62,13 @@ feature -- Status setting
 			implementation.toggle
 		end
 
-feature -- Event : command association
+feature -- Event handling
 
-	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is selected.
-		obsolete "Use action sequence instead"
-		do
-			--FIXME implementation.add_select_command (cmd, arg)
-		end
+	select_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions performed when item is selected.
 
-	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is unselected.
-		obsolete "Use action sequence instead"
-		do
-			--FIXME implementation.add_unselect_command (cmd, arg)		
-		end
-
-	add_button_press_command (mouse_button: INTEGER; 
-		 cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when button number 'mouse_button' is pressed.
-		obsolete "Use action sequence instead"
-		do
-			--FIXME implementation.add_button_press_command (mouse_button, cmd, arg)
-		end
-
-	add_button_release_command (mouse_button: INTEGER;
-		    cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when button number 'mouse_button' is released.
-		obsolete "Use action sequence instead"
-		do
-		--FIXME	implementation.add_button_release_command (mouse_button, cmd, arg)
-		end
-
-feature -- Event -- removing command association
-
-	remove_select_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is selected.
-		obsolete "Use action sequence instead"
-		do
-			--FIXME implementation.remove_select_commands			
-		end
-
-	remove_unselect_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is unselected.
-		obsolete "Use action sequence instead"
-		do
-			--FIXME implementation.remove_unselect_commands	
-		end
-
-	remove_button_press_commands (mouse_button: INTEGER) is
-			-- Empty the list of commands to be executed when
-			-- button number 'mouse_button' is pressed.
-		obsolete "Use action sequence instead"
-		do
-			--FIXME implementation.remove_button_press_commands (mouse_button)
-		end
-
-	remove_button_release_commands (mouse_button: INTEGER) is
-			-- Empty the list of commands to be executed when
-			-- button number 'mouse_button' is released.
-		obsolete "Use action sequence instead"
-		do
-			--FIXME implementation.remove_button_release_commands (mouse_button)
-		end
+	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions performed when item is deselected.
 
 feature -- Implementation
 
@@ -146,6 +84,8 @@ feature -- Implementation
 	create_action_sequences is
 		do
 			{EV_COMPOSED_ITEM} Precursor
+			create select_actions
+			create deselect_actions
 		end
 
 end -- class EV_MULTI_COLUMN_LIST_ROW
@@ -171,6 +111,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/02/17 22:46:29  king
+--| Removed command association commands
+--|
 --| Revision 1.20  2000/02/16 20:32:09  king
 --| Removed inheritence from pnd
 --|

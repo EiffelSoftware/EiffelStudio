@@ -13,10 +13,6 @@ inherit
 	DEBUG_EXT;
 
 	BEURK_HEXER
-		rename
-			min as basic_r_min,
-			max as basic_r_max
-		end
 
 feature -- Access
 

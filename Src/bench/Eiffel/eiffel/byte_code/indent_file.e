@@ -143,20 +143,24 @@ feature
 			val, remain: INTEGER;
 			s, t: STRING;
 		do
-			!!s.make (3);
-			from
-				val := i;
-			variant
-				val + 1
-			until
-				val = 0
-			loop
-				remain := val \\ 8;
-				val := val // 8;
-				t := remain.out;
-				s.prepend (t);
+			if i = 0 then
+				file_putstring ("0")
+			else
+				!!s.make (3);
+				from
+					val := i;
+				variant
+					val + 1
+				until
+					val = 0
+				loop
+					remain := val \\ 8;
+					val := val // 8;
+					t := remain.out;
+					s.prepend (t);
+				end;
+				file_putstring (s);
 			end;
-			file_putstring (s);
 		end;
 
 	escape_char (c: CHARACTER) is

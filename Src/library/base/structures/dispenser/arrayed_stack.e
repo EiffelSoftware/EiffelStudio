@@ -42,8 +42,7 @@ class ARRAYED_STACK [G] inherit
 			 	make, wipe_out, valid_index, index, off
 			{STACK} before, after, start, finish, forth, back
 			{ARRAYED_STACK} valid_cursor, cursor, go_to, area,
-				subarray, subcopy, i_th, upper, lower,
-				array_valid_index
+				subarray, subcopy, i_th, upper, lower
 		undefine
 			readable, writable,
 			append, fill

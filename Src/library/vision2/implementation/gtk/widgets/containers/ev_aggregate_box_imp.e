@@ -48,7 +48,7 @@ feature {EV_ANY_I} -- Implementation
 invariant
 	parent_is_void: parent = Void
 	
-end -- class EV_AGGREGATE_BOX_I
+end -- class EV_AGGREGATE_BOX_IMP
 
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
@@ -71,6 +71,9 @@ end -- class EV_AGGREGATE_BOX_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.2  2000/02/15 20:16:12  king
+--| Corrected class footer
+--|
 --| Revision 1.1  2000/02/15 19:43:04  oconnor
 --| initial
 --|

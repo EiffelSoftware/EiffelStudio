@@ -256,7 +256,7 @@ feature {NONE} -- Implementation
 						types.after or Result /= Void
 					loop
 						if types.item.registry_name.is_equal (sprefix) then
-							Result := types.item.load_resource (k_name.substring (8, k_name.count), reg_k.value)
+							Result := types.item.load_resource (k_name.substring (8, k_name.count), reg_k.string_value)
 							if Result = Void then
 								raise (types.item.error_message)
 							end

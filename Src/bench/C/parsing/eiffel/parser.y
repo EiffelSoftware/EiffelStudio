@@ -131,6 +131,7 @@ extern char token_str[];
 %token		TE_RESULT;
 %token		TE_RETRY;
 %token		TE_SELECT;
+%token		TE_SEPARATE;
 %token		TE_THEN;
 %token		TE_UNDEFINE;
 %token		TE_UNIQUE;
@@ -186,7 +187,7 @@ Class_declaration:
 	Formal_generics Obsolete Inheritance Creators Features Class_invariant TE_END
 		{
 			/* node is set at the Eiffel level for root class */
-			rn_ast = create_class(click_list_elem ($<value>5),deferred,expanded,$1,$6,$7,$8,$9,$10,$11,click_list_new(),
+			rn_ast = create_class(click_list_elem ($<value>5),deferred,expanded,separate,$1,$6,$7,$8,$9,$10,$11,click_list_new(),
 start_position);
 		}
 	;
@@ -244,11 +245,13 @@ Index_value:			Identifier
  */
 
 Header_mark:			/* empty */
-							{deferred = FALSE; expanded = FALSE;}
+							{deferred = FALSE; expanded = FALSE; separate = FALSE;}
 	|					TE_DEFERRED
-							{deferred = TRUE; expanded = FALSE;}
+							{deferred = TRUE; expanded = FALSE; separate = FALSE;}
 	|					TE_EXPANDED
-							{expanded = TRUE; deferred = FALSE;}
+							{expanded = TRUE; deferred = FALSE; separate = FALSE;}
+	|					TE_SEPARATE
+							{expanded = FALSE; deferred = FALSE; separate = TRUE;}
 	;
 
 
@@ -774,6 +777,16 @@ Type:
 	| TE_EXPANDED Pushing_id Existing_generics
 		{
 		$$ = create_exp_class_type(click_list_elem($<value>2),$3);
+		click_list_set ($$, $<value>2);
+		}
+	| TE_SEPARATE Pushing_id
+		{
+		$$ = create_separate_class_type(click_list_elem($<value>2),NULL);
+		click_list_set ($$, $<value>2);
+		}
+	| TE_SEPARATE Pushing_id Existing_generics
+		{
+		$$ = create_separate_class_type(click_list_elem($<value>2),$3);
 		click_list_set ($$, $<value>2);
 		}
 	| TE_BIT Integer_constant
@@ -1341,6 +1354,7 @@ Manifest_array:			TE_LARRAY {list_init();} Manifest_expression_list TE_RARRAY
 %%
 char deferred;					/* Boolean mark for deferred class */
 char expanded;					/* Boolean mark for expanded class */
+char separate;					/* Boolean mark for separate class */
 char is_frozen;					/* Boolean mark for frozen feature names */
 
 int id_level;					/* Boolean for controlling the semantic

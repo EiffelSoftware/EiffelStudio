@@ -25,6 +25,7 @@ extern char		*create_class(),
 				*create_type_class(),
 				*create_feature_as(),
 				*create_exp_class_type(),
+				*create_separate_class_type(),
 				*create_feature_name(),
 				*create_fclause_as(),
 				*create_routine_as();

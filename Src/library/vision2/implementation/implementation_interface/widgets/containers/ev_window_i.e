@@ -14,65 +14,73 @@ deferred class
 inherit
 	
 	EV_CONTAINER_I
-		
---	EV_WINDOW_MANAGER_EV_WINDOW_I
-
+		rename
+			make as old_make
+		end
+	
 	
 feature {NONE} -- Initialization
-	
-        make (interface: EV_WINDOW) is
-                        -- Create a window. Window does not have any
-                        -- parents
+
+	make_top_level (interface: EV_WINDOW) is
+			-- Create a window. Window does not have any
+			-- parents
 		deferred
 		end
+
+	make (par: EV_WINDOW; interface: EV_WINDOW) is
+			-- Create a window. Window does not have any
+			-- parents
+		deferred
+		end
+
 
 feature  -- Access
 
 
-        icon_name: STRING is
-                        -- Short form of application name to be
-                        -- displayed by the window manager when
-                        -- application is iconified
-                deferred
-                end
+	icon_name: STRING is
+			-- Short form of application name to be
+			-- displayed by the window manager when
+			-- application is iconified
+		deferred
+		end
 	
-        icon_mask: EV_PIXMAP is
-                        -- Bitmap that could be used by window manager
-                        -- to clip `icon_pixmap' bitmap to make the
-                        -- icon nonrectangular 
-                require
-                        exists: not destroyed
-                deferred
-                end
+	icon_mask: EV_PIXMAP is
+			-- Bitmap that could be used by window manager
+			-- to clip `icon_pixmap' bitmap to make the
+			-- icon nonrectangular 
+		require
+			exists: not destroyed
+		deferred
+		end
 
-        icon_pixmap: EV_PIXMAP is
-                        -- Bitmap that could be used by the window manager
-                        -- as the application's icon
-                require
-                        exists: not destroyed
-                deferred
-                ensure
-                        valid_result: Result /= Void
-                end
+	icon_pixmap: EV_PIXMAP is
+			-- Bitmap that could be used by the window manager
+			-- as the application's icon
+		require
+			exists: not destroyed
+		deferred
+		ensure
+			valid_result: Result /= Void
+		end
 	
-        title: STRING is
-                        -- Application name to be displayed by
-                        -- the window manager
-                require
-                        exists: not destroyed
-                deferred
-                end
+	title: STRING is
+			-- Application name to be displayed by
+			-- the window manager
+		require
+			exists: not destroyed
+		deferred
+		end
 
-        widget_group: EV_WIDGET is
-                        -- Widget with wich current widget is associated.
-                        -- By convention this widget is the "leader" of a group
-                        -- widgets. Window manager will treat all widgets in
-                        -- a group in some way; for example, it may move or
-                        -- iconify them together
-                require
-                        exists: not destroyed
-                deferred
-                end 
+	widget_group: EV_WIDGET is
+			-- Widget with wich current widget is associated.
+			-- By convention this widget is the "leader" of a group
+			-- widgets. Window manager will treat all widgets in
+			-- a group in some way; for example, it may move or
+			-- iconify them together
+		require
+			exists: not destroyed
+		deferred
+		end 
 
 feature -- Element change
 

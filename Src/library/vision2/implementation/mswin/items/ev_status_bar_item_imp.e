@@ -88,12 +88,6 @@ feature -- Element change
 			end
 		end
 
-feature {NONE} -- Inapplicable
-
-	on_draw (struct: WEL_DRAW_ITEM_STRUCT) is
-		do
-		end
-
 end -- class EV_STATUS_BAR_ITEM_IMP
 
 --|----------------------------------------------------------------

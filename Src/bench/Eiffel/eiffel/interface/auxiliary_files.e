@@ -97,6 +97,9 @@ feature -- Dynamic Library file
 			dynamic_lib_def_file_name: FILE_NAME
 			C_dynamic_lib_file: INDENT_FILE
 			C_dynamic_lib_file_name: STRING
+			is_dll_generated: BOOLEAN
+			eiffel_def_file: PLAIN_TEXT_FILE
+			dynamic_lib: E_DYNAMIC_LIB
 
 			args: E_FEATURE_ARGUMENTS
 			argument_names: FIXED_LIST [STRING]
@@ -114,11 +117,24 @@ feature -- Dynamic Library file
 			def_buffer := header_generation_buffer
 			def_buffer.clear_all
 
-			dynamic_lib_exports:= system.eiffel_dynamic_lib.dynamic_lib_exports
-			system_name:= clone(system.eiffel_system.name)
+			dynamic_lib := system.eiffel_dynamic_lib
+			is_dll_generated := dynamic_lib /= Void
+			if is_dll_generated then
+						-- We need to reparse the Eiffel DEF file in order to
+						-- get the latest version saved by the user.
+						--| Note: this is required because during some incremental
+						--| compilation some IDs are going to be changed and thus
+						--| what has been stored in E_DYNAMIC_LIB is not valid anymore.
+				!! eiffel_def_file.make_open_read (dynamic_lib.file_name)
+				is_dll_generated := dynamic_lib.parse_exports_from_file (eiffel_def_file)
+				eiffel_def_file.close
+				dynamic_lib_exports := dynamic_lib.dynamic_lib_exports
+				system_name := clone(system.eiffel_system.name)
+				is_dll_generated := not dynamic_lib_exports.empty
+			end
 
-			if dynamic_lib_exports /= Void and then not dynamic_lib_exports.empty then
-				-- Generation of the header of the C_dynamic_lib_file
+			if is_dll_generated then
+						-- Generation of the header of the C_dynamic_lib_file
 					buffer.putstring("/*****************%N")
 					buffer.putstring(" *** EDYNLIB.C ***%N")
 					buffer.putstring(" *****************/%N%N")
@@ -127,7 +143,7 @@ feature -- Dynamic Library file
 
 					buffer.putstring("%N")
 
-				-- Generation of the header of the dynamic_lib_def_file
+						-- Generation of the header of the dynamic_lib_def_file
 					def_buffer.putstring("LIBRARY ")
 					def_buffer.putstring(system_name)
 					def_buffer.putstring(".dll%N")
@@ -135,12 +151,9 @@ feature -- Dynamic Library file
 					def_buffer.putstring("DESCRIPTION ")
 					def_buffer.putstring(system_name)
 					def_buffer.putstring(".DLL%N")
-					def_buffer.putstring("%NEXPORTS%N")
-					def_buffer.putstring("%N;System")
-					def_buffer.putstring("%N%Tinit_rt")
-					def_buffer.putstring("%N%Treclaim_rt%N") --FIXME
+					def_buffer.putstring("%NEXPORTS%N%N")
 
-				-- generation of everything
+					-- generation of everything
 				from
 					dynamic_lib_exports.start
 				until
@@ -233,7 +246,7 @@ feature -- Dynamic Library file
 									end
 									buffer.putstring (");")
 
-									-- DEFINITION OF THE FUNCTION TO BE EXPORTED
+										-- DEFINITION OF THE FUNCTION TO BE EXPORTED
 									buffer.putstring ("%N")
 									buffer.putstring (return_type)
 									buffer.putstring (" ")

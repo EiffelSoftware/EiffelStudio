@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			create out_of_process_check.make_by_id (Current, out_of_process_check_constant)
 			create id_ok.make_by_id (Current, Idok)
 			create id_cancel.make_by_id (Current, Idcancel)
-			create help_button.make_by_id (Current, Help_button_constant)
+	--		create help_button.make_by_id (Current, Help_button_constant)
 			create id_back.make_by_id (Current, Id_back_constant)
 		end
 

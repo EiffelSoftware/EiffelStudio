@@ -33,7 +33,7 @@ feature -- Access
 	id_back: WEL_PUSH_BUTTON
 			-- Back button
 
-	help_button: WEL_PUSH_BUTTON
+--	help_button: WEL_PUSH_BUTTON
 			-- Help button
 
 feature -- Behavior
@@ -48,8 +48,9 @@ feature -- Behavior
 	on_control_command (control: WEL_CONTROL) is
 			-- A command has been received from `control'.
 		do
-			if control = help_button then
-			elseif control = id_back then
+		--	if control = help_button then
+		--	elseif 
+			if control = id_back then
 				terminate (Idcancel)
 			end
 		end

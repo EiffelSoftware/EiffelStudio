@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			create virtual_table_universal_radio.make_by_id (Current, Virtual_table_universal_radio_constant)
 			create id_ok.make_by_id (Current, Idok)
 			create id_back.make_by_id (Current, id_back_constant)
-			create help_button.make_by_id (Current, Help_button_constant)
+	--		create help_button.make_by_id (Current, Help_button_constant)
 			create id_cancel.make_by_id (Current, Idcancel)
 		end
 

@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			create proxy_stub_input_edit.make_by_id (Current, Proxy_stub_input_edit_constant)
 			create id_back.make_by_id (Current, id_back_constant)
 			create browse_button.make_by_id (Current, Browse_button_constant)
-			create help_button.make_by_id (Current, Help_button_constant)
+	--		create help_button.make_by_id (Current, Help_button_constant)
 			create id_cancel.make_by_id (Current, Idcancel)
 			create msg_box.make
 		end

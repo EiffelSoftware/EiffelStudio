@@ -84,6 +84,9 @@
 			<item>Fixed crash of the compiler at the very end of a finalization of a system which has an assignment of a manifest type into a variable of type <class_name>ARRAY</class_name> [<keyword>like</keyword> <feature_name>anchor</feature_name>] where<feature_name>anchor</feature_name> is a feature being redefined with a different type in a descendant class.</item>
 			<item>Fixed an issue where compiler would report more than once the same error in an incremental recompilation.</item>
 			<item>Fixed issue where changing a normal routine to an external and having a compile error, and then reverting back to a normal routine while fixing the error would cause the compiler to crash.</item>
+			<item>Fixed some cases where project could be corrupted after a recompilation.</item>
+			<item>Now compiler reports VTCT errors at the end of degree 5, rather than during degree 5, so that you can collect all the VTCT errors at once.</item>
+			<item>Thanks to the improvement in VTCT errors reporting, now compiler will not generate an incorrect VTCT errors during an incremental recompilation for a class which has actually been removed from the system.</item>
 		</list>
 		<heading>
 			<size>3</size>Runtime/code generation issues
@@ -104,6 +107,7 @@
 			<item>Fixed issue where declaring a <class_name>NATIVE_ARRAY</class_name> of a .NET expanded type would be rejected by the compiler.</item>
 			<item>Fixed issue where assigning a .NET expanded type to an entity of type <class_name>ANY</class_name> would be rejected by the compiler.</item>
 			<item>Fixed a crash in the compiler when generating the code for a class which inherits from a .NET class and from an Eiffel class which has some anchored types.</item>
+			<item>Fixed a bug where calls to <feature_name>standard_is_equal</feature_name> from <class_name>ANY</class_name> on objects whose type is generic would yield <keyword>False</keyword> where it should have been <keyword>True</keyword> in classic Eiffel.</item>
 		</list>
 		<heading>
 			<size>3</size>Store/Retrieve issues

@@ -19,6 +19,7 @@
 				<item>Improved look and feel of applications using the EiffelVision library under Windows XP theme engine.</item>
 				<item>Improved keyboard navigation in EiffelStudio windows/dialogs.</item>
 				<item>Full support for 64 bits operating systems such as Windows, Linux, Solaris, Irix, VMS,...</item>
+				<item>Features tree is also available for classes which are part of the universe, but not yet compiled.</item>
 			</list>
 			<heading><size>3</size>Changes</heading>
 			<list ordered="false">
@@ -31,6 +32,7 @@
 		<heading><size>2</size>Debugger</heading>
 			<list ordered="false">
 				<item>Fixed a memory leak with the `estudio' process when conditional breakpoints are enabled.</item>
+				<item>Improved speed of execution when conditional breakpoints are enabled (about 20 times faster).</item>
 				<item>Fixed a bug where after killing a debugged process, the debugger could not be launched anymore.</item>
 			</list>
 		<heading><size>2</size>EiffelBuild</heading>

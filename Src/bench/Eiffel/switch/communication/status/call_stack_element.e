@@ -26,6 +26,11 @@ feature {NONE} -- Initialization
 	
 feature -- Properties
 
+	is_eiffel_call_stack_element: BOOLEAN is
+			-- Is, Current, an eiffel call stack element or not (external stack) ?
+		deferred
+		end		
+
 	class_name: STRING
 			-- Associated class name
 

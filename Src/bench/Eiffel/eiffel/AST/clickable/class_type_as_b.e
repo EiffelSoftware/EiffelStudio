@@ -251,7 +251,7 @@ feature -- Conveniences
 					elseif generics /= Void then
 						from
 							temp := cl_generics;
-							!! cl_generics.make (temp.count);
+							!! cl_generics.make_filled (temp.count);
 							pos := temp.index;
 							temp.start
 						until

@@ -2,7 +2,7 @@ SHELL= \bin\sh
 CC=		cl
 LD=		cl
 
-CFLAGS= -Od -c -nologo  -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(JDK_HOME)\include -I$(JDK_HOME)\include\win32 
+CFLAGS= -Od -c -nologo  -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(JDK_HOME)\include -I$(JDK_HOME)\include\win32
 CFLAGSMT= -Od -c -nologo -MTd -DEIF_THREADS  -DWORKBENCH -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(JDK_HOME)\include -I$(JDK_HOME)\include\win32 -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
 
 .c.obj:

@@ -8,6 +8,8 @@ inherit
 			make as old_make
 		end;
 	HOLE
+		rename
+			stone_type as hole_stone_type
 		redefine
 			process_color
 		end;
@@ -18,12 +20,17 @@ creation
 	
 feature {NONE}
 
+	focus_string: STRING is
+		do
+			Result := Focus_labels.fg_color_att_label
+		end;
+
 	command: FG_STONE_CMD is
 		once
 			!!Result
 		end;
 
-	pixmap: PIXMAP is
+	symbol: PIXMAP is
 		do
 			Result := Pixmaps.fg_color_stone_pixmap
 		end;
@@ -33,6 +40,11 @@ feature {NONE}
 			old_make (a_parent, an_editor);
 			associated_tf := tf;	
 			register
+		end;
+
+	hole_stone_type: INTEGER is
+		do
+			Result := Stone_types.color_type
 		end;
 
 	associated_tf: TEXT_FIELD
@@ -67,11 +79,13 @@ feature -- Hole
 
 	process_color (dropped: COLOR_STONE) is
 		local
-			cmd: FG_COLOR_CMD;
+			cmd: FG_STONE_CMD;
 		do
 			associated_tf.set_text (dropped.color_name);
 			!!cmd;
 			cmd.execute (editor.edited_context);
+            editor.edited_context.set_fg_color_name (dropped.color_name);
+            context_catalog.update_editors (editor.edited_context, Context_const.color_form_nbr)
 		end;
 
 feature {NONE}

@@ -99,9 +99,9 @@ feature -- Basic Oprtations
 			end
 			
 			Result := impl.relative_folder_name (name, version, culture, key).to_cil
---		ensure
---			non_void_result: Result /= Void
---			non_empty_result: Result.get_length > 0
+		ensure
+			non_void_result: Result /= Void
+			non_empty_result: Result.get_length > 0
 		end
 		
 

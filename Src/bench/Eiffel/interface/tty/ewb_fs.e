@@ -56,7 +56,8 @@ feature {NONE} -- Execution
 
 	associated_cmd: E_SHOW_FS is
 		do
-			!! Result.do_nothing
+			!! Result.do_nothing;
+			Result.set_feature_clause_order (Void)
 		end;
 
 end -- class EWB_FS

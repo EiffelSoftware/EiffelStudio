@@ -284,6 +284,31 @@ feature
 			end;
 		end;
 
+	class_stone (class_name: STRING): STONE is
+			-- Find first class stone with class name `class_name'.
+			-- (Void if none are found).	
+		local
+			local_cursor: LINKABLE [CLUSTER_I];
+			class_i: CLASS_I
+		do
+			from
+				local_cursor := clusters.first_element
+			until
+				local_cursor = Void or else (Result /= Void)
+			loop
+				class_i :=  class_named (class_name, local_cursor.item);
+				if class_i /= Void then
+					if class_i.compiled then
+						Result := class_i.compiled_class.stone;
+					else
+						!CLASSI_STONE!Result.make (class_i)
+					end;
+				else
+					local_cursor := local_cursor.right
+				end;	
+			end
+		end;
+
 	class_named (class_name: STRING; cluster: CLUSTER_I): CLASS_I is
 			-- Class named `class_name' in cluster `cluster'
 		require

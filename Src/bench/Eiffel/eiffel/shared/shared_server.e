@@ -87,6 +87,24 @@ feature {NONE}
 			Result := System.m_desc_server;
 		end;
  
+	Rep_feat_server: REP_FEAT_SERVER is
+			-- Replicated features server
+		once
+			Result := System.Rep_feat_server;
+		end;
+ 
+	Rep_server: REP_SERVER is
+			-- Replicated features server for classes
+		once
+			Result := System.Rep_server;
+		end;
+ 
+	Rep_depend_server: REP_DEPEND_SERVER is
+			-- Dependency server for replicated features 
+		once
+			Result := System.Rep_depend_server;
+		end;
+ 
 	Poly_server: POLY_SERVER is
 			-- Server of polymorphic unit tables
 		once

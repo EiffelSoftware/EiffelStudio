@@ -28,6 +28,7 @@ inherit
 	SHARED_ARRAY_BYTE;
 	SHARED_DECLARATIONS;
 	SHARED_PASS;
+	SHARED_DIALOG;
 	EXCEPTIONS;
 
 feature 
@@ -75,6 +76,12 @@ feature
 	byte_server: BYTE_SERVER;
 			-- Server for byte code trees
 
+	rep_server: REP_SERVER;
+			-- Server for class that has replicated features 
+
+	rep_feat_server: REP_FEAT_SERVER;
+			-- Server for replicated features 
+
 	class_info_server: CLASS_INFO_SERVER;
 			-- Server for class information produced bu first pass
 
@@ -86,6 +93,9 @@ feature
 
 	depend_server: DEPEND_SERVER;
 			-- Server for dependances for incremental type check
+
+	rep_depend_server: REP_DEPEND_SERVER;
+			-- Server for dependances for replicated features 
 
 	m_feat_tbl_server: M_FEAT_TBL_SERVER;
 			-- Server of byte code description of melted feature tables
@@ -288,10 +298,13 @@ feature
 			!!body_server.make;
 			!!byte_server.make;
 			!!ast_server.make;
+			!!rep_server.make;
+			!!rep_feat_server.make;
 			!!class_info_server.make;
 			!!inv_ast_server.make;
 			!!inv_byte_server.make;
 			!!depend_server.make;
+			!!rep_depend_server.make;
 			!!m_feat_tbl_server.make;
 			!!m_feature_server.make;
 			!!m_rout_id_server.make;
@@ -484,8 +497,10 @@ end;
 				Tmp_ast_server.remove (id);
 				Tmp_feat_tbl_server.remove (id);
 				Tmp_class_info_server.remove (id);
+				Tmp_rep_info_server.remove (id);
 				Tmp_inv_ast_server.remove (id);
 				Tmp_depend_server.remove (id);
+				Tmp_rep_depend_server.remove (id);
 				Tmp_m_rout_id_server.remove (id);
 				Tmp_m_desc_server.remove (id);
 
@@ -1214,6 +1229,12 @@ end;
 			write_int (file_pointer, -1);
 
 			Update_file.close;
+		rescue
+			if not Update_file.is_closed then
+				Update_file.close
+			end;
+			Dialog_window.display ("Error in writing .UPDT file");
+			retry;
 		end;
 
 	make_conformance_table_byte_code is
@@ -1338,15 +1359,20 @@ end;
 			Feat_tbl_server.take_control (Tmp_feat_tbl_server);
 			Tmp_body_server.finalize;
 			Tmp_inv_ast_server.finalize;
+			Tmp_rep_feat_server.finalize;
 			Ast_server.take_control (Tmp_ast_server);
 			Class_info_server.take_control (Tmp_class_info_server);
 			Byte_server.take_control (Tmp_byte_server);
 			Inv_byte_server.take_control (Tmp_inv_byte_server);
 			Depend_server.take_control (Tmp_depend_server);
+			Rep_depend_server.take_control (Tmp_rep_depend_server);
 			M_feat_tbl_server.take_control (Tmp_m_feat_tbl_server);
 			M_feature_server.take_control (Tmp_m_feature_server);
 			M_rout_id_server.take_control (Tmp_m_rout_id_server);
 			M_desc_server.take_control (Tmp_m_desc_server);
+			Rep_server.take_control (Tmp_rep_server);
+				-- Just clear the rep info server
+			Tmp_rep_info_server.clear;
 		end;
 
 feature  -- Freeezing
@@ -1526,7 +1552,12 @@ end;
 
 			freeze_set1.wipe_out;
 			freeze_set2.wipe_out;
+			generate_main_eiffel_files;
+		end;
 
+	generate_main_eiffel_files is
+			-- Generate the "E*.c" files.
+		do
 			generate_skeletons;
 
 			generate_cecil;
@@ -1550,6 +1581,14 @@ end;
 			generate_exec_tables;
 
 				-- Empty update file
+			generate_empty_update_file;
+		rescue
+			Dialog_window.display ("Cannot generate main Eiffel files");
+			retry;	
+		end;
+
+	generate_empty_update_file is
+		do
 			Update_file.open_write;
 				-- Nothing to update
 			Update_file.putchar ('%U');
@@ -2911,10 +2950,15 @@ feature
 			Tmp_feat_tbl_server.clear;
 			Tmp_body_server.clear;
 			Tmp_class_info_server.clear;
+			Tmp_rep_info_server.clear;
 			Tmp_byte_server.clear;
 			Tmp_inv_byte_server.clear;
 			Tmp_inv_ast_server.clear;
 			Tmp_depend_server.clear;
+			Tmp_rep_depend_server.clear;
+			Tmp_rep_server.clear;
+			Tmp_rep_feat_server.clear;
+			Tmp_rep_info_server.clear;
 		end;
 
 	System_chunk: INTEGER is 500;
@@ -2931,6 +2975,7 @@ feature -- Purge of compilation files
 				-- Transfer datas from servers to temporary servers
 			feat_tbl_server.purge;
 			depend_server.purge;
+			rep_depend_server.purge;
 			class_info_server.purge;
 			inv_byte_server.purge;
 			byte_server.purge;
@@ -2939,6 +2984,7 @@ feature -- Purge of compilation files
 			m_feature_server.purge;
 			m_rout_id_server.purge;
 			m_desc_server.purge;
+			rep_server.purge;
 		end;
 	
 feature -- Conveniences

@@ -22,6 +22,10 @@ inherit
 		export
 			{ANY} all
 		end;
+	SHARED_DIALOG
+		undefine
+			twin
+		end;
 
 feature
 
@@ -125,6 +129,9 @@ feature
 				end;
 			end;
 			force (info, id);
+		rescue
+			Dialog_window.display ("Cannot write compilation information to disk");
+			retry;
 		end;
 
 	init_file (server_file: SERVER_FILE) is
@@ -194,6 +201,9 @@ feature
 				end;
 				cache.put (Result);
 			end;
+		rescue
+			Dialog_window.display ("Cannot read compilation information from disk");
+			retry;
 		end;
 
 	disk_item (an_id: INTEGER): T is

@@ -23,15 +23,17 @@ inherit
 		undefine
 			default_create, copy
 		end
-	
-	ARGUMENTS
-		undefine
-			default_create, copy
-		end
 
 	GB_CONSTANTS
 	
 	GB_SHARED_SYSTEM_STATUS
+		undefine
+			default_create, copy
+		end
+		
+	EXECUTION_ENVIRONMENT
+		rename
+			launch as environment_launch
 		undefine
 			default_create, copy
 		end
@@ -49,18 +51,28 @@ feature {NONE} -- Initialization
 				-- If `argument_array' has one element,
 				-- then no argument was specified, only the
 				-- name of the executable.
-			if argument_array.count = 1 then
+			if command_line.argument_array.count = 1 then
 				default_create
 				xml_handler.load_components
 				main_window.build_interface
 				main_window.show
 				launch
-			elseif (argument_array @ 2).as_lower.is_equal (Visual_studio_argument) then
+			elseif (command_line.argument_array @ 2).as_lower.is_equal (Visual_studio_project_argument) then
+				check
+					four_arguments: command_line.argument_array.count = 5
+				end
 						-- Now create the project_settings.
 				create project_settings.make_with_default_values
-				if (argument_array @ 3).as_lower.is_equal (Project_argument) then
+					-- Enable complete project in the project settings.
+				if (command_line.argument_array @ 2).as_lower.is_equal (Visual_studio_project_argument) then
 					project_settings.enable_complete_project
 				end
+					-- Set the project location.
+				project_settings.set_project_location (command_line.argument_array @ 3)
+				
+					-- Set the project_name
+				project_settings.set_project_name ((command_line.argument_array @ 4))
+
 					-- And set them as the build settings.
 				system_status.set_current_project (project_settings)
 				system_status.enable_wizard_system
@@ -75,5 +87,5 @@ feature {NONE} -- Initialization
 			-- Any General initialization can be added here.
 			-- This will be executed before the program is launched.
 		end
-
+		
 end

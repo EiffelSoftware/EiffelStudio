@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			set_tooltip ("Generate code")
 			set_pixmaps ((create {GB_SHARED_PIXMAPS}).icon_code_generation)
 			set_name ("generate code")
-			set_menu_name ("generate code")
+			set_menu_name ("Generate code")
 			disable_sensitive
 			add_agent (agent execute)
 

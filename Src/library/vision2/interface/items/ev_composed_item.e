@@ -93,6 +93,7 @@ feature -- Element change
 		require
 			exists: not destroyed
 			valid_text: txt /= Void
+			valid_text_length: txt.count = count
 		do
 			implementation.set_text (txt)
 		end
@@ -106,6 +107,16 @@ feature -- Element change
 			valid_pixmap: is_valid (pix)
 		do
 			implementation.set_cell_pixmap (index, pix)
+		end
+
+	unset_cell_pixmap (index: INTEGER) is
+			-- Remove the pixmap of the 
+			-- `index'-th cell of the item.
+		require
+			valid_index: index >= 1 and index <= count
+			has_pixmap: (pixmap @ index) /= Void
+		do
+			implementation.unset_cell_pixmap (index)
 		end
 
 	set_pixmap (pix: ARRAY [EV_PIXMAP]) is

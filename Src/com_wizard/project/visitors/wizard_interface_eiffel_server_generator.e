@@ -13,7 +13,7 @@ inherit
 			generate
 		end
 
-feature -- Basic operation
+feature -- Basic operations
 
 	generate (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
 			-- Generate Eiffel client for interface.

@@ -15,7 +15,7 @@ inherit
 			{NONE} all
 		end
 
-feature -- Access
+feature -- Basic Operations
 
 	generate (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
 			-- Generate eiffel writer

@@ -792,7 +792,7 @@ feature {NONE} -- Implementation
 		do
 			if private_background_color = Void then
 				-- FIXME Will be Windows 3D object color.
-				!! Result.make_by_sys_color (Color_menu)
+				!! Result.make_by_sys_color (color_background)
 			else
 				windows_color ?= private_background_color.implementation
 				Result := windows_color.brush

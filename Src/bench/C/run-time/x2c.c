@@ -53,7 +53,11 @@ struct parse {
 
 struct parse *locate();
 
-void main()
+FILE *input_file, *output_file;
+
+void main(argc, argv)
+int argc;
+char **argv;
 {
 	/* Pre-process input (stdin) and outputs new form with resolved offset
 	 * macros (introduced by '@') on stdout. C strings and C chars are skipped
@@ -69,7 +73,21 @@ void main()
 	struct parse *ps;
 	int pos;
 
-	while ((c = getchar()) != EOF) {
+	if (argc != 3){
+		print_err_msg(stderr, "x2c: wrong number of arguments.\n");
+		exit (1);
+	}
+
+	if ((input_file = fopen (argv[1], "r")) == (FILE *)0){
+		print_err_msg(stderr, "x2c: cannot open input file.\n");
+		exit (1);
+		}
+	if ((output_file = fopen (argv[2], "w")) == (FILE *)0){
+		print_err_msg(stderr, "x2c: cannot open output file.\n");
+		exit (1);
+		}
+
+	while ((c = getc(input_file)) != EOF) {
 		if (!in_string && !in_char) {
 			if (!last_was_backslash) {	/* Skip C strings and C chars */
 				switch (c) {
@@ -81,7 +99,7 @@ void main()
 					break;
 				}
 				if (in_string || in_char) {
-					putchar(c);
+					putc(c, output_file);
 					continue;
 				}
 			}
@@ -90,13 +108,13 @@ void main()
 			if (c == '"' && !last_was_backslash)
 				in_string = 0;
 			last_was_backslash = c == '\\' && !last_was_backslash;
-			putchar(c);
+			putc(c, output_file);
 			continue;
 		} else if (in_char) {
 			if (c == '\'' && !last_was_backslash)
 				in_char = 0;
 			last_was_backslash = c == '\\' && !last_was_backslash;
-			putchar(c);
+			putc(c, output_file);
 			continue;
 		} else {
 			print_err_msg(stderr, "x2c: impossible state.\n");
@@ -104,7 +122,7 @@ void main()
 		}
 		if (!in_word) {
 			if (c != '@') {
-				putchar(c);
+				putc(c, output_file);
 				continue;
 			}
 			in_word = 1;
@@ -114,7 +132,7 @@ void main()
 		} else {
 			if (c == '@') {				/* Hmm..., got another '@' !? */
 				buf[pos] = '\0';
-				printf("@%s", buf);		/* Print what we got so far */
+				fprintf(output_file, "@%s", buf);		/* Print what we got so far */
 				pos = 0;				/* And restart with new word */
 				buf[pos] = '\0';
 				continue;
@@ -123,16 +141,18 @@ void main()
 				in_word = 0;
 				buf[pos] = '\0';
 				if (pos > MAXLEN || 0 == (ps = locate(buf))) {
-					printf("@%s%c", buf, c);
+					fprintf(output_file, "@%s%c", buf, c);
 					continue;
 				}
 				getarg(ps->c_args, buf);
-				printf("%d", (ps->c_off)());
+				fprintf(output_file, "%d", (ps->c_off)());
 				continue;
 			}
 			buf[pos++] = c;
 		}
 	}
+	fclose (input_file);
+	fclose (output_file);
 	exit(0);
 }
 
@@ -179,9 +199,9 @@ char *name;			/* Macro name (used only for error message) */
 		a[i] = val;
 	}
 
-	c = getchar();
+	c = getc(input_file);
 	if (c != ')' && c != EOF)
-		ungetc(c, stdin);
+		ungetc(c, input_file);
 }
 
 long nextarg()
@@ -198,11 +218,11 @@ long nextarg()
 
 	buf[pos] = '\0';
 
-	while ((c = getchar()) != EOF) {
+	while ((c = getc(input_file)) != EOF) {
 		if (isspace(c))
 			continue;
 		if (c == ')')
-			ungetc(c, stdin);
+			ungetc(c, input_file);
 		if (c == ',' || c == ')') {
 			if (pos == 0)
 				return -1;

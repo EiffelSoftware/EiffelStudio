@@ -269,8 +269,8 @@ feature -- Window Properties
 	initialized: BOOLEAN;
 			-- Is the workbench created?
 
-	is_system_window_hidden: BOOLEAN;
-			-- Is the system window hidden?
+	is_system_tool_hidden: BOOLEAN;
+			-- Is the system tool hidden?
 
 	is_name_chooser_hidden: BOOLEAN;
 			-- Is the name chooser hidden?
@@ -283,6 +283,12 @@ feature -- Window Properties
 
 	is_project_tool_hidden: BOOLEAN;
 			-- Is the project tool hidden?
+
+	is_preference_tool_hidden: BOOLEAN;
+			-- Is the preference tool hidden?
+
+	is_profile_tool_hidden: BOOLEAN;
+			-- Is the profile tool hidden?
 
 	eiffel_symbol: PIXMAP is
 		do
@@ -390,9 +396,17 @@ feature -- Execution Implementation
 						-- The project tool is being deiconified.
 					is_project_tool_hidden := False;
 					window_manager.show_all_editors
-					if is_system_window_hidden then
+					if is_profile_tool_hidden then
+						is_profile_tool_hidden := False;
+						Profile_tool.show
+					end;
+					if is_preference_tool_hidden then
+						is_preference_tool_hidden := False;
+						Preference_tool.show
+					end;
+					if is_system_tool_hidden then
 						system_tool.show
-						is_system_window_hidden := False;
+						is_system_tool_hidden := False;
 					elseif system_tool.in_use then
 						system_tool.show
 					end;
@@ -420,7 +434,15 @@ feature -- Execution Implementation
 				if 	system_tool.realized and then system_tool.shown then
 					system_tool.hide;
 					system_tool.close_windows;
-					is_system_window_hidden := True;
+					is_system_tool_hidden := True;
+				end;
+				if 	Preference_tool /= Void and then Preference_tool.shown then
+					Preference_tool.hide;
+					is_preference_tool_hidden := True;
+				end;
+				if 	Profile_tool /= Void and then Profile_tool.shown then
+					Profile_tool.hide;
+					is_profile_tool_hidden := True;
 				end;
 				if last_name_chooser /= Void and then last_name_chooser.is_popped_up then
 					is_name_chooser_hidden := true;
@@ -977,7 +999,8 @@ feature -- Graphical Interface
 			!! debug_quit_cmd.make (Current);
 			!! debug_quit_button.make (debug_quit_cmd, format_bar);
 			debug_quit_button.set_action ("!c<Btn1Down>", debug_quit_cmd, debug_quit_cmd.kill_it);
-			!! debug_quit_menu_entry.make (debug_quit_cmd, debug_menu);
+			!! debug_quit_menu_entry.make_button_only (debug_quit_cmd, debug_menu);
+			debug_quit_button.add_activate_action (debug_quit_cmd, debug_quit_cmd.kill_it);
 			!! debug_quit_cmd_holder.make (debug_quit_cmd, debug_quit_button, debug_quit_menu_entry);
 
 			!! sep.make (new_name, debug_menu)

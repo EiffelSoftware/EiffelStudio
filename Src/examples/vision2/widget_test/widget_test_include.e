@@ -15,6 +15,7 @@ feature {NONE} -- Implementation
 			fixed_set_item_position_demo: FIXED_SET_ITEM_POSITION_TEST
 			fixed_increase_item_position_demo: FIXED_INCREASE_ITEM_POSITION_TEST
 			fixed_z_order_test: FIXED_Z_ORDER_TEST
+			fixed_pixmap_test: FIXED_PIXMAP_TEST
 			button_select_actions_test: BUTTON_SELECT_ACTIONS_TEST
 			button_pixmp_test: BUTTON_PIXMAP_TEST
 			label_basic_test: LABEL_BASIC_TEST

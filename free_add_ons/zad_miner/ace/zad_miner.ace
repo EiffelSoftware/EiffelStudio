@@ -36,16 +36,6 @@ default
 	multithreaded(no)
 
 
---	array_optimization (yes)
---	inlining (yes)
------------------------- EiffelBase:
------------------------- TimeEiffelLibrary:
------------------------- EiffelVision
---"$ISE_EIFFEL\library\libpng\libpng.lib",
---"$ISE_EIFFEL\library\zlib\zlib.lib",
--- 		"$VISION_PRERELEASE\libpng\libpng.lib",
--- 		"$VISION_PRERELEASE\zlib\zlib.lib",
-
 cluster
 	root_cluster:		"$ISE_EIFFEL\free_add_ons\zad_miner\src"
 
@@ -73,13 +63,11 @@ external
 
 	include_path:
 		"$ISE_EIFFEL\library\wel\spec\windows\include",
-		"$ISE_EIFFEL\library\vision2\spec\include",
-		"$ISE_EIFFEL\library\time\clib"
+		"$ISE_EIFFEL\library\vision2\spec\include"
 
 	object:
 		"$ISE_EIFFEL\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
 		"$ISE_EIFFEL\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
-		"$ISE_EIFFEL\library\time\spec\msc\lib\datetime.lib",
 		"$ISE_EIFFEL\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
 		"$ISE_EIFFEL\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib"
 

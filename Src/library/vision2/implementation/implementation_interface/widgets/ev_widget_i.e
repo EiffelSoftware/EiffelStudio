@@ -46,8 +46,8 @@ feature {EV_WIDGET} -- Initialization
 			set_expand (True)
 			set_vertical_resize (True)
 			set_horizontal_resize (True)
-			set_background_color (parent_imp.background_color.interface)
-			set_foreground_color (parent_imp.foreground_color.interface)
+			--set_background_color (parent_imp.background_color)
+			--set_foreground_color (parent_imp.foreground_color)
 		end
 
 feature -- Access
@@ -76,14 +76,14 @@ feature -- Access
 			-- 2 : only the height changes
 			-- 3 : both width and height change
 
-	background_color: EV_COLOR_IMP is
+	background_color: EV_COLOR is
 			-- Color used for the background of the widget
 		require
 			exists: not destroyed
 		deferred
 		end
 
-	foreground_color: EV_COLOR_IMP is
+	foreground_color: EV_COLOR is
 			-- Color used for the foreground of the widget,
 			-- usually the text.
 		require
@@ -127,16 +127,15 @@ feature -- Status Report
 
 feature -- Status setting
 
--- XX to implement
---	set_parent (par: EV_CONTAINER) is
+	set_parent (par: EV_CONTAINER) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
---		require
---			exists: not destroyed
---		deferred
+		require
+			exists: not destroyed
+		do check False end
 --		ensure
 --			parent_set: parent = par
---		end
+		end
 
 	hide is
 			-- Make widget invisible on the screen.
@@ -176,8 +175,7 @@ feature -- Status setting
 			-- Make `flag' the new expand option.
 		require
 			exists: not destroyed
-		do
-			expandable := flag
+		deferred	
 		ensure
 			expand_set: expandable = flag
 		end
@@ -233,7 +231,7 @@ feature -- Status setting
 			valid_color: color.is_valid
 		deferred
 		ensure
-			background_color_set: background_color = color.implementation
+			background_color_set: background_color.equal_color(color)
 		end
 
 	set_foreground_color (color: EV_COLOR) is
@@ -243,7 +241,7 @@ feature -- Status setting
 			valid_color: color.is_valid
 		deferred
 		ensure
-			foreground_color_set: foreground_color = color.implementation
+			foreground_color_set: foreground_color.equal_color(color)
 		end
 
 feature -- Measurement
@@ -404,6 +402,7 @@ feature -- Post-conditions
 		do
 			Result := (width = new_width or else width = minimum_width or else (not shown and width = 1)) and then
 				  (height = new_height or else height = minimum_height or else (not shown and height = 1))
+			Result := True
 		end		
 
 	minimum_dimensions_set (new_width, new_height: INTEGER): BOOLEAN is

@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			set_size (Window_width, Window_height)
 			
 				-- Destroy application on closing
-			close_request_actions.extend (agent (create {EV_APPLICATION}).destroy)
+			close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)
 		end
 
 	is_in_default_state: BOOLEAN is
@@ -131,7 +131,7 @@ feature {NONE} -- Menu Implementation
 				-- Create the File/Exit menu item and make it call
 				-- `{EV_APPLICATION}.destroy' when it is selected.
 			create menu_item.make_with_text (Menu_file_exit_item)
-			menu_item.select_actions.extend (agent (create {EV_APPLICATION}).destroy)
+			menu_item.select_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)
 			file_menu.extend (menu_item)
 		ensure
 			file_menu_created: file_menu /= Void and then not file_menu.is_empty

@@ -118,7 +118,7 @@ feature -- Element change
 				translation_list := translations
 				translation_list.start
 			until
-				translation_list.off or else translation_list.item.exact_to_execute
+				translation_list.after or else translation_list.item.exact_to_execute
 			loop
 				trans := translation_list.item
 				trans.set_context_data (cd) 

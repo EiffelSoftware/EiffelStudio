@@ -254,6 +254,7 @@ feature -- Status setting
 			output_view.quick_refresh
 			class_view.quick_refresh
 			feature_view.quick_refresh
+			address_manager.refresh
 		end
 
 	cut_from_development_window is

@@ -83,7 +83,7 @@ feature -- Basic Operations
 			else
 				message_output.initialize_log_file
 				if shared_wizard_environment.new_eiffel_project then
-					progress_report.set_title ("Process Eiffel class")
+					progress_report.set_title ("Processing Eiffel class")
 					progress_report.start
 					progress_report.set_range (2)
 

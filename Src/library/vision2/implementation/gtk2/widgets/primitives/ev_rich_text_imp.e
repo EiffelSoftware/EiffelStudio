@@ -563,6 +563,8 @@ feature -- Status setting
 	buffered_format (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT) is
 			-- Apply a character format `format' from caret positions `start_position' to `end_position' to
 			-- format buffer. Call `flush_format_buffer' to apply buffered contents to `Current'.
+		local
+			a_format_imp: EV_CHARACTER_FORMAT_IMP
 		do
 			if not buffer_locked_in_format_mode then
 				buffer_locked_in_format_mode := True
@@ -571,7 +573,8 @@ feature -- Status setting
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (append_buffer)
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_buffer (text_view, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_new (default_pointer))
 			end
-			format_region (start_position, end_position, format)
+			a_format_imp ?= format.implementation
+			modify_region_internal (append_buffer, start_position, end_position, a_format_imp, a_format_imp.dummy_character_format_range_information)
 		end
 		
 	buffered_append (a_text: STRING; format: EV_CHARACTER_FORMAT) is
@@ -584,12 +587,18 @@ feature -- Status setting
 			a_format_imp: EV_CHARACTER_FORMAT_IMP
 			l_count: INTEGER
 			l_char: CHARACTER
+			a_text_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
 			l_count := a_text.count
 			if l_count >= 1 then
 				if not buffer_locked_in_append_mode then
 					text_tag_table := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_tag_table (text_buffer)
 					append_buffer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_new (text_tag_table)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, temp_start_iter.item, 0)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, temp_end_iter.item, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_char_count (text_buffer))
+					create a_text_iter.make
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (append_buffer, a_text_iter.item, 0)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert_range (append_buffer, a_text_iter.item, temp_start_iter.item, temp_end_iter.item)
 					buffer_locked_in_append_mode := True
 				end
 				l_char := a_text.item (1)
@@ -616,12 +625,14 @@ feature -- Status setting
 		do
 			if buffer_locked_in_format_mode then
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_buffer (text_view, append_buffer)
+				text_buffer := append_buffer
 				initialize_buffer_events
 				feature {EV_GTK_EXTERNALS}.object_unref (append_buffer)
 				append_buffer := NULL
 				buffer_locked_in_format_mode := False
 			elseif buffer_locked_in_append_mode then
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_buffer (text_view, append_buffer)
+				text_buffer := append_buffer
 				initialize_buffer_events
 				feature {EV_GTK_EXTERNALS}.object_unref (append_buffer)
 				append_buffer := NULL

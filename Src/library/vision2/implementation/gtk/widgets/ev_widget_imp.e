@@ -73,6 +73,7 @@ feature {NONE} -- Initialization
 		end
 
 	initialize_events is
+			-- Initialize the gtk events received by `Current'
 		do
 			if not feature {EV_GTK_EXTERNALS}.gtk_widget_no_window (c_object) then
 				feature {EV_GTK_EXTERNALS}.gtk_widget_add_events (c_object, Gdk_events_mask)
@@ -133,28 +134,35 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Used for key event actions sequences.
 		local
 			temp_key_string: STRING
+			a_capture_widget_imp: EV_WIDGET_IMP
 		do
-			if a_key_press then
-					-- The event is a key press event.
-				if a_key /= Void and then key_press_actions_internal /= Void then
-					key_press_actions_internal.call ([a_key])
-				end
-				if key_press_string_actions_internal /= Void then
-					temp_key_string := a_key_string
-					if a_key /= Void then
-						if a_key.out.count /= 1 and not a_key.is_numpad then
-							temp_key_string := ""
-						end
-						if a_key.code = app_implementation.Key_constants.Key_space then
-							temp_key_string := " "
-						end
-					end
-					key_press_string_actions_internal.call ([temp_key_string])
-				end
+			if App_implementation.capture_widget /= Void and then a_key_press and then a_key /= Void and then a_key.code = feature {EV_KEY_CONSTANTS}.Key_escape then
+					-- If a PND is in action and the Esc key is pressed then cancel it
+				a_capture_widget_imp ?= App_implementation.capture_widget.implementation
+				a_capture_widget_imp.end_transport (0, 0, 0, 0, 0 ,0 ,0 ,0)
 			else
-					-- The event is a key release event.
-				if a_key /= Void and then key_release_actions_internal /= Void then
-					key_release_actions_internal.call ([a_key])
+				if a_key_press then
+						-- The event is a key press event.
+					if a_key /= Void and then key_press_actions_internal /= Void then
+						key_press_actions_internal.call ([a_key])
+					end
+					if key_press_string_actions_internal /= Void then
+						temp_key_string := a_key_string
+						if a_key /= Void then
+							if a_key.out.count /= 1 and not a_key.is_numpad then
+								temp_key_string := ""
+							end
+							if a_key.code = app_implementation.Key_constants.Key_space then
+								temp_key_string := " "
+							end
+						end
+						key_press_string_actions_internal.call ([temp_key_string])
+					end
+				else
+						-- The event is a key release event.
+					if a_key /= Void and then key_release_actions_internal /= Void then
+						key_release_actions_internal.call ([a_key])
+					end
 				end
 			end
 		end
@@ -372,6 +380,7 @@ feature -- Status setting
 		local
 			i: INTEGER
 		do
+			App_implementation.set_capture_widget (interface)
 			feature {EV_GTK_EXTERNALS}.gtk_grab_add (c_object)
 			i := feature {EV_GTK_EXTERNALS}.gdk_pointer_grab (
 				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
@@ -384,12 +393,13 @@ feature -- Status setting
 				NULL,						-- GdkWindow* confine_to 
 				NULL,						-- GdkCursor *cursor
 				0)							-- guint32 time
-			end
+		end
 
 	disable_capture is
 			-- Ungrab all the mouse and keyboard events.
 			--| Used by pick and drop.
 		do
+			App_implementation.set_capture_widget (Void)
 			feature {EV_GTK_EXTERNALS}.gtk_grab_remove (c_object)
 			feature {EV_GTK_EXTERNALS}.gdk_pointer_ungrab (
 				0 -- guint32 time
@@ -600,6 +610,7 @@ feature {EV_ANY_IMP} -- Implementation
 			-- (Void if `Current' is not in a container)
 
 	aux_info_struct: POINTER is
+			-- Pointer to the auxillary information struct used for retrieving when widget is unmapped
 		local
 			a_cs: C_STRING
 		do
@@ -613,6 +624,7 @@ feature {EV_ANY_IMP} -- Implementation
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 		
 	top_level_window_imp: EV_WINDOW_IMP is
+			-- Window that `Current' is contained within (if any)
 		local
 			wind_ptr: POINTER
 		do
@@ -625,13 +637,13 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 feature {NONE} -- Agent functions.
 
 	key_event_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
-			-- 
+			-- Translation agent used for key events
 		once
 			Result := agent (App_implementation.gtk_marshal).key_event_translate
 		end
 		
 	size_allocate_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
-			-- 
+			-- Translation agent used for size allocation events
 		once
 			Result := agent (App_implementation.gtk_marshal).size_allocate_translate
 		end
@@ -751,6 +763,7 @@ feature {NONE} -- Implementation
 feature {EV_ANY_I} -- Contract Support
 
 	parent_is_sensitive: BOOLEAN is
+			-- Is the parent sensitive?
 		local
 			a_par: EV_CONTAINER_IMP
 		do
@@ -759,6 +772,7 @@ feature {EV_ANY_I} -- Contract Support
 		end
 
 	has_parent: BOOLEAN is
+			-- Is `Current' parented?
 		do
 			Result := parent_imp /= Void
 		end

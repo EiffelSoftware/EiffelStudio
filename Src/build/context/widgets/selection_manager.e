@@ -13,8 +13,7 @@ creation
 
 	make
 
-	
-feature 
+feature {NONE} -- Creation
 
 	make is
 		do
@@ -22,7 +21,6 @@ feature
 			set_logical_mode (10); -- GXinvert
 			!!group.make;
 		end;
-
 	
 	wipe_out_group is
 		do
@@ -31,7 +29,9 @@ feature
 			until
 				group.after
 			loop
-				group.item.set_grouped (false);
+				if not group.item.widget.destroyed then
+					group.item.set_grouped (false);
+				end;
 				group.forth
 			end;
 			group.wipe_out;
@@ -73,6 +73,8 @@ feature {NONE}
 	shift_selected: BOOLEAN;
 
 	ctrl_selected: BOOLEAN;
+
+	abort_button_release: BOOLEAN;
 
 	motion: BOOLEAN;
 
@@ -138,7 +140,15 @@ feature {NONE}
 				widget.ungrab;
 				grabbed := false;
 				display_selected_rectangles;
-				if width >= 0 and height >= 0 then
+				if context.is_group_composite and then
+					context.is_in_a_group
+				then
+					display_rectangle;
+					draw_grouped_comp_items
+				elseif width >= 0 and height >= 0 and then
+					not (context.is_group_composite and then
+						context.is_in_a_group)
+				then
 					!!cmd;
 					cmd.execute (context);
 					if cursor_shape /= Cursors.move_cursor then
@@ -158,7 +168,7 @@ feature {NONE}
 		do
 			widget.ungrab;
 			grabbed := false;
-			draw_grouped_items;
+			draw_grouped_comp_items;
 			move_context
 		end;
 
@@ -289,7 +299,7 @@ feature {NONE}
 			ct: INTEGER
 		do
 			if context.is_group_composite then
-				draw_grouped_items
+				draw_grouped_comp_items
 			elseif shift_selected then
 				display_shift_selected_rectangles;
 			else
@@ -316,7 +326,7 @@ feature {NONE}
 				height := new_y - y;
 			end;
 			if context.is_group_composite then
-				draw_grouped_items
+				draw_grouped_comp_items
 			elseif shift_selected then
 				display_shift_selected_rectangles
 			else
@@ -424,9 +434,7 @@ feature {NONE}
 			end;
 		end;
 
-	-- *******************
-	-- * Display section *
-	-- *******************
+feature {NONE} -- Display Section
 
 	display_selected_rectangles is
 			-- Display rectangles that has been selected.
@@ -470,7 +478,11 @@ feature {NONE}
 			end;
 		end;
 
-	draw_grouped_items is
+	draw_grouped_comp_items is
+			-- Draw grouped composite items. Draw ghost shapes
+			-- for additional children.
+		require
+			context_is_group_comp: context.is_group_composite
 		local
 			number: INTEGER;
 			new_number: INTEGER;
@@ -484,15 +496,28 @@ feature {NONE}
 				a_child :=  context.first_child;
 				new_number := height // (a_child.height+3);
 				if new_number > number then
-					-- Draw rectangles for the children	
+						-- Draw ghost rectangles for the children	
 					from
-						d_x := a_child.real_x+(a_child.width // 2);
-						if cursor_shape = Cursors.bottom_left_corner_cursor or
-							cursor_shape = Cursors.bottom_right_corner_cursor then
-							d_y := a_child.real_y+(a_child.height // 2) + number * (a_child.height+3);
+						if (cursor_shape = 
+							Cursors.bottom_left_corner_cursor) or else
+							(cursor_shape 
+									= Cursors.top_left_corner_cursor)
+						then
+							d_x := 3 + x +(a_child.width // 2);
+						else
+							d_x := a_child.real_x+(a_child.width // 2);
+						end;
+						if (cursor_shape = 
+							Cursors.bottom_left_corner_cursor) or else
+							(cursor_shape 
+									= Cursors.bottom_right_corner_cursor)
+						then
+							d_y := a_child.real_y+(a_child.height // 2) 
+										+ number * (a_child.height+3);
 							down := 1;
 						else
-							d_y := a_child.real_y+(a_child.height // 2)-a_child.height-3;
+							d_y := a_child.real_y+(a_child.height // 2)
+										-a_child.height-3; 
 							down := -1;
 						end;
 					until
@@ -506,9 +531,7 @@ feature {NONE}
 			end;
 		end;
 
-	-- ****************
-	-- * Cursor shape *
-	-- ****************
+feature {NONE} -- Cursor shape
 
 	cursor_shape: SCREEN_CURSOR;
 
@@ -571,20 +594,28 @@ feature {PERM_WIND_C}
 			elseif (argument = Second) then
 					-- Button release
 				selected := false;
-				if context.is_group_composite and then 
-					cursor_shape = Cursors.move_cursor 
-				then
-					end_group_composite
-				elseif shift_selected then
-					end_shift_action
-				elseif ctrl_selected then
-					end_group_action
+				if abort_button_release then
+					if grabbed then
+						widget.ungrab;
+						grabbed := false;
+					end;
+					abort_button_release := False;
 				else
-					end_mvt
+					if shift_selected then
+						end_shift_action
+					elseif ctrl_selected then
+						end_group_action
+					elseif context.is_group_composite and then
+						cursor_shape = Cursors.move_cursor 
+					then
+						end_group_composite
+					else
+						end_mvt
+					end
 				end;
 			elseif (argument = Third) then
 					-- Button press
-				if context.is_selectionnable then
+				if context.is_selectionable then
 					selected := true
 				end;
 			elseif (argument = Fourth) then
@@ -592,6 +623,8 @@ feature {PERM_WIND_C}
 				if cursor_shape /= Cursors.move_cursor then
 					selected := true;
 					shift_selected := true;
+				else
+					abort_button_release := True;
 				end;
 			elseif (argument = Fifth) then
 				-- Group (control selected)
@@ -629,6 +662,7 @@ feature {PERM_WIND_C}
 			elseif not (grabbed or ctrl_selected) then
 					-- Enter event
 				selected := false;
+				abort_button_release := false;
 				a_context ?= argument;
 				if not a_context.deleted then
 					context := a_context;

@@ -139,7 +139,7 @@ feature
 			if (Result = Void) then
 				!!Result.make;
 				Result.set_name (font_table_i_th (fonts_ptr, index));
-				list_put (Result)
+				list_put_i_th (Result, index)
 			end
 		ensure then
 			element_exists: not (Result = Void)

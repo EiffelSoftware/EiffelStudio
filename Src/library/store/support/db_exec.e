@@ -9,7 +9,7 @@ indexing
 
 class DB_EXEC
 
-creation -- Creation procedure
+create -- Creation procedure
 
 	make
 

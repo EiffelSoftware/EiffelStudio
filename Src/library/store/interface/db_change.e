@@ -27,7 +27,7 @@ inherit
 
 	DB_CONSTANT
 
-creation -- Creation procedure
+create -- Creation procedure
 
 	make
 

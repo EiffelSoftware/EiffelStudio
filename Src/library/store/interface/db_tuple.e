@@ -15,7 +15,7 @@ inherit
 			implementation, data
 		end
 
-creation -- Creation procedures
+create -- Creation procedures
 
 	copy, make
 

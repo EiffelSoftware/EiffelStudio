@@ -21,7 +21,7 @@ inherit
 			{NONE} all
 		end
 
-creation -- Creation procedure
+create -- Creation procedure
 
 	make
 

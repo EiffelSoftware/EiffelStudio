@@ -15,7 +15,7 @@ inherit
 			copy as hard_copy
 		end
 
-creation -- Creation procedure
+create -- Creation procedure
 
 	make
 

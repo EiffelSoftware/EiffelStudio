@@ -628,6 +628,33 @@ feature -- Update
 			successful_implies_freezing_occurred: successful implies freezing_occurred 
 		end
 
+	delete_f_code is
+		local
+			generation_directory: DIRECTORY
+			retried, in_creation: BOOLEAN
+		do
+			if not retried then
+				create generation_directory.make (Final_generation_path)
+				generation_directory.recursive_delete
+				generation_directory.create_dir
+			else
+					-- Make sure that `F_code' exists, if not we create it.
+				if not generation_directory.exists then
+					in_creation := True
+					generation_directory.create_dir
+				end
+			end
+		rescue
+				-- It can fail if we do not have write permission
+				-- but it should not be the case.
+				-- In that case, we do not delete and leave the directory
+				-- as it is.
+			if not in_creation then
+				retried := True
+				retry
+			end
+		end
+
 feature -- Output
 
 	save_upon_exiting is

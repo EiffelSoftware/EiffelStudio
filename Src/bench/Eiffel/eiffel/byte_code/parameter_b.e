@@ -72,11 +72,8 @@ feature
 
 	allocates_memory: BOOLEAN is
 		do
-			Result :=
-					-- Is there a metamorphosis?
-				(not attachment_type.is_basic and expression.type.is_basic)
-				or else expression.allocates_memory
-		end;
+			Result := expression.allocates_memory
+		end
 
 	stored_register: REGISTRABLE is
 			-- The register in which the expression is stored
@@ -95,25 +92,8 @@ feature -- IL code generation
 
 	generate_il is
 			-- Generate IL code for `expression'
-		local
-			target_type, source_type: TYPE_I
 		do
 			expression.generate_il
-
-			target_type := context.real_type (attachment_type);
-			if target_type.is_none then
-					-- Do nothing
-			elseif target_type.is_reference then
-				source_type := context.real_type (expression.type)
-				if source_type.is_expanded then
-						-- Source is an expanded type and target is a reference:
-						-- metamorphose with boxing.
-					generate_il_metamorphose (source_type, target_type, True)
-				end
-			elseif target_type.is_numeric then
-				source_type := context.real_type (expression.type)
-				target_type.il_convert_from (source_type)
-			end
 		end
 
 feature -- Byte code generation

@@ -38,7 +38,7 @@ const REG_DATA reg_entries[] =
     TRUE
   },
   {
-    __TEXT("AppID\\Eif_compiler"),
+    __TEXT("AppID\\ISE.Compiler"),
     __TEXT("AppID"),
     __TEXT("{28F511DB-0CCE-44C5-9DD5-E93066C0B00F}"),
     TRUE
@@ -116,7 +116,7 @@ const REG_DATA reg_entries[] =
     TRUE
   },
   {
-    __TEXT("AppID\\Eif_compiler"),
+    __TEXT("AppID\\ISE.Compiler"),
     __TEXT("AppID"),
     __TEXT("{86D23C62-E03D-4A16-83F6-8F79D628110E}"),
     TRUE

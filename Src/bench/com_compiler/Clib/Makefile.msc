@@ -20,8 +20,8 @@ ecom_eiffel_compiler_ieiffelproject_impl_stub_s.obj \
 ecom_eiffel_compiler_ieiffelsystembrowser_impl_stub_s.obj \
 ecom_eiffel_compiler_ieiffelsystemclusters_impl_stub_s.obj \
 ecom_eiffel_compiler_ieiffelsystemexternals_impl_stub_s.obj \
-ecom_gce_eif_compiler.obj \
-ecom_gec_eif_compiler.obj \
+ecom_gce_ise.obj \
+ecom_gec_ise.obj \
 ecom_xcp_ieiffelcompilerevents_ceiffelcompiler.obj \
 server_registration.obj \
 ecom_eiffel_compiler_ieiffelclassdescriptor_impl_proxy_s.obj \
@@ -58,8 +58,8 @@ wecom_eiffel_compiler_ieiffelproject_impl_stub_s.obj \
 wecom_eiffel_compiler_ieiffelsystembrowser_impl_stub_s.obj \
 wecom_eiffel_compiler_ieiffelsystemclusters_impl_stub_s.obj \
 wecom_eiffel_compiler_ieiffelsystemexternals_impl_stub_s.obj \
-wecom_gce_eif_compiler.obj \
-wecom_gec_eif_compiler.obj \
+wecom_gce_ise.obj \
+wecom_gec_ise.obj \
 wecom_xcp_ieiffelcompilerevents_ceiffelcompiler.obj \
 wserver_registration.obj \
 wecom_eiffel_compiler_ieiffelclassdescriptor_impl_proxy_s.obj \
@@ -140,10 +140,10 @@ wecom_eiffel_compiler_ieiffelproject_impl_stub_s.obj: ecom_eiffel_compiler_ieiff
 wecom_eiffel_compiler_ieiffelsystembrowser_impl_stub_s.obj: ecom_eiffel_compiler_ieiffelsystembrowser_impl_stub_s.cpp
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
 
-wecom_gce_eif_compiler.obj: ecom_gce_eif_compiler.cpp
+wecom_gce_ise.obj: ecom_gce_ise.cpp
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
 
-wecom_gec_eif_compiler.obj: ecom_gec_eif_compiler.cpp
+wecom_gec_ise.obj: ecom_gec_ise.cpp
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
 
 wecom_xcp_ieiffelcompilerevents_ceiffelcompiler.obj: ecom_xcp_ieiffelcompilerevents_ceiffelcompiler.cpp

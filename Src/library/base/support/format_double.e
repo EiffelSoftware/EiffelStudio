@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 			-- Stretch or shrink `f' to length `decimals' .
 		do
 			Result := f.out
-			Result.head (Result.count - 1)
+			Result.keep_head (Result.count - 1)
 			if Result.count > decimals then
 				Result := Result.substring (1, decimals)
 			else

@@ -32,7 +32,7 @@ feature -- Access
 			val := value
 			cval ?= val
 			if cval /= Void then
-				create Result.make_character (cval.item)
+				create Result.make_character (cval.item, Dynamic_class)
 			end
 		end
 

@@ -91,9 +91,7 @@ feature -- Access
 	dump_value: DUMP_VALUE is
 			-- Dump_value corresponding to `Current'.
 		do
-			if address /= Void then
-				create Result.make_object (address)
-			end
+			create Result.make_object (address, dynamic_class)
 		end
 
 feature -- Output

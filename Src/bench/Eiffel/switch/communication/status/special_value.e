@@ -107,7 +107,7 @@ feature -- Access
 	dump_value: DUMP_VALUE is
 			-- Dump_value corresponding to `Current'.
 		do
-			create Result.make_object (address)
+			create Result.make_object (address, dynamic_class)
 		end
 
 feature -- Output

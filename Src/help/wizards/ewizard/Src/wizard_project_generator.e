@@ -124,7 +124,7 @@ feature -- Basic Operations
 			from_template_to_project (wizard_resources_path, "template_wizard_final_state.e",   project_location + "/src", "wizard_final_state.e", l)
 
 			copy_file ("wizard_information", 	"e",   project_location + "/src")
-			copy_file ("project_wizard_shared",	"e",   project_location + "/src")
+			copy_file ("wizard_project_shared",	"e",   project_location + "/src")
 			copy_file ("eiffel_wizard_icon", 	"bmp", project_location + "/pixmaps")
 			copy_file ("eiffel_wizard", 		"bmp", project_location + "/pixmaps")
 		end

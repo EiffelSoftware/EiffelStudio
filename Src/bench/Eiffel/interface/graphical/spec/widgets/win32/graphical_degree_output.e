@@ -42,7 +42,7 @@ feature -- Start output
 			-- Put message indicating the start of degree six
 			-- with `total_nbr' passes to be done.
 		local
-			i_name: STRING
+			tmp: STRING
 		do
 			create_window;
 			cancel_b.enable;
@@ -59,11 +59,10 @@ feature -- Start output
 			current_nbr_to_go_text.set_text (total_nbr.out);
 			percentage_text.set_text (Zero_percent);
 
-			i_name := clone (icon_name);
-			i_name.extend (' ');
-			i_name.append (Interface_names.d_Degree);
-			i_name.append (current_degree.out);
-			Project_tool.set_icon_name (i_name);
+			!! tmp.make (0);
+			tmp.append (Interface_names.d_Degree);
+			tmp.append (current_degree.out);
+			set_project_icon_name (tmp);
 
 			process_messages
 		end;
@@ -72,7 +71,7 @@ feature -- Start output
 			-- Put message indicating the start of a degree
 			-- with `total_nbr' to be done.
 		local
-			i_name: STRING
+			tmp: STRING
 		do
 			set_text (Interface_names.d_Compilation_progress);
 			total_number := total_nbr;
@@ -91,11 +90,10 @@ feature -- Start output
 
 			percentage_text.set_text (Zero_percent);
 			progress_bar.set_position (0);
-			i_name := clone (icon_name);
-			i_name.extend (' ');
-			i_name.append (Interface_names.d_Degree);
-			i_name.append (current_degree.out);
-			Project_tool.set_icon_name (i_name);
+			!! tmp.make (0) ;
+			tmp.append (Interface_names.d_Degree);
+			tmp.append (current_degree.out);
+			set_project_icon_name (tmp)
 
 			process_messages
 		end;
@@ -127,7 +125,8 @@ feature -- Start output
 
 			set_project_icon_name (removing_dead_code_message);
 			put_non_degree_message (removing_dead_code_message);
-			nbr_to_go_text.set_text (Interface_names.d_Features_processed);
+			entity_text.set_text (Interface_names.d_Features_processed);
+			nbr_to_go_text.set_text (Interface_names.d_Features_to_go);
 
 			process_messages
 		end
@@ -334,7 +333,7 @@ feature -- Per entity output
 			processed := processed + features_done;
 			total_number := nbr_to_go + processed;
 			a_per := percentage_calculation (nbr_to_go);
-			update_interface (Empty_string, processed, a_per);
+			update_interface (processed.out, nbr_to_go, a_per);
 			progress_bar.set_position (a_per);
 
 			process_messages
@@ -431,11 +430,13 @@ feature {NONE} -- Implementation
 
 	set_project_icon_name (msg: STRING) is
 			-- Set icon name of `Project_tool' to `msg'.
+		require
+			valid_icon_name: icon_name /= Void
 		local
 			i_name: STRING
 		do
 			i_name := clone (icon_name);
-			i_name.extend (' ');
+			i_name.append (": ");
 			i_name.append (msg);
 			Project_tool.set_icon_name (i_name)
 		end;

@@ -42,8 +42,10 @@ feature -- Basic operations
 					property_generator.generate (a_component, a_interface_desc.properties.item)
 					an_eiffel_writer.add_feature (property_generator.access_feature, Access)
 					an_eiffel_writer.add_feature (property_generator.external_access_feature, Externals)
-					an_eiffel_writer.add_feature (property_generator.external_setting_feature, Externals)
-					an_eiffel_writer.add_feature (property_generator.setting_feature, Element_change)
+					if (property_generator.setting_feature /= Void) then
+						an_eiffel_writer.add_feature (property_generator.external_setting_feature, Externals)
+						an_eiffel_writer.add_feature (property_generator.setting_feature, Element_change)
+					end
 
 					if property_generator.property_renamed then
 						from

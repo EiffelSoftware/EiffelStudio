@@ -224,27 +224,41 @@ feature -- Status Setting
 		local
 			current_character: CHARACTER
 		do
+			create format_stack.make (8)
+			create current_format
 			plain_text := ""
 			from
 				main_iterator := 1
 			until
 				main_iterator > rtf_text.count
 			loop
-				current_character := rtf_text.item (main_iterator)
+				current_character := get_character (rtf_text, main_iterator)
 				if current_character = '{' then
-					-- Store state on stack
+						-- Store state on stack
+					format_stack.extend (current_format.twin)
 				elseif current_character = '}' then
-					-- retrieve state from stack.
+						-- retrieve state from stack.
+					current_format := format_stack.item
+					format_stack.remove
 				elseif current_character = '\' then
 					process_keyword (rtf_text, main_iterator)
-				elseif current_character = ' ' or ended_keyword_with_newline then
+				elseif current_character = ' '  then
 					process_text (rtf_text, main_iterator)
+				elseif rtf_text.item (main_iterator - 1) = '%N' or rtf_text.item (main_iterator - 1) = '}' then
+						-- We are now one character past the tag for the text. This may occur when a keyword
+						-- is ended with a '%N' or we have just skipped a bracket section that contained the "\*"
+						-- keyword. As in this case, `current_character' is the start of the text, call `process_text'
+						-- from the previous position, as the first index is ignored.
+					process_text (rtf_text, main_iterator - 1)
 				end
 				move_main_iterator (1)
 					-- Move the iterator by one. This may or may not be required
 					-- if other routines have just called it within this loop.
 				
 				update_main_iterator
+			end
+			check
+				no_carriage_returns: not plain_text.has ('%R')
 			end
 			rich_text.set_text (plain_text)
 		end
@@ -268,7 +282,7 @@ feature -- Status Setting
 				text_completed
 			loop
 				current_character := get_character (rtf_text, l_index + index)
-				if current_character /= '%N' then
+				if current_character /= '%N' and current_character /= '%R' then
 						-- New line characters have no effect on the RTF contents, so
 						-- simply ignore these characters.
 					if current_character = '\' or current_character = '}' or current_character = '{' then
@@ -315,8 +329,6 @@ feature -- Status Setting
 			reading_tag_value: BOOLEAN
 			tag_start_position: INTEGER
 		do
-				-- As we are now starting to read a new keyword, reset this flag.
-			ended_keyword_with_newline := False
 			tag_start_position := index
 			tag := ""
 			tag_value := ""
@@ -329,15 +341,13 @@ feature -- Status Setting
 			loop
 				current_character := get_character (rtf_text, l_index + index)
 				
-				if current_character = '%N' then
-						-- A newline character may be used to signify the end of a keyword and
-						-- if so it determines that text follows, instead of requiring a space
-						-- as normal. We must know if the last keyword ended with a newline
-						-- character within`set_with_rtf' so that we can start reading the text.
-					ended_keyword_with_newline := True
-				end
-				
-				if (current_character = ' ' or current_character = '\' or current_character = '}' or current_character = '{') or current_character = '%N' then
+				if (current_character = ' ' or
+					current_character = '\' or
+					current_character = '}' or
+					current_character = '{') or
+					current_character = '%N' or
+					current_character = '%R' then
+					
 						-- Note that newline characters are not permitted in the middle of tags.
 						-- We must perform at least one iteration, ensuring that we enter the loop.
 					if performed_one_iteration = True then
@@ -375,7 +385,6 @@ feature -- Status Setting
 			elseif tag.is_equal (rtf_font_size) then
 			elseif tag.is_equal (rtf_new_line) then
 				plain_text.append_character ('%N')
-			--	move_main_iterator (tag.count)
 			elseif tag.is_equal (rtf_user_props) then
 				check
 					is_start_of_group: rtf_text.substring (tag_start_position - 1, tag_start_position + 1).is_equal ("{\*")
@@ -421,9 +430,15 @@ feature -- Status Setting
 				end
 			end
 			move_main_iterator (l_index)
-		ensure
-			moved: old temp_iterator > temp_iterator + 1
 		end
+		
+	current_format: RTF_FORMAT_I
+		-- The current format retrieved from the RTF.
+		
+	format_stack: ARRAYED_STACK [RTF_FORMAT_I]
+		-- A stack to hold current formatting for RTF being loaded.
+		-- Each set of formatting contained within braces is only local to those braces,
+		-- so we pop and push the current formats from the stack as we enter and leave braces.
 		
 	main_iterator: INTEGER
 		-- The index currently iterated within the RTF file that is being loaded.
@@ -436,12 +451,6 @@ feature -- Status Setting
 	plain_text: STRING
 		-- A string representation of the contents of from the last
 		-- RTF file loaded.
-	
-	ended_keyword_with_newline: BOOLEAN
-		-- In RTF, a space is normally used to signify the end of a tag and the start of
-		-- text. If a newline immediately follows the end of a tag, then we must check
-		-- for the newline to signify the start of text, and not a space.
-		-- Keywords may not be broken by a newline character.
 		
 	update_main_iterator is
 			-- Ensure `main_iterator' takes the value of `temp_iterator'.

@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 		local
 			wizard_manager: WIZARD_PROJECT_MANAGER
 			project_settings: GB_PROJECT_SETTINGS
-		do
+		do		
 				-- If `argument_array' has one element,
 				-- then no argument was specified, only the
 				-- name of the executable.
@@ -74,6 +74,14 @@ feature {NONE} -- Initialization
 				check
 					five_arguments: command_line.argument_array.count = 6
 				end
+					-- For Visual Studio launches, the arguments are as follows:
+					-- 1. The location to the png files for the wizard
+					-- 2. "visualstudio_project" which informs Build it has been launched from VS.
+					-- 3. Path to where the project will be created.
+					-- 4. Project name.
+					-- 5. Hwnd of window that Build should be displayed modally to.
+				
+				
 						-- Now create the project_settings.
 				create project_settings.make_with_default_values
 					-- Enable complete project in the project settings.

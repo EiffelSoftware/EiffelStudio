@@ -1,7 +1,7 @@
 
 class CONTEXT_TREE 
 
-inherit
+inherit 
 
 	CONSTANTS;
 	SHARED_CONTEXT;

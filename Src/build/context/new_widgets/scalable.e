@@ -124,6 +124,7 @@ feature {NONE} -- Configure event
 	execute (argument: ANY) is
 		local
 			widget_ratio: WIDGET_RATIO
+			c: CURSOR
 		do
 			if argument = Current then
 				if old_width /= 0 and old_height /= 0 and then
@@ -136,6 +137,7 @@ feature {NONE} -- Configure event
 						widget_coordinates.after
 					loop
 						widget_ratio := widget_coordinates.item;
+
 						if widget_ratio.widget.destroyed then
 							widget_coordinates.remove
 						else
@@ -143,6 +145,7 @@ feature {NONE} -- Configure event
 								(width, height);
 							widget_coordinates.forth
 						end;
+
 					end;
 				end;
 				old_width := width;

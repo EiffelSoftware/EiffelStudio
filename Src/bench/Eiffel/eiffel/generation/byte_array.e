@@ -514,7 +514,7 @@ feature {NONE} -- Externals
 			"C"
 		end;
 
-	ca_wbit(ptr: POINTER; val: ANY; pos: INTEGER; bit_count: INTEGER) is
+	ca_wbit(ptr: POINTER; val: POINTER; pos: INTEGER; bit_count: INTEGER) is
 			-- Write in `ptr' at position `pos' a bit value `val'
 		external
 			"C"

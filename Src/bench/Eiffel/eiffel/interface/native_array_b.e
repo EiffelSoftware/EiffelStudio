@@ -110,6 +110,10 @@ feature -- Generic derivation
 			-- New class type for class NATIVE_ARRAY.
 		do
 			create Result.make (data)
+			if already_compiled then
+					-- Melt all the code written in the associated class of the new class type
+				melt_all
+			end
 		end
 
 feature -- Status report

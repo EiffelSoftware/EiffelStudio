@@ -3436,11 +3436,6 @@ end
 						-- Insertion of the new class type
 					types.extend (new_class_type)
 					System.insert_class_type (new_class_type)
-					if already_compiled then
-							-- Melt all the code written in the associated class of
-							-- the new class type
-						melt_all
-					end
 				end
 
 					-- Propagation along the filters since we have a new type
@@ -3485,6 +3480,10 @@ end
 					-- the call to the external routine.
 					-- Fixes eweasel test incr213.
 				System.set_freeze
+			end
+			if already_compiled then
+					-- Melt all the code written in the associated class of the new class type
+				melt_all
 			end
 		ensure
 			new_type_not_void: Result /= Void

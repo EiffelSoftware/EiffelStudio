@@ -330,6 +330,7 @@ feature -- Basic operation
 			display_win: GB_DISPLAY_WINDOW
 			object_built: BOOLEAN
 			widget: EV_WIDGET
+			menu_bar: EV_MENU_BAR
 		do
 			object_built := window_object.layout_item /= Void
 			if not object_built then
@@ -349,9 +350,15 @@ feature -- Basic operation
 			titled_window.set_size (Default_window_dimension, Default_window_dimension)
 			if window_object.object /= Void then
 				widget := window_object.object.item
-				widget.parent.prune (widget)
+				widget.parent.prune_all (widget)
 				titled_window.extend (widget)
+				menu_bar := window_object.object.menu_bar
+				if menu_bar /= Void then
+					menu_bar.parent.remove_menu_bar
+					titled_window.set_menu_bar (menu_bar)
+				end
 			end
+			
 			window_object.set_object (titled_window)
 			
 			if window_object.display_object = Void then

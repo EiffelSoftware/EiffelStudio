@@ -30,7 +30,6 @@ feature -- Access
 				Result := clone (private_font)
 			end
 		end
-			
 
 feature -- Status setting
 
@@ -41,7 +40,7 @@ feature -- Status setting
 			font_imp: EV_FONT_IMP
 		do
 			private_font := clone (a_font)
-			font_imp ?= a_font.implementation
+			font_imp ?= private_font.implementation
 			a_style := C.gtk_style_copy (C.gtk_widget_struct_style (visual_widget))
 			C.set_gtk_style_struct_font (a_style, font_imp.c_object)
 			C.gtk_widget_set_style (visual_widget, a_style)
@@ -77,6 +76,9 @@ end -- class EV_FONTABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2001/06/29 22:19:29  king
+--| Now setting using private font
+--|
 --| Revision 1.6  2001/06/07 23:08:04  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

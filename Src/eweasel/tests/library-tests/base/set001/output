@@ -4,19 +4,19 @@ integer sets disjoint: True
 Create integer set as type LINKED_SET
 Filling integer set with non-disjoint data
 integer sets disjoint: False
-Create string set as type BINARY_SEARCH_TREE_SET
+Create string set as type LINKED_SET
 reference comparison set
 Filling string set with disjoint data
 string sets disjoint: True
-Create string set as type BINARY_SEARCH_TREE_SET
+Create string set as type LINKED_SET
 reference comparison set
 Filling string set with non-disjoint data
 string sets disjoint: False
-Create string set as type BINARY_SEARCH_TREE_SET
+Create string set as type LINKED_SET
 object comparison set
 Filling string set with disjoint data
 string sets disjoint: True
-Create string set as type BINARY_SEARCH_TREE_SET
+Create string set as type LINKED_SET
 object comparison set
 Filling string set with non-disjoint data
 string sets disjoint: False

@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 			inspect
 				impl
 			when 1 then
-				Io.put_string ("Create string set as type BINARY_SEARCH_TREE_SET%N")
+				Io.put_string ("Create string set as type LINKED_SET%N")
 				create {LINKED_SET [STRING]} string_set1.make
 				create {LINKED_SET [STRING]} string_set2.make
 			when 2 then

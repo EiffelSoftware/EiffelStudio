@@ -6,11 +6,17 @@ deferred class
 	DIALOG
 	
 inherit
-	SYSTEM_WINDOWS_FORMS_FORM
-
+	ASSMEBLY_MANAGER_SUPPORT [STRING]
+		rename
+			to_string as to_assembly_manager_support_string,
+			finalize as assembly_manager_support_finalize
+		end
+		
 feature -- Access
 
-	assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
+	main_win: WINFORMS_FORM
+
+	assembly_descriptor: ASSEMBLY_DESCRIPTOR
 		indexing
 			description: "Assembly descriptor"
 			external_name: "AssemblyDescriptor"
@@ -26,7 +32,7 @@ feature -- Access
 			non_void_dictionary: Result /= Void
 		end
 
-	assembly_label: SYSTEM_WINDOWS_FORMS_LABEL
+	assembly_label: WINFORMS_LABEL
 		indexing
 			description: "Assembly label"
 			external_name: "AssemblyLabel"
@@ -39,37 +45,44 @@ feature -- Basic Operations
 			description: "Create labels with assembly version, culture and public key."
 			external_name: "CreateAssemblyLabels"
 		local
-			a_label: SYSTEM_WINDOWS_FORMS_LABEL
-			a_size: SYSTEM_DRAWING_SIZE
-			a_point: SYSTEM_DRAWING_POINT
-			a_font: SYSTEM_DRAWING_FONT
+			a_label: WINFORMS_LABEL
+			a_size: DRAWING_SIZE
+			a_point: DRAWING_POINT
+			a_font: DRAWING_FONT
+			label_text: STRING
 		do
-			create a_label.make_label
+			create a_label.make_winforms_label
 			a_label.set_font (a_font)
-			a_label.set_text (dictionary.Version_string.concat_string_string (dictionary.Version_string, assembly_descriptor.get_version))
+			label_text := dictionary.Version_string.clone (dictionary.Version_string)
+			label_text.append (assembly_descriptor.version)
+			a_label.set_text (label_text.to_cil)
 			a_point.set_X (dictionary.Margin)
 			a_point.set_Y (dictionary.Margin + dictionary.Label_height)
 			a_label.set_location (a_point)			
 			a_label.set_auto_size (True)
-			get_controls.extend (a_label)
+			main_win.get_controls.add (a_label)
 
-			create a_label.make_label
+			create a_label.make_winforms_label
 			a_label.set_font (a_font)
-			a_label.set_text (dictionary.Culture_string.concat_string_string (dictionary.Culture_string, assembly_descriptor.get_culture))
+			label_text := dictionary.Culture_string.clone (dictionary.Culture_string)
+			label_text.append (assembly_descriptor.culture)
+			a_label.set_text (label_text.to_cil)
 			a_point.set_X (dictionary.Margin)
 			a_point.set_Y (dictionary.Margin + 2 * dictionary.Label_height)
 			a_label.set_location (a_point)			
 			a_label.set_auto_size (True)
-			get_controls.extend (a_label)
+			main_win.get_controls.add (a_label)
 
-			create a_label.make_label
+			create a_label.make_winforms_label
 			a_label.set_font (a_font)
-			a_label.set_text (dictionary.Public_key_string.concat_string_string (dictionary.Public_key_string, assembly_descriptor.get_public_key))
+			label_text := dictionary.Public_key_string.clone (dictionary.Public_key_string)
+			label_text.append (assembly_descriptor.public_key)
+			a_label.set_text (label_text.to_cil)
 			a_point.set_X (dictionary.Margin)
 			a_point.set_Y (dictionary.Margin + 3 * dictionary.Label_height)
 			a_label.set_location (a_point)			
 			a_label.set_auto_size (True)
-			get_controls.extend (a_label)
+			main_win.get_controls.add (a_label)
 		end
 		
 end -- class DIALOG

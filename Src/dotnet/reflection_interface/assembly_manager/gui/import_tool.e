@@ -24,26 +24,26 @@ feature -- Access
 			create Result
 		end
 
-	open_menu_item: SYSTEM_WINDOWS_FORMS_MENUITEM
+	open_menu_item: WINFORMS_MENU_ITEM
 		indexing
 			description: "Open menu item"
 			external_name: "OpenMenuItem"
 		end
 		
-	open_toolbar_button: SYSTEM_WINDOWS_FORMS_TOOLBARBUTTON
+	open_toolbar_button: WINFORMS_TOOL_BAR_BUTTON
 		indexing
 			description: "Open toolbar button"
 			external_name: "OpenToolbarButton"
 		end
 		
-	show_name_menu_item: SYSTEM_WINDOWS_FORMS_MENUITEM
+	show_name_menu_item: WINFORMS_MENU_ITEM
 		indexing
 			description: "Show name menu item"
 			external_name: "ShowNameMenuItem"
 		end
 			
-	shared_assemblies: SYSTEM_COLLECTIONS_ARRAYLIST
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_ASSEMBLYDESCRIPTOR]
+	shared_assemblies: LINKED_LIST [ASSEMBLY_DESCRIPTOR]
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ASSEMBLYDESCRIPTOR]
 		indexing
 			description: "Assemblies in the global assembly cache"
 			external_name: "SharedAssemblies"
@@ -51,7 +51,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	is_imported (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): BOOLEAN is
+	is_imported (a_descriptor: ASSEMBLY_DESCRIPTOR): BOOLEAN is
 		indexing
 			description: "Is assembly corresponding to `a_descriptor' already in the Eiffel assembly cache?"
 			external_name: "IsImported"
@@ -63,7 +63,7 @@ feature -- Status Setting
 		do
 			if not retried then
 				reflection_interface.search (a_descriptor)
-				Result := reflection_interface.get_found
+				Result := reflection_interface.found
 			else
 				Result := False
 			end
@@ -80,29 +80,29 @@ feature -- Basic Operations
 			external_name: "BuildMenu"
 		local
 			added: INTEGER
-			separator: SYSTEM_WINDOWS_FORMS_MENUITEM
-			shortcut: SYSTEM_WINDOWS_FORMS_SHORTCUT
+			separator: WINFORMS_MENU_ITEM
+			shortcut: WINFORMS_SHORTCUT
 		do				
 			build_menu_assembly_viewer
 				-- Build File menu item.
-			create open_menu_item.make_menuitem_1 (dictionary.Open_menu_item)
+			create open_menu_item.make_winforms_menu_item_1 (dictionary.Open_menu_item.to_cil)
 			open_menu_item.set_shortcut (shortcut.Ctrl_O)
-			added := file_menu_item.get_menu_items.extend (open_menu_item)
-			separator := file_menu_item.get_menu_items.add_string ("-")
-			added := file_menu_item.get_menu_items.extend (exit_menu_item)
+			added := file_menu_item.get_menu_items.add_menu_item (open_menu_item)
+			separator := file_menu_item.get_menu_items.add (("-").to_cil)
+			added := file_menu_item.get_menu_items.add_menu_item (exit_menu_item)
 			
 				-- Build View menu item.
-			create show_name_menu_item.make_menuitem_1 (dictionary.Show_name_menu_item)
+			create show_name_menu_item.make_winforms_menu_item_1 (dictionary.Show_name_menu_item.to_cil)
 			show_all_menu_item.set_shortcut (shortcut.Ctrl_A)
 			show_name_menu_item.set_shortcut (shortcut.Ctrl_W)
-			separator := view_menu_item.get_menu_items.add_string ("-")
-			added := view_menu_item.get_menu_items.extend (show_all_menu_item)	
-			added := view_menu_item.get_menu_items.extend (show_name_menu_item)	
+			separator := view_menu_item.get_menu_items.add  (("-").to_cil)
+			added := view_menu_item.get_menu_items.add_menu_item (show_all_menu_item)	
+			added := view_menu_item.get_menu_items.add_menu_item (show_name_menu_item)	
 			
 				-- Build Tools menu item.
-			create import_menu_item.make_menuitem_1 (dictionary.Import_menu_item)
+			create import_menu_item.make_winforms_menu_item_1 (dictionary.Import_menu_item.to_cil)
 			import_menu_item.set_shortcut (shortcut.Ctrl_I)
-			added := tools_menu_item.get_menu_items.extend (import_menu_item)
+			added := tools_menu_item.get_menu_items.add_menu_item (import_menu_item)
 		end
 	
 	set_menu_actions is
@@ -110,21 +110,21 @@ feature -- Basic Operations
 			description: "Set actions to `main_menu'."
 			external_name: "SetMenuActions"
 		local
-			open_delegate: SYSTEM_EVENTHANDLER
-			show_name_delegate: SYSTEM_EVENTHANDLER
-			import_delegate: SYSTEM_EVENTHANDLER
+			open_delegate: EVENT_HANDLER
+			show_name_delegate: EVENT_HANDLER
+			import_delegate: EVENT_HANDLER
 		do
 			set_menu_actions_assembly_viewer
 				-- File menu
-			create open_delegate.make_eventhandler (Current, $open_assembly)
+			create open_delegate.make_event_handler (Current, $open_assembly)
 			open_menu_item.add_click (open_delegate)		
 			
 				-- View menu	
-			create show_name_delegate.make_eventhandler (Current, $show_name)
+			create show_name_delegate.make_event_handler (Current, $show_name)
 			show_name_menu_item.add_click (show_name_delegate)
 			
 				-- Tools menu
-			create import_delegate.make_eventhandler (Current, $import)
+			create import_delegate.make_event_handler (Current, $import)
 			import_menu_item.add_click (import_delegate)
 		end
 
@@ -134,26 +134,26 @@ feature -- Basic Operations
 			external_name: "BuildToolbar"
 		local
 			added: INTEGER
-			separator: SYSTEM_WINDOWS_FORMS_TOOLBARBUTTON
-			appearance: SYSTEM_WINDOWS_FORMS_TOOLBARBUTTONSTYLE
+			separator: WINFORMS_TOOL_BAR_BUTTON
+			appearance: WINFORMS_TOOL_BAR_BUTTON_STYLE
 			retried: BOOLEAN
 		do			
 			build_toolbar_assembly_viewer
 			
-			create open_toolbar_button.make_toolbarbutton
-			create import_toolbar_button.make_toolbarbutton
-			create separator.make_toolbarbutton
+			create open_toolbar_button.make_winforms_tool_bar_button
+			create import_toolbar_button.make_winforms_tool_bar_button
+			create separator.make_winforms_tool_bar_button
 			
 			if not retried then
 				open_toolbar_button.set_image_index (7)
 			end
-			open_toolbar_button.set_tool_tip_text (dictionary.Open_menu_item)
+			open_toolbar_button.set_tool_tip_text (dictionary.Open_menu_item.to_cil)
 			open_toolbar_button.set_style (appearance.Push_button)
 			
 			if not retried then
 				import_toolbar_button.set_image_index (8)
 			end
-			import_toolbar_button.set_tool_tip_text (dictionary.Import_menu_item)
+			import_toolbar_button.set_tool_tip_text (dictionary.Import_menu_item.to_cil)
 			import_toolbar_button.set_style (appearance.Push_button)
 			separator.set_style (appearance.Separator)
 				
@@ -172,7 +172,7 @@ feature -- Basic Operations
 			added := toolbar.get_buttons.add_tool_bar_button (import_toolbar_button)
 			added := toolbar.get_buttons.add_tool_bar_button (separator)
 			added := toolbar.get_buttons.add_tool_bar_button (help_toolbar_button)
-			get_controls.extend (toolbar)
+			main_win.get_controls.add (toolbar)
 		rescue
 			retried := True
 			retry
@@ -183,38 +183,40 @@ feature -- Basic Operations
 			description: "Build toolbar image list."
 			external_name: "Buildimage_list"
 		local
-			import_image: SYSTEM_DRAWING_IMAGE
-			open_image: SYSTEM_DRAWING_IMAGE
-			image_list: SYSTEM_WINDOWS_FORMS_IMAGELIST
-			images: IMAGECOLLECTION_IN_SYSTEM_WINDOWS_FORMS_IMAGELIST
+			import_image: DRAWING_IMAGE
+			open_image: DRAWING_IMAGE
+			image_list: WINFORMS_IMAGE_LIST
+			images: WINFORMS_IMAGE_COLLECTION_IN_WINFORMS_IMAGE_LIST
 			retried: BOOLEAN
-			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
-			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
-			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON 
-			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
-			file: SYSTEM_IO_FILE
+			returned_value: WINFORMS_DIALOG_RESULT
+			message_box_buttons: WINFORMS_MESSAGE_BOX_BUTTONS
+			message_box_icon: WINFORMS_MESSAGE_BOX_ICON 
+			windows_message_box: WINFORMS_MESSAGE_BOX
+			file: PLAIN_TEXT_FILE
 		do
 			if not retried then
 				build_image_list_assembly_viewer
-				set_icon (dictionary.Import_tool_icon)		
+				main_win.set_icon (dictionary.Import_tool_icon)		
 
-				if file.exists (dictionary.Open_icon_filename) then
-					open_image := image_factory.from_file (dictionary.Open_icon_filename)
+				create file.make (dictionary.Open_icon_filename)
+				if file.exists then
+					open_image := image_factory.from_file (dictionary.Open_icon_filename.to_cil)
 				else
-					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Open_icon_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Open_icon_not_found_error.to_cil, dictionary.Error_caption.to_cil, message_box_buttons.Ok, message_box_icon.Error)
 				end
-				if file.exists (dictionary.Import_icon_filename) then
-					import_image := image_factory.from_file (dictionary.Import_icon_filename)
+				file.reset (dictionary.Import_icon_filename)
+				if file.exists then
+					import_image := image_factory.from_file (dictionary.Import_icon_filename.to_cil)
 				else
-					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Import_icon_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)				
+					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Import_icon_not_found_error.to_cil, dictionary.Error_caption.to_cil, message_box_buttons.Ok, message_box_icon.Error)
 				end
 
 				image_list := toolbar.get_image_list
 				images := image_list.get_images
-				images.extend (open_image)
-				images.extend (import_image)
+				images.add (open_image)
+				images.add (import_image)
 			else
-				returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Toolbar_icon_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+				returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Toolbar_icon_not_found_error.to_cil, dictionary.Error_caption.to_cil, message_box_buttons.Ok, message_box_icon.Error)
 			end
 		rescue
 			retried := True
@@ -235,7 +237,7 @@ feature -- Basic Operations
 			external_name: "BuildDataGrid"
 		do
 			build_data_grid_assembly_viewer
-			data_grid.set_caption_text (dictionary.Caption_text)
+			data_grid.set_caption_text (dictionary.Caption_text.to_cil)
 				-- Set `width'.
 			assembly_name_column_style.set_width (dictionary.Window_width)
 			set_read_only
@@ -243,7 +245,7 @@ feature -- Basic Operations
 		
 feature -- Event handling
 		
-	open_assembly (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+	open_assembly (sender: SYSTEM_OBJECT; arguments: EVENT_ARGS) is
 		indexing
 			description: "Open an open file dialog to import a signed assembly, which is not in the GAC."
 			external_name: "OpenAssembly"
@@ -251,40 +253,40 @@ feature -- Event handling
 			non_void_sender: sender /= Void
 			non_void_arguments: arguments /= Void
 		local
-			open_file_dialog: SYSTEM_WINDOWS_FORMS_OPENFILEDIALOG
-			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
+			open_file_dialog: WINFORMS_OPEN_FILE_DIALOG
+			returned_value: WINFORMS_DIALOG_RESULT
 		do
-			create open_file_dialog.make_openfiledialog
+			create open_file_dialog.make_winforms_open_file_dialog
 			open_file_dialog.set_add_extension (True)
 			open_file_dialog.set_check_file_exists (True)
-			open_file_dialog.set_title (dictionary.Open_file_dialog_title)
+			open_file_dialog.set_title (dictionary.Open_file_dialog_title.to_cil)
 			open_file_dialog.set_validate_names (true)
-			open_file_dialog.set_filter (dictionary.Open_file_dialog_filter)
+			open_file_dialog.set_filter (dictionary.Open_file_dialog_filter.to_cil)
 			returned_value := open_file_dialog.show_dialog
 			if returned_value = returned_value.Ok and then open_file_dialog.get_file_name /= Void and then open_file_dialog.get_file_name.get_length > 0 then
-				import_signed_assembly (open_file_dialog.get_file_name)
+				import_signed_assembly ( from_system_string (open_file_dialog.get_file_name) )
 			end
 		end
 		
-	display_name (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+	display_name (sender: SYSTEM_OBJECT; arguments: EVENT_ARGS) is
 		indexing
 			description: "Display assembly name column if checked."
 			external_name: "DisplayName"
 		local
 			checked: BOOLEAN
-			columns: SYSTEM_DATA_DATACOLUMNCOLLECTION
+			columns: DATA_DATA_COLUMN_COLLECTION
 		do
 			columns := data_table.get_columns
 			checked := name_menu_item.get_checked
 			if columns.get_count > 1 or not checked then				
-				if checked and then columns.has (dictionary.Assembly_name_column_title) then
+				if checked and then columns.contains (dictionary.Assembly_name_column_title.to_cil) then
 					columns.remove_data_column (assembly_name_column)
 					name_menu_item.set_checked (not checked)
 					name_toolbar_button.set_pushed (not checked)
 					resize_columns
-					refresh
+					main_win.refresh
 				elseif not checked then
-					get_controls.remove (data_grid)
+					main_win.get_controls.remove (data_grid)
 					build_assemblies_table
 					columns := data_table.get_columns
 					columns.clear
@@ -307,31 +309,31 @@ feature -- Event handling
 					name_toolbar_button.set_pushed (not checked)
 					resize_columns
 					fill_data_grid
-					get_controls.extend (data_grid)
-					refresh		
+					main_win.get_controls.add (data_grid)
+					main_win.refresh		
 				end
 			end
 		end
 
-	display_version (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+	display_version (sender: SYSTEM_OBJECT; arguments: EVENT_ARGS) is
 		indexing
 			description: "Display assembly version column if checked."
 			external_name: "DisplayVersion"
 		local
 			checked: BOOLEAN
-			columns: SYSTEM_DATA_DATACOLUMNCOLLECTION
+			columns: DATA_DATA_COLUMN_COLLECTION
 		do
 			columns := data_table.get_columns
 			checked := version_menu_item.get_checked
 			if columns.get_count > 1 or not checked then
-				if checked and then columns.has (dictionary.Assembly_version_column_title) then
+				if checked and then columns.contains (dictionary.Assembly_version_column_title.to_cil) then
 					columns.remove_data_column (assembly_version_column)
 					version_menu_item.set_checked (not checked)
 					version_toolbar_button.set_pushed (not checked)
 					resize_columns
-					refresh
+					main_win.refresh
 				elseif not checked then
-					get_controls.remove (data_grid)
+					main_win.get_controls.remove (data_grid)
 					build_assemblies_table
 					columns := data_table.get_columns
 					columns.clear
@@ -354,31 +356,31 @@ feature -- Event handling
 					version_toolbar_button.set_pushed (not checked)
 					resize_columns
 					fill_data_grid
-					get_controls.extend (data_grid)
-					refresh		
+					main_win.get_controls.add (data_grid)
+					main_win.refresh		
 				end
 			end
 		end
 
-	display_culture (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+	display_culture (sender: SYSTEM_OBJECT; arguments: EVENT_ARGS) is
 		indexing
 			description: "Display assembly culture column if checked."
 			external_name: "DisplayCulture"
 		local
 			checked: BOOLEAN
-			columns: SYSTEM_DATA_DATACOLUMNCOLLECTION
+			columns: DATA_DATA_COLUMN_COLLECTION
 		do
 			columns := data_table.get_columns
 			checked := culture_menu_item.get_checked
 			if columns.get_count > 1 or not checked then			
-				if checked and then columns.has (dictionary.Assembly_culture_column_title) then
+				if checked and then columns.contains (dictionary.Assembly_culture_column_title.to_cil) then
 					columns.remove_data_column (assembly_culture_column)
 					culture_menu_item.set_checked (not checked)
 					culture_toolbar_button.set_pushed (not checked)
 					resize_columns
-					refresh
+					main_win.refresh
 				elseif not checked then
-					get_controls.remove (data_grid)
+					main_win.get_controls.remove (data_grid)
 					build_assemblies_table
 					columns := data_table.get_columns
 					columns.clear
@@ -401,31 +403,31 @@ feature -- Event handling
 					culture_toolbar_button.set_pushed (not checked)
 					resize_columns
 					fill_data_grid
-					get_controls.extend (data_grid)
-					refresh		
+					main_win.get_controls.add (data_grid)
+					main_win.refresh		
 				end
 			end
 		end
 
-	display_public_key (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+	display_public_key (sender: SYSTEM_OBJECT; arguments: EVENT_ARGS) is
 		indexing
 			description: "Display assembly public key column if checked."
 			external_name: "DisplayPublicKey"
 		local
 			checked: BOOLEAN
-			columns: SYSTEM_DATA_DATACOLUMNCOLLECTION
+			columns: DATA_DATA_COLUMN_COLLECTION
 		do
 			columns := data_table.get_columns
 			checked := public_key_menu_item.get_checked
 			if columns.get_count > 1 or not checked then					
-				if checked and then columns.has (dictionary.Assembly_public_key_column_title) then
+				if checked and then columns.contains (dictionary.Assembly_public_key_column_title.to_cil) then
 					columns.remove_data_column (assembly_public_key_column)
 					public_key_menu_item.set_checked (not checked)
 					public_key_toolbar_button.set_pushed (not checked)	
 					resize_columns
-					refresh
+					main_win.refresh
 				elseif not checked then
-					get_controls.remove (data_grid)
+					main_win.get_controls.remove (data_grid)
 					build_assemblies_table
 					columns := data_table.get_columns
 					columns.clear
@@ -448,31 +450,31 @@ feature -- Event handling
 					public_key_toolbar_button.set_pushed (not checked)	
 					resize_columns
 					fill_data_grid
-					get_controls.extend (data_grid)
-					refresh		
+					main_win.get_controls.add (data_grid)
+					main_win.refresh		
 				end
 			end
 		end
 
-	display_dependancies (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+	display_dependancies (sender: SYSTEM_OBJECT; arguments: EVENT_ARGS) is
 		indexing
 			description: "Display dependancies column if checked."
 			external_name: "DisplayDependancies"
 		local
 			checked: BOOLEAN
-			columns: SYSTEM_DATA_DATACOLUMNCOLLECTION
+			columns: DATA_DATA_COLUMN_COLLECTION
 		do
 			columns := data_table.get_columns
 			checked := dependancies_menu_item.get_checked
 			if columns.get_count > 1 or not checked then							
-				if checked and then columns.has (dictionary.Dependancies_column_title) then
+				if checked and then columns.contains (dictionary.Dependancies_column_title.to_cil) then
 					columns.remove_data_column (dependancies_column)
 					dependancies_menu_item.set_checked (not checked)
 					dependancies_toolbar_button.set_pushed (not checked)
 					resize_columns
-					refresh
+					main_win.refresh
 				elseif not checked then
-					get_controls.remove (data_grid)
+					main_win.get_controls.remove (data_grid)
 					build_assemblies_table
 					columns := data_table.get_columns
 					columns.clear
@@ -495,13 +497,13 @@ feature -- Event handling
 					dependancies_toolbar_button.set_pushed (not checked)
 					resize_columns
 					fill_data_grid
-					get_controls.extend (data_grid)
-					refresh		
+					main_win.get_controls.add (data_grid)
+					main_win.refresh		
 				end
 			end
 		end
 
-	show_all (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+	show_all (sender: SYSTEM_OBJECT; arguments: EVENT_ARGS) is
 		indexing
 			description: "Show all columns."
 			external_name: "ShowAll"
@@ -510,13 +512,13 @@ feature -- Event handling
 			display_assemblies
 			set_default_column_width
 			fill_data_grid
-			get_controls.extend (data_grid)
-			refresh
+			main_win.get_controls.add (data_grid)
+			main_win.refresh
 		ensure then
 			all_columns_displayed: data_table.get_columns.get_count = 5
 		end
 
-	show_name (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+	show_name (sender: SYSTEM_OBJECT; arguments: EVENT_ARGS) is
 		indexing
 			description: "Show assembly name column only."
 			external_name: "ShowName"
@@ -528,13 +530,13 @@ feature -- Event handling
 			display_assemblies
 			assembly_name_column_style.set_width (dictionary.Window_width - dictionary.Scrollbar_width)
 			fill_data_grid
-			get_controls.extend (data_grid)
-			refresh
+			main_win.get_controls.add (data_grid)
+			main_win.refresh
 		ensure
 			name_columns_displayed: data_table.get_columns.get_count = 1
 		end
 		
-	import (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+	import (sender: SYSTEM_OBJECT; arguments: EVENT_ARGS) is
 		indexing
 			description: "Display import tool."
 			external_name: "Import"
@@ -543,10 +545,10 @@ feature -- Event handling
 			non_void_arguments: arguments /= Void
 		local
 			selected_row: INTEGER
-			a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
-			assembly_dependancies: ARRAY [SYSTEM_REFLECTION_ASSEMBLYNAME]
+			a_descriptor: ASSEMBLY_DESCRIPTOR
+			assembly_dependancies: ARRAY [CLI_CELL [ASSEMBLY_NAME]]
 			import_dialog: IMPORT_DIALOG
-			support: SUPPORT
+			support: ASSEMBLY_SUPPORT
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -556,7 +558,7 @@ feature -- Event handling
 					create support.make
 					assembly_dependancies := support.dependancies_from_info (a_descriptor)
 					if assembly_dependancies = Void then
-						create assembly_dependancies.make (0)				
+						create assembly_dependancies.make (0,0)				
 					end
 					create import_dialog.make (a_descriptor, assembly_dependancies)
 				end
@@ -566,13 +568,13 @@ feature -- Event handling
 			retry
 		end
 		
-	on_toolbar_button_clicked (sender: ANY; arguments: SYSTEM_WINDOWS_FORMS_TOOLBARBUTTONCLICKEVENTARGS) is
+	on_toolbar_button_clicked (sender: SYSTEM_OBJECT; arguments: WINFORMS_TOOL_BAR_BUTTON_CLICK_EVENT_ARGS) is
 		indexing
 			description: "Identify toolbar button and perform appropriate action."
 			external_name: "OnToolBarButtonClicked"
 		local
 			index: INTEGER
-			args: SYSTEM_EVENTARGS
+			args: EVENT_ARGS
 		do
 			index := toolbar.get_buttons.index_of (arguments.get_button) 
 			create args.make
@@ -606,15 +608,16 @@ feature {NONE} -- Implementation
 			description: "Register assembly viewer to `ISE.ReflectionInterface.Notifier'."
 			external_name: "RegisterToSubject"
 		local
-			type: SYSTEM_TYPE
-			notifier_handle: ISE_REFLECTION_NOTIFIERHANDLE
-			notifier: ISE_REFLECTION_NOTIFIER
-			on_update_add_delegate: SYSTEM_EVENTHANDLER
+			type: TYPE
+			notifier_handle: NOTIFIER_HANDLE
+			notifier: NOTIFIER
+			--on_update_add_delegate: SYSTEM_EVENT_HANDLER
 		do
-			create notifier_handle.make1
+			notifier_handle := create {NOTIFIER_HANDLE}.make
 			notifier := notifier_handle.current_notifier
-			create on_update_add_delegate.make_eventhandler (Current, $update_add)		
-			notifier.add_addition_observer (on_update_add_delegate)
+			--create on_update_add_delegate.make_event_handler (Current, $update_add)		
+			--notifier.add_addition_observer (on_update_add_delegate)
+			notifier.add_addition_observer (agent update_add)
 		end
 		
 	sort_assemblies is
@@ -629,7 +632,7 @@ feature {NONE} -- Implementation
 			end
 			create sort_support
 			sort_support.sort_assembly_descriptors (shared_assemblies)
-			shared_assemblies := sort_support.sorted_list
+			shared_assemblies ?= sort_support.sorted_list
 		end
 		
 	display_assemblies is
@@ -638,34 +641,33 @@ feature {NONE} -- Implementation
 			external_name: "DisplayAssemblies"
 		local
 			row_count: INTEGER
-			i: INTEGER
-			a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
+			a_descriptor: ASSEMBLY_DESCRIPTOR
 			imported: BOOLEAN
 		do
-			if shared_assemblies /= Void and then shared_assemblies.get_count > 0 then
+			if shared_assemblies /= Void and then shared_assemblies.count > 0 then
 				check
 					non_void_imported_table: imported_table /= Void
 				end
 				from
+					shared_assemblies.start
 					row_count := 0
-					i := 0
 				until
-					i = shared_assemblies.get_Count
+					shared_assemblies.after
 				loop
-					a_descriptor ?= shared_assemblies.get_Item (i)
+					a_descriptor ?= shared_assemblies.item
 					if a_descriptor /= Void then
-						imported ?= imported_table.get_item (a_descriptor)
+						imported ?= imported_table.item (a_descriptor)
 						if not imported then
 							build_row (a_descriptor, row_count)
 							row_count := row_count + 1
 						end
 					end
-					i := i + 1
+					shared_assemblies.forth
 				end
 			end
 		end
 
-	build_row (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; row_count: INTEGER) is 
+	build_row (a_descriptor: ASSEMBLY_DESCRIPTOR; row_count: INTEGER) is 
 		indexing
 			description: "Build a row at index `row_count' and fill row with information from `a_descriptor'."
 			external_name: "BuildRow"
@@ -673,7 +675,7 @@ feature {NONE} -- Implementation
 			non_void_assembly_descriptor: a_descriptor /= Void
 			positive_row_count: row_count >= 0
 		local
-			a_row: SYSTEM_DATA_DATAROW
+			a_row: DATA_DATA_ROW
 		do
 			a_row := new_row (a_descriptor, row_count)
 		end
@@ -683,7 +685,7 @@ feature {NONE} -- Implementation
 			description: "Build an empty row at index `row_count'."
 			external_name: "BuildEmptyRow"
 		local
-			a_row: SYSTEM_DATA_DATAROW
+			a_row: DATA_DATA_ROW
 		do
 			a_row := empty_row (row_count)
 		end	
@@ -735,21 +737,21 @@ feature {NONE} -- Implementation
 			if dependancies_menu_item.get_checked then
 				total_width := total_width + dependancies_column_style.get_width
 			end	
-			if (get_width > dictionary.Window_width and total_width < get_width) or (get_width <= dictionary.Window_width and total_width < dictionary.Window_width - dictionary.Scrollbar_width) then
+			if (main_win.get_width > dictionary.Window_width and total_width < main_win.get_width) or (main_win.get_width <= dictionary.Window_width and total_width < dictionary.Window_width - dictionary.Scrollbar_width) then
 				if dependancies_menu_item.get_checked then
 					current_width := dependancies_column_style.get_width
-					dependancies_column_style.set_width (current_width + get_width - total_width - dictionary.Scrollbar_width)		
+					dependancies_column_style.set_width (current_width + main_win.get_width - total_width - dictionary.Scrollbar_width)		
 				elseif	public_key_menu_item.get_checked then
 					current_width := assembly_public_key_column_style.get_width
-					assembly_public_key_column_style.set_width (current_width + get_width - total_width - dictionary.Scrollbar_width)		
+					assembly_public_key_column_style.set_width (current_width + main_win.get_width - total_width - dictionary.Scrollbar_width)		
 				elseif	culture_menu_item.get_checked then
 					current_width := assembly_culture_column_style.get_width
-					assembly_culture_column_style.set_width (current_width + get_width - total_width - dictionary.Scrollbar_width)		
+					assembly_culture_column_style.set_width (current_width + main_win.get_width - total_width - dictionary.Scrollbar_width)		
 				elseif	version_menu_item.get_checked then
 					current_width := assembly_version_column_style.get_width
-					assembly_version_column_style.set_width (current_width + get_width - total_width - dictionary.Scrollbar_width)		
+					assembly_version_column_style.set_width (current_width + main_win.get_width - total_width - dictionary.Scrollbar_width)		
 				elseif	name_menu_item.get_checked then
-					assembly_name_column_style.set_width (get_width - dictionary.Scrollbar_width)		
+					assembly_name_column_style.set_width (main_win.get_width - dictionary.Scrollbar_width)		
 				end
 			end
 		end
@@ -761,29 +763,29 @@ feature {NONE} -- Implementation
 		require
 			non_void_shared_assemblies: shared_assemblies /= Void
 		local
-			i: INTEGER
-			a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
+			a_descriptor: ASSEMBLY_DESCRIPTOR
 		do
-			create imported_table.make
+			create imported_table.make (0)
 			from
+				shared_assemblies.start
 			until
-				i = shared_assemblies.get_count
+				shared_assemblies.after
 			loop
-				a_descriptor ?= shared_assemblies.get_item (i)
-				if a_descriptor /= Void and then not imported_table.contains_key (a_descriptor) then
-					imported_table.extend (a_descriptor, is_imported (a_descriptor))
+				a_descriptor ?= shared_assemblies.item
+				if a_descriptor /= Void and then not imported_table.has (a_descriptor) then
+					imported_table.extend (is_imported (a_descriptor), a_descriptor)
 				end
-				i := i + 1
+				shared_assemblies.forth
 			end
 		end
 		
-	assembly_factory: SYSTEM_REFLECTION_ASSEMBLY 
+	assembly_factory: ASSEMBLY 
 		indexing
 			description: "Static needed to load .NET assemblies"
 			external_name: "AssemblyFactory"
 		end
 
-	imported_table: SYSTEM_COLLECTIONS_HASHTABLE
+	imported_table: HASH_TABLE [BOOLEAN, ASSEMBLY_DESCRIPTOR]
 		indexing
 			description: "Key: Assembly descriptor; Value: Boolean indicating if assembly is imported."
 			external_name: "ImportedTable"
@@ -795,38 +797,39 @@ feature {NONE} -- Implementation
 			external_name: "ImportSignedAssembly"
 		require
 			non_void_filename: a_filename /= Void
-			not_empty_filename: a_filename.get_length > 0
+			not_empty_filename: a_filename.count > 0
 		local
-			an_assembly: SYSTEM_REFLECTION_ASSEMBLY
-			an_assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME
-			a_key: ARRAY [INTEGER_8]
-			conversion_support: ISE_REFLECTION_CONVERSIONSUPPORT
-			a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
-			dependancies: ARRAY [SYSTEM_REFLECTION_ASSEMBLYNAME]
+			an_assembly: ASSEMBLY
+			an_assembly_name: ASSEMBLY_NAME
+			a_key: NATIVE_ARRAY [INTEGER_8]
+			conversion_support: CONVERSION_SUPPORT
+			a_descriptor: ASSEMBLY_DESCRIPTOR
+			dependancies: ARRAY [CLI_CELL [ASSEMBLY_NAME]]
 			import_dialog: IMPORT_DIALOG
 			retried: BOOLEAN
-			message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
-			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
-			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
-			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON
-			support: SUPPORT
+			message_box: WINFORMS_MESSAGE_BOX
+			returned_value: WINFORMS_DIALOG_RESULT
+			message_box_buttons: WINFORMS_MESSAGE_BOX_BUTTONS
+			message_box_icon: WINFORMS_MESSAGE_BOX_ICON
+			support: ASSEMBLY_SUPPORT
 		do
 			if not retried then
-				an_assembly := assembly_factory.load_from (a_filename)
+				an_assembly := assembly_factory.load_from (a_filename.to_cil)
 				an_assembly_name := an_assembly.get_name
 					-- Check assembly is signed.
 				a_key := an_assembly_name.get_public_key
 				if a_key /= Void and then a_key.count > 0 then
 					create support.make
-					create conversion_support.make_conversionsupport
+					--conversion_support := create {CONVERSION_SUPPORT}.make
+					create conversion_support
 					a_descriptor := conversion_support.assembly_descriptor_from_name (an_assembly_name)
 					dependancies := support.dependancies_from_info (a_descriptor)
 					if dependancies = Void then
-						create dependancies.make (0)
+						create dependancies.make (0, 0)
 					end
 					create import_dialog.make (a_descriptor, dependancies)
 				else
-					returned_value := message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Non_signed_assembly, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+					returned_value := message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Non_signed_assembly.to_cil, dictionary.Error_caption.to_cil, message_box_buttons.Ok, message_box_icon.Error)
 				end
 			end
 		rescue
@@ -841,10 +844,11 @@ feature {NONE} -- Implementation
 		local
 			gac_browser: GAC_BROWSER
 			retried: BOOLEAN
-			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
-			message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
-			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
-			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON
+			returned_value: WINFORMS_DIALOG_RESULT
+			message_box: WINFORMS_MESSAGE_BOX
+			message_box_buttons: WINFORMS_MESSAGE_BOX_BUTTONS
+			message_box_icon: WINFORMS_MESSAGE_BOX_ICON
+			conversion_support: ASSMEBLY_MANAGER_SUPPORT [ASSEMBLY_DESCRIPTOR]
 		do
 			if not retried then
 				create gac_browser
@@ -852,7 +856,7 @@ feature {NONE} -- Implementation
 				sort_assemblies
 				build_imported_table
 			else
-				returned_value := message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Error_browsing_GAC, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+				returned_value := message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Error_browsing_GAC.to_cil, dictionary.Error_caption.to_cil, message_box_buttons.Ok, message_box_icon.Error)
 			end
 		ensure then
 			non_void_shared_assemblies: shared_assemblies /= Void
@@ -862,24 +866,28 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	current_assembly (row_number: INTEGER): ISE_REFLECTION_ASSEMBLYDESCRIPTOR is
+	current_assembly (row_number: INTEGER): ASSEMBLY_DESCRIPTOR is
 		indexing
 			description: "Assembly descriptor corresponding to row at index `row_number'"
 			external_name: "CurrentAssembly"
 		local
-			columns: SYSTEM_DATA_DATACOLUMNCOLLECTION
-			rows: SYSTEM_DATA_DATAROWCOLLECTION
-			a_row: SYSTEM_DATA_DATAROW
+			columns: DATA_DATA_COLUMN_COLLECTION
+			rows: DATA_DATA_ROW_COLLECTION
+			a_row: DATA_DATA_ROW
 			a_name: STRING
 			a_version: STRING
 			a_culture: STRING
 			a_public_key: STRING
+			name: SYSTEM_STRING
+			version: SYSTEM_STRING
+			culture: SYSTEM_STRING
+			public_key: SYSTEM_STRING
 			retried: BOOLEAN		
 		do
 			if not retried then
 				data_table ?= data_grid.get_data_source
 				if data_table /= Void then
-					get_controls.remove (data_grid)
+					main_win.get_controls.remove (data_grid)
 					build_assemblies_table
 					columns := data_table.get_columns
 					columns.clear
@@ -889,18 +897,22 @@ feature {NONE} -- Implementation
 					data_table.get_columns.add_data_column (assembly_public_key_column)
 					data_table.get_columns.add_data_column (dependancies_column)
 					display_assemblies
-					get_controls.extend (data_grid)
+					main_win.get_controls.add (data_grid)
 					rows := data_table.get_rows
 					
-					get_controls.remove (data_grid)
+					main_win.get_controls.remove (data_grid)
 					a_row := rows.get_item (row_number)
-					a_name ?= a_row.get_item (assembly_name_column)
-					a_version ?= a_row.get_item (assembly_version_column)
-					a_culture ?= a_row.get_item (assembly_culture_column)
-					a_public_key ?= a_row.get_item (assembly_public_key_column)
+					name ?= a_row.get_item (assembly_name_column)
+					a_name ?= from_system_string (name)
+					version ?= a_row.get_item (assembly_version_column)
+					a_version ?= from_system_string (version)
+					culture ?= a_row.get_item (assembly_culture_column)
+					a_culture ?= from_system_string (culture)
+					public_key ?= a_row.get_item (assembly_public_key_column)
+					a_public_key ?= from_system_string (public_key)
 					if a_name /= Void and a_version /= Void and a_culture /= Void and a_public_key /= Void then
-						create Result.make1
-						Result.make (a_name, a_version, a_culture, a_public_key)
+						--Result := create {ASSEMBLY_DESCRIPTOR}.make1
+						create Result.make (to_reflection_string (a_name), to_reflection_string (a_version), to_reflection_string(a_culture), to_reflection_string(a_public_key))
 					end
 					
 					build_assemblies_table
@@ -923,8 +935,8 @@ feature {NONE} -- Implementation
 					end
 					display_assemblies
 					resize_columns
-					get_controls.extend (data_grid)
-					refresh
+					main_win.get_controls.add (data_grid)
+					main_win.refresh
 				end
 			else
 				Result := Void
@@ -939,8 +951,8 @@ feature {NONE} -- Implementation
 			update_gui_assembly_viewer	
 			display_assemblies
 			resize_columns
-			get_controls.extend (data_grid)
-			refresh		
+			main_win.get_controls.add (data_grid)
+			main_win.refresh		
 		end
 		
 end -- class IMPORT_TOOL

@@ -16,7 +16,7 @@ feature {NONE} -- Initialization
 			description: "Initialize `arguments_modifications'."
 			external_name: "Make"
 		do
-			create arguments_modifications.make
+			create arguments_modifications.make (0)
 		ensure
 			non_void_arguments_modifications: arguments_modifications /= Void
 		end
@@ -29,9 +29,9 @@ feature {NONE} -- Initialization
 			non_void_old_name: old_name /= Void
 		do
 			set_old_feature_name (old_name)
-			create arguments_modifications.make
+			create arguments_modifications.make (0)
 		ensure
-			old_feature_name_set: old_feature_name.equals_string (old_name)
+			old_feature_name_set: old_feature_name.is_equal (old_name)
 			non_void_arguments_modifications: arguments_modifications /= Void
 		end
 
@@ -49,7 +49,7 @@ feature -- Access
 			external_name: "NewFeatureName"
 		end
 
-	arguments_modifications: SYSTEM_COLLECTIONS_HASHTABLE
+	arguments_modifications: HASH_TABLE [STRING, NAMED_SIGNATURE_TYPE_INTERFACE]
 			-- | Key: Instance of `NAMED_SIGNATURE_TYPE'
 			-- | Value: New argument name
 		indexing
@@ -68,7 +68,7 @@ feature -- Status Setting
 		do
 			old_feature_name := a_name
 		ensure
-			old_feature_name_set: old_feature_name.equals_string (a_name)
+			old_feature_name_set: old_feature_name.is_equal (a_name)
 		end
 		
 	set_new_feature_name (a_name: like old_feature_name) is
@@ -80,12 +80,12 @@ feature -- Status Setting
 		do
 			new_feature_name := a_name
 		ensure
-			new_feature_name_set: new_feature_name.equals_string (a_name)
+			new_feature_name_set: new_feature_name.is_equal (a_name)
 		end
 
 feature -- Basic Operations
 
-	add_argument_modification (an_argument: ISE_REFLECTION_INAMEDSIGNATURETYPE; new_argument_name: STRING) is
+	add_argument_modification (an_argument: NAMED_SIGNATURE_TYPE_INTERFACE; new_argument_name: STRING) is
 		indexing
 			description: "[
 						Add `new_argument_name' to `arguments_modifications' with key `an_argument'.
@@ -96,14 +96,14 @@ feature -- Basic Operations
 			non_void_argument: an_argument /= Void
 			non_void_argument_name: new_argument_name /= Void
 		do
-			if not arguments_modifications.contains_key (an_argument) then
-				arguments_modifications.extend (an_argument, new_argument_name)
+			if not arguments_modifications.has (an_argument) then
+				arguments_modifications.extend (new_argument_name, an_argument)
 			else
 				arguments_modifications.remove (an_argument)
-				arguments_modifications.extend (an_argument, new_argument_name)
+				arguments_modifications.extend (new_argument_name, an_argument)
 			end
 		ensure
-			argument_modification_added: arguments_modifications.contains_value (new_argument_name)
+			argument_modification_added: arguments_modifications.has_item (new_argument_name)
 		end
 		
 invariant

@@ -7,7 +7,7 @@ class
 
 feature -- Access
 
-	sorted_list: SYSTEM_COLLECTIONS_ARRAYLIST
+	sorted_list: LINKED_LIST [ANY]
 		indexing
 			description: "List sorted by assembly name"
 			external_name: "SortedList"
@@ -15,8 +15,8 @@ feature -- Access
 
 feature -- Basic Operations
 
-	sort_assembly_descriptors (a_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_ASSEMBLYDESCRIPTOR]
+	sort_assembly_descriptors (a_list: LINKED_LIST [ASSEMBLY_DESCRIPTOR]) is
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ASSEMBLYDESCRIPTOR]
 		indexing
 			description: "Sort list by assembly names. Make result available in `sorted_list'."
 			external_name: "SortAssemblyDescriptors"
@@ -24,9 +24,9 @@ feature -- Basic Operations
 			non_void_list: a_list /= Void
 		local
 			i: INTEGER
-			tmp_list: SYSTEM_COLLECTIONS_ARRAYLIST
-			tmp_table: SYSTEM_COLLECTIONS_HASHTABLE
-			a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
+			tmp_list: SORTED_TWO_WAY_LIST [STRING]
+			tmp_table: HASH_TABLE [ASSEMBLY_DESCRIPTOR, STRING]
+			a_descriptor: ASSEMBLY_DESCRIPTOR
 			a_name: STRING
 			added: INTEGER
 			retried: BOOLEAN
@@ -34,46 +34,47 @@ feature -- Basic Operations
 			if not retried then
 				from
 					create tmp_list.make
-					create tmp_table.make
+					create tmp_table.make (0)
+					a_list.start
 				until
-					i = a_list.get_count
+					a_list.after
 				loop
-					a_descriptor ?= a_list.get_item (i)
+					a_descriptor ?= a_list.item
 					if a_descriptor /= Void then
-						added := tmp_list.extend (a_descriptor.get_name)
-						tmp_table.extend (a_descriptor.get_name, a_descriptor)
+						tmp_list.extend (a_descriptor.name)
+						tmp_table.extend (a_descriptor, a_descriptor.name)
 					end
-					i := i + 1
+					a_list.forth
 				end
 				tmp_list.sort
 				create sorted_list.make
 				from
-					i := 0
+					tmp_list.start
 				until
-					i = tmp_list.get_count
+					tmp_list.after
 				loop
-					a_name ?= tmp_list.get_item (i)
+					a_name ?= tmp_list.item
 					if a_name /= Void then
-						a_descriptor ?= tmp_table.get_item (a_name)
+						a_descriptor ?= tmp_table.item (a_name)
 						if a_descriptor /= Void then
-							added := sorted_list.extend (a_descriptor)
+							sorted_list.extend (a_descriptor)
 						end
 					end
-					i := i + 1
+					tmp_list.forth
 				end
 			else
 				sorted_list := a_list
 			end
 		ensure
 			non_void_sorted_list: sorted_list /= Void
-			valid_sorted_list: sorted_list.get_count = a_list.get_count
+			valid_sorted_list: sorted_list.count = a_list.count
 		rescue
 			retried := True
 			retry
 		end
 
-	sort_eiffel_assemblies (a_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_EIFFELASSEMBLY]
+	sort_eiffel_assemblies (a_list: LINKED_LIST [EIFFEL_ASSEMBLY]) is
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFELASSEMBLY]
 		indexing
 			description: "Sort list by assembly names. Make result available in `sorted_list'."
 			external_name: "SortEiffelAssemblies"
@@ -81,9 +82,9 @@ feature -- Basic Operations
 			non_void_list: a_list /= Void
 		local
 			i: INTEGER
-			tmp_list: SYSTEM_COLLECTIONS_ARRAYLIST
-			tmp_table: SYSTEM_COLLECTIONS_HASHTABLE
-			an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY
+			tmp_list: SORTED_TWO_WAY_LIST [STRING]
+			tmp_table: HASH_TABLE [EIFFEL_ASSEMBLY, STRING]
+			an_eiffel_assembly: EIFFEL_ASSEMBLY
 			a_name: STRING
 			added: INTEGER
 			retried: BOOLEAN
@@ -91,32 +92,33 @@ feature -- Basic Operations
 			if not retried then
 				from
 					create tmp_list.make
-					create tmp_table.make
+					create tmp_table.make (0)
+					a_list.start
 				until
-					i = a_list.get_count
+					a_list.after
 				loop
-					an_eiffel_assembly ?= a_list.get_item (i)
+					an_eiffel_assembly ?= a_list.item
 					if an_eiffel_assembly /= Void then
-						added := tmp_list.extend (an_eiffel_assembly.get_assembly_descriptor.get_name)
-						tmp_table.extend (an_eiffel_assembly.get_assembly_descriptor.get_name, an_eiffel_assembly)
+						tmp_list.extend (an_eiffel_assembly.assembly_descriptor.name)
+						tmp_table.extend (an_eiffel_assembly, an_eiffel_assembly.assembly_descriptor.name)
 					end
-					i := i + 1
+					a_list.forth
 				end
 				tmp_list.sort
 				create sorted_list.make
 				from
-					i := 0
+					tmp_list.start
 				until
-					i = tmp_table.get_count
+					tmp_list.after
 				loop
-					a_name ?= tmp_list.get_item (i)
+					a_name ?= tmp_list.item
 					if a_name /= Void then
-						an_eiffel_assembly ?= tmp_table.get_item (a_name)
+						an_eiffel_assembly ?= tmp_table.item (a_name)
 						if an_eiffel_assembly /= Void then
-							added := sorted_list.extend (an_eiffel_assembly)
+							sorted_list.extend (an_eiffel_assembly)
 						end
 					end
-					i := i + 1
+					tmp_list.forth
 				end
 			else
 				sorted_list := a_list
@@ -128,8 +130,8 @@ feature -- Basic Operations
 			retry
 		end
 
-	sort_eiffel_classes (a_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_EIFFELCLASS]
+	sort_eiffel_classes (a_list: LINKED_LIST [EIFFEL_CLASS]) is
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFELCLASS]
 		indexing
 			description: "Sort list by class Eiffel names. Make result available in `sorted_list'."
 			external_name: "SortEiffelClasses"
@@ -137,9 +139,9 @@ feature -- Basic Operations
 			non_void_list: a_list /= Void
 		local
 			i: INTEGER
-			tmp_list: SYSTEM_COLLECTIONS_ARRAYLIST
-			tmp_table: SYSTEM_COLLECTIONS_HASHTABLE
-			an_eiffel_class: ISE_REFLECTION_EIFFELCLASS
+			tmp_list: SORTED_TWO_WAY_LIST [STRING]
+			tmp_table: HASH_TABLE [EIFFEL_CLASS, STRING]
+			an_eiffel_class: EIFFEL_CLASS
 			a_name: STRING
 			added: INTEGER
 			retried: BOOLEAN
@@ -147,32 +149,33 @@ feature -- Basic Operations
 			if not retried then
 				from
 					create tmp_list.make
-					create tmp_table.make
+					create tmp_table.make (0)
+					a_list.start
 				until
-					i = a_list.get_count
+					a_list.after
 				loop
-					an_eiffel_class ?= a_list.get_item (i)
+					an_eiffel_class ?= a_list.item
 					if an_eiffel_class /= Void then
-						added := tmp_list.extend (an_eiffel_class.get_eiffel_name)
-						tmp_table.extend (an_eiffel_class.get_eiffel_name, an_eiffel_class)
+						tmp_list.extend (an_eiffel_class.eiffel_name)
+						tmp_table.extend (an_eiffel_class, an_eiffel_class.eiffel_name)
 					end
-					i := i + 1
+					a_list.forth
 				end
 				tmp_list.sort
 				create sorted_list.make
 				from
-					i := 0
+					tmp_list.start
 				until
-					i = tmp_table.get_count
+					tmp_list.after
 				loop
-					a_name ?= tmp_list.get_item (i)
+					a_name ?= tmp_list.item
 					if a_name /= Void then
-						an_eiffel_class ?= tmp_table.get_item (a_name)
+						an_eiffel_class ?= tmp_table.item (a_name)
 						if an_eiffel_class /= Void then
-							added := sorted_list.extend (an_eiffel_class)
+							sorted_list.extend (an_eiffel_class)
 						end
 					end
-					i := i + 1
+					tmp_list.forth
 				end
 			else
 				sorted_list := a_list

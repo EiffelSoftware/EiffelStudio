@@ -34,9 +34,10 @@ feature {NONE} -- Initialization
 			type_view := a_type_view
 			is_valid := True
 			children := type_view.children
-			new_inheritance_clauses ?= eiffel_class.get_parents.clone
-			create errors_in_features.make
-			create errors_in_arguments.make
+			new_inheritance_clauses ?= eiffel_class.parents.clone (eiffel_class.parents)
+			create errors_in_features.make (0)
+			create errors_in_arguments.make (0)
+			create errors_in_arguments_mappings.make (0)
 		ensure
 			eiffel_class_set: eiffel_class = an_eiffel_class
 			type_modifications_set: type_modifications = a_type_modification
@@ -46,11 +47,12 @@ feature {NONE} -- Initialization
 			non_void_children: children /= Void
 			non_void_errors_in_features: errors_in_features /= Void
 			non_void_errors_in_arguments: errors_in_arguments /= Void
+			non_void_errors_in_arguments_mapping: errors_in_arguments_mappings /= Void
 		end
 		
 feature -- Access
 	
-	eiffel_class: ISE_REFLECTION_EIFFELCLASS
+	eiffel_class: EIFFEL_CLASS
 		indexing
 			description: "Eiffel class `inheritance_clauses' should belong to"
 			external_name: "EiffelClass"
@@ -74,14 +76,14 @@ feature -- Access
 			external_name: "ClassErrorMessage"
 		end
 	
-	children: SYSTEM_COLLECTIONS_ARRAYLIST
+	children: LINKED_LIST [EIFFEL_CLASS]
 		indexing
 			description: "Children of `eiffel_class'"
 			external_name: "Children"
 		end
 	
-	assembly_types: SYSTEM_COLLECTIONS_ARRAYLIST is
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_EIFFELCLASS]
+	assembly_types: LINKED_LIST [EIFFEL_CLASS]  is
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFELCLASS]
 		indexing
 			description: "Assembly types"
 			external_name: "AssemblyTypes"
@@ -91,16 +93,21 @@ feature -- Access
 			non_void_types: Result /= Void
 		end
 		
-	errors_in_features: SYSTEM_COLLECTIONS_HASHTABLE
+	errors_in_features: HASH_TABLE [STRING, EIFFEL_FEATURE]
 		indexing
-			description: "Key: `ISE_REFLECTION_EIFFELFEATURE'; Value: Error message'"
+			description: "Key: `EIFFELFEATURE'; Value: Error message'"
 			external_name: "ErrorsInFeatures"
 		end
 
-	errors_in_arguments: SYSTEM_COLLECTIONS_HASHTABLE
+	errors_in_arguments: HASH_TABLE [STRING, INTEGER]
 		indexing
-			description: "Key: [ISE_REFLECTION_EIFFELFEATURE, ISE_REFLECTION_NAMEDSIGNATURETYPE], Value: Error message"
+			description: "Key: [EIFFELFEATURE, NAMEDSIGNATURETYPE], Value: Error message"
 			external_name: "ErrorsInArguments"
+		end
+		
+	errors_in_arguments_mappings: HASH_TABLE [ARRAY [ANY], INTEGER]
+		indexing
+			description: "Key "
 		end
 		
 feature -- Status Report
@@ -121,13 +128,11 @@ feature -- Basic Operations
 					  ]"
 			external_name: "Check_and_update"
 		local
-			features_changes: SYSTEM_COLLECTIONS_HASHTABLE
-			enumerator: SYSTEM_COLLECTIONS_IENUMERATOR
-			a_feature: ISE_REFLECTION_EIFFELFEATURE
+			features_changes: HASH_TABLE [FEATURE_MODIFICATIONS, EIFFEL_FEATURE]
+			a_feature: EIFFEL_FEATURE
 			a_feature_modifications: FEATURE_MODIFICATIONS
-			changes: SYSTEM_COLLECTIONS_ARRAYLIST
-			tmp_changes: SYSTEM_COLLECTIONS_ARRAYLIST
-			i: INTEGER
+			changes: LINKED_LIST [ARRAY [ANY]]
+			tmp_changes: LINKED_LIST [ARRAY [ANY]]
 			an_array: ARRAY [ANY]
 			added: INTEGER
 		do
@@ -142,30 +147,32 @@ feature -- Basic Operations
 		--	end			
 				-- Update class features 
 			features_changes := type_modifications.features_modifications
-			if features_changes /= Void and then features_changes.get_count > 0 then
-				enumerator := features_changes.get_keys.get_enumerator
+			if features_changes /= Void and then features_changes.count > 0 then
 				from
 					create changes.make 
+					features_changes.start
 				until
-					not enumerator.move_next
+					features_changes.after
 				loop
-					a_feature ?= enumerator.get_current
+					a_feature ?= features_changes.key_for_iteration
 					if a_feature /= Void then
-						a_feature_modifications ?= features_changes.get_item (a_feature)
+						a_feature_modifications ?= features_changes.item (a_feature)
 						if a_feature_modifications /= Void then
-							create an_array.make (2)
-							an_array.put (0, a_feature)
-							an_array.put (1, a_feature_modifications)
-							added := changes.extend (an_array)
+							create an_array.make (0, 1)
+							an_array.put (a_feature, 0)
+							an_array.put (a_feature_modifications, 1)
+							changes.extend (an_array)
 						end
 					end
+					features_changes.forth
 				end
-				tmp_changes ?= changes.clone
+				tmp_changes := changes.clone(changes)
 				from
+					changes.start
 				until
-					i = changes.get_count
+					changes.after
 				loop
-					an_array ?= tmp_changes.get_item (i)
+					an_array := tmp_changes.item
 					if an_array /= Void then
 						a_feature ?= an_array.item (0)
 						a_feature_modifications ?= an_array.item (1)
@@ -173,7 +180,7 @@ feature -- Basic Operations
 							update_features (a_feature_modifications, a_feature)
 						end
 					end
-					i := i + 1
+					changes.forth
 				end
 			end
 		end
@@ -203,7 +210,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	update_features (a_feature_modifications: FEATURE_MODIFICATIONS; a_feature: ISE_REFLECTION_EIFFELFEATURE) is
+	update_features (a_feature_modifications: FEATURE_MODIFICATIONS; a_feature: EIFFEL_FEATURE) is
 		indexing
 			description: "[
 						Check for name clashes and update feature name, create clauses and inheritance clauses (if needed) if name is valid. 
@@ -216,74 +223,81 @@ feature {NONE} -- Implementation
 		local
 			old_name: STRING
 			new_name: STRING
-			arguments_changes: SYSTEM_COLLECTIONS_HASHTABLE
-			enumerator: SYSTEM_COLLECTIONS_IENUMERATOR
-			an_argument: ISE_REFLECTION_NAMEDSIGNATURETYPE
+			arguments_changes: HASH_TABLE [STRING, NAMED_SIGNATURE_TYPE_INTERFACE]
+			an_argument: NAMED_SIGNATURE_TYPE
 			i: INTEGER
 			added: INTEGER
-			changes: SYSTEM_COLLECTIONS_ARRAYLIST
-			tmp_changes: SYSTEM_COLLECTIONS_ARRAYLIST
+			changes: LINKED_LIST [ARRAY [ANY]]
+			tmp_changes: LINKED_LIST [ARRAY [ANY]]
 			an_array: ARRAY [ANY]
+			name: STRING
 		do
 				-- Update feature name
 			if a_feature_modifications.new_feature_name /= Void then
-				if a_feature_modifications.new_feature_name.get_length > 0 then
+				if a_feature_modifications.new_feature_name.count > 0 then
 					new_name := a_feature_modifications.new_feature_name
+					new_name := new_name.clone (new_name)
 					if recursive_exists (new_name) then
 						is_valid := False
 						if errors_in_features.has (a_feature) then
 							errors_in_features.remove (a_feature)
 						end
-						errors_in_features.extend (a_feature, Feature_exists_error)
-					elseif reserved_words.has (new_name.to_lower) then
-						is_valid := False
-						if errors_in_features.has (a_feature) then
-							errors_in_features.remove (a_feature)
-						end					
-						errors_in_features.extend (a_feature, Feature_clash_with_reserved_word)
+						errors_in_features.extend (Feature_exists_error, a_feature)
 					else
-						is_valid := is_valid and True
-						old_name := a_feature_modifications.old_feature_name					
-						--recursive_update_inheritance_clauses (old_name, new_name)
-						--update_children_inheritance_clauses (old_name, new_name)
-						rename_feature_in_children (old_name, new_name)
-						a_feature.set_eiffel_name (new_name)
-						a_feature.set_modified (True)
+						new_name.to_lower
+						if reserved_words.has (new_name) then
+							is_valid := False
+							if errors_in_features.has (a_feature) then
+								errors_in_features.remove (a_feature)
+							end					
+							errors_in_features.extend (Feature_clash_with_reserved_word, a_feature)
+						else
+							is_valid := is_valid and True
+							old_name := a_feature_modifications.old_feature_name					
+							--recursive_update_inheritance_clauses (old_name, new_name)
+							--update_children_inheritance_clauses (old_name, new_name)
+							rename_feature_in_children (old_name, new_name)
+							a_feature.set_eiffel_name (new_name)
+							a_feature.set_modified (True)
+						end
 					end
 				else
 					is_valid := False
 					if errors_in_features.has (a_feature) then
 						errors_in_features.remove (a_feature) 
 					end
-					errors_in_features.extend (a_feature, Empty_feature_name)
+					errors_in_features.extend (Empty_feature_name, a_feature)
 				end 
 			end
 				-- Update feature arguments
 			arguments_changes := a_feature_modifications.arguments_modifications
-			if arguments_changes /= Void and then arguments_changes.get_count > 0 then
-				enumerator := arguments_changes.get_keys.get_enumerator
+			if arguments_changes /= Void and then arguments_changes.count > 0 then
+				--enumerator := arguments_changes.get_keys.get_enumerator
 				from
 					create changes.make
+					arguments_changes.start
 				until
-					not enumerator.move_next
+					arguments_changes.after
 				loop
-					an_argument ?= enumerator.get_current
+					an_argument ?= arguments_changes.key_for_iteration
 					if an_argument /= Void then
-						new_name ?= arguments_changes.get_item (an_argument)
+						new_name ?= arguments_changes.item (an_argument)
 						if new_name /= Void then
-							create an_array.make (2)
-							an_array.put (0, an_argument)
-							an_array.put (1, new_name)
-							added := changes.extend (an_array)						
+							create an_array.make (0, 1)
+							an_array.put (an_argument, 0)
+							an_array.put (new_name, 1)
+							changes.extend (an_array)
 						end
 					end
+					arguments_changes.forth
 				end			
-				tmp_changes ?= changes.clone
+				tmp_changes := changes.clone (changes)
 				from
+					tmp_changes.start
 				until
-					i = changes.get_count
+					tmp_changes.after
 				loop
-					an_array ?= tmp_changes.get_item (i)
+					an_array ?= tmp_changes.item
 					if an_array /= Void then
 						an_argument ?= an_array.item (0)
 						new_name ?= an_array.item (1)
@@ -291,12 +305,12 @@ feature {NONE} -- Implementation
 							update_arguments (new_name, an_argument, a_feature)
 						end
 					end
-					i := i + 1
+					tmp_changes.forth
 				end
 			end
 		end
 	
-	update_arguments (new_name: STRING; an_argument: ISE_REFLECTION_NAMEDSIGNATURETYPE; a_feature: ISE_REFLECTION_EIFFELFEATURE) is
+	update_arguments (new_name: STRING; an_argument: NAMED_SIGNATURE_TYPE; a_feature: EIFFEL_FEATURE) is
 		indexing
 			description: "[
 						Check for name clashes with other arguments or feature names and update argument name.
@@ -309,53 +323,62 @@ feature {NONE} -- Implementation
 			non_void_feature: a_feature /= Void
 		local
 			an_array: ARRAY [ANY]
+			name: STRING
 		do
-			if new_name.get_length > 0 then
+			if new_name.count > 0 then
 				if recursive_exists (new_name) then
 					is_valid := False
-					create an_array.make (2)
-					an_array.put (0, a_feature)
-					an_array.put (1, an_argument)
-					if errors_in_arguments.has (an_array) then
-						errors_in_arguments.remove (an_array)
+					create an_array.make (0, 1)
+					an_array.put (a_feature, 0)
+					an_array.put (an_argument, 1)
+					if errors_in_arguments.has (an_array.get_hash_code) then
+						errors_in_arguments.remove (an_array.get_hash_code)
 					end
-					errors_in_arguments.extend (an_array, Clash_with_feature_name)
-				elseif reserved_words.has (new_name.to_lower) then
-					is_valid := False
-					create an_array.make (2)
-					an_array.put (0, a_feature)
-					an_array.put (1, an_argument)
-					if errors_in_arguments.has (an_array) then
-						errors_in_arguments.remove (an_array)
-					end
-					errors_in_arguments.extend (an_array, Argument_clash_with_reserved_word)	
-				elseif argument_exists (new_name, a_feature) then
-					is_valid := False
-					create an_array.make (2)
-					an_array.put (0, a_feature)
-					an_array.put (1, an_argument)
-					if errors_in_arguments.has (an_array) then
-						errors_in_arguments.remove (an_array)
-					end
-					errors_in_arguments.extend (an_array, Argument_name_exists)
+					errors_in_arguments.extend (Clash_with_feature_name, an_array.get_hash_code)
+					errors_in_arguments_mappings.extend (an_array, an_array.get_hash_code)
 				else
-					is_valid := is_valid and True
-					an_argument.set_eiffel_name (new_name)
-					a_feature.set_modified (True)
+					name := new_name.clone (new_name)
+					name.to_lower
+					if reserved_words.has (name) then
+						is_valid := False
+						create an_array.make (0, 1)
+						an_array.put (a_feature, 0)
+						an_array.put (an_argument, 1)
+						if errors_in_arguments.has (an_array.get_hash_code) then
+							errors_in_arguments.remove (an_array.get_hash_code)
+						end
+						errors_in_arguments.extend (Argument_clash_with_reserved_word, an_array.get_hash_code)
+						errors_in_arguments_mappings.extend (an_array, an_array.get_hash_code)
+					elseif argument_exists (new_name, a_feature) then
+						is_valid := False
+						create an_array.make (0, 1)
+						an_array.put (a_feature, 0)
+						an_array.put (an_argument, 1)
+						if errors_in_arguments.has (an_array.get_hash_code) then
+							errors_in_arguments.remove (an_array.get_hash_code)
+						end
+						errors_in_arguments.extend (Argument_name_exists, an_array.get_hash_code)
+						errors_in_arguments_mappings.extend (an_array, an_array.get_hash_code)
+					else
+						is_valid := is_valid and True
+						an_argument.set_eiffel_name (new_name)
+						a_feature.set_modified (True)
+					end
 				end
 			else
 				is_valid := False
-				create an_array.make (2)
-				an_array.put (0, a_feature)
-				an_array.put (1, an_argument)
-				if errors_in_arguments.has (an_array) then
-					errors_in_arguments.remove (an_array)
+				create an_array.make (0, 1)
+				an_array.put (a_feature, 0)
+				an_array.put (an_argument, 1)
+				if errors_in_arguments.has (an_array.get_hash_code) then
+					errors_in_arguments.remove (an_array.get_hash_code)
 				end
-				errors_in_arguments.extend (an_array, Empty_argument_name)
+				errors_in_arguments.extend (Empty_argument_name, an_array.get_hash_code)
+				errors_in_arguments_mappings.extend (an_array, an_array.get_hash_code)
 			end
 		end
 		
-	new_inheritance_clauses: SYSTEM_COLLECTIONS_HASHTABLE
+	new_inheritance_clauses: HASH_TABLE [ARRAY[LINKED_LIST [INHERITANCE_CLAUSE]], STRING]
 			-- Key: Parent name
 			-- Value: List of inheritance clauses
 		indexing
@@ -371,17 +394,25 @@ feature {NONE} -- Implementation
 			non_void_class_name: a_class_name /= Void
 		local
 			i: INTEGER
-			a_type: ISE_REFLECTION_EIFFELCLASS
+			a_type: EIFFEL_CLASS
+			class_name: STRING
+			eiffel_type_name: STRING
 		do
 			from
+				assembly_types.start
 			until
-				i = assembly_types.get_count or Result
+				assembly_types.after
 			loop
-				a_type ?= assembly_types.get_item (i)
+				a_type ?= assembly_types.item
 				if a_type /= Void then
-					Result := a_type.get_eiffel_name.to_lower.equals_string (a_class_name.to_lower)
+					class_name := a_class_name.clone (a_class_name)
+					class_name.to_lower
+					eiffel_type_name := a_type.eiffel_name.clone (a_type.eiffel_name)
+					eiffel_type_name.to_lower
+					
+					Result := eiffel_type_name.is_equal (class_name)
 				end
-				i := i + 1
+				assembly_types.forth
 			end
 		end
 	
@@ -393,23 +424,30 @@ feature {NONE} -- Implementation
 			non_void_name: new_name /= Void
 		local
 			i: INTEGER
-			a_class: ISE_REFLECTION_EIFFELCLASS
+			a_class: EIFFEL_CLASS
 			class_found: BOOLEAN
+			class_name: STRING
+			eiffel_type_name: STRING
 		do
 			from
+				assembly_types.start
 			until
-				i = assembly_types.get_count or class_found
+				assembly_types.after
 			loop
-				a_class ?= assembly_types.get_item (i)
-				if a_class.get_eiffel_name.to_lower.equals_string (eiffel_class.get_eiffel_name.to_lower) then
+				a_class ?= assembly_types.item
+				class_name := eiffel_class.eiffel_name.clone (eiffel_class.eiffel_name)
+				class_name.to_lower
+				eiffel_type_name := a_class.eiffel_name.clone (a_class.eiffel_name)
+				eiffel_type_name.to_lower
+				if eiffel_type_name.is_equal (class_name) then
 					a_class.set_eiffel_name (new_name)
 					class_found := True
 				end
-				i := i + 1
+				assembly_types.forth
 			end
 			eiffel_class.set_eiffel_name (new_name)
 		ensure
-			new_name_set: eiffel_class.get_eiffel_name.equals_string (new_name)
+			new_name_set: eiffel_class.eiffel_name.is_equal (new_name)
 		end
 
 	rename_children_parent (new_name: STRING) is
@@ -420,30 +458,31 @@ feature {NONE} -- Implementation
 			non_void_new_name: new_name /= Void
 		local
 			i: INTEGER
-			a_child: ISE_REFLECTION_EIFFELCLASS
-			parents: SYSTEM_COLLECTIONS_HASHTABLE
-			clauses: ARRAY [SYSTEM_COLLECTIONS_ARRAYLIST]			
+			a_child: EIFFEL_CLASS
+			parents: HASH_TABLE [ARRAY[LINKED_LIST [INHERITANCE_CLAUSE]], STRING]
+			clauses: ARRAY [LINKED_LIST [INHERITANCE_CLAUSE]]			
 		do
 			from
+				children.start
 			until
-				i = children.get_count
+				children.after
 			loop
-				a_child ?= children.get_item (i)
+				a_child ?= children.item
 				if a_child /= Void then
-					parents := a_child.get_parents
-					if parents.has (eiffel_class.get_eiffel_name) then
-						clauses ?= parents.get_item (eiffel_class.get_eiffel_name)
+					parents := a_child.parents
+					if parents.has (eiffel_class.eiffel_name) then
+						clauses ?= parents.item (eiffel_class.eiffel_name)
 						if clauses /= Void then
-							parents.remove (eiffel_class.get_eiffel_name)
-							parents.extend (new_name, clauses)
+							parents.remove (eiffel_class.eiffel_name)
+							parents.extend (clauses, new_name)
 						end
 					end
 				end
-				i := i + 1
+				children.forth
 			end
 		end
 	
-	exists (a_class: ISE_REFLECTION_EIFFELCLASS; a_feature_name: STRING): BOOLEAN is
+	exists (a_class: EIFFEL_CLASS; a_feature_name: STRING): BOOLEAN is
 		indexing
 			description: "Does a feature with `a_feature_name' exist in `eiffel_class'?"
 			external_name: "Exists"
@@ -451,7 +490,7 @@ feature {NONE} -- Implementation
 			non_void_class: a_class /= Void
 			non_void_feature_name: a_feature_name /= Void
 		local
-			support: SUPPORT
+			support: ASSEMBLY_SUPPORT
 		do
 			create support.make
 			Result := support.exists (a_class, a_feature_name)
@@ -467,25 +506,26 @@ feature {NONE} -- Implementation
 			non_void_children_list: children /= Void
 		local
 			i: INTEGER
-			a_child: ISE_REFLECTION_EIFFELCLASS
+			a_child: EIFFEL_CLASS
 		do
 			if exists (eiffel_class, a_feature_name) then
 				Result := True
 			else
 				from
+					children.start
 				until
-					i = children.get_count or Result
+					children.after
 				loop
-					a_child ?= children.get_item (i)	
+					a_child ?= children.item
 					if a_child /= Void then
 						Result := exists (a_child, a_feature_name)
 					end
-					i := i + 1
+					children.forth
 				end
 			end
 		end
 		
-	eiffel_feature: ISE_REFLECTION_EIFFELFEATURE
+	eiffel_feature: EIFFEL_FEATURE
 		indexing
 			description: "Eiffel feature (Result of `has_feature')"
 			external_name: "EiffelFeature"
@@ -498,33 +538,35 @@ feature {NONE} -- Implementation
 		require
 			non_void_new_name: new_name /= Void
 		local
-			children_to_change: SYSTEM_COLLECTIONS_HASHTABLE
+			children_to_change: HASH_TABLE [EIFFEL_FEATURE, EIFFEL_CLASS]
 			i: INTEGER
-			a_child: ISE_REFLECTION_EIFFELCLASS
-			enumerator: SYSTEM_COLLECTIONS_IENUMERATOR
-			a_feature: ISE_REFLECTION_EIFFELFEATURE
+			a_child: EIFFEL_CLASS
+			a_feature: EIFFEL_FEATURE
 		do
 			from
-				create children_to_change.make
+				create children_to_change.make (0)
+				children.start
 			until
-				i = children.get_count
+				children.after
 			loop
-				a_child ?= children.get_item (i)
+				a_child ?= children.item
 				if a_child /= Void and then exists (a_child, old_name) then
-					children_to_change.extend(a_child, eiffel_feature)
+					children_to_change.extend(eiffel_feature, a_child)
 				end
-				i := i + 1
+				children.forth
 			end
-			enumerator := children_to_change.get_values.get_enumerator
+			
 			from
+				children_to_change.start
 			until
-				not enumerator.move_next
+				children_to_change.after
 			loop
-				a_feature ?= enumerator.get_current
+				a_feature ?= children_to_change.item_for_iteration
 				if a_feature /= Void then
 					a_feature.set_eiffel_name (new_name)
 					a_feature.set_modified (True)
 				end
+				children_to_change.forth
 			end
 		end
 		
@@ -536,35 +578,35 @@ feature {NONE} -- Implementation
 			non_void_old_name: old_name /= Void
 			non_void_new_name: new_name /= Void
 		local
-			parents_enumerator: SYSTEM_COLLECTIONS_IENUMERATOR
 			a_parent_name: STRING
 			i: INTEGER
 			added: INTEGER
-			parent_names: SYSTEM_COLLECTIONS_ARRAYLIST
-			tmp_parent_names: SYSTEM_COLLECTIONS_ARRAYLIST
+			parent_names: LINKED_LIST [STRING]
+			tmp_parent_names: LINKED_LIST [STRING]
 		do
-			parents_enumerator := eiffel_class.get_parents.get_keys.get_enumerator
 			from
 				create parent_names.make
+				eiffel_class.parents.start
 			until
-				not parents_enumerator.move_next
+				eiffel_class.parents.after
 			loop
-				a_parent_name ?= parents_enumerator.get_current
-				if a_parent_name /= Void and then a_parent_name.get_length > 0 then
-					added := parent_names.extend (a_parent_name)
+				a_parent_name ?= eiffel_class.parents.key_for_iteration
+				if a_parent_name /= Void and then a_parent_name.count > 0 then
+					parent_names.extend (a_parent_name)
 					--update_inheritance_clauses (a_parent_name, old_name, new_name)
 				end
 			end
-			tmp_parent_names ?= parent_names.clone
+			tmp_parent_names ?= parent_names.clone (parent_names)
 			from
+				parent_names.start
 			until
-				i = parent_names.get_count
+				parent_names.after
 			loop
-				a_parent_name ?= tmp_parent_names.get_item (i)
+				a_parent_name ?= tmp_parent_names.item
 				if a_parent_name /= Void then
 					update_inheritance_clauses (a_parent_name, old_name, new_name)
 				end
-				i := i + 1
+				parent_names.forth
 			end
 			commit (eiffel_class)
 		end
@@ -578,15 +620,15 @@ feature {NONE} -- Implementation
 			non_void_new_name: new_name /= Void
 			non_void_old_name: old_name /= Void
 		local
-			a_rename_clause: ISE_REFLECTION_RENAMECLAUSE
+			a_rename_clause: RENAME_CLAUSE
 			added: INTEGER
 		do
 			build_inheritance_clauses (parent_name)
 			if not has_rename_clause (old_name) and then (is_in_list (undefine_clauses, old_name) or is_in_list (redefine_clauses, old_name) or is_in_list (select_clauses, old_name)) then
-				create a_rename_clause.make_renameclause
+				create a_rename_clause
 				a_rename_clause.set_source_name (old_name)
 				a_rename_clause.set_target_name (new_name)
-				added := rename_clauses.extend (a_rename_clause)
+				rename_clauses.extend (a_rename_clause)
 			end
 			intern_update_inheritance_clauses (old_name, new_name)
 			commit_parent_changes (parent_name, eiffel_class)
@@ -605,10 +647,10 @@ feature {NONE} -- Implementation
 			non_void_new_name: new_name /= Void
 		local
 			added: INTEGER
-			a_rename_clause: ISE_REFLECTION_RENAMECLAUSE
-			an_undefine_clause: ISE_REFLECTION_UNDEFINECLAUSE
-			a_redefine_clause: ISE_REFLECTION_REDEFINECLAUSE
-			a_select_clause: ISE_REFLECTION_SELECTCLAUSE
+			a_rename_clause: RENAME_CLAUSE
+			an_undefine_clause: UNDEFINE_CLAUSE
+			a_redefine_clause: REDEFINE_CLAUSE
+			a_select_clause: SELECT_CLAUSE
 		do
 		--	if has_rename_clause (old_name) then
 		--		rename_clauses.prune_i_th (index_in_list)
@@ -617,22 +659,25 @@ feature {NONE} -- Implementation
 		--		added := rename_clauses.extend (a_rename_clause)
 		--	end
 			if is_in_list (undefine_clauses, old_name) then
-				undefine_clauses.prune_i_th (index_in_list)
-				create an_undefine_clause.make_undefineclause
+				undefine_clauses.go_i_th (index_in_list)
+				undefine_clauses.remove
+				create an_undefine_clause
 				an_undefine_clause.set_source_name (new_name)
-				added := undefine_clauses.extend (an_undefine_clause)
+				undefine_clauses.extend (an_undefine_clause)
 			end
 			if is_in_list (redefine_clauses, old_name) then
-				redefine_clauses.prune_i_th (index_in_list)
-				create a_redefine_clause.make_redefineclause
+				redefine_clauses.go_i_th (index_in_list)
+				redefine_clauses.remove
+				create a_redefine_clause
 				a_redefine_clause.set_source_name (new_name)				
-				added := redefine_clauses.extend (a_redefine_clause)			
+				redefine_clauses.extend (a_redefine_clause)			
 			end
 			if is_in_list (select_clauses, old_name) then
-				select_clauses.prune_i_th (index_in_list)
-				create a_select_clause.make_selectclause
+				select_clauses.go_i_th (index_in_list)
+				select_clauses.remove
+				create a_select_clause
 				a_select_clause.set_source_name (new_name)
-				added := select_clauses.extend (a_select_clause)			
+				select_clauses.extend (a_select_clause)			
 			end
 		ensure
 			not_in_undefine_clauses: not is_in_list (undefine_clauses, old_name)
@@ -640,7 +685,7 @@ feature {NONE} -- Implementation
 			not_in_select_clauses: not is_in_list (select_clauses, old_name)
 		end
 
-	commit_parent_changes (parent_name: STRING; a_class: ISE_REFLECTION_EIFFELCLASS) is
+	commit_parent_changes (parent_name: STRING; a_class: EIFFEL_CLASS) is
 		indexing
 			description: "Set new inheritance clauses to parent of `eiffel_class' with name `parent_name'."
 			external_name: "CommitParentChanges"
@@ -651,13 +696,13 @@ feature {NONE} -- Implementation
 		do
 			if new_inheritance_clauses.has (parent_name) then
 				new_inheritance_clauses.remove (parent_name)
-				if a_class.get_parents.has (parent_name) and not a_class.get_eiffel_name.equals_string (parent_name) then
-					new_inheritance_clauses.extend (parent_name, inheritance_clauses)
+				if a_class.parents.has (parent_name) and not a_class.eiffel_name.is_equal (parent_name) then
+					new_inheritance_clauses.extend (inheritance_clauses, parent_name)
 				end
 			end
 		end
 	 
-	commit (an_eiffel_class: ISE_REFLECTION_EIFFELCLASS) is
+	commit (an_eiffel_class: EIFFEL_CLASS) is
 		indexing
 			description: "Commit changes in parents inheritance clauses"
 			external_name: "Commit"
@@ -667,21 +712,21 @@ feature {NONE} -- Implementation
 			an_eiffel_class.set_parents (new_inheritance_clauses)	
 		end
 		
-	inheritance_clauses: ARRAY [SYSTEM_COLLECTIONS_ARRAYLIST] is
+	inheritance_clauses: ARRAY [ LINKED_LIST [INHERITANCE_CLAUSE]] is
 			-- | Built from `rename_clauses', `undefine_clauses', `redefine_clauses' and `select_clauses'.
 		indexing
 			description: "Inheritance clauses"
 			external_name: "InheritanceClauses"		
 		local
-			a_list: SYSTEM_COLLECTIONS_ARRAYLIST
+			a_list: LINKED_LIST [INHERITANCE_CLAUSE]
 		do
-			create Result.make (5)
-			Result.put (0, rename_clauses)
-			Result.put (1, undefine_clauses)
-			Result.put (2, redefine_clauses)
-			Result.put (3, select_clauses)
+			create Result.make (0, 4)
+			Result.put (rename_clauses, 0)
+			Result.put (undefine_clauses, 1)
+			Result.put (redefine_clauses, 2)
+			Result.put (select_clauses, 3)
 			create a_list.make
-			Result.put (4, a_list)
+			Result.put (a_list, 4)
 		ensure
 			inheritance_clauses_created: Result /= Void
 			valid_inheritance_clauses: Result.count = 5
@@ -698,39 +743,41 @@ feature {NONE} -- Implementation
 			non_void_old_name: old_name /= Void
 			non_void_new_name: new_name /= Void
 		local
-			tmp_children: SYSTEM_COLLECTIONS_ARRAYLIST
+			tmp_children: like children
 			i: INTEGER
-			a_child: ISE_REFLECTION_EIFFELCLASS
-			tmp_child: ISE_REFLECTION_EIFFELCLASS
-			parents: SYSTEM_COLLECTIONS_HASHTABLE
-			clauses: ARRAY [SYSTEM_COLLECTIONS_ARRAYLIST]	
+			a_child: EIFFEL_CLASS
+			tmp_child: EIFFEL_CLASS
+			parents: HASH_TABLE [ARRAY[LINKED_LIST [INHERITANCE_CLAUSE]], STRING]
+			clauses: ARRAY [LINKED_LIST [INHERITANCE_CLAUSE]]
 		do
 			from
-				tmp_children ?= children.clone
+				tmp_children ?= children.clone (children)
+				children.start
 			until
-				i = children.get_count
+				children.after
 			loop
-				a_child ?= children.get_item (i)
+				a_child ?= children.item
 				if a_child /= Void then
-					parents := a_child.get_parents
-					if parents.has (eiffel_class.get_eiffel_name) then
-						new_inheritance_clauses ?= parents.clone
-						clauses ?= parents.get_item (eiffel_class.get_eiffel_name) 
+					parents := a_child.parents
+					if parents.has (eiffel_class.eiffel_name) then
+						new_inheritance_clauses ?= parents.clone (parents)
+						clauses ?= parents.item (eiffel_class.eiffel_name) 
 						if clauses /= Void and then clauses.count = 5 then
 							rename_clauses := clauses.item (0)
 							undefine_clauses := clauses.item (1)		
 							redefine_clauses := clauses.item (2)	
 							select_clauses := clauses.item (3)	
 							intern_update_inheritance_clauses (old_name, new_name)
-							commit_parent_changes (eiffel_class.get_eiffel_name, a_child)
+							commit_parent_changes (eiffel_class.eiffel_name, a_child)
 						end
 					end
 				end
-				tmp_child ?= tmp_children.get_item (i)
+				tmp_children.go_i_th (children.index)
+				tmp_child ?= tmp_children.item
 				if tmp_child /= Void then
 					commit (tmp_child)
 				end
-				i := i + 1
+				children.forth
 			end
 			children := tmp_children
 		end
@@ -742,11 +789,11 @@ feature {NONE} -- Implementation
 		require
 			non_void_parent_name: parent_name /= Void
 		local
-			parents: SYSTEM_COLLECTIONS_HASHTABLE
-			clauses: ARRAY [SYSTEM_COLLECTIONS_ARRAYLIST]
+			parents: HASH_TABLE [ARRAY[LINKED_LIST [INHERITANCE_CLAUSE]], STRING]
+			clauses: ARRAY [LINKED_LIST [INHERITANCE_CLAUSE]]
 		do
-			parents := eiffel_class.get_parents
-			clauses ?= parents.get_item (parent_name)
+			parents := eiffel_class.parents
+			clauses ?= parents.item (parent_name)
 			if clauses /= Void and then clauses.count = 5 then
 				rename_clauses := clauses.item (0)
 				undefine_clauses := clauses.item (1)		
@@ -760,35 +807,35 @@ feature {NONE} -- Implementation
 			non_void_select_clauses: select_clauses /= Void
 		end
 
-	rename_clauses: SYSTEM_COLLECTIONS_ARRAYLIST
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_INHERITANCECLAUSE]
+	rename_clauses: LINKED_LIST [INHERITANCE_CLAUSE]
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [INHERITANCECLAUSE]
 		indexing
 			description: "Rename clauses for parent with `parent_name' in `eiffel_class'"
 			external_name: "RenameClauses"
 		end
 		
-	undefine_clauses: SYSTEM_COLLECTIONS_ARRAYLIST
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_INHERITANCECLAUSE]
+	undefine_clauses:  LINKED_LIST [INHERITANCE_CLAUSE]
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [INHERITANCECLAUSE]
 		indexing
 			description: "Undefine clauses for parent with `parent_name' in `eiffel_class'"
 			external_name: "UndefineClauses"
 		end
 
-	redefine_clauses: SYSTEM_COLLECTIONS_ARRAYLIST
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_INHERITANCECLAUSE]
+	redefine_clauses:  LINKED_LIST [INHERITANCE_CLAUSE]
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [INHERITANCECLAUSE]
 		indexing
 			description: "Redefine clauses for parent with `parent_name' in `eiffel_class'"
 			external_name: "RedefineClauses"
 		end
 
-	select_clauses: SYSTEM_COLLECTIONS_ARRAYLIST
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_INHERITANCECLAUSE]
+	select_clauses:  LINKED_LIST [INHERITANCE_CLAUSE]
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [INHERITANCECLAUSE]
 		indexing
 			description: "Select clauses for parent with `parent_name' in `eiffel_class'"
 			external_name: "SelectClauses"
 		end
 		
-	is_in_list (a_list: SYSTEM_COLLECTIONS_ARRAYLIST; a_feature_name: STRING): BOOLEAN is
+	is_in_list (a_list:  LINKED_LIST [INHERITANCE_CLAUSE]; a_feature_name: STRING): BOOLEAN is
 		indexing
 			description: "[
 						Does `a_feature_name' appear in `a_list'?
@@ -799,19 +846,24 @@ feature {NONE} -- Implementation
 			non_void_feature_name: a_feature_name /= Void
 			non_void_clauses: a_list /= Void
 		local
-			i: INTEGER
-			a_clause: ISE_REFLECTION_INHERITANCECLAUSE
+			a_clause: INHERITANCE_CLAUSE
+			clause_string, feature_string: STRING
 		do
 			from
+				a_list.start
 			until
-				i = a_list.get_count or Result
+				a_list.after
 			loop
-				a_clause ?= a_list.get_item (i)
-				if a_clause /= Void and then a_clause.get_source_name.to_lower.equals_string (a_feature_name.to_lower) then
-					index_in_list := i
+				a_clause ?= a_list.item
+				clause_string := a_clause.source_name.clone (a_clause.source_name)
+				clause_string.to_lower
+				feature_string := a_feature_name.clone (a_feature_name)
+				feature_string.to_lower
+				if a_clause /= Void and then clause_string.is_equal (feature_string) then
+					index_in_list := a_list.index
 					Result := True
 				end
-				i := i + 1
+				a_list.forth
 			end		
 		end
 	
@@ -829,21 +881,28 @@ feature {NONE} -- Implementation
 			non_void_name: a_name /= Void
 		local
 			i: INTEGER
-			an_get_item: ISE_REFLECTION_RENAMECLAUSE			
+			an_get_item: RENAME_CLAUSE	
+			target_name, name: STRING
 		do
 			from
+				rename_clauses.start
 			until
-				i = rename_clauses.get_count or Result
+				rename_clauses.after or Result
 			loop
-				an_get_item ?= rename_clauses.get_item (i)
+				an_get_item ?= rename_clauses.item
 				if an_get_item /= Void then
-					if an_get_item.get_target_name.to_lower.equals_string (a_name.to_lower) then
+					target_name := an_get_item.target_name.clone (an_get_item.target_name)
+					target_name.to_lower
+					name := a_name.clone (a_name)
+					name.to_lower
+					
+					if target_name.is_equal (name) then
 						index_in_list := i
-						rename_source := an_get_item.get_source_name
+						rename_source := an_get_item.source_name.clone (an_get_item.source_name)
 						Result := True
 					end
 				end
-				i := i + 1
+				rename_clauses.forth
 			end
 		end
 
@@ -853,7 +912,7 @@ feature {NONE} -- Implementation
 			external_name: "RenameSource"
 		end
 		
-	argument_exists (new_name: STRING; a_feature: ISE_REFLECTION_EIFFELFEATURE): BOOLEAN is
+	argument_exists (new_name: STRING; a_feature: EIFFEL_FEATURE): BOOLEAN is
 		indexing
 			description: "Does `a_feature' has an argument with name `new_name'?"
 			external_name: "ArgumentExists"
@@ -861,24 +920,30 @@ feature {NONE} -- Implementation
 			non_void_new_name: new_name /= Void
 			non_void_feature: a_feature /= Void	
 		local
-			arguments: SYSTEM_COLLECTIONS_ARRAYLIST
-			an_argument: ISE_REFLECTION_INAMEDSIGNATURETYPE
+			arguments: LINKED_LIST [NAMED_SIGNATURE_TYPE_INTERFACE]
+			an_argument: NAMED_SIGNATURE_TYPE_INTERFACE
 			i: INTEGER
+			eiffel_name, name: STRING
 		do
-			arguments := a_feature.get_arguments
+			arguments := a_feature.arguments
 			from
+				arguments.start
 			until
-				i = arguments.get_count or Result
+				arguments.after or Result
 			loop
-				an_argument ?= arguments.get_item (i)
+				an_argument ?= arguments.item
 				if an_argument /= Void and then an_argument.eiffel_name /= Void then
-					Result := an_argument.eiffel_name.to_lower.equals_string (new_name.to_lower)
+					eiffel_name := an_argument.eiffel_name.clone (an_argument.eiffel_name)
+					eiffel_name.to_lower
+					name := new_name.clone (new_name)
+					name.to_lower
+					Result := eiffel_name.is_equal (name)
 				end
-				i := i + 1
+				arguments.forth
 			end
 		end
 
-	reserved_words: SYSTEM_COLLECTIONS_ARRAYLIST is
+	reserved_words: LINKED_LIST [STRING] is
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [STRING]
 		indexing
 			description: "Reserved words in Eiffel"
@@ -887,64 +952,64 @@ feature {NONE} -- Implementation
 			added: INTEGER
 		once
 			create Result.make
-			added := Result.extend ("current")
-			added := Result.extend ("class")
-			added := Result.extend ("end")
-			added := Result.extend ("indexing")
-			added := Result.extend ("deferred")
-			added := Result.extend ("expanded")
-			added := Result.extend ("obsolete")
-			added := Result.extend ("feature")
-			added := Result.extend ("is")
-			added := Result.extend ("frozen")
-			added := Result.extend ("prefix")
-			added := Result.extend ("infix")
-			added := Result.extend ("not")
-			added := Result.extend ("and")
-			added := Result.extend ("or")
-			added := Result.extend ("xor")
-			added := Result.extend ("else")
-			added := Result.extend ("implies")
-			added := Result.extend ("do")
-			added := Result.extend ("once")
-			added := Result.extend ("local")
-			added := Result.extend ("old")
-			added := Result.extend ("like")
-			added := Result.extend ("if")
-			added := Result.extend ("elseif")
-			added := Result.extend ("create")
-			added := Result.extend ("then")
-			added := Result.extend ("inspect")
-			added := Result.extend ("when")
-			added := Result.extend ("from")
-			added := Result.extend ("loop")
-			added := Result.extend ("precursor")
-			added := Result.extend ("until")
-			added := Result.extend ("debug")
-			added := Result.extend ("rescue")
-			added := Result.extend ("retry")
-			added := Result.extend ("unique")
-			added := Result.extend ("creation")
-			added := Result.extend ("inherit")
-			added := Result.extend ("rename")
-			added := Result.extend ("as")
-			added := Result.extend ("export")
-			added := Result.extend ("all")
-			added := Result.extend ("redefine")
-			added := Result.extend ("undefine")
-			added := Result.extend ("select")
-			added := Result.extend ("strip")
-			added := Result.extend ("external")
-			added := Result.extend ("alias")
-			added := Result.extend ("require")
-			added := Result.extend ("ensure")
-			added := Result.extend ("invariant")
-			added := Result.extend ("check")
-			added := Result.extend ("variant")
-			added := Result.extend ("true")
-			added := Result.extend ("false")
-			added := Result.extend ("result")
-			added := Result.extend ("bit")
+			Result.extend ("current")
+			Result.extend ("class")
+			Result.extend ("end")
+			Result.extend ("indexing")
+			Result.extend ("deferred")
+			Result.extend ("expanded")
+			Result.extend ("obsolete")
+			Result.extend ("feature")
+			Result.extend ("is")
+			Result.extend ("frozen")
+			Result.extend ("prefix")
+			Result.extend ("infix")
+			Result.extend ("not")
+			Result.extend ("and")
+			Result.extend ("or")
+			Result.extend ("xor")
+			Result.extend ("else")
+			Result.extend ("implies")
+			Result.extend ("do")
+			Result.extend ("once")
+			Result.extend ("local")
+			Result.extend ("old")
+			Result.extend ("like")
+			Result.extend ("if")
+			Result.extend ("elseif")
+			Result.extend ("create")
+			Result.extend ("then")
+			Result.extend ("inspect")
+			Result.extend ("when")
+			Result.extend ("from")
+			Result.extend ("loop")
+			Result.extend ("precursor")
+			Result.extend ("until")
+			Result.extend ("debug")
+			Result.extend ("rescue")
+			Result.extend ("retry")
+			Result.extend ("unique")
+			Result.extend ("creation")
+			Result.extend ("inherit")
+			Result.extend ("rename")
+			Result.extend ("as")
+			Result.extend ("export")
+			Result.extend ("all")
+			Result.extend ("redefine")
+			Result.extend ("undefine")
+			Result.extend ("select")
+			Result.extend ("strip")
+			Result.extend ("external")
+			Result.extend ("alias")
+			Result.extend ("require")
+			Result.extend ("ensure")
+			Result.extend ("invariant")
+			Result.extend ("check")
+			Result.extend ("variant")
+			Result.extend ("true")
+			Result.extend ("false")
+			Result.extend ("result")
+			Result.extend ("bit")
 		ensure
 			list_created: Result /= Void
 		end

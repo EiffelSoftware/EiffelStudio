@@ -923,7 +923,7 @@ int ora_get_data_len (int no_des, int i)
 	  return desc[i-1].buflen;
 }
 
-int ora_conv_type (int precision, i)
+int ora_conv_type (int i)
 	/*char syb_conv_type (int i)*/
 {
 	switch (i)

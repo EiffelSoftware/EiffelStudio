@@ -227,6 +227,10 @@ extern "C" {
 */
 #endif
 
+/* Manifest tuple */
+#define BC_TUPLE	(unsigned char) 168
+#define BC_PTUPLE	(unsigned char) 169
+
 #define BC_JAVA_RTYPE           (unsigned char) 200
 #define BC_JAVA_EXTERNAL        (unsigned char) 201
 

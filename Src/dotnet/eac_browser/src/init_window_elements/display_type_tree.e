@@ -78,6 +78,7 @@ feature -- Basic Operations
 			right_tree.wipe_out
 			create eac
 			ct := eac.consumed_type (assembly_of_dotnet_type, a_full_dotnet_type_name)
+			(create {SESSION}).set_current_type (ct)
 			l_entities := ct.entities
 			from
 				i := 1
@@ -215,6 +216,7 @@ feature -- Basic Operations
 					or else i > ct.constructors.count
 				loop
 					create l_constructor_node.make_with_text (eiffel_signature_constructor (assembly_of_dotnet_type, ct.constructors.item (i)))
+					l_constructor_node.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_constructor_information (assembly_of_type, ct.constructors.item (i), a_full_dotnet_type_name))
 					if l_ico /= Void then
 						l_constructor_node.set_pixmap (l_ico)
 					end
@@ -515,7 +517,8 @@ feature {NONE} -- Implementation
 			l_icon_path := Path_icon_constructor
 			
 				-- Add action to node
-			Result.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_constructor_information (assembly_of_type, a_member, a_full_dotnet_type_name))
+			Result.pointer_button_press_actions.force_extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_constructor_information (assembly_of_type, a_member, a_full_dotnet_type_name))
+--			Result.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_constructor_information (assembly_of_type, a_member, a_full_dotnet_type_name))
 
 				-- Add type icon.
 			l_ico := load_icon (l_icon_path)

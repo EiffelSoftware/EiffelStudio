@@ -10,7 +10,8 @@ class
 inherit
 	WEL_STRUCTURE
 		rename
-			make as structure_make
+			make as structure_make,
+			initialize as structure_initialize
 		end
 
 	WEL_LVIF_CONSTANTS

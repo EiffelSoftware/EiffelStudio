@@ -314,7 +314,10 @@ feature {NONE} -- Implementation
 			if Shared_wizard_environment.output_level = message_output.Output_none then
 				Result.append (" /nologo ")
 			end
+			
+			Result.append (Double_quote)
 			Result.append (shared_wizard_environment.idl_file_name)
+			Result.append (Double_quote)
 		end
 
 	Linker_command_line: STRING is

@@ -8,7 +8,6 @@ indexing
 class BITS_VALUE
 
 inherit
-
 	DEBUG_VALUE
 		rename
 			set_hector_addr as get_value,
@@ -16,19 +15,23 @@ inherit
 			max as comp_max
 		redefine
 			get_value
-		end;
+		end
+
 	DEBUG_EXT
 		undefine
 			is_equal
-		end;
+		end
+
 	IPC_SHARED
 		undefine
 			is_equal
-		end;
+		end
+
 	BEURK_HEXER
 		undefine
 			is_equal
-		end;
+		end
+
 	SHARED_TEXT_ITEMS
 		undefine
 			is_equal

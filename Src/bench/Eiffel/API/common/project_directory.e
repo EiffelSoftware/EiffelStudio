@@ -8,11 +8,11 @@ indexing
 class PROJECT_DIRECTORY
 
 inherit
-
 	PROJECT_CONTEXT
 		export
 			{NONE} all
-		end;
+		end
+
 	DIRECTORY
 		rename
 			mode as file_mode
@@ -20,7 +20,8 @@ inherit
 			{NONE} all
 			{ANY} is_readable, is_writable, exists, name,
 				is_executable, is_closed, close
-		end;
+		end
+
 	SHARED_WORKBENCH
 
 creation
@@ -122,7 +123,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	private_project_eif_file: PROJECT_EIFFEL_FILE;
+	private_project_eif_file: PROJECT_EIFFEL_FILE
 			-- Project.eif file
 
 end -- class PROJECT_DIRECTORY

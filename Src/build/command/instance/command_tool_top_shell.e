@@ -238,6 +238,11 @@ feature -- Destroy
 			Precursor
 		end
 
+feature {NONE} -- Attribute
+
+	already_open: BOOLEAN
+			-- 	Has the command window been already opened
+
 feature
 
 	display is
@@ -248,11 +253,17 @@ feature
 
 	show_command_editor is
 		do
+			split_window.set_proportion ((100 * height // 
+										(height + Resources.cmd_ed_height)))
+			set_height (height + Resources.cmd_ed_height)
 			bottom_split_form.manage
 		end
 
 	hide_command_editor is
 		do
+			if already_open then
+				set_height (height - bottom_split_form.height)
+			end
 			bottom_split_form.unmanage
 		end
 
@@ -265,6 +276,7 @@ feature
 		do
 			Precursor
 			hide_command_editor
+			already_open := true
 		end
 
 end -- class COMMAND_TOOL_TOP_SHELL

@@ -53,6 +53,12 @@ inherit
 			{NONE} all
 		end
 
+	COMPILER_EXPORTER
+			--| Just to be able to access E_FEATURE::associated_feature_i :(
+		export
+			{NONE} all
+		end
+
 create
 	make_with_class,
 	make_with_object,
@@ -284,7 +290,7 @@ feature -- Status report
 				(context_class.is_valid and then context_class.has_feature_table))
 		end
 
-	final_result: ABSTRACT_DEBUG_VALUE
+--	final_result: ABSTRACT_DEBUG_VALUE
 			-- Result of the last message of `Current'.
 			--| Only valid after `evaluate' was called.
 
@@ -330,7 +336,8 @@ feature -- Basic operations
 			par1: EB_EXPRESSION
 		do
 			error_message := Void
-			final_result := Void
+			result_object := Void
+			result_static_type := Void
 			final_result_type := Void
 			final_result_value := Void
 			if is_identity then
@@ -344,15 +351,15 @@ feature -- Basic operations
 				result_static_type := par1.result_static_type
 				error_message := par1.error_message
 			elseif is_constant then
-				final_result_type := constant_result_type
-				final_result_value := constant_result_value
+				result_object := constant_result_value
+				result_static_type := constant_result_type
 			elseif target /= Void then
 					-- Use the target to get the context.
 				check
 					-- The target shouldn't have propagated the evaluation if it had no result.
 					target.result_static_type /= Void
-					target.result_type /= Void
 					target.result_object /= Void
+					target.result_type /= Void
 					-- The target shouldn't have propagated the evaluation if it found an error.
 					target.error_message = Void
 				end
@@ -360,10 +367,11 @@ feature -- Basic operations
 				if f /= Void then
 					f := f.ancestor_version (target.result_type)
 					if f /= Void then
-						o := value_to_object (target.result_object)
+						o := dump_to_object (target.result_object)
 						if o /= Void then
 							evaluate_feature_on_object (f, o)
 						else
+							--| FIXME XR: Handle calls on basic types.
 							error_message := "Cannot evaluate " + feature_name + " because its target is not an object"
 						end
 					else
@@ -417,40 +425,31 @@ feature -- Basic operations
 							if message.error_message /= Void then
 								error_message := message.error_message
 							else
-								final_result := message.final_result
+								final_result_value := message.final_result_value
 								final_result_type := message.final_result_type
 							end
-						elseif result_object.output_value.is_equal ("Void") then
+						elseif result_object.is_void then
 							error_message := feature_name + " has a Void result"
 						else
 							error_message := "Could not evaluate the dynamic type of " + feature_name
 						end
-					elseif is_constant then
-						-- Nothing to do.
-						check
-							final_result_value /= Void
-							final_result_type /= Void
-						end
-					elseif final_result_value /= Void then
-						check
-							final_result_type /= Void
-							-- We already evaluated `Current' as a constant expression.
-						end
 					else
 						error_message := "Could not evaluate " + expression
 					end
-				elseif final_result_value = Void then
-					final_result := result_object
-					final_result_type := result_type
 				else
-					check
-						final_result_type /= Void
-						-- We already evaluated `Current' as a constant expression.
+					final_result_value := result_object
+					if result_type /= Void then
+						final_result_type := result_type
+					elseif result_object.is_void then
+						final_result_type := result_static_type
+					else
+						error_message := "Could not evaluate the type of " + expression
 					end
 				end
 			end
 		ensure
-			error_message_iff_failed: (error_message = Void) /= (final_result = Void or final_result_value = Void)
+			error_message_if_failed: ((final_result_value = Void) implies (error_message /= Void)) and
+									 ((final_result_type = Void) implies (error_message /= Void))
 		end
 
 feature {EB_EXPRESSION, EB_EXPRESSION_DEFINITION_DIALOG, EB_EXPRESSION_EVALUATOR} -- Status report: Propagate the context and the results.
@@ -479,7 +478,7 @@ feature {EB_EXPRESSION} -- Status report: intermediate results.
 		require
 			evaluated: result_object /= Void
 		do
-			Result := result_object.dynamic_class
+			Result := result_object.dynamic_type
 		end
 
 	result_static_type: CLASS_C
@@ -487,7 +486,7 @@ feature {EB_EXPRESSION} -- Status report: intermediate results.
 			--| Only valid after `evaluate' was called.
 			--| Used to find the feature that corresponds to the message.
 
-	result_object: ABSTRACT_DEBUG_VALUE
+	result_object: DUMP_VALUE
 			-- Result of `Current'.
 			--| Only valid after `evaluate' was called.
 
@@ -569,27 +568,27 @@ feature {NONE} -- Implementation
 			elseif fn.item (1) = '%"' then
 				if fn.item (fn.count) = '%"' then
 					is_constant := True
-					constant_result_value := create {DUMP_VALUE}.make_manifest_string (fn.substring (2, fn.count - 1))
 					constant_result_type := System.string_class.compiled_class
+					constant_result_value := create {DUMP_VALUE}.make_manifest_string (fn.substring (2, fn.count - 1), constant_result_type)
 				else
 					syntax_error := True
 				end
 			elseif fn.is_integer then
 				is_constant := True
-				constant_result_value := create {DUMP_VALUE}.make_integer (fn.to_integer)
 				constant_result_type := System.integer_32_class.compiled_class
+				constant_result_value := create {DUMP_VALUE}.make_integer (fn.to_integer, constant_result_type)
 			elseif fn.is_real then
 				is_constant := True
-				constant_result_value := create {DUMP_VALUE}.make_real (fn.to_real)
 				constant_result_type := System.real_class.compiled_class
+				constant_result_value := create {DUMP_VALUE}.make_real (fn.to_real, constant_result_type)
 			elseif fn.is_double then
 				is_constant := True
-				constant_result_value := create {DUMP_VALUE}.make_double (fn.to_double)
 				constant_result_type := System.double_class.compiled_class
+				constant_result_value := create {DUMP_VALUE}.make_double (fn.to_double, constant_result_type)
 			elseif fn.is_boolean then
 				is_constant := True
-				constant_result_value := create {DUMP_VALUE}.make_boolean (fn.to_boolean)
 				constant_result_type := System.boolean_class.compiled_class
+				constant_result_value := create {DUMP_VALUE}.make_boolean (fn.to_boolean, constant_result_type)
 			elseif Syntax_checker.is_valid_feature_name (fn) then
 				-- Nothing special.
 			else
@@ -665,29 +664,21 @@ feature {NONE} -- Implementation
 				cop := Syntax_checker.Basic_operators.item
 				if s.substring (pos, pos + cop.count - 1).is_equal (cop) then
 						-- Ah! We may have found a matching operator.
---					if not 
---						((pos + cop.count <= s.count) and then
---						(s.item (pos + cop.count) = '%"') and
---						(pos > 1 and then s.item (pos - 1) = '%"')
---						)
---					then
-							-- The operator is not wrapped in quotes.
-						if (Result = Void) or else (Result.count < cop.count) then
-								--Aaahh... We found a longer matching operator.
-							if cop.item (1).is_alpha then
-									-- Hmm we must check that it is surrounded by spaces.
-								if
-									(pos + cop.count <= s.count) and then
-									(is_blank (s.item (pos + cop.count))) and
-									(pos > 1 and then is_blank (s.item (pos - 1)))
-								then
-									Result := cop
-								end
-							else
+					if (Result = Void) or else (Result.count < cop.count) then
+							-- Aaahh... We found a longer matching operator.
+						if cop.item (1).is_alpha then
+								-- Hmm we must check that it is surrounded by spaces.
+							if
+								(pos + cop.count <= s.count) and then
+								(is_blank (s.item (pos + cop.count))) and
+								(pos > 1 and then is_blank (s.item (pos - 1)))
+							then
 								Result := cop
 							end
+						else
+							Result := cop
 						end
---					end
+					end
 				end
 				Syntax_checker.Basic_operators.forth
 			end
@@ -792,23 +783,27 @@ feature {NONE} -- Implementation
 			found: BOOLEAN
 			par: INTEGER
 			f: E_FEATURE
+			fid: INTEGER
+			rout_info: ROUT_INFO
+			dv: ABSTRACT_DEBUG_VALUE
 		do
 			f := sf.ancestor_version (obj.dtype)
 			if f = Void then
 				error_message := "No descendant of feature " + sf.name + " in class " + obj.dtype.name_in_upper
-			elseif f.is_once and f.is_function then
+			elseif f.associated_feature_i.is_once and f.type /= Void then
 				evaluate_once (f)
 			elseif f.is_attribute then
 				lst := obj.attributes
-				result_object := find_item_in_list (f.name, lst)
-				if result_object = Void then
+				dv := find_item_in_list (f.name, lst)
+				result_static_type := f.type.associated_class
+				if dv = Void then
 					if f.name.is_equal ("Void") then
-						error_message := Void
+						create result_object.make_object (Void, Void)
 					else
 						error_message := "Could not find attribute value for " + f.name
 					end
 				else
-					result_static_type := f.type.associated_class
+					result_object := dv.dump_value
 				end
 			elseif f.is_constant then
 				evaluate_constant (f)
@@ -852,20 +847,24 @@ feature {NONE} -- Implementation
 				end
 				if error_message = Void then
 						-- Send the target object.
-					create dmp.make_object (obj.object_address)
+					create dmp.make_object (obj.object_address, obj.dtype)
 					dmp.send_value
 						-- Send the final request.
 					if f.is_external then
 						par := 1
-					elseif f.written_class.is_precompiled then
-						par := 2
 					end
-					send_rqst_3 (Rqst_dynamic_eval, f.feature_id, obj.class_type.static_type_id - 1, par)
+					if f.written_class.is_precompiled then
+						par := par + 2
+						rout_info := System.rout_info_table.item (f.rout_id_set.first)
+						send_rqst_3 (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
+					else
+						send_rqst_3 (Rqst_dynamic_eval, f.feature_id, obj.class_type.static_type_id - 1, par)
+					end
 						-- Receive the Result.
 					c_recv_value (Current)
 					if item /= Void then
 						item.set_hector_addr
-						result_object := item
+						result_object := item.dump_value
 						result_static_type := f.type.associated_class
 					else
 						error_message := "Could not evaluate function " + f.name
@@ -884,12 +883,6 @@ feature {NONE} -- Implementation
 			dv: ABSTRACT_DEBUG_VALUE
 		do
 			Result := expr.final_result_value
-			if Result = Void then
-				dv := expr.final_result
-				if dv /= Void then
-					Result := value_to_dump (dv)
-				end
-			end
 		ensure
 			no_errors_means_dump: (expr.error_message = Void) implies (Result /= Void)
 		end
@@ -898,13 +891,13 @@ feature {NONE} -- Implementation
 			-- Call the once function `f'.
 		require
 			valid_feature: f /= Void
-			is_once: f.is_once and f.is_function
+			is_once: f.associated_feature_i.is_once and f.type /= Void
 		local
 			once_r: ONCE_REQUEST
 		do
 			once_r := debug_info.once_request
 			if once_r.already_called (f) then
-				result_object := once_r.once_result (f)
+				result_object := once_r.once_result (f).dump_value
 				result_static_type := f.type.associated_class
 			else
 				error_message := "Once feature " + f.name + " not called yet"
@@ -923,18 +916,15 @@ feature {NONE} -- Implementation
 			cv_cst ?= f
 			if cv_cst /= Void then
 				val := cv_cst.value
+				result_static_type := f.type.associated_class
 				if val.is_integer then
-					final_result_value := create {DUMP_VALUE}.make_integer (val.to_integer);
-					final_result_type := system.integer_32_class.compiled_class
+					result_object := create {DUMP_VALUE}.make_integer (val.to_integer, result_static_type);
 				elseif val.is_real then
-					final_result_value := create {DUMP_VALUE}.make_real (val.to_real);
-					final_result_type := system.real_class.compiled_class
+					result_object := create {DUMP_VALUE}.make_real (val.to_real, result_static_type);
 				elseif val.is_double then
-					final_result_value := create {DUMP_VALUE}.make_double (val.to_double);
-					final_result_type := system.double_class.compiled_class
+					result_object := create {DUMP_VALUE}.make_double (val.to_double, result_static_type);
 				elseif val.is_boolean then
-					final_result_value := create {DUMP_VALUE}.make_boolean (val.to_boolean);
-					final_result_type := system.boolean_class.compiled_class
+					result_object := create {DUMP_VALUE}.make_boolean (val.to_boolean, result_static_type);
 				else
 					error_message := "Unknown constant type for " + feature_name
 				end
@@ -977,6 +967,16 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	dump_to_object (dump: DUMP_VALUE): DEBUGGED_OBJECT is
+			-- Return a debugged_object corresponding to `dump', if any.
+		require
+			valid_dv: dump /= Void
+		do
+			if dump.address /= Void then
+				create Result.make (dump.address, Min_slice_ref.item, Max_slice_ref.item)
+			end
+		end
+
 	value_to_dump (dv: ABSTRACT_DEBUG_VALUE): DUMP_VALUE is
 			-- Return a dump_value corresponding to `dv'.
 		require
@@ -1000,6 +1000,7 @@ feature {NONE} -- Implementation
 			t: TYPE_DEC_AS
 			prev_class: CLASS_C
 			prev_cluster: CLUSTER_I
+			dv: ABSTRACT_DEBUG_VALUE
 		do
 			lower_name := clone (n)
 			lower_name.to_lower
@@ -1019,17 +1020,20 @@ feature {NONE} -- Implementation
 				end
 			elseif lower_name.is_equal (Result_name) then
 					-- The wanted debug value is the feature result.
-				result_object := cse.result_value
-				if cf.type /= Void then
-					result_static_type := cf.type.associated_class
+				dv := cse.result_value
+				if dv /= Void then
+					result_object := dv.dump_value
+					if cf.type /= Void then
+						result_static_type := cf.type.associated_class
+					end
 				end
 			else
 					-- Is it in the locals?
-				result_object := find_item_in_list (lower_name, cse.locals)
-				if result_object = Void then
+				dv := find_item_in_list (lower_name, cse.locals)
+				if dv = Void then
 						-- Is it in the arguments?
-					result_object := find_item_in_list (lower_name, cse.arguments)
-					if result_object = Void then
+					dv := find_item_in_list (lower_name, cse.arguments)
+					if dv = Void then
 							-- Darn, if that's so, I'm gonna look through the current object's attributes and onces!
 						f := cf.written_class.feature_with_name (n)
 						if f /= Void then
@@ -1037,12 +1041,14 @@ feature {NONE} -- Implementation
 							evaluate_feature_on_object (f, o)
 						end
 					else
+						result_object := dv.dump_value
 							-- Find the type of the corresponding argument.
 						cf.argument_names.compare_objects
 						pos := cf.argument_names.index_of (n, 1)
 						result_static_type := cf.arguments.i_th (pos).associated_class
 					end
 				else
+					result_object := dv.dump_value
 						-- Find the type of the corresponding local.
 						-- First, initialize the context.
 					prev_class := System.current_class
@@ -1079,8 +1085,6 @@ feature {NONE} -- Implementation
 					Inst_context.set_cluster (prev_cluster)
 				end
 			end
-		ensure
-			same_name_if_found: (result_object /= Void) implies (result_object.name.is_equal (n))
 		end
 
 	find_item_in_list (n: STRING; lst: LIST [ABSTRACT_DEBUG_VALUE]): ABSTRACT_DEBUG_VALUE is

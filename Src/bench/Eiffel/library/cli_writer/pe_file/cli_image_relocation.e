@@ -17,6 +17,8 @@ inherit
 	CLI_UTILITIES
 		export
 			{NONE} padding, pad_up
+		undefine
+			copy, is_equal
 		end
 		
 create

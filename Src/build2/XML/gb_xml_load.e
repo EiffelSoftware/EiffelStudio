@@ -67,7 +67,7 @@ feature -- Basic operation
 			remove_load_output
 		end
 
-feature {NONE} -- Implementation
+feature {GB_OBJECT_HANDLER} -- Implementation
 
 	build_window (window: XML_ELEMENT) is
 			-- Build a window representing `window'.
@@ -142,22 +142,46 @@ feature {NONE} -- Implementation
 				window.forth
 			end
 		end
-		
-	build_new_object (element: XML_ELEMENT; object: GB_OBJECT) is
-			-- Build a new object from information in `element'.
+
+	retrieve_new_object (element: XML_ELEMENT; object: GB_OBJECT; pos: INTEGER): GB_OBJECT is
+			-- Build a new object from information in `element', into `object' at position `pos'.
+			-- `Result' is the new object.
 		require
 			element_not_void: element /= Void
 			element_type_is_item: element.name.to_utf8.is_equal (Item_string)
 		local
 			new_object: GB_OBJECT
+		do
+			new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value.to_utf8)
+			Result := new_object
+			object_handler.add_object (object, new_object, pos)
+			modify_from_xml (element, new_object)
+		end
+
+feature {NONE} -- Implementation
+		
+	build_new_object (element: XML_ELEMENT; object: GB_OBJECT) is
+			-- Build a new object from information in `element' into `object'.
+		require
+			element_not_void: element /= Void
+			element_type_is_item: element.name.to_utf8.is_equal (Item_string)
+		local
+			new_object: GB_OBJECT
+		do
+			new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value.to_utf8)
+			object_handler.add_object (object, new_object, object.layout_item.count + 1)
+			modify_from_xml (element, new_object)
+		end
+		
+	modify_from_xml (element: XML_ELEMENT; object: GB_OBJECT) is
+			-- Update properties of `object' based on information in `element'.
+		local
 			current_element: XML_ELEMENT
 			gb_ev_any: GB_EV_ANY
 			current_name: STRING
 			display_object: GB_DISPLAY_OBJECT
 		do
-			new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value.to_utf8)
-			object_handler.add_object (object, new_object, object.layout_item.count + 1)
-			from
+				from
 				element.start
 			until
 				element.off
@@ -168,15 +192,15 @@ feature {NONE} -- Implementation
 					current_name := current_element.name.to_utf8
 					if current_name.is_equal (Item_string) then
 							-- The element represents an item, so we must add new objects.
-						build_new_object (current_element, new_object)
+						build_new_object (current_element, object)
 					elseif current_name.is_equal (Events_string) then
 							-- We now add the event information from `current_element'
-							-- into `new_object'.
-						extract_event_information (current_element, new_object)
+							-- into `object'.
+						extract_event_information (current_element, object)
 					else
 							-- We must check for internal properties, else set the properties of the component
 						if current_name.is_equal (Internal_properties_string) then
-							new_object.modify_from_xml (current_element)
+							object.modify_from_xml (current_element)
 						else
 						
 							-- Create the class.
@@ -191,10 +215,10 @@ feature {NONE} -- Implementation
 						end
 						
 							-- Add the appropriate objects to `objects'.
-						gb_ev_any.add_object (new_object.object)
-						display_object ?= new_object.display_object
+						gb_ev_any.add_object (object.object)
+						display_object ?= object.display_object
 						if display_object = Void then
-							gb_ev_any.add_object (new_object.display_object)
+							gb_ev_any.add_object (object.display_object)
 						else
 							gb_ev_any.add_object (display_object.child)
 						end
@@ -207,7 +231,7 @@ feature {NONE} -- Implementation
 				element.forth
 			end
 		end
-		
+
 	extract_event_information (element: XML_ELEMENT; object: GB_OBJECT) is
 			-- Generate event information into `object', from `element'.
 		require

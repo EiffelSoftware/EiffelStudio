@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision $"
 
-deferred class E_CLASS
+deferred class CLASS_C_ROUTINES
 
 inherit
 	TOPOLOGICAL
@@ -67,17 +67,17 @@ feature -- Properties
 	parents: FIXED_LIST [CL_TYPE_A]
 			-- Parent classes
 
-	descendants: LINKED_LIST [E_CLASS]
+	descendants: LINKED_LIST [CLASS_C]
 			-- Direct descendants of the current class
 
-	clients: LINKED_LIST [E_CLASS]
+	clients: LINKED_LIST [CLASS_C]
 			-- Clients of the class
 
 	suppliers: SUPPLIER_LIST
 			-- Suppliers of the class in terms of calls
 			-- [Useful for incremental type check].
 
-	generics: EIFFEL_LIST [FORMAL_DEC_AS]
+	generics: EIFFEL_LIST_B [FORMAL_DEC_AS_B]
 			-- Formal generical parameters
 
 	topological_id: INTEGER
@@ -120,6 +120,14 @@ feature -- Properties
 			valid_file_name: file_name /= Void
 		do
 			Result := lace_class.text
+		end
+
+feature -- status
+
+	hash_code: INTEGER is
+			-- Hash code value corresponds to `id.hash_code'.
+		do
+			Result := id.hash_code
 		end
 
 feature -- Access
@@ -172,7 +180,7 @@ feature -- Access
 		local
 			f: FEATURE_I
 		do
-			f := comp_feature_table.item (n)
+			f := feature_table.item (n)
 			if f /= Void then
 				Result := f.api_feature (id)
 			end
@@ -186,7 +194,7 @@ feature -- Access
 		local
 			feat: FEATURE_I
 		do
-			feat := comp_feature_table.feature_of_body_id (bid)
+			feat := feature_table.feature_of_body_id (bid)
 			if feat /= Void then
 				Result := feat.api_feature (id)
 			end
@@ -200,18 +208,18 @@ feature -- Access
 		local
 			feat: FEATURE_I
 		do
-			feat := comp_feature_table.origin_table.item (rout_id)
+			feat := feature_table.origin_table.item (rout_id)
 			if feat /= Void then
 				Result := feat.api_feature (id)
 			end
 		end
 
-	feature_table: E_FEATURE_TABLE is	
+	api_feature_table: E_FEATURE_TABLE is	
 			-- Feature table for current class
 		require
 			has_feature_table: Feat_tbl_server.has (id)
 		do
-			Result := comp_feature_table.api_table
+			Result := feature_table.api_table
 		ensure
 			valid_result: Result /= Void
 		end
@@ -225,7 +233,7 @@ feature -- Access
 		do
 			class_id := id
 			!! Result.make
-			f_table := comp_feature_table
+			f_table := feature_table
 			from
 				f_table.start
 			until
@@ -257,7 +265,7 @@ feature -- Access
 		require
 			has_feature_table: Feat_tbl_server.has (id)
 		do
-			Result := comp_feature_table.written_in_features
+			Result := feature_table.written_in_features
 		ensure
 			non_void_Result: Result /= Void
 		end
@@ -571,7 +579,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 
 feature {NONE} -- Implementation
 
-	comp_feature_table: FEATURE_TABLE is
+	feature_table: FEATURE_TABLE is
 			-- Compiler feature table
 		require
 			has_feature_table: Feat_tbl_server.has (id)
@@ -609,4 +617,4 @@ invariant
 	suppliers_exisis: suppliers /= Void
 	clients_exists: clients /= Void
 
-end -- class E_CLASS
+end -- class CLASS_C_ROUTINES

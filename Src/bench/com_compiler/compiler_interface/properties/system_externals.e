@@ -257,15 +257,15 @@ feature -- Basic operations
 			create externals_list.make (include_paths_list.count + object_files_list.count + dotnet_resources_list.count)
 			ace_accesser.root_ast.set_externals (externals_list)
 			
-			store_externals (include_paths_list, include_path_keyword)
-			store_externals (object_files_list, object_keyword)
-			store_externals (dotnet_resources_list, dotnet_resource_keyword)
+			store_externals (include_paths_list, include_path_keyword, True)
+			store_externals (object_files_list, object_keyword, True)
+			store_externals (dotnet_resources_list, dotnet_resource_keyword, False)
 			ace_accesser.apply
 		end
 
 feature {NONE} -- Implementation
 
-	add_external (external_item: STRING; external_list: ARRAYED_LIST [STRING] ) is
+	add_external (external_item: STRING; external_list: ARRAYED_LIST [STRING]) is
 			-- adds `external_item' to `external_list'
 		require
 			non_void_external: external_item /= Void
@@ -346,8 +346,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	store_externals (external_list: ARRAYED_LIST [STRING]; external_keyword: STRING) is
+	store_externals (external_list: ARRAYED_LIST [STRING]; external_keyword: STRING; add_quotes: BOOLEAN) is
 			-- store contents of `external_list' in external `external_keyword' section
+			-- External will be wrapped in additional "..." if `add_quotes' is true
 		require
 			non_void_external_list: external_list /= Void
 			non_void_external_keyword: external_keyword /= Void
@@ -369,7 +370,11 @@ feature {NONE} -- Implementation
 					external_list.after
 				loop
 					-- replace all " in string with %"
-					file_names.extend (new_id_sd (external_list.item, True))
+					if add_quotes then
+						file_names.extend (new_id_sd (external_list.item, True))	
+					else
+						file_names.extend (new_id_sd (external_list.item, False))
+					end
 					external_list.forth
 				end
 				create external_item.initialize (create {LANGUAGE_NAME_SD}.initialize (file_name), file_names)

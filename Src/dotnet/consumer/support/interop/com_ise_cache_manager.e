@@ -6,9 +6,9 @@ indexing
 		create {COM_VISIBLE_ATTRIBUTE}.make (True) end
 	class_attribute:
 		create {CLASS_INTERFACE_ATTRIBUTE}.make_from_class_interface_type_2 (feature {CLASS_INTERFACE_TYPE}.none) end,
-		create {GUID_ATTRIBUTE}.make (("01BDF738-3044-3ED6-BA7B-34632D67E145").to_cil) end
+		create {GUID_ATTRIBUTE}.make (("0477E16A-FB59-4f0c-9D85-ADDD9366E359").to_cil) end
 	interface_attribute:
-		create {GUID_ATTRIBUTE}.make (("E3526F85-A118-3FBC-B445-417452D1AAA5").to_cil) end
+		create {GUID_ATTRIBUTE}.make (("5855B757-2182-4c1b-8D26-AC4BB334A7C8").to_cil) end
 
 class
 	COM_ISE_CACHE_MANAGER
@@ -54,14 +54,20 @@ feature -- Basic Oprtations
 		end
 		
 	initialize_with_path (a_path: SYSTEM_STRING) is
-			-- initialize object with path to specific EAC
+			-- initialize object with path to specific EAC and initializes it if not already done.
 		require
 			not_already_initialized: not is_initialized
 			non_void_path: a_path /= Void
 			valid_path: a_path.length > 0
 			path_exists: (create {DIRECTORY}.make (create {STRING}.make_from_cil (a_path))).exists
+		local
+			cr: CACHE_READER
 		do
 			create impl.make_with_path (create {STRING}.make_from_cil (a_path))
+			create cr
+			if not cr.is_initialized then
+				(create {EIFFEL_XML_SERIALIZER}).serialize (create {CACHE_INFO}.make, cr.absolute_info_path)
+			end
 			is_initialized := True
 		ensure
 			current_initialized: is_initialized

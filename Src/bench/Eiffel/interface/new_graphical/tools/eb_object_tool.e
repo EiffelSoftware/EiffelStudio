@@ -55,12 +55,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: EB_TOOL_MANAGER; an_explorer_bar: like explorer_bar) is
+	make (a_manager: EB_TOOL_MANAGER) is
 			-- Initialize `Current'.
 		do
 			min_slice_ref.set_item (min_slice)
 			max_slice_ref.set_item (max_slice)
-			Precursor {EB_TOOL} (a_manager, an_explorer_bar)
+			Precursor {EB_TOOL} (a_manager)
 			display_first_attributes := True
 			display_first_onces := False
 			display_first_special := True
@@ -96,11 +96,9 @@ feature {NONE} -- Initialization
 			create_update_on_idle_agent			
 		end
 
-	build_explorer_bar is
-			-- Build the associated explorer bar item and
-			-- Add it to `explorer_bar'
+	build_mini_toolbar is
+			-- Build associated tool bar
 		local
-			mini_toolbar: EV_TOOL_BAR
 			cmd: EB_SET_SLICE_SIZE_CMD
 		do
 			create remove_object_cmd.make (Current)
@@ -119,9 +117,18 @@ feature {NONE} -- Initialization
 			create hex_format_cmd.make (agent set_hexa_mode (?))
 			hex_format_cmd.enable_sensitive
 			mini_toolbar.extend (hex_format_cmd.new_mini_toolbar_item)
+		ensure
+			mini_toolbar_exists: mini_toolbar /= Void
+		end
 
-
-			create explorer_bar_item.make_with_mini_toolbar (
+	build_explorer_bar_item (explorer_bar: EB_EXPLORER_BAR) is
+			-- Build the associated explorer bar item and
+			-- Add it to `explorer_bar'
+		do
+			if mini_toolbar = Void then
+				build_mini_toolbar
+			end
+			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make_with_mini_toolbar (
 				explorer_bar, widget, title, False, mini_toolbar
 			)
 			explorer_bar_item.set_menu_name (menu_name)
@@ -132,6 +139,9 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	mini_toolbar: EV_TOOL_BAR
+			-- Associated mini tool bar.
 
 	widget: EV_WIDGET
 			-- Widget representing Current.
@@ -441,7 +451,7 @@ feature -- Status setting
 			debugger_manager := a_manager
 		end
 
-	change_manager (a_manager: EB_TOOL_MANAGER; an_explorer_bar: like explorer_bar) is
+	change_manager_and_explorer_bar (a_manager: EB_TOOL_MANAGER; an_explorer_bar: EB_EXPLORER_BAR) is
 			-- Change the window and explorer bar `Current' is in.
 		require
 			a_manager_exists: a_manager /= Void
@@ -507,7 +517,9 @@ feature -- Memory management
 			debugger_manager.kept_objects.wipe_out
 			displayed_objects.wipe_out
 			pretty_print_cmd.end_debug
-			explorer_bar_item.recycle
+			if explorer_bar_item /= Void then
+				explorer_bar_item.recycle
+			end
 			if current_object /= Void then
 				display_first := current_object.display
 				display_first_attributes := current_object.display_attributes

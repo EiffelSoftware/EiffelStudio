@@ -173,25 +173,33 @@ feature {NONE} -- Initialization
 			widget := box
 		end
 
-	build_explorer_bar is
-			-- Build the associated explorer bar item and
-			-- Add it to `explorer_bar'
-		local
-			tb: EV_TOOL_BAR
+	build_mini_toolbar is
+			-- Build the associated tool bar
 		do
-			create tb
+			create mini_toolbar
 			create save_call_stack_cmd.make
 			save_call_stack_cmd.set_mini_pixmaps (Pixmaps.Icon_save_call_stack)
 			save_call_stack_cmd.set_tooltip (Interface_names.e_Save_call_stack)
 			save_call_stack_cmd.add_agent (agent save_call_stack)
-			tb.extend (save_call_stack_cmd.new_mini_toolbar_item)
+			mini_toolbar.extend (save_call_stack_cmd.new_mini_toolbar_item)
 			create set_stack_depth_cmd.make
 			set_stack_depth_cmd.set_mini_pixmaps (Pixmaps.Icon_set_stack_depth)
 			set_stack_depth_cmd.set_tooltip (Interface_names.e_Set_stack_depth)
 			set_stack_depth_cmd.add_agent (agent set_stack_depth)
 			set_stack_depth_cmd.enable_sensitive
-			tb.extend (set_stack_depth_cmd.new_mini_toolbar_item)
-			create explorer_bar_item.make_with_mini_toolbar (explorer_bar, widget, title, False, tb)
+			mini_toolbar.extend (set_stack_depth_cmd.new_mini_toolbar_item)
+		ensure
+			mini_toolbar_exists: mini_toolbar /= Void
+		end
+
+	build_explorer_bar_item (explorer_bar: EB_EXPLORER_BAR) is
+			-- Build the associated explorer bar item and
+			-- Add it to `explorer_bar'
+		do
+			if mini_toolbar = Void then
+				build_mini_toolbar
+			end
+			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make_with_mini_toolbar (explorer_bar, widget, title, False, mini_toolbar)
 			explorer_bar_item.set_menu_name (menu_name)
 			if pixmap /= Void then
 				explorer_bar_item.set_pixmap (pixmap)
@@ -214,6 +222,9 @@ feature -- Box management
 		end
 
 feature -- Access
+
+	mini_toolbar: EV_TOOL_BAR
+			-- Associated mini toolbar.
 
 	widget: EV_WIDGET
 			-- Widget representing Current.
@@ -311,7 +322,7 @@ feature -- Status setting
 			end
 		end
 
-	change_manager (a_manager: EB_TOOL_MANAGER; an_explorer_bar: like explorer_bar) is
+	change_manager_and_explorer_bar (a_manager: EB_TOOL_MANAGER; an_explorer_bar: EB_EXPLORER_BAR) is
 			-- Change the window and explorer bar `Current' is in.
 		require
 			a_manager_exists: a_manager /= Void
@@ -332,7 +343,9 @@ feature -- Memory management
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
-			explorer_bar_item.recycle
+			if explorer_bar_item /= Void then
+				explorer_bar_item.recycle
+			end
 			exception.remove_text
 			exception.remove_tooltip
 		end

@@ -70,14 +70,12 @@ feature {NONE} -- Initialization
 			create_update_on_idle_agent
 		end
 
-	build_explorer_bar is
-			-- Build the associated explorer bar item and
-			-- Add it to `explorer_bar'
+	build_mini_toolbar is
+			-- Build associated tool bar
 		local
-			tb: EV_TOOL_BAR
 			tbb: EV_TOOL_BAR_BUTTON
 		do
-			create tb
+			create mini_toolbar
 			
 				--| Create command
 			create create_expression_cmd.make
@@ -85,7 +83,7 @@ feature {NONE} -- Initialization
 			create_expression_cmd.set_tooltip (Interface_names.e_New_expression)
 			create_expression_cmd.add_agent (agent define_new_expression)
 			create_expression_cmd.enable_sensitive
-			tb.extend (create_expression_cmd.new_mini_toolbar_item)
+			mini_toolbar.extend (create_expression_cmd.new_mini_toolbar_item)
 
 				--| Edit command
 			create edit_expression_cmd.make
@@ -94,7 +92,7 @@ feature {NONE} -- Initialization
 			edit_expression_cmd.add_agent (agent edit_expression)
 			tbb := edit_expression_cmd.new_mini_toolbar_item
 --			tbb.drop_actions.extend (~edit_dropped)
-			tb.extend (tbb)
+			mini_toolbar.extend (tbb)
 			
 				--| Enable/Disable command
 			create toggle_state_of_expression_cmd.make
@@ -102,7 +100,7 @@ feature {NONE} -- Initialization
 			toggle_state_of_expression_cmd.set_tooltip (Interface_names.e_Toggle_state_of_expressions)
 			toggle_state_of_expression_cmd.add_agent (agent toggle_state_of_selected)
 			tbb := toggle_state_of_expression_cmd.new_mini_toolbar_item
-			tb.extend (tbb)
+			mini_toolbar.extend (tbb)
 
 				--| Delete command
 			create delete_expression_cmd.make
@@ -111,9 +109,20 @@ feature {NONE} -- Initialization
 			delete_expression_cmd.add_agent (agent remove_selected)
 			tbb := delete_expression_cmd.new_mini_toolbar_item
 --			tbb.drop_actions.extend (~delete_dropped)
-			tb.extend (tbb)		
+			mini_toolbar.extend (tbb)
+		ensure
+			mini_toolbar_exists: mini_toolbar /= Void
+		end
+
+	build_explorer_bar_item (explorer_bar: EB_EXPLORER_BAR) is
+			-- Build the associated explorer bar item and
+			-- Add it to `explorer_bar'
+		do
+			if mini_toolbar = Void then
+				build_mini_toolbar
+			end
 			
-			create explorer_bar_item.make_with_mini_toolbar (explorer_bar, widget, title, False, tb)
+			create explorer_bar_item.make_with_mini_toolbar (explorer_bar, widget, title, False, mini_toolbar)
 			explorer_bar_item.set_menu_name (menu_name)
 			if pixmap /= Void then
 				explorer_bar_item.set_pixmap (pixmap)
@@ -122,6 +131,9 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	mini_toolbar: EV_TOOL_BAR
+			-- Associated mini toolbar.
 
 	widget: EV_WIDGET is
 			-- Widget representing Current.
@@ -210,7 +222,7 @@ feature -- Status setting
 --		do
 --		end
 	
-	change_manager (a_manager: EB_TOOL_MANAGER; an_explorer_bar: like explorer_bar) is
+	change_manager_and_explorer_bar (a_manager: EB_TOOL_MANAGER; an_explorer_bar: EB_EXPLORER_BAR) is
 			-- Change the window and explorer bar `Current' is in.
 		require
 			a_manager_exists: a_manager /= Void
@@ -231,7 +243,9 @@ feature -- Memory management
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
-			explorer_bar_item.recycle
+			if explorer_bar_item /= Void then
+				explorer_bar_item.recycle
+			end
 			recycle_expressions
 		end
 		

@@ -252,6 +252,12 @@ feature -- Value
 		do
 			Result := highlight_document_changes_preference.value
 		end
+		
+	quadruple_click_enabled: BOOLEAN is
+			-- is quadruple click (select all) enabled ?
+		do
+			Result := quadruple_click_enabled_preference.value
+		end
 
 feature {NONE} -- Preferences
 
@@ -354,6 +360,9 @@ feature {NONE} -- Preferences
 
 	smart_identation_preference: BOOLEAN_PREFERENCE
 			-- Is smart identation enabled?	
+			
+	quadruple_click_enabled_preference: BOOLEAN_PREFERENCE
+			-- is quadruple click (select all) enabled ?
 
 feature -- Misc
 
@@ -452,6 +461,8 @@ feature {NONE} -- Preference Strings
 	smart_identation_string: STRING is "editor.smart_identation"
 			-- Is smart identation enabled?	
 
+	quadruple_click_enabled_string: STRING is "editor.eiffel.quadruple_click_enabled" 
+			-- is quadruple click (select all) enabled ?
 
 feature {NONE} -- Implementation
 		
@@ -502,6 +513,7 @@ feature {NONE} -- Implementation
 			number_background_color_preference := l_manager.new_color_resource_value (l_manager, number_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			highlight_color_preference := l_manager.new_color_resource_value (l_manager, highlight_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 128))
 			cursor_line_highlight_color_preference := l_manager.new_color_resource_value (l_manager, cursor_line_highlight_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 128, 128))
+			quadruple_click_enabled_preference := l_manager.new_boolean_resource_value (l_manager, quadruple_click_enabled_string, True)
 			
 			tabulation_spaces_preference.change_actions.extend (agent update)
 			left_margin_width_preference.change_actions.extend (agent update)

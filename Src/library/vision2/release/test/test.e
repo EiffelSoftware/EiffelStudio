@@ -49,6 +49,7 @@ feature
 			timer: EV_TIMEOUT
 		do
 			first_window.set_title ("Eiffel Vision Widgets")
+			set_status_bar (create {EV_STATUS_BAR}.make_for_test)
 			create menu_bar
 			first_window.set_menu_bar (menu_bar)
 			create object_menu.make_with_text ("Other objects")
@@ -335,7 +336,6 @@ feature
 			Result.extend (create {EV_TEXT}.make_for_test)
 			Result.extend (create {EV_PASSWORD_FIELD}.make_for_test)
 			Result.extend (create {EV_COMBO_BOX}.make_for_test)
-			Result.extend (create {EV_STATUS_BAR}.make_for_test)
 		end
 
 	windows: LINKED_LIST [EV_WINDOW] is
@@ -507,6 +507,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2000/04/28 22:32:13  brendel
+--| What's the point of having a status bar not at the bottom of a window?
+--|
 --| Revision 1.40  2000/04/28 22:23:28  brendel
 --| Status bar is now a widget.
 --| There is no status bar item anymore.

@@ -6,7 +6,7 @@ inherit
 
 	CREATE_INFO
 		redefine
-			gen_type_string, make_gen_type_byte_code
+			generate_cid, make_gen_type_byte_code
 		end
 	SHARED_GENERATION_CONSTANTS
 
@@ -89,37 +89,13 @@ feature -- Generic conformance
 			end
 		end
 
-	generated_type_id : STRING is
-
-		local
-			cl_type_i : CL_TYPE_I;
-			gen_type  : GEN_TYPE_I
-		do
-			cl_type_i := type_to_create;
-			gen_type  ?= cl_type_i;
-
-			!!Result.make (0)
-			Result.append ("RTCA(arg");
-			Result.append_integer (position);
-			Result.append (gc_comma);
-
-			if gen_type = Void then
-				Result.append_integer (cl_type_i.type_id - 1);
-			else
-				Result.append ("typres");
-			end
-
-			Result.append_character (')');
-		end;
-
-	gen_type_string (final_mode : BOOLEAN) : STRING is
+	generate_cid (f : INDENT_FILE; final_mode : BOOLEAN) is
 
 		do
-			!!Result.make (0)
-			Result.append_integer (-11)
-			Result.append (", RTCA(arg")
-			Result.append_integer (position)
-			Result.append (",-10), ")
+			f.putint (-11)
+			f.putstring (", RTCA(arg")
+			f.putint (position)
+			f.putstring (",-10), ")
 		end
 
 	make_gen_type_byte_code (ba : BYTE_ARRAY) is

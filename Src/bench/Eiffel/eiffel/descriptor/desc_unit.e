@@ -246,7 +246,7 @@ feature -- Generation
 						f.putint (cnt.value);
 						j := cnt.next;
 						f.putstring (" [] = {0,");
-						f.putstring (re.gen_type_string (False));
+						re.generate_cid (f, False);
 						f.putstring ("-1};%N")
 					else
 						ae ?= entry_item
@@ -255,7 +255,7 @@ feature -- Generation
 							f.putint (cnt.value);
 							j := cnt.next;
 							f.putstring (" [] = {0,");
-							f.putstring (ae.gen_type_string (False));
+							ae.generate_cid (f, False);
 							f.putstring ("-1};%N")
 						end
 					end;

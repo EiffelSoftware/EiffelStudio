@@ -16,7 +16,7 @@ inherit
 			complete_instantiation_in,
 			conforms_to_array,
 			generated_id,
-			gen_type_string,
+			generate_cid,
 			make_gen_type_byte_code
 		end
 
@@ -300,35 +300,31 @@ feature
 feature -- Generic conformance
 
 	generated_id (final_mode : BOOLEAN) : INTEGER is
-		do
-			if has_associated_class_type then
-				if final_mode then
-					Result := type_id - 1
-				else
-					Result := associated_class_type.id.id-1
-				end
 
-				if is_expanded then
-					Result := -256 - Result
-				end
+		do
+			if final_mode then
+				Result := type_id - 1
 			else
-				Result := -10       -- Invalid - should never happen
+				Result := associated_class_type.id.id-1
+			end
+
+			if is_expanded then
+				Result := -256 - Result
 			end
 		end
 
-	gen_type_string (final_mode, use_info : BOOLEAN) : STRING is
-		do
-			!!Result.make (0)
+	generate_cid (f : INDENT_FILE; final_mode, use_info : BOOLEAN) is
 
+		do
 			if
 				use_info and then (cr_info /= Void)
 				and then not (is_expanded or is_basic)
 			then
 				-- It's an anchored type 
-				Result.append (cr_info.gen_type_string (final_mode))
+				cr_info.generate_cid (f, final_mode)
 			end
-			Result.append_integer (generated_id (final_mode))
-			Result.append (", ")
+			f.putint (generated_id (final_mode))
+			f.putstring (", ")
 		end
 
 	make_gen_type_byte_code (ba : BYTE_ARRAY; use_info : BOOLEAN) is

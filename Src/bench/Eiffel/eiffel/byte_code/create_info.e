@@ -64,11 +64,13 @@ feature -- Generic conformance
 		deferred
 		end
 
-	gen_type_string (final_mode : BOOLEAN) : STRING is
+	generate_cid (f : INDENT_FILE; final_mode : BOOLEAN) is
 			-- Additional info for creation of generic
 			-- types with anchored parameters.
+		require
+			valid_file : f /= Void
 		do
-			!!Result.make (0)
+			-- Do nothing
 		end
 
 	make_gen_type_byte_code (ba : BYTE_ARRAY) is

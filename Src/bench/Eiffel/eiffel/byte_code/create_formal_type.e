@@ -11,7 +11,7 @@ inherit
 	CREATE_TYPE
 		redefine
 			generate, generate_gen_type_conversion,
-			generated_type_id, type_to_create, make_byte_code
+			generate_cid, type_to_create, make_byte_code
 		end
 
 creation
@@ -44,7 +44,7 @@ feature -- C code generation
 			gen_file := context.generated_file
 
 			gen_file.putstring ("RTGPTID(")
-			context.current_register.print_register
+			context.current_register.print_register_by_name
 			gen_file.putchar (',')
 			gen_file.putint (formal_position)
 			gen_file.putchar (')');
@@ -63,9 +63,9 @@ feature -- Generic conformance
 		do
 		end
 
-	generated_type_id : STRING is
+	generate_cid (f : INDENT_FILE; final_mode : BOOLEAN) is
 		do
-		end;
+		end
 
 	type_to_create : CL_TYPE_I is
 		do

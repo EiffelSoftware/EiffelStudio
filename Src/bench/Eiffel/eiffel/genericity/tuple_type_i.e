@@ -10,7 +10,7 @@ inherit
 			dump,
 			append_signature,
 			type_a,
-			gen_type_string,
+			generate_cid,
 			make_gen_type_byte_code
 		end
 
@@ -130,23 +130,21 @@ feature
 
 feature -- Generic conformance
 
-	gen_type_string (final_mode, use_info : BOOLEAN) : STRING is
+	generate_cid (f : INDENT_FILE; final_mode, use_info : BOOLEAN) is
 
 		local
 			i, up : INTEGER
 		do
-			!!Result.make (0)
-
 			if use_info and then (cr_info /= Void) then
 				-- It's an ancored type 
-				Result.append (cr_info.gen_type_string(final_mode))
+				cr_info.generate_cid (f, final_mode)
 			end
-			Result.append_integer (-15)
-			Result.append (", ")
-			Result.append_integer (true_generics.count)
-			Result.append (", ")
-			Result.append_integer (generated_id (final_mode))
-			Result.append (", ")
+			f.putint (-15)
+			f.putstring (", ")
+			f.putint (true_generics.count)
+			f.putstring (", ")
+			f.putint (generated_id (final_mode))
+			f.putstring (", ")
 
 			from
 				i  := true_generics.lower
@@ -154,10 +152,7 @@ feature -- Generic conformance
 			until
 				i > up
 			loop
-				Result.append (true_generics.item (i).gen_type_string (
-																final_mode,
-																use_info
-																	  ))
+				true_generics.item (i).generate_cid (f, final_mode, use_info)
 				i := i + 1
 			end
 		end

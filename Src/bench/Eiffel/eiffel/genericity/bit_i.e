@@ -7,7 +7,7 @@ inherit
 			description, sk_value, generate_cecil_value, hash_code,
 			is_pointer, 
 			metamorphose, append_signature,
-			gen_type_string, generated_id, make_gen_type_byte_code
+			generate_cid, generated_id, make_gen_type_byte_code
 		end
 
 feature
@@ -160,13 +160,13 @@ feature -- Generic conformance
 			Result := -7        -- Code for BITs
 		end
 
-	gen_type_string (final_mode, use_info : BOOLEAN) : STRING is
+	generate_cid (f : INDENT_FILE; final_mode, use_info : BOOLEAN) is
+
 		do
-			!!Result.make (0)
-			Result.append_integer (generated_id (final_mode))
-			Result.append (", ")
-			Result.append_integer (size)
-			Result.append (", ")
+			f.putint (generated_id (final_mode))
+			f.putstring (", ")
+			f.putint (size)
+			f.putstring (", ")
 		end
 
 	make_gen_type_byte_code (ba : BYTE_ARRAY; use_info : BOOLEAN) is

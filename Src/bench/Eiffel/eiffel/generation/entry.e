@@ -163,16 +163,14 @@ feature -- from ENTRY
 			Result := (gtype /= Void)
 		end;
 
-	gen_type_string (final_mode: BOOLEAN): STRING is
-			-- List of type id's of generic type 
+	generate_cid (f : INDENT_FILE; final_mode: BOOLEAN) is
+			-- Generate list of type id's of generic type
 			-- separated by commas.
 		require
 			is_generic : is_generic
 		do
-			Result := type.gen_type_string (final_mode, False)
-		ensure
-			exists : Result /= Void
-		end;
+			type.generate_cid (f, final_mode, False)
+		end
 
 	make_gen_type_byte_code (ba: BYTE_ARRAY) is
 			-- Make byte code for type of current entry.

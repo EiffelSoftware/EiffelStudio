@@ -85,7 +85,7 @@ feature
 			until
 				i >= n
 			loop
-				parents_file.putstring (item (i).gen_type_string (final_mode, false));
+				item (i).generate_cid (parents_file, final_mode, false);
 
 				i := i + 1;
 				j := j + 1;

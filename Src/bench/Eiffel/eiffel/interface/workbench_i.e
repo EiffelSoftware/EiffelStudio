@@ -31,7 +31,7 @@ feature -- Attributes
 	lace: LACE_I;
 			-- Current lace description
 
-	precompiled_directories: HASH_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
+	precompiled_directories: EXTEND_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
 			-- Precompilation directories, indexed by precompilation ids
 
 	precompiled_driver: FILE_NAME
@@ -305,6 +305,21 @@ feature -- Commands
 			pass3_controler.insert_new_class (class_to_recompile);
 			pass4_controler.insert_new_class (class_to_recompile);
 		end;
+
+feature -- Merging
+
+	merge (other: like Current) is
+			-- Merge `other' to `Current'.
+			-- Used when merging precompilations.
+		require
+			other_not_void: other /= Void
+		do
+-- TO DO: Check compatibility between precompiled libraries here.
+			precompiled_directories.merge (other.precompiled_directories);
+			Precompilation_directories.copy (precompiled_directories);
+			universe.merge (other.universe);
+			system.merge (other.system)
+		end
 
 feature -- DLE
 

@@ -29,7 +29,12 @@
 #include "equal.h"	/* for xequal() */
 #include <math.h>
 
-/*#define DEBUG 3	/**/
+#ifdef CONCURRENT_EIFFEL
+#include "curextern.h"
+#endif
+
+/*#define SEP_DEBUG  /**/
+/*#define DEBUG 6	/**/
 /*#define TEST /**/
 #ifdef TEST
 #include <stdio.h>
@@ -254,8 +259,11 @@ char *icval;
 	}
 
 #ifdef DEBUG
-	if (DEBUG & 4)
+	if (DEBUG & 4) {
+		fprintf(stdout, "****************** begin melted Feature *************\n");
 		idump(stdout, IC);				/* Dump byte code for feature */
+		fprintf(stdout, "****************** end melted feature ***************\n");
+	}
 #endif
 
 	/* Normal execution procedure: interpret the byte code as a compound and,
@@ -347,6 +355,25 @@ int where;			/* Are we checking invariant before or after compound? */
 	char **saved_prof_top;	/* Saved top of `prof_stack' */
 	struct item *result_val;		/* Postcondition result value */
 	RTSN;							/* Save nested flag */
+ 
+#ifdef CONCURRENT_EIFFEL
+	/* the following variable is used by Concurrent Eiffel */
+	char has_called_sep_feature =0;	/* Has the current feature called separate
+									* feature in its pre-condition?
+									*/
+	EIF_TYPE_ID sep_obj_id;			/* The data type id of the special class
+									* for separate object proxy.
+									*/
+	char has_reserved_new_born_sep = 0;	/* Is the new created separate object
+										 * created with a creation procedure?
+										*/
+	char debug_info[100];			/* the variable is just used to store the
+									 * debuging info, can be removed afterward.
+									*/
+
+	sep_obj_id = eif_type_id ("SEP_OBJ");
+#endif
+
 
 	for (;;) {
 	
@@ -1207,15 +1234,15 @@ end:
 #ifdef DEBUG
 		dprintf(2)("BC_END_FST_PRE\n");
 #endif
+		offset = get_long();		/* get the offset to the precondition
+									 * block's corresponding "BC_GOTO_BODY"
+									*/
 		code = (int) opop()->it_char;	
 									/* Get the assertion boolean result */
-
-		if (pre_success)			/* Was previous precondition a success? */
-			if (!code) 
-				pre_success = '\0';
-			else {
-				RTCK;
-			}
+		if (!code) {
+			pre_success = '\0'; 
+			IC += offset;
+		}
 		else {
 			RTCK;
 		}
@@ -1228,12 +1255,15 @@ end:
 #ifdef DEBUG
 		dprintf(2)("BC_END_PRE\n");
 #endif
+		offset = get_long(); 	/* the offset to the corresponding 
+								 * precondition block's "BC_GOTO_BODY"
+								*/
 		code = (int) opop()->it_char;	
 									/* Get the assertion boolean result */
-		if (pre_success)     		/* Was previous precondition a success? */
-			if (!code)
-				pre_success = '\0';
-
+		if (!code) {
+			pre_success = '\0';
+			IC += offset;
+		}
 		break;
 
 	/*
@@ -2535,6 +2565,599 @@ end:
 #endif
 		dbreak(PG_BREAK);		/* Debugger hook */
 		break;
+
+
+#ifdef CONCURRENT_EIFFEL
+	/* The following instructions started with BC_SEP are used by
+	 * Concurrent Eiffel.
+	*/
+
+	/* the current has called a separate feature in checking its
+	 * pre-condition.
+	*/
+	case BC_SEP_SET:
+#ifdef DEBUG
+		dprintf(2)("BC_SEP_SET\n");
+#endif
+		has_called_sep_feature = 1;
+		break;
+	
+	/* clear the flag indicating whether the current separate feature
+	 * has called a separate feature call in its pre-condition 
+	 * checking.
+	*/
+	case BC_SEP_UNSET:
+#ifdef DEBUG
+		dprintf(2)("BC_SEP_UNSET\n");
+#endif
+		has_called_sep_feature = 0;
+		break;
+
+	/* reserve separate parameters of the current feature which are
+	 * used in at least one separate feature call.
+	*/
+	case BC_SEP_RESERVE: 
+#ifdef DEBUG
+		dprintf(2)("BC_SEP_RESERVE\n");
+#endif
+		{
+			short nb_of_sep_paras;
+			short sep_para_index[constant_max_number_of_sep_paras];
+			short tmp_tyc;
+			nb_of_sep_paras = get_short();
+			for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; tmp_tyc++) {
+				sep_para_index[tmp_tyc] = get_short();
+			}
+			for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; ) {
+#ifdef SEP_DEBUG
+				printf("Now, test %d parameter: %lx\n", sep_para_index[tmp_tyc]+1, ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref);
+				if (Dtype(ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref) != sep_obj_id) {
+					printf ("Error, Dtype(%d)=%d\n", tmp_tyc, Dtype(ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref));
+				}
+				else {
+					printf("To Reserve <%s, %d, %d>\n", hostname_of_sep_obj(ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref), pid_of_sep_obj(ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref), oid_of_sep_obj(ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref)); 
+				}
+#endif
+				if (CURRSO(ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref)) {
+					for(tmp_tyc--; tmp_tyc >= 0; tmp_tyc--) {
+						CURFSO(ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref);
+					}
+					tmp_tyc = 0;
+				}
+				else 
+					tmp_tyc++;
+			}
+		}	
+		break;
+
+	/* free separate parameters of the current feature which are
+	 * used in at least one  separate feature call.
+	*/
+	case BC_SEP_FREE: 
+#ifdef DEBUG
+		dprintf(2)("BC_SEP_FREE\n");
+#endif
+		{
+			short nb_of_sep_paras;
+			short tmp_tyc;
+			nb_of_sep_paras = get_short();
+			for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; tmp_tyc++) {
+				CURFSO(ivalue(IV_ARG, get_short())->it_ref);
+			}
+		}	
+		break;
+
+	/* change the local object stored in the top of the operation stack into 
+	 * a separate object 
+	*/
+	case BC_SEP_TO_SEP:
+#ifdef DEBUG
+		dprintf(2)("BC_SEP_TO_SEP\n");
+#endif
+		otop()->it_ref = CURLTS(otop()->it_ref);
+		break;
+
+	/* to perform a separate external feature call */
+	case BC_SEP_EXTERN:
+	case BC_SEP_PEXTERN:
+		is_extern = 1;
+		/* Fall Through */
+
+	/* to perform a separate feature call */
+	case BC_SEP_FEATURE:
+	case BC_SEP_PFEATURE:
+		{
+			short nb_of_paras;
+			short tyc_tmp;
+			struct item *tyc_current, *tyc_last;
+			uint32 ret_type;
+			char need_ack;
+			char *feature_name;
+			char *class_name;
+			char tyc_command = *(IC-1);
+
+			int32 origin;
+
+#ifdef DEBUG
+			if (tyc_command == BC_SEP_FEATURE) {
+				dprintf(2)("BC_SEP_FEATURE\n");
+			} else if (tyc_command == BC_SEP_PFEATURE) {
+				dprintf(2)("BC_SEP_PFEATURE\n");
+			} else if (tyc_command == BC_SEP_EXTERN) {
+                dprintf(2)("BC_SEP_EXTERN\n");
+			} else if (tyc_command == BC_SEP_PEXTERN) {
+                dprintf(2)("BC_SEP_PEXTERN\n");
+			}
+#endif
+			nb_of_paras = get_short();	/* number of parameters */
+			class_name = IC;			/* get the class name   */
+			IC += strlen(IC) + 1;
+			feature_name = IC;			/* get the feature name */
+			IC += strlen(IC) + 1;
+			ret_type = get_uint32();	/* Get the feature's return type */
+			need_ack = *IC++;			/* if the proc needs acknowledgement */
+#ifdef DEBUG
+			dprintf(2)("	paras#=%d, class=%s, feature=%s, ret=%d\n", nb_of_paras, class_name, feature_name, ret_type & SK_HEAD);
+#endif
+
+			if (tyc_command == BC_SEP_FEATURE || tyc_command == BC_SEP_EXTERN) {
+				offset = get_long(); 		/* Get the feature id */		
+				code = get_short();   		/* Get the static type */
+#ifdef DEBUG
+			dprintf(2)("	offset=%d, code=%d\n", offset, code);
+#endif
+			} else if (tyc_command == BC_SEP_PFEATURE || tyc_command == BC_SEP_PEXTERN) {
+				origin = get_long();		/* Get the origin class id */
+				offset = get_long(); 		/* Get the offset in origin */
+#ifdef DEBUG
+			dprintf(2)("	origin=%d, offset=%d\n", origin, offset);
+#endif
+			}
+			nstcall = 0;        		/* Invariant check turned off */
+
+			if (on_local_processor(otop()->it_ref)) {
+			/* execute the feature on the local processor */
+				/* get the current object on the local processor */
+				otop()->it_ref = CURPROXY_OBJ(otop()->it_ref); 
+				if (tyc_command == BC_SEP_FEATURE || tyc_command == BC_SEP_EXTERN) {
+					if (icall((int)offset, code, is_extern))
+						sync_registers(scur, stop);
+				} else if (tyc_command == BC_SEP_PFEATURE || tyc_command == BC_SEP_PEXTERN) {
+					if (ipcall(origin, offset, is_extern))
+						sync_registers(scur, stop);
+				}
+				/* if the return value's type is REFERENCE object, change it 
+				 * into a separate object.
+				*/
+				switch (ret_type & SK_HEAD) {
+					case SK_REF:
+						/* change the return REFERENCE object into separate
+						 * object.
+						*/
+						otop()->it_ref = CURLTS(otop()->it_ref);
+						break;
+					default:
+						break;
+				}
+			}
+			else {
+			/* send a request to the remote processor */
+				if ((ret_type & SK_HEAD) != SK_VOID) {
+					CURSARI(constant_execute_query, oid_of_sep_obj(otop()->it_ref), constant_query, class_name, feature_name, nb_of_paras);
+				}
+				else {
+					if (need_ack) {
+						CURSARI(constant_execute_procedure, oid_of_sep_obj(otop()->it_ref), constant_procedure_with_ack, class_name, feature_name, nb_of_paras);
+					} else {
+						CURSARI(constant_execute_procedure, oid_of_sep_obj(otop()->it_ref), constant_procedure_without_ack, class_name, feature_name, nb_of_paras);
+					}
+				}
+				tyc_current = opop();
+				for (tyc_tmp=nb_of_paras-1; tyc_tmp>=0; tyc_tmp--) {
+					tyc_last = otop();
+#ifdef SEP_DEBUG
+	fprintf(stdout, "	Put %dth parameter with type %lx into %dth cell\n", tyc_tmp+1, tyc_last->type, tyc_tmp);
+#endif
+					switch (tyc_last->type & SK_HEAD) {
+						case SK_BOOL: 
+							CURPB(tyc_last->it_char, tyc_tmp); break;
+						case SK_CHAR: 
+							CURPC(tyc_last->it_char, tyc_tmp); break;
+						case SK_INT: 
+							CURPI(tyc_last->it_long, tyc_tmp); break;
+						case SK_FLOAT:
+							CURPR(tyc_last->it_float, tyc_tmp); break;
+						case SK_DOUBLE:
+							CURPD(tyc_last->it_double, tyc_tmp); break;
+						case SK_REF:
+							CURPSO(tyc_last->it_ref, tyc_tmp); break;
+						case SK_BIT:
+						case SK_EXP:
+						case SK_POINTER:
+						default:	
+							sprintf(debug_info, "1.Invalid Type %lx(%d)\n", tyc_last->type, tyc_tmp);
+							panic(debug_info);
+							panic("Not implemented type in separate feature call");
+					}
+					tyc_last = opop();
+				}
+				CURSG(tyc_current->it_ref);
+				if ((ret_type & SK_HEAD) != SK_VOID) {
+					last = iget();
+					last->type = ret_type;
+					switch (ret_type & SK_HEAD) {
+						case SK_BOOL: 	last->it_char = (char)(CURGB(0)); break;
+						case SK_CHAR: 	last->it_char = CURGC(0); break;
+						case SK_INT: 	last->it_long = CURGI(0); break;
+						case SK_FLOAT: 	last->it_float = CURGR(0); break;
+						case SK_DOUBLE:	last->it_double = CURGD(0); break; 
+						case SK_REF: 	last->it_ref = CURGSO(0); break;
+						case SK_POINTER: 
+						case SK_BIT: 
+						case SK_EXP: 
+						default:	
+							sprintf(debug_info, "2.Invalid Type %lx\n", ret_type);
+							panic(debug_info);
+							panic("Not implemented type in separate feature call");
+					}
+				}
+			}
+		}	
+		is_extern = 0;
+		break;
+
+
+	/* to perform a separate external feature call */
+	case BC_SEP_EXTERN_INV:
+	case BC_SEP_PEXTERN_INV:
+		is_extern = 1;
+		/* Fall Through */
+
+	/* to perform a separate feature call */
+	case BC_SEP_FEATURE_INV:
+	case BC_SEP_PFEATURE_INV:
+		{
+			short nb_of_paras;
+			short tyc_tmp;
+			struct item *tyc_current, *tyc_last;
+			uint32 ret_type;
+			char need_ack;
+			char *feature_name;
+			char *class_name;
+			char tyc_command = *(IC-1);
+
+			int32 origin;
+
+#ifdef DEBUG
+			if (tyc_command == BC_SEP_FEATURE_INV) {
+				dprintf(2)("BC_SEP_FEATURE_INV\n");
+			} else if (tyc_command == BC_SEP_PFEATURE_INV) {
+				dprintf(2)("BC_SEP_PFEATURE_INV\n");
+			} else if (tyc_command == BC_SEP_EXTERN_INV) {
+				dprintf(2)("BC_SEP_EXTERN_INV\n");
+			} else if (tyc_command == BC_SEP_PEXTERN_INV) {
+				dprintf(2)("BC_SEP_PEXTERN_INV\n");
+			}
+#endif
+			nb_of_paras = get_short();	/* number of parameters */
+			class_name = IC;			/* get the class name   */
+			IC += strlen(IC) + 1;
+			feature_name = IC;			/* get the feature name */
+			IC += strlen(IC) + 1;
+			ret_type = get_uint32();	/* Get the feature's return type */
+			need_ack = *IC++;			/* if the proc needs acknowledgement */
+#ifdef DEBUG
+			dprintf(2)("	paras#=%d, class=%s, feature=%s, ret_type=0x%lx\n", nb_of_paras, class_name, feature_name, ret_type);
+#endif
+
+			string = feature_name;
+			if (otop()->it_ref == (char *) 0) /* Called on a void reference? */
+				eraise(string, EN_VOID); 	/* Yes, raise exception */
+			if (tyc_command == BC_SEP_FEATURE_INV || tyc_command == BC_SEP_EXTERN_INV) {
+				offset = get_long(); 		/* Get the feature id */		
+				code = get_short();   		/* Get the static type */
+#ifdef DEBUG
+			dprintf(2)("	offset=%d, code=%d\n", offset, code);
+#endif
+			} else if (tyc_command == BC_SEP_PFEATURE_INV || tyc_command == BC_SEP_PEXTERN_INV) {
+				origin = get_long();		/* Get the origin class id */
+				offset = get_long(); 		/* Get the offset in origin */
+#ifdef DEBUG
+			dprintf(2)("	origin=%d, offset=%d\n", origin, offset);
+#endif
+			}
+			nstcall = 1;        		/* Invariant check turned off */
+
+			if (on_local_processor(otop()->it_ref)) {
+			/* execute the feature on the local processor */
+				/* get the current object on the local processor */
+				otop()->it_ref = CURPROXY_OBJ(otop()->it_ref); 
+				if (tyc_command == BC_SEP_FEATURE_INV || tyc_command == BC_SEP_EXTERN_INV) {
+					if (icall((int)offset, code, is_extern))
+						sync_registers(scur, stop);
+				} else if (tyc_command == BC_SEP_PFEATURE_INV || tyc_command == BC_SEP_PEXTERN_INV) {
+					if (ipcall(origin, offset, is_extern))
+						sync_registers(scur, stop);
+				}
+				/* if the return value's type is REFERENCE object, change it 
+				 * into a separate object.
+				*/
+				switch (ret_type & SK_HEAD) {
+					case SK_REF:
+						/* change the return REFERENCE object into separate
+						 * object.
+						*/
+						otop()->it_ref = CURLTS(otop()->it_ref);
+						break;
+					default:
+						break;
+				}
+			}
+			else {
+			/* send a request to the remote processor */
+				if ((ret_type & SK_HEAD) != SK_VOID) {
+					CURSARI(constant_execute_query, oid_of_sep_obj(otop()->it_ref), constant_query, class_name, feature_name, nb_of_paras);
+				}
+				else {
+					if (need_ack) {
+						CURSARI(constant_execute_procedure, oid_of_sep_obj(otop()->it_ref), constant_procedure_with_ack, class_name, feature_name, nb_of_paras);
+					} else {
+						CURSARI(constant_execute_procedure, oid_of_sep_obj(otop()->it_ref), constant_procedure_without_ack, class_name, feature_name, nb_of_paras);
+					}
+				}
+				tyc_current = opop();
+				for (tyc_tmp=nb_of_paras-1; tyc_tmp>=0; tyc_tmp--) {
+					tyc_last = otop();
+#ifdef SEP_DEBUG
+	fprintf(stdout, "	Put %dth parameter with type %lx into %dth cell\n", tyc_tmp+1, tyc_last->type, tyc_tmp);
+#endif
+					switch (tyc_last->type & SK_HEAD) {
+						case SK_BOOL: 
+							CURPB(tyc_last->it_char, tyc_tmp); break;
+						case SK_CHAR: 
+							CURPC(tyc_last->it_char, tyc_tmp); break;
+						case SK_INT: 
+							CURPI(tyc_last->it_long, tyc_tmp); break;
+						case SK_FLOAT:
+							CURPR(tyc_last->it_float, tyc_tmp); break;
+						case SK_DOUBLE:
+							CURPD(tyc_last->it_double, tyc_tmp); break;
+						case SK_REF:
+							CURPSO(tyc_last->it_ref, tyc_tmp); break;
+						case SK_BIT:
+						case SK_EXP:
+						case SK_POINTER:
+						default:	
+							sprintf(debug_info, "4.Invalid Type %lx\n", tyc_last->type);
+							panic(debug_info);
+							panic("Not implemented type in separate feature call");
+					}
+					tyc_last = opop();
+				}
+				CURSG(tyc_current->it_ref);
+				if ((ret_type & SK_HEAD) != SK_VOID) {
+					last = iget();
+					last->type = ret_type;
+					switch (ret_type & SK_HEAD) {
+						case SK_BOOL: 	last->it_char = (char)(CURGB(0)); break;
+						case SK_CHAR: 	last->it_char = CURGC(0); break;
+						case SK_INT: 	last->it_long = CURGI(0); break;
+						case SK_FLOAT: 	last->it_float = CURGR(0); break;
+						case SK_DOUBLE:	last->it_double = CURGD(0); break; 
+						case SK_REF: 	last->it_ref = CURGSO(0); break;
+						case SK_POINTER: 
+						case SK_BIT: 
+						case SK_EXP: 
+						default:	
+							sprintf(debug_info, "5.Invalid Type %lx\n", ret_type);
+							panic(debug_info);
+							panic("Not implemented type in separate feature call");
+					}
+				}
+			}
+		}	
+		is_extern = 0;
+		break;
+
+	/* to perform a separate attribute call */
+	case BC_SEP_ATTRIBUTE_INV:
+	case BC_SEP_PATTRIBUTE_INV:
+		{
+			uint32 ret_type;
+			char *feature_name;
+			char *class_name;
+			char tyc_command = *(IC-1);
+
+			int32 origin, ooffset;
+
+#ifdef DEBUG
+			if (tyc_command == BC_SEP_ATTRIBUTE_INV) {
+				dprintf(2)("BC_SEP_ATTRIBUTE_INV\n");
+			} else if (tyc_command == BC_SEP_PATTRIBUTE_INV) {
+				dprintf(2)("BC_SEP_PATTRIBUTE_INV\n");
+			}
+#endif
+			class_name = IC;			/* get the class name   */
+			IC += strlen(IC) + 1;
+			feature_name = IC;			/* get the feature name */
+			IC += strlen(IC) + 1;
+
+#ifdef DEBUG
+			dprintf(2)("	class=%s, feature=%s\n", class_name, feature_name);
+#endif
+			string = feature_name;
+			if (otop()->it_ref == (char *) 0)
+				eraise(string, EN_VOID);
+			if (tyc_command == BC_SEP_ATTRIBUTE_INV) {
+				offset = get_long();  			/* Get feature id */ 
+				code = get_short();        		/* Get static type */
+#ifdef DEBUG
+			dprintf(2)("	offset=%d, code=%d, ", offset, code);
+#endif
+			} else if (tyc_command == BC_SEP_PATTRIBUTE_INV) {
+				origin = get_long();   			/* Get the origin class id */
+				ooffset = get_long();			/* Get the offset in origin */
+#ifdef DEBUG
+			dprintf(2)("	origin=%d, offset=%d, ", origin, ooffset);
+#endif
+			}
+			ret_type = get_uint32();		/* Get attribute meta-type */
+#ifdef DEBUG
+			dprintf(2)(" ret_type=0x%lx\n", ret_type);
+#endif
+			
+			if (on_local_processor(otop()->it_ref)) {
+			/* execute the attribute on the local processor */
+				/* get the current object on the local processor */
+				otop()->it_ref = CURPROXY_OBJ(otop()->it_ref); 
+				if (tyc_command == BC_SEP_ATTRIBUTE_INV) {
+					interp_access((int)offset, code, ret_type);
+				} else if (tyc_command == BC_SEP_PATTRIBUTE_INV) {
+					interp_paccess(origin, ooffset, ret_type);
+				}
+				/* if the return value's type is REFERENCE object, change it 
+				 * into a separate object.
+				*/
+				switch (ret_type & SK_HEAD) {
+					case SK_REF:
+						/* change the return REFERENCE object into separate
+						 * object.
+						*/
+						otop()->it_ref = CURLTS(otop()->it_ref);
+						break;
+					default:
+						break;
+				}
+			}
+			else {
+			/* send a request to the remote processor */
+				CURSARI(constant_execute_query, oid_of_sep_obj(otop()->it_ref), constant_query, class_name, feature_name, 0);
+				CURSG(opop()->it_ref);
+				if ((ret_type & SK_HEAD) != SK_VOID) {
+					last = iget();
+					last->type = ret_type;
+					switch (ret_type & SK_HEAD) {
+						case SK_BOOL: 	last->it_char = (char)(CURGB(0)); break;
+						case SK_CHAR: 	last->it_char = CURGC(0); break;
+						case SK_INT: 	last->it_long = CURGI(0); break;
+						case SK_FLOAT: 	last->it_float = CURGR(0); break;
+						case SK_DOUBLE:	last->it_double = CURGD(0); break; 
+						case SK_REF: 	last->it_ref = CURGSO(0); break;
+						case SK_POINTER: 
+						case SK_BIT: 
+						case SK_EXP: 
+						default:	
+							sprintf(debug_info, "6.Invalid Type %lx\n", ret_type);
+							panic(debug_info);
+							panic("Not implemented type in separate attribute call");
+					}
+				}
+			}
+		}	
+		break;
+
+	/*
+	 * process the failure of precondition checking with separate feature call(s)
+	 */
+	case BC_SEP_RAISE_PREC:
+#ifdef DEBUG
+		dprintf(2)("BC_SEP_RAISE_PREC\n");
+#endif
+		{
+			short nb_of_sep_paras;
+			short sep_para_index[constant_max_number_of_sep_paras];
+			short tmp_tyc;
+			char reserve_cmd = *IC++;
+			if (reserve_cmd != BC_SEP_RESERVE) {
+#ifdef DEBUG
+		dprintf(2)("expect BC_SEP_RESERVE\n");
+#endif
+			}
+			nb_of_sep_paras = get_short();
+			for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; tmp_tyc++) {
+				sep_para_index[tmp_tyc] = get_short();
+			}
+			offset = get_long(); 		/* get the offset to the point to recheck
+										 * the pre-condition.
+										*/
+			if (!has_called_sep_feature) {
+				RTCF;
+			}
+			else {
+				RTCK;
+				in_first_block = '\01';
+				pre_success = '\01';
+				/* free the separate parameters */
+				for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; tmp_tyc++) {
+					CURFSO(ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref);
+
+				}
+				/* reserve the separate parameters */
+				for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; ) {
+					if (CURRSO(ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref)) {
+						for(tmp_tyc--; tmp_tyc >= 0; tmp_tyc--) {
+							CURFSO(ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref);
+						}
+						tmp_tyc = 0;
+					}
+					else {
+						tmp_tyc++;
+					}
+				}
+				IC += offset;
+			}
+		}	
+		break;
+
+	/* create separate object */
+	case BC_SEP_CREATE:
+		{
+			char *class_name, *feature_name;
+			struct item *tyc_last;
+			class_name = IC;
+			IC += strlen(IC) + 1;
+			feature_name = IC;
+			IC += strlen(IC) + 1;
+#ifdef DEBUG
+		dprintf(2)("BC_SEP_CREATE on %s with procedure <%s>\n", class_name, feature_name);
+#endif
+#ifdef SEP_DEBUG
+fprintf(stdout, "$$$$$$$$$$ Before CREATE_SEP_OBJ, STACK_TOP=%lx\n", otop()); 
+#endif
+			last = iget();
+			last->type = SK_REF;
+			CURCCI(class_name, feature_name);
+			CURCC(last->it_ref);
+#ifdef SEP_DEBUG
+fprintf(stdout, "$$$$$$$$$$Created separate obj <%s, %d, %d> on <%s, %d>\n", hostname_of_sep_obj(last->it_ref), pid_of_sep_obj(last->it_ref), oid_of_sep_obj(last->it_ref), _concur_hostname, _concur_pid); 
+#endif
+			if (strlen(feature_name)) {
+				tyc_last = last;
+				last = iget();
+				last->type = SK_REF;
+				last->it_ref = tyc_last->it_ref;
+				CURRSO(last->it_ref);
+				has_reserved_new_born_sep = 1;
+			}
+			else 
+				has_reserved_new_born_sep = 0;
+		}
+		break;
+
+	/* finishing creating separate object */
+	case BC_SEP_CREATE_END:
+#ifdef DEBUG
+		dprintf(2)("BC_SEP_CREATE_END\n");
+#endif
+		if (has_reserved_new_born_sep) {
+			CURFSO(opop()->it_ref);
+		}
+#ifdef SEP_DEBUG
+fprintf(stdout, "$$$$$$$$$$  After CREATE_SEP_OBJ, STACK_TOP=%lx\n", otop()); 
+#endif
+		break;
+#endif
+
 
 	/*
 	 * End of rescue clause
@@ -5116,14 +5739,14 @@ char *start;
 	 * End of precondition in first block.
 	 */
 	case BC_END_FST_PRE:
-		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_END_FST_PRE");
+		fprintf(fd, "0x%lX %s Offset = %d\n", IC - 1, "BC_END_FST_PRE", get_long());
 		break;
 
 	/*
 	 * End of precondition.
 	 */
 	case BC_END_PRE:
-		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_END_PRE");
+		fprintf(fd, "0x%lX %s Offset=%d\n", IC - 1, "BC_END_PRE", get_long());
 		break;
 
 	/*
@@ -5882,6 +6505,253 @@ char *start;
 	case BC_CAST_DOUBLE:
 		fprintf(fd, "0x%lX BC_CAST_DOUBLE\n", IC - 1);
 		break;
+
+
+#ifdef CONCURRENT_EIFFEL
+	/* The following instructions started with BC_SEP are used by
+	 * Concurrent Eiffel.
+	*/
+
+	/* the current has called a separate feature in checking its
+	 * pre-condition.
+	*/
+	case BC_SEP_SET:
+		fprintf(fd, "0x%lX BC_SEP_SET\n", IC - 1);
+		break;
+	
+	/* clear the flag indicating whether the current separate feature
+	 * has called a separate feature call in its pre-condition 
+	 * checking.
+	*/
+	case BC_SEP_UNSET:
+		fprintf(fd, "0x%lX BC_SEP_UNSET\n", IC - 1);
+		break;
+
+	/* reserve separate parameters of the current feature which are
+	 * used in at least one separate feature call.
+	*/
+	case BC_SEP_RESERVE: 
+		{
+			short nb_of_sep_paras;
+			short tmp_tyc;
+			nb_of_sep_paras = get_short();
+			fprintf(fd, "0x%lX BC_SEP_RESERVE %d separate parameters\n", IC - sizeof(short) - 1, nb_of_sep_paras);
+			fprintf(fd, "	");
+			for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; tmp_tyc++) {
+				fprintf(fd, "  %d", get_short() + 1);
+			}
+			fprintf(fd, "\n");
+		}	
+		break;
+
+	/* free separate parameters of the current feature which are
+	 * used in at least one  separate feature call.
+	*/
+	case BC_SEP_FREE: 
+		{
+			short nb_of_sep_paras;
+			short tmp_tyc;
+			nb_of_sep_paras = get_short();
+			fprintf(fd, "0x%lX BC_SEP_FREE with %d parameters\n", IC - sizeof(short) - 1, nb_of_sep_paras);
+			fprintf(fd, "	");
+			for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; tmp_tyc++) {
+				fprintf(fd, "  %d", get_short() + 1);
+			}
+			fprintf(fd, "\n");
+		}	
+		break;
+
+	/* change the local object stored in the top of the operation stack into 
+	 * a separate object 
+	*/
+	case BC_SEP_TO_SEP:
+		fprintf(fd, "0x%lX BC_SEP_TO_SEP\n", IC - 1);
+		break;
+
+	/* to perform a separate external feature call */
+	case BC_SEP_EXTERN:
+	case BC_SEP_PEXTERN:
+	/* to perform a separate feature call */
+	case BC_SEP_FEATURE:
+	case BC_SEP_PFEATURE:
+		{
+			short nb_of_paras;
+			short tyc_tmp;
+			struct item *tyc_current, *tyc_last;
+			uint32 ret_type;
+			char need_ack;
+			char *feature_name;
+			char *class_name;
+			char tyc_command = *(IC-1);
+
+			int32 origin;
+
+			fprintf(fd, "0x%lX ", IC - 1);
+
+			nb_of_paras = get_short();	/* number of parameters */
+			class_name = IC;			/* get the class name   */
+			IC += strlen(IC) + 1;
+			feature_name = IC;			/* get the feature name */
+			IC += strlen(IC) + 1;
+			ret_type = get_uint32();	/* Get the feature's return type */
+			need_ack = *IC++;			/* if the proc needs acknowledgement */
+
+			if (tyc_command == BC_SEP_FEATURE || tyc_command == BC_SEP_EXTERN) {
+				offset = get_long(); 		/* Get the feature id */		
+				code = get_short();   		/* Get the static type */
+			} else if (tyc_command == BC_SEP_PFEATURE || tyc_command == BC_SEP_PEXTERN) {
+				origin = get_long();		/* Get the origin class id */
+				offset = get_long(); 		/* Get the offset in origin */
+			}
+
+			if (tyc_command == BC_SEP_FEATURE || tyc_command == BC_SEP_EXTERN) {
+				if (tyc_command == BC_SEP_FEATURE)
+					fprintf(fd, " BC_SEP_FEATURE paras#=%d, class=%s, feat=%s, ret_type=%d, need_ack=%d\n	offset=%ld, code=%ld\n", nb_of_paras, class_name, feature_name, ret_type & SK_HEAD, need_ack, offset, code);
+				else 
+					fprintf(fd, " BC_SEP_EXTERN paras#=%d, class=%s, feat=%s, ret_type=%d, need_ack=%d\n	offset=%ld, code=%ld\n", nb_of_paras, class_name, feature_name, ret_type & SK_HEAD, need_ack, offset, code);
+			} else if (tyc_command == BC_SEP_PFEATURE || tyc_command == BC_SEP_PEXTERN) {
+				if (tyc_command == BC_SEP_PFEATURE)
+					fprintf(fd, " BC_SEP_PFEATURE paras#=%d, class=%s, feat=%s, ret_type=%d, need_ack=%d\n	origin=%ld, offset=%ld\n", nb_of_paras, class_name, feature_name, ret_type & SK_HEAD, need_ack, origin, offset);
+				else
+					fprintf(fd, " BC_SEP_PEXTERN paras#=%d, class=%s, feat=%s, ret_type=%d, need_ack=%d\n	origin=%ld, offset=%ld\n", nb_of_paras, class_name, feature_name, ret_type & SK_HEAD, need_ack, origin, offset);
+			}
+		}	
+		break;
+
+
+	/* to perform a separate external feature call */
+	case BC_SEP_EXTERN_INV:
+	case BC_SEP_PEXTERN_INV:
+	/* to perform a separate feature call */
+	case BC_SEP_FEATURE_INV:
+	case BC_SEP_PFEATURE_INV:
+		{
+			short nb_of_paras;
+			short tyc_tmp;
+			struct item *tyc_current, *tyc_last;
+			uint32 ret_type;
+			char need_ack;
+			char *feature_name;
+			char *class_name;
+			char tyc_command = *(IC-1);
+
+			int32 origin;
+
+			fprintf(fd, "0x%lX ", IC - 1);
+
+			nb_of_paras = get_short();	/* number of parameters */
+			class_name = IC;			/* get the class name   */
+			IC += strlen(IC) + 1;
+			feature_name = IC;			/* get the feature name */
+			IC += strlen(IC) + 1;
+			ret_type = get_uint32();	/* Get the feature's return type */
+			need_ack = *IC++;			/* if the proc needs acknowledgement */
+
+			if (tyc_command == BC_SEP_FEATURE_INV || tyc_command == BC_SEP_EXTERN_INV) {
+				offset = get_long(); 		/* Get the feature id */		
+				code = get_short();   		/* Get the static type */
+			} else if (tyc_command == BC_SEP_PFEATURE_INV|| tyc_command == BC_SEP_PEXTERN_INV) {
+				origin = get_long();		/* Get the origin class id */
+				offset = get_long(); 		/* Get the offset in origin */
+			}
+
+			if (tyc_command == BC_SEP_FEATURE_INV || tyc_command == BC_SEP_EXTERN_INV) {
+				if (tyc_command == BC_SEP_FEATURE_INV)
+					fprintf(fd, " BC_SEP_FEATURE_INV paras#=%d, class=%s, feat=%s, ret_type=0x%lx, need_ack=%d\n	offset=%ld, code=%ld\n", nb_of_paras, class_name, feature_name, ret_type, need_ack, offset, code);
+				else
+					fprintf(fd, " BC_SEP_EXTERN_INV paras#=%d, class=%s, feat=%s, ret_type=0x%lx, need_ack=%d\n	offset=%ld, code=%ld\n", nb_of_paras, class_name, feature_name, ret_type, need_ack, offset, code);
+			} else if (tyc_command == BC_SEP_PFEATURE_INV || tyc_command == BC_SEP_PEXTERN_INV) {
+				if (tyc_command == BC_SEP_PFEATURE_INV)
+					fprintf(fd, " BC_SEP_PFEATURE_INV paras#=%d, class=%s, feat=%s, ret_type=0x%lx, need_ack=%d\n	origin=%ld, offset=%ld\n", nb_of_paras, class_name, feature_name, ret_type, need_ack, origin, offset);
+				else
+					fprintf(fd, " BC_SEP_PEXTERN_INV paras#=%d, class=%s, feat=%s, ret_type=0x%lx, need_ack=%d\n	origin=%ld, offset=%ld\n", nb_of_paras, class_name, feature_name, ret_type, need_ack, origin, offset);
+			}
+		}	
+		break;
+
+	/* to perform a separate attribute call */
+	case BC_SEP_ATTRIBUTE_INV:
+	case BC_SEP_PATTRIBUTE_INV:
+		{
+			uint32 ret_type;
+			char *feature_name;
+			char *class_name;
+			char tyc_command = *(IC-1);
+
+			int32 origin, ooffset;
+
+			fprintf(fd, "0x%lX ", IC - 1);
+
+			class_name = IC;			/* get the class name   */
+			IC += strlen(IC) + 1;
+			feature_name = IC;			/* get the feature name */
+			IC += strlen(IC) + 1;
+
+			if (tyc_command == BC_SEP_ATTRIBUTE_INV) {
+				offset = get_long();  			/* Get feature id */ 
+				code = get_short();        		/* Get static type */
+			} else if (tyc_command == BC_SEP_PATTRIBUTE_INV) {
+				origin = get_long();   			/* Get the origin class id */
+				ooffset = get_long();			/* Get the offset in origin */
+			}
+			ret_type = get_uint32();		/* Get attribute meta-type */
+			
+			if (tyc_command == BC_SEP_ATTRIBUTE_INV) {
+				fprintf(fd, " BC_SEP_ATTRIBUTE_INV  class=%s, feat=%s, ret_type=0x%lx\n	offset=%ld, code=%ld\n", class_name, feature_name, ret_type, offset, code);
+			} else if (tyc_command == BC_SEP_PATTRIBUTE_INV) {
+				fprintf(fd, " BC_SEP_PATTRIBUTE_INV class=%s, feat=%s, ret_type=0x%lx\n	origin=%ld, offset=%ld\n", class_name, feature_name, ret_type, origin, offset);
+			}
+		}	
+		break;
+
+	/*
+	 * process the failure of precondition checking with separate feature call(s)
+	 */
+	case BC_SEP_RAISE_PREC:
+		fprintf(fd, "0x%lX ", IC - 1);
+		{
+			short nb_of_sep_paras;
+			short sep_para_index[constant_max_number_of_sep_paras];
+			short tmp_tyc;
+			char reserve_cmd = *IC++;
+			fprintf(fd, "BC_SEP_RAISE_PREC\n");
+			nb_of_sep_paras = get_short();
+			if (reserve_cmd != BC_SEP_RESERVE) {
+				fprintf(fd, "expect BC_SEP_RESERVE\n");
+			}
+			else {
+				fprintf(fd, "	BC_SEP_RESERVE with %d parameters\n	<", nb_of_sep_paras);
+			}
+			for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; tmp_tyc++) {
+				sep_para_index[tmp_tyc] = get_short() + 1;
+				fprintf(fd, " %d ", sep_para_index[tmp_tyc]);
+			}
+			offset = get_long(); 		/* get the offset to the point to recheck
+										 * the pre-condition.
+										*/
+			fprintf(fd, " > offset=%d\n", offset);
+		}
+		break;
+
+	/* create separate object */
+	case BC_SEP_CREATE:
+		{
+			char *class_name, *feature_name;
+			struct item *tyc_last;
+			class_name = IC;
+			IC += strlen(IC) + 1;
+			feature_name = IC;
+			IC += strlen(IC) + 1;
+			fprintf(fd, "0x%lX BC_SEP_CREATE on %s with procedure <%s>\n", IC-1, class_name, feature_name);
+			break;
+		}
+
+	/* finishing creating separate object */
+	case BC_SEP_CREATE_END:
+		fprintf(fd, "0x%lX BC_SEP_CREATE_END\n", IC - 1);
+		break;
+#endif
+
 
 	default:
 		fprintf(fd, "0x%lX UNKNOWN (opcode = %d)\n", IC - 1, code);

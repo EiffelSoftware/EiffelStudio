@@ -26,7 +26,8 @@ inherit
 			interface,
 			add_to_container,
 			remove_i_th,
-			reorder_child
+			reorder_child,
+			list_widget
 		end
 
 create
@@ -203,6 +204,8 @@ feature {NONE} -- Implementation
 			check  do_not_call: False end
 		end
 
+	list_widget: POINTER
+
 end -- class EV_TREE_IMP
 
 --!-----------------------------------------------------------------------------
@@ -226,6 +229,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2000/04/06 23:52:37  brendel
+--| Added list_widget.
+--|
 --| Revision 1.39  2000/04/06 02:05:50  brendel
 --| Changed to comply with new EV_DYNAMIC_LIST_IMP.
 --|

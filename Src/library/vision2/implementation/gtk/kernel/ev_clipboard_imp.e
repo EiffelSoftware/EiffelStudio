@@ -49,12 +49,13 @@ feature -- Access
 			a_gs1, a_gs2: GEL_STRING
 			edit_chars: POINTER
 		do
+			C.gtk_editable_delete_text (clipboard_widget, 0, -1)
 			create a_gs1.make ("CLIPBOARD")
 			create a_gs2.make ("COMPOUND_TEXT")
 			a_success := C.gtk_selection_convert (
 				clipboard_widget,
-				C.gdk_atom_intern (a_gs1.item, 0),
-				C.gdk_atom_intern (a_gs2.item, 0),
+				C.gdk_atom_intern (a_gs1.item, 1),
+				C.gdk_atom_intern (a_gs2.item, 1),
 				C.GDK_CURRENT_TIME
 			)
 			edit_chars := C.gtk_editable_get_chars (clipboard_widget, 0, -1)
@@ -67,7 +68,6 @@ feature -- Status Setting
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to clipboard.
 		local
-			a_success: INTEGER
 			clip_text: STRING
 			a_gs: GEL_STRING
 		do
@@ -77,17 +77,10 @@ feature -- Status Setting
 				clip_text := ""
 			end
 			create a_gs.make (clip_text)
-			C.gtk_text_set_point (clipboard_widget, 0)
-			a_success := C.gtk_text_forward_delete (clipboard_widget, C.gtk_text_get_length (clipboard_widget))
+			C.gtk_editable_delete_text (clipboard_widget, 0, -1)
 			C.gtk_text_insert (clipboard_widget, NULL, NULL, NULL, a_gs.item, -1)
 			C.gtk_editable_select_region (clipboard_widget, 0, -1)
-			
-			create a_gs.make ("CLIPBOARD")
-     		a_success := C.gtk_selection_owner_set (
-				clipboard_widget,
-				C.gdk_atom_intern (a_gs.item, 0),
- 				C.GDK_CURRENT_TIME
-			)
+			C.gtk_editable_copy_clipboard (clipboard_widget)
 		end
 
 feature {EV_ANY_I}

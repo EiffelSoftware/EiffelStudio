@@ -251,15 +251,20 @@ end;
 					-- deferred feature in which case we have to be careful
 					-- and get the routine name of the first entry in the
 					-- routine table.
--- FIXME
--- deferred routine => feature_name ?????
-
 				rout_table ?= entry;
-				internal_name := clone (rout_table.feature_name (typ.type_id));
-				generated_file.putstring (internal_name);
-					-- Remember extern routine declaration
-				Extern_declarations.add_routine
-							(real_type (type).c_type, internal_name);
+
+				if rout_table.is_implemented (typ.type_id) then
+					internal_name := clone (rout_table.feature_name (typ.type_id));
+					generated_file.putstring (internal_name);
+						-- Remember extern routine declaration
+					Extern_declarations.add_routine
+								(real_type (type).c_type, internal_name);
+				else
+						-- Call to a deferred feature without implementation
+					generated_file.putchar ('(');
+					real_type (type).c_type.generate_function_cast (generated_file);
+					generated_file.putstring (" RTNR)");
+				end
 			end;
 		end;
 		

@@ -128,17 +128,20 @@ feature
 			-- in a static type greater than `type_id'.
 		do
 			goto_used (type_id);
-				-- FIXME
-				-- test conformance => after can be True
-			check
-				not_off: not after
-			end;
 			if not after then
 				Result := item.routine_name
 			else
 				Result := "((void (*)())  RTNR)"
 			end;
 		end;
+
+	is_implemented (type_id: INTEGER): BOOLEAN is
+			-- Is the feature implemented
+			-- in a static type greater than `type_id'.
+		do
+			goto_used (type_id);
+			Result := not after
+		end
 
 	workbench_c_type: STRING is "struct ca_info";
 			-- Associated C item structure name

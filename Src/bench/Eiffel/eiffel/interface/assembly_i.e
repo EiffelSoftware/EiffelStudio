@@ -349,7 +349,7 @@ feature {NONE} -- Implementation
 			l_dir: DIRECTORY
 		do
 			if is_local then
-				create l_emitter.make
+				create l_emitter.make (System.clr_runtime_version)
 				if not l_emitter.exists then
 						-- IL_EMITTER component could not be loaded.
 					create l_vd64
@@ -377,7 +377,7 @@ feature {NONE} -- Implementation
 			l_vd64: VD64
 			l_emitter: IL_EMITTER
 		do
-			create l_emitter.make
+			create l_emitter.make (System.clr_runtime_version)
 			if not l_emitter.exists then
 					-- IL_EMITTER component could not be loaded.
 				create l_vd64
@@ -407,7 +407,7 @@ feature {NONE} -- Implementation
 				create l_vd63.make (an_assembly)
 				Error_handler.insert_error (l_vd63)
 			else
-				create l_emitter.make
+				create l_emitter.make (System.clr_runtime_version)
 				if not l_emitter.exists then
 						-- IL_EMITTER component could not be loaded.
 					create l_vd64

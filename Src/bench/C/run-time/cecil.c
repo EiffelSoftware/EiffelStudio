@@ -11,12 +11,16 @@
 	C-Eiffel Call-In Library.
 */
 
+/*
+doc:<file name="cecil.c" header="eif_cecil.h" version="$Id$" summary="C-Eiffel Call-In Library">
+*/
+
 #include "eif_portable.h"
 #include "rt_malloc.h"
 #include "eif_garcol.h"
 #include "eif_cecil.h"
 #include "eif_hector.h"
-#include "eif_struct.h"
+#include "rt_struct.h"
 #include "eif_tools.h"
 #include "eif_eiffel.h"				/* Need string header */
 #include "rt_macros.h"
@@ -35,28 +39,34 @@
 #endif
 
 /*
-doc:<file name="cecil.c" header="eif_cecil.h">
-doc:	<attribute name="eif_visible_is_off" return_type="char">
+doc:	<attribute name="eif_visible_is_off" return_type="char" export="shared">
 doc:		<summary>If set to True, we will not throw an exception if feature cannot be found or is not visible.</summary>
+doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe as access is done through `cecil_lock'.</thread_safety>
+doc:		<synchronization>cecil_lock</synchronization>
 doc:	</attribute>
-doc:	<attribute name="cecil_lock" return_type="EIF_LW_MUTEX_TYPE *">
-doc:		<summary>To protect multithreaded access to `eif_visible_is_off'.</summary>
-doc:		<thread_safety>Safe</thread_safety>
-doc:	</attribute>
-doc:	<attribute name="eif_default_pointer" return_type="void *">
-doc:		<summary>Return value when `eif_field_safe' fails.</summary>
-doc:		<thread_safety>Safe</thread_safety>
-doc:	</attribute>
-doc:</file>
 */
 rt_shared unsigned char eif_visible_is_off = (unsigned char) 1;
+
+/*
+doc:	<attribute name="eif_default_pointer" return_type="void *" export="private">
+doc:		<summary>Return value when `eif_field_safe' fails.</summary>
+doc:		<access>Read</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:	</attribute>
+*/
 rt_private void *eif_default_pointer = NULL;
 
 /* 
  * Cecil mutex in MT mode. 
  */
 #ifdef EIF_THREADS
+/*
+doc:	<attribute name="cecil_lock" return_type="EIF_LW_MUTEX_TYPE *" export="private">
+doc:		<summary>To protect multithreaded access to `eif_visible_is_off'.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:	</attribute>
+*/
 rt_private EIF_LW_MUTEX_TYPE *cecil_lock = (EIF_LW_MUTEX_TYPE *) 0;
 
 rt_shared  void eif_cecil_init ();
@@ -732,3 +742,7 @@ rt_shared void eif_set_thr_context () {
 	eif_thr_context = rout;
 }
 #endif	/* EIF_THREADS */
+
+/*
+doc:</file>
+*/

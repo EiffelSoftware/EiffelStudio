@@ -18,6 +18,7 @@
 #include "x2c.h"			/* For macro LNGPAD */
 #include "eif_tools.h"			/* For `nprime' */
 #include "eif_search.h"
+#include "eif_plug.h"			/* for econfg */
 
 #define dprintf(n) if (DEBUG & n) printf
 

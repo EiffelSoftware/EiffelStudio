@@ -51,7 +51,7 @@ feature
 					changed_classes.start;
 					changed_classes.search (pass_c);
 					if not changed_classes.after then
-					changed_classes.remove;
+						changed_classes.remove;
 					end;
 				end;
 				System.set_current_class (Void);

@@ -28,6 +28,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_COMPONENT_C_GENERATOR
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Implementation
 
 	check_interface_pointer (interface_name: STRING): STRING is
@@ -35,11 +40,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_interface_name: interface_name /= Void 
 			valid_interface_name: not interface_name.empty 
-		local
-			pointer_var: LINKED_LIST[STRING]
 		do
-			create pointer_var.make
-
 			create Result.make (1000)
 			Result.append (Tab)
 			Result.append (Hresult)
@@ -64,9 +65,7 @@ feature {NONE} -- Implementation
 			Result.append (Struct_selection_operator)
 			Result.append (Query_interface)
 			Result.append (Space_open_parenthesis)
-			Result.append (Iid_type)
-			Result.append (Underscore)
-			Result.append (interface_name)
+			Result.append (iid_name (interface_name))
 			Result.append (Comma_space)
 			Result.append (Open_parenthesis)
 			Result.append (C_void_pointer)
@@ -78,7 +77,7 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
 			Result.append (New_line)
-			Result.append (examine_hresult_with_pointer (Hresult_variable_name, pointer_var))
+			Result.append (examine_hresult (Hresult_variable_name))
 			Result.append (New_line_tab)
 			Result.append (Close_curly_brace)
 			Result.append (Semicolon)
@@ -238,7 +237,7 @@ feature {NONE} -- Implementation
 			Result.append (Open_curly_brace)
 			Result.append (New_line_tab_tab)
 
-			-- 	if ((HRESULT_FACILITY (hr) == FACILITY_ITF) && (HRESULT_CODE  (hr) > 1024))
+			-- 	if ((HRESULT_FACILITY (`variable_name') == FACILITY_ITF) && (HRESULT_CODE  (`variable_name') > 1024) && (HRESULT_CODE  (`variable_name') < 1053))
 
 			Result.append (If_keyword)
 			Result.append (Space)
@@ -247,7 +246,7 @@ feature {NONE} -- Implementation
 			Result.append (Hresult_facility)
 			Result.append (Space)
 			Result.append (Open_parenthesis)
-			Result.append (Hresult_variable_name)
+			Result.append (variable_name)
 			Result.append (Close_parenthesis)
 			Result.append (Space)
 			Result.append (C_equal)
@@ -261,17 +260,31 @@ feature {NONE} -- Implementation
 			Result.append (Hresult_code)
 			Result.append (Space)
 			Result.append (Open_parenthesis)
-			Result.append (Hresult_variable_name)
+			Result.append (variable_name)
 			Result.append (Close_parenthesis)
 			Result.append (Space)
 			Result.append (More)
 			Result.append (Space)
 			Result.append_integer (1024)
 			Result.append (Close_parenthesis)
+			Result.append (Space)
+			Result.append (C_and)
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append (Hresult_code)
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append (variable_name)
+			Result.append (Close_parenthesis)
+			Result.append (Space)
+			Result.append (less)
+			Result.append (Space)
+			Result.append_integer (1053)
+			Result.append (Close_parenthesis)
 			Result.append (Close_parenthesis)
 			Result.append (New_line_tab_tab_tab)
 
-			-- 		com_eraise (rt_ec.ccom_ec_lpstr (eename (HRESULT_CODE (hr) - 1024), NULL), HRESULT_CODE (hr) -1024);
+			-- 		com_eraise (rt_ec.ccom_ec_lpstr (eename (HRESULT_CODE (`variable_name') - 1024), NULL), HRESULT_CODE (`variable_name') -1024);
 
 			Result.append (Com_eraise)
 			Result.append (Space)
@@ -286,7 +299,7 @@ feature {NONE} -- Implementation
 			Result.append (Hresult_code)
 			Result.append (Space)
 			Result.append (Open_parenthesis)
-			Result.append (Hresult_variable_name)
+			Result.append (variable_name)
 			Result.append (Close_parenthesis)
 			Result.append (Space)
 			Result.append (Minus)
@@ -300,7 +313,7 @@ feature {NONE} -- Implementation
 			Result.append (Hresult_code)
 			Result.append (Space)
 			Result.append (Open_parenthesis)
-			Result.append (Hresult_variable_name)
+			Result.append (variable_name)
 			Result.append (Close_parenthesis)
 			Result.append (Space)
 			Result.append (Minus)
@@ -323,11 +336,7 @@ feature {NONE} -- Implementation
 			Result.append (variable_name)
 			Result.append (Close_parenthesis)
 			Result.append (Comma_space)
-			Result.append (Hresult_code)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (variable_name)
-			Result.append (Close_parenthesis)
+			Result.append ("EN_PROG")
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
@@ -420,13 +429,15 @@ feature {NONE} -- Implementation
 			type := visitor.vt_type
 			
 			create Result.make (1000)
-			Result.append (Return)
-			Result.append (Space)
  
 			if 
 				visitor.is_enumeration or visitor.is_basic_type and 
 				not is_boolean (type) and not (type = Vt_void) 
 			then
+				Result.append (visitor.cecil_type)
+				Result.append (Space)
+				Result.append ("result")
+				Result.append (Space_equal_space)
 				Result.append (Open_parenthesis)
 				Result.append (visitor.cecil_type)
 				Result.append (Close_parenthesis)
@@ -434,9 +445,10 @@ feature {NONE} -- Implementation
 				Result.append (Semicolon)
 
 			elseif is_boolean (type) then
-				Result.append (Open_parenthesis)
 				Result.append (Eif_boolean)
-				Result.append (Close_parenthesis)
+				Result.append (Space)
+				Result.append ("result")
+				Result.append (Space_equal_space)
 				Result.append (Ce_mapper)
 				Result.append (Dot)
 				Result.append (visitor.ce_function_name)
@@ -449,10 +461,10 @@ feature {NONE} -- Implementation
 			elseif type = Vt_void or is_hresult (type) or is_error (type) then 
 				Result := (" ")
 			else
-				Result.append (Open_parenthesis)
 				Result.append (Eif_reference)
-				Result.append (Close_parenthesis)
-				Result.append (Open_parenthesis)
+				Result.append (Space)
+				Result.append ("result")
+				Result.append (Space_equal_space)
 				if visitor.need_generate_ce then
 					Result.append (Generated_ce_mapper)
 				else
@@ -477,9 +489,13 @@ feature {NONE} -- Implementation
 					Result.append (Null)
 				end
 				Result.append (Close_parenthesis)
-				Result.append (Close_parenthesis)
 				Result.append (Semicolon)
-			end	
+			end
+			
+			if not (type = Vt_void or is_hresult (type) or is_error (type)) then 
+				Result.append (New_line_tab)
+				Result.append ("return result;")
+			end
 		ensure
 			non_void_retval: Result /= Void
 			valid_retval: not Result.empty

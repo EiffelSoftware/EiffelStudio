@@ -42,7 +42,7 @@ inherit
 			mel_screen, set_x, set_y, set_x_y
 		end;
 
-	MEL_CALLBACK
+	MEL_COMMAND
 
 feature -- Access
 
@@ -109,7 +109,7 @@ feature -- Element change
 		do
 			!! atom.make (mel_screen.display, "WM_DELETE_WINDOW", False);
 			set_delete_response_do_nothing;
-			add_wm_protocol_callback (atom, Current, Void)
+			set_wm_protocol_callback (atom, Current, Void)
 		end;
 
 feature -- Execution

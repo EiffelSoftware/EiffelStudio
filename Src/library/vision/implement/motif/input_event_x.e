@@ -14,7 +14,7 @@ inherit
 
 	EVENT_HDL;
 
-	MEL_CALLBACK;
+	MEL_COMMAND;
 
 	G_ANY
 

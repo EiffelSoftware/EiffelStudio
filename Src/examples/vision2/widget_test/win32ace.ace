@@ -39,7 +39,7 @@ default
 cluster
 	all root_cluster:		"."
 		exclude
-			"templates"; "CVS"
+			"templates"; "CVS"; "EIFGEN"
 		end
 
 	all base:		"$EIFFEL_SRC\library\base"

@@ -30,7 +30,7 @@ feature -- Access
 			-- Current filter type
 
 	filters: HASH_TABLE [DOCUMENT_FILTER, STRING]
-			-- Loaded filters hased by description
+			-- Loaded filters hashed by description
 
 	filtered_document (a_doc: DOCUMENT): FILTERED_DOCUMENT is
 			-- Filtered document generated from `filter' and `a_doc'
@@ -118,19 +118,28 @@ feature {NONE} -- Implementation
 	load_filters is
 			-- Load default filters
 		local
-			l_unfiltered_filter,
-			l_studio_output_filter,
-			l_envision_output_filter: OUTPUT_FILTER
-		do
-			create l_unfiltered_filter.make (unfiltered_flag, unfiltered)		
-			create l_studio_output_filter.make (Studio_flag, studio_desc)
-			create l_envision_output_filter.make (Envision_flag, envision_desc)
-			add_filter (l_unfiltered_filter)
-			add_filter (l_studio_output_filter)
-			add_filter (l_envision_output_filter)
-			
-					-- Set default filter
-			set_filter (l_unfiltered_filter)
+			l_filter: OUTPUT_FILTER
+		do			
+			create l_filter.make (unfiltered_flag, unfiltered)
+			add_filter (l_filter)
+			set_filter (l_filter) -- (Default filter)
+			create l_filter.make (studio_flag, studio_desc)
+			l_filter.add_output_flag (studio_flag)
+			l_filter.add_output_flag (studio_win_flag)
+			l_filter.add_output_flag (studio_lin_flag)
+			l_filter.add_output_flag (studio_mac_flag)
+			add_filter (l_filter)
+			create l_filter.make (studio_win_flag, studio_win_desc)
+			l_filter.add_output_flag (studio_flag)
+			add_filter (l_filter)
+			create l_filter.make (studio_lin_flag, studio_lin_desc)
+			l_filter.add_output_flag (studio_flag)
+			add_filter (l_filter)
+			create l_filter.make (studio_mac_flag, studio_mac_desc)
+			l_filter.add_output_flag (studio_flag)
+			add_filter (l_filter)
+			create l_filter.make (Envision_flag, envision_desc)
+			add_filter (l_filter)
 		end	
 
 	unique_id: INTEGER

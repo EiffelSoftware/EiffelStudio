@@ -53,23 +53,9 @@ feature {NONE} -- Initialization
 			non_void_parent: a_parent /= Void
 		local
 			act: STRING;
-			m_name: STRING;
-			p_tool: PROJECT_W;
-			pos: INTEGER
 		do
-			m_name := a_cmd.menu_name;	
-			if is_windows then
-				p_tool ?= a_parent.top;
-				if p_tool = Void then
-					pos := m_name.index_of ('%T', 1);
-					if pos > 0 and then m_name.count > 1 then
-				--		m_name := m_name.substring (1, pos - 1);
-					end 
-				end
-			end;			
-			button_make (m_name, a_parent);	
+			button_make (a_cmd.menu_name, a_parent);	
 			act := a_cmd.accelerator;
-	--		if act /= Void and then (not is_windows or else p_tool /= Void) then	
 			if act /= Void then
 				set_accelerator_action (act)
 			end
@@ -79,13 +65,5 @@ feature {NONE} -- Initialization
 			-- Command type that menu entry expects
 		do
 		end
-
-feature {NONE} -- Implementation
-
-	is_windows: BOOLEAN is
-			-- Is the current platform windows?
-		once
-			Result := Platform_constants.is_windows
-		end;
 
 end -- class EB_MENU_ENTRY

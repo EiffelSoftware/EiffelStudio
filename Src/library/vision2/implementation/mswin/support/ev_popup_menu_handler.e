@@ -11,8 +11,16 @@ class
 
 inherit
 	WEL_FRAME_WINDOW
+		undefine
+			on_draw_item
 		redefine
-			on_menu_command
+			on_menu_command,
+			default_process_message
+		end
+		
+	EV_MENU_CONTAINER_IMP
+		export
+			{NONE} all
 		end
 
 create
@@ -39,6 +47,26 @@ feature {NONE} -- Implementation
 			-- Propagate to `menu'.
 		do
 			menu_item_list.menu_item_clicked (an_id)
+		end
+
+	default_process_message (msg, wparam, lparam: INTEGER) is
+			-- Process `msg' which has not been processed by
+			-- `process_message'.
+		do
+			if not process_menu_message(msg, wparam, lparam) then
+				Precursor (msg, wparam, lparam)
+			end
+		end
+
+feature {NONE} -- WEL Implementation
+
+	on_menu_char (char_code: CHARACTER; corresponding_menu: WEL_MENU) is
+			-- The menu char `char_code' has been typed within `corresponding_menu'.
+		local
+			return_value: INTEGER
+		do
+			return_value := menu_item_list.on_menu_char (char_code, corresponding_menu)
+			set_message_return_value (return_value)
 		end
 
 end -- class EV_POPUP_MENU_HANDLER

@@ -296,7 +296,7 @@ feature {NONE} -- WEL Implementation
 			Result_not_void: Result /= Void
 		end
 		
-feature {EV_CONTAINER_IMP, EV_MENU_IMP} -- WEL Implementation
+feature {EV_MENU_CONTAINER_IMP, EV_MENU_IMP} -- WEL Implementation
 
 	set_accelerator_text_position (a_value: INTEGER) is
 			-- Set the `accelerator_text_position' to `a_value'.

@@ -55,6 +55,13 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	EV_MENU_CONTAINER_IMP
+		export
+			{NONE} all
+		redefine
+			on_draw_item
+		end
 
 feature {NONE} -- Initialization
 
@@ -208,46 +215,20 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	on_measure_item (control_id: INTEGER; measure_item: WEL_MEASURE_ITEM_STRUCT) is
-			-- Handle Wm_measureitem messages.
-			-- A owner-draw control identified by `control_id' has
-			-- been changed and must be drawn. `measure_item' contains
-			-- information that the control must fill.
-		require
-			measure_item_valid: measure_item /= Void
-		local
-			menu_item_imp: EV_MENU_ITEM_IMP
-			item_type: INTEGER
-		do
-			item_type := measure_item.ctl_type
-			if item_type = Odt_menu then
-				menu_item_imp ?= eif_id_object (measure_item.item_data)
-				if menu_item_imp /= Void then
-					menu_item_imp.on_measure_item (measure_item)
-				end
-			end
-		end
-
 	on_draw_item (control_id: INTEGER; draw_item: WEL_DRAW_ITEM_STRUCT) is
 			-- Handle Wm_drawitem messages.
 			-- A owner-draw control identified by `control_id' has
 			-- been changed and must be drawn. `draw_item' contains
 			-- information about the item to be drawn and the type
 			-- of drawing required.
-		require
-			draw_item_valid: draw_item /= Void
 		local
 			label_imp: EV_LABEL_IMP
 			item_type: INTEGER
-			menu_item_imp: EV_MENU_ITEM_IMP
 		do
 			item_type := draw_item.ctl_type
-			if item_type = Odt_menu then
-				menu_item_imp ?= eif_id_object (draw_item.item_data)
-				if menu_item_imp /= Void then
-					menu_item_imp.on_draw_item (draw_item)
-				end
-			elseif item_type = Odt_static then
+			if item_type = (feature {WEL_ODT_CONSTANTS}.Odt_menu) then
+				Precursor {EV_MENU_CONTAINER_IMP} (control_id, draw_item)
+			elseif item_type = (feature {WEL_ODT_CONSTANTS}.Odt_static) then
 				label_imp ?= draw_item.window_item
 				if label_imp /= Void then
 					label_imp.on_draw_item (draw_item)
@@ -281,9 +262,7 @@ feature {NONE} -- WEL Implementation
 				paint_dc.set_background_color (control.background_color)
 				brush := allocated_brushes.get (Void, control.background_color)
 				debug ("WEL")
-					io.putstring (
-						"Warning, there is no `decrement_reference'%Nfor the %
-						%previous brush%N")
+					io.putstring ("Warning, there is no `decrement_reference'%Nfor the previous brush%N")
 				end
 				set_message_return_value (brush.to_integer)
 				disable_default_processing
@@ -685,25 +664,8 @@ feature {NONE} -- Implementation
 	default_process_message (msg, wparam, lparam: INTEGER) is
 			-- Process `msg' which has not been processed by
 			-- `process_message'.
-		local
-			draw_item_struct: WEL_DRAW_ITEM_STRUCT
-			measure_item_struct: WEL_MEASURE_ITEM_STRUCT
-			corresponding_menu: WEL_MENU
-			char_code: CHARACTER
 		do
-			if msg = Wm_drawitem then
-				create draw_item_struct.make_by_pointer (integer_to_pointer (lparam))
-				on_draw_item (wparam, draw_item_struct)
-			elseif msg = Wm_measureitem then
-				create measure_item_struct.make_by_pointer (integer_to_pointer (lparam))
-				on_measure_item (wparam, measure_item_struct)
-			elseif msg = Wm_menuchar then
-				if (wparam & 0xFFFF0000) |>> 16 /= ((create {WEL_MF_CONSTANTS}).Mf_sysmenu) then
-					char_code := chconv (wparam & 0x0000FFFF)
-					create corresponding_menu.make_by_pointer (integer_to_pointer (lparam))
-					on_menu_char (char_code, corresponding_menu)
-				end
-			else
+			if not process_menu_message(msg, wparam, lparam) then
 				Precursor (msg, wparam, lparam)
 			end
 		end
@@ -712,22 +674,6 @@ feature {NONE} -- Implementation
 			-- Access to SB_xxx constants.
 		once
 			create Result
-		end
-
-feature {NONE} -- Externals
-
-	integer_to_pointer (i: INTEGER): POINTER is
-			-- Converts an integer `i' to a pointer
-		external
-			"C [macro <wel.h>] (EIF_INTEGER): EIF_POINTER"
-		alias
-			"cwel_integer_to_pointer"
-		end
-
-	chconv (i: INTEGER): CHARACTER is
-			-- Character associated with integer value `i'
-		external
-			"C [macro %"eif_misc.h%"]"
 		end
 
 invariant

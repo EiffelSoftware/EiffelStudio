@@ -32,14 +32,9 @@ feature -- Access
 	criterium (f: E_FEATURE): BOOLEAN is
 			-- Criterium for feature `f'
 		do
-			Result := any_criterium (f);
-			Result := Result and (not f.is_attribute);
-			Result := Result and (not f.is_constant)
+			Result := not f.is_attribute and not f.is_constant
 		ensure then
-			good_criterium: 
-				Result implies any_criterium (f) and then
-						not f.is_attribute and then
-						not f.is_constant
+			good_criterium: Result = (not f.is_attribute and not f.is_constant)
 		end
 
 feature -- Execution

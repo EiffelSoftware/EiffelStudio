@@ -22,9 +22,9 @@ feature -- Access
 
 	criterium (f: E_FEATURE): BOOLEAN is
 		do
-			Result := any_criterium (f);
-			Result := Result and then (f.is_once or else
-							f.is_constant)
+			Result := f.is_once or f.is_constant
+		ensure then
+			good_criterium: Result = (f.is_once or f.is_constant)
 		end;
 
 feature -- Output

@@ -224,7 +224,12 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 			draw_item_struct_rect: WEL_RECT
 			draw_font: WEL_FONT
 			font_imp: EV_FONT_IMP
+			theme_drawer: EV_THEME_DRAWER_IMP
+			bk_brush: WEL_BRUSH
 		do
+			theme_drawer := application_imp.theme_drawer
+			create bk_brush.make_solid (wel_background_color)
+
 				-- Assign local variable for faster access
 			draw_dc := draw_item_struct.dc
 			draw_item_struct_rect := draw_item_struct.rect_item
@@ -252,16 +257,18 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 				end
 				draw_flags := draw_flags | Dt_expandtabs
 	
-					-- Compute the bounding rectangle where the text need
-					-- to be displayed.
+				-- Compute the bounding rectangle where the text need
+				-- to be displayed.
+	
 				create draw_rect.make (
 					draw_item_struct_rect.left, draw_item_struct_rect.top + 
 						(draw_item_struct_rect.height - text_height) // 2,
 					draw_item_struct_rect.right, draw_item_struct_rect.bottom)
-
-					-- Erase the background
-				erase_background (draw_dc, draw_item_struct_rect)
-			
+	
+	
+					-- Need to first clear the area to the background color of `parent_imp'
+				theme_drawer.draw_widget_background (Current, draw_dc, draw_item_struct_rect, bk_brush)
+				
 					-- Draw the text
 				draw_dc.select_font (draw_font)
 				if not is_sensitive then
@@ -275,9 +282,9 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 				end
 				draw_dc.unselect_font
 			else
-					-- No text, just erase the background
-				erase_background (draw_dc, draw_item_struct_rect)
+				theme_drawer.draw_widget_background (Current, draw_dc, draw_item_struct_rect, bk_brush)
 			end
+			bk_brush.delete
 		end
 		
 feature {NONE} -- Implementation

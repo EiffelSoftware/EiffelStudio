@@ -275,7 +275,7 @@ end;
 					function_name.right_adjust;
 
 					if functions.has (function_name) then
-						e_function := functions.item (function_name)
+						e_function := functions.found_item
 						is_eiffel := true;
 						is_c := false;
 						is_cycle := false

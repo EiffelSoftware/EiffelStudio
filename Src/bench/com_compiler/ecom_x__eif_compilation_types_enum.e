@@ -7,13 +7,13 @@ class
 
 feature -- Access
 
-	is_application: INTEGER is 0
+	eif_compt_is_application: INTEGER is 0
 			-- No description available.
 
-	is_library: INTEGER is 1
+	eif_compt_is_library: INTEGER is 1
 			-- No description available.
 
-	is_precompilation: INTEGER is 2
+	eif_compt_is_precompilation: INTEGER is 2
 			-- No description available.
 
 end -- ECOM_X__EIF_COMPILATION_TYPES_ENUM

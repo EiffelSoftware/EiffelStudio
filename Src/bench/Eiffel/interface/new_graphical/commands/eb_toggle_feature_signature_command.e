@@ -9,7 +9,7 @@ class
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
-			mini_pixmap
+			mini_pixmap, new_mini_toolbar_item
 		end
 
 	EB_DEVELOPMENT_WINDOW_COMMAND
@@ -69,5 +69,24 @@ feature {NONE} -- Implementation
 	name: STRING is "Toggle_feature_signature"
 			-- Name of the command. Used to store the command in the
 			-- preferences.
+
+feature -- Basic operations
+
+	new_mini_toolbar_item: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
+			-- Create a new mini toolbar button for this command.
+		do
+			if managed_toolbar_items = Void then
+				create managed_toolbar_items.make (1)
+			end
+			create Result.make (Current)
+			Result.set_pixmap (mini_pixmap @ 1)
+			if is_sensitive then
+				Result.enable_sensitive
+			else
+				Result.disable_sensitive
+			end
+			Result.set_tooltip (tooltip)
+			Result.select_actions.extend (agent execute)
+		end			
 
 end -- class EB_TOGGLE_FEATURE_SIGNATURE_COMMAND

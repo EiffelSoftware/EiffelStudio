@@ -49,7 +49,7 @@ rt_public int str_str(EIF_CONTEXT EIF_OBJECT text, EIF_OBJECT pattern, int tlen,
 	 * the pattern. A 0 means an exact match. For efficiency reasons, I use a
 	 * special version of the algorithm for perfect matches, although the fuzzy
 	 * one is a generalization--RAM.
-	 * NB: as the fuzzy pattern matching uses eif_malloc(), the Eiffel side must
+	 * NB: as the fuzzy pattern matching uses cmalloc(), the Eiffel side must
 	 * give us protected addresses.
 	 */
 
@@ -81,7 +81,7 @@ rt_public int str_str(EIF_CONTEXT EIF_OBJECT text, EIF_OBJECT pattern, int tlen,
 		fuz_compile(pattern, plen, fuzzy);				/* Compile pattern */
 		p = fuz_qsearch(eif_access(text) + start, tlen-start,
 			eif_access(pattern), plen, fuzzy);			/* Quick search */
-		free_structures(fuzzy);							/* Free tables */
+		free_structures(fuzzy + 1);							/* Free tables */
 	}
 
 	if (p == (char *) 0)		/* `p' is the start of the found substring */
@@ -168,10 +168,11 @@ rt_private void fuz_compile(EIF_CONTEXT EIF_OBJECT pattern, register int plen, i
 rt_private void free_structures(EIF_CONTEXT int n)
 {
 	EIF_GET_CONTEXT
-	
+	int i;
+
 	/* Free fuzzy delta shift tables from 0 to 'n' */
-	while (n > 0)
-		xfree((char *) (darray[n--]));	/* Free allocated delta tables */
+	for (i = 0; i < n; i++)
+		xfree((char *) (darray[i]));	/* Free allocated delta tables */
 	xfree((char *) darray);					/* Free main table */
 
 	EIF_END_GET_CONTEXT

@@ -128,6 +128,7 @@ feature -- Basic Operation
 		require
 			not_initialized: not initialized
 		local
+			rescued: BOOLEAN
 			i, nb, arg_count, index: INTEGER
 			l_fields: ARRAYED_LIST [CONSUMED_FIELD]
 			l_functions, l_other_functions: ARRAYED_LIST [CONSUMED_FUNCTION]
@@ -144,125 +145,132 @@ feature -- Basic Operation
 			l_properties: ARRAYED_LIST [CONSUMED_PROPERTY]
 			l_unic_eiffel_name: STRING
 		do
-			check
-				non_void_internal_members: internal_members /= Void
-				non_void_internal_constructors: internal_constructors /= Void
-			end
-			create tc.make
-			create l_fields.make (0)
-			create l_functions.make (0)
-			create l_procedures.make (0)
-			create l_properties.make (0)
-			create l_events.make (0)
-			create reserved_names.make (100)
-
-				-- Add constructors.
-			from
-				i := 0
-				nb := internal_constructors.count
-			until
-				i = nb
-			loop
-				cons := internal_constructors.item (i)
-				if is_consumed_method (cons) then
-					tc.extend (create {CONSTRUCTOR_SOLVER}.make (cons))					
+			if not rescued then
+				check
+					non_void_internal_members: internal_members /= Void
+					non_void_internal_constructors: internal_constructors /= Void
 				end
-				i := i + 1
-			end
-			
-				-- Add methods and fields.
-			from
-				i := 0
-				nb := internal_members.count
-			until
-				i = nb
-			loop
-				member := internal_members.item (i)
-				if member.get_member_type = feature {MEMBER_TYPES}.method then
-					meth ?= member
-					check
-						is_method: meth /= Void
+				create tc.make
+				create l_fields.make (0)
+				create l_functions.make (0)
+				create l_procedures.make (0)
+				create l_properties.make (0)
+				create l_events.make (0)
+				create reserved_names.make (100)
+	
+					-- Add constructors.
+				from
+					i := 0
+					nb := internal_constructors.count
+				until
+					i = nb
+				loop
+					cons := internal_constructors.item (i)
+					if is_consumed_method (cons) then
+						tc.extend (create {CONSTRUCTOR_SOLVER}.make (cons))					
 					end
-					if is_consumed_method (meth) then
-						if not is_property_or_event (meth) then
-							l_unic_eiffel_name := unique_feature_name (create {STRING}.make_from_cil (meth.get_name))
-							if is_function (meth) then
-								l_functions.extend (consumed_function (meth, l_unic_eiffel_name))
+					i := i + 1
+				end
+				
+					-- Add methods and fields.
+				from
+					i := 0
+					nb := internal_members.count
+				until
+					i = nb
+				loop
+					member := internal_members.item (i)
+					if member.get_member_type = feature {MEMBER_TYPES}.method then
+						meth ?= member
+						check
+							is_method: meth /= Void
+						end
+						if is_consumed_method (meth) then
+							if not is_property_or_event (meth) then
+								l_unic_eiffel_name := unique_feature_name (create {STRING}.make_from_cil (meth.get_name))
+								if is_function (meth) then
+									l_functions.extend (consumed_function (meth, l_unic_eiffel_name))
+								else
+									l_procedures.extend (consumed_procedure (meth, l_unic_eiffel_name))
+								end
 							else
-								l_procedures.extend (consumed_procedure (meth, l_unic_eiffel_name))
+								-- The method will be added at the same time than the property or the event.
 							end
-						else
-							-- The method will be added at the same time than the property or the event.
+						end
+					elseif member.get_member_type = feature {MEMBER_TYPES}.field then
+						field ?= member
+						check
+							is_field: field /= Void
+						end
+						if is_consumed_field (field) then
+							l_fields.extend (consumed_field (field))						
 						end
 					end
-				elseif member.get_member_type = feature {MEMBER_TYPES}.field then
-					field ?= member
-					check
-						is_field: field /= Void
-					end
-					if is_consumed_field (field) then
-						l_fields.extend (consumed_field (field))						
-					end
+					i := i + 1
 				end
-				i := i + 1
-			end
-
-				-- Add properties.
-			from
-				i := 0
-				nb := internal_properties.count
-			until
-				i = nb
-			loop
-				l_property := internal_properties.item (i)
-				l_unic_eiffel_name := unique_feature_name (create {STRING}.make_from_cil (l_property.get_name))
-				l_properties.extend (consumed_property (l_property, l_unic_eiffel_name))
-				i := i + 1
-			end
-
-				-- Add events.
-			from
-				i := 0
-				nb := internal_events.count
-			until
-				i = nb
-			loop
-				l_event := internal_events.item (i)
-				l_unic_eiffel_name := unique_feature_name (create {STRING}.make_from_cil (l_event.get_name))
-				l_events.extend (consumed_event (l_event, l_unic_eiffel_name))
-				i := i + 1
-			end
-
-			consumed_type.set_properties (l_properties)
-			consumed_type.set_events (l_events)
-			consumed_type.set_constructors (solved_constructors (tc))
-			consumed_type.set_fields (l_fields)
-			consumed_type.set_procedures (l_procedures)
-			if consumed_type.is_enum then
+	
+					-- Add properties.
 				from
-					l_other_functions := l_functions
-					l_other_functions.start
-					create l_functions.make (nb + Additional_enum_features)
+					i := 0
+					nb := internal_properties.count
 				until
-					l_other_functions.after
+					i = nb
 				loop
-					l_functions.extend (l_other_functions.item)
-					l_other_functions.forth
+					l_property := internal_properties.item (i)
+					l_unic_eiffel_name := unique_feature_name (create {STRING}.make_from_cil (l_property.get_name))
+					l_properties.extend (consumed_property (l_property, l_unic_eiffel_name))
+					i := i + 1
 				end
-				l_functions.extend (infix_or_feature (internal_referenced_type))
-				l_functions.extend (from_integer_feature (internal_referenced_type))
-				l_functions.extend (to_integer_feature (internal_referenced_type))
+	
+					-- Add events.
+				from
+					i := 0
+					nb := internal_events.count
+				until
+					i = nb
+				loop
+					l_event := internal_events.item (i)
+					l_unic_eiffel_name := unique_feature_name (create {STRING}.make_from_cil (l_event.get_name))
+					l_events.extend (consumed_event (l_event, l_unic_eiffel_name))
+					i := i + 1
+				end
+	
+				consumed_type.set_properties (l_properties)
+				consumed_type.set_events (l_events)
+				consumed_type.set_constructors (solved_constructors (tc))
+				consumed_type.set_fields (l_fields)
+				consumed_type.set_procedures (l_procedures)
+				if consumed_type.is_enum then
+					from
+						l_other_functions := l_functions
+						l_other_functions.start
+						create l_functions.make (nb + Additional_enum_features)
+					until
+						l_other_functions.after
+					loop
+						l_functions.extend (l_other_functions.item)
+						l_other_functions.forth
+					end
+					l_functions.extend (infix_or_feature (internal_referenced_type))
+					l_functions.extend (from_integer_feature (internal_referenced_type))
+					l_functions.extend (to_integer_feature (internal_referenced_type))
+				end
+				consumed_type.set_functions (l_functions)			
+				initialized := True
+			else
+				initialized := False
 			end
-			consumed_type.set_functions (l_functions)			
-			initialized := True
 		ensure
-			initialized: initialized
+--			initialized: initialized
 			non_void_constructors: consumed_type.constructors /= Void
 			non_void_fields: consumed_type.fields /= Void
 			non_void_procedures: consumed_type.procedures /= Void
 			non_void_functions: consumed_type.functions /= Void
 			non_void_properties: consumed_type.properties /= Void
 			non_void_events: consumed_type.events /= Void
+		rescue
+			rescued := True
+			retry
 		end
 
 

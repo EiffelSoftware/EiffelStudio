@@ -109,9 +109,9 @@ feature -- Access
 --				create a_font_height.make (0) 
 --				a_font_height.from_c_substring (a_height_ptr, 1, 2)
 --			end
-			Result.set_height (a_font_height.to_integer)
-			Result.set_weight (font_imp.weight_from_string (font_imp.substring_dash (a_fullname, 3)))
-			Result.set_shape (font_imp.shape_from_string (font_imp.substring_dash (a_fullname, 4)))
+--			Result.set_height (a_font_height.to_integer)
+--			Result.set_weight (font_imp.weight_from_string (font_imp.substring_dash (a_fullname, 3)))
+--			Result.set_shape (font_imp.shape_from_string (font_imp.substring_dash (a_fullname, 4)))
 		end
 
 feature -- Element change
@@ -124,7 +124,7 @@ feature -- Element change
 			a_cs: C_STRING
 		do
 			font_imp ?= a_font.implementation
-			create a_cs.make (font_imp.system_name)
+--			create a_cs.make (font_imp.system_name)
 --			a_success_flag := feature {EV_GTK_EXTERNALS}.gtk_font_selection_dialog_set_font_name (
 --							c_object,
 --							a_cs.item

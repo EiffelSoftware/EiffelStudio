@@ -40,7 +40,7 @@ CPP=cl.exe
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /Z7 /Od /D "_DEBUG" /D "WORKBENCH" /YX /FD /c
+# ADD CPP /nologo /W3 /GX /Z7 /Od /I ".." /I "..\.." /I "..\..\ipc\app" /I "..\..\console" /D "_DEBUG" /D "WORKBENCH" /YX /FD /c
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -61,7 +61,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "traditional"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /W1 /GX /O2 /D "WORKBENCH" /YX /FD /c
+# ADD CPP /nologo /GX /O2 /D "WORKBENCH" /YX /FD /c
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -82,7 +82,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "mt"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MT /W1 /GX /O2 /D "WORKBENCH" /D "EIF_THREADS" /YX /FD /c
+# ADD CPP /nologo /MT /GX /O2 /D "WORKBENCH" /D "EIF_THREADS" /YX /FD /c
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo /o"mtwkbench.bsc"
@@ -103,7 +103,15 @@ SOURCE=..\argv.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\bexcept.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\bits.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\bmain.c
 # End Source File
 # Begin Source File
 
@@ -136,6 +144,14 @@ SOURCE=..\dir.c
 # Begin Source File
 
 SOURCE=..\dle.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\eif_cond_var.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\eif_once.c
 # End Source File
 # Begin Source File
 
@@ -180,6 +196,10 @@ SOURCE=..\internal.c
 # Begin Source File
 
 SOURCE=..\interp.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\lmalloc.c
 # End Source File
 # Begin Source File
 

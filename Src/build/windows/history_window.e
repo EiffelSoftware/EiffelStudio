@@ -118,7 +118,7 @@ feature -- Access
 			create arg.make (3)
 			a_row.add_select_command (Current, arg)
 			set_unsaved
-			select_item (list.rows)
+			select_item (list.count)
 		end
 
 feature -- Status report
@@ -200,7 +200,7 @@ feature {NONE} -- Command
 		end
 
 	redo is
-			-- Move forward in history list.
+			-- Moves forward in history list.
 		do
 			if not history_list.empty and then not history_list.islast then
 				history_list.forth
@@ -214,12 +214,46 @@ feature {NONE} -- Command
 			end
 		end
 
+	fake_redo is
+			-- Moves forward in history list without executing the command.
+		do
+			if not history_list.empty and then not history_list.islast then
+				history_list.forth
+				if history_list.item = last_command_saved then
+					set_saved
+				else
+					set_unsaved
+				end
+				select_item (history_list.index)
+			end
+		end
+
 	undo is
-			-- Move back in history list
+			-- Moves back in history list
 			-- and select current item.
 		do
 			if not history_list.empty and then history_list.index /= 0 then
 				item.undo
+				history_list.back
+				if (history_list.before and last_command_saved = Void) 
+				or (not history_list.before and then history_list.item = last_command_saved)
+				then
+					set_saved
+				else
+					set_unsaved
+				end
+				if history_list.before then
+					list.get_item (1).set_selected (False)
+				else
+					select_item (history_list.index)
+				end
+			end
+		end
+
+	fake_undo is
+			-- Moves backward in history list without executing the command.
+		do
+			if not history_list.empty and then history_list.index /= 0 then
 				history_list.back
 				if (history_list.before and last_command_saved = Void) 
 				or (not history_list.before and then history_list.item = last_command_saved)
@@ -312,14 +346,26 @@ feature {NONE} -- Implementation
 
 	can_undo: BOOLEAN is
 		do
-			Result := list.rows > 0 and not history_list. empty
+			Result := list.count > 0 and not history_list. empty
 									and then not history_list.before
 		end
 		
 	can_redo: BOOLEAN is
 		do
-			Result := list.rows > 0 and not history_list. empty
+			Result := list.count > 0 and not history_list. empty
 									and then not history_list.islast
+		end
+
+	next_undo_command: EV_UNDOABLE_COMMAND is
+			-- Returns the command that is next in the undo queue
+		do
+			Result := history_list.i_th (history_list.index - 1)
+		end
+
+	next_redo_command: EV_UNDOABLE_COMMAND is
+			-- Returns the command that is next in the redo queue
+		do
+			Result := history_list.i_th (history_list.index + 1)
 		end
 
 feature -- Interface

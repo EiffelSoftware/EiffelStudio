@@ -26,8 +26,7 @@ inherit
 		
 	GB_SHARED_PIXMAPS
 		rename
-			visual_studio_information as old_visual_studio_information,
-			implementation as pixmaps_implementation
+			visual_studio_information as old_visual_studio_information
 		export
 			{NONE} all
 		undefine

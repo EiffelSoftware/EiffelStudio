@@ -60,9 +60,17 @@ cdd %EIFFEL_SRC\tools\doc_builder\resources\xml\Documentation
 fullrd *.html
 fullrd *_links.xml
 fullrd *_short.xml
+
+remtrace Removing implementation clusters
 cd vision2\implementation
 fullrd mswin
 sed -e "s/^.*mswin.*$//g" index.xml >> new_index.xml
+move new_index.xml index.xml
+gvim.exe -c "set ff=dos" -c "wq" index.xml
+
+cd ..\contrib
+fullrd implementation
+sed -e "s/^.*implementation.*$//g" index.xml >> new_index.xml
 move new_index.xml index.xml
 gvim.exe -c "set ff=dos" -c "wq" index.xml
 

@@ -54,6 +54,7 @@ extern char *eretrieve();		/* Retrieve object store in file */
  * Utilities
  */
 extern int r_fides; 	        /* File descriptor use for retrieve */
+extern char r_fstoretype;	/* File storage type use for retrieve */
 extern char *rt_make();			/* Retrieve object graph */
 extern char *rt_nmake();		/* Retrieve `n' objects */
 extern struct htable *rt_table;	/* Table used for solving references */

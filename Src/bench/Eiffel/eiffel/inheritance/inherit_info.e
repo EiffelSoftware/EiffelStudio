@@ -4,7 +4,10 @@ class INHERIT_INFO
 
 inherit
 
-	COMPARABLE;
+	COMPARABLE
+		undefine
+			is_equal
+		end;
 	SHARED_WORKBENCH
 	
 feature 

@@ -5,6 +5,11 @@ class DEPEND_UNIT
 inherit
 
 	COMPARABLE
+		undefine
+			is_equal
+		end;
+
+	ANY
 
 creation
 

@@ -4,7 +4,8 @@ inherit
 
 	CL_TYPE_I
 		rename
-			is_void as cl_type_is_void
+			is_void as cl_type_is_void,
+			same_type as general_same_type
 		undefine
 			type_a
 		redefine
@@ -15,7 +16,10 @@ inherit
 		undefine
 			is_bit
 		end;
-	SHARED_C_LEVEL;
+	SHARED_C_LEVEL
+		rename
+			same_type as general_same_type
+		end
 
 feature
 

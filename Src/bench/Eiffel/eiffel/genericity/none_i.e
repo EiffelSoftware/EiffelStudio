@@ -8,7 +8,10 @@ inherit
 			description, sk_value, generate_cecil_value, hash_code,
 			cecil_value, append_clickable_signature
 		end;
-	SHARED_C_LEVEL;
+	SHARED_C_LEVEL
+		rename
+			same_type as general_same_type
+		end
 
 feature
 

@@ -12,6 +12,9 @@ inherit
 			byte_code_cast
 		end;
 	BYTE_CONST
+		rename
+			same_type as general_same_type
+		end
 
 feature
 

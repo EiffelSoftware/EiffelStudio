@@ -6,7 +6,10 @@ inherit
 
 	SHARED_WORKBENCH;
 	EIFFEL_ENV;
-	COMPARABLE;
+	COMPARABLE
+		undefine
+			is_equal
+		end;
 	WINDOWS;
 	STONABLE
 

@@ -10,6 +10,9 @@ inherit
 			can_be_inlined
 		end;
 	SHARED_BODY_ID
+		rename
+			same_type as general_same_type
+		end
 
 creation
 

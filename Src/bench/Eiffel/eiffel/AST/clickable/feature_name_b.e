@@ -10,6 +10,9 @@ inherit
 		end;
 	STONABLE;
 	COMPARABLE
+		undefine
+			is_equal
+		end
 
 feature -- Conveniences
 

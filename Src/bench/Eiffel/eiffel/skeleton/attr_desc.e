@@ -4,7 +4,10 @@ deferred class ATTR_DESC
 
 inherit
 
-	COMPARABLE;
+	COMPARABLE
+		undefine
+			is_equal
+		end;
 	SHARED_LEVEL;
 	SK_CONST;
 	

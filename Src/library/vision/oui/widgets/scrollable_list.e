@@ -782,7 +782,7 @@ feature -- Status setting
 			-- Set the selection to be multiple items
 		require
 			exists: not destroyed;
-			not_realized: not realized
+			not_realized: not realized or else not shown
 		do
 			implementation.set_multiple_selection
 		end
@@ -791,7 +791,7 @@ feature -- Status setting
 			-- Set the selection to be single items
 		require
 			exists: not destroyed;
-			not_realized: not realized
+			not_realized: not realized or else not shown
 		do
 			implementation.set_single_selection
 		end

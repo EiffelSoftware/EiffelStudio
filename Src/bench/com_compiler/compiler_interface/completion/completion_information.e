@@ -200,16 +200,16 @@ feature -- Access
         local
             def_parser: DEFINITION_PARSER
         do
-            create def_parser.make
-            def_parser.parse (source_text, source_row, source_col)
-            if def_parser.parse_successful then
-                is_class_expr.set_item (def_parser.is_class)
-                expr.put (def_parser.parsed_result)
-                feat.put (def_parser.parsed_result_feature)
-            end
+--            create def_parser.make
+--            def_parser.parse (source_text, source_row, source_col)
+--            if def_parser.parse_successful then
+--                is_class_expr.set_item (def_parser.is_class)
+--                expr.put (def_parser.parsed_result)
+--                feat.put (def_parser.parsed_result_feature)
+--            end
         end
 
-    find_definition (class_text, target_file_name: STRING; target_row, target_col: INTEGER; source_file_name: CELL [STRING]; source_row: INTEGER_REF) is
+    find_definition (class_text, target_file_name: STRING; target_row, target_col: INTEGER): IEIFFEL_DEFINITION_RESULT_INTERFACE is
             -- Find `target' file name and location
         require else
             non_void_class_text: class_text /= Void
@@ -218,34 +218,46 @@ feature -- Access
             valid_target_file_name: not target_file_name.is_empty
             target_row_big_enough: target_row >= 1
             target_col_big_enough: target_col >= 1
-            non_void_source_file_name: source_file_name /= Void
-            source_file_name_is_empty: source_file_name.item.is_empty
-            non_void_source_row: source_row /= Void
         local
             def_parser: DEFINITION_PARSER
+            def_parsed_result: DEFINITION_PARSED_RESULT
  			cf: COMPLETION_FEATURE
             ecom_var: ECOM_VARIANT
+            class_file_name: FILE_NAME
+            class_i: CLASS_I
+            feature_i: FEATURE_I
         do
-            create def_parser.make
-            def_parser.parse (class_text, target_row, target_col)
-            if def_parser.parse_successful then
-                if def_parser.is_class then
-                    source_file_name.put (class_from_name (def_parser.parsed_result).file_name)
-                    source_row.set_item (1)
-                elseif def_parser.is_feature_call then
-                    -- creates empty arguments and init feature
+            create def_parser
+            def_parsed_result := def_parser.parse (class_text, target_row, target_col)
+            if def_parsed_result /= Void and then def_parsed_result.parse_successful then
+            	if def_parsed_result.parsed_result_is_class then
+            		class_file_name := class_from_name (def_parsed_result.parsed_result_string).file_name
+            		if class_file_name /= Void then
+						class_i := Eiffel_universe.class_with_file_name (class_file_name);
+						if class_i /= Void then
+							create {DEFINITION_SEARCH_RESULT} Result.make (class_i)
+						end
+            		end
+            	else
                     create ecom_var.make
                     ecom_var.set_string_array (create {ECOM_ARRAY [STRING]}.make_empty)
-                    initialize_feature (def_parser.parsed_result_feature, ecom_var, ecom_var, def_parser.parsed_result_return_type, feature {ECOM_EIF_FEATURE_TYPES_ENUM}.eif_feature_types_function, target_file_name, def_parser.parsed_result_feature_location)
-                    cf := internal_target_feature (def_parser.parsed_result, def_parser.parsed_result_feature, target_file_name, false)
+                    initialize_feature (def_parsed_result.parsed_result_containing_feature, ecom_var, ecom_var, def_parsed_result.parsed_result_containing_feature_return_type, feature {ECOM_EIF_FEATURE_TYPES_ENUM}.eif_feature_types_function, target_file_name, def_parsed_result.parsed_result_containing_feature_row)
+                    cf := internal_target_feature (def_parsed_result.parsed_result_string, def_parsed_result.parsed_result_containing_feature, target_file_name, false)
                     if cf /= Void then
-                        cf.feature_location (source_file_name, source_row)
+                    	create class_file_name.make_from_string (cf.file_name)
+						class_i := eiffel_universe.class_with_file_name (class_file_name)
+						if class_i /= Void and then class_i.compiled_class /= Void then
+							feature_i := class_i.compiled_class.feature_named (cf.feature_name)
+							if feature_i /= Void then
+								create {DEFINITION_SEARCH_RESULT_FEATURE} Result.make (class_i, feature_i)
+							end
+						end
                     end
-                end
+				end
             end
         end
         
-    find_inherited_definition (class_text, a_class_name: STRING; target_row, target_col: INTEGER; source_file_name: CELL [STRING]; source_row: INTEGER_REF) is
+    find_inherited_definition (class_text, a_class_name: STRING; target_row, target_col: INTEGER): IEIFFEL_DEFINITION_RESULT_INTERFACE is
             -- find definition for feature in inheritance clause
         require else
             non_void_class_text: class_text /= Void
@@ -254,49 +266,61 @@ feature -- Access
             valid_class_name: not a_class_name.is_empty
             target_row_big_enough: target_row >= 1
             target_col_big_enough: target_col >= 1
-            non_void_source_file_name: source_file_name /= Void
-            source_file_name_is_empty: source_file_name.item.is_empty
-            non_void_source_row: source_row /= Void
         local
-            retried: BOOLEAN
-            classes: LIST [CLASS_I]
-            ci: CLASS_I
-             def_parser: DEFINITION_PARSER
-            feat_name: STRING
-            fd: FEATURE_DESCRIPTOR
+			retried: BOOLEAN
+			classes: LIST [CLASS_I]
+			class_i: CLASS_I
+			feature_i: FEATURE_I
+			class_file_name: FILE_NAME
+			cf: COMPLETION_FEATURE
+			def_parser: DEFINITION_PARSER
+			def_parsed_result: DEFINITION_PARSED_RESULT
         do
             if not retried then
-                classes := Eiffel_universe.classes_with_name (a_class_name)
+                classes := eiffel_universe.classes_with_name (a_class_name)
                 if classes /= Void then
                     from 
                         classes.start
                     until
-                        classes.after or ci /= Void
+                        classes.after or class_i /= Void
                     loop
                         if classes.item.is_compiled then
-                            ci := classes.item
+                            class_i := classes.item
                         end
                         classes.forth
                     end
                     -- If inherited class is uncompiled then we can take first uncompiled class
-                    if classes.count = 1 and then ci = Void then
-                        ci := classes.first
+                    if classes.count = 1 and then class_i = Void then
+                        class_i := classes.first
                     end
-                    if ci /= Void then
-                        create def_parser.make
-                        feat_name := def_parser.extract_feature_name_from_text (class_text, target_row, target_col)
-                        if feat_name /= Void and then not feat_name.is_empty then
-                            fd := internal_target_feature (feat_name, "default_create", ci.file_name, False)
-                            if fd /= Void then
-                                fd.feature_location (source_file_name, source_row)
-                            else
-                                -- Check if feature name is actually a class name
-                                classes := Eiffel_universe.classes_with_name (feat_name)
-                                if classes.count >= 1 then
-                                    source_row.set_item (1)
-                                    source_file_name.put (classes.i_th (1).file_name)
-                                end
-                            end
+                    if class_i /= Void then
+                        create def_parser
+                        def_parsed_result := def_parser.extract_feature_name_from_text (class_text, target_row, target_col)
+                        if def_parsed_result /= Void and then def_parsed_result.parse_successful then
+                        	if def_parsed_result.parsed_result_is_class then
+                        		class_i := class_from_name (def_parsed_result.parsed_result_string)
+                        		if class_i /= Void then
+				            		class_file_name := class_i.file_name
+				            		if class_file_name /= Void then
+										class_i := Eiffel_universe.class_with_file_name (class_file_name);
+										if class_i /= Void then
+											create {DEFINITION_SEARCH_RESULT} Result.make (class_i)
+										end
+				            		end                        			
+                        		end
+							else
+								cf := internal_target_feature (def_parsed_result.parsed_result_string, "default_create", class_i.file_name, false)
+								if cf /= Void then
+			                    	create class_file_name.make_from_string (cf.file_name)
+									class_i := eiffel_universe.class_with_file_name (class_file_name)
+									if class_i /= Void and then class_i.compiled_class /= Void then
+										feature_i := class_i.compiled_class.feature_named (cf.feature_name)
+										if feature_i /= Void then
+											create {DEFINITION_SEARCH_RESULT_FEATURE} Result.make (class_i, feature_i)
+										end
+									end									
+								end
+                        	end
                         end
                     end
                 end
@@ -305,7 +329,7 @@ feature -- Access
             retried := True
             retry
         end
-
+        
 feature -- Basic Operations
 
     setup_rename_table (var_sources: ECOM_VARIANT; var_targets: ECOM_VARIANT) is

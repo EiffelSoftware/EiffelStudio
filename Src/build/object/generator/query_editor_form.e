@@ -28,6 +28,7 @@ feature -- Creation
 			-- Create current form.
 		do
 			{FORM} Precursor (a_name, a_parent)
+			print (realized)
 			create_interface
 		end
 
@@ -86,6 +87,14 @@ feature -- Interface generation
 		deferred
 		end
 
+feature -- Command generation
+
+	generate_eiffel_text (parent_perm_wind: STRING): STRING is
+			-- Generate Eiffel text corresponding to the setting
+			-- of the query correpsonding to `query'.
+		deferred
+		end
+
 feature {NONE} -- Interface generation
 
 	display_new_context (a_context: CONTEXT) is
@@ -95,6 +104,47 @@ feature {NONE} -- Interface generation
 		do
 			a_context.realize
 			a_context.widget.manage
+		end
+
+feature
+
+	is_real: BOOLEAN is
+			-- Is the type of the query is real?
+		do
+			Result := query.query_type.is_equal ("REAL")
+		end
+
+	is_boolean: BOOLEAN is
+			-- Is the type of the query is boolean?
+		do
+			Result := query.query_type.is_equal ("BOOLEAN")
+		end
+
+	is_integer: BOOLEAN is
+			-- Is the type of the query is integer?
+		do
+			Result := query.query_type.is_equal ("INTEGER")
+		end
+
+	is_double: BOOLEAN is
+			-- Is the type of the query is double?
+		do
+			Result := query.query_type.is_equal ("DOUBLE")
+		end
+
+	extension_to_add: STRING is
+			-- Extension to add to match types.
+		do
+			!! Result.make (0)
+			if is_boolean then
+				Result.append (".to_boolean")
+			elseif is_double then
+				Result.append (".to_double")
+			elseif is_integer then
+				Result.append (".to_integer")
+			elseif is_real then
+				Result.append (".to_real")
+			end
 		end
 
 end -- class QUERY_EDITOR_FORM

@@ -24,9 +24,12 @@ creation
 
 feature --Access
 
-	label_b, fixed_b: EV_BUTTON
+	label_b, fixed_b, box_b: EV_BUTTON
 	box: EV_VERTICAL_BOX
 			-- Push buttons
+	
+	current_demo_window: DEMO_WINDOW
+	
 feature -- Initialization
 	
 	make is
@@ -35,6 +38,7 @@ feature -- Initialization
 			!!box.make (Current)
 			!!label_b.make (box)
 			!!fixed_b.make (box)
+			!!box_b.make (box)
 			set_values
 			set_commands
 		end
@@ -46,6 +50,7 @@ feature -- Status setting
 			set_title ("Test all widgets")
 			label_b.set_text ("Label")
 			fixed_b.set_text ("Fixed")
+			box_b.set_text ("Box")
 		end
 
 
@@ -53,6 +58,7 @@ feature -- Status setting
 		local
 			c1: LABEL_DEMO_WINDOW
 			c2: FIXED_DEMO_WINDOW
+			c3: BOX_DEMO_WINDOW
 			e: EV_EVENT
 			a: EV_ARGUMENT1 [STRING]
 		do
@@ -60,8 +66,10 @@ feature -- Status setting
 			!!a.make ("sss")
 			!!c1.make
 			!!c2.make
+			!!c3.make
 			label_b.add_command (e, c1, a)
 			fixed_b.add_command (e, c2, a)
+			box_b.add_command (e, c3, a)
 		end
 end
 --|----------------------------------------------------------------

@@ -21,24 +21,22 @@ creation
 
 feature -- Access
 
-	main_widget: EV_WIDGET is
+	main_widget: EV_FIXED is
 		once
-			!EV_FIXED!Result.make (Current)
+			!!Result.make (Current)
 		end
 
 feature -- Access
 
 	button1: EV_BUTTON
 	button2: EV_BUTTON
-	fixed: EV_FIXED
 			-- Push buttons
 feature -- Status setting
 	
 	set_widgets is
 		do
-			!!fixed.make (Current)
-			!!button1.make (fixed)
-			!!button2.make (fixed)
+			!!button1.make (main_widget)
+			!!button2.make (main_widget)
 			set_values
 --			set_commands
 		end

@@ -1,63 +1,83 @@
 indexing
 
 	description: 
-	"DEMO_WINDOW, base class for all demo windows. Belongs to EiffelVision example test_all_widgets."
+	"ACTIONS_WINDOW, base class for all actions windows. Belongs to EiffelVision example test_all_widgets."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
-deferred class 
-	DEMO_WINDOW
-
-inherit
-
-	EV_WINDOW
-		redefine	
-			make
-		end
+class 
+	ACTIONS_WINDOW
 	
-	EV_COMMAND
-
-feature --Access
-
-	main_widget: EV_WIDGET is
-		deferred
-		end
+creation
 	
-	actions_window: ACTIONS_WINDOW is
-		once
-			!ACTIONS_WINDOW!Result.make (main_widget)
-		end
+	make
+
+feature -- Access
 	
+	window: EV_WINDOW
+	
+	box: EV_HORIZONTAL_BOX 
+	show_button, hide_button: EV_BUTTON
+	
+	widget: EV_WIDGET
+
 feature -- Initialization
 	
-	make is
+	make (main_widget: EV_WIDGET) is
 		do
-			Precursor
+			widget := main_widget
 			set_widgets
+			set_values
+			set_commands
 		end
 	
 feature -- Status setting
         
 	set_widgets is
-                deferred
+			-- Create the widgets inside the window
+                do
+			!!window.make
+			!!box.make (window)
+			!!show_button.make (box)
+			!!hide_button.make (box)
                 end
 	
-	-- set_values is
--- 		deferred
--- 		end
+	set_values is
+ 		do
+			show_button.set_text ("Show")
+			hide_button.set_text ("Hide")
+ 		end
 
--- 	set_commands is
--- 		deferred
--- 		end
+ 	set_commands is
+		local
+			hide_c: HIDE_COMMAND
+			show_c: SHOW_COMMAND
+			e: EV_EVENT
+			a: EV_ARGUMENT1 [EV_WIDGET]
+ 		do
+			!!hide_c
+			!!show_c
+			!!e.make ("clicked")
+			!!a.make (widget)
+			show_button.add_command (e, show_c, a)
+			hide_button.add_command (e, hide_c, a)
+ 		end
+	
+feature
+	
+	show is
+			-- show the window
+		do
+			window.show
+		end
 	
 feature -- Command executing
 	
 	execute (argument: EV_ARGUMENT1[STRING]) is
 		do
 			show
-			actions_window.show
 		end
 end
 --|----------------------------------------------------------------

@@ -1,65 +1,72 @@
 indexing
 
 	description: 
-	"DEMO_WINDOW, base class for all demo windows. Belongs to EiffelVision example test_all_widgets."
+	"BOX_DEMO_WINDOW, demo window to test box widget. Belongs to EiffelVision example."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
-deferred class 
-	DEMO_WINDOW
+class 
+	BOX_DEMO_WINDOW
 
 inherit
 
-	EV_WINDOW
-		redefine	
-			make
-		end
+	DEMO_WINDOW
 	
-	EV_COMMAND
 
-feature --Access
+creation
 
-	main_widget: EV_WIDGET is
-		deferred
-		end
-	
-	actions_window: ACTIONS_WINDOW is
+	make
+
+feature -- Access
+
+	main_widget: EV_HORIZONTAL_BOX is
 		once
-			!ACTIONS_WINDOW!Result.make (main_widget)
+			!EV_HORIZONTAL_BOX!Result.make (Current)
 		end
 	
-feature -- Initialization
+feature -- Access
+
+	button1: EV_BUTTON
+	button2: EV_BUTTON
+	button3: EV_BUTTON
+			-- Push buttons
+feature -- Status setting
 	
-	make is
+	set_widgets is
 		do
-			Precursor
-			set_widgets
+			!!button1.make (main_widget)
+			!!button2.make (main_widget)
+			!!button3.make (main_widget)
+			set_values
+--			set_commands
 		end
 	
 feature -- Status setting
-        
-	set_widgets is
-                deferred
-                end
 	
-	-- set_values is
--- 		deferred
--- 		end
-
--- 	set_commands is
--- 		deferred
--- 		end
-	
-feature -- Command executing
-	
-	execute (argument: EV_ARGUMENT1[STRING]) is
+	set_values is
 		do
-			show
-			actions_window.show
+			set_title ("Box demo")
+			button1.set_text ("Press me")
+			button2.set_text ("Me too!")
+			button3.set_text ("Me too!")
+		end
+
+
+	set_commands is
+		local
+		--	c: HELLO_COMMAND
+			e: EV_EVENT
+			a: EV_ARGUMENT1 [STRING]
+		do
+		--	!!e.make ("clicked")
+		--	!!a.make (button.text)
+		--	!!c
+		--	button.add_command (e, c, a)
 		end
 end
+
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.

@@ -22,12 +22,9 @@ extern "C" {
 
 #ifdef EIF_WIN32
 #include <windows.h>
+#include <direct.h>	/* In order to use chdir and getcwd */
 #else
-#include <unistd.h>
-#endif
-
-#ifndef MAX_PATH
-#define MAX_PATH 255
+#include <unistd.h>	/* In order to use chdir and getcwd */
 #endif
 
 /*

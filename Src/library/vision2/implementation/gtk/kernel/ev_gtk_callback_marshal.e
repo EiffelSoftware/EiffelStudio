@@ -335,7 +335,7 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 			check
 				a_window_imp_not_void: a_window_imp /= Void
 			end
-			a_window_imp.close_request_actions.call (empty_tuple)
+			a_window_imp.call_close_request_actions
 		end		
 	
 	on_tree_event_intermediary (a_c_object: POINTER; a_event_number: INTEGER; a_tree_item: POINTER) is

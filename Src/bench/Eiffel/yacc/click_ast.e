@@ -8,7 +8,10 @@ indexing
 class
 	CLICK_AST 
 
-feature {AST_FACTORY, LACE_AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (n: like node; s, e: INTEGER) is
 			-- Create a new clickable element for `n'.

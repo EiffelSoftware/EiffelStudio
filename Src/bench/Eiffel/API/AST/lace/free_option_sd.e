@@ -454,8 +454,12 @@ feature {COMPILER_EXPORTER}
 
 				when shared_library_definition then
 					if value.is_name then
-						string_value := value.value;
-						System.set_dynamic_def_file (string_value)
+							-- If the release doesn't generate DLL's,
+							-- we do not take the option into account in the Ace.
+						if has_dll_generation then
+							string_value := value.value;
+							System.set_dynamic_def_file (string_value)
+						end
 					else
 						error_found := True;
 					end;

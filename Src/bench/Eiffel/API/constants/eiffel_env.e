@@ -120,10 +120,16 @@ feature -- Access: file name
 			end
 		end
 
-	Default_class_file: FILE_NAME is
+	Templates_path: FILE_NAME is
+			-- Location of templates.
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
 			Result.extend_from_array (<<"studio", "help", "defaults", Eiffel_platform>>)
+		end
+
+	Default_class_file: FILE_NAME is
+		once
+			Result := clone (Templates_path)
 			Result.set_file_name (Default_class_filename)
 		end
 
@@ -293,5 +299,26 @@ feature -- Status
 		once
 			Result := Platform_constants.is_windows and then Eiffel_c_compiler.is_equal ("bcb")
 		end
-		
+
+
+feature -- Version limitation
+
+	has_case: BOOLEAN is True
+			-- Does this version have the diagram tool?
+
+	has_metrics: BOOLEAN is True
+			-- Does this version have the metrics?
+
+	has_profiler: BOOLEAN is True
+			-- Does this version have the profiler?
+
+	has_documentation_generation: BOOLEAN is True
+			-- Does this version have the documentation generation?
+
+	has_xmi_generation: BOOLEAN is True
+			-- Does this version have the XMI generation?
+
+	has_dll_generation: BOOLEAN is True
+			-- Does this version have the DLL generation?
+
 end -- class EIFFEL_ENV

@@ -19,9 +19,11 @@ extern "C" {
 
 EIF_REFERENCE generize (EIF_OBJECT g_item);
 
-typedef EIF_INTEGER (* EIF_WNDPROC) (
 #ifndef EIF_IL_DLL
+typedef EIF_INTEGER (* EIF_WNDPROC) (
 	EIF_OBJECT,     /* WEL_DISPATCHER Eiffel object */
+#else
+typedef EIF_INTEGER (__stdcall* EIF_WNDPROC) (
 #endif
 	 EIF_POINTER, /* hwnd */
 	 EIF_INTEGER, /* message */
@@ -30,9 +32,11 @@ typedef EIF_INTEGER (* EIF_WNDPROC) (
 	 );
 /* Eiffel routine signature for `window_procedure' */
 
-typedef EIF_INTEGER (* EIF_DLGPROC) (
 #ifndef EIF_IL_DLL
+typedef EIF_INTEGER (* EIF_DLGPROC) (
 	EIF_OBJECT,     /* WEL_DISPATCHER Eiffel object */
+#else
+typedef EIF_INTEGER (__stdcall* EIF_DLGPROC) (
 #endif
 	 EIF_POINTER, /* hwnd */
 	 EIF_INTEGER, /* message */

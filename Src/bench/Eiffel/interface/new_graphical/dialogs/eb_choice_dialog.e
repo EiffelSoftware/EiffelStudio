@@ -8,8 +8,10 @@ class
 	EB_CHOICE_DIALOG
 
 inherit
-
 	EV_WINDOW
+		redefine
+			show
+		end
 
 	EV_COMMAND
 		undefine
@@ -22,11 +24,10 @@ inherit
 		end
 
 create
-
 	make_default
 
 feature -- Initialization
-
+		
 	make_default (ctf: like callback) is
 			-- Make a choice window, and set a callback procedure.
 		local
@@ -37,27 +38,26 @@ feature -- Initialization
 			create list
 			list.hide_title_row
 			list.pointer_button_release_actions.extend (agent on_select)
-
 			list.key_press_actions.extend (agent key_actions)
-
-			create exit_b.make_with_text_and_action (Interface_names.b_Cancel, agent destroy_dialog)
 
 			create vb
 			vb.set_padding (3)
---			vb.set_border_width (2)
 			vb.extend (list)
---			vb.extend (exit_b)
---			vb.disable_item_expand (exit_b)		
 
 			default_create
 			set_title ("Choice Window")
 
 			extend (vb)
---			set_default_push_button (exit_b)
---			set_default_cancel_button (exit_b)
 
 			show_actions.extend (agent on_shown)
+		end
+
+feature --
+
+	show is
+		do
 			enable_user_resize
+			Precursor {EV_WINDOW}
 		end
 
 feature
@@ -97,27 +97,12 @@ feature
 				name_list.forth
 			end
 			list.resize_column_to_content (1)
---			if list.count >= 15 then
---				list.set_visible_item_count (15)
---			elseif list.count > 0 then
---				list.set_visible_item_count (list.count)
---			else
---				list.set_visible_item_count (1)
---			end
 
 				-- We allow bounds for the list width of 70 and 150 pixels.
 			list.set_minimum_width ((List_maximum_width.min (new_width * char_width + 10)).max (List_minimum_width))
 				-- We allow bounds for the list height of 50 and 300 pixels.
 			list.set_minimum_height (((List_maximum_height).min (name_list.count * char_height + 40)).max (List_minimum_height))
---			display
 		end
-
---	update_position is
---		do
---			if shown then
---				display
---			end
---		end
 
 	execute (it: EV_MULTI_COLUMN_LIST_ROW) is
 			-- Recall the caller command.
@@ -147,8 +132,6 @@ feature
 			if not list.is_empty then
 				list.first.enable_select
 			end
---			exit_b.focus_out_actions.wipe_out
---			exit_b.focus_out_actions.extend (~one_lost_focus)
 			list.focus_out_actions.wipe_out
 			list.focus_out_actions.extend (agent one_lost_focus)
 			focus_out_actions.wipe_out
@@ -160,9 +143,6 @@ feature {NONE} -- Properties
 feature {NONE} -- Properties
 
 	list: EV_MULTI_COLUMN_LIST
-
-	exit_b: EV_BUTTON	
-			-- Exit button
 
 	callback: PROCEDURE [ANY, TUPLE [INTEGER]]
 			-- Command who calls `Current'
@@ -208,7 +188,6 @@ feature {NONE} -- Implementation
 			-- If no widget has the focus, destroy `Current'.
 		do
 			if
-				not exit_b.has_focus and then
 				not list.has_focus and then
 				not is_destroyed and then
 				not has_focus
@@ -224,35 +203,6 @@ feature {NONE} -- Implementation
 				execute (list.selected_item)
 			end
 		end
-
---	display is
---			-- Display the choice window in order to be seen 
---			-- on the screen.
---		local
---			x1, y1: INTEGER
---			a_widget: EV_WIDGET
---		do
---			if map_widget /= Void then
---				x1 := map_widget.real_x
---				y1 := map_widget.real_y
---			else
---				a_widget := parent
---              x1 := a_widget.real_x + (a_widget.width - width) // 2
---		y1 := a_widget.real_y + (height // 2)
---			end
---			set_x_y (x1, y1)
---			fd_popup
---			if real_x + width > screen.width then
---				set_x (screen.width - width)
---			elseif real_x < 0 then
---				set_x (0)
---			end
---			if real_y + height > screen.height then
---				set_y (screen.height - height)
---			elseif real_y < 0 then
---				set_y (0)
---			end
---		end
 
 	List_minimum_width: INTEGER is 70
 	List_maximum_width: INTEGER is 300

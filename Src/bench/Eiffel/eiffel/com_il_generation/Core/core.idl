@@ -3,7 +3,7 @@
 // typelib filename: EiffelCompiler.tlb
 
 [
-  uuid(C947355E-AE58-3607-957C-7565E8CC09A1),
+  uuid(FEA1D8C7-0C0B-352D-9A59-1E2E768EA771),
   version(5.1)
 ]
 library EiffelCompiler
@@ -16,7 +16,7 @@ library EiffelCompiler
 
     [
       odl,
-      uuid(9F1CA01D-E32F-3689-9816-79AF3202178A),
+      uuid(851B57F7-E416-36E2-AFF4-84FC9F1F579E),
       version(1.0),
       oleautomation
     ]
@@ -85,6 +85,7 @@ library EiffelCompiler
                         [in] long TypeID);
         HRESULT _stdcall CreateFeatureDescription();
         HRESULT _stdcall DefineEntryPoint(
+                        [in] long CreationTypeID, 
                         [in] long TypeID, 
                         [in] long FeatureID);
         HRESULT _stdcall LastError([out, retval] BSTR* pRetVal);
@@ -265,7 +266,7 @@ library EiffelCompiler
     };
 
     [
-      uuid(9DAF83A1-15D7-3A80-AB8F-0E034F479C3F),
+      uuid(CB46CF82-135C-371F-B9AF-38DA1E58A64D),
       version(1.0)
     ]
     coclass Core {

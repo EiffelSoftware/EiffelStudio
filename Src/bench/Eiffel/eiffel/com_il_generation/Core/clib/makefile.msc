@@ -3,8 +3,8 @@
 MV = copy
 CC = cl
 OUTPUT_CMD = -Fo
-CFLAGS = -Ox -D_WIN32_DCOM -c -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(ISE_EIFFEL)\library\com\spec\windows\include 
-MTCFLAGS = -Ox -MT -DEIF_THREADS -D_WIN32_DCOM -c -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(ISE_EIFFEL)\library\com\spec\windows\include 
+CFLAGS = -Zi -D_WIN32_DCOM -c -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(ISE_EIFFEL)\library\com\spec\windows\include 
+MTCFLAGS = -Zi -MT -DEIF_THREADS -D_WIN32_DCOM -c -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(ISE_EIFFEL)\library\com\spec\windows\include 
 
 OBJ = ecom_eiffelcompiler_core.obj \
 ecom_gce_core_c.obj \

@@ -192,7 +192,7 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP DefineEntryPoint(  /* [in] */ LONG type_id, /* [in] */ LONG feature_id ) = 0;
+	virtual STDMETHODIMP DefineEntryPoint(  /* [in] */ LONG creation_type_id, /* [in] */ LONG type_id, /* [in] */ LONG feature_id ) = 0;
 
 
 	/*-----------------------------------------------------------

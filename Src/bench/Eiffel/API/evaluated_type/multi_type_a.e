@@ -21,21 +21,25 @@ creation
 
 	make
 	
-feature 
+feature -- Property
 
 	last_type: GEN_TYPE_A;
 			-- Last type conforming to Current
-
-	make (n: INTEGER) is
-			-- Initialization
-		do
-			array_make (1, n);
-		end;
 
 	is_multi_type: BOOLEAN is
 		do
 			Result := True
 		end;
+
+	associated_eclass: E_CLASS is
+			-- Associated eiffel class
+		once
+			Result := associated_class.e_class;
+				--- **** TO BE FIXED System should not
+				-- have COMPILED class but E_CLASS
+		end;
+
+feature -- Output
 
 	dump: STRING is
 			-- Dump trace
@@ -75,6 +79,14 @@ feature
 				i := i + 1;
 			end;
 			a_clickable.put_string (">>");
+		end;
+
+feature 
+
+	make (n: INTEGER) is
+			-- Initialization
+		do
+			array_make (1, n);
 		end;
 
 	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is

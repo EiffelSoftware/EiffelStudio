@@ -9,15 +9,32 @@ inherit
 			internal_conform_to as old_conform_to
 		redefine
 			is_double, associated_class, same_as,
-			is_numeric, heaviest
+			is_numeric, heaviest, associated_eclass
 		end;
 	BASIC_A
 		redefine
 			is_double, associated_class, same_as,
-			is_numeric, heaviest, internal_conform_to
+			is_numeric, heaviest, internal_conform_to,
+			associated_eclass
 		select
 			internal_conform_to
 		end
+
+feature -- Access
+
+	is_double: BOOLEAN is
+			-- Is the current type a double type ?
+		do
+			Result := True;
+		end;
+
+	associated_eclass: E_CLASS is
+			-- Associated eiffel class
+		once
+			Result := associated_class.e_class;
+				--- **** TO BE FIXED System should not
+				-- have COMPILED class but E_CLASS
+		end;
 
 feature
 
@@ -30,12 +47,6 @@ feature
 				Result := old_conform_to (other, False) or else
 				other.actual_type.is_real
 			end;
-		end;
-
-	is_double: BOOLEAN is
-			-- Is the current type a double type ?
-		do
-			Result := True;
 		end;
 
 	is_numeric: BOOLEAN is

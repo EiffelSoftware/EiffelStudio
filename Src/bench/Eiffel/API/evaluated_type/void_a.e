@@ -9,7 +9,7 @@ inherit
 			is_void, same_as
 		end
 
-feature
+feature -- Property
 
 	is_void: BOOLEAN is
 			-- Is the current actual type a void type ?
@@ -17,11 +17,14 @@ feature
 			Result := True;
 		end; -- is_void
 
-	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
-			-- Does `other' conform to Current ?
+feature -- Access
+
+	associated_eclass: E_CLASS is
+			-- No associated calss
 		do
-			Result := other.actual_type.is_void;
 		end;
+
+feature -- Output
 
 	dump: STRING is "Void";
 			-- Dumped trace
@@ -29,6 +32,14 @@ feature
 	append_clickable_signature (a_clickable: CLICK_WINDOW) is
 		do
 			a_clickable.put_string ("Void");
+		end;
+
+feature 
+
+	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
+			-- Does `other' conform to Current ?
+		do
+			Result := other.actual_type.is_void;
 		end;
 
 	type_i: VOID_I is

@@ -9,15 +9,33 @@ inherit
 			internal_conform_to as old_conform_to
 		redefine
 			is_integer, associated_class,
-			same_as, is_numeric, heaviest
+			same_as, is_numeric, heaviest,
+			associated_eclass
 		end;
 	BASIC_A
 		redefine
 			is_integer, associated_class,
-			same_as, is_numeric, heaviest, internal_conform_to
+			same_as, is_numeric, heaviest, internal_conform_to,
+			associated_eclass
 		select
 			internal_conform_to
 		end
+
+feature -- Access
+
+	is_integer: BOOLEAN is
+			-- Is the current type an integer type ?
+		do
+			Result := True;
+		end;
+
+	associated_eclass: E_CLASS is
+			-- Associated eiffel class
+		once
+			Result := associated_class.e_class;
+				--- **** TO BE FIXED System should not
+				-- have COMPILED class but E_CLASS
+		end;
 
 feature
 
@@ -33,12 +51,6 @@ feature
 							or else
 							other.is_double;
 			end;
-		end;
-
-	is_integer: BOOLEAN is
-			-- Is the current type an integer type ?
-		do
-			Result := True;
 		end;
 
 	is_numeric: BOOLEAN is

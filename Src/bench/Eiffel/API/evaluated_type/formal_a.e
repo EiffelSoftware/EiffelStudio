@@ -17,13 +17,36 @@ inherit
 			format
 		end;
 
-feature
+feature -- Access
 
 	is_formal: BOOLEAN is
 			-- Is the current actual type a formal generic type ?
 		do
 			Result := True;
 		end;
+
+	associated_eclass: E_CLASS is
+			-- No associated class
+		do
+		end; 
+
+feature -- Output
+
+	dump: STRING is
+			-- Dumped trace
+		do
+			!!Result.make (10);
+			Result.append ("Generic #");
+			Result.append_integer (base_type);
+		end;
+
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		do
+			a_clickable.put_string ("Generic #");
+			a_clickable.put_int (base_type);
+		end;
+
+feature 
 
 	has_formal_generic: BOOLEAN is
 			-- Does the current actual type have formal generic type ?
@@ -60,20 +83,6 @@ feature
 				other_formal ?= other;
 				Result := base_type = other_formal.base_type;
 			end;
-		end;
-
-	dump: STRING is
-			-- Dumped trace
-		do
-			!!Result.make (10);
-			Result.append ("Generic #");
-			Result.append_integer (base_type);
-		end;
-
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
-		do
-			a_clickable.put_string ("Generic #");
-			a_clickable.put_int (base_type);
 		end;
 
 	associated_class: CLASS_C is

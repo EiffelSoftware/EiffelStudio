@@ -12,19 +12,20 @@ inherit
 		redefine
 			is_solved, same_as, format
 		end;
+	SHARED_EIFFEL_PROJECT;
 	SHARED_WORKBENCH;
 	SHARED_CONSTRAINT_ERROR;
 	SHARED_TYPE_I;
 
-feature
+feature -- Properties
 
 	base_type: INTEGER;
 			-- Base type of the actual type
 
-	set_base_type (i: INTEGER) is
-			-- Assign `i' tp `base_type'.
+	evaluated_type: TYPE_A is
+			-- Evaluated type (for like types)	
 		do
-			base_type := i;
+			Result := actual_type
 		end;
 
 	generics: ARRAY [TYPE_A] is
@@ -33,76 +34,16 @@ feature
 			-- Void
 		end;
 
-	check_const_gen_conformance (target_type: TYPE_A; a_class: CLASS_C) is
-		local
-			vtgg5: VTGG5;
-		do
-			if not conform_to (target_type) then
-				!!vtgg5
-				vtgg5.set_class (a_class);
-				vtgg5.set_actual_type (Current);
-				vtgg5.set_constraint_type (target_type);
-				Error_handler.insert_error (vtgg5);
-			end;
-		end;
-
-	check_conformance (target_name: STRING; target_type: TYPE_A) is
-			-- Check if Current conforms to `other'.
-			-- If not, insert error into Error handler.
-		local
-			vjar: VJAR;
-		do
-			if not conform_to (target_type) then
-				!!vjar;
-				context.init_error (vjar);
-				vjar.set_source_type (Current);
-				vjar.set_target_type (target_type);
-				vjar.set_target_name (target_name);
-				Error_handler.insert_error (vjar);
-			end;
-		end;
-
-	conform_to (other: TYPE_A): BOOLEAN is
-			-- Does Current conform to `other' ?
-		do
-			Result := internal_conform_to (other, False);
-		end;
-
-	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
-			-- Does Current conform to `other' ?
-			-- [If `in_generics' is set, we are within generic parameters].
-		require
-			good_argument: other /= Void
-		deferred
-		end;
-
-	redeclaration_conform_to (other: TYPE_A): BOOLEAN is
-			-- Does Current conform to `other' for a redeclaration ?
-		do
-			Result := internal_conform_to (other, True);
-		end;
-
 	has_generics: BOOLEAN is
 			-- Has the current type generics types ?
 		do
 			Result := generics /= Void;
 		end;
 
-	has_formal_generic: BOOLEAN is
-			-- Has the current type formal generic parameter in its type ?
+	is_valid: BOOLEAN is
+			-- The associated class is still in the system
 		do
-			-- Do nothing
-		end;
-
-	valid_generic (type: TYPE_A): BOOLEAN is
-			-- Do the generic parameter of `type' conform to those of
-			-- Current ?
-		do
-		end;
-
-	associated_class: CLASS_C is
-			-- Class associated to the current type
-		deferred
+			Result := True
 		end;
 
 	is_integer: BOOLEAN is
@@ -165,12 +106,6 @@ feature
 			-- Do nothing
 		end;
 
-	is_numeric: BOOLEAN is
-			-- Is the current actual type a numeric type ?
-		do
-			-- Do nothing
-		end;
-
 	is_like: BOOLEAN is
 			-- Is the current type an anchored one ?
 		do
@@ -201,6 +136,46 @@ feature
 			-- Do nothing
 		end;
 
+feature -- Access
+
+	valid_base_type: BOOLEAN is
+			-- Is the base type valid
+		do
+			Result := base_type > 0
+		end;
+
+	has_associated_class: BOOLEAN is
+			-- Does Current have associated class?
+		do
+			Result := not (is_void or else is_formal or else is_none)
+		ensure
+			Yes_if_is: Result implies not (is_void or else 
+								is_formal or else is_none)
+		end;
+
+	associated_eclass: E_CLASS is
+			-- Eiffel class associated to the current type
+		require
+			valid_base_type: not has_associated_class implies valid_base_type
+		deferred
+		ensure
+			non_void_if_not_formal: not has_associated_class implies Result /= Void
+		end;
+
+feature -- Output
+
+	append_clickable_signature (click_window: CLICK_WINDOW) is
+		deferred
+		end;
+
+feature 
+
+	actual_type: TYPE_A is
+			-- Actual type of the interpreted type
+		do
+			Result := Current
+		end;
+
 	has_expanded: BOOLEAN is
 			-- Has the current type some expanded types in itself ?
 		do
@@ -222,15 +197,87 @@ feature
 		do
 		end;
 
+	is_numeric: BOOLEAN is
+			-- Is the current actual type a numeric type ?
+		do
+			-- Do nothing
+		end;
+
+	set_base_type (i: INTEGER) is
+			-- Assign `i' tp `base_type'.
+		do
+			base_type := i;
+		end;
+
+	check_const_gen_conformance (target_type: TYPE_A; a_class: CLASS_C) is
+		local
+			vtgg5: VTGG5;
+		do
+			if not conform_to (target_type) then
+				!!vtgg5
+				vtgg5.set_class (a_class);
+				vtgg5.set_actual_type (Current);
+				vtgg5.set_constraint_type (target_type);
+				Error_handler.insert_error (vtgg5);
+			end;
+		end;
+
+	check_conformance (target_name: STRING; target_type: TYPE_A) is
+			-- Check if Current conforms to `other'.
+			-- If not, insert error into Error handler.
+		local
+			vjar: VJAR;
+		do
+			if not conform_to (target_type) then
+				!!vjar;
+				context.init_error (vjar);
+				vjar.set_source_type (Current);
+				vjar.set_target_type (target_type);
+				vjar.set_target_name (target_name);
+				Error_handler.insert_error (vjar);
+			end;
+		end;
+
+	conform_to (other: TYPE_A): BOOLEAN is
+			-- Does Current conform to `other' ?
+		do
+			Result := internal_conform_to (other, False);
+		end;
+
+	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
+			-- Does Current conform to `other' ?
+			-- [If `in_generics' is set, we are within generic parameters].
+		require
+			good_argument: other /= Void
+		deferred
+		end;
+
+	redeclaration_conform_to (other: TYPE_A): BOOLEAN is
+			-- Does Current conform to `other' for a redeclaration ?
+		do
+			Result := internal_conform_to (other, True);
+		end;
+
+	has_formal_generic: BOOLEAN is
+			-- Has the current type formal generic parameter in its type ?
+		do
+			-- Do nothing
+		end;
+
+	valid_generic (type: TYPE_A): BOOLEAN is
+			-- Do the generic parameter of `type' conform to those of
+			-- Current ?
+		do
+		end;
+
+	associated_class: CLASS_C is
+			-- Class associated to the current type
+		deferred
+		end;
+
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): TYPE_A is
 			-- Calculated type in function of the feature `f' which has
 			-- the type Current and the feautre table `feat_table'
-		do
-			Result := Current
-		end;
-
-	actual_type: TYPE_A is
-			-- Actual type of the interpreted type
 		do
 			Result := Current
 		end;
@@ -264,12 +311,6 @@ feature
 	is_solved: BOOLEAN is
 		do
 			Result := True;
-		end;
-
-	is_valid: BOOLEAN is
-			-- The associated class is still in the system
-		do
-			Result := True
 		end;
 
 	duplicate: like Current is

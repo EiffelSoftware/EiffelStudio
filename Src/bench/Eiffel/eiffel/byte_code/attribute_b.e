@@ -15,7 +15,7 @@ inherit
 			make_end_assignment, make_end_reverse_assignment,
 			creation_access, enlarged, is_creatable, is_attribute, read_only,
 			assigns_to, pre_inlined_code, generate_il_call_access,
-			need_target
+			need_target, generate_il_address
 		end
 
 feature 
@@ -102,6 +102,19 @@ feature
 
 feature -- IL code generation
 
+	generate_il_address is
+			-- Generate address of current attribute.
+		local
+			cl_type: CL_TYPE_I
+		do
+			cl_type ?= context_type
+			il_generator.generate_current
+			il_generator.generate_attribute_address (
+				il_generator.implemented_type (written_in, cl_type),
+				Context.real_type (type),
+				attribute_id)
+		end
+		
 	generate_il_call_access (is_target_of_call: BOOLEAN) is
 			-- Generate IL code for an access to an attribute variable.
 		local

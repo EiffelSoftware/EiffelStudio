@@ -518,28 +518,10 @@ feature -- IL code generation
 
 	generate_il_address is
 			-- Generate address of current if it makes sense, otherwise
-			-- do nothing. Usually used in conjonction with creation of
-			-- expanded types.
-		local
-			res: RESULT_B
-			attr: ATTRIBUTE_B
-			loc: LOCAL_B
-			cl_type: CL_TYPE_I
+			-- do nothing.
+		require
+			is_first: is_first
 		do
-			if is_attribute then
-				attr ?= Current
-				cl_type ?= attr.context_type
-				il_generator.generate_attribute_address (
-					il_generator.implemented_type (attr.written_in, cl_type),
-					Context.real_type (attr.type),
-					attr.attribute_id)
-			elseif is_local then
-				loc ?= Current
-				il_generator.generate_local_address (loc.position)
-			elseif is_result then
-				res ?= Current
-				il_generator.generate_result_address
-			end
 		end
 
 	generate_il_start_assignment is

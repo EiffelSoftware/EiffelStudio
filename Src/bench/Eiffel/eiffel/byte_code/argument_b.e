@@ -8,7 +8,8 @@ inherit
 		redefine
 			enlarged, type, is_argument, is_local, is_creatable,
 			make_byte_code, register_name, array_descriptor,
-			pre_inlined_code, print_register, generate_il_call_access
+			pre_inlined_code, print_register, generate_il_call_access,
+			generate_il_address
 		end;
 	
 feature 
@@ -82,6 +83,12 @@ feature -- IL code generation
 			else
 				il_generator.generate_argument (position)
 			end
+		end
+		
+	generate_il_address is
+			-- Generate address of argument.
+		do
+			il_generator.generate_argument_address (position)
 		end
 
 feature -- Byte code generation

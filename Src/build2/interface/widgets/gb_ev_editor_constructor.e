@@ -173,7 +173,6 @@ feature {GB_OBJECT, GB_EV_EDITOR_CONSTRUCTOR} -- Implementation
 			-- actions for GB_OBJECT.
 		local
 			an_object: GB_OBJECT
-			shared_tools: GB_SHARED_TOOLS
 			shared_handler: GB_SHARED_OBJECT_HANDLER
 		do
 			create shared_handler
@@ -190,8 +189,6 @@ feature {GB_OBJECT, GB_EV_EDITOR_CONSTRUCTOR} -- Implementation
 			if application.ctrl_pressed then
 				new_object_editor (an_object)
 			else
-				create shared_tools
-				shared_tools.type_selector.update_drop_actions_for_all_children (an_object)
 				Result := an_object
 			end
 		end

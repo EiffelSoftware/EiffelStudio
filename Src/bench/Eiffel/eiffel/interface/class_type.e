@@ -272,16 +272,11 @@ feature -- Generation
 
 			file := generation_file;
 
-			file.open_write;
+				file.open_write_c;
 				-- Write header
-			file.putstring ("/*");
-			file.new_line;
-			file.putstring (" * Code for class ");
+				file.putstring ("/*%N * Code for class ");
 			type.dump (file);
-			file.new_line;
-			file.putstring (" */");
-			file.new_line;
-			file.new_line;
+				file.putstring ("%N */%N%N");
 				-- Includes wanted
 			file.putstring ("#include %"eiffel.h%"");
 			file.new_line;
@@ -346,7 +341,7 @@ feature -- Generation
 				Extern_declarations.generate (extern_declaration_filename);
 				Extern_declarations.wipe_out;
 			end;
-			file.close;
+				file.close_c;
 
 			elseif not Compilation_modes.is_extending then
 					-- The file hasn't been generated
@@ -1446,24 +1441,16 @@ feature -- DLE
 			if generate_c_code then
 
 				file := dle_generation_file;
-				file.open_write;
+				file.open_write_c;
 					-- Write header
-				file.putstring ("/*");
-				file.new_line;
-				file.putstring (" * Code for class ");
+				file.putstring ("/*%N * Code for class ");
 				type.dump (file);
-				file.new_line;
-				file.putstring (" */");
-				file.new_line;
-				file.new_line;
+				file.putstring ("%N */%N%N");
 					-- Includes wanted
-				file.putstring ("#include %"eiffel.h%"");
-				file.new_line;
+				file.putstring ("%N#include %"eiffel.h%"%N");
 				file.putstring ("#include %"");
 				file.putstring (base_file_name);
-				file.putstring (".h%"%N");
-				file.new_line;
-				file.new_line;
+				file.putstring (".h%"%N%N%N");
 
 				Extern_declarations.generate_header (dle_extern_declaration_filename)
 				extern_decl_file := dle_extern_declaration_file;
@@ -1526,7 +1513,7 @@ feature -- DLE
 				Extern_declarations.generate (dle_extern_declaration_filename);
 				Extern_declarations.wipe_out;
 
-				file.close
+				file.close_c
 
 			elseif is_dynamic then
 					-- The file hasn't been generated

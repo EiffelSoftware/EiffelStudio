@@ -34,11 +34,6 @@ inherit
 
 feature -- Access
 
-	i_th (i: INTEGER): G is
-			-- Item of rank `i'
-		deferred
-		end
-
 	index: INTEGER
 			-- Index of current position
 

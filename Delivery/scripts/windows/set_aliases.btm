@@ -2,7 +2,7 @@ REM Define some user parameters here
 
 REM The file where all output is stored
 set INSTALL_LOG=D:\install.log
-REM NB: The following directory must contain a finalization Ace for ec.exe called finalizedbench.ace
+REM NB: The following directory is where a new version of ec.exe will be finalized.
 set FINALIZATION_DIR=D:\Compils\newbench
 REM NB: The following directory must contain document.exe
 set DOCUMENT_DIR=D:\Delivery

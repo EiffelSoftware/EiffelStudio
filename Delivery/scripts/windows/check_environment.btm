@@ -15,11 +15,6 @@ iff not defined NO_COMPILE then
 		echo FINALIZED_DIR not defined. Cannot continue
 		CANCEL
 	endiff
-	iff not exist %FINALIZATION_DIR\finalizedbench.ace then
-		echo No finalization ace available in %FINALIZATION_DIR. Cannot continue
-		CANCEL
-	endiff
-	
 	iff not exist %ISE_EIFFEL\BCC55\Bin\bcc32.exe then
 		echo Cannot find a version of Borland under ISE_EIFFEL. Cannot continue
 		CANCEL

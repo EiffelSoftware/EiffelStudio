@@ -53,12 +53,6 @@ fullrf %INSTALL_DIR\studio\spec\%ISE_PLATFORM\lib\msc\ebench.lib
 copy %EIFFEL_SRC\C\run-time\*.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
 cd %EIFFEL_SRC
 
-remtrace Compile com_il_generation
-cd %EIFFEL_SRC\Eiffel\eiffel\com_il_generation\Core\clib
-default_make
-cd %EIFFEL_SRC\Eiffel\eiffel\com_il_generation\eac\clib
-default_make
-
 remtrace Then the C libraries
 cd %EIFFEL_SRC\C_library
 fullrd .libs
@@ -90,6 +84,10 @@ safe_md %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
 iff not defined NO_NEW_EC then
 	remtrace Recompile EiffelStudio
 	cdd %FINALIZATION_DIR
+	copy %EIFFEL_SRC\Eiffel\Ace\newbench.mswin.ace finalizedbench.ace
+	copy %EIFFEL_SRC\Eiffel\Ace\ec*.* .
+	copy %EIFFEL_SRC\Eiffel\Ace\logo.bmp .
+	copy %EIFFEL_SRC\Eiffel\Ace\resource.h .
 	iff not exist finalizedbench.ace then
 		echo Cannot find the finalization Ace for EiffelStudio
 		CANCEL

@@ -19,6 +19,8 @@ feature {NONE} -- Initialization
 
 	make (token: INTEGER) is
 			-- Create new instance ready to be updated.
+		require
+			is_method_token: token & 0xFF000000 = feature {MD_TOKEN_TYPES}.Method_def
 		do
 			create item.make (Chunk_size)
 			create labels.make (1, 5)
@@ -40,6 +42,8 @@ feature -- Reset
 
 	remake (token: like method_token) is
 			-- Reuse current object for body of method `token'.
+		require
+			is_method_token: token & 0xFF000000 = feature {MD_TOKEN_TYPES}.Method_def
 		do
 			current_position := 0
 			max_stack := 0
@@ -146,7 +150,7 @@ feature -- Opcode insertion
 			l_opcodes := opcodes
 			l_stack_transition := opcodes.item (opcode).stack_depth_transition
 			
-			if l_stack_transition /= 0xFF then
+			if l_stack_transition /= 0xFF000000 then
 				update_stack_depth (l_stack_transition)
 			end
 			
@@ -303,13 +307,19 @@ feature -- Opcode insertion with manual update of `current_stack_depth'.
 			-- Perform call to `feature_token' with proper stack size computation.
 		require
 			not_yet_written: not is_written
+		local
+			l_additional: INTEGER
 		do
 			put_opcode (opcode)
 			add_integer (feature_token)
+			if opcode = feature {MD_OPCODES}.Callvirt then
+					-- We remove target of calls from stack.
+				l_additional := 1
+			end
 			if is_function then
-				update_stack_depth (- nb_arguments + 1)
+				update_stack_depth (- nb_arguments - l_additional + 1)
 			else
-				update_stack_depth (- nb_arguments)
+				update_stack_depth (- nb_arguments - l_additional)
 			end
 		end
 	

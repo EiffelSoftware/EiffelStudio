@@ -38,9 +38,10 @@ feature {NONE}-- Initialization
 			create xml_radio
 			create schema_radio
 			create link_radio
-			create l_ev_vertical_box_4
+			create link_radio_box
 			create link_check
-			create images_check
+			create link_relative_check
+			create link_absolute_check
 			create l_ev_horizontal_box_1
 			create l_ev_cell_1
 			create apply_bt
@@ -55,9 +56,10 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_3.extend (xml_radio)
 			l_ev_vertical_box_3.extend (schema_radio)
 			l_ev_vertical_box_3.extend (link_radio)
-			l_ev_vertical_box_3.extend (l_ev_vertical_box_4)
-			l_ev_vertical_box_4.extend (link_check)
-			l_ev_vertical_box_4.extend (images_check)
+			l_ev_vertical_box_3.extend (link_radio_box)
+			link_radio_box.extend (link_check)
+			link_radio_box.extend (link_relative_check)
+			link_radio_box.extend (link_absolute_check)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (l_ev_cell_1)
 			l_ev_horizontal_box_1.extend (apply_bt)
@@ -84,15 +86,14 @@ feature {NONE}-- Initialization
 			xml_radio.set_text ("Validate project documents as XML")
 			schema_radio.set_text ("Validate project documents against schema definition")
 			link_radio.set_text ("Validate document links")
-			l_ev_vertical_box_4.set_padding_width (padding_width)
-			l_ev_vertical_box_4.set_border_width (inner_border_width)
-			l_ev_vertical_box_4.disable_item_expand (link_check)
-			l_ev_vertical_box_4.disable_item_expand (images_check)
-			link_check.enable_select
-			link_check.disable_sensitive
-			link_check.set_text ("Check page links")
-			images_check.disable_sensitive
-			images_check.set_text ("Check image links")
+			link_radio_box.disable_sensitive
+			link_radio_box.set_padding_width (padding_width)
+			link_radio_box.set_border_width (inner_border_width)
+			link_radio_box.disable_item_expand (link_relative_check)
+			link_radio_box.disable_item_expand (link_absolute_check)
+			link_check.set_text ("Check links")
+			link_relative_check.set_text ("Make all links relative")
+			link_absolute_check.set_text ("Make all links absolute")
 			l_ev_horizontal_box_1.set_padding_width (5)
 			l_ev_horizontal_box_1.set_border_width (2)
 			l_ev_horizontal_box_1.disable_item_expand (apply_bt)
@@ -115,10 +116,10 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3, l_ev_vertical_box_4: EV_VERTICAL_BOX
+	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3, link_radio_box: EV_VERTICAL_BOX
 	l_ev_label_1: EV_LABEL
 	xml_radio, schema_radio, link_radio: EV_RADIO_BUTTON
-	link_check, images_check: EV_CHECK_BUTTON
+	link_check, link_relative_check, link_absolute_check: EV_CHECK_BUTTON
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 	l_ev_cell_1: EV_CELL
 	apply_bt, okay_bt, cancel_bt: EV_BUTTON

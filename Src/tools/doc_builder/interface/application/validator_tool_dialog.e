@@ -27,9 +27,39 @@ feature {NONE} -- Initialization
 		do
 			apply_bt.select_actions.extend (agent apply)
 			okay_bt.select_actions.extend (agent okay)
-			cancel_bt.select_actions.extend (agent cancel)
-			link_radio.select_actions.extend (agent radio_selected)
-			schema_radio.select_actions.extend (agent radio_selected)
+			cancel_bt.select_actions.extend (agent hide)
+			link_radio.select_actions.extend (agent link_radio_selected)
+		end
+
+feature -- Commands
+
+	process_links is
+			-- Process links according to options
+		local
+			l_manager: LINK_MANAGER			
+		do
+			create l_manager.make_with_documents (shared_project.documents)
+			if link_check.is_selected then
+				l_manager.check_links
+			end	
+			if link_relative_check.is_selected then
+				l_manager.set_links_relative
+			end
+			if link_absolute_check.is_selected then
+				l_manager.set_links_absolute
+			end
+		end		
+
+feature {NONE}  -- Events
+
+	link_radio_selected is
+			-- Radio was selected
+		do
+			if link_radio.is_selected then
+				link_radio_box.enable_sensitive
+			else
+				link_radio_box.disable_sensitive
+			end			
 		end
 
 feature {NONE} -- Implementation
@@ -46,12 +76,6 @@ feature {NONE} -- Implementation
 			run
 			hide
 		end
-		
-	cancel is
-			-- Cancel
-		do
-			hide			
-		end
 
 	run is
 			-- Run
@@ -60,23 +84,9 @@ feature {NONE} -- Implementation
 				Shared_project.validate_files_xml
 			elseif schema_radio.is_selected then
 				Shared_project.validate_files
-			else
-				Shared_project.validate_links
+			elseif link_radio.is_selected then				
+				process_links
 			end
-		end
-
-feature {NONE}  -- Events
-
-	radio_selected is
-			-- Radio was selected
-		do
-			if link_radio.is_selected then
-				link_check.enable_sensitive
-				images_check.enable_sensitive
-			else
-				link_check.disable_sensitive
-				images_check.disable_sensitive
-			end			
 		end
 
 end -- class VALIDATOR_TOOL_DIALOG

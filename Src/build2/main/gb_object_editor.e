@@ -42,6 +42,11 @@ inherit
 		undefine
 			default_create, copy, is_equal
 		end
+		
+	GB_ACCESSIBLE_SYSTEM_STATUS
+		undefine
+			default_create, copy, is_equal
+		end
 
 feature -- Initialization
 
@@ -64,9 +69,9 @@ feature -- Initialization
 			create separator
 			vertical_box1.extend (separator)
 			vertical_box1.disable_item_expand (separator)
-			create vertical_box2
-			vertical_box1.extend (vertical_box2)
-			vertical_box1.disable_item_expand (vertical_box2)
+			create attribute_editor_box
+			vertical_box1.extend (attribute_editor_box)
+			vertical_box1.disable_item_expand (attribute_editor_box)
 			create item_parent
 			vertical_box1.extend (item_parent)
 			vertical_box1.disable_item_expand (item_parent)
@@ -128,8 +133,7 @@ feature -- Status setting
 			-- Assign `an_object' to `object'.
 			-- Set up `Current' to modify `object'.
 		do
-			--| FIXME need to remove old editors.
-			remove_editor
+			make_empty
 			
 			object := an_object
 			
@@ -138,13 +142,18 @@ feature -- Status setting
 			construct_editor	
 		end
 		
-	remove_editor is
+	make_empty is
 			-- Remove all editor objects from `Current'.
+			-- Assign `Void' to `object'.
 		do
+			object := Void
 			window_parent.lock_update
 			item_parent.wipe_out
-			vertical_box2.wipe_out
+			attribute_editor_box.wipe_out
 			window_parent.unlock_update
+		ensure
+			now_empty: attribute_editor_box.count = 0
+			object_is_void: object = Void
 		end
 		
 	update_current_object is
@@ -184,7 +193,10 @@ feature -- Status setting
 feature {NONE} -- Implementation
 
 	construct_editor is
-			--
+			-- Build `Current'. Build all attribute editors and populate,
+			-- to represent `object'.
+		require
+			object_not_void: object /= Void
 		local
 			handler: GB_EV_HANDLER
 			supported_types: ARRAYED_LIST [STRING]
@@ -195,28 +207,28 @@ feature {NONE} -- Implementation
 			label: EV_LABEL
 		do
 			window_parent.lock_update
-			vertical_box2.wipe_out
+			attribute_editor_box.wipe_out
 			create label.make_with_text ("Type:")
 			label.align_text_left
-			vertical_box2.extend (label)
-			vertical_box2.disable_item_expand (label)
+			attribute_editor_box.extend (label)
+			attribute_editor_box.disable_item_expand (label)
 			create label.make_with_text (object.type.substring (4, object.type.count))
 			label.align_text_left
-			vertical_box2.extend (label)
-			vertical_box2.disable_item_expand (label)
+			attribute_editor_box.extend (label)
+			attribute_editor_box.disable_item_expand (label)
 			
 			create label.make_with_text ("Name:")
 			label.align_text_left
-			vertical_box2.extend (label)
-			vertical_box2.disable_item_expand (label)
+			attribute_editor_box.extend (label)
+			attribute_editor_box.disable_item_expand (label)
 			create name_field.make_with_text (object.name)
 			name_field.change_actions.extend (agent update_visual_representations_on_name_change)
-			vertical_box2.extend (name_field)
-			vertical_box2.disable_item_expand (name_field)
+			attribute_editor_box.extend (name_field)
+			attribute_editor_box.disable_item_expand (name_field)
 			
 			create separator
-			vertical_box2.extend (separator)
-			vertical_box2.disable_item_expand (separator)
+			attribute_editor_box.extend (separator)
+			attribute_editor_box.disable_item_expand (separator)
 			
 			
 			
@@ -260,7 +272,7 @@ feature {NONE} -- Implementation
 		local
 			current_caret_position: INTEGER
 		do
-			if valid_class_name (name_field.text) then
+			if valid_class_name (name_field.text) or name_field.text.is_empty then
 				if name_field.text.is_empty then
 					object.layout_item.set_text (object.type.substring (4, object.type.count))
 				else
@@ -269,6 +281,9 @@ feature {NONE} -- Implementation
 				object.set_name (name_field.text)
 					-- Must be performed after we have actually changed the name of the object.
 				update_editors_for_name_change (object.object, Current)
+					-- We now inform the system that the user has modified something
+				system_status.enable_project_modified
+				command_handler.update	
 			else
 				current_caret_position := name_field.caret_position
 				name_field.change_actions.block
@@ -289,17 +304,20 @@ feature {NONE} -- Implementation
 		end
 
 	item_parent: EV_VERTICAL_BOX
-		-- An EV_VERTICAL_BOX to hold all GB_OBJECT_EDITOR_ITEM
+		-- An EV_VERTICAL_BOX to hold all GB_OBJECT_EDITOR_ITEM.
 		
 	name_field: EV_TEXT_FIELD
 		-- Entry for the object name.
 		
-	vertical_box2: EV_VERTICAL_BOX
+	attribute_editor_box: EV_VERTICAL_BOX
+		-- All attribute editors are placed in here.
 	
 feature {GB_ACCESSIBLE_OBJECT_EDITOR} -- Implementation
 
 	update_name_field is
-			--
+			-- Update `name_field' to reflect `object.name'.
+			-- Used when a name changes from another
+			-- object editor. All must be updated.
 		do
 			name_field.change_actions.block
 			name_field.set_text (object.name)

@@ -8,9 +8,6 @@ inherit
 	STORABLE
 
 	WIZARD_OUTPUT_LEVEL
-		export
-			{NONE} all
-		end
 
 	OPERATING_ENVIRONMENT
 		export
@@ -29,6 +26,7 @@ feature {NONE} -- Initialization
 			use_universal_marshaller := True
 			automation := True
 			client := True
+			output_level := Output_warnings
 		end
 
 feature -- Access
@@ -248,5 +246,9 @@ feature -- Element Change
 		do
 			abort := False
 		end
+
+invariant
+
+	valid_output_level: output_level = Output_warnings or output_level = Output_all or output_level = Output_none
 
 end -- class WIZARD_ENVIRONMENT

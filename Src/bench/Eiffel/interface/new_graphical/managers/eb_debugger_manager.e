@@ -246,6 +246,7 @@ feature -- Status setting
 		local
 			pos: INTEGER
 			cst: CALL_STACK_STONE
+			ecs: EIFFEL_CALL_STACK
 		do
 			maximum_stack_depth := nb
 			if Application.is_running then
@@ -253,14 +254,19 @@ feature -- Status setting
 				if Application.is_stopped then
 					pos := Application.current_execution_stack_number
 					Application.status.reload_current_call_stack
-					if pos > Application.status.current_call_stack.count then
-							-- We reloaded less elements than there were.
-						pos := 1
-					end
-					call_stack_tool.update
-					create cst.make (pos)
-					if cst.is_valid then
-						launch_stone (cst)
+					ecs := Application.status.current_call_stack
+					if ecs = Void or else ecs.is_empty then
+						--| Nothing to display, maybe debugger had an issue getting call stack ..
+					else
+						if pos > Application.status.current_call_stack.count then
+								-- We reloaded less elements than there were.
+							pos := 1
+						end
+						call_stack_tool.update
+						create cst.make (pos)
+						if cst.is_valid then
+							launch_stone (cst)
+						end
 					end
 				end
 			end

@@ -99,14 +99,21 @@ feature -- Status report
 		local
 			widget_imp_at_cursor_position: EV_WIDGET_IMP
 			current_target: EV_DOCKABLE_TARGET
+			tool_bar: EV_TOOL_BAR
 		do
 			widget_imp_at_cursor_position := widget_imp_at_pointer_position
 			if widget_imp_at_cursor_position /= Void then
 				current_target ?= widget_imp_at_cursor_position.interface
+				tool_bar ?= current_target
 				if widget_imp_at_cursor_position.real_target /= Void and
 					widget_imp_at_cursor_position.real_target.is_docking_enabled then
 					Result := widget_imp_at_cursor_position.real_target
-				elseif current_target /= Void and then current_target.is_docking_enabled then
+				elseif current_target /= Void and then current_target.is_docking_enabled and
+					(tool_bar /= Void and then item_source_being_docked /= Void) then
+						-- The last section of the above `elseif' handles tool bars as a special case.
+						-- If the current target is a tool bar, and we are docking an item then the toolbar
+						-- is returned. Without this check, it would not be possible to drag a toolbar as
+						-- the real source of a tool bar button, if the tool bar had docking enabled.
 					Result := current_target
 				else
 					Result:= get_next_target (widget_imp_at_cursor_position.interface)

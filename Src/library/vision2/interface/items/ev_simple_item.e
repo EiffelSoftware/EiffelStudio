@@ -12,6 +12,11 @@ deferred class
 	EV_ITEM
 
 inherit
+	EV_ANY
+		redefine
+			implementation
+		end
+
 	EV_TEXT_CONTAINER
 		rename
 			make as wrong_make,
@@ -20,24 +25,9 @@ inherit
 			implementation
 		end
 
-feature -- Status report
+feature -- Status settings
 
-	destroyed: BOOLEAN is
-			-- Is current object destroyed
-		do
-			Result := (implementation = Void)
-		end
-
-feature -- Status setting
-
-	destroy is
-			-- Destroy the current item
-		do
-			implementation.destroy
-		ensure
-			destroyed: destroyed
-		end
-
+-- XX to implement
 --	set_parent (par: EV_CONTAINER) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void.
@@ -83,18 +73,10 @@ feature -- Implementation
 
 	implementation: EV_ITEM_I
 
-	remove_implementation is
-			-- Remove implementation of Current widget.
-		do
-			implementation := Void
-		ensure
-			void_implementation: implementation = Void
-		end
-
 end -- class EV_ITEM
 
 --|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| EiffelVision : library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 

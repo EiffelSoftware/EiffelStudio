@@ -29,9 +29,8 @@ feature -- Basic Operations
 			-- Set `shared_wizard_environment.type_library_file_name' with
 			-- resulting type library file name.
 		local
-			a_string, a_working_directory: STRING
+			a_string: STRING
 		do
-			a_working_directory := current_working_directory
 			a_string := clone (Idl_compiler)
 			a_string.append (Space)
 			a_string.append (Idl_compiler_command_line)
@@ -46,55 +45,37 @@ feature -- Basic Operations
 			a_string.append (clone (Space))
 			a_string.append (last_make_command)
 			launch (a_string, Shared_wizard_environment.destination_folder)
-			change_working_directory (a_working_directory)
 			check_return_code (1)
 		end
 
 	compile_iid is
 			-- Compile iid C file.
-		local
-			a_string: STRING
 		do
-			a_string := current_working_directory
-			change_working_directory (shared_wizard_environment.destination_folder)
 			compile_file (Generated_iid_file_name)
-			change_working_directory (a_string)
 		end
 	
 	compile_ps is
 			-- Compile proxy/stub C file.
-		local
-			a_string: STRING
 		do
-			a_string := current_working_directory
-			change_working_directory (shared_wizard_environment.destination_folder)
 			compile_file (Generated_ps_file_name)
-			change_working_directory (a_string)
 		end
 
 	compile_data is
 			-- Compile dlldata C file.
-		local
-			a_string: STRING
 		do
-			a_string := current_working_directory
-			change_working_directory (shared_wizard_environment.destination_folder)
 			compile_file (Generated_dlldata_file_name)
-			change_working_directory (a_string)
 		end
 	
 	link is
 			-- Create proxy/stub dll.
 		local
-			a_string, a_working_directory: STRING
+			a_string: STRING
 		do
 			generate_def_file
 			a_string := clone (linker)
 			a_string.append (Space)
 			a_string.append (Linker_command_line)
 			add_message (Current, a_string)
-			a_working_directory := current_working_directory
-			change_working_directory (Shared_wizard_environment.destination_folder)
 			generate_make_file (Linker_command_line, Temporary_input_file_name)
 			a_string := clone (Linker)
 			a_string.append (Space)
@@ -105,7 +86,11 @@ feature -- Basic Operations
 			a_string.append (clone (shared_wizard_environment.project_name))
 			a_string.append (Dll_file_extension)
 			shared_wizard_environment.set_proxy_stub_file_name (a_string)
-			change_working_directory (a_working_directory)
+		end
+
+	compile_eiffel (a_folder: STRING) is
+			-- Compile Eiffel code in `a_folder'.
+		do
 		end
 
 feature {NONE} -- Implementation
@@ -123,9 +108,7 @@ feature {NONE} -- Implementation
 			-- Generate standard COM def file in current folder.
 		local
 			a_file: RAW_FILE
-			a_string: STRING
 		do
-			a_string := current_working_directory
 			change_working_directory (shared_wizard_environment.destination_folder)
 			create a_file.make (Def_file_name)
 			if not a_file.exists then
@@ -138,7 +121,6 @@ feature {NONE} -- Implementation
 				a_file.put_string ("%TDllUnregisterServer%T@4 PRIVATE%N")
 				a_file.close
 			end
-			change_working_directory (a_string)
 		end
 
 	Idl_compiler_command_line: STRING is

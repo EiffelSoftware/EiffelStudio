@@ -14,8 +14,6 @@ feature -- Access
 	common_test_file_name: STRING is "common_test.e"
 	
 	ace_file_name: STRING is
-		local
-			application: EV_APPLICATION
 		once
 			if (create {EV_ENVIRONMENT}).supported_image_formats.has ("ICO") then
 				Result := "ace.Windows.ace"

@@ -37,15 +37,14 @@ feature
 			if title_label /= null_label then
 				ext_name := MlabelString.to_c;
 				ext_name_title := a_title.to_c;
-				to_left_xm_string (title_label, $ext_name_title,
-							$ext_name)
+				to_left_xm_string (title_label, ext_name_title, ext_name)
 			else
 				label_identifier := clone (abstract_menu.identifier);
 				label_identifier.append ("Title");
 				ext_name_title := a_title.to_c;
 				ext_name := label_identifier.to_c;
 				title_label := menu_set_title (screen_object,
-								$ext_name_title, $ext_name)
+								$ext_name_title, ext_name)
 			end
 		end;
 

@@ -68,7 +68,7 @@ feature -- Text
 		do
 			ext_name_text := a_text.to_c;
 			ext_name_label := MlabelString.to_c;
-			to_left_xm_string (screen_object, $ext_name_text, $ext_name_label)
+			to_left_xm_string (screen_object, ext_name_text, ext_name_label)
 		ensure
 			text.is_equal (a_text)
 		end;

@@ -90,8 +90,7 @@ feature
 		do
 			ext_name := MlabelString.to_c;
 			ext_name_text := a_text.to_c;
-			to_left_xm_string (screen_object, $ext_name_text,
-						$ext_name);
+			to_left_xm_string (screen_object, ext_name_text, ext_name);
 		ensure then
 			text.is_equal (a_text)
 		end;

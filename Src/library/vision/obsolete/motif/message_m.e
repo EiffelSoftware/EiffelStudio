@@ -159,8 +159,7 @@ feature
 		do
 			ext_name_label := a_label.to_c;
 			ext_name := McancelLabelString.to_c;
-			to_left_xm_string (screen_object, $ext_name_label,
-						$ext_name)
+			to_left_xm_string (screen_object, ext_name_label, ext_name)
 		end;
 
 	set_center_alignment is
@@ -191,8 +190,7 @@ feature
 		do
 			ext_name := MhelpLabelString.to_c;
 			ext_name_label := a_label.to_c;
-			to_left_xm_string (screen_object, $ext_name_label,
-						$ext_name)
+			to_left_xm_string (screen_object, ext_name_label, ext_name)
 		end;
 
 	set_message (a_message: STRING) is
@@ -204,8 +202,7 @@ feature
 		do
 			ext_name := MmessageString.to_c;
 			ext_name_mess := a_message.to_c;
-			to_left_xm_string (screen_object, $ext_name_mess,
-						$ext_name)
+			to_left_xm_string (screen_object, ext_name_mess, ext_name)
 		end;
 
 	set_ok_label (a_label: STRING) is
@@ -218,8 +215,7 @@ feature
 		do
 			ext_name := MokLabelString.to_c;
 			ext_name_label := a_label.to_c;
-			to_left_xm_string (screen_object, $ext_name_label,
-							$ext_name)
+			to_left_xm_string (screen_object, ext_name_label, ext_name)
 		end;
 
 	set_start_alignment is

@@ -26,6 +26,7 @@ inherit
 			put_resynchronizing_breakpoints_message,
 			put_class_document_message,
 			put_start_documentation,
+			put_new_compilation,
 			display_degree_output,
 			put_initializing_documentation
 		end
@@ -102,6 +103,12 @@ feature -- Start output features
 				dialog.enable_cancel
 			end
 			dialog.start (100)
+		end
+
+	put_new_compilation is
+			-- A new compilation has begun.
+		do
+			last_reached_degree := 6
 		end
 
 	put_end_degree is

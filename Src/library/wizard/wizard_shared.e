@@ -32,15 +32,6 @@ feature -- Access
 			exists: Result /= Void
 		end
 
-	pixmap: EV_PIXMAP is
-			-- Pixmap on which can be displayed a picture which 
-			-- goes with the state.
-		do
-			Result := first_window.main_pixmap
-		ensure
-			exists: Result /= Void
-		end
-
 	history: TWO_WAY_LIST [WIZARD_STATE_WINDOW] is
 			-- History of the different pages
 			-- the user has processed.

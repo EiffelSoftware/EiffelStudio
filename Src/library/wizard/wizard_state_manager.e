@@ -100,15 +100,6 @@ feature {NONE} -- Implementation
 	wizard_information: WIZARD_INFORMATION
 		-- State relative to Current State.
 
-	is_final_state: BOOLEAN
-		-- Is Current state a final state.
-
-	is_initial_state: BOOLEAN
-		-- Is Current state the initial state.
-
-	is_common_state: BOOLEAN
-		-- Is Current a common state
-
 invariant
 	state_information_defined: wizard_information /= Void
 end -- class WIZARD_STATE_MANAGER

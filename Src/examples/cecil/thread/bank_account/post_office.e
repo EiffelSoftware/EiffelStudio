@@ -35,7 +35,7 @@ feature -- Display
 			c_post (info)
 			io.put_string ("Do you want to continue? (y/n)%N")
 			io.read_line
-			res := clone (io.last_string)
+			res := io.last_string.twin
 			if not res.is_equal ("y") then
 				finished.set_item (True)
 			end

@@ -52,7 +52,7 @@ feature -- Basic operations
 
 	generate_source_interface_features (an_interface: WIZARD_INTERFACE_DESCRIPTOR) is
 			-- Generate source interface features.
-		do
+		deferred
 		end
 
 feature {NONE} -- Implementation

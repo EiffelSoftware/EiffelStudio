@@ -459,11 +459,10 @@ feature -- Status setting
 				-- Recompilation
 			root_ast.build_universe
 
-			if not Workbench.is_already_compiled then
-					-- Check presence of basic classes in the universe, only
-					-- once at the beginning
-				Universe.check_universe
-			end
+				-- Check presence of basic classes in the universe.
+				-- Do it on every recompilation, as these classes
+				-- may be removed from universe between recompilations.
+			Universe.check_universe
 
 				-- Check sum error
 			Error_handler.checksum

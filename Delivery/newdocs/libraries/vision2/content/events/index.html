@@ -2,14 +2,38 @@
 
 <HTML>
 	<HEAD>
-		<TITLE>EiffelVision2 Kernel</TITLE>
-		<LINK REL=StyleSheet HREF="../../../../default.css">
+		<TITLE>Vision2 Events</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
 	</HEAD>
 
 	<BODY>
-		<H1>EiffelVision2 Kernel Overview</H1>
+		<H1>Vision2 Events</H1>
         <P>
-				The Kernel Cluster of EiffelVision2 provides the classes needed
-        to get a basic Vision2 application up and running.</P>
+	This cluster contains classes for event handling within Vision2. </P>
+	<H2>What is an event?</H2>
+	<P>
+		An event is considered to be an external action that occurs during a program's execution. Correctly dealing with events is an important part of developing
+		a Vision2 application. For example, if a user selects a menu item from a menu, the application needs to be able to respond appropriately to this event and perform
+		the necessary processing.
+	</p>
+	<H2>How do I connect to an event?</H2>
+	<p>
+		When an event occurs, the corresponding action sequence is called. All Vision2 action sequences inherit <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/events/ev_action_sequence_chart.html">EV_ACTION_SEQUENCE</A> and
+		when it is called, all of the agents held within are fired, thus calling all of the procedures represented by the agents. The signature of any agent that you place in an action sequence must conform to those of the action sequences actual generic parameter.
+	
+	</p>
+	
+	There are two different types of classes contained within
+	this cluster, identified by their names:
+	<UL>
+		<LI>classes named ev_*_action_sequence.<BR>
+		These classes represent different types of action_sequence, distinguished by the parameters that their items can take. For example, one of the most widely used is
+		<A CLASS="eclass" HREF="/libraries/Vision2/reference/interface/events/ev_notify_action_sequence_chart.html">EV_NOTIFY_ACTION_SEQUENCE</A> whose items take no arguments. All
+		these classes inherit <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/events/ev_action_sequence_chart.html">EV_ACTION_SEQUENCE</A>
+		<LI>classes named ev_*_action_sequences.<BR>
+		These classes contain one or more action sequences applicable to a certain context. For example, <A CLASS="eclass" HREF="/libraries/Vision2/reference/interface/events/ev_button_action_sequences_chart.html">EV_BUTTON_ACTION_SEQUENCES</A>
+		contains one action sequence, <A CLASS="efeature" HREF="/libraries/Vision2/reference/interface/events/ev_button_action_sequences.html#f_select_actions">select_actions</A>, which is fired whenever a button is selected in the GUI.
+	</UL>
+	</p>
 	</BODY>
 </HTML>

@@ -71,6 +71,8 @@ feature
 			else
 				ready_to_run := true
 			end;
+
+			set_global_cursor (watch_cursor);
 			if not ready_to_run then
 					-- Do nothing
 			elseif Run_info.is_running then
@@ -155,9 +157,14 @@ end;
 								(w_Must_compile_first)
 						end;
 					end
+				else
+					debug_window.clear_window;
+					debug_window.put_string ("System not compiled%N");
+					debug_window.display
 				end;
 				Run_info.set_is_stopped (False)
-			end
+			end;
+			restore_cursors
 		end;
 
 feature 

@@ -106,6 +106,7 @@ feature {NONE} -- Implementation
 			gb_ev_fixed: GB_EV_FIXED
 			gb_ev_viewport: GB_EV_VIEWPORT
 			gb_ev_table: GB_EV_TABLE
+			gb_ev_container: GB_EV_CONTAINER
 		do
 		end
 

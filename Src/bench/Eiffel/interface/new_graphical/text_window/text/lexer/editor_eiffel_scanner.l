@@ -103,14 +103,15 @@ create
 ----------/** Reserved words **/------------------------------------------------
 
 "!!"									|
-[cC][rR][eE][aA][tT][iI][oO][nN]		|
-[cC][rR][eE][aA][tT][eE]				|
 [aA][gG][eE][nN][tT]					|
 [aA][lL][iI][aA][sS]					|
 [aA][lL][lL]|[aA][nN][dD]				|
 [aA][sS]|[bB][iI][tT]					|
 [cC][hH][eE][cC][kK]					|
 [cC][lL][aA][sS][sS]					|
+[cC][oO][nN][vV][eE][rR][tT]			|
+[cC][rR][eE][aA][tT][eE]				|
+[cC][rR][eE][aA][tT][iI][oO][nN]		|
 [cC][uU][rR][rR][eE][nN][tT]			|
 [dD][eE][bB][uU][gG]					|
 [dD][eE][fF][eE][rR][rR][eE][dD]		|

@@ -16,6 +16,8 @@
 
 extern char *(*wfeat())();				/* Feature call */
 extern char *(*wfeat_inv())();			/* Nested feature call */
+extern void wexp();						/* Creation call for expanded types */
+extern char *(*wdisp())();          	/* Feature call for dispose routine */ 
 extern fnptr wpointer();				/* Feature pointer */
 extern long	wattr();					/* Attribute access */
 extern long wattr_inv();				/* Nested attribute access */

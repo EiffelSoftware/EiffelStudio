@@ -28,7 +28,7 @@
  * `wattr (static_type, feature_id, dyn_type)'
  * `wattr_inv (static_type, feature_id, name, object)'
  * `wtype (static_type, feature_id, dyn_type)'
- * `wdisp (routine_id, dyn_type)'
+ * `wdisp (dyn_type)'
  */
 
 public char *(*wfeat(static_type, feature_id, dyn_type))()
@@ -95,6 +95,46 @@ char *name;
 		IC = melt[body_id];	
 		return pattern[MPatId(body_id)].toi;
 	}
+}
+
+
+public void wexp(static_type, feature_id, dyn_type, object)
+int static_type, dyn_type;
+int32 feature_id;
+char *object;
+{
+	/* Call the creation of the expanded.
+	 * with static type `stype', dynamic type `dtype' and
+	 * feature id `fid'. Apply the function to `object'
+	 */
+
+	int32 rout_id;
+	int16 body_index;
+	uint32 body_id;
+	char *OLD_IC;
+
+	nstcall = 0;								/* No invariant check */
+	rout_id = Routids(static_type)[feature_id]; /* Get the routine id */
+	CBodyIdx(body_index,rout_id,dyn_type);		/* Get the body index */
+	body_id = dispatch[body_index];
+
+	OLD_IC = IC;								/* Save old IC */
+	if (body_id < zeroc) 
+		((void (*)()) (frozen[body_id])) (object);	/* Frozen feature */
+									/* Call frozen creation routine */
+	else {
+		IC = melt[body_id];	 		/* Position byte code to interpret */
+		((void (*)()) (pattern[MPatId(body_id)].toi)) (object);
+									/* Call melted creation routine */
+	}
+	IC = OLD_IC;					/* Restore old IC.
+									 * This was needed if expanded objects
+									 * had expanded objects (which has a
+									 * creation routine which in turn call
+									 * the interpreter) so that 
+									 * the IC was return to the previous 
+									 * state.
+									 */
 }
 
 public fnptr wpointer(static_type, feature_id, dyn_type)
@@ -186,8 +226,7 @@ int32 feature_id;
 	return (type & SK_DTYPE);
 }
 
-public char *(*wdisp(routine_id, dyn_type))()
-int32 routine_id;
+public char *(*wdisp(dyn_type))()
 int dyn_type;
 {
 	/* Function pointer associated to Eiffel feature of routine id
@@ -199,7 +238,7 @@ int dyn_type;
 	uint32 body_id;
 
 	nstcall = 0;								/* No invariant check */
-	CBodyIdx(body_index,routine_id,dyn_type);	/* Get the body index */
+	CBodyIdx(body_index,disp_rout_id,dyn_type);	/* Get the body index */
 	body_id = dispatch[body_index];
 
 	if (body_id < zeroc) {
@@ -244,7 +283,7 @@ char desc_fill;				/* Flag for descriptor table initialization */
 struct mdesc {				/* Structure used to record melted descriptor */
 	struct desc_info *desc_ptr;
 	int16 origin;
-	int16 type
+	int16 type;
 };
 
 struct mdesc *mdesc_tab;	/* Temporary table of melted descriptors */

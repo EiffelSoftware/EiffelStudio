@@ -112,17 +112,26 @@ feature -- Access
 			Result := Precursor {GB_CELL_OBJECT} (object_representation)
 			component ?= object_representation
 			an_object ?= object_representation
+				-- We must update `Result' taken from Precursor, to handle menus
+				-- correctly. Set to False if `object_representation' is a menu bar.
+			if ((component /= Void and then component.root_element_type.is_equal (Ev_menu_bar_string))
+				or (an_object /= Void and then an_object.type.is_equal (Ev_menu_bar_string))) and object.menu_bar /= Void then
+				Result := False
+			end
 			check
 				object_is_a_component_or_an_object: component /= Void or an_object /= Void
 			end
+				-- We now allow a menu bar child if we are dropping an object and
+				-- there is not a menu bar already contained in `Current'.
 			menu_bar_object ?= an_object
 			if menu_bar_object /= Void then
 				if object.menu_bar = Void then
 					Result := True
 				end
 			end
-				-- We now allow child addition if we are dropping a component.
-			if component /= Void and component.root_element_type.is_equal (Ev_menu_bar_string) and
+				-- We now allow child addition if we are dropping a component and
+				-- there is not a menu bar already contained in `Current'.
+			if component /= Void and then component.root_element_type.is_equal (Ev_menu_bar_string) and
 				object.menu_bar = Void then
 				Result := True
 			end
@@ -204,7 +213,7 @@ feature -- Access
 		local
 			menu_object: GB_MENU_BAR_OBJECT
 		do
-			menu_object ?= new_object (xml_handler.xml_element_representing_named_component (a_component.name), True)
+			menu_object ?= a_component.object
 			check
 				menu_object_not_void: menu_object /= Void
 			end

@@ -15,7 +15,7 @@ feature -- Access
 		do
 			l_error_id := error_code_to_id (a_error_code)
 			if error_meaning.has (l_error_id) then
-				Result := clone (error_meaning.item (l_error_id))
+				Result := error_meaning.item (l_error_id).twin
 			else
 				Result := ""
 			end

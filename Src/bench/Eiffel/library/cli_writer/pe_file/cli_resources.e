@@ -25,7 +25,7 @@ feature -- Access
 			if not resources.is_empty then
 				from
 					resources.start
-					Result := clone (resources.item)
+					Result := resources.item.twin
 					resources.forth
 				until
 					resources.after

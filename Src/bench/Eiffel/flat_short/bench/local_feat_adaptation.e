@@ -326,7 +326,7 @@ end
 		require
 			valid_target_feature: target_feature /= Void
 		do
-			final_name := clone (target_feature.feature_name)
+			final_name := target_feature.feature_name.twin
 			if final_name.item (final_name.count) = '%"' and final_name.count > Infix_str.count then
 				if final_name.substring_index_in_bounds (Prefix_str, 1, Prefix_str.count) = 1 then
 					final_name := extract_symbol_from_prefix (final_name)

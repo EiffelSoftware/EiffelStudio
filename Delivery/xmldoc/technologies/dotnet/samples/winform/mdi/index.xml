@@ -34,7 +34,7 @@
 				</item>
 				<item>Browse to 
 					<output output="envision">ENViSioN! root directory</output>
-					<output output="studio">Eiffel54</output>\examples\dotnet\winforms\mdi\.
+					<output output="studio">$ISE_EIFFEL</output>\examples\dotnet\winforms\mdi\.
 					<italic/>
 				</item>
 				<item>Choose

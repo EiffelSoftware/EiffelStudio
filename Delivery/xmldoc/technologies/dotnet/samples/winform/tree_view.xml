@@ -38,7 +38,7 @@
 				<list ordered="true">
 					<item>Launch EiffelStudio.</item>
 					<item>Select <bold>Use existing Ace (control file)</bold> and click <bold>OK</bold></item>
-					<item>Browse to <italic>Eiffel54\examples\dotnet\winforms\control_reference\tree_view_ctl\</italic></item>
+					<item>Browse to <italic>$ISE_EIFFEL\examples\dotnet\winforms\control_reference\tree_view_ctl\</italic></item>
 					<item>Choose the Ace file for the version of the .net framework you are running</item>
 					<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.</item>
 					<item>Click <bold>OK</bold>.</item>

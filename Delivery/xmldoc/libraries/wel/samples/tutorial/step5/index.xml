@@ -35,7 +35,7 @@
 				<list ordered="true">
 					<item>Launch EiffelStudio.</item>
 					<item>Select <bold>Use existing Ace (control file)</bold> and click <bold>OK</bold></item>
-					<item>Browse to <italic>Eiffel54\examples\wel\tutorial\step5\</italic></item>
+					<item>Browse to <italic>$ISE_EIFFEL\examples\wel\tutorial\step5\</italic></item>
 					<item>Choose the Ace file</item>
 					<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.</item>
 					<item>Click <bold>OK</bold>.</item>

@@ -163,6 +163,7 @@ feature {GB_CODE_GENERATOR} -- Output
 			temp_width_string, temp_height_string: STRING
 			counter: INTEGER
 			lower, upper: INTEGER
+			current_child_name: STRING
 		do
 			Result := ""
 			full_information := get_unique_full_info (element)
@@ -196,10 +197,11 @@ feature {GB_CODE_GENERATOR} -- Output
 			loop
 				lower := (counter - 1) * 4 + 1
 				upper := (counter - 1) * 4 + 4
-				Result := Result + indent + a_name + ".set_item_x_position (" + a_name + ".i_th (" + counter.out + "), " + temp_x_position_string.substring (lower, upper) + ")"
-				Result := Result + indent + a_name + ".set_item_y_position (" + a_name + ".i_th (" + counter.out + "), " + temp_y_position_string.substring (lower, upper) + ")"
-				Result := Result + indent + a_name + ".set_item_width (" + a_name + ".i_th (" + counter.out + "), " + temp_width_string.substring (lower, upper) + ")"
-				Result := Result + indent + a_name + ".set_item_height (" + a_name + ".i_th (" + counter.out + "), " + temp_height_string.substring (lower, upper) + ")"
+				current_child_name := children_names @ counter
+				Result := Result + indent + a_name + ".set_item_x_position (" + current_child_name + ", " + temp_x_position_string.substring (lower, upper) + ")"
+				Result := Result + indent + a_name + ".set_item_y_position (" + current_child_name + ", " + temp_y_position_string.substring (lower, upper) + ")"
+				Result := Result + indent + a_name + ".set_item_width (" + current_child_name + ", " + temp_width_string.substring (lower, upper) + ")"
+				Result := Result + indent + a_name + ".set_item_height (" + current_child_name + ", " + temp_height_string.substring (lower, upper) + ")"
 				counter := counter + 1
 			end			
 		end

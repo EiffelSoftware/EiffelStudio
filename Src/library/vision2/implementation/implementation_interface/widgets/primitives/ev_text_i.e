@@ -34,6 +34,15 @@ feature -- Access
 
 feature -- Status report
 
+		has_word_wrapping: BOOLEAN is
+			-- Is word wrapping enabled?
+			-- If enabled, lines that are too long to be displayed
+			-- in `Current' will be wrapped onto new lines.
+			-- If disabled, a horizontal scroll bar will be displayed
+			-- and lines will not be wrapped.
+		deferred
+		end
+
 	current_line_number: INTEGER is
 			-- `Result'is number of line containing cursor.
 		require
@@ -70,6 +79,20 @@ feature -- Status report
 		end
 
 feature -- Basic operation
+
+	enable_word_wrapping is
+			-- Ensure `has_word_wrap' is True.
+		deferred
+		ensure
+			word_wrapping_enabled: has_word_wrapping
+		end
+		
+	disable_word_wrapping is
+			-- Ensure `has_word_wrap' is False.
+		deferred
+		ensure
+			word_wrapping_disabled: not has_word_wrapping
+		end
 
 	put_new_line is
 			-- Go to the beginning of the following line.

@@ -19,8 +19,11 @@ rm -rf F_code_stage1
 rm -rf F_code_stage2
 rm -rf F_code_stage3
 
+#set ace = "batch.unix.ace"
+set ace = "newbench.linux.ace"
+
 #First stage of bootstrap
-(time ec -finalize -ace newbench.linux.ace -batch >& e_comp1 )>> e_comp1
+(time ec -finalize -ace $ace -batch >& e_comp1 )>> e_comp1
 cd EIFGEN/F_code
 (time finish_freezing >& ../../c_comp1 )>> ../../c_comp1
 strip ec
@@ -32,7 +35,7 @@ cd ..
 #If first stage succeeded, let's go for Second stage of bootstrap
 if ( -e ec_stage1 ) then
 	rm -rf EIFGEN
-	(time ./ec_stage1 -finalize -ace newbench.linux.ace -batch >& e_comp2 )>> e_comp2
+	(time ./ec_stage1 -finalize -ace $ace -batch >& e_comp2 )>> e_comp2
 	cd EIFGEN/F_code
 	(time finish_freezing >& ../../c_comp2)>> ../../c_comp2
 	strip ec
@@ -44,7 +47,7 @@ if ( -e ec_stage1 ) then
 	#if second stage succeeded, let's go for Third and final stage of bootstrap
 	if ( -e ec_stage2) then
 		rm -rf EIFGEN
-		(time ./ec_stage2 -finalize -ace newbench.linux.ace -batch >& e_comp3 )>> e_comp3
+		(time ./ec_stage2 -finalize -ace $ace -batch >& e_comp3 )>> e_comp3
 		cd EIFGEN/F_code
 		(time finish_freezing >& ../../c_comp3)>> ../../c_comp3
 		strip ec

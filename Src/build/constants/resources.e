@@ -132,6 +132,12 @@ feature {NONE} -- Initialize font values
 feature -- Integer Misc Values
 
 	window_free_list_number: INTEGER;
+	command_file_name: STRING;
+	perm_window_file_name: STRING;
+	temp_window_file_name: STRING;
+			-- Base file name
+	default_toolkit: STRING
+			-- Default toolkit for code generation
 
 feature {NONE} -- Integer Values initialization
 
@@ -139,6 +145,17 @@ feature {NONE} -- Integer Values initialization
 		do
 			window_free_list_number 
 				:= resource.get_integer ("window_free_list_number", 0);
+			command_file_name
+				:= resource.get_string ("command_file_name", "cmd");
+			command_file_name.to_lower;
+			perm_window_file_name
+				:= resource.get_string ("perm_window_file_name", "perm_w");
+			perm_window_file_name.to_lower;
+			temp_window_file_name
+				:= resource.get_string ("temp_window_file_name", "temp_w");
+			temp_window_file_name.to_lower;
+			default_toolkit
+				:= resource.get_string ("default_toolkit", "MOTIF");
 		end;
 
 feature -- Window sizes
@@ -225,7 +242,7 @@ feature {NONE} -- Integer Values initialization
 			cmd_inst_ed_width := resource.get_pos_integer ("cmd_inst_ed_width", 300);
 			cmd_inst_ed_height := resource.get_pos_integer ("cmd_inst_ed_height", 167);
 
-			cmd_type_ed_width := resource.get_pos_integer ("cmd_type_ed_width", 475);
+			cmd_type_ed_width := resource.get_pos_integer ("cmd_type_ed_width", 500);
 			cmd_type_ed_height := resource.get_pos_integer ("cmd_type_ed_height", 650);
 
 			cont_cat_width := resource.get_pos_integer ("cont_cat_width", 320);

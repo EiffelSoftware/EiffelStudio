@@ -72,19 +72,29 @@ feature
 
 	generate_assertions is
 		local
-			generate_variant, workbench_mode: BOOLEAN;
+			generate_invariant, generate_variant, workbench_mode: BOOLEAN;
 		do
 			workbench_mode := context.workbench_mode;
-			if 	workbench_mode
-				or else
-				context.assertion_level.check_loop
-			then
-				generate_variant := variant_part /= Void;
+			if workbench_mode or else context.assertion_level.check_loop then
+				generate_variant := variant_part /= Void
+				generate_invariant := invariant_part /= Void
 			end;
 				-- Outstand loop structure
 			buffer.new_line;
 			if from_part /= Void then
 				from_part.generate;
+			end;
+			if generate_invariant then
+				context.set_assertion_type (In_loop_invariant);
+				if workbench_mode then
+					generate_workbench_test;
+					invariant_part.generate;
+					generate_end_workbench_test;
+				else
+					generate_final_mode_test;
+					invariant_part.generate;
+					generate_end_final_mode_test;
+				end;
 			end;
 			if generate_variant then
 				if workbench_mode then
@@ -106,10 +116,7 @@ feature
 		do
 			buf := buffer
 			workbench_mode := context.workbench_mode;
-			if 	workbench_mode
-				or else
-				context.assertion_level.check_loop
-			then
+			if workbench_mode or else context.assertion_level.check_loop then
 				generate_invariant := invariant_part /= Void;
 				generate_variant := variant_part /= Void;
 			end;
@@ -124,6 +131,9 @@ feature
 			buf.putstring (")) {");
 			buf.new_line;
 			buf.indent;
+			if compound /= Void then
+				compound.generate;
+			end;
 			if generate_invariant then
 				context.set_assertion_type (In_loop_invariant);
 				if workbench_mode then
@@ -146,9 +156,6 @@ feature
 					variant_part.print_register;
 					generate_end_final_mode_test;
 				end;
-			end;
-			if compound /= Void then
-				compound.generate;
 			end;
 			stop.generate;
 			buf.putchar (';');

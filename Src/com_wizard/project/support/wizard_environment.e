@@ -5,8 +5,6 @@ class
 	WIZARD_ENVIRONMENT
 
 inherit
-	STORABLE
-
 	WIZARD_OUTPUT_LEVEL
 
 	OPERATING_ENVIRONMENT
@@ -107,6 +105,16 @@ feature -- Access
 	new_project: BOOLEAN
 			-- Is new project selected?
 
+	not_spawn_ebench: BOOLEAN
+			-- Shouldn't wizard spawn EiffelBench at the end?
+
+	clean_destination_folder: BOOLEAN
+			-- Should wizard clean destination folder before
+			-- starting code generation?
+	
+	no_backup: BOOLEAN
+			-- Shouldn't wizard backup existing files?
+			
 feature -- Element Change
 
 	set_ace_file_name (ace_file: STRING) is
@@ -126,6 +134,16 @@ feature -- Element Change
 			in_process_server_set: in_process_server = a_boolean
 		end
 	
+	set_output_level (a_level: INTEGER) is
+			-- Set `output_level' with `a_level'.
+		do
+			output_level := a_level
+		ensure
+			output_level_set: output_level = Output_warnings or
+					output_level = Output_all or
+					output_level = Output_none
+		end
+		
 	set_warning_output is
 			-- Set `output_level' with `Output_warnings'.
 		do
@@ -352,6 +370,30 @@ feature -- Element Change
 			new_project_set: new_project = a_boolean
 		end
 
+	set_spawn_ebench (a_boolean: BOOLEAN) is
+			-- Set `not_spawn_ebench' with `a_boolean'.
+		do
+			not_spawn_ebench := a_boolean
+		ensure
+			not_spawn_ebench_set: not_spawn_ebench = a_boolean
+		end
+
+	set_no_backup (a_boolean: BOOLEAN) is
+			-- Set `no_backup' with `a_boolean'.
+		do
+			no_backup := a_boolean
+		ensure
+			no_backup_set: no_backup = a_boolean
+		end
+
+	set_clean_destination_folder (a_boolean: BOOLEAN) is
+			-- Set `clean_destination_folder' with `a_boolean'.
+		do
+			clean_destination_folder := a_boolean
+		ensure
+			clean_destination_folder_set: clean_destination_folder = a_boolean
+		end
+		
 invariant
 
 	valid_output_level: output_level = Output_warnings or output_level = Output_all or output_level = Output_none

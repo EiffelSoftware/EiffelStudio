@@ -197,7 +197,10 @@ feature -- Basic Operations
 				a_local_folder.append (W_code)
 				launch (finish_freezing_command, a_local_folder)
 				check_finish_freezing_status (a_folder)
-				if not Shared_wizard_environment.abort then
+				if 
+					not Shared_wizard_environment.abort and
+					not Shared_wizard_environment.not_spawn_ebench
+				then
 					if a_folder.is_equal (Client) then
 						a_dest_file := clone (a_folder)
 						a_dest_file.append_character (Directory_separator)

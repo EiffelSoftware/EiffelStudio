@@ -242,9 +242,9 @@ feature -- Basic Operations
 			Result.put ("INTEGER", "RemotableHandle")
 			Result.put ("INTEGER", "_RemotableHandle")
 
---			Result.put ("ECOM_STATSTG", "STATSTG")
---			Result.put ("ECOM_EXCEP_INFO", "EXCEPINFO")
---			Result.put ("ECOM_DISP_PARAMS", "DISPPARAMS")
+			Result.put ("ECOM_STATSTG", "STATSTG")
+			Result.put ("ECOM_EXCEP_INFO", "EXCEPINFO")
+			Result.put ("ECOM_DISP_PARAMS", "DISPPARAMS")
 		end
 
 feature {NONE} -- Implementation

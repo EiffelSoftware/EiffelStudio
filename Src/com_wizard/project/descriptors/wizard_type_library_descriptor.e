@@ -306,7 +306,9 @@ feature -- Basic operations
 			loop
 				if descriptors.item (i) /= Void then
 					if 
-						system_descriptor.eiffel_names.has (descriptors.item (i).eiffel_class_name) 
+						system_descriptor.eiffel_names.has (descriptors.item (i).eiffel_class_name) and
+						not descriptors.item (i).name.is_equal (Iunknown_type) and 
+						not descriptors.item (i).name.is_equal (Idispatch_type)
 					then
 						local_counter := counter
 						create tmp_string.make (3)

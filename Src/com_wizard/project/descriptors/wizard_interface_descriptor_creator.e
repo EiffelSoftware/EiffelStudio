@@ -140,22 +140,31 @@ feature -- Basic operations
 				name.append_integer (a_type_info.index_in_type_lib + 1)
 			end
 
-			namespace := namespace_name (type_library_descriptor.name)
 
 			if prefixed_libraries.has (tmp_guid) then
 				name.prepend (Underscore)
 				name.prepend (type_library_descriptor.name)
 			end
 
-			eiffel_class_name := name_for_class (name, type_kind, False)
-
 			create c_type_name.make (100)
 			c_type_name.append (name)
 			system_descriptor.add_c_type (name)
 
-			create c_header_file_name.make (100)
-			if not Non_generated_type_libraries.has (type_library_descriptor.guid) then
-				c_header_file_name := header_name (name)
+			if 
+				not name.is_equal (Iunknown_type) and
+				not name.is_equal (Idispatch_type)
+			then
+				namespace := namespace_name (type_library_descriptor.name)
+				eiffel_class_name := name_for_class (name, type_kind, False)
+
+				create c_header_file_name.make (100)
+				if not Non_generated_type_libraries.has (type_library_descriptor.guid) then
+					c_header_file_name := header_name (name)
+				end
+			else
+				eiffel_class_name := clone (Ecom_interface)
+				create c_header_file_name.make (0)
+				create namespace.make (0)
 			end
 
 			lcid := tmp_type_attr.lcid

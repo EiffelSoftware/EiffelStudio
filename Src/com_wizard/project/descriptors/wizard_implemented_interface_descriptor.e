@@ -69,7 +69,18 @@ feature -- Access
 			Result.append (Dot)
 		end
 
+	source: BOOLEAN
+			-- Is source interface?
+
 feature -- Basic operations
+
+	set_source (a_boolean: BOOLEAN) is
+			-- Set `source' with `a_boolean'.
+		do
+			source := a_boolean
+		ensure
+			source_set: source = a_boolean
+		end
 
 	visit (a_visitor: WIZARD_TYPE_VISITOR) is
 			-- Call back `a_visitor' with appropriate feature.

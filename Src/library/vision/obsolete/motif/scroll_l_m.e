@@ -25,7 +25,7 @@ inherit
 			clean_up as primitive_clean_up
 		redefine
 			action_target, set_foreground_color, update_foreground_color,
-			set_background_color, update_background_color
+			set_background_color, update_background_color, set_managed
 		end;
 	PRIMITIVE_M
 		rename
@@ -35,7 +35,7 @@ inherit
 		redefine
 			action_target, set_foreground_color, update_foreground_color,
 			set_background_color, update_background_color,
-			clean_up
+			clean_up, set_managed
 		select
 			clean_up
 		end;
@@ -62,20 +62,20 @@ creation
 feature {NONE} -- Creation
 
 	make (a_list: SCROLL_LIST; man: BOOLEAN) is
-            -- Create a motif list, get screen_object value of srolled
-            -- window which contains current list.
-        local
-            ext_name: ANY
-        do
+			-- Create a motif list, get screen_object value of srolled
+			-- window which contains current list.
+		local
+			ext_name: ANY
+		do
 			widget_index := widget_manager.last_inserted_position;
-            ext_name := a_list.identifier.to_c;
-            list_screen_object := create_scroll_list ($ext_name,
+			ext_name := a_list.identifier.to_c;
+			list_screen_object := create_scroll_list ($ext_name,
 					parent_screen_object (a_list, widget_index),
 					man);
-            screen_object := xt_parent (list_screen_object);
-            a_list.set_list_imp (Current);
-            a_list.set_font_imp (Current);
-        end;
+			screen_object := xt_parent (list_screen_object);
+			a_list.set_list_imp (Current);
+			a_list.set_font_imp (Current);
+		end;
 
 feature {NONE}
 
@@ -83,6 +83,20 @@ feature {NONE}
 		do
 			Result := list_screen_object
 		end;
+
+    set_managed (flag: BOOLEAN) is
+            -- Enable geometry managment on screen widget implementation,
+            -- by window manager of parent widget if `flag', disable it
+            -- otherwise.
+        do
+            if flag then
+                xt_manage_child (action_target)
+                xt_manage_child (screen_object)
+            else
+                xt_unmanage_child (action_target)
+                xt_unmanage_child (screen_object)
+            end
+        end;
 
 feature 
 
@@ -107,8 +121,6 @@ feature
 		ensure
 			output_only_mode: is_output_only_mode
 		end;
-
-
 
 	set_foreground_color (a_color: COLOR) is
 			-- Set `foreground_color' to `a_color'.

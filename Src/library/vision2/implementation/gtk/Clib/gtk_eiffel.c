@@ -690,6 +690,21 @@ void c_gtk_widget_set_all_events (GtkObject * win)
 
 /*********************************
  *
+ * Function `c_gtk_widget_grab_focus'	(1)
+ *
+ * Note : 	(1) Grab the focus
+ *
+ *********************************/
+
+void c_gtk_widget_grab_focus (GtkWidget *widget)
+{
+//	GTK_WIDGET_SET_FLAGS(widget, GTK_CAN_FOCUS);
+
+	gtk_widget_grab_focus (widget);	
+}
+
+/*********************************
+ *
  * Function `c_gtk_widget_destroyed'
  *
  * Note : True, if widget is destroyed

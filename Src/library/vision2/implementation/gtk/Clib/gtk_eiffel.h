@@ -150,7 +150,10 @@ void c_gtk_widget_set_all_events (GtkObject *w);
  gtk_widget functions
 ==============================================================================*/
 
-/* True, if widget is destroyed */
+/* Grab the focus */
+void c_gtk_widget_grab_focus (GtkWidget *wid);
+
+//* True, if widget is destroyed */
 int c_gtk_widget_destroyed (GtkWidget *widget);
 
 /* Set widget flags */

@@ -50,9 +50,10 @@ feature {NONE} -- GTK C functions for widgets
 			"C | <gtk/gtk.h>"
 		end
 
-	gtk_widget_grab_focus (w: POINTER) is
+	c_gtk_widget_grab_focus (w: POINTER) is
 		external
-			"C | <gtk/gtk.h>"
+--			"C | <gtk/gtk.h>"
+			"C (GtkWidget *)| %"gtk_eiffel.h%""
 		end
 
 	c_gtk_widget_has_focus (w: POINTER): BOOLEAN is
@@ -60,6 +61,13 @@ feature {NONE} -- GTK C functions for widgets
 			"C [macro <gtk/gtk.h>] (GtkWidget *): EIF_BOOLEAN"
 		alias
 			"GTK_WIDGET_HAS_FOCUS"
+		end
+
+	c_gtk_widget_can_focus (w: POINTER): BOOLEAN is
+		external 
+			"C [macro <gtk/gtk.h>] (GtkWidget *): EIF_BOOLEAN"
+		alias
+			"GTK_WIDGET_CAN_FOCUS"
 		end
 
 	gtk_widget_destroy (w: POINTER) is

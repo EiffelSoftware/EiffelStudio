@@ -151,11 +151,11 @@ feature {NONE} -- GTK C functions for gtkeditable
 		external "C [macro %"gtk_eiffel.h%"]"
 		end
 
-	c_gtk_editable_has_selection (widget: POINTER): BOOLEAN is
+	c_gtk_editable_has_selection (widget: POINTER): INTEGER is
 		external "C [macro %"gtk_eiffel.h%"]"
 		end
 
-	c_gtk_editable_editable (widget: POINTER): BOOLEAN is
+	c_gtk_editable_editable (widget: POINTER): INTEGER is
 		external "C [macro %"gtk_eiffel.h%"]"
 		end
 

@@ -25,6 +25,8 @@ feature -- Project name and Location state
 	
 	l_Compile_project: STRING is "Compile the generated project"
 	
+	l_Console_application: STRING is "Console application"
+	
 feature -- Project name error state
 
 	t_Project_name_error_state: STRING is "Project Name Error"
@@ -42,7 +44,7 @@ feature -- Project name error state
 feature -- Location error state
 
 	t_Location_state: STRING is "Location Error"
-	
+
 	m_Location_state: STRING is 
 		"The directory you have chosen doesn't exist and%N%
 		%the Wizard cannot create it.%N%

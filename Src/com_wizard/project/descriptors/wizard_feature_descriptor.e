@@ -103,7 +103,6 @@ feature -- Transformation
 							l_new_name.append (l_name)
 							name := unique_identifier (l_new_name, agent l_names.has)
 						end
-						a_interface_descriptor.feature_c_names.force (name.twin)
 						
 						-- Then rename Eiffel feature name in coclass, add corresponding renaming clause
 						l_name := interface_eiffel_name
@@ -122,6 +121,9 @@ feature -- Transformation
 				l_eiffel_names.put (a_interface_descriptor, interface_eiffel_name)
 				l_eiffel_names.put (a_interface_descriptor, precondition_feature_name (interface_eiffel_name))
 			end
+
+			-- Store used name for later comparison
+			a_interface_descriptor.feature_c_names.force (name.twin)
 		end
 
 	disambiguate_interface_names (a_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is

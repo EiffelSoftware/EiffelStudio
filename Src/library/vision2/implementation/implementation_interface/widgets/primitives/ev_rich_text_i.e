@@ -32,7 +32,9 @@ feature -- Status report
 		end
 		
 	selected_character_format: EV_CHARACTER_FORMAT is
-			--
+			-- `Result' is character format of current selection.
+			-- If more than one format is contained in the selection, `Result'
+			-- is the first of these formats.
 		require
 			has_selection: has_selection
 		deferred
@@ -338,7 +340,7 @@ feature -- Status setting
 		end
 		
 	set_tab_width (a_width: INTEGER) is
-			-- Assign `a_width' to `tab_width'.
+			-- Assign `a_width' in pixels to `tab_width'.
 		require
 			width_positive: a_width > 0
 		deferred
@@ -543,6 +545,8 @@ feature -- Status setting
 			-- Is formatting from caret position `start_index' to `end_index' contiguous?
 			-- Internal version which permits optimizations as caret position and selection
 			-- does not need to be restored.
+		require
+			valid_character_index: start_index >= 1 and end_index <= text_length + 1 and start_index <= end_index
 		deferred
 		end
 		
@@ -550,17 +554,27 @@ feature -- Status setting
 			-- `Result' is character format at position `pos'. On some platforms
 			-- this may be optimized to take the selected character format and therefore
 			-- should only be used by `next_change_of_character'.
+		require
+			valid_character_index: pos >= 1 and pos <= text_length + 1
 		deferred
+		ensure
+			result_not_void: Result /= Void
 		end
 		
 	internal_paragraph_format_contiguous (start_position, end_position: INTEGER): BOOLEAN is
 			-- Is paragraph formatting from caret_position `start_position' to `end_position' contiguous?
+		require
+			valid_character_index: start_position >= 1 and end_position <= text_length + 1 and start_position <= end_position
 		deferred
 		end
 		
 	internal_paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
 			-- `Result' is paragraph_format at caret position `caret_index'.
+		require
+			valid_character_index: caret_index >= 1 and caret_index <= text_length + 1
 		deferred
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	initialize_for_saving is

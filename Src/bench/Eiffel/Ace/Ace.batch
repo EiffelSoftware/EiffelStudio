@@ -1,0 +1,83 @@
+system ewb
+
+root
+
+	ewb (root_cluster): "make"
+
+cluster
+
+-- STANDARD STRUCTURES:
+
+		kernel:				"$BASE/kernel";
+		support:			"$BASE/support";
+		access:				"$BASE/structures/access";
+		cursors:			"$BASE/structures/cursors";
+		dispenser:			"$BASE/structures/dispenser";
+		list:				"$BASE/structures/list";
+		set:				"$BASE/structures/set";
+		sort:				"$BASE/structures/sort";
+		storage:			"$BASE/structures/storage";
+		table:				"$BASE/structures/table";
+		traversing:			"$BASE/structures/traversing";
+
+-- ES3 SPECIFIC CLUSTERS
+
+	-- Root
+
+		root_cluster:       "$EBENCH/Eiffel/es";
+
+	-- General compilation:
+
+		yacc:				"$EBENCH/Eiffel/yacc";
+		const:				"$EBENCH/Eiffel/const";
+		error:				"$EBENCH/Eiffel/error";
+
+	-- Lace compilation:
+
+		lace_AST:			"$EBENCH/Eiffel/lace/AST";
+		env:				"$EBENCH/Eiffel/lace/env";
+		lace_error:			"$EBENCH/Eiffel/lace/error";
+		lace_compile:		"$EBENCH/Eiffel/lace/lace_compile";
+		lace_shared:		"$EBENCH/Eiffel/lace/shared";
+
+	-- Eiffel compilation:
+
+		instructions:		"$EBENCH/Eiffel/eiffel/AST/instructions";
+		expressions:		"$EBENCH/Eiffel/eiffel/AST/expressions";
+		ast_skeleton:		"$EBENCH/Eiffel/eiffel/AST/skeleton";
+		ast_stonables:		"$EBENCH/Eiffel/eiffel/AST/stonables";
+		actual_type:		"$EBENCH/Eiffel/eiffel/actual_type";
+		byte_code:			"$EBENCH/Eiffel/eiffel/byte_code";
+		cecil:				"$EBENCH/Eiffel/eiffel/cecil";
+		compiler:			"$EBENCH/Eiffel/eiffel/compiler";
+		eiffel_const:		"$EBENCH/Eiffel/eiffel/const";
+		eiffel_error_feature:			"$EBENCH/Eiffel/eiffel/error/feature";
+		eiffel_error_parents:			"$EBENCH/Eiffel/eiffel/error/parents";
+		eiffel_error_redefined:			"$EBENCH/Eiffel/eiffel/error/redefined";
+		eiffel_error_unredefined:		"$EBENCH/Eiffel/eiffel/error/unredefined";
+		generation:			"$EBENCH/Eiffel/eiffel/generation";
+		genericity:			"$EBENCH/Eiffel/eiffel/genericity";
+		inheritance:		"$EBENCH/Eiffel/eiffel/inheritance";
+		interface:			"$EBENCH/Eiffel/eiffel/interface";
+		polymorphism:		"$EBENCH/Eiffel/eiffel/polymorphism";
+		server:				"$EBENCH/Eiffel/eiffel/server";
+		eiffel_shared:		"$EBENCH/Eiffel/eiffel/shared";
+		skeleton:			"$EBENCH/Eiffel/eiffel/skeleton";
+		structures:			"$EBENCH/Eiffel/eiffel/structures";
+		tables:				"$EBENCH/Eiffel/eiffel/tables";
+		debuggable:			"$EBENCH/Eiffel/debug";
+
+-- SHARED BETWEEN COMPILER AND INTERFACE:
+
+		clicking:			"$EBENCH/Eiffel/shared/clicking";
+		communications:		"$EBENCH/Eiffel/shared/es3_bench";
+		stones:				"$EBENCH/Eiffel/shared/stones";
+		tops:				"$EBENCH/Eiffel/shared/tops";
+
+--external
+--
+--	"$(EBENCH)/C/parsing/shared/libparsing.a";
+--	"$(EBENCH)/C/parsing/eiffel/libeiffel.a";
+--	"$(EBENCH)/C/parsing/lace/liblace.a"
+
+end

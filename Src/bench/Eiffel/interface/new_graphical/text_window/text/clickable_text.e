@@ -186,6 +186,8 @@ feature -- Initialization
 
 	select_line (l_num: INTEGER) is
 			-- select the `l_num'-th line in text
+			-- Cursor is positioned at end of selection.
+			-- Selection cursor is positioned at beginning of selection.
 		require
 			l_num_large_enough: l_num > 0
 			l_num_small_enough: l_num <= number_of_lines
@@ -196,8 +198,8 @@ feature -- Initialization
 			enable_selection
 		ensure
 			has_selection
-			cursor_positioned: cursor.y_in_lines = l_num and cursor.x_in_characters = 1
-			selection_cursor_positioned: selection_cursor.y_in_lines = l_num and selection_cursor.line.eol_token = selection_cursor.token
+			cursor_positioned: cursor.y_in_lines = l_num and cursor.line.eol_token = cursor.token
+			selection_cursor_positioned: selection_cursor.y_in_lines = l_num and selection_cursor.x_in_characters = 1
 		end
 
 feature {NONE} -- Load Text handling

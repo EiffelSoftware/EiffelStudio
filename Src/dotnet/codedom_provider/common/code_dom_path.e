@@ -27,23 +27,20 @@ feature -- Access
 	Codedom_installation_path: STRING is
 			-- Path to installed CodeDom provider
 		local
-			l_retried: BOOLEAN
 			l_key: REGISTRY_KEY
 			l_path: SYSTEM_STRING
 		once
-			if not l_retried then
-				l_key := feature {REGISTRY}.local_machine.open_sub_key (Setup_key, False)
-				if l_key = Void then
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_setup_key, [])
+			l_key := feature {REGISTRY}.local_machine.open_sub_key (Setup_key, False)
+			if l_key = Void then
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_setup_key, [])
+			else
+				l_path ?= l_key.get_value (Installation_dir_value)
+				if l_path = Void then
+					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_installation_directory, [])
 				else
-					l_path ?= l_key.get_value (Installation_dir_value)
-					if l_path = Void then
-						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_installation_directory, [])
-					else
-						Result := l_path
-						if Result.count > 1 and then Result.item (Result.count) = Directory_separator then
-							Result.keep_head (Result.count - 1)
-						end
+					Result := l_path
+					if Result.count > 1 and then Result.item (Result.count) = Directory_separator then
+						Result.keep_head (Result.count - 1)
 					end
 				end
 			end
@@ -93,7 +90,38 @@ feature -- Access
 				Result.append ("default.ecd")
 			end
 		end
-		
+	
+	Compiler_path: STRING is
+			-- Path to compiler
+		local
+			l_key: REGISTRY_KEY
+			l_path: SYSTEM_STRING
+		once
+			l_key := feature {REGISTRY}.local_machine.open_sub_key (Compiler_key, False)
+			if l_key = Void then
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_compiler_key, [])
+			else
+				l_path ?= l_key.get_value (Ise_eiffel_value)
+				if l_path = Void then
+					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_ise_eiffel, [])
+				else
+					Result := l_path
+					if Result.item (Result.count) /= Directory_separator then
+						Result.append_character (Directory_separator)
+					end
+					Result.append ("studio")
+					Result.append_character (Directory_separator)
+					Result.append ("spec")
+					Result.append_character (Directory_separator)
+					Result.append ("windows")
+					Result.append_character (Directory_separator)
+					Result.append ("bin")
+				end
+			end
+		ensure
+			no_ending_directory_separator: Result /= Void implies Result.item (Result.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator
+		end
+
 end -- class CODE_DOM_PATH
 
 --+--------------------------------------------------------------------

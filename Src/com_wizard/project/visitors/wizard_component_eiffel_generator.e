@@ -39,14 +39,6 @@ feature {NONE} -- Implementation
 		local
 			tmp_writer: WIZARD_WRITER_INHERIT_CLAUSE
 		do
-
-			create tmp_writer.make
-			tmp_writer.set_name (Queriable_type)
-			an_eiffel_writer.add_inherit_clause (tmp_writer)
-
-			create tmp_writer.make
-
-
 			-- Add enumeration
 			if not system_descriptor.enumerators.empty then
 				from

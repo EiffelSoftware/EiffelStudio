@@ -82,10 +82,8 @@ feature -- Basic operations
 			cpp_class_writer.add_other (Extern_lock_module)
 			cpp_class_writer.add_other (Extern_unlock_module)
 
-			if shared_wizard_environment.in_process_server then
-				-- Set type id feature
-				cpp_class_writer.add_function (set_type_id_feature, Public)
-			end
+			-- Set type id feature
+			cpp_class_writer.add_function (set_type_id_feature, Public)
 
 			-- Member
 			create member_writer.make

@@ -21,6 +21,8 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	SHARED_EIFNET_DEBUG_VALUE_FORMATTER
 
 create 
 	make

@@ -76,8 +76,6 @@ iff not defined NO_COMPILE then
 	all_makes
 	cd %INSTALL_DIR\library\store\dbms\rdbms\oracle\clib
 	all_makes
-	cd %INSTALL_DIR\library\store\support\Clib
-	all_makes
 	remtrace vision2
 	cd %INSTALL_DIR\library\vision2\Clib
 	all_makes

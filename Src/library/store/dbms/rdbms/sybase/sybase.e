@@ -490,7 +490,7 @@ feature {NONE} -- External features
 			"C"
 		end
 
-	syb_conv_type (index: ANY): INTEGER is
+	syb_conv_type (index: INTEGER): INTEGER is
 		external
 			"C"	
 		end

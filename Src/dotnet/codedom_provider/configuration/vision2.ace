@@ -12,7 +12,6 @@ default
  	cls_compliant (yes)
  	dotnet_naming_convention (yes)
  	msil_generation_type ("dll")
-	msil_clr_version ("v1.1.4322")
 	msil_use_optimized_precompile (yes)
  	use_all_cluster_name_as_namespace (yes)
  	use_cluster_name_as_namespace (no)

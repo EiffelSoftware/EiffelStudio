@@ -7,7 +7,6 @@ root
 default
 	assertion (no)
 	msil_generation (yes)
-	msil_clr_version ("v1.1.4322")
 	il_verifiable (yes)
 	cls_compliant (yes)
 	dotnet_naming_convention (yes)

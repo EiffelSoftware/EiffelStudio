@@ -281,9 +281,21 @@ feature {GB_OBJECT} -- Status setting
 			-- like these, but we need to be able to handle them.
 			-- Does nothing by default, but must be redefined in descendents
 			-- where an event must be handled.
+		require
+			actual_object_not_void: actual_object /= Void
+			vision2_object_not_void: vision2_object /= Void
+			an_object_not_void: an_object /= Void
 		do
-			
-		end		
+		ensure
+			object_set: object = actual_object
+			objects_count_is_two: objects.count = 2 and objects.has (vision2_object) and objects.has (an_object)
+		end
+		
+	has_user_events: BOOLEAN is
+			-- Does `Current' have user events which must be set?
+		once
+			Result := False
+		end
 
 feature {NONE} -- Implementation
 

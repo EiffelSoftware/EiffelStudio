@@ -52,9 +52,12 @@ feature {NONE} -- Initialization
 			dib_not_void: dib /= Void
 			valid_mode: valid_dib_colors_constant (mode)
 		do
-			item := cwin_create_di_bitmap (a_dc.item, dib.item,
+			item := cwin_create_di_bitmap (a_dc.item, dib.info_header.item,
 				Cbm_init, dib.item_bits, dib.item, mode)
+		ensure
+			bitmap_created: item /= item.default
 		end
+		
 
 	make_indirect (a_log_bitmap: WEL_LOG_BITMAP) is
 			-- Make a bitmap using `a_log_bitmap'.

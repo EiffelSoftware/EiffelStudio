@@ -139,8 +139,10 @@ feature {MATISSE} -- Persistence
 				until
 					linear_rep.off
 				loop
-					persist_if_not (linear_rep.item)
-					c_add_successor_append (a_pred.oid, oid, linear_rep.item.oid)
+					if linear_rep.item /= Void then
+						persist_if_not (linear_rep.item)
+						c_add_successor_append (a_pred.oid, oid, linear_rep.item.oid)
+					end
 					linear_rep.forth
 				end
 			end

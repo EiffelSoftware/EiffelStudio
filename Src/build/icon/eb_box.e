@@ -7,20 +7,8 @@ inherit
 		rename
 			make as make_row_col,
 			make_unmanaged as make_row_col_unmanaged,
-			cursor as row_column_cursor,
-			show as row_show,
-			hide as row_hide
-		export
-			{NONE} all
-		end
-	ROW_COLUMN
-		rename 
-			make as make_row_col,
-			make_unmanaged as make_row_col_unmanaged,
 			cursor as row_column_cursor
 		redefine
-			show, hide
-		select
 			show, hide
 		end
 	EB_LINKED_LIST [T]
@@ -47,7 +35,7 @@ inherit
 			go_i_th, put, wipe_out, remove,
 			put_right, extend
 		end
-	
+
 feature -- List operations
 
 	make_box (a_name: STRING a_parent: COMPOSITE) is
@@ -133,7 +121,6 @@ feature -- List operations
 				from
 					icons.go_i_th (relative_position)
 					list_remove
---					forth
 				until
 					after or icons.after
 				loop
@@ -144,12 +131,9 @@ feature -- List operations
 				end
 				current_icon := icons.item
 				current_icon.reset_data
-				current_icon.set_managed (False)
+				current_icon.unmanage
 			end
 			go_i_th (old_pos)
---			if after and then not empty then
---				back
---			end
 		end -- remove
 
 	wipe_out is
@@ -197,13 +181,13 @@ feature {NONE}
 			end
 		end -- clear_icons
 
-feature -- Other features
+feature -- Display
 
 	show is
 		local
 			icon: ICON
 		do
-			row_show
+			Precursor
 			from
 				start
 				icons.start
@@ -225,7 +209,7 @@ feature -- Other features
 		local
 			icon: ICON
 		do
-			row_hide
+			Precursor
 			from
 				start
 				icons.start
@@ -319,7 +303,7 @@ feature {NONE}
 
 	create_new_icon is
 		do
-			!!new_icon
+			!! new_icon
 		end -- icon_create
 	
 feature {NONE}

@@ -503,7 +503,7 @@ local_realclean::
 
 libmtwkbench.so: $(MT_WOBJ)
 	$(RM) $@
-	$(SHAREDLINK) $(LDSHAREDFLAGS) -o $@ $(MT_WOBJ)
+	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(MT_WOBJ)
 
 all:: libmtfinalized.so 
 
@@ -511,7 +511,7 @@ local_realclean::
 	$(RM) libmtfinalized.so	
 
 libmtfinalized.so: $(MT_LOBJ)
-	$(SHAREDLINK) $(LDSHAREDFLAGS) -o $@ $(MT_LOBJ)
+	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(MT_LOBJ)
 	
 all:: libmtfinalized.a
 
@@ -538,7 +538,7 @@ local_realclean::
 	$(RM) libwkbench.so 
 
 libwkbench.so: $(WOBJ)
-	$(SHAREDLINK) $(LDSHAREDFLAGS) -o $@ $(WOBJ)
+	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(WOBJ)
 
 all:: libfinalized.so 
 
@@ -546,7 +546,7 @@ local_realclean::
 	$(RM) libfinalized.so	
 
 libfinalized.so: $(LOBJ)
-	$(SHAREDLINK) $(LDSHAREDFLAGS) -o $@ $(LOBJ)
+	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(LOBJ)
 	
 all:: libfinalized.a
 

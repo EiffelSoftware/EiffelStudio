@@ -3,12 +3,10 @@ echo -----------------------------------------------------------------
 echo ----------------- Preparing Temporary directory -----------------
 echo -----------------------------------------------------------------
 pushd
-mkdir %DELIVERY%\studio\wizards\new_projects\vision2\spec
-mkdir %DELIVERY%\studio\wizards\new_projects\vision2\spec\windows
-echo Y > y.txt
-rd /S %TEMP%\vision2_wizard < y.txt
-del y.txt
-mkdir %TEMP%\vision2_wizard
+mkdir %DELIVERY%\studio\wizards\%1\%2\spec
+mkdir %DELIVERY%\studio\wizards\%1\%2\spec\%ISE_PLATFORM%
+rd /Q /S %TEMP%\%3
+mkdir %TEMP%\%3
 echo -----------------------------------------------------------------
 echo ----------------- Retrieving last sources -----------------------
 echo -----------------------------------------------------------------
@@ -17,27 +15,24 @@ call cvs up -Pd
 echo -----------------------------------------------------------------
 echo ----------------- Compilation -----------------------------------
 echo -----------------------------------------------------------------
-%ISE_EIFFEL%\studio\spec\windows\bin\ec -finalize -ace %EIFFEL_SRC%\help\wizards\vision2_wizard.ace -project_path %TEMP%\vision2_wizard
-cdd %TEMP%\vision2_wizard
+cdd %TEMP%\%3
 copy %EIFFEL_SRC%\help\wizards\wizard.ico .
 copy %EIFFEL_SRC%\help\wizards\wizard.rc .
-cdd %TEMP%\vision2_wizard\EIFGEN\F_Code
-%ISE_EIFFEL%\studio\spec\windows\bin\finish_freezing -silent
+%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec -finalize -ace %EIFFEL_SRC%\help\wizards\%3.ace -project_path %TEMP%\%3 -c_compile
 echo -----------------------------------------------------------------
 echo ------- Compress generated executable file ----------------------
 echo -----------------------------------------------------------------
+cdd %TEMP%\%3\EIFGEN\F_code
 iff not defined WIN64 then
 	upx wizard.exe
 endiff
 echo -----------------------------------------------------------------
 echo ------- Copying generated executable file into Delivery ---------
 echo -----------------------------------------------------------------
-copy wizard.exe %DELIVERY%\studio\wizards\new_projects\vision2\spec\windows
+copy wizard.exe %DELIVERY%\studio\wizards\%1\%2\spec\%ISE_PLATFORM%
 cd %TEMP%
 popd
 echo -----------------------------------------------------------------
 echo ------- Deleting temporary files --------------------------------
 echo -----------------------------------------------------------------
-echo Y > y.txt
-rd /S %TEMP%\vision2_wizard < y.txt
-del y.txt
+rd /Q /S %TEMP%\%3

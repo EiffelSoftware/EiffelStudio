@@ -1,14 +1,9 @@
---|---------------------------------------------------------------
---| Copyright (C) Interactive Software Engineering, Inc.        --
---|  270 Storke Road, Suite 7 Goleta, California 93117          --
---|                      (805) 685-1006                         --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- COORD_XY_FIG: Description of geometric abstract coordinates.
 
 indexing
 
+	copyright: "See notice at end of class";
     	date: "$Date$";
     	revision: "$Revision$"
 
@@ -18,34 +13,54 @@ inherit
 
     	GEOMETRIC_OP;
 
-    	ANGLE_ROUT;
+    	ANGLE_ROUT
+			export
+				{NONE} all
+			end;
 
     	PART_COMPARABLE
 		redefine
             		infix ">"
 		end;
 
-    	BASIC_ROUTINES;
+    	BASIC_ROUTINES
+			export
+				{NONE} all
+			end;
 
-	SINGLE_MATH;
+		SINGLE_MATH
+			export
+				{NONE} all
+			end;
 
-	COORD_XY
+		CONFIGURE_NOTIFY
+			rename
+				make as notify_make
+			export
+				{NONE} all
+			redefine
+				set_conf_modified
+			end;
 
-feature
+		COORD_XY
 
-	add (v: VECTOR) is
-            		-- add `v' to the two_coord.
-        	require
-            		vector_exists: not (v = Void)
+feature -- Access
+
+	origin: COORD_XY_FIG is
+            		-- Origin of point
         	do
-            		x := x + v.x;
-            		y := y + v.y
-        	ensure
-            		x = old x + v.x;
-            		y = old y + v.y
+            		inspect
+                		origin_user_type
+            		when 0 then
+            		when 1 then
+                		Result := origin_user
+            		when 2 then
+                		Result := Current
+            		end
         	end;
 
-    	distance (other: like Current): INTEGER is
+
+	distance (other: like Current): INTEGER is
             		-- Distance between current point and `other'
         	local
             		xr, yr: INTEGER
@@ -55,28 +70,23 @@ feature
             		Result := real_to_integer (sqrt(integer_to_real (xr * xr + yr	* yr)));
         	end;
 
-    	duplicate: like Current is
-            		-- Create a copy of current point.
-        	do
-            		!! Result;
-            		Result.set (x, y)
-        	ensure
-        	    	Result.is_surimposable (Current)
-        	end;
+feature -- Comparison
 
-    	infix ">" (p: like Current): BOOLEAN is
+	infix ">" (p: like Current): BOOLEAN is
             		-- Make a comparison between coordinates of point.
         	do
             		Result := (x >= p.x and then y >= p.y) and then (x /= p.x or else y/= p.y)
         	end;
 
-    	infix "<" (p: like Current): BOOLEAN is
+   	infix "<" (p: like Current): BOOLEAN is
             		-- Make a comparison between coordinates of point.
         	do
             		Result := (x <= p.x and then y <= p.y) and then (x /= p.x or else y/= p.y)
         	end;
 
-    	infix "-" (other: like Current): VECTOR is
+feature -- Basic operation
+
+	infix "-" (other: like Current): VECTOR is
             		-- Current point translated by -`other'
         	require
             		other_exists: not (other = Void)
@@ -100,26 +110,7 @@ feature
             		Result.y = y + other.y
         	end;
 
-    	is_surimposable (other: like Current): BOOLEAN is
-            		-- Is the point surimposable to `other' ?
-        	do
-            		Result := (x=other.x) and (y=other.y)
-        	end;
-
-    	origin: COORD_XY_FIG is
-            		-- Origin of point
-        	do
-            		inspect
-                		origin_user_type
-            		when 0 then
-            		when 1 then
-                		Result := origin_user
-            		when 2 then
-                		Result := Current
-            		end
-        	end;
-
-    	prefix "-": like Current is
+	prefix "-": like Current is
             		-- Make a negative copy of current point
         	do
             		!! Result;
@@ -138,13 +129,43 @@ feature
             		Result.is_surimposable (Current)
         	end;
 
+
+
+feature -- Duplication
+
+	duplicate: like Current is
+            		-- Create a copy of current point.
+        	do
+            		!! Result;
+            		Result.set (x, y)
+        	ensure
+        	    	Result.is_surimposable (Current)
+        	end;
+
+
+feature -- Modification & Insertion
+
+	add (v: VECTOR) is
+            		-- add `v' to the two_coord.
+        	require
+            		vector_exists: not (v = Void)
+        	do
+            		x := x + v.x;
+            		y := y + v.y;
+					set_conf_modified
+        	ensure
+            		x = old x + v.x;
+            		y = old y + v.y
+        	end;
+      	
     	set_max (other: like Current) is
             		-- Set both coordinates to the maximum between current and `other'.
         	require
             		other_exists: not (other = Void)
         	do
             		x := max (x, other.x);
-            		y := max (y, other.y)
+            		y := max (y, other.y);
+					set_conf_modified
         	ensure
             		x =  max (old x, other.x);
             		y =  max (old y, other.y)
@@ -156,7 +177,8 @@ feature
             		other_exists: not (other = Void)
         	do
             		x := min (x, other.x);
-            		y := min (y, other.y)
+            		y := min (y, other.y);
+					set_conf_modified
         	ensure
             		x =  min (old x, other.x);
             		y =  min (old y, other.y)
@@ -171,7 +193,8 @@ feature
     	set_x (x1: INTEGER) is
             		-- Set horizontal coordinate.
         	do
-            		x := x1
+            		x := x1;
+					set_conf_modified
         	ensure
             		x = x1
         	end;
@@ -179,7 +202,8 @@ feature
     	set_y (y1: INTEGER) is
             		-- Set vertical coordinate.
         	do
-            		y := y1
+            		y := y1;
+					set_conf_modified
         	ensure
             		y = y1
         	end;
@@ -190,7 +214,8 @@ feature
             		other_exists: not (other = Void)
         	do
             		x := x - other.x;
-            		y := y - other.y
+            		y := y - other.y;
+					set_conf_modified
         	ensure
             		x = old x - other.x;
             		y = old y - other.y
@@ -208,8 +233,9 @@ feature
                 		cosinus := cos (a);
                 		sinus := sin (a);
                 		x := px+real_to_integer (xr*cosinus)+real_to_integer (yr*sinus);
-                		y := py+real_to_integer (yr*cosinus)-real_to_integer (xr*sinus)
-		        end
+                		y := py+real_to_integer (yr*cosinus)-real_to_integer (xr*sinus);
+						set_conf_modified
+		        end;
         	end;
 
     	xyscale (f: REAL; px,py: INTEGER) is
@@ -222,21 +248,52 @@ feature
             		x := real_to_integer (f * x);
             		y := real_to_integer (f * y);
             		x := x + px;
-            		y := y + py
+            		y := y + py;
+					set_conf_modified
         	end;
 
     	xytranslate (vx, vy: INTEGER) is
             		-- Translate by `vx' horizontally and `vy' vertically.
         	do
             		x := x + vx;
-            		y := y + vy
+            		y := y + vy;
+					set_conf_modified
         	ensure then
             		x = old x + vx;
             		y = old y + vy
         	end;
 
+feature -- Status report
+
+		
+    	is_surimposable (other: like Current): BOOLEAN is
+            		-- Is the point surimposable to `other' ?
+        	do
+            		Result := (x=other.x) and (y=other.y)
+        	end;
+
+feature {NONE} -- Modification & Insertion
+
+		set_conf_modified is
+			do
+			end;
+
 invariant
 
     	origin_user_type <= 2
 
-end
+end -- COORD_XY_FIG
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -1,9 +1,7 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
-		"EiffelVision text container, gtk implementation"
+		"Eiffel Vision textable. Mswindows implementation."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -12,46 +10,116 @@ deferred class
 	
 inherit
 	EV_TEXTABLE_I
-
-feature -- Status setting
-
-	align_text_center is
-			-- Set text alignment of current label to center.
-		deferred
-           end
-
-	align_text_right is
-			-- Set text alignment of current label to right.
-		deferred
-		end
-
-	align_text_left is
-			-- Set text alignment of current label to left.
-		deferred
-		end
 	
-	destroyed: BOOLEAN is
-		deferred
+feature -- Access
+
+	text: STRING is
+			-- Text displayed in label.
+		do
+			Result := wel_text
+			if Result /= Void and then Result.empty then
+				Result := Void
+			else
+				unescape_ampersands (Result)
+			end
+		end 
+
+feature -- Element change
+
+	set_text (a_text: STRING) is
+			-- Assign `a_text' to `text'.
+		do
+			wel_set_text (escaped_text (a_text))
 		end
 
 	remove_text is
-			-- Remove text by setting it to an empty string.
+			-- Make `text' `Void'.
 		do
 			set_text ("")
 		end
 
-feature {EV_ANY_I}
+feature {NONE} -- Implementation
 
-	safe_text: STRING is
-			-- Convenience function for Windows implementation.
-			-- Returns `text' but if `Void' returns empty string.
-		do
-			Result := text
-			if Result = Void then
-				Result := ""
-			end
+	wel_set_text (a_text: STRING) is
+			-- Set `a_text' in WEL object.
+		deferred
+		end
+
+	wel_text: STRING is
+			-- Text from WEL object.
+		deferred
 		ensure
 			not_void: Result /= Void
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	escaped_text (s: STRING): STRING is
+			-- `text' with doubled ampersands.
+		require
+			s_not_void: s /= Void
+		do
+			Result := clone (s)
+			escape_ampersands (Result)
+		end
+
+	escape_ampersands (s: STRING) is
+			-- Replace all occurrences of "&" with "&&".
+			--| Cannot be replaced with {STRING}.replace_substring_all because
+			--| we only want it to happen once, not forever.
+		require
+			s_not_void: s /= Void
+		local
+			n: INTEGER
+		do
+			from
+				n := 1
+			until
+				n > s.count
+			loop
+				n := s.index_of ('&', n)
+				if n > 0 then
+					s.insert ("&", n)
+					n := n + 2
+				else
+					n := s.count + 1
+				end
+			end
+		ensure
+			ampersand_occurrences_doubled: (old clone (s)).occurrences ('&') =
+				s.occurrences ('&') * 2
+		end
+
+	unescape_ampersands (s: STRING) is
+			-- Replace all occurrences of "&&" with "&".
+			--| Cannot be replaced with {STRING}.replace_substring_all because
+			--| it will replace any number of ampersands with only one.
+			--| Has to be a previously escaped string. Enforced with a check
+			--| inside routine body.
+		require
+			s_not_void: s /= Void
+		local
+			n: INTEGER
+		do
+			from
+				n := 1
+			until
+				n > s.count
+			loop
+				n := s.index_of ('&', n)
+				if n > 0 then
+					s.remove (n)
+					check
+						is_escaped_string: (s @ n) = '&'
+					end
+					n := n + 1
+				else
+					n := s.count + 1
+				end
+			end
+		ensure
+			ampersand_occurrences_halved: s.occurrences ('&') =
+				(old clone (s)).occurrences ('&') * 2
 		end
 
 	line_count: INTEGER is
@@ -64,11 +132,27 @@ feature {EV_ANY_I}
 			non_negative: Result >= 0
 		end
 
-feature -- Inapplicable
+feature -- Obsolete
+
+	safe_text: STRING is
+			-- Convenience function for Windows implementation.
+			-- Returns `text' but if `Void' returns empty string.
+		obsolete
+			"Just use `wel_text'."
+		do
+			Result := wel_text
+		ensure
+			not_void: Result /= Void
+		end
 
 	set_default_minimum_size is
-			-- Set to the size of the text
+			-- Set to the size of the text.
+		obsolete
+			"Implement using {EV_FONT_IMP}.text_metrics."
 		do
+			check
+				inapplicable: False
+			end
 		end
 
 end -- class EV_TEXTABLE_IMP
@@ -94,6 +178,15 @@ end -- class EV_TEXTABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/03/28 00:04:23  brendel
+--| Revised.
+--| Changed feature order and comments with _I.
+--| Removed redundant deferred redeclaration of align_* features.
+--| Added deferred wel_set_text and wel_text, to be implemented by WEL object.
+--| Added set_text, that uses wel_set_text to pass filtered text. See code.
+--| Added text, that uses wel_text to retreive text with inverted filter.
+--| Declared safe_text obsolete. wel_text can be used instead.
+--|
 --| Revision 1.16  2000/03/03 00:55:10  brendel
 --| Added feature `line_count'.
 --| Formatted for 80 columns.

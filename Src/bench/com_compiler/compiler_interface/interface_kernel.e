@@ -118,6 +118,8 @@ feature -- Basic Operations
 
 	create_project (ace_name: STRING; project_directory_path: STRING) is
 			-- Create new project.
+		local
+			enum: ECOM_X__EIF_COMPILATON_TYPES_ENUM
 		do
 			valid_project := False
 			if ace_name /= Void and project_directory_path /= Void then
@@ -130,6 +132,8 @@ feature -- Basic Operations
 					if Eiffel_project.initialized then
 						Eiffel_ace.set_file_name (ace_name)
 						create {PROJECT_PROPERTIES} project_properties.make
+						create enum
+						project_properties.set_compilation_type (enum.is_application)
 					else
 						last_error_message := "Project could not be initialized"
 					end

@@ -111,7 +111,7 @@ feature -- Comparison
 					and then is_expanded = other_gen_type.is_expanded
 					and then other_gen_type.generics.count = 1
 				then
-					Result := last_type.same_as (other_gen_type.generics.item (1))
+					Result := last_type.generics.item (1).same_as (other_gen_type.generics.item (1))
 				end
 			end
 		end
@@ -257,6 +257,6 @@ feature {COMPILER_EXPORTER}
 		end
 
 invariant
-	last_type_valid: last_type /= Void implies last_type.generics.count = 1
+	last_type_valid: last_type /= Void implies (last_type.generics /= Void and then last_type.generics.count = 1)
 	
 end -- class MULTI_TYPE_A

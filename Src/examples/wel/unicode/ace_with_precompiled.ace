@@ -2,7 +2,7 @@ system
 	brushes_demo
 
 root 
-	BRUSHES_DEMO (root_cluster): "make"
+	UNICODE_DEMO (root_cluster): "make"
 
 default
 	assertion (all)

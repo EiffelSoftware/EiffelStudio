@@ -4,9 +4,7 @@ deferred class ATTRIB_STONE
 
 inherit
 
-	ICON_STONE
-		undefine
-			stone_cursor, stone
+	DRAG_SOURCE
 		redefine
 			transportable	
 		end;
@@ -16,7 +14,8 @@ inherit
 		end;
 	WINDOWS;
 	CONSTANTS;
-	DATA
+	DATA;
+	EB_BUTTON
 	
 feature 
 
@@ -26,6 +25,16 @@ feature
 		end;
 
 feature {NONE}
+
+	label: STRING is
+		do
+			Result := data.label
+		end;
+
+	data: DATA is
+		do
+			Result := Current
+		end;
 
 	help_file_name: STRING is
 		do
@@ -101,11 +110,22 @@ feature
 		do
 			editor := an_editor;
 			make_visible (a_parent);
-			set_symbol (pixmap);
+			set_symbol (symbol);
 			initialize_transport;
+			initialize_focus
 		end;
 
-	pixmap: PIXMAP is
+	focus_label: FOCUS_LABEL is
+		do
+			Result := editor.focus_label
+		end;
+
+	source: WIDGET is
+		do
+			Result := Current
+		end;
+
+	symbol: PIXMAP is
 		deferred
 		end
 	

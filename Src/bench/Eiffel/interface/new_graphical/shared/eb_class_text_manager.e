@@ -41,7 +41,7 @@ feature -- Access
 						-- Wait for the editor to read class text.
 					editor := l.item.editor_tool.text_area
 					from
-						ev_application.process_events
+						process_events_and_idle
 					until
 						editor.text_is_fully_loaded
 					loop

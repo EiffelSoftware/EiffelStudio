@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 				i >= 10
 			loop
 				ev_application.sleep (10)
-				ev_application.process_events
+				process_events_and_idle
 				i := i + 1
 			end
 		end

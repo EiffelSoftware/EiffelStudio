@@ -423,7 +423,7 @@ feature -- Modification
 			if not editor.is_empty then
 					-- Wait for the editor to read class text.
 				from
-					ev_application.process_events
+					process_events_and_idle
 				until
 					editor.text_is_fully_loaded
 				loop
@@ -552,7 +552,7 @@ feature -- Modification
 			if not editor.is_empty then
 					-- Wait for the editor to read class text.
 				from
-					ev_application.process_events
+					process_events_and_idle
 				until
 					editor.text_is_fully_loaded
 				loop

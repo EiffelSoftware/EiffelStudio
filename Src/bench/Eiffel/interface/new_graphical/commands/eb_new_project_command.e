@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 				deleting_dialog_label_exists: deleting_dialog_label /= Void
 			end
 			deleting_dialog_label.set_text (deleted_file_pathname)
-			ev_application.process_events
+			process_events_and_idle
 		end
 
 	on_cancel_operation: BOOLEAN is

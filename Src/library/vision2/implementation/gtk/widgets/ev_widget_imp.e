@@ -223,7 +223,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_BUTTON_EVENT_DATA!ev_data.make
-			add_command ("button_press_event", command, arguments, ev_data, mouse_button)
+			add_command ("button_press_event", command, arguments, ev_data, mouse_button, False)
 		end
 	
 	
@@ -234,15 +234,25 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_BUTTON_EVENT_DATA!ev_data.make
-			add_command ("button_release_event", command, arguments, ev_data, mouse_button)
+			add_command ("button_release_event", command, arguments, ev_data, mouse_button, False)
 		end
-			
+	
+	add_double_click_command (mouse_button: INTEGER; 
+				  command: EV_COMMAND; 
+				  arguments: EV_ARGUMENTS) is
+		local
+			ev_data: EV_EVENT_DATA
+		do
+			!EV_BUTTON_EVENT_DATA!ev_data.make
+			add_command ("button_press_event", command, arguments, ev_data, mouse_button, True)
+		end		
+	
 	add_motion_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 		local
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_MOTION_EVENT_DATA!ev_data.make
-			add_command ("motion_notify_event", command, arguments, ev_data, 0)
+			add_command ("motion_notify_event", command, arguments, ev_data, 0, False)
 		end
 	
 	add_delete_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
@@ -250,7 +260,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA		
 		do
 			!EV_EVENT_DATA!ev_data.make-- temporary, craeta a correct object here XX
-			add_command ("delete_event", command, arguments, ev_data, 0)
+			add_command ("delete_event", command, arguments, ev_data, 0, False)
 		end
 	
 	add_key_press_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
@@ -258,7 +268,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_KEY_EVENT_DATA!ev_data.make
-			add_command ("key_press_event", command, arguments, ev_data, 0)
+			add_command ("key_press_event", command, arguments, ev_data, 0, False)
 		end
 			
 	add_key_release_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
@@ -266,7 +276,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_KEY_EVENT_DATA!ev_data.make
-			add_command ("key_press_event", command, arguments, ev_data, 0)
+			add_command ("key_press_event", command, arguments, ev_data, 0, False)
 		end	
 	
 	add_enter_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
@@ -274,7 +284,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA		
 		do
 			!EV_EVENT_DATA!ev_data.make-- temporary, craeta a correct object here XX
-			add_command ("enter_notify_event", command, arguments, ev_data, 0)
+			add_command ("enter_notify_event", command, arguments, ev_data, 0, False)
 		end
 	
 	add_leave_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
@@ -282,7 +292,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA		
 		do
 			!EV_EVENT_DATA!ev_data.make  -- temporary, craeta a correct object here XX
-			add_command ("leave_notify_event", command, arguments, ev_data, 0)
+			add_command ("leave_notify_event", command, arguments, ev_data, 0, False)
 		end
 	
 
@@ -306,7 +316,7 @@ feature {NONE} -- Implementation
 
 	add_command (event: STRING; command: EV_COMMAND; 
 		     arguments: EV_ARGUMENTS; ev_data: EV_EVENT_DATA;
-		     mouse_button: INTEGER) is
+		     mouse_button: INTEGER; double_click: BOOLEAN) is
 			-- Add `command' at the end of the list of
 			-- actions to be executed when the 'event'
 			-- happens `arguments' will be passed to
@@ -351,7 +361,8 @@ feature {NONE} -- Implementation
 						      $arguments,
 						      $ev_d_imp,
 						      ev_d_imp.initialize_address,
-						      mouse_button)
+						      mouse_button,
+						      double_click)
 		end
         
 	

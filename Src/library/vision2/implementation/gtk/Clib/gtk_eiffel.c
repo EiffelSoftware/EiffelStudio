@@ -56,9 +56,12 @@ void c_event_callback (GtkObject *w, GdkEvent *ev,  gpointer data)
     }
 
     /* In case of button event we have to check that the right button
-       was pressed. Otherwise, no callback is executed */
+       was pressed. If it was a wrong button, no callback will be
+       executed */
+
     if (pcbd->mouse_button == 0 ||
-	pcbd->mouse_button == c_gdk_event_button (ev))
+	(pcbd->mouse_button == c_gdk_event_button (ev) &&
+	 (pcbd->double_click == (c_gdk_event_type (ev) == GDK_2BUTTON_PRESS))))
     {
 	
 	/* Call Eiffel routine 'rtn' of object 'obj' with argument 'argument'
@@ -94,6 +97,7 @@ void c_gtk_signal_destroy_data (gpointer data)
    ev_data = object of type EV_EVENT_DATA. The fields of this object are filled in 'event_data_rtn' which is called in 'c_event_callback' according to the C(gdk) event struct
 
    mouse_button = number of mouse button. Only applicable in button events.
+   double_click = tells whether we are interested in double click events. Only applicable in button events.
 
    argument can be NULL which means that there is no arguments for excute (the corresponding
    ev_data can be NULL which means that event data is not needed for this event
@@ -110,7 +114,8 @@ gint c_gtk_signal_connect (GtkObject *widget,
 			   EIF_POINTER argument,
 			   EIF_POINTER ev_data,
 			   EIF_PROC event_data_rtn,
-			   int mouse_button)
+			   char mouse_button,
+			   char double_click)
 {
     callback_data_t *pcbd;
     int name_len;
@@ -127,7 +132,8 @@ gint c_gtk_signal_connect (GtkObject *widget,
     pcbd->argument = henter (argument);
     pcbd->ev_data = henter (ev_data);
     pcbd->set_event_data = event_data_rtn;
-    pcbd->mouse_button = mouse_button;  
+    pcbd->mouse_button = mouse_button;
+    pcbd->double_click = double_click;  
     /*  printf ("connect rtn= %d object= %d pcbd= %d\n", pcbd->rtn, (pcbd->obj), pcbd); */
 
     /* allow the garbage collection of object and argument, when the signal is destroyed */ 

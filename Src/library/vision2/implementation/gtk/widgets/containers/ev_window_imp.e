@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			
 			-- Connect the signal
 			i := c_gtk_signal_connect (widget, $a, routine_address ($delete_window_action), 
-						   $Current, Default_pointer, Default_pointer, Default_pointer, 0)
+						   $Current, Default_pointer, Default_pointer, Default_pointer, 0, False)
 			s := "delete"
 			a ?= s.to_c
 --			i := c_gtk_signal_connect (widget, $a, interface.routine_address($delete_window_action), Current, Default_pointer)

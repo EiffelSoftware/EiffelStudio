@@ -296,6 +296,10 @@ feature -- Event - command association
 	add_button_release_command (mouse_button: INTEGER; command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 		deferred
 		end
+	
+	add_double_click_command (mouse_button: INTEGER; command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		deferred
+		end
 			
 	add_motion_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 		deferred

@@ -16,11 +16,6 @@ inherit
 			implementation
 		end
 	
-	EV_BAR_ITEM
-		redefine
-			implementation
-		end
-
 feature -- Access
 
 	text: STRING is

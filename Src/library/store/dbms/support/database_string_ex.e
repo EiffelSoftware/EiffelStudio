@@ -24,19 +24,17 @@ feature -- Status setting
 	get_select_name (no_descriptor: INTEGER; index: INTEGER) is
 			-- Put in `Current' name of the index-th column of selection.
 		do
-			count := db_spec.put_col_name (no_descriptor, index, area, capacity)
+			set_count (db_spec.put_col_name (no_descriptor, index, Current, capacity))
 		ensure
 			capacity_unchanged: capacity = old capacity
-			not_change_area: area = old area
 		end
 
 	get_value (no_descriptor: INTEGER; index: INTEGER) is
 			-- Put in `Current' value of index-th column of selection.
 		do
-			count := db_spec.put_data (no_descriptor, index, area, capacity) 
+			set_count (db_spec.put_data (no_descriptor, index, Current, capacity))
 		ensure
 			capacity_unchanged: capacity = old capacity
-			not_change_area: area = old area
 		end
 
 end -- class DATABASE_STRING_EX

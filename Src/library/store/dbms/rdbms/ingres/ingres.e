@@ -15,6 +15,8 @@ inherit
 			map_var_between_2,
 			proc_args
 		end
+		
+	STRING_HANDLER
 
 feature -- Access
 
@@ -249,10 +251,10 @@ feature -- External
 
 	init_order (no_descriptor: INTEGER; command: STRING) is
 		local
-			c_temp: ANY
+			c_temp: C_STRING
 		do
-			c_temp := command.to_c
-			last_error_code := ing_init_order (no_descriptor, $c_temp)
+			create c_temp.make (command)
+			last_error_code := ing_init_order (no_descriptor, c_temp.item)
 		end
 
 	start_order (no_descriptor: INTEGER) is
@@ -277,20 +279,60 @@ feature -- External
 
 	exec_immediate (no_descriptor: INTEGER; command: STRING) is
 		local
-			c_temp: ANY
+			c_temp: C_STRING
 		do
-			c_temp := command.to_c
-			last_error_code := ing_exec_immediate($c_temp)
+			create c_temp.make (command)
+			last_error_code := ing_exec_immediate(c_temp.item)
 		end
 
-	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: SPECIAL [CHARACTER]; max_len:INTEGER): INTEGER is
+	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len:INTEGER): INTEGER is
+		local
+			l_area: MANAGED_POINTER
+			i: INTEGER
 		do
-			Result := ing_put_col_name(no_descriptor, index, $ar, max_len)
+			create l_area.make (max_len)
+
+			Result := ing_put_col_name(no_descriptor, index, l_area.item, max_len)
+
+			check
+				Result <= max_len
+			end
+
+			ar.set_count (Result)
+
+			from
+				i := 1
+			until
+				i > Result
+			loop
+				ar.put (l_area.read_integer_8 (i - 1).to_character, i)
+				i := i + 1
+			end
 		end
 
-	put_data (no_descriptor: INTEGER; index: INTEGER; ar: SPECIAL [CHARACTER]; max_len:INTEGER): INTEGER is
+	put_data (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len:INTEGER): INTEGER is
+		local
+			l_area: MANAGED_POINTER
+			i: INTEGER
 		do
-			Result := ing_put_data (no_descriptor, index, $ar, max_len)
+			create l_area.make (max_len)
+
+			Result := ing_put_data (no_descriptor, index, l_area.item, max_len)
+
+			check
+				Result <= max_len
+			end
+
+			ar.set_count (Result)
+
+			from
+				i := 1
+			until
+				i > Result
+			loop
+				ar.put (l_area.read_integer_8 (i - 1).to_character, i)
+				i := i + 1
+			end
 		end
 
 	conv_type (indicator: INTEGER; index: INTEGER): INTEGER is
@@ -419,16 +461,17 @@ feature -- External
 		end
 
 	connect (user_name, user_passwd, data_source, application, hostname, roleId, rolePassWd, groupId: STRING) is
-        	local
-            		c_temp1, c_temp2, c_temp3, c_temp4, c_temp5, c_temp6: ANY
-        	do
-            		c_temp1 := user_name.to_c
-            		c_temp2 := user_passwd.to_c
-         			c_temp3 := roleId.to_c
-            		c_temp4 := rolePassWd.to_c
-            		c_temp5 := groupId.to_c
-            		c_temp6 := data_source.to_c
-            		last_error_code := ing_connect ($c_temp1, $c_temp2, $c_temp3, $c_temp4, $c_temp5, $c_temp6)
+		local
+			c_temp1, c_temp2, c_temp3, c_temp4, c_temp5, c_temp6: C_STRING
+		do
+			create c_temp1.make (user_name)
+			create c_temp2.make (user_passwd)
+			create c_temp3.make (roleId)
+			create c_temp4.make (rolePassWd)
+			create c_temp5.make (groupId)
+			create c_temp6.make (data_source)
+			last_error_code := ing_connect (c_temp1.item, c_temp2.item,
+				c_temp3.item, c_temp4.item, c_temp5.item, c_temp6.item)
 		end
 
 	disconnect is

@@ -1,16 +1,14 @@
 indexing
-
-	Status: "See notice at end of class";
+	Status: "See notice at end of class"
+	Access: "internal"
+	Product: "EiffelStore"
+	Database: "All_Bases"
 	Date: "$Date$"
 	Revision: "$Revision$"
-	Access: internal
-	Product: EiffelStore
-	Database: All_Bases
 
 class EXT_INTERNAL
 
 inherit
-
 	INTERNAL
 
 	BASIC_ROUTINES
@@ -22,8 +20,8 @@ feature -- Basic operations
 	field_copy (i: INTEGER; object, value: ANY): BOOLEAN is
 			-- Copy `value' in `i'-th field of `object'.
 		require
-			object_exists: object /= Void
-			value_exists: value /= Void
+			object_not_void: object /= Void
+			value_not_void: value /= Void
 		local
 			ftype, local_int: INTEGER
 			fname: STRING
@@ -70,7 +68,7 @@ feature -- Basic operations
 					local_real := int_ref.item
 					set_real_field (i, object, local_real)
 				else
-					Result := false
+					Result := False
 				end
 			elseif ftype = Double_type then
 				real_ref ?= value
@@ -87,7 +85,7 @@ feature -- Basic operations
 					local_double := int_ref.item
 					set_double_field (i, object, local_double)
 				else
-					Result := false
+					Result := False
 				end
 			elseif is_character (value) and then ftype = Character_type then
 				char_ref ?= value
@@ -123,7 +121,7 @@ feature -- Basic operations
 			elseif ftype = Reference_type then
 				set_reference_field (i, object, value)
 			else
-				Result := false
+				Result := False
 			end
 
 		end
@@ -131,7 +129,7 @@ feature -- Basic operations
 	field_clean (i: INTEGER; object: ANY): BOOLEAN is
 			-- Clean `i'-th field of `object'.
 		require
-			object_exists: object /= Void
+			object_not_void: object /= Void
 		local
 			ftype: INTEGER
 			fname: STRING
@@ -153,38 +151,14 @@ feature -- Basic operations
 			elseif ftype = Reference_type then
 				set_reference_field (i, object, Void)
 			else
-				Result := false
+				Result := False
 			end
-		end
-
-	mark (obj: ANY) is
-			-- Mark object `obj'
-		require
-			object_exists: obj /= Void
-		do
-			c_mark ($obj)
-		end
-
-	unmark (obj: ANY) is
-			-- Unmark object `obj'
-		require
-			object_exists: obj /= Void
-		do
-			c_nullmark ($obj)
-		end
-
-	is_marked (obj: ANY): BOOLEAN is
-			-- Is `obj' marked?
-		require
-			object_exists: obj /= Void
-		do
-			Result := c_is_marked ($obj)
 		end
 
 	switch_mark (obj: ANY) is
 			-- Unmark `obj' if marked or mark it if unmarked.
 		require
-			object_exists: obj /= Void
+			object_not_void: obj /= Void
 		do
 			if is_marked (obj) then
 				unmark (obj)
@@ -196,7 +170,7 @@ feature -- Basic operations
 	unmark_structure (obj: ANY) is
 			-- Unmark structure of objects.
 		require
-			object_exists: obj /= Void
+			object_not_void: obj /= Void
 		local
 			i: INTEGER
 			nbfield: INTEGER
@@ -231,7 +205,7 @@ feature -- Basic operations
 			-- run-time system where expanded objects are encapsulated within
 			-- other objects
 		require
-			object_exists: object /= Void
+			object_not_void: object /= Void
 		local
 			type_value, nb_fields, i: INTEGER
 		do
@@ -328,8 +302,9 @@ feature -- Basic operations
 
 	nb_classes: INTEGER is
 			-- Number of dynamic types in current system
-		once
-			Result := c_nb_classes
+		obsolete
+			"Should not be used. No other equivalent feature is supported."
+		do
 		end
 
 feature {NONE} -- Status report
@@ -414,8 +389,8 @@ feature {NONE} -- Basic operations
 			i: INTEGER
 			one_field: ANY
 		do
-			one_field := one_array.to_c
-			if c_is_ref_array ($one_field) then
+			one_field := one_array.area
+			if is_special_any_type (dynamic_type (one_field)) then
 					-- `one_array' is an array of elements
 					-- that are of reference type.
 				from
@@ -424,8 +399,7 @@ feature {NONE} -- Basic operations
 					i > one_array.upper 
 				loop
 					one_field := one_array.item (i)
-					if one_field /= Void and then
-						not is_marked (one_field) then
+					if one_field /= Void and then not is_marked (one_field) then
 							-- Propagate the traversal to
 							-- the next reference object
 						deep_traversal (one_field)
@@ -483,8 +457,8 @@ feature {NONE} -- Basic operations
 			i: INTEGER
 			one_field: ANY
 		do
-			one_field := one_array.to_c
-			if c_is_ref_array ($one_field) then
+			one_field := one_array.area
+			if is_special_any_type (dynamic_type (one_field)) then
 				from
 					i := one_array.lower
 				until
@@ -498,35 +472,6 @@ feature {NONE} -- Basic operations
 				end
 			end
 		end 
-
-feature {NONE} -- External features
-
-	c_is_marked (obj: POINTER): BOOLEAN is
-		external
-			"C"
-		end
-
-	c_nullmark (obj: POINTER) is
-		external
-			"C"
-		end
-
-	c_mark (obj: POINTER) is
-		external
-			"C"
-		end
-
-	c_nb_classes: INTEGER is
-		external
-			"C"
-		end
-
-	c_is_ref_array (object: POINTER): BOOLEAN is
-			-- Is object a generic array derived
-			-- with a reference type?
-		external 
-			"C"
-		end
 
 end -- class EXT_INTERNAL
 

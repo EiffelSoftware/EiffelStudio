@@ -475,12 +475,12 @@ feature -- External features
 		deferred
 		end
 
-	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: SPECIAL [CHARACTER]; max_len:INTEGER): INTEGER is
+	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len:INTEGER): INTEGER is
 			-- Function used to get data from structure SQLDA filled  by FETCH clause.
 		deferred
 		end
 
-	put_data (no_descriptor: INTEGER; index: INTEGER; ar: SPECIAL [CHARACTER]; max_len:INTEGER): INTEGER is
+	put_data (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len:INTEGER): INTEGER is
 			-- Function used to get data from structure SQLDA filled  by FETCH clause.
 		deferred
 		end

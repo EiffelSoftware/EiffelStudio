@@ -203,8 +203,7 @@ feature -- Basic operations
 							create new_string.make (2 * count)
 						end
 						if old_index < index then
-							new_string.append_substring (Current, 
-								old_index, index - 1)
+							new_string.append (substring (old_index, index - 1))
 						end
 						old_index := index
 						index := index + 1
@@ -223,28 +222,24 @@ feature -- Basic operations
 			end
 			if new_string /= Void then
 				if old_index <= count then
-					new_string.append_substring (Current, old_index, count)
+					new_string.append (substring (old_index, count))
 				end
-				area := new_string.area
-				count := new_string.count
+				wipe_out
+				append (new_string)
 			end
 		end
 
 	append_substring (s: STRING; n1, n2: INTEGER) is
 			-- Append substring `s.substring (n1, n2)' to `Current'.
-			-- Faster than append s.substring (n1, n2).
+		obsolete
+			"Use append (s.substring (n1, n2)) instead"
 		require
 			string_exists: s /= Void
 			meaningful_origin: 1 <= n1
 			meaningful_interval: n1 <= n2
 			meaningful_end: n2 <= s.count
-		local
-			a: like area
 		do
-			grow (count + n2 - n1 + 1)
-			a := s.area
-			c_append_substring ($area, $a, count, n1, n2)
-			count := count + n2 - n1 + 1
+			append (s.substring (n1, n2))
 		end
 
 feature {NONE} -- Status report
@@ -363,13 +358,6 @@ feature {NONE} -- Status setting
 			else
 				destination.append (Null_string)
 			end
-		end
-
-feature {NONE} -- External features
-
-	c_append_substring (a1, a2: POINTER; c, n1, n2: INTEGER) is
-		external 
-			"C"
 		end
 
 end -- class SQL_SCAN

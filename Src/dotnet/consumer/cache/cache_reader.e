@@ -70,12 +70,16 @@ feature -- Access
 			Result ?= des.deserialized_object
 		end
 		
-	consumed_type_from_consumed_referenced_type (crt: CONSUMED_REFERENCED_TYPE): CONSUMED_TYPE is
+	consumed_type_from_consumed_referenced_type (ca: CONSUMED_ASSEMBLY; crt: CONSUMED_REFERENCED_TYPE): CONSUMED_TYPE is
 			-- Type information from consumed referenced type `crt'.
 		require
 			non_void_referenced_type: crt /= Void
+		local
+			crt_ca: CONSUMED_ASSEMBLY
+			ca_mapping: CONSUMED_ASSEMBLY_MAPPING
 		do
-			Result := consumed_type_from_dotnet_type_name (info.assemblies @ crt.assembly_id, crt.name)
+			ca_mapping := assembly_mapping_from_consumed_assembly (ca)
+			Result := consumed_type_from_dotnet_type_name (ca_mapping.assemblies @ crt.assembly_id, crt.name)
 		ensure
 			non_void_info: Result /= Void
 		end
@@ -197,7 +201,7 @@ feature {CACHE_WRITER} -- Implementation
 			des: EIFFEL_XML_DESERIALIZER
 		do
 			create des
-			des.deserialize ((create {CACHE_PATH}).Absolute_info_path)
+			des.deserialize (Absolute_info_path)
 			if des.successful then
 				Result ?= des.deserialized_object
 			end

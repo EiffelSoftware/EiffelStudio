@@ -6,7 +6,7 @@ indexing
 class
 	SHARED_COMPILATION_MODES
 
-feature
+feature -- Access
 
 	compilation_modes: COMPILATION_MODES is
 			-- Status of current compilation

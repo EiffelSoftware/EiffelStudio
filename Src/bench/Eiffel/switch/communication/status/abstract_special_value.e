@@ -70,14 +70,14 @@ feature -- Output
 			st.add_feature_name (name, e_class);
 			st.add_string (": ");
 			dynamic_class.append_name (st);
-			st.add_string (Left_square_bracket);
+			st.add_string (Left_address_delim);
 			status := Application.status;
 			if status /= Void and status.is_stopped then
 				st.add_address (address, name, dynamic_class)
 			else
 				st.add_string (address)
 			end
-			st.add_string (Right_square_bracket);
+			st.add_string (Right_address_delim);
 			st.add_new_line;
 			append_tabs (st, indent + 1);
 			st.add_string ("-- begin special object --");
@@ -138,7 +138,7 @@ feature {NONE} -- Output
 			if address = Void then
 				Result := NONE_representation
 			else
-				Result := Left_square_bracket + address + Right_square_bracket
+				Result := Left_address_delim + address + Right_address_delim
 				str := string_value 
 				if str /= Void then
 					Result.append (Equal_sign_str)

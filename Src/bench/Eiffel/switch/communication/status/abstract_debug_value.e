@@ -103,7 +103,7 @@ feature {ABSTRACT_DEBUG_VALUE} -- Output
 		deferred 
 		end;
 		
-feature {NONE}
+feature {NONE} -- Computed Value access
 
 	append_value (st: STRUCTURED_TEXT) is
 			-- Append only the value of Current to `st'.
@@ -219,9 +219,9 @@ feature {NONE} -- Constants
 
 	NONE_representation: STRING is "NONE = Void"
 
-	Left_square_bracket: STRING is " ["
+	Left_address_delim: STRING is " <"
 
-	Right_square_bracket: STRING is "]"
+	Right_address_delim: STRING is ">"
 
 	Equal_sign_str: STRING is " = "
 

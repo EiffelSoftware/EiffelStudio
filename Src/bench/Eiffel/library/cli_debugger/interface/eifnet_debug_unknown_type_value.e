@@ -123,9 +123,9 @@ feature {NONE} -- Output
 			if ec /= Void then
 				create Result.make (60)
 				Result.append ("Error: Unknown type")
-				Result.append (Left_square_bracket)
+				Result.append (Left_address_delim)
 				Result.append (address)
-				Result.append (Right_square_bracket)
+				Result.append (Right_address_delim)
 			else
 				create Result.make (20)
 				Result.append (Any_class.name_in_upper)

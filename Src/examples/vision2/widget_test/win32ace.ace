@@ -45,14 +45,14 @@ cluster
 		end
 
 
-	all base:		"$ISE_EIFFEL\library\base"
+	all base:		"$EIFFEL_SRC\library\base"
 		exclude
 			"table_eiffel3"; "desc"; 
 		end
 
-	all wel:		"$ISE_EIFFEL\library\wel"
+	all wel:		"$EIFFEL_SRC\library\wel"
 
-	all vision2:		"$ISE_EIFFEL\library\vision2"
+	all vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
 			"gtk"; "ev_pixmap.e"; "ev_pixmapable.e";
 		end
@@ -64,9 +64,9 @@ external
 		"$(ISE_EIFFEL)\library\vision2\spec\include"
 
 	object:
-		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
-		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
-		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
-		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib"
+		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib"
 
 end

@@ -22,7 +22,8 @@ inherit
 			on_key_down,
 			initialize,
 			interface,
-			update_current_push_button
+			update_current_push_button,
+			set_background_color
 		end
    
 	EV_TEXT_ALIGNABLE_IMP
@@ -270,6 +271,13 @@ feature -- Status setting
 		
 feature -- Element change
 
+	set_background_color (a_color: EV_COLOR) is
+			-- Make `color' the new `background_color'
+		do
+			Precursor {EV_PRIMITIVE_IMP} (a_color)
+			set_style (style | bs_ownerdraw)
+		end
+		
 	set_pixmap (pix: EV_PIXMAP) is
 			-- Make `pix' the pixmap of `Current'.
 		local

@@ -34,42 +34,42 @@ feature {NONE} -- Initialization
 			set_finite_dimension (2)
 			set_row_spacing (10)
 			set_column_spacing (10)
-			!! color
-			!! code.make
+			create color
+			create code.make
 
-			!! frame.make_with_text (Current, "Press [Ctrl+S]")
+			create frame.make_with_text (Current, "Press [Ctrl+S]")
 			frame.set_foreground_color (color.red)
-			!! lab1.make (frame)
+			create lab1.make (frame)
 			lab1.set_editable (False)
-			!! acc.make (code.key_s, False, False, True)
-			!! cmd.make (~execute1)
+			create acc.make (code.key_s, False, False, True)
+			create cmd.make (~execute1)
 			frame.add_accelerator_command (acc, cmd, Void)
 
-			!! frame.make_with_text (Current, "Press [F2]")
+			create frame.make_with_text (Current, "Press [F2]")
 			frame.set_foreground_color (color.red)
-			!! lab2.make (frame)
+			create lab2.make (frame)
 			lab2.set_editable (False)
-			!! acc.make (code.key_f2, False, False, False)
-			!! cmd.make (~execute2)
+			create acc.make (code.key_f2, False, False, False)
+			create cmd.make (~execute2)
 			frame.add_accelerator_command (acc, cmd, Void)
 
-			!! frame.make_with_text (Current, "Press [F2]")
+			create frame.make_with_text (Current, "Press [F2]")
 			frame.set_foreground_color (color.red)
-			!! lab3.make (frame)
+			create lab3.make (frame)
 			lab3.set_editable (False)
-			!! acc.make (code.key_f2, False, False, False)
-			!! cmd.make (~execute3)
+			create acc.make (code.key_f2, False, False, False)
+			create cmd.make (~execute3)
 			frame.add_accelerator_command (acc, cmd, Void)
 
-			!! frame.make_with_text (Current, "Choose your accelerator")
+			create frame.make_with_text (Current, "Choose your accelerator")
 			frame.set_foreground_color (color.red)
-			!! vbox.make (frame)
+			create vbox.make (frame)
 			vbox.set_spacing (5)
 			create lab4.make (vbox)
 			lab4.set_editable (False)
-			!! but.make_with_text (vbox, "Choose")
+			create but.make_with_text (vbox, "Choose")
 			vbox.set_child_expandable (but, False)
-			!! cmd.make (~execute_button)
+			create cmd.make (~execute_button)
 			but.add_click_command (cmd, Void)
 
 			set_parent (par)
@@ -135,7 +135,7 @@ feature -- Execution features
 		local
 			cmd: EV_ROUTINE_COMMAND
 		do
-			!! cmd.make (~execute4)
+			create cmd.make (~execute4)
 			if accelerator /= Void then
 				frame.remove_accelerator_commands (accelerator)
 			end
@@ -149,11 +149,11 @@ feature -- Execution features
 			action: LINKED_LIST [STRING]
 			cmd: EV_ROUTINE_COMMAND
 		do
-			!! action.make
+			create action.make
 			action.extend ("Your accelerator")
-			!! dialog.make_with_actions (parent, action)
+			create dialog.make_with_actions (parent, action)
 			dialog.show
-			!! cmd.make (~execute5)
+			create cmd.make (~execute5)
 			dialog.add_ok_command (cmd, Void)
 		end
 

@@ -14,6 +14,10 @@ inherit
 		end
 
 	DEMO_WINDOW
+	WIDGET_COMMANDS
+	BUTTON_COMMANDS
+	TOGGLE_BUTTON_COMMANDS
+
 
 creation
 	make
@@ -27,7 +31,10 @@ feature {NONE} -- Initialization
 		do
 			{EV_CHECK_BUTTON} Precursor (par)
 			set_text ("Check Button")
-
+			create event_window.make (Current)
+			add_widget_commands (Current, event_window, "toggle button")
+			add_button_commands (Current, event_window, "Toggle button")
+			add_toggle_button_commands (Current, event_window, "Toggle button")
 		end
 
 	set_tabs is

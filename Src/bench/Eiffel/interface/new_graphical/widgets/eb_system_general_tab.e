@@ -99,6 +99,7 @@ feature -- Store/Retrieve
 		local
 			root_sd: ROOT_SD
 			defaults: LACE_LIST [D_OPTION_SD]
+			safe_name: STRING
 		do
 			defaults := root_ast.defaults
 			if defaults = Void then
@@ -108,7 +109,10 @@ feature -- Store/Retrieve
 			end
 
 				-- Set name of system.
-			root_ast.set_system_name (new_id_sd (app_name_field.text, False))
+			safe_name := app_name_field.text
+			safe_name.prepend_character ('%"')
+			safe_name.append_character ('%"')
+			root_ast.set_system_name (new_id_sd (safe_name, False))
 
 				-- Set name of root class and creation procedure if any.
 			create root_sd
@@ -374,8 +378,12 @@ feature -- Checking
 
 	perform_check is
 			-- Perform check on content of current pane.
+		local
+			l_is_valid: BOOLEAN
 		do
-			set_is_valid (True)
+			l_is_valid := app_name_field.text /= Void and then
+				root_class_field.text /= Void
+			set_is_valid (l_is_valid)
 		end
 
 feature -- Initialization

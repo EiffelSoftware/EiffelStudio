@@ -99,7 +99,9 @@ feature {GB_CODE_GENERATOR} -- Output
 					--| and have the code generator add this information. To do at some point.
 				if not system_status.current_project_settings.client_of_window and info.is_root_object then
 					Result := Result + indent + "set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (" + temp_color.red_8_bit.out + ", " + temp_color.green_8_bit.out + ", " + temp_color.blue_8_bit.out + "))"
-				else
+				elseif not info.is_root_object then
+					Result := Result + indent + info.name + ".set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (" + temp_color.red_8_bit.out + ", " + temp_color.green_8_bit.out + ", " + temp_color.blue_8_bit.out + "))"
+				else	
 					Result := Result + indent + Client_window_string + ".set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (" + temp_color.red_8_bit.out + ", " + temp_color.green_8_bit.out + ", " + temp_color.blue_8_bit.out + "))"
 				end
 			end

@@ -57,6 +57,8 @@ feature {GB_CODE_GENERATOR} -- Output
 			if element_info /= Void then
 				if not system_status.current_project_settings.client_of_window and info.is_root_object then
 					Result := Result + indent + "set_minimum_height (" + element_info.data + ")"
+				elseif not info.is_root_object then
+					Result := Result + indent + info.name + ".set_minimum_height (" + element_info.data + ")"				
 				else
 					Result := Result + indent + Client_window_string + ".set_minimum_height (" + element_info.data + ")"				
 				end

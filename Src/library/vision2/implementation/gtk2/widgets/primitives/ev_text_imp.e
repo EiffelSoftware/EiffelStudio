@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 		end
 		
 	initialize is
-			-- 
+			-- Initialize `Current'
 		do
 			enable_word_wrapping
 			set_editable (True)

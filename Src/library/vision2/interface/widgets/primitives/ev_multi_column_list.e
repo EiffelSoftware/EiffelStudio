@@ -129,6 +129,8 @@ feature -- Status setting
 
 	clear_selection is
 			-- Make `selected_items' empty.
+			--| FIXME according to PR 2359 clear_selection does not
+			--| cause an unselect event. This needs to be checked out.
 		do
 			implementation.clear_selection
 		ensure
@@ -373,6 +375,9 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.48  2000/03/27 18:38:58  oconnor
+--| added fixme
+--|
 --| Revision 1.47  2000/03/27 17:16:09  brendel
 --| columns -> column_count.
 --| Declared columns obsolete.

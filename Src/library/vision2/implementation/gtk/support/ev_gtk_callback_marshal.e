@@ -71,6 +71,10 @@ feature {NONE} -- Basic operation
 			tuple: TUPLE
 			mcl_int_agent: PROCEDURE [EV_MULTI_COLUMN_LIST_IMP, TUPLE [TUPLE [INTEGER]]]
 			item_list_agent: PROCEDURE [EV_ITEM_LIST_IMP [EV_ITEM], TUPLE]
+			--| FIXME The marshal should not need to know about lists or any
+			--| other widget type, the marshal should be passed an agent that
+			--| knows how to translate the GTK event data into and Eiffel object
+			--| gdk_event_to_tuple shoule be broken up accordingly.
 		do
 			mcl_int_agent ?= agent
 			item_list_agent ?= agent
@@ -321,6 +325,9 @@ end -- class EV_GTK_CALLBACK_MARSHAL
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/03/27 18:46:53  oconnor
+--| added fixme
+--|
 --| Revision 1.14  2000/03/18 01:33:22  brendel
 --| Fixed inheritance clash of Gdk_delete_enum.
 --|

@@ -292,6 +292,8 @@ feature -- Event handling
 
 	change_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed then `text' changes.
+		--|FIXME make sure that change_actions and any other events that
+		--|apply to text entry widgets are connected on both platforms.
 
 feature {NONE} -- Implementation
 
@@ -333,6 +335,9 @@ end -- class EV_TEXT_COMPONENT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/03/27 18:43:22  oconnor
+--| added fixme
+--|
 --| Revision 1.27  2000/02/29 18:09:11  oconnor
 --| reformatted indexing cluase
 --|

@@ -57,8 +57,8 @@ feature {FEATURE_TOOL_LIST} -- Displaying
 
 feature -- Formatting
 
-	format (stone: STONE) is
-			-- Show text of `stone' in `text_area'
+	format is
+			-- Show text of tool stone in `text_area'
 		local
 			retried: BOOLEAN
 --			mp: MOUSE_PTR
@@ -68,10 +68,10 @@ feature -- Formatting
 			wd: EV_WARNING_DIALOG
 		do
 			if not retried then
---				!! mp.set_watch_cursor
+--				create mp.set_watch_cursor
 				cur := tool.text_area.position
 				
-				display_temp_header (stone)
+				display_temp_header (tool.stone)
 
 --				if cur /= Void then
 					tool.text_area.go_to (cur)
@@ -79,7 +79,7 @@ feature -- Formatting
 				tool.set_clickable (False)
 				tool.display_clickable_dynamic_lib_exports (False)
 				tool.set_last_format (Current)
-				display_header (stone)
+				display_header (tool.stone)
 --				mp.restore
 			else
 --				if mp /= Void then

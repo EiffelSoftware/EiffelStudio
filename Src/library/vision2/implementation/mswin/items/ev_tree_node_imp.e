@@ -563,7 +563,24 @@ feature {NONE} -- Implementation
 				internal_children.prune_all (item_imp)
 			end
 		end
-
+		
+	dragable_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
+			-- Process `a_button' to start/stop the drag/pick and
+			-- drop mechanism.
+		do
+			-- Not applicable. Required by implementation of EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
+			-- as for widgets that contain items, there are correct implementations. It is
+			-- of no harm to call this, as it will just do nothing and docking will not occur.
+		end
+		
+	check_dragable_release (x_pos, y_pos: INTEGER) is
+			-- End transport if in drag and drop.
+		do
+			-- Not applicable. Required by implementation of EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
+			-- as for widgets that contain items, there are correct implementations. It is
+			-- of no harm to call this, as it will just do nothing and docking will not occur.
+		end
+		
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TREE_NODE

@@ -34,11 +34,6 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := height_preference.value
 		end
 
-	bar: BOOLEAN is
-		do
-			Result := bar_preference.value
-		end
-
 	last_saved_stack_path: STRING is
 		do
 			Result := last_saved_stack_path_preference.value
@@ -102,7 +97,6 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 
 	width_preference: INTEGER_PREFERENCE
 	height_preference: INTEGER_PREFERENCE
-	bar_preference: BOOLEAN_PREFERENCE
 	last_saved_stack_path_preference: STRING_PREFERENCE
 	interrupt_every_n_instructions_preference: INTEGER_PREFERENCE
 	debug_output_evaluation_enabled_preference: BOOLEAN_PREFERENCE
@@ -119,7 +113,6 @@ feature -- Preference Strings
 
 	width_string: STRING is "debug_tool.width"
 	height_string: STRING is "debug_tool.height"
-	bar_string: STRING is "debug_tool.bar"
 	last_saved_stack_path_string: STRING is "debug_tool.last_saved_stack_path"
 	interrupt_every_n_instructions_string: STRING is "debug_tool.interrupt_every_n_instructions"
 	debug_output_evaluation_enabled_string: STRING is "debug_tool.debug_output_evaluation"	
@@ -142,8 +135,7 @@ feature {NONE} -- Implementation
 			create l_manager.make (preferences, "debug_tool")	
 		
 			width_preference := l_manager.new_integer_resource_value (l_manager, width_string, 214)
-			height_preference := l_manager.new_integer_resource_value (l_manager, height_string, 214)
-			bar_preference := l_manager.new_boolean_resource_value (l_manager, bar_string, True)
+			height_preference := l_manager.new_integer_resource_value (l_manager, height_string, 214)			
 			last_saved_stack_path_preference := l_manager.new_string_resource_value (l_manager, last_saved_stack_path_string, "C:\")
 			interrupt_every_n_instructions_preference := l_manager.new_integer_resource_value (l_manager, interrupt_every_n_instructions_string, 1)
 			debug_output_evaluation_enabled_preference := l_manager.new_boolean_resource_value (l_manager, debug_output_evaluation_enabled_string, True)
@@ -163,8 +155,7 @@ feature {NONE} -- Implementation
 invariant
 	preferences_not_void: preferences /= Void
 	width_preference_not_void: width_preference /= Void
-	height_preference_not_void: height_preference /= Void
-	bar_preference_not_void: bar_preference /= Void
+	height_preference_not_void: height_preference /= Void	
 	last_saved_stack_path_preference_not_void: last_saved_stack_path_preference /= Void
 	interrupt_every_n_instructions_preference_not_void: interrupt_every_n_instructions_preference /= Void
 	debug_output_evaluation_enabled_preference_not_void: debug_output_evaluation_enabled_preference /= Void

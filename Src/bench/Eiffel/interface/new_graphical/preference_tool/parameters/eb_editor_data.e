@@ -208,12 +208,6 @@ feature {EB_SHARED_PREFERENCES, EDITOR_TOKEN} -- Value
 			Result := syntax_complete_enabled_preference.value
 		end
 
-	quadruple_click_enabled: BOOLEAN is
-			-- is quadruple click (select all) enabled ?
-		do
-			Result := quadruple_click_enabled_preference.value
-		end
-
 	customized_string_1: STRING is
 			-- strings defined by the user.
 		do
@@ -293,9 +287,6 @@ feature {NONE} -- Preference
 
 	syntax_complete_enabled_preference: BOOLEAN_PREFERENCE
 			-- should main keywords be completed ?
-
-	quadruple_click_enabled_preference: BOOLEAN_PREFERENCE
-			-- is quadruple click (select all) enabled ?
 			
 	customized_string_1_preference: STRING_PREFERENCE
 	customized_string_2_preference: STRING_PREFERENCE
@@ -357,9 +348,6 @@ feature {NONE} -- Preference Strings
 
 	syntax_complete_enabled_string: STRING is "editor.eiffel.syntax_complete_enabled" 
 			-- should main keywords be completed ?
-
-	quadruple_click_enabled_string: STRING is "editor.eiffel.quadruple_click_enabled" 
-			-- is quadruple click (select all) enabled ?
 			
 	customized_string_1_string: STRING is "editor.eiffel.customized_string_1"
 	customized_string_2_string: STRING is "editor.eiffel.customized_string_2"
@@ -413,8 +401,7 @@ feature {NONE} -- Initialization
 			autocomplete_brackets_and_parenthesis_preference := l_manager.new_boolean_resource_value (l_manager, autocomplete_brackets_and_parenthesis_string, False)
 			autocomplete_quotes_preference := l_manager.new_boolean_resource_value (l_manager, autocomplete_quotes_string, False)
 			show_any_features_preference := l_manager.new_boolean_resource_value (l_manager, show_any_features_string, False)
-			syntax_complete_enabled_preference := l_manager.new_boolean_resource_value (l_manager, syntax_complete_enabled_string, True)
-			quadruple_click_enabled_preference := l_manager.new_boolean_resource_value (l_manager, quadruple_click_enabled_string, True)
+			syntax_complete_enabled_preference := l_manager.new_boolean_resource_value (l_manager, syntax_complete_enabled_string, True)			
 			auto_auto_complete_preference := l_manager.new_boolean_resource_value (l_manager, auto_auto_complete_string, True)
 			filter_completion_list_preference := l_manager.new_boolean_resource_value (l_manager, filter_completion_list_string, True)
 			show_completion_signature_preference := l_manager.new_boolean_resource_value (l_manager, show_completion_signature_string, True)
@@ -870,8 +857,7 @@ invariant
 	filter_completion_list_preference_not_void: filter_completion_list_preference /= Void
 	show_completion_signature_preference_not_void: show_completion_signature_preference /= Void
 	show_completion_type_preference_not_void: show_completion_type_preference /= Void
-	syntax_complete_enabled_preference_not_void: syntax_complete_enabled_preference /= Void
-	quadruple_click_enabled_preference_not_void: quadruple_click_enabled_preference /= Void
+	syntax_complete_enabled_preference_not_void: syntax_complete_enabled_preference /= Void	
 	customized_string_1_preference_not_void: customized_string_1_preference /= Void
 	customized_string_2_preference_not_void: customized_string_2_preference /= Void
 	customized_string_3_preference_not_void: customized_string_3_preference /= Void

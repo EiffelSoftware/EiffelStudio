@@ -20,7 +20,7 @@ inherit
 feature -- Status setting
 
 	widget_imp_at_pointer_position: EV_WIDGET_IMP is
-			-- 
+			-- Widget implementation at current mouse pointer position (if any)
 		local
 			a_x, a_y: INTEGER
 			gdkwin, gtkwid: POINTER

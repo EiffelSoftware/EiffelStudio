@@ -23,7 +23,7 @@ inherit
 			initialize
 		end
 
-	EV_INTERNALLY_PROCESSED_TEXTABLE_IMP
+	EV_TEXT_ALIGNABLE_IMP
 		undefine
 			set_default_minimum_size
 		redefine
@@ -117,7 +117,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			wel_make (default_parent, "", 0, 0, 0, 0, 0)
-			text_alignment := text_alignment_center
+			align_text_center
 		end
 
 	initialize is
@@ -137,7 +137,7 @@ feature -- Element change
 			else
 				accomodate_text (a_text)
 			end
-			Precursor {EV_INTERNALLY_PROCESSED_TEXTABLE_IMP} (a_text)
+			Precursor {EV_TEXT_ALIGNABLE_IMP} (a_text)
 			invalidate
 		end
 
@@ -156,21 +156,21 @@ feature -- Status setting
 	align_text_center is
 			-- Set text alignment of current label to center.
 		do
-			Precursor {EV_INTERNALLY_PROCESSED_TEXTABLE_IMP}
+			Precursor {EV_TEXT_ALIGNABLE_IMP}
 			invalidate
 		end
 
 	align_text_right is
 			-- Set text alignment of current label to right.
 		do
-			Precursor {EV_INTERNALLY_PROCESSED_TEXTABLE_IMP}
+			Precursor {EV_TEXT_ALIGNABLE_IMP}
 			invalidate
 		end
 
 	align_text_left is
 			-- Set text alignment of current label to left.
 		do
-			Precursor {EV_INTERNALLY_PROCESSED_TEXTABLE_IMP}
+			Precursor {EV_TEXT_ALIGNABLE_IMP}
 			invalidate
 		end
 
@@ -234,11 +234,11 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 					-- Set the flag for the forthcoming call to
 					-- `draw_text'.
 				inspect text_alignment
-				when text_alignment_center then
+				when feature {EV_TEXT_ALIGNABLE_CONSTANTS}.Ev_text_alignment_center then
 					draw_flags := Dt_center
-				when text_alignment_left then
+				when feature {EV_TEXT_ALIGNABLE_CONSTANTS}.Ev_text_alignment_left then
 					draw_flags := Dt_left
-				when text_alignment_right then
+				when feature {EV_TEXT_ALIGNABLE_CONSTANTS}.Ev_text_alignment_right then
 					draw_flags := Dt_right
 				else
 					check

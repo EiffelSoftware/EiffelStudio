@@ -248,7 +248,7 @@ feature {NONE}
 			!!showexternals_command.make (format_bar, text_window);
 			!!showexported_command.make (format_bar, text_window);
 			!!showonces_command.make (format_bar, text_window);
-			--!!showcustom_command.make (format_bar, text_window);
+			!!showcustom_command.make (format_bar, text_window);
 				format_bar.attach_top (showtext_command, 0);
 				format_bar.attach_left (showtext_command, 0);
 				format_bar.attach_top (showflat_command, 0);
@@ -277,8 +277,9 @@ feature {NONE}
 				format_bar.attach_right_widget (showexternals_command, showonces_command, 0);
 				format_bar.attach_top (showexternals_command, 0);
 				format_bar.attach_right_widget (showexported_command, showexternals_command, 0);
-				format_bar.attach_top (showexported_command, 0);
-				format_bar.attach_right (showexported_command, 0);
+				format_bar.attach_right_widget (showcustom_command, showexported_command, 0);
+				format_bar.attach_top (showcustom_command, 0);
+				format_bar.attach_right (showcustom_command, 0);
 		end;
  
 	format_label: LABEL;
@@ -352,6 +353,6 @@ feature -- Formats
 	showexternals_command: SHOW_EXTERNALS;
 	showonces_command: SHOW_ONCES;
 	showexported_command: SHOW_EXPORTED;
-	--showcustom_command: SHOW_CUSTOM
+	showcustom_command: SHOW_CUSTOM
 
 end -- class CLASS_W

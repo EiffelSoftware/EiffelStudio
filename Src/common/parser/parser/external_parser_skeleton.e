@@ -9,7 +9,7 @@ deferred class EXTERNAL_PARSER_SKELETON
 
 inherit
 
-	YY_PARSER_SKELETON [ANY]
+	YY_NEW_PARSER_SKELETON
 		rename
 			parse as yyparse,
 			make as make_parser_skeleton

@@ -400,39 +400,6 @@ feature -- Settings
 			argument_types_not_void: Result /= Void
 		end
 
-	generate_arg_declarations is
-			-- Declare C parameters, if any, as part of the definition.
-		local
-			i, count: INTEGER
-			a_types: like argument_types
-			a_names: like argument_names
-			buf: GENERATION_BUFFER
-		do
-			from
-				a_types := argument_types
-				a_names := argument_names
-				i := 1
-				count := argument_names.count
-				buf := buffer
-				if i <= count then
-					buf.put_string (argument_types @ i)
-					buf.put_character (' ')
-					buf.put_string (argument_names @ i)
-					buf.put_character (';')
-					i := i + 1
-				end
-			until
-				i > count
-			loop
-				buf.put_string (gc_comma)
-				buf.put_string (argument_types @ i)
-				buf.put_character (' ')
-				buf.put_string (argument_names @ i)
-				buf.put_character (';')
-				i := i + 1
-			end
-		end
-
 	finish_compound is
 			-- Generate the end of the compound
 		do

@@ -5,6 +5,9 @@ class SHOW_ONCES
 inherit
 
 	FORMATTER
+		redefine
+			dark_symbol
+		end
 
 creation
 
@@ -20,6 +23,11 @@ feature
 	symbol: PIXMAP is 
 		once 
 			Result := bm_Showonces 
+		end;
+	
+	dark_symbol: PIXMAP is 
+		once 
+			Result := bm_Dark_showonces 
 		end;
 	
 feature {NONE}

@@ -6,7 +6,7 @@ inherit
 
 	FORMATTER
 		redefine
-			format
+			format, dark_symbol
 		end;
 	SHARED_SERVER
 
@@ -24,6 +24,11 @@ feature
 	symbol: PIXMAP is
 		once
 			Result := bm_Showflat
+		end;
+
+	dark_symbol: PIXMAP is
+		once
+			Result := bm_Dark_showflat
 		end;
 
 	format (stone: STONE) is

@@ -56,7 +56,8 @@ feature
 	call is
 			-- Record calling text_window `a_text_window' and popup current.
 		do
-			popup
+			popup;
+			raise
 		end;
 
 feature {NONE}

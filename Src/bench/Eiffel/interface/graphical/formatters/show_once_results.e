@@ -7,7 +7,10 @@ class
 
 inherit
 
-	FORMATTER;
+	FORMATTER
+		redefine
+			dark_symbol
+		end;
 	SHARED_DEBUG
 
 creation
@@ -25,6 +28,11 @@ feature
 	symbol: PIXMAP is 
 		once 
 			Result := bm_Showonces 
+		end;
+	
+	dark_symbol: PIXMAP is 
+		once 
+			Result := bm_Dark_showonces 
 		end;
 	
 feature {NONE}
@@ -100,7 +108,7 @@ feature {NONE}
 						once_request.once_result (feature_i).append_value (text_window)
 					else
 						feature_i.type.append_clickable_signature (text_window);
-						text_window.put_string ("  Not defined")
+						text_window.put_string (" Not yet called")
 					end;
 					text_window.new_line;
 					once_func_list.forth

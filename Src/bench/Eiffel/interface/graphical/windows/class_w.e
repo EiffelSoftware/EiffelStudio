@@ -15,6 +15,7 @@ inherit
 	BAR_AND_TEXT
 		rename
 			make as normal_create,
+			attach_all as default_attach_all,
 			build_edit_bar as old_build_edit_bar,
 			reset as old_reset, 
 			execute as old_execute
@@ -23,7 +24,7 @@ inherit
 			tool_name, open_command, save_command,
 			save_as_command, quit_command, editable,
 			create_edit_buttons, set_default_position,
-			set_default_size
+			set_default_size, build_widgets
 		end;
 	BAR_AND_TEXT
 		redefine
@@ -32,9 +33,9 @@ inherit
 			save_as_command, quit_command, editable,
 			build_edit_bar, create_edit_buttons, reset,
 			set_default_position, make, execute,
-			set_default_size
+			set_default_size, build_widgets, attach_all
 		select
-			build_edit_bar, reset, make, execute
+			build_edit_bar, reset, make, execute, attach_all
 		end
 
 creation
@@ -100,6 +101,33 @@ feature
 			change_class_command.set_text (s);
 		end;
 
+feature
+
+	build_widgets is
+		do
+			set_default_size;
+			!!text_window.make (new_name, global_form, Current);
+			!!edit_bar.make (new_name, global_form);
+			build_bar;
+			!!format_bar.make (new_name, global_form);
+			build_format_bar;
+			!!command_bar.make (new_name, global_form);
+			build_command_bar;
+			text_window.set_last_format (default_format);
+			attach_all 
+		end;
+
+	attach_all is
+		do
+			default_attach_all;
+			global_form.detach_right (text_window);
+			global_form.attach_right (command_bar, 0);
+			global_form.attach_bottom (command_bar, 0);
+			global_form.attach_right_widget (command_bar, text_window, 0);
+			global_form.attach_top_widget (edit_bar, command_bar, 0);
+			global_form.attach_right_widget (command_bar, format_bar, 0);
+		end;
+
 feature {NONE}
 
 	editable: BOOLEAN is True;
@@ -143,6 +171,25 @@ feature {NONE}
 			!!quit_command.make (edit_bar, text_window);
 		end;
 
+	command_bar: FORM;
+			-- Bar with the command buttons
+
+	build_command_bar is
+		do
+			!!shell_command.make (command_bar, text_window);
+			command_bar.attach_left (shell_command, 0);
+			command_bar.attach_bottom (shell_command, 0);
+			!! current_target.make (command_bar, text_window);
+			command_bar.attach_left (current_target, 0);
+			command_bar.attach_bottom_widget (shell_command, current_target, 10);
+			!! next_target.make (command_bar, text_window);
+			command_bar.attach_left (next_target, 0);
+			command_bar.attach_bottom_widget (current_target, next_target, 0);
+			!! previous_target.make (command_bar, text_window);
+			command_bar.attach_left (previous_target, 0);
+			command_bar.attach_bottom_widget (next_target, previous_target, 0);
+		end;
+
 	build_format_bar is
 			-- Build formatting buttons in `format_bar'.
 		do
@@ -161,7 +208,6 @@ feature {NONE}
 			!!showexternals_command.make (format_bar, text_window);
 			!!showonces_command.make (format_bar, text_window);
 			--!!showcustom_command.make (format_bar, text_window);
-			!!shell_command.make (format_bar, text_window);
 				format_bar.attach_top (showtext_command, 0);
 				format_bar.attach_left (showtext_command, 0);
 				format_bar.attach_top (showflat_command, 0);
@@ -189,9 +235,7 @@ feature {NONE}
 				format_bar.attach_top (showonces_command, 0);
 				format_bar.attach_right_widget (showexternals_command, showonces_command, 0);
 				format_bar.attach_top (showexternals_command, 0);
-				format_bar.attach_right_widget (shell_command, showexternals_command, 10);
-				format_bar.attach_top (shell_command, 0);
-				format_bar.attach_right (shell_command, 0);
+				format_bar.attach_right (showexternals_command, 10);
 		end;
  
 	format_label: LABEL;
@@ -218,10 +262,10 @@ feature {NONE}
 		end;
 
 	set_default_position is
-        local
-            i: INTEGER;
-        do
-            i := 10 * window_manager.class_windows_count;
+		local
+			i: INTEGER;
+		do
+			i := 10 * window_manager.class_windows_count;
 			set_x_y (220 + i, 100 + i)
 		end;
 
@@ -240,5 +284,8 @@ feature {NONE}
 	showonces_command: SHOW_ONCES;
 	--showcustom_command: SHOW_CUSTOM
 	shell_command: SHELL_COMMAND;
+	current_target: CURRENT_CLASS;
+	previous_target: PREVIOUS_TARGET;
+	next_target: NEXT_TARGET
 
 end -- class CLASS_W

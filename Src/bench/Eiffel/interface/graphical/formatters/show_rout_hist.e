@@ -4,7 +4,10 @@ class SHOW_ROUT_HIST
 
 inherit
 
-	FORMATTER;
+	FORMATTER
+		redefine
+			dark_symbol
+		end;
 	SHARED_SERVER
 
 creation
@@ -21,6 +24,11 @@ feature
 	symbol: PIXMAP is 
 		once 
 			Result := bm_Showhistory
+		end;
+ 
+	dark_symbol: PIXMAP is 
+		once 
+			Result := bm_Dark_showhistory
 		end;
  
 feature {NONE}

@@ -35,6 +35,12 @@ feature -- Access
 			Result := "Close"
 		end
 
+	save_string: STRING is
+			-- `Result' is STRING constant named `save_string'.
+		once
+			Result := "Save"
+		end
+
 	small_padding: INTEGER is 
 			-- `Result' is INTEGER constant named small_padding.
 		once

@@ -12,7 +12,6 @@ inherit
 
 	EV_MENU_CONTAINER_IMP
 		undefine
-			on_draw,
 			add_menu,
 			on_selection_changed
 		end

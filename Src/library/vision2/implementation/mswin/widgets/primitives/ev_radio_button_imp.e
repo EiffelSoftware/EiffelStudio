@@ -43,6 +43,7 @@ inherit
 			on_mouse_move,
 			on_char,
 			on_key_up,
+			on_key_down,
 			process_notification
 		end
 		

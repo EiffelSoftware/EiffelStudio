@@ -12,6 +12,8 @@ inherit
 	EV_LABEL_I
 
 	EV_PRIMITIVE_IMP
+		undefine
+			on_key_down
 		redefine
 			plateform_build
 		end
@@ -35,7 +37,6 @@ inherit
 			set_font as wel_set_font,
 			set_text as wel_set_text,
 			destroy as wel_destroy
-
 		undefine
 			-- We undefine the features redefined by EV_WIDGET_IMP,
 			-- and EV_PRIMITIVE_IMP
@@ -122,6 +123,28 @@ feature {NONE} -- Implementation
 	wel_foreground_color: WEL_COLOR_REF is
 		do
 			Result := foreground_color_imp
+		end
+
+feature {NONE} -- Inapplicable
+
+	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgTabItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		do
+			check
+				Inapplicable: False
+			end
+		end
+
+	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgGroupItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		do
+			check
+				Inapplicable: False
+			end
 		end
 
 end -- class EV_LABEL_IMP

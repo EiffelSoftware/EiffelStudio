@@ -13,7 +13,8 @@ inherit
 
 	EV_PRIMITIVE_IMP
 		undefine
-			build
+			build,
+			on_key_down
 		end
 
 	EV_SYSTEM_PEN_IMP
@@ -61,6 +62,28 @@ feature {NONE} -- Implementation
 		do
 			if background_color /= Void then
 				!! Result.make_solid (background_color_imp)
+			end
+		end
+
+feature {NONE} -- Inapplicable
+
+	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgTabItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		do
+			check
+				Inapplicable: False
+			end
+		end
+
+	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgGroupItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		do
+			check
+				Inapplicable: False
 			end
 		end
 

@@ -49,6 +49,7 @@ inherit
 			on_right_button_double_click,
 			on_mouse_move,
 			on_char,
+			on_key_down,
 			on_key_up
 		redefine
 			on_bn_clicked

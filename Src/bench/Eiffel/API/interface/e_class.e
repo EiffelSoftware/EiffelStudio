@@ -231,6 +231,24 @@ feature -- Access
 			result_sorted: Result.sorted
 		end;
 
+	is_valid: BOOLEAN is
+			-- Is the current class valid?
+			-- (After a compilation Current may become 
+			-- invalid)
+		do
+			Result := Eiffel_system.class_of_id (id) = Current
+		end;
+
+	written_in_features: LIST [E_FEATURE] is
+			-- List of features defined in current class
+		require
+			has_feature_table: has_feature_table
+		do
+			Result := comp_feature_table.written_in_features
+		ensure
+			non_void_Result: Result /= Void
+		end;
+
 feature -- Precompilation Access
 
 	is_precompiled: BOOLEAN is
@@ -303,40 +321,37 @@ feature -- Output
 		local
 			formal_dec: FORMAL_DEC_AS_B;
 			constraint_type: TYPE_B;
-			error: BOOLEAN;
 			old_cluster: CLUSTER_I;
 			gens: like private_generics
 		do
-			if not error then
+			!!Result.make (50);
+			Result.append (name);
+			gens := private_generics;
+			if gens /= Void then
 				old_cluster := Inst_context.cluster;
 				Inst_context.set_cluster (cluster);
-				!!Result.make (50);
-				Result.append (name);
-				gens := private_generics;
-				if gens /= Void then
-					Result.append (" [");
-					from
-						gens.start
-					until
-						gens.after
-					loop
-						formal_dec := gens.item;
-						Result.append (formal_dec.formal_name);
-						constraint_type := formal_dec.constraint;
-						if constraint_type /= Void then
-							Result.append (" -> ");
-							Result.append (constraint_type.dump)
-						end;
-						gens.forth;
-						if not gens.after then
-							Result.append (", ")
-						end
+				Result.append (" [");
+				from
+					gens.start
+				until
+					gens.after
+				loop
+					formal_dec := gens.item;
+					Result.append (formal_dec.formal_name);
+					constraint_type := formal_dec.constraint;
+					if constraint_type /= Void then
+						Result.append (" -> ");
+						Result.append (constraint_type.dump)
 					end;
-					Result.append ("]")
+					gens.forth;
+					if not gens.after then
+						Result.append (", ")
+					end
 				end;
-				Result.to_upper;
 				Inst_context.set_cluster (old_cluster);
+				Result.append ("]")
 			end;
+			Result.to_upper;
 		end;
 
 	append_signature (st: STRUCTURED_TEXT) is
@@ -347,38 +362,35 @@ feature -- Output
 			formal_dec: FORMAL_DEC_AS_B;
 			constraint_type: TYPE_B;
 			c_name: STRING;
-			error: BOOLEAN;
 			old_cluster: CLUSTER_I;
 			gens: like private_generics
 		do
-			if not error then
+			append_name (st);
+			gens := private_generics;
+			if gens /= Void then
 				old_cluster := Inst_context.cluster;
 				Inst_context.set_cluster (cluster);
-				append_name (st);
-				gens := private_generics;
-				if gens /= Void then
-					st.add_string (" [");
-					from
-						gens.start
-					until
-						gens.after
-					loop
-						formal_dec := gens.item;
-						c_name := clone (formal_dec.formal_name);
-						c_name.to_upper;
-						st.add_string (c_name);
-						constraint_type := formal_dec.constraint;
-						if constraint_type /= Void then
-							st.add_string (" -> ");
-							constraint_type.append_to (st)
-						end;
-						gens.forth;
-						if not gens.after then
-							st.add_string (", ");
-						end;
+				st.add_string (" [");
+				from
+					gens.start
+				until
+					gens.after
+				loop
+					formal_dec := gens.item;
+					c_name := clone (formal_dec.formal_name);
+					c_name.to_upper;
+					st.add_string (c_name);
+					constraint_type := formal_dec.constraint;
+					if constraint_type /= Void then
+						st.add_string (" -> ");
+						constraint_type.append_to (st)
 					end;
-					st.add_char (']');
+					gens.forth;
+					if not gens.after then
+						st.add_string (", ");
+					end;
 				end;
+				st.add_char (']');
 				Inst_context.set_cluster (old_cluster);
 			end;
 		end;

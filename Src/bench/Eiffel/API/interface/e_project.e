@@ -644,6 +644,33 @@ feature -- Update
 			error_implies: error_occurred implies save_error
 			successful_implies_freezing_occurred: successful implies freezing_occurred 
 		end
+	
+	finalize_precompile (licensed: BOOLEAN; keep_assertions: BOOLEAN) is
+			-- precompile eiffel project and then finalize it (i.e generate
+			-- optimize C code for workbench mode).
+		require
+			able_to_compile: able_to_compile
+		do
+			is_finalizing := True
+			precompile (licensed)
+			if successful and then comp_system.il_generation then
+				Compilation_modes.set_is_finalizing
+				set_error_status (Ok_status)
+				is_compiling_ref.set_item (True)
+				Comp_system.finalize_system (keep_assertions)
+				Workbench.save_project (True)
+				is_compiling_ref.set_item (False)
+			end
+			Workbench.stop_compilation
+			is_finalizing := False
+		ensure
+			was_saved: successful and then not
+				error_occurred implies was_saved
+			error_implies: error_occurred implies save_error
+			successful_implies_freezing_occurred: successful implies freezing_occurred
+		rescue
+			is_finalizing := False
+		end
 
 	delete_generation_directory (
 			base_name: STRING; deletion_agent: PROCEDURE [ANY, TUPLE];
@@ -878,6 +905,7 @@ feature {NONE} -- Retrieval
 						create remote_dir.make (project_directory.name)
 						remote_dir.set_licensed (Comp_system.licensed_precompilation)
 						remote_dir.set_system_name (Comp_system.name)
+						remote_dir.set_is_precompile_finalized (comp_system.is_precompile_finalized)
 						Precompilation_directories.force
 							(remote_dir, Comp_system.compilation_id)
 					else

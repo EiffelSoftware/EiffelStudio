@@ -1323,69 +1323,6 @@ feature -- Features info
 			end
 		end
 
-	generate_interface_feature_identification (name: STRING; a_feature_id: INTEGER;
-			is_attribute: BOOLEAN)
-		is
-			-- Generate feature identification for feature located in interface.
-		require
-			name_not_void: name /= Void
-			name_not_empty: not name.is_empty
-			positive_feature_id: a_feature_id > 0
-		do
---			implementation.generate_interface_feature_identification (name, a_feature_id, is_attribute)
-		end
-
-	generate_feature_identification (name: STRING; a_feature_id: INTEGER;
-			is_redefined, is_deferred, is_frozen, is_attribute, is_c_external, is_static: BOOLEAN)
-		is
-			-- Generate info about current feature.
-		require
-			name_not_void: name /= Void
-			name_not_empty: not name.is_empty
-			positive_feature_id: a_feature_id > 0
-			non_deferred_frozen: is_frozen implies not is_deferred
-			non_deferred_attribute: is_attribute implies not is_deferred
-		do
---			implementation.generate_feature_identification (name, a_feature_id,
---				is_redefined, is_deferred, is_frozen, is_attribute, is_c_external, is_static)
-		end
-
-	generate_feature_return_type (type_i: TYPE_I) is
-			-- Generate return type `type_i' of current feature.
-		require
-			type_i_not_void: type_i /= Void
-		do
---			implementation.generate_feature_return_type (type_i.static_type_id)
-		end
-		
-	generate_type_info_return_type is
-			-- Generate return type of known type `runtime_type_id' for Current feature.
-		do
---			implementation.generate_feature_return_type (runtime_type_id)
-		end
-
-	start_arguments_list (count: INTEGER) is
-			-- Start declaration of arguments list of `count' size of current feature.
-		do
---			implementation.start_arguments_list (count)
-		end
-
-	generate_feature_argument (name: STRING; type_i: TYPE_I) is
-			-- Generate argument `name' of type `type_i'.
-		require
-			name_not_void: name /= Void
-			name_not_empty: not name.is_empty
-			type_i_not_void: type_i /= Void
-		do
---			implementation.generate_feature_argument (name, type_i.static_type_id)
-		end
-
-	end_arguments_list is
-			-- End declaration of arguments list of current feature.
-		do
---			implementation.end_arguments_list
-		end
-
 feature -- Custom attribute
 
 	add_ca (target_type_id: INTEGER; attribute_type_id: INTEGER; arg_count: INTEGER) is
@@ -1695,15 +1632,6 @@ feature -- IL Generation
 			method_body_set: method_body /= Void
 		end
 
-	generate_creation_feature_il (a_feature_id: INTEGER) is
-			-- Specifies for which creation feature of `a_feature_id' written in
-			-- class of `a_type_id' IL code will be generated.
-		require
-			positive_feature_id: a_feature_id > 0
-		do
---			implementation.generate_creation_feature_il (a_feature_id)
-		end
-
 	last_override_token: INTEGER
 			-- Token of last defined override feature.
 
@@ -1824,36 +1752,6 @@ feature -- IL Generation
 						setter_token (l_parent_type_id, inh_feat.feature_id))
 				end
 				inh_feat.set_feature_name_id (l_name_id)
-			end
-		end
-
-	generate_creation_routines (class_c: CLASS_C; class_type: CLASS_TYPE) is
-			-- Generate description for creation routines of `class_c' if any.
-		require
-			class_c_not_void: class_c /= Void
-			class_type_not_void: class_type /= Void
-		local
-			creators: HASH_TABLE [EXPORT_I, STRING]
-			feat_tbl: FEATURE_TABLE
-			feat: FEATURE_I
-			i: INTEGER
-		do
-			if not class_c.is_external then
-				creators := class_c.creators	
-				if creators /= Void and then not creators.is_empty then
-					from
-						creators.start
-						feat_tbl := class_c.feature_table
-					until
-						creators.after
-					loop
-						feat := feat_tbl.item (creators.key_for_iteration)
-						generate_creation_feature_il (feat.feature_id)
-						class_type.generate_il_feature (feat)
-						creators.forth
-						i := i + 1
-					end
-				end
 			end
 		end
 
@@ -2204,17 +2102,6 @@ feature -- Object creation
 				False)			
 		end
 
-	mark_creation_routines (feature_ids: ARRAY [INTEGER]) is
-			-- Mark routines of `feature_ids' in Current class as creation
-			-- routine of Current class.
-		require
-			feature_ids_not_void: feature_ids /= Void
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
-
 feature -- IL stack managment
 
 	duplicate_top is
@@ -2255,16 +2142,6 @@ feature -- Variables access
 		do
 				-- Attribute are accessed through their feature encapsulation.
 			internal_generate_feature_access (type_i.static_type_id, a_feature_id, 0, True, True)
-		end
-
-	internal_generate_attribute (a_type_id, a_feature_id: INTEGER) is
-			-- Generate access to attribute of `a_feature_id' in `a_type_id'.
-		require
-			positive_type_id: a_type_id > 0
-			positive_feature_id: a_feature_id > 0
-		do
-			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldfld,
-				feature_token (a_type_id, a_feature_id))
 		end
 
 	generate_feature_access (type_i: TYPE_I; a_feature_id: INTEGER; nb: INTEGER;
@@ -2444,15 +2321,6 @@ feature -- Addresses
 			end
 		end
 
-	generate_attribute_address (type_i: TYPE_I; a_feature_id: INTEGER) is
-			-- Generate address of attribute of `a_feature_id' in class `type_i'.
-		require
-			type_i_not_void: type_i /= Void
-			positive_feature_id: a_feature_id > 0
-		do
-			internal_generate_attribute_address (type_i.static_type_id, a_feature_id)
-		end
-
 	generate_routine_address (type_i: TYPE_I; a_feature_id: INTEGER) is
 			-- Generate address of routine of `a_feature_id' in class `type_i'.
 		require
@@ -2462,16 +2330,6 @@ feature -- Addresses
 			method_body.put_opcode (feature {MD_OPCODES}.Dup)
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldvirtftn,
 				feature_token (type_i.static_type_id, a_feature_id))
-		end
-
-	internal_generate_attribute_address (a_type_id, a_feature_id: INTEGER) is
-			-- Generate address of attribute of `a_feature_id' in class `a_type_id'.
-		require
-			positive_type_id: a_type_id > 0
-			positive_feature_id: a_feature_id > 0
-		do
-			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldflda,
-				feature_token (a_type_id, a_feature_id))
 		end
 
 	generate_load_from_address (a_type: TYPE_I) is
@@ -2958,16 +2816,6 @@ feature -- Assertions
 			method_body.put_opcode (feature {MD_OPCODES}.Throw)
 		end
 
-	mark_invariant (a_feature_id: INTEGER) is
-			-- Mark routine `a_feature_id' in Current class as invariant of Current class.
-		require
-			positive_feature_id: a_feature_id > 0
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
-
 	generate_invariant_checking (type_i: TYPE_I) is
 			-- Generate an invariant check after routine call
 		require
@@ -3416,18 +3264,6 @@ feature -- Convenience
 
 feature -- Generic conformance
 
-	generate_formal_type_instance (formal_type: FORMAL_I) is
-			-- Generate a FORMAL_TYPE instance corresponding to `formal_type'.
-		require
-			formal_type_not_void: formal_type /= Void
-		do
-			create_object (formal_type_id)
-			duplicate_top
-			put_integer_32_constant (formal_type.position)
-			internal_generate_external_call (ise_runtime_token, 0, formal_type_class_name,
-				"set_position", Normal_type, <<integer_32_class_name>>, Void, True)
-		end
-	
 	generate_class_type_instance (cl_type: CL_TYPE_I) is
 			-- Generate a CLASS_TYPE instance corresponding to `cl_type'.
 		require
@@ -3622,12 +3458,6 @@ feature {NONE} -- Implementation: generation
 	
 feature {IL_CODE_GENERATOR} -- Implementation: convenience
 
-	System_object_type: TYPE_I is
-			-- Type of SYSTEM_OBJECT.
-		once
-			Result := System.system_object_class.compiled_class.types.first.type
-		end
-	
 	System_string_type: TYPE_I is
 			-- Type of string object
 		once
@@ -3707,7 +3537,6 @@ feature {NONE} -- Constants
 	generic_conformance_class_name: STRING is "ISE.Runtime.GENERIC_CONFORMANCE"
 	type_info_class_name: STRING is "ISE.Runtime.EIFFEL_TYPE_INFO"
 	integer_32_class_name: STRING is "System.Int32"
-	system_type_class_name: STRING is "System.Type"
 	type_handle_class_name: STRING is "System.RuntimeTypeHandle"
 
 	override_prefix: STRING is "__"

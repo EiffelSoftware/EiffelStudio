@@ -258,7 +258,11 @@ feature -- Event handling
 
 	on_new_item (an_item: EV_WIDGET) is
 			-- Called after `an_item' is added.
+		local
+			a_widget_imp: EV_WIDGET_IMP
 		do
+			a_widget_imp ?= an_item.implementation
+			a_widget_imp.set_parent_imp (Current)
 			add_radio_button (an_item)
 			if new_item_actions_internal /= Void then
 				new_item_actions_internal.call ([an_item])
@@ -267,7 +271,11 @@ feature -- Event handling
 
 	on_removed_item (an_item: EV_WIDGET) is
 			-- Called just before `an_item' is removed.
+		local
+			a_widget_imp: EV_WIDGET_IMP
 		do
+			a_widget_imp ?= an_item.implementation
+			a_widget_imp.set_parent_imp (Void)
 			remove_radio_button (an_item)
 		end
 

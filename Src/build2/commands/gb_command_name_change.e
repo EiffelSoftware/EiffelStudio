@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that represent a renaming of an object"
+	description: "Objects that represent a renaming of an object."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -65,7 +65,6 @@ feature -- Basic Operation
 			-- Execute `Current'.
 		local
 			object: GB_OBJECT
-			titled_window_object: GB_TITLED_WINDOW_OBJECT
 		do
 			object := Object_handler.deep_object_from_id (object_id)
 			
@@ -73,14 +72,16 @@ feature -- Basic Operation
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
 			end
-			titled_window_object ?= object
-			if titled_window_object /= Void then
-				titled_window_object.window_selector_item.set_text (name_and_type_from_object(titled_window_object))
+			if object.is_top_level_object then
+				object.window_selector_item.set_text (name_and_type_from_object(object))
 				if not new_name.as_lower.is_equal (old_name.as_lower) then
 						-- If only the type (Upper or Lower) of the named has changed, then there is no
 						-- need to rename files.
-					window_selector.update_class_files_of_window (titled_window_object, old_name, new_name)
+					window_selector.update_class_files_of_window (object, old_name, new_name)
 				end
+					-- Now must recursively update all instances of `object' so that
+					-- the representations are up to date.
+				update_representations_of_all_referers (object)
 			end
 			update_editors_by_calling_feature (object.object, Void, agent {GB_OBJECT_EDITOR}.update_name_field)
 			update_all_editors_by_calling_feature (object.object, Void, agent {GB_OBJECT_EDITOR}.update_merged_containers)
@@ -93,18 +94,20 @@ feature -- Basic Operation
 			-- the system to its previous state.
 		local
 			object: GB_OBJECT
-			titled_window_object: GB_TITLED_WINDOW_OBJECT
 		do
 			object := Object_handler.deep_object_from_id (object_id)
 			object.set_name (old_name)
-			titled_window_object ?= object
-			if titled_window_object /= Void then
-				titled_window_object.window_selector_item.set_text (name_and_type_from_object(titled_window_object))
+			object ?= object
+			if object.is_top_level_object then
+				object.window_selector_item.set_text (name_and_type_from_object(object))
 				if not new_name.as_lower.is_equal (old_name.as_lower) then
 						-- If only the type (Upper or Lower) of the named has changed, then there is no
 						-- need to rename files.
-					window_selector.update_class_files_of_window (titled_window_object, new_name, old_name)
+					window_selector.update_class_files_of_window (object, new_name, old_name)
 				end
+					-- Now must recursively update all instances of `object' so that
+					-- the representations are up to date.
+				update_representations_of_all_referers (object)
 			end
 			update_editors_by_calling_feature (object.object, Void, agent {GB_OBJECT_EDITOR}.update_name_field)
 			command_handler.update
@@ -137,5 +140,25 @@ feature {NONE} -- Implementation
 		
 	old_name: STRING
 		-- Previous name of `object'.
+		
+	update_representations_of_all_referers (an_object: GB_OBJECT) is
+			-- For all `instance_referers' of `an_object recursively, call
+			-- `update_layout_item_text' to reflect the name change in layout representations.
+		require
+			an_object_not_void: an_object /= Void
+		local
+			current_object: GB_OBJECT
+		do
+			from
+				an_object.instance_referers.start
+			until
+				an_object.instance_referers.off
+			loop
+				current_object := object_handler.deep_object_from_id (an_object.instance_referers.item_for_iteration)
+				current_object.update_representations_for_name_or_type_change
+				update_representations_of_all_referers (current_object)
+				an_object.instance_referers.forth
+			end
+		end
 
 end -- class GB_COMMAND_NAME_CHANGE

@@ -76,7 +76,7 @@ else
 		remtrace Cannot create $INSTALL_DIR
 		CANCEL
 	fi
-	mv delivery.tar.gz $INSTALL_DIR
+	move delivery.tar.gz $INSTALL_DIR
 	cd $INSTALL_DIR
 	gunzip delivery.tar.gz
 	tar -xf delivery.tar
@@ -98,6 +98,8 @@ cp C/run-time/config.sh $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
 	
 #Setting ISE_EIFFEL to new delivery location
 ISE_EIFFEL=$INSTALL_DIR
+
+move $ISE_EIFFEL/studio/config/unix $ISE_EIFFEL/studio/config/$ISE_PLATFORM
 
 remtrace "Put x2c in the new delivery"
 # It should already have been compiled by the configure of the run-time.

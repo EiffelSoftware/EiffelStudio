@@ -12,6 +12,9 @@ extern "C" {
 /* Initialize module */
 RT_LNK void eif_gen_conf_init (int);
 
+/* Clean up module. */
+rt_shared void eif_gen_conf_cleanup ();
+
 /* Creation type of a gen. feat. in final mode */
 RT_LNK int16 eif_final_id (int16, int16 *ttable, int16 **gttable, EIF_REFERENCE object);
 

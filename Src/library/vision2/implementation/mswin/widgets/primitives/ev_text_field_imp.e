@@ -58,7 +58,8 @@ inherit
 			on_en_change,
 			default_style,
 			enable,
-			disable
+			disable,
+			on_char
 		end
 
 creation
@@ -121,6 +122,16 @@ feature {NONE} -- WEL Implementation
 				execute_command (Cmd_activate, Void)
 			end
 		end	
+
+	on_char (character_code, key_data: INTEGER) is
+			-- Wm_char message
+			-- Avoid an unconvenient `bip' when the user
+			-- tab to another control.
+		do
+			if not has_focus then
+				disable_default_processing
+			end
+		end
 
 	on_en_change is
 			-- The user has taken an action

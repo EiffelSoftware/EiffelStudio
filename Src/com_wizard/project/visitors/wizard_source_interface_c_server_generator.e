@@ -399,26 +399,6 @@ feature -- Access
 			valid: Result.can_generate
 		end
 
-feature -- Measurement
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
 feature -- Miscellaneous
 
 	add_attribute_to_coclass is
@@ -434,15 +414,6 @@ feature -- Miscellaneous
 			coclass_writer.add_member (an_attribute, Private)
 		end
 		
-feature -- Basic operations
-
-
-		
-feature {NONE} -- Implementation
-
-invariant
-	invariant_clause: -- Your invariant here
-
 end -- class WIZARD_SOURCE_INTERFACE_C_SERVER_GENERATOR
 
 --|----------------------------------------------------------------

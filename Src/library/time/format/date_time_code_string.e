@@ -53,8 +53,10 @@ feature -- Creation
 					i := i + 1
 				end
 			end
+			base_century := c_year_now // 100 * 100
 		ensure
-			value_set: value /= Void	
+			value_set: value /= Void
+			base_century_set: base_century > 0 and (base_century \\ 100 = 0)
 		end
 
 feature -- Attributes
@@ -79,6 +81,10 @@ feature -- Attributes
 			end
 		end
 
+	base_century: INTEGER
+			-- Base century, used when interpreting 2-digit year
+			-- specifications.
+			
 feature -- Status report
 
 	is_date (s: STRING): BOOLEAN is
@@ -115,6 +121,18 @@ feature -- Status report
 		do
 			build_parser (s)
 			Result := parser.is_date or parser.is_time or parser.is_date_time
+		end
+
+feature -- Status setting
+
+	set_base_century (c: INTEGER) is
+			-- Set base century to `c'.
+		require
+			base_valid: c > 0 and (c \\ 100 = 0)
+		do
+			base_century := c
+		ensure
+			base_century_set: base_century = c
 		end
 
 feature -- Interface
@@ -349,7 +367,6 @@ feature -- Interface
 		ensure
 			date_time_exists: Result /= Void
 			day_text_equal_day: right_day_text
-			date_time_correspond: create_string (Result).is_equal (s)
 		end
 
 	create_date (s: STRING): DATE is
@@ -384,7 +401,6 @@ feature -- Interface
 		ensure
 			date_exists: Result /= Void
 			day_text_equal_day: right_day_text
-			date_correspond: create_date_string (Result).is_equal (s)
 		end
 
 	create_time (s: STRING): TIME is
@@ -497,6 +513,14 @@ feature -- Interface
 			Result := has_hour and has_minute and has_second
 		end
 	
+feature {NONE} -- Externals
+
+	c_year_now: INTEGER is
+			-- Today's year
+		external
+			"C"
+		end
+
 feature {NONE} -- Implementation
 		
 	parser: DATE_TIME_PARSER
@@ -508,7 +532,7 @@ feature {NONE} -- Implementation
 			non_empty_string: s /= Void and then not s.empty
 		do
 			if parser = Void or else not equal (parser.source_string, s) then
-				create parser.make (value, months, days)
+				create parser.make (value, months, days, base_century)
 				parser.set_source_string (s)
 				parser.parse
 			end

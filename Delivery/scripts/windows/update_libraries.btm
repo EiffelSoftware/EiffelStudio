@@ -14,9 +14,9 @@ exprt -r %DEFAULT_CVS_TAG -d encryption "Src/library/encryption"
 remtrace event
 exprt -r %DEFAULT_CVS_TAG -d event "Src/library/event"
 remtrace gobo
-copy %INSTALL_DIR\free_add_ons\gobo\gobo_win.tgz .
-tar xvfz gobo_win.tgz
-fullrf gobo_win.tgz
+copy %INSTALL_DIR\free_add_ons\gobo\gobo_33_win.tgz .
+tar xvfz gobo_33_win.tgz
+fullrf gobo_33_win.tgz
 remtrace helpers
 exprt -r %DEFAULT_CVS_TAG -d helpers "Src/library/helpers"
 remtrace keygen

@@ -321,7 +321,6 @@ feature -- Element change
 				else
 					set_children_in_columns (c, new_width)
 				end
-				set_enclosing_size
 			else
 				c := children_list
 					-- Find the largest height and width
@@ -342,19 +341,14 @@ feature -- Element change
 					end
 					c.forth
 				end
-				if is_row_layout then
-					largest_h := largest_h.max (height // preferred_count)
-				else
-					largest_w := largest_w.max (width // preferred_count)
-				end
 				set_children_sizes (c, largest_w, largest_h)
 				if is_row_layout then
 					set_children_in_rows (c, largest_h)
 				else
 					set_children_in_columns (c, largest_w)
 				end
-				set_enclosing_size
 			end
+			set_enclosing_size
 			mapping := False
 		end
 
@@ -392,10 +386,10 @@ feature {NONE} -- Implementation
 	set_enclosing_free_size (managed_count, ew, eh: INTEGER; c: ARRAYED_LIST [WIDGET_IMP]) is
 			-- Set the enclosing size if not `same_size'.
 		local
-			max_width, max_height: INTEGER
-			i: INTEGER
+			max_width, max_height, temp_height: INTEGER
+			i, j: INTEGER
 			total: INTEGER
-			loop_count: INTEGER
+			loop_count, rest_count: INTEGER
 		do
 			max_width := ew
 			max_height := eh
@@ -409,10 +403,14 @@ feature {NONE} -- Implementation
 						max_height := preferred_count * eh +
 							2 * margin_height +
 							((preferred_count - 1) * spacing)
+						rest_count := managed_count \\ preferred_count;
 						from
 							c.finish
 							max_width := 0
 							loop_count := managed_count // preferred_count
+							if rest_count /= 0 then
+								loop_count := loop_count + 1
+							end
 						until
 							c.before
 						loop
@@ -438,26 +436,31 @@ feature {NONE} -- Implementation
 						max_width := preferred_count * ew +
 							2 * margin_width +
 							((preferred_count - 1) * spacing)
+
+						rest_count := managed_count \\ preferred_count
+						loop_count := managed_count // preferred_count
+						max_height := 0
+							--| Official version
 						from
 							c.finish
 							max_height := 0
+							temp_height := 0
 							loop_count := managed_count // preferred_count
 						until
 							c.before
 						loop
-							total := total + c.item.height + spacing
+							temp_height := temp_height.max (c.item.height + spacing)
 							i := i + 1
-							if i = loop_count then
-								total := total - spacing
-								max_height := max_height.max (total)
+							if i = preferred_count then
+								max_height := temp_height + max_height
+								temp_height := 0
 								i := 0
-								total := 0
 							end
 							c.back
 						end
-						max_height := max_height.max (total)
+						max_height := max_height + temp_height - spacing
 						max_height := max_height + 2 * margin_height
-					end
+ 					end
 				end
 			end
 			set_form_size (max_width, max_height)
@@ -535,7 +538,7 @@ feature {NONE} -- Implementation
 					ci := c.i_th (c.count - placed + 1) 
 					if ci /= Void and then ci.managed then
 						ci.set_x_y (new_x, new_y)
-						if new_x > margin_width then
+						if new_x >= margin_width then
 								-- We know that there must have been a previous
 								-- managed child in this loop.
 							new_x := new_x + spacing
@@ -683,7 +686,6 @@ feature {NONE} -- Implementation
 		do
 			if not mapping then
 				map_widgets (width, height)
-				set_enclosing_size
 			end
 		end
 

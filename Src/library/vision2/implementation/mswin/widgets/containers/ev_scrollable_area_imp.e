@@ -25,13 +25,14 @@ inherit
 	WEL_CONTROL_WINDOW
 		rename
 			make as wel_make,
-			parent as wel_parent
+			parent as wel_parent,
+			destroy as wel_destroy
 		undefine
 				-- We undefine the features refined by EV_CONTAINER_IMP
 			set_width,
 			set_height,
 			remove_command,
-			destroy,
+--			destroy,
 			on_left_button_down,
 			on_right_button_down,
 			on_left_button_up,
@@ -42,7 +43,8 @@ inherit
 			on_char,
 			on_key_up
 		redefine
-			default_style
+			default_style,
+			background_brush
 		end
 
 creation
@@ -52,11 +54,11 @@ feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
 		local
-			par_imp: EV_CONTAINER_IMP
+			par_imp: WEL_COMPOSITE_WINDOW
 		do
 			par_imp ?= par.implementation
 			check
-				parent_not_void: par_imp /= Void 
+				parent_not_void: par_imp /= Void
 			end
 			wel_make (par_imp, "Scrollable Area")
 			!! scroller.make_with_options (Current, 0, 10, 0, 10, 1, 20, 1, 20)
@@ -111,7 +113,7 @@ feature {EV_WIDGET_IMP} -- Implementation
 			end
 		end
 
-	child_minwidth_changed (new_child_minimum: INTEGER) is
+	child_minwidth_changed (new_child_minimum: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the minimum width of the container because
 			-- the child changed his own minimum width.
 			-- By default, the minimum width of a container is
@@ -120,7 +122,7 @@ feature {EV_WIDGET_IMP} -- Implementation
 		do
 		end
 
-	child_minheight_changed (new_child_minimum: INTEGER) is
+	child_minheight_changed (new_child_minimum: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the minimum width of the container because
 			-- the child changed his own minimum width.
 			-- By default, the minimum width of a container is
@@ -145,6 +147,17 @@ feature {NONE} -- WEL implementation
 		do
 			Result := {WEL_CONTROL_WINDOW} Precursor 
 					+ Ws_clipchildren + Ws_clipsiblings
+		end
+
+	background_brush: WEL_BRUSH is
+			-- Current window background color used to refresh the window when
+			-- requested by the WM_ERASEBKGND windows message.
+			-- By default there is no background
+		do
+			if background_color /= Void then
+				!! Result.make_solid (background_color)
+				disable_default_processing
+			end
 		end
 
 end -- class EV_SCROLLABLE_AREA_IMP

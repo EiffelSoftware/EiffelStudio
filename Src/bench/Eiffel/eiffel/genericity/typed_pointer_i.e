@@ -130,7 +130,7 @@ feature
 			-- This is a temporary solution as metamorphose of basic types doesn't like
 			-- generic basic types.
 		do
-			Result := system.pointer_class.compiled_class.types.first
+			Result := system.pointer_ref_class.compiled_class.types.first
 		end
 
 	sk_value: INTEGER is

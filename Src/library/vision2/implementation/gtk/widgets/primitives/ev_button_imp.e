@@ -13,6 +13,9 @@ inherit
         EV_BUTTON_I
         
 	EV_PRIMITIVE_IMP
+		undefine
+			set_foreground_color
+		end
 	
 	EV_BAR_ITEM_IMP
         

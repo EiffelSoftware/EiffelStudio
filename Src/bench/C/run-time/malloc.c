@@ -341,9 +341,10 @@ rt_private EIF_REFERENCE external_allocation (int atomic, int has_dispose, uint3
 			header->ov_size = real_nbytes;
 				/* Point to the first data byte, just after the header. */
 #ifdef BOEHM_GC
-/*			GC_is_valid_displacement(header);
+#ifdef EIF_ASSERTIONS
+			GC_is_valid_displacement(header);
 			GC_is_valid_displacement((EIF_REFERENCE)(header + 1));
-			*/
+#endif
 			if (has_dispose) {
 				GC_register_finalizer(header, &boehm_dispose, 0, 0, 0);
 			}

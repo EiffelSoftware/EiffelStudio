@@ -75,10 +75,16 @@ feature -- Access
 			-- Is there an item in the table with key `key'?
 		local
 			old_control: INTEGER
+			default_value: G
 		do
 			old_control := control;
 			internal_search (key);
 			Result := (control = Found_constant)
+			if Result then
+				found_item := content.item (position)
+			else
+				found_item := default_value
+			end
 			control := old_control
 		end;
 
@@ -146,6 +152,10 @@ feature -- Access
 			-- Special key used to mark deleted items
 		do
 		end
+
+	found_item: G
+			-- Item found during a search with `has' to reduce the number of
+			-- search for clients
 
 	position: INTEGER;
 			-- Hash table cursor, updated after each operation:

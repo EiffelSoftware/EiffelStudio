@@ -3,7 +3,7 @@ indexing
 	description: "[
 		Commonly used input and output mechanisms.
 		This class may be used as either ancestor or supplier
-		by classes needing its facilities."
+		by classes needing its facilities.
 		]"
 
 	status: "See notice at end of class"
@@ -200,11 +200,14 @@ feature -- Input
 
 	read_character, readchar is
 			-- Read a new character from standard input.
+			-- It will not return until read operation is
+			-- terminated when enter key is pressed.
 			-- Make result available in `last_character'.
+			-- `last_character' will also contains platform
+			-- specific newline character.
 		do
 			input.read_character
 		end
-
 
 	to_next_line, next_line is
 			-- Move to next input line on standard input.

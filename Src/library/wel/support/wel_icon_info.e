@@ -21,7 +21,18 @@ feature -- Status Report
 		do
 			Result := fIcon_ext (item)
 		end
-	
+
+	has_color_bitmap: BOOLEAN is
+			-- Is `color_bitmap' valid?
+			--
+			-- In the case of a black & white icon/cursor, `mask_bitmap' is 
+			-- formatted so that the upper half is the icon AND bitmask and 
+			-- the lower half is the icon XOR bitmask. Under this condition, 
+			-- the height should be an even multiple of two. 
+		do
+			Result := (hbmColor_ext (item) /= Default_pointer)
+		end
+
 	x_hotspot: INTEGER is
 			-- Specifies the x-coordinate of a cursor's hotspot.
 			-- If this structure defines an icon, the hot spot is
@@ -40,14 +51,47 @@ feature -- Status Report
 	
 	mask_bitmap: WEL_BITMAP is
 			-- bitmap representing the mask.
+			--
+			-- Specifies the icon bitmask bitmap. If this structure defines a black 
+			-- and white icon, this bitmask is formatted so that the upper half is 
+			-- the icon AND bitmask and the lower half is the icon XOR bitmask. 
+			-- Under this condition, the height should be an even multiple of two. 
+			-- If this structure defines a color icon, this mask only defines the 
+			-- AND bitmask of the icon. 
 		do
-			create Result.make_by_pointer(hbmMask_ext (item))
+				-- We use this implementation to avoid a memory leak
+				-- with `hbmMask_ext (item)'.
+			if internal_mask_bitmap = Void then
+				create internal_mask_bitmap.make_by_pointer(hbmMask_ext (item))
+				internal_mask_bitmap.set_unshared
+			end
+			Result := internal_mask_bitmap
+		ensure
+			Result_not_void: Result /= Void
+			Result_exists: Result.exists
 		end
 
 	color_bitmap: WEL_BITMAP is
 			-- bitmap representing the image (as opposed to the mask)
+			--
+			-- Handle to the icon color bitmap. This member can be optional if 
+			-- this structure defines a black and white icon. The AND bitmask of 
+			-- hbmMask is applied with the SRCAND flag to the destination; 
+			-- subsequently, the color bitmap is applied (using XOR) to the 
+			-- destination by using the SRCINVERT flag. 
+		require
+			has_color_bitmap: has_color_bitmap
 		do
-			create Result.make_by_pointer(hbmColor_ext (item))
+				-- We use this implementation to avoid a memory leak
+				-- with `hbmColor_ext (item)'.
+			if internal_color_bitmap = Void then
+				create internal_color_bitmap.make_by_pointer(hbmColor_ext (item))
+				internal_color_bitmap.set_unshared
+			end
+			Result := internal_color_bitmap
+		ensure
+			Result_not_void: Result /= Void
+			Result_exists: Result.exists
 		end
 
 feature -- Status Setting
@@ -90,7 +134,6 @@ feature --  Measurement
 			Result := c_size_of_iconinfo
 		end
 
-
 feature -- Obsolete
 
 	fIcon: BOOLEAN is
@@ -128,6 +171,14 @@ feature -- Obsolete
 		do
 			set_is_icon (a_is_icon)
 		end
+
+feature {NONE} -- Implementation
+
+	internal_mask_bitmap: WEL_BITMAP
+			-- Mask bitmap build from the hbmMask pointer.
+
+	internal_color_bitmap: WEL_BITMAP
+			-- Mask bitmap build from the hbmColor pointer.
 
 feature {NONE} -- Externals
 

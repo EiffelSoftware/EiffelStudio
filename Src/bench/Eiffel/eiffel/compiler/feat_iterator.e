@@ -32,11 +32,11 @@ feature
 			old_position: INTEGER
 		do
 			if System.disposable_class /= Void and then System.disposable_class.is_compiled then
-				dispose_rout_id := System.memory_dispose_id
+				dispose_rout_id := System.disposable_dispose_id
 				table ?= Tmp_poly_server.item (dispose_rout_id);
 				if table /= Void then
 						-- There might be no `dispose' routine in the system if
-						-- MEMORY is not used at all.
+						-- DISPOSABLE is not used at all.
 					from
 						table.start
 					until

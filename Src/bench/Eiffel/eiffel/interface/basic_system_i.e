@@ -85,7 +85,7 @@ feature -- Access
 			-- Class POINTER_REF
 
 	disposable_class: CLASS_I
-			-- Class MEMORY
+			-- Class DISPOSABLE
 
 	tuple_class: CLASS_I
 			-- Class TUPLE

@@ -207,13 +207,12 @@ feature {NONE} -- implementation
 							has_radio_item := True
 							if sep_imp /= Void then
 								radio_imp.set_radio_group (sep_imp.radio_group)
-								sep_imp.set_radio_group (radio_imp.radio_group)
-								C.gtk_check_menu_item_set_active (radio_imp.c_object, False)
+								sep_imp.set_radio_group (radio_imp.radio_group)	
 							else
 								radio_imp.set_radio_group (radio_group)
 								set_radio_group (radio_imp.radio_group)
-								C.gtk_check_menu_item_set_active (radio_imp.c_object, False)
 							end
+							C.gtk_check_menu_item_set_active (radio_imp.c_object, False)
 						end
 						interface.forth
 					end
@@ -274,6 +273,9 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/05/01 22:23:09  king
+--| Slight refactoring if remove_i_th
+--|
 --| Revision 1.20  2000/05/01 22:16:12  king
 --| Added code to select an item if selected radio item is removed
 --|

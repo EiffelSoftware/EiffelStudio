@@ -45,6 +45,14 @@ feature {NONE} -- Initialization
 			widget := gtk_menu_new ()
 		end	
 
+feature -- Status report
+
+	text: STRING is
+			-- Label of the current menu
+		do
+			Result := name
+		end
+
 feature {EV_MENU_CONTAINER_IMP} -- Implementation
 
 	name: STRING

@@ -1,7 +1,5 @@
 indexing
-
-	description:
-		"Abstract notion of a closeable window.";
+	description: "Abstract notion of a closeable window.";
 	date: "$Date$";
 	revision: "$Revision$"
 

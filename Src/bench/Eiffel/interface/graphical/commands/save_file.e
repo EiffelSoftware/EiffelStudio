@@ -1,14 +1,13 @@
 indexing
-	description:	
-		"Command to save a file.";
-	date: "$Date$";
+	description: "Command to save a file."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class SAVE_FILE 
 
 inherit
-	EB_CONSTANTS;
-	SYSTEM_CONSTANTS;
+	EB_CONSTANTS
+	SYSTEM_CONSTANTS
 	TWO_STATE_CMD
 		rename
 			init as make,
@@ -27,46 +26,46 @@ feature -- Properties
 			-- Pixmap for the button.
 		once 
 			Result := Pixmaps.bm_Save 
-		end;
+		end
 
 	modified_pixmap: PIXMAP is
 			-- Pixmap for the button.
 		once
 			Result := Pixmaps.bm_Modified
-		end;
+		end
 
 feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 			-- Save a file with the chosen name.
 		local   
-			new_file: RAW_FILE;	-- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
-			to_write: STRING;
-			aok: BOOLEAN;
+			new_file: RAW_FILE	-- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
+			to_write: STRING
+			aok: BOOLEAN
 			save_as_cmd: SAVE_AS_FILE
 		do
 			if tool.file_name = Void then
-				!! save_as_cmd.make (tool);
+				!! save_as_cmd.make (tool)
 				save_as_cmd.execute (tool)
 			else
-				!!new_file.make (tool.file_name);
-				aok := True;
+				!!new_file.make (tool.file_name)
+				aok := True
 				if (new_file.exists) and then (not new_file.is_plain) then
-					aok := False;
+					aok := False
 					warner (popup_parent).gotcha_call (Warning_messages.w_Not_a_plain_file (new_file.name))
 
 				elseif new_file.exists and then (not new_file.is_writable) then
-					aok := False;
+					aok := False
 					warner (popup_parent).gotcha_call (Warning_messages.w_Not_writable (new_file.name))
 
 				elseif (not new_file.exists) and then (not new_file.is_creatable) then
-					aok := False;
+					aok := False
 					warner (popup_parent).gotcha_call (Warning_messages.w_Not_creatable (new_file.name))
-				end;
+				end
 
 				if aok then
-					new_file.open_write;
-					to_write := text_window.text;
+					new_file.open_write
+					to_write := text_window.text
 					if not to_write.empty then
 						to_write.prune_all ('%R')
 						if general_resources.text_mode.value.is_equal ("UNIX") then
@@ -79,24 +78,24 @@ feature {NONE} -- Implementation
 							to_write.replace_substring_all ("%N", "%R%N")
 							new_file.putstring (to_write)
 						end
-					end;
-					new_file.close;
-					text_window.disable_clicking;
+					end
+					new_file.close
+					text_window.disable_clicking
 					if tool.stone /= Void and then Class_resources.parse_class_after_saving.actual_value then
 						if tool.parse_file then
-							tool.synchronise_stone
+							tool.synchronize
 						end
 					end
 					tool.update_save_symbol
 				end
 			end
-		end;
+		end
 
  
 	
 feature {NONE} -- Attributes
 
-	license_checked: BOOLEAN is True;
+	license_checked: BOOLEAN is True
 			-- Is the license checked?
 
 	name: STRING is
@@ -109,12 +108,12 @@ feature {NONE} -- Attributes
 			-- Name used in menu entry
 		do
 			Result := Interface_names.m_Save
-		end;
+		end
 
 	accelerator: STRING is
 			-- Accelerator action for menu entry
 		do
 			Result := Interface_names.a_Save
-		end;
+		end
 
 end -- class SAVE_FILE

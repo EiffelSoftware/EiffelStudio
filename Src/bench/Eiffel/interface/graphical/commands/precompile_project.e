@@ -1,14 +1,11 @@
 indexing
-
-	description:	
-		"Command to precompile the Eiffel code.";
-	date: "$Date$";
+	description: "Command to precompile the Eiffel code."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class PRECOMPILE_PROJECT 
 
 inherit
- 
 	UPDATE_PROJECT
 		rename
 			warner_ok as update_project_warner_ok
@@ -16,8 +13,9 @@ inherit
 			launch_c_compilation, 
 			confirm_and_compile,
 			name, menu_name, accelerator,
-			perform_compilation
-		end;
+			perform_compilation, is_precompiling
+		end
+
 	UPDATE_PROJECT
 		rename
 			warner_ok as precompile_now
@@ -26,10 +24,10 @@ inherit
 			confirm_and_compile,
 			name, menu_name, accelerator,
 			perform_compilation,
-			precompile_now
+			precompile_now, is_precompiling
 		select
 			precompile_now
-		end;
+		end
  
 creation
 
@@ -41,15 +39,10 @@ feature -- Callbacks
 		do
 			if Eiffel_ace.file_name = Void then
 				update_project_warner_ok (argument)
-			elseif Application.is_running then
-				end_run_confirmed := true;
-				confirmer (popup_parent).call (Current,
-						"Recompiling project will end current run.%N%
-						%Start compilation anyway?", "Compile")
 			else
 				compile (argument)
 			end
-		end;
+		end
 
 feature {NONE} -- Implementation
 
@@ -61,8 +54,9 @@ feature {NONE} -- Implementation
 				(argument /= Void and then 
 				argument = last_confirmer and not end_run_confirmed) 
 			then
-				warner (popup_parent).custom_call (Current, Warning_messages.w_Precompile_warning,
-							Interface_names.b_Precompile_now, Void, Interface_names.b_Cancel);
+				warner (popup_parent).custom_call
+							(Current, Warning_messages.w_Precompile_warning,
+							Interface_names.b_Precompile_now, Void, Interface_names.b_Cancel)
 			elseif (argument /= Void and then argument = last_warner) then
 					precompile_now (argument)
 			elseif 
@@ -70,8 +64,8 @@ feature {NONE} -- Implementation
 				argument = last_confirmer and end_run_confirmed 
 			then
 				compile (argument)
-			end;
-		end;
+			end
+		end
 
 	launch_c_compilation (argument: ANY) is
 			-- Launch the C compilation in the background.
@@ -99,26 +93,29 @@ feature {NONE} -- Implementation
 			-- The actual compilation process.
 		do
 			Eiffel_project.precompile (False)
-		end;
+		end
 
 feature {NONE} -- Attributes
 
 	name: STRING is
 			-- Name of the command.
-		do
+		once
 			Result := Interface_names.f_Precompile
-		end;
+		end
 
 	menu_name: STRING is
 			-- Name used in menu entry
-		do
+		once
 			Result := Interface_names.m_Precompile
-		end;
+		end
 
 	accelerator: STRING is
 			-- Accelerator action for menu entry
-		do
+		once
 			Result := Interface_names.a_Precompile
-		end;
+		end
+
+	is_precompiling: BOOLEAN is True
+			-- We are doing a precompilation here.
 
 end -- PRECOMPILE_PROJECT

@@ -1,15 +1,15 @@
 indexing
 
 	description:
-		"Command to close manage tools (raise, close, tile).";
-	date: "$Date$";
+		"Command to close manage tools (raise, close, tile)."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class TOOLS_MANAGEMENT
 
 inherit
-	ISE_COMMAND;
-	EB_CONSTANTS;
+	ISE_COMMAND
+	EB_CONSTANTS
 	WINDOWS
 
 creation
@@ -22,20 +22,20 @@ feature {NONE} -- Initialization
 			-- Create command to close all tools.
 		do
 			tool_action := Close_all_tools_action
-		end;
+		end
 
 	make_raise_all is
 			-- Create command to raise all tools.
 		do
 			tool_action := Raise_all_tools_action
-		end;
+		end
 
 feature -- Properties
 
-	Close_all_tools_action, Raise_all_tools_action: INTEGER is unique;
+	Close_all_tools_action, Raise_all_tools_action: INTEGER is unique
 			-- Action values
 
-	tool_action: INTEGER;
+	tool_action: INTEGER
 			-- Action value to be performed on tool
 
 	name: STRING is 
@@ -48,7 +48,7 @@ feature -- Properties
 			when Raise_all_tools_action then
 				Result := Interface_names.f_Raise_all_tools
 			end
-		end;
+		end
 
 	menu_name: STRING is
 			-- Name used in menu entry
@@ -60,12 +60,12 @@ feature -- Properties
 			when Raise_all_tools_action then
 				Result := Interface_names.m_Raise_all_tools
 			end
-		end;
+		end
 
 	accelerator: STRING is
 			-- Accelerator action for menu entry
 		do
-		end;
+		end
 
 feature {NONE} -- Execution
 
@@ -74,24 +74,28 @@ feature {NONE} -- Execution
 			inspect 
 				tool_action
 			when Close_all_tools_action then
-				window_manager.close_all_editors;
-				System_tool.close;
+				window_manager.close_all_editors
+				if is_system_tool_created then 
+					System_tool.close
+				end
 				if Profile_tool /= Void then
 					Profile_tool.close
-				end;
+				end
 				if Preference_tool /= Void then
 					Preference_tool.close
 				end
 			when Raise_all_tools_action then
-				window_manager.raise_all_editors;
-				System_tool.raise;
+				window_manager.raise_all_editors
+				if is_system_tool_created then 
+					System_tool.raise
+				end
 				if Profile_tool /= Void then
 					Profile_tool.raise
-				end;
+				end
 				if Preference_tool /= Void then
 					Preference_tool.raise
 				end
-			end;
+			end
 		end
 
 end -- class TOOLS_MANAGEMENT

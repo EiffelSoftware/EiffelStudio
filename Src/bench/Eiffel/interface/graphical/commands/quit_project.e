@@ -73,8 +73,8 @@ feature {NONE} -- Implementation
 				then
 					exit_anyway
 				elseif
-					(window_manager.class_win_mgr.changed or
-					system_tool.changed)
+					window_manager.class_win_mgr.changed or else
+					(is_system_tool_created and then system_tool.changed)
 				then
 					do_exit := true;
 					warner (popup_parent).custom_call (Current,

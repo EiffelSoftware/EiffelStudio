@@ -1174,7 +1174,7 @@ rt_public uint32 *onceitem(register uint32 id)
 	return (uint32 *)0;		/* val not found */
 }
 
-rt_public struct item *docall(EIF_CONTEXT register uint32 body_id, register int arg_num) /* %% ss mt last caller */
+rt_public struct item *docall(EIF_CONTEXT register uint32 body_id, register int arg_num) /* %%ss mt last caller */
                          		/* body id of the once function */
                       			/* Number of arguments */
 {

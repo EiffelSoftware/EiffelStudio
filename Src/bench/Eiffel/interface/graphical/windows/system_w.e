@@ -290,9 +290,6 @@ feature {NONE} -- Implementation Graphical Interface
 			if resources.command_bar.actual_value = False then
 				system_toolbar.remove
 			end
-			if resources.format_bar.actual_value = False then
-				system_toolbar.remove
-			end
 
 			attach_all
 		end
@@ -336,7 +333,6 @@ feature {NONE} -- Implementation Graphical Interface
 	build_system_toolbar is
 		local
 			quit_cmd: QUIT_SYSTEM
-			quit_button: EB_BUTTON
 			quit_menu_entry: EB_MENU_ENTRY
 			exit_menu_entry: EB_MENU_ENTRY
 			open_cmd: OPEN_SYSTEM
@@ -395,9 +391,8 @@ feature {NONE} -- Implementation Graphical Interface
 			build_edit_menu (system_toolbar)
 
 			!! quit_cmd.make (Current)
-			!! quit_button.make (quit_cmd, system_toolbar)
 			!! quit_menu_entry.make (quit_cmd, file_menu)
-			!! quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
+			!! quit_cmd_holder.make (quit_cmd, Void, quit_menu_entry)
 
 			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
 			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
@@ -495,9 +490,6 @@ feature {NONE} -- Implementation Graphical Interface
 			system_toolbar.attach_left_widget (stat_button, mod_button, 0)
 			system_toolbar.attach_top (showindex_button, 0)
 			system_toolbar.attach_left_widget (mod_button, showindex_button, 0)
-	
-			system_toolbar.attach_top (quit_button, 0)
-			system_toolbar.attach_right (quit_button, 0)
 		end
 
 feature {WINDOWS} -- Attributes

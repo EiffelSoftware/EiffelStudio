@@ -48,12 +48,12 @@ feature {NONE} -- Initialization
 			dialog: GB_COMPONENT_NAMER_DIALOG
 			new_component_name: STRING
 		do
-			create dialog
+			create dialog.make_with_names (all_component_names)
 			dialog.show_modal_to_window (parent_window (Current))
 			new_component_name := dialog.name
 			
 			if not new_component_name.is_empty then
-				create component_item.make_from_object (an_object, new_component_name)--"Component_" + (count + 1).out)		
+				create component_item.make_from_object (an_object, new_component_name)	
 				extend (component_item)
 			end
 		end
@@ -96,5 +96,31 @@ feature {GB_XML_HANDLER} -- Basic operation
 		ensure
 			count_increased_correctly: count = old count + list.count
 		end
+		
+feature {NONE} -- Implementation
+
+	all_component_names: ARRAYED_LIST [STRING] is
+			-- `Result' is all named components displayed in `Current'.
+			-- All components must be in `Current', so this is all components
+			-- in the system. All strings in `Result' are lowercase.
+			-- `Result' is empty if no components currently exist.
+		local
+			temp_string: STRING
+		do
+			create Result.make (0)
+			from
+				start
+			until
+				off
+			loop
+				temp_string := item.text
+				temp_string.to_lower
+				Result.extend (temp_string)
+				forth
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+		
 		
 end -- class GB_COMPONENT_SELECTOR

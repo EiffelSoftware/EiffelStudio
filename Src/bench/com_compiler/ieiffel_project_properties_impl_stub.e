@@ -175,7 +175,7 @@ feature -- Basic Operations
 
 	set_namespace_generation (penu_cluster_namespace_generation: INTEGER) is
 			-- Namespace generation for cluster
-			-- `penu_cluster_namespace_generation' [in]. See ECOM_TAG_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM for possible `penu_cluster_namespace_generation' values. 
+			-- `penu_cluster_namespace_generation' [in]. See ECOM_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM for possible `penu_cluster_namespace_generation' values. 
 		do
 			-- Put Implementation here.
 		end
@@ -189,7 +189,7 @@ feature -- Basic Operations
 
 	set_project_type (penum_project_type: INTEGER) is
 			-- Project type
-			-- `penum_project_type' [in]. See ECOM_TAG_EIF_PROJECT_TYPES_ENUM for possible `penum_project_type' values. 
+			-- `penum_project_type' [in]. See ECOM_EIF_PROJECT_TYPES_ENUM for possible `penum_project_type' values. 
 		do
 			-- Put Implementation here.
 		end

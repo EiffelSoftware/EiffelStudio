@@ -39,7 +39,7 @@ feature -- Access
 
 	exception_code: INTEGER is
 			-- Retrieve exception type
-			-- See ECOM_TAG_EIF_EXCEPTIONS_ENUM for possible `Result' values.
+			-- See ECOM_EIF_EXCEPTIONS_ENUM for possible `Result' values.
 		do
 			Result := ccom_exception_code (initializer)
 		end

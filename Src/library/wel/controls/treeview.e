@@ -22,6 +22,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_TVGN_CONSTANTS
+		export
+			{NONE} all
+		end
+
 creation
 	make,
 	make_by_id
@@ -73,6 +78,55 @@ feature -- Status report
 				Tvm_getvisiblecount, 0, 0)
 		ensure
 			positive_result: Result >= 0
+		end
+
+	indent: INTEGER is
+			-- Amout, in pixels, that child items are indented
+			-- relative to their parent items.
+		require
+			exists: exists
+		do
+			Result := cwin_send_message_result (item,
+				Tvm_getindent, 0, 0)
+		end
+
+feature -- Status setting
+
+	select_item (an_item: WEL_TREE_VIEW_ITEM) is
+			-- Set the selection to the given `an_item'.
+		require
+			exists: exists
+		do
+			cwin_send_message (item, Tvm_selectitem,
+				Tvgn_caret, an_item.h_item)
+		end
+
+	select_first_visible (an_item: WEL_TREE_VIEW_ITEM) is
+			-- Scrolls the tree view vertically so that 
+			-- the given `an_item' is the first visible item.
+		require
+			exists: exists
+		do
+			cwin_send_message (item, Tvm_selectitem,
+				Tvgn_firstvisible, an_item.h_item)
+		end
+
+	select_drop_target (an_item: WEL_TREE_VIEW_ITEM) is
+			-- Redraw the given `an_item' in the style used to 
+			-- indicate the target of a drag and drop operation.
+		require
+			exists: exists
+		do
+			cwin_send_message (item, Tvm_selectitem,
+				Tvgn_drophilite, an_item.h_item)
+		end
+
+	set_indent (an_indent: INTEGER) is
+			-- Set `indent' with `an_indent'.
+		require
+			exists: exists
+		do
+			cwin_send_message (item, Tvm_setindent, an_indent, 0)
 		end
 
 feature -- Element change

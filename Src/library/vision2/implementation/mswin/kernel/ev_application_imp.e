@@ -292,19 +292,46 @@ feature {EV_ANY_I, EV_PICK_AND_DROPABLE_IMP, EV_INTERNAL_COMBO_FIELD_IMP} -- Sta
 		--| If `Void' then no pick and drop is currently executing.
 		--| This allows us to globally check whether a pick and drop
 		--| is executing, and if so, the source.
+		
+	dockable_source: EV_DOCKABLE_SOURCE_IMP
+		-- The current dockable source if a dock is executing.
 
 feature {EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Status Report
 
+	dock_started (source: EV_DOCKABLE_SOURCE_IMP) is
+			-- Assign `source' to `dockable_source'.
+		require
+			source_not_void: source /= Void
+		do
+			dockable_source := source
+		ensure
+			source_set: dockable_source = source
+		end
+		
+	dock_ended is
+			-- Ensure `dockable_source' is Void.
+		do
+			dockable_source := Void
+		ensure
+			dockable_source = Void
+		end
+
 	transport_started (widget: EV_PICK_AND_DROPABLE_IMP) is
 			-- Assign `widget' to `pick_and_drop_source'.
+		require
+			widget_not_void: widget /= Void
 		do
 			pick_and_drop_source := widget
+		ensure
+			source_set: pick_and_drop_source = widget
 		end
 
 	transport_ended is
 			-- Assign `Void' to `pick_and_drop_source'.
 		do
 			pick_and_drop_source := Void
+		ensure
+			pick_and_drop_source = Void
 		end
 
 	awaiting_movement: BOOLEAN

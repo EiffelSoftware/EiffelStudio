@@ -593,8 +593,7 @@ feature {NONE} -- Externals
 		end
 
 invariant
-
-	position_greater_than_zero: position > 0
-	position_less_than_size: position <= count
+	position_greater_than_zero: position >= 0
+	position_less_than_size: position < count
 
 end

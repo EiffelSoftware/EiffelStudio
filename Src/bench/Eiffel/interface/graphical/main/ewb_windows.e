@@ -36,7 +36,7 @@ feature {NONE}
 				delay := 10
 			end;
 				-- FIXME need to pass delay as a extra argument
-			win_ioh_make_client ($call_back, Current) 
+			win_ioh_make_client ($call_back, Current, delay) 
 		end;
 
 	call_back is
@@ -47,7 +47,7 @@ feature {NONE}
 
 feature {NONE} -- Externals
 
-	win_ioh_make_client (cb: POINTER; obj: like Current) is
+	win_ioh_make_client (cb: POINTER; obj: like Current; delay: INTEGER) is
 			-- Make the io handler function
 		external
 			"C"

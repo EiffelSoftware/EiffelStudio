@@ -1,6 +1,7 @@
 #include <objbase.h>
 
 #include "cli_debugger.h"
+#include "cli_debugger_callback_id.h"
 #include <objbase.h>
 #include <cor.h>
 
@@ -69,9 +70,9 @@ const IID IID_ICorDebugArrayValue = {0x0405B0DF,0xA660,0x11d2,0xBD,0x02,0x00,0x0
 
 
 /****************************************/
-/****************************************/
 
 rt_private BOOL dbg_last_callback_is_about_eval;
+rt_private Callback_ids dbg_last_callback_id;
 rt_private HANDLE estudio_thread_handle;
 rt_private LONG dbg_state;
 
@@ -99,7 +100,6 @@ rt_private void raise_error (HRESULT hr, char *msg)
 #endif
 
 
-
 ////////////////////////////////////////////////////////////////////////////
 
 #ifdef DBGTRACE_ENABLED
@@ -111,6 +111,7 @@ rt_public void trace_event (char* mesg)
   FILE *out;
 
   dbg_msg_displayed_index = dbg_msg_displayed_index + 1;
+
 
   out=fopen("eif_debugger.out","a+");
   fprintf(out,"%d - <%d|%d>%s\n",
@@ -181,10 +182,20 @@ rt_private UINT dbg_timer;
 
 
 rt_public void dbg_init_estudio_thread_handle () {
-	DWORD th_id;
- 	th_id = GetCurrentThreadId(); 
-	DBGTRACE_DWORD("GetCurrentThreadId() : result =", th_id);
-	estudio_thread_handle = OpenThread (THREAD_SUSPEND_RESUME, FALSE, th_id);
+	HANDLE pseudo_th_hdl;
+	BOOL fSuccess;
+
+	pseudo_th_hdl = GetCurrentThread();
+
+	fSuccess = DuplicateHandle(
+			GetCurrentProcess(),
+			GetCurrentThread(),
+			GetCurrentProcess(),
+			&estudio_thread_handle,
+			THREAD_SUSPEND_RESUME,
+			FALSE,
+			DUPLICATE_SAME_ACCESS);
+	CHECK(fSuccess = 0, "Ensure: DuplicateHandle failed !!")
 }
 
 rt_public void dbg_suspend_estudio_thread () {
@@ -209,6 +220,7 @@ rt_public void dbg_resume_estudio_thread () {
 	DBGTRACE_DWORD ("[Debugger] ResumeThread : result = ", result); /*D*/
 }
 
+#define DBG_INIT_ESTUDIO_THREAD_HANDLE dbg_init_estudio_thread_handle ()
 #define DBG_SUSPEND_ESTUDIO_THREAD dbg_suspend_estudio_thread ()
 #define DBG_RESUME_ESTUDIO_THREAD  dbg_resume_estudio_thread ()
 
@@ -223,6 +235,10 @@ rt_public void dbg_resume_estudio_thread () {
 	// 1 : ec is waiting for dbg
 	// 2 : dbg has starting his processing, ec is waiting for dbg to finish
 	// 3 : dbg is done, dbg waiting
+
+rt_public void dbg_init_synchro () {
+	DBG_INIT_ESTUDIO_THREAD_HANDLE;
+}
 
 rt_public EIF_INTEGER dbg_timer_id () {
 	return (EIF_INTEGER) dbg_timer;
@@ -339,6 +355,7 @@ rt_public void dbg_lock_and_wait_callback () {
 		
 		// now check if last callback is about evaluating
 		// only now, after synchronized with debugger, otherwise we may missed one
+		DBGTRACE2("[EVAL] LastCallback = ", Callback_name(dbg_last_callback_id));
 		eval_callback_proceed = dbg_last_callback_is_about_eval;
 		// if eval callback occured, we must exit after this loop 
 		// but we need to do this at least once
@@ -373,11 +390,12 @@ rt_public void dbg_lock_and_wait_callback () {
 /// dbg_debugger_..._callback :: .NET Dbg Callback      ///
 ///////////////////////////////////////////////////////////
 
-rt_public void dbg_debugger_before_callback (char* callback_id, BOOL is_eval_callback) {
+rt_public void dbg_debugger_before_callback (Callback_ids callback_id, BOOL is_eval_callback) {
+	dbg_last_callback_id = callback_id;
 	if (is_eval_callback) { DBGTRACE("<< is_eval_callback  >>"); }/*D*/
 	dbg_last_callback_is_about_eval = is_eval_callback;
 	DBGTRACE("<<<<<<<<<<<<<<<<<<<<<<<<");/*D*/
-	DBGTRACE2("CALLBACK = ", callback_id);/*D*/
+	DBGTRACE2("CALLBACK = ", Callback_name(callback_id));/*D*/
 	// It is not possible to have 2 callbacks at the same time, 
 	// since it is supposed to be in the same thread ...
 	while (InterlockedExchangeAdd (&dbg_state, 0) == 3) {
@@ -418,8 +436,8 @@ rt_public void dbg_debugger_before_callback (char* callback_id, BOOL is_eval_cal
 	// and then come back by dbg_debugger_after_callback ...
 }
 
-rt_public void dbg_debugger_after_callback (char * callback_id) {
-	DBGTRACE2("EXECUTE = ", callback_id);/*D*/
+rt_public void dbg_debugger_after_callback (Callback_ids callback_id) {
+	DBGTRACE2("EXECUTE = ", Callback_name(callback_id));/*D*/
 	DBGTRACE("7 - [Debugger|DBG] finish execution callback");/*D*/
 //<2>---< come back from callback >------------------------------//
 	InterlockedIncrement (&dbg_state);
@@ -453,8 +471,6 @@ rt_public EIF_POINTER new_cordebug ()
 
 
 	CHECK ((((hr == S_OK) || (hr == S_FALSE)) ? 0 : 1), "Could not create ICorDebug");
-
-	dbg_init_estudio_thread_handle ();
 
 	return icd;
 }

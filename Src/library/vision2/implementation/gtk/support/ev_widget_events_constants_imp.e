@@ -108,10 +108,24 @@ feature -- Event for notebooks
 	switch_page_id: INTEGER is 19
 			-- a page is switched in the notebook
  
-feature -- Event for lists, trees and combo boxes
+feature -- Event for lists and combo boxes
 
 	selection_changed_id: INTEGER is 19
 			-- the selection has changed
+
+feature -- Event for ctrees
+
+	tree_select_row_id: INTEGER is 19
+			-- an item has been selected
+
+	tree_unselect_row_id: INTEGER is 20
+			-- an item has been unselected
+
+	tree_expand_id: INTEGER is 21
+			-- an item has been unselected
+
+	tree_collapse_id: INTEGER is 22
+			-- an item has been unselected
 
 feature -- Event for multi column lists
 

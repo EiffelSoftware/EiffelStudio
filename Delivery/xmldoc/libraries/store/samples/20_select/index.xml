@@ -1,7 +1,7 @@
 <document output="studio" title="Selector Sample">
 	<meta_data/>
 	<paragraph>
-		<paragraph> This sample creates a <code><class_name>DB_BOOK</class_name></code> table in your database, enters sample data in it and lets you select rows from this table with author's            name. </paragraph>
+		<paragraph> This sample creates a <class_name>DB_BOOK</class_name> table in your database, enters sample data in it and lets you select rows from this table with author's            name. </paragraph>
 		<paragraph>
 			<heading>
 				<size>2</size>Compiling

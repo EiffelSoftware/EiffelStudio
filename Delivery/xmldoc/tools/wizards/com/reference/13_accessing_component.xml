@@ -14,9 +14,7 @@ HRESULT InterfaceFunction ([in] int a, [out, retval] MyStruct * b)
 <feature_name>interface_function</feature_name> <symbol>(</symbol><feature_name>a</feature_name><symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol><symbol>:</symbol> <class_name>MY_STRUCT_RECORD</class_name>
 </code_block>
 		<paragraph>where 
-			<code>
-				<class_name>MY_STRUCT_RECORD</class_name>
-			</code> is a generated Eiffel class wrapping 
+			<class_name>MY_STRUCT_RECORD</class_name> is a generated Eiffel class wrapping 
 			<italic>MyStruct</italic>.
 		</paragraph>
 		<paragraph>Here is a more difficult example:</paragraph>
@@ -28,12 +26,8 @@ HRESULT a_function ([in] IsomeInterface * p_interface)
 <feature_name>a_function</feature_name> <symbol>(</symbol><local_variable>p_interface</local_variable><symbol>:</symbol> <class_name>ISOME_INTERFACE_INTERFACE</class_name><symbol>)</symbol>
 </code_block>
 		<paragraph>where 
-			<code>
-				<class_name>ISOME_INTERFACE_INTERFACE</class_name>
-			</code>is a generated deferred class. Where can you obtain an instance of the class? First, you may receive from other function. Second, you can create an implemented server interface 
-			<code>
-				<class_name>ISOME_INTERFACE_IMPL_STUB</class_name>
-			</code>. In the later case you should provide your own implementation.
+			<class_name>ISOME_INTERFACE_INTERFACE</class_name>is a generated deferred class. Where can you obtain an instance of the class? First, you may receive from other function. Second, you can create an implemented server interface 
+			<class_name>ISOME_INTERFACE_IMPL_STUB</class_name>. In the later case you should provide your own implementation.
 		</paragraph>
 		<heading>
 			<size>2</size> Contracts
@@ -75,15 +69,9 @@ HRESULT a_function ([in] IsomeInterface * p_interface)
 			</image>
 		</paragraph>
 		<paragraph>As a result, any feature in the co class client making calls to the user defined Eiffel coclass should include a rescue clause. The processing done in this clause might depend on the nature of the exception. All the standard COM exceptions can be found in the library class 
-			<code>
-				<class_name>ECOM_EXCEPTION_CODES,</class_name>
-			</code> which is inherited from by 
-			<code>
-				<class_name>ECOM_EXCEPTION</class_name>
-			</code>. The later also inherits from the kernel class 
-			<code>
-				<class_name>EXCEPTIONS</class_name>
-			</code> and can consequently be used by the coclass client to catch the exceptions.
+			<class_name>ECOM_EXCEPTION_CODES,</class_name> which is inherited from by 
+			<class_name>ECOM_EXCEPTION</class_name>. The later also inherits from the kernel class 
+			<class_name>EXCEPTIONS</class_name> and can consequently be used by the coclass client to catch the exceptions.
 		</paragraph>
 		<paragraph>The following code snippet illustrates how a client can process exceptions raised in the Eiffel coclass:</paragraph>
 <code_block>

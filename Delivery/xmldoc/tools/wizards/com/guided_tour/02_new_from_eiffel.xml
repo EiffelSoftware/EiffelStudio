@@ -77,9 +77,7 @@
 		<heading>
 			<size>2</size> First look at the generated code
 		</heading>The only generated Eiffel class is 
-		<code>
-			<class_name>COM_&amp;lt;Name_of_system&amp;gt;_REGISTRATION</class_name>
-		</code>. You do not need to modify or implement any classes. The wizard produces a ready-to-use component.
+		<class_name>COM_&amp;lt;Name_of_system&amp;gt;_REGISTRATION</class_name>. You do not need to modify or implement any classes. The wizard produces a ready-to-use component.
 		<tip>
 			<bold>Tip</bold>
 			<line_break/>In most Eiffel systems functionality is spread out throughout the system. No single class exposes the full functionality of the system and can serve as a Facade to the outside world. Running the wizard on any such class would not be practical. Before starting the wizard write an Eiffel class that acts as a Facade and forwards client calls to the appropriate subsystems. Enter the Facade class name into "Enter Eiffel class name" field of the third dialog (Eiffel Project File Dialog). The wizard generates an IDL file from this class.

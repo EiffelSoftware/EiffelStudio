@@ -8,9 +8,7 @@
 			</link>, paragraph 26.4. The description should be informative, clear and terse.
 		</paragraph>
 		<paragraph>For example, suppose you have an attribute 
-			<code>
-				<feature_name>count</feature_name>
-			</code>. You can enter the following header comment:
+			<feature_name>count</feature_name>. You can enter the following header comment:
 		</paragraph>
 		<div>
 			<image>

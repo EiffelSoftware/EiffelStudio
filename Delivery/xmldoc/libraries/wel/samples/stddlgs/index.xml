@@ -33,12 +33,12 @@
 		</heading> After launching the program, a window will displayed with a menu allowing you to select some of the standard dialogs provided by WEL. 
 		<heading>
 			<size>2</size>Under the Hood
-		</heading><code><feature_name>on_menu_command</feature_name></code> has been redefined in <code><class_name>MAIN_WINDOW</class_name></code> to display a different standard dialog when each of the menu items is selected. 
+		</heading><feature_name>on_menu_command</feature_name> has been redefined in <class_name>MAIN_WINDOW</class_name> to display a different standard dialog when each of the menu items is selected. 
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
-				<item><code><class_name>APPLICATION_IDS</class_name></code></item>
-				<item><code><class_name>MAIN_WINDOW</class_name></code></item>
-				<item><code><class_name>STDDLG_DEMO</class_name></code></item>
+				<item><class_name>APPLICATION_IDS</class_name></item>
+				<item><class_name>MAIN_WINDOW</class_name></item>
+				<item><class_name>STDDLG_DEMO</class_name></item>
 			</list>
 			<seealso>
 				<bold>See Also</bold>

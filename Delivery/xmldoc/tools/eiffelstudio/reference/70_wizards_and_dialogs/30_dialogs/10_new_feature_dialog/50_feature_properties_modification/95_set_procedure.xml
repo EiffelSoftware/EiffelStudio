@@ -2,15 +2,9 @@
 	<meta_data/>
 	<paragraph>
 		<paragraph>When creating an attribute, it is common that you will also need a set-procedure for it. For example, for attribute 
-			<code>
-				<feature_name>property</feature_name>
-			</code> you need a procedure 
-			<code>
-				<feature_name>set_property</feature_name>
-			</code> to set it. This feature takes one argument of the same type as 
-			<code>
-				<feature_name>property</feature_name>
-			</code> or is anchored to it. The only thing you have to do with the feature wizard is check the button 
+			<feature_name>property</feature_name> you need a procedure 
+			<feature_name>set_property</feature_name> to set it. This feature takes one argument of the same type as 
+			<feature_name>property</feature_name> or is anchored to it. The only thing you have to do with the feature wizard is check the button 
 			<bold>Generate set procedure</bold>.
 		</paragraph>
 		<div>

@@ -40,13 +40,13 @@
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>Each menu is an instance of <link><url>../../reference/support/wel_menu_chart.xml</url><label>WEL_MENU</label></link> and on_menu_command has been redefined in <code><class_name>MAIN_WINDOW</class_name></code> to perform the appropriate actions.
+		<paragraph>Each menu is an instance of <link><url>../../reference/support/wel_menu_chart.xml</url><label>WEL_MENU</label></link> and on_menu_command has been redefined in <class_name>MAIN_WINDOW</class_name> to perform the appropriate actions.
 			<paragraph>
 				<paragraph>This sample contains the following classes: 
 					<list ordered="false">
-						<item><code><class_name>APPLICATION_IDS</class_name></code></item>
-						<item><code><class_name>CONTROLS</class_name></code></item>
-						<item><code><class_name>MAIN_WINDOW</class_name></code></item>
+						<item><class_name>APPLICATION_IDS</class_name></item>
+						<item><class_name>CONTROLS</class_name></item>
+						<item><class_name>MAIN_WINDOW</class_name></item>
 					</list>
 					<seealso>
 						<bold>See Also</bold>

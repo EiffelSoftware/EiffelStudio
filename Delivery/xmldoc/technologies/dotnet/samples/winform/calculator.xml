@@ -65,16 +65,16 @@
 		<paragraph>This sample contains the following class:</paragraph>
 		<list ordered="false">
 			<item>
-				<span><code><class_name>FORM</class_name></code></span>
+				<span><class_name>FORM</class_name></span>
 			</item>
 			<item>
-				<span><code><class_name>BUTTON</class_name></code></span>
+				<span><class_name>BUTTON</class_name></span>
 			</item>
 			<item>
-				<span><code><class_name>TEXT_FIELD</class_name></code></span>
+				<span><class_name>TEXT_FIELD</class_name></span>
 			</item>
 			<item>
-				<span><code><class_name>LABEL</class_name></code></span>
+				<span><class_name>LABEL</class_name></span>
 			</item>
 		</list>
 		<heading>

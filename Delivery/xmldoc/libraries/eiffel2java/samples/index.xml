@@ -2,9 +2,7 @@
 	<meta_data/>
 	<paragraph>
 		<paragraph>This example shows how to create an instance of the Java Virtual Machine and the creation of an object of type 
-			<code>
-				<class_name>test</class_name>
-			</code>, a java class reproduced below:
+			<class_name>test</class_name>, a java class reproduced below:
 		</paragraph>
 		<code_block>
 (Java Code)

@@ -49,11 +49,11 @@
 			<size>2</size>Running
 		</heading>
 		<paragraph>After launching the application, you will see a window displayed with a similar appearance to the one above. On the left side of the main window a date is displayed in a 
-			<span><code><class_name>COMBO_BOX</class_name></code></span>. Clicking on this 
-			<span><code><class_name>COMBO_BOX</class_name></code></span> and a 
-			<span><code><class_name>CALENDAR</class_name></code></span> control will appear showing the same date as in the 
-			<span><code><class_name>COMBO_BOX</class_name></code></span>. On the right side of the main window are the controls for selecting the format of the displayed date and the style of the 
-			<span><code><class_name>CALENDAR</class_name></code></span> control.
+			<span><class_name>COMBO_BOX</class_name></span>. Clicking on this 
+			<span><class_name>COMBO_BOX</class_name></span> and a 
+			<span><class_name>CALENDAR</class_name></span> control will appear showing the same date as in the 
+			<span><class_name>COMBO_BOX</class_name></span>. On the right side of the main window are the controls for selecting the format of the displayed date and the style of the 
+			<span><class_name>CALENDAR</class_name></span> control.
 		</paragraph>
 		<paragraph>Clicking on the "Change font" button and a 
 			<link>
@@ -76,33 +76,33 @@
 			<size>2</size>Under the Hood
 		</heading>
 		<paragraph>This application uses several different controls, but tend to show how to parameter the 
-			<span><code><class_name>CALENDAR</class_name></code></span> control using the 
-			<span><code><class_name>FONT_DIALOG</class_name></code></span> and 
-			<span><code><class_name>COLOR_DIALOG</class_name></code></span>.
+			<span><class_name>CALENDAR</class_name></span> control using the 
+			<span><class_name>FONT_DIALOG</class_name></span> and 
+			<span><class_name>COLOR_DIALOG</class_name></span>.
 		</paragraph>
 		<paragraph>When one of the buttons "Change font" or "Change color" is pressed, an event is launched and open the corresponding dialog box. </paragraph>
 		<paragraph>When the entry in the 
-			<span><code><class_name>COMBO_BOX</class_name></code></span> format changes, an event is launched and modify the format of the displayed date.
+			<span><class_name>COMBO_BOX</class_name></span> format changes, an event is launched and modify the format of the displayed date.
 		</paragraph>
 		<paragraph>This sample contains the following class:</paragraph>
 		<list ordered="false">
 			<item>
-				<span><code><class_name>CALENDAR</class_name></code></span>
+				<span><class_name>CALENDAR</class_name></span>
 			</item>
 			<item>
-				<span><code><class_name>COMBO_BOX</class_name></code></span>
+				<span><class_name>COMBO_BOX</class_name></span>
 			</item>
 			<item>
-				<span><code><class_name>BUTTON</class_name></code></span>
+				<span><class_name>BUTTON</class_name></span>
 			</item>
 			<item>
-				<span><code><class_name>LABEL</class_name></code></span>
+				<span><class_name>LABEL</class_name></span>
 			</item>
 			<item>
-				<span><code><class_name>GROUP_BOX</class_name></code></span>
+				<span><class_name>GROUP_BOX</class_name></span>
 			</item>
 			<item>
-				<span><code><class_name>CHECK_BOX</class_name></code></span>
+				<span><class_name>CHECK_BOX</class_name></span>
 			</item>
 		</list>
 		<heading>

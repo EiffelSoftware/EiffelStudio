@@ -73,13 +73,9 @@ WOLZA    Wolski  Zajazd
 			<code> 
 				<local_variable>my_sql_connection</local_variable>
 			</code>. 
-			<code>
-				<feature_name>make_from_connection_string </feature_name>
-			</code> ( 
+			<feature_name>make_from_connection_string </feature_name> ( 
 			<italic>my_database</italic>)), then a request to the database is made (create my_sql_command. 
-			<code>
-				<feature_name>make_from_cmd_text_and_connection </feature_name>
-			</code>( 
+			<feature_name>make_from_cmd_text_and_connection </feature_name>( 
 			<italic>my_command</italic>, 
 			<code>
 				<local_variable>my_sql_connection</local_variable>
@@ -88,19 +84,13 @@ WOLZA    Wolski  Zajazd
 		<paragraph>This sample contains the following class: </paragraph>
 		<list ordered="false">
 			<item>
-				<code>
-					<class_name>SQL_DATA_READER</class_name>
-				</code>
+				<class_name>SQL_DATA_READER</class_name>
 			</item>
 			<item>
-				<code>
-					<class_name>SQL_CONNECTION</class_name>
-				</code>
+				<class_name>SQL_CONNECTION</class_name>
 			</item>
 			<item>
-				<code>
-					<class_name>SQL_COMMAND</class_name>
-				</code>
+				<class_name>SQL_COMMAND</class_name>
 			</item>
 		</list>
 		<heading>

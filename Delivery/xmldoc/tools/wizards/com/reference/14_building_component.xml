@@ -13,122 +13,94 @@
 				<link>
 					<url>../../../../libraries/base/reference/kernel/classic/character_chart.xml</url>
 					<label>
-						<code>
-							<class_name>CHARACTER</class_name>
-						</code>
+						<class_name>CHARACTER</class_name>
 					</label>
 				</link>, 
 				<link>
 					<url>../../../../libraries/base/reference/kernel/classic/integer_chart.xml</url>
 					<label>
-						<code>
-							<class_name>INTEGER</class_name>
-						</code>
+						<class_name>INTEGER</class_name>
 					</label>
 				</link>, 
 				<link>
 					<url>../../../../libraries/base/reference/kernel/classic/real_chart.xml</url>
 					<label>
-						<code>
-							<class_name>REAL</class_name>
-						</code>
+						<class_name>REAL</class_name>
 					</label>
 				</link>, 
 				<link>
 					<url>../../../../libraries/base/reference/kernel/classic/double_chart.xml</url>
 					<label>
-						<code>
-							<class_name>DOUBLE</class_name>
-						</code>
+						<class_name>DOUBLE</class_name>
 					</label>
 				</link>, 
 				<link>
 					<url>../../../../libraries/base/reference/kernel/classic/boolean_chart.xml</url>
 					<label>
-						<code>
-							<class_name>BOOLEAN</class_name>
-						</code>
+						<class_name>BOOLEAN</class_name>
 					</label>
 				</link>, 
 				<link>
 					<url>../../../../libraries/base/reference/kernel/integer_ref_chart.xml</url>
 					<label>
-						<code>
-							<class_name>INTEGER_REF</class_name>
-						</code>
+						<class_name>INTEGER_REF</class_name>
 					</label>
 				</link>, 
 				<link>
 					<url>../../../../libraries/base/reference/kernel/classic/boolean_ref_chart.xml</url>
 					<label>
-						<code>
-							<class_name>BOOLEAN_REF</class_name>
-						</code>
+						<class_name>BOOLEAN_REF</class_name>
 					</label>
 				</link>, 
 				<link>
 					<url>../../../../libraries/base/reference/kernel/classic/real_ref_chart.xml</url>
 					<label>
-						<code>
-							<class_name>REAL_REF</class_name>
-						</code>
+						<class_name>REAL_REF</class_name>
 					</label>
 				</link>, 
 				<link>
 					<url>../../../../libraries/base/reference/kernel/classic/character_ref_chart.xml</url>
 					<label>
-						<code>
-							<class_name>CHARACTER_REF</class_name>
-						</code>
+						<class_name>CHARACTER_REF</class_name>
 					</label>
 				</link>, 
 				<link>
 					<url>../../../../libraries/base/reference/kernel/classic/double_ref_chart.xml</url>
 					<label>
-						<code>
-							<class_name>DOUBLE_REF</class_name>
-						</code>
+						<class_name>DOUBLE_REF</class_name>
 					</label>
 				</link>, 
 				<link>
 					<url>../../../../libraries/base/reference/kernel/classic/string_chart.xml</url>
 					<label>
-						<code>
-							<class_name>STRING</class_name>
-						</code>
+						<class_name>STRING</class_name>
 					</label>
 				</link>, 
 				<link>
 					<url>../../../../libraries/com/reference/Structures/ecom_currency_chart.xml</url>
 					<label>
-						<code>
-							<class_name>ECOM_CURRENCY</class_name>
-						</code>
+						<class_name>ECOM_CURRENCY</class_name>
 					</label>
 				</link>, 
 				<link>
 					<url>../../../../libraries/com/reference/Structures/ecom_decimal_chart.xml</url>
 					<label>
-						<code>
-							<class_name>ECOM_DECIMAL</class_name>
-						</code>
+						<class_name>ECOM_DECIMAL</class_name>
 					</label>
 				</link>, 
 				<link>
 					<url>../../../../libraries/com/reference/Interfaces/ecom_interface_chart.xml</url>
-					<label><code><class_name>ECOM_INTERFACE</class_name></code></label>
+					<label><class_name>ECOM_INTERFACE</class_name></label>
 				</link>, and 
 				<link>
 					<url>../../../../libraries/base/reference/structures/list/cell_chart.xml</url>
 					<label>
-						<code>
-							<class_name>CELL</class_name>
-						</code>
+						<class_name>CELL</class_name>
 					</label>
 				</link> and 
 				<link>
 					<url>../../../../libraries/com/reference/Structures/ecom_array_chart.xml</url>
-					<label><code><class_name>ECOM_ARRAY</class_name></code></label>
+					<label><class_name>ECOM_ARRAY</class_name></label>
 				</link> of above types. Features with arguments or return values of other types are excluded from the generated IDL file and are not accessible to the COM runtime.
 			</item>
 			<item>Feature names should not be C++ keywords or names of standard library functions such as min, max, etc. The wizard is able to handle this correctly and to create a COM component; however, other languages may not be able to access it.</item>
@@ -140,9 +112,7 @@
 		</heading>
 		<paragraph>If you start from an Eiffel project, the wizard produces a ready-to-use component, and you do not need to modify or to implement any generated code.</paragraph>
 		<paragraph>If you start from a COM definition file, you are able to design a more flexible component that has more than one interface and/or coclass and user defined types, but you have to implement features of the generated coclass. The generated Eiffel coclass features are empty. You should redefine them in heir to implement the intended behavior. Unlike client generated code, the server generated code will differ whether you have chosen to implement an in-process or an out-of-process component. The difference lies in the component activation code in the class 
-			<code>
-				<class_name>ECOM_&lt;Name_of_system&gt;_REGISTRATION</class_name>
-			</code>. If the component is in-process then this class includes the four functions that need to be exported from an in-process COM component ( 
+			<class_name>ECOM_&lt;Name_of_system&gt;_REGISTRATION</class_name>. If the component is in-process then this class includes the four functions that need to be exported from an in-process COM component ( 
 			<italic>DllRegisterServer</italic>, 
 			<italic>DllUnregisterServer</italic>, 
 			<italic>DllGetClassObject</italic>, and 
@@ -151,12 +121,8 @@
 		<paragraph>The architecture of generated code for the server is similar to the one for the client: the generated Eiffel coclass should be inherited from and the contract features redefined. The default feature implementation of the generated Eiffel coclass is empty. Features should be redefined to implement the intended behavior. These features will be called by the EiffelCOM runtime whenever a client accesses an interface.</paragraph>
 		<paragraph> The architecture remains the same as when accessing a component: the generated Eiffel coclass should be inherited from and the contract features redefined. The default implementation for features from the generated Eiffel coclass are empty. They should also be redefined to implement the intended behavior. These features will be called by the EiffelCOM runtime whenever a client access an interface.</paragraph>
 		<note>Note: For this first release, the name of the user defined coclass has to be 
-			<code>
-				<class_name>&lt;Name_of_generated_coclass&gt;_IMP</class_name>
-			</code>. So if the generated coclass name is 
-			<code>
-				<class_name>MY_COCLASS</class_name>
-			</code> then the user defined coclass name must be MY_COCLASS_IMP.
+			<class_name>&lt;Name_of_generated_coclass&gt;_IMP</class_name>. So if the generated coclass name is 
+			<class_name>MY_COCLASS</class_name> then the user defined coclass name must be MY_COCLASS_IMP.
 		</note>
 		<heading>
 			<size>2</size>  Component's GUI
@@ -207,12 +173,8 @@
 		
 <keyword>end</keyword> <comment>-- class ECOM_SERVER_COCLASS_IMP</comment>
 </code_block> This class inherits from the generated Eiffel coclass and from 
-			<code>
-				<class_name>ECOM_EXCEPTION</class_name>
-			</code>. It redefines the feature coclass_feature from the generated coclass. This feature is part of the interface functions that can be called by clients of the component. Its implementation uses the feature trigger from 
-			<code>
-				<class_name>ECOM_EXCEPTION</class_name>
-			</code> to raise exceptions in case the feature cannot be executed normally (invalid argument e.g.).The EiffelCOM runtime catches the exception and maps it into an HRESULT that is sent back to the client.
+			<class_name>ECOM_EXCEPTION</class_name>. It redefines the feature coclass_feature from the generated coclass. This feature is part of the interface functions that can be called by clients of the component. Its implementation uses the feature trigger from 
+			<class_name>ECOM_EXCEPTION</class_name> to raise exceptions in case the feature cannot be executed normally (invalid argument e.g.).The EiffelCOM runtime catches the exception and maps it into an HRESULT that is sent back to the client.
 			<heading>
 				<size>2</size> Summary
 			</heading>

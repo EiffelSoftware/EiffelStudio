@@ -38,10 +38,10 @@
 		<paragraph>A <link><url>../../reference/support/wel_color_control_chart.xml</url><label>WEL_COLOR_CONTROL</label></link> is used to retrieve the color selection of the user through the feature rgb_result which returns an object of type <link><url>../../reference/gdi/wel_color_ref_chart.xml</url><label>WEL_COLOR_REF</label></link>. </paragraph>
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
-				<item><code><class_name>CTLCOLOR_DEMO</class_name></code></item>
-				<item><code><class_name>MAIN_WINDOW</class_name></code></item>
-				<item><code><class_name>MY_BUTTON</class_name></code></item>
-				<item><code><class_name>PRECOMP_MAIN_WINDOW</class_name></code></item>
+				<item><class_name>CTLCOLOR_DEMO</class_name></item>
+				<item><class_name>MAIN_WINDOW</class_name></item>
+				<item><class_name>MY_BUTTON</class_name></item>
+				<item><class_name>PRECOMP_MAIN_WINDOW</class_name></item>
 			</list>
 		</paragraph>
 	</paragraph></document>

@@ -45,9 +45,7 @@
 				</paragraph>
 			</item>
 			<item>Persistent: class inherits 
-				<code>
-					<class_name>STORABLE</class_name>
-				</code> or has indexing tag 
+				<class_name>STORABLE</class_name> or has indexing tag 
 				<code>
 					<indexing_tag>persistent</indexing_tag>
 				</code>. 

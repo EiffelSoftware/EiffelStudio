@@ -8,9 +8,7 @@
 			</image>
 		</div>
 		<paragraph>If the attribute is of a reference type, you may select the invariant that the attribute may never be void. If it is of a basic expanded type, some other standard options may be chosen. For example, for 
-			<code>
-				<class_name>INTEGER</class_name>
-			</code> you may select that it should always be positive.
+			<class_name>INTEGER</class_name> you may select that it should always be positive.
 		</paragraph>
 		<div>
 			<image>

@@ -19,7 +19,7 @@
 		<heading>
 			<size>3</size>Object structures
 		</heading>
-		<paragraph>As noted above, it is possible with sockets, as any other <code><class_name>IO_MEDIUM</class_name></code>,    to send and receive simple objects such as integers. But for this first    example we are already more ambitious and want to exchange entire linked    lists of strings. The structures that we will exchange are described by    the following class:    
+		<paragraph>As noted above, it is possible with sockets, as any other <class_name>IO_MEDIUM</class_name>,    to send and receive simple objects such as integers. But for this first    example we are already more ambitious and want to exchange entire linked    lists of strings. The structures that we will exchange are described by    the following class:    
 <code_block>
 	<keyword>class</keyword>
 		<class_name>OUR_MESSAGE</class_name>
@@ -35,24 +35,24 @@
 
 	<keyword>end</keyword>
 </code_block>
-			<paragraph>Note that to make use of the storage and retrieval facilities the    objects to be exchanged must be instances of a class which, as here, is    a descendant of <code><class_name>STORABLE</class_name></code>.</paragraph>
+			<paragraph>Note that to make use of the storage and retrieval facilities the    objects to be exchanged must be instances of a class which, as here, is    a descendant of <class_name>STORABLE</class_name>.</paragraph>
 			<heading>
 				<size>3</size>Application classes and system structure
 			</heading>
-			<paragraph>The client and server mechanisms will be described by instances of    two classes that make up the example, called<code><class_name> OUR_CLIENT</class_name></code> and <code><class_name>OUR_SERVER</class_name></code>.</paragraph>
-			<paragraph>We want to have the two communicating systems be two different    systems (compiled separately, with two separate Ace files).<code><class_name> OUR_CLIENT</class_name></code>
-				<italic/>will be part of one of these systems; <code><class_name>OUR_SERVER</class_name></code>
+			<paragraph>The client and server mechanisms will be described by instances of    two classes that make up the example, called<class_name> OUR_CLIENT</class_name> and <class_name>OUR_SERVER</class_name>.</paragraph>
+			<paragraph>We want to have the two communicating systems be two different    systems (compiled separately, with two separate Ace files).<class_name> OUR_CLIENT</class_name>
+				<italic/>will be part of one of these systems; <class_name>OUR_SERVER</class_name>
 				<italic/>will be part    of the other.
 			</paragraph>
 			<paragraph>There are four predefined classes, corresponding to the client and    server sides with, in each case, the choice between the "Unix"    (single-machine) and "network" (multi-machine) styles of    communication. Note that all these classes support stream communication;    for datagrams, see 
 				<link>
 					<url>70_datagram_sockets.xml</url>
 					<label>using datagram sockets</label>
-				</link>.    The server class should inherit from <code><class_name>UNIX_SERVER</class_name></code>    or 
+				</link>.    The server class should inherit from <class_name>UNIX_SERVER</class_name>    or 
 				<link>
 					<url>../reference/network/client_server/network_server_chart.xml</url>
 					<label>NETWORK_SERVER</label>
-				</link>;    the client class should inherit from <code><class_name>UNIX_CLIENT</class_name></code>    or <code><class_name>NETWORK_CLIENT</class_name></code>.    The choice between <code><class_name>UNIX_</class_name></code> and <code><class_name>NETWORK_</class_name></code> classes must of course be the same    on both sides.
+				</link>;    the client class should inherit from <class_name>UNIX_CLIENT</class_name>    or <class_name>NETWORK_CLIENT</class_name>.    The choice between <class_name>UNIX_</class_name> and <class_name>NETWORK_</class_name> classes must of course be the same    on both sides.
 			</paragraph>
 			<heading>
 				<size>3</size>The client
@@ -133,14 +133,14 @@
 						</item>
 						<item>It then uses the inherited procedure 
 							<italic>send</italic> to send this      object structure to the server; 
-							<italic>send</italic> expects an argument of a      type conforming to <code><class_name>STORABLE</class_name></code>,      so that it can use all the predefined storage and retrieval      facilities.
+							<italic>send</italic> expects an argument of a      type conforming to <class_name>STORABLE</class_name>,      so that it can use all the predefined storage and retrieval      facilities.
 						</item>
 						<item>The 
 							<italic>receive</italic> procedure, called next, obtains an object      structure from the server; here, as will be seen from the server's      text below, this is the original list to which the server has      appended a new element. The result of procedure 
 							<italic>receive</italic> is      available through feature 
 							<italic>received</italic>. To avoid the need for an      assignment attempt (as with the result of a 
-							<italic>retrieve</italic>      operation with <code><class_name>STORABLE</class_name></code>)      the class redefines 
-							<italic>received</italic> to be of type <code><class_name>STORABLE</class_name></code>.
+							<italic>retrieve</italic>      operation with <class_name>STORABLE</class_name>)      the class redefines 
+							<italic>received</italic> to be of type <class_name>STORABLE</class_name>.
 						</item>
 						<item>The client has defined a procedure 
 							<italic>process_received</italic> to      print the received string.
@@ -150,14 +150,14 @@
 						</item>
 					</list>
 					<paragraph>Of course, in a typical object-oriented design, the class and those    which appear in the rest of this set of examples may "do" more    than one thing and so may have more routines than the ones shown in this    document.</paragraph>
-					<paragraph>This example shows how to write a client class in the most common    cases: inherit from <code><class_name>UNIX_CLIENT</class_name></code> or    <code><class_name>NETWORK_CLIENT</class_name></code>;    use 
+					<paragraph>This example shows how to write a client class in the most common    cases: inherit from <class_name>UNIX_CLIENT</class_name> or    <class_name>NETWORK_CLIENT</class_name>;    use 
 						<italic>make</italic> to specify the socket address, 
 						<italic>send</italic> to send an    object structure, 
 						<italic>receive </italic>to receive an object structure, 
 						<italic>received</italic>    to access it, and 
 						<italic>cleanup </italic>to clean things up.
 					</paragraph>
-					<paragraph>There would be one difference for a <code><class_name>NETWORK_CLIENT</class_name></code>:    procedure 
+					<paragraph>There would be one difference for a <class_name>NETWORK_CLIENT</class_name>:    procedure 
 						<italic>make</italic> would need two arguments, the name of a host and a    port on that host. For example, to connect to a server running on a    machine of name 
 						<italic>serverhost </italic>and using port 2000, the call would    be:    
 						<paragraph>make ("serverhost", 2000)</paragraph>
@@ -219,7 +219,7 @@
 	<keyword>end</keyword>
 </code_block>
 							<paragraph>The developer's task is even easier here than on the client side. The    last instruction in the creation procedure is 
-								<italic>execute</italic>, inherited    from the chosen <code><class_name>_SERVER</class_name></code> 
+								<italic>execute</italic>, inherited    from the chosen <class_name>_SERVER</class_name> 
 								<italic/>class, which executes a loop that will    repeatedly call 
 								<italic>receive</italic>, 
 								<italic>process_message</italic>, 
@@ -228,10 +228,10 @@
 								<italic>cleanup</italic>); indeed, a server is not expected to    terminate under normal circumstances.
 							</paragraph>
 							<paragraph>To define a server's behavior as desired for your particular    application, all you are required to do is to effect the procedure 
-								<italic>process_message</italic>,    inherited from the <code><class_name>_SERVER</class_name></code> class in deferred form. (Remember that to    "effect" a deferred feature is to provide a non-deferred    version, also called an effective version.) Here the effective version    prints the list of strings received from the client.
+								<italic>process_message</italic>,    inherited from the <class_name>_SERVER</class_name> class in deferred form. (Remember that to    "effect" a deferred feature is to provide a non-deferred    version, also called an effective version.) Here the effective version    prints the list of strings received from the client.
 							</paragraph>
 							<paragraph>In addition, you may also, as here, redefine procedure 
-								<italic>respond</italic>.    In the <code><class_name>_SERVER</class_name></code> class this procedure is effective, but it does nothing;    this means that you have nothing special to do for the common case in    which the server does not respond when it has received a message. Here,    however, we do want to respond; the redefined version of 
+								<italic>respond</italic>.    In the <class_name>_SERVER</class_name> class this procedure is effective, but it does nothing;    this means that you have nothing special to do for the common case in    which the server does not respond when it has received a message. Here,    however, we do want to respond; the redefined version of 
 								<italic>respond</italic>    extends the 
 								<italic>received</italic> string and returns it. Procedure 
 								<italic>resend</italic>    sends an object structure back to the last connected client. It is also    possible to have more sophisticated versions of 

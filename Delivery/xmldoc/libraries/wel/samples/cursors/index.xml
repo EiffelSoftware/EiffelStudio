@@ -35,12 +35,12 @@
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>The feature <code><feature_name>on_menu_command</feature_name></code> has been redefined in <code><class_name>MAIN_WINDOW</class_name></code> to create the appropriate cursor when a menu selection is made, while <code><feature_name>on_set_cursor</feature_name></code> has been redefined to update the style of the displayed cursor. </paragraph>
+		<paragraph>The feature <feature_name>on_menu_command</feature_name> has been redefined in <class_name>MAIN_WINDOW</class_name> to create the appropriate cursor when a menu selection is made, while <feature_name>on_set_cursor</feature_name> has been redefined to update the style of the displayed cursor. </paragraph>
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
-				<item><code><class_name>CURSORS_DEMO</class_name></code></item>
-				<item><code><class_name>MAIN_WINDOW</class_name></code></item>
-				<item><code><class_name>APPLICATION_IDS</class_name></code></item>
+				<item><class_name>CURSORS_DEMO</class_name></item>
+				<item><class_name>MAIN_WINDOW</class_name></item>
+				<item><class_name>APPLICATION_IDS</class_name></item>
 			</list>
 		</paragraph>
 	</paragraph></document>

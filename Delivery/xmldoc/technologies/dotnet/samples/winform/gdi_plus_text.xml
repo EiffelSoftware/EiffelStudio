@@ -57,9 +57,7 @@
 		<paragraph>This sample contains the following class:</paragraph>
 		<list ordered="false">
 			<item>
-				<code>
-					<class_name>FORM</class_name>
-				</code>
+				<class_name>FORM</class_name>
 			</item>
 		</list>
 		<heading>

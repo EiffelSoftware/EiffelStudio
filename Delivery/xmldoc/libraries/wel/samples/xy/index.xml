@@ -38,11 +38,11 @@
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>A <link><url>../../reference/gdi/wel_client_dc_chart.xml</url><label>WEL_CLIENT_DC</label></link> is used to display output in the client area of the window during the execution of <code><feature_name>on_left_button_down</feature_name></code> which has been redefined in <code><class_name>MAIN_WINDOW</class_name></code>.</paragraph>
+		<paragraph>A <link><url>../../reference/gdi/wel_client_dc_chart.xml</url><label>WEL_CLIENT_DC</label></link> is used to display output in the client area of the window during the execution of <feature_name>on_left_button_down</feature_name> which has been redefined in <class_name>MAIN_WINDOW</class_name>.</paragraph>
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
-				<item><code><class_name>XY_DEMO</class_name></code></item>
-				<item><code><class_name>MAIN_WINDOW</class_name></code></item>
+				<item><class_name>XY_DEMO</class_name></item>
+				<item><class_name>MAIN_WINDOW</class_name></item>
 			</list>
 		</paragraph>
 		<seealso>

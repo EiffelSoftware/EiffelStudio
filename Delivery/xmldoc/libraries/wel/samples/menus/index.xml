@@ -36,8 +36,8 @@
 		</heading> A <link><url>../../reference/support/wel_menu_chart.xml</url><label>WEL_MENU</label></link> is used for the menu's in this sample. The feature show_track is used to display the menu at the cursor position and a <link><url>../../reference/support/wel_msg_box_chart.xml</url><label>WEL_MSG_BOX</label></link> is used to display the notification when a menu selection has occurred. 
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
-				<item><code><class_name>MAIN_WINDOW</class_name></code></item>
-				<item><code><class_name>MENUS_DEMO</class_name></code></item>
+				<item><class_name>MAIN_WINDOW</class_name></item>
+				<item><class_name>MENUS_DEMO</class_name></item>
 			</list>
 		</paragraph>
 	</paragraph></document>

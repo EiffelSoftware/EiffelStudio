@@ -89,30 +89,18 @@
 </code_block>
 		</paragraph>
 		<paragraph>The example shows three of the features ( 
-			<code>
-				<feature_name>make</feature_name>
-			</code>, 
-			<code>
-				<feature_name>item</feature_name>
-			</code>, and 
-			<code>
-				<feature_name>first</feature_name>
-			</code>) coded directly in the class. These features (and the ones omitted from the example in the interest of brevity) may not be the only features of the class 
-			<code>
-				<class_name>OLD_FASHIONED_LIST</class_name>
-			</code>. In fact we can just about guarantee that there are other features of this class. Remember the inheritance part of the class:
+			<feature_name>make</feature_name>, 
+			<feature_name>item</feature_name>, and 
+			<feature_name>first</feature_name>) coded directly in the class. These features (and the ones omitted from the example in the interest of brevity) may not be the only features of the class 
+			<class_name>OLD_FASHIONED_LIST</class_name>. In fact we can just about guarantee that there are other features of this class. Remember the inheritance part of the class:
 		</paragraph>
 		<code_block>
 	<keyword>inherit</keyword>
 		<class_name>DYNAMIC_LIST</class_name> <symbol>[</symbol><class_name>G</class_name><symbol>]</symbol>
 </code_block>
 		<paragraph>This means that every feature in 
-			<code>
-				<class_name>DYNAMIC_LIST</class_name>
-			</code> will be a feature of 
-			<code>
-				<class_name>OLD_FASHIONED_LIST</class_name>
-			</code>. So one way we can think of features is by their source.
+			<class_name>DYNAMIC_LIST</class_name> will be a feature of 
+			<class_name>OLD_FASHIONED_LIST</class_name>. So one way we can think of features is by their source.
 		</paragraph>
 		<list ordered="false">
 			<item>Immediate features are those that are introduced by a class itself.</item>
@@ -183,12 +171,8 @@
 			</item>
 		</list>
 		<paragraph>This view can be valuable when a producer is considering performance issues. For example, if there is some class function called 
-			<code>
-				<feature_name>count</feature_name>
-			</code>, a producer might investigate whether it is better to leave 
-			<code>
-				<feature_name>count</feature_name>
-			</code> as a function, computing it each time the feature is applied, or to change it to an attribute and compute it less often.
+			<feature_name>count</feature_name>, a producer might investigate whether it is better to leave 
+			<feature_name>count</feature_name> as a function, computing it each time the feature is applied, or to change it to an attribute and compute it less often.
 		</paragraph>
 		<heading>
 			<size>3</size>Usage
@@ -425,9 +409,7 @@
 			<size>3</size>Obsolete
 		</heading>
 		<paragraph>The feature 
-			<code>
-				<feature_name>insert_text_header_item</feature_name>
-			</code> is not obsolete ... but if it were it would include an 
+			<feature_name>insert_text_header_item</feature_name> is not obsolete ... but if it were it would include an 
 			<code>
 				<keyword>obsolete</keyword>
 			</code> clause. This works much like the obsolete part for classes that we saw in 
@@ -468,12 +450,8 @@
 			<code>
 				<indexing_tag>hd_item</indexing_tag>
 			</code> is available as type 
-			<code>
-				<class_name>WEL_HD_ITEM</class_name>
-			</code> during the computation of feature 
-			<code>
-				<feature_name>insert_text_header_item</feature_name>
-			</code>.
+			<class_name>WEL_HD_ITEM</class_name> during the computation of feature 
+			<feature_name>insert_text_header_item</feature_name>.
 		</paragraph>
 		<note>
 			<bold>Note:</bold> A local entity name must not be the same as any feature of the class in which its feature occurs or the same as any argument name of the feature in which it occurs.
@@ -666,15 +644,9 @@
 	<keyword>feature</keyword><symbol> {</symbol><class_name>ANY</class_name><symbol>}</symbol> -- <comment>Basic Operations</comment>
 </code_block>
 		<paragraph>which means that the following features are available to clients which conform to class 
-			<code>
-				<class_name>ANY</class_name>
-			</code>. And in Eiffel, 
-			<code>
-				<class_name>ANY</class_name>
-			</code> is the class from which all other classes inherit. As a consequence all classes conform to 
-			<code>
-				<class_name>ANY</class_name>
-			</code>.
+			<class_name>ANY</class_name>. And in Eiffel, 
+			<class_name>ANY</class_name> is the class from which all other classes inherit. As a consequence all classes conform to 
+			<class_name>ANY</class_name>.
 		</paragraph>
 		<paragraph>Inside the braces is a list of classes which are eligible as clients.</paragraph>
 		<code_block>
@@ -684,18 +656,14 @@
 			<code>
 				<keyword>STRING</keyword>
 			</code> will be available to client class 
-			<code>
-				<class_name>STRING_HANDLER</class_name>
-			</code> and all its proper descendants.
+			<class_name>STRING_HANDLER</class_name> and all its proper descendants.
 		</paragraph>
 		<paragraph>As stated above, you can put a list of class names in the braces:</paragraph>
 		<code_block>
 	<keyword>feature</keyword> <symbol>{</symbol><class_name>CLASS_A</class_name>, <class_name>CLASS_B</class_name>, <class_name>CLASS_C</class_name><symbol>}</symbol> <comment>-- Semi-private features</comment>
 </code_block>
 		<paragraph>Often features which are solely for implementation should not be seen or used by clients of any type. You can ensure this by exporting to class 
-			<code>
-				<class_name>NONE</class_name>
-			</code>, the class from which no other class can inherit:
+			<class_name>NONE</class_name>, the class from which no other class can inherit:
 		</paragraph>
 		<code_block>
 	<keyword>feature</keyword> <symbol>{</symbol><class_name>NONE</class_name><symbol>}</symbol> <comment>-- Implementation</comment>
@@ -730,93 +698,55 @@
 			<size>3</size>Assignment
 		</heading>
 		<paragraph>In Eiffel, assignment syntax is simple. But depending upon the types involved, what actually happens may need some explanation. Assume here that 
-			<code>
-				<feature_name>is_open_read</feature_name>
-			</code> is an attribute declared as type 
-			<code>
-				<class_name>BOOLEAN</class_name>
-			</code>:
+			<feature_name>is_open_read</feature_name> is an attribute declared as type 
+			<class_name>BOOLEAN</class_name>:
 		</paragraph>
 		<code_block>
 	<feature_name>is_open_read</feature_name> <symbol>:=</symbol> False
 </code_block>
 		<paragraph>In this instruction, an attribute of type 
-			<code>
-				<class_name>BOOLEAN</class_name>
-			</code> named 
-			<code>
-				<feature_name>is_open_read</feature_name>
-			</code> is being assigned the value of the manifest boolean " 
+			<class_name>BOOLEAN</class_name> named 
+			<feature_name>is_open_read</feature_name> is being assigned the value of the manifest boolean " 
 			<code>
 				<keyword>False</keyword>
 			</code>". The attribute 
-			<code>
-				<feature_name>is_open_read</feature_name>
-			</code> is based on an expanded class 
-			<code>
-				<class_name>BOOLEAN</class_name>
-			</code>, so that means that the value for 
+			<feature_name>is_open_read</feature_name> is based on an expanded class 
+			<class_name>BOOLEAN</class_name>, so that means that the value for 
 			<code>
 				<keyword>False</keyword>
 			</code> is held in the field for 
-			<code>
-				<feature_name>is_open_read</feature_name>
-			</code>. This is in contrast to what happens with reference types.
+			<feature_name>is_open_read</feature_name>. This is in contrast to what happens with reference types.
 		</paragraph>
 		<code_block>
 	<feature_name>my_string</feature_name> <symbol>:=</symbol> <feature_name>some_other_string</feature_name>
 </code_block>
 		<paragraph>In this assignment, we will assume that both entities are type 
-			<code>
-				<class_name>STRING</class_name>
-			</code>. Because 
-			<code>
-				<class_name>STRING</class_name>
-			</code> is a reference type, the field for 
-			<code>
-				<feature_name>my_string</feature_name>
-			</code> will hold either a reference to an instance of 
-			<code>
-				<class_name>STRING</class_name>
-			</code>, or it will be 
+			<class_name>STRING</class_name>. Because 
+			<class_name>STRING</class_name> is a reference type, the field for 
+			<feature_name>my_string</feature_name> will hold either a reference to an instance of 
+			<class_name>STRING</class_name>, or it will be 
 			<code>
 				<keyword>Void</keyword>
 			</code>. When the assignment above executes, then whatever was in the field for 
-			<code>
-				<feature_name>my_string</feature_name>
-			</code> is replaced with a reference to the same object that 
-			<code>
-				<feature_name>some_other_string</feature_name>
-			</code> refers to.
+			<feature_name>my_string</feature_name> is replaced with a reference to the same object that 
+			<feature_name>some_other_string</feature_name> refers to.
 		</paragraph>
 		<paragraph>In summary, for objects based on expanded classes, assignment means assignment of value. For objects based on reference classes, assignment means assignment of reference.</paragraph>
 		<heading>
 			<size>4</size>Conformance
 		</heading>
 		<paragraph>There is an important rule about assignment in Eiffel. The rule exists to ensure type safety. Consider the following assignment which we would read as " 
-			<code>
-				<feature_name>x</feature_name>
-			</code>receives 
-			<code>
-				<feature_name>y</feature_name>
-			</code>" or " 
-			<code>
-				<feature_name>x</feature_name>
-			</code>gets 
-			<code>
-				<feature_name>y</feature_name>
-			</code>".
+			<feature_name>x</feature_name>receives 
+			<feature_name>y</feature_name>" or " 
+			<feature_name>x</feature_name>gets 
+			<feature_name>y</feature_name>".
 		</paragraph>
 		<code_block>
 	<feature_name>x</feature_name> <symbol>:=</symbol> <feature_name>y</feature_name>
 </code_block>
 		<paragraph>then the rule says that this assignment is valid only if the type of 
-			<code>
-				<feature_name>y</feature_name>
-			</code> conforms to the type of 
-			<code>
-				<feature_name>x</feature_name>
-			</code>.
+			<feature_name>y</feature_name> conforms to the type of 
+			<feature_name>x</feature_name>.
 		</paragraph>
 		<paragraph>The rule is clear enough ... if you know what "conform" means. In the presence of mechanisms like 
 			<link>
@@ -834,20 +764,12 @@
 		</paragraph>
 		<paragraph>But we can get by for a while with much less. For now let us be satisfied with this:</paragraph>
 		<paragraph>Consider the classes in the declarations for 
-			<code>
-				<feature_name>x</feature_name>
-			</code> and 
-			<code>
-				<feature_name>y</feature_name>
-			</code>.
+			<feature_name>x</feature_name> and 
+			<feature_name>y</feature_name>.
 		</paragraph>
 		<paragraph>You might be tempted to say that to achieve "conformance", the classes would have to be the same. And for the case in which the declarations for 
-			<code>
-				<feature_name>x</feature_name>
-			</code> and 
-			<code>
-				<feature_name>y</feature_name>
-			</code> are 
+			<feature_name>x</feature_name> and 
+			<feature_name>y</feature_name> are 
 			<link>
 				<url></url>
 				<label>expanded classes</label>
@@ -858,12 +780,8 @@
 				<url></url>
 				<label>reference types</label>
 			</link>, that constraint is unnecessarily restrictive. So, for reference types, the class of 
-			<code>
-				<feature_name>y</feature_name>
-			</code> conforms to that 
-			<code>
-				<feature_name>x</feature_name>
-			</code> if it is the same class or a proper descendant of that class. This facilitates a powerful idea known as polymorphic attachment that we will see more closely in the section on 
+			<feature_name>y</feature_name> conforms to that 
+			<feature_name>x</feature_name> if it is the same class or a proper descendant of that class. This facilitates a powerful idea known as polymorphic attachment that we will see more closely in the section on 
 			<link>
 				<url>../../eiffel_dotnet_language/20_language/30_inheritance.xml</url>
 				<label>Inheritance</label>

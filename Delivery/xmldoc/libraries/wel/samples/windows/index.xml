@@ -31,19 +31,19 @@
 		<heading>
 			<size>2</size>Running
 		</heading>
-		<paragraph>After launching the program, a window will appear with a custom <code><class_name>ON_OFF_CONTROL</class_name></code> control displayed. Clicking on this control will cause its state to change. If you select one of the options from the "Windows" menu, that type of window will be displayed. 
+		<paragraph>After launching the program, a window will appear with a custom <class_name>ON_OFF_CONTROL</class_name> control displayed. Clicking on this control will cause its state to change. If you select one of the options from the "Windows" menu, that type of window will be displayed. 
 			<heading>
 				<size>2</size>Under the Hood
 			</heading>
-			<paragraph>The <code><class_name>ON_OFF_CONTROL</class_name></code> inherits <link><url>../../reference/windows/wel_control_window_chart.xml</url><label>WEL_CONTROL_WINDOW</label></link> and demonstrates how to build your controls. The classes <code><class_name>MODAL</class_name></code> and <code><class_name>MODELESS</class_name></code> inherit <link><url>../../reference/windows/wel_modal_dialog_chart.xml</url><label>WEL_MODAL_DIALOG</label></link> and <link><url>../../reference/windows/wel_modeless_dialog_chart.xml</url><label>WEL_MODELESS_DIALOG</label></link> respectively. </paragraph>
+			<paragraph>The <class_name>ON_OFF_CONTROL</class_name> inherits <link><url>../../reference/windows/wel_control_window_chart.xml</url><label>WEL_CONTROL_WINDOW</label></link> and demonstrates how to build your controls. The classes <class_name>MODAL</class_name> and <class_name>MODELESS</class_name> inherit <link><url>../../reference/windows/wel_modal_dialog_chart.xml</url><label>WEL_MODAL_DIALOG</label></link> and <link><url>../../reference/windows/wel_modeless_dialog_chart.xml</url><label>WEL_MODELESS_DIALOG</label></link> respectively. </paragraph>
 			<paragraph>This sample contains the following classes: 
 				<list ordered="false">
-					<item><code><class_name>APPLICATION_IDS</class_name></code></item>
-					<item><code><class_name>MAIN_WINDOW</class_name></code></item>
-					<item><code><class_name>MODAL</class_name></code></item>
-					<item><code><class_name>MODELESS</class_name></code></item>
-					<item><code><class_name>ON_OFF_CONTROL</class_name></code></item>
-					<item><code><class_name>WINDOWS_DEMO</class_name></code></item>
+					<item><class_name>APPLICATION_IDS</class_name></item>
+					<item><class_name>MAIN_WINDOW</class_name></item>
+					<item><class_name>MODAL</class_name></item>
+					<item><class_name>MODELESS</class_name></item>
+					<item><class_name>ON_OFF_CONTROL</class_name></item>
+					<item><class_name>WINDOWS_DEMO</class_name></item>
 				</list>
 			</paragraph>
 		</paragraph>

@@ -35,27 +35,19 @@
 		</heading>
 		<paragraph>Class <link><url>/libraries/base/reference/support/classic/internal_chart.xml</url><label>INTERNAL</label></link> provides low-level access to internal object structures. It, too, is meant to be used as ancestor by classes needing its features.
 			<line_break/> Here are some of the most useful calls and what they yield, 
-			<code>
-				<feature_name>obj</feature_name>
-			</code> being an entity attached to an object 
-			<code>
-				<feature_name>O</feature_name>
-			</code> and 
-			<code>
-				<feature_name>i</feature_name>
-			</code> an integer:
+			<feature_name>obj</feature_name> being an entity attached to an object 
+			<feature_name>O</feature_name> and 
+			<feature_name>i</feature_name> an integer:
 		</paragraph>
 		<list ordered="false">
-			<item><link><url>/libraries/base/reference/support/classic/internal_flatshort.xml</url><anchor_name>f_class_name</anchor_name><label>class_name</label></link> (<code><feature_name>obj</feature_name></code>):  the name of the generator class for O.</item>
+			<item><link><url>/libraries/base/reference/support/classic/internal_flatshort.xml</url><anchor_name>f_class_name</anchor_name><label>class_name</label></link> (<feature_name>obj</feature_name>):  the name of the generator class for O.</item>
 			<item><link><url>/libraries/base/reference/support/classic/internal_flatshort.xml</url><anchor_name>f_dynamic_type</anchor_name><label>dynamic_type </label></link>
 				<code>
 					<symbol>(</symbol>
 					<feature_name>obj</feature_name>
 					<symbol>)</symbol>
 				</code>:  the integer code for the type of 
-				<code>
-					<feature_name>O</feature_name>
-				</code>,  where each type in a system is identified by a unique code.
+				<feature_name>O</feature_name>,  where each type in a system is identified by a unique code.
 			</item>
 			<item><link><url>/libraries/base/reference/support/classic/internal_flatshort.xml</url><anchor_name>f_field_count</anchor_name><label>field_count </label></link>
 				<code>
@@ -63,9 +55,7 @@
 					<feature_name>obj</feature_name>
 					<symbol>)</symbol>
 				</code>:  the number of fields in 
-				<code>
-					<feature_name>O</feature_name>
-				</code>.
+				<feature_name>O</feature_name>.
 			</item>
 			<item><link><url>/libraries/base/reference/support/classic/internal_flatshort.xml</url><anchor_name>f_physical_size</anchor_name><label>physical_size </label></link>
 				<code>
@@ -73,57 +63,37 @@
 					<feature_name>obj</feature_name>
 					<symbol>)</symbol>
 				</code>: the space occupied by 
-				<code>
-					<feature_name>O</feature_name>
-				</code>, in bytes.
+				<feature_name>O</feature_name>, in bytes.
 			</item>
 			<item>
-				<code>
-					<feature_name>field_xx</feature_name>
-				</code>
+				<feature_name>field_xx</feature_name>
 				<code>
 					<symbol>(</symbol>
-					<feature_name>i</feature_name>
-				</code>,  
-				<code>
-					<feature_name>obj</feature_name>
+					<feature_name>i</feature_name>,  
+				<feature_name>obj</feature_name>
 					<symbol>)</symbol>
 				</code> where  
-				<code>
-					<feature_name>xx</feature_name>
-				</code> is name or offset: name or offset of the i-th field of  
-				<code>
-					<feature_name>O</feature_name>
-				</code>.
+				<feature_name>xx</feature_name> is name or offset: name or offset of the i-th field of  
+				<feature_name>O</feature_name>.
 			</item>
 			<item><link><url>/libraries/base/reference/support/classic/internal_flatshort.xml</url><anchor_name>f_field</anchor_name><label>field </label></link>
 				<code>
 					<symbol>(</symbol>
-					<feature_name>i</feature_name>
-				</code>, 
-				<code>
-					<feature_name>obj</feature_name>
+					<feature_name>i</feature_name>, 
+				<feature_name>obj</feature_name>
 					<symbol>)</symbol>
 				</code>:  the value of the i-th field of , if a reference; declared of type  ANY  in the class.
 			</item>
 			<item>
-				<code>
-					<feature_name>yy_field</feature_name>
-				</code>
+				<feature_name>yy_field</feature_name>
 				<code>
 					<symbol>(</symbol>
-					<feature_name>i</feature_name>
-				</code>, 
-				<code>
-					<feature_name>obj</feature_name>
+					<feature_name>i</feature_name>, 
+				<feature_name>obj</feature_name>
 					<symbol>)</symbol>
 				</code> where  
-				<code>
-					<feature_name>yy</feature_name>
-				</code> is boolean, character, integer, real or double: the value  of the i-th field of 
-				<code>
-					<feature_name>O</feature_name>
-				</code>, if of the corresponding type; each declared of the  appropriate type in the class.
+				<feature_name>yy</feature_name> is boolean, character, integer, real or double: the value  of the i-th field of 
+				<feature_name>O</feature_name>, if of the corresponding type; each declared of the  appropriate type in the class.
 			</item>
 			<item><link><url>/libraries/base/reference/support/classic/internal_flatshort.xml</url><anchor_name>f_is_special</anchor_name><label>is_special </label></link>
 				<code>
@@ -131,9 +101,7 @@
 					<feature_name>obj</feature_name>
 					<symbol>)</symbol>
 				</code>, a boolean query which indicates whether 
-				<code>
-					<feature_name>O</feature_name>
-				</code> is a special object  (the sequence of values representing the elements of an array or the characters of  a string).
+				<feature_name>O</feature_name> is a special object  (the sequence of values representing the elements of an array or the characters of  a string).
 			</item>
 		</list>
 		<warning>

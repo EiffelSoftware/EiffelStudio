@@ -54,7 +54,7 @@
 			<size>3</size>Library example
 		</heading>
 		<paragraph>The EiffelStudio delivery includes (in the examples/library/lex subdirectory) a simple example using the Lexical Library classes. The example applies Lex library facilities to the analysis of a language which is none other than Eiffel itself.</paragraph>
-		<paragraph>The root class of that example, <code><class_name>EIFFEL_SCAN</class_name></code>, is only a few lines long; it relies on the general mechanism provided by <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link> (see below). The actual lexical grammar is given by a lexical grammar file (a concept explained below): the file of name eiffel_regular in the same directory.</paragraph>
+		<paragraph>The root class of that example, <class_name>EIFFEL_SCAN</class_name>, is only a few lines long; it relies on the general mechanism provided by <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link> (see below). The actual lexical grammar is given by a lexical grammar file (a concept explained below): the file of name eiffel_regular in the same directory.</paragraph>
 		<heading>
 			<size>3</size>Dealing with finite automata
 		</heading>
@@ -72,11 +72,11 @@
 		</heading>
 		<paragraph>A lexical analyzer built through any of the techniques described in the rest of this chapter will return tokens - instances of class <link><url>../reference/token_chart.xml</url><label>TOKEN</label></link>. Here are the most important features of this class:</paragraph>
 		<list ordered="false">
-			<item><code><feature_name>string_value</feature_name></code>: a string giving the token's contents.</item>
-		<item><code><feature_name>type</feature_name></code>: an integer giving the code of the token's type. The possible token types and associated integer codes are specified during the process of building the lexical analyzer in one of the ways described below.</item>
-			<item><code><feature_name>is_keyword</feature_name></code>: a boolean indicating whether the token is a keyword.</item>
-			<item><code><feature_name>keyword_code</feature_name></code>: an integer, meaningful only if is_keyword is true, and identifying the keyword by the code that was given to it during the process of building the analyzer.</item>
-			<item><code><feature_name>line_number</feature_name></code>, <code><feature_name>column_number</feature_name></code>: two integers indicating where the token appeared in the input text.</item>
+			<item><feature_name>string_value</feature_name>: a string giving the token's contents.</item>
+		<item><feature_name>type</feature_name>: an integer giving the code of the token's type. The possible token types and associated integer codes are specified during the process of building the lexical analyzer in one of the ways described below.</item>
+			<item><feature_name>is_keyword</feature_name>: a boolean indicating whether the token is a keyword.</item>
+			<item><feature_name>keyword_code</feature_name>: an integer, meaningful only if is_keyword is true, and identifying the keyword by the code that was given to it during the process of building the analyzer.</item>
+			<item><feature_name>line_number</feature_name>, <feature_name>column_number</feature_name>: two integers indicating where the token appeared in the input text.</item>
 		</list>
 		<heading>
 			<size>2</size>BUILDING AND USING LEXICAL ANALYZERS
@@ -170,11 +170,11 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 			<heading>
 				<size>3</size>Using a lexical analyzer
 			</heading>
-			<paragraph>Once <code><feature_name>build</feature_name></code> has given you an analyzer, you may use it to analyze input texts through calls to the procedure</paragraph>
+			<paragraph>Once <feature_name>build</feature_name> has given you an analyzer, you may use it to analyze input texts through calls to the procedure</paragraph>
 <code_block>
 	<feature_name>analyze</feature_name> <symbol>(</symbol><local_variable>input_file_name</local_variable><symbol>: </symbol><class_name>STRING</class_name><symbol>)</symbol></code_block>
 			<paragraph>This will read in and process successive input tokens. Procedure analyze will apply to each of these tokens the action of procedure do_a_token. As defined in <link><label>SCANNING</label></link>, this procedure prints out information on the token: its string value, its type, whether it is a keyword and if so its code. You may redefine it in any descendant class so as to perform specific actions on each token.</paragraph>
-			<paragraph>The initial action <code><feature_name>begin_analysis</feature_name></code>, which by default prints a header, and the terminal action <code><feature_name>end_analysis</feature_name></code>, which by default does nothing, may also be redefined.</paragraph>
+			<paragraph>The initial action <feature_name>begin_analysis</feature_name>, which by default prints a header, and the terminal action <feature_name>end_analysis</feature_name>, which by default does nothing, may also be redefined.</paragraph>
 			<paragraph>To build lexical analyzers which provide a higher degree of flexibility, use <link><url>/libraries/lex/reference/metalex_chart.xml</url><label>METALEX</label></link> or <link><url>/libraries/lex/reference/lex_builder_chart.xml</url><label>LEX_BUILDER</label></link>, as described in the last part of this chapter.</paragraph>
 			<heading>
 				<size>2</size>ANALYZING INPUT
@@ -201,7 +201,7 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 			<heading>
 				<size>3</size>Choosing a document
 			</heading>
-			<paragraph>To analyze a text, call <code><feature_name>set_file </feature_name></code>or <code><feature_name>set_string </feature_name></code>to specify the document to be parsed. With the first call, the analysis will be applied to a file; with the second, to a string.</paragraph>
+			<paragraph>To analyze a text, call <feature_name>set_file </feature_name>or <feature_name>set_string </feature_name>to specify the document to be parsed. With the first call, the analysis will be applied to a file; with the second, to a string.</paragraph>
 			<note>
 				<bold>Note</bold>: if you use procedure analyze of <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link>, you do not need any such call, since analyze calls set_file on the file name passed as argument.
 			</note>
@@ -210,13 +210,13 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 			</heading>
 			<paragraph>The basic procedure for analyzing successive tokens in the text is get_token, which reads in one token and sets up various attributes of the analyzer to record properties of that token:</paragraph>
 			<list ordered="false">
-				<item><code><feature_name>last_token</feature_name></code>, a function of type <link><url>/libraries/lex/reference/token_chart.xml</url><label>TOKEN</label></link>, which provides all necessary information on the last token read.</item>
-				<item><code><feature_name>token_line_number</feature_name></code> and<code><feature_name> token_column_number</feature_name></code>, to know where the token is in the text. These queries return results of type <code><class_name>INTEGER</class_name></code>.</item>
-				<item><code><feature_name>token_type</feature_name></code>, giving the regular expression type, identified by its integer number (which is the value No_token if no correct token was recognized).</item>
-				<item><code><feature_name>other_possible_tokens</feature_name></code>, an array giving all the other possible token types of the last token. (If token_type is No_token the array is empty.)</item>
-				<item><code><feature_name>end_of_text</feature_name></code>, a boolean attribute used to record whether the end of text has been reached. If so, subsequent calls to get_token will have no effect.</item>
+				<item><feature_name>last_token</feature_name>, a function of type <link><url>/libraries/lex/reference/token_chart.xml</url><label>TOKEN</label></link>, which provides all necessary information on the last token read.</item>
+				<item><feature_name>token_line_number</feature_name> and<feature_name> token_column_number</feature_name>, to know where the token is in the text. These queries return results of type <class_name>INTEGER</class_name>.</item>
+				<item><feature_name>token_type</feature_name>, giving the regular expression type, identified by its integer number (which is the value No_token if no correct token was recognized).</item>
+				<item><feature_name>other_possible_tokens</feature_name>, an array giving all the other possible token types of the last token. (If token_type is No_token the array is empty.)</item>
+				<item><feature_name>end_of_text</feature_name>, a boolean attribute used to record whether the end of text has been reached. If so, subsequent calls to get_token will have no effect.</item>
 			</list>
-			<paragraph>Procedure <code><feature_name>get_token</feature_name></code> recognizes the longest possible token. So if &lt;, = and &lt;= are all regular expressions in the grammar, the analyzer recognizes &lt;= as one token, rather than &lt; followed by =. You can use other_possible_tokens to know what shorter tokens were recognized but not retained.</paragraph>
+			<paragraph>Procedure <feature_name>get_token</feature_name> recognizes the longest possible token. So if &lt;, = and &lt;= are all regular expressions in the grammar, the analyzer recognizes &lt;= as one token, rather than &lt; followed by =. You can use other_possible_tokens to know what shorter tokens were recognized but not retained.</paragraph>
 			<paragraph>If it fails to recognize a regular expression, get_token sets token_type to No_token and advances the input cursor by one character.</paragraph>
 			<heading>
 				<size>3</size>The basic scheme
@@ -246,7 +246,7 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 				<bold>regular expressions</bold>; any regular expression describes a set of possible tokens, called the 
 				<bold>specimens</bold> of the regular expression.
 			</paragraph>
-			<paragraph>Let us now study the format of regular expressions. This format is used in particular for the lexical grammar files needed by class <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link> and (as seen below) by procedure <code><feature_name>read_grammar</feature_name></code> of class <link><url>/libraries/lex/reference/metalex_chart.xml</url><label>METALEX</label></link>. The 
+			<paragraph>Let us now study the format of regular expressions. This format is used in particular for the lexical grammar files needed by class <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link> and (as seen below) by procedure <feature_name>read_grammar</feature_name> of class <link><url>/libraries/lex/reference/metalex_chart.xml</url><label>METALEX</label></link>. The 
 				<italic>eiffel_regular</italic> grammar file in the examples directory provides an extensive example.
 			</paragraph>
 			<paragraph>Each regular expression denotes a set of tokens. For example, the first regular expression seen above,
@@ -636,7 +636,7 @@ BOOLEAN
 					<item>Set options, such as case sensitivity.</item>
 					<item>Record regular expressions.</item>
 					<item>Record keywords (this may be interleaved with step 2.)</item>
-					<item>"Freeze" the analyzer by a call to <code><feature_name>make_analyzer</feature_name></code>.</item>
+					<item>"Freeze" the analyzer by a call to <feature_name>make_analyzer</feature_name>.</item>
 				</list>
 				<paragraph>To perform steps 2 to 4 in a single shot and generate a lexical analyzer from a lexical grammar file, as with <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link>, you may use the procedure</paragraph>
 				<code_block>	<feature_name>read_grammar</feature_name> <symbol>(</symbol><local_variable>grammar_file_name</local_variable><symbol>: </symbol><class_name>STRING</class_name><symbol>)</symbol></code_block>
@@ -656,9 +656,7 @@ BOOLEAN
 					</paragraph>
 <code_block>	<feature_name>put_nameless_expression</feature_name> <symbol>(</symbol> <string>"$W"</string> <symbol>,</symbol><feature_name>Word</feature_name> <symbol>)</symbol> </code_block>
 					<paragraph>Procedure 
-						<code>
-							<feature_name>declare_keyword</feature_name>
-						</code> records a keyword. The first argument is a string containing the keyword; the second argument is the regular expression of which the keyword must be a specimen. The example shows that here - in contrast with the rule enforced by <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link> - not all keywords need be specimens of the same regular expression.
+						<feature_name>declare_keyword</feature_name> records a keyword. The first argument is a string containing the keyword; the second argument is the regular expression of which the keyword must be a specimen. The example shows that here - in contrast with the rule enforced by <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link> - not all keywords need be specimens of the same regular expression.
 					</paragraph>
 					<paragraph>The calls seen so far record a number of regular expressions and keywords, but do not give us a lexical analyzer yet. To obtain a usable lexical analyzer, you must call</paragraph>
 					<code_block>	<feature_name>make_analyzer</feature_name></code_block>
@@ -667,7 +665,7 @@ BOOLEAN
 							<bold>Note</bold>: for readers knowledgeable in the theory of lexical analysis: one of the most important effects of the call to make_analyzer is to transform the non-deterministic finite automaton resulting from calls such as the ones above into a deterministic finite automaton.
 						</note>
 						<paragraph>Remember that if you use procedure read_grammar, you need not worry about make_analyzer, as the former procedure calls the latter.
-							<paragraph>Another important feature of class <link><url>/libraries/lex/reference/metalex_chart.xml</url><label>METALEX</label></link> is procedure <code><feature_name>store_analyzer</feature_name></code>, which stores the analyzer into a file whose name is passed as argument, for use by later lexical analysis sessions. To retrieve the analyzer, simply use procedure <code><feature_name>retrieve_analyzer</feature_name></code>, again with a file name as argument.</paragraph>
+							<paragraph>Another important feature of class <link><url>/libraries/lex/reference/metalex_chart.xml</url><label>METALEX</label></link> is procedure <feature_name>store_analyzer</feature_name>, which stores the analyzer into a file whose name is passed as argument, for use by later lexical analysis sessions. To retrieve the analyzer, simply use procedure <feature_name>retrieve_analyzer</feature_name>, again with a file name as argument.</paragraph>
 							<heading>
 								<size>2</size>BUILDING A LEXICAL ANALYZER WITH LEX_BUILDER
 							</heading>
@@ -686,9 +684,9 @@ BOOLEAN
 	<feature_name>union </feature_name><symbol>(</symbol><feature_name>Letter</feature_name>, <feature_name>Underlined</feature_name><symbol>)</symbol>
 	      <comment>-- Create a union tool </comment>
 </code_block>
-							<paragraph>Every such procedure call also assigns an integer index to the tool it creates; this number is available through the attribute <code><feature_name>last_created_tool</feature_name></code>. You will need to record it into an integer entity, for example 
-								<code><feature_name>Identifier</feature_name></code> or 
-								<code><feature_name>Letter</feature_name></code>.
+							<paragraph>Every such procedure call also assigns an integer index to the tool it creates; this number is available through the attribute <feature_name>last_created_tool</feature_name>. You will need to record it into an integer entity, for example 
+								<feature_name>Identifier</feature_name> or 
+								<feature_name>Letter</feature_name>.
 								<heading>
 									<size>3</size>An example
 								</heading>
@@ -708,16 +706,16 @@ BOOLEAN
 			<feature_name>Identifier </feature_name><symbol>:</symbol><symbol>=</symbol><feature_name> last_created_tool</feature_name>
 		<keyword>end</keyword>
 </code_block>
-								<paragraph>Each token type is characterized by a number in the tool_list. Each tool has a name, recorded in <code><feature_name>tool_names</feature_name></code>, which gives a readable form of the corresponding regular expression. You can use it to check that you are building the right tool.
+								<paragraph>Each token type is characterized by a number in the tool_list. Each tool has a name, recorded in <feature_name>tool_names</feature_name>, which gives a readable form of the corresponding regular expression. You can use it to check that you are building the right tool.
 									<heading>
 										<size>3</size>Selecting visible tools
 									</heading>
 									<paragraph>In the preceding example, only some of the tools, such as 
-										<code><feature_name>Identifier</feature_name></code>, are of interest to the clients. Others, such as 
-										<code><feature_name>Suffix</feature_name></code> and 
-										<code><feature_name>Suffix_list</feature_name></code>, only play an auxiliary role.
+										<feature_name>Identifier</feature_name>, are of interest to the clients. Others, such as 
+										<feature_name>Suffix</feature_name> and 
+										<feature_name>Suffix_list</feature_name>, only play an auxiliary role.
 									</paragraph>
-									<paragraph>When you create a tool, it is by default invisible to clients. To make it visible, use procedure <code><feature_name>select_tool</feature_name></code>. Clients will need a number identifying it; to set this number, use procedure<code><feature_name> associate</feature_name></code>. For example the above extract may be followed by:</paragraph>
+									<paragraph>When you create a tool, it is by default invisible to clients. To make it visible, use procedure <feature_name>select_tool</feature_name>. Clients will need a number identifying it; to set this number, use procedure<feature_name> associate</feature_name>. For example the above extract may be followed by:</paragraph>
 <code_block>
 	<feature_name>select_tool </feature_name><symbol>(</symbol><feature_name>Identifier</feature_name><symbol>)</symbol>
 	<feature_name>associate </feature_name><symbol>(</symbol><feature_name>Identifier</feature_name>, <number>34</number><symbol>)</symbol>
@@ -725,8 +723,8 @@ BOOLEAN
 	<feature_name>put_keyword </feature_name><symbol>(</symbol><string>"end"</string>,<feature_name> Identifier</feature_name><symbol>)</symbol>
 	<feature_name>put_keyword </feature_name><symbol>(</symbol><string>"feature"</string>, <feature_name>Identifier</feature_name><symbol>)</symbol>
 </code_block>
-									<paragraph>If the analysis encounters a token that belongs to two or more different selected regular expressions, the one entered last takes over. Others are recorded in the array<code><feature_name> other_possible_tokens</feature_name></code>.</paragraph>
-									<paragraph>If you do not explicitly give an integer value to a regular expression, its default value is its rank in <code><feature_name>tool_list</feature_name></code>.</paragraph>
+									<paragraph>If the analysis encounters a token that belongs to two or more different selected regular expressions, the one entered last takes over. Others are recorded in the array<feature_name> other_possible_tokens</feature_name>.</paragraph>
+									<paragraph>If you do not explicitly give an integer value to a regular expression, its default value is its rank in <feature_name>tool_list</feature_name>.</paragraph>
 								</paragraph>
 							</paragraph>
 						</paragraph>

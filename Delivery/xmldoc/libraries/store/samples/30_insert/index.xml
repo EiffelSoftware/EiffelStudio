@@ -99,7 +99,7 @@ Double value? 12.675
 Object inserted
 </code_block>
 				<note>
-					<bold>Note:</bold> if your database does not contain a <code><class_name>DB_BOOK</class_name></code> table, this example will create it.
+					<bold>Note:</bold> if your database does not contain a <class_name>DB_BOOK</class_name> table, this example will create it.
 				</note>
 				<heading>
 					<size>2</size>Under the Hood

@@ -68,8 +68,8 @@
 		</paragraph>
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
-				<item><code><class_name>TUTORIAL_STEP4</class_name></code></item>
-				<item><code><class_name>MAIN_WINDOW</class_name></code></item>
+				<item><class_name>TUTORIAL_STEP4</class_name></item>
+				<item><class_name>MAIN_WINDOW</class_name></item>
 			</list>
 		</paragraph>
 	</paragraph></document>

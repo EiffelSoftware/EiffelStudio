@@ -9,12 +9,8 @@
 		<heading>
 			<size>2</size>Export status
 		</heading>The export status is the class the feature is accessible for. Usually, this is 
-		<code>
-			<class_name>ANY</class_name>
-		</code> for public features, or 
-		<code>
-			<class_name>NONE</class_name>
-		</code> for implementation features, but you can specify any class here. 
+		<class_name>ANY</class_name> for public features, or 
+		<class_name>NONE</class_name> for implementation features, but you can specify any class here. 
 		<paragraph>	<image>
 				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard-export.png</url>
 			</image></paragraph>
@@ -36,10 +32,10 @@
 			<size>2</size>Generated code
 		</heading>The code that is inserted in your class as a result of the selections made for the feature clause, is of the form: 
 		<code_block>feature <class_name>{EXPORT}</class_name><comment> -- Clause name</comment></code_block>
-		except if you specified <code><class_name>ANY</class_name></code> 
+		except if you specified <class_name>ANY</class_name> 
 		as export status, which is similar to having no export status. 
 		<code_block>feature <comment> --Clause name</comment></code_block>
 		<line_break/>For example, if you specified a the "Initialization" feature clause name, and specified 
-		<code><class_name>NONE</class_name></code> as export status, you get: 
+		<class_name>NONE</class_name> as export status, you get: 
 		<code_block>feature <class_name>{NONE}</class_name><comment> -- Initialization</comment></code_block>
 	</paragraph></document>

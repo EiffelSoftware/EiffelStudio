@@ -128,35 +128,25 @@ Next operation?
 					<heading>
 						<size>2</size>Under the Hood
 					</heading>
-					<paragraph>This sample shows how to leverage EiffelBase data structures in a simple Eiffel system. The root class <code><class_name>CALCULATOR</class_name></code> first instantiates all 
-						<italic>state</italic> objects, each corresponding to one possible operation. The state classes all inherit from <code><class_name>STATE</class_name></code>. They are:
+					<paragraph>This sample shows how to leverage EiffelBase data structures in a simple Eiffel system. The root class <class_name>CALCULATOR</class_name> first instantiates all 
+						<italic>state</italic> objects, each corresponding to one possible operation. The state classes all inherit from <class_name>STATE</class_name>. They are:
 					</paragraph>
 					<list ordered="false">
-						<item><code><class_name>PLUS</class_name></code>: Add stack's two top numbers.</item>
-						<item><code><class_name>MINUS</class_name></code>: Substract stack's two top numbers.</item>
-						<item><code><class_name>MULTIPLY</class_name></code>: Multiply stack's two top numbers.</item>
-						<item><code><class_name>DIVIDE</class_name></code>: Divide stack's two top numbers.</item>
-						<item><code><class_name>EMPTY</class_name></code>: Empty stack.</item>
-						<item><code><class_name>HELP</class_name></code>: Prints available commands.</item>
-						<item><code><class_name>QUESTION</class_name></code>: Get number from user.</item>
-						<item><code><class_name>QUIT</class_name></code>: Close application.</item>
+						<item><class_name>PLUS</class_name>: Add stack's two top numbers.</item>
+						<item><class_name>MINUS</class_name>: Substract stack's two top numbers.</item>
+						<item><class_name>MULTIPLY</class_name>: Multiply stack's two top numbers.</item>
+						<item><class_name>DIVIDE</class_name>: Divide stack's two top numbers.</item>
+						<item><class_name>EMPTY</class_name>: Empty stack.</item>
+						<item><class_name>HELP</class_name>: Prints available commands.</item>
+						<item><class_name>QUESTION</class_name>: Get number from user.</item>
+						<item><class_name>QUIT</class_name>: Close application.</item>
 					</list>Each of these classes implement the feature 
-					<code>
-						<feature_name>do_one_state</feature_name>
-					</code> from 
-					<code>
-						<class_name>STATE</class_name>
-					</code> which performs the operation associated with the state.The initial state is 
-					<code>
-						<class_name>QUESTION</class_name>
-					</code> which asks for the initial number to put in the 
+					<feature_name>do_one_state</feature_name> from 
+					<class_name>STATE</class_name> which performs the operation associated with the state.The initial state is 
+					<class_name>QUESTION</class_name> which asks for the initial number to put in the 
 					<italic>accumulator</italic>. Following states depend on the user input.Every descendant of 
-					<code>
-						<class_name>STATE</class_name>
-					</code> implement the feature 
-					<code>
-						<feature_name>operation</feature_name>
-					</code> which performs the corresponding stack transformation.
+					<class_name>STATE</class_name> implement the feature 
+					<feature_name>operation</feature_name> which performs the corresponding stack transformation.
 				</paragraph>
 			</paragraph>
 		</paragraph>

@@ -40,9 +40,7 @@
 			<link>
 				<url>../../../../libraries/base/reference/kernel/classic/string_chart.xml</url>
 				<label>
-					<code>
-						<class_name>STRING</class_name>
-					</code>
+					<class_name>STRING</class_name>
 				</label>
 			</link>
 		</code> and the property 
@@ -111,24 +109,16 @@
 			<italic>string_manipulator.log</italic> holds summary of the processing and error and warning messages.
 		</paragraph>
 		<paragraph>The deferred class 
-			<code>
-				<class_name>STRING_MANIPULATOR_COCLASS</class_name>
-			</code> represents component functionality. It inherits from 
-			<code>
-				<class_name>ISTRING_INTERFACE</class_name>
-			</code> that corresponds to the 
+			<class_name>STRING_MANIPULATOR_COCLASS</class_name> represents component functionality. It inherits from 
+			<class_name>ISTRING_INTERFACE</class_name> that corresponds to the 
 			<italic>IString</italic> interface. It has one descendant 
-			<code>
-				<class_name>STRING_MANIPULATOR_COCLASS_IMP</class_name>
-			</code> that implements the deferred features. The default implementation is empty.
+			<class_name>STRING_MANIPULATOR_COCLASS_IMP</class_name> that implements the deferred features. The default implementation is empty.
 		</paragraph>
 		<heading>
 			<size>2</size> Implementing the component
 		</heading>
 		<link/> To do something more interesting than merely return an error to a client edit the implementation of the 
-		<code>
-			<class_name>STRING_MANIPULATOR_COCLASS_IMP</class_name>
-		</code> class. The wizard would not overwrite this class in future executions. There is an implementation of the class in 
+		<class_name>STRING_MANIPULATOR_COCLASS_IMP</class_name> class. The wizard would not overwrite this class in future executions. There is an implementation of the class in 
 		<italic>$ISE_EIFFEL\examples\com\wizard\string_manipulator\server</italic>\.  Copy this file over to 
 		<italic>$ISE_EIFFEL\examples\com\wizard\string_manipulator\generated\server\component</italic> and freeze the project. Voila!, you have your first EiffelCOM component up and running.
 		<paragraph> </paragraph>

@@ -194,9 +194,7 @@
 			</link>.
 		</paragraph>
 		<paragraph>The keyword class is followed by the class name, in this case " 
-			<code>
-				<class_name>OLD_FASHIONED_LIST</class_name>
-			</code>".
+			<class_name>OLD_FASHIONED_LIST</class_name>".
 		</paragraph>
 		<paragraph>Of the three keywords for header marks, the one which you will encounter most often is 
 			<code>
@@ -230,29 +228,17 @@
 				<url/>
 				<label>generic class</label>
 			</link>. The formal generic parameter is a place holder for a class name which will be provided by reuse consumers. For example if we wrote a class which was a client to 
-			<code>
-				<class_name>OLD_FASHIONED_LIST</class_name>
-			</code> we would substitute the class name for the type of objects that we would want to build an 
-			<code>
-				<class_name>OLD_FASHIONED_LIST</class_name>
-			</code> of. We might make this declaration:
+			<class_name>OLD_FASHIONED_LIST</class_name> we would substitute the class name for the type of objects that we would want to build an 
+			<class_name>OLD_FASHIONED_LIST</class_name> of. We might make this declaration:
 		</paragraph>
 		<code_block>
 	<feature_name>my_list_of_cats</feature_name><symbol>:</symbol> <class_name>OLD_FASHION_LIST</class_name> <symbol>[</symbol><class_name>CAT</class_name><symbol>]</symbol>
 </code_block>
 		<paragraph>The entity 
-			<code>
-				<feature_name>my_list_of_cats</feature_name>
-			</code> could then be attached at runtime to an 
-			<code>
-				<class_name>OLD_FASHIONED_LIST</class_name>
-			</code> of objects of type 
-			<code>
-				<class_name>CAT</class_name>
-			</code>. So the class 
-			<code>
-				<class_name>CAT</class_name>
-			</code> becomes an actual generic parameter and substitutes for 
+			<feature_name>my_list_of_cats</feature_name> could then be attached at runtime to an 
+			<class_name>OLD_FASHIONED_LIST</class_name> of objects of type 
+			<class_name>CAT</class_name>. So the class 
+			<class_name>CAT</class_name> becomes an actual generic parameter and substitutes for 
 			<code>
 				<generics>G</generics>
 			</code> in the declaration.
@@ -271,9 +257,7 @@
 <keyword>obsolete</keyword> "<string>This class is obsolete, use LINKED_LIST [G] instead</string>"
 </code_block>
 		<paragraph>
-			<code>
-				<class_name>OLD_FASHION_LIST</class_name>
-			</code>s are obsolete ... and the class is marked as such by include the line above. The manifest string contains an explanation, instructions, and/or recommended alternatives. Compilers and other language tools can deliver this message to potential reuse consumers. As with indexing, obsolete has no effect on the semantics of the class.
+			<class_name>OLD_FASHION_LIST</class_name>s are obsolete ... and the class is marked as such by include the line above. The manifest string contains an explanation, instructions, and/or recommended alternatives. Compilers and other language tools can deliver this message to potential reuse consumers. As with indexing, obsolete has no effect on the semantics of the class.
 		</paragraph>
 		<paragraph>Obsolete is rarely used because of the nature of certain elements of the Eiffel methodology. For example, if implementations are well-hidden behind implementation-independent specifications, then those implementations may be changed to adapt the class to changing execution environments in such a way that clients are unaffected.</paragraph>
 		<heading>
@@ -292,34 +276,22 @@
 				<url/>
 				<label>inheritance</label>
 			</link> is also a powerful software reuse mechanism. In this example class 
-			<code>
-				<class_name>OLD_FASHIONED_LIST</class_name>
-			</code> declares itself to be a 
+			<class_name>OLD_FASHIONED_LIST</class_name> declares itself to be a 
 			<link>
 				<url/>
 				<label>proper descendant</label>
 			</link> of class 
-			<code>
-				<class_name>DYNAMIC_LIST</class_name>
-			</code>.
+			<class_name>DYNAMIC_LIST</class_name>.
 		</paragraph>
 		<paragraph>There will be more in the section called . For now though, be aware of two important implications of this declaration:</paragraph>
 		<list ordered="false">
 			<item>Every feature of 
-				<code>
-					<class_name>DYNAMIC_LIST</class_name>
-				</code> is available to 
-				<code>
-					<class_name>OLD_FASHIONED_LIST</class_name>
-				</code> and potentially available to its clients.
+				<class_name>DYNAMIC_LIST</class_name> is available to 
+				<class_name>OLD_FASHIONED_LIST</class_name> and potentially available to its clients.
 			</item>
 			<item>Whenever an instance of 
-				<code>
-					<class_name>DYNAMIC_LIST</class_name>
-				</code> is called for, then an instance of 
-				<code>
-					<class_name>OLD_FASHIONED_LIST</class_name>
-				</code> will suffice.
+				<class_name>DYNAMIC_LIST</class_name> is called for, then an instance of 
+				<class_name>OLD_FASHIONED_LIST</class_name> will suffice.
 			</item>
 		</list>
 		<heading>
@@ -334,30 +306,18 @@
 				<url/>
 				<label>creation procedure</label>
 			</link>. In this case the procedure in question is the one named 
-			<code>
-				<feature_name>make</feature_name>
-			</code>. By convention, creation procedure names begin with the word " 
-			<code>
-				<feature_name>make</feature_name>
-			</code>".
+			<feature_name>make</feature_name>. By convention, creation procedure names begin with the word " 
+			<feature_name>make</feature_name>".
 		</paragraph>
 		<paragraph>Let's take a quick look at object creation. Consider this declaration:</paragraph>
 		<code_block>
 	<feature_name>my_list_of_cats</feature_name><symbol>:</symbol> <class_name>OLD_FASHION_LIST</class_name> <symbol>[</symbol><class_name>CAT</class_name><symbol>]</symbol>
 </code_block>
 		<paragraph>Here the entity 
-			<code>
-				<feature_name>my_list_of_cats</feature_name>
-			</code> can be attached to an object of type 
-			<code>
-				<class_name>OLD_FASHION_LIST</class_name>
-			</code> [ 
-			<code>
-				<class_name>CAT</class_name>
-			</code>] at runtime. The process of converting 
-			<code>
-				<feature_name>my_list_of_cats</feature_name>
-			</code> from holding a void reference to holding a reference to a object modeling a list of cats, starts when a creation instruction is executed. The creation instruction creates the instance and may apply a creation procedure to initialize the instance. A creation instruction for the declaration above would look like this:
+			<feature_name>my_list_of_cats</feature_name> can be attached to an object of type 
+			<class_name>OLD_FASHION_LIST</class_name> [ 
+			<class_name>CAT</class_name>] at runtime. The process of converting 
+			<feature_name>my_list_of_cats</feature_name> from holding a void reference to holding a reference to a object modeling a list of cats, starts when a creation instruction is executed. The creation instruction creates the instance and may apply a creation procedure to initialize the instance. A creation instruction for the declaration above would look like this:
 		</paragraph>
 		<code_block>
 	<keyword>create</keyword> <feature_name>my_list_of_cats</feature_name>.<feature_name>make</feature_name>
@@ -369,12 +329,8 @@
 		</paragraph>
 		<list ordered="false">
 			<item>A shell of a new instance of 
-				<code>
-					<class_name>OLD_FASHION_LIST</class_name>
-				</code> [ 
-				<code>
-					<class_name>CAT</class_name>
-				</code>] is created in memory with a memory field for every 
+				<class_name>OLD_FASHION_LIST</class_name> [ 
+				<class_name>CAT</class_name>] is created in memory with a memory field for every 
 				<link>
 					<url/>
 					<label>attribute</label>
@@ -383,14 +339,10 @@
 			<item>Each field is initialized with standard default values
 				<list ordered="false">
 					<item>False for type 
-						<code>
-							<class_name>BOOLEAN</class_name>
-						</code>
+						<class_name>BOOLEAN</class_name>
 					</item>
 					<item>Null character for type 
-						<code>
-							<class_name>CHARACTER</class_name>
-						</code>
+						<class_name>CHARACTER</class_name>
 					</item>
 					<item>The appropriate form of zero for number types</item>
 					<item>
@@ -401,30 +353,20 @@
 				</list>
 			</item>
 			<item>Attach the new instance to the entity 
-				<code>
-					<feature_name>my_list_of_cats</feature_name>
-				</code>
+				<feature_name>my_list_of_cats</feature_name>
 			</item>
 			<item>Apply the creation procedure 
-				<code>
-					<feature_name>make</feature_name>
-				</code>
+				<feature_name>make</feature_name>
 			</item>
 		</list>
 		<paragraph>Once these steps complete successfully, 
-			<code>
-				<feature_name>my_list_of_cats</feature_name>
-			</code> will be attached to a valid instance (i.e., an instance in which the 
+			<feature_name>my_list_of_cats</feature_name> will be attached to a valid instance (i.e., an instance in which the 
 			<link>
 				<url/>
 				<label>class invariant</label>
 			</link> is true) of 
-			<code>
-				<class_name>OLD_FASHIONED_LIST</class_name>
-			</code> [ 
-			<code>
-				<class_name>CAT</class_name>
-			</code>].
+			<class_name>OLD_FASHIONED_LIST</class_name> [ 
+			<class_name>CAT</class_name>].
 		</paragraph>
 		<heading>
 			<size>3</size>Features

@@ -17,7 +17,7 @@
 			</row>
 			<row>
 				<cell>Names of classes that should not appear in generated diagrams.</cell>
-				<cell>This is the list of classes that will be ignored in the Diagram tool if the previous preferences is set to False. By default, this list includes: <code><class_name>INTEGER, BOOLEAN, STRING, CHARACTER, REAL</class_name> and <class_name>DOUBLE</class_name></code>.</cell>
+				<cell>This is the list of classes that will be ignored in the Diagram tool if the previous preferences is set to False. By default, this list includes: <class_name>INTEGER, BOOLEAN, STRING, CHARACTER, REAL</class_name> and <class_name>DOUBLE</class_name>.</cell>
 			</row>
 			<row>
 				<cell>Order used to sort feature clauses in class views.</cell>

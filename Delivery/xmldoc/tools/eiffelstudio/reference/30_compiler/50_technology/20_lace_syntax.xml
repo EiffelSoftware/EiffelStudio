@@ -141,7 +141,7 @@
 				<italic>collect </italic>(
 					<bold>yes</bold> | no)
 				: not applicable. One has to use the 
-				<code><class_name>MEMORY</class_name></code> class to activate or stop the garbage collector.
+				<class_name>MEMORY</class_name> class to activate or stop the garbage collector.
 			</item>
 			<item>
 				<italic>dead_code_removal </italic>(

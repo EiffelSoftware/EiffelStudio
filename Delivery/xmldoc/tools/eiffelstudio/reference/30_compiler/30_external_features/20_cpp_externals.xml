@@ -167,8 +167,8 @@ External_name ==  <keyword>alias</keyword> Manifest_string
 	<keyword>end</keyword>
 </code_block>
 		<paragraph>where 
-			<italic>object_ptr</italic> is a secret attribute of type <code><class_name>POINTER</class_name></code>, 
-			initialized by the creation procedures of the class. To the Eiffel developer, <code><feature_name>add</feature_name></code> looks like a normal object-oriented feature, which takes only the expected argument. Further examples appear below. This technique only works of course when the C++ object is implicit in the context of the Eiffel class.
+			<italic>object_ptr</italic> is a secret attribute of type <class_name>POINTER</class_name>, 
+			initialized by the creation procedures of the class. To the Eiffel developer, <feature_name>add</feature_name> looks like a normal object-oriented feature, which takes only the expected argument. Further examples appear below. This technique only works of course when the C++ object is implicit in the context of the Eiffel class.
 		</paragraph>
 		<paragraph>There is no need for an extra argument in the case of static member functions and constructors.</paragraph>
 		<heading>
@@ -216,22 +216,18 @@ External_name ==  <keyword>alias</keyword> Manifest_string
 		<paragraph>Legacy++ knows about default specifiers: public for structs, private for classes.</paragraph>
 		<paragraph>Legacy++ will generate Eiffel features for member functions (static or not).</paragraph>
 		<paragraph>It will also handle any constructors and destructors given in the C++ code, yielding the corresponding Eiffel creation procedures. If there is no explicit constructor, it will produce a creation procedure with no arguments and an empty body.</paragraph>
-		<paragraph>For any non-static member function or destructor, Legacy++ will generate a secret feature with an extra argument representing the object, as explained in the preceding section in this page. It will also produce a public feature with the same number of arguments as the C++ function, relying on a call to the secret feature, as illustrated for <code><feature_name>add </feature_name></code>and <code><feature_name>cpp_add</feature_name></code> above.</paragraph>
-		<paragraph>The char* type is translated into <code><class_name>STRING</class_name></code>. 
+		<paragraph>For any non-static member function or destructor, Legacy++ will generate a secret feature with an extra argument representing the object, as explained in the preceding section in this page. It will also produce a public feature with the same number of arguments as the C++ function, relying on a call to the secret feature, as illustrated for <feature_name>add </feature_name>and <feature_name>cpp_add</feature_name> above.</paragraph>
+		<paragraph>The char* type is translated into <class_name>STRING</class_name>. 
 			Pointer types, as well as reference types corresponding to classes and types that Legacy++ 
-			has processed, will be translated into <code><class_name>POINTER</class_name></code>. 
+			has processed, will be translated into <class_name>POINTER</class_name>. 
 			Other types will yield the type 
-			<code>
-				<class_name>UNRESOLVED_TYPE</class_name>
-			</code>.
+			<class_name>UNRESOLVED_TYPE</class_name>.
 		</paragraph>
 		<heading>
 			<size>3</size>Legacy++ limitations
 		</heading>
 		<paragraph>It is up to you to supply Eiffel equivalents of all the needed types. If Legacy++ encounters the name of a C++ class or type that it does not know -- i.e. it is neither a predefined type nor a previously translated class -- it will use the Eiffel type name 
-			<code>
-				<class_name>UNRESOLVED_TYPE</class_name>
-			</code>. If you do not change that type in the generated class, the Eiffel compiler will produce an error (unknown class) at degree 5.
+			<class_name>UNRESOLVED_TYPE</class_name>. If you do not change that type in the generated class, the Eiffel compiler will produce an error (unknown class) at degree 5.
 		</paragraph>
 		<paragraph>Legacy++ does not handle inline function declarations.</paragraph>
 		<paragraph>Legacy++ does not handle C++ templates.</paragraph>

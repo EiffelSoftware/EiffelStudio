@@ -231,7 +231,7 @@
 		<heading>
 			<size>4</size>4.1.2. Database handler
 		</heading>
-		<paragraph>This handler is specific to the application. It must inherit from <code><class_name>ABSTRACT_DB_TABLE_MANAGER</class_name></code>. Since it is specific to the program, it can be set before creating any <link><url>../../reference/dataview/processing/dv_table_component_chart.xml</url><label>DV_TABLE_COMPONENT</label></link> object through {DV_DATABASE_HANDLER}.set_database_handler.The <link><url>../../reference/generation/tables_access/db_table_manager_chart.xml</url><label>DB_TABLE_MANAGER</label></link> class is the default database handler for EiffelStore.</paragraph>
+		<paragraph>This handler is specific to the application. It must inherit from <class_name>ABSTRACT_DB_TABLE_MANAGER</class_name>. Since it is specific to the program, it can be set before creating any <link><url>../../reference/dataview/processing/dv_table_component_chart.xml</url><label>DV_TABLE_COMPONENT</label></link> object through {DV_DATABASE_HANDLER}.set_database_handler.The <link><url>../../reference/generation/tables_access/db_table_manager_chart.xml</url><label>DB_TABLE_MANAGER</label></link> class is the default database handler for EiffelStore.</paragraph>
 		<heading>4.1.3. Action controllers</heading>
 		<paragraph>No subcomponent is associated to 'write', 'refresh' and 'delete' actions since these actions does not require specific behavioral choices.</paragraph>
 		<paragraph>To perform 'write', 'refresh' and 'delete' at runtime, a controller is associated to each of these actions. This controller triggers the action when a determined user event is grabbed, for instance, when the user clicks a button.</paragraph>
@@ -465,7 +465,7 @@
 				<url>creator-provider_relation.png</url>
 			</image>
 		</paragraph>
-		<paragraph><code><class_name>DV_CHOICE_CREATOR/DV_TABLEROW_ID_PROVIDER</class_name></code> basic interactions</paragraph>
+		<paragraph><class_name>DV_CHOICE_CREATOR/DV_TABLEROW_ID_PROVIDER</class_name> basic interactions</paragraph>
 		<paragraph>Creation process and <link><url>../../reference/dataview/processing/dv_choice_creator_chart.xml</url><label>DV_CHOICE_CREATOR</label></link> objects creation procedure can help you use this class.</paragraph>
 		<heading>
 			<size>5</size>4.4.2.2. Creation process
@@ -478,19 +478,19 @@
 					<label> controller</label>
 				</link> ("create")
 			</item>
-			<item> <code><class_name>DV_CHOICE_CREATOR</class_name></code>  creates a table row object</item>
-			<item> <code><class_name>DV_CHOICE_CREATOR </class_name></code> requests a first foreign key value to <link><url>../../reference/dataview/processing/dv_tablerow_id_provider_chart.xml</url><label>DV_TABLEROW_ID_PROVIDER</label></link> (through `select_from_table')</item>
-			<item> <code><class_name>DV_TABLEROW_ID_PROVIDER </class_name></code> loads the available table rows that can be  referenced</item>
-			<item> <code><class_name>DV_TABLEROW_ID_PROVIDER</class_name></code> assigns the table rows to <code><class_name>DV_TABLEROWS_NAVIGATOR</class_name></code>  and  pops up the interface with the table rows</item>
+			<item> <class_name>DV_CHOICE_CREATOR</class_name>  creates a table row object</item>
+			<item> <class_name>DV_CHOICE_CREATOR </class_name> requests a first foreign key value to <link><url>../../reference/dataview/processing/dv_tablerow_id_provider_chart.xml</url><label>DV_TABLEROW_ID_PROVIDER</label></link> (through `select_from_table')</item>
+			<item> <class_name>DV_TABLEROW_ID_PROVIDER </class_name> loads the available table rows that can be  referenced</item>
+			<item> <class_name>DV_TABLEROW_ID_PROVIDER</class_name> assigns the table rows to <class_name>DV_TABLEROWS_NAVIGATOR</class_name>  and  pops up the interface with the table rows</item>
 			<item>Table row selection is triggered by a 
 				<link>
 					<anchor_name>dv_s_control</anchor_name>
 					<label> controller</label>
 				</link> ("ok")
 			</item>
-			<item> <code><class_name>DV_TABLEROW_ID_PROVIDER</class_name></code> retrieves the selected table row ID and gives it  back to <code><class_name>DV_CHOICE_CREATOR</class_name></code>  (through `add_foreign_key_value')</item>
-			<item> <code><class_name>DV_CHOICE_CREATOR</class_name></code> requests other foreign key values to   <code><class_name>DV_TABLEROW_ID_PROVIDER</class_name></code></item>
-			<item> <code><class_name>DV_CHOICE_CREATOR</class_name></code> creates the database row with a new ID through the  database handle</item>
+			<item> <class_name>DV_TABLEROW_ID_PROVIDER</class_name> retrieves the selected table row ID and gives it  back to <class_name>DV_CHOICE_CREATOR</class_name>  (through `add_foreign_key_value')</item>
+			<item> <class_name>DV_CHOICE_CREATOR</class_name> requests other foreign key values to   <class_name>DV_TABLEROW_ID_PROVIDER</class_name></item>
+			<item> <class_name>DV_CHOICE_CREATOR</class_name> creates the database row with a new ID through the  database handle</item>
 		</list>
 		<heading>
 			<size>5</size>4.4.2.3. Objects creation procedure
@@ -498,7 +498,7 @@
 		<paragraph>To create a DV_CHOICE_CREATOR, follow these steps:</paragraph>
 		<list ordered="true">
 			<item>Create an object conforming to DV_TABLEROWS_NAVIGATOR</item>
-			<item>Create a <code><class_name>DV_TABLEROW_ID_PROVIDER</class_name></code> object and assign the  <code><class_name>DV_TABLEROWS_NAVIGATOR</class_name></code>  object to it</item>
+			<item>Create a <class_name>DV_TABLEROW_ID_PROVIDER</class_name> object and assign the  <class_name>DV_TABLEROWS_NAVIGATOR</class_name>  object to it</item>
 			<item>Set a 
 				<link>
 					<anchor_name>dv_s_control</anchor_name>
@@ -506,7 +506,7 @@
 				</link> to trigger foreign key selection
 			</item>
 			<item>Set the action to perform to pop up the interface to select the foreign  key</item>
-			<item>Create a <code><class_name>DV_CHOICE_CREATOR</class_name></code>  object and assign the <code><class_name>DV_TABLEROW_ID_PROVIDER</class_name></code>  object to it</item>
+			<item>Create a <class_name>DV_CHOICE_CREATOR</class_name>  object and assign the <class_name>DV_TABLEROW_ID_PROVIDER</class_name>  object to it</item>
 			<item>Set a 
 				<link>
 					<anchor_name>dv_s_control</anchor_name>
@@ -625,17 +625,17 @@
 		<heading>
 			<size>3</size>5.3. DV_SENSITIVE_INTEGER class
 		</heading>
-		<paragraph>This class lets a model class input or output an <code><class_name>INTEGER</class_name></code> value graphically. As for controllers, the model class lets the user know when an integer value can be input by setting the widget sensitivity.</paragraph>
+		<paragraph>This class lets a model class input or output an <class_name>INTEGER</class_name> value graphically. As for controllers, the model class lets the user know when an integer value can be input by setting the widget sensitivity.</paragraph>
 		<paragraph>Different widgets can be used to implement this:</paragraph>
 		<list ordered="false">
-			<item>A text field. Notice that the value entered should be checked to ensure it  is an <code><class_name>INTEGER </class_name></code>value.</item>
+			<item>A text field. Notice that the value entered should be checked to ensure it  is an <class_name>INTEGER </class_name>value.</item>
 			<item>A combo-box. Each combo-box option is associated to an integer.</item>
 			<item>A scroll button.</item>
 		</list>
 		<heading>
 			<size>3</size>5.4. DV_SENSITIVE_CHECK class
 		</heading>
-		<paragraph>This class lets a model class input or output a <code><class_name>BOOLEAN </class_name></code>value graphically. As for controllers, the model class lets the user know when a Boolean value can be input by setting the widget sensitivity.</paragraph>
+		<paragraph>This class lets a model class input or output a <class_name>BOOLEAN </class_name>value graphically. As for controllers, the model class lets the user know when a Boolean value can be input by setting the widget sensitivity.</paragraph>
 		<paragraph>The standard widget to implement this is a check box.</paragraph>
 		<heading>
 			<size>3</size>5.5. DV_TABLEROW_LIST class

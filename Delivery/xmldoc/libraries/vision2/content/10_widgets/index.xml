@@ -15,9 +15,7 @@
 				<url>/libraries/vision2/reference/interface/widgets/ev_widget_chart.xml</url>
 				<label> EV_WIDGET</label>
 			</link> and the features provided in 
-			<code>
-				<class_name> EV_WIDGET</class_name>
-			</code> may be called on any widget. 
+			<class_name> EV_WIDGET</class_name> may be called on any widget. 
 		</paragraph>
 		<heading>
 			<size>2</size>Variations of Widget 

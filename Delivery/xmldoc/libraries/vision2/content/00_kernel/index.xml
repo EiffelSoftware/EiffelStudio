@@ -67,12 +67,10 @@
 	<keyword>end</keyword>
 </code_block>
 		<paragraph>This is the same Vision2 application but instead using 
-			<code>
-				<class_name>
+			<class_name>
 					<url>/libraries/vision2/reference/interface/kernel/ev_application_chart.xml</url>
 					<label>EV_APPLICATION</label>
-				</class_name>
-			</code>  in a client/supplier relationship.
+				</class_name>  in a client/supplier relationship.
 		</paragraph>
 <code_block>
 	<keyword>class</keyword>
@@ -108,7 +106,7 @@
 				<link>
 					<url>/libraries/vision2/content/30_events/index.xml</url>
 					<label>events</label>
-				</link> as they occur. Therefore, if you call launch on  an <link><url>../../reference/interface/kernel/ev_application_chart.xml</url><label>EV_APPLICATION</label></link>, the processing for the application will continue indefinitely unless you have provided a  way to exit the application. It is essential to initialize your components  correctly, so your application can be exited (call <code><feature_name>destroy</feature_name></code> on the application).  
+				</link> as they occur. Therefore, if you call launch on  an <link><url>../../reference/interface/kernel/ev_application_chart.xml</url><label>EV_APPLICATION</label></link>, the processing for the application will continue indefinitely unless you have provided a  way to exit the application. It is essential to initialize your components  correctly, so your application can be exited (call <feature_name>destroy</feature_name> on the application).  
 			</note>   
 			<heading>
 				<size>2</size>Building your application skeleton

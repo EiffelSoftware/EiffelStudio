@@ -12,9 +12,7 @@
 				<url>routine.xml</url>
 				<label>created</label>
 			</link> the object  representing the external routine and attachedit to entity 
-			<code>
-				<feature_name>your_routine</feature_name>
-			</code>, you may now call the routine with  arbitrary actual arguments through the procedure,  a feature of class 
+			<feature_name>your_routine</feature_name>, you may now call the routine with  arbitrary actual arguments through the procedure,  a feature of class 
 			<link>
 				<url>../../reference/desc/spec/win32/dll_32_routine_chart.xml</url>
 				<label>DLL_32_ROUTINE</label>

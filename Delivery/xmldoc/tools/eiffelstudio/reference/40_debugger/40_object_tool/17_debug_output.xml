@@ -8,9 +8,7 @@
 			</link>, objects are displayed. For virtually all objects, it is possible to display a user-definable string value next to the object address.
 		</paragraph>
 		<paragraph>To do so, inherit from the class 
-			<code>
-				<class_name>DEBUG_OUTPUT</class_name>
-			</code> in the classes that should let their objects display a string value, and implement the `debug_output' feature. At run-time, the debugger will automatically query the result of this feature on all objects that define it and display it in the object tool and the 
+			<class_name>DEBUG_OUTPUT</class_name> in the classes that should let their objects display a string value, and implement the `debug_output' feature. At run-time, the debugger will automatically query the result of this feature on all objects that define it and display it in the object tool and the 
 			<link>
 				<url>../50_expression_evaluation/index.xml</url>
 				<label>evaluation tool</label>
@@ -18,12 +16,8 @@
 		</paragraph>
 		<sample>
 			<bold>Sample</bold>: The 
-			<code>
-				<class_name>NUMERIC</class_name>
-			</code> class inherits from the 
-			<code>
-				<class_name>DEBUG_OUTPUT</class_name>
-			</code> one so that it is possible to see the value of *_REF objects without expanding them.
+			<class_name>NUMERIC</class_name> class inherits from the 
+			<class_name>DEBUG_OUTPUT</class_name> one so that it is possible to see the value of *_REF objects without expanding them.
 		</sample>
 		<tip>
 			<bold>Tip</bold>: If an object has a long string output or an output with carriage returns, for instance, pick-and-drop it to the expanded display command 

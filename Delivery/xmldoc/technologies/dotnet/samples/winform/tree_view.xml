@@ -50,32 +50,32 @@
 			<size>2</size>Running
 		</heading>
 		<paragraph>After launching the application, you will see a window displayed with a similar appearance to the one above. On the left of the form you have the 
-			<span><code><class_name>TREE_VIEW</class_name></code></span> control, and on the right you have some controls to configure the 
-			<span><code><class_name>TREE_VIEW</class_name></code></span>.
+			<span><class_name>TREE_VIEW</class_name></span> control, and on the right you have some controls to configure the 
+			<span><class_name>TREE_VIEW</class_name></span>.
 		</paragraph>
 		<paragraph/>
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
 		<paragraph>The application shows how to use a 
-			<span><code><class_name>TREE_VIEW</class_name></code></span> and what are all its different configurations.
+			<span><class_name>TREE_VIEW</class_name></span> and what are all its different configurations.
 		</paragraph>
 		<paragraph>This sample contains the following class:</paragraph>
 		<list ordered="false">
 			<item>
-				<span><code><class_name>TREE_VIEW</class_name></code></span>
+				<span><class_name>TREE_VIEW</class_name></span>
 			</item>
 			<item>
-				<span><code><class_name>GROUP_BOX</class_name></code></span>
+				<span><class_name>GROUP_BOX</class_name></span>
 			</item>
 			<item>
-				<span><code><class_name>CHECK_BOX</class_name></code></span>
+				<span><class_name>CHECK_BOX</class_name></span>
 			</item>
 			<item>
-				<span><code><class_name>COMBO_BOX</class_name></code></span>
+				<span><class_name>COMBO_BOX</class_name></span>
 			</item>
 			<item>
-				<span><code><class_name>LABEL</class_name></code></span>
+				<span><class_name>LABEL</class_name></span>
 			</item>
 		</list>
 		<heading>

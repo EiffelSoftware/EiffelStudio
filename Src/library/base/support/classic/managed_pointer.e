@@ -33,11 +33,10 @@ feature {NONE} -- Initialization
 		require
 			n_positive: n > 0
 		do
-			item := item.memory_alloc (n)
+			item := item.memory_calloc (1, n)
 			if item = default_pointer then
 				(create {EXCEPTIONS}).raise ("No more memory")
 			end
-			item.memory_set (0, n)
 			count := n
 		ensure
 			item_set: item /= default_pointer

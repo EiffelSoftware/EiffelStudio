@@ -41,7 +41,7 @@ feature
 		end
 		format_case.set_list_clusters ( l )
 
-		format_case.execute
+		format_case.execute ( case_window.text_field1.text )
 		case_window.unrealize
 		aa.destroy
 	end

@@ -106,6 +106,8 @@ feature
 			arrow_b2.add_activate_action  (a_command1, Void )
 			scroll_list2.add_default_action (a_command1, Void )
 
+			!BROWSE_COM!a_command2.make ( Current )
+			browsw_b.add_activate_action ( browse, Void )
 			! EXIT_REVERSE ! a_command2.make ( Current)
 			exit_b.add_activate_action (a_command2, Void )
 			! GENERATE_ALL_REVERSE ! a_command2.make ( Current )
@@ -132,6 +134,8 @@ feature
 		end
 
 	set_values is
+		local
+			exec : EXECUTION_ENVIRONMENT
 		do
 
 			associated_form.set_fraction_base ( 11 )
@@ -168,8 +172,12 @@ feature
 			associated_form.attach_top_widget ( sep1, browsw_b, 8)
 			associated_form.attach_top_widget ( sep1, label4, 12 )
 			associated_form.attach_left ( label4, 10 ) 
+
 			associated_form.attach_left_widget ( label4, text_field1, 5)
 			associated_form.attach_left_widget ( text_field1, browsw_b, 10 )
+			!! exec
+			text_field1.set_text(exec.current_working_directory)
+
 			label4.set_text ("Generation path :")
 			browsw_b.set_text ("Browse")
 			

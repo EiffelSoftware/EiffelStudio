@@ -1,0 +1,15 @@
+<document title="Documentation menu" output="studio"><meta_data ><help /></meta_data><paragraph ><heading ><size >1</size>Documentation menu</heading><paragraph >The Documentation Menu enables you to generate documentationabout the classes of your system:</paragraph>
+
+<code_block >
+	(I) Documentation (Flat/Short): Generate flat/short form of all classes in system.
+	(S) Documentation (Short): Generate short form of all classes in system.
+	(F) Documentation (Flat): Generate flat form of all classes in system.
+	(T) Documentation (Text): Generate text form of all classes in system.
+
+	(H) Help         : show list of commands.
+	(M) Main         : go back to main menu.
+	(Q) Quit         : terminate session.
+	(Y) Yank         : yank (save) output of last command to a file.
+</code_block>
+
+<paragraph >The four documentation commands will trigger the creation ofhtml files corresponding to requested information. These files willthen be located in the Documentation subdirectory of your projectdirectory.</paragraph></paragraph></document>

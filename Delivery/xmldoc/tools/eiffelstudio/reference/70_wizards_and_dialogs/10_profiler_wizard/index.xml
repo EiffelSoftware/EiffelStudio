@@ -1,0 +1,36 @@
+<document title="Profiler Wizard" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Profiler Wizard
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>00_introduction.xml</url>
+					<label>Introduction</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>10_guided_tour.xml</url>
+					<label>Profiler wizard guided tour</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>how_to_s/index.xml</url>
+					<label>Profiler how to's</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>reference/index.xml</url>
+					<label>Profiler reference</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

@@ -1,0 +1,20 @@
+<document title="Remove favorite command" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Remove favorite command
+		</heading>
+		<paragraph>The Remove favorite command 
+			<image>
+				<url>/images/eiffelstudio/browsing_tools/favorites_dialog_remove.png</url>
+			</image> discards a favorite item from the favorites. It is enabled whenever an item is selected in the left-hand tree of the 
+			<link>
+				<url>00_introduction.xml</url>
+				<label>Organize favorites dialog</label>
+			</link>.
+		</paragraph>
+		<paragraph>Pressing it removes the selected item from the favorites.</paragraph>
+	</paragraph>
+</document>

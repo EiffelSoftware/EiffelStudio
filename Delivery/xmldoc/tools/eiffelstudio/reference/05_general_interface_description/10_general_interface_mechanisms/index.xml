@@ -1,0 +1,35 @@
+<document title="EiffelStudio interface mechanisms" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>interface mechanisms</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>10_pick_and_drop.xml</url>
+					<label>Pick-and-drop</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_pick_and_drop_shortcut.xml</url>
+					<label>Pick-and-drop shortcut</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>30_toolbars_customization.xml</url>
+					<label>Toolbars customization</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

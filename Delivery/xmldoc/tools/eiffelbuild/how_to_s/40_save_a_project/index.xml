@@ -1,0 +1,35 @@
+<document title="Save a project" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Save a project
+		</heading>
+		<paragraph>To save the project that is currently open, select 
+			<bold>Save</bold> from the 
+			<bold>File</bold> menu or click on 
+			<image>
+				<url>/images/eiffelbuild/icons/icon_save_color.png</url>
+			</image> in the 
+			<link>
+				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.html</url>
+				<label>main toolbar</label>
+			</link>.
+		</paragraph>
+		<paragraph>Alternatively, you may use the keyboard shortcut - 
+			<bold>Ctrl+S</bold>
+		</paragraph>
+		<note>
+			<bold>Note</bold>: If no changes have been made to the system, the save command will be disabled.
+		</note>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break>
+			<link>
+				<url>/tools/eiffelbuild/reference/10_general_interface_description/40_key_shortcuts.html</url>
+				<label>Key shortcuts</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

@@ -1,0 +1,43 @@
+<document title="Automatic completion preferences" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>Preference, Automatic completion</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>Completion, preferences</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>Automatic completion, preferences</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Automatic completion preferences
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>00_introduction.xml</url>
+					<label>Introduction</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>10_general_automatic_completion_preferences.xml</url>
+					<label>General preferences</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_syntax_autocomplete/index.xml</url>
+					<label>Syntax completion preferences</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

@@ -1,0 +1,36 @@
+<document title="EiffelBuild" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>EiffelBuild
+		</heading>
+		<paragraph>Type: Tool
+			<line_break></line_break>Platform: Any
+			<line_break></line_break>Version: 5.1
+			<line_break></line_break>Availability: Student and Enterprise versions.
+		</paragraph>
+		<paragraph>See:</paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>reference/00_introduction.xml</url>
+					<label>Introduction</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>how_to_s/index.xml</url>
+					<label>How To's</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>reference/index.xml</url>
+					<label>Reference</label>
+				</link>  
+			</item>
+		</list>
+	</paragraph>
+</document>

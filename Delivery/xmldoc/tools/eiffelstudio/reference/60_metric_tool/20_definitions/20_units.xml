@@ -1,0 +1,77 @@
+<document title="Units" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Units
+		</heading>
+		<paragraph>Metrics will be expressed in units, such as LINE (numbers of source lines) or FEATURE (number of features). Metrics units appear in a provided text field in the metric tool:</paragraph>
+		<paragraph>
+			<image>
+				<url>/images/eiffelstudio/metrics_png/unit.png</url>
+			</image>
+		</paragraph>
+		<note>
+			<bold>Unit rule:</bold> The definition of any metric must specify an associated unit.
+		</note>
+		<paragraph>Different metrics may be marked with the same unit; for example metrics such as number of non-comment lines and number of comment lines may both be marked with the unit LINE.</paragraph>
+		<paragraph>Whenever we need to express ratios of one measurement to another, as in computing the average number of features per class by dividing the number of features by the number of classes, we will use a specific unit, RATIO:</paragraph>
+		<note>
+			<bold>"Ratio unit"</bold>: The name RATIO denotes a predefined unit, whose values are arbitrary real numbers, expressed either as numbers or in percentage style (as in 35.3%).
+		</note>
+		<paragraph>As a result of this choice, we will consider every division to yield a result of unit, RATIO. </paragraph>
+		<paragraph>The following predefined units are available in the metric tool:</paragraph>
+		<table>
+			<row>
+				<cell>UNIT</cell>
+				<cell>Quantities measured </cell>
+				<cell>KIND</cell>
+			</row>
+			<row>
+				<cell>CLASS</cell>
+				<cell>Number of classes or types </cell>
+				<cell>Product</cell>
+			</row>
+			<row>
+				<cell>CLUSTER</cell>
+				<cell>Number of clusters (groups of classes) </cell>
+				<cell>Product</cell>
+			</row>
+			<row>
+				<cell>COMPILATION</cell>
+				<cell>Number of compilations </cell>
+				<cell>Product</cell>
+			</row>
+			<row>
+				<cell>CONTRACT_CLAUSE</cell>
+				<cell>Number of assertion clauses </cell>
+				<cell>Product</cell>
+			</row>
+			<row>
+				<cell>LOCAL</cell>
+				<cell>Number of entities local to a routine (local variables, formal arguments) </cell>
+				<cell>Product</cell>
+			</row>
+			<row>
+				<cell>FEATURE</cell>
+				<cell>Number of features </cell>
+				<cell>Product</cell>
+			</row>
+			<row>
+				<cell>LINE</cell>
+				<cell>Number of source lines </cell>
+				<cell>Product</cell>
+			</row>
+			<row>
+				<cell>RATIO</cell>
+				<cell>Results of divisions </cell>
+				<cell>Product</cell>
+			</row>
+		</table>
+		<paragraph>The units listed here are 
+			<bold>minimal</bold> in the sense that it is not possible to add the properties measured by any two of them; for example it makes no sense to add a number of features to a number of classes.
+		</paragraph> 
+		<paragraph>In the future, it might be desirable to include more specific units, such as ?features per class , and an associated calculus of units (as in the physical sciences, where multiplying a quantity expressed in g /cm by one in cm yields a result in g). This has not appeared necessary for the typical uses of division envisioned in this note, answering such questions as ?What percentage of routines have a header comment? and all expressed as simply as RATIO.</paragraph>
+	</paragraph>
+</document>

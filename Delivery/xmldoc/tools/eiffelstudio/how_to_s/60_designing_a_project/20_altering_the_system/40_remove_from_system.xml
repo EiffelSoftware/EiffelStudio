@@ -1,0 +1,42 @@
+<document title="Deleting items" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>Client link,Delete</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>Inheritance link,Delete</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>Class,Delete</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>Cluster,Delete</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Deleting items
+		</heading>
+		<list ordered="false">
+			<item>Pick-and-drop the item you want to remove in the 
+				<bold>Delete</bold>hole. 
+				<image>
+					<url>/images/eiffelstudio/icons/icon_delete_small_color.gif</url>
+				</image> For links, the associated Eiffel code will be removed from the class text. Clusters and classes will be deleted from disk!
+			</item>
+		</list>
+		<warning>
+			<bold>Caution</bold>: an action that deletes one or more files or directories cannot be undone!
+		</warning>
+		<tip>
+			<bold>Tip</bold>: turn on 
+			<bold>Automatic backups</bold>.EiffelStudio will make a copy of each class file every time a compilation is done.
+		</tip>
+	</paragraph>
+</document>

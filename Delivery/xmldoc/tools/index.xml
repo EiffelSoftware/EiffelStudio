@@ -1,0 +1,30 @@
+<document title="Tools" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Tools
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>eiffelbuild/index.xml</url>
+					<label>EiffelBuild</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>eiffelstudio/index.xml</url>
+					<label>EiffelStudio</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>wizards/index.xml</url>
+					<label>Wizards</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

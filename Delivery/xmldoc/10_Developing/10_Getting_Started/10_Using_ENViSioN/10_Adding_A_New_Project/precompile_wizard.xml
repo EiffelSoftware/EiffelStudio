@@ -1,0 +1,48 @@
+<document title="Precompile Project Wizard" output="envision">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>50</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size> Precompile Project Wizard
+		</heading>
+		<paragraph>Availability: Enterprise and Free versions.</paragraph>
+		<paragraph>
+			<line_break></line_break> The Precompile Project Wizard create a new precompiled project that may be used as a precompiled library from other projects. 
+		</paragraph>
+		<heading>
+			<size>2</size>Page content
+		</heading>
+		<paragraph>
+			<line_break></line_break> The wizard comprises of the following pages:
+		</paragraph>
+		<list ordered="false">
+			<item> Overview- Introducing the wizard </item>
+			<item>  Precompile Options - Setting to modify what is generated in your  precompiled project</item>
+		</list>
+		<heading>
+			<size>2</size>Precompile Settings
+		</heading>
+		<paragraph>
+			<line_break></line_break> By default the precompile project wizard will create a new precompile project using the existing Eiffel Base Class (eBCL) precompile library. You may turn this option off by un-checking the 'Use eBCL precompile?' option. If eBCL is not used then you may select the Eiffel libraries you would like to include in your procompile project via the 'Include Library' list.
+		</paragraph>
+		<paragraph>
+			<image>
+				<alt_text>Import EiffelStudio Wizard</alt_text>
+				<url>precompile_wizard.PNG</url>
+			</image>
+		</paragraph>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break>
+			<link>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/index.xml</url>
+				<label>  Adding a New Project</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

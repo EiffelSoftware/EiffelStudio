@@ -1,0 +1,64 @@
+<document title="Deploying ENViSioN! Projects" output="envision">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>30</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Deploying ENViSioN! Projects
+		</heading>
+		<paragraph>
+			<line_break></line_break> Deploying an ENViSioN! project or a number of ENViSioN! projects is made simple through using the 
+			<link>
+				<url>/10_Developing\10_Getting_Started\10_Using_ENViSioN\10_Adding_A_New_Project\deployment_wizard.xml</url>
+				<label>  Deployment Project Wizard</label>
+			</link> in the 
+			<link>
+				<url>/10_Developing\10_Getting_Started\10_Using_ENViSioN\10_Adding_A_New_Project\index.xml</url>
+				<label>Add New Project Dialog</label>
+			</link>. 
+		</paragraph>
+		<heading>
+			<size>2</size>Deployment Checklist
+		</heading>
+		<paragraph>
+			<line_break></line_break> Before choosing to deploy your ENViSioN! project(s) please use this checklist to ensure that you project(s) can be deployed successfully. Ensure that...
+		</paragraph>
+		<list ordered="false">
+			<item> All project dependencies are compiled for all projects that are to be deployed </item>
+			<item> The ENViSioN! project(s)have been successfully compiled </item>
+			<item>  If the deployment is a release deployment then the dependencies and ENViSioN!  projects have been compiled in the Release or the equivalent configuration  mode.</item>
+		</list>
+		<heading>
+			<size>2</size>Merge Modules
+		</heading>
+		<paragraph>
+			<line_break></line_break> The Deployment Project Wizard creates a new Visual Studio.NET Merge Module project when it is completed. This is for connivances purposes as Visual Studio.NET comescomplete with a Merge Module compatible installation setup software. The merge module project may then be modified to suit the particular deployment solution. For more information see the 
+			<link>
+				<url>/10_Developing\10_Getting_Started\10_Using_ENViSioN\10_Adding_A_New_Project\deployment_wizard.xml</url>
+				<label>  Deployment Project Wizard</label>
+			</link>. 
+		</paragraph>
+		<heading>
+			<size>2</size>Not Using A Merge Module
+		</heading>
+		<paragraph>
+			<line_break></line_break> If your deployment solution does not support merge modules, or you want to do a simply deploy such as archiving the project assemblies and dependant files then this is alsomade possible through the Deployment wizard. The wizard actually copies all of the assemblies to the location specified when selecting the Deployment wizard from the Add New Project Dialog. For more information seethe 
+			<link>
+				<url>/10_Developing\10_Getting_Started\10_Using_ENViSioN\10_Adding_A_New_Project\deployment_wizard.xml</url>
+				<label>  Deployment Project Wizard</label>
+			</link>.
+		</paragraph>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break>
+			<link>
+				<url>/10_Developing\10_Getting_Started\10_Using_ENViSioN\10_Adding_A_New_Project\deployment_wizard.xml</url>
+				<label>  Deployment Project Wizard</label>
+			</link>.
+		</seealso>
+	</paragraph>
+</document>

@@ -1,0 +1,169 @@
+<document title="Introduction" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content> class, view</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Introduction
+		</heading>
+		<paragraph>
+			<image>
+				<url>/images/eiffelstudio/class_format_bar.png</url>
+			</image>
+		</paragraph>
+		<paragraph>Class views are all available through the 
+			<bold>Class</bold> tab of the 
+			<link>
+				<url>/tools/eiffelstudio/reference/05_general_interface_description/20_eiffelstudio_window_overview.xml</url>
+				<label>context tool</label>
+			</link>, and for some of them directly with the 
+			<link>
+				<url>/tools/eiffelstudio/reference/20_editor/index.xml</url>
+				<label>editor</label>
+			</link>.
+			<line_break></line_break>These views (with their associated icon) are:
+		</paragraph>
+		<list ordered="false">
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_format_text_color.gif</url>
+				</image> 
+				<link>
+					<url>./05_basic_text_format.xml</url>
+					<label>Basic text view</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_format_clickable_color.gif</url>
+				</image>
+				<link>
+					<url>./10_clickable_format.xml</url>
+					<label>Clickable view</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_format_flat_color.gif</url>
+				</image> 
+				<link>
+					<url>./15_flat_format.xml</url>
+					<label>Flat view</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_format_contract_color.gif</url>
+				</image>
+				<link>
+					<url>./20_contract_format.xml</url>
+					<label>Contract view</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_format_interface_color.gif</url>
+				</image>
+				<link>
+					<url>./25_interface_format.xml</url>
+					<label>Flat Contract view</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_format_ancestors_color.gif</url>
+				</image>
+				<link>
+					<url>./30_ancestors_format.xml</url>
+					<label>Ancestors</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_format_descendants_color.gif</url>
+				</image> 
+				<link>
+					<url>./35_descendants_format.xml</url>
+					<label>Descendants</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_format_clients_color.gif</url>
+				</image>
+				<link>
+					<url>./40_clients_format.xml</url>
+					<label>Clients</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_format_suppliers_color.gif</url>
+				</image>
+				<link>
+					<url>./45_suppliers_format.xml</url>
+					<label>Suppliers</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_format_attributes_color.gif</url>
+				</image> 
+				<link>
+					<url>./50_attributes_format.xml</url>
+					<label>Attributes</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_format_routines_color.gif</url>
+				</image>
+				<link>
+					<url>./55_routines_format.xml</url>
+					<label>Routines</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_format_deferreds_color.gif</url>
+				</image>
+				<link>
+					<url>./60_deferred_format.xml</url>
+					<label>Deferred features</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_format_onces_color.gif</url>
+				</image> 
+				<link>
+					<url>./65_onces_format.xml</url>
+					<label>Once routines and constants</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_format_externals_color.gif</url>
+				</image>
+				<link>
+					<url>./70_externals_format.xml</url>
+					<label>External features</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_format_exporteds_color.gif</url>
+				</image>
+				<link>
+					<url>./75_exported_format.xml</url>
+					<label>Exported features</label>
+				</link>  
+			</item>
+		</list>
+	</paragraph>
+</document>

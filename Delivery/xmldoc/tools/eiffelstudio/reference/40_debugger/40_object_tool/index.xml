@@ -1,0 +1,69 @@
+<document title="Object tool" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>object tool</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Object tool
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>00_introduction.xml</url>
+					<label>Introduction</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>05_local_view.xml</url>
+					<label>Local view</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>10_object_view.xml</url>
+					<label>Object view</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>15_attribute_symbols.xml</url>
+					<label>Attribute symbols</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>17_debug_output.xml</url>
+					<label>Debug output</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<height>8</height>
+					<width>8</width>
+					<url>../../../../../images/eiffelstudio/icons/icon_slice_limits_vsmall_color.gif</url>
+				</image> 
+				<link>
+					<url>20_slice_size_command.xml</url>
+					<label>Set slice size command</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<height>8</height>
+					<width>8</width>
+					<url>../../../../../images/eiffelstudio/icons/icon_delete_very_small_color.gif</url>
+				</image> 
+				<link>
+					<url>30_remove_object_command.xml</url>
+					<label>Remove object command</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

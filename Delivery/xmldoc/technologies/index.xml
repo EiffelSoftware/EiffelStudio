@@ -1,0 +1,42 @@
+<document title="Technologies" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Technologies
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>com/index.xml</url>
+					<label>COM</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>dotnet/index.xml</url>
+					<label>.NET</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>cecil/index.xml</url>
+					<label>CECIL</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>porting/index.xml</url>
+					<label>Porting Instructions</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>threads/index.xml</url>
+					<label>Threads</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

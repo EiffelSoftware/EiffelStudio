@@ -1,0 +1,98 @@
+<document title="Message Box">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>20</envision_pseudo_name>
+				<envision_location>Samples\Windows Forms</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Simple Hello world form sample
+		</heading>
+		<div>
+			<paragraph>
+				<image>
+					<height>144</height>
+					<width>400</width>
+					<url>/images/dotnet_samples/hello_world.png</url>
+					<alt_text>Hello world form</alt_text>
+				</image>
+				<image>
+					<height>100</height>
+					<width>203</width>
+					<url>/images/dotnet_samples/message_box.png</url>
+					<alt_text>Hello world form</alt_text>
+				</image>
+			</paragraph>
+		</div>
+		<paragraph>
+			<line_break></line_break>
+			<line_break></line_break>
+		</paragraph>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<heading>
+			<size>2</size>Running
+		</heading>
+		<paragraph>After launching the application, you will see a window displayed with a similar appearance to the one above. </paragraph>
+		<paragraph>Click on the 
+			<span>BUTTON</span> "Click Me!" and a message box will appear with the text that you have entered in the 
+			<span>TEXT_FIELD</span>. 
+		</paragraph>
+		<paragraph></paragraph>
+		<heading>
+			<size>2</size>Under the Hood
+		</heading>
+		<paragraph>The application shows how to use the very useful 
+			<span>MESSAGE_BOX</span> control. 
+		</paragraph>
+		<paragraph>An event (
+			<span>EVENT_HANDLER)</span> is associated to a control (here to the 
+			<span>BUTTON</span>). So the line
+		</paragraph>
+		<code>. ( {}. make (Current, $ ))</code>associates a click to 
+		<span>my_button</span> to the feature 
+		<span>on_my_button_clicked</span>. So every time the 
+		<span>BUTTON</span> 
+		<span>my_button</span> is clicked, the feature 
+		<span>on_my_button_clicked</span> is executed. 
+		<line_break></line_break>
+		<line_break></line_break> 
+		<paragraph>The feature 
+			<span>my_button_clicked</span>displays a 
+			<span>MESSAGE_BOX</span> (
+			<span>feature</span> {
+			<span>WINFORMS_MESSAGE_BOX</span>}. 
+			<span>show</span> (
+			<italic>msg</italic>)) with the text contained in 
+			<span>TEXT_FIELD</span> (
+			<italic>msg</italic> := 
+			<span>my_text_field</span>. 
+			<span>text</span>). 
+		</paragraph>
+		<paragraph>This sample contains the following class:</paragraph>
+		<list ordered="false">
+			<item>
+				<span>FORM</span>
+			</item>
+			<item>
+				<span>BUTTON</span>
+			</item>
+			<item>
+				<span>TEXT_FIELD</span>
+			</item>
+			<item>
+				<span>EVENT_HANDLER</span>
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Notes
+		</heading>
+		<paragraph>This sample is translated from the example located in the QuickStart\winforms\samples\accessible subdirectory of the .NET Framework SDK samples directory of Microsoft Visual Studio.NET. </paragraph>
+		<paragraph></paragraph>
+		<paragraph></paragraph>
+	</paragraph>
+</document>

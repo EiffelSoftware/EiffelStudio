@@ -1,0 +1,87 @@
+<document title="C externals" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>C externals</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>externals, C</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>C externals
+		</heading>
+		<heading>
+			<size>2</size>General consideration
+		</heading>
+		<paragraph>As ISE's technology relies heavily on the use of a C/C++ ANSI compiler, you have to be sure to always put the correct signature of an external C/C++ routine. If it was not the case, the Ccompilation of your system could fail. Most of the time a C compiler is more comprehensive than a C++ compiler and most type errors won't cause you any harm, but C++ compilers are not as laxas C compilers and they will mostly generate errors.</paragraph>
+		<paragraph>The section concerning 
+			<link>
+				<url>#macros</url>
+				<label>Macros</label>
+			</link> and 
+			<link>
+				<url>#structs</url>
+				<label>Structs</label>
+			</link> are also available for C++, i.e. if the macro or the struct is defined in a C++ header file.
+		</paragraph>
+		<heading>
+			<size>2</size>C routines
+		</heading>
+		<paragraph>You can encapsulate routines that are defined in a C header file. We will take some examples and will show you how to write wrappers in Eiffel.</paragraph>
+		<paragraph>If in a header file called `my_header.h', you have the following declaration:</paragraph>
+		<paragraph>Here is the corresponding Eiffel code:</paragraph>
+		<heading>
+			<size>2</size>Macros
+		</heading>
+		<paragraph>If in a header file called `my_header.h', you have the following declaration:</paragraph>
+		<paragraph>Then, the corresponding Eiffel code will look like:</paragraph>
+		<heading>
+			<size>2</size>Structs
+		</heading>
+		<paragraph>The struct encapsulation enables you to wrap C/C++ structures easily without having to write any additional code in a C header file as it was the case until ISE introduced this new keyword in the external specification with ISE EiffelBench 4.5. With the struct encapsulation you can set and retrieve the value of a certain field of a struct.</paragraph>
+		<paragraph>If in a header file called `my_header.h', you have the followingdeclaration of the `Point' structure whose `x' and `y' fields we want to access and set:</paragraph>
+		<paragraph>Then, the corresponding Eiffel code will look like:</paragraph>
+		<heading>
+			<size>2</size>Windows externals
+		</heading>
+		<heading>
+			<size>3</size>DLLs
+		</heading>
+		<paragraph>With ISE EiffelStudio you now have two different ways to call C routines exported in a DLL. Why two, because Windows provides two ways to call a C routine in a DLL:</paragraph>
+		<list ordered="false">
+			<item>_cdecl: referred to as the standard way</item>
+			<item>__stdcall referred to as the Pascal way</item>
+		</list>
+		<paragraph>Therefore if you want to call an external routine defined in a DLL supposed to be called using the `_cdecl' method, you have to use the `
+			<span>
+				<bold>dll32</bold>'
+			</span> sub-language option. For `__stdcall' you need to use the `
+			<bold>dllwin32</bold>' sub-language option. Here is an example:
+		</paragraph>
+		<warning>
+			<bold>Caution</bold>: Using wrongly 
+			<bold>dll32</bold> instead of 
+			<bold>dllwin32</bold>and reciprocally will conduce to a crash of your system since the C call stack will be corrupted. For more information please read your C compiler documentation.
+		</warning>
+		<heading>
+			<size>3</size>Windows API
+		</heading>
+		<paragraph>As described in the previous section concerning routines exported in a DLL, the Windows API is using the `__stdcall'convention. As a consequence, you cannot use the standard external mechanism to wrap them because it is using the `_cdecl' convention. However, you can easily wrap those function by using the`
+			<bold>macro</bold>' sub-language.
+		</paragraph>
+		<paragraph>Here is an example that has been taken from WEL, the Windows Eiffel Library, to encapsulate the Windows `SendMessage' function:</paragraph>
+		<seealso>
+			<bold>See also</bold>
+			<line_break></line_break>
+			<link>
+				<url>20_cpp_externals.xml</url>
+				<label>C++ externals</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

@@ -1,0 +1,18 @@
+<document title="Unicode" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Unicode
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>./windows9x/index.xml</url>
+					<label>Getting Started</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

@@ -1,0 +1,95 @@
+<document title="Saving a measure" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>Measure, save</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Saving a measure
+		</heading>
+		<paragraph>To save the result of evaluation of a metric over a scope:</paragraph>
+		<list ordered="true">
+			<item>
+				<link>
+					<url>10_calculating_a_measure.xml</url>
+					<label>Evaluate a metric</label>
+				</link> over a scope.
+			</item>
+			<item>You can enter a name in the 
+				<link>
+					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.html#name</url>
+					<label>name field</label>
+				</link>, otherwise, the metric tool generates automatically a name for the saved measure.
+			</item>
+			<item>Click the 
+				<link>
+					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.html#add</url>
+					<label>add</label>
+				</link> 
+				<link>
+					<url>20_saving_a_measure.xml</url>
+				</link> button. (link to buttons).
+			</item>
+		</list>
+		<paragraph>The result is added to the multi column list, with a 
+			<image>
+				<height>16</height>
+				<width>16</width>
+				<url>/images/eiffelstudio/icons/icon_green_tick.gif</url>
+				<border>0</border>
+			</image> icon, meaning that the measure is related to the last compilation of the project.
+		</paragraph>
+		<paragraph>If you are saving measures for the first time, a file will be automatically generated to store measures. It is located in the "Metrics" subfolder of current project. Otherwise, this file is updated.</paragraph>
+		<paragraph>A dialog reminds you of the path of the file in which measures are stored.</paragraph>
+		<paragraph>
+			<image>
+				<url>/images/eiffelstudio/metrics_png/save.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<note>
+			<bold>Note</bold>: After recompiling the project, all
+			<image>
+				<height>16</height>
+				<width>16</width>
+				<url>/images/eiffelstudio/icons/icon_green_tick.gif</url>
+				<border>0</border>
+			</image> icons are changed to 
+			<image>
+				<height>16</height>
+				<width>16</width>
+				<url>/images/eiffelstudio/icons/icon_red_cross.gif</url>
+				<border>0</border>
+			</image> to inform that measures could have changed since project has been recompiled. You can 
+			<link>
+				<url>50_updating_recorded_measures.xml</url>
+				<label>update</label>
+			</link> your measures.
+		</note>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break>
+			<link>
+				<url>10_calculating_a_measure.xml</url>
+				<label>Calculating measures</label>
+			</link>
+			<link>
+				<url>50_updating_recorded_measures.xml</url>
+				<label>Updating measures</label>
+			</link>
+			<link>
+				<url>30_deleting_measures.xml</url>
+				<label>Deleting measures</label>
+			</link>
+			<link>
+				<url>40_viewing_measure_details.xml</url>
+				<label>Detailing measures</label>
+			</link>
+			<line_break></line_break>
+		</seealso>
+	</paragraph>
+</document>

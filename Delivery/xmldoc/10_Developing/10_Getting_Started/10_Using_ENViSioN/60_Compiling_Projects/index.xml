@@ -1,0 +1,102 @@
+<document title="Compiling Projects" output="envision">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>50</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Compiling Projects
+		</heading>
+		<paragraph>
+			<paragraph>Compiling is the process of building a project into an executable file which may  be then executed externally to ENViSioN!. To compile a project, select 
+				<bold>BuildSolution</bold> fromthe 
+				<bold>Build</bold> menu as demonstrated below:
+			</paragraph>
+			<paragraph>
+				<image>
+					<alt_text>Build Menu</alt_text>
+					<url>BuildMenu.PNG</url>
+				</image>
+			</paragraph>
+			<paragraph>There are six entries on the 
+				<bold>Build</bold> menu, each described below:
+			</paragraph>
+			<list ordered="false">
+				<item>
+					<bold>Build Solution</bold> - Compiles the current solution. All projects in the   current solution will be built. This process attempts to minimize the   compilationthat must beundertaken, by only re-compiling files that have been   modified.  
+				</item>
+				<item>
+					<bold>Rebuild Solution</bold> - Compiles the current solution from scratch. All   projects in the current solution will be built. There is no optimization of   whichfiles will be compiled,and it is equivalent to compiling a project for   the very first time.  
+				</item>
+				<item>
+					<bold>Build Selection</bold> - Compiles only the currently selected project in the   
+					<help_link>
+						<tab_index>0</tab_index>
+						<index_moniker>!DefaultAssociativeIndex</index_moniker>
+						<keywords>Eiffel Solution Explorer</keywords>&gt;Solution Explorer
+					</help_link>.   The compilation method of this project is equivalent to that performedby 
+					<bold>BuildSolution</bold>. This menu entry is grayed out when there is no project   selected in the   
+					<help_link>
+						<tab_index>0</tab_index>
+						<index_moniker>!DefaultAssociativeIndex</index_moniker>
+						<keywords>Eiffel Solution Explorer</keywords>&gt;Solution Explorer
+					</help_link>.  
+				</item>
+				<item>
+					<bold>Rebuild Selection</bold> - Compiles only the currently selected project in the   
+					<help_link>
+						<tab_index>0</tab_index>
+						<index_moniker>!DefaultAssociativeIndex</index_moniker>
+						<keywords>Eiffel Solution Explorer</keywords>&gt;Solution Explorer
+					</help_link>.The   compilation method of this project is equivalent to that performedby 
+					<bold>RebuildSolution</bold>. This menu entry is grayed out when there is no project   selected in the   
+					<help_link>
+						<tab_index>0</tab_index>
+						<index_moniker>!DefaultAssociativeIndex</index_moniker>
+						<keywords>Eiffel Solution Explorer</keywords>&gt;Solution Explorer
+					</help_link>.
+				</item>
+				<item>
+					<bold>Batch Build...</bold> - Displays a dialog allowing you to specify which   Projects are to be compiled. This allows you to compile selected projects   withinthe currentSolution.
+				</item>
+				<item>
+					<bold>Configuration Manager...</bold> - Displays a dialog allowing you to specify   Project configuration information for each Project in the Solution.
+				</item>
+			</list>
+			<paragraph>The  
+				<help_link>
+					<tab_index>0</tab_index>
+					<index_moniker>!DefaultAssociativeIndex</index_moniker>
+					<keywords>Eiffel Property Pages</keywords>&gt;Project Property Pages
+				</help_link>  allow you to adjust the properties of your project, many of which applydirectly to thecompilation.
+			</paragraph>
+			<paragraph>If your compilation fails, see  
+				<help_link>
+					<tab_index>0</tab_index>
+					<index_moniker>!DefaultAssociativeIndex</index_moniker>
+					<keywords>Eiffel Compilation Error</keywords>&gt;Compilation Errors
+				</help_link>  for more information on correcting such errors.
+			</paragraph>
+			<heading>
+				<size>2</size>Resources
+			</heading>
+			<paragraph>To include the contents of a resource file into your Project, a resource file   matching the name of the system must be placed in both the "debug" and   "release"directories. Duringcompilation, the contents of these files will be   included in the unmanaged .dll.</paragraph>
+			<seealso>
+				<bold>See Also</bold>
+				<line_break></line_break>
+				<link>
+					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/index.xml</url>
+					<label>Using   ENViSioN! Within Visual Studio.NET</label>
+				</link>
+				<line_break></line_break>
+				<link>
+					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/70_Debugging_Projects/index.xml</url>
+					<label>   Debugging</label>
+				</link>
+			</seealso>
+		</paragraph>
+	</paragraph>
+</document>

@@ -1,0 +1,42 @@
+<document title="Metric tool" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Metric tool
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>00_introduction.xml</url>
+					<label>Introduction</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>10_requirements.xml</url>
+					<label>Requirements</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_definitions/index.xml</url>
+					<label>Definitions</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>30_user_interface_basics/index.xml</url>
+					<label>User interface basics</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>metric_toolbar.xml</url>
+					<label>Metric toolbar</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

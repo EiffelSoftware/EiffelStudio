@@ -1,0 +1,48 @@
+<document title="MANUAL IDENTIFICATION AND COPYRIGHT" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>4</size>Manual Identification and Copyright
+		</heading>
+		<paragraph>Title: 
+			<span>EiffelStudio: A Guided Tour</span>, ISE Technical Report TR-EI-68/GT.  (Replaces TR-EI-38/EB.  )
+		</paragraph>
+		<paragraph>Publication history</paragraph>
+		<paragraph>First published 1993 as 
+			<span>First Steps with EiffelBench</span> (TR-EI-38/EB) and revised as a chapter of 
+			<span>Eiffel: The Environment</span> 
+			<link>
+				<url>http://www.eiffel.com/doc/#ooe</url>
+				<label>(TR-EI-39/IE), also available as</label>
+			</link> 
+			<span>An Object-Oriented Environment</span> (Prentice Hall, 1994, ISBN 0-13-245-507-2.  
+		</paragraph>
+		<paragraph>Version 3.  3.  8, 1995.  </paragraph>
+		<paragraph>Version 4.  1, 1997</paragraph>
+		<paragraph>This version: July 2001.  Corresponds to release 5.  0 of the ISE Eiffel environment.  </paragraph>
+		<paragraph>Author</paragraph>
+		<paragraph></paragraph>
+		<paragraph>Software credits</paragraph>
+		<paragraph>Emmanuel Stapf, Arnaud Pichery, Xavier Rousselot, Raphael Simon; Etienne Amodeo, Jrome Bou Aziz, Vincent Brendel, Gauthier Brillaud, Paul Colin de Verdiere, Jocelyn Fiat, Pascal Freund, Savrak Sar, Patrick Schonbach, Zoran Simic, Jacques Sireude, Tanit Talbi, Emmanuel Texier, Guillaume Wong-So; EiffelVision 2: Leila Ait-Kaci, Sylvain Baron, Sami Kallio, Ian King, Sam O'Connor, Julian Rogers.  See also acknowledgments for earlier versions in 
+			<span>Eiffel: The Environment</span>(TR-EI-39/IE)
+		</paragraph>
+		<paragraph>Non-ISE: special thanks to Thomas Beale, Eric Bezault, Paul Cohen, Paul-Georges Crismer, Michael Gacsaly, Dave Hollenberg, Mark Howard, Randy John, Eirik Mangseth, Glenn Maughan, Jacques Silberstein.  </paragraph>
+		<paragraph>Cover design</paragraph>
+		<paragraph>Rich Ayling.  </paragraph>
+		<paragraph>Copyright notice and proprietary information</paragraph>
+		<paragraph>Copyright Interactive Software Engineering Inc.  (ISE), 2001.  May not be reproduced in any form (including electronic storage) without the written permission of ISE.  "Eiffel Power" and the Eiffel Power logo are trademarks of ISE.  </paragraph>
+		<paragraph>All uses of the product documented here are subject to the terms and conditions of the ISE Eiffel user license.  Any other use or duplication is a violation of the applicable laws on copyright, trade secrets and intellectual property.  </paragraph>
+		<paragraph>Any third-party products mentioned in this document are hereby acknowledged as trademarks of their respective owners.  </paragraph>
+		<paragraph>Special duplication permission for educational institutions</paragraph>
+		<paragraph>Degree-granting educational institutions using ISE Eiffel for teaching purposes as part of the 
+			<span>
+				<link>
+					<url> http://www.eiffel.com/educators/resources.xml</url>
+					<label>Eiffel University Partnership Program</label>
+				</link>
+			</span> may be permitted under certain conditions to copy specific parts of this book.  Contact ISE for details.  
+		</paragraph>
+	</paragraph>
+</document>

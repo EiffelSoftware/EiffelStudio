@@ -1,0 +1,79 @@
+<document title="Using debug clauses" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>debug clauses</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>using debug clauses</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>enabling debug clauses</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>disabling debug clauses</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>setting debug clauses</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Using debug clauses
+		</heading>
+		<paragraph>Eiffel provides ways to add debug code to features to help during their debugging. You may think of it as the well-known C construct: 
+			<code></code>
+		</paragraph>
+		<paragraph>
+			<code>#ifdef MY_DEBUG_FLAG
+				<line_break></line_break> /* Debug code is here */
+				<line_break></line_break> #endif
+			</code>
+		</paragraph>
+		<paragraph>The corresponding construct in Eiffel is provided by the debug keyword. It is possible to wrap code inside a debug clause like this:</paragraph> 
+		<code></code>
+		<paragraph>
+			<code>
+				<keyword>debug</keyword>("MY_DEBUG_FLAG")
+				<line_break></line_break>     
+				<comment>-- Debug code is here.</comment>
+				<line_break></line_break> 
+				<keyword>end</keyword>
+			</code>
+		</paragraph>
+		<paragraph>It is then possible to enable or disable debug clauses globally.</paragraph>
+		<paragraph>To modify the debug clauses status:</paragraph>
+		<list ordered="false">
+			<item>Open the 
+				<link>
+					<url>/tools/eiffelstudio/reference/25_project_settings/20_debug.xml</url>
+					<label>System Settings</label>
+				</link> dialog.
+			</item>
+			<item>In the 
+				<bold>Debug/Profile</bold> tab, the 
+				<bold>enable debug</bold> checkbox affects the system globally.
+			</item>
+			<item>The list under it gives the possibility to enable or disable each debug clause separately, through a context menu that appears when right-clicking on them.</item>
+			<item>Click 
+				<bold>Apply</bold> or 
+				<bold>OK</bold>.
+			</item>
+			<item>You must 
+				<link>
+					<url>../40_compiling/10_generating_executables.xml</url>
+					<label>recompile</label>
+				</link> your project for the changes to take effect.
+			</item>
+		</list>
+		<tip>
+			<bold>Tip</bold>: Debug clauses make it easy to remove all debug messages when finalizing a system.
+		</tip>
+	</paragraph>
+</document>

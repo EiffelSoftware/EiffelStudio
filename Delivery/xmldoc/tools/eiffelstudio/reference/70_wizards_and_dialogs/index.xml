@@ -1,0 +1,24 @@
+<document title="Wizards and dialogs" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Wizards and dialogs
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>10_profiler_wizard/index.xml</url>
+					<label>Profiler Wizard</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>30_dialogs/index.xml</url>
+					<label>Dialogs</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

@@ -1,0 +1,36 @@
+<document title="External features" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>External features
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>00_introduction.xml</url>
+					<label>Introduction</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>10_c_externals.xml</url>
+					<label>C externals</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_cpp_externals.xml</url>
+					<label>C++ externals</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>30_java_externals.xml</url>
+					<label>Java externals</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

@@ -1,0 +1,47 @@
+<document title="Add New Item - Dialog" output="envision">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>20</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Add New Item - Dialog
+		</heading>
+		<paragraph>
+			<paragraph>The Dialog item is a new Eiffel Class, DIALOG that  represents a Vision2 dialog, inheriting    EV_DIALOG</paragraph>
+			<paragraph>  Default feature clauses are contained within the class text, and two  pre-defined features are contained:</paragraph>
+			<list ordered="false">
+				<item>initialize - Redefined from    EV_DIALOG, this feature performs the initialization of the dialog, and  any custom initialization required for your dialog, can be added here.    initialize isexecuted as a result of calling default_create  on the dialog.  </item>
+				<item>is_in_default_state - Is the dialog in the correct  default state after initialization? If you wish to check the default state of  your dialog, add code to perform this here.</item>
+			</list>
+			<paragraph>For more information regarding the use of 
+				<link>
+					<url>/libraries/vision2/index.xml</url>
+					<label>Vision2</label>
+				</link>,  click 
+				<link>
+					<url>/libraries/vision2/index.xml</url>
+					<label>here</label>
+				</link>
+			</paragraph>
+			<paragraph>Appearance of an EV_DIALOG displayed modally to an    EV_TITLED_WINDOW:</paragraph>
+			<paragraph>
+				<image>
+					<alt_text>dialog</alt_text>
+					<url>dialog.PNG</url>
+				</image>
+			</paragraph>
+			<seealso>
+				<bold>See Also</bold>
+				<line_break></line_break>
+				<link>
+					<url>/10_Developing/20_Managing_Projects/20_Adding_New_Project_Items/index.xml</url>
+					<label>   Adding New Project Items</label>
+				</link>
+			</seealso>
+		</paragraph>
+	</paragraph>
+</document>

@@ -1,0 +1,79 @@
+<document title="Comparing to an archive" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>Metric,archive,compare</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>
+		</heading>
+		<paragraph>The main goal of archives is comparing archives one to another. In order to compare your project to an archived file, you must have clicked on 
+			<image>
+				<height>16</height>
+				<width>16</width>
+				<url>/images/eiffelstudio/icons/icon_delete_small_color.gif</url>
+				<border>0</border>
+			</image> in the "metric" tab of the context tool.
+		</paragraph>
+		<paragraph>The goal is to load the archive of a (preferably different)project, to compare the archived measures to the system's. You can either select a file that is located on your machine or a remote one, using a URL address.</paragraph>
+		<paragraph>
+			<image>
+				<height>526</height>
+				<width>279</width>
+				<url>/images/eiffelstudio/metrics_png/archive_compare.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<list ordered="true">
+			<item>In the "Set reference archive" frame, select the comparison mode. Comparison can be displayed in one of the following mode:
+				<line_break></line_break> - Ratio of current measures to the archived one.
+				<line_break></line_break> - Ratio of the difference between current and archived measures to current measures.
+				<line_break></line_break> - Value of the archived measures.
+			</item>
+		</list>
+		<paragraph>
+			<line_break></line_break> If you want to access a remote archive:
+		</paragraph>
+		<list ordered="true">
+			<item>Enter the URL address in the " Current archive" field. Address must include either a http or a ftp protocol.</item>
+			<item>Press the carriage return (enter) key.</item>
+		</list>
+		<paragraph>If you already have the archive file on your machine:</paragraph>
+		<list ordered="true">
+			<item>Click on "Browse".</item>
+			<item>Select the archive file you want your system to be compared to.</item>
+		</list>
+		<paragraph>In both cases, exit the main interface (on clicking "OK") to make your comparison effective. Comparison results are displayed in the last column of the multi column list in the "Metric" tab of the context tool, regarding the comparison mode you have previouslychosen.</paragraph>
+		<paragraph>
+			<image>
+				<height>307</height>
+				<width>745</width>
+				<url>/images/eiffelstudio/metrics_png/archive_compare_result.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<note>
+			<bold>Note</bold>: "Current measures" are the result of evaluating available metrics over the current system scope, when possible.
+		</note>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break>
+			<link>
+				<url>10_creating_an_archive.xml</url>
+				<label>Creating an archive</label>
+			</link>
+			<link>
+				<url>20_updating_an_archive.xml</url>
+				<label>updating an archive</label>
+			</link>
+			<link>
+				<url>40_evaluating_a_metric_over_an_archive.xml</url>
+				<label>evaluating a metric over an archive</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

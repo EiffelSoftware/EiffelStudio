@@ -1,0 +1,117 @@
+<document title="Execution commands" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Execution commands
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>00_introduction.xml</url>
+					<label>Introduction</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<height>16</height>
+					<width>16</width>
+					<url>../../../../../images/eiffelstudio/icons/icon_debug_run_color.gif</url>
+				</image>
+				<link>
+					<url>10_run_and_debug.xml</url>
+					<label>Run and debug</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<height>16</height>
+					<width>16</width>
+					<url>../../../../../images/eiffelstudio/icons/icon_debug_run_color.gif</url>
+				</image>
+				<link>
+					<url>15_run_with_arguments.xml</url>
+					<label>Run with arguments</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<height>16</height>
+					<width>16</width>
+					<url>../../../../../images/eiffelstudio/icons/icon_no_stop_color.gif</url>
+				</image>
+				<link>
+					<url>20_run_without_breakpoints.xml</url>
+					<label>Run regardless of breakpoints</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<height>16</height>
+					<width>16</width>
+					<url>../../../../../images/eiffelstudio/icons/icon_run_color.gif</url>
+				</image>
+				<link>
+					<url>30_run_a_finalized_executable.xml</url>
+					<label>Run a finalized executable</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<height>16</height>
+					<width>16</width>
+					<url>../../../../../images/eiffelstudio/icons/icon_step_into_color.gif</url>
+				</image>
+				<link>
+					<url>40_step_into_a_feature.xml</url>
+					<label>Step into a feature</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<height>16</height>
+					<width>16</width>
+					<url>../../../../../images/eiffelstudio/icons/icon_exec_step_color.gif</url>
+				</image>
+				<link>
+					<url>50_step_by_step.xml</url>
+					<label>Execute an instruction line</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<height>16</height>
+					<width>16</width>
+					<url>../../../../../images/eiffelstudio/icons/icon_step_out_color.gif</url>
+				</image>
+				<link>
+					<url>60_step_out.xml</url>
+					<label>Step out of a feature</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<height>16</height>
+					<width>16</width>
+					<url>../../../../../images/eiffelstudio/icons/icon_exec_stop_color.gif</url>
+				</image>
+				<link>
+					<url>70_pause_execution.xml</url>
+					<label>Pause the execution</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<height>16</height>
+					<width>16</width>
+					<url>../../../../../images/eiffelstudio/icons/icon_exec_quit_color.gif</url>
+				</image>
+				<link>
+					<url>80_kill_application.xml</url>
+					<label>Kill the debugged application</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

@@ -1,0 +1,36 @@
+<document title="Tools" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Tools
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>00_introduction.xml</url>
+					<label>Introduction</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>10_browsing_tools.xml</url>
+					<label>Browsing tools</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_context_tools.xml</url>
+					<label>Context tools</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>30_editor/index.xml</url>
+					<label>Editor</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

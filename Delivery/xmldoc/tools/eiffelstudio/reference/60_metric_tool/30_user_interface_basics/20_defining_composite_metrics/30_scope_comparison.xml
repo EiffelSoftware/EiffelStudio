@@ -1,0 +1,35 @@
+<document title="Scope comparison for metrics" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Scope comparison for metrics
+		</heading>
+		<paragraph>Notation: a1 // a2</paragraph>
+		<paragraph>Applicability: a1 and a2 are the same metric except for a possibly different scope.</paragraph>
+		<paragraph>Semantics: division</paragraph>
+		<paragraph>Resulting unit: RATIO</paragraph>
+		<paragraph>Note that since a scope may be a measurement archive, the presence of scope comparisons in our battery of metrics makes it possible to compare current measures to those of a reference archive, for example the previous measurements of a company. The result of a scope comparison doesn't have to be expressed as a raw number or percentage; other possibilities include a percentage variation, such as -25% to mean that the value for a1 is 25% less than the value for a2.</paragraph>
+		<paragraph>The metric tool provides a command for defining linear metrics. Button 
+			<image>
+				<url>/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
+			</image>pops-up the following dialog. Select the scope ratio tab toobtain:
+		</paragraph>
+		<paragraph>
+			<image>
+				<url>/images/eiffelstudio/metrics_png/sratio.png</url>
+			</image>
+		</paragraph>
+		<paragraph>and to define any scope comparison metrics.</paragraph>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break>
+			<link>
+				<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/20_handling_new_metrics/10_defining_new_metrics/40_defining_scope_comparison_metrics.xml</url>
+				<label>Defining scope comparison metrics</label>
+			</link>
+			<line_break></line_break>
+		</seealso>
+	</paragraph>
+</document>

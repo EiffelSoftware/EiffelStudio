@@ -1,0 +1,36 @@
+<document title="Run without breakpoints" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Run without breakpoints
+		</heading>
+		<paragraph>This command launches an application compiled in Workbench mode. The application will not stop when a 
+			<link>
+				<url>../20_breakpoints/00_introduction.xml</url>
+				<label>breakpoint</label>
+			</link> is encountered. However, it stops when an exception occurs.
+		</paragraph>
+		<paragraph>It is accessible through the 
+			<bold>project</bold> toolbar ( 
+			<image>
+				<url>../../../../../images/eiffelstudio/icons/icon_no_stop_color.gif</url>
+			</image> ) or through the 
+			<bold>debug</bold> menu.
+		</paragraph>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break> 
+			<link>
+				<url>00_introduction.xml</url>
+				<label>Execution commands</label>
+			</link>
+			<line_break></line_break>
+			<link>
+				<url>../../../../../tools/eiffelstudio/how_to_s/40_compiling/10_generating_executables.xml</url>
+				<label>Compiling in Workbench mode</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

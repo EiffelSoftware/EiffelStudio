@@ -1,0 +1,34 @@
+<document title="Compilation Errors" output="envision">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Compilation Errors
+		</heading>
+		<paragraph>
+			<paragraph>From time to time, as a result to modifications to a project, a compilation will  fail. The screenshot below shows the contents of the Output Window following a  failedcompilation:</paragraph>
+			<paragraph>
+				<image>
+					<alt_text>Output Window</alt_text>
+					<url>OutputWindow.PNG</url>
+				</image>
+			</paragraph>
+			<paragraph>In this case, the compilation failed in class ROOT_CLASS during degree 3. This  however, does not provide enough explicit information to quickly fix the  problem. For more informationregarding the error, you need to view the Task  List, as demonstrated below:</paragraph>
+			<paragraph>
+				<image>
+					<alt_text>Task List Build Error</alt_text>
+					<url>TaskListBuildError.PNG</url>
+				</image>
+			</paragraph>
+			<paragraph>The current compilation error is listed in the Task List, and if you move the  mouse over the error, additional information will appear in the form of a tool tip as in the  screenshot above. Thistool tip contains detailed information about the error, which simplifies the process of finding and fixing the problem.  </paragraph>
+			<paragraph>  If you double click on a compilation error in the Task List, the corresponding  source code that caused the compilation to fail, will be opened in an  
+				<help_link>
+					<tab_index>0</tab_index>
+					<index_moniker>!DefaultAssociativeIndex</index_moniker>
+					<keywords>Eiffel Editor</keywords>&gt;Editor
+				</help_link>.  You can then easily fix the offending code, and recompile the project.  
+			</paragraph>
+		</paragraph>
+	</paragraph>
+</document>

@@ -1,0 +1,86 @@
+<document title="Release notes of EiffelStudio 5.0" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Release notes of EiffelStudio 5.0
+		</heading>
+		<heading>
+			<size>2</size>Graphical environment
+		</heading>
+		<list ordered="false">
+			<item>New Look and feel.</item>
+			<item>New way of starting EiffelStudio and simplified the process of compiling an existing project.</item>
+			<item>New editor with: 
+				<list ordered="false">
+					<item>smart syntax highlighting</item>
+					<item>feature completion (by pressing Ctrl+Space after an identifier).</item>
+					<item>syntax completion of major control statement (if, from, is,...)and of symbols such as `{', `[', `(', `"',...</item>
+					<item>smart auto indenting</item>
+					<item>block indent and exdent.</item>
+					<item>infinite level of Undo/Redo</item>
+				</list>
+			</item>
+			<item>When edition a class text which has been successfully compiled, the class will be fully `pick-and-droppable'.</item>
+			<item>Faster rendering for Clickable, Flat, Contract (previously known as Short) and Flat Contract views.</item>
+			<item>System tool has been replaced by a `project settings' window. The underlying mechanism of the Ace file is kept, but all changes are done through a nice GUI making it simpler for beginners to create their first Ace file.</item>
+			<item>Toolbars are now customizable</item>
+			<item>EiffelCase has been merged within EiffelStudio to provide a true reverse engineering using the BON notation.</item>
+		</list>
+		<heading>
+			<size>2</size>Compiler
+		</heading>The compiler has been improved in many ways and some functionality have been added. 
+		<link>
+			<url>../30_compiler/60_version_history/00_50_release/00_45_to_50_changes.xml</url>
+			<label>Check it out</label>
+		</link>. 
+		<heading>
+			<size>2</size>Debugger
+		</heading>
+		<list ordered="false">
+			<item>New debugger functionalities: 
+				<list ordered="false">
+					<item>one can step-in, step-out, step-by-step when they want to.</item>
+					<item>one can put a breakpoint on the fly (Windows Only)</item>
+					<item>one can see all local variables and arguments.</item>
+					<item>one can set breakpoints in all kind of assertion clauses except in invariants.</item>
+				</list>
+			</item>
+			<item>Debugging is faster.</item>
+		</list>
+		<heading>
+			<size>2</size>Documentation
+		</heading>
+		<list ordered="false">
+			<item>New documentation generation (limited now to HTML) which is completely clickable as if within EiffelStudio. It also includes an EiffelCase-like documentation generation.</item>
+			<item>Generation of XMI which can be used in tools such as RationalRose.</item>
+		</list>
+		<heading>
+			<size>2</size>Libraries
+		</heading>
+		<heading>
+			<size>3</size>EiffelBase:
+		</heading>
+		<list ordered="false">
+			<item>No more GENERAL class as proposed by the NICE committee. It has been replaced by ANY which does not inherit any more from PLATFORM.</item>
+			<item>Adaptation of the ARRAY class to the ELKS 2000 standard.</item>
+			<item>This implies a change in our CONTAINER class where we renamed `empty' into `is_empty' and made `empty' obsolete. If you were inheriting from CONTAINER and redefining `empty', make sure to update your code so that you redefine `is_empty' instead. That way your polymorphic calls will still work as expected without having to change all call to `empty' into calls to `is_empty'.</item>
+			<item>New implementation of `is_equal' on LIST which will now check that two lists are identical if their items are identical.</item>
+			<item>New implementation of `copy' on LIST.</item>
+			<item>New implementation of an iterative `is_equal' on TREE which will now check that two trees are identical if their items are identical.</item>
+			<item>New implementation of an iterative `copy' on TREE, which recursively copies the tree.</item>
+			<item>New ROUTINE classes which perform better type checking on argument passing.</item>
+			<item>Introduction of binary operations on INTEGER types: `&amp;',`|', `bit_xor', `bit_not', `bit_shift', `|&gt;&gt;', `|&lt;&lt;'and bit_text.</item>
+			<item>Removed `infix "^"' from NUMERIC. It does not break any inheritance, but break clients that were using this operator on an entity declared of type NUMERIC. This is due to the different return type of this operator depending the NUMERIC type you are handling.</item>
+			<item>Changed the signature of `pruned' in BINARY_SEARCH_TREE to take an extra argument. This was necessary to fix a problem that caused the `parent' attributes to become inconsistent under certain conditions when calling `pruned'.</item>
+			<item>Re-implemented the features `disjoint' and `symdif' of SUBSET. These features caused problems under certain conditions and were also quite inefficient. The new implementation of these features uses the strategy pattern to choose among different versions of these calculations depending on the properties of the elements contained in the set.</item>
+			<item>All features on SUBSET that take another subset as an argument(e.g. `intersect') now accept any other subset type as an argument, independent of its underlying implementation, and not only subsets of type `like Current'.</item>
+			<item>Many smaller bug fixes for bugs that were reported by our customers or that have been discovered during our development andtesting.</item>
+		</list>
+		<heading>
+			<size>3</size>WEL:
+		</heading>
+		<paragraph>Modified classes relative to the use of registry keys to be written only using Eiffel and externals to Win32 API (no more C intermediates). In the process `close_key' and `delete_key' are now commands and not queries. To find out if it their call was successful, you can query `last_call_successful'.</paragraph>
+	</paragraph>
+</document>

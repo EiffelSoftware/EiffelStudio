@@ -1,0 +1,123 @@
+<document title="General Page" output="envision">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>10</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size> General Property Page
+		</heading>
+		<paragraph>The General Property Page is for all of the basic project configuration details. It contains all of the information that is required by the compiler so that the compiler knows how and what to compile your project as. The following list explains each of the options and their relevance to your project.</paragraph>
+		<paragraph>
+			<image>
+				<alt_text>General Property Page</alt_text>
+				<url>GeneralPPG.PNG</url>
+			</image>
+		</paragraph>
+		<heading>
+			<size>2</size>General Properties
+		</heading>
+		<heading>
+			<size>3</size>System Name
+		</heading>
+		<paragraph>The System Name is the filename given to the result of the compiled project minus the filename extension (the type of file generated id governed by the 
+			<italic>Project Type</italic> option). This field is required by the compiler in order for it to be able to compile the selected project.
+		</paragraph>
+		<heading>
+			<size>3</size>Default Namespace
+		</heading>
+		<paragraph>Default Namespace is an optional property for the project. If this option is left blank then the System Name field will be taken as the namespace for the project. If supplied the namespace must adhere to a number of rules. Firstly namespaces are case-sensitive so 
+			<bold>MyProjects.FirstProject</bold> is not the same as 
+			<bold>myprojects.firstproject</bold>. Namespace can only contain a valid sequence of characters the must begin with a character between 
+			<italic>'a'</italic>to 
+			<italic>'z'</italic> or 
+			<italic>'A'</italic> to 
+			<italic>'Z'</italic>. The valid character thereafter may be an alpha-numerical characters, period '.' or underscore '
+			<italic>_</italic> '. 
+			<heading>
+				<size>3</size>Root Class Name
+			</heading>
+			<paragraph>The Root Class Name is another required property. It defines the 'start up object' name, it the name of the first object to be created when the project is executed.</paragraph>
+			<heading>
+				<size>3</size>Creation Routine
+			</heading>
+			<paragraph>The Creation Routine goes hand in hand with the 
+				<italic>Root Class Name.</italic> The creation routine is the root class name's creation routine, and so the root class must have the creation routine defined here.
+			</paragraph>
+			<heading>
+				<size>2</size>Precompiled Library
+			</heading>
+			<heading>
+				<size>3</size>Precompiled Library Path
+			</heading>
+			<paragraph> In an Eiffel project you may specify a precompiled library to use with your project. Not only does this speed up the compilation time and debugging, but it reduces the size of the compiled project. 
+				<heading>
+					<size>2</size>Project Generation
+				</heading>
+				<heading>
+					<size>3</size>Project Type
+				</heading>
+				<paragraph>The Project Type property defines what type of binary the compiler generates. There are three available options - '
+					<italic>exe</italic> ', '
+					<italic>dll</italic>' and '
+					<italic>precompile</italic>'. The exe generation type will create a standalone executable. The dll type will generated a library (also known as an Application Extension). The precompile project type is a feature of the Eiffel compiler allowing you to pre-compile a library of classes, so that when included in any project, those classes found in the library will not need to be compiled again.
+				</paragraph>
+				<bold>Note</bold>: Changing the Project Type property requires a Rebuild compile.
+				<heading>
+					<size>3</size>Console Application
+				</heading>
+				<paragraph>Console Application is another property that depends on another. Console application is only an applicable option when the 
+					<italic>Project Type</italic> property is set to 'exe'. Setting this property to true will allow your executable that will launch a command line window in ran from Windows. If run from the command line then it will use the same command line window.
+				</paragraph>
+				<heading>
+					<size>3</size>Optimize Code
+				</heading>
+				<paragraph>When set to true the compiler will finalize your projects code. The overall process reduces the size and speeds up execution of the compiled project. It is recommended that this option is set to true for Release configurations and set to false for all debugging configurations.</paragraph>
+				<bold>Note</bold>: It is necessary to have the Optimize Code option set to true when compiling a version of your project intended for distribution.
+				<heading>
+					<size>2</size> Signing Key
+				</heading>
+				<paragraph>
+					<line_break></line_break> If you need to sign your project then you will need to make use of the following options.
+					<line_break></line_break>
+				</paragraph>
+				<heading>
+					<size>3</size>Sign Assembly
+				</heading>
+				<paragraph>If the finally compiled assembly needs to be added to the Global Assembly Cache (GAC), or you have any other reason to sign the assembly, then this property should be set to true. Setting this option to true will open the next two properties.</paragraph>
+				<heading>
+					<size>3</size>Use Generated Key
+				</heading>
+				<paragraph>If the 
+					<italic>Sign Assembly</italic> option is set to true then the option to use a generated key is opened. If this option is set to true then the cryptographic key that is used to sign the assembly will be generated for the project. The generated key will only be generated once for every project. If this option is set to false then you must specify a cryptographic key in the next property. If no key file is supplied then the compiler will generate and error.
+				</paragraph>
+				<heading>
+					<size>3</size>Signing Key
+				</heading>
+				<paragraph>The Signing Key property is only available if the 
+					<italic>Sign Assembly</italic> property is set to true and 
+					<italic>Use Generated Key</italic> is set to false. This property is used to define the cryptographic key file name. If the 
+					<italic>Sign  Assembly</italic> property is set to true and 
+					<italic>Use Generated Key</italic> is set to false then this option 
+					<bold>must</bold> be specified or the compiler will generate and error.
+				</paragraph>
+				<seealso>
+					<bold>See Also</bold>
+					<line_break></line_break>
+					<link>
+						<url>./ProjectConfiguration.xml</url>
+						<label>Property Page Overview</label>
+					</link>
+					<line_break></line_break>
+					<link>
+						<url>AssemblyInfoPage.xml</url>
+						<label>Assembly Info Property Page</label>
+					</link>
+				</seealso>
+			</paragraph>
+		</paragraph>
+	</paragraph>
+</document>

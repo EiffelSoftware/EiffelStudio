@@ -1,0 +1,35 @@
+<document title="Setting the editor behavior" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>setting the editor behavior</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size> Setting the editor behavior 
+		</heading>Some of 
+		<link>
+			<url>../../reference/20_editor/00_introduction.xml</url>
+			<label>the editor</label>
+		</link> properties are customizable. 
+		<link>
+			<url>../../reference/20_editor/60_autocomplete/00_introduction.xml</url>
+			<label>Automatic completion</label>
+		</link>, for instance, can be partially or totally disabled, and inserted strings can be defined by the user. Some accelerators are customizable too. For more information, please refer to the 
+		<link>
+			<url>../../reference/85_preferences/20_preferences_reference/20_tools/30_editor/00_introduction.xml</url>
+			<label>editor preferences reference</label>
+		</link>. 
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break>
+			<link>
+				<url>20_changing_texts_display.xml</url>
+				<label>Text colors and fontcustomization.</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

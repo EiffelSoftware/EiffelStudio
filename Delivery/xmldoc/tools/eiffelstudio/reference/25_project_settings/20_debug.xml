@@ -1,0 +1,57 @@
+<document title="Debug/Profile Tab" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Debug/Profile Tab
+		</heading>
+		<paragraph> </paragraph>
+		<paragraph>Here is what the debug tab looks like when you have not yet compiled the system you just created. It comprises two tabs, the first and default tab for debugging options and the second for program execution options.</paragraph>
+		<paragraph>
+			<image>
+				<url>../../../../images/eiffelstudio/project_settings/debug_debug.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<paragraph> </paragraph>
+		<heading>
+			<size>2</size>Debug options
+		</heading>
+		<paragraph>By default all debug clauses are turned off.</paragraph>
+		<paragraph>The first step to enable them is to select the `Enable debug' check box. Then right-click on the debug clauses you want to enable/disable and a contextual menu will appear to let you do so.</paragraph>
+		<tip>
+			<bold>Tip</bold>: You can select several debug clauses at a time by using the Ctrl and Shift keys.
+		</tip>
+		<paragraph>Before you compile for the first time your project with an Ace file that has been automatically created, you won't see any debug clauses. They will be automatically added by the compiler at the end of your first compilation. When this is done, you can enable/disable each one of them.</paragraph>
+		<heading>
+			<size>2</size>Program Execution
+		</heading>
+		<paragraph>You can specify the location from where your program will run. By default the location is `your_project_path/EIFGEN/W_code'. Use this option when your application relies on the use of resource files located at a different location.</paragraph>
+		<paragraph>You can also specify one or more command line arguments. The first step is to enable them by selecting the 'Enable arguments' check box. If this box is not checked the system will run without any arguments. Selecting it will enable the arguments notebook which provides two type of arguments, 'Program Arguments' and 'My Arguments'. Program Arguments are those that reside in the project Ace file and are therefore system-wide. My Arguments are user specific and are stored in a separate file from the Ace. Below is the debug tab with the arguments tab selected.</paragraph>
+		<paragraph>
+			<image>
+				<url>../../../../images/eiffelstudio/project_settings/debug_args.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<paragraph>To add a new argument select the desired tab, type the arguments into the Current Argument text box and then click 'Add'. To select an argument simply click the argument as it appears in the list or select it from the drop-down combo box. Once selected the argument can be set by clicking 'Apply' or 'OK', or it can be removed by clicking 'Remove'. To edit an existing argument double-click the corresponding argument in the list box. This will display an editable text field whereby the argument can be edited. The same execution options are also accessible from any of the program debugging and launching toolbar buttons in the main EiffelStudio development window. To display them right-click on any of these buttons, or for more information click here.</paragraph>
+		<paragraph> </paragraph>
+		<heading>
+			<size>2</size>Miscellaneous options
+		</heading>
+		<list ordered="false">
+			<item>line number generation when selected will generate in either.NET generation or C generation some extra information that will enable a .NET debugger or a C debugger to step through the Eiffel code rather than MSIL code or C code.</item>
+			<item>call tracing when selected will, in C generation mode only, display on the console all the features that are called during the system execution.</item>
+			<item>profiling when selected will, in C generation mode, turn on the Eiffel profiler during the application execution. The results can be seen at the end of the execution in 
+				<link>
+					<url>../70_wizards_and_dialogs/10_profiler_wizard/00_introduction.xml</url>
+					<label>the profiler window</label>
+				</link>.
+			</item>
+		</list>
+		<paragraph>
+			<bold>Note</bold>: The profiler is only available in the Enterprise edition of EiffelStudio.
+		</paragraph>
+	</paragraph>
+</document>

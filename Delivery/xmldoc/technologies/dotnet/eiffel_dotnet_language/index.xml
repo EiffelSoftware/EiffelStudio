@@ -1,0 +1,42 @@
+<document title="The Eiffel for .NET language" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>The Eiffel for .NET language
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>00_introduction.xml</url>
+					<label>Introduction</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>10_conventions/00_introduction.xml</url>
+					<label>Using Eiffel on .NET</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_language/index.xml</url>
+					<label>Summary of the Eiffel Language</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>30_eiffel_dotnet_limitations.xml</url>
+					<label>Difference between Eiffel and Eiffel for .NET</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>40_known_issues.xml</url>
+					<label>Known issues with Eiffel for .NET compiler</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

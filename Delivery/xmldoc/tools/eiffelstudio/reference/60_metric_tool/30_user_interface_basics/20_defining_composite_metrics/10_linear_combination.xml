@@ -1,0 +1,34 @@
+<document title="Linear combinations of metrics" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Linear combinations of metrics
+		</heading>
+		<paragraph>Notation: ki.mi (where the i are real values)</paragraph>
+		<paragraph>Applicability: all the mi are metrics with the same unit u other than RATIO</paragraph>
+		<paragraph>Semantics: weighted sum</paragraph>
+		<paragraph>Resulting unit: u</paragraph>
+		<paragraph>The metric tool provides a command for defining linear metrics. Button 
+			<image>
+				<url>/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
+			</image>pops-up the following dialog. Select the linear tab to obtain:
+		</paragraph>
+		<paragraph>
+			<image>
+				<url>/images/eiffelstudio/metrics_png/linear.png</url>
+			</image>
+		</paragraph>
+		<paragraph>and to define any linear metrics.</paragraph>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break> 
+			<link>
+				<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/20_handling_new_metrics/10_defining_new_metrics/20_defining_linear_metrics.xml</url>
+				<label>Defining linear metrics</label>
+			</link>
+			<line_break></line_break>
+		</seealso>
+	</paragraph>
+</document>

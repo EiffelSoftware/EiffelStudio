@@ -1,0 +1,105 @@
+<document title="Property Page Overview" output="envision">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Project Property Pages Overview
+		</heading>
+		<paragraph>Eiffel for Visual Studio.NET provides the facilities to modify your projects setting via a number of property pages. The property pages can be used to modify a single projects configuration(debug, release, etc), modify all configurations in a project, modify the configurations of multiple projects in a multiple project solution, and even multiple configurations for multiple projects.</paragraph>
+		<heading>
+			<size>2</size>Understanding The Property Page Dialog
+		</heading>
+		<paragraph>
+			<line_break></line_break> The property page dialog is a common dialog to Visual Studio, it allows the manipulate of your projects setting. To discover what each one of the property pages does see thebelow section '
+			<link>
+				<url>#ThePropertyPages</url>
+				<label>
+					<italic>The  Property Pages</italic>
+				</label>
+			</link>'.
+		</paragraph>
+		<heading>
+			<size>3</size>Viewing in multiple configuration modes: 
+		</heading>
+		<paragraph>There are two ways that a projects properties can be manipulated. Firstly there a single configuration. This is a single selected project, where the configuration property is set to eitherdebug or release (or any other configuration added to the project). The alternative way is to manipulate multiple configurations. This is can be a single project with the configuration property set to 'All Configurations' and/ormultiple projects in the solution are selected.</paragraph>
+		<paragraph>
+			<image>
+				<alt_text></alt_text>
+				<url>PropertyPageHeader.PNG</url>
+			</image>
+		</paragraph>
+		<paragraph> </paragraph>
+		<paragraph>When viewing in multiple configurations some previously entered values (in a single configuration) may not be display, or displayed correctly. This is normal as the property page cannotfind a common value for each one of the configurations and so leaves it blank or replaces the value with a value that represents different values. And example of this would be to have two projects in a solution.
+			<bold>ProjectA</bold> and 
+			<bold>ProjectB</bold> . The system names (
+			<link>
+				<url>GeneralPage.htm</url>
+				<label>General Property Page</label>
+			</link>) for these projects are ProjectA and ProjectB respectively. When each one of the projects is selected individually the general property page will display the respective system name.However if both projects are selected when viewing their properties the system name will not display anything as the two system names are different. If we were then to change this value, then both ProjectA's andProjectB's system name will be changed to new value.
+		</paragraph>
+		<paragraph>
+			<bold>Recommend</bold>: It is recommended that when making additions to your  project(s) that the 'All Configurations' be selected in the configuration drop  down list box on the propertypage dialog. This is so you can ensure that when  adding a cluster, assembly reference, external or setting any other basic  property, all configurations will have these changes. If these settings where  to be made in asingle configurations, then you will have to switch to each one  of the other configurations and reapply the settings for each. Each one of the  configurations modes (such as debug, release etc.) should be reserved foruse  in setting configuration specific properties. An example of a configuration  specific property would be '
+			<italic>Generate   Debug Info</italic>' in the 
+			<link>
+				<url>./DebugPage.htm</url>
+				<label>Debug Property Page</label>
+			</link>..  For a release configuration there is no need to generate the debugging  information, as your project has already been debugged and is read to be  released.
+		</paragraph>
+		<heading>
+			<size>3</size> Saving Your Configuration 
+		</heading>
+		<paragraph>To save all of the changes made in the property pages click on the '
+			<italic>Apply</italic>' or '
+			<italic>OK</italic>' button located at the bottom right of the property pagedialog.
+		</paragraph>
+		<bold>Note</bold>: Unless stated, any changes to the properties in the property pages require a system re-compilation to reflect those changes made.
+		<heading>
+			<size>3</size>Switch Configurations and Projects
+		</heading>
+		<paragraph>The property page dialog is a non-modal window so you are able to change the project that is being configured to another project, simply click clicking on the desired project node in the
+			<link>
+				<url>../../SolutionExplorer/GettingStarted/SolutionExplorerEiffelSystemHierarchy.htm</url>
+				<label>  Solution Explorer</label>
+			</link>. The property page will automatically update with the newly selected project settings. If any unsaved changes have been made to the previous project, then you will be asked tosave those project settings before the project configurations are switched.
+		</paragraph>
+		<heading>
+			<size>2</size>The Property Pages
+		</heading>
+		<paragraph>
+			<line_break></line_break> There are seven property pages each has a specific function for the project.
+		</paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>GeneralPage.htm</url>
+					<label>General</label>
+				</link> - For all of the general (basic) project properties. 
+			</item>
+			<item>
+				<link>
+					<url>AssemblyInfoPage.htm</url>
+					<label>Assembly Info</label>
+				</link> - Information about the project (version number, description etc.). 
+			</item>
+			<item>
+				<link>
+					<url>DebugPage.htm</url>
+					<label>Debug</label>
+				</link> - The debugging options for the project. 
+			</item>
+			<item>Assertions - The project wide Design By Contract settings. </item>
+			<item>Clusters - Allows manipulation of the projects clusters. </item>
+			<item>Assembly References - The assemblies that are required to compile the project. </item>
+			<item>Externals - All of the object files and include  paths for the project.</item>
+		</list>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break>
+			<link>
+				<url>GeneralPage.htm</url>
+				<label>General Property Page</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

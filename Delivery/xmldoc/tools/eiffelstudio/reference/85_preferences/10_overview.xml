@@ -1,0 +1,35 @@
+<document title="Preference window overview" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Preference window overview
+		</heading>The preferences dialog window is divided into two parts (plus a button bar at the bottom). 
+		<paragraph>
+			<image>
+				<url>/images/eiffelstudio/dialogs_and_wizards/preferences_dialog.png</url>
+			</image>
+		</paragraph>
+		<paragraph>The left part is used to display a tree that shows preference categories. A description of the contents of this tree, i.e. the different categories of preferences and preferences themselves, is available 
+			<link>
+				<url>./20_preferences_reference/index.xml</url>
+				<label>here</label>
+			</link>.
+		</paragraph>
+		<paragraph>The right part shows the preferences attached to the currently selected tree node. They appear in a table that has two columns. The first one contains the description of the preference, the second one contains its value. To modify this value, select the preference by clicking on it. A floating widget appears on top of the preference value to let you change it.</paragraph>
+		<paragraph>The floating widget depends on the type of the preference that is modified. There are four kinds of preferences:</paragraph>
+		<list ordered="false">
+			<item>Boolean preferences : their possible values are "True" and "False". A combo box will allow you to choose between both.</item>
+			<item>Color preferences : Their value is represented by three integers, which are the RGB code of the color. You do not have to use RGB codes though. When you select such a preference, the current color and two buttons are displayed. If you press the first button, a color selection window will appear. For some background colors, you have the possibility to click the "Auto" button. EiffelStudio will then set the current color to the default background color.</item>
+			<item>Font preferences : A font selection window will appear as you press the button with label "change".</item>
+			<item>Other preferences : They will be modified by typing their value directly.</item>
+		</list>If there is no message stating you need to restart EiffelStudio, changes will be taken into account immediately. 
+		<paragraph>
+			<bold>Tip</bold>: Sub-categories and their contents are not displayed in the right area. To see the preferences that belong to a sub-category, you have to select it in the left part of the window.
+		</paragraph>
+		<warning>
+			<bold>Caution</bold>: You can restore preferences default values by clicking on the "Restore Default" button. ALL preferences will be reset.
+		</warning>
+	</paragraph>
+</document>

@@ -1,0 +1,55 @@
+<document title="Generated files" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Generated files
+		</heading>
+		<paragraph>Basically, once the Eiffel definition file is created, the compiler will generate a set of files and will compile them to generate the Dynamic library into the 
+			<italic>EIFGEN/W_code</italic> or
+			<italic>EIFGEN/F_code</italic> directory.
+		</paragraph>
+		<note>
+			<bold>Note</bold>: To generate and compile these files, you have to indicate the definition file that should be used in the
+			<link>
+				<url>/tools/eiffelstudio/reference/25_project_settings/60_advanced.xml</url>
+				<label>advanced tab of the project settings</label>
+			</link> of your system. This way EiffelStudio will know which one to use. If you do not specify any definition file, nothing will be generated.
+		</note>
+		<paragraph>The set of files is composed of:</paragraph>
+		<div>
+			<list ordered="false">
+				<item>
+					<bold>EIFGEN/W_code/</bold> (or F_code)
+				</item>
+				<item>
+					<bold>EIFGEN/W_code/</bold> (or F_code)
+				</item>
+				<item>
+					<bold>$(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/templates/</bold>
+					<line_break></line_break>this file will be copied during the compilation into theEIFGEN/W_code/E1 directory as 
+					<bold>egc_dynlib.c</bold>
+				</item>
+				<item>
+					<bold>$(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/include/</bold>
+				</item>
+				<item>and the Makefile</item>
+			</list>
+		</div>
+		<paragraph>The 
+			<italic>system.def</italic> is only used on windows, itis the definition file used to generate a DLL when linking.
+		</paragraph>
+		<paragraph>The 
+			<italic>edynlib.c</italic> file is the "interface" between the Eiffel system, and the C code, basically it contains the declaration and the implementation of the function used todirectly call the eiffel feature with its real name.
+		</paragraph>
+		<paragraph>The 
+			<span>
+				<italic>egc_dynlib.c</italic>
+			</span> and 
+			<span>
+				<italic>egc_dynlib.h</italic>
+			</span> files are used for operations performed by the Run Time.
+		</paragraph>
+	</paragraph>
+</document>

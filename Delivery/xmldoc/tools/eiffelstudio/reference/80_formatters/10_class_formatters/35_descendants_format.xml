@@ -1,0 +1,30 @@
+<document title="Descendants" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Descendants
+		</heading>
+		<paragraph>The descendants view 
+			<image>
+				<url>/images/eiffelstudio/icons/icon_format_descendants_color.gif</url>
+			</image> displays all the classes which inherit from the current class,directly or not, using a tree-like indented layout.
+			<line_break></line_break>It is available through the 
+			<bold>Class</bold> tab of the 
+			<link>
+				<url>/tools/eiffelstudio/reference/05_general_interface_description/20_eiffelstudio_window_overview.xml</url>
+				<label>context tool</label>
+			</link>.
+		</paragraph>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break> 
+			<link>
+				<url>./30_ancestors_format.xml</url>
+				<label>Ancestors</label>
+			</link>
+			<line_break></line_break>
+		</seealso>
+	</paragraph>
+</document>

@@ -1,0 +1,196 @@
+<document title="EiffelStudio: A Guided Tour" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>
+			<content>EiffelStudio: A Guided Tour</content>
+		</heading>
+		<heading>
+			<size>2</size>Interactive Software Engineering
+		</heading>
+		<heading>
+			<size>3</size>
+			<content>
+				<link>
+					<url>index-99-document-info.html#pgfId-467816</url>
+					<label>MANUAL IDENTIFICATION AND COPYRIGHT</label>
+				</link>
+			</content>
+		</heading>
+		<div>
+			<heading>
+				<size>2</size>
+				<content>
+					<link>
+						<url>index-02.html#pgfId-471615</url>
+						<label>1 OVERVIEW AND PREREQUISITES</label>
+					</link>
+				</content>
+			</heading>
+			<heading>
+				<size>2</size>
+				<content>
+					<link>
+						<url>index-03.html#pgfId-333608</url>
+						<label>2 COPYING THE EXAMPLE FILES</label>
+					</link>
+				</content>
+			</heading>
+			<heading>
+				<size>2</size>
+				<content>
+					<link>
+						<url>index-04.html#pgfId-264352</url>
+						<label>3 STARTING EIFFELSTUDIO AND OPENING A PROJECT</label>
+					</link>
+				</content>
+			</heading>
+			<heading>
+				<size>2</size>
+				<content>
+					<link>
+						<url>index-05.html#pgfId-258371</url>
+						<label>4 COMPILING AND EXECUTING A SYSTEM</label>
+					</link>
+				</content>
+			</heading>
+			<heading>
+				<size>2</size>
+				<content>
+					<link>
+						<url>index-06.html#pgfId-3038</url>
+						<label>5 A LOOK AT THE PROJECT DIRECTORY</label>
+					</link>
+				</content>
+			</heading>
+			<heading>
+				<size>2</size>
+				<content>
+					<link>
+						<url>index-07.html#pgfId-475544</url>
+						<label>6 STARTING TO BROWSE</label>
+					</link>
+				</content>
+			</heading>
+			<heading>
+				<size>2</size>
+				<content>
+					<link>
+						<url>index-08.html#pgfId-479692</url>
+						<label>7 CLASS VIEWS</label>
+					</link>
+				</content>
+			</heading>
+			<heading>
+				<size>2</size>
+				<content>
+					<link>
+						<url>index-09.html#pgfId-495679</url>
+						<label>8 PRODUCING AND EXPORTING DOCUMENTATION</label>
+					</link>
+				</content>
+			</heading>
+			<heading>
+				<size>2</size>
+				<content>
+					<link>
+						<url>index-10.html#pgfId-510970</url>
+						<label>9 BROWSING FEATURES</label>
+					</link>
+				</content>
+			</heading>
+			<heading>
+				<size>2</size>
+				<content>
+					<link>
+						<url>index-11.html#pgfId-511185</url>
+						<label>10 RETARGETING THROUGH PICK-AND-DROP</label>
+					</link>
+				</content>
+			</heading>
+			<heading>
+				<size>2</size>
+				<content>
+					<link>
+						<url>index-12.html#pgfId-515538</url>
+						<label>11 RECOMPILING AND EDITING</label>
+					</link>
+				</content>
+			</heading>
+			<heading>
+				<size>2</size>
+				<content>
+					<link>
+						<url>index-13.html#pgfId-519836</url>
+						<label>12 HANDLING SYNTAX AND VALIDITY ERRORS</label>
+					</link>
+				</content>
+			</heading>
+			<heading>
+				<size>2</size>
+				<content>
+					<link>
+						<url>index-14.html#pgfId-515824</url>
+						<label>13 DEBUGGING AND RUN-TIME MONITORING</label>
+					</link>
+				</content>
+			</heading>
+			<heading>
+				<size>2</size>
+				<content>
+					<link>
+						<url>index-15.html#pgfId-522626</url>
+						<label>14 COMPUTING PROJECT METRICS</label>
+					</link>
+				</content>
+			</heading>
+			<heading>
+				<size>2</size>
+				<content>
+					<link>
+						<url>index-16.html#pgfId-527344</url>
+						<label>15 GRAPHICS-BASED DESIGN</label>
+					</link>
+				</content>
+			</heading>
+			<heading>
+				<size>2</size>
+				<content>
+					<link>
+						<url>index-17.html#pgfId-527441</url>
+						<label>16 HOW EIFFELSTUDIO COMPILES</label>
+					</link>
+				</content>
+			</heading>
+			<heading>
+				<size>2</size>
+				<content>
+					<link>
+						<url>index-18.html#pgfId-522597</url>
+						<label>17 THE COMMAND-LINE COMPILER</label>
+					</link>
+				</content>
+			</heading>
+			<heading>
+				<size>2</size>
+				<content>
+					<link>
+						<url>index-19.html#pgfId-527948</url>
+						<label>18 EXECUTING A SYSTEM WITHIN AND WITHOUT EIFFELSTUDIO</label>
+					</link>
+				</content>
+			</heading>
+			<heading>
+				<size>2</size>
+				<content>
+					<link>
+						<url>index-20.html#pgfId-521093</url>
+						<label>19 APPENDIX: WRITING DOCUMENTATION FILTERS WITH EFF, THE EIFFEL FILTER FORMAT</label>
+					</link>
+				</content>
+			</heading>
+		</div>
+	</paragraph>
+</document>

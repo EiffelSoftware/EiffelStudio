@@ -1,0 +1,43 @@
+<document title="Removing items from a view" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>Client link,Hide</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>Inheritance link,Hide</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>Class,Hide</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>Cluster,Hide</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Removing items from a view
+		</heading>
+		<paragraph></paragraph>
+		<list ordered="false">
+			<item>To remove an class, cluster, or link from the current view, use pick-and-drop to drop it in the 
+				<bold>Remove figure</bold> hole. 
+				<image>
+					<url>/images/eiffelstudio/icons/icon_recycle_bin_color.gif</url>
+				</image>
+			</item>
+		</list>
+		<note>
+			<bold>Note</bold>: if you want to remove the item fromthe system, use the 
+			<link>
+				<url>../20_altering_the_system/40_remove_from_system.xml</url>
+				<label>Delete</label>
+			</link>hole.
+		</note>
+	</paragraph>
+</document>

@@ -1,0 +1,58 @@
+<document title="Generating executables" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Generating executables
+		</heading>
+		<paragraph>There are several ways to compile an executable with EiffelStudio.</paragraph>
+		<paragraph>Compilation modes include the following: melting, freezing and finalizing. To learn more about the compilation semantics in EiffelStudio, see the 
+			<link>
+				<url>/tools/eiffelstudio/reference/30_compiler/00_introduction.xml</url>
+				<label>compiler reference</label>
+			</link>.
+		</paragraph>
+		<paragraph>There is a command for all compilation modes in the
+			<bold>Project</bold> menu, under the entries 
+			<bold>Melt</bold>, 
+			<bold>Freeze</bold>and 
+			<bold>Finalize</bold>. There is also a 
+			<bold>Quick compile</bold> command, that only melts the classes that have been edited in EiffelStudio since the last compilation. You may want to use it as long as no classes are edited outside EiffelStudio.
+		</paragraph>
+		<paragraph>These commands are also available in the 
+			<bold>Project</bold> toolbar
+			<image>
+				<url>/images/eiffelstudio/icons/icon_compile_color.gif</url>
+			</image>,
+			<image>
+				<url>/images/eiffelstudio/icons/icon_freeze_color.gif</url>
+			</image>,
+			<image>
+				<url>/images/eiffelstudio/icons/icon_finalize_color.gif</url>
+			</image>,
+			<image>
+				<url>/images/eiffelstudio/icons/icon_quick_compile_color.gif</url>
+			</image>.
+		</paragraph>
+		<paragraph>To solve the errors that occur during the Eiffel compilation, use the 
+			<link>
+				<url>/tools/eiffelstudio/reference/70_wizards_and_dialogs/30_dialogs/20_error_description/00_introduction.xml</url>
+				<label>compilation error wizard</label>
+			</link>. For errors occurring during the C compilation, check that the installation is not corrupted (all environment variables should be set, especially ISE_C_COMPILER and ISE_PLATFORM), and refer to your C compiler documentation for more information.
+		</paragraph>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break> 
+			<link>
+				<url>/tools/eiffelstudio/reference/30_compiler/20_command_line/00_introduction.xml</url>
+				<label>Command line options</label>
+			</link>
+			<line_break></line_break> 
+			<link>
+				<url>/tools/eiffelstudio/reference/30_compiler/00_introduction.xml</url>
+				<label>Compiler reference</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

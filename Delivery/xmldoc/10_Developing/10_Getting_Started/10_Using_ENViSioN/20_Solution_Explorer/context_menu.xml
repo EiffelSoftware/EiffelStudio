@@ -1,0 +1,86 @@
+<document title="Solution Explorer Context Menus" output="envision">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph><!-- Insert HTML here -->
+		<heading>
+			<size>1</size>Solution Explorer Context Menus
+		</heading>
+		<paragraph>Right clicking on a node in the 
+			<help_link>
+				<tab_index>0</tab_index>
+				<keywords>Eiffel Solution Explorer</keywords>
+				<index_moniker>!DefaultAssociativeIndex</index_moniker>&gt;Solution Explorer
+			</help_link> will bring up a context menu   that allows you to perform certain actions relative to that node. For an   Eiffel Project there two main types of context menus, one for the Eiffel   project itself, and one for the files contained within your project directory,   be it either an Eiffel Class or a miscellaneous file.
+		</paragraph>
+		<heading>
+			<size>2</size>Project Context Menu
+		</heading>
+		<paragraph>
+			<image>
+				<alt_text></alt_text>
+				<url>./solution_explorer_project_node_context_menu.PNG</url>
+			</image>
+		</paragraph>
+		<paragraph>In the image above we can see the context menu for the Eiffel project 'My Eiffel   Project'. The entries available on the context menu perform the following   actions:  </paragraph>
+		<list ordered="false">
+			<item>   Build - Builds the Eiffel project (
+				<help_link>
+					<tab_index>0</tab_index>
+					<index_moniker>!DefaultAssociativeIndex</index_moniker>
+					<keywords>Eiffel Compiling</keywords>&gt;Compiling
+				</help_link>).   
+			</item>
+			<item>   Rebuild - Rebuilds the Eiffel project (
+				<help_link>
+					<tab_index>0</tab_index>
+					<index_moniker>!DefaultAssociativeIndex</index_moniker>
+					<keywords>Eiffel Compiling</keywords>&gt;Compiles
+				</help_link>   completely from scratch).   
+			</item>
+			<item>   Add - This allows you to
+				<help_link>
+					<tab_index>0</tab_index>
+					<index_moniker>!DefaultAssociativeIndex</index_moniker>
+					<keywords>Eiffel Add New Item</keywords>&gt; Add a New or Existing Item
+				</help_link>   to the Eiffel project.   
+			</item>
+			<item>   Set as Start Up Project - Sets the project to be the one that is launched on   solution execution.   </item>
+			<item>   Debug - Allows you to execute or step in to the Eiffel project.   </item>
+			<item>   Save My Eiffel Project.eifp - This saves the project file associated with this   project.   </item>
+			<item>   Remove - Removes the project from the current solution   </item>
+			<item>   Rename - Allows the project name to be changed   </item>
+			<item>   Properties -Display the main Property Page for the project.</item>
+		</list>
+		<heading>
+			<size>2</size>File Context Menu
+		</heading>
+		<paragraph>
+			<image>
+				<alt_text></alt_text>
+				<url>./solution_explorer_class_node_context_menu.PNG</url>
+			</image>
+		</paragraph>
+		<paragraph>In the image just above we can see the context menu for the Eiffel class file   'root_class.e'. The entries available on the context menu perform the   following actions:  </paragraph>
+		<list ordered="false">
+			<item>   Open - This opens the file in the default editor.   </item>
+			<item>   Open With - This allows you to choose which editor you want to open the file   with.   </item>
+			<item>   Remove - Remove the file from the project.   </item>
+			<item>   Rename - Change the name of the file.   </item>
+			<item>   Properties -Display the Properties Window for the file.</item>
+		</list>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break>
+			<link>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.xml</url>
+				<label>Solution Explorer</label>
+			</link>
+			<line_break></line_break>
+			<link>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/index.xml</url>
+				<label>Using ENViSioN! Within Visual Studio.NET</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

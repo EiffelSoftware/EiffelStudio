@@ -1,0 +1,69 @@
+<document title="Setting the assertion level" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>assertion level, setting</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>setting the assertion level</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>enabling assertions</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>checking assertions</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>require, checking</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>ensure, checking</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>invariant, checking</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size> Setting the assertion level 
+		</heading>
+		<paragraph>To modify the assertion level in a generated binary (executable or library),</paragraph>
+		<list ordered="false">
+			<item>Open the 
+				<link>
+					<url>/tools/eiffelstudio/reference/25_project_settings/10_general.xml</url>
+					<label>System Settings</label>
+				</link> dialog.
+			</item>
+			<item>In the 
+				<bold>General</bold> tab, select the assertions you want to check (among require, ensure, check, loop and class invariant).
+			</item>
+			<item>Click 
+				<bold>Apply</bold> or 
+				<bold>OK</bold>.
+			</item>
+			<item>You must 
+				<link>
+					<url>10_generating_executables.xml</url>
+					<label>recompile</label>
+				</link> your project for the changes to take effect.
+			</item>
+		</list>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break>
+			<link>
+				<url>/general/guided_tour/language/tutorial-09.xml</url>
+				<label>Assertions in Eiffel</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

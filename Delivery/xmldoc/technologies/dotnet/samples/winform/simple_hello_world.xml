@@ -1,0 +1,60 @@
+<document title="Simple Hello world form sample" output="studio">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>Samples\Windows Forms</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Simple Hello world form sample
+		</heading>
+		<div>
+			<paragraph>
+				<image>
+					<height>300</height>
+					<width>300</width>
+					<url>/images/dotnet_samples/simple_hello_world.png</url>
+					<alt_text>Hello world form</alt_text>
+				</image>
+			</paragraph>
+		</div>
+		<paragraph>
+			<line_break></line_break>
+			<line_break></line_break>
+		</paragraph>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<heading>
+			<size>2</size>Running
+		</heading>
+		<paragraph>After launching the application, you will see a window displayed with a similar appearance to the one above. This is the simplest windows form we can display. We have just set the title with "HelloWorld". </paragraph>
+		<paragraph></paragraph>
+		<heading>
+			<size>2</size>Under the Hood
+		</heading>
+		<paragraph>The application shows how to display a Windows Form under the windows environment. The application inherits the 
+			<span>FORM</span> class, and just set the title with 
+			<span>"Hello world"</span> with the inherited feature
+			<span>set_title</span>. 
+		</paragraph>
+		<code>set_title (("Hello world"). to_cil)</code>
+		<paragraph>The application is launch in a PROCESS with this command line:</paragraph>
+		<code>feature {WINFORMS_APPLICATION}. run_form (Current). </code>
+		<paragraph>This sample contains the following class:</paragraph>
+		<list ordered="false">
+			<item>
+				<span>FORM</span>
+			</item>
+			<item>WINFORMS_APPLICATION</item>
+		</list>
+		<heading>
+			<size>2</size>Notes
+		</heading>
+		<paragraph>This sample is translated from the example located in the QuickStart\winforms\samples\simple hello world subdirectory of the.NET Framework SDK samples directory of Microsoft Visual Studio.NET. </paragraph>
+		<paragraph></paragraph>
+		<paragraph></paragraph>
+	</paragraph>
+</document>

@@ -1,0 +1,33 @@
+<document title="Contract view" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Contract view
+		</heading>
+		<paragraph>The contract view 
+			<image>
+				<url>/images/eiffelstudio/icons/icon_format_contract_color.gif</url>
+			</image>displays the contracts of all written-in features of the current class. It is available either through the 
+			<link>
+				<url>/tools/eiffelstudio/reference/20_editor/index.xml</url>
+				<label>editor</label>
+			</link> or through the 
+			<bold>Class</bold> tab of the 
+			<link>
+				<url>/tools/eiffelstudio/reference/05_general_interface_description/20_eiffelstudio_window_overview.xml</url>
+				<label>context tool</label>
+			</link>.
+		</paragraph>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break> 
+			<link>
+				<url>./25_interface_format.xml</url>
+				<label>Flat contract view</label>
+			</link>
+			<line_break></line_break>
+		</seealso>
+	</paragraph>
+</document>

@@ -1,0 +1,59 @@
+<document title="EiffelCOM Wizard Guided Tour" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>EiffelCOM</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>EiffelCOM Wizard</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>EiffelCOM Wizard, Guided Tour</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>EiffelCOM Wizard, Guided Tour, Index</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>EiffelCOM Wizard Guided Tour
+		</heading>
+		<link></link>This chapter explains how to use the EiffelCOM wizard to create COM components and to access existing components. 
+		<paragraph>See:</paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>01_new_from_com.xml</url>
+					<label>Creating a new COMcomponent</label>
+				</link>.
+			</item>
+			<item>
+				<link>
+					<url>02_new_from_eiffel.xml</url>
+					<label>Creating a new component from an Eiffel Project.</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>03_accessing.xml</url>
+					<label>Accessing a COM component.</label>
+				</link>
+			</item>
+		</list>
+		<seealso>
+			<link>
+				<url>../01_introduction.xml</url>
+				<label>Introduction</label>
+			</link>
+			<link>
+				<url>../reference/index.xml</url>
+				<label>EiffelCOM wizard reference</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

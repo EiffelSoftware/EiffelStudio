@@ -1,0 +1,63 @@
+<document title="EiffelStudio Debugger" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>debugger</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>application, debug</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>EiffelStudio Debugger
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>00_introduction.xml</url>
+					<label>Introduction</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>10_execution/index.xml</url>
+					<label>Execution commands</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_breakpoints/index.xml</url>
+					<label>Breakpoint management</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>30_call_stack_tool/index.xml</url>
+					<label>Call stack information</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>40_object_tool/index.xml</url>
+					<label>Object state information</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>50_expression_evaluation/index.xml</url>
+					<label>Dynamic evaluation of expressions</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>60_stack_overflow_prevention.xml</url>
+					<label>Stack overflow prevention</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

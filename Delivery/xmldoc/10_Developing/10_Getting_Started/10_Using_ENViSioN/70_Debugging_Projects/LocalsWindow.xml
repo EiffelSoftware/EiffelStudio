@@ -1,0 +1,133 @@
+<document title="Locals Window" output="envision">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>40</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>  Locals Window
+		</heading>
+		<paragraph>
+			<paragraph>While  
+				<help_link>
+					<tab_index>0</tab_index>
+					<index_moniker>!DefaultAssociativeIndex</index_moniker>
+					<keywords>Eiffel debugging</keywords>&gt;Debugging
+				</help_link>  a system, it is possible to view the values of all locals of the current  
+				<help_link>
+					<tab_index>0</tab_index>
+					<index_moniker>!DefaultAssociativeIndex</index_moniker>
+					<keywords>Eiffel feature</keywords>&gt;feature
+				</help_link>, and attributes of the current  
+				<help_link>
+					<tab_index>0</tab_index>
+					<index_moniker>!DefaultAssociativeIndex</index_moniker>
+					<keywords>Eiffel object</keywords>&gt;Object
+				</help_link>  in which the execution has stopped.
+			</paragraph>
+			<paragraph>The Locals Window consists of three columns, used to display the relevant information:  
+				<list ordered="false">
+					<item>  Name - The name of the local, may also include "Current" to represent the  current object.  </item>
+					<item>  Value - If the object referred to by the Name field is a basic type, then Value  will be the value of the object. If it is a reference type, then Value will be  its declared .Net typewhich is displayed in parenthesis.  </item>
+					<item>   Type - The Eiffel name corresponding to the Dynamic Type of the object unless it is a non basic .NET type in which case, the .NET name will be displayed.</item>
+				</list>
+			</paragraph>
+			<paragraph>
+				<image>
+					<alt_text>Locals Debugging Window</alt_text>
+					<url>LocalsDebuggingWindow.png</url>
+				</image>
+			</paragraph>
+			<paragraph>In the screenshot above, the execution of the system has stopped in a  
+				<help_link>
+					<tab_index>0</tab_index>
+					<index_moniker>!DefaultAssociativeIndex</index_moniker>
+					<keywords>Eiffel feature</keywords>&gt;feature
+				</help_link>  with three locals :- 
+				<bold>a</bold>, 
+				<bold>ss</bold> and 
+				<bold>s</bold>. 
+				<bold>Current</bold> is also available andcorresponds to the current 
+				<help_link>
+					<tab_index>0</tab_index>
+					<index_moniker>!DefaultAssociativeIndex</index_moniker>
+					<keywords>Eiffel object</keywords>&gt;Object
+				</help_link> in which execution has stopped. 
+				<list ordered="false">
+					<item>
+						<bold>Current</bold> - The current object in which execution has stopped. In this case, ROOT_CLASS. All attributes are displayed when the node is expanded.
+					</item>
+					<item>
+						<bold>a</bold> - an    ARRAY, of   INTEGER and currently contains four items.
+					</item>
+					<item>
+						<bold>s</bold> - an Eiffel    STRING
+					</item>
+					<item>
+						<bold>ss</bold> - a .NET SYSTEM STRING
+					</item>
+				</list>
+			</paragraph>
+			<paragraph>The class ROOT_CLASS has two Once 
+				<help_link>
+					<tab_index>0</tab_index>
+					<index_moniker>!DefaultAssociativeIndex</index_moniker>
+					<keywords>Eiffel feature</keywords>&gt;features
+				</help_link>, io and operating_environment which do not show up directly in the Locals Window as they are not attributes.However, they do show up indirectly through the "done" and "result" attributes displayed in the screenshot above. For every Once, an attribute is available, allowing you to see whether the Once has been executed. Thename of this 
+				<help_link>
+					<tab_index>0</tab_index>
+					<index_moniker>!DefaultAssociativeIndex</index_moniker>
+					<keywords>Eiffel feature</keywords>&gt;feature
+				</help_link> corresponds to the name of the Once, with "_done" appended. For example, in the screenshot above, we haveio_done" and "operating_environment_done", both of which demonstrate the associated Once 
+				<help_link>
+					<tab_index>0</tab_index>
+					<index_moniker>!DefaultAssociativeIndex</index_moniker>
+					<keywords>Eiffel feature</keywords>&gt;feature
+				</help_link> has not been executed as they evaluate to False. For every Once 
+				<help_link>
+					<tab_index>0</tab_index>
+					<index_moniker>!DefaultAssociativeIndex</index_moniker>
+					<keywords>Eiffel feature</keywords>&gt;feature
+				</help_link> which has a return type, an attribute is generated, the value of which is the Result from the Once, or Void if it has notalready been executed. In the screenshot above, we have io_result and operating_environment_result.
+			</paragraph>
+			<paragraph> This ability to see the  current state of an  
+				<help_link>
+					<tab_index>0</tab_index>
+					<index_moniker>!DefaultAssociativeIndex</index_moniker>
+					<keywords>Eiffel object</keywords>&gt;Object
+				</help_link>  can prove to be a critical component in successful  
+				<help_link>
+					<tab_index>0</tab_index>
+					<index_moniker>!DefaultAssociativeIndex</index_moniker>
+					<keywords>Eiffel debugging</keywords>&gt;Debugging
+				</help_link>.  
+			</paragraph>
+			<seealso>
+				<bold>See Also</bold>
+				<line_break></line_break>
+				<link>
+					<url>./index.xml</url>
+					<label>Debugging</label>
+				</link>
+				<line_break></line_break>
+				<link>
+					<url>./CallStackWindow.xml</url>
+					<label>Call Stack Window</label>
+				</link>
+				<line_break></line_break>
+				<link>
+					<url>./BreakPointWindow.xml</url>
+					<label>Break Point Window</label>
+				</link>
+				<line_break></line_break>
+				<link>
+					<url>./WatchWindow.xml</url>
+					<label>Watch Window</label>
+				</link>
+			</seealso>
+		</paragraph>
+	</paragraph>
+</document>

@@ -1,0 +1,34 @@
+<document title="Introduction" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Introduction
+		</heading>
+		<paragraph>The windows tool ( 
+			<image>
+				<url>/images/eiffelstudio/icons/icon_windows_color.gif</url>
+			</image> ) gives a list of opened development windows.
+		</paragraph>
+		<paragraph>
+			<image>
+				<url>/images/eiffelstudio/browsing_tools/windows_tool.png</url>
+			</image>
+		</paragraph>
+		<paragraph>Its main component is the 
+			<link>
+				<url>10_list_view.xml</url>
+				<label>Window list</label>
+			</link>.
+		</paragraph>
+		<paragraph>It is also linked to the 
+			<link>
+				<url>20_window_menu.xml</url>
+				<label>
+					<bold>Window</bold>
+				</label>
+			</link> menu.
+		</paragraph>
+	</paragraph>
+</document>

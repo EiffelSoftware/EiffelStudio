@@ -1,0 +1,24 @@
+<document title="Starting a project" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Starting a project
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>10_creating_a_new_project.xml</url>
+					<label>Creating a new project</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_retrieving_a_project_from_a_build_project_file.xml</url>
+					<label>Retrieving a project from a Build project file</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

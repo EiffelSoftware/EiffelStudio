@@ -1,0 +1,43 @@
+<document title="Introduction" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Introduction
+		</heading>
+		<paragraph>
+			<image>
+				<url>../../../../../images/eiffelstudio/debugger/object_tool.png</url>
+			</image>
+		</paragraph>
+		<paragraph>The object tool is a debugging tool that displays extended dynamic information concerning one or several objects while debugging an application. This information includes the value of all their attributes, as well as the values of the once functions that have already been called.</paragraph>
+		<paragraph>It is mainly composed of two trees, the 
+			<link>
+				<url>05_local_view.xml</url>
+				<label>local view</label>
+			</link> and the 
+			<link>
+				<url>10_object_view.xml</url>
+				<label>object view</label>
+			</link>. In the toolbar are located two commands that facilitate browsing the trees: the 
+			<link>
+				<url>30_remove_object_command.xml</url>
+				<label>remove object command</label>
+			</link> 
+			<image>
+				<url>../../../../../images/eiffelstudio/icons/icon_delete_very_small_color.gif</url>
+			</image> and the 
+			<link>
+				<url>20_slice_size_command.xml</url>
+				<label>set slice size command</label>
+			</link> 
+			<image>
+				<url>../../../../../images/eiffelstudio/icons/icon_slice_limits_vsmall_color.gif</url>
+			</image>. The third command 
+			<image>
+				<url>../../../../../images/eiffelstudio/icons/icon_expand_string_color.gif</url>
+			</image> can give an expanded display of the string relative to an object, by dropping the object onto the button. Use it if an object has a very long string representation or a string representation that contains carriage returns, for example.
+		</paragraph>
+	</paragraph>
+</document>

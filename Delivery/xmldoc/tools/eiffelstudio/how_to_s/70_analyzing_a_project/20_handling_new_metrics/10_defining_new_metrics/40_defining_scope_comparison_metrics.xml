@@ -1,0 +1,52 @@
+<document title="Defining scope comparison metric" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>Metric,new,scope comparison,define</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading></heading>
+		<paragraph>To define a scope comparison metric, you must have already clicked on 
+			<image>
+				<border>0</border>
+				<url>/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
+			</image> of the "Metric" tab in the context tool. Select then the "Scope Ratio" tab of the "New metric" dialog:
+		</paragraph>
+		<paragraph>
+			<image>
+				<url>/images/eiffelstudio/metrics_png/sratio.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<list ordered="true">
+			<item>Enter a name in the "New metric name" field.</item>
+			<item>Select a metric from the "Metric" combo box. </item>
+			<item>Select a scope for numerator in the "Scope" combo box of the "Numerator" frame to change the numerator in the "Ratio" field</item>
+			<item>Select a scope for denominator in the "Scope" combo box of the "Denominator" frame to change the denominator in the "Ratio"field. </item>
+			<item>If you want to change again either metric, numerator or denominator repeat operations 2., 3. or 4.as many times as needed.</item>
+			<item>If you want to display measures, when evaluating this metric, in a percentage style, select "Display as percentage".</item>
+			<item>If you want to save the metric definition without exiting the interface, click on "Save", otherwise, click on "OK" to save and exit.</item>
+			<item>If you want to define another scope comparison metric, click on  
+				<image>
+					<border>0</border>
+					<url>/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
+				</image> to reset.
+			</item>
+		</list>
+		<note>
+			<bold>Note</bold>: - The formula field below the metric combo box gives the selected metric's definition.
+			<line_break></line_break>           - The ratio field is filled in by default, you have just to change metric, numerator and denominator as needed.
+		</note>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break>
+			<link>
+				<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/20_handling_new_metrics/20_managing_new_metrics/00_introduction.xml</url>
+				<label>Managing new metrics</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

@@ -36,7 +36,7 @@ feature -- Graphical User Interface
 			toggle: TOGGLE_B;
 			first: BOOLEAN;
 			subdir: DIRECTORY_NAME;
-			l_s_d: STRING;
+			l_s_d, l_s_d_lower, std_precomp_name: STRING;
 			proj: STRING
 		do
 			twl := precompiles;
@@ -56,16 +56,22 @@ feature -- Graphical User Interface
 			from
 				twl := precompiles;
 				twl.start;
-				first := True
+				first := True;
+				!! standard_precompiles_reverse.make (3)
 			until
 				twl.after
 			loop
 				!! toggle.make ("toggle", precomp_radio);
 				!! subdir.make_from_string (twl.item);
 				l_s_d := last_sub_dir (subdir);
-				if standard_precompiles.has (l_s_d) then
-					toggle.set_text (standard_precompiles.item (l_s_d))
+				l_s_d_lower := clone (l_s_d);
+				l_s_d_lower.to_lower;
+				std_precomp_name := standard_precompiles.item (l_s_d_lower);
+				if std_precomp_name /= Void then
+					standard_precompiles_reverse.put (l_s_d, std_precomp_name);
+					toggle.set_text (std_precomp_name)
 				else
+					standard_precompiles_reverse.put (l_s_d, l_s_d);
 					toggle.set_text (l_s_d);
 				end;
 				if first then
@@ -76,6 +82,7 @@ feature -- Graphical User Interface
 				first := False;
 				twl.forth
 			end;
+			standard_precompiles_reverse.compare_objects;
 
 			!! assertion_radio.make ("assertion_radio", dialog.action_form);
 			!! no_ass.make ("ass_no", assertion_radio);
@@ -326,19 +333,16 @@ feature -- Standard precompiles
 		once
 			!! Result.make (3);
 			Result.put ("EiffelBase", "base");
-			Result.put ("EiffelVision", "mvision");
+			Result.put ("EiffelVision", "vision");
+			Result.put ("EiffelParse", "parse");
+			Result.put ("Windows Eiffel Library", "wel");
 			Result.compare_objects
 		end;
 
-	standard_precompiles_reverse: HASH_TABLE [STRING, STRING] is
+	standard_precompiles_reverse: HASH_TABLE [STRING, STRING];
 			-- A hash table of the qualified name of standard precompiles (EiffelBase, EiffelLex, etc.)
 			-- against their location in $EIFFEL3/precomp/spec/$PLATFORM (base, lex, etc.)
-		once
-			!! Result.make (3);
-			Result.put ("base", "EiffelBase");
-			Result.put ("mvsision", "EiffelVision");
-			Result.compare_objects
-		end;
+			--| Dynamically created.
 
 feature -- Subdirs from a directory name
 
@@ -391,10 +395,9 @@ feature {NONE} -- Implementation
 			new_ace.putstring (t);
 			new_ace.putstring ("%" (root_cluster): %"");
 			new_ace.putstring (creation_procedure_edit.text);
-			new_ace.putstring ("%"%N%T%T-- Create object of class `");
+			new_ace.putstring ("%"%N%T%T-- Execute system by creating instance of class `");
 			new_ace.putstring (t);
-			new_ace.putstring ("' in cluster `root_cluster'%N");
-			new_ace.putstring ("%T%T-- use creation procedure `");
+			new_ace.putstring ("'%N%T%T-- from cluster `root_cluster', using creation procedure `");
 			new_ace.putstring (creation_procedure_edit.text);
 			new_ace.putstring ("'.%N");
 			new_ace.putstring ("%Ndefault%N%T");
@@ -466,20 +469,24 @@ feature {NONE} -- Implementation
 			!! new_class.make (rc);
 			if not new_class.exists then
 				new_class.open_write;
-				new_class.putstring ("class ");
+				new_class.putstring ("indexing%N%
+					%%Tdescription: %"System's root class%";%N%
+					%%Tnote: %"Initial version automatically generated%"%N%N");
+				new_class.putstring ("class%N%T");
 				t := clone (root_class_edit.text);
 				t.to_upper;
 				new_class.putstring (t);
 				new_class.putstring ("%N%N");
-				new_class.putstring ("creation%N%T");
+				new_class.putstring ("creation%N%N%T");
 				new_class.putstring (creation_procedure_edit.text);
 				new_class.putstring ("%N%N");
 				new_class.putstring ("feature -- Initialization%N%N%T");
 				new_class.putstring (creation_procedure_edit.text);
 				new_class.putstring (" is%N");
-				new_class.putstring ("%T%T%T-- Automatically generated root class and creation procedure.%N");
+				new_class.putstring ("%T%T%T-- Output a welcome message.%N%
+					%%T%T%T--| (Automatically generated.)%N");
 				new_class.putstring ("%T%Tdo%N");
-				new_class.putstring ("%T%T%Tio.putstring (%"Welcome to ISE Eiffel.%%N%")%N");
+				new_class.putstring ("%T%T%Tio.putstring (%"Welcome to ISE Eiffel!%%N%");%N");
 				new_class.putstring ("%T%T%Tio.readline%N");
 					-- FIXME **********************************************
 					-- UNIX: `ebench &' will not work with this.

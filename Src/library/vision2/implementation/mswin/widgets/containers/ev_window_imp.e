@@ -85,6 +85,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_SIZE_CONSTANTS
+		export
+			{NONE} all
+		end
+
 creation
 	make,
 	make_with_owner,
@@ -531,13 +536,15 @@ feature {NONE} -- Implementation
 			-- Called when the window is resized.
 			-- Resize the child if it exists.
 		do
-			if child /= Void then
-				child.parent_ask_resize (client_width, client_height)
+			if size_type /= size_minimized then
+				if child /= Void then
+					child.parent_ask_resize (client_width, client_height)
+				end
+				if status_bar /= Void then
+					status_bar.reposition
+				end
+				execute_command (Cmd_size, Void)
 			end
-			if status_bar /= Void then
-				status_bar.reposition
-			end
-			execute_command (Cmd_size, Void)
 		end
 
    	on_move (x_pos, y_pos: INTEGER) is

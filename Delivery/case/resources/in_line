@@ -61,7 +61,7 @@ CI/Cluster
 CJ/Inheritance 
 CK/Go to next page
 CL/Clusters not to print
-CM/Load project 
+CM/Open project 
 CN/Go to previous page
 CO/Clusters to print
 CP/Print (PostScript)
@@ -90,7 +90,7 @@ DL/Undo last command
 DM/Retarget to parent
 DN/Go to top
 DO/View Tool
-DP/Hide implementation relations 
+DP/Hide implmentation relations 
 DQ/Show relation labels
 DR/Show inheritance 
 DS/Show aggregate relations
@@ -100,3 +100,28 @@ DV/Remove all handles
 DW/Namer
 DX/Modified classes
 DY/Modified features
+DZ/Go to previous class
+EA/Go to next class
+EB/Go to first difference
+EC/Go to previous difference
+ED/Go to next difference
+EE/Go to last difference
+EF/Keep EiffelCase version
+EG/Keep Eiffel code version
+EH/Go to first class
+EI/Go to last class
+EJ/Class
+EK/Class code differences
+EL/Class diffs stats
+EM/Detailed class diffs stats
+EN/Record last changes
+EO/Forget last changes
+EP/Forget all changes
+EQ/Add feature clause
+ER/Feature clause
+ES/Export list
+ET/Check and apply
+EU/Comments
+EV/Keep EiffelCase version of class
+EW/Keep Eiffel code version of class
+

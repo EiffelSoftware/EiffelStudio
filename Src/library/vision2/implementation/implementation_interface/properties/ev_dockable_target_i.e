@@ -24,28 +24,32 @@ feature -- Status report
 	veto_dock_function: FUNCTION [ANY, TUPLE [EV_DOCKABLE_SOURCE], BOOLEAN]
 		--
 		
-	is_dockable: BOOLEAN
+	is_docking_enabled: BOOLEAN
+		-- May `Current' be docked to?
 
 feature -- Status setting
 
-	enable_dockable is
-			--
+	enable_docking is
+			-- Ensure `is_docking_enabled' is True.
+			-- `Current' will accept docking from a
+			-- compatible EV_DOCKABLE_SOURCE.
 		do
-			is_dockable := True
-			(create {EV_ENVIRONMENT}).application.implementation.dragable_targets.extend (interface.object_id)
+			is_docking_enabled := True
+			(create {EV_ENVIRONMENT}).application.implementation.dockable_targets.extend (interface.object_id)
 		ensure
-			is_dockable: is_dockable
-			id_stored_in_application: (create {EV_ENVIRONMENT}).application.implementation.dragable_targets.has (interface.object_id)
+			is_dockable: is_docking_enabled
+			id_stored_in_application: (create {EV_ENVIRONMENT}).application.implementation.dockable_targets.has (interface.object_id)
 		end
 		
-	disable_dockable is
-			--
+	disable_docking is
+			-- Ensure `is_docking_enabled' is False.
+			-- `Current' will not accept docking.
 		do
-			is_dockable := False
-			(create {EV_ENVIRONMENT}).application.implementation.dragable_targets.prune (interface.object_id)
+			is_docking_enabled := False
+			(create {EV_ENVIRONMENT}).application.implementation.dockable_targets.prune (interface.object_id)
 		ensure
-			not_dockable: not is_dockable
-			id_not_stored_in_application: not (create {EV_ENVIRONMENT}).application.implementation.dragable_targets.has (interface.object_id)
+			not_dockable: not is_docking_enabled
+			id_not_stored_in_application: not (create {EV_ENVIRONMENT}).application.implementation.dockable_targets.has (interface.object_id)
 		end
 		
 		

@@ -21,30 +21,30 @@ feature -- Access
 
 	original_parent_position: INTEGER
 	
-	is_dragging: BOOLEAN is
-			-- Is `Current' being dragged.
+	is_dock_executing: BOOLEAN is
+			-- Is `Current' in the process of a dockable transport?
 		do
-			Result := source_being_dragged /= Void
+			Result := source_being_docked /= Void
 		end
 		
 	real_source: EV_DOCKABLE_SOURCE
 			-- `Result' is EV_DOCKABLE_SOURCE which should be
-			-- dragged when a drag starts on `Current'.
+			-- dragged when docking begins on `Current'.
 			
-	is_dragable: BOOLEAN
-		-- Is `Current' dragable?
+	is_dockable: BOOLEAN
+		-- Is `Current' dockable?
 		
-	not_externally_dockable: BOOLEAN
+	not_external_docking_enabled: BOOLEAN
 			-- Attribute used for `is_externally_dockable'. We must implement
 			-- `is_externally_dockable' this way as we have no easy solution to
 			-- assign `True' to `is_externally_dockable'
 			
-	is_externally_dockable: BOOLEAN is
+	is_external_docking_enabled: BOOLEAN is
 			-- Is `Current' able to be docked into an EV_DOCKABLE_DIALOG
 			-- When there is no valid EV_DRAGABLE_TARGET upon completion
 			-- of the transport?
 		do
-			Result := not not_externally_dockable
+			Result := not not_external_docking_enabled
 		end
 
 feature -- Measurement
@@ -68,7 +68,7 @@ feature -- Status report
 					-- avoid entering the loop unless necessary.
 				container := a_widget.parent
 				target ?= container
-				if target /= Void and then target.is_dockable then
+				if target /= Void and then target.is_docking_enabled then
 					Result := target
 				end
 			until
@@ -76,15 +76,15 @@ feature -- Status report
 			loop
 				container := container.parent
 				target ?= container
-				if target /= Void and then target.is_dockable then
+				if target /= Void and then target.is_docking_enabled then
 					Result := target
 				end
 			end
 		ensure
-			result_is_dockable: Result /= Void implies Result.is_dockable
+			result_is_dockable: Result /= Void implies Result.is_docking_enabled
 		end
 
-	closest_dragable_target: EV_DOCKABLE_TARGET is
+	closest_dockable_target: EV_DOCKABLE_TARGET is
 			-- `Result' is first dockable target that `is_dockable' found by recursively
 			-- searching up through the parenting structure from the widget
 			-- currently underneath the pointer position.
@@ -96,45 +96,43 @@ feature -- Status report
 			widget_imp_at_cursor_position := widget_imp_at_pointer_position
 			if widget_imp_at_cursor_position /= Void then
 				current_target ?= widget_imp_at_cursor_position.interface
-				if current_target /= Void and then current_target.is_dockable then
+				if current_target /= Void and then current_target.is_docking_enabled then
 					Result := current_target
 				else
 					Result:= get_next_target (widget_imp_at_cursor_position.interface)
-				--else
-				--	Result := get_next_target (current_target)
 				end
 			end
 		ensure
-			result_is_dockable: Result /= Void implies Result.is_dockable
+			result_is_dockable: Result /= Void implies Result.is_docking_enabled
 		end
 
 feature -- Status setting
 
-	enable_drag is
-			-- Allow `Current' to be dragable
+	enable_dockable is
+			-- Allow `Current' to be dockable
 		do
-			is_dragable := True
-			internal_enable_drag
+			is_dockable := True
+			internal_enable_dockable
 		ensure
-			is_dragable: is_dragable
+			is_dockable: is_dockable
 		end
 
-	internal_enable_drag is
-			-- Platform specific implementation of `enable_drag'.
+	internal_enable_dockable is
+			-- Platform specific implementation of `enable_dockable'.
 		deferred
 		end
 
-	disable_drag is
-			-- Ensure `Current' is not dragable
+	disable_dockable is
+			-- Ensure `Current' is not dockable
 		do
-			is_dragable := False
-			internal_disable_drag
+			is_dockable := False
+			internal_disable_dockable
 		ensure
-			not_is_dragable: not is_dragable
+			not_is_dockable: not is_dockable
 		end
 		
-	internal_disable_drag is
-			-- Platform specific implementation of `disable_drag'.
+	internal_disable_dockable is
+			-- Platform specific implementation of `disable_dockable'.
 		deferred
 		end
 
@@ -142,7 +140,7 @@ feature -- Status setting
 			-- Set `dockable_source' to be the widget moved when a
 			-- drag begins on `Current'.
 		require
-			is_dragable: is_dragable
+			is_dockable: is_dockable
 			dockable_source_not_void: dockable_source /= Void
 		do
 			real_source := dockable_source
@@ -153,35 +151,35 @@ feature -- Status setting
 	remove_real_source is
 			-- Ensure `real_source' is `Void'.
 		require
-			is_dragable: is_dragable
+			is_dockable: is_dockable
 		do
 			real_source := Void
 		ensure
 			no_real_source: real_source = Void
 		end
 		
-	enable_externally_dockable is
+	enable_external_docking is
 			-- Allow `Current' to be docked into an EV_DOCKABLE_DIALOG
 			-- When there is no valid EV_DRAGABLE_TARGET upon completion
 			-- of the transport?
 		require
-			is_dragable: is_dragable
+			is_dockable: is_dockable
 		do
-			not_externally_dockable := False
+			not_external_docking_enabled := False
 		ensure
-			is_externally_dockable: not is_externally_dockable
+			is_externally_dockable: not is_external_docking_enabled
 		end
 		
-	disable_externally_dockable is
+	disable_external_docking is
 			-- Forbid `Current' to be docked into an EV_DOCKABLE_DIALOG
 			-- When there is no valid EV_DRAGABLE_TARGET upon completion
 			-- of the transport?
 		require
-			is_dragable: is_dragable
+			is_dockable: is_dockable
 		do
-			not_externally_dockable := True
+			not_external_docking_enabled := True
 		ensure
-			not_externally_dockable: not is_externally_dockable
+			not_externally_dockable: not is_external_docking_enabled
 		end
 
 feature -- Cursor movement
@@ -202,10 +200,10 @@ feature -- Miscellaneous
 
 feature -- Basic operations
 			
-	complete_drag is
-			-- Complete a drag from `source_being_dragged'.
+	complete_dock is
+			-- Complete a dock from `source_being_docked'.
 		require
-			source_being_dragged: source_being_dragged /= Void
+			source_being_docked: source_being_docked /= Void
 		local
 			target_container: EV_CONTAINER_IMP
 			target_container_interface: EV_CONTAINER
@@ -220,8 +218,8 @@ feature -- Basic operations
 			dropping_in_source: BOOLEAN
 			original_widget_window: EV_WINDOW
 			box: EV_BOX
-			dragable_dialog_source: EV_DOCKABLE_DIALOG
-			dragable_target: EV_DOCKABLE_TARGET
+			dockable_dialog_source: EV_DOCKABLE_DIALOG
+			dockable_target: EV_DOCKABLE_TARGET
 			tool_bar_button: EV_TOOL_BAR_BUTTON
 			tool_bar_button_imp: EV_TOOL_BAR_BUTTON_IMP
 			tool_bar: EV_TOOL_BAR
@@ -233,106 +231,104 @@ feature -- Basic operations
 			temp_index: INTEGER
 			original_parent: EV_DOCKABLE_TARGET
 		do
-			dragable_target := closest_dragable_target
+			dockable_target := closest_dockable_target
 				-- Note that if the parent is not a dialog, then we do not destroy the dialog.
 				-- If the parent is a dialog, it means that the drop of the newly transported widget
 				-- initially created the dialog, so it is alright to destroy it again.
 
-			if widget_source_being_dragged /= Void then
-				dragable_dialog_source ?= widget_source_being_dragged.parent
+			if widget_source_being_docked /= Void then
+				dockable_dialog_source ?= widget_source_being_docked.parent
 			else
 					-- In this case, we are indirectly parented in the dialog
 					-- as a temporary item holder must have been created to
 					-- hold the item within the dialog.
-				dragable_dialog_source ?= item_source_being_dragged.parent.parent
+				dockable_dialog_source ?= item_source_being_docked.parent.parent
 			end
 			
 			
-			tool_bar ?= dragable_target
-			container ?= dragable_target
-			if ((widget_source_being_dragged /= Void and container = Void) or (item_source_being_dragged /= Void and tool_bar = Void)) then
-				dragable_target := Void
+			tool_bar ?= dockable_target
+			container ?= dockable_target
+			if ((widget_source_being_docked /= Void and container = Void) or (item_source_being_docked /= Void and tool_bar = Void)) then
+				dockable_target := Void
 			end
 			
 			
-			if dragable_target = Void then
-				if originating_source.is_externally_dockable then
-					if dragable_dialog_source = Void then
+			if dockable_target = Void then
+				if originating_source.is_external_docking_enabled then
+					if dockable_dialog_source = Void then
 							-- There is no valid target, and the source was not from an EV_DRAGABLE_DIALOG
-							-- so we must insert `source_being_dragged' into an EV_DRAGABLE_DIALOG.
-						create dragable_dialog_target
+							-- so we must insert `source_being_docked' into an EV_DRAGABLE_DIALOG.
+						create dockable_dialog_target
 							-- Check whether we are dragging a widget or an item.
-						if widget_source_being_dragged /= Void then
-							original_widget_window := widget_source_being_dragged.top_level_window_imp.interface
-							original_parent ?= widget_source_being_dragged.interface.parent
+						if widget_source_being_docked /= Void then
+							original_widget_window := widget_source_being_docked.top_level_window_imp.interface
+							original_parent ?= widget_source_being_docked.interface.parent
 							check
 								original_parent_not_void: original_parent /= Void
 							end
-							dragable_dialog_target.set_original_parent (original_parent)
-							dragable_dialog_target.set_original_parent_index (position_in_parent (widget_source_being_dragged))
+							dockable_dialog_target.set_original_parent (original_parent)
+							dockable_dialog_target.set_original_parent_index (position_in_parent (widget_source_being_docked))
 						else
 							-- Note that this will not work with tree items as it is not recursive.
-							temp_widget_parent ?= item_source_being_dragged.parent_imp
+							temp_widget_parent ?= item_source_being_docked.parent_imp
 							check
 								parent_is_widget: temp_widget_parent /= Void
 							end
 							original_widget_window := temp_widget_parent.top_level_window_imp.interface
-							temp_parent ?= item_source_being_dragged.interface.parent
+							temp_parent ?= item_source_being_docked.interface.parent
 							check
 								parent_not_void: temp_parent /= Void
 							end
-							dragable_dialog_target.set_original_parent (temp_parent)
-							tool_bar_button_imp ?= item_source_being_dragged
+							dockable_dialog_target.set_original_parent (temp_parent)
+							tool_bar_button_imp ?= item_source_being_docked
 							check
 								item_was_tool_bar_button: tool_bar_button_imp /= Void
 							end
-							dragable_dialog_target.set_original_parent_index (position_in_parent (tool_bar_button_imp))
+							dockable_dialog_target.set_original_parent_index (position_in_parent (tool_bar_button_imp))
 						end
 						
-					--	dragable_dialog_target.move_actions.force_extend (agent display_position (dragable_dialog_target))
-						
-							-- Now check to see whether `source_being_dragged' was originally 
+							-- Now check to see whether `source_being_docked' was originally 
 							-- disabled and parented in a box. If so, flag this so it can be restored
 							-- as disabled.
-						if widget_source_being_dragged /= Void then
-							box ?= widget_source_being_dragged.interface.parent
-							if box /= Void and then not box.is_item_expanded (widget_source_being_dragged.interface) then
-								dragable_dialog_target.set_expansion_was_disabled
+						if widget_source_being_docked /= Void then
+							box ?= widget_source_being_docked.interface.parent
+							if box /= Void and then not box.is_item_expanded (widget_source_being_docked.interface) then
+								dockable_dialog_target.set_expansion_was_disabled
 							end
 						end
 							
-						unparent_source_being_dragged
+						unparent_source_being_docked
 							-- Handle a special case for tool bar buttons.
-						if widget_source_being_dragged /= Void then
-							dragable_dialog_target.extend (widget_source_being_dragged.interface)
+						if widget_source_being_docked /= Void then
+							dockable_dialog_target.extend (widget_source_being_docked.interface)
 						else
 							create tool_bar
-							dragable_dialog_target.extend (tool_bar)
-							tool_bar_button ?= item_source_being_dragged.interface
+							dockable_dialog_target.extend (tool_bar)
+							tool_bar_button ?= item_source_being_docked.interface
 							check
 								item_was_tool_bar_button: tool_bar_button /= Void
 							end
 							tool_bar.extend (tool_bar_button)
 						end
 						
-						dialog_imp ?= dragable_dialog_target.implementation
+						dialog_imp ?= dockable_dialog_target.implementation
 						check
 							dialog_imp_not_void: dialog_imp /= Void
 						end
 						dialog_imp.enable_closeable
-						dragable_dialog_target.close_request_actions.extend (agent close_dockable_dialog (dragable_dialog_target))
-						move_dialog_to_pointer (dragable_dialog_target)
-						dragable_dialog_target.show_relative_to_window (original_widget_window)
-						target_container_interface ?= dragable_dialog_target
+						dockable_dialog_target.close_request_actions.extend (agent close_dockable_dialog (dockable_dialog_target))
+						move_dialog_to_pointer (dockable_dialog_target)
+						dockable_dialog_target.show_relative_to_window (original_widget_window)
+						target_container_interface ?= dockable_dialog_target
 					else
 							-- As there is no valid target, and the transport began in an EV_DRAGABLE_DIALOG
 							-- we simply move the existing dialog.
-						move_dialog_to_pointer (dragable_dialog_source)
+						move_dialog_to_pointer (dockable_dialog_source)
 					end
 				end
 			else
 				dropping_in_source := True
-				target_widget ?= dragable_target.implementation
+				target_widget ?= dockable_target.implementation
 				check
 					target_widget_not_void: target_widget /= Void
 				end
@@ -340,37 +336,37 @@ feature -- Basic operations
 			end
 			
 			
-			if dragable_dialog_source = Void or dragable_target /= Void then
-				tool_bar ?= dragable_target
-				if not (tool_bar /= Void and widget_source_being_dragged /= Void) then
+			if dockable_dialog_source = Void or dockable_target /= Void then
+				tool_bar ?= dockable_target
+				if not (tool_bar /= Void and widget_source_being_docked /= Void) then
 
 					if insert_label.parent /= Void then
-						unparent_source_being_dragged
+						unparent_source_being_docked
 						replace_insert_label
 					end
-					if dragable_dialog_source /= Void then
-						dragable_dialog_source.destroy
+					if dockable_dialog_source /= Void then
+						dockable_dialog_source.destroy
 					end
 				else
-					move_dialog_to_pointer (dragable_dialog_source)
+					move_dialog_to_pointer (dockable_dialog_source)
 				end
 			end
 			
-			if widget_source_being_dragged = Void then
+			if widget_source_being_docked = Void then
 					-- We must now handle items that are supported by the docking mechanism.
-				tool_bar_button ?= source_being_dragged.interface
+				tool_bar_button ?= source_being_docked.interface
 					-- The only item that is currently dockable is a
 					-- tool bar button hence the check.
 				check
 					tool_bar_button_not_void: tool_bar_button /= Void
 				end
-				tool_bar ?= dragable_target
+				tool_bar ?= dockable_target
 				if tool_bar /= Void then
 						-- If the current target is a tool bar then
 						-- remove the source of the dock and replace
 						-- the temporary separator.
 					if insert_sep.parent /= Void then
-						unparent_source_being_dragged
+						unparent_source_being_docked
 						replace_insert_sep	
 					else
 					
@@ -418,19 +414,13 @@ feature -- Basic operations
 				end
 			end
 			
-				-- As the transport has completed, we need to ensure `source_being_dragged'
+				-- As the transport has completed, we need to ensure `source_being_docked'
 				-- is now `Void'.
-			source_being_dragged := Void
+			source_being_docked := Void
 		ensure
-			not_dragging: not is_dragging
+			not_dock_executing: not is_dock_executing
 			insert_separator_not_parented: insert_sep.parent = Void
 			insert_label_not_parented: insert_label.parent = Void
-		end
-		
-	display_position (d: EV_DOCKABLE_DIALOG) is
-			--
-		do
-			d.set_title (d.x_position.out + " " + d.y_position.out)
 		end
 		
 	close_dockable_dialog (dockable_dialog: EV_DOCKABLE_DIALOG) is
@@ -500,26 +490,27 @@ feature -- Inapplicable
 		local
 			pixmap: EV_PIXMAP
 		once
-			create pixmap
-			pixmap.set_with_named_file ("C:test_cursor.ico")
-			create Result.make_with_pixmap (pixmap, 1, 1)
+			Result := (create {EV_STOCK_PIXMAPS}).sizeall_cursor
+			--create pixmap
+			--pixmap.set_with_named_file ("C:test_cursor.ico")
+			--create Result.make_with_pixmap (pixmap, 1, 1)
 		end
 		
 
 feature {NONE} -- Implementation
 
-	widget_source_being_dragged: EV_WIDGET_IMP is
-			-- `Result' is `source_being_dragged' or `Void' if
+	widget_source_being_docked: EV_WIDGET_IMP is
+			-- `Result' is `source_being_docked' or `Void' if
 			-- it is not a widget.
 		do
-			Result ?= source_being_dragged
+			Result ?= source_being_docked
 		end
 		
-	item_source_being_dragged: EV_ITEM_IMP is
-			-- `Result' is `source_being_dragged' or `Void' if
+	item_source_being_docked: EV_ITEM_IMP is
+			-- `Result' is `source_being_docked' or `Void' if
 			-- it is not an item.
 		do
-			Result ?= source_being_dragged
+			Result ?= source_being_docked
 		end
 		
 		
@@ -530,7 +521,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	position_in_parent (a_dragable_source: EV_DOCKABLE_SOURCE_IMP): INTEGER is
+	position_in_parent (a_dockable_source: EV_DOCKABLE_SOURCE_IMP): INTEGER is
 			-- `Result' is position of `a_widget' within its `parent'.
 		local
 			cell: EV_CELL
@@ -539,7 +530,7 @@ feature {NONE} -- Implementation
 			a_tool_bar_button: EV_TOOL_BAR_BUTTON_IMP
 			tool_bar: EV_TOOL_BAR
 		do
-			a_widget ?= a_dragable_source
+			a_widget ?= a_dockable_source
 			if a_widget /= Void then
 				cell ?= a_widget.parent
 				if cell /= Void then
@@ -550,7 +541,7 @@ feature {NONE} -- Implementation
 					Result := box.index_of (a_widget.interface, 1)
 				end
 			else
-				a_tool_bar_button ?= a_dragable_source
+				a_tool_bar_button ?= a_dockable_source
 				check
 					source_was_widget_or_tool_bar_button: a_tool_bar_button /= Void
 				end
@@ -567,15 +558,15 @@ feature {NONE} -- Implementation
 			-- began.
 		do
 			if source.real_source /= Void then
-				source_being_dragged ?= source.real_source.implementation
+				source_being_docked ?= source.real_source.implementation
 			else
-				source_being_dragged ?= source.implementation
+				source_being_docked ?= source.implementation
 			end
 			originating_source ?= source.implementation
 			pointer_x := a_screen_x
 			pointer_y := a_screen_y
 		ensure
-			source_being_dragged_set: source_being_dragged /= Void
+			source_being_docked_set: source_being_docked /= Void
 		end
 		
 
@@ -618,18 +609,18 @@ feature {NONE} -- Implementation
 			insert_label_pos: INTEGER
 			tool_bar: EV_TOOL_BAR_IMP
 			tool_bar_button: EV_TOOL_BAR_BUTTON
-			dragable_target: EV_DOCKABLE_TARGET
+			dockable_target: EV_DOCKABLE_TARGET
 			veto_result: BOOLEAN
 		do
-			target := closest_dragable_target
-			if widget_source_being_dragged /= Void then
+			target := closest_dockable_target
+			if widget_source_being_docked /= Void then
 				-- We are transporting a widget, so we can find the EV_CONTAINER
 				-- and modify the interface accordingly, to insert `insert_label' to
 				-- provide graphical feedback to user.
 				
 				if target /= Void and target /= insert_label then
 
-					if widget_source_being_dragged /= Void then
+					if widget_source_being_docked /= Void then
 						 -- remove `insert_label' if the pointed target has changed
 						container ?= target 
 						if container /= Void then
@@ -650,7 +641,7 @@ feature {NONE} -- Implementation
 							loop
 								counter := counter + 1
 								if target.veto_dock_function /= Void then
-									target.veto_dock_function.call ([widget_source_being_dragged.interface])
+									target.veto_dock_function.call ([widget_source_being_docked.interface])
 									veto_result := target.veto_dock_function.last_result
 									if veto_result then
 										target := get_next_target (container)										
@@ -678,8 +669,8 @@ feature {NONE} -- Implementation
 						insert_position := vertical_box.insertion_position
 						if insert_position /= -1 then
 							if not ((vertical_box.i_th (insert_position.min (vertical_box.count)) = insert_label) or (vertical_box.i_th ((insert_position - 1).max (1)) = insert_label)) then
-								dragged_index := vertical_box.index_of (widget_source_being_dragged.interface, 1)
-								if widget_source_being_dragged.parent = vertical_box.interface and (dragged_index = insert_position or dragged_index = insert_position - 1) then
+								dragged_index := vertical_box.index_of (widget_source_being_docked.interface, 1)
+								if widget_source_being_docked.parent = vertical_box.interface and (dragged_index = insert_position or dragged_index = insert_position - 1) then
 									
 								else
 									if insert_label.parent /= Void then
@@ -717,7 +708,7 @@ feature {NONE} -- Implementation
 				-- items that may be supported later.
 				if target /= Void then
 					if target.veto_dock_function /= Void then
-						tool_bar_button ?= item_source_being_dragged.interface
+						tool_bar_button ?= item_source_being_docked.interface
 						check
 							we_only_support_tool_bar_buttons: tool_bar_button /= Void
 						end
@@ -737,12 +728,12 @@ feature {NONE} -- Implementation
 								insert_position := insert_position + 1	
 							end
 							if not ((tool_bar.i_th (insert_position.min (tool_bar.count)) = insert_sep) or (tool_bar.i_th ((insert_position - 1).max (1)) = insert_sep)) then
-								tool_bar_button ?= item_source_being_dragged.interface
+								tool_bar_button ?= item_source_being_docked.interface
 								check
 									tool_bar_button_not_void: tool_bar_button /= Void
 								end
 								dragged_index := tool_bar.index_of (tool_bar_button, 1)
-								if item_source_being_dragged.parent = tool_bar.interface and (dragged_index = insert_position or dragged_index = insert_position - 1) then
+								if item_source_being_docked.parent = tool_bar.interface and (dragged_index = insert_position or dragged_index = insert_position - 1) then
 										-- As we are pointing to the original tool bar item that
 										-- is being transported, we remove `insert_sep' to illustrate
 										-- that no movememnt will occur when the transport ends.
@@ -771,29 +762,29 @@ feature {NONE} -- Implementation
 			end
 		end
 			
-		unparent_source_being_dragged is
-				-- Remove `widget_source_being_dragged' from `parent' or
-				-- `item_source_being_dragged' from `parent'.
+		unparent_source_being_docked is
+				-- Remove `widget_source_being_docked' from `parent' or
+				-- `item_source_being_docked' from `parent'.
 			require
-				widget_or_item: widget_source_being_dragged /= Void or item_source_being_dragged /= Void
+				widget_or_item: widget_source_being_docked /= Void or item_source_being_docked /= Void
 			do
-				if widget_source_being_dragged /= Void then
-					widget_source_being_dragged.interface.parent.prune (widget_source_being_dragged.interface)	
+				if widget_source_being_docked /= Void then
+					widget_source_being_docked.interface.parent.prune (widget_source_being_docked.interface)	
 					check
-						not_parented: widget_source_being_dragged.parent = Void
+						not_parented: widget_source_being_docked.parent = Void
 					end
 				else
-					item_source_being_dragged.interface.parent.prune (item_source_being_dragged.interface)	
+					item_source_being_docked.interface.parent.prune (item_source_being_docked.interface)	
 					check
-						not_parented: item_source_being_dragged.parent = Void
+						not_parented: item_source_being_docked.parent = Void
 					end
 				end
 			end
 			
 		replace_insert_label is
-				-- Replace `insert_label' with `widget_source_being_dragged'.
+				-- Replace `insert_label' with `widget_source_being_docked'.
 			require
-				source_not_parented: widget_source_being_dragged.parent = Void
+				source_not_parented: widget_source_being_docked.parent = Void
 				insert_label_parented: insert_label.parent /= Void
 			local
 				box: EV_BOX
@@ -801,22 +792,22 @@ feature {NONE} -- Implementation
 			do
 				box ?= insert_label.parent
 				if box /= Void then
-					box.put_i_th (widget_source_being_dragged.interface, box.index_of (insert_label, 1))--insert_index)
+					box.put_i_th (widget_source_being_docked.interface, box.index_of (insert_label, 1))--insert_index)
 				end
 				cell ?= insert_label.parent
 				if cell /= Void then
-					cell.put (widget_source_being_dragged.interface)
+					cell.put (widget_source_being_docked.interface)
 				end
 			ensure
-				source_parented: widget_source_being_dragged.parent /= Void
+				source_parented: widget_source_being_docked.parent /= Void
 				insert_label_not_parented: insert_label.parent = Void
-				parent_swapped: old insert_label.parent = widget_source_being_dragged.parent
+				parent_swapped: old insert_label.parent = widget_source_being_docked.parent
 			end
 			
 		replace_insert_sep is
-				-- Replace `insert_sep' with item_source_being_dragged'.
+				-- Replace `insert_sep' with item_source_being_docked'.
 			require
-				source_not_parented: item_source_being_dragged.parent = Void
+				source_not_parented: item_source_being_docked.parent = Void
 				sep_parented: insert_sep.parent /= Void
 			local
 				tool_bar: EV_TOOL_BAR
@@ -826,15 +817,15 @@ feature {NONE} -- Implementation
 				check
 					parent_was_tool_bar: tool_bar /= Void
 				end
-				tool_bar_item ?= item_source_being_dragged.interface
+				tool_bar_item ?= item_source_being_docked.interface
 				check
 					tool_bar_item_not_void: tool_bar_item /= Void
 				end
 				tool_bar.put_i_th (tool_bar_item, tool_bar.index_of (insert_sep, 1))
 			ensure
-				source_parented: item_source_being_dragged.parent /= Void
+				source_parented: item_source_being_docked.parent /= Void
 				insert_sep_not_parented: insert_sep.parent = Void
-				parent_swapped: old insert_sep.parent = item_source_being_dragged.parent
+				parent_swapped: old insert_sep.parent = item_source_being_docked.parent
 			end
 			
 
@@ -843,9 +834,10 @@ feature {EV_ANY_I} -- Implementation
 	interface: EV_DOCKABLE_SOURCE
 
 invariant
---	no_widget_stored_while_not_dragging: not is_dragging implies source_being_dragged = Void
---	widget_stored_while_dragging: is_dragging implies source_being_dragged /= Void
-	no_temporary_widget_when_no_target: is_dragging and then closest_dragable_target = Void implies insert_label.parent = Void
-	widget_or_item_source: not (widget_source_being_dragged /= Void and item_source_being_dragged /= Void)
+--	no_widget_stored_while_not_dragging: not is_dragging implies source_being_docked = Void
+--	widget_stored_while_dragging: is_dragging implies source_being_docked /= Void
+	no_temporary_widget_when_no_target: is_dock_executing and then closest_dockable_target = Void implies insert_label.parent = Void
+	widget_or_item_source: not (widget_source_being_docked /= Void and item_source_being_docked /= Void)
+	dock_executing: is_dock_executing implies widget_source_being_docked /= Void or item_source_being_docked /= Void
 
-end -- class EV_DOCKABLE_SO
+end -- class EV_DOCKABLE_SOURCE_I

@@ -1,20 +1,13 @@
 indexing
-	description: "Objects that ..."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Objects that represent a line in the editor."
+	author		: "Christophe Bonnard / Arnaud PICHERY [ aranud@mail.dotcom.fr] "
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	EDITOR_LINE
 
 inherit
---	LINKED_LIST[EDITOR_TOKEN]
---		rename
---			previous as previous_token,
---			next as next_token,
---			index as index_token
---		end
-
 	TREE_ITEM
 		rename
 			tree as paragraph
@@ -26,7 +19,7 @@ create
 	make_empty_line,
 	make_from_lexer
 
-feature ---
+feature --- Initialisations
 
 	make_empty_line is
 			-- Create an empty line.
@@ -55,6 +48,7 @@ feature ---
 feature -- Access
 
 	paragraph: PARAGRAPH
+		-- This line belongs to the paragraph `paragraph'
 
 	first_token: EDITOR_TOKEN
 		-- First token in the

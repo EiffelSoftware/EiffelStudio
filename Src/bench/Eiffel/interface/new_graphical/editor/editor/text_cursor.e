@@ -16,8 +16,13 @@ create
 
 feature -- Initialization
 
-	make_form_absolute_pos (x, y : INTEGER) is
+	make_form_absolute_pos (x, y : INTEGER; a_text: STRUCTURED_TEXT) is
+		require
+			a_text_valid: a_text /= Void
+			x_valid: x >= 0
+			y_valid: y >= 0
 		do
+			whole_text := a_text
 			set_y_in_lines (y)
 			set_x_in_pixels (x)
 		end
@@ -81,17 +86,10 @@ feature -- Element change
 			x_in_pixels := current_width
 		end
 
-	set_line (a_line: EDITOR_LINE) is
-			-- Make `a_line' the new value of `line'.
-			-- Change `y_in_lines' accordingly.
-		do
-			line := a_line
-		end
-
 	set_x_in_pixels (x: INTEGER) is
 			-- Make `x' be the new value of `x_in_pixels'.
 		require
-			x_positive_or_null: x >= 0
+			x_valid: x >= 0
 		do
 				-- Update the attribute.
 			x_in_pixels := x
@@ -104,12 +102,15 @@ feature -- Element change
 	set_y_in_lines (y: INTEGER) is
 			-- Make `y' be the new value of `y_in_lines'.
 			-- Change `line' accordingly.
+		require
+			y_valid: y >= 0
 		do
 			y_in_lines := y
-				--| set line not implemented.
-			check
-					not_finished: false
-			end
+
+				-- update the line attribute
+			whole_text.go_i_th(y)
+			line := whole_text.current_line
+			update_current_char
 		end
 
 feature -- Cursor movement
@@ -198,6 +199,7 @@ feature {NONE} -- Implementation
 		do
 			line := line.next
 			y_in_lines := y_in_lines + 1
+			update_current_char
 		end
 
 	set_line_to_previous is
@@ -206,6 +208,7 @@ feature {NONE} -- Implementation
 		do
 			line := line.previous
 			y_in_lines := y_in_lines - 1
+			update_current_char
 		end
 
 	update_current_char is
@@ -247,7 +250,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	whole_text: STRUCTURED_TEXT
+		-- Whole text displayed.
+
 invariant
-	x_in_pixels_positive_or_null: x_in_pixels >= 0
+	x_in_pixels_positive_or_null	: x_in_pixels >= 0
+	y_in_lines_positive_or_null		: y_in_lines >= 0
+	whole_text_not_void				: whole_text /= Void
 
 end -- class TEXT_CURSOR

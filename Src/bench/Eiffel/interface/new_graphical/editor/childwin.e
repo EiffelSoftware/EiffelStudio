@@ -126,7 +126,7 @@ feature -- Basic operations
 		do
 			copy_x := invalid_rect.x
 			copy_y := invalid_rect.y
-			copy_width := invalid_rect.width 
+			copy_width := invalid_rect.width
 			copy_height := invalid_rect.height
 
 			update_buffered_screen(paint_dc, invalid_rect.top, invalid_rect.bottom)
@@ -215,6 +215,9 @@ feature -- Basic operations
 					text_displayed.after
 				loop
 					display_line (0,(curr_line - first_line_displayed)*line_increment,text_displayed.current_line, dc)
+					if curr_line = cursor.y_in_lines then
+						dc.text_out(cursor.x_in_pixels, (curr_line - first_line_displayed)*line_increment, "#")
+					end
 					curr_line := curr_line + 1
 					text_displayed.forth
 				end

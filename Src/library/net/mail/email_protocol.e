@@ -13,17 +13,14 @@ inherit
 feature -- Access
 
 	hostname: STRING
-		-- hostname .. ex: smtp.
+		-- hostname .. ex: smtp
 
 	default_port: INTEGER is
-		-- Default port.
+		-- Default port
 		deferred
 		end
 
 feature -- Status report
-
-	is_initiated: BOOLEAN
-		-- Has the connection has been initiated?
 
 	is_connected: BOOLEAN
 		-- Is the connection done?
@@ -32,29 +29,16 @@ feature -- Status report
 feature -- Basic operations
 
 	initiate_protocol is
+			-- Initiate the protocol.
 		deferred
 		end
 
 	close_protocol is
+			-- Close the protocol.
 		deferred
 		end
 
-	connect is
-			-- Connect to the host machine.
-			-- Use this feature only if the protocol has been created without the connection.
-		do
-			init_socket
-		ensure
-			is_connected
-		end
-
 feature -- Settings
-
-	enable_initiated is
-			-- Set is_initiated.
-		do
-			is_initiated:= True
-		end
 
 	enable_connected is
 			-- Set is_connected.
@@ -77,12 +61,21 @@ feature -- Settings
 feature {NONE} -- Implementation 
 
 	port: INTEGER
-		-- port number.
+		-- port number
 
 	socket: NETWORK_STREAM_SOCKET
-		-- Socket use to communicate.
+		-- Socket use to communicate
 
 feature {NONE} -- Miscellaneous
+
+	connect is
+			-- Connect to the host machine,
+			-- Use this feature only if the protocol has been created without the connection.
+		do
+			init_socket
+		ensure
+			is_connected
+		end
 
 	init_socket is
 			-- Initiate the socket.
@@ -96,7 +89,8 @@ feature {NONE} -- Miscellaneous
 		end
 
 	decode (s: STRING): INTEGER is
-			-- Decode the answer and retrieve the code number.
+			-- Decode the answer and retrieve the code number,
+			-- Update the reply message.
 		deferred
 		end
 

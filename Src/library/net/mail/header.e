@@ -22,8 +22,6 @@ feature -- Initialization
 
 	make_with_entries (list: ARRAY [STRING]) is
 			-- Initialize the header with a 'list' of entries.
-		local
-			lin_list: LINEAR [STRING]
 		do
 			create entries.make (list.count)
 			from_array_to_entries (list)

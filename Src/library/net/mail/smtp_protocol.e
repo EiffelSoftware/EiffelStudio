@@ -26,21 +26,10 @@ feature -- Initialization
 feature -- Access
 
 	smtp_code_number: INTEGER
-		-- Code number of the reply.
+		-- Code number of the reply
 
 	smtp_reply: STRING
-		-- Replied message from SMTP protocol.
-
-	smtp_error: BOOLEAN is
-			-- Protocol error.
-		do
-			Result:= smtp_code_number /= ack_begin_connection and 
-					 smtp_code_number /= ack_end_connection and
-					 smtp_code_number /= 0
-			if Result then
-				enable_transfer_error
-			end
-		end
+		-- Replied message from SMTP protocol
 
 	pipelining: BOOLEAN
 		-- Does the connection use pipeline?
@@ -62,22 +51,19 @@ feature -- Setting
 feature -- Access EMAIL_PROTOCOL
 
 	default_port: INTEGER is 25
-		-- Smtp default port.
+		-- Smtp default port
 
-	memory_resource: MEMORY_RESOURCE
-		-- Memory resource to be send.
-
-feature -- Implementation (EMAIL_PROTOCOL).
+feature -- Implementation (EMAIL_RESOURCE).
 
 	transfer (resource: MEMORY_RESOURCE) is
 			-- Send the email and add a %N. at the end of the message.
-		require else
-			connection_exists: is_connected
-			connection_initiated: is_initiated
 		do
-			memory_resource := resource
-			recipients:= Void
-			send_mail
+			if not transfer_error then
+				memory_resource := resource
+				recipients:= Void
+				send_mail
+			end
+			disable_transfer_error
 		end
 
 feature -- Basic operations.
@@ -105,16 +91,15 @@ feature -- Basic operations.
 			send_command (Quit, Ack_end_connection)
 			if not transfer_error then
 				socket.cleanup
+				disable_initiated
 				disable_connected
 			end
-		ensure then
-			disconnected: not is_connected
 		end
 
 feature -- Implementation (EMAIL_RESOURCE)
 
 	can_receive: BOOLEAN is False
-		-- Smtp protocol can not receive.
+		-- Can the Smtp protocolreceive?
 
 	initialize is
 			-- Initialize the protocol to send a new email.
@@ -145,14 +130,13 @@ feature {NONE} -- Basic operations
 		local
 			response: STRING
 		do
-			if not transfer_error then
-				socket.put_string (s + "%N")
-				socket.read_line
-				response:= socket.last_string
-				smtp_code_number := decode (response)
-				if (smtp_code_number /= expected_code) then
-					enable_transfer_error
-				end
+			socket.put_string (s + "%N")
+			socket.read_line
+			response:= socket.last_string
+			smtp_code_number := decode (response)
+			if (smtp_code_number /= expected_code) then
+				enable_transfer_error
+				set_transfer_error_message (smtp_reply)
 			end
 		end
 
@@ -160,9 +144,6 @@ feature {NONE} -- Basic operations
 
 	send_mail is
 			-- Send mail using smtp protocol.
-		require else
-			connection_exists: is_connected
-			connection_initiated: is_initiated		
 		do
 			send_mails
 			if memory_resource.headers.has (H_bcc) then
@@ -174,11 +155,11 @@ feature {NONE} -- Basic operations
 
 	send_mails	is
 		do
-			header_from:= memory_resource.header (H_from).unique_entry
-			sub_header:= ""
-			set_recipients
-			build_sub_header
-			send_all
+				header_from:= memory_resource.header (H_from).unique_entry
+				sub_header:= ""
+				set_recipients
+				build_sub_header
+				send_all
 		end
 
 	set_recipients is
@@ -191,7 +172,7 @@ feature {NONE} -- Basic operations
 		do
 			if not bcc_mode then
 				a_header:= memory_resource.header (H_to)
-				recipients:= a_header.entries
+				recipients:= clone (a_header.entries)
 				a_header:= memory_resource.header (H_cc)
 				if a_header /= Void then
 					from 
@@ -238,13 +219,13 @@ feature {NONE} -- Basic operations
 			loop
 				if bcc_mode then
 					if sub_header_key.is_equal (H_bcc) then
-						sub_header.append (H_to + a_header.entries.item + "%N")
+						sub_header.append (H_to + ":" +a_header.entries.item + "%N")
 					end
 					if not (sub_header_key.is_equal (H_to) or sub_header_key.is_equal (H_cc)) then
-						sub_header.append (sub_header_key + a_header.entries.item + "%N")
+						sub_header.append (sub_header_key + ":" + a_header.entries.item + "%N")
 					end
 				else
-					sub_header.append (sub_header_key + a_header.entries.item + "%N")
+					sub_header.append (sub_header_key + ":" + a_header.entries.item + "%N")
 				end
 				a_header.entries.forth
 			end

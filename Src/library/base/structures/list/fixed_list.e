@@ -125,7 +125,7 @@ feature -- Status report
 		do
 			fl_c ?= p;
 			if fl_c /= Void then
-				Result := valid_index (fl_c.index)
+				Result := valid_cursor_index (fl_c.index)
 			end
 		end;
 

@@ -49,7 +49,7 @@ EIF_INTEGER eif_console_readint()
 		eio();
 
 	if (0 >= sscanf (eif_console_buffer, "%ld", &lastint))
-		eio();
+		eise_io("Not an INTEGER.");
 
 	return lastint;
 	EIF_END_GET_CONTEXT
@@ -67,7 +67,7 @@ EIF_REAL eif_console_readreal()
 		eio();
 
 	if (0 > sscanf (eif_console_buffer, "%f", &lastreal))
-		eio();
+		eise_io("Not a REAL.");
 
 	return lastreal;
 	EIF_END_GET_CONTEXT
@@ -99,7 +99,7 @@ double eif_console_readdouble()
 		eio();
 
 	if (0 > sscanf (eif_console_buffer, "%lf", &lastdouble))
-		eio();
+		eise_io("Not a DOUBLE.");
 
 	return lastdouble;
 	EIF_END_GET_CONTEXT

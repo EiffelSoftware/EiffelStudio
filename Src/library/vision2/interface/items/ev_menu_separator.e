@@ -20,7 +20,7 @@ inherit
 create
 	default_create
 
-feature {NONE} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_MENU_SEPARATOR_I
 			-- Platform dependent access
@@ -53,6 +53,9 @@ end -- class EV_MENU_SEPARATOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/22 19:53:41  brendel
+--| Changed export status of implementation.
+--|
 --| Revision 1.4  2000/02/22 18:39:47  oconnor
 --| updated copyright date and formatting
 --|

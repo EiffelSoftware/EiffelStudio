@@ -29,7 +29,10 @@ inherit
 			initialize,
 			destroy,
 			make,
-			on_key_event
+			on_key_event,
+			width,
+			height,
+			on_size_allocate
 		end
 
 	EV_WINDOW_ACTION_SEQUENCES_IMP
@@ -52,9 +55,11 @@ feature -- Initialization
 			C.gdk_window_set_decorations (C.gtk_widget_struct_window (c_object), 0)
 			C.gdk_window_set_functions (C.gtk_widget_struct_window (c_object), 0)
 			
-			C.gtk_window_set_policy (c_object, 0, 0, 1) -- False, False, True
+			C.gtk_window_set_policy (c_object, 1, 1, 0) -- allow_shrink = True, allow_grow = True, auto_shrink = False
 			accel_group := C.gtk_accel_group_new
 			C.gtk_window_add_accel_group (c_object, accel_group)
+			default_height := -1
+			default_width := -1
 		end
 
 feature  -- Access
@@ -119,17 +124,39 @@ feature  -- Access
 			
 		end
 
+	width: INTEGER is
+			-- Horizontal size measured in pixels.
+		do
+			if default_width /= -1 then
+				Result := default_width
+			else
+				Result := Precursor
+			end
+		end
+
+	height: INTEGER is
+			-- Vertical size measured in pixels.
+		do
+			if default_height /= -1 then
+				Result := default_height
+			else
+				Result := Precursor
+			end
+		end
+	
  	maximum_width: INTEGER
 			-- Maximum width that application wishes widget
 			-- instance to have.
 
 	minimum_width: INTEGER	
+			-- Minimum width for the window.
 	
 	maximum_height: INTEGER
 			-- Maximum height that application wishes widget
 			-- instance to have.
 
 	minimum_height: INTEGER
+			-- Minimum height for the window.
 
 	title: STRING is
 			-- Application name to be displayed by
@@ -216,20 +243,24 @@ feature -- Status setting
 	set_width (a_width: INTEGER) is
 			-- Set the horizontal size to `a_width'.
 		do
-			set_size (a_width, height)
+			default_width := a_width
+			C.gtk_window_set_default_size (c_object, default_width, height)
 		end
 
 	set_height (a_height: INTEGER) is
 			-- Set the vertical size to `a_height'.
 		do
-			set_size (width, a_height)
+			default_height := a_height
+			C.gtk_window_set_default_size (c_object, width, default_height)
 		end
 
 	set_size (a_width, a_height: INTEGER) is
 			-- Set the horizontal size to `a_width'.
 			-- Set the vertical size to `a_height'.
 		do
-			set_bounds (x_position, y_position, a_width, a_height)
+			default_width := a_width
+			default_height := a_height
+			C.gtk_window_set_default_size (c_object, default_width, default_height)
 		end
 
 	forbid_resize is
@@ -241,7 +272,7 @@ feature -- Status setting
 	allow_resize is
 			-- Allow the resize of the window.
 		do
-			C.gtk_window_set_policy (c_object, 0, 1, 0)
+			C.gtk_window_set_policy (c_object, 1, 1, 0)
 		end
 
 	destroy is
@@ -412,6 +443,23 @@ feature {EV_DRAWING_AREA_IMP, EV_LIST_ITEM_LIST_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
+	default_width: INTEGER
+			-- Default width for the window if set, -1 otherwise.
+			-- (see. `gtk_window_set_default_size' for more information)
+		
+	default_height: INTEGER
+			-- Default height for the window if set, -1 otherwise.
+			-- (see. `gtk_window_set_default_size' for more information)
+
+	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER) is
+			-- Gtk_Widget."size-allocate" happened.
+		do
+				--| `default_width' and `default_height' are not useful anymore
+			default_width := -1
+			default_height := -1
+			Precursor (a_x, a_y, a_width, a_height)
+		end
+
 	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- Used for key event actions sequences.
 		do
@@ -539,6 +587,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.54  2001/06/30 22:22:39  pichery
+--| Correctly implemented `set_size'
+--|
 --| Revision 1.53  2001/06/29 22:24:44  king
 --| Enabling user_resize
 --|

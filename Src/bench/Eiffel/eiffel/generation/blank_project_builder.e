@@ -10,7 +10,7 @@ class
 inherit
 	EB_ERROR_MANAGER
 
-	EB_GENERAL_DATA
+	EIFFEL_ENV
 		export
 			{NONE} all
 		end

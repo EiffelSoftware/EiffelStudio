@@ -50,6 +50,12 @@ feature -- Access
 			external_name: "DependanciesCheckBoxText"
 		end
 	
+	Eiffel_names_check_box_text: STRING is "Generate Eiffel-friendly names"
+		indexing
+			description: "Text of `eiffel_names_check_box'"
+			external_name: "EiffelNamesCheckBoxText"
+		end
+		
 	Importation_error: STRING is "An errors occurred during assembly importation. Please check the assembly is signed. If not, sign it and try importation again."
 		indexing
 			description: "Error message when assembly importation fails"
@@ -66,12 +72,18 @@ feature -- Access
 			icon_created: Result /= Void
 		end
 
-	Import_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_import_assembly_title_color.ico"
+	Import_icon_filename: STRING is 
 		indexing
-			description: "Filename of icon appearing in import dialog header"
+			description: "Filename of icon appearing in import tool header"
 			external_name: "ImportIconFilename"
+		once
+			Result := Base_filename
+			Result := Result.concat_string_string (Result, Import_icon_relative_filename)
+		ensure
+			non_void_filename: Result /= Void
+			not_empty_filename: Result.length > 0
 		end
-		
+				
 	Title: STRING is "Import a .NET assembly"
 		indexing
 			description: "Window title"
@@ -84,10 +96,18 @@ feature -- Access
 			external_name: "WarningText"
 		end
 
-	Window_height: INTEGER is 310
+	Window_height: INTEGER is 330
 		indexing
 			description: "Window height"
 			external_name: "WindowHeight"
 		end
-		
+
+feature {NONE} -- Implementation
+
+	Import_icon_relative_filename: STRING is "\icon_import_assembly_title_color.ico"
+		indexing
+			description: "Filename of icon appearing in import dialog header"
+			external_name: "ImportIconRelativeFilename"
+		end
+
 end -- class IMPORT_DIALOG_DICTIONARY

@@ -62,10 +62,16 @@ feature -- Access
 			icon_created: Result /= Void
 		end
 
-	Remove_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_delete_color.ico"
+	Remove_icon_filename: STRING is 
 		indexing
 			description: "Filename of icon appearing in remove dialog header"
 			external_name: "RemoveIconFilename"
+		once
+			Result := Base_filename
+			Result := Result.concat_string_string (Result, Remove_icon_relative_filename)
+		ensure
+			non_void_filename: Result /= Void
+			not_empty_filename: Result.length > 0
 		end
 		
 	Title: STRING is "Remove a .NET assembly"
@@ -96,6 +102,14 @@ feature -- Access
 		indexing
 			description: "Yes button label"
 			external_name: "YesButtonLabel"
+		end
+
+feature {NONE} -- Implementation
+
+	Remove_icon_relative_filename: STRING is "\icon_delete_color.ico"
+		indexing
+			description: "Filename of icon appearing in remove dialog header"
+			external_name: "RemoveIconRelativeFilename"
 		end
 
 end -- class REMOVE_DIALOG_DICTIONARY

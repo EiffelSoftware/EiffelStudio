@@ -32,10 +32,16 @@ feature -- Access
 			icon_created: Result /= Void
 		end
 
-	Dependancies_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_title_dependencies_color.ico"
+	Dependancies_icon_filename: STRING is 
 		indexing
 			description: "Filename of icon appearing in dependancy viewer header"
 			external_name: "DependanciesIconFilename"
+		once
+			Result := Base_filename
+			Result := Result.concat_string_string (Result, Dependancies_icon_relative_filename)
+		ensure
+			non_void_filename: Result /= Void
+			not_empty_filename: Result.length > 0
 		end
 		
 	No_dependancies_text: STRING is "The selected assembly has no dependancy."
@@ -44,10 +50,18 @@ feature -- Access
 			external_name: "NoDependanciesText"
 		end
 		
-	Title: STRING is "Dependancy viewer"
+	Title: STRING is "Dependency viewer"
 		indexing
 			description: "Window title"
 			external_name: "Title"
 		end
-		
+
+feature {NONE} -- Implementation
+
+	Dependancies_icon_relative_filename: STRING is "\icon_title_dependencies_color.ico"
+		indexing
+			description: "Filename of icon appearing in dependancy viewer header"
+			external_name: "DependanciesIconRelativeFilename"
+		end
+
 end -- class DEPENDANCY_VIEWER_DICTIONARY

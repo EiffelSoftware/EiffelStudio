@@ -28,10 +28,16 @@ feature -- Access
 			external_name: "Fax"
 		end
 		
-	Image_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\Eiffel_tower.png"
+	Image_filename: STRING is 
 		indexing
 			description: "Image on the left side of the dialog"
 			external_name: "ImageFilename"
+		once
+			Result := Base_filename
+			Result := Result.concat_string_string (Result, Image_relative_filename)
+		ensure
+			non_void_filename: Result /= Void
+			not_empty_filename: Result.length > 0
 		end
 	
 	Middle_center_alignment: INTEGER is 32
@@ -96,4 +102,12 @@ feature -- Access
 			external_name: "WindowWidth"
 		end
 
+feature {NONE} -- Implementation
+
+	Image_relative_filename: STRING is "\Eiffel_tower.png"
+		indexing
+			description: "Image on the left side of the dialog"
+			external_name: "ImageRelativeFilename"
+		end
+		
 end -- class ABOUT_DIALOG_DICTIONARY

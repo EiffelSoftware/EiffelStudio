@@ -60,12 +60,12 @@ feature -- Shortcuts
 			external_name: "CtrlEShortcut"
 		end
 
-	Ctrl_R_shortcut: INTEGER is 131154
+	Ctrl_M_shortcut: INTEGER is 131149
 		indexing
-			description: "Ctrl+R shortcut, enum value: 0x 20052"
-			external_name: "CtrlRShortcut"
+			description: "Ctrl+M shortcut, enum value: 0x 2004D"
+			external_name: "CtrlMShortcut"
 		end
-
+		
 	Ctrl_G_shortcut: INTEGER is 131143
 		indexing
 			description: "Ctrl+G shortcut, enum value: 0x 20047"
@@ -144,10 +144,10 @@ feature -- Column Names
 
 feature -- Messages
 
-	Edit_type_message: STRING is "ISE Assembly Manager will now retrieve assembly types. This may take a few seconds. Please be patient." 
+	Edit_assembly_message: STRING is "Editing assembly..." 
 		indexing
 			description: "Message to the user before displaying the type view."
-			external_name: "EditTypeMessage"
+			external_name: "EditAssemblyMessage"
 		end
 
 feature -- Other constants

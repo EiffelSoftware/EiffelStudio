@@ -28,7 +28,9 @@ inherit
 			on_middle_button_double_click,
 			on_right_button_double_click,
 			pnd_press,
-			escape_pnd
+			escape_pnd,
+			set_background_color,
+			set_foreground_color
 		redefine
 			on_mouse_move,
 			on_key_down,
@@ -346,6 +348,29 @@ feature -- Status setting
 				set_column_format (a_column - 1, Lvcfmt_right)
 			end
 			invalidate
+		end
+		
+	set_background_color (color: EV_COLOR) is
+			-- Make `color' the new `background_color'
+		do
+			background_color_imp ?= color.implementation
+			set_text_background_color (background_color_imp)
+			wel_set_background_color (background_color_imp)
+			if is_displayed then
+				-- If the widget is not hidden then invalidate.
+				invalidate
+			end
+		end
+
+	set_foreground_color (color: EV_COLOR) is
+			-- Make `color' the new `foreground_color'
+		do
+			foreground_color_imp ?= color.implementation
+			set_text_foreground_color (foreground_color_imp)
+			if is_displayed then
+				-- If the widget is not hidden then invalidate.
+				invalidate
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -1009,7 +1034,8 @@ feature {NONE} -- WEL Implementation
 					client_rect.right, rect1.top - 2)	
 				paint_dc.fill_rect (rect2, brush)
 
-				create rect2.make (rect1.left, client_rect.top,
+					-- Fill in right side of `paint_dc'
+				create rect2.make (rect1.right, client_rect.top,
 					client_rect.right, client_rect.bottom)
 				paint_dc.fill_rect (rect2, brush)
 

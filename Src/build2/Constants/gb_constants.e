@@ -403,6 +403,8 @@ feature -- Dialogs
 	
 	window_class_name_prompt: STRING is "Window class name :"
 	
+	project_name_prompt: STRING is "Project name :"
+	
 feature -- Warning Dialogs
 
 	Exit_warning: STRING is "Are you sure you wish to Exit?"

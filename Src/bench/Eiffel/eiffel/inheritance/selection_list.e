@@ -241,7 +241,7 @@ end;
 					rout_id_set.force (rid);
 debug ("REPLICATION", "ACTUAL_REPLICATION")
 	io.error.putstring ("%T");
-	io.error.putstring (System.current_class.signature);
+	io.error.putstring (System.current_class.class_signature);
 	io.error.putstring (", ");
 	io.error.putstring (a_feature.feature_name);
 	io.error.putstring (" is unselected and has a history%N");

@@ -39,7 +39,7 @@ feature
 		do
 debug
 io.error.putstring ("Check expanded%N");
-io.error.putstring (current_type.associated_eclass.signature);
+io.error.putstring (current_type.associated_eclass.class_signature);
 io.error.new_line;
 end;
 			recursive_check (current_type);

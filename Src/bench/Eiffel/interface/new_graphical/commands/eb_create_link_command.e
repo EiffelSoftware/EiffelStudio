@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			-- Client-supplier links are selected by default. 
 		do
 			Precursor (a_target)
-			selected_type := Supplier
+			selected_type := Inheritance
 		end
 		
 
@@ -87,7 +87,7 @@ feature -- Status report
 feature -- Status setting
 
 	select_type (a_type: INTEGER) is
-			-- 
+			-- Set current type of link to `Supplier', `Inheritance' or`Aggregate'.
 		require
 			valid_type: a_type = Inheritance or else a_type = Supplier or else a_type = Aggregate
 		local
@@ -163,22 +163,31 @@ feature {NONE} -- Implementation
 			-- preferences.
 
 	show_text_menu is
-			-- 
+			-- Show menu to enable selection of link type.
 		local
 			menu: EV_MENU
-			menu_item:EV_MENU_ITEM
+			menu_item: EV_CHECK_MENU_ITEM
 		do
 			create menu
 			create menu_item
 			menu_item.set_text (Interface_names.E_create_inheritance_links)
+			if selected_type = Inheritance then
+				menu_item.enable_select
+			end
 			menu_item.select_actions.extend (agent select_type (Inheritance))
 			menu.extend (menu_item)
 			create menu_item
 			menu_item.set_text (Interface_names.E_create_supplier_links)
 			menu.extend (menu_item)
+			if selected_type = Supplier then
+				menu_item.enable_select
+			end
 			menu_item.select_actions.extend (agent select_type (Supplier))
 			create menu_item
 			menu_item.set_text (Interface_names.E_create_aggregate_supplier_links)
+			if selected_type = Aggregate then
+				menu_item.enable_select
+			end
 			menu_item.select_actions.extend (agent select_type (Aggregate))
 			menu.extend (menu_item)
 			menu.show

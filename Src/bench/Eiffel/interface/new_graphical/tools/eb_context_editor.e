@@ -627,7 +627,7 @@ feature {EB_CONTEXT_EDITOR, EB_CONTEXT_DIAGRAM_COMMAND, CONTEXT_DIAGRAM} -- Tool
 --			create_supplier_cmd.current_button.enable_select
 --			create_aggregate_cmd.enable_sensitive
 
-			create_new_links_cmd.select_type (create_new_links_cmd.Supplier)
+			create_new_links_cmd.select_type (create_new_links_cmd.Inheritance)
 			create_new_links_cmd.enable_sensitive
 			change_color_cmd.enable_sensitive
 			trash_cmd.enable_sensitive

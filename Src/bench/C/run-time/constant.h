@@ -571,6 +571,19 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
 #define is_with_rejection \
 	_concur_options & 0x80
 
+/* The following macros are used to
+ * process REAL/DOUBLE between different platforms. We change all formats
+ * into UNIX format. Because Eiffel run-time does not distinguish Linux
+ * from Unix, we have to use "ntohl" to distinguish them in the
+ * functions instead of defining different macros.
+ */
+ 
+#define ise_ntohf(x)    change_float_order(x)
+#define ise_htonf(x)    change_float_order(x)
+#define ise_ntohd(x)    change_double_order(x)
+#define ise_htond(x)    change_double_order(x)
+
+
 /*----------------------------------------------------------*/
 /* The following MACROs are defined for Concurrent Compiler */
 /*----------------------------------------------------------*/

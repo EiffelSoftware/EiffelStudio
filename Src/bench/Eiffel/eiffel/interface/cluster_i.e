@@ -635,7 +635,7 @@ end;
 			i, j: INTEGER
 			class_path: FILE_NAME
 			vd01: VD01
-			vd22: VD22
+			vd21: VD21
 			class_file: EXTEND_FILE
 			is_efile, check_dir, found: BOOLEAN
 			sub_dirs: LINKED_LIST [FILE_NAME]
@@ -659,10 +659,10 @@ end;
 			end
 
 			if open_directory_error (cluster_file) then
-				create vd22
-				vd22.set_cluster (Current)
-				vd22.set_file_name (cluster_file.name)
-				Error_handler.insert_error (vd22)
+				create vd21
+				vd21.set_cluster (Current)
+				vd21.set_file_name (cluster_file.name)
+				Error_handler.insert_error (vd21)
 			else
 				if is_recursive then
 					create sub_dirs.make
@@ -904,43 +904,34 @@ end;
 			-- Check if there is already a class with this name
 			-- in the cluster
 		local
-			class_file: KL_BINARY_INPUT_FILE;
-			vd10: VD10;
-			vd21: VD21;
-			vd22: VD22;
+			class_file: KL_BINARY_INPUT_FILE
+			vd10: VD10
+			vd21: VD21
 		do
 			create class_file.make (file_name)
-			if class_file.exists and then class_file.is_readable then
-				class_file.open_read
-				if not class_file.is_open_read then
-						-- Error when opening file
-					create vd22;
-					vd22.set_cluster (Current);
-					vd22.set_file_name (file_name);
-					Error_handler.insert_error (vd22);
-				else
-					Classname_finder.parse (class_file);
-					Result := Classname_finder.classname
-					class_file.close;
-					if Result /= Void then
-							-- Eiffel class in file
-						Result.to_lower;
-					else
-							-- No class in file
-						create vd10;
-						vd10.set_cluster (Current);
-						vd10.set_file_name (file_name);
-						Error_handler.insert_error (vd10);
-					end;
-				end;
+			class_file.open_read
+			if not class_file.is_open_read then
+					-- Error when opening file
+				create vd21
+				vd21.set_cluster (Current)
+				vd21.set_file_name (file_name)
+				Error_handler.insert_error (vd21)
 			else
-					-- Unreadable file
-				create vd21;
-				vd21.set_cluster (Current);
-				vd21.set_file_name (file_name);
-				Error_handler.insert_error (vd21);
-			end;
-		end;
+				Classname_finder.parse (class_file)
+				Result := Classname_finder.classname
+				class_file.close
+				if Result /= Void then
+						-- Eiffel class in file
+					Result.to_lower
+				else
+						-- No class in file
+					create vd10
+					vd10.set_cluster (Current)
+					vd10.set_file_name (file_name)
+					Error_handler.insert_error (vd10)
+				end
+			end
+		end
 
 	remove_class (a_class: CLASS_I) is
 			-- Remove a class from the cluster (Exclude clause)
@@ -1790,8 +1781,8 @@ feature {NONE} -- Implementation
 			fn.extend ("indexing")
 			fn.add_extension ("txt")
 			create file.make (fn)
-			if file.exists and then file.is_readable then
-				file.open_read
+			file.open_read
+			if file.is_open_read then
 				Cluster_indexing_parser.parse (file)
 				Result := Cluster_indexing_parser.root_node.top_indexes
 				file.close

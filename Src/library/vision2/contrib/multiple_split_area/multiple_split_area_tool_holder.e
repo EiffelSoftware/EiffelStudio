@@ -60,8 +60,8 @@ feature {NONE} -- Initialization
 			temp_cell.set_minimum_width (8)--spacing_to_holder_tool_bar)
 			horizontal_box.extend (temp_cell)
 			horizontal_box.disable_item_expand (temp_cell)
-			create tool_bar_cell
-			horizontal_box.extend (tool_bar_cell)
+			create customizeable_area
+			horizontal_box.extend (customizeable_area)
 			horizontal_box.set_data (display_name)
 			create tool_bar
 			create minimize_button
@@ -188,22 +188,6 @@ feature {NONE} -- Initialization
 		-- Position of `Current' at time it was docked from `parent_area'.
 		-- Used as the index within `parent_area' to restore `Current' when a dockable
 		-- dialog containing `Current' is closed.
-
-feature -- Basic operation
-
-	add_command_tool_bar (a_tool_bar: EV_TOOL_BAR) is
-			-- Display `a_tool_bar' within header of `Current'.
-		require
-			tool_bar_not_void: a_tool_bar /= Void
-		do
-			command_tool_bar := a_tool_bar
-			if tool_bar_cell.is_empty then
-				tool_bar_cell.wipe_out
-			end
-			tool_bar_cell.extend (a_tool_bar)
-		ensure
-			command_tool_bar_set: command_tool_bar = a_tool_bar
-		end
 		
 feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 	
@@ -356,6 +340,7 @@ feature {MULTIPLE_SPLIT_AREA} -- Implementation
 			tool_height: INTEGER
 			locked_in_here: BOOLEAN
 			original_parent_window: EV_WINDOW
+			widget: EV_WIDGET
 		do
 			tool_height := main_box.height
 			tool.parent.prune_all (tool)
@@ -370,6 +355,19 @@ feature {MULTIPLE_SPLIT_AREA} -- Implementation
 			end		
 			parent_area.external_representation.prune_all (tool)
 			parent_area.insert_widget (tool, display_name, (position_docked_from.min (parent_area.count + 1)).max (1), tool_height)
+			
+				-- Now take all widgets inserted into `customizeable_area' of `Current',
+				-- and associated them with `tool' in `parent_area', so that the
+				-- customization is not lost.
+			from
+				customizeable_area.start
+			until
+				customizeable_area.is_empty
+			loop
+				widget := customizeable_area.item
+				customizeable_area.remove
+				parent_area.customizeable_area_of_widget (tool).extend (widget)
+			end
 			if original_parent_window /= Void then
 				original_parent_window.unlock_update
 			end
@@ -398,6 +396,10 @@ feature {MULTIPLE_SPLIT_AREA} -- Implementation
 			end	
 		end
 		
+	customizeable_area: EV_HORIZONTAL_BOX
+		-- An area which may be customized by a user. Located between
+		-- the name label and minimize maximize tool bar.
+		
 feature {NONE} -- Implementation
 		
 	parent_window (widget: EV_WIDGET): EV_WINDOW is
@@ -417,9 +419,6 @@ feature {NONE} -- Implementation
 				Result := window
 			end	
 		end
-
-	tool_bar_cell: EV_CELL
-		-- A cell to hold `command_tool_bar'.
 
 	change_minimized_state is
 			-- Minimize `Current' if not minimized, restore otherwise.

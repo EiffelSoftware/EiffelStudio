@@ -111,10 +111,12 @@ feature -- from ROUT_ENTRY
 			-- Is the entry used ?
 		local
 			remover: REMOVER
+			system_i: SYSTEM_I
 		do
-			remover := System.remover;
+			system_i := System
+			remover := system_i.remover;
 			Result := 	remover = Void						-- Workbench mode
-						or else System.remover_off			-- Dead code removal disconnected
+						or else system_i.remover_off		-- Dead code removal disconnected
 						or else remover.is_body_alive (body_id)	-- Final mode
 		end;
 

@@ -232,7 +232,7 @@ feature {EV_GRID_I} -- Implementation
 	disable_select is
 			-- Deselect `Current' from `parent_i'
 		do
-			
+			to_implement ("EV_GRID_COLUMN_I.disable_select")
 		end
 
 	destroy is

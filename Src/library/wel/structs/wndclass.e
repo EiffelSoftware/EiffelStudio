@@ -483,14 +483,6 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-feature -- Obsolete
-
-	is_registered: BOOLEAN is obsolete "Use ``registered''"
-			-- Is the class registered?
-		do
-			Result := registered
-		end
-
 feature {NONE} -- Externals
 
 	c_size_of_wnd_class: INTEGER is

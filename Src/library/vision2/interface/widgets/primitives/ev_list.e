@@ -90,6 +90,26 @@ feature -- Status setting
 		do
 			implementation.set_single_selection
 		end
+
+feature -- Event : command association
+
+	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
+			-- Make `command' executed when an item is
+			-- selected.
+		require
+			exists: not destroyed
+		do
+			implementation.add_selection_command (a_command, arguments)
+		end
+
+	add_double_click_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Make `command' executed when an item is
+			-- selected by double clicked.
+		require
+			exists: not destroyed
+		do
+			implementation.add_double_click_selection_command (a_command, arguments)
+		end
 	
 feature {EV_LIST_ITEM_IMP, EV_LIST_ITEM} -- Implementation
 	

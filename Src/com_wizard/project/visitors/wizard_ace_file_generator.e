@@ -252,38 +252,9 @@ feature -- Basic operations
 				a_string.replace_substring_all ("ISE_C_COMPILER", "COMPILER")
 			end
 
-			if not is_empty_clib_folder (Client) then
-				a_string.append (Tab)
-				a_string.append (Tab)
-				a_string.append (Tab)
-				a_string.append (Double_quote)
-				a_string.append (Shared_wizard_environment.destination_folder)
-				a_string.append (Client)
-				a_string.append_character (Directory_separator)
-				a_string.append (Clib)
-				a_string.append_character (Directory_separator)
-				a_string.append (Clib_name)
-				a_string.append (Lib_file_extension)
-				a_string.append (Double_quote)
-				a_string.append (Comma)
-			end
-
-			if not is_empty_clib_folder (Server) then
-				a_string.append (New_line_tab_tab_tab)
-				a_string.append (Double_quote)
-				a_string.append (Shared_wizard_environment.destination_folder)
-				a_string.append (Server)
-				a_string.append_character (Directory_separator)
-				a_string.append (Clib)
-				a_string.append_character (Directory_separator)
-				a_string.append (Clib_name)
-				a_string.append (Lib_file_extension)
-				a_string.append (Double_quote)
-				a_string.append (Comma)
-			end
-			
+			a_string.append (ecom_lib_location (Client))
+			a_string.append (ecom_lib_location (Server))
 			a_string.remove (a_string.count)
-
 			a_string.append (Semicolon)
 			a_string.append (New_line)
 			a_string.append (End_keyword)
@@ -300,6 +271,33 @@ feature -- Basic operations
 			ace_file_generated := True
 		end
 
+	ecom_lib_location (a_folder: STRING): STRING is
+			-- Location of ecom.lib
+		require
+			non_void_folder: a_folder /= Void
+			valid_folder: a_folder.is_equal (Client) or a_folder.is_equal (Server)
+		do
+			create Result.make (100)
+			if not is_empty_clib_folder (a_folder) then
+				Result.append (New_line_tab_tab_tab)
+				Result.append (Double_quote)
+				Result.append (Shared_wizard_environment.destination_folder)
+				Result.append (a_folder)
+				Result.append_character (Directory_separator)
+				Result.append (Clib)
+				Result.append_character (Directory_separator)
+				Result.append ("$(ISE_C_COMPILER)")
+				Result.append_character (Directory_separator)
+				Result.append (Clib_name)
+				Result.append (Lib_file_extension)
+				Result.append (Double_quote)
+				Result.append (Comma)
+			end			
+		ensure
+			non_void_result: Result /= Void
+			valid_result: not is_empty_clib_folder (a_folder) implies not Result.is_empty
+		end
+		
 	is_empty_clib_folder (a_folder: STRING): BOOLEAN is
 			-- Is folder `a_folder' is_empty?
 		local

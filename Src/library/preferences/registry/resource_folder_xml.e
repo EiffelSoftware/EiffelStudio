@@ -8,12 +8,15 @@ class
 inherit
 	RESOURCE_FOLDER_I
 
+	XM_CALLBACKS_FILTER_FACTORY
+		export {NONE} all end
+
 create
 	make, make_root, make_default, make_default_root
 
 feature -- Initialization
 
-	make (doc: XML_ELEMENT; struct: like structure) is
+	make (doc: XM_ELEMENT; struct: like structure) is
 		do
 			make_default (doc, struct)
 		end
@@ -27,27 +30,32 @@ feature -- Update
 
 	update_root (file_name: FILE_NAME) is
 		local
-			file: RAW_FILE
-			s: STRING
-			parser: XML_TREE_PARSER
+			parser: XM_EIFFEL_PARSER
 			error_message: STRING
+			l_file: KL_BINARY_INPUT_FILE
+			s: STRING
+			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
+			l_concat_filter: XM_CONTENT_CONCATENATOR
 		do
 			name := "root"
 			description := "root folder"
-
 			create parser.make
-			create file.make (file_name)
-			if file.exists then
-				file.open_read
-				file.read_stream (file.count)
-				s := file.last_string
-				parser.parse_string (s)
-				parser.set_end_of_file
-				file.close
-				if not parser.root_element.name.is_equal ("EIFFEL_DOCUMENT") then
+			create l_file.make (file_name.string)
+			l_file.open_read
+			if l_file.is_open_read then
+				create l_tree_pipe.make
+				create l_concat_filter.make_null
+				parser.set_callbacks (standard_callbacks_pipe (<<l_concat_filter, l_tree_pipe.start>>))
+				parser.parse_from_stream (l_file)
+				l_file.close
+
+				check
+					structure_initialized: structure /= Void
+				end
+				if not l_tree_pipe.document.root_element.name.is_equal ("EIFFEL_DOCUMENT") then
 					error_message := "EIFFEL_DOCUMENT TAG missing%N"
 				else
-					xml_data := parser.root_element
+					xml_data := l_tree_pipe.document.root_element
 					update_attributes (xml_data)
 				end
 			else
@@ -59,13 +67,13 @@ feature -- Update
 			end
 		end
 
-	update_attributes (doc: XML_ELEMENT) is
+	update_attributes (doc: XM_ELEMENT) is
 		local
 			resource: RESOURCE
 			child: like Current
-			cursor, des_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
-			node: XML_ELEMENT
-			txt: XML_TEXT
+			cursor, des_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			node: XM_ELEMENT
+			txt: XM_CHARACTER_DATA
 		do
 			cursor := doc.new_cursor
 			from
@@ -84,7 +92,7 @@ feature -- Update
 						loop
 							txt ?= des_cursor.item
 							if txt /= Void then
-								description.append (txt.string)
+								description.append (txt.content)
 							end
 							des_cursor.forth
 						end
@@ -127,7 +135,6 @@ feature -- Saving
 				file.close
 			end
 		end
-
 
 feature -- Output
 

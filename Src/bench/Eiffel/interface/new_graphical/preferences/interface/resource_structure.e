@@ -96,12 +96,6 @@ feature -- Saving
 			implementation.save
 		end
 
-	save_resource (res: RESOURCE) is
-			-- Save all changes in appropriate storing device
-		do
-			implementation.save_resource (res)
-		end
-
 feature -- Implementation
 
 	root_folder: RESOURCE_FOLDER is

@@ -733,7 +733,7 @@ feature -- Basic operations
 					%%<%N%T%T%T%
 						%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%N%T%T%
 					%%>%N%T%T%
-					%eif_array_element = eif_protect (rt_generated_ce." + tmp_element_ce_function + "(sa_element));%N%T%T%
+					%eif_array_element = eif_protect (" + Generated_ce_mapper + "." + tmp_element_ce_function + "(sa_element));%N%T%T%
 					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put) (eif_access (result), eif_access (eif_array_element), eif_access (eif_index));%N%T%T%
 					%eif_wean (eif_array_element);%N%T%
 				%%> while (rt_ce.ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));%N%T%

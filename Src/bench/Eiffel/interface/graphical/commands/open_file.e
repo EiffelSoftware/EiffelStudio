@@ -73,14 +73,14 @@ feature {NONE} -- Implementation
 						tool.show_file (f);
 					elseif f.exists and then not f.is_plain then
 						warner (popup_parent).custom_call (Current, 
-							w_Not_a_file_retry (fn), " OK ", Void, "Cancel");
+							w_Not_a_file_retry (fn), l_Ok, Void, l_Cancel);
 					else
 						warner (popup_parent).custom_call (Current, 
-						w_Cannot_read_file_retry (fn), " OK ", Void, "Cancel");
+						w_Cannot_read_file_retry (fn), l_Ok, Void, l_Cancel);
 					end
 				else
 					warner (popup_parent).custom_call (Current, 
-						w_Not_a_file_retry (fn), " OK ", Void, "Cancel");
+						w_Not_a_file_retry (fn), l_Ok, Void, l_Cancel);
 				end
 			else
 				-- First click on open

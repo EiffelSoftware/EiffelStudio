@@ -65,7 +65,7 @@ feature -- Callbacks
 					aok := False;
 					warner (popup_parent).custom_call (Current, 
 						w_File_exists (fn), 
-						"Overwrite", Void, "Cancel");
+						l_Overwrite, Void, l_Cancel);
 				elseif
 					new_file.exists and then (not new_file.is_writable)
 				then

@@ -29,7 +29,7 @@ feature
 	generate (file: INDENT_FILE; id: INTEGER) is
 			-- Generate assertion value in `file'.
 		do
-			file.putstring ("{DB_ALL, (int16) 0, (char **) 0}");
+			file.putstring ("{OPT_ALL, (int16) 0, (char **) 0}");
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is
@@ -43,7 +43,7 @@ feature -- DLE
 	generate_dle (file: INDENT_FILE; id: INTEGER) is
 			-- Generate assertion value in `file'.
 		do
-			file.putstring ("dle_dbg->debug_level = DB_ALL;");
+			file.putstring ("dle_dbg->debug_level = OPT_ALL;");
 			file.new_line;
 			file.putstring ("dle_dbg->nb_keys = (int16) 0;");
 			file.new_line;

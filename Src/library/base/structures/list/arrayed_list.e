@@ -17,7 +17,8 @@ class ARRAYED_LIST [G] inherit
 	ARRAY [G]
 		rename
 			force as force_i_th,
-			item as i_th,
+			item as array_item,
+			infix "@" as array_infix_at,
 			make as array_make,
 			put as put_i_th,
 			count as array_count,
@@ -43,21 +44,20 @@ class ARRAYED_LIST [G] inherit
 
 	DYNAMIC_LIST [G]
 		undefine
-			valid_index, infix "@", i_th, put_i_th,
+			valid_index, put_i_th,
 			force, is_inserted, copy
 		redefine
-			first, last, swap, wipe_out,
+			first, last, swap, wipe_out, i_th, infix "@",
 			go_i_th, move, prunable, start, finish,
 			count, prune, remove,
 			put_left, merge_left,
 			merge_right, duplicate, prune_all, has, search,
 			append
 		select
-			count, index_set
+			count, index_set, i_th, infix "@"
 		end
 
 create
-
 	make, make_filled, make_from_array
 
 feature -- Initialization
@@ -106,7 +106,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item: like first is
+	item: G is
 			-- Current item
 		require else
 			index_is_valid: valid_index (index)
@@ -114,7 +114,13 @@ feature -- Access
 			Result := area.item (index - 1)
 		end
 
-	first: G is
+	i_th, infix "@" (i: INTEGER): like item is
+			-- Item at `i'-th position
+		do
+			Result := area.item (i - 1)
+		end
+
+	first: like item is
 			-- Item at first position
 		do
 			Result := area.item (0)

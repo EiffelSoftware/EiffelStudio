@@ -456,6 +456,10 @@ feature -- Generation, Header
 				make_file.putstring ("CFLAGS = $optimize $ccflags $large ")
 			end
 
+			if System.has_dynamic_runtime then
+				make_file.putstring ("$shared_flags ")
+			end
+
 			if System.has_separate then
 				make_file.putstring ("-DCONCURRENT_EIFFEL ")
 			end

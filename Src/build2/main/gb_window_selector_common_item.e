@@ -306,6 +306,13 @@ feature -- Status setting
 			end
 		end
 		
+	destroy is
+			-- Destroy `Current'.
+		do
+			tree_item.destroy
+		end
+		
+		
 feature {NONE} -- Implementation
 
 	common_make is

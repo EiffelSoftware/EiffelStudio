@@ -15,6 +15,7 @@ inherit
 	DRAWING_AREA
 		rename
 			make as drawing_area_create,
+			make_unmanaged as drawing_area_create_unmanaged,
 			set_size as set_drawing_area_size,
 			width as drawing_area_width,
 			height as drawing_area_height,
@@ -29,20 +30,21 @@ inherit
 		redefine
 			x, y, set_x_y, hide, show, realize, 
 			set_managed, shown, unrealize, realized,
-			managed, unmanage, manage, make_unmanaged, background_color,
-			set_cursor
+			managed, unmanage, manage, background_color, set_cursor
+-- make_unmanaged,
 		end;
 
 	DRAWING_AREA
 		rename
-			make as drawing_area_create
+			make as drawing_area_create,
+			make_unmanaged as drawing_area_create_unmanaged
 		redefine
 			set_background_pixmap, set_background_color, 
 			set_foreground_color, realize, show, hide, shown, set_size, 
 			set_x_y, height, width, real_y, real_x, y, x, 
 			set_managed, unrealize, realized,
-			managed, unmanage, manage, make_unmanaged, background_color,
-			set_cursor
+			managed, unmanage, manage, background_color, set_cursor
+--make_unmanaged, 
 		select
 			set_background_pixmap, set_background_color, 
 			set_foreground_color, set_size, height, width, real_y,
@@ -71,7 +73,7 @@ feature {NONE}
 			-- `a_parent' as parent.
 		do
 			!! scrolled_window.make_unmanaged (a_name, a_parent);
-			drawing_area_create (a_name, scrolled_window);
+			drawing_area_create_unmanaged (a_name, scrolled_window);
 			!!world.make;
 			world.attach_drawing (Current);
 			scrolled_window.set_working_area (Current);

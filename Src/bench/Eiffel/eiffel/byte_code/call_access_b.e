@@ -107,7 +107,6 @@ feature
 				end;
 				if meta then
 					ba.append (Bc_metamorphose);
-					ba.append_short_integer (static_type);
 					static_type := basic_type.associated_reference.id - 1;
 				end;
 			end;

@@ -25,7 +25,6 @@ feature
 		local
 			workbench_mode: BOOLEAN;
 		do
-			!!c_old_expressions.make;
 			workbench_mode := context.workbench_mode;
 			context.set_assertion_type (0);
 
@@ -173,7 +172,6 @@ feature
 			generated_file.new_line;
 				-- Leave a blank line after function definition
 			generated_file.new_line;
-			c_old_expressions := Void
 		end;
 
 	generate_compound is

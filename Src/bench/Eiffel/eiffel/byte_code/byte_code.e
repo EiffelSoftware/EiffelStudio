@@ -66,10 +66,6 @@ feature
 	old_expressions: LINKED_LIST [UN_OLD_B];
 			-- List of UN_OLD_B instances: can be Void.
 
-	c_old_expressions: LINKED_LIST [UN_OLD_BL];
-			-- List of UN_OLD_BL instances: can be Void.
-			-- Used when generating C code. 
-
 	rescue_clause: BYTE_LIST [BYTE_NODE];
 			-- List of INSTR_B instances: can be Void.
 
@@ -171,6 +167,8 @@ feature
 
 	enlarge_tree is
 			-- Enlarges byte code tree for C code generation
+		local
+			expr: UN_OLD_B
 		do
 			if precondition /= Void then
 				precondition.enlarge_tree;
@@ -258,9 +256,11 @@ feature
 			-- Generate value for old variables
 		local
 			workbench_mode: BOOLEAN;
-			old_exp: UN_OLD_BL
+			old_exp: UN_OLD_BL;
+			c_old_expr: LINKED_LIST [UN_OLD_BL]
 		do
 			workbench_mode:= Context.workbench_mode;
+			c_old_expr := Context.c_old_expressions;
 			if context.has_postcondition and then (old_expressions /= Void)
 				and then (not old_expressions.empty)
 			then
@@ -269,21 +269,19 @@ feature
 						generated_file.new_line;
 						generated_file.indent;
 				end;
-				if c_old_expressions /= Void then
-					from
-						c_old_expressions.start;
-					until
-						c_old_expressions.offright
-					loop
-						old_exp := c_old_expressions.item;
-						old_exp.initialize;
-						c_old_expressions.forth;
-					end;
-					if workbench_mode then
-						generated_file.putchar ('}');
-						generated_file.new_line;
-						generated_file.exdent;
-					end;
+				from
+					c_old_expr.start;
+				until
+					c_old_expr.offright
+				loop
+					old_exp := c_old_expr.item;
+					old_exp.initialize;
+					c_old_expr.forth;
+				end;
+				if workbench_mode then
+					generated_file.putchar ('}');
+					generated_file.new_line;
+					generated_file.exdent;
 				end;
 			end;
 		end;

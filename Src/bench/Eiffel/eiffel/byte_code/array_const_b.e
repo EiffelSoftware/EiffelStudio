@@ -105,7 +105,6 @@ feature
 							-- Simple type objects are metamorphosed
 						basic_i ?= actual_type;	
 						ba.append (Bc_metamorphose);
-						ba.append_short_integer (basic_i.associated_dtype);
 					end
 				end;
 				ba.append (Bc_insert);

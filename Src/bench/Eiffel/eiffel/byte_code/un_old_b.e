@@ -4,7 +4,7 @@ inherit
 
 	UNARY_B
 		redefine
-			type, enlarged, make_byte_code
+			type, make_byte_code, enlarged
 		end;
 	
 feature 
@@ -15,21 +15,17 @@ feature
 			Result := expr.type;
 		end; -- type
 
-	enlarged: UN_OLD_BL is
-			-- Enlarge node and update information in BYTE_CODE
-		local
-			old_exps: LINKED_LIST [UN_OLD_B]
-		do
-			!!Result;
-			Result.set_expr (expr.enlarged);
-			old_exps := Context.byte_code.c_old_expressions;
-			Context.byte_code.c_old_expressions.add (Result);
-		end;
-
 	add_old_expression is
 			-- Add Current to old_expressions.
 		do
 			Context.old_expressions.add (Current);
+		end;
+
+	enlarged: UN_OLD_BL is
+		do
+			!!Result;
+			Result.set_expr (expr.enlarged);
+			Context.c_old_expressions.add (Result);	
 		end;
 
 	operator_constant: CHARACTER is

@@ -37,8 +37,12 @@ feature -- Status report
 			Result := exists
 		end
 
-	in_menu: BOOLEAN
+	in_menu: BOOLEAN is
 			-- Is current button in a menu?
+		do
+			Result := is_parent_option_pull or
+				is_parent_menu_pull
+		end
 
 feature -- Status setting 
 
@@ -80,7 +84,6 @@ feature -- Status setting
 
 	set_default_size is
 			-- Resize to a default size.
-			-- Does nothing by default.
 		local
 			fw: FONT_WINDOWS
 		do

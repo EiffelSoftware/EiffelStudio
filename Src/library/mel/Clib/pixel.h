@@ -1,3 +1,4 @@
+#include "mel.h"
 #include "xpm.h"
 
 /*

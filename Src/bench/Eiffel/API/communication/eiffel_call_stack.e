@@ -16,6 +16,12 @@ inherit
 	SHARED_RESOURCES
 		export
 			{NONE} all
+		undefine
+			setup, copy
+		end;
+	SHARED_APPLICATION_EXECUTION
+		undefine
+			setup, copy
 		end
 
 creation {RUN_INFO, APPLICATION_STATUS}
@@ -31,28 +37,52 @@ feature -- Output
 
 	display_stack (st: STRUCTURED_TEXT) is
 			-- Display callstack in `st'.
+		local
+			stack_num, i: INTEGER;
+			cs: CALL_STACK_ITEM
 		do
 			st.add_new_line;
 			st.add_string ("Call stack:");
 			st.add_new_line;
 			st.add_new_line;
-			st.add_string ("Object		  Class		  Routine");
+			!! cs.do_nothing; -- For padding
+			st.add (cs);
+			st.add_string ("Object");
+			st.add_column_number (14);
+			st.add_string ("Class");
+			st.add_column_number (26);
+			st.add_string ("Routine");
 			st.add_new_line;
-			st.add_string ("------		  -----		  -------");
+			!! cs.do_nothing; -- For padding
+			st.add (cs);
+			st.add_string ("------");
+			st.add_column_number (14);
+			st.add_string ("-----");
+			st.add_column_number (26);
+			st.add_string ("-------");
 			st.add_new_line;
+			stack_num := Application.current_execution_stack_number;
 			from
-				start
+				start;
+				i := 1
 			until
 				after
 			loop
+				if i = stack_num then
+					!! cs.make_selected (i);
+				else
+					!! cs.make (i);
+				end;
+				st.add (cs)
 				item.display_feature (st);
 				st.add_new_line;
-				forth
+				forth;
+				i := i + 1;
 			end;
 			st.add_new_line
 		end;
 
-feature {NONE}
+feature {NONE} -- Initialization
 
 	make is
 			-- Fill where with the calls stack
@@ -82,13 +112,13 @@ end
 				-- Convert the physical addresses received from
 				-- application to hector addresses.
 			from
-				start
+				start;
 			until
 				after
 			loop
 				item.set_hector_addr;
 				forth
-			end
+			end;
 if enabled_debug_trace then
 	io.error.putstring ("%TFinished creating Eiffel Stack:%N")
 end

@@ -67,8 +67,8 @@ feature -- Creation
 			create schema_validator
 			create links.make (3)
 			create images.make (3)
-			create invalid_links.make_empty ("Invalid links")		
-			attach (Application_window)
+			create invalid_links.make ("Invalid links")		
+			attach (Application_window) 
 		end
 
 feature -- Access	
@@ -146,7 +146,7 @@ feature -- XML
 		end
 		
 	output_filter_text: STRING is
-			-- Document level output filter text (default: "unfiltered")
+			-- Document level output filter text
 		local
 			l_element: XM_ELEMENT
 			l_att: XM_ATTRIBUTE
@@ -161,12 +161,18 @@ feature -- XML
 					end					
 				end
 			end
-			if l_value = Void or l_value.is_equal (shared_constants.output_constants.unfiltered_flag) then
+			if 
+				l_value = Void or 
+				(not shared_constants.output_constants.output_list.has_item (l_value)) or 
+				l_value.is_equal (shared_constants.output_constants.unfiltered_flag) 
+			then
 				Result := shared_constants.output_constants.unfiltered
 			elseif l_value.is_equal (shared_constants.output_constants.envision_flag) then
 				Result := shared_constants.output_constants.envision_desc
 			elseif l_value.is_equal (shared_constants.output_constants.studio_flag) then
 				Result := shared_constants.output_constants.studio_desc
+			elseif l_value.is_equal (shared_constants.output_constants.none_desc) then				
+				Result := shared_constants.output_constants.none_desc
 			end
 		ensure
 			has_result: Result /= Void
@@ -215,7 +221,7 @@ feature -- Query
 				l_curr_filter.is_equal (shared_constants.output_constants.unfiltered) or
 						-- Document defines no filtering
 				l_doc_filter.is_equal (shared_constants.output_constants.unfiltered) or			
-						-- Application level filterinf matches document level filter type
+						-- Application level filtering matches document level filter type
 				l_curr_filter.is_equal (l_doc_filter)				
 		end	
 
@@ -308,14 +314,14 @@ feature {DOCUMENT_LINK, LINK_MANAGER, HTML_GENERATOR} -- Links
 			create l_formatter.make_with_document (Current)
 			l_formatter.process_document (xml)
 			if not links.is_empty then
-				create invalid_links.make_empty ("Invalid Links")
+				create invalid_links.make ("Invalid Links")
 				from
 					links.start
 				until
 					links.after
 				loop
 					if not links.item.exists then
-						invalid_links.append_error ("File: " + name + " (Url: " + links.item.url + ")", 0, 0)
+						invalid_links.append_error (create {ERROR}.make ("File: " + name + " (Url: " + links.item.url + ")"))
 					end
 					links.forth
 				end

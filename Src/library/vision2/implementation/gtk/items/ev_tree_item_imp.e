@@ -224,7 +224,6 @@ feature {NONE} -- Implementation
 		do	
 			item_imp ?= interface.i_th (a_position).implementation
 			item_imp.set_parent_imp (Void)
-			--| FIXME Add code for dealing with subtree.
 			item_imp.set_dummy_list_widget (item_imp.list_widget)
 			if item_imp.list_widget /= Default_pointer then
 				C.gtk_widget_ref (item_imp.list_widget)
@@ -238,7 +237,9 @@ feature {NONE} -- Implementation
 			imp: EV_TREE_ITEM_IMP
 		do
 			imp ?= v.implementation
+			C.gtk_widget_ref (imp.c_object)
 			C.gtk_tree_remove_item (list_widget, imp.c_object)
+			C.gtk_widget_unref (imp.c_object)
 			C.gtk_tree_insert (
 				list_widget,
 				imp.c_object,
@@ -330,6 +331,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.48  2000/03/13 22:05:16  king
+--| Added referencing handling for reorder child
+--|
 --| Revision 1.47  2000/03/10 23:51:57  king
 --| Fixed dereferencing of list widget
 --|

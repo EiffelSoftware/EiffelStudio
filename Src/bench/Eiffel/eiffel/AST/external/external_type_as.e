@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: ""
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -58,6 +58,13 @@ feature {EXTERNAL_FACTORY} -- Initialization
 			value_id_set: value_id > 0
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+		end
+
 feature -- Access
 
 	value_id: INTEGER
@@ -88,13 +95,4 @@ feature {NONE} -- Not exported because should never be used.
 			end
 		end
 	
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconsitute text according to context.
-			-- Not valid in current context
-		do
-			check
-				False
-			end
-		end
-
 end -- class EXTERNAL_TYPE_AS

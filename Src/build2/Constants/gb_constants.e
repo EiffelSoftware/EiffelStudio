@@ -773,6 +773,12 @@ feature -- Constants
 	directory_constant_type: STRING is "DIRECTORY"
 		-- String representation of a directory constant.
 		
+	color_constant_type: STRING is "COLOR"
+		-- String representation of a color constant.
+		
+	font_constant_type: STRING is "FONT"
+		-- String representation of a font constant.
+		
 	filepath_constant_type: STRING is "FILEPATH"
 	
 	filename_constant_type: STRING is "FILENAME"
@@ -826,5 +832,11 @@ feature -- Prompts
 
 	select_directory_location_modify_string: STRING is "Please select new location for directory constant %""
 		-- String displayed when selecting a new directroy during a modification of an existing directory constant.
+		
+	select_color_location_modify_string: STRING is "Please select new color value for color constant %""
+		-- String displayed when selecting a new color during a modification of an existing color constant.
+		
+	select_font_location_modify_string: STRING is "Please select new font value for font constant %""
+		-- String displayed when selecting a new font during a modification of an existing font constant.
 
 end -- class GB_CONSTANTS

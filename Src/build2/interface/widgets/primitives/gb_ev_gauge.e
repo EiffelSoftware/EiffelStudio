@@ -63,6 +63,9 @@ feature -- Access
 			leap.return_actions.extend (agent set_leap)
 			leap.return_actions.extend (agent update_editors)
 			
+			create upper_entry.make (Current, Result, "Upper", agent set_upper (?), agent valid_upper (?))
+			create lower_entry.make (Current, Result, "Lower", agent set_lower (?), agent valid_lower (?))
+			
 			update_attribute_editor
 			
 			disable_all_items (Result)
@@ -88,6 +91,13 @@ feature {GB_XML_STORE} -- Output
 			if gauge.leap /= first.leap then
 				add_element_containing_integer (element, Leap_string, objects.first.leap)
 			end
+				-- We always store the lower and upper values for the value range, as it is much easier to
+				-- restore them if we know they are always together. We need them in pairs for the
+				-- restoration anyway.
+			if gauge.value_range.lower /= first.value_range.lower or gauge.value_range.upper /= first.value_range.upper then
+				add_element_containing_integer (element, Lower_string, objects.first.value_range.lower)
+				add_element_containing_integer (element, Upper_string, objects.first.value_range.upper)
+			end
 		end
 		
 	modify_from_xml (element: XML_ELEMENT) is
@@ -96,8 +106,23 @@ feature {GB_XML_STORE} -- Output
 			current_element: XML_ELEMENT
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
+			element_info2: ELEMENT_INFORMATION
+			interval: INTEGER_INTERVAL
 		do
 			full_information := get_unique_full_info (element)
+			
+				-- We must set the upper and lower first as they affect the valid values that may
+				-- be set.
+			element_info := full_information @ (Upper_string)
+			if element_info /= Void then
+				element_info2 := full_information @ (Lower_string)
+				check
+					info_not_void: element_info2 /= Void
+				end
+				create interval.make (element_info2.data.to_integer, element_info.data.to_integer)
+				first.value_range.adapt (interval)
+				(objects @ 2).value_range.adapt (interval)
+			end
 			
 			element_info := full_information @ (Value_string)
 			if element_info /= Void then
@@ -123,13 +148,26 @@ feature {GB_CODE_GENERATOR} -- Output
 			-- in a compilable format.
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
-			element_info: ELEMENT_INFORMATION
+			element_info, element_info2: ELEMENT_INFORMATION
+			lower, upper: STRING
 		do
 			Result := ""
 			full_information := get_unique_full_info (element)
+			
+			element_info := full_information @ (Upper_string)
+			if element_info /= Void then
+				element_info2 := full_information @ (Lower_string)
+				check
+					info_not_void: element_info2 /= Void
+				end
+				lower := element_info2.data
+				upper := element_info.data
+				Result := a_name + ".value_range.adapt(create {INTEGER_INTERVAL}.make (" + lower + ", " + upper + "))"
+			end
+			
 			element_info := full_information @ (Value_string)
 			if element_info /= Void then
-				Result := a_name + ".set_value (" + element_info.data + ")"
+				Result := Result + indent + a_name + ".set_value (" + element_info.data + ")"
 			end
 			element_info := full_information @ (Step_string)
 			if element_info /= Void then
@@ -159,6 +197,9 @@ feature {NONE} -- Implementation
 			value.return_actions.resume
 			step.return_actions.resume
 			leap.return_actions.resume
+			
+			upper_entry.set_text (first.value_range.upper.out)
+			lower_entry.set_text (first.value_range.lower.out)
 		end
 		
 	set_up_user_events (vision2_object, an_object: like ev_type) is
@@ -223,7 +264,7 @@ feature {NONE} -- Implementation
 			if step.text /= Void and then step.text.is_integer then
 				a_value := step.text.to_integer
 				if a_value > 0 then
-					for_all_objects (agent {EV_GAUGE}.set_value (a_value))
+					for_all_objects (agent {EV_GAUGE}.set_step (a_value))
 				end
 			end
 		end
@@ -238,9 +279,49 @@ feature {NONE} -- Implementation
 			if leap.text /= Void and then leap.text.is_integer then
 				a_value := leap.text.to_integer
 				if a_value > 0 then
-					for_all_objects (agent {EV_GAUGE}.set_value (a_value))
+					for_all_objects (agent {EV_GAUGE}.set_leap (a_value))
 				end
 			end
+		end
+		
+	set_upper (integer: INTEGER) is
+			-- Update property `upper' on all items in `objects'.
+		require
+			first_not_void: first /= Void
+		local
+			lower: INTEGER
+			interval: INTEGER_INTERVAL
+		do
+			lower := lower_entry.text.to_integer
+			create interval.make (lower, integer)
+			first.value_range.adapt (interval)
+			(objects @ 2).value_range.adapt (interval)
+		end
+		
+	valid_upper (upper: INTEGER): BOOLEAN is
+			-- Is `upper' a valid upper?
+		do
+			Result := upper >= lower_entry.text.to_integer
+		end
+		
+	set_lower (integer: INTEGER) is
+			-- Update property `lower' on all items in `objects'.
+		require
+			first_not_void: first /= Void
+		local
+			upper: INTEGER
+			interval: INTEGER_INTERVAL
+		do
+			upper := upper_entry.text.to_integer
+			create interval.make (integer, upper)
+			first.value_range.adapt (interval)
+			(objects @ 2).value_range.adapt (interval)
+		end
+		
+	valid_lower (lower: INTEGER): BOOLEAN is
+			-- Is `lower' a valid upper?
+		do
+			Result := lower <= upper_entry.text.to_integer
 		end
 		
 	value, step, leap: EV_TEXT_FIELD
@@ -248,5 +329,10 @@ feature {NONE} -- Implementation
 	Value_string: STRING is "Value"
 	Step_string: STRING is "Step"
 	Leap_string: STRING is "Leap"
+	Upper_string: STRING is "Upper"
+	Lower_string: STRING is "Lower"
+	
+	upper_entry, lower_entry: GB_INTEGER_INPUT_FIELD
+		-- Input widgets for `Upper' and `Lower'.
 
 end -- class GB_EV_WINDOW

@@ -37,6 +37,12 @@ feature -- Event handling
 		do
 			create Result
 		end
+		
+	create_mouse_wheel_actions: EV_INTEGER_ACTION_SEQUENCE is
+			-- Create a mouse_wheel action sequence.
+		do
+			create Result
+		end
 
 	create_pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Create a pointer_enter action sequence.

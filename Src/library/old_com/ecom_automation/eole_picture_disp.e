@@ -12,9 +12,8 @@ inherit
 	EOLE_DISPATCH
 		rename
 			create_ole_interface_ptr as dispatch_create_ole_interface_ptr
-		undefine
-			interface_identifier
 		redefine
+			interface_identifier
 			on_invoke
 		end
 		

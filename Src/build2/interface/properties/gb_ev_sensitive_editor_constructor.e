@@ -33,6 +33,7 @@ feature -- Access
 			Result.extend (check_button)
 			check_button.select_actions.extend (agent toggle_sensitivity)
 			check_button.select_actions.extend (agent update_editors)
+			update_attribute_editor
 		end
 		
 	update_attribute_editor is

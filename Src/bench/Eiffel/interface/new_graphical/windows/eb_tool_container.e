@@ -22,14 +22,14 @@ feature -- Access
 
 feature -- Tool management
 
-	destroy_tool is
+	show_tool is
 			-- destroys the tool.
 		deferred
 		ensure
-			destroyed: tool.destroyed
+			shown: tool.shown
 		end
 
-	show_tool is
+	raise_tool is
 			-- destroys the tool.
 		deferred
 		ensure
@@ -41,6 +41,13 @@ feature -- Tool management
 		deferred
 		ensure
 			hidden: not tool.shown
+		end
+
+	destroy_tool is
+			-- destroys the tool.
+		deferred
+		ensure
+			destroyed: tool.destroyed
 		end
 
 feature -- Commands from tool

@@ -1,5 +1,4 @@
 indexing
-
 	description: "Registry manager"
 	status: "See notice at end of class";
 	date: "$Date$";
@@ -20,55 +19,54 @@ inherit
 
 feature -- Actions
 
-	create_new_key(key_path: STRING) is
+	create_new_key (key_path: STRING) is
 				-- Create a new key, with as path 'path'
 				-- The path should be like "a\b\c"
 				-- Please refer to WEL_HKEY for possible value for a.
 		require
 			at_least_one_back_slash: key_path /= Void and then key_path.has('\')
 		local
-			node_list: LINKED_LIST [ STRING ]
+			node_list: LINKED_LIST [STRING]
 			index_value, i: POINTER
 		do
-			node_list := value_keys_list(key_path)
+			node_list := value_keys_list (key_path)
 			check
-				node_list_possible: node_list.count>0
-				first_element_possible: basic_valid_name_for_HKEY(node_list.first)
+				node_list_possible: node_list.count > 0
+				first_element_possible: basic_valid_name_for_HKEY (node_list.first)
 			end
 			node_list.start
-			index_value := index_value_for_root_keys ( node_list.item )
+			index_value := index_value_for_root_keys (node_list.item)
 			from
 				node_list.forth
 			until
 				node_list.after
 			loop
-				i := open_key (index_value,node_list.item,Key_create_sub_key)
+				i := open_key (index_value,node_list.item, Key_create_sub_key)
 				if i = default_pointer then
-					i := create_key (index_value, node_list.item, 4)
+					i := create_key (index_value, node_list.item, Key_create_sub_key)
 				end
 				index_value := i
 				node_list.forth
 			end
 		end
 
-	open_key_with_access(key_path: STRING;sam: INTEGER):POINTER is
+	open_key_with_access(key_path: STRING; sam: INTEGER):POINTER is
 				-- Open the key relative to the path 'key_path', with
 				-- the access 'sam'.
 				-- Return the key reference (defaul_pointer if the operation failed).
 		require
 			at_least_one_back_slash: key_path /= Void and then key_path.has('\')
 		local
-			node_list: LINKED_LIST [ STRING ]
+			node_list: LINKED_LIST [STRING]
 			index_value, i: POINTER
 		do
-
 			node_list := value_keys_list(key_path)
 			check
 				node_list_possible: node_list.count>0
 				first_element_possible: basic_valid_name_for_HKEY(node_list.first)
 			end
 			node_list.start
-			index_value := index_value_for_root_keys ( node_list.item )
+			index_value := index_value_for_root_keys (node_list.item)
 			from
 				node_list.forth
 			until
@@ -82,7 +80,7 @@ feature -- Actions
 		end
 
 
-	open_key_value(key_path: STRING;value_name: STRING): WEL_REGISTRY_KEY_VALUE is
+	open_key_value (key_path: STRING; value_name: STRING): WEL_REGISTRY_KEY_VALUE is
 				-- Open a key, with as path 'path' and 
 				-- name 'key_name'.
 				-- The path should be like "a\b\c"
@@ -92,8 +90,8 @@ feature -- Actions
 			key_name_possible: value_name /= Void and then not value_name.empty
 			at_least_one_back_slash: key_path /= Void and then key_path.has('\')
 		local
-			node_list: LINKED_LIST [ STRING ]
-			index_value,i: POINTER
+			node_list: LINKED_LIST [STRING]
+			index_value, i: POINTER
 			stop: BOOLEAN
 		do
 			node_list := value_keys_list(key_path)
@@ -102,13 +100,13 @@ feature -- Actions
 				first_element_possible: basic_valid_name_for_HKEY(node_list.first)
 			end
 			node_list.start
-			index_value := index_value_for_root_keys ( node_list.item )
+			index_value := index_value_for_root_keys (node_list.item)
 			from
 				node_list.forth
 			until
 				node_list.after or stop
 			loop
-				i := open_key (index_value,node_list.item,16)
+				i := open_key (index_value,node_list.item, Key_read)
 				if i = default_pointer then
 					stop := TRUE
 				end
@@ -117,7 +115,7 @@ feature -- Actions
 			end
 			if not stop then
 				Result := key_value (index_value, value_name)
-				if Result.item=default_pointer then
+				if Result /= Void and then Result.item = default_pointer then
 					Result := Void
 				end
 			end
@@ -126,7 +124,7 @@ feature -- Actions
 
 feature {NONE} -- Internal Results
 
-	value_keys_list(path:STRING):LINKED_LIST[STRING] is
+	value_keys_list (path :STRING): LINKED_LIST[STRING] is
 			-- From a path ( "a\b\c\...\x") 
 			-- Return a list of string: a,b,c,d,e,...x
 		require
@@ -135,22 +133,22 @@ feature {NONE} -- Internal Results
 			i,j: INTEGER
 			s: STRING
 		do
-			!! Result.make
+			create Result.make
 			from
-				i:=1
+				i :=1
 				j := 1
-				s:= clone (path)
+				s := clone (path)
 			until
-				j <1
+				j < 1
 			loop
-				j := s.index_of('\',i+1)
-				if j>i then
-					Result.extend(s.substring(i,j-1))
-					i := j+1
+				j := s.index_of ('\', i + 1)
+				if j > i then
+					Result.extend (s.substring (i, j - 1))
+					i := j + 1
 				end
 			end
-			if i+1<s.count then
-				Result.extend(s.substring(i,s.count))
+			if i + 1 < s.count then
+				Result.extend (s.substring (i, s.count))
 			end
 		end
 
@@ -163,15 +161,15 @@ feature -- Access
 			-- investigations on the remote machine.
 			-- If 'Host_name' is empty, then the local computer is used by default.
 		require
-			root_key_possible: root_key=HKEY_LOCAL_MACHINE or 
-							   root_key=HKEY_USERS or
-							   root_key=HKEY_PERFORMANCE_DATA
+			root_key_possible: root_key = HKEY_LOCAL_MACHINE or 
+							   root_key = HKEY_USERS or
+							   root_key = HKEY_PERFORMANCE_DATA
 			host_name_possible: host_name /= Void	
 		local
 			s: WEL_STRING
 		do
 			if not host_name.empty then
-				!! s.make(host_name)
+				create s.make(host_name)
 				Result := cwin_reg_connect_key(s.item,root_key)
 			else
 				Result := cwin_reg_connect_key(DEFAULT_POINTER, root_key)
@@ -181,14 +179,14 @@ feature -- Access
 	enumerate_key (key: POINTER; index: INTEGER): WEL_REGISTRY_KEY is
 			-- class WEL_REGISTRY
 		require
-			key_possible:valid_value_for_hkey(key)
-			index_possible: index <= number_of_subkeys(key)
+			key_possible: valid_value_for_hkey (key)
+			index_possible: index <= number_of_subkeys (key)
 		local
 			registry_key_ptr: POINTER
 		do
 			registry_key_ptr := cwin_reg_enum_key (key, index)
 			if registry_key_ptr /= default_pointer then
-				!! Result.make_from_pointer (registry_key_ptr)
+				create Result.make_from_pointer (registry_key_ptr)
 			end
 		end
 
@@ -202,15 +200,15 @@ feature -- Access
 			registry_value_ptr: POINTER
 		do
 			if path /= Void then
-				!! wel_string.make (path);
+				create wel_string.make (path);
 				registry_value_ptr := cwin_reg_def_query_value (key, wel_string.item)
 			else
 				registry_value_ptr := cwin_reg_def_query_value (key, default_pointer)
 			end;
 			if registry_value_ptr /= default_pointer then
-				!! Result.make_from_pointer (registry_value_ptr)
+				create Result.make_from_pointer (registry_value_ptr)
 			end
-		end;
+		end
 
 feature -- Settings
 
@@ -226,7 +224,7 @@ feature -- Settings
 			wel_string: WEL_STRING
 		do
 			if value_name /= Void then
-				!! wel_string.make (value_name)
+				create wel_string.make (value_name)
 				cwin_reg_set_key_value (key, wel_string.item, value.item)
 			else
 				cwin_reg_set_key_value (key, default_pointer, value.item)
@@ -244,7 +242,7 @@ feature -- Basic Actions
 		local
 			wel_string: WEL_STRING
 		do
-			!! wel_string.make (key_name)
+			create wel_string.make (key_name)
 			Result := cwin_reg_create_key (parent_key, wel_string.item, sam)
 		end
 
@@ -257,7 +255,7 @@ feature -- Basic Actions
 		local
 			wel_string: WEL_STRING
 		do
-			!! wel_string.make (key_name)
+			create wel_string.make (key_name)
 			Result := cwin_reg_open_key (parent_key, wel_string.item, access_mode)
 		end
 
@@ -281,7 +279,7 @@ feature -- Basic Actions
 		local
 			wel_string: WEL_STRING
 		do
-			!! wel_string.make (key_name)
+			create wel_string.make (key_name)
 			Result := cwin_reg_delete_key (parent_key, wel_string.item)
 		end
 
@@ -292,7 +290,7 @@ feature -- Basic Actions
 			i: INTEGER
 			s: STRING
 		do
-			!! Result.make
+			create Result.make
 			from
 				i:=0
 			until
@@ -317,7 +315,7 @@ feature  -- New actions
 		local
 			wel_string: WEL_STRING
 		do
-			!! wel_string.make (name)
+			create wel_string.make (name)
 			Result := cwin_reg_delete_value(parent_key, wel_string.item)
 		end
 
@@ -329,7 +327,7 @@ feature  -- New actions
 			do
 				p  := cwin_reg_enum_value (key, index)
 				if p/=default_pointer then
-					!! Result.make(20)
+					create Result.make(20)
 					Result.from_c(p)
 				end	
 			end
@@ -364,10 +362,10 @@ feature -- Access
 			wel_string: WEL_STRING
 			a_pointer: POINTER
 		do
-			!! wel_string.make (value_name)
+			create wel_string.make (value_name)
 			a_pointer := cwin_reg_query_value (key, wel_string.item)
 		 	if (a_pointer /= default_pointer) then
-   				!! Result.make_from_pointer (a_pointer)
+   				create Result.make_from_pointer (a_pointer)
          	end
 		end	
 
@@ -418,39 +416,37 @@ feature {NONE} -- Externals
 			-- (export status {NONE})
 		external
 			"C | %"registry.h%""
-		end;
+		end
 
 	cwin_reg_enum_value (key: POINTER; index: INTEGER): POINTER is
 			-- (export status {NONE})
 		external
 			"C | %"registry.h%""
-		end;
+		end
 
 	cwin_reg_subkey_number(key: POINTER) : INTEGER is
 		-- (export status {NONE})
 		external
 			"C | %"registry.h%""
-		end;
+		end
 
 	cwin_reg_value_number(key:POINTER) : INTEGER is
 		-- (export status {NONE})
 		external
 			"C | %"registry.h%""
-		end;
+		end
 
 	cwin_reg_connect_key(name: POINTER; key: POINTER): POINTER is
 		-- (export status {NONE})
 		external
 			"C | %"registry.h%""
-		end;
-
-
+		end
 
 end -- class WEL_REGISTRY
 
 --|----------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.

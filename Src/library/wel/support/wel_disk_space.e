@@ -157,7 +157,6 @@ feature {NONE} -- Implementation
 							 not extension.is_empty
 		local
 			integer_part: INTEGER
-			fractional_part: INTEGER -- 1 or 2 digits fractional part
 			fractional_part_first_digit: INTEGER
 			fractional_part_second_digit: INTEGER
 		do

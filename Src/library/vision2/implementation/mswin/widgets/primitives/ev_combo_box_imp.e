@@ -52,7 +52,6 @@ inherit
 			pnd_press,
 			escape_pnd
 		redefine
-			wel_move_and_resize,
 			set_editable,
 			on_key_down,
 			interface,

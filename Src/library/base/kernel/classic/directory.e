@@ -308,7 +308,7 @@ feature -- Removal
 			directory_exists: exists
 		do	
 			delete_content
-			if not is_empty then
+			if is_empty then
 				delete
 			end
 		end

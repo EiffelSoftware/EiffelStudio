@@ -133,7 +133,6 @@ feature {NONE} -- Initialization
 			explorer_bar_item.set_menu_name (menu_name)
 			explorer_bar_item.set_pixmap (pixmap)
 			explorer_bar.add (explorer_bar_item)
-			explorer_bar.repack_widgets
 		end
 
 feature -- Access
@@ -237,12 +236,7 @@ feature -- Status report
 	is_visible: BOOLEAN is
 			-- Can `Current' be seen on screen?
 		do
-			Result :=
-				explorer_bar_item.is_visible -- i.e. not closed
-					and then
-				manager.left_tools_are_visible
-					and then
-				not	explorer_bar_item.is_minimized
+			Result := widget.is_displayed
 		end
 
 	options_shown: BOOLEAN is

@@ -154,7 +154,7 @@ int length, capacity;
 	offset = (capacity - i) / 2;
 	for (s = str + offset; i > offset; i --)
 		*s-- = *r--;
-    for (;i > 0; i --)
+	for (;i > 0; i --)
 		*s-- = ' ';	
 
 }
@@ -293,7 +293,7 @@ public EIF_INTEGER str_code(str, i)
 EIF_CHARACTER *str;
 EIF_INTEGER i;
 {
-    return (EIF_INTEGER) str[i-1]; /* Numeric code of 'i'-th character in 'str' */
+	return (EIF_INTEGER) str[i-1]; /* Numeric code of 'i'-th character in 'str' */
 }
 
 public void str_blank(str, n)
@@ -304,8 +304,8 @@ int n;
 
 	int i;
 
-    for (i = 0; i < n; i++)
-        *str++ = ' ';
+	for (i = 0; i < n; i++)
+		*str++ = ' ';
 }
 
 public void str_fill(str, n, c)
@@ -317,8 +317,8 @@ char c;
 
 	int i;
 
-    for (i = 0; i < n; i++)
-        *str++ = c;
+	for (i = 0; i < n; i++)
+		*str++ = c;
 }
 
 public void str_tail(str, n, l)
@@ -357,11 +357,10 @@ int l;
 
 	register2 char c;
 
-    while (l-- > 0) {
+	while (l-- > 0) {
 		c = *str;
-        if (isupper(c))
-            *str = tolower(c);
-        str++;
+		*str = tolower(c);
+		str++;
 	}
 }
 
@@ -373,11 +372,10 @@ int l;
 
 	register2 char c;
 
-    while (l-- > 0) {
+	while (l-- > 0) {
 		c = *str;
-        if (islower(c))
-            *str = toupper(c);
-        str++;
+		*str = toupper(c);
+		str++;
 	}
 }
 
@@ -435,7 +433,7 @@ int l;			/* And Her Majesty, the Length */
 	for (f = str + l - 1, t = f + 1; l > 0; l--)
 		*t-- = *f--;
 
-    *str = c;
+	*str = c;
 }
 
 public void str_append(str, new, string_length, new_len)
@@ -479,7 +477,7 @@ char c;			/* Character to be removed */
 int l;			/* Length of string */
 {
 	/* Remove all occurrences of `c' in `str'.
-     * Return new number of character making up `str'.
+	 * Return new number of character making up `str'.
 	 */
 
 	int new;		/* New string length */
@@ -488,8 +486,8 @@ int l;			/* Length of string */
 	top = str;
 	new = 0;
 
-    while (l-- > 0) {
-        if (*str++ != c) {
+	while (l-- > 0) {
+		if (*str++ != c) {
 			*top++ = *(str - 1);
 			new++;
 		}
@@ -561,8 +559,8 @@ int length;
 	char *s = make_string(str, length);
 	float val;
 
-    sscanf(s, "%f", &val);
-    return val;
+	sscanf(s, "%f", &val);
+	return val;
 }
 
 public double str_atod(str, length)
@@ -575,7 +573,7 @@ int length;
 	double val;
 
 	sscanf(s, "%lf", &val);
-    return val;
+	return val;
 }
 
 /*
@@ -604,7 +602,7 @@ EIF_INTEGER length;
 	float val;
 	char c;
 
-    return (sscanf(s, "%f %c", &val, &c) == 1)?(EIF_BOOLEAN) '\1': (EIF_BOOLEAN) '\0';
+	return (sscanf(s, "%f %c", &val, &c) == 1)?(EIF_BOOLEAN) '\1': (EIF_BOOLEAN) '\0';
 }
 
 public EIF_BOOLEAN str_isd(str, length)

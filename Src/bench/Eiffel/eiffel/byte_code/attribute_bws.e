@@ -115,7 +115,7 @@ feature
               generated_file.exdent;
             end;
 	
-			if not(cl_type.is_separate or cl_type.is_long or cl_type.is_feature_pointer or cl_type.is_boolean or cl_type.is_char or cl_type.is_double or cl_type.is_float) then
+			if not(cl_type.is_separate or cl_type.is_long or cl_type.is_feature_pointer or cl_type.is_boolean or cl_type.is_char or cl_type.is_double or cl_type.is_float or cl_type.is_expanded) then
                 generated_file.putstring(")")
             end
 			generated_file.putstring (", 0);");

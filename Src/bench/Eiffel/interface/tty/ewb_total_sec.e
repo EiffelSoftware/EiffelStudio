@@ -2,7 +2,7 @@ indexing
 
 	description:
 			"Disables or Enables output of total amount of time in %
-			% both the feature and its descendents in profile-output";
+			% both the feature and its descendants in profile-output";
 	default:	"disabled";
 	date:		"$Date$";
 	revision:	"$Revision $"

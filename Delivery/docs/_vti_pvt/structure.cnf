@@ -1,5 +1,5 @@
 3.0.0.507
-1092
+1097
 1033,release_notes.html,0,Release Notes,0,942281138,1
 vti_globalpage:BW|true
 1018,papers/index.html,0,Technology Papers,0,942202015,1
@@ -19,6 +19,7 @@ vti_globalpage:BW|true
 1077,papers/eiffeltime.html,0,EiffelTime,1018,942435569,0
 1080,papers/web/intro.html,0,EiffelWeb,1018,942451386,0
 1078,papers/eiffelmath.html,0,EiffelMath,1018,942450249,0
+1092,papers/rb/intro.html,0,Resource Bench,1018,942686196,0
 1091,papers/eiffellexparse.html,0,EiffelLex/EiffelParse,1018,942455025,0
 1049,papers/eiffel.html,0,Eiffel in ISE EiffelBench,1018,942293007,0
 1061,papers/net/index.html,0,EiffelNet Manual,1018,942302125,0
@@ -59,6 +60,10 @@ vti_globalpage:BW|true
 1081,papers/web/appendix_a.html,0,EiffelWeb,1080,942452188,0
 1086,papers/web/generator.html,0,EiffelWeb,1080,942452189,0
 1083,papers/web/appendix_c.html,0,EiffelWeb,1080,942452188,0
+1094,papers/rb/features.html,0,Resource Bench,1092,942686196,0
+1093,papers/rb/index.html,0,Resource Bench,1092,942686196,0
+1096,papers/rb/trouble.html,0,Resource Bench,1092,942686196,0
+1095,papers/rb/tour.html,0,Resource Bench,1092,942686196,0
 1062,papers/net/bibliography.html,0,Bibliography,1061,942302125,0
 1063,papers/net/clients_and_servers.html,0,Clients and Servers,1061,942302125,0
 1064,papers/net/complex_example.html,0,A More Complex Example,1061,942302125,0

@@ -657,15 +657,6 @@ end;
 								(file_name.item (i-1) = Dot) and then
 								valid_class_file_extension (file_name.item (i))
 
-					-- If there is a corresponding .e.out file we want to use that instead.
-					-- (We assume that it is the output of some preprocessing step.)
-					if is_efile and cluster_file.has_entry (file_name + ".out") then
-						--print ("Using %"" + file_name + ".out%" instead of %"" + file_name + "%"%N")
-						file_name := file_name + ".out"
-						check_dir := False
-							-- Paranoia. Dont want to look for directories called "xxx.e.out"
-					end
-
 					if check_dir or is_efile then
 						-- First check if it is excluded.
 						found := False
@@ -867,12 +858,6 @@ debug ("REMOVE_CLASS")
 end;
 					!!a_class.make (class_name);
 					a_class.set_base_name (file_name);
-					if
-						file_name.count > 6 and -- 6 = (".e.out").count
-						(file_name.substring (file_name.count - 3, file_name.count).is_equal (".out"))
-					then
-						a_class.set_source_base_name (file_name.substring (1, file_name.count - 4))
-					end
 					a_class.set_cluster (Current);
 					a_class.set_date;
 					a_class.set_read_only (is_library)

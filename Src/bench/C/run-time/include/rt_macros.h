@@ -57,7 +57,7 @@ extern "C" {
 	(*(EIF_INTEGER *) offset)
 
 #define RT_SPECIAL_ELEM_SIZE(spec) \
-	(*(EIF_INTEGER *) (RT_SPECIAL_INFO(spec) + sizeof(EIF_INTEGER))
+	(*(EIF_INTEGER *) RT_SPECIAL_INFO(spec) + sizeof(EIF_INTEGER))
 #define RT_SPECIAL_ELEM_SIZE_WITH_ZONE(spec,zone) \
 	(*(EIF_INTEGER *) RT_SPECIAL_INFO_WITH_ZONE(spec,zone) + sizeof(EIF_INTEGER))
 #define RT_SPECIAL_ELEM_SIZE_WITH_INFO(offset) \

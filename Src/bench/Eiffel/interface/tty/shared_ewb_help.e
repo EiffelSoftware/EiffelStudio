@@ -54,6 +54,8 @@ feature {NONE}
 
 	implementers_help: STRING is "show the classes implementing a feature";
 
+	indexing_help: STRING is "show indexing clauses of classes";
+
 	loop_help: STRING is "run es3 as a command loop";
 
 	loop_help_help: STRING is "show list of commands";
@@ -61,6 +63,8 @@ feature {NONE}
 	main_help: STRING is "go back to main menu";
 
 	melt_help: STRING is "melt the system";
+
+	modifs_help: STRING is "show classes modified since last compilation";
 
 	once_help: STRING is "show the once & constant features of a class";
 
@@ -76,7 +80,7 @@ feature {NONE}
 
 	routines_help: STRING is "show the routines of a class";
 
-	run_help: STRING is "execute the application";
+	run_help: STRING is "execute the system";
 
 	short_help: STRING is "show the short form of a class";
 
@@ -85,6 +89,8 @@ feature {NONE}
 	storage_help: STRING is "store in case format";
 
 	suppliers_help: STRING is "show the suppliers of a class";
+
+	synonyms_help: STRING is "shown the synonyms of a feature";
 
 	system_help: STRING is "Ace and cluster details";
 

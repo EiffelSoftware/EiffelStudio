@@ -1,5 +1,5 @@
 indexing
-	description: "Create COM_ISE_CACHE_MANAGER instances"
+	description: "Create COM_CACHE_MANAGER instances"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -16,8 +16,8 @@ inherit
 
 feature -- Initialization
 
-	new_emitter (runtime_version: STRING): COM_ISE_CACHE_MANAGER is
-			-- Create a new instance of COM_ISE_CACHE_MANAGER.
+	new_emitter (runtime_version: STRING): COM_CACHE_MANAGER is
+			-- Create a new instance of COM_CACHE_MANAGER.
 		local
 			p: POINTER
 			l_host: CLR_HOST
@@ -27,7 +27,7 @@ feature -- Initialization
 			check
 				l_host_not_void: l_host /= Void
 			end
-			p := c_new_ise_cache_manager
+			p := c_new_cache_manager
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
 			end
@@ -35,12 +35,12 @@ feature -- Initialization
 
 feature {NONE} -- Externals
 
-	c_new_ise_cache_manager: POINTER is
-			-- Creates new instance of ISE_Cache_COM_ISE_CACHE_MANAGER.
+	c_new_cache_manager: POINTER is
+			-- Creates new instance of EiffelSoftware_MetadataConsumer_ComCacheManager.
 		external
 			"C use %"cli_writer.h%""
 		alias
-			"new_ise_cache_manager"
+			"new_cache_manager"
 		end
 
 end -- class EMITTER_FACTORY

@@ -102,7 +102,8 @@ feature
 				end
 				arg_type := arg_types @ i
 				if arg_type.is_equal ("EIF_REAL") then
-					file.putstring ("EIF_DOUBLE")
+					file.putstring ("EIF_REAL") -- ss for ANSI rt
+					--file.putstring ("EIF_DOUBLE")
 				else
 					file.putstring (arg_types @ i)
 				end

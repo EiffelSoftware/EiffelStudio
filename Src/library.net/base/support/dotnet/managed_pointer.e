@@ -22,7 +22,7 @@ inherit
 		end
 		
 create
-	make, make_from_array, make_from_pointer
+	make, make_from_array, make_from_pointer, share_from_pointer
 	
 feature {NONE} -- Initialization
 
@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 		ensure
 			item_set: item /= default_pointer
 			count_set: count = n
+			is_shared_set: not is_shared
 		end
 
 	make_from_array (data: ARRAY [INTEGER_8]) is
@@ -56,6 +57,7 @@ feature {NONE} -- Initialization
 		ensure
 			item_set: item /= default_pointer
 			count_set: count = data.count
+			is_shared_set: not is_shared
 		end
 
 	make_from_pointer (a_ptr: POINTER; n: INTEGER) is
@@ -73,8 +75,24 @@ feature {NONE} -- Initialization
 		ensure
 			item_set: item /= default_pointer
 			count_set: count = n
+			is_shared_set: not is_shared
 		end
-		
+	
+	share_from_pointer (a_ptr: POINTER; n: INTEGER) is
+			-- Use directly `a_ptr' with count `n' to hold current data.
+		require
+			a_ptr_not_null: a_ptr /= default_pointer
+			n_positive: n > 0
+		do
+			item := a_ptr
+			count := n
+			is_shared := True
+		ensure
+			item_set: item /= default_pointer
+			count_set: count = n
+			is_shared_set: is_shared
+		end
+
 feature -- Access
 
 	item: POINTER
@@ -82,6 +100,9 @@ feature -- Access
 			
 	count: INTEGER
 			-- Number of elements that Current can hold.
+
+	is_shared: BOOLEAN
+			-- Is `item' shared with another memory area?
 
 feature -- Comparison
 
@@ -95,10 +116,32 @@ feature -- Duplication
 
 	copy (other: like Current) is
 			-- Update current object using fields of object attached
-			-- to `other', so as to yield equal objects.
+			-- to `other', so as to yield equal objects. If `is_shared'
+			-- and current is not large enough to hold `other' create
+			-- a new pointer area and `is_shared' is set to `False'.
+		local
+			l_ptr: POINTER
 		do
-			resize (other.count)
-			item.memory_copy (other.item, other.count)
+			if count >= other.count then
+					-- No need to reallocate, it is safe to just copy.
+				item.memory_copy (other.item, other.count)
+			else
+					-- We need to reallocate memory here
+				if is_shared then
+						-- Before `item' was shared, so we simply allocate
+						-- a new memory area from `other' and reset
+						-- the `is_shared' flag.
+					is_shared := False
+					make_from_pointer (other.item, other.count)
+				else
+						-- Simply resize Current and copy data.
+					resize (other.count)
+					item.memory_copy (other.item, other.count)
+				end
+			end
+		ensure then
+			sharing_status_not_preserved:
+				(old is_shared and not is_shared) implies (other.count > old count)
 		end
 		
 feature -- Access: Platform specific
@@ -147,6 +190,31 @@ feature -- Access: Platform specific
 		do
 			Result := feature {MARSHAL}.read_int_ptr (item, pos)
 		end
+
+	read_boolean (pos: INTEGER): BOOLEAN is
+			-- Read BOOLEAN at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + Boolean_bytes) <= count
+		local
+			l_int8: INTEGER_8
+		do
+			l_int8 := read_integer_8 (pos)
+			Result := l_int8 /= 0
+		end
+
+	read_character (pos: INTEGER): CHARACTER is
+			-- Read CHARACTER at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + Character_bytes) <= count
+		local
+			l_target: NATIVE_ARRAY [CHARACTER]
+		do
+			create l_target.make (1)
+			feature {MARSHAL}.copy (item + pos, l_target, 0, 1)
+			Result := l_target.item (0)
+		end		
 
 	read_real (pos: INTEGER): REAL is
 			-- Read REAL at position `pos'.
@@ -252,6 +320,36 @@ feature -- Element change: Platform specific
 		ensure
 			inserted: p = read_pointer (pos)
 		end
+
+	put_boolean (b: BOOLEAN; pos: INTEGER) is
+			-- Insert `b' at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + Boolean_bytes) <= count
+		do
+			if b then
+				put_integer_8 (1, pos)
+			else
+				put_integer_8 (0, pos)
+			end
+		ensure
+			inserted: b = read_boolean (pos)
+		end	
+
+	put_character (c: CHARACTER; pos: INTEGER) is
+			-- Insert `' at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + Character_bytes) <= count
+		local
+			l_source: NATIVE_ARRAY [CHARACTER]
+		do
+			create l_source.make (1)
+			l_source.put (0, c)
+			feature {MARSHAL}.copy (l_source, 0, item + pos, 1)
+		ensure
+			inserted: c = read_character (pos)
+		end			
 
 	put_real (r: REAL; pos: INTEGER) is
 			-- Insert `r' at position `pos'.
@@ -502,6 +600,7 @@ feature -- Concatenation
 	append (other: like Current) is
 			-- Append `other' at the end of Current.
 		require
+			not_shared: not is_shared
 			other_not_void: other /= Void
 		local
 			new_count: INTEGER
@@ -520,6 +619,8 @@ feature -- Resizing
 	resize (n: INTEGER) is
 			-- Reallocate `item' to hold `n' bytes.
 			-- If `n' smaller than `count', does nothing.
+		require
+			not_shared: not is_shared
 		do
 			if n > count then
 					-- Reallocate.
@@ -541,10 +642,15 @@ feature {NONE} -- Disposal
 		local
 			null: POINTER
 		do
-			item.memory_free
+			if not is_shared then
+				item.memory_free
+			end
+			is_shared := False
 					-- We do not reset `item' to `default_pointer'
 					-- because the only way to get there is that current
 					-- instance is not reachable anymore.
+		ensure then
+			shared_reset: not is_shared
 		end
 
 invariant

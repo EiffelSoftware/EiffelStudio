@@ -96,7 +96,7 @@ feature -- Element change
 			from
 				local_children.start
 			variant
-				local_children.count - local_children.index
+				local_children.count - local_children.index + 1
 			until
 				local_children.off
 			loop
@@ -120,7 +120,7 @@ feature -- Element change
 			from
 				local_children.start
 			variant
-				local_children.count - local_children.index
+				local_children.count - local_children.index + 1
 			until
 				local_children.after
 			loop

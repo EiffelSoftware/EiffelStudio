@@ -2610,9 +2610,6 @@ feature -- Parent checking
 
 				if l_parent_class.is_frozen then
 						-- Error which occurs only during IL generation.
-					check
-						il_generation: System.il_generation
-					end
 					create vifi1.make (Current)
 					vifi1.set_parent_class (l_parent_class)
 					Error_handler.insert_error (vifi1)

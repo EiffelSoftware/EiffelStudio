@@ -30,6 +30,30 @@ feature
 		end
 
 	prepare is
+		do
+			post_launch_actions.extend (~show_splash_screen)
+			post_launch_actions.extend (~prepare_main_window)
+			post_launch_actions.extend (~remove_splash_screen)
+		end
+
+	splash_screen: EV_WINDOW
+			-- Application logo window.
+
+	show_splash_screen is
+			-- Display application logo window.
+		do
+			create splash_screen
+			splash_screen.extend (create {EV_PIXMAP}.make_for_test)
+			splash_screen.show
+		end
+
+	remove_splash_screen is
+			-- Hide application logo window.
+		do
+			splash_screen.destroy
+		end
+
+	prepare_main_window is
 			-- Pre launch preperation.
 			--  Create some procedure widgets in a notebook.
 			--  Create one of each Vision widget in a notebook.
@@ -169,7 +193,7 @@ feature
 		end
 
 	display_test (an_area: EV_CELL; any_object: ANY) is
-			-- Display `a_testable'.`test_widget' on `an_area'.
+			-- Display `any_object's test on `an_area'.
 		require
 			an_area_not_void: an_area /= Void
 		local
@@ -264,16 +288,16 @@ feature
 			Result.extend (create {EV_FIGURE_DOT}.make_for_test)
 --|FIXME		Result.extend (create {EV_FIGURE_DRAWER})
 			Result.extend (create {EV_FIGURE_ELLIPSE}.make_for_test)
-			Result.extend (create {EV_FIGURE_EQUILATERAL})
+			Result.extend (create {EV_FIGURE_EQUILATERAL}.make_for_test)
 			Result.extend (create {EV_FIGURE_GROUP})
 			Result.extend (create {EV_FIGURE_LINE}.make_for_test)
 			Result.extend (create {EV_FIGURE_MATH})
-			Result.extend (create {EV_FIGURE_PICTURE})
+			Result.extend (create {EV_FIGURE_PICTURE}.make_for_test)
 			Result.extend (create {EV_FIGURE_PIE_SLICE})
 			Result.extend (create {EV_FIGURE_POLYGON})
 			Result.extend (create {EV_FIGURE_POLYLINE})
 			Result.extend (create {EV_FIGURE_RECTANGLE}.make_for_test)
-			Result.extend (create {EV_FIGURE_TEXT})
+			Result.extend (create {EV_FIGURE_TEXT}.make_for_test)
 			Result.extend (create {EV_FIGURE_TRIANGLE})
 			Result.extend (create {EV_FIGURE_WORLD})
 --|FIXME		Result.extend (create {EV_PROJECTION})
@@ -405,6 +429,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/04/25 23:38:42  brendel
+--| Started implementation of splash screen.
+--|
 --| Revision 1.21  2000/04/25 23:16:16  brendel
 --| Added test area for non-widgets.
 --|

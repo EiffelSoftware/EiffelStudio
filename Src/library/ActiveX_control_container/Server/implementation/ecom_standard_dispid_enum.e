@@ -1,5 +1,7 @@
 indexing
 	description: "Standard dispatch ID constants. From <olectl.h>"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ECOM_STANDARD_DISPID_ENUM

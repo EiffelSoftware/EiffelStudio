@@ -17,7 +17,7 @@ rt_shared void eif_gen_conf_cleanup (void);
 RT_LNK int16 eif_final_id (int16, int16 *ttable, int16 **gttable, EIF_REFERENCE object);
 
 /* Converts an array of type ids to a single id */
-RT_LNK int16 eif_compound_id (int16 *cache, EIF_REFERENCE object, int16 dyn_type, int16 *typearr);
+RT_LNK int16 eif_compound_id (int16 *cache, int16 current_dftype, int16 dyn_type, int16 *typearr);
 
 /* Type of an actual generic parameter */
 RT_LNK int16 eif_gen_param (int16 stype, EIF_REFERENCE object, int pos, char *is_exp, long *nr_bits);
@@ -35,7 +35,8 @@ RT_LNK int16 eif_register_bit_type (long size);
 RT_LNK int16 eif_typeof_array_of (int16 type);
 
 /* Full type name of an object as STRING object */
-RT_LNK char *eif_gen_typename (EIF_REFERENCE obj);
+RT_LNK EIF_REFERENCE eif_gen_typename_of_type (int16 current_dftype);
+#define eif_gen_typename(obj)	((obj) ? eif_gen_typename_of_type ((int16) Dftype (obj)) : eif_gen_typename_of_type ((int16) 0))
 
 /* CID which creates a given type */
 RT_LNK int16 *eif_gen_cid (int16);

@@ -5,8 +5,9 @@ indexing
 		"Parser skeletons for parser generators such as 'geyacc'"
 
 	library:    "Gobo Eiffel Parse Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1998, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -555,7 +556,7 @@ feature {NONE} -- Factory
 					-- (0 is reserved for no-type)
 				an_id := last_grammar.types.count + 1
 				!! Result.make_generic (an_id, a_name, generics)
-				upper_name := STRING_.to_upper (result.name)
+				upper_name := STRING_.to_upper (Result.name)
 				if types.has (upper_name) then
 					Result := types.item (upper_name)
 				else
@@ -635,7 +636,19 @@ feature {NONE} -- Implementation
 		require
 			an_action_not_void: an_action /= Void
 			a_rule_not_void: a_rule /= Void
+		local
+			dummy_rule: PR_RULE
+			dummy_variable: PR_VARIABLE
 		do
+			if a_rule.action /= No_action then
+					-- A mid-rule action has been detected.
+				dummy_variable := new_dummy_variable
+				dummy_rule := new_rule (dummy_variable)
+				dummy_rule.set_action (a_rule.action)
+				dummy_rule.set_line_nb (a_rule.line_nb)
+				put_rule (dummy_rule)
+				a_rule.put_symbol (dummy_variable)
+			end
 			a_rule.set_action (an_action)
 		ensure
 			inserted: a_rule.action = an_action

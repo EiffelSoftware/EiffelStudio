@@ -13,8 +13,9 @@ indexing
 
 
 	library:    "Gobo Eiffel Lexical Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -68,7 +69,7 @@ feature -- Element change
 			proto: LX_PROTO
 		do
 			proto := a_cursor.item
-			remove_at (a_cursor)
+			a_cursor.remove
 			put_first (proto)
 		ensure
 			moved: first = old (a_cursor.item)

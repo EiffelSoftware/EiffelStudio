@@ -4,8 +4,9 @@ indexing
 
 		"Gobo Eiffel Grep"
 
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -32,6 +33,8 @@ feature -- Execution
 			a_filename: STRING
 			case_insensitive: BOOLEAN
 		do
+			if False then resurrect_code end
+
 			nb := Arguments.argument_count
 			if nb = 0 then
 				std.error.put_string (Usage_message)
@@ -129,5 +132,30 @@ feature -- Access
 
 	regexp: LX_DFA_REGULAR_EXPRESSION
 			-- Regular expression
+
+feature {NONE} -- Implementation
+
+	resurrect_code is
+			-- Make sure that SmallEiffel does not complain about possible
+			-- "calls on a Void target in the living Eiffel code".
+		local
+			et1: DS_EQUALITY_TESTER [LX_NFA_STATE]
+			et2: DS_EQUALITY_TESTER [INTEGER]
+			et3: DS_EQUALITY_TESTER [LX_NFA]
+			et4: DS_EQUALITY_TESTER [LX_RULE]
+			et5: DS_EQUALITY_TESTER [LX_START_CONDITION]
+			et6: DS_EQUALITY_TESTER [LX_SYMBOL_CLASS]
+			et7: DS_EQUALITY_TESTER [LX_DFA_STATE]
+			fb: YY_FILE_BUFFER
+		do
+			!! et1
+			!! et2
+			!! et3
+			!! et4
+			!! et5
+			!! et6
+			!! et7
+			!! fb.make (std.input)
+		end
 
 end -- class GEGREP

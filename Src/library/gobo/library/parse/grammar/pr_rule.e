@@ -6,8 +6,9 @@ indexing
 		%about grammar rules, see $GOBO\doc\geyacc\rules.html"
 
 	library:    "Gobo Eiffel Parse Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1998, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -224,7 +225,7 @@ feature -- Output
 			a_file.put_string (lhs.name)
 			a_file.put_string (" ->")
 			if rhs.is_empty then
-				a_file.put_string (" -- /* empty */")
+				a_file.put_string (" -- Empty")
 			else
 				nb := rhs.count
 				from i := 1 until i > nb loop

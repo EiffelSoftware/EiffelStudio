@@ -4,14 +4,17 @@ indexing
 
 		"Gobo Eiffel Yacc: syntactical analyzer generator"
 
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1998, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
 class GEYACC
 
 inherit
+
+	GEYACC_VERSION
 
 	KL_SHARED_EXCEPTIONS
 	KL_SHARED_ARGUMENTS
@@ -38,6 +41,8 @@ feature -- Processing
 			tokens_needed: BOOLEAN
 			verbose_file: like OUTPUT_STREAM_TYPE
 		do
+			if False then resurrect_code end
+
 			Arguments.set_program_name ("geyacc")
 			!! error_handler.make_standard
 			read_command_line
@@ -198,7 +203,6 @@ feature -- Access
 
 feature -- Constants
 
-	Version_number: STRING is "1.4"
 	Eiffel_extension: STRING is ".e"
 
 feature {NONE} -- Error handling
@@ -234,6 +238,39 @@ feature {NONE} -- Error handling
 			!! Result.make ("[-hxV?][-t classname][-v filename][-o filename] filename")
 		ensure
 			usage_message_not_void: Result /= Void
+		end
+
+feature {NONE} -- Implementation
+
+	resurrect_code is
+			-- Make sure that SmallEiffel does not complain about possible
+			-- "calls on a Void target in the living Eiffel code".
+		local
+			et1: DS_EQUALITY_TESTER [PR_RULE]
+			et2: DS_EQUALITY_TESTER [PR_TOKEN]
+			et3: DS_EQUALITY_TESTER [PR_VARIABLE]
+			et4: DS_EQUALITY_TESTER [PR_TYPE]
+			et5: DS_EQUALITY_TESTER [INTEGER]
+			et6: DS_EQUALITY_TESTER [STRING]
+			et7: DS_EQUALITY_TESTER [PR_TRANSITION]
+			et8: DS_EQUALITY_TESTER [PR_REDUCTION]
+			et9: DS_EQUALITY_TESTER [PR_STATE]
+			et10: DS_EQUALITY_TESTER [PR_PORTION]
+			et11: DS_EQUALITY_TESTER [PR_CONFLICT]
+			et12: DS_EQUALITY_TESTER [DS_ARRAYED_LIST [PR_VARIABLE]]
+		do
+			!! et1
+			!! et2
+			!! et3
+			!! et4
+			!! et5
+			!! et6
+			!! et7
+			!! et8
+			!! et9
+			!! et10
+			!! et11
+			!! et12
 		end
 
 invariant

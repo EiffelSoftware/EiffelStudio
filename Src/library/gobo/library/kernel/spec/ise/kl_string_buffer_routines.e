@@ -7,8 +7,9 @@ indexing
 		%with features `put', `item' and `count'."
 
 	library:    "Gobo Eiffel Kernel Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1999, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -86,7 +87,7 @@ feature -- Access
 				nb := e - s + 1
 				!! Result.make (nb)
 				a := Result.area
-				c_bcopy ($a, c_offset_pointer ($a_buffer, s), nb)
+				c_memcpy ($a, c_offset_pointer ($a_buffer, s), nb)
 				c_str_set_count ($Result, nb)
 			end
 		ensure
@@ -134,7 +135,7 @@ feature -- Element change
 					a_string.resize (new_count + a_string.additional_space)
 				end
 				a := a_string.area
-				c_safe_bcopy (c_offset_pointer ($a, old_count), c_offset_pointer ($a_buffer, s), nb)
+				c_memmove (c_offset_pointer ($a, old_count), c_offset_pointer ($a_buffer, s), nb)
 				c_str_set_count ($a_string, new_count)
 			end
 		ensure
@@ -158,7 +159,7 @@ feature -- Element change
 			nb := a_string.count
 			if nb > 0 then
 				a := a_string.area
-				c_bcopy (c_offset_pointer ($a_buffer, pos), $a, nb)
+				c_memcpy (c_offset_pointer ($a_buffer, pos), $a, nb)
 			end
 		ensure
 			charaters_set: equal (substring (a_buffer, pos, a_string.count + pos - 1), a_string)
@@ -213,7 +214,7 @@ feature -- Element change
 			move_left: old_pos > new_pos
 		do
 			if nb > 0 then
-				c_safe_bcopy (c_offset_pointer ($a_buffer, new_pos), c_offset_pointer ($a_buffer, old_pos), nb)
+				c_memmove (c_offset_pointer ($a_buffer, new_pos), c_offset_pointer ($a_buffer, old_pos), nb)
 			end
 		end
 
@@ -230,7 +231,7 @@ feature -- Element change
 			move_right: old_pos < new_pos
 		do
 			if nb > 0 then
-				c_safe_bcopy (c_offset_pointer ($a_buffer, new_pos), c_offset_pointer ($a_buffer, old_pos), nb)
+				c_memmove (c_offset_pointer ($a_buffer, new_pos), c_offset_pointer ($a_buffer, old_pos), nb)
 			end
 		end
 
@@ -268,7 +269,7 @@ feature {NONE} -- Externals
 			-- Read min (`length', remaining bytes in `a_file')
 			-- characters into `a_string'.
 		external
-			"C (FILE *, EIF_CHARACTER *, EIF_INTEGER): EIF_INTEGER | %"eif_file.h%""
+			"C (FILE *, char *, EIF_INTEGER): EIF_INTEGER"
 		alias
 			"file_gss"
 		end
@@ -281,7 +282,7 @@ feature {NONE} -- Externals
 			"console_readstream"
 		end
 
-	c_bcopy (target, source: POINTER; size: INTEGER) is
+	c_memcpy (target, source: POINTER; size: INTEGER) is
 			-- Copy `size' characters from `source' to `target'.
 			-- `source' and `target' should not overlap.
 		external
@@ -290,7 +291,7 @@ feature {NONE} -- Externals
 			"memcpy"
 		end
 
-	c_safe_bcopy (target, source: POINTER; size: INTEGER) is
+	c_memmove (target, source: POINTER; size: INTEGER) is
 			-- Copy `size' characters from `source' to `target'.
 			-- `source' and `target' can overlap.
 		external

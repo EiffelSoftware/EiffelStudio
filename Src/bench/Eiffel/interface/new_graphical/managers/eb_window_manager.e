@@ -701,14 +701,6 @@ feature -- Events
 			Freeze_project_cmd.disable_sensitive
 			Finalize_project_cmd.disable_sensitive
 			Precompilation_cmd.disable_sensitive
-			from
-				managed_windows.start
-			until
-				managed_windows.after
-			loop
-				managed_windows.item.on_compile
-				managed_windows.forth
-			end
 		end
 
 	on_project_created is

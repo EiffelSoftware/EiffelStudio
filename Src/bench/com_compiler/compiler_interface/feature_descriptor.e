@@ -70,7 +70,7 @@ feature -- Access
 	name: STRING is
 			-- Feature name.
 		do
-			Result := compiler_feature.feature_name
+			Result := clone (compiler_feature.feature_name)
 		ensure then
 			result_exists: Result /= void
 		end
@@ -112,16 +112,50 @@ feature -- Access
 			ef.set_current_feature (ast)
 			comments := ef.current_feature_comments
 			create Result.make (20)
-			from
-				comments.start
-			until
-				comments.after
-			loop
-				Result.append (comments.item)
-				comments.forth
+			if is_once then
+				Result.append ("once ")
+			end
+			if is_constant then
+				Result.append ("constant ")
+			end
+			if is_frozen then
+				Result.append ("frozen ")
+			end
+			if is_external then
+				Result.append ("external ")
+			end
+			if is_deferred then
+				Result.append ("deferred ")
+			end
+			if is_infix then
+				Result.append ("infix ")
+			end
+			if is_prefix then
+				Result.append ("prefix ")
+			end
+			if is_attribute then
+				Result.append ("attribute: ")
+			elseif is_function then
+				Result.append ("function: ")
+			elseif is_procedure then
+				Result.append ("procedure: ")
+			end
+			Result.append (name)
+			Result.append ("%Nsignature: ")
+			Result.append (signature)
+			if comments /= Void then
+				Result.append ("%N")
+				Result.append ("Description:%N")
+				from
+					comments.start
+				until
+					comments.after
+				loop
+					Result.append (comments.item + "%N")
+					comments.forth
+				end
 			end
 			Result.prune_all ('%R')
-			Result.prune_all ('%N')
 			Result.prune_all ('%T')
 		ensure then
 			result_exists: Result /= void			
@@ -129,8 +163,17 @@ feature -- Access
 
 	signature: STRING is
 			-- Feature signature.
+		local
+			e_feature: E_FEATURE
+			type: TYPE_A
 		do
-			Result := compiler_feature.api_feature (compiler_class.compiled_class.class_id).feature_signature
+			e_feature := compiler_feature.api_feature (compiler_class.compiled_class.class_id)
+			Result := e_feature.feature_signature
+			type := e_feature.type			
+			if type /= Void then
+				Result.append (": ")
+				Result.append (e_feature.type.dump)
+			end
 		ensure then
 			result_exists: Result /= void			
 		end

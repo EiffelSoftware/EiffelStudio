@@ -28,12 +28,15 @@ feature {NONE} -- Implementation
 			eac: EAC_BROWSER
 			ci: CACHE_INFO
 			counter: INTEGER
+			path: CACHE_PATH
+			info_file_name: STRING
 		do
 			create tree_item.make_with_text ("Eiffel Assembly Cache")
 			widget_tree.extend (tree_item)
 			
 			create eac
-			ci := eac.info
+			create path
+			ci := eac.info (path.absolute_info_assemblies_path)
 			from 
 				counter := 1
 			until
@@ -42,8 +45,10 @@ feature {NONE} -- Implementation
 				create tree_item1.make_with_text (ci.assemblies.item (counter).name)
 				tree_item.extend (tree_item1)
 				
-				tree_item1.select_actions.extend (agent initialize_assembly (ci.assemblies.item (counter), tree_item1))
-				
+					-- Add a ficitve element for a cross to appear
+				tree_item1.extend (create {EV_TREE_ITEM})
+				tree_item1.expand_actions.extend (agent initialize_assembly (ci.assemblies.item (counter), tree_item1))
+
 				counter := counter + 1
 			end
 		end
@@ -66,7 +71,12 @@ feature {NONE} -- Implementation
 			cache: CACHE
 		do
 				-- Is it allready initilized?
-			if tree_item_parent.is_empty then
+			if tree_item_parent.is_empty or tree_item_parent.count = 1 then
+				if tree_item_parent.count = 1 then
+						-- remove element that served to show the cross to expand tree.
+					tree_item_parent.first.destroy
+				end
+				
 				create eac
 				create path
 				a_file_name := path.absolute_info_assembly_path (an_assembly)
@@ -85,9 +95,6 @@ feature {NONE} -- Implementation
 						if not cache.Types.has (l_dotnet_type_name) then
 							cache.Types.extend (cat.eiffel_names.item (counter), l_dotnet_type_name)
 						end
-					else
-						l_dotnet_type_name := "ZZZ_xml_deleted_type_" + counter.to_hex_string
-						tree_buffer.put (l_dotnet_type_name, counter)
 					end
 					counter := counter + 1
 				end
@@ -118,7 +125,6 @@ feature {NONE} -- Implementation
 			create output.make (l_text_1)
 			output.print_type (an_assembly, a_dotnet_type_name)
 		end
-
 			
 end -- class MAIN_WINDOW
 

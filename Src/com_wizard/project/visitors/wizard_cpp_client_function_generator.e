@@ -30,11 +30,9 @@ feature -- Basic operations
 
 			func_desc := a_function
 
-			-- Set function name used in ccom
 			ccom_feature_writer.set_name (external_feature_name (a_function.eiffel_name (a_component)))
 			ccom_feature_writer.set_comment (func_desc.description)
 
-			-- Argument for ccom feature
 			set_client_result_type_and_signature
 
 			ccom_feature_writer.set_body (feature_body (interface_name))
@@ -57,6 +55,38 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
+	set_client_result_type_and_signature is
+			-- Set ccom client feature signature
+		require
+			non_void_func_desc: func_desc /= Void
+			non_void_ccom_feature_writer: ccom_feature_writer /= Void
+		local
+			visitor: WIZARD_DATA_TYPE_VISITOR
+		do
+			if func_desc.arguments /= Void and not func_desc.arguments.empty then
+				ccom_feature_writer.set_signature (set_result_type_and_signature)
+			end
+
+			if does_return_application_data then
+				visitor := func_desc.return_type.visitor
+
+				if visitor.is_basic_type or visitor.is_enumeration then
+					ccom_feature_writer.set_result_type (visitor.cecil_type)
+				elseif (visitor.vt_type = Vt_bool) then
+					ccom_feature_writer.set_result_type (Eif_boolean)
+				else
+					ccom_feature_writer.set_result_type (Eif_reference)
+				end
+			end
+
+		end
+
+	does_return_application_data: BOOLEAN is
+			-- Does function return application data?
+		do
+			Result := not (func_desc.return_type.type = Vt_hresult) 
+		end
+
 	feature_body (interface_name: STRING): STRING is
 			-- Ccom client feature body
 		require
@@ -77,7 +107,6 @@ feature {NONE} -- Implementation
 			if func_desc.argument_count > 0 then
 				create pointer_var.make
 
-				-- Create call function argument list
 				arguments := func_desc.arguments
 	
 				create out_value.make (1000)
@@ -626,6 +655,132 @@ feature {NONE} -- Implementation
 		ensure
 			non_void_retval: Result /= Void
 			valid_retval: not Result.empty
+		end
+
+	set_result_type_and_signature: STRING is
+			-- set result type and return signature of feature
+		require
+			non_void_feature_writer: ccom_feature_writer /= Void
+			non_void_arguments: func_desc.arguments /= Void
+			has_arguments: not func_desc.arguments.empty
+		local
+			arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
+			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
+			visitor: WIZARD_DATA_TYPE_VISITOR
+		do
+			create Result.make (1000)
+			arguments := func_desc.arguments
+			from
+				arguments.start
+			until
+				arguments.off
+			loop
+				visitor := arguments.item.type.visitor
+
+				if is_paramflag_fretval (arguments.item.flags) then
+					pointed_descriptor ?= arguments.item.type
+					if pointed_descriptor /= Void then
+						visitor := pointed_descriptor.pointed_data_type_descriptor.visitor
+						if visitor.is_basic_type or visitor.is_enumeration or (visitor.vt_type = Vt_bool) then
+							ccom_feature_writer.set_result_type (visitor.cecil_type)
+						else
+							ccom_feature_writer.set_result_type (Eif_reference)
+						end
+					else
+						if visitor.is_basic_type or visitor.is_enumeration or (visitor.vt_type = Vt_bool) then
+							ccom_feature_writer.set_result_type (visitor.cecil_type)
+						else
+							ccom_feature_writer.set_result_type (Eif_reference)
+						end
+					end
+
+				elseif is_paramflag_fout (arguments.item.flags) then
+					Result.append (Beginning_comment_paramflag)
+					if is_paramflag_fin (arguments.item.flags) then
+						Result.append ("in, ")
+					end
+					Result.append ("out")
+					Result.append (End_comment_paramflag)
+					if visitor.is_basic_type then
+						Result.append (visitor.cecil_type)
+						Result.append (Space)
+						Result.append (arguments.item.name)
+
+					elseif 
+						visitor.is_array_basic_type or 
+						visitor.is_interface_pointer or 
+						visitor.is_coclass_pointer or 
+						visitor.is_structure_pointer 
+					then
+						Result.append (visitor.c_type)
+						Result.append (Space)
+						Result.append (arguments.item.name)
+						Result.append (visitor.c_post_type)
+					elseif visitor.is_interface or visitor.is_structure then
+						Result.append (Eif_pointer)
+						Result.append (Space)
+						Result.append (arguments.item.name)
+
+					else
+						Result.append (Eif_object)
+						Result.append (Space)
+						Result.append (arguments.item.name)
+					end
+					if not (visitor.c_header_file = Void or else visitor.c_header_file.empty) then
+						c_header_files.extend (visitor.c_header_file)
+					end
+					Result.append (Comma_space)
+
+				else
+					Result.append (Beginning_comment_paramflag)
+					Result.append ("in")
+					Result.append (End_comment_paramflag)
+					if visitor.is_basic_type or visitor.is_enumeration then
+						Result.append (visitor.cecil_type)
+					elseif 
+						visitor.is_array_basic_type or 
+						visitor.is_interface_pointer or 
+						visitor.is_coclass_pointer or 
+						visitor.is_structure_pointer 
+					then
+						Result.append (visitor.c_type)
+
+					elseif (visitor.vt_type = Vt_bool) then
+						Result.append (Eif_boolean)
+
+					elseif visitor.is_interface or visitor.is_structure then
+						Result.append (visitor.c_type)
+						Result.append (Space)
+						Result.append (Asterisk)
+
+					else
+						Result.append (Eif_object)
+					end
+
+					Result.append (Space)
+					Result.append (arguments.item.name)
+
+					if visitor.is_array_basic_type then
+						Result.append (visitor.c_post_type)
+					end
+
+					if not (visitor.c_header_file = Void or else visitor.c_header_file.empty) then
+						c_header_files.extend (visitor.c_header_file)
+					end
+
+					Result.append (Comma_space)
+
+				end
+				visitor := Void
+				arguments.forth
+			end
+
+			if Result.count > 0  then
+				Result.remove (Result.count)
+				Result.remove (Result.count)
+			end
+		ensure
+			valid_result: Result /= Void
 		end
 
 end -- class WIZARD_CPP_CLIENT_FUNCTION_GENERATOR

@@ -72,7 +72,13 @@ feature -- Access EV_DRAGABLE_SOURCE.
 				Create Result
 				Result.set_minimum_size (10, 10)
 				create pixmap
-				pixmap.set_with_named_file ("C:\Documents and Settings\Julian Rogers\Desktop\grid_pattern.bmp")
+				pixmap.set_size (2, 2)
+				pixmap.set_foreground_color ((create {EV_STOCK_COLORS}).default_background_color)
+				pixmap.draw_point (0, 0)
+				pixmap.draw_point (1, 1)
+				pixmap.set_foreground_color ((create {EV_STOCK_COLORS}).black)
+				pixmap.draw_point (0, 1)
+				pixmap.draw_point (1, 0)
 				Result.set_background_pixmap (pixmap)
 			ensure
 				result_not_void: Result /= Void

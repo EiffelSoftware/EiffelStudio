@@ -59,22 +59,19 @@ feature -- Implementation
 	enable_transport is
 			-- Activate pick/drag and drop mechanism.
  		do
-			check
-				button_release_not_connected: button_release_connection_id = 0
+ 			if not is_destroyed then
+				if button_press_connection_id > 0 then
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, button_press_connection_id)
+				end
+				real_signal_connect (
+					event_widget,
+					"button-press-event",
+					agent (App_implementation.gtk_marshal).start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
+					App_implementation.default_translate
+				)
+				button_press_connection_id := last_signal_connection_id
+				is_transport_enabled := True
 			end
-			if button_press_connection_id > 0 then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, button_press_connection_id)
-			end
-			real_signal_connect (
-				event_widget,
-				"button-press-event",
-				agent (App_implementation.gtk_marshal).start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
-				App_implementation.default_translate
-			)
-			button_press_connection_id := last_signal_connection_id
-			is_transport_enabled := True
-		ensure then
-			press_connection_successful: button_press_connection_id > 0
 		end
 
 	disable_transport is
@@ -502,7 +499,7 @@ feature -- Implementation
 			if a_wid_imp /= Void and then a_wid_imp.is_sensitive then
 				if App_implementation.pnd_targets.has (a_wid_imp.interface.object_id) then
 					Result := a_wid_imp.interface
-				end	
+				end
 				a_pnd_deferred_item_parent ?= a_wid_imp
 				if a_pnd_deferred_item_parent /= Void then
 						-- We need to explicitly search for PND deferred items
@@ -517,6 +514,7 @@ feature -- Implementation
 		end
 
 	create_drop_actions: EV_PND_ACTION_SEQUENCE is
+			-- Create and initialize `drop_actions' for `Current'
 		do
 			create Result
 			interface.init_drop_actions (Result)

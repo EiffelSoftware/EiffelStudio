@@ -66,4 +66,8 @@ feature {NONE} -- Counters
 			Result := System.pattern_table.pattern_id_counter
 		end
 
+	Invalid_index: INTEGER is 65535
+			-- Invalid real body index used to mark
+			-- empty invariants (max uint16)
+
 end -- class SHARED_COUNTER

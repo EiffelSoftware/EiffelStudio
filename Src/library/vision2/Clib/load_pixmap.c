@@ -78,9 +78,11 @@ struct TLoadPixmapCtx {
 		void *pCurrObject;		/* Current Eiffel Object executed */
 		char *pszFileName;		/* File name */
 		FILE *pFile;			/* File Pointer */
-		void (*LoadPixmapUpdateObject)(
 #ifndef EIF_IL_DLL
+		void (* LoadPixmapUpdateObject)(
 				void*, 
+#else
+		void (__stdcall* LoadPixmapUpdateObject)(
 #endif
 				unsigned int, 
 				unsigned int, 
@@ -90,6 +92,7 @@ struct TLoadPixmapCtx {
 				void*
 			);
 };
+
 typedef struct TLoadPixmapCtx  LoadPixmapCtx;
 
 /* Fonctions declaration */
@@ -588,9 +591,11 @@ void c_ev_load_pixmap(
 		)
 	{
 	FILE *pFile;
-	void (*LoadPixmapUpdateObject)(
 #ifndef EIF_IL_DLL
+	void (* LoadPixmapUpdateObject)(
 			void*,
+#else
+	void (__stdcall* LoadPixmapUpdateObject)(
 #endif
 			unsigned int,
 			unsigned int,
@@ -606,9 +611,11 @@ void c_ev_load_pixmap(
 	unsigned char	bFileToBeDeleted = FALSE;
 	int				bFreeFileName = FALSE;
 	
-	LoadPixmapUpdateObject = (void (*) (
 #ifndef EIF_IL_DLL
+	LoadPixmapUpdateObject = (void (*) (
 			void*,
+#else
+	LoadPixmapUpdateObject = (void (__stdcall *) (
 #endif
 			unsigned int,
 			unsigned int,

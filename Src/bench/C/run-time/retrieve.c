@@ -4346,7 +4346,6 @@ rt_private EIF_REFERENCE object_rread_special (
 		EIF_REFERENCE object, uint32 flags, uint32 count)
 {
 	EIF_REFERENCE result = NULL;
-	uint32 old_type = flags & EO_TYPE;
 	type_descriptor *conv = type_description (flags & EO_TYPE);
 	EIF_REFERENCE addr, trash = NULL;
 

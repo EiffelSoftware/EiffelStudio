@@ -2254,13 +2254,19 @@ feature -- Final mode generation
 			a_class: CLASS_C
 			i, j, k, nb: INTEGER
 			deg_output: DEGREE_OUTPUT
-			class_array, ordered_classes: ARRAY [CLASS_C]
+			class_array: ARRAY [CLASS_C]
 			local_classes: CLASS_C_SERVER
+			is_topologic: BOOLEAN
 		do
-			!! ordered_classes.make (1, max_class_id)
+				-- Are we going to process degree minus 4 by following the topological
+				-- sort?
+			is_topologic := Configure_resources.get_boolean ("topo", True)
+
 			local_classes := classes
 			i := local_classes.count
 			from
+				deg_output := Degree_output
+				deg_output.put_start_degree (-4, i)
 				local_classes.start
 			until
 				local_classes.after
@@ -2276,34 +2282,19 @@ feature -- Final mode generation
 						-- Since a class can be removed, test if `a_class'
 						-- is not Void.
 					if a_class /= Void then
-						ordered_classes.put (a_class, a_class.topological_id)
+						deg_output.put_degree_minus_4 (a_class, i)
+						i := i - 1
+						a_class.process_polymorphism
+						History_control.check_overload
 					end
 					j := j + 1
 				end
 				local_classes.forth
 			end
 
-			from
-				deg_output := Degree_output
-				deg_output.put_start_degree (-4, i)
-				k := 1
-			until
-				k > max_class_id
-			loop
-					-- Since a class can be removed, test if `a_class'
-					-- is not Void.
-				a_class := ordered_classes.item (k)
-				if a_class /= Void then
-					deg_output.put_degree_minus_4 (a_class, i)
-					i := i - 1
-					a_class.process_polymorphism
-					History_control.check_overload
-				end
-				k := k + 1
-			end
-			deg_output.put_end_degree
 			History_control.transfer
 			tmp_poly_server.flush
+			deg_output.put_end_degree
 		end
 
 	degree_minus_5 is

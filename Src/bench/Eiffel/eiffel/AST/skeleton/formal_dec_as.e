@@ -154,7 +154,8 @@ feature -- Status
 					creation_feature_list.after
 				loop
 					feature_name := creation_feature_list.item.internal_name
-					Result.extend (feat_table.item (feature_name))
+					feat_table.search (feature_name)
+					Result.extend (feat_table.found_item)
 					Result.forth
 
 					if not has_default_create then

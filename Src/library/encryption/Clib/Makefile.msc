@@ -36,4 +36,4 @@ MTdes.obj: des.c
 	$(CC) -Fo$@ $(MTCFLAGS) -c $?
 
 MTdesop.obj: desop.c
-	$(CC) -FoT$@ $(MTCFLAGS) -c $?
+	$(CC) -Fo$@ $(MTCFLAGS) -c $?

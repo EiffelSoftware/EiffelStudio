@@ -69,16 +69,15 @@ feature {NONE} -- Internal Initialisation
 			l_type: INTEGER
 		do
 			if not error_occured then
-					--| FIXME JFIAT: check if we sometimes used the address of unreference, unboxed ... value
 				referenced_address := icd_referenced_value.get_address
 				object_address := icd_prepared_value.get_address					
 				
 --				if referenced_address = 0 then
---					-- FIXME jfiat: 20040316 : Check this, 
---					-- why sometime the referenced value has null address but is not null !!!
---					-- so for now let's use the icd_prepared_value when it occurs ..
---					-- ANSWER: If the value is at least partly in registers, 
---					--         the address value is 0
+-- FIXME jfiat: 20040316 : null address for non null object : Check this
+-- why sometime the referenced value has null address but is not null !!!
+-- so for now let's use the icd_prepared_value when it occurs ..
+-- ANSWER: If the value is at least partly in registers, 
+--         the address value is 0
 --				end
 				
 				l_type := icd_prepared_value.get_type		
@@ -187,6 +186,19 @@ feature -- Queries
 		do
 			Result := debug_value_from_prepared_icdv (icd_referenced_value, icd_prepared_value)
 		end
+
+	value_icd_class: ICOR_DEBUG_CLASS is
+			-- ICOR_DEBUG_CLASS related to this Current value
+		require
+			has_object_interface: has_object_interface	
+		local
+		do
+			Result := once_value_icd_class
+			if Result = Void then
+				Result := interface_debug_object_value.get_class
+				once_value_icd_class := Result
+			end
+		end		
 		
 	value_class_type: CLASS_TYPE is
 			-- CLASS_TYPE related to this Current value
@@ -195,16 +207,73 @@ feature -- Queries
 			value_module_file_name_valid: value_module_file_name /= Void
 			value_class_token_valid: value_class_token > 0			
 		do
-			if once_value_class_type = Void then
-				if has_object_interface then
-					once_value_class_type := Il_debug_info_recorder.class_type_for_module_class_token (value_module_file_name, value_class_token)			
-				else
-					once_value_class_type := Eiffel_system.System.system_object_class.compiled_class.types.first
-					--| FIXME jfiat 2004/03/29 : any smarter way to find the real type ?
-				end	
-			end
 			Result := once_value_class_type
+			if Result = Void then
+				if has_object_interface then
+					Result := Il_debug_info_recorder.class_type_for_module_class_token (value_module_file_name, value_class_token)
+				else
+--				end
+--				if Result = Void then
+					Result := Eiffel_system.System.system_object_class.compiled_class.types.first
+					--| FIXME jfiat 2004/03/29 : Any smarter way to find the real type ?
+					-- even in case of external type ?
+				end
+				once_value_class_type := Result
+			end
+--		ensure
+--			result_not_void: Result /= Void
 		end
+		
+	value_class_c: CLASS_C is
+			-- CLASS_C related to this Current value
+		require
+			has_object_interface: has_object_interface	
+			value_module_file_name_valid: value_module_file_name /= Void
+			value_class_token_valid: value_class_token > 0
+		local
+			ct: CLASS_TYPE
+			an: STRING -- assembly name
+			ci: CLASS_I
+			ctok: INTEGER -- class token
+			cn: STRING  -- class name
+		do
+			ct := value_class_type
+			if ct /= Void then
+				Result := ct.associated_class
+			else
+				ctok := value_class_token
+				cn := value_icd_module.interface_md_import.get_typedef_props (ctok)
+				an := value_icd_module.get_assembly.get_name
+				an := only_file_name_without_extension (an)
+					--| FIXME jfiat 2004/04/02 : maybe having 
+					--| eiffel_universe.class_from_assembly_filename (...
+				ci := eiffel_universe.class_from_assembly (an, cn)
+				if ci = Void then
+						-- FIXME JFIAT: Ugly .. but for now .. far enought
+					ci := Eiffel_system.System.system_object_class
+				end
+				Result := ci.compiled_class
+			end
+		end
+		
+	only_file_name_without_extension (f: STRING): STRING is
+			-- Return only the filename part of the absolute filename `f'
+			-- Not very nice, but how could we do otherwise ?
+		local
+			pos: INTEGER
+			sep: CHARACTER
+		do
+			sep := (create {OPERATING_ENVIRONMENT}).Directory_separator
+			Result := f.twin
+			pos := Result.last_index_of (sep, Result.count)
+			if pos > 0 then
+				Result := Result.substring (pos + 1, Result.count)
+			end
+			pos := Result.last_index_of ('.', Result.count)
+			if pos > 0 then
+				Result := Result.substring (1, pos - 1)
+			end			
+		end	
 
 feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 
@@ -213,27 +282,30 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 		require
 			has_object_interface
 		do
-			Result := interface_debug_object_value.get_class.get_token
+			Result := value_icd_class.get_token
 		end
 
 	value_class_name: STRING is
 			-- class name for this ICorDebugObjectValue value
 		require
 			has_object_interface
+		local
+			l_ct: INTEGER			
 		do
-			if il_debug_info_recorder.has_class_info_about_module_class_token (value_module_file_name, value_class_token) then
-				Result := Il_debug_info_recorder.class_name_for_class_token_and_module (value_class_token, value_module_file_name)			
+			l_ct := value_class_token
+			if il_debug_info_recorder.has_class_info_about_module_class_token (value_module_file_name, l_ct) then
+				Result := Il_debug_info_recorder.class_name_for_class_token_and_module (l_ct, value_module_file_name)			
 			else
-				Result := value_icd_module.interface_md_import.get_typedef_props (value_class_token)
+				Result := value_icd_module.interface_md_import.get_typedef_props (l_ct)
 			end
-		end		
+		end
 
 	value_module_file_name: STRING is
 			-- module filename for this ICorDebugObjectValue value
 		require
 			has_object_interface
 		do
-			Result := value_icd_module.get_name			
+			Result := value_icd_module.get_name
 		end
 		
 	value_icd_module: ICOR_DEBUG_MODULE is
@@ -241,7 +313,11 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 		require
 			has_object_interface
 		do
-			Result := interface_debug_object_value.get_class.get_module			
+			Result := once_value_icd_module
+			if Result = Void then
+				Result := value_icd_class.get_module
+				once_value_icd_module := Result
+			end
 		end
 
 feature -- Interface queries for feature
@@ -249,11 +325,9 @@ feature -- Interface queries for feature
 	feature_token_for_feature_name (a_feat_name: STRING): INTEGER is
 			-- feature token for feature named by `a_feat_name'
 		local
-			l_class_type: CLASS_TYPE
 			l_feat_i: FEATURE_I
 		do
-			l_class_type := value_class_type
-			l_feat_i := l_class_type.associated_class.feature_named (a_feat_name)					
+			l_feat_i := value_class_c.feature_named (a_feat_name)
 			if l_feat_i /= Void then
 				Result := feature_token_for_feature (l_feat_i)
 			end
@@ -272,10 +346,10 @@ feature -- Interface Access
 		require
 			valid_object_type: is_reference_type or else is_class or else is_object or else is_valuetype
 		do
-			if once_interface_debug_object_value /= Void then
-				Result := once_interface_debug_object_value
-			else
+			Result := once_interface_debug_object_value
+			if Result = Void then
 				Result := icd_prepared_value.query_interface_icor_debug_object_value
+				once_interface_debug_object_value := Result
 			end
 		end
 		
@@ -284,10 +358,10 @@ feature -- Interface Access
 		require
 			is_reference_type 
 		do
-			if once_interface_debug_reference_value /= Void then
-				Result := once_interface_debug_reference_value
-			else
+			Result := once_interface_debug_reference_value
+			if Result = Void then
 				Result := icd_prepared_value.query_interface_icor_debug_reference_value
+				once_interface_debug_reference_value := Result
 			end
 		end
 
@@ -296,10 +370,10 @@ feature -- Interface Access
 		require
 			is_array_type 
 		do
-			if once_interface_debug_array_value /= Void then
-				Result := once_interface_debug_array_value
-			else
+			Result := once_interface_debug_array_value
+			if Result = Void then
 				Result := icd_prepared_value.query_interface_icor_debug_array_value
+				once_interface_debug_array_value := Result
 			end
 		end
 
@@ -308,10 +382,10 @@ feature -- Interface Access
 		require
 			is_string_type 
 		do
-			if once_interface_debug_string_value /= Void then
-				Result := once_interface_debug_string_value
-			else
+			Result := once_interface_debug_string_value
+			if Result = Void then
 				Result := icd_prepared_value.query_interface_icor_debug_string_value
+				once_interface_debug_string_value := Result
 			end
 		end
 
@@ -319,6 +393,12 @@ feature {NONE} -- Implementation
 
 	once_value_class_type: CLASS_TYPE
 			-- Once per instance for `value_class_type'
+
+	once_value_icd_class: ICOR_DEBUG_CLASS
+			-- Once per instance for `value_icd_class'
+			
+	once_value_icd_module: ICOR_DEBUG_MODULE
+			-- Once per instance for `value_icd_module'			
 		
 	once_interface_debug_object_value: ICOR_DEBUG_OBJECT_VALUE
 			-- Once per instance for `interface_debug_object_value'

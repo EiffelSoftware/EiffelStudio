@@ -5,7 +5,7 @@ inherit
 
 	FUNCTION
 		export 
-			{CONTEXT} drop_pair
+			{CONTEXT, CONTEXT_TREE} drop_pair
 		redefine
 			func_editor, 
 			input_data, output_data
@@ -172,17 +172,13 @@ feature {FUNC_DROP, FUNC_CUT} -- Adding and removing commands on the interface.
 		require
 			command_not_void: output_data /= Void
 		do
-			if corresponding_internal_meta_command = Void then
-				!! Result.make 
-				if func_editor /= Void then
-					Result.add_command (func_editor.current_state, output_data.instantiated_command)
-				else
-					Result.add_command (main_panel.current_state, output_data.instantiated_command)
-				end
-				corresponding_internal_meta_command := Result
+			!! Result.make 
+			if func_editor /= Void then
+				Result.add_command (func_editor.current_state, output_data.instantiated_command)
 			else
-				Result := corresponding_internal_meta_command
+				Result.add_command (main_panel.current_state, output_data.instantiated_command)
 			end
+			corresponding_internal_meta_command := Result
 		end
 
 	add_interface_command (a_command: COMMAND) is

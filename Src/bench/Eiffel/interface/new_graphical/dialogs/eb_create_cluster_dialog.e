@@ -397,12 +397,14 @@ feature {NONE} -- Implementation
 			if sub_cluster then
 				create cluster_i.make_with_parent (path, cluster)
 				cluster_i.set_dollar_path (ace_pth)
+				cluster_i.set_path (path)
 				cluster_i.set_cluster_name (name)
 				cluster_i.set_belongs_to_all (rec)
 				manager.add_cluster_i (cluster_i, cluster, all_box.is_sensitive and all_box.is_selected, library_box.is_selected)
 			else
 				create cluster_i.make_with_parent (path, Void)
 				cluster_i.set_dollar_path (ace_pth)
+				cluster_i.set_path (path)
 				cluster_i.set_cluster_name (name)
 				manager.add_top_cluster_i (cluster_i, all_box.is_sensitive and all_box.is_selected, library_box.is_selected)
 			end

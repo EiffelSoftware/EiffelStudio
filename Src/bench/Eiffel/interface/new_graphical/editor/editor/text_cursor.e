@@ -43,24 +43,55 @@ feature -- Access
 
 feature -- Element change
 
-	set_current_char (t: EDITOR_TOKEN; p: INTEGER) is
-			-- Make `t' be the new value of `token'.
-			-- Set the value of `pos_in_token' to `p'.
+	set_current_char (a_token: EDITOR_TOKEN; a_position: INTEGER) is
+			-- Make `a_token' be the new value for `token'.
+			-- Set the value of `pos_in_token' to `a_position'.
+		require
+			token_not_void: a_token /= Void
+			a_position_positive_not_null: p >= 0
+		local
+			current_width: INTEGER
+			current_token: EDITOR_TOKEN
 		do
-			token := t
-			pos_in_token := t
+				-- update the attributes.
+			token := a_token
+			pos_in_token := p
+			
+				-- Compute the size of the current token.
+			current_width := a_token.get_substring_width(p)
+
+				-- Rewind the tokens of the line to get
+				-- the width of each one.
+			from
+				current_token := a_token.previous
+			until
+				current_token.previous = Void
+			loop
+				current_width := current_width + current_token.width
+			end
+
+				-- Update the value of `x_in_pixels'
+			x_in_pixels := current_width
 		end
 
-	set_line (l: EDITOR_LINE) is
+	set_line (a_line: EDITOR_LINE) is
 			-- Make `l' be the new value of `line'.
 		do
-			line := l
+			line := a_line
 		end
 
 	set_x_in_pixels (x: INTEGER) is
 			-- Make `x' be the new value of `x_in_pixels'.
+		require
+			x_positive_or_null: x >= 0
+		local
+			current_x: INTEGER
 		do
+				-- Update the attribute.
 			x_in_pixels := x
+
+				-- Update the current token.
+			token
 		end
 
 	set_y_in_lines (y: INTEGER) is

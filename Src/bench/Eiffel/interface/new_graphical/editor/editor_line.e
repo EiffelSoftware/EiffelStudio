@@ -8,12 +8,12 @@ class
 	EDITOR_LINE
 
 inherit
-	LINKED_LIST[EDITOR_TOKEN]
-		rename
-			previous as previous_token,
-			next as next_token,
-			index as index_token
-		end
+--	LINKED_LIST[EDITOR_TOKEN]
+--		rename
+--			previous as previous_token,
+--			next as next_token,
+--			index as index_token
+--		end
 
 	TREE_ITEM
 		rename

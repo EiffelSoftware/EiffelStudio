@@ -1,25 +1,24 @@
 /* XPM */
-static char *noname[] = {
-/* width height ncolors chars_per_pixel */
+static char *magick[] = {
+/* columns rows colors chars-per-pixel */
 "16 16 2 1",
-/* colors */
-"` c #000000",
-"a c #FFFFFF",
+"  c Gray0",
+". c Gray100",
 /* pixels */
-"````````````````",
-"````````````````",
-"````````````````",
-"``````aaaaa`````",
-"````aaaaaaaaa```",
-"```aaaaaaaaaaa``",
-"```aaaaaaaaaaa``",
-"```aaaaaaaaaaa``",
-"```aaaaaaaaaaa``",
-"```aaaaaaaaaaa``",
-"````aaaaaaaaa```",
-"``````aaaaa`````",
-"````````````````",
-"````````````````",
-"````````````````",
-"````````````````"
+"                ",
+"                ",
+"                ",
+"      .....     ",
+"    .........   ",
+"   ...........  ",
+"   ...........  ",
+"   ...........  ",
+"   ...........  ",
+"   ...........  ",
+"    .........   ",
+"      .....     ",
+"                ",
+"                ",
+"                ",
+"                "
 };

@@ -1,28 +1,28 @@
 /* XPM */
-static char *noname[] = {
-/* width height ncolors chars_per_pixel */
-"16 16 5 1",
+static char *search[] = {
+/* width height num_colors chars_per_pixel */
+"    16    16        5            1",
 /* colors */
-"` c #000000",
-"a c #00FFFF",
-"b c #C0C0C0",
-"c c #808080",
-"d c #FFFFFF",
+". c #000000",
+"# c #00cfcf",
+"a c #c3c3c3",
+"b c #828282",
+"c c #ffffff",
 /* pixels */
-"bbbbbbbbbbbbbbbb",
-"bb```````bbbbbbb",
-"bb`ddddd``bbbbbb",
-"bb`ddddd`b`bbbbb",
-"bb`ddddd````bbbb",
-"bb`ddddd````bbbb",
-"bb`dddddcbbcbbbb",
-"bb`dddd`aabc`bbb",
-"bb`dddd`abbc`bbb",
-"bb`dddd`bbbc`bbb",
-"bb`dddddcbbccbbb",
-"bb`ddddd``````bb",
-"bb`dddddddd````b",
-"bb``````````b``b",
-"bbbbbbbbbbbbbbbb",
-"bbbbbbbbbbbbbbbb"
+"aaaaaaaaaaaaaaaa",
+"aa.......aaaaaaa",
+"aa.ccccc..aaaaaa",
+"aa.ccccc.a.aaaaa",
+"aa.ccccc....aaaa",
+"aa.ccccc....aaaa",
+"aa.cccccbaabaaaa",
+"aa.cccc.##ab.aaa",
+"aa.cccc.#aab.aaa",
+"aa.cccc.aaab.aaa",
+"aa.cccccbaabbaaa",
+"aa.ccccc......aa",
+"aa.cccccccc....a",
+"aa..........a..a",
+"aaaaaaaaaaaaaaaa",
+"aaaaaaaaaaaaaaaa"
 };

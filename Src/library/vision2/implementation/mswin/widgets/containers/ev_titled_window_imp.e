@@ -24,6 +24,7 @@ inherit
 			destroy,
 			set_parent,
 			set_size,
+			client_height,
 			set_minimum_width,
 			set_minimum_height,
 			child_minwidth_changed,
@@ -38,7 +39,6 @@ inherit
 			set_parent as wel_set_parent,
 			destroy as wel_destroy
 		undefine
-				-- We undefine the features refined by EV_CONTAINER_IMP
 			remove_command,
 			on_left_button_down,
 			on_right_button_down,
@@ -77,8 +77,6 @@ feature {NONE} -- Initialization
 			-- parents
 		do
 			make_top ("EV_WINDOW")
---			!! min_track.make (0, 0)
---			!! max_track.make (system_metrics.screen_width, system_metrics.screen_height)
 		end
 
 	make_with_owner (par: EV_WINDOW) is
@@ -92,13 +90,18 @@ feature {NONE} -- Initialization
 				valid_owner: ww /= Void
 			end
 			make_child (ww, "EV_WINDOW")
---			!! min_track.make (0,0)
---			!! max_track.make (system_metrics.screen_width, system_metrics.screen_height)
---			set_maximum_width (system_metrics.screen_width)
---			set_maximum_height (system_metrics.screen_height)
 		end
 
 feature  -- Access
+
+	client_height: INTEGER is
+			-- Height of the client area of container
+		do
+			Result := client_rect.height
+			if status_bar /= Void then
+				Result := (Result - status_bar.height).max (0)
+			end
+		end
 
 	maximum_height: INTEGER
 			-- Maximum height that application wishes widget
@@ -161,6 +164,9 @@ feature  -- Access
 		do
 			Result := Current
 		end
+
+	status_bar: EV_STATUS_BAR_IMP
+			-- Status bar of the window.
 
 feature -- Status report
 
@@ -279,10 +285,7 @@ feature -- Status setting
 	set_modal is
 			-- Make the window modal
 		do
-			check
-				not_yet_implemented: False
-			end
---			set_capture
+			set_capture
 		end
 
 feature -- Element change
@@ -316,7 +319,6 @@ feature -- Element change
 			if value > width then
 				resize (value, height)
 			end
---			min_track.set_x (value)
 		end
 
 	set_minimum_height (value: INTEGER) is
@@ -328,7 +330,6 @@ feature -- Element change
 			if value > height then
 				resize (width, value)
 			end
---			min_track.set_y (value)
 		end
 
 	set_maximum_width (value: INTEGER) is
@@ -352,7 +353,6 @@ feature -- Element change
 			if value < height then
 				resize (width, value)
 			end
---			max_track.set_y (value)
 		end
 
 	set_title (txt: STRING) is
@@ -391,6 +391,19 @@ feature -- Element change
 			check
                 not_yet_implemented: False
             end
+		end
+
+	set_status_bar (a_bar: EV_STATUS_BAR_IMP) is
+			-- Make `a_bar' the new status bar of the window.
+		do
+			status_bar := a_bar
+			update_minimum_size
+		end
+
+	remove_status_bar is
+			-- Remove the current status bar of the window.
+		do
+			status_bar := Void
 		end
 
 feature -- Event - command association
@@ -519,6 +532,9 @@ feature {NONE} -- Implementation
 			if child /= Void then
 				child.parent_ask_resize (client_width, client_height)
 			end
+			if status_bar /= Void then
+				status_bar.reposition
+			end
 		end
 
    	on_move (x_pos, y_pos: INTEGER) is
@@ -545,12 +561,6 @@ feature {NONE} -- Implementation
 				Result := False
 			end
 		end
-
---	min_track: WEL_POINT
---			-- Minimum position where the user can track the window
-
---	max_track: WEL_POINT
---			-- Maximum position where the user can track the window
 
 	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is
 		local
@@ -596,11 +606,34 @@ feature {EV_STATIC_MENU_BAR_IMP} -- Implementation
 			-- Set `menu' with `a_menu'.
 		do
 			{WEL_FRAME_WINDOW} Precursor (a_menu)
+			update_minimum_size
+		end
+
+	update_minimum_size is
+			-- Update the minimum_size of the window according
+			-- to the component inside the window.
+		local
+			value: INTEGER
+		do
+			-- For the width first
+			value := 2*window_frame_width
 			if child /= Void then
-				set_minimum_size (child.minimum_width + 2*window_frame_width, child.minimum_height + title_bar_height + menu_bar_height + window_border_height + 2 * window_frame_height)
-			else
-				set_minimum_size (2*window_frame_width, title_bar_height + menu_bar_height + window_border_height + 2 * window_frame_height)
+				value := value + child.minimum_width
 			end
+			set_minimum_width (value)
+
+			-- For the height then
+			value := title_bar_height + window_border_height + 2 * window_frame_height
+			if child /= Void then
+				value := value + child.minimum_height
+			end
+			if has_menu then
+				value := value + menu_bar_height
+			end
+			if status_bar /= Void then
+				value := value + status_bar.height
+			end
+			set_minimum_height (value)
 		end
 
 feature {NONE} -- Inapplicable

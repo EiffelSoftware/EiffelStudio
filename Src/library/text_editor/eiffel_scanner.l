@@ -515,28 +515,22 @@ feature -- Access
 	
 	token_first_pos: INTEGER is
 		do
-                        --| Because of an error in the analyzer we need to check
-                        --| the size of text_count for validity
-                        if
-                             text_count = 0
-                       then
-                             Result := token_last_pos
-                       else
-			     Result := token_last_pos - text_count + 1
-                       end
-
+				--| Because of an error in the analyzer we need to check
+				--| the size of text_count for validity
+			if text_count = 0 then
+				Result := token_last_pos
+			else
+				Result := token_last_pos - text_count + 1
+			end
 		end
 
 	token_last_pos: INTEGER is
 		do
-			Result := eif_position - 1
-                        --| Because of an error in the analyzer we need to assure `Result'
-                        --| will be ok.
-                        if
-                              Result < 1
-                        then
-                              Result := 1
-                        end
+				--| Because of an error in the analyzer we need to assure `Result'
+				--| will be ok.
+			Result := (1).max (eif_position - 1)
+		ensure
+			valid_result: Result >= 1
 		end
 	
 	last_value: ANY

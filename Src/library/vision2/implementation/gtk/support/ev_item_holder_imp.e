@@ -116,6 +116,9 @@ feature -- Element change
 			-- If add `v' to end.
 			-- Do not move cursor.
 		do
+			if index > count then
+				index := index + 1
+			end
 			if v.parent /= Void then
 				v.parent.prune (v)
 			end
@@ -140,6 +143,9 @@ feature -- Element change
 			if v.parent /= Void then
 				v.parent.prune (v)
 			end
+			if index /= 0 then
+				index := index + 1
+			end			
 			add_to_container (v)
 			reorder_child (v, 1)
 			index := index + 1
@@ -164,7 +170,12 @@ feature -- Removal
 			a_position: INTEGER
 		do
 			a_position := interface.index_of (v, 1)
-			remove_item_from_position (a_position)
+			if a_position > 0 then
+				remove_item_from_position (a_position)
+				if index > pos then
+					index := index - 1
+				end
+			end
 		end
 
 	remove is
@@ -279,6 +290,9 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/16 20:31:56  king
+--| Corrected list test bugs by comparing to widget list
+--|
 --| Revision 1.18  2000/03/15 17:07:50  brendel
 --| Before every put/extend/replace, removes item from its old parent, if
 --| not Void.

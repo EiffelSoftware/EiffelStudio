@@ -118,12 +118,11 @@ doc:<file name="malloc.c" header="eif_malloc.h" version="$Id$" summary="Memory a
 
 /*
 doc:	<attribute name="m_data" return_type="struct emallinfo" export="shared">
-doc:		<summary>This structure records some general information about the memory, the number of chunck, etc... These informations are available via the meminfo() routine.</summary>
+doc:		<summary>This structure records some general information about the memory, the number of chunck, etc... These informations are available via the meminfo() routine. Only used by current and garcol.c</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eif_free_list_mutex' or GC synchronization.</synchronization>
 doc:		<eiffel_classes>MEM_INFO</eiffel_classes>
-doc:		<fixme>I'm not sure all updates are protected by `eif_gc_mutex'. This needs to be carrefully checked.</fixme>
 doc:	</attribute>
 */
 rt_shared struct emallinfo m_data = {
@@ -135,12 +134,11 @@ rt_shared struct emallinfo m_data = {
 
 /*
 doc:	<attribute name="c_data" return_type="struct emallinfo" export="shared">
-doc:		<summary>For C memory, we keep track of general informations too. This enables us to pilot the garbage collector correctly or to call coalescing over the memory only if it is has a chance to succeed.</summary>
+doc:		<summary>For C memory, we keep track of general informations too. This enables us to pilot the garbage collector correctly or to call coalescing over the memory only if it is has a chance to succeed. Only used by current and garcol.c</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eif_free_list_mutex' or GC synchronization.</synchronization>
 doc:		<eiffel_classes>MEM_INFO</eiffel_classes>
-doc:		<fixme>I'm not sure all updates are protected by `eif_gc_mutex'. This needs to be carrefully checked.</fixme>
 doc:	</attribute>
 */
 rt_shared struct emallinfo c_data = { /* Informations on C memory */
@@ -152,12 +150,12 @@ rt_shared struct emallinfo c_data = { /* Informations on C memory */
 
 /*
 doc:	<attribute name="e_data" return_type="struct emallinfo" export="shared">
-doc:		<summary>For Eiffel memory, we keep track of general informations too. This enables us to pilot the garbage collector correctly or to call coalescing over the memory only if it is has a chance to succeed.</summary>
+doc:		<summary>For Eiffel memory, we keep track of general informations too. This enables us to pilot the garbage collector correctly or to call coalescing over the memory only if it is has a chance to succeed. Only used by current and garcol.c</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eif_free_list_mutex' or GC synchronization.</synchronization>
 doc:		<eiffel_classes>MEM_INFO</eiffel_classes>
-doc:		<fixme>I'm not sure all updates are protected by `eif_gc_mutex'. This needs to be carrefully checked.</fixme>
+doc:		<fixme>Unsafe access to `e_data' from `acollect' when compiled with `-DEIF_CONDITIONAL_COLLECT' option.</fixme>
 doc:	</attribute>
 */
 rt_shared struct emallinfo e_data = { /* Informations on Eiffel memory */
@@ -170,11 +168,10 @@ rt_shared struct emallinfo e_data = { /* Informations on Eiffel memory */
 /*  */
 /*
 doc:	<attribute name="cklst" return_type="struct ck_list" export="shared">
-doc:		<summary>Record head and tail of the chunk list</summary>
+doc:		<summary>Record head and tail of the chunk list. Only used by current and garcol.c</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>Should be through eif_gc_mutex</synchronization>
-doc:		<fixme>Some calls are using `cklst' without a synchronization (eg full_coalesc)</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eif_free_list_mutex' or GC synchronization.</synchronization>
 doc:	</attribute>
 */
 rt_shared struct ck_list cklst = {
@@ -192,7 +189,7 @@ doc:		<summary>Records all C blocks with roughly the same size. The entry at ind
 doc:		<access>Read/Write</access>
 doc:		<indexing>i for access to block of size 2^i</indexing>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:		<synchronization>Through `eif_free_list_mutex'.</synchronization>
 doc:	</attribute>
 */
 
@@ -204,7 +201,7 @@ doc:		<summary>Records all Eiffel blocks with roughly the same size. The entry a
 doc:		<access>Read/Write</access>
 doc:		<indexing>i for access to block of size 2^i</indexing>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:		<synchronization>Through `eif_free_list_mutex'.</synchronization>
 doc:	</attribute>
 */
 rt_private union overhead *e_hlist[NBLOCKS];
@@ -215,7 +212,7 @@ doc:		<summary>The following arrays act as a buffer cache for every operation in
 doc:		<access>Read/Write</access>
 doc:		<indexing>i for access to block of size 2^i</indexing>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:		<synchronization>Through `eif_free_list_mutex'.</synchronization>
 doc:	</attribute>
 */
 rt_private union overhead *c_buffer[NBLOCKS];
@@ -226,7 +223,7 @@ doc:		<summary>The following arrays act as a buffer cache for every operation in
 doc:		<access>Read/Write</access>
 doc:		<indexing>i for access to block of size 2^i</indexing>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:		<synchronization>Through `eif_free_list_mutex'.</synchronization>
 doc:	</attribute>
 */
 rt_private union overhead *e_buffer[NBLOCKS];
@@ -236,7 +233,7 @@ doc:	<attribute name="sc_from" return_type="struct sc_zone" export="shared">
 doc:		<summary>The sc_from zone is the `from' zone used by the generation scavenging garbage collector. They are shared with the garbage collector. This zone may be put back into the free list in case we are low in RAM.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>eif_gc_gsz_mutex</synchronization>
+doc:		<synchronization>Through `eif_gc_gsz_mutex'.</synchronization>
 doc:	</attribute>
 */
 rt_shared struct sc_zone sc_from;
@@ -246,7 +243,7 @@ doc:	<attribute name="sc_to" return_type="struct sc_zone" export="shared">
 doc:		<summary>The sc_to zone is the `to' zone used by the generation scavenging garbage collector. They are shared with the garbage collector. This zone may be put back into the free list in case we are low in RAM.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>eif_gc_gsz_mutex</synchronization>
+doc:		<synchronization>Through `eif_gc_gsz_mutex'.</synchronization>
 doc:	</attribute>
 */
 rt_shared struct sc_zone sc_to;
@@ -255,20 +252,19 @@ rt_shared struct sc_zone sc_to;
 doc:	<attribute name="gen_scavenge" return_type="uint32" export="shared">
 doc:		<summary>Generation scavenging status which can be either GS_OFF (disabled) or GS_ON (enabled). When it is GC_ON, it can be temporarly disabled in which case it holds the GS_STOP flag. By default it is GS_OFF, and it will be enabled by `create_scavenge_zones' if `cc_for_speed' is enabled and enough memory is available to allocate the zones.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>Mostly through `eif_gc_mutex' or `eif_gc_gsz_mutex'</synchronization>
-doc:		<fixme>Some updates are not protected, nor the visibility of the change is not guaranteed among all threads.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through GC synchronization.</synchronization>
+doc:		<fixme>Is the visibility of the change is not guaranteed among all threads.</fixme>
 doc:	</attribute>
 */
 rt_shared uint32 gen_scavenge = GS_OFF;
 
 /*
 doc:	<attribute name="eiffel_usage" return_type="long" export="public">
-doc:		<summary>Monitor Eiffel memory usage. Each time an Eiffel object is created in the free-list (via emalloc or tenuring), we record its size in eiffel_usage variable. Then, once the amount of allocated data goes beyond th_alloc, a cycle of acollect() is run.</summary>
+doc:		<summary>Monitor Eiffel memory usage. Each time an Eiffel object is created outside the scavenge zone (via emalloc or tenuring), we record its size in eiffel_usage variable. Then, once the amount of allocated data goes beyond th_alloc, a cycle of acollect() is run.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Updates are not done properly outside synchronization points. We need a special mutex for it.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eiffel_usage_mutex' or GC synchronization.</synchronization>
 doc:	</attribute>
 */
 rt_public long eiffel_usage = 0;
@@ -335,35 +331,27 @@ doc:	</attribute>
 rt_shared int eif_chunk_size;
 
 #ifdef ISE_GC
-/* Error message commonly used */
-rt_private char *RT_INCONSISTENCY_MSG = "free-list inconsistency";
-
 /* Functions handling free list */
 rt_private int32 compute_hlist_index (int32 size);
-rt_shared EIF_REFERENCE eif_rt_xmalloc(unsigned int nbytes, int type, int gc_flag);					/* General free-list allocation */
-#ifdef EIF_THREADS
-rt_private EIF_REFERENCE eif_rt_internal_xmalloc(unsigned int nbytes, int type, int gc_flag);					/* General free-list allocation */
-rt_private void eif_rt_internal_xfree(EIF_REFERENCE);
-#else
-#define eif_rt_internal_xmalloc eif_rt_xmalloc
-#define eif_rt_internal_xfree eif_rt_xfree
-#endif
+rt_shared EIF_REFERENCE eif_rt_xmalloc(unsigned int nbytes, int type, int gc_flag);		/* General free-list allocation */
 rt_shared void rel_core(void);					/* Release core to kernel */
 rt_private union overhead *add_core(register unsigned int nbytes, int type);		/* Get more core from kernel */
 rt_private void connect_free_list(register union overhead *zone, register uint32 i);		/* Insert a block in free list */
 rt_private void disconnect_free_list(register union overhead *next, register uint32 i);	/* Remove a block from free list */
 rt_private int coalesc(register union overhead *zone);					/* Coalescing (return # of bytes) */
-rt_private EIF_REFERENCE malloc_free_list(unsigned int nbytes, union overhead **hlist, int gc_flag);		/* Allocate block in one of the lists */
+rt_private EIF_REFERENCE malloc_free_list(unsigned int nbytes, union overhead **hlist, int type, int gc_flag);		/* Allocate block in one of the lists */
 rt_private EIF_REFERENCE allocate_free_list(register unsigned int nbytes, register union overhead **hlist);		/* Allocate block from free list */
-rt_private EIF_REFERENCE allocate_from_core(unsigned int nbytes, union overhead **hlist, char block_type);		/* Allocate block asking for core */
+rt_private union overhead * allocate_free_list_helper (uint32 i, register unsigned int nbytes, register union overhead **hlist);
+rt_private EIF_REFERENCE allocate_from_core(unsigned int nbytes, union overhead **hlist);		/* Allocate block asking for core */
 rt_private EIF_REFERENCE set_up(register union overhead *selected, unsigned int nbytes);					/* Set up block before public usage */
-rt_private EIF_REFERENCE set_up_chunk(register union overhead *selected, unsigned int nbytes);			/* Set up big chunk */
 rt_shared int chunk_coalesc(struct chunk *c);				/* Coalescing on a chunk */
 rt_private void xfreeblock(union overhead *zone, uint32 r);				/* Release block to the free list */
 rt_shared int full_coalesc(int chunk_type);				/* Coalescing over specified chunks */
+rt_private int full_coalesc_unsafe(int chunk_type);				/* Coalescing over specified chunks */
 rt_private int free_last_chunk(void);			/* Detach last chunk from core */
 
 /* Functions handling scavenging zone */
+rt_private EIF_REFERENCE malloc_from_eiffel_list (unsigned int nbytes);
 rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes);		/* Allocate block in scavenging zone */
 rt_shared void create_scavenge_zones(void);	/* Attempt creating the two zones */
 rt_private void explode_scavenge_zone(struct sc_zone *sc);	/* Release objects to free-list */
@@ -375,23 +363,15 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 dftype, uint32 dty
 rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge);				/* Set special Eiffel object */
 
 #ifdef ISE_GC
-rt_private void set_memory_object (EIF_REFERENCE object);
+rt_private int trigger_gc_cycle (void);
+rt_private int trigger_smart_gc_cycle (void);
+rt_private EIF_REFERENCE add_to_stack (EIF_REFERENCE, struct stack *);
 
 /* Also used by the garbage collector */
 rt_shared int eif_rt_split_block(register union overhead *selected, register uint32 nbytes);				/* Split a block (return length) */
 rt_shared void lxtract(union overhead *next);					/* Extract a block from free list */
-rt_shared EIF_REFERENCE gmalloc(unsigned int nbytes);			/* Wrapper to eif_rt_xmalloc */
+rt_shared EIF_REFERENCE malloc_from_eiffel_list_no_gc (unsigned int nbytes);			/* Wrapper to eif_rt_xmalloc */
 rt_shared EIF_REFERENCE get_to_from_core(unsigned int nbytes);		/* Get a free eiffel chunk from kernel */
-#endif
-
-#ifdef WORKBENCH
-rt_public void discard_breakpoints(void);	/* Avoid debugger to stop while in GC cycles */
-rt_public void undiscard_breakpoints(void); /* re-authorize the debugger to stop */
-#define DISCARD_BREAKPOINTS	discard_breakpoints();
-#define UNDISCARD_BREAKPOINTS	undiscard_breakpoints();
-#else
-#define DISCARD_BREAKPOINTS
-#define UNDISCARD_BREAKPOINTS
 #endif
 
 #ifdef ISE_GC
@@ -434,6 +414,7 @@ doc:	<routine name="boehm_dispose" export="private">
 doc:		<summary>Record `dispose' routine for Boehm GC</summary>
 doc:		<param name="header" type="union overhead *">Zone allocated by Boehm GC which needs to be recorded so that `dispose' is called by Boehm GC when collectin `header'.</param>
 doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
 doc:	</routine>
 */
 
@@ -478,6 +459,7 @@ rt_private EIF_REFERENCE external_allocation (int atomic, int has_dispose, uint3
 			/* Object too big */
 		return NULL;
 	} else {
+		DISCARD_BREAKPOINTS
 #ifdef BOEHM_GC
 		if (real_nbytes == 0) {
 			real_nbytes++;
@@ -503,8 +485,10 @@ rt_private EIF_REFERENCE external_allocation (int atomic, int has_dispose, uint3
 				GC_register_finalizer(header, &boehm_dispose, 0, 0, 0);
 			}
 #endif
+			UNDISCARD_BREAKPOINTS
 			return (EIF_REFERENCE)(header + 1);
 		} else {
+			UNDISCARD_BREAKPOINTS
 			return NULL;
 		}
 	}
@@ -539,12 +523,14 @@ rt_private EIF_REFERENCE external_reallocation (EIF_REFERENCE obj, uint32 nbytes
 			/* Object too big */
 		return NULL;
 	} else {
+		DISCARD_BREAKPOINTS
 #ifdef BOEHM_GC
 		header = (union overhead *) GC_realloc((union overhead *) obj - 1, real_nbytes + OVERHEAD);
 #endif
 #ifdef NO_GC
 		header = (union overhead *) realloc((union overhead *) obj - 1, real_nbytes + OVERHEAD);
 #endif
+		UNDISCARD_BREAKPOINTS
 
 		if (header != NULL) {
 			header->ov_size = real_nbytes;
@@ -560,19 +546,50 @@ rt_private EIF_REFERENCE external_reallocation (EIF_REFERENCE obj, uint32 nbytes
 
 #if defined(ISE_GC) && defined(EIF_THREADS)
 /*
-doc:	<attribute name="eif_gc_gsz_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="public">
+doc:	<attribute name="eif_gc_gsz_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="shared">
 doc:		<summary>Mutex used to protect GC allocation in scavenge zone.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:	</attribute>
 */
-rt_public EIF_LW_MUTEX_TYPE *eif_gc_gsz_mutex = NULL;
-#define EIF_GC_GSZ_LOCK \
-	GC_THREAD_PROTECT(gc_thread_status = EIF_THREAD_GC_GSZ); \
-	EIF_LW_MUTEX_LOCK(eif_gc_gsz_mutex, "Could not lock GSZ mutex"); \
-	GC_THREAD_PROTECT(gc_thread_status = EIF_THREAD_RUNNING); \
-	RTGC; 
-#define EIF_GC_GSZ_UNLOCK EIF_LW_MUTEX_UNLOCK(eif_gc_gsz_mutex, "Could not lock GSZ mutex")
+rt_shared EIF_LW_MUTEX_TYPE *eif_gc_gsz_mutex = NULL;
+#define EIF_GC_GSZ_LOCK EIF_LW_MUTEX_LOCK(eif_gc_gsz_mutex, "Could not lock GSZ mutex");
+#define EIF_GC_GSZ_UNLOCK EIF_LW_MUTEX_UNLOCK(eif_gc_gsz_mutex, "Could not unlock GSZ mutex")
+
+/*
+doc:	<attribute name="eif_free_list_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="shared">
+doc:		<summary>Mutex used to protect access and update to private/shared member of this module.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:	</attribute>
+*/
+
+rt_shared EIF_LW_MUTEX_TYPE *eif_free_list_mutex = NULL;
+#define EIF_FREE_LIST_MUTEX_LOCK	EIF_LW_MUTEX_LOCK(eif_free_list_mutex, "Could not lock free list mutex");
+#define EIF_FREE_LIST_MUTEX_UNLOCK	EIF_LW_MUTEX_UNLOCK(eif_free_list_mutex, "Could not unlock free list mutex");
+
+/*
+doc:	<attribute name="eiffel_usage_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="shared">
+doc:		<summary>Mutex used to protect access and update `eiffel_usage'.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:	</attribute>
+*/
+
+rt_shared EIF_LW_MUTEX_TYPE *eiffel_usage_mutex = NULL;
+#define EIFFEL_USAGE_MUTEX_LOCK		EIF_LW_MUTEX_LOCK(eiffel_usage_mutex, "Could not lock eiffel_usage mutex");
+#define EIFFEL_USAGE_MUTEX_UNLOCK	EIF_LW_MUTEX_UNLOCK(eiffel_usage_mutex, "Could not unlock eiffel_usage mutex");
+
+/*
+doc:	<attribute name="trigger_gc_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="shared">
+doc:		<summary>Mutex used to protect execution of `trigger_gc' routines. So that even if more than one threads enter this routine because there is a need to launch a GC cycle, hopefully one will run it, and not all of them.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:	</attribute>
+*/
+
+rt_shared EIF_LW_MUTEX_TYPE *trigger_gc_mutex = NULL;
+#define TRIGGER_GC_LOCK		EIF_LW_MUTEX_LOCK(trigger_gc_mutex, "Could not lock trigger gc mutex");
+#define TRIGGER_GC_UNLOCK	EIF_LW_MUTEX_UNLOCK(trigger_gc_mutex, "Could not unlock trigger gc mutex");
 #endif
+
+
 
 /*
 doc:	<routine name="smart_emalloc" return_type="EIF_REFERENCE" export="public">
@@ -580,6 +597,8 @@ doc:		<summary>Perform smart allocation of either a TUPLE object or a normal obj
 doc:		<param name="ftype" type="uint32">Full dynamic type used to determine if we are creating a TUPLE or a normal object.</param>
 doc:		<return>A newly allocated object if successful, otherwise throw an exception</return>
 doc:		<exception>"No more memory" when it fails</exception>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Done by different allocators to whom we request memory</synchronization>
 doc:	</routine>
 */
 
@@ -599,6 +618,8 @@ doc:		<summary>Perform allocation of normal object (i.e. not a BIT, SPECIAL or T
 doc:		<param name="ftype" type="uint32">Full dynamic type used to determine if we are creating a TUPLE or a normal object.</param>
 doc:		<return>A newly allocated object if successful, otherwise throw an exception.</return>
 doc:		<exception>"No more memory" when it fails</exception>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Done by different allocators to whom we request memory</synchronization>
 doc:	</routine>
 */
 
@@ -617,20 +638,17 @@ doc:		<param name="nbytes" type="uint32">Number of bytes to allocate for this ty
 doc:		<return>A newly allocated object holding at least `nbytes' if successful, otherwise throw an exception.</return>
 doc:		<exception>"No more memory" when it fails</exception>
 doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Done by different allocators to whom we request memory</synchronization>
 doc:	</routine>
 */
 
 rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 {
-	RT_GET_CONTEXT
 	EIF_REFERENCE object;				/* Pointer to the freshly created object */
-	
-#ifdef EMCHK
-	printf("--- Start of emalloc (DT %d) ---\n",type);
-	memck(0);
-	printf("--- ------------------------ ---\n");
+#ifdef ISE_GC
+	uint32 mod;							/* Remainder for padding */
 #endif
- 
+	
 #ifdef WORKBENCH
 	if (System(type).cn_deferred) {	/* Cannot create deferred */
 		eraise(System(type).cn_generator, EN_CDEF);
@@ -638,17 +656,9 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 	}
 #endif
 
-	DISCARD_BREAKPOINTS
-
-#ifdef DEBUG
-	dprintf(8)("emalloc: type %d is %d bytes\n", type, nbytes);
-	flush;
-#endif
-
 #if defined(BOEHM_GC) || defined(NO_GC)
 	object = external_allocation (References(type) == 0, (int) Disp_rout(type), nbytes);
 	if (object != NULL) {
-		UNDISCARD_BREAKPOINTS
 		return eif_set(object, ftype | EO_NEW, type);
 	} else {
 		eraise("object allocation", EN_MEM);	/* Signals no more memory */
@@ -657,6 +667,12 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 #endif
 
 #ifdef ISE_GC
+		/* We really use at least ALIGNMAX, to avoid alignement problems.
+		 * So even if nbytes is 0, some memory will be used (the header), he he !!
+		 */
+	mod = nbytes % ALIGNMAX;
+	if (mod != 0)
+		nbytes += ALIGNMAX - mod;
 
 	/* Depending on the optimization chosen, we allocate the object in
 	 * the Generational Scavenge Zone (GSZ) or in the free-list.
@@ -670,93 +686,63 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 
 	if ((gen_scavenge == GS_ON) && (nbytes <= (unsigned int) eif_gs_limit)) {
 		object = malloc_from_zone(nbytes);
-		if (object != (EIF_REFERENCE) 0) {
-			UNDISCARD_BREAKPOINTS
-
-			CHECK ("Allocated size big enough", nbytes <= (HEADER(object)->ov_size & B_SIZE));
-
-			object = eif_set(object, ftype, type);	/* Set for Eiffel use */
-
-#ifdef EMCHK
-			printf("--- End of emalloc (malloc_from_zone) ---\n");
-			memck(0);
-			printf("--- --------------------------------- ---\n\n");
-#endif
-			return object;
+		if (object) {
+			return eif_set(object, ftype, type);	/* Set for Eiffel use */
+		} else if (trigger_smart_gc_cycle()) {
+				/* First allocation in scavenge zone failed. If `trigger_smart_gc_cycle' was
+				 * successful, let's try again as this is a more efficient way to allocate
+				 * in the scavenge zone. */
+			object = malloc_from_zone (nbytes);
+			if (object) {
+				return eif_set(object, ftype, type);	/* Set for Eiffel use */
+			}
 		}
 	}
 
-	/* Try an allocation in the free list, with garbage collection turned on.
-	 * If this fail, then generation scavenging is turned off and the two
-	 * scavenge zones are freed. A last attempt is then made before raising
-	 * an exception if it also failed.
-	 */
-	object = eif_rt_xmalloc(nbytes, EIFFEL_T, GC_ON);
-
-	if (object != (EIF_REFERENCE) 0) {
-		UNDISCARD_BREAKPOINTS
-
-		CHECK ("Allocated size big enough", nbytes <= (HEADER(object)->ov_size & B_SIZE));
-
-#ifdef EMCHK
-		rt_public EIF_REFERENCE ret_val;
-
-		ret_val = eif_set(object, ftype | EO_NEW, type);	/* Set for Eiffel use */
-		printf("--- End of emalloc (eif_rt_xmalloc) ---\n");
-		memck(0);
-		printf("--- ------------------------ ---\n\n");
-		return ret_val;
-#else
+	/* Try an allocation in the free list, with garbage collection turned on. */
+	CHECK("Not too big", !(nbytes & ~B_SIZE));
+	object = malloc_from_eiffel_list (nbytes);
+	if (object) {
 		return eif_set(object, ftype | EO_NEW, type);		/* Set for Eiffel use */
-#endif
-	}
+	} else {
+			/*
+			 * Allocation failed even if GC was requested. We can only make some space
+			 * by turning off generation scavenging and getting the two scavenge zones
+			 * back for next allocation. A last attempt is then made before raising
+			 * an exception if it also failed.
+			 */
+		if (gen_scavenge & GS_ON)		/* If generation scaveging was on */
+			sc_stop();					/* Free 'to' and explode 'from' space */
 
-	GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
-	if (gen_scavenge & GS_ON)		/* If generation scaveging was on */
-		sc_stop();					/* Free 'to' and explode 'from' space */
+		object = malloc_from_eiffel_list_no_gc (nbytes);		/* Retry with GC off this time */
 
-	object = eif_rt_internal_xmalloc(nbytes, EIFFEL_T, GC_OFF);		/* Retry */
-	GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
-
-	if (object != (EIF_REFERENCE) 0) {
-		UNDISCARD_BREAKPOINTS
-
-		CHECK ("Allocated size big enough", nbytes <= (HEADER(object)->ov_size & B_SIZE));
-
-#ifdef EMCHK
-		rt_public EIF_REFERENCE ret_val;
-
-		ret_val = eif_set(object, ftype | EO_NEW, type);	/* Set for Eiffel use */
-		printf("--- End of emalloc (eif_rt_xmalloc after gen_scav) ---\n");
-		memck(0);
-		printf("--- --------------------------------------- ---\n\n");
-		return ret_val;
-#else
-		return eif_set(object, ftype | EO_NEW, type);		/* Set for Eiffel use */
-#endif
+		if (object) {
+			return eif_set(object, ftype | EO_NEW, type);		/* Set for Eiffel use */
+		}
 	}
 
 #endif /* ISE_GC */
 
-	UNDISCARD_BREAKPOINTS
-
 	eraise("object allocation", EN_MEM);	/* Signals no more memory */
 
-	/* NOTREACHED */
-	return (EIF_REFERENCE) 0;				/* They chose to ignore EN_MEN */
+	/* NOTREACHED, to avoid C compilation warning. */
+	return NULL;
 }
 
 /*
-doc:	<routine name="sp_init" export="public">
+doc:	<routine name="sp_init" return_type="EIF_REFERENCE" export="public">
 doc:		<summary>Initialize special object of expanded `obj' from `lower' position to `upper' position. I.e. creating new instances of expanded objects and assigning them from `obj [lower]' to `obj [upper]'.</summary>
 doc:		<param name="obj" type="EIF_REFERENCE">Special object of expanded which will be initialized.</param>
 doc:		<param name="dftype" type="uint32">Dynamic type of expanded object to create for each entry of special object `obj'.</param>
 doc:		<param name="lower" type="EIF_INTEGER">Lower bound of `obj'.</param>
 doc:		<param name="upper" type="EIF_INTEGER">Upper bound of `obj'.</param>
+doc:		<return>New address of `obj' in case a GC collection was performed.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
 doc:	</routine>
 */
 
-rt_public void sp_init (EIF_REFERENCE obj, uint32 dftype, EIF_INTEGER lower, EIF_INTEGER upper)
+rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, uint32 dftype, EIF_INTEGER lower, EIF_INTEGER upper)
 {
 	EIF_GET_CONTEXT
 
@@ -782,6 +768,8 @@ rt_public void sp_init (EIF_REFERENCE obj, uint32 dftype, EIF_INTEGER lower, EIF
 		ecopy(exp, obj + OVERHEAD + offset);
 	}
 	RT_GC_WEAN(obj);
+
+	return obj;
 }
 
 /*
@@ -790,6 +778,8 @@ doc:		<summary>Allocated new TUPLE object of type `ftype'. It internally calls `
 doc:		<param name="ftype" type="uint32">Dynamic type of TUPLE object to create.</param>
 doc:		<return>A newly allocated TUPLE object of type `ftype' if successful, otherwise throw an exception.</return>
 doc:		<exception>"No more memory" when it fails</exception>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Done by different allocators to whom we request memory</synchronization>
 doc:	</routine>
 */
 
@@ -826,6 +816,8 @@ doc:		<param name="count" type="uint32">Number of elements in TUPLE object to cr
 doc:		<param name="atomic" type="EIF_BOOLEAN">Does current TUPLE object to create has reference or not? True means no.</param>
 doc:		<return>A newly allocated TUPLE object if successful, otherwise throw an exception.</return>
 doc:		<exception>"No more memory" when it fails</exception>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Done by different allocators to whom we request memory</synchronization>
 doc:	</routine>
 */
 
@@ -870,21 +862,22 @@ doc:		<param name="nbytes" type="unsigned int">Number of bytes to allocate.</par
 doc:		<param name="atomic" type="EIF_BOOLEAN">Does current special object to create has reference or not? True means no.</param>
 doc:		<return>A newly allocated TUPLE object if successful, otherwise throw an exception.</return>
 doc:		<exception>"No more memory" when it fails</exception>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Done by different allocators to whom we request memory</synchronization>
 doc:	</routine>
 */
 
 rt_public EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic)
 {
-
 	EIF_REFERENCE object;		/* Pointer to the freshly created special object */
+#ifdef ISE_GC
+	uint32 mod;
+#endif
 	
-	DISCARD_BREAKPOINTS
-
 #if defined(BOEHM_GC) || defined(NO_GC)
 		/* No dispose routine associated, therefore `0' for second argument */
 	object = external_allocation (atomic, 0, nbytes);
 	if (object != NULL) {
-		UNDISCARD_BREAKPOINTS
 		return eif_spset(object, EIF_FALSE);
 	} else {
 		eraise("Special allocation", EN_MEM);	/* Signals no more memory */
@@ -893,24 +886,54 @@ rt_public EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic)
 #endif
 
 #ifdef ISE_GC
-#ifdef EIF_GSZ_ALLOC_OPTIMIZATION
+		/* We really use at least ALIGNMAX, to avoid alignement problems.
+		 * So even if nbytes is 0, some memory will be used (the header), he he !!
+		 */
+	mod = nbytes % ALIGNMAX;
+	if (mod != 0)
+		nbytes += ALIGNMAX - mod;
+
 	if ((gen_scavenge == GS_ON) && (nbytes <= (unsigned int) eif_gs_limit)) {
 		object = malloc_from_zone (nbytes);	/* allocate it in scavenge zone. */
-		if (object != (EIF_REFERENCE) 0) {
-			UNDISCARD_BREAKPOINTS
-			CHECK ("Allocated size big enough", nbytes <= (HEADER(object)->ov_size & B_SIZE));
+		if (object) {
 			return  eif_spset(object, EIF_TRUE);
+		} else if (trigger_smart_gc_cycle()) {
+			object = malloc_from_zone (nbytes);
+			if (object) {
+				return eif_spset(object, EIF_TRUE);
+			}
 		}
 	}
-#endif
+
 		/* New special object is too big to be created in generational scavenge zone or there is
-		 * more space in scavenge zone. So we allocate it in free list. */
-	object = eif_rt_xmalloc(nbytes, EIFFEL_T, GC_ON);
-	UNDISCARD_BREAKPOINTS
-	if (object == (EIF_REFERENCE) 0)
-		eraise("Special allocation", EN_MEM);	/* No more memory */
-	CHECK ("Allocated size big enough", nbytes <= (HEADER(object)->ov_size & B_SIZE));
-	return eif_spset(object, EIF_FALSE);
+		 * more space in scavenge zone. So we allocate it in free list only if it is less
+		 * than the authorized size `2^27'. */
+	if (!(nbytes & ~B_SIZE)) {
+		object = malloc_from_eiffel_list (nbytes);
+		if (object) {
+			return eif_spset(object, EIF_FALSE);
+		} else {
+				/*
+				 * Allocation failed even if GC was requested. We can only make some space
+				 * by turning off generation scavenging and getting the two scavenge zones
+				 * back for next allocation. A last attempt is then made before raising
+				 * an exception if it also failed.
+				 */
+			if (gen_scavenge & GS_ON)		/* If generation scaveging was on */
+				sc_stop();					/* Free 'to' and explode 'from' space */
+
+			object = malloc_from_eiffel_list_no_gc (nbytes);		/* Retry with GC off this time */
+
+			if (object) {
+				return eif_spset(object, EIF_FALSE);		/* Set for Eiffel use */
+			}
+		}
+	}
+
+	eraise("Special allocation", EN_MEM);	/* No more memory */
+
+	/* Not reached - to avoid C compilation warning */
+	return NULL;
 #endif
 }
 
@@ -921,6 +944,8 @@ doc:		<param name="ptr" type="EIF_REFERENCE">Special object which will be reallo
 doc:		<param name="nbitems" type="long int">New number of items wanted.</param>
 doc:		<return>A newly allocated special object if successful, otherwise throw an exception.</return>
 doc:		<exception>"No more memory" when it fails</exception>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required, it is done by the features we are calling.</synchronization>
 doc:	</routine>
 */
 
@@ -941,8 +966,6 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 	REQUIRE ("Not forwarded", !(HEADER (ptr)->ov_size & B_FWD));
 	REQUIRE ("Special object:", HEADER (ptr)->ov_flags & EO_SPEC);
 
-	DISCARD_BREAKPOINTS
-
 	/* At the end of the special object arena, there are two long values which
 	 * are kept up-to-date: the actual number of items held and the size in
 	 * byte of each item (the same for all items).
@@ -957,7 +980,6 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 	new_size = new_real_size + LNGPAD_2;		/* New required size */
 
 	if (nbitems == count) {		/* OPTIMIZATION: Does resized object have same size? */
-		UNDISCARD_BREAKPOINTS
 		return ptr;				/* If so, we return unchanged `ptr'. */
 	}
 
@@ -966,16 +988,6 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 	CHECK ("Stil not forwarded", !(HEADER(ptr)->ov_size & B_FWD));
 
 #ifdef ISE_GC
-		/* The accounting of memory used by Eiffel is not accurate here, but it is
-		 * not easy to know at this level whether the block was merely extended or
-		 * whether we had to allocate a new block. However, if the reallocation
-		 * shrinks the object, we know xrealloc will not move the block but shrink
-		 * it in place, so there is no need to update the usage.
-		 */
-
-	if (new_size > old_size)				/* Then update memory usage. */
-		eiffel_usage += (new_size - old_size);
-
 #ifdef EIF_GSZ_ALLOC_OPTIMIZATION
 	if (zone->ov_flags & (EO_NEW | EO_OLD)) {	/* Is it out of GSZ? */
 #endif
@@ -996,7 +1008,6 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 #endif
 
 		if ((EIF_REFERENCE) 0 == object) {
-			UNDISCARD_BREAKPOINTS
 			eraise("special reallocation", EN_MEM);
 			return (EIF_REFERENCE) 0;
 		}
@@ -1048,7 +1059,6 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 			object = ptr;
 
 		if (object == (EIF_REFERENCE) 0) {
-			UNDISCARD_BREAKPOINTS
 			eraise("Special reallocation", EN_MEM);
 			return (EIF_REFERENCE) 0;
 		}
@@ -1113,7 +1123,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 	if (need_expanded_initialization) {
 	   		/* Case of a special object of expanded structures. */
 			/* Initialize remaining items. */
-		sp_init(object, HEADER(object + OVERHEAD)->ov_flags & EO_TYPE, count, nbitems - 1);
+		object = sp_init(object, HEADER(object + OVERHEAD)->ov_flags & EO_TYPE, count, nbitems - 1);
 	}
 
 #ifdef ISE_GC
@@ -1130,32 +1140,28 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 					/* A simple remembering for other special objects. */
 		}
 
-		if (HEADER(ptr)->ov_flags & EO_NEW) {			/* Original was new, ie not allocated
-														 * in GSZ. */
-			RT_GET_CONTEXT
-			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
-			if (-1 == epush(&moved_set, object)) {		/* Cannot record object */
-				GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
-				urgent_plsc(&object);					/* Full collection */
-				GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
-				if (-1 == epush(&moved_set, object)) {	/* Still failed */
-					GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
-					enomem(MTC_NOARG);							/* Critical exception */
-				} else {
-					GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
-				}
-			} else {
-				GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
-			}
+		if (HEADER(ptr)->ov_flags & EO_NEW) {	/* Original was new, ie not allocated in GSZ. */
+			object = add_to_stack (object, &moved_set);
 		}
 	}
 #endif
 
-	UNDISCARD_BREAKPOINTS
-
 	ENSURE ("Special object", HEADER (object)->ov_flags & EO_SPEC);
 	ENSURE ("Eiffel object", !(HEADER (object)->ov_flags & EO_C));
 	ENSURE ("Valid new size", (int)(HEADER (object)->ov_size & B_SIZE) >= new_size);
+
+		/* The accounting of memory used by Eiffel is not accurate here, but it is
+		 * not easy to know at this level whether the block was merely extended or
+		 * whether we had to allocate a new block. However, if the reallocation
+		 * shrinks the object, we know xrealloc will not move the block but shrink
+		 * it in place, so there is no need to update the usage.
+		 */
+
+	if (new_size > old_size) {				/* Then update memory usage. */
+		GC_THREAD_PROTECT(EIFFEL_USAGE_MUTEX_LOCK);
+		eiffel_usage += (new_size - old_size);
+		GC_THREAD_PROTECT(EIFFEL_USAGE_MUTEX_UNLOCK);
+	}
 
 	return object;
 }
@@ -1166,6 +1172,8 @@ doc:		<summary>Allocate a new object of type BIT `size'.</summary>
 doc:		<param name="size" type="long int">Required size of bit type to allocated.</param>
 doc:		<return>A newly allocated BIT object if successful, otherwise throw an exception.</return>
 doc:		<exception>"No more memory" when it fails</exception>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
 doc:	</routine>
 */
 
@@ -1174,11 +1182,9 @@ rt_public EIF_REFERENCE bmalloc(long int size)
 	EIF_REFERENCE object;			/* Pointer to the freshly created bit object */
 	unsigned int nbytes;			/* Object's size */
 
-	DISCARD_BREAKPOINTS
-
 	(void) eif_register_bit_type (size);
 #ifdef DEBUG
-	printf ("bmalloc: %d bits requested.\n", size);
+	dprintf(1) ("bmalloc: %d bits requested.\n", size);
 #endif
 
 	/* A BIT object has a length field (the number of bits in the object), and
@@ -1188,35 +1194,25 @@ rt_public EIF_REFERENCE bmalloc(long int size)
 	 */
 	nbytes = BIT_NBPACK(size) * BIT_PACKSIZE + sizeof(uint32);
 #ifdef ISE_GC
-	object = eif_rt_xmalloc (nbytes, EIFFEL_T, GC_ON);		/* Allocate Eiffel object */
+	object = malloc_from_eiffel_list (nbytes);		/* Allocate Eiffel object */
 #endif
-
 #if defined(BOEHM_GC) || defined(NO_GC)
 	object = external_allocation (1, 0, nbytes);
-	if (object != NULL) {
-		UNDISCARD_BREAKPOINTS
-	}
 #endif
 
-	/* As in the memory allocation routines located in eif_malloc.c, a new
-	 * BIT object has to be marked after being allocated in the eif_free
-	 * list. Otherwise the GC will be lost. 
-	 * Fixes negate-big-bit-local.
-	 * -- Fabrice
-	 */
-
-	if (object != (EIF_REFERENCE ) 0) {
-		EIF_REFERENCE result;
+		/* As in the memory allocation routines located in eif_malloc.c, a new
+		 * BIT object has to be marked after being allocated in the eif_free
+		 * list. Otherwise the GC will be lost. 
+		 * Fixes negate-big-bit-local.
+		 * -- Fabrice
+		 */
+	if (object) {
 		CHECK ("Allocated size big enough", nbytes <= (HEADER(object)->ov_size & B_SIZE));
-		result = eif_set(object, egc_bit_dtype | EO_NEW, egc_bit_dtype);
-		LENGTH(result) = (uint32) size;				/* Record size */
-
-		UNDISCARD_BREAKPOINTS
-		return result;
+		object = eif_set(object, egc_bit_dtype | EO_NEW, egc_bit_dtype);
+		LENGTH(object) = (uint32) size;				/* Record size */
+		return object;
 	}
-
   
-	UNDISCARD_BREAKPOINTS
 	eraise(MTC "object allocation", EN_MEM);	/* Signals no more memory */
 	return (0); /* NOTREACHED */
 }
@@ -1226,23 +1222,23 @@ doc:	<routine name="cmalloc" return_type="EIF_REFERENCE" export="public">
 doc:		<summary>Memory allocation for a C object. This is the same as the traditional malloc routine, excepted that the memory management is done by the Eiffel run time, so Eiffel keeps a kind of control over this memory. Memory is `zeroed'.</summary>
 doc:		<param name="nbytes" type="unsigned int">Number of bytes to allocated.</param>
 doc:		<return>Upon success, it returns a pointer on a new free zone holding at least 'nbytes' free. Otherwise, a null pointer is returned.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
 doc:	</routine>
 */
 
 rt_public EIF_REFERENCE cmalloc(unsigned int nbytes)
 {
-
 #ifdef ISE_GC
 	EIF_REFERENCE arena;		/* C arena allocated */
 
 	arena = eif_rt_xmalloc(nbytes, C_T, GC_OFF);
 
-	/* The C object does not use its Eiffel flags field in the header. However,
-	 * we set the EO_C bit. This will help the GC because it won't need
-	 * extra-tests to skip the C arenas referenced by Eiffel objects.
-	 */
-
-	if (arena != (EIF_REFERENCE) 0)
+		/* The C object does not use its Eiffel flags field in the header. However,
+		 * we set the EO_C bit. This will help the GC because it won't need
+		 * extra-tests to skip the C arenas referenced by Eiffel objects.
+		 */
+	if (arena)
 		HEADER(arena)->ov_flags = EO_C;		/* Clear all flags but EO_C */
 
 	return arena;
@@ -1253,66 +1249,116 @@ rt_public EIF_REFERENCE cmalloc(unsigned int nbytes)
 
 #ifdef ISE_GC
 /*
-doc:	<routine name="gmalloc" return_type="EIF_REFERENCE" export="shared">
+doc:	<routine name="malloc_from_eiffel_list_no_gc" return_type="EIF_REFERENCE" export="shared">
 doc:		<summary>Requests 'nbytes' from the free-list (Eiffel if possible), garbage collection turned off. This entry point is used by some garbage collector routines, so it is really important to turn the GC off. This routine being called from within the garbage collector, there is no need to make it a critical section with SIGBLOCK / SIGRESUME.</summary>
-doc:		<param name="nbytes" type="unsigned int">Number of bytes to allocated.</param>
+doc:		<param name="nbytes" type="unsigned int">Number of bytes to allocated, should be properly aligned an no greater than the maximum size we can allocate (i.e. 2^27 currently).</param>
 doc:		<return>Upon success, it returns a pointer on a new free zone holding at least 'nbytes' free. Otherwise, a null pointer is returned.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
 doc:	</routine>
 */
 
-rt_shared EIF_REFERENCE gmalloc(unsigned int nbytes)
+rt_shared EIF_REFERENCE malloc_from_eiffel_list_no_gc (unsigned int nbytes)
 {
-	
-	return eif_rt_internal_xmalloc (nbytes, EIFFEL_T, GC_OFF);
+	EIF_REFERENCE result;	
+
+	REQUIRE("nbytes properly padded", (nbytes % ALIGNMAX) == 0);
+	REQUIRE("nbytes not too big (less than 2^27)", !(nbytes & ~B_SIZE)); 
+
+		/* We try to find an empty spot in the free list. If not found, we
+		 * will try `malloc_free_list' which will either allocate more
+		 * memory or coalesc some zone of the free list to create a bigger
+		 * one that will be able to accommodate `nbytes'.
+		 */
+	result = allocate_free_list (nbytes, e_hlist);
+	if (!result) {
+		result = malloc_free_list (nbytes, e_hlist, EIFFEL_T, GC_OFF);
+
+		GC_THREAD_PROTECT(EIFFEL_USAGE_MUTEX_LOCK);
+			/* Increment allocated bytes outside scavenge zone. */
+		eiffel_usage += nbytes;
+			/* No more space found in free memory, we force a full collection next time
+			 * we do a collect. */
+		force_plsc++;
+		GC_THREAD_PROTECT(EIFFEL_USAGE_MUTEX_UNLOCK);
+	}
+
+	ENSURE ("Allocated size big enough", !result || (nbytes <= (HEADER(result)->ov_size & B_SIZE)));
+	return result;
+}
+
+/*
+doc:	<routine name="malloc_from_eiffel_list" return_type="EIF_REFERENCE" export="shared">
+doc:		<summary>Requests 'nbytes' from the free-list (Eiffel if possible), garbage collection turned on. If no more space is found in the free list, we will launch a GC cycle to make some room and then try again, if it fails we try one more time with garbage collection turned off.</summary>
+doc:		<param name="nbytes" type="unsigned int">Number of bytes to allocated, should be properly aligned an no greater than the maximum size we can allocate (i.e. 2^27 currently).</param>
+doc:		<return>Upon success, it returns a pointer on a new free zone holding at least 'nbytes' free. Otherwise, a null pointer is returned.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Use `eiffel_usage_mutex' to perform safe update to `eiffel_usage', otherwise rest is naturally thread safe.</synchronization>
+doc:	</routine>
+*/
+
+rt_private EIF_REFERENCE malloc_from_eiffel_list (unsigned int nbytes)
+{
+	EIF_REFERENCE result;
+
+	REQUIRE("nbytes properly padded", (nbytes % ALIGNMAX) == 0);
+	REQUIRE("nbytes not too big (less than 2^27)", !(nbytes & ~B_SIZE)); 
+
+		/* Perform allocation in free list. If not successful, we try again
+		 * by trying a GC cycle. */
+	result = allocate_free_list(nbytes, e_hlist);
+
+	if (!result) {
+		if (trigger_gc_cycle()) {
+			result = allocate_free_list(nbytes, e_hlist);
+		}
+		if (!result) {
+				/* We try to put Eiffel blocks in Eiffel chunks
+				 * If the free list cannot hold the block, switch to the C chunks list.
+				 */
+			result = malloc_free_list(nbytes, e_hlist, EIFFEL_T, GC_ON);
+			if (!result) {
+				result = allocate_free_list (nbytes, c_hlist);
+				if (!result) {
+					result = malloc_free_list(nbytes, c_hlist, C_T, GC_OFF);
+				}
+			}
+		}
+	}
+
+	if (result) {
+		GC_THREAD_PROTECT(EIFFEL_USAGE_MUTEX_LOCK);
+		eiffel_usage += nbytes + OVERHEAD;	/* Memory used by Eiffel */
+		GC_THREAD_PROTECT(EIFFEL_USAGE_MUTEX_UNLOCK);
+	}
+
+	ENSURE ("Allocated size big enough", !result || (nbytes <= (HEADER(result)->ov_size & B_SIZE)));
+	return result;
 }
 #endif
 
-#ifdef EIF_THREADS
 /*
 doc:	<routine name="eif_rt_xmalloc" return_type="EIF_REFERENCE" export="shared">
-doc:		<summary>Wrapper around `eif_rt_internal_xmalloc' in multithreaded mode. Cf `eif_rt_internal_xmalloc' for documentation.</summary>
+doc:		<summary>This routine is the main entry point for free-list driven memory allocation. It allocates 'nbytes' of type 'type' (Eiffel or C) and will call the garbage collector if necessary, unless it is turned off. The function returns a pointer to the free location found, or a null pointer if there is no memory available.</summary>
+doc:		<param name="nbytes" type="unsigned int">Number of bytes requested.</param>
+doc:		<param name="type" type="int">Type of block (C_T or EIFFEL_T).</param>
+doc:		<param name="gc_flag" type="int">Is GC on or off?</param>
+doc:		<return>New block of memory if successful, otherwise a null pointer.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
 doc:	</routine>
 */
 
 rt_shared EIF_REFERENCE eif_rt_xmalloc(unsigned int nbytes, int type, int gc_flag)
 {
 #ifdef ISE_GC
-	RT_GET_CONTEXT
-	if (gc_thread_status == EIF_THREAD_GC_RUNNING) {
-			/* Allocation is done from the thread that is collecting,
-			 * therefore we do not need to perform a synchronization again
-			 */
-		return eif_rt_internal_xmalloc (nbytes, type, gc_flag);
-	} else {
-		EIF_REFERENCE result = NULL;
-		GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
-		result = eif_rt_internal_xmalloc(nbytes, type, gc_flag);	
-		GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
-		return result;
-	}
-#else
-	return (EIF_REFERENCE) malloc (nbytes);
-#endif
-}
-
-/*
-doc:	<routine name="eif_rt_internal_xmalloc" return_type="EIF_REFERENCE" export="shared">
-doc:		<summary>This routine is the main entry point for free-list driven memory allocation. It allocates 'nbytes' of type 'type' (Eiffel or C) and will call the garbage collector if necessary, unless it is turned off. The function returns a pointer to the free location found, or a null pointer if there is no memory available.</summary>
-doc:		<param name="nbytes" type="unsigned int">Number of bytes requested.</param>
-doc:		<param name="type" type="int">Type of block (C_T or EIFFEL_T).</param>
-doc:		<param name="gc_flag" type="int">Is GC on or off?</param>
-doc:		<return>New block of memory if successful, otherwise a null pointer.</return>
-doc:	</routine>
-*/
-
-rt_private EIF_REFERENCE eif_rt_internal_xmalloc(unsigned int nbytes, int type, int gc_flag)
-#else
-rt_shared EIF_REFERENCE eif_rt_internal_xmalloc(unsigned int nbytes, int type, int gc_flag)
-#endif
-{
-#ifdef ISE_GC
 	int mod;			/* Remainder for padding */
 	EIF_REFERENCE result;		/* Pointer to the free memory location we found */
+	union overhead **first_hlist, **second_hlist;
+	int second_type;
+#ifdef EIF_ASSERTIONS
+	unsigned int old_nbytes = nbytes;
+#endif
 
 	/* We really use at least ALIGNMAX, to avoid alignement problems.
 	 * So even if nbytes is 0, some memory will be used (the header), he he !!
@@ -1343,15 +1389,34 @@ rt_shared EIF_REFERENCE eif_rt_internal_xmalloc(unsigned int nbytes, int type, i
 	 */
 
 	if (type == EIFFEL_T) {
-		result = malloc_free_list(nbytes, e_hlist, gc_flag);
-		if (result == (EIF_REFERENCE) 0 && gc_flag != GC_OFF)
-			result = malloc_free_list(nbytes, c_hlist, GC_OFF);
+		first_hlist = e_hlist;
+		second_hlist = c_hlist;
+		second_type = C_T;
 	} else {
-		result = malloc_free_list(nbytes, c_hlist, gc_flag);
-		if (result == (EIF_REFERENCE) 0 && gc_flag != GC_OFF)
-			result = malloc_free_list(nbytes, e_hlist, GC_OFF);
+		first_hlist = c_hlist;
+		second_hlist = e_hlist;
+		second_type = EIFFEL_T;
 	}
 
+	result = allocate_free_list (nbytes, first_hlist);
+	if (!result) {
+		if (gc_flag && (type == EIFFEL_T)) {
+			if (trigger_gc_cycle()) {
+				result = allocate_free_list(nbytes, e_hlist);
+			}
+		}
+		if (!result) {
+			result = malloc_free_list (nbytes, first_hlist, type, gc_flag);
+			if (result == (EIF_REFERENCE) 0 && gc_flag != GC_OFF) {
+				result = allocate_free_list (nbytes, second_hlist);
+				if (!result) {
+					result = malloc_free_list(nbytes, second_hlist, second_type, GC_OFF);
+				}
+			}
+		}
+	}
+
+	ENSURE ("Allocated size big enough", !result || (old_nbytes <= (HEADER(result)->ov_size & B_SIZE)));
 	return result;	/* Pointer to free data space or null if out of memory */
 #else
 	return (EIF_REFERENCE) malloc (nbytes);
@@ -1361,171 +1426,90 @@ rt_shared EIF_REFERENCE eif_rt_internal_xmalloc(unsigned int nbytes, int type, i
 #ifdef ISE_GC
 /*
 doc:	<routine name="malloc_free_list" return_type="EIF_REFERENCE" export="private">
-doc:		<summary>Find an aligned block of `nbytes'. The free list described by 'hlist' is used and the garbage collector called, if gc_flag is on. It is assumed that 'nbytes' is a correctly padded number.</summary>
-doc:		<param name="nbytes" type="unsigned int">Number of bytes requested.</param>
+doc:		<summary>We tried to find a free block in `hlist' before calling this routine but could not find any. Therefore here we will try to launch a GC cycle if permitted, or we will try to coalesc the memory so that bigger blocks of memory can be found in the free list.</summary>
+doc:		<param name="nbytes" type="unsigned int">Number of bytes to allocated, should be properly aligned.</param>
 doc:		<param name="hlist" type="union overhead **">List from which we try to find a free block or allocated a new block.</param>
+doc:		<param name="type" type="int">Type of list (EIFFEL_T or C_T).</param>
 doc:		<param name="gc_flag" type="int">Is GC on or off?</param>
 doc:		<return>An aligned block of 'nbytes' bytes or null if no more memory is available.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eif_free_list_mutex'.</synchronization>
 doc:	</routine>
 */
 
-rt_private EIF_REFERENCE malloc_free_list(unsigned int nbytes, union overhead **hlist, int gc_flag)
+rt_private EIF_REFERENCE malloc_free_list (unsigned int nbytes, union overhead **hlist, int type, int gc_flag)
 {
 	EIF_REFERENCE result;					/* Location of the malloc'ed block */
+	unsigned int estimated_free_space;
 
-	/* We keep an acoounting of the amount of memory allocated for Eiffel in
-	 * the free-list. Whenever that amount reaches the allocation threshold
-	 * 'th_alloc', a call to acollect() is done to perform automatic garbage
-	 * collection.
-	 */
-	if (CHUNK_TYPE(hlist) == EIFFEL_T) {
-		if ((eiffel_usage > th_alloc) && gc_flag)		/* Above threshold */
-			if (0 == acollect())			/* Perform automatic collection */
-				eiffel_usage = 0;			/* Reset amount of allocated data */
-		eiffel_usage += nbytes + OVERHEAD;	/* Memory used by Eiffel */
-	}
+	REQUIRE("Valid list", CHUNK_TYPE(hlist) == type);
 
-	result = allocate_free_list(nbytes, hlist);
-
-	if ((EIF_REFERENCE) 0 != result)
-		return result;			/* The easy way to get memory ! */
-	
 	if (cc_for_speed) {
-
-		/* They asked for speed (over memory, of course), so we first try
-		 * to allocate by requesting some core from the kernel. If this fails,
-		 * we try to do block coalescing before attempting a new allocation
-		 * from the free list if the coalescing brought a big enough bloc.
-		 */
-
-		result = allocate_from_core(nbytes, hlist, MB_EO);	/* Ask for more core */
-		if ((EIF_REFERENCE) 0 != result)
+			/* They asked for speed (over memory, of course), so we first try
+			 * to allocate by requesting some core from the kernel. If this fails,
+			 * we try to do block coalescing before attempting a new allocation
+			 * from the free list if the coalescing brought a big enough bloc.
+			 */
+		result = allocate_from_core (nbytes, hlist);	/* Ask for more core */
+		if (result) {
 			return result;				/* We got it */
+		}
+	}
 	
 		/* Call garbage collector if it is not turned off and restart our
 		 * attempt from the beginning. We always call the partial scavenging
 		 * collector to benefit from the memory compaction, if possible.
 		 */
-		if (gc_flag == GC_ON) {
-			plsc();						/* Call garbage collector */
-			eiffel_usage = 0;			/* Reset amount of allocated data */
-			return malloc_free_list(nbytes, hlist, GC_OFF);
-		}
-
-		/* Optimize: do not try to run a full coalescing if there is not
-		 * enough free memory anyway. To give an estimation of the amount of
-		 * free memory, we substract the amount used from the total allocated:
-		 * in a perfect world, the amount of overhead would be zero... Anyway,
-		 * the coalescing operation will reduce the overhead, so we must not
-		 * deal with it or we may wrongly reject some situtations--RAM.
-		 */
-
-		if (CHUNK_TYPE(hlist) == C_T) {
-			if (nbytes <= (unsigned int) (c_data.ml_total - c_data.ml_used)) {
-				if (nbytes >= (unsigned int) full_coalesc(C_T))
-#ifdef HAS_SMART_MMAP
-				{
-					free_unused ();
-					result = allocate_from_core(nbytes, hlist, MB_EO);
-										/* Ask for more core */
-					if ((EIF_REFERENCE) 0 != result)
-						return result;				/* We got it */
-					else
-						return (EIF_REFERENCE) 0;		/* Not enough memory */
-				}
-#else
-					return (EIF_REFERENCE) 0;			/* Insufficient coalescing */
-#endif
-			} else 
-				return (EIF_REFERENCE) 0;				/* Not enough memory */
-		} else {
-			if (nbytes <= (unsigned int) (e_data.ml_total - e_data.ml_used)) {
-				if (nbytes >= (unsigned int) full_coalesc(EIFFEL_T))
-#ifdef HAS_SMART_MMAP
-				{
-					free_unused ();
-					result = allocate_from_core(nbytes, hlist, MB_EO);
-										/* Ask for more core */
-					if ((EIF_REFERENCE) 0 != result)
-						return result;				/* We got it */
-					else
-						return (EIF_REFERENCE) 0;		/* Not enough memory */
-				}
-#else
-					return (EIF_REFERENCE) 0;			/* Insufficient coalescing */
-#endif
-			} else
-				return (EIF_REFERENCE) 0;				/* Not enough memory */
-		}
-
-		/* Retry once more from the coalesced free list. Note that this cannot
-		 * fail unless the free list is corrupted in some way. This is fatal.
-		 */
-
-		result = allocate_free_list(nbytes, hlist);
-		if ((EIF_REFERENCE) 0 != result)
-			return result;				/* We must have it */
-
-		eif_panic(MTC RT_INCONSISTENCY_MSG);
-	} /* end if cc_for_speed */
-
-	/* Call garbage collector if it is not turned off and restart our
-	 * attempt from the beginning. We always call the partial scavenging
-	 * collector to benefit from the memory compaction, if possible.
-	 */
 	if (gc_flag == GC_ON) {
 		plsc();						/* Call garbage collector */
-		eiffel_usage = 0;			/* Reset amount of allocated data */
-		return malloc_free_list(nbytes, hlist, GC_OFF);
+		return malloc_free_list (nbytes, hlist, type, GC_OFF);
 	}
 
-	/* They asked for memory optimization (over speed, of course), so we
-	 * first try to do block coalescing before attempting to request more
-	 * core from the kernel. Of course, the call to full_coalesc is optimized.
-	 * There is a special case for nbytes = 0, because full_coalesc will return
-	 * 0 if no coalescing occurred by the test cannot be nbytes < full_coalesc
-	 * because there might be just the room for 'nbytes'. So in that case,
-	 * there is no inconsistency of we cannot allocate from the eif_free list after
-	 * the coalescing process was run--RAM.
+	/* Optimize: do not try to run a full coalescing if there is not
+	 * enough free memory anyway. To give an estimation of the amount of
+	 * free memory, we substract the amount used from the total allocated:
+	 * in a perfect world, the amount of overhead would be zero... Anyway,
+	 * the coalescing operation will reduce the overhead, so we must not
+	 * deal with it or we may wrongly reject some situtations--RAM.
 	 */
-		
-	if (CHUNK_TYPE(hlist) == C_T) {
-		if (nbytes <= (unsigned int) (c_data.ml_total - c_data.ml_used)) {
-			if (nbytes <= (unsigned int) full_coalesc(C_T)) {		/* Coalescing helped */
-				result = allocate_free_list(nbytes, hlist);
-				if ((EIF_REFERENCE) 0 != result)
-					return result;					/* We must have it */
-				if (nbytes)
-					eif_panic(MTC RT_INCONSISTENCY_MSG);
-			}
-#ifdef HAS_SMART_MMAP
-			else {
-				free_unused ();
-			}
-#endif
-		}
+
+	GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_LOCK);
+	if (type == C_T) {
+		estimated_free_space = (unsigned int) (c_data.ml_total - c_data.ml_used);
 	} else {
-		if (nbytes <= (unsigned int) (e_data.ml_total - e_data.ml_used)) {
-			if (nbytes <= (unsigned int) full_coalesc(EIFFEL_T)) {	/* Coalescing helped */
-				result = allocate_free_list(nbytes, hlist);
-				if ((EIF_REFERENCE) 0 != result)
-					return result;					/* We must have it */
-				if (nbytes)
-					eif_panic(MTC RT_INCONSISTENCY_MSG);
-			}
-#ifdef HAS_SMART_MMAP
-			else {
-				free_unused ();
-			}
-#endif
-		}
+		estimated_free_space = (unsigned int) (e_data.ml_total - e_data.ml_used);
 	}
 
-	/* No other choice but to request for more core */
-	return allocate_from_core(nbytes, hlist, MB_EO);
+	if ((nbytes <= estimated_free_space) && (nbytes < (unsigned int) full_coalesc_unsafe (type))) {
+#ifdef EIF_ASSERTIONS
+		EIF_REFERENCE result;
+		GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
+		result = allocate_free_list (nbytes, hlist);
+		CHECK ("result not null", result);
+		return result;
+#else
+		GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
+		return allocate_free_list (nbytes, hlist);
+#endif
+	} else {
+		GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
+#ifdef HAS_SMART_MMAP
+		free_unused ();
+#endif
+			/* No other choice but to request for more core */
+		return allocate_from_core (nbytes, hlist);
+	}
 }
 
 #ifdef HAS_SMART_MMAP
+/*
+doc:	<routine name="free_unused" export="private">
+doc:		<summary>???</summary>
+doc:		<thread_safety>Not safe<thread_safety>
+doc:		<synchronization>Safe if caller holds `eif_free_list_mutex' or is under GC synchronization.</synchronization>
+doc:	</routine>
+*/
+
 rt_private void free_unused (void)
 {
 	struct chunk *local_chunk;
@@ -1542,6 +1526,14 @@ rt_private void free_unused (void)
 	}
 }
 
+/*
+doc:	<routine name="chunk_free" return_type="int" export="private">
+doc:		<summary>???</summary>
+doc:		<param name="ck" type="struct chunk *">??</param>
+doc:		<thread_safety>Safe<thread_safety>
+doc:	</routine>
+*/
+
 rt_private int chunk_free (struct chunk *ck)
 {
 	return 0;
@@ -1555,6 +1547,8 @@ doc:		<summary>Given a correctly padded size 'nbytes', we try to find a free blo
 doc:		<param name="nbytes" type="unsigned int">Number of bytes requested.</param>
 doc:		<param name="hlist" type="union overhead **">List from which we try to find a free block.</param>
 doc:		<return>Return the address of the (splited) block if found, a null pointer otherwise.</return>
+doc:		<thread_safety>Safe<thread_safety>
+doc:		<synchronization>Through `eif_free_list_mutex'</synchronization>
 doc:	</routine>
 */
 
@@ -1562,9 +1556,8 @@ rt_private EIF_REFERENCE allocate_free_list(register unsigned int nbytes, regist
 {
 	RT_GET_CONTEXT
 	register2 uint32 i;					/* Index in hlist */
-	register3 union overhead *selected = (union overhead *) 0;	
-							/* The selected block */
-	register4 union overhead *p;		/* To walk through free-list */
+	register3 union overhead *selected;
+	EIF_REFERENCE result;
 
 #ifdef DEBUG
 	dprintf(4)("allocate_free_list: requesting %d bytes from %s list\n",
@@ -1572,83 +1565,30 @@ rt_private EIF_REFERENCE allocate_free_list(register unsigned int nbytes, regist
 	flush;
 #endif
 
-	/* Quickly compute the index in the hlist array where we have a
-	 * chance to find the right block.
-	 */
+		/* Quickly compute the index in the hlist array where we have a
+		 * chance to find the right block. */
 	i = HLIST_INDEX(nbytes);
 
-	/* This is the heart of malloc: Look in the hlist array to see if there is
-	 * already a block available. If so, we take the first one and we eventually
-	 * split the block. If no block is available, we look for some bigger one.
-	 * If none is found, then we fail.
-	 */
+		/* Look in free list to find a suitable block. */
 
+	GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_LOCK);
 	SIGBLOCK;				/* Critical section */
 
 	if (i >= HLIST_INDEX_LIMIT) {
-		for (; i < NBLOCKS; i++) {
-			if ((selected = hlist[i]) == (union overhead *) 0)
-				continue;
-			else if ((selected->ov_size & B_SIZE) >= nbytes) {
-				hlist[i] = selected->ov_next;		/* Remove block from list */
-				if (BUFFER(hlist)[i] == selected)	/* Selected was cached */
-					BUFFER(hlist)[i] = hlist[i];	/* Update cache */
-				break;				/* Found it, selected points to it */
-			} else {
-				/* Walk through list, until we find a good block. This
-				 * is only done for the first 'i'. Afterwards, either the
-				 * first item will fit, or we'll have to report failure.
-				 */
-				for (
-					p = selected, selected = p->ov_next;
-					selected != (union overhead *) 0;
-					p = selected, selected = p->ov_next
-				)
-					if ((selected->ov_size & B_SIZE) >= nbytes) {
-						p->ov_next = selected->ov_next;	/* Remove from list */
-						if (BUFFER(hlist)[i] == selected)	/* Selected cached? */
-							BUFFER(hlist)[i] = p->ov_next;	/* Update cache */
-						break;		/* Found it, selected points to it */
-					}
-				if (selected != (union overhead *) 0)
-					break;			/* Exit main loop */
-			}
-		}
+		selected = allocate_free_list_helper (i, nbytes, hlist);
 	} else {
+			/* We are below the limit `HLIST_INDEX_LIMIT', therefore if the entry of
+			 * `hlist' at index `i' is not NULL, then it means that we have `nbytes'
+			 * available. No need to check the size here. If block is null, then we
+			 * go through all other blocks to find the first one available. */
 		selected = hlist[i];
 	  	if (selected) {
 			hlist[i] = selected->ov_next;		/* remove block from list */
 			if (BUFFER(hlist)[i] == selected)	/* Selected was cached */
 			  	BUFFER(hlist)[i] = hlist[i];	/* update cache */
 		} else {
-			for (i++; i < NBLOCKS; i++) {
-				if ((selected = hlist[i]) == (union overhead *) 0)
-					continue;
-				else if ((selected->ov_size & B_SIZE) >= nbytes) {
-					hlist[i] = selected->ov_next;		/* Remove block from list */
-					if (BUFFER(hlist)[i] == selected)	/* Selected was cached */
-						BUFFER(hlist)[i] = hlist[i];	/* Update cache */
-					break;				/* Found it, selected points to it */
-				} else {
-					/* Walk through list, until we find a good block. This
-					 * is only done for the first 'i'. Afterwards, either the
-					 * first item will fit, or we'll have to report failure.
-					 */
-					for (
-						p = selected, selected = p->ov_next;
-						selected != (union overhead *) 0;
-						p = selected, selected = p->ov_next
-					)
-						if ((selected->ov_size & B_SIZE) >= nbytes) {
-							p->ov_next = selected->ov_next;	/* Remove from list */
-							if (BUFFER(hlist)[i] == selected)	/* Selected cached? */
-								BUFFER(hlist)[i] = p->ov_next;	/* Update cache */
-							break;		/* Found it, selected points to it */
-						}
-					if (selected != (union overhead *) 0)
-						break;			/* Exit main loop */
-				}
-			}
+			i++;
+			selected = allocate_free_list_helper (i, nbytes, hlist);
 		}
 	}
 		
@@ -1659,8 +1599,10 @@ rt_private EIF_REFERENCE allocate_free_list(register unsigned int nbytes, regist
 	 * index in the hlist array.
 	 */
 	
-	if (selected == (union overhead *) 0)	/* We did not find it */
-		return (EIF_REFERENCE) 0;					/* Failed */
+	if (!selected) {		/* We did not find it */
+		GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
+		return NULL;	/* Failed */
+	}
 
 #ifdef DEBUG
 	dprintf(8)("allocate_free_list: got block from list #%d\n", i);
@@ -1670,22 +1612,116 @@ rt_private EIF_REFERENCE allocate_free_list(register unsigned int nbytes, regist
 	/* Block is ready to be set up for use of 'nbytes' (eventually after
 	 * having been split). Memory accounting is done in set_up().
 	 */
-	return set_up(selected, nbytes);
+	result = set_up(selected, nbytes);
+	GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
+	return result;
 }
+
+/*
+doc:	<routine name="allocate_free_list_helper" return_type="union overhead *" export="private">
+doc:		<summary>This is the heart of malloc: Look in the hlist array to see if there is already a block available. If so, we take the first one and we eventually split the block. If no block is available, we look for some bigger one. If none is found, then we fail.</summary>
+doc:		<param name="i" type="uint32">Index from where we start looking for a block of `nbytes' in `hlist'.</param>
+doc:		<param name="nbytes" type="unsigned int">Number of bytes requested to be found.</param>
+doc:		<param name="hlist" type="union overhead **">Free list where search will take place.</param>
+doc:		<return>Location of a zone that can hold `nbytes', null otherwise.</return>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Safe if caller holds `eif_free_list_mutex' or is under GC synchronization.</synchronization>
+doc:	</routine>
+*/
+
+rt_private union overhead * allocate_free_list_helper(uint32 i, register unsigned int nbytes, register union overhead **hlist)
+{
+	register3 union overhead *selected;	/* The selected block */
+	register4 union overhead *p;		/* To walk through free-list */
+
+
+	for (; i < NBLOCKS; i++) {
+		if ((selected = hlist[i]) == NULL)
+			continue;
+		else if ((selected->ov_size & B_SIZE) >= nbytes) {
+			hlist[i] = selected->ov_next;		/* Remove block from list */
+			if (BUFFER(hlist)[i] == selected)	/* Selected was cached */
+				BUFFER(hlist)[i] = hlist[i];	/* Update cache */
+			return selected;				/* Found it, selected points to it */
+		} else {
+			/* Walk through list, until we find a good block. This
+			 * is only done for the first 'i'. Afterwards, either the
+			 * first item will fit, or we'll have to report failure.
+			 */
+			for (
+				p = selected, selected = p->ov_next;
+				selected != NULL;
+				p = selected, selected = p->ov_next
+			) {
+				if ((selected->ov_size & B_SIZE) >= nbytes) {
+					p->ov_next = selected->ov_next;	/* Remove from list */
+					if (BUFFER(hlist)[i] == selected)	/* Selected cached? */
+						BUFFER(hlist)[i] = p->ov_next;	/* Update cache */
+					return selected;		/* Found it, selected points to it */
+				}
+			}
+			CHECK ("Not found", selected == NULL);
+		}
+	}
+
+#if DEBUG
+{
+	uint32 bytes_available = 0;
+	int found = 0;
+	fprintf(stderr, "\nallocate_free_list_helper: Requested %d, but found nothing.\n", nbytes);
+	for (i = 0; i < NBLOCKS; i++) {
+		selected = hlist [i];
+		if (selected) {
+			uint32 count = 0;
+			uint32 list_bytes = 0;
+			for (
+				p = selected;
+				selected != NULL;
+				p = selected, selected = p->ov_next
+			) {
+				if ((selected->ov_size & B_SIZE) >= nbytes) {
+					found++;
+				}
+				list_bytes += selected->ov_size & B_SIZE;
+				count++;
+			}
+			fprintf(stderr, "hlist [%d] has %d elements and %d free bytes.\n", i, count, list_bytes);
+			bytes_available += list_bytes;
+		} else {
+//			fprintf(stderr, "hlist [%d] is empty.\n", i);
+		}
+	}
+	if (found) {
+		fprintf(stderr, "We found a possible %d block(s) of size greater than %d bytes.\n", found, nbytes);
+	}
+	fprintf(stderr, "Total available bytes is %d\n", bytes_available);
+	if (CHUNK_TYPE(hlist) == EIFFEL_T) {
+		fprintf(stderr, "Eiffel free list has %d bytes allocated, %d used and %d free.\n",
+			e_data.ml_total, e_data.ml_used, e_data.ml_total - e_data.ml_used); 
+	} else {
+		fprintf(stderr, "C free list has %d bytes allocated, %d used and %d free.\n",
+			c_data.ml_total, c_data.ml_used, c_data.ml_total - c_data.ml_used); 
+	}
+	flush;
+}
+#endif
+	return NULL;
+}
+
 
 /*
 doc:	<routine name="get_to_from_core" return_type="EIF_REFERENCE" export="shared">
 doc:		<summary>For the partial scavenging algorithm, gets a new free chunk for the to_space.</summary>
 doc:		<param name="nbytes" type="unsigned int">Number of bytes requested.</param>
 doc:		<return>New block if successful, otherwise a null pointer.</return>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>Safe if called by thread which requested synchronization when GC is synchronized.</synchronization>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Call to `allocate_from_core' is safe.</synchronization>
 doc:	</routine>
 */
 
 rt_shared EIF_REFERENCE get_to_from_core (unsigned int nbytes)
 {
-	return allocate_from_core (nbytes, e_hlist, MB_CHUNK);
+	return allocate_from_core (nbytes, e_hlist);
 }
 
 /*
@@ -1693,26 +1729,33 @@ doc:	<routine name="allocate_from_core" return_type="EIF_REFERENCE" export="priv
 doc:		<summary>Given a correctly padded size 'nbytes', we ask for some core to be able to make a chunk capable of holding 'nbytes'. The chunk will be placed in the specified `hlist'.</summary>
 doc:		<param name="nbytes" type="unsigned int">Number of bytes requested.</param>
 doc:		<param name="hlist" type="union overhead **">List in which we try to allocated a free block.</param>
-doc:		<param name="block_type" type="char">Type of block to allocated (MB_EO or MB_CHUNK).</param>
 doc:		<return>Address of new block, or null if no more core is available.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eif_free_list_mutex'.</synchronization>
 doc:	</routine>
 */
 
-rt_private EIF_REFERENCE allocate_from_core(unsigned int nbytes, union overhead **hlist, char block_type)
+rt_private EIF_REFERENCE allocate_from_core(unsigned int nbytes, union overhead **hlist)
 {
 	RT_GET_CONTEXT
 	register2 union overhead *selected;		/* The selected block */
 	register1 struct chunk *chkbase;		/* Base address of new chunk */
+	EIF_REFERENCE result;
+	int type = CHUNK_TYPE(hlist);
 	
 #ifdef DEBUG
 	dprintf(4)("allocate_from_core: requesting %d bytes from %s list\n",
-		nbytes, (CHUNK_TYPE(hlist) == C_T) ? "C" : "Eiffel");
+		nbytes, (type == C_T) ? "C" : "Eiffel");
 	flush;
 #endif
 
-	selected = add_core(nbytes, CHUNK_TYPE(hlist));	/* Ask for more core */
-	if (selected == (union overhead *) 0)
+	GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_LOCK);
+
+	selected = add_core(nbytes, type);	/* Ask for more core */
+	if (!selected) {
+		GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
 		return (EIF_REFERENCE) 0;				/* Could not obtain enough memory */
+	}
 	
 	/* Add_core() returns a pointer of the info zone of the sole block
 	 * currently in the new born chunk. We have to set the "type" of the
@@ -1732,7 +1775,7 @@ rt_private EIF_REFERENCE allocate_from_core(unsigned int nbytes, union overhead 
 
 	SIGBLOCK;			/* Critical section */
 
-	if (C_T == CHUNK_TYPE(hlist)) {
+	if (C_T == type) {
 		/* C block chunck */
 		if (cklst.cck_head == (struct chunk *) 0) {	/* No C chunk yet */
 			cklst.cck_head = chkbase;				/* First C chunk */
@@ -1763,7 +1806,7 @@ rt_private EIF_REFERENCE allocate_from_core(unsigned int nbytes, union overhead 
 
 #ifdef DEBUG
 	dprintf(4)("allocate_from_core: %d user bytes chunk added to %s list\n",
-		chkbase->ck_length, (CHUNK_TYPE(hlist) == C_T) ? "C" : "Eiffel");
+		chkbase->ck_length, (type == C_T) ? "C" : "Eiffel");
 	flush;
 #endif
 
@@ -1771,10 +1814,10 @@ rt_private EIF_REFERENCE allocate_from_core(unsigned int nbytes, union overhead 
 	 * having been split). Memory accounting is done in set_up().
 	 */
 
-	if (block_type == MB_EO)
-		return set_up(selected, nbytes);
-	else
-		return set_up_chunk(selected, nbytes);
+	result = set_up(selected, nbytes);
+
+	GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
+	return result;
 }
 
 /*
@@ -1783,6 +1826,8 @@ doc:		<summary>Get more core from kernel, increasing the data segment of the pro
 doc:		<param name="nbytes" type="unsigned int">Number of bytes requested.</param>
 doc:		<param name="type" type="int">Type of block to allocated (EIFFEL_T or C_T).</param>
 doc:		<return>Address of new block of `nbytes' bytes, or null if no more core is available.</return>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Safe if caller holds `eif_free_list_mutex' or is under GC synchronization.</synchronization>
 doc:	</routine>
 */
 
@@ -1797,7 +1842,6 @@ rt_private union overhead *add_core(register unsigned int nbytes, int type)
 						/* Initialized with `failed' value. */
 #endif
 	register2 int32 asked = (int32) nbytes;	/* Bytes requested */
-	int over_chunk;
 
 	/* We want at least 'nbytes' bytes for use, so we must add the overhead
 	 * for each block and for each chunk. The memory made available to us
@@ -1808,20 +1852,12 @@ rt_private union overhead *add_core(register unsigned int nbytes, int type)
 
 	/* Requesting less than CHUNK implies requesting CHUNK bytes, at least.
 	 * Requesting more implies at least CHUNK plus the needed number of
-	 * extra pages necessary (tiny fit), if this is for a Eiffel chunk.
-	 * Otherwise, it is a multiple of CHUNK, because C blocks are more likely to
-	 * be reallocated than Eiffel ones. Moreover, C chunks are not meant to be
-	 * scavenged, so it is less important.
+	 * extra pages necessary (tiny fit).
 	 */
-	if (asked <= eif_chunk_size)
+	if (asked <= eif_chunk_size) {
 		asked = eif_chunk_size;
-	else if (type == EIFFEL_T)
-		asked = eif_chunk_size +
-			(((asked - eif_chunk_size) / PAGESIZE_VALUE) + 1) * PAGESIZE_VALUE;
-	else {
-		over_chunk = (asked % eif_chunk_size);
-		if (over_chunk != 0)
-			asked += eif_chunk_size - over_chunk;
+	} else {
+		asked = eif_chunk_size + (((asked - eif_chunk_size) / PAGESIZE_VALUE) + 1) * PAGESIZE_VALUE;
 	}
 
 	/* If we request for more than a CHUNK, we'll loop only once (for Eiffel,
@@ -1980,7 +2016,7 @@ rt_private union overhead *add_core(register unsigned int nbytes, int type)
 doc:	<routine name="rel_core" export="shared">
 doc:		<summary>Release core if possible, giving pages back to the kernel. This will shrink the size of the process accordingly. To release memory, we need at least two free chunks at the end (i.e. near the break), and of course, a chunk not reserved for next partial scavenging as a 'to' zone.</summary>
 doc:		<thread_safety>Not safe<thread_safety>
-doc:		<synchronization>Safe if called by thread which requested synchronization when GC is synchronized.</synchronization>
+doc:		<synchronization>Safe under GC synchronization.</synchronization>
 doc:	</routine>
 */
 
@@ -1996,7 +2032,7 @@ doc:	<routine name="free_last_chunk" return_type="int" export="private">
 doc:		<summary>The last chunk in memory is freed (i.e. given back to the kernel) and the break value is updated. The status from sbrk() is returned. Great care is taken to ensure that the last chunk does not contain anything referenced by the process (otherwise, you get a free ticket for a memory fault)--RAM. Only called by `rel_core'.</summary>
 doc:		<return>An error condition of -2 means the last chunk is not near the break for whatever reason and hence cannot be wiped out from the process, sorry. A -3 means that there is no way the last chunk can be freed. -4 is returned when there are no more chunks to be freed</return>
 doc:		<thread_safety>Not safe<thread_safety>
-doc:		<synchronization>Safe if called by thread which requested synchronization when GC is synchronized.</synchronization>
+doc:		<synchronization>Safe under GC synchronization.</synchronization>
 doc:	</routine>
 */
 
@@ -2234,6 +2270,8 @@ doc:		<summary>Given a 'selected' block which may be too big to hold 'nbytes', w
 doc:		<param name="selected" type="union overhead *">Block of memory which is too big to hold `nbytes'.</param>
 doc:		<param name="nbytes" type="unsigned int">Size in bytes of block we should return.</param>
 doc:		<return>Address of location of object of size `nbytes' in `selected'.</return>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Safe if caller is synchronized on `eif_free_list_mutex', or under GC synchronization.</synchronization>
 doc:	</routine>
 */
 
@@ -2301,109 +2339,18 @@ rt_private EIF_REFERENCE set_up(register union overhead *selected, unsigned int 
 	return (EIF_REFERENCE) (selected + 1);		/* Free data space */
 }
 
-/*
-doc:	<routine name="set_up_chunk" return_type="EIF_REFERENCE" export="private">
-doc:		<summary>Same as set_up() but for memory chunk when they are explicitely allocated from core for the partial scavenging.</summary>
-doc:		<param name="selected" type="union overhead *">Block of memory which is too big to hold `nbytes'.</param>
-doc:		<param name="nbytes" type="unsigned int">Size in bytes of block we should return.</param>
-doc:		<return>Address of location of object of size `nbytes' in `selected'.</return>
-doc:	</routine>
-*/
-
-rt_private EIF_REFERENCE set_up_chunk(register union overhead *selected, unsigned int nbytes)
-{
-	RT_GET_CONTEXT
-	register2 uint32 r;		/* For temporary storage */
-	register3 uint32 i;		/* To store true size */
-
-#ifdef DEBUG
-	dprintf(8)("set_up_chunk: selected is 0x%lx (%s, %d bytes)\n",
-		selected, selected->ov_size & B_LAST ? "last" : "normal",
-		selected->ov_size & B_SIZE);
-	flush;
-#endif
-
-	SIGBLOCK;				/* Critical section, cannot be interrupted */
-
-	(void) eif_rt_split_block(selected, nbytes);	/* Eventually split the area */
-
-	/* The 'selected' block is now in use and the real size is in
-	 * the ov_size area. To mark the block as used, we have to set
-	 * two bits in the flags part (block is busy and it is a C block).
-	 * Another part of the run-time will overwrite this if Eiffel is
-	 * to ever use this object.
-	 */
-	
-	r = selected->ov_size;
-	selected->ov_size = r | B_NEW;
-	i = r & B_SIZE;						/* Keep only true size */
-
-	/* Memory accounting is relevant only if the current block has been 
-	 * allocated in a C chunk (memory for Eiffel allocated in a C chunk).
-	 * This memory block is used only as container for other Eiffel blocks
-	 * (which are already counted).
-	 */
-	if (r & B_CTYPE) {
-		m_data.ml_used += i;				/* Account for memory used */
-		c_data.ml_used += i;
-	}
-
-	SIGRESUME;				/* Re-enable signal exceptions */
-
-	/* Now it's done. We return the address of data space, that
-	 * is to say (selected + 1) -- yes ! The area holds at least
-	 * 'nbytes' (entrance value) of free space.
-	 */
-
-#ifdef DEBUG
-	dprintf(8)("set_up_chunk: returning %s %s block starting at 0x%lx (%d bytes)\n",
-		(selected->ov_size & B_CTYPE) ? "C" : "Eiffel",
-		(selected->ov_size & B_LAST) ? "last" : "normal",
-		(EIF_REFERENCE) (selected + 1), selected->ov_size & B_SIZE);
-	flush;
-#endif
-
-	return (EIF_REFERENCE) (selected + 1);		/* Free data space */
-}
 #endif /* ISE_GC */
 
-#ifdef EIF_THREADS
 /*
 doc:	<routine name="eif_rt_xfree" export="public">
-doc:		<summary>Wrapper around `eif_rt_internal_xfree' in multithreaded mode. Cf `eif_rt_internal_xfree' for documentation.</summary>
+doc:		<summary>Frees the memory block which starts at 'ptr'. This has to be a pointer returned by eif_rt_xmalloc, otherwise impredictable results will follow... The contents of the block are preserved, though one should not rely on this as it may change without notice.</summary>
+doc:		<param name="ptr" type="EIF_REFERENCE">Address of memory to be freed.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eif_free_list_mutex'.</synchronization>
 doc:	</routine>
 */
 
 rt_public void eif_rt_xfree(register EIF_REFERENCE ptr)
-{
-#ifdef ISE_GC
-	RT_GET_CONTEXT
-	if (gc_thread_status == EIF_THREAD_GC_RUNNING) {
-			/* Allocation is done from the thread that is collecting,
-			 * therefore we do not need to perform a synchronization again
-			 */
-		eif_rt_internal_xfree (ptr);
-	} else {
-		GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
-		eif_rt_internal_xfree (ptr);
-		GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
-	}
-#else
-	free (ptr);
-#endif
-}
-
-/*
-doc:	<routine name="eif_rt_internal_xfree" export="public">
-doc:		<summary>Frees the memory block which starts at 'ptr'. This has to be a pointer returned by eif_rt_xmalloc, otherwise impredictable results will follow... The contents of the block are preserved, though one should not rely on this as it may change without notice.</summary>
-doc:		<param name="ptr" type="EIF_REFERENCE">Address of memory to be freed.</param>
-doc:	</routine>
-*/
-
-rt_private void eif_rt_internal_xfree(register EIF_REFERENCE ptr)
-#else
-rt_public void eif_rt_internal_xfree(register EIF_REFERENCE ptr)
-#endif
 {
 #ifdef ISE_GC
 	uint32 r;					/* For shifting purposes */
@@ -2424,6 +2371,8 @@ rt_public void eif_rt_internal_xfree(register EIF_REFERENCE ptr)
 	 */
 	if (!(r & B_BUSY))
 		return;				/* Nothing to be done */
+
+	GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_LOCK);
 
 	/* Memory accounting */
 	i = r & B_SIZE;				/* Amount of memory released */
@@ -2460,6 +2409,8 @@ rt_public void eif_rt_internal_xfree(register EIF_REFERENCE ptr)
 	 */
 	xfreeblock(zone, r);
 
+	GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
+
 #ifdef DEBUG
 	dprintf(8)("eif_rt_xfree: %s %s block starting at 0x%lx holds %d bytes free\n",
 		(zone->ov_size & B_LAST) ? "last" : "normal",
@@ -2471,72 +2422,6 @@ rt_public void eif_rt_internal_xfree(register EIF_REFERENCE ptr)
 #endif
 }
 
-#ifdef ISE_GC
-/*
-doc:	<routine name="xfreechunk" export="shared">
-doc:		<summary>Frees the memory chunk which starts at 'ptr'. This has to be a pointer returned by malloc, otherwise impredictable results will follow... The contents of the block are preserved, though one should not rely on this as it may change without notice. The only difference with the eif_rt_xfree() routine is that the Eiffel memory used is updated if the block is not a block freed by partial scavenging (as the objects it was holding have already been counted).</summary>
-doc:		<param name="ptr" type="EIF_REFERENCE">Chunk of memory to be freed.</param>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>Safe if called by thread which requested synchronization when GC is synchronized.</synchronization>
-doc:	</routine>
-*/
-
-rt_shared void xfreechunk(EIF_REFERENCE ptr)
-{
-	uint32 r;					/* For shifting purposes */
-	union overhead *zone;		/* The to-be-freed zone */
-	uint32 i;					/* Index in hlist */
-
-	zone = ((union overhead *) ptr) - 1;	/* Walk backward to header */
-	r = zone->ov_size;						/* Size of block */
-
-	/* If the bloc is in the generation scavenge zone, nothing has to be done.
-	 * This is easy to detect because objects in the scavenge zone have the
-	 * B_BUSY bit reset. Testing for that bit will also enable the routine
-	 * to return immediately if the address of a free block is given.
-	 */
-	if (!(r & B_BUSY))
-		return;				/* Nothing to be done */
-
-	/* Memory accounting */
-	i = r & B_SIZE;				/* Amount of memory released */
-	m_data.ml_used -= i;		/* At least this is free */
-	if (r & B_CTYPE)
-		c_data.ml_used -= i;
-	else
-		e_data.ml_used -= i;
-
-#ifdef DEBUG
-	dprintf(1)("xfreechunk: on a %s %s block starting at 0x%lx (%d bytes)\n",
-		(zone->ov_size & B_LAST) ? "last" : "normal",
-		(zone->ov_size & B_CTYPE) ? "C" : "Eiffel",
-		ptr, zone->ov_size & B_SIZE);
-	flush;
-	if (DEBUG & 128) {					/* Print type and class name */
-		EIF_REFERENCE obj = (EIF_REFERENCE) (zone + 1);
-		if (zone->ov_size & B_FWD)		/* Object was forwarded */
-			obj = zone->ov_fwd;
-		if (!(HEADER(obj)->ov_flags & EO_C))
-			printf("xfreechunk: %s object [%d]\n",
-				System(Dtype(obj)).cn_generator, Dtype(obj));
-	}
-	flush;
-#endif
-
-	/* Now put back in the free list a memory block starting at `zone', of
-	 * size 'r' bytes.
-	 */
-	xfreeblock(zone, r);
-
-#ifdef DEBUG
-	dprintf(8)("xfreechunk: %s %s block starting at 0x%lx holds %d bytes free\n",
-		(zone->ov_size & B_LAST) ? "last" : "normal",
-		(zone->ov_size & B_CTYPE) ? "C" : "Eiffel",
-		ptr, zone->ov_size & B_SIZE);
-#endif
-}
-#endif
-
 /*
 doc:	<routine name="eif_rt_xcalloc" export="public">
 doc:		<summary>Allocate space for 'nelem' elements of 'elsize' bytes and set the new space with zeros. This is NEVER used by the Eiffel run time but it is provided to keep the C interface with the standard malloc package.</summary>
@@ -2544,6 +2429,7 @@ doc:		<param name="nelem" type="unsigned int">Number of elements to allocate.</p
 doc:		<param name="elsize" type="unsigned int">Size of element.</param>
 doc:		<return>New block of memory of size nelem * elsize if successful, otherwise null pointer.</return>
 doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Handled by `eif_rt_xmalloc'.</synchronization>
 doc:	</routine>
 */
 
@@ -2572,6 +2458,8 @@ doc:	<routine name="xfreeblock" export="private">
 doc:		<summary>Put the memory block starting at 'zone' into the free_list. Note that zone points at the beginning of the memory block (beginning of the header) and not at an object data area.
 doc:		<param name="zone" type="union overhead *">Zone to be freed.</param>
 doc:		<param name="r" type="uint32">Size of block.</param>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Safe if caller holds `eif_free_list_mutex' or is under GC synchronization.</synchronization>
 doc:	</routine>
 */
 
@@ -2619,6 +2507,8 @@ doc:		<param name="ptr" type="EIF_REFERENCE">Address that will be reallocated.</
 doc:		<param name="nbytes" type="unsigned int">New size in bytes of `ptr'.</param>
 doc:		<return>New block of memory of size `nbytes', otherwise null pointer or throw an exception.</return>
 doc:		<exception>"No more memory" exception</exception>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
 doc:	</routine>
 */
 
@@ -2640,6 +2530,8 @@ doc:		<param name="nbytes" type="unsigned int">New size in bytes of `ptr'.</para
 doc:		<param name="gc_flag" type="nbytes">New size in bytes of `ptr'.</param>
 doc:		<return>New block of memory of size `nbytes', otherwise null pointer or throw an exception.</return>
 doc:		<exception>"No more memory" exception</exception>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eif_free_list_mutex'.</synchronization>
 doc:	</routine>
 */
 
@@ -2689,6 +2581,7 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 	if (r == nbytes) 			/* Same size, lucky us... */
 		return ptr;				/* That's all I wrote */
 
+	GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_LOCK);
 	SIGBLOCK;					/* Beginning of critical section */
 
 	if (r > nbytes) {			/* New block is smaller */
@@ -2699,10 +2592,10 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 		flush;
 #endif
 
-		r = (uint32)
-			eif_rt_split_block(zone, nbytes);	/* Split block, r holds size */
+		r = (uint32) eif_rt_split_block(zone, nbytes);	/* Split block, r holds size */
 		if (r == (uint32) -1) {			/* If we did not split it */
 			SIGRESUME;					/* Exiting from critical section */
+			GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
 			return ptr;					/* Leave block unchanged */
 		}
 		
@@ -2724,6 +2617,7 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 #endif
 
 		SIGRESUME;		/* Exiting from critical section */
+		GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
 		return ptr;		/* Block address did not change */
 	}
 	
@@ -2736,8 +2630,9 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 	size_gain = 0;
 #else	/* EIF_MALLOC_OPTIMIZATION */
 	size_gain = 0;
-	while ((size = coalesc(zone)))	/* Perform coalescing as long as possible */
+	while ((size = coalesc(zone))) {	/* Perform coalescing as long as possible */
 		size_gain += size;
+	}
 #endif	/* EIF_MALLOC_OPTIMIZATION */
 
 #ifdef DEBUG
@@ -2778,8 +2673,7 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 	if (i >= nbytes) {					/* Total size is ok ? */
 
 		r = i - r;						/* Amount of memory over-used */
-		i = (uint32)
-			eif_rt_split_block(zone, nbytes);	/* Split block, i holds size */
+		i = (uint32) eif_rt_split_block(zone, nbytes);	/* Split block, i holds size */
 		if (i == (uint32) -1) {			/* If we did not split it */
 			m_data.ml_used += r;		/* Update memory used */
 			if (zone->ov_size & B_CTYPE)
@@ -2793,6 +2687,7 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 			}
 
 			SIGRESUME;					/* Exiting from critical section */
+			GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
 			return ptr;					/* Leave block unsplit */
 		}
 		
@@ -2815,10 +2710,12 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 #endif
 
 		SIGRESUME;		/* Exiting from critical section */
+		GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
 		return ptr;		/* Block address did not change */
 	}
 
 	SIGRESUME;			/* End of critical section */
+	GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
 
 	/* If we come here, we have to use malloc/free. I use 'zone' as
 	 * a temporary variable, because in fact, pointers returned by
@@ -2830,8 +2727,7 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 	 * block from the correct free list, if at all possible.
 	 */
 
-	i = (uint32)
-		((HEADER(ptr)->ov_size & B_C) ? C_T : EIFFEL_T);	/* Best type */
+	i = (uint32) ((HEADER(ptr)->ov_size & B_C) ? C_T : EIFFEL_T);	/* Best type */
 
 	if (gc_flag & GC_ON) {
 		safeptr = ptr;
@@ -2856,8 +2752,7 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 
 	if (zone != (union overhead *) 0) {
 		memcpy (zone, ptr, r & B_SIZE);	/* Move to new location */
-		HEADER(zone)->ov_flags =				/* Keep Eiffel flags */
-			HEADER(ptr)->ov_flags;
+		HEADER(zone)->ov_flags = HEADER(ptr)->ov_flags;		/* Keep Eiffel flags */
 		if (!(gc_flag & GC_FREE))		/* Will GC take care of free? */
 			eif_rt_xfree(ptr);					/* Free old location */
 	} else if (i == EIFFEL_T)			/* Could not reallocate object */
@@ -2887,6 +2782,7 @@ doc:		<summary>Return the pointer to the static data held in m_data. The user mu
 doc:		<param name="type" type="int">Type of memory (M_C or M_EIFFEL or M_ALL) to get info from.</param>
 doc:		<return>Pointer to an internal structure used by `malloc.c'.</return>
 doc:		<thread_safety>Not Safe</thread_safety>
+doc:		<synchronization>Safe if caller holds `eif_free_list_mutex' or is under GC synchronization.</synchronization>
 doc:	</routine>
 */
 
@@ -2908,6 +2804,8 @@ doc:		<summary>The block 'selected' may be too big to hold only 'nbytes', so it 
 doc:		<param name="selected" type="union overhead *">Selected block from which we try to extract a block of `nbytes' bytes.</param>
 doc:		<param name="nbytes" type="uint32">Size of block we should retur</param>
 doc:		<return>Address of location of object of size `nbytes' in `selected'.</return>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Safe if caller holds `eif_free_list_mutex' or is under GC synchronization.</synchronization>
 doc:	</routine>
 */
 
@@ -2975,6 +2873,8 @@ doc:	<routine name="coalesc" return_type="int" export="private">
 doc:		<summary>Given a zone to be freed, test whether we can do some coalescing with the next block, if it happens to be free. Overhead accounting is updated. It is up to the caller to put the coalesced block back to the free list (in case this is called by a free operation). It is up to the caller to issue a SIGBLOCK prior any call to this critical routine.</summary>
 doc:		<param name="zone" type="union overhead *">Starting block from which we are trying to coalesc next block to it, if next block is free.</param>
 doc:		<return>Number of new free bytes available (i.e. the size of the coalesced block plus the overhead) or 0 if no coalescing occurred.</return>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Safe if caller holds `eif_free_list_mutex' or is under GC synchronization.</synchronization>
 doc:	</routine>
 */
 
@@ -3040,6 +2940,8 @@ doc:	<routine name="connect_free_list" export="private">
 doc:		<summary>The block 'zone' is inserted in the free list #i. This list is sorted by increasing addresses. Although this costs in case of insertions, it can drastically improve performances, because as the malloc routine uses a frist fit in the free list, the objects won't get sparsed in the whole memory. This should limit swapping overhead and enable the process to give memory back to the kernel. It is up to the caller to ensure signal exceptions are blocked when entering in this critical routine.</summary>
 doc:		<param name="zone" type="union overhead *">Block to insert in free list #`i'.</param>
 doc:		<param name="i" type="uint32">Free list index to insert `zone'.</param>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Safe if caller holds `eif_free_list_mutex' or is under GC synchronization.</synchronization>
 doc:	</routine>
 */
 
@@ -3120,6 +3022,8 @@ doc:	<routine name="disconnect_free_list" export="private">
 doc:		<summary>Removes block pointed to by 'next' from free list #i. Note that we do not take advantage of the sorting of the free list, because the block has to be found. If it is not, then the free list has been corrupted. It is up to the caller to ensure signal exceptions are blocked when entering in this critical routine.</summary>
 doc:		<param name="next" type="union overhead *">Block to remove from free list #`i'.</param>
 doc:		<param name="i" type="uint32">Free list index to remove `next'.</param>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Safe if caller holds `eif_free_list_mutex' or is under GC synchronization.</synchronization>
 doc:	</routine>
 */
 
@@ -3181,7 +3085,7 @@ doc:	<routine name="lxtract" export="shared">
 doc:		<summary>Remove 'next' from the free list. This routine is used by the garbage collector, and thus it is visible from the outside world, hence the cryptic name for portability--RAM. Note that the garbage collector performs with signal exceptions blocked.</summary>
 doc:		<param name="next" type="union overhead *">Block to remove from free list.</param>
 doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>Safe if called by thread which requested synchronization when GC is synchronized.</synchronization>
+doc:		<synchronization>Safe under GC synchronization.</synchronization>
 doc:	</routine>
 */
 
@@ -3201,7 +3105,7 @@ doc:		<summary>Do block coalescing inside the chunk wherever possible.</summary>
 doc:		<param name="c" type="struct chunk *">Block to remove from free list.</param>
 doc:		<return>Size of the largest coalesced block or 0 if no coalescing occurred.</return>
 doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>Safe if called by thread which requested synchronization when GC is synchronized.</synchronization>
+doc:		<synchronization>Safe under GC synchronization.</synchronization>
 doc:	</routine>
 */
 
@@ -3290,15 +3194,34 @@ rt_shared int chunk_coalesc(struct chunk *c)
 
 /*
 doc:	<routine name="full_coalesc" return_type="int" export="shared">
+doc:		<summary>Same as `full_coalesc_unsafe' except it is a safe thread version.</summary>
+doc:		<param name="chunk_type" type="int">Type of chunk on which we perform coalescing (C_T, EIFFEL_T or ALL_T).</param>
+doc:		<return>Size of the largest block made available by coalescing, or 0 if no coalescing ever occurred.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eif_free_list_mutex'.</synchronization>
+doc:	</routine>
+*/
+
+rt_shared int full_coalesc (int chunk_type)
+{
+	int result;
+	GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_LOCK);
+	result = full_coalesc_unsafe (chunk_type);
+	GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
+	return result;
+}
+
+/*
+doc:	<routine name="full_coalesc_unsafe" return_type="int" export="shared">
 doc:		<summary>Walks through the designated chunk list (type 'chunk_type') and do block coalescing wherever possible.</summary>
 doc:		<param name="chunk_type" type="int">Type of chunk on which we perform coalescing (C_T, EIFFEL_T or ALL_T).</param>
 doc:		<return>Size of the largest block made available by coalescing, or 0 if no coalescing ever occurred.</return>
 doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>Safe if called by thread which requested synchronization when GC is synchronized.</synchronization>
+doc:		<synchronization>Safe if caller holds `eif_free_list_mutex' or is under GC synchronization.</synchronization>
 doc:	</routine>
 */
 
-rt_shared int full_coalesc(int chunk_type)
+rt_private int full_coalesc_unsafe(int chunk_type)
 {
 	register1 struct chunk *c;		/* To walk along chunk list */
 	register2 int max_size = 0;		/* Size of biggest coalesced block */
@@ -3329,7 +3252,7 @@ rt_shared int full_coalesc(int chunk_type)
 	) {
 	
 #ifdef DEBUG
-		dprintf(1+32)("full_coalesc: entering %s chunk 0x%lx (%d bytes)\n",
+		dprintf(1+32)("full_coalesc_unsafe: entering %s chunk 0x%lx (%d bytes)\n",
 			c->ck_type == C_T ? "C" : "Eiffel", c, c->ck_length);
 		flush;
 #endif
@@ -3340,7 +3263,7 @@ rt_shared int full_coalesc(int chunk_type)
 	}
 
 #ifdef DEBUG
-	dprintf(1+8+32)("full_coalesc: %d bytes is the largest coalesced block\n",
+	dprintf(1+8+32)("full_coalesc_unsafe: %d bytes is the largest coalesced block\n",
 		max_size);
 	flush;
 #endif
@@ -3349,10 +3272,70 @@ rt_shared int full_coalesc(int chunk_type)
 }
 
 /*
+doc:	<routine name="trigger_smart_gc_cycle" return_type="int" export="private">
+doc:		<summary>Launch a GC cycle. If we have allocated more than `th_alloc' then we perform an automatic collection, otherwise we try a simple generation scavenging. Since it can trigger a GC collection, we disable debugger so that no one can reach a breakpoint located in a dispose routine.</summary>
+doc:		<return>1 if collection was successful, 0 otherwise.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eiffel_usage_mutex' for getting value of `eiffel_usage'.</synchronization>
+doc:	</routine>
+*/
+
+rt_private int trigger_smart_gc_cycle (void)
+{
+	int result = 0;
+	long e_usage;
+	EIF_ENTER_C;
+	GC_THREAD_PROTECT(TRIGGER_GC_LOCK);
+	GC_THREAD_PROTECT(EIFFEL_USAGE_MUTEX_LOCK);
+	e_usage = eiffel_usage;
+	GC_THREAD_PROTECT(EIFFEL_USAGE_MUTEX_UNLOCK);
+	if (e_usage > th_alloc) {	/* Above threshold */
+		if (0 == acollect()) {		/* Perform automatic collection */
+			result = 1;
+		}
+	} else if (0 == collect()) {	/* Simple generation scavenging */
+		result = 1;
+	}
+	GC_THREAD_PROTECT(TRIGGER_GC_UNLOCK);
+	EIF_EXIT_C;
+	return result;
+}
+
+/*
+doc:	<routine name="trigger_gc_cycle" return_type="int" export="private">
+doc:		<summary>Launch a GC cycle. If we have allocated more than `th_alloc' then we perform an automatic collection, otherwise we try a simple generation scavenging. Since it can trigger a GC collection, we disable debugger so that no one can reach a breakpoint located in a dispose routine.</summary>
+doc:		<return>1 if collection was successful, 0 otherwise</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eiffel_usage_mutex' for getting value of `eiffel_usage'.</synchronization>
+doc:	</routine>
+*/
+
+rt_private int trigger_gc_cycle (void)
+{
+	int result = 0;
+	long e_usage;
+	EIF_ENTER_C;
+	GC_THREAD_PROTECT(TRIGGER_GC_LOCK);
+	GC_THREAD_PROTECT(EIFFEL_USAGE_MUTEX_LOCK);
+	e_usage = eiffel_usage;
+	GC_THREAD_PROTECT(EIFFEL_USAGE_MUTEX_UNLOCK);
+	if (e_usage > th_alloc) {	/* Above threshold */
+		if (0 == acollect()) {		/* Perform automatic collection */
+			result = 1;
+		}
+	}
+	GC_THREAD_PROTECT(TRIGGER_GC_UNLOCK);
+	EIF_EXIT_C;
+	return result;
+}
+
+/*
 doc:	<routine name="malloc_from_zone" return_type="EIF_REFERENCE" export="private">
 doc:		<summary>Try to allocate 'nbytes' in the scavenge zone. Returns a pointer to the object's location or a null pointer if an error occurred.</summary>
 doc:		<param name="nbytes" type="unsigned int">Size in bytes of zone to allocated.</param>
 doc:		<return>Address of a block in scavenge zone if successful, null pointer otherwise.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eif_gc_gsz_mutex'.</synchronization>
 doc:	</routine>
 */
 
@@ -3360,68 +3343,29 @@ rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 {
 	RT_GET_CONTEXT
 	EIF_REFERENCE object;	/* Address of the allocated object */
-	uint32 mod;				/* Remainder for padding */
 
 	REQUIRE("Scavenging enabled", gen_scavenge == GS_ON);
 	REQUIRE("Has from zone", sc_from.sc_arena);
+	REQUIRE("nbytes properly padded", (nbytes % ALIGNMAX) == 0);
 	
-	/* Pad to correct size -- see eif_rt_xmalloc() for a detailed explaination of
-	 * why this is desirable.
-	 */
-	mod = nbytes % ALIGNMAX;
-	if (mod != 0)
-		nbytes += ALIGNMAX - mod;
-
 	/* Allocating from a scavenging zone is easy and fast. It's basically a
 	 * pointer update... However, if the level in the 'from' zone reaches
-	 * the watermark GS_WATERMARK, the generation scavenging is ran. The
-	 * tenuring threshold for the next scavenge is computed to make the level
-	 * of occupation go below the watermark at the next collection. There is
-	 * enough room after the watermark to safely allocate the object, anyway.
+	 * the watermark GS_WATERMARK, we return NULL immediately, it is up to
+	 * the caller to decide whether or not he will run the generation scavenging
+	 * The tenuring threshold for the next scavenge is computed to make the level
+	 * of occupation go below the watermark at the next collection so that
+	 * the next call to `malloc_from_zone' is most likely to succeed.
 	 */
 	GC_THREAD_PROTECT(EIF_GC_GSZ_LOCK);
 	if (sc_from.sc_top >= sc_from.sc_mark) {
-		GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
-		if (eiffel_usage > th_alloc) {	/* Above threshold */
-			if (0 == acollect()) {		/* Perform automatic collection */
-				eiffel_usage = 0;		/* Reset amount of allocated data */
-			} else {
-				GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
-				GC_THREAD_PROTECT(EIF_GC_GSZ_UNLOCK);
-				return (EIF_REFERENCE) 0;		/* Collection failed */
-			}
-		} else if (0 != collect()) {	/* Simple generation scavenging */
-			GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
-			GC_THREAD_PROTECT(EIF_GC_GSZ_UNLOCK);
-			return (EIF_REFERENCE) 0;			/* Collection failed */
-		}
-		GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
-
-		/* When we're back from any of the GC call above, we're not sure
-		 * the scavenge zone has been freed from as much memory as we thought.
-		 * In case the kernel can't allocate more memory to the process, the
-		 * scavenge zone is still full of objects after the collection because
-		 * these objects couldn't be moved anywhere else.
-		 * We have to test whether there is enough room in the scavenge zone
-		 * (sc_from) to put our object. If we do not so, we can erase some
-		 * relevant information located just after the scavenge space in the
-		 * memory. We have to raise a 'no more memory' exception if we
-		 * can't allocate the object in the scavenge space.
-		 * This bug was revealed by the unixware port.
-		 * -- Fabrice.
-		 */
-
-		if ((OVERHEAD+nbytes+sc_from.sc_top) > sc_from.sc_end) {
-			GC_THREAD_PROTECT(EIF_GC_GSZ_UNLOCK);
-			return NULL;
-		}
+		GC_THREAD_PROTECT(EIF_GC_GSZ_UNLOCK);
+		return NULL;
 	}
 
 	SIGBLOCK;								/* Block signals */
 	object = sc_from.sc_top;				/* First eif_free location */
 	sc_from.sc_top += nbytes + ALIGNMAX;	/* Update free-location pointer */
 	((union overhead *) object)->ov_size = nbytes;	/* All flags cleared */
-	SIGRESUME;								/* Restore signal handling */
 
 	/* No account for memory used is to be done. The memory used by the two
 	 * scavenge zones is already considered to be in full use.
@@ -3434,13 +3378,19 @@ rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 	flush;
 #endif
 
+	SIGRESUME;								/* Restore signal handling */
 	GC_THREAD_PROTECT(EIF_GC_GSZ_UNLOCK);
+
+	ENSURE ("Allocated size big enough", nbytes <= (((union overhead *) object)->ov_size & B_SIZE));
+
 	return (EIF_REFERENCE) (((union overhead *) object ) + 1);	/* Free data space */
 }
 
 /*
 doc:	<routine name="create_scavenge_zones" export="shared">
 doc:		<summary>Attempt creation of two scavenge zones: the 'from' zone and the 'to' zone. If it is successful, `gen_scavenge' is set to `GS_ON' otherwise the value remained unchanged and is `GS_OFF'. Upon success, the routine updates the structures accordingly.</summary>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Safe when under GC synchronization or during run-time initialization.</synchronization>
 doc:	</routine>
 */
 
@@ -3494,6 +3444,8 @@ rt_shared void create_scavenge_zones(void)
 doc:	<routine name="explode_scavenge_zones" export="private">
 doc:		<summary>Take a scavenge zone and destroy it letting all the objects held in it go back under the free-list management scheme. The memory accounting has to be done exactely: all the zone was handled as being in use for the statistics, but now we have to account for the overhead used by each stored object...</summary>
 doc:		<param name="sc" type="struct sc_zone *">Zone to be freed. Usually the from zone of the 2 scavenge zones.</param>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Safe when under GC synchronization.</synchronization>
 doc:	</routine>
 */
 
@@ -3524,7 +3476,6 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 
 	SIGBLOCK;				/* Beginning of critical section */
 
-	GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
 	for (zone = next; (EIF_REFERENCE) zone < top; zone = next) {
 
 		/* Set the flags for the new block and compute the location of
@@ -3546,7 +3497,6 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 		zone->ov_flags |= EO_NEW;		/* Released object is young */
 		object++;						/* One more released object */
 	}
-	GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
 
 #ifdef MAY_PANIC
 	/* Consitency check. We must have reached the top of the zone */
@@ -3609,12 +3559,16 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 
 /*
 doc:	<routine name="sc_stop" export="shared">
-doc:		<summary>Stop the scavenging process by freeing the zones.</summary>
+doc:		<summary>Stop the scavenging process by freeing the zones. In MT mode, it forces a GC synchronization as some threads might be still running and trying to allocated in the scavenge zone.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through GC synchronization.</synchronization>
 doc:	</routine>
 */
 
 rt_shared void sc_stop(void)
 {
+	RT_GET_CONTEXT
+	GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
 	gen_scavenge = GS_OFF;				/* Generation scavenging is off */
 	eif_rt_xfree(sc_to.sc_arena);				/* This one is completely eif_free */
 	explode_scavenge_zone(&sc_from);	/* While this one has to be exploded */
@@ -3622,6 +3576,7 @@ rt_shared void sc_stop(void)
 		/* Reset values to their default value */
 	memset (&sc_to, 0, sizeof(struct sc_zone));
 	memset (&sc_from, 0, sizeof(struct sc_zone));
+	GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
 }
 #endif
 
@@ -3632,6 +3587,8 @@ doc:		<param name="object" type="EIF_REFERENCE">Object to setup.</param>
 doc:		<param name="dftype" type="uint32">Full dynamic type of object to setup.</param>
 doc:		<param name="dtype" type="uint32">Dynamic type of object to setup.</param>
 doc:		<return>New value of `object' as this routine can trigger a GC cycle</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
 doc:	</routine>
 */
 
@@ -3657,25 +3614,12 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 dftype, uint32 dty
 
 #ifdef ISE_GC
 	if (dftype & EO_NEW) {					/* New object outside scavenge zone */
-		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
-		if (-1 == epush(&moved_set, object)) {		/* Cannot record object */
-			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
-			urgent_plsc(&object);					/* Full collection */
-			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
-			if (-1 == epush(&moved_set, object)) {	/* Still failed */
-				GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
-				enomem(MTC_NOARG);							/* Critical exception */
-			} else {
-				GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
-			}
-		} else {
-			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
-		}
+		object = add_to_stack (object, &moved_set);
 	}
 	if (Disp_rout(dtype)) {
 			/* Special marking of MEMORY object allocated in scavenge zone */
 		if (!(dftype & EO_NEW)) {
-			set_memory_object (object);
+			object = add_to_stack (object, &memory_set);
 		}
 		zone->ov_flags |= EO_DISP;
 	}
@@ -3690,9 +3634,11 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 dftype, uint32 dty
 	init = (void *(*) (EIF_REFERENCE, EIF_REFERENCE)) XCreate(dtype);
 	if (init) {
 		EIF_GET_CONTEXT
+		DISCARD_BREAKPOINTS
 		RT_GC_PROTECT(object);
 		(init)(object, object);
 		RT_GC_WEAN(object);
+		UNDISCARD_BREAKPOINTS
 	}
 
 	SIGRESUME;					/* End of critical section */
@@ -3712,6 +3658,8 @@ doc:		<summary>Set the special Eiffel object for use: reset the zone with zeros.
 doc:		<param name="object" type="EIF_REFERENCE">Special object to setup.</param>
 doc:		<param name="in_scavenge" type="EIF_BOOLEAN">Is new special object in scavenge zone?</param>
 doc:		<return>New value of `object' as this routine can trigger a GC cycle</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
 doc:	</routine>
 */
 
@@ -3736,20 +3684,7 @@ rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge
 #ifdef ISE_GC
 	if (in_scavenge == EIF_FALSE) {
 		zone->ov_flags = EO_SPEC | EO_NEW;	/* Object is special and new */
-		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
-		if (-1 == epush(&moved_set, object)) {		/* Cannot record object */
-			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
-			urgent_plsc(&object);					/* Full collection */
-			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
-			if (-1 == epush(&moved_set, object)) {	/* Still failed */
-				GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
-				enomem(MTC_NOARG);							/* Critical exception */
-			} else {
-				GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
-			}
-		} else {
-			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
-		}
+		object = add_to_stack (object, &moved_set);
 	} else
 #endif
 		zone->ov_flags = EO_SPEC;	/* Object is special */
@@ -3765,38 +3700,45 @@ rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge
 }
 
 #ifdef ISE_GC
+
 /*
-doc:	<routine name="set_memory_object" export="private">
-doc:		<summary>Add `object' into `memory_set'.</summary>
+doc:	<routine name="add_to_stack" return_type="EIF_REFERENCE" export="private">
+doc:		<summary>Add `object' into `stk'.</summary>
 doc:		<param name="object" type="EIF_REFERENCE">Object to add in `memory_set'.</param>
+doc:		<param name="stk" type="struct stack *">Stack in which we wish to add `object'.</param>
+doc:		<return>Location of `object' as it might have moved.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eif_gc_set_mutex'.</synchronization>
 doc:	</routine>
 */
 
-rt_private void set_memory_object (EIF_REFERENCE object)
+rt_private EIF_REFERENCE add_to_stack (EIF_REFERENCE object, struct stack *stk)
 {
-	RT_GET_CONTEXT
+		/* Need to discard breakpoint in case GC is called */
 	GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
-		/* Push it in the memory set.*/
-	if (-1 == epush (&memory_set, object)) {
+	if (-1 == epush(stk, object)) {		/* Cannot record object */
 		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
-		urgent_plsc(&object);			/* Full safe collection */
+		urgent_plsc(&object);					/* Full collection */
 		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
-		if (-1 == epush(&memory_set, object)) {	/* Still failed */
+		if (-1 == epush(stk, object)) {	/* Still failed */
 			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
-			enomem(MTC_NOARG);				/* Critical exception */
+			enomem(MTC_NOARG);							/* Critical exception */
 		} else {
 			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
 		}
 	} else {
 		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
 	}
+	return object;
 }
-	
+
 /*
 doc:	<routine name="compute_hlist_index" return_type="int32" export="private">
 doc:		<summary>Quickly compute the index in the hlist array where we have a chance to find the right block. The idea is to do a right logical shift until the register is zero. The number of shifts done is the base 2 logarithm of 'nbytes'.</summary>
 doc:		<param name="size" type="int32">Size of block from which we want to find its associated index in free list.</param>
 doc:		<return>Index of free list where block of size `size' will be found.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
 doc:	</routine>
 */
 

@@ -471,6 +471,15 @@ doc:	</attribute>
 rt_public long plsc_per;
 
 /*
+doc:	<attribute name="force_plsc" return_type="long" export="shared">
+doc:		<summary>When moving objects outside the scavenge zone, if it turns out we do not have enough memory in the free list, we force a full collection at the next collection. That way we are sure not to over-allocate block of memory when not needed. Doing so reduces the memory foot-print of Eiffel applications.</summary>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Under `trigger_gc_mutex' or `eiffel_usage_mutex' or GC synchronization.</synchronization>
+doc:	</attribute>
+*/
+rt_shared long force_plsc = 0;
+
+/*
 doc:	<attribute name="gc_running" return_type="int" export="public">
 doc:		<summary>Is GC running?</summary>
 doc:		<thread_safety>Safe</thread_safety>
@@ -580,8 +589,8 @@ rt_public EIF_REFERENCE root_obj = NULL;
 rt_private int nb_items(register1 struct stack *);	/* Number of items held in a stack */
 #endif
 /* Automatic invokations of GC */
-rt_public int acollect(void);				/* Collection based on threshold */
-rt_public int scollect(int (*gc_func) (void), int i);				/* Collect with statistics */
+rt_shared int acollect(void);				/* Collection based on threshold */
+rt_shared int scollect(int (*gc_func) (void), int i);				/* Collect with statistics */
 
 #endif /* ISE_GC */
 
@@ -711,16 +720,17 @@ rt_private char *rcsid =
 /*
  * Automatic collection and statistics routines.
  */
+/*
+doc:	<routine name="acollect" return_type="int" export="shared">
+doc:		<summary>This is the main dispatcher for garbage collection. Calls are based on a threshold th_alloc. Statistics are gathered while performing collection. We run the collect() most of the time (for a generational mark and sweep and/or a generation scavenging) and a full collection once every 'plsc_per' (aka the period) calls. If `clsc_per' is set, then each time `nb_calls' is 0 or each time `nb_calls' is `clsc_per' we perform a full coalesc of the memory. Our experience shows that it is more efficient to do the coalesc just after a full collection, doing it in between degrades the performance.</summary>
+doc:		<return>0 if collection was done, -1 otherwise.</return>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Through `trigger_gc_mutex'.</synchronization>
+doc:	</routine>
+*/
 
-rt_public int acollect(void)
+rt_shared int acollect(void)
 {
-	/* This is the main dispatcher for garbage collection. Calls are based on
-	 * a threshold th_alloc. Statistics are gathered while performing
-	 * collection. We run the collect() most of the time (for a generational
-	 * mark and sweep and/or a generation scavenging) and a full collection
-	 * once every 'plsc_per' (aka the period) calls.
-	 * The function returns 0 if collection was done, -1 otherwise.
-	 */
 	static long nb_calls = 0;		/* Number of calls to function */
 	static long eif_total = 0;		/* Total Eiffel memory allocated */
 	int status;						/* Status returned by scollect() */
@@ -776,29 +786,35 @@ rt_public int acollect(void)
 	 * This period can be set by the user.
 	 */
 
-	if (plsc_per)						/* Can we run full collections?.*/
-	{
-		if (0 == nb_calls % plsc_per) {	/* Full collection required */
+	if (plsc_per) {				/* Can we run full collections?.*/
+		if (force_plsc || (0 == nb_calls % plsc_per)) {	/* Full collection required */
 			plsc();
 			status = 0;
+				/* Reset `force_plsc' since we don't want to have a second full
+				 * collection right after this one. */
+			force_plsc = 0;
+				/* Reset `nb_calls' so that if we came here because of a `force_plsc'
+				 * which happens between `0' and `plsc_per', we still wait `plsc_per'
+				 * calls before launching the next full collection. */
+			nb_calls = 0;
 			eif_total = e_data.ml_total;
 		} else							/* Generation-base collector */
 			status = collect();
-	} else							/* Generation-base collector called, since
+	} else {						/* Generation-base collector called, since
 									 * there is no Full Collection. */
 		status = collect();
-
+	}
 
 	/* We may want to run periodically a full coalescing (Eiffel and C objects).
 	 * Note that the user can also set his own period of full coalescing. 
 	 */
 
-	if (clsc_per && nb_calls)	/* Do not coalesce at the first collection. 
-								 * It may corrupt the memory. */
-	{
-			if (0 == nb_calls % clsc_per)
-				full_coalesc (ALL_T);
+	if (clsc_per) {
+		if (0 == nb_calls % clsc_per) {
+			full_coalesc (ALL_T);
+		}
 	}
+
 #ifdef DEBUG
 	dprintf(1)("acollect: returning status %d\n", status);
 #endif
@@ -808,16 +824,20 @@ rt_public int acollect(void)
 	return status;		/* Collection done, forward status */
 }
 
-rt_public int scollect(int (*gc_func) (void), int i)
-				 		/* The collection function to be called */
-						/* Index in g_stat array where statistics are kept */
-{
-	/* Run a garbage collection cycle with statistics updating. We monitor
-	 * both the time spent in the collection and the memory released,
-	 * if any, as well as time between two collections...
-	 * Return the status given by the collection function.
-	 */
+/*
+doc:	<routine name="scollect" return_type="int" export="shared">
+doc:		<summary>Run a garbage collection cycle with statistics updating. We monitor both the time spent in the collection and the memory released, if any, as well as time between two collections... </summary>
+doc:		<param name="gc_func" type="int (*) (void)">Collection function to be called.</param>
+doc:		<param name="i" type="int">Index in `g_stat' array where statistics are kept.</param>
+doc:		<return>Return the status given by the collection function.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Performs a GC synchronization before executing itself.</synchronization>
+doc:	</routine>
+*/
 
+rt_shared int scollect(int (*gc_func) (void), int i)
+{
+	RT_GET_CONTEXT
 	static uint32 nb_stats[GST_NBR];	/* For average computation */
 #ifndef FAST_RUNTIME
 	static Timeval lastreal[GST_NBR];	/* Last real time of invocation */
@@ -831,10 +851,15 @@ rt_public int scollect(int (*gc_func) (void), int i)
 	int status;							/* Status reported by GC function */
 	struct gacstat *gstat = &g_stat[i];	/* Address where stats are kept */
 	int nbstat;							/* Current number of statistics */
+	unsigned long nb_full;
 
 	if (g_data.status & GC_STOP)
 		return -1;						/* Garbage collection stopped */
 
+	GC_THREAD_PROTECT(eif_synchronize_gc (rt_globals));
+	DISCARD_BREAKPOINTS;
+
+	nb_full = g_data.nb_full;
 	mem_used = m_data.ml_used + m_data.ml_over;		/* Count overhead */
 	nbstat = ++nb_stats[i];							/* One more computation */
 
@@ -898,6 +923,27 @@ rt_public int scollect(int (*gc_func) (void), int i)
 		g_data.mem_copied - g_data.mem_move;
 	gstat->mem_avg = ((gstat->mem_avg * (nbstat - 1)) +
 		gstat->mem_collect) / nbstat;					/* Average mem freed */
+
+	if (nb_full != g_data.nb_full) {
+			/* We are during a full collection cycle. This is were we
+			 * will update value of `clsc_per' and `plsc_per' to a better
+			 * value. We only increase their values if the ratio freed memory
+			 * used memory is less than 1/3, betwen 1/3 and 2/3 we do not change
+			 * anything, and above 2/3 we decrease their value. */
+		int partial_used_memory = (e_data.ml_used + e_data.ml_over) / 3;
+		int freed_memory = mem_used - g_data.mem_used;
+		if (freed_memory <= partial_used_memory) {
+			plsc_per += 4;
+			clsc_per = 2 * plsc_per;
+		} else if (freed_memory > 2 * partial_used_memory) {
+			plsc_per -= 4;
+			if (plsc_per < PLSC_PER) {
+				plsc_per = PLSC_PER;
+			}
+			clsc_per = 2 * plsc_per;
+		}
+	}
+			
 #ifndef FAST_RUNTIME
 	if (gc_monitor) {
 		gstat->real_time = elapsed(&realtime, &realtime2);
@@ -974,6 +1020,8 @@ rt_public int scollect(int (*gc_func) (void), int i)
 	}
 #endif
 
+	UNDISCARD_BREAKPOINTS;
+	GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
 	return status;		/* Forward status report */
 }
 #endif /* ISE_GC */
@@ -1085,6 +1133,7 @@ rt_public void reclaim(void)
 
 #ifdef EIF_THREADS 
 	CHECK ("Root thread", eif_thr_is_root ());
+	eif_thread_cleanup ();
 #endif	/* EIF_THREADS */
 	eif_free (starting_working_directory);
 	eif_gen_conf_cleanup ();
@@ -1752,7 +1801,7 @@ rt_private void mark_ex_stack(register5 struct xstack *stk, register4 MARKER mar
 	 */
 
 #ifdef DEBUG
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 #endif
 
 	register1 struct ex_vect *last;	/* For looping over subsidiary roots */
@@ -2313,17 +2362,17 @@ rt_private void full_update(void)
 }
 #endif /* ISE_GC */
 
+
 /*
- * Mixed strategy garbage collector (mark and sweep plus scavenging).
- * This can also be qualified as a storage compaction garbage collector.
- */
+doc:	<routine name="plsc" export="public">
+doc:		<summary>Mixed strategy garbage collector (mark and sweep plus scavenging). This can also be qualified as a storage compaction garbage collector. The partial scavenging entry point, which is monitored for statistics updating (available to the user via MEMORY).</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Synchronization done through `scollect'.</synchronization>
+doc:	</routine>
+*/
 
 rt_public void plsc(void)
 {
-	/* The partial scavenging entry point, which is monitored for statistics
-	 * updating (available to the user via MEMORY).
-	 */
-
 #ifdef ISE_GC
 	if (g_data.status & GC_STOP)
 		return;				/* Garbage collection stopped */
@@ -2347,11 +2396,9 @@ rt_private int partial_scavenging(void)
 	RT_GET_CONTEXT
 
 	SIGBLOCK;				/* Block all signals during garbage collection */
-	GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
 	init_plsc();			/* Initialize scavenging (find 'to' space) */
 	run_plsc();				/* Normal sequence */
-	GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
-
+	eiffel_usage = 0;		/* Reset Eiffel memory allocated since last collection */
 	return 0;
 }
 
@@ -2458,7 +2505,7 @@ rt_private void clean_zones(void)
 			 */
 
 			((union overhead *) ps_from.sc_arena)->ov_size |= B_BUSY;
-			xfreechunk(ps_from.sc_arena + OVERHEAD);	/* One big bloc */
+			eif_rt_xfree (ps_from.sc_arena + OVERHEAD);	/* One big bloc */
 			memset (&ps_from, 0, sizeof(struct sc_zone));	/* Was freed */
 			g_data.gc_to--;
 
@@ -2524,7 +2571,7 @@ rt_private void init_plsc(void)
 			 * into trouble when we try to put it back into the free list.
 			 */
 			((union overhead *) ps_to.sc_arena)->ov_size |= B_BUSY;
-			xfreechunk(ps_to.sc_arena + OVERHEAD);
+			eif_rt_xfree (ps_to.sc_arena + OVERHEAD);
 			ps_to.sc_arena = (EIF_REFERENCE) 0;	/* No to zone yet */
 		}
 	}
@@ -2967,7 +3014,7 @@ rt_private int find_scavenge_spaces(void)
 	 * It's necessary to have the 'to' space in the Eiffel space, so I call a
 	 * somewhat low-level malloc routine.
 	 *
-	 * The get_to_from_core replaces the previous call to gmalloc which used
+	 * The get_to_from_core replaces the previous call to malloc_from_eiffel_list_no_gc which used
 	 * to get a to_space anywhere in the free list. But we want a standard
 	 * empty chunk and if we arrive here, the only way to get a free chunk
 	 * is to get it from the kernel. It does not happen so often. Usually
@@ -3275,13 +3322,17 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *t
  */
 
 #endif /* ISE_GC */
+/*
+doc:	<routine name="collect" return_type="int" export="public">
+doc:		<summary>The generational collector entry point, with statistics updating. The time spent in the algorithm is monitored by scollect and accessible to the user via MEMORY primitives.</summary>
+doc:		<return>0 if collection was done, -1 otherwise.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Synchronization done through `scollect'.</synchronization>
+doc:	</routine>
+*/
+
 rt_public int collect(void)
 {
-	/* The generational collector entry point, with statistics updating. The
-	 * time spent in the algorithm is monitored by scollect and accessible
-	 * to the user via MEMORY primitives.
-	 */
-
 #ifdef ISE_GC
 	int result;
 	result = scollect(generational_collect, GST_GEN);
@@ -3681,8 +3732,7 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 	register3 uint32 flags;				/* Eiffel flags */
 	EIF_REFERENCE new;							/* Address of new object (tenured) */ 
 	int size;							/* Size of scavenged object */
-	int ret;							/* status returned by "epush" or 
-										 * "eif_promote_special" */
+	int ret;							/* status returned by "epush" */
 
 	zone = HEADER(root);				/* Info header */
 	flags = zone->ov_flags;				/* Eiffel flags */
@@ -3755,7 +3805,7 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 #endif
 			size = zone->ov_size & B_SIZE;		/* Size without header */
 
-			new = gmalloc(size);				/* Try in Eiffel chunks first */
+			new = malloc_from_eiffel_list_no_gc (size);				/* Try in Eiffel chunks first */
 			if ((EIF_REFERENCE) 0 == new) {			/* Out of memory */
 				gen_scavenge |= GS_STOP;		/* Stop generation scavenging */
 				return scavenge(root, &sc_to);	/* Simple scavenge */
@@ -4325,7 +4375,6 @@ rt_public void eremb(EIF_REFERENCE obj)
 	 * normally done by the RTAR macro.
 	 */
 
-	RT_GET_CONTEXT
 	GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
 	if (-1 == epush(&rem_set, obj)) {		/* Low on memory */
 		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
@@ -4362,7 +4411,6 @@ rt_public void erembq(EIF_REFERENCE obj)
 	 * on every 'put' operation).
 	 */
 
-	RT_GET_CONTEXT
 	GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
 	if (-1 == epush(&rem_set, obj)) {		/* Cannot record object */
 		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
@@ -4677,7 +4725,7 @@ rt_private void scavenge_statistics (struct sc_zone *to)
 
 	REQUIRE("to not null", to != NULL);
 
-	arean = to->sc_arena;
+	arena = to->sc_arena;
 	top = to->sc_top;
 
 	memset (nb_allocated, 0, sizeof(EIF_INTEGER) * (count + 1));

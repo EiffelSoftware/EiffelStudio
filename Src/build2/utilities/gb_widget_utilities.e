@@ -82,7 +82,6 @@ feature -- Basic operations
 				end
 			end
 		end
-		
 
 	extend_no_expand (a_box: EV_BOX; a_widget: EV_WIDGET) is
 			-- Extend `a_widget' into `a_box' and disable expandability.
@@ -131,7 +130,6 @@ feature -- Basic operations
 				b.forth
 			end
 		end
-		
 		
 	unparent_ev_object (ev_object: EV_ANY) is
 			-- Remove `ev_object' from its parent.
@@ -221,6 +219,15 @@ feature -- Basic operations
 		ensure
 			tree_node_unparented: tree_node.parent = Void
 		end
+		
+	set_split_position (split_area: EV_SPLIT_AREA; position: INTEGER) is
+			-- Assign `position' to `split_position' of `split_area', bounded
+			-- to the minimum and maximum split positions.
+		require
+			split_area_not_void: split_area /= Void
+		do
+			split_area.set_split_position ((position.max (split_area.minimum_split_position)).min (split_area.maximum_split_position))
+		end	
 
 feature {NONE} -- Implementation
 

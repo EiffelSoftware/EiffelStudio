@@ -15,16 +15,39 @@ inherit
 		end
 		
 	GB_SHARED_COMMAND_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_XML_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_TOOLS
+		export
+			{NONE} all
+		end
 	
 	GB_CONSTANTS
+		export
+			{NONE} all
+		end
+	
+	GB_SHARED_OBJECT_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_FILE_CONSTANTS
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -113,7 +136,10 @@ feature -- Basic operations
 							end
 						end
 					end
-				end				
+				end
+				
+					-- We must now initailize the tools for a new empty project.
+				object_handler.add_initial_window
 			end
 
 end -- class GB_NEW_PROJECT_COMMAND

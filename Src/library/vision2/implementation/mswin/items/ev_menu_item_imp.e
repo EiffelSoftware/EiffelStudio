@@ -98,12 +98,18 @@ feature -- Status setting
 			end
 		end
 
-feature {EV_MENU_ITEM_CONTAINER_IMP} -- Element change
+feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
 
 	set_text (str: STRING) is
 			-- Set `text' to `str'
 		do
 			menu.modify_string (str, id)
+		end
+
+	on_activate is
+			-- Is called by the menu when th item is activate.
+		do
+			execute_command (Cmd_item_activate, Void)
 		end
 
 end -- class EV_MENU_ITEM_IMP

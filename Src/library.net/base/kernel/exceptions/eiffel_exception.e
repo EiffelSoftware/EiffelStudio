@@ -10,14 +10,7 @@ inherit
 	APPLICATION_EXCEPTION
 		rename
 			make as exc_make
-		undefine
-			finalize,
-			equals,
-			to_string,
-			get_hash_code
 		end
-
-	EXCEP_CONST
 
 create
 	make
@@ -27,13 +20,17 @@ feature {NONE} -- Initialization
 	make (a_code: INTEGER; a_tag: STRING) is
 			-- Create an exception with the given Eiffel code.
 		require
-			valid_code: valid_code (a_code)
+			valid_code: (create {EXCEP_CONST}).valid_code (a_code)
+		local
+			default: STRING
 		do
 			code := a_code
-			tag := clone (a_tag)
+			if a_tag /= default then
+				create tag.make_from_string (a_tag)
+			end
 		ensure
 			code_set: code = a_code
-			tag_set: equal (tag, a_tag)
+			tag_set: tag /= a_tag implies tag.is_equal (a_tag)
 		end
 
 feature -- Access
@@ -46,6 +43,6 @@ feature -- Access
 			-- Additional information concerning current exception.
 
 invariant
-	valid_code: valid_code (code)
+	valid_code: (create {EXCEP_CONST}).valid_code (code)
 
 end -- class EIFFEL_EXCEPTION

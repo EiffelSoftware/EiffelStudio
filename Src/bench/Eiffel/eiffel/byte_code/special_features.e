@@ -73,6 +73,18 @@ feature -- Byte code special generation
 			when to_character_type then
 				check integer_type: type_of (basic_type) = integer_type end
 				ba.append (Bc_cast_char)
+			when to_natural_8_type then
+				ba.append (bc_cast_natural)
+				ba.append_integer (8)
+			when to_natural_16_type then
+				ba.append (bc_cast_natural)
+				ba.append_integer (16)
+			when to_natural_32_type then
+				ba.append (bc_cast_natural)
+				ba.append_integer (32)
+			when to_natural_64_type then
+				ba.append (bc_cast_natural)
+				ba.append_integer (64)
 			when to_integer_8_type then
 				ba.append (Bc_cast_integer)
 				ba.append_integer (8)
@@ -123,6 +135,9 @@ feature -- Byte code special generation
 			when three_way_comparison_type then
 				ba.append (bc_basic_operations)
 				ba.append (bc_three_way_comparison)
+
+			when twin_type then
+					-- Nothing to do, top of the stack has correct value
 			end
 		end
 
@@ -149,6 +164,18 @@ feature -- C special code generation
 			when to_character_type then
 				buffer.put_string ("(EIF_CHARACTER) ")
 				target.print_register
+			when to_natural_8_type then
+				buffer.put_string ("(EIF_NATURAL_8) ")
+				target.print_register
+			when to_natural_16_type then
+				buffer.put_string ("(EIF_NATURAL_16) ")
+				target.print_register
+			when to_natural_32_type then
+				buffer.put_string ("(EIF_NATURAL_32) ")
+				target.print_register
+			when to_natural_64_type then
+				buffer.put_string ("(EIF_NATURAL_64) ")
+				target.print_register
 			when to_integer_8_type then
 				buffer.put_string ("(EIF_INTEGER_8) ")
 				target.print_register
@@ -162,11 +189,21 @@ feature -- C special code generation
 				buffer.put_string ("(EIF_INTEGER_64) ")
 				target.print_register
 			when to_real_64_type then
-				buffer.put_string ("(EIF_REAL_64) ")
+					-- We are using `c_type' here, but in some descendants of
+					-- REGISTRABLE such as NESTED_BL it is the `c_type' of the
+					-- first nested call, not of the whole. However it seems that
+					-- here we never get a NESTED_BL so it works just fine.
+				target.c_type.generate_conversion_to_real_64 (buffer)
 				target.print_register
+				buffer.put_character (')')
 			when to_real_32_type then
-				buffer.put_string ("(EIF_REAL_32) ")
+					-- We are using `c_type' here, but in some descendants of
+					-- REGISTRABLE such as NESTED_BL it is the `c_type' of the
+					-- first nested call, not of the whole. However it seems that
+					-- here we never get a NESTED_BL so it works just fine.
+				target.c_type.generate_conversion_to_real_32 (buffer)
 				target.print_register
+				buffer.put_character (')')
 			when offset_type then
 				generate_offset (buffer, type_of (basic_type), target, parameter)
 			when out_type then
@@ -203,6 +240,8 @@ feature -- C special code generation
 			when memory_move, memory_copy, memory_set, memory_alloc, memory_free, memory_calloc then
 				check pointer_type: type_of (basic_type) = pointer_type end
 				generate_memory_routine (buffer, function_type, target, parameters)
+			when twin_type then
+				target.print_register
 			end
 		end
 
@@ -225,12 +264,16 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (generator_type, feature {PREDEFINED_NAMES}.generating_type_name_id)
 			Result.put (to_character_type, feature {PREDEFINED_NAMES}.to_character_name_id)
 			Result.put (to_character_type, feature {PREDEFINED_NAMES}.ascii_char_name_id)
-			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.truncated_to_integer_name_id)
 			Result.put (to_integer_8_type, feature {PREDEFINED_NAMES}.to_integer_8_name_id)
 			Result.put (to_integer_16_type, feature {PREDEFINED_NAMES}.to_integer_16_name_id)
+			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.truncated_to_integer_name_id)
 			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.to_integer_name_id)
 			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.to_integer_32_name_id)
 			Result.put (to_integer_64_type, feature {PREDEFINED_NAMES}.to_integer_64_name_id)
+			Result.put (to_natural_8_type, feature {PREDEFINED_NAMES}.to_natural_8_name_id)
+			Result.put (to_natural_16_type, feature {PREDEFINED_NAMES}.to_natural_16_name_id)
+			Result.put (to_natural_32_type, feature {PREDEFINED_NAMES}.to_natural_32_name_id)
+			Result.put (to_natural_64_type, feature {PREDEFINED_NAMES}.to_natural_64_name_id)
 			Result.put (to_real_64_type, feature {PREDEFINED_NAMES}.to_double_name_id)
 			Result.put (to_real_32_type, feature {PREDEFINED_NAMES}.to_real_name_id)
 			Result.put (offset_type, feature {PREDEFINED_NAMES}.infix_plus_name_id)
@@ -257,6 +300,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (upper_type, feature {PREDEFINED_NAMES}.upper_name_id)
 			Result.put (is_digit_type, feature {PREDEFINED_NAMES}.is_digit_name_id)
 			Result.put (three_way_comparison_type, feature {PREDEFINED_NAMES}.three_way_comparison_name_id)
+			Result.put (twin_type, feature {PREDEFINED_NAMES}.twin_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.copy_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.deep_copy_name_id)
@@ -295,9 +339,14 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.to_integer_name_id)
 			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.to_integer_32_name_id)
 			Result.put (to_integer_64_type, feature {PREDEFINED_NAMES}.to_integer_64_name_id)
+			Result.put (to_natural_8_type, feature {PREDEFINED_NAMES}.to_natural_8_name_id)
+			Result.put (to_natural_16_type, feature {PREDEFINED_NAMES}.to_natural_16_name_id)
+			Result.put (to_natural_32_type, feature {PREDEFINED_NAMES}.to_natural_32_name_id)
+			Result.put (to_natural_64_type, feature {PREDEFINED_NAMES}.to_natural_64_name_id)
 			Result.put (to_real_64_type, feature {PREDEFINED_NAMES}.to_double_name_id)
 			Result.put (to_real_32_type, feature {PREDEFINED_NAMES}.to_real_name_id)
 			Result.put (three_way_comparison_type, feature {PREDEFINED_NAMES}.three_way_comparison_name_id)
+			Result.put (twin_type, feature {PREDEFINED_NAMES}.twin_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
 		end
 
@@ -341,7 +390,12 @@ feature {NONE} -- Fast access to feature name
 	to_real_64_type: INTEGER is 35
 	to_real_32_type: INTEGER is 36
 	three_way_comparison_type: INTEGER is 37
-	max_type_id: INTEGER is 37
+	to_natural_8_type: INTEGER is 38
+	to_natural_16_type: INTEGER is 39
+	to_natural_32_type: INTEGER is 40
+	to_natural_64_type: INTEGER is 41
+	twin_type: INTEGER is 42
+	max_type_id: INTEGER is 42
 
 feature {NONE} -- Byte code generation
 
@@ -487,10 +541,18 @@ feature {NONE} -- C code generation
 					end
 					buffer.put_string ("c_outc(")
 				when integer_type then
-					inspect
-						integer_size
-					when 8, 16, 32 then buffer.put_string ("c_outi(")
-					when 64 then buffer.put_string ("c_outi64(")
+					if is_signed_integer then
+						inspect
+							integer_size
+						when 8, 16, 32 then buffer.put_string ("c_outi(")
+						when 64 then buffer.put_string ("c_outi64(")
+						end
+					else
+						inspect
+							integer_size
+						when 8, 16, 32 then buffer.put_string ("c_outu(")
+						when 64 then buffer.put_string ("c_outu64(")
+						end
 					end
 				when pointer_type then
 					buffer.put_string ("c_outp(")
@@ -546,7 +608,11 @@ feature {NONE} -- C code generation
 					buffer.put_string (" RTMS_EX(%"CHARACTER%", 9)")
 				end
 			when integer_type then
-				buffer.put_string (" RTMS_EX(%"INTEGER")
+				if is_signed_integer then
+					buffer.put_string (" RTMS_EX(%"INTEGER")
+				else
+					buffer.put_string (" RTMS_EX(%"NATURAL")
+				end
 				inspect
 					integer_size
 				when 8 then buffer.put_string ("_8%", 9)")
@@ -580,11 +646,16 @@ feature {NONE} -- C code generation
 					buffer.put_string ("eif_max_char (")
 				end
 			when integer_type then
+				if is_signed_integer then
+					buffer.put_string ("eif_max_")
+				else
+					buffer.put_string ("eif_max_u")
+				end
 				inspect integer_size
-				when 8 then buffer.put_string ("eif_max_int8 (")
-				when 16 then buffer.put_string ("eif_max_int16 (")
-				when 32 then buffer.put_string ("eif_max_int32 (")					
-				when 64 then buffer.put_string ("eif_max_int64 (")
+				when 8 then buffer.put_string ("int8 (")
+				when 16 then buffer.put_string ("int16 (")
+				when 32 then buffer.put_string ("int32 (")					
+				when 64 then buffer.put_string ("int64 (")
 				end
 			when real_32_type then
 				buffer.put_string ("eif_max_real32 (")
@@ -618,11 +689,16 @@ feature {NONE} -- C code generation
 					buffer.put_string ("eif_min_char (")
 				end
 			when integer_type then
+				if is_signed_integer then
+					buffer.put_string ("eif_min_")
+				else
+					buffer.put_string ("eif_min_u")
+				end
 				inspect integer_size
-				when 8 then buffer.put_string ("eif_min_int8 (")
-				when 16 then buffer.put_string ("eif_min_int16 (")
-				when 32 then buffer.put_string ("eif_min_int32 (")					
-				when 64 then buffer.put_string ("eif_min_int64 (")
+				when 8 then buffer.put_string ("int8 (")
+				when 16 then buffer.put_string ("int16 (")
+				when 32 then buffer.put_string ("int32 (")					
+				when 64 then buffer.put_string ("int64 (")
 				end
 			when real_32_type then
 				buffer.put_string ("eif_min_real32 (")
@@ -656,11 +732,16 @@ feature {NONE} -- C code generation
 					buffer.put_string ("eif_twc_char (")
 				end
 			when integer_type then
+				if is_signed_integer then
+					buffer.put_string ("eif_twc_")
+				else
+					buffer.put_string ("eif_twc_u")
+				end
 				inspect integer_size
-				when 8 then buffer.put_string ("eif_twc_int8 (")
-				when 16 then buffer.put_string ("eif_twc_int16 (")
-				when 32 then buffer.put_string ("eif_twc_int32 (")					
-				when 64 then buffer.put_string ("eif_twc_int64 (")
+				when 8 then buffer.put_string ("int8 (")
+				when 16 then buffer.put_string ("int16 (")
+				when 32 then buffer.put_string ("int32 (")					
+				when 64 then buffer.put_string ("int64 (")
 				end
 			when real_32_type then
 				buffer.put_string ("eif_twc_real32 (")
@@ -687,11 +768,16 @@ feature {NONE} -- C code generation
 			inspect
 				type_of_basic
 			when integer_type then
+				if is_signed_integer then
+					buffer.put_string ("eif_abs_")
+				else
+					buffer.put_string ("eif_abs_u")
+				end
 				inspect integer_size
-				when 8 then buffer.put_string ("eif_abs_int8 (")
-				when 16 then buffer.put_string ("eif_abs_int16 (")
-				when 32 then buffer.put_string ("eif_abs_int32 (")					
-				when 64 then buffer.put_string ("eif_abs_int64 (")
+				when 8 then buffer.put_string ("int8 (")
+				when 16 then buffer.put_string ("int16 (")
+				when 32 then buffer.put_string ("int32 (")					
+				when 64 then buffer.put_string ("int64 (")
 				end
 			when real_32_type then
 				buffer.put_string ("eif_abs_real32 (")
@@ -881,7 +967,11 @@ feature {NONE} -- Type information
 			-- Constant defining type
 
 	integer_size: INTEGER
-			-- Size of integer when `type_of' returns `integer_type'.
+			-- Size of datatype when `type_of' returns `integer_type'.
+
+	is_signed_integer: BOOLEAN
+			-- Is `integer_type' a INTEGER_XX type?
+			-- False for NATURAL_XX type.
 
 	is_wide: BOOLEAN
 			-- Is `character_type' returned by `type_of' a WIDE_CHARACTER?
@@ -892,7 +982,8 @@ feature {NONE} -- Type information
 			b_not_void: b /= Void
 			b_not_bit: not b.is_bit
 		local
-			long: INTEGER_I
+			l_int: INTEGER_I
+			l_nat: NATURAL_I
 			t: TYPED_POINTER_I
 		do
 			inspect b.hash_code
@@ -906,12 +997,22 @@ feature {NONE} -- Type information
 				is_wide := True
 
 			when
-				Integer8_code, Integer16_code,
-				Integer32_code, Integer64_code
+				natural_8_code, natural_16_code,
+				natural_32_code, natural_64_code
 			then
 				Result := integer_type
-				long ?= b
-				integer_size := long.size
+				is_signed_integer := False
+				l_nat ?= b
+				integer_size := l_nat.size
+
+			when
+				Integer_8_code, Integer_16_code,
+				Integer_32_code, Integer_64_code
+			then
+				Result := integer_type
+				is_signed_integer := True
+				l_int ?= b
+				integer_size := l_int.size
 
 			when Pointer_code then Result := pointer_type
 			when Real_32_code then Result := real_32_type

@@ -6,6 +6,8 @@ inherit
 			raise as raise_exception
 		end
 	SHARED_WORKBENCH
+	SHARED_ERROR_HANDLER
+	COMPILER_EXPORTER
 
 feature {NONE}
 
@@ -113,6 +115,7 @@ feature {NONE}
 			r: REMOTE_PROJECT_DIRECTORY
 			l: LIBRARY_LICENSE
 			precomp_name: STRING
+			error: NO_LICENSE
 		do
 			precomp_dirs := workbench.precompiled_directories
 			from
@@ -146,11 +149,14 @@ feature {NONE}
 						licenses.put (l, precomp_name)
 					end
 					if not l.licensed then
-						io.error.putstring ("No license!!!%N")
+						!! error
+						error.set_application_name (l.library_name)
+						Error_handler.insert_error (error)
 					end
 				end
 				precomp_dirs.forth
 			end
+			Error_handler.checksum
 		end
 
 feature {NONE} -- Implementation

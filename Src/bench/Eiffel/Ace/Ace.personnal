@@ -93,7 +93,7 @@ cluster
 	-- Switch:
 	
 		switch: 			"$BENCH/Eiffel/batch_bench/batch"
-			ignore
+			exclude
 				"shared_status.e"
 			end;
 		melt_only: 			"$BENCH/Eiffel/batch_bench/melt_only";

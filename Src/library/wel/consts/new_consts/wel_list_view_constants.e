@@ -1003,7 +1003,3 @@ end -- class WEL_LIST_VIEW_CONSTANTS
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|-----------------------------------------------------------------------
-
-
-
-

@@ -45,7 +45,7 @@ feature -- Execution
 			sorted_class_names: SORTED_TWO_WAY_LIST [STRING];
 			classes: EXTEND_TABLE [CLASS_I, STRING];
 			a_classi: CLASS_I;
-			a_class: E_CLASS;
+			a_class: CLASS_C;
 		do
 			!! sorted_class_names.make;
 			classes := cluster.classes;
@@ -71,7 +71,7 @@ feature -- Execution
 			loop
 				structured_text.add_indent;
 				a_classi := classes.item (sorted_class_names.item);
-				a_class := a_classi.compiled_eclass;
+				a_class := a_classi.compiled_class;
 				if a_class /= Void then
 					a_class.append_signature (structured_text);
 					display_indexing (a_class, structured_text)
@@ -84,7 +84,7 @@ feature -- Execution
 			end
 		end;
 
-	display_indexing (e_class: E_CLASS; st: STRUCTURED_TEXT) is
+	display_indexing (e_class: CLASS_C; st: STRUCTURED_TEXT) is
 			-- Display the indexing clause of `classc' if any.
 		local
 			indexes: EIFFEL_LIST [INDEX_AS];

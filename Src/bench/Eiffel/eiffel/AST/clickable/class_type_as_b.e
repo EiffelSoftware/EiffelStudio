@@ -321,10 +321,10 @@ feature -- Output
 			end;
 		end;
  
-	associated_eiffel_class (reference_class: E_CLASS): E_CLASS is
+	associated_eiffel_class (reference_class: CLASS_C): CLASS_C is
 		local
 			aclassi: CLASS_I;
-			eclass: E_CLASS
+			eclass: CLASS_C
 		do
 				-- Check if we can find the class in the cluster.
 				-- If the class is not compiled anymore (or doesnot
@@ -333,7 +333,7 @@ feature -- Output
 			aclassi := Universe.class_named 
 						(class_name, reference_class.cluster);
 			if aclassi /= Void then
-				Result := aclassi.compiled_eclass
+				Result := aclassi.compiled_class
 			end
 		end;
 

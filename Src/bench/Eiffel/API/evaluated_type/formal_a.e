@@ -42,7 +42,7 @@ feature -- Access
 			end
 		end
 
-	associated_eclass: E_CLASS is
+	associated_eclass: CLASS_C is
 			-- No associated class
 		do
 		end

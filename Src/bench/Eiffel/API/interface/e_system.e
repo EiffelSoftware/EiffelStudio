@@ -157,7 +157,7 @@ feature -- Access
 			Result := System.classes.count
 		end;
 
-	class_of_id (i: CLASS_ID): E_CLASS is
+	class_of_id (i: CLASS_ID): CLASS_C is
 			-- Eiffel Class of id `i'
 		require
 			valid_id: i /= Void
@@ -204,7 +204,7 @@ feature {COMPILER_EXPORTER, CALL_STACK_ELEMENT, RUN_INFO, REFERENCE_VALUE, EXPAN
 			Result := System.class_types.valid_index (i)
 		end;
 
-	class_of_dynamic_id (i: INTEGER): E_CLASS is
+	class_of_dynamic_id (i: INTEGER): CLASS_C is
 			-- Eiffel Class of dynamic id `i'
 		require
 			positive_i: i >= 0;

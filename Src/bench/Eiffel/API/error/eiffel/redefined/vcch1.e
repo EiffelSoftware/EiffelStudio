@@ -41,7 +41,7 @@ feature -- Output
 			-- Build specific explanation explain for current error
 			-- in `st'.
 		local
-			wclass: E_CLASS;
+			wclass: CLASS_C;
 		do
 			wclass := deferred_feature.written_class;
 			st.add_string ("Deferred feature: ");

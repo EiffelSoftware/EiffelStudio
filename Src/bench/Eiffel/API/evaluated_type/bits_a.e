@@ -40,10 +40,10 @@ feature -- Access
 						other_bits.bit_count = bit_count
 		end
 
-	associated_eclass: E_CLASS is
+	associated_eclass: CLASS_C is
 			-- Associated eiffel class
 		once
-			Result := Eiffel_system.bit_class.compiled_eclass
+			Result := Eiffel_system.bit_class.compiled_class
 		end
 
 	bit_count: INTEGER

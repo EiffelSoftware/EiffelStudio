@@ -16,7 +16,7 @@ inherit
 
 feature -- Properties
 
-	client: E_CLASS;
+	client: CLASS_C;
 			-- Unvalid class type
 
 	code: STRING is "VLEC";

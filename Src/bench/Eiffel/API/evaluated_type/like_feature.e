@@ -64,7 +64,7 @@ feature -- Output
 
 	append_to (st: STRUCTURED_TEXT) is
 		local
-			ec: E_CLASS
+			ec: CLASS_C
 		do
 			ec := Eiffel_system.class_of_id (class_id)
 			st.add_string ("[like ")

@@ -27,7 +27,7 @@ feature -- Properties
 	entity_name: STRING;
 			-- I-th argument of the involved feature ?
 
-	base_class: E_CLASS;
+	base_class: CLASS_C;
 
 feature -- Access
 

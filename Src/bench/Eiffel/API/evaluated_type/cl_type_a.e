@@ -66,7 +66,7 @@ feature -- Access
 						is_separate = other_class_type.is_separate
 		end
 
-	associated_eclass: E_CLASS is
+	associated_eclass: CLASS_C is
 			-- Associated class to the type
 		do
 			Result := System.class_of_id (base_class_id)

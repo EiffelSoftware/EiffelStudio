@@ -16,7 +16,7 @@ inherit
 
 feature -- Properties
 
-	e_class: E_CLASS;
+	e_class: CLASS_C;
 			-- Class where the error is encountered
 
 feature -- Access

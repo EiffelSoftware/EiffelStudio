@@ -35,7 +35,7 @@ feature -- Initialization
 
 feature -- Properties
 
-	e_class: E_CLASS;
+	e_class: CLASS_C;
 			-- Eiffel class with e_feature is defined
 
 feature {TEXT_FORMATTER} -- Implementation

@@ -42,7 +42,7 @@ feature {NONE} -- Recording information for eiffelcase
 			list_tmp : ARRAY [ TYPE_A ]
 			list_gene : LINKED_LIST [ S_GENERIC_DATA ]
 			gene : S_GENERIC_DATA
-			e_class : E_CLASS
+			e_class : CLASS_C
 			i : INTEGER
 		do
 			from

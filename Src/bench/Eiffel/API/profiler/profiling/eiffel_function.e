@@ -31,7 +31,7 @@ feature -- Creation
 			feature_name := new_name;
 		end;
 
-	set_class (a_class: E_CLASS) is
+	set_class (a_class: CLASS_C) is
 			-- Set `e_class' to `a_class'.
 		do
 			class_id := a_class.id
@@ -44,7 +44,7 @@ feature -- Output
 		local
 			cluster: CLUSTER_I	
 			class_i: CLASS_I
-			e_class: E_CLASS
+			e_class: CLASS_C
 			class_c: CLASS_C
 			feature_i: FEATURE_I
 			e_feature: E_FEATURE
@@ -55,7 +55,7 @@ feature -- Output
 					if cluster /= Void then
 						class_i := Eiffel_universe.class_named (int_class_name, cluster);
 						if class_i.compiled then	
-							class_id := class_i.compiled_eclass.id;
+							class_id := class_i.compiled_class.id;
 						end
 					end
 				end

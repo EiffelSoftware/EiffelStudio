@@ -61,14 +61,14 @@ feature -- Property
 
 feature {NONE} -- Convenience
 
-	record_descendants (classes: PART_SORTED_TWO_WAY_LIST [E_CLASS]; e_class: E_CLASS) is
+	record_descendants (classes: PART_SORTED_TWO_WAY_LIST [CLASS_C]; e_class: CLASS_C) is
 			-- Record the descendants of `class_c' to `classes'.
 		require
 			valid_classes: classes /= Void;
 			valid_e_class: e_class /= Void
 		local
-			descendants: LINKED_LIST [E_CLASS];
-			desc_c: E_CLASS
+			descendants: LINKED_LIST [CLASS_C];
+			desc_c: CLASS_C
 		do
 			descendants := e_class.descendants;
 			classes.extend (e_class);

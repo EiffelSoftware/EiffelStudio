@@ -21,7 +21,7 @@ feature -- Properties
 	feature_name: STRING;
 			-- Feature name selected
 
-	parent: E_CLASS;
+	parent: CLASS_C;
 			-- Class id of the involved parent
 
 	code: STRING is "VMSS";

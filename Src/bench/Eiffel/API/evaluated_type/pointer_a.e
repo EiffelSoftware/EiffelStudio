@@ -19,10 +19,10 @@ feature -- Property
 
 feature -- Access
 
-	associated_eclass: E_CLASS is
+	associated_eclass: CLASS_C is
 			-- Associated eiffel class
 		once
-			Result := System.pointer_class.compiled_eclass
+			Result := System.pointer_class.compiled_class
 		end
 
 feature {COMPILER_EXPORTER}

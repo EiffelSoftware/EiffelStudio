@@ -20,7 +20,7 @@ feature -- Properties
 	undefined_feature: E_FEATURE;
 			-- Undefined feature
 
-	parent: E_CLASS;
+	parent: CLASS_C;
 			-- Parent from which `undefined_feature' is inherited
 
 	code: STRING is "VDUS";

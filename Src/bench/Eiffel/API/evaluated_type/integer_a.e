@@ -27,10 +27,10 @@ feature -- Access
 			Result := other.is_integer
 		end
 
-	associated_eclass: E_CLASS is
+	associated_eclass: CLASS_C is
 			-- Associated eiffel class
 		once
-			Result := System.integer_class.compiled_eclass
+			Result := System.integer_class.compiled_class
 		end
 
 feature {COMPILER_EXPORTER}

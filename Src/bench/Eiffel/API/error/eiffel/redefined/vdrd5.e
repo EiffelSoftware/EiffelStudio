@@ -42,8 +42,8 @@ feature -- Output
 			-- Build specific explanation image for current error
 			-- in `st'.
 		local
-			r_class: E_CLASS
-			p_class: E_CLASS
+			r_class: CLASS_C
+			p_class: CLASS_C
 		do
 			r_class := redeclaration.written_class
 			p_class := precursor_of_redeclaration.written_class

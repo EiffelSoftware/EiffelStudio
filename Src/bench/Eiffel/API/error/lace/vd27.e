@@ -16,7 +16,7 @@ feature -- Properties
 	creation_routine: STRING;
 			-- Error creation routine 
 
-	root_class: E_CLASS;
+	root_class: CLASS_C;
 			-- Root class
 
 feature -- Output

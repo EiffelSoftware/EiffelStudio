@@ -38,7 +38,7 @@ feature -- Access
 			Result := evaluated_type /= Void
 		end
 
-	associated_eclass: E_CLASS is
+	associated_eclass: CLASS_C is
 			-- Associated class
 		do
 			Result := actual_type.associated_eclass

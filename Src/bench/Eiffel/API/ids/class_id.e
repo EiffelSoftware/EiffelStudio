@@ -25,7 +25,7 @@ feature -- Access
 			Result := internal_id > 0 and then internal_id <= class_array.count
 		end
 
-	associated_eclass: E_CLASS is
+	associated_eclass: CLASS_C is
 			-- Class associated with current id
 		require
 			is_valid: is_valid

@@ -49,7 +49,7 @@ feature -- Execution
 				end;
 				structured_text.add_new_line;
 				structured_text.add_string ("root: ");
-				Eiffel_system.root_class.compiled_eclass.append_signature (structured_text);
+				Eiffel_system.root_class.compiled_class.append_signature (structured_text);
 				structured_text.add_string (" (cluster: ");
 				structured_text.add_cluster (
 					Eiffel_system.root_cluster,
@@ -95,7 +95,7 @@ feature -- Execution
 			classes: EXTEND_TABLE [CLASS_I, STRING];
 			sorted_class_names: SORTED_TWO_WAY_LIST [STRING];
 			a_classi: CLASS_I;
-			a_classe: E_CLASS;
+			a_classe: CLASS_C;
 			nb_of_classes: INTEGER;
 		do
 			!! sorted_class_names.make;
@@ -133,7 +133,7 @@ feature -- Execution
 			loop
 				structured_text.add_indent;
 				a_classi := classes.item (sorted_class_names.item);
-				a_classe := a_classi.compiled_eclass;
+				a_classe := a_classi.compiled_class;
 				if a_classe /= Void then
 					a_classe.append_signature (structured_text);
 				else

@@ -46,9 +46,9 @@ feature -- Execution
 	show_current_callers is
 			-- Show the callers of `current_feature'.
 		local
-			clients: LINKED_LIST [E_CLASS];
+			clients: LINKED_LIST [CLASS_C];
 			cfeat: STRING;
-			client: E_CLASS;
+			client: CLASS_C;
 			feat: E_FEATURE;
 			classes: PART_SORTED_TWO_WAY_LIST [CLASS_I];
 			list: SORTED_LIST [STRING];
@@ -82,7 +82,7 @@ feature -- Execution
 			until
 				classes.after
 			loop
-				client := classes.item.compiled_eclass;	
+				client := classes.item.compiled_class;	
 					-- Print out client name once.
 				add_tabs (st, tabs);
 				client.append_name (st);
@@ -117,11 +117,11 @@ feature {NONE} -- Implementation
 		require
 			to_show_all_callers: to_show_all_callers
 		local
-			descendants: PART_SORTED_TWO_WAY_LIST [E_CLASS];
+			descendants: PART_SORTED_TWO_WAY_LIST [CLASS_C];
 			a_feat: E_FEATURE;
-			a_class: E_CLASS;
-			a_list: FIXED_LIST [CELL2 [E_CLASS,E_FEATURE]];
-			cell: CELL2 [E_CLASS,E_FEATURE];
+			a_class: CLASS_C;
+			a_list: FIXED_LIST [CELL2 [CLASS_C,E_FEATURE]];
+			cell: CELL2 [CLASS_C,E_FEATURE];
 			rid: ROUTINE_ID;
 			st: like structured_text
 		do

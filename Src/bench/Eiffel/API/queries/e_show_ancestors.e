@@ -46,11 +46,11 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	rec_display (i: INTEGER; c: E_CLASS; st: STRUCTURED_TEXT) is
+	rec_display (i: INTEGER; c: CLASS_C; st: STRUCTURED_TEXT) is
 			-- Display parents of `c' in tree form.
 		local
 			parents: FIXED_LIST [CL_TYPE_A];
-			parent_class: E_CLASS;
+			parent_class: CLASS_C;
 		do
 			if 
 				(not equal (c.id, Eiffel_system.any_id)) or else

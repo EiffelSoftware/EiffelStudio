@@ -32,7 +32,7 @@ feature -- Output
 	display_feature (f: E_FEATURE; st: STRUCTURED_TEXT) is
 		local
 			const: E_CONSTANT;
-			ec: E_CLASS;
+			ec: CLASS_C;
 			str: STRING
 		do
 			f.append_signature (st);

@@ -50,16 +50,16 @@ feature -- Execution
 				-- Compiler structures
 			feature_table: E_FEATURE_TABLE;
 			e_feature: E_FEATURE;
-			e_class: E_CLASS;
+			e_class: CLASS_C;
 			id: CLASS_ID;
 				-- Temporary structures
 			list: SORTED_TWO_WAY_LIST [E_FEATURE];
 			table: EXTEND_TABLE [SORTED_TWO_WAY_LIST [E_FEATURE], CLASS_ID];
-			classes: PART_SORTED_TWO_WAY_LIST [E_CLASS];
+			classes: PART_SORTED_TWO_WAY_LIST [CLASS_C];
 			c: like current_class
 		do
 			c := current_class;
-			feature_table := c.feature_table;
+			feature_table := c.api_feature_table;
 			
 			-- Group the features in terms of their origin.
 			from
@@ -118,9 +118,9 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	any_class: E_CLASS is
+	any_class: CLASS_C is
 		once
-			Result := Eiffel_system.any_class.compiled_eclass
+			Result := Eiffel_system.any_class.compiled_class
 		end;
 
 end -- class E_CLASS_FORMAT_CMD

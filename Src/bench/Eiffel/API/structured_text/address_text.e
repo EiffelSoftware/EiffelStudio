@@ -21,7 +21,7 @@ creation
 
 feature -- Initialization
 
-	make (addr: like address; a_name: STRING; eclass: E_CLASS) is
+	make (addr: like address; a_name: STRING; eclass: CLASS_C) is
 			-- Initialize Current with address is `addr' and
 			-- `e_class' is `eclass' referenced by `a_name'.
 		do
@@ -36,7 +36,7 @@ feature -- Properties
 			-- Name of the object address (it is an attribute,
 			-- local or argument name)
 
-	e_class: E_CLASS;
+	e_class: CLASS_C;
 			-- Eiffel class of which object at `address' as an
 			-- instantiation.
 

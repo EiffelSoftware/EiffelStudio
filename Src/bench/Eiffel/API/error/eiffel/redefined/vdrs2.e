@@ -20,7 +20,7 @@ feature -- Properties
 	feature_name: STRING;
 			-- Feature name involved
 
-	parent: E_CLASS;
+	parent: CLASS_C;
 			-- Parent class involving the non-valid
 			-- redefinition
 

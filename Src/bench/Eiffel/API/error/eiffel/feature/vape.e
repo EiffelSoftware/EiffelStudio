@@ -37,7 +37,7 @@ feature -- Output
 
 	build_explain (st: STRUCTURED_TEXT) is
 		local
-			ec: E_CLASS
+			ec: CLASS_C
 		do
 			ec := exported_feature.written_class;
 			st.add_string ("Insufficiently exported feature: ");

@@ -14,7 +14,7 @@ inherit
 	
 feature -- Properties
 
-	parent: E_CLASS;
+	parent: CLASS_C;
 			-- Parent
 
 	feature_name: STRING;

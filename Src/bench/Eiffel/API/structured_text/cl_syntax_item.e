@@ -20,7 +20,7 @@ creation
 
 feature -- Initialization
 
-	make (a_syntax_error: SYNTAX_ERROR; c: E_CLASS; str: STRING) is
+	make (a_syntax_error: SYNTAX_ERROR; c: CLASS_C; str: STRING) is
 			-- Create Current for `a_syntax_error' in `c' with
 			-- `str' as representation.
 		require
@@ -39,7 +39,7 @@ feature -- Initialization
 
 feature -- Properties
 
-	e_class: E_CLASS;
+	e_class: CLASS_C;
 			-- Class where `syntax_error' has been detected.
 
 	syntax_error: SYNTAX_ERROR;

@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 			sorted_class_names: SORTED_TWO_WAY_LIST [STRING];
 			classes: EXTEND_TABLE [CLASS_I, STRING];
 			a_classi: CLASS_I;
-			a_classe: E_CLASS
+			a_classe: CLASS_C
 		do
 			!! sorted_class_names.make;
 			classes := cluster.classes;
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 				loop
 					structured_text.add_indent;
 					a_classi := classes.item (sorted_class_names.item);
-					a_classe := a_classi.compiled_eclass;
+					a_classe := a_classi.compiled_class;
 					if a_classe /= Void then
 						a_classe.append_signature (structured_text)
 					else

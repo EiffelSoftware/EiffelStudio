@@ -20,16 +20,16 @@ feature -- Execution
 
 	work is
 		local
-			classes: PART_SORTED_TWO_WAY_LIST [E_CLASS];
+			classes: PART_SORTED_TWO_WAY_LIST [CLASS_C];
 			rout_id_set: ROUT_ID_SET;
 			rout_id: ROUTINE_ID;
 			i: INTEGER;
 			stop: BOOLEAN;
 			written_in: CLASS_ID;
 			feat: E_FEATURE;
-			c: E_CLASS;
-			written_cl: E_CLASS;
-			precursors: LIST [E_CLASS];
+			c: CLASS_C;
+			written_cl: CLASS_C;
+			precursors: LIST [CLASS_C];
 			rc: INTEGER
         do
 			written_cl := current_feature.written_class;

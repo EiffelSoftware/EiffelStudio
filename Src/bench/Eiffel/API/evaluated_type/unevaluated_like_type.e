@@ -40,7 +40,7 @@ feature -- Properties
 	has_associated_class: BOOLEAN is False
 			-- Does Current have associated class?
 
-	associated_eclass: E_CLASS is
+	associated_eclass: CLASS_C is
 		do
 		end
 

@@ -27,7 +27,7 @@ feature -- Properties
 
 feature -- Access
 
-	is_exported_to (c: E_CLASS): BOOLEAN is
+	is_exported_to (c: CLASS_C): BOOLEAN is
 			-- Is current exported to `c'?
 		do
 			Result := valid_for (c)
@@ -41,7 +41,7 @@ feature -- Comparison
 
 feature {COMPILER_EXPORTER} -- Queries
 
-	valid_for (client: E_CLASS): BOOLEAN is
+	valid_for (client: CLASS_C): BOOLEAN is
 			-- Is the export clause for client `client' ?
 		require
 			good_argument: client /= Void;

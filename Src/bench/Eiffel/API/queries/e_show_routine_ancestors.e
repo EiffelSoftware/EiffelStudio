@@ -20,12 +20,12 @@ feature -- Execution
 
 	work is
 		local
-			classes: PART_SORTED_TWO_WAY_LIST [E_CLASS];
+			classes: PART_SORTED_TWO_WAY_LIST [CLASS_C];
 			rout_id_set: ROUT_ID_SET;
 			rout_id: ROUTINE_ID;
 			i: INTEGER;
 			other_feature: E_FEATURE;
-			c: E_CLASS
+			c: CLASS_C
 		do
 			!! classes.make;
 			rec_add_parents (classes, current_class);
@@ -66,12 +66,12 @@ feature -- Execution
 			end;
 		end;
 
-	rec_add_parents (classes: PART_SORTED_TWO_WAY_LIST [E_CLASS]; 
-			e_class: E_CLASS) is
+	rec_add_parents (classes: PART_SORTED_TWO_WAY_LIST [CLASS_C]; 
+			e_class: CLASS_C) is
 			-- Record parents of `class_c' to `classes'.	
 		local
 			parents: FIXED_LIST [CL_TYPE_A];
-			e_parent: E_CLASS
+			e_parent: CLASS_C
 		do
 			parents := e_class.parents;
 			classes.extend (e_class);

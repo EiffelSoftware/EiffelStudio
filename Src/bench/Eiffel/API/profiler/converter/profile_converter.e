@@ -260,7 +260,7 @@ end;
 			num_str: STRING;
 			class_n, feature_n, cluster_n: STRING;
 			class_id, temp_int: INTEGER;
-			eclass: E_CLASS;
+			eclass: CLASS_C;
 			a_cluster: CLUSTER_I
 		do
 			if config.get_function_name_column = column_nr then

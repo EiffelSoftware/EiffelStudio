@@ -106,8 +106,8 @@ feature -- Execution
 		local
 			clusters: LINKED_LIST [CLUSTER_I];
 			classes: EXTEND_TABLE [CLASS_I, STRING];
-			list: LINKED_LIST [E_CLASS];
-			a_class: E_CLASS;
+			list: LINKED_LIST [CLASS_C];
+			a_class: CLASS_C;
 			a_cluster: CLUSTER_I;
 			filter: TEXT_FILTER;
 			class_formatter: CLASS_TEXT_FORMATTER;
@@ -176,7 +176,7 @@ feature -- Execution
 						until 
 							classes.after 
 						loop
-							a_class := classes.item_for_iteration.compiled_eclass;
+							a_class := classes.item_for_iteration.compiled_class;
 							if a_class /= Void then
 								list.put_front (a_class);
 							end	
@@ -255,17 +255,17 @@ feature {NONE} -- Implementation
 			-- Output window used to display erros during the
 			-- execution of Current
 
-	append_parents (st: STRUCTURED_TEXT; e_class: E_CLASS) is
+	append_parents (st: STRUCTURED_TEXT; e_class: CLASS_C) is
 			-- Append parents to `st' for `e_class'.
 		require
 			valid_args: st /= Void and then e_class /= Void
 		local
 			parents: FIXED_LIST [CL_TYPE_A];
-			processed: LINKED_LIST [E_CLASS];
-			c: E_CLASS;
+			processed: LINKED_LIST [CLASS_C];
+			c: CLASS_C;
 		do
 			!! processed.make;
-			processed.put_front (Eiffel_system.any_class.compiled_eclass)
+			processed.put_front (Eiffel_system.any_class.compiled_class)
 			parents := e_class.parents;
 			from
 				parents.start

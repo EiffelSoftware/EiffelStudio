@@ -41,8 +41,8 @@ feature -- Output
 			-- Build specific explanation explain for current error
 			-- in `st'.
 		local
-			u_class: E_CLASS;
-			s_class: E_CLASS;
+			u_class: CLASS_C;
+			s_class: CLASS_C;
 		do
 			u_class := invalid_feature.written_class;
 			s_class := selected_feature.written_class;

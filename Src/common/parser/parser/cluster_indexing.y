@@ -150,7 +150,7 @@ ASemi: -- Empty
  
 
 Identifier: TE_ID
-			{ $$ := new_id_as (token_buffer) }
+			{ create $$.initialize (token_buffer) }
 	|	TE_BOOLEAN_ID
 			{ $$ := new_boolean_id_as }
 	|	TE_CHARACTER_ID
@@ -262,7 +262,7 @@ Real_constant: TE_REAL
 	;
 
 Bit_constant: TE_A_BIT
-			{ $$ := new_bit_const_as (new_id_as (token_buffer)) }
+			{ $$ := new_bit_const_as (create {ID_AS}.initialize (token_buffer)) }
 	;
 
 Manifest_string: Non_empty_string

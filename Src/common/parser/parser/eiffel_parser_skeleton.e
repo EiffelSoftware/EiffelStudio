@@ -399,10 +399,10 @@ feature {NONE} -- ID factory
 			-- New ID AST node for "INTEGER" of `n' bits.
 		do
 			inspect n
-			when 8 then Result := new_id_as (Integer_8_classname)
-			when 16 then Result := new_id_as (Integer_16_classname)
-			when 32 then Result := new_id_as (Integer_classname)
-			when 64 then Result := new_id_as (Integer_64_classname)
+			when 8 then create Result.initialize (Integer_8_classname)
+			when 16 then create Result.initialize (Integer_16_classname)
+			when 32 then create Result.initialize (Integer_classname)
+			when 64 then create Result.initialize (Integer_64_classname)
 			end
 		ensure
 			id_as_not_void: Result /= Void
@@ -411,7 +411,7 @@ feature {NONE} -- ID factory
 	new_boolean_id_as: ID_AS is
 			-- New ID AST node for "BOOLEAN"
 		do
-			Result := new_id_as (Boolean_classname)
+			create Result.initialize (Boolean_classname)
 		ensure
 			id_as_not_void: Result /= Void
 		end
@@ -420,9 +420,9 @@ feature {NONE} -- ID factory
 			-- New ID AST node for "CHARACTER"
 		do
 			if is_wide then
-				Result := new_id_as (Wide_char_classname)
+				create Result.initialize (Wide_char_classname)
 			else
-				Result := new_id_as (Character_classname)
+				create Result.initialize (Character_classname)
 			end
 		ensure
 			id_as_not_void: Result /= Void
@@ -431,7 +431,7 @@ feature {NONE} -- ID factory
 	new_real_id_as: ID_AS is
 			-- New ID AST node for "REAL"
 		do
-			Result := new_id_as (Real_classname)
+			create Result.initialize (Real_classname)
 		ensure
 			id_as_not_void: Result /= Void
 		end
@@ -439,7 +439,7 @@ feature {NONE} -- ID factory
 	new_double_id_as: ID_AS is
 			-- New ID AST node for "DOUBLE"
 		do
-			Result := new_id_as (Double_classname)
+			create Result.initialize (Double_classname)
 		ensure
 			id_as_not_void: Result /= Void
 		end
@@ -447,7 +447,7 @@ feature {NONE} -- ID factory
 	new_pointer_id_as: ID_AS is
 			-- New ID AST node for "POINTER"
 		do
-			Result := new_id_as (Pointer_classname)
+			create Result.initialize (Pointer_classname)
 		ensure
 			id_as_not_void: Result /= Void
 		end
@@ -455,7 +455,7 @@ feature {NONE} -- ID factory
 	new_none_id_as: ID_AS is
 			-- New ID AST node for "NONE"
 		do
-			Result := new_id_as (None_classname)
+			create Result.initialize (None_classname)
 		ensure
 			id_as_not_void: Result /= Void
 		end

@@ -82,7 +82,7 @@ public unsigned char ex_ign[EN_NEX];	/* Item set to 1 to ignore exception */
 /* Stack of current exception flags. This is used to control the assertion
  * checking (e.g. disable it when already in assertion checking).
  */
-public struct except exdata = {
+public struct eif_except exdata = {
 	1,				/* ex_chk */
 	0,				/* ex_val */
 	0,				/* ex_nomem */
@@ -783,7 +783,14 @@ long num;			/* May be called from Eiffel, and INTEGER is long */
 				break;
 			case EN_SYS:				/* Operating system error */
 			case EN_IO:					/* I/O error */
+#ifdef EIF_WIN32
+				if (errno != 0)
+					trace->ex_errno = errno;
+				else
+					trace->ex_errno = _doserrno;
+#else
 				trace->ex_errno = errno;
+#endif
 				break;
 			default:
 				trace->ex_name = tag;	/* Record its tag */

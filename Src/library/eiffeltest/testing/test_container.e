@@ -269,7 +269,7 @@ feature -- Output
 				select_test (i)
 				if selected_test.has_results and 
 					n <= selected_test.total_run_count and
-				   selected_test.has_execution_time (n) then
+				 	selected_test.has_execution_time (n) then
 					selected_test.put_timing_information (f, n)
 				end
 				i := i + 1

@@ -29,7 +29,7 @@ feature -- Line number setting
 
 feature  -- Status Report
 
-	interval: BYTE_LIST [BYTE_NODE]
+	interval: BYTE_LIST [INTERVAL_B]
 			-- Case interval {list of INTERVAL_B}: can be Void
 			-- in situations such as 5..3
 
@@ -85,59 +85,6 @@ feature -- C generation
 			buf.exdent
 		end
 
-feature -- IL generation
-
-	generate_il_case (end_label: IL_LABEL) is
-			-- Generate IL code.
-		local
-			next_case_label, compound_label: IL_LABEL
-			need_label: BOOLEAN
-			interval_b: INTERVAL_B
-			i, nb: INTEGER
-		do
-			generate_il_line_info (False)
-			nb := interval.count
-			need_label := nb > 1
-			if need_label then
-				compound_label := il_label_factory.new_label	
-			end
-			
-			from
-				i := 1
-			until
-				i > nb
-			loop
-				interval_b ?= interval.i_th (i)
-				if i > 1 then
-					check
-						label_computed: next_case_label /= Void
-					end
-					il_generator.mark_label (next_case_label)
-				end
-				next_case_label := il_label_factory.new_label
-				interval_b.generate_il_interval (next_case_label)
-				interval.forth
-
-				if need_label and then i <= nb then
-					il_generator.branch_to (compound_label)
-				end
-				i := i + 1
-			end
-
-			if need_label then
-				il_generator.mark_label (compound_label)
-			end
-			if compound /= Void then
-				compound.generate_il
-			end
-
-				-- Branch to end of `inspect' statement.
-			il_generator.branch_to (end_label)
-
-				-- Branch to next `when' statement.
-			il_generator.mark_label (next_case_label)
-		end
-
 feature -- Byte code generation
 
 	make_range (ba: BYTE_ARRAY) is
@@ -151,7 +98,7 @@ feature -- Byte code generation
 			until
 				i < 1
 			loop
-				inter ?= interval.i_th (i)
+				inter := interval.i_th (i)
 				inter.make_range (ba)
 				ba.mark_forward2
 				i := i - 1

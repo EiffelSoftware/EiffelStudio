@@ -244,7 +244,7 @@ feature -- Status setting
 			-- `True' within `applicable_attributes', ignoring others.
 		require
 			applicable_attributes_not_void: applicable_attributes /= Void
-			valid_positions: start_line < end_line and start_line >= 1 and end_line <= line_count
+			valid_positions: start_line <= end_line and start_line >= 1 and end_line <= line_count
 			format_not_void: format /= Void
 		deferred
 		ensure

@@ -1337,7 +1337,6 @@ feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT, GB_OBJECT, GB_LAYOUT_CONSTR
 					-- of beginning the pick and drop.
 				new_object_editor (Current)
 			else
-				type_selector.update_drop_actions_for_all_children (Current)
 				Result := Current
 			end
 		end

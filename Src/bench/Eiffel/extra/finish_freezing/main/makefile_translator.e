@@ -12,6 +12,7 @@ feature -- Initialization
 
 			eiffel4 := env.get ("EIFFEL4")
 			platform := env.get ("PLATFORM")
+			compiler := env.get ("COMPILER")
 
 			eobj_count := 1
 			uses_precompiled := False
@@ -23,6 +24,11 @@ feature -- Initialization
 			if platform = Void or else platform.empty then
 				io.error.putstring ("ERROR: Key 'PLATFORM' was not found in registry!%N")
 			end
+
+			if compiler = Void or else compiler.empty then
+				io.error.putstring ("ERROR: Key 'COMPILER' was not found in registry!%N")
+			end
+
 		end
 
 feature -- Access
@@ -59,6 +65,9 @@ feature -- Access
 			
 	platform: STRING			
 			-- PLATFORM environment variable
+	
+	compiler: STRING
+			-- COMPILER environment variable
 			
 	eobj_count: INTEGER
 			-- The number of EOBJ# parts
@@ -73,7 +82,7 @@ feature -- Execution
 			reader: RESOURCE_PARSER
 			filename: FILE_NAME -- the filename for the config.eif file
 		do
-			filename := config_eif_fn
+			!! filename.make_from_string (config_eif_fn)
 			!!reader
 			reader.parse_file (filename, options)
 		end
@@ -340,6 +349,7 @@ feature {NONE} -- Translation
 					subst_continuation (lastline)
 					subst_eiffel (lastline)
 					subst_platform (lastline)
+					subst_compiler (lastline)
 					subst_dir_sep (lastline)
 					lastline.replace_substring_all ("$ (CC) $ (CFLAGS) -c", options.get_string ("cc_text", "Void"))
 					lastline.replace_substring_all (".c.o:", options.get_string ("cobj_text", Void))
@@ -394,6 +404,7 @@ feature {NONE} -- Translation
 				subst_continuation (lastline)
 				subst_eiffel (lastline)
 				subst_platform (lastline)
+				subst_compiler (lastline)
 				search_and_replace (lastline)
 				subst_dir_sep (lastline)
 
@@ -453,7 +464,7 @@ feature {NONE} -- Translation
 					end
 				end
 
-				if appl.is_equal (options.get_string ("driver_text", Void)) then
+				if appl.substring_index (options.get_string ("driver_text", Void),1) > 0 then
 					precompile := true
 					appl_exe := options.get_string ("driver_filename", Void)
 				else
@@ -694,6 +705,7 @@ feature {NONE} -- Translation
 
 			subst_eiffel (lastline)
 			subst_platform (lastline)
+			subst_compiler (lastline)
 			subst_dir_sep (lastline)
 
 			-- intermediate files
@@ -809,6 +821,10 @@ feature {NONE} -- Translation
 			lastline.replace_substring_all ("$appl", appl)
 
 			subst_eiffel (lastline)
+			subst_platform (lastline)
+			subst_compiler (lastline)
+			subst_dir_sep (lastline)
+
 			subst_precomp_libs (lastline, precompile_libs)
 			if lastline.substring_index ("$precompile_libs_command", 1) > 0 then
 				subst_precomp_libs_command (lastline, precompile_libs)
@@ -816,13 +832,9 @@ feature {NONE} -- Translation
 			subst_library (lastline)
 
 			if not externals then
-				lastline.replace_substring_all ("$ (EXTERNALS)", "")
+				lastline.replace_substring_all ("$(EXTERNALS)", "")
 			end
 
-			if options.has ("lib_path") then
-				lastline.replace_substring_all ("$(LIB_PATH)", options.get_string ("lib_path", Void))
-			end
-			
 			debug ("translate_appl")
 				debug ("output")
 					io.putstring ("OUT: ")
@@ -884,7 +896,7 @@ feature {NONE} -- Translation
 
 feature {NONE}	-- substitutions
 
-	subst_eiffel  (line: STRING) is
+	subst_eiffel (line: STRING) is
 			-- Replace all occurrences of Eiffel4 environment variable in `line'
 		do
 			debug ("subst")
@@ -892,27 +904,31 @@ feature {NONE}	-- substitutions
 			end
 
 			if eiffel4 /= Void and then not eiffel4.empty then
-				line.replace_substring_all ("\$(EIFFEL4)", eiffel4)
 				line.replace_substring_all ("$(EIFFEL4)", eiffel4)
 			end
 		end
 
-	subst_platform  (line: STRING) is
+	subst_platform (line: STRING) is
 			-- Replace all occurrences of platform environment variable in `line'
-		local
-			env_platform: STRING -- the environment's platform variable
 		do
 			debug ("subst")
 				io.putstring("%Tsubst_platform%N")
 			end
 
-			if options.has ("platform") then
-				line.replace_substring_all ("$(PLATFORM)", options.get_string ("platform", Void))
-			else
-				env_platform := env.get("platform")
-				if env_platform /= Void and then not env_platform.empty then
-					line.replace_substring_all ("$(PLATFORM)", env_platform)
-				end
+			if platform /= Void and then not platform.empty then
+				line.replace_substring_all ("$(PLATFORM)", platform)
+			end
+		end
+
+	subst_compiler (line: STRING) is
+			-- Replace all occurrences of compiler environment variable in `line'
+		do
+			debug ("subst")
+				io.putstring("%Tsubst_compiler%N")
+			end
+
+			if compiler /= Void and then not compiler.empty then
+				line.replace_substring_all ("$(COMPILER)", compiler)
 			end
 		end
 
@@ -1208,7 +1224,7 @@ feature {NONE} -- Implementation
 
 				if precomp_lib_start > 0 then
 					uses_precompiled := true
-					Result.append (line.substring (1, line.substring_index ("preobj.obj", 1)-2))
+					Result.append (line.substring (1, precomp_lib_start - 2))
 					from
 					until
 						Result.item (1) > ' '
@@ -1216,7 +1232,7 @@ feature {NONE} -- Implementation
 						Result.remove (1)
 					end
 					Result.append_character (operating_environment.directory_separator)
-					Result.append ("precomp.lib")
+					Result.append ("$(COMPILER)\precomp.lib")
 				else
 					uses_precompiled := false
 				end
@@ -1247,7 +1263,7 @@ feature {NONE} -- Implementation
 
 				if precomp_lib_start > 0 then
 					uses_precompiled := true
-					next_precomp_lib := line.substring (1, line.substring_index ("preobj.obj", 1)-2)
+					next_precomp_lib := line.substring (1, precomp_lib_start - 2) 
 					from
 					until
 						next_precomp_lib.item (1) > ' '
@@ -1255,7 +1271,7 @@ feature {NONE} -- Implementation
 						next_precomp_lib.remove (1)
 					end
 					next_precomp_lib.append_character (operating_environment.directory_separator)
-					next_precomp_lib.append ("precomp.lib")
+					next_precomp_lib.append ("$(COMPILER)\precomp.lib")
 
 					if not Result.empty then
 						Result.append_character (' ')
@@ -1273,7 +1289,7 @@ feature {NONE} -- Implementation
 			out_file, error: BOOLEAN
 		do
 			debug ("implementation")
-				io.putstring("%Topen_files%N")
+				io.putstring("%Topen_files = ")
 			end
 
 			out_file := false
@@ -1284,6 +1300,10 @@ feature {NONE} -- Implementation
 				!!makefile.make_open_write ("Makefile")
 			end
 
+			debug ("implementation")
+				io.putstring(makefile_sh.name)
+				io.new_line
+			end
 		rescue
 			if not out_file then
 				io.error.putstring ("ERROR: Unable to open Makefile.SH for input%N")
@@ -1327,29 +1347,32 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	config_eif_fn: FILE_NAME is
+	config_eif_fn: STRING is
 			-- the full filename for the CONFIG.EIF file
 			-- currently: $EIFFEL4|bench|spec|$PLATFORM|config|config.eif
-		local
-			temp_result: STRING
 		once
 			debug ("implementation")
-				io.putstring("%Tconfig_eif_fn%N")
+				io.putstring("%Tconfig_eif_fn = ")
 			end
 
-			temp_result := clone (eiffel4)
-			temp_result.append_character (operating_environment.directory_separator)
-			temp_result.append ("bench")
-			temp_result.append_character (operating_environment.directory_separator)
-			temp_result.append ("spec")
-			temp_result.append_character (operating_environment.directory_separator)
-			temp_result.append (platform)
-        		temp_result.append_character (operating_environment.directory_separator)
-			temp_result.append ("config")
-			temp_result.append_character (operating_environment.directory_separator)
-			temp_result.append ("config.eif")
+			Result := clone (eiffel4)
+			Result.append_character (operating_environment.directory_separator)
+			Result.append ("bench")
+			Result.append_character (operating_environment.directory_separator)
+			Result.append ("spec")
+			Result.append_character (operating_environment.directory_separator)
+			Result.append (platform)
+      	  	Result.append_character (operating_environment.directory_separator)
+			Result.append (compiler)
+	        	Result.append_character (operating_environment.directory_separator)
+			Result.append ("config")
+			Result.append_character (operating_environment.directory_separator)
+			Result.append ("config.eif")
 
-			!!Result.make_from_string (temp_result)
+			debug ("implementation")
+				io.putstring(Result)
+				io.new_line
+			end
 		end
 		
 end -- class MAKEFILE_TRANSLATOR

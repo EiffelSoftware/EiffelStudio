@@ -18,7 +18,7 @@ get local/TEST_DELIV/PorterPackage/Eiffel54_enterprise.iso Eiffel54_enterprise_r
 close 
 EOF
 
-	echo LinuxPPC compilation done
+	echo Linux for RH9.0 compilation done
 else
 	rm -rf PorterPackage
 	tar xvf ~/PorterPackage_enterprise.tar

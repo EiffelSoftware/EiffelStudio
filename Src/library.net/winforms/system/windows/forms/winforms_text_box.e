@@ -11,8 +11,11 @@ inherit
 		redefine
 			wnd_proc,
 			on_mouse_up,
+			on_got_focus,
 			on_handle_created,
 			is_input_key,
+			set_text,
+			get_text,
 			get_default_ime_mode,
 			get_create_params
 		end
@@ -58,6 +61,13 @@ feature -- Access
 			"get_PasswordChar"
 		end
 
+	get_text: SYSTEM_STRING is
+		external
+			"IL signature (): System.String use System.Windows.Forms.TextBox"
+		alias
+			"get_Text"
+		end
+
 	frozen get_accepts_return: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Windows.Forms.TextBox"
@@ -74,32 +84,11 @@ feature -- Access
 
 feature -- Element Change
 
-	frozen set_scroll_bars (value: WINFORMS_SCROLL_BARS) is
+	set_text (value: SYSTEM_STRING) is
 		external
-			"IL signature (System.Windows.Forms.ScrollBars): System.Void use System.Windows.Forms.TextBox"
+			"IL signature (System.String): System.Void use System.Windows.Forms.TextBox"
 		alias
-			"set_ScrollBars"
-		end
-
-	frozen remove_text_align_changed (value: EVENT_HANDLER) is
-		external
-			"IL signature (System.EventHandler): System.Void use System.Windows.Forms.TextBox"
-		alias
-			"remove_TextAlignChanged"
-		end
-
-	frozen set_accepts_return (value: BOOLEAN) is
-		external
-			"IL signature (System.Boolean): System.Void use System.Windows.Forms.TextBox"
-		alias
-			"set_AcceptsReturn"
-		end
-
-	frozen set_character_casing (value: WINFORMS_CHARACTER_CASING) is
-		external
-			"IL signature (System.Windows.Forms.CharacterCasing): System.Void use System.Windows.Forms.TextBox"
-		alias
-			"set_CharacterCasing"
+			"set_Text"
 		end
 
 	frozen set_text_align (value: WINFORMS_HORIZONTAL_ALIGNMENT) is
@@ -109,13 +98,6 @@ feature -- Element Change
 			"set_TextAlign"
 		end
 
-	frozen add_text_align_changed (value: EVENT_HANDLER) is
-		external
-			"IL signature (System.EventHandler): System.Void use System.Windows.Forms.TextBox"
-		alias
-			"add_TextAlignChanged"
-		end
-
 	frozen set_password_char (value: CHARACTER) is
 		external
 			"IL signature (System.Char): System.Void use System.Windows.Forms.TextBox"
@@ -123,28 +105,42 @@ feature -- Element Change
 			"set_PasswordChar"
 		end
 
+	frozen set_character_casing (value: WINFORMS_CHARACTER_CASING) is
+		external
+			"IL signature (System.Windows.Forms.CharacterCasing): System.Void use System.Windows.Forms.TextBox"
+		alias
+			"set_CharacterCasing"
+		end
+
+	frozen add_text_align_changed (value: EVENT_HANDLER) is
+		external
+			"IL signature (System.EventHandler): System.Void use System.Windows.Forms.TextBox"
+		alias
+			"add_TextAlignChanged"
+		end
+
+	frozen set_accepts_return (value: BOOLEAN) is
+		external
+			"IL signature (System.Boolean): System.Void use System.Windows.Forms.TextBox"
+		alias
+			"set_AcceptsReturn"
+		end
+
+	frozen remove_text_align_changed (value: EVENT_HANDLER) is
+		external
+			"IL signature (System.EventHandler): System.Void use System.Windows.Forms.TextBox"
+		alias
+			"remove_TextAlignChanged"
+		end
+
+	frozen set_scroll_bars (value: WINFORMS_SCROLL_BARS) is
+		external
+			"IL signature (System.Windows.Forms.ScrollBars): System.Void use System.Windows.Forms.TextBox"
+		alias
+			"set_ScrollBars"
+		end
+
 feature {NONE} -- Implementation
-
-	get_default_ime_mode: WINFORMS_IME_MODE is
-		external
-			"IL signature (): System.Windows.Forms.ImeMode use System.Windows.Forms.TextBox"
-		alias
-			"get_DefaultImeMode"
-		end
-
-	on_handle_created (e: EVENT_ARGS) is
-		external
-			"IL signature (System.EventArgs): System.Void use System.Windows.Forms.TextBox"
-		alias
-			"OnHandleCreated"
-		end
-
-	on_mouse_up (mevent: WINFORMS_MOUSE_EVENT_ARGS) is
-		external
-			"IL signature (System.Windows.Forms.MouseEventArgs): System.Void use System.Windows.Forms.TextBox"
-		alias
-			"OnMouseUp"
-		end
 
 	get_create_params: WINFORMS_CREATE_PARAMS is
 		external
@@ -160,11 +156,39 @@ feature {NONE} -- Implementation
 			"OnTextAlignChanged"
 		end
 
+	get_default_ime_mode: WINFORMS_IME_MODE is
+		external
+			"IL signature (): System.Windows.Forms.ImeMode use System.Windows.Forms.TextBox"
+		alias
+			"get_DefaultImeMode"
+		end
+
+	on_mouse_up (mevent: WINFORMS_MOUSE_EVENT_ARGS) is
+		external
+			"IL signature (System.Windows.Forms.MouseEventArgs): System.Void use System.Windows.Forms.TextBox"
+		alias
+			"OnMouseUp"
+		end
+
+	on_handle_created (e: EVENT_ARGS) is
+		external
+			"IL signature (System.EventArgs): System.Void use System.Windows.Forms.TextBox"
+		alias
+			"OnHandleCreated"
+		end
+
 	wnd_proc (m: WINFORMS_MESSAGE) is
 		external
 			"IL signature (System.Windows.Forms.Message&): System.Void use System.Windows.Forms.TextBox"
 		alias
 			"WndProc"
+		end
+
+	on_got_focus (e: EVENT_ARGS) is
+		external
+			"IL signature (System.EventArgs): System.Void use System.Windows.Forms.TextBox"
+		alias
+			"OnGotFocus"
 		end
 
 	is_input_key (key_data: WINFORMS_KEYS): BOOLEAN is

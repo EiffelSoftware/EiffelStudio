@@ -268,8 +268,8 @@ feature -- Duplication
 			-- Re-initialize from `other'.
 		do
 			standard_copy (other)
-			content := clone (other.content)
-			deleted_marks := clone (other.deleted_marks)
+			content := other.content.twin
+			deleted_marks := other.deleted_marks.twin
 		end
 
 feature -- Conversion

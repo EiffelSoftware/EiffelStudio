@@ -91,7 +91,7 @@ feature -- Dynamic Library file
 				is_dll_generated := dynamic_lib.is_content_valid and not dynamic_lib.is_empty
 				if is_dll_generated then
 					dynamic_lib_exports := dynamic_lib.dynamic_lib_exports
-					system_name := clone(system.eiffel_system.name)
+					system_name := system.eiffel_system.name.twin
 				end
 			end
 
@@ -126,7 +126,7 @@ feature -- Dynamic Library file
 
 						from
 							dynamic_lib_exports.item_for_iteration.start
-							class_name := clone(dynamic_lib_exports.item_for_iteration.item.compiled_class.name_in_upper)
+							class_name := dynamic_lib_exports.item_for_iteration.item.compiled_class.name_in_upper.twin
 							def_buffer.putstring(class_name)
 							def_buffer.putstring( "]%N" )
 						until
@@ -143,21 +143,21 @@ feature -- Dynamic Library file
 										buffer.putstring (" (")
 										buffer.putstring (dl_exp.creation_routine.name)
 										buffer.putstring (")")
-										internal_creation_name := clone (Encoder.feature_name (
+										internal_creation_name := Encoder.feature_name (
 													System.class_of_id (dl_exp.creation_routine.written_in).types.first.static_type_id,
-													dl_exp.creation_routine.body_index))
+													dl_exp.creation_routine.body_index).twin
 								elseif (dl_exp.creation_routine = Void) then
 										buffer.putstring (" (!!)")
 								end
 								if (dl_exp.routine /= Void) then
 									if dl_exp.has_alias then
-										feature_name := clone(dl_exp.alias_name)
+										feature_name := dl_exp.alias_name.twin
 									else
-										feature_name := clone(dl_exp.routine.name)
+										feature_name := dl_exp.routine.name.twin
 									end
-									internal_feature_name := clone (Encoder.feature_name (
+									internal_feature_name := Encoder.feature_name (
 											System.class_of_id (dl_exp.routine.written_in).types.first.static_type_id,
-											dl_exp.routine.body_index))
+											dl_exp.routine.body_index).twin
 									args:= dl_exp.routine.arguments
 
 									def_buffer.putstring("%T")
@@ -190,7 +190,7 @@ feature -- Dynamic Library file
 
 									----- Routine function
 									buffer.putstring ("%Nextern ")
-									return_type := clone ( cecil_type(dl_exp.routine.type) )
+									return_type := cecil_type(dl_exp.routine.type).twin
 									buffer.putstring (return_type)
 										
 									buffer.putstring (" ")
@@ -466,15 +466,15 @@ feature -- Plug and Makefile file
 			any_cl := system.any_class.compiled_class
 			correct_mismatch_feat :=
 				any_cl.feature_table.item_id (Names_heap.internal_correct_mismatch_name_id)
-			correct_mismatch_name := clone (Encoder.feature_name (any_cl.types.first.static_type_id,
-				correct_mismatch_feat.body_index))
+			correct_mismatch_name := Encoder.feature_name (any_cl.types.first.static_type_id,
+				correct_mismatch_feat.body_index).twin
 			buffer.putstring ("extern void ")
 			buffer.putstring (correct_mismatch_name)
 			buffer.putstring ("();%N")
 
 				-- Make string declaration
 			str_make_feat := string_cl.feature_table.item_id (Names_heap.make_name_id)
-			str_make_name := clone (Encoder.feature_name (id, str_make_feat.body_index))
+			str_make_name := Encoder.feature_name (id, str_make_feat.body_index).twin
 			buffer.putstring ("extern void ")
 			buffer.putstring (str_make_name)
 			buffer.putstring ("();%N")
@@ -483,7 +483,7 @@ feature -- Plug and Makefile file
 				internal_hash_code_feat ?= string_cl.feature_table.item_id (Names_heap.internal_hash_code_name_id)
 			else
 				set_count_feat ?= string_cl.feature_table.item_id (Names_heap.set_count_name_id)
-				set_count_name := clone (Encoder.feature_name (id, set_count_feat.body_index))
+				set_count_name := Encoder.feature_name (id, set_count_feat.body_index).twin
 				buffer.putstring ("extern void ")
 				buffer.putstring (set_count_name)
 				buffer.putstring ("();%N")
@@ -491,7 +491,7 @@ feature -- Plug and Makefile file
 
 			if system.has_separate then
 				to_c_feat := string_cl.feature_table.item_id (Names_heap.to_c_name_id)
-				to_c_name := clone (Encoder.feature_name (id, to_c_feat.body_index))
+				to_c_name := Encoder.feature_name (id, to_c_feat.body_index).twin
 				buffer.putstring ("extern void ")
 				buffer.putstring (to_c_name)
 				buffer.putstring ("();%N")
@@ -512,7 +512,7 @@ feature -- Plug and Makefile file
 				creators := array_cl.creators
 				creators.start
 				creation_feature := array_cl.feature_table.item_id (Names_heap.make_name_id)
-				arr_make_name := clone (Encoder.feature_name (id, creation_feature.body_index))
+				arr_make_name := Encoder.feature_name (id, creation_feature.body_index).twin
 				system.set_array_make_name (arr_make_name)
 			else
 				cl_type := System.Instantiator.Array_type.associated_class_type; 
@@ -531,7 +531,7 @@ feature -- Plug and Makefile file
 				cl_type := rout_cl.types.first
 				id := cl_type.static_type_id
 				set_rout_disp_feat := rout_cl.feature_table.item_id (Names_heap.set_rout_disp_name_id)
-				set_rout_disp_name := clone (Encoder.feature_name (id, set_rout_disp_feat.body_index))
+				set_rout_disp_name := Encoder.feature_name (id, set_rout_disp_feat.body_index).twin
 
 				buffer.putstring ("extern void ")
 				buffer.putstring (set_rout_disp_name)
@@ -549,9 +549,9 @@ feature -- Plug and Makefile file
 
 			if final_mode then
 				init_name :=
-					clone (Encoder.table_name (system.routine_id_counter.initialization_rout_id))
+					Encoder.table_name (system.routine_id_counter.initialization_rout_id).twin
 				exp_init_name :=
-					clone (Encoder.table_name (system.routine_id_counter.creation_rout_id))
+					Encoder.table_name (system.routine_id_counter.creation_rout_id).twin
 
 				buffer.putstring ("extern char *(*")
 				buffer.putstring (init_name)
@@ -561,7 +561,7 @@ feature -- Plug and Makefile file
 				buffer.putstring ("[])();%N")
 
 				if has_dispose then
-					dispose_name := clone (Encoder.table_name (system.routine_id_counter.dispose_rout_id))
+					dispose_name := Encoder.table_name (system.routine_id_counter.dispose_rout_id).twin
 					buffer.putstring ("extern char *(*")
 					buffer.putstring (dispose_name)
 					buffer.putstring ("[])();%N%N")

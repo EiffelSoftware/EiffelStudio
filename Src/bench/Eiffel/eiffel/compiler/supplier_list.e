@@ -110,7 +110,7 @@ feature -- Element change
 			until
 				after
 			loop
-				Result.put_right (clone (item))
+				Result.put_right (item.twin)
 				Result.forth
 				forth
 			end

@@ -172,7 +172,7 @@ feature
 					new_name := parent.renaming.item (feature_name);
 					l_names_heap.put (new_name)
 					new_name_id := l_names_heap.found_item
-					replication := clone (next.a_feature);
+					replication := next.a_feature.twin
 						-- Mark it as processed
 					next.set_renaming_processed;
 						-- Move the inherit feature information under 

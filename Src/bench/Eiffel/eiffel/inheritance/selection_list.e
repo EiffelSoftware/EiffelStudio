@@ -65,7 +65,7 @@ feature -- Selection
 				Result := parent_selection (parents);
 
 				if Result /= Void then
-					selected_rout_id_set := clone (Result.rout_id_set);
+					selected_rout_id_set := Result.rout_id_set.twin
 
 						-- Keep track of the selection
 					Selected.put_front (Result.feature_name);

@@ -147,7 +147,7 @@ feature -- Settings
 			name_not_void: name /= Void
 			name_exists: name.count > 0
 		do
-			alias_name := clone (name)
+			alias_name := name.twin
 		ensure
 			alias_name_set: alias_name /= Void and then alias_name.is_equal (name)
 		end
@@ -164,7 +164,7 @@ feature -- Settings
 			name_not_void: name /= Void
 			name_exists: name.count > 0
 		do
-			call_type := clone (name)
+			call_type := name.twin
 		ensure
 			call_type_set: call_type /= Void and then call_type.is_equal (name)
 		end

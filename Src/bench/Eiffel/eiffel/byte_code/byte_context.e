@@ -681,11 +681,13 @@ feature -- Setting
 	set_local_index (s: STRING; r: REGISTRABLE) is
 			-- Record the instance `r' into the `associated_register_table'
 			-- as register named `s'.
+		require
+			s_not_void: s /= Void
 		local
 			key: STRING
 		do
-			if not local_index_table.has(s) then
-				key := clone (s)
+			if not local_index_table.has (s) then
+				key := s.twin
 				local_index_table.put (local_index_counter, key)
 				local_index_counter := local_index_counter + 1
 				associated_register_table.put (r, key)
@@ -873,8 +875,8 @@ feature -- Setting
 		do
 			copy (other)
 			register_server := other.register_server.duplicate
-			local_index_table := clone (other.local_index_table)
-			associated_register_table := clone (other.associated_register_table)
+			local_index_table := other.local_index_table.twin
+			associated_register_table := other.associated_register_table.twin
 		end
 
 	restore (saved_context: like Current) is

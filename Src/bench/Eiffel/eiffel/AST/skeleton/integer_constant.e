@@ -132,7 +132,7 @@ feature -- Unary operators
 	unary_minus: INTEGER_CONSTANT is
 			-- Apply `-' operator to Current.
 		do
-			Result := clone (Current)
+			Result := twin
 			Result.negate
 		end
 
@@ -199,8 +199,10 @@ feature -- Conveniences
 	value_i: INTEGER_CONSTANT is
 			-- Interface value
 		do
-				-- Need to clone since 
-			Result := clone (Current)
+				-- FIXME: Previous comment said we needed to `twin' but
+				-- I don't remember why since the comment was cut off at
+				-- the first revision of Current class.
+			Result := twin
 		end
 
 	to_integer_64: INTEGER_64 is

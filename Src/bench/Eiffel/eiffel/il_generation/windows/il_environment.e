@@ -54,9 +54,9 @@ feature -- Access
 		do
 			l_installed := installed_runtimes
 			if l_installed.has (v1_1) then
-				Result := clone (v1_1)
+				Result := v1_1.twin
 			else
-				Result := clone (v1_0)
+				Result := v1_0.twin
 			end
 		ensure
 			default_version_not_void: Result /= Void

@@ -208,7 +208,7 @@ feature {NONE} -- Generation
 				l_extension ?= l_feat.extension
 				l_feat_name := l_extension.alias_name
 				if not l_feat.is_attribute then
-					l_feat_name := clone (l_feat_name)
+					l_feat_name := l_feat_name.twin
 					l_feat_name.remove_head (4)
 				end
 			end

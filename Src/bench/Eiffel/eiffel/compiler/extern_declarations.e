@@ -34,7 +34,7 @@ feature -- Settings
 		require
 			rout_table_exists: rout_table /= Void
 		do
-			routine_tables.put (clone (rout_table))
+			routine_tables.put (rout_table.twin)
 		end
 
 	add_attribute_table (attr_table: STRING) is
@@ -42,7 +42,7 @@ feature -- Settings
 		require
 			attr_table_exists: attr_table /= Void
 		do
-			attribute_tables.put (clone (attr_table))
+			attribute_tables.put (attr_table.twin)
 		end
 
 	add_once (type: TYPE_C; once_name: STRING) is
@@ -51,7 +51,7 @@ feature -- Settings
 			type__not_void: type /= Void
 			once_name_not_void: once_name /= Void
 		do
-			onces_table.put (type, clone (once_name))
+			onces_table.put (type, once_name.twin)
 		end
 
 	add_type_table (type_table: STRING) is
@@ -59,7 +59,7 @@ feature -- Settings
 		require
 			type_table_exists: type_table /= Void
 		do
-			type_tables.put (clone (type_table))
+			type_tables.put (type_table.twin)
 		end
 
 	add_routine (type: TYPE_C; rout_name: STRING) is

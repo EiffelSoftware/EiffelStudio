@@ -213,7 +213,7 @@ feature -- formatter
 			until
 				clients.after
 			loop
-				temp := clone (clients.item)
+				temp := clients.item.twin
 				client_classi := Universe.class_named (temp, cluster)
 				if client_classi /= Void then
 					ctxt.put_classi (client_classi)

@@ -43,7 +43,7 @@ feature -- Initialization
 					file.readline
 					end_pos := file.position
 					if start_pos < end_pos then
-						create line.make (start_pos, end_pos - 1, clone (file.laststring))
+						create line.make (start_pos, end_pos - 1, file.laststring.twin)
 						extend (line)
 					end
 					start_pos := end_pos
@@ -81,7 +81,7 @@ end
 					file.readline
 					end_pos := file.position
 					if start_feat_pos <= end_pos then
-						create line.make (start_pos, end_pos - 1, clone (file.laststring))
+						create line.make (start_pos, end_pos - 1, file.laststring.twin)
 						extend (line)
 					end
 					start_pos := end_pos

@@ -7,6 +7,12 @@ indexing
 class
 	WIZARD_ENUM_ELEMENT_DESCRIPTOR_FACTORY
 
+inherit
+	WIZARD_SHARED_GENERATION_ENVIRONMENT
+		export
+			{NONE} all
+		end
+
 feature -- Basic operations
 
 	create_descriptor (a_documentation: ECOM_DOCUMENTATION; 
@@ -17,6 +23,9 @@ feature -- Basic operations
 				a_documentation.name /= Void
 		do
 			name := a_documentation.name
+			if eiffel_key_words.has (name) then
+				name.append (One)
+			end
 			value := a_value
 			description := a_documentation.doc_string
 

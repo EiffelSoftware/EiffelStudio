@@ -35,26 +35,22 @@ feature -- Access
 			Result := "No Matching DIRECTORY Constant"
 		end
 
-	negative: INTEGER is 
-			-- `Result' is INTEGER constant named negative.
+	close_text: STRING is
+			-- `Result' is STRING constant named `close_text'.
 		once
-			Result := -100
-		end
-
-	lightbulb_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (png_location)
-			a_file_name.extend ("lightbulb.png")
-			Result.set_with_named_file (a_file_name)
+			Result := "Close"
 		end
 
 	constants_dialog_title: STRING is
 			-- `Result' is STRING constant named `constants_dialog_title'.
 		once
 			Result := "Constants"
+		end
+
+	default_button_width: INTEGER is 
+			-- `Result' is INTEGER constant named default_button_width.
+		once
+			Result := 80
 		end
 
 	next_tip_text: STRING is
@@ -69,10 +65,32 @@ feature -- Access
 			Result := "Project Configuration"
 		end
 
+	lightbulb_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (png_location)
+			a_file_name.extend ("lightbulb.png")
+			Result.set_with_named_file (a_file_name)
+		end
+
+	new_button_add_text: STRING is
+			-- `Result' is STRING constant named `new_button_add_text'.
+		once
+			Result := "Add"
+		end
+
 	tip_of_day_dialog_title: STRING is
 			-- `Result' is STRING constant named `tip_of_day_dialog_title'.
 		once
 			Result := "Tip of the Day"
+		end
+
+	new_button_text: STRING is
+			-- `Result' is STRING constant named `new_button_text'.
+		once
+			Result := "New..."
 		end
 
 	small_padding: INTEGER is 
@@ -87,10 +105,10 @@ feature -- Access
 			Result := "Pixmap Selection"
 		end
 
-	default_button_width: INTEGER is 
-			-- `Result' is INTEGER constant named default_button_width.
+	negative: INTEGER is 
+			-- `Result' is INTEGER constant named negative.
 		once
-			Result := 80
+			Result := -100
 		end
 
 	ok_button_text: STRING is
@@ -105,16 +123,22 @@ feature -- Access
 			Result := 12
 		end
 
+	remove_button_text: STRING is
+			-- `Result' is STRING constant named `remove_button_text'.
+		once
+			Result := "Remove"
+		end
+
 	cancel_button_text: STRING is
 			-- `Result' is STRING constant named `cancel_button_text'.
 		once
 			Result := "Cancel"
 		end
 
-	close_text: STRING is
-			-- `Result' is STRING constant named `close_text'.
+	modify_button_text: STRING is
+			-- `Result' is STRING constant named `modify_button_text'.
 		once
-			Result := "Close"
+			Result := "Modify"
 		end
 
 	png_location: STRING is

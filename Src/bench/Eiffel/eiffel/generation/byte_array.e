@@ -157,6 +157,32 @@ feature -- Element change
 			end
 		end
 
+	append_integer_8 (i: INTEGER_8) is
+			-- Append integer `i' in the array
+		local
+			new_position: INTEGER
+		do
+			new_position := position + Int8_size
+			if new_position >= count then
+				resize (count + Chunk)
+			end
+			($area + position).memory_copy ($i, Int8_size)
+			position := new_position
+		end
+
+	append_integer_16 (i: INTEGER_16) is
+			-- Append integer `i' in the array
+		local
+			new_position: INTEGER
+		do
+			new_position := position + Int16_size
+			if new_position >= count then
+				resize (count + Chunk)
+			end
+			($area + position).memory_copy ($i, Int16_size)
+			position := new_position
+		end
+
 	append_integer (i: INTEGER) is
 			-- Append long integer `i' in the array
 		do
@@ -168,17 +194,8 @@ feature -- Element change
 		require
 			valid_short_integer: i >= feature {INTEGER_16}.Min_value and
 				i <= feature {INTEGER_16}.Max_value
-		local
-			new_position: INTEGER
-			l_val: INTEGER_16
 		do
-			new_position := position + Int16_size
-			if new_position >= count then
-				resize (count + Chunk)
-			end
-			l_val := i.to_integer_16;
-			($area + position).memory_copy ($l_val, Int16_size)
-			position := new_position
+			append_integer_16 (i.to_integer_16)
 		end
 
 	append_uint32_integer (i: INTEGER) is

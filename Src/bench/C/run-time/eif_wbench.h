@@ -34,8 +34,6 @@ RT_LNK long	wattr(int static_type, int32 feature_id, int dyn_type);					/* Attri
 RT_LNK long	wpattr(int32 origin, int32 offset, int dyn_type);					/* Precompiled attribute access */
 RT_LNK long wattr_inv(int static_type, int32 feature_id, char *name, EIF_REFERENCE object);				/* Nested attribute access */
 RT_LNK long wpattr_inv(int32 origin, int32 offset, char *name, EIF_REFERENCE object);				/* Nested precompiled attribute access*/
-RT_LNK int wtype(int static_type, int32 feature_id, int dyn_type);						/* Creation type */
-RT_LNK int wptype(int32 origin, int32 offset, int dyn_type);					/* Creation type of a precomp feature */
 RT_LNK int wtype_gen(int static_type, int32 feature_id, EIF_REFERENCE object);						/* Creation type (generic) */
 RT_LNK int wptype_gen(int static_type, int32 origin, int32 offset, EIF_REFERENCE object);						/* Creation type of a precomp generic feature */
 
@@ -53,7 +51,6 @@ RT_LNK char desc_fill;					/* Is it an actual insertion or do we
 /* Macros for call structure manipulation:
  *  CAttrOffs(x,y,z)
  *  CBodyId(x,y,z)
- *	CFeatType(x,y,z)
  *  CGENFeatType(t,x,y,z)
  *  MPatId(x)
  *  FPatId(x)
@@ -75,15 +72,6 @@ RT_LNK char desc_fill;					/* Is it an actual insertion or do we
 		info = eorg_table[(y)] ;\
 		desc = (desc_tab[info.origin])[(z)] ;\
 		(x) = (desc[info.offset]).info ;\
-	}	
-
-#define CFeatType(x,y,z) \
-	{ \
-		struct rout_info info; \
-		struct desc_info *desc; \
-		info = eorg_table[(y)] ;\
-		desc = (desc_tab[info.origin])[(z)] ;\
-		(x) = (desc[info.offset]).type ;\
 	}	
 
 #define CGENFeatType(t,x,y,z) \

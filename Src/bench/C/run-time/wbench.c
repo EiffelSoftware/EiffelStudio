@@ -31,8 +31,6 @@
  * `wpattr (origin, offset, dyn_type)'
  * `wattr_inv (static_type, feature_id, name, object)'
  * `wpattr_inv (origin, offset, name, object)'
- * `wtype (static_type, feature_id, dyn_type)'
- * `wptype (origin, offset, dyn_type)'
  * `wtype_gen (static_type, feature_id, object)'
  * `wptype_gen (origin, offset, object)'
  * `wdisp (dyn_type)'
@@ -308,35 +306,6 @@ rt_public long wpattr_inv (int32 origin, int32 offset, char *name, EIF_REFERENCE
  */
 
 	return (desc_tab[origin][dyn_type][offset].info);
-}
-
-rt_public int wtype(int static_type, int32 feature_id, int dyn_type)
-{
-	/* Type of feature of routine id `rout_id' in the class of
-	 * dynamic type `dyn_type'.
-	 * Return an integer.
-	 */ 
-
-	int32 rout_id;
-	int type;
-
-	rout_id = Routids(static_type)[feature_id];
-	CFeatType(type,rout_id,dyn_type);
-	type = RTUD(type);
-	return (type & SK_DTYPE);
-}
-
-rt_public int wptype(int32 origin, int32 offset, int dyn_type)
-{
-	/* Type of feature of routine identified by `offset' in its origin class
-	 * `origin' and to be applied on an object of dynamic type `dyn_type'.
-	 * Return an integer.
-	 */ 
-
-	int type;
-
-	type = RTUD(desc_tab[origin][dyn_type][offset].type);
-	return (type & SK_DTYPE);
 }
 
 /* GENERIC CONFORMANCE */

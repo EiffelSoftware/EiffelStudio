@@ -27,6 +27,26 @@ class IEiffelSystemBrowser;
 extern "C" {
 #endif
 
+#ifndef __ecom_eiffel_compiler_IEnumClass_FWD_DEFINED__
+#define __ecom_eiffel_compiler_IEnumClass_FWD_DEFINED__
+namespace ecom_eiffel_compiler
+{
+class IEnumClass;
+}
+#endif
+
+
+
+#ifndef __ecom_eiffel_compiler_IEnumCluster_FWD_DEFINED__
+#define __ecom_eiffel_compiler_IEnumCluster_FWD_DEFINED__
+namespace ecom_eiffel_compiler
+{
+class IEnumCluster;
+}
+#endif
+
+
+
 #ifndef __ecom_eiffel_compiler_IEiffelClusterDescriptor_FWD_DEFINED__
 #define __ecom_eiffel_compiler_IEiffelClusterDescriptor_FWD_DEFINED__
 namespace ecom_eiffel_compiler
@@ -72,19 +92,19 @@ public:
 	/*-----------------------------------------------------------
 	List of classes in system.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP system_classes(  /* [out, retval] */ SAFEARRAY *  * names ) = 0;
+	virtual STDMETHODIMP system_classes(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_classes ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of classes in system.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP class_count(  /* [out, retval] */ LONG * return_value ) = 0;
+	virtual STDMETHODIMP class_count(  /* [out, retval] */ ULONG * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List of system's clusters.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP system_clusters(  /* [out, retval] */ SAFEARRAY *  * names ) = 0;
+	virtual STDMETHODIMP system_clusters(  /* [out, retval] */ ecom_eiffel_compiler::IEnumCluster * * some_clusters ) = 0;
 
 
 	/*-----------------------------------------------------------

@@ -30,7 +30,7 @@ ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::~IEiffelSystemBrowser_impl
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::system_classes(  /* [out, retval] */ SAFEARRAY *  * names )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::system_classes(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_classes )
 
 /*-----------------------------------------------------------
 	List of classes in system.
@@ -49,18 +49,18 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::system_classe
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*names = rt_ec.ccom_ec_safearray_bstr (eif_access (tmp_object));
+		*some_classes = grt_ec_Eif_compiler.ccom_ec_pointed_interface_18 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*names = NULL;
+		*some_classes = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::class_count(  /* [out, retval] */ LONG * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::class_count(  /* [out, retval] */ ULONG * return_value )
 
 /*-----------------------------------------------------------
 	Number of classes in system.
@@ -76,14 +76,14 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::class_count( 
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "class_count", EIF_INTEGER);
-	*return_value = (LONG)tmp_value;
+	*return_value = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::system_clusters(  /* [out, retval] */ SAFEARRAY *  * names )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::system_clusters(  /* [out, retval] */ ecom_eiffel_compiler::IEnumCluster * * some_clusters )
 
 /*-----------------------------------------------------------
 	List of system's clusters.
@@ -102,11 +102,11 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::system_cluste
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*names = rt_ec.ccom_ec_safearray_bstr (eif_access (tmp_object));
+		*some_clusters = grt_ec_Eif_compiler.ccom_ec_pointed_interface_22 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*names = NULL;
+		*some_clusters = NULL;
 	
 	END_ECATCH;
 	return S_OK;
@@ -160,7 +160,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::cluster_descr
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_24 (eif_access (tmp_object));
+		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_26 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -197,7 +197,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::class_descrip
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_27 (eif_access (tmp_object));
+		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_29 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -239,7 +239,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::feature_descr
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_30 (eif_access (tmp_object));
+		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_32 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else

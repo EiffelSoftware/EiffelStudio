@@ -27,6 +27,26 @@ class IEiffelClusterDescriptor;
 extern "C" {
 #endif
 
+#ifndef __ecom_eiffel_compiler_IEnumClass_FWD_DEFINED__
+#define __ecom_eiffel_compiler_IEnumClass_FWD_DEFINED__
+namespace ecom_eiffel_compiler
+{
+class IEnumClass;
+}
+#endif
+
+
+
+#ifndef __ecom_eiffel_compiler_IEnumCluster_FWD_DEFINED__
+#define __ecom_eiffel_compiler_IEnumCluster_FWD_DEFINED__
+namespace ecom_eiffel_compiler
+{
+class IEnumCluster;
+}
+#endif
+
+
+
 #ifdef __cplusplus
 extern "C" {
 #ifndef __ecom_eiffel_compiler_IEiffelClusterDescriptor_INTERFACE_DEFINED__
@@ -54,25 +74,25 @@ public:
 	/*-----------------------------------------------------------
 	List of classes in cluster.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP classes(  /* [out, retval] */ VARIANT * some_classes ) = 0;
+	virtual STDMETHODIMP classes(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_classes ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of classes in cluster.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP class_count(  /* [out, retval] */ LONG * return_value ) = 0;
+	virtual STDMETHODIMP class_count(  /* [out, retval] */ ULONG * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List of subclusters in cluster.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP clusters(  /* [out, retval] */ VARIANT * some_clusters ) = 0;
+	virtual STDMETHODIMP clusters(  /* [out, retval] */ ecom_eiffel_compiler::IEnumCluster * * some_clusters ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of subclusters in cluster.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP cluster_count(  /* [out, retval] */ LONG * return_value ) = 0;
+	virtual STDMETHODIMP cluster_count(  /* [out, retval] */ ULONG * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------

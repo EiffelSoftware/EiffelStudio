@@ -85,73 +85,73 @@ public:
 	/*-----------------------------------------------------------
 	List of all feature callers, includding callers of ancestor and descendant versions.
 	-----------------------------------------------------------*/
-	STDMETHODIMP all_callers(  /* [out, retval] */ VARIANT * some_callers );
+	STDMETHODIMP all_callers(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_callers );
 
 
 	/*-----------------------------------------------------------
 	Number of all callers.
 	-----------------------------------------------------------*/
-	STDMETHODIMP all_callers_count(  /* [out, retval] */ LONG * return_value );
+	STDMETHODIMP all_callers_count(  /* [out, retval] */ ULONG * return_value );
 
 
 	/*-----------------------------------------------------------
 	List of feature callers.
 	-----------------------------------------------------------*/
-	STDMETHODIMP local_callers(  /* [out, retval] */ VARIANT * some_callers );
+	STDMETHODIMP local_callers(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_callers );
 
 
 	/*-----------------------------------------------------------
 	Number of local callers.
 	-----------------------------------------------------------*/
-	STDMETHODIMP local_callers_count(  /* [out, retval] */ LONG * return_value );
+	STDMETHODIMP local_callers_count(  /* [out, retval] */ ULONG * return_value );
 
 
 	/*-----------------------------------------------------------
 	List of feature callers, including callers of descendant versions.
 	-----------------------------------------------------------*/
-	STDMETHODIMP descendant_callers(  /* [out, retval] */ VARIANT * some_callers );
+	STDMETHODIMP descendant_callers(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_callers );
 
 
 	/*-----------------------------------------------------------
 	Number of descendant callers.
 	-----------------------------------------------------------*/
-	STDMETHODIMP descendant_callers_count(  /* [out, retval] */ LONG * return_value );
+	STDMETHODIMP descendant_callers_count(  /* [out, retval] */ ULONG * return_value );
 
 
 	/*-----------------------------------------------------------
 	List of implementers.
 	-----------------------------------------------------------*/
-	STDMETHODIMP implementers(  /* [out, retval] */ VARIANT * some_implementers );
+	STDMETHODIMP implementers(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_implementers );
 
 
 	/*-----------------------------------------------------------
 	Number of feature implementers.
 	-----------------------------------------------------------*/
-	STDMETHODIMP implementer_count(  /* [out, retval] */ LONG * return_value );
+	STDMETHODIMP implementer_count(  /* [out, retval] */ ULONG * return_value );
 
 
 	/*-----------------------------------------------------------
 	List of ancestor versions.
 	-----------------------------------------------------------*/
-	STDMETHODIMP ancestor_versions(  /* [out, retval] */ VARIANT * some_implementers );
+	STDMETHODIMP ancestor_versions(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_implementers );
 
 
 	/*-----------------------------------------------------------
 	Number of ancestor versions.
 	-----------------------------------------------------------*/
-	STDMETHODIMP ancestor_version_count(  /* [out, retval] */ LONG * return_value );
+	STDMETHODIMP ancestor_version_count(  /* [out, retval] */ ULONG * return_value );
 
 
 	/*-----------------------------------------------------------
 	List of descendant versions.
 	-----------------------------------------------------------*/
-	STDMETHODIMP descendant_versions(  /* [out, retval] */ VARIANT * some_implementers );
+	STDMETHODIMP descendant_versions(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_implementers );
 
 
 	/*-----------------------------------------------------------
 	Number of descendant versions.
 	-----------------------------------------------------------*/
-	STDMETHODIMP descendant_version_count(  /* [out, retval] */ LONG * return_value );
+	STDMETHODIMP descendant_version_count(  /* [out, retval] */ ULONG * return_value );
 
 
 	/*-----------------------------------------------------------

@@ -61,7 +61,7 @@ feature -- Access
 			Result := ccom_signature (initializer)
 		end
 
-	all_callers: ECOM_VARIANT is
+	all_callers: IENUM_FEATURE_INTERFACE is
 			-- List of all feature callers, includding callers of ancestor and descendant versions.
 		do
 			Result := ccom_all_callers (initializer)
@@ -73,7 +73,7 @@ feature -- Access
 			Result := ccom_all_callers_count (initializer)
 		end
 
-	local_callers: ECOM_VARIANT is
+	local_callers: IENUM_FEATURE_INTERFACE is
 			-- List of feature callers.
 		do
 			Result := ccom_local_callers (initializer)
@@ -85,7 +85,7 @@ feature -- Access
 			Result := ccom_local_callers_count (initializer)
 		end
 
-	descendant_callers: ECOM_VARIANT is
+	descendant_callers: IENUM_FEATURE_INTERFACE is
 			-- List of feature callers, including callers of descendant versions.
 		do
 			Result := ccom_descendant_callers (initializer)
@@ -97,7 +97,7 @@ feature -- Access
 			Result := ccom_descendant_callers_count (initializer)
 		end
 
-	implementers: ECOM_VARIANT is
+	implementers: IENUM_FEATURE_INTERFACE is
 			-- List of implementers.
 		do
 			Result := ccom_implementers (initializer)
@@ -109,7 +109,7 @@ feature -- Access
 			Result := ccom_implementer_count (initializer)
 		end
 
-	ancestor_versions: ECOM_VARIANT is
+	ancestor_versions: IENUM_FEATURE_INTERFACE is
 			-- List of ancestor versions.
 		do
 			Result := ccom_ancestor_versions (initializer)
@@ -121,7 +121,7 @@ feature -- Access
 			Result := ccom_ancestor_version_count (initializer)
 		end
 
-	descendant_versions: ECOM_VARIANT is
+	descendant_versions: IENUM_FEATURE_INTERFACE is
 			-- List of descendant versions.
 		do
 			Result := ccom_descendant_versions (initializer)
@@ -285,7 +285,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_all_callers (cpp_obj: POINTER): ECOM_VARIANT is
+	ccom_all_callers (cpp_obj: POINTER): IENUM_FEATURE_INTERFACE is
 			-- List of all feature callers, includding callers of ancestor and descendant versions.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
@@ -297,7 +297,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
-	ccom_local_callers (cpp_obj: POINTER): ECOM_VARIANT is
+	ccom_local_callers (cpp_obj: POINTER): IENUM_FEATURE_INTERFACE is
 			-- List of feature callers.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
@@ -309,7 +309,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
-	ccom_descendant_callers (cpp_obj: POINTER): ECOM_VARIANT is
+	ccom_descendant_callers (cpp_obj: POINTER): IENUM_FEATURE_INTERFACE is
 			-- List of feature callers, including callers of descendant versions.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
@@ -321,7 +321,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
-	ccom_implementers (cpp_obj: POINTER): ECOM_VARIANT is
+	ccom_implementers (cpp_obj: POINTER): IENUM_FEATURE_INTERFACE is
 			-- List of implementers.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
@@ -333,7 +333,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
-	ccom_ancestor_versions (cpp_obj: POINTER): ECOM_VARIANT is
+	ccom_ancestor_versions (cpp_obj: POINTER): IENUM_FEATURE_INTERFACE is
 			-- List of ancestor versions.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
@@ -345,7 +345,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
-	ccom_descendant_versions (cpp_obj: POINTER): ECOM_VARIANT is
+	ccom_descendant_versions (cpp_obj: POINTER): IENUM_FEATURE_INTERFACE is
 			-- List of descendant versions.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"

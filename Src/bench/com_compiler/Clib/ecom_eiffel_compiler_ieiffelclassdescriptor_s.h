@@ -27,6 +27,26 @@ class IEiffelClassDescriptor;
 extern "C" {
 #endif
 
+#ifndef __ecom_eiffel_compiler_IEnumFeature_FWD_DEFINED__
+#define __ecom_eiffel_compiler_IEnumFeature_FWD_DEFINED__
+namespace ecom_eiffel_compiler
+{
+class IEnumFeature;
+}
+#endif
+
+
+
+#ifndef __ecom_eiffel_compiler_IEnumClass_FWD_DEFINED__
+#define __ecom_eiffel_compiler_IEnumClass_FWD_DEFINED__
+namespace ecom_eiffel_compiler
+{
+class IEnumClass;
+}
+#endif
+
+
+
 #ifdef __cplusplus
 extern "C" {
 #ifndef __ecom_eiffel_compiler_IEiffelClassDescriptor_INTERFACE_DEFINED__
@@ -66,73 +86,73 @@ public:
 	/*-----------------------------------------------------------
 	List of class features.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP features(  /* [out, retval] */ VARIANT * some_features ) = 0;
+	virtual STDMETHODIMP features(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_features ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of class features.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP feature_count(  /* [out, retval] */ LONG * return_value ) = 0;
+	virtual STDMETHODIMP feature_count(  /* [out, retval] */ ULONG * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List of class features including ancestor features.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP flat_features(  /* [out, retval] */ VARIANT * some_features ) = 0;
+	virtual STDMETHODIMP flat_features(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_features ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of flat class features.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP flat_feature_count(  /* [out, retval] */ LONG * return_value ) = 0;
+	virtual STDMETHODIMP flat_feature_count(  /* [out, retval] */ ULONG * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List of class clients.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP clients(  /* [out, retval] */ VARIANT * some_clients ) = 0;
+	virtual STDMETHODIMP clients(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_clients ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of class clients.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP client_count(  /* [out, retval] */ LONG * return_value ) = 0;
+	virtual STDMETHODIMP client_count(  /* [out, retval] */ ULONG * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List of class suppliers.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP suppliers(  /* [out, retval] */ VARIANT * some_suppliers ) = 0;
+	virtual STDMETHODIMP suppliers(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_suppliers ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of class suppliers.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP supplier_count(  /* [out, retval] */ LONG * return_value ) = 0;
+	virtual STDMETHODIMP supplier_count(  /* [out, retval] */ ULONG * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List of direct ancestors of class.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP ancestors(  /* [out, retval] */ VARIANT * some_ancestors ) = 0;
+	virtual STDMETHODIMP ancestors(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_ancestors ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of direct ancestors.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP ancestor_count(  /* [out, retval] */ LONG * return_value ) = 0;
+	virtual STDMETHODIMP ancestor_count(  /* [out, retval] */ ULONG * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List of direct descendants of class.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP descendants(  /* [out, retval] */ VARIANT * some_descendants ) = 0;
+	virtual STDMETHODIMP descendants(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_descendants ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of direct descendants.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP descendant_count(  /* [out, retval] */ LONG * return_value ) = 0;
+	virtual STDMETHODIMP descendant_count(  /* [out, retval] */ ULONG * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------

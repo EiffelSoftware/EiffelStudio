@@ -37,7 +37,7 @@ feature -- Access
 			Result := ccom_description (initializer)
 		end
 
-	classes: ECOM_VARIANT is
+	classes: IENUM_CLASS_INTERFACE is
 			-- List of classes in cluster.
 		do
 			Result := ccom_classes (initializer)
@@ -49,7 +49,7 @@ feature -- Access
 			Result := ccom_class_count (initializer)
 		end
 
-	clusters: ECOM_VARIANT is
+	clusters: IENUM_CLUSTER_INTERFACE is
 			-- List of subclusters in cluster.
 		do
 			Result := ccom_clusters (initializer)
@@ -89,7 +89,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_classes (cpp_obj: POINTER): ECOM_VARIANT is
+	ccom_classes (cpp_obj: POINTER): IENUM_CLASS_INTERFACE is
 			-- List of classes in cluster.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
@@ -101,7 +101,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
-	ccom_clusters (cpp_obj: POINTER): ECOM_VARIANT is
+	ccom_clusters (cpp_obj: POINTER): IENUM_CLUSTER_INTERFACE is
 			-- List of subclusters in cluster.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"

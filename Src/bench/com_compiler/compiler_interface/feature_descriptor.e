@@ -135,16 +135,13 @@ feature -- Access
 			result_exists: Result /= void			
 		end
 
-	all_callers: ECOM_VARIANT is
+	all_callers: FEATURE_ENUMERATOR is
 			-- List of all feature callers, including callers of ancestor and descendant versions.
 		local
-			res: ARRAY [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
-			ecom_res: ECOM_ARRAY [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
+			res: ARRAYED_LIST [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
 		do
 			res := all_callers_internal
-			create ecom_res.make_from_array (res, 1, <<1>>, <<res.count>>)
-			create Result.make
-			Result.set_unknown_array (ecom_res)
+			create Result.make (res)
 		ensure then
 			result_exists: Result /= Void
 		end
@@ -155,16 +152,13 @@ feature -- Access
 			Result := all_callers_internal.count
 		end
 		
-	local_callers: ECOM_VARIANT is
+	local_callers: FEATURE_ENUMERATOR is
 			-- List of feature callers.
 		local
-			res: ARRAY [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
-			ecom_res: ECOM_ARRAY [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
+			res: ARRAYED_LIST [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
 		do
 			res := local_callers_internal
-			create ecom_res.make_from_array (res, 1, <<1>>, <<res.count>>)
-			create Result.make
-			Result.set_unknown_array (ecom_res)
+			create Result.make (res)
 		ensure then
 			result_exists: Result /= Void
 		end
@@ -175,16 +169,13 @@ feature -- Access
 			Result := local_callers_internal.count
 		end
 		
-	descendant_callers: ECOM_VARIANT is
+	descendant_callers: FEATURE_ENUMERATOR is
 			-- List of feature callers, including callers of descendant versions.
 		local
 			res: ARRAYED_LIST [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
-			ecom_res: ECOM_ARRAY [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
 		do
 			res := descendant_callers_internal
-			create ecom_res.make_from_array (res, 1, <<1>>, <<res.count>>)
-			create Result.make
-			Result.set_unknown_array (ecom_res)
+			create Result.make (res)
 		ensure then
 			result_exists: Result /= Void
 		end
@@ -195,7 +186,7 @@ feature -- Access
 			Result := descendant_callers_internal.count
 		end
 		
-	implementers: ECOM_VARIANT is
+	implementers: FEATURE_ENUMERATOR is
 			-- List of implementers.
 		local
 			classes: PART_SORTED_TWO_WAY_LIST [CLASS_C]
@@ -204,9 +195,8 @@ feature -- Access
 			current_feature: E_FEATURE
 			current_class, written_cl, c: CLASS_C
 			precursors: LIST [CLASS_C]
-			rc, i, nb: INTEGER
-			res: ARRAY [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
-			ecom_res: ECOM_ARRAY [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
+			rc, i: INTEGER
+			res: ARRAYED_LIST [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
 			desc: FEATURE_DESCRIPTOR
 			feat: FEATURE_I
 		do
@@ -224,12 +214,11 @@ feature -- Access
 			end
 			rout_id_set := current_feature.rout_id_set
 			rc := rout_id_set.count
-			create res.make (1, classes.count * rc)
+			create res.make (classes.count * rc)
 			from
-				i := 1
-				nb := 1
+				i := 0
 			until
-				i > rc
+				i >= rc
 			loop
 				rout_id := rout_id_set.item (i)
 				from
@@ -241,19 +230,13 @@ feature -- Access
 					feat := c.feature_table.origin_table.item (rout_id)
 					if feat /= Void then
 						create {FEATURE_DESCRIPTOR} desc.make_with_class_i_and_feature_i (c.lace_class, feat)
-						res.put (desc, nb)
-						nb := nb + 1
+						res.extend (desc)
 					end
 					classes.forth
 				end
 				i := i + 1
 			end
-			if nb > 1 then
-				res.resize (1, nb - 1)
-				create ecom_res.make_from_array (res, 1, <<1>>, <<res.count>>)
-				create Result.make
-				Result.set_unknown_array (ecom_res)
-			end
+			create Result.make (res)
 		ensure then
 			result_exists: Result /= void			
 		end
@@ -261,19 +244,16 @@ feature -- Access
 	implementer_count: INTEGER is
 			-- Number of feature implementers.
 		do
-			Result := implementers.unknown_interface_array.count
+			Result := implementers.count
 		end
 
-	ancestor_versions: ECOM_VARIANT is
+	ancestor_versions: FEATURE_ENUMERATOR is
 			-- List of ancestor versions.
 		local
-			res: ARRAY [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
-			ecom_res: ECOM_ARRAY [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
+			res: ARRAYED_LIST [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
 		do
 			res := ancestor_versions_internal
-			create ecom_res.make_from_array (res, 1, <<1>>, <<res.count>>)
-			create Result.make
-			Result.set_unknown_array (ecom_res)
+			create Result.make (res)
 		ensure then
 			result_exists: Result /= void	
 		end
@@ -284,16 +264,13 @@ feature -- Access
 			Result := ancestor_versions_internal.count
 		end
 		
-	descendant_versions: ECOM_VARIANT is
+	descendant_versions: FEATURE_ENUMERATOR is
 			-- List of descendant versions.
 		local
-			res: ARRAY [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
-			ecom_res: ECOM_ARRAY [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
+			res: ARRAYED_LIST [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
 		do
 			res := descendant_versions_internal
-			create ecom_res.make_from_array (res, 1, <<1>>, <<res.count>>)
-			create Result.make
-			Result.set_unknown_array (ecom_res)
+			create Result.make (res)
 		end
 
 	descendant_version_count: INTEGER is

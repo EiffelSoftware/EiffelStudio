@@ -36,7 +36,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	features: ECOM_VARIANT is
+	features: IENUM_FEATURE_INTERFACE is
 			-- List of class features.
 		do
 			-- Put Implementation here.
@@ -48,7 +48,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	flat_features: ECOM_VARIANT is
+	flat_features: IENUM_FEATURE_INTERFACE is
 			-- List of class features including ancestor features.
 		do
 			-- Put Implementation here.
@@ -60,7 +60,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	clients: ECOM_VARIANT is
+	clients: IENUM_CLASS_INTERFACE is
 			-- List of class clients.
 		do
 			-- Put Implementation here.
@@ -72,7 +72,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	suppliers: ECOM_VARIANT is
+	suppliers: IENUM_CLASS_INTERFACE is
 			-- List of class suppliers.
 		do
 			-- Put Implementation here.
@@ -84,7 +84,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	ancestors: ECOM_VARIANT is
+	ancestors: IENUM_CLASS_INTERFACE is
 			-- List of direct ancestors of class.
 		do
 			-- Put Implementation here.
@@ -96,7 +96,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	descendants: ECOM_VARIANT is
+	descendants: IENUM_CLASS_INTERFACE is
 			-- List of direct descendants of class.
 		do
 			-- Put Implementation here.

@@ -48,7 +48,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	all_callers: ECOM_VARIANT is
+	all_callers: IENUM_FEATURE_INTERFACE is
 			-- List of all feature callers, includding callers of ancestor and descendant versions.
 		do
 			-- Put Implementation here.
@@ -60,7 +60,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	local_callers: ECOM_VARIANT is
+	local_callers: IENUM_FEATURE_INTERFACE is
 			-- List of feature callers.
 		do
 			-- Put Implementation here.
@@ -72,7 +72,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	descendant_callers: ECOM_VARIANT is
+	descendant_callers: IENUM_FEATURE_INTERFACE is
 			-- List of feature callers, including callers of descendant versions.
 		do
 			-- Put Implementation here.
@@ -84,7 +84,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	implementers: ECOM_VARIANT is
+	implementers: IENUM_FEATURE_INTERFACE is
 			-- List of implementers.
 		do
 			-- Put Implementation here.
@@ -96,7 +96,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	ancestor_versions: ECOM_VARIANT is
+	ancestor_versions: IENUM_FEATURE_INTERFACE is
 			-- List of ancestor versions.
 		do
 			-- Put Implementation here.
@@ -108,7 +108,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	descendant_versions: ECOM_VARIANT is
+	descendant_versions: IENUM_FEATURE_INTERFACE is
 			-- List of descendant versions.
 		do
 			-- Put Implementation here.

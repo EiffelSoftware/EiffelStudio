@@ -24,7 +24,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	classes: ECOM_VARIANT is
+	classes: IENUM_CLASS_INTERFACE is
 			-- List of classes in cluster.
 		do
 			-- Put Implementation here.
@@ -36,7 +36,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	clusters: ECOM_VARIANT is
+	clusters: IENUM_CLUSTER_INTERFACE is
 			-- List of subclusters in cluster.
 		do
 			-- Put Implementation here.

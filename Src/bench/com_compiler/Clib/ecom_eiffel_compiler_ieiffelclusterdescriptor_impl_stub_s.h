@@ -55,25 +55,25 @@ public:
 	/*-----------------------------------------------------------
 	List of classes in cluster.
 	-----------------------------------------------------------*/
-	STDMETHODIMP classes(  /* [out, retval] */ VARIANT * some_classes );
+	STDMETHODIMP classes(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_classes );
 
 
 	/*-----------------------------------------------------------
 	Number of classes in cluster.
 	-----------------------------------------------------------*/
-	STDMETHODIMP class_count(  /* [out, retval] */ LONG * return_value );
+	STDMETHODIMP class_count(  /* [out, retval] */ ULONG * return_value );
 
 
 	/*-----------------------------------------------------------
 	List of subclusters in cluster.
 	-----------------------------------------------------------*/
-	STDMETHODIMP clusters(  /* [out, retval] */ VARIANT * some_clusters );
+	STDMETHODIMP clusters(  /* [out, retval] */ ecom_eiffel_compiler::IEnumCluster * * some_clusters );
 
 
 	/*-----------------------------------------------------------
 	Number of subclusters in cluster.
 	-----------------------------------------------------------*/
-	STDMETHODIMP cluster_count(  /* [out, retval] */ LONG * return_value );
+	STDMETHODIMP cluster_count(  /* [out, retval] */ ULONG * return_value );
 
 
 	/*-----------------------------------------------------------

@@ -12,7 +12,7 @@ inherit
 
 feature -- Access
 
-	system_classes: ECOM_ARRAY [STRING] is
+	system_classes: IENUM_CLASS_INTERFACE is
 			-- List of classes in system.
 		do
 			-- Put Implementation here.
@@ -24,7 +24,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	system_clusters: ECOM_ARRAY [STRING] is
+	system_clusters: IENUM_CLUSTER_INTERFACE is
 			-- List of system's clusters.
 		do
 			-- Put Implementation here.

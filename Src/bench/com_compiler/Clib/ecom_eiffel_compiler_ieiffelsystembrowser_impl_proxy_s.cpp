@@ -64,7 +64,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_system
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	SAFEARRAY *  ret_value = 0;
+	ecom_eiffel_compiler::IEnumClass * ret_value = 0;
 	
 	hr = p_IEiffelSystemBrowser->system_classes( &ret_value);
 	if (FAILED (hr))
@@ -75,8 +75,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_system
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_safearray_bstr (ret_value));
-	rt_ce.free_memory_safearray (ret_value);
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_18 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -98,7 +97,7 @@ EIF_INTEGER ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_class_co
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	LONG ret_value = 0;
+	ULONG ret_value = 0;
 	
 	hr = p_IEiffelSystemBrowser->class_count( &ret_value);
 	if (FAILED (hr))
@@ -131,7 +130,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_system
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	SAFEARRAY *  ret_value = 0;
+	ecom_eiffel_compiler::IEnumCluster * ret_value = 0;
 	
 	hr = p_IEiffelSystemBrowser->system_clusters( &ret_value);
 	if (FAILED (hr))
@@ -142,8 +141,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_system
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_safearray_bstr (ret_value));
-	rt_ce.free_memory_safearray (ret_value);
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_22 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -212,7 +210,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_cluste
 	
 	rt_ce.free_memory_bstr (tmp_cluster_name);
 
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_24 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_26 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -248,7 +246,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_class_
 	
 	rt_ce.free_memory_bstr (tmp_class_name1);
 
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_27 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_29 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -287,7 +285,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_featur
 	rt_ce.free_memory_bstr (tmp_class_name1);
 rt_ce.free_memory_bstr (tmp_feature_name);
 
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_30 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_32 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

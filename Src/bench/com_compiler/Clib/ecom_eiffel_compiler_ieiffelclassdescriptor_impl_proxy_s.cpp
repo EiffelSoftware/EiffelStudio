@@ -200,19 +200,9 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy::ccom_feat
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
+	ecom_eiffel_compiler::IEnumFeature * ret_value = 0;
 	
-	EIF_TYPE_ID tid = -1;
-	EIF_OBJECT result = 0;
-	EIF_PROCEDURE make = 0;
-	VARIANT * ret_value;
-
-	tid = eif_type_id ("ECOM_VARIANT");
-	make = eif_procedure ("make", tid);
-	result = eif_create (tid);
-	make (eif_access (result));
-	ret_value = (VARIANT *)eif_field (eif_access (result), "item", EIF_POINTER);
-	
-	hr = p_IEiffelClassDescriptor->features( ret_value);
+	hr = p_IEiffelClassDescriptor->features( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -221,7 +211,8 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy::ccom_feat
 	};
 	
 	
-	return eif_wean (result);
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_42 (ret_value));
+	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -242,7 +233,7 @@ EIF_INTEGER ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy::ccom_featur
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	LONG ret_value = 0;
+	ULONG ret_value = 0;
 	
 	hr = p_IEiffelClassDescriptor->feature_count( &ret_value);
 	if (FAILED (hr))
@@ -275,19 +266,9 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy::ccom_flat
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
+	ecom_eiffel_compiler::IEnumFeature * ret_value = 0;
 	
-	EIF_TYPE_ID tid = -1;
-	EIF_OBJECT result = 0;
-	EIF_PROCEDURE make = 0;
-	VARIANT * ret_value;
-
-	tid = eif_type_id ("ECOM_VARIANT");
-	make = eif_procedure ("make", tid);
-	result = eif_create (tid);
-	make (eif_access (result));
-	ret_value = (VARIANT *)eif_field (eif_access (result), "item", EIF_POINTER);
-	
-	hr = p_IEiffelClassDescriptor->flat_features( ret_value);
+	hr = p_IEiffelClassDescriptor->flat_features( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -296,7 +277,8 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy::ccom_flat
 	};
 	
 	
-	return eif_wean (result);
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_42 (ret_value));
+	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -317,7 +299,7 @@ EIF_INTEGER ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy::ccom_flat_f
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	LONG ret_value = 0;
+	ULONG ret_value = 0;
 	
 	hr = p_IEiffelClassDescriptor->flat_feature_count( &ret_value);
 	if (FAILED (hr))
@@ -350,19 +332,9 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy::ccom_clie
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
+	ecom_eiffel_compiler::IEnumClass * ret_value = 0;
 	
-	EIF_TYPE_ID tid = -1;
-	EIF_OBJECT result = 0;
-	EIF_PROCEDURE make = 0;
-	VARIANT * ret_value;
-
-	tid = eif_type_id ("ECOM_VARIANT");
-	make = eif_procedure ("make", tid);
-	result = eif_create (tid);
-	make (eif_access (result));
-	ret_value = (VARIANT *)eif_field (eif_access (result), "item", EIF_POINTER);
-	
-	hr = p_IEiffelClassDescriptor->clients( ret_value);
+	hr = p_IEiffelClassDescriptor->clients( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -371,7 +343,8 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy::ccom_clie
 	};
 	
 	
-	return eif_wean (result);
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_18 (ret_value));
+	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -392,7 +365,7 @@ EIF_INTEGER ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy::ccom_client
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	LONG ret_value = 0;
+	ULONG ret_value = 0;
 	
 	hr = p_IEiffelClassDescriptor->client_count( &ret_value);
 	if (FAILED (hr))
@@ -425,19 +398,9 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy::ccom_supp
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
+	ecom_eiffel_compiler::IEnumClass * ret_value = 0;
 	
-	EIF_TYPE_ID tid = -1;
-	EIF_OBJECT result = 0;
-	EIF_PROCEDURE make = 0;
-	VARIANT * ret_value;
-
-	tid = eif_type_id ("ECOM_VARIANT");
-	make = eif_procedure ("make", tid);
-	result = eif_create (tid);
-	make (eif_access (result));
-	ret_value = (VARIANT *)eif_field (eif_access (result), "item", EIF_POINTER);
-	
-	hr = p_IEiffelClassDescriptor->suppliers( ret_value);
+	hr = p_IEiffelClassDescriptor->suppliers( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -446,7 +409,8 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy::ccom_supp
 	};
 	
 	
-	return eif_wean (result);
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_18 (ret_value));
+	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -467,7 +431,7 @@ EIF_INTEGER ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy::ccom_suppli
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	LONG ret_value = 0;
+	ULONG ret_value = 0;
 	
 	hr = p_IEiffelClassDescriptor->supplier_count( &ret_value);
 	if (FAILED (hr))
@@ -500,19 +464,9 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy::ccom_ance
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
+	ecom_eiffel_compiler::IEnumClass * ret_value = 0;
 	
-	EIF_TYPE_ID tid = -1;
-	EIF_OBJECT result = 0;
-	EIF_PROCEDURE make = 0;
-	VARIANT * ret_value;
-
-	tid = eif_type_id ("ECOM_VARIANT");
-	make = eif_procedure ("make", tid);
-	result = eif_create (tid);
-	make (eif_access (result));
-	ret_value = (VARIANT *)eif_field (eif_access (result), "item", EIF_POINTER);
-	
-	hr = p_IEiffelClassDescriptor->ancestors( ret_value);
+	hr = p_IEiffelClassDescriptor->ancestors( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -521,7 +475,8 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy::ccom_ance
 	};
 	
 	
-	return eif_wean (result);
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_18 (ret_value));
+	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -542,7 +497,7 @@ EIF_INTEGER ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy::ccom_ancest
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	LONG ret_value = 0;
+	ULONG ret_value = 0;
 	
 	hr = p_IEiffelClassDescriptor->ancestor_count( &ret_value);
 	if (FAILED (hr))
@@ -575,19 +530,9 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy::ccom_desc
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
+	ecom_eiffel_compiler::IEnumClass * ret_value = 0;
 	
-	EIF_TYPE_ID tid = -1;
-	EIF_OBJECT result = 0;
-	EIF_PROCEDURE make = 0;
-	VARIANT * ret_value;
-
-	tid = eif_type_id ("ECOM_VARIANT");
-	make = eif_procedure ("make", tid);
-	result = eif_create (tid);
-	make (eif_access (result));
-	ret_value = (VARIANT *)eif_field (eif_access (result), "item", EIF_POINTER);
-	
-	hr = p_IEiffelClassDescriptor->descendants( ret_value);
+	hr = p_IEiffelClassDescriptor->descendants( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -596,7 +541,8 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy::ccom_desc
 	};
 	
 	
-	return eif_wean (result);
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_18 (ret_value));
+	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -617,7 +563,7 @@ EIF_INTEGER ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy::ccom_descen
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	LONG ret_value = 0;
+	ULONG ret_value = 0;
 	
 	hr = p_IEiffelClassDescriptor->descendant_count( &ret_value);
 	if (FAILED (hr))

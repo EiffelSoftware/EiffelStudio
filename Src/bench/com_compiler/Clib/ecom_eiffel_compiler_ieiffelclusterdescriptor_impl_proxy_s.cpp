@@ -132,19 +132,9 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy::ccom_cl
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
+	ecom_eiffel_compiler::IEnumClass * ret_value = 0;
 	
-	EIF_TYPE_ID tid = -1;
-	EIF_OBJECT result = 0;
-	EIF_PROCEDURE make = 0;
-	VARIANT * ret_value;
-
-	tid = eif_type_id ("ECOM_VARIANT");
-	make = eif_procedure ("make", tid);
-	result = eif_create (tid);
-	make (eif_access (result));
-	ret_value = (VARIANT *)eif_field (eif_access (result), "item", EIF_POINTER);
-	
-	hr = p_IEiffelClusterDescriptor->classes( ret_value);
+	hr = p_IEiffelClusterDescriptor->classes( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -153,7 +143,8 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy::ccom_cl
 	};
 	
 	
-	return eif_wean (result);
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_18 (ret_value));
+	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -174,7 +165,7 @@ EIF_INTEGER ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy::ccom_clas
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	LONG ret_value = 0;
+	ULONG ret_value = 0;
 	
 	hr = p_IEiffelClusterDescriptor->class_count( &ret_value);
 	if (FAILED (hr))
@@ -207,19 +198,9 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy::ccom_cl
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
+	ecom_eiffel_compiler::IEnumCluster * ret_value = 0;
 	
-	EIF_TYPE_ID tid = -1;
-	EIF_OBJECT result = 0;
-	EIF_PROCEDURE make = 0;
-	VARIANT * ret_value;
-
-	tid = eif_type_id ("ECOM_VARIANT");
-	make = eif_procedure ("make", tid);
-	result = eif_create (tid);
-	make (eif_access (result));
-	ret_value = (VARIANT *)eif_field (eif_access (result), "item", EIF_POINTER);
-	
-	hr = p_IEiffelClusterDescriptor->clusters( ret_value);
+	hr = p_IEiffelClusterDescriptor->clusters( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -228,7 +209,8 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy::ccom_cl
 	};
 	
 	
-	return eif_wean (result);
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_22 (ret_value));
+	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -249,7 +231,7 @@ EIF_INTEGER ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy::ccom_clus
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	LONG ret_value = 0;
+	ULONG ret_value = 0;
 	
 	hr = p_IEiffelClusterDescriptor->cluster_count( &ret_value);
 	if (FAILED (hr))

@@ -22,6 +22,10 @@ class IEiffelClusterDescriptor_impl_proxy;
 
 #include "ecom_eiffel_compiler_IEiffelClusterDescriptor_s.h"
 
+#include "ecom_eiffel_compiler_IEnumClass_s.h"
+
+#include "ecom_eiffel_compiler_IEnumCluster_s.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

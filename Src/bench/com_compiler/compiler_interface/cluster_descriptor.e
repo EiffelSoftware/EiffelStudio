@@ -50,31 +50,25 @@ feature -- Access
 			result_exists: Result /= Void
 		end
 
-	classes: ECOM_VARIANT is
+	classes: CLASS_ENUMERATOR is
 			-- List of classes in cluster.
 		local
-			res: ARRAY [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
-			ecom_res: ECOM_ARRAY [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
+			res: ARRAYED_LIST [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
 			l: EXTEND_TABLE [CLASS_I, STRING]
 			class_desc: CLASS_DESCRIPTOR
-			i: INTEGER
 		do
 			l := compiler_cluster.classes
-			create res.make (1, l.count)
+			create res.make (l.count)
 			from
 				l.start
-				i := 1
 			until
 				l.after
 			loop
 				create class_desc.make_with_class_i (l.item_for_iteration)
-				res.put (class_desc, i)
-				i := i + 1
+				res.extend (class_desc)
 				l.forth
 			end
-			create ecom_res.make_from_array (res, 1, <<1>>, <<res.count>>)
-			create Result.make
-			Result.set_unknown_array (ecom_res)
+			create Result.make (res)
 		ensure then
 			result_exists: Result /= Void
 		end
@@ -85,31 +79,25 @@ feature -- Access
 			Result := compiler_cluster.classes.count
 		end
 
-	clusters: ECOM_VARIANT is
+	clusters: CLUSTER_ENUMERATOR is
 			-- List of subclusters in cluster.
 		local
-			res: ARRAY [IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE]
-			ecom_res: ECOM_ARRAY [IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE]
+			res: ARRAYED_LIST [IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE]
 			cluster_desc: CLUSTER_DESCRIPTOR
 			l: ARRAYED_LIST [CLUSTER_I]
-			i:INTEGER
 		do
 			l := compiler_cluster.sub_clusters
-			create res.make (1, l.count)
+			create res.make (l.count)
 			from
 				l.start
-				i := 1
 			until
 				l.after
 			loop
 				create cluster_desc.make_with_cluster_i (l.item)
-				res.put (cluster_desc, i)
-				i := i + 1
+				res.extend (cluster_desc)
 				l.forth
 			end
-			create ecom_res.make_from_array (res, 1, <<1>>, <<res.count>>)
-			create Result.make
-			Result.set_unknown_array (ecom_res)
+			create Result.make (res)
 		ensure then
 			result_exists: Result /= Void
 		end

@@ -25,7 +25,7 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	system_classes: ECOM_ARRAY [STRING] is
+	system_classes: IENUM_CLASS_INTERFACE is
 			-- List of classes in system.
 		do
 			Result := ccom_system_classes (initializer)
@@ -37,7 +37,7 @@ feature -- Access
 			Result := ccom_class_count (initializer)
 		end
 
-	system_clusters: ECOM_ARRAY [STRING] is
+	system_clusters: IENUM_CLUSTER_INTERFACE is
 			-- List of system's clusters.
 		do
 			Result := ccom_system_clusters (initializer)
@@ -83,7 +83,7 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_system_classes (cpp_obj: POINTER): ECOM_ARRAY [STRING] is
+	ccom_system_classes (cpp_obj: POINTER): IENUM_CLASS_INTERFACE is
 			-- List of classes in system.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](): EIF_REFERENCE"
@@ -95,7 +95,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
-	ccom_system_clusters (cpp_obj: POINTER): ECOM_ARRAY [STRING] is
+	ccom_system_clusters (cpp_obj: POINTER): IENUM_CLUSTER_INTERFACE is
 			-- List of system's clusters.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](): EIF_REFERENCE"

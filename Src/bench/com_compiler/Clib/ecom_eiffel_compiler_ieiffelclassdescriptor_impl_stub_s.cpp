@@ -150,7 +150,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::feature_nam
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::features(  /* [out, retval] */ VARIANT * some_features )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::features(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_features )
 
 /*-----------------------------------------------------------
 	List of class features.
@@ -169,18 +169,18 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::features(  
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		VARIANT * tmpsome_features = (VARIANT *) eif_field (eif_access(tmp_object), "item", EIF_POINTER);
-		VariantCopy (some_features, tmpsome_features);
-		
+		*some_features = grt_ec_Eif_compiler.ccom_ec_pointed_interface_42 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
+	else
+		*some_features = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::feature_count(  /* [out, retval] */ LONG * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::feature_count(  /* [out, retval] */ ULONG * return_value )
 
 /*-----------------------------------------------------------
 	Number of class features.
@@ -196,14 +196,14 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::feature_cou
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "feature_count", EIF_INTEGER);
-	*return_value = (LONG)tmp_value;
+	*return_value = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::flat_features(  /* [out, retval] */ VARIANT * some_features )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::flat_features(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_features )
 
 /*-----------------------------------------------------------
 	List of class features including ancestor features.
@@ -222,18 +222,18 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::flat_featur
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		VARIANT * tmpsome_features = (VARIANT *) eif_field (eif_access(tmp_object), "item", EIF_POINTER);
-		VariantCopy (some_features, tmpsome_features);
-		
+		*some_features = grt_ec_Eif_compiler.ccom_ec_pointed_interface_42 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
+	else
+		*some_features = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::flat_feature_count(  /* [out, retval] */ LONG * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::flat_feature_count(  /* [out, retval] */ ULONG * return_value )
 
 /*-----------------------------------------------------------
 	Number of flat class features.
@@ -249,14 +249,14 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::flat_featur
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "flat_feature_count", EIF_INTEGER);
-	*return_value = (LONG)tmp_value;
+	*return_value = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::clients(  /* [out, retval] */ VARIANT * some_clients )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::clients(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_clients )
 
 /*-----------------------------------------------------------
 	List of class clients.
@@ -275,18 +275,18 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::clients(  /
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		VARIANT * tmpsome_clients = (VARIANT *) eif_field (eif_access(tmp_object), "item", EIF_POINTER);
-		VariantCopy (some_clients, tmpsome_clients);
-		
+		*some_clients = grt_ec_Eif_compiler.ccom_ec_pointed_interface_18 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
+	else
+		*some_clients = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::client_count(  /* [out, retval] */ LONG * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::client_count(  /* [out, retval] */ ULONG * return_value )
 
 /*-----------------------------------------------------------
 	Number of class clients.
@@ -302,14 +302,14 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::client_coun
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "client_count", EIF_INTEGER);
-	*return_value = (LONG)tmp_value;
+	*return_value = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::suppliers(  /* [out, retval] */ VARIANT * some_suppliers )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::suppliers(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_suppliers )
 
 /*-----------------------------------------------------------
 	List of class suppliers.
@@ -328,18 +328,18 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::suppliers( 
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		VARIANT * tmpsome_suppliers = (VARIANT *) eif_field (eif_access(tmp_object), "item", EIF_POINTER);
-		VariantCopy (some_suppliers, tmpsome_suppliers);
-		
+		*some_suppliers = grt_ec_Eif_compiler.ccom_ec_pointed_interface_18 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
+	else
+		*some_suppliers = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::supplier_count(  /* [out, retval] */ LONG * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::supplier_count(  /* [out, retval] */ ULONG * return_value )
 
 /*-----------------------------------------------------------
 	Number of class suppliers.
@@ -355,14 +355,14 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::supplier_co
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "supplier_count", EIF_INTEGER);
-	*return_value = (LONG)tmp_value;
+	*return_value = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::ancestors(  /* [out, retval] */ VARIANT * some_ancestors )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::ancestors(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_ancestors )
 
 /*-----------------------------------------------------------
 	List of direct ancestors of class.
@@ -381,18 +381,18 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::ancestors( 
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		VARIANT * tmpsome_ancestors = (VARIANT *) eif_field (eif_access(tmp_object), "item", EIF_POINTER);
-		VariantCopy (some_ancestors, tmpsome_ancestors);
-		
+		*some_ancestors = grt_ec_Eif_compiler.ccom_ec_pointed_interface_18 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
+	else
+		*some_ancestors = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::ancestor_count(  /* [out, retval] */ LONG * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::ancestor_count(  /* [out, retval] */ ULONG * return_value )
 
 /*-----------------------------------------------------------
 	Number of direct ancestors.
@@ -408,14 +408,14 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::ancestor_co
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "ancestor_count", EIF_INTEGER);
-	*return_value = (LONG)tmp_value;
+	*return_value = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::descendants(  /* [out, retval] */ VARIANT * some_descendants )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::descendants(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_descendants )
 
 /*-----------------------------------------------------------
 	List of direct descendants of class.
@@ -434,18 +434,18 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::descendants
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		VARIANT * tmpsome_descendants = (VARIANT *) eif_field (eif_access(tmp_object), "item", EIF_POINTER);
-		VariantCopy (some_descendants, tmpsome_descendants);
-		
+		*some_descendants = grt_ec_Eif_compiler.ccom_ec_pointed_interface_18 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
+	else
+		*some_descendants = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::descendant_count(  /* [out, retval] */ LONG * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::descendant_count(  /* [out, retval] */ ULONG * return_value )
 
 /*-----------------------------------------------------------
 	Number of direct descendants.
@@ -461,7 +461,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::descendant_
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "descendant_count", EIF_INTEGER);
-	*return_value = (LONG)tmp_value;
+	*return_value = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;

@@ -3,8 +3,8 @@
 class P_FILE_ID
 
 inherit
+	P_COMPILER_ID
 
-	P_COMPILER_ID;
 	FILE_ID
 		rename
 			make as make_id
@@ -15,7 +15,6 @@ inherit
 		end
 
 creation
-
 	make
 
 feature -- Access

@@ -14,9 +14,9 @@ creation
 feature -- Access
 
 	packet_number: INTEGER is
-			-- Packet in which the file will be stored
+			-- Packet in which the file will be stored (100 is the default_size)
 		do
-			Result := (internal_id // packet_size) + 1
+			Result := (internal_id // 100) + 1
 		end
 
 	file_name: STRING is
@@ -44,8 +44,5 @@ feature {NONE} -- Implementation
 		once
 			Result := File_counter.item (Normal_compilation)
 		end
-
-	packet_size: INTEGER is 100
-			-- Packet size
 
 end -- class FILE_ID

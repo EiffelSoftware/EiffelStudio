@@ -53,7 +53,12 @@ feature -- Behavior
 			-- Disable back button and setup buttons.
 		do
 			id_back.disable
-			open_project_radio.set_checked
+			if shared_wizard_environment.new_project then
+				open_project_radio.disable
+				create_project_from_com_radio.set_checked
+			else
+				open_project_radio.set_checked
+			end
 			welcome_static.set_font (welcome_font)
 			id_ok.set_focus
 		end

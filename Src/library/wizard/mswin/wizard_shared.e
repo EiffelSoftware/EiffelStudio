@@ -19,7 +19,7 @@ feature -- Access
 	first_window:  WIZARD_WINDOW is
 			-- Main Window ( i.e. the wizard window frame )
 		once
-			create Result.make
+			create Result
 			Result.load_first_state
 		ensure	
 			exists: Result /= Void

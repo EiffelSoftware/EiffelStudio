@@ -71,7 +71,7 @@ feature -- Basic Operations
 			interior_box.extend (message_and_title_box) -- Expandable item
 			main_box.extend (interior_box)
 
-			create tuple.make
+			create tuple
 			choice_box.set_help_context (agent create_help_context (tuple))
 		end
 		

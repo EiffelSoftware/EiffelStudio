@@ -39,34 +39,46 @@ feature {NONE} -- Initialization
 		do
 			widget := gtk_window_new (GTK_WINDOW_TOPLEVEL)
 
+			-- set the events to be handled by the window
 			c_gtk_widget_set_all_events (widget)
-				-- set the events to be handled by the window
 
 			initialize
 
 		end
 
         make_with_owner (par: EV_WINDOW) is
+			-- Create a window with `par' as parent.
+			-- The life of the window will depend on
+			-- the one of `par'.
+		local
+			par_imp: EV_WINDOW_IMP
 		do
+			par_imp ?= par.implementation
+
+			-- Create the window
 			widget := gtk_window_new (GTK_WINDOW_TOPLEVEL)
+
+			-- Attach the window to `par'.
+			gtk_window_set_transient_for (widget, par_imp.widget)
+
+			-- set the events to be handled by the window
+			c_gtk_widget_set_all_events (widget)
+
 			initialize
 		end
 
-	set_parent (par: EV_CONTAINER) is
+	set_parent (par: EV_WINDOW) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
-			-- Before to remove the widget from the
-			-- container, we increment the number of
-			-- reference on the object otherwise gtk
-			-- destroyed the object. And after having
-			-- added the object to another container,
-			-- we remove this supplementary reference.
 		do
 			if parent_imp /= Void then
 				parent_imp := Void
 			end
 			if par /= Void then
 				parent_imp ?= par.implementation
+
+				-- Attach the window to `par'.
+				gtk_window_set_transient_for (widget, parent_imp.widget)
 			end
 		end
 

@@ -14,6 +14,7 @@
 #ifndef _eif_constants_h_
 #define _eif_constants_h_
 
+#include <signal.h>
 
 	/*------------*/
 	/*  except.h  */

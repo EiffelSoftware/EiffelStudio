@@ -477,20 +477,29 @@ feature {NONE} -- to implement force
 				found := equal (l_array.item (j).item.id, id)
 				j := j - 1
 			end
-			-- found IS true
-			j := j + 1
-			from 
-				k := j
-				last_removed_item := l_array.item (j).item
-				j := array_count.item (i)
-				array_count.put (j - 1, i)
-			until
-				k = j
-			loop
-				l_array.put (l_array.item (k+1), k)
-				k := k + 1
+DEBUG ("CACHE_RESEARCH")
+	if not found then
+		io.putstring ("Be carefull: object not found%N")
+	end
+end
+			if found then
+				-- found IS true
+				-- the if is to avoid a bug I didn't find (yet)
+				-- in the cache history
+				j := j + 1
+				from 
+					k := j
+					last_removed_item := l_array.item (j).item
+					j := array_count.item (i)
+					array_count.put (j - 1, i)
+				until
+					k = j
+				loop
+					l_array.put (l_array.item (k+1), k)
+					k := k + 1
+				end
+				l_array.put (Void, j)
 			end
-			l_array.put (Void, j)
 		end	
 
 feature {NONE} -- statistics

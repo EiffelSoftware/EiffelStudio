@@ -10,21 +10,35 @@ deferred class DATE_MEASUREMENT inherit
 feature -- Access
 
 	day: INTEGER is
-		-- Number of days associated with current object
+			-- Number of days associated with current object
 		deferred
 		end
 
 	month: INTEGER is
-		-- Number of monthes associated with current object
+			-- Number of monthes associated with current object
 		deferred
 		end
 	 
 	year: INTEGER is
-		-- Number of years associated with current object
+			-- Number of years associated with current object
 		deferred
 		end
 
 feature -- Element change
+
+	set_date (y, m, d: INTEGER) is
+			-- Set `year' with `y', `month' with `m' and `day' with `d'.
+		require
+			d_large_enough: d >= 1
+			m_large_enough: m >= 1
+			m_small_enough: m <= Months_in_year
+			d_small_enough: d <= days_in_i_th_month (m, y)
+		deferred
+		ensure
+			day_set: day = d
+			month_set: month = m
+			year_set: year = y
+		end
 
 	set_day (d: INTEGER) is
 			-- Set `day' to `d'.

@@ -25,6 +25,8 @@ class DATE_TIME inherit
 		end
 
 	DATE_TIME_VALIDITY_CHECKER
+		rename
+			set_date as set_compact_date
 		undefine
 			copy, is_equal, out, year, month, day, hour, minute, second, 
 			fine_second

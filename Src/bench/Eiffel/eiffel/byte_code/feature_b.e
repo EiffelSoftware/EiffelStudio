@@ -312,7 +312,7 @@ feature -- IL code generation
 			cl_type ?= context_type
 			check
 				valid_type: cl_type /= Void
-				type_is_special: cl_type.base_class.is_special
+				type_is_native_array: cl_type.base_class.is_native_array
 				class_type_exists: cl_type.associated_class_type /= Void
 			end
 

@@ -32,11 +32,6 @@ inherit
 			{NONE} all
 		end
 
-	WEL_WINDOWS_ROUTINES
-		export
-			{NONE} all
-		end
-
 	WIZARD_ROUTINES
 		export
 			{NONE} all

@@ -20,7 +20,7 @@ feature -- Type check, byte code and dead code removal
 	type_check is
 			-- Type check an adress access on Current
 		do
-			context.begin_expression;
+			context.put (pointer_type);
 		end;
 
 	byte_node: HECTOR_B is

@@ -44,8 +44,7 @@ feature -- Type check, byte code and dead code removal
 			id_type := access_address.access_type;
 
 			if not context.access_line.access.is_feature then
-				!!hector_type.make (id_type);
-				id_type := hector_type;
+				id_type := pointer_type;
 			end;
 
 				-- Update the type stack

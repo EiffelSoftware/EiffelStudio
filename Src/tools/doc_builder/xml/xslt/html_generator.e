@@ -73,9 +73,7 @@ feature -- Generation
 			filtered_document := Shared_project.filter_manager.filtered_document (a_doc)
 				
 					-- Now convert the filtered document to HTML
-			--l_html := Shared_project.filter_manager.convert_to_html (filtered_document)
-			
-			l_html := "<html><head><title>Dummy Test</title></head>><body>Dummy Test</body></html>"
+			l_html := Shared_project.filter_manager.convert_to_html (filtered_document)			
 
 			create l_filename.make_from_string (target.name)
 			l_filename.extend (file_no_extension (short_name (a_doc.name)))
@@ -85,6 +83,46 @@ feature -- Generation
 			last_generated_file.close
 		ensure
 			has_last_generated_file: last_generated_file /= Void
+		end
+
+	generate_code_file (a_doc: DOCUMENT; target: DIRECTORY) is
+			-- Generate HTML file from `a_doc' in `target'.  Resulting file stored in `last_generated_file'
+		require
+			document_not_void: a_doc /= Void
+			target_not_void: target /= Void
+		local
+			l_html: STRING			
+			retried: BOOLEAN
+			l_string: STRING
+			l_filename: FILE_NAME
+			l_parser: XM_EIFFEL_PARSER
+			l_code_filter: CODE_HTML_FILTER
+
+		do	
+			if not retried then
+				l_string := a_doc.text
+				if not l_string.is_empty then					
+					create l_code_filter.make
+					create l_parser.make
+					l_parser.set_callbacks (l_code_filter)
+					l_parser.parse_from_string (l_string)
+					check
+						ok_parsing: l_parser.is_correct
+					end
+					l_html := l_code_filter.output_string						
+				end
+				create l_filename.make_from_string (target.name)
+				l_filename.extend (file_no_extension (short_name (a_doc.name)))
+				l_filename.add_extension ("html")
+				create last_generated_file.make_create_read_write (l_filename)
+				last_generated_file.put_string (l_html)
+				last_generated_file.close
+			end
+		ensure
+			has_last_generated_file: last_generated_file /= Void
+		rescue
+			retried := True
+			retry		
 		end
 
 feature {NONE} -- Implementation
@@ -125,7 +163,8 @@ feature {NONE} -- Implementation
 								create l_doc.make_from_file (doc_file)								
 							end
 							if l_doc.file.exists and then l_doc.can_transform then 
-								generate_file (l_doc, target)
+								--generate_file (l_doc, target)
+								generate_code_file (l_doc, target)
 								progress_generator.update_progress_report
 							end
 						elseif file_types.has (file_type (l_filename.string)) then

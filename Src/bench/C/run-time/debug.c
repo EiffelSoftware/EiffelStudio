@@ -10,7 +10,7 @@
 	Debugging control.
 */
 
-#include "confmagic.h"
+#include "confmagic.h"		/* %%ss added for bcopy, bzero */
 #include "config.h"
 #include "portable.h"
 #include "macros.h"
@@ -131,7 +131,7 @@ rt_private char *rcsid =
  * Context set up and handling.
  */
 
-rt_public void dstart(void)
+rt_public void dstart(EIF_CONTEXT_NOARG)
 {
 	/* This routine is called at the beginning of every melted feature. It
 	 * builds up a calling context on the debugging stack and initializes it.
@@ -203,7 +203,7 @@ rt_public void drun(int body_id)
 	dsync();						/* Initialize cached data */
 }
 
-rt_public void dostk(void)
+rt_public void dostk(EIF_CONTEXT_NOARG)
 {
 	/* Save the current operational stack context (the one after interpreter
 	 * registers have been initialized) so that we can resynchronize the
@@ -499,7 +499,7 @@ rt_shared void esresume(EIF_CONTEXT_NOARG)
 	 */
 
 	if (context != (struct dcall *) 0)
-		sync_registers(context->dc_cur, context->dc_top);
+		sync_registers(MTC context->dc_cur, context->dc_top);
 
 	d_cxt.pg_status = PG_RUN;	/* Program is running */
 }
@@ -802,7 +802,7 @@ rt_public void dmove(int offset)
 		call_down(-offset);
 
 	active = dtop();
-	sync_registers(active->dc_cur, active->dc_top);
+	sync_registers(MTC active->dc_cur, active->dc_top);
 }
 
 rt_private void call_down(int level)
@@ -1164,7 +1164,7 @@ rt_public uint32 *onceitem(register uint32 id)
 	return (uint32 *)0;		/* val not found */
 }
 
-rt_public struct item *docall(register uint32 body_id, register int arg_num)
+rt_public struct item *docall(EIF_CONTEXT register uint32 body_id, register int arg_num) /* %% ss mt last caller */
                          		/* body id of the once function */
                       			/* Number of arguments */
 {
@@ -1197,14 +1197,14 @@ rt_public struct item *docall(register uint32 body_id, register int arg_num)
 #else
 	if (body_id < dle_level)
 			/* Static melted level */
-		xinterp(melt[body_id]);
+		xinterp(MTC melt[body_id]);
 	else if (body_id < dle_zeroc) {
 			/* Dynamic frozen level */
 		pid = (uint32) DLEFPatId(body_id);
 		(pattern[pid].toc)(dle_frozen[body_id], 0);		/* Call pattern */
 	} else
 			/* Dynamic melted level */
-		xinterp(dle_melt[body_id]);
+		xinterp(MTC dle_melt[body_id]);
 #endif
 	IC = old_IC;				/* Restore IC back-up */
 

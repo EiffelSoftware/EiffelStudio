@@ -31,6 +31,7 @@ feature -- Settings
 	set_from_resource (resource: EMAIL_RESOURCE) is
 		require
 			resource_exists: resource /= Void
+			valid_from_resource: resource.can_be_sent
 		do
 			from_resource:= resource
 		end
@@ -38,6 +39,7 @@ feature -- Settings
 	set_to_resource (resource: EMAIL_RESOURCE) is
 		require
 			resource_exists: resource /= Void
+			valid_to_resource: resource.can_receive
 		do
 			to_resource:= resource
 		end

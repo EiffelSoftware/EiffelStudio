@@ -52,7 +52,7 @@ feature {NONE}
 						w_Assertion_warning, "Keep assertions", 
 						"Discard assertions", "Cancel"); 
 				elseif 
-					not Run_info.is_running or else
+					not Application.is_running or else
 					(argument /= Void and 
 					argument = last_confirmer and end_run_confirmed)
 				then
@@ -91,18 +91,13 @@ feature {NONE}
 					error_window.put_string (temp)
 				end;
 				finalization_error := false
+			else
+				rescued := False
 			end
 		rescue
-			if Rescue_status.is_error_exception then
-					-- A validity error has been detected during the
-					-- finalization. This happens with DLE dealing
-					-- with statically bound feature calls.
-				Rescue_status.set_is_error_exception (false);
-				rescued := true;
-				finalization_error := true;
-				Error_handler.trace;
-				retry
-			end
+			rescued := true;
+			finalization_error := true;
+			retry
 		end;
 
 	finalization_error: BOOLEAN;

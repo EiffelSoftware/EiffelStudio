@@ -62,11 +62,11 @@ feature -- Output
 
 feature -- Stoning
  
-	stone (reference_class: CLASS_C): CLASSC_STONE is
+	stone (reference_class: E_CLASS): CLASSC_STONE is
 		local
-			aclass: CLASS_C;
+			aclass: E_CLASS;
 		do  
-			aclass := actual_type.associated_class;
+			aclass := actual_type.associated_eclass;
 			!!Result.make (aclass)
 		end;
 

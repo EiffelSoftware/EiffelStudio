@@ -145,3 +145,14 @@ char c;
 		/* NOTREACHED */
 	}
 }
+
+void reset_class_name_parser()
+{
+#ifdef FLEX_SCANNER
+    zzrestart (zzin);
+#else
+    /* Reset lex parser */
+    zzsptr = zzsbuf;
+#endif
+}
+

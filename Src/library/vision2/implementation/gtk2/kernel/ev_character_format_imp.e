@@ -110,8 +110,6 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 		
 	dummy_character_format_range_information: EV_CHARACTER_FORMAT_RANGE_INFORMATION is
 			-- Used for creating a fully set GtkTextTag
-		local
-			a: INTEGER
 		once
 			create Result.make_with_flags (
 				feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_family
@@ -131,7 +129,6 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			-- Create a new text tag based on state of `Current'
 		local
 			color_struct: POINTER
-			font_desc: POINTER
 			propname, propvalue: EV_GTK_C_STRING
 			a_font_imp: EV_FONT_IMP
 			a_color_imp: EV_COLOR_IMP

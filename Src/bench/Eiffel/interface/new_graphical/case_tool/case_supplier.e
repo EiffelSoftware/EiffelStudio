@@ -263,7 +263,6 @@ feature -- Status report
 	is_expanded: BOOLEAN is
 			-- Is `Current' declared `expanded'?
 		local
-			et: EXP_TYPE_AS
 			bt: BASIC_TYPE
 			ct: CLASS_TYPE_AS
 			type_as_class_c: CLASS_C
@@ -272,11 +271,10 @@ feature -- Status report
 		do
 			l_body := feature_as.body
 			if l_body /= Void then
-				et ?= l_body.type
 				bt ?= l_body.type
 				ct ?= l_body.type
 			end
-			Result := (et /= Void) or (bt /= Void)
+			Result := (bt /= Void) or (ct /= Void and then ct.is_expanded)
 			if not Result and then ct /= Void then
 				if System.any_class.is_compiled then
 					class_c_any := System.any_class.compiled_class

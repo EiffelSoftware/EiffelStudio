@@ -2573,6 +2573,7 @@ end
 			end
 
 			generate_initialization_table
+			generate_expanded_creation_table
 			generate_dispose_table
 
 			Attr_generator.finish
@@ -3142,7 +3143,7 @@ end
 		end
 
 	generate_initialization_table is
-			-- Generate table of initialization routines
+			-- Generate table of initialization routines for composite objects
 		local
 			rout_table: SPECIAL_TABLE
 			rout_entry: SPECIAL_ENTRY
@@ -3158,16 +3159,47 @@ end
 				i > nb
 			loop
 				class_type := class_types.item (i)
-if class_type /= Void then
--- FIXME
-				if class_type.has_creation_routine then
+				if class_type /= Void and then class_type.has_creation_routine then
 					create rout_entry
 					rout_entry.set_type_id (i)
 					rout_entry.set_written_type_id (i)
 					rout_entry.set_body_index (body_index_counter.initialization_body_index)
 					rout_table.extend (rout_entry)
 				end
-end
+				i := i + 1
+			end
+			rout_table.sort_till_position
+			rout_table.write
+		end
+
+	generate_expanded_creation_table is
+			-- Generate table of creation procedures for all expanded objects.
+		local
+			rout_table: SPECIAL_TABLE
+			rout_entry: SPECIAL_ENTRY
+			i, nb: INTEGER
+			class_type: CLASS_TYPE
+			l_class: CLASS_C
+		do
+			from
+				create rout_table.make (routine_id_counter.creation_rout_id)
+				i := 1
+				nb := Type_id_counter.value
+				rout_table.create_block (nb)
+			until
+				i > nb
+			loop
+				class_type := class_types.item (i)
+				if class_type /= Void then
+					l_class := class_type.associated_class
+					if l_class.is_used_as_expanded and l_class.creation_feature /= Void then
+						create rout_entry
+						rout_entry.set_type_id (i)
+						rout_entry.set_written_type_id (i)
+						rout_entry.set_body_index (l_class.creation_feature.body_index)
+						rout_table.extend (rout_entry)
+					end
+				end
 				i := i + 1
 			end
 			rout_table.sort_till_position

@@ -17,16 +17,17 @@ inherit
 		export
 			{NONE}
 				c_object
+			{EV_CONTAINER_IMP}
+				visual_widget
 		redefine
 			interface,
 			make,
-			initialize,
-			visual_widget
+			initialize
 		end
 
 	EV_RADIO_PEER_IMP
 		redefine
-			interface, widget_object, visual_widget
+			interface, widget_object
 		end
 
 create
@@ -38,10 +39,7 @@ feature {NONE} -- Initialization
 			-- Create radio button.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_event_box_new)
-			visual_widget := C.gtk_radio_button_new (NULL)
-			C.gtk_widget_show (visual_widget)
-			C.gtk_container_add (c_object, visual_widget)
+			set_c_object (C.gtk_radio_button_new (NULL))
 		end
 
 	initialize is
@@ -49,11 +47,6 @@ feature {NONE} -- Initialization
 			Precursor
 			align_text_left
 		end
-
-feature {EV_CONTAINER_IMP} -- Access
-
-	visual_widget: POINTER
-			-- Pointer to the gtkbutton widget as c_object is event box.
 
 feature -- Status report
 	

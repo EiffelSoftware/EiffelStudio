@@ -150,8 +150,12 @@ feature -- Status report
 							Result := clone (cluster.top_of_recursive_cluster.cluster_name)
 						end
 					else
-						l_start_name := cluster.top_of_recursive_cluster.cluster_name
-						
+						if cluster.belongs_to_all then
+							l_start_name := cluster.top_of_recursive_cluster.cluster_name
+						else
+							l_start_name := cluster.cluster_name
+						end
+					
 						check
 							l_start_name_exists:
 								cluster.cluster_name.substring (1, l_start_name.count).

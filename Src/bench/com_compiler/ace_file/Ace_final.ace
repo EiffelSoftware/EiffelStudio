@@ -2,7 +2,7 @@ system
 	"ISE.Compiler"
 
 root
-	ECOM_ISE_REGISTRATION: make
+	ecom_ise_registration: make
 
 default
 	assertion (no)
@@ -51,6 +51,7 @@ default
 	disabled_debug ("parse")
 	disabled_debug ("remove_class")
 	disabled_debug ("replication")
+	disabled_debug ("resource_validate")
 	disabled_debug ("sep_debug")
 	disabled_debug ("server")
 	disabled_debug ("skeleton")
@@ -70,6 +71,8 @@ default
 	cls_compliant (yes)
 	dotnet_naming_convention (yes)
 	msil_generation_type ("exe")
+	msil_culture ("n/a")
+	msil_assembly_compatibility ("None")
 	check_vape (yes)
 	console_application (no)
 	array_optimization (no)
@@ -188,6 +191,8 @@ cluster
 			ieiffel_htmldoc_generator_impl_stub
 				end
 			ieiffel_htmldoc_generator_impl_proxy
+				end
+			variable_descriptor
 				end
 		end
 
@@ -322,15 +327,15 @@ cluster
 
 	documentation_main:		"$EIFFEL_SRC\Eiffel\case\documentation\main"
 
- 	interface:		"$EIFFEL_SRC\Eiffel\interface"
- 
- 	interface_shared (interface):		"$\shared"
- 
- 	tty (interface):		"$\tty"
- 
- 	preference_tool (interface):		"$\graphical\preference_tool"
- 
- 	profile_tool (interface):		"$\graphical\profile_tool"
+	interface:		"$EIFFEL_SRC\Eiffel\interface"
+
+	interface_shared (interface):		"$\shared"
+
+	tty (interface):		"$\tty"
+
+	preference_tool (interface):		"$\graphical\preference_tool"
+
+	profile_tool (interface):		"$\graphical\profile_tool"
 
 	all "compiler_support":		"$EIFFEL_SRC\Eiffel\support"
 

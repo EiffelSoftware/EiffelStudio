@@ -187,6 +187,8 @@ cluster
 				end
 			ieiffel_htmldoc_generator_impl_proxy
 				end
+			variable_descriptor
+				end
 		end
 
 	all base:		"$EIFFEL_SRC\library\base"

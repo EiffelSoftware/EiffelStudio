@@ -694,6 +694,7 @@ feature -- Update
 			if stone /= Void then
 				st := stone.synchronized_stone
 			end
+			editor_tool.text_area.update_click_list (True)
 			set_stone (st)
 			update_save_symbol
 			address_manager.refresh

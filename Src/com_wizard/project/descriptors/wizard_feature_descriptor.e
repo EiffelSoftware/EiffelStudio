@@ -39,6 +39,25 @@ feature -- Access
 	member_id: INTEGER
 			-- Member ID.
 
+feature -- Status report
+
+	eiffel_name (a_component: WIZARD_COMPONENT_DESCRIPTOR): STRING is
+			-- Eiffel name in `a_component'.
+		require
+			non_void_component: a_component /= Void
+			non_void_component_name: a_component.name /= Void
+			valid_component_name: not a_component.name.empty
+		do
+			if coclass_eiffel_names.has (a_component.name) then
+				Result := clone (coclass_eiffel_names.item (a_component.name))
+			else
+				Result := clone (interface_eiffel_name)
+			end
+		ensure
+			non_void_name: Result /= Void
+			valid_name: not Result.empty
+		end
+
 feature -- Transformation
 
 	disambiguate_names (an_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR;

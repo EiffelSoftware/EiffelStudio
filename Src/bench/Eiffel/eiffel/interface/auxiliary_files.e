@@ -84,25 +84,15 @@ feature -- Dynamic Library file
 						-- Create for the first time the dynamic library.
 					Eiffel_project.create_dynamic_lib
 					dynamic_lib := system.eiffel_dynamic_lib
-					dynamic_lib.set_file_name (System.dynamic_def_file)
 					is_dll_generated := True
 				end
 			end
 			if is_dll_generated then
-				create eiffel_def_file.make (dynamic_lib.file_name)
-				if
-					eiffel_def_file.exists and then
-					eiffel_def_file.is_readable and then
-					eiffel_def_file.is_plain
-				then
-					eiffel_def_file.open_read
-					is_dll_generated := dynamic_lib.parse_exports_from_file (eiffel_def_file)
-					eiffel_def_file.close
+				dynamic_lib.update
+				is_dll_generated := dynamic_lib.is_content_valid and not dynamic_lib.is_empty
+				if is_dll_generated then
 					dynamic_lib_exports := dynamic_lib.dynamic_lib_exports
 					system_name := clone(system.eiffel_system.name)
-					is_dll_generated := not dynamic_lib_exports.is_empty
-				else
-					is_dll_generated := False
 				end
 			end
 
@@ -265,9 +255,7 @@ feature -- Dynamic Library file
 									buffer.putstring (" ;*/")
 
 										--LOCAL VARIABLES
-									buffer.putstring ("%N%TEIF_PROC ep;")
 									buffer.putstring ("%N%TEIF_REFERENCE main_obj = (EIF_REFERENCE) 0;")
-									buffer.putstring ("%N%TEIF_TYPE_ID eti;")
 									if not return_type.is_equal("void") then
 										buffer.putstring ("%N%T")
 										buffer.putstring (return_type)

@@ -160,7 +160,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 		
 feature {GB_WINDOW_SELECTOR} -- Implementation
 
-	set_root_window (a_window: GB_TITLED_WINDOW_OBJECT) is
+	set_root_window (a_window: GB_OBJECT) is
 			-- Ensure that `a_window' is displayed in `Current'.
 		require
 			window_not_void: a_window /= Void

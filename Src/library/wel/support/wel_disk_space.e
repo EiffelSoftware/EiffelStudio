@@ -8,6 +8,9 @@ indexing
 class
 	WEL_DISK_SPACE
 
+inherit
+	WEL_DISK_SPACE_CALLBACK
+
 create
 	default_create
 
@@ -97,22 +100,6 @@ feature -- Access
 							internal_last_total_space, 
 							internal_last_total_space_in_bytes
 							)
-		end
-	
-	last_query_success: BOOLEAN
-			-- Was the last call to `query_disk_space' successful?
-
-feature -- Status report
-
-	query_local_drive(drive_letter: CHARACTER) is
-			-- Query the disk space available on the local drice 
-			-- designated by the letter `drive_letter'.
-		do
-			last_query_success := cwin_query_disk_space(
-										$Current,
-										drive_letter, 
-										$eif_set_disk_space_attributes_callback
-										)
 		end
 
 feature {NONE} -- Implementation
@@ -216,13 +203,6 @@ feature {NONE} -- Internal values
 			-- the feature `query_disk_space'.
 
 feature {NONE} -- Externals
-
-	cwin_query_disk_space(current_object: POINTER;
-						  drive_letter: CHARACTER; 
-						  callback_function: POINTER): BOOLEAN is
-		external 
-			"C | %"wel_disk_space.h%""
-		end
 
 	eif_set_disk_space_attributes_callback(
 		-- Callback function called from the C code.

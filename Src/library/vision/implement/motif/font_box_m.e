@@ -269,7 +269,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	font_box_create (b_name: ANY; scr_obj: POINTER; 
+	font_box_create (b_name: POINTER; scr_obj: POINTER; 
 			is_dial, man: BOOLEAN): POINTER is
 		external
 			"C"

@@ -547,12 +547,12 @@ feature
 
 feature {NONE} -- External features
 
-	c_append_item (scr_obj: POINTER; a_name: ANY; pos: INTEGER): INTEGER is
+	c_append_item (scr_obj: POINTER; a_name: POINTER; pos: INTEGER): INTEGER is
 		external
 			"C"
 		end;
 
-	c_insert_item (scr_obj: POINTER; a_name: ANY; pos: INTEGER; ref: INTEGER): INTEGER is
+	c_insert_item (scr_obj: POINTER; a_name: POINTER; pos: INTEGER; ref: INTEGER): INTEGER is
 		external
 			"C"
 		end;
@@ -592,12 +592,12 @@ feature {NONE} -- External features
 			"C"
 		end; 
 
-	set_int (scr_obj: POINTER; val: INTEGER; resource: ANY) is
+	set_int (scr_obj: POINTER; val: INTEGER; resource: POINTER) is
 		external
 			"C"
 		end; 
 
-	get_int (scr_obj: POINTER; resource: ANY): INTEGER is
+	get_int (scr_obj: POINTER; resource: POINTER): INTEGER is
 		external
 			"C"
 		end; 

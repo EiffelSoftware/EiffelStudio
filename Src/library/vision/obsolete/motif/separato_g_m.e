@@ -79,7 +79,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_separator_gadget (sg_name: ANY; scr_obj: POINTER;
+	create_separator_gadget (sg_name: POINTER; scr_obj: POINTER;
 			man: BOOLEAN): POINTER is
 		external
 			"C"

@@ -208,7 +208,7 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	c_dynamic_type (object: ANY): INTEGER is
+	c_dynamic_type (object: POINTER): INTEGER is
 			-- Dynamic type of `object'
 		external
 			"C"
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 			"ei_dtype"
 		end;
 
-	c_field (i: INTEGER; object: ANY): ANY is
+	c_field (i: INTEGER; object: POINTER): ANY is
 			-- Object referenced by the `i'-th field of `object'
 		external
 			"C"
@@ -224,7 +224,7 @@ feature {NONE} -- Implementation
 			"ei_field"
 		end;
 
-	c_field_name (i: INTEGER; object: ANY): STRING is
+	c_field_name (i: INTEGER; object: POINTER): STRING is
 			-- Name of `i'-th field of `object'
 		external
 			"C"
@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 			"ei_field_name"
 		end;
 
-	c_field_type (i: INTEGER; object: ANY): INTEGER is
+	c_field_type (i: INTEGER; object: POINTER): INTEGER is
 			-- Type of `i'-th field of `object'
 		external
 			"C"
@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 			"ei_field_type"
 		end;
 
-	c_expanded_type (i: INTEGER; object: ANY): STRING is
+	c_expanded_type (i: INTEGER; object: POINTER): STRING is
 			-- Class name of the `i'-th expanded field of `object'
 		external
 			"C"
@@ -248,7 +248,7 @@ feature {NONE} -- Implementation
 			"ei_exp_type"
 		end;
 
-	c_character_field (i: INTEGER; object: ANY): CHARACTER is
+	c_character_field (i: INTEGER; object: POINTER): CHARACTER is
 			-- Character value of `i'-th field of `object'
 		external
 			"C"
@@ -256,7 +256,7 @@ feature {NONE} -- Implementation
 			"ei_char_field"
 		end;
 
-	c_boolean_field (i: INTEGER; object: ANY): BOOLEAN is
+	c_boolean_field (i: INTEGER; object: POINTER): BOOLEAN is
 			-- Boolean value of `i'-th field of `object'
 		external
 			"C"
@@ -264,7 +264,7 @@ feature {NONE} -- Implementation
 			"ei_bool_field"
 		end;
 
-	c_integer_field (i: INTEGER; object: ANY): INTEGER is
+	c_integer_field (i: INTEGER; object: POINTER): INTEGER is
 			-- Integer value of `i'-th field of `object'
 		external
 			"C"
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 			"ei_int_field"
 		end;
 
-	c_real_field (i: INTEGER; object: ANY): REAL is
+	c_real_field (i: INTEGER; object: POINTER): REAL is
 			-- Real value of `i'-th field of `object'
 		external
 			"C"
@@ -280,7 +280,7 @@ feature {NONE} -- Implementation
 			"ei_float_field"
 		end;
 
-	c_pointer_field (i: INTEGER; object: ANY): POINTER is
+	c_pointer_field (i: INTEGER; object: POINTER): POINTER is
 			-- Pointer value of `i'-th field of `object'
 		external
 			"C"
@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 			"ei_ptr_field"
 		end;
 
-	c_double_field (i: INTEGER; object: ANY): DOUBLE is
+	c_double_field (i: INTEGER; object: POINTER): DOUBLE is
 			-- Double precision value of `i'-th field of `object'
 		external
 			"C"
@@ -296,7 +296,7 @@ feature {NONE} -- Implementation
 			"ei_double_field"
 		end;
 
-	c_is_special (object: ANY): BOOLEAN is
+	c_is_special (object: POINTER): BOOLEAN is
 			-- Is `object' a special object?
 		external
 			"C"
@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 			"ei_special"
 		end;
 
-	c_field_offset (i: INTEGER; object: ANY): INTEGER is
+	c_field_offset (i: INTEGER; object: POINTER): INTEGER is
 			-- Offset of `i'-th field of `object'
 		external
 			"C"
@@ -312,7 +312,7 @@ feature {NONE} -- Implementation
 			"ei_offset"
 		end;
 
-	c_field_count (object: ANY): INTEGER is
+	c_field_count (object: POINTER): INTEGER is
 			-- Number of logical fields in `object'
 		external
 			"C"
@@ -321,7 +321,7 @@ feature {NONE} -- Implementation
 		end;
 
 
-	c_bit_size (i: INTEGER; object: ANY): INTEGER is
+	c_bit_size (i: INTEGER; object: POINTER): INTEGER is
 			-- Size (in bit) of the `i'-th bit field of `object'
 		external
 			"C"
@@ -330,7 +330,7 @@ feature {NONE} -- Implementation
 		end;
 
 
-	c_size (object: ANY): INTEGER is
+	c_size (object: POINTER): INTEGER is
 			-- Physical size of `object'
 		external
 			"C"

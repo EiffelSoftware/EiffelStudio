@@ -147,7 +147,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_row_column (name: ANY; parent: POINTER): POINTER is
+	create_row_column (name: POINTER; parent: POINTER): POINTER is
 		external
 			"C"
 		end; 

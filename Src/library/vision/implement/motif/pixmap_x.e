@@ -385,12 +385,12 @@ feature {NONE} -- External features
 			"C"
 		end; 
 
-	c_store (pix: POINTER; file_name: ANY): BOOLEAN is
+	c_store (pix: POINTER; file_name: POINTER): BOOLEAN is
 		external
 			"C"
 		end;
 
-	c_retrieve (file_name: ANY): POINTER is
+	c_retrieve (file_name: POINTER): POINTER is
 		external
 			"C"
 		end;
@@ -410,7 +410,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	pix_read_from_file (file_name: ANY): POINTER is
+	pix_read_from_file (file_name: POINTER): POINTER is
 		external
 			"C"
 		end;

@@ -103,7 +103,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_dialog_shell (name: ANY; parent: POINTER): POINTER is
+	create_dialog_shell (name: POINTER; parent: POINTER): POINTER is
 		external
 			"C"
 		end; 

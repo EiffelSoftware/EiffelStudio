@@ -124,7 +124,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_file_select_d (d_name: ANY; scr_obj: POINTER): POINTER is
+	create_file_select_d (d_name: POINTER; scr_obj: POINTER): POINTER is
 		external
 			"C"
 		end;

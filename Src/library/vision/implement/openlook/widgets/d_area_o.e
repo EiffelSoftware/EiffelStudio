@@ -164,7 +164,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_drawing_area (name: ANY; parent: POINTER): POINTER is
+	create_drawing_area (name: POINTER; parent: POINTER): POINTER is
 		external
 			"C"
 		end; 

@@ -37,7 +37,7 @@ feature
 
 feature {NONE} -- External features
 
-	get_cardinal (scr_obj: POINTER; name: ANY): INTEGER is
+	get_cardinal (scr_obj: POINTER; name: POINTER): INTEGER is
 		external
 			"C"
 		end; 

@@ -374,7 +374,7 @@ feature {NONE}
 
 feature {NONE} -- External features
 
-	c_parse_name_color (scr_obj: POINTER; ext_name: ANY): BOOLEAN is
+	c_parse_name_color (scr_obj: POINTER; ext_name: POINTER): BOOLEAN is
 		external
 			"C"
 		end; 

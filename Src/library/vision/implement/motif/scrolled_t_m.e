@@ -184,13 +184,13 @@ feature {NONE}
 
 feature {NONE} -- Externals
 
-	create_scrolled_text (st_name: ANY; scr_obj: POINTER; 
+	create_scrolled_text (st_name: POINTER; scr_obj: POINTER; 
 				is_man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;
 
-	create_scrolled_text_ww (st_name: ANY; scr_obj: POINTER; 
+	create_scrolled_text_ww (st_name: POINTER; scr_obj: POINTER; 
 				is_man: BOOLEAN): POINTER is
 		external
 			"C"

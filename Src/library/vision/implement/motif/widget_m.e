@@ -325,12 +325,12 @@ feature
 
 feature {NONE} -- External features
 
-	set_xm_string (scr_obj: POINTER; value: POINTER; name: ANY) is
+	set_xm_string (scr_obj: POINTER; value: POINTER; name: POINTER) is
 		external
 			"C"
 		end;
 
-	get_xm_string (scr_obj: POINTER; r_name: ANY): POINTER is
+	get_xm_string (scr_obj: POINTER; r_name: POINTER): POINTER is
 		external
 			"C"
 		end;

@@ -241,7 +241,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-    font_box_create (b_name: ANY; scr_obj: POINTER; value: BOOLEAN): POINTER is
+    font_box_create (b_name: POINTER; scr_obj: POINTER; value: BOOLEAN): POINTER is
         external
             "C"
         end;

@@ -246,7 +246,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_arrow_b (a_name: ANY; scr_obj: POINTER; 
+	create_arrow_b (a_name: POINTER; scr_obj: POINTER; 
 				man: BOOLEAN): POINTER is
 		external
 			"C"

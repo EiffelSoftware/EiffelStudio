@@ -127,7 +127,7 @@ feature {ALL_CURS_X}
 
 feature {NONE} -- External features
 
-	create_message_d (i_name: ANY; scr_obj: POINTER): POINTER is
+	create_message_d (i_name: POINTER; scr_obj: POINTER): POINTER is
 		external
 			"C"
 		end;

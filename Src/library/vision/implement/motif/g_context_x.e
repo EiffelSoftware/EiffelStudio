@@ -315,17 +315,23 @@ feature {NONE} -- External features
 
 	x_set_tile (dspl_pointer, gc, value: POINTER) is
 		external
-			"C"
+			"C (Display *, GC, Pixmap) | <X11/Xlib.h>"
+		alias
+			"XSetTile"
 		end;
 
 	x_set_subwindow_mode (dspl_pointer, gc: POINTER; mode: INTEGER) is
 		external
-			"C"
+			"C (Display *, GC, int) | <X11/Xlib.h>"
+		alias
+			"XSetSubwindowMode"
 		end;
 
 	x_set_stipple (dspl_pointer, gc, value: POINTER) is
 		external
-			"C"
+			"C (Display *, GC, Pixmap) | <X11/Xlib.h>"
+		alias
+			"XSetStipple"
 		end;
 
 	c_set_no_clip (dspl_pointer, gc: POINTER) is
@@ -368,7 +374,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	x_set_dashes (dspl_pointer, gc: POINTER; offset: INTEGER; name: ANY;
+	x_set_dashes (dspl_pointer, gc: POINTER; offset: INTEGER; name: POINTER;
 					count: INTEGER) is
 		external
 			"C"
@@ -397,7 +403,9 @@ feature {NONE} -- External features
 
 	x_free_gc (dspl_pointer, gc: POINTER) is
 		external
-			"C"
+			"C (Display *, GC) | <X11/Xlib.h>"
+		alias
+			"XFreeGC"
 		end;
 
 end

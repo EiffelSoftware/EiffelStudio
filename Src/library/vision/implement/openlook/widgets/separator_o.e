@@ -214,7 +214,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	create_separator (name: ANY; parent: POINTER): POINTER is
+	create_separator (name: POINTER; parent: POINTER): POINTER is
 		external
 			"C"
 		end; 

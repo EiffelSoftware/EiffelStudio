@@ -599,13 +599,13 @@ feature -- Cursor position
 
 feature {NONE} -- External features
 
-	create_text (t_name: ANY; scr_obj: POINTER; 
+	create_text (t_name: POINTER; scr_obj: POINTER; 
 					is_man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;
 
-	create_text_ww (t_name: ANY; scr_obj: POINTER; 
+	create_text_ww (t_name: POINTER; scr_obj: POINTER; 
 					is_man: BOOLEAN): POINTER is
 		external
 			"C"
@@ -631,7 +631,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	xm_text_replace (scr_obj: POINTER; from_pos, to_pos: INTEGER; name: ANY) is
+	xm_text_replace (scr_obj: POINTER; from_pos, to_pos: INTEGER; name: POINTER) is
 		external
 			"C"
 		end;
@@ -646,7 +646,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	xm_text_insert (scr_obj: POINTER; position: INTEGER; name: ANY) is
+	xm_text_insert (scr_obj: POINTER; position: INTEGER; name: POINTER) is
 		external
 			"C"
 		end;
@@ -676,7 +676,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	xm_text_set_string (scr_obj: POINTER; name: ANY) is
+	xm_text_set_string (scr_obj: POINTER; name: POINTER) is
 		external
 			"C"
 		end;
@@ -686,7 +686,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	xm_text_append (scr_obj: POINTER; t_name: ANY) is
+	xm_text_append (scr_obj: POINTER; t_name: POINTER) is
 		external
 			"C"
 		end;

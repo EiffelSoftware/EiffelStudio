@@ -87,7 +87,7 @@ feature {NONE} -- Creation
 
 feature {NONE} -- External features
 
-	create_bulletin (b_name: ANY; scr_obj: POINTER; 
+	create_bulletin (b_name: POINTER; scr_obj: POINTER; 
 				man: BOOLEAN): POINTER is
 		external
 			"C"

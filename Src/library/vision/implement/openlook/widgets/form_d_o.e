@@ -166,7 +166,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_form_d (name: ANY; parent: POINTER): POINTER is
+	create_form_d (name: POINTER; parent: POINTER): POINTER is
 		external
 			"C"
 		end;

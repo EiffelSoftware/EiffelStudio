@@ -43,7 +43,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_frame (name: ANY; parent: POINTER): POINTER is
+	create_frame (name: POINTER; parent: POINTER): POINTER is
 		external
 			"C"
 		end; 

@@ -319,7 +319,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	from_xm_string (scr_obj: POINTER; s_name: ANY): STRING is
+	from_xm_string (scr_obj: POINTER; s_name: POINTER): STRING is
 		external
 			"C"
 		end;
@@ -329,7 +329,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	create_prompt (p_name: ANY; scr_obj: POINTER;
+	create_prompt (p_name: POINTER; scr_obj: POINTER;
 			man: BOOLEAN): POINTER is
 		external
 			"C"

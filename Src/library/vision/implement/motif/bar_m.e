@@ -74,7 +74,7 @@ feature {NONE}
 
 feature {NONE} -- External features
 
-	create_bar (b_name: ANY; scr_obj: POINTER;
+	create_bar (b_name: POINTER; scr_obj: POINTER;
 			man: BOOLEAN): POINTER is
 		external
 			"C"

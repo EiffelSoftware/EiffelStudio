@@ -78,7 +78,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_label_gadget (l_name: ANY; scr_obj: POINTER;
+	create_label_gadget (l_name: POINTER; scr_obj: POINTER;
 				man: BOOLEAN): POINTER is
 		external
 			"C"

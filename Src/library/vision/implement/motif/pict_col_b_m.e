@@ -95,7 +95,7 @@ feature {NONE}
 
 feature {NONE} -- External features
 
-	create_pict_color_b (p_name: ANY; scr_obj: POINTER;
+	create_pict_color_b (p_name: POINTER; scr_obj: POINTER;
 			man: BOOLEAN): POINTER is
 		external
 			"C"

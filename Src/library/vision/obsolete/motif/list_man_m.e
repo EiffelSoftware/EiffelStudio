@@ -943,7 +943,7 @@ feature
 
 feature {NONE} -- External features
 
-	xm_list_add_left (scr_obj: POINTER; name: ANY; pos: INTEGER): INTEGER is
+	xm_list_add_left (scr_obj: POINTER; name: POINTER; pos: INTEGER): INTEGER is
 		external
 			"C"
 		end;
@@ -958,12 +958,12 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	set_int (scr_obj: POINTER; a_count: INTEGER; name: ANY) is
+	set_int (scr_obj: POINTER; a_count: INTEGER; name: POINTER) is
 		external
 			"C"
 		end;
 
-	set_unsigned_char (scr_obj: POINTER; value: INTEGER; name: ANY) is
+	set_unsigned_char (scr_obj: POINTER; value: INTEGER; name: POINTER) is
 		external
 			"C"
 		end;
@@ -988,7 +988,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	xm_list_search_equal (scr_obj: POINTER; i_name: ANY; pos: INTEGER): INTEGER is
+	xm_list_search_equal (scr_obj: POINTER; i_name: POINTER; pos: INTEGER): INTEGER is
 		external
 			"C"
 		end;
@@ -1003,7 +1003,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	xm_remove_item (scr_obj: POINTER; i_name: ANY) is
+	xm_remove_item (scr_obj: POINTER; i_name: POINTER) is
 		external
 			"C"
 		end;
@@ -1013,7 +1013,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	xm_list_put (scr_obj: POINTER; i_name: ANY; pos: INTEGER) is
+	xm_list_put (scr_obj: POINTER; i_name: POINTER; pos: INTEGER) is
 		external
 			"C"
 		end;
@@ -1028,7 +1028,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	xm_add_item_merge_list (list: POINTER; i_name: ANY; pos: INTEGER) is
+	xm_add_item_merge_list (list: POINTER; i_name: POINTER; pos: INTEGER) is
 		external
 			"C"
 		end;
@@ -1043,12 +1043,12 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	xm_list_index_of (scr_obj: POINTER; name: ANY; pos: INTEGER): INTEGER is
+	xm_list_index_of (scr_obj: POINTER; name: POINTER; pos: INTEGER): INTEGER is
 		external
 			"C"
 		end;
 
-	xm_list_has (scr_obj: POINTER; name: ANY): BOOLEAN is
+	xm_list_has (scr_obj: POINTER; name: POINTER): BOOLEAN is
 		external
 			"C"
 		end;
@@ -1058,12 +1058,12 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	get_i_th_xmstring_table (scr_obj: POINTER; pos: INTEGER; name: ANY): STRING is
+	get_i_th_xmstring_table (scr_obj: POINTER; pos: INTEGER; name: POINTER): STRING is
 		external
 			"C"
 		end;
 
-	get_xmstring_tab (scr_obj: POINTER; name: ANY): POINTER is
+	get_xmstring_tab (scr_obj: POINTER; name: POINTER): POINTER is
 		external
 			"C"
 		end;
@@ -1078,12 +1078,12 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	get_int (scr_obj: POINTER; name: ANY): INTEGER is
+	get_int (scr_obj: POINTER; name: POINTER): INTEGER is
 		external
 			"C"
 		end;
 
-	xm_list_add_right (scr_obj: POINTER; name: ANY; pos: INTEGER) is
+	xm_list_add_right (scr_obj: POINTER; name: POINTER; pos: INTEGER) is
 		external
 			"C"
 		end;

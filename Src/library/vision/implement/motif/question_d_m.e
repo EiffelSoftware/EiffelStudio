@@ -61,7 +61,7 @@ feature {ALL_CURS_X}
 
 feature {NONE} -- External features
 
-	create_question_d (d_name: ANY; scr_obj: POINTER): POINTER is
+	create_question_d (d_name: POINTER; scr_obj: POINTER): POINTER is
 		external
 			"C"
 		end;

@@ -493,7 +493,7 @@ feature {NONE}
 
 feature {NONE} -- External features
 
-	create_file_selection (s_name: ANY; scr_obj: POINTER;
+	create_file_selection (s_name: POINTER; scr_obj: POINTER;
 				man: BOOLEAN): POINTER is
 		external
 			"C"
@@ -514,12 +514,12 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	get_xmstring_tab (scr_obj: POINTER; name: ANY): POINTER is
+	get_xmstring_tab (scr_obj: POINTER; name: POINTER): POINTER is
 		external
 			"C"
 		end;
 
-	from_xm_string (scr_obj: POINTER; name: ANY): STRING is
+	from_xm_string (scr_obj: POINTER; name: POINTER): STRING is
 		external
 			"C"
 		end;

@@ -72,13 +72,14 @@ feature
 		local
 			ext_name, ext_name_app: ANY;
 			scr_name: STRING
+			null_pointer: POINTER;
 		do
 			scr_name := a_screen.screen_name;
 			if not scr_name.empty then
 				ext_name := scr_name.to_c;
 			end;
 			if (application_class = Void) then
-				display_pointer := xt_open_display ($ext_name, 0)
+				display_pointer := xt_open_display ($ext_name, null_pointer)
 			else
 				ext_name_app := application_class.to_c;
 				display_pointer := xt_open_display ($ext_name, $ext_name_app)
@@ -230,7 +231,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	xt_open_display (name1, name2: ANY): POINTER is
+	xt_open_display (name1, name2: POINTER): POINTER is
 		external
 			"C"
 		end;

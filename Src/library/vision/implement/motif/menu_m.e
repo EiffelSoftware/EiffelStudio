@@ -79,12 +79,12 @@ feature {NONE}
 
 feature {NONE} -- External features
 
-	menu_set_title (scr_obj: POINTER; name1, name2: ANY): POINTER is
+	menu_set_title (scr_obj: POINTER; name1:POINTER; name2: ANY): POINTER is
 		external
 			"C"
 		end;
 
-	from_xm_string (value: POINTER; name: ANY): STRING is
+	from_xm_string (value: POINTER; name: POINTER): STRING is
 		external
 			"C"
 		end;

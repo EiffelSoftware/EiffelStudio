@@ -45,7 +45,7 @@ feature
 
 feature {NONE} -- External features
 
-	xt_create_top_level_shell (scr_obj: POINTER; top_id, app_class: ANY): POINTER is
+	xt_create_top_level_shell (scr_obj: POINTER; top_id, app_class: POINTER): POINTER is
 		external
 			"C"
 		end;

@@ -139,7 +139,7 @@ feature {NONE}
 
 feature {NONE} -- External features
 
-	get_font (scr_obj, old_font_ptr: POINTER; name1, name2: ANY): POINTER is
+	get_font (scr_obj, old_font_ptr: POINTER; name1, name2: POINTER): POINTER is
 			-- (Have no idea on why the old_font_ptr is passed down)
 		external
 			"C"

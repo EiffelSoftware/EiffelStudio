@@ -65,7 +65,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_vertical_scale (name: ANY; parent: POINTER): POINTER is
+	create_vertical_scale (name: POINTER; parent: POINTER): POINTER is
 		external
 			"C"
 		end; 

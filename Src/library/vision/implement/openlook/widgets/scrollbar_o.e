@@ -108,7 +108,7 @@ feature
 	
 feature {NONE} -- External features
 
-	create_vertical_scrollbar (name: ANY; scr_obj: POINTER): POINTER is
+	create_vertical_scrollbar (name: POINTER; scr_obj: POINTER): POINTER is
 		external
 			"C"
 		end; 

@@ -168,7 +168,7 @@ feature
 	
 feature {NONE} -- External features
 
-	create_toggle_b (name: ANY; parent: POINTER): POINTER is
+	create_toggle_b (name: POINTER; parent: POINTER): POINTER is
 		external
 			"C"
 		end; 

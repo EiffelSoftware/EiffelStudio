@@ -49,7 +49,7 @@ feature {NONE}
 feature {NONE} -- External features
 
 	xt_create_top_level_shell (scr_obj: POINTER; 
-			name1, name2: ANY): POINTER is
+			name1, name2: POINTER): POINTER is
 		external
 			"C"
 		end;

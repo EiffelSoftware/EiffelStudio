@@ -125,7 +125,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_form_d (fd_name: ANY; scr_obj: POINTER): POINTEr is
+	create_form_d (fd_name: POINTER; scr_obj: POINTER): POINTEr is
 		external
 			"C"
 		end;

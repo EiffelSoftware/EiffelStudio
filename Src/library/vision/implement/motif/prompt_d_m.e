@@ -118,7 +118,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_prompt_d (p_name: ANY; scr_obj: POINTER): POINTER is
+	create_prompt_d (p_name: POINTER; scr_obj: POINTER): POINTER is
 		external
 			"C"
 		end;

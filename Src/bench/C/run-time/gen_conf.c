@@ -265,13 +265,13 @@ rt_private char ** non_generic_type_names = NULL;
 #ifdef  EIF_THREADS
 
 /*
-doc:	<attribute name="eif_gen_mutex" return_type="" export="private">
+doc:	<attribute name="eif_gen_mutex" return_type="" export="shared">
 doc:		<summary>Calls to public routines are indirected and protected by current mutex. Indirection is needed to avoids problem with recursive calls.</summary>
 doc:		<access>Read</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:	</attribute>
 */
-rt_private EIF_LW_MUTEX_TYPE   *eif_gen_mutex = (EIF_LW_MUTEX_TYPE *) 0;
+rt_shared EIF_LW_MUTEX_TYPE *eif_gen_mutex = (EIF_LW_MUTEX_TYPE *) 0;
 
 rt_public int16 eifthd_compound_id (int16 *, int16, int16, int16 *);
 rt_public int16 eifthd_final_id (int16, int16 *, int16 **, int16, int );
@@ -286,8 +286,6 @@ rt_shared int16 *eifthd_gen_cid (int16);
 rt_shared int16 eifthd_gen_id_from_cid (int16 *, int *);
 rt_public int eifthd_gen_conf (int16, int16);
 
-#define EIFMTX_CREATE EIF_LW_MUTEX_CREATE(eif_gen_mutex, -1, "Cannot create mutex for eif_gen_conf\n")
-#define EIFMTX_DESTROY	EIF_LW_MUTEX_DESTROY (eif_gen_mutex, "Cannot destroy mutex for eif_gen_conf\n");
 #define EIFMTX_LOCK   EIF_LW_MUTEX_LOCK(eif_gen_mutex, "Cannot lock mutex for eif_gen_conf\n")
 #define EIFMTX_UNLOCK EIF_LW_MUTEX_UNLOCK(eif_gen_mutex, "Cannot unlock mutex for eif_gen_conf\n")
 
@@ -521,8 +519,6 @@ rt_shared void eif_gen_conf_init (int max_dtype)
 	struct eif_par_types **pt;
 
 #ifdef EIF_THREADS
-		/* First we create the mutex */
-	EIFMTX_CREATE;
 		/* Since we want to avoid any locks to happen on the access on 
 		 * eif_cid_map, we make sure that `eif_cid_map' can't be resized
 		 * by giving the maximum size it can have, ie 0x0000FFFF */
@@ -774,9 +770,6 @@ rt_shared void eif_gen_conf_cleanup ()
 		eif_free (tmp);
 	}
 	eif_free (eif_derivations);	
-#ifdef EIF_THREADS
-	EIFMTX_DESTROY
-#endif
 
 	eif_free (eif_cid_map);		/* (int16 *) */
 #ifndef EIF_THREADS

@@ -1,7 +1,7 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		"EiffelVision tool-bar separator, implementation interface."
+		"Eiffel Vision tool bar separator. Implementation interface."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,7 @@ inherit
 			interface
 		end
 
-	EV_SEPARATOR_ITEM_IMP
+	EV_ITEM_IMP
 		rename
 			interface as sep_item_interface
 		undefine	
@@ -46,18 +46,15 @@ create
 	make
 
 feature {NONE} -- Initialization
-
+	
 	initialize is
-			-- Initialize the toolbar separator.
+			-- Initialize some stuff useless to separators.
 		do
-			{EV_SEPARATOR_ITEM_IMP} Precursor
-			set_minimum_width (12)
-		end
-
-feature -- Implementation
-
-	index: INTEGER is
-		do
+			pixmapable_imp_initialize
+			{EV_ITEM_IMP} Precursor
+		--| FIXME sementation violation?
+		--| 	set_minimum_width (12)
+			is_initialized := True
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -87,6 +84,11 @@ end -- class EV_TOOL_BAR_SEPARATOR_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/04/12 17:58:21  brendel
+--| Revised.
+--| Attempt to fix segmentation violation unsuccesful.
+--| Added FIXME for the line concerned.
+--|
 --| Revision 1.12  2000/02/22 18:39:34  oconnor
 --| updated copyright date and formatting
 --|

@@ -486,11 +486,7 @@ rt_public EIF_REFERENCE c_outi64(EIF_INTEGER_64 i)
 {
 	EIF_GET_CONTEXT
 	register int len;
-#ifdef EIF_WIN32
-	len = sprintf(buffero, "%I64d", i);
-#else
-	len = sprintf(buffero, "%Ld", i);
-#endif
+	len = sprintf(buffero, "%" EIF_INTEGER_64_DISPLAY, i);
 	return makestr(buffero, len);
 }
 
@@ -570,11 +566,7 @@ rt_shared char *simple_out(struct item *val)
 		sprintf(tagged_out, "INTEGER = %d", val->it_int32);
 		break;
 	case SK_INT64:
-#ifdef EIF_WIN32
-		sprintf(tagged_out, "INTEGER_32 = l%I64d", val->it_int64);
-#else
-		sprintf(tagged_out, "INTEGER_32 = l%Ld", val->it_int64);
-#endif
+		sprintf(tagged_out, "INTEGER_64 = %" EIF_INTEGER_64_DISPLAY, val->it_int64);
 		break;
 	case SK_FLOAT:
 		sprintf(tagged_out, "REAL = %g", val->it_float);

@@ -199,7 +199,6 @@ feature {NONE} -- Implementation
 			titled_window_object ?= an_object
 			Result := titled_window_object = Void
 		end
-		
 
 	expand_layout_item (an_object: GB_OBJECT) is
 			-- If `an_object' is expanded, expand `layout_item' of `an_object'.

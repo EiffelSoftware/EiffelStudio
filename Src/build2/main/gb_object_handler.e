@@ -994,7 +994,7 @@ feature -- Basic operation
 			loop
 				an_object := some_objects.item
 				if an_object.name.is_empty then
-					an_object.set_name (unique_name (names, an_object.short_type))
+					an_object.set_name (unique_name_from_array (names, an_object.short_type))
 					an_object.layout_item.set_text (name_and_type_from_object (an_object))
 					titled_window_object ?= an_object
 					if titled_window_object /= Void then

@@ -101,7 +101,7 @@ feature -- Status report
 			-- Items may be removed.
 
 	split_position: INTEGER is
-			-- Offset of the splitter from left or top.
+			-- Offset of splitter from left or top.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -111,7 +111,7 @@ feature -- Status report
 		end
 
 	minimum_split_position: INTEGER is
-			-- Minimum position the splitter can have.
+			-- Minimum position splitter can have.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -122,7 +122,7 @@ feature -- Status report
 		end
 
 	maximum_split_position: INTEGER is
-			-- Maximum position the splitter can have.
+			-- Maximum position splitter can have.
 		require
 			not_destroyed: not is_destroyed
 		do

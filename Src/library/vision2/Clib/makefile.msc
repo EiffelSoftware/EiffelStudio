@@ -13,7 +13,7 @@ CFLAGS = -c -O1 \
 	-I..\spec\include \
 	-I$(ISE_EIFFEL)\C_library\libpng \
 	-I$(ISE_EIFFEL)\C_library\zlib \
-	-I$(ISE_EIFFEL)\bench\spec\windows\include
+	-I$(ISE_EIFFEL)\studio\spec\windows\include
 
 .c.obj:
 	$(CC) $(CFLAGS) $<

@@ -11,8 +11,7 @@ inherit
 	CONTENT_AS
 		redefine
 			is_require_else, is_ensure_then, has_rescue,
-			has_precondition, has_postcondition,
-			simple_format
+			has_precondition, has_postcondition
 		end;
 
 feature -- Attributes
@@ -36,6 +35,11 @@ feature -- Attributes
 	rescue_clause: EIFFEL_LIST [INSTRUCTION_AS];
 			-- Rescue compound
 
+	comment: EIFFEL_COMMENTS is
+			-- Routine comments
+		do
+		end;
+
 feature -- Initialization
 
 	set is
@@ -54,12 +58,6 @@ feature -- Initialization
 	set_comment (c: EIFFEL_COMMENTS) is
 		do
 		end;
-
-	comment: EIFFEL_COMMENTS;
-
-	--comment: EIFFEL_COMMENTS is
-	--	do
-	--	end;
 
 feature -- Conveniences
 
@@ -191,53 +189,56 @@ feature -- Simple formatting
 			-- Reconstitute text.
 		do
 			ctxt.put_space
-			ctxt.put_text_item (ti_Is_keyword)
-			ctxt.indent_one_more
+			ctxt.put_text_item_without_tabs (ti_Is_keyword)
+			ctxt.new_line
 
 			if obsolete_message /= Void then
-				ctxt.next_line
+				ctxt.indent
 				ctxt.put_text_item (ti_Obsolete_keyword)
-				ctxt.indent_one_more
-				ctxt.next_line
+				ctxt.put_space
 				obsolete_message.simple_format (ctxt)
-				ctxt.indent_one_less
+				ctxt.new_line
+				ctxt.exdent
 			end
 
+            if comment /= Void then
+                ctxt.indent
+                ctxt.indent
+                ctxt.put_comment (comment)
+                ctxt.exdent
+                ctxt.exdent
+            end
+
+			ctxt.indent;
 			if precondition /= Void then
-				precondition.simple_format (ctxt)
+				precondition.simple_format (ctxt);
 			end
-
 			if locals /= Void then
-				ctxt.next_line
 				ctxt.put_text_item (ti_Local_keyword)
-				ctxt.indent_one_more
-				ctxt.new_line_between_tokens
-				ctxt.next_line
+				ctxt.set_separator (ti_Semi_colon)
+				ctxt.indent
+				ctxt.set_new_line_between_tokens
+				ctxt.new_line
 				locals.simple_format (ctxt)
-				ctxt.indent_one_less
+				ctxt.new_line;
+				ctxt.exdent
 			end
-
 			if routine_body /= Void then
-				ctxt.next_line
 				routine_body.simple_format (ctxt)
 			end
-
 			if postcondition /= Void then
-				postcondition.simple_format (ctxt)
+				postcondition.simple_format (ctxt);
 			end
-
 			if rescue_clause /= Void then
-				ctxt.next_line
 				ctxt.put_text_item (ti_Rescue_keyword)
-				ctxt.indent_one_more
-				ctxt.next_line
+				ctxt.indent
+				ctxt.new_line
 				rescue_clause.simple_format (ctxt)
-				ctxt.indent_one_less
-			end
-
-			ctxt.next_line
+				ctxt.new_line
+				ctxt.exdent
+			end;
 			ctxt.put_text_item (ti_End_keyword)
-			ctxt.indent_one_less
+			ctxt.exdent
 		end;
 
 feature	{ROUTINE_AS, FEATURE_AS, ROUTINE_MERGER, USER_CMD, CMD}  -- Replication and for flattening of a routine

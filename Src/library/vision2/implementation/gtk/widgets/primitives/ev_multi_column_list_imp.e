@@ -91,6 +91,12 @@ feature {NONE} -- Initialization
 			create Result
 		end
 
+	call_selection_action_sequences is
+			-- 
+		do
+			-- Not needed for 1.2 implementation
+		end
+
 	button_press_switch (
 			a_type: INTEGER;
 			a_x, a_y, a_button: INTEGER;

@@ -169,9 +169,7 @@ feature {NONE}  -- Type
 			a_class: CLASS_C
 			a_feature: FEATURE_I
 			a_table: FEATURE_TABLE
-			any_type: CL_TYPE_A
 			ttype: TYPE_A
-			gen_type: GEN_TYPE_A
 			formal_type: FORMAL_A
 			formal_dec: FORMAL_DEC_AS
 			formal_position: INTEGER
@@ -224,8 +222,7 @@ feature {NONE}  -- Type
 				if formal_dec.has_constraint then
 					ttype := formal_dec.constraint_type
 				else
-					create any_type.make (System.any_id)
-					ttype := any_type
+					create {CL_TYPE_A} ttype.make (System.any_id)
 				end
 			end
 
@@ -240,10 +237,7 @@ feature {NONE}  -- Type
 				Error_handler.raise_error
 			end
 
-			gen_type ?= ttype
-			if gen_type /= Void then
-				System.instantiator.dispatch (gen_type, context.current_class)
-			end
+			System.instantiator.dispatch (ttype, context.current_class)
 
 			ttype.reset_constraint_error_list
 			ttype.check_constraints (context.current_class)

@@ -329,6 +329,7 @@ feature {EV_ANY_I} -- Implementation
 		local
 			env: EV_ENVIRONMENT
 			target: EV_ABSTRACT_PICK_AND_DROPABLE
+			pick_and_dropable: EV_PICK_AND_DROPABLE
 		do
 			modify_widget_appearance (False)
 				-- Remove the capture (as soon as possible because we can't
@@ -370,6 +371,11 @@ feature {EV_ANY_I} -- Implementation
 							-- actions for `target'.
 				end
 			end
+			pick_and_dropable ?= target
+			check
+				pick_and_dropable_not_void : pick_and_dropable /= Void
+			end
+			pick_ended_actions.call ([pick_and_dropable])
 			enable_transport
 				-- Return state ready for next drag/pick and drop.
 			
@@ -380,6 +386,10 @@ feature {EV_ANY_I} -- Implementation
 			
 			interface.pointer_motion_actions.resume
 				-- Resume `pointer_motion_actions'.
+				
+				
+			original_top_level_window_imp.allow_movement
+			original_top_level_window_imp := Void
 			
 			env.application.drop_actions.call ([pebble])
 				-- Execute drop_actions for the application.
@@ -391,8 +401,6 @@ feature {EV_ANY_I} -- Implementation
 			if pebble_function /= Void then
 				pebble := Void
 			end
-			original_top_level_window_imp.allow_movement
-			original_top_level_window_imp := Void
 		ensure then
 			original_window_void: original_top_level_window_imp = Void
 			press_action_Reset: press_action = Ev_pnd_start_transport

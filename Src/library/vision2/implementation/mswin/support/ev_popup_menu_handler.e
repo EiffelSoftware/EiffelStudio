@@ -1,8 +1,7 @@
 indexing
 	description:
-		"Eiffel Vision popup menu handler. Needed by Window as recipient%N%
-		%for menu click commands. Inherits from WEL_COMPOSITE_WINDOW to be%N%
-		%able to receive menu commands. Sends them directly to the menu."
+		"Eiffel Vision popup menu handler. Invisible window that lets%N%
+		%`menu_item_list' receive click commands."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -65,6 +64,9 @@ end -- class EV_POPUP_MENU_HANDLER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2000/04/07 22:33:27  brendel
+--| Indexing clause.
+--|
 --| Revision 1.2  2000/03/23 00:53:35  brendel
 --| Now inherits WEL_FRAME_WINDOW because WEL_COMPOSITE_WINDOW is deferred.
 --|

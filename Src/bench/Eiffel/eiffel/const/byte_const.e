@@ -134,5 +134,8 @@ feature {NONE}
 	Bc_passign:			CHARACTER is '%/126/';
 	Bc_preverse:		CHARACTER is '%/127/';
 	Bc_pclike:			CHARACTER is '%/128/';
+	Bc_object_expr_addr:	CHARACTER is '%/129/';
+	Bc_reserve:			CHARACTER is '%/130/';
+	Bc_pop:				CHARACTER is '%/131/';
 
 end

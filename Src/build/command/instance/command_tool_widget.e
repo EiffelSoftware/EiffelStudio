@@ -156,11 +156,14 @@ feature
 
 	show_command_editor is
 		do
+			hide_other_command_editor
 			main_panel.show_command_editor
+			command_editor.set_command (command_instance.associated_command)
 		end
 
 	hide_command_editor is
 		do
+			command_editor.clear
 			main_panel.hide_command_editor
 		end
 

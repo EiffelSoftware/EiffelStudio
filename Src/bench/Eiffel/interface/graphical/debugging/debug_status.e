@@ -5,7 +5,7 @@ class DEBUG_STATUS
 inherit
 
 	ICONED_COMMAND;
-	SHARED_DEBUG
+	SHARED_APPLICATION_EXECUTION
 
 creation
 
@@ -22,7 +22,11 @@ feature {NONE}
 
 	work (argument: ANY) is
 		do
-			Run_info.display_status (Debug_window)
+			if Application.is_running then
+				Application.status.display_status (Debug_window)
+			else
+				Debug_window.put_string ("System not launched%N")
+			end
 		end;
 
 feature

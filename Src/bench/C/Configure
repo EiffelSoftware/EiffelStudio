@@ -20,7 +20,7 @@
 
 # $Id$
 #
-# Generated on Tue Jun 21 09:25:14 PDT 1994 [metaconfig 3.0 PL31]
+# Generated on Fri Aug 12 14:10:11 PDT 1994 [metaconfig 3.0 PL31]
 
 cat >/tmp/c1$$ <<EOF
 ARGGGHHHH!!!!!
@@ -276,6 +276,7 @@ d_dirnamlen=''
 direntrytype=''
 i_dirent=''
 i_fcntl=''
+i_fd_setsyss=''
 i_grp=''
 i_limits=''
 i_netns_ns=''
@@ -5526,6 +5527,20 @@ esac
 set i_fcntl
 eval $setvar
 
+: see if sys/select.h has to be included
+xxx=`./findhdr sys/select.h`
+if $test "$xxx"; then
+    if $contains 'fd_set.*{' $xxx >/dev/null 2>&1; then
+        val="$define"
+        echo "You have struct fd_set defined in <sys/select.h>." >&4
+	else
+		val="$undef"
+    fi
+else
+    val="$undef"
+fi
+set i_fd_setsyss
+eval $setvar
 : see if this is an grp system
 set grp.h i_grp
 eval $inhdr
@@ -6053,6 +6068,7 @@ d_dirnamlen='$d_dirnamlen'
 direntrytype='$direntrytype'
 i_dirent='$i_dirent'
 i_fcntl='$i_fcntl'
+i_fd_setsyss='$i_fd_setsyss'
 i_grp='$i_grp'
 i_limits='$i_limits'
 i_netns_ns='$i_netns_ns'

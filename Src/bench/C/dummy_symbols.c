@@ -7,6 +7,9 @@
 #ifdef I_NETNS_NS
 #endif
 
+#ifdef I_FD_SET_SYS_SELECT
+#endif
+
 /* symbols used by EiffelVision */
 
 #ifdef I_XM_PROTOCOLS

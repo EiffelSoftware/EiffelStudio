@@ -92,7 +92,6 @@ feature {NONE} -- Type check, byte code production, dead_code_removal
 			-- Check if the target type conforms to the source one
 		local
 			source_type, target_type: TYPE_A
-			l_source, l_target: CL_TYPE_A
 			l_vjar: VJAR
 			l_vncb: VNCB
 		do
@@ -106,20 +105,32 @@ feature {NONE} -- Type check, byte code production, dead_code_removal
 
 				-- Type checking
 				--| If `source_type' is of type NONE_A and if `target_type' does
-				--| not conform to NONE¸ we generate in all the cases a VJAR error,
+				--| not conform to NONE, we generate in all the cases a VJAR error,
 				--| we do not try to specify what kind of error, i.e.
 				--| 1- if target was a basic or an expanded type, we should generate
 				--|    a VNCE error.
 				--| 2- if target was a BIT type, we should generate a VNCB error.
 			if not source_type.conform_to (target_type) then
 				if source_type.convert_to (context.current_class, target_type) then
-					l_source ?= source_type
-					l_target ?= target_type
-					check
-						l_source_not_void: l_source /= Void
-						l_target_not_void: l_target /= Void
-					end
-					create conversion_info.make (l_source, l_target)
+					conversion_info := context.last_conversion_info
+					context.supplier_ids.extend (conversion_info.depend_unit)
+				elseif
+					source_type.is_expanded and then target_type.is_external and then
+					source_type.reference_actual_type.conform_to (target_type)
+				then
+						-- No need for conversion, this is currently done at the code
+						-- generation level to properly handle the generic case.
+						-- If not done at the code generation, we would need the following
+						-- line.
+					-- create {BOX_CONVERSION_INFO} conversion_info.make (source_type)
+				elseif
+					source_type.is_expanded and then
+					source_type.convert_to (context.current_class,
+						source_type.reference_actual_type) and then
+					source_type.reference_actual_type.conform_to (target_type)
+				then
+					conversion_info := context.last_conversion_info
+					context.supplier_ids.extend (conversion_info.depend_unit)
 				else
 						-- Type does not convert neither, so we raise an error
 						-- about non-conforming types.
@@ -151,11 +162,7 @@ feature {NONE} -- Type check, byte code production, dead_code_removal
 			create Result
 			Result.set_target (target.byte_node)
 			if conversion_info /= Void then
-				Result.set_source (
-					Byte_code_factory.convert_byte_node (
-					source.byte_node, conversion_info.first,
-					conversion_info.second,
-					line_number))
+				Result.set_source (conversion_info.byte_node (source.byte_node))
 					-- We don't need the information, so let's reset it.
 				conversion_info := Void
 			else
@@ -204,17 +211,7 @@ feature {ASSIGN_AS}	-- Replication
 
 feature {NONE} -- Convertibility
 
-	conversion_info: PAIR [CL_TYPE_A, CL_TYPE_A]
+	conversion_info: CONVERSION_INFO
 			-- Store information about source and target type to perform proper conversion.
-
-	Byte_code_factory: BYTE_CODE_FACTORY is
-			-- Factory to create conversion byte node.
-		once
-			create Result
-		end
-
-invariant
-	conversion_info_valid: conversion_info /= Void implies (conversion_info.first /= Void and
-		conversion_info.second /= Void)
 
 end -- class ASSIGN_AS

@@ -1,18 +1,18 @@
-: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL60]
-: $X-Id: Jmake.tmpl,v 3.0.1.2 1995/01/11 14:50:21 ram Exp $
+: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL70]
+: $X-Id: Jmake.tmpl,v 3.0.1.3 1997/02/28 14:56:16 ram Exp $
 
 case $CONFIG in
 '')
-	if test -f config.sh; then TOP=.;
-	elif test -f ../config.sh; then TOP=..;
-	elif test -f ../../config.sh; then TOP=../..;
-	elif test -f ../../../config.sh; then TOP=../../..;
-	elif test -f ../../../../config.sh; then TOP=../../../..;
-	else
-		echo "Can't find config.sh."; exit 1
-	fi
-	. $TOP/config.sh
-	;;
+	       if test -f config.sh; then TOP=.;
+	       elif test -f ../config.sh; then TOP=..;
+	       elif test -f ../../config.sh; then TOP=../..;
+	       elif test -f ../../../config.sh; then TOP=../../..;
+	       elif test -f ../../../../config.sh; then TOP=../../../..;
+	       else
+	               echo "Can't find config.sh."; exit 1
+	       fi
+	       . $TOP/config.sh
+	       ;;
 esac
 case "$0" in
 */*) cd `expr X$0 : 'X\(.*\)/'` ;;
@@ -40,6 +40,7 @@ AR = ar rc
 CC = $cc
 CTAGS = ctags
 JCFLAGS = \$(CFLAGS) $optimize $warning_level $ccflags $large
+LINT = lint
 MAKE = make
 MKDEP = $mkdep \$(DPFLAGS) --
 MV = $mv
@@ -50,22 +51,21 @@ SED = $sed
 ########################################################################
 # Automatically generated parameters -- do not edit
 
-SOURCES =  \$(SRC)
-OBJECTS =  \$(OBJ)
+USRINC = $usrinc
+SOURCES =  \$(LSRC)
+OBJECTS =  \$(LOBJ)
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care
 
 .c.o:
-	\$(RM) \$@
 	\$(CC) -c \$(JCFLAGS) \$<
 
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
-# $X-Id: Jmake.rules,v 3.0.1.5 1995/09/25 09:07:19 ram Exp $
-
+# $X-Id: Jmake.rules,v 3.0.1.6 1997/02/28 14:56:01 ram Exp $
 ########################################################################
 # Force 'make depend' to be performed first -- do not edit
 
@@ -77,23 +77,34 @@ all:: .FORCE_DEPEND
 # Start of Jmakefile
 
 # Files used to build the daemon
-SRC = ewb_proto.c eproto.c eif_in.c eif_out.c ewb_init.c ewb_dumped.c
+LSRC = ewb_proto.c eproto.c eif_in.c eif_out.c ewb_init.c ewb_dumped.c
 
 # Derived object file names
-OBJ = ewb_proto.o \
-	eproto.o \
-	eif_in.o \
-	eif_out.o \
-	ewb_init.o \
-	ewb_dumped.o 
+LOBJ = \
+	       ewb_proto.o \
+	       eproto.o \
+	       eif_in.o \
+	       eif_out.o \
+	       ewb_init.o \
+	       ewb_dumped.o 
 
 # Where shared archive is located (path and name)
-LIBDIR = ../shared
-LIBIDR = ../../idrs
+LIB_SHARED = ../shared
+LIB_IDR = ../../idrs
 
 RUN_TIME = ../../run-time
-DPFLAGS = -I$(TOP) -I$(LIBDIR) -I$(RUN_TIME) -I$(RUN_TIME)/include -I$(LIBIDR)
+DPFLAGS = -I$(TOP) -I$(LIB_SHARED) -I$(RUN_TIME) -I$(LIB_IDR) -I$(RUN_TIME)/include
 CFLAGS = $(DPFLAGS)
+
+all:: libewb.a
+
+local_realclean::
+	$(RM) libewb.a
+
+libewb.a: $(LOBJ)
+	$(RM) $@
+	$(AR) $@ $(LOBJ)
+	$(RANLIB) $@
 
 depend:: ../../mkdep
 
@@ -103,21 +114,16 @@ depend:: ../../mkdep
 depend::
 	($(SED) '/^# DO NOT DELETE/q' Makefile && \
 	$(MKDEP) $(SOURCES) | \
-	$(SED) -e 's/: \.\//: /; s/\/usr\/include[^ ]*//g' -e '/: *$$/d' \
+	$(SED) -e 's:/usr/include[^ ]*::g; s:$(USRINC)[^ ]*::g; ' \
+	-e '/: / b print' -e 'H; d; n; : print' -e 'x; s/\\\n//g' \
+	-e 's/  */ /g; s/ :/:/;' -e '/: *$$/d' \
 	) > Makefile.new
 	cp Makefile Makefile.bak
 	cp Makefile.new Makefile
 	$(RM) Makefile.new
 
-all:: libewb.a
-
-local_realclean::
-	$(RM) libewb.a
-
-libewb.a: $(OBJ)
-	$(RM) $@
-	$(AR) $@ $(OBJ)
-	$(RANLIB) $@
+lint:
+	$(LINT) $(LINTFLAGS) $(SOURCES) $(LINTLIBS)
 
 ########################################################################
 # Common rules for all Makefiles -- do not edit
@@ -160,16 +166,16 @@ local_clobber::
 # Empty rules for directories with no sub-directories -- do not edit
 
 install::
-	@echo "install in $(CURRENT) done."
+	       @echo "install in $(CURRENT) done."
 
 deinstall::
-	@echo "deinstall in $(CURRENT) done."
+	       @echo "deinstall in $(CURRENT) done."
 
 install.man::
-	@echo "install.man in $(CURRENT) done."
+	       @echo "install.man in $(CURRENT) done."
 
 deinstall.man::
-	@echo "deinstall.man in $(CURRENT) done."
+	       @echo "deinstall.man in $(CURRENT) done."
 
 Makefiles::
 
@@ -185,4 +191,3 @@ Makefiles.SH::
 !NO!SUBS!
 chmod 644 Makefile
 $eunicefix Makefile
-

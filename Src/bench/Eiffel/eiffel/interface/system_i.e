@@ -243,12 +243,6 @@ feature -- Properties
 	remover: REMOVER
 			-- Dead code removal control
 
-	inliner: INLINER
-			-- Inliner control		
-
-	array_optimizer: ARRAY_OPTIMIZER
-			-- Array optimizer control
-
 	keep_assertions: BOOLEAN
 			-- Are the assertions kept in final mode?
 
@@ -873,7 +867,7 @@ feature -- Recompilation
 			end
 
 				-- Syntax analysis: This maybe add new classes to
-				-- the system
+				-- the system (degree 5)
 			process_pass (pass1_controler)
 
 				-- Check generic validity on old classes
@@ -1007,17 +1001,19 @@ end
 			class_array: ARRAY [CLASS_C]
 			i, nb: INTEGER
 			a_class: CLASS_C
+			local_classes: CLASS_C_SERVER
 		do
 debug ("ACTIVITY")
 	io.error.putstring ("Check generics%N")
 end
 			from
-				classes.start
+				local_classes := classes
+				local_classes.start
 			until
-				classes.after
+				local_classes.after
 			loop
-				class_array := classes.item_for_iteration
-				nb := class_counter.item (classes.key_for_iteration).count
+				class_array := local_classes.item_for_iteration
+				nb := class_counter.item (local_classes.key_for_iteration).count
 				from
 					i := 1
 				until
@@ -1036,7 +1032,7 @@ end
 					end
 					i := i + 1
 				end
-				classes.forth
+				local_classes.forth
 			end
 			Error_handler.checksum
 		end
@@ -1049,6 +1045,7 @@ end
 			i, nb: INTEGER
 			root_class_c: CLASS_C
 			marked_classes: SEARCH_TABLE [CLASS_ID]
+			local_classes: CLASS_C_SERVER
 		do
 				-- First mark all the classes that can be reached
 				-- from the root class
@@ -1070,12 +1067,13 @@ end
 				-- Now mark all classes reachable from visible classes.
 
 			from
-				classes.start
+				local_classes := classes
+				local_classes.start
 			until
-				classes.after
+				local_classes.after
 			loop
-				class_array := classes.item_for_iteration
-				nb := class_counter.item (classes.key_for_iteration).count
+				class_array := local_classes.item_for_iteration
+				nb := class_counter.item (local_classes.key_for_iteration).count
 				from
 					i := 1
 				until
@@ -1090,7 +1088,7 @@ end
 					end
 					i := i + 1
 				end
-				classes.forth
+				local_classes.forth
 			end
 
 				-- Mark the descendants of DYNAMIC when compiling
@@ -1100,12 +1098,12 @@ end
 				-- Remove all the classes that cannot be reached if they are
 				-- not protected
 			from
-				classes.start
+				local_classes.start
 			until
-				classes.after
+				local_classes.after
 			loop
-				class_array := classes.item_for_iteration
-				nb := class_counter.item (classes.key_for_iteration).count
+				class_array := local_classes.item_for_iteration
+				nb := class_counter.item (local_classes.key_for_iteration).count
 				from
 					i := 1
 				until
@@ -1126,7 +1124,7 @@ end
 					end
 					i := i + 1
 				end
-				classes.forth
+				local_classes.forth
 			end
 			Error_handler.checksum
 		end
@@ -1137,14 +1135,16 @@ end
 			a_class: CLASS_C
 			class_array: ARRAY [CLASS_C]
 			i, nb: INTEGER
+			local_classes: CLASS_C_SERVER
 		do
 			from
-				classes.start
+				local_classes := classes
+				local_classes.start
 			until
-				classes.after
+				local_classes.after
 			loop
-				class_array := classes.item_for_iteration
-				nb := class_counter.item (classes.key_for_iteration).count
+				class_array := local_classes.item_for_iteration
+				nb := class_counter.item (local_classes.key_for_iteration).count
 				from i := 1 until i > nb loop
 					a_class := class_array.item (i)
 					if a_class /= Void then
@@ -1152,7 +1152,7 @@ end
 					end
 					i := i + 1
 				end
-				classes.forth
+				local_classes.forth
 			end
 		end
 
@@ -1270,14 +1270,16 @@ end
 			class_array: ARRAY [CLASS_C]
 			i, nb: INTEGER
 			a_class: CLASS_C
+			local_classes: CLASS_C_SERVER	
 		do
 			from
-				classes.start
+				local_classes := classes
+				local_classes.start
 			until
-				classes.after
+				local_classes.after
 			loop
-				class_array := classes.item_for_iteration
-				nb := class_counter.item (classes.key_for_iteration).count
+				class_array := local_classes.item_for_iteration
+				nb := class_counter.item (local_classes.key_for_iteration).count
 				from i := 1 until i > nb loop
 					a_class := class_array.item (i)
 					if a_class /= Void then
@@ -1291,7 +1293,7 @@ end
 					end
 					i := i + 1
 				end
-				classes.forth
+				local_classes.forth
 			end
 		end
 
@@ -1754,6 +1756,7 @@ end
 			class_array: ARRAY [CLASS_C]
 			i, nb: INTEGER
 			a_class: CLASS_C
+			local_classes: CLASS_C_SERVER
 		do
 				-- Reinitialization of control flags of the topological
 				-- sort.
@@ -1762,12 +1765,13 @@ end
 
 				-- Reset the classes as unchanged
 			from
-				classes.start
+				local_classes := classes
+				local_classes.start
 			until
-				classes.after
+				local_classes.after
 			loop
-				class_array := classes.item_for_iteration
-				nb := class_counter.item (classes.key_for_iteration).count
+				class_array := local_classes.item_for_iteration
+				nb := class_counter.item (local_classes.key_for_iteration).count
 				from i := 1 until i > nb loop
 					a_class := class_array.item (i)
 					if a_class /= Void then
@@ -1780,7 +1784,7 @@ end
 					end
 					i := i + 1
 				end
-				classes.forth
+				local_classes.forth
 			end
 
 				-- Update servers
@@ -2047,14 +2051,19 @@ end
 		local
 			class_list: LINKED_LIST [CLASS_C]
 		do
-			from
-				class_list := freeze_set1
-				class_list.start
-			until
-				class_list.after
-			loop
-				class_list.item.update_valid_body_ids
-				class_list.forth
+				-- If we are not using any precompilation, ie classes.count = 1
+				-- which correspond to the classes.item (Normal_compilation),
+				-- we don't need to update the body ids at the first compilation
+			if not (First_compilation and then classes.ht_count = 1) then
+				from
+					class_list := freeze_set1
+					class_list.start
+				until
+					class_list.after
+				loop
+					class_list.item.update_valid_body_ids
+					class_list.forth
+				end
 			end
 		end
 
@@ -2155,16 +2164,6 @@ feature -- Final mode generation
 
 			degree_minus_4
 			
-			if inlining_on then
-				!! inliner.make
-			end
-
-			if array_optimization_on then
-				!! array_optimizer.make
-					-- record the descendants of ARRAY
-				array_optimizer.record_array_descendants
-			end
-
 				-- Dead code removal
 			if not remover_off then
 				deg_output := Degree_output
@@ -2213,8 +2212,6 @@ feature -- Final mode generation
 			Tmp_opt_byte_server.clear
 
 			remover := Void
-			inliner := Void
-			array_optimizer := Void
 
 			remover_off := old_remover_off
 			exception_stack_managed := old_exception_stack_managed
@@ -2236,17 +2233,19 @@ feature -- Final mode generation
 			i, j, nb: INTEGER
 			deg_output: DEGREE_OUTPUT
 			class_array: ARRAY [CLASS_C]
+			local_classes: CLASS_C_SERVER
 		do
-			i := classes.count
+			local_classes := classes
+			i := local_classes.count
 			deg_output := Degree_output
 			deg_output.put_start_degree (-4, i)
 			from
-				classes.start
+				local_classes.start
 			until
-				classes.after
+				local_classes.after
 			loop
-				class_array := classes.item_for_iteration
-				nb := class_counter.item (classes.key_for_iteration).count
+				class_array := local_classes.item_for_iteration
+				nb := class_counter.item (local_classes.key_for_iteration).count
 				from
 					j := 1
 				until
@@ -2261,7 +2260,7 @@ feature -- Final mode generation
 					end
 					j := j + 1
 				end
-				classes.forth
+				local_classes.forth
 			end
 			deg_output.put_end_degree
 			History_control.transfer
@@ -2278,19 +2277,21 @@ feature -- Final mode generation
 			a_class: CLASS_C
 			j: INTEGER
 			deg_output: DEGREE_OUTPUT
+			local_classes: CLASS_C_SERVER
 		do
 			from
+				local_classes := classes
 				!FINAL_MAKER! makefile_generator.make
 				open_log_files
-				j := classes.count
+				j := local_classes.count
 				deg_output := Degree_output
 				deg_output.put_start_degree (-5, j)
-				classes.start
+				local_classes.start
 			until
-				classes.after
+				local_classes.after
 			loop
-				class_array := classes.item_for_iteration
-				nb := class_counter.item (classes.key_for_iteration).count
+				class_array := local_classes.item_for_iteration
+				nb := class_counter.item (local_classes.key_for_iteration).count
 				from
 					i := 1
 				until
@@ -2305,7 +2306,7 @@ feature -- Final mode generation
 					end
 					i := i + 1
 				end
-				classes.forth
+				local_classes.forth
 			end
 			deg_output.put_end_degree
 			close_log_files
@@ -2321,8 +2322,13 @@ feature -- Dead code removal
 			a_class: CLASS_C
 			root_feat: FEATURE_I
 			ct: CLASS_TYPE
+			local_classes: CLASS_C_SERVER
 		do
-			!! remover.make (array_optimizer, inliner)
+			!! remover.make
+
+			if array_optimization_on then
+				remover.record_array_descendants
+			end
 
 				-- First, inspection of the Eiffel code
 			if creation_name /= Void then
@@ -2332,12 +2338,13 @@ feature -- Dead code removal
 			end
 
 			from
-				classes.start
+				local_classes := classes
+				local_classes.start
 			until
-				classes.after
+				local_classes.after
 			loop
-				class_array := classes.item_for_iteration
-				nb := class_counter.item (classes.key_for_iteration).count
+				class_array := local_classes.item_for_iteration
+				nb := class_counter.item (local_classes.key_for_iteration).count
 				from i := 1 until i > nb loop
 					a_class := class_array.item (i)
 					if a_class /= Void then
@@ -2351,7 +2358,7 @@ feature -- Dead code removal
 					end
 					i := i + 1
 				end
-				classes.forth
+				local_classes.forth
 			end
 
 			if has_expanded then
@@ -2469,6 +2476,7 @@ feature -- Generation
 			a_class: CLASS_C
 			types: TYPE_LIST
 			i, nb: INTEGER
+			local_classes: CLASS_C_SERVER
 		do
 				-- First re-process all the type id of instances of
 				-- CLASS_TYPE available in attribute list `types' of
@@ -2480,12 +2488,13 @@ end
 				-- Sort the class_list by type id in `class_list'.
 			!!class_list.make (1, max_class_id)
 			from
-				classes.start
+				local_classes := classes
+				local_classes.start
 			until
-				classes.after
+				local_classes.after
 			loop
-				class_array := classes.item_for_iteration
-				nb := class_counter.item (classes.key_for_iteration).count
+				class_array := local_classes.item_for_iteration
+				nb := class_counter.item (local_classes.key_for_iteration).count
 				from i := 1 until i > nb loop
 					a_class := class_array.item (i)
 					if a_class /= Void then
@@ -2493,7 +2502,7 @@ end
 					end
 					i := i + 1
 				end
-				classes.forth
+				local_classes.forth
 			end
 
 			nb := max_class_id
@@ -2657,6 +2666,7 @@ end
 				-- cltype_array is indexed by `id' not by `type_id'
 				-- as `class_types'
 			cltype_array: ARRAY [CLASS_TYPE]
+			local_classes: CLASS_C_SERVER
 	--		skeleton_file: INDENT_FILE
 		do
 			nb := Type_id_counter.value
@@ -2694,12 +2704,13 @@ end
 				Skeleton_file.putstring ("#include %"eif_macros.h%"%N")
 				Skeleton_file.new_line
 				from
-					classes.start
+					local_classes := classes
+					local_classes.start
 				until
-					classes.after
+					local_classes.after
 				loop
-					class_array := classes.item_for_iteration
-					nb := class_counter.item (classes.key_for_iteration).count
+					class_array := local_classes.item_for_iteration
+					nb := class_counter.item (local_classes.key_for_iteration).count
 					from i := 1 until i > nb loop
 						a_class := class_array.item (i)
 						if a_class /= Void then
@@ -2736,7 +2747,7 @@ end
 						end
 						i := i + 1
 					end
-					classes.forth
+					local_classes.forth
 				end
 				Skeleton_file.new_line
 
@@ -2865,6 +2876,7 @@ end
 			subdir: DIRECTORY
 			f_name: FILE_NAME
 			dir_name: DIRECTORY_NAME
+			local_classes: CLASS_C_SERVER
 		do
 			final_mode := byte_context.final_mode
 
@@ -2878,12 +2890,13 @@ end
 			Cecil_file.putstring ("#include %"eif_struct.h%"%N%N")
 
 			from
-				classes.start
+				local_classes := classes
+				local_classes.start
 			until
-				classes.after
+				local_classes.after
 			loop
-				class_array := classes.item_for_iteration
-				nb := class_counter.item (classes.key_for_iteration).count
+				class_array := local_classes.item_for_iteration
+				nb := class_counter.item (local_classes.key_for_iteration).count
 				from i := 1 until i > nb loop
 					a_class := class_array.item (i)
 					if a_class /= Void then
@@ -2893,7 +2906,7 @@ end
 					end
 					i := i + 1
 				end
-				classes.forth
+				local_classes.forth
 			end
 
 			if final_mode then
@@ -2967,14 +2980,16 @@ end
 			generic, no_generic: INTEGER
 			a_class: CLASS_C
 			upper_class_name: STRING
+			local_classes: CLASS_C_SERVER
 		do
 			from
-				classes.start
+				local_classes := classes
+				local_classes.start
 			until
-				classes.after
+				local_classes.after
 			loop
-				class_array := classes.item_for_iteration
-				nb := class_counter.item (classes.key_for_iteration).count
+				class_array := local_classes.item_for_iteration
+				nb := class_counter.item (local_classes.key_for_iteration).count
 				from i := 1 until i > nb loop
 					a_class := class_array.item (i)
 					if a_class /= Void then
@@ -2986,18 +3001,18 @@ end
 					end
 					i := i + 1
 				end
-				classes.forth
+				local_classes.forth
 			end
 
 			Cecil2.init (no_generic)
 			Cecil3.init (generic)
 			from
-				classes.start
+				local_classes.start
 			until
-				classes.after
+				local_classes.after
 			loop
-				class_array := classes.item_for_iteration
-				nb := class_counter.item (classes.key_for_iteration).count
+				class_array := local_classes.item_for_iteration
+				nb := class_counter.item (local_classes.key_for_iteration).count
 				from i := 1 until i > nb loop
 					a_class := class_array.item (i)
 					if a_class /= Void then
@@ -3011,7 +3026,7 @@ end
 					end
 					i := i + 1
 				end
-				classes.forth
+				local_classes.forth
 			end
 		end
 
@@ -3536,6 +3551,7 @@ feature --Workbench option file generation
 			a_class: CLASS_C
 			partial_debug: DEBUG_TAG_I
 			class_type: CLASS_TYPE
+			local_classes: CLASS_C_SERVER
 		do
 			Option_file.open_write
 
@@ -3544,12 +3560,13 @@ feature --Workbench option file generation
 
 				-- First debug keys
 			from
-				classes.start
+				local_classes := classes
+				local_classes.start
 			until
-				classes.after
+				local_classes.after
 			loop
-				class_array := classes.item_for_iteration
-				nb := class_counter.item (classes.key_for_iteration).count
+				class_array := local_classes.item_for_iteration
+				nb := class_counter.item (local_classes.key_for_iteration).count
 				from i := 1 until i > nb loop
 					a_class := class_array.item (i)
 					if a_class /= Void then
@@ -3560,7 +3577,7 @@ feature --Workbench option file generation
 					end
 					i := i + 1
 				end
-				classes.forth
+				local_classes.forth
 			end
 
 				-- Then option C array

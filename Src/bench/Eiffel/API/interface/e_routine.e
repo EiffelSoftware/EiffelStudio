@@ -47,18 +47,12 @@ feature -- Access
 
 	locals: EIFFEL_LIST [TYPE_DEC_AS] is
 		local
-			ec: like written_class
 			routine_as: ROUTINE_AS
 		do
-			ec := written_class;
-			--Eiffel_system.set_current_class (ec);
-			--Eiffel_system.set_cluster (ec.cluster);
 			routine_as ?= Body_server.item (body_id).body.content;
 			if routine_as /= Void then
 				Result := routine_as.locals
 			end;
-            --Eiffel_system.set_current_class (Void);
-            --Eiffel_system.set_cluster (Void)
 		end;
 
 feature -- Setting

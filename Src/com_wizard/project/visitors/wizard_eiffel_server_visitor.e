@@ -27,7 +27,6 @@ feature -- Processing
 		do
 			Precursor (alias_descriptor)
 			create alias_server_generator
-			alias_server_generator.initialize
 			alias_server_generator.generate (alias_descriptor)
 		end
 
@@ -48,7 +47,6 @@ feature -- Processing
 				coclass_impl_generator.generate (coclass_descriptor)
 			else
 				create coclass_server_generator
-				coclass_server_generator.initialize
 				coclass_server_generator.generate (coclass_descriptor)
 			end
 		end
@@ -63,7 +61,6 @@ feature -- Processing
 		do
 			Precursor (interface_descriptor)
 			create implemented_interface_generator
-			implemented_interface_generator.initialize
 			implemented_interface_generator.generate (interface_descriptor)
 		end
 
@@ -78,7 +75,6 @@ feature -- Processing
 			if not shared_wizard_environment.new_eiffel_project then
 				Precursor (interface_descriptor)
 				create interface_server_generator
-				interface_server_generator.initialize
 				interface_server_generator.generate (interface_descriptor)
 			end
 		end
@@ -93,7 +89,6 @@ feature -- Processing
 		do
 			Precursor (enum_descriptor)
 			create enum_server_generator
-			enum_server_generator.initialize
 			enum_server_generator.generate (enum_descriptor)
 		end
 
@@ -116,7 +111,6 @@ feature -- Processing
 		do
 			Precursor (record_descriptor)
 			create record_server_generator
-			record_server_generator.initialize
 			record_server_generator.generate (record_descriptor)
 		end
 

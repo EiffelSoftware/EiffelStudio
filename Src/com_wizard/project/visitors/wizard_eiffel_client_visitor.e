@@ -35,7 +35,6 @@ feature -- Processing
 		do
 			Precursor (alias_descriptor)
 			create alias_client_generator
-			alias_client_generator.initialize
 			alias_client_generator.generate (alias_descriptor)
 		end
 
@@ -51,7 +50,6 @@ feature -- Processing
 		do
 			Precursor (coclass_descriptor)
 			create coclass_client_generator
-			coclass_client_generator.initialize
 			coclass_client_generator.generate (coclass_descriptor)
 		end
 
@@ -67,7 +65,6 @@ feature -- Processing
 		do
 			Precursor (implemented_interface_descriptor)
 			create implemented_interface_generator
-			implemented_interface_generator.initialize
 			implemented_interface_generator.generate (implemented_interface_descriptor)
 		end
 
@@ -81,7 +78,6 @@ feature -- Processing
 		do
 			Precursor (interface_descriptor)
 			create interface_client_generator
-			interface_client_generator.initialize
 			interface_client_generator.generate (interface_descriptor)
 		end
 
@@ -95,7 +91,6 @@ feature -- Processing
 		do
 			Precursor (enum_descriptor)
 			create enum_client_generator
-			enum_client_generator.initialize
 			enum_client_generator.generate (enum_descriptor)
 		end
 
@@ -118,7 +113,6 @@ feature -- Processing
 		do
 			Precursor (record_descriptor)
 			create record_client_generator
-			record_client_generator.initialize
 			record_client_generator.generate (record_descriptor)
 		end
 

@@ -63,7 +63,7 @@ feature -- Element change
 			new_pixmap.copy (a_pixmap)
 
 			imp ?= new_pixmap.implementation
-			C.gtk_container_add (pixmap_box, imp.gtk_pixmap)
+			C.gtk_container_add (pixmap_box, imp.c_object)
 			C.gtk_widget_show (pixmap_box)		
 		end
 
@@ -127,6 +127,9 @@ end -- EV_PIXMAPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/04/27 18:20:59  king
+--| Corrected pixmapable to add c_object instead of gtkpixmap
+--|
 --| Revision 1.22  2000/04/26 17:04:49  oconnor
 --| put GtkPixmap in an event box
 --|

@@ -42,9 +42,10 @@ feature -- Access
 			Result := syntax_error_i.file_name
         end;
 
-	help_text: STRING is
+	help_text: LINKED_LIST [STRING] is
 		do
-			Result := l_No_help_available
+			!! Result.make;
+			Result.put_front (l_No_help_available)
 		end;
 
 	start_position: INTEGER is do Result := syntax_error_i.start_position end;

@@ -181,13 +181,17 @@ feature -- Status report
 			exists: exists
 			index_large_enough: index >= 0
 			index_small_enough: index < column_count
+		local
+			buffer: STRING
 		do
 			!! Result.make
 			Result.set_mask (Lvif_text + Lvif_state + Lvif_image + Lvif_param)
 			Result.set_iitem (index)
 			Result.set_isubitem (subitem)
-			Result.set_text ("")
-			Result.set_cchtextmax (30)
+			create buffer.make (buffer_size)
+			buffer.fill_blank
+			Result.set_text (buffer)
+			Result.set_cchtextmax (buffer_size)
 			Result.set_statemask (Lvis_cut + Lvis_drophilited + Lvis_focused + Lvis_selected)
 			cwin_send_message (item, Lvm_getitem, 0, Result.to_integer)
 		end
@@ -534,6 +538,9 @@ feature {NONE} -- Implementation
 				Ws_tabstop + Ws_border + Ws_clipchildren
 				+ Lvs_report + Lvs_showselalways
 		end
+
+	buffer_size: INTEGER is 30
+			-- Windows text retrieval buffer size
 
 feature {NONE} -- Externals
 

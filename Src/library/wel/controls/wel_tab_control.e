@@ -147,10 +147,14 @@ feature -- Status report
 			-- label is longer, it will be cut.
 		require
 			exists: exists
+		local
+			buffer: STRING
 		do
 			!! Result.make
-			Result.set_text ("")
-			Result.set_cchtextmax (30)
+			!! buffer.make (buffer_size)
+			buffer.fill_blank
+			Result.set_text (buffer)
+			Result.set_cchtextmax (buffer_size)
 			cwin_send_message (item, Tcm_getitem, index, Result.to_integer)
 		end
 
@@ -357,6 +361,9 @@ feature {NONE} -- Implementation
 			Result := Ws_visible + Ws_child + Ws_group + Ws_tabstop
 						+ Tcs_multiline
 		end
+
+	buffer_size: INTEGER is 30
+			-- Windows text retrieval buffer size
 
   	on_wm_paint (wparam: INTEGER) is
    			-- Wm_paint message.

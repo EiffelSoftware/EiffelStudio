@@ -772,29 +772,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Welcome to the EiffelVision2 rich text example
-
-Some sample text:
-
-Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1
-Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2
-Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 
-Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   
-
-
-Tab samples:
-
-1st tab		3rd tab		5th tab		7th tab
-
-Data		Data		Data		Data
-
-Some more text. 
-
-And a little more.
-
-Finally all available fonts:
-]]></Text>
-	</EV_TEXTABLE>
+<EV_TEXTABLE></EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
 <EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>

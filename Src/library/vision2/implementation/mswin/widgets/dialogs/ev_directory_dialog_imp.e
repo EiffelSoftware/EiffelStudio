@@ -12,25 +12,25 @@ inherit
 
 	EV_STANDARD_DIALOG_IMP
 
-	WEL_OPEN_FILE_DIALOG
+	WEL_CHOOSE_FOLDER_DIALOG
 		rename
 			make as wel_make,
 			set_parent as wel_set_parent
-		redefine
-			wel_make
 		end
 
 creation
-	make
+	make,
+	make_with_text
 
 feature {NONE} -- Initialization
 
-	wel_make is
+	make_with_text (par: EV_CONTAINER; txt: STRING) is
+			-- Create a directory selection dialog with `txt' as
+			-- title.
 		do
-			{WEL_OPEN_FILE_DIALOG} Precursor
---			add_flag (Ofn_explorer)
---			add_flag (Ofn_enablehook)
---			cwel_open_file_name_set_lpfnhook (item, $hook_procedure)
+			wel_make
+			parent_imp ?= par.implementation
+			set_title (txt)
 		end
 
 feature -- Status report
@@ -38,6 +38,7 @@ feature -- Status report
 	directory: STRING is
 			-- Path of the current selected file
 		do
+			Result := folder_name
 		end
 
 feature -- Element change
@@ -46,85 +47,57 @@ feature -- Element change
 			-- Make `path' the base directory in detrmining files
 			-- to be displayed.
 		do
+			check
+				not_yet_implemented: False
+			end
 		end
 
-feature {NONE} -- Implementation
+feature -- Event - command association
 
-	frozen hook_procedure (hwnd: POINTER; msg, wparam,
-			lparam: INTEGER): INTEGER is
-			-- Hook procedure that receive the events
-			-- of the dialog
-		local
+	add_ok_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed when
+			-- the "OK" button is pressed.
+			-- If there is no "OK" button, the event never occurs.
 		do
-			io.put_string ("%NBouh : ")
-			io.putint (msg)
+			add_command (Cmd_ok, cmd, arg)
 		end
 
-feature {NONE} -- Externals
-
-	cwel_open_file_name_set_hinstance (ptr, value: POINTER) is
-		external
-			"C [macro %"ofn.h%"]"
+	add_cancel_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed when
+			-- the "Cancel" button is pressed.
+			-- If there is no "Cancel" button, the event never occurs.
+		do
+			add_command (Cmd_cancel, cmd, arg)
 		end
 
-	cwel_open_file_name_set_lpstrcustomfilter (ptr, value: POINTER) is
-		external
-			"C [macro %"ofn.h%"]"
+feature -- Event -- removing command association
+
+	remove_ok_commands is
+			-- Empty the list of commands to be executed when
+			-- "OK" button is pressed.
+		do
+			remove_command (Cmd_ok)
 		end
 
-	cwel_open_file_name_set_nmaxcustfilter (ptr, value: POINTER) is
-		external
-			"C [macro %"ofn.h%"]"
+	remove_cancel_commands is
+			-- Empty the list of commands to be executed when
+			-- "Cancel" button is pressed.
+		do
+			remove_command (Cmd_cancel)
 		end
 
-	cwel_open_file_name_set_nfileoffset (ptr, value: POINTER) is
-		external
-			"C [macro %"ofn.h%"]"
-		end
+feature {NONE} -- Implementation for events handling
 
-	cwel_open_file_name_set_lcustdata (ptr, value: POINTER) is
-		external
-			"C [macro %"ofn.h%"]"
-		end
-
-	cwel_open_file_name_set_lpfnhook (ptr, value: POINTER) is
-		external
-			"C [macro %"ofn.h%"]"
-		end
-
-	cwel_open_file_name_set_lptemplatename (ptr, value: POINTER) is
-		external
-			"C [macro %"ofn.h%"]"
-		end
-
-	cwel_open_file_name_get_hinstance (ptr: POINTER): POINTER is
-		external
-			"C [macro %"ofn.h%"]"
-		end
-
-	cwel_open_file_name_get_lpstrcustomfilter (ptr: POINTER): POINTER is
-		external
-			"C [macro %"ofn.h%"]"
-		end
-
-	cwel_open_file_name_get_nmaxcustfilter (ptr: POINTER): POINTER is
-		external
-			"C [macro %"ofn.h%"]"
-		end
-
-	cwel_open_file_name_get_lcustdata (ptr: POINTER): POINTER is
-		external
-			"C [macro %"ofn.h%"]"
-		end
-
-	cwel_open_file_name_get_lpfnhook (ptr: POINTER): POINTER is
-		external
-			"C [macro %"ofn.h%"]"
-		end
-
-	cwel_open_file_name_get_lptemplatename (ptr: POINTER): POINTER is
-		external
-			"C [macro %"ofn.h%"]"
+	dispatch_events is
+			-- Execute the command associated to the action of the user.
+			-- As in `process_message' of WEL_WINDOW, we can't use
+			-- `inspect' here.
+		do
+			if selected then
+				execute_command (Cmd_ok, Void)
+			else
+				execute_command (Cmd_cancel, Void)
+			end
 		end
 
 end -- class EV_DIRECTORY_SELECTION_DIALOG_IMP

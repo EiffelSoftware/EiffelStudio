@@ -49,7 +49,7 @@ feature -- Properties
 			file_name, dir_entry: STRING
 			found: BOOLEAN
 		once
-			Result := General_resources.filter_name.value
+			Result := filter_name
 				-- Check whether that filter exists or not.
 			create filter_dir.make (filter_path)
 			if filter_dir.exists and then filter_dir.is_readable then
@@ -133,7 +133,7 @@ feature {EB_FILTER_DIALOG} -- Implementation
 							save_to_file (new_text, filename)
 						end
 					end
-					cmd_string := clone (General_resources.filter_command.value)
+					cmd_string := clone (general_filter_command)
 					if not cmd_string.empty then
 						cmd_string.replace_substring_all ("$target", filename)
 					end

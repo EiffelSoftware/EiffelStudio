@@ -92,8 +92,6 @@ feature {ROUTINE_CLASS_TEXT_FIELD} -- Implementation
 					stone := classc_stone;
 					classc_stone := Void;
 					execute (stone)
-				else
-					close_choice_window
 				end
 			else
 				stone ?= arg;
@@ -132,7 +130,7 @@ feature {ROUTINE_CLASS_TEXT_FIELD} -- Implementation
 								end;
 								classc_stone := stone;
 								mp.restore;
-								choice.popup (Current, feat_names)
+								choice.popup (Current, feat_names, Interface_names.t_Select_feature)
 							else
 								e_feature := f_table.item (rname);		
 								if e_feature = Void then
@@ -143,7 +141,6 @@ feature {ROUTINE_CLASS_TEXT_FIELD} -- Implementation
 									!! feature_stone.make (e_feature);
 									tool.process_feature (feature_stone);
 									mp.restore;
-									close_choice_window
 								end
 							end
 						else

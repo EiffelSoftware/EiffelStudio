@@ -178,9 +178,13 @@ feature -- Access
 		do
 			if relative_from_root then
 						-- Prepend `root_directory' to `url' to get absolute file name			
-				create l_filename.make_from_string (root_directory)								
-				l_filename.extend (url.substring (2, url.count))	
-   				Result := l_filename.string			  				
+--				if (create {PLATFORM}).is_windows then
+					create l_filename.make_from_string (root_directory)								
+					l_filename.extend (url.substring (2, url.count))	   							  				
+--  				else
+--					create l_filename.make_from_string (url)
+--  				end
+   				Result := l_filename.string	
 			elseif relative_from_document then
 						-- Determine number of directory parents specified in relative url
 				from
@@ -376,21 +380,15 @@ feature {DOCUMENT_LINK} -- Query
 			-- Is `url' relative from project root?
 		local			
 			l_first_char: CHARACTER
---			l_filename: FILE_NAME
---			l_file: RAW_FILE
---			l_url: STRING
+			path_to_root: STRING
 		do
 			l_first_char := url.item (1)				
 			Result := l_first_char = '\' or l_first_char = '/'
---			if l_first_char = '\' or l_first_char = '/' then			
---				l_url := url.substring (2, url.count)
---			else
---				l_url := url
---			end
---			create l_filename.make_from_string (root_directory)
---			l_filename.extend (l_url)
---			create l_file.make (l_filename)
---			Result := l_file.exists
+			if Result and then (create {PLATFORM}).is_unix then
+				path_to_root := shared_project.root_directory
+				Result := (not url.substring (1, path_to_root.count).is_equal (root_directory)) and 
+					(not url.substring (1, shared_constants.application_constants.temporary_html_directory.string.count).is_equal (shared_constants.application_constants.temporary_html_directory.string))
+			end
 		end		
 		
 feature {NONE} -- Implmentation

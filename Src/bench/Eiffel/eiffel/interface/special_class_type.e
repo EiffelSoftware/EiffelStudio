@@ -82,6 +82,10 @@ feature -- Byte code generation
 			ba.append_boolean (gen_param.is_bit)
 			ba.append_boolean (l_param_is_expanded)
 			if l_param_is_expanded then
+				expanded_type ?= gen_param
+				check
+					expanded_type_not_void: expanded_type /= Void
+				end
 				ba.append_short_integer (expanded_type.associated_class_type.static_type_id - 1)
 			else
 				ba.append_uint32_integer (gen_param.sk_value)
@@ -106,6 +110,8 @@ feature -- C code generation
 		local
 			gen_param: TYPE_I
 			expanded_type: CL_TYPE_I
+			l_exp_class_type: CLASS_TYPE
+			l_exp_has_references: BOOLEAN
 			l_bit: BIT_I
 			l_param_is_expanded: BOOLEAN
 			type_c: TYPE_C
@@ -131,24 +137,14 @@ feature -- C code generation
 			end
 
 			if l_param_is_expanded then
-				buffer.put_character ('{')
-				buffer.indent
-				buffer.put_new_line
-				buffer.put_string ("EIF_INTEGER elem_size = (EIF_Size(")
 				expanded_type ?= gen_param
 				check
 					expanded_type_not_void: expanded_type /= Void
 				end
-				if final_mode then
-					buffer.put_type_id (expanded_type.type_id)
-				else
-					buffer.put_string("RTUD(")
-					buffer.put_static_type_id (expanded_type.associated_class_type.static_type_id)
-					buffer.put_character (')')
-				end
-				buffer.put_string (") + OVERHEAD);")
-				buffer.put_new_line
+				l_exp_class_type := expanded_type.associated_class_type
+				l_exp_has_references := l_exp_class_type.skeleton.has_references
 			end
+
 				-- Generate recipient of newly created SPECIAL instance.
 			target_register.print_register
 
@@ -157,7 +153,8 @@ feature -- C code generation
 			info.generate_type_id (buffer, final_mode)
 			if gen_param.is_reference or else gen_param.is_bit then
 				buffer.put_string (" | EO_REF")
-			elseif l_param_is_expanded then
+			end
+			if l_param_is_expanded then
 				buffer.put_string (" | EO_COMP")
 			end
 			buffer.put_string (", ")
@@ -168,7 +165,16 @@ feature -- C code generation
 
 				-- 3. Element size
 			if l_param_is_expanded then
-				buffer.put_string ("elem_size")
+				if final_mode then
+					l_exp_class_type.skeleton.generate_size (buffer)
+					if l_exp_has_references then
+						buffer.put_string (" + OVERHEAD")
+					end
+				else
+					buffer.put_string("(EIF_Size(RTUD(")
+					buffer.put_static_type_id (l_exp_class_type.static_type_id)
+					buffer.put_string (")) + OVERHEAD)")
+				end
 			else
 				type_c.generate_size (buffer)
 			end
@@ -179,12 +185,6 @@ feature -- C code generation
 				buffer.put_string ("EIF_TRUE);")
 			else
 				buffer.put_string ("EIF_FALSE);")
-			end
-
-			if l_param_is_expanded then
-				buffer.put_new_line
-				buffer.exdent
-				buffer.put_character ('}')
 			end
 
 			if gen_param.is_bit then
@@ -268,6 +268,7 @@ feature {NONE} -- C code generation
 		local
 			gen_param: TYPE_I;
 			expanded_type: CL_TYPE_I;
+			l_exp_class_type: CLASS_TYPE
 			l_param_is_expanded: BOOLEAN;
 			type_c: TYPE_C;
 			final_mode: BOOLEAN;
@@ -288,7 +289,7 @@ feature {NONE} -- C code generation
 
 			final_mode := byte_context.final_mode;
 
-			if l_param_is_expanded then
+			if not final_mode and then l_param_is_expanded then
 				buffer.put_string ("%
 					%%Tif (arg1 == (EIF_REFERENCE) 0)%N%
 					%%T%TRTEC(EN_VEXP);%N");
@@ -298,12 +299,21 @@ feature {NONE} -- C code generation
 
 			if l_param_is_expanded then
 				if final_mode then
-						-- Optimization: size is know at compile time
-
-					buffer.put_string ("%Tecopy(arg1, Current + OVERHEAD + arg2 * (EIF_Size(");
 					expanded_type ?= gen_param;
-					buffer.put_type_id (expanded_type.type_id);
-					buffer.put_string (") + OVERHEAD));%N")
+					l_exp_class_type := expanded_type.associated_class_type
+					if l_exp_class_type.skeleton.has_references then
+							-- Optimization: size is know at compile time
+						buffer.put_string ("%Tecopy(arg1, Current + OVERHEAD + arg2 * (");
+						l_exp_class_type.skeleton.generate_size (buffer)
+						buffer.put_string (" + OVERHEAD));%N")
+					else
+							-- No references, do a simple `memcpy'.
+						buffer.put_string ("%Tmemcpy(Current + arg2 * ");
+						l_exp_class_type.skeleton.generate_size (buffer)
+						buffer.put_string (", arg1, ")
+						l_exp_class_type.skeleton.generate_size (buffer)
+						buffer.put_string (");%N")
+					end
 				else
 					buffer.put_string ("%Tecopy(arg1, Current + OVERHEAD + arg2 * (");
 					buffer.put_string ("*(EIF_INTEGER *) (Current + %
@@ -332,10 +342,12 @@ feature {NONE} -- C code generation
 		local
 			gen_param: TYPE_I;
 			expanded_type: CL_TYPE_I;
+			l_exp_class_type: CLASS_TYPE
 			l_param_is_expanded: BOOLEAN;
 			type_c: TYPE_C;
 			final_mode: BOOLEAN;
 			encoded_name: STRING
+			l_exp_has_references: BOOLEAN
 		do
 			gen_param := first_generic;
 			l_param_is_expanded := gen_param.is_true_expanded;
@@ -353,21 +365,51 @@ feature {NONE} -- C code generation
 
 			final_mode := byte_context.final_mode;
 
+			if l_param_is_expanded and final_mode then
+				expanded_type ?= gen_param;
+				l_exp_class_type := expanded_type.associated_class_type
+				l_exp_has_references := l_exp_class_type.skeleton.has_references
+				if not l_exp_has_references then
+					buffer.indent
+					buffer.put_string ("EIF_REFERENCE Result;")
+					buffer.put_new_line
+				end
+			end
+
 			generate_precondition (buffer, final_mode, "arg1")
 
 			if l_param_is_expanded then
 				if final_mode then
 						-- Optimization: size of expanded is known at compile time
-
-					buffer.put_string ("%Treturn Current + OVERHEAD + arg1 * (EIF_Size(");
-					expanded_type ?= gen_param;
-					buffer.put_type_id (expanded_type.type_id);
-					buffer.put_string (") + OVERHEAD);%N")
+					if l_exp_has_references then
+						buffer.put_string ("%Treturn RTCL(Current + OVERHEAD + arg1 * (");
+						l_exp_class_type.skeleton.generate_size (buffer)
+						buffer.put_string (" + OVERHEAD));%N")
+					else
+						buffer.put_string ("RTLD;")
+						buffer.put_new_line
+						buffer.put_string ("RTLI(1);")
+						buffer.put_new_line
+						buffer.put_string ("RTLR(0, Current);")
+						buffer.put_new_line
+						expanded_type.generate_expanded_creation (buffer, "Result")
+						buffer.put_string ("memcpy (Result, ")
+						buffer.put_string ("Current + arg1 * (");
+						l_exp_class_type.skeleton.generate_size (buffer)
+						buffer.put_string ("), ")
+						l_exp_class_type.skeleton.generate_size (buffer)
+						buffer.put_string (");")
+						buffer.put_new_line
+						buffer.put_string ("RTLE;")
+						buffer.put_new_line
+						buffer.put_string ("return Result;")
+						buffer.exdent
+					end
 				else
-					buffer.put_string ("%Treturn Current + OVERHEAD + arg1 * (");
+					buffer.put_string ("%Treturn RTCL(Current + OVERHEAD + arg1 * (");
 					buffer.put_string ("*(EIF_INTEGER *) (Current + %
 						%(HEADER(Current)->ov_size & B_SIZE) - LNGPAD(2) + %
-						%sizeof(EIF_INTEGER)));%N")
+						%sizeof(EIF_INTEGER))));%N")
 				end
 			else
 				buffer.put_string ("%Treturn *(")
@@ -389,6 +431,8 @@ feature {NONE} -- C code generation
 			l_param_is_expanded: BOOLEAN;
 			type_c: TYPE_C;
 			encoded_name: STRING
+			expanded_type: CL_TYPE_I
+			l_exp_class_type: CLASS_TYPE
 		do
 			gen_param := first_generic;
 			l_param_is_expanded := gen_param.is_true_expanded;
@@ -415,7 +459,26 @@ feature {NONE} -- C code generation
 			result_type.c_type.generate_cast (buffer)
 			buffer.put_string ("(Current + ")
 			if l_param_is_expanded then
-				buffer.put_string ("OVERHEAD + arg1 * sp_elem_size (Current));")
+				if byte_context.final_mode then
+					expanded_type ?= gen_param
+					l_exp_class_type := expanded_type.associated_class_type
+						-- It is set to True because at the moment we need a header in
+						-- order to call inherited features in an expanded class. This is
+						-- necessary until we are able to do a flat code generation for
+						-- expanded.
+					if True or l_exp_class_type.skeleton.has_references then
+						buffer.put_string ("OVERHEAD + arg1 * (")
+						l_exp_class_type.skeleton.generate_size (buffer)
+						buffer.put_string (" + OVERHEAD));")
+					else
+						buffer.put_string ("arg1 * ")
+						l_exp_class_type.skeleton.generate_size (buffer)
+						buffer.put_character (')')
+						buffer.put_character (';')
+					end
+				else
+					buffer.put_string ("OVERHEAD + arg1 * sp_elem_size (Current));")
+				end
 			else
 				buffer.put_string ("arg1 * sizeof(")
 				type_c.generate (buffer)

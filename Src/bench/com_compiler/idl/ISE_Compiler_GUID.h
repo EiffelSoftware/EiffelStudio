@@ -53,8 +53,8 @@
 #define UUID_IEnumCompletionEntry                   7081edbd-9335-48d5-b75f-401f525afb76
 #define UUID_IEnumParameter                         e3ab1afb-730c-498f-a168-418ee482a2d7
 #define UUID_IEiffelParameterDescriptor             7857e992-d5eb-434b-9d21-ec3e4ff0058f
-#define UUID_IEiffelHTMLDocGenerator                86270519-790f-48cb-8869-db06184f97b4
-#define UUID_IEiffelHTMLDocEvents                   b120763e-ed26-4ded-aafb-21fa8b28e879
+#define UUID_IEiffelHtmlDocumentationGenerator      86270519-790f-48cb-8869-db06184f97b4
+#define UUID_IEiffelHtmlDocumentationEvents         b120763e-ed26-4ded-aafb-21fa8b28e879
 
 //
 // Enum GUID
@@ -66,5 +66,6 @@
 #define UUID_EnumEIF_PROJECT_TYPES                  168468fb-dff4-46b6-aeec-de988135025b
 #define UUID_EnumEIF_ASSERTIONS                     af5ce2a1-488d-410d-a920-db5a4921c1c1
 #define UUID_EnumEIF_CLUSTER_NAMESPACE_GENERATION   1cb05808-5b25-4dbf-b02e-0a50107a99f9
+#define UUID_EnumEIF_COMPILATION_MODE               fcdaf70f-6fe8-445f-80dc-6fdf79e71356
 
 #endif

@@ -332,35 +332,33 @@ feature -- Element change
 			-- Assign `alignments' to column text alignments in order.
 		require
 			alignments_not_void: alignments /= Void
-		local
-			i: INTEGER
-			old_count: INTEGER
 		do
+			
+				-- Firstly add the first column as left aligned as the first column is
+				-- always left aligned in a multi column list.
+			if column_alignments.is_empty then
+				column_alignments.extend (feature {EV_TEXT_ALIGNMENT}.left_alignment)
+			end
+			
 			from
-				i := 1
-				alignments.start
-				old_count := column_alignments.count
-				column_alignments.wipe_out
+					-- Note that we go to the second position if it exists
+					-- as we have already added the first item as left aligned.
+					-- We restrict this to `count + 1' if the list is empty which is
+					-- the final permissable cursor position, not 2.
+				alignments.go_i_th ((2).min (alignments.count + 1))
 			until
-				alignments.after
+					-- If `alignments' contains more elements than the
+					-- list columns, we ignore those elements.
+				alignments.off or alignments.index > column_count
 			loop
-				if i > 1 then
-					column_alignment_changed (alignments.item, i)
+				column_alignment_changed (alignments.item, alignments.index)
+				if alignments.index > column_alignments.count then
 					column_alignments.extend (alignments.item.alignment_code)
 				else
-					column_alignments.extend (alignments.item.left_alignment)
+					column_alignments.go_i_th (alignments.index)
+					column_alignments.replace (alignments.item.alignment_code)
 				end
 				alignments.forth
-				i := i + 1
-				old_count := old_count - 1
-			end
-			from
-			until
-				old_count < 1
-			loop
-				align_text_left (i)
-				i := i + 1
-				old_count := old_count + 1
 			end
 		end
 

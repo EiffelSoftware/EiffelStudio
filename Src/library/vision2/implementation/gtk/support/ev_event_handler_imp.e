@@ -119,6 +119,10 @@ feature {NONE} -- Status report
 				Result := expose_event_id
 			elseif ev_str.is_equal ("destroy") then
 				Result := destroy_id
+			elseif ev_str.is_equal ("show") then
+				Result := show_id
+			elseif ev_str.is_equal ("hide") then
+				Result := hide_id
 
 			-- For windows:
 			elseif ev_str.is_equal ("delete_event") then
@@ -203,8 +207,8 @@ feature {NONE} -- Status report
 
 			end
 		ensure
-			event_id_ok: (Result > 0 and Result <= 46)
-			-- there are 46 differents signals (cf EV_WIDGET_EVENTS_CONSTANTS_IMP).
+			event_id_ok: (Result > 0 and Result <= command_count)
+			-- there are `command_count' differents signals (cf EV_WIDGET_EVENTS_CONSTANTS_IMP).
 		end
 
 feature {NONE} -- Status setting

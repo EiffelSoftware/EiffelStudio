@@ -41,7 +41,7 @@ feature -- Access
 			imp: EV_PIXMAP_IMP
 		do
 			p := gtk_pixmap
-			if p /= Void then
+			if p /= Default_pointer then
 				imp ?= eif_object_from_c (p)
 				check
 					imp_not_void: imp /= Void
@@ -74,7 +74,7 @@ feature -- Element change
 		do
 			p:= gtk_pixmap
 
-			if p/= Default_pointer then
+			if p /= Default_pointer then
 				C.gtk_container_remove (pixmap_box, p)
 			end
 
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 			-- Pointer to the GtkPixmap widget.
 		do
 			Result := C.gtk_container_children (pixmap_box)
-			if Result /= default_pointer then
+			if Result /= Default_pointer then
 				Result := C.g_list_nth_data (Result, 0)
 			end
 		end
@@ -127,6 +127,9 @@ end -- EV_PIXMAPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/03/03 20:08:12  king
+--| Corrected indentation, structure, equivalence of pointer to void
+--|
 --| Revision 1.20  2000/03/03 03:33:07  oconnor
 --| fixed feature: pixmap
 --|

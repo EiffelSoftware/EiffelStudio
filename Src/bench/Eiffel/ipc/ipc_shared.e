@@ -1,10 +1,18 @@
--- Constants for communication control 
- 
+indexing
+
+	description: 
+		"Constants for communication control.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class IPC_SHARED
  
-		
-feature {NONE} -- For workbench requests.
+feature {NONE} -- Implementation
 
+	-- ************	
+	-- *** FIXME
+	-- *** Use macros (need 3.3.9 +)
+	-- *** to use `include_path'  
 	-- Same as in file /ipc/shared/rqst_const.h
 
 	Rqst_application: INTEGER is 14;
@@ -157,8 +165,6 @@ feature {NONE} -- For workbench responses.
 	Rep_melt: INTEGER is 4;
 	Rep_dead: INTEGER is 5;
 	Rep_stopped: INTEGER is 6;
-
-feature
 
 	sent_jobs: HASH_TABLE [STRING, STRING] is
 		once

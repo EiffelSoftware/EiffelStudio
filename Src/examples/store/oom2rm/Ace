@@ -11,18 +11,18 @@ root
 default
 
 	assertion (all);
-	precompiled ("$EIFFEL3/precomp/spec/$PLATFORM/base")
+	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
 
 cluster
 	
 	root_cluster:	".";
-	model1:		"$EIFFEL3/library/store/examples/Utilities";
-	estore_support:	"$EIFFEL3/library/store/support";
-	date_and_time:	"$EIFFEL3/library/store/date_and_time";
+	model1:		"$EIFFEL4/library/store/examples/Utilities";
+	estore_support:	"$EIFFEL4/library/store/support";
+	date_and_time:	"$EIFFEL4/library/store/date_and_time";
 
 external
 
-	object: "-L$(EIFFEL3)/library/store/spec/$(PLATFORM)/lib";
+	object: "-L$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib";
 		"-lsys_time";
 		"-lsupport"
 

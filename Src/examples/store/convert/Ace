@@ -7,29 +7,29 @@ root
 default
 
 	assertion (all);
-	precompiled ("$EIFFEL3/precomp/spec/$PLATFORM/base");
+	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base");
 
 cluster
 
-	root_cluster:		"$EIFFEL3/library/store/examples/convert";
-	estore_examples_objects:"$EIFFEL3/library/store/examples/Utilities";
+	root_cluster:		"$EIFFEL4/library/store/examples/convert";
+	estore_examples_objects:"$EIFFEL4/library/store/examples/Utilities";
 
 
 -- EiffelStore
 
-	estore_support:		"$EIFFEL3/library/store/support";
-	estore_date:		"$EIFFEL3/library/store/date_and_time";
-	estore_db_support:	"$EIFFEL3/library/store/dbms/support";
-   estore_converter:       "$EIFFEL3/library/store/converter";
+	estore_support:		"$EIFFEL4/library/store/support";
+	estore_date:		"$EIFFEL4/library/store/date_and_time";
+	estore_db_support:	"$EIFFEL4/library/store/dbms/support";
+   estore_converter:       "$EIFFEL4/library/store/converter";
 
 -- EiffelLex
 
-	lexical:		"$EIFFEL3/library/lex";
+	lexical:		"$EIFFEL4/library/lex";
 
 external
 
-	Object: "$(EIFFEL3)/library/lex/spec/$(PLATFORM)/lib/lex.a";
-		"-L$(EIFFEL3)/library/store/spec/$(PLATFORM)/lib";
+	Object: "$(EIFFEL4)/library/lex/spec/$(PLATFORM)/lib/lex.a";
+		"-L$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib";
 		"-lsys_time";
 		"-lsupport"
 

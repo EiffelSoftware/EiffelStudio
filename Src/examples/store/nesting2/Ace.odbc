@@ -6,24 +6,24 @@ root
 default
 
 	assertion (all);
-	precompiled ("$EIFFEL3\precomp\spec\$PLATFORM\base")
+	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\base")
 
 cluster
 
-	root_cluster:		"$EIFFEL3\library\store\examples\nest2";
-	estore_examples:	"$EIFFEL3\library\store\examples\Utilities";
+	root_cluster:		"$EIFFEL4\library\store\examples\nest2";
+	estore_examples:	"$EIFFEL4\library\store\examples\Utilities";
 -- EiffelStore
 
-	estore_support:		"$EIFFEL3\library\store\support";
-	estore_interface:	"$EIFFEL3\library\store\interface";
-	estore_date:		"$EIFFEL3\library\store\date_and_time";
-	estore_db_support:	"$EIFFEL3\library\store\dbms\support";
-	estore_odbc:		"$EIFFEL3\library\store\dbms\rdbms\odbc";
+	estore_support:		"$EIFFEL4\library\store\support";
+	estore_interface:	"$EIFFEL4\library\store\interface";
+	estore_date:		"$EIFFEL4\library\store\date_and_time";
+	estore_db_support:	"$EIFFEL4\library\store\dbms\support";
+	estore_odbc:		"$EIFFEL4\library\store\dbms\rdbms\odbc";
 
 external
 
-	object: "$(EIFFEL3)\library\store\support\Clib\support.lib",
-		"$(EIFFEL3)\library\store\date_and_time\Clib\sys_time.lib",
-		"$(EIFFEL3)\library\store\dbms\rdbms\odbc\Clib\odbc_store.lib",
+	object: "$(EIFFEL4)\library\store\support\Clib\support.lib",
+		"$(EIFFEL4)\library\store\date_and_time\Clib\sys_time.lib",
+		"$(EIFFEL4)\library\store\dbms\rdbms\odbc\Clib\odbc_store.lib",
 		"\odbcsdk\lib32\odbc32.lib"
 end

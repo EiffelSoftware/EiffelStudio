@@ -151,9 +151,8 @@ feature {NONE} -- Implementation
 			create widget
 			common_make
 			widget.set_minimum_height (tool_minimum_height)
-			widget.drop_actions.set_veto_pebble_function (agent veto_drop)
-			widget.drop_actions.extend (agent add_new_object (?, Current))
-			widget.drop_actions.extend (agent add_new_component (?, Current))
+			widget.drop_actions.set_veto_pebble_function (agent veto_object_drop)
+			widget.drop_actions.extend (agent handle_object_drop (?, Current))
 			widget.drop_actions.extend (agent add_new_directory_direct)
 			widget.key_press_actions.extend (agent check_for_object_delete)
 			widget.select_actions.extend (agent tool_bar.update_select_root_window_command)
@@ -446,15 +445,6 @@ feature {GB_COMMAND_DELETE_WINDOW_OBJECT, GB_COMMAND_ADD_WINDOW} -- Implementati
 		end
 
 feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
-
-	add_new_component (a_component: GB_COMPONENT; parent_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
-			-- Add a new object representing `a_component' to `parent_item'.
-		require
-			a_component_not_void: a_component /= Void
-			parent_item_not_void: parent_item /= Void
-		do
-			add_new_object (a_component.object, parent_item)
-		end
 
 	add_new_object (an_object: GB_OBJECT; parent_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
 			-- Add an associated window item for `window_object'.
@@ -1142,12 +1132,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	veto_drop (an_object: GB_OBJECT): BOOLEAN is
-			-- Veto drop of `an_object'.
+	veto_object_drop (object_stone: GB_OBJECT_STONE): BOOLEAN is
+			-- Veto drop of `object_stone'.
 		require
-			an_object_not_void: an_object /= Void
+			object_stone_not_void: object_stone /= Void
 		do
-			Result := not an_object.is_instance_of_top_level_object
+			Result := not object_stone.is_instance_of_top_level_object
 		end
 		
 	check_for_object_delete (a_key: EV_KEY) is
@@ -1241,6 +1231,15 @@ feature {NONE} -- Implementation
 			l_children.go_to (l_cursor)
 		ensure
 			position_not_changed: widget.index = old widget.index
+		end
+		
+	handle_object_drop (object_pebble: GB_OBJECT_STONE; selector_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
+			-- Respond to the dropping of `object_pebble' onto `selector_item'.
+		require
+			object_pebble_not_void: object_pebble /= Void
+			selector_item_not_void: selector_item /= Void
+		do
+			add_new_object (object_pebble.object, selector_item)
 		end
 		
 feature {GB_WINDOW_SELECTOR_TOOL_BAR, GB_WINDOW_SELECTOR_COMMON_ITEM} -- Implementation

@@ -60,19 +60,23 @@ feature -- Access
 		-- The real type represented by `Current'.
 		-- i.e. "EV_BUTTON"
 
-	can_drop_object (object: GB_OBJECT): BOOLEAN is
+	can_drop_object (object_stone: GB_STANDARD_OBJECT_STONE): BOOLEAN is
 			-- Can `object' be dropped on `Current'?
 			-- Used as  a veto function to prevent an invalid type from being changed.
+		require
+			object_stone_not_void: object_stone /= Void
 		local
 			current_type: INTEGER
 			container: GB_CONTAINER_OBJECT
 			cell: GB_CELL_OBJECT
 			primitive: GB_PRIMITIVE_OBJECT
 			menu_bar: GB_MENU_BAR_OBJECT
-		do
+			object: GB_OBJECT
+		do	
 			--| Note that the checks in this feature check for the state that we do not want
 			--| and then if this is not the case, perform an action. It is simpler to do it this
 			--| way, as there are so many other cases that we would allow.
+			object ?= object_stone.object
 			
 			current_type := dynamic_type_from_string (type)	
 			Result := True
@@ -173,7 +177,7 @@ feature -- Access
 
 feature {GB_OBJECT_HANDLER} -- Implementation
 
-	generate_transportable: GB_OBJECT is
+	generate_transportable: GB_OBJECT_STONE is
 			-- `Result' is a GB_OBJECT matching `text' of `Current'.
 		do			
 			process_number_key
@@ -181,7 +185,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 				-- Note that this generates a new id, so if the pnd is cancelled, we
 				-- will have used an other id, although this should not be a problem.
 				-- As the ids will be compacted when the project is next loaded.
-			Result := object_handler.build_object_from_string_and_assign_id (type)
+			Result := create {GB_STANDARD_OBJECT_STONE}.make_with_object (object_handler.build_object_from_string_and_assign_id (type))
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -192,13 +196,15 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 		deferred
 		end
 		
-	replace_layout_item (an_object: GB_OBJECT) is
+	replace_layout_item (object_stone: GB_STANDARD_OBJECT_STONE) is
 			-- Replace `an_object' with a new object of
 			-- type `text'.
+		require
+			object_stone_not_void: object_stone /= Void
 		local
 			command: GB_COMMAND_CHANGE_TYPE
 		do	
-			create command.make (an_object, an_object.type, type)
+			create command.make (object_stone.object, object_stone.object.type, type)
 			command.execute
 		end
 

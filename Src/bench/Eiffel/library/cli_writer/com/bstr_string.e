@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 	c_get_bstr (astring: POINTER): POINTER is
 			-- returns a BSTR from a UNI_STRING
 		external
-			"C signature (EIF_POINTER): EIF_POINTER use %"OleAuto.h%""
+			"C signature (LPWSTR): EIF_POINTER use %"OleAuto.h%""
 		alias
 			"SysAllocString"
 		end
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 	c_free_bstr (abstr: POINTER) is
 			-- frees a BSTR
 		external
-			"C signature (EIF_POINTER) use %"OleAuto.h%""
+			"C signature (BSTR) use %"OleAuto.h%""
 		alias
 			"SysFreeString"
 		end

@@ -177,7 +177,7 @@ feature {EV_ANY_I} -- Event handling
 		require
 			a_connection_id_positive: a_connection_id > 0
 		do
-			C.gtk_signal_disconnect (c_object, a_connection_id)
+			C.signal_disconnect (c_object, a_connection_id)
 		end
 		
 feature {NONE} -- Implementation

@@ -9,7 +9,7 @@ inherit
 		rename
 			make as make_id
 		undefine
-			compilation_id
+			compilation_id, is_precompiled
 		end
 
 creation

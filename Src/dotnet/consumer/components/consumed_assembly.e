@@ -48,7 +48,9 @@ feature {NONE} -- Initialization
 			culture := c
 			key := k
 			location := loc.as_lower
+			location.replace_substring_all ("\\", "\")
 			gac_path := gp.as_lower
+			gac_path.replace_substring_all ("\\", "\")
 			unique_id := id
 			is_in_gac := a_in_gac
 			
@@ -182,6 +184,7 @@ feature -- Comparison
 			l_path: STRING
 		do
 			l_path := a_path.as_lower
+			l_path.replace_substring_all ("\\", "\")
 			Result := l_path.is_equal (location) or l_path.is_equal (gac_path)
 		end
 

@@ -353,6 +353,7 @@ feature {NONE} -- Status setting
 				end
 			end
 		end
+		
 
 	remove_single_command (wid: POINTER; event_id: INTEGER; cmd: EV_COMMAND) is
 			-- Remove `cmd' from the list of commmands associated

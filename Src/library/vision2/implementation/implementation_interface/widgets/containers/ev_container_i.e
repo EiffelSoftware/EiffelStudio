@@ -51,7 +51,7 @@ feature -- Element change
 			-- the container.
 		require
 			exitst: not destroyed
-			valid_child: is_child (child_imp)
+--			valid_child: is_child (child_imp)
 		deferred
 		ensure
 			child_removed: not is_child (child_imp)

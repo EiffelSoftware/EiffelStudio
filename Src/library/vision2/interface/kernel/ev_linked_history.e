@@ -1,48 +1,83 @@
 indexing
-	description: "General notion of command history."
+	description: "Linked infinite history."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
+	EV_LINKED_HISTORY
+
+inherit
 	EV_HISTORY
+	
+creation
+	make
 
-feature -- Access
+feature {NONE} -- Initialization
 
-	can_undo: BOOLEAN is
-			-- Is there any command recorded that may be undone?
-		deferred
-		end
-		
-	can_redo: BOOLEAN is
-			-- Is there any undone command that may be redone?
-		deferred
+	make is
+		do
+			create {TWO_WAY_LIST [EV_UNDOABLE_COMMAND]} list.make
 		end
 
 feature -- Basic operations
 
+
 	record (cmd: EV_UNDOABLE_COMMAND) is
 			-- Record `cmd' in Current history.
-		require
-			cmd_not_void: cmd /= Void
-		deferred
+		do
+			remove_all_right_list_items
+			list.extend (cmd)
+			list.forth
+		ensure then
+			can_undo: can_undo
+			can_not_redo: not can_redo
 		end
 
 	undo is
 			-- Undo the last recorded command
-		require
-			can_undo: can_undo
-		deferred
+		local
+			t: EV_TEXT_EDITOR_COMMAND
+			i: INTEGER
+		do
+			list.item.undo
+			list.back
 		end
 
 	redo is
 			-- Redo the last undone command
-		require
-			can_undo: can_redo
-		deferred
+		do
+			list.forth
+			list.item.redo
 		end
 
-end -- class EV_HISTORY
+	can_undo: BOOLEAN is
+		do
+			Result := not list.empty and not list.before
+		end
+		
+	can_redo: BOOLEAN is
+		do
+			Result := not list.empty and not list.islast
+		end
+
+feature {NONE} -- Implementation
+
+	list: DYNAMIC_LIST [EV_UNDOABLE_COMMAND]
+	
+	remove_all_right_list_items is
+		do
+			from
+			variant
+				list.count
+			until
+				list.islast or list.empty
+			loop
+				list.remove_right
+			end
+		end
+
+end -- class EV_LINKED_HISTORY
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -1,48 +1,54 @@
 indexing
-	description: "General notion of command history."
-	status: "See notice at end of class."
-	date: "$Date$"
+	description: "EiffelVision generic rich text event data.";
+	status: "See notice at end of class";
+	id: "$Id$";
+	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class
-	EV_HISTORY
-
-feature -- Access
-
-	can_undo: BOOLEAN is
-			-- Is there any command recorded that may be undone?
-		deferred
-		end
-		
-	can_redo: BOOLEAN is
-			-- Is there any undone command that may be redone?
-		deferred
+class
+	EV_RICH_TEXT_EVENT_DATA
+	
+inherit
+	EV_EVENT_DATA	
+		redefine
+			make,
+			implementation,
+			print_contents
 		end
 
-feature -- Basic operations
+creation
+	make
 
-	record (cmd: EV_UNDOABLE_COMMAND) is
-			-- Record `cmd' in Current history.
-		require
-			cmd_not_void: cmd /= Void
-		deferred
+feature {NONE} -- Initialization
+
+	make is
+		do
+			!EV_RICH_TEXT_EVENT_DATA_IMP! implementation
+		end
+	
+feature -- Access	
+
+	rich_text: EV_RICH_TEXT is
+			-- The mouse pointer was over this widget 
+			-- when event happened
+		do
+			Result := implementation.rich_text
+		ensure
+			valid_result: Result /= Void
 		end
 
-	undo is
-			-- Undo the last recorded command
-		require
-			can_undo: can_undo
-		deferred
+feature -- Debug
+	
+	print_contents is
+			-- print the contents of the object
+		do
 		end
 
-	redo is
-			-- Redo the last undone command
-		require
-			can_undo: can_redo
-		deferred
-		end
+feature {EV_WIDGET_IMP} -- Implementation
 
-end -- class EV_HISTORY
+	implementation: EV_RICH_TEXT_EVENT_DATA_IMP
+
+end -- class EV_RICH_TEXT_EVENT_DATA
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

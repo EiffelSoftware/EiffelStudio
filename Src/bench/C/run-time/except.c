@@ -133,6 +133,7 @@ rt_public struct eif_exception exdata = {
 };
 
 #ifdef WORKBENCH
+#ifndef NOHOOK
 /*
 doc:	<attribute name="db_ign" return_type="unsigned char []" export="private">
 doc:		<summary>Array of ignored exceptions, from the debugger's point of view. Normally an exception stops the program to allow user inspection of the objects.</summary>
@@ -141,6 +142,7 @@ doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
 */
 rt_private unsigned char db_ign[EN_NEX];	/* Item set to 1 to ignore exception */
+#endif
 #endif
 
 /*
@@ -169,8 +171,8 @@ rt_shared	EIF_LW_MUTEX_TYPE *eif_except_lock = (EIF_LW_MUTEX_TYPE *) 0;
 
 /* Exception handling mechanism */
 rt_public void enomem(void);			/* A critical "No more memory" exception */
-rt_public struct ex_vect *exret(register1 struct ex_vect *rout_vect);	/* Retries execution of routine */
-rt_public void exinv(register2 char *tag, register3 char *object);			/* Invariant record */
+rt_public struct ex_vect *exret(struct ex_vect *rout_vect);	/* Retries execution of routine */
+rt_public void exinv(char *tag, char *object);			/* Invariant record */
 rt_public void exasrt(char *tag, int type);		/* Assertion record */
 rt_public void eraise(char *tag, long num);		/* Raises an Eiffel exception */
 rt_public void com_eraise(char *tag, long num);	/* Raises an EiffelCOM exception */
@@ -213,13 +215,13 @@ rt_private int print_history_table = ~0;
 rt_private char eedefined(long ex);		  /* Is exception code valid? */
 
 /* Stack handling routines */
-rt_public void expop(register1 struct xstack *stk);				/* Pops an execution vector off */
-rt_private void stack_truncate(register1 struct xstack *stk);		/* Truncate stack if necessary */
+rt_public void expop(struct xstack *stk);				/* Pops an execution vector off */
+rt_private void stack_truncate(struct xstack *stk);		/* Truncate stack if necessary */
 rt_private void wipe_out(register struct stxchunk *chunk);			/* Remove unneeded chunk from stack */
-rt_shared struct ex_vect *exget(register2 struct xstack *stk);		/* Get a new vector on stack */
-rt_private int stack_extend(register2 struct xstack *stk, register1 int size);			/* Extends size of stack */
-rt_private struct ex_vect *stack_allocate(register2 struct xstack *stk, register1 int size);	/* Creates an empty stack */
-rt_shared struct ex_vect *extop(register1 struct xstack *stk);		/* Top of Eiffel stack */
+rt_shared struct ex_vect *exget(struct xstack *stk);		/* Get a new vector on stack */
+rt_private int stack_extend(struct xstack *stk, int size);			/* Extends size of stack */
+rt_private struct ex_vect *stack_allocate(struct xstack *stk, int size);	/* Creates an empty stack */
+rt_shared struct ex_vect *extop(struct xstack *stk);		/* Top of Eiffel stack */
 rt_shared struct ex_vect *exnext(void);	/* Next item at bottom of trace stack */
 rt_private int exend(void);				/* True if end of trace stack reached */
 
@@ -229,7 +231,7 @@ rt_private void dump_core(void);			/* Dumps a core for debugging infos */
 rt_private char *exception_string(int code);	/* Name of an exception */
 rt_private void dump_trace_stack(void);	/* Dumps the Eiffel trace stack to stderr */
 rt_private void find_call(void);			/* Find enclosing call ID */
-rt_private void recursive_dump(void (*append_trace)(char *), register1 int level);		/* Dump the stack at a given level */
+rt_private void recursive_dump(void (*append_trace)(char *), int level);		/* Dump the stack at a given level */
 rt_private void print_top(void (*append_trace)(char *));			/* Prints top value of the stack */
 rt_private void dump_stack(void (*append_trace)(char *));			/* Dump the Eiffel trace stack */
 rt_private void ds_stderr(char *line);			/* Wrapper to dump stack to stderr */
@@ -366,10 +368,6 @@ struct test {
 rt_private void dump_vector(char *msg, struct ex_vect *vector);			/* Dump an execution vector on stdout */
 #endif
 
-#ifndef lint
-rt_private char *rcsid = "$Id$";
-#endif
-
 #ifdef EIF_THREADS
 rt_shared void eif_except_thread_init (void)
 	/* Initialize private data of `run_idr.c' in multithreaded environment. */
@@ -427,7 +425,7 @@ rt_public struct ex_vect *new_exset(char *name, int origin, char *object, unsign
 	 */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	register1 struct ex_vect *vector;	/* The exception vector */
+	struct ex_vect *vector;	/* The exception vector */
 
 	SIGBLOCK;				/* Critical section, protected against signals */
 
@@ -465,7 +463,7 @@ rt_public struct ex_vect *exft(void)
 	 */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	register1 struct ex_vect *vector;	/* The exception vector */
+	struct ex_vect *vector;	/* The exception vector */
 
 	SIGBLOCK;				/* Critical section, protected against signals */
 
@@ -496,7 +494,7 @@ rt_public struct ex_vect *exft(void)
 }
 #endif
 
-rt_public struct ex_vect *exret(register1 struct ex_vect *rout_vect)
+rt_public struct ex_vect *exret(struct ex_vect *rout_vect)
 		/* Exec. vector of enclosing routine */
 {
 	/* An exception was caught in the enclosing routine and transferred the
@@ -567,14 +565,14 @@ rt_public struct ex_vect *exret(register1 struct ex_vect *rout_vect)
 	return last_item;	/* Execution vector for new routine invokation */
 }
 
-rt_public void exinv(register2 char *tag, register3 char *object)
+rt_public void exinv(char *tag, char *object)
 		/* Assertion tag */
 		/* The object on which invariant is checked */
 {
 	/* Checking of the invariant 'tag' on 'object' */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	register1 struct ex_vect *vector;		/* The execution vector */
+	struct ex_vect *vector;		/* The execution vector */
 
 	SIGBLOCK;			/* Critical section, protected against signals */
 
@@ -605,7 +603,7 @@ rt_public void exasrt(char *tag, int type)
 	 */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	register1 struct ex_vect *vector;		/* The execution vector */
+	struct ex_vect *vector;		/* The execution vector */
 
 	SIGBLOCK;			/* Critical section, protected against signals */
 
@@ -645,7 +643,7 @@ rt_shared void excatch(jmp_buf *jmp)
 	 */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	register1 struct ex_vect *vector;		/* The execution vector */
+	struct ex_vect *vector;		/* The execution vector */
 
 
 	SIGBLOCK;			/* Critical section, protected against signals */
@@ -881,7 +879,7 @@ rt_public void exfail(void)
 	/* NOTREACHED */
 }
 
-rt_public void exresc(register2 struct ex_vect *rout_vect)
+rt_public void exresc(struct ex_vect *rout_vect)
 {
 	/* Signals entry in rescue clause. As we may enter a new exception level
 	 * should an exception occur in the clause, push a "New level" on the
@@ -890,7 +888,7 @@ rt_public void exresc(register2 struct ex_vect *rout_vect)
 	 */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	register1 struct ex_vect *trace;	/* Top of Eiffel trace item */
+	struct ex_vect *trace;	/* Top of Eiffel trace item */
 
 	SIGBLOCK;			/* Critical section, protected against signals */
 
@@ -1343,7 +1341,7 @@ rt_private jmp_buf *backtrack(void)
 	 */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	register1 struct ex_vect *top;		/* Top of calling stack */
+	struct ex_vect *top;		/* Top of calling stack */
 	struct ex_vect *trace = NULL;	/* The stack trace entry */
 
 	while ((top = extop(&eif_stack))) {	/* While bottom not reached */
@@ -1546,9 +1544,9 @@ rt_public void exok(void)
 	 */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	register1 struct ex_vect *top;		/* Top of calling stack */
-	register2 struct stxchunk *start;	/* First chunk in trace stack */
-	register3 int type;					/* Type of execution vector */
+	struct ex_vect *top;		/* Top of calling stack */
+	struct stxchunk *start;	/* First chunk in trace stack */
+	int type;					/* Type of execution vector */
 
 	/* If 'echval' is set to zero, then no exception occurred, so return
 	 * immediately after poping the current element.
@@ -2041,7 +2039,7 @@ rt_private void find_call(void)
 	 * The function return the address of the enclosing call vector.
 	 */
 	RT_GET_CONTEXT
-	register1 struct ex_vect *item;	/* Item we deal with */
+	struct ex_vect *item;	/* Item we deal with */
 	struct xstack saved;			/* Saved stack context */
 
 	memcpy (&saved, &eif_trace, sizeof(struct xstack));
@@ -2146,7 +2144,7 @@ rt_private void extend_trace_string(char *line)
 	 */
 	RT_GET_CONTEXT
 
-	if ((ex_string.size - ex_string.used) > (long) strlen(line)) {
+	if ((ex_string.size - ex_string.used) > strlen(line)) {
 		strcpy (ex_string.area + ex_string.used, line);
 		ex_string.used += strlen(line);
 	} else {
@@ -2222,11 +2220,11 @@ rt_private void dump_stack(void (*append_trace)(char *))
 	append_trace(buffer);
 	
 	if (!(eif_thr_is_root()))
-		sprintf (buffer,"%-19.19s %-22.22s 0x%lx %s\n", "In thread", 
-				"Child thread", (unsigned long) eif_thr_context->tid, "(thread id)");
+		sprintf (buffer,"%-19.19s %-22.22s 0x%" EIF_POINTER_DISPLAY " %s\n", "In thread", 
+				"Child thread", (rt_uint_ptr) eif_thr_context->tid, "(thread id)");
 	else
-		sprintf (buffer,"%-19.19s %-22.22s 0x%lx %s\n", "In thread", 
-				"Root thread", (unsigned long) 0, "(thread id)");
+		sprintf (buffer,"%-19.19s %-22.22s 0x%" EIF_POINTER_DISPLAY " %s\n", "In thread", 
+				"Root thread", (rt_uint_ptr) 0, "(thread id)");
 		
 	append_trace(buffer);
 	sprintf(buffer, "%s\n", RT_THREAD_FAILED_MSG);
@@ -2250,7 +2248,7 @@ rt_private void dump_stack(void (*append_trace)(char *))
 	recursive_dump(append_trace, 0);	/* Recursive dump, starting at level 0 */
 }
 
-rt_private void recursive_dump(void (*append_trace)(char *), register1 int level)
+rt_private void recursive_dump(void (*append_trace)(char *), int level)
 {
 	/* Prints the stack trace of a given level. Whenever a new level is reached,
 	 * we call us recursively, hence the name of the routine. The exception
@@ -2354,9 +2352,9 @@ rt_private void print_class_feature_tag (
 		 * Note: because `buffer' has a fixed size of 256, we need to use `precision' to avoid
 		 * writting more than `buffer' can hold.
 		 */
-	l_class_count = strlen(a_class_name);
-	l_feature_count = strlen(a_feature_name);
-	l_tag_count = strlen(a_tag_name);
+	l_class_count = (int) strlen(a_class_name);
+	l_feature_count = (int) strlen(a_feature_name);
+	l_tag_count = (int) strlen(a_tag_name);
 
 		/* 1 - precision of 212 = 255 - 43, 43 being number of characters written
 		 *      for `a_class_name' and `a_feature_name'. */
@@ -2422,9 +2420,9 @@ rt_private void print_object_location_reason_effect (
 		 * writting more than `buffer' can hold.
 		 */
 
-	l_location_count = strlen(a_location);
-	l_reason_count = strlen(a_reason);
-	l_effect_count = strlen(a_effect);
+	l_location_count = (int) strlen(a_location);
+	l_reason_count = (int) strlen(a_reason);
+	l_effect_count = (int) strlen(a_effect);
 
 		/* 1 - precision of 212 = 255 - 43, 43 being number of characters written
 		 *      for `a_object_addr' and `a_location'. */
@@ -2433,7 +2431,7 @@ rt_private void print_object_location_reason_effect (
 
 		/* Print object address with 16 digits to be ready when pointers
 		 * will be on 64 bits on all platform. */
-	sprintf(buffer, "<%016lX>  ", (unsigned long) a_object_addr);
+	sprintf(buffer, "<%016" EIF_POINTER_DISPLAY ">  ", (rt_uint_ptr) a_object_addr);
 	append_trace(buffer);
 
 	if (l_location_count > 22) {
@@ -2644,7 +2642,7 @@ rt_private void print_top(void (*append_trace)(char *))
  * (char *) elements, we now store (struct ex_vect) ones.
  */
 
-rt_shared struct ex_vect *exget(register2 struct xstack *stk)
+rt_shared struct ex_vect *exget(struct xstack *stk)
 {
 	/* Get a new execution vector at the top of the stack. If the chunk is
 	 * full, we try to allocate a new chunk. If this fails, nothing is done,
@@ -2652,7 +2650,7 @@ rt_shared struct ex_vect *exget(register2 struct xstack *stk)
 	 * of the new execution vector is returned.
 	 */
 
-	register1 struct ex_vect *top = stk->st_top;	/* Top of stack */
+	struct ex_vect *top = stk->st_top;	/* Top of stack */
 
 	if (top == (struct ex_vect *) 0)	{		/* No stack yet? */
 		top = stack_allocate(stk, STACK_CHUNK);	/* Create one */
@@ -2670,7 +2668,7 @@ rt_shared struct ex_vect *exget(register2 struct xstack *stk)
 				return (struct ex_vect *) 0;
 			top = stk->st_top;				/* New top */
 		} else {
-			register2 struct stxchunk *current;		/* New current chunk */
+			struct stxchunk *current;		/* New current chunk */
 
 			/* Update the new stack context (main structure) */
 			current = stk->st_cur = stk->st_cur->sk_next;
@@ -2684,14 +2682,14 @@ rt_shared struct ex_vect *exget(register2 struct xstack *stk)
 	return top - 1;			/* Address of new available execution vector */
 }
 
-rt_private struct ex_vect *stack_allocate(register2 struct xstack *stk, register1 int size)
+rt_private struct ex_vect *stack_allocate(struct xstack *stk, int size)
 		/* The stack */
 		/* Initial size */
 {
 	/* The stack 'stk' is created, with size 'size'. Return the arena value */
 
-	register3 struct ex_vect *arena;	/* Address for the arena */
-	register4 struct stxchunk *chunk;	/* Address of the chunk */
+	struct ex_vect *arena;	/* Address for the arena */
+	struct stxchunk *chunk;	/* Address of the chunk */
 
 	size *= sizeof(struct ex_vect);
 	size += sizeof(*chunk);				/* Ensure arena is a correct multiple */
@@ -2714,7 +2712,7 @@ rt_private struct ex_vect *stack_allocate(register2 struct xstack *stk, register
 	return arena;			/* Stack allocated */
 }
 
-rt_private int stack_extend(register2 struct xstack *stk, register1 int size)
+rt_private int stack_extend(struct xstack *stk, int size)
 			/* The stack */
 			/* Size of new chunk to be added */
 {
@@ -2722,8 +2720,8 @@ rt_private int stack_extend(register2 struct xstack *stk, register1 int size)
 	 * 0 is returned in case of success. Otherwise, -1 is returned.
 	 */
 
-	register3 struct ex_vect *arena;	/* Address for the arena */
-	register4 struct stxchunk *chunk;	/* Address of the chunk */
+	struct ex_vect *arena;	/* Address for the arena */
+	struct stxchunk *chunk;	/* Address of the chunk */
 
 	size *= sizeof(struct ex_vect);
 	size += sizeof(*chunk);				/* Or arena might not be padded */
@@ -2751,7 +2749,7 @@ rt_private int stack_extend(register2 struct xstack *stk, register1 int size)
 	return 0;			/* Everything is ok */
 }
 
-rt_private void stack_truncate(register1 struct xstack *stk)
+rt_private void stack_truncate(struct xstack *stk)
 		/* The stack to be truncated */
 {
 	/* Free unused chunks in the stack. If the current chunk has at least
@@ -2759,7 +2757,7 @@ rt_private void stack_truncate(register1 struct xstack *stk)
 	 * next one. Otherwise, we skip the next chunk and free the remainder.
 	 */
 
-	register2 struct ex_vect *top;	/* The current top of the stack */
+	struct ex_vect *top;	/* The current top of the stack */
 	struct stxchunk *next;			/* Address of next chunk */
 
 	top = stk->st_top;						/* The first free location */
@@ -2780,7 +2778,7 @@ rt_private void wipe_out(register struct stxchunk *chunk)
 {
 	/* Free all the chunks after 'chunk' */
 
-	register2 struct stxchunk *next;	/* Address of next chunk */
+	struct stxchunk *next;	/* Address of next chunk */
 
 	if (chunk == (struct stxchunk *) 0)	/* No chunk */
 		return;							/* Nothing to be done */
@@ -2795,7 +2793,7 @@ rt_private void wipe_out(register struct stxchunk *chunk)
 		eif_rt_xfree((char *) chunk);
 }
 
-rt_public void expop(register1 struct xstack *stk)
+rt_public void expop(struct xstack *stk)
 		/* The stack */
 {
 	/* Removes one item from the Eiffel stack */
@@ -2803,9 +2801,9 @@ rt_public void expop(register1 struct xstack *stk)
 	RT_GET_CONTEXT
 #endif
 
-	register2 struct ex_vect *top = stk->st_top;	/* Top of the stack */
-	register3 struct stxchunk *s;			/* To walk through stack chunks */
-	register4 struct ex_vect *arena;		/* Base address of current chunk */
+	struct ex_vect *top = stk->st_top;	/* Top of the stack */
+	struct stxchunk *s;			/* To walk through stack chunks */
+	struct ex_vect *arena;		/* Base address of current chunk */
 
 	/* Optimization: try to update the top, hoping it will remain in the
 	 * same chunk. This avoids pointer manipulation (walking along the stack)
@@ -2844,7 +2842,7 @@ rt_public void expop(register1 struct xstack *stk)
 #endif
 }
 
-rt_shared struct ex_vect *extop(register1 struct xstack *stk)
+rt_shared struct ex_vect *extop(struct xstack *stk)
 		/* The stack */
 {
 	/* Returns the value at the top of the Eiffel stack or a NULL pointer if
@@ -2882,7 +2880,7 @@ rt_shared struct ex_vect *exnext(void)
 	 * NB: The stack structure is physically destroyed, mangled from the bottom.
 	 */
 	RT_GET_CONTEXT
-	register1 struct ex_vect *first_item;	/* First item pushed */
+	struct ex_vect *first_item;	/* First item pushed */
 
 	/* If we already reached the end of the stack, return immediately */
 	if (eif_trace.st_bot == eif_trace.st_top)
@@ -3211,7 +3209,7 @@ void get_call_stack(void) {
 
 }
 
-cur_recursive_dump(register1 int level)
+cur_recursive_dump(int level)
 {
 	char buf[200];
 	/* Prints the stack trace of a given level. Whenever a new level is reached ,

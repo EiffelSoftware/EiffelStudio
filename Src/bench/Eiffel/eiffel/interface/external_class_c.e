@@ -292,7 +292,7 @@ feature {NONE} -- Implementation: Overloading
 
 	updated_overloaded_list (a_feat_tbl: FEATURE_TABLE; a_list: ARRAYED_LIST [INTEGER]): ARRAYED_LIST [INTEGER] is
 			-- Process `a_list' to ensure that there are no 2 routines that only differ by
-			-- their return type. CLS rules guarantee that the two routines cannot be in the
+			-- their return type if any. CLS rules guarantee that the two routines cannot be in the
 			-- same class, so we return a new list with the one which is defined in
 			-- an ancestor class (including the Current class) the closest to the Current class,
 			-- the others are removed from the list to avoid ambiguity when calling an
@@ -309,55 +309,49 @@ feature {NONE} -- Implementation: Overloading
 			l_processed: SPECIAL [BOOLEAN]
 		do
 			l_feat := a_feat_tbl.item_id (a_list.first)
-			if not l_feat.is_function then
-					-- Case of a procedure or a query that is not a function. Thus there is no
-					-- possible overloading on return type.
-				Result := a_list
-			else
-					-- Iterate through `a_list' and eliminate features with same parameters,
-					-- more precisely only keeps the one that have distinct parameters.
-				from
-					i := 1
-					nb := a_list.count
-					create l_processed.make (nb + 1)
-					create Result.make (nb)
-				until
-					i > nb
-				loop
-						-- If a routine was found in the sub-loop to be overloaded, we do not
-						-- need to process it again.
-					if not l_processed.item (i) then
-						l_name_id := a_list.i_th (i)
-						l_feat := a_feat_tbl.item_id (l_name_id)
-						from
-							l_has_overload_on_return_type := False
-							j := i + 1
-						until
-							j > nb
-						loop
-							if not l_processed.item (j) then
-								l_other := a_feat_tbl.item_id (a_list.i_th (j))
-									-- Find if `l_feat' and `l_other' have the same parameter
-									-- signature. If they do, we should not insert them in the
-									-- overloading resolution list.
-								l_is_overloaded := 
-									(not l_feat.has_arguments and not l_other.has_arguments) or else
-									((l_feat.has_arguments and l_other.has_arguments) and then
-									(l_feat.arguments.count = l_other.arguments.count) and then
-									l_feat.arguments.same_interface (l_other.arguments))
-								if l_is_overloaded then
-									l_has_overload_on_return_type := True
-									l_processed.put (True, j)
-								end
+				-- Iterate through `a_list' and eliminate features with same parameters,
+				-- more precisely only keeps the one that have distinct parameters.
+			from
+				i := 1
+				nb := a_list.count
+				create l_processed.make (nb + 1)
+				create Result.make (nb)
+			until
+				i > nb
+			loop
+					-- If a routine was found in the sub-loop to be overloaded, we do not
+					-- need to process it again.
+				if not l_processed.item (i) then
+					l_name_id := a_list.i_th (i)
+					l_feat := a_feat_tbl.item_id (l_name_id)
+					from
+						l_has_overload_on_return_type := False
+						j := i + 1
+					until
+						j > nb
+					loop
+						if not l_processed.item (j) then
+							l_other := a_feat_tbl.item_id (a_list.i_th (j))
+								-- Find if `l_feat' and `l_other' have the same parameter
+								-- signature. If they do, we should not insert them in the
+								-- overloading resolution list.
+							l_is_overloaded := 
+								(not l_feat.has_arguments and not l_other.has_arguments) or else
+								((l_feat.has_arguments and l_other.has_arguments) and then
+								(l_feat.arguments.count = l_other.arguments.count) and then
+								l_feat.arguments.same_interface (l_other.arguments))
+							if l_is_overloaded then
+								l_has_overload_on_return_type := True
+								l_processed.put (True, j)
 							end
-							j := j + 1
 						end
-						if not l_has_overload_on_return_type then
-							Result.extend (l_name_id)
-						end
+						j := j + 1
 					end
-					i := i + 1
+					if not l_has_overload_on_return_type then
+						Result.extend (l_name_id)
+					end
 				end
+				i := i + 1
 			end
 		end
 

@@ -33,7 +33,7 @@ feature -- Conformance
 			type1_nonnegative: type1 >= 0
 			type2_nonnegative: type2 >= 0
 		local
-			l_child, l_parent: TYPE
+			l_child, l_parent: SYSTEM_TYPE
 			l_types: like known_types
 		do
 			if type1 = type2 then
@@ -60,7 +60,7 @@ feature -- Creation
 		require
 			class_type_not_void: class_type /= Void
 		local
-			t: TYPE
+			t: SYSTEM_TYPE
 			l_class_type: SYSTEM_STRING
 		do
 			l_class_type := class_type.to_cil
@@ -71,7 +71,7 @@ feature -- Creation
 				t := eiffel_type_mapping.found_item
 			else
 					-- Could not find it, let's try the .NET name.
-				t := feature {TYPE}.get_type_string (l_class_type)
+				t := feature {SYSTEM_TYPE}.get_type_string (l_class_type)
 			end
 			if t /= Void then
 				Result := get_type_index (t)
@@ -96,7 +96,7 @@ feature -- Creation
 			l_types := known_types
 			l_types.search (type_id)
 			if l_types.found then
-				c := l_types.found_item.get_constructor (feature {TYPE}.empty_types)
+				c := l_types.found_item.get_constructor (feature {SYSTEM_TYPE}.empty_types)
 				if c /= Void then
 					Result ?= c.invoke (Void)
 				end
@@ -224,7 +224,7 @@ feature -- Access
 		local
 			l_types: like known_types
 			l_name: EIFFEL_NAME_ATTRIBUTE
-			l_type: TYPE
+			l_type: SYSTEM_TYPE
 			l_attributes: NATIVE_ARRAY [SYSTEM_OBJECT]
 		do
 			l_types := known_types
@@ -304,7 +304,7 @@ feature -- Access
 			object_generic: generic_count (object) > 0
 			i_valid: i > 0 and i <= generic_count (object)
 		local
-			generic_type: TYPE
+			generic_type: SYSTEM_TYPE
 		do
 			generic_type := feature {ISE_RUNTIME}.type_of_generic_parameter (object, i)
 			Result := get_type_index (generic_type)
@@ -487,7 +487,7 @@ feature -- Access
 		local
 			l_m: like get_members
 			l_field: FIELD_INFO
-			l_type: TYPE
+			l_type: SYSTEM_TYPE
 		do
 			l_m := get_members (type_id)
 			if l_m /= Void and then l_m.valid_index (i) then
@@ -499,7 +499,7 @@ feature -- Access
 						-- FIXME: BIT not supported
 					if
 						l_type.is_subclass_of (
-						feature {TYPE}.get_type_string (("System.Enum").to_cil))
+						feature {SYSTEM_TYPE}.get_type_string (("System.Enum").to_cil))
 					then
 						Result := Expanded_type
 					else
@@ -950,7 +950,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_type_index (t: TYPE): INTEGER is
+	get_type_index (t: SYSTEM_TYPE): INTEGER is
 			-- If type is a known type, return its index,
 			-- otherwise add it to the known types and return its index.
 		require
@@ -1012,7 +1012,7 @@ feature {NONE} -- Implementation
 		require
 			an_assembly_not_void: an_assembly /= Void
 		local
-			l_types: NATIVE_ARRAY [TYPE]
+			l_types: NATIVE_ARRAY [SYSTEM_TYPE]
 			l_name: EIFFEL_NAME_ATTRIBUTE
 			l_cas: NATIVE_ARRAY [SYSTEM_OBJECT]
 			i, nb: INTEGER
@@ -1044,31 +1044,31 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	eiffel_type_mapping: HASH_TABLE [TYPE, STRING] is
+	eiffel_type_mapping: HASH_TABLE [SYSTEM_TYPE, STRING] is
 			-- Mapping between Eiffel class names and .NET types.
 		once
 			create Result.make (50)
 		end
 
-	known_types: HASH_TABLE [TYPE, INTEGER] is
+	known_types: HASH_TABLE [SYSTEM_TYPE, INTEGER] is
 			-- All types that have already been identified.
 		once
 				-- FIXME: We do not support BIT
 			create Result.make (50)
-			Result.put (feature {TYPE}.get_type_string ("System.IntPtr"), Pointer_type)
-			Result.put (feature {TYPE}.get_type_string ("System.Char"), Character_type)
-			Result.put (feature {TYPE}.get_type_string ("System.Boolean"), Boolean_type)
-			Result.put (feature {TYPE}.get_type_string ("System.Single"), Real_type)
-			Result.put (feature {TYPE}.get_type_string ("System.Double"), Double_type)
-			Result.put (feature {TYPE}.get_type_string ("System.Byte"), natural_8_type)
-			Result.put (feature {TYPE}.get_type_string ("System.UInt16"), natural_16_type)
-			Result.put (feature {TYPE}.get_type_string ("System.UInt32"), natural_32_type)
-			Result.put (feature {TYPE}.get_type_string ("System.UInt64"), natural_64_type)
-			Result.put (feature {TYPE}.get_type_string ("System.SByte"), Integer_8_type)
-			Result.put (feature {TYPE}.get_type_string ("System.Int16"), Integer_16_type)
-			Result.put (feature {TYPE}.get_type_string ("System.Int32"), Integer_32_type)
-			Result.put (feature {TYPE}.get_type_string ("System.Int64"), Integer_64_type)
-			Result.put (feature {TYPE}.get_type_string ("System.Object"), Object_type)
+			Result.put (feature {SYSTEM_TYPE}.get_type_string ("System.IntPtr"), Pointer_type)
+			Result.put (feature {SYSTEM_TYPE}.get_type_string ("System.Char"), Character_type)
+			Result.put (feature {SYSTEM_TYPE}.get_type_string ("System.Boolean"), Boolean_type)
+			Result.put (feature {SYSTEM_TYPE}.get_type_string ("System.Single"), Real_type)
+			Result.put (feature {SYSTEM_TYPE}.get_type_string ("System.Double"), Double_type)
+			Result.put (feature {SYSTEM_TYPE}.get_type_string ("System.Byte"), natural_8_type)
+			Result.put (feature {SYSTEM_TYPE}.get_type_string ("System.UInt16"), natural_16_type)
+			Result.put (feature {SYSTEM_TYPE}.get_type_string ("System.UInt32"), natural_32_type)
+			Result.put (feature {SYSTEM_TYPE}.get_type_string ("System.UInt64"), natural_64_type)
+			Result.put (feature {SYSTEM_TYPE}.get_type_string ("System.SByte"), Integer_8_type)
+			Result.put (feature {SYSTEM_TYPE}.get_type_string ("System.Int16"), Integer_16_type)
+			Result.put (feature {SYSTEM_TYPE}.get_type_string ("System.Int32"), Integer_32_type)
+			Result.put (feature {SYSTEM_TYPE}.get_type_string ("System.Int64"), Integer_64_type)
+			Result.put (feature {SYSTEM_TYPE}.get_type_string ("System.Object"), Object_type)
 		end
 
 	known_types_id: HASHTABLE is
@@ -1079,20 +1079,20 @@ feature {NONE} -- Implementation
 		once
 				-- FIXME: We do not support BIT
 			create Result.make_from_capacity (50)
-			Result.add (feature {TYPE}.get_type_string ("System.IntPtr"), Pointer_type)
-			Result.add (feature {TYPE}.get_type_string ("System.Char"), Character_type)
-			Result.add (feature {TYPE}.get_type_string ("System.Boolean"), Boolean_type)
-			Result.add (feature {TYPE}.get_type_string ("System.Single"), Real_type)
-			Result.add (feature {TYPE}.get_type_string ("System.Double"), Double_type)
-			Result.add (feature {TYPE}.get_type_string ("System.Byte"), natural_8_type)
-			Result.add (feature {TYPE}.get_type_string ("System.UInt16"), natural_16_type)
-			Result.add (feature {TYPE}.get_type_string ("System.UInt32"), natural_32_type)
-			Result.add (feature {TYPE}.get_type_string ("System.UInt64"), natural_64_type)
-			Result.add (feature {TYPE}.get_type_string ("System.SByte"), Integer_8_type)
-			Result.add (feature {TYPE}.get_type_string ("System.Int16"), Integer_16_type)
-			Result.add (feature {TYPE}.get_type_string ("System.Int32"), Integer_32_type)
-			Result.add (feature {TYPE}.get_type_string ("System.Int64"), Integer_64_type)
-			Result.add (feature {TYPE}.get_type_string ("System.Object"), Object_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.IntPtr"), Pointer_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.Char"), Character_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.Boolean"), Boolean_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.Single"), Real_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.Double"), Double_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.Byte"), natural_8_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.UInt16"), natural_16_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.UInt32"), natural_32_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.UInt64"), natural_64_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.SByte"), Integer_8_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.Int16"), Integer_16_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.Int32"), Integer_32_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.Int64"), Integer_64_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.Object"), Object_type)
 		end
 
 	abstract_types: HASHTABLE is
@@ -1101,19 +1101,19 @@ feature {NONE} -- Implementation
 			-- Value: ID
 		once
 			create Result.make_from_capacity (10)
-			Result.add (feature {TYPE}.get_type_string ("System.IntPtr"), Pointer_type)
-			Result.add (feature {TYPE}.get_type_string ("System.Char"), Character_type)
-			Result.add (feature {TYPE}.get_type_string ("System.Boolean"), Boolean_type)
-			Result.add (feature {TYPE}.get_type_string ("System.Single"), Real_type)
-			Result.add (feature {TYPE}.get_type_string ("System.Double"), Double_type)
-			Result.add (feature {TYPE}.get_type_string ("System.Byte"), natural_8_type)
-			Result.add (feature {TYPE}.get_type_string ("System.UInt16"), natural_16_type)
-			Result.add (feature {TYPE}.get_type_string ("System.UInt32"), natural_32_type)
-			Result.add (feature {TYPE}.get_type_string ("System.UInt64"), natural_64_type)
-			Result.add (feature {TYPE}.get_type_string ("System.SByte"), Integer_8_type)
-			Result.add (feature {TYPE}.get_type_string ("System.Int16"), Integer_16_type)
-			Result.add (feature {TYPE}.get_type_string ("System.Int32"), Integer_32_type)
-			Result.add (feature {TYPE}.get_type_string ("System.Int64"), Integer_64_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.IntPtr"), Pointer_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.Char"), Character_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.Boolean"), Boolean_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.Single"), Real_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.Double"), Double_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.Byte"), natural_8_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.UInt16"), natural_16_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.UInt32"), natural_32_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.UInt64"), natural_64_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.SByte"), Integer_8_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.Int16"), Integer_16_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.Int32"), Integer_32_type)
+			Result.add (feature {SYSTEM_TYPE}.get_type_string ("System.Int64"), Integer_64_type)
 		end
 		
 	get_members (type_id: INTEGER): ARRAYED_LIST [FIELD_INFO] is
@@ -1188,7 +1188,7 @@ feature {NONE} -- Implementation
 			create Result.make_from_capacity (50)
 		end
 
-	eiffel_name_attribute_type: TYPE is
+	eiffel_name_attribute_type: SYSTEM_TYPE is
 			-- Get actual type of EIFFEL_NAME_ATTRIBUTE while
 			-- waiting for `typeof' operator.
 		local

@@ -30,7 +30,6 @@ feature -- Access
 			parented := False
 		end
 
-
 	key: EV_KEY is
 			-- Key that has to pressed to trigger actions.
 		deferred

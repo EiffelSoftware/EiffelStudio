@@ -10,6 +10,20 @@ class
 inherit
 	EXPR_AS
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (c: like class_type; t: like target; e: like expression) is
+			-- Create a new OPERAND AST node.
+		do
+			class_type := c
+			target := t
+			expression := e
+		ensure
+			class_type_set: class_type = c
+			target_set: target = t
+			expression_set: expression = e
+		end
+
 feature {NONE} -- Initialization
 
 	set is

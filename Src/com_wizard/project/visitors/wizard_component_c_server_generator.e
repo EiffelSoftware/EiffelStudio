@@ -42,8 +42,6 @@ feature -- Access
 		require
 			non_void_component: a_component /= Void
 			dispatch_interface: dispatch_interface
---			non_void_default_dispinterface: default_dispinterface_name (a_component) /= Void
---			valid_default_dispinterface: not default_dispinterface_name (a_component).empty
 		deferred
 		ensure
 			non_void_dispinterface: Result /= Void
@@ -298,7 +296,7 @@ feature -- Basic Operations
 				Result.append (Semicolon)
 			end
 
-			if shared_wizard_environment.out_of_process_server then
+			if shared_wizard_environment.server then
 				Result.append (New_line_tab)
 				Result.append ("LockModule ();")
 			end
@@ -336,7 +334,7 @@ feature -- Basic Operations
 				tmp_body.append (Release_function)
 			end
 
-			if shared_wizard_environment.out_of_process_server then
+			if shared_wizard_environment.server then
 				tmp_body.append (New_line_tab)
 				tmp_body.append ("UnlockModule ();")
 			end
@@ -1087,7 +1085,12 @@ feature -- Basic Operations
 					Result.append (New_line_tab_tab_tab)
 					Result.append (Tab)
 
-					if visitor.is_interface_pointer or visitor.is_coclass_pointer then
+					if 
+						(visitor.is_interface_pointer or 
+						visitor.is_coclass_pointer) and
+						not (visitor.c_type.substring_index (Iunknown_type, 1) > 0 or 
+						visitor.c_type.substring_index (Idispatch_type, 1) > 0)
+					then
 						Result.append (visitor.c_type)
 						Result.append (Space)
 						Result.append ("arg_")
@@ -1148,7 +1151,12 @@ feature -- Basic Operations
 						Result.append (check_failer (func_desc, "", "DISP_E_BADVARTYPE"))
 
 
-					elseif visitor.is_interface_pointer_pointer or visitor.is_coclass_pointer_pointer then
+					elseif 
+						(visitor.is_interface_pointer_pointer or 
+						visitor.is_coclass_pointer_pointer) and
+						not (visitor.c_type.substring_index (Iunknown_type, 1) > 0 or 
+						visitor.c_type.substring_index (Idispatch_type, 1) > 0)
+					then
 						Result.append (visitor.c_type)
 						Result.append (Space)
 						Result.append ("arg_")
@@ -1322,8 +1330,10 @@ feature -- Basic Operations
 						end
 						local_buffer.append (Space_equal_space)
 						if 
-							visitor.is_interface_pointer_pointer or visitor.is_coclass_pointer_pointer or
-							visitor.is_interface_pointer or visitor.is_coclass_pointer
+							(visitor.is_interface_pointer_pointer or visitor.is_coclass_pointer_pointer or
+							visitor.is_interface_pointer or visitor.is_coclass_pointer) and
+							not (visitor.c_type.substring_index (Iunknown_type, 1) > 0 or 
+							visitor.c_type.substring_index (Idispatch_type, 1) > 0)
 						then
 							local_buffer.append ("static_cast<IUnknown *>(")
 						end
@@ -1333,8 +1343,10 @@ feature -- Basic Operations
 						local_buffer.append ("arg_")
 						local_buffer.append_integer (counter)
 						if 
-							visitor.is_interface_pointer_pointer or visitor.is_coclass_pointer_pointer or
-							visitor.is_interface_pointer or visitor.is_coclass_pointer
+							(visitor.is_interface_pointer_pointer or visitor.is_coclass_pointer_pointer or
+							visitor.is_interface_pointer or visitor.is_coclass_pointer) and
+							not (visitor.c_type.substring_index (Iunknown_type, 1) > 0 or 
+							visitor.c_type.substring_index (Idispatch_type, 1) > 0)
 						then
 							local_buffer.append (Close_parenthesis)
 						end

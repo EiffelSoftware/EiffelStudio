@@ -278,7 +278,7 @@ feature -- Element Change
 	copy (other: like Current) is
 			-- set `date' and `time' with the `other' attributes.
 		do
-			{ABSOLUTE} Precursor (other)
+			Precursor {ABSOLUTE} (other)
 			date := clone (other.date)
 			time := clone (other.time)
 		end

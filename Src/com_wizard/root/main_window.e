@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 			create idl_dialog.make (Current)
 			create ps_dialog.make (Current)
 			create final_dialog.make (Current)
-			resize (400, 400)
+			resize (600, 400)
 			show
 		end
 

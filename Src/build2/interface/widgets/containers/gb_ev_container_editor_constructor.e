@@ -28,10 +28,8 @@ feature -- Access
 			label: EV_LABEL
 			editor_item: GB_OBJECT_EDITOR_ITEM
 			hbox1, hbox2: EV_HORIZONTAL_BOX
-			vbox1, vbox2: EV_VERTICAL_BOX
-			frame1, frame2: EV_FRAME
-			button1, button2: EV_BUTTON
-			new_button1, new_button2: EV_BUTTON
+			pixmap: EV_PIXMAP
+			tool_bar1, tool_bar2: EV_TOOL_BAR
 		do
 			create Result
 			initialize_attribute_editor (Result)
@@ -45,8 +43,17 @@ feature -- Access
 			merged_list.drop_actions.extend (agent new_merge)
 			merged_list.drop_actions.set_veto_pebble_function (agent veto_merge (?))
 			Result.extend (merged_list)
-			create propagate_foreground_color.make_with_text (gb_ev_container_propagate_foreground_color)
-			create propagate_background_color.make_with_text (gb_ev_container_propagate_background_color)
+			
+			pixmap := (create {GB_SHARED_PIXMAPS}).pixmap_by_name ("propagate")
+			
+			create propagate_foreground_color--.make_with_text (gb_ev_container_propagate_foreground_color)
+			create tool_bar1
+			tool_bar1.extend (propagate_foreground_color)
+			propagate_foreground_color.set_pixmap (pixmap)
+			create propagate_background_color--.make_with_text (gb_ev_container_propagate_background_color)
+			create tool_bar2
+			tool_bar2.extend (propagate_background_color)
+			propagate_background_color.set_pixmap (pixmap)
 			propagate_background_color.set_tooltip (gb_ev_container_propagate_background_color_tooltip)
 			propagate_foreground_color.set_tooltip (gb_ev_container_propagate_foreground_color_tooltip)
 			propagate_foreground_color.select_actions.extend (agent for_all_objects (agent {EV_CONTAINER}.propagate_foreground_color))
@@ -59,42 +66,16 @@ feature -- Access
 			check
 				colorizable_controls_not_changed: editor_item /= Void
 			end
-			frame1 ?= editor_item @ 1
-			frame2 ?= editor_item @ 2
-			check
-				colorizable_controls_not_changed: frame1 /= Void and frame2 /= Void
-			end
-
-				-- Note that as we rebuild the colorizable control,
-				-- we must rebuild one of the buttons, as we have no
-				-- way of restoring it back to its original size.
-			
-				-- Firstly rebuild the background_color
-			vbox1 ?= frame1.item
-			hbox1 ?= vbox1.i_th (vbox1.count)
-			button1 ?= hbox1.i_th (1)
-			create new_button1
-			new_button1.set_text (button1.text)
-			new_button1.select_actions.append (button1.select_actions)
-			button1.destroy
-			hbox1.extend (new_button1)
-			hbox1.extend (propagate_background_color)
-			hbox1.disable_item_expand (new_button1)
-			hbox1.disable_item_expand (propagate_background_color)
+			hbox1 ?= editor_item @ 2
+			hbox1.go_i_th (hbox1.count)
+			hbox1.put_left (tool_bar1)
+			hbox1.disable_item_expand (tool_bar1)
 			
 			
-				-- Secondly rebuild the foreground_color
-			vbox2 ?= frame2.item
-			hbox2 ?= vbox2.i_th (vbox2.count)
-			button2 ?= hbox2.i_th (1)
-			create new_button2
-			new_button2.set_text (button2.text)
-			new_button2.select_actions.append (button2.select_actions)
-			button2.destroy
-			hbox2.extend (new_button2)
-			hbox2.extend (propagate_foreground_color)
-			hbox2.disable_item_expand (new_button2)
-			hbox2.disable_item_expand (propagate_foreground_color)
+			hbox2 ?= editor_item @ 4
+			hbox2.go_i_th (hbox2.count)
+			hbox2.put_left (tool_bar2)
+			hbox2.disable_item_expand (tool_bar2)
 			
 			update_attribute_editor
 			disable_all_items (Result)
@@ -194,6 +175,6 @@ feature {NONE} -- Implementation
 		-- Representation of all containers linked to
 		-- this one for radio button grouping.
 		
-	propagate_foreground_color, propagate_background_color: EV_BUTTON
+	propagate_foreground_color, propagate_background_color: EV_TOOL_BAR_BUTTON
 
 end -- class GB_EV_CONTAINER_EDITOR_CONSTRUCTOR

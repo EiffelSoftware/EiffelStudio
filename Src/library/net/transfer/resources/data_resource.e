@@ -27,8 +27,10 @@ feature {NONE} -- Initialization
 		do
 			address := addr
 			initialize
+			timeout := default_timeout
 		ensure
 			address_set: address = addr
+			default_timeout_set: timeout = default_timeout
 		end
 		
 	initialize is
@@ -73,6 +75,9 @@ feature -- Access
 			Result := address.location
 		end
 
+	timeout: INTEGER
+			-- Duration of timeout in seconds
+		
 feature -- Measurement
 
 	count: INTEGER is
@@ -248,7 +253,7 @@ feature -- Status setting
 			read_mode_set: read_mode
 		end
 	 
-	 set_write_mode is
+	set_write_mode is
 	 		-- Set write mode.
 		deferred
 		ensure
@@ -296,6 +301,24 @@ feature -- Status setting
 			non_empty_password: pw /= Void and then not pw.is_empty
 		do
 			address.set_password (pw)
+		end
+		
+	set_timeout (n: INTEGER) is
+			-- Set timeout to `n' seconds.
+		require
+			non_negative: n >= 0
+		do
+			timeout := n
+		ensure
+			timeout_set: timeout = n
+		end
+
+	set_timeout_to_default is
+			-- Set timeout to default value.
+		do
+			timeout := default_timeout
+		ensure
+			default_timeout_set: timeout = default_timeout
 		end
 		
 	reset_proxy is
@@ -365,9 +388,15 @@ feature -- Input
 				bytes_transferred = old bytes_transferred + last_packet_size
 		end
 
+feature {NONE} -- Constants
+
+	default_timeout: INTEGER is 20
+			-- Default timeout duration in seconds
+
 invariant
 
 	address_assigned: address /= Void
+	timeout_non_negative: timeout >= 0
 	packet_constraint: not (has_packet xor last_packet /= Void)
 	pending_constraint: is_packet_pending implies 
 						(is_open and is_readable and transfer_initiated)

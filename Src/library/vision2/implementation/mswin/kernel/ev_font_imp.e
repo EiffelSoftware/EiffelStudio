@@ -43,7 +43,7 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 			set_family (Ev_font_family_sans)
 			set_weight (Ev_font_weight_regular)
 			set_shape (Ev_font_shape_regular)
-			set_height (8)
+			set_height (15)
 		end
 
 	initialize is
@@ -582,6 +582,9 @@ end -- class EV_FONT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/02/22 19:51:50  rogers
+--| set_height in make now takes 15 as the argument for the font height as height is now measured in pixels rather than the previous implementation, using points.
+--|
 --| Revision 1.20  2000/02/21 20:02:39  pichery
 --| Changed implementation of EV_FONT under Windows. Now we only keep one
 --| WEL_LOG_FONT structure in memory for all EV_FONT objects (wel_log_font is

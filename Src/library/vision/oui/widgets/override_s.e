@@ -19,14 +19,14 @@ creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create an override shell with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
-			Valid_name: a_name /= Void;
-			Valid_parent: a_parent /= Void
+			valid_name: a_name /= Void;
+			valid_parent: a_parent /= Void
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
@@ -34,8 +34,8 @@ feature -- Creation
 			implementation:= toolkit.override_s (current);
 			set_default
 		ensure
-			Parent_set: parent = a_parent;
-			Identifier_set: identifier.is_equal (a_name)
+			parent_set: parent = a_parent;
+			identifier_set: identifier.is_equal (a_name)
 		end;
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}

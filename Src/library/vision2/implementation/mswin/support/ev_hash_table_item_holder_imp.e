@@ -1,3 +1,4 @@
+--| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
@@ -75,6 +76,9 @@ end -- class EV_HASH_TABLE_ITEM_HOLDER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/04/26 17:37:56  brendel
+--| Unreleased.
+--|
 --| Revision 1.6  2000/04/05 21:16:11  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

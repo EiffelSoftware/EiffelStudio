@@ -62,6 +62,11 @@ RT_LNK EIF_BOOLEAN eif_is_special_type (EIF_INTEGER dftype);
 #define ei_set_double_field(i,object,value)		*(EIF_DOUBLE *) ei_oref(i,(EIF_REFERENCE)(object)) = (EIF_DOUBLE) (value)
 #define ei_set_pointer_field(i,object,value)	*(EIF_POINTER *) ei_oref(i,(EIF_REFERENCE)(object)) = (EIF_POINTER) (value)
 
+/* Marking */
+#define ei_mark(obj)		(HEADER(obj)->ov_flags |= EO_STORE)
+#define ei_unmark(obj)		(HEADER(obj)->ov_flags &= ~EO_STORE)
+#define ei_is_marked(obj)	((HEADER(obj)->ov_flags & EO_STORE) ? EIF_TRUE : EIF_FALSE)
+
 #ifdef __cplusplus
 }
 #endif

@@ -62,7 +62,7 @@ feature -- Status report
 		do 
 			temp := get_xm_string (screen_object, XmNlabelString);
 			Result := temp.to_eiffel_string;
-			temp.free
+			temp.destroy
 		ensure
 			text_not_void: Result /= Void
 		end;
@@ -136,8 +136,9 @@ feature -- Status report
 		do
 			Result := get_xt_pixmap (Current, XmNlabelInsensitivePixmap)
 		ensure
-			valid_result: Result /= Void and then Result.is_valid;
-			result_has_same_display: Result.same_display (display) 
+			valid_Result: Result /= Void and then Result.is_valid;
+			Result_has_same_display: Result.same_display (display);
+			Result_is_shared: Result.shared
 		end;
 
 	pixmap: MEL_PIXMAP is
@@ -147,8 +148,9 @@ feature -- Status report
 		do
 			Result := get_xt_pixmap (Current, XmNlabelPixmap)
 		ensure
-			valid_pixmap: Result /= Void and then Result.is_valid;
-			result_has_same_display: Result.same_display (display) 
+			valid_Result: Result /= Void and then Result.is_valid;
+			Result_has_same_display: Result.same_display (display);
+			Result_is_shared: Result.shared
 		end;
 
 	is_type_string: BOOLEAN is
@@ -271,7 +273,7 @@ feature -- Status setting
 		do
 			!! compound_string.make_default_l_to_r (a_text);
 			set_xm_string (screen_object, XmNlabelString, compound_string);
-			compound_string.free
+			compound_string.destroy
 		ensure
 			text_set: label_as_string.is_equal (a_text)
 		end;

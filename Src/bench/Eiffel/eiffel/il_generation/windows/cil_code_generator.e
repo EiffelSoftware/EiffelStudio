@@ -4008,6 +4008,7 @@ feature -- Once management
 				current_class_token,
 				feature {MD_FIELD_ATTRIBUTES}.Public | feature {MD_FIELD_ATTRIBUTES}.Static,
 				done_sig)
+			current_module.define_thread_static_attribute (done_token)
 
 			Il_debug_info_recorder.record_once_info (current_class_type, Byte_context.current_feature, name, done_token, 0)
 		end
@@ -4030,6 +4031,7 @@ feature -- Once management
 			result_token := md_emit.define_field (uni_string,
 				current_class_token,
 				feature {MD_FIELD_ATTRIBUTES}.Public | feature {MD_FIELD_ATTRIBUTES}.Static, l_sig)
+			current_module.define_thread_static_attribute (result_token)
 				
 			Il_debug_info_recorder.record_once_info (current_class_type, Byte_context.current_feature, name, 0, result_token)
 		end

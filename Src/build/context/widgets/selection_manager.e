@@ -622,7 +622,7 @@ feature {PERM_WIND_C}
 					end
 				end;
 			elseif (argument = Second) then
-					-- Button release
+				-- Button release
 				selected := false;
 				if abort_button_release then
 					if grabbed then

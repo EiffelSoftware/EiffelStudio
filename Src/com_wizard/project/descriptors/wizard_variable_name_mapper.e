@@ -24,16 +24,12 @@ inherit
 		end
 
 	ECOM_TYPE_KIND
+		export
+			{NONE} all
+			{ANY} is_valid_type_kind
+		end
 
 feature -- Access
-
-	implemented_coclass_name (a_coclass_name: STRING): STRING is
-			-- Name of heir of coclass `a_coclass_name'
-			-- Implementation class for component server.
-		do
-			Result := clone (a_coclass_name)
-			Result.append (Implemented_coclass_extension)
-		end
 
 	Registration_class_creation_routine: STRING is "make"
 			-- Registration class creation routine name
@@ -45,6 +41,16 @@ feature -- Access
 			Result.append (Shared_wizard_environment.project_name)
 			Result.append (Registration_suffix)
 			Result.to_upper
+		end
+
+feature -- Basic Operations
+
+	implemented_coclass_name (a_coclass_name: STRING): STRING is
+			-- Name of heir of coclass `a_coclass_name'
+			-- Implementation class for component server.
+		do
+			Result := clone (a_coclass_name)
+			Result.append (Implemented_coclass_extension)
 		end
 
 	to_eiffel_name (a_name: STRING): STRING is
@@ -194,24 +200,6 @@ feature -- Access
 			valid_header_name: not Result.empty
 		end
 
-	library_headers: HASH_TABLE [STRING, STRING] is
-			-- Names of header files in EiffelCOM library.
-		once
-			create result.make (10)
-			Result.compare_objects
-
-			Result.put ("ecom_guid.h", "ecom_guid.h")
-			Result.put ("ecom_exception.h", "ecom_exception.h")
-			Result.put ("ecom_flags.h", "ecom_flags.h")
-			Result.put ("ecom_font.h", "ecom_font.h")
-			Result.put ("ecom_fontevents.h", "ecom_fontevents.h")
-			Result.put ("ecom_ifont.h", "ecom_ifont.h")
-			Result.put ("ecom_ipicture.h", "ecom_ipicture.h")
-			Result.put ("ecom_picture", "ecom_picture")
-			Result.put ("ecom_stdfont.h", "ecom_stdfont.h")
-			Result.put ("ecom_stdpicture.h", "ecom_stdpicture.h")
-		end
-
 	standard_structures: HASH_TABLE [STRING, STRING] is
 			-- Names of standard structures.
 			-- Where item is Eiffel name, and key is C name
@@ -229,6 +217,24 @@ feature -- Access
 		end
 
 feature {NONE} -- Implementation
+
+	library_headers: HASH_TABLE [STRING, STRING] is
+			-- Names of header files in EiffelCOM library.
+		once
+			create result.make (10)
+			Result.compare_objects
+
+			Result.put ("ecom_guid.h", "ecom_guid.h")
+			Result.put ("ecom_exception.h", "ecom_exception.h")
+			Result.put ("ecom_flags.h", "ecom_flags.h")
+			Result.put ("ecom_font.h", "ecom_font.h")
+			Result.put ("ecom_fontevents.h", "ecom_fontevents.h")
+			Result.put ("ecom_ifont.h", "ecom_ifont.h")
+			Result.put ("ecom_ipicture.h", "ecom_ipicture.h")
+			Result.put ("ecom_picture", "ecom_picture")
+			Result.put ("ecom_stdfont.h", "ecom_stdfont.h")
+			Result.put ("ecom_stdpicture.h", "ecom_stdpicture.h")
+		end
 
 	Ecom_prefix: STRING is "ECOM_"
 			-- Prefix for registration class

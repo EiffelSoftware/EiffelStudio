@@ -200,11 +200,10 @@ feature -- Properties
 			-- Is object address `addr' valid?
 			-- (i.e Does bench know about it)
 		require
-			valid_addr: addr /= Void
 			is_running: is_running
 			is_stopped: is_stopped
 		do
-			Result := imp_application.is_valid_object_address (addr)
+			Result := addr /= Void and then imp_application.is_valid_object_address (addr)
 		end
 
 	error_in_bkpts: BOOLEAN is

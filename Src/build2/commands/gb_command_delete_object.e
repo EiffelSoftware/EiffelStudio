@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			history.cut_off_at_current_position
 			original_id := an_object.id
 			parent_id := an_object.parent_object.id
-			position := an_object.parent_object.layout_item.index_of (an_object.layout_item, 1)
+			position := an_object.parent_object.children.index_of (an_object, 1)
 		end
 
 feature -- Basic Operation

@@ -131,7 +131,7 @@ feature -- Status report
 			-- Is `an_item' selected?
 		require
 			exists: exists
-			valid_item: -- To find
+			valid_item: item_exists (an_item)
 		do
 			an_item.set_statemask (Tvis_selected)
 			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
@@ -142,7 +142,7 @@ feature -- Status report
 			-- Is `an_item' expanded?
 		require
 			exists: exists
-			valid_item: -- To find
+			valid_item: item_exists (an_item)
 		do
 			an_item.set_statemask (Tvis_expanded)
 			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
@@ -154,7 +154,7 @@ feature -- Status report
 			-- operation?
 		require
 			exists: exists
-			valid_item: -- To find
+			valid_item: item_exists (an_item)
 		do
 			an_item.set_statemask (Tvis_cut)
 			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
@@ -165,7 +165,7 @@ feature -- Status report
 			-- Is `an_item' bold?
 		require
 			exists: exists
-			valid_item: -- To find
+			valid_item: item_exists (an_item)
 		do
 			an_item.set_statemask (Tvis_bold)
 			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
@@ -176,7 +176,7 @@ feature -- Status report
 			-- Is `an_item' selected as a drag ans drop target?
 		require
 			exists: exists
-			valid_item: -- To find
+			valid_item: item_exists (an_item)
 		do
 			an_item.set_statemask (Tvis_drophilited)
 			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
@@ -189,6 +189,7 @@ feature -- Status setting
 			-- Set the selection to the given `an_item'.
 		require
 			exists: exists
+			valid_item: item_exists (an_item)
 		do
 			cwin_send_message (item, Tvm_selectitem,
 				Tvgn_caret, an_item.h_item)
@@ -199,6 +200,7 @@ feature -- Status setting
 			-- the given `an_item' is the first visible item.
 		require
 			exists: exists
+			valid_item: item_exists (an_item)
 		do
 			cwin_send_message (item, Tvm_selectitem,
 				Tvgn_firstvisible, an_item.h_item)
@@ -209,6 +211,7 @@ feature -- Status setting
 			-- indicate the target of a drag and drop operation.
 		require
 			exists: exists
+			valid_item: item_exists (an_item)
 		do
 			cwin_send_message (item, Tvm_selectitem,
 				Tvgn_drophilite, an_item.h_item)
@@ -220,6 +223,21 @@ feature -- Status setting
 			exists: exists
 		do
 			cwin_send_message (item, Tvm_setindent, an_indent, 0)
+		end
+
+feature -- Status report
+
+	item_exists (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
+			-- Does `an_item' exists in the tree?
+		require
+			exists: exists
+		local
+			mask: INTEGER
+		do
+			mask := an_item.mask
+			an_item.set_mask (Tvif_handle)
+			Result := cwin_send_message_result (item, Tvm_getitem, 0, an_item.to_integer) /= 0
+			an_item.set_mask (mask)
 		end
 
 feature -- Element change
@@ -234,6 +252,17 @@ feature -- Element change
 				Tvm_insertitem, 0, an_item.to_integer)
 		ensure
 			new_count: count = old count + 1 
+		end
+
+	delete_item (an_item: WEL_TREE_VIEW_ITEM) is
+			-- Remove `an_item' from the tree.
+		require
+			exists: exists
+			valid_item: item_exists (an_item)
+		do
+			cwin_send_message (item, Tvm_deleteitem, 0, an_item.h_item)
+		ensure
+			item_removed: not item_exists (an_item)
 		end
 
 feature -- Notifications
@@ -386,6 +415,8 @@ feature {WEL_NM_TREE_VIEW} -- Implementation
 	get_item_with_data (an_item: WEL_TREE_VIEW_ITEM): WEL_TREE_VIEW_ITEM is
 			-- Get an item and return the same item with all the
 			-- data valid
+		require
+			exists: exists
 		do
 			an_item.set_mask (Tvif_text + Tvif_state + Tvif_param)
 			an_item.set_text ("")

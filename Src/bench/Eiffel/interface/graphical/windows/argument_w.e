@@ -17,29 +17,11 @@ inherit
 	WINDOW_ATTRIBUTES
 
 creation
-
-	make, make_plain
+	make
 	
 feature -- Initialization
 
-	make (a_composite: COMPOSITE; cmd: COMMAND) is
-			-- Create a file selection dialog
-		do
-			prompt_dialog_create (Interface_names.n_X_resource_name, a_composite);
-			set_title (Interface_names.t_Argument_w);
-			set_selection_label (Interface_names.l_Specify_arguments);
-			hide_help_button;
-			show_apply_button;
-			set_ok_label (Interface_names.b_Run);
-			set_apply_label (Interface_names.b_Ok);
-			add_ok_action (Current, Void);
-			add_apply_action (Current, apply_it);
-			add_cancel_action (Current, cancel_it);
-			run := cmd;
-			set_composite_attributes (Current)
-		end;
-	
-	make_plain is
+	make is
 			-- Create Current object
 		do
 		end;

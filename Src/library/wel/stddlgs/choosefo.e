@@ -50,13 +50,12 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	log_font: WEL_LOG_FONT
-			-- Informations about the selected font
+			-- Information about the selected font
 
 	font_type: INTEGER is
 			-- Type of the selected font.
 			-- See class WEL_FONT_TYPE_CONSTANTS for values.
 		require
-			exists: exists
 			selected: selected
 		do
 			Result := cwel_choose_font_get_nfonttype (item)
@@ -68,7 +67,6 @@ feature -- Access
 			-- Size of the selected font (in units of 1/10 of
 			-- a point)
 		require
-			exists: exists
 			selected: selected
 		do
 			Result := cwel_choose_font_get_ipointsize (item)
@@ -76,16 +74,12 @@ feature -- Access
 
 	minimum_size: INTEGER is
 			-- Minimum point size a user can select
-		require
-			exists: exists
 		do
 			Result := cwel_choose_font_get_nsizemin (item)
 		end
 
 	maximum_size: INTEGER is
 			-- Maximum point size a user can select
-		require
-			exists: exists
 		do
 			Result := cwel_choose_font_get_nsizemax (item)
 		end
@@ -94,8 +88,6 @@ feature -- Access
 			-- Dialog box creation flags.
 			-- Can be a combination of the values defined in 
 			-- class WEL_CF_CONSTANTS.
-		require
-			exists: exists
 		do
 			Result := cwel_choose_font_get_flags (item)
 		end
@@ -116,7 +108,6 @@ feature -- Element change
 			-- Set a device context `a_dc' of the printer whose
 			-- fonts will be listed in the dialog box.
 		require
-			exists: exists
 			a_dc_not_void: a_dc /= Void
 			a_dc_exists: a_dc.exists
 		do
@@ -127,7 +118,6 @@ feature -- Element change
 	set_log_font (a_log_font: WEL_LOG_FONT) is
 			-- Set `log_font' with `a_log_font'.
 		require
-			exists: exists
 			a_log_font_not_void: a_log_font /= Void
 		do
 			log_font := a_log_font
@@ -139,8 +129,6 @@ feature -- Element change
 
 	set_minimum_size (size: INTEGER) is
 			-- Set `minimum_size' with `size'.
-		require
-			exists: exists
 		do
 			add_flag (Cf_limitsize)
 			cwel_choose_font_set_nsizemin (item, size)
@@ -150,8 +138,6 @@ feature -- Element change
 
 	set_maximum_size (size: INTEGER) is
 			-- Set `maximum_size' with `size'.
-		require
-			exists: exists
 		do
 			add_flag (Cf_limitsize)
 			cwel_choose_font_set_nsizemax (item, size)
@@ -161,8 +147,6 @@ feature -- Element change
 
 	set_color (a_color: WEL_COLOR_REF) is
 			-- Set `color' with `a_color'.
-		require
-			exists: exists
 		do
 			add_flag (Cf_effects)
 			cwel_choose_font_set_rgbcolors (item, a_color.item)
@@ -173,8 +157,6 @@ feature -- Element change
 	set_flags (a_flags: INTEGER) is
 			-- Set `flags' with `a_flags'.
 			-- See class WEL_CF_CONSTANTS for `a_flags' values.
-		require
-			exists: exists
 		do
 			cwel_choose_font_set_flags (item, a_flags)
 		ensure
@@ -184,8 +166,6 @@ feature -- Element change
 	add_flag (a_flags: INTEGER) is
 			-- Add `a_flags' to `flags'.
 			-- See class WEL_CF_CONSTANTS for `a_flags' values.
-		require
-			exists: exists
 		do
 			set_flags (set_flag (flags, a_flags))
 		ensure
@@ -195,8 +175,6 @@ feature -- Element change
 	remove_flag (a_flags: INTEGER) is
 			-- Remove `a_flags' from `flags'.
 			-- See class WEL_CF_CONSTANTS for `a_flags' values.
-		require
-			exists: exists
 		do
 			set_flags (clear_flag (flags, a_flags))
 		ensure
@@ -208,8 +186,6 @@ feature -- Status report
 	has_flag (a_flags: INTEGER): BOOLEAN is
 			-- Is `a_flags' set in `flags'?
 			-- See class WEL_CF_CONSTANTS for `a_flags' values.
-		require
-			exists: exists
 		do
 			Result := flag_set (flags, a_flags)
 		end
@@ -229,7 +205,6 @@ feature {NONE} -- Implementation
 	set_parent (a_parent: WEL_COMPOSITE_WINDOW) is
 			-- Set the parent window with `a_parent'.
 		require
-			exists: exists
 			a_parent_not_void: a_parent /= Void
 			a_parent_exists: a_parent.exists
 		do

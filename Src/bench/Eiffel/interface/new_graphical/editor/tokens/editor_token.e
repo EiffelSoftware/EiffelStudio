@@ -129,16 +129,6 @@ feature -- Width & height
 
 feature {EDITOR_TOKEN} -- Properties used to display the token
 
-	selected_text_color: WEL_COLOR_REF is
-		do
-			Result := editor_preferences.selected_text_color
-		end
-
-	selected_background_color: WEL_COLOR_REF is
-		do
-			Result := editor_preferences.selected_background_color
-		end
-
 	text_color: WEL_COLOR_REF is
 		do
 			Result := editor_preferences.normal_text_color
@@ -149,6 +139,26 @@ feature {EDITOR_TOKEN} -- Properties used to display the token
 			Result := editor_preferences.normal_background_color
 		end
 
+	normal_background_brush: WEL_BRUSH is
+		do
+			Result := editor_preferences.normal_background_brush
+		end
+
+	selected_text_color: WEL_COLOR_REF is
+		do
+			Result := editor_preferences.selected_text_color
+		end
+
+	selected_background_color: WEL_COLOR_REF is
+		do
+			Result := editor_preferences.selected_background_color
+		end
+
+	selected_background_brush: WEL_BRUSH is
+		do
+			Result := editor_preferences.selected_background_brush
+		end
+
 	font: WEL_FONT is
 		local
 			log_font: WEL_LOG_FONT
@@ -156,16 +166,6 @@ feature {EDITOR_TOKEN} -- Properties used to display the token
 				-- create the font
 			create log_font.make(editor_preferences.font_size, editor_preferences.font_name)
 			create Result.make_indirect(log_font)
-		end
-
-	normal_background_brush: WEL_BRUSH is
-		do
-			create Result.make_solid(background_color)
-		end
-
-	selected_background_brush: WEL_BRUSH is
-		do
-			create Result.make_solid(selected_background_color)
 		end
 
 invariant

@@ -367,34 +367,53 @@ feature -- Process Windows Messages
 			mouse_left_button_down := False
 		end
 
-feature -- Selection Handling
+feature -- Actions
+
+	undo is
+			-- undo last command
+		do
+			history.undo
+			invalidate
+			update
+		end
+	
+	redo is
+			-- redo last command
+		do
+			history.redo
+			invalidate
+			update
+		end
 
 	cut_selection is
+			-- Cut current selection into clipboard
 		do
 			if has_selection then
 				copy_selection
 				delete_selection
+				invalidate
+				update
 			end
 		end
 
 	copy_selection is
+			-- Copy current selection into clipboard
 		do
 			if has_selection then
-				if (cursor < selection_start) then
-					clipboard := text_displayed.string_selected (cursor, selection_start)
-				else
-					clipboard := text_displayed.string_selected (selection_start, cursor)
-				end
+				clipboard := text_displayed.string_selected (begin_selection, end_selection)
 			end
 		end
 
 	paste_selection is
+			-- Paste clipboard.
 		do
 			if has_selection then
 				delete_selection
 			end
 			history.record_paste (clipboard)
 			cursor.insert_string (clipboard)
+			invalidate
+			update
 		end
 
 	delete_selection is
@@ -501,8 +520,6 @@ feature {NONE} -- Handle keystokes
 			if virtual_key = Vk_x then
 					-- Ctrl-X (cut)
 				cut_selection
-				invalidate
-				update
 
 			elseif virtual_key = Vk_c then
 					-- Ctrl-C (copy)
@@ -511,20 +528,14 @@ feature {NONE} -- Handle keystokes
 			elseif virtual_key = Vk_v then
 					-- Ctrl-V (paste)
 				paste_selection
-				invalidate
-				update
 
 			elseif virtual_key = Vk_z then
 					-- Ctrl-Z (undo)
-				history.undo
-				invalidate
-				update
+				undo
 
 			elseif virtual_key = Vk_r then
 					-- Ctrl-R (redo)
-				history.redo
-				invalidate
-				update
+				redo
 			end
 		end
 
@@ -677,7 +688,7 @@ feature {NONE} -- Display functions
 				-- The file is too small for the screen, so we fill in the
 				-- last portion of the screen.
 				create wel_rect.make(0, curr_y, width, bottom)
-				dc.fill_rect(wel_rect, text_background_brush)
+				dc.fill_rect(wel_rect, normal_background_brush)
 			end
 		end
 
@@ -796,9 +807,7 @@ feature {NONE} -- Display functions
 						width_cursor := 2
 					end
 						-- Draw the cursor
-					dc.select_brush (black_brush)
-					dc.pat_blt (start_cursor, curr_y, width_cursor, line_height, Blackness)
-					dc.unselect_brush
+					dc.pat_blt (start_cursor, curr_y, width_cursor, line_height, Dstinvert)
 				end
 
 					-- prepare next iteration
@@ -820,9 +829,7 @@ feature {NONE} -- Display functions
 				start_cursor := curr_token.position + curr_token.get_substring_width(cursor.pos_in_token - 1)
 				width_cursor := 2
 					-- Draw the cursor
-				dc.select_brush(black_brush)
-				dc.pat_blt(start_cursor, curr_y, width_cursor, line_height, Blackness)
-				dc.unselect_brush
+				dc.pat_blt(start_cursor, curr_y, width_cursor, line_height, Dstinvert)
 			end
 		end
 
@@ -877,20 +884,9 @@ feature {NONE} -- Implementation
 	current_font: WEL_FONT
 		-- Current font used to display the text.
 
-	black_brush: WEL_BRUSH is
-		local
-			black_color: WEL_COLOR_REF
-		once
-			create black_color.make_rgb (0, 0, 0)
-			create Result.make_solid (black_color)
-		end
-
-	text_background_brush: WEL_BRUSH is
-		local
-			the_background_color: WEL_COLOR_REF
-		once
-			create the_background_color.make_rgb (255, 255, 255)
-			create Result.make_solid (the_background_color)
+	normal_background_brush: WEL_BRUSH is
+		do
+			Result := editor_preferences.normal_background_brush
 		end
 
 	initialized: BOOLEAN

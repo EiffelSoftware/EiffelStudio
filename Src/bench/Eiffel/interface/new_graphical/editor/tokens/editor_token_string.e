@@ -28,4 +28,4 @@ feature {NONE} -- Implementation
 			Result := editor_preferences.string_background_color
 		end
 
-end -- class EDITOR_STRING
+end -- class EDITOR_TOKEN_STRING

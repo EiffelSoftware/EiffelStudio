@@ -23,20 +23,30 @@ feature -- Default Initialisation
 			font_size := 14
 			create normal_text_color.make_rgb(255,255,255)
 			create normal_background_color.make_rgb(0,0,0)
+
 			create selected_text_color.make_rgb(255,255,255)
 			create selected_background_color.make_rgb(0,0,128)
+
 			create string_text_color.make_rgb(255,255,204)
 			create string_background_color.make_rgb(153,0,51)
+
 			create keyword_text_color.make_rgb(0,153,255)
 			create keyword_background_color.make_rgb(0,0,0)
+
 			create spaces_text_color.make_rgb(0,0,128)
 			create spaces_background_color.make_rgb(0,0,0)
+
 			create comments_text_color.make_rgb(204,102,255)
 			create comments_background_color.make_rgb(0,0,0)
+
 			create number_text_color.make_rgb(150,255,150)
 			create number_background_color.make_rgb(0,0,0)
+
 			create operator_text_color.make_rgb(0,153,255)
 			create operator_background_color.make_rgb(0,0,0)
+
+			create normal_background_brush.make_solid(normal_background_color)
+			create selected_background_brush.make_solid(selected_background_color)
 		end
 
 feature -- Access
@@ -66,11 +76,17 @@ feature -- Access
 	normal_background_color: WEL_COLOR_REF
 		-- Background color used to display normal text
 
+	normal_background_brush: WEL_BRUSH
+		-- Background brush corresponding to `normal_brackground_color'
+
 	selected_text_color: WEL_COLOR_REF
 		-- Color used to display selected text
 
 	selected_background_color: WEL_COLOR_REF
 		-- Background color used to display selected text
+
+	selected_background_brush: WEL_BRUSH
+		-- Backgroun brush corresponding to `selected_brackground_color'
 
 	string_text_color: WEL_COLOR_REF
 		-- Color used to display strings
@@ -107,7 +123,6 @@ feature -- Access
 
 	operator_background_color: WEL_COLOR_REF
 		-- Background color used to display operator
-
 
 feature -- Element Change (General preferences)
 
@@ -162,6 +177,8 @@ feature -- Element Change (Font color Preferences)
 
 	set_normal_text_color(a_normal_text_color: WEL_COLOR_REF) is
 			-- Set the color used to display normal text
+		require
+			a_normal_text_color_not_void: a_normal_text_color /= Void
 		do
 			normal_text_color := a_normal_text_color
 		ensure
@@ -170,14 +187,19 @@ feature -- Element Change (Font color Preferences)
 
 	set_normal_background_color(a_normal_background_color: WEL_COLOR_REF) is
 			-- Set the background color used to display normal text
+		require
+			a_normal_background_color_not_void: a_normal_background_color /= Void
 		do
 			normal_background_color := a_normal_background_color
+			create normal_background_brush.make_solid(a_normal_background_color)
 		ensure
 			normal_background_color = a_normal_background_color
 		end
 
 	set_selected_text_color(a_selected_text_color: WEL_COLOR_REF) is
 			-- Set the color used to display selected text
+		require
+			a_selected_text_color_not_void: a_selected_text_color /= Void
 		do
 			selected_text_color := a_selected_text_color
 		ensure
@@ -186,14 +208,19 @@ feature -- Element Change (Font color Preferences)
 
 	set_selected_background_color(a_selected_background_color: WEL_COLOR_REF) is
 			-- Set the background color used to display selected text
+		require
+			a_selected_background_color_not_void: a_selected_background_color /= Void
 		do
 			selected_background_color := a_selected_background_color
+			create selected_background_brush.make_solid(a_selected_background_color)
 		ensure
 			selected_background_color = a_selected_background_color
 		end
 
 	set_string_text_color(a_string_text_color: WEL_COLOR_REF) is
 			-- Set the color used to display string text
+		require
+			a_string_text_color_not_void: a_string_text_color /= Void
 		do
 			string_text_color := a_string_text_color
 		ensure
@@ -202,6 +229,8 @@ feature -- Element Change (Font color Preferences)
 
 	set_string_background_color(a_string_background_color: WEL_COLOR_REF) is
 			-- Set the background color used to display string text
+		require
+			a_string_background_color_not_void: a_string_background_color /= Void
 		do
 			string_background_color := a_string_background_color
 		ensure
@@ -210,6 +239,8 @@ feature -- Element Change (Font color Preferences)
 
 	set_keyword_text_color(a_keyword_text_color: WEL_COLOR_REF) is
 			-- Set the color used to display keyword text
+		require
+			a_keyword_text_color_not_void: a_keyword_text_color /= Void
 		do
 			keyword_text_color := a_keyword_text_color
 		ensure
@@ -218,6 +249,8 @@ feature -- Element Change (Font color Preferences)
 
 	set_keyword_background_color(a_keyword_background_color: WEL_COLOR_REF) is
 			-- Set the background color used to display keyword text
+		require
+			a_keyword_background_color_not_void: a_keyword_background_color /= Void
 		do
 			keyword_background_color := a_keyword_background_color
 		ensure
@@ -226,6 +259,8 @@ feature -- Element Change (Font color Preferences)
 
 	set_spaces_text_color(a_spaces_text_color: WEL_COLOR_REF) is
 			-- Set the color used to display spaces text
+		require
+			a_spaces_text_color_not_void: a_spaces_text_color /= Void
 		do
 			spaces_text_color := a_spaces_text_color
 		ensure
@@ -234,6 +269,8 @@ feature -- Element Change (Font color Preferences)
 
 	set_spaces_background_color(a_spaces_background_color: WEL_COLOR_REF) is
 			-- Set the background color used to display spaces text
+		require
+			a_spaces_background_color_not_void: a_spaces_background_color /= Void
 		do
 			spaces_background_color := a_spaces_background_color
 		ensure
@@ -242,6 +279,8 @@ feature -- Element Change (Font color Preferences)
 
 	set_comments_text_color(a_comments_text_color: WEL_COLOR_REF) is
 			-- Set the color used to display comments text
+		require
+			a_comments_text_color_not_void: a_comments_text_color /= Void
 		do
 			comments_text_color := a_comments_text_color
 		ensure
@@ -250,6 +289,8 @@ feature -- Element Change (Font color Preferences)
 
 	set_comments_background_color(a_comments_background_color: WEL_COLOR_REF) is
 			-- Set the background color used to display comments text
+		require
+			a_comments_background_color_not_void: a_comments_background_color /= Void
 		do
 			comments_background_color := a_comments_background_color
 		ensure
@@ -258,6 +299,8 @@ feature -- Element Change (Font color Preferences)
 
 	set_number_text_color(a_number_text_color: WEL_COLOR_REF) is
 			-- Set the color used to display number text
+		require
+			a_number_text_color_not_void: a_number_text_color /= Void
 		do
 			number_text_color := a_number_text_color
 		ensure
@@ -266,6 +309,8 @@ feature -- Element Change (Font color Preferences)
 
 	set_number_background_color(a_number_background_color: WEL_COLOR_REF) is
 			-- Set the background color used to display number text
+		require
+			a_number_background_color_not_void: a_number_background_color /= Void
 		do
 			number_background_color := a_number_background_color
 		ensure
@@ -274,6 +319,8 @@ feature -- Element Change (Font color Preferences)
 
 	set_operator_text_color(a_operator_text_color: WEL_COLOR_REF) is
 			-- Set the color used to display operator text
+		require
+			a_operator_text_color_not_void: a_operator_text_color /= Void
 		do
 			operator_text_color := a_operator_text_color
 		ensure
@@ -282,6 +329,8 @@ feature -- Element Change (Font color Preferences)
 
 	set_operator_background_color(a_operator_background_color: WEL_COLOR_REF) is
 			-- Set the background color used to display operator text
+		require
+			a_operator_background_color_not_void: a_operator_background_color /= Void
 		do
 			operator_background_color := a_operator_background_color
 		ensure

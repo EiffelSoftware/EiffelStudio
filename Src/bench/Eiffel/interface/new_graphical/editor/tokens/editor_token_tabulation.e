@@ -11,7 +11,9 @@ inherit
 	EDITOR_TOKEN
 		redefine
 			display_selected,
-			display_half_selected
+			display_half_selected,
+			text_color,
+			background_color
 		end
 
 create
@@ -217,6 +219,18 @@ feature {NONE} -- Private characteristics & constants
 	tabulation_symbol: STRING is
 		once
 			Result := "»"
+		end
+
+feature {NONE} -- Implementation
+	
+	text_color: WEL_COLOR_REF is
+		do
+			Result := editor_preferences.spaces_text_color
+		end
+
+	background_color: WEL_COLOR_REF is
+		do
+			Result := editor_preferences.spaces_background_color
 		end
 
 end -- class EDITOR_TOKEN_TABULATION

@@ -51,14 +51,34 @@ feature {NONE} -- Implementation
 
 				-- EDIT menu
 			when Cmd_edit_undo then
+				if has_active_window then
+					child ?= active_window
+					child.undo
+				end
 				
 			when Cmd_edit_redo then
+				if has_active_window then
+					child ?= active_window
+					child.redo
+				end
 				
 			when Cmd_edit_cut then
+				if has_active_window then
+					child ?= active_window
+					child.cut_selection
+				end
 				
 			when Cmd_edit_copy then
+				if has_active_window then
+					child ?= active_window
+					child.copy_selection
+				end
 				
 			when Cmd_edit_paste then
+				if has_active_window then
+					child ?= active_window
+					child.paste_selection
+				end
 				
 			when Cmd_edit_indent then
 				if has_active_window then

@@ -9,6 +9,10 @@ class
 
 inherit
 	EDITOR_TOKEN
+		redefine
+			text_color,
+			background_color
+		end
 
 create
 	make
@@ -124,6 +128,18 @@ feature {NONE} -- Implementation
 				-- Fill the end of the line with the specified background brush.
 			create wel_rect.make(curr_position, d_y, a_width, d_y+height)
 			a_dc.fill_rect(wel_rect, the_background_brush)
+		end
+
+feature {NONE} -- Implementation
+	
+	text_color: WEL_COLOR_REF is
+		do
+			Result := editor_preferences.spaces_text_color
+		end
+
+	background_color: WEL_COLOR_REF is
+		do
+			Result := editor_preferences.spaces_background_color
 		end
 
 end -- class EDITOR_COMMENT

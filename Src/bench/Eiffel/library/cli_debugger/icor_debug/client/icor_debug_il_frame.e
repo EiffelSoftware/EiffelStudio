@@ -122,15 +122,11 @@ feature {ICOR_EXPORTER} -- Access
 			if l_p /= default_pointer then
 				create Result.make_by_pointer (l_p)
 			end
-		ensure
-			success: last_call_success = 0
 		end
 
 	get_stack_depth: INTEGER is
 		do
 			last_call_success := cpp_get_stack_depth (item, $Result)
---		ensure
---			success: last_call_success = 0
 		end
 
 feature {NONE} -- Implementation

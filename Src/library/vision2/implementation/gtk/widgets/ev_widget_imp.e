@@ -336,10 +336,10 @@ feature -- Element change
 				C.gtk_widget_realize (c_object)
 			end
 			cursor_imp ?= a_cursor.implementation
-		--	C.gdk_window_set_cursor (
-		--		C.gtk_widget_struct_window (c_object),
-		--		cursor_imp.c_object
-		--	)
+			C.gdk_window_set_cursor (
+				C.gtk_widget_struct_window (c_object),
+				cursor_imp.c_object
+			)
 		end
 
 	set_background_color (a_color: EV_COLOR) is
@@ -818,6 +818,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.61  2000/03/15 22:46:38  king
+--| Uncommented pointer_style external call
+--|
 --| Revision 1.60  2000/03/01 18:05:25  king
 --| Removed XXXX
 --|

@@ -54,6 +54,7 @@ feature -- Status setting
 			-- <<start1, end1,..., startn, endn,...>>
 		require
 			valid_format: ft /= Void
+			has_character_format: has_character_format (ft)
 			valid_regions: regions /= Void
 			coherent_regions: (regions.count \\ 2) = 0
 		local
@@ -67,6 +68,9 @@ feature -- Status setting
 					start, finish: INTEGER) is
 			-- Add the given region to the list of region where
 			-- `format' is used.
+		require
+			valid_format: ft /= Void
+			has_character_format: has_character_format (ft)
 		local
 			internal: EV_INTERNAL_CHARACTER_FORMAT
 		do
@@ -101,6 +105,14 @@ feature -- Element change
 			!! internal.make (ft)
 			internal.set_regions (regions)
 			character_format_list.extend (internal)
+		end
+
+feature -- Assertion feature
+
+	has_character_format (ft: EV_CHARACTER_FORMAT): BOOLEAN is
+			-- Does `ft' belongs to the current format.
+		do
+			Result := find_character_format (ft) /= Void
 		end
 
 feature {EV_RICH_TEXT_IMP} -- Basic_operation
@@ -144,8 +156,6 @@ feature {NONE} -- Implementation
 				end
 				list.forth
 			end
-		ensure
-			valid_result: Result /= Void
 		end
 
 invariant

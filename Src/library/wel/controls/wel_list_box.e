@@ -188,7 +188,7 @@ feature -- Status setting
 		do
 			cwin_send_message (item, Lb_settopindex, index, 0)
 		ensure
-			top_index_set: top_index = index
+			index_visible: top_index <= index  
 		end
 
 	select_item (index: INTEGER) is

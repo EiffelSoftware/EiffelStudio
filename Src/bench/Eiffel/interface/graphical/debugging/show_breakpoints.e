@@ -39,10 +39,10 @@ feature -- Initialization
 			init (a_tool);
 			if tool = Project_tool then
 				do_flat := 
-					Project_tool_resources.debugger_do_flat_in_breakpoints.actual_value
+					Project_resources.debugger_do_flat_in_breakpoints.actual_value
 			else
 				do_flat := 
-					Feature_tool_resources.do_flat_in_breakpoints.actual_value
+					Feature_resources.do_flat_in_breakpoints.actual_value
 			end
 		end; 
 
@@ -59,10 +59,9 @@ feature -- Execution
 			end
 		end;
 
-	execute_save_action (a_cust_tool: like associated_custom_tool) is
+	execute_ok_action (a_cust_tool: like associated_custom_tool) is
 			-- Action performed when ok button is activated
 		do
-				-- ******* FIXME need to save resource
 			execute_apply_action (a_cust_tool)
 		end;
 

@@ -15,9 +15,11 @@ class FIXED_LIST [G] inherit
 
 	LIST [G]
 		export
+			{ANY} 
+				put
 			{NONE}
 				force, extend, 
-				put, fill,
+				fill,
 				prune, prune_all;
 		undefine
 			force, prune, infix "@", is_equal, setup, put_i_th, occurrences,

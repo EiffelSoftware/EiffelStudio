@@ -96,15 +96,15 @@ int fd;
 }
 
 
-public char *eretrieve(file_ptr)
-FILE *file_ptr;
+public char *eretrieve(file_desc)
+EIF_INTEGER file_desc;
 {
 	/* Retrieve object store in file `filename' */
 
 	char *retrieved;
 
 	/* Open file */
-	r_fides = fileno (file_ptr);
+	r_fides = file_desc;
 
 	allocate_gen_buffer ();
 

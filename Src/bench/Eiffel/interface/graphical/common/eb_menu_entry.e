@@ -10,6 +10,7 @@ class EB_MENU_ENTRY
 inherit
 	ISE_MENU_ENTRY
 		redefine
+			make,
 			associated_command
 		end;
 	PUSH_B
@@ -18,18 +19,36 @@ inherit
 		end
 
 creation
-	make, make_button_only,
-	make_tools_menu
+	make, 
+	make_default,
+	make_button_only
 
 feature {NONE} -- Initialization
 
-	initialize_button (a_cmd: like associated_command; a_parent: MENU) is
-			-- Initialize the button part.
-			-- Add activate action with argument to be
-			-- `associated_command.text_window'.
+	make (a_cmd: TOOL_COMMAND; a_parent: MENU) is
+			-- Initialize button with tool command `a_cmd' and parent `a_parent'.
+			-- The action will pass `tool' to the argument of the command.
 		do
-			make_button_only (a_cmd, a_parent);
+			initialize_button (a_cmd, a_parent);
 			add_activate_action (a_cmd, a_cmd.tool);
+		end;
+
+	make_default (a_cmd: like associated_command; a_parent: MENU) is
+			-- Initialize button with default command type `a_cmd' and parent `a_parent'.
+			-- The action will pass Void to the argument of the command.
+		require
+			non_void_cmd: a_cmd /= Void;
+			non_void_parent: a_parent /= Void;
+		do
+			initialize_button (a_cmd, a_parent);
+			add_activate_action (a_cmd, Void);
+		end;
+
+	initialize_button (a_cmd: like associated_command; a_parent: MENU) is
+			-- Initialize the button part of Current.
+		do
+			initialize_button (a_cmd, a_parent);
+			make_button_only (a_cmd, a_parent);
 		end;
 
 	make_button_only (a_cmd: like associated_command; a_parent: MENU) is
@@ -39,37 +58,18 @@ feature {NONE} -- Initialization
 			non_void_cmd: a_cmd /= Void;
 			non_void_parent: a_parent /= Void
 		local
-			act: STRING;
-			st: STRING
+			act: STRING
 		do
-			st := a_cmd.menu_name;
-			if st = Void then
-print ("command name: ")
-print (a_cmd.name);
-print ("%N")
-				st := "TOTOOTOTOTOOT"
-			end;
-			button_make (st, a_parent);
+			button_make (a_cmd.menu_name, a_parent);
 			act := a_cmd.accelerator;
 			if act /= Void then	
 				set_accelerator_action (act)
 			end
 		end;
 
-	make_tools_menu (a_cmd: like associated_command; a_parent: MENU) is
-			-- Initialize Current with `associated_command' set
-			-- to `a_cmd' and `parent' set to `a_parent'.
-		require
-			non_void_cmd: a_cmd /= Void;
-			non_void_parent: a_parent /= Void
-		do
-			associated_command := a_cmd;
-			initialize_button (a_cmd, a_parent)
-		end
-
-feature -- Properties
-
-	associated_command: TOOL_COMMAND
+	associated_command: ISE_COMMAND is
 			-- Command type that menu entry expects
+		do
+		end
 
 end -- class EB_MENU_ENTRY

@@ -8,21 +8,13 @@ indexing
 deferred class ISE_BUTTON
 
 inherit
-	PICT_COLOR_B
-		undefine
-			set_sensitive, set_insensitive
-		end;
+	PICT_COLOR_B;
 	FOCUSABLE
 
 feature -- Access
 
 	symbol: PIXMAP is
 			-- The pixmap representing Current.
-		deferred
-		end;
-
-	grey_symbol: PIXMAP is
-			-- Insensitive version of `symbol'
 		deferred
 		end;
 
@@ -44,18 +36,6 @@ feature -- Status Setting
 			if p.is_valid then
 				set_pixmap (p)
 			end;
-		end;
-
-	set_sensitive is
-			-- Make Current sensitive for user input.
-		do
-			set_symbol (symbol)
-		end;
-
-	set_insensitive is
-			-- Make Current insensitive for user input.
-		do
-			set_symbol (grey_symbol)
 		end;
 
 feature {NONE} -- Properties

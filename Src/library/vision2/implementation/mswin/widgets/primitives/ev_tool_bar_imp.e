@@ -370,6 +370,7 @@ feature -- Basic operation
 			-- appropriate event item.
 		local
 			it: EV_TOOL_BAR_BUTTON_IMP
+			radio_button: EV_TOOL_BAR_RADIO_BUTTON_IMP
 			pt: WEL_POINT
 		do
 			it := find_item_at_position (x_pos, y_pos)
@@ -381,10 +382,15 @@ feature -- Basic operation
 					pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
 				end
 			if it /= Void then
+				radio_button ?= it
+				if radio_button /= Void then
+					radio_button.internal_enable_select
+				end
 				it.interface.pointer_button_press_actions.call
 				([x_pos - child_x (it.interface),
 				child_y_absolute (it.interface) - y_pos, button, 0.0, 0.0, 0.0,
 				pt.x, pt.y])
+				it.interface.press_actions.call ([])
 			end
 		end
 
@@ -725,6 +731,11 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2000/04/05 17:25:41  rogers
+--| Added support for radio_button's in
+--| internal_propagate_pointer_press. Also now call the press_actions
+--| on a button.
+--|
 --| Revision 1.40  2000/04/04 22:45:46  rogers
 --| Re-order Precursor calls in initialize. Restructuring.
 --|

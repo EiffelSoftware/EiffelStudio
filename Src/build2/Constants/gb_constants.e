@@ -703,6 +703,12 @@ feature -- Constants
 feature -- Preferences
 
 	constants_do_not_show_again: STRING is "Reject invalid constants, and do not show this dialog again."
+	
+	delete_do_not_show_again: STRING is "Always delete via the keyboard, and do not show again."
+	
+	delete_warning1: STRING is "The currently selected "
+	
+	delete_warning2: STRING is " will be deleted.%N%NAre you sure you wish to perform this?"
 
 	show_repeated_absolute_constant_warning: STRING is "show_repeated_absolute_constant_warning"
 	

@@ -22,6 +22,17 @@ feature {NONE} -- Initialization
 		deferred
 		end
 
+feature -- Status setting
+
+	set_maximum_text_length (value: INTEGER) is
+			-- Make `value' the new maximal lenght of the text
+			-- in characte number.
+		require
+			exist: not destroyed
+			valid_length: value >= 0
+		deferred
+		end
+
 feature -- Event - command association
 
 	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is

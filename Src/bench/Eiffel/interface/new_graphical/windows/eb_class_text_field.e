@@ -6,9 +6,13 @@ indexing
 class EB_CLASS_TEXT_FIELD
 
 inherit
-
 	NEW_EB_CONSTANTS
-	EV_COMMAND
+	EB_TOOL_COMMAND
+		rename
+			make as init_tool
+		redefine
+			tool
+		end
 	EV_TEXT_FIELD
 		export
 			{NAVIGATE_CMD} implementation
@@ -16,21 +20,20 @@ inherit
 	SHARED_EIFFEL_PROJECT
 
 creation
-
 	make_with_tool
 
 feature -- Initialization
 
-	make_with_tool (a_parent: EV_CONTAINER; a_tool: EB_CLASS_TOOL) is
+	make_with_tool (a_parent: EV_CONTAINER; a_tool: like tool) is
 			-- Initialize the text field "Class_name".
 			-- Set up the activate actions.
 		local
-			debug_tip_cmd: DEBUG_TOOLTIP_CMD
+--			debug_tip_cmd: DEBUG_TOOLTIP_CMD
 		do
-			make (a_parent) 
+			make (a_parent)
+			init_tool (a_tool)
 --			create debug_tip_cmd.make (implementation)
 			add_activate_command (Current, Void)
-			tool := a_tool
 		end
 
 feature -- Properties
@@ -43,66 +46,10 @@ feature -- Properties
 
 feature -- Updating
 
---	update_choice_position is
---			-- Update the text area after a resize
---		do
---			if choice /= Void then
---				choice.update_position
---			end
---		end
-
 	update_text is
 			-- Update the text area after a resize
 		do
 			set_text (text)
-		end
-
-feature -- Closure
-
-	destroy_choice_window is
-		do
-			if choice /= Void then	
-				choice.destroy
-			end
-		end
-
---	set_focus is
---		local
---			t: EV_TEXT_FIELD_IMP
---		do
---			if toolkit.name.is_equal ("MS_WINDOWS") then
---				t ?= implementation
---				t.wel_set_focus
---			end
---		end
-
-feature {NONE} -- Implementation
-
-	choice: EB_CHOICE_WINDOW
-			-- Window for user choices.
-
-	class_list: LINKED_LIST [CLASS_I]
-			-- List of classes displayed in `choice'
-
-feature {EB_CHOICE_WINDOW} -- Execution
-
-	choose (choice_position: INTEGER) is
-		local
-			cname: STRING
-			class_i: CLASS_I
-		do
-			check
-				class_list /= Void
-			end
-			if choice_position /= 0 then
-				class_i := class_list.i_th (choice_position)
-				cname := clone (class_i.name)
-				cname.to_upper
-				set_text (cname)
-				process (class_i)
-			else
-				class_list := Void
-			end
 		end
 
 feature {NONE} -- Execution
@@ -123,11 +70,15 @@ feature {NONE} -- Execution
 			end
 		end
 
-	execute (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+feature {EB_CHOICE_WINDOW} -- Execution
+
+	execute (arg: EV_ARGUMENT1 [EB_CHOICE_WINDOW]; data: EV_EVENT_DATA) is
 			-- Execute the command.
 			--| The KMP commented lines are for the futur when the class
 			--| KMP_WILD will be fully functional
 		local
+			class_i: CLASS_I
+			choice_position: INTEGER
 			cname: STRING
 			clusters: LINKED_LIST [CLUSTER_I]
 			sorted_classes: SORTED_TWO_WAY_LIST [CLASS_I]
@@ -138,102 +89,127 @@ feature {NONE} -- Execution
 			pattern: STRING_PATTERN
 --KMP			matcher: KMP_WILD
 			classes: EXTEND_TABLE [CLASS_I, STRING]
+			wd: EV_WARNING_DIALOG
 		do
-			if Eiffel_project.initialized then
-				cname := clone (text)
-				cname.left_adjust
-				cname.right_adjust
-				if cname.empty then
---					warner (tool.popup_parent).gotcha_call (Warning_messages.w_Specify_a_class)
-				else
-					cname.to_lower
-					create pattern.make (0)
-					pattern.append (cname)
-					if not pattern.has_wild_cards then
---						create mp.set_watch_cursor
-						at_pos := cname.index_of ('@', 1)
-						if at_pos = 0 then
-							class_list := Eiffel_universe.classes_with_name (cname)
---							mp.restore
-							if class_list.empty then
-								class_list := Void
---								if new_class_win = Void then
---									create new_class_win.make (tool)
---								end
---								new_class_win.call (cname, tool.cluster)
-							elseif class_list.count = 1 then
-								cname.to_upper
-								set_text (cname)
-								process (class_list.first)
-								class_list := Void
-							else
-								display_choice
-							end
-						elseif at_pos = cname.count then
-							cname.head (cname.count - 1)
-							set_text (cname)
-							execute (Void, data)
-						else
-							cluster_name := cname.substring (at_pos + 1, cname.count)
-							if at_pos > 1 then
-								cname := cname.substring (1, at_pos - 1)
-							else
-								cname := ""
-							end
-							cluster := Eiffel_universe.cluster_of_name (cluster_name)
---							mp.restore
-							if cluster = Void then
---								warner (tool.popup_parent).gotcha_call
---									(Warning_messages.w_Cannot_find_cluster (cluster_name))
-							else
---								class_i := cluster.classes.item (cname)
---								if class_i = Void then
+			if arg = Void then
+				if Eiffel_project.initialized then
+					cname := clone (text)
+					cname.left_adjust
+					cname.right_adjust
+					if cname.empty then
+						create wd.make_default (tool.parent, Interface_names.t_Warning,
+							Warning_messages.w_Specify_a_class)
+					else
+						cname.to_lower
+						create pattern.make (0)
+						pattern.append (cname)
+						if not pattern.has_wild_cards then
+--							create mp.set_watch_cursor
+							at_pos := cname.index_of ('@', 1)
+							if at_pos = 0 then
+								class_list := Eiffel_universe.classes_with_name (cname)
+--								mp.restore
+								if class_list.empty then
+									class_list := Void
 --									if new_class_win = Void then
 --										create new_class_win.make (tool)
 --									end
---									new_class_win.call (cname, cluster)
---								end
-							end	
-						end
-					else
-						from
---							create mp.set_watch_cursor
-							create sorted_classes.make
---KMP							create matcher.make (cname, "")
-							clusters := Eiffel_universe.clusters
-							clusters.start
-						until
-							clusters.after
-						loop
-							from
-								classes := clusters.item.classes
-								classes.start
-							until
-								classes.after
-							loop
---KMP								matcher.set_text (classes.key_for_iteration) 
---KMP								if matcher.search_for_pattern then
-								if pattern.matches (classes.key_for_iteration) then
-									sorted_classes.put_front (classes.item_for_iteration)
+--									new_class_win.call (cname, tool.cluster)
+								elseif class_list.count = 1 then
+									cname.to_upper
+									set_text (cname)
+									process (class_list.first)
+									class_list := Void
+								else
+									display_choice
 								end
-								classes.forth
+							elseif at_pos = cname.count then
+								cname.head (cname.count - 1)
+								set_text (cname)
+								execute (Void, data)
+							else
+								cluster_name := cname.substring (at_pos + 1, cname.count)
+								if at_pos > 1 then
+									cname := cname.substring (1, at_pos - 1)
+								else
+									cname := ""
+								end
+								cluster := Eiffel_universe.cluster_of_name (cluster_name)
+--								mp.restore
+								if cluster = Void then
+									create wd.make_default (tool.parent, Interface_names.t_Warning,
+										Warning_messages.w_Cannot_find_cluster (cluster_name))
+								else
+--									class_i := cluster.classes.item (cname)
+--									if class_i = Void then
+--										if new_class_win = Void then
+--											create new_class_win.make (tool)
+--										end
+--										new_class_win.call (cname, cluster)
+--									end
+								end	
 							end
-							clusters.forth
+						else
+							from
+--								create mp.set_watch_cursor
+								create sorted_classes.make
+--KMP								create matcher.make (cname, "")
+								clusters := Eiffel_universe.clusters
+								clusters.start
+							until
+								clusters.after
+							loop
+								from
+									classes := clusters.item.classes
+									classes.start
+								until
+									classes.after
+								loop
+--KMP									matcher.set_text (classes.key_for_iteration) 
+--KMP									if matcher.search_for_pattern then
+									if pattern.matches (classes.key_for_iteration) then
+										sorted_classes.put_front (classes.item_for_iteration)
+									end
+									classes.forth
+								end
+								clusters.forth
+							end
+								sorted_classes.sort
+							class_list := sorted_classes
+--							mp.restore
+							display_choice
 						end
-							sorted_classes.sort
-						class_list := sorted_classes
---						mp.restore
-						display_choice
 					end
+				end
+			else
+				choice_position := arg.first.position
+				arg.first.destroy
+				check
+					class_list /= Void
+				end
+				if choice_position /= 0 then
+					class_i := class_list.i_th (choice_position)
+					cname := clone (class_i.name)
+					cname.to_upper
+					set_text (cname)
+					process (class_i)
+				else
+					class_list := Void
 				end
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	class_list: LINKED_LIST [CLASS_I]
+			-- List of classes displayed in `choice'
 
 	display_choice is
 				-- Display class names from `class_list' to `choice'.
 		require
 			class_list_not_void: class_list /= Void
 		local
+			choice: EB_CHOICE_WINDOW
 			class_names: ARRAYED_LIST [STRING]
 			class_i, last_class: CLASS_I
 			cname, last_name: STRING
@@ -269,7 +245,5 @@ feature {NONE} -- Execution
 			choice.set_list (class_names)
 			choice.show
 		end
-
-feature -- focus action
 
 end -- class EB_CLASS_TEXT_FIELD

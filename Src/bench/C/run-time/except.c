@@ -2284,7 +2284,7 @@ rt_private void print_object_location_reason_effect (
 
 		/* Print object address with 16 digits to be ready when pointers
 		 * will be on 64 bits on all platform. */
-	sprintf(buffer, "<%016lX>  ", a_object_addr);
+	sprintf(buffer, "<%016lX>  ", (unsigned long) a_object_addr);
 	append_trace(buffer);
 
 	if (l_location_count > 19) {

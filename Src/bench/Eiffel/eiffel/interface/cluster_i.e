@@ -144,7 +144,7 @@ feature {COMPILER_EXPORTER} -- Conveniences
 	update_path is
 		do
 			if dollar_path /= Void then
-				path := Environ.interpret (dollar_path)
+				path := Environ.interpreted_string (dollar_path)
 			end;
 		end;
 
@@ -371,7 +371,8 @@ end;				-- Check if the path is valid
 				until
 					i > ex_l.count
 				loop
-					file_name := Environ.interpret (ex_l.i_th (i).file__name);
+					file_name := Environ.interpreted_string
+									(ex_l.i_th (i).file__name);
 					!!class_path.make_from_string (path);
 					class_path.set_file_name (file_name);
 					!!class_file.make (class_path)
@@ -393,7 +394,8 @@ end;				-- Check if the path is valid
 				until
 					i > inc_l.count
 				loop
-					file_name := Environ.interpret (inc_l.i_th (i).file__name);
+					file_name := Environ.interpreted_string
+										(inc_l.i_th (i).file__name);
 					!!class_path.make_from_string (path);
 					class_path.set_file_name (file_name);
 					!!class_file.make (class_path)

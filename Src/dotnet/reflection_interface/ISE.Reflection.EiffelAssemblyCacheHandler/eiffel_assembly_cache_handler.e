@@ -18,8 +18,8 @@ create
 feature {NONE} -- Initialization
 
 	make_cache_handler is
-			-- Creation routine
 		indexing
+			description: "Initialize `error_messages'."
 			external_name: "MakeCacheHandler"
 		do
 			create error_messages
@@ -30,30 +30,30 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	last_error: ISE_REFLECTION_ERRORINFO
-			-- Last error
 		indexing
+			description: "Last error"
 			external_name: "LastError"
 		end
 
 	Has_write_lock_code: INTEGER is
-			-- Error code 
 		indexing
+			description: "Write lock error code"
 			external_name: "HasWriteLockCode"
 		once
 			Result := support.errorstable.errorstable.count
 		end
 
-	Has_read_lock_code: INTEGER is
-			-- Error code 
+	Has_read_lock_code: INTEGER is 
 		indexing
+			description: "Read lock error code"
 			external_name: "HasReadLockCode"
 		once
 			Result := support.errorstable.errorstable.count
 		end
 
 	Write_lock_creation_failed_code: INTEGER is
-			-- Error code 
 		indexing
+			description: "Write lock creation error code"
 			external_name: "WriteLockCreationFailedCode"
 		once
 			Result := support.errorstable.errorstable.count
@@ -62,23 +62,23 @@ feature -- Access
 feature -- Status Report
 
 	last_write_successful: BOOLEAN
-			-- Was last storage successful?
 		indexing
+			description: "Was last storage successful?"
 			external_name: "LastWriteSuccessful"
 		end
 
 	last_removal_successful: BOOLEAN
-			-- Was last removal successful?
 		indexing
+			description: "Was last removal successful?"
 			external_name: "LastRemovalSuccessful"
 		end
 				
 feature -- Basic Operations
 		
 	store_assembly (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLYFACTORY): TYPE_STORER is
-			-- Store assembly corresponding to `an_eiffel_assembly': 
-			-- Create assembly folder from `an_eiffel_assembly' if it does not exist yet.
 		indexing
+			description: "[Store assembly corresponding to `an_eiffel_assembly': %
+					%Create assembly folder from `an_eiffel_assembly' if it does not exist yet.]"
 			external_name: "StoreAssembly"
 		require
 			non_void_assembly: an_eiffel_assembly /= Void
@@ -96,10 +96,10 @@ feature -- Basic Operations
 		end
 
 	commit is
-			-- Create assembly description file.
-			-- Set `eiffel_assembly' with Void.
-			-- Set `assembly_descriptor' with Void.
 		indexing
+			description: "[Create assembly description file.%
+					%Set `eiffel_assembly' with Void.%
+					%Set `assembly_descriptor' with Void.]"
 			external_name: "Commit"
 		local
 			notifier_handle: ISE_REFLECTION_NOTIFIERHANDLE
@@ -122,12 +122,10 @@ feature -- Basic Operations
 		end
 		
 	remove_assembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
-			-- Remove assembly corresponding to `a_descriptor' from Eiffel/.NET assembly cache.
-			-- | Build a string from `a_name', `a_version', `a_culture' and `a_public_key'
-			-- | and use hash value to retrieve assembly folder name where `assembly_description.xml' is.
 			-- | Check for write or read lock before removing the assembly.
-			-- | Update `last_removal_successful'.
 		indexing
+			description: "[Remove assembly corresponding to `a_descriptor' from the Eiffel assembly cache.%
+					%Update `last_removal_successful'.]"
 			external_name: "RemoveAssembly"
 		require
 			non_void_assembly_descriptor: a_descriptor /= Void
@@ -251,8 +249,8 @@ feature -- Basic Operations
 		end
 	
 	replace_type (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; an_eiffel_class: ISE_REFLECTION_EIFFELCLASS): TYPE_STORER is
-			-- Replace type corresponding to `an_eiffel_class' in assembly corresponding to `an_assembly_descriptor'.
 		indexing
+			description: "Replace type corresponding to `an_eiffel_class' in assembly corresponding to `an_assembly_descriptor'."
 			external_name: "ReplaceType"
 		require
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void
@@ -264,12 +262,112 @@ feature -- Basic Operations
 		ensure
 			type_storer_created: Result /= Void
 		end
-		
+
+	update_assembly_description (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY; new_path: STRING) is
+		indexing
+			description: "Update `assembly_description.xml' by replacing the old Eiffel cluster path by `new_path'."
+			external_name: "UpdateAssemblyDescription"
+		require
+			non_void_path: new_path /= Void
+			not_empty_path: new_path.length > 0
+			non_void_eiffel_assembly: an_eiffel_assembly /= Void
+		local
+			reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT			
+			a_filename: STRING
+			types_list: SYSTEM_COLLECTIONS_ARRAYLIST
+			type_filename: STRING
+			text_writer: SYSTEM_XML_XMLTEXTWRITER
+			retried: BOOLEAN
+			DTD_path: STRING
+			public_string: STRING
+			subset: STRING
+			i: INTEGER
+			file: SYSTEM_IO_FILE 
+		do
+			if not retried then
+				create reflection_support.make_reflectionsupport
+				reflection_support.make
+				a_filename := reflection_support.xmlassemblyfilename (an_eiffel_assembly.assemblydescriptor)
+				a_filename := a_filename.replace (reflection_support.Eiffelkey, reflection_support.Eiffeldeliverypath)
+				
+				types_list := assembly_types_from_xml (a_filename)	
+				file.delete (a_filename)
+					-- Write new `assembly_description.xml' with `new_path' as new Eiffel cluster path.
+				create text_writer.make_xmltextwriter_1 (a_filename, create {SYSTEM_TEXT_ASCIIENCODING}.make_asciiencoding)
+
+					-- Set generation options
+					-- `1' for `Formatting.Indented'
+				text_writer.set_Formatting (1)
+				text_writer.set_Indentation (1)
+				text_writer.set_IndentChar ('%T')
+				text_writer.set_Namespaces (False)
+				text_writer.set_QuoteChar ('%"')
+
+					-- Write `<?xml version="1.0">
+				DTD_path := "..\"
+				text_writer.WriteDocType (DtdAssemblyFilename, public_string, DTD_path.Concat_String_String_String (DTD_path, DtdAssemblyFilename, DtdExtension), subset)
+					-- <assembly>
+				text_writer.writestartelement (AssemblyElement)
+				
+					-- <assembly_name>
+				text_writer.writeelementstring (AssemblyNameElement, an_eiffel_assembly.AssemblyDescriptor.Name)
+					-- <assembly_version>
+				if an_eiffel_assembly.AssemblyDescriptor.Version /= Void then
+					if an_eiffel_assembly.AssemblyDescriptor.Version.Length > 0 then
+						text_writer.writeelementstring (AssemblyVersionElement, an_eiffel_assembly.AssemblyDescriptor.Version)
+					end
+				end
+					-- <assembly_culture>
+				if an_eiffel_assembly.AssemblyDescriptor.Culture /= Void then
+					if an_eiffel_assembly.AssemblyDescriptor.Culture.Length > 0 then
+						text_writer.writeelementstring (AssemblyCultureElement, an_eiffel_assembly.AssemblyDescriptor.Culture)
+					end
+				end
+					-- <assembly_public_key>
+				if an_eiffel_assembly.AssemblyDescriptor.PublicKey /= Void then
+					if an_eiffel_assembly.AssemblyDescriptor.PublicKey.Length > 0 then
+						text_writer.writeelementstring (AssemblyPublicKeyElement, an_eiffel_assembly.AssemblyDescriptor.PublicKey)
+					end
+				end
+					-- <eiffel_cluster_path>
+				text_writer.writeelementstring (EiffelClusterPathElement, new_path)
+					-- <emitter_version_number>
+				if an_eiffel_assembly.EmitterVersionNumber /= Void then
+					if an_eiffel_assembly.EmitterVersionNumber.Length > 0 then
+						text_writer.writeelementstring (EmitterVersionNumberElement, an_eiffel_assembly.EmitterVersionNumber)
+					end
+				end
+					-- <assembly_types>
+				if types_list.Count > 0 then
+					text_writer.writestartelement (AssemblyTypesElement)
+					from
+						i := 0
+					until
+						i = types_list.Count
+					loop
+						type_filename ?= types_list.Item (i)
+						if type_filename /= Void and then type_filename.length > 0 then
+							text_writer.writeelementstring (AssemblyTypeFilenameElement, type_filename)
+						end
+						i := i + 1
+					end
+				end
+					-- </assembly>
+				text_writer.WriteEndElement
+				text_writer.Close	
+			end
+		rescue
+			retried := True
+			support.createerror (error_messages.Assembly_description_update_failed, error_messages.Assembly_description_update_failed_message)
+			last_error := support.lasterror			
+			retry
+		end
+			
 feature {NONE} -- Implementation
 
 	support: ISE_REFLECTION_CODEGENERATIONSUPPORT is
-			-- Support
 		indexing
+			description: "Support"
 			external_name: "Support"
 		once
 			create Result.make_codegenerationsupport
@@ -279,33 +377,33 @@ feature {NONE} -- Implementation
 		end
 		
 	error_messages: EIFFEL_ASSEMBLY_CACHE_HANDLER_ERROR_MESSAGES
-			-- Error messages
 		indexing
+			description: "Error messages"
 			external_name: "ErrorMessages"
 		end
 		
 	assembly_folder_path: STRING
-			-- Folder path of assembly currently stored
 		indexing
+			description: "Folder path of assembly currently stored"
 			external_name: "AssemblyFolderPath"
 		end
 	
 	eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLYFACTORY
-			-- Assembly being stored
 		indexing
+			description: "Assembly being stored"
 			external_name: "EiffelAssembly"
 		end
 	
 	assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
-			-- Assembly descriptor of `eiffel_assembly'.
 		indexing
+			description: "Assembly descriptor of `eiffel_assembly'"
 			external_name: "AssemblyDescriptor"
 		end
 		
 	prepare_assembly_storage is
-			-- Prepare type storage: 
-			-- Create assembly folder from `assembly_descriptor' if it does not exist yet.
 		indexing
+			description: "[Prepare type storage: %
+					%Create assembly folder from `assembly_descriptor' if it does not exist yet.]"
 			external_name: "PrepareTypeStorage"
 		local
 			dir: SYSTEM_IO_DIRECTORY
@@ -379,8 +477,8 @@ feature {NONE} -- Implementation
 		end			
 
 	update_index is
-			-- Add `assembly_folder_name' to `index' located in $EIFFEL\dotnet\assemblies.
 		indexing
+			description: "Add `assembly_folder_name' to `index' located in $EIFFEL\dotnet\assemblies."
 			external_name: "UpdateIndex"		
 		local
 			file: SYSTEM_IO_FILE
@@ -485,8 +583,8 @@ feature {NONE} -- Implementation
 		end
 
 	generate_assembly_xml_file is
-			-- Generate XML file from `eiffel_assembly'. 
 		indexing
+			description: "Generate XML file from `eiffel_assembly'."
 			external_name: "GenerateAssemblyXmlFile"
 		local
 			public_string: STRING
@@ -598,9 +696,9 @@ feature {NONE} -- Implementation
 		end
 	
 	prepare_type_storage (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
-			-- Prepare type storage: 
-			-- Create assembly folder from `assembly_descriptor' if it does not exist yet.
 		indexing
+			description: "[Prepare type storage:%
+					%Create assembly folder from `assembly_descriptor' if it does not exist yet.]"
 			external_name: "PrepareTypeStorage"
 		require
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void
@@ -651,6 +749,78 @@ feature {NONE} -- Implementation
 		rescue
 			retried := True
 			support.createerror (error_messages.Type_storage_failed, error_messages.Type_storage_failed_message)
+			last_error := support.lasterror
+			retry
+		end
+
+	assembly_types_from_xml (xml_filename: STRING): SYSTEM_COLLECTIONS_ARRAYLIST is
+		indexing
+			description: "Assembly types from XML file corresponding to `xml_filename'"
+			external_name: "AssemblyTypesFromXml"
+		require
+			non_void_filename: xml_filename /= Void
+			not_empty_filename: xml_filename.length > 0
+		local
+			xml_reader: SYSTEM_XML_XMLTEXTREADER
+			assembly_name: STRING
+			assembly_version: STRING
+			assembly_culture: STRING
+			assembly_public_key: STRING
+			eiffel_cluster_path: STRING
+			emitter_version_number: STRING
+			a_type_name: STRING
+			added: INTEGER
+			retried: BOOLEAN
+		do
+			if not retried then
+				create xml_reader.make_xmltextreader_10 (xml_filename)	
+					-- WhitespaceHandling = None
+				xml_reader.set_WhitespaceHandling (2)
+
+				xml_reader.ReadStartElement_String (AssemblyElement)
+					-- Set `assembly_name'.
+				if xml_reader.Name.Equals_String (AssemblyNameElement) then
+					assembly_name := xml_reader.ReadElementString_String (AssemblyNameElement)
+				end
+					-- Set `assembly_version'.
+				if xml_reader.Name.Equals_String (AssemblyVersionElement) then
+					assembly_version := xml_reader.ReadElementString_String (AssemblyVersionElement)
+				end
+					-- Set `assembly_culture'.
+				if xml_reader.Name.Equals_String (AssemblyCultureElement) then
+					assembly_culture := xml_reader.ReadElementString_String (AssemblyCultureElement)
+				end
+					-- Set `assembly_public_key'.
+				if xml_reader.Name.Equals_String (AssemblyPublicKeyElement) then
+					assembly_public_key := xml_reader.ReadElementString_String (AssemblyPublicKeyElement)
+				end
+					-- Set `eiffel_cluster_path'.
+				if xml_reader.Name.Equals_String (EiffelClusterPathElement) then
+					eiffel_cluster_path := xml_reader.ReadElementString_String (EiffelClusterPathElement)
+				end
+					-- Set `emitter_version_number'.
+				if xml_reader.Name.Equals_String (EmitterVersionNumberElement) then
+					emitter_version_number := xml_reader.ReadElementString_String (EmitterVersionNumberElement)
+				end
+				if xml_reader.Name.Equals_String (AssemblyTypesElement) then
+					xml_reader.ReadStartElement_String (AssemblyTypesElement)
+					from
+						create Result.make
+					until
+						not xml_reader.Name.Equals_String (AssemblyTypeFilenameElement)
+					loop
+						a_type_name := xml_reader.ReadElementString_String (AssemblyTypeFilenameElement)
+						added := Result.Add (a_type_name)
+					end
+					xml_reader.ReadEndElement
+				end
+				xml_reader.Close
+			else
+				Result := Void
+			end
+		rescue
+			retried := True
+			support.createerror (error_messages.Assembly_description_reading_failed, error_messages.Assembly_description_reading_failed_message)
 			last_error := support.lasterror
 			retry
 		end

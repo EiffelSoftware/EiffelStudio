@@ -11,38 +11,32 @@ inherit
 feature -- Access
 
 	Bold_style: INTEGER is 1
-			-- Bold style
 		indexing
+			description: "Bold style"
 			external_name: "BoldStyle"
 		end
 		
 	Comma_separator: STRING is ", "
-			-- Comma separator
 		indexing
+			description: "Comma separator"
 			external_name: "CommaSeparator"
 		end
 		
 	Culture_string: STRING is "Culture: " 
-			-- Assembly culture label
 		indexing
+			description: "Assembly culture label"
 			external_name: "CultureString"
 		end
-
---	Name_string: STRING is "Name: " 
---			-- Assembly name label
---		indexing
---			external_name: "NameString"
---		end
 		
 	Public_key_string: STRING is "Public Key: " 
-			-- Assembly public key label
 		indexing
+			description: "Assembly public key label"
 			external_name: "PublicKeyString"
 		end
 
 	Version_string: STRING is "Version: " 
-			-- Assembly version label
 		indexing
+			description: "Assembly version label"
 			external_name: "VersionString"
 		end
 		

@@ -12,8 +12,8 @@ create
 feature {NONE} -- Initialization
 
 	make is
-			-- Creation routine
 		indexing
+			description: "Creation routine"
 			external_name: "Make"
 		do
 		end
@@ -21,30 +21,30 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	type_eiffel_name: STRING
-			-- Type Eiffel name
 		indexing
+			description: "Type Eiffel name"
 			external_name: "TypeEiffelName"
 		end
 	
 	type_full_external_name: STRING
-			-- Type external name (full name)
 		indexing
+			description: "Type external name (full name)"
 			external_name: "TypeFullExternalName"
 		end
 
 feature -- Status Report
 
 	is_enum: BOOLEAN 
-			-- Is signature type an enum?
 		indexing
+			description: "Is signature type an enum?"
 			external_name: "IsEnum"
 		end
 		
 feature -- Status Setting
 
 	set_type_eiffel_name (a_name: like type_eiffel_name) is
-			-- Set `type_eiffel_name' with `a_name'.
 		indexing
+			description: "Set `type_eiffel_name' with `a_name'."
 			external_name: "SetTypeEiffelName"
 		require
 			non_void_name: a_name /= Void
@@ -56,8 +56,8 @@ feature -- Status Setting
 		end
 
 	set_type_full_external_name (a_name: like type_full_external_name) is
-			-- Set `type_full_external_name' with `a_name'.
 		indexing
+			description: "Set `type_full_external_name' with `a_name'."
 			external_name: "SetTypeFullExternalName"
 		require
 			non_void_name: a_name /= Void
@@ -69,8 +69,8 @@ feature -- Status Setting
 		end
 
 	set_enum (a_value: like is_enum) is
-			-- Set `is_enum' with `a_value'.
 		indexing
+			description: "Set `is_enum' with `a_value'."
 			external_name: "SetEnum"
 		do
 			is_enum := a_value

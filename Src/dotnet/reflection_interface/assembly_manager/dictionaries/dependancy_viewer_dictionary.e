@@ -11,8 +11,8 @@ inherit
 feature -- Access
 
 	Assembly_label_text: STRING is "Selected assembly: "
-			-- Text of assembly label
 		indexing
+			description: "Text of assembly label"
 			external_name: "AssemblyLabelText"
 		end
 
@@ -39,14 +39,14 @@ feature -- Access
 		end
 		
 	No_dependancies_text: STRING is "The selected assembly has no dependancy."
-			-- Text whenever selected assembly has no dependancy	
 		indexing
+			description: "Text whenever selected assembly has no dependancy"
 			external_name: "NoDependanciesText"
 		end
 		
 	Title: STRING is "Dependancy viewer"
-			-- Window title
 		indexing
+			description: "Window title"
 			external_name: "Title"
 		end
 		

@@ -14,14 +14,14 @@ inherit
 feature -- Access
 	
 	dependancies: ARRAY [SYSTEM_REFLECTION_ASSEMBLYNAME]
-			-- Assembly dependancies
 		indexing
+			description: "Assembly dependancies"
 			external_name: "Dependancies"
 		end
 
 	dependancies_label: SYSTEM_WINDOWS_FORMS_LABEL
-			-- Dependancies label
 		indexing
+			description: "Dependancies label"
 			external_name: "DependanciesLabel"
 		end
 
@@ -102,8 +102,8 @@ feature {NONE} -- Implementation
 		end
 
 	type_factory: SYSTEM_TYPE
-			-- Statics needed to create a type
 		indexing
+			description: "Statics needed to create a type"
 			external_name: "TypeFactory"
 		end
 		
@@ -209,8 +209,7 @@ feature {NONE} -- Implementation
 			end	
 		end
 
-	build_dependancies_list is
-			
+	build_dependancies_list is			
 		indexing
 			description: "Build `dependancies_list'"
 			external_name: "BuildDependanciesList"

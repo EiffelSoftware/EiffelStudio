@@ -18,6 +18,7 @@ feature -- Access
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [STRING]
 		indexing
 			description: "List of classes `source_name' is exported to"
+			external_name: "ExportationList"
 		end
 
 	eiffel_keyword: STRING is

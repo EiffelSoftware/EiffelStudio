@@ -11,20 +11,20 @@ inherit
 feature -- Access
 
 	Access_comment: STRING is "-- Access"
-			-- Comment for access feature clause
 		indexing
+			description: "Comment for access feature clause"
 			external_name: "AccessComment"
 		end
 
 	Align_left: INTEGER is 32
-			-- Left alignment
 		indexing
+			description: "Left alignment"
 			external_name: "AlignLeft"
 		end
 
 	Alignment: INTEGER is 1
-			-- Left alignment (in list view)
 		indexing
+			description: "Left alignment (in list view)"
 			external_name: "Alignment"
 		end
 		
@@ -35,20 +35,20 @@ feature -- Access
 		end
 		
 	Basic_operations_comment: STRING is "-- Basic Operations"
-			-- Comment for basic operations feature clause
 		indexing
+			description: "Comment for basic operations feature clause"
 			external_name: "BasicOperationsComment"
 		end
 
 	Binary_operators_comment: STRING is "-- Binary Operators"
-			-- Comment for binary operators clause
 		indexing
+			description: "Comment for binary operators clause"
 			external_name: "BinaryOperatorsComment"
 		end
 		
 	Cancel_button_label: STRING is "Cancel"
-			-- Cancel button label
 		indexing
+			description: "Cancel button label"
 			external_name: "CancelButtonLabel"
 		end
 	
@@ -65,22 +65,22 @@ feature -- Access
 		end
 		
 	Class_color: SYSTEM_DRAWING_COLOR is
-			-- Class color
 		indexing
+			description: "Class color"
 			external_name: "ClassColor"
 		once
 			Result := Result.Blue
 		end
 
 	Closing_curl_bracket: STRING is "}"
-			-- Closing curl bracket
 		indexing
+			description: "Closing curl bracket"
 			external_name: "ClosingCurlBracket"
 		end
 
 	Closing_round_bracket: STRING is ")"
-			-- Closing round bracket
 		indexing
+			description: "Closing round bracket"
 			external_name: "ClosingRoundBracket"
 		end
 	
@@ -91,30 +91,30 @@ feature -- Access
 		end
 		
 	Comment_color: SYSTEM_DRAWING_COLOR is
-			-- Comment color
 		indexing
+			description: "Comment color"
 			external_name: "CommentColor"
 		once
 			Result := Result.DarkRed
 		end
 
 	Editable_color: SYSTEM_DRAWING_COLOR is
-			-- Color for editable text fields
 		indexing
+			description: "Color for editable text fields"
 			external_name: "EditableColor"
 		once
 			Result := Result.Ivory
 		end
 	
-	Eiffel_generation: STRING is "Regenerating Eiffel class..."
+	Eiffel_generation: STRING is "Updating Eiffel class..."
 		indexing
 			description: "Message to the user during Eiffel regeneration (after changes in type view and XML generation)"
 			external_name: "EiffelGeneration"
 		end
 		
 	Element_change_comment: STRING is "-- Element Change"
-			-- Comment for element change feature clause
 		indexing
+			description: "Comment for element change feature clause"
 			external_name: "ElementChangeComment"
 		end
 	
@@ -131,46 +131,46 @@ feature -- Access
 		end
 		
 	Feature_color: SYSTEM_DRAWING_COLOR is
-			-- Feature color
 		indexing
+			description: "Feature color"
 			external_name: "FeatureColor"
 		once
 			Result := Result.DarkGreen
 		end
 
 	Feature_keyword: STRING is "feature"
-			-- Feature keyword
 		indexing
+			description: "Feature keyword"
 			external_name: "FeatureKeyword"
 		end		
 
 	Feature_string: STRING is "Feature"
-			-- Feature string
 		indexing
+			description: "Feature string"
 			external_name: "FeatureString"
 		end	
 		
 	Implementation_comment: STRING is "-- Implementation"
-			-- Comment for implementation clause
 		indexing
+			description: "Comment for implementation clause"
 			external_name: "ImplementationComment"
 		end
 
 	Initialization_comment: STRING is "-- Initialization"
-			-- Comment for initialization feature clause
 		indexing
+			description: "Comment for initialization feature clause"
 			external_name: "InitializationComment"
 		end
 
 	Italic_style: INTEGER is 2
-			-- Italic style
 		indexing
+			description: "Italic style"
 			external_name: "ItalicStyle"
 		end
 
 	Keyword_color: SYSTEM_DRAWING_COLOR is
-			-- Keyword color
 		indexing
+			description: "Keyword color"
 			external_name: "KeywordColor"
 		once
 			Result := Result.DarkBlue
@@ -183,32 +183,32 @@ feature -- Access
 		end
 		
 	None_class: STRING is "NONE"
-			-- `NONE' class
 		indexing
+			description: "Class `NONE' as a string"
 			external_name: "NoneClass"
 		end
 		
 	Ok_button_label: STRING is "OK"
-			-- OK button label
 		indexing
+			description: "OK button label"
 			external_name: "OkButtonLabel"
 		end
 
 	Opening_curl_bracket: STRING is "{"
-			-- Opening curl bracket
 		indexing
+			description: "Opening curl bracket"
 			external_name: "OpeningCurlBracket"
 		end
 
 	Opening_round_bracket: STRING is "("
-			-- Opening round bracket
 		indexing
+			description: "Opening round bracket"
 			external_name: "OpeningRoundBracket"
 		end
 		
 	Red_color: SYSTEM_DRAWING_COLOR is
-			-- Red color
 		indexing
+			description: "Red color"
 			external_name: "RedColor"
 		once
 			Result := Result.Red
@@ -221,28 +221,28 @@ feature -- Access
 		end
 		
 	Specials_comment: STRING is "-- Specials"
-			-- Comment for specials clause
 		indexing
+			description: "Comment for specials clause"
 			external_name: "SpecialsComment"
 		end
 		
 	Text_color: SYSTEM_DRAWING_COLOR is
-			-- Text color
 		indexing
+			description: "Color for type view text"
 			external_name: "TextColor"
 		once
 			Result := Result.Black
 		end
 		
 	Title: STRING is "Type view"
-			-- Window title
 		indexing
+			description: "Window title"
 			external_name: "Title"
 		end
 
 	Unary_operators_comment: STRING is "-- Unary Operators"
-			-- Comment for unary operators clause
 		indexing
+			description: "Comment for unary operators clause"
 			external_name: "UinaryOperatorsComment"
 		end
 
@@ -253,8 +253,8 @@ feature -- Access
 		end
 		
 	White_color: SYSTEM_DRAWING_COLOR is
-			-- White color
 		indexing
+			description: "White color"
 			external_name: "WhiteColor"
 		once
 			Result := Result.White

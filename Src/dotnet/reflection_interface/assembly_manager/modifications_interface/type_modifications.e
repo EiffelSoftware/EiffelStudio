@@ -12,8 +12,8 @@ create
 feature {NONE} -- Initialization
 
 	make is
-			-- Initialize attributes.
 		indexing
+			description: "Initialize `features_modifications'."
 			external_name: "Make"
 		do
 			create features_modifications.make
@@ -24,6 +24,8 @@ feature {NONE} -- Initialization
 	make_from_info (an_old_name: like old_name) is
 			-- Initialize attributes.
 		indexing
+			description: "[Set `old_name' with `an_old_name'.%
+					%Initialize `features_modifications']"
 			external_name: "MakeFromInfo"
 		require
 			non_void_name: an_old_name /= Void
@@ -38,30 +40,30 @@ feature {NONE} -- Initialization
 feature -- Access
 	
 	old_name: STRING
-			-- Old class name
 		indexing
+			description: "Old class name"
 			external_name: "OldName"
 		end
 		
 	new_name: STRING
-			-- New class name
 		indexing
+			description: "New class name"
 			external_name: "NewName"
 		end
 		
 	features_modifications: SYSTEM_COLLECTIONS_HASHTABLE
-			-- Features modifications
 			-- | Key: Instance of `EIFFEL_FEATURE'
 			-- | Value: Instance of `FEATURE_MODIFICATIONS'
 		indexing
+			description: "Features modifications"
 			external_name: "FeaturesModifications"
 		end
 
 feature -- Status Setting
 
 	set_old_name (an_old_name: like old_name) is
-			-- Set `old_name' with `an_old_name'.
 		indexing
+			description: "Set `old_name' with `an_old_name'."
 			external_name: "SetOldName"
 		require
 			non_void_name: an_old_name /= Void
@@ -72,8 +74,8 @@ feature -- Status Setting
 		end
 	
 	set_new_name (a_name: like new_name) is
-			-- Set `new_name' with `a_name'.
 		indexing
+			description: "Set `new_name' with `a_name'."
 			external_name: "SetNewName"
 		require
 			non_void_name: a_name /= Void
@@ -86,9 +88,9 @@ feature -- Status Setting
 feature -- Basic Operations
 
 	add_feature_modification (a_feature: ISE_REFLECTION_EIFFELFEATURE; feature_modification: FEATURE_MODIFICATIONS) is
-			-- Add `feature_modification' to `features_modifications' with key `a_feature'.
-			-- If `a_feature' is already in table, the existing value will be replaced by `feature_modifications'.
 		indexing
+			description: "[Add `feature_modification' to `features_modifications' with key `a_feature'.%
+					%If `a_feature' is already in table, the existing value will be replaced by `feature_modifications'.]"
 			external_name: "AddFeatureModification"
 		require
 			non_void_feature: a_feature /= Void

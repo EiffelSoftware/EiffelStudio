@@ -11,8 +11,8 @@ create
 feature {NONE} -- Initialization
 
 	make (a_list: like types) is
-			-- Set `types' with `a_list'.
 		indexing
+			description: "Set `types' with `a_list'."
 			external_name: "Make"
 		require
 			non_void_type_list: a_list /= Void
@@ -25,17 +25,17 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	types: SYSTEM_COLLECTIONS_ARRAYLIST
-			-- Types in current assembly
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_EIFFELCLASS]
 		indexing
+			description: "Types in current assembly"
 			external_name: "Types"
 		end
 
 	recursive_children (a_class: ISE_REFLECTION_EIFFELCLASS): SYSTEM_COLLECTIONS_ARRAYLIST is
-			-- All children of `a_class'
 			-- | Call in loop to `children'
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_EIFFELCLASS]
 		indexing
+			description: "All children of `a_class'"
 			external_name: "RecursiveChildren"
 		require
 			non_void_eiffel_class: a_class /= Void
@@ -82,9 +82,9 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	children (a_class: ISE_REFLECTION_EIFFELCLASS): SYSTEM_COLLECTIONS_ARRAYLIST is
-			-- Children of `a_class' 
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_EIFFELCLASS]
 		indexing
+			description: "Children of `a_class'"
 			external_name: "Children"
 		require
 			non_void_class: a_class /= Void

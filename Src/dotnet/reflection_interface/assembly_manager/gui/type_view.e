@@ -17,10 +17,10 @@ create
 feature {NONE} -- Initialization
 
 	make (an_assembly_descriptor: like assembly_descriptor; an_eiffel_class: like eiffel_class; children_list: like children; an_assembly_view: like assembly_view) is
-			-- Set `assembly_descriptor' with `an_assembly_descriptor'.
-			-- Set `eiffel_class' with `an_eiffel_class'.
-			-- Set `assembly_view' with `an_assembly_view'.
 		indexing
+			description: "[Set `assembly_descriptor' with `an_assembly_descriptor'.%
+					%Set `eiffel_class' with `an_eiffel_class'.%
+					%Set `assembly_view' with `an_assembly_view'.]"
 			external_name: "Make"
 		require
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void
@@ -53,36 +53,36 @@ feature {NONE} -- Initialization
 feature -- Access
 		
 	dictionary: TYPE_VIEW_DICTIONARY is
-			-- Dictionary
 		indexing
+			description: "Dictionary"
 			external_name: "Dictionary"
 		once
 			create Result
 		end
 		
 	eiffel_class: ISE_REFLECTION_EIFFELCLASS
-			-- Eiffel class
 		indexing
+			description: "Eiffel class"
 			external_name: "EiffelClass"
 		end
 		
 	children: SYSTEM_COLLECTIONS_ARRAYLIST 
-			-- Children of `eiffel_class'
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_EIFFELCLASS]
 		indexing
+			description: "Children of `eiffel_class'"
 			external_name: "Children"
 		end
 	
 	assembly_view: ASSEMBLY_VIEW
-			-- Assembly view
 		indexing
+			description: "Assembly view"
 			external_name: "AssemblyView"
 		end
 		
 	assembly_types: SYSTEM_COLLECTIONS_ARRAYLIST is
-			-- Assembly types
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_EIFFELCLASS]
 		indexing
+			description: "Assembly types"
 			external_name: "AssemblyTypes"
 		require
 			non_void_assembly_view: assembly_view /= Void
@@ -107,64 +107,58 @@ feature -- Access
 		end
 		
 	eiffel_dictionary: ISE_REFLECTION_EIFFELCODEGENERATORDICTIONARY
-			-- Dictionary
 		indexing
+			description: "Eiffel dictionary"
 			external_name: "EiffelDictionary"
 		end
 		
 	ok_button: SYSTEM_WINDOWS_FORMS_BUTTON
-			-- OK button
 		indexing
+			description: "OK button"
 			external_name: "OkButton"
 		end
 
 	cancel_button: SYSTEM_WINDOWS_FORMS_BUTTON
-			-- cancel button
 		indexing
+			description: "Cancel button"
 			external_name: "CancelButton"
 		end
 
 	panel: SYSTEM_WINDOWS_FORMS_PANEL
-			-- Panel with class contract form
 		indexing
+			description: "Panel with class contract form"
 			external_name: "Panel"
 		end
 
 	class_name_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
-			-- Class name text box
 		indexing
+			description: "Class name text box"
 			external_name: "ClassNameTextBox"
 		end
 
 	end_class_name_label: SYSTEM_WINDOWS_FORMS_LABEL
-			-- Class name label
 		indexing
+			description: "Class name label"
 			external_name: "EndClassNameLabel"
 		end
 	
 	label_width: INTEGER 
-			-- Width of label created by `create_label'.
 		indexing
+			description: "Width of label created by `create_label'"
 			external_name: "LabelWidth"
 		end
 
 	created_label: SYSTEM_WINDOWS_FORMS_LABEL
-			-- Label created by `create_label'.
 		indexing
+			description: "Label created by `create_label'"
 			external_name: "CreatedLabel"
-		end
-
-	error_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
-			-- Error text box
-		indexing
-			external_name: "ErrorTextBox"
 		end
 		
 feature -- Basic Operations
 
 	initialize_gui is
-			-- Initialize GUI.
 		indexing
+			description: "Initialize GUI."
 			external_name: "InitializeGUI"
 		local
 			a_size: SYSTEM_DRAWING_SIZE
@@ -263,8 +257,8 @@ feature -- Event handling
 		end
 		
 	on_class_name_leave_event_handler (sender: ANY; arguments: SYSTEM_EVENTARGS) is
-			-- Action launched when a text box is entered
 		indexing
+			description: "Action launched when a text box is entered"
 			external_name: "OnClassNameLeaveEventHandler"
 		require
 			non_void_sender: sender /= Void
@@ -286,8 +280,8 @@ feature -- Event handling
 		end
 
 	on_class_name_enter (sender: ANY; arguments: SYSTEM_WINDOWS_FORMS_KEYEVENTARGS) is
-			-- Action launched when user presses `Enter' in the class name text box
 		indexing
+			description: "Action launched when user presses `Enter' in the class name text box"
 			external_name: "OnClassNameEnter"
 		require
 			non_void_sender: sender /= Void
@@ -311,8 +305,8 @@ feature -- Event handling
 		end
 	
 	on_click (sender: ANY; arguments: SYSTEM_EVENTARGS) is
-			-- Action launched when a text box is entered
 		indexing
+			description: "Action launched when a text box is entered"
 			external_name: "OnClick"
 		require
 			non_void_sender: sender /= Void
@@ -336,8 +330,8 @@ feature -- Event handling
 		end
 		
 	on_enter_event_handler (sender: ANY; arguments: SYSTEM_EVENTARGS) is
-			-- Action launched when a text box is entered
 		indexing
+			description: "Action launched when a text box is entered"
 			external_name: "OnEnterEventHandler"
 		require
 			non_void_sender: sender /= Void
@@ -374,8 +368,8 @@ feature -- Event handling
 		end
 
 	on_leave_event_handler (sender: ANY; arguments: SYSTEM_EVENTARGS) is
-			-- Action launched when a text box is leaved
 		indexing
+			description: "Action launched when a text box is leaved"
 			external_name: "OnLeaveEventHandler"
 		require
 			non_void_sender: sender /= Void
@@ -390,8 +384,8 @@ feature -- Event handling
 		end
 
 	on_enter_pressed (sender: ANY; arguments: SYSTEM_WINDOWS_FORMS_KEYEVENTARGS) is
-			-- Action launched when a text box is leaved
 		indexing
+			description: "Action launched when user presses `Enter' in a text box"
 			external_name: "OnEnterPressed"
 		require
 			non_void_sender: sender /= Void
@@ -408,8 +402,8 @@ feature -- Event handling
 		end
 		
 	on_ok_event_handler (sender: ANY; arguments: SYSTEM_EVENTARGS) is
-			-- Process `ok_button' activation.
 		indexing
+			description: "Process `ok_button' activation."
 			external_name: "OnOkEventHandler"
 		require
 			non_void_sender: sender /= Void
@@ -520,8 +514,8 @@ feature -- Event handling
 		end
 	
 	on_cancel_event_handler (sender: ANY; arguments: SYSTEM_EVENTARGS) is
-			-- Process `cancel_button' activation.
 		indexing
+			description: "Process `cancel_button' activation."
 			external_name: "OnCancelEventHandler"
 		require
 			non_void_sender: sender /= Void
@@ -551,10 +545,10 @@ feature {NONE} -- Implementation
 		end
 	
 	parents: SYSTEM_COLLECTIONS_HASHTABLE
-			-- Class parents
 			-- | Key: parent name
 			-- | Value: inheritance clauses (ARRAY [SYSTEM_COLLECTIONS_ARRAYLIST [STRING]])
 		indexing
+			description: "Class parents"
 			external_name: "Parents"
 		end
 	
@@ -565,37 +559,37 @@ feature {NONE} -- Implementation
 		end
 
 	panel_height: INTEGER
-			-- Height of panel inside before calling `build_inherit_clause'.
 		indexing
+			description: "Height of panel inside before calling `build_inherit_clause'"
 			external_name: "PanelHeight"
 		end
 
 	special_classes: ARRAY [STRING]
-			-- Special classes 
 			-- | ["ANY", "INTEGER", "INTEGER_64", "INTEGER_16", "INTEGER_8", "CHARACTER",  "DOUBLE", "REAL", "BOOLEAN"]
 		indexing
+			description: "Special classes"
 			external_name: "SpecialClasses"
 		end
 
 	feature_names_boxes: SYSTEM_COLLECTIONS_HASHTABLE
-			-- Text boxes for feature names
 			-- | Key: text box
 			-- | Value: `ISE_REFLECTION_EIFFELFEATURE'
 		indexing
+			description: "Text boxes for feature names"
 			external_name: "FeatureNamesBoxes"
 		end
 
 	feature_arguments_boxes: SYSTEM_COLLECTIONS_HASHTABLE
-			-- Text boxes for feature arguments
 			-- | Key: text box
 			-- | Value: [ISE_REFLECTION_EIFFELFEATURE, ISE_REFLECTION_NAMEDSIGNATURETYPE]
 		indexing
+			description: "Text boxes for feature arguments"
 			external_name: "FeatureArgumentsBoxes"
 		end
 		
 	build_class_contract_form (an_eiffel_class: like eiffel_class) is
-			-- Build editable contract form of `an_eiffel_class'.
 		indexing
+			description: "Build editable contract form of `an_eiffel_class'."
 			external_name: "BuildClassContractForm"
 		require
 			non_void_eiffel_class: an_eiffel_class /= Void
@@ -633,7 +627,7 @@ feature {NONE} -- Implementation
 			an_external_clause := an_external_clause.concat_string_string (an_external_clause, eiffel_dictionary.Colon)
 			create_label (an_external_clause, 3 * dictionary.Margin, dictionary.Margin + dictionary.Label_height, dictionary.Keyword_color, True)
 			
-			create formatter.make_formatter
+			create formatter.make
 			an_external_name := eiffel_dictionary.Invertedcomma
 			an_external_name := an_external_name.concat_string_string_string (an_external_name, formatter.formatstrongname (an_eiffel_class.fullexternalname), eiffel_dictionary.Invertedcomma)
 			create_label (an_external_name, 3 * dictionary.Margin + label_width, dictionary.Margin + dictionary.Label_height, dictionary.Comment_color, False)
@@ -698,9 +692,9 @@ feature {NONE} -- Implementation
 		end
 	
 	create_label (a_text: STRING; x_position, y_position: INTEGER; a_color: SYSTEM_DRAWING_COLOR; is_bold_font: BOOLEAN) is
-			-- Create a text box with text `a_text' at position (x_position, y_position).
-			-- Set text box forecolor with `a_color' and bold font if `is_bold_font' is True (regular font otherwise).
 		indexing
+			description: "[Create a text box with text `a_text' at position (x_position, y_position).%
+					%Set text box forecolor with `a_color' and bold font if `is_bold_font' is True (regular font otherwise).]"
 			external_name: "CreateLabel"
 		require
 			non_void_text: a_text /= Void
@@ -734,9 +728,9 @@ feature {NONE} -- Implementation
 		end
 	
 	create_form_label (a_text: STRING; x_position, y_position: INTEGER) is
-			-- Create a text box with text `a_text' at position (x_position, y_position).
-			-- Set text box forecolor with `a_color' and bold font if `is_bold_font' is True (regular font otherwise).
 		indexing
+			description: "[Create a text box with text `a_text' at position (x_position, y_position).%
+					%Set text box forecolor with `a_color' and bold font if `is_bold_font' is True (regular font otherwise).]"
 			external_name: "CreateFormLabel"
 		require
 			non_void_text: a_text /= Void
@@ -762,10 +756,10 @@ feature {NONE} -- Implementation
 	end	
 		
 	set_editable_text_box_properties (a_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX; a_text: STRING; x_position, y_position, a_width: INTEGER; a_color: SYSTEM_DRAWING_COLOR) is
-			-- Set `a_text_box' position: (x_position, y_position).
-			-- Set `a_text_box' size (a_width, Label_height).
-			-- Set font color with `a_color'.
 		indexing
+			description: "[Set `a_text_box' position: (x_position, y_position).%
+					%Set `a_text_box' size (a_width, Label_height).%
+					%Set font color with `a_color'.]"
 			external_name: "SetEditableTextBoxProperties"
 		require
 			non_void_text_box: a_text_box /= Void
@@ -790,10 +784,10 @@ feature {NONE} -- Implementation
 		end
 
 	set_text_box_properties (a_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX; a_text: STRING; x_position, y_position, a_width: INTEGER; a_color: SYSTEM_DRAWING_COLOR) is
-			-- Set `a_text_box' position: (x_position, y_position).
-			-- Set `a_text_box' size (a_width, Label_height).
-			-- Set font color with `a_color'.
 		indexing
+			description: "[Set `a_text_box' position: (x_position, y_position).%
+					%Set `a_text_box' size (a_width, Label_height).%
+					%Set font color with `a_color'.]"
 			external_name: "SetTextBoxProperties"
 		require
 			non_void_text_box: a_text_box /= Void
@@ -825,8 +819,8 @@ feature {NONE} -- Implementation
 		end
 		
 	build_inherit_clause (an_eiffel_class: like eiffel_class) is
-			-- Build inherit clause
 		indexing
+			description: "Build inherit clause"
 			external_name: "BuildInheritClause"
 		require
 			non_void_eiffel_class: an_eiffel_class /= Void
@@ -934,8 +928,8 @@ feature {NONE} -- Implementation
 		end
 
 	has_any_in_clause: BOOLEAN is
-			-- Does class have inheritance clauses for parent `ANY'?
 		indexing
+			description: "Does class have inheritance clauses for parent `ANY'?"
 			external_name: "HasAnyInClause"
 		require
 			non_void_parents: parents /= Void
@@ -956,9 +950,9 @@ feature {NONE} -- Implementation
 		end
 		
 	build_inheritance_clauses (clauses: SYSTEM_COLLECTIONS_ARRAYLIST) is
-			-- Build inheritance clauses from `clauses'.
 			-- | Add text box to `a_table' for `parent_number'-th parent. 
 		indexing
+			description: "Build inheritance clauses from `clauses'."
 			external_name: "BuildInheritanceClauses"
 		require
 			non_void_clauses: clauses /= Void
@@ -986,8 +980,8 @@ feature {NONE} -- Implementation
 		end
 
 	build_create_clause (an_eiffel_class: like eiffel_class) is 
-			-- Build create clause.
 		indexing 
+			description: "Build create clause."
 			external_name: "BuildCreateClause"
 		require
 			non_void_eiffel_class: an_eiffel_class /= Void
@@ -1075,8 +1069,8 @@ feature {NONE} -- Implementation
 		end
 
 	is_special_class (an_eiffel_class:like eiffel_class): BOOLEAN is
-			-- Is `an_eiffel_class' a special class?
 		indexing
+			description: "Is `an_eiffel_class' a special class?"
 			external_name: "IsSpecialClass"
 		require
 			non_void_special_classes: special_classes /= Void
@@ -1094,8 +1088,8 @@ feature {NONE} -- Implementation
 		end
 
 	build_class_features (an_eiffel_class: like eiffel_class) is
-			-- Build class features from `an_eiffel_class', except initialization ones.
 		indexing
+			description: "Build class features from `an_eiffel_class', except initialization ones."
 			external_name: "BuildClassFeatures"
 		require
 			non_void_eiffel_class: an_eiffel_class /= Void
@@ -1175,9 +1169,9 @@ feature {NONE} -- Implementation
 		end
 
 	intern_build_class_features (an_eiffel_class: like eiffel_class; a_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
-			-- Build class features from `a_list'.
 			-- | Call in loop `build_eiffel_feature'.
 		indexing
+			description: "Build class features from `a_list'."
 			external_name: "InternBuildClassFeatures"
 		require
 			non_void_list: a_list /= Void
@@ -1200,8 +1194,8 @@ feature {NONE} -- Implementation
 		end
 
 	build_eiffel_feature (an_eiffel_class: like eiffel_class; a_feature: ISE_REFLECTION_EIFFELFEATURE) is
-			-- Generate Eiffel feature from `a_feature' and `an_eiffel_class'.
 		indexing
+			description: "Generate Eiffel feature from `a_feature' and `an_eiffel_class'."
 			external_name: "BuildEiffelFeature"
 		require
 			non_void_feature: a_feature /= Void
@@ -1331,9 +1325,9 @@ feature {NONE} -- Implementation
 		end	
 	
 	text_box_width_from_text (a_text: STRING; a_font: SYSTEM_DRAWING_FONT): INTEGER is
-			-- Width of text box with text `a_text' and font `a_font'.
-			-- | Should disappear if we can find a feature giving the length of a string in pixels.
+			-- | FIXME: Should disappear if we can find a feature giving the length of a string in pixels.
 		indexing
+			description: "Width of text box with text `a_text' and font `a_font'."
 			external_name: "TextBoxWidthFromText"
 		require
 			non_void_text: a_text /= Void
@@ -1395,8 +1389,8 @@ feature {NONE} -- Implementation
 		end
 		
 	display_errors (class_error_message: STRING; errors_in_features, errors_in_arguments: SYSTEM_COLLECTIONS_HASHTABLE) is
-			-- Build errors list view from `class_error_message', errors_in_features' and `errors_in_arguments' and display it.
 		indexing
+			description: "Build errors list view from `class_error_message', errors_in_features' and `errors_in_arguments' and display it."
 			external_name: "ErrorsListView"
 		local
 			a_size: SYSTEM_DRAWING_SIZE

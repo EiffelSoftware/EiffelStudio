@@ -11,26 +11,26 @@ inherit
 feature -- Access
 
 	Assembly_label_text: STRING is "Selected assembly: "
-			-- Text of assembly label
 		indexing
+			description: "Text of assembly label"
 			external_name: "AssemblyLabelText"
 		end
 		
 	No_button_label: STRING is "No"
-			-- No button label
 		indexing
+			description: "No button label"
 			external_name: "NoButtonLabel"
 		end
 		
 	Title: STRING is "WARNING - ISE Assembly Manager"
-			-- Window title
 		indexing
+			description: "Window title"
 			external_name: "Title"
 		end
 
 	Yes_button_label: STRING is "Yes"
-			-- Yes button label
 		indexing
+			description: "Yes button label"
 			external_name: "YesButtonLabel"
 		end
 		

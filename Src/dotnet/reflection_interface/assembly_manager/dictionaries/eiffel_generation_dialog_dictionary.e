@@ -11,8 +11,8 @@ inherit
 feature -- Access
 	
 	Assembly_generation_message: STRING is "Generating Eiffel classes..."
-			-- Message to let the user know selected assembly will be generated to the Eiffel repository.
 		indexing
+			description: "Message to let the user know selected assembly will be generated to the Eiffel repository"
 			external_name: "AssemblyGenerationMessage"
 		end
 
@@ -39,14 +39,14 @@ feature -- Access
 		end
 
 	Title: STRING is "Generate Eiffel classes"
-			-- Window title
 		indexing
+			description: "Window title"
 			external_name: "Title"
 		end
 
-	Window_height: INTEGER is 275
-			-- Window height
+	Window_height: INTEGER is 300
 		indexing
+			description: "Window height"
 			external_name: "WindowHeight"
 		end
 		

@@ -17,9 +17,9 @@ create
 feature {NONE} -- Initialization
 
 	make (an_assembly_descriptor: like assembly_descriptor; assembly_dependancies: like dependancies) is
-			-- Set `assembly_descriptor' with `an_assembly_descriptor'.
-			-- Set `assembly_dependancies' with `dependancies'.
 		indexing
+			description: "[Set `assembly_descriptor' with `an_assembly_descriptor'.%
+					%Set `assembly_dependancies' with `dependancies'.]"
 			external_name: "Make"
 		require
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void
@@ -38,26 +38,26 @@ feature {NONE} -- Initialization
 			assembly_descriptor_set: assembly_descriptor = an_assembly_descriptor
 			dependancies_set: dependancies = assembly_dependancies
 		end
-		
+
 feature -- Access
 		
 	dictionary: IMPORT_DIALOG_DICTIONARY is
-			-- Dictionary
 		indexing
+			description: "Dictionary"
 			external_name: "Dictionary"
 		once
 			create Result
 		end
 
 	dependancies: ARRAY [SYSTEM_REFLECTION_ASSEMBLYNAME]
-			-- Assembly dependancies
 		indexing
+			description: "Assembly dependancies"
 			external_name: "Dependancies"
 		end
-		
+	
 	dependancies_check_box: SYSTEM_WINDOWS_FORMS_CHECKBOX
-			-- Dependancies check box
 		indexing
+			description: "Dependancies check box"
 			external_name: "DependanciesCheckBox"
 		end
 	
@@ -115,8 +115,8 @@ feature -- Status Report
 feature -- Basic Operations
 
 	initialize_gui is
-			-- Initialize GUI.
 		indexing
+			description: "Initialize GUI."
 			external_name: "InitializeGUI"
 		local
 			a_size: SYSTEM_DRAWING_SIZE
@@ -132,14 +132,15 @@ feature -- Basic Operations
 			a_size.set_Width (dictionary.Window_width)
 			set_size (a_size)
 			set_icon (dictionary.Import_icon)
-
+			destination_path_text_box.set_text (dictionary.Default_generation_path)
+			
 				-- Dependancies check box (checked by default)
 			if dependancies.count > 0 then
 				create dependancies_check_box.make_checkbox
 				dependancies_check_box.set_text (dictionary.Dependancies_check_box_text)
 				dependancies_check_box.set_font (a_font)
 				a_point.set_X (dictionary.Margin)
-				a_point.set_Y (5 * dictionary.Margin + 7 * dictionary.Label_height)
+				a_point.set_Y (4 * dictionary.Margin + 9 * dictionary.Label_height)
 				dependancies_check_box.set_location (a_point)
 				a_size.set_height (dictionary.Label_height)
 				a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
@@ -153,9 +154,9 @@ feature -- Basic Operations
 			create ok_button.make_button
 			a_point.set_X ((dictionary.Window_width // 2) - (dictionary.Margin //2) - dictionary.Button_width) 
 			if dependancies.count > 0 then
-				a_point.set_Y (6 * dictionary.Margin + 8 * dictionary.Label_height)
+				a_point.set_Y (5 * dictionary.Margin + 10 * dictionary.Label_height)
 			else
-				a_point.set_Y (5 * dictionary.Margin + 7 * dictionary.Label_height)
+				a_point.set_Y (4 * dictionary.Margin + 9 * dictionary.Label_height)
 			end
 			ok_button.set_location (a_point)
 			ok_button.set_text (dictionary.Ok_button_label)
@@ -168,9 +169,9 @@ feature -- Basic Operations
 			create cancel_button.make_button
 			a_point.set_X ((dictionary.Window_width // 2) + (dictionary.Margin // 2))
 			if dependancies.count > 0 then
-				a_point.set_Y (6 * dictionary.Margin + 8 * dictionary.Label_height)
+				a_point.set_Y (5 * dictionary.Margin + 10 * dictionary.Label_height)
 			else
-				a_point.set_Y (5 * dictionary.Margin + 7 * dictionary.Label_height)
+				a_point.set_Y (4 * dictionary.Margin + 9 * dictionary.Label_height)
 			end
 			cancel_button.set_location (a_point)
 			cancel_button.set_height (dictionary.Button_height)
@@ -187,8 +188,8 @@ feature -- Basic Operations
 feature -- Event handling
 
 	on_ok_event_handler (sender: ANY; arguments: SYSTEM_EVENTARGS) is
-			-- Process `ok_button' activation.
 		indexing
+			description: "Process `ok_button' activation."
 			external_name: "OnOkEventHandler"
 		local
 			on_confirmation_event_handler_delegate: SYSTEM_EVENTHANDLER
@@ -213,8 +214,8 @@ feature -- Event handling
 feature {NONE} -- Implementation
 	
 	import_assembly_and_dependancies is
-			-- Import the assembly corresponding to `assembly_descriptor' and its dependancies.
 		indexing
+			description: "Import the assembly corresponding to `assembly_descriptor' and its dependancies."
 			external_name: "ImportAssemblyAndDependancies"
 		require
 			non_void_assembly_descriptor: assembly_descriptor /= Void
@@ -252,8 +253,6 @@ feature {NONE} -- Implementation
 					close
 					create emitter.make_neweiffelclassgenerator
 					if destination_path_text_box.text /= Void and then destination_path_text_box.text.length > 0 then
-						ok_button.set_enabled (False)
-						cancel_button.set_enabled (False)
 						emitter.importassemblywithdependancies (assembly, destination_path_text_box.text)
 						message_box.close
 					else
@@ -271,8 +270,8 @@ feature {NONE} -- Implementation
 		end
 
 	import_assembly_without_dependancies is
-			-- Import the assembly corresponding to `assembly_descriptor' without its dependancies.
 		indexing
+			description: "Import the assembly corresponding to `assembly_descriptor' without its dependancies."
 			external_name: "ImportAssemblyWithoutDependancies"
 		require	
 			non_void_assembly_descriptor: assembly_descriptor /= Void
@@ -285,8 +284,8 @@ feature {NONE} -- Implementation
 		end
 		
 	import_without_dependancies (sender: ANY; arguments: SYSTEM_EVENTARGS) is
-			-- Import the assembly corresponding to `assembly_descriptor' without its dependancies.
 		indexing
+			description: "Import the assembly corresponding to `assembly_descriptor' without its dependancies."
 			external_name: "ImportWithoutDependancies"
 		require	
 			non_void_assembly_descriptor: assembly_descriptor /= Void
@@ -311,8 +310,6 @@ feature {NONE} -- Implementation
 					close
 					create emitter.make_neweiffelclassgenerator
 					if destination_path_text_box.text /= Void and then destination_path_text_box.text.length > 0 then
-						ok_button.set_enabled (False)
-						cancel_button.set_enabled (False)
 						emitter.importassemblywithoutdependancies (assembly, destination_path_text_box.text)
 						message_box.close
 					else
@@ -328,5 +325,5 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
-		
+	
 end -- class IMPORT_DIALOG

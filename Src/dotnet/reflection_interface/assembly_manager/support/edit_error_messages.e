@@ -8,8 +8,8 @@ class
 feature -- Access
 
 	Class_exists_error: STRING is "A class of the assembly has the same name. Please choose another name."
-			-- Error message in case the class name already exists.
 		indexing
+			description: "Error message in case the class name already exists"
 			external_name: "ClassExistsError"
 		end
 	
@@ -20,14 +20,14 @@ feature -- Access
 		end
 		
 	Feature_exists_error: STRING is "The feature name already exists in the current class or one of its descendants. Please choose another name."
-			-- Error message in case the feature name is the name of an existing feature of the class or of the children
 		indexing
+			description: "Error message in case the feature name is the name of an existing feature of the class or of the children"
 			external_name: "FeatureExistsError"
 		end
 
 	Clash_with_feature_name: STRING is "The argument has the same name of an existing feature of the class or one of its descendant. Please choose another name."
-			-- Error message in case of clash between argument and features names
 		indexing
+			description: "Error message in case of clash between argument and features names"
 			external_name: "ClashWithFeatureName"
 		end	
 
@@ -50,8 +50,8 @@ feature -- Access
 		end
 		
 	Argument_name_exists: STRING is "The feature already has an argument with the same name. Please choose another name."
-			-- Error message in case the feature already has an argument with the same name
 		indexing
+			description: "Error message in case the feature already has an argument with the same name"
 			external_name: "ArgumentNameExists"
 		end
 

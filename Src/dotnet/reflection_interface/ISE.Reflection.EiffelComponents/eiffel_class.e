@@ -12,8 +12,8 @@ create
 feature {NONE} -- Initialization
 
 	make is
-			-- Initialize attributes.
 		indexing
+			description: "Initialize attributes."
 			external_name: "Make"
 		do
 			create parents.make
@@ -44,32 +44,32 @@ feature {NONE} -- Initialization
 feature -- Access
 			
 	eiffel_name: STRING
-			-- Eiffel name
 		indexing
+			description: "Eiffel name"
 			external_name: "EiffelName"
 		end
 	
 	full_external_name: STRING
-			-- Full external name (i.e. with namespace)
 		indexing
+			description: "Full external name (i.e. with namespace)"
 			external_name: "FullExternalName"
 		end
 		
 	external_name: STRING 
-			-- .NET simple name
 		indexing
+			description: ".NET simple name"
 			external_name: "ExternalName"
 		end
 	
 	assembly_descriptor: ASSEMBLY_DESCRIPTOR
-			-- Descriptor of assembly defining current type
 		indexing
+			description: "Descriptor of assembly defining current type"
 			external_name: "AssemblyDescriptor"
 		end
 		
 	namespace: STRING	
-			-- Namespace defining current class
 		indexing
+			description: "Namespace defining current class"
 			external_name: "Namespace"
 		end
 		
@@ -78,84 +78,86 @@ feature -- Access
 			-- Value: Inheritance clauses (ARRAY [SYSTEM_COLLECTIONS_ARRAYLIST [INHERITANCE_CLAUSE]]) 
 			-- (array with rename, undefine, redefine, select and export clauses)
 		indexing
+			description: "Parents"
 			external_name: "Parents"
 		end
 		
 	creation_routines: SYSTEM_COLLECTIONS_ARRAYLIST
-			-- Creation routines Eiffel names 
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [STRING]
 		indexing
+			description: "Creation routines Eiffel names "
 			external_name: "CreationRoutines"
 		end
 		
 	initialization_features: SYSTEM_COLLECTIONS_ARRAYLIST 
-			-- Initialization features 
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_FEATURE]
 		indexing
+			description: "Initialization features"
 			external_name: "InitializationFeatures"
 		end
 		
 	access_features: SYSTEM_COLLECTIONS_ARRAYLIST 
-			-- Access features 
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_FEATURE]
 		indexing
+			description: "Access features"
 			external_name: "AccessFeatures"
 		end
 		
 	element_change_features: SYSTEM_COLLECTIONS_ARRAYLIST 
-			-- Element change features 
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_FEATURE]
 		indexing
+			description: "Element change features"
 			external_name: "ElementChangeFeatures"
 		end
 		
 	basic_operations: SYSTEM_COLLECTIONS_ARRAYLIST 
-			-- Basic operations
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_FEATURE]
 		indexing
+			description: "Basic operations"
 			external_name: "BasicOperations"
 		end
 		
 	unary_operators_features: SYSTEM_COLLECTIONS_ARRAYLIST 
-			-- Unary operators
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_FEATURE]
 		indexing
+			description: "Unary operators"
 			external_name: "UnaryOperatorsFeatures"
 		end
 		
 	binary_operators_features: SYSTEM_COLLECTIONS_ARRAYLIST 
-			-- Binary operators
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_FEATURE]
 		indexing
+			description: "Binary operators"
 			external_name: "BinaryOperatorsFeatures"
 		end
 		
 	special_features: SYSTEM_COLLECTIONS_ARRAYLIST 
-			-- Special features 
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_FEATURE]	
 		indexing
+			description: "Special features"
 			external_name: "SpecialFeatures"
 		end
 		
 	implementation_features: SYSTEM_COLLECTIONS_ARRAYLIST 
-			-- Implementation features 
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_FEATURE]		
 		indexing
+			description: "Implementation features"
 			external_name: "ImplementationFeatures"
 		end
 		
 	invariants: SYSTEM_COLLECTIONS_ARRAYLIST
-			-- Class invariants
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ARRAY [STRING]] (Array with invariant tag and invariant text)
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ARRAY [STRING]] 
+			-- | (Array with invariant tag and invariant text)
 		indexing
+			description: "Class invariants"
 			external_name: "Invariants"
 		end
 
 feature -- Eiffel names from .NET reflection info
 
 	creation_routine_from_info (info: SYSTEM_REFLECTION_CONSTRUCTORINFO): EIFFEL_FEATURE is
-			-- Creation routine corresponding to .NET `info'.
 		indexing
+			description: "Creation routine corresponding to .NET `info'"
 			external_name: "CreationRoutineFromInfo"
 		require
 			non_void_info: info /= Void
@@ -175,8 +177,8 @@ feature -- Eiffel names from .NET reflection info
 		end
 		
 	attribute_from_info (info: SYSTEM_REFLECTION_MEMBERINFO): EIFFEL_FEATURE is
-			-- Eiffel attribute corresponding to .NET `info'.
 		indexing
+			description: "Eiffel attribute corresponding to .NET `info'"
 			external_name: "AttributeFromInfo"
 		require
 			non_void_info: info /= Void
@@ -222,8 +224,8 @@ feature -- Eiffel names from .NET reflection info
 		end
 		
 	routine_from_info (info: SYSTEM_REFLECTION_METHODINFO): EIFFEL_FEATURE is
-			-- Eiffel routine corresponding to .NET `info'.
 		indexing
+			description: "Eiffel routine corresponding to .NET `info'"
 			external_name: "RoutineFromInfo"
 		require
 			non_void_info: info /= Void
@@ -271,34 +273,34 @@ feature -- Eiffel names from .NET reflection info
 feature -- Status Report
 
 	is_frozen: BOOLEAN
-			-- Is class frozen?
 		indexing
+			description: "Is class frozen?"
 			external_name: "IsFrozen"
 		end
 		
 	is_expanded: BOOLEAN
-			-- Is class expanded?
 		indexing
+			description: "Is class expanded?"
 			external_name: "IsExpanded"
 		end
 		
 	is_deferred: BOOLEAN
-			-- Is class deferred?
 		indexing
+			description: "Is class deferred?"
 			external_name: "IsDeferred"
 		end
 		
 	create_none: BOOLEAN
-			-- Does class have `create{NONE}' creation declaration?
 		indexing
+			description: "Does class have `create{NONE}' creation declaration?"
 			external_name: "CreateNone"
 		end
 		
 feature -- Status Setting
 
 	set_frozen (a_value: like is_frozen) is
-			-- Set `is_frozen' with `a_value'.
 		indexing
+			description: "Set `is_frozen' with `a_value'."
 			external_name: "SetFrozen"
 		do
 			is_frozen := a_value
@@ -307,8 +309,8 @@ feature -- Status Setting
 		end
 		
 	set_expanded (a_value: like is_expanded) is
-			-- Set `is_expanded' with `expanded'.
 		indexing
+			description: "Set `is_expanded' with `expanded'."
 			external_name: "SetExpanded"
 		do
 			is_expanded := a_value
@@ -317,8 +319,8 @@ feature -- Status Setting
 		end
 	
 	set_deferred (a_value: like is_deferred) is
-			-- Set `is_deferred' with `deferred'.
 		indexing
+			description: "Set `is_deferred' with `deferred'."
 			external_name: "SetDeferred"
 		do
 			is_deferred := a_value
@@ -327,8 +329,8 @@ feature -- Status Setting
 		end
 
 	set_create_none (a_value: like create_none) is
-			-- Set `create_none' with `a_value'.
 		indexing
+			description: "Set `create_none' with `a_value'."
 			external_name: "SetCreateNone"
 		do
 			create_none := a_value
@@ -337,8 +339,8 @@ feature -- Status Setting
 		end
 	
 	set_eiffel_name (a_name: like eiffel_name) is
-			-- Set `eiffel_name' with `a_name'.
 		indexing
+			description: "Set `eiffel_name' with `a_name'."
 			external_name: "SetEiffelName"
 		require
 			non_void_name: a_name /= Void
@@ -350,8 +352,8 @@ feature -- Status Setting
 		end
 	
 	set_external_name (a_name: like external_name) is
-			-- Set `external_name' with `a_name'.
 		indexing
+			description: "Set `external_name' with `a_name'."
 			external_name: "SetExternalName"
 		require
 			non_void_name: a_name /= Void
@@ -363,8 +365,8 @@ feature -- Status Setting
 		end	
 	
 	set_namespace (a_name: like namespace) is
-			-- Set `namespace' with `a_name'.
 		indexing
+			description: "Set `namespace' with `a_name'."
 			external_name: "SetNamespace"
 		require
 			non_void_name: a_name /= Void
@@ -375,10 +377,10 @@ feature -- Status Setting
 			namespace_set: namespace.Equals_String (a_name)
 		end	
 
-	set_external_names (a_full_name: like full_external_name) is
-			-- Set `full_external_name' from `a_full_name'.
-			-- Set `external_name' and `namespace' from `a_full_name'.
+	set_external_names (a_full_name: like full_external_name) is 
 		indexing
+			description: "[Set `full_external_name' from `a_full_name'.%
+						%Set `external_name' and `namespace' from `a_full_name'.]"
 			external_name: "SetExternalNames"
 		require
 			non_void_full_name: a_full_name /= Void
@@ -404,8 +406,8 @@ feature -- Status Setting
 		end
 
 	set_assembly_descriptor (a_descriptor: like assembly_descriptor) is
-			-- Set `descriptor' with `a_descriptor'.
 		indexing
+			description: "Set `descriptor' with `a_descriptor'."
 			external_name: "SetAssemblyDescriptor"
 		require
 			non_void_descriptor: a_descriptor /= Void
@@ -416,8 +418,8 @@ feature -- Status Setting
 		end
 		
 	set_full_external_name (a_full_name: like full_external_name) is
-			-- Set `full_external_name' from `a_full_name'.
 		indexing
+			description: "Set `full_external_name' from `a_full_name'."
 			external_name: "SetFullExternalName"
 		require
 			non_void_full_name: a_full_name /= Void
@@ -443,10 +445,10 @@ feature -- Status Setting
 feature -- Basic Operations
 
 	add_parent (a_name: STRING; rename_clauses, undefine_clauses, redefine_clauses, select_clauses, export_clauses: SYSTEM_COLLECTIONS_ARRAYLIST) is
-			-- Add new parent to `parents' with `a_name' as key and inheritance clauses as value.
-			-- Inheritance clauses are built from `rename_clauses', `undefine_clauses', `redefine_clauses', `select_clauses', `export_clauses'.
 			-- | Inheritance clauses: SYSTEM_COLLECTIONS_ARRAYLIST [INHERITANCE_CLAUSE]
 		indexing
+			description: "Add new parent to `parents' with `a_name' as key and inheritance clauses as value.%
+					%Inheritance clauses are built from `rename_clauses', `undefine_clauses', `redefine_clauses', `select_clauses', `export_clauses'.]"
 			external_name: "AddParent"
 		require
 			non_void_name: a_name /= Void
@@ -472,8 +474,8 @@ feature -- Basic Operations
 		end
 	
 	add_creation_routine (a_name: STRING) is
-			-- Add `a_name' to `creation_routines'.
 		indexing
+			description: "Add `a_name' to `creation_routines'."
 			external_name: "AddCreationRoutine"
 		require
 			non_void_routine_name: a_name /= Void
@@ -487,8 +489,8 @@ feature -- Basic Operations
 		end
 
 	add_initialization_feature (a_feature: EIFFEL_FEATURE) is
-			-- Add `a_feature' to `initialization_features'.
 		indexing
+			description: "Add `a_feature' to `initialization_features'."
 			external_name: "AddInitializationFeature"
 		require
 			non_void_feature: a_feature /= Void
@@ -501,8 +503,8 @@ feature -- Basic Operations
 		end
 		
 	add_access_feature (a_feature: EIFFEL_FEATURE) is
-			-- Add `a_feature' to `access_features'.
 		indexing
+			description: "Add `a_feature' to `access_features'."
 			external_name: "AddAccessFeature"
 		require
 			non_void_feature: a_feature /= Void
@@ -515,8 +517,8 @@ feature -- Basic Operations
 		end
 		
 	add_element_change_feature (a_feature: EIFFEL_FEATURE) is
-			-- Add `a_feature' to `element_change_features'.
 		indexing
+			description: "Add `a_feature' to `element_change_features'."
 			external_name: "AddElementChangeFeature"
 		require
 			non_void_feature: a_feature /= Void
@@ -529,8 +531,8 @@ feature -- Basic Operations
 		end
 		
 	add_basic_operation (a_feature: EIFFEL_FEATURE) is
-			-- Add `a_feature' to `basic_operations'.
 		indexing
+			description: "Add `a_feature' to `basic_operations'."
 			external_name: "AddBasicOperation"
 		require
 			non_void_feature: a_feature /= Void
@@ -543,8 +545,8 @@ feature -- Basic Operations
 		end
 		
 	add_unary_operator (a_feature: EIFFEL_FEATURE) is
-			-- Add `a_feature' to `unary_operator_features'.
 		indexing
+			description: "Add `a_feature' to `unary_operator_features'."
 			external_name: "AddUnaryOperator"
 		require
 			non_void_feature: a_feature /= Void
@@ -557,8 +559,8 @@ feature -- Basic Operations
 		end
 		
 	add_binary_operator (a_feature: EIFFEL_FEATURE) is
-			-- Add `a_feature' to `binary_operator_features'.
 		indexing
+			description: "Add `a_feature' to `binary_operator_features'."
 			external_name: "AddBinaryOperator"
 		require
 			non_void_feature: a_feature /= Void
@@ -571,8 +573,8 @@ feature -- Basic Operations
 		end
 		
 	add_special_feature (a_feature: EIFFEL_FEATURE) is
-			-- Add `a_feature' to `special_features'.
 		indexing
+			description: "Add `a_feature' to `special_features'."
 			external_name: "AddSpecialFeature"
 		require
 			non_void_feature: a_feature /= Void
@@ -585,8 +587,8 @@ feature -- Basic Operations
 		end
 		
 	add_implementation_feature (a_feature: EIFFEL_FEATURE) is
-			-- Add `a_feature' to `implementation_features'.
 		indexing
+			description: "Add `a_feature' to `implementation_features'."
 			external_name: "AddImplementationFeature"
 		require
 			non_void_feature: a_feature /= Void
@@ -599,8 +601,8 @@ feature -- Basic Operations
 		end
 	
 	add_invariant (a_tag, a_text: STRING) is
-			-- Add new invariant (built from `a_tag' and `a_text'  to `invariants'.
 		indexing
+			description: "Add new invariant (built from `a_tag' and `a_text'  to `invariants'."
 			external_name: "AddInvariant"
 		require
 			non_void_tag: a_tag /= Void
@@ -619,9 +621,9 @@ feature -- Basic Operations
 feature {NONE} -- Implementation
 		
 	has_creation_routine (info: SYSTEM_REFLECTION_CONSTRUCTORINFO): BOOLEAN is
-			-- Does current class has creation routine corresponding to `info'?
-			-- If found, make Eiffel feature available in `routine'.
 		indexing
+			description: "[Does current class has creation routine corresponding to `info'?%
+						%If found, make Eiffel feature available in `routine'.]"
 			external_name: "HasCreationRoutine"
 		require
 			non_void_info: info /= Void
@@ -643,15 +645,15 @@ feature {NONE} -- Implementation
 		end
 
 	attribute: EIFFEL_FEATURE
-			-- Attribute (Result of `has_attribute' if attribute was found)
 		indexing
+			description: "Attribute (Result of `has_attribute' if attribute was found)"
 			external_name: "Attribute"
 		end
 		
 	has_attribute (info: SYSTEM_REFLECTION_MEMBERINFO; a_list: SYSTEM_COLLECTIONS_ARRAYLIST): BOOLEAN is
-			-- Has `a_table' feature corresponding to `info'?
-			-- If found, make Eiffel feature available in `attribute'.
 		indexing
+			description: "[Has `a_table' feature corresponding to `info'?%
+						%If found, make Eiffel feature available in `attribute'.]"
 			external_name: "HasAttribute"
 		require
 			non_void_info: info /= Void
@@ -685,15 +687,15 @@ feature {NONE} -- Implementation
 		end
 
 	routine: EIFFEL_FEATURE
-			-- Routine (Result of `has_routine' if routine was found)
 		indexing
+			description: "Routine (Result of `has_routine' if routine was found)"
 			external_name: "Routine"
 		end
 	
 	has_routine (info: SYSTEM_REFLECTION_METHODBASE; a_list: SYSTEM_COLLECTIONS_ARRAYLIST): BOOLEAN is
-			-- Has `a_table' feature corresponding to `info'?
-			-- If found, make Eiffel feature available in `routine'.
 		indexing
+			description: "[Has `a_table' feature corresponding to `info'?%
+					%If found, make Eiffel feature available in `routine'.]"
 			external_name: "HasRoutine"
 		require
 			non_void_info: info /= Void
@@ -730,9 +732,9 @@ feature {NONE} -- Implementation
 		end
 		
 	intern_has_routine (eiffel_feature: EIFFEL_FEATURE; info: SYSTEM_REFLECTION_METHODBASE): BOOLEAN is
-			-- Does `eiffel_feature' match with `info'.
-			-- If matching, set `routine' with `eiffel_feature'.
 		indexing
+			description: "[Does `eiffel_feature' match with `info'?%
+					%If matching, set `routine' with `eiffel_feature'.]"
 			external_name: "InternHasRoutine"
 		require
 			non_void_eiffel_feature: eiffel_feature /= Void
@@ -755,8 +757,8 @@ feature {NONE} -- Implementation
 		end
 	
 	matching_arguments (info: SYSTEM_REFLECTION_METHODBASE; arguments: SYSTEM_COLLECTIONS_ARRAYLIST): BOOLEAN is
-			-- Do Eiffel `arguments' match with .NET arguments of `info'?
 		indexing
+			description: "Do Eiffel `arguments' match with .NET arguments of `info'?"
 			external_name: "MatchingArguments"
 		require
 			non_void_info: info /= Void

@@ -11,8 +11,8 @@ inherit
 feature -- Access
 
 	shared_assemblies: SYSTEM_COLLECTIONS_ARRAYLIST is
-	       	 	-- Assemblies in GAC.
 		indexing
+			description: "Assemblies in the GAC"
 			external_name: "SharedAssemblies"
 		local
 			assembly_path: STRING
@@ -42,16 +42,16 @@ feature -- Access
 		end 
 
 	Gac_path: STRING is "\Assembly\GAC"
-			-- Relative path to the GAC
 		indexing
+			description: "Relative path to the GAC"
 			external_name: "GacPath"
 		end
 		
 feature {NONE} -- Implementation
 
 	assembly_versions (dir: SYSTEM_IO_DIRECTORYINFO): SYSTEM_COLLECTIONS_ARRAYLIST is
-			-- Versions of assembly in `dir'.
 		indexing
+			description: "Versions of assembly in `dir'"
 			external_name: "AssemblyVersions"
 		require
 			dir_not_void: dir /= Void
@@ -90,9 +90,8 @@ feature {NONE} -- Implementation
 		end
 
 	load_from_file (file: STRING): SYSTEM_REFLECTION_ASSEMBLYNAME is
-			-- Assembly stored in `file'.
-			-- Void if `file' format is invalid.
 		indexing
+			description: "Assembly stored in `file' (Void if `file' format is invalid)"
 			external_name: "LoadFromFile"
 		require
 			file_not_void: file /= Void

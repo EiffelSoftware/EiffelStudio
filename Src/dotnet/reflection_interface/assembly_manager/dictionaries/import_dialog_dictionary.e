@@ -11,14 +11,14 @@ inherit
 feature -- Access
 	
 	Assembly_and_dependancies_importation_message: STRING is "Importing assembly and dependencies..."
-			-- Message to let the user know selected assembly and its dependancies will be imported to the Eiffel repository.
 		indexing
+			description: "Message to let the user know selected assembly and its dependancies will be imported to the Eiffel repository."
 			external_name: "AssemblyAndDependanciesImportationMessage"
 		end
 
 	Assembly_importation_message: STRING is "Importing assembly..."
-			-- Message to let the user know selected assembly will be imported to the Eiffel repository.
 		indexing
+			description: "Message to let the user know selected assembly will be imported to the Eiffel repository"
 			external_name: "AssemblyImportationMessage"
 		end
 		
@@ -27,11 +27,33 @@ feature -- Access
 			description: "Text that appears in the blue header of the data grid"
 			external_name: "CaptionText"
 		end
+
+	Default_generation_path: STRING is
+		indexing
+			description: "Default generation path"
+			external_name: "DefaultGenerationPath"
+		local
+			reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT
+		once
+			create reflection_support.make_reflectionsupport
+			reflection_support.make
+			Result := reflection_support.Eiffeldeliverypath
+			Result := Result.Concat_string_string (Result, Dotnet_library_relative_path)
+		ensure
+			non_void_path: Result /= Void
+			not_empty_path: Result.length > 0
+		end
 		
 	Dependancies_check_box_text: STRING is "Import assembly dependencies"
-			-- Dependancies check box text
 		indexing
+			description: "Dependancies check box text"
 			external_name: "DependanciesCheckBoxText"
+		end
+	
+	Importation_error: STRING is "An errors occurred during assembly importation. Please check the assembly is signed. If not, sign it and try importation again."
+		indexing
+			description: "Error message when assembly importation fails"
+			external_name: "ImportationError"
 		end
 
 	Import_icon: SYSTEM_DRAWING_ICON is
@@ -44,12 +66,6 @@ feature -- Access
 			icon_created: Result /= Void
 		end
 
-	Importation_error: STRING is "An errors occurred during assembly importation. Please check the assembly is signed. If not, sign it and try importation again."
-		indexing
-			description: "Error message when assembly importation fails"
-			external_name: "ImportationError"
-		end
-
 	Import_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_import_assembly_title_color.ico"
 		indexing
 			description: "Filename of icon appearing in import dialog header"
@@ -57,20 +73,20 @@ feature -- Access
 		end
 		
 	Title: STRING is "Import a .NET assembly"
-			-- Window title
 		indexing
+			description: "Window title"
 			external_name: "Title"
 		end
 	
 	Warning_text: STRING is "Are you sure you want to import the .NET assembly without its dependencies?"
-			-- Warning in case user does not ask for importation of assembly dependancies
 		indexing
+			description: "Warning in case user does not ask for importation of assembly dependancies"
 			external_name: "WarningText"
 		end
 
-	Window_height: INTEGER is 280
-			-- Window height
+	Window_height: INTEGER is 310
 		indexing
+			description: "Window height"
 			external_name: "WindowHeight"
 		end
 		

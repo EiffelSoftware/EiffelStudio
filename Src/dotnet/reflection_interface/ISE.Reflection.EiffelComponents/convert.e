@@ -9,8 +9,8 @@ class
 feature -- Access
 
 	assembly_info_from_name (an_assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME): ARRAY [STRING] is 
-			-- Assembly info [name, version, culture, public key] corresponding to `an_assembly_name'
 		indexing
+			description: "Assembly info [name, version, culture, public key] corresponding to `an_assembly_name'"
 			external_name: "AssemblyInfoFromName"
 		require
 			non_void_assembly_name: an_assembly_name /= Void
@@ -44,16 +44,16 @@ feature -- Access
 		end
 
 	Neutral_culture: STRING is "neutral"
-			-- Neutral culture as a string
 		indexing
+			description: "Neutral culture as a string"
 			external_name: "NeutralCulture"
 		end
 		
 feature {NONE} -- Implementation
 
 	decode_key (a_key: ARRAY [INTEGER_8]): STRING is
-			-- Printable representation of `a_key'.
 		indexing
+			description: "Printable representation of `a_key'"
 			external_name: "DecodeKey"
 		require
 			a_key_not_void: a_key /= Void

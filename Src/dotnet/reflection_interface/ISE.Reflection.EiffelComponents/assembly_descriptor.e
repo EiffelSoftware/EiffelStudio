@@ -13,11 +13,11 @@ create
 feature {NONE} -- Initialization
 
 	make (a_name: like name; a_version: like version; a_culture: like culture; a_public_key: like public_key) is
-			-- Set `name' with `a_name'.
-			-- Set `version' with `a_version'.
-			-- Set `culture' with `a_culture'.
-			-- Set `public_key' with `a_public_key'.
 		indexing
+			description: "[Set `name' with `a_name'.%
+						%Set `version' with `a_version'.%
+						%Set `culture' with `a_culture'.%
+						%Set `public_key' with `a_public_key'.]"
 			external_name: "Make"
 		require
 			non_void_name: a_name /= Void
@@ -41,8 +41,8 @@ feature {NONE} -- Initialization
 		end
 
 	make_from_assembly (a_dot_net_assembly: SYSTEM_REFLECTION_ASSEMBLY) is
-			-- Create an instance of `ASSEMBLY_DESCRIPTOR' from `a_dot_net_assembly'.
 		indexing
+			description: "Create an instance of `ASSEMBLY_DESCRIPTOR' from `a_dot_net_assembly'."
 			external_name: "MakeFromAssembly"
 		require
 			non_void_assembly: a_dot_net_assembly /= Void
@@ -68,26 +68,26 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	name: STRING 
-			-- Assembly name
 		indexing
+			description: "Assembly name"
 			external_name: "Name"
 		end
 		
 	version: STRING
-			-- Assembly version
 		indexing
+			description: "Assembly version"
 			external_name: "Version"
 		end
 
 	culture: STRING
-			-- Assembly culture
 		indexing
+			description: "Assembly culture"
 			external_name: "Culture"
 		end
 
 	public_key: STRING
-			-- Assembly public key
 		indexing
+			description: "Assembly public key"
 			external_name: "PublicKey"
 		end
 		

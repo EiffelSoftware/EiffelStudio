@@ -391,26 +391,7 @@ feature -- Other constants
 		end
 
 feature {NONE} -- Implementation
-
-	base_filename: STRING is
-		indexing
-			description: "Path to folder where icons are stored"
-			external_name: "BaseRelativeFilename"
-		local
-			support: ISE_REFLECTION_REFLECTIONSUPPORT
-		once
-			create support.make_reflectionsupport
-			support.make
-			Result := support.Eiffeldeliverypath
-			Result := Result.concat_string_string (Result, Base_relative_filename)
-		end
-		
-	Base_relative_filename: STRING is "\bench\wizards\new_projects\dotnet\pixmaps\"
-		indexing
-			description: "Path to folder where icons are stored"
-			external_name: "BaseRelativeFilename"
-		end
-		
+			
 	Name_icon_relative_filename: STRING is "icon_assembly_name_color.ico"
 		indexing
 			description: "Filename of icon on name toolbar button"

@@ -11,14 +11,14 @@ inherit
 feature -- Access
 		
 	Assembly_label_text: STRING is "Selected assembly: "
-			-- Text of assembly label
 		indexing
+			description: "Text of assembly label"
 			external_name: "AssemblyLabelText"
 		end
 
 	Browse_button_label: STRING is "Browse..."
-			-- Browse button label
 		indexing
+			description: "Browse button label"
 			external_name: "BrowseButtonLabel"
 		end
 
@@ -29,38 +29,50 @@ feature -- Access
 		end
 		
 	Cancel_button_label: STRING is "Cancel"
-			-- Cancel button label
 		indexing
+			description: "Cancel button label"
 			external_name: "CancelButtonLabel"
 		end
-				
-	Destination_path_label_text: STRING is "Destination path: " 
-			-- Text of destination path label
+
+	Default_path_check_box_text: STRING is "Default path"
 		indexing
+			description: "Text of `default_path_check_box'"
+			external_name: "DefaultPathCheckBoxText"
+		end
+		
+	Destination_path_label_text: STRING is "Destination path: " 
+		indexing
+			description: "Text of destination path label"
 			external_name: "DestinationPathLabelText"
 		end
 
 	Destination_path_selection_title: STRING is "Select a destination path"
-			-- Title of browse dialog used to select the destination path
 		indexing
+			description: "Title of browse dialog used to select the destination path"
 			external_name: "DestinationPathSelectionTitle"
 		end
 		
 	Empty_string: STRING is ""
-			-- Empty string
 		indexing
+			description: "Empty string"
 			external_name: "EmptyString"
 		end
 		
 	Explanation_label_text: STRING is "Path to directory where Eiffel classes will be generated." 
-			-- Explanation of destination path
 		indexing
+			description: "Explanation of destination path"
 			external_name: "ExplanationLabelText"
 		end	
+
+	Explanation_text: STRING is "(A new folder named as the assembly will automatically be created)"
+		indexing
+			description: "Explanation text"
+			external_name: "ExplanationText"
+		end
 			
 	Neutral_culture: STRING is "neutral"
-			-- Neutral culture
 		indexing
+			description: "Neutral culture"
 			external_name: "NeutralCulture"
 		end
 
@@ -71,8 +83,8 @@ feature -- Access
 		end
 		
 	Ok_button_label: STRING is "OK"
-			-- OK button label
 		indexing
+			description: "OK button label"
 			external_name: "OkButtonLabel"
 		end
 	
@@ -83,9 +95,17 @@ feature -- Access
 		end
 		
 	Window_width: INTEGER is 500
-			-- Window width
 		indexing
+			description: "Window width"
 			external_name: "WindowWidth"
+		end
+
+feature {NONE} -- Implementation
+
+	Dotnet_library_relative_path: STRING is "\library.net"
+		indexing
+			description: "Path to `library.net' relatively to Eiffel delivery"
+			external_name: "DotnetLibraryRelativePath"
 		end
 		
 end -- class GENERATION_DIALOG_DICTIONARY

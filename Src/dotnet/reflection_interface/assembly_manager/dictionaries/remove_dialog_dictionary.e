@@ -11,8 +11,8 @@ inherit
 feature -- Access
 	
 	Assembly_label_text: STRING is "Selected assembly: "
-			-- Text of assembly label
 		indexing
+			description: "Text of assembly label"
 			external_name: "AssemblyLabelText"
 		end
 
@@ -23,14 +23,14 @@ feature -- Access
 		end
 		
 	Dependancies_check_box_text: STRING is "Remove dependencies."
-			-- Check box for dependancies removal
 		indexing
+			description: "Check box for dependancies removal"
 			external_name: "DependanciesCheckBoxText"
 		end
 		
 	No_button_label: STRING is "No"
-			-- No button label
 		indexing
+			description: "No button label"
 			external_name: "NoButtonLabel"
 		end
 	
@@ -47,8 +47,8 @@ feature -- Access
 		end
 	
 	Question_label_text: STRING is "Are you sure you want to remove the selected .NET assembly?"
-			-- Question to the user
 		indexing
+			description: "Question to the user"
 			external_name: "QuestionLabelText"
 		end
 
@@ -69,32 +69,32 @@ feature -- Access
 		end
 		
 	Title: STRING is "Remove a .NET assembly"
-			-- Window title
 		indexing
+			description: "Window title"
 			external_name: "Title"
 		end
 		
 	Warning_text: STRING is "Are you sure you want to remove the assembly and its dependencies?"
-			-- Warning in case user asks for removal of assembly dependancies
 		indexing
+			description: "Warning in case user asks for removal of assembly dependancies"
 			external_name: "WarningText"
 		end
 
 	Window_height: INTEGER is 220
-			-- Window height
 		indexing
+			description: "Window height"
 			external_name: "WindowHeight"
 		end
 		
 	Window_width: INTEGER is 500
-			-- Window width
 		indexing
+			description: "Window width"
 			external_name: "WindowWidth"
 		end
 		
 	Yes_button_label: STRING is "Yes"
-			-- Yes button label
 		indexing
+			description: "Yes button label"
 			external_name: "YesButtonLabel"
 		end
 

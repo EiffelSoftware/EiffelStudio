@@ -7,6 +7,9 @@ class
 
 inherit
 	DIALOG
+		redefine
+			dictionary
+		end
 	
 create 
 	make
@@ -44,6 +47,14 @@ feature -- Access
 			description: "Message"
 			external_name: "Message"
 		end
+
+	dictionary: MESSAGE_BOX_DICTIONARY is
+		indexing
+			description: "Dictionary"
+			external_name: "Dictionary"
+		once
+			create Result
+		end
 		
 feature -- Basic Operations
 
@@ -55,28 +66,49 @@ feature -- Basic Operations
 			a_size: SYSTEM_DRAWING_SIZE
 			a_point: SYSTEM_DRAWING_POINT
 			a_font: SYSTEM_DRAWING_FONT
+			a_label: SYSTEM_WINDOWS_FORMS_LABEL
+			a_panel: SYSTEM_WINDOWS_FORMS_PANEL
+			an_image: SYSTEM_DRAWING_IMAGE
 		do
 			set_Enabled (True)
-			set_text (Title)
+			set_text (dictionary.Title)
 			set_borderstyle (dictionary.Border_style)
-			a_size.set_Width (Window_width)
-			a_size.set_Height (Window_height)
+			a_size.set_Width (dictionary.Window_width)
+			a_size.set_Height (dictionary.Window_height)
 			set_size (a_size)	
 			set_maximizebox (False)
 			set_icon (dictionary.Assembly_manager_icon)	
 			
 			create message_label.make_label
 			a_point.set_x (dictionary.Margin)
-			a_point.set_y (4 * dictionary.Margin)
+			a_point.set_y (2 * dictionary.Margin)
 			message_label.set_location (a_point)
-			a_size.set_width (Window_width - 2 * dictionary.Margin - dictionary.Margin // 2)
-			a_size.set_height (dictionary.Label_height)
-			message_label.set_size (a_size)
+			message_label.set_autosize (True)
 			create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Bold_style)
 			message_label.set_font (a_font)
 			message_label.set_text (message)
-			
 			controls.add (message_label)
+
+			create a_label.make_label
+			a_point.set_x (dictionary.Margin)
+			a_point.set_y (2 * dictionary.Margin + dictionary.Label_height)
+			a_label.set_location (a_point)
+			a_label.set_autosize (True)
+			create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Regular_style)
+			a_label.set_font (a_font)
+			a_label.set_text (dictionary.Other_message)
+			controls.add (a_label)
+			
+				-- Image
+			an_image := image_factory.fromfile (dictionary.Watch_icon_filename)
+			create a_panel.make_panel
+			a_panel.set_height (an_image.height)
+			a_panel.set_width (an_image.width)
+			a_panel.set_backgroundimage (an_image)	
+			a_point.set_x (dictionary.Window_width - 2 * dictionary.Margin - an_image.width)
+			a_point.set_y (2 * dictionary.Margin)
+			a_panel.set_location (a_point)
+			controls.add (a_panel)	
 		end
 		
 feature {NONE} -- Implementation
@@ -87,22 +119,10 @@ feature {NONE} -- Implementation
 			external_name: "MessageLabel"
 		end
 
-	Title: STRING is "ISE Assembly Manager"
+	image_factory: SYSTEM_DRAWING_IMAGE 
 		indexing
-			description: "Window title"
-			external_name: "Title"
-		end
-	
-	Window_height: INTEGER is 120
-		indexing
-			description: "Window height"
-			external_name: "WindowHeight"
-		end
-	
-	Window_width: INTEGER is 400
-		indexing
-			description: "Window width"
-			external_name: "WindowWidth"
+			description: "Static needed to create images"
+			external_name: "ImageFactory"
 		end
 		
 end -- class MESSAGE_BOX

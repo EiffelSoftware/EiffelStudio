@@ -17,9 +17,9 @@ create
 feature {NONE} -- Initialization
 
 	make (an_assembly_descriptor: like assembly_descriptor; assembly_dependancies: like dependancies) is 
-			-- Set `assembly_descriptor' with `an_assembly_descriptor'.
-			-- Set `dependancies' with `assembly_dependancies'.
 		indexing
+			description: "[Set `assembly_descriptor' with `an_assembly_descriptor'.%
+					%Set `dependancies' with `assembly_dependancies'.]"
 			external_name: "Make"
 		require
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void
@@ -45,8 +45,8 @@ feature {NONE} -- Initialization
 feature -- Access
 	
 	dictionary: DEPENDANCY_VIEWER_DICTIONARY is
-			-- Dictionary
 		indexing
+			description: "Dictionary"
 			external_name: "Dictionary"
 		once
 			create Result
@@ -55,8 +55,8 @@ feature -- Access
 feature -- Basic Operations
 
 	initialize_gui is
-			-- Initialize GUI.
 		indexing
+			description: "Initialize GUI."
 			external_name: "InitializeGUI"
 		local
 			a_size: SYSTEM_DRAWING_SIZE

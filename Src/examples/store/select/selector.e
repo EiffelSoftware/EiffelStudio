@@ -62,7 +62,7 @@ feature
 			create base_selection.make
 			create base_update.make
 
-			-- An Eiffel object ic created. It will be stored in the DB, 
+			-- An Eiffel object is created. It will be stored in the DB, 
 			-- through the repository
 			create book.make
 

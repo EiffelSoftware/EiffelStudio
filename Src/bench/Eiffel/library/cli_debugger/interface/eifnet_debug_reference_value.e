@@ -80,10 +80,13 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	object_value: ICOR_DEBUG_OBJECT_VALUE
+			-- Interface to ICorDebugObjectValue
 
 	value_class_token: INTEGER
+			-- class token related to `object_value'
 
 	value_module_file_name: STRING
+			-- ICorDebugModule filename related to `object_value'
 
 	dynamic_class: CLASS_C is
 			-- Find corresponding CLASS_C to type represented by `value'.
@@ -101,6 +104,7 @@ feature -- Access
 		end
 
 	dynamic_class_type: CLASS_TYPE is
+			-- Corresponding CLASS_TYPE represented by `value'.
 		do
 			Result := internal_dynamic_class_type
 			if Result = Void then

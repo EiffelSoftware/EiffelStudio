@@ -58,28 +58,28 @@ feature -- Properties
 	routine_window: ROUTINE_W is
 			-- Make a routine window 
 		do
-			Result := routine_win_mgr.top_shell_editor;
+			Result := routine_win_mgr.editor;
 			Project_tool.add_routine_entry (Result)
 		end;
 
 	class_window: CLASS_W is
 			-- Make a class window 
 		do
-			Result := class_win_mgr.top_shell_editor;
+			Result := class_win_mgr.editor;
 			Project_tool.add_class_entry (Result)
 		end;
 
 	object_window: OBJECT_W is
 			-- Make an object window
 		do
-			Result := object_win_mgr.top_shell_editor;
+			Result := object_win_mgr.editor;
 			Project_tool.add_object_entry (Result)
 		end;
 
 	explain_window: EXPLAIN_W is
 			-- Create a context editor
 		do
-			Result := explain_win_mgr.top_shell_editor;
+			Result := explain_win_mgr.editor;
 			Project_tool.add_explain_entry (Result)
 		end;
 

@@ -24,19 +24,26 @@ inherit
 			implementation
 		end;
 	WINDOWS;
-	EB_CONSTANTS
+	EB_CONSTANTS;
+	SYSTEM_CONSTANTS
 
 creation
 	make
 
 feature -- Initialization
 
-	make (a_screen: SCREEN) is
+	make (an_id: INTEGER; a_screen: SCREEN) is
 			-- Initialize Current.
 		require
 			valid_screen: a_screen /= Void
 		do
-			old_make (Interface_names.n_X_resource_name, a_screen);
+			if Platform_constants.is_windows then
+					-- For windows we need the id for the Icon
+				old_make (an_id.out, a_screen);
+			else
+					-- For unix we need this for the X resource file
+				old_make (Interface_names.n_X_resource_name, a_screen);
+			end;
 			!! associated_form.make ("", Current);
 		ensure
 			screen_set: equal (screen, a_screen)

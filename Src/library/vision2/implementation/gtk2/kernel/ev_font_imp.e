@@ -211,12 +211,11 @@ feature -- Status report
 			log_x, log_y, log_width, log_height, ink_x, ink_y,  ink_width, ink_height, a_width, a_height, left_off, right_off: INTEGER
 			a_baseline: INTEGER
 		do
-			--create a_cs.make (a_string)
 			a_cs := a_string
-				-- Change this code back when we have UTF16 support
+				-- Change this code when we have UTF16 support
 			
 			a_pango_layout := App_implementation.pango_layout
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, -1)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, font_description)
 			
 			ink_rect := feature {EV_GTK_DEPENDENT_EXTERNALS}.c_pango_rectangle_struct_allocate
@@ -258,7 +257,7 @@ feature -- Status report
 		do
 			a_cs := a_string
 			a_pango_layout := App_implementation.pango_layout
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, -1)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, font_description)
 			log_rect := reusable_pango_rectangle_struct
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_pixel_extents (a_pango_layout, default_pointer, log_rect)

@@ -16,14 +16,14 @@ feature {NONE} -- Initialization
 		deferred
 		end
 		
-        widget_make (par: EV_CONTAINER) is
-                        -- Create a widget with `par' as parent and
-                        -- call `set_default'. 
+    widget_make (par: EV_CONTAINER) is
+			-- Create a widget with `par' as parent and
+			-- call `set_default'. 
 			-- This is a general initialization for 
 			-- widgets and has to be called by all the 
 			-- widgets with parents.
-                require
-                        valid_parent: par /= Void
+		require
+			valid_parent: par /= Void
 		do
 			parent := par
 			-- For effective widgets, create widget_imp
@@ -36,8 +36,8 @@ feature {NONE} -- Initialization
 feature -- Access
 	
 	parent: EV_CONTAINER
-	
-	
+			-- Parent container of this widget
+
 feature -- Status report
 	
 	destroyed: BOOLEAN is
@@ -74,6 +74,15 @@ feature -- Status report
 			-- when the container is EV_FIXED). This is 
 			-- set in the procedure set_default
 		
+	automatic_resize: BOOLEAN
+			-- Is the widget resized automatically when the parent resize ?
+			-- In this case, automatic_position has no effect.
+			-- True by default
+
+	automatic_position: BOOLEAN
+			-- Does the widget take a new position when the parent resize ?
+			-- (If it does, its size doesn't changed).
+			-- False by default
 
 feature -- Status setting
 
@@ -128,7 +137,27 @@ feature -- Status setting
 		ensure
 			flag = insensitive	
 		end
-	
+
+	set_automatic_resize (state: BOOLEAN) is
+			-- Set `automatic_resize' at `state'.
+		require
+			exists: not destroyed
+		do
+			automatic_resize := state
+		ensure
+			automatic_resize_set: automatic_resize = state
+		end
+
+	set_automatic_position (state: BOOLEAN) is
+			-- Set `automatic_position' at `state'.
+		require
+			exists: not destroyed
+		do
+			automatic_position := state
+		ensure
+			automatic_position_set: automatic_position = state
+		end
+
 	-- What is this for?
 -- 	grab (a_cursor: SCREEN_CURSOR) is
 -- 			-- Grab the mouse and the keyboard , i.e.

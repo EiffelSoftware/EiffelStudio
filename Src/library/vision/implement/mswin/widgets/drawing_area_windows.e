@@ -210,7 +210,7 @@ feature -- Basic operations
 			if printer_dc.exists then
 				printer_dc.start_document (a_name)
 				printer_dc.start_page
-				printer_dc.set_map_mode (mm_anisotropic)
+				printer_dc.set_map_mode (mm_isotropic)
 				printer_dc.set_window_extent (width, height)
 				printer_dc.set_viewport_extent (printer_dc.device_caps (horizontal_resolution), printer_dc.device_caps (vertical_resolution))
 				painting := true

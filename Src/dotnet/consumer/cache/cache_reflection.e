@@ -113,9 +113,13 @@ feature -- Access
 			cargs: ARRAY [CONSUMED_ARGUMENT]
 			am: ARRAY [CONSUMED_ASSEMBLY]
 		do
-			ct := consumed_type (t)
+			if is_type_in_cache (t) then
+				ct := consumed_type (t)
+			end
 			ca := consumed_assembly_from_path (t.assembly.location)
-			am := assembly_mapping_array (ca)
+			if ca /= Void then
+				am := assembly_mapping_array (ca)
+			end
 			if ct /= Void and am /= Void then
 				if dotnet_name.is_equal (Constructor_name) then
 					constructors := ct.constructors
@@ -328,7 +332,6 @@ feature -- Access
 			procedures: ARRAY [CONSUMED_PROCEDURE]
 			functions: ARRAY [CONSUMED_FUNCTION]
 			constructors: ARRAY [CONSUMED_CONSTRUCTOR]
-			ca: CONSUMED_ASSEMBLY
 			i: INTEGER
 		do
 			create Result.make
@@ -343,7 +346,6 @@ feature -- Access
 				end
 			end
 			if ct /= Void then
-				ca := consumed_assembly_from_path (t.assembly.location)
 				if dotnet_feature_name.is_equal (Constructor_name) then
 					constructors := ct.constructors
 					if constructors /= Void then

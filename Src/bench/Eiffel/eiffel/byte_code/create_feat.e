@@ -4,7 +4,10 @@ class CREATE_FEAT
 
 inherit
 
-	CREATE_INFO;
+	CREATE_INFO
+		redefine
+			gen_type_string, make_gen_type_byte_code
+		end
 	SHARED_TABLE;
 	SHARED_DECLARATIONS;
 	SHARED_GENERATION_CONSTANTS;
@@ -157,6 +160,95 @@ feature -- Genericity
 
 			if gen_type /= Void then
 				node.generate_gen_type_conversion (gen_type)
+			end
+		end
+
+	gen_type_string (final_mode : BOOLEAN) : STRING is
+
+		local
+			table: POLY_TABLE [ENTRY];
+			table_name: STRING;
+			rout_info: ROUT_INFO;
+			gen_type: GEN_TYPE_I;
+		do
+			!!Result.make (0)
+			Result.append ("-13, ")
+			if context.final_mode then
+				table := Eiffel_table.poly_table (rout_id)
+				if table.has_one_type then
+						-- There is a table, but with only one type id
+					gen_type ?= table.first.type
+
+					if gen_type /= Void then
+						Result.append ("-10, ")
+						Result.append (gen_type.gen_type_string (final_mode, True))
+					else
+						Result.append_integer (table.first.feature_type_id - 1)
+						Result.append (", ")
+					end
+				else
+						-- Attribute is polymorphic
+					table_name := rout_id.type_table_name
+
+					Result.append ("RTFCID((")
+					Result.append (table_name)
+					Result.append ("-")
+					Result.append_integer (table.min_type_id - 1)
+					Result.append ("), (")
+
+					Result.append (table_name)
+					Result.append ("_gen_type")
+					Result.append ("-")
+					Result.append_integer (table.min_type_id - 1)
+					Result.append ("), ")
+					Result.append (context.Current_register.register_name)
+					Result.append ("), ")
+
+						-- Side effect. This is not nice but
+						-- unavoidable.
+						-- Mark routine id used
+					Eiffel_table.mark_used (rout_id)
+						-- Remember extern declaration
+					Extern_declarations.add_type_table (clone (table_name))
+				end
+			else
+				if
+					Compilation_modes.is_precompiling or
+					context.current_type.base_class.is_precompiled
+				then
+					Result.append ("RTWPCT(")
+					rout_info := System.rout_info_table.item (rout_id)
+					Result.append (rout_info.origin.generated_id)
+					Result.append (gc_comma)
+					Result.append_integer (rout_info.offset)
+				else
+					Result.append ("RTWCT(")
+					Result.append_integer
+						(context.current_type.associated_class_type.id.id - 1)
+					Result.append (gc_comma)
+					Result.append_integer (feature_id)
+				end
+				Result.append (gc_comma)
+				Result.append (context.Current_register.register_name)
+				Result.append ("), ")
+			end
+		end
+
+	make_gen_type_byte_code (ba : BYTE_ARRAY) is
+
+		local
+			rout_info: ROUT_INFO
+		do
+			if context.current_type.base_class.is_precompiled then
+				ba.append_short_integer (-13)
+				rout_info := System.rout_info_table.item (rout_id)
+				ba.append_integer (rout_info.origin.id)
+				ba.append_integer (rout_info.offset)
+			else
+				ba.append_short_integer (-14)
+				ba.append_short_integer
+					(context.current_type.associated_class_type.id.id - 1)
+				ba.append_integer (feature_id)
 			end
 		end
 

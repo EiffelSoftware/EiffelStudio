@@ -67,7 +67,7 @@ feature -- Byte code generation
 			ba.append_short_integer (cl_type_i.type_id - 1);
 
 			if gen_type /= Void then
-				gen_type.make_gen_type_byte_code (ba)
+				gen_type.make_gen_type_byte_code (ba, True)
 			end
 
 			ba.append_short_integer (-1);

@@ -215,7 +215,7 @@ feature -- Generic conformance
 			valid_type : gtype /= Void
 		do
 			generated_file.putstring ("int16 typarr [] = {")
-			generated_file.putstring (gtype.gen_type_string (context.final_mode))
+			generated_file.putstring (gtype.gen_type_string (context.final_mode, True))
 			generated_file.putstring ("-1};")
 			generated_file.new_line
 			generated_file.putstring ("int16 typres;")

@@ -4,7 +4,10 @@ class CREATE_CURRENT
 
 inherit
 
-	CREATE_INFO;
+	CREATE_INFO
+		redefine
+			gen_type_string, make_gen_type_byte_code
+		end
 	SHARED_GENERATION_CONSTANTS
 
 feature 
@@ -51,6 +54,23 @@ feature -- Generic conformance
 			Result.append ("Dftype(")
 			Result.append (context.Current_register.register_name)
 			Result.append_character (')')
+		end
+
+	gen_type_string (final_mode : BOOLEAN) : STRING is
+
+		do
+			!!Result.make (0)
+			Result.append_integer (-12)
+			Result.append (", Dftype(")
+			Result.append (context.Current_register.register_name)
+			Result.append ("), ")
+		end
+
+	make_gen_type_byte_code (ba : BYTE_ARRAY) is
+
+		do
+			ba.append_short_integer (-12)
+			ba.append_short_integer (0)
 		end
 
 	type_to_create : CL_TYPE_I is

@@ -430,49 +430,50 @@ feature -- Basic Operations
 	description_from_dotnet_type (a_assembly_name, a_full_dotnet_type: STRING): STRING is
 			-- Retrieve summary information for a dotnet type.
 		local
-			a_member_info: MEMBER_INFORMATION
-			a_description_string: STRING
+			l_dictionary: IDM_DICTIONARY_INTERFACE
+			l_retried: BOOLEAN
 		do
-			a_member_info := assembly_information.find_type (a_assembly_name, a_full_dotnet_type)
-			if a_member_info /= Void then
-				a_description_string := "%NSummary%N"
-				a_description_string := a_description_string + a_member_info.summary
-			else
-				a_description_string := ""
+			if not l_retried then
+				l_dictionary := dictionary_for_assembly (a_assembly_name)
+				if l_dictionary /= Void and then l_dictionary.is_initialized then
+					l_dictionary.set_type (a_full_dotnet_type)
+					Result := l_dictionary.type_documentation
+				end
+				if Result = Void then
+					Result := ""
+				end
 			end
-			Result := a_description_string
+		rescue
+			l_retried := True
+			retry
 		end
 		
 	description_from_dotnet_feature (a_assembly_name, a_full_dotnet_feature, a_feature_signature: STRING): STRING is
 			-- Retrieve summary information for a dotnet feature.
 		local
-			a_member_info: MEMBER_INFORMATION
-			a_description_string: STRING
+			l_dictionary: IDM_DICTIONARY_INTERFACE
+			l_type_name, l_feature_name: STRING
+			l_index: INTEGER
+			l_retried: BOOLEAN
 		do
-			a_member_info := assembly_information.find_type (a_assembly_name, a_full_dotnet_feature + a_feature_signature)
-			if a_member_info /= Void then
-				a_description_string := "%NSummary%N"
-				a_description_string := a_description_string + a_member_info.summary
-				
-				from
-					a_member_info.parameters.start
-					if a_member_info.parameters.count > 0 then
-						a_description_string := a_description_string + "%N%NParameters:%N"
+			if not l_retried then
+				l_dictionary := dictionary_for_assembly (a_assembly_name)
+				if l_dictionary /= Void and then l_dictionary.is_initialized then
+					l_index := a_full_dotnet_feature.last_index_of ('.', a_full_dotnet_feature.count)
+					if l_index > 0 then
+						l_type_name := a_full_dotnet_feature.substring (1, l_index - 1)
+						l_feature_name := a_full_dotnet_feature.substring (l_index + 1, a_full_dotnet_feature.count)
+						l_dictionary.set_type (l_type_name)
+						Result := l_dictionary.feature_documentation (l_feature_name, a_feature_signature)
 					end
-				until
-					a_member_info.parameters.off
-				loop
-					a_description_string := a_description_string + a_member_info.parameters.item.name + ": " + a_member_info.parameters.item.description + "%N"
-					a_member_info.parameters.forth
 				end
-				
-				if not a_member_info.returns.is_equal ("") then
-					a_description_string := a_description_string + "%N%NReturns:%N" + a_member_info.returns
+				if Result = Void then
+					Result := ""
 				end
-			else
-				a_description_string := ""
 			end
-			Result := a_description_string
+		rescue
+			l_retried := True
+			retry
 		end
 
 feature {NONE} -- Implementation
@@ -482,11 +483,50 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (10)
 		end
-		
-	assembly_information: ASSEMBLY_INFORMATION is
-			-- 
+
+	Documentation_manager: DOCUMENTATION_MANAGER_PROXY is
+			-- 	Documentation manager
 		once
-			create Result.make (Eiffel_project.system.System.clr_runtime_version)
+			create Result.make
 		end
 
+	dictionary_for_assembly (a_assembly_name: STRING): IDM_DICTIONARY_INTERFACE is
+			-- Dictionary if any for assembly `a_assembly_name'.
+			-- `a_assembly_name' may be a path (for local assemblies) or a simple name
+			-- (for EAC assemblies)
+		require
+			non_void_assembly_name: a_assembly_name /= Void
+		local
+			l_xml_file, l_dll_file, l_suffix, l_framework_path: STRING
+		do
+			if a_assembly_name.count > 3 then
+				l_suffix := a_assembly_name.substring (a_assembly_name.count - 3, a_assembly_name.count)
+				if l_suffix.is_equal (".dll") or l_suffix.is_equal (".exe") then
+					l_xml_file := a_assembly_name.substring (1, a_assembly_name.count - 4) + ".xml"
+					if (create {RAW_FILE}.make (l_xml_file)).exists then
+						l_dll_file := a_assembly_name
+					end
+				end
+			end
+			if l_dll_file = Void then
+				-- Try with PIA assembly
+				l_framework_path := (create {IL_ENVIRONMENT}.make (Eiffel_project.system.System.clr_runtime_version)).dotnet_framework_path
+				create l_xml_file.make (l_framework_path.count + 1 + a_assembly_name.count + 4)
+				l_xml_file.append (l_framework_path)
+				l_xml_file.append_character ('\')
+				l_xml_file.append (a_assembly_name)
+				l_xml_file.append (".xml")
+				if (create {RAW_FILE}.make (l_xml_file)).exists then
+					create l_dll_file.make (l_framework_path.count + 1 + a_assembly_name.count + 4)
+					l_dll_file.append (l_framework_path)
+					l_dll_file.append_character ('\')
+					l_dll_file.append (a_assembly_name)
+					l_dll_file.append (".dll")
+				end
+			end
+			if l_dll_file /= Void then
+				Result := Documentation_manager.dictionary (l_dll_file)
+			end
+		end
+		
 end -- class SYSTEM_BROWSER

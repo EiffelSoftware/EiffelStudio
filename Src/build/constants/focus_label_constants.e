@@ -67,7 +67,6 @@ feature
 	reset_label: STRING is "Reset commands"
 	return_label: STRING is "Return"
 	save_project_label: STRING is "Save project"
-	save_project_as_label: STRING is "Save project as..."
 	scale_label: STRING is "Scale"
 	scroll_label: STRING is "Scroll"
 	self_label: STRING is "Self"

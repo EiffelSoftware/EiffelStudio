@@ -326,11 +326,6 @@ feature -- General Pixmaps
 			Result := symbol_file_content ("save")
 		end;
 
- 	Save_as_pixmap: PIXMAP is
- 		once
- 			Result := symbol_file_content ("save_as")
-		end;
-
 	Selected_alignment_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("salign")

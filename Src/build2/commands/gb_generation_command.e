@@ -90,7 +90,7 @@ feature -- Access
 				titled_window_object ?= objects.item
 				objects.forth
 			end
-				-- Only executable if there is at least on window within the system.
+				-- Only executable if there is at least one window within the system.
 			Result := system_status.project_open and titled_window_object /= Void
 		end
 

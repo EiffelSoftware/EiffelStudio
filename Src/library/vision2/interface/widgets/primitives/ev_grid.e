@@ -42,6 +42,18 @@ feature -- Access
 			row_not_void: Result /= Void
 		end
 
+	visible_column (i: INTEGER): EV_GRID_COLUMN is
+			-- `i'-th visible column
+		require
+			not_destroyed: not is_destroyed
+			i_positive: i > 0
+			i_not_greater_than_visible_column_count: i <= visible_column_count
+		do
+			Result := implementation.visible_column (i)
+		ensure
+			column_not_void: Result /= Void
+		end
+
 	column (a_column: INTEGER): EV_GRID_COLUMN is
 			-- Column number `a_column'
 		require
@@ -352,6 +364,7 @@ feature -- Element change
 			implementation.insert_new_column (a_index)
 		ensure
 			column_count_set: column_count = old column_count + 1
+			visible_column_count_set: visible_column_count = old visible_column_count + 1
 		end
 
 	move_row (i, j: INTEGER) is
@@ -432,6 +445,16 @@ feature -- Measurements
 			Result := implementation.column_count
 		ensure
 			result_positive: Result >= 1
+		end
+		
+	visible_column_count: INTEGER is
+			-- Number of visible columns in Current
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.visible_column_count
+		ensure
+			result_valid: Result >= 0 and Result <= column_count
 		end
 
 	row_count: INTEGER is

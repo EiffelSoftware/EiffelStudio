@@ -17,7 +17,7 @@ inherit
 		redefine
 			element,
 			page
-		end;
+		end
 	CAT_ADD_ELEMENT
 		redefine
 			undo, redo, catalog_work,
@@ -25,49 +25,49 @@ inherit
 			page
 		select
 			undo, redo, catalog_work
-		end;
+		end
 	WINDOWS
 	SHARED_INSTANTIATOR
 	
 feature {NONE}
 
-	element: CMD;
+	element: CMD
 
-	page: COMMAND_PAGE;
+	page: COMMAND_PAGE
 
 	catalog: COMMAND_CATALOG is
 		do
 			Result := command_catalog
-		end;
+		end
 
 	reset_element is
 		do
 			if element.command_editor /= Void then
-				element.command_editor.clear;
+				element.command_editor.clear
 				element.reset
 			end
-		end;
+		end
 
 	catalog_work is
 		do
-			parent_work;
-			command_instantiator.add_command (element)
-		end;
+			parent_work
+			command_instantiator_generator.add_command (element)
+		end
 
 feature
 
 	redo is
 		do
 			parent_redo
-			element.recreate_class;
-			command_instantiator.add_command (element)
-		end;
+			element.recreate_class
+			command_instantiator_generator.add_command (element)
+		end
 
 	undo is
 		do
-			parent_undo;
-			element.remove_class;
-			command_instantiator.remove_command (element)
-		end;
+			parent_undo
+			element.remove_class
+			command_instantiator_generator.remove_command (element)
+		end
 			
 end

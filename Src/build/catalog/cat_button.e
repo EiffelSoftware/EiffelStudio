@@ -1,8 +1,15 @@
+indexing
+	description: "A button representing a category in a catalog."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
+
 class CAT_BUTTON
 
 inherit
 
 	COMMAND
+
 	EB_BUTTON
 		export {CAT_PAGE}
 			set_symbol
@@ -14,19 +21,19 @@ creation
 
 feature {NONE}
 
-	catalog_page: CAT_PAGE [DATA];
+	catalog_page: CAT_PAGE [DATA]
 
-	make (cat_page: like catalog_page; 
+	make (cat_page: like catalog_page ;
 			a_parent: COMPOSITE; a_symbol: PIXMAP) is
 		require
-			valid_cat_page: cat_page /= Void;
+			valid_cat_page: cat_page /= Void
 			valid_a_parent: a_parent /= Void
 		do
 			catalog_page := cat_page
 			symbol := a_symbol
 			make_visible (a_parent)
 			add_activate_action (Current, Void)
-		end;
+		end
 
 	create_focus_label is
 		do
@@ -39,7 +46,8 @@ feature {NONE}
 	execute (arg: ANY) is
 		do
 			catalog_page.select_it
-		end;
+		end
   
  	symbol: PIXMAP
+
 end

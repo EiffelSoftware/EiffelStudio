@@ -48,12 +48,11 @@ feature -- Initialization
 
 	make_new (project_dir: PROJECT_DIRECTORY) is
 			-- Create an Eiffel Project. 
-			-- Also create the sub-directories (EIFGEN, W_code ...)
+			-- Also create, if needed, the sub-directories (EIFGEN, W_code ...)
 			-- (If a read-write error occured you must exit from
 			-- application.).
 		require
 			not_initialized: not initialized
-			is_new: project_dir.is_new
 			is_readable: project_dir.is_base_readable
 			is_writable: project_dir.is_base_writable
 			is_executable: project_dir.is_base_executable

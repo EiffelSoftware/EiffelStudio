@@ -18,8 +18,7 @@ inherit
 	PROJECT_CONTEXT
 		rename
 			compilation_path as shared_compilation_path,
-			precomp_eif as shared_precomp_eif,
-			project_txt_name as shared_project_txt_name
+			precomp_eif as shared_precomp_eif
 		export
 			{NONE} all
 		end;
@@ -92,14 +91,6 @@ feature -- Access
 	licensed: BOOLEAN
 			-- Is this precompilation protected by a license?
 
-	project_txt_name: FILE_NAME is
-			-- Full name of the project.txt file
-		do
-			!! Result.make_from_string (name);
-			Result.extend (Eiffelgen);
-			Result.set_file_name (Project_txt);
-		end;
-
 	project_eif: FILE_NAME is
 			-- Full name of the file where the
 			-- workbench is stored
@@ -112,7 +103,7 @@ feature -- Access
 	project_eif_file: PROJECT_EIFFEL_FILE is
 			-- File where the workbench is stored
 		do
-			!! Result.make (project_eif, Project_txt_name)
+			!! Result.make (project_eif)
 		end
 
 	precomp_eif: FILE_NAME is
@@ -127,7 +118,7 @@ feature -- Access
 	precomp_eif_file: PROJECT_EIFFEL_FILE is
 			-- File where the precompilation information is stored
 		do
-			!! Result.make (precomp_eif, Project_txt_name)
+			!! Result.make (precomp_eif)
 		end
 
 	precompiled_preobj: FILE_NAME is
@@ -164,7 +155,9 @@ feature -- Check
 			file: PROJECT_EIFFEL_FILE
 		do
 			file := project_eif_file;
+			file.open_read
 			file.check_version_number (precomp_id);
+			file.close
 			if file.is_incompatible then
 				!! vd52;
 				vd52.set_path (compilation_path);

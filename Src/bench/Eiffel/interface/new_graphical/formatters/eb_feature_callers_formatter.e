@@ -32,10 +32,10 @@ feature -- Properties
 	to_show_all_callers: BOOLEAN
 			-- Is the format going to show all callers?
 
---	symbol: EV_PIXMAP is 
---		once 
---			Result := Pixmaps.bm_Showcallers 
---		end
+	symbol: EV_PIXMAP is 
+		once 
+			Result := Pixmaps.bm_Showcallers 
+		end
  
 feature -- Executions
 
@@ -83,6 +83,8 @@ feature {NONE} -- Properties
 				Result := Interface_names.t_Callers
 			end
 		end
+
+	post_fix: STRING is "fcl"
 
 	create_structured_text (f: FEATURE_STONE): STRUCTURED_TEXT is
 			-- Display Senders of `f`.

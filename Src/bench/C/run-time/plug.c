@@ -10,6 +10,10 @@
 	A set of routines to plug the run-time in the generated C code.
 */
 
+/*
+doc:<file name="plug.c" header="eif_plug.h" version="$Id$" summary="Set of routines to plug run-time into generated C code">
+*/
+
 #include "eif_portable.h"
 #include "eif_eiffel.h"
 #include "eif_project.h" /* for egc... */
@@ -26,6 +30,7 @@
 #include "eif_hashin.h"
 #endif
 #include "eif_bits.h"
+#include "rt_struct.h"
 #include "x2c.h"		/* For macro LNGPAD */
 #include <string.h>
 #include "rt_assert.h"		/* For assertions checkings. */
@@ -41,13 +46,15 @@ rt_private char *rcsid =
 #endif
 
 #ifndef EIF_THREADS
-/* The nested call flag is set to 1 when a feature call is made within a
- * dot expression. We need to check the invariant before and after the call
- * on those features. This global variable is saved immediately in a local
- * variable upon entrance in the feature, so this is merely an added optional
- * parameter.
- */
-rt_public int nstcall = 0;	/* Is current call a nested one? */ /* %%ss mt */
+/*
+doc:	<attribute name="nstcall" return_type="int" export="public">
+doc:		<summary>Is current call a nested one? The nested call flag is set to 1 when a feature call is made within a dot expression. We need to check the invariant before and after the call on those features. This global variable is saved immediately in a local variable upon entrance in the feature, so this is merely an added optional parameter.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:	</attribute>
+*/
+rt_public int nstcall = 0;
 #endif /* EIF_THREADS */
 
 rt_private void recursive_chkinv(int dtype, EIF_REFERENCE obj, int where);		/* Internal invariant control loop */
@@ -149,7 +156,7 @@ rt_public EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, char **items, lo
 
 	stripped_nbr = nbr_attr - nbr;
 
-	typres = eif_typeof_array_of((int16)egc_any_dtype);
+	typres = eif_typeof_array_of(egc_any_dtype);
 	array = emalloc((uint32)typres);	/* If we return, it succeeded */
 	nstcall = 0;
 	(egc_arrmake)(array, (EIF_INTEGER) 1, stripped_nbr);	
@@ -298,9 +305,16 @@ rt_public EIF_INTEGER sp_count(EIF_REFERENCE spobject)
  */
 
 #ifndef EIF_THREADS
-rt_private char *inv_mark_tablep = (char * ) 0;	/* Marking table to avoid checking the same 
-									 * invariant several times
-									 */ /* %%ss mt renamed conflicting with interp.c */
+/*
+doc:	<attribute name="inv_mark_tablep" return_type="char *" export="private">
+doc:		<summary>Marking table to avoid checking the same invariant several times.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:	</attribute>
+*/
+rt_private char *inv_mark_tablep = (char * ) 0;
 #endif /* EIF_THREADS */
 
 rt_public void chkinv (EIF_REFERENCE obj, int where)
@@ -586,3 +600,7 @@ void rt_norout(EIF_REFERENCE dummy)
 }
 
 #endif
+
+/*
+doc:</file>
+*/

@@ -197,32 +197,6 @@ EIF_POINTER an_atom;
 	XmAddWMProtocols ((Widget) shell, &atom, 1);
 }
 
-void xm_text_set_do_it (event_ptr, b)
-EIF_POINTER event_ptr;
-EIF_BOOLEAN b;
-{
-	/*
-	 * Allows or forbids the cursor to move or the text to be modified
-	 * during a `motion' or a `modify' action.
-	*/
-	if (b) 
-		((XmTextVerifyCallbackStruct *) event_ptr)->doit = True;
-	else ((XmTextVerifyCallbackStruct *) event_ptr)->doit = False;
-}
-
-void xm_text_wcs_set_do_it (event_ptr, b)
-EIF_POINTER event_ptr;
-EIF_BOOLEAN b;
-{
-	/*
-	 * Allows or forbids the cursor to move or the text to be modified
-	 * during a `motion' or a `modify' action.
-	 */
-	if (b) 
-		((XmTextVerifyCallbackStructWcs *) event_ptr)->doit = True;
-	else ((XmTextVerifyCallbackStructWcs *) event_ptr)->doit = False;
-}
-
 void xm_font_list_entry_free (an_entry)
 EIF_POINTER an_entry;
 {

@@ -194,7 +194,7 @@ feature -- Access
 			exp: STRING
 		do
 			if a_text /= Void then
-				exp := clone (a_text)
+				exp := a_text.twin
 					-- Replace "%N" with "%R%N" for Windows.
 				convert_string (exp)
 			end
@@ -308,7 +308,7 @@ feature -- Status Settings
 			previous_caret_position: INTEGER
 			a_string: STRING
 		do
-			a_string := clone (txt)
+			a_string := txt.twin
 			previous_caret_position := internal_caret_position
 			internal_set_caret_position (wel_text_length)
 				-- Replace "%N" with "%R%N" for Windows.

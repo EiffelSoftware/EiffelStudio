@@ -140,7 +140,7 @@ feature -- Access
 				internal_selected_items := retrieve_selected_items
 				internal_selected_items_uptodate := True
 			end
-			Result := clone (internal_selected_items)
+			Result := internal_selected_items.twin
 		ensure then
 			valid_result: Result.is_equal(retrieve_selected_items)
 		end
@@ -283,7 +283,7 @@ feature -- Status setting
 			if is_sensitive then
 					-- Copy `selected_items' into `selected_items_at_disable_sensitive'
 				if selected_items /= Void then
-					selected_items_at_disable_sensitive := clone (selected_items)
+					selected_items_at_disable_sensitive := selected_items.twin
 				end
 				Precursor
 					-- We now remove the selection on all selected items.

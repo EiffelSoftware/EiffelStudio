@@ -982,7 +982,7 @@ feature {NONE} -- Implementation
 			if current_minimums_total < minimum_value - (length - 1) * spacing then
 					-- Set step to the `width' + `spacing'
 				step := (minimum_value - (length - 1) * spacing)
-				clone_min := clone (minimums)
+				clone_min := minimums.twin
 
 					-- Reduce step by the total values contained in `minimums'
 					-- between the `first' + 1 and `last'. 

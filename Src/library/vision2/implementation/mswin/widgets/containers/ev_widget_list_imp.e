@@ -152,7 +152,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			container: EV_CONTAINER_IMP
 			old_cursor: like cursor
 		do
-			old_cursor := clone (cursor)
+			old_cursor := cursor.twin
 			from
 				go_i_th (1)
 			until

@@ -118,7 +118,7 @@ feature {EV_CONTAINER_IMP, EV_MENU_ITEM_LIST_IMP, EV_POPUP_MENU_HANDLER} -- WEL 
 				until
 					ev_children.after
 				loop
-					menu_text := clone (ev_children.item.text)
+					menu_text := ev_children.item.text.twin
 					if menu_text /= Void then
 						menu_text.to_lower
 						if menu_text.count > shortcut_text.count and then

@@ -110,7 +110,7 @@ feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
 			reset_bitmap_content
 			reset_resource_content
 
-			pixmap_filename := clone (file_name)
+			pixmap_filename := file_name.twin
 			update_needed := True
 		end
 
@@ -1112,7 +1112,9 @@ feature {EV_PIXMAP_I, EV_PIXMAP_IMP_STATE} -- Duplication
 
 			other_simple_imp ?= other_interface.implementation
 			if other_simple_imp /= Void then
-				pixmap_filename := clone (other_simple_imp.pixmap_filename)
+				if other_simple_imp.pixmap_filename /= Void then
+					pixmap_filename := other_simple_imp.pixmap_filename.twin
+				end
 				private_width := other_simple_imp.private_width
 				private_height := other_simple_imp.private_height
 				private_bitmap := other_simple_imp.private_bitmap

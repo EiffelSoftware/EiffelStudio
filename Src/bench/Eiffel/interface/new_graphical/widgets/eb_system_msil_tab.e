@@ -38,6 +38,12 @@ feature -- MSIL options
 
 	dll_check: EV_CHECK_BUTTON
 			-- Will generated assembly be a DLL?
+			
+	cls_compliant_check: EV_CHECK_BUTTON
+			-- Will generated assembly be CLS compliant?
+			
+	cls_compliant_name_check: EV_CHECK_BUTTON
+			-- Will names generated in assembly follow the CLS guideline?
 
 feature -- Assembly information
 
@@ -80,11 +86,14 @@ feature -- Store/Retrieve
 
 			defaults.finish
 
-			defaults.extend (new_special_option_sd ("il_verifiable", Void, verifiable_check.is_selected))
+			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.il_verifiable, Void, verifiable_check.is_selected))
+			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.cls_compliant, Void, cls_compliant_check.is_selected))
+			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.cls_compliant_name, Void, cls_compliant_name_check.is_selected))
+			
 			if dll_check.is_selected then
-				defaults.extend (new_special_option_sd ("msil_generation_type", "dll", False))
+				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.msil_generation_type, "dll", False))
 			else
-				defaults.extend (new_special_option_sd ("msil_generation_type", "exe", False))
+				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.msil_generation_type, "exe", False))
 			end
 
 			if not assembly_list.is_empty then
@@ -196,18 +205,21 @@ feature {NONE} -- Filling
 			val := a_opt.value
 			if opt.is_free_option then
 				free_option ?= opt
-				if free_option.code = free_option.il_verifiable then
-					enable_select (verifiable_check)
-					is_item_removable := True
-				elseif free_option.code = free_option.msil_generation_type then
-					if val.value.is_equal (new_id_sd ("dll", True)) then 
-						enable_select (dll_check)
-					end
-					is_item_removable := True
+				is_item_removable := True
+				inspect free_option.code
+				when feature {FREE_OPTION_SD}.Il_verifiable then
+					set_selected (verifiable_check, val.is_yes)
+				when feature {FREE_OPTION_SD}.Msil_generation_type then
+					set_selected (dll_check, val.value.is_equal (new_id_sd ("dll", True))) 
+				when feature {FREE_OPTION_SD}.Cls_compliant then
+					set_selected (cls_compliant_check, val.is_yes)
+				when feature {FREE_OPTION_SD}.Cls_compliant_name then
+					set_selected (cls_compliant_name_check, val.is_yes)
+				else
+					is_item_removable := False
 				end
 			end
 		end
-
 
 feature {NONE} -- Filling AST
 
@@ -225,7 +237,9 @@ feature -- Initialization
 			-- Set graphical elements to their default value.
 		do
 			Precursor {EB_SYSTEM_TAB}
-			disable_select (verifiable_check)
+			enable_select (cls_compliant_check)
+			enable_select (cls_compliant_name_check)
+			enable_select (verifiable_check)
 			disable_select (dll_check)
 			assembly_list.reset
 
@@ -235,8 +249,10 @@ feature -- Initialization
 			culture_combo.disable_sensitive
 			compatibility_combo.disable_sensitive
 		ensure then
-			verifiable_check_not_selected: not verifiable_check.is_selected
+			verifiable_check_selected: verifiable_check.is_selected
 			dll_check_not_selected: not dll_check.is_selected
+			cls_compliant_check_selected: cls_compliant_check.is_selected
+			cls_compliant_name_check_selected: cls_compliant_name_check.is_selected
 			assembly_list_empty: assembly_list.is_empty
 		end
 
@@ -244,6 +260,8 @@ feature {NONE} -- Initialization
 
 	make (top: like system_window) is
 			-- Create widget corresponding to `General' tab in notebook.
+		require
+			top_not_void: top /= Void
 		local
 			assembly_frame: EV_FRAME
 		do
@@ -268,6 +286,9 @@ feature {NONE} -- Initialization
 
 	msil_info_frame (st: STRING): EV_FRAME is
 			-- MSIL information about current assembly.
+		require
+			st_not_void: st /= Void
+			st_not_empty: not st.is_empty
 		local
 			vbox: EV_VERTICAL_BOX
 			label: EV_LABEL
@@ -326,6 +347,9 @@ feature {NONE} -- Initialization
 
 	options_frame (st: STRING): EV_FRAME is
 			-- MSIL specific options
+		require
+			st_not_void: st /= Void
+			st_not_empty: not st.is_empty
 		local
 			vbox: EV_VERTICAL_BOX
 		do
@@ -333,6 +357,8 @@ feature {NONE} -- Initialization
 			create vbox
 			vbox.set_border_width (Layout_constants.Small_border_size)
 
+			cls_compliant_check := new_check_button (vbox, "CLS compliant")
+			cls_compliant_name_check := new_check_button (vbox, "Follow CLS naming guidelines")
 			verifiable_check := new_check_button (vbox, "Verifiable")
 			dll_check := new_check_button (vbox, "Generate DLL")
 

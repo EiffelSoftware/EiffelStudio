@@ -114,10 +114,10 @@ feature -- Store/Retrieve
 			store_arguments (root_ast)
 			store_debug (root_ast)
 
-			defaults.extend (new_special_option_sd ("line_generation", Void, line_generation.is_selected))
+			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.line_generation, Void, line_generation.is_selected))
 
 			if profile_check.is_sensitive then
-				defaults.extend (new_special_option_sd ("profile", Void, profile_check.is_selected))
+				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.profile, Void, profile_check.is_selected))
 			end
 
 			if trace_check.is_sensitive then
@@ -126,7 +126,7 @@ feature -- Store/Retrieve
 
 			wd := working_directory.path
 			if not wd.is_empty then
-				defaults.extend (new_special_option_sd ("working_directory", wd, True))
+				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.working_directory, wd, True))
 			end
 			if Workbench.system_defined then
 				Lace.set_application_working_directory (wd)
@@ -258,7 +258,9 @@ feature {NONE} -- Filling GUI
 			elseif opt.is_free_option then
 				free_option ?= opt
 				is_item_removable := True
-				if free_option.code = free_option.arguments then
+				inspect
+					free_option.code
+				when feature {FREE_OPTION_SD}.arguments then
 					argument_value := val.value
 					if argument_value.is_empty or else 
 						argument_value.is_equal (" ") or else
@@ -270,13 +272,13 @@ feature {NONE} -- Filling GUI
 						arguments.extend (create {EV_LIST_ITEM}.make_with_text (argument_value))
 					end
 
-				elseif free_option.code = free_option.line_generation then
+				when feature {FREE_OPTION_SD}.line_generation then
 					set_selected (line_generation, val.is_yes)
 
-				elseif free_option.code = free_option.working_directory then
+				when feature {FREE_OPTION_SD}.working_directory then
 					working_directory.set_path (val.value)
 
-				elseif free_option.code = free_option.profile then
+				when feature {FREE_OPTION_SD}.profile then
 					set_selected (profile_check, val.is_yes)
 				else
 					is_item_removable := False
@@ -337,7 +339,7 @@ feature {NONE} -- Filling AST
 			
 			defaults := root_ast.defaults
 				-- Store command line arguments in Ace file.
-			defaults.extend (new_special_option_sd ("arguments", argument_text, True))
+			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.arguments, argument_text, True))
 
 			if arguments.count > 0 then
 				from
@@ -347,7 +349,7 @@ feature {NONE} -- Filling AST
 				loop
 					current_text := escape_argument (arguments.item.text)
 					if not current_text.is_equal (argument_text) then
-						defaults.extend (new_special_option_sd ("arguments", current_text, True))
+						defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.arguments, current_text, True))
 					end
 					arguments.forth
 				end

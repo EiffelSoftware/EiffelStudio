@@ -114,53 +114,53 @@ feature -- Store/Retrieve
 			
 			defaults.finish
 			
-			defaults.extend (new_special_option_sd ("check_vape", Void, vape_check.is_selected))
-			defaults.extend (new_special_option_sd ("console_application", Void,
+			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Check_vape, Void, vape_check.is_selected))
+			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Console_application, Void,
 				console_check.is_selected))
 
 			if address_expression_check.is_sensitive then
-				defaults.extend (new_special_option_sd ("address_expression", Void,
+				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.address_expression, Void,
 					address_expression_check.is_selected))
 			end
 
 			if array_optimization_check.is_sensitive then
-				defaults.extend (new_special_option_sd ("array_optimization", Void,
+				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.array_optimization, Void,
 					array_optimization_check.is_selected))
 			end
 
 			if dead_code_removal_check.is_sensitive then
-				defaults.extend (new_special_option_sd ("dead_code_removal", Void,
+				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Dead_code, Void,
 					dead_code_removal_check.is_selected))
 			end
 
 			if dynamic_rt_check.is_sensitive then
-				defaults.extend (new_special_option_sd ("dynamic_runtime", Void,
+				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.dynamic_runtime, Void,
 					dynamic_rt_check.is_selected))
 			end
 
 			if exception_trace_check.is_sensitive then
-				defaults.extend (new_special_option_sd ("exception_trace", Void,
+				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Exception_stack_managed, Void,
 					exception_trace_check.is_selected))
 			end
 
 			if inlining_check.is_sensitive then
-				defaults.extend (new_special_option_sd ("inlining", Void,
+				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.inlining, Void,
 					inlining_check.is_selected))
 				if inlining_check.is_selected then
-					defaults.extend (new_special_option_sd ("inlining_size",
+					defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.inlining_size,
 						inlining_size_field.text, True))
 				end
 			end
 
 			if mt_runtime_check.is_sensitive then
-				defaults.extend (new_special_option_sd ("multithreaded", Void,
+				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.multithreaded, Void,
 					mt_runtime_check.is_selected))
 				if shared_library_check.is_selected then
 					l_name := shared_library_field.text
 					if l_name.is_empty then
 						l_name := " "
 					end
-					defaults.extend (new_special_option_sd ("shared_library_definition",
+					defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.shared_library_definition,
 						l_name, True))
 				end
 			end
@@ -226,40 +226,30 @@ feature {NONE} -- Filling
 			if opt.is_free_option then
 				free_option ?= opt
 				is_item_removable := True
-				if free_option.code = free_option.address_expression then
+				inspect free_option.code
+				when feature {FREE_OPTION_SD}.address_expression then
 					set_selected (address_expression_check, val.is_yes)
-					
-				elseif free_option.code = free_option.array_optimization then
+				when feature {FREE_OPTION_SD}.array_optimization then
 					set_selected (array_optimization_check, val.is_yes)
-				
-				elseif free_option.code = free_option.console_application then
+				when feature {FREE_OPTION_SD}.console_application then
 					set_selected (console_check, val.is_yes)
-
-				elseif free_option.code = free_option.dead_code then
+				when feature {FREE_OPTION_SD}.dead_code then
 					set_selected (dead_code_removal_check, val.is_yes)
-									
-				elseif free_option.code = free_option.dynamic_runtime then
+				when feature {FREE_OPTION_SD}.dynamic_runtime then
 					set_selected (dynamic_rt_check, val.is_yes)
-					
-				elseif free_option.code = free_option.exception_stack_managed then
+				when feature {FREE_OPTION_SD}.exception_stack_managed then
 					set_selected (exception_trace_check, val.is_yes)
-				
-				elseif free_option.code = free_option.inlining then
+				when feature {FREE_OPTION_SD}.inlining then
 					set_selected (inlining_check, val.is_yes)
-				
-				elseif free_option.code = free_option.inlining_size then
+				when feature {FREE_OPTION_SD}.inlining_size then
 					inlining_size_field.set_text (val.value)
-
-				elseif free_option.code = free_option.multithreaded then
+				when feature {FREE_OPTION_SD}.multithreaded then
 					set_selected (mt_runtime_check, val.is_yes)
-								
-				elseif free_option.code = free_option.shared_library_definition then
+				when feature {FREE_OPTION_SD}.shared_library_definition then
 					enable_select (shared_library_check)
 					shared_library_field.set_text (val.value)
-
-				elseif free_option.code = free_option.check_vape then
+				when feature {FREE_OPTION_SD}.check_vape then
 					set_selected (vape_check, val.is_yes)
-					
 				else
 					is_item_removable := False		
 				end
@@ -356,10 +346,10 @@ feature {NONE} -- Initialization
 			c_specific_widgets.extend (inlining_size_field)
 			
 				-- Add widgets that can be set only once
-			set_only_once_widgets.extend (address_expression_check)
-			set_only_once_widgets.extend (dynamic_rt_check)
-			set_only_once_widgets.extend (mt_runtime_check)
-			set_only_once_widgets.extend (vape_check)
+			widgets_set_before_is_already_compiled.extend (dynamic_rt_check)
+			widgets_set_before_is_already_compiled.extend (mt_runtime_check)
+			widgets_set_before_has_compilation_started.extend (address_expression_check)
+			widgets_set_before_has_compilation_started.extend (vape_check)
 		end
 	
 	ace_frame (st: STRING): EV_FRAME is

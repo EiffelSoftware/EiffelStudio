@@ -193,8 +193,11 @@ feature -- Content initialization
 		do
 			l_tab_list := tab_list
 			l_tab_list.do_all ({EB_SYSTEM_TAB}~reset)
+			if Workbench.has_compilation_started then
+				l_tab_list.do_all ({EB_SYSTEM_TAB}~disable_widgets_set_before_has_compilation_started)
+			end
 			if Workbench.is_already_compiled then
-				l_tab_list.do_all ({EB_SYSTEM_TAB}~disable_set_only_once_widgets)
+				l_tab_list.do_all ({EB_SYSTEM_TAB}~disable_widgets_set_before_is_already_compiled)
 			end
 			is_content_valid := False
 		end

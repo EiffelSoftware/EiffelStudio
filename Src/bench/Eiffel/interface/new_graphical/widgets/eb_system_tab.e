@@ -18,7 +18,8 @@ feature -- Initialization
 		do
 			create msil_specific_widgets.make (10)
 			create c_specific_widgets.make (10)
-			create set_only_once_widgets.make (10)
+			create widgets_set_before_has_compilation_started.make (10)
+			create widgets_set_before_is_already_compiled.make (10)
 		end
 
 	reset is
@@ -52,9 +53,13 @@ feature -- Access
 			-- Not sensitive when MSIL generation is chosen
 			-- from EB_SYSTEM_GENERAL_TAB.
 
-	set_only_once_widgets: ARRAYED_LIST [EV_WIDGET]
+	widgets_set_before_has_compilation_started: ARRAYED_LIST [EV_WIDGET]
 			-- List of widgets that can be set only once
-			-- before first Eiffel compilation.
+			-- before the first Eiffel compilation started.
+			
+	widgets_set_before_is_already_compiled: ARRAYED_LIST [EV_WIDGET]
+			-- List of widgets that can be set only once
+			-- before the end of the first compilation.
 			
 feature -- Status
 
@@ -80,11 +85,18 @@ feature -- Status setting
 			c_specific_widgets.do_all ({EV_WIDGET}~enable_sensitive)
 		end
 
-	disable_set_only_once_widgets is
+	disable_widgets_set_before_has_compilation_started is
 			-- Disable all widgets that can be set only once during
 			-- a project lifetime.
 		do
-			set_only_once_widgets.do_all ({EV_WIDGET}~disable_sensitive)
+			widgets_set_before_has_compilation_started.do_all ({EV_WIDGET}~disable_sensitive)
+		end
+
+	disable_widgets_set_before_is_already_compiled is
+			-- Disable all widgets that can be set only once during
+			-- a project lifetime.
+		do
+			widgets_set_before_is_already_compiled.do_all ({EV_WIDGET}~disable_sensitive)
 		end
 		
 feature -- Setting
@@ -274,6 +286,8 @@ feature -- Convenience
 			create Result.make_with_text (st)
 			box.extend (Result)
 			box.disable_item_expand (Result)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	new_radio_button (box: EV_BOX; st: STRING): EV_RADIO_BUTTON is
@@ -285,20 +299,25 @@ feature -- Convenience
 			create Result.make_with_text (st)
 			box.extend (Result)
 			box.disable_item_expand (Result)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature {NONE} -- Generation of AST
 
-	new_special_option_sd (type: STRING; a_name: STRING; flag: BOOLEAN): D_OPTION_SD is
+	new_special_option_sd (type_id: INTEGER; a_name: STRING; flag: BOOLEAN): D_OPTION_SD is
 			-- Create new `D_OPTION_SD' node corresponding to a free
 			-- option clause. If `a_name' Void then it is `free_option (flag)'.
 		require
-			type_not_void: type /= Void
+			valid_type_id: type_id > 0
+			type_id_big_enough: type_id < feature {FREE_OPTION_SD}.free_option_count
 		local
 			argument_sd: FREE_OPTION_SD
 			v: OPT_VAL_SD
+			l_type_name: STRING
 		do
-			argument_sd := new_free_option_sd (new_id_sd (type, False))
+			l_type_name := free_option_names.item (type_id)
+			argument_sd := new_free_option_sd (new_id_sd (l_type_name, False))
 			if a_name /= Void then
 				v := new_name_sd (new_id_sd (a_name, True))
 			else
@@ -309,10 +328,14 @@ feature {NONE} -- Generation of AST
 				end
 			end
 			Result := new_d_option_sd (argument_sd, v)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	new_lace_list (list: EV_LIST): LACE_LIST [ID_SD] is
 			-- Convert `list' into `LACE_LIST [ID_SD]'.
+		require
+			list_not_void: list /= Void
 		do
 			create Result.make (list.count)
 			from
@@ -323,6 +346,8 @@ feature {NONE} -- Generation of AST
 				Result.extend (new_id_sd (list.item.text, True))
 				list.forth
 			end
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	new_trace_option_sd (enabled: BOOLEAN): D_OPTION_SD is
@@ -340,6 +365,8 @@ feature {NONE} -- Generation of AST
 				v := new_no_sd (new_id_sd ("no", False))
 			end
 			Result := new_d_option_sd (trace_sd, v)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation
@@ -350,6 +377,20 @@ feature {NONE} -- Implementation
 	internal_is_valid: BOOLEAN
 			-- Is content of current pane valid for Ace file.
 			-- Set by call to `perform_check'.
+
+	free_option_names: ARRAY [STRING] is
+			-- List all option names used in FREE_OPTION_SD
+		once
+			Result := (create {FREE_OPTION_SD}).option_names
+		ensure
+			result_not_void: Result /= Void
+		end
+
+invariant
+	msil_specific_widgets_not_void: msil_specific_widgets /= Void
+	c_specific_widgets_not_void: c_specific_widgets /= Void
+	widgets_set_before_has_compilation_started_not_void: widgets_set_before_has_compilation_started /= Void
+	widgets_set_before_is_already_compiled_not_void: widgets_set_before_is_already_compiled /= Void
 
 end -- class EB_SYSTEM_TAB
 

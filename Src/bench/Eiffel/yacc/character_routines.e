@@ -6,7 +6,7 @@ inherit
 
 	ASCII
 
-feature
+feature -- Access
 
 	char_text (char: CHARACTER): STRING is
 			-- "Readable" representation of `char' using

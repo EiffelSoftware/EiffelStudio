@@ -55,4 +55,25 @@ feature {NONE} -- GTK macros for casting types
 		external 
 			"C [macro %"gdk_eiffel.h%"]"
 		end		
+	
+	-- Expose
+	c_gdk_event_rectangle_x (p: POINTER): INTEGER is
+		external 
+			"C [macro %"gdk_eiffel.h%"]"
+		end	
+	
+	c_gdk_event_rectangle_y (p: POINTER): INTEGER is
+		external 
+			"C [macro %"gdk_eiffel.h%"]"
+		end	
+	
+	c_gdk_event_rectangle_width (p: POINTER): INTEGER is
+		external 
+			"C [macro %"gdk_eiffel.h%"]"
+		end	
+	
+	c_gdk_event_rectangle_height (p: POINTER): INTEGER is
+		external 
+			"C [macro %"gdk_eiffel.h%"]"
+		end	
 end

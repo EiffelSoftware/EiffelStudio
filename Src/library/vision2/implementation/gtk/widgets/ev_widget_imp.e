@@ -263,6 +263,14 @@ feature -- Event - command association
 			add_command ("delete_event", command, arguments, ev_data, 0, False)
 		end
 	
+	add_expose_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		local
+			ev_data: EV_EVENT_DATA
+		do
+			!EV_EXPOSE_EVENT_DATA!ev_data.make
+			add_command ("expose_event", command, arguments, ev_data, 0, False)
+		end
+	
 	add_key_press_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 		local
 			ev_data: EV_EVENT_DATA

@@ -89,3 +89,4 @@ feature {NONE} -- Externals
 			"MB_TOPMOST"
 		end	
 end -- class STATUS_BOX
+

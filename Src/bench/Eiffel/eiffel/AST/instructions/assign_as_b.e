@@ -66,30 +66,21 @@ feature {NONE} -- Type check, byte code production, dead_code_removal
 			-- Check if the target type conforms to the source one
 		local
 			source_type, target_type: TYPE_A;
-			vjar: VJAR;
+			not_has_error: BOOLEAN
 		do
 				-- Stack mangment
 			source_type := context.item;
 			context.pop (1);
 			target_type := context.item.actual_type;
 
+				-- Type checking
+				--| If `source_type' is of type NONE_A and if `target_type' does
+				--| not conform to NONE¸ we generate in all the cases a VJAR error,
+				--| we do not try to specify what kind of error, i.e.
+				--| 1- if target was a basic or an expanded type, we should generate
+				--|    a VNCE error.
+				--| 2- if target was a BIT type, we should generate a VNCB error.
 			source_type.check_conformance (target.access_name, target_type);
-			if
-				source_type.is_none
-			and then
-				(target_type.is_expanded or else target_type.is_bits)
-			then
-				if target_type.is_expanded then
-					!!vjar;
-				else
-					!VNCB!vjar;
-				end;
-				context.init_error (vjar);
-				vjar.set_source_type (source_type);
-				vjar.set_target_type (target_type);
-				vjar.set_target_name (target.access_name);
-				Error_handler.insert_error (vjar);
-			end;
 				-- Update type stack
 			context.pop (1);
 		end;

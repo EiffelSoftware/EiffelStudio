@@ -382,15 +382,94 @@ feature -- Drawing operations
 	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP) is
 			-- Draw `a_pixmap' with upper-left corner on (`x', `y').
 		local
-			pix_imp: EV_PIXMAP_IMP
+			pixmap_height		: INTEGER
+			pixmap_width		: INTEGER
+			display_mask_bitmap	: WEL_BITMAP
+			display_bitmap		: WEL_BITMAP
+			s_dc				: WEL_SCREEN_DC
+			display_mask_dc		: WEL_MEMORY_DC
+			display_bitmap_dc	: WEL_MEMORY_DC
+			pixmap_imp			: EV_PIXMAP_IMP_STATE
 		do
-			pix_imp ?= a_pixmap.implementation
---| FIXME ARNAUD
-			check
-				not_implemented: False
+			pixmap_imp ?= a_pixmap.implementation
+			pixmap_height := pixmap_imp.height
+			pixmap_width := pixmap_imp.width
+			
+				-- Allocate GDI objects
+			create s_dc
+			s_dc.get
+
+			if pixmap_imp.has_mask then -- Display a masked pixmap
+
+					-- Create the mask and image used for display. 
+					-- They are different than the real image because 
+					-- we need to apply logical operation in order 
+					-- to display the masked bitmap.
+				create display_mask_bitmap.make_by_bitmap(pixmap_imp.mask_bitmap)
+				create display_mask_dc.make
+				display_mask_dc.select_bitmap(display_mask_bitmap)
+					-- Display_mask_dc = NOT MASK
+				display_mask_dc.pat_blt(0, 0, pixmap_width, pixmap_height, Dstinvert)
+
+				create display_bitmap.make_by_bitmap(pixmap_imp.bitmap)
+				create display_bitmap_dc.make_by_dc(s_dc)
+				display_bitmap_dc.select_bitmap(display_bitmap)
+					-- display_bitmap_dc = IMAGE AND (NOT MASK)
+				display_bitmap_dc.bit_blt (0, 0, pixmap_width, pixmap_height, 
+						display_mask_dc, 0, 0, Srcand)
+
+					-- Apply NOT MASK
+				dc.bit_blt (
+					x, 
+					y, 
+					pixmap_width, 
+					pixmap_height, 
+					display_mask_dc, 
+					0, 
+					0, 
+					Maskpaint
+					)
+
+					-- Apply IMAGE AND (NOT MASK)
+				dc.bit_blt (
+					x, 
+					y,
+					pixmap_width, 
+					pixmap_height, 
+					display_bitmap_dc,
+					0, 
+					0, 
+					Srcpaint
+					)
+
+					-- Free GDI Objects
+				display_bitmap_dc.unselect_bitmap
+				display_bitmap_dc.delete
+				display_mask_dc.unselect_bitmap
+				display_mask_dc.delete
+				display_bitmap.delete
+				display_mask_bitmap.delete
+
+			else -- Display a not masked pixmap.
+
+				create display_bitmap.make_by_bitmap(pixmap_imp.bitmap)
+				create display_bitmap_dc.make_by_dc(s_dc)
+				display_bitmap_dc.select_bitmap(display_bitmap)
+
+				dc.bit_blt (
+					x, 
+					y, 
+					pixmap_width, 
+					pixmap_height, 
+					display_bitmap_dc, 
+					0, 
+					0, 
+					Srccopy
+					)
 			end
---			dc.bit_blt (x, y, pix_imp.width, 
---				pix_imp.height, pix_imp.dc, 0, 0, Srccopy)
+
+				-- Free GDI objects
+			s_dc.release
 		end
 
 	draw_rectangle (x, y, a_width, a_height: INTEGER) is
@@ -798,6 +877,10 @@ end -- class EV_DRAWABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/04/13 18:35:36  pichery
+--| Implemented feature `draw_pixmap' (works with
+--| pixmap with or without mask).
+--|
 --| Revision 1.25  2000/04/13 00:20:23  pichery
 --| Improved pens & brush caching. Text color and font
 --| selection are now also cached.

@@ -17,7 +17,7 @@
 #define cwel_paraformat_set_dxoffset(_ptr_, _value_) (((PARAFORMAT *) _ptr_)->dxOffset= (LONG) (_value_))
 #define cwel_paraformat_set_walignment(_ptr_, _value_) (((PARAFORMAT *) _ptr_)->wAlignment = (WORD) (_value_))
 #define cwel_paraformat_set_ctabcount(_ptr_, _value_) (((PARAFORMAT *) _ptr_)->cTabCount = (SHORT) (_value_))
-// XXXXX #define cwel_paraformat_set_rgxtabs(_ptr_, _value_) (((PARAFORMAT *) _ptr_)->rgxTabs = (LONG) (_value_))
+#define cwel_paraformat_set_rgxtabs(_ptr_, _value_, _index_) (((PARAFORMAT *) _ptr_)->rgxTabs[_index_] = (LONG) (_value_))
 
 #define cwel_paraformat_get_dwmask(_ptr_) ((((PARAFORMAT *) _ptr_)->dwMask))
 #define cwel_paraformat_get_wnumbering(_ptr_) ((((PARAFORMAT *) _ptr_)->wNumbering))
@@ -26,7 +26,7 @@
 #define cwel_paraformat_get_dxoffset(_ptr_) ((((PARAFORMAT *) _ptr_)->dxOffset))
 #define cwel_paraformat_get_walignment(_ptr_) ((((PARAFORMAT *) _ptr_)->wAlignment))
 #define cwel_paraformat_get_ctabcount(_ptr_) ((((PARAFORMAT *) _ptr_)->cTabCount))
-//XXXX #define cwel_paraformat_get_rgxtabs(_ptr_) ((((PARAFORMAT *) _ptr_)->rgxTabs))
+#define cwel_paraformat_get_rgxtabs(_ptr_,_index_) ((((PARAFORMAT *) _ptr_)->rgxTabs[_index_]))
 
 #endif /* __WEL_PARAFORMAT__ */
 

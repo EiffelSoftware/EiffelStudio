@@ -68,7 +68,7 @@ feature {COMPILER_EXPORTER}
 	type_i: TYPED_POINTER_I is
 			-- Pointer C type
 		do
-			create Result.make_typed (class_id, pointed_type)
+			create Result.make (class_id, pointed_type)
 		end
 
 end -- class TYPED_POINTER_A

@@ -19,13 +19,8 @@ feature -- Access
 
 	type_i: NATIVE_ARRAY_TYPE_I is
 			-- Meta generic interpretation of the generic type
-		local
-			meta_generic: META_GENERIC
 		do
-			create meta_generic.make (1)
-			meta_generic.put (generics.item (1).type_i, 1)
-
-			create Result.make (class_id, meta_generic, meta_generic)
+			create Result.make (class_id, generics.item (1))
 			Result.set_is_expanded (is_expanded)
 		end
 

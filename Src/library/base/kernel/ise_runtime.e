@@ -80,9 +80,11 @@ feature -- Feature specific to ISE runtime.
 			"C | %"eif_out.h%""
 		end
 
-	frozen c_check_assert (b: BOOLEAN): BOOLEAN is
+	frozen check_assert (b: BOOLEAN): BOOLEAN is
 		external
 			"C | %"eif_copy.h%""
+		alias
+			"c_check_assert"
 		end
 
  	frozen c_generating_type (obj: POINTER): STRING is

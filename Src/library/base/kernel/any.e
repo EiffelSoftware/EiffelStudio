@@ -173,10 +173,10 @@ feature -- Duplication
 			temp: BOOLEAN
 		do
 			if other /= Void then
-				temp := feature {ISE_RUNTIME}.c_check_assert (False)
+				temp := feature {ISE_RUNTIME}.check_assert (False)
 				Result := feature {ISE_RUNTIME}.c_standard_clone ($other)
 				Result.copy (other)
-				temp := feature {ISE_RUNTIME}.c_check_assert (temp)
+				temp := feature {ISE_RUNTIME}.check_assert (temp)
 			end
 		ensure
 			equal: equal (Result, other)
@@ -190,10 +190,10 @@ feature -- Duplication
 			temp: BOOLEAN
 		do
 			if other /= Void then
-				temp := feature {ISE_RUNTIME}.c_check_assert (False)
+				temp := feature {ISE_RUNTIME}.check_assert (False)
 				Result := feature {ISE_RUNTIME}.c_standard_clone ($other)
 				Result.standard_copy (other)
-				temp := feature {ISE_RUNTIME}.c_check_assert (temp)
+				temp := feature {ISE_RUNTIME}.check_assert (temp)
 			end
 		ensure
 			equal: standard_equal (Result, other)

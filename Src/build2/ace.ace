@@ -42,53 +42,36 @@ default
 -- Same for EV_PIXMAPABLE.
 
 cluster
-	all build2:				"D:\work\build2"
+	all build2:				"$(EIFFEL_SRC)\build2"
 		exclude
 			"object_editor"; "eifgen"; "EIFGEN"; "templates"; "Gtk"; "hact"; "se";  "ve"
 		end
 
 	dev:		"D:\work\library"
 
-	all wel (dev):			"$\wel"
+	all wel (dev):			"$(EIFFEL_SRC)\library\wel"
 		exclude
 			"wel_dialog.e"; "wel_modeless_dialog.e"; 
 		end
 
-	all vision2 (dev):		"$\vision2"
+	all vision2 (dev):		"$(EIFFEL_SRC)\library\vision2"
 		include
 			"ev_button"; 
 		exclude
 			"new_figures"; "gtk"; "components"; "obsolete"; "release"; "ev_widget.e"; "ev_pixmapable.e"; "ev_dialog.e"; "ev_dialog_i.e"; "ev_dialog_imp.e"; "ev_dialog_imp_common.e"; "ev_dialog_imp_modal.e"; "ev_dialog_imp_modeless.e"; "ev_sensitive.e"; "ev_sensitive_i.e"; 
 		end
 
-	all base:				"d:\work\library\base"
+	all base:				"$(EIFFEL_SRC)\library\base"
 		exclude
 			"table_eiffel3"; 
 		end
 
---	all exml_interface:		"D:\work\build2\modified_libraries\exml\lib\interface"
---		exclude
---			"hact";
---		end
-
---	all exml_implementation:	"D:\work\build2\modified_libraries\exml\lib\implementation"
---		exclude
---			"hact"; "se";
---		end
-
---	all ucstring_library:		"D:\work\build2\modified_libraries\ucstring"
---		exclude
---			"se"; "ve";
---		end
-
-	--all_ucstring_spec:		"D:\work\library\exml_02_cvs_anon\ucstring\spec\ise"
-
-	all gobo:				"D:\work\library\gobo_16\library"
+	all gobo:				"$(EIFFEL_SRC)\build2\modified_libraries\gobo_16\library"
 		exclude
 			"hact"; "se"; "ve"; "base"; "CVS"; "test"; 
 		end
 
-	all wizard_library:		"D:\work\library\wizard"
+	all wizard_library:		"$(EIFFEL_SRC)\library\wizard"
 		exclude
 			"unix"; "wizard_window.e"; "wizard_project_manager.e"; 
 		end
@@ -96,20 +79,20 @@ cluster
 external
 
 	include_path:
-		"D:\work\library\expat\xmlparse",
-		"d:\work\library\wel\spec\windows\include",
-		"d:\work\library\vision2\spec\include",
-		"d:\work\library\gobo_16\library\kernel\include",
-		"d:\work\build2\modified_libraries\exml\lib\implementation\expat\compiler_specific\ise\clib",
-		"d:\work\library\wizard\help\clib"
+		"$(EIFFEL_SRC)\C_library\expat\xmlparse",
+		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
+		"$(EIFFEL_SRC)\library\vision2\spec\include",
+		"$(EIFFEL_SRC)\build2\modified_libraries\gobo_16\library\kernel\include",
+		"$(EIFFEL_SRC)\build2\modified_libraries\exml\lib\implementation\expat\compiler_specific\ise\clib",
+		"$(EIFFEL_SRC)\library\wizard\help\clib"
 
 	object:
-		"d:\work\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
-		"d:\work\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
-		"d:\work\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
-		"d:\work\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
-		"d:\work\build2\modified_libraries\exml\lib\implementation\expat\compiler_specific\ise\clib\msc\exml.lib",
-		"d:\work\library\expat\lib\xmlparse.lib",
-		"d:\work\library\wizard\help\clib\htmlhelp.lib"
+		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
+		"$(EIFFEL_SRC)\build2\modified_libraries\exml\lib\implementation\expat\compiler_specific\ise\clib\msc\exml.lib",
+		"$(EIFFEL_SRC)\C_library\expat\lib\xmlparse.lib",
+		"$(EIFFEL_SRC)\library\wizard\help\clib\htmlhelp.lib"
 
 end

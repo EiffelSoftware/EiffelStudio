@@ -1,7 +1,10 @@
 source_path $TESTROOTDIR
 
-test	is-equal			list001 tcf list
-test	put-extend			list002 tcf list
-test	clone-list			list003 tcf list
+test	is-equal								list001 tcf list
+test	put-extend								list002 tcf list
+test	clone-list								list003 tcf list
 
-test	disjoint-sets		set001 tcf set
+test	disjoint-sets							set001 tcf set
+test	symdif-sets								set002 tcf set
+
+test	insert-default-key						table001 tcf table

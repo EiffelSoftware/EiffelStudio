@@ -30,6 +30,7 @@ feature -- Status report
 				end
 				radio_group.go_to (cur)
 			else
+					--| `radio_group' is void when `Current' is not parented in a container.
 				check
 					-- This item should be selected as enforced by
 					-- other contracts.
@@ -58,6 +59,7 @@ feature -- Status report
 				end
 				radio_group.go_to (cur)
 			else
+					--| `radio_group' is void when `Current' is not parented in a container.
 				check
 					-- This item should be selected as enforced by
 					-- other contracts.
@@ -112,6 +114,10 @@ feature {EV_ANY_I} -- Implementation
 		ensure
 			void: radio_group = Void
 		end
+		
+invariant
+	
+	peers_not_void: peers /= Void
 
 end -- class EV_RADIO_PEER
 
@@ -136,6 +142,9 @@ end -- class EV_RADIO_PEER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2001/07/10 17:01:03  rogers
+--| Added comments and new invariant, "peers_not_void".
+--|
 --| Revision 1.3  2001/06/07 23:08:13  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

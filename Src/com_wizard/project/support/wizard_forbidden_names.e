@@ -83,36 +83,28 @@ feature -- Access
 			Result.force (When_keyword, When_keyword)
 			Result.force (Xor_keyword, Xor_keyword)
 
-  			tmp_string := Bit_keyword.twin
-			tmp_string.to_lower
+  			tmp_string := Bit_keyword.as_lower
 			Result.force (tmp_string, tmp_string)
 
- 			tmp_string := Current_keyword.twin
-			tmp_string.to_lower
+ 			tmp_string := Current_keyword.as_lower
 			Result.force (tmp_string, tmp_string)
 
- 			tmp_string := False_keyword.twin
-			tmp_string.to_lower
+ 			tmp_string := False_keyword.as_lower
 			Result.force (tmp_string, tmp_string)
 
-			tmp_string := Precursor_keyword.twin
-			tmp_string.to_lower
+			tmp_string := Precursor_keyword.as_lower
 			Result.force (tmp_string, tmp_string)
 
-			tmp_string := Result_keyword.twin
-			tmp_string.to_lower
+			tmp_string := Result_keyword.as_lower
 			Result.force (tmp_string, tmp_string)
 
-			tmp_string := Strip_keyword.twin
-			tmp_string.to_lower
+			tmp_string := Strip_keyword.as_lower
 			Result.force (tmp_string, tmp_string)
 
-			tmp_string := True_keyword.twin
-			tmp_string.to_lower
+			tmp_string := True_keyword.as_lower
 			Result.force (tmp_string, tmp_string)
 
-			tmp_string := Unique_keyword.twin
-			tmp_string.to_lower
+			tmp_string := Unique_keyword.as_lower
 			Result.force (tmp_string, tmp_string)
 
 			Result.force (Make_word, Make_word)

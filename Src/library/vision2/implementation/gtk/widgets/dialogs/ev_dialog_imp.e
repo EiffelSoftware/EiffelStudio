@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 		local
 			a_key_code: INTEGER
 		do
-			if a_key /= Void then
+			if a_key /= Void and then not App_implementation.is_in_transport then
 				a_key_code := a_key.code
 
 				if a_key_code = Key_constants.Key_escape and then
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 			-- Call the cancel actions if dialog is closeable.
 		do
 			Precursor {EV_TITLED_WINDOW_IMP}
-			if is_dialog_closeable then 
+			if is_dialog_closeable and then not App_implementation.is_in_transport then 
 				if internal_default_cancel_button /= Void and then
 					internal_default_cancel_button.is_sensitive-- and then
 					--internal_default_cancel_button.is_displayed 

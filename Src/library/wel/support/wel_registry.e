@@ -90,7 +90,7 @@ feature -- Actions
 				-- Please refer to WEL_HKEY for possible value for a.
 				-- Return Void if the operation did not correctly terminate.
 		require
-			key_name_possible: value_name /= Void and then not value_name.is_empty
+			key_name_possible: value_name /= Void
 			at_least_one_back_slash: key_path /= Void and then key_path.has('\')
 		local
 			node_list: ARRAYED_LIST [STRING]

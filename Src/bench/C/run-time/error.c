@@ -10,6 +10,10 @@
 	System error handling.
 */
 
+/*
+doc:<file name="error.c" header="eif_error.h" version="$Id$" summary="System error handling">
+*/
+
 #include "eif_portable.h"
 #include "rt_except.h"
 #include "eif_error.h"
@@ -64,3 +68,7 @@ rt_public void eise_io(char *tag)
 
 	eraise(tag, EN_ISE_IO);					/* I/O error */
 }
+
+/*
+doc:</file>
+*/

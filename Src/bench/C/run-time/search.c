@@ -10,6 +10,10 @@
 	Search table (like an H table, but no value array).
 */
 
+/*
+doc:<file name="search.c" header="eif_search.h" version="$Id$" summary="Search table, ie hash table where keys are the elements">
+*/
+
 #include "eif_portable.h"
 #include "eif_search.h"
 #include "eif_tools.h"
@@ -103,3 +107,6 @@ rt_public void s_resize(register struct s_table *tbl)
 	xfree((char *) new);					/* Free temporary descriptor */
 }
 
+/*
+doc:</file>
+*/

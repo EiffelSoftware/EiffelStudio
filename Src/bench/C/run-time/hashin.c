@@ -10,6 +10,10 @@
 	Hash table handling (indexed by integer keys).
 */
 
+/*
+doc:<file name="hashin.c" header="eif_hashin.h" version="$Id$" summary="Hash table implementation indexed by integer keys">
+*/
+
 #include "eif_portable.h"
 #include "eif_tools.h"
 #include "eif_hashin.h"
@@ -290,3 +294,6 @@ rt_public void ht_free(struct htable *ht)
 	xfree((char *) ht);
 }
 
+/*
+doc:</file>
+*/

@@ -10,6 +10,10 @@
 	Hash table source file.
 */
 
+/*
+doc:<file name="hash.c" header="eif_hash.h" version="$Id$" summary="Hash table implementation">
+*/
+
 #include "eif_portable.h"
 #include "eif_tools.h"
 #include "eif_malloc.h"
@@ -77,3 +81,6 @@ rt_shared char **hash_search(struct hash *hp, register char *object)
 	return &hp->h_entry[pos];
 }
 
+/*
+doc:</file>
+*/

@@ -10,6 +10,10 @@
 	Externals for class BOOL_STRING.
 */
 
+/*
+doc:<file name="boolstr.c" header="eif_boolstr.h" version="$Id$" summary="Externals for BOOL_STRING class">
+*/
+
 #include "eif_portable.h"
 #include "eif_boolstr.h"
 #include <string.h>
@@ -95,3 +99,6 @@ rt_public char *bl_str_shiftl(char *a1, char *a2, int s, int n)
 	return a2;
 }
 
+/*
+doc:</file>
+*/

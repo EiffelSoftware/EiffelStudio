@@ -7,14 +7,15 @@
  #       #    #  #    #  #       #       #    #  #    #   ###    #    #
  ######  #    #  #    #  ######  ######   ####    ####    ###     ####
 
-	Malloc library functions.
-	$Id$
 
   Wrappers to malloc functions from standard libs. 
   Define LMALLOC_CHECK, for checks and debugging output.
 
 */
 
+/*
+doc:<file name="lmalloc.c" header="eif_lmalloc.h" version="$Id$" summary="Malloc library functions">
+*/
 
 #include "eif_portable.h"
 #include "eif_malloc.h"
@@ -384,3 +385,6 @@ void eiffel_free(register void *ptr)
 #endif	/* LMALLOC_CHECK */
 }
 
+/*
+doc:</file>
+*/

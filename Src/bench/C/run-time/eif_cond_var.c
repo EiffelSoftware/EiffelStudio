@@ -18,6 +18,10 @@
 
 */
 
+/*
+doc:<file name="eif_cond_var.c" header="eif_cond_var.h" version="$Id$" summary="Condition variable management routine for Windows.">
+*/
+
 #include "eif_cond_var.h"
 #ifdef EIF_THREADS
 
@@ -206,3 +210,7 @@ int pthread_cond_broadcast (pthread_cond_t *cv)
 }
 
 #endif
+
+/*
+doc:</file>
+*/

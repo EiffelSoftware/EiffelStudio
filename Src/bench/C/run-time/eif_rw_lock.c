@@ -17,6 +17,10 @@
 
  An implementation of multiple readers, single writer lock */
 
+/*
+doc:<file name="eif_rw_lock.c" header="rt_rw_lock.h" version="$Id$" summary="Multiple readers, single writer lock">
+*/
+
 #include "eif_portable.h"
 #include "rt_rw_lock.h"
 #include "rt_threads.h"
@@ -114,3 +118,7 @@ rt_public void eif_rwl_unlock (eif_rwl_t *rwlp)
 		}
 }
 #endif /* EIF_THREADS */
+
+/*
+doc:</file>
+*/

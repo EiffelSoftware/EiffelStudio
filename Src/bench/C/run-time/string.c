@@ -11,6 +11,10 @@
 
 */
 
+/*
+doc:<file name="string.c" header="eif_string.h" version="$Id$" summary="Externals for STRING class">
+*/
+
 #include "eif_portable.h"
 #include "eif_macros.h"			/* For EIF_FALSE|EIF_TRUE. */
 #include "eif_str.h"
@@ -385,3 +389,7 @@ rt_public EIF_BOOLEAN str_isd(EIF_CHARACTER *str, EIF_INTEGER length)
 
 	return EIF_TEST(sscanf((char *) s, "%lf %c", &val, &c) == 1);
 }
+
+/*
+doc:</file>
+*/

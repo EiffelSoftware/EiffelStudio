@@ -12,6 +12,10 @@
 
 */
 
+/*
+doc:<file name="file.c" header="eif_file.h" version="$Id$" summary="Externals for FILE class">
+*/
+
 #include "eif_portable.h"	/* must come before <errno.h> for VMS */
 #include "eif_path_name.h"	/* for eifrt_vms_directory_file_name */
 
@@ -1812,3 +1816,7 @@ int unlink(char *path)
 
 #endif		/* unlink */
 #endif		/* HAS_UNLINK */
+
+/*
+doc:</file>
+*/

@@ -12,6 +12,10 @@
 
 
 /*
+doc:<file name="compress.c" header="rt_compress.h" version="$Id$" summary="Compression/Decompression algorithm for storable">
+*/
+
+/*
 
 Compression - decompression algorithm description 
 -------------------------------------------------
@@ -341,3 +345,6 @@ rt_private void eif_cmps_write_u32_to_char_buf (uint32 in_value, unsigned char* 
 	*(out_buf + 3) = (unsigned char)in_value;
 }
 
+/*
+doc:</file>
+*/

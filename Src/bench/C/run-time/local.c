@@ -11,6 +11,9 @@
 
 */
 
+/*
+doc:<file name="local.h" header="eif_local.h" version="$Id$" summary="Handling of local variable stack">
+*/
 
 #include "eif_portable.h"
 #include "rt_malloc.h"
@@ -362,3 +365,6 @@ rt_shared void initstk(void)
 #endif
 }
 
+/*
+doc:</file>
+*/

@@ -35,7 +35,8 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_with_path
 
 feature {NONE}-- Initialization 
 
@@ -50,6 +51,17 @@ feature {NONE}-- Initialization
 			
 			assembly_consumer.set_status_printer (agent display_status)
 			assembly_consumer.set_error_printer (agent process_error)
+		end
+		
+	make_with_path (a_path: STRING) is
+			-- create instance of ISE_CACHE_MANAGER with ISE_EIFFEL path set to `a_path'
+		require
+			non_void_path: a_path /= Void
+			valid_path: not a_path.is_empty
+			path_exists: (create {DIRECTORY}.make (a_path)).exists
+		do
+			set_internal_eiffel_path (a_path)
+			make
 		end
 		
 feature -- Access

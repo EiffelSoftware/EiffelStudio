@@ -354,7 +354,7 @@ feature -- External macro (enum)
 	enum_cor_debug_thread_state__thread_run: INTEGER is
 			-- 
 		external
-			"C++ macro use %"cordebug.h%" "
+			"C++ macro use %"cli_headers.h%" "
 		alias
 			"THREAD_RUN"
 		end		
@@ -362,56 +362,56 @@ feature -- External macro (enum)
 	enum_cor_debug_thread_state__thread_suspend: INTEGER is
 			-- 
 		external
-			"C++ macro use %"cordebug.h%" "
+			"C++ macro use %"cli_headers.h%" "
 		alias
 			"THREAD_SUSPEND"
 		end
 		
 	enum_cor_debug_user_state__user_stop_requested: INTEGER is --		= 0x01,
 		external
-			"C++ macro use %"cordebug.h%" "
+			"C++ macro use %"cli_headers.h%" "
 		alias
 			"USER_STOP_REQUESTED"
 		end
 
 	enum_cor_debug_user_state__user_suspend_requested: INTEGER is --	= 0x02,
 		external
-			"C++ macro use %"cordebug.h%" "
+			"C++ macro use %"cli_headers.h%" "
 		alias
 			"USER_SUSPEND_REQUESTED"
 		end
 
 	enum_cor_debug_user_state__user_background: INTEGER is --			= 0x04,
 		external
-			"C++ macro use %"cordebug.h%" "
+			"C++ macro use %"cli_headers.h%" "
 		alias
 			"USER_BACKGROUND"
 		end
 
 	enum_cor_debug_user_state__user_unstarted: INTEGER is --			= 0x08,
 		external
-			"C++ macro use %"cordebug.h%" "
+			"C++ macro use %"cli_headers.h%" "
 		alias
 			"USER_UNSTARTED"
 		end
 
 	enum_cor_debug_user_state__user_stopped: INTEGER is --			= 0x10,
 		external
-			"C++ macro use %"cordebug.h%" "
+			"C++ macro use %"cli_headers.h%" "
 		alias
 			"USER_STOPPED"
 		end
 
 	enum_cor_debug_user_state__user_wait_sleep_join: INTEGER is --	= 0x20,
 		external
-			"C++ macro use %"cordebug.h%" "
+			"C++ macro use %"cli_headers.h%" "
 		alias
 			"USER_WAIT_SLEEP_JOIN"
 		end
 
 	enum_cor_debug_user_state__user_suspended: INTEGER is --			= 0x40		
 		external
-			"C++ macro use %"cordebug.h%" "
+			"C++ macro use %"cli_headers.h%" "
 		alias
 			"USER_SUSPENDED"
 		end

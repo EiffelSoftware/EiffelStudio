@@ -3644,4 +3644,161 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 </item>
 </item>
 </item>
+<item type="Directory"><Internal_properties>
+	<name>object_still_referenced_dialog</name>
+	</Internal_properties>
+<item type="EV_DIALOG"><Internal_properties>
+	<id>252</id>
+	<name>gb_object_still_referenced_dialog</name>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_WINDOW><Title><![CDATA[Cannot Delete - Object still referenced]]></Title>
+	</EV_WINDOW>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_VERTICAL_BOX"><Internal_properties>
+	<id>253</id>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_BOX><Is_item_expanded>11</Is_item_expanded>
+	</EV_BOX>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_HORIZONTAL_BOX"><Internal_properties>
+	<id>254</id>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_BOX><Padding><Constant>large_spacing_width</Constant>
+		</Padding>
+	<Border><Constant>large_spacing_width</Constant>
+		</Border>
+	<Is_item_expanded>01</Is_item_expanded>
+	</EV_BOX>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_CELL"><Internal_properties>
+	<id>255</id>
+	<name>pixmap_cell</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+</item>
+<item type="EV_LABEL"><Internal_properties>
+	<id>256</id>
+	<name>error_label</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE></EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE><Text_alignment>Left</Text_alignment>
+	</EV_TEXT_ALIGNABLE>
+</item>
+</item>
+<item type="EV_HORIZONTAL_BOX"><Internal_properties>
+	<id>257</id>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_BOX><Padding><Constant>large_spacing_width</Constant>
+		</Padding>
+	<Border><Constant>large_spacing_width</Constant>
+		</Border>
+	<Is_item_expanded>10001</Is_item_expanded>
+	</EV_BOX>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_CELL"><Internal_properties>
+	<id>1042</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+</item>
+<item type="EV_BUTTON"><Internal_properties>
+	<id>258</id>
+	<name>flatten_all_instances_button</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text><![CDATA[Flatten All and Delete]]></Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES flatten_all_instances</Event>
+	</Events>
+</item>
+<item type="EV_BUTTON"><Internal_properties>
+	<id>259</id>
+	<name>view_next_button</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE></EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES view_next</Event>
+	</Events>
+</item>
+<item type="EV_BUTTON"><Internal_properties>
+	<id>260</id>
+	<name>cancel_button</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text><Constant>cancel_button_text</Constant>
+		</Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES cancel_selected</Event>
+	</Events>
+</item>
+<item type="EV_CELL"><Internal_properties>
+	<id>1041</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+</item>
+</item>
+</item>
+</item>
+</item>
 </application>

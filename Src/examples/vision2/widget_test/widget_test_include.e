@@ -70,14 +70,18 @@ feature {NONE} -- Implementation
 			horizontal_progress_bar_adjusting_test: HORIZONTAL_PROGRESS_BAR_ADJUSTING_TEST
 			vertical_progress_bar_adjusting_test: VERTICAL_PROGRESS_BAR_ADJUSTING_TEST
 			horizontal_range_bar_simple_test: HORIZONTAL_RANGE_SIMPLE_TEST
+			horizontal_range_value_test: HORIZONTAL_RANGE_VALUE_TEST
 			horizontal_progress_bar_segmentation_test: HORIZONTAL_PROGRESS_BAR_SEGMENTATION_TEST
 			vertical_range_bar_simple_test: VERTICAL_RANGE_SIMPLE_TEST
+			vertical_range_value_test: VERTICAL_RANGE_VALUE_TEST
 			horizontal_range_bar_adjusting_test: HORIZONTAL_RANGE_ADJUSTING_TEST
 			vertical_range_bar_adjusting_test: VERTICAL_RANGE_ADJUSTING_TEST
 			horizontal_scroll_bar_bar_simple_test: HORIZONTAL_SCROLL_BAR_SIMPLE_TEST
 			vertical_scroll_bar_bar_simple_test: VERTICAL_SCROLL_BAR_SIMPLE_TEST
 			horizontal_scroll_bar_bar_adjusting_test: HORIZONTAL_SCROLL_BAR_ADJUSTING_TEST
+			horizontal_scroll_bar_value_test: HORIZONTAL_SCROLL_BAR_VALUE_TEST
 			vertical_scroll_bar_bar_adjusting_test: VERTICAL_SCROLL_BAR_ADJUSTING_TEST
+			vertical_scroll_bar_value_test: VERTICAL_SCROLL_BAR_VALUE_TEST
 			tree_basic_test: TREE_BASIC_TEST
 			tree_expand_test: TREE_EXPAND_TEST
 			tree_dynamic_test: TREE_DYNAMIC_TEST
@@ -96,7 +100,7 @@ feature {NONE} -- Implementation
 			tool_bar_toggle_button_test: TOOL_BAR_TOGGLE_BUTTON_TEST
 			tool_bar_combo_box_test: TOOL_BAR_COMBO_BOX_TEST
 			checkable_list_test: CHECKABLE_LIST_BASIC_TEST
-			checkable_list_pixmap_test: CHECKABLE_LIST_PIXMAP_TEST -- 84
+			checkable_list_pixmap_test: CHECKABLE_LIST_PIXMAP_TEST
 			pixmap_basic_test: PIXMAP_BASIC_TEST
 			pixmap_drawing_test: PIXMAP_DRAWING_TEST
 			text_basic_test: TEXT_BASIC_TEST

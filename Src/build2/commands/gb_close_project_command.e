@@ -57,18 +57,28 @@ feature -- Basic operations
 			local
 				dialog: EV_QUESTION_DIALOG
 			do
-				create dialog.make_with_text (Save_prompt)
-				dialog.show_modal_to_window (system_status.main_window)
-					-- Do nothing if cancel was pressed.
-				if not dialog.selected_button.is_equal (Ev_cancel) then
-					if dialog.selected_button.is_equal (Ev_yes) then
-						-- Must now save.
-						command_handler.save_command.execute
+				if system_status.project_modified then
+					create dialog.make_with_text (Save_prompt)
+					dialog.show_modal_to_window (system_status.main_window)
+						-- Do nothing if cancel was pressed.
+					if not dialog.selected_button.is_equal (Ev_cancel) then
+						if dialog.selected_button.is_equal (Ev_yes) then
+							-- Must now save.
+							command_handler.save_command.execute
+						end
+						perform_close
 					end
-					object_handler.clear_all_objects
-					system_status.close_current_project
-					command_handler.update	
+				else
+					perform_close
 				end
+			end
+			
+		perform_close is
+				-- Actually perfrom the closing of the project.
+			do
+				object_handler.clear_all_objects
+				system_status.close_current_project
+				command_handler.update	
 			end
 
 end -- class GB_CLOSE_PROJECT_COMMAND

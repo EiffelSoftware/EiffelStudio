@@ -22,8 +22,6 @@ class frame_window;
 
 #include "ecom_server_rt_globals.h"
 
-#include "ecom_control_library_ioleinplaceframe_s.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif

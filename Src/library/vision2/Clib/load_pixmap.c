@@ -79,7 +79,9 @@ struct TLoadPixmapCtx {
 		char *pszFileName;		/* File name */
 		FILE *pFile;			/* File Pointer */
 		void (*LoadPixmapUpdateObject)(
+#ifndef EIF_IL_DLL
 				void*, 
+#endif
 				unsigned int, 
 				unsigned int, 
 				unsigned int, 
@@ -92,7 +94,9 @@ typedef struct TLoadPixmapCtx  LoadPixmapCtx;
 
 /* Fonctions declaration */
 void c_ev_load_pixmap(
+#ifndef EIF_IL_DLL
 		void *pCurrObject, 
+#endif
 		char *pszFileName, 
 		void *fnptr
 		);
@@ -576,14 +580,18 @@ void c_ev_save_png (char image[], char *path, int array_width, int array_height,
 /*         if NULL, then the default EiffelVision2 icon is loaded            */
 /*---------------------------------------------------------------------------*/
 void c_ev_load_pixmap(
+#ifndef EIF_IL_DLL
 		void *pCurrObject, 
+#endif
 		char *pszFileName, 
 		void *fnptr
 		)
 	{
 	FILE *pFile;
 	void (*LoadPixmapUpdateObject)(
+#ifndef EIF_IL_DLL
 			void*,
+#endif
 			unsigned int,
 			unsigned int,
 			unsigned int,
@@ -599,7 +607,9 @@ void c_ev_load_pixmap(
 	int				bFreeFileName = FALSE;
 	
 	LoadPixmapUpdateObject = (void (*) (
+#ifndef EIF_IL_DLL
 			void*,
+#endif
 			unsigned int,
 			unsigned int,
 			unsigned int,
@@ -633,7 +643,7 @@ void c_ev_load_pixmap(
 			}
 		
 		/* Open the temporary file */
-		pFile = fopen ((const char *)pszFileName, "w+");
+		pFile = fopen ((const char *)pszFileName, "w+b");
 		if (pFile==NULL && bFreeFileName==TRUE)
 			{
 			/* Unable to open temporary file created with GetTempFileName,
@@ -646,13 +656,22 @@ void c_ev_load_pixmap(
 			pszFileName = tmpnam(NULL);
 
 			/* Open the temporary file */
-			pFile = fopen ((const char *)pszFileName, "w+");
+			pFile = fopen ((const char *)pszFileName, "w+b");
 			}
 
 		if (pFile == NULL)
 			{
 			/* Unable to create the file, return NULL */
-			LoadPixmapUpdateObject(pCurrObject, LOADPIXMAP_ERROR_UNABLE_OPEN_FILE, 0, 0, 0, NULL, NULL);
+			LoadPixmapUpdateObject(
+#ifndef EIF_IL_DLL
+				pCurrObject,
+#endif
+				LOADPIXMAP_ERROR_UNABLE_OPEN_FILE,
+				0,
+				0,
+				0,
+				NULL,
+				NULL);
 			return;
 			}
 		bFileToBeDeleted = TRUE;
@@ -671,7 +690,9 @@ void c_ev_load_pixmap(
 			{
 			/* Unable to open the file, return NULL */
 			LoadPixmapUpdateObject(
+#ifndef EIF_IL_DLL
 				pCurrObject,
+#endif
 				LOADPIXMAP_ERROR_UNABLE_OPEN_FILE,
 				0,
 				0,
@@ -688,7 +709,16 @@ void c_ev_load_pixmap(
 	if (pBuffer == NULL)
 		{
 		/* Out of memory */
-		LoadPixmapUpdateObject(pCurrObject,LOADPIXMAP_ERROR_OUTOFMEMORY, 0, 0, 0, NULL, NULL);
+		LoadPixmapUpdateObject(
+#ifndef EIF_IL_DLL
+			pCurrObject,
+#endif
+			LOADPIXMAP_ERROR_OUTOFMEMORY,
+			0,
+			0,
+			0,
+			NULL,
+			NULL);
 		return;
 		}
 	stBufFile.nCurrBufferSize = 0;
@@ -710,13 +740,17 @@ void c_ev_load_pixmap(
 			fclose (pFile);
 #ifdef EIF_WIN32
 			stCtx.LoadPixmapUpdateObject = LoadPixmapUpdateObject;
+#ifndef EIF_IL_DLL
 			stCtx.pCurrObject = pCurrObject;
+#endif
 			stCtx.pszFileName = pszFileName;
 			c_ev_load_windows_file(IMAGE_ICON, &stCtx);
 #else
 			/* ICO files are currently not supported under Unix */
 			LoadPixmapUpdateObject(
+#ifndef EIF_IL_DLL
 				pCurrObject,
+#endif
 				LOADPIXMAP_ERROR_UNKNOWN_FILEFORMAT,
 				0,
 				0,
@@ -737,13 +771,17 @@ void c_ev_load_pixmap(
 			fclose (pFile);
 #ifdef EIF_WIN32
 			stCtx.LoadPixmapUpdateObject = LoadPixmapUpdateObject;
+#ifndef EIF_IL_DLL
 			stCtx.pCurrObject = pCurrObject;
+#endif
 			stCtx.pszFileName = pszFileName;
 			c_ev_load_windows_file(IMAGE_BITMAP, &stCtx);
 #else
 			/* BMP files are currently not supported under Unix */
 			LoadPixmapUpdateObject(
+#ifndef EIF_IL_DLL
 				pCurrObject,
+#endif
 				LOADPIXMAP_ERROR_UNKNOWN_FILEFORMAT,
 				0,
 				0,
@@ -760,7 +798,9 @@ void c_ev_load_pixmap(
 
 		case FILEFORMAT_PNG:
 			stCtx.LoadPixmapUpdateObject = LoadPixmapUpdateObject;
+#ifndef EIF_IL_DLL
 			stCtx.pCurrObject = pCurrObject;
+#endif
 			stCtx.pszFileName = pszFileName;
 			stCtx.pFile = pFile;
 			c_ev_load_png_file(&stCtx);
@@ -775,7 +815,9 @@ void c_ev_load_pixmap(
 		default:
 			/* Bad file format */
 			LoadPixmapUpdateObject(
+#ifndef EIF_IL_DLL
 				pCurrObject,
+#endif
 				LOADPIXMAP_ERROR_UNKNOWN_FILEFORMAT,
 				0,
 				0,
@@ -829,11 +871,22 @@ unsigned char c_ev_read_n_bytes(
 		MINIMUM_BYTES_TO_READ_PER_ACCESS
 		);
 
-	nBytesRead = fread(&(pBufFile->pBuffer[pBufFile->nCurrBufferSize]), 1, 
-				       (size_t)nBytesToRead, pBufFile->pFile);
+		{
+			int j = ftell (pBufFile->pFile);
+			int i = j;
+		}
+
+	nBytesRead = fread(pBufFile->pBuffer + pBufFile->nCurrBufferSize, 1, 
+				       (size_t) nBytesToRead, pBufFile->pFile);
 	
 	/* Compute the new buffer size */
 	pBufFile->nCurrBufferSize += nBytesRead;
+
+		{
+			int j = ftell (pBufFile->pFile);
+			int i = j;
+		}
+
 
 	/* Everything went ok if the RequestedSize is loaded. */
 	if (pBufFile->nCurrBufferSize >= nRequestedBufferSize)
@@ -891,7 +944,9 @@ void c_ev_load_windows_file(unsigned int nWindowsType, LoadPixmapCtx *pCtx)
 					nErrorCode = LOADPIXMAP_ERROR_UNKNOWN_ERROR;
 				}
 			(pCtx->LoadPixmapUpdateObject)(
+#ifndef EIF_IL_DLL
 				pCtx->pCurrObject,
+#endif
 				nErrorCode,
 				LOADPIXMAP_HBITMAP,
 				0, 
@@ -905,7 +960,9 @@ void c_ev_load_windows_file(unsigned int nWindowsType, LoadPixmapCtx *pCtx)
 		if (nWindowsType == IMAGE_ICON)
 			{
 			(pCtx->LoadPixmapUpdateObject)(
+#ifndef EIF_IL_DLL
 				pCtx->pCurrObject,
+#endif
 				nErrorCode,
 				LOADPIXMAP_HICON,
 				0,
@@ -930,7 +987,7 @@ void c_ev_load_windows_file(unsigned int nWindowsType, LoadPixmapCtx *pCtx)
 				{
 				nLineSize = ((bmInfo.bmWidth / 16) + 1) * 2;
 				nBitmapSize = nLineSize * bmInfo.bmHeight;
-				pBits = cmalloc(nBitmapSize);/* Allocate space for the mask */
+				pBits = malloc(nBitmapSize);/* Allocate space for the mask */
 				memset(pBits, 0, nBitmapSize);/* Set the mask to be empty */
 				hbmMask = CreateBitmap (
 							bmInfo.bmWidth,	/* Same width as the bitmap */
@@ -939,6 +996,7 @@ void c_ev_load_windows_file(unsigned int nWindowsType, LoadPixmapCtx *pCtx)
 							1,				/* number of bits/pixel */
 							pBits			/* color data array. */
 						);
+				free (pBits);
 				if (hbmMask==NULL)
 					nErrorCode = LOADPIXMAP_ERROR_UNKNOWN_ERROR;
 				}
@@ -947,7 +1005,9 @@ void c_ev_load_windows_file(unsigned int nWindowsType, LoadPixmapCtx *pCtx)
 	
 			/* Call the Eiffel routine back. */
 			(pCtx->LoadPixmapUpdateObject)(
+#ifndef EIF_IL_DLL
 				pCtx->pCurrObject,
+#endif
 				nErrorCode,
 				LOADPIXMAP_HBITMAP,
 				0,
@@ -1487,7 +1547,9 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 
 	/* Call the Eiffel routine back */
 	(pCtx->LoadPixmapUpdateObject)(
+#ifndef EIF_IL_DLL
 		pCtx->pCurrObject,
+#endif
 		nErrorCode,
 		LOADPIXMAP_RGB_DATA,
 		width,

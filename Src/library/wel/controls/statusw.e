@@ -76,14 +76,17 @@ feature -- Status report
 			index_small_enough: index < number_of_parts
 			index_large_enough: index >= 0
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
+			nb: INTEGER
 		do
 			!! Result.make (text_length_for_part (index))
 			Result.fill_blank
-			a := Result.to_c
-			Result.head (cwin_send_message_result (item,
+			!! a_wel_string.make (Result)
+			nb := cwin_send_message_result (item,
 				Sb_gettext, index,
-				cwel_pointer_to_integer ($a)))
+				cwel_pointer_to_integer (a_wel_string.item))
+			Result := a_wel_string.string
+			Result.head (nb)
 		ensure
 			result_not_void: Result /= Void
 			consistent_count: Result.count =
@@ -139,12 +142,13 @@ feature -- Status report
 		require
 			exists: exists
 		local
-			a: ANY
+			a: WEL_INTEGER_ARRAY
 		do
 			!! Result.make (0, number_of_parts - 1)
-			a := Result.to_c
+			!! a.make (Result)
 			cwin_send_message (item, Sb_getparts, number_of_parts,
-				cwel_pointer_to_integer ($a))
+				cwel_pointer_to_integer (a.item))
+			Result := a.to_array (0)
 		ensure
 			result_not_void: Result /= Void
 			consistent_count: Result.count = number_of_parts
@@ -216,11 +220,11 @@ feature -- Element change
 			exists: exists
 			a_text_not_void: a_text /= Void
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := a_text.to_c
+			!! a_wel_string.make (a_text)
 			cwin_send_message (item, Sb_settext, Simple_part,
-				cwel_pointer_to_integer ($a))
+				cwel_pointer_to_integer (a_wel_string.item))
 		end
 
 	set_simple_text_with_style (a_text: STRING; a_style: INTEGER) is
@@ -231,12 +235,12 @@ feature -- Element change
 			exists: exists
 			a_text_not_void: a_text /= Void
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := a_text.to_c
+			!! a_wel_string.make (a_text)
 			cwin_send_message (item, Sb_settext,
 				Simple_part + a_style,
-				cwel_pointer_to_integer ($a))
+				cwel_pointer_to_integer (a_wel_string.item))
 		end
 
 	set_parts (a_edges: ARRAY [INTEGER]) is
@@ -251,11 +255,11 @@ feature -- Element change
 			count_large_enough: a_edges.count > 0
 			count_small_enough: a_edges.count < 255
 		local
-			a: ANY
+			a: WEL_INTEGER_ARRAY
 		do
-			a := a_edges.to_c
+			!! a.make (a_edges)
 			cwin_send_message (item, Sb_setparts,
-				a_edges.count, cwel_pointer_to_integer ($a))
+				a_edges.count, cwel_pointer_to_integer (a.item))
 		ensure
 			edges_set: edges.is_equal (a_edges)
 		end
@@ -269,11 +273,11 @@ feature -- Element change
 			index_large_enough: index >= 0
 			a_text_not_void: a_text /= Void
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := a_text.to_c
+			!! a_wel_string.make (a_text)
 			cwin_send_message (item, Sb_settext,
-				index, cwel_pointer_to_integer ($a))
+				index, cwel_pointer_to_integer (a_wel_string.item))
 		ensure
 			text_set: a_text.is_equal (text_for_part (index))
 		end
@@ -289,11 +293,11 @@ feature -- Element change
 			index_large_enough: index >= 0
 			a_text_not_void: a_text /= Void
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := a_text.to_c
+			!! a_wel_string.make (a_text)
 			cwin_send_message (item, Sb_settext, index + a_style,
-				cwel_pointer_to_integer ($a))
+				cwel_pointer_to_integer (a_wel_string.item))
 		ensure
 			text_set: a_text.is_equal (text_for_part (index))
 			style_is_set: a_style = text_style_for_part (index)
@@ -341,14 +345,14 @@ feature {NONE} -- Implementation
 			index_small_enough: index <= 2
 			index_large_enough: index >= 0
 		local
-			a: ANY
+			a: WEL_INTEGER_ARRAY
 			borders: ARRAY [INTEGER]
 		do
 			!! borders.make (0, 2)
-			a := borders.to_c
+			!! a.make (borders)
 			cwin_send_message (item, Sb_getborders, 0,
-				cwel_pointer_to_integer ($a))
-			Result := borders @ index
+				cwel_pointer_to_integer (a.item))
+			Result := a.to_array (0).item (index)
 		ensure
 			positive_result: Result > 0
 		end

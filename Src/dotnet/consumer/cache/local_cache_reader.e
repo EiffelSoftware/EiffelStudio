@@ -5,17 +5,17 @@ indexing
 
 class
 	LOCAL_CACHE_READER
-	
+
 inherit
 	CACHE_READER
 		redefine
 			absolute_assembly_path_from_consumed_assembly,
 			consumed_type
 		end
-		
+
 create
 	make_with_path
-	
+
 feature {NONE}
 
 	make_with_path (a_path: STRING) is
@@ -33,9 +33,10 @@ feature {NONE}
 				local_cache_path.append (a_op_env.Directory_separator.out)
 			end	
 		end
-		
+
 	absolute_assembly_path_from_consumed_assembly (ca: CONSUMED_ASSEMBLY): STRING is
 			-- Absolute path to folder containing `ca' types.
+
 		local
 			relative_path, a_absolute_path: STRING
 			a_dir: DIRECTORY
@@ -55,17 +56,17 @@ feature {NONE}
 			end
 			Result := a_absolute_path
 		end
-		
+
 	local_info_path: STRING is
 			-- Absolute path of the info xml file.
 		once
 			create Result.make (local_cache_path.count + info_path.count)
 			Result.append (local_cache_path + info_path)
 		end
-		
+
 	local_cache_path: STRING
 		-- Path to local cache path.
-		
+
 	local_info: LOCAL_CACHE_INFO is
 			-- Information on local assembly cache content
 			-- May be Void if not cache is present.
@@ -76,45 +77,6 @@ feature {NONE}
 			des.deserialize (local_info_path)
 			if des.successful then
 				Result ?= des.deserialized_object
-			end
-		end
-
-	total_consumed_assemblies: ARRAY [CONSUMED_ASSEMBLY] is
-			-- Array of consumed assemblies from both local and global caches.
-		local
-			a_info_assemblies, a_local_info_assemblies: ARRAY [CONSUMED_ASSEMBLY]
-			a_local_info: LOCAL_CACHE_INFO
-			i, a_count: INTEGER
-		do
-			if is_initialized then
-				a_info_assemblies := info.assemblies
-				a_count := a_info_assemblies.count
-				a_local_info := local_info
-				if a_local_info /= Void then
-					a_local_info_assemblies := local_info.assemblies
-					a_count := a_count + a_local_info_assemblies.count
-				end
-
-				create Result.make (1, a_count)
-				from 
-					i := 1
-				until
-					i > a_info_assemblies.count
-				loop
-					Result.put (a_info_assemblies @ i, i)
-					i := i + 1
-				end
-
-				if a_local_info_assemblies /= Void then
-					from
-						-- i is already correctly set from last loop
-					until
-						i > a_count
-					loop
-						Result.put (a_local_info_assemblies @ (i - a_info_assemblies.count), i)
-						i := i + 1
-					end
-				end
 			end
 		end
 

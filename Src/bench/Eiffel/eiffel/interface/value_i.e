@@ -94,6 +94,11 @@ feature
 		deferred
 		end;
 
+	string_value: STRING is
+		do
+			Result := dump
+		end;
+
 	trace is
 		do
 			io.error.putstring (dump)

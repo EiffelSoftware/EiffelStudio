@@ -1594,9 +1594,9 @@ end:
 	 * End insertion in manifest arrary
 	 */
 	case BC_END_INSERT:
-  #ifdef DEBUG
+#ifdef DEBUG
 		dprintf(2)("BC_END_INSERT\n");
-  #endif
+#endif
 		/* Discard special area of array */
 		opop ();
 		break;

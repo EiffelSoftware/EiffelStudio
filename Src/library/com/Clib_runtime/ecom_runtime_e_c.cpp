@@ -543,7 +543,7 @@ BSTR ecom_runtime_ec::ccom_ec_bstr (EIF_REFERENCE a_ref)
 	tid = eif_type_id ("STRING");
 	f_to_c = eif_reference_function ("to_c", tid);
 
-	c_string = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))f_to_c)(eif_access (eif_object));
+	c_string = (FUNCTION_CAST (char *, (EIF_REFERENCE))f_to_c)(eif_access (eif_object));
 	wide_string = ccom_create_from_string (c_string);
 
 	b_string = SysAllocString (wide_string);

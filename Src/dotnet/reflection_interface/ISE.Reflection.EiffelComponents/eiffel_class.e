@@ -430,8 +430,10 @@ feature -- Status Setting
 
 	set_external_names (a_full_name: like full_external_name) is 
 		indexing
-			description: "[Set `full_external_name' from `a_full_name'.%
-						%Set `external_name' and `namespace' from `a_full_name'.]"
+			description: "[
+						Set `full_external_name' from `a_full_name'.
+						Set `external_name' and `namespace' from `a_full_name'.
+					  ]"
 			external_name: "SetExternalNames"
 		require
 			non_void_full_name: a_full_name /= Void
@@ -498,8 +500,10 @@ feature -- Basic Operations
 	add_parent (a_name: STRING; rename_clauses, undefine_clauses, redefine_clauses, select_clauses, export_clauses: SYSTEM_COLLECTIONS_ARRAYLIST) is
 			-- | Inheritance clauses: SYSTEM_COLLECTIONS_ARRAYLIST [INHERITANCE_CLAUSE]
 		indexing
-			description: "Add new parent to `parents' with `a_name' as key and inheritance clauses as value.%
-					%Inheritance clauses are built from `rename_clauses', `undefine_clauses', `redefine_clauses', `select_clauses', `export_clauses'.]"
+			description: "[
+						Add new parent to `parents' with `a_name' as key and inheritance clauses as value.
+						Inheritance clauses are built from `rename_clauses', `undefine_clauses', `redefine_clauses', `select_clauses', `export_clauses'.
+					  ]"
 			external_name: "AddParent"
 		require
 			non_void_name: a_name /= Void
@@ -673,8 +677,10 @@ feature {NONE} -- Implementation
 		
 	has_creation_routine (info: SYSTEM_REFLECTION_CONSTRUCTORINFO): BOOLEAN is
 		indexing
-			description: "[Does current class has creation routine corresponding to `info'?%
-						%If found, make Eiffel feature available in `routine'.]"
+			description: "[
+						Does current class has creation routine corresponding to `info'?
+						If found, make Eiffel feature available in `routine'.
+					  ]"
 			external_name: "HasCreationRoutine"
 		require
 			non_void_info: info /= Void
@@ -703,8 +709,10 @@ feature {NONE} -- Implementation
 		
 	has_attribute (info: SYSTEM_REFLECTION_MEMBERINFO; a_list: SYSTEM_COLLECTIONS_ARRAYLIST): BOOLEAN is
 		indexing
-			description: "[Has `a_table' feature corresponding to `info'?%
-						%If found, make Eiffel feature available in `attribute'.]"
+			description: "[
+						Has `a_table' feature corresponding to `info'?
+						If found, make Eiffel feature available in `attribute'.
+					  ]"
 			external_name: "HasAttribute"
 		require
 			non_void_info: info /= Void
@@ -745,8 +753,10 @@ feature {NONE} -- Implementation
 	
 	has_routine (info: SYSTEM_REFLECTION_METHODBASE; a_list: SYSTEM_COLLECTIONS_ARRAYLIST): BOOLEAN is
 		indexing
-			description: "[Has `a_table' feature corresponding to `info'?%
-					%If found, make Eiffel feature available in `routine'.]"
+			description: "[
+						Has `a_table' feature corresponding to `info'?
+						If found, make Eiffel feature available in `routine'.
+					  ]"
 			external_name: "HasRoutine"
 		require
 			non_void_info: info /= Void
@@ -784,8 +794,10 @@ feature {NONE} -- Implementation
 		
 	intern_has_routine (eiffel_feature: EIFFEL_FEATURE; info: SYSTEM_REFLECTION_METHODBASE): BOOLEAN is
 		indexing
-			description: "[Does `eiffel_feature' match with `info'?%
-					%If matching, set `routine' with `eiffel_feature'.]"
+			description: "[
+						Does `eiffel_feature' match with `info'?
+						If matching, set `routine' with `eiffel_feature'.
+					  ]"
 			external_name: "InternHasRoutine"
 		require
 			non_void_eiffel_feature: eiffel_feature /= Void

@@ -20,10 +20,12 @@ feature {NONE} -- Initialization
 
 	make (a_name: like name; a_version: like version; a_culture: like culture; a_public_key: like public_key) is
 		indexing
-			description: "[Set `name' with `a_name'.%
-						%Set `version' with `a_version'.%
-						%Set `culture' with `a_culture'.%
-						%Set `public_key' with `a_public_key'.]"
+			description: "[
+						Set `name' with `a_name'.
+						Set `version' with `a_version'.
+						Set `culture' with `a_culture'.
+						Set `public_key' with `a_public_key'.
+					  ]"
 			external_name: "Make"
 		require
 			non_void_name: a_name /= Void

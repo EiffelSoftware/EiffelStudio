@@ -81,8 +81,10 @@ feature -- Basic Operations
 
 	add_type (an_eiffel_class: ISE_REFLECTION_EIFFELCLASS; overwrite: BOOLEAN) is
 		indexing
-			description: "[Add type XML description corresponding to `an_eiffel_class' to the Eiffel assembly cache.%
-					%If the xml file corresponding to `an_eiffel_class', it will overwrites it if `overwrite' is True.]"
+			description: "[
+						Add type XML description corresponding to `an_eiffel_class' to the Eiffel assembly cache.
+						If the xml file corresponding to `an_eiffel_class', it will overwrites it if `overwrite' is True.
+					  ]"
 			external_name: "AddType"
 		require
 			non_void_eiffel_class: an_eiffel_class /= Void

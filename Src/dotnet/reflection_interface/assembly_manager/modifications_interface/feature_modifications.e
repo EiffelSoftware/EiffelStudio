@@ -87,8 +87,10 @@ feature -- Basic Operations
 
 	add_argument_modification (an_argument: ISE_REFLECTION_NAMEDSIGNATURETYPE; new_argument_name: STRING) is
 		indexing
-			description: "[Add `new_argument_name' to `arguments_modifications' with key `an_argument'.%
-					%If `an_argument' is already in table, the existing value will be replaced by `new_argument_name'.]"
+			description: "[
+						Add `new_argument_name' to `arguments_modifications' with key `an_argument'.
+						If `an_argument' is already in table, the existing value will be replaced by `new_argument_name'.
+					  ]"
 			external_name: "AddArgumentModification"
 		require
 			non_void_argument: an_argument /= Void

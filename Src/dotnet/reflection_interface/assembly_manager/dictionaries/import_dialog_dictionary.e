@@ -19,11 +19,11 @@ feature -- Access
 			external_name: "AssemblyAndDependanciesImportationMessage"
 		end
 
-	Assembly_importation_message: STRING is "Importing assembly..."
-		indexing
-			description: "Message to let the user know selected assembly will be imported to the Eiffel repository"
-			external_name: "AssemblyImportationMessage"
-		end
+--	Assembly_importation_message: STRING is "Importing assembly..."
+--		indexing
+--			description: "Message to let the user know selected assembly will be imported to the Eiffel repository"
+--			external_name: "AssemblyImportationMessage"
+--		end
 		
 	Caption_text: STRING is "Non imported dependencies"
 		indexing
@@ -59,7 +59,7 @@ feature -- Access
 			external_name: "EiffelNamesCheckBoxText"
 		end
 		
-	Importation_error: STRING is "An errors occurred during assembly importation. Please check the assembly is signed. If not, sign it and try importation again."
+	Importation_error: STRING is "An error occurred during assembly importation. Please check the assembly is signed. If not, sign it and try importation again."
 		indexing
 			description: "Error message when assembly importation fails"
 			external_name: "ImportationError"
@@ -102,11 +102,11 @@ feature -- Access
 			external_name: "Title"
 		end
 	
-	Warning_text: STRING is "Are you sure you want to import the .NET assembly without its dependencies?"
-		indexing
-			description: "Warning in case user does not ask for importation of assembly dependancies"
-			external_name: "WarningText"
-		end
+--	Warning_text: STRING is "Are you sure you want to import the .NET assembly without its dependencies?"
+--		indexing
+--			description: "Warning in case user does not ask for importation of assembly dependancies"
+--			external_name: "WarningText"
+--		end
 
 	Window_height: INTEGER is 310
 		indexing

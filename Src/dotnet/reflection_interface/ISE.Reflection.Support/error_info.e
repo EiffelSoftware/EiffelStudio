@@ -13,9 +13,11 @@ feature {NONE} -- Initialization
 
 	make (a_code: like code; a_name: like name; a_description: like description) is
 		indexing
-			description: "[Set `code' with `a_code'.%
-					%Set `name' with `a_name'.%
-					%Set `description' with `a_description'.]"
+			description: "[
+						Set `code' with `a_code'.
+						Set `name' with `a_name'.
+						Set `description' with `a_description'.
+					  ]"
 			external_name: "Make"
 		require
 			valid_code: a_code >= 0

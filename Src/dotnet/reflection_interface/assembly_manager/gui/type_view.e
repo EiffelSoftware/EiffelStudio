@@ -18,9 +18,11 @@ feature {NONE} -- Initialization
 
 	make (an_assembly_descriptor: like assembly_descriptor; an_eiffel_class: like eiffel_class; children_list: like children; an_assembly_view: like assembly_view) is
 		indexing
-			description: "[Set `assembly_descriptor' with `an_assembly_descriptor'.%
-					%Set `eiffel_class' with `an_eiffel_class'.%
-					%Set `assembly_view' with `an_assembly_view'.]"
+			description: "[
+						Set `assembly_descriptor' with `an_assembly_descriptor'.
+						Set `eiffel_class' with `an_eiffel_class'.
+						Set `assembly_view' with `an_assembly_view'.
+					  ]"
 			external_name: "Make"
 		require
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void
@@ -757,8 +759,10 @@ feature {NONE} -- Implementation
 	
 	create_label (a_text: STRING; x_position, y_position: INTEGER; a_color: SYSTEM_DRAWING_COLOR; is_bold_font: BOOLEAN) is
 		indexing
-			description: "[Create a text box with text `a_text' at position (x_position, y_position).%
-					%Set text box forecolor with `a_color' and bold font if `is_bold_font' is True (regular font otherwise).]"
+			description: "[
+						Create a text box with text `a_text' at position (x_position, y_position).
+						Set text box forecolor with `a_color' and bold font if `is_bold_font' is True (regular font otherwise).
+					  ]"
 			external_name: "CreateLabel"
 		require
 			non_void_text: a_text /= Void
@@ -796,8 +800,10 @@ feature {NONE} -- Implementation
 	
 	create_form_label (a_text: STRING; x_position, y_position: INTEGER) is
 		indexing
-			description: "[Create a text box with text `a_text' at position (x_position, y_position).%
-					%Set text box forecolor with `a_color' and bold font if `is_bold_font' is True (regular font otherwise).]"
+			description: "[
+						Create a text box with text `a_text' at position (x_position, y_position).
+						Set text box forecolor with `a_color' and bold font if `is_bold_font' is True (regular font otherwise).
+					  ]"
 			external_name: "CreateFormLabel"
 		require
 			non_void_text: a_text /= Void
@@ -827,9 +833,11 @@ feature {NONE} -- Implementation
 		
 	set_editable_text_box_properties (a_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX; a_text: STRING; x_position, y_position, a_width: INTEGER; a_color: SYSTEM_DRAWING_COLOR) is
 		indexing
-			description: "[Set `a_text_box' position: (x_position, y_position).%
-					%Set `a_text_box' size (a_width, Label_height).%
-					%Set font color with `a_color'.]"
+			description: "[
+						Set `a_text_box' position: (x_position, y_position).
+						Set `a_text_box' size (a_width, Label_height).
+						Set font color with `a_color'.
+					  ]"
 			external_name: "SetEditableTextBoxProperties"
 		require
 			non_void_text_box: a_text_box /= Void
@@ -855,9 +863,11 @@ feature {NONE} -- Implementation
 
 	set_text_box_properties (a_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX; a_text: STRING; x_position, y_position, a_width: INTEGER; a_color: SYSTEM_DRAWING_COLOR) is
 		indexing
-			description: "[Set `a_text_box' position: (x_position, y_position).%
-					%Set `a_text_box' size (a_width, Label_height).%
-					%Set font color with `a_color'.]"
+			description: "[
+						Set `a_text_box' position: (x_position, y_position).
+						Set `a_text_box' size (a_width, Label_height).
+						Set font color with `a_color'.
+					  ]"
 			external_name: "SetTextBoxProperties"
 		require
 			non_void_text_box: a_text_box /= Void

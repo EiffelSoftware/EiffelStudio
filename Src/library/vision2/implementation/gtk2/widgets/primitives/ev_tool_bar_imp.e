@@ -18,7 +18,8 @@ inherit
 			interface,
 			initialize,
 			visual_widget,
-			needs_event_box
+			needs_event_box,
+			set_parent_imp
 		end
 
 	EV_ITEM_LIST_IMP [EV_TOOL_BAR_ITEM]
@@ -77,6 +78,13 @@ feature {NONE} -- Implementation
 		do
 			Result := visual_widget
 		end
+
+	set_parent_imp (a_container_imp: EV_CONTAINER_IMP) is
+			-- Set `parent_imp' to `a_container_imp'.
+		do
+			Precursor {EV_PRIMITIVE_IMP} (a_container_imp)
+			update_toolbar_style
+		end
 		
 feature -- Status report
 
@@ -118,33 +126,35 @@ feature -- Implementation
 			has_text, has_pixmap: BOOLEAN
 			i, a_style: INTEGER
 		do
-			from
-				i := 1
-			until
-				i > interface.count
-			loop
-				tbb_imp ?= interface.i_th (i).implementation
-				if tbb_imp /= Void and then not tbb_imp.text.is_equal ("") then
-					has_text := True
+			if parent_imp /= Void then
+				from
+					i := 1
+				until
+					i > interface.count
+				loop
+					tbb_imp ?= interface.i_th (i).implementation
+					if tbb_imp /= Void and then not tbb_imp.text.is_equal ("") then
+						has_text := True
+					end
+					if tbb_imp /= Void and then tbb_imp.pixmap /= Void then
+						has_pixmap := True
+					end
+					i := i + 1
 				end
-				if tbb_imp /= Void and then tbb_imp.pixmap /= Void then
-					has_pixmap := True
-				end
-				i := i + 1
-			end
-			
-			if has_text and has_pixmap then
-				if has_vertical_button_style then
-					a_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_both_enum
+				
+				if has_text and has_pixmap then
+					if has_vertical_button_style then
+						a_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_both_enum
+					else
+						a_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_both_horiz_enum
+					end
+				elseif has_text then
+					a_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_text_enum
 				else
-					a_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_both_horiz_enum
+					a_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_icons_enum
 				end
-			elseif has_text then
-				a_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_text_enum
-			else
-				a_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_icons_enum
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_style (visual_widget, a_style)
 			end
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_style (visual_widget, a_style)
 		end	
 
 	insertion_position: INTEGER is
@@ -176,7 +186,9 @@ feature -- Implementation
 			add_radio_button (v)
 			child_array.go_i_th (i)
 			child_array.put_left (v)
-			update_toolbar_style
+			if parent_imp /= Void then
+				update_toolbar_style			
+			end
 		end
 
 	add_to_container (v: like item; v_imp: EV_ITEM_IMP) is

@@ -139,10 +139,10 @@ feature -- Access
 	ace_file_generated: BOOLEAN
 			-- Was generated project ace file generated?
 
-	Standard_clusters: LINKED_LIST[STRING] is
+	Standard_clusters: LIST [STRING] is
 			-- Standard clusters.
 		once
-			create Result.make
+			create {ARRAYED_LIST [STRING]} Result.make (4)
 			Result.extend (
 					"	-- BASE%N%
 					%	all base:						%"$ISE_EIFFEL\library\base%"%N%

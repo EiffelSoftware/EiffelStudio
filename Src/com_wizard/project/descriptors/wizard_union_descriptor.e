@@ -30,7 +30,7 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	fields: LINKED_LIST[WIZARD_RECORD_FIELD_DESCRIPTOR]
+	fields: LIST [WIZARD_RECORD_FIELD_DESCRIPTOR]
 			-- Descriptions of structure's fields
 
 	size_of_instance: INTEGER
@@ -43,24 +43,23 @@ feature -- Access
 
 feature -- Basic operations
 
-	set_fields (some_fields: LINKED_LIST[WIZARD_RECORD_FIELD_DESCRIPTOR]) is
-			--
+	set_fields (some_fields: LIST [WIZARD_RECORD_FIELD_DESCRIPTOR]) is
+			-- Set `fields' with `some_fields'.
 		require
 			valid_fields: some_fields /= Void
 		do
 			fields := some_fields
 		ensure
-			valid_fields: fields /= Void and fields = some_fields
+			fields_set: fields /= Void and fields = some_fields
 		end
 
 	set_size (a_size: INTEGER) is
-			--
+			-- Set `size_of_instance' with `a_size'.
 		do
 			size_of_instance := a_size
 		ensure
-			valid_size: size_of_instance = a_size
+			size_set: size_of_instance = a_size
 		end
-
 
 	visit (a_visitor: WIZARD_TYPE_VISITOR) is
 			-- Call back `a_visitor' with appropriate feature.

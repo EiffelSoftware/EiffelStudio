@@ -28,74 +28,63 @@ feature -- Basic operations
 	generate (a_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
 			-- Generate C client for implemented interface.
 		local
-			data_member: WIZARD_WRITER_C_MEMBER
-			a_name, a_result_type: STRING
-			interface_generator: WIZARD_COMPONENT_INTERFACE_C_CLIENT_GENERATOR
+			l_member: WIZARD_WRITER_C_MEMBER
+			l_name, l_type, l_namespace: STRING
+			l_generator: WIZARD_COMPONENT_INTERFACE_C_CLIENT_GENERATOR
 		do
 			create cpp_class_writer.make
 			a_descriptor.set_impl_names (True)
 			cpp_class_writer.set_name (a_descriptor.impl_c_type_name (True))
 			cpp_class_writer.set_namespace (a_descriptor.namespace)
 			cpp_class_writer.set_header (a_descriptor.description)
-			cpp_class_writer.set_header_file_name (a_descriptor.impl_c_header_file_name (True))
+			cpp_class_writer.set_declaration_header_file_name (a_descriptor.impl_c_declaration_header_file_name (True))
+			cpp_class_writer.set_definition_header_file_name (a_descriptor.impl_c_definition_header_file_name (True))
 
-			cpp_class_writer.add_import (a_descriptor.interface_descriptor.c_header_file_name)
+			cpp_class_writer.add_import (a_descriptor.interface_descriptor.c_definition_header_file_name)
 			cpp_class_writer.add_other_source (iid_definition (a_descriptor.interface_descriptor.name, a_descriptor.interface_descriptor.guid))
 
-			create data_member.make
-			data_member.set_comment (Interface_pointer_comment)
+			create l_member.make
+			l_member.set_comment ("Interface pointer")
 
-			create a_name.make (100)
-			a_name.append (Interface_variable_prepend)
-			a_name.append (a_descriptor.interface_descriptor.c_type_name)
-			data_member.set_name (a_name)
+			create l_name.make (100)
+			l_name.append ("p_")
+			l_name.append (a_descriptor.interface_descriptor.c_type_name)
+			l_member.set_name (l_name)
 
-			create a_result_type.make (100)
-			if 
-				a_descriptor.interface_descriptor.namespace /= Void and then
-				not a_descriptor.interface_descriptor.namespace.is_empty 
-			then
-				a_result_type.append (a_descriptor.interface_descriptor.namespace)
-				a_result_type.append ("::")
+			create l_type.make (100)
+			l_namespace := a_descriptor.interface_descriptor.namespace
+			if l_namespace /= Void and then not l_namespace.is_empty then
+				l_type.append (l_namespace)
+				l_type.append ("::")
 			end
-			a_result_type.append (a_descriptor.interface_descriptor.c_type_name)
-			a_result_type.append (Space)
-			a_result_type.append (Asterisk)
-			data_member.set_result_type (a_result_type)
-			cpp_class_writer.add_member (data_member, Private)
+			l_type.append (a_descriptor.interface_descriptor.c_type_name)
+			l_type.append (" *")
+			l_member.set_result_type (l_type)
+			cpp_class_writer.add_member (l_member, Private)
 
-			create data_member.make
-			data_member.set_comment (Default_iunknown_variable_comment)
-			data_member.set_name (Iunknown_variable_name)
-			data_member.set_result_type (Iunknown)
-			cpp_class_writer.add_member (data_member, Private)
+			create l_member.make
+			l_member.set_comment ("Default IUnknown interface pointer")
+			l_member.set_name ("p_unknown")
+			l_member.set_result_type ("IUnknown *")
+			cpp_class_writer.add_member (l_member, Private)
 
-			if 
-				a_descriptor.interface_descriptor.dispinterface or 
-				a_descriptor.interface_descriptor.dual
-			then
+			if a_descriptor.interface_descriptor.dispinterface or a_descriptor.interface_descriptor.dual then
 				dispatch_interface := True
 
 				-- Add memeber "EXCEPINFO * excepinfo"
-				create data_member.make
-				data_member.set_name (Excepinfo_variable_name.twin)
-				
-				create a_result_type.make (100)
-				a_result_type.append (Excepinfo)
-				a_result_type.append (Space)
-				a_result_type.append (Asterisk)
-				data_member.set_result_type (a_result_type)
-				data_member.set_comment (Excepinfo_variable_comment)
-				cpp_class_writer.add_member (data_member, Private)
+				create l_member.make
+				l_member.set_name ("excepinfo")
+				l_member.set_result_type ("EXCEPINFO *")
+				l_member.set_comment ("Exception information")
+				cpp_class_writer.add_member (l_member, Private)
 				cpp_class_writer.add_function (ccom_last_error_code_function, Public)
 				cpp_class_writer.add_function (ccom_last_source_of_exception_function, Public)
 				cpp_class_writer.add_function (ccom_last_error_description_function, Public)
 				cpp_class_writer.add_function (ccom_last_error_help_file_function, Public)
-
 			end
 
-			create interface_generator.make (a_descriptor, a_descriptor.interface_descriptor, cpp_class_writer)
-			interface_generator.generate_functions_and_properties (a_descriptor.interface_descriptor)
+			create l_generator.make (a_descriptor, a_descriptor.interface_descriptor, cpp_class_writer)
+			l_generator.generate_functions_and_properties (a_descriptor.interface_descriptor)
 
 			add_default_function
 			cpp_class_writer.set_destructor (destructor (a_descriptor))
@@ -104,7 +93,8 @@ feature -- Basic operations
 			-- Generate code and file name.
 			Shared_file_name_factory.create_file_name (Current, cpp_class_writer)
 			cpp_class_writer.save_file (Shared_file_name_factory.last_created_file_name)
-			cpp_class_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
+			cpp_class_writer.save_declaration_header_file (Shared_file_name_factory.last_created_declaration_header_file_name)
+			cpp_class_writer.save_definition_header_file (Shared_file_name_factory.last_created_header_file_name)
 
 			cpp_class_writer := Void
 		end
@@ -123,76 +113,25 @@ feature {NONE} -- Implementation
 			non_void_descriptor: a_descriptor /= Void
 			non_void_interface_descriptor: a_descriptor.interface_descriptor /= Void
 		local
-			constructor_body: STRING
-			a_signature: STRING
+			l_body: STRING
 		do
 			create Result.make
-
-			create a_signature.make (100)
-			a_signature.append (Iunknown)
-			a_signature.append (Space)
-			a_signature.append (A_pointer)
-			Result.set_signature (a_signature)
-
-			create constructor_body.make (1000)
-			constructor_body.append (Tab)
-			constructor_body.append (Hresult)
-			constructor_body.append (Space)
-			constructor_body.append (Hresult_variable_name)
-			constructor_body.append (Comma_space)
-			constructor_body.append (Hresult_variable_name_2)
-			constructor_body.append (Semicolon)
-			constructor_body.append (New_line)
-
-			constructor_body.append (co_initialize_ex_function)
-			constructor_body.append (examine_hresult (Hresult_variable_name))
-
-			constructor_body.append (New_line_tab)
-			constructor_body.append (Hresult_variable_name)
-			constructor_body.append (Space_equal_space)
-			constructor_body.append (A_pointer)
-			constructor_body.append (Struct_selection_operator)
-			constructor_body.append (Query_interface)
-			constructor_body.append (Open_parenthesis)
-			constructor_body.append (Iunknown_clsid)
-			constructor_body.append (Comma_space)
-			constructor_body.append (Open_parenthesis)
-			constructor_body.append (C_void_pointer)
-			constructor_body.append (Asterisk)
-			constructor_body.append (Close_parenthesis)
-			constructor_body.append (Ampersand)
-			constructor_body.append (Iunknown_variable_name)
-			constructor_body.append (Close_parenthesis)
-			constructor_body.append (Semicolon)
-			constructor_body.append (New_line)
-			constructor_body.append (examine_hresult (Hresult_variable_name))
-			constructor_body.append (New_line)
-
-			constructor_body.append (New_line_tab)
-			constructor_body.append (Hresult_variable_name)
-			constructor_body.append (Space_equal_space)
-			constructor_body.append (A_pointer)
-			constructor_body.append (Struct_selection_operator)
-			constructor_body.append (Query_interface)
-			constructor_body.append (Open_parenthesis)
-			constructor_body.append (iid_name (a_descriptor.interface_descriptor.name))
-			constructor_body.append (Comma_space)
-			constructor_body.append (Open_parenthesis)
-			constructor_body.append (C_void_pointer)
-			constructor_body.append (Asterisk)
-			constructor_body.append (Close_parenthesis)
-			constructor_body.append (Ampersand)
-			constructor_body.append (Interface_variable_prepend)
-			constructor_body.append (a_descriptor.interface_descriptor.name)
-			constructor_body.append (Close_parenthesis)
-			constructor_body.append (Semicolon)
-			constructor_body.append (New_line)
-			constructor_body.append (examine_hresult (Hresult_variable_name))
-			constructor_body.append (New_line)
-
-			constructor_body.append (excepinfo_initialization)
-			
-			Result.set_body (constructor_body)
+			Result.set_signature ("IUnknown * a_pointer")
+			create l_body.make (1000)
+			l_body.append ("%THRESULT hr, hr2;%N")
+			l_body.append (co_initialize_ex_function)
+			l_body.append (examine_hresult ("hr"))
+			l_body.append ("%N%Thr = a_pointer->QueryInterface(IID_IUnknown, (void **)&p_unknown);%N")
+			l_body.append (examine_hresult ("hr"))
+			l_body.append ("%N%N%Thr = a_pointer->QueryInterface(")
+			l_body.append (iid_name (a_descriptor.interface_descriptor.name))
+			l_body.append (", (void **)&p_")
+			l_body.append (a_descriptor.interface_descriptor.name)
+			l_body.append (");%N")
+			l_body.append (examine_hresult ("hr"))
+			l_body.append ("%N")
+			l_body.append (excepinfo_initialization)			
+			Result.set_body (l_body)
 		ensure
 			non_void_constructor: Result /= Void
 		end
@@ -211,21 +150,12 @@ feature {NONE} -- Implementation
 
 			-- Release "excepinfo" if allocated
 			if dispatch_interface then
-				Result.append (New_line_tab)
-				Result.append (Co_task_mem_free)
-				Result.append (Space_open_parenthesis)
-				Result.append (Open_parenthesis)
-				Result.append (C_void_pointer)
-				Result.append (Close_parenthesis)
-				Result.append (Excepinfo_variable_name)
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab)
+				Result.append ("%N%TCoTaskMemFree ((void *)excepinfo);%N%T")
 			end
 
 			Result.append (release_interface (a_descriptor.interface_descriptor.name))
 
-			Result.append (Co_uninitialize_function)
+			Result.append ("CoUninitialize ();")
 		ensure
 			non_void_destructor: Result /= void
 			valid_descructor: not Result.is_empty

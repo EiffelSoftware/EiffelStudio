@@ -64,8 +64,7 @@ feature -- Basic Operations
 			valid_name: not a_feature_name.is_empty
 		do
 			Result := a_feature_name.twin
-			Result.append (Underscore)
-			Result.append (User_precondition)
+			Result.append ("_user_precondition")
 		ensure
 			non_void_name: Result /= Void
 			valid_name: not Result.is_empty
@@ -192,7 +191,7 @@ feature -- Basic Operations
 		do
 			Result := name_for_feature (a_name)
 
-			if eiffel_key_words.has (Result) and not shared_wizard_environment.new_eiffel_project then
+			if Eiffel_keywords.has (Result) and not shared_wizard_environment.new_eiffel_project then
 				Result.append (One)
 			end
 		ensure
@@ -207,7 +206,7 @@ feature -- Basic Operations
 			valid_name: not a_name.is_empty
 		do
 			create Result.make (100)
-			Result.append (Ccom_clause)
+			Result.append ("ccom_")
 			Result.append (name_for_feature (a_name))
 		ensure
 			non_void_feature_name: Result /= Void
@@ -220,7 +219,7 @@ feature -- Basic Operations
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
 		local
-			tmp_string: STRING
+			l_string: STRING
 		do
 			create Result.make (20)
 			if a_namespace /= Void and then not a_namespace.is_empty then
@@ -233,9 +232,8 @@ feature -- Basic Operations
 			end
 			Result.append (".h")
 
-			tmp_string := Result.twin
-			tmp_string.to_lower
-			if library_headers.has (tmp_string) then
+			l_string := Result.as_lower
+			if library_headers.has (l_string) then
 				if not standard_structures.has (a_name) then
 					Result.insert_string ("_x", Result.index_of ('.', 1))
 				end

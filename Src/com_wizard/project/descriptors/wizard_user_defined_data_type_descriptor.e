@@ -77,14 +77,14 @@ feature -- Status report
 
 feature -- Basic operations
 
-	set_type_descriptor_index (an_index: INTEGER) is
-			-- Set `type_descriptor_index' with `an_index'
+	set_type_descriptor_index (a_index: INTEGER) is
+			-- Set `type_descriptor_index' with `a_index'
 		require
-			valid_index: an_index /= 0
+			valid_index: a_index /= 0
 		do
-			type_descriptor_index := an_index
+			type_descriptor_index := a_index
 		ensure
-			valid_index: type_descriptor_index = an_index
+			valid_index: type_descriptor_index = a_index
 		end
 
 	set_library_descriptor (a_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is

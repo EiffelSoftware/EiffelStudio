@@ -18,23 +18,24 @@ feature -- Basic operations
 	process_property (a_property: WIZARD_PROPERTY_DESCRIPTOR) is
 			-- Process property.
 		local
-			a_prop_generator: WIZARD_EIFFEL_CLIENT_PROPERTY_GENERATOR
+			l_generator: WIZARD_EIFFEL_CLIENT_PROPERTY_GENERATOR
 		do
-			create a_prop_generator.generate (component, a_property)
-			add_property_features_to_class (a_prop_generator)
-			add_property_rename (a_prop_generator)
+			create l_generator.generate (component, a_property)
+			add_property_features_to_class (l_generator)
+			add_property_rename (l_generator)
 		end
-
 
 	process_function (a_function: WIZARD_FUNCTION_DESCRIPTOR) is
 			-- Process function.
 		local
-			a_func_generator: WIZARD_EIFFEL_CLIENT_FUNCTION_GENERATOR
+			l_generator: WIZARD_EIFFEL_CLIENT_FUNCTION_GENERATOR
 		do
-			create a_func_generator.generate (component, a_function)
-			add_feature_rename (a_func_generator)
-			add_feature_to_class (a_func_generator.feature_writer)
-			eiffel_writer.add_feature (a_func_generator.external_feature_writer, Externals)
+			create l_generator.generate (component, a_function)
+			add_feature_rename (l_generator)
+			if not a_function.is_renaming_clause then
+				add_feature_to_class (l_generator.feature_writer)
+				eiffel_writer.add_feature (l_generator.external_feature_writer, Externals)
+			end
 		end
 
 end -- class WIZARD_COMPONENT_INTERFACE_EIFFEL_CLIENT_GENERATOR

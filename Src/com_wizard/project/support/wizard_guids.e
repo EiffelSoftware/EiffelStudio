@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Well known interface GUIDs"
 	status: "See notice at end of class";
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,40 +26,6 @@ feature -- Access
 
 	Idispatch_guid_string: STRING is "{00020400-0000-0000-C000-000000000046}"
 			-- IDispatch IID
-
-
-feature -- Measurement
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
-feature -- Basic operations
-
-feature -- Obsolete
-
-feature -- Inapplicable
-
-feature {NONE} -- Implementation
-
-invariant
-	invariant_clause: -- Your invariant here
 
 end -- class WIZARD_GUIDS
 

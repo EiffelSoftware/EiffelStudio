@@ -119,14 +119,14 @@ feature -- Element Change
 			name_set:export_feature_name.is_equal (a_feature_name)
 		end
 
-	set_feature_index (an_index: INTEGER) is
-			-- Set 'feature_index' with 'an_index'.
+	set_feature_index (a_index: INTEGER) is
+			-- Set 'feature_index' with 'a_index'.
 		require
-			valid_index: an_index > 0
+			valid_index: a_index > 0
 		do
-			feature_index := an_index
+			feature_index := a_index
 		ensure
-			index_set: feature_index = an_index
+			index_set: feature_index = a_index
 		end
 
 	set_feature_alias (an_alias: like feature_alias) is

@@ -23,12 +23,12 @@ feature -- Basic operations
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			create ccom_feature_writer.make
-			create c_header_files.make
+			create {ARRAYED_LIST [STRING]} c_header_files.make (20)
 			create visitor
 
 			func_desc := a_function
 
-			ccom_feature_writer.set_name (external_feature_name (a_function.eiffel_name (a_component)))
+			ccom_feature_writer.set_name (external_feature_name (a_function.component_eiffel_name (a_component)))
 			ccom_feature_writer.set_comment (func_desc.description)
 
 			set_client_result_type_and_signature
@@ -45,7 +45,6 @@ feature -- Basic operations
 			non_void_feature_result_type: ccom_feature_writer.result_type /= Void
 			valid_feature_result_type: not ccom_feature_writer.result_type.is_empty
 			non_void_feature_comment: ccom_feature_writer.comment /= Void
-			valid_feature_comment: not ccom_feature_writer.comment.is_empty
 			non_void_header_files: c_header_files /= Void
 			function_descriptor_set: func_desc /= Void
 		end
@@ -86,19 +85,16 @@ feature {NONE} -- Implementation
 			non_void_interface_name: interface_name /= Void 
 			valid_interface_name: not interface_name.is_empty
 		local
-			arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
+			arguments: LIST [WIZARD_PARAM_DESCRIPTOR]
 			out_value, signature, free_memory, variables, return_value: STRING
-			pointer_var: LINKED_LIST[STRING]
 			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 			visitor: WIZARD_DATA_TYPE_VISITOR
-			tmp_name: STRING
+			tmp_name, l_header_file: STRING
 		do
 			Result := check_interface_pointer (interface_name)
 			create return_value.make (10000)
 
 			if func_desc.argument_count > 0 then
-				create pointer_var.make
-
 				arguments := func_desc.arguments
 	
 				create out_value.make (1000)
@@ -119,9 +115,9 @@ feature {NONE} -- Implementation
 					arguments.after
 				loop
 					visitor := arguments.item.type.visitor
-
-					if visitor.c_header_file /= Void and then not visitor.c_header_file.is_empty then
-						c_header_files.force (visitor.c_header_file)
+					l_header_file := visitor.c_declaration_header_file_name
+					if l_header_file /= Void and then not l_header_file.is_empty then
+						c_header_files.force (l_header_file)
 					end
 					if is_paramflag_fretval (arguments.item.flags) then
 
@@ -184,42 +180,35 @@ feature {NONE} -- Implementation
 							visitor.is_coclass or 
 							visitor.is_structure 
 						then
-							signature.append (Asterisk)
-							signature.append (Open_parenthesis)
+							signature.append ("*(")
 							signature.append (visitor.c_type)
-							signature.append (Asterisk)
-							signature.append (Close_parenthesis)
+							signature.append ("*)")
 							signature.append (arguments.item.name)
 
 						else
 							variables.append (visitor.c_type)
-							variables.append (Space)
+							variables.append (" ")
 
 							if visitor.is_array_type then
-								variables.append (Asterisk)
+								variables.append ("*")
 							end
 
-							variables.append (Tmp_clause)
+							variables.append ("tmp_")
 							variables.append (arguments.item.name)
 
 							if not visitor.is_array_type then
 								variables.append (visitor.c_post_type)
 							end
-							variables.append (Space_equal_space)
-							variables.append (Zero)
-							variables.append (Semicolon)
-							variables.append (New_line_tab)
-
-							signature.append (Tmp_clause)
+							variables.append (" = 0;%N%Ttmp_")
 							signature.append (arguments.item.name)
 	
-							variables.append ( in_out_parameter_set_up (arguments.item.name, arguments.item.type, visitor))
-							variables.append (New_line_tab)
+							variables.append (in_out_parameter_set_up (arguments.item.name, arguments.item.type, visitor))
+							variables.append ("%N%T")
 							if is_paramflag_fout (arguments.item.flags) then
 								out_value.append ( out_set_up (arguments.item.name, arguments.item.type.type, visitor))
 							else
 								create tmp_name.make (100)
-								tmp_name.append (Tmp_clause)
+								tmp_name.append ("tmp_")
 								tmp_name.append (arguments.item.name)
 							end
 						end

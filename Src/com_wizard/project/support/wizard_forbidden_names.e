@@ -22,7 +22,7 @@ inherit
 
 feature -- Access
 
-	eiffel_key_words: HASH_TABLE [STRING, STRING] is
+	Eiffel_keywords: HASH_TABLE [STRING, STRING] is
 			-- List of Eiffel key words.
 		local
 			tmp_string: STRING

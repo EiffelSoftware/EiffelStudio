@@ -34,8 +34,10 @@ feature -- Basic operations
 		local
 			a_func_generator: WIZARD_EIFFEL_SERVER_FUNCTION_GENERATOR
 		do
-			create a_func_generator.generate (component, a_function)
-			add_feature_rename (a_func_generator)
+			if not a_function.is_renaming_clause then
+				create a_func_generator.generate (component, a_function)
+				add_feature_rename (a_func_generator)
+			end
 		end
 
 end -- class WIZARD_COCLASS_INTERFACE_EIFFEL_SERVER_GENERATOR

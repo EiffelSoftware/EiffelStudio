@@ -70,8 +70,6 @@ feature -- Basic operations
 
 			writable := True
 
-			create c_header_file.make (100)
-
 			if is_void (an_element_type) then
 				message_output.add_warning (Current, message_output.void_array)
 
@@ -184,6 +182,7 @@ feature -- Basic operations
 				ec_function_return_type.append (Asterisk)
 			end
 
+			create c_definition_header_file_name.make (0)
 			vt_type := an_array_descriptor.type
 			set_visitor_atributes (a_visitor)
 		end

@@ -24,11 +24,13 @@ feature -- Basic operations
 		local
 			a_func_generator: WIZARD_EIFFEL_SERVER_FUNCTION_GENERATOR
 		do
-			create a_func_generator.generate_source (a_function)
-			add_feature_to_class (a_func_generator.feature_writer)
-
-			create a_func_generator.generate_on_hook (a_function)
-			add_feature_to_class (a_func_generator.feature_writer)
+			if not a_function.is_renaming_clause then
+				create a_func_generator.generate_source (a_function)
+				add_feature_to_class (a_func_generator.feature_writer)
+	
+				create a_func_generator.generate_on_hook (a_function)
+				add_feature_to_class (a_func_generator.feature_writer)
+			end
 		end
 
 end -- class WIZARD_COMPONENT_INTERFACE_SOURCE_EIFFEL_SERVER_GENERATOR

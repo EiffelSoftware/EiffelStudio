@@ -18,14 +18,14 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize data.
 		do
-			create {LINKED_LIST [WIZARD_WRITER_C_FUNCTION]} functions.make
-			create {LINKED_LIST [WIZARD_WRITER_C_MEMBER]} global_variables.make
-			create {LINKED_LIST [STRING]} others_forward.make
-			create {LINKED_LIST [STRING]} others.make
-			create {LINKED_LIST [STRING]} others_source.make
-			create {LINKED_LIST [STRING]} import_files.make
+			create {ARRAYED_LIST [WIZARD_WRITER_C_FUNCTION]} functions.make (20)
+			create {ARRAYED_LIST [WIZARD_WRITER_C_MEMBER]} global_variables.make (20)
+			create {ARRAYED_LIST [STRING]} others_forward.make (20)
+			create {ARRAYED_LIST [STRING]} others.make (20)
+			create {ARRAYED_LIST [STRING]} others_source.make (20)
+			create {ARRAYED_LIST [STRING]} import_files.make (20)
 			import_files.compare_objects
-			create {LINKED_LIST [STRING]} import_files_after.make
+			create {ARRAYED_LIST [STRING]} import_files_after.make (20)
 			import_files_after.compare_objects
 
 			standard_include
@@ -38,74 +38,49 @@ feature -- Access
 		require
 			ready: can_generate
 		do
-			Result := C_open_comment_line.twin
-			Result.append (New_line)
+			create Result.make (4096)
+			Result.append ("/*-----------------------------------------------------------%N")
 			Result.append (header)
-			Result.append (New_line)
-			Result.append (C_close_comment_line)
-			Result.append (New_line)
-			Result.append (New_line)
-
-			Result.append (Sharp)
-			Result.append (Ifndef)
-			Result.append (Space)
+			Result.append ("%N-----------------------------------------------------------*/%N%N#ifndef ")
 			Result.append (header_protector (header_file_name))
-			Result.append (New_line)
-
-			Result.append (Sharp)
-			Result.append (define)
-			Result.append (Space)
+			Result.append ("%N#define ")
 			Result.append (header_protector (header_file_name))
-			Result.append (New_line)
-
+			Result.append ("%N")
 			if not others_forward.is_empty then
 				Result.append (cpp_protector_start)
-				Result.append (New_line)
-
+				Result.append ("%N")
 				from
 					others_forward.start
 				until
 					others_forward.after
 				loop
-					Result.append (New_line)
-					Result.append (New_line)
+					Result.append ("%N%N")
 					Result.append (others_forward.item)
 					others_forward.forth
 				end
-				Result.append (New_line)
-				Result.append (New_line)
-
+				Result.append ("%N%N")
 				Result.append (cpp_protector_end)
-				Result.append (New_line)
+				Result.append ("%N")
 			end
-			Result.append (New_line)
-
+			Result.append ("%N")
 			from
 				import_files.start
 			until
 				import_files.after
 			loop
-				Result.append (Include_clause)
-				Result.append (Space)
-				Result.append ("%"")
+				Result.append ("#include %"")
 				Result.append (import_files.item)
-				Result.append ("%"")
-				Result.append (New_line)
-				Result.append (New_line)
+				Result.append ("%"%N%N")
 				import_files.forth
 			end
-
 			Result.append (cpp_protector_start)
-			Result.append (New_line)
-			Result.append (New_line)
-
+			Result.append ("%N%N")
 			from
 				global_variables.start
 			until
 				global_variables.after
 			loop
-				Result.append (New_line)
-				Result.append (New_line)
+				Result.append ("%N%N")
 				Result.append (global_variables.item.generated_header_file)
 				global_variables.forth
 			end
@@ -114,8 +89,7 @@ feature -- Access
 			until
 				others.after
 			loop
-				Result.append (New_line)
-				Result.append (New_line)
+				Result.append ("%N%N")
 				Result.append (others.item)
 				others.forth
 			end
@@ -124,34 +98,24 @@ feature -- Access
 			until
 				functions.after
 			loop
-				Result.append (New_line)
-				Result.append (New_line)
+				Result.append ("%N%N")
 				Result.append (functions.item.generated_header_file)
 				functions.forth
 			end
-
-			Result.append (New_line)
+			Result.append ("%N")
 			Result.append (cpp_protector_end)
-			Result.append (New_line)
-
+			Result.append ("%N")
 			from
 				import_files_after.start
 			until
 				import_files_after.after
 			loop
-				Result.append (Include_clause)
-				Result.append (Space)
-				Result.append ("%"")
+				Result.append ("#include %"")
 				Result.append (import_files_after.item)
-				Result.append ("%"")
-				Result.append (New_line)
-				Result.append (New_line)
+				Result.append ("%"%N%N")
 				import_files_after.forth
 			end
-
-			Result.append (New_line)
-			Result.append (Sharp)
-			Result.append (Endif)
+			Result.append ("%N#endif")
 		end
 
 	functions: LIST [WIZARD_WRITER_C_FUNCTION]
@@ -163,26 +127,14 @@ feature -- Access
 	generated_code: STRING is
 			-- Generated code
 		do
-			Result := C_open_comment_line.twin
-			Result.append (New_line)
+			create Result.make (4096)
+			Result.append ("/*-----------------------------------------------------------%N")
 			Result.append (header)
-			Result.append (New_line)
-			Result.append (C_close_comment_line)
-			Result.append (New_line)
-			Result.append (New_line)
-			Result.append (Include_clause)
-			Result.append (Space)
-			Result.append ("%"")
+			Result.append ("%N-----------------------------------------------------------*/%N%N#include %"")
 			Result.append (header_file_name)
-			Result.append ("%"")
-
-			Result.append (New_line)
-			Result.append (New_line)
-
+			Result.append ("%"%N%N")
 			Result.append (cpp_protector_start)
-			Result.append (New_line)
-			Result.append (New_line)
-
+			Result.append ("%N%N")
 			from
 				others_source.start
 			until
@@ -190,31 +142,25 @@ feature -- Access
 			loop
 				Result.append (others_source.item)
 				others_source.forth
-				Result.append (New_line)
-				Result.append (New_line)
+				Result.append ("%N%N")
 			end
-
-
 			from
 				functions.start
 			until
 				functions.after
 			loop
-				Result.append (New_line)
-				Result.append (New_line)
+				Result.append ("%N%N")
 				Result.append (functions.item.generated_code)
 				functions.forth
 			end
-
-			Result.append (New_line)
+			Result.append ("%N")
 			Result.append (cpp_protector_end)
 		end
 
 	can_generate: BOOLEAN is
 			-- Can code be generated?
 		do
-			Result := header /= Void and then not header.is_empty
-					and header_file_name /= Void and then not header_file_name.is_empty
+			Result := header /= Void and then not header.is_empty and header_file_name /= Void and then not header_file_name.is_empty
 		end
 
 feature -- Element Change

@@ -28,16 +28,13 @@ inherit
 
 feature -- Initialization
 
-	make (a_component: WIZARD_COMPONENT_DESCRIPTOR;
-				an_interface: WIZARD_INTERFACE_DESCRIPTOR;
-				an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS;
-				an_inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE) is
+	make (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS; a_inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE) is
 			-- Initialize
 		do
 			component := a_component
-			interface := an_interface
-			eiffel_writer := an_eiffel_writer
-			inherit_clause := an_inherit_clause
+			interface := a_interface
+			eiffel_writer := a_eiffel_writer
+			inherit_clause := a_inherit_clause
 		end
 
 feature -- Access
@@ -109,7 +106,7 @@ feature -- Basic Operations
 				from
 					a_property_generator.changed_names.start
 				until
-					a_property_generator.changed_names.off
+					a_property_generator.changed_names.after
 				loop
 					inherit_clause.add_rename (a_property_generator.changed_names.key_for_iteration, 
 							a_property_generator.changed_names.item_for_iteration)

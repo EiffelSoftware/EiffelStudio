@@ -37,7 +37,6 @@ feature -- Access
 				eiffel_writer.add_feature (ccom_last_error_description_feature (a_descriptor), Externals)
 				eiffel_writer.add_feature (ccom_last_error_help_file_feature (a_descriptor), Externals)
 				eiffel_writer.add_feature (ccom_last_source_of_exception_feature (a_descriptor), Externals)
-
 			end
 
 			Shared_file_name_factory.create_file_name (Current, eiffel_writer)
@@ -49,11 +48,11 @@ feature -- Access
 	process_interfaces (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Process coclass interfaces.
 		local
-			interface_processor: WIZARD_COCLASS_INTERFACE_EIFFEL_CLIENT_PROCESSOR
+			l_processor: WIZARD_COCLASS_INTERFACE_EIFFEL_CLIENT_PROCESSOR
 		do
-			create interface_processor.make (a_coclass, eiffel_writer)
-			interface_processor.process_interfaces
-			dispatch_interface := interface_processor.dispatch_interface
+			create l_processor.make (a_coclass, eiffel_writer)
+			l_processor.process_interfaces
+			dispatch_interface := l_processor.dispatch_interface
 		end
 
 feature --  Basic operation
@@ -85,18 +84,16 @@ feature {NONE} -- Implementation
 		do
 			a_coclass_name := name_for_feature (a_coclass_descriptor.eiffel_class_name.twin)
 
-			create ccom_create_feature_name.make (1000)
-			ccom_create_feature_name.append (Ccom_clause)
-			ccom_create_feature_name.append ("create_")
+			create ccom_create_feature_name.make (240)
+			ccom_create_feature_name.append ("ccom_create_")
 			ccom_create_feature_name.append (a_coclass_name)
 
-			create ccom_create_from_pointer_feature_name.make (1000)
+			create ccom_create_from_pointer_feature_name.make (240)
 			ccom_create_from_pointer_feature_name.append (ccom_create_feature_name)
 			ccom_create_from_pointer_feature_name.append ("_from_pointer")
 
-			create ccom_delete_feature_name.make (1000)
-			ccom_delete_feature_name.append (Ccom_clause)
-			ccom_delete_feature_name.append ("delete_")
+			create ccom_delete_feature_name.make (240)
+			ccom_delete_feature_name.append ("ccom_delete_")
 			ccom_delete_feature_name.append (a_coclass_name)
 
 			if is_typeflag_fcancreate (a_coclass_descriptor.flags) then
@@ -123,22 +120,9 @@ feature {NONE} -- Implementation
 			Result.set_comment ("Creation")
 
 			create feature_body.make (1000)
-			feature_body.append (Tab_tab_tab)
-			feature_body.append (Initializer_variable)
-			feature_body.append (Space)
-			feature_body.append (Assignment)
-			feature_body.append (Space)
+			feature_body.append ("%T%T%Tinitializer := ")
 			feature_body.append (ccom_create_feature_name)
-			feature_body.append (New_line_tab_tab_tab)
-			feature_body.append (Item_clause)
-			feature_body.append (Space)
-			feature_body.append (Assignment)
-			feature_body.append (Space)
-			feature_body.append (Ccom_item_function_name)
-			feature_body.append (Space)
-			feature_body.append (Open_parenthesis)
-			feature_body.append (Initializer_variable)
-			feature_body.append (Close_parenthesis)
+			feature_body.append ("%N%T%T%Titem := ccom_item (initializer)")
 
 			Result.set_effective
 			Result.set_body (feature_body)

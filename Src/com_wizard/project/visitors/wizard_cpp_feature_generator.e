@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 			valid_result: not Result.is_empty
 		end
 
-	examine_hresult_with_pointer (variable_name: STRING; pointer_variables: LINKED_LIST[STRING]): STRING is
+	examine_hresult_with_pointer (variable_name: STRING; pointer_variables: LIST [STRING]): STRING is
 			-- Hresult examination function
 		require
 			non_void_name: variable_name /= Void

@@ -76,8 +76,6 @@ feature -- Special simbols -- 1
 
 	Percent: STRING is "%%"
 
-	Tilda: STRING is "~"
-
 	Dot: STRING is "."
 
 	Less: STRING is "<"

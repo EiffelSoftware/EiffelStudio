@@ -123,10 +123,10 @@ feature -- Basic operations
 				set_common_fields (a_descriptor)
 				a_descriptor.set_fields (fields)
 				a_descriptor.set_size (size_of_instance)
-				if description /= Void and then not description.is_empty then
+				if description /= Void then
 					a_descriptor.set_description (description)
 				else
-					a_descriptor.set_description (No_description_available)
+					a_descriptor.set_description ("")
 				end
 				a_descriptor.set_type_library (type_library_descriptor)
 				a_descriptor.set_is_union (is_union)
@@ -134,7 +134,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	fields: SORTED_TWO_WAY_LIST[WIZARD_RECORD_FIELD_DESCRIPTOR]
+	fields: SORTED_TWO_WAY_LIST [WIZARD_RECORD_FIELD_DESCRIPTOR]
 			-- Descriptions of structure's fields
 
 	size_of_instance: INTEGER

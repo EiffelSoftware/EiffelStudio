@@ -17,8 +17,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_component: WIZARD_COMPONENT_DESCRIPTOR; an_interface: WIZARD_INTERFACE_DESCRIPTOR;
-					a_writer: WIZARD_WRITER_CPP_CLASS) is
+	make (a_component: WIZARD_COMPONENT_DESCRIPTOR; an_interface: WIZARD_INTERFACE_DESCRIPTOR; a_writer: WIZARD_WRITER_CPP_CLASS) is
 			-- Initialize
 		require
 			non_void_component: a_component /= Void

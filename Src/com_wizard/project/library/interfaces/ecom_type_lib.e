@@ -55,14 +55,14 @@ feature -- Access
 			Result := ccom_find_name (initializer, wide_string.item, count)
 		end
 
-	documentation (an_index: INTEGER): ECOM_DOCUMENTATION is
-			-- Documentation of library if `an_index' is equal to -1,
-			-- or type description, if `an_index' is equal 
+	documentation (a_index: INTEGER): ECOM_DOCUMENTATION is
+			-- Documentation of library if `a_index' is equal to -1,
+			-- or type description, if `a_index' is equal 
 			-- to index of type description
 		require
-			valid_index: an_index >= -1 and an_index < type_info_count
+			valid_index: a_index >= -1 and a_index < type_info_count
 		do
-			Result := ccom_get_documentation (initializer, an_index)
+			Result := ccom_get_documentation (initializer, a_index)
 		ensure
 			non_void_documentation: Result /= Void
 		end
@@ -89,12 +89,12 @@ feature -- Access
 			non_void_type_comp_interface: Result /= Void 
 		end
 
-	type_info (an_index: INTEGER): ECOM_TYPE_INFO is
-			-- Type description in library at `an_index'
+	type_info (a_index: INTEGER): ECOM_TYPE_INFO is
+			-- Type description in library at `a_index'
 		require
-			valid_index: an_index >= 0 and an_index < type_info_count
+			valid_index: a_index >= 0 and a_index < type_info_count
 		do
-			!! Result.make_from_pointer (ccom_get_type_info (initializer, an_index))
+			!! Result.make_from_pointer (ccom_get_type_info (initializer, a_index))
 		ensure
 			non_void_type_info: Result /= Void 
 			valid_type_info: Result.exists
@@ -119,13 +119,13 @@ feature -- Access
 			non_void_type_info: Result /= Void 
 		end
 
-	type_info_type (an_index: INTEGER): INTEGER is
+	type_info_type (a_index: INTEGER): INTEGER is
 			-- Type of type description
 			-- See ECOM_TYPE_KIND for return values
 		require
-			valid_index: an_index >= 0 and an_index < type_info_count
+			valid_index: a_index >= 0 and a_index < type_info_count
 		do
-			Result := ccom_get_type_info_type (initializer, an_index)
+			Result := ccom_get_type_info_type (initializer, a_index)
 		ensure
 			valid_type: is_valid_type_kind (Result)
 		end

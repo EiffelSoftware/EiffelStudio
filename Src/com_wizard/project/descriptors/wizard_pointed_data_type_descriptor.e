@@ -109,7 +109,7 @@ feature -- Access
 			tmp_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR
 			tmp_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
 			a_type_descriptor: WIZARD_TYPE_DESCRIPTOR
-			an_index: INTEGER
+			a_index: INTEGER
 		do
 			user_defined ?= pointed_data_type_descriptor
 			if user_defined = Void then
@@ -122,29 +122,27 @@ feature -- Access
 			check
 				non_void_user_defined: user_defined /= Void
 			end
-			if (user_defined /= Void) then
-				an_index := user_defined.type_descriptor_index
-				a_type_descriptor := user_defined.library_descriptor.descriptors.item (an_index)
-				from
+			a_index := user_defined.type_descriptor_index
+			a_type_descriptor := user_defined.library_descriptor.descriptors.item (a_index)
+			from
+				alias_descriptor ?= a_type_descriptor
+			until
+				alias_descriptor = Void
+			loop
+				user_defined ?= alias_descriptor.type_descriptor
+				if (user_defined /= Void) then
+					a_index := user_defined.type_descriptor_index
+					a_type_descriptor := user_defined.library_descriptor.descriptors.item (a_index)
 					alias_descriptor ?= a_type_descriptor
-				until
-					alias_descriptor = Void
-				loop
-					user_defined ?= alias_descriptor.type_descriptor
-					if (user_defined /= Void) then
-						an_index := user_defined.type_descriptor_index
-						a_type_descriptor := user_defined.library_descriptor.descriptors.item (an_index)
-						alias_descriptor ?= a_type_descriptor
-					else
-						alias_descriptor := Void
-					end
+				else
+					alias_descriptor := Void
 				end
-				tmp_interface_descriptor ?= a_type_descriptor
-				if tmp_interface_descriptor = Void then
-					tmp_coclass_descriptor ?= a_type_descriptor
-					if tmp_coclass_descriptor /= Void then
-						tmp_interface_descriptor := tmp_coclass_descriptor.default_interface_descriptor
-					end
+			end
+			tmp_interface_descriptor ?= a_type_descriptor
+			if tmp_interface_descriptor = Void then
+				tmp_coclass_descriptor ?= a_type_descriptor
+				if tmp_coclass_descriptor /= Void then
+					tmp_interface_descriptor := tmp_coclass_descriptor.default_interface_descriptor
 				end
 			end
 			Result := tmp_interface_descriptor

@@ -40,32 +40,25 @@ feature -- Basic operations
 			type := a_type_info.type_attr.type_kind
 			if type = Tkind_enum then
 				create Enum_creator
-				Result := Enum_creator.create_descriptor 
-					(a_documentation, a_type_info)
+				Result := Enum_creator.create_descriptor (a_documentation, a_type_info)
 			elseif type = Tkind_record then
 				create Record_creator
-				Result := Record_creator.create_descriptor  
-					(a_documentation, a_type_info)
+				Result := Record_creator.create_descriptor (a_documentation, a_type_info)
 			elseif type = Tkind_interface then
 				create Interface_creator
-				Result := Interface_creator.create_descriptor 
-					(a_documentation, a_type_info)
+				Result := Interface_creator.create_descriptor (a_documentation, a_type_info)
 			elseif type = Tkind_dispatch then
 				create Interface_creator
-				Result := Interface_creator.create_descriptor 
-					(a_documentation, a_type_info)
+				Result := Interface_creator.create_descriptor (a_documentation, a_type_info)
 			elseif type = Tkind_coclass then
 				create Coclass_creator
-				Result := Coclass_creator.create_descriptor 
-					(a_documentation, a_type_info)
+				Result := Coclass_creator.create_descriptor (a_documentation, a_type_info)
 			elseif type = Tkind_alias then
 				create Alias_creator
-				Result := Alias_creator.create_descriptor 
-					(a_documentation, a_type_info)
+				Result := Alias_creator.create_descriptor (a_documentation, a_type_info)
 			elseif type = Tkind_union then
 				create Record_creator
-				Result := Record_creator.create_descriptor  
-					(a_documentation, a_type_info)
+				Result := Record_creator.create_descriptor (a_documentation, a_type_info)
 			elseif type = Tkind_module then
 				message_output.add_warning (Current, message_output.Type_info_module)
 			end

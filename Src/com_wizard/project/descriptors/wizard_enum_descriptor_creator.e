@@ -83,7 +83,7 @@ feature -- Basic operations
 			elem_name: STRING
 			a_variant: ECOM_VARIANT
 		do
-			create elements.make
+			create {ARRAYED_LIST [WIZARD_ENUM_ELEMENT_DESCRIPTOR]} elements.make (20)
 			element_count := a_type_info.type_attr.count_variables
 			from
 				i := 0
@@ -132,7 +132,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	elements: LINKED_LIST[WIZARD_ENUM_ELEMENT_DESCRIPTOR]
+	elements: LIST [WIZARD_ENUM_ELEMENT_DESCRIPTOR]
 			-- list of element descriptors
 
 	size_of_instance: INTEGER

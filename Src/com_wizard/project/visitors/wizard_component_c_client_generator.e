@@ -44,27 +44,13 @@ feature {NONE} -- Implementation
 	excepinfo_initialization: STRING is
 			-- EXCEPINFO structure initialization.
 		do
-			create Result.make (100)
 			if dispatch_interface then
-				Result.append (New_line_tab)
-				Result.append (Excepinfo_variable_name)
-				Result.append (Space_equal_space)
-				Result.append (Open_parenthesis)
-				Result.append (Excepinfo)
-				Result.append (Asterisk)
-				Result.append (Close_parenthesis)
-				Result.append (Co_task_mem_alloc)
-				Result.append (Space_open_parenthesis)
-				Result.append (Sizeof)
-				Result.append (Space_open_parenthesis)
-				Result.append (Excepinfo)
-				Result.append (Close_parenthesis)
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				
-				Result.append (New_line_tab)
-				Result.append ("if (excepinfo != NULL)%N%T%T")
+				create Result.make (200)
+				Result.append ("%N%Texcepinfo = (EXCEPINFO*)CoTaskMemAlloc (sizeof (EXCEPINFO));")
+				Result.append ("%N%Tif (excepinfo != NULL)%N%T%T")
 				Result.append ("memset (excepinfo, %'\0%', sizeof (EXCEPINFO));")
+			else
+				create Result.make (0)
 			end
 		ensure
 			non_void_initialization: Result /= Void
@@ -76,85 +62,40 @@ feature {NONE} -- Implementation
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
 		do
-			-- if (`interface_variable_prepend'`a_name' == NULL )
-			--	`interface_vaiable_prepend'`a_name'`Release_function'
-
 			create Result.make (500)
-			Result.append (If_keyword)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Interface_variable_prepend)
+			Result.append ("if (p_")
 			Result.append (a_name)
-			Result.append (C_not_equal)
-			Result.append (Null)
-			Result.append (Close_parenthesis)
-			Result.append (New_line_tab_tab)
-			Result.append (Interface_variable_prepend)
+			Result.append (" != NULL)%N%T%Tp_")
 			Result.append (a_name)
-			Result.append (Release_function)
-			Result.append (New_line_tab)
+			Result.append ("->Release ();%N%T")
 		ensure
 			non_void_release_interface: Result /= Void
 			valid_release_interface: not Result.is_empty
 		end
-
 
 	add_default_function is
 			-- Add default function.
 		require
 			non_void_cpp_class_writer: cpp_class_writer /= Void
 		local
-			function_writer: WIZARD_WRITER_C_FUNCTION
-			function_body: STRING
+			l_writer: WIZARD_WRITER_C_FUNCTION
 		do
-			create function_writer.make
-			function_writer.set_name ("ccom_item")
-			function_writer.set_comment ("IUnknown interface")
-			function_writer.set_result_type (Eif_pointer)
-
-			create function_body.make (1000)
-			function_body.append (tab)
-			function_body.append (Return)
-			function_body.append (Space_open_parenthesis)
-			function_body.append (Eif_pointer)
-			function_body.append (Close_parenthesis)
-			function_body.append (Iunknown_variable_name)
-			function_body.append (Semicolon)
-
-			function_writer.set_body (function_body)
-
-			cpp_class_writer.add_function (function_writer, Public)
-
+			create l_writer.make
+			l_writer.set_name ("ccom_item")
+			l_writer.set_comment ("IUnknown interface")
+			l_writer.set_result_type ("EIF_POINTER")
+			l_writer.set_body ("%Treturn (EIF_POINTER)p_unknown;")
+			cpp_class_writer.add_function (l_writer, Public)
 		end
 
 	ccom_last_error_code_function: WIZARD_WRITER_C_FUNCTION is
 			-- `ccom_last_error_code' function.
-
-		local
-			function_body: STRING
 		do
 			create Result.make
 			Result.set_name (ccom_last_error_code_name)
 			Result.set_comment ("Last error code")
-			Result.set_result_type  (Eif_integer)
-
-			create function_body.make (1000)
-			function_body.append (tab)
-
-			-- return (EIF_INTEGER) excepinfo->wCode;
-
-			function_body.append (Return)
-			function_body.append (Space)
-			function_body.append (Open_parenthesis)
-			function_body.append (Eif_integer)
-			function_body.append (Close_parenthesis)
-			function_body.append (Space)
-			function_body.append (Excepinfo_access)
-			function_body.append (Wcode_field)
-			function_body.append (Semicolon)
-
-			Result.set_body (function_body)
-
+			Result.set_result_type ("EIF_INTEGER")
+			Result.set_body ("%Treturn (EIF_INTEGER) excepinfo->wCode;")
 		ensure
 			non_void_function: Result /= Void
 			non_void_function_name: Result.name /= Void
@@ -163,37 +104,12 @@ feature {NONE} -- Implementation
 
 	ccom_last_source_of_exception_function: WIZARD_WRITER_C_FUNCTION is
 			-- `ccom_last_source_of_exception' function.
-		local
-			function_body: STRING
 		do
 			create Result.make
 			Result.set_name (ccom_last_source_of_exception_name)
 			Result.set_comment ("Last source of exception")
-			Result.set_result_type  (Eif_reference)
-
-			create function_body.make (1000)
-			function_body.append (tab)
-
-			-- return (EIF_INTEGER) excepinfo->wCode;
-
-			function_body.append (Return)
-			function_body.append (Space)
-			function_body.append (Open_parenthesis)
-			function_body.append (Eif_reference)
-			function_body.append (Close_parenthesis)
-			function_body.append (Space)
-			function_body.append (Ce_mapper)
-			function_body.append (Dot)
-			function_body.append ("ccom_ce_bstr")
-			function_body.append (Space)
-			function_body.append (Open_parenthesis)
-			function_body.append (Excepinfo_access)
-			function_body.append (Bstr_source_field)
-			function_body.append (Close_parenthesis)
-			function_body.append (Semicolon)
-
-			Result.set_body (function_body)
-
+			Result.set_result_type ("EIF_REFERENCE")
+			Result.set_body ("%Treturn (EIF_REFERENCE) rt_ce.ccom_ce_bstr (excepinfo->bstrSource);")
 		ensure
 			non_void_function: Result /= Void
 			non_void_function_name: Result.name /= Void
@@ -202,37 +118,12 @@ feature {NONE} -- Implementation
 
 	ccom_last_error_description_function: WIZARD_WRITER_C_FUNCTION is
 			-- `ccom_last_error_description' function.
-		local
-			function_body: STRING
 		do
 			create Result.make
 			Result.set_name (ccom_last_error_description_name)
 			Result.set_comment ("Last error description")
-			Result.set_result_type  (Eif_reference)
-
-			create function_body.make (1000)
-			function_body.append (tab)
-
-			-- return (EIF_INTEGER) excepinfo->wCode;
-
-			function_body.append (Return)
-			function_body.append (Space)
-			function_body.append (Open_parenthesis)
-			function_body.append (Eif_reference)
-			function_body.append (Close_parenthesis)
-			function_body.append (Space)
-			function_body.append (Ce_mapper)
-			function_body.append (Dot)
-			function_body.append ("ccom_ce_bstr")
-			function_body.append (Space)
-			function_body.append (Open_parenthesis)
-			function_body.append (Excepinfo_access)
-			function_body.append (Bstr_description_field)
-			function_body.append (Close_parenthesis)
-			function_body.append (Semicolon)
-
-			Result.set_body (function_body)
-
+			Result.set_result_type ("EIF_REFERENCE")
+			Result.set_body ("%Treturn (EIF_REFERENCE) rt_ce.ccom_ce_bstr (excepinfo->bstrDescription);")
 		ensure
 			non_void_function: Result /= Void
 			non_void_function_name: Result.name /= Void
@@ -241,59 +132,20 @@ feature {NONE} -- Implementation
 
 	ccom_last_error_help_file_function: WIZARD_WRITER_C_FUNCTION is
 			-- `ccom_last_error_help_file' function.
-		local
-			function_body: STRING
 		do
 			create Result.make
 			Result.set_name (ccom_last_error_help_file_name)
 			Result.set_comment ("Last error help file")
-			Result.set_result_type  (Eif_reference)
-
-			create function_body.make (1000)
-			function_body.append (tab)
-
-			-- return (EIF_INTEGER) excepinfo->wCode;
-
-			function_body.append (Return)
-			function_body.append (Space)
-			function_body.append (Open_parenthesis)
-			function_body.append (Eif_reference)
-			function_body.append (Close_parenthesis)
-			function_body.append (Space)
-			function_body.append (Ce_mapper)
-			function_body.append (Dot)
-			function_body.append ("ccom_ce_bstr")
-			function_body.append (Space)
-			function_body.append (Open_parenthesis)
-			function_body.append (Excepinfo_access)
-			function_body.append (Bstr_help_file_field)
-			function_body.append (Close_parenthesis)
-			function_body.append (Semicolon)
-
-			Result.set_body (function_body)
-
+			Result.set_result_type ("EIF_REFERENCE")
+			Result.set_body ("%Treturn (EIF_REFERENCE) rt_ce.ccom_ce_bstr (excepinfo->bstrHelpFile);")
 		ensure
 			non_void_function: Result /= Void
 			non_void_function_name: Result.name /= Void
 			non_void_function_body: Result.body /= Void
 		end
 
-	co_initialize_ex_function: STRING is
+	co_initialize_ex_function: STRING is "%Thr = CoInitializeEx (NULL, COINIT_APARTMENTTHREADED);%N"
 			-- CoInitialize function call
-		do
-			create Result.make (1000)
-			Result.append (Tab)
-			Result.append ("hr = CoInitializeEx (")
-			Result.append (Null)
-			Result.append (Comma_space)
-			Result.append (concurrency_model)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line)
-		ensure
-			non_void_co_initialize: Result /= Void
-			valid_co_initialize: not Result.is_empty
-		end
 
 end -- class WIZARD_COMPONENT_C_CLIENT_GENERATOR
 

@@ -63,25 +63,24 @@ feature {NONE} -- Implementation
 			non_void_interface_name: interface_name /= Void
 			non_void_property: a_property/= Void
 			valid_interface_name: not interface_name.is_empty
+		local
+			l_header_file_name: STRING
 		do
 			-- Access feature (get_  function)
 			create c_access_feature.make
 
-			c_access_feature.set_name (external_feature_name (a_property.eiffel_name (a_component)))
+			c_access_feature.set_name (external_feature_name (a_property.component_eiffel_name (a_component)))
 
-			if visitor.c_header_file /= Void and then not visitor.c_header_file.is_empty then
-				set_header_file (visitor.c_header_file)
+			l_header_file_name := visitor.c_definition_header_file_name
+			if l_header_file_name /= Void and then not l_header_file_name.is_empty then
+				set_header_file (l_header_file_name)
 			end
 
 			-- Set result type
-			if 
-				visitor.is_basic_type or 
-				(visitor.vt_type = Vt_bool) or 
-				visitor.is_enumeration 
-			then
+			if visitor.is_basic_type or visitor.vt_type = Vt_bool or visitor.is_enumeration then
 				c_access_feature.set_result_type (visitor.cecil_type)
 			else
-				c_access_feature.set_result_type (Eif_reference)
+				c_access_feature.set_result_type ("EIF_REFERENCE")
 			end
 
 			-- Set comment
@@ -107,7 +106,7 @@ feature {NONE} -- Implementation
 			
 			create set_feature_name.make (100)
 			set_feature_name.append (Set_clause)
-			set_feature_name.append (a_property.eiffel_name (a_component))
+			set_feature_name.append (a_property.component_eiffel_name (a_component))
 			c_setting_feature.set_name (external_feature_name (set_feature_name))
 
 			-- Set comment
@@ -118,38 +117,19 @@ feature {NONE} -- Implementation
 
 			-- Set signature
 			create a_signature.make (200)
-			if 
-				visitor.is_basic_type or 
-				(visitor.vt_type = Vt_bool) or 
-				visitor.is_enumeration 
-			then
+			if visitor.is_basic_type or visitor.vt_type = Vt_bool or visitor.is_enumeration then
 				a_signature.append (visitor.cecil_type)
-
-			elseif 
-				visitor.is_structure or 
-				visitor.is_array_basic_type 
-			then
+			elseif visitor.is_structure or visitor.is_array_basic_type then
 				a_signature.append (visitor.c_type)
-				a_signature.append (Space)
-				a_signature.append (Asterisk)
-			elseif 
-				visitor.is_structure_pointer
-			then
+				a_signature.append (" *")
+			elseif visitor.is_structure_pointer then
 				a_signature.append (visitor.c_type)
-			
-			elseif
-				visitor.is_interface_pointer or
-				visitor.is_coclass_pointer or
-				visitor.is_interface or
-				visitor.is_coclass
-			then
-				a_signature.append (Iunknown)
-
+			elseif visitor.is_interface_pointer or visitor.is_coclass_pointer or visitor.is_interface or visitor.is_coclass then
+				a_signature.append ("IUnknown *")
 			else
-				a_signature.append (Eif_object)
+				a_signature.append ("EIF_OBJECT")
 			end
-			a_signature.append (Space)
-			a_signature.append (Argument_name)
+			a_signature.append (" a_value")
 			c_setting_feature.set_signature (a_signature)
 			c_setting_feature.set_result_type ("void")
 
@@ -165,63 +145,37 @@ feature {NONE} -- Implementation
 			valid_interface_name: not interface_name.is_empty
 			non_void_access_feature: c_access_feature /= Void
 		local
-			tmp_body: STRING
-			pointer_var: LINKED_LIST[STRING]
+			l_body: STRING
+			l_var: ARRAYED_LIST [STRING]
 		do
-			create pointer_var.make
+			create l_var.make (0)
 
-			tmp_body := check_interface_pointer (interface_name)
-			tmp_body.append (New_line_tab)
+			create l_body.make (4096)
+			l_body.append (check_interface_pointer (interface_name))
 
 			-- Set up "invoke" function call
 
-			tmp_body.append ("DISPID disp = (DISPID) ")
-			tmp_body.append_integer (member_id)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
-			tmp_body.append ("LCID lcid = (LCID) ")
-			tmp_body.append_integer (lcid)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
-
-			tmp_body.append (Empty_dispparams)
-			tmp_body.append (New_line_tab)
-			tmp_body.append (Return_variant_variable)
-			tmp_body.append (New_line)
-			tmp_body.append (New_line)
-
-			tmp_body.append (initialize_excepinfo)
-			tmp_body.append (New_line_tab)
-
-			tmp_body.append ("unsigned int nArgErr;")
-			tmp_body.append (New_line)
-			tmp_body.append (New_line_tab)
-			tmp_body.append (Hresult_variable_name)
-			tmp_body.append (Space_equal_space)
-			tmp_body.append (Interface_variable_prepend)
-			tmp_body.append (interface_name)
-			tmp_body.append (Struct_selection_operator)
-			tmp_body.append (Invoke)
-			tmp_body.append (Space_open_parenthesis)
-			tmp_body.append ("disp, IID_NULL, lcid, DISPATCH_PROPERTYGET, &args, ")
-			tmp_body.append (Ampersand)
-			tmp_body.append (Return_variant_variable_name)
-			
-			tmp_body.append (", excepinfo, &nArgErr);")
-			tmp_body.append (New_line_tab)
+			l_body.append ("%N%TDISPID disp = (DISPID) ")
+			l_body.append_integer (member_id)
+			l_body.append (";%N%TLCID lcid = (LCID) ")
+			l_body.append_integer (lcid)
+			l_body.append (";%N%TDISPPARAMS args = {NULL, NULL, 0, 0};%N%TVARIANT pResult; %N%TVariantInit (&pResult);%N%N")
+			l_body.append (initialize_excepinfo)
+			l_body.append ("%N%Tunsigned int nArgErr;%N%N%Thr = p_")
+			l_body.append (interface_name)
+			l_body.append ("->Invoke (disp, IID_NULL, lcid, DISPATCH_PROPERTYGET, &args, &pResult, excepinfo, &nArgErr);%N%T")
 
 			-- if argument error
-			tmp_body.append (examine_parameter_error (Hresult_variable_name))
-			tmp_body.append (New_line_tab)
-			tmp_body.append (examine_hresult_with_pointer (Hresult_variable_name, pointer_var))
+			l_body.append (examine_parameter_error ("hr"))
+			l_body.append ("%N%T")
+			l_body.append (examine_hresult_with_pointer ("hr", l_var))
 
-			tmp_body.append (New_line)
-			tmp_body.append (New_line_tab)
+			l_body.append ("%N%N%T")
 
 			-- return result from each type
-			tmp_body.append (retval_return_value_set_up (visitor))
+			l_body.append (retval_return_value_set_up (visitor))
 
-			c_access_feature.set_body (tmp_body)
+			c_access_feature.set_body (l_body)
 		end
 
 	set_setting_body (interface_name: STRING; lcid, member_id: INTEGER; visitor: WIZARD_DATA_TYPE_VISITOR) is
@@ -232,200 +186,108 @@ feature {NONE} -- Implementation
 			valid_interface_name: not interface_name.is_empty
 			non_void_c_setting_feature: c_setting_feature /= Void
 		local
-			tmp_body: STRING
-			pointer_var: LINKED_LIST[STRING]
+			l_body: STRING
+			l_var: ARRAYED_LIST [STRING]
 			type: INTEGER
 		do
-			create pointer_var.make
-
+			create l_var.make (1)
 			type := visitor.vt_type
-
-			tmp_body := check_interface_pointer (interface_name)
-			tmp_body.append (New_line)
+			l_body := check_interface_pointer (interface_name)
 
 			-- Set up "invoke" function call
-
-			tmp_body.append (Tab)
-			tmp_body.append ("DISPID disp = (DISPID) ")
-			tmp_body.append_integer (member_id)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
-
-			tmp_body.append ("LCID lcid = (LCID) ")
-			tmp_body.append_integer (lcid)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
+			l_body.append ("%N%TDISPID disp = (DISPID) ")
+			l_body.append_integer (member_id)
+			l_body.append (";%N%TLCID lcid = (LCID) ")
+			l_body.append_integer (lcid)
 
 			-- Set up parameter
-			tmp_body.append ("DISPPARAMS args;")
-			tmp_body.append (New_line_tab)
-
-			tmp_body.append ("VARIANTARG arg;")
-			tmp_body.append (New_line)
-			tmp_body.append (New_line_tab)
+			l_body.append (";%N%TDISPPARAMS args;%N%TVARIANTARG arg;%N%N%T")
 
 			if not visitor.is_structure then
-				if 
-					visitor.is_interface_pointer or
-					visitor.is_coclass_pointer
-				then
+				if visitor.is_interface_pointer or visitor.is_coclass_pointer then
 					if visitor.vt_type = Vt_unknown then
-						tmp_body.append (Iunknown)
+						l_body.append ("IUnknown *")
 					else
-						tmp_body.append (Idispatch)
+						l_body.append ("IDispatch *")
 					end
 				else
-					tmp_body.append (visitor.c_type)
+					l_body.append (visitor.c_type)
 				end
-				tmp_body.append (Space)
-				tmp_body.append (Tmp_variable_name)
+				l_body.append (" tmp_value")
 				
-				if 
-					visitor.is_interface_pointer or
-					visitor.is_coclass_pointer or
-					visitor.is_structure_pointer
-				then
-					tmp_body.append (" = 0")
+				if visitor.is_interface_pointer or visitor.is_coclass_pointer or visitor.is_structure_pointer then
+					l_body.append (" = 0")
 				end
-				tmp_body.append (Semicolon)
-				tmp_body.append (New_line_tab)
+				l_body.append (";%N%T")
 
-				if 
-					visitor.vt_type = Vt_dispatch
-				then
-					tmp_body.append ("hr = " + Argument_name + 
-								"->QueryInterface (IID_IDispatch, (void**)&" +
-								Tmp_variable_name + 
-								")")
+				if visitor.vt_type = Vt_dispatch then
+					l_body.append ("hr = a_value->QueryInterface (IID_IDispatch, (void**)&tmp_value)")
 				elseif
 					visitor.vt_type = Vt_unknown
 				then
-					tmp_body.append (Tmp_variable_name + " = " + Argument_name)
-				
+					l_body.append ("tmp_value = a_value")
 				else
-					tmp_body.append (Tmp_variable_name)
-					tmp_body.append (Space_equal_space)
-
+					l_body.append ("tmp_value = ")
 					if is_byref (type) then
-						pointer_var.extend (Tmp_variable_name)
+						l_var.extend ("tmp_value")
 					end
 
-
-					if 
-						visitor.is_basic_type or 
-						visitor.is_enumeration  or
-						visitor.is_array_basic_type or
-						visitor.is_structure_pointer
-					then
-						tmp_body.append (Open_parenthesis)
-						tmp_body.append (visitor.c_type)
-						tmp_body.append (Close_parenthesis)
-						tmp_body.append (Argument_name)
-
+					if visitor.is_basic_type or visitor.is_enumeration  or visitor.is_array_basic_type or visitor.is_structure_pointer then
+						l_body.append ("(")
+						l_body.append (visitor.c_type)
+						l_body.append (")a_value")
 					else
 						if visitor.need_generate_ec then
-							tmp_body.append (Generated_ec_mapper)
+							l_body.append (Generated_ec_mapper)
 						else
-							tmp_body.append (Ec_mapper)
+							l_body.append ("rt_ec")
 						end
 
-						tmp_body.append (Dot)
-						tmp_body.append (visitor.ec_function_name)
-						tmp_body.append (Space_open_parenthesis)
-						tmp_body.append (Argument_name)
-						tmp_body.append (Close_parenthesis)
+						l_body.append (".")
+						l_body.append (visitor.ec_function_name)
+						l_body.append (" (a_value)")
 					end
 				end
-				tmp_body.append (Semicolon)
-				tmp_body.append (New_line_tab)
+				l_body.append (";%N%T")
 			end
 
-			tmp_body.append ("arg.vt")
-			tmp_body.append (Space_equal_space)
-			tmp_body.append_integer (type)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
+			l_body.append ("arg.vt = ")
+			l_body.append_integer (type)
+			l_body.append (";%N%T")
 
 			if visitor.is_structure then
-				tmp_body.append (Memcpy)
-				tmp_body.append (Space_open_parenthesis)
-				tmp_body.append (Ampersand)
-				tmp_body.append (Open_parenthesis)
-				tmp_body.append ("arg.")
-				tmp_body.append (vartype_namer.variant_field_name (visitor))
-				tmp_body.append (Close_parenthesis)
-				tmp_body.append (Comma_space)
-				tmp_body.append (Argument_name)
-				tmp_body.append (Comma_space)
-				tmp_body.append (Sizeof)
-				tmp_body.append (Space_open_parenthesis)
-				tmp_body.append (visitor.c_type)
-				tmp_body.append (Close_parenthesis)
-				tmp_body.append (Close_parenthesis)
+				l_body.append ("memcpy (&(arg.")
+				l_body.append (vartype_namer.variant_field_name (visitor))
+				l_body.append ("), a_value, sizeof (")
+				l_body.append (visitor.c_type)
+				l_body.append ("))")
 			else
-				tmp_body.append ("arg.")
-				tmp_body.append (vartype_namer.variant_field_name (visitor))
-				tmp_body.append (Space_equal_space)
-				tmp_body.append (Tmp_variable_name)
+				l_body.append ("arg.")
+				l_body.append (vartype_namer.variant_field_name (visitor))
+				l_body.append (" = tmp_value")
 			end
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
-
-			tmp_body.append ("args.rgvarg = &arg")
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
-			tmp_body.append ("args.rgdispidNamedArgs = NULL")
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
-			tmp_body.append ("args.cArgs = 1")
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
-			tmp_body.append ("args.cNamedArgs = 0")
-			tmp_body.append (Semicolon)
-
-			tmp_body.append (New_line)
-			tmp_body.append (New_line_tab)
-
-			tmp_body.append (Return_variant_variable)
-			tmp_body.append (New_line)
-			tmp_body.append (New_line)
-			tmp_body.append (initialize_excepinfo)
-			tmp_body.append (New_line_tab)
-			tmp_body.append ("unsigned int nArgErr;")
-			tmp_body.append (New_line)
-			tmp_body.append (New_line_tab)
-
-			tmp_body.append (Hresult_variable_name)
-			tmp_body.append (Space_equal_space)
-			tmp_body.append (Interface_variable_prepend)
-			tmp_body.append (interface_name)
-			tmp_body.append (Struct_selection_operator)
-			tmp_body.append (Invoke)
-			tmp_body.append (Space_open_parenthesis)
-			tmp_body.append ("disp, IID_NULL, lcid, DISPATCH_PROPERTYPUT, &args, ")
-			tmp_body.append (Ampersand)
-			tmp_body.append (Return_variant_variable_name)
-			
-			tmp_body.append (", excepinfo, &nArgErr);")
-			tmp_body.append (New_line_tab)
+			l_body.append (";%N%Targs.rgvarg = &arg;%N%T")
+			l_body.append ("args.rgdispidNamedArgs = NULL;%N%T")
+			l_body.append ("args.cArgs = 1;%N%T")
+			l_body.append ("args.cNamedArgs = 0;%N%N%T")
+			l_body.append ("VARIANT pResult; %N%TVariantInit (&pResult);%N%N")
+			l_body.append (initialize_excepinfo)
+			l_body.append ("%N%Tunsigned int nArgErr;")
+			l_body.append ("%N%N%Thr = p_")
+			l_body.append (interface_name)
+			l_body.append ("->Invoke (disp, IID_NULL, lcid, DISPATCH_PROPERTYPUT, &args, &pResult, excepinfo, &nArgErr);%N%T")
 
 			-- if argument error
-			tmp_body.append (examine_parameter_error (Hresult_variable_name))
-			tmp_body.append (examine_hresult_with_pointer (Hresult_variable_name, pointer_var))
+			l_body.append (examine_parameter_error ("hr"))
+			l_body.append (examine_hresult_with_pointer ("hr", l_var))
 
-			if not pointer_var.is_empty then
-				tmp_body.append (New_line_tab)
-				tmp_body.append (Co_task_mem_free)
-				tmp_body.append (Space_open_parenthesis)
-				tmp_body.append (Open_parenthesis)
-				tmp_body.append (C_void_pointer)
-				tmp_body.append (Close_parenthesis)
-				tmp_body.append (pointer_var.first)
-				tmp_body.append (Close_parenthesis)
-				tmp_body.append (Semicolon)
+			if not l_var.is_empty then
+				l_body.append ("%N%TCoTaskMemFree ((void *)")
+				l_body.append (l_var.first)
+				l_body.append (");")
 			end
-			tmp_body.append (New_line_tab)
-			c_setting_feature.set_body (tmp_body)
+			l_body.append ("%N%T")
+			c_setting_feature.set_body (l_body)
 		end
 
 end -- class WIZARD_CPP_CLIENT_PROPERTY_GENERATOR

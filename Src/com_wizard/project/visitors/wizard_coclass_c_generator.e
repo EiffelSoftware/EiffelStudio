@@ -12,14 +12,12 @@ inherit
 
 	WIZARD_CPP_WRITER_GENERATOR
 
-	WIZARD_COCLASS_GENERATOR_HELPER
-
 feature -- Access
 
-	interface_names: LINKED_LIST[STRING]
+	interface_names: LIST [STRING]
 			-- Interface names.
 
-	dispinterface_names: LINKED_LIST [STRING]
+	dispinterface_names: LIST [STRING]
 			-- Names of dispinterfaces.
 
 feature {NONE} -- Implementation

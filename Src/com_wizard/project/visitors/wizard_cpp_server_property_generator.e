@@ -12,84 +12,83 @@ inherit
 
 feature -- Basic operations
 
-	generate (a_component: WIZARD_COMPONENT_DESCRIPTOR; 
-					a_property: WIZARD_PROPERTY_DESCRIPTOR) is
+	generate (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_property: WIZARD_PROPERTY_DESCRIPTOR) is
 			-- Generate C server access and setting features.
 		require
 			non_void_component: a_component /= Void
 			non_void_coclass_name: a_component.name /= Void
 			non_void_property: a_property /= Void
 		local
-			a_name, a_signature, tmp_string: STRING
-			visitor: WIZARD_DATA_TYPE_VISITOR
+			l_name, l_signature, l_string: STRING
+			l_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			create c_access_feature.make
 			create c_setting_feature.make
 
-			visitor := a_property.data_type.visitor 
+			l_visitor := a_property.data_type.visitor 
 
 			-- Access feature
-			create a_name.make (100)
-			a_name.append (Get_clause)
-			a_name.append (a_property.name)
-			c_access_feature.set_name (a_name)
+			create l_name.make (100)
+			l_name.append (Get_clause)
+			l_name.append (a_property.name)
+			c_access_feature.set_name (l_name)
 
-			c_access_feature.set_body (access_body (a_property.eiffel_name (a_component), visitor))
+			c_access_feature.set_body (access_body (a_property.component_eiffel_name (a_component), l_visitor))
 			c_access_feature.set_result_type (Std_method_imp)
 			c_access_feature.set_comment (a_property.description)
 
 			-- Set c signature
-			create a_signature.make (100)
-			a_signature.append (Beginning_comment_paramflag)
-			a_signature.append (Out_keyword)
-			a_signature.append (End_comment_paramflag)
-			a_signature.append (visitor.c_type)
-			a_signature.append (visitor.c_post_type)
-			a_signature.append (Asterisk)
-			a_signature.append (Space)
-			a_signature.append (Argument_name)
-			c_access_feature.set_signature (a_signature)
+			create l_signature.make (100)
+			l_signature.append (Beginning_comment_paramflag)
+			l_signature.append (Out_keyword)
+			l_signature.append (End_comment_paramflag)
+			l_signature.append (l_visitor.c_type)
+			l_signature.append (l_visitor.c_post_type)
+			l_signature.append (Asterisk)
+			l_signature.append (Space)
+			l_signature.append (Argument_name)
+			c_access_feature.set_signature (l_signature)
 
 			-- Setting feature
-			create a_name.make (100)
-			a_name.append (Set_clause)
-			a_name.append (a_property.name)
-			c_setting_feature.set_name (a_name)
+			create l_name.make (100)
+			l_name.append (Set_clause)
+			l_name.append (a_property.name)
+			c_setting_feature.set_name (l_name)
 
 			-- set c setting body
-			create tmp_string.make (100)
-			tmp_string.append (Set_clause)
-			tmp_string.append (a_property.eiffel_name (a_component))
-			c_setting_feature.set_body (setting_body (tmp_string, visitor))
+			create l_string.make (100)
+			l_string.append (Set_clause)
+			l_string.append (a_property.component_eiffel_name (a_component))
+			c_setting_feature.set_body (setting_body (l_string, l_visitor))
 
 			c_setting_feature.set_result_type (Std_method_imp)
 			c_setting_feature.set_comment (a_property.description)
 
 			-- Set c signature
-			create a_signature.make (100)
-			a_signature.append (Beginning_comment_paramflag)
-			a_signature.append (In)
-			a_signature.append (End_comment_paramflag)
-			a_signature.append (visitor.c_type)
-			a_signature.append (visitor.c_post_type)
-			a_signature.append (Space)
-			a_signature.append (Argument_name)
-			c_setting_feature.set_signature (a_signature)
+			create l_signature.make (100)
+			l_signature.append (Beginning_comment_paramflag)
+			l_signature.append (In)
+			l_signature.append (End_comment_paramflag)
+			l_signature.append (l_visitor.c_type)
+			l_signature.append (l_visitor.c_post_type)
+			l_signature.append (Space)
+			l_signature.append (Argument_name)
+			c_setting_feature.set_signature (l_signature)
 		end
 
 feature {NONE} -- Implementation
 
-	access_body (a_name: STRING; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	access_body (l_name: STRING; l_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- Access body code
 		require
-			non_void_name: a_name /= Void
-			non_void_visitor: visitor /= Void
+			non_void_name: l_name /= Void
+			non_void_visitor: l_visitor /= Void
 		do
 			create Result.make (10000)
 			Result.append (Ecatch)
 
 			Result.append (New_line_tab)
-			Result.append (cecil_function (a_name, visitor))
+			Result.append (cecil_function (l_name, l_visitor))
 
 			Result.append (New_line_tab)
 
@@ -98,24 +97,24 @@ feature {NONE} -- Implementation
 			Result.append (Space_equal_space)
 
 			if 
-				visitor.is_basic_type or
-				visitor.is_enumeration
+				l_visitor.is_basic_type or
+				l_visitor.is_enumeration
 			then
 				Result.append (Open_parenthesis)
-				Result.append (visitor.c_type)
+				Result.append (l_visitor.c_type)
 				Result.append (Close_parenthesis)
 				Result.append (Tmp_variable_name)
 			else
-				if visitor.need_generate_ec then
+				if l_visitor.need_generate_ec then
 					Result.append (Generated_ec_mapper)
 				else
 					Result.append (Ec_mapper)
 				end
 				Result.append (Dot)
-				Result.append (visitor.ec_function_name)
+				Result.append (l_visitor.ec_function_name)
 				Result.append (Space_open_parenthesis)
 				Result.append (Tmp_variable_name)
-				if visitor.writable then
+				if l_visitor.writable then
 					Result.append (Comma_space)
 					Result.append (Null)
 				end
@@ -130,17 +129,17 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 		end
 
-	setting_body (a_name: STRING; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	setting_body (l_name: STRING; l_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- Setting body code
 		require
-			non_void_name: a_name /= Void
-			non_void_visitor: visitor /= Void
+			non_void_name: l_name /= Void
+			non_void_visitor: l_visitor /= Void
 		do
 			create Result.make (1000)
 			Result.append (Ecatch)
-			Result.append (set_variable (visitor))
+			Result.append (set_variable (l_visitor))
 			Result.append (New_line_tab)
-			Result.append (cecil_procedure (a_name, visitor))
+			Result.append (cecil_procedure (l_name, l_visitor))
 			Result.append (New_line_tab)
 			Result.append (End_ecatch)
 			Result.append (Return)
@@ -149,30 +148,30 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 		end
 
-	set_variable (visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	set_variable (l_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- Variables
 		require
-			non_void_visitor: visitor /= Void
+			non_void_visitor: l_visitor /= Void
 		do
 			create Result.make (1000)
 			Result.append (Tab)
-			if visitor.is_basic_type or visitor.is_enumeration then
-				Result.append (visitor.cecil_type)
+			if l_visitor.is_basic_type or l_visitor.is_enumeration then
+				Result.append (l_visitor.cecil_type)
 				Result.append (Space)
 				Result.append (Tmp_variable_name)
 				Result.append (Space_equal_space)
 				Result.append (Open_parenthesis)
-				Result.append (visitor.cecil_type)
+				Result.append (l_visitor.cecil_type)
 				Result.append (Close_parenthesis)
 				Result.append (Argument_name)
-			elseif (visitor.vt_type = Vt_bool) then
-				Result.append (visitor.cecil_type)
+			elseif (l_visitor.vt_type = Vt_bool) then
+				Result.append (l_visitor.cecil_type)
 				Result.append (Space)
 				Result.append (Tmp_variable_name)
 				Result.append (Space_equal_space)
 				Result.append (Ce_mapper)
 				Result.append (Dot)
-				Result.append (visitor.ce_function_name)
+				Result.append (l_visitor.ce_function_name)
 				Result.append (Space_open_parenthesis)
 				Result.append (Argument_name)
 				Result.append (Close_parenthesis)
@@ -186,17 +185,17 @@ feature {NONE} -- Implementation
 				Result.append (Space_equal_space)
 				Result.append (Eif_protect)
 				Result.append (Space_open_parenthesis)
-				if visitor.need_generate_ce then
+				if l_visitor.need_generate_ce then
 					Result.append (Generated_ce_mapper)
 				else
 					Result.append (Ce_mapper)
 				end
 				Result.append (Dot)
-				Result.append (visitor.ce_function_name)
+				Result.append (l_visitor.ce_function_name)
 				Result.append (Space_open_parenthesis)
 				Result.append (Argument_name)
 
-				if visitor.writable then
+				if l_visitor.writable then
 					Result.append (Comma_space)
 					Result.append (Null)
 				end
@@ -207,46 +206,46 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 		end
 
-	cecil_function (function_name: STRING; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	cecil_function (function_name: STRING; l_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- Code to set up eif_function call
 		require
-			non_void_visitor: visitor /= Void
+			non_void_visitor: l_visitor /= Void
 		local
 			cecil_function_type, cecil_function_name, cecil_type: STRING
 		do
 			if 
-				visitor.is_basic_type or
-				visitor.is_enumeration or
-				visitor.vt_type = Vt_bool
+				l_visitor.is_basic_type or
+				l_visitor.is_enumeration or
+				l_visitor.vt_type = Vt_bool
 			then
-				cecil_type := visitor.cecil_type
+				cecil_type := l_visitor.cecil_type
 				if 
-					is_int (visitor.vt_type) or 
-					is_integer2 (visitor.vt_type) or 
-					is_integer4 (visitor.vt_type) or 
-					is_unsigned_int (visitor.vt_type) or 
-					is_unsigned_long (visitor.vt_type) or 
-					is_unsigned_short (visitor.vt_type) 
+					is_int (l_visitor.vt_type) or 
+					is_integer2 (l_visitor.vt_type) or 
+					is_integer4 (l_visitor.vt_type) or 
+					is_unsigned_int (l_visitor.vt_type) or 
+					is_unsigned_long (l_visitor.vt_type) or 
+					is_unsigned_short (l_visitor.vt_type) 
 				then
 					cecil_function_type := Eif_integer_function
 					cecil_function_name := Eif_integer_function_name
 					
 				elseif 
-					is_character (visitor.vt_type) or 
-					is_unsigned_char (visitor.vt_type) 
+					is_character (l_visitor.vt_type) or 
+					is_unsigned_char (l_visitor.vt_type) 
 				then
 					cecil_function_type := Eif_character_function
 					cecil_function_name := Eif_character_function_name
 					
-				elseif is_real4 (visitor.vt_type) then
+				elseif is_real4 (l_visitor.vt_type) then
 					cecil_function_type := Eif_real_function
 					cecil_function_name := Eif_real_function_name
 					
-				elseif is_real8 (visitor.vt_type) then
+				elseif is_real8 (l_visitor.vt_type) then
 					cecil_function_type := Eif_double_function
 					cecil_function_name := Eif_double_function_name
 					
-				elseif visitor.vt_type = Vt_bool then
+				elseif l_visitor.vt_type = Vt_bool then
 					cecil_function_type := Eif_boolean_function
 					cecil_function_name := Eif_boolean_function_name
 				end
@@ -266,9 +265,9 @@ feature {NONE} -- Implementation
 			Result.append (Tmp_variable_name)
 			
 			if 
-				not (visitor.is_basic_type or
-				visitor.is_enumeration or
-				visitor.vt_type = Vt_bool)
+				not (l_visitor.is_basic_type or
+				l_visitor.is_enumeration or
+				l_visitor.vt_type = Vt_bool)
 			then
 				Result.append (Space_equal_space)
 				Result.append (Zero)
@@ -372,11 +371,11 @@ feature {NONE} -- Implementation
 			valid_code: not Result.is_empty
 		end
 
-	cecil_procedure (function_name: STRING; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	cecil_procedure (function_name: STRING; l_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- Cecil procedure code
 		require
 			non_void_name: function_name /= Void
-			non_void_visitor: visitor /= Void
+			non_void_visitor: l_visitor /= Void
 		do
 			-- EIF_PROCEDURE eiffel_procedure
 			create Result.make (10000)
@@ -402,9 +401,9 @@ feature {NONE} -- Implementation
 
 			-- eif_procedure (eif_access (eiffel_object),
 			Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE, ")
-			if visitor.is_basic_type or visitor.is_enumeration then
-				Result.append (visitor.cecil_type)
-			elseif visitor.vt_type = Vt_bool then
+			if l_visitor.is_basic_type or l_visitor.is_enumeration then
+				Result.append (l_visitor.cecil_type)
+			elseif l_visitor.vt_type = Vt_bool then
 				Result.append (Eif_boolean)
 			else
 				Result.append (Eif_reference)
@@ -420,7 +419,7 @@ feature {NONE} -- Implementation
 			Result.append (Eiffel_object)
 			Result.append (Close_parenthesis)
 			Result.append (Comma_space)
-			if visitor.is_basic_type or (visitor.vt_type = Vt_bool) or visitor.is_enumeration then
+			if l_visitor.is_basic_type or (l_visitor.vt_type = Vt_bool) or l_visitor.is_enumeration then
 				Result.append (Tmp_variable_name)
 			else
 				Result.append (Eif_access)
@@ -432,7 +431,7 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 
 			-- eif_wean ('tmp_object')
-			if not (visitor.is_basic_type or (visitor.vt_type = Vt_bool) or visitor.is_enumeration) then
+			if not (l_visitor.is_basic_type or (l_visitor.vt_type = Vt_bool) or l_visitor.is_enumeration) then
 				Result.append (New_line_tab)
 				Result.append (Eif_wean)
 				Result.append (Space_open_parenthesis)

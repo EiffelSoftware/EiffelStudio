@@ -20,18 +20,38 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_UNIQUE_IDENTIFIER_FACTORY
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	name: STRING
-			-- Feature name.
+			-- Feature name
 
 	interface_eiffel_name: STRING
-			-- Eiffel function name that used in deferrded interface.
+			-- Eiffel function name used in deferred interface
 
-	coclass_eiffel_names: HASH_TABLE [STRING, STRING]
-			-- Eiffel function name that used in coclass.
-			-- item: function name
-			-- key: Coclass name, `name' in coclass_descriptor.
+	component_eiffel_name (a_component: WIZARD_COMPONENT_DESCRIPTOR): STRING is
+			-- Eiffel name in `a_component'
+		require
+			non_void_component: a_component /= Void
+			non_void_component_name: a_component.name /= Void
+			non_void_interface_name: interface_eiffel_name /= Void
+			valid_component_name: not a_component.name.is_empty
+			valid_interface_name: not interface_eiffel_name.is_empty
+		do
+			components_eiffel_names.search (a_component.name)
+			if components_eiffel_names.found then
+				Result := components_eiffel_names.found_item
+			else
+				Result := interface_eiffel_name
+			end
+		ensure
+			non_void_name: Result /= Void
+			valid_name: not Result.is_empty
+		end
 
 	description: STRING
 			-- Help String.
@@ -39,118 +59,102 @@ feature -- Access
 	member_id: INTEGER
 			-- Member ID.
 
-feature -- Status report
+	from_iunknown_or_idispatch: BOOLEAN
+			-- Is function from IUnknown or IDispatch?
 
-	eiffel_name (a_component: WIZARD_COMPONENT_DESCRIPTOR): STRING is
-			-- Eiffel name in `a_component'.
+feature -- Status Report
+
+	is_renamed_in (a_component: WIZARD_COMPONENT_DESCRIPTOR): BOOLEAN is
+			-- Is feature renamed in `a_component'?
 		require
 			non_void_component: a_component /= Void
 			non_void_component_name: a_component.name /= Void
-			valid_component_name: not a_component.name.is_empty
 		do
-			if coclass_eiffel_names.has (a_component.name) then
-				Result := coclass_eiffel_names.item (a_component.name).twin
-			else
-				Result := interface_eiffel_name.twin
-			end
-		ensure
-			non_void_name: Result /= Void
-			valid_name: not Result.is_empty
+			Result := components_eiffel_names.has (a_component.name)
 		end
-
+		
 feature -- Transformation
 
-	disambiguate_names (an_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR;
-				a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
+	disambiguate_coclass_names (a_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR; a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Disambiguate names for coclass.
 		require
-			non_void_interface_descriptor: an_interface_descriptor /= Void
+			non_void_interface_descriptor: a_interface_descriptor /= Void
 			non_void_coclass_descriptor: a_coclass_descriptor /= Void
 		local
-			tmp_name, tmp_precondition_name: STRING
+			l_name, l_precondition_name, l_new_name: STRING
+			l_names: ARRAYED_LIST [STRING]
+			l_eiffel_names: HASH_TABLE [WIZARD_INTERFACE_DESCRIPTOR, STRING]
 		do
-			if a_coclass_descriptor.feature_c_names.has (name) then
-				name.prepend (Underscore)
-				name.prepend (an_interface_descriptor.name)
-				from
-				until
-					not a_coclass_descriptor.feature_c_names.has (name)
-				loop
-					name.append (One)
+			-- First check whether this feature was already processed
+			l_eiffel_names := a_coclass_descriptor.feature_eiffel_names
+			l_eiffel_names.search (interface_eiffel_name)			
+			if l_eiffel_names.found then
+				-- Check whether processed feature comes from same interface
+				if not a_interface_descriptor.is_equal (l_eiffel_names.found_item) then
+					-- Check whether feature was already renamed
+					if not components_eiffel_names.has (a_coclass_descriptor.name) then
+						-- First rename C feature interface name so it's unique in coclass context
+						l_name := name
+						l_names := a_coclass_descriptor.feature_c_names
+						if l_names.has (l_name) then
+							create l_new_name.make (240)
+							l_new_name.append (a_interface_descriptor.name)
+							l_new_name.append_character ('_')
+							l_new_name.append (l_name)
+							name := unique_identifier (l_new_name, agent l_names.has)
+						end
+						a_interface_descriptor.feature_c_names.force (name.twin)
+						
+						-- Then rename Eiffel feature name in coclass, add corresponding renaming clause
+						l_name := interface_eiffel_name
+						l_precondition_name := precondition_feature_name (l_name)
+						l_new_name := unique_identifier (l_name, agent table_has_name_or_precondition (l_eiffel_names, ?))
+						if not l_new_name.is_equal (l_name) then
+							l_name := l_new_name
+							add_component_eiffel_name (l_name, a_coclass_descriptor)
+						end
+						l_eiffel_names.put (a_interface_descriptor, l_name)
+						l_eiffel_names.put (a_interface_descriptor, precondition_feature_name (l_name))
+					end
 				end
+			else
+				-- Not yet in coclass features table, add it.
+				l_eiffel_names.put (a_interface_descriptor, interface_eiffel_name)
+				l_eiffel_names.put (a_interface_descriptor, precondition_feature_name (interface_eiffel_name))
 			end
-			tmp_name := interface_eiffel_name.twin
-			tmp_precondition_name := tmp_name.twin
-			tmp_precondition_name.append ("_user_precondition")
-			if 
-				a_coclass_descriptor.feature_eiffel_names.has (tmp_name) or
-				a_coclass_descriptor.feature_eiffel_names.has (tmp_precondition_name)
-			then
-				tmp_name.prepend (Underscore)
-				tmp_name.prepend (an_interface_descriptor.name)
-				tmp_name := name_for_feature (tmp_name)
-				from
-				until
-					not a_coclass_descriptor.feature_eiffel_names.has (tmp_name) and
-					not a_coclass_descriptor.feature_eiffel_names.has (tmp_precondition_name)
-				loop
-					tmp_name.append (One)
-					tmp_precondition_name := tmp_name.twin
-					tmp_precondition_name.append ("_user_precondition")
-				end
-				add_coclass_eiffel_name (tmp_name, a_coclass_descriptor.name)
-			end
-			a_coclass_descriptor.feature_eiffel_names.force (tmp_name.twin)
-			tmp_precondition_name := tmp_name.twin
-			tmp_precondition_name.append ("_user_precondition")
-			a_coclass_descriptor.feature_eiffel_names.force (tmp_precondition_name)
-			
-			a_coclass_descriptor.feature_c_names.force (name.twin)
-			an_interface_descriptor.feature_c_names.force (name.twin)
 		end
 
-	disambiguate_eiffel_names (an_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
+	disambiguate_interface_names (a_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
 			-- Disambiguate names for interface.
 		require
-			non_void_interface: an_interface_descriptor /= Void
+			non_void_interface: a_interface_descriptor /= Void
 		local
-			tmp_string, tmp_string2: STRING
+			l_name, l_precondition_name: STRING
+			l_names: LIST [STRING]
 		do
-			if system_descriptor.c_types.has (name) then
-				name.prepend ("a_")
-			end
-			tmp_string := interface_eiffel_name.twin
-			tmp_string.to_lower
-			tmp_string2 := tmp_string.twin
-			tmp_string2.append ("_user_precondition")
-			if 
-				an_interface_descriptor.feature_eiffel_names.has (tmp_string) or
-				an_interface_descriptor.feature_eiffel_names.has (tmp_string2) 
-			then
-				interface_eiffel_name.append_integer (counter)
-			end
-			tmp_string := interface_eiffel_name.twin
-			tmp_string2 := tmp_string.twin
-			tmp_string2.append ("_user_precondition")
-			an_interface_descriptor.feature_eiffel_names.force (tmp_string)
-			an_interface_descriptor.feature_eiffel_names.force (tmp_string2)
+			name := unique_identifier (name, agent (system_descriptor.c_types).has)
+			l_name := interface_eiffel_name.as_lower
+			l_precondition_name := precondition_feature_name (l_name)
+			l_names := a_interface_descriptor.feature_eiffel_names
+			interface_eiffel_name := unique_identifier (l_name, agent list_has_name_or_precondition (l_names, ?))
+			l_names.force (interface_eiffel_name)
+			l_names.force (precondition_feature_name (interface_eiffel_name))
 		end
 
 feature -- Basic operations
 
-	add_coclass_eiffel_name (an_eiffel_name, a_coclass_name: STRING) is
-			-- Add `an_eiffel_name' to `coclass_eiffel_names' table
+	add_component_eiffel_name (a_eiffel_name: STRING; a_component: WIZARD_COMPONENT_DESCRIPTOR) is
+			-- Add `a_eiffel_name' to `components_eiffel_names' table
 			-- with key `a_coclass_name'
 		require
-			non_void_eiffel_name: an_eiffel_name /= Void
-			valid_eiffel_name: not an_eiffel_name.is_empty
-			non_void_coclass_name: a_coclass_name /= Void
-			valid_coclass_name: not a_coclass_name.is_empty
-			not_has: not coclass_eiffel_names.has (a_coclass_name)
+			non_void_eiffel_name: a_eiffel_name /= Void
+			valid_eiffel_name: not a_eiffel_name.is_empty
+			non_void_component: a_component /= Void
+			valid_component: a_component.name /= Void
+			not_has: not is_renamed_in (a_component)
 		do
-			coclass_eiffel_names.extend (an_eiffel_name, a_coclass_name)
+			components_eiffel_names.extend (a_eiffel_name, a_component.name)
 		end
-
 
 	set_interface_eiffel_name (a_name: STRING) is
 			-- Set `eiffel_name' with `a_name'.
@@ -172,22 +176,53 @@ feature -- Basic operations
 			valid_name: name /= Void and then not name.is_empty and name.is_equal (a_name)
 		end
 
+	set_from_iunknown_or_idispatch (a_value: BOOLEAN) is
+			-- Set `from_iunknown_or_idispatch' with `a_value'
+		do
+			from_iunknown_or_idispatch := a_value
+		ensure
+			set: from_iunknown_or_idispatch = a_value
+		end
+
 feature {NONE} -- Implementation
 
-	counter: INTEGER is
-			-- Counter
+	components_eiffel_names: HASH_TABLE [STRING, STRING]
+			-- Eiffel function name used in coclass if different from `interface_eiffel_name'
+			-- item: function name
+			-- key: Coclass name, `name' in coclass_descriptor.
+
+	precondition_feature_name (a_name: STRING): STRING is
+			-- Name of precondition feature for feature `a_name'
+		require
+			non_void_name: a_name /= Void
 		do
-			Result := counter_impl.item
-			counter_impl.set_item (Result + 1)
+			create Result.make (a_name.count + 18)
+			Result.append (a_name)
+			Result.append ("_user_precondition")
 		end
 
-	counter_impl: INTEGER_REF is
-			-- Global counter
-		once
-			create Result
-			Result.set_item (1)
+	list_has_name_or_precondition (a_list: LIST [STRING]; a_name: STRING): BOOLEAN is
+			-- Does `a_list' have `a_name' or precondition feature name corresponding to `a_name'?
+		require
+			non_void_list: a_list /= Void
+			non_void_name: a_name /= Void
+		do
+			Result := a_list.has (a_name) or a_list.has (precondition_feature_name (a_name))
+		ensure
+			definition: Result = a_list.has (a_name) or a_list.has (precondition_feature_name (a_name))
 		end
-
+				
+	table_has_name_or_precondition (a_table: HASH_TABLE [ANY, STRING]; a_name: STRING): BOOLEAN is
+			-- Does `a_table' have `a_name' or precondition feature name corresponding to `a_name'?
+		require
+			non_void_table: a_table /= Void
+			non_void_name: a_name /= Void
+		do
+			Result := a_table.has (a_name) or a_table.has (precondition_feature_name (a_name))
+		ensure
+			definition: Result = a_table.has (a_name) or a_table.has (precondition_feature_name (a_name))
+		end
+				
 end -- class WIZARD_FEATURE_DESCRIPTOR
 
 --|----------------------------------------------------------------

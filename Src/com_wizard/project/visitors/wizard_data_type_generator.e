@@ -82,13 +82,17 @@ feature -- Access
 			-- Otherwise is_empty
 
 	eiffel_type: STRING 
-			-- Eiffel class name.
+			-- Eiffel class name
 
 	inherit_from: STRING
-			-- Eiffel class name, from which user of this type should inherit.
+			-- Eiffel class name, from which user of this type should inherit
 	
-	c_header_file: STRING
-			-- Name of C header file.
+	c_definition_header_file_name: STRING
+			-- Filename of C definition header file
+
+	c_declaration_header_file_name: STRING
+			-- Filename of C declaration header file
+			-- Note: only initialized for interfaces
 
 	cecil_type: STRING
 			-- Name of Standard Eiffel type on C side.
@@ -150,8 +154,9 @@ feature -- Basic operations
 		require
 			valid_visitor: a_visitor /= Void
 		do
-			if c_header_file /= Void and then not c_header_file.is_empty then
-				a_visitor.set_c_header_file (c_header_file)
+			if c_definition_header_file_name /= Void and then not c_definition_header_file_name.is_empty then
+				a_visitor.set_c_definition_header_file_name (c_definition_header_file_name)
+				a_visitor.set_c_declaration_header_file_name (c_declaration_header_file_name)
 			end
 			a_visitor.set_c_post_type (c_post_type)
 			a_visitor.set_c_type (c_type)

@@ -70,7 +70,7 @@ feature -- Basic operations
 			count := a_type_info.type_attr.count_variables
 			from
 				i := 0
-				create fields.make
+				create {ARRAYED_LIST [WIZARD_RECORD_FIELD_DESCRIPTOR]} fields.make (20)
 			variant
 				count - i
 			until
@@ -97,7 +97,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	fields: LINKED_LIST [WIZARD_RECORD_FIELD_DESCRIPTOR]
+	fields: LIST [WIZARD_RECORD_FIELD_DESCRIPTOR]
 			-- Descriptions of structure's fields
 
 	size_of_instance: INTEGER

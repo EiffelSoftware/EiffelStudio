@@ -73,7 +73,7 @@ feature -- Initialization
 			non_void_type_lib: a_type_lib /= Void
 		local
 			i: INTEGER
-			a_referee_list: LINKED_LIST [WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR]
+			a_referee_list: ARRAYED_LIST [WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR]
 		do
 			create descriptors.make (1, a_type_lib.type_info_count)
 			create referees.make (1, a_type_lib.type_info_count)
@@ -84,7 +84,7 @@ feature -- Initialization
 			until
 				i > a_type_lib.type_info_count
 			loop
-				create a_referee_list.make
+				create a_referee_list.make (20)
 				referees.put (a_referee_list, i)
 				i := i + 1
 			end
@@ -109,7 +109,7 @@ feature -- Access
 			-- Array of descriptors, index starts from 1
 			-- index corresponds to `index_in_type_lib' + 1
 
-	referees: ARRAY [LINKED_LIST [WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR]]
+	referees: ARRAY [LIST [WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR]]
 			-- Array of Referee Lists, index starts from 1
 			-- index corresponds to descriptor with same index.
 
@@ -183,33 +183,31 @@ feature -- Basic operations
 			complete := True
 		end
 
-	add_descriptor (type_descriptor: WIZARD_TYPE_DESCRIPTOR; an_index: INTEGER) is
-			-- Add `type_descriptor' to 'descriptors'.
+	add_descriptor (a_descriptor: WIZARD_TYPE_DESCRIPTOR; a_index: INTEGER) is
+			-- Add `a_descriptor' to 'descriptors'.
 		require
-			valid_index: an_index > 0 and an_index <= descriptors.count
-			not_has: descriptors.item (an_index) = Void
+			valid_index: a_index > 0 and a_index <= descriptors.count
+			not_has: descriptors.item (a_index) = Void
 		do
-			descriptors.put (type_descriptor, an_index)
-			if an_index = 41 then
-				do_nothing
-			end
+			descriptors.put (a_descriptor, a_index)
 		ensure
-			added: descriptors.item (an_index) = type_descriptor
+			added: descriptors.item (a_index) = a_descriptor
 		end
 
-	add_referee (a_data_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR; an_index: INTEGER) is
+	add_referee (a_data_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR; a_index: INTEGER) is
 			-- Add `a_data_descriptor' to `referees'.
 		require
 			non_void_descriptor: a_data_descriptor /= Void
-			valid_index: an_index > 0 and an_index <= descriptors.count
+			valid_index: a_index > 0 and a_index <= descriptors.count
 		do
-			referees.item (an_index).force (a_data_descriptor)
+			referees.item (a_index).force (a_data_descriptor)
 		end
 
 	generate  is
 			-- Create `descriptors' array.
 		local
 			i: INTEGER
+			l_type_info: ECOM_TYPE_INFO
 		do
 			progress_report.set_range (progress_report.range + type_lib.type_info_count)
 			from
@@ -217,9 +215,9 @@ feature -- Basic operations
 			until
 				i = type_lib.type_info_count or Shared_wizard_environment.abort
 			loop
+				l_type_info := type_lib.type_info (i)
 				if descriptors.item (i + 1) = Void then
-					add_descriptor (Type_descriptor_factory.create_type_descriptor (
-									type_lib.documentation (i), type_lib.type_info (i)), i + 1)
+					add_descriptor (Type_descriptor_factory.create_type_descriptor (type_lib.documentation (i), l_type_info), i + 1)
 				end
 				i := i + 1
 				progress_report.step
@@ -227,29 +225,30 @@ feature -- Basic operations
 		end
 
 	finalize_inherited_interfaces is
-			-- Set references to inherited interfaces.
+			-- Set references to inherited interfaces
+			-- Flatten interfaces
 		require
 			complete: complete
 		local
-			i: INTEGER
-			interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
+			i, l_count: INTEGER
+			l_interface: WIZARD_INTERFACE_DESCRIPTOR
+			l_type: WIZARD_TYPE_DESCRIPTOR
 		do
 			from
 				i := 1
+				l_count := descriptors.count
 			variant
-				descriptors.count - i + 1
+				l_count - i + 1
 			until
-				i > descriptors.count
+				i > l_count
 			loop
-				if descriptors.item (i) /= Void then
-					if (descriptors.item (i).type_kind = Tkind_interface) or (descriptors.item (i).type_kind = Tkind_dispatch) then
-						interface_descriptor ?= descriptors.item (i)
-						if interface_descriptor /= Void then
-							if 
-								interface_descriptor.inherited_interface = Void and 
-								interface_descriptor.inherited_interface_descriptor /= Void
-							then
-								interface_descriptor.initialize_inherited_interface
+				l_type := descriptors.item (i)
+				if l_type /= Void then
+					if l_type.type_kind = Tkind_interface or l_type.type_kind = Tkind_dispatch then
+						l_interface ?= l_type
+						if l_interface /= Void then
+							if l_interface.inherited_interface = Void and l_interface.inherited_interface_descriptor /= Void then
+								l_interface.initialize_inherited_interface
 							end
 						end
 					end
@@ -263,24 +262,24 @@ feature -- Basic operations
 		require
 			complete: complete
 		local
-			i: INTEGER
-			interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
+			i, l_count: INTEGER
+			l_type: WIZARD_TYPE_DESCRIPTOR
+			l_interface: WIZARD_INTERFACE_DESCRIPTOR
 		do
 			from
 				i := 1
+				l_count := descriptors.count
 			variant
-				descriptors.count - i + 1
+				l_count - i + 1
 			until
-				i > descriptors.count
+				i > l_count
 			loop
-				if descriptors.item (i) /= Void then
-					if 
-						(descriptors.item (i).type_kind = Tkind_interface) or 
-						(descriptors.item (i).type_kind = Tkind_dispatch) 
-					then
-						interface_descriptor ?= descriptors.item (i)
-						if interface_descriptor /= Void then
-							interface_descriptor.finalize_interface_functions
+				l_type := descriptors.item (i)
+				if l_type /= Void then
+					if l_type.type_kind = Tkind_interface or l_type.type_kind = Tkind_dispatch then
+						l_interface ?= l_type
+						if l_interface /= Void then
+							l_interface.finalize_functions
 						end
 					end
 				end
@@ -288,45 +287,39 @@ feature -- Basic operations
 			end
 		end
 
-
 	finalize_names is
 			-- Remove name clashes in system.
 		require
 			complete: complete
 		local
-			i, local_counter: INTEGER
-			tmp_string: STRING
+			i, local_counter, l_count: INTEGER
+			l_string: STRING
+			l_type: WIZARD_TYPE_DESCRIPTOR
 		do
 			from
 				i := 1
+				l_count := descriptors.count
 			variant
-				descriptors.count - i + 1
+				l_count - i + 1
 			until
-				i > descriptors.count
+				i > l_count
 			loop
-				if descriptors.item (i) /= Void then
-					if 
-						system_descriptor.eiffel_names.has (descriptors.item (i).eiffel_class_name) and
-						not descriptors.item (i).name.is_equal (Iunknown_type) and 
-						not descriptors.item (i).name.is_equal (Idispatch_type)
-					then
+				l_type := descriptors.item (i)
+				if l_type /= Void then
+					if system_descriptor.eiffel_names.has (l_type.eiffel_class_name) and not l_type.is_iunknown and not l_type.is_idispatch then
 						local_counter := counter
-						create tmp_string.make (3)
-						tmp_string.append_integer (local_counter)
-						descriptors.item (i).eiffel_class_name.append (tmp_string)
-						if not (descriptors.item (i).type_kind = Tkind_alias) then
-							if 
-								descriptors.item (i).c_header_file_name /= Void and then 
-								not descriptors.item (i).c_header_file_name.is_empty 
-							then
-								descriptors.item (i).c_header_file_name.insert_string 
-									(tmp_string, descriptors.item (i).c_header_file_name.index_of ('.', 1))
+						create l_string.make (3)
+						l_string.append_integer (local_counter)
+						l_type.eiffel_class_name.append (l_string)
+						if l_type.type_kind /= Tkind_alias then
+							if l_type.c_header_file_name /= Void and then not l_type.c_header_file_name.is_empty then
+								l_type.c_header_file_name.insert_string (l_string, l_type.c_header_file_name.index_of ('.', 1))
 							end
 						end
-						descriptors.item (i).c_type_name.append (tmp_string)
-						descriptors.item (i).name.append (tmp_string)
+						l_type.c_type_name.append (l_string)
+						l_type.name.append (l_string)
 					end
-					system_descriptor.eiffel_names.force (descriptors.item (i).eiffel_class_name, descriptors.item (i).eiffel_class_name)
+					system_descriptor.eiffel_names.force (l_type.eiffel_class_name, l_type.eiffel_class_name)
 				end
 				i := i + 1
 			end
@@ -337,52 +330,46 @@ feature -- Basic operations
 		require
 			complete: complete
 		local
-			i: INTEGER
+			i, l_count: INTEGER
 			alias_descriptor: WIZARD_ALIAS_DESCRIPTOR
 			user_defined_type_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR
 			a_name: STRING
 			a_lib: WIZARD_TYPE_LIBRARY_DESCRIPTOR
-			an_index: INTEGER
+			a_index: INTEGER
 			aliased_descriptor: WIZARD_TYPE_DESCRIPTOR
+			l_type: WIZARD_TYPE_DESCRIPTOR
 		do
 			from
 				i := 1
+				l_count := descriptors.count
 			variant
-				descriptors.count - i + 1
+				l_count - i + 1
 			until
-				i > descriptors.count
+				i > l_count
 			loop
-				if descriptors.item (i) /= Void then
-					if (descriptors.item (i).type_kind = Tkind_alias) then
-						alias_descriptor ?= descriptors.item (i)
+				l_type := descriptors.item (i)
+				if l_type /= Void then
+					if l_type.type_kind = Tkind_alias then
+						alias_descriptor ?= l_type
 						if alias_descriptor /= Void then
 							user_defined_type_descriptor ?= alias_descriptor.type_descriptor
 							if user_defined_type_descriptor /= Void then
 								a_lib := user_defined_type_descriptor.library_descriptor
-								an_index := user_defined_type_descriptor.type_descriptor_index
-								aliased_descriptor := a_lib.descriptors.item (an_index)
+								a_index := user_defined_type_descriptor.type_descriptor_index
+								aliased_descriptor := a_lib.descriptors.item (a_index)
 								a_name := aliased_descriptor.name.twin
 								a_name.to_upper
 								if 
 									(a_name.substring_index ("__MIDL___MIDL_", 1) > 0) or
 									(a_name.substring_index ("TAG", 1) > 0)
 								then
-									aliased_descriptor.set_name (descriptors.item (i).name)
-									aliased_descriptor.set_c_type_name (descriptors.item (i).name)
+									aliased_descriptor.set_name (l_type.name)
+									aliased_descriptor.set_c_type_name (l_type.name)
 									aliased_descriptor.set_eiffel_class_name 
-										(name_for_class (descriptors.item (i).name, aliased_descriptor.type_kind, False))
+										(name_for_class (l_type.name, aliased_descriptor.type_kind, False))
 									aliased_descriptor.set_c_header_file_name (header_name (aliased_descriptor.namespace, aliased_descriptor.c_type_name))
-								end
-									
-								from
-									referees.item (i).start
-								until
-									referees.item (i).after
-								loop
-									referees.item (i).item.set_type_descriptor_index (an_index)
-									referees.item (i).item.set_library_descriptor (a_lib)
-									referees.item (i).forth
-								end
+								end								
+								update_referees (i, a_index, a_lib)								
 								descriptors.put (Void, i)
 							end
 						end
@@ -392,28 +379,56 @@ feature -- Basic operations
 			end
 		end
 
+	update_referees (a_index, a_new_index: INTEGER; a_new_lib: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is
+			-- Update referees of descriptor at `a_index' to use descriptor at `a_new_index'.
+			-- Also update referees type library to `a_new_lib'.
+		require
+			valid_index: a_index > 0 and a_index <= descriptors.count
+			valid_new_index: a_new_index > 0 and a_new_index <= descriptors.count
+			non_void_new_lib: a_new_lib /= Void
+		local
+			l_referees: LIST [WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR]
+			l_referee: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR
+		do
+			l_referees := referees.item (a_index)
+			from
+				l_referees.start
+			until
+				l_referees.after
+			loop
+				l_referee := l_referees.item
+				if l_referee.type_descriptor_index /= a_new_index then
+					l_referee.set_type_descriptor_index (a_new_index)
+					l_referee.set_library_descriptor (a_new_lib)
+					add_referee (l_referee, a_new_index)
+				end
+				l_referees.forth
+			end
+		end
+
 	finalize_interface_feature_names is
 			-- Remove feature name clashes on interface level.
 		require
 			complete: complete
 		local
-			i: INTEGER
-			interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
+			i, l_count: INTEGER
+			l_interface: WIZARD_INTERFACE_DESCRIPTOR
+			l_type: WIZARD_TYPE_DESCRIPTOR
 		do
 			from
 				i := 1
+				l_count := descriptors.count
 			variant
-				descriptors.count - i + 1
+				l_count - i + 1
 			until
-				i > descriptors.count
+				i > l_count
 			loop
-				if descriptors.item (i) /= Void then
-					if (descriptors.item (i).type_kind = Tkind_interface) or 
-						(descriptors.item (i).type_kind = Tkind_dispatch)
-					then
-						interface_descriptor ?= descriptors.item (i)
-						if interface_descriptor /= Void then
-							interface_descriptor.disambiguate_eiffel_names
+				l_type := descriptors.item (i)
+				if l_type /= Void then
+					if l_type.type_kind = Tkind_interface or l_type.type_kind = Tkind_dispatch then
+						l_interface ?= l_type
+						if l_interface /= Void and then not l_interface.is_interface_disambiguated then
+							l_interface.disambiguate_interface_names
 						end
 					end
 				end
@@ -426,21 +441,24 @@ feature -- Basic operations
 		require
 			complete: complete
 		local
-			i: INTEGER
-			coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR
+			i, l_count: INTEGER
+			l_descriptor: WIZARD_COCLASS_DESCRIPTOR
+			l_type: WIZARD_TYPE_DESCRIPTOR
 		do
 			from
 				i := 1
+				l_count := descriptors.count
 			variant
-				descriptors.count - i + 1
+				l_count - i + 1
 			until
-				i > descriptors.count
+				i > l_count
 			loop
-				if descriptors.item (i) /= Void then
-					if (descriptors.item (i).type_kind = Tkind_coclass) then
-						coclass_descriptor ?= descriptors.item (i)
-						if coclass_descriptor /= Void then
-							coclass_descriptor.disambiguate_feature_names
+				l_type := descriptors.item (i)
+				if l_type /= Void then
+					if l_type.type_kind = Tkind_coclass then
+						l_descriptor ?= l_type
+						if l_descriptor /= Void then
+							l_descriptor.disambiguate_feature_names
 						end
 					end
 				end
@@ -453,33 +471,27 @@ feature -- Basic operations
 		require
 			complete: complete
 		local
-			i: INTEGER
-			interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
-			implemented_interface_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR
+			i, l_count: INTEGER
+			l_interface: WIZARD_INTERFACE_DESCRIPTOR
+			l_type: WIZARD_TYPE_DESCRIPTOR
 		do
 			from
 				i := 1
+				l_count := descriptors.count
 			variant
-				descriptors.count - i + 1
+				l_count - i + 1
 			until
-				i > descriptors.count
+				i > l_count
 			loop
-				if descriptors.item (i) /= Void then
-					if (descriptors.item (i).type_kind = Tkind_interface) or 
-						(descriptors.item (i).type_kind = Tkind_dispatch)
-					then
-						interface_descriptor ?= descriptors.item (i)
-						if interface_descriptor /= Void then
-							if 
-								(shared_wizard_environment.server or
-								system_descriptor.is_iunknown or 
-								not referees.item (i).is_empty) and 
-								not Non_generated_type_libraries.has (guid) 
-							then
-								if not (interface_descriptor.inherited_interface = Void) then
-									implemented_interface_descriptor := interface_descriptor.implemented_interface
-									system_descriptor.interfaces.force (implemented_interface_descriptor)
-								end
+				l_type := descriptors.item (i)
+				if l_type /= Void then
+					if l_type.type_kind = Tkind_interface or l_type.type_kind = Tkind_dispatch then
+						l_interface ?= l_type
+						if l_interface /= Void then
+							if (shared_wizard_environment.server or system_descriptor.is_iunknown or 
+									not referees.item (i).is_empty) and not Non_generated_type_libraries.has (guid) and
+									l_interface.inherited_interface /= Void then
+								system_descriptor.interfaces.force (l_interface.implemented_interface)
 							end
 						end
 					end

@@ -58,7 +58,7 @@ feature -- Basic operations
 feature {NONE} -- Implementation
 
 	description_message: STRING is 
-		"Objectes of this class set the registry keys necessary for COM to access the component%%%N%T%T%T%T  %
+		"Objects of this class set the registry keys necessary for COM to access the component%%%N%T%T%T%T  %
 		% %%and activate a new instance of the component whenever COM asks for if.%%%N%T%T%T%T  %
 		% %%User may inherit from this class and redifine `main_window'."
 
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 			-- Set default ancestors.
 		local
 			tmp_writer: WIZARD_WRITER_INHERIT_CLAUSE
-			feature_list: LINKED_LIST [STRING]
+			feature_list: ARRAYED_LIST [STRING]
 		do
 			create tmp_writer.make
 			tmp_writer.set_name ("ARGUMENTS")
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 
 			create tmp_writer.make
 			tmp_writer.set_name ("WEL_SW_CONSTANTS")
-			create feature_list.make
+			create feature_list.make (20)
 			feature_list.force (All_keyword.twin)
 			tmp_writer.add_export (feature_list, None_keyword)
 			an_eiffel_writer.add_inherit_clause (tmp_writer)

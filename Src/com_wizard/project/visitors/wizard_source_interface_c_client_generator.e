@@ -25,29 +25,28 @@ create
 
 feature -- Initialization
 
-	generate (an_interface: WIZARD_INTERFACE_DESCRIPTOR; 
-				a_writer: WIZARD_WRITER_CPP_CLASS) is
+	generate (a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_writer: WIZARD_WRITER_CPP_CLASS) is
 			-- Generate connection points features.
 		do
-			a_writer.add_import (an_interface.c_header_file_name)
-			a_writer.add_member (cookie_member (an_interface), Private)
-			a_writer.add_function (enable_routine (an_interface), Public)
-			a_writer.add_function (disable_routine (an_interface), Public)
+			a_writer.add_import (a_interface.c_definition_header_file_name)
+			a_writer.add_member (cookie_member (a_interface), Private)
+			a_writer.add_function (enable_routine (a_interface), Public)
+			a_writer.add_function (disable_routine (a_interface), Public)
 		end
 
 feature -- Basic operations
 
-	enable_routine (an_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_C_FUNCTION is
+	enable_routine (a_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_C_FUNCTION is
 			-- Enable call back routine.
 		require
-			non_void_interface: an_interface /= Void
-			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.is_empty
+			non_void_interface: a_interface /= Void
+			non_void_interface_name: a_interface.name /= Void
+			valid_interface_name: not a_interface.name.is_empty
 		local
 			a_signature: STRING
 		do
 			create Result.make
-			Result.set_name (external_feature_name (enable_feature_name (an_interface)))
+			Result.set_name (external_feature_name (enable_feature_name (a_interface)))
 			
 			create a_signature.make (100)
 			a_signature.append (Eif_pointer)
@@ -57,19 +56,19 @@ feature -- Basic operations
 			
 			Result.set_result_type (Void_c_keyword)
 			Result.set_comment ("Hook up call back interface.")
-			Result.set_body (enable_body (an_interface))
+			Result.set_body (enable_body (a_interface))
 		ensure
 			non_void_routine: Result /= Void
 			valid_routine: Result.can_generate
 		end
 
-	enable_body (an_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING is
+	enable_body (a_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING is
 			-- Body of enable call back routine.
 		require
-			non_void_interface: an_interface /= Void
-			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.is_empty
-			non_void_interface_guid: an_interface.guid /= Void
+			non_void_interface: a_interface /= Void
+			non_void_interface_name: a_interface.name /= Void
+			valid_interface_name: not a_interface.name.is_empty
+			non_void_interface_guid: a_interface.guid /= Void
 		do
 			create Result.make (1000)
 			Result.append (Tab)
@@ -90,7 +89,7 @@ feature -- Basic operations
 			Result.append ("IConnectionPoint * pcp = 0;%N%T")
 			
 			Result.append ("IID temp_IID = ")
-			Result.append (an_interface.guid.to_definition_string)
+			Result.append (a_interface.guid.to_definition_string)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 			
@@ -102,7 +101,7 @@ feature -- Basic operations
 			
 			Result.append (Hresult_variable_name)
 			Result.append (" = pcp->Advise ((IUnknown *)p_events, &")
-			Result.append (cookie_name (an_interface))
+			Result.append (cookie_name (a_interface))
 			Result.append (");%N")
 			
 			Result.append (examine_hresult (Hresult_variable_name))
@@ -115,31 +114,31 @@ feature -- Basic operations
 			valid_body: not Result.is_empty
 		end
 		
-	disable_routine (an_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_C_FUNCTION is
+	disable_routine (a_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_C_FUNCTION is
 			-- Disable call back routine.
 		require
-			non_void_interface: an_interface /= Void
-			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.is_empty
+			non_void_interface: a_interface /= Void
+			non_void_interface_name: a_interface.name /= Void
+			valid_interface_name: not a_interface.name.is_empty
 		do
 			create Result.make
 			
-			Result.set_name (external_feature_name (disable_feature_name (an_interface)))
+			Result.set_name (external_feature_name (disable_feature_name (a_interface)))
 			Result.set_result_type (Void_c_keyword)
 			Result.set_comment ("Tear down call back interface.")
-			Result.set_body (disable_body (an_interface))
+			Result.set_body (disable_body (a_interface))
 		ensure
 			non_void_routine: Result /= Void
 			valid_routine: Result.can_generate
 		end
 	
-	disable_body (an_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING is
+	disable_body (a_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING is
 			-- Body of disable call back routine.
 		require
-			non_void_interface: an_interface /= Void
-			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.is_empty
-			non_void_interface_guid: an_interface.guid /= Void
+			non_void_interface: a_interface /= Void
+			non_void_interface_name: a_interface.name /= Void
+			valid_interface_name: not a_interface.name.is_empty
+			non_void_interface_guid: a_interface.guid /= Void
 		do
 			create Result.make (1000)
 			Result.append (Tab)
@@ -160,7 +159,7 @@ feature -- Basic operations
 			Result.append ("IConnectionPoint * pcp = 0;%N%T")
 
 			Result.append ("IID temp_IID = ")
-			Result.append (an_interface.guid.to_definition_string)
+			Result.append (a_interface.guid.to_definition_string)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
@@ -172,7 +171,7 @@ feature -- Basic operations
 
 			Result.append (Hresult_variable_name)
 			Result.append (" = pcp->Unadvise (")
-			Result.append (cookie_name (an_interface))
+			Result.append (cookie_name (a_interface))
 			Result.append (");%N")
 
 			Result.append (examine_hresult (Hresult_variable_name))
@@ -185,16 +184,16 @@ feature -- Basic operations
 			valid_body: not Result.is_empty
 		end
 
-	cookie_member (an_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_C_MEMBER is
+	cookie_member (a_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_C_MEMBER is
 			-- Call back interface cookie member.
 		require
-			non_void_interface: an_interface /= Void
-			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.is_empty
+			non_void_interface: a_interface /= Void
+			non_void_interface_name: a_interface.name /= Void
+			valid_interface_name: not a_interface.name.is_empty
 		do
 			create Result.make
 			
-			Result.set_name (cookie_name (an_interface))
+			Result.set_name (cookie_name (a_interface))
 			Result.set_result_type (Dword)
 			Result.set_comment ("Call back interface cookie.")
 		ensure
@@ -202,16 +201,16 @@ feature -- Basic operations
 			valid_member: Result.can_generate
 		end
 	
-	cookie_name (an_interface: WIZARD_INTERFACE_DESCRIPTOR):STRING is
+	cookie_name (a_interface: WIZARD_INTERFACE_DESCRIPTOR):STRING is
 			-- Name of cookie member.
 		require
-			non_void_interface: an_interface /= Void
-			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.is_empty
+			non_void_interface: a_interface /= Void
+			non_void_interface_name: a_interface.name /= Void
+			valid_interface_name: not a_interface.name.is_empty
 		do
 			create Result.make (100)
 			Result.append ("cookie_")
-			Result.append (an_interface.name)
+			Result.append (a_interface.name)
 		ensure
 			non_void_name: Result /= Void
 			valid_name: not Result.is_empty

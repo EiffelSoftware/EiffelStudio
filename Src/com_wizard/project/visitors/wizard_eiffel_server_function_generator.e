@@ -24,32 +24,36 @@ feature -- Basic operations
 
 	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
 			-- Generate server feature.
-		local
-			coclass_name: STRING
 		do
-			coclass_name := a_component_descriptor.name
-			func_desc := a_descriptor
-			create original_name.make (100)
-			create changed_name.make (100)
-
-			create feature_writer.make
-
-			if a_descriptor.coclass_eiffel_names.has (coclass_name) then
-				function_renamed := True
+			if a_descriptor.is_renaming_clause then
 				original_name := a_descriptor.interface_eiffel_name
-				changed_name := a_descriptor.coclass_eiffel_names.item (coclass_name)
-				feature_writer.set_name (changed_name)
+				changed_name := a_descriptor.component_eiffel_name (a_component_descriptor)
+				-- Could be identical if renaming occured for another component
+				function_renamed := not original_name.is_equal (changed_name)
 			else
-				feature_writer.set_name (a_descriptor.interface_eiffel_name)
+				func_desc := a_descriptor
+				create original_name.make (100)
+				create changed_name.make (100)
+	
+				create feature_writer.make
+	
+				if a_descriptor.is_renamed_in (a_component_descriptor) then
+					function_renamed := True
+					original_name := a_descriptor.interface_eiffel_name
+					changed_name := a_descriptor.component_eiffel_name (a_component_descriptor)
+					feature_writer.set_name (changed_name)
+				else
+					feature_writer.set_name (a_descriptor.interface_eiffel_name)
+				end
+	
+				set_feature_result_type_and_arguments
+				
+				feature_writer.set_comment (func_desc.description)
+				add_feature_argument_comments
+				feature_writer.set_body (Empty_function_body)
+	
+				feature_writer.set_effective
 			end
-
-			set_feature_result_type_and_arguments
-			
-			feature_writer.set_comment (func_desc.description)
-			add_feature_argument_comments
-			feature_writer.set_body (Empty_function_body)
-
-			feature_writer.set_effective
 		end
 
 	generate_source (a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
@@ -111,7 +115,7 @@ feature {NONE} -- Implementation
 			non_void_func_desc: func_desc /= Void
 			non_void_arguments: func_desc.arguments /= Void
 		local
-			arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
+			arguments: LIST [WIZARD_PARAM_DESCRIPTOR]
 		do
 			arguments := func_desc.arguments
 

@@ -33,38 +33,20 @@ feature {NONE} -- Implementation
 	make_from_pointer_feature: WIZARD_WRITER_FEATURE is
 			-- `make_from_pointer' function
 		local
-			feature_body: STRING
+			l_body: STRING
 		do
 			create Result.make
 
 			Result.set_name ("make_from_pointer")
 			Result.set_comment ("Make from pointer")
-			Result.add_argument (Default_pointer_argument.twin)
+			Result.add_argument ("a_object: POINTER")
 			Result.set_effective
 
-			create feature_body.make (10000)
-			feature_body.append (Tab_tab_tab)
-			feature_body.append (Initializer_variable)
-			feature_body.append (Space)
-			feature_body.append (Assignment)
-			feature_body.append (Space)
-			feature_body.append (ccom_create_from_pointer_feature_name)
-			feature_body.append (Open_parenthesis)
-			feature_body.append ("cpp_obj")
-			feature_body.append (Close_parenthesis)
-			feature_body.append (New_line_tab_tab_tab)
-
-			feature_body.append (Item_clause)
-			feature_body.append (Space)
-			feature_body.append (Assignment)
-			feature_body.append (Space)
-			feature_body.append (Ccom_item_function_name)
-			feature_body.append (Space)
-			feature_body.append (Open_parenthesis)
-			feature_body.append (Initializer_variable)
-			feature_body.append (Close_parenthesis)
-
-			Result.set_body (feature_body)
+			create l_body.make (10000)
+			l_body.append ("%T%T%Tinitializer := ")
+			l_body.append (ccom_create_from_pointer_feature_name)
+			l_body.append ("(a_object)%N%T%T%Titem := ccom_item (initializer)")
+			Result.set_body (l_body)
 		ensure
 			non_void_feature: Result /= Void
 			non_void_feature_name: Result.name /= Void
@@ -77,37 +59,26 @@ feature {NONE} -- Implementation
 		require
 			non_void_component_descriptor: a_component_descriptor /= Void
 		local
-			feature_body: STRING
+			l_body: STRING
 		do
 			create Result.make
 			Result.set_name (ccom_create_from_pointer_feature_name)
 			Result.set_comment ("Create from pointer")
 			Result.set_result_type (Pointer_type)
-			Result.add_argument (Pointer_variable.twin)
+			Result.add_argument ("a_pointer: POINTER")
 			Result.set_external
 
-			create feature_body.make (1000)
-			feature_body.append (Tab_tab_tab)
-			feature_body.append (Double_quote)
-			feature_body.append (Cpp_clause)
-			feature_body.append (New)
-			feature_body.append (Space)
+			create l_body.make (1000)
+			l_body.append ("%T%T%T%"C++ [new ")
 			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.is_empty then
-				feature_body.append (a_component_descriptor.namespace)
-				feature_body.append ("::")
+				l_body.append (a_component_descriptor.namespace)
+				l_body.append ("::")
 			end
-			feature_body.append (a_component_descriptor.c_type_name)
-			feature_body.append (Space)
-			feature_body.append (Percent_double_quote)
-			feature_body.append (a_component_descriptor.c_header_file_name)
-			feature_body.append (Percent_double_quote)
-			feature_body.append (Close_bracket)
-			feature_body.append (Open_parenthesis)
-			feature_body.append (Iunknown)
-			feature_body.append (Close_parenthesis)
-			feature_body.append (Double_quote)
-
-			Result.set_body (feature_body)
+			l_body.append (a_component_descriptor.c_type_name)
+			l_body.append (" %%%"")
+			l_body.append (a_component_descriptor.c_definition_header_file_name)
+			l_body.append ("%%%"](IUnknown *)%"")
+			Result.set_body (l_body)
 
 		ensure
 			non_void_feature: Result /= Void
@@ -118,7 +89,7 @@ feature {NONE} -- Implementation
 	delete_wrapper_feature: WIZARD_WRITER_FEATURE is
 			-- `delete_wrapper' feature.
 		local
-			feature_body: STRING
+			l_body: STRING
 		do
 			create Result.make
 
@@ -126,14 +97,11 @@ feature {NONE} -- Implementation
 			Result.set_comment ("Delete wrapper")
 			Result.set_effective
 			
-			create feature_body.make (500)
-			feature_body.append (Tab_tab_tab)
-			feature_body.append (ccom_delete_feature_name)
-			feature_body.append (Open_parenthesis)
-			feature_body.append (Initializer_variable)
-			feature_body.append (Close_parenthesis)
-			
-			Result.set_body (feature_body)
+			create l_body.make (500)
+			l_body.append ("%T%T%T")
+			l_body.append (ccom_delete_feature_name)
+			l_body.append ("(initializer)")
+			Result.set_body (l_body)
 		ensure
 			non_void_feature: Result /= Void
 			non_void_feature_name: Result.name /= Void
@@ -146,35 +114,25 @@ feature {NONE} -- Implementation
 		require
 			non_void_component_descriptor: a_component_descriptor /= Void
 		local
-			feature_body: STRING
+			l_body: STRING
 		do
 			create Result.make
 			Result.set_name (ccom_delete_feature_name)
 			Result.set_comment ("Release resource")
-			Result.add_argument (Pointer_variable)
+			Result.add_argument ("a_pointer: POINTER")
 			Result.set_external
 
-			create feature_body.make (500)
-			feature_body.append (Tab_tab_tab)
-			feature_body.append (Double_quote)
-			feature_body.append (Cpp_clause)
-			feature_body.append (Delete)
-			feature_body.append (Space)
+			create l_body.make (500)
+			l_body.append ("%T%T%T%"C++ [delete ")
 			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.is_empty then
-				feature_body.append (a_component_descriptor.namespace)
-				feature_body.append ("::")
+				l_body.append (a_component_descriptor.namespace)
+				l_body.append ("::")
 			end
-			feature_body.append (a_component_descriptor.c_type_name)
-			feature_body.append (Space)
-			feature_body.append (Percent_double_quote)
-			feature_body.append (a_component_descriptor.c_header_file_name)
-			feature_body.append (Percent_double_quote)
-			feature_body.append (Close_bracket)
-			feature_body.append (Open_parenthesis)
-			feature_body.append (Close_parenthesis)
-			feature_body.append (Double_quote)
-
-			Result.set_body (feature_body)
+			l_body.append (a_component_descriptor.c_type_name)
+			l_body.append (" %%%"")
+			l_body.append (a_component_descriptor.c_definition_header_file_name)
+			l_body.append ("%%%"]()%"")
+			Result.set_body (l_body)
 		ensure
 			non_void_feature: Result /= Void
 			non_void_feature_name: Result.name /= Void
@@ -188,35 +146,25 @@ feature {NONE} -- Implementation
 			non_void_ccom_create_feature_name: ccom_create_feature_name /= Void
 			valid_ccom_create_feature_name: not ccom_create_feature_name.is_empty
 		local
-			feature_body: STRING
+			l_body: STRING
 		do
 			create Result.make
 			Result.set_name (ccom_create_feature_name)
 			Result.set_comment ("Creation")
-			Result.set_result_type (Pointer_type)
+			Result.set_result_type ("POINTER")
 			Result.set_external
 
-			create feature_body.make (500)
-			feature_body.append (Tab_tab_tab)
-			feature_body.append (Double_quote)
-			feature_body.append (Cpp_clause)
-			feature_body.append (New)
-			feature_body.append (Space)
+			create l_body.make (500)
+			l_body.append ("%T%T%T%"C++ [new ")
 			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.is_empty then
-				feature_body.append (a_component_descriptor.namespace)
-				feature_body.append ("::")
+				l_body.append (a_component_descriptor.namespace)
+				l_body.append ("::")
 			end
-			feature_body.append (a_component_descriptor.c_type_name)
-			feature_body.append (Space)
-			feature_body.append (Percent_double_quote)
-			feature_body.append (a_component_descriptor.c_header_file_name)
-			feature_body.append (Percent_double_quote)
-			feature_body.append (Close_bracket)
-			feature_body.append (Open_parenthesis)
-			feature_body.append (Close_parenthesis)
-			feature_body.append (Double_quote)
-
-			Result.set_body (feature_body)
+			l_body.append (a_component_descriptor.c_type_name)
+			l_body.append (" %%%"")
+			l_body.append (a_component_descriptor.c_definition_header_file_name)
+			l_body.append ("%%%"]()%"")
+			Result.set_body (l_body)
 		ensure
 			non_void_feature: Result /= Void
 			non_void_feature_name: Result.name /= Void
@@ -228,36 +176,26 @@ feature {NONE} -- Implementation
 		require
 			non_void_component_descriptor: a_component_descriptor /= Void
 		local
-			feature_body: STRING
+			l_body: STRING
 		do
 			create Result.make
 			Result.set_name (Ccom_item_function_name)
 			Result.set_comment ("Item")
 			Result.set_external
-			Result.set_result_type (Pointer_type)
+			Result.set_result_type ("POINTER")
 			Result.add_argument (Default_pointer_argument.twin)
 
-			create feature_body.make (500)
-			feature_body.append (Tab_tab_tab)
-			feature_body.append (Double_quote)
-			feature_body.append (Cpp_clause)
+			create l_body.make (500)
+			l_body.append ("%T%T%T%"C++ [")
 			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.is_empty then
-				feature_body.append (a_component_descriptor.namespace)
-				feature_body.append ("::")
+				l_body.append (a_component_descriptor.namespace)
+				l_body.append ("::")
 			end
-			feature_body.append (a_component_descriptor.c_type_name)
-			feature_body.append (Space)
-			feature_body.append (Percent_double_quote)
-			feature_body.append (a_component_descriptor.c_header_file_name)
-			feature_body.append (Percent_double_quote)
-			feature_body.append (Close_bracket)
-			feature_body.append (Open_parenthesis)
-			feature_body.append (Close_parenthesis)
-			feature_body.append (Colon)
-			feature_body.append (Eif_pointer)
-			feature_body.append (Double_quote)
-
-			Result.set_body (feature_body)
+			l_body.append (a_component_descriptor.c_type_name)
+			l_body.append (" %%%"")
+			l_body.append (a_component_descriptor.c_definition_header_file_name)
+			l_body.append ("%%%"](): EIF_POINTER%"")
+			Result.set_body (l_body)
 		ensure
 			non_void_feature: Result /= Void
 			non_void_feature_name: Result.name /= Void
@@ -267,29 +205,24 @@ feature {NONE} -- Implementation
 	last_error_code_feature: WIZARD_WRITER_FEATURE is
 			-- `last_error_code' feature.
 		local
-			feature_body: STRING
+			l_body: STRING
 		do
 			create Result.make
 			Result.set_name (last_error_code_name.twin)
 			Result.set_comment ("Last error code.")
-			Result.set_result_type (Integer_type)
+			Result.set_result_type ("INTEGER")
 
-			create feature_body.make (1000)
-			feature_body.append (Tab_tab_tab)
-			feature_body.append (Result_clause)
-			feature_body.append (ccom_last_error_code_name)
-			feature_body.append (Space_open_parenthesis)
-			feature_body.append (Initializer_variable)
-			feature_body.append (close_parenthesis)
-
-			Result.set_body (feature_body)
+			create l_body.make (1000)
+			l_body.append ("%T%T%TResult := ")
+			l_body.append (ccom_last_error_code_name)
+			l_body.append (" (initializer)")
+			Result.set_body (l_body)
 			Result.set_effective
 		ensure
 			non_void_feature: Result /= Void
 			non_void_feature_name: Result.name /= Void
 			valid_feature_name: not Result.name.is_empty
 			non_void_feature_comment: Result.comment /= Void
-			valid_feature_comment: not Result.comment.is_empty
 			non_void_feature_body: Result.body /= Void
 			valid_feature_body: not Result.body.is_empty
 		end
@@ -297,29 +230,24 @@ feature {NONE} -- Implementation
 	last_source_of_exception_feature: WIZARD_WRITER_FEATURE is
 			-- `last_source_of_exception' feature.
 		local
-			feature_body: STRING
+			l_body: STRING
 		do
 			create Result.make
 			Result.set_name (last_source_of_exception_name.twin)
 			Result.set_comment ("Last source of exception.")
-			Result.set_result_type (String_type)
+			Result.set_result_type ("STRING")
 
-			create feature_body.make (1000)
-			feature_body.append (Tab_tab_tab)
-			feature_body.append (Result_clause)
-			feature_body.append (ccom_last_source_of_exception_name)
-			feature_body.append (Space_open_parenthesis)
-			feature_body.append (Initializer_variable)
-			feature_body.append (close_parenthesis)
-
-			Result.set_body (feature_body)
+			create l_body.make (1000)
+			l_body.append ("%T%T%TResult := ")
+			l_body.append (ccom_last_source_of_exception_name)
+			l_body.append (" (initializer)")
+			Result.set_body (l_body)
 			Result.set_effective
 		ensure
 			non_void_feature: Result /= Void
 			non_void_feature_name: Result.name /= Void
 			valid_feature_name: not Result.name.is_empty
 			non_void_feature_comment: Result.comment /= Void
-			valid_feature_comment: not Result.comment.is_empty
 			non_void_feature_body: Result.body /= Void
 			valid_feature_body: not Result.body.is_empty
 		end
@@ -327,29 +255,24 @@ feature {NONE} -- Implementation
 	last_error_description_feature: WIZARD_WRITER_FEATURE is
 			-- `last_error_description' feature.
 		local
-			feature_body: STRING
+			l_body: STRING
 		do
 			create Result.make
 			Result.set_name (last_error_description_name.twin)
 			Result.set_comment ("Last error description.")
-			Result.set_result_type (String_type)
+			Result.set_result_type ("STRING")
 
-			create feature_body.make (1000)
-			feature_body.append (Tab_tab_tab)
-			feature_body.append (Result_clause)
-			feature_body.append (ccom_last_error_description_name)
-			feature_body.append (Space_open_parenthesis)
-			feature_body.append (Initializer_variable)
-			feature_body.append (close_parenthesis)
-
-			Result.set_body (feature_body)
+			create l_body.make (1000)
+			l_body.append ("%T%T%TResult := ")
+			l_body.append (ccom_last_error_description_name)
+			l_body.append (" (initializer)")
+			Result.set_body (l_body)
 			Result.set_effective
 		ensure
 			non_void_feature: Result /= Void
 			non_void_feature_name: Result.name /= Void
 			valid_feature_name: not Result.name.is_empty
 			non_void_feature_comment: Result.comment /= Void
-			valid_feature_comment: not Result.comment.is_empty
 			non_void_feature_body: Result.body /= Void
 			valid_feature_body: not Result.body.is_empty
 		end
@@ -357,29 +280,24 @@ feature {NONE} -- Implementation
 	last_error_help_file_feature: WIZARD_WRITER_FEATURE is
 			-- `last_error_help_file' feature.
 		local
-			feature_body: STRING
+			l_body: STRING
 		do
 			create Result.make
 			Result.set_name (last_error_help_file_name.twin)
 			Result.set_comment ("Last error help file.")
-			Result.set_result_type (String_type)
+			Result.set_result_type ("STRING")
 
-			create feature_body.make (1000)
-			feature_body.append (Tab_tab_tab)
-			feature_body.append (Result_clause)
-			feature_body.append (ccom_last_error_help_file_name)
-			feature_body.append (Space_open_parenthesis)
-			feature_body.append (Initializer_variable)
-			feature_body.append (close_parenthesis)
-
-			Result.set_body (feature_body)
+			create l_body.make (1000)
+			l_body.append ("%T%T%TResult := ")
+			l_body.append (ccom_last_error_help_file_name)
+			l_body.append (" (initializer)")
+			Result.set_body (l_body)
 			Result.set_effective
 		ensure
 			non_void_feature: Result /= Void
 			non_void_feature_name: Result.name /= Void
 			valid_feature_name: not Result.name.is_empty
 			non_void_feature_comment: Result.comment /= Void
-			valid_feature_comment: not Result.comment.is_empty
 			non_void_feature_body: Result.body /= Void
 			valid_feature_body: not Result.body.is_empty
 		end
@@ -389,36 +307,26 @@ feature {NONE} -- Implementation
 		require
 			non_void_component_descriptor: a_component_descriptor /= Void
 		local
-			feature_body: STRING
+			l_body: STRING
 		do
 			create Result.make
 			Result.set_name (ccom_last_error_code_name)
 			Result.set_comment ("Last error code")
 			Result.set_external
-			Result.set_result_type (Integer_type)
-			Result.add_argument (Default_pointer_argument.twin)
+			Result.set_result_type ("INTEGER")
+			Result.add_argument ("a_object: POINTER")
 
-			create feature_body.make (500)
-			feature_body.append (Tab_tab_tab)
-			feature_body.append (Double_quote)
-			feature_body.append (Cpp_clause)
+			create l_body.make (500)
+			l_body.append ("%T%T%T%"C++ [")
 			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.is_empty then
-				feature_body.append (a_component_descriptor.namespace)
-				feature_body.append ("::")
+				l_body.append (a_component_descriptor.namespace)
+				l_body.append ("::")
 			end
-			feature_body.append (a_component_descriptor.c_type_name)
-			feature_body.append (Space)
-			feature_body.append (Percent_double_quote)
-			feature_body.append (a_component_descriptor.c_header_file_name)
-			feature_body.append (Percent_double_quote)
-			feature_body.append (Close_bracket)
-			feature_body.append (Open_parenthesis)
-			feature_body.append (Close_parenthesis)
-			feature_body.append (Colon)
-			feature_body.append (Eif_integer)
-			feature_body.append (Double_quote)
-
-			Result.set_body (feature_body)
+			l_body.append (a_component_descriptor.c_type_name)
+			l_body.append (" %%%"")
+			l_body.append (a_component_descriptor.c_definition_header_file_name)
+			l_body.append ("%%%"](): EIF_INTEGER%"")
+			Result.set_body (l_body)
 		ensure
 			non_void_feature: Result /= Void
 			non_void_feature_name: Result.name /= Void
@@ -430,36 +338,27 @@ feature {NONE} -- Implementation
 		require
 			non_void_component_descriptor: a_component_descriptor /= Void
 		local
-			feature_body: STRING
+			l_body: STRING
 		do
 			create Result.make
 			Result.set_name (ccom_last_source_of_exception_name)
 			Result.set_comment ("Last source of exception")
 			Result.set_external
-			Result.set_result_type (String_type)
-			Result.add_argument (Default_pointer_argument.twin)
+			Result.set_result_type ("STRING")
+			Result.add_argument ("a_object: POINTER")
 
-			create feature_body.make (500)
-			feature_body.append (Tab_tab_tab)
-			feature_body.append (Double_quote)
-			feature_body.append (Cpp_clause)
+			create l_body.make (500)
+			l_body.append ("%T%T%T%"C++ [")
 			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.is_empty then
-				feature_body.append (a_component_descriptor.namespace)
-				feature_body.append ("::")
+				l_body.append (a_component_descriptor.namespace)
+				l_body.append ("::")
 			end
-			feature_body.append (a_component_descriptor.c_type_name)
-			feature_body.append (Space)
-			feature_body.append (Percent_double_quote)
-			feature_body.append (a_component_descriptor.c_header_file_name)
-			feature_body.append (Percent_double_quote)
-			feature_body.append (Close_bracket)
-			feature_body.append (Open_parenthesis)
-			feature_body.append (Close_parenthesis)
-			feature_body.append (Colon)
-			feature_body.append (Eif_reference)
-			feature_body.append (Double_quote)
+			l_body.append (a_component_descriptor.c_type_name)
+			l_body.append (" %%%"")
+			l_body.append (a_component_descriptor.c_definition_header_file_name)
+			l_body.append ("%%%"](): EIF_REFERENCE%"")
 
-			Result.set_body (feature_body)
+			Result.set_body (l_body)
 		ensure
 			non_void_feature: Result /= Void
 			non_void_feature_name: Result.name /= Void
@@ -471,36 +370,26 @@ feature {NONE} -- Implementation
 		require
 			non_void_component_descriptor: a_component_descriptor /= Void
 		local
-			feature_body: STRING
+			l_body: STRING
 		do
 			create Result.make
 			Result.set_name (ccom_last_error_description_name)
 			Result.set_comment ("Last error description")
 			Result.set_external
-			Result.set_result_type (String_type)
-			Result.add_argument (Default_pointer_argument.twin)
+			Result.set_result_type ("STRING")
+			Result.add_argument ("a_object: POINTER")
 
-			create feature_body.make (500)
-			feature_body.append (Tab_tab_tab)
-			feature_body.append (Double_quote)
-			feature_body.append (Cpp_clause)
+			create l_body.make (500)
+			l_body.append ("%T%T%T%"C++ [")
 			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.is_empty then
-				feature_body.append (a_component_descriptor.namespace)
-				feature_body.append ("::")
+				l_body.append (a_component_descriptor.namespace)
+				l_body.append ("::")
 			end
-			feature_body.append (a_component_descriptor.c_type_name)
-			feature_body.append (Space)
-			feature_body.append (Percent_double_quote)
-			feature_body.append (a_component_descriptor.c_header_file_name)
-			feature_body.append (Percent_double_quote)
-			feature_body.append (Close_bracket)
-			feature_body.append (Open_parenthesis)
-			feature_body.append (Close_parenthesis)
-			feature_body.append (Colon)
-			feature_body.append (Eif_reference)
-			feature_body.append (Double_quote)
-
-			Result.set_body (feature_body)
+			l_body.append (a_component_descriptor.c_type_name)
+			l_body.append (" %%%"")
+			l_body.append (a_component_descriptor.c_definition_header_file_name)
+			l_body.append ("%%%"](): EIF_REFERENCE%"")
+			Result.set_body (l_body)
 		ensure
 			non_void_feature: Result /= Void
 			non_void_feature_name: Result.name /= Void
@@ -512,36 +401,26 @@ feature {NONE} -- Implementation
 		require
 			non_void_component_descriptor: a_component_descriptor /= Void
 		local
-			feature_body: STRING
+			l_body: STRING
 		do
 			create Result.make
 			Result.set_name (ccom_last_error_help_file_name)
 			Result.set_comment ("Last error help file")
 			Result.set_external
-			Result.set_result_type (String_type)
-			Result.add_argument (Default_pointer_argument.twin)
+			Result.set_result_type ("STRING")
+			Result.add_argument ("a_object: POINTER")
 
-			create feature_body.make (500)
-			feature_body.append (Tab_tab_tab)
-			feature_body.append (Double_quote)
-			feature_body.append (Cpp_clause)
+			create l_body.make (500)
+			l_body.append ("%T%T%T%"C++ [")
 			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.is_empty then
-				feature_body.append (a_component_descriptor.namespace)
-				feature_body.append ("::")
+				l_body.append (a_component_descriptor.namespace)
+				l_body.append ("::")
 			end
-			feature_body.append (a_component_descriptor.c_type_name)
-			feature_body.append (Space)
-			feature_body.append (Percent_double_quote)
-			feature_body.append (a_component_descriptor.c_header_file_name)
-			feature_body.append (Percent_double_quote)
-			feature_body.append (Close_bracket)
-			feature_body.append (Open_parenthesis)
-			feature_body.append (Close_parenthesis)
-			feature_body.append (Colon)
-			feature_body.append (Eif_reference)
-			feature_body.append (Double_quote)
-
-			Result.set_body (feature_body)
+			l_body.append (a_component_descriptor.c_type_name)
+			l_body.append (" %%%"")
+			l_body.append (a_component_descriptor.c_definition_header_file_name)
+			l_body.append ("%%%"](): EIF_REFERENCE%"")
+			Result.set_body (l_body)
 		ensure
 			non_void_feature: Result /= Void
 			non_void_feature_name: Result.name /= Void

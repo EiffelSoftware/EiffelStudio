@@ -9,8 +9,6 @@ class
 
 feature -- Access
 
-	User_precondition: STRING is "user_precondition"
-
 	Class_footer: STRING is ""
 
 	Class_header: STRING is ""
@@ -38,8 +36,6 @@ feature -- Access
 	Implementation_title: STRING is "Implementation"
 	
 	External_title: STRING is "External"
-
-	No_description_available: STRING is "No description available."
 	
 	Added:STRING is "Added"
 
@@ -341,7 +337,7 @@ feature -- Access
 
 	Pointer_variable: STRING is "a_pointer: POINTER"
 
-	Default_pointer_argument: STRING is "cpp_obj: POINTER"
+	Default_pointer_argument: STRING is "a_object: POINTER"
 
 	Empty_dispparams: STRING is "DISPPARAMS args = %<NULL, NULL, 0, 0%>;"
 

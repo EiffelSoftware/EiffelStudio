@@ -51,8 +51,11 @@ feature -- Basic operations
 
 			create c_post_type.make (10)
 			c_post_type.append (pointed_visitor.c_post_type)
-			if pointed_visitor.c_header_file /= Void then
-				c_header_file := pointed_visitor.c_header_file.twin
+			if pointed_visitor.c_definition_header_file_name /= Void then
+				c_definition_header_file_name := pointed_visitor.c_definition_header_file_name
+			end
+			if pointed_visitor.c_declaration_header_file_name /= Void then
+				c_declaration_header_file_name := pointed_visitor.c_declaration_header_file_name
 			end
 
 			create ce_function_name.make (100)

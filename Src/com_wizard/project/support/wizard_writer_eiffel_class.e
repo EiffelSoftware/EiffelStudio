@@ -20,11 +20,11 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize writer.
 		do
-			description := Default_description
-			create {LINKED_LIST [WIZARD_WRITER_INHERIT_CLAUSE]} inherit_clauses.make
-			create {LINKED_LIST [STRING]} creation_routines.make
+			description := ""
+			create {ARRAYED_LIST [WIZARD_WRITER_INHERIT_CLAUSE]} inherit_clauses.make (20)
+			create {ARRAYED_LIST [STRING]} creation_routines.make (20)
 			create features.make (10)
-			create {LINKED_LIST [WIZARD_WRITER_ASSERTION]} invariants.make
+			create {ARRAYED_LIST [WIZARD_WRITER_ASSERTION]} invariants.make (20)
 		end
 
 feature -- Access
@@ -32,118 +32,86 @@ feature -- Access
 	generated_code: STRING is
 			-- Generated code
 		local
-			an_integer: INTEGER
+			l_integer: INTEGER
+			l_features: LIST [WIZARD_WRITER_FEATURE]
 		do
-			Result := indexing_keyword.twin
-			Result.append (New_line_tab)
-			Result.append (Description_keyword)
-			Result.append (Colon)
-			Result.append (Space)
-			Result.append (Double_quote)
+			Result := "indexing%N%Tdescription: %""
 			Result.append (description)
-			Result.append (Double_quote)
-			Result.append (New_line_tab)
-			Result.append (Note_keyword)
-			Result.append (Colon)
-			Result.append (Space)
+			Result.append ("%"%N%Tnote: ")
 			Result.append (Wizard_note)
-			Result.append (New_line)
-			Result.append (New_line)
+			Result.append ("%N%N")
 			if is_deferred then
-				Result.append (Deferred_keyword)
-				Result.append (Space)
+				Result.append ("deferred ")
 			end
-			Result.append (Class_keyword)
-			Result.append (New_line_tab)
+			Result.append ("class%N%T")
 			Result.append (class_name)
-			Result.append (New_line)
-			Result.append (New_line)
+			Result.append ("%N%N")
 			if not inherit_clauses.is_empty then
-				Result.append (Inherit_keyword)
+				Result.append ("inherit")
 			end
 			from
 				inherit_clauses.start
 			until
 				inherit_clauses.after
 			loop
-				Result.append (New_line)
+				Result.append ("%N")
 				Result.append (inherit_clauses.item.generated_code)
-				Result.append (New_line)
+				Result.append ("%N")
 				inherit_clauses.forth
 			end
 			if not inherit_clauses.is_empty then
-				Result.append (New_line)
+				Result.append ("%N")
 			end
 			if empty_creation_routines then
-				Result.append (Creation_keyword)
-				Result.append (New_line)
-				Result.append (New_line)
+				Result.append ("create%N%N")
 			else
 				from
 					creation_routines.start
 					if not creation_routines.off then
-						Result.append (Creation_keyword)
-						Result.append (New_line_tab)
+						Result.append ("create%N%T")
 						Result.append (creation_routines.item)
 						creation_routines.forth
 					end
 				until
 					creation_routines.off
 				loop
-					Result.append (Comma)
-					Result.append (New_line_tab)
+					Result.append (",%N%T")
 					Result.append (creation_routines.item)
 					creation_routines.forth
 				end
 				if not creation_routines.is_empty then
-					Result.append (New_line)
-					Result.append (New_line)
+					Result.append ("%N%N")
 				end
 			end
 			from
-				an_integer := Initialization
+				l_integer := Initialization
 			until
-				an_integer = Externals + 1
+				l_integer = Externals + 1
 			loop
-				if features.has (an_integer) then
-					Result.append (Feature_keyword)
-					if 
-						an_integer = Initialization or 
-						an_integer = Implementation or 
-						an_integer = Externals 
-					then
-						Result.append (Space)
-						Result.append (Open_curly_brace)
-						Result.append (None_keyword)
-						Result.append (Close_curly_brace)
-						Result.append (Space)
+				if features.has (l_integer) then
+					Result.append ("feature")
+					if l_integer = Initialization or l_integer = Implementation or l_integer = Externals then
+						Result.append (" {NONE} ")
 					end
-					Result.append (Space)
-					Result.append (Double_dash)
-					Result.append (Space)
-					Result.append (feature_clauses.item (an_integer))
+					Result.append (" -- ")
+					Result.append (feature_clauses.item (l_integer))
+					l_features := features.item (l_integer)
 					from
-						features.item (an_integer).start
+						l_features.start
 					until
-						features.item (an_integer).after
+						l_features.after
 					loop
-						Result.append (New_line)
-						Result.append (New_line)
-						Result.append (features.item (an_integer).item.generated_code)
-						features.item (an_integer).forth
+						Result.append ("%N%N")
+						Result.append (l_features.item.generated_code)
+						l_features.forth
 					end
-					Result.append (New_line)
-					Result.append (New_line)
+					Result.append ("%N%N")
 				end
-				an_integer := an_integer + 1
+				l_integer := l_integer + 1
 			end
-			Result.append (End_keyword)
-			Result.append (Space)
-			Result.append (Double_dash)
-			Result.append (Space)
+			Result.append ("end -- ")
 			Result.append (class_name)
-			Result.append (New_line)
-			Result.append (New_line)
+			Result.append ("%N%N")
 			Result.append (Class_footer)
 		end
 
@@ -174,9 +142,6 @@ feature -- Access
 			Result := class_name /= Void and then not class_name.is_empty
 		end
 				
-	Default_description: STRING is "No description available."
-			-- Default indexing clause description part
-
 	empty_creation_routines: BOOLEAN
 			-- Should `create' be specified without any creation routines?
 
@@ -207,7 +172,6 @@ feature -- Element Change
 			-- Set `description' with `a_description'.
 		require
 			non_void_description: a_description /= Void
-			valid_description: not a_description.is_empty
 		do
 			description := a_description
 		ensure
@@ -242,7 +206,7 @@ feature -- Element Change
 			valid_clause: is_valid_clause (a_clause)
 		do
 			if not features.has (a_clause) then
-				features.put (create {LINKED_LIST [WIZARD_WRITER_FEATURE]}.make, a_clause)
+				features.put (create {ARRAYED_LIST [WIZARD_WRITER_FEATURE]}.make (20), a_clause)
 			end
 			check
 				features.has (a_clause)

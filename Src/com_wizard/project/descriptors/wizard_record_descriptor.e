@@ -33,7 +33,7 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	fields: SORTED_TWO_WAY_LIST[WIZARD_RECORD_FIELD_DESCRIPTOR]
+	fields: SORTED_TWO_WAY_LIST [WIZARD_RECORD_FIELD_DESCRIPTOR]
 			-- Descriptions of structure's fields
 
 	size_of_instance: INTEGER
@@ -74,7 +74,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	set_fields (some_fields: SORTED_TWO_WAY_LIST[WIZARD_RECORD_FIELD_DESCRIPTOR]) is
+	set_fields (some_fields: SORTED_TWO_WAY_LIST [WIZARD_RECORD_FIELD_DESCRIPTOR]) is
 			-- Set `fields' with `some_fields'.
 		require
 			valid_fields: some_fields /= Void

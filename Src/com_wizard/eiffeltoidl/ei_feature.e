@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			valid_name: not r_name.is_empty
 		do
 			name := r_name.twin
-			create parameters.make
+			create {ARRAYED_LIST [EI_PARAMETER]} parameters.make (20)
 			create result_type.make (0)
 			create comment.make (0)
 		ensure
@@ -44,7 +44,7 @@ feature -- Access
 	comment: STRING
 			-- Comment
 
-	parameters: LINKED_LIST[EI_PARAMETER]
+	parameters: LIST [EI_PARAMETER]
 			-- Parameters
 
 	result_type: STRING
@@ -67,7 +67,6 @@ feature -- Element change
 			-- Set 'comment' to 'new_comment'.
 		require
 			non_void_comment: new_comment /= Void
-			valid_comment: not new_comment.is_empty
 		do
 			comment := new_comment.twin
 		ensure

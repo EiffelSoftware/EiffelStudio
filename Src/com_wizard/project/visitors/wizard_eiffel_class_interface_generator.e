@@ -36,7 +36,7 @@ feature -- Basic operations
 			
 			create inherit_clause_writer.make
 			inherit_clause_writer.set_name (shared_wizard_environment.eiffel_class_name)
-			create {LINKED_LIST [STRING]} feature_list.make
+			create {ARRAYED_LIST [STRING]} feature_list.make (20)
 			feature_list.force ("all")
 			inherit_clause_writer.add_export (feature_list, "NONE")
 			
@@ -56,27 +56,30 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	process_functions (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR; 
-					inherit_clause_writer: WIZARD_WRITER_INHERIT_CLAUSE) is
+	process_functions (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR; inherit_clause_writer: WIZARD_WRITER_INHERIT_CLAUSE) is
 			-- Process functions
 		require
 			non_void_descriptor: a_descriptor /= Void
 			not_empty_list: not a_descriptor.functions_empty
 			non_void_eiffel_writer: eiffel_writer /= Void
 		local
-			feature_list: LIST [STRING]
+			l_list: LIST [STRING]
+			l_function: WIZARD_FUNCTION_DESCRIPTOR
 		do
-			create {LINKED_LIST [STRING]} feature_list.make
+			create {ARRAYED_LIST [STRING]} l_list.make (20)
 			from
 				a_descriptor.functions_start
 			until
 				a_descriptor.functions_after
 			loop
-				feature_list.force (a_descriptor.functions_item.name)
-				inherit_clause_writer.add_undefine (a_descriptor.functions_item.name)
+				l_function := a_descriptor.functions_item
+				if not l_function.is_renaming_clause then
+					l_list.force (l_function.name)
+					inherit_clause_writer.add_undefine (l_function.name)
+				end
 				a_descriptor.functions_forth
 			end
-			inherit_clause_writer.add_export (feature_list, "ANY")
+			inherit_clause_writer.add_export (l_list, "ANY")
 		end
 		
 		

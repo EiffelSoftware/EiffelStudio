@@ -22,9 +22,9 @@ feature -- Basic operations
 			non_void_descriptor: a_descriptor /= Void
 		deferred
 		ensure 
-			feature_generated: feature_writer /= Void
-			valid_feature_writer: feature_writer.can_generate
-			function_descriptor_set: func_desc /= Void
+			feature_generated: not a_descriptor.is_renaming_clause implies feature_writer /= Void
+			valid_feature_writer: not a_descriptor.is_renaming_clause implies feature_writer.can_generate
+			function_descriptor_set: not a_descriptor.is_renaming_clause implies func_desc /= Void
 		end
 
 end -- class WIZARD_EIFFEL_EFFECTIVE_FUNCTION_GENERATOR

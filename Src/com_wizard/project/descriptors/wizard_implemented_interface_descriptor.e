@@ -15,6 +15,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_FILE_NAME_FACTORY
+		export
+			{NONE} all
+		end
+
 create
 	make_from_interface
 
@@ -31,19 +36,12 @@ feature -- Initialization
 			namespace := a_descriptor.namespace.twin
 			name.append ("_impl")
 			c_type_name := name.twin
-			
 			eiffel_class_name := name_for_class (name, type_kind, True)
-				
-			c_header_file_name := header_name (namespace, name)
-
-			description := "Implemented "
-			description.append (Back_quote)
+			c_definition_header_file_name := header_name (namespace, name)
+			c_declaration_header_file_name := declaration_header_file_name (c_definition_header_file_name)
+			description := "Implemented %Q"
 			description.append (a_descriptor.name)
-			description.append (Single_quote)
-			description.append (Space)
-			description.append (Interface)
-			description.append (Dot)
-
+			description.append ("%' interface.")
 			type_library_descriptor := a_descriptor.type_library_descriptor
 		end
 
@@ -55,18 +53,15 @@ feature -- Access
 	creation_message: STRING is
 			-- Creation message for wizard output
 		do
-			Result := Processed.twin
-			Result.append (Space)
- 			Result.append (Implemented_word)
-			Result.append (Space)
+			create Result.make (1024)
+			Result.append ("Processing implemented ")
 			if interface_descriptor.dispinterface then
-				Result.append (Dispinterface_string)
+				Result.append ("dispatch interface ")
 			else
-				Result.append (Interface)
+				Result.append ("interface ")
 			end
-			Result.append (Space)
 			Result.append (name)
-			Result.append (Dot)
+			Result.append_character ('.')
 		end
 
 	source: BOOLEAN
@@ -93,7 +88,8 @@ feature -- Basic operations
 		do
 			c_type_name := impl_c_type_name (is_client)
 			eiffel_class_name := impl_eiffel_class_name (is_client)
-			c_header_file_name := impl_c_header_file_name (is_client)
+			c_declaration_header_file_name := impl_c_declaration_header_file_name (is_client)
+			c_definition_header_file_name := impl_c_definition_header_file_name (is_client)
 		end
 
 	impl_c_type_name (is_client: BOOLEAN): STRING is
@@ -121,13 +117,25 @@ feature -- Basic operations
 			valid_class_name: not Result.is_empty
 		end
 
-	impl_c_header_file_name (is_client: BOOLEAN): STRING is
+	impl_c_definition_header_file_name (is_client: BOOLEAN): STRING is
 			-- Implementation header file name.
 		require
 			non_void_name: name /= Void
 			valid_name: not name.is_empty
 		do
 			Result := header_name (namespace, impl_name (is_client))
+		ensure
+			non_void_header: Result /= Void
+			valid_header: not Result.is_empty
+		end
+
+	impl_c_declaration_header_file_name (is_client: BOOLEAN): STRING is
+			-- Implementation header file name.
+		require
+			non_void_name: name /= Void
+			valid_name: not name.is_empty
+		do
+			Result := declaration_header_file_name (impl_c_definition_header_file_name (is_client))
 		ensure
 			non_void_header: Result /= Void
 			valid_header: not Result.is_empty

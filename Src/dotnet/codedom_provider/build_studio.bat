@@ -67,18 +67,18 @@ GOTO END
 
 :MANAGER
 CD ..
-CD ecd_manager
+CD ecdpman
 IF EXIST EIFGEN RD /Q /S EIFGEN
 IF EXIST *.epr DEL /Q /F *.epr
 ECHO -
 ECHO COMPILING Eiffel CodeDom Manager
 ECHO -
-COPY ..\..\manager\ecd_manager.ico .
-COPY ..\..\manager\ecd_manager.rc .
+COPY ..\..\manager\ecdpman.ico .
+COPY ..\..\manager\ecdpman.rc .
 
 ec -ace ace.ace -finalize -c_compile
-IF EXIST EIFGEN\F_code\ecd_manager.exe GOTO END
-ECHO Compilation failed !! (no ecd_manager.exe was generated in build_studio\ecd_manager\EIFGEN\F_code)
+IF EXIST EIFGEN\F_code\ecdpman.exe GOTO END
+ECHO Compilation failed !! (no ecdpman.exe was generated in build_studio\ecdpman\EIFGEN\F_code)
 GOTO END
 
 :END

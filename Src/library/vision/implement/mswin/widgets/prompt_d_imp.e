@@ -57,7 +57,6 @@ feature {NONE} -- Initialization
 			max_width := full_screen_client_area_width 
 			max_height := full_screen_client_area_height
 			default_position := True
-			create_controls
 		end
 
 feature -- Status report

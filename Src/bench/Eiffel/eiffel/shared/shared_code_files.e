@@ -1,7 +1,6 @@
 class SHARED_CODE_FILES
 
 inherit
-
 	PROJECT_CONTEXT
 	
 feature {NONE}

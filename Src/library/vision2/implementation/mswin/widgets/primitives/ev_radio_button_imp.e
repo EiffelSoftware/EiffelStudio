@@ -44,6 +44,8 @@ inherit
 			on_char,
 			on_key_up,
 			on_key_down,
+			on_set_focus,
+			on_kill_focus,
 			process_notification
 		end
 		

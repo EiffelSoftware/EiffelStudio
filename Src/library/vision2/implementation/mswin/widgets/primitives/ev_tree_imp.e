@@ -35,6 +35,8 @@ inherit
 			on_right_button_double_click,
 			on_mouse_move,
 			on_char,
+			on_set_focus,
+			on_kill_focus,
 			on_key_down,
 			on_key_up
 		redefine
@@ -67,6 +69,15 @@ feature -- Event : command association
 			-- when the selection has changed.
 		do
 			add_command (Cmd_selection, cmd, arg)
+		end
+
+feature -- Event -- removing command association
+
+	remove_selection_commands is	
+			-- Empty the list of commands to be executed
+			-- when the selection has changed.
+		do
+			remove_command (Cmd_selection)
 		end
 
 feature {EV_TREE_ITEM_CONTAINER_IMP} -- Implementation attributes

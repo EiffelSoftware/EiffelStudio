@@ -59,6 +59,8 @@ inherit
 			on_right_button_double_click,
 			on_mouse_move,
 			on_char,
+			on_set_focus,
+			on_kill_focus,
 			on_key_down,
 			on_key_up
 		redefine
@@ -107,6 +109,15 @@ feature -- Event - command association
 			-- the button is pressed.
 		do
 			add_command (Cmd_click, cmd, arg)
+		end
+
+feature -- Event -- removing command association
+
+	remove_click_commands is	
+			-- Empty the list of commands to be executed when
+			-- the button is pressed.
+		do
+			remove_command (Cmd_click)
 		end
 
 feature {NONE} -- Implementation	

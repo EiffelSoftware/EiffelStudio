@@ -53,6 +53,8 @@ inherit
 			on_left_button_double_click,
 			on_right_button_double_click,
 			on_mouse_move,
+			on_set_focus,
+			on_kill_focus,
 			on_char,
 			on_key_up
 		redefine

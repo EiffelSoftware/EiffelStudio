@@ -55,6 +55,8 @@ inherit
 			on_mouse_move,
 			on_char,
 			on_key_up,
+			on_set_focus,
+			on_kill_focus,
 			on_menu_command,
 			background_brush,
 			on_draw_item
@@ -377,7 +379,8 @@ feature -- Element change
 feature -- Event - command association
 
 	add_close_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Make `cmd' the executed command when the window is closed.
+			-- Add `cmd' to the list of commands to be executed
+			-- when the window is closed.
 		do
 			add_command (Cmd_close, cmd, arg)
 		end
@@ -394,6 +397,29 @@ feature -- Event - command association
 			-- when the widget is resized.
 		do
 			add_command (Cmd_move, cmd, arg)
+		end
+
+feature -- Event -- removing command association
+
+	remove_close_commands is
+			-- Empty the list of commands to be executed
+			-- when the window is closed.
+		do
+			remove_command (Cmd_close)
+		end
+
+	remove_resize_commands is
+			-- Empty the list of commands to be executed
+			-- when the window is resized.
+		do
+			remove_command (Cmd_size)
+		end
+
+	remove_move_commands is
+			-- Empty the list of commands to be executed
+			-- when the widget is resized.
+		do
+			remove_command (Cmd_move)
 		end
 
 feature {EV_WIDGET_IMP} -- Implementation

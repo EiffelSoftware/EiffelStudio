@@ -39,6 +39,8 @@ inherit
 			on_right_button_double_click,
 			on_mouse_move,
 			on_char,
+			on_set_focus,
+			on_kill_focus,
 			on_key_up,
 			wel_background_color,
 			wel_foreground_color

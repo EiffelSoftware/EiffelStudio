@@ -55,6 +55,8 @@ inherit
 			on_char,
 			on_key_down,
 			on_key_up,
+			on_set_focus,
+			on_kill_focus,
 			wel_background_color,
 			wel_foreground_color,
 			default_process_message
@@ -96,6 +98,8 @@ inherit
 			on_char,
 			on_key_down,
 			on_key_up,
+			on_set_focus,
+			on_kill_focus,
 			wel_background_color,
 			wel_foreground_color,
 			default_process_message
@@ -218,6 +222,15 @@ feature -- Event : command association
 			-- when the selection has changed.
 		do
 			add_command (Cmd_selection, cmd, arg)
+		end
+
+feature -- Event -- removing command association
+
+	remove_selection_commands is	
+			-- Empty the list of commands to be executed
+			-- when the selection has changed.
+		do
+			remove_command (Cmd_selection)
 		end
 
 feature {NONE} -- Implementation

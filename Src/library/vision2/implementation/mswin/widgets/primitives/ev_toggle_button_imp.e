@@ -64,6 +64,15 @@ feature -- Event - command association
 			add_command (Cmd_toggle, cmd, arg)
 		end	
 
+feature -- Event -- removing command association
+
+	remove_toggle_commands is	
+			-- Empty the list of commands to be executed
+			-- when the button is toggled.
+		do
+			remove_command (Cmd_toggle)
+		end	
+
 feature {NONE} -- Implementation
 
 	select_action is

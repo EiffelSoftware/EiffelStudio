@@ -46,8 +46,10 @@ feature {NONE} -- Implementation
 				if closeable then
 					destroy
 				end
-			when Cmd_window_tile then
-				tile_children
+			when Cmd_window_tile_vertical then
+				tile_children_vertical
+			when Cmd_window_tile_horizontal then
+				tile_children_horizontal
 			when Cmd_window_cascade then
 				cascade_children
 			when Cmd_window_arrange then

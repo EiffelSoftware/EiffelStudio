@@ -1,6 +1,5 @@
 indexing
-	description: "Receives and dispatch the Windows messages to the Eiffel%
-		% objects."
+	description: "Receives and dispatch the Windows messages to the Eiffel objects."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,7 +35,7 @@ feature {NONE} -- Initialization
 		do
 			cwel_set_window_procedure_address ($window_procedure)
 			cwel_set_dialog_procedure_address ($dialog_procedure)
-			cwel_set_dispatcher_object (ceif_adopt (Current))
+			cwel_set_dispatcher_object (Current)
 		end
 
 feature {NONE} -- Implementation
@@ -113,9 +112,11 @@ feature {NONE} -- Implementation
 
 	dispose is
 			-- Wean `Current'
+		local
+			default_object: like Current
 		do
-			cwel_set_dispatcher_object (default_pointer)
-			ceif_wean (Current)
+			cwel_release_dispatcher_object
+			cwel_set_dispatcher_object (default_object)
 		end
 
 feature {NONE} -- Externals
@@ -123,51 +124,39 @@ feature {NONE} -- Externals
 	cwel_integer_to_pointer (i: INTEGER): POINTER is
 			-- Converts an integer `i' to a pointer
 		external
-			"C [macro <wel.h>]"
-		end
-
-	ceif_adopt (object: ANY): POINTER is
-			-- Eiffel macro to adopt an object
-		external
-			"C [macro <eif_eiffel.h>] (EIF_OBJ): EIF_POINTER"
-		alias
-			"eif_adopt"
-		end
-
-	ceif_wean (object: ANY) is
-			-- Eiffel macro to wean an object
-		external
-			"C [macro <eif_eiffel.h>] (EIF_OBJ)"
-		alias
-			"eif_wean"
+			"C [macro %"wel.h%"]"
 		end
 
 	cwel_temp_dialog_value: POINTER is
 		external
-			"C [macro <wel.h>]: EIF_POINTER"
+			"C [macro %"wel.h%"]: EIF_POINTER"
 		end
 
 	cwel_set_window_procedure_address (address: POINTER) is
 		external
-			"C [macro <disptchr.h>]"
+			"C [macro %"disptchr.h%"]"
 		end
 
 	cwel_set_dialog_procedure_address (address: POINTER) is
 		external
-			"C [macro <disptchr.h>]"
+			"C [macro %"disptchr.h%"]"
 		end
 
-	cwel_set_dispatcher_object (dispatcher: POINTER) is
+	cwel_set_dispatcher_object (dispatcher: like Current) is
 		external
-			"C [macro <disptchr.h>]"
+			"C [macro %"disptchr.h%"]"
+		end
+
+	cwel_release_dispatcher_object is
+		external
+			"C [macro %"disptchr.h%"]"
 		end
 
 	cwin_def_window_proc (hwnd: POINTER; msg, wparam,
 			lparam: INTEGER): INTEGER is
 			-- SDK DefWindowProc
 		external
-			"C [macro <wel.h>] (HWND, UINT, WPARAM, %
-				%LPARAM): EIF_INTEGER"
+			"C [macro <windows.h>] (HWND, UINT, WPARAM, LPARAM): EIF_INTEGER"
 		alias
 			"DefWindowProc"
 		end

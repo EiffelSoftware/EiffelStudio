@@ -16,6 +16,11 @@ inherit
 			{NONE} all
 		end
 
+	MEMORY
+		redefine
+			dispose
+		end
+
 feature {NONE} -- Initialization
 
 	make (dc: WEL_DC; family: STRING) is
@@ -28,7 +33,7 @@ feature {NONE} -- Initialization
 			dc_exits: dc.exists
 		do
 			cwel_set_enum_font_fam_procedure_address ($convert)
-			cwel_set_font_family_enumerator_object (Current)
+			cwel_set_font_family_enumerator_object ($Current)
 			enumerate (dc, family)
 			cwel_set_enum_font_fam_procedure_address (default_pointer)
 			cwel_set_font_family_enumerator_object (default_pointer)
@@ -76,8 +81,7 @@ feature {NONE} -- Implementation
 				!! str.make (family)
 				p := str.item
 			end
-			cwin_enum_font_families (dc.item, p,
-				cwel_enum_font_fam_procedure, default_pointer)
+			cwin_enum_font_families (dc.item, p, cwel_enum_font_fam_procedure, default_pointer)
 			finish_action
 		end
 
@@ -93,27 +97,39 @@ feature {NONE} -- Implementation
 			action (elf, tm, font_type)
 		end
 
+feature {NONE} -- Memory management
+
+	dispose is
+		do
+			cwel_release_font_family_enumerator_object
+		end
+
 feature {NONE} -- Externals
 
 	cwel_set_enum_font_fam_procedure_address (address: POINTER) is
 		external
-			"C [macro <enumfont.h>]"
+			"C [macro %"enumfont.h%"]"
 		end
 
 	cwel_set_font_family_enumerator_object (object: ANY) is
 		external
-			"C [macro <enumfont.h>]"
+			"C [macro %"enumfont.h%"]"
+		end
+
+	cwel_release_font_family_enumerator_object is
+		external
+			"C [macro %"enumfont.h%"]"
 		end
 
 	cwel_enum_font_fam_procedure: POINTER is
 		external
-			"C [macro <enumfont.h>]"
+			"C [macro %"enumfont.h%"]"
 		end
 
 	cwin_enum_font_families (hdc, family, enum_proc, data: POINTER) is
 			-- SDK EnumFontFamilies
 		external
-			"C [macro <wel.h>] (HDC, LPCSTR, FONTENUMPROC, LPARAM)"
+			"C [macro %"windows.h%"] (HDC, LPCSTR, FONTENUMPROC, LPARAM)"
 		alias
 			"EnumFontFamilies"
 		end

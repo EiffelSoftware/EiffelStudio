@@ -14,6 +14,8 @@ inherit
 	WEL_RICH_EDIT_STREAM
 		rename
 			make as rich_edit_stream_make
+		redefine
+			dispose
 		end
 
 feature {NONE} -- Initialization
@@ -49,6 +51,14 @@ feature {NONE} -- Implementation
 			write_buffer (s)
 			cwel_set_editstream_buffer_size (s.count)
 			Result := stream_result
+		end
+
+feature {NONE} -- Collection
+
+	dispose is
+		do
+			cwel_release_editstream_object
+			{WEL_RICH_EDIT_STREAM} precursor
 		end
 
 end -- class WEL_RICH_EDIT_STREAM_OUT

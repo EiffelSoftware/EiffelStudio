@@ -197,7 +197,9 @@ feature
 					if is_boolean then
 						buf.putstring ("EIF_TEST(");
 					else
-						type_c.generate_cast (buf);
+						if extension.has_return_type then
+							type_c.generate_cast (buf);
+						end
 					end;
 					extension.generate_header_files
 
@@ -250,13 +252,16 @@ feature
 			-- Generate final portion of C code.
 		local
 			is_macro_extension: BOOLEAN
+			is_struct_extension: BOOLEAN
 			is_cpp_extension: BOOLEAN
 			final_mode: BOOLEAN
 			not_polymorphic: BOOLEAN
 			cpp_ext: CPP_EXTENSION_I
+			struct_ext: STRUCT_EXTENSION_I
 			buf: GENERATION_BUFFER
 		do
 			if encapsulated then
+				is_struct_extension := extension.is_struct
 				is_macro_extension := extension.is_macro
 				is_cpp_extension := extension.is_cpp
 			end
@@ -278,7 +283,10 @@ feature
 							--| See comments in `generate_access_on_type'
 						buf.putchar (')');
 					end
-				elseif is_cpp_extension and not_polymorphic then
+				elseif is_struct_extension and then not_polymorphic then
+					struct_ext ?= extension
+					struct_ext.generate_struct_access (buf, external_name, parameters)
+				elseif is_cpp_extension and then not_polymorphic then
 					cpp_ext ?= extension
 					cpp_ext.generate (external_name, parameters)
 				else

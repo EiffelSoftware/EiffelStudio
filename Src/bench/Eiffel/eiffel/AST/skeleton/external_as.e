@@ -115,7 +115,7 @@ feature -- Byte code
 
 			if
 				extension /= Void and then
-				(extension.is_macro or extension.has_signature)
+				(extension.is_macro or extension.is_struct or extension.has_signature)
 			then
 				Result.set_result_type (extern.type.actual_type.type_i)
 				arg_c := extern.argument_count

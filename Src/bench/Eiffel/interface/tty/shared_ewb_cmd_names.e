@@ -21,6 +21,8 @@ feature {NONE}
 
 	aversions_cmd_name: STRING is "aversions"
 
+	batch_cmd_name: STRING is "batch"
+
 	callers_cmd_name: STRING is "callers"
 
 	change_operator_cmd_name: STRING is "operator"
@@ -162,5 +164,7 @@ feature {NONE}
 	short_doc_cmd_name: STRING is "Documentation (Short)"
 
 	text_doc_cmd_name: STRING is "Documentation (Text)"
+
+	version: STRING is "version"
 
 end

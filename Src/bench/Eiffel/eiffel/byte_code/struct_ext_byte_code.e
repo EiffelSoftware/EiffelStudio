@@ -4,13 +4,12 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class MACRO_EXT_BYTE_CODE
+class STRUCT_EXT_BYTE_CODE
 
 inherit
 	EXT_EXT_BYTE_CODE
 		redefine
-			is_special, generate, generate_body, generate_signature,
-			generate_arguments_with_cast
+			is_special, generate, generate_body, generate_signature
 		end
 
 feature -- Properties
@@ -58,11 +57,40 @@ feature -- Code generation
 
 	generate_body is
 			-- Generate the body for an external of type macro
+		local
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 			if is_cpp_code then
 				context.set_has_cpp_externals_calls (True)
 			end
-			generate_basic_body
+
+			if has_return_type then
+				buf.putstring ("return ");
+				result_type.c_type.generate_cast (buf)
+
+					--| External structure access will be generated as:
+					--| (type_2) (((type_1 *) arg1)->alias_name);
+				buf.putstring ("(((")
+				buf.putstring (argument_types.item(1))
+				buf.putstring (" *) arg1");
+				buf.putstring (")->")
+				buf.putstring (external_name)
+				buf.putstring (");")
+				buf.new_line;
+			else
+					--| External structure setting will be generated as:
+					--| ((type_1 *) arg1)->alias_name = (type_2) (arg2);
+				buf.putstring ("((")
+				buf.putstring (argument_types.item(1))
+				buf.putstring (" *) arg1");
+				buf.putstring (")->")
+				buf.putstring (external_name)
+				buf.putstring (" = (")
+				buf.putstring (argument_types.item(2))
+				buf.putstring (")(arg2);");
+				buf.new_line;
+			end
 		end
 
 	generate_signature is
@@ -71,21 +99,8 @@ feature -- Code generation
 			generate_basic_signature
 		end
 
-	generate_arguments_with_cast is
-			-- Generate the arguments list if there is one
-		local
-			buf: GENERATION_BUFFER
-		do
-			if arguments /= Void then
-				buf := buffer
-				buf.putchar ('(')
-				generate_basic_arguments_with_cast
-				buf.putchar (')')
-			end
-		end
-
 feature -- Convenience
 
 	is_special: BOOLEAN is True
 
-end -- class MACRO_EXT_BYTE_CODE
+end -- class STRUCT_EXT_BYTE_CODE

@@ -44,6 +44,11 @@ feature -- Conveniences
 		do
 		end
 
+	is_struct: BOOLEAN is
+			-- Is this a struct extension?
+		do
+		end
+
 	is_dll: BOOLEAN is
 			-- Is this a dll extension?
 		do

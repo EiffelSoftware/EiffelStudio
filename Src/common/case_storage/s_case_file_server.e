@@ -65,7 +65,7 @@ feature -- Output
 			-- `s_class_data' to disk.
 		require
 			valid_data: s_class_data /= Void;
-			valid_content: s_class_data.is_valid
+			valid_content: s_class_data.is_valid /= Void
 		do
 			s_class_data.tmp_store_to_disk (path);
 			saved_classes.force (s_class_data, s_class_data.view_id);

@@ -5,8 +5,8 @@ indexing
 		%declaration of class types. Basic class type %
 		%are `like features', `formal' type and %
 		%`like current' type";
-	date: "$Date$";
-	revision: "$Revision $"
+	date: "$$";
+	revision: "$Revision$"
 
 class S_BASIC_TYPE_INFO
 

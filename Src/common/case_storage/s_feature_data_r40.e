@@ -12,7 +12,7 @@ inherit
 	S_FEATURE_DATA
 		redefine
 			body, set_body, 
-			is_reversed_engineered, set_reversed_engineered,
+			is_reversed_engineered,set_reversed_engineered,
 			is_new_since_last_re, is_deleted_since_last_re,
 			is_once, is_constant
 		end
@@ -51,16 +51,28 @@ feature -- Properties
 			Result := status_handler.is_reversed_engineered (status)
 		end
 
-	body: S_FEATURE_BODY 
+	body: S_FEATURE_BODY
 			-- Body (with locals and recue) if routine or constant
 
 
 feature -- Setting
 
-	set_body (b: like body) is
+	set_body (b: FEATURE_BODY_DATA) is
 			-- Set body to `b'.
 		do
-			body := b
+			if b/= Void then
+				!! body.make ( b.count)
+				from	
+					b.start
+				until
+					b.after
+				loop
+					body.put_i_th(b.item, b.index)
+					b.forth
+				end
+			else
+				!! body.make (1)
+			end
 		end
 
 	set_reversed_engineered is

@@ -43,41 +43,6 @@ feature -- Properties
 		do
 		end;
 
-feature -- Properties for EiffelCase ( reverse )
-
-	set_x ( a : INTEGER ) is
-		do
-			x := a
-		end
-	set_y ( a : INTEGER ) is
-		do
-			y := a
-		end
-
-	set_color ( cl : STRING ) is
-		do
-			if cl /= Void then
-				color_name := clone (cl)
-			end
-		end
-
-	set_hidden ( h : STRING ) is
-		do
-			if h=Void or h.is_equal("FALSE") then
-				is_hidden := FALSE
-			else
-				is_hidden := TRUE
-			end
-		end
-
-	x : INTEGER
-
-	y : INTEGER
-
-	color_name : STRING
-
-	is_hidden : BOOLEAN
-
 feature -- Setting 
 
 	make (s: STRING) is
@@ -164,5 +129,37 @@ feature -- Setting
 		ensure
 			heir_links_set: heir_links = l
 		end;
+
+	set_x_y ( a: INTEGER; b: INTEGER ) is
+		do
+			x := a
+			y:= b
+		end
+
+	set_color_name ( s : STRING ) is
+		do
+			if	s /= void
+			then
+				color_name	:= clone (s )
+			else
+				color_name	:= "default"
+			end
+		end
+
+	set_hidden ( b : BOOLEAN ) is
+		do
+			is_hidden := b
+		end
+
+feature
+
+	x : INTEGER
+
+	y : INTEGER
+
+	color_name : STRING
+
+	is_hidden : BOOLEAN
+
 
 end -- class S_LINKABLE_DATA

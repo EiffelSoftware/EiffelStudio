@@ -17,16 +17,16 @@ feature -- Property
 
 feature -- Setting
 
-	set_indexes (list: like indexes) is
+	set_indexes (l: like indexes) is
 			-- Set indexes to `l'.
 		require
-			valid_list: list /= Void;
-			list_not_empty: not list.empty;
-			not_have_void: not list.has (Void)
+			valid_l: l /= Void;
+			l_not_empty: not l.empty;
+			not_have_void: not l.has (Void)
 		do
-			indexes := list
+			indexes := l
 		ensure
-			indexes_set: indexes = list
+			indexes_set: indexes = l
 		end;
 
 end -- class S_CHART

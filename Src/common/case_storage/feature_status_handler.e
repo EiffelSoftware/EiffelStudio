@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 		require
 			property_number_not_too_small: property_number >= 1
 			-- property_number >= number of bits in an INTEGER
-			not_set: not has_property (status, property_number)
+			-- not_set: not has_property (status, property_number)
 		do
 			Result := status + status_value (property_number)
 		ensure

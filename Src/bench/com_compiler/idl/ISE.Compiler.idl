@@ -57,6 +57,7 @@ enum
     ISECompilerID_is_signed,
     ISECompilerID_assembly_cluster_name,
     ISECompilerID_assembly_prefix,
+    ISECompilerID_is_prefix_read_only,
     ISECompilerID_is_precompiled,
 
     EIFFELCLUSTERPROP_Name,
@@ -243,7 +244,7 @@ interface IEiffelCompiler: IUnknown
 
   [helpstring ("Is compiler output sent to pipe `output_pipe_name'")]
   HRESULT is_output_piped ([out, retval] VARIANT_BOOL * return_value);
-  
+
   [helpstring ("Can product be run? (i.e. is it activated or was run less than 10 times)")]
   HRESULT can_run ([out, retval] VARIANT_BOOL * return_value);
 };
@@ -1270,6 +1271,11 @@ interface IEiffelAssemblyProperties: IDispatch
 
   [id (ISECompilerID_assembly_prefix), propput, helpstring ("Prefix.")]
   HRESULT assembly_prefix ([in] BSTR a_prefx);
+
+  [id (ISECompilerID_is_prefix_read_only), helpstring ("Is assembly prefix read only.")]
+  HRESULT is_prefix_read_only ([out, retval] VARIANT_BOOL* is_prefix_read_only);
+
+
 
 };
 //---------------------------------------------------------------------

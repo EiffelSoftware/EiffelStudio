@@ -103,6 +103,21 @@ feature
 			end
 			deg_output.put_end_degree;
 
+				-- Check now the validity on creation constraint, this need to be done
+				-- at the end of Degree 4 because we need some feature tables.
+			from
+				local_changed_classes.start
+			until
+				local_changed_classes.after
+			loop
+				current_class := local_changed_classes.item.associated_class;
+				if current_class.changed and then current_class.generics /= Void	then
+					System.set_current_class (current_class);
+					current_class.check_creation_constraint_genericity;
+				end;
+				local_changed_classes.forth
+			end;
+
 			if System.has_expanded and then not local_extra_check_list.empty then
 				System.check_vtec;
 			end;

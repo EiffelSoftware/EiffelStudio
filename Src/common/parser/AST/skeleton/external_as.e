@@ -62,6 +62,7 @@ feature -- Conveniences
 		local
 			sp_id: INTEGER;
 			ext_dll_sign: EXT_DLL_SIGN;
+			ext_dll_alias: EXT_DLL_ALIAS;
 			ext_same_sign: EXT_SAME_SIGN;
 			raise_an_error: BOOLEAN;
 		do
@@ -72,7 +73,7 @@ feature -- Conveniences
 					not (language_name.arg_list.count = context.a_feature.argument_count)
 				then
 					raise_an_error := True;
-				elseif language_name.has_return_type and not context.a_feature.is_function then
+				elseif language_name.has_return_type /= context.a_feature.is_function then
 					raise_an_error := True;
 				end;
 				if raise_an_error then
@@ -93,6 +94,16 @@ feature -- Conveniences
 				Error_handler.insert_error (ext_dll_sign);
 				Error_handler.raise_error;
 			end;
+			if
+				sp_id = dll32_id
+			and then
+				(alias_name = Void or else not alias_name.value.is_integer)
+			then
+				!! ext_dll_alias;
+				context.init_error (ext_dll_alias);
+				Error_handler.insert_error (ext_dll_alias);
+				Error_handler.raise_error;
+			end
 		end;
 
 feature -- Byte code
@@ -115,7 +126,6 @@ feature -- Byte code
 			Result.set_external_name (extern.external_name);
 			Result.set_encapsulated (extern.encapsulated);
 			Result.set_special_id (language_name.special_id);
-			Result.set_dll_arg (language_name.dll_arg);
 			Result.set_special_file_name (language_name.special_file_name);
 			Result.set_arg_list (language_name.arg_list);
 			Result.set_include_list (language_name.include_list);

@@ -132,7 +132,7 @@ shared uint32 gen_scavenge = GS_SET;	/* Generation scavenging to be set */
  * tenuring), we record its size in eiffel_usage variable. Then, once the amount
  * of allocated data goes beyond th_alloc, a cycle of acollect() is run.
  */
-private long eiffel_usage = 0;			/* Monitor Eiffel memory usage */
+public long eiffel_usage = 0;			/* Monitor Eiffel memory usage */
 extern long th_alloc;					/* Allocation threshold (in bytes) */
 
 /* Error message commonly used */

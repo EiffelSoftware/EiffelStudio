@@ -465,7 +465,7 @@ feature -- Element change
 		local
 			item: BEFORE_CLASS;
 		do
-			!! item.make (class_c);
+			!! item.make (class_c.e_class);
 			text.add (item);
 		end;
 
@@ -474,7 +474,7 @@ feature -- Element change
 		local
 			item: AFTER_CLASS
 		do
-			!! item.make (class_c);
+			!! item.make (class_c.e_class);
 			text.add (item);
 		end;
 
@@ -706,25 +706,34 @@ feature {NONE} -- Implementation
 		local
 			feature_i: FEATURE_I; 
 			item: BASIC_TEXT;
+			ot: OPERATOR_TEXT;
 			f_name: STRING;
 			adapt: like local_adapt;
+			is_key: BOOLEAN
 		do
 			adapt := local_adapt;
 			f_name := adapt.final_name;
 				-- Use source feature for stone.
 			feature_i := adapt.target_feature;
+			if f_name.item (1).is_alpha then
+				is_key := True
+			end
+			last_was_printed := True;
 			if feature_i /= Void and then in_bench_mode then
-				!FEATURE_NAME_TEXT! item.make (f_name, 
+				ot.make (f_name, 
 					feature_i.api_feature, adapt.target_class.e_class)
+				if is_key then
+					ot.set_is_keyword
+				end;
+				item := ot;
 			else
-				!! item.make (f_name)
+				if is_key then
+					!KEYWORD_TEXT! item.make (f_name)
+				else
+					!SYMBOL_TEXT! item.make (f_name)
+				end;
 			end;
 			text.insert_two (format.insertion_point, item, ti_Space)
-			if f_name.item (1).is_alpha then
-				item.set_is_keyword
-			else
-				item.set_is_special
-			end
 			last_was_printed := True;
 		end;
 
@@ -759,20 +768,25 @@ feature {NONE} -- Implementation
 			feature_i: FEATURE_I;
 			f_name: STRING;
 			item: BASIC_TEXT;
+			ot: OPERATOR_TEXT
+			is_key: BOOLEAN
 		do
 			f_name := adapt.final_name;
 				-- Use source feature for stone.
+			if f_name.item (1).is_alpha then
+				is_key := True
+			end;
 			feature_i := adapt.target_feature;
 			if feature_i /= Void and then in_bench_mode then
-				!FEATURE_NAME_TEXT! item.make (f_name, 
+				ot.make (f_name, 
 					feature_i.api_feature, adapt.target_class.e_class)
-			else	
-				!!item.make (f_name)
-			end;
-			if f_name.item (1).is_alpha then
-				item.set_is_keyword
+				if is_key then
+					ot.set_is_keyword
+				end;
+			elseif is_key then
+				!KEYWORD_TEXT! item.make (f_name)
 			else
-				item.set_is_special
+				!SYMBOL_TEXT! item.make (f_name)
 			end;
 			text.add (item);
 			last_was_printed := true;

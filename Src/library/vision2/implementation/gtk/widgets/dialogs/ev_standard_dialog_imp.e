@@ -23,7 +23,7 @@ feature -- Access
 	title: STRING is
 			-- Title of dialog shown in title bar.
 		do
-			create Result.make_from_c (C.c_gtk_window_title (c_object))
+			create Result.make_from_c (C.gtk_window_struct_title (c_object))
 		end
 
 	blocking_window: EV_WINDOW
@@ -40,10 +40,8 @@ feature -- Status setting
 			-- Show the dialog and wait until the user closes it.
 		do
 			selected_button := Void
-			C.gtk_window_set_modal (c_object, True)
 			C.gtk_widget_show (c_object)
 			block
-			C.gtk_window_set_modal (c_object, False)
 			if selected_button.is_equal ("OK") then
 				interface.ok_actions.call ([])
 			elseif selected_button.is_equal ("Cancel") then
@@ -121,6 +119,11 @@ end -- class EV_STANDARD_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/03/01 00:08:38  brendel
+--| Improved implementation of `title'.
+--| Removed set and unset of modal in show_modal, since standard dialogs are
+--| modal at all times because of windows limitations.
+--|
 --| Revision 1.10  2000/02/29 02:26:22  brendel
 --| Improved implementation of `block'.
 --| Rearranged some calls to try solving some strange behaviour when

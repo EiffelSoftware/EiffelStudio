@@ -91,12 +91,16 @@ declaration:</p>
 				-- Encapsulation of a C routine with no parameter.
 			external
 				&quot;C | %&quot;my_header.h%&quot;&quot;
+			alias
+				&quot;no_param&quot;
 			end
 
 		c_one_param (i: INTEGER) is
 				-- Encapsulation of a C routine with one parameter.
 			external
 				&quot;C (int) | %&quot;my_header.h%&quot;&quot;
+			alias
+				&quot;one_param&quot;
 			end
 
 		c_no_param_return: INTEGER is
@@ -104,13 +108,17 @@ declaration:</p>
 				-- returning an INTEGER
 			external
 				&quot;C (): EIF_INTEGER| %&quot;my_header.h%&quot;&quot;
+			alias
+				&quot;no_param_return&quot;
 			end
 
-		c_no_param_return (p: POINTER): INTEGER is
+		c_one_param_return (p: POINTER): INTEGER is
 				-- Encapsulation of a C routine with one parameter
 				-- returning an INTEGER
 			external
 				&quot;C (FILE *): EIF_INTEGER| %&quot;my_header.h%&quot;&quot;
+			alias
+				&quot;one_param_return&quot;
 			end
     </pre></td>
   </tr>

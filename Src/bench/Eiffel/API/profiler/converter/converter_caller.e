@@ -50,8 +50,8 @@ feature {EWB_GENERATE} -- Initialization
 								-- he's been stupid and removed TRANSLAT by
 								-- by hand.
 								-- What do we do??? ***** FIXME *****
-							io.putstring (arguments.item (2));
-							io.putstring (": File `TRANSLAT' does not exist in this directory.%N%N")
+							io.put_string (arguments.item (2));
+							io.put_string (": File `TRANSLAT' does not exist in this directory.%N%N")
 						else
 								-- Cool! Everything is fine!
 							do_conversion
@@ -106,12 +106,12 @@ feature {PROF_CONVERTER} -- Implementation
 	help is
 			-- Generate output for command line arguments.
 		do
-			io.error.putstring("Usage: ");
-			io.error.putstring(" <profile_path> compile_type%N");
-			io.error.new_line;
-			io.error.putstring("%Tprofile_path: path and filename of the profiler's output file.%N");
-			io.error.putstring("%Tcompile_type: `workbench' or `final'.%N");
-			io.error.new_line
+			io.error.put_string("Usage: ");
+			io.error.put_string(" <profile_path> compile_type%N");
+			io.error.put_new_line;
+			io.error.put_string("%Tprofile_path: path and filename of the profiler's output file.%N");
+			io.error.put_string("%Tcompile_type: `workbench' or `final'.%N");
+			io.error.put_new_line
 		end;
 
 feature -- Access

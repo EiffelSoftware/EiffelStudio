@@ -89,45 +89,45 @@ feature -- Comparison
 --			ctxt.set_new_line_between_tokens;
 --			if from_part /= Void then
 --				ctxt.indent;
---				ctxt.new_line;
+--				ctxt.put_new_line;
 --				ctxt.format_ast (from_part);
---				ctxt.new_line;
+--				ctxt.put_new_line;
 --				ctxt.exdent
 --			else
---				ctxt.new_line
+--				ctxt.put_new_line
 --			end
 --			ctxt.put_breakable;
 --			if invariant_part /= Void then
 --				ctxt.put_text_item (ti_Invariant_keyword);
 --				ctxt.indent;
---				ctxt.new_line;
+--				ctxt.put_new_line;
 --				ctxt.format_ast (invariant_part);
---				ctxt.new_line;
+--				ctxt.put_new_line;
 --				ctxt.exdent;
 --			end
 --			if variant_part /= Void then
 --				ctxt.put_text_item (ti_Variant_keyword);
 --				ctxt.indent;
---				ctxt.new_line;
+--				ctxt.put_new_line;
 --				ctxt.format_ast (variant_part);
---				ctxt.new_line;
+--				ctxt.put_new_line;
 --				ctxt.exdent;
 --			end
 --			ctxt.put_text_item (ti_Until_keyword);
 --			ctxt.indent;
---			ctxt.new_line;
+--			ctxt.put_new_line;
 --			ctxt.new_expression
 --			ctxt.format_ast (stop);
 --			ctxt.exdent;
---			ctxt.new_line;
+--			ctxt.put_new_line;
 --			ctxt.put_text_item (ti_Loop_keyword);
 --			if compound /= Void then
 --				ctxt.indent;
---				ctxt.new_line;
+--				ctxt.put_new_line;
 --				ctxt.format_ast (compound);
 --				ctxt.exdent;
 --			end
---			ctxt.new_line;
+--			ctxt.put_new_line;
 --			ctxt.put_breakable;
 --			ctxt.put_text_item (ti_End_keyword);
 --		end

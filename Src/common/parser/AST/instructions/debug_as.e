@@ -90,13 +90,13 @@ feature -- Comparison
 --			end
 --			if compound /= void then
 --				ctxt.indent;
---				ctxt.new_line;
+--				ctxt.put_new_line;
 --				ctxt.set_separator (ti_Semi_colon);
 --				ctxt.set_new_line_between_tokens;
 --				ctxt.format_ast (compound);
 --				ctxt.exdent;
 --			end
---			ctxt.new_line;
+--			ctxt.put_new_line;
 --			ctxt.put_breakable;
 --			ctxt.put_text_item (ti_End_keyword);
 --		end

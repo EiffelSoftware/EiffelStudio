@@ -62,7 +62,7 @@ feature -- Parsing
 				io.error.put_string ("Warning: Cannot read resource file %"");
 				io.error.put_string (filename);
 				io.error.put_string ("%".");
-				io.error.new_line
+				io.error.put_new_line
 			end
 		end;
 				
@@ -74,13 +74,13 @@ feature -- Errors
 		require
 			message_not_void: message /= Void
 		do
-			io.error.putstring ("Warning: resource file %"");
-			io.error.putstring (resource_file.name);
-			io.error.putstring ("%"%N%TSyntax error, line ");
-			io.error.putint (line_number);
-			io.error.putstring (": ");
-			io.error.putstring (message);
-			io.error.new_line;
+			io.error.put_string ("Warning: resource file %"");
+			io.error.put_string (resource_file.name);
+			io.error.put_string ("%"%N%TSyntax error, line ");
+			io.error.put_integer (line_number);
+			io.error.put_string (": ");
+			io.error.put_string (message);
+			io.error.put_new_line;
 			read_line
 		end;
 

@@ -295,17 +295,17 @@ feature -- Output
 		local
 			i: INTEGER
 		do
-			io.error.putchar ('[')
+			io.error.put_character ('[')
 			from
 				i := 1
 			until
 				i > count
 			loop
-				io.error.putint (item (i))
-				io.error.putchar (' ')
+				io.error.put_integer (item (i))
+				io.error.put_character (' ')
 				i := i + 1
 			end
-			io.error.putchar (']')
+			io.error.put_character (']')
 		end
 
 feature {ROUT_ID_SET} -- Implementation: access

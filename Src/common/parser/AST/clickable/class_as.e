@@ -367,7 +367,7 @@ feature -- Comparison
 --			end
 --			ctxt.put_text_item (ti_Class_keyword)
 --			ctxt.indent
---			ctxt.new_line
+--			ctxt.put_new_line
 --			ctxt.put_class_name (c_name)
 --			ctxt.exdent
 --
@@ -379,40 +379,40 @@ feature -- Comparison
 --				generics.simple_format (ctxt)
 --				ctxt.put_text_item_without_tabs (ti_R_bracket)
 --			end
---			ctxt.new_line
+--			ctxt.put_new_line
 --
 --			if obsolete_message /= Void then
---				ctxt.new_line
+--				ctxt.put_new_line
 --				ctxt.put_text_item (ti_Obsolete_keyword)
 --				ctxt.put_space
 --				obsolete_message.simple_format (ctxt)
---				ctxt.new_line
+--				ctxt.put_new_line
 --			end
 --
 --			if parents /= Void then
---				ctxt.new_line
+--				ctxt.put_new_line
 --				ctxt.put_text_item (ti_Inherit_keyword)
 --				ctxt.indent
---				ctxt.new_line
+--				ctxt.put_new_line
 --				ctxt.set_new_line_between_tokens
 --				ctxt.set_separator (ti_Semi_colon)
 --				parents.simple_format (ctxt)
---				ctxt.new_line
+--				ctxt.put_new_line
 --				ctxt.exdent
 --			end
 --
---			ctxt.new_line
+--			ctxt.put_new_line
 --
 --			if creators /= Void then
 --				creators.simple_format (ctxt)
---				ctxt.new_line
+--				ctxt.put_new_line
 --			end
 --
 --			if features /= Void then
 --				ctxt.set_new_line_between_tokens
 --				ctxt.set_separator (ti_Empty)
 --				features_simple_format (ctxt)
---				ctxt.new_line
+--				ctxt.put_new_line
 --			end
 --
 --			if invariant_part /= Void then
@@ -428,7 +428,7 @@ feature -- Comparison
 --
 --			ctxt.put_space
 --			ctxt.put_class_name (c_name)
---			ctxt.new_line
+--			ctxt.put_new_line
 --		end
 --  
 --feature {NONE} -- Implementation

@@ -23,23 +23,23 @@ feature -- Status
 			temp := Eiffel_installation_dir_name
 			create p
 			if (temp = Void) or else temp.is_empty then
-				io.error.putstring (p.Workbench_name)
-				io.error.putstring (": the environment variable $ISE_EIFFEL is not set%N")
+				io.error.put_string (p.Workbench_name)
+				io.error.put_string (": the environment variable $ISE_EIFFEL is not set%N")
 				(create {EXCEPTIONS}).die (-1)
 			end
 
 			temp := Eiffel_platform
 			if (temp = Void) or else temp.is_empty then
-				io.error.putstring (p.Workbench_name)
-				io.error.putstring (": the environment variable $ISE_PLATFORM is not set%N")
+				io.error.put_string (p.Workbench_name)
+				io.error.put_string (": the environment variable $ISE_PLATFORM is not set%N")
 				(create {EXCEPTIONS}).die (-1)
 			end
 			
 			if Platform_constants.is_windows then
 				temp := Eiffel_c_compiler
 				if (temp = Void) or else temp.is_empty then
-					io.error.putstring (p.Workbench_name)
-					io.error.putstring (": the environment variable $ISE_C_COMPILER is not set%N")
+					io.error.put_string (p.Workbench_name)
+					io.error.put_string (": the environment variable $ISE_C_COMPILER is not set%N")
 					(create {EXCEPTIONS}).die (-1)
 				end
 			end

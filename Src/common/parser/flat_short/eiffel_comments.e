@@ -136,11 +136,11 @@ feature -- Debug
 			until
 				after
 			loop
-				io.error.putstring (item);
-				io.error.new_line
+				io.error.put_string (item);
+				io.error.put_new_line
 				forth
 			end
-			io.error.new_line;
+			io.error.put_new_line;
 		end
 
 end

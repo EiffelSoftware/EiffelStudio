@@ -166,47 +166,47 @@ feature -- Saving
 			-- Save current in `st'.
 		do
 			st.put_string ("system")
-			st.new_line
+			st.put_new_line
 			st.indent
 			system_name.save (st)
 			st.exdent
-			st.new_line
-			st.new_line
+			st.put_new_line
+			st.put_new_line
 
 			st.put_string ("root")
-			st.new_line
+			st.put_new_line
 			st.indent
 			root.save (st)
 			st.exdent
-			st.new_line
-			st.new_line
+			st.put_new_line
+			st.put_new_line
 
 			if defaults /= Void then
 				st.put_string ("default")	
-				st.new_line
+				st.put_new_line
 				st.indent
 				defaults.save_with_new_line (st)
 				st.exdent
-				st.new_line
+				st.put_new_line
 			end
 
 			if comment_list /= Void and then not comment_list.is_empty then
 					-- Saving comments
-				st.new_line
+				st.put_new_line
 				from
 					comment_list.start
 				until
 					comment_list.after
 				loop
 					st.put_string (comment_list.item)
-					st.new_line
+					st.put_new_line
 					comment_list.forth
 				end
 			end
 	
-			st.new_line
+			st.put_new_line
 			st.put_string ("cluster")
-			st.new_line
+			st.put_new_line
 			st.indent
 			if clusters /= Void then
 				clusters.save_with_new_line (st)
@@ -215,7 +215,7 @@ feature -- Saving
 
 			if assemblies /= Void then
 				st.put_string ("assembly")
-				st.new_line
+				st.put_new_line
 				st.indent
 				assemblies.save_with_new_line (st)
 				st.exdent
@@ -223,15 +223,15 @@ feature -- Saving
 			
 			if externals /= Void then
 				st.put_string ("external")
-				st.new_line
+				st.put_new_line
 				st.indent
 				externals.save_with_new_line (st)
 				st.exdent
 			end
 
-			st.new_line
+			st.put_new_line
 			st.put_string ("end")
-			st.new_line
+			st.put_new_line
 		end
 
 feature -- Changes

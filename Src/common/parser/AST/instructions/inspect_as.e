@@ -75,7 +75,7 @@ feature -- Comparison
 --			ctxt.indent;
 --			ctxt.format_ast (switch);
 --			ctxt.exdent;
---			ctxt.new_line;
+--			ctxt.put_new_line;
 --			if case_list /= void then
 --				ctxt.set_separator (ti_Empty);
 --				ctxt.set_no_new_line_between_tokens;
@@ -84,11 +84,11 @@ feature -- Comparison
 --			if else_part /= void then
 --				ctxt.put_text_item (ti_Else_keyword);
 --				ctxt.indent;
---				ctxt.new_line;
+--				ctxt.put_new_line;
 --				ctxt.set_separator (ti_Semi_colon);
 --				ctxt.set_new_line_between_tokens;
 --				ctxt.reversed_format_list (else_part);
---				ctxt.new_line;
+--				ctxt.put_new_line;
 --				ctxt.exdent;
 --				ctxt.put_breakable;
 --			end

@@ -57,9 +57,9 @@ feature -- Result computation
 				expand_filenames;
 				expanded_filenames.start
 debug("SHOW_PROF_QUERY")
-	io.error.putstring ("About to `execute'%Nexpanded_filenames.after: ");
-	io.error.putbool(expanded_filenames.after);
-	io.error.new_line
+	io.error.put_string ("About to `execute'%Nexpanded_filenames.after: ");
+	io.error.put_boolean (expanded_filenames.after);
+	io.error.put_new_line
 end;
 			until
 				expanded_filenames.after
@@ -104,14 +104,14 @@ feature {QUERY_EXECUTER} -- Implementation
 			if not retried then
 				current_item := expanded_filenames.item;
 debug("SHOW_PROF_QUERY")
-	io.error.putstring ("current_item: ");
-	io.error.putstring (current_item);
-	io.error.new_line
+	io.error.put_string ("current_item: ");
+	io.error.put_string (current_item);
+	io.error.put_new_line
 end;
 				if not current_item.is_equal ("last_output") then
 debug("SHOW_PROF_QUERY")
-	io.error.putstring ("current_item /= last_output");
-	io.error.new_line
+	io.error.put_string ("current_item /= last_output");
+	io.error.put_new_line
 end;
 					create profile_file.make (current_item)
 					if profile_file.exists and then profile_file.is_readable then
@@ -121,8 +121,8 @@ end;
 					end
 					if profile_information /= Void then
 debug("SHOW_PROF_QUERY")
-	io.error.putstring ("profile information not VOID");
-	io.error.new_line
+	io.error.put_string ("profile information not VOID");
+	io.error.put_new_line
 end;
 						structured_text.add_string (current_item);
 						structured_text.add_new_line;
@@ -133,8 +133,8 @@ end;
 						structured_text.add_new_line
 					else
 debug("SHOW_PROF_QUERY")
-	io.error.putstring ("profile information VOID");
-	io.error.new_line
+	io.error.put_string ("profile information VOID");
+	io.error.put_new_line
 end;
 					end
 				else
@@ -181,12 +181,12 @@ end;
 			from
 				i := prof_options.filenames.lower
 debug("SHOW_PROF_QUERY")
-	io.error.putstring ("Expanding filenames.%Nprof_options.filenames.count: ");
-	io.error.putint (prof_options.filenames.count);
-	io.error.new_line;
-	io.error.putstring ("index (i): ");
-	io.error.putint (i);
-	io.error.new_line;
+	io.error.put_string ("Expanding filenames.%Nprof_options.filenames.count: ");
+	io.error.put_integer (prof_options.filenames.count);
+	io.error.put_new_line;
+	io.error.put_string ("index (i): ");
+	io.error.put_integer (i);
+	io.error.put_new_line;
 end;
 			until
 				i > prof_options.filenames.upper
@@ -213,20 +213,20 @@ end;
 							entries.after
 						loop
 debug("SHOW_PROF_QUERY")
-	io.error.putstring ("Entry from the directory: ");
-	io.error.putstring (entries.item);
-	io.error.new_line;
-	io.error.putstring ("Wildcarded name: ");
-	io.error.putstring (wc_name);
-	io.error.new_line;
+	io.error.put_string ("Entry from the directory: ");
+	io.error.put_string (entries.item);
+	io.error.put_new_line;
+	io.error.put_string ("Wildcarded name: ");
+	io.error.put_string (wc_name);
+	io.error.put_new_line;
 end;
 							entries_name := entries.item
 							entries_name.to_lower
 							wildcard_matcher.set_text (entries_name);
 debug("SHOW_PROF_QUERY")
-	io.error.putstring ("Did it match: ");
-	io.error.putbool(wildcard_matcher.found)
-	io.error.new_line;
+	io.error.put_string ("Did it match: ");
+	io.error.put_boolean (wildcard_matcher.found)
+	io.error.put_new_line;
 end;
 							if wildcard_matcher.pattern_matches then
 								entries_name := dir_name.twin
@@ -243,19 +243,19 @@ end;
 				end;
 				i := i + 1
 debug("SHOW_PROF_QUERY")
-	io.error.putstring ("prof_options.filenames.count: ");
-	io.error.putint (prof_options.filenames.count);
-	io.error.new_line;
-	io.error.putstring ("index (i): ");
-	io.error.putint (i);
-	io.error.new_line;
+	io.error.put_string ("prof_options.filenames.count: ");
+	io.error.put_integer (prof_options.filenames.count);
+	io.error.put_new_line;
+	io.error.put_string ("index (i): ");
+	io.error.put_integer (i);
+	io.error.put_new_line;
 end;
 			end;
 
 debug("SHOW_PROF_QUERY")
-	io.error.putstring("DONE expanding filenames%Nexpanded_filenames.count: ")
-	io.error.putint (expanded_filenames.count)
-	io.error.new_line;
+	io.error.put_string("DONE expanding filenames%Nexpanded_filenames.count: ")
+	io.error.put_integer (expanded_filenames.count)
+	io.error.put_new_line;
 end;
 				-- Copy filenames back in the original array
 				-- to keep them for the next run as default.
@@ -270,11 +270,11 @@ end;
 				expanded_filenames.forth
 			end
 debug("SHOW_PROF_QUERY")
-	io.error.putstring("DONE copying the names back into `prof_options.filenames'")
-	io.error.new_line;
-	io.error.putstring ("prof_options.filenames.count: ");
-	io.error.putint (prof_options.filenames.count)
-	io.error.new_line;
+	io.error.put_string("DONE copying the names back into `prof_options.filenames'")
+	io.error.put_new_line;
+	io.error.put_string ("prof_options.filenames.count: ");
+	io.error.put_integer (prof_options.filenames.count)
+	io.error.put_new_line;
 end;
 		end;
 
@@ -366,11 +366,11 @@ end;
 			last_op: STRING
 		do
 debug("SHOW_PROF_QUERY")
-	io.error.putstring ("Generating filters.");
-	io.error.new_line;
-	io.error.putstring ("prof_query.subquery_operators.count: ");
-	io.error.putint (prof_query.subquery_operators.count);
-	io.error.new_line;
+	io.error.put_string ("Generating filters.");
+	io.error.put_new_line;
+	io.error.put_string ("prof_query.subquery_operators.count: ");
+	io.error.put_integer (prof_query.subquery_operators.count);
+	io.error.put_new_line;
 end;
 
 			if prof_query.subquery_operators.count > 0 then

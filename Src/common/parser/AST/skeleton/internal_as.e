@@ -76,12 +76,12 @@ feature -- Access
 --			-- Reconstitute text.
 --		do
 --			ctxt.put_text_item (begin_keyword);
---			ctxt.new_line;
+--			ctxt.put_new_line;
 --			if compound /= Void then
 --				ctxt.indent
 --				ctxt.set_new_line_between_tokens;
 --				compound.simple_format (ctxt);
---				ctxt.new_line;
+--				ctxt.put_new_line;
 --				ctxt.exdent
 --			end
 --			ctxt.put_breakable;

@@ -141,13 +141,13 @@ feature -- Saving
 			end
 			st.put_string (":%T%T")
 			directory_name.save (st)
-			st.new_line
+			st.put_new_line
 
 			if cluster_properties /= Void then
 				st.indent
 				cluster_properties.save (st)
 				st.exdent
-				st.new_line
+				st.put_new_line
 			end
 		end
 

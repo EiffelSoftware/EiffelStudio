@@ -71,13 +71,13 @@ feature {AST_FACTORY} -- Access
 --			ctxt.put_space;
 --			ctxt.put_text_item_without_tabs (ti_Then_keyword);
 --			ctxt.put_space;
---			ctxt.new_line;
+--			ctxt.put_new_line;
 --			if compound /= void then
 --				ctxt.indent;
 --				ctxt.set_separator (ti_Semi_colon);
 --				ctxt.set_new_line_between_tokens;
 --				ctxt.format_ast (compound);
---				ctxt.new_line;
+--				ctxt.put_new_line;
 --				ctxt.exdent;
 --			end
 --			ctxt.put_breakable;

@@ -76,18 +76,18 @@ feature {NONE} -- Execution
 			answer: STRING
 		do
 			if not Eiffel_project.is_new then
-				io.error.putstring ("The project %"");
-				io.error.putstring (Eiffel_project.name);
-				io.error.putstring ("%" already exists.%N%
+				io.error.put_string ("The project %"");
+				io.error.put_string (Eiffel_project.name);
+				io.error.put_string ("%" already exists.%N%
 					%It needs to be deleted before a precompilation.%N");
 			elseif 
 				command_line_io.confirmed 
 						("Finalizing implies some C compilation and linking.%
 							%%NDo you want to do it now") 
 			then
-				io.putstring ("--> Keep assertions (y/n): ");
+				io.put_string ("--> Keep assertions (y/n): ");
 				command_line_io.wait_for_return;
-				answer := io.laststring;
+				answer := io.last_string;
 				answer.to_lower;
 				if answer.is_equal ("y") or else answer.is_equal ("yes") then
 					keep_assertions := True
@@ -111,9 +111,9 @@ feature {NONE} -- Execution
 					end
 				end;
 			else
-				io.error.putstring ("The project %"");
-				io.error.putstring (Eiffel_project.name);
-				io.error.putstring ("%" already exists.%N%
+				io.error.put_string ("The project %"");
+				io.error.put_string (Eiffel_project.name);
+				io.error.put_string ("%" already exists.%N%
 					%It needs to be deleted before a precompilation.%N");
 			end
 		end;

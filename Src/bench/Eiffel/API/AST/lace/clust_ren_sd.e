@@ -59,11 +59,11 @@ feature -- Save
 		do
 			cluster_name.save (st)
 			st.put_string (": rename")
-			st.new_line
+			st.put_new_line
 			st.indent
 			renamings.save_with_interval_separator (st, ",%N%T%T%T%T")
 			st.exdent
-			st.new_line
+			st.put_new_line
 		end
 
 feature {COMPILER_EXPORTER} -- Lace compilation

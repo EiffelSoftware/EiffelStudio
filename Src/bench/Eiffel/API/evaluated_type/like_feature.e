@@ -122,7 +122,7 @@ feature -- Primitives
 		do
 			if not (System.current_class.class_id = class_id) then
 				debug
-					io.error.putstring ("LIKE_FEATURE solved_type origin_table%N")
+					io.error.put_string ("LIKE_FEATURE solved_type origin_table%N")
 				end
 				
 				origin_table := feat_table.origin_table
@@ -135,7 +135,7 @@ feature -- Primitives
 				
 				debug
 					if anchor_feature = Void then
-						io.error.putstring ("Void feature%N")
+						io.error.put_string ("Void feature%N")
 						feat_table.trace
 						orig_feat.trace
 						f.trace
@@ -143,7 +143,7 @@ feature -- Primitives
 				end
 			else
 				debug
-					io.error.putstring ("LIKE_FEATURE solved_type origin_table%N")
+					io.error.put_string ("LIKE_FEATURE solved_type origin_table%N")
 				end
 
 				anchor_feature := feat_table.item_id (feature_name_id)
@@ -153,7 +153,7 @@ feature -- Primitives
 				routine_id := anchor_feature.rout_id_set.first
 				debug
 					if anchor_feature = Void then
-						io.error.putstring ("Void feature%N")
+						io.error.put_string ("Void feature%N")
 					end
 				end
 			end

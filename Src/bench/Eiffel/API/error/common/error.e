@@ -102,8 +102,8 @@ feature -- Output
 				until
 					file.end_of_file
 				loop
-					file.readline;
-					st.add_string (file.laststring.twin)
+					file.read_line;
+					st.add_string (file.last_string.twin)
 					st.add_new_line;
 				end;
 				file.close;

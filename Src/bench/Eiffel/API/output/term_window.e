@@ -15,17 +15,17 @@ feature -- Output
 
 	put_string (s: STRING) is 
 		do 
-			io.error.putstring (s) 
+			io.error.put_string (s) 
 		end;
 
-	new_line is 
+	put_new_line is 
 		do 
-			io.error.new_line 
+			io.error.put_new_line 
 		end;
 
 	put_char (c: CHARACTER) is 
 		do 
-			io.error.putchar (c) 
+			io.error.put_character (c) 
 		end;
 
 end -- class TERM_WINDOW

@@ -131,14 +131,14 @@ feature {NONE} -- Formats
 										create new_format.make (before, after);
 										format_table.force (new_format, construct)
 debug ("FILTERS")
-	io.error.putstring (construct);
-	io.error.putstring (" -> ");
-	io.error.putstring (before);
+	io.error.put_string (construct);
+	io.error.put_string (" -> ");
+	io.error.put_string (before);
 	if after /= Void then
-		io.error.putstring (" @ ");
-		io.error.putstring (after)
+		io.error.put_string (" @ ");
+		io.error.put_string (after)
 	end;
-	io.error.new_line
+	io.error.put_new_line
 end
 									elseif construct.is_empty and before /= Void then
 										syntax_error ("Construct expected")
@@ -154,16 +154,16 @@ end
 								-- Go to the beginning of the next line
 							read_error := false;
 							char_in_buffer := false;
-							filter_file.readline;
+							filter_file.read_line;
 							line_nb := line_nb + 1
 						end
 					end;
 				end;
 				filter_file.close
 			else
-				io.error.putstring ("Warning: Cannot read filter ");
-				io.error.putstring (filename);
-				io.error.new_line
+				io.error.put_string ("Warning: Cannot read filter ");
+				io.error.put_string (filename);
+				io.error.put_new_line
 			end
 		end;
 
@@ -174,19 +174,19 @@ end
 		do
 			is_last_meta := false;
 			if not char_in_buffer then
-				filter_file.readchar
+				filter_file.read_character
 			else
 				char_in_buffer := false
 			end;
 			if not filter_file.end_of_file then
-				inspect filter_file.lastchar
+				inspect filter_file.last_character
 				when '%%' then
-					filter_file.readchar;
+					filter_file.read_character;
 					if filter_file.end_of_file then
 						syntax_error ("End of line expected");
 						read_error := true
 					else
-						inspect filter_file.lastchar
+						inspect filter_file.last_character
 						when 'n', 'N' then
 							last_char_read := '%N'
 						when 't', 'T' then
@@ -194,23 +194,23 @@ end
 						when '%N' then
 							line_nb := line_nb + 1;
 							from
-								filter_file.readchar
+								filter_file.read_character
 							until
 								filter_file.end_of_file or else
-								(filter_file.lastchar /= ' ' and
-								filter_file.lastchar /= '%T')
+								(filter_file.last_character /= ' ' and
+								filter_file.last_character /= '%T')
 							loop
-								filter_file.readchar
+								filter_file.read_character
 							end;
 							if 
 								filter_file.end_of_file or else
-								filter_file.lastchar /= '%%'
+								filter_file.last_character /= '%%'
 							then
 								syntax_error ("%"%%%" expected");
 								read_error := true;
 								if
 									not filter_file.end_of_file and then
-									filter_file.lastchar = '%N'
+									filter_file.last_character = '%N'
 								then
 									line_nb := line_nb + 1
 								end
@@ -218,22 +218,22 @@ end
 								get_next_character
 							end
 						else
-							last_char_read := filter_file.lastchar
+							last_char_read := filter_file.last_character
 						end
 					end
 				when ',', '|', '*' then
-					last_char_read := filter_file.lastchar;
+					last_char_read := filter_file.last_character;
 					is_last_meta := true
 				when '%N' then
-					last_char_read := filter_file.lastchar;
+					last_char_read := filter_file.last_character;
 					is_last_meta := true;
 					line_nb := line_nb + 1
 				when '-' then
-					filter_file.readchar;
+					filter_file.read_character;
 					if not filter_file.end_of_file then
-						if filter_file.lastchar = '-' then
+						if filter_file.last_character = '-' then
 								-- This is a comment. Skip the end of the line.
-							filter_file.readline;
+							filter_file.read_line;
 							line_nb := line_nb + 1;
 							last_char_read := '%N';
 							is_last_meta := true
@@ -245,7 +245,7 @@ end
 						last_char_read := '-'
 					end
 				else
-					last_char_read := filter_file.lastchar
+					last_char_read := filter_file.last_character
 				end
 			else
 				last_char_read := '%N';
@@ -263,7 +263,7 @@ end
 			-- Did an error occurred during the line parsing?
 
 	char_in_buffer: BOOLEAN;
-			-- Has `filter_file.lastchar' been used yet?
+			-- Has `filter_file.last_character' been used yet?
 
 	is_last_meta: BOOLEAN;
 			-- Is last character read a meta character?
@@ -276,23 +276,23 @@ end
 		require
 			message_not_void: message /= Void
 		do
-			io.error.putstring ("Warning: filter ");
-			io.error.putstring (filter_file.name);
-			io.error.putstring ("%N%TSyntax error, line ");
+			io.error.put_string ("Warning: filter ");
+			io.error.put_string (filter_file.name);
+			io.error.put_string ("%N%TSyntax error, line ");
 			if last_char_read = '%N' then
-				io.error.putint (line_nb - 1);
-				io.error.putstring (" near ");
-				io.error.putstring ("End of line")
+				io.error.put_integer (line_nb - 1);
+				io.error.put_string (" near ");
+				io.error.put_string ("End of line")
 			else
-				io.error.putint (line_nb);
-				io.error.putstring (" near ");
-				io.error.putchar ('%"');
-				io.error.putchar (last_char_read);
-				io.error.putchar ('%"')
+				io.error.put_integer (line_nb);
+				io.error.put_string (" near ");
+				io.error.put_character ('%"');
+				io.error.put_character (last_char_read);
+				io.error.put_character ('%"')
 			end;
-			io.error.putstring (": ");
-			io.error.putstring (message);
-			io.error.new_line
+			io.error.put_string (": ");
+			io.error.put_string (message);
+			io.error.put_new_line
 		end;
 
 invariant

@@ -46,7 +46,7 @@ feature -- Start output features
 	put_end_degree_6 is
 			-- Put message indicating the end of degree six.
 		do
-			io.error.putstring ("Processing options%N");
+			io.error.put_string ("Processing options%N");
 		end;
 
 	put_start_degree (degree_nbr: INTEGER; total_nbr: INTEGER) is
@@ -72,21 +72,21 @@ feature -- Start output features
 			-- Put message indicating that melting changes is ocurring.
 		do
 			io.error.put_string (melting_changes_message);
-			io.error.new_line
+			io.error.put_new_line
 		end;
 
 	put_freezing_message is
 			-- Put message indicating that freezing is occurring.
 		do
 			io.error.put_string (freezing_system_message);
-			io.error.new_line
+			io.error.put_new_line
 		end;
 
 	put_start_dead_code_removal_message  is
 			-- Put message indicating the start of dead code removal.
 		do
 			io.error.put_string (removing_dead_code_message);
-			io.error.new_line
+			io.error.put_new_line
 		end;
 
 	put_end_dead_code_removal_message  is
@@ -103,8 +103,8 @@ feature -- Start output features
 	put_initializing_documentation is
 			-- Start documentation generation.
 		do
-			io.error.putstring ("Initializing documentation");
-			io.error.new_line;
+			io.error.put_string ("Initializing documentation");
+			io.error.put_new_line;
 		end
 
 	put_start_documentation (total_num: INTEGER; type: STRING) is
@@ -113,17 +113,17 @@ feature -- Start output features
 			valid_type: type /= Void
 		do
 			total_number := total_num;
-			io.error.putstring ("Generating ");
-			io.error.putstring (type);
-			io.error.new_line;
+			io.error.put_string ("Generating ");
+			io.error.put_string (type);
+			io.error.put_new_line;
 			processed := 0;
 		end;
 
 	put_string (a_message: STRING) is
 			-- Put `a_message' to output window.
 		do
-			io.error.putstring (a_message)
-			io.error.new_line
+			io.error.put_string (a_message)
+			io.error.put_new_line
 		end
 
 	put_resynchronizing_breakpoints_message is
@@ -136,16 +136,16 @@ feature -- Start output features
 			-- Put message indicating that the system has been compiled.
 		do
 			io.error.put_string ("System recompiled.")
-			io.error.new_line
+			io.error.put_new_line
 		end
 
 	put_header (displayed_version_number: STRING) is
 		do
-			io.error.putstring (
+			io.error.put_string (
 				"Eiffel compilation manager%N%
 				%  (version ")
-			io.error.putstring (displayed_version_number)
-			io.error.putstring (")%N")
+			io.error.put_string (displayed_version_number)
+			io.error.put_string (")%N")
 		end
 
 feature -- Output on per class
@@ -279,11 +279,11 @@ feature -- Output on per class
 			-- Put message progress the start of dead code removal.
 		do
 			processed := processed + total_nbr
-			io.error.putstring ("Features done: ")
-			io.error.putint (processed)
-			io.error.putstring ("%TFeatures to go: ")
-			io.error.putint (nbr_to_go)
-			io.error.new_line
+			io.error.put_string ("Features done: ")
+			io.error.put_integer (processed)
+			io.error.put_string ("%TFeatures to go: ")
+			io.error.put_integer (nbr_to_go)
+			io.error.put_new_line
 		end
 
 	put_case_cluster_message (a_name: STRING) is
@@ -295,9 +295,9 @@ feature -- Output on per class
 			str: STRING
 		do	
 			str := a_name.as_lower
-			io.error.putstring (case_cluster_message)
-			io.error.putstring (str)
-			io.error.new_line
+			io.error.put_string (case_cluster_message)
+			io.error.put_string (str)
+			io.error.put_new_line
 		end
 
 	put_case_class_message (a_class: CLASS_C) is
@@ -334,9 +334,9 @@ feature -- Other
 			-- Display degree `deg_nbr' with entity `a_class'.
 		do
 			total_number := total;
-			io.error.putstring (percentage_output (to_go));
-			io.error.putstring (deg_nbr);
-			io.error.new_line
+			io.error.put_string (percentage_output (to_go));
+			io.error.put_string (deg_nbr);
+			io.error.put_new_line
 		end
 
 feature {NONE} -- Implementation
@@ -380,10 +380,10 @@ feature {NONE} -- Implementation
 	display_degree (deg_nbr: STRING; to_go: INTEGER; a_name: STRING) is
 			-- Display degree `deg_nbr' with entity `a_class'.
 		do
-			io.error.putstring (percentage_output (to_go));
-			io.error.putstring (deg_nbr);
-			io.error.putstring (a_name);
-			io.error.new_line
+			io.error.put_string (percentage_output (to_go));
+			io.error.put_string (deg_nbr);
+			io.error.put_string (a_name);
+			io.error.put_new_line
 		end
 
 	percentage_calculation (to_go: INTEGER): INTEGER is

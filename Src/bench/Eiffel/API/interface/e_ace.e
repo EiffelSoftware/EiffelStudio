@@ -56,9 +56,9 @@ feature -- Access
 			create a_file.make (file_name)
 			if a_file.exists and then a_file.is_readable then
 				a_file.open_read
-				a_file.readstream (a_file.count)
+				a_file.read_stream (a_file.count)
 				a_file.close
-				Result := a_file.laststring.twin
+				Result := a_file.last_string.twin
 			end
 		end
 

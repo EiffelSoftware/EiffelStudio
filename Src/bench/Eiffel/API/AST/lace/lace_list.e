@@ -123,7 +123,7 @@ feature -- Saving
 				i = nb
 			loop
 				l_area.item (i).save (st)
-				st.new_line
+				st.put_new_line
 				i := i + 1
 			end
 		end

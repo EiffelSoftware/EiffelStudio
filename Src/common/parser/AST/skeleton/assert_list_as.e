@@ -72,7 +72,7 @@ feature -- Access
 --		do
 --			if assertions /= void then
 --				simple_put_clause_keywords (ctxt);
---				ctxt.new_line;
+--				ctxt.put_new_line;
 --				ctxt.set_new_line_between_tokens;
 --				ctxt.indent;
 --				simple_format_assertions (ctxt);
@@ -104,7 +104,7 @@ feature -- Access
 --				i := i + 1
 --			end
 --			if l_count > 0 then
---				ctxt.new_line
+--				ctxt.put_new_line
 --			end
 --			ctxt.commit;
 --		end

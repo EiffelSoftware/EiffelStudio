@@ -94,30 +94,30 @@ feature -- Saving
 			end
 			st.indent
 			if creation_restriction /= Void then
-				st.new_line
+				st.put_new_line
 				st.put_string ("create")
-				st.new_line
+				st.put_new_line
 				st.indent
 				creation_restriction.save_with_interval_separator (st, ", ")
 				st.exdent
 			end
 			if export_restriction /= Void then
-				st.new_line
+				st.put_new_line
 				st.put_string ("export")
-				st.new_line
+				st.put_new_line
 				st.indent
 				export_restriction.save_with_interval_separator (st, ", ")
 				st.exdent
 			end
 			if renamings /= Void then
-				st.new_line
+				st.put_new_line
 				st.put_string ("rename")
-				st.new_line
+				st.put_new_line
 				st.indent
 				renamings.save_with_interval_separator (st, ", ")
 				st.exdent
 			end
-			st.new_line
+			st.put_new_line
 			st.put_string ("end")
 			st.exdent
 		end

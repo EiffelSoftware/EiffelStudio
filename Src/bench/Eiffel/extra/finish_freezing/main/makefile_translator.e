@@ -205,7 +205,7 @@ feature {NONE} -- Translation
 		do
 			open_files
 			if has_makefile_sh then
-				makefile_sh.readstream (makefile_sh.count)
+				makefile_sh.read_stream (makefile_sh.count)
 				is_il_code := makefile_sh.last_string.substring_index ("$(IL_SYSTEM)", 1) > 0
 				close_files
 			else
@@ -218,11 +218,11 @@ feature {NONE} -- Translation
 			-- 	master: is this the master makefile (i.e. the one in the F/W_code directory)?
 		do
 			debug ("progress")
-				io.putstring ("Translate makefile")
+				io.put_string ("Translate makefile")
 				if master then
-					io.putstring (" (master)")
+					io.put_string (" (master)")
 				end
-				io.new_line
+				io.put_new_line
 			end
 
 			open_files
@@ -248,7 +248,7 @@ feature {NONE} -- Translation
 						translate_spit (False, Void)
 					end
 				else
-					io.error.putstring ("WARNING: Makefile.SH is empty.%N")
+					io.error.put_string ("WARNING: Makefile.SH is empty.%N")
 				end
 
 				close_files
@@ -262,7 +262,7 @@ feature {NONE} -- Translation
 			old_dir: STRING -- the previous directory
 		do
 			debug ("progress")
-				io.putstring ("Translate sub makefiles%N")
+				io.put_string ("Translate sub makefiles%N")
 			end
 
 			from
@@ -275,9 +275,9 @@ feature {NONE} -- Translation
 
 				if not dir.is_equal(old_dir) then
 					debug ("progress")
-						io.putstring ("%TTranslating Makefile.SH in directory ")
-						io.putstring (dir)
-						io.putstring (".%N")
+						io.put_string ("%TTranslating Makefile.SH in directory ")
+						io.put_string (dir)
+						io.put_string (".%N")
 					end
 
 					env.change_working_directory (dir)
@@ -299,16 +299,16 @@ feature {NONE} -- Translation
 			lastline: STRING
 		do
 			debug ("progress")
-				io.putstring ("Translate case%N")
+				io.put_string ("Translate case%N")
 			end
 
 			lastline := makefile_sh.last_string.twin
 
 			debug ("translate_case")
 				debug ("input")
-					io.putstring ("IN: ")
-					io.putstring (lastline)
-					io.new_line
+					io.put_string ("IN: ")
+					io.put_string (lastline)
+					io.put_new_line
 				end
 			end
 
@@ -325,9 +325,9 @@ feature {NONE} -- Translation
 
 				debug ("translate_case")
 					debug ("input")
-						io.putstring ("IN: ")
-						io.putstring (lastline)
-						io.new_line
+						io.put_string ("IN: ")
+						io.put_string (lastline)
+						io.put_new_line
 					end
 				end
 			end
@@ -341,16 +341,16 @@ feature {NONE} -- Translation
 			lastline: STRING
 		do
 			debug ("progress")
-				io.putstring ("Translate echo%N")
+				io.put_string ("Translate echo%N")
 			end
 
 			lastline := makefile_sh.last_string.twin
 
 			debug ("translate_echo")
 				debug ("input")
-					io.putstring ("IN: ")
-					io.putstring (lastline)
-					io.new_line
+					io.put_string ("IN: ")
+					io.put_string (lastline)
+					io.put_new_line
 				end
 			end
 
@@ -371,7 +371,7 @@ feature {NONE} -- Translation
 			tag: STRING -- read until we encounter this tag
 		do
 			debug ("progress")
-				io.putstring ("Translate spit%N")
+				io.put_string ("Translate spit%N")
 			end
 
 			lastline := makefile_sh.last_string.twin
@@ -406,7 +406,7 @@ feature {NONE} -- Translation
 					if not lastline.is_empty then
 						translate_line_change
 					else
-						makefile.new_line
+						makefile.put_new_line
 					end
 				end
 
@@ -421,7 +421,7 @@ feature {NONE} -- Translation
 			-- Translate master Makefile.SH.
 		do
 			debug ("progress")
-				io.putstring ("Translate master%N")
+				io.put_string ("Translate master%N")
 			end
 
 			translate_translate
@@ -438,7 +438,7 @@ feature {NONE} -- Translation
 			lastline: STRING
 		do
 			debug ("progress")
-				io.putstring ("%Ttranslate%N")
+				io.put_string ("%Ttranslate%N")
 			end
 
 			from
@@ -450,9 +450,9 @@ feature {NONE} -- Translation
 			loop
 				debug ("translate_translate")
 					debug ("input")
-						io.putstring ("IN: ")
-						io.putstring (lastline)
-						io.new_line
+						io.put_string ("IN: ")
+						io.put_string (lastline)
+						io.put_new_line
 					end
 				end
 
@@ -480,14 +480,14 @@ feature {NONE} -- Translation
 
 				debug ("translate_translate")
 					debug ("output")
-						io.putstring ("OUT: ")
-						io.putstring (lastline)
-						io.new_line
+						io.put_string ("OUT: ")
+						io.put_string (lastline)
+						io.put_new_line
 					end
 				end
 
-				makefile.putstring (lastline)
-				makefile.new_line
+				makefile.put_string (lastline)
+				makefile.put_new_line
 
 				read_next
 				lastline := makefile_sh.last_string
@@ -500,7 +500,7 @@ feature {NONE} -- Translation
 			lastline: STRING
 		do
 			debug ("progress")
-				io.putstring ("%Texternals%N")
+				io.put_string ("%Texternals%N")
 			end
 
 			lastline := makefile_sh.last_string.twin
@@ -515,9 +515,9 @@ feature {NONE} -- Translation
 			loop
 				debug ("translate_externals")
 					debug ("input")
-						io.putstring ("IN: ")
-						io.putstring (lastline)
-						io.new_line
+						io.put_string ("IN: ")
+						io.put_string (lastline)
+						io.put_new_line
 					end
 				end
 				
@@ -530,21 +530,21 @@ feature {NONE} -- Translation
 
 				debug ("translate_externals")
 					debug ("output")
-						io.putstring ("OUT: ")
-						io.putstring (lastline)
-						io.new_line
+						io.put_string ("OUT: ")
+						io.put_string (lastline)
+						io.put_new_line
 					end
 				end
 
-				makefile.putstring (lastline.out)
-				makefile.new_line
+				makefile.put_string (lastline.out)
+				makefile.put_new_line
 
 				read_next
 				lastline := makefile_sh.last_string.twin
 			end
 
 			if not makefile_sh.end_of_file and externals then
-				makefile.new_line
+				makefile.put_new_line
 				read_next
 			end
 		end
@@ -558,16 +558,16 @@ feature {NONE} -- Translation
 			shared_library_pos: INTEGER
 		do
 			debug ("translate_application")
-				io.putstring ("%Tapplication%N")
+				io.put_string ("%Tapplication%N")
 			end
 
 			lastline := makefile_sh.last_string.twin
 
 			debug ("translate_application")
 				debug ("input")
-					io.putstring ("IN: ")
-					io.putstring (lastline)
-					io.new_line
+					io.put_string ("IN: ")
+					io.put_string (lastline)
+					io.put_new_line
 				end
 			end
 
@@ -605,16 +605,16 @@ feature {NONE} -- Translation
 				read_next
 				read_next
 
-				makefile.putstring (options.get_string ("all", Void))
-				makefile.putstring (appl_exe)
+				makefile.put_string (options.get_string ("all", Void))
+				makefile.put_string (appl_exe)
 
 				if shared_library_pos /= 0 then
-					makefile.putstring (" $(SYSTEM_IN_DYNAMIC_LIB)")				
+					makefile.put_string (" $(SYSTEM_IN_DYNAMIC_LIB)")				
 				end
 
-				makefile.new_line
-				makefile.putstring (options.get_string ("completed", Void))
-				makefile.putstring ("%N%N")
+				makefile.put_new_line
+				makefile.put_string (options.get_string ("completed", Void))
+				makefile.put_string ("%N%N")
 			end
 		end
 
@@ -631,7 +631,7 @@ feature {NONE} -- Translation
 			min: INTEGER
 		do
 			debug ("progress")
-				io.putstring ("%Tdependencies%N")
+				io.put_string ("%Tdependencies%N")
 			end
 
 			from
@@ -642,9 +642,9 @@ feature {NONE} -- Translation
 			loop
 				debug ("translate_dependencies")
 					debug ("input")
-						io.putstring ("IN: ")
-						io.putstring (lastline)
-						io.new_line
+						io.put_string ("IN: ")
+						io.put_string (lastline)
+						io.put_new_line
 					end
 				end
 
@@ -660,33 +660,33 @@ feature {NONE} -- Translation
 
 
 				if filename.is_equal (options.get_string ("emain_text", Void)) then
-					makefile.putstring (dir)
-					makefile.putstring (directory_separator)
+					makefile.put_string (dir)
+					makefile.put_string (directory_separator)
 					is_emain := True
 					emain_line := lastline.substring( lastline.index_of ('$', 1), lastline.count)
 					if emain_line.count > 0 then
 						subst_eiffel (emain_line)
 						subst_platform (emain_line)
 						subst_dir_sep (emain_line)
-						makefile.putstring (options.get_string ("emain_obj_text", Void))
-						makefile.putstring (": Makefile ")
-						makefile.putstring (emain_line)
-						makefile.putstring ("%N%T$(MV) ")
-						makefile.putstring (emain_line)
-						makefile.putchar (' ')
-						makefile.putstring (dir)
-						makefile.putstring (directory_separator)
-						makefile.putstring ("emain.c%N")
+						makefile.put_string (options.get_string ("emain_obj_text", Void))
+						makefile.put_string (": Makefile ")
+						makefile.put_string (emain_line)
+						makefile.put_string ("%N%T$(MV) ")
+						makefile.put_string (emain_line)
+						makefile.put_character (' ')
+						makefile.put_string (dir)
+						makefile.put_string (directory_separator)
+						makefile.put_string ("emain.c%N")
 						read_next
 					else
-						makefile.putstring (options.get_string ("emain_obj_text", Void))
-						makefile.putstring (": Makefile%N")
+						makefile.put_string (options.get_string ("emain_obj_text", Void))
+						makefile.put_string (": Makefile%N")
 					end
 				elseif filename.is_equal ("Makefile") and then dir.is_equal ("E1") then
 					is_E1_makefile := True
 				else
-					makefile.putstring (dir)
-					makefile.putstring (directory_separator)
+					makefile.put_string (dir)
+					makefile.put_string (directory_separator)
 
 					if dir.item (1) = 'E' then
 						system_dependent_directories.put_front (dir)
@@ -696,51 +696,51 @@ feature {NONE} -- Translation
 						dependent_directories.put_front (dir)
 					end
 
-					makefile.putstring (filename)
-					makefile.putstring (".")
-					makefile.putstring (options.get_string ("intermediate_file_ext", Void))
-					makefile.putstring (": Makefile%N")
+					makefile.put_string (filename)
+					makefile.put_string (".")
+					makefile.put_string (options.get_string ("intermediate_file_ext", Void))
+					makefile.put_string (": Makefile%N")
 				end
 
 				if not is_E1_makefile then
-					makefile.putstring ("%T")
-					makefile.putstring (options.get_string ("cd", Void))
-					makefile.putstring (" ")
-					makefile.putstring (dir)
-					makefile.putstring (options.get_string ("subcommand_separator", " && "))
+					makefile.put_string ("%T")
+					makefile.put_string (options.get_string ("cd", Void))
+					makefile.put_string (" ")
+					makefile.put_string (dir)
+					makefile.put_string (options.get_string ("subcommand_separator", " && "))
 					if not is_emain then
-						makefile.putstring ("$(START_TEST) ")
+						makefile.put_string ("$(START_TEST) ")
 					end
-					makefile.putstring ("$(MAKE)")
-					makefile.putstring (" ")
+					makefile.put_string ("$(MAKE)")
+					makefile.put_string (" ")
 	
 					if is_emain then
-						makefile.putstring (options.get_string ("emain_obj_text", Void))
+						makefile.put_string (options.get_string ("emain_obj_text", Void))
 					else
-						makefile.putstring (filename)
-						makefile.putstring (".")
-						makefile.putstring (options.get_string ("intermediate_file_ext", Void))
+						makefile.put_string (filename)
+						makefile.put_string (".")
+						makefile.put_string (options.get_string ("intermediate_file_ext", Void))
 					end
 	
 					if not is_emain then
-						makefile.putstring (" $(END_TEST)")
+						makefile.put_string (" $(END_TEST)")
 					end
-					makefile.putstring (options.get_string ("subcommand_separator", " && "))
-					makefile.putstring (options.get_string ("cd", Void))
-					makefile.putstring (" ")
-					makefile.putstring (options.get_string ("updir", Void))
+					makefile.put_string (options.get_string ("subcommand_separator", " && "))
+					makefile.put_string (options.get_string ("cd", Void))
+					makefile.put_string (" ")
+					makefile.put_string (options.get_string ("updir", Void))
 
 					read_next
 
 					if is_emain then
-						makefile.putstring ("%N%T$(RM) ")
-						makefile.putstring (dir)
-						makefile.putstring (directory_separator)
-						makefile.putstring ("emain.c%N")
+						makefile.put_string ("%N%T$(RM) ")
+						makefile.put_string (dir)
+						makefile.put_string (directory_separator)
+						makefile.put_string ("emain.c%N")
 						is_emain := False
 					end
 
-					makefile.putstring ("%N%N")
+					makefile.put_string ("%N%N")
 				else
 					is_E1_makefile := False
 					read_next
@@ -758,49 +758,49 @@ feature {NONE} -- Translation
 				-- Generate the `OBJECTS = ' line
 			from
 				dependent_directories.start
-				makefile.putstring (options.get_string ("objects_text", Void))
+				makefile.put_string (options.get_string ("objects_text", Void))
 			until
 				dependent_directories.after
 			loop		
 				dir := dependent_directories.item
-				makefile.putstring (dir)
-				makefile.putstring (directory_separator)
-				makefile.putchar (dir.item (1))
-				makefile.putstring ("obj")
-				makefile.putstring (dir.substring (2, dir.count))
-				makefile.putchar ('.')
-				makefile.putstring (options.get_string ("intermediate_file_ext", Void))
-				makefile.putchar (' ')
+				makefile.put_string (dir)
+				makefile.put_string (directory_separator)
+				makefile.put_character (dir.item (1))
+				makefile.put_string ("obj")
+				makefile.put_string (dir.substring (2, dir.count))
+				makefile.put_character ('.')
+				makefile.put_string (options.get_string ("intermediate_file_ext", Void))
+				makefile.put_character (' ')
 				dependent_directories.forth
 			end
 
 				-- Generate the `x_OBJECTS = ' lines
 			from
 				object_dependent_directories.start
-				makefile.putstring ("%N%N");
-				makefile.putstring (options.get_string ("c_objects_text", Void))
+				makefile.put_string ("%N%N");
+				makefile.put_string (options.get_string ("c_objects_text", Void))
 			until
 				object_dependent_directories.after
 			loop		
 				dir := object_dependent_directories.item
-				makefile.putstring (dir)
-				makefile.putstring (directory_separator)
-				makefile.putchar (dir.item (1))
-				makefile.putstring ("obj")
-				makefile.putstring (dir.substring (2, dir.count))
-				makefile.putchar ('.')
-				makefile.putstring (options.get_string ("intermediate_file_ext", Void))
-				makefile.putchar (' ')
+				makefile.put_string (dir)
+				makefile.put_string (directory_separator)
+				makefile.put_character (dir.item (1))
+				makefile.put_string ("obj")
+				makefile.put_string (dir.substring (2, dir.count))
+				makefile.put_character ('.')
+				makefile.put_string (options.get_string ("intermediate_file_ext", Void))
+				makefile.put_character (' ')
 
 				object_dependent_directories.forth
 			end
 			if object_dependent_directories.is_empty then
-				makefile.putstring (" %"%" %N")
+				makefile.put_string (" %"%" %N")
 			end
 
 			from
-				makefile.putstring ("%N%N")
-				makefile.putstring (options.get_string ("eobjects_text", Void))
+				makefile.put_string ("%N%N")
+				makefile.put_string (options.get_string ("eobjects_text", Void))
 				number := 0
 				system_dependent_directories.start
 			until
@@ -809,19 +809,19 @@ feature {NONE} -- Translation
 				dir := system_dependent_directories.item
 				number := number + 1
 
-				makefile.putstring (dir)
-				makefile.putstring (directory_separator)
-				makefile.putchar (dir.item (1))
-				makefile.putstring ("obj")
-				makefile.putint (number)
-				makefile.putchar ('.')
-				makefile.putstring (options.get_string ("intermediate_file_ext", Void))
-				makefile.putchar (' ')
+				makefile.put_string (dir)
+				makefile.put_string (directory_separator)
+				makefile.put_character (dir.item (1))
+				makefile.put_string ("obj")
+				makefile.put_integer (number)
+				makefile.put_character ('.')
+				makefile.put_string (options.get_string ("intermediate_file_ext", Void))
+				makefile.put_character (' ')
 
 				system_dependent_directories.forth
 			end
 
-			makefile.putstring ("%N%N")
+			makefile.put_string ("%N%N")
 		end
 
 	translate_line_subst is
@@ -832,15 +832,15 @@ feature {NONE} -- Translation
 			i, j: INTEGER
 		do
 			debug ("progress")
-				io.putstring ("%Tsubst%N")
+				io.put_string ("%Tsubst%N")
 			end
 			lastline := makefile_sh.last_string.twin
 
 			debug ("translate_line_subst")
 				debug ("input")
-					io.putstring ("IN: ")
-					io.putstring (lastline)
-					io.new_line
+					io.put_string ("IN: ")
+					io.put_string (lastline)
+					io.put_new_line
 				end
 			end
 
@@ -875,14 +875,14 @@ feature {NONE} -- Translation
 
 			debug ("translate_line_subst")
 				debug ("output")
-					io.putstring ("OUT: ")
-					io.putstring (lastline)
-					io.new_line
+					io.put_string ("OUT: ")
+					io.put_string (lastline)
+					io.put_new_line
 				end
 			end
 
-			makefile.putstring (lastline)
-			makefile.new_line
+			makefile.put_string (lastline)
+			makefile.put_new_line
 		end
 
 	translate_line_change is
@@ -894,16 +894,16 @@ feature {NONE} -- Translation
 			dir: STRING -- what directory it should be in (e.g. E1, F1)
 		do
 			debug ("progress")
-				io.putstring ("%Tchange%N")
+				io.put_string ("%Tchange%N")
 			end
 			
 			lastline := makefile_sh.last_string.twin
 
 			debug ("translate_line_change")
 				debug ("input")
-					io.putstring ("IN: ")
-					io.putstring (lastline)
-					io.new_line
+					io.put_string ("IN: ")
+					io.put_string (lastline)
+					io.put_new_line
 				end
 			end
 
@@ -944,9 +944,9 @@ feature {NONE} -- Translation
 
 				debug ("translate_line_change")
 					debug ("input")
-						io.putstring ("CHANGE: ")
-						io.putstring (lastline)
-						io.new_line
+						io.put_string ("CHANGE: ")
+						io.put_string (lastline)
+						io.put_new_line
 					end
 				end
 
@@ -999,20 +999,20 @@ feature {NONE} -- Translation
 				subst_eiffel (replacement)
 				subst_platform (replacement)
 				subst_compiler (replacement)
-				makefile.putstring (replacement)
+				makefile.put_string (replacement)
 			else
 				debug ("translate_line_change")
 					debug ("output")
-						io.putstring ("OUT: ")
-						io.putstring (lastline)
-						io.new_line
+						io.put_string ("OUT: ")
+						io.put_string (lastline)
+						io.put_new_line
 					end
 				end
 
-				makefile.putstring (lastline)
+				makefile.put_string (lastline)
 			end
 
-			makefile.new_line
+			makefile.put_new_line
 		end
 
 	translate_appl is
@@ -1022,16 +1022,16 @@ feature {NONE} -- Translation
 			precompile_libs: STRING -- the precompiled libraries to use
 		do
 			debug ("progress")
-				io.putstring ("%Tappl%N")
+				io.put_string ("%Tappl%N")
 			end
 
 			lastline := makefile_sh.last_string.twin
 
 			debug ("translate_appl")
 				debug ("input")
-					io.putstring ("IN: ")
-					io.putstring (lastline)
-					io.new_line
+					io.put_string ("IN: ")
+					io.put_string (lastline)
+					io.put_new_line
 				end
 			end
 
@@ -1054,9 +1054,9 @@ feature {NONE} -- Translation
 
 			debug ("translate_appl")
 				debug ("input")
-					io.putstring ("IN: ")
-					io.putstring (lastline)
-					io.new_line
+					io.put_string ("IN: ")
+					io.put_string (lastline)
+					io.put_new_line
 				end
 			end
 
@@ -1084,14 +1084,14 @@ feature {NONE} -- Translation
 
 			debug ("translate_appl")
 				debug ("output")
-					io.putstring ("OUT: ")
-					io.putstring (lastline)
-					io.new_line
+					io.put_string ("OUT: ")
+					io.put_string (lastline)
+					io.put_new_line
 				end
 			end
 
-			makefile.putstring (lastline)
-			makefile.new_line
+			makefile.put_string (lastline)
+			makefile.put_new_line
 		end
 
 	translate_cecil_and_dll is
@@ -1101,19 +1101,19 @@ feature {NONE} -- Translation
 			precompile_libs: STRING -- the precompiled libraries to use
 		do
 			debug ("progress")
-				io.putstring ("%Tcecil%N")
+				io.put_string ("%Tcecil%N")
 			end
 
-			makefile.putstring ("%N#STATIC_CECIL PART%N")
+			makefile.put_string ("%N#STATIC_CECIL PART%N")
 
 			lastline := makefile_sh.last_string.twin
 			lastline.replace_substring_all (".a", lib_extension)
-			makefile.putstring (lastline)
-			makefile.new_line
+			makefile.put_string (lastline)
+			makefile.put_new_line
 			
 			read_next
-			makefile.putstring (makefile_sh.last_string)
-			makefile.new_line
+			makefile.put_string (makefile_sh.last_string)
+			makefile.put_new_line
 
 			precompile_libs := get_libs (lastline)
 			if options.has ("cecil_make") then
@@ -1124,9 +1124,9 @@ feature {NONE} -- Translation
 
 			debug ("translate_cecil_and_dll")
 				debug ("input")
-					io.putstring ("IN: ")
-					io.putstring (lastline)
-					io.new_line
+					io.put_string ("IN: ")
+					io.put_string (lastline)
+					io.put_new_line
 				end
 			end
 
@@ -1137,14 +1137,14 @@ feature {NONE} -- Translation
 
 			debug ("translate_cecil_and_dll")
 				debug ("output")
-					io.putstring ("OUT: ")
-					io.putstring (lastline)
-					io.new_line
+					io.put_string ("OUT: ")
+					io.put_string (lastline)
+					io.put_new_line
 				end
 			end
 
-			makefile.putstring (lastline)
-			makefile.new_line
+			makefile.put_string (lastline)
+			makefile.put_new_line
 
 
 			read_next
@@ -1157,15 +1157,15 @@ feature {NONE} -- Translation
 				lastline := makefile_sh.last_string.twin
 			end
 				
-			makefile.new_line
-			makefile.new_line
+			makefile.put_new_line
+			makefile.put_new_line
 
-			makefile.putstring ("%N#SHARED_CECIL PART%N")
-			makefile.putstring (lastline)
-			makefile.new_line
+			makefile.put_string ("%N#SHARED_CECIL PART%N")
+			makefile.put_string (lastline)
+			makefile.put_new_line
 			read_next
-			makefile.putstring (makefile_sh.last_string)
-			makefile.new_line
+			makefile.put_string (makefile_sh.last_string)
+			makefile.put_new_line
 
 -- DEF_FILE= appl.def
 			if options.has ("cecil_def") then 
@@ -1173,15 +1173,15 @@ feature {NONE} -- Translation
 				lastline.replace_substring_all ("$appl", appl)
 				subst_eiffel (lastline)
 				subst_platform (lastline)
-				makefile.putstring (lastline)
+				makefile.put_string (lastline)
 			end
-			makefile.new_line
+			makefile.put_new_line
 
 				-- dynamic_cecil: $(SHARED_CECIL)
-			makefile.new_line
+			makefile.put_new_line
 			read_next
-			makefile.putstring (makefile_sh.last_string)
-			makefile.new_line
+			makefile.put_string (makefile_sh.last_string)
+			makefile.put_new_line
 
 			from
 			until
@@ -1193,44 +1193,44 @@ feature {NONE} -- Translation
 	
 				-- SHARED_CECIL_OBJECT
 			if uses_precompiled then
-				makefile.putchar ('%T')
-				makefile.putstring (precompile_libs)
-				makefile.putstring (options.get_string ("continuation", Void))
-				makefile.new_line
+				makefile.put_character ('%T')
+				makefile.put_string (precompile_libs)
+				makefile.put_string (options.get_string ("continuation", Void))
+				makefile.put_new_line
 			end
 
 			lastline.replace_substring_all (".o", object_extension)
-			makefile.putstring (lastline)
-			makefile.new_line
+			makefile.put_string (lastline)
+			makefile.put_new_line
 			read_next
-			makefile.putstring ("SHARED_FLAGS = $(LDSHAREDFLAGS)")
+			makefile.put_string ("SHARED_FLAGS = $(LDSHAREDFLAGS)")
 
 				-- SHAREDFLAGS
 			if options.has ("cecil_dynlib") then 
-				makefile.putstring (" \%N")
+				makefile.put_string (" \%N")
 				lastline := options.get_string ("cecil_dynlib", Void).twin
 				lastline.replace_substring_all ("$appl", appl)
-				makefile.putstring (lastline)
-				makefile.new_line
+				makefile.put_string (lastline)
+				makefile.put_new_line
 			else
-				makefile.new_line
+				makefile.put_new_line
 			end
 
 				-- SHARED_CECIL
 			read_next
-			makefile.putstring (makefile_sh.last_string)
-			makefile.putstring (" $(DEF_FILE)")
-			makefile.new_line 
+			makefile.put_string (makefile_sh.last_string)
+			makefile.put_string (" $(DEF_FILE)")
+			makefile.put_new_line 
 
 				-- $(RM) "$(SHARD_CECIL)"
 			read_next
-			makefile.putstring (makefile_sh.last_string)
-			makefile.new_line
+			makefile.put_string (makefile_sh.last_string)
+			makefile.put_new_line
 
 				-- $(SHAREDLINK) $(SHAREDFLAGS) $(SHARED_CECIL_OBJECT) $(SHAREDLIBS)
 			read_next
-			makefile.putstring (makefile_sh.last_string)
-			makefile.new_line
+			makefile.put_string (makefile_sh.last_string)
+			makefile.put_new_line
 
 				-------------------------------------------------
 				-- Search the beginning of the SYSTEM_IN_DYNAMIC_LIB part
@@ -1244,17 +1244,17 @@ feature {NONE} -- Translation
 				lastline := makefile_sh.last_string.twin
 			end
 
-			makefile.putstring ("%N#SYSTEM_IN_DYNAMIC_LIB PART%N%N")
+			makefile.put_string ("%N#SYSTEM_IN_DYNAMIC_LIB PART%N%N")
 
 				-- DEF_FILE= appl.def
-			makefile.putstring ("DEF_FILE= ")
-			makefile.putstring (appl)
-			makefile.putstring (".def")
-			makefile.new_line
+			makefile.put_string ("DEF_FILE= ")
+			makefile.put_string (appl)
+			makefile.put_string (".def")
+			makefile.put_new_line
 
 				-- dynlib: $(SYSTEM_IN_DYNAMIC_LIB)
-			makefile.putstring (makefile_sh.last_string)
-			makefile.new_line
+			makefile.put_string (makefile_sh.last_string)
+			makefile.put_new_line
 
 				-- egc_dynlib.obj
 			read_next
@@ -1264,8 +1264,8 @@ feature {NONE} -- Translation
 			subst_platform (lastline)
 			subst_compiler (lastline)
 			subst_dir_sep (lastline)
-			makefile.putstring (lastline)
-			makefile.new_line
+			makefile.put_string (lastline)
+			makefile.put_new_line
 
 			read_next -- $(MV) $(ISE_EIFFEL....
 			lastline := makefile_sh.last_string.twin
@@ -1273,37 +1273,37 @@ feature {NONE} -- Translation
 			subst_platform (lastline)
 			subst_compiler (lastline)
 			subst_dir_sep (lastline)
-			makefile.putstring (lastline)
-			makefile.new_line
+			makefile.put_string (lastline)
+			makefile.put_new_line
 
 			read_next -- cd E1 ; $(MAKE) ....
 			lastline := makefile_sh.last_string.twin
 			lastline.replace_substring_all (".o", object_extension)
 			lastline.replace_substring_all (" ; ", options.get_string ("subcommand_separator", " && "))
-			makefile.putstring (lastline)
-			makefile.new_line
+			makefile.put_string (lastline)
+			makefile.put_new_line
 
 				-- edynlib.obj
 			read_next
 			lastline := makefile_sh.last_string.twin
 			lastline.replace_substring_all (".o", object_extension)
 			subst_dir_sep (lastline)
-			makefile.putstring (lastline)
-			makefile.new_line
+			makefile.put_string (lastline)
+			makefile.put_new_line
 
 			read_next -- cd E1 ; $(MAKE) ...
 			lastline := makefile_sh.last_string.twin
 			lastline.replace_substring_all (".o", object_extension)
 			lastline.replace_substring_all (" ; ", options.get_string ("subcommand_separator", " && "))
-			makefile.putstring (lastline)
-			makefile.new_line
+			makefile.put_string (lastline)
+			makefile.put_new_line
 
 				-- SYSTEM_IN_DYNAMIC_LIB_OBJ
 			read_next
-			makefile.new_line
+			makefile.put_new_line
 			read_next
-			makefile.putstring (makefile_sh.last_string)
-			makefile.new_line
+			makefile.put_string (makefile_sh.last_string)
+			makefile.put_new_line
 
 			from
 			until
@@ -1314,46 +1314,46 @@ feature {NONE} -- Translation
 			end
 				
 			if uses_precompiled then
-				makefile.putchar ('%T')
-				makefile.putstring (precompile_libs)
-				makefile.putstring (options.get_string ("continuation", Void))
-				makefile.new_line
+				makefile.put_character ('%T')
+				makefile.put_string (precompile_libs)
+				makefile.put_string (options.get_string ("continuation", Void))
+				makefile.put_new_line
 			end
 
 			lastline.replace_substring_all (".o", object_extension)
 			subst_dir_sep (lastline)
-			makefile.putstring (lastline)
-			makefile.new_line
+			makefile.put_string (lastline)
+			makefile.put_new_line
 
 				-- DYNLIBSHAREDFLAGS
 			read_next
-			makefile.putstring ("DYNLIBSHAREDFLAGS = $(LDSHAREDFLAGS)")
+			makefile.put_string ("DYNLIBSHAREDFLAGS = $(LDSHAREDFLAGS)")
 			if options.has ("system_dynlib") then 
-				makefile.putstring (" \%N")
+				makefile.put_string (" \%N")
 				lastline := options.get_string ("system_dynlib", Void).twin
 				lastline.replace_substring_all ("$appl", appl)
-				makefile.putstring (lastline)
-				makefile.new_line
+				makefile.put_string (lastline)
+				makefile.put_new_line
 			else
-				makefile.new_line
+				makefile.put_new_line
 			end
 
 -- SYSTEM_IN_DYNAMIC_LIB
 			read_next
-			makefile.putstring (makefile_sh.last_string)
-			makefile.putstring (" $(DEF_FILE)")
-			makefile.new_line 
+			makefile.put_string (makefile_sh.last_string)
+			makefile.put_string (" $(DEF_FILE)")
+			makefile.put_new_line 
 
 -- $(RM) "$(SYSTEM_IN_DYNAMIC_LIB)"
 			read_next
-			makefile.putstring ("%T$(FILE_EXIST) $(SYSTEM_IN_DYNAMIC_LIB) ")
-			makefile.putstring (makefile_sh.last_string)
-			makefile.new_line
+			makefile.put_string ("%T$(FILE_EXIST) $(SYSTEM_IN_DYNAMIC_LIB) ")
+			makefile.put_string (makefile_sh.last_string)
+			makefile.put_new_line
 
 -- $(SHAREDLINK) $(DYNLIBSHAREDFLAGS) $(SYSTEM_IN_DYNAMIC_LIB_OBJ) $(SHAREDLIBS)
 			read_next
-			makefile.putstring (makefile_sh.last_string)
-			makefile.new_line
+			makefile.put_string (makefile_sh.last_string)
+			makefile.put_new_line
 	end
 
 feature {NONE}	-- substitutions
@@ -1362,7 +1362,7 @@ feature {NONE}	-- substitutions
 			-- Replace all occurrences of `Eiffel_dir' environment variable in `line'
 		do
 			debug ("subst")
-				io.putstring("%Tsubst_eiffel%N")
+				io.put_string("%Tsubst_eiffel%N")
 			end
 
 			if eiffel_dir /= Void and then not eiffel_dir.is_empty then
@@ -1375,7 +1375,7 @@ feature {NONE}	-- substitutions
 			-- Replace all occurrences of platform environment variable in `line'
 		do
 			debug ("subst")
-				io.putstring("%Tsubst_platform%N")
+				io.put_string("%Tsubst_platform%N")
 			end
 
 			if platform /= Void and then not platform.is_empty then
@@ -1387,7 +1387,7 @@ feature {NONE}	-- substitutions
 			-- Replace all occurrences of compiler environment variable in `line'
 		do
 			debug ("subst")
-				io.putstring("%Tsubst_compiler%N")
+				io.put_string("%Tsubst_compiler%N")
 			end
 
 			if compiler /= Void and then not compiler.is_empty then
@@ -1402,7 +1402,7 @@ feature {NONE}	-- substitutions
 			default_net_lib: STRING
 		do
 			debug ("subst")
-				io.putstring("%Tsubst_library%N")
+				io.put_string("%Tsubst_library%N")
 			end
 
 			if concurrent then
@@ -1432,7 +1432,7 @@ feature {NONE}	-- substitutions
 			dir_sep: STRING
 		do
 			debug ("subst")
-				io.putstring("%Tsubst_dir_sep%N")
+				io.put_string("%Tsubst_dir_sep%N")
 			end
 
 			dir_sep := ""
@@ -1447,7 +1447,7 @@ feature {NONE}	-- substitutions
 			-- replace all occurrences of the line continuation character in `line'
 		do
 			debug ("subst")
-				io.putstring("%Tsubst_continuation%N")
+				io.put_string("%Tsubst_continuation%N")
 			end
 
 			if
@@ -1465,7 +1465,7 @@ feature {NONE}	-- substitutions
 			start: INTEGER
 		do
 			debug ("subst")
-				io.putstring("%Tsubst_intermediate%N")
+				io.put_string("%Tsubst_intermediate%N")
 			end
 
 			check
@@ -1490,7 +1490,7 @@ feature {NONE}	-- substitutions
 			-- replace all occurrences of $precompilelibs with the neccessary precompiled libraries
 		do
 			debug ("subst")
-				io.putstring ("%Tsubst_precomp_libs%N")
+				io.put_string ("%Tsubst_precomp_libs%N")
 			end
 			
 			if uses_precompiled then
@@ -1509,7 +1509,7 @@ feature {NONE}	-- substitutions
 			lib: STRING
 		do
 			debug ("subst")
-				io.putstring ("%Tsubst_precomp_libs_command%N")
+				io.put_string ("%Tsubst_precomp_libs_command%N")
 			end
 
 			libs := precompiled_libs.twin
@@ -1562,7 +1562,7 @@ feature {NONE} -- Implementation
 			word, replacement: STRING		
 		do
 			debug ("implementation")
-				io.putstring("%Tsearch_and_replace%N")
+				io.put_string("%Tsearch_and_replace%N")
 			end
 
 			from
@@ -1600,10 +1600,10 @@ feature {NONE} -- Implementation
 				elseif word.substring(1,18).is_equal("external_makefiles") then
 					-- $EXTERNAL_MAKEFILES must not be replaced.
 				else
-					io.error.putstring ("WARNING: Option '")
-					io.error.putstring (word)
-					io.error.putstring ("' was found in neither CONFIG.EIF nor registry.")
-					io.error.new_line
+					io.error.put_string ("WARNING: Option '")
+					io.error.put_string (word)
+					io.error.put_string ("' was found in neither CONFIG.EIF nor registry.")
+					io.error.put_new_line
 				end
 
 				wordstart := wordstart + 1
@@ -1623,7 +1623,7 @@ feature {NONE} -- Implementation
 			wordend: INTEGER
 		do
 			debug ("implementation")
-				io.putstring("%Tget_word_to_replace%N")
+				io.put_string("%Tget_word_to_replace%N")
 			end
 
 			from
@@ -1650,7 +1650,7 @@ feature {NONE} -- Implementation
 			replacement: STRING
 		do
 			debug ("implementation")
-				io.putstring("%Tget_replacement%N")
+				io.put_string("%Tget_replacement%N")
 			end
 
 			if options.has (word) then			
@@ -1671,7 +1671,7 @@ feature {NONE} -- Implementation
 			-- read the next line from Makefile.SH if possible
 		do
 			debug ("implementation")
-				io.putstring("%Tread_next%N")
+				io.put_string("%Tread_next%N")
 			end
 
 			if not makefile_sh.end_of_file then
@@ -1692,7 +1692,7 @@ feature {NONE} -- Implementation
 			preobj := "precomp.lib"
 
 			debug ("implementation")
-				io.putstring ("%Tget_libs%N")
+				io.put_string ("%Tget_libs%N")
 			end
 			
 			line := line_to_search.twin
@@ -1726,9 +1726,9 @@ feature {NONE} -- Implementation
 
 				debug ("implementation")
 					debug ("input")
-						io.putstring ("IN: ")
-						io.putstring (line)
-						io.new_line
+						io.put_string ("IN: ")
+						io.put_string (line)
+						io.put_new_line
 					end
 				end
 				
@@ -1788,9 +1788,9 @@ feature {NONE} -- Implementation
 			end
 		rescue
 			if not out_file then
-				io.error.putstring ("ERROR: Unable to open Makefile.SH for input%N")
+				io.error.put_string ("ERROR: Unable to open Makefile.SH for input%N")
 			else
-				io.error.putstring ("ERROR: Unable to open Makefile for output%N")
+				io.error.put_string ("ERROR: Unable to open Makefile for output%N")
 			end
 			retried := True
 			retry
@@ -1800,7 +1800,7 @@ feature {NONE} -- Implementation
 			-- close the Makefile.SH and the Makefile
 		do
 			debug ("implementation")
-				io.putstring("%Tclose_files%N")
+				io.put_string("%Tclose_files%N")
 			end
 
 			if makefile_sh /= Void and then not makefile_sh.is_closed then
@@ -1816,7 +1816,7 @@ feature {NONE} -- Implementation
 			-- remove enclosing parenthesis from word.
 		do
 			debug ("implementation")
-				io.putstring("%Tstrip_parenthesis%N")
+				io.put_string("%Tstrip_parenthesis%N")
 			end
 
 			if word.item (1) = '(' then
@@ -1837,7 +1837,7 @@ feature {NONE} -- Implementation
 			-- currently: $ISE_EIFFEL|studio|spec|$ISE_PLATFORM|$ISE_C_COMPILER|config.eif
 		once
 			debug ("implementation")
-				io.putstring("%Tconfig_eif_fn = ")
+				io.put_string("%Tconfig_eif_fn = ")
 			end
 
 			Result := eiffel_dir.twin
@@ -1853,8 +1853,8 @@ feature {NONE} -- Implementation
 			Result.append ("config.eif")
 
 			debug ("implementation")
-				io.putstring(Result)
-				io.new_line
+				io.put_string(Result)
+				io.put_new_line
 			end
 		end
 		

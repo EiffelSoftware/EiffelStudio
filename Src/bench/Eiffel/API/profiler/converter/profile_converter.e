@@ -50,33 +50,33 @@ feature {PROFILE_CONVERTER} -- analyzing
 			from
 				init_analyse
 debug("PROFILE_CONVERT")
-	io.error.putstring ("Done initializing the analyzation.")
-	io.error.new_line
-	io.error.putstring ("String_token: ")
-	io.error.putint (String_token)
-	io.error.new_line
-	io.error.putstring ("Number_token: ")
-	io.error.putint (Number_token)
-	io.error.new_line
-	io.error.putstring ("Real_token: ")
-	io.error.putint (Real_token)
-	io.error.new_line
-	io.error.putstring ("Index_token: ")
-	io.error.putint (Index_token)
-	io.error.new_line
-	io.error.putstring ("Newline_token: ")
-	io.error.putint (Newline_token)
-	io.error.new_line
-	io.error.putstring ("Whitespace_token: ")
-	io.error.putint (Whitespace_token)
-	io.error.new_line
-	io.error.putstring ("Error_token: ")
-	io.error.putint (Error_token)
-	io.error.new_line
-	io.error.putstring ("Profile string is: ")
-	io.error.putstring (profile_string)
-	io.error.new_line
-	io.error.putstring ("Configuration:%N==============%N")
+	io.error.put_string ("Done initializing the analyzation.")
+	io.error.put_new_line
+	io.error.put_string ("String_token: ")
+	io.error.put_integer (String_token)
+	io.error.put_new_line
+	io.error.put_string ("Number_token: ")
+	io.error.put_integer (Number_token)
+	io.error.put_new_line
+	io.error.put_string ("Real_token: ")
+	io.error.put_integer (Real_token)
+	io.error.put_new_line
+	io.error.put_string ("Index_token: ")
+	io.error.put_integer (Index_token)
+	io.error.put_new_line
+	io.error.put_string ("Newline_token: ")
+	io.error.put_integer (Newline_token)
+	io.error.put_new_line
+	io.error.put_string ("Whitespace_token: ")
+	io.error.put_integer (Whitespace_token)
+	io.error.put_new_line
+	io.error.put_string ("Error_token: ")
+	io.error.put_integer (Error_token)
+	io.error.put_new_line
+	io.error.put_string ("Profile string is: ")
+	io.error.put_string (profile_string)
+	io.error.put_new_line
+	io.error.put_string ("Configuration:%N==============%N")
 	config.spit_info
 end
 			until
@@ -84,9 +84,9 @@ end
 			loop
 				retrieve_first_next_token
 debug("PROFILE_CONVERT")
-	io.error.putstring ("Token type of first next token: ")
-	io.error.putint (token_type)
-	io.error.new_line
+	io.error.put_string ("Token type of first next token: ")
+	io.error.put_integer (token_type)
+	io.error.put_new_line
 end
 				if token_type = Error_token then
 					resync_line
@@ -128,13 +128,13 @@ end
 			redo_cyclics
 
 debug("PROFILE_CONVERT")
-	io.error.putstring ("Ready with analysis.%N%N")
-	io.error.putstring ("Cyclics are re-done.")
-	io.error.new_line
-	io.error.putstring ("About to store the information on disk.")
-	io.error.new_line
-	io.error.putstring ("Will use `independent_store'.")
-	io.error.new_line
+	io.error.put_string ("Ready with analysis.%N%N")
+	io.error.put_string ("Cyclics are re-done.")
+	io.error.put_new_line
+	io.error.put_string ("About to store the information on disk.")
+	io.error.put_new_line
+	io.error.put_string ("Will use `independent_store'.")
+	io.error.put_new_line
 end
 
 			create out_file_name.make_from_string (profilename)
@@ -146,17 +146,17 @@ end
 			then	
 				file.open_write
 debug("PROFILE_CONVERT")
-	io.error.putstring ("Calling `spit_info' on `profile_information'.")
-	io.error.new_line
+	io.error.put_string ("Calling `spit_info' on `profile_information'.")
+	io.error.put_new_line
 	profile_information.spit_info
-	io.error.putstring ("Store is called right now ...%N")
+	io.error.put_string ("Store is called right now ...%N")
 end
 				file.independent_store (profile_information)
 debug("PROFILE_CONVERT")
-	io.error.putstring ("`")
-	io.error.putstring (profilename)
-	io.error.putstring ("' successfully stored on disk.")
-	io.error.new_line
+	io.error.put_string ("`")
+	io.error.put_string (profilename)
+	io.error.put_string ("' successfully stored on disk.")
+	io.error.put_new_line
 end
 				file.close
 			else
@@ -284,12 +284,12 @@ end
 					elseif function_name.substring_index (" from ", 1) > 0 then
 						feature_n := function_name.substring (1, function_name.substring_index (" from ", 1) - 1)
 debug("PROFILE_CONVERT")
-	io.error.putstring ("Total token: ")
-	io.error.putstring (function_name)
-	io.error.new_line
-	io.error.putstring ("dtype representation is: ")
-	io.error.putstring (function_name.substring (function_name.substring_index (" from ", 1) + 6, function_name.count))
-	io.error.new_line
+	io.error.put_string ("Total token: ")
+	io.error.put_string (function_name)
+	io.error.put_new_line
+	io.error.put_string ("dtype representation is: ")
+	io.error.put_string (function_name.substring (function_name.substring_index (" from ", 1) + 6, function_name.count))
+	io.error.put_new_line
 end
 						dtype := function_name.substring (function_name.substring_index
 							(" from ", 1) + 6, function_name.count).to_integer + 1
@@ -305,26 +305,26 @@ end
 							class_n := dtype.out
 						end
 debug("PROFILE_CONVERT")
-	io.error.putstring ("Dynamic type id: ")
-	io.error.putint (dtype)
-	io.error.new_line
-	io.error.putstring ("Dynamic type id is ")
+	io.error.put_string ("Dynamic type id: ")
+	io.error.put_integer (dtype)
+	io.error.put_new_line
+	io.error.put_string ("Dynamic type id is ")
 	if not Eiffel_system.valid_dynamic_id (dtype) then
-		io.error.putstring ("not")
+		io.error.put_string ("not")
 	end
-	io.error.putstring (" valid.")
-	io.error.new_line
-	io.error.putstring ("The class name of dtype is: ")
-	io.error.putstring (class_n)
-	io.error.new_line
+	io.error.put_string (" valid.")
+	io.error.put_new_line
+	io.error.put_string ("The class name of dtype is: ")
+	io.error.put_string (class_n)
+	io.error.put_new_line
 
-	io.error.putstring ("Cluster name: ")
+	io.error.put_string ("Cluster name: ")
 	if a_cluster = Void then
-		io.error.putstring ("<unknown_cluster>")
+		io.error.put_string ("<unknown_cluster>")
 	else
-		io.error.putstring (a_cluster.cluster_name)
+		io.error.put_string (a_cluster.cluster_name)
 	end
-	io.error.new_line
+	io.error.put_new_line
 end
 						create e_function.make (Void, class_n, feature_n)
 						if eclass /= Void then
@@ -485,7 +485,7 @@ end
 
 	retrieve_first_next_token is
 			-- Checks whether the next characters can be grouped into
-			-- one of the predefined tokens (string, number, real, index, new_line).
+			-- one of the predefined tokens (string, number, real, index,.put_new_line).
 			-- If so 'token_type' is respectively String_token, Number_token, Real_token, Index_token, Newline_token.
 			-- If not 'token_type' is Error_token.
 		local
@@ -512,9 +512,9 @@ end
 					-- Eiffel generates ` from ABC' as well...
 
 debug("PROFILE_CONVERT")
-	io.error.putstring ("Substring (string_idx, string_idx + 4) is: ")
-	io.error.putstring (profile_string.substring (string_idx, string_idx + 4))
-	io.error.new_line
+	io.error.put_string ("Substring (string_idx, string_idx + 4) is: ")
+	io.error.put_string (profile_string.substring (string_idx, string_idx + 4))
+	io.error.put_new_line
 end
 
 				if profile_string.substring (string_idx, string_idx + 4).is_equal (" from") then
@@ -522,11 +522,11 @@ end
 					string_idx := string_idx + 6
 
 debug("PROFILE_CONVERT")
-	io.error.putstring ("Detecting Eiffel feature name...")
-	io.error.new_line
-	io.error.putstring ("Character at string_idx is ")
-	io.error.putchar (profile_string @ string_idx)
-	io.error.new_line
+	io.error.put_string ("Detecting Eiffel feature name...")
+	io.error.put_new_line
+	io.error.put_string ("Character at string_idx is ")
+	io.error.put_character (profile_string @ string_idx)
+	io.error.put_new_line
 end
 
 						-- Reading class name...
@@ -727,7 +727,7 @@ feature {NONE} -- Commands
 		do
 			from
 				create functions.make (20)
-				io.putstring ("Creating function table. Please wait...%N")
+				io.put_string ("Creating function table. Please wait...%N")
 			until
 				translat_string.count = 0
 			loop

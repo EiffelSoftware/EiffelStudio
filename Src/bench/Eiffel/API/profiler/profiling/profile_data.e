@@ -97,8 +97,8 @@ feature {PROFILE_SET} -- Spit Information (for debugging)
 	spit_info is
 		-- Spits all kinds of information about Current.
 		do
-			io.error.putstring (out);
-			io.error.new_line
+			io.error.put_string (out);
+			io.error.put_new_line
 		end
 
 end -- class PROFILE_DATA

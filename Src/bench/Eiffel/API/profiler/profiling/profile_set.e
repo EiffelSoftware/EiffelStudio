@@ -121,8 +121,8 @@ feature {PROFILE_FILTER} -- Adding
 			cd: C_PROFILE_DATA;
 		do
 debug("PROFILE_CONVERT")
-	io.error.putstring ("`insert_unknown_profile_data' has been called.");
-	io.error.new_line
+	io.error.put_string ("`insert_unknown_profile_data' has been called.");
+	io.error.put_new_line
 end;
 			ed ?= data;
 			if ed /= Void then
@@ -145,8 +145,8 @@ feature {PROFILE_INFORMATION, PROFILE_FILTER} -- Adding
 	insert_eiffel_profiling_data (data: EIFFEL_PROFILE_DATA) is
 		do
 debug("PROFILE_CONVERT")
-	io.error.putstring ("`insert_eiffel_profile_data' has been called.");
-	io.error.new_line
+	io.error.put_string ("`insert_eiffel_profile_data' has been called.");
+	io.error.put_new_line
 end;
 			eiffel_profiling_list.extend (data);
 			update_eiffel (data);
@@ -155,8 +155,8 @@ end;
 	insert_c_profiling_data (data: C_PROFILE_DATA) is
 		do
 debug("PROFILE_CONVERT")
-	io.error.putstring ("`insert_c_profile_data' has been called.");
-	io.error.new_line
+	io.error.put_string ("`insert_c_profile_data' has been called.");
+	io.error.put_new_line
 end;
 			c_profiling_list.extend (data);
 			update_c (data);
@@ -165,8 +165,8 @@ end;
 	insert_cycle_profiling_data (data: CYCLE_PROFILE_DATA) is
 		do
 debug("PROFILE_CONVERT")
-	io.error.putstring ("`insert_cycle_profile_data' has been called.");
-	io.error.new_line
+	io.error.put_string ("`insert_cycle_profile_data' has been called.");
+	io.error.put_new_line
 end;
 			cycle_profiling_list.extend (data);
 			update_cycle (data);
@@ -566,7 +566,7 @@ feature {PROFILE_INFORMATION} -- Spit Information (for debugging)
 			--| See also `spit_info' in `PROFILE_INFORMATION'.
 		do
 			from
-				io.error.putstring ("Contents of `eiffel_profiling_list':%N");
+				io.error.put_string ("Contents of `eiffel_profiling_list':%N");
 				eiffel_profiling_list.start
 			until
 				eiffel_profiling_list.after
@@ -575,7 +575,7 @@ feature {PROFILE_INFORMATION} -- Spit Information (for debugging)
 				eiffel_profiling_list.forth
 			end;
 			from
-				io.error.putstring ("Contents of `c_profiling_list':%N");
+				io.error.put_string ("Contents of `c_profiling_list':%N");
 				c_profiling_list.start
 			until
 				c_profiling_list.after
@@ -584,7 +584,7 @@ feature {PROFILE_INFORMATION} -- Spit Information (for debugging)
 				c_profiling_list.forth
 			end;
 			from
-				io.error.putstring ("Contents of `cycle_profiling_list':%N");
+				io.error.put_string ("Contents of `cycle_profiling_list':%N");
 				cycle_profiling_list.start
 			until
 				cycle_profiling_list.after

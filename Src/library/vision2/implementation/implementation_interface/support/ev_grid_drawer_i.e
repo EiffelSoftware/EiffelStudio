@@ -368,71 +368,76 @@ feature -- Basic operations
 								current_row_height := current_row.height
 							end
 						end
-
-						parent_row_i := current_row.parent_row_i
 						
-						drawing_subrow := parent_row_i /= Void
-							-- Are we drawing a subrow of the tree?
-							
-						drawing_parentrow := current_row.subrow_count > 0
-							-- Are we drawing a row that is a parent of other rows?
+						if grid.is_tree_enabled then
+							-- Only perform the following calculations if the tree is enabled
+							-- as otherwise, they are not required.
 						
-						if drawing_subrow or drawing_parentrow then
-							-- We are now about to draw a row that is a subrow of another row, so
-							-- perform any calculations required.
-							from
-								counter := 0
-								node_index := 0
-							until
-								node_index > 0
-							loop
-								if current_row_list @ counter /= Void then
-									node_index := counter + 1
-								end
-								counter := counter + 1
-							end
-							if drawing_subrow then
-								parent_row_list := grid.row_list @ (current_row.parent_row_i.index - 1)
+							parent_row_i := current_row.parent_row_i
+						
+							drawing_subrow := parent_row_i /= Void
+								-- Are we drawing a subrow of the tree?
 								
+							drawing_parentrow := current_row.subrow_count > 0
+								-- Are we drawing a row that is a parent of other rows?
+							
+							if drawing_subrow or drawing_parentrow then
+								-- We are now about to draw a row that is a subrow of another row, so
+								-- perform any calculations required.
 								from
 									counter := 0
-									parent_node_index := 0
+									node_index := 0
 								until
-									parent_node_index > 0
+									node_index > 0
 								loop
-									if parent_row_list @ counter /= Void then
-										parent_node_index := counter + 1
+									if current_row_list @ counter /= Void then
+										node_index := counter + 1
 									end
 									counter := counter + 1
 								end
-								
+								if drawing_subrow then
+									parent_row_list := grid.row_list @ (current_row.parent_row_i.index - 1)
 									
-									-- Now calculate information regarding the parent of the current subrow
-									-- which is required for the drawing. We must know where the parent is positioned
-									-- in order to connect the lines correctly.
-								parent_subrow_indent := subrow_indent * (current_row.parent_row_i.indent_depth_in_tree - 1) + first_tree_node_indent - (tree_node_spacing * 2) - ((node_pixmap_width + 1) // 2)
-								parent_x_indent_position := (column_offsets @ (parent_node_index)) - (internal_client_x - horizontal_buffer_offset)
-								parent_x_indent_position := parent_x_indent_position + parent_subrow_indent
+									from
+										counter := 0
+										parent_node_index := 0
+									until
+										parent_node_index > 0
+									loop
+										if parent_row_list @ counter /= Void then
+											parent_node_index := counter + 1
+										end
+										counter := counter + 1
+									end
+									
+										
+										-- Now calculate information regarding the parent of the current subrow
+										-- which is required for the drawing. We must know where the parent is positioned
+										-- in order to connect the lines correctly.
+									parent_subrow_indent := subrow_indent * (current_row.parent_row_i.indent_depth_in_tree - 1) + first_tree_node_indent - (tree_node_spacing * 2) - ((node_pixmap_width + 1) // 2)
+									parent_x_indent_position := (column_offsets @ (parent_node_index)) - (internal_client_x - horizontal_buffer_offset)
+									parent_x_indent_position := parent_x_indent_position + parent_subrow_indent
+								end
+							else
+								node_index := 1
 							end
-						else
-							node_index := 1
-						end
-						
-							-- Now compute variables required for drawing tree structures.
-							-- Note that here we only compute the vertical variables because as each row
-							-- has a fixed height, they can be computed outside of the inner row iteration.
-							-- The horizontal offsets must be computed within the inner loop.
-						row_vertical_center := current_item_y_position + (current_row_height // 2)
-						row_vertical_bottom := current_item_y_position + current_row_height
-						vertical_node_pixmap_top_offset := current_item_y_position + ((current_row_height - node_pixmap_height + 1)// 2)
-						vertical_node_pixmap_bottom_offset := vertical_node_pixmap_top_offset + node_pixmap_height
-						
-						if drawing_parentrow or (drawing_subrow and current_row.subrow_count > 0) then
-							current_subrow_indent := subrow_indent * (current_row.indent_depth_in_tree - 1) + first_tree_node_indent
-						elseif (drawing_subrow and current_row.subrow_count =0) then
-							current_subrow_indent := subrow_indent * (current_row.indent_depth_in_tree - 2) + first_tree_node_indent
-						else
-							current_subrow_indent := 0
+							
+								-- Now compute variables required for drawing tree structures.
+								-- Note that here we only compute the vertical variables because as each row
+								-- has a fixed height, they can be computed outside of the inner row iteration.
+								-- The horizontal offsets must be computed within the inner loop.
+							row_vertical_center := current_item_y_position + (current_row_height // 2)
+							row_vertical_bottom := current_item_y_position + current_row_height
+							vertical_node_pixmap_top_offset := current_item_y_position + ((current_row_height - node_pixmap_height + 1)// 2)
+							vertical_node_pixmap_bottom_offset := vertical_node_pixmap_top_offset + node_pixmap_height
+							
+							if drawing_parentrow or (drawing_subrow and current_row.subrow_count > 0) then
+								current_subrow_indent := subrow_indent * (current_row.indent_depth_in_tree - 1) + first_tree_node_indent
+							elseif (drawing_subrow and current_row.subrow_count =0) then
+								current_subrow_indent := subrow_indent * (current_row.indent_depth_in_tree - 2) + first_tree_node_indent
+							else
+								current_subrow_indent := 0
+							end
 						end
 						
 						from

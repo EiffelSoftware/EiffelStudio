@@ -199,7 +199,6 @@ feature {NONE} -- Implementation
 			-- parse user entered selection and processes it
 		require
 			non_void_selection: a_selection /= Void
-			non_empty_selection: not a_selection.is_empty
 		local
 			l_option: STRING
 			l_args_list: ARRAYED_LIST [STRING]

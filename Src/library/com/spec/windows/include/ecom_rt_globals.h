@@ -16,20 +16,14 @@
 #include "ecom_runtime_c_e.h"
 #include "ecom_runtime_e_c.h"
 
-extern 
 #ifdef __cplusplus
-"C"
-#endif
-Formatter  f;
-extern
-#ifdef __cplusplus
-"C"
-#endif
-ecom_runtime_ce rt_ce;
-extern 
-#ifdef __cplusplus
-"C"
-#endif
-ecom_runtime_ec rt_ec;
+
+extern "C" Formatter  f;
+
+extern "C" ecom_runtime_ce rt_ce;
+
+extern "C" ecom_runtime_ec rt_ec;
+
+#endif // __cplusplus
 
 #endif // !__ECOM_RUNTIME_GLOBALS_H_INC__

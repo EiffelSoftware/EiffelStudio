@@ -16,8 +16,6 @@
 
 #include "eif_eiffel.h"
 #ifdef __cplusplus
-extern "C" {
-#endif
 
 class Formatter
 {
@@ -30,9 +28,7 @@ public:
 
 };
 
-#ifdef __cplusplus
-}
-#endif
+#endif	// __cplusplus
 
 #endif // !__ECOM_EXCEPTION_H_INC__
 

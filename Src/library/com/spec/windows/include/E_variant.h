@@ -19,8 +19,6 @@
 #include "ecom_rt_globals.h"
 
 #ifdef __cplusplus
-extern "C" {
-#endif
 
 class ecom_variant
 {
@@ -243,8 +241,7 @@ class ecom_variant
 		VARIANT * variant;
 };
 
-#ifdef __cplusplus
-}
+
 #endif
 
 #endif // !__ECOM_E_VARIANT_H_INC__

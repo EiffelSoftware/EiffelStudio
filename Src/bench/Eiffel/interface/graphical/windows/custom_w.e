@@ -9,7 +9,6 @@ class CUSTOM_W
 
 inherit
 
-	INTERFACE_W;
 	COMMAND;
 	WINDOW_ATTRIBUTES;
 	FORM_D
@@ -39,37 +38,43 @@ feature -- Status setting
 
 feature {NONE} -- Interface initialization
 
-	buttons: ROW_COLUMN;
+	buttons: FORM;
 			-- Buttons specifying the choice
 
 	create_interface (a_parent: COMPOSITE) is
-			-- Create interface with save, cancel and apply button
+			-- Create interface with ok, cancel and apply button
 			-- at bottom with `a_parent'
 		local
-			save_b, apply_b, cancel_b: PUSH_B
+			ok_b, apply_b, cancel_b: PUSH_B
 		do
 			form_d_make ("", a_parent);
 			set_exclusive_grab;
 			!! buttons.make ("", Current);
-			buttons.set_row_layout;
-			buttons.set_preferred_count (1);
-			buttons.set_same_size;
-			detach_top (buttons);	
-			attach_left (buttons, 0);
-			attach_right (buttons, 0);
-			attach_bottom (buttons, 0);
-			!! save_b.make (Interface_names.b_Save, buttons);
-			!! cancel_b.make (Interface_names.b_Cancel, buttons);
+			!! ok_b.make (Interface_names.b_Ok, buttons);
 			!! apply_b.make (Interface_names.b_Apply, buttons);
-			save_b.set_center_alignment;
-			cancel_b.set_center_alignment;
-			apply_b.set_center_alignment;
-			save_b.add_activate_action (Current, save_action);
+			!! cancel_b.make (Interface_names.b_Cancel, buttons);
+			buttons.set_fraction_base (3);
+			attach_left (buttons, 5);
+			attach_right (buttons, 5);
+			attach_bottom (buttons, 5);
+			buttons.attach_top (ok_b, 0);
+			buttons.attach_top (apply_b, 0);
+			buttons.attach_top (cancel_b, 0);
+			buttons.attach_bottom (ok_b, 0);
+			buttons.attach_bottom (apply_b, 0);
+			buttons.attach_bottom (cancel_b, 0);
+			buttons.attach_left (ok_b, 0);
+			buttons.attach_right_position (ok_b, 1);
+			buttons.attach_left_position (apply_b, 1);
+			buttons.attach_right_position (apply_b, 2);
+			buttons.attach_left_position (cancel_b, 2);
+			buttons.attach_right (cancel_b, 0);
+			ok_b.add_activate_action (Current, ok_action);
 			cancel_b.add_activate_action (Current, Void);
 			apply_b.add_activate_action (Current, apply_action);
 		end;
 
-	save_action, apply_action: ANY is
+	ok_action, apply_action: ANY is
 			-- Action constants
 		once
 			!! Result;
@@ -80,10 +85,10 @@ feature -- Execution
 	execute (arg: ANY) is
 			-- Execute the action of the buttons
 		do
-			if arg = save_action then
+			if arg = ok_action then
 				unrealize;
 				popdown;
-				caller.execute_save_action (Current)
+				caller.execute_ok_action (Current)
 			elseif arg = apply_action then
 				caller.execute_apply_action (Current)
 			else

@@ -380,10 +380,10 @@ feature {EV_ANY_IMP} -- Externals
 		end
 
 	frozen c_signal_connect (a_c_object: POINTER; a_signal_name: POINTER;
-		an_agent: PROCEDURE [ANY, TUPLE]): INTEGER is
+		an_agent: PROCEDURE [ANY, TUPLE]; invoke_after_handler: BOOLEAN): INTEGER is
 			-- Connect `an_agent' to 'a_signal_name' on `a_c_object'.
 		external
-			"C (GtkObject*, gchar*, EIF_OBJECT): guint | %"ev_gtk_callback_marshal.h%""
+			"C (GtkObject*, gchar*, EIF_OBJECT, gboolean): guint | %"ev_gtk_callback_marshal.h%""
 		alias
 			"c_ev_gtk_callback_marshal_signal_connect"
 		end

@@ -19,6 +19,7 @@ feature {NONE} -- Initialization
 	make is
 		do
 			!EV_APPLICATION_IMP!implementation.make (Current)
+			implementation.iterate
 		end
 	
 feature	

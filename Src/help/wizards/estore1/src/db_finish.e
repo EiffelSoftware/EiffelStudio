@@ -75,6 +75,7 @@ feature -- basic Operations
 				generate_class(li.item.table_name)
 				li.forth
 			end
+			generate_ace_file
 			if state_information.generate_facade then
 				generate_basic_facade
 			end
@@ -205,6 +206,47 @@ feature -- Processing
 			Create fi.make_open_write(f_name)
 			fi.put_string(s)
 			fi.close
+		end
+
+	copy_ace(name: STRING; path_root_class: STRING) is
+			-- Copy Class whose name is 'name'.
+		require
+			name /= Void
+		local
+			f1,f_name: FILE_NAME
+			fi: PLAIN_TEXT_FILE
+			new_s,s: STRING
+		do
+			Create f1.make_from_string(wizard_resources_path)
+			f_name := clone(f1)
+			f_name.extend(name)
+			f_name.add_extension("Ace")
+			Create fi.make_open_read(f_name)
+			fi.read_stream(fi.count)
+			s := fi.last_string
+			new_s := clone (s)
+			new_s.replace_substring_all("<FL_PATH>", path_root_class)
+			fi.close
+			Create f_name.make_from_string(state_information.location)
+			f_name.extend(name)
+			f_name.add_extension("Ace")
+			Create fi.make_open_write(f_name)
+			fi.put_string(new_s)
+			fi.close
+		end
+
+	generate_ace_file is
+			-- Generate the selected Ace File
+		local
+			f_name: FILE_NAME
+			fi: PLAIN_TEXT_FILE
+		do
+			notify_user("Generating Ace File...")
+			if state_information.is_oracle then
+				copy_ace("Ace_mswin_oracle", state_information.location)
+			else
+				copy_ace("Ace_mswin_odbc", state_information.location)
+			end
 		end
 
 	generate_example is

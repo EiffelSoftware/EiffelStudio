@@ -55,7 +55,7 @@ feature -- Initialization
 			end
 			if f2 then
 				generate_simple_select(qu2)
-				a_repository_name ?= qu1.item(1)
+				a_repository_name ?= qu2.item(1)
 			end
 			Result_string.append("%Nend -- Class ESTORE_EXAMPLE")
 		end

@@ -1,6 +1,5 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "Eiffel Vision status bar item."
+	description: "Eiffel Vision status bar item. Implementation interface."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,32 +30,20 @@ feature -- Access
 feature -- Measurement
 
 	width: INTEGER is
-			-- The width of the item in the status bar.
-		require
+			-- Horizontal size in pixels.
 		deferred
 		end
 
 feature -- Status setting
 
 	set_width (value: INTEGER) is
-			-- Make `value' the new width of the item.
-			-- If -1, then the item reach the right of the status
-			-- bar.
+			-- Assign `a_width' to `width'.
 		require
-			has_parent: parent_imp /= Void
-			valid_value: value >= 0 or value = -1
+			a_width_non_negative: a_width >= 0
 		deferred
 		ensure
-			width_set: (width = value) or (value = -1)
+			width_assigned: a_width = width
 		end
-
-feature -- Element change
-
---	set_parent (par: EV_STATUS_BAR) is
---			-- Make `par' the new parent of the widget.
---			-- `par' can be Void then the parent is the screen.
---		deferred
---		end
 
 feature {EV_ANY_I} -- Implementation
 
@@ -85,6 +72,9 @@ end -- class EV_STATUS_BAR_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/04/26 21:21:36  brendel
+--| Revised
+--|
 --| Revision 1.13  2000/04/07 22:10:00  brendel
 --| EV_SIMPLE_ITEM_I -> EV_ITEM_I & EV_TEXTABLE_I.
 --|

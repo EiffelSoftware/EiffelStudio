@@ -280,6 +280,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW} -- Implementation
 			-- A column was tapped.
 		do
 			execute_command (Cmd_column_click, Void)
+			disable_default_processing
 		end
 
 	on_lvn_itemchanged (info: WEL_NM_LIST_VIEW) is
@@ -287,17 +288,19 @@ feature {EV_MULTI_COLUMN_LIST_ROW} -- Implementation
 		local
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-			if flag_set(info.unewstate, Lvis_selected) and
-					not flag_set(info.uoldstate, Lvis_selected) then
-				item_imp ?= (ev_children @ (info.iitem + 1)).implementation
-				item_imp.execute_command (Cmd_item_activate, Void)
-				execute_command (Cmd_selection, Void)
-			elseif flag_set(info.uoldstate, Lvis_selected) and
-					not flag_set(info.unewstate, Lvis_selected) then
-				item_imp ?= (ev_children @ (info.iitem + 1)).implementation
-				item_imp.execute_command (Cmd_item_deactivate, Void)
-				execute_command (Cmd_selection, Void)
+			if info.uchanged = Lvif_state and info.isubitem = 0 then
+				if flag_set(info.unewstate, Lvis_selected) and
+						not flag_set(info.uoldstate, Lvis_selected) then
+					item_imp ?= (ev_children @ (info.iitem + 1)).implementation
+					item_imp.execute_command (Cmd_item_activate, Void)
+					execute_command (Cmd_selection, Void)
+				elseif flag_set(info.uoldstate, Lvis_selected) and
+						not flag_set(info.unewstate, Lvis_selected) then
+					item_imp ?= (ev_children @ (info.iitem + 1)).implementation
+					item_imp.execute_command (Cmd_item_deactivate, Void)
+				end
 			end
+			disable_default_processing
 		end
 
 end -- class EV_MULTI_COLUMN_LIST_IMP

@@ -66,8 +66,7 @@ feature -- Bridge to Debugger
 		do
 		end
 		
-	exception_details: TUPLE [STRING, STRING] is
-			-- class details , module details
+	exception_module_name: STRING is
 		do
 		end
 

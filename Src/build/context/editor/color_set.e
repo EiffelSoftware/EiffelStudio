@@ -56,8 +56,6 @@ feature {NONE}
 				! DEFAULT_VALUE ! eb_color.make (Current, ed)
 				column_array.put (eb_color, j)
 				j := j + 1
--- 				attach_top (eb_color, 2)
--- 				attach_left (eb_color, 2)
 				from
 					file.open_read
 					file.readline
@@ -132,5 +130,6 @@ feature {NONE}
 				io.error.new_line
 			end
 		end
-end
+
+end -- class COLOR_STONE
 

@@ -44,17 +44,20 @@ feature -- Case storage
 			tmp: STRING;
 		do
 			!! txt.make (0);
-			from
-				index_list.start
-			until
-				index_list.after
-			loop
-				txt.append (index_list.item.string_value);
-				index_list.forth;
-				if not index_list.after then
-					txt.append (", ");
+			if index_list /= Void then
+				from
+					index_list.start
+				until
+					index_list.after
+				loop
+					txt.append (index_list.item.string_value);
+					index_list.forth;
+					if not index_list.after then
+						txt.append (", ");
+					end;
 				end;
-			end;
+			end
+
 			if tag = Void then
 				!! Result.make (Void, txt)
 			else

@@ -74,7 +74,6 @@ feature -- Basic operation
 		local
 			dialog: EV_CONFIRMATION_DIALOG
 			found: BOOLEAN
-			item_to_delete: EV_LIST_ITEM
 		do
 			create dialog.make_with_text (Delete_component_warning)
 			dialog.show_modal_to_window (system_status.main_window)

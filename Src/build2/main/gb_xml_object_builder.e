@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 						else
 							gb_ev_any.add_object (display_object.child)
 						end
-						
+
 							-- Call `modify_from_xml' which should modify the objects.
 						gb_ev_any.modify_from_xml (current_element)
 						end

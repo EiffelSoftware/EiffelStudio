@@ -477,7 +477,28 @@ feature -- Basic operation
 			object_removed_from_deleted: objects.has (an_object)
 		end
 		
-		
+	recursive_do_all (an_object: GB_OBJECT; action: PROCEDURE [ANY, TUPLE [GB_OBJECT]]) is
+			-- For `an_object' and all objects parented at any level in
+			-- `an_object', call `action' with the current object as
+			-- the argument.
+			-- Semantics not guaranteed if `action' changes the structure
+		local
+			t: TUPLE [GB_OBJECT]
+			layout: GB_LAYOUT_CONSTRUCTOR_ITEM
+		do
+			layout := an_object.layout_item
+			from
+				layout.start
+			until
+				layout.off
+			loop
+				recursive_do_all (layout.object, action)
+				t.put (layout.object, 1)
+				action.call (t)
+				layout.forth
+			end
+		end
+
 feature {GB_XML_OBJECT_BUILDER} -- Basic operations
 
 	build_object (new_object: GB_OBJECT) is

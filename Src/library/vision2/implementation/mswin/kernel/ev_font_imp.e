@@ -13,6 +13,16 @@ inherit
 
 	EV_FONT_CONSTANTS
 
+	WEL_FONT_FAMILY_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_FONT_PITCH_CONSTANTS
+		export
+			{NONE} all
+		end
+
 	WEL_CAPABILITIES_CONSTANTS
 		rename
 			vertical_resolution as sceeen_vertical_resolution,
@@ -36,15 +46,19 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 
 	make (an_interface: like interface) is
 			-- Create a font.
+		local
+			t: INTEGER
 		do
 			base_make (an_interface)
-			wel_log_font.set_width (0)
 			create wel_font.make_indirect (wel_log_font)
-			set_family (Ev_font_family_sans)
-			set_weight (Ev_font_weight_regular)
-			set_shape (Ev_font_shape_regular)
-			set_height (15)
+
+				-- Retrieve shape, weight and family from
+				-- the default font returned by Windows.
+			shape := convert_font_shape(wel_log_font.italic)
+			weight := convert_font_weight(wel_log_font.weight)
+			family := Ev_font_family_screen
 		end
+
 
 	initialize is
 		do
@@ -54,10 +68,14 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 	wel_log_font: WEL_LOG_FONT is
 			-- Structure used to specify font characteristics.
 		local
-			system_font: WEL_FONT
+			gui_font: WEL_FONT
 		once
-			create {WEL_SYSTEM_FONT} system_font.make
-			create Result.make_by_font (system_font)
+			create {WEL_DEFAULT_GUI_FONT} gui_font.make
+			create Result.make_by_font (gui_font)
+				
+				-- retrieve the family associated to Screen fonts.
+			wel_screen_font_family := Result.family
+			wel_screen_font_pitch := Result.pitch
 		end
 
 feature -- Access
@@ -73,12 +91,16 @@ feature -- Access
 
 	height: INTEGER is
 			-- Preferred font height measured in screen pixels.
+			-- NOTE: this function may return 0, which means that
+			--       the font has been created without any particular
+			--       height restriction - Windows use the best value
+			--       and we can't know what height it is. Too bad !
 		do
 				-- retrieve current values
 			wel_log_font.update_by_font(wel_font)
 
 				-- return value
-			Result := wel_log_font.height
+			Result := wel_log_font.height.abs
 		end
 
 	preferred_face: STRING
@@ -116,7 +138,7 @@ feature -- Element change
 			when Ev_font_weight_bold then
 				wel_log_font.set_weight (700)
 			when Ev_font_weight_black then
-				wel_log_font.set_weight (1000)
+				wel_log_font.set_weight (900)
 			else
 				check impossible: False end
 			end
@@ -299,10 +321,10 @@ feature {EV_FONTABLE_IMP} -- Access
 		do
 			wel_font := wf
 			wel_log_font.update_by_font (wel_font)
-			family := 0
-			weight := 0
-			shape := 0
-			preferred_face := Void
+			shape := convert_font_shape(wel_log_font.italic)
+			weight := convert_font_weight(wel_log_font.weight)
+			family := convert_font_family(wel_log_font.family, wel_log_font.pitch)
+			preferred_face := clone(wel_log_font.face_name)
 		end
 
 feature {NONE} -- Implementation
@@ -322,8 +344,8 @@ feature {NONE} -- Implementation
 			when Ev_font_family_screen then
 					--| FIXME ARNAUD: Retrieve user
 					--| preferences from Windows Registry.
-				wel_log_font.set_swiss_family
-				wel_log_font.set_variable_pitch
+				wel_log_font.set_family(wel_screen_font_family)
+				wel_log_font.set_pitch(wel_screen_font_pitch)
 
 			when Ev_font_family_roman then
 				wel_log_font.set_roman_family
@@ -427,6 +449,66 @@ feature {NONE} -- Implementation
 			sdc.release
 		ensure
 			result_exists: Result /= Void
+		end
+
+	wel_screen_font_family: INTEGER
+			-- Windows Family (Ff_roman, Ff_swiss, ...) associated
+			-- to Ev_font_family_screen.
+
+	wel_screen_font_pitch: INTEGER
+			-- Windows Pitch (Ff_roman, Ff_swiss, ...) associated
+			-- to Ev_font_family_screen.
+
+
+	convert_font_family(wel_family: INTEGER; wel_pitch: INTEGER): INTEGER is
+			-- Convert a Windows Font Family into a Vision2 Font Family.
+		do
+			if wel_family = wel_screen_font_family then
+				Result := Ev_font_family_screen
+			elseif wel_family = Ff_roman then
+				Result := Ev_font_family_roman
+			elseif wel_family = Ff_swiss then
+				Result := Ev_font_family_sans
+			elseif wel_family = Ff_modern then
+				if wel_pitch = Variable_pitch then
+					Result := Ev_font_family_modern
+				else
+					Result := Ev_font_family_typewriter
+				end
+			else
+					-- none of the above match, so we take
+					-- an arbitrary family
+				Result := Ev_font_family_sans
+			end
+		end
+
+	convert_font_weight(wel_weight: INTEGER): INTEGER is
+			-- Convert `wel_weight' (weight of a WEL_FONT) into
+			-- a vision2 weight constant.
+		do
+			inspect wel_weight
+			when 1..249 then
+				Result := Ev_font_weight_thin
+			when 250..549 then
+				Result := Ev_font_weight_regular
+			when 550..799 then
+				Result := Ev_font_weight_bold
+			when 800..1000 then
+				Result := Ev_font_weight_black
+			else
+				check impossible: False end
+			end
+		end
+
+	convert_font_shape(wel_italic: BOOLEAN): INTEGER is
+			-- Convert `wel_italic' (italic of a WEL_LOG_FONT) into
+			-- a vision2 shape constant.
+		do
+			if wel_italic then
+				Result := Ev_font_shape_italic
+			else
+				Result := Ev_font_shape_regular
+			end
 		end
 
 feature {NONE} -- Not used
@@ -582,6 +664,11 @@ end -- class EV_FONT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/02/22 21:22:32  pichery
+--| The default creation of EV_FONT under Windows now creates the
+--| WEL_DEFAULT_GUI_FONT and set family, weight and shape according to
+--| the retrieved font.
+--|
 --| Revision 1.21  2000/02/22 19:51:50  rogers
 --| set_height in make now takes 15 as the argument for the font height as height is now measured in pixels rather than the previous implementation, using points.
 --|

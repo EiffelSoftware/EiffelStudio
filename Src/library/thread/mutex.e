@@ -11,20 +11,27 @@ class
 
 inherit
 	OBJECT_OWNER
+		redefine
+			default_create
+		end
+
 	MEMORY
-		redefine dispose end
+		redefine
+			dispose,
+			default_create
+		end
 
 creation
-	make
+	default_create
 
 feature -- Initialization
 
-	make is
+	default_create is
 			-- Create mutex.
 		do
 			record_owner
 			mutex_pointer := eif_thr_mutex_create
-		ensure
+		ensure then
 			valid_mutex: mutex_pointer /= default_pointer
 		end
 

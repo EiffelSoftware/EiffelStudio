@@ -9,19 +9,11 @@ indexing
 class
 	PROXY [G]
 
-inherit
-	MEMORY
-		redefine
-			dispose
-		end
-
-	OBJECT_CONTROL
-
-	OBJECT_OWNER
+obsolete
+	"Not needed anymore since object does not need protection"
 
 creation
 	make, put
-
 
 feature {NONE} -- Initialization
 
@@ -30,72 +22,18 @@ feature {NONE} -- Initialization
 		require
 			not_void: obj /= Void
 		do
-			record_owner
-			proxy_pointer := set_proxy (freeze (obj))
-		ensure
-			attached: is_set
+			item := obj
 		end
 
 feature	-- Access
 
-	item: G is
+	item: G
 			-- Object attached to proxy.
-		require
-			attached: is_set
-		do
-			Result := access_proxy (proxy_pointer)
-		ensure
-			accessed_it: Result /= Void
-		end
 
-	is_set: BOOLEAN is
-			-- Is the proxy attached to an object?
-		do
-			Result := proxy_pointer /= default_pointer
-		end
-
-feature {NONE} -- Implementation
-
-	proxy_pointer: POINTER
-			-- Pointer to attached object.
-
-
-feature -- Removal
+feature {NONE} -- Disposal
 
 	dispose is
-			-- Detach object from proxy.
 		do
-			if thread_is_owner and is_set then
-				dispose_proxy (proxy_pointer)
-				proxy_pointer := default_pointer
-			end
-		end
-
-
-feature {NONE} -- Externals
-
-	set_proxy (obj: POINTER): POINTER is
-			-- Attach `obj' to proxy.
-		external
-			"C (EIF_REFERENCE): EIF_OBJECT | %"eif_threads.h%""
-		alias
-			"eif_thr_proxy_set"
-		end
-
-	access_proxy (p: POINTER): G is
-			-- Retrieve attached object.
-		external
-			"C (EIF_OBJECT): EIF_REFERENCE | %"eif_threads.h%""
-		alias
-			"eif_thr_proxy_access"
-		end
-
-	dispose_proxy (p: POINTER) is
-			-- Release attached  object.
-		external
-			"C | %"eif_threads.h%""
-		alias
-			"eif_thr_proxy_dispose"
 		end
 
 end -- class PROXY

@@ -65,13 +65,17 @@ feature -- Drawing area
 
 	clear is
 		do
-			--initial_state_circle.data.reset_namer;
+			if initial_state_circle /= Void then
+				initial_state_circle.data.reset_namer;
+				initial_state_circle := Void
+			end;
 			figures.wipe_out;
 			lines.wipe_out;
 			Shared_app_graph.clear_all;
+			set_selected (Void);
 			if implementation /= Void then
 				drawing_area.clear
-			end
+			end;
 			--create_initial_state;
 		end;
 
@@ -178,7 +182,9 @@ feature -- Drawing area
 				if selected_figure /= Void then
 					selected_figure.deselect
 				end;
-				state_list.set_selected (a_circle);
+				if implementation /= Void then
+					state_list.set_selected (a_circle);
+				end;
 				figures.set_selected (a_circle);
 				selected_figure := a_circle;
 				if

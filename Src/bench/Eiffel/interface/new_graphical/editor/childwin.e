@@ -80,7 +80,6 @@ feature -- Initialization
 				-- Load the font & Compute Font related constants.
 			Initialize
 			number_of_lines_displayed := height // line_increment
-			number_of_lines := text_displayed.count
 
 				-- Setup the scroll bars.
 			set_vertical_range (1,vertical_range_max)
@@ -476,7 +475,7 @@ feature -- Selection Handling
 				begin := selection_start
 				text_displayed.delete_selection (selection_start, cursor)
 			end
-			cursor := begin
+			cursor.make_from_absolute_pos (begin.x_in_pixels, begin.y_in_lines, Current)
 			has_selection := False
 		end
 
@@ -648,8 +647,11 @@ feature {NONE} -- Display functions
 
 feature {NONE} -- Status Report
 	
-	number_of_lines: INTEGER
-		-- Whole number of lines.
+	number_of_lines: INTEGER is
+			-- Whole number of lines.
+		do
+			Result := text_displayed.count
+		end
 
 	vertical_range_max: INTEGER is
 		do

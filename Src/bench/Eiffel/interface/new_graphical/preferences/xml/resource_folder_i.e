@@ -24,7 +24,7 @@ feature -- Initialization
 			load_default_attributes (doc)
 			if name = Void then
 				s := "TOPIC_ID not supplied for "
-				if description /= Void and then not description.empty then
+				if description /= Void and then not description.is_empty then
 					s.append (description)
 				else
 					s.append ("unknown TOPIC (no description supplied either)")

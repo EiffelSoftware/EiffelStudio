@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 			start_pos, end_pos: INTEGER
 		do
 			create actual_value.make (1, 0)
-			if not value.empty then
+			if not value.is_empty then
 				from
 					start_pos := 1
 					end_pos := value.index_of (';', start_pos)

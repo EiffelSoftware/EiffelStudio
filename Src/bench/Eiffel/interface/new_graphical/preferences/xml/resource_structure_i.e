@@ -53,7 +53,7 @@ feature -- Access
 				j := 1
 				s := path
 				f := root_folder_i
-				loop_must_end := s.empty
+				loop_must_end := s.is_empty
 			until
 				loop_must_end
 			loop

@@ -8,8 +8,8 @@ class
 	GB_EV_WIDGET
 	
 	-- The following properties from EV_WIDGET are manipulated by `Current'.
-	-- User_can_resize - Performed on the real object and the display_object.
-	-- Maximum_width - Performed on the real object and the display_object.
+	-- Minimum_width - Performed on the real object only. Not the display object
+	-- Minimum_height - Performed on the real object only, Not the display_object
 
 inherit
 	GB_EV_ANY
@@ -37,6 +37,7 @@ feature -- Access
 			-- of items held in `objects'.
 		local
 			label: EV_LABEL
+			horizontal_box: EV_HORIZONTAL_BOX
 		do
 			Result := Precursor {GB_EV_ANY}
 			create label.make_with_text (Minimum_width_string)
@@ -85,11 +86,13 @@ feature {GB_CODE_GENERATOR} -- Output
 			Result := ""
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (Minimum_width_string)
-			Result := a_name + ".set_minimum_width (" + element_info.data + ")"
-			
+			if element_info /= Void then
+				Result := a_name + ".set_minimum_width (" + element_info.data + ")"
+			end
 			element_info := full_information @ (Minimum_height_string)
-			Result := Result + indent + a_name + ".set_minimum_height (" + element_info.data + ")"
-			
+			if element_info /= Void then
+				Result := Result + indent + a_name + ".set_minimum_height (" + element_info.data + ")"
+			end
 			Result := strip_leading_indent (Result)
 		end
 
@@ -100,9 +103,12 @@ feature {GB_XML_STORE} -- Output
 	generate_xml (element: XML_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
 		do
-			--|FIXME
-			add_element_containing_integer (element, Minimum_width_string, objects.first.minimum_width)
-			add_element_containing_integer (element, Minimum_height_string, objects.first.minimum_height)
+			if objects.first.minimum_width_set_by_user then
+				add_element_containing_integer (element, Minimum_width_string, objects.first.minimum_width)	
+			end
+			if objects.first.minimum_height_set_by_user then
+				add_element_containing_integer (element, Minimum_height_string, objects.first.minimum_height)
+			end
 		end
 		
 	modify_from_xml (element: XML_ELEMENT) is
@@ -113,10 +119,14 @@ feature {GB_XML_STORE} -- Output
 		do
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (Minimum_width_string)
-			for_all_objects (agent {EV_WINDOW}.set_minimum_width(element_info.data.to_integer))
+			if element_info /= Void then
+				objects.first.set_minimum_width (element_info.data.to_integer)
+			end
 			
 			element_info := full_information @ (Minimum_height_string)
-			for_all_objects (agent {EV_WINDOW}.set_minimum_height(element_info.data.to_integer))
+			if element_info /= Void then
+				objects.first.set_minimum_height (element_info.data.to_integer)
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -131,9 +141,7 @@ feature {NONE} -- Implementation
 		do
 			if not minimum_height.text.is_empty and then minimum_height.text.is_integer then
 				value := minimum_height.text.to_integer
-				if value > 0 then
-					for_all_objects (agent {EV_WINDOW}.set_minimum_height (value))
-				end
+					objects.first.set_minimum_height (value)
 			end
 		end
 		
@@ -144,9 +152,7 @@ feature {NONE} -- Implementation
 		do
 			if not minimum_width.text.is_empty and then minimum_width.text.is_integer then
 				value := minimum_width.text.to_integer
-				if value > 0 then
-					for_all_objects (agent {EV_WINDOW}.set_minimum_width (value))
-				end
+					objects.first.set_minimum_width (value)
 			end
 		end
 

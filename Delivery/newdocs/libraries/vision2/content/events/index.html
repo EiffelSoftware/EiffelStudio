@@ -4,36 +4,58 @@
 	<HEAD>
 		<TITLE>Vision2 Events</TITLE>
 		<LINK REL=StyleSheet HREF="/default.css">
-	</HEAD>
+	<link rel="stylesheet" type="text/css" href="/default.css">
+</HEAD>
 
 	<BODY>
 		<H1>Vision2 Events</H1>
         <P>
-	This cluster contains classes for event handling within Vision2. </P>
+	This cluster contains classes for event handling within Vision2.&nbsp; To
+    view the classes contained in the the events cluster click <A HREF="/libraries/vision2/reference/interface/events/index.html">here</A>. </P>
 	<H2>What is an event?</H2>
 	<P>
 		An event is considered to be an external action that occurs during a program's execution. Correctly dealing with events is an important part of developing
-		a Vision2 application. For example, if a user selects a menu item from a menu, the application needs to be able to respond appropriately to this event and perform
-		the necessary processing.
+		a Vision2 application. For example, if a user clicks on a button, you
+        will want to respond to this event by calling a routine that deals with
+        the request.
 	</p>
 	<H2>How do I connect to an event?</H2>
+        <p>Every widget and item has an action sequence associated with it that
+        relates to some kind of event, for example an EV_BUTTON has a
+        select_actions action sequence.&nbsp; This gets fired when the user
+        clicks/selects the button.&nbsp; To have a procedure called on this
+        event, you need to create an agent based on this procedure, and then add
+        this to the action sequence (via extend).
+	
+	</p>
+	
+        <p>&nbsp;
+	
+	</p>
+	
+        <P>An example of adding an agent to an action_sequence is as follows.
+	
+	</p>
+	
+        <p>&nbsp;
+	
+	</p>
+	
+        <p Class ="code"><SPAN Class="eclass">button</SPAN>.<SPAN Class="efeature">select_actions.extend</SPAN> (<SPAN Class="ekeyword">agent</SPAN> <SPAN Class = "efeature">print </SPAN>(<SPAN Class="estring">&quot;Button Clicked!%N&quot;</SPAN>))
+	
+	</p>
+	
 	<p>
-		When an event occurs, the corresponding action sequence is called. All Vision2 action sequences inherit <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/events/ev_action_sequence_chart.html">EV_ACTION_SEQUENCE</A> and
+        &nbsp;
+	
+	</p>
+	
+	<p>
+ All Vision2 action sequences inherit <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/events/ev_action_sequence_chart.html">EV_ACTION_SEQUENCE</A> and
 		when it is called, all of the agents held within are fired, thus calling all of the procedures represented by the agents. The signature of any agent that you place in an action sequence must conform to those of the action sequences actual generic parameter.
 	
 	</p>
 	
-	There are two different types of classes contained within
-	this cluster, identified by their names:
-	<UL>
-		<LI>classes named ev_*_action_sequence.<BR>
-		These classes represent different types of action_sequence, distinguished by the parameters that their items can take. For example, one of the most widely used is
-		<A CLASS="eclass" HREF="/libraries/vision2/reference/interface/events/ev_notify_action_sequence_chart.html">EV_NOTIFY_ACTION_SEQUENCE</A> whose items take no arguments. All
-		these classes inherit <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/events/ev_action_sequence_chart.html">EV_ACTION_SEQUENCE</A>
-		<LI>classes named ev_*_action_sequences.<BR>
-		These classes contain one or more action sequences applicable to a certain context. For example, <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/events/ev_button_action_sequences_chart.html">EV_BUTTON_ACTION_SEQUENCES</A>
-		contains one action sequence, <A CLASS="efeature" HREF="/libraries/vision2/reference/interface/events/ev_button_action_sequences.html#f_select_actions">select_actions</A>, which is fired whenever a button is selected in the GUI.
-	</UL>
-	<P>Click <A HREF="/libraries/vision2/reference/interface/events/index.html">here</A> to browse the events cluster.</P>
+	<P>&nbsp;</P>
 	</BODY>
 </HTML>

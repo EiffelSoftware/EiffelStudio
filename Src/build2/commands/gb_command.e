@@ -17,7 +17,6 @@ feature -- Basic operations
 		deferred
 		end
 		
-	
 	undo is
 			-- Undo `Current'.
 			-- Calling `execute' followed by `undo' must restore
@@ -30,6 +29,8 @@ feature -- Access
 	textual_representation: STRING is
 			-- Text representation of command exectuted.
 		deferred
+		ensure
+			result_not_void: Result /= Void
 		end
 
 end -- class GB_COMMAND

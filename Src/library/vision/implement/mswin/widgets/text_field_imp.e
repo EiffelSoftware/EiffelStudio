@@ -34,6 +34,8 @@ inherit
 			set_y as wel_set_y,
 			set_width as wel_set_width,
 			set_height as wel_set_height,
+			background_color as wel_background_color,
+			foreground_color as wel_foreground_color,
 			shown as wel_shown,
 			set_focus as wel_set_focus,
 			set_capture as wel_set_capture, 

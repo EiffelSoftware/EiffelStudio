@@ -60,6 +60,8 @@ inherit
 			parent as wel_parent,
 			text as wel_text,
 			count as wel_count,
+			foreground_color as wel_foreground_color,
+			background_color as wel_background_color,
 			set_background_color as wel_set_background_color,
 			text_length as wel_text_length,
 			set_text as wel_set_text,

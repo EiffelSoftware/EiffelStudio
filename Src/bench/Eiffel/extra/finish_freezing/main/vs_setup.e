@@ -256,7 +256,7 @@ feature {NONE} -- Keys
 	vc_product_dir_for_vs_6: STRING is
 			--Retrieve product dir for VC from a Visual Studio .NET installation
 		do
-			Result := vc_product_dir_from_key ("hkey_local_machine\SOFTWARE\Microsoft\VisualStudio\6.0\Setup\MicrosoftVisual C++")
+			Result := vc_product_dir_from_key ("hkey_local_machine\SOFTWARE\Microsoft\VisualStudio\6.0\Setup\Microsoft Visual C++")
 		ensure
 			valid_result: Result /= Void implies Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).directory_separator
 		end

@@ -70,6 +70,13 @@ feature {NONE} -- Implementation
 					-- A new font has been selected, let's
 					-- repaint the text with this new font.
 					log_font := choose_font.log_font
+					log_font.set_weight (choose_font.log_font.weight)
+					if choose_font.log_font.italic then
+						log_font.set_italic
+					else
+						log_font.set_not_italic
+					end
+					color := choose_font.color
 					create font.make_indirect (log_font)
 					invalidate
 				end

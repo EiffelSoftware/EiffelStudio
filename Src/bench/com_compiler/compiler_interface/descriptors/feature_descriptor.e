@@ -46,7 +46,8 @@ inherit
             has_postcondition,
             feature_location,
             parameters,
-            return_type
+            return_type,
+            member_of
         end
 
     COMPLETION_ENTRY
@@ -479,6 +480,12 @@ feature -- Access
         do
             return_value.set_item (True)
         end
+        
+	member_of: CLASS_DESCRIPTOR is
+			-- Class feature is member of
+		do
+			create Result.make_with_class_i (compiler_class)
+		end
 
 feature -- Basic Operations
 

@@ -4,7 +4,7 @@ class INVARIANT_B
 
 inherit
 
-	IDABLE;
+	COMPILER_IDABLE;
 	SHARED_ENCODER;
 	SHARED_BODY_ID;
 	BYTE_NODE
@@ -15,7 +15,7 @@ inherit
 
 feature 
 
-	id: INTEGER;
+	id: CLASS_ID;
 			-- Id of the class to which the current invariant byte code
 			-- belongs to
 
@@ -24,7 +24,7 @@ feature
 
 feature 
 
-	set_id (i: INTEGER) is
+	set_id (i: CLASS_ID) is
 			-- Assign `i' to `id'.
 		do
 			id := i;
@@ -66,7 +66,7 @@ feature
 				body_id := associated_class.invariant_feature.body_id;
 			end;
 			internal_name := Encoder.feature_name
-				(System.class_type_of_id (context.current_type.type_id).id,
+				(System.class_type_of_id (context.current_type.type_id).id.id,
 				body_id);
 			generated_file.putstring (internal_name);
 				-- Arguments

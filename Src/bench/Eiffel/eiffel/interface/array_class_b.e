@@ -95,12 +95,12 @@ feature {NONE}
 			gen: ARRAY [TYPE_A];
 		once
 			!!f;
-			f.set_base_type (1);
+			f.set_position (1);
 			!!gen.make (1, 1);
 			gen.put (f, 1);
 			!!Result;
 			Result.set_generics (gen);
-			Result.set_base_type (System.to_special_id);
+			Result.set_base_class_id (System.to_special_id);
 		end;
 
 	Make_signature: DYN_PROC_I is

@@ -18,6 +18,10 @@ inherit
 	SHARED_WORKBENCH
 		undefine
 			is_equal, copy, consistent, setup
+		end;
+	COMPILER_EXPORTER
+		undefine
+			is_equal, copy, setup, consistent
 		end
 
 feature -- Initialization
@@ -90,6 +94,20 @@ feature -- Access
 			-- Subcounter associted with compilation `i'
 		do
 			Result ?= ht_item (i)
+		end
+
+	current_count: INTEGER is
+			-- Number of ids generated during the current compilation unit
+			-- (i.e. do not count precompiled ids when the system relies on
+			-- precompiled library)
+		do
+			Result := current_subcounter.count
+		end
+ 
+	total_count: INTEGER is
+			-- Total number of ids generated
+		do
+			Result := current_subcounter.offset + current_subcounter.count
 		end
 
 feature {NONE} -- Implementation

@@ -27,6 +27,10 @@ inherit
 		undefine
 			copy, setup, consistent, is_equal
 		end;
+	COMPILER_EXPORTER
+		undefine
+			copy, setup, consistent, is_equal
+		end
 
 creation
 
@@ -121,7 +125,7 @@ feature -- Insertion
 			ri := System.rout_info_table.item (r_id);
 			origin := ri.origin.id;
 			offset := ri.offset;
-			nb_routines := ri.origin.descriptor_size;
+			nb_routines := System.rout_info_table.descriptor_size (ri.origin);
 
 				-- For each class type, create the appropriate
 				-- entry, and insert it into the appropriate

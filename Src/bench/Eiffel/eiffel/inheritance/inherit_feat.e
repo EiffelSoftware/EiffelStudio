@@ -149,7 +149,7 @@ feature
 			pos, body_id: INTEGER;
 			duplication: BOOLEAN;
 			other_renamings: EXTEND_TABLE [STRING, STRING];
-			replication: FEATURE_i;
+			replication: FEATURE_I;
 				-- Replicated feature in case of repeated inheritance
 		do
 			from
@@ -374,7 +374,8 @@ feature
 		require
 			good_context: nb_features > 0;
 		local
-			body_id, written_id: INTEGER;
+			body_id: INTEGER;
+			written_id: CLASS_ID;
 			first_feature: FEATURE_I;
 			written_class: CLASS_C;
 			to_compair, written_type, written_actual_type: TYPE_A;

@@ -6,7 +6,7 @@ class CLASS_DEPENDANCE
 inherit
 
 	EXTEND_TABLE [FEATURE_DEPENDANCE, STRING];
-	IDABLE
+	COMPILER_IDABLE
 		undefine
 			is_equal, copy
 		end;
@@ -22,10 +22,10 @@ creation
 	
 feature 
 
-	id: INTEGER;
+	id: CLASS_ID;
 			-- Id of the associated class
 
-	set_id (i: INTEGER) is
+	set_id (i: CLASS_ID) is
 			-- Assign `i' to `id'.
 		do
 			id := i;

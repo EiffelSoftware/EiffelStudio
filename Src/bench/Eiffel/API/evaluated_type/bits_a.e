@@ -1,7 +1,7 @@
 indexing
 
 	description: 
-		"Actual type for bits: `base_type' is the bits value.";
+		"Actual type for bits."
 	date: "$Date$";
 	revision: "$Revision $"
 
@@ -45,7 +45,7 @@ feature -- Access
 			other_bits ?= other;
 			Result :=	other_bits /= Void
 						and then
-						other_bits.base_type = base_type
+						other_bits.bit_count = bit_count
 		end;
 
 	associated_eclass: E_CLASS is
@@ -54,6 +54,17 @@ feature -- Access
 			Result := Eiffel_system.bit_class.compiled_eclass
 		end;
 
+	bit_count: INTEGER;
+			-- Bit count
+
+feature -- Setting
+
+	set_bit_count (c: like bit_count) is
+			-- Assign `c' to `set_bit_count'.
+		do
+			bit_count := c
+		end
+
 feature -- Output
 
 	dump: STRING is
@@ -61,13 +72,13 @@ feature -- Output
 		do
 			!!Result.make (9);
 			Result.append ("BIT ");
-			Result.append_integer (base_type);
+			Result.append_integer (bit_count);
 		end;
 
-	append_to (st: STRUCTURED_TEXT) is
+	append_to (ow: OUTPUT_WINDOW) is
 		do
-			st.add_string ("BIT ");
-			st.add_int (base_type);
+			ow.put_string ("BIT ");
+			ow.put_int (bit_count);
 		end;
 
 feature {COMPILER_EXPORTER}
@@ -93,14 +104,14 @@ feature {COMPILER_EXPORTER}
 	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
 			-- Does Current conform to `other' ?
 		local
-			other_actual: TYPE_A;
+			other_bits: BITS_A;
 		do
-			other_actual := other.actual_type;
-			if other_actual.is_bits then
+			other_bits ?= other.actual_type;
+			if other_bits /= Void then
 				if in_generics then
-					Result := other_actual.base_type = base_type;
+					Result := other_bits.bit_count = bit_count;
 				else
-					Result := other_actual.base_type >= base_type;
+					Result := other_bits.bit_count >= bit_count;
 				end;
 			else
 				Result := old_conform_to (other, False);
@@ -116,7 +127,7 @@ feature {COMPILER_EXPORTER}
 			other: BITS_A;
 		do
 			other ?= type;
-			if other.base_type > base_type then
+			if other.bit_count > bit_count then
 				Result := type;
 			else
 				Result := Current;
@@ -135,13 +146,13 @@ feature {COMPILER_EXPORTER}
 			-- C type
 		do
 			!!Result;
-			Result.set_size (base_type);
+			Result.set_size (bit_count);
 		end;
 
 	format (ctxt: FORMAT_CONTEXT_B) is
 		do
 			ctxt.put_string ("BIT ");
-			ctxt.put_string (base_type.out);
+			ctxt.put_string (bit_count.out);
 		end
 
 end -- class BITS_A

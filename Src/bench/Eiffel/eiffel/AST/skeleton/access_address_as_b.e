@@ -47,7 +47,7 @@ feature -- Type check
 		local
 			last_type, last_constrained: TYPE_A;
 			last_class: CLASS_C;
-			last_id: INTEGER;
+			last_id: CLASS_ID;
 			a_feature: FEATURE_I;
 			access_b: ACCESS_B;
 			depend_unit: DEPEND_UNIT;

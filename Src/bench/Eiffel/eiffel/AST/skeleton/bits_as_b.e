@@ -46,7 +46,7 @@ feature
 			-- Actual bits type
 		do
 			!!Result;
-			Result.set_base_type (bits_value.value);
+			Result.set_bit_count (bits_value.value);
 		end;
 
 end -- class BITS_AS_B

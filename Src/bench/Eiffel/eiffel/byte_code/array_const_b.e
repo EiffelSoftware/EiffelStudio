@@ -126,7 +126,7 @@ feature
 				ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
 			else
 				ba.append (Bc_array);
-				ba.append_short_integer (real_ty.associated_class_type.id - 1);
+				ba.append_short_integer (real_ty.associated_class_type.id.id - 1);
 				ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
 				feat_id := feat_i.feature_id;
 				ba.append_short_integer (feat_id);

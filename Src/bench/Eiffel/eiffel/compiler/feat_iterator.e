@@ -159,7 +159,7 @@ debug ("MARKING")
     io.error.putstring (written_class.class_name);
     io.error.new_line;
 end;
-				depend_list := Depend_server.item (written_class.id).item
+				depend_list := Depend_server.item (written_class.id.id).item
 									(original_feature.feature_name);
 				if depend_list /= Void then
 					propagate_feature (written_class, original_feature, depend_list);

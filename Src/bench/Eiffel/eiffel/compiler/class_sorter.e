@@ -31,35 +31,28 @@ feature
 	fill_original is
 			-- Fill `original' with the lists `descendants' of classes
 		local
-			i, nb, class_id: INTEGER;
 			cl: CLASS_C;
 			e_class: E_CLASS;
-			class_array: ARRAY [CLASS_C]
+			classes: CLASS_C_SERVER
 		do
 			check
-				consistency: count = System.id_array.count
+				consistency: count = System.nb_of_classes
 			end;
 			from
-				i := 1;
-				nb := System.id_array.count;
-				class_array := System.id_array;
+				classes := System.classes;
+				classes.start
 				count := 0;
 			until
-				i > nb
+				classes.after
 			loop
-				cl := class_array.item (i);
-			
-					-- Since a class can be removed, test here if `cl' is
-					-- not Void.
-				if cl /= Void then
-					e_class := cl.e_class;
-					count := count + 1;
-					cl.set_topological_id (count);
-					original.put (e_class, count);
-					successors.put (e_class.descendants, count);
-				end;
+				cl := classes.item_for_iteration;
+				e_class := cl.e_class;
+				count := count + 1;
+				cl.set_topological_id (count);
+				original.put (e_class, count);
+				successors.put (e_class.descendants, count);
 
-				i := i + 1;
+				classes.forth
 			end
 		end;
 
@@ -67,7 +60,7 @@ feature
 			-- Topological sort of classes
 		do
 				-- Initialize data structures
-			init (System.id_array.count);
+			init (System.nb_of_classes);
 				-- Initialize arrays `successors' and `precursor_count'.
 			fill;
 				-- Perform sort
@@ -82,7 +75,7 @@ feature
 		local
 			i: INTEGER;
 			no_cycle: BOOLEAN;
-			name_list: LINKED_LIST [INTEGER];
+			name_list: LINKED_LIST [CLASS_ID];
 			a_class: E_CLASS;
 			vhpr1: VHPR1;
 		do

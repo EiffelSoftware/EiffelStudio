@@ -5,6 +5,7 @@ inherit
 	
 	CASE_CLASS_COMMAND;
 	SHARED_SERVER;
+	COMPILER_EXPORTER
 
 creation
 
@@ -32,10 +33,10 @@ feature {NONE} -- Recording information for eiffelcase
 			label: STRING;
 			class_dep: CLASS_DEPENDANCE;
 			feat_dep: FEATURE_DEPENDANCE;
-			sup_class_id: INTEGER;
+			sup_class_id: CLASS_ID;
 			features: ARRAYED_LIST [S_FEATURE_DATA];
 		do
-			class_dep := Depend_server.disk_item (classc.id);
+			class_dep := Depend_server.disk_item (classc.id.id);
 			if not class_dep.empty and then class_dep.count > 1 then
 				-- count > 1 is required since the class itself is always
 				features := s_class_data.features;
@@ -53,13 +54,13 @@ feature {NONE} -- Recording information for eiffelcase
 						until
 							feat_dep.after
 						loop
-							if classc.id /= sup_class_id then
+							if not equal (classc.id, sup_class_id) then
 								sup_class_id := feat_dep.item.id;
 								from
 									c_l.start
 								until
 									c_l.after or else 
-									c_l.item.supplier = sup_class_id
+									c_l.item.supplier = sup_class_id.id
 								loop
 									c_l.forth
 								end;
@@ -67,8 +68,8 @@ feature {NONE} -- Recording information for eiffelcase
 										-- Was not found
 									!! cli_sup_data;
 									cli_sup_data.set_implementation (True);
-									cli_sup_data.set_class_links (classc.id,
-											sup_class_id);
+									cli_sup_data.set_class_links (classc.id.id,
+											sup_class_id.id);
 									c_l.extend (cli_sup_data);
 								end;
 							end;
@@ -140,14 +141,14 @@ end;
 							if c_l.after then
 									-- Supplier hasn't been record 
 								!! cli_sup_data;
-								cli_sup_data.set_class_links (classc.id,
+								cli_sup_data.set_class_links (classc.id.id,
 										sup_class_id);
 								c_l.extend (cli_sup_data);
 							else
 								cli_sup_data := c_l.item;
 								cli_sup_data.set_implementation (False);
 							end
-							if sup_class_id = classc.id then
+							if sup_class_id = classc.id.id then
 								cli_sup_data.set_reflexive (True)
 							end;
 							if not is_hidden then
@@ -161,7 +162,8 @@ end;
 									label.append (feature_data.name);
 debug ("CASE_FEATURE")
 	io.error.putstring ("%T%T%TResult: ");
-	io.error.putstring (System.class_of_id (result_type.class_id).class_name);
+-- Not available (class_id in an INTEGER)
+--	io.error.putstring (System.class_of_id (result_type.class_id).class_name);
 	io.error.new_line;
 end
 								end;
@@ -206,20 +208,21 @@ end
 								end;
 debug ("CASE_FEATURE")
 	io.error.putstring ("%T%T%TArgument: ");
-	io.error.putstring (System.class_of_id (result_type.class_id).class_name);
+-- Not available (class_id in an INTEGER)
+--	io.error.putstring (System.class_of_id (result_type.class_id).class_name);
 	io.error.new_line;
 end
 								if c_l.after then
 										-- Supplier hasn't been recorded.
 									!! cli_sup_data;
-									cli_sup_data.set_class_links (classc.id,
+									cli_sup_data.set_class_links (classc.id.id,
 											sup_class_id);
 									c_l.extend (cli_sup_data);
 								else
 									cli_sup_data :=  c_l.item;
 									cli_sup_data.set_implementation (False)
 								end;
-								if sup_class_id = classc.id then
+								if sup_class_id = classc.id.id then
 									cli_sup_data.set_reflexive (True)
 								end;
 								real_class_ids.forth

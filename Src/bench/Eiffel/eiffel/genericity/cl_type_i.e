@@ -17,13 +17,13 @@ inherit
 
 feature
 
-	base_id: INTEGER;
+	base_id: CLASS_ID;
 			-- Base class id of the type class
 
 	is_expanded: BOOLEAN;
 			-- Is the type expanded ?
 
-	set_base_id (c: INTEGER) is
+	set_base_id (c: CLASS_ID) is
 			-- Assign `c' to `base_id'.
 		do
 			base_id := c;
@@ -67,7 +67,7 @@ feature
 			other_cl_type ?= other;
 			Result := 	other_cl_type /= Void 
 						and then
-						other_cl_type.base_id = base_id
+						equal (other_cl_type.base_id, base_id)
 						and then
 						other_cl_type.is_expanded = is_expanded
 						and then
@@ -180,14 +180,14 @@ feature
 				file.putstring ("SK_DTYPE");
 			else
 				file.putstring ("SK_EXP + (uint32) ");
-				file.putint (base_id);
+				file.putint (base_id.id);
 			end;
 		end;
 
 	hash_code: INTEGER is
 			-- Hash code for current type
 		do
-			Result := Other_code + base_id;
+			Result := Other_code + base_id.hash_code
 		end;
 
 	sk_value: INTEGER is
@@ -207,7 +207,7 @@ feature
 			if not is_expanded then
 				Result := Sk_dtype
 			else
-				Result := Sk_exp + base_id
+				Result := Sk_exp + base_id.id
 			end;
 		end;
 
@@ -231,7 +231,7 @@ feature
 		do
 			!!Result
 			Result.set_is_expanded (is_expanded);
-			Result.set_base_type (base_id)
+			Result.set_base_class_id (base_id)
 		end
 
 end

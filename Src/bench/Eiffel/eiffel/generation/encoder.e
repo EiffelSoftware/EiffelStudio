@@ -12,7 +12,7 @@ feature
 			-- Name of an Eiffel feature belonging to type of id `id'
 			-- and of body id `body_id'.
 		require
-			good_type_id: id <= System.static_type_id_counter.value;
+			good_type_id: id <= System.static_type_id_counter.total_count;
 			good_body_id: body_id <= System.body_id_counter.value;
 		local
 			old_body_id: INTEGER
@@ -29,16 +29,6 @@ feature
 			else
 				eif000 ($Result, id, body_id)
 			end
-		end;
-
-feature -- Address table
-
-	address_table_name (class_typeid, feature_id: INTEGER): STRING is
-			-- Name of a table of function pointers used by the
-			-- $ operator
-		do
-			Result := Address_table_buffer;
-			eif000 ($Result, class_typeid, feature_id);
 		end;
 
 feature {NONE}

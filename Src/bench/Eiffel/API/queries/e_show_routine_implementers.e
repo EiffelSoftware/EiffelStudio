@@ -25,7 +25,7 @@ feature -- Execution
 			rout_id: ROUTINE_ID;
 			i: INTEGER;
 			stop: BOOLEAN;
-			written_in: INTEGER;
+			written_in: CLASS_ID;
 			feat: E_FEATURE;
 			c: E_CLASS;
 			written_cl: E_CLASS;
@@ -60,7 +60,7 @@ feature -- Execution
 					written_in := c.id;
 					feat := c.feature_with_rout_id (rout_id);
 					if feat /= Void and then 
-						feat.written_in = written_in 
+						equal (feat.written_in, written_in)
 					then
 						c.append_name (structured_text);
 						structured_text.add_string (" ");

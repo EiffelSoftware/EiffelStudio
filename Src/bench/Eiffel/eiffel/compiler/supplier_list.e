@@ -5,7 +5,8 @@ class SUPPLIER_LIST
 inherit
 
 	LINKED_LIST [SUPPLIER_INFO];
-	SHARED_EIFFEL_PROJECT
+	SHARED_EIFFEL_PROJECT;
+	COMPILER_EXPORTER
 
 creation
 
@@ -21,8 +22,8 @@ feature
 			consistency: is_ok (l);
 		local
 			suppl_info: SUPPLIER_INFO;
-			id: INTEGER;
-			s: TWO_WAY_SORTED_SET [INTEGER]
+			id: CLASS_ID;
+			s: TWO_WAY_SORTED_SET [CLASS_ID]
 		do
 			s := suppliers (l);
 			from
@@ -52,8 +53,8 @@ feature
 			good_argument: l /= Void
 		local
 			suppl_info: SUPPLIER_INFO;
-			id: INTEGER;
-			s: TWO_WAY_SORTED_SET [INTEGER]
+			id: CLASS_ID;
+			s: TWO_WAY_SORTED_SET [CLASS_ID]
 		do
 			s := suppliers (l);
 			from
@@ -98,14 +99,15 @@ end;
 
 feature {NONE}
 
-	suppliers (l: TWO_WAY_SORTED_SET [DEPEND_UNIT]): TWO_WAY_SORTED_SET [INTEGER] is
+	suppliers (l: TWO_WAY_SORTED_SET [DEPEND_UNIT]): TWO_WAY_SORTED_SET [CLASS_ID] is
 		local
-			id: INTEGER
+			id: CLASS_ID
 		do
 debug ("ACTIVITY")
 	io.error.putstring ("SUPPLIER_lIST.suppliers%N");
 end;
 			!!Result.make;
+			Result.compare_objects;
 			from
 				l.start
 			until
@@ -117,7 +119,7 @@ end;
 		-- doesn't extend check to if id already exists since
 		-- result is set !!!???!! dinov
 debug ("ACTIVITY")
-	io.error.putint (id);
+	io.error.putint (id.id);
 	io.error.new_line;
 end;
 					Result.extend (id);
@@ -126,7 +128,7 @@ end;
 			end;
 		end;
 
-	goto (id: INTEGER) is
+	goto (id: CLASS_ID) is
 			-- Move cursor to supplier info of id `id'.
 		require
 			consistency: info (id) /= Void
@@ -136,16 +138,16 @@ end;
 			until	
 					-- The test for `after' is a defensive programming
 					-- test!!!
-				after or else item.supplier.id = id
+				after or else equal (item.supplier.id, id)
 			loop
 				forth;
 			end;
 		end;
 		
-	info (id: INTEGER): SUPPLIER_INFO is
+	info (id: CLASS_ID): SUPPLIER_INFO is
 			-- Supplier information associated to supplier of id `id'.
 		require
-			positive_argument: id > 0;
+			valid_id: id /= Void
 		local
 			cur: CURSOR;
 		do
@@ -155,7 +157,7 @@ end;
 			until
 				after or else Result /= Void
 			loop
-				if item.supplier.id = id then
+				if equal (item.supplier.id, id) then
 					Result := item;
 				end;
 				forth;
@@ -171,8 +173,8 @@ feature
 			good_argument: l /= Void
 		local
 			suppl_info: SUPPLIER_INFO;
-			id: INTEGER;
-			s: TWO_WAY_SORTED_SET [INTEGER];
+			id: CLASS_ID;
+			s: TWO_WAY_SORTED_SET [CLASS_ID];
 		do
 debug ("ACTIVITY")
 	trace;

@@ -209,10 +209,13 @@ feature
 
 	last_constrained_type: TYPE_A is
 			-- Constrained type onto the stack
+		local
+			formal_type: FORMAL_A
 		do
 			Result := item;	
 			if Result.is_formal then
-				Result := a_class.constraint (Result.base_type);
+				formal_type ?= Result;
+				Result := a_class.constraint (formal_type.position);
 			end;
 		end;
 

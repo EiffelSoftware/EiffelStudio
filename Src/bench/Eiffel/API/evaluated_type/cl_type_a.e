@@ -36,6 +36,9 @@ feature -- Properties
 
 feature -- Access
 
+	base_class_id: CLASS_ID;
+			-- Class id of the associated class
+
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
 		local
@@ -44,7 +47,7 @@ feature -- Access
 			other_class_type ?= other;
 			Result := 	other_class_type /= Void
 						and then
-						base_type = other_class_type.base_type
+						equal (base_class_id, other_class_type.base_class_id)
 						and then
 						is_expanded = other_class_type.is_expanded
 		end;
@@ -52,8 +55,16 @@ feature -- Access
 	associated_eclass: E_CLASS is
 			-- Associated class to the type
 		do
-			Result := Eiffel_system.class_of_id (base_type);
+			Result := Eiffel_system.class_of_id (base_class_id);
 		end;
+
+feature -- Setting
+
+	set_base_class_id (id: like base_class_id) is
+			-- Assign `id' to `base_class_id'.
+		do
+			base_class_id := id
+		end
 
 feature -- Output
 
@@ -92,9 +103,9 @@ feature {COMPILER_EXPORTER}
 	associated_class: CLASS_C is
 			-- Associated class to the type
 		require else
-			positive_base_type: base_type > 0;
+			valid_base_class_id: base_class_id /= Void
 		do
-			Result := System.id_array.item (base_type);
+			Result := System.class_of_id (base_class_id);
 		end;
 
 	type_i: CL_TYPE_I is
@@ -102,7 +113,7 @@ feature {COMPILER_EXPORTER}
 		do
 			!!Result;
 			Result.set_is_expanded (is_expanded);
-			Result.set_base_id (base_type);
+			Result.set_base_id (base_class_id);
 		end;
 
 	meta_type: TYPE_I is
@@ -224,7 +235,7 @@ feature {COMPILER_EXPORTER}
 			Result := feat_type.instantiation_in (Current, f.written_in);
 		end;
 
-	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A is
+	instantiation_in (type: TYPE_A; written_id: CLASS_ID): TYPE_A is
 			-- Instantiation of Current in the context of `class_type'
 			-- assuming that Current is written in `written_id'
 		local
@@ -240,14 +251,14 @@ feature {COMPILER_EXPORTER}
 
 -- Instantiation of a type in the context of a descendant one
 
-	instantiation_of (type: TYPE_B; class_id: INTEGER): TYPE_A is
+	instantiation_of (type: TYPE_B; class_id: CLASS_ID): TYPE_A is
 			-- Instantiation of type `type' written in class of id `class_id'
 			-- in the context of Current
 		local
 			instantiation: TYPE_A;
 			gen_type: GEN_TYPE_A;
 		do
-			if class_id = base_type then
+			if equal (class_id, base_class_id) then
 					-- Feature is written in the class associated to the
 					-- current actual class type
 				instantiation := Current;
@@ -307,7 +318,7 @@ feature {COMPILER_EXPORTER}
 	same_class_type (other: CL_TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
 		do
-			Result := base_type = other.base_type;
+			Result := equal (base_class_id, other.base_class_id);
 		end;
 
 	create_info: CREATE_TYPE is
@@ -328,7 +339,7 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 	storage_info (classc: CLASS_C): S_CLASS_TYPE_INFO is
 			-- Storage info for Current type in class `classc'
 		do
-			!! Result.make (Void, associated_class.id)
+			!! Result.make (Void, associated_class.id.id)
 		end;
 
     storage_info_with_name (classc: CLASS_C): S_CLASS_TYPE_INFO is
@@ -341,7 +352,7 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 			ass_classc := associated_class;
 			!! class_name.make (ass_classc.class_name.count);
 			class_name.append (ass_classc.class_name);
-			!! Result.make (class_name, ass_classc.id)
+			!! Result.make (class_name, ass_classc.id.id)
         end;
 
 end -- class CL_TYPE_A

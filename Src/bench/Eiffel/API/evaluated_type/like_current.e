@@ -100,7 +100,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			Result := actual_type.internal_conform_to (other, in_generics);
 		end;
 
-	instantiation_in (type: TYPE_A; written_id: INTEGER): LIKE_CURRENT 	is
+	instantiation_in (type: TYPE_A; written_id: CLASS_ID): LIKE_CURRENT is
 			-- Instantiation of Current in the context of `class_type',
 			-- assuming that Current is written in class of id `written_id'.
 		do
@@ -149,7 +149,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 		do
 			like_c ?= other;
 			Result := like_c /= Void and then
-				like_c.base_type = base_type and then
 				like_c.actual_type.is_deep_equal (actual_type);
 		end;
 

@@ -10,7 +10,7 @@ creation
 
 feature
 
-	written_in: INTEGER;
+	written_in: CLASS_ID;
 			-- Written_in id of the routine that has assertion
 
 	body_index_value: INTEGER;

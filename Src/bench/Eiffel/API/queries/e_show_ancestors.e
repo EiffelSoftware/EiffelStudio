@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 			parent_class: E_CLASS;
 		do
 			if 
-				(c.id /= Eiffel_system.any_id) or else
+				(not equal (c.id, Eiffel_system.any_id)) or else
 				(c = current_class)
 			then
 				parents := c.parents;

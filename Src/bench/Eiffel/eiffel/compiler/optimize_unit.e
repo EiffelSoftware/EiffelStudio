@@ -14,13 +14,13 @@ creation
 
 feature
 
-	class_id: INTEGER;
+	class_id: CLASS_ID;
 
 	body_index: INTEGER;
 
 feature
 
-	make (c_id, b_index: INTEGER) is
+	make (c_id: CLASS_ID; b_index: INTEGER) is
 		do
 			class_id := c_id;
 			body_index := b_index;
@@ -40,7 +40,7 @@ feature -- Comparable
 			-- Is `other' greater than Current ?
 		do
 			Result := class_id < other.class_id or else
-			(class_id = other.class_id and then body_index < other.body_index);
+			(equal (class_id, other.class_id) and then body_index < other.body_index);
 		end;
 
 end

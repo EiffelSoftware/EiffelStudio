@@ -94,7 +94,7 @@ feature
 			end;
 		end;
 				
-	insert (written_in: INTEGER; pattern: PATTERN) is
+	insert (written_in: CLASS_ID; pattern: PATTERN) is
 		require
 			good_argument: pattern /= Void
 		local

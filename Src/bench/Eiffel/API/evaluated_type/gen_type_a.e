@@ -85,7 +85,7 @@ feature -- Access
 			other_gen_type ?= other;
 			if 	other_gen_type /= Void
 				and then
-				other_gen_type.base_type = base_type
+				equal (other_gen_type.base_class_id, base_class_id)
 				and then
 				is_expanded = other_gen_type.is_expanded
 			then
@@ -234,7 +234,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				count := generics.count;
 				!!meta_generic.make (count);
 				!!Result;
-				Result.set_base_id (base_type);
+				Result.set_base_id (base_class_id);
 				Result.set_meta_generic (meta_generic);
 				Result.set_is_expanded (is_expanded);
 			until
@@ -260,7 +260,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 					count := generics.count;
 					!!new_generics.make (1, count);
 					!!Result;
-					Result.set_base_type (base_type);
+					Result.set_base_class_id (base_class_id);
 					Result.set_generics (new_generics);
 				until
 					i > count
@@ -304,7 +304,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			gen_type: GEN_TYPE_A;
 			gen_type_generics: like generics;
 		do
-			if base_type = type.base_type then
+			if equal (base_class_id, type.base_class_id) then
 				gen_type ?= type;
 				if gen_type /= Void then
 					from
@@ -334,7 +334,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		end;
 
 	instantiate (type: TYPE_A): TYPE_A is
-			-- Instatiates `type'. Given that `type' may hold
+			-- Instantiates `type'. Given that `type' may hold
 			-- some formal generics, instantiate them with the
 			-- generics from Current.	
 		require
@@ -343,10 +343,12 @@ feature {COMPILER_EXPORTER} -- Primitives
 			i, count: INTEGER;
 			gen_type: GEN_TYPE_A;
 			gen_type_generics: like generics;
+			formal_type: FORMAL_A
 		do
-			if type.is_formal then
+			formal_type ?= type;
+			if formal_type /= Void then
 					-- Instantiation of a formal generic
-				Result := generics.item (type.base_type);
+				Result := generics.item (formal_type.position);
 			elseif type.has_generics then
 					-- Instantiation of the generic parameter of `type'
 				gen_type ?= type;
@@ -463,6 +465,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			i, count: INTEGER;
 			gen_param, to_check, constraint_type: TYPE_A;
 			constraint_info: CONSTRAINT_INFO;
+			formal_type: FORMAL_A
 		do
 			from
 				i := 1;
@@ -471,14 +474,15 @@ feature {COMPILER_EXPORTER} -- Primitives
 				i > count
 			loop
 				gen_param := generics.item (i);
-				if gen_param.is_formal then
+				formal_type ?= gen_param;
+				if formal_type /= Void then
 						-- Check if constraint associated conform to the
 						-- i_th generic parameter of context_type
 					check
 						context_class.generics /= Void;
 					end;
 					to_check := context_class.generics.i_th
-										(gen_param.base_type).constraint_type;
+										(formal_type.position).constraint_type;
 				else
 					to_check := gen_param;
 				end;
@@ -511,7 +515,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			other_gen_type ?= other;
 			if 	other_gen_type /= Void
 				and then
-				other_gen_type.base_type = base_type
+				equal (other_gen_type.base_class_id, base_class_id)
 				and then
 				is_expanded = other_gen_type.is_expanded
 			then
@@ -540,7 +544,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			other_gen_type ?= other;
 			if  other_gen_type /= Void
 				and then
-				other_gen_type.base_type = base_type
+				equal (other_gen_type.base_class_id, base_class_id)
 			then
 				from
 					Result := True;
@@ -632,7 +636,7 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 			gens: FIXED_LIST [S_TYPE_INFO];
 			count, i: INTEGER
 		do
-			!! Result.make (Void, associated_class.id);
+			!! Result.make (Void, associated_class.id.id);
 			count := generics.count;
 			!! gens.make (count);
 			from
@@ -660,7 +664,7 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
             ass_classc := associated_class;
             !! class_name.make (ass_classc.class_name.count);
 			class_name.append (ass_classc.class_name);
-			!! Result.make (class_name, ass_classc.id);
+			!! Result.make (class_name, ass_classc.id.id);
 			count := generics.count;
 			!! gens.make (count);
 			from

@@ -38,7 +38,7 @@ feature
 						a_class.generics /= Void;
 					end;
 					Cecil_file.putstring ("static int32 patterns");
-					Cecil_file.putint (a_class.id);
+					Cecil_file.putint (a_class.id.id);
 					Cecil_file.putstring (" [] = {%N");
 					from
 						types := a_class.types;
@@ -53,7 +53,7 @@ feature
 					Cecil_file.putstring ("SK_INVALID%N};%N%N");
 					
 					Cecil_file.putstring ("static int16 dyn_types");
-					Cecil_file.putint (a_class.id);
+					Cecil_file.putint (a_class.id.id);
 					Cecil_file.putstring (" [] = {%N");
 					from
 						types.start
@@ -86,9 +86,9 @@ feature
 					Cecil_file.putstring ("{(int) ");
 					Cecil_file.putint (a_class.generics.count);
 					Cecil_file.putstring (", patterns");
-					Cecil_file.putint (a_class.id);
+					Cecil_file.putint (a_class.id.id);
 					Cecil_file.putstring (", dyn_types");
-					Cecil_file.putint (a_class.id);
+					Cecil_file.putint (a_class.id.id);
 					Cecil_file.putchar ('}');
 				end;
 				Cecil_file.putstring (",%N");

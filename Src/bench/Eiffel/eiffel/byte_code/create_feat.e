@@ -8,7 +8,8 @@ inherit
 	SHARED_ENCODER;
 	SHARED_TABLE;
 	SHARED_DECLARATIONS;
-	SHARED_GENERATION_CONSTANTS
+	SHARED_GENERATION_CONSTANTS;
+	COMPILER_EXPORTER
 
 feature 
 
@@ -104,7 +105,7 @@ feature
 				else
 					gen_file.putstring ("RTWT(");
 					gen_file.putint
-						(context.current_type.associated_class_type.id - 1);
+						(context.current_type.associated_class_type.id.id - 1);
 					gen_file.putstring (gc_comma);
 					gen_file.putint (feature_id);
 				end;
@@ -129,7 +130,7 @@ feature -- Byte code generation
 			else
 				ba.append (Bc_clike);
 				ba.append_short_integer
-					(context.current_type.associated_class_type.id - 1);
+					(context.current_type.associated_class_type.id.id - 1);
 				ba.append_integer (feature_id);
 			end
 		end;

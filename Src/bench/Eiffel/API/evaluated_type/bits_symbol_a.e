@@ -1,7 +1,7 @@
 indexing
 
 	description: 
-		"Actual type for bits_symbol: `base_type' is the bits value.";
+		"Actual type for bits_symbol."
 	date: "$Date$";
 	revision: "$Revision $"
 
@@ -10,6 +10,8 @@ class BITS_SYMBOL_A
 inherit
 
 	BITS_A
+		rename
+			base_class_id as class_id
 		redefine
 			solved_type, dump, append_to,
 			is_deep_equal
@@ -31,8 +33,6 @@ feature {NONE} -- Initialization
 feature -- Properties
 
 	feature_name: STRING;
-
-	class_id: INTEGER;
 
 	rout_id: ROUTINE_ID;
 
@@ -68,7 +68,7 @@ feature {COMPILER_EXPORTER}
 			int_value: INT_VALUE_I;
 		do
 			origin_table := feat_table.origin_table;
-			if System.current_class.id /= class_id then
+			if not equal (System.current_class.id, class_id) then
 				anchor_feature := System.class_of_id (class_id).feature_table
 								.item (feature_name);
 			else
@@ -103,7 +103,7 @@ feature {COMPILER_EXPORTER}
 					-- Cannot go on here
 					Error_handler.raise_error;
 				end;
-				base_type := bits_value;
+				bit_count := bits_value;
 			end;
 			rout_id := anchor_feature.rout_id_set.first;
 			Result := clone (Current);
@@ -115,9 +115,9 @@ feature {COMPILER_EXPORTER}
 		do
 			bits_s ?= other;
 			Result := bits_s /= Void and then
-				bits_s.base_type = base_type and then
+				bits_s.bit_count = bit_count and then
 				bits_s.is_expanded = is_expanded and then
-				bits_s.class_id = class_id and then
+				equal (bits_s.class_id, class_id) and then
 				bits_s.rout_id.is_equal (rout_id) and then
 				feature_name.is_equal (bits_s.feature_name)
 		end;

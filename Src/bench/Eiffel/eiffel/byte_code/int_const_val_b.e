@@ -71,7 +71,7 @@ feature -- Byte code generation
 			else
 				ba.append (Bc_feature);
 				ba.append_integer (feature_id);
-				ba.append_short_integer (cl_type.associated_class_type.id - 1)
+				ba.append_short_integer (cl_type.associated_class_type.id.id - 1)
 			end
 		end;
 

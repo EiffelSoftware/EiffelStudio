@@ -13,7 +13,7 @@ inherit
 		rename
 			successors as descendants
 		end;
-	IDABLE;
+	COMPILER_IDABLE;
 	PROJECT_CONTEXT;
 	SHARED_WORKBENCH;
 	SHARED_SERVER
@@ -47,7 +47,7 @@ feature -- Initialization
 
 feature -- Properties
 
-	id: INTEGER;
+	id: CLASS_ID;
 			-- Class id
 
 	lace_class: CLASS_I;
@@ -125,10 +125,10 @@ feature -- Access
 	ast: CLASS_AS is
 			-- Associated AST structure
 		do
-			if Ast_server.has (id) then
-				Result := Ast_server.item (id);
-			elseif Tmp_ast_server.has (id) then
-				Result := Tmp_ast_server.item (id);
+			if Ast_server.has (idable_id) then
+				Result := Ast_server.item (idable_id);
+			elseif Tmp_ast_server.has (idable_id) then
+				Result := Tmp_ast_server.item (idable_id);
 			end;
 		ensure
 			non_void_result_if: has_ast implies Result /= Void 
@@ -231,7 +231,7 @@ feature -- Precompilation Access
 
 	is_precompiled: BOOLEAN is
 		do	
-			Result := id <= System.max_precompiled_id
+			Result := id.is_precompiled and not Compilation_modes.is_precompiling
 		end;
 
 feature -- Server Access
@@ -239,14 +239,14 @@ feature -- Server Access
 	has_ast: BOOLEAN is
 			-- Does Current class have an AST structure?
 		do
-			Result := Ast_server.has (id) or else
-				Tmp_ast_server.has (id)
+			Result := Ast_server.has (idable_id) or else
+				Tmp_ast_server.has (idable_id)
 		end;
 
 	has_feature_table: BOOLEAN is
 			-- Does Current class have a feature table?
 		do
-			Result := Feat_tbl_server.has (id)
+			Result := Feat_tbl_server.has (idable_id)
 		end;
 
 	click_list: CLICK_LIST is
@@ -255,10 +255,10 @@ feature -- Server Access
 		local
 			ast_clicks: CLICK_LIST
 		do
-			if Tmp_ast_server.has (id) then
-				Result := Tmp_ast_server.item (id).click_list
+			if Tmp_ast_server.has (id.id) then
+				Result := Tmp_ast_server.item (id.id).click_list
 			else
-				Result := Ast_server.item (id).click_list
+				Result := Ast_server.item (id.id).click_list
 			end;
 		end;
 
@@ -433,7 +433,7 @@ feature {CLASS_C, CLASS_SORTER} -- Setting
 			is_expanded := b;
 		end;
 
-	set_id (i: INTEGER) is
+	set_id (i: like id) is
 			-- Assign `i' to `id'.
 		do
 			id := i;
@@ -482,9 +482,9 @@ feature {NONE} -- Implementation
 	comp_feature_table: FEATURE_TABLE is
 			-- Compiler feature table
 		require
-			has_feature_table: Feat_tbl_server.has (id)
+			has_feature_table: Feat_tbl_server.has (id.id)
 		do
-			Result := Feat_tbl_server.item (id)
+			Result := Feat_tbl_server.item (id.id)
 		ensure
 			valid_result: Result /= Void
 		end;

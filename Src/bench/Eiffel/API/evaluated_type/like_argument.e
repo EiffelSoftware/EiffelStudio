@@ -10,9 +10,6 @@ class LIKE_ARGUMENT
 inherit
 
 	TYPE_A
-		rename
-			base_type as position,
-			set_base_type as set_position
 		redefine
 			actual_type, solved_type, has_like, instantiation_in, is_like,
 			is_basic, instantiated_in, same_as, conformance_type, meta_type,
@@ -63,6 +60,17 @@ feature -- Access
 		do
 			Result := evaluated_type.associated_eclass;
 		end;
+
+	position: INTEGER
+			-- Position in the argument list
+
+feature -- Setting
+
+	set_position (p: like position) is
+			-- Assign `p' to `position'.
+		do
+			position := p
+		end
 
 feature -- Output
 
@@ -121,7 +129,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end;
 		end;
 
-	instantiation_in (type: TYPE_A; written_id: INTEGER): LIKE_ARGUMENT is
+	instantiation_in (type: TYPE_A; written_id: CLASS_ID): LIKE_ARGUMENT is
 			-- Instantiation of Current in the context of `class_type',
 			-- assuming that Current is written in class of id `written_id'.
 		do
@@ -201,7 +209,7 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 	storage_info (classc: CLASS_C): S_CLASS_TYPE_INFO is
 			-- Storage info for Current type in class `classc'
 		do
-			!! Result.make (Void, associated_class.id)
+			!! Result.make (Void, associated_class.id.id)
 		end;
 
 	storage_info_with_name (classc: CLASS_C): S_CLASS_TYPE_INFO is
@@ -214,7 +222,7 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 			ass_classc := associated_class;
 			!! class_name.make (ass_classc.class_name.count);
 			class_name.append (ass_classc.class_name);
-			!! Result.make (class_name, ass_classc.id)
+			!! Result.make (class_name, ass_classc.id.id)
 		end;
 
 end -- class LIKE_ARGUMENT

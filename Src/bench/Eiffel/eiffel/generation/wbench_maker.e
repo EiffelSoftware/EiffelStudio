@@ -96,59 +96,57 @@ feature
 			-- each class as well as feature tables and descriptor
 			-- tables.
 		local
-			i, nb: INTEGER;
 			a_class: CLASS_C;
 			types: TYPE_LIST;
 			cl_type: CLASS_TYPE;
-			object_name, file_name: STRING
+			object_name, file_name: STRING;
+			classes: CLASS_C_SERVER
 		do
 			from
-				i := 1;
-				nb := System.class_counter.value;
+				classes := System.classes;
+				classes.start
 			until
-				i > nb
+				classes.after
 			loop
-				a_class := System.class_of_id (i);
-				if a_class /= Void then
-					from
-						types := a_class.types;
-						types.start
-					until
-						types.after
-					loop
-						cl_type := types.item;
+				a_class := classes.item_for_iteration;
+				from
+					types := a_class.types;
+					types.start
+				until
+					types.after
+				loop
+					cl_type := types.item;
 
-						if (not cl_type.is_precompiled) then
-								-- C code
-							object_name := cl_type.base_file_name;
-							!!file_name.make (16);
-							file_name.append (object_name);
-							file_name.append (".o");
-							object_baskets.item (cl_type.packet_number).extend (file_name);
-
-								-- Descriptor file
-							!!file_name.make (16);
-							file_name.append (object_name);
-							file_name.append_character (Descriptor_file_suffix);
-							file_name.append (".o");
-							descriptor_baskets.item (cl_type.packet_number).extend (file_name);
-						end;
-
-						types.forth;
-					end;
-
-					if (not a_class.is_precompiled) then
-							-- Feature table
-						object_name := a_class.base_file_name;
+					if (not cl_type.is_precompiled) then
+							-- C code
+						object_name := cl_type.base_file_name;
 						!!file_name.make (16);
 						file_name.append (object_name);
-						file_name.append_integer (i);
-						file_name.append_character (Feature_table_file_suffix);
 						file_name.append (".o");
-						feat_table_baskets.item (a_class.packet_number).extend (file_name);
+						object_baskets.item (cl_type.packet_number).extend (file_name);
+
+							-- Descriptor file
+						!!file_name.make (16);
+						file_name.append (object_name);
+						file_name.append_character (Descriptor_file_suffix);
+						file_name.append (".o");
+						descriptor_baskets.item (cl_type.packet_number).extend (file_name);
 					end;
+
+					types.forth;
 				end;
-				i := i + 1;
+
+				if (not a_class.is_precompiled) then
+						-- Feature table
+					object_name := a_class.base_file_name;
+					!!file_name.make (16);
+					file_name.append (object_name);
+					file_name.append_integer (a_class.id.id);
+					file_name.append_character (Feature_table_file_suffix);
+					file_name.append (".o");
+					feat_table_baskets.item (a_class.packet_number).extend (file_name);
+				end;
+				classes.forth
 			end;
 		end;
 

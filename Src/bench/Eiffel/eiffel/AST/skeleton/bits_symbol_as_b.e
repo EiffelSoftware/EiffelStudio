@@ -77,7 +77,7 @@ feature
 				positive_bits_value: bits_value > 0;
 			end;
 			!!Result.make (constant);
-			Result.set_base_type (bits_value);
+			Result.set_bit_count (bits_value);
 			if System.in_pass3 then
 				!!depend_unit.make (context.a_class.id, constant.feature_id);
 				context.supplier_ids.extend (depend_unit);

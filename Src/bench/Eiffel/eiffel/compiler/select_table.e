@@ -19,7 +19,7 @@ creation
 
 feature -- Final mode
 
-	add_units (id: INTEGER) is
+	add_units (id: CLASS_ID) is
 			-- Insert units of Current in the history
 			-- controler (routine table construction)
 		local

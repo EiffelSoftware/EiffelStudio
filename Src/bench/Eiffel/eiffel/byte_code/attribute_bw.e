@@ -82,7 +82,7 @@ feature
 				else
 					generated_file.putstring ("RTWA(");
 				end;
-				generated_file.putint (typ.associated_class_type.id - 1);
+				generated_file.putint (typ.associated_class_type.id.id - 1);
 				generated_file.putstring (gc_comma);
 				generated_file.putint (real_feature_id);
 			end;

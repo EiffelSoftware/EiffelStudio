@@ -23,7 +23,8 @@ feature
 			c_type: TYPE_C;
 			written_class: CLASS_C;
 			class_type, written_type: CLASS_TYPE;
-			actual_type: TYPE_A
+			actual_type: TYPE_A;
+			formal_type: FORMAL_A
 		do
 			file.putstring ("static char *(*cr");
 			file.putint (type_id);
@@ -50,7 +51,7 @@ feature
 											(class_type.type).associated_class_type;
 					end;
 					routine_name := Encoder.feature_name
-										(written_type.id, feat.body_id);
+										(written_type.id.id, feat.body_id);
 debug ("CECIL")
     io.putstring ("Generating entry for feature: ");
     io.putstring (feat.feature_name);
@@ -68,9 +69,10 @@ end;
 					actual_type := feat.type.actual_type;
 						-- Remember extern declarations
 					if actual_type.is_formal then
+						formal_type ?= actual_type;
 						actual_type := 
 							class_type.associated_class.constraint 
-												(actual_type.base_type);
+												(formal_type.position);
 					end; 
 					c_type := actual_type.type_i.c_type;
 					Extern_declarations.add_routine (c_type, clone (routine_name));
@@ -81,14 +83,14 @@ end;
 			file.putstring ("};%N%N");
 		end;
 
-	generate_workbench (file: INDENT_FILE; class_id: INTEGER) is
+	generate_workbench (file: INDENT_FILE; class_id: CLASS_ID) is
 			-- Generate workbench feature id array
 		local
 			i: INTEGER;
 			feat: FEATURE_I;
 		do
 			file.putstring ("uint32 cr");
-			file.putint (class_id);
+			file.putint (class_id.id);
 			file.putstring ("[] = {%N");
 			from
 				i := 0
@@ -108,7 +110,7 @@ end;
 			file.putstring ("};%N%N");
 		end;
 
-	generate_name_table (file: INDENT_FILE; id: INTEGER) is
+	generate_name_table (file: INDENT_FILE; id: CLASS_ID) is
 			-- Generate name table in file `file'.
 		require
 			good_argument: file /= Void;
@@ -118,7 +120,7 @@ end;
 			feat: FEATURE_I;
 		do
 			file.putstring ("char *cl");
-			file.putint (id);
+			file.putint (id.id);
 			file.putstring (" [] = {%N");
 			from
 				i := 0;

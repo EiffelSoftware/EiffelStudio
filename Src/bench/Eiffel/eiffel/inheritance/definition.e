@@ -109,7 +109,7 @@ feature
 						-- At least, the attribute is a redeclaration
 						-- of a deferred routine or an implemented function.
 						-- Remember to generate a function
-					if attribute.generate_in <= 0 then
+					if attribute.generate_in = Void then
 						attribute.set_has_function_origin (True);
 						attribute.set_generate_in (new_tbl.feat_tbl_id);
 							-- Remember to process a pattern for this
@@ -145,7 +145,7 @@ feature
 						attribute_list.after or else stop
 					loop
 						attr_precursor ?= attribute_list.item.a_feature;
-						stop := attr_precursor.generate_in > 0;
+						stop :=  attr_precursor.generate_in /= Void;
 						attribute_list.forth
 					end;
 					if stop then

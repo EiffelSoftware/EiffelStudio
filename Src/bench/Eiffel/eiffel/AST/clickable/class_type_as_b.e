@@ -111,7 +111,7 @@ feature -- Conveniences
 				a_classi := Universe.class_named (class_name, Inst_context.cluster);
 				if a_classi /= Void and then a_classi.compiled_class /= Void then
 					a_class := a_classi.compiled_class;
-					Result.set_base_type (a_class.id);
+					Result.set_base_class_id (a_class.id);
 						-- Base type class is expanded
 					Result.set_is_expanded (a_class.is_expanded);
 				else
@@ -148,7 +148,7 @@ feature -- Conveniences
 			end;
 			a_class :=
 		Universe.class_named (class_name, Inst_context.cluster).compiled_class;
-			Result.set_base_type (a_class.id);
+			Result.set_base_class_id (a_class.id);
 				-- Base type class is expanded
 			Result.set_is_expanded (a_class.is_expanded);
 			if a_class.is_expanded then
@@ -219,7 +219,7 @@ feature -- Conveniences
 					Result := gen_type;
 				end;
 				a_class := a_class_i.compiled_class;
-				Result.set_base_type (a_class.id);
+				Result.set_base_class_id (a_class.id);
 						-- Base type class is expanded
 				Result.set_is_expanded (a_class.is_expanded);
 				if a_class.is_expanded then

@@ -95,7 +95,7 @@ feature
 	type_a: FORMAL_A is
 		do
 			!!Result
-			Result.set_base_type (position)
+			Result.set_position (position)
 		end
 
 end

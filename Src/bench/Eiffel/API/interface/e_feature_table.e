@@ -20,13 +20,13 @@ inherit
 
 feature -- Properties
 
-	class_id: INTEGER;
+	class_id: CLASS_ID;
 			-- Id of the class to which the feature table belongs to.
 
 	associated_class: E_CLASS is
 			-- Associated class
 		require
-			valid_class_id: class_id > 0
+			valid_class_id: class_id /= Void
 		do
 			Result := Eiffel_system.class_of_id (class_id);
 		end;

@@ -41,7 +41,7 @@ feature
 			class_type ?= t;
 			Result :=	class_type /= Void 
 						and then
-						bit_val.count <= class_type.base_type 
+						bit_val.count <= class_type.bit_count 
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is

@@ -12,6 +12,10 @@ inherit
 		redefine
 			is_equal
 		end;
+	COMPILER_EXPORTER
+		redefine
+			is_equal
+		end
 
 
 creation
@@ -24,20 +28,20 @@ feature
 	pattern_id: INTEGER;
 			-- Pattern unique identifier
 
-	written_in: INTEGER;
+	written_in: CLASS_ID;
 			-- Id of the class where the pattern comes from
 
 	pattern: PATTERN;
 			-- Pattern
 
-	make (i: INTEGER; p: PATTERN) is
+	make (i: CLASS_ID; p: PATTERN) is
 			-- Initialization
 		do
 			written_in := i;
 			pattern := p;
 		end;
 
-	set_written_in (i: INTEGER) is
+	set_written_in (i: CLASS_ID) is
 			-- Assign `i' to `written_in'.
 		do
 			written_in := i;
@@ -59,7 +63,7 @@ feature
 			-- Is `other' equal to Current ?
 		do
 			Result :=
-				written_in = other.written_in
+				equal (written_in, other.written_in)
 				and then
 				pattern.is_equal (other.pattern);
 		end;
@@ -67,7 +71,7 @@ feature
 	hash_code: INTEGER is
 			-- Hash code
 		do
-			Result := written_in + pattern.hash_code;
+			Result := written_in.hash_code + pattern.hash_code;
 		end;
 
 	associated_class: CLASS_C is

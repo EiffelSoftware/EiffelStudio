@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 			!! s_system_data;
 			s_system_data.set_root_cluster (root_cluster);
 			s_system_data.set_class_view_number (Old_case_info.class_view_number);
-			s_system_data.set_class_id_number (System.class_counter.value);
+			s_system_data.set_class_id_number (System.class_counter.total_count);
 			s_system_data.set_cluster_view_number (Old_case_info.cluster_view_number);
 			Case_file_server.tmp_save_system (s_system_data);
 			io.error.putstring ("Saving EiffelCase project to CASEGEN directory.%N");
@@ -325,21 +325,18 @@ feature {NONE} -- Implementation
 	need_to_reverse_engineer: BOOLEAN is
 			-- Do we need to reverse engineer?
 		local
-			classes: ARRAY [CLASS_C];
-			i: INTEGER;
+			classes: CLASS_C_SERVER;
 			c: CLASS_C;
 		do
-			classes := System.id_array;
+			classes := System.classes;
 			from
-				i := classes.lower
+				classes.start
 			until
-				i > classes.upper or else Result
+				classes.after or else Result
 			loop
-				c := classes.item (i);
-				if c /= Void then
-					Result := not c.reverse_engineered
-				end;
-				i := i + 1
+				c := classes.item_for_iteration;
+				Result := not c.reverse_engineered;
+				classes.forth
 			end;
 		end;
 
@@ -348,23 +345,21 @@ feature {NONE} -- Implementation
 			-- reversed engineered and save the 
 			-- project.
 		local
-			classes: ARRAY [CLASS_C];
+			classes: CLASS_C_SERVER;
 			i: INTEGER;
 			c: CLASS_C;
 			need_to_save: BOOLEAN
 		do
-			classes := System.id_array;
+			classes := System.classes;
 			from
-				i := classes.lower
+				classes.start
 			until
-				i > classes.upper
+				classes.after
 			loop
-				c := classes.item (i);
-				if c /= Void then
-					need_to_save := True;
-					c.set_reverse_engineered (True)
-				end;
-				i := i + 1
+				c := classes.item_for_iteration;
+				need_to_save := True;
+				c.set_reverse_engineered (True);
+				classes.forth
 			end;
 			if need_to_save then
 				save_workbench_file

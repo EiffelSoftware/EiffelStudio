@@ -60,7 +60,7 @@ feature -- Attributes
 debug
 	io.error.putstring ("Dispatch : ");
 	io.error.putstring (a_class.class_name);
-	io.error.putint (a_class.id);
+	io.error.putint (a_class.id.id);
 	io.error.new_line;
 	io.error.putstring (generic_type.dump);
 	io.error.new_line;
@@ -95,11 +95,10 @@ end;
 		local
 			data: GEN_TYPE_I;
 			local_cursor: LINKABLE [GEN_TYPE_I];
-			i, nb: INTEGER;
 			a_class: CLASS_C;
 			types: TYPE_LIST;
 			class_type: CLASS_TYPE;
-			class_array: ARRAY [CLASS_C];
+			classes: CLASS_C_SERVER
 		do
 				-- Check array class
 			check_array_class;
@@ -125,35 +124,32 @@ end;
 
 				-- Remove the obsolete class types
 			from
-				class_array := System.id_array;
-				i := 1;
-				nb := class_array.count;
+				classes := System.classes;
+				classes.start
 			until
-				i > nb
+				classes.after
 			loop
-				a_class := class_array.item (i);
-				if a_class /= Void then
-					from
-						types := a_class.types;
-						types.start
-					until
-						types.after
-					loop
-						class_type := types.item;
-						if not class_type.type.is_valid then
+				a_class := classes.item_for_iteration;
+				from
+					types := a_class.types;
+					types.start
+				until
+					types.after
+				loop
+					class_type := types.item;
+					if not class_type.type.is_valid then
 debug
 	io.error.putstring ("Removing a type of ");
 	io.error.putstring (a_class.class_name);
 	io.error.new_line;
 end;
-							System.class_types.put (Void, class_type.type_id);
-							types.remove;
-						else
-							types.forth
-						end;
+						System.class_types.put (Void, class_type.type_id);
+						types.remove;
+					else
+						types.forth
 					end;
 				end;
-				i := i + 1
+				classes.forth
 			end;
 		end;
 
@@ -191,10 +187,10 @@ feature
 		do
 				-- Not once because array_id and any_id can change
 			!!Result;
-			Result.set_base_type (System.array_id);
+			Result.set_base_class_id (System.array_id);
 			!!generics.make (1, 1);
 			!!any_type;
-			any_type.set_base_type (System.any_id);
+			any_type.set_base_class_id (System.any_id);
 			generics.put (any_type, 1);
 			Result.set_generics (generics);
 			Result.set_is_expanded (False);

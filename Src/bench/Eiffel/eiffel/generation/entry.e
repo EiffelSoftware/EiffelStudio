@@ -55,7 +55,7 @@ feature
 				--or else
 				--class_type.is_expanded
 			) then
-				Result := class_type.associated_class_type.id;
+				Result := class_type.associated_class_type.id.id;
 			end;
 		end;
 

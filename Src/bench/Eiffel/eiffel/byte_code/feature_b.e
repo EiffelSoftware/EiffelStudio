@@ -327,7 +327,7 @@ feature -- Inlining
 					i > nb_generics
 				loop
 					!!formal_a;
-					formal_a.set_base_type (i);
+					formal_a.set_position (i);
 					actual_type := formal_a.instantiation_in (real_target_type, written_class.id)
 					if actual_type.is_basic then
 						m.put (actual_type.type_i, i)

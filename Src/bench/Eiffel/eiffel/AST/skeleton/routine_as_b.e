@@ -208,7 +208,7 @@ feature -- Type check, byte code and dead code removal
 				from
 					curr_feat := context.a_feature;
 					track_local :=
-						curr_feat.written_in = context_class.id;
+						equal (curr_feat.written_in, context_class.id);
 					--	and then
 					--	context_class.changed;
 					context_locals := context.locals;

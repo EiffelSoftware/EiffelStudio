@@ -50,7 +50,7 @@ feature -- Properties
 	id: INTEGER;
 			-- Unique identification for a feature
 
-	written_in: INTEGER
+	written_in: CLASS_ID
 			-- Class id where feature is written in
 
 	body_id: INTEGER;
@@ -296,7 +296,7 @@ feature -- Access
 	written_class: E_CLASS is
 			-- Class where the feature is written in
 		require
-			good_written_in: written_in > 0;
+			good_written_in: written_in /= Void;
 		do
 			Result := Eiffel_system.class_of_id (written_in);
 		end;
@@ -332,11 +332,11 @@ feature -- Access
 				end
 			end;
 			if Result = Void then
-				if Tmp_ast_server.has (written_in) then
+				if Tmp_ast_server.has (written_in.id) then
 					-- Means a degree 4 error has occurred so the
 					-- best we can do is to search through the
 					-- class ast and find the feature as
-					class_ast := Tmp_ast_server.item (written_in)
+					class_ast := Tmp_ast_server.item (written_in.id)
 					Result := class_ast.feature_with_name (name)
 				end
 			end;
@@ -362,7 +362,7 @@ feature -- Access
 			current_d: DEPEND_UNIT;
 		do
 			!! Result.make;
-			dep := Depend_server.item (cl_class.id);
+			dep := Depend_server.item (cl_class.id.id);
 			!! current_d.make (in_class.id, id);
 			from
 				-- Loop through the features of each client
@@ -556,7 +556,7 @@ feature {FEATURE_I} -- Setting
 			is_dynamic := b
 		end;
 
-	set_written_in (i: INTEGER) is
+	set_written_in (i: CLASS_ID) is
 			-- Set `written_in' to `i'.
 		do
 			written_in := i;

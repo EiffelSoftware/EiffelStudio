@@ -45,6 +45,16 @@ feature -- Status report
 			Result := implementation.current_page
 		end
 
+	tab_position: STRING is
+			-- Position of the tabs.
+			-- "left" for left position.
+			-- "right" for right position.
+			-- "top" for top position.
+			-- "bottom" for bottom position.
+		do
+			Result := implementation.tab_position
+		end
+
 feature -- Status setting
 	
 	set_tab_top is

@@ -74,18 +74,7 @@ feature -- Status report
 	clipboard_content: STRING is
 			-- `Result' is current clipboard content.
 		do
-			--temp_label := C.gtk_entry_new
-			--C.gtk_widget_show (temp_label)
-			--C.gtk_container_add (default_gtk_window, temp_label)
-			--a_success := C.gtk_selection_convert (
-			--	temp_label,
-			--	C.gdk_atom_intern (eiffel_to_c ("CLIPBOARD"), 0),
-			----	C.gdk_atom_intern (eiffel_to_c ("COMPOUND_TEXT"), 0),
-			--	C.GDK_CURRENT_TIME
-			--)
-			--create Result.make (0)
-			--Result.from_c (C.gtk_editable_get_chars (temp_label, 0, -1))
-			--C.gtk_container_remove (default_gtk_window, temp_label)
+			--| FIXME IEK Needs implementing with clipboard from app_imp
 		end
 
 feature -- status settings

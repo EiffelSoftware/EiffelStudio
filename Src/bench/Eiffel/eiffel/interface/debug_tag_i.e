@@ -54,7 +54,7 @@ feature
 				pos := l.position;
 				l.start;
 			until
-				l.offright
+				l.after
 			loop
 				io.error.putstring (l.item);
 				io.error.putstring (" ");
@@ -88,7 +88,7 @@ feature
 				l := tags;
 				l.start
 			until
-				l.offright
+				l.after
 			loop
 				file.putchar ('"');
 				file.putstring (l.item);
@@ -109,7 +109,7 @@ feature
 				l := tags;
 				l.start
 			until
-				l.offright
+				l.after
 			loop
 				ba.append_string (l.item);
 				l.forth;

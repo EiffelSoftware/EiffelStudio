@@ -7,16 +7,20 @@ inherit
 	VWOE
 		rename
 			build_explain as vwoe_build_explain
+		redefine
+			subcode
 		end;
 
 	VWOE
 		redefine
-			build_explain
+			build_explain, subcode
 		select
 			build_explain
 		end
 	
 feature
+
+	subcode: INTEGER is 1;
 
 	formal_type: TYPE_A;
 			-- Formal argument type
@@ -36,18 +40,18 @@ feature
 			actual_type := t;
 		end;
 
-	build_explain (a_clickable: CLICK_WINDOW) is
+	build_explain is
             -- Build specific explanation explain for current error
-            -- in `a_clickable'.
+            -- in `error_window'.
         do
-            vwoe_build_explain (a_clickable);
-			a_clickable.put_string ("%T%T");
+            vwoe_build_explain;
+			put_string ("%T%T");
 -- FIXME:
 --			actual_type.build_explain;
-			a_clickable.put_string (" doesn't conform to ");
+			put_string (" doesn't conform to ");
 -- FIXME:
 --			formal_type.build_explain;
-			a_clickable.new_line;
+			new_line;
 		end;
 
 end

@@ -7,7 +7,7 @@ inherit
 	BASIC_A
 		redefine
 			is_none, dump, type_i, associated_class, same_as,
-			internal_conform_to
+			internal_conform_to, append_clickable_signature
 		end
 
 feature
@@ -20,6 +20,11 @@ feature
 
 	dump: STRING is "NONE";
 			-- Dumped trace
+
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		do
+			a_clickable.put_string ("NONE");
+		end;
 
 	type_i: NONE_I is
 			-- Void C type

@@ -25,7 +25,7 @@ feature
 			from
 				start;
 			until
-				offright
+				after
 			loop
 				item.analyze;
 				forth;
@@ -38,7 +38,7 @@ feature
 			from
 				start;
 			until
-				offright
+				after
 			loop
 				item.generate;
 				forth;
@@ -51,7 +51,7 @@ feature
 			from
 				start;
 			until
-				offright
+				after
 			loop
 				if item.need_enlarging then
 					put (item.enlarged);
@@ -68,7 +68,7 @@ feature
 			from
 				start
 			until
-				offright
+				after
 			loop
 				item.make_byte_code (ba);
 				forth;

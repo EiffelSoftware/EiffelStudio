@@ -5,5 +5,12 @@ class VAOL2
 inherit
 
 	VAOL1
+		redefine
+			subcode
+		end;
+
+feature
+
+	subcode: INTEGER is 2;
 
 end

@@ -29,18 +29,16 @@ feature
 			-- Generate byte code for updating the dispatch table
 		local
 			e: EXECUTION_UNIT;
-			real_body_id, frozen_level: INTEGER;
+			real_body_id: INTEGER;
 			melted_feature: MELT_FEATURE;
 		do
-			frozen_level := System.frozen_level;
-
 				-- First write the count of the byte code table
-			write_int (file.file_pointer, count - frozen_level);
+			write_int (file.file_pointer, counter - frozen_level);
 
 			from
 				melted_list.start
 			until
-				melted_list.offright
+				melted_list.after
 			loop
 				e := melted_list.item;
 				if e.is_valid then
@@ -81,11 +79,11 @@ feature
 			temp: STRING
 		do
 			from
-				nb := count;
+				nb := counter;
 				!!values.make (1, nb);
 				start
 			until
-				offright
+				after
 			loop
 				unit := item_for_iteration;
 				values.put (unit, unit.index);
@@ -99,8 +97,9 @@ feature
 			until
 				i > nb
 			loop
-				if values.item (i).is_valid then
-					values.item (i).generate_declaration (file);
+				unit := values.item (i);
+				if unit /= Void and then unit.is_valid then
+					unit.generate_declaration (file);
 				end;
 				i := i + 1;
 			end;
@@ -113,9 +112,10 @@ feature
 			until
 				i > nb
 			loop
-				if values.item (i).is_valid then
-					values.item (i).generate (file);
-					temp.append_integer (values.item (i).real_pattern_id);
+				unit := values.item (i);
+				if unit /= Void and then unit.is_valid then
+					unit.generate (file);
+					temp.append_integer (unit.real_pattern_id);
 					temp.append (",%N");
 				else
 					file.putstring ("(fnptr) 0,%N");

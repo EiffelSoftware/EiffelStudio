@@ -93,7 +93,7 @@ feature
 					start;
 					Result := True;
 				until
-					offright or else not Result
+					after or else not Result
 				loop
 					feature_name := key_for_iteration;
 					f2 := other.item (feature_name);
@@ -156,7 +156,7 @@ end;
 				removed_features := pass_control.removed_features;
 				start;
 			until
-				offright
+				after
 			loop
 					-- Old feature
 				old_feature_i := item_for_iteration;
@@ -170,6 +170,8 @@ end;
 				if not (	(new_feature_i /= Void
 							and then
 							old_feature_i.same_interface (new_feature_i)
+							and then
+							old_feature_i.export_status.equiv (new_feature_i.export_status)
 							and then
 							old_feature_i.is_deferred = new_feature_i.is_deferred)
 						or else
@@ -246,7 +248,7 @@ end;
 			from
 				start
 			until
-				offright
+				after
 			loop
 				if item_for_iteration.written_in = feat_tbl_id and then 
 					not item_for_iteration.is_deferred then
@@ -280,39 +282,25 @@ end;
 	update_table is
 			-- Check if the references to the supplier classes
 			-- are still valid and remove the entry otherwise
--- FIX ME
--- this should be modified to improve the incrementality
 		local
-			type_a: TYPE_A;
-			used_keys: ARRAY [STRING];
-			base_type: INTEGER;
+			f: FEATURE_I;
 		do
 			from
 				start
 			until
-				offright
+				after
 			loop
-				type_a ?= item_for_iteration.type;
-				if type_a /= Void then
-						-- it is not a procedure
-					if type_a.is_void = False and then
-							-- The result is not none
-						type_a.is_none = False and then
-							-- The result is not a formal argument
-						type_a.is_formal = False and then
-							-- The result is not a like argument
-						type_a.is_like = False and then
-							-- and the class associated with the result does not
-							-- exist in the system any more
-						type_a.associated_class = Void then
+				f := item_for_iteration;
+				if not f.is_valid then
+						-- The result type or one of the arguments type is not valid
+io.error.putstring ("REMOVE BODY_ID ....%N");
 debug
 	io.error.putstring ("Update table: ");
 	io.error.putstring (key_for_iteration);
 	io.error.putstring (" removed%N");
-	io.error.putstring (type_a.out);
 end;
-						remove (key_for_iteration)
-					end;
+					Tmp_body_server.desactive (f.body_id);
+					remove (key_for_iteration);
 				end;
 				forth
 			end
@@ -330,7 +318,7 @@ end;
 				non_deferred := not associated_class.is_deferred;
 				start
 			until
-				offright
+				after
 			loop
 				feature_i := item_for_iteration;
 				if feature_i.is_deferred then
@@ -382,7 +370,7 @@ end;
 			from
 				start
 			until
-				offright
+				after
 			loop
 				item_for_iteration.check_expanded (class_c);
 				forth;
@@ -398,7 +386,7 @@ end;
 			from
 				start
 			until
-				offright or else Result /= Void
+				after or else Result /= Void
 			loop
 				feat := item_for_iteration;
 				if feat.feature_id = i then
@@ -416,7 +404,7 @@ end;
 			from
 				start
 			until
-				offright or else Result /= Void
+				after or else Result /= Void
 			loop
 				feat := item_for_iteration;
 				if feat.body_id = i then
@@ -434,7 +422,7 @@ end;
 			from
 				start
 			until
-				offright or else Result /= Void
+				after or else Result /= Void
 			loop
 				feat := item_for_iteration;
 				if set.has (feat.rout_id_set.first) then
@@ -458,7 +446,7 @@ end;
 				start;
 				a_class := associated_class;
 			until
-				offright
+				after
 			loop
 				feature_i := item_for_iteration;
 				if feature_i.written_in = feat_tbl_id then
@@ -482,7 +470,7 @@ end;
 				!!Result.make;
 				start
 			until
-				offright
+				after
 			loop
 				feature_i := item_for_iteration;
 				if feature_i.is_attribute then
@@ -610,7 +598,7 @@ file.putstring ("' */");
 			from
 				start
 			until
-				offright
+				after
 			loop
 				feature_i := item_for_iteration;
 				Result.put (feature_i, feature_i.feature_id);
@@ -627,7 +615,7 @@ file.putstring ("' */");
 			from
 				start;
 			until
-				offright
+				after
 			loop
 				io.error.putchar ('%T');
 				item_for_iteration.trace_signature;
@@ -647,7 +635,7 @@ file.putstring ("' */");
 			from
 				start;
 			until
-				offright
+				after
 			loop
 				io.error.putstring ("%Tfeature name: ");
 				it := item_for_iteration;

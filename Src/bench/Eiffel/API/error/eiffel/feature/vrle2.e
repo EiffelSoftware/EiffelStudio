@@ -5,6 +5,9 @@ class VRLE2
 inherit
 
 	FEATURE_ERROR
+		redefine
+			build_explain, subcode
+		end;
 	
 feature 
 
@@ -19,5 +22,14 @@ feature
 
 	code: STRING is "VRLE";
 			-- Error code
+
+	subcode: INTEGER is 2;
+
+	build_explain is
+		do
+			put_string ("%TTwo local variables have the same name: `");
+			put_string (local_name);
+			put_string ("'%N");
+		end;
 
 end

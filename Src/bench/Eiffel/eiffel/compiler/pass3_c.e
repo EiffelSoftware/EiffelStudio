@@ -2,7 +2,7 @@ class PASS3_C
 
 inherit
 
-	PASS_C;
+	COMP_PASS_C;
 	SHARED_SERVER;
 	SHARED_ERROR_HANDLER
 

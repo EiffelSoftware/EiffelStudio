@@ -5,14 +5,7 @@ class VJAR
 inherit
 
 	FEATURE_ERROR
-		rename
-			build_explain as old_build_explain
-		end;
-
-	FEATURE_ERROR
 		redefine
-			build_explain
-		select
 			build_explain
 		end
 	
@@ -54,16 +47,15 @@ feature
 	Assign_code: STRING is "VJAR";
 			-- Error code
 
-	build_explain (a_clickable: CLICK_WINDOW) is
+	build_explain is
             -- Build specific explanation image for current error
-            -- in `a_clickable'.
+            -- in `error_window'.
         do
-			old_build_explain (a_clickable);
-			a_clickable.put_string ("%Ttarget = ");
-			a_clickable.put_string (target_type.dump);
-			a_clickable.put_string ("%N%Tsource_type = ");
-			a_clickable.put_string (source_type.dump);
-			a_clickable.put_string ("%N")
+			put_string ("%Ttarget = ");
+			put_string (target_type.dump);
+			put_string ("%N%Tsource_type = ");
+			put_string (source_type.dump);
+			new_line
 		end
 
 end

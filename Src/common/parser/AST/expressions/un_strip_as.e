@@ -38,13 +38,13 @@ feature -- Type check, byte code and dead code removal
 				feature_table := context.a_class.feature_table;
 				id_list.start
 			until
-				id_list.offright
+				id_list.after
 			loop
 				an_id := id_list.item;
 				pos := id_list.position;
 				id_list.forth;
 				id_list.search_equal (an_id);
-				if not id_list.offright then
+				if not id_list.after then
 						-- Id appears more than once in attribute list
 					!!vwst2;
 					context.init_error (vwst2);
@@ -95,7 +95,7 @@ feature -- Type check, byte code and dead code removal
 				!!Result.make;
 				feature_table := context.a_class.feature_table;
 			until
-				id_list.offright
+				id_list.after
 			loop
 				attribute_i ?= feature_table.item (id_list.item);
 				Result.feature_ids.put (attribute_i.feature_id);
@@ -115,7 +115,7 @@ feature -- Type check, byte code and dead code removal
 			from
 				id_list.start;
 			until
-				id_list.offright
+				id_list.after
 			loop
 				ctxt.new_expression;
 				ctxt.prepare_for_feature(id_list.item, void);

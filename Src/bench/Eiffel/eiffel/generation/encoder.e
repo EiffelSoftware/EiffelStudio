@@ -29,15 +29,15 @@ feature
 			eif101 ($Result, rout_id);
 		end;
 
-	feature_name (type_id: INTEGER; body_id: INTEGER): STRING is
-			-- Name of an Eiffel feature belonging to type of id `type_id'
+	feature_name (id: INTEGER; body_id: INTEGER): STRING is
+			-- Name of an Eiffel feature belonging to type of id `id'
 			-- and of body id `body_id'.
 		require
-			good_type_id: type_id <= System.type_id_counter.value;
+			good_type_id: id <= System.static_type_id_counter.value;
 			good_body_id: body_id <= System.body_id_counter.value;
 		do
 			Result := Buffer;
-			eif000 ($Result, type_id, body_id);
+			eif000 ($Result, id, body_id);
 		end;
 
 feature {NONE}

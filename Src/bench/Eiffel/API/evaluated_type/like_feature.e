@@ -116,8 +116,14 @@ feature -- Primitives
 		do
 			s := actual_type.dump;
 			!!Result.make (18 + s.count);
-			Result.append ("[LIKE_FEATURE]: ");
+			Result.append ("[like feature]: ");
 			Result.append (s);
+		end;
+
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		do
+			a_clickable.put_string ("[like feature]: ");
+			actual_type.append_clickable_signature (a_clickable);
 		end;
 
 	has_like: BOOLEAN is

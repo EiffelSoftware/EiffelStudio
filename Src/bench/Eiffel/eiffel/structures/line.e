@@ -49,7 +49,7 @@ feature
 			-- Remove one item
 		require
 			cursor > 0;
-			not offright;
+			not after;
 		do
 			put (t, cursor);
 		end;
@@ -60,16 +60,21 @@ feature
 			cursor := 1;
 		end;
 
-	offright: BOOLEAN is
-			-- Is the cursor offright ?
+	after: BOOLEAN is
+			-- Is the cursor after ?
 		do
 			Result := cursor > count;
+		end;
+
+	offright: BOOLEAN is obsolete "Use `after'"
+		do
+			Result := after
 		end;
 
 	forth is
 			-- Iteration
 		require
-			not offright
+			not after
 		do
 			cursor := cursor + 1;
 		end;
@@ -77,7 +82,7 @@ feature
 	item: T is
 			-- Item at cursor position
 		require
-			not offright
+			not after
 		do
 			Result := array_item (cursor);
 		end;

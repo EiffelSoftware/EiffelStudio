@@ -103,7 +103,7 @@ feature
 					!!Result.make (creators.count);
 					creators.start;
 				until
-					creators.offright
+					creators.after
 				loop
 					from
 						c_reation := creators.item;
@@ -116,7 +116,7 @@ feature
 						feature_list := c_reation.feature_list;
 						feature_list.start
 					until
-						feature_list.offright
+						feature_list.after
 					loop
 						feature_name := feature_list.item.internal_name;
 						a_feature := feat_table.item (feature_name);

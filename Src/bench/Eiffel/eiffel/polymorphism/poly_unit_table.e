@@ -34,7 +34,7 @@ feature
 			from
 				start
 			until
-				offright or else stop
+				after or else stop
 			loop
 				item_id := item.id;
 				if item_id = i then
@@ -75,7 +75,7 @@ feature
 			from
 				other.start
 			until
-				other.offright
+				other.after
 			loop
 				remove_unit_of_id (other.item.id);
 				other.forth;

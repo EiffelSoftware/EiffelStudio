@@ -10,7 +10,7 @@ inherit
 		redefine
 			feature_type, instantiation_in, instantiation_of,
 			meta_type, is_basic, internal_conform_to,
-			good_generics
+			good_generics, is_valid
 		end
 
 feature
@@ -64,6 +64,12 @@ feature
 
 	is_basic: BOOLEAN is
 			-- Is the current actual type a basic one ?
+		do
+			Result := True;
+		end;
+
+	is_valid: BOOLEAN is
+			-- The associated class is still in the system
 		do
 			Result := True;
 		end;

@@ -116,7 +116,7 @@ feature -- Conveniences
 				from
 					generics.start
 				until
-					generics.offright or else Result
+					generics.after or else Result
 				loop
 					Result := generics.item.has_like;
 					generics.forth
@@ -138,7 +138,7 @@ feature -- Conveniences
 					generics.start; 
 					Result.append (" [");
 				until
-					generics.offright
+					generics.after
 				loop
 					generics.item.trace;
 					if not generics.islast then

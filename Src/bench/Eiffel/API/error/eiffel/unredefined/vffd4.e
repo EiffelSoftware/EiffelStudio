@@ -5,6 +5,9 @@ class VFFD4
 inherit
 
 	EIFFEL_ERROR
+		redefine
+			subcode
+		end;
 	
 feature 
 
@@ -13,6 +16,8 @@ feature
 
 	code: STRING is "VFFD";
 			-- Error code
+
+	subcode: INTEGER is 4;
 
 	set_body_id (i: INTEGER) is
 			-- Assign `i' to `body_id'.

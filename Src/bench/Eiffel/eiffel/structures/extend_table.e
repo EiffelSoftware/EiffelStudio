@@ -17,16 +17,21 @@ feature -- Iterartion
 			forth
 		end;
 
-	offright: BOOLEAN is
+	after: BOOLEAN is
 			-- Is the cursor at the end ?
 		do
 			Result := position_for_iteration > keys.upper
 		end;
 
+	offright: BOOLEAN is obsolete "Use `after'"
+		do
+			Result := after
+		end;
+
 	forth is
 			-- Advance iteration
 		require
-			not_offright: not offright
+			not_after: not after
 		local
 			stop: BOOLEAN
 		do
@@ -35,7 +40,7 @@ feature -- Iterartion
 				stop
 			loop
 				position_for_iteration := position_for_iteration + 1;
-				stop := offright 
+				stop := after 
 					or else valid_key (keys.item (position_for_iteration))
 			end
 		end;
@@ -43,7 +48,7 @@ feature -- Iterartion
 	item_for_iteration: T is
 			-- Element at current iteration position
 		require
-			not_offright: not offright
+			not_after: not after
 		do
 			Result := content.item (position_for_iteration)
 		end;
@@ -51,7 +56,7 @@ feature -- Iterartion
 	key_for_iteration: U is
 			-- Key at current iteration position
 		require
-			not_offright: not offright
+			not_after: not after
 		do
 			Result := keys.item (position_for_iteration)
 		end;
@@ -68,7 +73,7 @@ feature -- Merging
 			from
 				other.start
 			until
-				other.offright
+				other.after
 			loop
 				force (other.item_for_iteration, other.key_for_iteration);
 				other.forth

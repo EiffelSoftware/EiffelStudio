@@ -5,8 +5,12 @@ class VWBE2
 inherit
 
 	VWBE
-	
+		redefine
+			subcode
+		end
 feature 
+
+	subcode: INTEGER is 2;
 
 	clause: ELSIF_AS;
 			-- Clause involved

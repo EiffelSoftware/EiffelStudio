@@ -5,14 +5,7 @@ class VWOE
 inherit
 
 	FEATURE_ERROR
-		rename
-			build_explain as old_build_explain
-		end;
-
-	FEATURE_ERROR
 		redefine
-			build_explain
-		select
 			build_explain
 		end
 	
@@ -48,18 +41,17 @@ feature
 	code: STRING is "VWOE";
 			-- Error code
 
-	build_explain (a_clickable: CLICK_WINDOW) is
+	build_explain is
 			-- Build specific explanation image for current error
-			-- in `a_clickable'.
+			-- in `error_window'.
 		do
-			old_build_explain (a_clickable);
-			a_clickable.put_string ("%TThere is no feature `");
-			a_clickable.put_string (op_name);
-			a_clickable.put_string ("' in class ");
+			put_string ("%TThere is no feature `");
+			put_string (op_name);
+			put_string ("' in class ");
 -- FIXME
---			a_clickable.put_clickable_string (other_class, other_class.class_name);
-			a_clickable.put_string (other_class.class_name);
-			a_clickable.put_string ("%N")
+--			put_clickable_string (other_class, other_class.class_name);
+			put_string (other_class.class_name);
+			put_char ('%N')
 		end
 
 end

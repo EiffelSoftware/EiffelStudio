@@ -53,14 +53,15 @@ feature
 			remover := System.remover;
 			Result := 	remover = Void					-- Workbench mode
 						or else
+						System.remover_off				-- Dead code removal disconnected
+						or else
 						remover.is_body_alive (body_id)	-- Final mode
 		end;
 
 	routine_name: STRING is
 			-- Routine name to generate
 		do
-			Result := Encoder.feature_name
-				(System.class_type_of_id (written_type_id).id, body_id);
+			Result := Encoder.feature_name (written_class_type.id, body_id);
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is
@@ -92,12 +93,16 @@ feature
 			file.putstring ("{(int16) 0, (int16) 0}");
 		end;
 
+	written_class_type: CLASS_TYPE is
+		do
+			Result := System.class_type_of_id (written_type_id)
+		end;
 
 	real_body_index: INTEGER is
 			-- Real body index
 		do
 			Result := Dispatch_table.real_body_index
-									(body_index, written_type_id) - 1;
+									(body_index, written_class_type) - 1;
 		end;
 
 end

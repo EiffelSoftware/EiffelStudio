@@ -23,7 +23,7 @@ feature
 			-- Has the skeleton an attribute of feature id `feature_id' ?
 		do
 			search_feature_id (feature_id);
-			Result := not offright;
+			Result := not after;
 		end;
 
 	search_feature_id (feature_id: INTEGER) is
@@ -34,7 +34,7 @@ feature
 			from
 				start;
 			until
-				offright or else item.feature_id = feature_id
+				after or else item.feature_id = feature_id
 			loop
 				forth
 			end;
@@ -100,7 +100,7 @@ feature
 				old_pos := position;
 				goto (level);
 			until
-				offright or else item.level > level
+				after or else item.level > level
 			loop
 				Result := Result + 1;
 				forth;
@@ -134,7 +134,7 @@ feature
 			from
 				start
 			until
-				offright or else item.level >= level
+				after or else item.level >= level
 			loop
 				forth
 			end;
@@ -167,7 +167,7 @@ feature
 			go_bits;
 			from
 			until
-				offright or else item.level /= Bits_level
+				after or else item.level /= Bits_level
 			loop
 				bit_desc ?= item;
 				file.putstring ("+OVERHEAD+BITOFF(");
@@ -178,7 +178,7 @@ feature
 			go_expanded;
 			from
 			until
-				offright
+				after
 			loop
 				expanded_desc ?= item;
 				expanded_skeleton := expanded_desc.class_type.skeleton;
@@ -211,7 +211,7 @@ feature
 			from
 				go_bits;
 			until
-				offright or else item.level /= Bits_level
+				after or else item.level /= Bits_level
 			loop
 				bit_desc ?= item;
 				Result := Result + ovhsiz + bitoff(bit_desc.value);
@@ -220,7 +220,7 @@ feature
 			go_expanded;
 			from
 			until
-				offright
+				after
 			loop
 				expanded_desc ?= item;
 				expanded_skeleton := expanded_desc.class_type.skeleton;
@@ -410,7 +410,7 @@ feature
 						pos := position;
 						go_bits;
 					until
-						offright or else item.level /= Bits_level
+						after or else item.level /= Bits_level
 					loop
 						file.putstring ("+OVERHEAD+BITOFF(");
 		   				bit_desc ?= item;
@@ -514,7 +514,7 @@ feature
 						pos := position;
 						go_bits;
 					until
-						offright or else item.level /= Bits_level
+						after or else item.level /= Bits_level
 					loop
 		   				bit_desc ?= item;
 						Result := Result + ovhsiz + bitoff(bit_desc.value);
@@ -544,7 +544,7 @@ feature
 			from
 				start
 			until
-				offright
+				after
 			loop
 				ba.append_string (item.attribute_name);
 				forth;
@@ -559,7 +559,7 @@ feature
 			from
 				start;
 			until
-				offright
+				after
 			loop
 				ba.append_int32_integer (item.rout_id);
 				forth;
@@ -574,7 +574,7 @@ feature
 			from
 				start
 			until
-				offright
+				after
 			loop
 				ba.append_uint32_integer (item.sk_value);
 				forth
@@ -619,7 +619,7 @@ feature
 			from
 				start
 			until
-				offright
+				after
 			loop
 				Skeleton_file.putchar ('"');
 				Skeleton_file.putstring (item.attribute_name);
@@ -641,7 +641,7 @@ feature
 			from
 				start
 			until
-				offright
+				after
 			loop
 				item.generate_code (Skeleton_file);
 				Skeleton_file.putstring (",%N");
@@ -664,7 +664,7 @@ feature
 			from
 				start;
 			until
-				offright
+				after
 			loop
 				rout_id := item.rout_id;
 				tbl := Eiffel_table.item_id (rout_id);
@@ -686,7 +686,7 @@ feature
             from
                 start
             until
-                offright
+                after
             loop
                 rout_id := item.rout_id;
                 Extern_declarations.add_attribute_table
@@ -707,7 +707,7 @@ feature
 			from
 				start;
 			until
-				offright
+				after
 			loop
 				Skeleton_file.putint (item.rout_id);
 				Skeleton_file.putstring (",%N");

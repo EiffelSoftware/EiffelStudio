@@ -17,13 +17,13 @@ creation
 	
 feature 
 
-	real_body_index (body_index: INTEGER; type_id: INTEGER): INTEGER is
+	real_body_index (body_index: INTEGER; class_type: CLASS_TYPE): INTEGER is
 			-- Body id associated to an instance of FEATURE_I of
-			-- body index `body_index' in a class type of type id `type_id'.
+			-- body index `body_index' in a class type `class_type'.
 		local
 			unit: DISPATCH_UNIT;
 		do
-			unit := unit_of_body_index (body_index, type_id);
+			unit := unit_of_body_index (body_index, class_type);
 			if not (unit = Void) then
 				Result := unit.real_body_index;
 			end;
@@ -31,12 +31,12 @@ feature
 
 feature {NONE} -- Search
 
-	unit_of_body_index (body_index: INTEGER; type_id: INTEGER): DISPATCH_UNIT is
+	unit_of_body_index (body_index: INTEGER; class_type: CLASS_TYPE): DISPATCH_UNIT is
 			-- Unit associated to an instance of FEATURE_I of
-			-- body index `body_index' in a class type of type id `type_id'.
+			-- body index `body_index' in a class type `class_type'.
 		do
 			Marker.set_body_index (body_index);
-			Marker.set_class_type (System.class_type_of_id (type_id));
+			Marker.set_class_type (class_type);
 			Result := item (Marker);
 		end;
 
@@ -60,12 +60,12 @@ feature	-- Melting and C Generation
 			u: DISPATCH_UNIT;
 		do
 				-- Write first the new size of the dispatch table
-			write_int (file.file_pointer, count);
+			write_int (file.file_pointer, counter);
 
 			from
 				melted_list.start
 			until
-				melted_list.offright
+				melted_list.after
 			loop
 				u := melted_list.item;
 				if u.is_valid then
@@ -91,11 +91,11 @@ feature	-- Melting and C Generation
 			i, nb: INTEGER;
 		do
 			from
-				nb := count;
+				nb := counter;
 				!!values.make (1, nb);
 				start
 			until
-				offright
+				after
 			loop
 				unit := item_for_iteration;
 				if unit.is_valid then

@@ -49,7 +49,6 @@ feature
 				!!argument_b;
 				argument_b.set_position (argument_position);
 				context.access_line.insert (argument_b);
-
 			else
 					-- Look for a local if not in a pre- or postcondition
 				local_info := context.locals.item (feature_name);
@@ -67,7 +66,7 @@ feature
 							-- Local in post- or precondition
 						!!veen2B;
 						context.init_error (veen2B);
-						veen2B.set_local_name (feature_name);
+						veen2B.set_identifier (feature_name);
 						Error_handler.insert_error (veen2B);
 					end;
 				else

@@ -46,6 +46,7 @@ feature
 				if file.open_read_error then
 						-- Error when opening file
 					!!vd22;
+					vd22.set_cluster (cluster);
 					vd22.set_file_name (file.name);
 					Error_handler.insert_error (vd22);
 				else

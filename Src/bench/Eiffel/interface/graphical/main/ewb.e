@@ -4,6 +4,7 @@ class EWB
 
 inherit
 
+	SHARED_ERROR_BEHAVIOR;
 	WINDOWS;
 	EIFFEL_ENV;
 	ISED_X_SLAVE;
@@ -26,8 +27,15 @@ feature
 				init_connection;
 				init_windowing;
 				iterate
+			elseif argument_count = 2 and then
+				argument (1).is_equal ("-stop")
+			then
+				set_batch_mode (True);
+				set_stop_on_error (True);
+				!!batch_compiler.make
 			else
 				set_batch_mode (True);
+				set_stop_on_error (False);
 				!! batch_compiler.make
 			end;
 		end;

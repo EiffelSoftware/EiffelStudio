@@ -5,17 +5,10 @@ class VZAA1
 inherit
 
 	FEATURE_ERROR	
-		rename
-			build_explain as old_build_explain
-		end;
-
-	FEATURE_ERROR
 		redefine
 			build_explain
-		select
-			build_explain
-		end
-	
+		end;
+
 feature
 
 	address_name: STRING;
@@ -31,14 +24,13 @@ feature
 	code: STRING is "VZAA";
 			-- Error code
 
-	build_explain (a_clickable: CLICK_WINDOW) is
-            -- Build specific explanation image for current error
-            -- in `a_clickable'.
-        do
-			old_build_explain (a_clickable);
-			a_clickable.put_string ("%Taddress_name: ");
-			a_clickable.put_string (address_name);
-			a_clickable.put_string ("%N")
+	build_explain is
+			-- Build specific explanation image for current error
+			-- in `error_window'.
+		do
+			put_string ("Address_name: ");
+			put_string (address_name);
+			new_line;
 		end
 		
 end

@@ -5,8 +5,12 @@ class VWBE4
 inherit
 
 	VWBE
-	
+		redefine
+			subcode
+		end
 feature 
+
+	subcode: INTEGER is 4;
 
 	loop_expression: EXPR_AS;
 			-- Clause involved

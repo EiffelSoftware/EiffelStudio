@@ -73,7 +73,7 @@ end;
 				check
 					changed_classes.after
 				end;
-				changed_classes.add_front (Result);
+				changed_classes.add_left (Result);
 			end;
 			changed_classes.go (position);
 		end;
@@ -115,8 +115,9 @@ end;
 				if pass_c.associated_class = a_class then
 					found := True;
 					changed_classes.remove;
+				else
+					changed_classes.forth
 				end;
-				changed_classes.forth
 			end;
 			changed_classes.go (position);
 		end;

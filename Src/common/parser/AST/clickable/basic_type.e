@@ -7,7 +7,7 @@ inherit
 	STONABLE;
 	TYPE
 		redefine 
-			format
+			format, append_clickable_signature
 		end;
 
 feature -- Initialization
@@ -16,6 +16,13 @@ feature -- Initialization
 			-- Yacc initialization
 		do
 			-- Do nothing
+		end;
+
+feature -- signature
+
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		do
+			actual_type.append_clickable_signature (a_clickable)
 		end;
 
 feature -- stoning

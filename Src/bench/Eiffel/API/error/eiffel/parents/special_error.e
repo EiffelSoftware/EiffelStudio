@@ -4,7 +4,7 @@ class SPECIAL_ERROR
 
 inherit
 
-	EIFFEL_ERROR
+	EIFFEL_ERROR	
 		redefine
 			build_explain
 		end;
@@ -19,26 +19,24 @@ creation
 
 feature
 
-	error_case: INTEGER;
+	error_case: STRING;
 			-- Case of error
 
-	make (case: INTEGER; id: INTEGER) is
+	make (case: STRING; c: CLASS_C) is
 		do
 			error_case := case;
-			class_id := id;
+			class_c := c;
 		end;
 
-	code: STRING is "Special error";
+	code: STRING is "Special_error";
 			-- Error code
 
-	build_explain (a_clickable: CLICK_WINDOW) is
+	build_explain is
             -- Build specific explanation image for current error
-            -- in `a_clickable'.
+            -- in `error_window'.
         do
--- FIX ME
-			a_clickable.put_string ("%TSpecial error: case [");
-			a_clickable.put_string (error_case.out);
-			a_clickable.put_string ("]%N");
+			put_string (error_case);
+			new_line;
 		end;
 
 end

@@ -1,6 +1,6 @@
 -- Meting information for a feature
 
-class FEAT_MELTED_INFO 
+class FEAT_MELTED_INFO
 
 inherit
 
@@ -9,8 +9,8 @@ inherit
 creation
 
 	make
-	
-feature 
+
+feature
 
 	feature_name: STRING;
 			-- Feature to melt

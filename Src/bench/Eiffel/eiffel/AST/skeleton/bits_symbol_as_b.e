@@ -4,7 +4,7 @@ inherit
 
 	BASIC_TYPE
 		redefine
-			set
+			set, append_clickable_signature
 		end
 
 feature -- Attributes
@@ -70,4 +70,10 @@ feature -- Initialization
 			Result.append ("BITS ");
    		end;
 
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		do
+			a_clickable.put_string ("BITS ");
+		end;
+
+			
 end

@@ -42,12 +42,12 @@ feature -- Implementation of inherited deferred features
 		end;
 
 	dump: STRING is
-            -- Dump string
-        do
-            !!Result.make (5 + anchor.count);
-            Result.append ("like ");
-            Result.append (anchor);
-        end;
+			-- Dump string
+		do
+			!!Result.make (5 + anchor.count);
+			Result.append ("like ");
+			Result.append (anchor);
+		end;
 	
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): TYPE_A is
 			-- Calculated type in function of the feauure `f' which has

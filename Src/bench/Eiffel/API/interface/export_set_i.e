@@ -25,7 +25,7 @@ feature
 				pos := position;
 				start
 			until
-				offright or else Result
+				after or else Result
 			loop
 				Result := item.valid_for (client);
 				forth;
@@ -79,7 +79,7 @@ feature
 					Result := True;
 					start;
 				until
-					offright or else not Result
+					after or else not Result
 				loop
 					export_client := item;
 					other_export_client := other_set.clause
@@ -135,7 +135,7 @@ feature
 			from
 				start;
 			until
-				offright or else Result /= Void
+				after or else Result /= Void
 			loop
 				if item.written_in = written_in then
 					Result := item;
@@ -151,7 +151,7 @@ feature
 			from
 				start;
 			until
-				offright
+				after
 			loop
 				item.trace;
 				io.error.new_line;

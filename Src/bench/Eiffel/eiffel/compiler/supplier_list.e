@@ -26,7 +26,7 @@ feature
 			from
 				l.start
 			until
-				l.offright
+				l.after
 			loop
 				id := l.item.id;
 				goto (l.item.id);
@@ -39,7 +39,7 @@ feature
 					-- Go to next supplier
 				from
 				until
-					l.offright or else	l.item.id /= id
+					l.after or else	l.item.id /= id
 				loop
 					l.forth;
 				end;
@@ -58,7 +58,7 @@ feature
 			from
 				l.start
 			until
-				l.offright
+				l.after
 			loop
 				id := l.item.id;
 debug ("ACTIVITY");
@@ -76,7 +76,7 @@ end;
 	
 				from
 				until
-					l.offright or else l.item.id /= id
+					l.after or else l.item.id /= id
 				loop
 					l.forth;
 				end;
@@ -92,7 +92,7 @@ end;
 			from
 				start
 			until
-				offright
+				after
 			loop
 				Result.add_right (item.twin);
 				Result.forth;
@@ -127,7 +127,7 @@ feature {NONE}
 			from
 				start
 			until
-				offright or else Result /= Void
+				after or else Result /= Void
 			loop
 				if item.supplier.id = id then
 					Result := item;
@@ -149,7 +149,7 @@ feature {NONE}
 				Result := True;
 				l.start;
 			until
-				l.offright or else not Result
+				l.after or else not Result
 			loop
 				id := l.item.id;
 				suppl_info := info (id);
@@ -158,7 +158,7 @@ feature {NONE}
 							suppl_info.occurence >= 1;
 				from
 				until
-					l.offright or else l.item.id /= id
+					l.after or else l.item.id /= id
 				loop
 					l.forth;
 				end;
@@ -173,7 +173,7 @@ feature
 			from
 				start
 			until
-				offright
+				after
 			loop
 				io.error.putstring (item.supplier.class_name);
 				io.error.putstring (" [");

@@ -47,7 +47,7 @@ feature
 				Result := True;
 				start;
 			until
-				offright or else not Result
+				after or else not Result
 			loop
 				Result := duplication.has (key_for_iteration) or else
 						-- If the name has been added and removed, no

@@ -26,6 +26,11 @@ feature
 	dump: STRING is "Void";
 			-- Dumped trace
 
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		do
+			a_clickable.put_string ("Void");
+		end;
+
 	type_i: VOID_I is
 			-- Void type
 		once

@@ -15,11 +15,11 @@ creation
 
 feature
 
-	build_explain (a_clickable: CLICK_WINDOW) is
+	build_explain is
             -- Build specific explanation image for current error
-            -- in `a_clickable'.
+            -- in `error_window'.
         do
-			error_window.put_string ("(Uncompleted string, missing final quote)")
+			put_string ("(incomplete string: missing final quote)%N")
         end
 
 end

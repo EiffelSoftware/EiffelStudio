@@ -54,18 +54,23 @@ feature
 			written_class: CLASS_C
 		do
 			written_class := System.class_of_id (written_in);
-			if written_class = Void then
-				Result := False
-			else
+			if written_class /= Void and then
+				System.class_type_of_id (type_id) /= Void
+			then
 				written_type :=	class_type.written_type (written_class);
-				if written_type = Void then
-					Result := False
-				elseif
-					written_type.associated_class_type.is_precompiled
-				then
-					Result := True
-				else
-					Result := Body_server.has (body_id);
+				if written_type /= Void then
+					if
+						written_type.associated_class_type.is_precompiled
+					then
+						Result := True
+					else
+						Result := Body_server.has (body_id);
+if not Result then
+	io.error.putstring ("is_valid: body_server.has FALSE ");
+	io.error.putint (body_id);
+	io.error.new_line;
+end;
+					end;
 				end;
 			end;
 		end;

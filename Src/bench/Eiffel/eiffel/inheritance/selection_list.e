@@ -73,7 +73,7 @@ feature
 			from
 				start
 			until
-				offright or else Result /= Void
+				after or else Result /= Void
 			loop
 				feature_i := item.a_feature;
 				if parents.is_selecting (feature_i.feature_name) then
@@ -88,12 +88,12 @@ feature
 						-- Remove result information
 					remove;
 				until
-					offright
+					after
 				loop
 					feature_i := item.a_feature;
 					if parents.is_selecting (feature_i.feature_name) then
 						!!vmrc2;
-						vmrc2.set_class_id (System.current_class.id);
+						vmrc2.set_class (System.current_class);
 						vmrc2.init (Result, feature_i);
 						Error_handler.insert_error (vmrc2);
 					end;
@@ -143,7 +143,7 @@ feature
 													(instantiator, written_id);
 				go (2);
 			until
-				offright or else not Result
+				after or else not Result
 			loop
 				written_type := written_actual_type.duplicate;
 				info := item;
@@ -214,7 +214,7 @@ feature
 				-- Remove unselection
 			remove;
 
-			if not offright then
+			if not after then
 				written_class := a_feature.written_class;
 				in_generic_class := written_class.generics /= Void;
 				if in_generic_class then
@@ -236,7 +236,7 @@ feature
 			from
 				old_pos := position
 			until
-				offright
+				after
 			loop
 				info := item;
 				a_feature := info.a_feature;
@@ -276,7 +276,7 @@ feature
 			from
 				start
 			until
-				offright
+				after
 			loop
 				if item.parent = Void then
 					io.error.putstring ("VOID");

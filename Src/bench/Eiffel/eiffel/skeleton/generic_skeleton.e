@@ -27,7 +27,7 @@ feature
 					start;
 					other.start
 				until
-					offright or else not Result
+					after or else not Result
 				loop
 					Result := item.same_as (other.item);
 					forth;
@@ -50,7 +50,7 @@ feature
 			from
 				start
 			until
-				offright
+				after
 			loop
 				Result.add (item.instantiation_in (class_type));
 				forth;
@@ -65,7 +65,7 @@ feature
 			from
 				start
 			until
-				offright
+				after
 			loop
 				io.error.putstring (item.attribute_name);
 				io.error.putstring (": ");

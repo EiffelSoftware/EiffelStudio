@@ -789,7 +789,7 @@ feature
 					associated := associated_register_table;
 					hash_table.start;
 				until
-					hash_table.offright
+					hash_table.after
 				loop
 					rname := hash_table.key_for_iteration;
 					position := hash_table.item_for_iteration;

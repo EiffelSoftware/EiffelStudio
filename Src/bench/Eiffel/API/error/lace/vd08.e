@@ -4,14 +4,6 @@ class VD08
 
 inherit
 
-	EXC_INC_ERROR
-
-feature
-
-	code: STRING is
-			-- Error code
-		do
-			Result := "VD08";
-		end
+	FILE_ERROR
 
 end

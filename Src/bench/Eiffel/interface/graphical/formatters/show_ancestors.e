@@ -37,52 +37,48 @@ feature {NONE}
 
 	displayed: LINKED_LIST [CL_TYPE_A];
 
+	current_class: CLASS_C;
+
 	display_info (i: INTEGER; c: CLASSC_STONE) is
 			-- Display parents of `c' in tree form.
 		do
 			!!displayed.make;
-			rec_display (i,c);
+			current_class := c.class_c;
+			rec_display (i, current_class);
 			displayed := void;	
 		end;
 
-
-
-
-	rec_display (i: INTEGER; c: CLASSC_STONE) is
+	rec_display (i: INTEGER; c: CLASS_C) is
 			-- Display parents of `c' in tree form.
 		local
 			parents: FIXED_LIST [CL_TYPE_A];
-			p: CLASSC_STONE;
-			class_c: CLASS_C
+			parent_class: CLASS_C;
 		do
-			class_c := c.class_c;
 			if 
-				(class_c.id /= System.any_id) or else
-				(c = formatted)
+				(c.id /= System.any_id) or else
+				(c = current_class)
 			then
-				parents := class_c.parents;
+				parents := c.parents;
 				if not parents.empty then
 					from
 						parents.start
 					until
 						parents.after
 					loop
-
-						!!p.make (parents.item.associated_class);
+						parent_class := parents.item.associated_class;
 						text_window.put_string (tabs (i));
-						text_window.put_clickable_string (p, p.signature);
+						parent_class.append_clickable_signature (text_window);
 						if displayed.has (parents.item) then
 							text_window.put_string ("...%N")
 						else	
 							text_window.new_line;
 							displayed.add (parents.item);
-							rec_display (i+1, p);
+							rec_display (i+1, parent_class);
 						end;			
 						parents.forth
 					end
 				end
 			end
 		end;
-
 
 end

@@ -11,16 +11,15 @@ inherit
 
 feature
 
-	node: D_OPTION_SD;
-			-- Option node
+	code: STRING is "VD32";
+			-- Error code
 
 	option_name: STRING;
 			-- Option name
 
-	set_node (n: like node) is
-			-- Assign `n' to `node'.
+	set_node (n: D_OPTION_SD) is obsolete "Useless but called in AST.set %N%
+				%Remove before a refreezing%N"
 		do
-			node := n;
 		end;
 
 	set_option_name (s: STRING) is
@@ -29,17 +28,11 @@ feature
 			option_name := s
 		end;
 
-	code: STRING is
-			-- Error code
+	build_explain is
 		do
-			Result := "VD32";
-		end;
-
-	build_explain (a_clickable: CLICK_WINDOW) is
-		do
-			a_clickable.put_string ("%TUnknown option: ");
-			a_clickable.put_string (option_name);
-			a_clickable.new_line;
+			put_string ("%TUnknown option: ");
+			put_string (option_name);
+			new_line;
 		end;
 
 end

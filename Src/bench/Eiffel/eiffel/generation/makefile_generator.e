@@ -313,6 +313,27 @@ feature -- Generation, External archives and object files.
 			end
 		end;
 
+	generate_makefile_names is
+		require
+			list_not_void: System.makefile_names /= Void
+		local
+			makefile_names: FIXED_LIST [STRING];
+			i, nb: INTEGER;
+		do
+			makefile_names := System.makefile_names;
+			from
+				i := 1;
+				nb := makefile_names.count;
+			until
+				i > nb
+			loop
+				Make_file.putstring ("%T$(MAKE) -f ");
+				Make_file.putstring (makefile_names.i_th (i));
+				Make_file.new_line;
+				i := i + 1;
+			end;
+		end;
+
 feature -- Generation (Linking rules)
 
 	generate_executable is
@@ -345,6 +366,9 @@ feature -- Generation (Linking rules)
 			Make_file.putstring ("%T$(RM) ");
 			Make_file.putstring (system_name);
 			Make_file.new_line;
+			if System.makefile_names /= Void then
+				generate_makefile_names;
+			end;
 			Make_file.putstring ("%T$(CC) -o ");
 			Make_file.putstring (system_name);
 			Make_file.putstring ("%

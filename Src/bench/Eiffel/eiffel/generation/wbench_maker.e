@@ -6,7 +6,8 @@ inherit
 
 	MAKEFILE_GENERATOR
 		redefine
-			generate_specific_defines, generate_other_objects
+			generate_specific_defines, generate_other_objects,
+			generate_additional_rules
 		end;
 
 creation
@@ -63,7 +64,7 @@ feature
 						types := a_class.types;
 						types.start
 					until
-						types.offright
+						types.after
 					loop
 						cl_type := types.item;
 
@@ -111,6 +112,15 @@ feature
 				Make_file.putstring ("%T%T");
 				Make_file.putstring (Precompilation_directory.name);
 				Make_file.putstring ("/C_code/preobj.o \");
+				Make_file.new_line;
+			end;
+		end;
+
+	generate_additional_rules is
+		do
+			if partial_objects > 0 then
+				Make_file.putstring ("%T$(RM) ");
+				generate_objects_macros (partial_objects, False);
 				Make_file.new_line;
 			end;
 		end;

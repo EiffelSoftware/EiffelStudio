@@ -364,7 +364,7 @@ feature -- Building conformance table
 				from
 					parents.start;
 				until
-					parents.offright
+					parents.after
 				loop
 					a_parent := parents.item.associated_class;
 					a_parent.build_conformance_table_of (cl);
@@ -440,7 +440,7 @@ feature -- Third pass: byte code production and type check
 
 				feat_table.start;
 			until
-				feat_table.offright
+				feat_table.after
 			loop
 				feature_i := feat_table.item_for_iteration;
 				feature_name := feature_i.feature_name;
@@ -512,9 +512,9 @@ end;
 							Error_handler.mark;
 debug ("ACTIVITY");
 	if f_suppliers /= Void then
-	io.error.putstring ("Feature_suppliers%N");
-	f_suppliers.trace;
-	io.error.new_line;
+		io.error.putstring ("Feature_suppliers%N");
+		f_suppliers.trace;
+		io.error.new_line;
 	end;
 end;
 							feature_i.type_check;
@@ -536,7 +536,7 @@ end;
 								f_suppliers := ast_context.supplier_ids.twin;
 								dependances.put (f_suppliers, feature_name);
 								new_suppliers.add_occurence (f_suppliers);
-		
+
 									-- Byte code processing
 --								if feature_i.is_deferred then
 --										-- No byte code and melted info for
@@ -599,7 +599,7 @@ end;
 					removed_features := propagators.removed_features;
 					removed_features.start
 				until
-					removed_features.offright
+					removed_features.after
 				loop
 					feature_i := removed_features.item_for_iteration;
 					feature_name := feature_i.feature_name;
@@ -889,7 +889,7 @@ feature -- Melting
 				tbl := feature_table;
 				tbl.start
 			until
-				tbl.offright
+				tbl.after
 			loop
 				feature_i := tbl.item_for_iteration;
 				if feature_i.to_generate_in (Current) then
@@ -1258,7 +1258,7 @@ feature -- Class initialization
 				from
 					syntactical_clients.start
 				until
-					syntactical_clients.offright
+					syntactical_clients.after
 				loop
 					a_client := syntactical_clients.item;
 					Workbench.add_class_to_recompile (a_client.lace_class);
@@ -1332,14 +1332,14 @@ feature -- Class initialization
 				Result := True;
 				parents.start;
 			until
-				parents.offright or else not Result
+				parents.after or else not Result
 			loop
 				parent_class := parents.item.associated_class;
 				from
 					old_parents.start;
 					Result := False;
 				until
-					old_parents.offright or else Result
+					old_parents.after or else Result
 				loop
 					Result := 	parent_class =
 								old_parents.item.associated_class;
@@ -1367,13 +1367,13 @@ feature -- Class initialization
 				Result := True;
 				old_parents.start
 			until
-				old_parents.offright or else not Result
+				old_parents.after or else not Result
 			loop
 				parent_class := old_parents.item.associated_class;
 				from
 					parents.start
 				until
-					parents.offright or else Result
+					parents.after or else Result
 				loop
 					Result := parent_class =
 								parents.item.associated_class;
@@ -1478,14 +1478,14 @@ feature
 			from
 				parents.start;
 			until
-				parents.offright
+				parents.after
 			loop
 				c := parents.item.associated_class;
 				if c /= Void then
 					des := c.descendants;
 					des.start;
 					des.search_same (Current);
-					if not des.offright then
+					if not des.after then
 						des.remove;
 					end;
 				end;
@@ -1526,7 +1526,7 @@ feature
 			from
 				generics.start
 			until
-				generics.offright
+				generics.after
 			loop
 				generic_dec := generics.item;
 				generic_name := generic_dec.formal_name;
@@ -1546,7 +1546,7 @@ feature
 				from
 					generics.start
 				until
-					generics.offright
+					generics.after
 				loop
 					next_dec := generics.item;
 					if next_dec /= generic_dec then
@@ -1579,7 +1579,7 @@ feature
 			from
 				generics.start
 			until
-				generics.offright
+				generics.after
 			loop
 				generic_dec := generics.item;
 				generic_name := generic_dec.formal_name;
@@ -1606,7 +1606,7 @@ feature -- Parent checking
 			from
 				parents.start
 			until
-				parents.offright
+				parents.after
 			loop
 				parent_actual_type := parents.item;
 				if not parent_actual_type.good_generics then
@@ -1624,7 +1624,7 @@ feature -- Parent checking
 					parent_actual_type.check_constraints (Current);
 					if not Constraint_error_list.empty then
 						!!vtgg4;
-						vtgg4.set_class_id (id);
+						vtgg4.set_class (Current);
 						vtgg4.set_error_list
 										(deep_clone (Constraint_error_list));
 						vtgg4.set_parent_type (parents.item);
@@ -1648,7 +1648,7 @@ feature -- Supplier checking
 			from
 				syntactical_suppliers.start
 			until
-				syntactical_suppliers.offright or else recompile
+				syntactical_suppliers.after or else recompile
 			loop
 				a_class := syntactical_suppliers.item.supplier;
 				Universe.compute_last_class (a_class.class_name, cluster);
@@ -1696,7 +1696,7 @@ feature -- Supplier checking
 			from
 				parent_list.start
 			until
-				parent_list.offright
+				parent_list.after
 			loop
 				cl_name := parent_list.item.type.class_name;
 				check_one_supplier (cl_name);
@@ -1737,7 +1737,7 @@ feature -- Supplier checking
 					!!supplier.make (comp_class, cl_name);
 					syntactical_suppliers.start;
 					syntactical_suppliers.search_equal (supplier);
-					if syntactical_suppliers.offright then
+					if syntactical_suppliers.after then
 						syntactical_suppliers.add_front (supplier);
 					end;
 				end;
@@ -1787,7 +1787,7 @@ feature -- Supplier checking
 				from
 					creators.start
 				until
-					creators.offright
+					creators.after
 				loop
 					creation_name := creators.key_for_iteration;
 					creation_proc := feat_tbl.item (creation_name);
@@ -2092,7 +2092,7 @@ feature -- Actual class type
 			from
 				parents.start
 			until
-				parents.offright
+				parents.after
 			loop
 				parent_type := parents.item;
 				if parent_type.generics /= Void then
@@ -2260,7 +2260,7 @@ feature -- Dispose routine
 				from
 					ftab.start
 				until
-					ftab.offright or (Result /= Void)
+					ftab.after or (Result /= Void)
 				loop
 					item := ftab.item_for_iteration;
 					if (item.rout_id_set.first = System.memory_dispose_id) then
@@ -2306,7 +2306,7 @@ feature -- Dead code removal
 				tbl := feature_table;
 				tbl.start;
 			until
-				tbl.offright
+				tbl.after
 			loop
 				a_feature := tbl.item_for_iteration;
 				pos := tbl.position_for_iteration;
@@ -2490,39 +2490,39 @@ feature {NONE} -- External features
 feature -- PS
 
 	signature: STRING is
-		obsolete "Use append_clickable_signature"
+		obsolete "Use `append_clickable_signature'"
 		local
 			formal_dec: FORMAL_DEC_AS;
 			constraint_type: TYPE_A;
 			error: BOOLEAN;
 		do
 			if not error then
-			!!Result.make (50);
-			Result.append (class_name);
-			if generics /= Void then
-				Result.append (" [");
-				from
-					generics.start
-				until
-					generics.offright
-				loop
-					formal_dec := generics.item;
-					Result.append (formal_dec.formal_name);
-					if formal_dec.constraint /= Void then
-						Result.append (" -> ");
-						constraint_type := formal_dec.constraint.actual_type;
+				!!Result.make (50);
+				Result.append (class_name);
+				if generics /= Void then
+					Result.append (" [");
+					from
+						generics.start
+					until
+						generics.after
+					loop
+						formal_dec := generics.item;
+						Result.append (formal_dec.formal_name);
+						if formal_dec.constraint /= Void then
+							Result.append (" -> ");
+							constraint_type := formal_dec.constraint.actual_type;
 							--constraint_type := constraint_type.instantiation_in (actual_type, id);
-						-- Result.append (constraint_type.signature)
-						Result.append (constraint_type.dump)
+							-- Result.append (constraint_type.signature)
+							Result.append (constraint_type.dump)
+						end;
+						generics.forth;
+						if not generics.after then
+							Result.append (", ")
+						end
 					end;
-					generics.forth;
-					if not generics.offright then
-						Result.append (", ")
-					end
+					Result.append ("]")
 				end;
-				Result.append ("]")
-			end;
-			Result.to_upper;
+				Result.to_upper;
 			end;
 		rescue
 			-- FIX ME ?
@@ -2548,30 +2548,30 @@ feature -- PS
 			error: BOOLEAN;
 		do
 			if not error then
-			append_clickable_name (a_clickable);
-			if generics /= Void then
-				a_clickable.put_string (" [");
-				from
-					generics.start
-				until
-					generics.after
-				loop
-					formal_dec := generics.item;
-					c_name := formal_dec.formal_name.duplicate;
-					c_name.to_upper;
-					a_clickable.put_string (c_name);
-					if formal_dec.constraint /= Void then
-						a_clickable.put_string (" -> ");
-						constraint_type := formal_dec.constraint.actual_type;
-						a_clickable.put_string (constraint_type.dump)
+				append_clickable_name (a_clickable);
+				if generics /= Void then
+					a_clickable.put_string (" [");
+					from
+						generics.start
+					until
+						generics.after
+					loop
+						formal_dec := generics.item;
+						c_name := formal_dec.formal_name.duplicate;
+						c_name.to_upper;
+						a_clickable.put_string (c_name);
+						if formal_dec.constraint /= Void then
+							a_clickable.put_string (" -> ");
+							constraint_type := formal_dec.constraint.actual_type;
+							constraint_type.append_clickable_signature (a_clickable)
+						end;
+						generics.forth;
+						if not generics.after then
+							a_clickable.put_string (", ");
+						end;
 					end;
-					generics.forth;
-					if not generics.after then
-						a_clickable.put_string (", ");
-					end;
+					a_clickable.put_char (']');
 				end;
-				a_clickable.put_char (']');
-			end;
 			end;
 		rescue
 			io.error.putstring ("%NError when building the signature of ");

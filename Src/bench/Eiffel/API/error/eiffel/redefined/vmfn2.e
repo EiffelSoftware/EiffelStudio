@@ -5,15 +5,8 @@ class VMFN2
 inherit
 
 	EIFFEL_ERROR
-		rename
-			build_explain as old_build_explain
-		end;
-
-	EIFFEL_ERROR
 		redefine
-			build_explain
-		select
-			build_explain
+			build_explain, subcode
 		end
 	
 feature
@@ -32,30 +25,31 @@ feature
 	code: STRING is "VMFN";
 			-- Error code
 
-	build_explain (a_clickable: CLICK_WINDOW) is
+	subcode: INTEGER is 2;
+
+	build_explain is
             -- Build specific explanation explain for current error
-			-- in `a_clickable'.
+			-- in `error_window'.
 		local
 			feature_info: INHERIT_INFO;
 			feature_i: FEATURE_I;
 			parent: CLASS_C;
 		do
-            old_build_explain (a_clickable);
 			from
 				features.start;
 			until
-				features.offright
+				features.after
 			loop
 				feature_info := features.item;
 				feature_i := feature_info.a_feature;
-				a_clickable.put_string ("%Tfeature ");
-				feature_i.append_clickable_signature (a_clickable);
-				a_clickable.put_string (" inherited from ");
+				put_string ("%Tfeature ");
+				feature_i.append_clickable_signature (error_window);
+				put_string (" inherited from ");
 				parent := System.class_of_id (feature_info.parent.parent_id);
-				parent.append_clickable_name (a_clickable);
-				a_clickable.put_string (" written in ");
-				feature_i.written_class.append_clickable_name (a_clickable);
-				a_clickable.new_line;
+				parent.append_clickable_name (error_window);
+				put_string (" written in ");
+				feature_i.written_class.append_clickable_name (error_window);
+				new_line;
 				features.forth;
 			end;
 		end;

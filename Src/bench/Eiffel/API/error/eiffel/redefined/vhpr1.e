@@ -4,7 +4,8 @@ class VHPR1
 
 inherit
 
-	EIFFEL_ERROR
+	SHARED_WORKBENCH;
+	ERROR
 		redefine
 			build_explain
 		end
@@ -20,25 +21,25 @@ feature
 			involved_classes := l;
 		end;
 
-	code: STRING is "VHPR";
+	code: STRING is "VHPR1";
 			-- Error code
 
-	build_explain (a_clickable: CLICK_WINDOW) is
+	build_explain is
             -- Build specific explanation explain for current error
-            -- in `a_clickable'.
+            -- in `error_window'.
         do
-			a_clickable.put_string ("VHPR: point 1%N%T");
+			put_char ('%T');
 			from
 				involved_classes.start
 			until
-				involved_classes.offright
+				involved_classes.after
 			loop
 				System.class_of_id (involved_classes.item).append_clickable_signature
-																(a_clickable);
-				a_clickable.put_string ("  ");
+																(error_window);
+				put_string ("  ");
 				involved_classes.forth;
 			end;
-			a_clickable.new_line;
+			new_line;
 		end;
 
 end

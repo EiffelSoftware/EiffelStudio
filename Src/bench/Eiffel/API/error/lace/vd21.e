@@ -4,20 +4,19 @@ class VD21
 
 inherit
 
-	CLUSTER_ERROR
+	FILE_ERROR
+		redefine
+			build_explain
+		end;
 
 feature
 
-	file_name: STRING;
-			-- Unreadable file name
-
-	set_file_name (s: STRING) is
-			-- Assign `s' to `file_name'.
+	build_explain is
 		do
-			file_name := s
+			if cluster /= Void then
+				put_cluster_name;
+			end;
+			put_file_name
 		end;
-
-	code: STRING is "VD21"
-			-- Error code
 
 end

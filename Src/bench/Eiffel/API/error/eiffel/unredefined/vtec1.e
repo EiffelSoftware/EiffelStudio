@@ -5,8 +5,16 @@ class VTEC1
 inherit
 
 	VTEC
-	
+		redefine
+			subcode
+		end;
+
 feature 
+
+	subcode: INTEGER is
+		do
+			Result := 1;
+		end;
 
 	body_id: INTEGER;
 			-- Body id of the invloved feature

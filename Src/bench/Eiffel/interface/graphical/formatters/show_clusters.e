@@ -40,8 +40,6 @@ feature {NONE}
 			sorted_class_names: SORTED_TWO_WAY_LIST [STRING];
 			a_classi: CLASS_I;
 			a_classc: CLASS_C;
-			a_classi_stone: CLASSI_STONE;
-			a_classc_stone: CLASSC_STONE
 		do
 			clusters := Universe.clusters;
 			if not clusters.empty then
@@ -75,11 +73,10 @@ feature {NONE}
 						a_classi := classes.item (sorted_class_names.item);
 						a_classc := a_classi.compiled_class;
 						if a_classc /= Void  then
-							!!a_classc_stone.make (a_classc);
-							text_window.put_clickable_string (a_classc_stone, a_classc_stone.signature)
+							a_classc.append_clickable_signature (text_window);
 						else
-							!!a_classi_stone.make (classes.item (sorted_class_names.item));
-							text_window.put_clickable_string (a_classi_stone, a_classi_stone.signature)
+							a_classi.append_clickable_name (text_window);
+							text_window.put_string ("  (not in system)");
 						end;
 						text_window.new_line;
 						sorted_class_names.forth

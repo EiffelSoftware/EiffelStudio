@@ -36,7 +36,7 @@ feature
 		deferred
 		end;
 
-	append_clikcable_signature (a_clickable: CLICK_WINDOW) is
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
 		do
 			a_clickable.put_string (dump)
 		end;

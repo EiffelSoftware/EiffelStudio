@@ -102,7 +102,7 @@ feature -- Byte code generation
 				from
 					parameters.start
 				until
-					parameters.offright
+					parameters.after
 				loop
 					param ?= parameters.item;
 					param.make_byte_code (ba);

@@ -6,5 +6,12 @@ class VGCC7
 inherit
 
 	VGCC
+		redefine
+			subcode
+		end;
+
+feature
+
+	subcode: INTEGER is 7;
 
 end

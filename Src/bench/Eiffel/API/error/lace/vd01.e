@@ -1,11 +1,11 @@
--- Error for an unexisting cluster path, or a cluster path which doesn't
+-- Error for an non-existent cluster path, or a cluster path which doesn't
 -- correpond to a directory or a readable directory
 
 class VD01
 
 inherit
 
-	ERROR
+	LACE_ERROR
 		redefine
 			build_explain
 		end;
@@ -13,7 +13,7 @@ inherit
 feature
 
 	path: STRING;
-			-- Unvalid path
+			-- Invalid path
 
 	set_path (s: STRING) is
 			-- Assign `s' to `path'.
@@ -21,13 +21,12 @@ feature
 			path := s;
 		end;
 
-	code: STRING is "VD01";	
-			-- Error code
-
-	build_explain (a_clickable: CLICK_WINDOW) is
+	build_explain is
 		do
-			a_clickable.put_string (path);
-			a_clickable.put_string (" is not a valid path%N");
+			put_string ("Path: `");
+			put_string (path);
+			put_char ('%'');
+			new_line
 		end;
 
 end

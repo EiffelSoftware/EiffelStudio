@@ -6,5 +6,12 @@ class VWST2
 inherit
 
 	VWST1
+		redefine
+			subcode
+		end;
+
+feature
+
+	subcode: INTEGER is 2;
 
 end

@@ -4,8 +4,15 @@ class VOMB3
 
 inherit
 
-	VOMB1
-	
+	VOMB
+		redefine
+			subcode
+		end;
+
+feature
+
+	subcode: INTEGER is 3;
+
 feature
 
 	interval: INTERVAL_B;

@@ -5,14 +5,7 @@ class VWEQ
 inherit
 
 	FEATURE_ERROR
-		rename
-			build_explain as old_build_explain
-		end;
-
-	FEATURE_ERROR
 		redefine
-			build_explain
-		select
 			build_explain
 		end
 	
@@ -48,16 +41,15 @@ feature
 	code: STRING is "VWEQ";
 			-- Error code
 
-	build_explain (a_clickable: CLICK_WINDOW) is
-            -- Build specific explanation image for current error
-            -- in `a_clickable'.
+	build_explain is
+			-- Build specific explanation image for current error
+			-- in `error_window'.
 		do
-			old_build_explain (a_clickable);
-			a_clickable.put_string ("%Ttype1 = ");
-			a_clickable.put_string (type1.dump);
-			a_clickable.put_string ("%N%Ttype2 = ");
-			a_clickable.put_string (type2.dump);
-			a_clickable.put_string ("%N")
+			put_string ("%Ttype1 = ");
+			put_string (type1.dump);
+			put_string ("%N%Ttype2 = ");
+			put_string (type2.dump);
+			new_line
 		end
 
 end

@@ -1,10 +1,10 @@
--- Error when root class name is unvalid
+-- Error when root class name is invalid
 
 class VD30
 
 inherit
 
-	ERROR
+	LACE_ERROR
 		redefine
 			build_explain
 		end;
@@ -12,7 +12,7 @@ inherit
 feature
 
 	root_class_name: STRING;
-			-- Unvalid root class name
+			-- Invalid root class name
 
 	set_root_class_name (s: STRING) is
 			-- Assign `s' to `root_class_name'.
@@ -20,15 +20,12 @@ feature
 			root_class_name := s;
 		end;
 
-	code: STRING is "VD30";
-			-- Error code
-
-	build_explain (a_clickable: CLICK_WINDOW) is
+	build_explain is
 		do
-			a_clickable.put_string ("%TThe root class ");
-			a_clickable.put_string (root_class_name);
-			a_clickable.put_string (" cannot be found in the system");
-			a_clickable.new_line;
+			put_string ("Root class name: `");
+			put_string (root_class_name);
+			put_char ('%'');
+			new_line
 		end;
 
 end

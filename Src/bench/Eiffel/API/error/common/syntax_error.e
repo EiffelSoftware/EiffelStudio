@@ -62,25 +62,116 @@ feature -- Error code
 
 feature
 
+	build_explain is
+		do
+		end;
+
 	trace is
 			-- Debug purpose
 		local
-			dummy_reference: CLASS_C
+			dummy_reference: CLASS_C;
+			file: UNIX_FILE;
+			previous_line: STRING;
+			current_line: STRING;
+			next_line: STRING;
+			start_line_pos: INTEGER;
+			line_number: INTEGER;
 		do
-			error_window.put_string ("Syntax error at position ");
-			error_window.put_string (start_position.out);
+			!!file.make_open_read (file_name);
+			from
+			until
+				file.position > start_position or else file.end_of_file
+			loop
+				previous_line := current_line;
+				start_line_pos := file.position;
+				line_number := line_number + 1;
+				file.readline;
+				current_line := file.laststring.duplicate;
+			end;
+			if not file.end_of_file then
+				file.readline;
+				next_line := file.laststring.duplicate;
+			end;
+			file.close;
+
+			put_string ("Syntax error at line ");
+			put_int (line_number);
 			if Lace.parsed then
 				-- Error happened in a class
-				error_window.put_string (" in class ");
-				error_window.put_clickable_string (
+				put_string (" in class ");
+				put_clickable_string (
 						stone (dummy_reference),
 						System.current_class.signature)
 			else
-				error_window.put_clickable_string (stone (dummy_reference), " in ace file")
+				put_clickable_string (stone (dummy_reference), " in Ace file")
 			end;
-			error_window.put_string ("%N");
-			build_explain (error_window)
-		end
+			new_line;
+			build_explain;
+			display_line (previous_line);
+			display_error_line (current_line, start_position - start_line_pos);
+			display_line (next_line);
+		end;
+
+	display_line (a_line: STRING) is
+		local
+			i: INTEGER;
+			nb: INTEGER;
+			c: CHARACTER;
+		do
+			from
+				nb := a_line.count;
+			until
+				i = nb
+			loop
+				i := i + 1;
+				c := a_line.item (i);
+				if c = '%T' then
+					put_string ("    ")
+				else
+					put_char (c)
+				end;
+			end;
+			new_line;
+		end;
+
+	display_error_line (a_line: STRING; pos: INTEGER) is
+		local
+			i, nb: INTEGER;
+			c: CHARACTER;
+			position, nb_tab: INTEGER;
+		do
+			from
+				nb := a_line.count;
+			until
+				i = nb
+			loop
+				i := i + 1;
+				c := a_line.item (i);
+				if c = '%T' then
+					put_string ("    ");
+					if i < pos then
+						nb_tab := nb_tab + 1;
+					end;
+				else
+					put_char (c)
+				end;
+			end;
+			new_line;
+			position := pos + 3*nb_tab;
+			if position = 0 then
+				put_string ("^---------------------------%N");
+			else
+				from
+					i := 1;
+				until
+					i > position
+				loop
+					put_char ('-');
+					i := i + 1;
+				end;
+				put_string ("^%N");
+			end;
+		end;
 
 feature {NONE} -- Externals
 

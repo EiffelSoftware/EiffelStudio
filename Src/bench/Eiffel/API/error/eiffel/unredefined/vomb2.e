@@ -4,8 +4,15 @@ class VOMB2
 
 inherit
 
-	VOMB1
-	
+	VOMB
+		redefine
+			subcode
+		end;
+
+feature
+
+	subcode: INTEGER is 2;
+
 feature
 
 	interval: INTERVAL_AS;

@@ -45,9 +45,9 @@ feature -- Type check, byte code and dead code removal
 
 			if id_type = Void then
 				!!vzaa1;
-                context.init_error (vzaa1);
-                vzaa1.set_address_name (internal_name);
-                Error_handler.insert_error (vzaa1);
+				context.init_error (vzaa1);
+				vzaa1.set_address_name (internal_name);
+				Error_handler.insert_error (vzaa1);
 					-- Cannot go on here...
 				Error_handler.raise_error;
 			end;

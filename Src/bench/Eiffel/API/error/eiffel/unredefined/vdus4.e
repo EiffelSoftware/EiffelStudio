@@ -6,12 +6,14 @@ inherit
 
 	VDRS3
 		redefine
-			code
+			code, subcode
 		end
 	
 feature 
 
 	code: STRING is "VDUS";
 			-- Error code
+
+	subcode: INTEGER is 4;
 
 end 

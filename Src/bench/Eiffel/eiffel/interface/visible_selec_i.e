@@ -47,7 +47,7 @@ feature
 			from
 				visible_features.start
 			until
-				visible_features.offright
+				visible_features.after
 			loop
 				a_feature := feat_table.item
 										(visible_features.item_for_iteration);
@@ -80,7 +80,7 @@ feature
 					types := a_class.types;
 					types.start
 				until
-					types.offright
+					types.after
 				loop
 					Cecil1.generate_final (Cecil_file, types.item.type_id);
 					types.forth
@@ -113,7 +113,7 @@ feature
 				Cecil1.init (prime_size (visible_features.count));
 				visible_features.start
 			until
-				visible_features.offright
+				visible_features.after
 			loop
 				a_feature := feat_table.item
 							(visible_features.item_for_iteration);
@@ -136,7 +136,7 @@ feature
 			from
 				visible_features.start
 			until
-				visible_features.offright
+				visible_features.after
 			loop
 				a_feature := feat_table.item
 							(visible_features.item_for_iteration);
@@ -156,7 +156,7 @@ feature
 			from
 				visible_features.start;
 			until
-				visible_features.offright
+				visible_features.after
 			loop
 				io.error.putstring (visible_features.item_for_iteration);
 				io.error.putchar (' ');

@@ -5,7 +5,10 @@ class VUEX1
 inherit
 
 	FEATURE_ERROR
-	
+		redefine
+			subcode
+		end;
+
 feature
 
 	access: ACCESS_INV_AS;
@@ -19,5 +22,7 @@ feature
 	
 	code: STRING is "VUEX";
 			-- Error code
+
+	subcode: INTEGER is 1;
 
 end

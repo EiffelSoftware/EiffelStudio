@@ -7,11 +7,13 @@ inherit
 	VDRD5
 		rename 
 			build_explain as vdrd5_build_explain
+		redefine
+			subcode
 		end;
 
 	VDRD5
 		redefine
-			build_explain
+			build_explain, subcode
 		select
 			build_explain
 		end
@@ -36,24 +38,24 @@ feature
 			precursor_type := t;
 		end;
 
-	code: STRING is 
+	subcode: INTEGER is 
 			-- Error code
 		do
-			Result := "VDRD";
+			Result := 51;
 		end;
 
-	build_explain (a_clickable: CLICK_WINDOW) is
-            -- Build specific explanation explain for current error
-            -- in `a_clickable'.
-        do
-			vdrd5_build_explain (a_clickable);
-			a_clickable.put_string ("%Tprecursor type: ");
+	build_explain is
+			-- Build specific explanation explain for current error
+			-- in `error_window'.
+		do
+			vdrd5_build_explain;
+			put_string ("%Tprecursor type: ");
 -- FIXME:
 --			precursor_type.build_explain;
-			a_clickable.put_string ("%N%Tredeclared type: ");
+			put_string ("%N%Tredeclared type: ");
 -- FIXME:
 --			type.build_explain;
-			a_clickable.new_line;
+			new_line;
 		end;
 
 end

@@ -26,7 +26,7 @@ feature
 		do
 			-- First, check if class has one formal generic parameter
 			if generics = Void or else generics.count /= 1 then
-				!!special_error.make (Case_11, id);
+				!!special_error.make (Case_11, Current);
 				Error_handler.insert_error (special_error);
 			end;
 
@@ -39,7 +39,7 @@ feature
 				or else
 				not item_feature.same_signature (Item_signature)
 			then
-				!!special_error.make (Case_12, id);
+				!!special_error.make (Case_12, Current);
 				Error_handler.insert_error (special_error);
 			end;
 			
@@ -51,7 +51,7 @@ feature
 				or else
 				not put_feature.same_signature (Put_signature)
 			then
-				!!special_error.make (Case_13, id);
+				!!special_error.make (Case_13, Current);
 				Error_handler.insert_error (special_error);
 			end;
 		end;
@@ -118,7 +118,7 @@ feature
 				pointer_dtype := -1;
 				types.start
 			until
-				types.offright
+				types.after
 			loop
 				class_type := types.item;
 				dtype := class_type.type_id - 1;

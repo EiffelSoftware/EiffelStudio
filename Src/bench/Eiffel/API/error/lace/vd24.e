@@ -4,15 +4,15 @@ class VD24
 
 inherit
 
-	CLUSTER_ERROR
+	CLASS_ERROR
+		redefine
+			build_explain
+		end;
 
 feature
 
 	other_cluster: CLUSTER_I;
 			-- Other cluster involved
-
-	class_name: STRING;
-			-- Class name involved
 
 	set_other_cluster (c: CLUSTER_I) is
 			-- Assign `c' to `other_cluster'.
@@ -20,13 +20,14 @@ feature
 			other_cluster := c;
 		end;
 
-	set_class_name (s: STRING) is
-			-- Assign `s' to `class_name'.
+	build_explain is
 		do
-			class_name := s;
+			put_string ("Conflicting clusters: `");
+			put_string (other_cluster.cluster_name);
+			put_string ("' and `");
+			put_string (cluster.cluster_name);
+			put_string ("';%N");
+			put_class_name;
 		end;
-
-	code: STRING is "VD24";
-			-- Error code
 
 end

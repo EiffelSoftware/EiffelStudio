@@ -26,7 +26,7 @@ feature
 		do
 			-- First check if current class has one formal generic parameter
 			if (generics = Void) or else generics.count /= 1 then
-				!!special_error.make (Case_7, id);
+				!!special_error.make (Case_7, Current);
 				Error_handler.insert_error (special_error);
 			end;
 
@@ -35,13 +35,13 @@ feature
 			from
 				parents.start
 			until
-				parents.offright or else stop
+				parents.after or else stop
 			loop
 				stop := deep_equal (parents.item, To_special_parent);
 				parents.forth;
 			end;
 			if not stop then
-				!!special_error.make (Case_8, id);
+				!!special_error.make (Case_8, Current);
 				Error_handler.insert_error (special_error);
 			end;
 			
@@ -50,7 +50,7 @@ feature
 			if 
 				types.first.skeleton.nb_reference /= 1
 			then
-				!!special_error.make (Case_9, id);
+				!!special_error.make (Case_9, Current);
 				Error_handler.insert_error (special_error);
 			end;
 
@@ -65,7 +65,7 @@ feature
 												(Make_signature); 
 			end;
 			if error then
-				!!special_error.make (Case_10, id);
+				!!special_error.make (Case_10, Current);
 				Error_handler.insert_error (special_error);
 			end;
 				

@@ -5,7 +5,10 @@ class VDRS3
 inherit
 
 	EIFFEL_ERROR
-	
+		redefine
+			subcode
+		end;
+
 feature 
 
 	parent: PARENT_AS;
@@ -30,6 +33,11 @@ feature
 			-- Error code
 		do
 			Result := "VDRS";
+		end;
+
+	subcode: INTEGER is
+		do
+			Result := 3;
 		end;
 
 end

@@ -33,7 +33,7 @@ feature
 			from
 				feat_table.start
 			until
-				feat_table.offright
+				feat_table.after
 			loop
 				a_feature := feat_table.item_for_iteration;
 
@@ -59,7 +59,7 @@ feature
 					types := a_class.types;
 					types.start
 				until
-					types.offright
+					types.after
 				loop
 					Cecil1.generate_final (Cecil_file, types.item.type_id);
 					types.forth
@@ -90,7 +90,7 @@ feature
 			from
 				feat_table.start
 			until
-				feat_table.offright
+				feat_table.after
 			loop
 				a_feature := feat_table.item_for_iteration;
 				if  not (a_feature.is_deferred or else a_feature.is_attribute)
@@ -107,7 +107,7 @@ feature
 				Cecil1.init (prime_size (nb));
 				feat_table.start
 			until
-				feat_table.offright
+				feat_table.after
 			loop
 				a_feature := feat_table.item_for_iteration;
 				if  not (a_feature.is_deferred or else a_feature.is_attribute)
@@ -131,7 +131,7 @@ feature
 			from
 				feat_table.start
 			until
-				feat_table.offright
+				feat_table.after
 			loop
 				a_feature := feat_table.item_for_iteration;
 				if 	not (a_feature.is_deferred or else a_feature.is_attribute)

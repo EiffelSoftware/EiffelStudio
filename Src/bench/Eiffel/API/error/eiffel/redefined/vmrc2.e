@@ -5,15 +5,8 @@ class VMRC2
 inherit
 
 	EIFFEL_ERROR
-		rename
-			build_explain as old_build_explain
-		end;
-
-	EIFFEL_ERROR
 		redefine
-			build_explain
-		select
-			build_explain
+			build_explain, subcode
 		end
 
 feature
@@ -42,6 +35,8 @@ feature
 	code: STRING is "VMRC";
 			-- Error code
 
+	subcode: INTEGER is 2;
+
 	init (selected: FEATURE_I; unvalid: FEATURE_I) is
 			-- Initialization
 		require
@@ -55,22 +50,21 @@ feature
 			unvalid_name := unvalid.feature_name;
 		end;
 
-	build_explain (a_clickable: CLICK_WINDOW) is
+	build_explain is
             -- Build specific explanation explain for current error
-            -- in `a_clickable'.
+            -- in `error_window'.
         do
 -- FIXME clickable feature_i instead of names
 
-            old_build_explain (a_clickable);
-			a_clickable.put_string ("%Tunvalid selection: ");
-			a_clickable.put_string (unvalid_name);
-			a_clickable.put_string (" [ written in ");
-			System.class_of_id (unvalid_written_in).append_clickable_name (a_clickable);
-			a_clickable.put_string ("]%N%Tfeature ");
-			a_clickable.put_string (selection_name);
-			a_clickable.put_string (" written in ");
-			System.class_of_id (selection_written_in).append_clickable_name (a_clickable);
-			a_clickable.put_string (" is already selected.%N");
+			put_string ("%Tunvalid selection: ");
+			put_string (unvalid_name);
+			put_string (" [ written in ");
+			System.class_of_id (unvalid_written_in).append_clickable_name (error_window);
+			put_string ("]%N%Tfeature ");
+			put_string (selection_name);
+			put_string (" written in ");
+			System.class_of_id (selection_written_in).append_clickable_name (error_window);
+			put_string (" is already selected.%N");
 		end;
 
 end

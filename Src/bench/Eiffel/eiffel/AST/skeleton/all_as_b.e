@@ -27,7 +27,7 @@ feature -- Initialization
 				export_adapt.set_all_export (export_status);
 			else
 				!!vlel1;
-				vlel1.set_class_id (System.current_class.id);
+				vlel1.set_class (System.current_class);
 				vlel1.set_parent_id (parent.parent_id);
 				Error_handler.insert_error (vlel1);
 			end;

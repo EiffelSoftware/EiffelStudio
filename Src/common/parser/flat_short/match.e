@@ -24,8 +24,8 @@ feature
 		ensure
 			text = t;
 			pattern = p;
-			offleft;
-			index_offleft;
+			before;
+			index_before;
 			--must_check_borders := must_check
 		end;
 
@@ -56,16 +56,26 @@ feature
 			position := text.count + 1;
 		end;
 
-	offleft: BOOLEAN  is
+	before: BOOLEAN  is
 			-- nothing at left of current position in text
 		do
 			Result := position < 1;
 		end;
 
-	offright: BOOLEAN  is
+	offleft: BOOLEAN is obsolete "Use `before'"
+		do
+			Result := before
+		end;
+
+	after: BOOLEAN  is
 			-- nothing at right of current position in text
 		do
 			Result := position > text.count;
+		end;
+
+	offright: BOOLEAN is obsolete "Use `after'"
+		do
+			Result := after
 		end;
 
 	go (p: INTEGER) is
@@ -76,14 +86,14 @@ feature
 
 	forth is
 		do
-			if not offright then
+			if not after then
 				position := position + 1;
 			end;
 		end;
 
 	back is
 		do
-			if not offleft then
+			if not before then
 				position := position - 1
 			end;
 		end;
@@ -101,14 +111,14 @@ feature
 				last_start := position;
 				index := 1;
 			until
-				offright or index_offright and stop_token (position)
+				after or index_after and stop_token (position)
 			loop
 				position := last_start + 1;
 				find_next_matching_first;
 				last_start := position;
 				match_forward;
 			end;
-			if index_offright then
+			if index_after then
 				position := last_start;
 			end;
 		end;	
@@ -128,14 +138,14 @@ feature
 				pos := position;
 				index := pattern.count;
 			until
-				offleft or index_offleft and stop_token (position + 1)
+				before or index_before and stop_token (position + 1)
 			loop
 				position := last_start - 1;
 				find_previous_matching_last;
 				last_start := position;
 				match_backward;
 			end;
-			if index_offleft then
+			if index_before then
 				position := last_start;
 			end;
 		end;
@@ -146,14 +156,14 @@ feature {}
 	index: INTEGER;
 		-- current position in pattern
 
-	index_offleft: BOOLEAN is
+	index_before: BOOLEAN is
 			-- nothing at left of current index in pattern
 		do
 			Result := index = pattern.count;
 		end;
 		
 
-	index_offright: BOOLEAN is
+	index_after: BOOLEAN is
 			-- nothing at right of current index in pattern
 		do
 			Result := index = pattern.count + 1;
@@ -169,7 +179,7 @@ feature {}
 			from
 				index := 1;
 			until
-				offright or found
+				after or found
 			loop				
 				if matching_chars then
 					found := stop_token (position);
@@ -192,7 +202,7 @@ feature {}
 			from
 				index := 1;
 			until
-				offleft or found
+				before or found
 			loop
 				if matching_chars then
 					found := stop_token (position + 1);
@@ -215,14 +225,14 @@ feature {}
 		do
 			from
 			until
-				offright or index_offright 
+				after or index_after 
 				or else not matching_chars
 			loop
 				position := position + 1;
 				index := index + 1;
 			end;
 		ensure
-			off_or_no_match: offright or index_offright 
+			off_or_no_match: after or index_after 
 				or else not matching_chars
 		end;
 
@@ -232,7 +242,7 @@ feature {}
 		do
 			from
 			until
-				offleft or index_offleft
+				before or index_before
 				or else not matching_chars
 			loop
 				position := position - 1;
@@ -301,9 +311,9 @@ end;
 invariant
 	text_exists: text /= void;
 	pattern_exists: pattern /= void;
-	position_in_text_or_off: offleft or offright 
+	position_in_text_or_off: before or after 
 			or position >= 1 and position <= text.count;
-	index_in_text_or_off: index_offleft or index_offright 
+	index_in_text_or_off: index_before or index_after 
 		or index >= 1 and index <= pattern.count
 
 end

@@ -84,7 +84,7 @@ feature -- Creation feature
 				cl := old_cluster.classes;
 				cl.start;
 			until
-				cl.offright
+				cl.after
 			loop
 				c := cl.item_for_iteration;
 				classes.put (c, cl.key_for_iteration);
@@ -123,7 +123,7 @@ feature -- Creation feature
 			from   
 				renamings.start;   
 			until  
-				renamings.offright or else Result /= Void
+				renamings.after or else Result /= Void
 			loop
 				rename_clause := renamings.item;
 				if rename_clause.cluster = cl then
@@ -168,6 +168,7 @@ feature -- Creation feature
 
 			if open_directory_error (cluster_file) then
 				!!vd22;
+				vd22.set_cluster (Current);
 				vd22.set_file_name (cluster_file.name);
 				Error_handler.insert_error (vd22);
 			else
@@ -243,6 +244,7 @@ feature -- Creation feature
 				if class_file.open_read_error then
 						-- Error when opening file
 					!!vd22;
+					vd22.set_cluster (Current);
 					vd22.set_file_name (file_name);
 					Error_handler.insert_error (vd22);
 				else
@@ -314,7 +316,7 @@ feature -- Creation feature
 			from
 				classes.start
 			until
-				classes.offright
+				classes.after
 			loop
 					-- reset_options on CLASS_I reset the default options
 				classes.item_for_iteration.reset_options;
@@ -352,7 +354,7 @@ feature -- Creation feature
 				old_classes := old_cluster.classes;
 				old_classes.start
 			until
-				old_classes.offright
+				old_classes.after
 			loop
 				old_class := old_classes.item_for_iteration;
 				if not classes.has (old_class.class_name) then
@@ -370,7 +372,7 @@ feature -- Creation feature
 			from
 				list.start
 			until
-				found or else list.offright
+				found or else list.after
 			loop
 				if pathname.is_equal (list.item.path) then
 					Result := list.item;
@@ -393,7 +395,7 @@ feature -- Creation feature
 			from
 				old_list.start
 			until
-				old_list.offright or else Result
+				old_list.after or else Result
 			loop
 				cluster := cluster_of_path (ignore, old_list.item.path);
 				if cluster = Void then
@@ -413,7 +415,7 @@ feature -- Creation feature
 			from
 				ignore.start
 			until
-				ignore.offright or else Result
+				ignore.after or else Result
 			loop
 				cluster := cluster_of_path (old_list, ignore.item.path);
 				if cluster = Void then
@@ -449,7 +451,7 @@ feature -- Creation feature
 			from
 				classes.start
 			until
-				classes.offright
+				classes.after
 			loop
 				remove_class_from_system (classes.item_for_iteration);
 				classes.forth
@@ -480,7 +482,7 @@ feature -- Creation feature
 			from
 				renamings.start
 			until
-				renamings.offright
+				renamings.after
 			loop
 				rename_clause := renamings.item;
 				a_cluster := rename_clause.cluster;
@@ -488,7 +490,7 @@ feature -- Creation feature
 					table := rename_clause.renamings;
 					table.start;
 				until
-					table.offright
+					table.after
 				loop
 					if table.item_for_iteration.is_equal (class_name) then
 						if not found then
@@ -525,7 +527,7 @@ feature -- Creation feature
 			from
 				renamings.start
 			until
-				renamings.offright or else Result /= Void
+				renamings.after or else Result /= Void
 			loop
 				rename_clause := renamings.item;
 				a_cluster := rename_clause.cluster;
@@ -533,7 +535,7 @@ feature -- Creation feature
 					table := rename_clause.renamings;
 					table.start;
 				until
-					table.offright
+					table.after
 				loop
 					if table.item_for_iteration.is_equal (class_name) then
 						Result := a_cluster.classes.item

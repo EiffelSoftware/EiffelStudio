@@ -41,6 +41,7 @@ feature
 			ct: CLASS_TYPE;
 		do
 			ct := System.class_type_of_id (type_id);
+					-- Class type is still in the system
 			if ct /= Void then
 				Result := ct.associated_class;
 			end;

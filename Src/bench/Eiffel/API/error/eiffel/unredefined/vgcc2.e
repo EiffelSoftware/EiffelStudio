@@ -5,5 +5,12 @@ class VGCC2
 inherit
 
 	VGCC
+		redefine
+			subcode
+		end
+
+feature
+
+	subcode: INTEGER is 2
 
 end

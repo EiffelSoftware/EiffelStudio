@@ -46,11 +46,11 @@ feature
 		do
 			pos := position;
 			goto_used (type_id);
-			if not offright then
+			if not after then
 				from
 					forth
 				until
-					offright or else Result
+					after or else Result
 				loop
 					Result := item.used;
 					forth

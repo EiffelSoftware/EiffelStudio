@@ -89,7 +89,7 @@ feature
 						types := a_class.types;
 						types.start
 					until
-						types.offright
+						types.after
 					loop
 						cl_type := types.item;
 

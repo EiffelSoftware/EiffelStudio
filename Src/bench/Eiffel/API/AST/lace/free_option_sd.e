@@ -20,4 +20,20 @@ feature
 			option_name_exists: option_name /= Void;
 		end;
 
+	is_valid: BOOLEAN is
+		do
+io.error.putstring ("FIXME FREE_OPTION%N");
+--			Result := ("dead_code_removal").is_equal (option_name);
+
+		-- "exception_stack_managed"
+		-- "chained_assertions"
+		-- "repeated_inheritance"
+		end;
+
+	is_system_tag: BOOLEAN is
+		do
+io.error.putstring ("FIXME FREE_OPTION%N");
+		--	Result := option_name.is_equal ("dead_code_removal");
+		end;
+
 end

@@ -5,8 +5,16 @@ class VLEL2
 inherit
 
 	VLEL
-	
+		redefine
+			subcode
+		end;
+
 feature
+
+	subcode: INTEGER is
+		do
+			Result := 2
+		end;
 
 	feature_name: STRING;
 			-- Feature name involved

@@ -5,22 +5,13 @@ class VUAR2
 inherit
 
 	VUAR
-		rename
-			build_explain as old_build_explain
 		redefine
-			code
-		end;
-	
-	VUAR
-		redefine
-			build_explain, code
-		select
-			build_explain
+			build_explain, subcode
 		end
 
 feature 
 
-	code: STRING is "VUAR2";
+	subcode: INTEGER is 2;
 
 	argument_name: STRING;
 			-- Name of the involved argument
@@ -49,26 +40,18 @@ feature
 			actual_type := a;
 		end;
 
-	build_explain (a_clickable: CLICK_WINDOW) is
+	build_explain is
 			-- Build specific explanation image for current error
-			-- in `a_clickable'.
-		local
-			class_name: STRING;
+			-- in `error_window'.
 		do
-			old_build_explain (a_clickable);
-			a_clickable.put_string ("%T%Ttarget ");
-			a_clickable.put_string (formal_type.dump);
-			a_clickable.put_string ("%N%T%Tsource	");
-			a_clickable.put_string (actual_type.dump);
-			a_clickable.put_string ("%N%T%Tfor argument `");
-			a_clickable.put_string (argument_name);
-			a_clickable.put_string ("' of ");
-			a_clickable.put_string (feature_i.feature_name);
-			a_clickable.put_string (" written in ");
-			class_name := feature_i.written_class.class_name.duplicate;
-			class_name.to_upper;
-			a_clickable.put_string (class_name);
-			a_clickable.new_line;
+			print_called_feature;
+			put_string ("Argument name: `");
+			put_string (argument_name);
+			put_string ("'%NTarget: ");
+			put_string (formal_type.dump);
+			put_string ("%NSource: ");
+			put_string (actual_type.dump);
+			new_line;
 		end;
 
 end

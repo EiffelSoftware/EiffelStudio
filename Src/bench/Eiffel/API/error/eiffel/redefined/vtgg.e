@@ -5,14 +5,7 @@ class VTGG
 inherit
 
 	EIFFEL_ERROR
-		rename
-			build_explain as old_build_explain
-		end;
-
-	EIFFEL_ERROR
 		redefine
-			build_explain
-		select
 			build_explain
 		end
 	
@@ -27,18 +20,17 @@ feature
 			error_list := e;
 		end;
 
-	build_explain (a_clickable: CLICK_WINDOW) is
-            -- Build specific explanation explain for current error
-            -- in `a_clickable'.
-        do
-            old_build_explain (a_clickable);
+	build_explain is
+			-- Build specific explanation explain for current error
+			-- in `error_window'.
+		do
 			from
 				error_list.start
 			until
-				error_list.offright
+				error_list.after
 			loop
-				a_clickable.put_string ("%T");
-				error_list.item.build_explain (a_clickable);
+				put_char ('%T');
+				error_list.item.build_explain;
 				error_list.forth;
 			end;
 		end;

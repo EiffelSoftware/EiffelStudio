@@ -56,8 +56,8 @@ feature
 		local
 			other_formal: FORMAL_A;
 		do
-			other_formal ?= other;
-			if other_formal /= Void then
+			if other.is_formal then
+				other_formal ?= other;
 				Result := base_type = other_formal.base_type;
 			end;
 		end;
@@ -68,6 +68,12 @@ feature
 			!!Result.make (10);
 			Result.append ("Generic #");
 			Result.append_integer (base_type);
+		end;
+
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		do
+			a_clickable.put_string ("Generic #");
+			a_clickable.put_int (base_type);
 		end;
 
 	associated_class: CLASS_C is
@@ -116,6 +122,6 @@ feature
 		do
 			ctxt.put_string (ctxt.formal_name (base_type));
 		end;
-		
+
 
 end

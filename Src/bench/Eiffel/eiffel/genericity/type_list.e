@@ -21,7 +21,7 @@ feature
 			from
 				start
 			until
-				offright or else item.type.same_as (t)
+				after or else item.type.same_as (t)
 			loop
 				forth;
 			end;
@@ -37,7 +37,7 @@ feature
 		do
 			pos := position;
 			search (t);
-			Result := not offright;
+			Result := not after;
 			go (pos);
 		end;
 

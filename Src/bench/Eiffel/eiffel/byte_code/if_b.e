@@ -96,7 +96,7 @@ feature
 				from
 					elsif_list.start;
 				until
-					elsif_list.offright or not Result
+					elsif_list.after or not Result
 				loop
 					Result := Result and elsif_list.item.last_all_in_result;
 					elsif_list.forth;
@@ -215,7 +215,7 @@ feature -- Byte code generation
 				from
 					elsif_list.start
 				until
-					elsif_list.offright
+					elsif_list.after
 				loop
 					elsif_clause ?= elsif_list.item;
 					

@@ -1,10 +1,10 @@
--- Error for unvalid value for option
+-- Error for invalid value for option
 
 class VD15
 
 inherit
 
-	ERROR
+	LACE_ERROR
 		redefine
 			build_explain
 		end
@@ -20,19 +20,14 @@ feature
 			node := n;
 		end;
 
-	code: STRING is
-			-- Error code
+	build_explain is
 		do
-			Result := "VD15";
-		end;
-
-	build_explain (a_clickable: CLICK_WINDOW) is
-		do
-			a_clickable.put_string ("Invalid option value: ");
-			a_clickable.put_string (node.value.value);
-			a_clickable.put_string (" for option ");
-			a_clickable.put_string (node.option.option_name);
-			a_clickable.new_line;
+			put_string ("Option name: `");
+			put_string (node.option.option_name);
+			put_string ("'%NOption value: `");
+			put_string (node.value.value);
+			put_char ('%'');
+			new_line
 		end;
 
 end

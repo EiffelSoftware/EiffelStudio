@@ -104,6 +104,22 @@ feature
 			compiled_class := c;
 		end;
 
+feature -- Drag and drop
+
+	stone: CLASSI_STONE is
+		do
+			!!Result.make (Current)
+		end;
+
+	append_clickable_name (a_clickable: CLICK_WINDOW) is
+			-- Append the name ot the current class in `a_clickable'
+		local
+			c_name: STRING;
+		do
+			c_name := class_name.duplicate;
+			c_name.to_upper;
+			a_clickable.put_clickable_string (stone, c_name);
+		end;
 
 feature -- Compiled class
 

@@ -31,13 +31,13 @@ feature
 			argument_name := s;
 		end;
 
-	build_explain (a_clickable: CLICK_WINDOW) is
+	build_explain is
 		do
-			a_clickable.put_string ("%T%Tin feature `");
-			feature_i.append_clickable_name (a_clickable);
-			a_clickable.put_string ("':%N%T%T");
-			a_clickable.put_string (argument_name);
-			a_clickable.put_string (" is a feature name and cannot%N%
+			put_string ("%T%Tin feature `");
+			feature_i.append_clickable_name (error_window);
+			put_string ("':%N%T%T");
+			put_string (argument_name);
+			put_string (" is a feature name and cannot%N%
 								%%T%Tbe used as an argument name%N");
 		end;
 

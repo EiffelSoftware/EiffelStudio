@@ -116,7 +116,7 @@ feature
 				!!Result.make (first_int, second_int);
 				int_intervals.start;
 			until	
-				int_intervals.offright
+				int_intervals.after
 			loop
 				if not Result.disjunction (int_intervals.item) then
 						-- Error
@@ -152,7 +152,7 @@ feature
 				!!Result.make (first_char, second_char);
 				char_intervals.start;
 			until
-				char_intervals.offright
+				char_intervals.after
 			loop
 				if not Result.disjunction (char_intervals.item) then
 						-- Error

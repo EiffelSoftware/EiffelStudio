@@ -65,7 +65,7 @@ feature
 			from
 				old_externals.start
 			until
-				old_externals.offright
+				old_externals.after
 			loop
 				Externals.remove_occurence (old_externals.item);
 				old_externals.forth;
@@ -73,7 +73,7 @@ feature
 			from
 				new_externals.start
 			until
-				new_externals.offright
+				new_externals.after
 			loop
 				Externals.add_occurence (new_externals.item);
 				new_externals.forth;

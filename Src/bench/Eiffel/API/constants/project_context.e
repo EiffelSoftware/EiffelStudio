@@ -22,18 +22,42 @@ feature {NONE}
 
 	Generation_path: STRING is
 			-- Path to the generation directory
+		do
+-- FIXME
+--	Generation_path should return TWO different strings
+--	One in workbench mode, one in final mode.
+			if False then
+				Result := Final_generation_path
+			else
+				Result := Workbench_generation_path
+			end;
+		end;
+
+	Workbench_generation_path: STRING is
 		once
 			!!Result.make (Project_directory.name.count + 7);
 			Result.append (Project_directory.name);
 			Result.append ("/C_code")
 		end;
 
-	Generation_directory: DIRECTORY is
-			-- Directory where the C code is generated
+	Final_generation_path: STRING is
 		once
-			!!Result.make (Generation_path);
-			if not Result.exists then
-				Result.create
+			!!Result.make (Project_directory.name.count + 10);
+			Result.append (Project_directory.name);
+			Result.append ("/Finalized")
+		end;
+
+	Create_generation_directory is
+		local
+			d: DIRECTORY
+		once
+			!!d.make (Final_generation_path);
+			if not d.exists then
+				d.create
+			end;
+			!!d.make (Workbench_generation_path);
+			if not d.exists then
+				d.create
 			end;
 		end;
 
@@ -45,12 +69,14 @@ feature {NONE}
 			Result.append ("/COMP")
 		end;
 
-	Compilation_directory: DIRECTORY is
+	Create_compilation_directory is
 			-- Directory where the compilation files are generated
+		local
+			d: DIRECTORY
 		once
-			!!Result.make (compilation_path);
-			if not Result.exists then
-				Result.create
+			!!d.make (compilation_path);
+			if not d.exists then
+				d.create
 			end
 		end;
 

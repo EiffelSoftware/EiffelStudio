@@ -4,14 +4,7 @@ class VTCT
 inherit
 
 	EIFFEL_ERROR
-		rename
-			build_explain as old_build_explain
-		end;
-
-	EIFFEL_ERROR
 		redefine
-			build_explain
-		select
 			build_explain
 		end
 	
@@ -29,14 +22,13 @@ feature
 	code: STRING is "VTCT";
 			-- Error code
 
-	build_explain (a_clickable: CLICK_WINDOW) is
+	build_explain is
             -- Build specific explanation explain for current error
-            -- in `a_clickable'.
+            -- in `error_window'.
         do
-            old_build_explain (a_clickable);
-			a_clickable.put_string ("%Tclass name: ");
-			a_clickable.put_string (class_name);
-			a_clickable.put_string ("%N")
+			put_string ("%Tclass name: ");
+			put_string (class_name);
+			new_line;
 		end;
 
 end

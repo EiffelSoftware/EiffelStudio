@@ -9,13 +9,13 @@ inherit
 			internal_conform_to as old_conform_to
 		redefine
 			is_bits, associated_class, dump,
-			heaviest, same_as
+			heaviest, same_as, append_clickable_signature
 		end;
 
 	BASIC_A
 		redefine
 			is_bits, internal_conform_to, associated_class, dump,
-			heaviest, same_as
+			heaviest, same_as, append_clickable_signature
 		select
 			internal_conform_to
 		end;
@@ -75,6 +75,12 @@ feature
 			!!Result.make (9);
 			Result.append ("BITS ");
 			Result.append_integer (base_type);
+		end;
+
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		do
+			a_clickable.put_string ("BITS ");
+			a_clickable.put_int (base_type);
 		end;
 
 	type_i: BIT_I is

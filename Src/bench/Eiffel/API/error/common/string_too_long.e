@@ -15,11 +15,11 @@ creation
 
 feature
 
-	build_explain (a_clickable: CLICK_WINDOW) is
+	build_explain is
             -- Build specific explanation image for current error
-            -- in `a_clickable'.
+            -- in `error_window'.
         do
-			error_window.put_string ("(String too long)%N")
+			put_string ("(string too long)%N")
         end;
 
 end

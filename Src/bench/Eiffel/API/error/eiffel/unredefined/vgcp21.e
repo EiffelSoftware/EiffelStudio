@@ -4,9 +4,17 @@ class VGCP21
 
 inherit
 
-	VGCP1
-	
+	VGCP
+		redefine
+			subcode
+		end;
+
 feature
+
+	subcode: INTEGER is
+		do
+			Result := 21;
+		end;
 
 	creation_feature: FEATURE_I;
 			-- Feature involved

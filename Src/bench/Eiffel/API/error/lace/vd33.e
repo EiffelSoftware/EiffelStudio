@@ -4,7 +4,7 @@ class VD33
 
 inherit
 
-	ERROR
+	LACE_ERROR
 		redefine
 			build_explain
 		end;
@@ -20,17 +20,12 @@ feature
 			language_name := s
 		end;
 
-	code: STRING is
-			-- Error code
+	build_explain is
 		do
-			Result := "VD33";
-		end;
-
-	build_explain (a_clickable: CLICK_WINDOW) is
-		do
-			a_clickable.put_string ("%TUndefined name in Generate clause: ");
-			a_clickable.put_string (language_name);
-			a_clickable.new_line;
+			put_string ("Language name: `");
+			put_string (language_name);
+			put_char ('%'');
+			new_line
 		end;
 
 end

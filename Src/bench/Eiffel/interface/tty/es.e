@@ -165,6 +165,20 @@ feature -- Command line options
 				else
 					option_error := True
 				end;
+			elseif option.is_equal ("-depend") then
+				if current_option < (argument_count - 2) then
+					if command /= Void then
+						option_error := True
+					else
+						current_option := current_option + 1;
+						cn := argument (current_option);
+						current_option := current_option + 1;
+						fn := argument (current_option);
+						!EWB_DEPEND!command.make (cn, fn);
+					end;
+				else
+					option_error := True
+				end;
 			elseif option.is_equal ("-fs") then
 				if current_option < (argument_count - 1) then
 					if command /= Void then
@@ -213,6 +227,8 @@ feature -- Command line options
 				else
 					option_error := True
 				end;
+			elseif option.is_equal ("-stop") then
+					-- The compiler stops on errors
 			else
 				option_error := True
 			end;

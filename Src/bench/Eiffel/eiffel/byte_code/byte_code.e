@@ -421,7 +421,7 @@ feature -- Byte code generation
 				Temp_byte_code_array.append_short_integer (local_list.count);
 				local_list.start
 			until
-				local_list.offright
+				local_list.after
 			loop
 				Temp_byte_code_array.append_integer (local_list.item.sk_value);
 				local_list.forth;

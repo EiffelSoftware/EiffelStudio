@@ -36,21 +36,26 @@ feature {NONE}
 
 	display_info (i: INTEGER; c: CLASSC_STONE) is
 			-- Display descendants of `c' in tree form.
+		do
+			recursive_display (i, c.class_c);
+		end;
+
+	recursive_display (i: INTEGER; c: CLASS_C) is
 		local
 			descendants: LINKED_LIST [CLASS_C];
-			d: CLASSC_STONE
+			descendant: CLASS_C;
 		do
 			from
-				descendants := c.class_c.descendants;
+				descendants := c.descendants;
 				descendants.start
 			until
 				descendants.after
 			loop
-				!!d.make (descendants.item);
+				descendant := descendants.item;
 				text_window.put_string (tabs(i));
-				text_window.put_clickable_string (d, d.signature);
+				descendant.append_clickable_signature (text_window);
 				text_window.new_line;
-				display_info (i+1, d);
+				recursive_display (i+1, descendant);
 				descendants.forth
 			end
 		end

@@ -38,7 +38,9 @@ feature -- Initialization
 			value ?= yacc_arg (1);
 
 			free_option ?= option;
-			if free_option /= Void then
+			if free_option /= Void and then
+				not free_option.is_valid
+			then
 				!!vd32;
 				vd32.set_node (Current);
 				vd32.set_option_name (free_option.option_name);

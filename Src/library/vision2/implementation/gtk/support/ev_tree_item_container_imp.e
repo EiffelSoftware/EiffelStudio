@@ -5,28 +5,18 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EV_TREE_ITEM_CONTAINER_IMP
+	EV_TREE_ITEM_HOLDER_IMP
 
 inherit
-	EV_TREE_ITEM_CONTAINER_I
+	EV_TREE_ITEM_HOLDER_I
 
-	EV_WIDGET_IMP
-
-		-- Inheriting from widget, because tree item and subtree
+	EV_CONTAINER_IMP
+		-- Inheriting from container, because tree item and subtree
 		-- are widgets in gtk, although it is not a widget in
 		-- EiffelVision. This is just for implementation
 		-- reasons.
 
-feature -- Status settings
-
-feature {EV_TREE_ITEM} -- Implementation
-
-	add_item (item: EV_TREE_ITEM) is
-			-- Add `item' to the list
-		deferred
-		end
-
-end -- class EV_TREE_ITEM_CONTAINER_IMP
+end -- class EV_TREE_ITEM_HOLDER_IMP
 
 --|----------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.

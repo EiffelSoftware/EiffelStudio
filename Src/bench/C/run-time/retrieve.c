@@ -804,7 +804,7 @@ rt_private void correct_one_mismatch (
 			if (vals != NULL) {
 				long attrib_offset;
 				EIF_REFERENCE ref;
-				CHECK ("Expanded attribute", System (dtype).cn_types[i] & SK_EXP);
+				CHECK ("Expanded attribute", (System (dtype).cn_types[i] & SK_HEAD) == SK_EXP);
 				attrib_offset = get_offset (dtype, i);
 				ref = (char *) object + attrib_offset;
 				correct_object_mismatch (ref, vals, conversions);

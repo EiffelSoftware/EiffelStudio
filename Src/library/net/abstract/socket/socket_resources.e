@@ -13,54 +13,53 @@ class
 
 feature -- Status report
 
-	error is
+	error: STRING is
 			-- Output a related error message.
 		do
 			if address_not_readable then
-				io.error.put_string ("Address not readable %N")
+				Result := "Address not readable"
 			elseif socket_ok then
-				io.error.put_string ("Socket Ok %N")
+				Result := "Socket Ok"
 			elseif protected_address then
-				io.error.put_string ("Address protected %N")
+				Result := "Address protected"
 			elseif already_bound then
-				io.error.put_string ("Address already bound %N")
+				Result := "Address already bound"
 			elseif address_in_use then
-				io.error.put_string ("Address in use %N")
+				Result := "Address in use"
 			elseif invalid_address then
-				io.error.put_string ("Address not available %N")
+				Result := "Address not available"
 			elseif invalid_socket_handle then
-				io.error.put_string ("Address is a file %N")
+				Result := "Address is a file"
 			elseif bad_socket_handle then
-				io.error.put_string ("socket_invalid %N")
+				Result := "Socket invalid"
 			elseif socket_family_not_supported then
-				io.error.put_string ("family not supported %N")
+				Result := "family not supported"
 			elseif no_permission then
-				io.error.put_string ("no permission %N")
+				Result := "No permission"
 			elseif no_buffers then
-				io.error.put_string ("no buffers %N")
+				Result := "No buffers"
 			elseif dtable_full then
-				io.error.put_string ("descriptor table full %N")
+				Result := "Descriptor table full"
 			elseif not_connected then
-				io.error.put_string ("not connected %N")
+				Result := "Not connected"
 			elseif protocol_not_supported then
-				io.error.put_string ("protocol not supported %N")
+				Result := "Protocol not supported"
 			elseif socket_would_block then
-				io.error.put_string ("socket would block %N")
+				Result := "Socket would block"
 			elseif socket_in_use then
-				io.error.put_string ("socket in use %N")
+				Result := "Socket in use"
 			elseif expired_socket then
-				io.error.put_string ("socket expired %N")
+				Result := "Socket expired"
 			elseif connection_refused then
-				io.error.put_string ("connection refused %N")
+				Result := "Connection refused"
 			elseif network then
-				io.error.put_string ("no network %N")
+				Result := "No network"
 			elseif zero_option then
-				io.error.put_string ("not an option %N")
+				Result := "Not an option"
 			elseif connect_in_progress then
-				io.error.put_string ("Connection in progress")
+				Result := "Connection in progress"
 			else
-				io.error.put_string( "Unknown error : ");
-				io.error.put_integer (c_errorno)
+				Result := "Unknown error : " + c_errorno.out
 			end
 		end;
 
@@ -631,7 +630,7 @@ end -- class SOCKET_RESOURCES
 
 --|----------------------------------------------------------------
 --| EiffelNet: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--| Copyright (C) 1086-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.

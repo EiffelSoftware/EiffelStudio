@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			dotnet_eiffel_name_set: equal (dotnet_eiffel_name, den)
 			arguments_set: arguments = args
 			return_type_set: return_type = ret
-			is_frozen_set: is_frozen = froz
+			is_frozen_set: is_frozen = froz or not virt
 			is_static_set: is_static = static
 			is_deferred_set: is_deferred = defer
 			is_infix_set: is_infix = inf

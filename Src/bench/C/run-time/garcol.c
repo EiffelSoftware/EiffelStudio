@@ -1148,15 +1148,17 @@ rt_private void mark_special_table (register struct special_table *spt, register
  
 	EIF_GET_CONTEXT
 
-	int 			count; 				/* Count of special table. */
-	EIF_REFERENCE	*hvalues;			/* Array of pointers. */
 	EIF_REFERENCE	*container;			/* Special object. */
 	union overhead	*zone;				/* Special object malloc info zone. */
 	union overhead	*iz;				/* Item header. */
 	EIF_INTEGER		ofst;				/* Index of item in special. */
-	EIF_INTEGER		*hkeys;				/* Array of indexes. */
 	int				i;					/* Index. */
 
+#ifndef NDEBUG
+	int old_count = spt->count;			/* For postcondition checking */
+#endif	/* !NDEBUG */
+
+	/*** Preconditions ***/
 	assert (g_data.status & GC_FAST);
 
 	if (spt == (struct special_table *) 0)	/* Table not created yet. */
@@ -1165,30 +1167,26 @@ rt_private void mark_special_table (register struct special_table *spt, register
 
 	/* Initialization. */
 
-	count   = spt->count;				/* Number of elements in table. */
-	hvalues = spt->h_values;			/* Object pointers table. */
-	hkeys 	= spt->h_keys;				/* Indexes table. */
-
-	assert (hkeys != (EIF_INTEGER *) 0);		/* Cannot be empty. */
-	assert (hvalues != (EIF_REFERENCE *) 0);	/* Cannot be empty. */
-	assert (count <= spt->h_size);		/* Special table must be coherent. */
+	assert (spt->h_keys != (EIF_INTEGER *) 0);		/* Cannot be empty. */
+	assert (spt->h_values != (EIF_REFERENCE *) 0);	/* Cannot be empty. */
+	assert (spt->count <= spt->h_size);		/* Special table must be coherent. */
 
 #ifdef MARK_SPECIAL_TABLE_DEBUG
-	printf ("MARK_SPECIAL_TABLE: count = %d\n", count);
+	printf ("MARK_SPECIAL_TABLE: count = %d\n", spt->count);
 #endif /* MARK_SPECIAL_TABLE_DEBUG */
 
 
-	for (i = 0; i < special_rem_set->count ; i++)
+	for (i = 0; i < spt->count ; i++)
 			/* It is very important to access directly to the `count' value 
 			 * of the table,since it can increase during the following marking. 
 			 * -- ET
 		 	 */
 	{
-		zone = HEADER (hvalues [i]);
-		assert (hvalues [i] != (EIF_REFERENCE) 0);
+		zone = HEADER (spt->h_values [i]);
+		assert (spt->h_values [i] != (EIF_REFERENCE) 0);
 
 #ifdef MARK_SPECIAL_TABLE_DEBUG
-	printf ("MARK_SPECIAL_TABLE: object %x\n", hvalues [i]);
+	printf ("MARK_SPECIAL_TABLE: object %x\n", spt->h_values [i]);
 #endif	/* MARK_SPECIAL_TABLE_DEBUG */
 
 
@@ -1211,7 +1209,7 @@ rt_private void mark_special_table (register struct special_table *spt, register
 			 * It must be referenced from an old object. */
 		{
 			zone->ov_flags |= EO_MARK;	/* Mark it. */	
-			assert (HEADER (hvalues [i])->ov_flags & EO_MARK);
+			assert (HEADER (spt->h_values [i])->ov_flags & EO_MARK);
 			assert (HEADER ((special_rem_set->h_values) [i])->ov_flags & EO_MARK);
 		}
 		
@@ -1223,10 +1221,10 @@ rt_private void mark_special_table (register struct special_table *spt, register
 
 		/* Initializations. */
 
-		ofst = hkeys [i];
+		ofst = spt->h_keys [i];
 		if (ofst == -1)
 			continue;				/* No new reference, just unmark it. */
-		container = (EIF_REFERENCE *) (hvalues [i] + ofst * sizeof (EIF_REFERENCE));
+		container = (EIF_REFERENCE *) (spt->h_values [i] + ofst * sizeof (EIF_REFERENCE));
 		if (*container == (EIF_REFERENCE) 0)
 			continue;				/* Skip Void elements. */
 
@@ -1235,9 +1233,9 @@ rt_private void mark_special_table (register struct special_table *spt, register
 #ifdef MARK_SPECIAL_TABLE_DEBUG
 /****************************** Debug. *************************************/
 		printf("MARK_SPECIAL_TABLE: marking at 0x%x (type %d, %d bytes) %s %s %s %s %s %s %s, \n\t\t\twith item %x, offset %ld (type %d, %d bytes) %s age %ld, %s %s%s %s %s %s\n",
-			hvalues [i],
+			spt->h_values [i],
 			HEADER(
-				zone->ov_size & B_FWD ? zone->ov_fwd : hvalues [i]
+				zone->ov_size & B_FWD ? zone->ov_fwd : spt->h_values [i]
 			)->ov_flags & EO_TYPE,
 			zone->ov_size & B_SIZE,
 			zone->ov_size & B_FWD ? "forwarded" : "",
@@ -1248,7 +1246,7 @@ rt_private void mark_special_table (register struct special_table *spt, register
 			zone->ov_flags & EO_COMP ? "cmp" : "",
 			zone->ov_flags & EO_SPEC ? "spec" : "",
 			*container,
-			hkeys [i],
+			spt->h_keys [i],
 			HEADER (
 				iz->ov_size & B_FWD ? iz->ov_fwd : *container
 			)->ov_flags & EO_TYPE,
@@ -1299,7 +1297,7 @@ rt_private void mark_special_table (register struct special_table *spt, register
 									/* Not forwarded twice. */
 				assert (!(HEADER (*container)->ov_flags & EO_MARK));	
 									/* Not marked and still in scavenge zone. */
-				hkeys [i] = -2;		/* Mark it as a twin, -2 by convention. */
+				spt->h_keys [i] = -2;		/* Mark it as a twin, -2 by convention. */
 				continue;			/* Next reference. */
 			}
 			else		/* Not a twin, then mark it. */
@@ -1325,18 +1323,22 @@ rt_private void mark_special_table (register struct special_table *spt, register
 
 #ifndef NDEBUG
 	/************************ Postconditions. **********************/
-	for (i = 0; i < special_rem_set->count; i ++)
+	assert (spt == special_rem_set);	
+	assert (old_count <= spt->count);	/* Special table must have grown or
+										 * kept the same size during marking.*/
+					/* `special_rem_set' must not move. */
+	for (i = 0; i < spt->count; i ++)
 	{
-		assert ((hvalues [i]) != (EIF_REFERENCE) 0);
-		assert ((hvalues [i]) == (special_rem_set->h_values) [i]);
+		assert ((spt->h_values [i]) != (EIF_REFERENCE) 0);
+		assert ((spt->h_values [i]) == (special_rem_set->h_values) [i]);
 		assert (!(HEADER ((special_rem_set->h_values) [i])->ov_size & B_FWD));
-		if ((hkeys [i] >= 0) && ((*(EIF_REFERENCE *) ((special_rem_set->h_values) [i] + hkeys [i]*sizeof (EIF_REFERENCE))) != (EIF_REFERENCE) 0))
-				assert (!(HEADER (*(EIF_REFERENCE *) ((special_rem_set->h_values) [i] + hkeys [i]*sizeof (EIF_REFERENCE)))->ov_size & B_FWD));
+		if ((spt->h_keys [i] >= 0) && ((*(EIF_REFERENCE *) ((special_rem_set->h_values) [i] + spt->h_keys [i]*sizeof (EIF_REFERENCE))) != (EIF_REFERENCE) 0))
+				assert (!(HEADER (*(EIF_REFERENCE *) ((special_rem_set->h_values) [i] + spt->h_keys [i]*sizeof (EIF_REFERENCE)))->ov_size & B_FWD));
 		assert (HEADER ((special_rem_set->h_values) [i])->ov_flags & EO_MARK);
 		assert (HEADER ((special_rem_set->h_values) [i])->ov_flags & EO_SPEC);
 			assert (HEADER ((special_rem_set->h_values) [i])->ov_flags & EO_REF);
 #ifdef EIF_EXPENSIVE_ASSERTIONS
-		if (hkeys [i] >= 0) 
+		if (spt->h_keys [i] >= 0) 
 		{
 			assert (all_subreferences_processed ((special_rem_set->h_values) [i]));	
 		}

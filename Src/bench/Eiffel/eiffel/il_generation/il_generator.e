@@ -530,8 +530,10 @@ feature {NONE} -- Type description
 			types: TYPE_LIST
 			cl_type: CLASS_TYPE
 			l_class_processed: BOOLEAN
+			mem: MEMORY
 		do
 			from
+				create mem
 				i := classes.lower
 				nb := classes.upper
 				j := compiled_classes_count
@@ -550,8 +552,8 @@ feature {NONE} -- Type description
 				class_c := classes.item (i)
 				if is_class_generated (class_c) then
 					if (j \\ 500) = 0 then
-						feature {MEMORY}.full_collect
-						feature {MEMORY}.full_coalesce
+						mem.full_collect
+						mem.full_coalesce
 					end
 
 					from
@@ -605,6 +607,7 @@ feature {NONE} -- Type description
 			types: TYPE_LIST
 			l_class_processed: BOOLEAN
 			cl_type: CLASS_TYPE
+			mem: MEMORY
 		do
 			from
 				i := classes.lower
@@ -625,8 +628,8 @@ feature {NONE} -- Type description
 				class_c := classes.item (i)
 				if is_class_generated (class_c) then
 					if (j \\ 500) = 0 then
-						feature {MEMORY}.full_collect
-						feature {MEMORY}.full_coalesce
+						mem.full_collect
+						mem.full_coalesce
 					end
 
 					from

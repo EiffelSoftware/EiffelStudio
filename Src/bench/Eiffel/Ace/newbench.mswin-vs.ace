@@ -5,7 +5,9 @@ root
 	EB_WINDOWS_KERNEL: make
 
 default
-	assertion (no)
+	assertion (check)
+	assertion (require)
+	assertion (ensure)
 	line_generation (no)
 	profile (no)
 	trace (no)

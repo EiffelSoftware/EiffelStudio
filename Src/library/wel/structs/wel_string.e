@@ -10,60 +10,14 @@ class
 	WEL_STRING
 
 inherit
-	WEL_STRUCTURE
-		rename
-			make as structure_make
-		end
+	C_STRING
 
 creation
 	make,
 	make_empty,
 	make_by_pointer
 
-feature {NONE} -- Initialization
-
-	make (a_string: STRING) is
-			-- Make a C string from `a_string'.
-		require
-			a_string_not_void: a_string /= Void
-		local
-			a: ANY
-			nb: INTEGER
-		do
-			nb := a_string.count
-			make_empty (nb)
-			a := a_string.to_c
-			memory_copy ($a, nb + 1)
-		ensure
-			not_shared: not shared
-		end
-
-	make_empty (a_length: INTEGER) is
-			-- Make an empty C string of `a_length' characters.
-			-- C memory area is not initialized.
-		require
-			positive_length: a_length >= 0
-		local
-			a_default_pointer: POINTER
-		do
-			item := c_calloc (1, a_length + 1)
-			if item = a_default_pointer then
-					-- Memory allocation problem
-				(create {EXCEPTIONS}).raise ("No more memory")
-			end
-			capacity := a_length + 1
-			shared := False
-		end
-
 feature -- Access
-
-	string: STRING is
-			-- Eiffel string
-		do
-			create Result.make_from_c (item)
-		ensure
-			result_not_void: Result /= Void
-		end
 
 	null_separated_strings: LINKED_LIST [STRING] is
 			-- Retrieve all string contained in `item'. Strings are
@@ -115,39 +69,29 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
+	
+feature -- Status report
 
-	length, count: INTEGER is
-			-- String length
+	to_integer: INTEGER is
+			-- Converts `item' to an integer.
 		do
-			Result := cwel_string_length (item)
+			Result := cwel_pointer_to_integer (item)	
 		end
+
+	exists: BOOLEAN is True
+			-- `item' is always valid.
 		
 feature -- Element change
-
-	set_string (a_string: STRING) is
-			-- Set `string' with `a_string'.
-		require
-			a_string_not_void: a_string /= Void
-			valid_count: a_string.count < capacity
-		local
-			a: ANY
-		do
-			a := a_string.to_c
-			memory_copy ($a, a_string.count + 1)
-		ensure
-			string_set: a_string.is_equal (string)
-		end
 
 	set_null_character (offset: INTEGER) is
 			-- Set `%U' at `offset' position of `Current'.
 			-- First position being  at `0' index.
 		require
 			valid_offset: offset >= 0 and offset < capacity
-		local
-			a: CHARACTER
 		do
-			a := '%U'
-			c_memcpy (item + offset, $a, 1)
+			managed_data.put_integer_8 (0, offset)
+		ensure
+			string_set: managed_data.read_integer_8 (offset) = 0
 		end
 
 	set_size_in_string (n: INTEGER) is
@@ -155,33 +99,17 @@ feature -- Element change
 			-- value represented by `n' in a two bytes representation.
 		require
 			valid_size: n > 0
+			small_enough: n <= feature {INTEGER_16}.Max_value
 		do
-			cwel_set_size_in_string (item, n)
+			managed_data.put_integer_16 (n.to_integer_16, 0)
 		end
-
-feature -- Measurement
-
-	structure_size: INTEGER is
-			-- String length
-		do
-			Result := capacity
-		end
-
-	capacity: INTEGER
-			-- Size of initial string (Needed for `set_string' precondition).
 
 feature {NONE} -- Implementation
 
-	cwel_string_length (ptr: POINTER): INTEGER is
+	cwel_pointer_to_integer (p: POINTER): INTEGER is
+			-- Converts a pointer `p' to an integer
 		external
-			"C signature (char *): EIF_INTEGER use %"eif_str.h%""
-		alias
-			"strlen"
-		end
-
-	cwel_set_size_in_string (ptr: POINTER; n: INTEGER) is
-		external
-			"C [macro %"wel_string.h%"]"
+			"C [macro <wel.h>] (EIF_POINTER): EIF_INTEGER"
 		end
 
 end -- class WEL_STRING

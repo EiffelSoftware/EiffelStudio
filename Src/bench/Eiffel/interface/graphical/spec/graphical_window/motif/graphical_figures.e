@@ -116,7 +116,8 @@ feature -- Access
 				else
 					if current_text /= Void then
 						-- Get the closest character position in text
-						Result := current_text.character_position (Current, x_pos)
+						Result := current_text.character_position 
+								(Current, x_pos + x_offset)
 					elseif x_pos <= initial_x_position then
 							-- Get the text position at the start of current next line
 						Result := i_th (index).text_position
@@ -181,6 +182,7 @@ feature -- Access
 		end;
 
 feature -- Update
+
 	find_text (relative_x, relative_y: INTEGER) is
 			-- Find clickable text from coordinates.
 		local
@@ -191,7 +193,7 @@ feature -- Update
 			find_line (relative_y);
 			if current_line /= Void then
 				!! p;
-				p.set (relative_x, relative_y);
+				p.set (relative_x + x_offset, relative_y);
 				current_text := current_line.text_figure (p);
 			end;
 		end;
@@ -377,8 +379,11 @@ end
 	put_cluster (e_cluster: CLUSTER_I; str: STRING) is
 			-- Put `e_cluster' with string representation
 			-- `str' at current position.
+		local
+			fig: CLUSTER_TEXT_IMAGE
 		do
-			put_string (str)
+			!! fig;
+			add_text_figure (fig, str)
 		end;
 
 	put_class (e_class: E_CLASS; str: STRING) is

@@ -25,7 +25,8 @@ inherit
 			internal_caret_position,
 			internal_set_caret_position,
 			text,
-			wel_text
+			wel_text,
+			process_notification_info
 		redefine
 			interface,
 			initialize,
@@ -123,7 +124,6 @@ inherit
 			class_name,
 			show,
 			line,
-			process_notification_info,
 			destroy,
 			wel_make
 		redefine
@@ -153,10 +153,10 @@ create
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			--
+			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
-			multiple_line_edit_make (default_parent, "", 0, 0, 0, 0, 0)
+			multiple_line_edit_make (default_parent, "", 0, 0, 0, 0, -1)
 			set_options (Ecoop_set, Eco_autovscroll + Eco_autohscroll)
 			show_vertical_scroll_bar
 			set_text_limit (2560000)
@@ -168,7 +168,8 @@ feature {NONE} -- Initialization
 			-- (from WEL_RICH_EDIT)
 			-- (export status {NONE})
 		once
-			Result := ws_visible + ws_child + ws_border + Es_autovscroll + es_savesel + es_disablenoscroll + es_multiline + Es_wantreturn
+			Result := Ws_visible + Ws_child + Ws_border + Ws_vscroll + Es_savesel +
+				Es_disablenoscroll + Es_multiline + es_autovscroll + Es_Wantreturn
 		end
 		
 	default_ex_style: INTEGER is

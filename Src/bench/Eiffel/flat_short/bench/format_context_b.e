@@ -1,73 +1,47 @@
+indexing
+
+	description: 
+		"Formatting context for class ast (flat, flat/short & clickable format).";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class FORMAT_CONTEXT_B
 
 inherit
 
 	FORMAT_CONTEXT
+		rename
+			make as simple_format_make
 		redefine 
-			make, execute, ast,
 			format, new_expression, arguments,
-			put_name_of_class, prepare_for_main_infix,
-			prepare_for_main_feature, 
-			prepare_for_main_prefix, prepare_for_current,
-			prepare_for_result, prepare_for_infix,
-			prepare_for_prefix, put_current_feature,
-			put_normal_feature, put_infix, put_prefix,
-			put_main_fix, begin, previous, commit,
-			prepare_for_feature
+			prepare_for_current, prepare_for_result, 
+			prepare_for_main_feature, put_normal_feature, 
+			prepare_for_prefix, prepare_for_infix,
+			put_infix_feature, put_prefix_feature,
+			begin, commit, prepare_for_feature,
+			formal_name, put_origin_comment,
+			format_ast, is_feature_visible,
+			reversed_format_list, put_current_feature
 		end
-
 	SHARED_SERVER;
-
 	SHARED_INST_CONTEXT;
-
 	SHARED_RESCUE_STATUS;
-
-	SPECIAL_AST_B
+	SHARED_FORMAT_INFO;
 
 creation
 
-	make, make_for_case
+	make
 
-feature -- Flat and flat/short modes
-
-	set_in_bench_mode is
-		do
-			in_bench_mode_bool.set_value (True);
-		end;
-
-	set_current_class_only is
-		do
-			current_class_only := True;	
-		end
-
-	set_is_short is
-		do
-			is_short_bool.set_value (True);
-		end;
-
-	set_troff_format is
-		do
-			troff_format := True
-		end;
-
-	set_order_same_as_text is
-		do
-			order_same_as_text_bool.set_value (True)
-		end;
-
-feature
-
-	ast: CLASS_AS_B;
+feature -- Initialization
 
 	make (c: CLASS_C) is
+			-- Initialize Current for bench.
 		do
 			class_c := c;
 			current_class_only := False;
-			is_short_bool.set_value (False);
-			in_bench_mode_bool.set_value (False);
-			order_same_as_text_bool.set_value (False);
-			in_assertion_bool.set_value (False);
+			reset_format_booleans;
 			troff_format := False;
+			last_was_printed := True;
 		ensure then
 			class_c_set: class_c = c;
 			batch_mode:	not in_bench_mode;
@@ -76,76 +50,39 @@ feature
 			not_troff_format: not troff_format
 		end;
 
-	make_for_case (c: CLASS_C) is
-		local
-			first_format: LOCAL_FORMAT_B;
+	init_feature_context (source, target: FEATURE_I; 
+				feature_as: FEATURE_AS_B) is
+			-- Initialize Current context to analyze
+			-- `source' and `target' features.
+			-- Use `feature_as' to set up locals.
+		require
+			valid_source: source /= Void;
+			valid_target: target /= Void
 		do
-			class_c := c;
-			current_class_only := False;
-			is_short_bool.set_value (False);
-			in_bench_mode_bool.set_value (False);
-			order_same_as_text_bool.set_value (False);
-			in_assertion_bool.set_value (False);
-			troff_format := False;
-			!! previous.make;
-			!! text.make;
-			!! first_format.make_for_case (class_c.actual_type);
-			previous.extend (first_format);
-			last_was_printed := True;
+			!! global_adapt.make (source, target, class_c)
+			global_adapt.set_locals (feature_as);
+			!! unnested_local_adapt;
+			unnested_local_adapt.update_from_global (global_adapt)
+			local_adapt := unnested_local_adapt;
 		ensure
-			class_c_set: class_c = c;
-			batch_mode:	not in_bench_mode;
-			analyze_ancestors: not current_class_only;
-			do_flat: not is_short;
-			not_troff_format: not troff_format
+			valid_global_adapt: global_adapt /= Void
+			valid_unnested_local_adapt: unnested_local_adapt /= Void
+			valid_unnested_local_adapt: local_adapt /= Void
 		end;
 
-	execute is
-				-- Execute the flat or flat_short.
-		require else
-			class_set: class_c /= Void
-		local
-			first_format: LOCAL_FORMAT_B;
-			name: STRING;
-		do
-			if not rescued then
-				execution_error := false;
-				Error_handler.wipe_out;
-				!!previous.make;
-				!!text.make;
-				!!first_format.make(class_c.actual_type);
-				upper_name := clone (class_c.class_name)
-				upper_name.to_upper;
-				previous.extend (first_format);
-				if is_short then
-					client := system.any_class.compiled_class;
-				end;
-				!!flat_struct.make (class_c, client);
-				flat_struct.fill (current_class_only);
-				System.set_current_class (class_c);
-				if flat_struct.ast /= void then
-					Inst_context.set_cluster (class_c.cluster);
-					flat_struct.ast.format (Current);
-					Inst_context.set_cluster (Void);
-				else
-					execution_error := true
-				end;
-				System.set_current_class (Void);
-			else
-				execution_error := true;
-				rescued := False
-			end
-		rescue
-			flat_ctxt.clear;
-			if Rescue_status.is_error_exception then
-				Rescue_status.set_is_error_exception (False);
-				Error_handler.trace;
-				rescued := True;
-				retry
-			end;
-		end;
+feature -- Properties
 
-	flat_struct: FLAT_STRUCT;
+	client: CLASS_C;
+			-- Client class for Current flat
+
+	class_name: STRING;
+			-- Class name of `class_c'
+
+	first_assertion: BOOLEAN;
+			-- Are we about to format the first assertion?
+		
+	format_registration: FORMAT_REGISTRATION;
+			-- Structure registerd for formatting
 
 	current_class_only: BOOLEAN;
 			-- Is Current only processing `class_c' and not
@@ -164,128 +101,319 @@ feature
 	class_c: CLASS_C;
 			-- Current class being processed
 	
-	previous: LINKED_STACK [LOCAL_FORMAT_B];
-			-- previous  format (push at begin, pop at commit and rollback)
-
-	format: LOCAL_FORMAT_B is
+	format: LOCAL_FORMAT_B;
 			-- Current internal formatting directives
+
+	last_was_printed: BOOLEAN;
+			-- Was we able to print a structure?
+
+	was_infix_arguments: BOOLEAN;
+			-- Were the arguments when preparing for
+			-- a feature came from an infix?
+
+	must_abort_on_failure: BOOLEAN is
+			-- Must we abort on failure?
+		require
+			valid_format: format /= Void
 		do
-			Result := previous.item;
+			Result := format.must_abort_on_failure
+		end;
+
+	arguments: AST_EIFFEL_B;
+			-- Arguments for Current feature being analyzed
+
+	is_feature_visible: BOOLEAN  is
+			-- should the feature be visible
+		do
+			Result := client = void
+				or else local_adapt.is_visible (client)
+		end;
+
+	global_adapt: GLOBAL_FEAT_ADAPTATION;
+			-- Feature adaptation information for enclosing
+			-- features being analyzed
+
+	saved_global_adapt: GLOBAL_FEAT_ADAPTATION;
+			-- Saved feature adaptation information for enclosing
+			-- features being analyzed
+
+	unnested_local_adapt: LOCAL_FEAT_ADAPTATION
+			-- Feature adaptation information for non nested features
+			-- within the enclosing features
+
+	local_adapt: LOCAL_FEAT_ADAPTATION
+			-- Current feature adaptation information for features
+			-- within the enclosing features
+
+	execution_error: BOOLEAN;
+			-- Did an error occur during `execute'?
+
+	rescued: BOOLEAN;
+			-- Was Current format rescued?
+
+feature -- Access
+
+	chained_assertion: CHAINED_ASSERTIONS is
+			-- Chained assertion for current analyzed feature.
+		require
+			valid_global_adapt: global_adapt /= Void;
+			has_target_feat: global_adapt.target_enclosing_feature /= Void;
+		local
+			chained_prec: CHAINED_ASSERTIONS;
+			t_feat: FEATURE_I;
+			assert_id_set: ASSERT_ID_SET
+		do
+			t_feat := global_adapt.target_enclosing_feature;
+			assert_id_set := t_feat.assert_id_set
+			if assert_id_set /= Void and then
+				assert_id_set.count > 0 
+			then
+				chained_prec := 
+					format_registration.chained_assertion_of_fid (t_feat.feature_id)
+			end
+		end;
+
+	formal_name (pos: INTEGER): ID_AS_B is
+			-- Formal name of class_c generics at position `pos.
+		do
+			Result := clone (class_c.generics.i_th (pos).formal_name)
+			Result.to_upper;
+		end;
+
+feature -- Setting
+
+	set_insertion_point is
+			-- Remember text position for parantheses 
+			-- and prefix operator.
+		do
+			if not tabs_emitted then
+				emit_tabs
+			end;
+			format.set_insertion_point (text.cursor);
+		end;
+
+	set_current_class_only is
+			-- Set current_class_only to True.
+		do
+			current_class_only := True;	
+		ensure
+			current_class_only: current_class_only
+		end
+
+	set_troff_format is
+			-- Set troff_format to True.
+		do
+			troff_format := True
+		ensure
+			troff_format: troff_format
+		end;
+
+	set_first_assertion (b: BOOLEAN) is
+			-- Set first_assertion `b'.
+		do
+			first_assertion := b;
+		ensure
+			first_assertion = b
+		end;
+
+	set_source_class (c: CLASS_C) is
+			-- Set source class to `c'.
+		require
+			good_class: c /= void
+		do
+			global_adapt := clone (global_adapt);
+			global_adapt.set_source_enclosing_class (c);
+		end;
+
+	set_classes (source, target: CLASS_C) is
+			-- Initialize global_adapt with classes
+			-- `source' and `target'.
+			--| Used in the inherit clause.
+		require
+			both_void: source = Void implies target = Void;
+			both_non_void: source /= Void implies target /= Void;
+		do
+			!! global_adapt.make_with_classes (source, target);
+			!! local_adapt;
+			if source /= Void then
+				local_adapt.update_from_global (global_adapt);
+			end;
+			unnested_local_adapt := local_adapt;
+		ensure
+			valid_global_adapt: global_adapt /= Void
+			valid_local_adapt: local_adapt /= Void
+			unnested_local_adapt = local_adapt
+		end;
+
+	set_source_feature_for_assertion (source: FEATURE_I) is
+			-- Set source feature to be analyzed to `source'.
+		require
+			valid_source: source /= Void
+		do
+			global_adapt := clone (global_adapt);
+			global_adapt.update_new_source_in_assertion (source);
+		end;
+
+	save_global_adapt is
+			-- Save global adapt.
+		do
+			saved_global_adapt := global_adapt;
+		ensure
+			saved_global_adapt = global_adapt
+		end;
+
+	restore_global_adapt is
+			-- Restore global adapt.
+		require
+			valid_saved_global_adapt: saved_global_adapt /= Void
+		do
+			global_adapt := saved_global_adapt;
+			saved_global_adapt := Void;
+		ensure
+			saved_global_adapt = Void;
+			(old saved_global_adapt) = global_adapt
+		end;
+
+feature -- Setting local format details
+
+	abort_on_failure is
+			-- Set abort flag for format to be True.
+		do
+			format.set_must_abort (True);
+		ensure
+			must_abort_on_failure: must_abort_on_failure
+		end;
+	
+	continue_on_failure is
+			-- Set abort flag for format to be False.
+		do
+			format.set_must_abort (false);
+		ensure
+			not_must_abort_on_failure: not must_abort_on_failure
+		end;
+
+feature -- Execution
+
+	execute is
+				-- Execute the flat or flat_short.
+		local
+			name: STRING;
+			simple_ctxt: FORMAT_CONTEXT
+		do
+			if not rescued then
+				execution_error := false;
+				Error_handler.wipe_out;
+				initialize;
+				class_name := clone (class_c.class_name)
+				class_name.to_upper;
+				if is_short then
+					client := system.any_class.compiled_class;
+				end;
+				!! format_registration.make (class_c, client);
+				format_registration.fill (current_class_only);
+				System.set_current_class (class_c);
+				if format_registration.target_ast /= void then
+					Inst_context.set_cluster (class_c.cluster);
+					format_registration.target_ast.format (Current);
+					Inst_context.set_cluster (Void);
+				else
+					execution_error := true
+				end;
+				System.set_current_class (Void);
+debug ("FLAT_SHORT")
+	!! simple_ctxt.make (format_registration.target_ast)
+	format_registration.target_ast.simple_format (simple_ctxt);
+	io.error.putstring (simple_ctxt.text.image)
+end
+			else
+				execution_error := True;
+				rescued := False
+			end;
+		rescue
+			if Rescue_status.is_error_exception then
+				Rescue_status.set_is_error_exception (False);
+				Error_handler.trace;
+				rescued := True;
+				retry
+			end;
+		end;
+
+feature -- Update
+
+	initialize is
+			-- Initialize structures for Current.
+		do
+			!! format_stack.make;
+			!! text.make;
+			!! format;
+			format_stack.extend (format);
 		end;
 
 	begin is
-		-- Save format before a change
+			-- Save current format before a change.
+			-- (To keep track of indent depth, separator etc.)
 		local
-			new_format: LOCAL_FORMAT_B;
-			i: INTEGER
+			new_format: like format;
 		do
 			new_format := clone (format);
-			text.finish;
-			new_format.set_position(text.cursor);
-			previous.extend (new_format);
-debug ("FS_RBRF")
-			io.error.putstring ("beginning format... %N");
-			i := text.index;
-			io.error.putstring (text.image);
-			text.go_i_th (i);
-			io.error.new_line;
-end
+			new_format.set_position (text.cursor);
+			format_stack.extend (new_format);
+			format := new_format;
 		end;
 
 	commit is
-			-- Go back to previous format. Keep text modifications.
-		local
-			i: INTEGER
+			-- Go back to previous format. 
+			--| Keep text modifications.
 		do
-			previous.remove;
+			format_stack.remove;
+			format := format_stack.item;
 			last_was_printed := True;
-debug ("FS_RBRF")
-		io.error.putstring ("Comimitting...%N");
-		i := text.index;
-		io.error.putstring (text.image);
-		text.go_i_th (i);
-		io.error.new_line;
-end
-		end;
-
-
-	again is
-			-- keep current format, Discard text modifications
-			-- since last begin.
-			-- Commit or rollback still to be done.
-		do
-			text.head(format.position_in_text);
+		ensure then
+			last_was_printed: last_was_printed;
 		end;
 
 	rollback is
-		-- go back to previous format.Discard text modifications 
+			-- Go back to the previous format.
+			-- Discard text modifications.
 		do
 			text.head (format.position_in_text);
-			previous.remove;
+			format_stack.remove;
+			format := format_stack.item;
 			last_was_printed := false;
-debug ("FS_RBRF")
-			io.error.putstring ("rollback to..%N");
-			io.error.putstring (text.image);
-			io.error.new_line;
-end
+		ensure
+			not_last_was_printed: not last_was_printed;
+			format_removed: not format_stack.has (old format)
 		end;
 
-	always_succeed is
-		-- do as if begin and commit had been done. quicker, but can't rollback
-		do
-			last_was_printed := true;
-		end;
-
-	last_was_printed: BOOLEAN;
-
-	is_in_first_pass: BOOLEAN;
-
-	set_in_assertion is
-		do
-			in_assertion_bool.set_value (True);
-		end
-
-	set_not_in_assertion is
-		do
-			in_assertion_bool.set_value (False);
-		end
-
-feature -- text construction
-
-	client: CLASS_C;
-
-	no_inherited: BOOLEAN;
-		-- immediate feature only;
-		--| not yet implemented
-
-	first_assertion: BOOLEAN;
-		
-	set_first_assertion (b: BOOLEAN) is
-		do
-			first_assertion := b;
-		end;
+feature -- Element change
 
 	put_class_name (c: CLASS_C) is
-			-- append class name to 'text', treated as a stone.
+			-- Append class name to 'text', treated as a stone.
 		local
 			p : CLASSC_STONE;
 			s: STRING;
 			item: CLASS_NAME_TEXT
 		do
-			!!p.make(c);
+			if not tabs_emitted then
+				emit_tabs
+			end;
+			!! p.make(c);
 			s := clone (c.class_name)
 			s.to_upper;
-			!!item.make (s, p);
+			!! item.make (s, p);
 			text.add (item);
 		end;
 
 	put_classi_name (c: CLASS_I) is
-			-- append class name to 'text', treated as a stone.
+			-- Append class name to 'text', treated as a stone.
 		local
 			p : CLASSI_STONE;
 			s: STRING;
 			item: CLASS_NAME_TEXT
 		do
+			if not tabs_emitted then
+				emit_tabs
+			end;
 			!!p.make(c);
 			s := clone (c.class_name)
 			s.to_upper;
@@ -294,492 +422,349 @@ feature -- text construction
 		end;
 
 	prepare_class_text is
-			-- append standard text before class 
+			-- Append standard text before class.
 		local
 			item: BEFORE_CLASS;
 		do
-			!!item.make (class_c);
+			!! item.make (class_c);
 			text.add (item);
 		end;
 
 	end_class_text is
-			-- append standard text after class
+			-- Append standard text after class.
 		local
 			item: AFTER_CLASS
 		do
-			!!item.make (class_c);
+			!! item.make (class_c);
 			text.add (item);
 		end;
 
+	end_feature is
+			-- Append standard text after feature declaration.
+		local
+			item: AFTER_FEATURE;
+		do
+			if troff_format then
+				!! item.make (class_name, Void);
+				text.add (item);
+			end
+		end;
+
+	put_origin_comment is
+			-- Put original comment.
+		local
+			c: CLASS_C;
+		do
+			if global_adapt.source_enclosing_class 
+				/= global_adapt.target_enclosing_class
+			then
+				put_text_item (ti_Dashdash);
+				text.add (ti_Space);
+				put_comment_text ("(from ");
+				c := global_adapt.source_enclosing_class;
+				put_class_name (c);
+				put_comment_text (")");
+				new_line;
+			end;
+		end;
+
+	new_expression is
+			-- Prepare for a new expression.
+		local
+			f: like format
+		do
+			f := format;
+				-- For features that go from
+				-- normal to an infix and
+				-- for rolling back.
+			f.set_insertion_point (text.cursor)
+			f.set_dot_needed (false);
+			local_adapt := unnested_local_adapt;
+			last_was_printed := true;
+		end;
+			
+	prepare_for_feature (name: STRING; args: EIFFEL_LIST_B [EXPR_AS_B]) is
+			-- Prepare for features within main features.
+		do
+			if format.dot_needed then
+				local_adapt := local_adapt.adapt_nested_feature (name)
+			else
+				local_adapt := unnested_local_adapt.adapt_feature (name, 
+											global_adapt)
+			end;
+			arguments := args;
+			was_infix_arguments := False;
+		end;
+
+	prepare_for_main_feature is
+			-- Prepare for enclosing context feature.
+		do
+			local_adapt := global_adapt.adapt_main_feature;
+			arguments := Void;
+		end;
+
+	prepare_for_current is
+			-- Prepare for Current.
+		do
+			local_adapt := global_adapt.adapt_current;	
+			arguments := Void;
+		end;
+
+	prepare_for_result is
+			-- Prepare for Result.
+		do
+			local_adapt := global_adapt.adapt_result;	
+			arguments := Void;
+		end;
+
+	prepare_for_infix (internal_name: STRING; right: EXPR_AS_B) is
+			-- Prepare for infix with feature `internal_name'
+			-- and arg `right'.
+		do
+			local_adapt := local_adapt.adapt_infix (internal_name);
+			arguments := right;
+			was_infix_arguments := True;
+		end;
+
+	prepare_for_prefix (internal_name: STRING) is
+			-- Prepare for infix with feature `internal_name'.
+		do
+			local_adapt := local_adapt.adapt_prefix (internal_name);
+			arguments := void;
+		end;
+
+feature -- Output
+
+	reversed_format_list (list: EIFFEL_LIST_B [AST_EIFFEL_B]) is
+			-- Format `list' in reverse order.
+		do
+			list.reversed_format (Current)
+		end;
+
+	format_ast (ast: AST_EIFFEL_B) is
+			-- Call simple_for on `ast'.
+		do
+			ast.format (Current)
+		end;
+
+	format_class_comments is
+			-- Format comments at the top of the class
+			-- for class_c.
+		do
+			format_registration.format_class_comments (Current);
+		end;
+
+	format_categories is
+			-- Format the categories for class_c.
+		do
+			format_registration.format_categories (Current);
+		end;
+
+	format_invariants is
+			-- Format the categories for class_c.
+		do
+			format_registration.format_invariants (Current);
+		end;
+
+	put_main_feature_name is
+			-- Put feature name of anlayzed feature.
+		do
+				-- For infix features and for
+				-- features becoming infixes
+			format.set_insertion_point (text.cursor)
+			if local_adapt.is_normal then
+				put_normal_feature
+			elseif local_adapt.is_infix then
+					-- Don't want space around `infix'
+				put_infix_name (local_adapt)
+			else
+				put_prefix_feature
+			end
+		end;
+
+	put_current_feature is
+			-- Put Current feature.
+		do
+			if local_adapt.is_normal then
+				put_normal_feature
+			elseif local_adapt.is_infix then
+				put_infix_feature
+			else
+				put_prefix_feature
+			end;
+		end;
+
 	prepare_feature (feature_name: STRING; is_pref, is_inf: BOOLEAN) is
-			-- append standard text before feature declaration 
+			-- Append standard text before feature declaration.
 		local
 			item: BEFORE_FEATURE;
 			temp: STRING;
 		do
 			if troff_format then
-				old_types := format.local_types;
 				temp := clone (feature_name)
 				if is_inf then
 					if temp.substring (1, 7).is_equal ("_infix_") then
 						temp.tail (feature_name.count - 7);
-						temp := old_types.operator_name (temp);
-						!!item.make (upper_name, temp);
+						temp := operator_table.name (temp);
+						!! item.make (class_name, temp);
 					else
-						!!item.make (upper_name, feature_name);
+						!! item.make (class_name, feature_name);
 					end;
 					item.set_is_infix
 				elseif is_pref then
 					if feature_name.substring (1, 8).is_equal ("_prefix_") then
 						temp.tail (feature_name.count - 8);
-						temp := old_types.operator_name (temp);
-						!!item.make (upper_name, temp);
+						temp := operator_table.name (temp);
+						!! item.make (class_name, temp);
 					else
-						!!item.make (upper_name, feature_name);
+						!! item.make (class_name, feature_name);
 					end;
 					item.set_is_prefix
 				else
-					!!item.make(upper_name, feature_name);
+					!! item.make(class_name, feature_name);
 				end;
 				text.add (item);
 			end
 		end;
 
-	end_feature is
-			-- append standard text after feature declaration
-		local
-			item: AFTER_FEATURE;
-		do
-			if troff_format then
-				!!item.make (upper_name, Void);
-				text.add (item);
-			end
-		end;
+feature {NONE} -- Implementation
 
-feature -- local_control
-
-	abort_on_failure is
-		do
-			format.set_must_abort(true);
-		end;
-	
-	continue_on_failure is
-		do
-			format.set_must_abort( false);
-		end;
-
-	must_abort_on_failure: BOOLEAN is
-		do
-			Result := format.must_abort_on_failure
-		end;
-
-feature -- type control
-
-	new_expression is
-			-- prepare for a new expression
-		do
-			format.set_local_types (format.global_types);
-			set_insertion_point;
-			format.set_priority (12);
-			format.set_dot_needed (false);
-			last_was_printed := true;
-		end;
-			
-	may_need_adaptation: BOOLEAN is
-			-- is the type of the expression (may be implicit Current) in
-			-- the source class to change in the target class
-		do	
-			Result := format.local_types.may_need_adaptation;
-		end;
-	
-	arguments: AST_EIFFEL_B;
-
-	put_name_of_class is
-		do
-			put_class_name (class_c);
-		end;
-			
-	prepare_for_feature (name: STRING; arg: EIFFEL_LIST_B [EXPR_AS_B]) is
-			-- Prepare for features within main features
-		do
-			old_types := format.local_types;
-			new_types := format.local_types.new_adapt_feat (name);
-			format.set_local_types (new_types);
-			arguments := arg;
-		end;
-
-	prepare_for_main_infix is
-			-- Prepare for class features
-		do
-			set_types_back_to_global;
-			old_types := format.local_types;
-			new_types := format.local_types.main_adapt_infix;
-			format.set_local_types (new_types);
-			arguments := Void;
-		end;
-
-	prepare_for_main_prefix is
-			-- Prepare for class features
-		do
-			set_types_back_to_global;
-			old_types := format.local_types;
-			new_types := format.local_types.main_adapt_prefix;
-			format.set_local_types (new_types);
-			arguments := Void;
-		end;
-
-	prepare_for_main_feature is
-			-- Prepare for class features
-		do
-			set_types_back_to_global;
-			old_types := format.local_types;
-			new_types := format.local_types.main_adapt_feat;
-			format.set_local_types (new_types);
-			arguments := Void;
-debug ("FS_RBRF")
-	io.error.putstring ("ANALZYING FEATURE FOR ROLLBACK/COMMIT: ");
-	io.error.putstring (format.local_types.final_name);
-	io.error.new_line;
-end;
-		end;
-
-	prepare_for_current is
-			-- Prepare for Current
-		do
-			old_types := format.local_types;
-			new_types := format.local_types.new_adapt_current;
-			format.set_local_types (new_types);
-			arguments := Void;
-		end;
-
-	prepare_for_result is
-			-- Prepare for Result
-		do
-			old_types := format.local_types;
-			new_types := format.local_types.new_adapt_result;
-			format.set_local_types (new_types);
-			arguments := Void;
-		end;
-
-	prepare_for_infix (internal_name: STRING; right: EXPR_AS_B) is
-		do
-			old_types := format.local_types;
-			new_types := format.local_types.new_adapt_infix (internal_name);
-			format.set_local_types (new_types);
-			arguments := right;
-		end;
-
-	prepare_for_prefix (internal_name: STRING) is
-		do
-			old_types := format.local_types;
-			new_types := format.local_types.new_adapt_prefix (internal_name);
-			format.set_local_types (new_types);
-			arguments := void;
-		end;
-
-	put_current_feature is
-		do
-			if priority < format.local_types.priority then
-				insert_text_item (ti_L_parenthesis);
-				put_text_item (ti_R_parenthesis)
-			end;
-			if format.local_types.is_normal then
-				put_normal_feature
-			elseif format.local_types.is_infix then
-				put_infix
-			else
-				put_prefix
-			end
-			old_types := Void
-		end;
-
-	index_feature is
-		local
-			name: STRING;
-		do
-		end;
-			
 	put_normal_feature is
+			-- Put normal feature (not infix or prefix feature).
 		local
 			feature_i: FEATURE_I;
 			stone: FEATURE_STONE;
-			arg: EIFFEL_LIST_B [EXPR_AS_B];
+			args: like arguments;
 			item: BASIC_TEXT;
-			i, nb: INTEGER;
 			f_name: STRING;
+			adapt: like local_adapt
 		do
-			feature_i := format.local_types.target_feature;
-			if dot_needed then
-				put_dot
-			elseif (in_assertion and then not is_feature_visible) then
-				last_was_printed := false;
+			if format.dot_needed then
+				text.add (ti_Dot)
+			else
+				if not tabs_emitted then
+					emit_tabs
+				end
+				if (in_assertion and then not is_feature_visible) then
+					last_was_printed := false;
+				end
 			end;
 			if last_was_printed then
-				f_name := format.local_types.final_name;
+				adapt := local_adapt;
+				feature_i := adapt.target_feature;
+				f_name := adapt.final_name;
 				if feature_i /= void and then in_bench_mode then
-					stone := feature_i.stone (old_types.target_class);
+					stone := feature_i.stone (adapt.target_class);
 					!CLICKABLE_TEXT!item.make (f_name, stone);
 				else			
-					!!item.make (f_name)
+					!! item.make (f_name)
 				end;
 				text.add (item);
-				arg ?= arguments;
-				if arg /= void then
+				args := arguments;
+				if args /= void then
 					begin;
+					if was_infix_arguments then
+							-- Feature in source class was
+							-- an infix (need to create new_expression).
+						new_expression;
+					end;
 					set_separator (ti_Comma);
-					space_between_tokens;
-					put_space;
-					put_text_item (ti_L_parenthesis);
+					set_space_between_tokens;
+					text.add (ti_Space);
+					text.add (ti_L_parenthesis);
 					abort_on_failure;
-					arguments.format (Current);
-					put_text_item (ti_R_parenthesis);
+					args.format (Current);
+					text.add (ti_R_parenthesis);
 					if last_was_printed then
 						commit;
-						keep_types;
 					else
 						rollback;
 					end;
-					from
-						arg.start;
-						nb := arg.count;
-						i := 1;
-					until	
-						i > nb	
-					loop
-						i := i + i
-					end
+					-- Reestablish adaptations.
+					local_adapt := adapt;
 				else
 					last_was_printed := true;
 				end;			
 			end;
 		end;
 
-	put_main_fix is
-				-- Print main pre or infix
+	put_prefix_feature is
+			-- Put prefix feature.
 		local
 			feature_i: FEATURE_I; 
 			item: BASIC_TEXT;
 			stone: FEATURE_STONE;
 			f_name: STRING;
+			adapt: like local_adapt;
 		do
-			feature_i := format.local_types.target_feature;
-			f_name := format.local_types.final_name;
-			if print_fix_keyword then
-				if format.local_types.is_prefix then
-					put_text_item (ti_Prefix_keyword);
-					put_string (" ")
-				else
-					put_text_item (ti_Infix_keyword); 
-					put_string (" ")
-				end
-			end;
+			adapt := local_adapt;
+			f_name := adapt.final_name;
+				-- Use source feature for stone.
+			feature_i := adapt.target_feature;
 			if feature_i /= Void and then in_bench_mode then
-				stone := feature_i.stone (old_types.target_class)
-				!CLICKABLE_TEXT!item.make (f_name, stone);
+				stone := feature_i.stone (adapt.target_class);
+				! CLICKABLE_TEXT !item.make (f_name, stone)
 			else
-				!!item.make (f_name)
+				!! item.make (f_name)
 			end;
-			text.add (item)
-		end;
-
-	put_prefix is
-		local
-			feature_i: FEATURE_I; 
-			item: BASIC_TEXT;
-			stone: FEATURE_STONE;
-			f_name: STRING;
-		do
-			f_name := format.local_types.final_name;
-			if illegal_operator then
-				put_text_item (ti_L_parenthesis);
-				put_text_item (ti_Prefix_keyword);
-				put_space;
-				put_text_item (ti_Double_quote);
-				!!item.make (f_name);
-				put_text_item (item);	
-				put_text_item (ti_Double_quote);
-				put_text_item (ti_R_parenthesis)
-			else
-				feature_i := format.local_types.target_feature;
-				insert_text_item (ti_Space);
-				if feature_i /= Void and then in_bench_mode then
-					stone := feature_i.stone (old_types.target_class);
-					!CLICKABLE_TEXT!item.make (f_name, stone)
-				else
-					!!item.make (f_name)
-				end;
-				insert_text_item (item);
-
-					-- careful: stone + keyword or special
-				if not dot_needed then
-					put_string ("Current");
-				end;
-				keep_types;
-				last_was_printed := true;
-			end;
-			if f_name.item (1) >= 'a' and f_name.item (1) <= 'z' then
+			text.insert_two (format.insertion_point, item, ti_Space)
+			if f_name.item (1).is_alpha then
 				item.set_is_keyword
 			else
 				item.set_is_special
 			end
+			last_was_printed := True;
 		end;
 
-	put_infix is
+	put_infix_feature is
+			-- Put infix feature.
 		local
-			arg: EXPR_AS_B;
-			old_priority : INTEGER;
+			args: like arguments;
+			adapt: like local_adapt
+		do
+			adapt := local_adapt;
+			text.add (ti_Space);
+			put_infix_name (adapt);
+			text.add (ti_Space);
+			args := arguments;
+			if args /= void then
+				begin;
+				new_expression;
+				args.format (Current);
+				if last_was_printed then
+					commit;
+				else
+					rollback;
+				end;
+					-- Reestablish adaptations.
+				local_adapt := adapt;
+			end
+		end;
+
+	put_infix_name (adapt: like local_adapt) is
+			-- Put infix feature.
+		local
 			feature_i: FEATURE_I;
 			stone: FEATURE_STONE;
 			f_name: STRING;
-			item: BASIC_TEXT
+			item: BASIC_TEXT;
 		do
-			f_name := format.local_types.final_name;
-			if illegal_operator then
-				put_text_item (ti_L_parenthesis);
-				put_text_item (ti_Infix_keyword);
-				put_space;
-				put_text_item (ti_Double_quote);
-				!!item.make (f_name);
-				put_text_item (item);
-				put_text_item (ti_Double_quote);
-				put_text_item (ti_R_parenthesis);
-				last_was_printed := true
-			else
-				feature_i := format.local_types.target_feature;
-				if not dot_needed then
-					put_string ("Current");
-				end;
-				put_space;
-				if feature_i /= Void and then in_bench_mode then
-					stone := feature_i.stone (old_types.target_class);
-					!CLICKABLE_TEXT!item.make (f_name, stone)
-				else	
-					!!item.make (f_name)
-				end;
-				put_text_item (item);
-				put_space;
-				old_priority := format.local_types.priority;
-				arg ?= arguments;
-				if arg /= void then
-					begin;
-					new_expression;
-					arg.format (Current);
-					if last_was_printed then
-						commit;
-					else
-						rollback;
-					end;
-					if format.local_types.priority < old_priority then
-						insert_text_item (ti_L_parenthesis);
-						put_text_item (ti_R_parenthesis)
-					end
-				end
-			end	;
-			if f_name.item (1) >= 'a' and f_name.item (1) <= 'z' then
+			f_name := adapt.final_name;
+				-- Use source feature for stone.
+			feature_i := adapt.target_feature;
+			if feature_i /= Void and then in_bench_mode then
+				stone := feature_i.stone (adapt.target_class);
+				!CLICKABLE_TEXT!item.make (f_name, stone)
+			else	
+				!!item.make (f_name)
+			end;
+			if f_name.item (1).is_alpha then
 				item.set_is_keyword
 			else
 				item.set_is_special
-			end
+			end;
+			text.add (item);
+			last_was_printed := true;
 		end;	
 				
-	is_feature_visible: BOOLEAN  is
-			-- should the feature be visible
-		do
-			Result := client = void
-				or else format.local_types.is_visible (client)
-		end;
-
-	old_types, new_types: FEAT_ADAPTATION;
-	new_priority: INTEGER;
-	
-	set_source_class (c: CLASS_C) is
-		require
-			good_class: c /= void
-		do
-			format.set_classes (c, format.global_types.target_class)
-		end;
-
-	set_context_features (source, target: FEATURE_I) is
-		do
-			format.set_context_features (source, target);
-		end;
-
-	set_source_context (source: FEATURE_I) is
-		do
-			format.set_context_features (source, 
-				format.global_types.target_enclosing_feature);
-		end;
-
-	keep_types is
-		do
-			format.set_local_types (new_types);
-			format.set_priority (new_priority);
-		end;
-	
-	set_types_back_to_global is
-		do
-			format.set_local_types (format.global_types);
-			format.set_priority (12);
-		end;
-
-	set_new_types(t: like new_types; p: like new_priority) is
-		do
-			new_types := t;
-			new_priority := p;
-		end;
-
-
-feature -- infix and prefix control
-
-	set_insertion_point is
-			-- Remember text position for parantheses and prefix operator
-		do
-			format.set_insertion_point(text.cursor);
-		end;
-
-	priority: INTEGER is
-		do
-			Result := format.priority;
-		end;
-
-feature -- Comments
-
-	put_origin_comment is
-		local
-			s: STRING;
-			c: CLASS_C;
-		do
-			if 
-				format.global_types.source_class 
-				/= format.global_types.target_class
-			then
-				begin;
-				next_line;
-				!!s.make (50);
-				put_text_item (ti_Dashdash);
-				put_space;
-				put_comment_text ("(from ");
-				c := format.global_types.source_class;
-				put_class_name (c);
-				put_comment_text (")");
-				commit;
-			end;
-		end;
-
-	formal_name (pos: INTEGER): ID_AS_B is
-		require
-			pos > 0;
-			pos <= class_c.generics.count
-		do
-			Result := clone (class_c.generics.i_th (pos).formal_name)
-			Result.to_upper;
-		end;
-
-feature {ASSERT_LIST_AS_B} -- For case
-
-	clear_text is
-		do
-			text.wipe_out
-		end;
-
 end	 -- class FORMAT_CONTEXT_B

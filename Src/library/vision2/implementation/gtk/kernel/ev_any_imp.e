@@ -24,10 +24,10 @@ inherit
 
 	EV_C_UTIL
 
-	GTK_ENUMS
-	--| FIXME This inheritance should be removed.
+--	GTK_ENUMS
 
 --	EV_GTK_KEY_CONVERSION
+--| Removed for implementation reasons regarding executable size
 
 	INTERNAL
 
@@ -95,6 +95,12 @@ feature {EV_ANY, EV_ANY_IMP} -- Command
 			end
 			is_destroyed := True
 			disconnect_all_signals
+			C.gtk_tooltips_set_tip (
+				app_implementation.tooltips,
+				c_object,
+				NULL,
+				NULL
+			)
 			C.gtk_object_unref (c_object)
 			c_object := NULL
 		ensure then
@@ -311,6 +317,7 @@ feature {NONE} -- Implementation
 				safe_print (generator + ".dispose")
 			end
 			if c_object /= NULL then
+				-- Destroy has been explicitly called.
 				gtk_signal_disconnect_by_data (c_object, object_id)
 					--| This is the signal attached in ev_any_imp.c
 					--| used for GC/Ref-Counting interaction.

@@ -56,12 +56,59 @@ feature
 			set_dialog_att.execute (Current);
 		end;
 
+feature 
+
+	error_string: STRING is
+		once
+			!! Result.make (0);
+		end;
+
+	put_string (an_error: STRING) is
+		do
+			error_string.append (an_error);
+		end;
+
+	put_clickable_string (a: ANY; s: STRING) is
+		do
+			error_string.append (s)
+		end;
+
+	new_line is
+		do
+			error_string.extend ('%N')
+		end;
+
+	put_char (c: CHARACTER) is
+		do
+			error_string.extend (c)
+		end;
+
+	put_int (i: INTEGER) is
+		do
+			error_string.append_integer (i);
+		end;
+
+	clear is
+		do
+			error_string.wipe_out
+		end;
+
+	display_error_message is
+		do
+			caller := Void;
+			set_message (clone (error_string));
+			error_string.wipe_out;
+			old_popup;
+		end;
+
 feature {NONE}
 
 	execute (argument: ANY) is
 		do
 			popdown;
-			caller.continue_after_popdown (Current, True)		
+			if caller /= Void then
+				caller.continue_after_popdown (Current, True)		
+			end
 		end
 
 end

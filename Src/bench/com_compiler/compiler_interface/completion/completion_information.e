@@ -82,6 +82,7 @@ feature -- Access
             l_count, l_index: INTEGER
             l_retried: BOOLEAN
         do
+        	target.to_upper
         	if not l_retried then
 	            clusters := Eiffel_universe.clusters
 	            create class_descs.make (0, 20)

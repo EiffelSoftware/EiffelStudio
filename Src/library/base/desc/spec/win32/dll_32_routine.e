@@ -438,7 +438,7 @@ feature {NONE} -- Externals
 			-- Creates an Eiffel string from a
 			-- C manifest string `str'
 		external
-			"C [macro <macros.h>] (EIF_POINTER): EIF_REFERENCE"
+			"C [macro %"eif_macros.h%"] (EIF_POINTER): EIF_REFERENCE"
 		alias
 			"RTMS"
 		end
@@ -446,7 +446,7 @@ feature {NONE} -- Externals
 	win_get_proc_address (m_p, fn: POINTER): POINTER is
 			-- Get function handle
 		external
-			"C [macro %"windows.h%"] (HINSTANCE, LPCSTR): EIF_POINTER"
+			"C [macro <windows.h>] (HINSTANCE, LPCSTR): EIF_POINTER"
 		alias
 			"GetProcAddress"
 		end

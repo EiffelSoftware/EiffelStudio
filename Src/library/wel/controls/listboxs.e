@@ -1,0 +1,105 @@
+indexing
+	description: "List box which can have only one selection."
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	WEL_SINGLE_SELECTION_LIST_BOX
+
+inherit
+	WEL_LIST_BOX
+
+	WEL_LBS_CONSTANTS
+		export
+			{NONE} all
+		end
+
+creation
+	make,
+	make_by_id
+
+feature -- Status setting
+
+	select_item (index: INTEGER) is
+			-- Select item at the zero-based `index'
+		require
+			exists: exists
+			index_small_enough: index < count
+			index_large_enough: index >= 0
+		do
+			cwin_send_message (item, Lb_setcursel, index, 0)
+		ensure
+			selected: selected
+			selected_item: selected_item = index
+			selected_string: strings.item (index).is_equal (selected_string)
+		end
+
+	unselect is
+			-- Unselect the selected item.
+		require
+			exists: exists
+		do
+			cwin_send_message (item, Lb_setcursel, -1, 0)
+		ensure
+			unselected: not selected
+		end
+
+feature -- Status report
+
+	selected: BOOLEAN is
+			-- Is an item selected?
+		require
+			exists: exists
+		do
+			Result := cwin_send_message_result (item,
+				Lb_getcursel, 0, 0) /= Lb_err
+		end
+
+	selected_item: INTEGER is
+			-- Zero-based index of the selected item
+		require
+			exists: exists
+			selected: selected
+		do
+			Result := cwin_send_message_result (item,
+					Lb_getcursel, 0, 0)
+		ensure
+			result_large_enough: Result >= 0
+			result_small_enough: Result < count
+		end
+
+	selected_string: STRING is
+			-- Selected string
+		require
+			exists: exists
+			selected: selected
+		do
+			Result := i_th_text (selected_item)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+feature {NONE} -- Implementation
+
+	default_style: INTEGER is
+			-- Default style used to create the control
+		once
+			Result := Ws_visible + Ws_child + Ws_group +
+				Ws_tabstop + Ws_border + Ws_vscroll +
+				Lbs_notify
+		end
+
+end -- class WEL_SINGLE_SELECTION_LIST_BOX
+
+--|-------------------------------------------------------------------------
+--| Windows Eiffel Library: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1995, Interactive Software Engineering, Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Information e-mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--|-------------------------------------------------------------------------

@@ -94,6 +94,63 @@ feature -- Access
 			end
 		end
 
+	interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR is
+			-- Interface descriptor.
+		require
+			interface_type: visitor.is_interface_pointer or visitor.is_interface_pointer_pointer or
+						visitor.is_coclass_pointer or visitor.is_coclass_pointer_pointer
+			non_unknown: visitor.c_type.substring_index (iunknown_type, 1) = 0
+			non_dispatch: visitor.c_type.substring_index (idispatch_type, 1) = 0
+		local
+			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
+			user_defined: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR
+			alias_descriptor: WIZARD_ALIAS_DESCRIPTOR
+			tmp_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR
+			tmp_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
+			a_type_descriptor: WIZARD_TYPE_DESCRIPTOR
+			an_index: INTEGER
+		do
+			user_defined ?= pointed_data_type_descriptor
+			if user_defined = Void then
+				pointed_descriptor ?= pointed_data_type_descriptor
+				check
+					non_void_pointed_descriptor: pointed_descriptor /= Void
+				end
+				user_defined ?= pointed_descriptor.pointed_data_type_descriptor
+			end
+			check
+				non_void_user_defined: user_defined /= Void
+			end
+			if (user_defined /= Void) then
+				an_index := user_defined.type_descriptor_index
+				a_type_descriptor := user_defined.library_descriptor.descriptors.item (an_index)
+				from
+					alias_descriptor ?= a_type_descriptor
+				until
+					alias_descriptor = Void
+				loop
+					user_defined ?= alias_descriptor.type_descriptor
+					if (user_defined /= Void) then
+						an_index := user_defined.type_descriptor_index
+						a_type_descriptor := user_defined.library_descriptor.descriptors.item (an_index)
+						alias_descriptor ?= a_type_descriptor
+					else
+						alias_descriptor := Void
+					end
+				end
+				tmp_interface_descriptor ?= a_type_descriptor
+				if tmp_interface_descriptor = Void then
+					tmp_coclass_descriptor ?= a_type_descriptor
+					if tmp_coclass_descriptor /= Void then
+						tmp_interface_descriptor := tmp_coclass_descriptor.default_interface_descriptor
+					end
+				end
+			end
+			Result := tmp_interface_descriptor
+		ensure
+			non_void_interface_descriptor: Result /= Void
+		end
+
 feature -- Status report
 
 	is_equal_data_type (other: WIZARD_DATA_TYPE_DESCRIPTOR): BOOLEAN is

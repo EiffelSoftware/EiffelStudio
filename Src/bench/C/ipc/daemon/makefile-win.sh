@@ -30,7 +30,7 @@ OBJECTS = \
 
 all:: estudio.exe
 
-$microsoft-estudio.exe: $(LIBS) estudio.lmk
+$microsoftestudio.exe: $(LIBS) estudio.lmk
 	link $(LDFLAGS) $(LIBS) -OUT:$@ @estudio.lmk
 
 estudio.res: estudio.rc
@@ -41,7 +41,7 @@ estudio.lmk: $(OBJECTS) estudio.res
 	echo $(OBJECTS) > estudio.lmk
 	echo GDI32.LIB ADVAPI32.LIB USER32.LIB estudio.res >> estudio.lmk
 
-$borland-estudio.exe: $(LIBS) estudio.lbk
+$borlandestudio.exe: $(LIBS) estudio.lbk
 	ilink32 @estudio.lbk
 
 estudio.lbk: $(OBJECTS) estudio.res
@@ -50,7 +50,7 @@ estudio.lbk: $(OBJECTS) estudio.res
 	estudio.exe,, CW32 IMPORT32 ..\shared\ipc.lib \
 	$(TOP)\idrs\idr.lib,,estudio.res >> estudio.lbk
 
-$watcom-estudio.exe: $(LIBS) estudio.lwk
+$watcomestudio.exe: $(LIBS) estudio.lwk
 	wlink @estudio.lwk
 	wrc /fe=estudio.exe estudio
 

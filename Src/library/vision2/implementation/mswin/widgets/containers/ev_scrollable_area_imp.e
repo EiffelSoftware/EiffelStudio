@@ -181,8 +181,8 @@ feature {NONE} -- Implementation
 		do
 			Precursor (a_x, a_y, a_width, a_height, repaint)
 			if item_imp /= Void then
-				cw := item_imp.width - client_width
-				ch := item_imp.height - client_height
+				cw := item_imp.wel_width - client_width
+				ch := item_imp.wel_height - client_height
 
 				if cw > 0 then
 					enable_horizontal_scroll_bar
@@ -225,6 +225,9 @@ end -- class EV_SCROLLABLE_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/06/09 01:26:45  manus
+--| Merged version 1.15.8.2 from DEVEL branch to trunc
+--|
 --| Revision 1.29  2000/04/26 21:01:29  brendel
 --| child -> item or item_imp.
 --|

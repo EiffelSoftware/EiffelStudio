@@ -31,21 +31,40 @@ creation
 
 feature 
 
-	c_widget: POINTER;
-
 	make (a_name: STRING; a_parent: COMPOSITE; a_tool: TOOL_W) is
-		local
-			implement: SCROLLED_T_I
 		do
 			text_create (a_name, a_parent);
 			!! history.make (10);
 			tool := a_tool;
 			set_read_only;
 			add_callbacks;
-			implement ?= implementation;
-			c_widget := implement.action_target;
 			upper := -1 			-- Init clickable array.
+			set_font_to_default
 		end;
+
+feature -- Fonts
+
+	default_font: CELL [FONT] is
+			-- Default font
+		once
+			!!Result.put (font)
+		end;
+
+	set_default_font (new_font: FONT) is
+			-- Assign `new_font' to `default_font'.
+		do
+			default_font.put (new_font)
+		end;
+
+	set_font_to_default is
+			-- Set `font' to the default font.
+		do
+			if default_font.item /= Void then
+				set_font (default_font.item)
+			end
+		end;
+
+feature
 
 	last_format: FORMATTER;
 

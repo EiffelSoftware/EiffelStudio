@@ -32,7 +32,7 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	h_filename: STRING is "help/wizards/edotnet/docs/reference/35_import_local_assemblies/index.html"
+	h_filename: STRING is "help/wizards/edotnet/docs/reference/30_assembly_selection/index.html"
 			-- Path to HTML help filename
 			
 feature -- Basic Operation
@@ -160,20 +160,29 @@ feature {NONE} -- Implementation
 			valid_filename: is_assembly_filename_valid (dotnet_assembly.text)
 			valid_directory: validate_directory_string (emit_directory.text).is_valid
 		local
+			a_message_box: WIZARD_MESSAGE_BOX
 			emit_command_line: STRING
 			cursor_pixmap: EV_STOCK_PIXMAPS
 			process_launcher: WEL_PROCESS_LAUNCHER
 		do
 			create cursor_pixmap
 			first_window.set_pointer_style (cursor_pixmap.Wait_cursor)
-			
+			create a_message_box.make (Message_dialog_title, first_window)
+			(create {EV_ENVIRONMENT}).application.process_events
+
 			create process_launcher
 			emit_command_line := clone (Emitter_filename) + clone (Target_switch) + clone (dotnet_assembly.text) + clone (Destination_switch) + clone (emit_directory.text)
 			if not eiffel_formatting_b.is_selected then
 				emit_command_line.append (Formatting_switch)
 				emit_command_line.append (Default_formatting_value)
+			end			
+			if not wizard_information.proxy.is_signed (dotnet_assembly.text) then
+				emit_command_line.append (Generation_switch)
+				emit_command_line.append (Default_generation_value)
 			end
-			process_launcher.launch_and_refresh (emit_command_line, "", ~on_refresh)
+			process_launcher.launch_and_refresh (emit_command_line, Empty_string, ~on_refresh)
+			
+			a_message_box.message_dialog.destroy
 			first_window.set_pointer_style (cursor_pixmap.Standard_cursor)
 			emit_succeeded := True
 		end
@@ -182,16 +191,20 @@ feature {NONE} -- Implementation
 			-- Has emit succeeded?
 			
 	update_local_assemblies is
+			-- Update `wizard_information.local_assemblies'.
 		require
 			emit_succeeded: emit_succeeded
 		do
-			wizard_information.local_assemblies.extend (clone (emit_directory.text), clone (dotnet_assembly.text))
+			if not wizard_information.proxy.is_signed (dotnet_assembly.text) then
+				wizard_information.local_assemblies.extend (clone (emit_directory.text), clone (dotnet_assembly.text))
+			else
+				wizard_information.update_lists
+			end
 		end
 		
 	on_refresh is
 			-- Action performed while the emitter is running
 		do
-			--(create {EV_ENVIRONMENT}).application.process_events
 		end
 		
 	display_state_text is
@@ -234,6 +247,12 @@ feature {NONE} -- Implementation
 	
 	Default_formatting_value: STRING is "default"
 			-- Default formatting value (not Eiffel formatting)
+
+	Generation_switch: STRING is " /g "
+			-- Generation switch
+	
+	Default_generation_value: STRING is "default"
+			-- Default generation value (no XML generation)
 			
 	State_title: STRING is "Import local assemblies."
 			-- Title of current state window
@@ -248,6 +267,9 @@ feature {NONE} -- Implementation
 	
 	Assembly_filter: STRING is "*.dll; *.exe"
 			-- Filter for assemblies
+
+	Message_dialog_title: STRING is "Importing local assembly..."
+			-- `message_dialog' title
 			
 end -- class WIZARD_EMIT_STATE
 

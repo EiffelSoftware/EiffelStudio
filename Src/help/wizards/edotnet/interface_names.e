@@ -20,8 +20,9 @@ feature -- Labels names
 feature -- Buttons names
 
 	b_Abort: STRING is 				"Abort"
-	b_Add: STRING is					"Add"
+	b_Add: STRING is					"Add ->"
 	b_Assembly_manager: STRING is 		"ISE Assembly Manager"
+	b_Close: STRING is 				"Close"
 	b_Ignore: STRING is				"Ignore"
 	b_Import_local_assemblies: STRING is	"Import Local Assemblies"
 	b_Remove: STRING is				"<- Remove"

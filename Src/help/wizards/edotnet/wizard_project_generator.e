@@ -103,7 +103,7 @@ feature -- Basic Operations
 		end
 
 feature {NONE} -- Implementation
-
+		
 	external_classes: STRING is
 			-- List of directories where Eiffel classes are stored
 		require
@@ -117,8 +117,8 @@ feature {NONE} -- Implementation
 			a_dependency: ASSEMBLY_INFORMATION
 			a_dependency_name: STRING
 			local_assemblies: HASH_TABLE [STRING, STRING]
-			i: INTEGER
 			a_local_assembly: STRING
+			i: INTEGER
 		do
 			create Result.make (1024)
 			Result.append (New_line + Tab + Tab + External_classes_comment + New_line)
@@ -158,10 +158,10 @@ feature {NONE} -- Implementation
 				a_local_assembly := clone (local_assemblies.item_for_iteration)
 				if a_local_assembly /= Void and then not a_local_assembly.is_empty then
 					Result.append (Tab + "all local_assembly_" + i.out + "_generated: " + Inverted_comma + a_local_assembly + Inverted_comma + New_line + New_line)
-				end
-				i := i + 1
+					i := i + 1
+				end			
 				local_assemblies.forth
-			end
+			end		
 		ensure
 			non_void_text: Result /= Void
 			not_empty_text: not Result.is_empty
@@ -179,6 +179,8 @@ feature {NONE} -- Implementation
 			a_dependency: ASSEMBLY_INFORMATION
 			local_assemblies: HASH_TABLE [STRING, STRING]
 			a_local_assembly: STRING
+			local_dependencies: LINKED_LIST [ASSEMBLY_INFORMATION]
+			a_local_dependency: ASSEMBLY_INFORMATION			
 		do
 			create Result.make (1024)
 			Result.append (External_keyword + New_line + Tab + Assembly_keyword + New_line)
@@ -215,6 +217,17 @@ feature {NONE} -- Implementation
 					Result.append (Tab + Tab + Tab + Inverted_comma + a_local_assembly + Inverted_comma + Comma + New_line)
 				end
 				local_assemblies.forth
+			end	
+
+			local_dependencies := wizard_information.local_dependencies
+			from
+				local_dependencies.start
+			until
+				local_dependencies.after
+			loop
+				a_local_dependency := local_dependencies.item
+				Result.append (Tab + Tab + Tab + Inverted_comma + assembly_location (a_local_dependency) + Inverted_comma + Comma + New_line)
+				dependencies.forth
 			end
 			
 			Result.right_adjust

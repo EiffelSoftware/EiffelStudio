@@ -188,7 +188,103 @@ feature -- Access
 				tmp_list.forth
 			end
 		end
-	
+
+	local_dependencies: LINKED_LIST [ASSEMBLY_INFORMATION] is
+			-- Dependencies corresponding to `local_assemblies'
+		require
+			non_void_local_assemblies: local_assemblies /= Void
+			not_empty_local_assemblies: not local_assemblies.is_empty
+		local
+			an_assembly: ASSEMBLY_INFORMATION
+			an_assembly_dependencies: LINKED_LIST [ASSEMBLY_INFORMATION]
+			a_dependency: ASSEMBLY_INFORMATION
+			tmp_list: LINKED_LIST [ASSEMBLY_INFORMATION]
+		do
+			from
+				create tmp_list.make
+				local_assemblies.start
+			until
+				local_assemblies.off
+			loop
+				an_assembly_dependencies := local_assembly_dependencies (local_assemblies.key_for_iteration, local_assemblies.item_for_iteration)
+				from
+					an_assembly_dependencies.start
+				until
+					an_assembly_dependencies.after
+				loop
+					a_dependency := an_assembly_dependencies.item					
+					if not a_dependency.name.is_equal (Mscorlib_name) and not has_assembly (tmp_list, a_dependency) then
+						tmp_list.extend (a_dependency)
+					end
+					an_assembly_dependencies.forth
+				end
+				local_assemblies.forth
+			end	
+			from
+				create Result.make
+				tmp_list.start
+			until
+				tmp_list.after
+			loop
+				an_assembly := tmp_list.item
+				if not has_assembly (selected_assemblies, an_assembly) and not has_local_assembly (an_assembly.name) then
+					Result.extend (an_assembly)
+				end
+				tmp_list.forth
+			end
+		end
+
+	eiffel_path_from_info (a_list: LINKED_LIST [ASSEMBLY_INFORMATION]; an_assembly: ASSEMBLY_INFORMATION): STRING is
+			-- Eiffel path corresponding to `an_assembly' if `a_list' contains `an_assembly', otherwise Void
+		require
+			non_void_list: a_list /= Void
+			non_void_assembly: an_assembly /= Void
+		local
+			an_info: ASSEMBLY_INFORMATION
+			an_assembly_name: STRING
+			an_assembly_version: STRING
+			an_assembly_culture: STRING
+			an_assembly_public_key: STRING
+			an_info_name: STRING
+			an_info_version: STRING
+			an_info_culture: STRING
+			an_info_public_key: STRING		
+		do
+			an_assembly_name := clone (an_assembly.name)
+			an_assembly_name.to_lower
+			an_assembly_version := clone (an_assembly.version)
+			an_assembly_version.to_lower
+			an_assembly_culture := clone (an_assembly.culture)
+			an_assembly_culture.to_lower
+			an_assembly_public_key := clone (an_assembly.public_key)
+			an_assembly_public_key.to_lower
+			from
+				a_list.start
+			until
+				a_list.after or (Result /= Void)
+			loop
+				an_info := a_list.item
+				an_info_name := clone (an_info.name)
+				an_info_name.to_lower
+				an_info_version := clone (an_info.version)
+				an_info_version.to_lower
+				an_info_culture := clone (an_info.culture)
+				an_info_culture.to_lower
+				an_info_public_key := clone (an_info.public_key)
+				an_info_public_key.to_lower	
+				if an_info_name.is_equal (an_assembly_name) and an_info_version.is_equal (an_assembly_version) and
+					an_info_culture.is_equal (an_assembly_culture) and an_info_public_key.is_equal (an_assembly_public_key) then
+						Result := clone (an_info.eiffel_cluster_path)
+				end
+				a_list.forth
+			end
+		end
+
+	Mscorlib_name: STRING is "mscorlib"
+			-- Name of `mscorlib.dll'
+			
+feature -- Status Report
+
 	has_assembly (a_list: LINKED_LIST [ASSEMBLY_INFORMATION]; an_assembly: ASSEMBLY_INFORMATION): BOOLEAN is
 			-- Does `a_list' contain `an_assembly'?
 		require
@@ -200,12 +296,10 @@ feature -- Access
 			an_assembly_version: STRING
 			an_assembly_culture: STRING
 			an_assembly_public_key: STRING
-			an_assembly_path: STRING
 			an_info_name: STRING
 			an_info_version: STRING
 			an_info_culture: STRING
-			an_info_public_key: STRING
-			an_info_path: STRING			
+			an_info_public_key: STRING		
 		do
 			an_assembly_name := clone (an_assembly.name)
 			an_assembly_name.to_lower
@@ -215,8 +309,6 @@ feature -- Access
 			an_assembly_culture.to_lower
 			an_assembly_public_key := clone (an_assembly.public_key)
 			an_assembly_public_key.to_lower
-			an_assembly_path := clone (an_assembly.eiffel_cluster_path)
-			an_assembly_path.to_lower
 			from
 				a_list.start
 			until
@@ -230,16 +322,36 @@ feature -- Access
 				an_info_culture := clone (an_info.culture)
 				an_info_culture.to_lower
 				an_info_public_key := clone (an_info.public_key)
-				an_info_public_key.to_lower
-				an_info_path := clone (an_info.eiffel_cluster_path)
-				an_info_path.to_lower				
+				an_info_public_key.to_lower	
 				Result := an_info_name.is_equal (an_assembly_name) and an_info_version.is_equal (an_assembly_version) and
-						an_info_culture.is_equal (an_assembly_culture) and an_info_public_key.is_equal (an_assembly_public_key) and
-						an_info_path.is_equal (an_assembly_path)
+						an_info_culture.is_equal (an_assembly_culture) and an_info_public_key.is_equal (an_assembly_public_key) 
 				a_list.forth
 			end
 		end
-		
+	
+	has_local_assembly (a_filename: STRING): BOOLEAN is
+			-- Does `local_assemblies' contain local assembly corresponding to `a_filename'?
+		require
+			non_void_filename: a_filename /= Void
+			not_empty_filename: not a_filename.is_empty
+		local
+			lower_filename: STRING
+			a_key: STRING
+		do
+			lower_filename := clone (a_filename)
+			lower_filename.to_lower
+			from
+				local_assemblies.start
+			until
+				local_assemblies.off or Result
+			loop
+				a_key := clone (local_assemblies.key_for_iteration)
+				a_key.to_lower
+				Result := a_key.is_equal (lower_filename)
+				local_assemblies.forth
+			end
+			
+		end
 feature -- Basic operation
 
 	retrieve_available_assemblies is
@@ -256,7 +368,9 @@ feature -- Basic operation
 				if proxy.last_importation_successful then
 					intern_retrieve_available_assemblies (imported_assemblies)
 				else
-					display_confirmation_dialog
+					if confirmation_dialog = Void then
+						display_confirmation_dialog
+					end
 				end
 			else
 				if confirmation_dialog = Void then
@@ -312,6 +426,45 @@ feature -- Basic operation
 				end
 			end	
 		end
+
+	update_lists is
+			-- Update list of assemblies
+		local
+			last_available_assemblies: LINKED_LIST [ASSEMBLY_INFORMATION]
+			assemblies_to_remove: LINKED_LIST [ASSEMBLY_INFORMATION]
+			an_assembly: ASSEMBLY_INFORMATION
+		do
+			last_available_assemblies := clone (available_assemblies)
+			available_assemblies.wipe_out
+			retrieve_available_assemblies
+			remove_kernel_assembly
+			remove_system_assembly
+			from
+				create assemblies_to_remove.make
+				available_assemblies.start
+			until
+				available_assemblies.after
+			loop
+				an_assembly := available_assemblies.item
+				if not has_assembly (last_available_assemblies, an_assembly) and not has_assembly (selected_assemblies, an_assembly) then
+					selected_assemblies.extend (an_assembly)
+					assemblies_to_remove.extend (an_assembly)
+				end
+				if has_assembly (selected_assemblies, an_assembly) then
+					assemblies_to_remove.extend (an_assembly)
+				end
+				available_assemblies.forth
+			end
+			from
+				assemblies_to_remove.start
+			until
+				assemblies_to_remove.after
+			loop
+				an_assembly := assemblies_to_remove.item
+				available_assemblies.prune_all (an_assembly)
+				assemblies_to_remove.forth
+			end		
+		end
 		
 feature {NONE} -- Implementation
 
@@ -349,7 +502,7 @@ feature {NONE} -- Implementation
 				a_culture := retrieved_dependencies.array_item (i + 2)
 				a_public_key := retrieved_dependencies.array_item (i + 3)
 				a_path := retrieved_dependencies.array_item (i + 4)
-				if (a_name /= Void and then a_name.is_empty) and (a_version /= Void and then not a_version.is_empty) and (a_culture /= Void and then not a_culture.is_empty)
+				if (a_name /= Void and then not a_name.is_empty) and (a_version /= Void and then not a_version.is_empty) and (a_culture /= Void and then not a_culture.is_empty)
 					and (a_public_key /= Void and then not a_public_key.is_empty) and (a_path /= Void and then not a_path.is_empty) then
 					create a_dependency.make_from_info (a_name, a_version, a_culture, a_public_key, a_path)
 					Result.extend (a_dependency)
@@ -389,6 +542,60 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	local_assembly_dependencies (a_filename, a_path: STRING): LINKED_LIST [ASSEMBLY_INFORMATION] is
+			-- Dependencies of local assembly corresponding to `a_filename', which was imported in `a_path'
+		require
+			non_void_filename: a_filename /= Void
+			not_empty_filename: not a_filename.is_empty
+			non_void_path: a_path /= Void
+			not_empty_path: not a_path.is_empty
+		local
+			locals: ECOM_ARRAY [STRING]
+			i: INTEGER
+			a_name: STRING
+			a_version: STRING
+			a_culture: STRING
+			a_public_key: STRING
+			an_assembly_info: ASSEMBLY_INFORMATION
+			an_eiffel_path: STRING
+		do
+			locals := proxy.local_assembly_dependencies (a_filename)
+			check
+				unidimensional_array: locals.dimension_count = 1
+			end
+		
+			from
+				create Result.make
+			until
+				i = locals.count
+			loop
+				a_name := locals.array_item (i)
+				a_version := locals.array_item (i + 1)
+				a_culture := locals.array_item (i + 2)
+				a_public_key := locals.array_item (i + 4)
+				if (a_name /= Void and then not a_name.is_empty) and (a_version /= Void and then not a_version.is_empty) and
+						(a_culture /= Void and then not a_culture.is_empty) and (a_public_key /= Void and then not a_public_key.is_empty) then
+						
+					create an_assembly_info.make (a_name)
+					an_assembly_info.set_version (a_version)
+					an_assembly_info.set_culture (a_culture)
+					an_assembly_info.set_public_key (a_public_key) 
+					an_eiffel_path := eiffel_path_from_info (available_assemblies, an_assembly_info)
+					if an_eiffel_path = Void then
+						an_eiffel_path := eiffel_path_from_info (selected_assemblies, an_assembly_info)
+					end
+					
+					if an_eiffel_path /= Void and then not an_eiffel_path.is_empty then
+						an_assembly_info.set_path (an_eiffel_path)
+					else
+						an_assembly_info.set_path (a_path)
+					end
+					Result.extend (an_assembly_info)
+				end
+				i := i + 5
+			end
+		end
+		
 	display_confirmation_dialog is
 			-- Display confirmation dialog
 		local
@@ -400,6 +607,7 @@ feature {NONE} -- Implementation
 			buttons_labels.put (Interface_names.b_Ignore, 3)
 			create confirmation_dialog.make_with_text (Confirmation_message)
 			confirmation_dialog.set_buttons (buttons_labels)
+			confirmation_dialog.button (interface_names.b_Abort).select_actions.extend (~on_abort)
 			confirmation_dialog.button (interface_names.b_Retry).select_actions.extend (~on_retry)
 			confirmation_dialog.button (interface_names.b_Ignore).select_actions.extend (~on_ignore)
 			confirmation_dialog.set_default_push_button (confirmation_dialog.button (interface_names.b_Abort))
@@ -409,14 +617,21 @@ feature {NONE} -- Implementation
 
 	confirmation_dialog: EV_QUESTION_DIALOG
 			-- Confirmation dialog
+	
+	on_abort is
+			-- Close confirmation message.
+		do
+			confirmation_dialog.destroy
+			current_application.destroy
+		end
 		
 	on_retry is
 			-- Retry assembly importation.
 		local
 			imported_assemblies: ECOM_ARRAY [STRING]
 		do
-			imported_assemblies := proxy.imported_assemblies
-			intern_retrieve_available_assemblies (imported_assemblies)
+			confirmation_dialog := Void
+			retrieve_available_assemblies 
 		end
 	
 	on_ignore is
@@ -426,7 +641,10 @@ feature {NONE} -- Implementation
 		do
 			proxy.clean_assemblies
 			imported_assemblies := proxy.imported_assemblies
-			intern_retrieve_available_assemblies (imported_assemblies)			
+			intern_retrieve_available_assemblies (imported_assemblies)	
+			remove_kernel_assembly
+			remove_system_assembly
+			create local_assemblies.make (1)
 		end
 	
 	Default_directory: STRING is 
@@ -458,9 +676,6 @@ feature {NONE} -- Constants
 	
 	Exe_type: STRING is "exe"
 			-- EXE type
-	
-	Mscorlib_name: STRING is "mscorlib"
-			-- Name of `mscorlib.dll'
 	
 	System_name: STRING is "system"
 			-- Name of `System.dll'

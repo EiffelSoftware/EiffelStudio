@@ -39,6 +39,7 @@ feature -- Basic operation
 		local
 			formater: XML_FORMATER
 			generation_settings: GB_GENERATION_SETTINGS
+			last_string: STRING
 		do
 			create generation_settings
 			generation_settings.enable_is_saving
@@ -48,8 +49,13 @@ feature -- Basic operation
 			create formater.make
 				-- Process the document ready for output
 			formater.process_document (document)
+				
+				-- Now format the generated XML.
+			last_string := formater.last_string.to_utf8
+			process_xml_string (last_string)
+					
 				-- Save our XML ouput to disk in `filename'.
-			write_file_to_disk (formater.last_string.to_utf8)
+			write_file_to_disk (last_string)
 			set_timed_status_text ("Saved.")
 		end
 

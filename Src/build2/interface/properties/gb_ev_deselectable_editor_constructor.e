@@ -52,7 +52,7 @@ feature -- Access
 			check_button.select_actions.resume
 		end
 		
-	set_up_user_events (vision2_object, an_object: like ev_type) is
+	set_up_user_events (actual_object: GB_OBJECT; vision2_object, an_object: like ev_type) is
 			-- Add events necessary for `vision2_object'.
 		local
 			widget: EV_WIDGET
@@ -63,6 +63,7 @@ feature -- Access
 			check
 				we_are_dealing_with_a_widget: widget /= Void
 			end
+			set_object (actual_object)
 			objects.extend (an_object)
 			objects.extend (vision2_object)
 			widget.pointer_button_release_actions.force_extend (agent start_timer)
@@ -89,7 +90,7 @@ feature -- Access
 					for_first_object (agent {EV_DESELECTABLE}.enable_select)
 					update_editors
 				else
-					for_first_object (agent {EV_DESELECTABLE}.enable_select)
+					for_all_objects (agent {EV_DESELECTABLE}.disable_select)
 					update_editors
 				end
 			end

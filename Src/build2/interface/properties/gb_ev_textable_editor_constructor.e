@@ -75,11 +75,12 @@ feature {NONE} -- Implementation
 			text_entry.update_constant_display (first.text)
 		end
 		
-	set_up_user_events (vision2_object, an_object: like ev_type) is
+	set_up_user_events (actual_object: GB_OBJECT; vision2_object, an_object: like ev_type) is
 			-- Add events necessary for `vision2_object'.
 		do
 			user_event_widget ?= vision2_object
 			if user_event_widget /= Void then
+				set_object (actual_object)
 				objects.extend (an_object)
 				objects.extend (vision2_object)
 				user_event_widget.change_actions.force_extend (agent start_timer)

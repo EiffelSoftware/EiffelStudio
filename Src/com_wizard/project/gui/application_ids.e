@@ -16,6 +16,7 @@ feature -- Access
 	Exit_string_constant: INTEGER is 4
 	Wizard_generated_code_type_dialog_constant: INTEGER is 106
 	Eiffel_code_compilation_check_constant: INTEGER is 1048
+	C_code_compilation_check_constant: INTEGER is 1049
 	Wizard3_bitmap_constant: INTEGER is 116
 	Wizard1_bitmap_constant: INTEGER is 114
 	Help_button_constant: INTEGER is 1018
@@ -33,6 +34,7 @@ feature -- Access
 	Wizard_final_dialog_constant: INTEGER is 104
 	Wizard4_bitmap_constant: INTEGER is 117
 	Launch_string_constant: INTEGER is 5
+	Generate_string_constant: INTEGER is 6
 	Introduction4_static_constant: INTEGER is 1044
 	Title_static_constant: INTEGER is 1048
 	Warnings_check_constant: INTEGER is 1060

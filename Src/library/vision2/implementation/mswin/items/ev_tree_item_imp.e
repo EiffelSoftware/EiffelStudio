@@ -140,6 +140,7 @@ feature -- Element change
 			item_imp.set_h_item (tree.last_item)
 			ev_tree ?= wel_window
 			ev_tree.ev_children.force (item_imp, tree.last_item)
+			ev_tree.invalidate
 		end
 
 	remove_item (item_imp: EV_TREE_ITEM_IMP) is
@@ -149,6 +150,7 @@ feature -- Element change
 		do
 			ev_tree ?= wel_window
 			ev_tree.remove_item (item_imp)
+			ev_tree.invalidate
 		end
 
 feature -- Event : command association

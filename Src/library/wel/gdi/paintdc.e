@@ -1,5 +1,5 @@
 indexing
-	description: "Device context used during a message paint."
+	description: "Device context used during a Wm_paint message."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,22 +53,40 @@ feature -- Basic operations
 			window_not_void: window /= Void
 		do
 			unselect_all
-			cwin_end_paint (item, paint_struct.item)
+			cwin_end_paint (hwindow, paint_struct.item)
 			item := default_pointer
 		end
 
 feature {NONE} -- Implementation
 
 	hwindow: POINTER
-			-- Window associated with the device context
+			-- Window handle associated with the device context
 
 feature {NONE} -- Removal
 
 	destroy_item is
 		do
 			unselect_all
-			cwin_end_paint (item, paint_struct.item)
+			cwin_end_paint (hwindow, paint_struct.item)
 			item := default_pointer
+		end
+
+feature {NONE} -- Externals
+
+	cwin_begin_paint (hwnd, a_paint_struct: POINTER): POINTER is
+			-- SDK BeginPaint
+		external
+			"C [macro <wel.h>] (HWND, PAINTSTRUCT *): EIF_POINTER"
+		alias
+			"BeginPaint"
+		end
+
+	cwin_end_paint (hwnd, a_paint_struct: POINTER) is
+			-- SDK EndPaint
+		external
+			"C [macro <wel.h>] (HWND, PAINTSTRUCT *)"
+		alias
+			"EndPaint"
 		end
 
 end -- class WEL_PAINT_DC

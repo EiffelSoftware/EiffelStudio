@@ -113,7 +113,7 @@ while (<>) {
 				$arg_name_list = "$arg_name_list, a_$name";
 			}
 
-			foreach $field (@fields) {
+			foreach $field (@args) {
 				$wrapper_args = "${wrapper_args}a_$field; "
 			}
 			$wrapper_argss{$name} = $wrapper_args;
@@ -127,7 +127,7 @@ while (<>) {
 			$fargs = $wrapper_argss{$source};
 			chop ($fargs);
 			chop ($fargs);
-			$filter_code = "\nfeature {NONE} -- Filtering\n\n\tflitered_call ($fargs) is\n\t\tdo\n\t\t\tif a_$f";
+			$filter_code = "\nfeature {NONE} -- Filtering\n\n\tfliter ($fargs) is\n\t\tdo\n\t\t\tif a_$f";
 			foreach $f (@fs) {
 				$filter_code = "$filter_code and $f ";
 			}
@@ -137,11 +137,11 @@ while (<>) {
 			tr/[a-z]/[A-Z]/;
 			$source_class = $_;
 			
-			$filter_code = "$filter_code )\n\t\t\tend\n\t\tend\n\n\tfliter_source: $source_class\n";
-			$create_args = "(a_filter_source: $source_class) ";
-			$filter_init = "\n\t\t\tfilter_source := a_filter_source";
-			$init_code = "\n\t\t\tfilter_source.extend (~filtered_call)";
-			$filter_comment = "\n\t\t\t-- This sequence will be one action in `a_filter_source'.";
+			$filter_code = "$filter_code )\n\t\t\tend\n\t\tend\n\n\tsource: $source_class\n";
+			$create_args = "(a_source: $source_class) ";
+			$filter_init = "\n\t\t\tsource := a_source";
+			$init_code = "\n\tinitialize is\n\t\t\t-- Connect to the event source we filter.\n\t\t\t-- (Not called until an action is added.)\n\t\tdo\n\t\t\tsource.extend (~filter)\n\t\t\taction_sequence_initialize\n\t\tend\n";
+			$filter_comment = "\n\t\t\t-- This sequence will be one action in `a_source'.";
 		}
 
 		if ($create_args eq "") {
@@ -175,21 +175,14 @@ inherit $parent [$data_type]
 creation
 	$make_name
 
-feature -- Initialization
+feature {NONE} -- Initialization
 	
 	$make_name ${create_args}is
 			-- Create a ready to use action sequence.$filter_comment
 		do
 			$parent_lower\_make ("$name", <<$arg_name_array>>)$filter_init
 		end
-
-	initialize is
-			-- Connect to the event source.
-			-- (Not called until an action is added.)
-		do
-			$parent_lower\_intialize$init_code
-		end
-
+$init_code
 feature -- Access
 
 	wrapper (${wrapper_args}action: PROCEDURE [ANY, TUPLE]) is
@@ -215,6 +208,9 @@ EOT
 #===============================================================================
 #
 # $Log$
+# Revision 1.9  1999/10/28 23:01:16  oconnor
+# rearanged filter generation/init a little
+#
 # Revision 1.8  1999/10/28 22:09:43  oconnor
 # added filter stuff
 #

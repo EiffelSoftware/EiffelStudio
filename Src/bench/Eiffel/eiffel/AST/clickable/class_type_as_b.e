@@ -20,7 +20,7 @@ inherit
 		undefine
 			is_deep_equal, has_like, simple_format
 		redefine
-			format, fill_calls_list, replicate,
+			fill_calls_list, replicate,
 			check_constraint_type, solved_type_for_format,
 			append_to
 		end;
@@ -332,10 +332,7 @@ feature -- Output
 		do
 			c_name := clone (class_name);
 			c_name.to_lower;
-			class_c := System.current_class;
-			if class_c /= Void then
-				class_i := Universe.class_named (c_name, class_c.cluster)
-			end;
+			class_i := associated_classi;
 			c_name.to_upper;
 			if class_i = Void then
 				st.add_string (c_name)
@@ -375,47 +372,18 @@ feature -- Output
 			end
 		end;
 
-	associated_classc: CLASS_C is
-			-- Associated class_c.
+	associated_classi: CLASS_I is
+			-- Associated class_i
 		local
 			class_i: CLASS_I
 		do
 			check
 				Inst_context.cluster /= Void
 			end
-			class_i := Universe.class_named (class_name,
+			Result := Universe.class_named (class_name,
 						Inst_context.cluster);
-			if class_i /= Void then
-				Result := class_i.compiled_class
-			end;	
 		end
 
-feature -- Formatting
-
-	format (ctxt: FORMAT_CONTEXT_B) is 
-			-- Reconstitute text
-		local
-			class_c: CLASS_C;
-			c_name: STRING
-		do
-			class_c := associated_classc;
-			if class_c = Void then
-				c_name := clone (class_name);
-				c_name.to_upper;
-				ctxt.put_string (c_name)
-			else
-				ctxt.put_class_name (class_c)
-			end;
-			if generics /= Void then
-				ctxt.put_space;
-				ctxt.put_text_item_without_tabs (ti_L_bracket);
-				ctxt.set_space_between_tokens;
-				ctxt.set_separator (ti_Comma);
-				generics.format (ctxt);
-				ctxt.put_text_item_without_tabs (ti_R_bracket)
-			end;
-		end;
-			
 feature -- Replication
 
 	fill_calls_list (l: CALLS_LIST) is

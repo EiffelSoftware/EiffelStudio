@@ -50,23 +50,21 @@ feature {GB_CODE_GENERATOR} -- Output
 		do
 			Result := ""
 			full_information := get_unique_full_info (element)
-			element_info := full_information @ (Minimum_width_string)
-			if element_info /= Void then
-				Result := info.name + ".set_minimum_width (" + element_info.data + ")"
+			if attribute_set (Minimum_width_string) then
+				Result := info.name + ".set_minimum_width (" + retrieve_integer_setting (Minimum_width_string) + ")"
 			end
-			element_info := full_information @ (Minimum_height_string)
 				--| FIXME This is a special case for windows, as they are the root object, and when not generating as
 				--| a client, only the first name will be pruned from `Result'. Hence we do not apply a second name if
 				--| we are are a root object and not generating as a client of the window. The best solution will be to
 				--| change type of `Result' to an ARRAYED_LIST [STRING], one item for each line, without formatting and a name,
 				--| and have the code generator add this information. To do at some point.
-			if element_info /= Void then
+			if attribute_set (Minimum_height_string) then
 				if not system_status.current_project_settings.client_of_window and info.is_root_object then
-					Result := Result + indent + "set_minimum_height (" + element_info.data + ")"
+					Result := Result + indent + "set_minimum_height (" + retrieve_integer_setting (Minimum_height_string) + ")"
 				elseif not info.is_root_object then
-					Result := Result + indent + info.name + ".set_minimum_height (" + element_info.data + ")"				
+					Result := Result + indent + info.name + ".set_minimum_height (" + retrieve_integer_setting (Minimum_height_string) + ")"				
 				else
-					Result := Result + indent + Client_window_string + ".set_minimum_height (" + element_info.data + ")"				
+					Result := Result + indent + Client_window_string + ".set_minimum_height (" + retrieve_integer_setting (Minimum_height_string) + ")"				
 				end
 			end
 			Result := strip_leading_indent (Result)

@@ -537,6 +537,8 @@ feature -- Generation
 			creation_feature: FEATURE_I
 			value: INTEGER
 			gen_type: GEN_TYPE_I
+			written_class: CLASS_C
+			written_ctype: CLASS_TYPE
 		do
 			c_name := init_procedure_name
 			nb_ref := skeleton.nb_reference
@@ -651,7 +653,13 @@ feature -- Generation
 				class_type := exp_desc.class_type
 				creation_feature := class_type.associated_class.creation_feature
 				if creation_feature /= Void then
-					creat_name := creation_feature.body_id.feature_name (class_type.id)
+					written_class := System.class_of_id (creation_feature.written_in)
+					if written_class.generics = Void then
+						written_ctype := written_class.types.first
+					else
+						written_ctype := written_class.meta_type (class_type.type).associated_class_type
+					end
+					creat_name := creation_feature.body_id.feature_name (written_ctype.id)
 					buffer.putstring (creat_name)
 					buffer.putstring ("(l[0]")
 					skeleton.generate(buffer, False)

@@ -35,9 +35,6 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_window_new (GTK_WINDOW_DIALOG_ENUM))
-			create a_cs.make ("Print")
-			feature {EV_GTK_EXTERNALS}.gtk_window_set_title (c_object, a_cs.item)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)
 		end
 	
 	gtk_window_dialog_enum: INTEGER is
@@ -68,6 +65,7 @@ feature {NONE} -- Initialization
 			print_btn_imp, cancel_btn_imp: EV_BUTTON_IMP
 		do
 			Precursor {EV_STANDARD_DIALOG_IMP}
+			set_title ("Print")
 			is_initialized := False
 			hbox := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (hbox)

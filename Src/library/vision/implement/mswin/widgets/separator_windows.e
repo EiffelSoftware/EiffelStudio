@@ -89,6 +89,7 @@ creation
 feature -- Initialization
 
 	make (a_separator: SEPARATOR; man: BOOLEAN; oui_parent: COMPOSITE) is
+			-- Make widget and set defaults.
 		local
 			local_menu: WEL_MENU
 		do
@@ -115,6 +116,7 @@ feature -- Status report
 			-- Is current separator in a menu?
 
 	realized: BOOLEAN is
+			-- Is Current realized?
 		do
 			if not in_menu then
 				Result := exists
@@ -173,6 +175,7 @@ feature -- Status setting
 		end
 
 	set_size (a_width, a_height: INTEGER) is
+			-- Set the size.
 		do
 			if private_attributes.width /= a_width
 			or else private_attributes.height /= a_height then
@@ -196,6 +199,7 @@ feature -- Status setting
 		end
 
 	set_width (a_width: INTEGER) is
+			-- Set the width.
 		do
 			if private_attributes.width /= a_width then
 				if in_menu then
@@ -217,6 +221,7 @@ feature -- Status setting
 		end
 
 	set_height (a_height: INTEGER) is
+			-- Set the height.
 		do
 			if private_attributes.height /= a_height then
 				if in_menu then
@@ -238,6 +243,7 @@ feature -- Status setting
 		end
 
 	set_x (a_x: INTEGER) is
+			-- Set x coordinate.
 		do
 			if in_menu then
 				debug ("WINDOWS")
@@ -254,6 +260,7 @@ feature -- Status setting
 		end
 
 	set_y (a_y: INTEGER) is
+			-- Set y coordinate.
 		do
 			if in_menu then
 				debug ("WINDOWS")
@@ -270,7 +277,7 @@ feature -- Status setting
 		end
 
 	realize is
-			-- Display a separator.
+			-- Realize separator.
 		local
 			local_menu: WEL_MENU
 			wc:WEL_COMPOSITE_WINDOW
@@ -290,10 +297,11 @@ feature -- Status setting
 		end
 
 	set_double_dashed_line is
+			-- Set separator to be double dashed.
 		do
 			!! pen.make (Ps_dash, 1, pen_color)
 			double := True
-			if realized then
+			if exists then
 				invalidate
 			end
 		ensure then
@@ -302,10 +310,11 @@ feature -- Status setting
 		end
 
 	set_double_line is
+			-- Set separator to be double line.
 		do
 			!! pen.make (Ps_solid, 1, pen_color)
 			double := True
-			if realized then
+			if exists then
 				invalidate
 			end
 		ensure then
@@ -314,7 +323,7 @@ feature -- Status setting
 		end
 
 	set_horizontal (flag: BOOLEAN) is
-			-- Set `is_horizontal' to `flag'
+			-- Set separator to be double horizontal.
 		local
 			w: INTEGER
 		do
@@ -324,7 +333,7 @@ feature -- Status setting
 				end
 				is_horizontal := flag
 			end
-			if realized then
+			if exists then
 				invalidate
 			end
 		ensure then
@@ -332,27 +341,30 @@ feature -- Status setting
 		end		
 
 	set_no_line is
+			-- Set separator to have no line.
 		do
 			!! pen.make (Ps_null, 1, pen_color)
-			if realized then
+			if exists then
 				invalidate
 			end
 		end
 
 	set_single_dashed_line is
+			-- Set separator to be a single dashed line.
 		do
 			!! pen.make (Ps_dash, 1, pen_color)
 			double := False
-			if realized then
+			if exists then
 				invalidate
 			end
 		end
 
 	set_single_line is
+			-- Set separator to be a single line.
 		do
 			!! pen.make (Ps_solid, 1, pen_color)
 			double := False
-			if realized then
+			if exists then
 				invalidate
 			end
 		end
@@ -360,9 +372,10 @@ feature -- Status setting
 feature {NONE} -- Implementation
 
 	on_paint (a_paint_dc: WEL_PAINT_DC; a_rect: WEL_RECT) is
+			-- Repaint separator.
 		do
 			a_paint_dc.select_pen (pen)
-			a_paint_dc.set_bk_color (c_background)
+			a_paint_dc.set_background_color (c_background)
 			if is_horizontal then
 				if double then
 					a_paint_dc.line (0, height // 2 - 1, width, height // 2 - 1)
@@ -381,13 +394,16 @@ feature {NONE} -- Implementation
 		end
 
 	pen: WEL_PEN
+			-- Pen used for drawing the separator.
 
 	c_background: WEL_COLOR_REF is
+			-- Color background
 		once
 			!! Result.make_system (Color_window)
 		end
 
 	pen_color: WEL_COLOR_REF is
+			-- Color of the pen to draw separator.
 		do
 			if foreground_color.implementation /= Void then
 				Result ?= foreground_color.implementation
@@ -399,6 +415,7 @@ feature {NONE} -- Implementation
 		end
 
 	black_color: WEL_COLOR_REF is
+			-- Black color
 		once
 			!! Result.make_rgb (0, 0, 0)
 		ensure
@@ -406,14 +423,18 @@ feature {NONE} -- Implementation
 		end
 
 	set_default_pen is
+			-- Set default pen to draw separator.
 		do
 			!! pen.make (Ps_solid, 1, black_color)
 		end
 
 	class_name: STRING is
+			-- Class name
 		do
 			Result := "EVisionSeparator"
 		end
+
+feature {NONE} -- Inapplicable
 
 	wel_font: WEL_FONT
 

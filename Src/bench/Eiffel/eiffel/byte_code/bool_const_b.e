@@ -11,7 +11,20 @@ inherit
 			print_register, make_byte_code, generate_il,
 			is_simple_expr, is_predefined, evaluate
 		end
-	
+
+create
+	make
+
+feature -- Initialization
+
+	make (v: BOOLEAN) is
+			-- Assign `v' to `value'.
+		do
+			value := v
+		ensure
+			value_set: value = v
+		end
+
 feature -- Access
 
 	value: BOOLEAN
@@ -37,14 +50,6 @@ feature -- Status report
 			-- Boolean type
 		once
 			Result := Boolean_c_type
-		end
-
-feature -- Settings
-
-	set_value (v: BOOLEAN) is
-			-- Assign `v' to `value'.
-		do
-			value := v
 		end
 
 feature -- C code generation

@@ -53,6 +53,11 @@ struct parse *locate();
 
 void main()
 {
+	/* Pre-process input (stdin) and outputs new form with resolved offset
+	 * macros (introduced by '@') on stdout. C strings and C chars are skipped
+	 * since any '@' in them has to stand for itself.
+	 */
+
 	int c;
 	int in_word = 0;
 	int in_string = 0;
@@ -92,7 +97,7 @@ void main()
 			putchar(c);
 			continue;
 		} else {
-			fprintf(stderr, "Impossible state in x2c.\n");
+			fprintf(stderr, "x2c: impossible state.\n");
 			exit(1);
 		}
 		if (!in_word) {
@@ -132,6 +137,10 @@ void main()
 struct parse *locate(name)
 char *name;
 {
+	/* Locate macro in parsing array and return the structure corresponding
+	 * to that macro. If the macro is not recognized, return a null pointer.
+	 */
+
 	int i;
 
 	for (i = 0; i < sizeof(parser) / sizeof(struct parse); i++) {
@@ -143,9 +152,14 @@ char *name;
 }
 
 void getarg(n, name)
-int n;
-char *name;
+int n;				/* Expected number of arguments */
+char *name;			/* Macro name (used only for error message) */
 {
+	/* Extract all the arguments of the macro into tha a[] array, whose items
+	 * are #define'd to arguments for offset-calculation routines. Not pretty
+	 * but really useful for such a small program--RAM.
+	 */
+
 	int i;
 	int c;
 	int val;
@@ -170,6 +184,11 @@ char *name;
 
 long nextarg()
 {
+	/* Extract the next argument from the macro. Arguments are separated by
+	 * a ',' and the argument list ends with a ')'. The numerical value of
+	 * each (positive) argument is returned, or -1 if no more arguments.
+	 */
+
 	int c;
 	int pos = 0;
 	char buf[BUFSIZ];
@@ -196,6 +215,10 @@ long nextarg()
 
 	return -1;		/* Not found */
 }
+
+/*
+ * Offset-calculation routines (take their arguments from a[] arary).
+ */
 
 long chroff()
 {

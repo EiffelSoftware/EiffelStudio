@@ -489,11 +489,11 @@ int gc_flag;			/* Garbage collector on/off */
 
 	if (type == EIFFEL_T) {
 		result = malloc_free_list(nbytes, e_hlist, gc_flag);
-		if (result == (char *) 0)
+		if (result == (char *) 0 && gc_flag != GC_OFF)
 			result = malloc_free_list(nbytes, c_hlist, GC_OFF);
 	} else {
 		result = malloc_free_list(nbytes, c_hlist, gc_flag);
-		if (result == (char *) 0)
+		if (result == (char *) 0 && gc_flag != GC_OFF)
 			result = malloc_free_list(nbytes, e_hlist, GC_OFF);
 	}
 
@@ -1036,8 +1036,10 @@ private int free_last_chunk()
 	 */
 
 	brk = sbrk(0);						/* Fetch current break value */
-	if (brk != last_addr)				/* There *is* something */
+	if (brk != last_addr) {				/* There *is* something */
+		SIGRESUME;						/* End of critical section */
 		return -2;						/* Sorry, cannot shrink data segment */
+	}
 	
 	/* Save a copy of the informations held in the header of the last chunk:
 	 * once the sbrk() system call is run, those data won't be able to be
@@ -1076,6 +1078,7 @@ private int free_last_chunk()
 	if (status == -1) {					/* System call failed */
 		if (i != -1)						/* Was removed from free list */
 			connect_free_list(arena, i);	/* Put block back in free list */
+		SIGRESUME;							/* End of critical section */
 		return -1;							/* Propagate failure */
 	}
 

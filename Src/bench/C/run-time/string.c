@@ -91,11 +91,11 @@ int length;
 	register2 char *s;
 
 	/* Find first non-space character starting from rightmost end */
-	for (s = str + length - 1; s > str; s--)
+	for (s = str + length - 1; s >= str; s--)
 		if (!isspace(*s))
 			break;
 
-	return s > str ? s - str + 1: 0;
+	return s >= str ? s - str + 1: 0;
 }
 
 /*

@@ -25,7 +25,9 @@
 #include "copy.h"
 #include "debug.h"
 #include "sig.h"
+#include "bits.h"
 
+/*#define DEBUG 6	/**/
 #define TEST
 #ifdef TEST
 #include <stdio.h>
@@ -432,9 +434,21 @@ int where;			/* Are we checking invariant before or after compound? */
 			ref = last->it_ref;
 			if (ref == (char *) 0)
 				xraise(EN_VEXP);	/* Void assigned to expanded */
-			last->it_ref = eclone(ref);
-			last->type = SK_REF;
-			ecopy(ref, last->it_ref);
+			switch (last->type & SK_HEAD) {
+			case SK_EXP:
+				epush(&loc_stack, &ref);
+				last->it_ref = RTLN(get_short());
+				epop(&loc_stack, 1);
+				last->type = SK_REF;
+				ecopy(ref, last->it_ref);
+				break;
+			case SK_BIT:
+				epush(&loc_stack, &ref);
+				last->it_bit = RTLB(get_short());
+				epop(&loc_stack, 1);
+				b_copy(ref, last->it_bit);
+				break;
+			}
 		}
 
 		init_var(iresult, rtype);
@@ -497,24 +511,42 @@ int where;			/* Are we checking invariant before or after compound? */
 			for (i = 1; i <= locnum; i++) {
 				last = loc(i);
 				type = last->type;
-				if ((type & SK_HEAD) == SK_EXP) {	/* Expanded local */
+				switch (type & SK_HEAD) {
+				case SK_EXP:
 					stagval = tagval;
 					last->type = SK_POINTER;	/* GC: wait for malloc */
 					last->it_ref = RTLN(type & SK_DTYPE);
 					last->type = SK_REF;
 					if (tagval != stagval)
 						sync_registers(scur, stop);
+					break;
+				case SK_BIT:
+					last->type = SK_POINTER;	/* GC: wait for malloc */
+					last->it_bit = RTLB(type & SK_BMASK);
+					last->type = type;
+					break;
+				default:
+					break;
 				}							
 			}
 			last = iresult;
 			type = last->type;
-			if ((type & SK_HEAD) == SK_EXP) { 	/* Expanded result */
+			switch (type & SK_HEAD) {
+			case SK_EXP:
 				stagval = tagval;
 				last->type = SK_POINTER;		/* For GC */
 				last->it_ref = RTLN(type & SK_DTYPE);	
 				last->type = SK_REF;
 				if (tagval != stagval)
 					sync_registers(scur, stop);
+				break;
+			case SK_BIT:
+				last->type = SK_POINTER;    /* GC: wait for malloc */
+				last->it_bit = RTLB(type & SK_BMASK);
+				last->type = type;
+				break;
+			default:
+				break;
 			}
 
 			if (rescue != (char *) 0) {	/* If there is a rescue clause */
@@ -1002,8 +1034,8 @@ end:
 			long intval;
 			char charval;
 
-			lower = opop();				/* Get the lower bound */
 			upper = opop();				/* Get the upper bound */
+			lower = opop();				/* Get the lower bound */
 			last = otop();				/* Get the inspect expression value */
 			offset = get_long();		/* Get the jump value */
 			switch (last->type) {
@@ -1052,34 +1084,43 @@ end:
 		dprintf(2)("BC_METAMORPHOSE\n");
 #endif 	
 		{	char *new_obj;
+			uint32 head_type;
 
 			code = get_short();			/* Get the dynamic type to create */
-			new_obj = RTLN(code);
 			last = opop();
-			switch (last->type) {
-			case SK_BOOL:
-			case SK_CHAR:	
-				*new_obj = last->it_char;
-				break;
-			case SK_INT:
-				*(long *) new_obj = last->it_long;
-				break;
-			case SK_FLOAT:
-				*(float *) new_obj = last->it_float;
-				break;
-			case SK_DOUBLE:
-				*(double *) new_obj = last->it_double;
-				break;
-			case SK_POINTER:
-				*(fnptr *) new_obj = last->it_ptr;
-				break;
-			default:
-				panic("illegal metamorphose type");
-				/* NOTREACHED */
+			head_type = last->type & SK_HEAD;
+			if (head_type != SK_BIT) {
+				new_obj = RTLN(code);
+				last = opop();
+				switch (last->type) {
+				case SK_BOOL:
+				case SK_CHAR:	
+					*new_obj = last->it_char;
+					break;
+				case SK_INT:
+					*(long *) new_obj = last->it_long;
+					break;
+				case SK_FLOAT:
+					*(float *) new_obj = last->it_float;
+					break;
+				case SK_DOUBLE:
+					*(double *) new_obj = last->it_double;
+					break;
+				case SK_POINTER:
+					*(fnptr *) new_obj = last->it_ptr;
+					break;
+				default:
+					panic("illegal metamorphose type");
+					/* NOTREACHED */
+				}
+				last = iget();
+				last->type = SK_REF;
+				last->it_ref = new_obj;
+			} else {
+				/* Bit metamorhose is a clone */
+				new_obj = b_clone(last->it_bit);
+				last->it_bit = new_obj;
 			}
-			last = iget();
-			last->type = SK_REF;
-			last->it_ref = new_obj;
 		}
 		break;
 
@@ -1299,9 +1340,8 @@ end:
 		dprintf(2)("BC_FLOAT\n");
 #endif
 		last = iget();
-		last->type = SK_FLOAT;
-		/* FIXME */
-		/* last->it_float = get_real(); */
+		last->type = SK_DOUBLE;
+		last->it_double = get_double();
 		break;
 
 	/*
@@ -1473,24 +1513,51 @@ end:
 		dprintf(2)("BC_STRING\n");
 #endif
 		{
-			char *str_obj;				/* String object created */
-
+			char *str_obj;			  /* String object created */
+ 
 			string = IC;
+			/* FIXME: string length */
 			IC += strlen(IC) + 1;
-
+			last = iget();
+			last->type = SK_INT;		/* Protect empty cell from GC */
+ 
 			/* We have to use the str_obj temporary variable instead of doing
 			 * the assignment directly into last->it_ref because the GC might
 			 * run a cycle when makestr() is called...
 			 */
 			str_obj = makestr(string, strlen(string));
-
-			last = iget();
+ 
 			last->type = SK_REF;
-			/* FIXME: string length */
 			last->it_ref = str_obj;
 			break;
 		}
+ 
 
+	/*
+	 * Manifest bit
+	 */
+	case BC_BIT:
+#ifdef DEBUG
+		dprintf(2)("BC_BIT\n");
+#endif
+		{
+			char  *new_obj;		/* New bit object created */
+			uint32 bcount;		/* Bit count */
+			int nb_uint32;
+			uint32 *addr;
+
+			last = iget();
+			bcount = get_uint32();			/* Read bit count */
+			new_obj = RTLB(bcount);			/* Creation */
+			addr = ARENA(new_obj);
+			nb_uint32 = BIT_NBPACK(bcount);
+			while (nb_uint32--)	/* Write bit count and value in `new_obj' */ 
+				*addr++ = get_uint32();
+			last->type = SK_BIT + bcount;
+			last->it_bit = new_obj;
+		}
+		break;
+			
 	/*
 	 * Jump if top of stack is false (value is poped).
 	 */
@@ -1576,7 +1643,7 @@ null:
 		return;
 
 	default:
-		panic("illegal byte code");
+		panic("illegal opcode");
 		/* NOTREACHED */
 	}
 	}							/* Remember: indentation was wrong--RAM */
@@ -1890,7 +1957,12 @@ int code;
 			default: panic(botched);
 			}
 			break;
-		case SK_REF: first->it_char = first->it_ref == second->it_ref; break;
+		case SK_REF:
+			first->it_char = first->it_ref == second->it_ref;
+			break;
+		case SK_POINTER:
+			first->it_char = first->it_ptr == second->it_ptr;
+			break;
 		default: panic(botched);
 		}
 		first->type = SK_BOOL;		/* Result is a boolean */
@@ -2008,7 +2080,12 @@ int code;
 			default: panic(botched);
 			}
 			break;
-		case SK_REF: first->it_char = first->it_ref != second->it_ref; break;
+		case SK_REF:
+			first->it_char = first->it_ref != second->it_ref;
+			break;
+		case SK_POINTER:
+			first->it_char = first->it_ptr != second->it_ptr;
+			break;
 		default: panic(botched);
 		}
 		first->type = SK_BOOL;		/* Result is a boolean */
@@ -2276,7 +2353,7 @@ uint32 type;			/* Get attribute meta-type */
 	case SK_INT: last->it_long = *(long *) (current + offset); break;
 	case SK_FLOAT: last->it_float = *(float *) (current + offset); break;
 	case SK_DOUBLE: last->it_double = *(double *) (current + offset); break;
-	case SK_BIT: /* FIXME */ break;
+	case SK_BIT: last->it_bit = (char *) (current + offset); break;
 	case SK_POINTER: last->it_ptr = *(fnptr *) (current + offset); break;
 	case SK_REF: last->it_ref = *(char **) (current + offset); break;
 	case SK_EXP: last->it_ref = (char *) (current + offset); break;
@@ -2330,9 +2407,7 @@ uint32 type;			/* Attribute meta-type */
 		break;
 	case SK_DOUBLE: *(double *) (i->it_ref + offset) = l->it_double; b;
 	case SK_POINTER: *(fnptr *) (i->it_ref + offset) = l->it_ptr; b;
-	case SK_BIT:
-		/* FIXME */
-		break;
+	case SK_BIT: b_copy(l->it_bit, i->it_ref + offset); b;
 	case SK_REF:
 		/* Perform aging tests: if the reference is new and is assigned to an
 		 * old object which is not yet remembered, then we need to put it in
@@ -2396,7 +2471,7 @@ private double get_double()
 
 	for (i = 0; i < sizeof(double); i++)
 		*p++ = *IC++;
-	
+
 	return *(double *) &xdouble;	/* Correctly aligned by union */
 }
 
@@ -2637,11 +2712,11 @@ long type;
 	case SK_INT:		ptr->it_long = (long) 0; break;
 	case SK_FLOAT:		ptr->it_float = (float) 0; break;
 	case SK_DOUBLE:		ptr->it_double = (double) 0; break;
+	case SK_BIT:
 	case SK_EXP:
 	case SK_REF:		ptr->it_ref = (char *) 0; break;
 	case SK_POINTER:	ptr->it_ptr = (fnptr) 0; break;
 	case SK_VOID:		break;
-	case SK_BIT:		/* FIXME */ break;
 	default:			panic(unknown_type);
 	}
 }
@@ -4105,6 +4180,23 @@ char *start;
 		break;
 
 	/*
+	 * Manifest bit
+	 */
+	case BC_BIT:
+		{
+			extern char *b_out();
+			char *str;
+			int nb_uint32 = (*(uint32 *) IC) + 1;
+
+			str = b_out(IC);
+			fprintf(fd, "BIT %s\n", str);
+			xfree(str);
+			while (nb_uint32--)
+				IC += sizeof(uint32);
+		}
+		break;
+			
+	/*
 	 * Jump if top of stack is false (value is poped).
 	 */
 	case BC_JMP_F:				/* Jump if false */
@@ -4153,7 +4245,7 @@ char *start;
 		return;
 
 	default:
-		fprintf(fd, "0x%X UNKNOWN\n", IC - 1);
+		fprintf(fd, "0x%X UNKNOWN (opcode = %d)\n", IC - 1, code);
 	}
 	}							/* Remember: indentation was wrong--RAM */
 	/* NOTREACHED */

@@ -34,9 +34,11 @@
 
 /* Macro used for allocation:
  *  RTLN(x) allocates a new object of type 'x'
+ *  RTLB(x) allocated a new bot object of size 'x'
  *  RTUD keep dynamic type  for refreezing
  */
 #define RTLN(x) emalloc(x)
+#define RTLB(x)	bmalloc(x)
 #ifdef WORKBENCH
 #define RTUD(x) fdtypes[x]  /* Updated dynamic type */
 #endif
@@ -284,6 +286,14 @@
 #define RTFZ(x)		frozen(x)			/* C frozen pointer of body id (x)
 #define RTMT(x)		melt(x)				/* Byte code of body id (x) */
 
+#endif
+
+#ifndef WORKBENCH
+/* In final mode, an Eiffel call to a deferred feature without any actual
+ * implementation could be generated anyway because of the statical dead code
+ * removal process; so we need a funciton pointer trigeering an exception
+ */
+#define RTNR rt_norout
 #endif
 
 #endif

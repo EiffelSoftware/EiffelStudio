@@ -91,8 +91,6 @@ int accounting;
 
 	if (!(flags & EO_EXP)) {		/* Mark the object if not expanded */
 
-		flags |= EO_STORE;			/* Object marked as traversed */
-
 		/* If a maping table is to be built, create a new object and insert it
 		 * in the map table. The reference is protected by requesting insertion
 		 * in the hector stack. There is no need to check for a null pointer
@@ -120,6 +118,7 @@ int accounting;
 		 * release of the stack relies on an accurate object count.
 		 */
 
+		flags |= EO_STORE;			/* Object marked as traversed */
 		obj_nb++; 					/* Count the number of objects traversed */
 	}
 

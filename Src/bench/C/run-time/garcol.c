@@ -967,6 +967,7 @@ register5 int move;					/* Are the objects expected to move? */
 				switch (last->type & SK_HEAD) {		/* Type in stack */
 				case SK_REF:						/* Reference */
 				case SK_EXP:
+				case SK_BIT:
 					last->it_ref = mark_expanded(last->it_ref, marker);
 					break;
 				}
@@ -975,6 +976,7 @@ register5 int move;					/* Are the objects expected to move? */
 				switch (last->type & SK_HEAD) {		/* Type in stack */
 				case SK_REF:						/* Reference */
 				case SK_EXP:
+				case SK_BIT:
 					(void) mark_expanded(last->it_ref, marker);
 					break;
 				}
@@ -1558,7 +1560,6 @@ private void clean_zones()
 			dprintf(1)("clean_zones: 'from' zone kept for next 'to'\n");
 			flush;
 #endif
-
 		}
 		return;
 	}
@@ -1600,8 +1601,16 @@ private void init_plsc()
 	 */
 
 	if (!(g_data.status & GC_PART)) {
-		ps_from.sc_arena = (char *) 0;	/* Will restart from end */
-		ps_to.sc_arena = (char *) 0;	/* No to zone yet */
+		ps_from.sc_arena = (char *) 0;		/* Will restart from end */
+		if (ps_to.sc_arena != (char *) 0) {	/* One chunk was kept in reserve */
+			/* Somehow, it is important to make sure the one big block in the
+			 * empty 'from' space is marked as busy, otherwise we will get
+			 * into trouble when we try to put it back into the free list.
+			 */
+			((union overhead *) ps_to.sc_arena)->ov_size |= B_BUSY;
+			xfree(ps_to.sc_arena + OVERHEAD);
+			ps_to.sc_arena = (char *) 0;	/* No to zone yet */
+		}
 	}
 }
 
@@ -2244,14 +2253,16 @@ struct sc_zone *to;
 			((union overhead *) root)->ov_size &= ~B_LAST;
 	}
 
-#ifdef DEBUG
+#ifdef MAY_PANIC
 	if (to->sc_top > to->sc_end) {			/* Uh-oh! Zone has overflowed */
 		if (to == &sc_to)					/* Identify culprit */
 			panic("generation zone overflow");
 		else
 			panic("scavenge zone overflow");
 	}
+#endif
 
+#ifdef DEBUG
 	dprintf(2)(
 		"scavenge: %sobject %x moved to %x (%d bytes) for %s scavenging\n",
 		to == &sc_to ? "" : (zone->ov_size & B_BUSY ? "" : "FREE? "),
@@ -3215,11 +3226,15 @@ register1 union overhead *zone;		/* Pointer on malloc info zone */
 public void onceset(ptr)
 register4 char **ptr;
 {
-
-	/* Add the address of Result (i.e. where the result of the once is
-	 * stored) to the once_set stack. Raise an exception if address cannot
-	 * be pushed.
+	/* Record result of once functions onto the once_set stack, so that the
+	 * run-time may update the address should the result be moved around by
+	 * the garbage collector (we are storing the address of a C static variable.
 	 */
+
+#ifdef DEBUG
+	dprintf(32)("onceset: value 0x%x at 0x%x\n", *ptr, ptr);
+	flush;
+#endif
 	
 	if (-1 == epush(&once_set, ptr))
 		eraise("once function recording", EN_MEM);

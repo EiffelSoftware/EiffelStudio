@@ -21,6 +21,7 @@
 #include "sig.h"
 #include "hector.h"
 #include "string.h"
+#include "bits.h"
 #include <stdio.h>
 
 /*
@@ -215,7 +216,13 @@ int tab;
 			write_out();
 			break;	
 		case SK_BIT:
-			/* BITS attribute  FIXME */
+			{		
+				char *str = b_out(o_ref);
+
+				sprintf(buffer, "BIT %ld = %s\n", LENGTH(o_ref), str);
+				write_out();
+				xfree(str);	/* Allocated by `b_out' */
+			}
 			break;
 		case SK_EXP:
 			/* Expanded attribute */

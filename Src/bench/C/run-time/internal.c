@@ -1,23 +1,15 @@
 /*
 
-    #    #    #   #####  ######  #####   #    #    ##    #                ####
-    #    ##   #     #    #       #    #  ##   #   #  #   #               #    #
-    #    # #  #     #    #####   #    #  # #  #  #    #  #               #
-    #    #  # #     #    #       #####   #  # #  ######  #        ###    #
-    #    #   ##     #    #       #   #   #   ##  #    #  #        ###    #    #
-    #    #    #     #    ######  #    #  #    #  #    #  ######   ###     ####
+	#	#	#   #####  ######  #####   #	#	##	#				####
+	#	##   #	 #	#	   #	#  ##   #   #  #   #			   #	#
+	#	# #  #	 #	#####   #	#  # #  #  #	#  #			   #
+	#	#  # #	 #	#	   #####   #  # #  ######  #		###	#
+	#	#   ##	 #	#	   #   #   #   ##  #	#  #		###	#	#
+	#	#	#	 #	######  #	#  #	#  #	#  ######   ###	 ####
 
 	Routines to implement class INTERNAL
 */
-#ifdef FIXME
 #include "eiffel.h"
-#include "config.h"
-#include "malloc.h"
-#include "garcol.h"
-#include "struct.h"
-#include "out.h"
-#include "macros.h"         /* For macro LNGOFF */
-#include "plug.h"
 
 #ifndef TRUE
 #define TRUE 1
@@ -26,453 +18,268 @@
 #define FALSE 0
 #endif
 
-#ifndef lint
-private char *rcsid =
-	"$Id$";
-#endif
+private long ei_str_dtype();	/* Look for a dynamic type with a string */
+private char *ei_oref();		/* Offset in object */
 
-/*
- * Private declarations
- */
-
-#define MAX_VALUE_SIZE 40	/* max size of nums in # of chars with %X %d... */
-
-/*
- * Routine definitions
- */
-
-uint32 v3_type(object)
-register1 char *object;
+public long ei_dtype (object)
+char *object;
 {
-	/*
-	 * Return in long integer form the type of the object `object'.
-	 */
+	/* Returns dynamic type of `object' */
 
-	return HEADER(object)->ov_flags;
+	return (long) Dtype(object);
 }
 
-char *v3_address(object)
-register1 char *object;
+public long ei_count_field (object)
+char *object;
 {
-	/*
-	 * Return Eiffel string containing the address of 'object'.
+	/* Returns the number of logical fields in `object'. */
+
+	return System(Dtype(object)).cn_nbattr;
+}
+
+public char *ei_field (i, object)
+long i;
+char *object;
+{
+	/* Returns the object referenced by the i_th field of `object'.
+	 * Take care of normal and expanded types.
 	 */
 
-	char buffer[MAX_VALUE_SIZE];
+	struct cnode *obj_desc;
+	int dtype = Dtype(object);
+	uint32 field_type;
+	char *o_ref, *new_obj;
+
+	obj_desc = &System(dtype);
+	field_type = obj_desc->cn_types[i];
+#ifndef WORKBENCH
+	o_ref = object + (obj_desc->cn_offsets[i])[dtype];
+#else
+	o_ref = object + ((long *) Table(obj_desc->cn_attr[i]))[dtype];
+#endif
+	switch (field_type & SK_HEAD) {
+	case SK_CHAR:
+		{
+			char val = *(char *) o_ref;
+
+			new_obj = RTLN(ei_str_dtype("CHARACTER_REF"));
+			*(char *) new_obj = val;
+			return new_obj;
+		}
+	case SK_BOOL:
+		{
+			char val = *(char *) val;
+
+			new_obj = RTLN(ei_str_dtype("BOOLEAN_REF"));
+			*(char *) new_obj = val;
+			return new_obj;
+		}
+	case SK_INT:
+		{
+			long val = *(long *) o_ref;
+
+			new_obj = RTLN(ei_str_dtype("INTEGER_REF"));
+			*(long *) new_obj = val;
+			return new_obj;
+		}
+	case SK_FLOAT:
+		{
+			float val = *(float *) o_ref;
+
+			new_obj = RTLN(ei_str_dtype("REAL_REF"));
+			*(float *) new_obj = val;
+			return new_obj;
+		}
+	case SK_POINTER:
+		{
+			fnptr val = *(fnptr *) val;
+
+			new_obj = RTLN(ei_str_dtype("POINTER_REF"));
+			*(fnptr *) new_obj = val;
+			return new_obj;
+		}
+	case SK_DOUBLE:
+		{
+			double val = *(double *) o_ref;
+
+			new_obj = RTLN(ei_str_dtype("DOUBLE_REF"));
+			*(double *) new_obj = val;
+			return new_obj;
+		}
+	case SK_REF:
+		return *(char **) o_ref;	/* Return reference */
+	case SK_EXP:
+		return RTCL(o_ref);			/* Return copy of expanded object */
+	default:
+		return (char *) 0;
+	}
+}
+
+public char *ei_field_name (i, object)
+long i;
+char *object;
+{
+	/* Returns name of the i_th logical field of `object'. */
+
+	char *name = System(Dtype(object)).cn_names[i];
+
+	return makestr(name, strlen(name));
+}
+
+public long ei_field_type(i, object)
+long i;
+char *object;
+{
+	/* Returns type of i-th logical field of `object'. */
+
+	uint32 field_type = System(Dtype(object)).cn_types[i];
+
+	switch (field_type & SK_HEAD) {
+	case SK_REF:	return 1L;
+	case SK_CHAR:	return 2L;
+	case SK_BOOL:	return 3L;
+	case SK_INT:	return 4L;
+	case SK_FLOAT:	return 5L;
+	case SK_DOUBLE:	return 6L;
+	case SK_EXP:	return 7L;
+	case SK_BIT:	return 8L;
+	default:		return 0L;
+	}
+}
+
+public char ei_char_field(i, object)
+long i;
+char *object;
+{
+	/* Returns character value of i-th value */
+
+	return *(char *) ei_oref(i,object);
+}
+
+public char ei_bool_field(i, object)
+long i;
+char *object;
+{
+	/* Returns boolean value of i-th value */
+
+	return *(char *) ei_oref(i, object);
+}
+
+public long ei_int_field(i, object)
+long i;
+char *object;
+{
+	/* Returns integer value of i-th value */
+
+	return *(long *) ei_oref(i, object);
+}
+
+public float ei_float_field(i, object)
+long i;
+char *object;
+{
+	/* Returns float value of i-th value */
+
+	return *(float *) ei_oref(i, object);
+}
+
+public fnptr ei_ptr_field(i, object)
+long i;
+char *object;
+{
+	/* Returns pointer value of i-th value */
+
+	return *(fnptr *) ei_oref(i,object);
+}
+
+public double ei_double_field(i, object)
+long i;
+char *object;
+{
+	/* Returns double value of i-th value */
+
+	return *(double *) ei_oref(i,object);
+}
+
+public char *ei_exp_type(i, object)
+long i;
+char *object;
+{
+	/* Returns the class name of the i-th expanded field of `object'. */
+
+	int dtype = (HEADER(ei_oref(i,object))->ov_flags) & EO_TYPE;
+	char *s;
+
+	s = System(dtype).cn_generator;
+	return makestr(s,strlen(s));
+}
+
+public long ei_bit_size(i, object)
+long i;
+char *object;
+{
+	/* Returns the size (in bit) of the i-the bit field of `object'. */
+
+	return (long) (System(Dtype(object)).cn_types[i] - SK_BIT);
+}
 	
-	sprintf(buffer, "%X", object);
+public long ei_size(object)
+char *object;
+{
+	/* Returns physical size occupied by `object'. */
 
-	return makestr(buffer, strlen(buffer));
+	if (HEADER(object)->ov_flags & EO_SPEC)
+		return (HEADER(object)->ov_size & B_SIZE) - LNGPAD(2);
+	else
+		return (long) Size(Dtype(object));
 }
 
-uint32 v3_attribute_count(object)
-register1 char *object;
+public char ei_special(object)
+char *object;
 {
-	/*
-	 * Return number of attributes in object
-	 */
-
-   	return (uint32) System(Dtype(object)).cn_nbattr;
-}
-
-char *v3_expanded_object(object, i)
-uint32 i;
-register1 char *object;
-{
-	/*
-	 * Return object known to be expanded at the valid entry i
-	 * in object `object'.
-	 */
-
-	struct cnode *object_description;
-	int16 dyn_type = Dtype(object);
-#ifdef WORKBENCH
-	int32 attr_key;
-	struct ca_info *attr_info;
-#endif
-
-	object_description = &System(dyn_type);
-#ifndef WORKBENCH
-	return (char *)(object + object_description->cn_offsets[i][dyn_type]);
-#else
-	attr_key = object_description->cn_attr[i];
-	attr_info = (struct ca_info *) ht_value
-		(&object_description->cn_eroutdf,attr_key);
-	return (char *) (object + ((attr_info->ca_id) & CA_ID));
-#endif
-}
-
-char *v3_special_object(object, i)
-uint32 i;
-register1 char *object;
-{
-	/*
-	 * Return object known to be special at the valid entry i in object
-	 * `object'.
-	 */
-
-	struct cnode *object_description;
-    register2 char *o_ref;
-	int16 dyn_type = Dtype(object);
-#ifdef WORKBENCH
-    int32 attr_key;
-    struct ca_info *attr_info;
-#endif
-
-	object_description = &System(dyn_type);
-#ifndef WORKBENCH
-	o_ref = object + object_description->cn_offsets[i][dyn_type];
-#else
-	attr_key = object_description->cn_attr[i];
-	attr_info = (struct ca_info *) ht_value
-		(&object_description->cn_eroutdf,attr_key);
-	o_ref = object + ((attr_info->ca_id) & CA_ID);
-#endif
-
-    return *(char **)o_ref;
-}
-
-int v3_special_has_reference(object)
-register1 char *object;
-{
-	/*
-	 * Return true if `object' which is a special object,
-	 * contains references
-	 */
-
-	return HEADER(object)->ov_flags & EO_REF ? 1 : 0;
-}
-
-int v3_special_has_composite(object)
-register1 char *object;
-{
-	/*
-	 * Return true if `object' which is a special object,
-	 * contains composite elements
-	 */
-
-	return HEADER(object)->ov_flags & EO_REF ? 1 : 0;
-}
-
-uint32 v3_special_content_type(object)
-register1 char *object;
-{
-	/*
-	 * Return type of elements in `object' which is a special object
-	 * containing simple elements: boolean, character, int, real or double.
-	 */
-
-	return (long)(HEADER(object)->ov_flags & EO_TYPE);
-}
-
-uint32 v3_special_count(object)
-register1 char *object;
-{
-	/*
-	 * Return number of elements in `object' which is a special object
-	 */
-
-	register2 uint32 flags;							/* Object flags */
-	register3 char *o_ref;
-	union overhead *zone = HEADER(object);			/* Object header */
-
-	flags = zone->ov_flags;
-	o_ref = (char *) (object + (zone->ov_size & B_SIZE) - LNGOFF(2));
+	/* Is `object' a special one ? */
 	
-	return *(long *)(o_ref);
+	return ((HEADER(object)->ov_flags) & EO_SPEC) ? (char) 1 : (char) 0;
 }
 
-uint32 v3_ith_type(object, i)
-uint32 i;
-register1 char *object;
+public long ei_offset(i, object)
+long i;
+char *object;
 {
-	/*
-	 * Return type of `i'-th element in `object', i is known to be
-	 * a valid entry.
-	 */
+	/* Returns offset of i-th field of `object'. */
 
-	struct cnode *object_description;
-	register2 long flags;								/* Object flags */
-	register3 char *o_ref;
-	register4 char *reference;
-	register5 long elem_size;
-	union overhead *zone = HEADER(object);				/* Object header */
-#ifdef WORKBENCH
-    int32 attr_key;
-    struct ca_info *attr_info;
-#endif
-
-	if(zone->ov_flags & EO_SPEC) {
-		flags = zone->ov_flags;
-		if(!(flags & EO_REF))
-			return (flags & EO_TYPE);
-		else if(!(flags & EO_COMP)) {
-			o_ref = (char *) ((char **)object + i);
-			reference = *(char **)o_ref;
-			if (0 == reference)
-				return SK_INVALID;			/* Signals: void reference */
-			else
-				return Dtype(reference);
-		} else {
-			o_ref = (char *)(object + (zone->ov_size & B_SIZE) - LNGOFF(2));
-			elem_size = *(long *)(o_ref + sizeof(long));
-			o_ref = (char *)(object + i*elem_size + OVERHEAD);
-			return Dtype(o_ref);
-		}
-	}
-	else {
-		object_description = &System(Dtype(object));
-#ifndef WORKBENCH
-		return object_description->cn_types[i];
-#else
-	attr_key = object_description->cn_attr[i];
-	attr_info = (struct ca_info *) ht_value
-		(&object_description->cn_eroutdf,attr_key);
-	return attr_info->ca_type;
-#endif
-		}
+	return (long) (ei_oref(i, object) - object);
 }
 
-char *v3_bool_value(object, i)
-uint32 i;
-register1 char *object;
+private char *ei_oref(i, object)
+long i;
+char *object;
 {
-	/*
-	 * Return value in Eiffel String form of the `i'-th element which is
-	 * known to be a valid entry and a boolean entity.
-	 */
+	/* Returns character value of i-th value */
 
-	struct cnode *object_description;
-	register2 char *o_ref;
-	int16 dyn_type = Dtype(object);
-#ifdef WORKBENCH
-    int32 attr_key;
-    struct ca_info *attr_info;
-#endif
+	struct cnode *obj_desc;
+	int dtype = Dtype(object);
+	char *o_ref;
 
-	object_description = &System(dyn_type);
+	obj_desc = &System(dtype);
 #ifndef WORKBENCH
-	o_ref = object + object_description->cn_offsets[i][dyn_type];
+	o_ref = object + (obj_desc->cn_offsets[i])[dtype];
 #else
-	attr_key = object_description->cn_attr[i];
-	attr_info = (struct ca_info *) ht_value
-		(&object_description->cn_eroutdf,attr_key);
-	o_ref = object + ((attr_info->ca_id) & CA_ID);
+	o_ref = object + ((long *) Table(obj_desc->cn_attr[i]))[dtype];
 #endif
-	return (*o_ref) ? makestr("true", 4) : makestr("false", 5);
+	return o_ref;
 }
 
-char *v3_char_value(object, i)
-uint32 i;
-register1 char *object;
+private long ei_str_dtype(s)
+char *s;
 {
-	/*
-	 * Return value in Eiffel String form of the `i'-th element which
-	 * is known to be a valid entry and a character entity.
-	 */
+	/* Return dynamic type associated to generator `s' */
 
-	struct cnode *object_description;
-	register2 char *o_ref;
-	char buffer[1];
-	int16 dyn_type = Dtype(object);
-#ifdef WORKBENCH
-    int32 attr_key;
-    struct ca_info *attr_info;
-#endif
+	long i;
 
-	object_description = &System(dyn_type);
-#ifndef WORKBENCH
-	o_ref = object + object_description->cn_offsets[i][dyn_type];
-#else
-	attr_key = object_description->cn_attr[i];
-	attr_info = (struct ca_info *) ht_value
-		(&object_description->cn_eroutdf,attr_key);
-	o_ref = object + ((attr_info->ca_id) & CA_ID);
-#endif
-	sprintf(buffer, "%c", *o_ref);
+	for (i=0; i<scount; i++)
+		if (0 == strcmp(s,System(i).cn_generator))
+			return i;
 
-	return makestr(buffer, strlen(buffer));
+	return -1;
 }
-
-char *v3_int_value(object, i)
-uint32 i;
-register1 char *object;
-{
-	/*
-	 * Return value in Eiffel String form of the `i'-th element which
-	 * is known to be a valid entry and an integer entity.
-	 */
-
-	struct cnode *object_description;
-	register2 char *o_ref;
-	char buffer[MAX_VALUE_SIZE];
-	int16 dyn_type = Dtype(object);
-#ifdef WORKBENCH
-    int32 attr_key;
-    struct ca_info *attr_info;
-#endif
-
-	object_description = &System(dyn_type);
-#ifndef WORKBENCH
-	o_ref = object + object_description->cn_offsets[i][dyn_type];
-#else
-	attr_key = object_description->cn_attr[i];
-	attr_info = (struct ca_info *) ht_value
-		(&object_description->cn_eroutdf,attr_key);
-	o_ref = object + ((attr_info->ca_id) & CA_ID);
-#endif
-	sprintf(buffer, "%ld", (long)*(long *)o_ref);
-
-	return makestr(buffer, strlen(buffer));
-}
-
-char *v3_real_value(object, i)
-uint32 i;
-register1 char *object;
-{
-	/*
-	 * Return value in Eiffel String form of the `i'-th element which
-	 * is known to be a valid entry and a real entity.
-	 */
-
-	struct cnode *object_description;
-	register2 char *o_ref;
-	char buffer[MAX_VALUE_SIZE];
-	int16 dyn_type = Dtype(object);
-#ifdef WORKBENCH
-    int32 attr_key;
-    struct ca_info *attr_info;
-#endif
-
-	object_description = &System(dyn_type);
-#ifndef WORKBENCH
-	o_ref = object + object_description->cn_offsets[i][dyn_type];
-#else
-	attr_key = object_description->cn_attr[i];
-	attr_info = (struct ca_info *) ht_value
-		(&object_description->cn_eroutdf,attr_key);
-	o_ref = object + ((attr_info->ca_id) & CA_ID);
-#endif
-	sprintf(buffer, "%f", (float)*(float *)o_ref);
-
-	return makestr(buffer, strlen(buffer));
-}
-
-char *v3_double_value(object, i)
-uint32 i;
-register1 char *object;
-{
-	/*
-	 * Return value in Eiffel String form of the `i'-th element which
-	 * is known to be a valid entry and a double entity.
-	 */
-
-	struct cnode *object_description;
-	register2 char *o_ref;
-	int16 dyn_type = Dtype(object);
-	char buffer[MAX_VALUE_SIZE];
-#ifdef WORKBENCH
-    int32 attr_key;
-    struct ca_info *attr_info;
-#endif
-
-	object_description  = &System(dyn_type);
-#ifndef WORKBENCH
-	o_ref = object + object_description->cn_offsets[i][dyn_type];
-#else
-	attr_key = object_description->cn_attr[i];
-	attr_info = (struct ca_info *) ht_value
-		(&object_description->cn_eroutdf,attr_key);
-	o_ref = object + ((attr_info->ca_id) & CA_ID);
-#endif
-	sprintf(buffer, "%lf", (double)*(double *)o_ref);
-
-	return makestr(buffer, strlen(buffer));
-}
-
-char *v3_expanded_value(object, i)
-uint32 i;
-register1 char *object;
-{
-	/*
-	 * Return address in Eiffel String form of the `i'-th element which
-	 * is known to be a valid entry and a expanded object.
-	 */
-
-	struct cnode *object_description;
-	register2 char *o_ref;
-	int16 dyn_type = Dtype(object);
-	char buffer[MAX_VALUE_SIZE];
-#ifdef WORKBENCH
-    int32 attr_key;
-    struct ca_info *attr_info;
-#endif
-
-	object_description = &System(dyn_type);
-#ifndef WORKBENCH
-	o_ref = object + object_description->cn_offsets[i][dyn_type];
-#else
-	attr_key = object_description->cn_attr[i];
-	attr_info = (struct ca_info *) ht_value
-		(&object_description->cn_eroutdf,attr_key);
-	o_ref = object + ((attr_info->ca_id) & CA_ID);
-#endif
-	sprintf(buffer, "%X", (char *)o_ref);
-
-	return makestr(buffer, strlen(buffer));
-}
-
-char *v3_ith_reference(object, i)
-uint32 i;
-register1 char *object;
-{
-	/*
-	 * Return value in Eiffel String form of the `i'-th element which
-	 * is known to be a valid entry and a normal reference.
-	 */
-
-	struct cnode *object_description;
-	register2 long flags;								/* Object flags */
-	register3 char *o_ref;
-	register5 long elem_size;
-	union overhead *zone = HEADER(object);				/* Object header */
-	char *reference;
-	char buffer[MAX_VALUE_SIZE];
-	int16 dtype;
-#ifdef WORKBENCH
-    int32 attr_key;
-    struct ca_info *attr_info;
-#endif
-
-	if(zone->ov_flags & EO_SPEC) {
-		o_ref = (char *) (object + (zone->ov_size & B_SIZE) - LNGOFF(2));
-		flags = zone->ov_flags;
-		if(!(flags & EO_COMP)) {
-			o_ref = (char *) ((char **)object + i);
-			reference = *(char **)o_ref;
-			if (0 == reference)
-				sprintf(buffer, "");
-			else
-				sprintf(buffer, "%X", reference);
-		} else {
-			o_ref = (char *)(object + (zone->ov_size & B_SIZE) - LNGOFF(2));
-			elem_size = *(long *)(o_ref + sizeof(long));
-			o_ref = (char *)(object + i*elem_size + OVERHEAD);
-		}
-	}
-	else {
-		dtype = Dtype(object);
-		object_description = &System(dtype);
-#ifndef WORKBENCH
-		o_ref = object + object_description->cn_offsets[i][dtype];
-#else
-		attr_key = object_description->cn_attr[i];
-		attr_info = (struct ca_info *) ht_value
-			(&object_description->cn_eroutdf,attr_key);
-		o_ref = object + ((attr_info->ca_id) & CA_ID);
-#endif
-		sprintf(buffer, "%X", *(char **)o_ref);
-	}
-	return makestr(buffer, strlen(buffer));
-}
-#endif

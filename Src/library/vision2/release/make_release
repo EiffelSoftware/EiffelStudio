@@ -1,5 +1,10 @@
 #!/bin/bash
-cvs -d :pserver:$USER@cvs:/home/cvs export vision2
+if [ "$1" = "" ]
+then
+	echo "usage: $0 release_tag"
+	exit 1
+fi
+cvs -d :pserver:$USER@cvs:/home/cvs export -r $1 vision2
 cp RELEASE_NOTES vision2
 cd vision2
 make
@@ -29,3 +34,4 @@ do
 	fi
 done
 echo "Done!"
+exit 0

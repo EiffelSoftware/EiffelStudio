@@ -6,7 +6,7 @@ root
 
 default
 	assertion (all)
-	precompiled ("..\generated\clent")
+	precompiled ("..\generated\client")
 	
 cluster
 	

@@ -9,6 +9,7 @@ MV = move
 RM = del
 LINK32 = $link32
 DLLFLAGS = $dllflags
+OUTDIR = $(TOP)\LIB
 
 .c.obj:
 	$(CC) -c $(JCFLAGS) $<
@@ -56,6 +57,14 @@ EOBJECTS = wlmalloc.obj wmath.obj wmalloc.obj wgarcol.obj \
 
 all:: eif_size.h
 
+LIBDIR=$(OUTDIR)
+"$(LIBDIR)" :
+    if not exist "$(LIBDIR)/$(NULL)" mkdir "$(LIBDIR)"
+
+DLLDIR=$(OUTDIR)
+"$(DLLDIR)" :
+    if not exist "$(DLLDIR)/$(NULL)" mkdir "$(DLLDIR)"
+
 all:: finalized.lib
 
 finalized.lib: $(OBJECTS)
@@ -67,9 +76,6 @@ wkbench.lib: $(WOBJECTS)
 	$link_wline
 
 
-DLLDIR=.\DLL
-"$(DLLDIR)" :
-    if not exist "$(DLLDIR)/$(NULL)" mkdir "$(DLLDIR)"
 
 all:: wkbench.dll
 

@@ -327,6 +327,9 @@ void c_gtk_pixmap_read_from_xpm ( GtkPixmap *pixmap,
 /* Create a pixmap with the given size */
 GtkWidget* c_gtk_pixmap_create_with_size (GtkWidget *window_parent, gint width, gint height);
 
+/* Create a pixmap with the given size */
+void c_gtk_pixmap_set_from_pixmap (GtkWidget *pixmapDest, GtkWidget *pixmapSource);
+
 /*==============================================================================
  gtk_editable functions
 ==============================================================================*/
@@ -345,9 +348,12 @@ GtkWidget* c_gtk_pixmap_create_with_size (GtkWidget *window_parent, gint width, 
 /* List : add a listItem to a list */
 void c_gtk_list_item_select (GtkWidget *item);
 void c_gtk_list_item_unselect (GtkWidget *item);
+EIF_BOOLEAN c_gtk_list_item_is_selected (GtkWidget *list, GtkWidget *item);
 gint c_gtk_list_selection_mode (GtkWidget *item);
 guint c_gtk_list_selected (GtkWidget* list);
 gint c_gtk_list_selected_item (GtkWidget *item);
+void c_gtk_list_insert_item (GtkWidget *list, GtkWidget *item, gint position);
+void c_gtk_list_remove_item (GtkWidget *list, GtkWidget *item);
 
 /* List : number of rows */
 guint c_gtk_list_rows (GtkWidget *list);
@@ -471,8 +477,8 @@ char* c_gtk_window_title(GtkWindow* window);
  gtk_statusbar functions
 ==============================================================================*/
 
-/* Sets the pixmap in the status bar item */
-void c_gtk_statusbar_item_set_pixmap (GtkWidget *statusbar, GtkWidget *pixmap);
+/* Create a Gtk pixmap in the status bar item. Return the pixmap's pointer. */
+EIF_POINTER c_gtk_statusbar_item_create_pixmap_place (GtkWidget *statusbar);
 
 /* Unsets the pixmap of the status bar item */
 void c_gtk_statusbar_item_unset_pixmap (GtkWidget *statusbar, GtkWidget *pixmap);
@@ -486,6 +492,9 @@ EIF_INTEGER c_gtk_pixmap_width (GtkWidget *pixmap);
 
 /* Height of the given pixmap */
 EIF_INTEGER c_gtk_pixmap_height (GtkWidget *pixmap);
+
+/* Unref the gdk pixmap and the maskof the given pixmap */
+void c_gtk_pixmap_gdk_unref (GtkWidget *pixmap);
 
 /*==============================================================================
  gtk_style functions

@@ -19,14 +19,29 @@ inherit
 			{NONE} action_area
 			{NONE} display_area
 		redefine
-			implementation
+			implementation,
+			make
 		end
 
 feature {NONE} -- Initialization
 
+	make (par: EV_WINDOW) is
+			-- Create the dialog box.
+		do
+			-- Put here the creation of the implementation in
+			-- the redefinition
+			implementation.set_interface (Current)
+			implementation.plateform_build (par.implementation)
+			implementation.build
+		end
+
 	make_default (par: EV_WINDOW; msg, dtitle: STRING) is
 		do
-			make (par)
+			-- Put here the creation of the implementation in
+			-- the redefinition
+			implementation.set_interface (Current)
+			implementation.plateform_build (par.implementation)
+			implementation.build
 			implementation.set_default (msg, dtitle)
 			show
 		end

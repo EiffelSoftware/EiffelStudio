@@ -39,9 +39,6 @@ feature {NONE}
 			if not rescued then
 				!!file.make (Environment.project_directory);
 				old_project_name := clone (Environment.project_directory);
-				main_panel.set_title (clone (selected_file));
-				Environment.project_directory.wipe_out;
-				Environment.project_directory.append (clone (selected_file));
 				if file.exists then
 					if file.is_directory then
 						error_box.popup (Current, 
@@ -59,6 +56,9 @@ feature {NONE}
 					!!cmd.make (Current);
 					mp.restore;
 					cmd.execute (Void);
+					main_panel.set_title (clone (selected_file));
+					Environment.project_directory.wipe_out;
+					Environment.project_directory.append (clone (selected_file));
 				end
 			else
 				rescued := False;

@@ -147,6 +147,14 @@ feature
 			implementation.set_parent_action (action, cmd, arg)
 		end
 
+	remove_parent_action (action: STRING) is
+			-- Remove `action' from the dialog shell 
+		require
+			action_exists: action /= Void
+		do
+			implementation.remove_parent_action (action)
+		end
+
 	dialog_command_target is
 			-- Set the command target to be the dialog shell
 		obsolete

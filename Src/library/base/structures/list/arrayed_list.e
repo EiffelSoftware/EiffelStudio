@@ -399,15 +399,19 @@ feature -- Element change
 
 	merge_right (other: ARRAYED_LIST [G]) is
 			-- Merge `other' into current structure after cursor.
+		local
+			l_new_count, l_old_count: INTEGER
 		do
 			if not other.is_empty then
-				conservative_resize (1, count + other.count)
-				if index < count then
-					subcopy (Current, index + 1, count, 
+				l_old_count := count
+				l_new_count := l_old_count + other.count
+				conservative_resize (1, l_new_count)
+				set_count (l_new_count)
+				if index < l_old_count then
+					subcopy (Current, index + 1, l_old_count, 
 						index + other.count + 1) 
 				end
 				subcopy (other, 1, other.count, index + 1) 
-				set_count (count + other.count)
 				other.wipe_out
 			end
 		end

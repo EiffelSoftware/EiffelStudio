@@ -158,7 +158,7 @@ feature -- Observer pattern
 			menu_item_to_remove: EV_MENU_ITEM
 		do
 				-- Remove the menu item that match `a_item' from the menu.
-			menu_item_to_remove ?= item_by_data (an_item)
+			menu_item_to_remove ?= retrieve_item_by_data (an_item, True)
 			if menu_item_to_remove /= void then
 				prune_all (menu_item_to_remove)
 			end
@@ -170,7 +170,7 @@ feature -- Observer pattern
 			menu_item_to_change: EV_MENU_ITEM
 			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
-			menu_item_to_change ?= item_by_data (an_item)
+			menu_item_to_change ?= retrieve_item_by_data (an_item, True)
 			conv_dev ?= an_item
 			if menu_item_to_change /= Void then
 				if

@@ -192,7 +192,7 @@ feature -- Observer pattern
 			item_name := a_item.name
 			item_list := get_menu_item_from_path (Current, a_path)
 			if item_list /= Void then
-				menu_item_to_remove ?= item_list.item_by_data (a_item)
+				menu_item_to_remove ?= item_list.retrieve_item_by_data (a_item, True)
 				if menu_item_to_remove /= void then
 					item_list.prune_all (menu_item_to_remove)
 				end
@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 				curr_item := new_path.item
 				new_path.remove
 		
-				sub_menu ?= item_list.item_by_data (curr_item)
+				sub_menu ?= item_list.retrieve_item_by_data (curr_item, True)
 				Result := get_menu_item_from_path (sub_menu, new_path)
 			end
 		end

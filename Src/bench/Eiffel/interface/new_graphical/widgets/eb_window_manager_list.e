@@ -130,7 +130,7 @@ feature -- Observer pattern
 			list_item_to_remove: EV_LIST_ITEM
 		do
 				-- Remove the list item that match `an_item' from the list.
-			list_item_to_remove ?= item_by_data (an_item)
+			list_item_to_remove ?= retrieve_item_by_data (an_item, True)
 			if list_item_to_remove /= void then
 				prune_all (list_item_to_remove)
 			end
@@ -142,7 +142,7 @@ feature -- Observer pattern
 			list_item_to_change: EV_LIST_ITEM
 		do
 				-- Remove the list item that match `an_item' from the list.
-			list_item_to_change ?= item_by_data (an_item)
+			list_item_to_change ?= retrieve_item_by_data (an_item, True)
 			if list_item_to_change /= void then
 				list_item_to_change.set_text (an_item.title)
 			end

@@ -43,7 +43,9 @@ feature -- Access
 
 	top_level_window_imp: EV_WINDOW_IMP is
 		do
-			Result := parent_imp.top_level_window_imp
+			if parent_imp /= Void then
+				Result := parent_imp.top_level_window_imp
+			end
 		end
 
 	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is

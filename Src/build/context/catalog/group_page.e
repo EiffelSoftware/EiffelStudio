@@ -43,6 +43,7 @@ feature {NONE}
 
 			!! group_name.make (Widget_names.group_name, Current)
 			group_name.set_background_color (background_color)	
+			group_name.set_foreground_color (foreground_color)
 			!! text.make (Widget_names.textfield, Current)
 
 			text.set_size (80, 20)

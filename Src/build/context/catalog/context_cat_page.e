@@ -43,10 +43,6 @@ feature
                         Result := ti.label
                 end
 
--- samik	focus_string: STRING is
--- samik		deferred
--- samik		end;
-
 	focus_source: WIDGET is
 		do
 			Result := button
@@ -57,15 +53,11 @@ feature
 feature {NONE}
 
 	make (a_parent: COMPOSITE; button_parent: ROW_COLUMN) is
-		local
-			bg_color: COLOR
 		do	
 			make_visible (Widget_names.form, a_parent);
 			!! button.make (Current, button_parent);
-		
-			!! bg_color.make
-			bg_color.set_rgb (background_color.red - 65 * 256, background_color.green - 65 * 256, background_color.blue - 65 * 256)	
-			set_background_color (bg_color)
+			set_background_color (Resources.catalog_background_color)
+			set_foreground_color (Resources.catalog_foreground_color)
 			
 			build_interface
 			-- build_interface sets the focus string for the button so 

@@ -57,15 +57,16 @@ feature -- Creation
 		end
 
 	set_values is
-		local
-			bg_color: COLOR
+--		local
+--			bg_color: COLOR
 		do
-			!! bg_color.make
-			bg_color.set_rgb (background_color.red - 65 * 256, background_color.green - 65 * 256, background_color.blue - 65 * 256)	
-			scrolled_w.set_background_color (bg_color)
-			
+--			!! bg_color.make
+--			bg_color.set_rgb (background_color.red - 65 * 256, background_color.green - 65 * 256, background_color.blue - 65 * 256)	
+			scrolled_w.set_background_color (Resources.catalog_background_color)
+			scrolled_w.set_foreground_color (Resources.catalog_foreground_color)
 			first_separator.set_horizontal (true)
 			rc.set_row_layout
+			rc.set_same_size
 			primitive_page.unmanage
 			menu_page.unmanage
 			group_page.unmanage
@@ -84,7 +85,7 @@ feature -- Creation
 			attach_top (context_catalog_label, 3)
 			attach_left (context_catalog_label, 0)
 			attach_left_widget (context_catalog_label, rc, 10)
-			attach_right (rc, 0)
+--			attach_right (rc, 0)
 			attach_top_widget (context_catalog_label, first_separator, 0)
 			attach_top_widget (rc, first_separator, 0)
 

@@ -112,8 +112,8 @@ feature {NONE}
 					inh_assert := assert_id_set.item (i);
 					if inh_assert.has_assertion then
 						ancestor_class := System.class_of_id (inh_assert.written_in);
-						ancestor_feature := ancestor_class.feature_table.feature_of_body_index
-														(inh_assert.body_index);
+						ancestor_feature := ancestor_class.feature_table.feature_of_rout_id
+														(f.rout_id_set);
 						mark_and_record (ancestor_feature, ancestor_class);
 					end;
 					i := i + 1;

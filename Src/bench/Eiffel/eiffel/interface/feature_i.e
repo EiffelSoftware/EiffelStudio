@@ -876,9 +876,7 @@ end;
 				vffd7.set_body_id (body_id);
 				Error_handler.insert_error (vffd7);
 			end;
-			if not feat_table.associated_class.is_obsolete then
-				solved_type.check_for_obsolete_class;
-			end;
+			solved_type.check_for_obsolete_class (feat_table.associated_class);
 			if arguments /= Void then
 				if is_infix and then argument_count /= 1 then
 						-- Infixed features should have only one argument
@@ -1501,7 +1499,10 @@ feature -- PS
 
 	append_clickable_signature (a_clickable: CLICK_WINDOW) is
 			-- Append the signature of current feature in `a_clickable'
+		local
+			error: BOOLEAN
 		do
+			if not Error then
 			append_clickable_name (a_clickable);
 			if arguments /= Void then
 				a_clickable.put_string (" (");
@@ -1523,18 +1524,30 @@ feature -- PS
 			if not type.is_void then
 				a_clickable.put_string (": ");
 				a_clickable.put_string (type.dump)
-			end
+			end;
+			end;
+		rescue
+			io.error.putstring ("%NError while building the feature signature%N");
+			Error := True;
+			retry
 		end;
 
 	append_clickable_name (a_clickable: CLICK_WINDOW) is
 			-- Append the name of the feature in `a_clickable'
 		do
-			a_clickable.put_clickable_string (stone (0, 0), feature_name);
+			a_clickable.put_clickable_string (stone, feature_name);
 		end;
 
-	stone (start_pos, end_pos: INTEGER): FEATURE_STONE is
+	stone: FEATURE_STONE is
+		local
+			body: FEATURE_AS;
 		do
-			!!Result.make (Current, start_pos, end_pos);
+			if Body_server.has (body_id) then
+				body := Body_server.item (body_id);
+				!!Result.make (Current, body.start_position, body.end_position);
+			else
+				!!Result.make (Current, 0, 0);
+			end;
 		end;
 
 feature -- Debugging

@@ -12,12 +12,19 @@ inherit
 feature
 
 	associated_class: CLASS_C;
-			-- feature name
+			-- Class using the obsolete class
+
+	obsolete_class: CLASS_C;
+			-- Obsolete class
 
 	set_class (c: CLASS_C) is
-			-- Assign `s' to `option_name'
 		do
 			associated_class := c
+		end;
+
+	set_obsolete_class (c: CLASS_C) is
+		do
+			obsolete_class := c
 		end;
 
 	code: STRING is
@@ -28,10 +35,12 @@ feature
 
 	build_explain (a_clickable: CLICK_WINDOW) is
 		do
-			a_clickable.put_string ("%T%T");
-			associated_class.append_clickable_signature (a_clickable);
-			a_clickable.put_string (" is obsolete: ");
-			a_clickable.put_string (associated_class.obsolete_message);
+			a_clickable.put_string ("%Tin class ");
+			associated_class.append_clickable_name (a_clickable);
+			a_clickable.put_string ("%T");
+			obsolete_class.append_clickable_name (a_clickable);
+			a_clickable.put_string (" is obsolete:%N%T");
+			a_clickable.put_string (obsolete_class.obsolete_message);
 			a_clickable.new_line;
 		end;
 

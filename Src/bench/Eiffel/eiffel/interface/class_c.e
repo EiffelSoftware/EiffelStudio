@@ -2518,7 +2518,8 @@ feature -- PS
 			-- Is Current class clickable?
 		do
 			Result := (Tmp_ast_server.has (id) or else 
-						Ast_server.has (id))
+						Ast_server.has (id)) and then
+					Feat_tbl_server.has (id)
 		end;
 
 feature -- Dino stuff

@@ -370,8 +370,8 @@ feature -- Type check, byte code and dead code removal
 					context.supplier_ids.add_supplier (local_class_c);
 				end;
 
-				if not context_class.is_obsolete and then solved_type /= Void then
-					solved_type.check_for_obsolete_class
+				if solved_type /= Void then
+					solved_type.check_for_obsolete_class (context_class)
 				end;
 				locals.forth;
 			end;

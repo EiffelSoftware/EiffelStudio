@@ -146,9 +146,7 @@ feature
 					-- the feature is written.
 				put (solved_type);
 
-				if not associated_class.is_obsolete then
-					solved_type.check_for_obsolete_class;
-				end;
+				solved_type.check_for_obsolete_class (associated_class);
 
 				forth;
 			end;

@@ -182,64 +182,26 @@ RT_LNK int fcount;
 
 /* Macros used for assignments:
  *  RTAG(x) is true if 'x' is an old object not remembered
- *  RTAO(x) is true if 'x' is an old object.
- *  RTAE(x) is true if 'x' is full of references .
  *  RTAN(x) is true if 'x' is a new object (i.e. not old)
  *  RTAM(x) memorizes 'x'
- *  RTAX(x,y) remembers 'y' if 'x' is new and 'y' is old not remembered yet
- *  RTAR(x,y) remembers 'y' if it is old and not remembered and 'x' is new
- *  RTAS(x,y) is the same as RTAR but for special objects and with no GC call
- *  RTAS_OPT(x,i, y) is the same as RTAS with passing the index.
+ *  RTAR(parent,source) remembers 'parent' if it is old and not remembered and 'source' is new
  */
 #ifdef ISE_GC
-#define RTAO(x)		(HEADER(x)->ov_flags & EO_OLD)
-#define RTAE(x)		(HEADER(x)->ov_flags & EO_REF)
 #define RTAG(x)		((HEADER(x)->ov_flags & (EO_OLD | EO_REM)) == EO_OLD)
 #define RTAN(x)		(!(HEADER(x)->ov_flags & EO_OLD))
 #define RTAM(x)		eremb(x)
-#define RTAX(x,y)	(RTAG(y)?(RTAN(x)?RTAM((y)),(x):(x)):(x))
-#define RTAR(x,y) \
-	if (((x) != (EIF_REFERENCE) 0) && (RTAN(x))) { \
-		if (HEADER(y)->ov_flags & EO_EXP) { \
-		   register EIF_REFERENCE z = (EIF_REFERENCE) y - (HEADER (y)->ov_size & B_SIZE); \
+#define RTAR(parent,source) \
+	if (((source) != (EIF_REFERENCE) 0) && (RTAN(source))) { \
+		if (HEADER(parent)->ov_flags & EO_EXP) { \
+			EIF_REFERENCE z = (EIF_REFERENCE) parent - (HEADER (parent)->ov_size & B_SIZE); \
 			if (RTAG(z)) RTAM(z); \
-		} else if (RTAG(y)) RTAM(y); \
+		} else if (RTAG(parent)) RTAM(parent); \
 	}
-#define RTAS(x,y) \
-	if ((x) != (EIF_REFERENCE) 0 && RTAN(x)) { \
-		if (HEADER(y)->ov_flags & EO_EXP) { \
-			register EIF_REFERENCE z = (EIF_REFERENCE) y - (HEADER(y)->ov_size & B_SIZE); \
-			if (RTAG(z)) erembq((z)); \
-		} else if (RTAG(y)) erembq((y)); \
-	}
-
-#ifdef EIF_REM_SET_OPTIMIZATION
-#define RTAS_OPT(x,i,y) \
-	if ((x) != (EIF_REFERENCE) 0 && RTAN(x)) { \
-		if (HEADER(y)->ov_flags & EO_EXP) { \
-			register EIF_REFERENCE z = (EIF_REFERENCE) y - (HEADER(y)->ov_size & B_SIZE); \
-			if (RTAG(z)) erembq((z)); \
-		} else if (RTAO(y)) { \
-			if (RTAE(y)) \
-				special_erembq((y), (i)); \
-			else \
-				erembq((y)); \
-		} \
-	} 
-#else	/* EIF_REM_SET_OPTIMIZATION */
-#define RTAS_OPT(x,i,y) RTAS (x,y)
-#endif	/* EIF_REM_SET_OPTIMIZATION */
-
 #else
-#define RTAO(x) EIF_FALSE
-#define RTAE(x) (HEADER(x)->ov_flags & EO_REF)
 #define RTAG(x) EIF_FALSE
 #define RTAN(x) EIF_FALSE
 #define RTAM(x)		(x)
-#define RTAX(x,y)	(x)
-#define RTAR(x,y)
-#define RTAS(x,y)
-#define RTAS_OPT(x,i,y)
+#define RTAR(parent,source)
 #endif
 
 
@@ -248,12 +210,10 @@ RT_LNK int fcount;
  *  RTRC(x,y) is true if type 'y' conforms to type 'x'
  *  RTRA(x,y) calls RTRC(x, Dftype(y)) if 'y' is not void
  *  RTRV(x,y) returns 'y' if it conforms to type 'x', void otherwise
- *  RTRM(x,y) memorizes 'x' if not void and 'y' is old with 'x' new
  */
 #define RTRC(x,y)		eif_gen_conf ((int16) (y), (int16) (x))
 #define RTRA(x,y)		((y) == (EIF_REFERENCE) 0 ? 0 : RTRC((x),Dftype(y)))
 #define RTRV(x,y)		(RTRA((x),(y)) ? (y) : (EIF_REFERENCE) 0)
-#define RTRM(x,y)		((x) == (EIF_REFERENCE) 0 ? 0 : RTAX(x,y))
 
 
 
@@ -740,7 +700,7 @@ RT_LNK int fcount;
 	EIF_REFERENCE EIF_VOLATILE ptr_current = (*(EIF_REFERENCE *)(y+CAT2(x,_area_offset))); \
 	long EIF_VOLATILE i = i-*(long*)(y+CAT2(x,_lower_offset)); \
 	*((EIF_REFERENCE *)ptr_current + i) = val; \
-	RTAS_OPT(val, i, ptr_current); \
+	RTAR(ptr_current, val); \
 	}
 
 #define RTAUP_BASIC(cast,x,y,val,i) \
@@ -790,7 +750,7 @@ RT_LNK int fcount;
 #define RTAP_EIF_REFERENCE(cast,x,val,i) \
 		{ \
 		*((cast*)CAT2(x,_area_minus_lower) + i) = val; \
-		RTAS_OPT (val, i, CAT2(x,_area)); \
+		RTAR(CAT2(x,_area), val); \
 		}
 
 #define RTAP_BASIC(cast,x,val,i) \

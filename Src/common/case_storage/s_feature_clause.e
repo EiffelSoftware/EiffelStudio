@@ -7,6 +7,9 @@ indexing
 
 class S_FEATURE_CLAUSE
 
+inherit
+	S_ELEMENT_DATA
+
 creation
 
 	make

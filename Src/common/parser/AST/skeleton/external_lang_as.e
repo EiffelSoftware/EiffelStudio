@@ -132,7 +132,10 @@ end
 						image.left_adjust;
 
 							-- Checking the type of special part
-						pos := special_part.index_of (' ',1);
+						pos := special_part.index_of (' ', 1);
+						if pos = 0 then
+							pos := special_part.index_of ('%T', 1);
+						end
 						if pos = 0 then
 								-- Only one word in brackets
 							raise_external_error ("Only one word between brackets",

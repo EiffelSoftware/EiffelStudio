@@ -8,7 +8,7 @@ class
 	WIZARD_APPLICATION
 
 inherit
-	EV_APPLICATION
+	EV_THREAD_APPLICATION
 
 create
 	make_and_launch

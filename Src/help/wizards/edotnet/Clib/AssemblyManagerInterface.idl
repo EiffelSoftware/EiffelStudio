@@ -18,9 +18,10 @@ library AssemblyManagerInterface
 
     [
       odl,
-      uuid(232A7E85-2357-386E-A37D-1D957E41AFFD),
+      uuid(2CAE334B-54E8-34BF-86AA-78C3E39B804F),
       version(1.0),
-      oleautomation  
+      oleautomation   
+
     ]
     interface IAssemblyManagerInterface : IUnknown {
         HRESULT _stdcall ImportedAssemblies([out, retval] SAFEARRAY(BSTR)* pRetVal);
@@ -31,12 +32,18 @@ library AssemblyManagerInterface
                         [in] BSTR Culture, 
                         [in] BSTR PublicKey, 
                         [out, retval] BSTR* pRetVal);
+        HRESULT _stdcall LocalAssemblyDependencies(
+                        [in] BSTR Filename, 
+                        [out, retval] SAFEARRAY(BSTR)* pRetVal);
         HRESULT _stdcall AssemblyDependencies(
                         [in] BSTR Name, 
                         [in] BSTR Version, 
                         [in] BSTR Culture, 
                         [in] BSTR PublicKey, 
                         [out, retval] SAFEARRAY(BSTR)* pRetVal);
+        HRESULT _stdcall IsSigned(
+                        [in] BSTR Filename, 
+                        [out, retval] VARIANT_BOOL* pRetVal);
         HRESULT _stdcall CleanAssemblies();
     };
 

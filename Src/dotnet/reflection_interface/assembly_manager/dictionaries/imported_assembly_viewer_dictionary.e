@@ -183,7 +183,13 @@ feature -- Messages
 			non_void_message: Result /= Void
 			not_empty_message: Result.get_length > 0
 		end
-		
+	
+	No_assembly_in_the_EAC: STRING is "There is no assembly in the Eiffel Assembly Cache. Please reinstall the Eiffel delivery."
+		indexing
+			description: "Error message in case the EAC contains no assembly"
+			external_name: "NoAssemblyInTheEAC"
+		end
+	
 feature -- Other constants
 	
 	Caption_text: STRING is "Imported Assemblies"

@@ -197,4 +197,11 @@ feature -- Basic Operations
 			"Search"
 		end
 
+	set_last_error (an_error: ISE_REFLECTION_ERRORINFO) is
+		external
+			"IL signature (ISE.Reflection.ErrorInfo): System.Void use ISE.Reflection.ReflectionInterface"
+		alias
+			"SetLastError"
+		end
+
 end -- class ISE_REFLECTION_REFLECTIONINTERFACE

@@ -40,9 +40,9 @@ feature -- Access
 			not_empty_filename: Result.get_length > 0
 		end
 		
-	Powered_by_eiffel_sharp: STRING is "Powered by Eiffel#"
+	Powered_by_eiffel_sharp: STRING is "Powered by Eiffel.NET"
 		indexing
-			description: "Powered by Eiffel#"
+			description: "Powered by Eiffel.NET"
 			external_name: "PoweredByEiffelSharp"
 		end
 		

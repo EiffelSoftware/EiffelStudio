@@ -224,16 +224,22 @@ feature -- Event handling
 		indexing
 			description: "Process `ok_button' activation."
 			external_name: "OnOkEventHandler"
+		local
+			message_box: MESSAGE_BOX
+			import_with_dependancies_delegate: SYSTEM_EVENTHANDLER
 		do
-			import
+			create import_with_dependancies_delegate.make_eventhandler (Current, $import)
+			create message_box.make (dictionary.Assembly_and_dependancies_importation_message, import_with_dependancies_delegate)
 		end
 		
 feature {NONE} -- Implementation
 	
-	import is
+	import (sender: ANY; arguments: SYSTEM_EVENTARGS) is
 		indexing
 			description: "Import assembly with dependencies."
 			external_name: "Import"
+		require
+			non_void_sender: sender /= Void
 		local
 			conversion_support: ISE_REFLECTION_CONVERSIONSUPPORT
 			assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME
@@ -244,20 +250,28 @@ feature {NONE} -- Implementation
 			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON
 			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
 			retried: BOOLEAN		
+                        message_box: MESSAGE_BOX
 		do
-			if not retried then
-				create conversion_support.make_conversionsupport
-				assembly_name := conversion_support.assembly_name_from_descriptor (assembly_descriptor)
-				assembly := assembly.load (assembly_name)
-				close
-				create emitter.make_neweiffelclassgenerator
-				if destination_path_text_box.get_text /= Void and then destination_path_text_box.get_text.get_length > 0 then
-					emitter.import_assembly_with_dependancies (assembly, destination_path_text_box.get_text, eiffel_names_check_box.get_checked)
+			message_box ?= sender
+			if message_box /= Void then
+				message_box.refresh                              
+				if not retried then
+					create conversion_support.make_conversionsupport
+					assembly_name := conversion_support.assembly_name_from_descriptor (assembly_descriptor)
+					assembly := assembly.load (assembly_name)
+					close
+					create emitter.make_neweiffelclassgenerator
+					if destination_path_text_box.get_text /= Void and then destination_path_text_box.get_text.get_length > 0 then
+						emitter.import_assembly_with_dependancies (assembly, destination_path_text_box.get_text, eiffel_names_check_box.get_checked)
+						message_box.close
+					else
+						message_box.close
+						returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.No_path, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+					end
 				else
-					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.No_path, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+					message_box.close
+					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Importation_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
 				end
-			else
-				returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Importation_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
 			end
 		rescue
 			retried := True

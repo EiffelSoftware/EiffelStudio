@@ -430,6 +430,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			system.set_double_ref_class (unique_class("double_ref"))
 			system.set_pointer_ref_class (unique_class("pointer_ref"))
 			system.set_memory_class_i (unique_class ("memory"))
+			system.set_tuple_class (unique_class ("tuple"))
 				-- Check sum error
 			Error_handler.checksum
 		end

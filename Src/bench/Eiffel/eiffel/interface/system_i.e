@@ -273,6 +273,10 @@ feature -- Properties
 			-- consists of saving the name the very first time it
 			-- is computed.
 
+	tuple_make_name: STRING
+			-- Name of the C routine corresponding to the
+			-- make routine of TUPLE. See also comment above.
+
 	optimization_tables: OPTIMIZATION_TABLES
 			-- Tables keeping track of flags for optimization
 			-- Based on the body_index of a feature
@@ -379,6 +383,7 @@ feature -- Properties
 			local_workbench.change_class (bit_class)
 			local_workbench.change_class (pointer_class)
 			local_workbench.change_class (string_class)
+			local_workbench.change_class (tuple_class)
 			protected_classes := False
 				-- The root class is not protected 
 				-- Godammit.
@@ -422,7 +427,8 @@ feature -- Properties
 	protected_classes: BOOLEAN
 			-- Useful for remove_useless_classes
 			-- Protected classes are GENERAL, ANY, DOUBLE, REAL,
-			-- INTEGER, BOOLEAN, CHARACTER, ARRAY, BIT, POINTER, STRING
+			-- INTEGER, BOOLEAN, CHARACTER, ARRAY, BIT, POINTER, STRING,
+			-- TUPLE
 
 	insert_new_class (a_class: CLASS_C) is
 			-- Add new class `c' to the system.
@@ -1051,6 +1057,7 @@ end
 			array_class.compiled_class.mark_class (marked_classes)
 			bit_class.compiled_class.mark_class (marked_classes)
 			pointer_class.compiled_class.mark_class (marked_classes)
+			tuple_class.compiled_class.mark_class (marked_classes)
 
 				-- Now mark all classes reachable from visible classes.
 
@@ -2378,6 +2385,9 @@ feature -- Dead code removal
 
 				-- Protection of feature `make' of class STRING
 			string_class.compiled_class.mark_all_used (remover)
+
+				-- Protection of feature `make' of class TUPLE
+			tuple_class.compiled_class.mark_all_used (remover)
 		end
 
 	is_used (f: FEATURE_I): BOOLEAN is

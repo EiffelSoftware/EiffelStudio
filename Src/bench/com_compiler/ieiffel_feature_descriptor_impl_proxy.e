@@ -133,10 +133,10 @@ feature -- Access
 			Result := ccom_descendant_version_count (initializer)
 		end
 
-	exported_to: ECOM_ARRAY [STRING] is
-			-- List of classes, to which feature is exported.
+	exported_to_all: BOOLEAN is
+			-- Is feature exported to all classes?
 		do
-			Result := ccom_exported_to (initializer)
+			Result := ccom_exported_to_all (initializer)
 		end
 
 	is_once: BOOLEAN is
@@ -357,10 +357,10 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
-	ccom_exported_to (cpp_obj: POINTER): ECOM_ARRAY [STRING] is
-			-- List of classes, to which feature is exported.
+	ccom_exported_to_all (cpp_obj: POINTER): BOOLEAN is
+			-- Is feature exported to all classes?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_is_once (cpp_obj: POINTER): BOOLEAN is

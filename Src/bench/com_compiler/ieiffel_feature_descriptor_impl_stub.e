@@ -120,8 +120,8 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	exported_to: ECOM_ARRAY [STRING] is
-			-- List of classes, to which feature is exported.
+	exported_to_all: BOOLEAN is
+			-- Is feature exported to all classes?
 		do
 			-- Put Implementation here.
 		end

@@ -143,8 +143,8 @@ feature -- Status Report
 			Result := True
 		end
 
-	exported_to_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `exported_to'.
+	exported_to_all_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `exported_to_all'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -409,10 +409,10 @@ feature -- Basic Operations
 
 		end
 
-	exported_to: ECOM_ARRAY [STRING] is
-			-- List of classes, to which feature is exported.
+	exported_to_all: BOOLEAN is
+			-- Is feature exported to all classes?
 		require
-			exported_to_user_precondition: exported_to_user_precondition
+			exported_to_all_user_precondition: exported_to_all_user_precondition
 		deferred
 
 		end

@@ -275,6 +275,9 @@ feature
 	remover_off: BOOLEAN;
 			-- Is the remover off (by specifying the Ace option)
 
+	keep_assertions: BOOLEAN;
+			-- Are the assertions kept in final mode?
+
 	code_replication_off: BOOLEAN;
 			-- Is code replication off (by specifying the Ace option)
 
@@ -1862,6 +1865,7 @@ feature -- Final mode generation
 			old_exception_stack_managed: BOOLEAN;
 			old_inlining_on, old_array_optimization_on: BOOLEAN
 		do
+			keep_assertions := keep_assert and then Lace.has_assertions;
 
 				-- Save the value of `remover_off'
 				-- and `exception_stack_managed'
@@ -1872,12 +1876,10 @@ feature -- Final mode generation
 
 				-- Should dead code be removed?
 			if not remover_off then
-				remover_off := 
-					keep_assert and then Lace.has_assertions;
+				remover_off := keep_assertions;
 			end;
 			if not exception_stack_managed then
-				exception_stack_managed := 
-					keep_assert and then Lace.has_assertions;
+				exception_stack_managed := keep_assertions;
 			end;
 
 			inlining_on := inlining_on and not remover_off

@@ -43,6 +43,7 @@ interface,,,,,,,
 ,4,"In the new blank project wizard, let the user choose the name of the root_class and of the root_cluster",Xavier,INT0038,,
 ,3,Give a different icon in the cluster tree to deferred/effective classes,Xavier,INT0039,,
 ,2,Give a way to choose among the last 'star-list' in the address (such as not closing the choice dialog when ctrl is pressed at selection time),Julian,INT0040,,
+,3,"Support Ctrl-right click everywhere + add a preference telling what to do (open a new window, a new editor window, a new context window, send to current editor, send to current context, send to external editor...)",Xavier,INT0041,,
 
 
 Formats,,,,,,

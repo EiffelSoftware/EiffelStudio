@@ -11,18 +11,14 @@ class
 	
 inherit
 	EV_NOTEBOOK_I
-		redefine
-			build
-		end
 
 	EV_CONTAINER_IMP
 		undefine
 			add_child_ok
 		redefine
-			build,
+			plateform_build,
 			add_child,
 			child_minheight_changed,
-			child_height_changed,
 			on_first_display
 		end
 
@@ -53,7 +49,7 @@ inherit
 			on_key_up
 		redefine
 			default_style,
---			default_ex_style,
+			default_ex_style,
 			adjust_items
 		end
 
@@ -80,11 +76,11 @@ feature {NONE} -- Initialization
 			wel_make (wel_imp, 0, 0, 0, 0, 0)
 		end
 
-	build is
+	plateform_build (par: EV_CONTAINER_IMP) is
 			-- Called after creation. Set the current size and
 			-- notify the parent.
 		do
-			{EV_CONTAINER_IMP} Precursor
+			{EV_CONTAINER_IMP} Precursor (par)
 			set_font (font)
 			set_minimum_height (tab_height)
 		end
@@ -132,7 +128,7 @@ feature -- Status setting
 			set_font (font)
 			set_minimum_height (tab_height)
 		end
-	
+
 feature -- Element change
 
 	set_page_title (index: INTEGER; str: STRING) is
@@ -173,20 +169,11 @@ feature -- Implementation
 
 feature {EV_WIDGET_IMP} -- Implementation
 
-	child_height_changed (new_child_height: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Change the size of the container because of the child.
-		do
-			set_height (new_child_height + tab_height)
-		end
-
-	child_minheight_changed (new_child_minimum: INTEGER; the_child: EV_WIDGET_IMP) is
+	child_minheight_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the minimum width of the container because
 			-- the child changed his own minimum width.
-			-- By default, the minimum width of a container is
-			-- the one of its child, to change this, just use
-			-- set_minimum_width
 		do
-			set_minimum_height (new_child_minimum + tab_height)
+			set_minimum_height (value + tab_height)
 		end
 
 feature {NONE} -- Implementation
@@ -241,7 +228,7 @@ feature {NONE} -- Implementation
 			-- Default style used to create the control
 		do
 			Result := {WEL_TAB_CONTROL} Precursor + Ws_clipchildren
-				+ Ws_clipsiblings + Tcs_multiline
+				+ Ws_clipsiblings + Tcs_multiline + Tcs_hottrack
 			if tab_pos = Pos_bottom then
 				Result := Result + Tcs_bottom
 			elseif tab_pos = Pos_left then
@@ -251,11 +238,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
---	default_ex_style: INTEGER is
---  			-- Default extented style used to create the window
--- 		do
--- 			Result := Ws_ex_staticedge
--- 		end
+	default_ex_style: INTEGER is
+	  			-- Default extented style used to create the window
+ 		do
+ 			Result := Ws_ex_controlparent
+ 		end
 
 	tab_height: INTEGER is
 			-- The height of the bar with the pages.

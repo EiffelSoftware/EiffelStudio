@@ -203,10 +203,10 @@ feature -- Interface
 	get_type_output (a_type: SYSTEM_DLL_CODE_TYPE_REFERENCE): SYSTEM_STRING is
 			-- Get the type indicated by the specified `type'.
 		local
-			l_type: TYPE
+			l_type: SYSTEM_TYPE
 		do
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GetTypeOutput"])
-			l_type := feature {TYPE}.get_type (a_type.base_type)
+			l_type := feature {SYSTEM_TYPE}.get_type (a_type.base_type)
 			Result := (create {NAME_FORMATTER}).full_formatted_type_name (a_type.base_type)
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GetTypeOutput"])
 		ensure then

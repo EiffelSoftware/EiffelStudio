@@ -1,26 +1,34 @@
--- Redefinition of inherited features contained in `old_features' into
--- a new feature
+indexing
+	description: "Redefinition of inherited features contained in `old_features' into%N%
+		%a new feature."
+	date: "$Date$"
+	revision: "$Revision$"
 
-class REDEFINITION 
+class
+	REDEFINITION 
 
 inherit
-
-	DEFINITION
-		rename
-			check_adaptation as check_definition
-		end;
 	DEFINITION
 		redefine
 			check_adaptation
-		select
-			check_adaptation
-		end;
-	SHARED_WORKBENCH;
-	SHARED_ERROR_HANDLER;
+		end
+
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		end
+
+	SHARED_ERROR_HANDLER
+		export
+			{NONE} all
+		end
+
 	COMPILER_EXPORTER
+		export
+			{NONE} all
+		end
 
 creation
-
 	make
 	
 feature 
@@ -31,31 +39,29 @@ feature
 			-- Take care also of the attribute `redefinitions' of
 			-- `new_feature' for merging assertions.
 		require else
-			old_features /= Void;
-			new_feature /= Void;
+			old_features /= Void
+			new_feature /= Void
 		local
-			vdrd8: VDRD8;
+			vdrd8: VDRD8
 		do
-			check_definition (feat_tbl);
+			Precursor {DEFINITION} (feat_tbl)
 
 				-- Check assertion marks
-			if not (
-						new_feature.is_require_else
-						and then
-						new_feature.is_ensure_then
-					)
+			if
+				not new_feature.is_require_else
+				and then new_feature.is_ensure_then
 			then
-				!!vdrd8;
-				vdrd8.set_class (System.current_class);
-				vdrd8.set_feature (new_feature);
+				create vdrd8
+				vdrd8.set_class (System.current_class)
+				vdrd8.set_feature (new_feature)
 				if not new_feature.is_require_else then
 					vdrd8.set_precondition
-				end;
+				end
 				if not new_feature.is_ensure_then then
 					vdrd8.set_postcondition
-				end;
-				Error_handler.insert_error (vdrd8);
-			end;
-		end;
+				end
+				Error_handler.insert_error (vdrd8)
+			end
+		end
 			
-end
+end -- class REDEFINITION

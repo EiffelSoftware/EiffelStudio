@@ -168,7 +168,6 @@ feature -- Settings
 			-- Set `help_filename' with `a_filename'.
 		require
 			non_void_filename: a_filename /= Void
-			not_empty_filename: not a_filename.is_empty
 		do
 			help_filename := a_filename
 		ensure

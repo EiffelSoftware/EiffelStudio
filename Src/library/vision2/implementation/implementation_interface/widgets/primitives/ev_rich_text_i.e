@@ -30,6 +30,18 @@ feature -- Status report
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
+	paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
+			-- `Result' is paragraph_format at caret position `caret_index'.
+		require
+			valid_character_index: caret_index >= 1 and caret_index <= text_length + 1
+		deferred
+		ensure
+			result_not_void: Result /= Void
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
+		end	
+		
 	formatting_contiguous (start_index, end_index: INTEGER): BOOLEAN is
 			-- Is formatting from caret position `start_index' to `end_index' contiguous?
 		require
@@ -44,6 +56,8 @@ feature -- Status report
 		
 	formatting_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
 			-- Formatting range information from caret position `start_index' to `end_index'.
+			-- All attributes in `Result' are set to `True' if they remain consitent from `start_index' to
+			--`end_index' and `False' otherwise.
 			-- `Result' is a snapshot of `Current', and does not remain consistent as the contents
 			-- are subsequently changed.
 		require
@@ -138,6 +152,18 @@ feature -- Status setting
 		deferred
 		ensure
 			text_not_changed: text.is_equal (old text)
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
+		end
+		
+	format_paragraph (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT) is
+			-- Apply paragraph formatting `format' to lines `start_line', `end_line' inclusive.
+		require
+			lines_valid: start_line >= 1 and end_line >= start_line and end_line <= line_count
+			format_not_void: format /= Void
+		deferred
+		ensure
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end

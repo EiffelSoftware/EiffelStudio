@@ -625,6 +625,7 @@ feature {NONE} -- Implementation Graphical Interface
 			search_button: EB_BUTTON
 			history_list_cmd: LIST_HISTORY
 			current_bar: TOOLBAR
+			do_nothing_cmd: DO_NOTHING_CMD
 		do
 				-- The current toolbar is by default `routine_toolbar'
 				--| It can be changed to `format_bar' when needed
@@ -700,10 +701,16 @@ feature {NONE} -- Implementation Graphical Interface
 			!! previous_target_cmd_holder.make (previous_target_cmd, previous_target_button,
 					previous_target_menu_entry)
 			previous_target_button.add_button_press_action (3, history_list_cmd, previous_target_button)
-
+			
+			!! class_text_field.make (current_bar, Current)
 			!! routine_text_field.make (current_bar, Current)
- 			!! class_text_field.make (current_bar, Current)
- 			!! label.make (Interface_names.t_Empty, current_bar)
+			routine_text_field.debug_tab (class_text_field)
+			class_text_field.debug_tab (routine_text_field)
+			if class_text_field.toolkit.name.is_equal ("MOTIF") then
+				class_text_field.set_width (class_text_field.width - 10)
+				routine_text_field.set_width (routine_text_field.width - 10)
+			end
+			!! label.make (Interface_names.t_Empty, current_bar)
  			label.set_text ("from: ")
  			label.set_right_alignment
   
@@ -855,6 +862,8 @@ feature {NONE} -- Implementation Graphical Interface
  			current_bar.attach_left_widget (routine_text_field, label, 7)
  			current_bar.attach_top (class_text_field, 0)
  			current_bar.attach_left_widget (label, class_text_field, 0)
+			!! do_nothing_cmd
+			current_bar.set_action ("c<Btn1Down>", do_nothing_cmd, Void)
 
 			if not is_in_project_tool and then has_close_button then
 				current_bar.attach_top (quit_button, 0)

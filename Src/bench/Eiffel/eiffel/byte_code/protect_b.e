@@ -51,7 +51,7 @@ feature
 		end;
 
 	generate is
-			-- Generate the paramter, and then the protection. Of course, the
+			-- Generate the parameter, and then the protection. Of course, the
 			-- scheme relies on the property that every parameter is stored in
 			-- a register (no Void_register propagation).
 		do

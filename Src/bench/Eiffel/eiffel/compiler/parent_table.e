@@ -8,6 +8,12 @@ inherit
 			make as array_make
 		end;
 
+	REFACTORING_HELPER
+		undefine
+			copy,
+			is_equal
+		end
+
 create
 	make
 
@@ -142,6 +148,7 @@ feature
 			-- Number of formal generics
 			ba.append_short_integer (generic_count)
 			-- Classname
+			fixme ("Ensure that classname is not longer than 256 characters - the limit imposed by run-time (see wclass_name in update.c)")
 			ba.append_raw_string (classname)
 			-- Expandedness
 			if is_expanded then

@@ -54,7 +54,8 @@ public:
 	EIF_REFERENCE ccom_ce_record (void * a_record_pointer, char * a_class_name, int a_size);
 
 	// Pointed
-
+	EIF_REFERENCE ccom_ce_pointed_bstr (BSTR *a_string);
+	EIF_REFERENCE ccom_ce_pointed_date (DATE *a_date);
 	EIF_REFERENCE ccom_ce_pointed_hresult (HRESULT * a_hresult, EIF_OBJECT an_object);
 	EIF_REFERENCE ccom_ce_pointed_short (short * an_integer, EIF_OBJECT an_object);
 	EIF_REFERENCE ccom_ce_pointed_long (long * an_integer, EIF_OBJECT an_object);
@@ -92,6 +93,23 @@ public:
 	EIF_REFERENCE ccom_ce_safearray_record (SAFEARRAY * a_safearray);
 	EIF_REFERENCE ccom_ce_safearray_dispatch (SAFEARRAY * a_safearray);
 	EIF_REFERENCE ccom_ce_safearray_unknown (SAFEARRAY * a_safearray);
+
+	// Pointed SAFEARRAY
+	EIF_REFERENCE ccom_ce_pointed_safearray_short (SAFEARRAY ** a_safearray);
+	EIF_REFERENCE ccom_ce_pointed_safearray_long (SAFEARRAY ** a_safearray);
+	EIF_REFERENCE ccom_ce_pointed_safearray_float (SAFEARRAY ** a_safearray);
+	EIF_REFERENCE ccom_ce_pointed_safearray_double (SAFEARRAY ** a_safearray);
+	EIF_REFERENCE ccom_ce_pointed_safearray_currency (SAFEARRAY ** a_safearray);
+	EIF_REFERENCE ccom_ce_pointed_safearray_date (SAFEARRAY ** a_safearray);
+	EIF_REFERENCE ccom_ce_pointed_safearray_bstr (SAFEARRAY ** a_safearray);
+	EIF_REFERENCE ccom_ce_pointed_safearray_hresult (SAFEARRAY ** a_safearray);
+	EIF_REFERENCE ccom_ce_pointed_safearray_boolean (SAFEARRAY ** a_safearray);
+	EIF_REFERENCE ccom_ce_pointed_safearray_variant (SAFEARRAY ** a_safearray);
+	EIF_REFERENCE ccom_ce_pointed_safearray_decimal (SAFEARRAY ** a_safearray);
+	EIF_REFERENCE ccom_ce_pointed_safearray_char (SAFEARRAY ** a_safearray);
+	EIF_REFERENCE ccom_ce_pointed_safearray_record (SAFEARRAY ** a_safearray);
+	EIF_REFERENCE ccom_ce_pointed_safearray_dispatch (SAFEARRAY ** a_safearray);
+	EIF_REFERENCE ccom_ce_pointed_safearray_unknown (SAFEARRAY ** a_safearray);
 
 	// Array
 

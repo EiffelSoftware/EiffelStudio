@@ -91,7 +91,7 @@
 
 // date
 #define ccom_variant_date(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_date (V_DATE(_ptr_)))
-#define ccom_variant_date_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_date(*(V_DATEREF(_ptr_))))
+#define ccom_variant_date_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_pointed_date(V_DATEREF(_ptr_)))
 
 #define ccom_set_variant_date(_ptr_,a_value) (V_VT(_ptr_) = VT_DATE, V_DATE(_ptr_) = (DATE) rt_ec.ccom_ec_date (a_value))
 #define ccom_set_variant_date_byref(_ptr_,a_value) (V_VT(_ptr_) = VT_DATE|VT_BYREF, V_DATEREF(_ptr_) = (DATE *) (rt_ec.ccom_ec_pointed_date (a_value, NULL)))
@@ -119,7 +119,7 @@
 
 // BSTR
 #define ccom_variant_bstr(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_bstr ( V_BSTR(_ptr_)))
-#define ccom_variant_bstr_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_bstr ( *(V_BSTRREF(_ptr_))))
+#define ccom_variant_bstr_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_pointed_bstr (V_BSTRREF(_ptr_)))
 
 #define ccom_set_variant_bstr(_ptr_,a_value) (V_VT(_ptr_) = VT_BSTR, V_BSTR(_ptr_) = (BSTR) rt_ec.ccom_ec_bstr (a_value))
 #define ccom_set_variant_bstr_byref(_ptr_,a_value) (V_VT(_ptr_) = VT_BSTR|VT_BYREF, V_BSTRREF(_ptr_) = (BSTR *) (rt_ec.ccom_ec_pointed_c_pointer((void *)rt_ec.ccom_ec_bstr (a_value))))
@@ -134,14 +134,14 @@
 #define ccom_variant_unknown_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_pointed_unknown(*(V_UNKNOWNREF(_ptr_))))
 
 #define ccom_set_variant_unknown(_ptr_,a_value) (V_VT(_ptr_) = VT_UNKNOWN, V_UNKNOWN(_ptr_) = (IUnknown *)a_value)
-#define ccom_set_variant_unknown_byref(_ptr_,a_value) (V_VT(_ptr_) = VT_UNKNOWN|VT_BYREF, V_UNKNOWNREF(_ptr_) = (IUnknown **)rt_ec.ccom_ec_pointed_c_pointer((void *)(a_value)))
+#define ccom_set_variant_unknown_byref(_ptr_,a_value) (V_VT(_ptr_) = VT_UNKNOWN|VT_BYREF, V_UNKNOWNREF(_ptr_) = (IUnknown **)rt_ec.ccom_ec_pointed_c_pointer((void *)a_value))
 
 // IDispatch
 #define ccom_variant_dispatch(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_pointed_dispatch(V_DISPATCH(_ptr_)))
 #define ccom_variant_dispatch_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_pointed_dispatch(*(V_DISPATCHREF(_ptr_))))
 
-#define ccom_set_variant_dispatch(_ptr_,a_value) (V_VT(_ptr_) = VT_DISPATCH, V_DISPATCH(_ptr_) = (IDispatch *) rt_ec.ccom_ec_dispatch (a_value))
-#define ccom_set_variant_dispatch_byref(_ptr_,a_value) (V_VT(_ptr_) = VT_DISPATCH|VT_BYREF, V_DISPATCHREF(_ptr_) = (IDispatch **)rt_ec.ccom_ec_pointed_c_pointer((void *)rt_ec.ccom_ec_dispatch(a_value)))
+#define ccom_set_variant_dispatch(_ptr_,a_value) (V_VT(_ptr_) = VT_DISPATCH, V_DISPATCH(_ptr_) = a_value)
+#define ccom_set_variant_dispatch_byref(_ptr_,a_value) (V_VT(_ptr_) = VT_DISPATCH|VT_BYREF, V_DISPATCHREF(_ptr_) = (IDispatch **)rt_ec.ccom_ec_pointed_c_pointer((void *)a_value))
 
 // safearray
 #define ccom_variant_safearray_unsigned_int(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_safearray_long(V_ARRAY(_ptr_)))
@@ -186,25 +186,25 @@
 #define ccom_set_variant_safearray_decimal(_ptr_,a_value) (V_VT(_ptr_) = VT_ARRAY, V_ARRAY(_ptr_) = (SAFEARRAY *)rt_ec.ccom_ec_safearray_decimal(a_value))
 
 // safearray byref
-#define ccom_variant_safearray_unsigned_int_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_safearray_long((SAFEARRAY *)*(V_ARRAYREF(_ptr_))))
-#define ccom_variant_safearray_int_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_safearray_long((SAFEARRAY *)*(V_ARRAYREF(_ptr_))))
-#define ccom_variant_safearray_unsigned_char_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_safearray_char((SAFEARRAY *)*(V_ARRAYREF(_ptr_))))
-#define ccom_variant_safearray_char_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_safearray_char((SAFEARRAY *)*(V_ARRAYREF(_ptr_))))
-#define ccom_variant_safearray_unsigned_short_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_safearray_short((SAFEARRAY *)*(V_ARRAYREF(_ptr_))))
-#define ccom_variant_safearray_short_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_safearray_short((SAFEARRAY *)*(V_ARRAYREF(_ptr_))))
-#define ccom_variant_safearray_unsigned_long_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_safearray_long((SAFEARRAY *)*(V_ARRAYREF(_ptr_))))
-#define ccom_variant_safearray_long_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_safearray_long((SAFEARRAY *)*(V_ARRAYREF(_ptr_))))
-#define ccom_variant_safearray_float_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_safearray_float((SAFEARRAY *)*(V_ARRAYREF(_ptr_))))
-#define ccom_variant_safearray_double_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_safearray_double((SAFEARRAY *)*(V_ARRAYREF(_ptr_))))
-#define ccom_variant_safearray_currency_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_safearray_currency((SAFEARRAY *)*(V_ARRAYREF(_ptr_))))
-#define ccom_variant_safearray_date_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_safearray_date((SAFEARRAY *)*(V_ARRAYREF(_ptr_))))
-#define ccom_variant_safearray_bstr_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_safearray_bstr((SAFEARRAY *)*(V_ARRAYREF(_ptr_))))
-#define ccom_variant_safearray_dispatch_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_safearray_dispatch((SAFEARRAY *)*(V_ARRAYREF(_ptr_))))
-#define ccom_variant_safearray_hresult_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_safearray_hresult((SAFEARRAY *)*(V_ARRAYREF(_ptr_))))
-#define ccom_variant_safearray_boolean_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_safearray_boolean((SAFEARRAY *)*(V_ARRAYREF(_ptr_))))
-#define ccom_variant_safearray_variant_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_safearray_variant((SAFEARRAY *)*(V_ARRAYREF(_ptr_))))
-#define ccom_variant_safearray_unknown_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_safearray_unknown((SAFEARRAY *)*(V_ARRAYREF(_ptr_))))
-#define ccom_variant_safearray_decimal_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_safearray_decimal((SAFEARRAY *)*(V_ARRAYREF(_ptr_))))
+#define ccom_variant_safearray_unsigned_int_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_pointed_safearray_long(V_ARRAYREF(_ptr_)))
+#define ccom_variant_safearray_int_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_pointed_safearray_long(V_ARRAYREF(_ptr_)))
+#define ccom_variant_safearray_unsigned_char_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_pointed_safearray_char(V_ARRAYREF(_ptr_)))
+#define ccom_variant_safearray_char_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_pointed_safearray_char(V_ARRAYREF(_ptr_)))
+#define ccom_variant_safearray_unsigned_short_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_pointed_safearray_short(V_ARRAYREF(_ptr_)))
+#define ccom_variant_safearray_short_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_pointed_safearray_short(V_ARRAYREF(_ptr_)))
+#define ccom_variant_safearray_unsigned_long_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_pointed_safearray_long(V_ARRAYREF(_ptr_)))
+#define ccom_variant_safearray_long_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_pointed_safearray_long(V_ARRAYREF(_ptr_)))
+#define ccom_variant_safearray_float_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_pointed_safearray_float(V_ARRAYREF(_ptr_)))
+#define ccom_variant_safearray_double_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_pointed_safearray_double(V_ARRAYREF(_ptr_)))
+#define ccom_variant_safearray_currency_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_pointed_safearray_currency(V_ARRAYREF(_ptr_)))
+#define ccom_variant_safearray_date_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_pointed_safearray_date(V_ARRAYREF(_ptr_)))
+#define ccom_variant_safearray_bstr_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_pointed_safearray_bstr(V_ARRAYREF(_ptr_)))
+#define ccom_variant_safearray_dispatch_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_pointed_safearray_dispatch(V_ARRAYREF(_ptr_)))
+#define ccom_variant_safearray_hresult_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_pointed_safearray_hresult(V_ARRAYREF(_ptr_)))
+#define ccom_variant_safearray_boolean_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_pointed_safearray_boolean(V_ARRAYREF(_ptr_)))
+#define ccom_variant_safearray_variant_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_pointed_safearray_variant(V_ARRAYREF(_ptr_)))
+#define ccom_variant_safearray_unknown_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_pointed_safearray_unknown(V_ARRAYREF(_ptr_)))
+#define ccom_variant_safearray_decimal_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_pointed_safearray_decimal(V_ARRAYREF(_ptr_)))
 
 // set SAFEARRAY byref
 #define ccom_set_variant_safearray_unsigned_int_byref(_ptr_,a_value) (V_VT(_ptr_) = VT_ARRAY|VT_BYREF, V_ARRAYREF(_ptr_) = (SAFEARRAY **)rt_ec.ccom_ec_pointed_c_pointer((void *)rt_ec.ccom_ec_safearray_long(a_value)))

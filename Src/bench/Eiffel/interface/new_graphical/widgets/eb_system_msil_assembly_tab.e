@@ -380,8 +380,8 @@ feature {NONE} -- Initialization
 				gac_assembly_list.set_column_titles 
 					(<<"Cluster Name", "Prefix", "Name", "Version", "Culture", "Public Key">>)
 				gac_assembly_list.disable_multiple_selection
-				gac_assembly_list.set_editable (1)
-				gac_assembly_list.set_editable (2)
+				gac_assembly_list.set_column_editable (True, 1)
+				gac_assembly_list.set_column_editable (True, 2)
 				gac_assembly_list.set_unique_column_values (True)
 				gac_assembly_list.deselect_actions.force_extend (agent check_cluster_names_valid)
 				item_box.extend (gac_assembly_list)
@@ -391,8 +391,8 @@ feature {NONE} -- Initialization
 				local_assembly_list.set_column_titles 
 					(<<"Cluster Name", "Prefix", "Path", "Version", "Culture", "Public Key">>)
 				local_assembly_list.disable_multiple_selection
-				local_assembly_list.set_editable (1)
-				local_assembly_list.set_editable (2)
+				local_assembly_list.set_column_editable (True, 1)
+				local_assembly_list.set_column_editable (True, 2)
 				local_assembly_list.set_unique_column_values (True)
 				local_assembly_list.deselect_actions.force_extend (agent check_cluster_names_valid)
 				local_assembly_list.set_column_width (0, 4)

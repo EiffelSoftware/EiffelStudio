@@ -40,8 +40,15 @@ feature -- Callbacks
 
 feature -- Properties
 
---	filter_window: EB_FILTER_DIALOG
+	filter_window: EB_FILTER_DIALOG
 			-- Associated popup window
+
+	filter_it: EV_ARGUMENT1 [ANY] is
+			-- Argument for the command.
+		once
+			create Result.make (Void)
+		end
+
 
 	filter_name: STRING is
 			-- Name of the filter to be applied
@@ -76,7 +83,7 @@ feature -- Properties
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {EB_FILTER_DIALOG} -- Implementation
 
 	execute (argument: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
 			-- If left mouse button was pressed -> execute filter.
@@ -88,21 +95,21 @@ feature {NONE} -- Implementation
 			filename, new_text: STRING
 --			mp: MOUSE_PTR
 			wd: EV_WARNING_DIALOG
+			csd: EB_CONFIRM_SAVE_DIALOG
 		do
 			if argument = Void then
 					-- Popup filter window
 --				create mp.set_watch_cursor
---				create filter_window.make (Current)
+				create filter_window.make_with_command (Current)
 --				mp.restore
---				filter_window.show
---			elseif argument = filter_window then
+				filter_window.call (Current)
+			elseif argument = filter_it then
 --					-- Display the filter output in `text_window'
---				if tool.text_window.changed then
---					warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
---						Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
---				else
---					tool.last_format.filter (filter_name)
---				end
+				if tool.text_window.changed then
+					create csd.make_and_launch (tool, Current, argument)
+				else
+					tool.last_format.filter (filter_name)
+				end
 			elseif tool.stone /= Void then
 					-- Execute the shell command
 				filterable_format ?= tool.last_format
@@ -145,6 +152,8 @@ feature {NONE} -- Implementation
 			end
 		end
 	
+feature {NONE} -- Implementation
+
 	save_to_file (a_text: STRING a_filename: STRING) is
 			-- Save `a_text' in `a_filename'.
 		require

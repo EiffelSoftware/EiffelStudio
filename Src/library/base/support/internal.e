@@ -11,6 +11,36 @@ indexing
 class
 	INTERNAL
 
+feature -- Conformance
+
+	is_instance_of (object: ANY; type_id: INTEGER): BOOLEAN is
+			-- Is `object' an instance of type `type_id'?
+		require
+			object_not_void: object /= Void
+		do
+			Result := c_is_instance_of (type_id, $object)
+		end
+
+	type_conforms_to (type1, type2: INTEGER): BOOLEAN is
+			-- Does `type1' conform to `type2'?
+		external
+			"C | %"eif_gen_conf.h%""
+		alias
+			"eif_gen_conf"
+		end
+		
+feature -- Creation
+
+	new_instance_of (type_id: INTEGER): ANY is
+			-- New instance of type `type_id'.
+			-- Note: returned object is not initialized and may
+			-- hence violate its invariant.
+		external
+			"C [macro %"eif_macros.h%"]"
+		alias
+			"RTLN"
+		end
+
 feature -- Access
 
 	Reference_type: INTEGER is 1;
@@ -181,6 +211,15 @@ feature -- Access
 			Result := c_is_special ($object)
 		end;
 
+feature -- Version
+
+	compiler_version: INTEGER is
+		external
+			"C [macro %"eif_project.h%"]"
+		alias
+			"egc_compiler_tag"
+		end
+
 feature -- Element change
 
 	set_reference_field (i: INTEGER; object: ANY; value: ANY) is
@@ -286,6 +325,14 @@ feature -- Measurement
 		end;
 
 feature {NONE} -- Implementation
+
+	c_is_instance_of (type1: INTEGER; obj: POINTER): BOOLEAN is
+			-- Is `obj' an instance of `type1'?
+		external
+			"C [macro %"eif_macros.h%"]"
+		alias
+			"RTRA"
+		end
 
 	c_dynamic_type (object: POINTER): INTEGER is
 			-- Dynamic type of `object'

@@ -63,11 +63,13 @@ feature -- Basic Operations
 			non_void_options: a_options /= Void
 			non_void_source: a_source /= Void
 		do
+			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromSource"])
 			(create {SECURITY_PERMISSION}.make (feature {SECURITY_PERMISSION_FLAG}.unmanaged_code)).assert
 			initialize (a_options)
 			source_generator.generate (a_source)
 			compile
-			Result := last_compilation_results
+			Result := last_compilation_results;
+			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromSource"])
 		ensure then
 			non_void_results: Result /= Void
 		end
@@ -80,6 +82,7 @@ feature -- Basic Operations
 		local
 			i, l_count: INTEGER
 		do
+			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromSourceBatch"])
 			(create {SECURITY_PERMISSION}.make (feature {SECURITY_PERMISSION_FLAG}.unmanaged_code)).assert
 			initialize (a_options)
 			from
@@ -91,7 +94,8 @@ feature -- Basic Operations
 				i := i + 1
 			end
 			compile
-			Result := last_compilation_results
+			Result := last_compilation_results;
+			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromSourceBatch"])
 		ensure then
 			non_void_results: Result /= Void
 		end
@@ -104,6 +108,7 @@ feature -- Basic Operations
 		local
 			l_file: PLAIN_TEXT_FILE
 		do
+			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromFile"])
 			(create {SECURITY_PERMISSION}.make (feature {SECURITY_PERMISSION_FLAG}.unmanaged_code)).assert
 			create l_file.make (a_file_name)
 			if l_file.exists then
@@ -114,6 +119,7 @@ feature -- Basic Operations
 			else
 				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_source_file, [a_file_name])
 			end
+			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromFile"])
 		ensure then
 			non_void_results: Result /= Void
 		end
@@ -127,6 +133,7 @@ feature -- Basic Operations
 			i, l_count: INTEGER
 			l_file: PLAIN_TEXT_FILE
 		do
+			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromFileBatch"])
 			(create {SECURITY_PERMISSION}.make (feature {SECURITY_PERMISSION_FLAG}.unmanaged_code)).assert
 			initialize (a_options)
 			from
@@ -146,7 +153,8 @@ feature -- Basic Operations
 				i := i + 1
 			end
  			compile
-			Result := last_compilation_results
+			Result := last_compilation_results;
+			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromFileBatch"])
 		ensure then
 			non_void_results: Result /= Void
 		end
@@ -161,6 +169,7 @@ feature -- Basic Operations
 			l_writer: STREAM_WRITER
 			l_path: SYSTEM_STRING
 		do
+			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromDom"])
 			(create {SECURITY_PERMISSION}.make (feature {SECURITY_PERMISSION_FLAG}.unmanaged_code)).assert
 			l_path := temp_files.add_extension (".es")
 			create l_stream.make (l_path, feature {FILE_MODE}.Create_, feature {FILE_ACCESS}.Write, feature {FILE_SHARE}.Write)
@@ -170,6 +179,7 @@ feature -- Basic Operations
 			l_writer.close
 			l_stream.close
 			Result := compile_assembly_from_file (a_options, l_path)
+			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromDom"])
 		ensure then
 			non_void_results: Result /= Void
 		rescue
@@ -188,6 +198,7 @@ feature -- Basic Operations
 			l_path: SYSTEM_STRING
 			i, l_count: INTEGER
 		do
+			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromDomBatch"])
 			(create {SECURITY_PERMISSION}.make (feature {SECURITY_PERMISSION_FLAG}.unmanaged_code)).assert
 			from
 				l_count := a_compilation_units.length
@@ -206,6 +217,7 @@ feature -- Basic Operations
 				i := i + 1
 			end
 			Result := compile_assembly_from_file_batch (a_options, l_paths)
+			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromDomBatch"])
 		ensure then
 			non_void_results: Result /= Void
 		rescue

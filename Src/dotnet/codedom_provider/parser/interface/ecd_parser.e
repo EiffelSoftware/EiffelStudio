@@ -15,7 +15,7 @@ inherit
 create
 	default_create
 
-feature -- Implementation
+feature -- Interface
 
 	parse (code_stream: TEXT_READER): SYSTEM_DLL_CODE_COMPILE_UNIT is
 			-- implementation of parse feature.
@@ -30,6 +30,7 @@ feature -- Implementation
 			l_retried: BOOLEAN
 			l_code_stream: SYSTEM_STRING
 		do
+			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.log, ["Starting CodeParser.Parse"])
 			if not l_retried then
 				initialize_referenced_assemblies
 				create l_eiffel_parser.make
@@ -47,6 +48,7 @@ feature -- Implementation
 				Result ?= l_support.last_element_created;
 				last_compile_unit_generated := Result
 			end
+			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.log, ["Ending CodeParser.Parse"])
 		rescue
 			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
 			l_retried := True

@@ -36,7 +36,7 @@ wkeiflib='wkbench'
 suffix='.a'
 
 optimize='-O'
-wkoptimize='-O'
+wkoptimize=''
 
 start_test='if [ ! -f finished ] ; then'
 end_test='; fi'

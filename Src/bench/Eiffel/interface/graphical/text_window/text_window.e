@@ -14,7 +14,7 @@ inherit
 		undefine
 			copy, setup, consistent, is_equal
 		end;
-	CLICKABLE
+	CLICK_WINDOW
 		redefine
 			clear_window, display
 		end;

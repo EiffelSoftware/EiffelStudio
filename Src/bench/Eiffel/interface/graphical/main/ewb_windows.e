@@ -12,7 +12,7 @@ creation
 
 feature {NONE}
 
-	init_toolkit: WINDOWS is once !!Result.make ("ewb") end;
+	init_toolkit: MS_WINDOWS is once !!Result.make ("ewb") end;
 
 feature 
 

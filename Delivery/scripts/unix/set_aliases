@@ -25,7 +25,7 @@ NEW_EIFFEL_SRC=~/DELIVERY/tmp50dev
 # Copy all files
 copy ()
 {
-cp $*
+cp -r $*
 }
 move ()
 {

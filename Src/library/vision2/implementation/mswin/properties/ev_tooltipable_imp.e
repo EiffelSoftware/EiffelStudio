@@ -49,10 +49,13 @@ feature -- Element change
 					internal_tooltip.destroy
 				end
 				create internal_tooltip.make (tooltip_window, 1)
+				internal_tooltip.set_max_tip_width (32000)
+				
 				create tool_info.make
 				tool_info.set_text (a_tooltip)
 				tool_info.set_flags (Ttf_subclass + Ttf_idishwnd)
 				tool_info.set_id_with_window (tooltip_window)
+
 				internal_tooltip.add_tool (tool_info)
 				internal_tooltip.activate
 
@@ -78,7 +81,7 @@ feature -- Element change
 					internal_tooltip.destroy
 				end
 			end
-
+			
 				-- Assign `a_tooltip' to `tooltip'.
 			internal_tooltip_string := clone (a_tooltip)
 		end

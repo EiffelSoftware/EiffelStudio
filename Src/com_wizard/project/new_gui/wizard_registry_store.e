@@ -5,7 +5,7 @@ indexing
 
 class
 	WIZARD_REGISTRY_STORE
-		
+
 feature -- Access
 
 	root_key: STRING is "hkey_current_user\software\ise\EiffelCOM Wizard\Settings\"
@@ -56,10 +56,8 @@ feature -- Access
 			l_value: STRING
 		do
 			l_value := saved_string (a_key)
-			if not l_value.is_empty then
-				Result := decoded_list (l_value)
-				Result.compare_objects
-			end
+			Result := decoded_list (l_value)
+			Result.compare_objects
 		ensure
 			non_void_list: Result /= Void
 			compare_objects: Result.object_comparison
@@ -110,13 +108,8 @@ feature -- Status Report
 			-- Is there a list associated with `a_key'?
 		require
 			non_void_key: a_key /= Void
-		local
-			l_registry: WEL_REGISTRY
-			l_value: WEL_REGISTRY_KEY_VALUE
 		do
-			create l_registry
-			l_value := l_registry.open_key_value (root_key, a_key)
-			Result := l_value /= Void and then l_value.type = l_value.reg_sz
+			Result := is_saved_string (a_key)
 		end
 
 feature -- Basic Operations
@@ -170,9 +163,20 @@ feature -- Basic Operations
 			a_list.compare_objects
 			save_string (encoded_list (a_list), a_key)
 		ensure
-			saved: is_saved_string (a_key) and then saved_list (a_key).is_equal (a_list)
+			saved: is_saved_list (a_key) and then saved_list (a_key).is_equal (a_list)
 		end
 
+	remove_entry (a_key: STRING) is
+			-- Remove entry with key `a_key'.
+		require
+			non_void_key: a_key /= Void
+		do	
+			(create {WEL_REGISTRY}).delete_key_value (root_key, a_key)
+		ensure
+			removed: not is_saved_string (a_key) and not is_saved_integer (a_key) and
+						not is_saved_boolean (a_key) and not is_saved_list (a_key)
+		end
+		
 feature {NONE} -- Implementation
 
 	encoded_list (a_list: LIST [STRING]): STRING is

@@ -51,6 +51,11 @@ feature -- Basic Operations
 		deferred
 		end
 
+	refresh is
+			-- Refresh output.
+		deferred
+		end
+
 end -- class WIZARD_OUTPUT_WINDOW
 
 --|----------------------------------------------------------------

@@ -28,7 +28,7 @@ inherit
 		redefine
 			main_window,
 			init_application,
-			accelerators
+			message_loop
  		end
 
 creation
@@ -55,11 +55,23 @@ feature {NONE} -- Initialization
 			if runable then
 				run
 			end
+			destroy_application
 		end
 
 feature -- Access
 
 	main_window: EV_WINDOW_IMP
+			-- Main window of the application
+
+feature -- Status setting
+
+	destroy_application is
+			-- Destroy few objects before to leave.
+		do
+			if accelerator_table /= Void then
+				accelerator_table.destroy
+			end
+		end
 
 feature -- Accelerators - command association
 
@@ -124,14 +136,10 @@ feature {NONE} -- WEL Implemenation
 	rich_edit_dll: WEL_RICH_EDIT_DLL
 			-- Needed if the user want to open a rich edit.
 
-	accelerators: EV_ACCELERATOR_TABLE_IMP is
-			-- Application's accelerators
+	has_accelerator: BOOLEAN is
+			-- Does the application has an accelerator
 		do
-			if accelerator_table.empty then
-				Result := Void
-			else
-				Result := accelerator_table
-			end
+			Result := not accelerator_table.empty
 		end
 
 	init_application is
@@ -139,6 +147,64 @@ feature {NONE} -- WEL Implemenation
 		do
 			!! common_control_dll.make
 			!! rich_edit_dll.make
+		end
+
+feature {NONE} -- Message loop, we redefine it because the user
+			   -- Can add an accelerator at the run-time.
+
+	message_loop is
+			-- Windows message loop
+		local
+			msg: WEL_MSG
+			accel: WEL_ACCELERATORS
+			main_w: WEL_WINDOW
+			done: BOOLEAN
+			dlg: POINTER
+		do
+			-- `accel' and `main_w' are declared
+			-- locally to get a faster access.
+			accel := accelerator_table
+			main_w := main_window
+
+			-- Process the messages
+			from
+				!! msg.make
+			until
+				done
+			loop
+				msg.peek_all
+				if msg.last_boolean_result then
+					if msg.quit then
+						done := True
+					else
+						dlg := cwin_get_last_active_popup (main_w.item)
+						if is_dialog (dlg) then
+							msg.process_dialog_message (dlg)
+							if not msg.last_boolean_result then
+								msg.translate
+								msg.dispatch
+							end
+						else
+							if has_accelerator then
+								msg.translate_accelerator (main_w, accel)
+								if not msg.last_boolean_result then
+									msg.translate
+									msg.dispatch
+								end
+							else
+								msg.translate
+								msg.dispatch
+							end
+						end
+					end
+				else
+					if idle_action_enabled then
+						idle_action
+					else
+						msg.wait
+					end
+				end
+			end
 		end
 
 feature {NONE} -- Inapplicable
@@ -183,7 +249,7 @@ feature {NONE} -- Inapplicable
 			check
 				Inapplicable: False
 			end
-		end
+ 		end
 
 end -- class EV_APPLICATION_IMP
 

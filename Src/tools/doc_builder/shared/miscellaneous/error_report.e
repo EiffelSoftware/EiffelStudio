@@ -10,119 +10,76 @@ inherit
 	SHARED_OBJECTS
 
 create
-	make,
-	make_empty,
-	make_from_gobo_error
+	make
 
 feature -- Creation
 
-	make_empty (a_title: STRING) is
-			-- Make with no error
+	make (a_context: STRING) is
+			-- Make with error context
 		require
-			title_not_void: a_title /= Void
+			context_not_void: a_context /= Void
 		do
-			create messages.make (5)
-			title := a_title
+			create errors.make (1)
+			title := a_context
 		ensure
-			has_message_list: messages /= Void
-			has_no_error: messages.count = 0
-		end		
-
-	make (a_title, a_message: STRING; line_no, line_pos: INTEGER) is
-			-- New error with `a_message' on `line_no' at position `line_pos'
-		require
-			title_not_void: a_title /= Void
-			message_not_void: a_message /= Void
-		do
-			create messages.make (5)
-			title := a_title
-			append_error (a_message, line_no, line_pos)
-		ensure
-			has_message_list: messages /= Void
-			has_error: messages.count > 0
-		end		
-
-	make_from_gobo_error (a_gobo_error: STRING) is
-			-- Make from Gobo extended error description
-		require
-			error_not_void: a_gobo_error /= Void
-		do
-			-- TODO: Extract line number and position from string
-			create messages.make (1)
-			append_error (a_gobo_error, 0 ,0)
-		ensure
-			has_message_list: messages /= Void
-			has_error: messages.count > 0
-		end		
+			has_error_list: errors /= Void
+			has_no_error: errors.count = 0
+		end			
 
 feature -- Status Setting	
 
-	append_error (a_message: STRING; line_no, line_pos: INTEGER) is
+	append_error (a_error: ERROR) is
 			-- Append error
 		require
-			message_not_void: a_message /= Void
+			error_not_void: a_error /= Void
 		do
-			messages.extend ([a_message, line_no, line_pos])
+			errors.extend (a_error)
 		ensure
-			has_new_error: messages.count = old messages.count + 1
-		end		
-
-	append_report (a_report: like Current) is
-			-- Append `a_report' to end of Current
-		do
-		    messages.append (a_report.messages)
-		end		
-
-	set_error_action (a_action: PROCEDURE [ANY, TUPLE [EV_LIST_ITEM]]) is
-			-- Set `a_action' to call when error message is double clicked
-		require
-			action_not_void: a_action /= Void
-		do
-			action := a_action
-		end
+			has_new_error: errors.count = old errors.count + 1
+		end	
 
 feature -- Query
 
 	is_empty: BOOLEAN is
 			-- Is Current empty?
 		do
-			Result := messages.is_empty
+			Result := errors.is_empty
 		end	
 
 feature -- Access
 
 	title: STRING
-			-- Title indicating type of errors in `messages'
+			-- Title indicating type of errors in `errors'
 
-	messages: ARRAYED_LIST [TUPLE [STRING, INTEGER, INTEGER]]
-			-- Error message(s)
+	errors: ARRAYED_LIST [ERROR]
+			-- Individual errors
 			
-	line_number: INTEGER
-			-- Error line number
-			
-	line_position: INTEGER
-			-- Error line position
-
-	messages_text: STRING is
-			-- All error messages in text representation
+	errors_text: STRING is
+			-- All error errors in text representation
 		local
 			l_message: STRING
 		do
 			create Result.make_from_string (title)
 			Result.append ("%N")
 			from
-				messages.start
+				errors.start
 			until
-				messages.after
+				errors.after
 			loop
-				l_message ?= messages.item @ 1
+				l_message ?= errors.item.description
 				if l_message /= Void then
 					Result.append (l_message)
 					Result.append ("%N")
 				end
-				messages.forth
+				errors.forth
 			end
 		end		
+		
+	actions: ERROR_ACTIONS is
+			-- Available error response actions
+		once
+			create Result
+		end
 
 feature -- Commands
 
@@ -130,9 +87,9 @@ feature -- Commands
 			-- Show error
 		do
 			if is_empty then
-				append_error (no_error_string, 0,0)
+				append_error (empty_error)
 			end
-			if Shared_constants.Application_constants.is_gui_mode then
+			if shared_constants.Application_constants.is_gui_mode then
 				show_as_message_dialog
 			else
 				show_command_prompt
@@ -142,43 +99,37 @@ feature -- Commands
 	clear is
 			-- Clear error report
 		do
-			if messages /= Void then
-				messages.wipe_out	
+			if errors /= Void then
+				errors.wipe_out	
 			end	
 		end	
 
 feature {NONE} -- Commands
 
 	show_command_prompt is
-			-- Show error (s) on command prompt.
+			-- Show error(s) on command prompt.
 		local
 			l_output_file: PLAIN_TEXT_FILE
 		do			
 			io.put_string (title)
 			io.put_new_line
-			io.putstring (messages_text)
+			io.putstring (errors_text)
 			l_output_file := Shared_constants.Application_constants.Script_output
 			l_output_file.open_append
 			l_output_file.putstring ("%NError: ")
-			l_output_file.putstring (messages_text)
+			l_output_file.putstring (errors_text)
 			l_output_file.close
 		end		
 
 	show_as_message_dialog is
-			-- 	Show error in message dialog with OK button
+			-- Show error in message dialog with OK button
 		do			
-			Shared_dialogs.error_dialog.set_error_list (messages)
-			Shared_dialogs.Error_dialog.set_title (title)
-			if action /= Void then
-				Shared_dialogs.error_dialog.set_error_action (action)
-			end
-			Shared_dialogs.error_dialog.show_relative_to_window (window)
+			shared_dialogs.error_dialog.set_error_list (errors)
+			shared_dialogs.error_dialog.set_title (title)			
+			shared_dialogs.error_dialog.show_relative_to_window (window)
 		end
 
 feature {NONE} -- Implementation
-
-	action: PROCEDURE [ANY, TUPLE [EV_LIST_ITEM]]
-			-- Internal action
 
 	window: EV_WINDOW is
 			-- Window
@@ -186,10 +137,14 @@ feature {NONE} -- Implementation
 			Result := Application_window
 		end		
 
-	no_error_string: STRING is "No errors found"
+	empty_error: ERROR is 
+			-- Empty error
+		once
+			create Result.make ("No errors found")	
+		end
 
 invariant
 	has_title: title /= Void
-	has_message_list: messages /= Void
+	has_message_list: errors /= Void
 
 end -- class ERROR_REPORT

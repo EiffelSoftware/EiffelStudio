@@ -5,32 +5,31 @@ indexing
 
 class
 	ERROR_ACTIONS
-
+		
 inherit
 	SHARED_OBJECTS
 
-feature -- Access
+create {ERROR_REPORT}
+	default_create
 
-	highlight_error (a_item: EV_LIST_ITEM) is
+feature -- Actions
+
+	highlight_text_in_editor (a_line_no, a_line_pos: INTEGER) is
 			-- Highlight error in editor
-		require
-			item_not_void: a_item /= Void
 		local
-			curr_doc: DOCUMENT
-			l_no, l_pos: INTEGER
+			l_current_widget: DOCUMENT_TEXT_WIDGET
 		do
-			curr_doc := Shared_document_editor.current_document
-			l_no := Shared_dialogs.error_dialog.line_data (a_item.text).integer_32_item (1)
-			l_pos := Shared_dialogs.error_dialog.line_data (a_item.text).integer_32_item (2)
---			a_item.pointer_double_press_actions.force_extend (agent curr_doc.widget.highlight_error (l_no, l_pos))
+			l_current_widget := shared_document_editor.current_widget.internal_edit_widget
+			l_current_widget.highlight_error_pos (a_line_no, a_line_pos)
+			l_current_widget.set_focus
 		end
 		
-	load_file (a_item: EV_LIST_ITEM) is
+	load_file_in_editor (a_filename: STRING) is
 			-- Load file in editor
 		require
-			item_not_void: a_item /= Void
+			filename_not_void: a_filename /= Void
 		do
-			a_item.pointer_double_press_actions.force_extend (agent Shared_document_manager.load_document_from_file (a_item.text))
+			Shared_document_manager.load_document_from_file (a_filename)
 		end
 
 end -- class ERROR_ACTIONS

@@ -104,7 +104,9 @@ feature -- IL code generation
 			il_generator.generate_argument (position)
 			il_generator.create_like_object
 
-			il_generator.mark_label (end_label)			
+			il_generator.mark_label (end_label)
+			
+			il_generator.generate_check_cast (Void, cl_type)
 		end
 
 	generate_il_type is

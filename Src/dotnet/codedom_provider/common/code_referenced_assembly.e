@@ -64,6 +64,14 @@ feature -- Access
 	assembly: ASSEMBLY
 			-- actual assembly.
 
+	cluster_name: STRING is
+			-- Cluster name for assembly
+		do
+			Result := assembly.to_string
+		ensure
+			non_void_cluster_name: Result /= Void
+		end
+
 invariant
 	non_void_assembly_prefix: assembly_prefix /= Void
 	non_void_assembly: assembly /= Void

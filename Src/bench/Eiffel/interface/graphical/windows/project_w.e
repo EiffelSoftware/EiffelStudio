@@ -744,11 +744,24 @@ feature -- Graphical Interface
 			-- Build widget.
 		local
 			default_width, default_height: INTEGER
+			hide_split_windows: BOOLEAN
+			display_routine_cmd: DISPLAY_ROUTINE_PORTION
+			display_object_cmd: DISPLAY_OBJECT_PORTION
 		do
 			shown_portions := 1
 
-			default_width := Project_resources.tool_width.actual_value
-			default_height := Project_resources.tool_height.actual_value
+			if screen.width < 800 then
+				default_width := 400
+				default_height := 350
+				hide_split_windows := True
+			elseif screen.width = 800 then
+				default_width := screen.visible_width
+				default_height := screen.visible_height
+				set_maximized_state
+			else
+				default_width := Project_resources.tool_width.actual_value
+				default_height := Project_resources.tool_height.actual_value
+			end
 			set_size (default_width, default_height)
 
 			!! global_form.make (new_name, Current)
@@ -800,6 +813,14 @@ feature -- Graphical Interface
 			end
 
 			attach_all
+
+			if hide_split_windows then
+				display_routine_cmd ?= display_feature_cmd_holder.associated_command
+				display_object_cmd ?= display_object_cmd_holder.associated_command
+
+				display_routine_cmd.hide
+				display_object_cmd.hide
+			end
 		end
 
 	create_toolbar (a_parent: COMPOSITE) is

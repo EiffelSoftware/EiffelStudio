@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:"EiffelVision fontable, mswindows implementation."
 	note : "When a heir of this class inherits from a WEL object,%
@@ -17,7 +16,7 @@ inherit
 feature -- Access
 
 	font: EV_FONT is
-			-- font of current primitive
+			-- Font of `Current'.
 		local
 			font_windows: EV_FONT_IMP
 			default_font: WEL_FONT
@@ -31,7 +30,7 @@ feature -- Access
 feature -- Status setting
 
 	set_font (ft: EV_FONT) is
-			-- Make `ft' the new font.
+			-- Make `ft' the new font of `Current'.
 		local
 			local_font_windows: EV_FONT_IMP
 		do
@@ -43,11 +42,13 @@ feature -- Status setting
 			wel_set_font (local_font_windows.wel_font)
 		end
 
+feature {EV_FONT_IMP} -- Implementation
+
 	private_font: EV_FONT
 			-- font used for the implementation
 
-feature {NONE} -- Implementation : the wel values, are deferred here, but
-			   -- they need to be define by the heir
+feature {NONE} -- Implementation : The wel values, are deferred here, but
+			   -- they need to be defined by their heirs.
 
 	wel_font: WEL_FONT is
 			-- The wel_font
@@ -61,7 +62,7 @@ feature {NONE} -- Implementation : the wel values, are deferred here, but
 
 end -- class EV_FONTABLE_IMP
 
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
@@ -75,7 +76,7 @@ end -- class EV_FONTABLE_IMP
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 
 
 --|-----------------------------------------------------------------------------
@@ -83,6 +84,9 @@ end -- class EV_FONTABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/04/05 19:26:57  rogers
+--| Review work. Comments, formatting.
+--|
 --| Revision 1.9  2000/02/19 05:44:59  oconnor
 --| released
 --|

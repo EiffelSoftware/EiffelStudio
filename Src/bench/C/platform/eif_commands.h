@@ -1,4 +1,4 @@
-#ifdef _EIF_COMMANDS_H_
+#ifndef _EIF_COMMANDS_H_
 #define _EIF_COMMANDS_H_
 
 #include "eif_eiffel.h"
@@ -17,9 +17,9 @@ extern "C" {
 
 /* VMS definition */
 #ifdef EIF_VMS
-#define EIF_IS_VMS EIF_TRUE;
+#define EIF_IS_VMS EIF_TRUE
 #else
-#define EIF_IS_VMS EIF_FALSE;
+#define EIF_IS_VMS EIF_FALSE
 #endif
 
 

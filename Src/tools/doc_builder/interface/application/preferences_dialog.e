@@ -94,7 +94,6 @@ feature {NONE} -- Commands
 			l_proj_settings.set_include_footer (footer_include_check.is_selected)
 			l_proj_settings.set_include_html_stylesheet (html_stylesheet_check.is_selected)
 			l_proj_settings.set_include_nav_links (nav_links_check.is_selected)
-			l_proj_settings.set_generate_dhtml_toc (dhtml_toc_check.is_selected)
 			l_proj_settings.set_generate_dhtml_filter (dhtml_filter_check.is_selected)
 				
 			project_preferences.write

@@ -69,81 +69,53 @@ feature -- IL Generation
 				-- to be generated.
 			if not class_c.is_external then
 				ast_context.set_current_class (class_c)
-				meta_data_generator.generate_class_custom_attribute (class_type)
 			end
 
-				-- Initialize implementation.
-			if not is_frozen_class then
-				implementation.start_features_list (class_type.implementation_id)
-			end
-			implementation.start_il_generation (class_type.implementation_id)
-			meta_data_generator.set_current_class (class_c)
-			meta_data_generator.set_current_class_type (class_type)
+			set_current_class (class_c)
+			set_current_class_type (class_type)
+			set_current_type_id (class_type.implementation_id)
+			current_class_token := class_mapping.item (current_type_id)
 
 				-- Generate current features implement locally in `current_class_type'
 				-- and traverse parents to define inherited features.
 			generate_il_implementation_local (class_interface, class_c, class_type)
 			generate_il_implementation_parents (class_interface)
-			generate_il_formal_generics (class_c, class_type)
-			generate_il_anchors (class_c, class_type)
+			generate_il_type_features (class_c, class_type, class_c.generic_features)
+			generate_il_type_features (class_c, class_type, class_c.anchored_features)
 
+				-- Define all features used by ISE runtime.
+			define_runtime_features (class_type)
+			
 				-- Reset global variable for collection.
 			current_class_type := Void
 			current_select_tbl := Void
 			rout_ids_tbl.wipe_out
 			processed_tbl.wipe_out
+			
+				-- Clean useless data
+			clean_implementation_class_data
 		end
 
-	generate_il_formal_generics (class_c: CLASS_C; class_type: CLASS_TYPE) is
-			-- Generate IL code for feature that represents type of a formal
-			-- generic parameter of `class_c'.
+	generate_il_type_features (class_c: CLASS_C; class_type: CLASS_TYPE;
+			type_features: HASH_TABLE [TYPE_FEATURE_I, INTEGER])
+		is
+			-- Generate IL code for feature that represents type information of `class_c'.
 		require
-			il_generation_started: il_generation_started
 			class_c_not_void: class_c /= Void
 			class_type_not_void: class_type /= Void
 		local
-			l_formals: HASH_TABLE [TYPE_FEATURE_I, INTEGER]
 			l_formal: TYPE_FEATURE_I
 		do
-			l_formals := class_c.generic_features
-			if l_formals /= Void then
+			if type_features /= Void then
 				from
-					l_formals.start
+					type_features.start
 				until
-					l_formals.after
+					type_features.after
 				loop
-					l_formal := l_formals.item_for_iteration
-					meta_data_generator.generate_feature (l_formal, False)
-					implementation.generate_type_feature (l_formal.feature_id)
+					l_formal := type_features.item_for_iteration
+					generate_feature (l_formal, False, False, False)
 					generate_type_feature (l_formal)
-					l_formals.forth
-				end
-			end
-		end
-
-	generate_il_anchors (class_c: CLASS_C; class_type: CLASS_TYPE) is
-			-- Generate IL code for feature that represents type of a formal
-			-- generic parameter of `class_c'.
-		require
-			il_generation_started: il_generation_started
-			class_c_not_void: class_c /= Void
-			class_type_not_void: class_type /= Void
-		local
-			l_anchors: HASH_TABLE [TYPE_FEATURE_I, INTEGER]
-			l_type_feature: TYPE_FEATURE_I
-		do
-			l_anchors := class_c.anchored_features
-			if l_anchors /= Void then
-				from
-					l_anchors.start
-				until
-					l_anchors.after
-				loop
-					l_type_feature := l_anchors.item_for_iteration
-					meta_data_generator.generate_feature (l_type_feature, False)
-					implementation.generate_type_feature (l_type_feature.feature_id)
-					generate_type_feature (l_type_feature)
-					l_anchors.forth
+					type_features.forth
 				end
 			end
 		end
@@ -151,7 +123,6 @@ feature -- IL Generation
 	generate_il_implementation_parents (class_interface: CLASS_INTERFACE) is
 			-- Generate IL code for feature in `class_c'.
 		require
-			il_generation_started: il_generation_started
 			class_interface_not_void: class_interface /= Void
 		local
 			parents: SEARCH_TABLE [CLASS_INTERFACE]
@@ -183,7 +154,6 @@ feature -- IL Generation
 		is
 			-- Generate IL code for inherited features of `current_class_type'.
 		require
-			il_generation_started: il_generation_started
 			class_c_not_void: class_c /= Void
 			eiffel_class: not class_c.is_external
 			class_type_not_void: class_type /= Void
@@ -241,11 +211,7 @@ feature -- IL Generation
 				-- done.
 				-- Generate `Finalize' from System.Object.			
 			feat := select_tbl.item (internal_finalize_rout_id)
-			meta_data_generator.generate_feature (feat, True)
-			generate_implementation_feature_il (feat.feature_id)
-			current_class_type.generate_il_feature (feat)
-				-- Generate call to `Finalize' implementation.
-			implementation.generate_finalize_feature (feat.feature_id)
+			generate_finalize_feature (feat)
 		end
 
 	generate_il_implementation_inherited
@@ -254,7 +220,6 @@ feature -- IL Generation
 		is
 			-- Generate IL code for inherited features of `current_class_type'.
 		require
-			il_generation_started: il_generation_started
 			class_c_not_void: class_c /= Void
 			eiffel_class: not class_c.is_external
 			class_type_not_void: class_type /= Void
@@ -284,8 +249,7 @@ feature -- IL Generation
 					rout_id := inh_feat.rout_id_set.first
 					if rout_ids_tbl.has (rout_id) then
 						feat := rout_ids_tbl.found_item
-						generate_method_impl (feat.feature_id,
-							class_type.static_type_id, inh_feat.feature_id)
+						generate_method_impl (feat, class_type, inh_feat)
 					else
 						feat := current_select_tbl.item (rout_id)
 							-- Generate code for current class only.
@@ -326,15 +290,14 @@ feature -- IL Generation
 			proc: PROCEDURE_I
 		do
 			if feat.rout_id_set.has (internal_duplicate_rout_id) then
-				meta_data_generator.generate_feature (feat, False)
-				implementation.generate_feature_internal_duplicate (feat.feature_id)
+				generate_feature (feat, False, False, False)
+				generate_feature_internal_duplicate (feat)
 			else
 				if not is_frozen_class then
 					if not is_replicated then
 							-- Generate static definition of `feat'.
-						meta_data_generator.generate_feature (feat, True)
-						generate_implementation_feature_il (feat.feature_id)
-						current_class_type.generate_il_feature (feat)
+						generate_feature (feat, False, True, False)
+						generate_feature_code (feat)
 					end
 	
 						-- Generate local definition of `feat' which
@@ -353,41 +316,39 @@ feature -- IL Generation
 								proc.set_arguments (inh_feat.arguments)
 							end
 							dup_feat.set_type (inh_feat.type)
-							meta_data_generator.generate_feature (dup_feat, False)
+							generate_feature (dup_feat, False, False, False)
 							Byte_context.set_class_type (current_class_type)
 						else
-							meta_data_generator.generate_feature (feat, False)
+							generate_feature (feat, False, False, False)
 						end
 					else
-						meta_data_generator.generate_feature (feat, False)
+						generate_feature (feat, False, False, False)
 					end
 
 
 					if not is_replicated then
 							-- We call locally above generated static feature
-						generate_feature_il (feat.feature_id,
+						generate_feature_il (feat, dup_feat,
 							current_class_type.implementation_id,
 							feat.feature_id)
 					else
 							-- We call static feature corresponding to current replicated feature.
 							-- This static feature is defined in parent which explains the search
 							-- made below to find in which parent's type.
-						generate_feature_il (feat.feature_id,
+						generate_feature_il (feat, dup_feat,
 							implemented_type (feat.written_in,
 								current_class_type.type).associated_class_type.implementation_id,
 							feat.written_feature_id)
 					end
 				else
-					generate_implementation_feature_il (feat.feature_id)
-					current_class_type.generate_il_feature (feat)
+					generate_feature_code (feat)
 				end
 
 			end
 			if l_is_method_impl_generated then
 					-- We need a MethodImpl here for mapping
 					-- inherited method to current defined one.
-				generate_method_impl (feat.feature_id,
-					class_type.static_type_id, inh_feat.feature_id)
+				generate_method_impl (feat, class_type, inh_feat)
 			end
 		end
 
@@ -418,20 +379,20 @@ feature -- IL Generation
 							proc.set_arguments (inh_feat.arguments)
 						end
 						dup_feat.set_type (inh_feat.type)
-						meta_data_generator.generate_feature (dup_feat, False)
+						generate_feature (dup_feat, False, False, False)
 						Byte_context.set_class_type (current_class_type)
 					else
-						meta_data_generator.generate_feature (feat, False)
+						generate_feature (feat, False, False, False)
 					end
 				else
-					meta_data_generator.generate_feature (feat, False)
+					generate_feature (feat, False, False, False)
 				end
 			end
 
 			if feat.feature_name_id = feature {PREDEFINED_NAMES}.Internal_duplicate_name_id then
-				implementation.generate_feature_internal_duplicate (feat.feature_id)
+				generate_feature_internal_duplicate (feat)
 			else
-				generate_feature_il (feat.feature_id,
+				generate_feature_il (feat, dup_feat,
 					implemented_type (feat.written_in,
 						current_class_type.type).associated_class_type.implementation_id,
 					feat.written_feature_id)
@@ -440,8 +401,7 @@ feature -- IL Generation
 				-- We need a MethodImpl here for mapping
 				-- inherited method to current defined one.
 			if l_is_method_impl_generated then
-				generate_method_impl (feat.feature_id,
-					class_type.static_type_id, inh_feat.feature_id)
+				generate_method_impl (feat, class_type, inh_feat)
 			end
 		end
 

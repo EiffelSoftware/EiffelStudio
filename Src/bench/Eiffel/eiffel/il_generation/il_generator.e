@@ -61,15 +61,11 @@ feature -- Generation
 			output_file_name: FILE_NAME
 			retried, is_assembly_loaded, is_error_available: BOOLEAN
 			deletion_successful: BOOLEAN
-			il_md_gen: IL_META_DATA_GENERATOR
 			classes: ARRAY [CLASS_C]
 			output_file: RAW_FILE
 			l_last_error_msg: STRING
 		do
 			if not retried then
-				create il_md_gen
-				il_generator.set_msil_generation
-
 					-- At this point the COM component should be properly instantiated.
 				is_assembly_loaded := True
 
@@ -80,8 +76,6 @@ feature -- Generation
 					-- (See rescue clause below).
 				l_last_error_msg := il_generator.last_error
 				is_error_available := True
-
-				il_generator.set_meta_data_generator (il_md_gen)
 
 					-- Compute name of generated file if any.
 				file_name := System.name + "." + System.msil_generation_type
@@ -126,12 +120,7 @@ feature -- Generation
 				classes := sorted_classes (System.classes)
 
 					-- Generate types metadata description and IL code
-				generate_types (il_md_gen, classes)
-
-					-- Generate Eiffel Assembly Cache metadata (XML files)
-				if System.generate_eac_metadata then
-					il_md_gen.generate_metadata (classes)
-				end
+				generate_types (classes)
 
 					-- Generate entry point, if any.
 				generate_entry_point
@@ -190,7 +179,7 @@ feature {NONE} -- Assembly imports
 
 feature {NONE} -- Type description
 
-	generate_types (il_md_gen: IL_META_DATA_GENERATOR; classes: ARRAY [CLASS_C]) is
+	generate_types (classes: ARRAY [CLASS_C]) is
 			-- Generate all classes in compiled system.
 		require
 			valid_system: System.classes /= Void
@@ -199,22 +188,19 @@ feature {NONE} -- Type description
 				-- We simply define a basic correspondance between Eiffel
 				-- and IDs used by the IL code generator in a topological
 				-- order.
-			generate_class_mappings (classes, il_md_gen)
+			generate_class_mappings (classes)
 
 				-- Generate only features description for each Eiffel class type
 				-- with their IL code.
-			generate_features_description (classes, il_md_gen)
-			generate_features_implementation (classes, il_md_gen)
-
-			il_generator.end_classes_descriptions
+			generate_features_description (classes)
+			generate_features_implementation (classes)
 		end
 
-	generate_class_mappings (classes: ARRAY [CLASS_C]; il_md_gen: IL_META_DATA_GENERATOR) is
+	generate_class_mappings (classes: ARRAY [CLASS_C]) is
 			-- Generate mapping between Eiffel and IL generator with `classes' sorted in
 			-- topological order.
 		require
 			classes_not_void: classes /= Void
-			il_md_gen_not_void: il_md_gen /= Void
 		local
 			class_c: CLASS_C
 			i, j, nb: INTEGER
@@ -229,18 +215,19 @@ feature {NONE} -- Type description
 				j := classes_count
 				degree_output.put_start_degree (1, j)
 
-					-- We add `7' because they are 7 types from ISE.Runtime
+					-- We add `8' because they are 8 types from ISE.Runtime
 					-- we want to reuse.
-				il_generator.start_class_mappings (static_type_id_counter.count + 7)
+				il_generator.start_class_mappings (static_type_id_counter.count + 8)
 
 					-- Identify all runtime types.
-				il_generator.set_type_id (static_type_id_counter.count + 1)
+				il_generator.set_runtime_type_id (static_type_id_counter.count + 1)
 				il_generator.set_class_type_id (static_type_id_counter.count + 2)
 				il_generator.set_generic_type_id (static_type_id_counter.count + 3)
 				il_generator.set_formal_type_id (static_type_id_counter.count + 4)
 				il_generator.set_none_type_id (static_type_id_counter.count + 5)
 				il_generator.set_basic_type_id (static_type_id_counter.count + 6)
 				il_generator.set_eiffel_type_info_type_id (static_type_id_counter.count + 7)
+				il_generator.set_generic_conformance_type_id (static_type_id_counter.count + 8)
 				il_generator.generate_type_class_mappings
 				il_generator.set_any_type_id (System.any_class.compiled_class.types.first.static_type_id)
 			variant
@@ -272,11 +259,7 @@ feature {NONE} -- Type description
 						cl_type := types.item
 							-- Generate correspondance between Eiffel IDs and
 							-- CIL information.
-						il_md_gen.generate_class_mappings (cl_type)
-
-							-- Generate precise description of classes: nature
-							-- and inheritance hierarchy.
-						il_md_gen.generate_il_class_description (class_c, cl_type)
+						Il_generator.generate_class_mappings (cl_type)
 
 						types.forth
 					end
@@ -286,12 +269,11 @@ feature {NONE} -- Type description
 			degree_output.put_end_degree
 		end
 
-	generate_features_description (classes: ARRAY [CLASS_C]; il_md_gen: IL_META_DATA_GENERATOR) is
+	generate_features_description (classes: ARRAY [CLASS_C]) is
 			-- Generate mapping between Eiffel and IL generator with `classes'
 			-- sorted in the topological order.
 		require
 			classes_not_void: classes /= Void
-			il_md_gen_not_void: il_md_gen /= Void
 		local
 			class_c: CLASS_C
 			i, j, nb: INTEGER
@@ -329,12 +311,8 @@ feature {NONE} -- Type description
 						context.init (cl_type)
 
 							-- Generate entity to represent current Eiffel interface class
-						il_md_gen.generate_il_features_description (class_c, cl_type)
+						il_generator.generate_il_features_description (class_c, cl_type)
 
-						if not class_c.is_frozen then
-							il_generator.start_il_generation (cl_type.static_type_id)
-							il_generator.end_class
-						end
 						types.forth
 					end
 				end
@@ -343,12 +321,11 @@ feature {NONE} -- Type description
 			degree_output.put_end_degree
 		end
 
-	generate_features_implementation (classes: ARRAY [CLASS_C]; il_md_gen: IL_META_DATA_GENERATOR) is
+	generate_features_implementation (classes: ARRAY [CLASS_C]) is
 			-- Generate mapping between Eiffel and IL generator with `classes'
 			-- sorted in the topological order.
 		require
 			classes_not_void: classes /= Void
-			il_md_gen_not_void: il_md_gen /= Void
 		local
 			class_c: CLASS_C
 			i, j, nb: INTEGER
@@ -384,7 +361,6 @@ feature {NONE} -- Type description
 						context.init (types.item)
 							-- Generate entity to represent current Eiffel implementation class
 						il_generator.generate_il_implementation (class_c, types.item)
-						il_generator.end_class
 
 						types.forth
 					end

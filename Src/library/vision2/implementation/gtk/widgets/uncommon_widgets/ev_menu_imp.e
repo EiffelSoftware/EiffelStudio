@@ -120,6 +120,27 @@ feature {EV_MENU_HOLDER_IMP} -- Implementation
 
 	name: STRING
 
+	every_children: ARRAYED_LIST [EV_MENU_ITEM_IMP] is
+			--| FIXME: To be removed. 09291999 AlexB.
+			--| This features is here only to show how to use
+			--| The hash table to retrieve the children.
+			--| Eventually this feature should replace `ev_children'.
+		local
+			i: INTEGER
+			item: EV_MENU_ITEM_IMP
+		do
+			create Result.make (1)
+			from
+				i := 0
+			until
+				i = c_gtk_menu_nb_children (widget)
+			loop
+				item ?= object_from_handle (c_gtk_menu_get_child (widget, i))
+				Result.extend (item)
+				i := i + 1		
+			end
+		end
+
 feature {NONE} -- Implementation - Assertion	
 
 	parent_is_option_button: BOOLEAN is
@@ -138,6 +159,7 @@ feature {NONE} -- Implementation
 	add_item (item_imp: EV_MENU_ITEM_IMP) is
 			-- Add menu item into container
 		local
+array: ARRAYED_LIST [EV_MENU_ITEM_IMP]
 			option_button_par: EV_OPTION_BUTTON_IMP
 		do
 			-- If the parent is an option button:
@@ -171,7 +193,8 @@ feature {NONE} -- Implementation
 			end
 
 			-- Update the array `ev_children'.
-			ev_children.extend (item_imp)			
+			ev_children.extend (item_imp)
+array := every_children			
 		end
 
 	remove_item (item_imp: EV_MENU_ITEM_IMP) is

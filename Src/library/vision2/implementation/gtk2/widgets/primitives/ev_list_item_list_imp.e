@@ -50,15 +50,8 @@ feature {NONE} -- Initialization
 
 	initialize_model is
 			-- Create our data model for `Current'
-		local
-			a_type_array: ARRAY [INTEGER]
-			a_type_array_c: ANY
 		do
-			create a_type_array.make (0, 1)
-			a_type_array.put (feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_type_pixbuf, 0)
-			a_type_array.put (feature {EV_GTK_DEPENDENT_EXTERNALS}.g_type_string, 1)
-			a_type_array_c := a_type_array.to_c
-			list_store := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_newv (2, $a_type_array_c)			
+			list_store := new_list_store
 		end
 
 feature -- Access
@@ -324,6 +317,14 @@ feature {NONE} -- Implementation
 			child_array.go_i_th (an_index)
 			child_array.remove
 			--update_pnd_status
+		end
+
+	new_list_store: POINTER is
+			-- New instance of a list store.
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_list_store_new (2, GDK_TYPE_PIXBUF, G_TYPE_STRING)"
 		end
 
 end -- class EV_LIST_ITEM_LIST_IMP

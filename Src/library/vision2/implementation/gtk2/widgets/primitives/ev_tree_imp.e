@@ -108,16 +108,8 @@ feature {NONE} -- Initialization
 
 	initialize_model is
 			-- Initialize data model
-		local
-			a_type_array: ARRAY [INTEGER]
-			a_type_array_c: ANY
 		do
-	create a_type_array.make (0, 1)
-			a_type_array.put (feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_type_pixbuf, 0)
-			a_type_array.put (feature {EV_GTK_DEPENDENT_EXTERNALS}.g_type_string, 1)
-			a_type_array_c := a_type_array.to_c
-			
-			tree_store := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_newv (2, $a_type_array_c)
+			tree_store := new_tree_store
 		end
 
 	initialize is
@@ -738,6 +730,14 @@ feature {NONE} -- Implementation
 			--| For now, do nothing.
 		end
 			
+	new_tree_store: POINTER is
+			-- New instance of a tree store.
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_tree_store_new (2, GDK_TYPE_PIXBUF, G_TYPE_STRING)"
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TREE

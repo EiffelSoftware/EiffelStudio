@@ -7,7 +7,7 @@ Interface,,,,,,,,,,
 ,2,2,"Create an inheritance cycle, recompile, display an invalid flat in the editor, pick a class in the error, drop in the editor => weird things happen",,Julian,,,,INT0002,11/16/2001
 ,3,2,The new feature wizard doesn't work during debug sessions,,Xavier,,,,INT0003,11/16/2001
 ,3,1,Clean up the code of EB_DEVELOPMENT_WINDOW::set_stone,,Xavier,,,,INT0004,11/16/2001
-
+,5,1,When recompiling an old project using a new version the start dialog stays up while compiling,,Manu,,,,INT0005,7/15/2002
 
 
 

@@ -1,14 +1,11 @@
 indexing
-
-	description: 
-		"Representation of an eiffel line of class text.";
+	description: "Representation of an eiffel line of class text.";
 	date: "$Date$";
 	revision: "$Revision $"
 
 class EIFFEL_LINE
 
 creation
-
 	make
 	
 feature -- Initialization
@@ -22,8 +19,7 @@ feature -- Initialization
 		do
 			start_position := start_pos;
 			end_position := end_pos;
-			!! text.make (s.count);
-			text.append (s);	
+			text := clone (s);
 		end;
 
 feature -- Properites
@@ -46,7 +42,6 @@ feature -- Properites
 			-- is the comment string and the second item is the
 			-- position of the comment string within the line
 		local
-			seeker: MATCH;
 			comment_pos: INTEGER;
 			comment_string: STRING;
 			start_pos: INTEGER;

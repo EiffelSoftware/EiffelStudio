@@ -156,7 +156,7 @@ feature -- IL code generation
 			-- Generate IL code for debug clause
 		do
 			if compound /= Void and then is_debug_clause_enabled then
-				generate_il_line_info
+				generate_il_line_info (True)
 				compound.generate_il
 				check
 					end_location_not_void: end_location /= Void

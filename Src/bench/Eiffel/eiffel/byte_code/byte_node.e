@@ -65,11 +65,15 @@ feature -- Eiffel source line information
 			end
 		end
 
-	generate_il_line_info is
+	generate_il_line_info (breakable_for_studio_dbg: BOOLEAN) is
 			-- Generate source line information in IL code.
 		do
 			if (System.line_generation or context.workbench_mode) and then line_number > 0 then
-				il_generator.put_line_info (line_number)
+				if breakable_for_studio_dbg then
+					il_generator.put_line_info (line_number)
+				else
+					il_generator.put_silent_line_info (line_number)
+				end
 			end
 		end
 

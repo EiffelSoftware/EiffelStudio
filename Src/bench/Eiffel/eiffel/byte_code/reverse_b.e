@@ -46,7 +46,7 @@ feature -- IL code generation
 			target_type, source_type: TYPE_I
 			success_label, failure_label: IL_LABEL
 		do
-			generate_il_line_info
+			generate_il_line_info (True)
 
 				-- Code that needs to be generated when performing
 				-- assignment to an attribute.

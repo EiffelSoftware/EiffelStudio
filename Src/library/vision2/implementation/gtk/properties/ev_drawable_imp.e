@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			set_foreground_color (create {EV_COLOR}.make_with_rgb (0, 0, 0))
 			set_background_color (create {EV_COLOR}.make_with_rgb (1, 1, 1))
 			line_style := C.Gdk_line_solid_enum
-			set_drawing_mode (Ev_drawing_mode_copy)
+			set_drawing_mode (drawing_mode_copy)
 			set_line_width (1)
 			create font
 			internal_font_ascent := font.ascent
@@ -110,15 +110,15 @@ feature -- Access
 			gdk_drawing_mode := C.gdk_gcvalues_struct_function (gcvalues)
 
 			if gdk_drawing_mode = C.Gdk_copy_enum then
-				Result := Ev_drawing_mode_copy
+				Result := drawing_mode_copy
 			elseif gdk_drawing_mode = C.Gdk_xor_enum then
-				Result := Ev_drawing_mode_xor
+				Result := drawing_mode_xor
 			elseif gdk_drawing_mode = C.Gdk_invert_enum then
-				Result := Ev_drawing_mode_invert
+				Result := drawing_mode_invert
 			elseif gdk_drawing_mode = C.Gdk_and_enum then
-				Result := Ev_drawing_mode_and
+				Result := drawing_mode_and
 			elseif gdk_drawing_mode = C.Gdk_or_enum then
-				Result := Ev_drawing_mode_or
+				Result := drawing_mode_or
 			else
 				check
 					drawing_mode_existent: False
@@ -203,15 +203,15 @@ feature -- Element change
 			check valid_drawing_mode (a_mode) end
 			inspect
 				a_mode
-			when Ev_drawing_mode_copy then
+			when drawing_mode_copy then
 				C.gdk_gc_set_function (gc, C.Gdk_copy_enum)
-			when Ev_drawing_mode_xor then
+			when drawing_mode_xor then
 				C.gdk_gc_set_function (gc, C.Gdk_xor_enum)
-			when Ev_drawing_mode_invert then
+			when drawing_mode_invert then
 				C.gdk_gc_set_function (gc, C.Gdk_invert_enum)
-			when Ev_drawing_mode_and then
+			when drawing_mode_and then
 				C.gdk_gc_set_function (gc, C.Gdk_and_enum)
-			when Ev_drawing_mode_or then
+			when drawing_mode_or then
 				C.gdk_gc_set_function (gc, C.Gdk_or_enum)
 			else
 				check
@@ -624,6 +624,9 @@ end -- class EV_DRAWABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2001/06/20 22:17:28  rogers
+--| Replaced Ev_drawing_mode* with drawing_mode*.
+--|
 --| Revision 1.17  2001/06/14 20:11:08  king
 --| Fixed the infamous black background problem, fixed ellipse problem
 --|

@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 				-- Initialise the device for painting.
 			dc.set_background_opaque
 			dc.set_background_transparent
-			set_drawing_mode (Ev_drawing_mode_copy)
+			set_drawing_mode (drawing_mode_copy)
 			set_line_width (1)
 			reset_pen
 			reset_brush
@@ -84,15 +84,15 @@ feature -- Access
 			-- Logical operation on pixels when drawing.
 		do
 			if wel_drawing_mode = R2_copypen then
-				Result := Ev_drawing_mode_copy
+				Result := drawing_mode_copy
 			elseif wel_drawing_mode = R2_xorpen then
-				Result := Ev_drawing_mode_xor
+				Result := drawing_mode_xor
 			elseif wel_drawing_mode = R2_not then
-				Result := Ev_drawing_mode_invert
+				Result := drawing_mode_invert
 			elseif wel_drawing_mode = R2_maskpen then
-				Result := Ev_drawing_mode_and
+				Result := drawing_mode_and
 			elseif wel_drawing_mode = R2_mergepen then
-				Result := Ev_drawing_mode_or
+				Result := drawing_mode_or
 			end
 		end
 
@@ -166,15 +166,15 @@ feature -- Element change
 			-- Set drawing mode to `a_mode'.
 		do
 			inspect a_mode
-			when Ev_drawing_mode_copy then
+			when drawing_mode_copy then
 				wel_drawing_mode := R2_copypen
-			when Ev_drawing_mode_xor then
+			when drawing_mode_xor then
 				wel_drawing_mode := R2_xorpen
-			when Ev_drawing_mode_invert then
+			when drawing_mode_invert then
 				wel_drawing_mode := R2_not
-			when Ev_drawing_mode_and then
+			when drawing_mode_and then
 				wel_drawing_mode := R2_maskpen
-			when Ev_drawing_mode_or then
+			when drawing_mode_or then
 				wel_drawing_mode := R2_mergepen
 			else
 				check
@@ -753,7 +753,7 @@ feature {NONE} -- Implementation
 		end
 
 	wel_drawing_mode: INTEGER
-			-- The WEL equivalent for the Ev_drawing_mode_* selected.
+			-- The WEL equivalent for the drawing_mode_* selected.
 
 	wel_font: WEL_FONT is
 		local
@@ -1025,6 +1025,9 @@ end -- class EV_DRAWABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2001/06/20 22:17:00  rogers
+--| Replaced Ev_drawing_mode* with drawing_mode*.
+--|
 --| Revision 1.31  2001/06/14 18:25:59  rogers
 --| Renamed EV_COORDINATES to EV_COORDINATE.
 --|

@@ -83,7 +83,8 @@ feature -- Access
 		do
 			Result := implementation.range
 		ensure
-			bridge_ok: Result = implementation.range
+			bridge_ok: Result /= Void and then
+				Result.is_equal (implementation.range)
 		end
 
 feature -- Status setting
@@ -183,10 +184,8 @@ feature -- Element change
 			-- Set `range' to `a_range'.
 		require
 			a_range_not_void: a_range /= Void
-			a_range_upper_greater_than_or_equal_to_a_range_lower:
-				a_range.upper >= a_range.lower
-			value_within_bounds:
-				value >= a_range.lower and then value <= a_range.upper
+			a_range_not_empty: not a_range.empty
+			a_range_has_value: a_range.has (value)
 		do
 			implementation.set_range (a_range)
 		ensure
@@ -200,8 +199,7 @@ feature -- Element change
 			-- Set `value' to `a_range.lower'.
 		require
 			a_range_not_void: a_range /= Void
-			a_range_upper_greater_than_or_equal_to_a_range_lower:
-				a_range.upper >= a_range.lower
+			a_range_not_empty: not a_range.empty
 		do
 			implementation.reset_with_range (a_range)
 		ensure
@@ -222,6 +220,12 @@ feature {NONE} -- Implementation
 		end
 
 invariant
+	range_not_void: is_useable implies range /= Void
+	range_has_value: is_useable implies range.has (value)
+	range_lower_same_as_minimum: is_useable implies range.lower = minimum
+	range_upper_same_as_maximum: is_useable implies range.upper = maximum
+	range_not_empty: is_useable implies range.count > 0
+
 	maximum_greater_than_or_equal_to_minimum: is_useable implies maximum >= minimum
 	value_within_bounds: is_useable implies value >= minimum and then value <= maximum
 	step_positive: is_useable implies step > 0
@@ -251,6 +255,9 @@ end -- class EV_GAUGE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/14 23:57:31  brendel
+--| Strengthened contracts using INTEGER_INTERVAL.
+--|
 --| Revision 1.4  2000/02/14 22:19:51  brendel
 --| Changed range instead of taking two integers to take an INTEGER_INTERVAL.
 --| This is to take advantage of the newly introduced operator |..|.

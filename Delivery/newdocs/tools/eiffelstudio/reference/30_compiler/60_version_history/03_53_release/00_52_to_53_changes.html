@@ -29,7 +29,7 @@
         
         
         <ul>
-          <li>&nbsp;</li>
+          <li>Made `\\' follow the balancing rules for various integer types.</li>
 </ul>
         
         
@@ -37,8 +37,27 @@
         
         
         <ul>
-          <li>Fixed a bug in storable mechanism when retrieving expanded 
+          <li>Fixed issue in storable mechanism when retrieving expanded 
           objects.</li>
+          <li>Fixed incorrect C code generation in final mode when creating an 
+          <span class="eclass">ARRAY</span> of expanded type.</li>
+          <li>Fixed incorrect C code generation in final mode when creating a 
+          complex object which contains expanded objects that have expanded 
+          objects.</li>
+          <li>Fixed random crash issue in finalized applications due to incorrect memory management when 
+          you have code similar to the following code:</li>
+</ul>
+        <pre>	<span class="efeature">f</span> (g: <span class="eclass">STRING</span>): <span class="eclass">ANY</span> <span class="ekeyword">is</span>
+		<span class="ekeyword">do</span>
+			Result := <span class="ekeyword">create</span> {<span class="eclass">STRING</span>}.<span class="efeature">make_from_string</span> (g)
+		<span class="ekeyword">end</span></pre>
+        
+        <ul>
+          <li>Fixed issue with <span class="efeature">deep_equal</span> on <span class="eclass">ARRAY</span> of expanded types which was 
+          returning <span class="ekeyword">False</span> where it should have returned <span class="ekeyword">True</span>.</li>
+          <li>Fixed issue in melted code where computation such as <span class="eclass">INTEGER_X</span> // 
+          <span class="eclass">INTEGER_Y</span> will either crash or give an incorrect computation where X 
+          and Y represents integers that are either 8, 16, 32 or 64 bits long and X &lt; Y.</li>
 </ul>
         
         

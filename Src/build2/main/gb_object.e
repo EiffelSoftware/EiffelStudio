@@ -543,14 +543,11 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			-- Retrieve pebble for transport.
 			-- A convenient was of setting up the drop
 			-- actions for GB_TYPE_SELECTOR_ITEM.
-		local
-			environment: EV_ENVIRONMENT
 		do
-			create environment
 				-- If the ctrl key is pressed, then we must
 				-- start a new object editor for `Current', instead
 				-- of beginning the pick and drop.
-			if environment.application.ctrl_pressed then
+			if application.ctrl_pressed then
 				new_object_editor (Current)
 			else
 				type_selector.update_drop_actions_for_all_children (Current)
@@ -740,13 +737,20 @@ feature {NONE} -- Implementation
 		require
 			target_not_void: obj2 /= Void
 			new_type_not_empty: new_type /= Void and not (new_type.count = 0)
+		local
+			status_start: STRING
 		do
+			if application.shift_pressed then
+				status_start := "Parent of p"
+			else
+				status_start := "P"
+			end
 			if obj2.is_full and obj2.layout_item.count = 0 then
-				set_status_text ("Pointed target (" + obj2.short_type + ") does not accept children.")
+				set_status_text (status_start + "ointed target (" + obj2.short_type + ") does not accept children.")
 			elseif not does_accept_child then
-				set_status_text ("Pointed target (" + obj2.short_type + ") does not accept children of type " + new_type + ".")
+				set_status_text (status_start + "ointed target (" + obj2.short_type + ") does not accept children of type " + new_type + ".")
 			elseif obj2.is_full then
-				set_status_text ("Pointed target (" + obj2.short_type + ") is full.")
+				set_status_text (status_start + "ointed target (" + obj2.short_type + ") is full.")
 			end
 		end
 		

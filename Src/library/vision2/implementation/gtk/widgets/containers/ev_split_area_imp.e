@@ -54,6 +54,7 @@ feature
 			item_imp ?= an_item.implementation
 			check item_imp_not_void: item_imp /= Void end
 			C.gtk_paned_pack1 (c_object, item_imp.c_object, False, False)
+			update_child_requisition (item_imp.c_object)
 			first := an_item
 			set_item_resize (first, False)
 			update_splitter
@@ -67,6 +68,7 @@ feature
 			item_imp ?= an_item.implementation
 			check item_imp_not_void: item_imp /= Void end
 			C.gtk_paned_pack2 (c_object, item_imp.c_object, True, False)
+			update_child_requisition (item_imp.c_object)
 			second := an_item
 			set_item_resize (second, True)
 			update_splitter
@@ -246,6 +248,9 @@ end -- class EV_SPLIT_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2001/06/21 22:34:40  king
+--| Added calls to update_child_requisition on child addition
+--|
 --| Revision 1.13  2001/06/07 23:08:06  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

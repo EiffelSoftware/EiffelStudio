@@ -43,11 +43,11 @@ feature {NONE} -- Initialization
 			-- Initialize current.
 		do
 			create debug_info.make
-			displayed_string_size := preferences.debug_tool_data.default_displayed_string_size
+			displayed_string_size := preferences.misc_data.default_displayed_string_size
 			current_execution_stack_number := 1
 			critical_stack_depth := -1
 		ensure
-			displayed_string_size: displayed_string_size = preferences.debug_tool_data.default_displayed_string_size
+			displayed_string_size: displayed_string_size = preferences.misc_data.default_displayed_string_size
 			current_execution_stack_number_is_one: current_execution_stack_number = 1
 		end
 		

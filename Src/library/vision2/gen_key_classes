@@ -68,7 +68,7 @@ while (<>) {
 	}
 }
 
-open (OH, ">" . "ev_key_constants.e");
+open (OH, ">" . "interface/kernel/ev_key_constants.e");
 print OH <<EOT;
 indexing
 	description:
@@ -120,7 +120,7 @@ end -- class EV_KEY_CONSTANTS
 EOT
 close (OH);
 
-open (OH, ">" . "ev_wel_key_conversion.e");
+open (OH, ">" . "implementation/mswin/support/ev_wel_key_conversion.e");
 print OH <<EOT;
 indexing
 	description: "Eiffel Vision WEL key conversion. Provides a function%N%
@@ -189,7 +189,7 @@ end -- class EV_WEL_KEY_CONVERSION
 EOT
 close (OH);
 
-open (OH, ">" . "ev_gtk_key_conversion.e");
+open (OH, ">" . "implementation/gtk/support/ev_gtk_key_conversion.e");
 print OH <<EOT;
 indexing
 	description: "Eiffel Vision GTK key conversion. Provides a function%N%
@@ -266,6 +266,9 @@ close (OH);
 #===============================================================================
 #
 # $Log$
+# Revision 1.3  2000/03/17 02:14:54  brendel
+# Now generates the classes in the right directory.
+#
 # Revision 1.2  2000/03/17 02:06:38  brendel
 # Now generates all 3 classes.
 #

@@ -34,7 +34,8 @@ inherit
 		undefine
 			visual_widget
 		redefine
-			interface
+			interface,
+			widget_object
 		end
 
 create
@@ -98,6 +99,13 @@ feature {NONE} -- Implementation
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	widget_object (a_list: POINTER): POINTER is
+			-- Returns c_object relative to a_list data.
+		do
+			Result := feature {EV_GTK_EXTERNALS}.gslist_struct_data (a_list)
+			Result := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (Result)
+		end
 
 	radio_group: POINTER is
 		do

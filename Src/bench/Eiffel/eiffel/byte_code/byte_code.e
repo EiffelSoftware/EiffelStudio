@@ -685,6 +685,7 @@ feature -- IL code generation
 
 			if compound /= Void then
 				compound.generate_il
+				il_generator.flush_sequence_points (context.class_type)
 			end
 
 				-- Make IL code for postcondition

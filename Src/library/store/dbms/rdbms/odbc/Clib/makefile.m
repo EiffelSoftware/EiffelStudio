@@ -1,5 +1,6 @@
 CC = cl
-CFLAGS = -c -Ox -W3 -I$(EIFFEL4)\bench\spec\$(PLATFORM)\include
+#CFLAGS = -c -Ox -W3 -I$(EIFFEL4)\bench\spec\$(PLATFORM)\include
+CFLAGS = -c -Zi -W3 -I$(EIFFEL4)\bench\spec\$(PLATFORM)\include
 OBJ = odbc.obj
 
 all:: clean odbc_store.lib

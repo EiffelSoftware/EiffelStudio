@@ -38,6 +38,7 @@ void odbc_disp_rec(int);
 void odbc_disp_c_type();
 void odbc_unhide_qualifier(char *);
 char *odbc_date_to_str(int, int, int, int, int, int, int);
+int	 odbc_c_type(int odbc_type);
 
 
 ODBCSQLDA * odbc_descriptor[MAX_DESCRIPTOR];
@@ -316,13 +317,13 @@ int odbc_exec_immediate (int no_desc, char *order)
 int odbc_init_order (int no_desc, char *order, int argNum)
 {
 	ODBCSQLDA *dap=odbc_descriptor[no_desc];
-	short colNum;
+	//short colNum;
 	int i, j;
-	int type;
-	SWORD indColName;
-	SWORD tmpNullable;
-	int bufSize;
-	char *dataBuf;
+	//int type;
+	//SWORD indColName;
+	//SWORD tmpNullable;
+	//int bufSize;
+	//char *dataBuf;
 
 	char tmpBuf[DB_MAX_TABLE_LEN];
 	char sqltab[30];
@@ -482,7 +483,8 @@ int odbc_start_order (int no_desc)
 {
 	ODBCSQLDA *dap=odbc_descriptor[no_desc];
 	short colNum;
-	int i, j;
+	int i;
+	//int j;
 	int type;
 	SQLSMALLINT indColName;
 	SQLSMALLINT tmpScale;
@@ -688,7 +690,7 @@ int odbc_start_order (int no_desc)
 				case SQL_C_DOUBLE:
 					SetDbColLength(dap, i, DB_SIZEOF_DOUBLE);
 					break;
-				defaults:
+				default:
 					/*bufSize += GetDbColLength(dap, i) + 1;*/
 					break;
 			}
@@ -751,7 +753,7 @@ int odbc_start_order (int no_desc)
 /*****************************************************************/
 int odbc_terminate_order (int no_des)
 {
-	int i;
+	//int i;
 	ODBCSQLDA *dap = odbc_descriptor[no_des];
 	int colNum;
 
@@ -1240,7 +1242,7 @@ char *odbc_str_from_str(char *ptr) {
 int odbc_connect (char *name, char *passwd, char *dsn)
 {
 	SWORD indColName;
-	int i;
+	//int i;
 	SWORD passLen, nameLen, dsnLen;
 	odbc_clear_error ();
 	strcpy(odbc_user_name, name);
@@ -1465,6 +1467,9 @@ int odbc_get_user  (char *result)
 
 int odbc_get_count (int no_des)
 {
+	if (odbc_descriptor[no_des] == NULL)
+		return -1;
+
 	return GetColNum(odbc_descriptor[no_des]);
 }
 
@@ -1497,7 +1502,7 @@ UDWORD odbc_get_data_len (int no_des, int index)
   int type = abs(GetDbCType(odbc_descriptor[no_des], i));
   char *dataPtr = GetDbColPtr(odbc_descriptor[no_des],i);
   int length = GetDbColLength(odbc_descriptor[no_des], i);
-  short tmp_short;
+  //short tmp_short;
 
   switch (type)
     {
@@ -1508,7 +1513,7 @@ UDWORD odbc_get_data_len (int no_des, int index)
 		else {
 			return odbc_indicator[no_des][i];
 		}
-    defaults:
+    default:
       return length;
     }
 }
@@ -1887,7 +1892,7 @@ void odbc_error_handler(HSTMT h_err_stmt, int code) {
 		}
 		strcat(warn_message,"\n");
 		break;
-	defaults:
+	default:
 		sprintf(msg, "\nODBC Inter code: <%d>", code);
 		strcat(warn_message, msg);
 		break;
@@ -1933,7 +1938,7 @@ int odbc_c_type(int odbc_type) {
 		case SQL_VARBINARY:
 		case SQL_LONGVARBINARY:
 			return SQL_C_BINARY;
-		defaults:
+		default:
 			return SQL_C_DEFAULT;
 	}
 }
@@ -1957,13 +1962,13 @@ void odbc_disp_c_type() {
 
 void odbc_disp_rec(int no_des) {
 	int i=1,j, type;
-	SWORD indColName;
-	short colNum;
-	SWORD tmpScale;
-	SWORD tmpNullable;
-	TIME_STRUCT *timeP;
-	DATE_STRUCT *dateP;
-	TIMESTAMP_STRUCT *stampP;
+	//SWORD indColName;
+	//short colNum;
+	//SWORD tmpScale;
+	//SWORD tmpNullable;
+	//TIME_STRUCT *timeP;
+	//DATE_STRUCT *dateP;
+	//TIMESTAMP_STRUCT *stampP;
 	char buff[255];
 
 	ODBCSQLDA *dap = odbc_descriptor[no_des];

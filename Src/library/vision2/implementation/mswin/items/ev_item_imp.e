@@ -63,6 +63,18 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
+	on_parented is
+			-- `Current' has just been put into a container.
+			--| FIXME To be implemented
+		do
+		end
+
+	on_orphaned is
+			-- `Current' has just been removed from its container.
+			--| FIXME To be implemented
+		do
+		end
+
 	invalidate is
 			-- Should invalidate the top parent.
 		do
@@ -91,6 +103,9 @@ end -- class EV_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/03/23 23:37:03  brendel
+--| Added on_parented and on_orphaned. Not called yet.
+--|
 --| Revision 1.15  2000/03/21 01:22:59  rogers
 --| Removed set_pointer_style.
 --|

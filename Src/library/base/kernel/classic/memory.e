@@ -152,25 +152,15 @@ feature -- Status report
 
 	referers (an_object: ANY): SPECIAL [ANY] is
 			-- Objects that refer to `an_object'.
-		local
-			a: ARRAY [ANY]
-			spec: SPECIAL [ANY]
 		do
-			create a.make (0, 200)
-			spec := a.area
-			Result := find_referers ($an_object, feature {ISE_RUNTIME}.dynamic_type ($spec))
+			Result := find_referers ($an_object, special_any_dynamic_type)
 		end
 		
 	objects_instance_of (an_object: ANY): SPECIAL [ANY] is
 			-- Objects that have same dynamic type as `an_object'.
-		local
-			a: ARRAY [ANY]
-			spec: SPECIAL [ANY]
 		do
-			create a.make (0, 200)
-			spec := a.area
 			Result := find_instance_of (feature {ISE_RUNTIME}.dynamic_type ($an_object),
-				feature {ISE_RUNTIME}.dynamic_type ($spec))			
+				special_any_dynamic_type)
 		end
 
 	memory_map: HASH_TABLE [ARRAYED_LIST [ANY], INTEGER] is
@@ -178,15 +168,12 @@ feature -- Status report
 			-- where elements are all instances of a given data type.
 		local
 			i, nb, dtype: INTEGER
-			l_a: ARRAY [ANY]
 			l_spec: SPECIAL [ANY]
 			l_item: ANY
 			l_list: ARRAYED_LIST [ANY]
 		do
 				-- First get all object instances in runtime.
-			create l_a.make (0, 200)
-			l_spec := l_a.area
-			l_spec := find_all_instances (feature {ISE_RUNTIME}.dynamic_type ($l_spec))
+			l_spec := find_all_instances (special_any_dynamic_type)
 			
 				-- Now create table indexed by dynamic type. For a given
 				-- dynamic type, we will have a list of all objects of
@@ -209,6 +196,42 @@ feature -- Status report
 						Result.put (l_list, dtype)
 					end
 					l_list.extend (l_item)
+				end
+				i := i + 1
+			end
+		end
+
+	memory_count_map: HASH_TABLE [INTEGER, INTEGER] is
+			-- Number of instances per dynamic type present in system.
+			-- Same as `memory_map' except that no references on the objects themselves
+			-- is kept.
+		local
+			i, nb, dtype: INTEGER
+			l_spec: SPECIAL [ANY]
+			l_item: ANY
+			l_count: INTEGER
+		do
+				-- First get all object instances in runtime.
+			l_spec := find_all_instances (special_any_dynamic_type)
+			
+				-- Now create table indexed by dynamic type. For a given
+				-- dynamic type, we will count all objects of this type.
+			create Result.make (100)
+			from
+				i := 0
+				nb := l_spec.count
+			until
+				i >= nb
+			loop
+				l_item := l_spec.item (i)
+				if l_item /= Void then
+					dtype := feature {ISE_RUNTIME}.dynamic_type ($l_item)
+					Result.search (dtype)
+					if Result.found then
+						Result.force (Result.found_item + 1, dtype)
+					else
+						Result.put (1, dtype)
+					end
 				end
 				i := i + 1
 			end
@@ -395,6 +418,17 @@ feature {NONE} -- Implementation
 	find_all_instances (result_type: INTEGER): SPECIAL [ANY] is
 		external
 			"C signature (EIF_INTEGER): EIF_REFERENCE use %"eif_traverse.h%""
+		end
+
+	special_any_dynamic_type: INTEGER is
+			-- Dynamic type ID of an instance of `SPECIAL [ANY]'
+		local
+			a: ARRAY [ANY]
+			spec: SPECIAL [ANY]
+		once
+			create a.make (0, 0)
+			spec := a.area
+			Result := feature {ISE_RUNTIME}.dynamic_type ($spec)
 		end
 
 indexing

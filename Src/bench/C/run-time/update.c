@@ -88,8 +88,8 @@ WritePrivateProfileString ("Environment", "MELT_PATH",NULL, inipath);
 if (strlen(buf)){
 	meltpath = buf;
 #else
-#define UPDTLEN 5
-#define UPDT_NAME "/.UPDT"
+#define UPDTLEN 10
+#define UPDT_NAME "/melted.eif"
 meltpath = eif_getenv ("MELT_PATH");
 if (meltpath) {
 #endif

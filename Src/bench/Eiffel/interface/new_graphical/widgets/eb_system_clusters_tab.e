@@ -893,7 +893,9 @@ feature {NONE} -- Initialization
 			profile_check.disable_sensitive
 			override_default_profile.select_actions.extend (~desactivation_action
 				(override_default_profile, profile_check))
-			vbox.extend (profile_box)
+			if Has_profiler then
+				vbox.extend (profile_box)
+			end
 
 			hbox.extend (vbox)
 		

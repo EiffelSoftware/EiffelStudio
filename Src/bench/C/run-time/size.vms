@@ -10,6 +10,9 @@
 
 	Size of basic types and access macros.
 	--- eif_size.h for VMS (size.vms)  ---
+
+    $Id$
+
 */
 
 #ifndef _size_h_
@@ -59,4 +62,16 @@ CONFIGURATION ERROR SIZE.VMS VAX SIZES NOT DEFINED
 #define LNGPAD_2 ( LNGPAD(2) )
 
 #endif /* EIF_VMS */
+
+
+#ifdef TEST
+
+#include <stdio.h>
+
+int main (int argc, char* argv[])
+{
+    printf ("LNGPAD_2 == LNGPAD(2) == %d\n", LNGPAD(2));
+}
+#endif
+
 #endif /* _size_h_ */

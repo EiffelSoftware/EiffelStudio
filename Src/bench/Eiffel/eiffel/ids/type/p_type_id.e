@@ -20,7 +20,7 @@ creation
 
 feature -- Access
 
-	generated_id (f: INDENT_FILE) is
+	generated_id (buffer: GENERATION_BUFFER) is
 			-- Generate textual representation of static type id
 			-- in generated C code
 		local
@@ -33,9 +33,9 @@ feature -- Access
 				statement.append (buff);
 				statement.extend ('+');
 				statement.append_integer (internal_id - 1)
-				f.putstring (statement)
+				buffer.putstring (statement)
 			else
-				f.putint (id - 1)
+				buffer.putint (id - 1)
 			end
 		end
 

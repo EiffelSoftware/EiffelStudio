@@ -44,11 +44,11 @@ feature -- Access
 			Result.append (buff)
 		end
 
-	generated_id (f: INDENT_FILE) is
+	generated_id (buffer: GENERATION_BUFFER) is
 			-- Generate textual representation of static type id
 			-- in generated C code
 		do
-			f.putint (id - 1)
+			buffer.putint (id - 1)
 		end
 
 	generated_id_string: STRING is

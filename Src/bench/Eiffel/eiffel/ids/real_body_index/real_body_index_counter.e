@@ -35,32 +35,30 @@ feature -- Access
 
 feature -- Generation
  
-	generate_offsets (file: INDENT_FILE) is
-			-- Generate `offset' declarations into `file'.
+	generate_offsets (buffer: GENERATION_BUFFER) is
+			-- Generate `offset' declarations into `buffer'.
 		require
-			file_not_void: file /= Void;
-			file_open_write: file.is_open_write
+			buffer_not_void: buffer /= Void;
 		local
 			real_body_index_subcounter: REAL_BODY_INDEX_SUBCOUNTER
 		do
 			from start until after loop
 				real_body_index_subcounter ?= item_for_iteration;
-				real_body_index_subcounter.generate_offset (file);
+				real_body_index_subcounter.generate_offset (buffer);
 				forth
 			end
 		end
 
-	generate_extern_offsets (file: INDENT_FILE) is
-			-- Generate `offset' extern declarations into `file'.
+	generate_extern_offsets (buffer: GENERATION_BUFFER) is
+			-- Generate `offset' extern declarations into `buffer'.
 		require
-			file_not_void: file /= Void;
-			file_open_write: file.is_open_write
+			buffer_not_void: buffer /= Void;
 		local
 			real_body_index_subcounter: REAL_BODY_INDEX_SUBCOUNTER
 		do
 			from start until after loop
 				real_body_index_subcounter ?= item_for_iteration;
-				real_body_index_subcounter.generate_extern_offset (file);
+				real_body_index_subcounter.generate_extern_offset (buffer);
 				forth
 			end
 		end

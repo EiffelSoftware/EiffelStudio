@@ -26,18 +26,19 @@ feature {NONE} -- Initialization
 	make_with_function (a_subtree_function: like subtree_function) is
 			-- Create with `a_subtree_function'.
 		do
-			default_create
 			set_subtree_function (a_subtree_function)
+			default_create
 		end
 
 	initialize is
-			-- Initialize `Current'.
-			-- Set up the expand action.
+			-- Set up expand action.
 		do
-			Precursor {EV_TREE_NODE}
-			expand_actions.extend (~fill_from_subtree_function)
-			implementation.extend (create {EV_TREE_ITEM})
-			set_subtree_function_timeout (default_subtree_function_timeout)
+			{EV_TREE_NODE} Precursor
+			if subtree_function /= void then
+				expand_actions.extend (~fill_from_subtree_function)
+				implementation.extend (create {EV_TREE_ITEM})
+				set_subtree_function_timeout (default_subtree_function_timeout)
+			end
 		end
 
 feature -- Access

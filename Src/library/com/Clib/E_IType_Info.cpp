@@ -136,7 +136,18 @@ EIF_REFERENCE E_IType_Info::ccom_get_dll_entry (EIF_INTEGER memid, EIF_INTEGER i
 	}
 
 	dll_name = bstr_to_eif_obj (bstr_dll_name);
+	if (bstr_dll_name != NULL)
+	{
+		SysFreeString (bstr_dll_name);
+		bstr_dll_name = NULL;
+	}
+		
 	entry_point = bstr_to_eif_obj (bstr_entry_point);
+	if (bstr_entry_point != NULL)
+	{
+		SysFreeString (bstr_entry_point);
+		bstr_entry_point = NULL;
+	}
 
 	eif_dll_entry_id = eif_type_id ("ECOM_DLL_ENTRY");
 	set_dll_name = eif_proc ("set_dll_name", eif_dll_entry_id);
@@ -183,8 +194,25 @@ EIF_REFERENCE E_IType_Info::ccom_get_documentation (EIF_INTEGER memid)
 	}
 
 	name = bstr_to_eif_obj (BstrName);
+	if (BstrName != NULL)
+	{
+		SysFreeString (BstrName);
+		BstrName = NULL;
+	}
+	
 	doc_string = bstr_to_eif_obj (BstrDocString);
+	if (BstrDocString != NULL)
+	{
+		SysFreeString (BstrDocString);
+		BstrDocString = NULL;
+	}
+	
 	help_file = bstr_to_eif_obj (BstrHelpFile);
+	if (BstrHelpFile != NULL)
+	{
+		SysFreeString (BstrHelpFile);
+		BstrHelpFile = NULL;
+	}
 
 	eif_doc_id = eif_type_id ("ECOM_DOCUMENTATION");
 	put_name = eif_proc ("set_name", eif_doc_id);
@@ -289,6 +317,11 @@ EIF_REFERENCE E_IType_Info::ccom_get_mops (EIF_INTEGER memid)
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	}
 	Result = bstr_to_eif_obj (mops);
+	if (mops != NULL)
+	{
+		SysFreeString (mops);
+		mops = NULL;
+	}
 	return eif_wean (Result);
 };
 //-------------------------------------------------------------------------
@@ -328,6 +361,11 @@ EIF_REFERENCE E_IType_Info::ccom_get_names (EIF_INTEGER memid, EIF_INTEGER max_n
 	for (i = 0; i < count; i++)
 	{
 		name = bstr_to_eif_obj (p_bstr_names [i]);
+		if (p_bstr_names [i] != NULL)
+		{
+			SysFreeString (p_bstr_names [i]);
+			p_bstr_names [i] = NULL;
+		}
 		array_put (eif_access (Result), eif_access(name), i + 1);
 		eif_wean (name);
 	}

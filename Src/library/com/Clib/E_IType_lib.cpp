@@ -143,9 +143,26 @@ EIF_REFERENCE E_IType_Lib::ccom_get_documentation (EIF_INTEGER index)
 	}
 
 	name = bstr_to_eif_obj (BstrName);
+	if (BstrName != NULL)
+	{
+		SysFreeString (BstrName);
+		BstrName = NULL;
+	}
+	
 	doc_string = bstr_to_eif_obj (BstrDocString);
+	if (BstrDocString != NULL)
+	{
+		SysFreeString (BstrDocString);
+		BstrDocString = NULL;
+	}
+	
 	help_file = bstr_to_eif_obj (BstrHelpFile);
-
+	if (BstrHelpFile != NULL)
+	{
+		SysFreeString (BstrHelpFile);
+		BstrHelpFile = NULL;
+	}
+	
 	eif_doc_id = eif_type_id ("ECOM_DOCUMENTATION");
 	put_name = eif_proc ("set_name", eif_doc_id);
 	put_doc_string = eif_proc ("set_doc_string", eif_doc_id);

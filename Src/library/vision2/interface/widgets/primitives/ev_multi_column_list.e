@@ -117,6 +117,15 @@ feature -- Status report
 		do
 			Result := implementation.is_multiple_selection
 		end
+	
+	title_shown: BOOLEAN is
+			-- True if the title row is shown.
+			-- False if the title row is not shown.
+		require
+			exist: not destroyed
+		do
+			Result := implementation.title_shown
+		end
 
 feature -- Status setting
 

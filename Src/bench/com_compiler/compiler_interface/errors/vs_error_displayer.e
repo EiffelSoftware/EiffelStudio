@@ -158,6 +158,7 @@ feature {NONE} -- Implementation
 			line_pos: INTEGER
 			sf: STRING_FORMATTER
 			st: STRUCTURED_TEXT
+			item: STRING
 		do
 			if not is_valid_error_string (warn.error_string) then
 				create st.make
@@ -166,7 +167,7 @@ feature {NONE} -- Implementation
 				sf.process_text (st)
 				full_error := clone (sf.output)
 			else
-				full_error := clone (warn.error_string)
+				full_error := warn.error_string.twin
 			end
 
 			unused_warn ?= warn
@@ -174,7 +175,29 @@ feature {NONE} -- Implementation
 				-- Unused local
 				file_name := unused_warn.associated_feature.associated_class.file_name
 				line_pos := unused_warn.associated_feature.ast.location.line_number
-				short_error := "Warning: '" + unused_warn.associated_local + "' is declared but never used in feature '" + unused_warn.associated_feature.name + "'."
+				short_error := "Warning: '"
+				from 
+					unused_warn.unused_locals.start
+				until
+					unused_warn.unused_locals.after
+				loop
+					item ?= unused_warn.unused_locals.item @ 1
+					if item /= Void then
+						short_error.append (item)
+						unused_warn.unused_locals.forth
+						if not unused_warn.unused_locals.off then
+							short_error.append ("', '")
+						else
+							if unused_warn.unused_locals.count = 1 then
+								short_error.append ("' is")
+							else
+								short_error.append ("' are")
+							end
+							
+						end	
+					end
+				end
+				short_error.append (" declared but never used in feature '" + unused_warn.associated_feature.name + "'.")
 			else
 				obs_feat ?= warn
 				if obs_feat /= Void then

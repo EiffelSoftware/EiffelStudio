@@ -310,12 +310,12 @@
 		<code_block>
 <keyword>from</keyword>
 	<italic>initialization</italic>
-<keyword>until</keyword>
-	<italic>exit</italic>
 <keyword>invariant</keyword>
 	<italic>inv</italic>
 <keyword>variant</keyword>
 	<italic>var</italic>
+<keyword>until</keyword>
+	<italic>exit</italic>
 <keyword>loop</keyword>
 	<italic>body</italic>
 <keyword>end</keyword>

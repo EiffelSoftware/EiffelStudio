@@ -1,0 +1,40 @@
+system
+	tutorial_step8
+
+root 
+	TUTORIAL_STEP8 (root_cluster): "make"
+
+default
+	assertion (all)
+	msil_generation (yes)
+	arguments (" ")
+	disabled_debug (yes)
+	debug (no)
+	line_generation (yes)
+	il_verifiable (yes)
+	msil_generation_type ("exe")
+	check_vape (yes)
+	console_application (no)
+	dotnet_naming_convention (yes)
+
+cluster 
+	root_cluster:	"$EIFFEL_SRC\..\samples\wel\tutorial\step8"
+
+	all base:		"$ISE_EIFFEL\library\base"
+		exclude
+			"table_eiffel3"; "desc"; "classic"; 
+		end
+
+	all base_net:		"$ISE_EIFFEL\library.net\base"
+
+	all wel: 		"$ISE_EIFFEL\library\wel"
+		exclude
+			"spec"
+			"clib"
+		end
+
+external
+	include_path:	"$(ISE_EIFFEL)\library\wel\spec\windows\include"
+	object: 		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\ilwel.lib"
+
+end -- tutorial_step1

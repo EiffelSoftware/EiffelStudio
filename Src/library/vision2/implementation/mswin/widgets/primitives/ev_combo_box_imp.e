@@ -21,6 +21,11 @@ inherit
 			interface,
 			initialize
 		end
+		
+	EV_FONTABLE_IMP
+		redefine
+			interface
+		end
 
 	EV_TEXT_COMPONENT_IMP
 		export {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
@@ -151,6 +156,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		do
+			set_default_font
 			Precursor {EV_TEXT_COMPONENT_IMP}
 			Precursor {EV_LIST_ITEM_LIST_IMP}
 			initialize_pixmaps

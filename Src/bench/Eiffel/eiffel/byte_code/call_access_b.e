@@ -363,6 +363,11 @@ end
 		do
 		end
 
+	is_il_feature_special (target_type: CL_TYPE_I): BOOLEAN is
+			-- Is feature optimized in IL code generation?
+		do
+		end
+
 	is_feature_special (compilation_type: BOOLEAN; target_type: BASIC_I): BOOLEAN is
 			-- Is feature a special routine of class of `target_type'?
 			-- (Only for feature calls)

@@ -10,6 +10,10 @@
 	Handling Eiffel-C Transfer of Objects to Routines.
 */
 
+/*
+doc:<file name="hector.c" header="eif_hector.h" version="$Id$" summary="Handling of Eiffel-C transfer of objects to routines.">
+*/
+
 #include "eif_portable.h"
 #include "eif_globals.h"
 #include "rt_malloc.h"
@@ -25,26 +29,15 @@ int stck_nb_items_free_stack ();
 #endif
 
 #ifndef EIF_THREADS
-/* The following stack records the addresses of objects which were given to
- * the C at some time. When Eiffel gives C an indirection pointer, it is an
- * address in the hec_stack structure (type EIF_OBJECT as defined in cecil.h).
- * The C may obtain the true address of the object by dereferencing this
- * indirection pointer through eif_access.
- */
-rt_public struct stack hec_stack = {			/* Indirection table "hector" */
-	(struct stchunk *) 0,	/* st_hd */
-	(struct stchunk *) 0,	/* st_tl */
-	(struct stchunk *) 0,	/* st_cur */
-	(EIF_REFERENCE *) 0,			/* st_top */
-	(EIF_REFERENCE *) 0,			/* st_end */
-};
-
-/* This stack records the saved references. Entries in this stack are obtained
- * either via eif_freeze() or eif_adopt(). Hence the stack structure is not
- * completely appropriate and holes may appear. The 'free_stack' stack records
- * those holes.
- */
-rt_public struct stack hec_saved = {			/* Saved indirection pointers */
+/*
+doc:	<attribute name="hec_stack" return_type="struct stack" export="public">
+doc:		<summary>Indirection table `hector'. The following stack records the addresses of objects which were given to the C at some time. When Eiffel gives C an indirection pointer, it is an address in the hec_stack structure (type EIF_OBJECT as defined in cecil.h).  The C may obtain the true address of the object by dereferencing this indirection pointer through eif_access.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data and `eif_gc_mutex'.</synchronization>
+doc:	</attribute>
+*/
+rt_public struct stack hec_stack = {
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
@@ -52,11 +45,31 @@ rt_public struct stack hec_saved = {			/* Saved indirection pointers */
 	(EIF_REFERENCE *) 0,	/* st_end */
 };
 
-/* Due to the way the hector stack is managed, there can be "holes" in it, when
- * an object in the middle of the stack is released by the C. To avoid having
- * an eternal growing bunch (EGB -- an Eternal Golden Braid :-) of chunks, we
- * record free locations in the following stack.
- */
+/*
+doc:	<attribute name="hec_saved" return_type="struct stack" export="public">
+doc:		<summary>This stack records the saved references. Entries in this stack are obtained either via eif_freeze() or eif_adopt(). Hence the stack structure is not completely appropriate and holes may appear. The `free_stack' stack records those holes.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data and `eif_gc_mutex'.</synchronization>
+doc:	</attribute>
+*/
+rt_public struct stack hec_saved = {
+	(struct stchunk *) 0,	/* st_hd */
+	(struct stchunk *) 0,	/* st_tl */
+	(struct stchunk *) 0,	/* st_cur */
+	(EIF_REFERENCE *) 0,	/* st_top */
+	(EIF_REFERENCE *) 0,	/* st_end */
+};
+
+/*
+doc:	<attribute name="free_stack" return_type="struct stack" export="private">
+doc:		<summary>Due to the way the hector stack is managed, there can be "holes" in it, when an object in the middle of the stack is released by the C. To avoid having an eternal growing bunch (EGB -- an Eternal Golden Braid :-) of chunks, we record free locations in the following stack.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:	</attribute>
+*/
 rt_private struct stack free_stack = {			/* Entries free in hector */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
@@ -412,3 +425,6 @@ rt_private EIF_OBJECT hector_addr(EIF_REFERENCE root)
 }
 
 #endif
+/*
+doc:</file>
+*/

@@ -214,6 +214,7 @@ rt_private EIF_INTEGER get_long(void);				/* Get a long constant */
 rt_private EIF_INTEGER_64 get_int64(void);		/* Get an INTEGER_64 constant */
 rt_private EIF_INTEGER_16 get_short(void);				/* Get a short constant */
 rt_private short get_compound_id(EIF_REFERENCE obj, short dtype);			/* Get a compound type id */
+rt_private int get_creation_type(void);		/* Get a creation type id */
 
 /* Interpreter interface */
 rt_public void exp_call(void);				/* Sets IC before calling interpret */ /* %%ss undefine */
@@ -1311,11 +1312,8 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_RREVERSE\n");
 #endif
-		type = get_short();			/* Get the reverse type */
+		type = get_creation_type();			/* Get the reverse type */
 		last = opop();
-
-/* GENERIC CONFORMANCE */
-		type = get_compound_id(MTC icurrent->it_ref,(short) type);
 
 		if (!RTRA(type, last->it_ref))
 			iresult->it_ref = (EIF_REFERENCE) 0;
@@ -1340,11 +1338,8 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_LREVERSE\n");
 #endif
 		code = get_short();			/* Get local number */
-		type = get_short();			/* Get the reverse type */
+		type = get_creation_type ();
 		last = opop();
-
-/* GENERIC CONFORMANCE */
-		type = get_compound_id(MTC icurrent->it_ref, (short)type);
 
 		if (!RTRA(type, last->it_ref))
 			loc(code)->it_ref = (EIF_REFERENCE) 0;
@@ -1365,11 +1360,8 @@ rt_private void interpret(int flag, int where)
 			offset = get_long();		/* Get the feature id */
 			code = get_short();			/* Get the static type */
 			meta = get_uint32();		/* Get the attribute meta-type */
-			type = get_short();			/* Get the reverse type */
+			type = get_creation_type ();
 			last = otop();
-
-/* GENERIC CONFORMANCE */
-			type = get_compound_id(MTC icurrent->it_ref,(short)type);
 
 			if (!RTRA(type, last->it_ref))
 				last->it_ref = (EIF_REFERENCE) 0;
@@ -1391,11 +1383,8 @@ rt_private void interpret(int flag, int where)
 			origin = get_long();		/* Get the origin class id */
 			ooffset = get_long();		/* Get the offset in origin */
 			meta = get_uint32();		/* Get the attribute meta-type */
-			type = get_short();			/* Get the reverse type */
+			type = get_creation_type ();
 			last = otop();
-
-/* GENERIC CONFORMANCE */
-			type = get_compound_id(MTC icurrent->it_ref,(short)type);
 
 			if (!RTRA(type, last->it_ref))
 				last->it_ref = (EIF_REFERENCE) 0;
@@ -1732,55 +1721,9 @@ rt_private void interpret(int flag, int where)
 		}
 		need_push = *IC++;		/* If there is a creation routine to call
 								   we need to push twice the created object */
-		switch (*IC++) {
-		case BC_CTYPE:				/* Hardcoded creation type */
-			type = get_short();
-/* GENERIC CONFORMANCE */
-			type = get_compound_id(MTC icurrent->it_ref,(short)type);
-			break;
-		case BC_CARG:				/* Like argument creation type */
-			type = get_short();		/* Default creation type if void arg.  */
-/* GENERIC CONFORMANCE */
-			type = get_compound_id(MTC icurrent->it_ref,(short)type);
-			code = get_short();		/* Argument position */
-			type = RTCA(arg(code)->it_ref, type);
-			break;
-		case BC_CLIKE:				/* Like feature creation type */
-			code = get_short();		/* Get the static type first */
-			offset = get_long();	/* Get the feature id of the anchor */
-/* GENERIC CONFORMANCE */
-			type = RTWCT(code, offset, icurrent->it_ref);
-			break;
-		case BC_PCLIKE:				/* Like feature creation type */
-			{
-			short stype;
-			int32 origin, ooffset;
 
-			stype = get_short();			/* Get static type of caller */
-			origin = get_long();			/* Get the origin class id */
-			ooffset = get_long();			/* Get the offset in origin */
-/* GENERIC CONFORMANCE */
-			type = RTWPCT(stype, origin, ooffset, icurrent->it_ref);
-			break;
-			}
-		case BC_CCUR:				/* Like Current creation type */
-			type = icur_dftype;
-			break;
-		case BC_GEN_PARAM_CREATE:
-			{
-			short current_type;
-			int32 formal_position;
+		type = get_creation_type ();
 
-			current_type = get_short ();		/* Get static type of caller */
-			formal_position = get_long ();	/* Get position of formal generic
-											   we want to create */
-			type = (int) RTGPTID(current_type, icurrent->it_ref, formal_position);
-			}
-			break;
-		default:
-			eif_panic(MTC "creation type lost");
-			/* NOTREACHED */
-		}	
 		/* Creation of a new object. We know there will be no call to a
 		 * creation routine, so it's useless to resynchronize registers--RAM.
 		 */
@@ -5441,6 +5384,67 @@ rt_private short get_compound_id(EIF_REFERENCE Current, short dtype)
 		return dtype;
 	
 	return (short) eif_compound_id((int16 *)0, (int16) Dftype (Current), (int16) dtype, gen_types);
+}
+
+rt_private int get_creation_type (void)
+{
+	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
+	int type;			/* Often used to hold type values */
+	int code;			/* Current intepreted byte code */
+	long offset;		/* Offset for jumps and al */
+	
+	switch (*IC++) {
+	case BC_CTYPE:				/* Hardcoded creation type */
+		type = get_short();
+/* GENERIC CONFORMANCE */
+		type = get_compound_id(MTC icurrent->it_ref,(short)type);
+		break;
+	case BC_CARG:				/* Like argument creation type */
+		type = get_short();		/* Default creation type if void arg.  */
+/* GENERIC CONFORMANCE */
+		type = get_compound_id(MTC icurrent->it_ref,(short)type);
+		code = get_short();		/* Argument position */
+		type = RTCA(arg(code)->it_ref, type);
+		break;
+	case BC_CLIKE:				/* Like feature creation type */
+		code = get_short();		/* Get the static type first */
+		offset = get_long();	/* Get the feature id of the anchor */
+/* GENERIC CONFORMANCE */
+		type = RTWCT(code, offset, icurrent->it_ref);
+		break;
+	case BC_PCLIKE:				/* Like feature creation type */
+		{
+		short stype;
+		int32 origin, ooffset;
+
+		stype = get_short();			/* Get static type of caller */
+		origin = get_long();			/* Get the origin class id */
+		ooffset = get_long();			/* Get the offset in origin */
+/* GENERIC CONFORMANCE */
+		type = RTWPCT(stype, origin, ooffset, icurrent->it_ref);
+		break;
+		}
+	case BC_CCUR:				/* Like Current creation type */
+		type = icur_dftype;
+		break;
+	case BC_GEN_PARAM_CREATE:
+		{
+		short current_type;
+		int32 formal_position;
+
+		current_type = get_short ();		/* Get static type of caller */
+		formal_position = get_long ();	/* Get position of formal generic
+										   we want to create */
+		type = (int) RTGPTID(current_type, icurrent->it_ref, formal_position);
+		}
+		break;
+	default:
+		eif_panic(MTC "creation type lost");
+		/* NOTREACHED */
+	}
+
+	return type;
 }
 
 /*

@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 			!! comment_font.make (associated_category.comment_font);
 			!! string_text_font.make (associated_category.string_text_font);
 			!! class_font.make (associated_category.class_font);
+			!! cluster_font.make (associated_category.cluster_font);
 			!! feature_font.make (associated_category.feature_font);
 			!! object_font.make (associated_category.object_font);
 			!! error_font.make (associated_category.error_font);
@@ -60,6 +61,7 @@ feature {NONE} -- Initialization
 			!! breakable_color.make (associated_category.breakable_color);
 			!! symbol_color.make (associated_category.symbol_color);
 			!! class_color.make (associated_category.class_color);
+			!! cluster_color.make (associated_category.cluster_color);
 			!! feature_color.make (associated_category.feature_color);
 			!! error_color.make (associated_category.error_color);
 			!! object_color.make (associated_category.object_color);
@@ -70,6 +72,7 @@ feature {NONE} -- Initialization
 			resources.extend (text_font);
 			resources.extend (breakable_font);
 			resources.extend (class_font);
+			resources.extend (cluster_font);
 			resources.extend (comment_font);
 			resources.extend (default_text_font);
 			resources.extend (error_font);
@@ -86,6 +89,7 @@ feature {NONE} -- Initialization
 
 			resources.extend (breakable_color);
 			resources.extend (class_color);
+			resources.extend (cluster_color);
 			resources.extend (comment_color);
 			resources.extend (default_text_color);
 			resources.extend (error_color);
@@ -146,6 +150,7 @@ feature {NONE} -- Resources
     comment_font,
     string_text_font,
     class_font,
+	cluster_font,
     feature_font,
     object_font,
     error_font,
@@ -165,6 +170,7 @@ feature {NONE} -- Resources
     breakable_color,
     symbol_color,
     class_color,
+	cluster_color,
     feature_color,
     error_color,
     object_color,

@@ -31,6 +31,7 @@ feature {TTY_RESOURCES} -- Initialization
 			!! font.make ("font", rt, "");
 			!! breakable_font.make ("breakable_font", rt, "timi14");
 			!! class_font.make ("class_font", rt, "timi14");
+			!! cluster_font.make ("cluster_font", rt, "timi14");
 			!! comment_font.make ("comment_font", rt, "timr14");
 			!! default_text_font.make ("default_text_font", rt, "timi14");
 			!! error_font.make ("error_font", rt, "timi14");
@@ -48,6 +49,7 @@ feature {TTY_RESOURCES} -- Initialization
 			!! text_foreground_color.make ("text_foreground_color", rt, "black");
 			!! breakable_color.make ("breakable_color", rt, "black");
 			!! class_color.make ("class_color", rt, "black");
+			!! cluster_color.make ("cluster_color", rt, "black");
 			!! comment_color.make ("comment_color", rt, "red");
 			!! default_text_color.make ("default_text_color", rt, "black");
 			!! error_color.make ("error_color", rt, "red");
@@ -83,6 +85,7 @@ feature -- Resources
 	comment_font,
 	string_text_font,
 	class_font,
+	cluster_font,
 	feature_font,
 	object_font,
 	error_font,
@@ -102,6 +105,7 @@ feature -- Resources
 	focus_label_color,
 	symbol_color,
 	class_color,
+	cluster_color,
 	feature_color,
 	error_color,
 	object_color,

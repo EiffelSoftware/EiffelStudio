@@ -1,9 +1,9 @@
 indexing
 	description: "EiffelVision container. Allows only one children.%
-				 % Deferred class, parent of all the containers.   %
-				 % Mswindows implementation."
+			 % Deferred class, parent of all the containers.%
+			 % Mswindows implementation."
 	note: "This class would be the equivalent of a wel_composite_window%
-			% in the wel hierarchy."
+		% in the wel hierarchy."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -29,10 +29,13 @@ feature {NONE} -- Initialization
 		do
 			{EV_WIDGET_IMP} Precursor (par)
 			!! menu_items.make (1)
+			if parent_imp /= Void then
+				already_displayed := parent_imp.already_displayed
+			end	
 		end
 	
 feature -- Access
-	
+
 	client_width: INTEGER is
 			-- Width of the client area of container
 		do
@@ -85,18 +88,16 @@ feature {EV_MENU_CONTAINER_IMP} -- Implementation
 
 feature {EV_WIDGET_IMP} -- Implementation
 
-	child_minwidth_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Change the minimum width of the container because
-			-- the child changed his own minimum width.
-		do
-			set_minimum_width (value)
-		end
+	already_displayed: BOOLEAN
+			-- The behavior before and after displaying
+			-- the container is different to gain some
+			-- speed before the first displaying of the
+			-- container.
 
-	child_minheight_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Change the minimum width of the container because
-			-- the child changed his own minimum width.
+	update_display is
+			-- Feature that update the actual container.
 		do
-			set_minimum_height (value)
+			child.parent_ask_resize (client_width, client_height)
 		end
 
 	on_first_display is
@@ -105,7 +106,26 @@ feature {EV_WIDGET_IMP} -- Implementation
 				child.on_first_display
 			end
 			{EV_WIDGET_IMP} Precursor
+			already_displayed := True
 		end
+
+feature {EV_SIZEABLE_IMP} -- Implementation for automatic size compute
+
+	child_minwidth_changed (value: INTEGER; the_child: EV_SIZEABLE_IMP) is
+			-- Change the minimum width of the container because
+			-- the child changed his own minimum width.
+		do
+			set_minimum_width (value)
+		end
+
+	child_minheight_changed (value: INTEGER; the_child: EV_SIZEABLE_IMP) is
+			-- Change the minimum width of the container because
+			-- the child changed his own minimum width.
+		do
+			set_minimum_height (value)
+		end
+
+feature {NONE} -- WEL Implementation
 
 	on_draw_item (control_id: INTEGER; draw_item: WEL_DRAW_ITEM_STRUCT) is
 			-- Wm_drawitem message.
@@ -136,9 +156,17 @@ feature {EV_WIDGET_IMP} -- Implementation
 			menu_items.item(menu_id).on_activate
 		end
 
-feature -- Implementation : deferred features of 
-		-- WEL_COMPOSITE_WINDOW that are used here but not 
-		-- defined
+   	background_brush: WEL_BRUSH is
+   			-- Current window background color used to refresh the window when
+   			-- requested by the WM_ERASEBKGND windows message.
+   			-- By default there is no background
+  		do
+ 			if background_color /= void then
+ 				!! Result.make_solid (background_color_imp)
+ 			end
+ 		end
+
+feature -- Implementation : deferred features
 
 	client_rect: WEL_RECT is
 		deferred

@@ -5,20 +5,12 @@ class FEATURE_B
 inherit
 
 	CALL_ACCESS_B
-		rename
-			make_code as standard_make_code
 		redefine
-			is_feature, set_parameters, parameters, enlarged		
+			is_feature, set_parameters, 
+			parameters, enlarged,
+			is_feature_special
 		end;
 
-	CALL_ACCESS_B
-		redefine
-			make_code,
-			is_feature, set_parameters, parameters, enlarged
-		select
-			make_code
-		end
-			
 feature 
 
 	feature_name: STRING;
@@ -43,6 +35,21 @@ feature
 			-- Assign `t' to `type'.
 		do
 			type := t;
+		end;
+
+	special_routines: SPECIAL_FEATURES is
+			-- Array containing special routines.
+		once
+			!!Result.make
+		end;
+
+	is_feature_special: BOOLEAN is
+			-- Search for feature_name in special_routines.
+			-- If found return True (and keep reference position).
+			-- Otherwize, return false;
+		do
+			special_routines.find (feature_name);
+			Result := special_routines.found;
 		end;
 
 	init (f: FEATURE_I) is
@@ -85,11 +92,20 @@ feature -- Byte code generation
 	make_code (ba: BYTE_ARRAY; flag: BOOLEAN) is
 			-- Generate byte code for a feature call. If not `flag', generate
 			-- an invariant check before the call.
+		local
+			inst_cont_type: TYPE_I;
+			metamorphosed: BOOLEAN;
 		do
 			if parameters /= Void then
 				parameters.make_byte_code (ba);
 			end;
-			standard_make_code (ba, flag);
+			inst_cont_type := context_type;
+			metamorphosed := require_metamorphosis (inst_cont_type);
+			if metamorphosed and is_feature_special then
+				ba.append (special_routines.bc_code);
+			else
+				standard_make_code (ba, flag, metamorphosed, inst_cont_type);
+			end;
 		end;
 
 	code_first: CHARACTER is

@@ -11,7 +11,7 @@ inherit
 			is_feature_call, basic_register, generate_parameters_list,
 			generate_access_on_type, is_polymorphic, has_call,
 			set_register, register, set_parent, parent, generate_access,
-			generate_on, analyze_on, analyze
+			generate_on, analyze_on, analyze, generate_special_feature
 		end;
 	FEATURE_B
 		redefine
@@ -19,7 +19,7 @@ inherit
 			is_feature_call, basic_register, generate_parameters_list,
 			generate_access_on_type, is_polymorphic, has_call,
 			set_register, register, set_parent, parent, generate_access,
-			generate_on, analyze_on, analyze
+			generate_on, analyze_on, analyze, generate_special_feature
 		select
 			free_register
 		end;
@@ -125,6 +125,23 @@ io.error.putstring ("Out feature_bl [analyze_on]: ");
 io.error.putstring (feature_name);
 io.error.new_line;
 end;
+		end;
+
+	generate_special_feature (reg: REGISTRABLE) is
+			-- Generate code for special routines (is_equal, copy ...).
+		require else
+			Valid_parameters: (parameters /= Void);
+			One_parameter: parameters.count = 1;
+			Special_rout_found: special_routines.found;
+		local
+			expr: EXPR_B;
+		do
+			reg.print_register;
+			generated_file.putstring (" ");
+			generated_file.putstring (special_routines.c_operation);
+			generated_file.putstring (" ");
+			expr ?= parameters.first; -- Cannot fail
+			expr.print_register;
 		end;
 
 	generate_access is

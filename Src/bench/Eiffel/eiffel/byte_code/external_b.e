@@ -5,19 +5,9 @@ class EXTERNAL_B
 inherit
 
 	CALL_ACCESS_B
-		rename
-			make_code as standard_make_code
 		redefine
 			same, is_external, set_parameters, parameters, enlarged		
 		end;
-
-	CALL_ACCESS_B
-		redefine
-			make_code,
-			same, is_external, set_parameters, parameters, enlarged
-		select
-			make_code
-		end
 
 feature 
 
@@ -107,6 +97,7 @@ feature -- Byte code generation
 		local
 			nb_protections, i, local_count: INTEGER;
 			param: EXPR_B;
+			inst_cont_type: TYPE_I;
 		do
 			if parameters /= Void then
 				from
@@ -127,7 +118,10 @@ feature -- Byte code generation
 				end;
 			end;
 		
-			standard_make_code (ba, flag);
+			inst_cont_type := context_type;
+			standard_make_code (ba, flag, 
+				require_metamorphosis (inst_cont_type),
+				inst_cont_type);
 	
 				-- Generation hector realease if any
 			if nb_protections > 0 then

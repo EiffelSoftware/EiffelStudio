@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		do
 			ace_file_name := a_file_name
 			if ace_file_name = Void then
-				ace_file_name := clone (default_ace_file_name)
+				ace_file_name := default_ace_file_name.twin
 			end
 			root_ast := parsed_ast (ace_file_name)
 			if root_ast = Void then
@@ -51,27 +51,25 @@ feature{NONE} -- Access
 	string_default(def_opt: INTEGER): STRING is
 			-- retrieve the string default option corresponding to 'def_opt'
 		local
-			defaults: LACE_LIST [D_OPTION_SD]
+			l_defaults: LACE_LIST [D_OPTION_SD]
 			free_opt: FREE_OPTION_SD
 			found: BOOLEAN
 		do
 			Result := ""
-			defaults := root_ast.defaults
-			if defaults /= Void then
-				from
-					defaults.start
-				until
-					defaults.after or found
-				loop
-					if defaults.item.option.is_free_option then
-						free_opt ?= defaults.item.option
-						if free_opt.code = def_opt then
-							found := true
-							Result := defaults.item.value.value
-						end
+			l_defaults := defaults
+			from
+				l_defaults.start
+			until
+				l_defaults.after or found
+			loop
+				if l_defaults.item.option.is_free_option then
+					free_opt ?= l_defaults.item.option
+					if free_opt.code = def_opt then
+						found := true
+						Result := l_defaults.item.value.value
 					end
-					defaults.forth
 				end
+				l_defaults.forth
 			end
 		ensure
 			non_void_result: Result /= Void
@@ -82,26 +80,24 @@ feature{NONE} -- Access
 		require
 			valid_default: def_opt >= 0
 		local
-			defaults: LACE_LIST [D_OPTION_SD]
+			l_defaults: LACE_LIST [D_OPTION_SD]
 			free_opt: FREE_OPTION_SD
 			found: BOOLEAN
 		do
-			defaults := root_ast.defaults
-			if defaults /= Void then
-				from
-					defaults.start
-				until
-					found or defaults.after
-				loop
-					if defaults.item.option.is_free_option then
-						free_opt ?= defaults.item.option
-						if free_opt.code = def_opt then
-							found := true
-							Result := defaults.item.value.is_yes
-						end
+			l_defaults := defaults
+			from
+				l_defaults.start
+			until
+				found or l_defaults.after
+			loop
+				if l_defaults.item.option.is_free_option then
+					free_opt ?= l_defaults.item.option
+					if free_opt.code = def_opt then
+						found := true
+						Result := l_defaults.item.value.is_yes
 					end
-					defaults.forth
 				end
+				l_defaults.forth
 			end
 		ensure
 			valid_Result: Result /= Void
@@ -164,53 +160,51 @@ feature -- Access
 	require_evaluated: BOOLEAN is
 			-- Are preconditions evaluated?
 		local
-			defaults: LACE_LIST [D_OPTION_SD]
+			l_defaults: LACE_LIST [D_OPTION_SD]
 			opt: OPTION_SD
 			val: OPT_VAL_SD			
 		do
 			Result := False
-			defaults := root_ast.defaults
-			if defaults /= Void then
-				from
-					defaults.start
-				until
-					Result or else defaults.after
-				loop
-					opt := defaults.item.option
-					if opt.is_assertion then
-						val := defaults.item.value
-						if val.is_require or else val.is_all then
-							Result := True
-						end
+			l_defaults := defaults
+			from
+				l_defaults.start
+			until
+				Result or else l_defaults.after
+			loop
+				opt := l_defaults.item.option
+				if opt.is_assertion then
+					val := l_defaults.item.value
+					if val.is_require or else val.is_all then
+						Result := True
 					end
-					defaults.forth
 				end
+				l_defaults.forth
 			end
 		end
 		
 	ensure_evaluated: BOOLEAN is
 			-- Are postconditions evaluated?
 		local
-			defaults: LACE_LIST [D_OPTION_SD]
+			l_defaults: LACE_LIST [D_OPTION_SD]
 			opt: OPTION_SD
 			val: OPT_VAL_SD			
 		do
 			Result := False
-			defaults := root_ast.defaults
-			if defaults /= Void then
+			l_defaults := defaults
+			if l_defaults /= Void then
 				from
-					defaults.start
+					l_defaults.start
 				until
-					Result or else defaults.after
+					Result or else l_defaults.after
 				loop
-					opt := defaults.item.option
+					opt := l_defaults.item.option
 					if opt.is_assertion then
-						val := defaults.item.value
+						val := l_defaults.item.value
 						if val.is_ensure or else val.is_all then
 							Result := True
 						end
 					end
-					defaults.forth
+					l_defaults.forth
 				end
 			end
 		end
@@ -218,104 +212,96 @@ feature -- Access
 	check_evaluated: BOOLEAN is
 			-- Are check statements evaluated?
 		local
-			defaults: LACE_LIST [D_OPTION_SD]
+			l_defaults: LACE_LIST [D_OPTION_SD]
 			opt: OPTION_SD
 			val: OPT_VAL_SD			
 		do
 			Result := False
-			defaults := root_ast.defaults
-			if defaults /= Void then
-				from
-					defaults.start
-				until
-					Result or else defaults.after
-				loop
-					opt := defaults.item.option
-					if opt.is_assertion then
-						val := defaults.item.value
-						if val.is_check or else val.is_all then
-							Result := True
-						end
+			l_defaults := defaults
+			from
+				l_defaults.start
+			until
+				Result or else l_defaults.after
+			loop
+				opt := l_defaults.item.option
+				if opt.is_assertion then
+					val := l_defaults.item.value
+					if val.is_check or else val.is_all then
+						Result := True
 					end
-					defaults.forth
 				end
+				l_defaults.forth
 			end
 		end
 
 	loop_evaluated: BOOLEAN is
 			-- Are loop assertions evaluated?
 		local
-			defaults: LACE_LIST [D_OPTION_SD]
+			l_defaults: LACE_LIST [D_OPTION_SD]
 			opt: OPTION_SD
 			val: OPT_VAL_SD			
 		do
 			Result := False
-			defaults := root_ast.defaults
-			if defaults /= Void then
-				from
-					defaults.start
-				until
-					Result or else defaults.after
-				loop
-					opt := defaults.item.option
-					if opt.is_assertion then
-						val := defaults.item.value
-						if val.is_loop or else val.is_all then
-							Result := True
-						end
+			l_defaults := defaults
+			from
+				l_defaults.start
+			until
+				Result or else l_defaults.after
+			loop
+				opt := l_defaults.item.option
+				if opt.is_assertion then
+					val := l_defaults.item.value
+					if val.is_loop or else val.is_all then
+						Result := True
 					end
-					defaults.forth
 				end
+				l_defaults.forth
 			end		
 		end
 
 	invariant_evaluated: BOOLEAN is
 			-- Are invariants evaluated?
 		local
-			defaults: LACE_LIST [D_OPTION_SD]
+			l_defaults: LACE_LIST [D_OPTION_SD]
 			opt: OPTION_SD
 			val: OPT_VAL_SD			
 		do
 			Result := False
-			defaults := root_ast.defaults
-			if defaults /= Void then
-				from
-					defaults.start
-				until
-					Result or else defaults.after
-				loop
-					opt := defaults.item.option
-					if opt.is_assertion then
-						val := defaults.item.value
-						if val.is_invariant or else val.is_all then
-							Result := True
-						end
+			l_defaults := defaults
+			from
+				l_defaults.start
+			until
+				Result or else l_defaults.after
+			loop
+				opt := l_defaults.item.option
+				if opt.is_assertion then
+					val := l_defaults.item.value
+					if val.is_invariant or else val.is_all then
+						Result := True
 					end
-					defaults.forth
 				end
+				l_defaults.forth
 			end
 		end
 
 	precompiled: STRING is
 			-- Precompiled file
 		local
-			defaults: LACE_LIST [D_OPTION_SD]
+			l_defaults: LACE_LIST [D_OPTION_SD]
 			found: BOOLEAN
 		do
 			Result := ""
-			defaults := root_ast.defaults
-			if defaults /= Void then
-				from
-					defaults.start
-				until
-					defaults.after or found
-				loop
-					if defaults.item.option.is_precompiled then
-						found := true
-						Result := defaults.item.value.value
-					end
-					defaults.forth
+			l_defaults := defaults
+			from
+				l_defaults.start
+			until
+				l_defaults.after or found
+			loop
+				if l_defaults.item.option.is_precompiled then
+					found := true
+					Result := l_defaults.item.value.value
 				end
+				l_defaults.forth
 			end
 		ensure
 			non_void_result: Result /= Void
@@ -445,33 +431,31 @@ feature{NONE} -- Element change
 	set_string_default (def_opt:INTEGER; new_value: STRING) is
 			-- Set the default
 		local
-			defaults: LACE_LIST [D_OPTION_SD]
+			l_defaults: LACE_LIST [D_OPTION_SD]
 			free_opt: FREE_OPTION_SD
 			is_item_removable: BOOLEAN
 		do
-			defaults := root_ast.defaults
-			if defaults /= Void then
-				from
-					defaults.start
-				until
-					defaults.after
-				loop
-					is_item_removable := False
-					if defaults.item.option.is_free_option then
-						free_opt ?= defaults.item.option
-						if free_opt.code = def_opt then
-							is_item_removable := True
-						end
+			l_defaults := defaults
+			from
+				l_defaults.start
+			until
+				l_defaults.after
+			loop
+				is_item_removable := False
+				if l_defaults.item.option.is_free_option then
+					free_opt ?= l_defaults.item.option
+					if free_opt.code = def_opt then
+						is_item_removable := True
 					end
-					if is_item_removable then
-						defaults.remove
-					else
-						defaults.forth
-					end
+				end
+				if is_item_removable then
+					l_defaults.remove
+				else
+					l_defaults.forth
 				end
 			end
 			if new_value /= Void and then new_value.count > 0 then
-				defaults.extend (new_special_option_sd (def_opt, new_value , True))
+				l_defaults.extend (new_special_option_sd (def_opt, new_value , True))
 			end
 			
 		end
@@ -479,32 +463,30 @@ feature{NONE} -- Element change
 	set_boolean_default (def_opt: INTEGER; new_value: BOOLEAN) is
 			-- Set a default boolean option
 		local
-			defaults: LACE_LIST [D_OPTION_SD]
+			l_defaults: LACE_LIST [D_OPTION_SD]
 			free_opt: FREE_OPTION_SD
 			is_item_removable: BOOLEAN
 		do
-			defaults := root_ast.defaults
-			if defaults /= Void then
-				from
-					defaults.start
-				until
-					defaults.after
-				loop
-					is_item_removable := False
-					if defaults.item.option.is_free_option then
-						free_opt ?= defaults.item.option
-						if free_opt.code = def_opt then
-							is_item_removable := True
-						end
-					end
-					if is_item_removable then
-						defaults.remove
-					else
-						defaults.forth
+			l_defaults := defaults
+			from
+				l_defaults.start
+			until
+				l_defaults.after
+			loop
+				is_item_removable := False
+				if l_defaults.item.option.is_free_option then
+					free_opt ?= l_defaults.item.option
+					if free_opt.code = def_opt then
+						is_item_removable := True
 					end
 				end
-			end			
-			defaults.extend (new_special_option_sd (def_opt, Void, new_value))
+				if is_item_removable then
+					l_defaults.remove
+				else
+					l_defaults.forth
+				end
+			end
+			l_defaults.extend (new_special_option_sd (def_opt, Void, new_value))
 		end
 
 feature -- Element change
@@ -564,28 +546,23 @@ feature -- Element change
 	set_assertions (evaluate_require, evaluate_ensure, evaluate_check, evaluate_loop, evaluate_invariant: BOOLEAN) is
 			-- Change assertion settings.
 		local
-			new_defaults: LACE_LIST [D_OPTION_SD]
+			l_defaults: LACE_LIST [D_OPTION_SD]
 			d_option: D_OPTION_SD
 			ass: ASSERTION_SD
 			v: OPT_VAL_SD
 			had_assertion: BOOLEAN
 		do
-			new_defaults := root_ast.defaults
-			if new_defaults /= Void then
-				from
-					new_defaults.start
-				until
-					new_defaults.after
-				loop
-					if new_defaults.item.option.is_assertion then
-						new_defaults.remove
-					else
-						new_defaults.forth
-					end
+			l_defaults := defaults
+			from
+				l_defaults.start
+			until
+				l_defaults.after
+			loop
+				if l_defaults.item.option.is_assertion then
+					l_defaults.remove
+				else
+					l_defaults.forth
 				end
-			else
-				create new_defaults.make (10)
-				root_ast.set_defaults (new_defaults)
 			end
 			
 			had_assertion := False
@@ -594,76 +571,71 @@ feature -- Element change
 				create v.make_invariant
 				create ass
 				create d_option.initialize (ass, v)
-				new_defaults.put_front (d_option)
+				l_defaults.put_front (d_option)
 			end			
 			if evaluate_loop then
 				had_assertion := True
 				create v.make_loop
 				create ass
 				create d_option.initialize (ass, v)
-				new_defaults.put_front (d_option)	
+				l_defaults.put_front (d_option)	
 			end
 			if evaluate_check then
 				had_assertion := True
 				create v.make_check
 				create ass
 				create d_option.initialize (ass, v)
-				new_defaults.put_front (d_option)	
+				l_defaults.put_front (d_option)	
 			end
 			if evaluate_ensure then
 				had_assertion := True
 				create v.make_ensure
 				create ass
 				create d_option.initialize (ass, v)
-				new_defaults.put_front (d_option)	
+				l_defaults.put_front (d_option)	
 			end
 			if evaluate_require then
 				had_assertion := True
 				create v.make_require
 				create ass
 				create d_option.initialize (ass, v)
-				new_defaults.put_front (d_option)	
+				l_defaults.put_front (d_option)	
 			end
 			if not had_assertion then
 				create v.make_no
 				create ass
 				create d_option.initialize (ass, v)
-				new_defaults.put_front (d_option)	
+				l_defaults.put_front (d_option)	
 			end		
 		end
 		
 	set_precompiled (filename: STRING) is
 			-- Set precompiled default option with 'filename'
 		local
-			defaults: LACE_LIST [D_OPTION_SD]
+			l_defaults: LACE_LIST [D_OPTION_SD]
 			opt: OPTION_SD
 			found: BOOLEAN
 			value: ID_SD 
 			d_option: D_OPTION_SD
 		do
-			defaults := root_ast.defaults
-			if defaults /= Void then
-				from
-					defaults.start
-				until
-					defaults.after or found
-				loop
-					opt := defaults.item.option
-					if opt.is_precompiled then
-						defaults.remove
-						found := True
-					end
-					defaults.forth
+			l_defaults := defaults
+			from
+				l_defaults.start
+			until
+				l_defaults.after or found
+			loop
+				opt := l_defaults.item.option
+				if opt.is_precompiled then
+					l_defaults.remove
+					found := True
 				end
-			else
-				create defaults.make (10)
-				root_ast.set_defaults (defaults)
+				l_defaults.forth
 			end
 			
 			if filename /= Void and not filename.is_empty then
 				value := new_id_sd (filename, true)
 				create d_option.initialize (create {PRECOMPILED_SD}, create {OPT_VAL_SD}.make (value))
-				defaults.extend (d_option)				
+				l_defaults.extend (d_option)				
 			end
 		end
 		
@@ -836,7 +808,7 @@ feature -- Environment
 		
 	library_path: STRING is 
 		once
-			Result := clone (ise_eiffel)
+			Result := ise_eiffel.twin
 			Result.append ("\library")
 		ensure
 			non_void_result: Result /= Void
@@ -845,7 +817,7 @@ feature -- Environment
 	
 	library_dotnet_path: STRING is
 		once
-			Result := clone (ise_eiffel)
+			Result := ise_eiffel.twin
 			Result.append ("\library.net")
 		ensure
 			non_void_result: Result /= Void
@@ -914,6 +886,19 @@ feature {NONE} -- Implementation
 			if Result /= Void then
 				Result.set_comment_list (Parser.comment_list)
 			end
+		end
+	
+	defaults: LACE_LIST [D_OPTION_SD] is
+			-- Ace default clause, create it if needed
+		do
+			Result := root_ast.defaults
+			if Result = Void then  
+				-- No default option, we need to create them.  
+				create Result.make (10) 
+				root_ast.set_defaults (Result) 
+			end 
+		ensure
+			non_void_defaults: Result /= Void
 		end
 		
 invariant

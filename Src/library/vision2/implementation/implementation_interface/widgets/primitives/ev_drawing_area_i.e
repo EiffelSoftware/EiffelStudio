@@ -17,6 +17,9 @@ inherit
 		end
 
 	EV_PIXMAPABLE_I
+		redefine
+			pixmap_drawable_ok
+		end
 
 feature -- Status setting
 
@@ -66,6 +69,15 @@ feature -- Event - command removal
 		require
 			exists: not destroyed
 		deferred
+		end
+
+feature -- Assertion feature
+
+	pixmap_drawable_ok (pix: EV_PIXMAP): BOOLEAN is
+			-- Check if the size of the pixmap is ok for
+			-- the container.
+		do
+			Result := pix.is_drawable
 		end
 
 end -- class EV_DRAWING_AREA_I

@@ -40,24 +40,28 @@ extern "C" {
  *  VMS system specific definitions 
  */
 #define __NEW_STARLET	/* define prototypes for sys$, lib$ function calls */
-#define _VMS_V6_SOURCE	/* see DECC RTL doc (geteuid) */
+/* #define _VMS_V6_SOURCE	** see DECC RTL doc (geteuid) */
 #if !defined(__DECC_VER) || __DECC_VER < 50000000	/* DECC vers < 5.0 */
 #define cma$tis_errno_get_addr CMA$TIS_ERRNO_GET_ADDR
 #define cma$tis_vmserrno_get_addr CMA$TIS_VMSERRNO_GET_ADDR
 #endif /* pre 5.0 DECC */
 /* handle standard C library symbols that are overriden by Eiffel runtime */
-/* --- symbols in readdir package --- */
-#define opendir eif_rt_opendir
-#define closedir eif_rt_closedir
-#define rmdir	eif_rt_rmdir
-#define seekdir eif_rt_seekdir
-#define telldir eif_rt_telldir
-#define readdir eif_rt_readdir
 /* --- symbols newly defined in VMS V7.0 DECC Runtime library --- */
-#define unlink eif_rt_unlink
-#define putenv eif_rt_putenv
-#define setenv eif_rt_setenv
-#define strdup eif_rt_strdup
+#define rmdir  eif_vms_rmdir
+#define unlink eif_vms_unlink
+#define getenv eif_vms_getenv
+#define putenv eif_vms_putenv
+#define setenv eif_vms_setenv
+#define strdup eif_vms_strdup
+#define system eif_vms_system
+/* --- symbols in readdir package (wrappers solve version problems) --- */
+#define opendir   eif_vms_opendir
+#define closedir  eif_vms_closedir
+#define rewinddir eif_vms_rewinddir
+#define readdir   eif_vms_readdir
+#define seekdir   eif_vms_seekdir
+#define telldir   eif_vms_telldir
+#include <dirent.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>

@@ -9,9 +9,6 @@ class
 	
 inherit
 	GB_EV_ACTION_SEQUENCE
-		redefine
-			display_agent
-		end
 
 feature -- Access
 

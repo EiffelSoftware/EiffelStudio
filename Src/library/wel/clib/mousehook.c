@@ -4,7 +4,7 @@
 /* Used to monitor mouse messages for the pick and drop mechanism under      */
 /* Windows                                                                   */
 /*****************************************************************************/
-#include "eif_portable.h"
+#include "eif_eiffel.h"
 #include <windows.h>
 //#include "wel_hook.h"
 #include "wel_mousehook.h"
@@ -37,7 +37,7 @@ EIF_BOOLEAN cwel_hook_mouse(HWND hWnd)
 	
 	// Everything went ok, execute the function and return the value returned
 	// by the function.
-	return (EIF_BOOLEAN)(hook_mouse_func(hWnd));
+	return (EIF_BOOLEAN) ((FUNCTION_CAST_TYPE(int, __stdcall, (HWND)) hook_mouse_func)(hWnd));
 	}
 
 /*---------------------------------------------------------------------------*/
@@ -67,7 +67,7 @@ EIF_BOOLEAN cwel_unhook_mouse()
 
 	// Everything went ok, execute the function and return the value returned
 	// by the function.
-	nRes = unhook_mouse_func();
+	nRes = ((FUNCTION_CAST_TYPE(int, __stdcall, ()) unhook_mouse_func)());
 	FreeLibrary(hLibrary);
-	return (EIF_BOOLEAN)nRes;
+	return (EIF_BOOLEAN) nRes;
 	}

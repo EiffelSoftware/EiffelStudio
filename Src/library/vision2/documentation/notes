@@ -88,6 +88,22 @@ X   complete but found to have bugs
 
                                                         IF   WEL   GEL   TEST
   Base:                                        
+<<<<<<< notes
+    kernel/ev_any.e                                     *    _    *    .
+    properties/ev_drawable.e                            *    *    *    .
+    properties/ev_drawable_constants.e                  *    *    *    .
+    properties/ev_fontable.e                            *    o .5 o    .
+    properties/ev_pick_and_dropable.e                   o    o .5 o 1  .
+    properties/ev_pixmapable.e                          *    o .5 *    .
+    properties/ev_textable.e                            *    o .1 *    .
+    support/ev_dynamic_list.e                           o    o 2  o    .
+    widgets/ev_widget.e                                 o    o 3  o 1  .
+    widgets/primitives/ev_primitive.e                   *    o .1 *    .
+    items/ev_item.e                                     *    o .5 *    .
+    items/ev_simple_item.e                              o    o .1 *    .
+    items/ev_separator_item.e                           o    *    *    .
+    support/ev_item_list.e                              o    o 1  *    .
+=======
     kernel/ev_any.e                                     *    -     *     .
     properties/ev_drawable.e                            *    *     *     .
     properties/ev_drawable_constants.e                  *    *     *     .
@@ -102,6 +118,7 @@ X   complete but found to have bugs
     items/ev_simple_item.e                              o    o .1  *     .
     items/ev_separator_item.e                           o    *     *     .
     support/ev_item_list.e                              o    o 1   *     .
+>>>>>>> 1.24
     
   Support:
     support/ev_default_colors.e                         o    X .5  *     .
@@ -123,6 +140,15 @@ X   complete but found to have bugs
     widgets/uncommon_widgets/ev_screen.e                .    .     .     .
 
   Buttons:
+<<<<<<< notes
+    widgets/primitives/ev_button.e                      *    *    *    .
+    widgets/primitives/ev_select_button.e               *    *    *    .
+    widgets/primitives/ev_check_button.e                *    *    *    .
+    widgets/primitives/ev_option_button.e               *    *    *    .
+    widgets/primitives/ev_radio_button.e                *    o 2  o .1 .
+    widgets/primitives/ev_toggle_button.e               *    *    *    .
+
+=======
     widgets/primitives/ev_button.e                      *    *     *     .
     widgets/primitives/ev_select_button.e               *    *     *     .
     widgets/primitives/ev_check_button.e                *    *     *     .
@@ -130,7 +156,19 @@ X   complete but found to have bugs
     widgets/primitives/ev_radio_button.e                *    o 2   o     .
     widgets/primitives/ev_toggle_button.e               *    *     *     .
  
+>>>>>>> 1.24
   Misc widgets:
+<<<<<<< notes
+    widgets/primitives/ev_combo_box.e                   *    o    o 1  .
+    widgets/primitives/ev_text_component.e              o    *    *    .
+    widgets/primitives/ev_text_field.e                  *    *    *    .
+    widgets/primitives/ev_label.e                       *    *    *    .
+    widgets/primitives/ev_drawing_area.e                *    o    o    .
+    widgets/primitives/ev_separator.e                   *    *    *    .
+    widgets/primitives/ev_horizontal_separator.e        *    *    *    .
+    widgets/primitives/ev_vertical_separator.e          *    *    *    .
+    widgets/uncommon_widgets/ev_pixmap.e                o    o 4  o    .
+=======
     widgets/primitives/ev_combo_box.e                   *    o     o     .
     widgets/primitives/ev_text_component.e              o    *     *     .
     widgets/primitives/ev_text_field.e                  *    *     *     .
@@ -140,6 +178,7 @@ X   complete but found to have bugs
     widgets/primitives/ev_horizontal_separator.e        *    *     *     .
     widgets/primitives/ev_vertical_separator.e          *    *     *     .
     widgets/uncommon_widgets/ev_pixmap.e                o    o 4   o     .
+>>>>>>> 1.24
 
   Gauges:
     widgets/primitives/ev_gauge.e                       *    *     *     .

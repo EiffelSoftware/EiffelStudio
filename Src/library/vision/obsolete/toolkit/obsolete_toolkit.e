@@ -52,14 +52,6 @@ feature -- Access
 			widget_exists: Result /= Void
 		end;
 
-	message (a_message: MESSAGE; managed: BOOLEAN;
-		oui_parent: COMPOSITE): MESSAGE_I is
-			-- Toolkit implementation of `a_message'
-		deferred
-		ensure
-			widget_exists: Result /= Void
-		end;
-
 	push_bg (a_push_b_gadget: PUSH_BG; managed: BOOLEAN;
 		oui_parent: COMPOSITE): PUSH_BG_I is
 			-- Toolkit implementation of `a_push_b_gadget'

@@ -23,6 +23,14 @@ feature -- Access
 			"DIB_PAL_COLORS"
 		end
 
+feature -- Status report
+
+	valid_dib_colors_constant (c: INTEGER): BOOLEAN is
+			-- Is `c' a valid dib colors constant?
+		do
+			Result := c = Dib_rgb_colors or else c = Dib_pal_colors
+		end
+
 end -- class WEL_DIB_COLORS_CONSTANTS
 
 --|-------------------------------------------------------------------------

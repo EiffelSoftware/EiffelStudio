@@ -142,6 +142,18 @@ feature -- Initialization
 
 feature  -- Access
 
+	scroll_to_current is
+			-- Scroll to currently selected item.
+		do
+			if realized and then selected then
+				if multiple_selection then
+					set_top_index (private_selected_positions.first - 1)
+				else
+					set_top_index (private_selected_position - 1)
+				end
+			end
+		end
+
 	deselect_i_th (a_index: INTEGER) is
 			-- Deselect item at position `a_index' if selected.
 		do
@@ -334,8 +346,9 @@ feature -- Status setting
 			-- Set the number of visible items to `a_count'.
 		do
 			private_visible_item_count := a_count
-			set_height (private_visible_item_count * item_height +
-				2 * Border_height)
+			if realized then
+				set_height (a_count * item_height + 2 * Border_height)
+			end
 		end
 
 	set_size (new_width, new_height: INTEGER) is
@@ -344,13 +357,15 @@ feature -- Status setting
 		local
 			a_visible_count: INTEGER
 		do
+			private_attributes.set_height (new_height)
+			private_attributes.set_width (new_width)
 			has_width := True
 			has_height := True
-			a_visible_count := new_height // item_height
-			private_attributes.set_height (a_visible_count * item_height +
-				2 * Border_height)
-			private_attributes.set_width (new_width)
 			if realized then
+				a_visible_count := new_height // item_height
+				private_attributes.set_height (a_visible_count * item_height +
+					2 * Border_height)
+				private_attributes.set_width (new_width)
 				set_visible_item_count (a_visible_count)
 				set_width (new_width)
 			end
@@ -377,11 +392,12 @@ feature -- Status setting
 		local
 			a_visible_count: INTEGER
 		do
+			private_attributes.set_height (new_height)
 			has_height := True
-			a_visible_count := new_height // item_height
-			private_attributes.set_height (a_visible_count * item_height +
-				2 * Border_height)
 			if realized then
+				a_visible_count := new_height // item_height
+				private_attributes.set_height (a_visible_count * item_height +
+					2 * Border_height)
 				set_visible_item_count (a_visible_count)
 			end
 			if parent /= Void then
@@ -637,7 +653,7 @@ feature {NONE} -- Implementation
 			-- Selection of item `i'
 		require
 			positive_i: i > 0
-			valid_i: i <= index
+			valid_i: i <= count
 		do
 			if realized then
 				if multiple_selection then
@@ -677,7 +693,7 @@ feature {NONE} -- Implementation
 			a_font_windows: FONT_WINDOWS
 		do
 			if realized then
-				a_font_windows ?= private_font.implementation
+				a_font_windows ?= font.implementation
 				if fixed_size then
 					if a_font_windows.string_width (Current, s) >= private_scroll_width then
 						private_scroll_width := a_font_windows.string_width (Current, s)
@@ -703,7 +719,7 @@ feature {NONE} -- Implementation
 			s := clone (i_th_text (pos))
 			wel_delete_string (pos)
 			if realized then
-				a_font_windows ?= private_font.implementation
+				a_font_windows ?= font.implementation
 				if fixed_size then
 					if private_scroll_width > wel_width then
 						if not (a_font_windows.string_width (Current, s) < private_scroll_width) then
@@ -732,7 +748,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			a_font_windows: FONT_WINDOWS
 		do
-			a_font_windows ?= private_font.implementation
+			a_font_windows ?= font.implementation
 			from
 				i :=0
 			until

@@ -1,14 +1,18 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
 	description:
-		"EiffelVision Combo-box. A combo-box contains a %
-		% text field and a button. When the button is    %
-		% pressed, a list of possible choices is opened."
-	note: "The `height' of a combo-box is the one of the text  %
-		% field. To have the height of the text field plus the %
-		% list, use extended_height."
+		"A text field with a button. When the button is pressed, a list of%
+		%text strings is displayed. Selecting one causes it to be copied into%
+		%the text field."
+	appearance:
+		"+-----------+-+%N%
+		%| `text'    |V|%N%
+		%+-----------+-+%N%
+		% |`first'     |%N%
+		% | ...        |%N%
+		% |`last'      |%N%
+		% +------------+"
 	status: "See notice at end of class"
-	names: widget
+	keywords: "combo, box, button, option, menu"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -43,41 +47,45 @@ create
 feature -- Access
 
 	extended_height: INTEGER is
-			-- height of the combo-box when the children are
-			-- visible.
-		require
+			-- Height when list items are visible.
+			-- ie: `height' (of text field)  + height of displayed list.
 		do
 			Result := implementation.extended_height
+		ensure
+			bridge_ok: Result = implementation.extended_height
 		end
 
 feature -- Element change
 
-	set_extended_height (value: INTEGER) is
-			-- Make `value' the new extended-height of the box.
+	set_extended_height (a_height: INTEGER) is
+			-- Assign `a_height' to `extended_height'.
 		require
-			valid_value: value >= 0
+			a_height_not_negative: value >= 0
 		do
 			implementation.set_extended_height (value)
-		end
-
-feature {NONE} -- Implementation
-
-	create_implementation is
-			-- Create implementation of combo box.
-		do
-			create {EV_COMBO_BOX_IMP} implementation.make (Current)
-		end
-
-	create_action_sequences is
-			-- Create action sequences of combo box.
-		do
-			{EV_LIST} Precursor
-			{EV_TEXT_FIELD} Precursor
+		ensure
+			extended_height_assigned: extended_height = a_height
 		end
 
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_COMBO_BOX_I
+			-- Responsible for interaction with the native graphics toolkit.
+
+feature {NONE} -- Implementation
+
+	create_implementation is
+			-- See `{EV_ANY}.create_implementation'.
+		do
+			create {EV_COMBO_BOX_IMP} implementation.make (Current)
+		end
+
+	create_action_sequences is
+			-- See `{EV_ANY}.create_action_sequences'.
+		do
+			{EV_LIST} Precursor
+			{EV_TEXT_FIELD} Precursor
+		end
 
 end -- class EV_COMBO_BOX
 
@@ -102,8 +110,12 @@ end -- class EV_COMBO_BOX
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/03/21 01:53:23  oconnor
+--| comments and formatting
+--|
 --| Revision 1.30  2000/03/02 18:00:35  rogers
---| Undefined make_from_test from ev_text_field, so it uses the make_from_test inherited from ev_list.
+--| Undefined make_from_test from ev_text_field, so it uses the make_from_test
+--| inherited from ev_list.
 --|
 --| Revision 1.29  2000/03/01 19:48:53  king
 --| Corrected export clauses for implementation and create_imp/act_seq
@@ -136,7 +148,8 @@ end -- class EV_COMBO_BOX
 --| Added default_create
 --|
 --| Revision 1.22.6.3  2000/01/15 00:54:19  oconnor
---| renamed set_multiple_selection, is_multiple_selection to enable_multiple_selection, multiple_selection_enabled
+--| renamed set_multiple_selection, is_multiple_selection to
+--| enable_multiple_selection, multiple_selection_enabled
 --|
 --| Revision 1.22.6.2  1999/11/30 22:24:20  oconnor
 --| removed make, added create_implementation
@@ -149,7 +162,6 @@ end -- class EV_COMBO_BOX
 --|
 --| Revision 1.22.2.2  1999/11/02 17:20:13  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

@@ -277,15 +277,6 @@ feature -- Element change
 			end
 		end
 
-	set_row_height (a_height: INTEGER) is
-			-- Set all rows to `a_height'.
-		require
-			height_valid: a_height > 0
-		deferred
-		ensure
-			a_height_assigned: a_height = row_height
-		end
-
 feature {EV_ANY_I} -- Implementation
 
 	expand_column_count_to (a_columns: INTEGER) is
@@ -454,6 +445,9 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.47  2000/04/20 18:45:18  rogers
+--| Removed set_row_height.
+--|
 --| Revision 1.46  2000/04/07 17:34:55  king
 --| Implemented set_column* to expand column_count
 --|

@@ -10,7 +10,11 @@ inherit
 	ICONED_COMMAND;
 	SHARED_DEBUG;
 	SHARED_RESCUE_STATUS;
-	SHARED_FORMAT_TABLES
+	SHARED_FORMAT_TABLES;
+	EXCEPTIONS
+		rename
+			raise as excep_raise
+		end
 
 creation
 
@@ -78,13 +82,22 @@ feature {NONE}
 				end;
 				tool_resynchronization (argument)
 			else
-				warner (text_window).gotcha_call (w_Project_may_be_corrupted)
+					-- The project may be corrupted => the project
+					-- becomes read-only.
+				warner (text_window).gotcha_call (w_Project_may_be_corrupted);
+				Project_read_only.set_item (true)
 			end;
 			error_window.display;
 			restore_cursors
 		rescue
-			rescued := true;
-			retry
+			if not Rescue_status.fail_on_rescue then
+				if original_exception = Io_exception then
+						-- We probably don't have the write permissions
+						-- on the server files.
+					rescued := true;
+					retry
+				end
+			end
 		end;
 
 	tool_resynchronization (argument: ANY) is

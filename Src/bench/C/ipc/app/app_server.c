@@ -94,12 +94,12 @@ rt_shared void winit(void)
 
 	/* Open a logfile in /tmp */
 #ifdef EIF_WIN32
-	(void) open_log("\\tmp\\app.log");
-/*	set_loglvl(LOGGING_LEVEL);			/* Set debug level */
+	(void) open_log("\\tmp\\ised.log");
 #else
 	(void) open_log("/tmp/ised.log");
-	set_loglvl(LOGGING_LEVEL);			/* Set debug level */
 #endif
+
+	set_loglvl(LOGGING_LEVEL);			/* Set debug level */
 	add_log(7, "identifying...");
 #endif
 

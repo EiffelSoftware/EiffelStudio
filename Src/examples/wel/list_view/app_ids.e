@@ -8,6 +8,11 @@ class
 feature -- Access
 
 	Id_ico_application: INTEGER is 1
+	
+	Idi_red		: INTEGER is 401
+	Idi_green	: INTEGER is 402
+	Idi_blue	: INTEGER is 403
+	Idi_magenta	: INTEGER is 404
 
 end -- class APPLICATION_IDS
 

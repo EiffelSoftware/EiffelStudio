@@ -35,16 +35,22 @@ feature {NONE} -- Initialization
 	make is
 		do
 			make_top (Title)
-			resize (355, 240)
-			-- Create the output
-			create list.make (Current, 0, 0, client_rect.width, 60, 1)
-			create label.make (Current, "What happens?", 0, 60, client_rect.width, 20, 0)
-			-- Create the list view.
-			create list_view.make (Current, 10, 90, client_rect.width - 20, client_rect.height - 130, -1)
+			resize (355, 360)
+
+				-- Create the output
+			create list.make (Current, 0, 0, client_rect.width, 120, 1)
+			list.set_font(gui_font)
+			create label.make (Current, "What happens?", 0, 120, client_rect.width, 20, 0)
+			label.set_font(gui_font)
+
+				-- Create the list view.
+			create list_view.make (Current, 10, 150, client_rect.width - 20, client_rect.height - 190, -1)
 			list_view.set_item_output (label)
 			list_view.set_mess_output (list)
-			-- Create a button
+			
+				-- Create a button
 			create button.make (Current, "Style", 10, height - 55, 50, 20, 3)
+			button.set_font(gui_font)
 		end
 
 feature -- Access
@@ -74,6 +80,12 @@ feature {NONE} -- Implementation
 			create Result.make_by_sys_color (Color_background)
 		end
 
+	gui_font: WEL_DEFAULT_GUI_FONT is
+			-- Default font used to draw dialogs.
+		once
+			create Result.make
+		end
+
 	default_style: INTEGER is
 			-- The window do not redraw the children.
 		once
@@ -85,10 +97,10 @@ feature {NONE} -- Implementation
    			-- Wm_size message
    		do
 			if list_view /= Void then
-				list_view.resize (client_rect.width - 20, client_rect.height - 130)
+				list_view.resize (client_rect.width - 20, client_rect.height - 190)
 			end
 			if list /= Void then
-				list.resize (client_rect.width, 60)
+				list.resize (client_rect.width, 120)
 			end
 			if button /= Void then
 				button.move (10, height - 55)

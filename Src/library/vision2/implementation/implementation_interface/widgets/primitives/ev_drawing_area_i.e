@@ -13,7 +13,7 @@ inherit
 
 	EV_PRIMITIVE_I
 
-	EV_PIXMAP_CONTAINER_I
+	EV_PIXMAPABLE_I
 
 feature {NONE} -- Initialization
 

@@ -13,9 +13,9 @@ inherit
 
 	EV_BAR_ITEM_I
 
-	EV_TEXT_CONTAINER_I
+	EV_TEXTABLE_I
 
-	EV_PIXMAP_CONTAINER_I
+	EV_PIXMAPABLE_I
 		redefine
 			pixmap_size_ok
 		end

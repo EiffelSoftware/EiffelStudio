@@ -117,7 +117,7 @@ feature -- Access
 			Result ?= wel_parent
 		end
 
-	ev_children: ARRAYED_LIST [EV_TOOL_BAR_BUTTON_IMP]
+	ev_children: ARRAYED_LIST [EV_TOOL_BAR_ITEM_IMP]
 			-- List of the direct children of `Current'.
 
 	parent_imp: EV_CONTAINER_IMP is
@@ -231,8 +231,8 @@ feature -- Status setting
 			-- If `flag' then make `Current' insensitive. Else
 			-- make `Current' sensitive.
 		local
-			list: ARRAYED_LIST [EV_TOOL_BAR_BUTTON_IMP]
-			widget_imp: EV_TOOL_BAR_BUTTON_IMP
+			list: ARRAYED_LIST [EV_TOOL_BAR_ITEM_IMP]
+			item_imp: EV_TOOL_BAR_ITEM_IMP
 			cur: CURSOR
 		do
 			if not ev_children.is_empty then
@@ -243,12 +243,12 @@ feature -- Status setting
 				until
 					list.after
 				loop
-					widget_imp := list.item
+					item_imp := list.item
 					if flag then
-						widget_imp.disable_sensitive 
+						item_imp.disable_sensitive 
 					else
-						if not widget_imp.internal_non_sensitive then
-							widget_imp.enable_sensitive
+						if not item_imp.internal_non_sensitive then
+							item_imp.enable_sensitive
 						end
 					end
 					list.forth
@@ -261,7 +261,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	insert_item (button: EV_TOOL_BAR_BUTTON_IMP; an_index: INTEGER) is
+	insert_item (button: EV_TOOL_BAR_ITEM_IMP; an_index: INTEGER) is
 			-- Insert `button' at the `an_index' position in `Current'.
 		local
 			but: WEL_TOOL_BAR_BUTTON
@@ -336,7 +336,7 @@ feature -- Element change
 			notify_change (2 + 1, Current)
 		end
 		
-	remove_item (button: EV_TOOL_BAR_BUTTON_IMP) is
+	remove_item (button: EV_TOOL_BAR_ITEM_IMP) is
 			-- Remove `button' from `current'.
 		local
 			id1: INTEGER
@@ -351,7 +351,7 @@ feature -- Element change
 
 feature -- Basic operation
 
-	internal_get_index (button: EV_TOOL_BAR_BUTTON_IMP): INTEGER is
+	internal_get_index (button: EV_TOOL_BAR_ITEM_IMP): INTEGER is
 			-- Retrieve the current index of `button'.
 		do
 			Result := cwin_send_message_result (
@@ -394,7 +394,7 @@ feature -- Basic operation
 			compute_minimum_width
 		end
 
-	internal_reset_button (but: EV_TOOL_BAR_BUTTON_IMP) is
+	internal_reset_button (but: EV_TOOL_BAR_ITEM_IMP) is
 			-- XX To update XX
 			-- This function is used each time we change an attribute of a 
 			-- button as the text or the pixmap. Yet, it should only be a 
@@ -410,7 +410,7 @@ feature -- Basic operation
 			insert_item (but, an_index)
 		end
 
-	find_item_at_position (x_pos, y_pos: INTEGER): EV_TOOL_BAR_BUTTON_IMP is
+	find_item_at_position (x_pos, y_pos: INTEGER): EV_TOOL_BAR_ITEM_IMP is
 			-- Find the item at `x_pos', `y_pos'.
 			-- Position is relative to `Current'.
 			-- If there is no button at (`x_pos',`y_pos'), the result is Void.
@@ -431,7 +431,7 @@ feature -- Basic operation
 			item_press_actions_called: BOOLEAN
 			pt: WEL_POINT
 		do
-			pre_drop_it := find_item_at_position (x_pos, y_pos)
+			pre_drop_it ?= find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			
 			if pre_drop_it /= Void and then pre_drop_it.is_dockable and button = 1 and not is_dock_executing then
@@ -471,7 +471,7 @@ feature -- Basic operation
 					([x_pos, y_pos, button, 0.0, 0.0, 0.0, pt.x, pt.y])
 			end
 					
-			post_drop_it := find_item_at_position (x_pos, y_pos)
+			post_drop_it ?= find_item_at_position (x_pos, y_pos)
 
 				-- If there is an item where the button press was recieved,
 				-- and it has not changed from the start of this procedure
@@ -495,7 +495,7 @@ feature -- Basic operation
 			it: EV_TOOL_BAR_BUTTON_IMP
 			pt: WEL_POINT
 		do
-			it := find_item_at_position (x_pos, y_pos)
+			it ?= find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			if it /= Void then
 				it.interface.pointer_double_press_actions.call
@@ -527,7 +527,7 @@ feature {EV_INTERNAL_TOOL_BAR_IMP} -- Click action event
 			-- `Result' is button associated with `command_id'.
 		local
 			found: BOOLEAN
-			local_children: ARRAYED_LIST [EV_TOOL_BAR_BUTTON_IMP]
+			local_children: ARRAYED_LIST [EV_TOOL_BAR_ITEM_IMP]
 		do
 			local_children := ev_children
 			from
@@ -630,7 +630,7 @@ feature {EV_TOOL_BAR_BUTTON_IMP} -- Pixmap handling
 feature {NONE} -- Implementation
 
 	update_buttons_with_no_text is
-			-- Update display of all buttons with text = Void.
+			-- Update display of all buttons with empty `text'.
 		local
 			a_cursor: CURSOR
 			but: EV_TOOL_BAR_SEPARATOR_IMP
@@ -696,7 +696,7 @@ feature {NONE} -- Implementation
 			-- of the toolbar. As soon as the message Tb_getmaxsize
 			-- is available, this feature should not be so usefull.
 		local
-			list: ARRAYED_LIST [EV_TOOL_BAR_BUTTON_IMP]
+			list: ARRAYED_LIST [EV_TOOL_BAR_ITEM_IMP]
 			original_index: INTEGER
 			separator: EV_TOOL_BAR_SEPARATOR_IMP
 		do
@@ -753,7 +753,7 @@ feature {NONE} -- WEL Implementation
 			it: EV_TOOL_BAR_BUTTON_IMP
 			pt: WEL_POINT
 		do
-			it := find_item_at_position (x_pos, y_pos)
+			it ?= find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			if it /= Void then
 				it.interface.pointer_motion_actions.call
@@ -854,7 +854,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 		require
 			w_not_void: w /= Void
 		local
-			button_imp: EV_TOOL_BAR_BUTTON_IMP
+			button_imp: EV_TOOL_BAR_ITEM_IMP
 		do
 			button_imp ?= w.implementation
 			check
@@ -907,11 +907,10 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 			offset := internal_screen.pointer_position.x - screen_x
 			
 			item_index := find_button(offset, height // 2)
-			io.putstring ("Item index : " + item_index.out + "%N")
 			if item_index >= 0 and item_index < ev_children.count then
-				 button := ev_children.i_th (item_index + 1)
+				 button ?= ev_children.i_th (item_index + 1)
 			elseif item_index <= - 1 and item_index >= - count then
-				button := ev_children.i_th (item_index.abs)
+				button ?= ev_children.i_th (item_index.abs)
 			elseif (item_index = -count - 1) then
 				Result := count + 1
 			end

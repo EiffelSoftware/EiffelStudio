@@ -25,7 +25,8 @@ feature -- Access
 		local
 			string_value: STRING
 		do
-			if has (name) then
+			search (name)
+			if found then
 				string_value := found_item
 				if string_value.is_integer then
 					Result := string_value.to_integer
@@ -46,7 +47,8 @@ feature -- Access
 		local
 			string_value: STRING
 		do
-			if has (name) then
+			search (name)
+			if found then
 				string_value := found_item
 				if string_value.is_integer then
 					Result := string_value.to_integer.abs
@@ -68,7 +70,8 @@ feature -- Access
 		local
 			string_value: STRING
 		do
-			if has (name) then
+			search (name)
+			if found then
 				string_value := found_item 
 				if string_value.is_boolean then
 					Result := string_value.to_boolean
@@ -88,7 +91,8 @@ feature -- Access
 		local
 			string_value: STRING
 		do
-			if has (name) then
+			search (name)
+			if found then
 				string_value := found_item
 				if string_value.is_real then
 					Result := string_value.to_real
@@ -106,7 +110,8 @@ feature -- Access
 		require
 			name_not_void: name /= Void
 		do
-			if has (name) then
+			search (name)
+			if found then
 				Result := found_item
 			else
 				Result := default_value
@@ -124,7 +129,8 @@ feature -- Access
 			c, pos, last_pos: INTEGER;
 			an_entry: STRING
 		do
-			if has (name) then
+			search (name)
+			if found then
 				a_text := found_item
 				!! a_list.make;
 				from
@@ -179,7 +185,8 @@ feature -- Access
 		local
 			string_value: STRING
 		do
-			if has (name) then
+			search (name)
+			if found then
 				string_value := found_item
 				if string_value.count > 0 then
 					Result := string_value.item (1);

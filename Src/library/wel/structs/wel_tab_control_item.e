@@ -39,14 +39,14 @@ creation
 feature {NONE} -- Initialization
 
 	make is
-			-- Make a tree item structure.
+			-- Make a tab item structure.
 		do
 			structure_make
 			set_mask (Tcif_text + Tcif_param)
 		end
 
 	make_with_window (a_parent: WEL_TAB_CONTROL) is
-			-- Make a tree item structure and create a window
+			-- Make a tab item structure and create a window
 			-- associated to the item.
 		local
 			temp_window: WEL_CONTROL_WINDOW

@@ -278,7 +278,7 @@ rt_public EIF_OBJ eif_getenv (EIF_OBJ k)
 	strcpy (lower_k, k);
 	CharLowerBuff (lower_k, key_len);
 
-	strcpy (key, "Software\\ISE Inc\\Eiffel4\\");
+	strcpy (key, "Software\\ISE\\Eiffel4\\");
 	strncat (key, rindex(modulename, '\\')+1, appl_len);
 
 	if (RegOpenKeyEx (HKEY_CURRENT_USER, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS) {

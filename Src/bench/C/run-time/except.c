@@ -285,7 +285,7 @@ struct test {
 #define Origin(x)		test_system[(int) x].class
 #undef Dtype
 #define Dtype(x)		0
-#else
+#else /* TEST */
 #define Class(x)		System(Dtype(x)).cn_generator
 #define Origin(x)		System(x).cn_generator
 #endif

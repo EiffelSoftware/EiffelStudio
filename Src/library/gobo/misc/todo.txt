@@ -1,0 +1,13 @@
+The following "TO DO" list is not exhaustive. The tasks have been
+listed by order of submission and are by no way sorted by priority
+or any other kind of criterion. This list is for internal use only
+and is given here just for information. In particular there is no
+implied commitment that these points will be implemented in future
+releases.
+
+
+14 June 1997
+
+. Add %option backupfile="filename" and corresponding command-line option.
+. Add a feature in DS_ARRAYED_LIST to get rid of garbage (i.e. old items
+  at indexes count+1..capacity.

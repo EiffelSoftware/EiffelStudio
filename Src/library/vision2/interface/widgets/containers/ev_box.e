@@ -142,18 +142,6 @@ feature {EV_ANY} -- Contract support
 			)
 		end
 
-	do_test is
-			-- Cycle the first widget into the last position.
-		local
-			w: EV_WIDGET
-		do
-			w := first
-			if w /= Void then
-				prune_all (w)
-				extend (w)
-			end
-		end
-
 feature  {EV_ANY_I} -- Implementation
 	
 	implementation: EV_BOX_I

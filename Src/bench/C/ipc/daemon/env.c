@@ -9,7 +9,7 @@
 		This is standard Windows registry access.
 */
 
-#include <windows.h>
+#include "eif_config.h"
 #include "eif_file.h"
 
 char *win_eif_getenv (char *k, char *app)

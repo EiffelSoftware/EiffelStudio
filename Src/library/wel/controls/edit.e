@@ -255,7 +255,7 @@ feature -- Status report
 			exists: exists
 		do
 			Result := cwin_send_message_result (item,
-				Em_getmodify, 0, 0) = 1
+				Em_getmodify, 0, 0) /= 0
 		end
 
 	formatting_rect: WEL_RECT is

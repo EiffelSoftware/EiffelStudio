@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 	
 class
-	REGSAM
+	WEL_REGISTRY_ACCESS_MODE
 
 feature -- Access
 
@@ -28,7 +28,7 @@ feature -- Access
 	Key_create_link: INTEGER is 32
 			-- Permission to create a symbolic link.
 
-end -- class REGSAM
+end -- class WEL_REGISTRY_ACCESS_MODE
 
 --|-------------------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.

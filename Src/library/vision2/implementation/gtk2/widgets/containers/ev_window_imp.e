@@ -525,8 +525,6 @@ feature {NONE} -- Implementation
 
 	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- Used for key event actions sequences.
-		local
-			a_cs: EV_GTK_C_STRING
 		do
 			Precursor (a_key, a_key_string, a_key_press)
 			if focus_widget /= Void and then a_key /= Void and then focus_widget.has_focus then

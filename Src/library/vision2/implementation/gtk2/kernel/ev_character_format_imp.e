@@ -196,9 +196,6 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			a_text_tag: POINTER
 			a_text_tag_name: EV_GTK_C_STRING
 			prop_value_int: INTEGER
-			prop_value_string: EV_GTK_C_STRING
-			temp_string: STRING
-			a_red, a_green, a_blue: INTEGER
 		do
 			a_tag_table := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_tag_table (a_text_buffer)
 			

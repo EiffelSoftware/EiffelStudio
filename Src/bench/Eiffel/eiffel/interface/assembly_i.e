@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 	initialize_from_gac_assembly is
 			-- Try to generate associated XML file of current assembly.
 		require
-			is_local: is_local
+			not_is_local: not is_local
 		local
 			l_vd64: VD64
 			l_emitter: IL_EMITTER

@@ -972,7 +972,7 @@ feature -- Element change
 			count := new_size
 			internal_hash_code := 0
 		ensure
-			new_count: count = old count + s.count
+			new_count: count = old (count + s.count)
 		end
 
 	prepend_boolean (b: BOOLEAN) is

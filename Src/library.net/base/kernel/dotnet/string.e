@@ -965,7 +965,7 @@ feature -- Element change
 		do
 			internal_string_builder := internal_string_builder.insert_integer_string (0, s.to_cil)
 		ensure
-			new_count: count = old count + s.count
+			new_count: count = old (count + s.count)
 		end
 
 	prepend_boolean (b: BOOLEAN) is

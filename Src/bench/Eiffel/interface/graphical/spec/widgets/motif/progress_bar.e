@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 		local
 			array: ARRAY [MEL_LABEL];
 			mel_label: MEL_LABEL;
-			color_x: COLOR_X;
+			color_x: COLOR_IMP;
 			t, i: INTEGER
 		do
 			color_x ?= 

@@ -16,7 +16,7 @@ feature -- Setting
 			-- to `a_color' 
 		local
 			mel_widget: MEL_SCROLLED_TEXT;
-			color_x: COLOR_X;
+			color_x: COLOR_IMP;
 		do
 			mel_widget ?= a_widget;
 			color_x ?= a_color.implementation;

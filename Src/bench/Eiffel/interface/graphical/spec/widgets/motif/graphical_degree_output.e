@@ -519,16 +519,17 @@ feature {NONE} -- Implementation
 			frame.attach_left;
 			frame.attach_right;
 			frame.set_top_offset (10);
-			frame.set_left_offset (10);
-			frame.set_right_offset (45);
+			frame.set_left_offset (10);	
+			frame.set_right_offset (65);
 			frame.set_bottom_offset (5);
 			frame.attach_bottom_to_widget (cancel_b);
 
 			app_context := application_context;
 			cancel_b.set_activate_callback (Current, Void);
 			update_resources;
-
-			percentage_l.set_bottom_offset (cancel_b.height + 10);
+			
+			percentage_l.attach_bottom_to_widget (cancel_b)
+			percentage_l.set_bottom_offset (5)
 			disable_default_positioning;
 		end;
 

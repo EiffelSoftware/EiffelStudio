@@ -51,7 +51,7 @@ feature -- Initialization
 			get_point_by_index (2).set_x (90)
 			get_point_by_index (2).set_y (110)
 			get_point_by_index (3).set_x (10)
-			get_point_by_index (4).set_y (170)
+			get_point_by_index (3).set_y (170)
 			set_foreground_color (create {EV_COLOR}.make_with_rgb (
 				1.0, 0.0, 0.0))
 			set_line_width (10)
@@ -165,6 +165,9 @@ end -- class EV_FIGURE_ARC
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/04/26 17:27:17  brendel
+--| Corrected index for point.
+--|
 --| Revision 1.5  2000/04/26 15:56:34  brendel
 --| Added CVS Log.
 --| Added copyright notice.

@@ -120,7 +120,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy::ccom_clust
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_128 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_127 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -255,7 +255,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy::ccom_clust
 	
 	rt_ce.free_memory_bstr (tmp_cluster_name);
 
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_131 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_130 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -290,7 +290,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy::ccom_clust
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_131 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_130 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -328,6 +328,42 @@ void ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy::ccom_change_cluster
 	rt_ce.free_memory_bstr (tmp_a_name);
 rt_ce.free_memory_bstr (tmp_a_new_name);
 
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_BOOLEAN ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy::ccom_is_valid_name(  /* [in] */ EIF_OBJECT cluster_name )
+
+/*-----------------------------------------------------------
+	Checks to see if a cluster name is valid
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelSystemClusters == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelSystemClusters_, (void **)&p_IEiffelSystemClusters);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	BSTR tmp_cluster_name = 0;
+	tmp_cluster_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (cluster_name));
+	VARIANT_BOOL ret_value = 0;
+	
+	hr = p_IEiffelSystemClusters->is_valid_name(tmp_cluster_name, &ret_value);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	rt_ce.free_memory_bstr (tmp_cluster_name);
+
+	EIF_BOOLEAN eiffel_result =  (EIF_BOOLEAN)rt_ce.ccom_ce_boolean (ret_value);
+	return (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 

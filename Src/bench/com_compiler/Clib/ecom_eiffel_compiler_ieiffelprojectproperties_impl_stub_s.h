@@ -179,57 +179,27 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Imported assemblies.
+	Externals.
 	-----------------------------------------------------------*/
-	STDMETHODIMP assemblies(  /* [out, retval] */ ecom_eiffel_compiler::IEnumImportedAssemblies * * return_value );
+	STDMETHODIMP externals(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelSystemExternals * * return_value );
 
 
 	/*-----------------------------------------------------------
-	Add an assembly to the project.
+	Default namespace.
 	-----------------------------------------------------------*/
-	STDMETHODIMP add_assembly(  /* [in] */ BSTR assembly_path );
+	STDMETHODIMP default_namespace(  /* [out, retval] */ BSTR * return_value );
 
 
 	/*-----------------------------------------------------------
-	Remove an assembly from the project.
+	Default namespace.
 	-----------------------------------------------------------*/
-	STDMETHODIMP remove_assembly(  /* [in] */ BSTR assembly_path );
+	STDMETHODIMP set_default_namespace(  /* [in] */ BSTR return_value );
 
 
 	/*-----------------------------------------------------------
-	Included Paths.
+	Assemblies.
 	-----------------------------------------------------------*/
-	STDMETHODIMP include_paths(  /* [out, retval] */ ecom_eiffel_compiler::IEnumIncludePaths * * return_value );
-
-
-	/*-----------------------------------------------------------
-	Add an include path to the project.
-	-----------------------------------------------------------*/
-	STDMETHODIMP add_include_path(  /* [in] */ BSTR include_path );
-
-
-	/*-----------------------------------------------------------
-	Remove an include path from the project.
-	-----------------------------------------------------------*/
-	STDMETHODIMP remove_include_path(  /* [in] */ BSTR include_path );
-
-
-	/*-----------------------------------------------------------
-	Object Files.
-	-----------------------------------------------------------*/
-	STDMETHODIMP object_files(  /* [out, retval] */ ecom_eiffel_compiler::IEnumObjectFiles * * return_value );
-
-
-	/*-----------------------------------------------------------
-	Add an object file to the project.
-	-----------------------------------------------------------*/
-	STDMETHODIMP add_object_file(  /* [in] */ BSTR object_file );
-
-
-	/*-----------------------------------------------------------
-	Remove an object file from the project.
-	-----------------------------------------------------------*/
-	STDMETHODIMP remove_object_file(  /* [in] */ BSTR object_file );
+	STDMETHODIMP assemblies(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelSystemAssemblies * * return_value );
 
 
 	/*-----------------------------------------------------------

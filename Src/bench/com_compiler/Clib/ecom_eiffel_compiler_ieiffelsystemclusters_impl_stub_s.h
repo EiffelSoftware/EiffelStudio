@@ -83,6 +83,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Checks to see if a cluster name is valid
+	-----------------------------------------------------------*/
+	STDMETHODIMP is_valid_name(  /* [in] */ BSTR cluster_name, /* [out, retval] */ VARIANT_BOOL * return_value );
+
+
+	/*-----------------------------------------------------------
 	Get type info
 	-----------------------------------------------------------*/
 	STDMETHODIMP GetTypeInfo( unsigned int itinfo, LCID lcid, ITypeInfo **pptinfo );

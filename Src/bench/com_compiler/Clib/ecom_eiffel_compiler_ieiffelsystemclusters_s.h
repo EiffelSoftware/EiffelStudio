@@ -101,6 +101,12 @@ public:
 	virtual STDMETHODIMP change_cluster_name(  /* [in] */ BSTR a_name, /* [in] */ BSTR a_new_name ) = 0;
 
 
+	/*-----------------------------------------------------------
+	Checks to see if a cluster name is valid
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP is_valid_name(  /* [in] */ BSTR cluster_name, /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+
+
 
 protected:
 

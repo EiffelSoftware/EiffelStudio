@@ -213,22 +213,20 @@ feature -- Status report
 			Result := wel_font.string_width (a_string)
 		end
 
-	string_size (a_string: STRING): TUPLE [INTEGER, INTEGER] is
-			-- [width, height] in pixels of `a_string' in the current font,
+	string_size (a_string: STRING): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
+			-- [width, height, left_offset, right_offset] in pixels of `a_string' in the current font,
 			-- taking into account line breaks ('%N').
+			-- `width' and `height' correspond to the rectange used to bound `a_string', and
+			-- should be used when placing strings next to each as part of a text.
+			-- On some fonts, characters may extend outside of the bounds given by `width' and `height',
+			-- for example certain italic letters may overhang other letters. Use `left_offset' and
+			-- `right_offset' to determine if there is any overhang for `a_string'. a negative `left_offset'
+			-- indicates overhang to the left, while a positive `right_offset' indicates an overhang to the right.
+			-- To determine the complete bounding rectangle for `a_string' add negative `left_offset'
+			-- and positive `right_offset' to `width'.
 		do
-			Result := wel_font.string_size (a_string)
-				--| FIXME The Result from `wel_font' is not correctly being
-				--| returned when `Current' is italic. The width is smaller
-				--| than the displayed width. I believe the overhang from
-				--| text_metric should be taken into account, but when
-				--| queried, this would always return 0. See TEXTMETRIC from
-				--| MSDN. For now, if `Current' is italic then we add 1/6 of the
-				--| height. Julian 11/01/2001
-			if shape = shape_italic then
-				Result.put (Result.integer_item (2) // 6 +
-					Result.integer_item (1), 1)
-			end
+			Result := wel_font.string_size_extended (a_string)
+			Result.put_integer_32 (0 - Result.integer_32_item (4), 4)
 		end
 
 	horizontal_resolution: INTEGER is

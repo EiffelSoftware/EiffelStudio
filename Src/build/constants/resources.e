@@ -262,10 +262,10 @@ feature -- Window sizes
 	object_command_generator_height: INTEGER
 
 		-- Class selector
-	class_selector_width: INTEGER
-	class_selector_height: INTEGER
-	class_selector_x: INTEGER
-	class_selector_y: INTEGER
+	class_importer_width: INTEGER
+	class_importer_height: INTEGER
+	class_importer_x: INTEGER
+	class_importer_y: INTEGER
 
 feature {NONE} -- Integer Values initialization
 
@@ -331,10 +331,10 @@ feature {NONE} -- Integer Values initialization
 			object_command_generator_width := resource.get_pos_integer ("object_command_generator_width", 410)
 			object_command_generator_height := resource.get_pos_integer ("object_command_generator_height", 135)
 
-			class_selector_width := resource.get_pos_integer ("class_selector_width", 300)
-			class_selector_height := resource.get_pos_integer ("class_selector_height", 300)
-			class_selector_x := resource.get_pos_integer ("class_selector_x", 0)
-			class_selector_y := resource.get_pos_integer ("class_selector_y", 0)
+			class_importer_width := resource.get_pos_integer ("class_importer_width", 160)
+			class_importer_height := resource.get_pos_integer ("class_importer_height", 300)
+			class_importer_x := resource.get_pos_integer ("class_importer_x", 0)
+			class_importer_y := resource.get_pos_integer ("class_importer_y", 0)
 
 		end;
 

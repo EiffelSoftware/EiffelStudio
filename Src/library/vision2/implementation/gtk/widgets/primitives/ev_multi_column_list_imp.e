@@ -105,7 +105,7 @@ feature {NONE} -- Initialization
 		do
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y]
-			a_row_number := (a_y // (row_height + 1)) + 1
+			a_row_number := row_from_y_coord (a_y)
 			if a_row_number > 0 and then a_row_number <= count then
 				clicked_row := ev_children @ a_row_number
 			end
@@ -329,7 +329,7 @@ feature {NONE} -- Initialization
 			{EV_ITEM_LIST_IMP} Precursor
 			{EV_PRIMITIVE_IMP} Precursor
 			{EV_MULTI_COLUMN_LIST_I} Precursor
-			real_signal_connect (c_object, "motion_notify_event", agent motion_handler, Default_translate)
+			real_signal_connect (visual_widget, "motion_notify_event", agent motion_handler, Default_translate)
 			connect_button_press_switch
 			disable_multiple_selection
 		end
@@ -346,7 +346,8 @@ feature {NONE} -- Initialization
 			end
 			if a_y > y_coord_offset then
 				a_row_number := row_from_y_coord (a_y)
-				if a_row_number <= count then
+				print ("a_row_number = " + a_row_number.out + " a_y = " + a_y.out + "%N")
+				if a_row_number > 0 and then a_row_number <= count then
 					a_row_imp := ev_children @ a_row_number
 					if a_row_imp.pointer_motion_actions_internal /= Void then
 						a_row_imp.pointer_motion_actions_internal.call (t)
@@ -734,7 +735,6 @@ feature -- Implementation
 
 	connect_pnd_callback is
 		do
-
 			check
 				button_release_not_connected: button_release_connection_id = 0
 			end
@@ -787,6 +787,7 @@ feature -- Implementation
 			a_row_index: INTEGER
 		do
 			a_row_index := row_from_y_coord (a_y)
+			print ("PND row index = " + a_row_index.out + "%N")
 
 			if a_row_index > 0 then
 				pnd_row_imp := ev_children.i_th (a_row_index)
@@ -832,19 +833,11 @@ feature -- Implementation
 	
 	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
 			-- Steps to perform before transport initiated.
-		local
-			env: EV_ENVIRONMENT
-			app_imp: EV_APPLICATION_IMP
 		do
-			create env
-			app_imp ?= env.application.implementation
-			check
-				app_imp_not_void: app_imp /= Void
-			end
 
 			temp_accept_cursor := accept_cursor
 			temp_deny_cursor := deny_cursor
-			app_imp.on_pick (pebble)
+			app_implementation.on_pick (pebble)
 
 			if pnd_row_imp /= Void then
 				if pnd_row_imp.pick_actions_internal /= Void then
@@ -951,7 +944,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 		do
 			ver_adj := C.gtk_scrolled_window_get_vadjustment (c_object)
 			ver_offset := C.gtk_adjustment_struct_value (ver_adj).rounded
-			temp_a_y := (ver_offset - y_coord_offset) + a_y
+			temp_a_y := a_y + ver_offset - y_coord_offset
 			Result := temp_a_y // (row_height + 1) + 1
 			if Result > ev_children.count then
 				Result := 0

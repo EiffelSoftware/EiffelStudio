@@ -17,17 +17,17 @@ creation
 
 feature -- Status report
 
-	to_show_all_caller: BOOLEAN;
+	to_show_all_callers: BOOLEAN;
 			-- Is the format going to show all callers?
 
 feature -- Status setting
 
 	set_all_callers is
-			-- Set `to_show_all_caller' to True;
+			-- Set `to_show_all_callers' to True;
 		do
-			to_show_all_caller := True
+			to_show_all_callers := True
 		ensure
-			show_all_callers: to_show_all_caller	
+			show_all_callers: to_show_all_callers	
 		end
 
 feature -- Execution
@@ -35,9 +35,10 @@ feature -- Execution
 	execute is
 			-- Execute the display of callers.
 		do
-			if to_show_all_caller then
+			if to_show_all_callers then
 				show_all_callers
 			else
+				tabs := -1;
 				show_current_callers
 			end
 		end;
@@ -91,11 +92,11 @@ feature -- Execution
 				loop
 					cfeat := list.item;
 					feat := client.feature_with_name (cfeat);
-					add_tabs (st, tabs);
+					add_tabs (st, tabs + 1);
 					if feat = Void then
 						st.add_string ("invariant")
 					else
-						feat.append_name (st, client)	
+						feat.append_name (st)	
 					end;
 					st.add_new_line;
 					list.forth
@@ -112,7 +113,7 @@ feature {NONE} -- Implementation
 	show_all_callers is
 			-- Show all the callers of `current_feature' and its descendents.
 		require
-			to_show_all_caller: to_show_all_caller	
+			to_show_all_callers: to_show_all_callers
 		local
 			descendants: PART_SORTED_TWO_WAY_LIST [E_CLASS];
 			a_feat: E_FEATURE;
@@ -149,11 +150,11 @@ feature {NONE} -- Implementation
 				cell := a_list.item;
 				current_class := cell.item1;
 				current_feature := cell.item2;
-				current_feature.append_name (st, current_class);
+				current_feature.append_name (st);
 				st.add_string (" from ");
 				current_class.append_name (st);
 				st.add_new_line;
-				tabs := 1;
+				tabs := 0;
 				show_current_callers;
 				a_list.forth
 			end

@@ -440,7 +440,6 @@ feature -- Assertions
 			Result := wid = par
 		end
 
-
 feature -- Event - command association
 
 	add_double_click_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -464,16 +463,6 @@ feature -- Event - command association
 	add_destroy_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when the widget is destroyed.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
-		end
-
-	add_expose_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the widget has to be redrawn because it was
-			-- exposed from behind another widget.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
@@ -527,7 +516,7 @@ feature -- Event - command association
 		deferred
 		end
 
-	add_loose_focus_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	add_lose_focus_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when the widget loose the focus.
 		require
@@ -573,15 +562,6 @@ feature -- Event -- removing command association
 	remove_destroy_commands is
 			-- Empty the list of commands to be executed when
 			-- the widget is destroyed.
-		require
-			exists: not destroyed
-		deferred
-		end
-
-	remove_expose_commands is
-			-- Empty the list of commands to be executed when
-			-- the widget has to be redrawn because it was exposed from
-			-- behind another widget.
 		require
 			exists: not destroyed
 		deferred

@@ -63,7 +63,11 @@ feature
 			f_name.extend ('E');
 			f_name.append_integer (i);
 			file_make (f_name);
-			if not Project_read_only.item and not exists then
+			if not Project_read_only.item then
+					-- If the file exists, open_write + close
+					-- will delete the previous content
+					--| Re-finalization after a crash: the COMP
+					--| directory doesn't grow and grow and grow
 				open_write;
 				basic_close
 			end;

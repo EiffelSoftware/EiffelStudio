@@ -18,7 +18,7 @@ creation
 	
 feature 
 
-	eiffel_type: STRING is "CMD";
+	eiffel_type: STRING is "BUILD_NON_UNDOABLE_CMD";
 
 	label: STRING is
 		do

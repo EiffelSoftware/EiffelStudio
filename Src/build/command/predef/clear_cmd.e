@@ -16,7 +16,7 @@ creation
 
 feature 
 
-	eiffel_type: STRING is "Build_clear"
+	eiffel_type: STRING is "BUILD_CLEAR"
 
 	label: STRING is
 		do

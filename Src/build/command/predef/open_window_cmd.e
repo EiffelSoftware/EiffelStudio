@@ -16,7 +16,7 @@ creation
 
 feature 
 
-	eiffel_type: STRING is "Build_open_cmd";
+	eiffel_type: STRING is "BUILD_OPEN_CMD";
 
 	label: STRING is "Open window";
 

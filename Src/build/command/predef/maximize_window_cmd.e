@@ -16,7 +16,7 @@ creation
 
 feature 
 
-	eiffel_type: STRING is "Build_maximize_cmd";
+	eiffel_type: STRING is "BUILD_MAXIMIZE_CMD";
 
 	label: STRING is "Maximize";
 

@@ -17,7 +17,7 @@ creation
 
 feature 
 
-	eiffel_type: STRING is "Build_reset_to_empty"
+	eiffel_type: STRING is "BUILD_RESET_TO_EMPTY"
 
 	label: STRING is
 		do

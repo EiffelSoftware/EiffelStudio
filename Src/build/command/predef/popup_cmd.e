@@ -12,7 +12,7 @@ creation
 
 feature 
 
-	eiffel_type: STRING is "Build_popup_cmd";
+	eiffel_type: STRING is "BUILD_POPUP_CMD";
 
 	label: STRING is "Popup";
 

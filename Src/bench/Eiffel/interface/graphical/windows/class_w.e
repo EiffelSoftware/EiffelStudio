@@ -278,22 +278,28 @@ feature -- Stone process
 			else
 				e_class := s.e_feature.written_class;
 				!! cl_stone.make (e_class);
-				showtext_frmt_holder.execute (cl_stone);
-				history.extend (stone);
-				text_window.deselect_all;
-				pos := s.error_position;
-				txt := text_window.text;
-				if txt.count > pos then
-					if txt.item (pos) = '%N' then	
-						end_pos := txt.index_of ('%N', pos + 1);
-					else
-						end_pos := txt.index_of ('%N', pos);
+				if e_class.lace_class.hide_implementation then
+					set_default_format;
+					process_class (cl_stone);
+					text_window.search_stone (s)
+				else
+					showtext_frmt_holder.execute (cl_stone);
+					history.extend (stone);
+					text_window.deselect_all;
+					pos := s.error_position;
+					txt := text_window.text;
+					if txt.count > pos then
+						if txt.item (pos) = '%N' then	
+							end_pos := txt.index_of ('%N', pos + 1);
+						else
+							end_pos := txt.index_of ('%N', pos);
+						end;
+						if pos /= 0 then
+							text_window.highlight_selected (pos, end_pos)
+						end
 					end;
-					if pos /= 0 then
-						text_window.highlight_selected (pos, end_pos)
-					end
-				end;
-				text_window.set_cursor_position (pos);
+					text_window.set_cursor_position (pos);
+				end
 			end
 		end;
  
@@ -308,12 +314,18 @@ feature -- Stone process
 			else
 				e_class := s.e_feature.written_class;
 				!! cl_stone.make (e_class);
-				showtext_frmt_holder.execute (cl_stone);
-				history.extend (stone);
-				text_window.deselect_all;
-				text_window.set_cursor_position (s.start_position);
-				text_window.highlight_selected
-					(s.start_position, s.end_position)
+				if e_class.lace_class.hide_implementation then
+					set_default_format;
+					process_class (cl_stone);
+					text_window.search_stone (s)
+				else
+					showtext_frmt_holder.execute (cl_stone);
+					history.extend (stone);
+					text_window.deselect_all;
+					text_window.set_cursor_position (s.start_position);
+					text_window.highlight_selected
+						(s.start_position, s.end_position)
+				end
 			end
 		end;
  
@@ -389,13 +401,15 @@ feature -- Update
 					e_class.parse_ast;
 					syn_error := e_class.last_syntax_error;
 					if syn_error /= Void then	
-						txt := "Class has syntax error ";
+						txt := "Class has syntax error";
 						msg := syn_error.syntax_message;
 						if not msg.empty then
-							txt.extend ('(');
+							txt.append (" (");
 							txt.append (msg);
 							txt.extend (')');
 						end;
+						txt.extend ('.');
+						txt.append ("%NSee highlighted area");
 							-- syntax error occurred
 						!! syn_stone.make (syn_error, e_class);
 						process_class_syntax (syn_stone);
@@ -466,14 +480,11 @@ feature -- Grahpical Interface
 		local
 			sep: SEPARATOR
 		do
-			create_toolbar_parent (global_form);
+			create_toolbar (global_form);
 
 			build_text_windows;
 			build_menus;
-			!! edit_bar.make (Interface_names.n_Command_bar_name, toolbar_parent);
-			!! sep.make (Interface_names.t_Empty, toolbar_parent);
 			build_bar;
-			!! format_bar.make (Interface_names.n_Format_bar_name, toolbar_parent);
 			build_format_bar;
 			build_command_bar;
 			fill_menus;

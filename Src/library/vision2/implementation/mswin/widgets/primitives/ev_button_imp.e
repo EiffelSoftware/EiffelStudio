@@ -240,14 +240,26 @@ feature -- Status setting
 			-- Set the style "default_push_button" of `Current'.
 		do
 			is_default_push_button := True
-			invalidate
+			if internal_bitmap /= Void then
+				invalidate
+			else
+				cwin_send_message (wel_item, bm_setstyle,
+					to_wparam (style | bs_defpushbutton),
+					cwin_make_long (1, 0))
+			end
 		end
 
 	disable_default_push_button is
 			-- Remove the style "default_push_button"  of `Current'. 
 		do
 			is_default_push_button := False
-			invalidate
+			if internal_bitmap /= Void then
+				invalidate
+			else
+				cwin_send_message (wel_item, bm_setstyle,
+					to_wparam (style & bs_defpushbutton.bit_not),
+					cwin_make_long (1, 0))
+			end
 		end
 
 	enable_can_default is

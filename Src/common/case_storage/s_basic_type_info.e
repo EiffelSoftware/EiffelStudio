@@ -18,7 +18,7 @@ feature
 		require
 			valid_name: a_name /= Void
 		do
-			free_text_name := a_name
+			free_text_name := a_name;
 		end;
 
 	is_valid: BOOLEAN is

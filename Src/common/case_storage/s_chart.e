@@ -2,7 +2,7 @@ class S_CHART
 
 feature
 
-	indexes: FIXED_LIST [S_TEXT_DATA];
+	indexes: FIXED_LIST [S_TAG_DATA];
 		-- Data on Current synonymn,
 		-- application domain, authors,
 		-- date of creation, revision level

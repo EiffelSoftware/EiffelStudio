@@ -23,7 +23,9 @@ feature  -- Initialization
 			icon_location := icon_location + Icon_relative_filename
 			generate_dll := False
 			root_class_name := Default_root_class_name
+			root_class_external_name := Default_root_class_external_name
 			creation_routine_name := Default_creation_routine_name
+			creation_routine_external_name := Default_creation_routine_external_name
 			dotnet_assembly_filename := Empty_string
 			emit_directory := Default_directory
 			eiffel_formatting := True
@@ -58,12 +60,28 @@ feature -- Setting
 			root_class_name_set: root_class_name = a_name
 		end
 
+	set_root_class_external_name (a_name: like root_class_external_name) is
+			-- Set `root_class_external_name' with `a_name'.
+		do
+			root_class_external_name := a_name
+		ensure
+			root_class_external_name_set: root_class_external_name = a_name
+		end
+		
 	set_creation_routine_name (a_name: like creation_routine_name) is
 			-- Set `creation_routine_name' with `a_name'.
 		do
 			creation_routine_name := a_name
 		ensure
 			creation_routine_name_set: creation_routine_name = a_name
+		end
+
+	set_creation_routine_external_name (a_name: like creation_routine_external_name) is
+			-- Set `creation_routine_external_name' with `a_name'.
+		do
+			creation_routine_external_name := a_name
+		ensure
+			creation_routine_external_name_set: creation_routine_external_name = a_name
 		end
 	
 	set_dotnet_assembly_filename (a_filename: like dotnet_assembly_filename) is
@@ -102,8 +120,14 @@ feature -- Access
 	root_class_name: STRING
 			-- Name of the root class of the Eiffel.NET project
 
+	root_class_external_name: STRING
+			-- External name of the root class of the Eiffel.NET project
+
 	creation_routine_name: STRING
 			-- Name of the creation routine of the root class
+
+	creation_routine_external_name: STRING
+			-- External name of the creation routine of the root class
 	
 	dotnet_assembly_filename: STRING
 			-- Filename of .NET assembly to emit
@@ -646,10 +670,16 @@ feature {NONE} -- Constants
 	
 	Default_root_class_name: STRING is "APPLICATION"
 			-- Default root class name
-	
+
+	Default_root_class_external_name: STRING is "Application"
+			-- Default root class external name
+			
 	Default_creation_routine_name: STRING is "make"
 			-- Default creation routine name
-	
+
+	Default_creation_routine_external_name: STRING is "Make"
+			-- Default creation routine external name
+			
 	Dll_type: STRING is "dll"
 			-- DLL type
 	

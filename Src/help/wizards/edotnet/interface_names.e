@@ -8,12 +8,14 @@ feature -- Labels names
 
 	l_Available_assemblies_name: STRING is 	"Available assemblies Name" 
 	l_Creation_routine_name: STRING is 	"Creation routine name"
+	l_Creation_routine_external_name: STRING is 	"Creation routine .NET name"
 	l_Culture: STRING is				"Culture"
 	l_Dotnet_assembly: STRING is 		".NET Assembly"
 	l_Eiffel_formatting: STRING is 		"Generate Eiffel-friendly names"
 	l_Emit_directory: STRING is 			"Import Directory"
 	l_Public_key: STRING is 			"Public Key"
 	l_Root_class_name: STRING is 		"Root class name"
+	l_Root_class_external_name: STRING is 	"Root class .NET name"
 	l_Selected_assemblies_name: STRING is	"Selected assemblies Name"
 	l_Version: STRING is 				"Version"
 	
@@ -39,6 +41,17 @@ feature -- Messages
 								%be a letter.%N%
 								%%N%
 								%Click Back and choose a valid creation routine name."
+
+	m_Empty_root_class_external_name_error: STRING is
+								"Please chose a .NET name for the root class.%N%
+								%The .NET name is the name that will be used%N%
+								%by other .NET components when calling this class."
+								
+	m_Empty_creation_routine_external_name_error: STRING is
+								"Please chose a .NET name for the creation routine.%N%
+								%The .NET name is the name that will be used%N%
+								%by other .NET components when calling this routine."
+								
 	m_Filename_error: STRING is 
 						"The .NET Assembly filename that you have chosen is not valid.%N%
 						%%N%
@@ -84,6 +97,8 @@ feature -- Messages
 feature -- Titles
 
 	t_Creation_routine_name_error: STRING is "Creation Routine Name Error"
+	t_Empty_creation_routine_external_name_error: STRING is "Empty Creation Routine .NET Name Error"
+	t_Empty_root_class_external_name_error: STRING is "Empty Root Class .NET Name Error"
 	t_Filename_error: STRING is ".NET Assembly Filename Error"
 	t_Invalid_data_error: STRING is "Invalid Names Error"
 	t_Root_class_name_error: STRING is "Root Class Name Error"

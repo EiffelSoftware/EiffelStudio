@@ -13,27 +13,43 @@ inherit
 	W_MAN_GEN
 		export
 			{NONE} all
+		undefine
+			is_equal
 		end;
 
 	G_ANY_I
 		export
 			{NONE} all
+		undefine
+			is_equal
 		end;
 
 	DRAWING_X
+		undefine
+			is_equal
 		redefine
-			display_pointer
+			display_handle
 		end;
 
 	SCREEN_I
+		rename
+			screen_object as display_handle
+		undefine
+			is_equal
+		end;
 
 	MEL_DISPLAY
 		rename
 			make as make_display,
-			handle as display_pointer
+			handle as display_handle
 		redefine
-			display_pointer
-		end	
+			display_handle
+		end;
+
+	SHARED_MEL_DISPLAY
+		undefine
+			is_equal
+		end
 
 creation
 
@@ -49,14 +65,27 @@ feature {NONE} -- Initialization
 			make_display (app_context, a_screen.screen_name, 
 					application_class, application_class);
 			if is_valid then
-				create_gc
+				make_gc (default_screen);
+				display_cell.put (Current)
 			end
 		end;
 
 feature -- Access
 
-	display_pointer: POINTER;
+	display_handle: POINTER;
 			-- C pointer to X display
+
+	window: POINTER is
+			-- Root window of default screen
+		do	
+			Result := default_screen.root_window
+		end;
+
+	depth: INTEGER is
+			-- Default depth of root window
+		do
+			Result := default_screen.default_depth
+		end;
 
 	buttons: BUTTONS is
 			-- Current state of the mouse buttons
@@ -90,87 +119,33 @@ feature -- Access
 			not (Result = Void)
 		end;
 
-	screen_object: POINTER is
-			-- Screen object associated
-		do
-			Result := display_pointer
-		end;
-	
 	widget_pointed: WIDGET is
 			-- Widget currently pointed by the pointer
 		local
-			last_widget_c: POINTER;
-			widget_c: POINTER;
-			void_pointer: POINTER;
-			found: BOOLEAN;
-			widget_list: LINKED_LIST [POINTER]
+			mel_widget: WIDGET_M;
+			widget_list: LINKED_LIST [MEL_OBJECT]
 		do
-			widget_list := default_screen.widgets_pointed;
-				-- Remove last item;
-			if not widget_list.empty then
+			widget_list := default_screen.mel_widgets_pointed;
+				-- Find a EiffelVision widget by going
+				-- from the child to the parent
+			from
 				widget_list.finish;
-				last_widget_c := widget_list.item
+			until
+				widget_list.before or else
+				Result /= Void
+			loop
+				mel_widget ?= widget_list.item;
+				if mel_widget /= Void then
+					Result := mel_widget.widget_oui
+				end;
+				widget_list.back
 			end;
-			if last_widget_c /= default_pointer then
-					-- Remove last one
-				widget_list.remove;
-				from
-					widget_manager.start;
-				until	
-					Result /= Void or widget_manager.after
-				loop
-					if last_widget_c 
-						= widget_manager.item.implementation.screen_object
-					then
-						Result := widget_manager.item;
-					end;
-					widget_manager.forth
-				end
-				if Result = Void then
-					--| Cannot find widget in widget_manager.
-					--| This means that this widget was created on the
-					--| C side and hasn't been recorded in the widget_manager.
-					--| The best we can do is to get the parent that has
-					--| been recorded in the w_manager.
-					from
-						widget_list.start
-					until
-						widget_list.after
-					loop
-						widget_c := widget_list.item;
-						if widget_c /= void_pointer then
-							from
-								found := false;
-								widget_manager.start
-							until
-								found or widget_manager.after
-							loop
-								if widget_c = 
-									widget_manager.item.implementation.screen_object
-								then
-									Result := widget_manager.item;
-									found := true
-								end;
-								widget_manager.forth
-							end;
-						end;
-						widget_list.forth
-					end
-				end
-			end
 		end;
 
 	width: INTEGER is
 			-- Width of screen
 		do
 			Result := default_screen.width
-		end;
-
-	window_object: POINTER is
-			-- X identifier of the drawable.
-		do
-			--Result := default_screen.root
-			Result := root_window_object
 		end;
 
 	x: INTEGER is

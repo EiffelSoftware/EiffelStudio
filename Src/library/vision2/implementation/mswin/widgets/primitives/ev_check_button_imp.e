@@ -23,7 +23,8 @@ inherit
 			interface,
 			make,
 			internal_default_height,
-			set_default_minimum_size
+			set_default_minimum_size,
+			set_background_color
 		end
 
 create
@@ -90,6 +91,16 @@ feature {NONE} -- Implementation
 			Result := Ws_child | Ws_visible | Ws_group
 					| Ws_tabstop | Ws_clipchildren | Ws_clipsiblings
 					| Bs_autocheckbox
+		end
+		
+	set_background_color (color: EV_COLOR) is
+			-- Make `color' the new `background_color'
+		do
+			background_color_imp ?= color.implementation
+			if is_displayed then
+				-- If the widget is not hidden then invalidate.
+				invalidate
+			end
 		end
 
 	interface: EV_CHECK_BUTTON

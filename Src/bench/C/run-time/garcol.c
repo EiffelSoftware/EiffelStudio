@@ -1408,14 +1408,14 @@ rt_private void internal_marking(MARKER marking, int moving)
 	mark_simple_stack(&separate_object_id_set, marking, moving);
 #endif
 
+	/* process overflow_stack_set */
+	mark_overflow_stack(marking, moving);
+
 	/* The object id stacks record the objects referenced by an identifier. Those objects
 	 * are not necessarily alive. Thus only an update after a move is needed.
 	 */
 	if (moving) update_object_id_stack();
 #endif
-
-	/* process overflow_stack_set */
-	mark_overflow_stack(marking, moving);
 }
 
 rt_private void mark_simple_stack(register5 struct stack *stk, register4 MARKER marker, register6 int move)

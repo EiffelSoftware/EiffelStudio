@@ -1,5 +1,5 @@
 indexing
-	description: "Interface to access dot debugger services"
+	description: "Interface to access dotnet debugger services"
 	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,15 +21,15 @@ inherit
 			{NONE} all
 		end
 
+	COMPILER_EXPORTER
+		export
+			{NONE} all
+		end
+
 	EIFNET_DEBUGGER_SYNCHRO
 		export
 			{NONE} all
-			{EIFNET_EXPORTER} stop_dbg_timer, start_dbg_timer, lock_and_wait_for_callback
-		end
-
-	EIFNET_DEBUGGER_TRACER_ACCESS
-		export
-			{NONE} all
+			{EIFNET_EXPORTER} dbg_timer_active, stop_dbg_timer, start_dbg_timer, lock_and_wait_for_callback
 		end
 
 	SHARED_DEBUG
@@ -45,8 +45,13 @@ inherit
 	SHARED_IL_DEBUG_INFO_RECORDER
 		export
 			{NONE} all
-			{ICOR_DEBUG_MANAGED_CALLBACK} Il_debug_info_recorder
+			{ICOR_DEBUG_MANAGED_CALLBACK, EIFNET_EXPORTER} Il_debug_info_recorder
 		end	
+		
+	SHARED_EIFNET_DEBUG_VALUE_FORMATTER
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -227,9 +232,7 @@ feature -- Interaction with .Net Debugger
 --				end
 			end
 		end	
-
-
-		
+	
 feature {NONE} -- Stepping Implementation
 
 	last_stepper: ICOR_DEBUG_STEPPER
@@ -415,7 +418,25 @@ feature -- Change Debuggee Session Parameters
 		do
 			Eifnet_debugger_info.set_param_arguments (a_arg)
 		end		
+		
+feature -- Tracer
 
+	eif_debug_display (msg: STRING) is
+		do
+		end
+
+feature {EIFNET_EXPORTER} -- Restricted Bridge to EIFNET_DEBUGGER_INFO
+
+	set_last_managed_callback (a_cb: like last_managed_callback) is
+		do
+			eifnet_debugger_info.set_last_managed_callback (a_cb)
+		end
+		
+	last_managed_callback: INTEGER is
+		do
+			Result := Eifnet_debugger_info.last_managed_callback
+		end	
+		
 feature -- Bridge to EIFNET_DEBUGGER_INFO
 
 	last_managed_callback_is_exception: BOOLEAN is
@@ -488,9 +509,49 @@ feature -- Bridge to EIFNET_DEBUGGER_INFO
 			end			
 		end
 		
+feature -- Easy access
+
+	icor_debug_class (a_class_type: CLASS_TYPE): ICOR_DEBUG_CLASS is
+		require
+			arg_class_type_void: a_class_type /= Void
+		local
+			l_class_module_name: STRING
+			l_icd_module: ICOR_DEBUG_MODULE
+			l_class_token: INTEGER
+		do
+			l_class_module_name := Il_debug_info_recorder.module_file_name_for_class (a_class_type)
+			l_icd_module := icor_debug_module (l_class_module_name)
+			l_class_token := Il_debug_info_recorder.class_token (l_class_module_name, a_class_type)
+			Result := l_icd_module.get_class_from_token (l_class_token)
+		end
+		
 feature -- Function Evaluation
 
 	Internal_string_builder_name: STRING is "internal_string_builder"
+
+	Internal_make_from_cil_name: STRING is "make_from_cil";
+	
+	eiffel_string_make_from_cil_constructor: ICOR_DEBUG_FUNCTION is
+			-- 
+		local
+			l_string_class : CLASS_C
+			l_mod_name: STRING
+			l_icd_module: ICOR_DEBUG_MODULE
+			l_feat_ctor : FEATURE_I
+			l_feat_ctor_tok: INTEGER
+
+		do
+			l_string_class := Eiffel_system.String_class.compiled_class
+			
+			l_feat_ctor := l_string_class.feature_named (Internal_make_from_cil_name)
+			l_feat_ctor_tok := Il_debug_info_recorder.feature_token_for_non_generic (l_feat_ctor)
+			
+			l_mod_name := il_debug_info_recorder.module_file_name_for_class (l_string_class.types.first)
+			l_icd_module := icor_debug_module (l_mod_name)
+			Result := l_icd_module.get_function_from_token (l_feat_ctor_tok)
+		ensure
+			Result /= Void
+		end		
 	
 	string_value_from_string_class_object_value (icd_string_instance: ICOR_DEBUG_OBJECT_VALUE): STRING is
 		local
@@ -512,11 +573,8 @@ feature -- Function Evaluation
 				l_icd_value := icd_string_instance.get_field_value (icd_string_instance.get_class, l_feat_internal_string_builder_token)
 					--| l_icd_value represents the `internal_string_builder' value
 				if l_icd_value /= Void then
-					Result := (create {EIFNET_DEBUG_EXTERNAL_FORMATTER}).string_from_string_builder (l_icd_value)
+					Result := Edv_external_formatter.string_from_string_builder (l_icd_value)
 				end
---				if Result = Void then
---					Result := "Error : Unavailable"				
---				end
 			end
 		end
 
@@ -534,7 +592,7 @@ feature -- Function Evaluation
 			l_class_type: CLASS_TYPE
 			l_func: ICOR_DEBUG_FUNCTION
 
-			l_debug_info : EIFNET_DEBUG_VALUE_INFO
+			l_value_info : EIFNET_DEBUG_VALUE_INFO
 			skip_debug_output_evaluation: BOOLEAN
 		do	
 --			skip_debug_output_evaluation := True
@@ -555,30 +613,32 @@ feature -- Function Evaluation
 					l_func := l_icd_module.get_function_from_token (l_feature_token)
 	
 					if l_func /= Void then
-						l_icd := evaluator.function_evaluation (a_frame, l_icd, l_func)
+						l_icd := function_evaluation (a_frame, l_func, <<l_icd>>)
 						if l_icd /= Void then
-							create l_debug_info.make (l_icd)
-							Result := string_value_from_string_class_object_value (l_debug_info.interface_debug_object_value)							
+							create l_value_info.make (l_icd)
+							Result := string_value_from_string_class_object_value (l_value_info.interface_debug_object_value)							
 						else
 							Result := Void -- "WARNING: Could not evaluate output"	
 						end
 					else
 						debug ("DEBUGGER_TRACE_EVAL")
 							print ("EIFNET_DEBUGGER.debug_output_.. :: Unable to retrieve ICorDebugFunction %N")
-							print ("                                :: class name    = ["+l_class_type.full_il_type_name+"]%N")
-							print ("                                :: module_name   = %""+l_module_name+"%"%N")
-							print ("                                :: feature_token = 0x"+l_feature_token.to_hex_string+" %N")
+							print ("                                :: class name    = [" + l_class_type.full_il_type_name + "]%N")
+							print ("                                :: module_name   = %"" + l_module_name + "%"%N")
+							print ("                                :: feature_token = 0x" + l_feature_token.to_hex_string + " %N")
 						end
 					end
 	
 				else
 					debug ("DEBUGGER_TRACE_EVAL")
-						print ("EIFNET_DEBUGGER.debug_output_.. :: Unable to retrieve FEATURE_I ["+l_class_type.associated_class.name_in_upper+"] %N")
+						print ("EIFNET_DEBUGGER.debug_output_.. :: Unable to retrieve FEATURE_I [" 
+							+ l_class_type.associated_class.name_in_upper
+							+"] %N")
 					end
 				end
 				debug ("DEBUGGER_TRACE_EVAL")
 					if Result = Void then
-						print ("EIFNET_DEBUGGER.debug_output_.. :: Error: non debuggable ;) %N")
+						print ("EIFNET_DEBUGGER.debug_output_.. :: Error: non debuggable ! %N")
 					end
 				end
 			end		
@@ -595,11 +655,10 @@ feature -- Function Evaluation
 			l_feature_token: INTEGER
 			l_func: ICOR_DEBUG_FUNCTION
 			l_debug_info : EIFNET_DEBUG_VALUE_INFO
-			skip_debug_output_evaluation: BOOLEAN
-			l_formatter: EIFNET_DEBUG_EXTERNAL_FORMATTER
+			skip_exception_message_evaluation: BOOLEAN
 		do	
---			skip_debug_output_evaluation := True
-			if skip_debug_output_evaluation then
+--			skip_exception_message_evaluation := True
+			if skip_exception_message_evaluation then
 				Result := Void --"debug_output evaluation is OFF"
 			else	
 				l_icd := a_icd
@@ -607,20 +666,99 @@ feature -- Function Evaluation
 				l_icd_class := l_icd_object.get_class
 				l_icd_module := l_icd_class.get_module
 				l_module_name := l_icd_module.get_name
+
+--				l_icd_module := icor_debug_module_for_mscorlib
 				
-				create l_formatter
-				l_feature_token := l_formatter.token_Exception_ToString
+				l_feature_token := Edv_external_formatter.token_Exception_ToString
 				l_func := l_icd_module.get_function_from_token (l_feature_token)
 	
 				if l_func /= Void then
-					l_icd := function_evaluation (a_frame, l_icd, l_func)
+					l_icd := function_evaluation (a_frame, l_func, <<l_icd>>)
 					if l_icd /= Void then
 							--| We should get a System.String
 						create l_debug_info.make (l_icd)
-						Result := l_formatter.system_string_value_to_string (l_debug_info.interface_debug_object_value)							
+						Result := Edv_external_formatter.system_string_value_to_string (l_debug_info.interface_debug_object_value)							
 					else
 						Result := Void -- "WARNING: Could not evaluate output"	
 					end
+				end
+			end
+		end
+
+ 	get_message_value_from_exception_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; a_icd_obj: ICOR_DEBUG_OBJECT_VALUE): STRING is
+			-- System.Exception.ToString value
+		local
+			l_icd: ICOR_DEBUG_VALUE		
+			l_icd_object: ICOR_DEBUG_OBJECT_VALUE
+			l_icd_class: ICOR_DEBUG_CLASS
+			l_icd_module: ICOR_DEBUG_MODULE
+			l_module_name: STRING
+			l_feature_token: INTEGER
+			l_func: ICOR_DEBUG_FUNCTION
+			l_debug_info : EIFNET_DEBUG_VALUE_INFO
+		do	
+			l_icd := a_icd
+			l_icd_object := a_icd_obj
+			l_icd_class := l_icd_object.get_class
+			l_icd_module := l_icd_class.get_module
+			l_module_name := l_icd_module.get_name
+
+			l_icd_module := icor_debug_module_for_mscorlib
+
+			l_feature_token := Edv_external_formatter.token_Exception_get_Message
+			l_func := l_icd_module.get_function_from_token (l_feature_token)
+
+			if l_func /= Void then
+				l_icd := function_evaluation (a_frame, l_func, <<l_icd>>)
+				if l_icd /= Void then
+						--| We should get a System.String
+					create l_debug_info.make (l_icd)
+					Result := Edv_external_formatter.system_string_value_to_string (l_debug_info.interface_debug_object_value)							
+				else
+					Result := Void -- "WARNING: Could not evaluate output"	
+				end
+			end
+		end
+
+	once_function_value_on_icd_class (a_icd_frame: ICOR_DEBUG_FRAME; a_icd_class: ICOR_DEBUG_CLASS; a_adapted_class_type: CLASS_TYPE; a_feat: E_FEATURE): ICOR_DEBUG_VALUE is
+			-- ICorDebugValue object representing the once value.
+		require
+			a_icd_class_not_void: a_icd_class /= Void
+			a_feat_not_void: a_feat /= Void
+			adapted_class_not_void: a_adapted_class_type /= Void
+		local
+			l_once_info_tokens: TUPLE [INTEGER, INTEGER]
+			l_done_token, l_result_token: INTEGER
+			l_icd_debug_value: ICOR_DEBUG_VALUE
+			l_once_already_called: BOOLEAN
+			l_icd_frame: ICOR_DEBUG_FRAME
+		do
+				--| Set related frame
+			l_icd_frame := a_icd_frame
+			if l_icd_frame = Void then
+					--| just in case icd_frame is not set
+				l_icd_frame := active_frame
+			end
+
+				--| Get related tokens
+			l_once_info_tokens := Il_debug_info_recorder.once_feature_tokens_for_feat_and_class_type (a_feat.associated_feature_i, a_adapted_class_type)
+			l_done_token := l_once_info_tokens.integer_item (1)
+			l_result_token := l_once_info_tokens.integer_item (2)	
+			
+
+				--| Check if already called (_done)
+			if l_done_token /= 0 then
+				l_icd_debug_value := a_icd_class.get_static_field_value (l_done_token, l_icd_frame)
+				if l_icd_debug_value /= Void then
+					l_icd_debug_value := Edv_formatter.prepared_debug_value (l_icd_debug_value)
+					l_once_already_called := Edv_formatter.prepared_icor_debug_value_as_boolean (l_icd_debug_value)
+				end
+			end
+
+				--| if already called then get the value (_result)
+			if l_once_already_called then
+				if l_result_token /= 0 then
+					Result := a_icd_class.get_static_field_value (l_result_token, l_icd_frame)
 				end
 			end
 		end
@@ -629,9 +767,9 @@ feature -- Bridge to evaluator
 
 	evaluator: EIFNET_DEBUGGER_EVALUATOR
 
-	function_evaluation (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; a_func: ICOR_DEBUG_FUNCTION): ICOR_DEBUG_VALUE is
+	function_evaluation (a_frame: ICOR_DEBUG_FRAME; a_func: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE]): ICOR_DEBUG_VALUE is
 		do
-			Result := evaluator.function_evaluation (a_frame, a_icd, a_func)
+			Result := evaluator.function_evaluation (a_frame, a_func, a_args)
 		end
 
 feature {NONE} -- External

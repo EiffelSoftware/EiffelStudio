@@ -30,8 +30,13 @@ feature
 			entry: ROUT_ENTRY;
 			i, nb, min_id, max_id: INTEGER;
 			r_name, c_name: STRING;
+			empty_function_ptr_string: STRING
+			function_ptr_cast_string: STRING
 		do
 			c_name := rout_id.table_name;
+			empty_function_ptr_string := "(char *(*)()) 0,%N"
+			function_ptr_cast_string := "(char *(*)()) "
+
 			min_id := 1;
 			max_id := final_table_size;
 			if System.has_separate then
@@ -50,16 +55,15 @@ feature
 				if (not after) and then i = item.type_id then
 					entry := item;
 					r_name := entry.routine_name;
-					file.putstring ("(char *(*)()) ");
+					file.putstring (function_ptr_cast_string);
 					file.putstring (r_name);
-					file.putchar (',');
-					file.new_line;
+					file.putstring (",%N");
 					forth;
 	
 						-- Remember external declaration
 					Extern_declarations.add_routine (void_type, clone (r_name));
 				else
-					file.putstring ("(char *(*)()) 0,%N");
+					file.putstring (empty_function_ptr_string);
 				end;
 				i := i + 1;
 			end;
@@ -70,13 +74,8 @@ feature
 
 		end;
 
-	generable: BOOLEAN is
+	generable: BOOLEAN is True
 			-- Is the current table generable ?
-		require else
-			True
-		do
-			Result := True;
-		end;
 
 	void_type: VOID_I is
 			-- Void universal type

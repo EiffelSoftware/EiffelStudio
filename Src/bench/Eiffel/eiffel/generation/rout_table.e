@@ -84,10 +84,14 @@ feature
 			entry: ROUT_ENTRY;
 			i, nb, min_id, max_id: INTEGER;
 			routine_name, c_name: STRING;
+			empty_function_ptr_string: STRING
+			function_ptr_cast_string: STRING
 		do
 			c_name := rout_id.table_name;
 			min_id := min_used;
 			max_id := max_used;
+			empty_function_ptr_string := "(char *(*)()) 0,%N"
+			function_ptr_cast_string := "(char *(*)()) "
 			from
 				file.putstring ("char *(*");
 				file.putstring (c_name);
@@ -103,25 +107,22 @@ feature
 					if entry.used then
 						routine_name := entry.routine_name;
 
-						file.putstring ("(char *(*)()) ");
+						file.putstring (function_ptr_cast_string);
 						file.putstring (routine_name);
-						file.putchar (',');
-						file.new_line;
+						file.putstring (",%N");
 			
 							-- Remember external routine declaration
-						Extern_declarations.add_routine
-							(entry.type.c_type, clone (routine_name));
+						Extern_declarations.add_routine (entry.type.c_type, clone (routine_name));
 					else
-						file.putstring ("(char *(*)()) 0,%N");
+						file.putstring (empty_function_ptr_string);
 					end;
 					forth;
 				else
-					file.putstring ("(char *(*)()) 0,%N");
+					file.putstring (empty_function_ptr_string);
 				end;
 				i := i + 1;
 			end;
 			file.putstring ("};%N%N");
-
 		end; -- generate
 
 	feature_name (type_id: INTEGER): STRING is
@@ -132,7 +133,7 @@ feature
 			if not after then
 				Result := item.routine_name
 			else
-				Result := "((void (*)())  RTNR)"
+				Result := "((void (*)()) RTNR)"
 			end;
 		end;
 

@@ -180,8 +180,32 @@ feature -- Byte code generation
 		local
 			nb_protections, i: INTEGER;
 			param: EXPR_B;
+			has_hector: BOOLEAN;
+			parameter_b: PARAMETER_B;
+			hector_b: HECTOR_B;
+			expr_address_b: EXPR_ADDRESS_B;
+			nb_expr_address: INTEGER
+			pos: INTEGER
 		do
 			if parameters /= Void then
+					-- Generate the expression address byte code
+				from
+					parameters.start
+				until
+					parameters.after
+				loop
+					parameter_b ?= parameters.item;
+					if parameter_b.is_hector then
+						has_hector := True;
+						expr_address_b ?= parameter_b.expression;
+						if expr_address_b /= Void and then expr_address_b.is_protected then
+							expr_address_b.generate_expression_byte_code (ba);
+							nb_expr_address := nb_expr_address + 1;
+						end
+					end
+					parameters.forth;
+				end
+
 				from
 					parameters.start
 				until
@@ -200,6 +224,33 @@ feature -- Byte code generation
 				end;
 			end;
 
+			if has_hector then
+				from
+					 parameters.start
+				until
+					parameters.after
+				loop
+					pos := pos + 1;
+					parameter_b ?= parameters.item;
+					if parameter_b.is_hector then
+						hector_b ?= parameter_b.expression;
+						if hector_b /= Void then
+							hector_b.make_protected_byte_code (ba, parameters.count - pos);
+						else
+								-- Cannot be Void
+							expr_address_b ?= parameter_b.expression;
+							if expr_address_b.is_protected then
+								i := i + 1;
+								expr_address_b.make_protected_byte_code (ba,
+									parameters.count - pos,
+									parameters.count + nb_expr_address - i);
+							end
+						end
+					end
+					parameters.forth;
+				end
+			end
+
 			standard_make_code (ba, flag);
 	
 				-- Generation hector realease if any
@@ -207,6 +258,10 @@ feature -- Byte code generation
 				ba.append (Bc_release);
 				ba.append_short_integer (nb_protections);
 			end;
+			if nb_expr_address > 0 then
+				ba.append (Bc_pop)
+				ba.append_uint32_integer (nb_expr_address)
+			end
 		end;
 
 	code_first: CHARACTER is

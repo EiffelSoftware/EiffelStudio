@@ -1769,7 +1769,7 @@ rt_private void interpret(int flag, int where)
 			EIF_INTEGER_16 intval_16;
 			EIF_INTEGER_32 intval_32;
 			EIF_INTEGER_64 intval_64;
-			char charval;
+			EIF_CHARACTER charval;
 
 			upper = opop();				/* Get the upper bound */
 			lower = opop();				/* Get the lower bound */

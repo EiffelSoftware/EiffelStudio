@@ -247,18 +247,13 @@ feature {NONE} -- Implementation
 				if not l_dir.exists then
 					l_dir.create_dir
 				end
-				l_filename.extend ("sub_tocs")	
-			else
-				l_filename.extend ("sub_tocs")	
-				create l_dir.make (l_filename.string)
-				if not l_dir.exists then
-					l_dir.create_dir
-				end
 			end
-			create Result.make (l_filename.string)
-			if not Result.exists then
-				Result.create_dir
-			end
+			l_filename.extend ("sub_tocs")	
+			create l_dir.make (l_filename.string)
+			if not l_dir.exists then
+				l_dir.create_dir
+			end			
+			create Result.make (l_filename.string)			
 		end
 
 	template_file_name: STRING is

@@ -207,7 +207,7 @@ feature -- Basic operations
 			Result_not_void: Result /= Void
 		end
 
-	item_at_position (an_x, a_y: INTEGER): EV_GRID_ITEM is
+	item_at_position (an_x, a_y: INTEGER): EV_GRID_ITEM_I is
 			-- `Result' is item at position `an_x', `a_y' relative to the top left corner
 			-- of the viewport in which the grid is displayed.
 		require
@@ -219,7 +219,7 @@ feature -- Basic operations
 			horizontal_span_items := items_spanning_horizontal_span (an_x, 0)
 			vertical_span_items := items_spanning_vertical_span (a_y, 0)
 			if not horizontal_span_items.is_empty and not vertical_span_items.is_empty then
-				Result := grid.item (horizontal_span_items.first, vertical_span_items.first)
+				Result := grid.item_internal (horizontal_span_items.first, vertical_span_items.first, False)
 			end
 		end
 

@@ -260,6 +260,7 @@ feature -- Element change
 
 	clear_items is
 			-- Clear all the items of the list.
+			-- (Remove them from the list and destroy them).
 		local
 			c: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
 				-- to work with local variable which

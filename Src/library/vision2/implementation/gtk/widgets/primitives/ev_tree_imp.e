@@ -134,6 +134,7 @@ feature -- Element change
 
 	clear_items is
 			-- Clear all the items of the tree item holder.
+			-- (Remove them from the tree and destroy them).
 		local
 			list: ARRAYED_LIST [EV_TREE_ITEM_IMP]
 			item: EV_TREE_ITEM_IMP

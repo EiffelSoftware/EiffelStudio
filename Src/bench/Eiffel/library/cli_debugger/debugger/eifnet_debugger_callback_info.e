@@ -45,7 +45,7 @@ feature {NONE} -- callbacks initialisation
 --			enable_managed_callback (Cst_managed_cb_unload_module)
 --			enable_managed_callback (Cst_managed_cb_load_class)
 --			enable_managed_callback (Cst_managed_cb_unload_class)
---			enable_managed_callback (Cst_managed_cb_debugger_error)
+			enable_managed_callback (Cst_managed_cb_debugger_error)
 --			enable_managed_callback (Cst_managed_cb_log_message)
 --			enable_managed_callback (Cst_managed_cb_log_switch)
 --			enable_managed_callback (Cst_managed_cb_create_app_domain)

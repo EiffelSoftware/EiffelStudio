@@ -102,7 +102,7 @@ feature -- Type check, byte code and dead code removal
 				-- Type check if it is an expression conform either to
 				-- and integer or to a character
 			current_item := context.item
-			if current_item.is_integer or else current_item.is_character then
+			if current_item.is_integer or else current_item.is_character or else current_item.is_natural then
 				controler.set_type (current_item)
 			else
 					-- Error

@@ -141,7 +141,6 @@ feature {NONE}
 		do
 	   		search_command.close;
 	   		change_font_command.close;
---			debug_run_command.close;
 			if change_routine_command.choice.is_popped_up then
 				change_routine_command.choice.popdown
 			end;
@@ -209,80 +208,99 @@ feature {NONE}
 			-- Build top bar: editing commands.
 		local
 			quit_cmd: QUIT_FILE;
+			hole_form, quit_form: FORM;
 			label: LABEL;
 		do
-			edit_bar.set_fraction_base (5);
+			edit_bar.set_fraction_base (31);
+
+			!!hole_form.make (new_name, edit_bar);
+			edit_bar.attach_left (hole_form, 0);
+			edit_bar.attach_top (hole_form, 0);
+			edit_bar.attach_bottom (hole_form, 0);
+
+			!!hole.make (hole_form, Current);
+			hole_form.attach_left (hole, 0);
+			hole_form.attach_top (hole, 0);
+			!!class_hole.make (hole_form, Current);
+			hole_form.attach_left_widget (hole, class_hole, 0);
+			hole_form.attach_top (class_hole, 0);
+			!!stop_hole.make (hole_form, Current);
+			hole_form.attach_left_widget (class_hole, stop_hole, 0);
+			hole_form.attach_top (stop_hole, 0);
+
+			!!type_teller.make (new_name, edit_bar);
+			type_teller.set_center_alignment;
+			edit_bar.attach_left_widget (hole_form, type_teller, 0);
+			edit_bar.attach_top (type_teller, 0);
+			edit_bar.attach_bottom (type_teller, 0);
+			edit_bar.attach_right_position (type_teller, 11);
+			clean_type;
+
+			!!change_routine_form.make (new_name, edit_bar);
+			edit_bar.attach_left_position (change_routine_form, 11);
+			edit_bar.attach_top (change_routine_form, 0);
+			edit_bar.attach_bottom (change_routine_form, 0);
+			edit_bar.attach_right_position (change_routine_form, 17);
+
+			!!change_routine_command.make (change_routine_form, text_window);
+			change_routine_command.set_width (80);
+			change_routine_form.attach_left (change_routine_command, 0);
+			change_routine_form.attach_top (change_routine_command, 0);
+			change_routine_form.attach_bottom (change_routine_command, 0);
+			change_routine_form.attach_right (change_routine_command, 0);
+
 			!!label.make ("", edit_bar);
 			label.set_text ("from: ");
-			!!change_class_form.make (new_name, edit_bar);
-			!!change_class_command.make (change_class_form, text_window);
-			change_class_form.attach_left (change_class_command, 0);
-			change_class_form.attach_right (change_class_command, 0);
-			change_class_form.attach_bottom (change_class_command, 0);
-			change_class_form.attach_top (change_class_command, 0);
-			edit_bar.attach_top (change_class_form, 0);
+			label.set_right_alignment;
+			edit_bar.attach_left_position (label, 17);
 			edit_bar.attach_top (label, 0);
 			edit_bar.attach_bottom (label, 0);
-			edit_bar.attach_left_widget (label, change_class_form, 0);
-			!!hole.make (edit_bar, Current);
-			!!class_hole.make (edit_bar, Current);
-			!!stop_hole.make (edit_bar, Current);
-			!!type_teller.make (new_name, edit_bar);
-			!!change_routine_form.make (new_name, edit_bar);
-			!!change_routine_command.make (change_routine_form, text_window);
-			change_routine_form.attach_left (change_routine_command, 0);
-			change_routine_form.attach_right (change_routine_command, 0);
-			change_routine_form.attach_bottom (change_routine_command, 0);
-			change_routine_form.attach_top (change_routine_command, 0);
-			type_teller.set_center_alignment;
-			!!search_command.make (edit_bar, text_window);
-			!!change_font_command.make (edit_bar, text_window);
-			!!quit_cmd.make (edit_bar, text_window);
-				edit_bar.attach_left (hole, 0);
-				edit_bar.attach_top (hole, 0);
-				edit_bar.attach_left_widget (hole, class_hole, 0);
-				edit_bar.attach_top (class_hole, 0);
-				edit_bar.attach_left_widget (class_hole, stop_hole, 0);
-				edit_bar.attach_top (stop_hole, 0);
+			edit_bar.attach_right_position (label, 20);
 
-				clean_type;
+			!!change_class_form.make (new_name, edit_bar);
+			edit_bar.attach_left_position (change_class_form, 20);
+			edit_bar.attach_top (change_class_form, 0);
+			edit_bar.attach_bottom (change_class_form, 0);
+			edit_bar.attach_right_position (change_class_form, 26);
 
-				edit_bar.attach_top (change_routine_form, 0);
-				edit_bar.attach_bottom (change_routine_form, 0);
-				edit_bar.attach_top (type_teller, 0);
-				edit_bar.attach_left_widget (stop_hole, type_teller, 0);
-				edit_bar.attach_left (change_routine_form, 215);
-				edit_bar.attach_bottom (type_teller, 0);
-				edit_bar.attach_top (search_command, 0);
-				edit_bar.attach_right_widget (label, change_routine_form, 0);
-				edit_bar.attach_left_position (change_class_form, 3);
-				edit_bar.attach_right_position (label, 3);
-				edit_bar.attach_right_widget (change_routine_form, type_teller, 0);
-				edit_bar.attach_right_widget (search_command, change_class_form, 0);
-				edit_bar.attach_right_widget (change_font_command, search_command, 0);
-				edit_bar.attach_top (change_font_command, 0);
-				edit_bar.attach_right_widget (quit_cmd, change_font_command, 10);
-				edit_bar.attach_top (quit_cmd, 0);
-				edit_bar.attach_right (quit_cmd, 0);
+			!!change_class_command.make (change_class_form, text_window);
+			change_class_command.set_width (80);
+			change_class_form.attach_left (change_class_command, 0);
+			change_class_form.attach_top (change_class_command, 0);
+			change_class_form.attach_bottom (change_class_command, 0);
+			change_class_form.attach_right (change_class_command, 0);
+
+			!!quit_form.make (new_name, edit_bar);
+			edit_bar.attach_left_position (quit_form, 26);
+			edit_bar.attach_top (quit_form, 0);
+			edit_bar.attach_bottom (quit_form, 0);
+			edit_bar.attach_right (quit_form, 0);
+
+			!!quit_cmd.make (quit_form, text_window);
+			quit_form.attach_top (quit_cmd, 0);
+			quit_form.attach_right (quit_cmd, 0);
+
+			!!change_font_command.make (quit_form, text_window);
+			quit_form.attach_top (change_font_command, 0);
+			quit_form.attach_right_widget (quit_cmd, change_font_command, 10);
+
+			!!search_command.make (quit_form, text_window);
+			quit_form.attach_top (search_command, 0);
+			quit_form.attach_right_widget (change_font_command, search_command, 0)
 		end;
 
---	debug_run_command: DEBUG_RUN;
---	step_command: STEP;
---	next_command: NEXT;
---	line_command: TIL_LINE;
---	continue_command: CONTINUE;
---	break_command: SET_BREAKPOINT;
---	break_command: DEBUG_STOPIN;	
---	unbreak_command: DEBUG_NOSTOPIN;	
---	debug_quit_command: DEBUG_QUIT;
+feature -- Formats
+
 	showroutclients_command: SHOW_ROUTCLIENTS;
 	showhomonyms_command: SHOW_HOMONYMS;
---	debug_showbreak: DEBUG_SHOWBREAK;
 	showpast_command: SHOW_PAST;
 	showhistory_command: SHOW_ROUT_HIST;
 	showfuture_command: SHOW_FUTURE;
 	showflat_command: SHOW_ROUT_FLAT;
 	showstop_command: SHOW_BREAKPOINTS;
+
+feature -- Commands
+
 	shell_command: SHELL_COMMAND;
 	current_target: CURRENT_ROUTINE;
 	previous_target: PREVIOUS_TARGET;

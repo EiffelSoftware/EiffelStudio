@@ -706,7 +706,7 @@ feature {NONE} -- To check -- Temp
  --			dc.set_text_alignment (ta_baseline)
  --		end
 
-	set_clip (a_clip: EV_RECTANGLE) is
+	set_clip (a_clip: EV_CLIP) is
 			-- Set a clip area.
 		local
 			x1, y1, x2, y2: INTEGER

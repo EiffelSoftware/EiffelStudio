@@ -46,6 +46,11 @@ feature {NONE} -- Initialization
 
 			-- Create the array where the items will be listed.
 			create ev_children.make (0)
+
+			-- The interface does not call `widget_make' so we need 
+			-- to connect `destroy_signal_callback'
+			-- to `destroy' event.
+			initialize_object_handling
 		end
 
 feature -- Access

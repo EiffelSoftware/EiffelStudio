@@ -35,6 +35,11 @@ feature {NONE} -- Initialization
 
 			-- Create the `box'.	
 			initialize
+
+			-- The interface does not call `widget_make' so we need 
+			-- to connect `destroy_signal_callback'
+			-- to `destroy' event.
+			initialize_object_handling
 		end
 	
 	make_with_index (par: EV_LIST; value: INTEGER) is

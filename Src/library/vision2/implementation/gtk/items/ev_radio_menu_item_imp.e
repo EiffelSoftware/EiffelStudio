@@ -41,6 +41,11 @@ feature {NONE} -- Initialization
 			gtk_check_menu_item_set_show_toggle (widget, True)
 
 			initialize
+
+			-- The interface does not call `widget_make' so we need 
+			-- to connect `destroy_signal_callback'
+			-- to `destroy' event.
+			initialize_object_handling
 		end
 
 feature -- Access

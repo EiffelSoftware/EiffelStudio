@@ -1,0 +1,114 @@
+<html>
+
+<head>
+<title>Borland tips</title>
+<link rel="stylesheet" type="text/css" href="../../default.css">
+</head>
+
+<body>
+
+<h2>Bcc32 5.5 startup objs and libs</h2>
+<!--webbot bot="FormInsertHere" descr="The FrontPage FormInsertHere Component indicates the point in an HTML file where you want a default, Registration, or Discussion Component to insert new results." -->
+<p><b>Date: </b>20 Mar 2000<br>
+<b>Time: </b>6:48:36<br>
+<b>Remote Name: </b>207.177.63.98<br>
+&nbsp;</p>
+<h3>Comments</h3>
+<p>Q. BCC32 5.5 info needed please.What six start up objs go with what four libs.<br>
+A.&nbsp;&nbsp;<br>
+&gt;Windows plain?<br>
+<br>
+<b>c0w32.obj + import32.lib + cw32.lib</b><br>
+<br>
+&gt;Windows multi threaded?<br>
+<br>
+<b>c0w32.obj + import32.lib + cw32mt.lib</b><br>
+<br>
+&gt;Windows DLL plain?<br>
+<br>
+<b>c0d32.obj + import32.lib + cw32.lib</b><br>
+<br>
+&gt;Windows DLL multi threaded?<br>
+<br>
+<b>c0d32.obj + import32.lib + cw32mt.lib</b><br>
+<br>
+&gt;Console plain?<br>
+<br>
+<b>c0x32.obj + import32.lib + cw32.lib</b><br>
+<br>
+&gt;Console multi threaded?<br>
+<br>
+<b>c0x32.obj + import32.lib + cw32mt.lib</b><br>
+<br>
+&gt;Console DLL plain?<br>
+&gt;Console DLL multi threaded?<br>
+<br>
+What is the difference between a console DLL and a GUI DLL?<br>
+<br>
+To summarize the startup OBJs:<br>
+&nbsp;</p>
+<table borderColorDark="#003366" width="100%" borderColorLight="#c0c0c0" border="1">
+  <tr>
+    <td width="14%">c0d32.obj&nbsp;</td>
+    <td width="42%">DLL startup module</td>
+    <td width="44%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="14%">c0d32w.obj</td>
+    <td width="42%">DLL startup module</td>
+    <td width="44%">Wide-char version</td>
+  </tr>
+  <tr>
+    <td width="14%">c0d32x.obj</td>
+    <td width="42%">DLL startup module</td>
+    <td width="44%">no exception handling</td>
+  </tr>
+  <tr>
+    <td width="14%">c0pkg32.obj</td>
+    <td width="42%">Package startup module</td>
+    <td width="44%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="14%">c0w32.obj</td>
+    <td width="42%">GUI EXE startup module</td>
+    <td width="44%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="14%">c0w32w.obj</td>
+    <td width="42%">GUI EXE startup module</td>
+    <td width="44%">Wide-char version</td>
+  </tr>
+  <tr>
+    <td width="14%">c0x32.obj</td>
+    <td width="42%">32-bit console-mode EXE startup module</td>
+    <td width="44%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="14%">c0x32w.obj</td>
+    <td width="42%">32-bit console-mode EXE startup module</td>
+    <td width="44%">Wide-char version</td>
+  </tr>
+</table>
+<p><b>The d stands for dll, the w for windows GUI exe's, and the x is for 
+console<br>
+mode exe's.<br>
+</b><br>
+The RTL libs are<br>
+<br>
+cp32mt.lib&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VCL-compliant C RTL multithreaded static library<br>
+cp3250mt.dll, cp32mti.lib&nbsp;&nbsp;&nbsp; VCL-compliant import library for multithreaded C 
+RTL<br>
+cw32.lib&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RTL single-threaded static library<br>
+cw3250.dll, cw32i.lib&nbsp; Import library for RTL cw3250.dll<br>
+cw32mt.lib&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RTL multi-threaded static library<br>
+cw3250mt.dll, cw32mti.lib&nbsp;&nbsp;&nbsp;&nbsp; Import library for multithreaded RTL cw3250mt.dll<br>
+<br>
+The 'p' in 'cp' means pascal. No need for that one. The 'i's stand for<br>
+import library. mt stands for multi-threaded. For simplicity, you can stic<br>
+to cw32.lib and cw32mt.lib for apps compiled with the free bc55.<br>
+<br>
+Harold Howe (TeamB) </p>
+
+</body>
+
+</html>

@@ -51,7 +51,7 @@ feature -- Callbacks
 		do
 			if choose_again then
 				choose_again := False
-					-- `last_name_choose' can be Void when creating a project
+					-- `last_name_chooser' can be Void when creating a project
 					-- from another EiffelBench session because no chooser has
 					-- been created yet.
 				if last_name_chooser /= Void then
@@ -87,11 +87,13 @@ feature {NONE} -- Implementation
 		do
 			if not project_tool.initialized then
 				if argument = project_tool then
-					new_name_chooser := name_chooser (project_tool)
-					new_name_chooser.set_directory_selection
-					new_name_chooser.hide_file_selection_list
-					new_name_chooser.hide_file_selection_label
-					new_name_chooser.set_title (Interface_names.t_Select_a_directory)
+					if last_name_chooser = Void then
+						new_name_chooser := name_chooser (project_tool)
+					end
+					last_name_chooser.set_directory_selection
+					last_name_chooser.hide_file_selection_list
+					last_name_chooser.hide_file_selection_label
+					last_name_chooser.set_title (Interface_names.t_Select_a_directory)
 
 					last_name_chooser.set_window (Project_tool);
 					last_name_chooser.call (Current)
@@ -118,11 +120,13 @@ feature {NONE} -- Implementation
 			else
 					-- A Project has been opened, we need to open a new one
 				if argument = project_tool then
-					new_name_chooser := name_chooser (project_tool)
-					new_name_chooser.set_directory_selection
-					new_name_chooser.hide_file_selection_list
-					new_name_chooser.hide_file_selection_label
-					new_name_chooser.set_title (Interface_names.t_Select_a_directory)
+					if last_name_chooser = Void then
+						new_name_chooser := name_chooser (project_tool)
+					end
+					last_name_chooser.set_directory_selection
+					last_name_chooser.hide_file_selection_list
+					last_name_chooser.hide_file_selection_label
+					last_name_chooser.set_title (Interface_names.t_Select_a_directory)
 
 					last_name_chooser.set_window (Project_tool);
 					last_name_chooser.call (Current)

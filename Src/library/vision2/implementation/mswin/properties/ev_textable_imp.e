@@ -49,9 +49,10 @@ feature {NONE} -- Implementation
 
 	wel_text: STRING is
 			-- Text from WEL object.
+			-- Note: may be Void.
 		deferred
-		ensure
-			not_void: Result /= Void
+--		ensure
+--			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -180,6 +181,10 @@ end -- class EV_TEXTABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/29 07:00:49  pichery
+--| Commented bad postcondition after discussion with Sam.
+--| Should be fixed by Vincent.
+--|
 --| Revision 1.18  2000/03/28 22:11:41  brendel
 --| Added check for Void string.
 --|

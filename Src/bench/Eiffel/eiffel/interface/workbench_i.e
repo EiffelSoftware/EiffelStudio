@@ -167,8 +167,6 @@ feature -- Commands
 					Error_handler.raise_error
 				end
 
-				Compilation_modes.reset_modes
-
 					-- If the compilation is successful we are going to print the warnings only
 					-- If there was an error during the compilation, this feature won't never be called
 					-- and the Error_handler.trace from the rescue clause will print the warnings

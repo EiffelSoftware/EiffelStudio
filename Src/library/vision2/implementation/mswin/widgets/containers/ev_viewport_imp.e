@@ -21,6 +21,8 @@ inherit
 			interface,
 			make,
 			wel_move_and_resize
+		select
+			wel_move_and_resize
 		end
 
 	WEL_CONTROL_WINDOW
@@ -38,7 +40,7 @@ inherit
 			y as y_position,
 			move as wel_move,
 			resize as wel_resize,
-			move_and_resize as wel_move_and_resize,
+			move_and_resize as wel_cw_move_and_resize,
 			text as wel_text,
 			set_text as wel_set_text
 		undefine
@@ -69,8 +71,7 @@ inherit
 			on_destroy
 		redefine
 			default_style,
-			default_ex_style,
-			wel_move_and_resize
+			default_ex_style
 		end
 
 create
@@ -83,6 +84,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			wel_make (Default_parent, "")
+			set_minimum_size (100, 100)
 		end	
 
 feature -- Access
@@ -137,89 +139,11 @@ feature {NONE} -- Implementation
 	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
 			-- Move the window to `a_x', `a_y' position and
 			-- resize it with `a_width', `a_height'.
-		local
-			cd: EV_WIDGET_IMP
+			--| Scrollbars may NEVER be visible.
 		do
-			{WEL_CONTROL_WINDOW} Precursor (a_x, a_y, a_width, a_height, repaint)
-	
+			wel_cw_move_and_resize (a_x, a_y, a_width, a_height, repaint)
 			if child /= Void then
-				cd := child
-
-				-- If the container is bigger than the child, it simply resize it
-				if client_width >= cd.minimum_width and client_height >= cd.minimum_height then
-					set_vertical_range (0, 0)
-					set_horizontal_range (0, 0)
-					cd.set_move_and_size (0, 0, client_width, client_height)
-
-				-- Only a vertical scroll bar, we adapt it
-				elseif client_width >= cd.minimum_width then
-					set_horizontal_range (0, 0)
-					if cd.y_position < 0 then
-						-- If it grows, we need to move the child.
-						if client_height > cd.minimum_height + cd.y_position then
-							vertical_update (client_height - cd.minimum_height - cd.y_position, 0)
-						end
-						cd.set_move_and_size (0, cd.y_position, client_width, cd.minimum_height)
-						set_vertical_range (cd.y_position, (cd.minimum_height - client_height + cd.y_position).abs)
-						set_vertical_position (0)
-					else
-						cd.set_move_and_size (0, 0, client_width, cd.minimum_height)
-						set_vertical_range (0, cd.minimum_height - client_height)
-					end
-
-				-- Only an horizontal scroll bar, we adapt it
-				elseif client_height >= cd.minimum_height then
-					set_vertical_range (0, 0)
-					if cd.x_position < 0 then
-						-- If it grows, we need to move the child.
-						if client_width > cd.minimum_width + cd.x_position then
-							horizontal_update (client_width - cd.width - cd.x_position, 0)
-						end
-						cd.set_move_and_size (cd.x_position, 0, cd.minimum_width, client_height)
-						set_horizontal_range (cd.x_position, (cd.minimum_width - client_width + cd.x_position).abs)
-						set_horizontal_position (0)
-					else
-						cd.set_move_and_size (0, 0, cd.minimum_width, client_height)
-						set_horizontal_range (0, cd.minimum_width - client_width)
-					end
-
-				-- Both scroll bars are shown
-				else
-					if cd.x_position < 0 and cd.y_position < 0 then
-							-- If it grows, we need to move the child.
-						if client_width > cd.minimum_width + cd.x_position then
-							horizontal_update (client_width - cd.width - cd.x_position, 0)
-						end
-						if client_height > cd.minimum_height + cd.y_position then
-							vertical_update (client_height - cd.height - cd.y_position, 0)
-						end
-						cd.set_move_and_size (cd.x_position, cd.y_position, cd.minimum_width, cd.minimum_height)
-						set_horizontal_range (cd.x_position, (cd.minimum_width - client_width + cd.x_position).abs)
-						set_vertical_range (cd.y_position, (cd.minimum_height - client_height + cd.y_position).abs)
-						set_horizontal_position (0)
-						set_vertical_position (0)
-					elseif cd.x_position < 0 then
-						if client_width > cd.minimum_width + cd.x_position then
-							horizontal_update (client_width - cd.width - cd.x_position, 0)
-						end
-						cd.set_move_and_size (cd.x_position, 0, cd.minimum_width, cd.minimum_height)
-						set_horizontal_range (cd.x_position, (cd.minimum_width - client_width + cd.x_position).abs)
-						set_vertical_range (0, cd.minimum_height - client_height)
-						set_horizontal_position (0)
-					elseif cd.y_position <= 0 then
-						if client_height > cd.minimum_height + cd.y_position then
-							vertical_update (client_height - cd.height - cd.y_position, 0)
-						end
-						cd.set_move_and_size (0, cd.y_position, cd.minimum_width, cd.minimum_height)
-						set_horizontal_range (0, cd.minimum_width - client_width)
-						set_vertical_range (cd.y_position, (cd.minimum_height - client_height + cd.y_position).abs)
-						set_vertical_position (0)
-					else
-						cd.set_move_and_size (0, 0, cd.minimum_width, cd.minimum_height)
-						set_horizontal_range (0, cd.minimum_width - client_width)
-						set_vertical_range (0, cd.minimum_height - client_height)
-					end
-				end
+				child.set_move_and_size (0, 0, client_width, client_height)
 			end
 		end
 
@@ -248,6 +172,9 @@ end -- class EV_VIEWPORT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/04/21 00:49:24  brendel
+--| Scrollbars are not shown anymore.
+--|
 --| Revision 1.6  2000/03/29 21:28:45  brendel
 --| Fixed compiler errors resulting from recent changes.
 --|

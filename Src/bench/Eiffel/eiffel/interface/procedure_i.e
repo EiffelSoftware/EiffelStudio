@@ -172,9 +172,9 @@ feature
 		do
 			basic_transfer_to (other);
 			other.set_arguments (arguments);
+			other.set_obsolete_message (other.obsolete_message);
 			other.set_is_require_else (is_require_else);
-			other.set_is_require_else (is_require_else);
-			other.set_obsolete_message (obsolete_message);
+			other.set_is_ensure_then (is_ensure_then);
 			other.set_has_precondition (has_precondition);
 			other.set_has_postcondition (has_postcondition);
 		end;

@@ -319,18 +319,6 @@ int where;		/* Invariant is being checked before or after compound? */
 
 #ifdef WORKBENCH
 
-char *(*dispose_routine(type))()
-uint32 type;
-{
-	/* Does dynamic type `type' have a dispose_routine ?
-	 */
-
-	if (esystem[type].cn_disposed)
-		return wdisp (type); 	/* Has dispose */
-	else
-		return 0;
-}
-
 char *cr_exp(type)
 uint32 type;							/* Dynamic type */
 {

@@ -63,16 +63,9 @@ feature -- Conveniences
 
 	is_body_equiv (other: like Current): BOOLEAN is
 		-- Is the current feature equivalent to `other' ?
-		do
-			Result := deep_equal (Current, other)
+		deferred
 		end;
 
-    is_assertion_equiv (other: like Current): BOOLEAN is
-            -- Is the current feature equivalent to `other' ?
-        do
-			Result := True
-        end;
- 
 feature -- Type check and byte code
 
 	byte_node: BYTE_CODE is

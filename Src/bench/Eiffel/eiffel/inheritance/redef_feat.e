@@ -78,7 +78,7 @@ is
 					feat := features.item;
 						--! Add assert info of feat
 					!!info.make (feat);
-					new_assert_id_set.put (info);
+					new_assert_id_set.force (info);
 					if feat.assert_id_set /= Void then
 						--! Merge in inherited assertion info for this routine
 						new_assert_id_set.merge (feat.assert_id_set);

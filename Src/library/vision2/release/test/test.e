@@ -14,6 +14,11 @@ class
 inherit
 	EV_APPLICATION
 
+	EV_INTERNAL
+		undefine
+			default_create
+		end
+
 create
 	make_and_launch
 
@@ -29,102 +34,30 @@ feature
 			--  Create some procedure widgets in a notebook.
 			--  Create one of each Vision widget in a notebook.
 		local
-			frame: EV_FRAME
-			scroll: EV_SCROLLABLE_AREA
-			notebook: EV_NOTEBOOK
 			box: EV_BOX
-			label: EV_LABEL
-			i: INTEGER
-			textable: EV_TEXTABLE
-			pixmapable: EV_PIXMAPABLE
-			container: EV_CONTAINER
+			scroll: EV_SCROLLABLE_AREA
 			menu_bar: EV_MENU_BAR
 			object_menu: EV_MENU
 			menu_item: EV_MENU
-			button: EV_BUTTON
-			event_test_frame: EV_FRAME
+			description_frame: EV_FRAME
 		do
-			create scroll
-			create notebook
-			notebook.position_tabs_left
-			create frame.make_with_text ("Eiffel Vision Widgets")
-			create menu_bar
-			create object_menu.make_with_text ("Other objects")
-			create {EV_VERTICAL_BOX} box
-
-			first_window.set_menu_bar (menu_bar)
-			menu_bar.extend (object_menu)
-
 			first_window.set_title ("Eiffel Vision Widgets")
+			create menu_bar
+			first_window.set_menu_bar (menu_bar)
+			create object_menu.make_with_text ("Other objects")
+			menu_bar.extend (object_menu)
+			create {EV_VERTICAL_BOX} box
 			first_window.extend (box)
-			box.extend (frame)
-			frame.extend (scroll)
-			scroll.extend  (notebook)
+			create scroll
+			scroll.set_minimum_size (700,500)
+			box.extend (scroll)
+			scroll.extend (widgets_frame)
+			create description_frame.make_with_text ("Description")
+			box.extend (description_frame)
+			widget_label.align_text_left
+			description_frame.extend (widget_label)
+			box.disable_child_expand (description_frame)
 
-			create label.make_with_text ("Drop here!")
-			create button.make_with_text ("Destroy widget")
-			create event_test_frame.make_with_text ("Event test, triggering an event will remove it from list")
-			box.extend (label)
-			box.set_minimum_width (800)
-			box.set_minimum_height (600)
-			box.disable_child_expand (label)
-			label.drop_actions.extend (~update_widget_label (label, event_test_frame, ?))
-			button.press_actions.extend (~destroy_current_widget)
-			box.extend (button)
-			box.disable_child_expand (button)
-			box.extend (event_test_frame)
-			box.disable_child_expand (event_test_frame)
-			
-			notebook.fill (widgets)
-			
-			from
-				notebook.start
-			until
-				notebook.after
-			loop
-				textable ?= notebook.item
-				if textable /= Void then
-					textable.set_text ("some text")
-				end
-			
---|				pixmapable ?= notebook.item
---|				if pixmapable /= Void then
---|					pixmapable.set_pixmap (EV_PIXMAP_OBJECT)
---|				end
-
-				container ?= notebook.item
-				if container /= Void then
-					notebook.remove
-					create {EV_VERTICAL_BOX} box
-					box.extend (create {EV_LABEL}.make_with_text (container.generating_type))
-					box.last.set_pebble (container)
-					box.disable_child_expand (box.last)
-					box.extend (container)
-					notebook.put_left (box)
-					notebook.set_item_text (box, container.generating_type)
-					from
-						i := 1
-					until
-						i = 6 or container.full
-					loop
-						create label.make_with_text ("item " + i.out)
-						container.extend (label)
-						label.set_pebble (label)
-						inspect i
-						when 1 then label.set_background_color (create {EV_COLOR}.make_with_rgb (0.7,0.2,0.2))
-						when 2 then label.set_background_color (create {EV_COLOR}.make_with_rgb (0.7,0.7,0.2))
-						when 3 then label.set_background_color (create {EV_COLOR}.make_with_rgb (0.2,0.7,0.2))
-						when 4 then label.set_background_color (create {EV_COLOR}.make_with_rgb (0.2,0.7,0.7))
-						when 5 then label.set_background_color (create {EV_COLOR}.make_with_rgb (0.2,0.2,0.7))
-						end
-						i := i + 1
-					end
-				else
-					notebook.set_item_text (notebook.item, notebook.item.generating_type)
-					notebook.item.set_pebble (notebook.item)
-					notebook.forth
-				end
-			end
 			menu_bar.extend (decendants (first_window))
 
 			from
@@ -140,38 +73,92 @@ feature
 			end
 		end
 
+	widgets_frame: EV_FRAME is
+			-- Frame containing one instance of each widget.
+		local
+			i, j: INTEGER
+			vbox, wbox: EV_VERTICAL_BOX
+			hbox: EV_HORIZONTAL_BOX
+			l: EV_LABEL
+			c: CURSOR
+		once
+			create Result.make_with_text ("Widgets")
+			create vbox
+			vbox.set_padding (10)
+			Result.extend (vbox)
+			c := widgets.cursor
+			from
+				widgets.start
+			until
+				widgets.after
+			loop
+				create hbox
+				hbox.set_padding (10)
+				hbox.enable_homogeneous
+				vbox.extend (hbox)
+				from i := 1 until i > 3 or widgets.after loop
+					create wbox
+					wbox.set_padding (3)
+					hbox.extend (wbox)
+					create l.make_with_text (
+						widgets.item.generating_type
+					)
+					l.pointer_button_press_actions.force_extend (
+						widget_label~set_text (
+							widgets.item.generating_type + "%N" +
+							class_descriptions.item (
+								widgets.item.generating_type
+							)
+						)
+					)
+					l.set_background_color (create {EV_COLOR}.make_with_rgb (0.7, 0.7, 1.0))
+					wbox.extend (l)
+					wbox.extend (widgets.item)
+					wbox.disable_child_expand (l)
+					widgets.forth
+					i := i + 1
+				end
+			end
+			widgets.go_to (c)
+		end
+
+	widget_label: EV_LABEL is
+		once
+			create Result.make_with_text ("Click on one of the blue labels above to see a widget description.")
+		end
+
 	widgets: LINKED_LIST [EV_WIDGET] is
 			-- List of different widgets.
 		once
 			create Result.make
-			Result.extend (create {EV_CELL})
-			Result.extend (create {EV_FRAME})
-			Result.extend (create {EV_HORIZONTAL_BOX})
-			Result.extend (create {EV_HORIZONTAL_SPLIT_AREA})
-			Result.extend (create {EV_NOTEBOOK})
-			Result.extend (create {EV_SCROLLABLE_AREA})
-			Result.extend (create {EV_VERTICAL_BOX})
-			Result.extend (create {EV_VERTICAL_SPLIT_AREA})
-			Result.extend (create {EV_VIEWPORT})
-			Result.extend (create {EV_BUTTON})
-			Result.extend (create {EV_CHECK_BUTTON})
-			Result.extend (create {EV_DRAWING_AREA})
-			Result.extend (create {EV_HORIZONTAL_PROGRESS_BAR})
-			Result.extend (create {EV_HORIZONTAL_RANGE})
-			Result.extend (create {EV_HORIZONTAL_SCROLL_BAR})
-			Result.extend (create {EV_HORIZONTAL_SEPARATOR})
-			Result.extend (create {EV_LABEL})
-			Result.extend (create {EV_LIST})
---|FIXME		Result.extend (create {EV_OPTION_BUTTON})
-			Result.extend (create {EV_SPIN_BUTTON})
-			Result.extend (create {EV_TEXT_FIELD})
-			Result.extend (create {EV_TOGGLE_BUTTON})
-			Result.extend (create {EV_TOOL_BAR})
-			Result.extend (create {EV_VERTICAL_PROGRESS_BAR})
-			Result.extend (create {EV_VERTICAL_RANGE})
-			Result.extend (create {EV_VERTICAL_SCROLL_BAR})
-			Result.extend (create {EV_VERTICAL_SEPARATOR})
-			Result.extend (create {EV_PIXMAP})
+			Result.extend (create {EV_CELL}.make_for_test)
+			Result.extend (create {EV_FRAME}.make_for_test)
+			Result.extend (create {EV_HORIZONTAL_BOX}.make_for_test)
+			Result.extend (create {EV_HORIZONTAL_SPLIT_AREA}.make_for_test)
+			Result.extend (create {EV_NOTEBOOK}.make_for_test)
+			Result.extend (create {EV_SCROLLABLE_AREA}.make_for_test)
+			Result.extend (create {EV_VERTICAL_BOX}.make_for_test)
+			Result.extend (create {EV_VERTICAL_SPLIT_AREA}.make_for_test)
+			Result.extend (create {EV_VIEWPORT}.make_for_test)
+			Result.extend (create {EV_BUTTON}.make_for_test)
+			Result.extend (create {EV_CHECK_BUTTON}.make_for_test)
+			Result.extend (create {EV_DRAWING_AREA}.make_for_test)
+			Result.extend (create {EV_HORIZONTAL_PROGRESS_BAR}.make_for_test)
+			Result.extend (create {EV_HORIZONTAL_RANGE}.make_for_test)
+			Result.extend (create {EV_HORIZONTAL_SCROLL_BAR}.make_for_test)
+			Result.extend (create {EV_HORIZONTAL_SEPARATOR}.make_for_test)
+			Result.extend (create {EV_LABEL}.make_for_test)
+			Result.extend (create {EV_LIST}.make_for_test)
+--|FIXME		Result.extend (create {EV_OPTION_BUTTON}.make_for_test)
+			Result.extend (create {EV_SPIN_BUTTON}.make_for_test)
+			Result.extend (create {EV_TEXT_FIELD}.make_for_test)
+			Result.extend (create {EV_TOGGLE_BUTTON}.make_for_test)
+			Result.extend (create {EV_TOOL_BAR}.make_for_test)
+			Result.extend (create {EV_VERTICAL_PROGRESS_BAR}.make_for_test)
+			Result.extend (create {EV_VERTICAL_RANGE}.make_for_test)
+			Result.extend (create {EV_VERTICAL_SCROLL_BAR}.make_for_test)
+			Result.extend (create {EV_VERTICAL_SEPARATOR}.make_for_test)
+			Result.extend (create {EV_PIXMAP}.make_for_test)
 		end
 
 	windows: LINKED_LIST [EV_WINDOW] is
@@ -324,35 +311,6 @@ feature
 			end
 		end
 
-	update_widget_label (a_label: EV_LABEL; a_cell: EV_CELL; a_widget: EV_WIDGET) is
-			-- Update `a_lable' with information about `a_widget'.
-		local
-			t: EV_TEXTABLE
-			s: STRING
-		do
-			a_cell.wipe_out
-			a_cell.extend (a_widget.action_sequence_test_widget)
-			current_widget := a_widget
-			s := "type   = " + a_widget.generating_type + "%N"
-			s.append ("width  = " + a_widget.width.out + "%N")
-			s.append ("height = " + a_widget.height.out + "%N")
-			t ?= a_widget
-			if t /= Void then
-				s.append ("text   = " + t.text + "%N")
-			end
-			a_label.set_text (s)
-		end
-
-	destroy_current_widget is
-		do
-			if current_widget /= Void then
-				current_widget.destroy
-				current_widget := Void
-			end
-		end
-
-	current_widget: EV_WIDGET
-
 end
 
 --!-----------------------------------------------------------------------------
@@ -376,6 +334,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/03/01 03:06:13  oconnor
+--| revised tests
+--|
 --| Revision 1.8  2000/02/22 18:39:53  oconnor
 --| updated copyright date and formatting
 --|

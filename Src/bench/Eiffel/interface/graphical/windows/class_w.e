@@ -53,20 +53,6 @@ feature
 
 	text_window: CLASS_TEXT;
 
-	class_entered: STONE is
-			-- Stone corresponding the name entered in
-			-- the class text. (Void if can not find one). 
-		do
--- FIXME !!!!!!
--- FIXME !!!!!!
--- FIXME !!!!!!
--- FIXME !!!!!!
--- FIXME !!!!!!
-
-			--Result := class_name_tf.text.empty or else
-						--Universe.class_stone (class_name_tf.text)
-		end;
-
 	reset is
 			-- Reset the window contents
 		do

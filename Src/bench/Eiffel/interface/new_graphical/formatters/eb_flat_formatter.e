@@ -89,7 +89,9 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				set_is_with_breakable
-				formatted_text := flat_context_text (associated_class)
+				if associated_class /= Void then
+					formatted_text := flat_context_text (associated_class)
+				end
 				if formatted_text = Void then
 					last_was_error := True
 				else

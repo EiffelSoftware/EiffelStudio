@@ -78,7 +78,8 @@ inherit
 			resize as wel_resize,
 			move_and_resize as wel_move_and_resize,
 			item as wel_item,
-			enabled as is_sensitive
+			enabled as is_sensitive,
+			count as wel_count
 		export
 			{EV_INTERNAL_COMBO_FIELD_IMP} edit_item
 			{EV_INTERNAL_COMBO_BOX_IMP} combo_item
@@ -100,8 +101,7 @@ inherit
 			on_key_up,
 			on_set_cursor,
 			show,
-			hide,
-			count
+			hide
 		redefine
 			on_cben_endedit_item,
 			on_cbn_editchange,
@@ -711,6 +711,10 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.72  2000/04/17 18:40:58  brendel
+--| Instead of undefining count from the WEL object, we rename it
+--| because it is used in a WEL postcondition.
+--|
 --| Revision 1.71  2000/04/17 17:29:05  rogers
 --| Added wel_window_parent fix.
 --|

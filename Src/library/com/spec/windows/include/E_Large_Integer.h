@@ -22,15 +22,16 @@ class E_Large_Integer
 public:
 	// Commands
 	E_Large_Integer (){};
+	E_Large_Integer (LARGE_INTEGER * large);
 	~E_Large_Integer (){};
 	void ccom_set_from_integer(EIF_INTEGER i);
-	void ccom_set_from_large_integer(LARGE_INTEGER * large);
-	
+
 	// Queries
 	LARGE_INTEGER * ccom_large_integer();
 	
 private:
-	LARGE_INTEGER * li;
+	LARGE_INTEGER * pli;
+	LARGE_INTEGER li;
 };
 
 #endif // !__ECOM_E_LARGE_INTEGER_H_INC__

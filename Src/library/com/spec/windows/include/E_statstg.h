@@ -21,9 +21,8 @@ class E_STATSTG
 {
 public:
 	// Commands
-	E_STATSTG(){};
+	E_STATSTG(STATSTG * p_statstg);
 	~E_STATSTG();
-	void ccom_initialize_statstg(STATSTG * p_statstg);
 					
 	// Queries
 	LPWSTR ccom_name ();

@@ -22,10 +22,9 @@
 class E_IEnumSTATSTG
 {
 public:
-	E_IEnumSTATSTG (){};
+	E_IEnumSTATSTG (IEnumSTATSTG * p);
 	~E_IEnumSTATSTG();
 
-	void ccom_initialize_i_enum_ptr (IEnumSTATSTG * p);
 	STATSTG * ccom_next ();
 	void ccom_skip (ULONG n);
 	void ccom_reset();

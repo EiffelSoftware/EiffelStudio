@@ -109,7 +109,6 @@ feature -- Execution
 			quit_request.make (Rqst_new_breakpoint)
 			quit_request.send
 		end
-		
 
 	kill is
 			-- Ask the application to terminate itself.
@@ -121,8 +120,13 @@ feature -- Execution
 
 				-- Don't wait until the next event loop to
 				-- to process the actual termination of the application.
-				-- `recv_dead' will wait until the application is dead.
-			if quit_request.recv_dead then end
+				-- `recv_dead' will process all other messages sent by
+				-- the application until the application is dead.
+			from
+			until
+				quit_request.recv_dead
+			loop
+			end
 		ensure then
 			app_is_not_running: not Application.is_running			
 		end		

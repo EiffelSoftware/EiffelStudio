@@ -582,7 +582,9 @@ feature -- Element change
 			-- Replace current item by `v'.
 		do
 			if realized then
-				private_delete (index)
+				if index >= 0 and then index < wel_count then
+					private_delete (index)
+				end
 				private_add (an_item.value, index)
 			end
 			ll_replace (an_item)
@@ -773,6 +775,10 @@ feature {NONE} -- Implementation
 
 	private_delete (pos: INTEGER) is
 			-- Delete a string and resize if necessary.
+		require
+			exists: exists
+			pos_large_enough: pos >= 0
+			pos_small_enough: pos < wel_count
 		local
 			s: STRING
 			a_font_windows: FONT_IMP

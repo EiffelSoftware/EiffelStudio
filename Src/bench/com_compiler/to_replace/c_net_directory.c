@@ -21,7 +21,7 @@ EIF_REFERENCE c_net_directory ()
 		{
 			if (SUCCEEDED((*lpfnGetCORSysDir)(wszBuf, MAX_PATH, &dwLen)))
 			{
-				wctomb (szBuf, *wszBuf);
+				wcstombs (szBuf, wszBuf, MAX_PATH);
 				return RTMS (szBuf);
 			}
 		}

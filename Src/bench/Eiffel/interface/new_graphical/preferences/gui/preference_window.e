@@ -409,6 +409,8 @@ feature {NONE} -- Implementation - Fill Lists
 			r: RESOURCE_FOLDER
 			selected_item: RESOURCE_LIST_ITEM
 			row_number: INTEGER
+			selected_row: INTEGER
+			tmp_list: ARRAYED_LIST [RESOURCE_LIST_ITEM]
 		do
 			implementation.lock_update
 
@@ -416,6 +418,7 @@ feature {NONE} -- Implementation - Fill Lists
 			if r /= Void then
 				selected_item ?= right_list.selected_item
 				right_list.wipe_out
+				create tmp_list.make (r.resource_list.count)
 				from
 					r.resource_list.start
 					row_number := 1
@@ -425,13 +428,17 @@ feature {NONE} -- Implementation - Fill Lists
 					if r.resource_list.item.description /= Void then
 						create it.make_resource (r.resource_list.item)
 						it.set_row_number (row_number)
-						right_list.extend (it)
-						row_number := row_number + 1
+						tmp_list.extend (it)
 						if selected_item /= Void and then selected_item.resource = it.resource then
-							it.enable_select						
+							selected_row := row_number
 						end
+						row_number := row_number + 1
 					end
 					r.resource_list.forth
+				end
+				right_list.append (tmp_list)
+				if selected_row > 0 then
+					right_list.i_th (selected_row).enable_select
 				end
 			end
 

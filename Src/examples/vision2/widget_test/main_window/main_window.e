@@ -32,6 +32,11 @@ inherit
 		undefine
 			copy, default_create, is_equal
 		end
+		
+	INSTALLATION_LOCATOR
+		undefine
+			copy, default_create, is_equal
+		end
 
 feature {NONE} -- Initialization
 
@@ -99,6 +104,8 @@ feature {NONE} -- Initialization
 			
 				-- Set up search tool
 			search_tool.associate_text_entry (search_field)
+				-- Disable search tool if installation incorrect.
+			search_parent_box.disable_sensitive
 			
 				-- Now select font for `flat_short_display'
 			temp_font := flat_short_display.font
@@ -266,7 +273,7 @@ feature {NONE} -- Implementation
 		
 	update_tool_bar_radio_buttons (selected_button: EV_TOOL_BAR_TOGGLE_BUTTON) is
 			-- Simulate radio button behaviour on the three buttons in
-			-- the seperate tool bars.
+			-- the separate tool bars.
 		do
 			if selected_button /= properties_button then
 				properties_button.select_actions.block
@@ -283,7 +290,9 @@ feature {NONE} -- Implementation
 				tests_button.select_actions.resume
 			else
 				main_notebook.select_item (main_notebook_tests)
-				generate_button.enable_sensitive
+				if installation_location /= Void then
+					generate_button.enable_sensitive
+				end
 				file_generate.enable_sensitive
 			end
 			if selected_button /= documentation_button then
@@ -314,10 +323,12 @@ feature {NONE} -- Implementation
 	initialize_pixmaps is
 			-- Assign pixmaps to buttons as necessary.
 		do
-			properties_button.set_pixmap (pixmap_by_name ("properties"))
-			tests_button.set_pixmap (pixmap_by_name ("testing"))
-			documentation_button.set_pixmap (pixmap_by_name ("documentation"))
-			generate_button.set_pixmap (pixmap_by_name ("icon_code_generation_color"))
+			if installation_location /= Void then
+				properties_button.set_pixmap (pixmap_by_name ("properties"))
+				tests_button.set_pixmap (pixmap_by_name ("testing"))
+				documentation_button.set_pixmap (pixmap_by_name ("documentation"))
+				generate_button.set_pixmap (pixmap_by_name ("icon_code_generation_color"))
+			end
 		end
 		
 	pixmap_by_name (a_name: STRING): EV_PIXMAP is
@@ -328,17 +339,8 @@ feature {NONE} -- Implementation
 			file_name: FILE_NAME
 			file_location: STRING
 		do
-			file_location := get ("ISE_VISION2_TOUR")
-			if file_location = Void then
-				file_location := get ("ISE_EIFFEL")
-				if file_location /= Void then
-					create file_name.make_from_string (file_location)
-					file_name.extend ("vision2_tour")
-				end
-			else
-				create file_name.make_from_string (file_location)
-			end
-			if file_location /= Void then
+			if installation_location /= Void then
+				create file_name.make_from_string (installation_location)
 				file_name.extend ("bitmaps")
 				file_name.extend (image_extension)
 				file_name.extend (a_name + "." + image_extension)
@@ -346,10 +348,7 @@ feature {NONE} -- Implementation
 				Result.set_with_named_file (file_name.out)
 			else
 				missing_files.extend (a_name + "." + image_extension)
-				Create Result
 			end
-		ensure
-			result_not_void: Result /= Void
 		end
 		
 	display_missing_pixmaps is
@@ -373,7 +372,7 @@ feature {NONE} -- Implementation
 					end
 					missing_files.forth
 				end
-				message_text.append ("%NIf this tour was included in the EiffelStudio installation, please ensure that ISE_EIFFEL environment variable is correctly set.%N%NIf you downloaded this tour seperately, please ensure the ISE_VISION2_TOUR environment variable is set, and points to the root directory of this tour.")
+				message_text.append ("%N" + location_error_message)
 				warning_dialog.set_text (message_text)
 				warning_dialog.show_modal_to_window (Current)
 			end
@@ -397,6 +396,7 @@ feature {NONE} -- Implementation
 			-- display a GENERATION_DIALOG.
 		local
 			generation_dialog: GENERATION_DIALOG
+			error_dialog: EV_ERROR_DIALOG
 		do
 			create generation_dialog
 			generation_dialog.set_message ("You have selected to generate the " + Test_controller.selected_test_name +

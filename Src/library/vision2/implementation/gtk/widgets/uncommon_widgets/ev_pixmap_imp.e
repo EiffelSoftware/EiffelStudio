@@ -320,31 +320,34 @@ feature -- Duplication
 			-- Update `Current' to have same appearence as `other'.
 			-- (So as to satisfy `is_equal'.)
 		local
-			other_width: INTEGER
-			other_height: INTEGER
-			gdkpix, gdkmask: POINTER
-			pixgc, maskgc: POINTER
-			loc_default_pointer: POINTER
 			other_imp: EV_PIXMAP_IMP
 		do
 			other_imp ?= other.implementation
-			other_width := other.width
-			other_height := other.height
-			
- 			gdkpix := C.gdk_pixmap_new (default_gdk_window, other_width, other_height, Default_color_depth)
+			copy_from_gdk_data (other_imp.drawable, other_imp.mask, other_imp.width, other_imp.height)
+		end
+		
+feature {EV_ANY_I} -- Implementation
+		
+	copy_from_gdk_data (a_src_pix, a_src_mask: POINTER; a_width, a_height: INTEGER) is
+			-- Update `Current' to use passed gdk pixmap data.
+		local
+			gdkpix, gdkmask: POINTER
+			pixgc, maskgc: POINTER
+		do
+ 			gdkpix := C.gdk_pixmap_new (default_gdk_window, a_width, a_height, Default_color_depth)
 			pixgc := C.gdk_gc_new (gdkpix)
-			C.gdk_draw_pixmap (gdkpix, pixgc, other_imp.drawable, 0, 0, 0, 0, other_width, other_height)
+			C.gdk_draw_pixmap (gdkpix, pixgc, a_src_pix, 0, 0, 0, 0, a_width, a_height)
 			C.gdk_gc_unref (pixgc)
-			if other_imp.mask /= loc_default_pointer then
-				gdkmask := C.gdk_pixmap_new (NULL, other_width, other_height, Monochrome_color_depth)
+			if a_src_mask /= NULL then
+				gdkmask := C.gdk_pixmap_new (NULL, a_width, a_height, Monochrome_color_depth)
 				maskgc := C.gdk_gc_new (gdkmask)
-				C.gdk_draw_pixmap (gdkmask, maskgc, other_imp.mask, 0, 0, 0, 0, other_width, other_height)
+				C.gdk_draw_pixmap (gdkmask, maskgc, a_src_mask, 0, 0, 0, 0, a_width, a_height)
 				C.gdk_gc_unref (maskgc)
 			end
-			set_pixmap (gdkpix, gdkmask)
+			set_pixmap (gdkpix, gdkmask)			
 		end
 
-feature {EV_DRAWABLE_IMP, EV_WIDGET_IMP} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	drawable: POINTER is
 		do

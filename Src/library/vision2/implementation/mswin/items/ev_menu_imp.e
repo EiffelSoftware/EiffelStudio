@@ -44,6 +44,15 @@ feature -- Status report
 			end
 		end
 
+feature -- Access
+
+	get_item (index: INTEGER): EV_MENU_ITEM is
+			-- Give the item of the list at the zero-base
+			-- `index'.
+		do
+			Result ?= (ev_children.item (index)).interface
+		end
+
 feature -- Status setting
 
 	destroy is
@@ -94,6 +103,25 @@ feature {EV_MENU_ITEM_HOLDER_IMP} -- Implementation
 
 	parent_imp: EV_MENU_HOLDER_IMP
 			-- EV parent of the current menu
+
+	clear_ev_children is
+			-- Clear all the items of the list.
+		require
+			exists: not destroyed
+		local
+			list: HASH_TABLE [EV_MENU_ITEM_IMP, INTEGER]
+		do
+			from
+				list := ev_children
+				list.start
+			until
+				list.after
+			loop
+				list.item_for_iteration.interface.remove_implementation
+				list.forth
+			end
+			list.clear_all
+		end
 
 end -- class EV_MENU_IMP
 

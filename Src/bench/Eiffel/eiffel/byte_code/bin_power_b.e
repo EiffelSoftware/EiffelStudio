@@ -38,7 +38,7 @@ feature -- C code generation
 			-- Print expression value
 		local
 			buf			: GENERATION_BUFFER
-			power_nb	: INT_CONST_B
+			power_nb	: INTEGER_CONSTANT
 			power_value	: INTEGER
 			done		: BOOLEAN
 		do

@@ -100,12 +100,40 @@ feature {NONE} -- Implementation
 			create {EV_VIEWPORT_IMP} implementation.make (Current)
 		end
 
+feature -- Contract support
+
+	item_width: INTEGER is
+			-- Width of `item'. Zero if `item' `Void'.
+		do
+			if item /= Void then
+				Result := item.width
+			end
+		end
+
+	item_height: INTEGER is
+			-- Height of `item'. Zero if `item' `Void'.
+		do
+			if item /= Void then
+				Result := item.height
+			end
+		end
+
 invariant
---|FIXME This invariant needs to be reworked.
---|FIXME	x_offset_within_bounds: is_displayed and item /= Void implies
---|FIXME		x_offset >= 0 and then x_offset <= (item.width - width)
---|FIXME	y_offset_within_bounds: is_displayed and item /= Void implies
---|FIXME		y_offset >= 0 and then y_offset <= (item.height - height)
+	x_offset_non_negative: is_useable implies x_offset >= 0
+	y_offset_non_negative: is_useable implies y_offset >= 0
+
+	x_offset_smaller_than_item_width_minus_client_width: is_useable implies
+		x_offset <= (item_width - client_width).max (0)
+	y_offset_smaller_than_item_height_minus_client_height: is_useable implies
+		y_offset <= (item_height - client_height).max (0)
+
+	item_void_means_offset_zero: is_useable implies
+		(item = Void implies x_offset = 0 and y_offset = 0)
+
+	item_width_smaller_than_client_width_implies_x_offset_zero:
+		is_useable implies (item_width < client_width) implies x_offset = 0
+	item_height_smaller_than_client_height_implies_y_offset_zero:
+		is_useable implies (item_height < client_height) implies y_offset = 0
 
 end -- class EV_VIEWPORT
 
@@ -130,6 +158,9 @@ end -- class EV_VIEWPORT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/04/21 18:15:26  brendel
+--| Reworked invariant.
+--|
 --| Revision 1.7  2000/04/21 00:39:39  brendel
 --| Added make_for_test.
 --|

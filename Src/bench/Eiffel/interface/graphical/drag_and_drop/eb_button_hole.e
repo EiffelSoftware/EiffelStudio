@@ -40,8 +40,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING is do end
-
 	target: WIDGET is
 			-- Target of hole
 		do
@@ -80,7 +78,7 @@ feature -- For redefinition in the descendants.
 			Result := symbol
 		end;
 
-	command_name: STRING is
+	name: STRING is
 		do
 		end;
 

@@ -15,13 +15,16 @@ inherit
 			process_text as old_process_text
 		redefine
 			process_filter_item, process_after_class,
-			process_class_name_text, process_comment_text
+			process_class_name_text, process_comment_text,
+			process_operator_text, process_keyword_text,
+			process_symbol_text
 		end;
 	TEXT_FORMATTER
 		redefine
 			process_filter_item, process_after_class,
 			process_class_name_text, process_text,
-			process_comment_text
+			process_comment_text, process_operator_text, 
+			process_keyword_text, process_symbol_text
 		select
 			process_text
 		end;
@@ -90,32 +93,86 @@ feature {NONE} -- Text processing
 	structured_text: STRUCTURED_TEXT;
 			-- Text being processed
 
+	process_symbol_text (text: SYMBOL_TEXT) is
+			-- Process symbol text.
+		local
+			format: CELL2 [STRING, STRING];
+			text_image: STRING
+		do
+			text_image := text.image;
+			text_image.to_lower;
+			if format_table.has (text_image) then
+				format := format_table.item (text.image)
+			elseif format_table.has (f_Symbol) then
+				format := format_table.item (f_Symbol)
+			end
+			if format /= Void then
+				image.append (format.item1);
+				if format.item2 /= Void then
+					print_escaped_text (text.image);
+					image.append (format.item2)
+				end
+			else
+				print_escaped_text (text.image)
+			end
+		end;
+
+	process_keyword_text (text: KEYWORD_TEXT) is
+			-- Process keyword text.
+		local
+			format: CELL2 [STRING, STRING];
+			text_image: STRING
+		do
+			text_image := text.image;
+			text_image.to_lower;
+			if format_table.has (text_image) then
+				format := format_table.item (text.image)
+			elseif format_table.has (f_Keyword) then
+				format := format_table.item (f_Keyword)
+			end
+			if format /= Void then
+				image.append (format.item1);
+				if format.item2 /= Void then
+					print_escaped_text (text.image);
+					image.append (format.item2)
+				end
+			else
+				print_escaped_text (text.image)
+			end
+		end;
+
+	process_operator_text (text: OPERATOR_TEXT) is
+			-- Process operator text.
+		local
+			format: CELL2 [STRING, STRING];
+			text_image: STRING
+		do
+			if text.is_keyword or text.is_symbol then
+				text_image := text.image;
+				text_image.to_lower;
+				if format_table.has (text_image) then
+					format := format_table.item (text.image)
+				elseif text.is_keyword and format_table.has (f_Keyword) then
+					format := format_table.item (f_Keyword)
+				elseif text.is_symbol and format_table.has (f_Symbol) then
+					format := format_table.item (f_Symbol)
+				end
+			end;
+			if format /= Void then
+				image.append (format.item1);
+				if format.item2 /= Void then
+					print_escaped_text (text.image);
+					image.append (format.item2)
+				end
+			else
+				print_escaped_text (text.image)
+			end
+		end;
+
 	process_basic_text (text: BASIC_TEXT) is
 			-- Check first if a format has been specified for `text'.
-		--local
-			--format: CELL2 [STRING, STRING];
-			--text_image: STRING
 		do
-			--if text.is_keyword or text.is_special then
-				--text_image := text.image;
-				--text_image.to_lower;
-				--if format_table.has (text_image) then
-					--format := format_table.item (text.image)
-				--elseif text.is_keyword and format_table.has (f_Keyword) then
-					--format := format_table.item (f_Keyword)
-				--elseif text.is_special and format_table.has (f_Symbol) then
-					--format := format_table.item (f_Symbol)
-				--end
-			--end;
-			--if format /= Void then
-				--image.append (format.item1);
-				--if format.item2 /= Void then
-					--print_escaped_text (text.image);
-					--image.append (format.item2)
-				--end
-			--else
-				--print_escaped_text (text.image)
-			--end
+			print_escaped_text (text.image)
 		end;
 
 	process_comment_text (text: COMMENT_TEXT) is
@@ -135,11 +192,11 @@ feature {NONE} -- Text processing
 			end
 		end;
 
-    process_quoted_text (text: QUOTED_TEXT) is
-            -- Process the quoted `text' within a comment.
-        do
+	process_quoted_text (text: QUOTED_TEXT) is
+			-- Process the quoted `text' within a comment.
+		do
 			print_escaped_text (text.image_without_quotes);
-        end;
+		end;
 
 	process_class_name_text (text: CLASS_NAME_TEXT) is
 		local
@@ -279,15 +336,15 @@ feature {NONE} -- Text processing
 		end;
 
 	process_after_class (text: AFTER_CLASS) is
-		--local
-			--item: COMMENT_TEXT
+		local
+			item: COMMENT_TEXT
 		do
-			--print_escaped_text (" ");
-			--process_basic_text (ti_Dashdash);
-			--print_escaped_text (" ");
-			--!! item.make ("class ");
-			--process_comment_text (item);
-			--print_escaped_text (text.class_name)
+			print_escaped_text (" ");
+			process_basic_text (ti_Dashdash);
+			print_escaped_text (" ");
+			!! item.make ("class ");
+			process_comment_text (item);
+			print_escaped_text (text.e_class.name_in_upper)
 		end;
 
 	print_escaped_text (str: STRING) is

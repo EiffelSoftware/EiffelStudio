@@ -1,0 +1,43 @@
+# Requires environment variable ISE_EIFFEL.
+CC = $(ISE_EIFFEL)\BCC55\bin\bcc32.exe
+AR = $(ISE_EIFFEL)\BCC55\bin\tlib.exe
+CFLAGS = -P -c -D_WIN32_DCOM -I$(ISE_EIFFEL)\bench\spec\windows\include -I..\spec\windows\include -IO -I$(ISE_EIFFEL)\BCC55\include -L$(ISE_EIFFEL)\BCC55\lib
+
+OBJ = E_variant.obj E_IRootStorage.obj E_IStorage.obj E_IStream.obj E_statstg.obj E_wide_string.obj E_IEnumSTATSTG.obj E_Routines.obj ecom_exception.obj E_arraydesc.obj E_custdata.obj E_bstr.obj E_IType_lib.obj E_IType_Info.obj E_IType_Comp.obj E_guid.obj E_Currency.obj E_Decimal.obj E_generic_interface.obj E_automation_interface.obj ecom_font_impl_proxy.obj ecom_ienumvariant_impl_proxy.obj ecom_ifont_impl_proxy.obj ecom_picture_impl_proxy.obj 
+
+com.lib: $(OBJ)
+	if exist $@ del $@
+	$(AR) $@ +E_variant.obj
+	$(AR) $@ +E_IRootStorage.obj
+	$(AR) $@ +E_IStorage.obj
+	$(AR) $@ +E_IStream.obj
+	$(AR) $@ +E_statstg.obj
+	$(AR) $@ +E_wide_string.obj
+	$(AR) $@ +E_IEnumSTATSTG.obj
+	$(AR) $@ +E_Routines.obj
+	$(AR) $@ +ecom_exception.obj
+	$(AR) $@ +E_arraydesc.obj
+	$(AR) $@ +E_custdata.obj
+	$(AR) $@ +E_bstr.obj
+	$(AR) $@ +E_IType_lib.obj
+	$(AR) $@ +E_IType_info.obj
+	$(AR) $@ +E_IType_Comp.obj
+	$(AR) $@ +E_guid.obj
+	$(AR) $@ +E_Currency.obj
+	$(AR) $@ +E_Decimal.obj
+	$(AR) $@ +E_generic_interface.obj
+	$(AR) $@ +E_automation_interface.obj
+	$(AR) $@ +ecom_font_impl_proxy.obj
+	$(AR) $@ +ecom_picture_impl_proxy.obj
+	$(AR) $@ +ecom_ienumvariant_impl_proxy.obj
+	$(AR) $@ +ecom_ifont_impl_proxy.obj
+	if not exist ..\spec\bcb mkdir ..\spec\bcb
+	if not exist ..\spec\bcb\lib mkdir ..\spec\bcb\lib
+	copy $@ ..\spec\bcb\lib
+	del *.obj
+
+.cpp.obj:
+	$(CC) $(CFLAGS) $<
+
+.c.obj:
+	$(CC) $(CFLAGS) $<

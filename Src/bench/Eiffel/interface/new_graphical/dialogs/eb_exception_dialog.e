@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 				create sfd
 				sfd.set_filter("*.txt")
 				sfd.show_modal_to_window (Current)
-				if sfd.file_name /= Void then
+				if not sfd.file_name.is_empty then
 					create text_file.make_open_write (sfd.file_name)
 					text_file.put_string (trace)
 					text_file.close

@@ -122,7 +122,7 @@ feature {NONE} -- Initialization
 		do
 			parent_window := a_parent_window
 			ace_file_name := ace_name
-			if a_suggested_directory_name /= Void then
+			if not a_suggested_directory_name.is_empty then
 				suggested_directory_name := a_suggested_directory_name
 			else
 				suggested_directory_name := create_default_directory_name (Default_project_name)

@@ -244,6 +244,7 @@ feature -- Status setting
 			not_destroyed: not is_destroyed
 			no_menu_bar_assigned: menu_bar = Void
 			a_menu_bar_not_void: a_menu_bar /= Void
+			a_menu_bar_not_parented: a_menu_bar.parent = Void
 		do
 			implementation.set_menu_bar (a_menu_bar)
 		ensure

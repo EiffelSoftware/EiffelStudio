@@ -55,6 +55,7 @@ feature {NONE} -- Initialization
 				io.put_string("wizard -arg1 [resource_path]%N")
 			else
 				default_create
+				build_non_once_windows
 				set_application (Current)
 				pnd_motion_actions.extend (agent clear_status_during_transport)
 				cancel_actions.extend (agent clear_status_after_transport)
@@ -67,6 +68,7 @@ feature {NONE} -- Initialization
 			-- directly for interface modification (fourth page).
 		do
 			default_create
+			build_non_once_windows
 			xml_handler.load_components
 			set_application (Current)
 			pnd_motion_actions.extend (agent clear_status_during_transport)
@@ -118,6 +120,14 @@ feature {NONE} -- Initialization
 			Result := Envision_build_wizard_title
 		ensure
 			Valid_result: Result /= Void and then not Result.is_empty
+		end
+	
+	build_non_once_windows is
+			-- Create windows that must be explicitly created before use
+			-- i.e. non once features.
+		do
+			set_display_window (create {GB_DISPLAY_WINDOW})
+			set_builder_window (create {GB_BUILDER_WINDOW})
 		end
 	
 end -- class WIZARD_PROJECT_MANAGER

@@ -1649,7 +1649,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND} -- Implementation
 			pixmap := (create {GB_SHARED_PIXMAPS}).pixmap_by_name ("icon_locked_color")
 			l_pixmap := (create {GB_SHARED_PIXMAPS}).pixmap_by_name (type.as_lower).twin
 			l_pixmap.draw_sub_pixmap (0, 0, pixmap, create {EV_RECTANGLE}.make (0, 0, pixmap.width, pixmap.height))
-			create tree_item.make_with_text (client_object.actual_type)
+			create tree_item.make_with_text (name_and_type_from_object (client_object))
 			client_object.all_client_representations.extend (tree_item)
 			tree_item.set_data (client_object.id)
 			tree_item.set_pixmap (l_pixmap)

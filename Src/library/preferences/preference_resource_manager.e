@@ -1,19 +1,6 @@
 indexing
 	description: "[
-		Manager of related preference values.  This is a helper class used to initialize preferences.
-		The namespace indicates the top-level organizational identifier for this manager.  To initialize a resource
-		use the `new_*_resource_value' functions.  In doing so the following rules apply:
-		
-			1.  The resource name must be unique to this manager.  Note: it is possible to have a resource with
-				the same name in a different manager.  For example you may have two resources name `editor.width' 
-				and `application.width' in the same system, but not `editor.width' and `editor.width'.
-				
-			2.  If the resource is found in the underlying data store (registry or XML) from a previous session this
-				saved value shall be used when the resource is initialized.  If there is no value in the underlying data store
-				the value specified in a default file will be used.  If there is no default file or the resource does appear in the
-				specified default file the value passed to the `new_*_resource_value' will be used.					
-				
-		To add custom resources inherit PREFERENCE_MANAGER and implement a custom manager with a feature like 'new_custom_resource_value'.
+		Manager of related preference values.  
 				
 		]"
 	date: "$Date$"

@@ -198,43 +198,62 @@ feature -- Processing
 			create impl_interface.make_from_interface (interface_descriptor)
 			c_type := clone (interface_descriptor.c_type_name)
 			create c_post_type.make (0)
-			c_header_file := clone (interface_descriptor.c_header_file_name)
-			eiffel_type := clone (impl_interface.eiffel_class_name)
-
 			is_interface := True
-
-			need_generate_ce := True
-			need_generate_ec := True
-
+			c_header_file := clone (interface_descriptor.c_header_file_name)
 			create ce_function_name.make (0)
-			ce_function_name.append ("ccom_ce_interface_")
-			ce_function_name.append (eiffel_type)
-			ce_function_name.append_integer (local_counter)
-
-			create ce_function_signature.make (0)
-			ce_function_signature.append (c_type)
-			ce_function_signature.append (" * a_interface")
-
-			create ce_function_body.make (0)
-			ce_function_body.append (ce_function_body_interface (eiffel_type))
-
-			create ce_function_return_type.make (0)
-			ce_function_return_type.append (Eif_reference)
-
 			create ec_function_name.make (0)
-			ec_function_name.append ("ccom_ec_interface_")
-			ec_function_name.append (eiffel_type)
-			ec_function_name.append_integer (local_counter)
 
-			create ec_function_return_type.make (0)
-			ec_function_return_type.append (c_type)
+			if c_type.is_equal (Iunknown_type) then
+				vt_type := Vt_unknown
+				eiffel_type := vartype_namer.eiffel_name (vt_type)
+				need_generate_ce := False
+				need_generate_ec := False
 
-			create ec_function_signature.make (0)
-			ec_function_signature.append (Eif_reference)
-			ec_function_signature.append (Space)
-			ec_function_signature.append (Eif_ref_variable)
+				ce_function_name.append ("ccom_ce_pointed_unknown")
+				ec_function_name.append ("ccom_ec_unknown")
 
-			ec_function_body := ec_function_body_wrapper (eiffel_type, c_type)
+			elseif c_type.is_equal (Idispatch_type) then
+				vt_type := Vt_dispatch
+				eiffel_type := vartype_namer.eiffel_name (vt_type)
+				need_generate_ce := False
+				need_generate_ec := False
+
+				ce_function_name.append ("ccom_ce_pointed_dispatch")
+				ec_function_name.append ("ccom_ec_dispatch")
+			else
+				eiffel_type := clone (impl_interface.eiffel_class_name)
+
+				need_generate_ce := True
+				need_generate_ec := True
+
+				ce_function_name.append ("ccom_ce_interface_")
+				ce_function_name.append (eiffel_type)
+				ce_function_name.append_integer (local_counter)
+
+				create ce_function_signature.make (0)
+				ce_function_signature.append (c_type)
+				ce_function_signature.append (" * a_interface")
+
+				create ce_function_body.make (0)
+				ce_function_body.append (ce_function_body_interface (eiffel_type))
+
+				create ce_function_return_type.make (0)
+				ce_function_return_type.append (Eif_reference)
+
+				ec_function_name.append ("ccom_ec_interface_")
+				ec_function_name.append (eiffel_type)
+				ec_function_name.append_integer (local_counter)
+
+				create ec_function_return_type.make (0)
+				ec_function_return_type.append (c_type)
+
+				create ec_function_signature.make (0)
+				ec_function_signature.append (Eif_reference)
+				ec_function_signature.append (Space)
+				ec_function_signature.append (Eif_ref_variable)
+
+				ec_function_body := ec_function_body_wrapper (eiffel_type, c_type)
+			end
 		end
 
 	process_enum (enum_descriptor: WIZARD_ENUM_DESCRIPTOR) is

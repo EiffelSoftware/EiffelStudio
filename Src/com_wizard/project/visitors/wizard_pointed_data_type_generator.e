@@ -33,7 +33,16 @@ feature -- Basic operations
 			create pointed_visitor
 			pointed_visitor.visit (a_descriptor.pointed_data_type_descriptor)
 
-			vt_type := binary_or (pointed_visitor.vt_type, Vt_byref)
+			if 
+				pointed_visitor.is_interface and 
+				(is_unknown (pointed_visitor.vt_type) or
+				is_dispatch (pointed_visitor.vt_type))
+			then
+				vt_type := pointed_visitor.vt_type
+			else
+				vt_type := binary_or (pointed_visitor.vt_type, Vt_byref)
+			end
+
 			c_type := clone (pointed_visitor.c_type)
 			c_type.append (Space)
 			c_type.append (Asterisk)

@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 			end;
 			!! a_list.make;
 			fill_list (a_list);
-			choices.popup (Current, a_list);
+			choices.popup (Current, a_list, tool.history_window_title);
 			choices.select_i_th (tool.history.index)
 		end;
 
@@ -117,7 +117,9 @@ feature {NONE} -- Implementation
 					history.forth;
 					i := i + 1
 				end;
-				tool.last_format.execute (history.item)
+				history.set_do_not_update (True);
+				tool.receive (history.item);
+				history.set_do_not_update (False)
 			end
 		end;
 

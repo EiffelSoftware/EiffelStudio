@@ -149,7 +149,15 @@ feature {NONE} -- Implementation
 	update_docked_object_editor is
 			-- update `docked_object_editor' to reflect `Current'
 		do
-			docked_object_editor.set_object (object)
+			if system_status.project_open then
+					-- If there is no project open, then there is
+					-- nothing to update. The reason that we must protect,
+					-- is that when rebuilding new projects, it seems that
+					-- selection change events from the layout tree items
+					-- are somewhat unusual. There will be no side
+					-- effect from performing this protection. Julian.
+				docked_object_editor.set_object (object)
+			end
 		end
 		
 end -- class GB_LAYOUT_CONSTRUCTOR_ITEM

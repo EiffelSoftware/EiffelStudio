@@ -59,11 +59,15 @@ feature -- Basic operations
 			c_type_name.append (name)
 			
 			create c_header_file_name.make (0)
-			c_header_file_name.append ("ecom_")
-			c_header_file_name.append (name)
-			c_header_file_name.append (".h")
+			if not Non_generated_type_libraries.has (type_library_descriptor.guid) then
+				c_header_file_name.append ("ecom_")
+				c_header_file_name.append (name)
+				c_header_file_name.append (".h")
+			end
 
 			create Result.make (Current)
+
+			system_descriptor.add_coclass (Result)
 		ensure then
 			valid_interface_descriptors: interface_descriptors /= Void and then
 				interface_descriptors.count = a_type_info.type_attr.count_implemented_types

@@ -23,6 +23,8 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_REJECTED_TYPE_LIBRARIES
+
 feature -- Basic Operations
 
 	set_common_fields (a_descriptor: WIZARD_TYPE_DESCRIPTOR) is

@@ -19,10 +19,15 @@ feature {NONE} -- Initialization
 			create {LINKED_LIST [WIZARD_ENUM_DESCRIPTOR]} enumerators.make
 			create {LINKED_LIST [WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR]} 
 					interfaces.make
+			create {LINKED_LIST [WIZARD_COCLASS_DESCRIPTOR]} coclasses.make
 			create {LINKED_LIST [STRING]} eiffel_names.make
 			eiffel_names.compare_objects
 		ensure
 			valid_library_descriptors: library_descriptors /= Void
+			valid_enumerators: enumerators /= Void
+			valid_interfaces: interfaces /= Void
+			valid_coclasses: coclasses /= Void
+			valid_eiffel_names: eiffel_names /= Void
 		end
 
 feature -- Access
@@ -61,6 +66,9 @@ feature -- Access
 	interfaces: LIST [WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR]
 			-- List of implemented interfaces.
 
+	coclasses: LIST [WIZARD_COCLASS_DESCRIPTOR]
+			-- List of coclasses in system.
+
 	is_iunknown: BOOLEAN
 			-- Is IUnknown referenced as data type in system?
 
@@ -69,6 +77,9 @@ feature -- Access
 
 	name: STRING 
 			-- System name.
+
+	type_lib_guid: ECOM_GUID
+			-- GUID of Type Library that started system.
 
 feature -- Basic operations
 
@@ -83,6 +94,7 @@ feature -- Basic operations
 		do
 			create a_type_lib.make_from_name (a_type_library_file_name)
 			create a_type_library_descriptor.make (a_type_lib)
+			type_lib_guid := a_type_library_descriptor.guid
 			name := clone (a_type_library_descriptor.name)
 			add_library_descriptor (a_type_library_descriptor)
 			a_type_library_descriptor.generate
@@ -129,6 +141,14 @@ feature -- Basic operations
 			enumerators.force (an_enumerator)
 		end
 
+	add_coclass (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
+			-- Add `a_coclass to `coclasses
+		require
+			non_void_descriptor: a_coclass /= Void
+		do
+			coclasses.force (a_coclass)
+		end
+
 	start is
 			-- Set cursor to first descriptor
 		do
@@ -155,6 +175,10 @@ feature {NONE} -- Implementation
 
 invariant
 	valid_library_descriptors: library_descriptors /= Void
+	valid_enumerators: enumerators /= Void
+	valid_interfaces: interfaces /= Void
+	valid_coclasses: coclasses /= Void
+	valid_eiffel_names: eiffel_names /= Void
 
 end -- class WIZARD_SYSTEM_DESCRIPTOR
 

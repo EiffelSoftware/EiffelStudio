@@ -396,6 +396,11 @@ feature -- Accelerators - command association
 
 feature -- Implementation
 
+	on_contained is
+			-- `Current' has just been put into a container.
+		do
+		end
+
 	background_color_imp: EV_COLOR_IMP
 			-- Color used for the background of the widget
 
@@ -915,6 +920,10 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.60  2000/03/20 23:23:23  pichery
+--| - Added `on_contained' notion. A widget is now notified when it is put
+--|   in a container (usefull for pixmap)
+--|
 --| Revision 1.59  2000/03/17 23:24:49  brendel
 --| Implemented recently changed key event to take EV_KEY.
 --|

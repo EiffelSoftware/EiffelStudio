@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 
 	set_toolkit  is
 			-- Set motif as toolkit.
-		do	
+		do
 			!! init_toolkit.make (application_name);
 			if (toolkit = Void) then end
 		end

@@ -40,6 +40,8 @@ feature {NONE} -- Implementation
 			-- Set arguments
 		require
 			non_void_feature_writer: feature_writer /= Void
+			non_void_func_desc: func_desc /= Void
+			non_void_arguments: func_desc.arguments /= Void
 		local
 			arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
 			an_argument: STRING

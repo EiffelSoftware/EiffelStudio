@@ -2590,6 +2590,17 @@ feature -- Java byte-code generation
 			jave_generation_set : java_generation = b
 		end;
 
+feature -- Line number generation in the C-code
+
+	line_generation : BOOLEAN;
+
+	set_line_generation (b: BOOLEAN) is
+		do
+			line_generation := b;
+		ensure
+			line_generation_set : line_generation = b
+		end;
+
 feature -- Generation
 
 	generate_main_finalized_eiffel_files is
@@ -4010,12 +4021,12 @@ feature -- Workbench routine info table file generation
 			f: INDENT_FILE
 		do
 			if not byte_context.final_mode then
-				f := Rout_info_file;
-				f.open_write;
-				f.putstring (Rout_info_table.C_string);
-				f.close;
-			end;
-		end;
+				f := Rout_info_file
+				f.open_write
+				Rout_info_table.generate (f)
+				f.close
+			end
+		end
 
 feature --Workbench option file generation
 

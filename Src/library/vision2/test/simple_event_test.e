@@ -18,23 +18,9 @@ feature -- Access
 
 	selected, pressed, released: BOOLEAN
 
-	on_select is
-		do
-			selected := True
-			print ("select")
-		end
-
-	on_press is
-		do
-			pressed := True
-			print ("press")
-		end
-
-	on_release is
-		do
-			released := True
-			print ("release")
-		end
+	on_select  is do selected := True end
+	on_press   is do pressed  := True end
+	on_release is do released := True end
 
 	do_test (wgt: EV_WIDGET) is
 		local
@@ -68,8 +54,10 @@ feature -- Access
 				pressed and
 				released
 			then
+				print ("success%N")
 				destroy
 			else
+				print ("failure%N")
 				exit_one
 			end
 		end
@@ -82,8 +70,11 @@ feature -- Access
 			create t
 			create b.make_with_text ("Test button")
 			b.select_actions.extend (~on_select)
+			b.select_actions.extend (~print ("select%N"))
 			b.pointer_button_press_actions.force_extend (~on_press)
+			b.pointer_button_press_actions.force_extend (~print ("press%N"))
 			b.pointer_button_release_actions.force_extend (~on_release)
+			b.pointer_button_release_actions.force_extend (~print ("release%N"))
 			first_window.extend (b)
 			t.actions.extend (~do_test (b))
 			t.set_interval (10000)

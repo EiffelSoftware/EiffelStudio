@@ -117,6 +117,7 @@ feature {NONE} -- Initialization
 			variant_field_names.put (Variant_dblval, Vt_r8)
 			variant_field_names.put (Variant_boolval, Vt_bool)
 			variant_field_names.put (Variant_scode, Vt_error)
+			variant_field_names.put (Variant_scode, Vt_hresult)
 			variant_field_names.put (Variant_cyval, Vt_cy)
 			variant_field_names.put (Variant_date, Vt_date)
 			variant_field_names.put (Variant_bstrval, Vt_bstr)

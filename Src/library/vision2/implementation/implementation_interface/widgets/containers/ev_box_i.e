@@ -14,6 +14,12 @@ inherit
 		redefine
 			interface
 		end
+		
+	EV_DOCKABLE_TARGET_I
+		redefine
+			interface
+		end
+
 	
 feature -- Constants
 	
@@ -83,7 +89,13 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 		deferred
 		ensure
 			flag_assigned: is_item_expanded (child) = flag
-		end	
+		end
+
+feature {EV_DOCKABLE_SOURCE_I} -- Implementation
+
+	insertion_position: INTEGER is
+		deferred
+		end
 		
 feature {EV_ANY, EV_ANY_I} -- Implementation
 

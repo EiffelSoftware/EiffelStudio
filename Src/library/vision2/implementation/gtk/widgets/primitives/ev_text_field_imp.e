@@ -123,7 +123,7 @@ feature {EV_ANY_I} -- Implementation
 		do
 			create Result
 			--real_connect_signal_to_actions (entry_widget, "activate", Result, Void)
-			real_signal_connect (visual_widget, "activate", agent gtk_marshal.text_field_return_intermediary (c_object), Void)
+			real_signal_connect (entry_widget, "activate", agent gtk_marshal.text_field_return_intermediary (c_object), Void)
 		end
 
 feature {EV_TEXT_FIELD_I} -- Implementation

@@ -6,6 +6,12 @@ indexing
 
 class
 	RTF_FORMAT_I
+	
+inherit
+	ANY
+		redefine
+			out
+		end
 
 feature -- Access
 
@@ -15,9 +21,6 @@ feature -- Access
 	text_color: INTEGER
 			-- Text color of format
 
-	color: INTEGER
-			-- Text color of  format
-
 	is_bold: BOOLEAN
 			-- Is format bold?
 
@@ -26,6 +29,13 @@ feature -- Access
 
 	character_format: INTEGER
 			-- Current character format index.
+			
+	out: STRING is
+			-- New string containing terse printable representation
+			-- of current object
+		do
+			Result := character_format.out + font_height.out + text_color.out + highlight_color.out + is_bold.out
+		end
 
 feature -- Element change
 
@@ -47,16 +57,6 @@ feature -- Element change
 			text_color := a_text_color
 		ensure
 			text_color_assigned: text_color = a_text_color
-		end
-
-	set_color (a_color: INTEGER) is
-			-- Set `color' to `a_color'.
-		require
-			a_color_non_negative: a_color >= 0
-		do
-			color := a_color
-		ensure
-			color_assigned: color = a_color
 		end
 
 	set_bold (a_is_bold: BOOLEAN) is
@@ -90,7 +90,6 @@ feature -- Element change
 invariant
 	character_format_non_negative: character_format >= 0
 	font_height_positive: font_height > 0
-	color_non_negative: color >= 0
 	text_color_non_negative: text_color >= 0
 	highlight_color_non_negative: highlight_color >= 0
 

@@ -1,0 +1,46 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Tree_view</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+		<META NAME="MS-HKWD" CONTENT="WEL Samples, Tree_view">
+	</HEAD>
+
+	<BODY>
+		<H1>Tree View Sample</H1>
+		<CENTER><IMG SRC="tree_view.png" ALT="tree_view" /></CENTER><BR><BR>
+		<H2>Compiling</H2>
+		<P>
+			To compile the example:
+		</P>
+		<UL>
+			<LI>Launch [BENCH].
+			<LI>Select <B>Use existing Ace (control file)</B> and click <B>OK</B>.
+			<LI>Browse to <I>Eiffel50\examples\wel\tree_view\</I>.
+			<LI>Choose <I>Ace.ace</I>
+			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
+			<LI>Click <B>OK</B>.
+		</UL>
+		<H2>Running</H2>
+		<P>After launching the program, a window will be displayed as illustrated above. Selecting or expanding one of the tree items will cause notification
+		to be displayed in the list at the top of the window. Various other notifications are also displayed, such as pressing a key in the tree.
+		</P>
+
+		<H2>Under the Hood</H2>
+		<P><A CLASS="eclass" HREF="/libraries/wel/samples/tree_view/root_cluster/treeview_chart.html">TREEVIEW</A> inherits <A CLASS="eclass" HREF="/libraries/wel/reference/controls/wel_tree_view_chart.html">WEL_TREE_VIEW</A> and redefines 
+		<A CLASS="efeature" HREF="/libraries/wel/samples/tree_view/root_cluster/treeview_chart.html#f_make">make</A> to initialize items within the tree. A <a CLASS="eclass" HREF="/libraries/wel/reference/structs/wel_tree_view_insert_struct_chart.html">WEL_TREE_VIEW_INSERT_STRUCT</A>
+		is used to insert each <A CLASS="eclass" HREF="/libraries/wel/reference/structs/wel_tree_view_item.html">WEL_TREE_VIEW_ITEM</A> while a <A CLASS="eclass" HREF="/libraries/wel/reference/structs/wel_image_list_chart.html">WEL_IMAGE_LIST</A> is used to reference images within the tree.
+		
+		
+		<P>This sample contains the following classes:
+			<UL>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tree_view/root_cluster/treeview_chart.html">TREEVIEW</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tree_view/root_cluster/main_window_chart.html">MAIN_WINDOW</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tree_view/root_cluster/treeview_demo_chart.html">TREEVIEW_DEMO</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tree_view/root_cluster/application_ids_chart.html">APPLICATION_IDS</A>
+			</UL>
+		</P>
+		<P CLASS="seealso"><B>See Also</B><BR><A HREF="/libraries/wel/content/controls/wel_tree_view.html">WEL_TREE_VIEW</A></P>
+	</BODY>
+</HTML>

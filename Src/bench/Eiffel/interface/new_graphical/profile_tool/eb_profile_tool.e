@@ -10,27 +10,22 @@ class
 
 inherit
 	EB_TOOL
-		rename
-			empty_tool_name as tool_name
 		redefine
 			make,
 			show, hide, destroy,
 			init_commands, tool_name
 		end
 
+--	EB_PROFILE_TOOL_DATA
+--		rename
+--			Profile_resources as resources
+--		end
+
 	EB_PROFILE_TOOL_DATA
-		rename
-			Profile_resources as resources
-		end
 
 	EV_COMMAND
 
 --	WINDOWS
-
-	EB_RESOURCE_USER
-		redefine
-			dispatch_modified_resource
-		end
 
 	SYSTEM_CONSTANTS
 
@@ -41,7 +36,7 @@ feature {NONE} -- Initialization
 
 	make (man: EB_TOOL_MANAGER) is
 		do
-			resources.add_user (Current)
+--			resources.add_user (Current)
 			create open_tools.make 
 
 			precursor {EB_TOOL} (man)			
@@ -138,8 +133,9 @@ feature {EB_TOOL_MANAGER} -- Initialization
 			exit_button.set_vertical_resize (False)
 
 				-- Sizing policy
-			set_size (resources.tool_width.actual_value,
-				resources.tool_height.actual_value)
+			update
+--			set_size (resources.tool_width.actual_value,
+--				resources.tool_height.actual_value)
 		end
 
 	init_commands is
@@ -159,49 +155,54 @@ feature -- Access
 
 feature -- Updating
 
-
-	dispatch_modified_resource (mod_res: EB_MODIFIED_RESOURCE) is
-		local
-			old_i, new_i: EB_INTEGER_RESOURCE
+	register is
 		do
-			old_i ?= mod_res.old_resource
-			if old_i /= Void then
-				new_i ?= mod_res.new_resource
-				update_integer_resource (old_i, new_i)
-			end
+			register_to ("profile_tool_width")
+			register_to ("profile_tool_height")
 		end
 
-	update_integer_resource (old_res, new_res: EB_INTEGER_RESOURCE) is
-		local
-			pr: like resources
+	update is
 		do
-			pr := resources
-			if new_res.actual_value >= 0 then
-				if old_res = pr.tool_width then
-					set_width (new_res.actual_value)
-				elseif old_res = pr.tool_height then
-					set_height (new_res.actual_value)
-				elseif old_res = pr.query_tool_width then
-					from
-						open_tools.start
-					until
-						open_tools.after
-					loop
-						open_tools.item.set_width (new_res.actual_value)
-						open_tools.forth
-					end
-				elseif old_res = pr.query_tool_height then
-					from
-						open_tools.start
-					until
-						open_tools.after
-					loop
-						open_tools.item.set_height (new_res.actual_value)
-						open_tools.forth
-					end
-				end
-			end
+			set_size (profile_tool_width, profile_tool_height)
 		end
+
+	unregister is
+		do
+			unregister_to ("profile_tool_width")
+			unregister_to ("profile_tool_height")
+		end
+
+--	update_integer_resource (old_res, new_res: EB_INTEGER_RESOURCE) is
+--		local
+--			pr: like resources
+--		do
+--			pr := resources
+--			if new_res.actual_value >= 0 then
+--				if old_res = pr.tool_width then
+--					set_width (new_res.actual_value)
+--				elseif old_res = pr.tool_height then
+--					set_height (new_res.actual_value)
+--				elseif old_res = pr.query_tool_width then
+--					from
+--						open_tools.start
+--					until
+--						open_tools.after
+--					loop
+--						open_tools.item.set_width (new_res.actual_value)
+--						open_tools.forth
+--					end
+--				elseif old_res = pr.query_tool_height then
+--					from
+--						open_tools.start
+--					until
+--						open_tools.after
+--					loop
+--						open_tools.item.set_height (new_res.actual_value)
+--						open_tools.forth
+--					end
+--				end
+--			end
+--		end
 
 feature -- Graphical User Interface
 
@@ -358,7 +359,7 @@ feature  -- status Setting
 				a_wnd.destroy
 				open_tools.remove
 			end
-			resources.remove_user (Current)
+--			resources.remove_user (Current)
 			precursor
 		end
 

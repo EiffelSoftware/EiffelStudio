@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 		do
 			editor_make (a_tool)
 			make (tool.parent_window)
-			shell_command := clone (General_resources.print_shell_command.value)
+			shell_command := clone (print_shell_command)
 			shell_cmd_field.set_text (shell_command)
 			set_title (tool.title)
 			postscript_t.set_insensitive (filterable_format = Void)
@@ -107,8 +107,8 @@ feature {NONE} -- Execution
 			file_name: FILE_NAME
 		do
 			if arg = ok_it then
-				General_resources.print_shell_command.set_value 
-					(clone (shell_cmd_field.text))
+--				General_resources.print_shell_command.set_value 
+--					(clone (shell_cmd_field.text))
 --				create mp.set_watch_cursor
 				if print_to_file_t.state then
 					create file_save_d.make (tool.parent)

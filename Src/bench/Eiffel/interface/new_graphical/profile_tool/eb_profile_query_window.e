@@ -50,121 +50,6 @@ feature {NONE} -- Initialization
 			tool_set: tool.is_equal (a_tool)
 		end
 
-feature {EB_SAVE_RESULT_CMD} -- Save commands
-
-	save_it (ptf: RAW_FILE) is
-		do
-			ptf.create_read_write
-			ptf.putstring ("Options:%N========%N%N")
-			ptf.putstring (profiler_options.image)
-			ptf.putstring ("%NQuery:%N======%N%N")
-			ptf.putstring (profiler_query.image)
-			ptf.putstring ("%NResults:%N========%N%N")
-			ptf.putstring (text_window.text)
-			ptf.new_line
-			ptf.close
-		end
-
-feature -- Status Setting
-
-	update_window (st: STRUCTURED_TEXT; pq: PROFILER_QUERY;
-				po: PROFILER_OPTIONS; pi: PROFILE_INFORMATION) is
-			-- Update User Interface Widgets to reflect the parameters.
-		do
-			profiler_query := pq
-			profiler_options := po
-			profinfo := pi
-
-			count_active_subqueries
-			if profiler_query.subqueries.count > active_subqueries then
-				from
-					profiler_query.subqueries.go_i_th ( active_subqueries + 1 )
-					profiler_query.subquery_operators.go_i_th ( active_subqueries )
-					if profiler_query.subquery_operators.before then
-						profiler_query.subquery_operators.forth
-					end
-				until
-					profiler_query.subqueries.after 
-				loop
-					all_subqueries.extend ( profiler_query.subqueries.item )
-					profiler_query.subqueries.forth
-					if not profiler_query.subquery_operators.after then
-						all_operators.extend ( profiler_query.subquery_operators.item )
-						profiler_query.subquery_operators.forth
-					end
-				end
-			end
-
-			update_query_frame
-			subquery_text.set_text ("")
-			text_window.freeze
-			text_window.clear_window
-			text_window.process_text (st)
-			text_window.set_editable (True)
-			text_window.set_position (1)
-			text_window.set_editable (False)
-			text_window.thaw
-		end
-
-feature -- Update
-
-	update_graphical_resources is
-			-- Update the graphical resources.
-		do
-			text_window.clear_window
-			text_window.init_resource_values
-			run_query_cmd.execute (Void, Void)
-		end
-
-	update_query_frame is
-		local
-			i : INTEGER
-			scrollable_subquery: EB_SUBQUERY_ITEM
-			op: STRING
-		do
-			active_query_window.clear_items
-			inactive_subqueries_window.clear_items
-			if all_subqueries.count > 0 then
-				all_subqueries.start
-				if all_subqueries.item.is_active then
-					create scrollable_subquery.make_first (active_query_window, all_subqueries.item.image)
-				else
-					create scrollable_subquery.make_first (inactive_subqueries_window, all_subqueries.item.image)
-				end
-				if all_operators.count > 0 then
-					from
-						all_subqueries.forth
-						all_operators.start
-						i := 2
-					until
-						all_subqueries.after or else all_operators.after
-					loop
-						if all_subqueries.item.is_active then
-							if active_query_window.count = 0 then
-								op := ""
-							else
-								op := all_operators.item.actual_operator
-							end
-							create scrollable_subquery.make_normal (active_query_window, op, all_subqueries.item.image, i)
-						else
-							create scrollable_subquery.make_normal (inactive_subqueries_window, all_operators.item.actual_operator, all_subqueries.item.image, i)
-						end
-						all_subqueries.forth
-						all_operators.forth
-						i := i + 1
-					end							
-				end
-			end
-		end
-
-	update_profiler_query is
-		do
-			profiler_query.set_subqueries (all_subqueries)
-			profiler_query.set_subquery_operators (all_operators)
-		end
-
-feature {NONE} -- Graphical User Interface
-
 	build_interface is
 			-- Build the user interface.
 		local
@@ -282,8 +167,125 @@ feature {NONE} -- Graphical User Interface
 			close_button.add_click_command (close_cmd, Void)
 
 				--| Sizing
-			set_minimum_size (Profile_resources.query_tool_width.actual_value, 
-					Profile_resources.query_tool_height.actual_value)
+			set_window_size
+		end
+
+feature {EB_SAVE_RESULT_CMD} -- Save commands
+
+	save_it (ptf: RAW_FILE) is
+		do
+			ptf.create_read_write
+			ptf.putstring ("Options:%N========%N%N")
+			ptf.putstring (profiler_options.image)
+			ptf.putstring ("%NQuery:%N======%N%N")
+			ptf.putstring (profiler_query.image)
+			ptf.putstring ("%NResults:%N========%N%N")
+			ptf.putstring (text_window.text)
+			ptf.new_line
+			ptf.close
+		end
+
+feature -- Status Setting
+
+	set_window_size is
+		do
+			set_size (query_window_width, query_window_height)
+		end
+
+	update_window (st: STRUCTURED_TEXT; pq: PROFILER_QUERY;
+				po: PROFILER_OPTIONS; pi: PROFILE_INFORMATION) is
+			-- Update User Interface Widgets to reflect the parameters.
+		do
+			profiler_query := pq
+			profiler_options := po
+			profinfo := pi
+
+			count_active_subqueries
+			if profiler_query.subqueries.count > active_subqueries then
+				from
+					profiler_query.subqueries.go_i_th ( active_subqueries + 1 )
+					profiler_query.subquery_operators.go_i_th ( active_subqueries )
+					if profiler_query.subquery_operators.before then
+						profiler_query.subquery_operators.forth
+					end
+				until
+					profiler_query.subqueries.after 
+				loop
+					all_subqueries.extend ( profiler_query.subqueries.item )
+					profiler_query.subqueries.forth
+					if not profiler_query.subquery_operators.after then
+						all_operators.extend ( profiler_query.subquery_operators.item )
+						profiler_query.subquery_operators.forth
+					end
+				end
+			end
+
+			update_query_frame
+			subquery_text.set_text ("")
+			text_window.freeze
+			text_window.clear_window
+			text_window.process_text (st)
+			text_window.set_editable (True)
+			text_window.set_position (1)
+			text_window.set_editable (False)
+			text_window.thaw
+		end
+
+feature -- Update
+
+	update_graphical_resources is
+			-- Update the graphical resources.
+		do
+			text_window.clear_window
+			text_window.init_resource_values
+			run_query_cmd.execute (Void, Void)
+		end
+
+	update_query_frame is
+		local
+			i : INTEGER
+			scrollable_subquery: EB_SUBQUERY_ITEM
+			op: STRING
+		do
+			active_query_window.clear_items
+			inactive_subqueries_window.clear_items
+			if all_subqueries.count > 0 then
+				all_subqueries.start
+				if all_subqueries.item.is_active then
+					create scrollable_subquery.make_first (active_query_window, all_subqueries.item.image)
+				else
+					create scrollable_subquery.make_first (inactive_subqueries_window, all_subqueries.item.image)
+				end
+				if all_operators.count > 0 then
+					from
+						all_subqueries.forth
+						all_operators.start
+						i := 2
+					until
+						all_subqueries.after or else all_operators.after
+					loop
+						if all_subqueries.item.is_active then
+							if active_query_window.count = 0 then
+								op := ""
+							else
+								op := all_operators.item.actual_operator
+							end
+							create scrollable_subquery.make_normal (active_query_window, op, all_subqueries.item.image, i)
+						else
+							create scrollable_subquery.make_normal (inactive_subqueries_window, all_operators.item.actual_operator, all_subqueries.item.image, i)
+						end
+						all_subqueries.forth
+						all_operators.forth
+						i := i + 1
+					end							
+				end
+			end
+		end
+
+	update_profiler_query is
+		do
+			profiler_query.set_subqueries (all_subqueries)
+			profiler_query.set_subquery_operators (all_operators)
 		end
 
 feature {NONE} -- Attributes

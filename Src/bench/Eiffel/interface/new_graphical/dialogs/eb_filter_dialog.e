@@ -60,7 +60,7 @@ feature -- Execution Implementation
 	filter_name: STRING is
 			-- Filter name 
 		once
-			Result := clone (General_resources.filter_name.value)
+			Result := clone (filter_name)
 		end
 	
 	call (cmd: like associated_command) is
@@ -78,7 +78,7 @@ feature -- Execution Implementation
 			else
 				create str_element.make_with_text (list, filter_command.filter_name)
 				index := str_element.index
-				text_field.set_text (General_resources.filter_command.value)
+				text_field.set_text (general_filter_command)
 			end
 			if index = 0 then index := 1 end
 			list.select_item (index)
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 					if list.selected_item /= Void then
 						tmp_name.append (list.selected_item.text)
 					end
-					tmp_name := General_resources.filter_command.value
+					tmp_name := general_filter_command
 					tmp_name.wipe_out
 					tmp_name.append (text_field.text)
 				end

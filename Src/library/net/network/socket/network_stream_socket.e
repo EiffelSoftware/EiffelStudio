@@ -103,8 +103,18 @@ feature -- Initialization
 
 feature -- Status report
 
+	maximum_seg_size: INTEGER is
+			-- Maximum segment size
+		require
+			socket_exists: exists
+		do
+			Result := c_get_sock_opt_int (descriptor, level_iproto_tcp, tcpmax_seg)
+		end
+
 	maxium_seg_size: INTEGER is
 			-- Maximum segment size
+		obsolete
+			"Use `maximum_seg_size' instead."
 		require
 			socket_exists: exists
 		do

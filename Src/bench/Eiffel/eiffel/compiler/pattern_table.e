@@ -60,7 +60,7 @@ feature
 			-- Process the table of C patterns
 		local
 			c_pattern: C_PATTERN
-			types: LINKED_LIST [CLASS_TYPE]
+			types: TYPE_LIST
 			info: PATTERN_INFO
 			c_pattern_info: C_PATTERN_INFO
 			assoc_class: CLASS_C

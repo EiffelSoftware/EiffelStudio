@@ -29,6 +29,13 @@ feature -- Access
 		alias
 			"PBM_SETRANGE"
 		end
+		
+	Pbm_setrange32: INTEGER is
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"PBM_SETRANGE32"
+		end
 
 	Pbm_setpos: INTEGER is
 		external

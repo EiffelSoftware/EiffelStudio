@@ -13,11 +13,11 @@ inherit
 	SHARED_SERVER;
 	SHARED_ERROR_HANDLER;
 	SHARED_RESCUE_STATUS;
+	SHARED_EIFFEL_PARSER
 	AST_REGISTRATION
 		rename
 			class_ast as current_ast
 		end;
-	MEMORY;
 	COMPILER_EXPORTER
 
 creation
@@ -437,6 +437,7 @@ feature {NONE} -- Implementation
 			--| (If class is out of date with compiled
 			--| structures reparse class)
 		local
+			parser: like eiffel_parser
 			file: RAW_FILE;
 			class_file_name: STRING;
 			vd21: VD21;
@@ -485,16 +486,15 @@ end;
 					Error_handler.insert_error (vd21);
 					Error_handler.raise_error;
 				end;
-				file.open_read;
-				collection_off;
-				Result := c_parse (file.file_pointer, $class_file_name);
-				collection_on;
-				file.close;
+				file.open_read
+				parser := Eiffel_parser
+				parser.parse (file)
+				Result := parser.root_node
+				file.close
 			end
 		rescue
 			if Rescue_status.is_error_exception then
 					-- Error happened
-				collection_on;
 				if not (file = Void or else file.is_closed) then
 					file.close;
 				end;
@@ -721,13 +721,6 @@ feature {NONE} -- Implementation
 
 	feature_clause_order: ARRAY [STRING];
 			-- Array of ordered feature clause comments
-
-feature {NONE} -- External features
-
-	c_parse (f: POINTER; s: POINTER): CLASS_AS is
-		external
-			"C"
-		end;
 
 invariant
 	

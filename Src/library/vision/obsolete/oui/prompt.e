@@ -8,7 +8,7 @@ class PROMPT
 
 inherit
 
-	TERMINAL
+	TERMINAL_OUI
 		rename
 			make as terminal_make
 		redefine

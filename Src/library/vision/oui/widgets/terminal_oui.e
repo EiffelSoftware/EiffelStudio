@@ -4,7 +4,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class TERMINAL 
+class TERMINAL_OUI
 
 inherit 
 

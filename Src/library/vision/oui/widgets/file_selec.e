@@ -10,7 +10,7 @@ class FILE_SELEC
 
 inherit
 
-	TERMINAL
+	TERMINAL_OUI
 		rename
 			make as terminal_make
 		redefine

@@ -12,7 +12,7 @@ class MESSAGE
 
 inherit
 
-	TERMINAL
+	TERMINAL_OUI
 		rename
 			make as bulletin_make
 		redefine

@@ -258,9 +258,7 @@ feature -- Element change
 			until
 				referers.is_empty
 			loop
-				context := referers.item
-				context.object.constants.remove (context.property + context.attribute)
-				referers.remove
+				referers.item.destroy
 			end
 			
 			deleted_constants.extend (a_constant)

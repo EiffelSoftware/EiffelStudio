@@ -141,8 +141,10 @@ feature -- Initialization
 						end
 					elseif node.name.is_equal ("TEXT") then
 						resource := load_xml_resource (node)
-						resource_list.extend (resource)
-						structure.put_resource (resource)
+						if structure.item (resource.name) = Void then
+							resource_list.extend (resource)
+							structure.put_resource (resource)
+						end
 					elseif node.name.is_equal ("TOPIC") then
 						child := new_child (node, structure)
 						child.create_interface

@@ -385,6 +385,14 @@ feature -- Element change
 
 feature -- Access
 
+	has_conditional_stop (f: E_FEATURE; i: INTEGER): BOOLEAN is
+			-- Does breakpoint located at (`f', `i') have a condition ?
+		require
+			valid_breakpoint: is_breakpoint_set (f, i)			
+		do
+			Result := condition (f, i) /= Void
+		end	
+
 	condition (f: E_FEATURE; i: INTEGER): EB_EXPRESSION is
 			-- Make the breakpoint located at (`f',`i') unconditional.
 		require

@@ -18,7 +18,7 @@ feature -- Initialization
 
 	build is
 		do
-			Precursor
+			Precursor {WIZARD_FINAL_STATE_WINDOW}
 			first_window.set_final_state ("Abort")
 		end
 

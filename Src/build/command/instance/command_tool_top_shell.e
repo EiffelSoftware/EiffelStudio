@@ -53,6 +53,7 @@ feature -- Creation
 			!! add_formal_argument_entry.make (Menu_names.Add_formal_argument, action_category)
 			!! remove_formal_argument_entry.make (Menu_names.Remove_formal_argument, action_category)
 				--| Top form
+			!! separator_2.make ("", top_form)
 			!! command_hole.make (top_form)
 			!! trash_hole.make (top_form)
 			!! search_class_name_button.make (Current, top_form)
@@ -109,11 +110,14 @@ feature -- Creation
 			form.attach_right (split_window, 0)
 			form.attach_bottom (split_window, 0)
 				--| Top form
-			top_form.attach_top (command_hole, 0)
-			top_form.attach_top (trash_hole, 0)
-			top_form.attach_top (search_class_name_button, 0)
-			top_form.attach_top (popup_instances_button, 0)
-			top_form.attach_top (popup_contexts_button, 0)
+			top_form.attach_top (separator_2, 1)
+			top_form.attach_left (separator_2, 0)
+			top_form.attach_right (separator_2, 0)	
+			top_form.attach_top_widget (separator_2, command_hole, 0)
+			top_form.attach_top_widget (separator_2, trash_hole, 0)
+			top_form.attach_top_widget (separator_2, search_class_name_button, 0)
+			top_form.attach_top_widget (separator_2, popup_instances_button, 0)
+			top_form.attach_top_widget (separator_2, popup_contexts_button, 0)
 			top_form.attach_bottom (command_hole, 0)
 			top_form.attach_bottom (trash_hole, 0)
 			top_form.attach_bottom (search_class_name_button, 0)
@@ -162,7 +166,7 @@ feature {NONE} -- Graphical interface
 	top_split_form,
 			-- Top frame in `split_window'
 	bottom_split_form: SPLIT_WINDOW_CHILD
-			-- Bottom frame of `split_wondow'
+			-- Bottom frame of `split_window'
 
 		--| Menu Row
 	menu_bar: BAR
@@ -172,6 +176,7 @@ feature {NONE} -- Graphical interface
 		--| Entries in the File category
 	generate_entry: PUSH_B
 	separator_1: SEPARATOR
+	separator_2: THREE_D_SEPARATOR
 	exit_tool_entry: PUSH_B
 	exit_entry: PUSH_B
 		--| Entries in the Action category
@@ -251,8 +256,8 @@ feature
 	show_command_editor is
 		do
 			hide_other_command_editor
-			split_window.set_proportion ((100 * height // 
-									(height + Resources.cmd_ed_height)))
+			split_window.set_proportion (100 * top_split_form.height // 
+						(top_split_form.height + Resources.cmd_ed_height))
 			set_height (height + Resources.cmd_ed_height)
 			bottom_split_form.manage
 			command_editor.set_command (command_instance.associated_command)

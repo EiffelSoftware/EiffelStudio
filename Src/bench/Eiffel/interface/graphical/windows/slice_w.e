@@ -17,7 +17,7 @@ inherit
 			dot as ascii_dot,
 			plus as ascii_plus
 		end;
-	FORM_D
+	EB_FORM_DIALOG
 		rename
 			make as form_dialog_create
 		end;
@@ -99,7 +99,8 @@ feature -- Initialization
 			apply_button.add_activate_action (Current, apply_it);
 			cancel_button.add_activate_action (Current, cancel_it);
 			associated_command := cmd;
-			set_composite_attributes (Current)
+			set_composite_attributes (Current);
+			realize
 		end;
 
 feature -- Access
@@ -122,8 +123,7 @@ feature -- Access
 				from_field.set_text ("0");
 				to_field.set_text (sp_capacity.out)
 			end;
-			popup;
-			raise
+			display;
 		end;
 
 feature {NONE} -- Properties

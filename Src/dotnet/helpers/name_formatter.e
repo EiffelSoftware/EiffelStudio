@@ -252,6 +252,26 @@ feature -- Basic Operations
 			non_void_result: Result /= Void
 		end
 
+	is_valid_variable_name (a_name: STRING): BOOLEAN is
+			-- Is `a_name' a valid variable name?
+		require
+			non_void_a_name: a_name /= Void
+		do
+			if
+				a_name.is_empty or
+				variable_mapping_table.has (a_name) or
+				a_name.has (' ') or
+				a_name.has ('.') or
+				a_name.has ('&') or
+				a_name.has ('#') or
+				a_name.has ('@')
+			then
+				Result := False
+			else
+				Result := True
+			end
+		end
+		
 
 feature {NONE} -- Implementation
 

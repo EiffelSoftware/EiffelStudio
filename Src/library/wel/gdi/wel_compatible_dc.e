@@ -30,6 +30,18 @@ feature {NONE} -- Initialization
 			exists: exists
 		end
 
+feature -- Basic operations
+
+	get is
+			-- Get the device context
+		do
+		end
+
+	release is
+			-- Release the device context
+		do
+		end
+
 feature {NONE} -- Removal
 
 	destroy_item is

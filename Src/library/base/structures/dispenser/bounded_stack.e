@@ -88,9 +88,9 @@ feature -- Element change
 feature -- Access
 
 	has (v: G): BOOLEAN is
-			--  Does `v' appear in stack?
-			--  (Reference or object equality,
-			--  based on `object_comparison'.)
+			-- Does `v' appear in stack?
+			-- (Reference or object equality,
+			-- based on `object_comparison'.)
 		do
 			if object_comparison then
 				fl.compare_objects

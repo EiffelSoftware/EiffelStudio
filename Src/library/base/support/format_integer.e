@@ -13,7 +13,7 @@ class FORMAT_INTEGER
 creation
 	make
 
-feature  -- Initialization
+feature -- Initialization
 
 	make (w: INTEGER) is
 		require
@@ -472,8 +472,8 @@ feature {NONE} -- Implementation
 				Result.precede ('(')
 				Result.extend (')')
 			end
-			if  ((show_sign_negative or show_sign) and sn = -1) or else
-				((show_sign_positive or show_sign) and sn =  1) or else
+			if ((show_sign_negative or show_sign) and sn = -1) or else
+				((show_sign_positive or show_sign) and sn = 1) or else
 				(show_sign and sn = 0) then
 				sstring := sign_value (sn)
 			end
@@ -563,6 +563,7 @@ invariant
 
 end -- class FORMAT_INTEGER
 
+
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
@@ -575,4 +576,3 @@ end -- class FORMAT_INTEGER
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
-

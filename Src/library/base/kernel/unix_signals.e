@@ -295,7 +295,7 @@ feature -- Status setting
 
 	ignore (sig: INTEGER) is
 			-- Make sure that future occurrences of `sig'
-			-- will be ignored.  (This is not the default.)
+			-- will be ignored. (This is not the default.)
 			-- No effect if signal not defined.
 		external
 			"C"

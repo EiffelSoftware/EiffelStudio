@@ -99,31 +99,31 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
-   file_open (f_name: POINTER; how: INTEGER): POINTER is
-            -- File pointer for file `f_name', in mode `how'.
-        external
-            "C"
+	file_open (f_name: POINTER; how: INTEGER): POINTER is
+			-- File pointer for file `f_name', in mode `how'.
+		external
+			"C"
 		alias
 			"file_binary_open"
-        end;
+		end;
 
-    file_dopen (fd, how: INTEGER): POINTER is
-            -- File pointer for file of descriptor `fd' in mode `how'
-            -- (which must fit the way `fd' was obtained).
-        external
-            "C"
+	file_dopen (fd, how: INTEGER): POINTER is
+			-- File pointer for file of descriptor `fd' in mode `how'
+			-- (which must fit the way `fd' was obtained).
+		external
+			"C"
 		alias
 			"file_binary_dopen"
-        end;
+		end;
 
-    file_reopen (f_name: POINTER; how: INTEGER; file: POINTER): POINTER is
-           -- File pointer to `file', reopened to have new name `f_name'
-           -- in a mode specified by `how'.
-        external
-            "C"
+	file_reopen (f_name: POINTER; how: INTEGER; file: POINTER): POINTER is
+			-- File pointer to `file', reopened to have new name `f_name'
+			-- in a mode specified by `how'.
+		external
+			"C"
 		alias
 			"file_binary_reopen"
-        end;
+		end;
 
 	file_pib (file: POINTER; n: INTEGER) is
 			-- Put `n' to end of `file'.

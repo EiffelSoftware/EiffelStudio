@@ -129,8 +129,8 @@ feature -- Removal
 			is_not_last: not child_islast;
 		deferred
 		ensure
-	 	  new_arity: arity = old arity - 1;
-	 	  new_child_index: child_index = old child_index
+	 		new_arity: arity = old arity - 1;
+	 		new_child_index: child_index = old child_index
 		end;
 
 	remove_child is

@@ -248,7 +248,7 @@ feature -- Element change
 		do
 			string_prepend (s);
 			index := index + s.count;
-  		ensure
+		ensure
  			new_index: index = old index + s.count;
 		end;
 
@@ -301,7 +301,7 @@ feature -- Duplication
 		ensure
 			mirrored_index: Result.index = count - index + 1;
 			same_count: Result.count = count;
-		--  reverse_entries:
+		--	reverse_entries:
 		--	for all `i: 1..count, Result.item (i) = item (count + 1 - i)'
 		end;
 
@@ -314,9 +314,9 @@ feature -- Duplication
 			string_mirror;
 			index := count + 1 - index;
 		ensure
-		   same_count: count = old count;
-		   mirrored_index: index = count - old index + 1;
-		--   reverse_entries:
+			same_count: count = old count;
+			mirrored_index: index = count - old index + 1;
+		--	reverse_entries:
 		--	for all `i: 1..count, item (i) = old item (count + 1 - i)'
 		end;
 

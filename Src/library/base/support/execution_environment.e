@@ -77,7 +77,7 @@ feature -- Access
 feature -- Status
 
 	return_code : INTEGER
-			--  Status code set by last call to `system' or `put'
+			-- Status code set by last call to `system' or `put'
 
 feature -- Status setting
 

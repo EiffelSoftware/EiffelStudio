@@ -260,7 +260,7 @@ feature -- Cursor movement
 	 			(old index + i) <= (count + 1))
 	 				implies index = (old index + i);
 	 		before_set: (old index + i) <= 0 implies before;
-	 		after_set:  (old index + i) >= (count + 1) implies after
+	 		after_set: (old index + i) >= (count + 1) implies after
 		end;
 
 	go_i_th (i: INTEGER) is

@@ -27,12 +27,12 @@ feature -- Access
 		deferred
 		end;
 
-   	item: G is
+	item: G is
 			-- Item in current node
 		deferred
 		end;
 
-   	child_item: like item is
+	child_item: like item is
 			-- Item in current child node
 		require
 			readable: child_readable

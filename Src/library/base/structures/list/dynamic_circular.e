@@ -29,7 +29,7 @@ deferred class DYNAMIC_CIRCULAR [G] inherit
 
 feature -- Duplication
 
-   duplicate (n: INTEGER): like Current is
+	duplicate (n: INTEGER): like Current is
 			-- Copy of sub-chain beginning at current position
 			-- and having min (`n', `count') items.
 		local

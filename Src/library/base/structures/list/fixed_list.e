@@ -92,19 +92,19 @@ feature -- Access
 		-- Current position in the list
 
 	item: G is
-            -- Current item
+			-- Current item
 		do
 			Result := area.item (index - 1)
 		end;
 
 	first: G is
-            -- Item at first position
+			-- Item at first position
 		do
 			Result := area.item (0)
 		end;
 
 	last: like first is
-            -- Item at last position
+			-- Item at last position
 		do
 			Result := area.item (count - 1)
 		end;
@@ -195,22 +195,22 @@ feature -- Element change
 
 feature -- Transformation
 
-   swap (i: INTEGER) is
-             -- Exchange item at `i'-th position with item
-             -- at cursor position.
-       local
-           old_item: like item;
-       do
-           old_item := item;
-           replace (i_th (i));
-           put_i_th (old_item, i)
-       end;
+	swap (i: INTEGER) is
+			-- Exchange item at `i'-th position with item
+			-- at cursor position.
+		local
+			old_item: like item;
+		do
+			old_item := item;
+			replace (i_th (i));
+			put_i_th (old_item, i)
+		end;
 
 feature -- Duplication
 
 	duplicate (n: INTEGER): like Current is
-            -- Copy of sub-list beginning at cursor position
-            -- and having min (`n', `count' - `index' + 1) items
+			-- Copy of sub-list beginning at cursor position
+			-- and having min (`n', `count' - `index' + 1) items
 		local
 			pos: INTEGER
 		do

@@ -57,7 +57,7 @@ feature -- Status setting
 		end;
 
 	compare_references is
-			-- Ensure that future search operations will use  `='
+			-- Ensure that future search operations will use `='
 			-- rather than `equal' for comparing references.
 		require
 			changeable_comparison_criterion

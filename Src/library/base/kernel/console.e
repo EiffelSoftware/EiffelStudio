@@ -114,7 +114,7 @@ feature -- Input
 			is_readable: file_readable
 		local
 			str_cap: INTEGER;
-			read: INTEGER;  -- Amount of bytes already read
+			read: INTEGER; -- Amount of bytes already read
 			str_area: ANY
 			done: BOOLEAN
 		do
@@ -134,7 +134,7 @@ feature -- Input
 					last_string.resize (str_cap + 1024);
 					str_area := last_string.area;
 					str_cap := last_string.capacity;
-					read := read - 1;	   -- True amount of byte read
+					read := read - 1;	-- True amount of byte read
 				else
 					last_string.set_count (read);
 					done := true
@@ -182,8 +182,8 @@ feature -- Input
 					last_string.resize (str_cap + 1024);
 					str_area := last_string.area;
 					str_cap := last_string.capacity;
-					read := read - 1;	   -- True amount of byte read
-			   else
+					read := read - 1;	-- True amount of byte read
+				else
 					last_string.set_count (read);
 					done := true
 				end;

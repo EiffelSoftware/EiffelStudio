@@ -52,7 +52,7 @@ feature -- Access
 			Result := first_element.item.first
 		end;
 
-	last: like item  is
+	last: like item is
 			-- Item at last position
 		do
 			Result := last_element.item.last

@@ -6,7 +6,7 @@ indexing
 		%and characterized by their implementation properties.";
 
 	status: "See notice at end of class";
-	names:  storage;
+	names: storage;
 	date: "$Date$";
 	revision: "$Revision$"
 

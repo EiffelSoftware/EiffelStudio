@@ -172,7 +172,7 @@ feature -- Status report
 			p := has_character_option (opt)
 			if p /= 0 then
 				l := argument_array.item (p)
-				Result :=  l.substring (l.index_of (opt, 2), l.count)
+				Result := l.substring (l.index_of (opt, 2), l.count)
 				Result.remove (1)
 			end
 		end
@@ -190,7 +190,7 @@ feature -- Status report
 			p := has_word_option (opt)
 			if p /= 0 then
 				l := argument_array.item (p)
-				Result :=  l.substring (l.substring_index (opt, 2), l.count)
+				Result := l.substring (l.substring_index (opt, 2), l.count)
 				Result.remove (1)
 			end
 		end
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 	option_character_equal (arg: STRING; c : CHARACTER): BOOLEAN is
 			-- Does `arg' contain the character option `c'?
 		do
-			if internal_option_sign  = '%U' then
+			if internal_option_sign = '%U' then
 				Result := arg.has (c)
 			elseif arg.item(1) = option_sign then
 				Result := arg.substring (2,arg.count).has (c)

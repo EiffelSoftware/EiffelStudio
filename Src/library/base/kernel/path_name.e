@@ -94,7 +94,7 @@ feature
 		end
 
 	extend_from_array (directories: ARRAY [STRING]) is
-			--  Append the subdirectories from `directories' to the path name.
+			-- Append the subdirectories from `directories' to the path name.
 		require
 			array_exists: directories /= Void and then not (directories.empty)
 		local

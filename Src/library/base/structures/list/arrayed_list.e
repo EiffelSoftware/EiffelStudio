@@ -571,7 +571,7 @@ feature {NONE} --Internal
 			end;
 			last_item := last;
 			count := count + 1;
-			force_i_th  (last_item, count);
+			force_i_th (last_item, count);
 			from
 				i := count - 2
 			until

@@ -427,7 +427,15 @@ feature -- Access
 		alias
 			"SUBLANG_KOREAN"
 		end
-			 
+	
+	Sublang_korean_johab: INTEGER is
+		obsolete
+			"Not defined any more for some %
+			 %C compilers, returns old defined value"
+		do
+			Result := 2
+		end
+
 	Sublang_arabic_yemen: INTEGER is
 		external
 			"C [macro <wel.h>]"
@@ -435,13 +443,6 @@ feature -- Access
 			"SUBLANG_ARABIC_YEMEN"
 		end
 
-	Sublang_korean_johab: INTEGER is
-		external
-			"C [macro <wel.h>]"
-		alias
-			"SUBLANG_KOREAN_JOHAB"
-		end
-			 
 	Sublang_arabic_syria: INTEGER is
 		external
 			"C [macro <wel.h>]"
@@ -645,7 +646,7 @@ feature -- Access
 			"SUBLANG_ENGLISH_US"
 		end
 		
-		Sublang_spanish_venezuela: INTEGER is
+	Sublang_spanish_venezuela: INTEGER is
 		external
 			"C [macro <wel.h>]"
 		alias

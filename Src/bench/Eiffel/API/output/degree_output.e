@@ -259,7 +259,7 @@ feature -- Output on per class
 		do
 			processed := processed + 1;
 			io.error.putchar ('.');
-			if processed = dots_per_line then
+			if processed \\ dots_per_line = 0 then
 				io.error.new_line
 			end
 		end;

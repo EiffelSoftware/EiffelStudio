@@ -9,6 +9,9 @@ class
 
 inherit
 	WEL_STRUCTURE
+		rename
+			make_by_pointer as structure_make_by_pointer
+		end
 
 	WEL_WINDOW_MANAGER
 		export
@@ -17,6 +20,14 @@ inherit
 
 creation
 	make_by_pointer
+
+feature {NONE} -- Initialization
+
+	make_by_pointer (pointer: POINTER) is
+		do
+			structure_make_by_pointer (pointer)
+			!! dc.make_by_pointer (cwel_drawitemstruct_get_hdc (item))
+		end
 
 feature -- Access
 
@@ -74,16 +85,9 @@ feature -- Access
 			Result ?= windows.item (cwel_drawitemstruct_get_hwnditem (item))
 		end
 
-	dc: WEL_CLIENT_DC is
+	dc: WEL_CLIENT_DC
 			-- Device context used when performing drawing
-			-- opertions on the control.
-		require
-			exists: exists
-		do
-			!! Result.make_by_pointer (cwel_drawitemstruct_get_hdc (item))
-		ensure
-			result_not_void: Result /= Void
-		end
+			-- operations on the control.
 
 	rect_item: WEL_RECT is
 			-- Rectangle that defines the boundaries
@@ -165,6 +169,9 @@ feature {NONE} -- Externals
 		external
 			"C [macro <drawitem.h>]"
 		end
+
+invariant
+	dc_exists: exists implies dc /= Void and then dc.exists
 
 end -- class WEL_DRAW_ITEM_STRUCT
 

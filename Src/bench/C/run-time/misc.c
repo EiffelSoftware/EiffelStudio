@@ -17,14 +17,12 @@
 #include <windows.h>
 #endif
 
-#include "portable.h"
 #include <signal.h>
 #include <stdlib.h>
 #include <string.h>
 #include "misc.h"
 #include "malloc.h"
 #include "macros.h"
-#include "cecil.h"
 
 #include <ctype.h>			/* For toupper(), is_alpha(), ... */
 #include <stdio.h>

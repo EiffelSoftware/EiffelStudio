@@ -15,6 +15,7 @@
 #include "eif_threads.h"
 #include "eif_globals.h"
 #include "err_msg.h"
+#include "hector.h"      /* for efreeze() and eufreeze() */
 
 #ifdef EIF_THREADS
 
@@ -30,35 +31,27 @@ typedef struct {
 rt_public void eif_thr_panic(char *);
 rt_public void eif_thr_init_root(void);
 rt_public void eif_thr_register(void);
-rt_public void eif_thr_create(EIF_OBJ current_obj, EIF_PROC init_func);
+rt_public void eif_thr_create(EIF_OBJ, EIF_PROC);
 rt_public void eif_thr_exit(void);
 
 rt_public EIF_MUTEX_TYPE eif_thr_mutex_create(void);
-rt_public void eif_thr_mutex_lock(EIF_MUTEX_TYPE a_mutex_pointer);
-rt_public void eif_thr_mutex_unlock(EIF_MUTEX_TYPE a_mutex_pointer);
-rt_public EIF_BOOLEAN eif_thr_mutex_trylock(EIF_MUTEX_TYPE a_mutex_pointer);
+rt_public void eif_thr_mutex_lock(EIF_MUTEX_TYPE);
+rt_public void eif_thr_mutex_unlock(EIF_MUTEX_TYPE);
+rt_public EIF_BOOLEAN eif_thr_mutex_trylock(EIF_MUTEX_TYPE);
 
-rt_public EIF_POINTER eif_thr_proxy_set(EIF_REFERENCE object);
-rt_public EIF_REFERENCE eif_thr_proxy_access(EIF_POINTER proxy);
-rt_public void eif_thr_proxy_dispose(EIF_POINTER proxy);
+rt_public EIF_POINTER eif_thr_proxy_set(EIF_REFERENCE);
+rt_public EIF_REFERENCE eif_thr_proxy_access(EIF_POINTER);
+rt_public void eif_thr_proxy_dispose(EIF_POINTER);
 
-rt_private void eif_init_context(eif_global_context_t *eif_globals);
-rt_private void eif_thr_entry(start_routine_ctxt_t *routine_ctxt);
+rt_private void eif_init_context(eif_global_context_t *);
+rt_private void eif_thr_entry(EIF_THR_ENTRY_ARG_TYPE);
 
 rt_public EIF_TSD_TYPE eif_global_key;
 rt_public EIF_MUTEX_TYPE eif_rmark_mutex;
-rt_private eif_global_context_t globals_buffer;
-
-
-rt_public void eif_thr_panic(char *msg) {
-	printf("eif_thr_panic!\n");
-	print_err_msg(stderr,"%s\n",msg);
-	exit(0);
-}
 
 rt_public void eif_thr_init_root(void) {
 	EIF_TSD_CREATE(eif_global_key, "could not create global key for initial thread");
-	EIF_MUTEX_CREATE(eif_rmark_mutex,"could not create mutex for recursive marking");
+	EIF_MUTEX_CREATE(eif_rmark_mutex,"could not create mutex for inter-GC recursing marking");
 	eif_thr_register();
 }
 
@@ -67,14 +60,14 @@ rt_public void eif_thr_register(void) {
 
 	eif_globals = (eif_global_context_t *)malloc(sizeof(eif_global_context_t));
 	if (!eif_globals)
-		eif_thr_panic("Could not get memory for thread context");
+		eif_thr_panic("No more memory for thread context");
 
 	eif_init_context(eif_globals);
-	EIF_TSD_SET(eif_global_key,eif_globals,"could not bind a specific value to a thread");
+	EIF_TSD_SET(eif_global_key,eif_globals,"could not bind a context to a thread");
 }
 
 
-rt_public void eif_init_context(eif_global_context_t *eif_globals) {
+rt_private void eif_init_context(eif_global_context_t *eif_globals) {
 
 	bzero((char *)eif_globals,sizeof(eif_global_context_t));
 
@@ -92,15 +85,15 @@ rt_public void eif_init_context(eif_global_context_t *eif_globals) {
 }
 
 
-void eif_thr_create (EIF_OBJ current_obj, EIF_PROC init_func)
+rt_public void eif_thr_create (EIF_OBJ thr_root_obj, EIF_PROC init_func)
 {
 	start_routine_ctxt_t *routine_ctxt;
 	EIF_THR_TYPE tid;
 
 	routine_ctxt = (start_routine_ctxt_t *)malloc(sizeof(start_routine_ctxt_t));
 	if (!routine_ctxt)
-		eif_thr_panic("No memory for thread info\n");
-	routine_ctxt->current = eif_adopt(current_obj);
+		eif_thr_panic("No more memory to launch new thread\n");
+	routine_ctxt->current = eif_adopt(thr_root_obj);
 	routine_ctxt->routine = init_func;
 
 	EIF_THR_CREATE(
@@ -111,8 +104,9 @@ void eif_thr_create (EIF_OBJ current_obj, EIF_PROC init_func)
 }
 
 
-void eif_thr_entry(start_routine_ctxt_t *routine_ctxt)
+rt_private EIF_THR_ENTRY_TYPE eif_thr_entry(EIF_THR_ENTRY_ARG_TYPE arg)
 {
+	start_routine_ctxt_t *routine_ctxt = (start_routine_ctxt_t *)arg;
 	eif_thr_register();
 	{
 		EIF_GET_CONTEXT
@@ -152,28 +146,15 @@ void eif_thr_entry(start_routine_ctxt_t *routine_ctxt)
 }
 
 
-void eif_thr_exit(void) {
+rt_public void eif_thr_exit(void) {
 	EIF_THR_EXIT(0);
 }
 
-void eif_thr_efreeze(EIF_OBJ object) {
-	char *obj;
-
-	obj = efreeze(object);
-	if (!obj)
-		eif_thr_panic("cannot freeze\n");
-}
-
-void eif_thr_eufreeze(char *object) {
-    eufreeze(object);
-}
-
-
-void eif_thr_yield(void) {
+rt_public void eif_thr_yield(void) {
     EIF_THR_YIELD;
 }
 
-void eif_thr_join_all(void) {
+rt_public void eif_thr_join_all(void) {
     EIF_THR_JOIN_ALL;
 }
 
@@ -203,6 +184,26 @@ rt_public EIF_BOOLEAN eif_thr_mutex_trylock(EIF_MUTEX_TYPE a_mutex_pointer) {
 	return ((EIF_BOOLEAN)(!status));
 }
 
+#endif /* EIF_THREADS */
+
+rt_public void eif_thr_panic(char *msg) {
+	printf("eif_thr_panic!\n");
+	print_err_msg(stderr,"%s\n",msg);
+	exit(0);
+}
+
+
+rt_public void eif_thr_efreeze(EIF_OBJ object) {
+	char *obj;
+
+	obj = efreeze(object);
+	if (!obj)
+		eif_thr_panic("cannot freeze\n");
+}
+
+rt_public void eif_thr_eufreeze(char *object) {
+    eufreeze(object);
+}
 
 	/******************************/
 	/* class PROXY implementation */
@@ -229,4 +230,3 @@ rt_public void eif_thr_proxy_dispose(EIF_POINTER proxy) {
 	dummy = eif_wean((EIF_OBJ)proxy);
 }
 
-#endif /* EIF_THREADS */

@@ -1566,7 +1566,7 @@ rt_public char *file_group(int gid)
 
 /* Does the list of groups the user belongs to include `gid'? */
 
-EIF_BOOLEAN eif_group_in_list(int gid)
+rt_public EIF_BOOLEAN eif_group_in_list(int gid)
 {
 	Groups_t group_list[NGROUPS_MAX];
 	int i, nb_groups;
@@ -1646,9 +1646,9 @@ rt_public int mkdir(char *path)
 
 #ifndef HAS_UTIME
 #ifdef __VMS
-rt_private int utime(char *path, char *times)		/* %%ss changed form */
+rt_private int utime(char *path, char *times)
 #else
-rt_private int utime(char *path, struct utimbuf *times)	/* %%ss changed form */
+rt_private int utime(char *path, struct utimbuf *times)
 #endif
 {
 	/* Emulation of utime */

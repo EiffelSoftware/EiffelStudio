@@ -23,6 +23,7 @@ feature -- Initialization
 			-- Yacc initialization
 		do
 			cluster_name ?= yacc_arg (0);
+			cluster_name.to_lower;
 			renamings ?= yacc_arg (1);
 		ensure then
 			cluster_name_exists: cluster_name /= Void;

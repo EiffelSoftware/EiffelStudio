@@ -14,7 +14,8 @@ feature
 
 	set is
 		do
-			cluster_name ?= yacc_arg (0)
+			cluster_name ?= yacc_arg (0);
+			cluster_name.to_lower
 		end;
 		
 	adapt is
@@ -23,10 +24,6 @@ feature
 			cluster: CLUSTER_I;
 			ok: BOOLEAN;
 		do
---| Note: this should really be done in the
---| `set' routine but that would cause a 
---| refreezing. Do it later
-cluster_name.to_lower;
 				-- First check cluster existence
 			ok := good_cluster;
 			if ok then

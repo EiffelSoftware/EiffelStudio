@@ -16,7 +16,6 @@ inherit
 			loop_action
 		end;
 	EIFFEL_ENV;
-	SHARED_MELT_ONLY;
 	SHARED_ERROR_BEHAVIOR
 
 feature -- Initialization

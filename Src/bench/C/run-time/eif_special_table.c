@@ -445,7 +445,6 @@ rt_public int spt_replace(struct special_table *spt, EIF_REFERENCE old, EIF_REFE
 	 ************************/
 	assert (spt != (struct special_table *) 0);
 	assert (old != (EIF_REFERENCE)  0);
-	assert (val != (EIF_REFERENCE) 0);
 	/* End of preconditions. */
 
 	/* Initializations */

@@ -325,8 +325,10 @@ rt_public void special_erembq(EIF_REFERENCE obj, EIF_INTEGER offst);
 									/* Quick version (no GC call) of eremb 
 									 * for special objects full of references.*/
 #ifdef EIF_REM_SET_OPTIMIZATION
-rt_public int special_erembq_replace(EIF_REFERENCE old, EIF_REFERENCE val);				
-									/* Replace `old' by `val' in special_rem_set. */
+rt_public int special_rem_remove (EIF_REFERENCE obj);
+			/* Remove `obj' in special_rem_set. */
+rt_public int special_erembq_replace(EIF_REFERENCE old, EIF_REFERENCE val);
+			/* Replace `old' by `val' in special_rem_set. */
 rt_private int update_special_rem_set(void);	
 					/* Update remembered set for special object full of references.*/
 #endif	/* EIF_REM_SET_OPTIMIZATION */
@@ -5848,6 +5850,11 @@ rt_shared int eif_promote_special (register EIF_REFERENCE object)
 	 * scan all the subreferences of "object" so that only the
 	 * young references will be processed during a partial
 	 * collection.	-- ET
+	 * Return value:
+	 *	-2: no young references found, but object put in special
+	 * 		table with index -1.
+	 *  -1: Error, could not push it into special_table, not implemented yey.
+	 * 	+1: Young references found, and recorded in special table.
 	 */
 {
 
@@ -5911,7 +5918,8 @@ rt_shared int eif_promote_special (register EIF_REFERENCE object)
 	printf ("EIF_PROMOTE_SPECIAL: item %x at %d was forwarded\n", item, i);
 #endif	/* EIF_PROMOTE_SPECIAL_DEBUG */	
 			
-			/* An item was forwarded before the enclosing special has been promoted. 
+			/* An item was forwarded before the enclosing special 
+			 * has been promoted. 
 			 * Thus, we must update now the reference if it is an old object, 
 			 * since it will not be updated at the end of the collection 
 			 * in "update_special_rem_set ()". -- ET
@@ -5924,13 +5932,15 @@ rt_shared int eif_promote_special (register EIF_REFERENCE object)
 			{
 				ret = 1;					/* We found a new reference. */
 #ifdef EIF_PROMOTE_SPECIAL_DEBUG
-	printf ("EIF_PROMOTE_SPECIAL: remembering object %x with offset %di without update\n", object, i);
+	printf ("EIF_PROMOTE_SPECIAL: remembering object %x with offset %d without update\n", object, i);
 #endif	/* EIF_PROMOTE_SPECIAL_DEBUG */	
 				special_erembq (object, i);	/* Remember the reference. */
 			}
 			else	/* Then, it is old */
 			{
-				/* This reference will not be processed, we must update it now. */
+				/* This reference will not be processed, 
+				 * we must update it now. This function may be called 
+				 * from the GC. */
 
 #ifdef EIF_PROMOTE_SPECIAL_DEBUG
 	printf ("EIF_PROMOTE_SPECIAL: updating new location of forwarded %x at %d without remembering it\n", item, i);
@@ -5965,8 +5975,8 @@ rt_shared int eif_promote_special (register EIF_REFERENCE object)
 		printf ("EIF_PROMOTE_SPECIAL: no item to be inserted");
 #endif	/* EIF_PROMOTE_SPECIAL_DEBUG */	
 
-			/* Remember the object, even with no new reference, only for unmarking
-			 * it in "update_special_table ()". 
+			/* Remember the object, even with no new reference, 
+			 * only for unmarking it in "update_special_table ()". 
 			 */
 
 		special_erembq (object, -1);		
@@ -6225,6 +6235,13 @@ rt_public void erembq(EIF_REFERENCE obj)
 }
 
 #ifdef EIF_REM_SET_OPTIMIZATION
+rt_public int special_rem_remove (EIF_REFERENCE obj)
+{
+	/* Remove `obj' in special_rem_set. */
+	EIF_GET_CONTEXT
+	return spt_replace (special_rem_set, obj, (EIF_REFERENCE) 0);
+}	/* special_rem_remove () */
+
 rt_public int special_erembq_replace(EIF_REFERENCE old, EIF_REFERENCE val)
 {
 	/* Replace `old' by `val' in special_rem_set. */

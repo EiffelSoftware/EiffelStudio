@@ -109,6 +109,7 @@ extern void special_erembq(EIF_REFERENCE obj, EIF_INTEGER offst);
 							/* Quick version (no GC call) of eremb for
 							 *special objects full of references.*/
 #ifdef EIF_REM_SET_OPTIMIZATION
+rt_public int special_rem_remove (EIF_REFERENCE obj);
 extern int special_erembq_replace(EIF_REFERENCE old, EIF_REFERENCE val);				
 							/* Replace `old' by `val' in special_rem_set. */
 extern int eif_promote_special (register EIF_REFERENCE object);		

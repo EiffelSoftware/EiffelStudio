@@ -23,8 +23,8 @@ goto start
 :start
 set MV=%TEST% ren
 set DEL=%TEST% del /q
-set EC=%TEST% ..\..\..\..\bench\spec\windows\bin\ec.exe
-set FF=%TEST% ..\..\..\..\..\..\bench\spec\windows\bin\finish_freezing.exe -silent
+set EC=%TEST% ..\..\..\..\studio\spec\windows\bin\ec.exe
+set FF=%TEST% ..\..\..\..\..\..\studio\spec\windows\bin\finish_freezing.exe -silent
 
 echo %DEL% /s *.c >> cleanup.bat
 echo %DEL% /s *.obj >> cleanup.bat

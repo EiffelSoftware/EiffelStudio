@@ -6,7 +6,7 @@ inherit
 
 	ATOMIC_AS
 		redefine
-			byte_node, type_check, value_i
+			byte_node, type_check, value_i, format
 		end
 
 feature -- Attributes
@@ -51,6 +51,16 @@ feature
 		do
 			!!Result;
 			Result.set_bit_val (value)
+		end;
+
+
+feature -- formatter
+
+	format (ctxt: FORMAT_CONTEXT) is
+		do
+			ctxt.always_succeed;
+			ctxt.put_string (value)
+				-- add B if necessary. to be checked
 		end;
 
 end

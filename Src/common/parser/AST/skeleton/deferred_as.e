@@ -4,7 +4,7 @@ inherit
 
 	ROUT_BODY_AS
 		redefine
-			is_deferred, byte_node
+			is_deferred, byte_node, format
 		end
 
 feature -- Intialization
@@ -31,4 +31,11 @@ feature -- byte code
 			!!Result;
 		end;
 
+feature -- formatter
+
+	format (ctxt: FORMAT_CONTEXT) is
+		do
+			ctxt.always_succeed;
+			ctxt.put_keyword ("deferred");
+		end;
 end

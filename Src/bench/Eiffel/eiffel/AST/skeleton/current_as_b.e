@@ -6,7 +6,7 @@ inherit
 
 	ACCESS_AS
 		redefine
-			type_check, byte_node
+			type_check, byte_node, format
 		end
 
 feature -- Initialization
@@ -43,4 +43,10 @@ feature -- Type check and byte code
 			access_line.forth;
 		end;
 
+	format (ctxt: FORMAT_CONTEXT) is
+		do
+			ctxt.always_succeed;
+			ctxt.put_string ("Current");
+			ctxt.set_types_back_to_global;
+		end;
 end

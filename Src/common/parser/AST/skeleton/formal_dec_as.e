@@ -8,7 +8,7 @@ inherit
 
 	FORMAL_AS
 		redefine
-			set
+			set, format
 		end
 
 feature -- Attributes
@@ -49,4 +49,22 @@ feature -- Initialization
 			Result.set_base_type (System.any_id);
 		end;
 
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+
+			--| formal name are changed to G H I...
+			--| to ensure compatibilite with FORMAL_AS
+		local
+			s: string;
+		do
+			!!s.make (1);
+			s.append_character (charconv (charcode ('F') + position));
+			ctxt.put_string(s);
+			if constraint /= void then
+				ctxt.put_special(" <- ");
+				constraint.format (ctxt);
+				ctxt.always_succeed;
+			end;
+		end;
+		
 end

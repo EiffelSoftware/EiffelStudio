@@ -6,6 +6,9 @@ inherit
 
 	STONABLE;
 	TYPE
+		redefine 
+			format
+		end;
 
 feature -- Initialization
 
@@ -21,5 +24,14 @@ feature -- stoning
 		do
 			!!Result.make (actual_type.associated_class)
 		end;
+
+feature -- formatting
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text
+		do
+			ctxt.put_class_name (actual_type.associated_class);
+		end;
+			
 
 end

@@ -6,7 +6,7 @@ inherit
 
 	EXPR_AS
 		redefine
-			type_check, byte_node
+			type_check, byte_node, format
 		end
 
 feature -- Attributes
@@ -42,6 +42,14 @@ feature -- Type check, byte code and dead code removal
 			-- Associated byte node
 		do
 			Result := terminal.byte_node;
+		end;
+
+feature -- Formatter
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			terminal.format (ctxt);
 		end;
 
 end

@@ -6,7 +6,7 @@ inherit
 
 	ATOMIC_AS
 		redefine
-			type_check, byte_node, value_i
+			type_check, byte_node, value_i, format
 		end
 
 feature -- Attributes
@@ -51,6 +51,16 @@ feature -- Type check and byte code
 		do
 			!!Result;
 			Result.set_value (value);
-		end
+		end;
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.put_special ("%"");
+			ctxt.put_string (value);
+			ctxt.put_special ("%"");
+			ctxt.always_succeed;
+		end;
+
 
 end

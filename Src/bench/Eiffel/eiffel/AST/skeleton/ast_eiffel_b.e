@@ -53,4 +53,14 @@ feature -- Debugger
 			context.instruction_line.insert (Current);
 		end
 
+feature -- formatter
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconsitute text according to context.
+		do
+			-- Do nothing
+
+			-- should do nothing. Now put AST class name
+			ctxt.put_string (generator);
+		end;
 end

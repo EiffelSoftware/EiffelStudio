@@ -7,7 +7,8 @@ inherit
 	AST_EIFFEL
 		redefine
 			type_check, byte_node,
-			find_breakable
+			find_breakable,
+			format
 		end
 
 feature -- Attributes
@@ -182,4 +183,32 @@ feature -- Debugger
 			end;
 		end
  
+feature -- formatter
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.begin;
+			if arguments /= void and then not arguments.empty then
+				ctxt.put_special (" (");
+				ctxt.set_separator (";");
+				ctxt.no_new_line_between_tokens;
+				arguments.format (ctxt);
+				ctxt.put_special (")");
+			end;
+			if type /= void then
+				ctxt.put_special (": ");
+				type.format (ctxt);
+		 	end;
+			if content /= void then
+				content.format (ctxt)
+			end;
+			if not ctxt.no_internals then
+				ctxt.put_special(";");
+			end;
+			ctxt.next_line;
+			ctxt.commit;
+		end;
+		
+		
 end

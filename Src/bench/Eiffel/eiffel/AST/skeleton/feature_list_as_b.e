@@ -3,6 +3,9 @@ class FEATURE_LIST_AS
 inherit
 
 	FEATURE_SET_AS
+		redefine
+			format
+		end
 
 feature -- Attributes
 
@@ -46,5 +49,19 @@ feature -- Export status computing
 				features.forth;
 			end;
 		end;
+	
+	
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+			--| what if multiple names in ancestors?
+		do
+			ctxt.begin;
+			ctxt.set_separator(",");
+			ctxt.no_new_line_between_tokens;
+			ctxt.continue_on_failure;
+			features.format (ctxt);
+			ctxt.commit;
+		end;
 
+			
 end

@@ -5,6 +5,8 @@ class NONE_TYPE_AS
 inherit
 
 	BASIC_TYPE
+		redefine format
+	end
 
 feature
 
@@ -22,6 +24,13 @@ feature
 			-- Actual integer type
 		once
 			!!Result;
+		end;
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text
+		do
+			ctxt.put_string ("none");
+			ctxt.always_succeed;
 		end;
 
 end

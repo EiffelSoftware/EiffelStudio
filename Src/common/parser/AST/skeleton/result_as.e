@@ -6,7 +6,7 @@ inherit
 
 	ACCESS_AS
 		redefine
-			type_check, byte_node
+			type_check, byte_node, format
 		end
 
 feature
@@ -65,5 +65,12 @@ feature -- Type check, byte code and dead code removal
 			Result ?= access_line.access;
 			access_line.forth;
 		end;
+
+	format (ctxt: FORMAT_CONTEXT) is
+		do
+			ctxt.put_string("Result");
+			ctxt.always_succeed;
+		end;
+
 
 end

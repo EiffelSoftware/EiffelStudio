@@ -31,12 +31,11 @@ feature {NONE}
 
 	display_info (i: INTEGER; c: CLASSC_STONE) is
 			-- Display flat|short form of `c'.
---		local
---			flat_class: FLAT_CLASS;
+		local
+			ctxt: FORMAT_CONTEXT;
 		do
---			!!flat_class.make (c);
---			flat_class.flat;
---			text_window.put_string (flat_class.flat_text);
+			!!ctxt.make (c.class_c, true);
+			ctxt.text.write_in (text_window);
 --		  text_window.share (flat_class.click_list)
 		end
 

@@ -8,7 +8,7 @@ inherit
 
 	ACCESS_AS
 		redefine
-			type_check, byte_node
+			type_check, byte_node, format
 		end
 
 feature -- Attributes
@@ -240,4 +240,18 @@ feature -- Type check, byte code and dead code removal
 			Result := Context.parameters;
 		end;
 	
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.begin;
+			ctxt.prepare_for_feature (feature_name, parameters);
+			ctxt.put_current_feature;
+			if ctxt.last_was_printed then
+				ctxt.commit
+			else
+				ctxt.rollback
+			end;
+	end;
+					
 end

@@ -4,8 +4,16 @@ class FORMAL_AS
 
 inherit
 
-	TYPE;
-	STONABLE
+	TYPE
+		redefine
+			format
+		end;
+	STONABLE;
+	BASIC_ROUTINES
+		export
+			{NONE}
+				all
+		end;
 
 feature
 
@@ -59,5 +67,22 @@ feature -- stoning
 			aclass := actual_type.associated_class;
 			!!Result.make (aclass)
 		end;
- 
+
+
+feature -- Formatting
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+
+			--| G, H, I, J... according to position
+			--| do not work with instantiation for flat
+			--| to be changed
+		local
+			s: STRING; 
+		do
+			!!s.make(1);
+			s.append_character (charconv (charcode('F') + position));
+			ctxt.put_string (s);
+			ctxt.always_succeed;
+		end;
 end

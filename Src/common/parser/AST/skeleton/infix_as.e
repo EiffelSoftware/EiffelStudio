@@ -6,7 +6,7 @@ inherit
 
 	FEATURE_NAME
 		redefine
-			is_infix, is_valid
+			is_infix, is_valid, format
 		end
 
 feature -- Attributes
@@ -103,4 +103,27 @@ feature
 			Result implies not code_table.has (fix_operator.value);
 		end;
 
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.begin;
+			if is_frozen then 
+				ctxt.put_keyword ("frozen");
+				ctxt.put_string (" ");
+			end;
+			if is_infix then
+				ctxt.put_keyword ("infix");
+				ctxt.put_special (" %"");
+				ctxt.prepare_for_infix (internal_name, void);
+			else
+				ctxt.put_keyword ("prefix");
+				ctxt.put_special (" %"");
+				ctxt.prepare_for_prefix (internal_name);
+			end;
+			ctxt.put_string (ctxt.new_types.final_name);
+			ctxt.put_special ("%"");
+			ctxt.commit;
+		end;
+	
 end

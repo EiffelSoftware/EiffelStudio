@@ -6,7 +6,7 @@ inherit
 
 	CONTENT_AS
 		redefine
-			is_unique, is_constant, byte_node, type_check
+			is_unique, is_constant, byte_node, type_check, format
 		end
 
 feature -- Attributes
@@ -64,6 +64,16 @@ feature -- Conveniences
 			-- Associated byte code
 		do
 			-- Do nothing
+		end;
+
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.begin;
+			ctxt.put_keyword (" is ");
+			value.format(ctxt);
+			ctxt.commit;
 		end;
 
 end

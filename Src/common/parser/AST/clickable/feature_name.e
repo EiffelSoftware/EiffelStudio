@@ -4,7 +4,10 @@ deferred class FEATURE_NAME
 
 inherit
 
-	AST_EIFFEL;
+	AST_EIFFEL
+		redefine
+			format
+		end;
 	STONABLE
 
 feature -- Conveniences
@@ -75,5 +78,14 @@ feature -- stoning
 io.error.putstring ("Making a stone for a FEATURE_NAME, with 0,0 as start/end: FIX ME%N");
 			!!Result.make (a_feature_i, 0, 0)
 		end
+
+feature -- Formatting
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.prepare_for_feature (internal_name, void);
+			ctxt.put_current_feature;
+		end;
 
 end

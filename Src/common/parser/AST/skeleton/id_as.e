@@ -10,7 +10,8 @@ inherit
 		redefine
 			pass_address, is_id,
 			good_integer, good_character,
-			make_integer, make_character
+			make_integer, make_character,
+			format
 		end;
 	STRING
 		rename
@@ -99,6 +100,14 @@ feature -- Conveniences
 			char_value ?= constant_i.value;
 			!!Result.make (char_value.char_val, constant_i);
 		end;
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.put_string (Current);
+			ctxt.always_succeed;
+		end;
+			
 
 feature {NONE}
 

@@ -6,7 +6,7 @@ inherit
 
 	CALL_AS
 		redefine
-			type_check, byte_node
+			type_check, byte_node, format
 		end
 
 feature -- Attributes
@@ -56,4 +56,27 @@ feature -- Type check, byte code and dead code removal
 			Result.set_message (m);
 		end;
 
+
+	
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.begin;
+			target.format (ctxt);
+			if ctxt.last_was_printed then
+				ctxt.need_dot;
+				ctxt.keep_types;
+				message.format (ctxt);
+				if ctxt.last_was_printed then
+					ctxt.commit
+				else
+					ctxt.rollback;
+				end
+			else
+				ctxt.rollback
+			end
+		end;
+	
+			
+			
 end

@@ -6,7 +6,7 @@ inherit
 
 	TYPE
 		redefine
-			has_like
+			has_like, format
 		end;
 	SHARED_INST_CONTEXT;
 	STONABLE
@@ -159,5 +159,24 @@ feature -- stoning
 			aclass := Universe.class_named (class_name, reference_class.cluster).compiled_class;
 			!!Result.make (aclass)
 		end;
+
+
+	format (ctxt: FORMAT_CONTEXT) is 
+			-- Reconstitute text
+		local
+			s: STRING;
+		do
+			ctxt.begin;
+			S := class_name.duplicate;
+			s.to_upper;
+			ctxt.put_string (s);
+			if generics /= void then
+				ctxt.put_special (" [");
+				generics.format (ctxt);
+				ctxt.put_special ("]");
+			end;
+			ctxt.commit;
+		end;
+			
 
 end

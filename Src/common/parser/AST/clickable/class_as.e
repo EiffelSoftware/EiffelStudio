@@ -4,7 +4,10 @@ class CLASS_AS
 
 inherit
 
-	AST_EIFFEL;
+	AST_EIFFEL
+		redefine
+			format
+		end;
 	IDABLE;
 	SHARED_INST_CONTEXT;
 	STONABLE;
@@ -118,6 +121,78 @@ feature -- stoning
 			!!Result.make (aclass)
 		end;
 
-	click_list: CLICK_LIST
+	click_list: CLICK_LIST;
  
+feature -- formatting
+
+	format (ctxt: FORMAT_CONTEXT) is
+		local
+			flat: FLAT_AST;
+			s: STRING;
+		do
+			ctxt.begin;
+			if indexes /= void and not indexes.empty then
+				ctxt.put_keyword ("indexing");
+				ctxt.next_line;
+				ctxt.indent_one_more;
+				ctxt.next_line;
+				ctxt.set_separator (void);
+				ctxt.new_line_between_tokens;
+				indexes.format (ctxt);
+				ctxt.indent_one_less;
+				ctxt.next_line;
+				ctxt.next_line;
+			end;
+
+			if is_expanded then
+				ctxt.put_keyword ("expanded");
+				ctxt.put_string (" ");
+			elseif is_deferred then
+				ctxt.put_keyword ("deferred");
+				ctxt.put_string (" ");
+			end;
+			ctxt.put_keyword ("class");
+			ctxt.put_string (" ");
+		--	ctxt.put_class_name (Universe.class_named (class_name,
+		--			reference_class.cluster).compiled_class);
+			s := class_name.duplicate;
+			s.to_upper;
+			ctxt.put_string (s);
+			
+			if generics /= void then
+				ctxt.put_string (" ");
+				ctxt.put_special ("[");
+				ctxt.no_new_line_between_tokens;
+				ctxt.set_separator (",");
+				generics.format (ctxt);
+				ctxt.put_special ("]");
+			end;
+			ctxt.next_line;
+			ctxt.next_line;
+
+--			if features /= void then
+--				ctxt.set_separator (void);
+--				ctxt.new_line_between_tokens;
+--				features.format (ctxt);
+--				ctxt.next_line;
+--			end;
+			ctxt.begin;
+			!!flat.make (ctxt.format.global_types.source_type.
+					associated_class);
+			flat.format (ctxt);
+			ctxt.commit;	
+			if invariant_part /= void then
+				invariant_part.format (ctxt);
+				if ctxt.last_was_printed then
+					ctxt.next_line;
+				end;
+			end;
+			ctxt.put_keyword ("end");
+			ctxt.commit;
+		end;
+
+			
+			
+			
+			
 end

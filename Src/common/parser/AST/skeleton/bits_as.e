@@ -4,7 +4,7 @@ inherit
 
 	BASIC_TYPE
 		redefine
-			set
+			set, format
 		end
 
 feature -- Attributes
@@ -45,5 +45,14 @@ feature
 			Result.append ("BITS ");
 			Result.append_integer (bits_value.value);
 		end;
+
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.always_succeed;
+			--ctxt.put_class_name("BITS ");
+			ctxt.put_string(bits_value.value.out);
+		end
 
 end

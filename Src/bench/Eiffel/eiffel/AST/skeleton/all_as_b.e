@@ -3,6 +3,9 @@ class ALL_AS
 inherit
 
 	FEATURE_SET_AS
+		redefine
+			format
+		end
 
 feature -- Initialization
 
@@ -28,6 +31,13 @@ feature -- Initialization
 				vlel1.set_parent_id (parent.parent_id);
 				Error_handler.insert_error (vlel1);
 			end;
+		end;
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.put_keyword("all");
+			ctxt.always_succeed;
 		end;
 
 end

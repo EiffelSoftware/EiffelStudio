@@ -7,7 +7,7 @@ inherit
 	ATOMIC_AS
 		redefine
 			is_integer, type_check, byte_node, value_i,
-			make_integer, good_integer
+			make_integer, good_integer, format
 		end
 
 feature -- Attributes
@@ -63,5 +63,15 @@ feature -- Conveniences
 		do
 			!!Result.make (value);
 		end;
+
+feature -- Formatter 
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.always_succeed;
+			ctxt.put_string(value.out);
+		end;
+				
 
 end

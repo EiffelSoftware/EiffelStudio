@@ -93,6 +93,20 @@ feature -- Access
 			"SW_PARENTOPENING"
 		end
 
+	Sw_otherzoom: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"SW_OTHERZOOM"
+		end
+
+	Sw_otherunzoom: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"SW_OTHERUNZOOM"
+		end
+
 end -- class WEL_SW_CONSTANTS
 
 --|----------------------------------------------------------------

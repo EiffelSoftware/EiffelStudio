@@ -11,19 +11,19 @@
 		<heading>
 			<size>2</size>Deferred classes
 		</heading>
-		<paragraph>The most general class describing sets is
+		<paragraph>The most general class describing sets is 
 			<link>
 				<url>../../reference/structures/set/set_chart.html</url>
 				<label>SET</label>
-			</link>. The usual operations of set theory such as union and intersection have been relegated to
+			</link>. The usual operations of set theory such as union and intersection have been relegated to 
 			<link>
 				<url>../../reference/structures/set/subset_chart.html</url>
 				<label>SUBSET</label>
-			</link>, an heir of
+			</link>, an heir of 
 			<link>
 				<url>../../reference/structures/set/set_chart.html</url>
 				<label>SET</label>
-			</link>. This enables a class to inherit from
+			</link>. This enables a class to inherit from 
 			<link>
 				<url>../../reference/structures/set/set_chart.html</url>
 				<label>SET</label>
@@ -36,7 +36,7 @@
 			<link>
 				<url>../../reference/structures/set/linked_set_chart.html</url>
 				<label>LINKED_SET</label>
-			</link> provides a basic implementation of
+			</link> provides a basic implementation of 
 			<link>
 				<url>../../reference/structures/set/set_chart.html</url>
 				<label>SET</label>
@@ -45,51 +45,48 @@
 		<heading>
 			<size>2</size>Sets of comparable elements and sorted sets
 		</heading>
-		<paragraph>The deferred class
+		<paragraph>The deferred class 
 			<link>
 				<url>../../reference/structures/set/comparable_set_chart.html</url>
 				<label>COMPARABLE_SET</label>
 			</link>, declared as
 		</paragraph>
 		<code_block>
-			<keyword>deferred class</keyword>
-			<link>
-				<url>../../reference/structures/set/comparable_set_chart.html</url>
-				<label>COMPARABLE_SET</label>
-			</link>  [G -&gt; <link><url>../../reference/kernel/comparable_chart.html</url><label>COMPARABLE</label></link>]
+	<keyword>deferred class</keyword>
+		<link><url>../../reference/structures/set/comparable_set_chart.html</url><label>COMPARABLE_SET</label></link>[G -&gt; <link><url>../../reference/kernel/comparable_chart.html</url><label>COMPARABLE</label></link>]
 
-			<keyword>inherit</keyword>
-			<link><url>../../reference/structures/set/subset.html</url><label>SUBSET</label></link> [G]
-			<link><url>/libraries/base/reference/structures/sort/comparable_struct_chart.html</url><label>COMPARABLE_STRUCT</label></link> [G]
- ...
+	<keyword>inherit</keyword>
+		<link><url>../../reference/structures/set/subset.html</url><label>SUBSET</label></link> [G]
+		<link><url>/libraries/base/reference/structures/sort/comparable_struct_chart.html</url><label>COMPARABLE_STRUCT</label></link> [G]
+	...
 		</code_block>
-		<paragraph> describes sets whose items may be compared by a total order relation. The class has the features
+		<paragraph> describes sets whose items may be compared by a total order relation. The class has the features 
 			<link>
 				<url>../../reference/structures/set/comparable_set.html#f_min</url>
 				<label>min</label>
-			</link> and
+			</link> and 
 			<link>
 				<url>../../reference/structures/set/comparable_set.html#f_max</url>
 				<label>max</label>
 			</link>.
-			<line_break/>   Two implementations of
+			<line_break/>   Two implementations of 
 			<link>
 				<url>../../reference/structures/set/comparable_set_chart.html</url>
 				<label>COMPARABLE_SET</label>
-			</link> are provided. One,
+			</link> are provided. One, 
 			<link>
 				<url>../../reference/structures/set/two_way_sorted_set_chart.html</url>
 				<label>TWO_WAY_SORTED_SET</label>
-			</link>, uses sorted two-way lists. The other,
+			</link>, uses sorted two-way lists. The other, 
 			<link>
 				<url>../../reference/structures/set/binary_search_tree_set_chart.html</url>
 				<label>BINARY_SEARCH_TREE_SET</label>
 			</link>, uses binary search trees.
-			<line_break/>   If the items are partially rather than totally ordered, you may use the class
+			<line_break/>   If the items are partially rather than totally ordered, you may use the class 
 			<link>
 				<url>../../reference/structures/set/part_sorted_set_chart.html</url>
 				<label>PART_SORTED_SET</label>
-			</link> [G -&gt;
+			</link> [G -&gt; 
 			<link>
 				<url>../../reference/kernel/part_comparable_chart.html</url>
 				<label>PART_COMPARABLE</label>

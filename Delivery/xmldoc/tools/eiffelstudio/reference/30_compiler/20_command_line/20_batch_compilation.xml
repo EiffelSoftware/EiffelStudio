@@ -8,8 +8,8 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>In order to launch a compilation without user intervention you need to specify the `-batch' switch in the
-			<bold>ec</bold> command line, otherwise the Eiffel compilation will be blocked. We will present below a typical example of batch processing on both Unix and Windows platforms where we want to compile a project in both frozen and finalized mode, then to launch the C compilations. At the same time we want to save the output of
+		<paragraph>In order to launch a compilation without user intervention you need to specify the `-batch' switch in the 
+			<bold>ec</bold> command line, otherwise the Eiffel compilation will be blocked. We will present below a typical example of batch processing on both Unix and Windows platforms where we want to compile a project in both frozen and finalized mode, then to launch the C compilations. At the same time we want to save the output of 
 			<bold>ec</bold> and the C compilations.
 		</paragraph>
 		<heading>
@@ -20,7 +20,7 @@
 		</paragraph>
 		<paragraph>It will go the directory where your project is located and compile your Eiffel code using the `Ace.ace' file located in your project directory and compile automatically the C code. All outputs will be stored in the file `/output_path/OUTPUT'.</paragraph>
 		<paragraph>
-			<bold>Note:</bold> All output from
+			<bold>Note:</bold> All output from 
 			<bold>ec</bold> are going to the error output, so do not forget to redirect the error output when you want to see the result.
 		</paragraph>
 		<heading>

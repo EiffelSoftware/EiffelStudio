@@ -34,8 +34,8 @@
 					<label>Windows Eiffel Library(WEL)</label>
 				</link>. This option is recommended for projects needing advanced Windows features, or Windows applications that are time-critical, since the graphic functionality provided by WEL is more efficient than the one provided by Vision2, which on the other hand provides a platform-independent abstract interface. This wizard is only available on Windows.
 			</item>
-		</list>All those options are also available in the
-		<bold> File</bold>/
+		</list>All those options are also available in the 
+		<bold> File</bold>/ 
 		<bold>New project...</bold> menu. This pops up a dialog with all the options to generate a new project:
 		<image>
 			<url>/images/eiffelstudio/dialogs_and_wizards/create_a_project.png</url>

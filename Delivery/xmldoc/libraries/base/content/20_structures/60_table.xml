@@ -10,11 +10,11 @@
 		<paragraph> Hash tables are a convenient mechanism tostore and retrieve objects identified by unique keys. 
 			<heading>
 				<size>2</size>Why use hash tables?
-			</heading> The main advantage of hash tables is the efficiency of the basic operations: store (
+			</heading> The main advantage of hash tables is the efficiency of the basic operations: store ( 
 			<link>
 				<url>../../reference/structures/table/hash_table.html#f_put</url>
 				<label>put</label>
-			</link>) and retrieve (
+			</link>) and retrieve ( 
 			<link>
 				<url>../../reference/structures/table/hash_table.html#f_item</url>
 				<label>item</label>
@@ -29,7 +29,7 @@
 			</code>, for some integer 
 			<code>
 				<local_variable>i</local_variable>
-			</code> whose value lies within the bounds of
+			</code> whose value lies within the bounds of 
 			<code>
 				<local_variable>a</local_variable>
 			</code>, the basic operations are

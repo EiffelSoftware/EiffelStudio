@@ -13,12 +13,12 @@
 				<url>/images/eiffelstudio/class_format_bar.png</url>
 			</image>
 		</paragraph>
-		<paragraph>Class views are all available through the
-			<bold>Class</bold> tab of the
+		<paragraph>Class views are all available through the 
+			<bold>Class</bold> tab of the 
 			<link>
 				<url>/tools/eiffelstudio/reference/05_general_interface_description/20_eiffelstudio_window_overview.xml</url>
 				<label>context tool</label>
-			</link>, and for some of them directly with the
+			</link>, and for some of them directly with the 
 			<link>
 				<url>/tools/eiffelstudio/reference/20_editor/index.xml</url>
 				<label>editor</label>

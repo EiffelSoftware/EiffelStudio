@@ -1,7 +1,7 @@
 <document output="studio" title="Interval">
 	<meta_data/>
 	<paragraph>
-		<paragraph>Class INTERVAL deals with intervals between two instances of the same class which conform to ABSOLUTE (
+		<paragraph>Class INTERVAL deals with intervals between two instances of the same class which conform to ABSOLUTE ( 
 			<code>
 				<class_name>DATE</class_name>
 			</code>, 
@@ -33,7 +33,7 @@
 			</code>, 
 			<code>
 				<class_name>DATE_DURATION</class_name>
-			</code> and
+			</code> and 
 			<code>
 				<class_name>DATE_TIME_DURATION</class_name>
 			</code>, it does not have many features available. Some features in class 
@@ -42,7 +42,7 @@
 			</code>, 
 			<code>
 				<class_name>DATE</class_name>
-			</code>,
+			</code>, 
 			<code>
 				<class_name>DATE_TIME</class_name>
 			</code> return the same result and are more efficient to use. 

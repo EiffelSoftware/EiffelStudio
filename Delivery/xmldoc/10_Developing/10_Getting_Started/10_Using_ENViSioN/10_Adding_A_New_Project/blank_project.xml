@@ -15,10 +15,10 @@
 						<size>2</size>Navigation
 					</heading>
 					<paragraph>To navigate to the desired page, select the page name which is displayed to the  left hand side of the window.</paragraph>
-					<paragraph>To cancel the wizard at any point, select the
+					<paragraph>To cancel the wizard at any point, select the 
 						<bold>Cancel</bold> button
 					</paragraph>
-					<paragraph>To complete the wizard, using the current settings, select the
+					<paragraph>To complete the wizard, using the current settings, select the 
 						<bold>Finish</bold> button
 						<line_break/>
 					</paragraph>
@@ -30,7 +30,7 @@
 						<paragraph>
 							<bold>Overview</bold>
 						</paragraph>
-						<paragraph>This page displays the current settings that will be used when
+						<paragraph>This page displays the current settings that will be used when 
 							<bold>Finish</bold> is pressed.
 							<paragraph>
 								<bold>System Settings</bold>
@@ -47,7 +47,7 @@
 									<bold>Root Class</bold>  - Root class of the Eiffel system. A class of this name will be generated for  inclusion in the system
 								</item>
 								<item>
-									<bold>Root Feature</bold> - Root feature of the Eiffel system. A feature of this name  will be generated in the class
+									<bold>Root Feature</bold> - Root feature of the Eiffel system. A feature of this name  will be generated in the class 
 									<bold>Root Class</bold>. The root feature is the  feature executed when the system is launched.
 								</item>
 							</list>

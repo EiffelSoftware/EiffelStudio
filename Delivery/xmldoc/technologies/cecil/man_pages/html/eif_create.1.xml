@@ -24,7 +24,7 @@
 			<size>2</size>NOTES
 		</heading>You cannot pass the return value to Eiffel routines as is: you must call 
 		<bold>eif_access()</bold> to pass it to Eiffel routine. 
-		<line_break/>To release the protection of an Eiffel object created with
+		<line_break/>To release the protection of an Eiffel object created with 
 		<bold>eif_create()</bold>, call 
 		<bold>eif_wean()</bold>. It will be collected during the next collection.  
 		<heading>

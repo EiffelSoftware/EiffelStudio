@@ -78,11 +78,11 @@
 				<paragraph>Use default autocomplete: If this is set to True, the next preferences will be ignored and the default completion scheme will be used. Otherwise, the automatic completion will use the user-defined strings described below.</paragraph>
 			</item>
 			<item>
-				<paragraph>Customized autocomplete (Return after keyword was typed): This
+				<paragraph>Customized autocomplete (Return after keyword was typed): This 
 					<link>
 						<url>20_keyword_completion_customization.xml</url>
 						<label>string</label>
-					</link>defines what will be inserted as you press Return just after typing the keyword if you chose not to use the
+					</link>defines what will be inserted as you press Return just after typing the keyword if you chose not to use the 
 					<link>
 						<url>&gt;30_keyword_completion_default_values.xml</url>
 						<label>default value</label>
@@ -90,11 +90,11 @@
 				</paragraph>
 			</item>
 			<item>
-				<paragraph>Customized autocomplete (Space after keyword was typed): This
+				<paragraph>Customized autocomplete (Space after keyword was typed): This 
 					<link>
 						<url>20_keyword_completion_customization.xml</url>
 						<label>string</label>
-					</link> defines what will be inserted as you press Space just after typing the keyword if you chose not to use the
+					</link> defines what will be inserted as you press Space just after typing the keyword if you chose not to use the 
 					<link>
 						<url>&gt;30_keyword_completion_default_values.xml</url>
 						<label>default value</label>
@@ -102,11 +102,11 @@
 				</paragraph>
 			</item>
 			<item>
-				<paragraph>Customized autocomplete (Return, other cases): This
+				<paragraph>Customized autocomplete (Return, other cases): This 
 					<link>
 						<url>20_keyword_completion_customization.xml</url>
 						<label>string</label>
-					</link> defines what will be inserted as you press Return after a keyword which had been previously typed. It is effective only if you chose not to use the
+					</link> defines what will be inserted as you press Return after a keyword which had been previously typed. It is effective only if you chose not to use the 
 					<link>
 						<url>30_keyword_completion_default_values.xml</url>
 						<label>default value</label>
@@ -114,22 +114,22 @@
 				</paragraph>
 			</item>
 			<item>
-				<paragraph>Customized autocomplete (Space, other cases): This
+				<paragraph>Customized autocomplete (Space, other cases): This 
 					<link>
 						<url>20_keyword_completion_customization.xml</url>
 						<label>string</label>
-					</link> defines what will be inserted as you press Space after a keyword which had been previously typed. It is effective only if you chose not to use the
+					</link> defines what will be inserted as you press Space after a keyword which had been previously typed. It is effective only if you chose not to use the 
 					<link>
 						<url>30_keyword_completion_default_values.xml</url>
 						<label>defaultvalue</label>
 					</link> (see Use default autocomplete above).
 				</paragraph>
 			</item>
-		</list>The syntax used in the four last item is described in
+		</list>The syntax used in the four last item is described in 
 		<link>
 			<url>20_keyword_completion_customization.xml</url>
 			<label>Keyword completion customization</label>
-		</link>.
+		</link>. 
 		<link>
 			<url>30_keyword_completion_default_values.xml</url>
 			<label>Default values</label>

@@ -15,7 +15,7 @@
 		<paragraph>Note that the presence of both linear combinations and ratios make it possible to define any metric of the form</paragraph>
 		<paragraph>k.m  / l.n</paragraph>
 		<span/>
-		<paragraph>in terms of elementary metrics m, n
+		<paragraph>in terms of elementary metrics m, n 
 			<span>. If necessary, the interface can provide a shortcut to define such a formula in one step, without first defining the numerator and denominator as linear combinations.</span>
 		</paragraph>
 		<paragraph>The metric tool provides a command for defining linear metrics. Button

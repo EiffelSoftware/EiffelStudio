@@ -10,21 +10,21 @@
 		<table>
 			<row>
 				<cell>
-					<paragraph>  While
+					<paragraph>  While 
 						<link>
 							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.htm</url>
 							<label>Debugging</label>
-						</link>  a system, it is possible to watch any of the locals of the current
+						</link>  a system, it is possible to watch any of the locals of the current 
 						<link>
 							<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#feature</url>
 							<label>feature</label>
-						</link>,  and attributes of the current
+						</link>,  and attributes of the current 
 						<link>
 							<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#object</url>
 							<label>Object</label>
 						</link>  in which the execution has stopped.
 					</paragraph>
-					<paragraph>  To set a watch, you may drag a representation from the
+					<paragraph>  To set a watch, you may drag a representation from the 
 						<link>
 							<url>./LocalsWindow.htm</url>
 							<label>Locals Window</label>

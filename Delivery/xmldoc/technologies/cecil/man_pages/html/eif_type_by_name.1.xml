@@ -12,12 +12,12 @@
 		</code>
 		<heading>
 			<size>2</size>DESCRIPTION
-		</heading>The
-		<bold>eif_type_by_name()</bold> function returns the type identifier corresponding to
+		</heading>The 
+		<bold>eif_type_by_name()</bold> function returns the type identifier corresponding to 
 		<italic>type</italic>, which is the name of the type.
 		<heading>
 			<size>2</size>RETURN VALUE
-		</heading>The
+		</heading>The 
 		<bold>eif_type_by_name()</bold> function returns the type
 		<heading>
 			<size>2</size>NOTES
@@ -29,13 +29,13 @@
 		<heading>
 			<size>2</size>COMPATIBILITY
 		</heading>
-		<bold>eif_type_by_name()</bold> is equivalent to
+		<bold>eif_type_by_name()</bold> is equivalent to 
 		<bold>eif_type_id()</bold>.
 		<heading>
 			<size>2</size>SEE ALSO
 		</heading>
-		<bold>eif_reference_function</bold>(1) ,
-		<bold>eif_procedure</bold>(1) ,
-		<bold>eif_type</bold>(1),
+		<bold>eif_reference_function</bold>(1) , 
+		<bold>eif_procedure</bold>(1) , 
+		<bold>eif_type</bold>(1), 
 		<bold>eif_name</bold>(1).  Markup created by  1. 0, November 15, 1999.
 	</paragraph></document>

@@ -8,11 +8,11 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>The layout constructor provides a view of the
+		<paragraph>The layout constructor provides a view of the 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>objects</label>
-			</link> you have defined in your system, in which the
+			</link> you have defined in your system, in which the 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>objects</label>
@@ -23,43 +23,43 @@
 				<url>/images/eiffelbuild/screenshots/layout_constructor.png</url>
 			</image>
 		</paragraph>
-		<paragraph>Each item in the tree represents one object. The screenshot above represents the following
+		<paragraph>Each item in the tree represents one object. The screenshot above represents the following 
 			<link>
 				<url>/libraries/vision2/00_introduction</url>
 				<label>EiffelVision2</label>
 			</link> interface definition - An EV_TITLED_WINDOW containing one child, of type EV_VERTICAL_BOX. Within the vertical box there is an EV_HORIZONTAL_BOX and an EV_LIST. The list is empty, but the horizontal box contains three different objects of type EV_BUTTON.
 		</paragraph>
-		<paragraph>The information displayed, only shows you the structure of the
+		<paragraph>The information displayed, only shows you the structure of the 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>objects</label>
 			</link>, and although it gives you an indication of the final appearance of the interface you are building, you cannot see the details of the interface. i.e. color, sizes, tool tips etc.
 		</paragraph>
-		<paragraph>All
+		<paragraph>All 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>objects</label>
-			</link> displayed in here are
+			</link> displayed in here are 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
 				<label>pickable</label>
-			</link>, so can be easily manipulated, e.g.
+			</link>, so can be easily manipulated, e.g. 
 			<link>
 				<url>/tools/eiffelbuild/how_to_s/30_delete_an_object/index</url>
 				<label>deleted</label>
-			</link> or
+			</link> or 
 			<link>
 				<url>/tools/eiffelbuild/how_to_s/50_reparent_an_object/index</url>
 				<label>reparented</label>
 			</link>.
 		</paragraph>
 		<note>
-			<bold>Note</bold>: If the
+			<bold>Note</bold>: If the 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link> in the tree has the
-			<bold>Name</bold> property set, then the text corresponds to the name, otherwise, the text is the type of the
+			</link> in the tree has the 
+			<bold>Name</bold> property set, then the text corresponds to the name, otherwise, the text is the type of the 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
@@ -69,12 +69,12 @@
 			<heading>
 				<size>2</size>Expanding/Collapsing
 			</heading>
-			<paragraph>To Expand all of the items displayed in the layout constructor, select
-				<bold>Expand layout tree</bold> from the
+			<paragraph>To Expand all of the items displayed in the layout constructor, select 
+				<bold>Expand layout tree</bold> from the 
 				<bold>View</bold> menu.
 			</paragraph>
-			<paragraph>Similarly, if you wish to collapse all of the items in the layout constructor, select
-				<bold>Collapse layout tree</bold> from the
+			<paragraph>Similarly, if you wish to collapse all of the items in the layout constructor, select 
+				<bold>Collapse layout tree</bold> from the 
 				<bold>View</bold> menu.
 			</paragraph>
 			<seealso>

@@ -35,7 +35,7 @@
 				<tab_index>0</tab_index>
 				<keywords>Eiffel break points</keywords>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>&gt;BreakPoint
-			</help_link>  representation, often in the editor or the breakpoint window, and selecting
+			</help_link>  representation, often in the editor or the breakpoint window, and selecting 
 			<bold>BreakpointProperties...</bold>  from the context menu.
 		</paragraph>
 		<paragraph>
@@ -49,8 +49,8 @@
 				<tab_index>0</tab_index>
 				<keywords>Eiffel break points</keywords>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>&gt;BreakPoint
-			</help_link>, corresponding to its position in the source code. The buttons
-			<bold>Condition...</bold>  and
+			</help_link>, corresponding to its position in the source code. The buttons 
+			<bold>Condition...</bold>  and 
 			<bold>HitCount..</bold> both display dialogs which allow you to specify the  condition, or the hit count for the
 			<help_link>
 				<tab_index>0</tab_index>

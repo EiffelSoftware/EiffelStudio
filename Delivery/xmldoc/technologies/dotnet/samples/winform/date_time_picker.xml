@@ -28,24 +28,24 @@
 		<heading>
 			<size>2</size>Running
 		</heading>
-		<paragraph>After launching the application, you will see a window displayed with a similar appearance to the one above. On the left side of the main window a date is displayed in a
-			<span>COMBO_BOX</span>. Clicking on this
-			<span>COMBO_BOX</span> and a
-			<span>CALENDAR</span> control will appear showing the same date than in the
-			<span>COMBO_BOX</span>. On the the right side of the main window are the commands to control the format of the displayed date and the style of the
+		<paragraph>After launching the application, you will see a window displayed with a similar appearance to the one above. On the left side of the main window a date is displayed in a 
+			<span>COMBO_BOX</span>. Clicking on this 
+			<span>COMBO_BOX</span> and a 
+			<span>CALENDAR</span> control will appear showing the same date than in the 
+			<span>COMBO_BOX</span>. On the the right side of the main window are the commands to control the format of the displayed date and the style of the 
 			<span>CALENDAR</span> control.
 		</paragraph>
-		<paragraph>Clicking on the "Change font" button and a
+		<paragraph>Clicking on the "Change font" button and a 
 			<link>
 				<url>/images/dotnet_samples/change_font_dialog.png</url>
 				<label>change font dialog box</label>
 			</link> will appear.
 		</paragraph>
-		<paragraph>Clicking on the "Change color" button and a
+		<paragraph>Clicking on the "Change color" button and a 
 			<link>
 				<url>/images/dotnet_samples/date_time_picker_change_color_dlg.png</url>
 				<label>dialog box</label>
-			</link> will appear that will permit you to customize the color appearance of the calendar thought a
+			</link> will appear that will permit you to customize the color appearance of the calendar thought a 
 			<link>
 				<url>/images/dotnet_samples/change_color_dialog.png</url>
 				<label>color dialog box</label>
@@ -55,13 +55,13 @@
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>This application uses several different controls, but tend to show how to parameter the
-			<span>CALENDAR</span> control using the
-			<span>FONT_DIALOG</span> and
+		<paragraph>This application uses several different controls, but tend to show how to parameter the 
+			<span>CALENDAR</span> control using the 
+			<span>FONT_DIALOG</span> and 
 			<span>COLOR_DIALOG</span>.
 		</paragraph>
 		<paragraph>When one of the buttons "Change font" or "Change color" is pressed, an event is launched and open the corresponding dialog box. </paragraph>
-		<paragraph>When the entry in the
+		<paragraph>When the entry in the 
 			<span>COMBO_BOX</span>format change, an event is launched and modify the format of the displayed date.
 		</paragraph>
 		<paragraph>This sample contains the following class:</paragraph>

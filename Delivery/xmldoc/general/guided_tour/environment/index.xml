@@ -21,17 +21,17 @@
 		<div>
 			<heading/>
 			<div>
-				<info>This document is available both locally, as part of the ISE Eiffel delivery, and on the
+				<info>This document is available both locally, as part of the ISE Eiffel delivery, and on the 
 					<link>
 						<url>http://docs.eiffel.com/general/guided_tour/environment/index.xml</url>
 						<label>http://docs.eiffel.com</label>
-					</link> Web site.  See the
+					</link> Web site.  See the 
 					<link>
 						<url>../../../general/guided_tour/index.xml</url>
 						<label>list of introductory documents.  </label>
 					</link>
-					<line_break/>This is
-					<bold>not</bold> an introduction to the Eiffel method and language.  Follow the preceding link for
+					<line_break/>This is 
+					<bold>not</bold> an introduction to the Eiffel method and language.  Follow the preceding link for 
 					<italic>Invitation to Eiffel </italic>and a longer tutorial.
 				</info>
 			</div>

@@ -39,7 +39,7 @@
 						<link>
 							<url>10_run_and_debug.xml</url>
 							<label>Launch and stop</label>
-						</link> as soon as the application encounters a
+						</link> as soon as the application encounters a 
 						<link>
 							<url>../20_breakpoints/00_introduction.xml</url>
 							<label>breakpoint</label>
@@ -76,18 +76,18 @@
 				</list>
 			</item>
 		</list>
-		<paragraph>Once the application is launched in debug mode, you can
+		<paragraph>Once the application is launched in debug mode, you can 
 			<link>
 				<url>70_pause_execution.xml</url>
 				<label>stop</label>
-			</link> it at any time to see its current state or you can
+			</link> it at any time to see its current state or you can 
 			<link>
 				<url>80_kill_application.xml</url>
 				<label>kill</label>
 			</link> it completely.
 		</paragraph>
-		<paragraph>All these commands are accessible either through the
-			<bold>debug</bold> menu, or through the
+		<paragraph>All these commands are accessible either through the 
+			<bold>debug</bold> menu, or through the 
 			<bold>project</bold> toolbar.
 		</paragraph>
 		<paragraph>Note:  Debugging a .NET compiled system within EiffelStudio is not currently possible.  Consequently for a system compiled using .NET the debugging toolbar buttons will not be enabled.  Only the 'Launch' and 'Launch and stop at breakpoints' are available. </paragraph>

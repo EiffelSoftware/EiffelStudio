@@ -223,7 +223,7 @@
 								<bold>EV_CELL</bold> - If you removed the item, the minimum size was not updated to reflect this,  thereby retaining the minimum size as constrained by the minimum size of the  now removed item.
 							</item>
 							<item>
-								<bold>EV_TREE_ITEM</bold>/
+								<bold>EV_TREE_ITEM</bold>/ 
 								<bold>EV_TREE</bold> - A call to `disable_select' on an EV_TREE_ITEM will now actually remove the  selection from the tree. Previously, the style of the item was changed, but a  call to `selected_item' on the tree would still return the item.
 							</item>
 							<item>
@@ -254,7 +254,7 @@
 								<bold>EV_PRINT_DIALOG</bold> - Querying `print_context' from a print dialog if a user selected "Cancel"  would previously crash.
 							</item>
 							<item>
-								<bold>EV_TREE</bold> and
+								<bold>EV_TREE</bold> and 
 								<bold>EV_MULTI_COLUMN_LIST</bold> - Fixed result of `background_color' which was returning gray instead of white  before a color was assigned
 							</item>
 							<item>
@@ -382,10 +382,10 @@
 								<bold>put</bold> - If you were using `put', you must now replace this with `put_at_position'.
 							</item>
 							<item>
-								<bold>extend</bold> and
+								<bold>extend</bold> and 
 								<bold>replace</bold> - These are now both exported, as before, they were exported to {NONE}.
 							</item>
-							<item>  features inherited from
+							<item>  features inherited from 
 								<bold>ARRAY</bold> - These are no longer available but you may use the feature `to_array', which  returns the contents of the table represented as an ARRAY [EV_WIDGET]. This  feature is marked as obsolete, as it is temporary, to simplify the transition  to the new inheritence structure of EV_TABLE.
 							</item>
 							<item>

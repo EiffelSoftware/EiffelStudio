@@ -3,12 +3,12 @@
 		<help/>
 	</meta_data>
 	<paragraph>
-		<paragraph>This document contains the description of default completion for recognized keywords. The
+		<paragraph>This document contains the description of default completion for recognized keywords. The 
 			<link>
 				<url>./20_keyword_completion_customization.xml</url>
 				<label>syntax</label>
 			</link> used is the one used to redefine keyword completion in the preferences.
-			<line_break/> Four tables list default values for each of the
+			<line_break/> Four tables list default values for each of the 
 			<link>
 				<url>10_automatic_keyword_completion.xml</url>
 				<label>four preferences</label>
@@ -16,7 +16,7 @@
 		</paragraph>
 		<list ordered="true">
 			<item>
-				<paragraph>Default value for
+				<paragraph>Default value for 
 					<link>
 						<url>10_automatic_keyword_completion.xml</url>
 						<label>"Customizedautocomplete (Space after keyword was typed)"</label>
@@ -184,7 +184,7 @@
 				<line_break/>
 			</item>
 			<item>
-				<paragraph>Default value for
+				<paragraph>Default value for 
 					<link>
 						<url>10_automatic_keyword_completion.xml</url>
 						<label>"Customizedautocomplete (Return after keyword was typed)"</label>
@@ -352,7 +352,7 @@
 				<line_break/>
 			</item>
 			<item>
-				<paragraph>Default value for
+				<paragraph>Default value for 
 					<link>
 						<url>10_automatic_keyword_completion.xml</url>
 						<label>"Customizedautocomplete (Space, other cases)"</label>
@@ -520,7 +520,7 @@
 				<line_break/>
 			</item>
 			<item>
-				<paragraph>Default value for
+				<paragraph>Default value for 
 					<link>
 						<url>10_automatic_keyword_completion.xml</url>
 						<label>"Customizedautocomplete (Return, other cases)"</label>

@@ -97,7 +97,7 @@
 			</code>. The result represents the difference between the current duration and the number of days yielded by to_days. It implies that the result is always positive and less than one day.
 		</paragraph>
 		<paragraph>For example, the current duration is 25:70:600. to_days will returns 1 (oneday) and time_modulo_day will return 2:20:0:. If the current duration is negative: -23:-80:300,to_days will return -2 (minus two days) and time_modulo_day will return 23:45:0.</paragraph>
-		<paragraph>Durations may be canonical or not canonical (BOOLEAN canonical). That means the features hour, minute and second are included in a particular range, or not. An instance of
+		<paragraph>Durations may be canonical or not canonical (BOOLEAN canonical). That means the features hour, minute and second are included in a particular range, or not. An instance of 
 			<code>
 				<class_name>TIME_DURATION</class_name>
 			</code> is canonical if:
@@ -250,7 +250,7 @@
 					<class_name>DATE_TIME_DURATION</class_name>
 				</code> inherits from GROUP_ELEMENT. infix and prefix +, infixand prefix - are available to compose instances to each other.
 			</item>
-			<item>Only day_add is present. To add only one element, features from
+			<item>Only day_add is present. To add only one element, features from 
 				<code>
 					<class_name>TIME_DURATION</class_name>
 				</code> or 

@@ -16,7 +16,7 @@
 			<size>2</size>Compiler
 		</heading>
 		<list ordered="false">
-			<item>Click
+			<item>Click 
 				<link>
 					<url>../30_compiler/60_version_history/04_54_release/00_53_to_54_changes.xml</url>
 					<label>here</label>
@@ -33,13 +33,13 @@
 			<size>3</size>EiffelNet
 		</heading>
 		<list ordered="false">
-			<item>Fixed bug in
+			<item>Fixed bug in 
 				<code>
 					<feature_name>set_delay</feature_name>
-				</code> and
+				</code> and 
 				<code>
 					<feature_name>set_nodelay</feature_name>
-				</code> in
+				</code> in 
 				<code>
 					<class_name>NETWORK_STREAM_SOCKET</class_name>
 				</code>, because their implementations were inverted.
@@ -49,37 +49,37 @@
 			<size>3</size>EiffelTime
 		</heading>
 		<list ordered="false">
-			<item>Improved speed of
+			<item>Improved speed of 
 				<code>
 					<class_name>DATE</class_name>
-				</code> and
+				</code> and 
 				<code>
 					<class_name>TIME</class_name>
 				</code> comparison.
 			</item>
-			<item>In
+			<item>In 
 				<code>
 					<class_name>DATE_VALUE</class_name>
 				</code>
 				<code>
 					<feature_name>ordered_compact_date</feature_name>
-				</code> and made
+				</code> and made 
 				<code>
 					<feature_name>compact_date</feature_name>
 				</code> obsolete.
 			</item>
-			<item>In
+			<item>In 
 				<code>
 					<class_name>DATE</class_name>
 				</code>
 				<code>
 					<feature_name>make_by_ordered_compact_date</feature_name>
-				</code> and
+				</code> and 
 				<code>
 					<feature_name>make_by_compact_date</feature_name>
 				</code> obsolete.
 			</item>
-			<item>In
+			<item>In 
 				<code>
 					<class_name>DATE_VALIDITY_CHECKER</class_name>
 				</code>

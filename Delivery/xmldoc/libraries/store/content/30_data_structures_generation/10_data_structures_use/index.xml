@@ -5,18 +5,18 @@
 			<size>2</size>1. Overview
 		</heading>
 		<paragraph>EiffelStore affords a context that optimizes and facilitates theuse of the classes that maps your database content.</paragraph>
-		<paragraph>The main advantage of database-specific structures is the staticchecking: you can determine at compile-time the type of information you areaccessing or modifying.</paragraph>
-		<paragraph>However, it can be more flexible to determine the type of datayou are dealing with at run-time. This can be particularly useful for GUIapplications, take a look at the 
+		<paragraph>The main advantage of database-specific structures is the static checking: you can determine at compile-time the type of information you are accessing or modifying.</paragraph>
+		<paragraph>However, it can be more flexible to determine the type of data you are dealing with at run-time. This can be particularly useful for GUI applications, take a look at the 
 			<link>
 				<url>../../40_dataview_cluster/index.html</url>
 				<label>DataView cluster</label>
 			</link>.
 		</paragraph>
-		<paragraph>Each data structure carries some meta-data about its type sothat the run-time typing hazards can be avoided with assertions based on thismeta-data.</paragraph>
+		<paragraph>Each data structure carries some meta-data about its type so that the run-time typing hazards can be avoided with assertions based on this meta-data.</paragraph>
 		<paragraph>The advantage of this system is two-fold:</paragraph>
 		<list ordered="false">
-			<item>You can choose to use compile-time type checking or not,  depending on your own needs.</item>
-			<item>If you choose run-time type checking, assertions ensure that  each object type is valid and prevent catcalls.</item>
+			<item>You can choose to use compile-time type checking or not, depending on your own needs.</item>
+			<item>If you choose run-time type checking, assertions ensure that each object type is valid and prevent cat calls.</item>
 		</list>
 		<paragraph>Let us see first 
 			<link>
@@ -25,13 +25,13 @@
 			</link>with data structures and their context, then 
 			<link>
 				<url>#implementation</url>
-				<label>how it isimplemented</label>
+				<label>how it is implemented</label>
 			</link>.
 		</paragraph>
 		<heading>
 			<size>2</size>2. Data structure capabilities
 		</heading>
-		<paragraph>Database-specific classes and their context let you perform thefollowing operations:</paragraph>
+		<paragraph>Database-specific classes and their context let you perform the following operations:</paragraph>
 		<list ordered="false">
 			<item>
 				<link>
@@ -67,8 +67,8 @@
 		<heading>
 			<size>3</size>2.1. Storing table/view rows content
 		</heading>
-		<paragraph>You can store table/view rows content into classes that have thetable or view name: one database table/view row correspond to one Eiffel object.Each table attribute will correspond to a class attribute with the same name. 
-			<italic>set</italic>commands enable to change the object content to insert rows in the database orupdate rows. DB_SELECTION class can directly map database results into theseobjects, and you can directly create a table/view row from one object with theDB_STORE class. Take a look at the
+		<paragraph>You can store table/view rows content into classes that have the table or view name: one database table/view row correspond to one Eiffel object. Each table attribute will correspond to a class attribute with the same name. 
+			<italic>set</italic> commands enable to change the object content to insert rows in the database or update rows. DB_SELECTION class can directly map database results into these objects, and you can directly create a table/view row from one object with the DB_STORE class. Take a look at the 
 			<link>
 				<url>../../10_interface_layer/50_data_object_coupling/index.html</url>
 				<label>data-object coupling</label>
@@ -78,15 +78,15 @@
 		<heading>
 			<size>3</size>2.2. Manipulating abstract table/view rows content
 		</heading>
-		<paragraph>Each table/view storage structure inherits from the DB_TABLEabstract class. This enables to handle DB_TABLE objects as abstract database table/view structures.</paragraph>
+		<paragraph>Each table/view storage structure inherits from the DB_TABLE abstract class. This enables to handle DB_TABLE objects as abstract database table/view structures.</paragraph>
 		<paragraph>You can then access or modify DB_TABLE attributes: instead of accessing attributes with their 
-			<italic>name</italic>,which implies that the object type is known at compile-time, attributes can thenbe accessed with a 
+			<italic>name</italic>, which implies that the object type is known at compile-time, attributes can then be accessed with a 
 			<italic>code</italic>.
 		</paragraph>
 		<code_block>Missing</code_block>
 		<note>
 			<bold>Note:</bold> to access attributes data with 
-			<italic>code</italic>, youneed to use the DB_TABLE_DESCRIPTIONobject associated to your DB_TABLEobject.
+			<italic>code</italic>, you need to use the DB_TABLE_DESCRIPTION object associated to your DB_TABLE object.
 		</note>
 		<heading>
 			<size>3</size>2.3. Getting objects metadata
@@ -97,22 +97,22 @@
 			<item>What are the types of its attributes.</item>
 		</list>
 		<paragraph>
-			<bold>Note:</bold> you also get objects metadata  through the DB_TABLE_DESCRIPTION  object associated to your   DB_TABLE object.
-			<paragraph>Objects metadata used in assertions ensures objects typevalidity. To illustrates this, let's look at the contract form of a class thatmanipulates "abstract" table/view rows:</paragraph>
+			<bold>Note:</bold> you also get objects metadata through the DB_TABLE_DESCRIPTION object associated to your   DB_TABLE object.
+			<paragraph>Objects metadata used in assertions ensures objects type validity. To illustrates this, let's look at the contract form of a class that manipulates "abstract" table/view rows:</paragraph>
 			<code_block>Missing</code_block>
 			<heading>
 				<size>3</size>2.4. Accessing database metadata
 			</heading>
-			<paragraph>Basic database metadata is also available: the
+			<paragraph>Basic database metadata is also available: the 
 				<code>
 					<class_name>DB_SPECIFIC_TABLES_ACCESS_USE</class_name>
-				</code> class (generated), stores INTEGER codes for eachdatabase table/view. These codes afford related table/view name and related newstoring objects (i.e. that conforms to   DB_TABLE class).
+				</code> class (generated), stores INTEGER codes for each database table/view. These codes afford related table/view name and related new storing objects (i.e. that conforms to DB_TABLE class).
 			</paragraph>
 			<code_block>Missing</code_block>
 			<heading>
 				<size>3</size>2.5. More interesting features
 			</heading>
-			<paragraph>The DB_TABLE_DESCRIPTIONclass offers more features to get table row attributes as conveniently aspossible:</paragraph>
+			<paragraph>The DB_TABLE_DESCRIPTION class offers more features to get table row attributes as conveniently as possible:</paragraph>
 			<list ordered="false">
 				<item>The table/view row primary key value (ID)</item>
 				<item>The list of table/view row attributes</item>
@@ -127,9 +127,9 @@
 			<list ordered="false">
 				<item>Classes holding database table rows content (inheriting from  DB_TABLE)</item>
 				<item>Classes describing database tables (inheriting from DB_TABLE_DESCRIPTION)</item>
-				<item>A class describing the database and giving access to the  previous types of classes (inheriting from DB_TABLES_ACCESS)</item>
+				<item>A class describing the database and giving access to the previous types of classes (inheriting from DB_TABLES_ACCESS)</item>
 			</list>
-			<paragraph>One database table is hence associated to one table class and one  description class. Both classes are closely 
+			<paragraph>One database table is hence associated to one table class and one description class. Both classes are closely 
 				<link>
 					<url>#table-descr_relationship</url>
 					<label> interrelated</label>
@@ -137,9 +137,9 @@
 				<link>
 					<url>#table_access_classes</url>
 					<label>table access classes</label>
-				</link>  describes the database tables  and gives access to both table and description classes.
+				</link>  describes the database tables and gives access to both table and description classes.
 			</paragraph>
-			<paragraph>Each database-specific (generated) class inherits from anabstract class. These abstract classes gathers all the facilities that are not specific toyour database, and so that can be inherited by all the database-specificclasses.</paragraph>
+			<paragraph>Each database-specific (generated) class inherits from an abstract class. These abstract classes gathers all the facilities that are not specific to your database, and so that can be inherited by all the database-specificclasses.</paragraph>
 			<paragraph>Let us see abstract and database-specific classes relationship:</paragraph>
 			<paragraph>
 				<image> 
@@ -154,15 +154,15 @@
 			<heading>
 				<size>2</size>2. Table and description classes relationship
 			</heading>
-			<paragraph>Table classes, that inherit from DB_TABLE,and description classes, that inherit from DB_TABLE_DESCRIPTION,both deals with database tables. This section explains what are their own roleand their relationship.</paragraph>
+			<paragraph>Table classes, that inherit from DB_TABLE, and description classes, that inherit from DB_TABLE_DESCRIPTION, both deals with database tables. This section explains what are their own role and their relationship.</paragraph>
 			<heading>
 				<size>3</size>2.1. Table classes
 			</heading>
-			<paragraph>As seen in the previous section, table classes merely store table rows attribute values. Their objects can beconsidered as databasetable rows, or more precisely, database table rows on the Eiffel side. These classes inherit from DB_TABLE. </paragraph>
-			<paragraph>Each of these classes are associated to a descriptionclass. </paragraph>
+			<paragraph>As seen in the previous section, table classes merely store table rows attribute values. Their objects can be considered as databasetable rows, or more precisely, database table rows on the Eiffel side. These classes inherit from DB_TABLE. </paragraph>
+			<paragraph>Each of these classes are associated to a description class. </paragraph>
 			<paragraph>
 				<bold>Tip:</bold> Use table classes to 
-				<italic>carry</italic>data. 
+				<italic>carry</italic> data. 
 			</paragraph>
 			<heading>
 				<size>3</size>2.2. Description classes
@@ -189,32 +189,32 @@
 				</item>
 			</list>
 			<paragraph>These descriptions inherit from DB_TABLE_DESCRIPTION.</paragraph>
-			<paragraph>Since they only describes a table and provide tools, description objectscan be unique. EiffelStore ensures their unicity for resources optimization.</paragraph>
+			<paragraph>Since they only describes a table and provide tools, description objects can be unique. EiffelStore ensures their unicity for resources optimization.</paragraph>
 			<paragraph>
 				<bold>Tip:</bold> Use description classes to 
-				<italic>access andmodify</italic> data.
+				<italic>access and modify</italic> data.
 			</paragraph>
 			<heading>
 				<size>3</size>2.3. Relationship
 			</heading>
-			<paragraph>Each table class is associated to the description classcorresponding to the same database table.</paragraph>
+			<paragraph>Each table class is associated to the description class corresponding to the same database table.</paragraph>
 			<paragraph>A table class object provides the associated table description:</paragraph>
 			<paragraph>
 				<code_block>Missing</code_block>
-			</paragraph>As descriptions are unique, every table row object is associated to the samedescription. The following figure illustrates this:
+			</paragraph>As descriptions are unique, every table row object is associated to the same description. The following figure illustrates this:
 			<paragraph>
 				<image> 
 					<url>table-descr_objects.png</url>
 				</image>
 			</paragraph>
 			<paragraph>table and description objects relationship</paragraph>
-			<paragraph>As seen in the previous section, to manipulate abstract table/view rows content,you have to use the description class. The following example shows how to outputa table row ID value.</paragraph>
+			<paragraph>As seen in the previous section, to manipulate abstract table/view rows content, you have to use the description class. The following example shows how to output a table row ID value.</paragraph>
 			<paragraph>
 				<code_block>Missing</code_block>
 			</paragraph>
-			<paragraph>As descriptions are unique, this means that description objects are alsoassociated to a specific table object to deal with it (i.e. access or modify itscontent). Actually, the table_description feature associates thedescription with the current object and then returns this description.</paragraph>
+			<paragraph>As descriptions are unique, this means that description objects are also associated to a specific table object to deal with it (i.e. access or modify its content). Actually, the table_description feature associates the description with the current object and then returns this description.</paragraph>
 			<note>
-				<bold>Note:</bold> The table_descriptionfeature is still aquery as the association part should not be visible at the interfacelevel.
+				<bold>Note:</bold> The table_description feature is still a query as the association part should not be visible at the interface level.
 			</note>
 			<paragraph>On the whole, you have to pay attention to always execute table_descriptionon your table/view row to get the appropriate description.</paragraph>
 			<heading>
@@ -223,8 +223,8 @@
 			<heading>
 				<size>3</size>3.1. Overview
 			</heading>
-			<paragraph>Table access classes provide facilities to manage table row andtable description objects. They also give basic database table meta-data.</paragraph>
-			<paragraph>The following figure shows table access classes and theirrelations.</paragraph>
+			<paragraph>Table access classes provide facilities to manage table row and table description objects. They also give basic database table meta-data.</paragraph>
+			<paragraph>The following figure shows table access classes and their relations.</paragraph>
 			<list ordered="false">
 				<item>Yellow classes are EiffelStore classes</item>
 				<item>Green class is generated</item>
@@ -241,14 +241,14 @@
 					<url>table-descr-access_objects.png</url> 
 				</image>
 			</paragraph>
-			<paragraph>Relationship between the tables accessobject, description and table objects</paragraph>
+			<paragraph>Relationship between the tables access object, description and table objects</paragraph>
 			<heading>
 				<size>3</size>3.2. DB_SPECIFIC_TABLES_ACCESS class
 			</heading>
 			<paragraph>The 
 				<code>
 					<class_name>DB_SPECIFIC_TABLES_ACCESS</class_name>
-				</code> class stores the unique tabledescription object. It also provides the following facilities:
+				</code> class stores the unique table description object. It also provides the following facilities:
 			</paragraph>
 			<list ordered="false">
 				<item>Every database table code</item>
@@ -262,7 +262,7 @@
 			<heading>
 				<size>3</size>3.3. Abstract access class
 			</heading>
-			<paragraph>The DB_TABLES_ACCESS class provides an interface for the
+			<paragraph>The DB_TABLES_ACCESS class provides an interface for the 
 				<code>
 					<class_name>DB_SPECIFIC_TABLES_ACCESS</class_name>
 				</code> class which is non-specific to the database. This canbe used by non database-specific code (for instance the 
@@ -271,7 +271,7 @@
 					<label>DataView cluster</label>
 				</link>) toaccess database tables.
 			</paragraph>
-			<paragraph>Unique table description objects and table codes are of coursenot directly available from this class, but the following features are stillavailable:</paragraph>
+			<paragraph>Unique table description objects and table codes are of course not directly available from this class, but the following features are still available:</paragraph>
 			<list ordered="false">
 				<item>Table descriptions from a table code</item>
 				<item>Sample table class objects from a table code</item>
@@ -283,7 +283,7 @@
 			<paragraph>The 
 				<code>
 					<class_name>DB_SPECIFIC_TABLES_ACCESS</class_name>
-				</code> object can be accessed as a kindof "global variable" by any class which inherits from
+				</code> object can be accessed as a kind of "global variable" by any class which inherits from 
 				<code>
 					<class_name>DB_SPECIFIC_TABLES_ACCESS_USE</class_name>
 				</code>. This class also ensures 
@@ -291,10 +291,10 @@
 					<class_name>DB_SPECIFIC_TABLES_ACCESS</class_name>
 				</code>object unicity.
 			</paragraph>
-			<paragraph>The DB_TABLES_ACCESS_USE class affords the same possibility butwith no reference to the 
+			<paragraph>The DB_TABLES_ACCESS_USE class affords the same possibility but with no reference to the 
 				<code>
 					<class_name>DB_SPECIFIC_TABLES_ACCESS</class_name>
-				</code> object. The unique
+				</code> object. The unique 
 				<code>
 					<class_name>DB_SPECIFIC_TABLES_ACCESS</class_name>
 				</code> should be set to this class as of type DB_TABLES_ACCESS.

@@ -10,13 +10,13 @@
 	<paragraph>
 		<paragraph>If you do not want straight arrows, you can insert handles on them. It is recommended that you use the link tool to do this, because it inserts the handles so that the angles in the line are exactly 90 degrees.</paragraph>
 		<list ordered="true">
-			<item>To apply straight angles to a link, drop it in the
+			<item>To apply straight angles to a link, drop it in the 
 				<bold>Put handles on a link</bold> hole.
 				<image>
 					<url>/images/eiffelstudio/icons/icon_straight_arrows_color.gif</url>
 				</image>
 			</item>
-			<item>The
+			<item>The 
 				<bold>Link tool</bold> appears. Select the type of angle(s) you want for the link.
 				<line_break/>
 				<image>
@@ -68,11 +68,11 @@
 					</item>
 				</list>
 			</item>
-			<item>Click
+			<item>Click 
 				<bold>Apply</bold> to see a preview the new layout of the link.
 			</item>
-			<item>Click
-				<bold>OK</bold> when you are satisfied with the result, pressing
+			<item>Click 
+				<bold>OK</bold> when you are satisfied with the result, pressing 
 				<bold>Cancel</bold> will put the link back the way it was.
 			</item>
 		</list>

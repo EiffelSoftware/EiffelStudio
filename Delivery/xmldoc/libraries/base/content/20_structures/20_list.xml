@@ -14,7 +14,7 @@
 		<heading>
 			<size>1</size>Higher Level Traversal Classes
 		</heading>
-		<paragraph>The list and chain classes are characterized, for their traversal properties, as being linear and, more precisely, bilinear. In the traversal hierarchy, the relevant deferred classes are LINEAR and BILINEAR, introduced in the
+		<paragraph>The list and chain classes are characterized, for their traversal properties, as being linear and, more precisely, bilinear. In the traversal hierarchy, the relevant deferred classes are LINEAR and BILINEAR, introduced in the 
 			<link>
 				<url>10_taxonomy.html</url>
 				<label>discussion</label>
@@ -114,7 +114,7 @@ empty_property<symbol>:</symbol> is_empty <keyword>implies</keyword> <symbol>(</
 	   <feature_name>lin</feature_name>.<feature_name>forth</feature_name>
 	<keyword>end</keyword> 
 		</code_block>
-		<paragraph>The value of
+		<paragraph>The value of 
 			<code>
 				<local_variable>lin</local_variable>
 			</code>
@@ -146,7 +146,7 @@ empty_property<symbol>:</symbol> is_empty <keyword>implies</keyword> <symbol>(</
 	</code_block>
 		<paragraph> When a structure is created, some initializations will have to be made; the default initializations will usually lead to a value of 0 rather than 1 for index, although this dissymetry is not apparent in the assertions. Although acceptable, this solution leads to small but unpleasant complications, in particular frequent conditional instructions of the form</paragraph>
 		<code_block>
-<keyword>if</keyword> <feature_name>after</feature_name> <keyword>and</keyword> <keyword>not</keyword> <feature_name>is_empty</feature_name> <feature_name>then</feature_name>.<feature_name></feature_name>.<feature_name></feature_name>.<feature_name></feature_name>
+<keyword>if</keyword> <feature_name>after</feature_name> <keyword>and</keyword> <keyword>not</keyword> <feature_name>is_empty</feature_name> <feature_name>then</feature_name>.<feature_name/>.<feature_name/>.<feature_name/>
 		</code_block>
 		<paragraph> The solution finally retained for the Base libraries uses a different technique, which has turned out to be preferable. The idea is to replace the conceptual picture by one in which there are always two fictitious sentinel items. The two sentinel items are only present conceptually. They are of course not taken into account for the computation of count and, although it is possible to conceive of an implementation which would actually reserve space for them (for example in an array representation), none of the implementations used in Base for the classes of this documentation and other descendants of LINEAR do. The only purpose of the sentinels is to provide two valid theoretical cursor positions, which exist regardless of the number of actual (non-sentinel) items in the structure.
 			<line_break/> The sentinel items always appear at positions 0 and count + 1; this property is true even if the structure is empty of items, in which case count is zero. As a result, the following properties are part of the invariant:
@@ -254,7 +254,7 @@ empty_property<symbol>:</symbol> is_empty <keyword>implies</keyword> <symbol>(</
 				</code>.
 			</item>
 		</list>
-		<paragraph>These procedures have various abstract preconditions:
+		<paragraph>These procedures have various abstract preconditions: 
 			<code>
 				<local_variable>s</local_variable>
 				<symbol>.</symbol>extendible for additions,
@@ -287,7 +287,7 @@ empty_property<symbol>:</symbol> is_empty <keyword>implies</keyword> <symbol>(</
 			<item>Procedures remove_left and remove_right remove an item at the left and right or the cursor position.</item>
 			<item>Procedures merge_left and merge_right are similar to put_left and put_right but insert another dynamic chain rather than a single item. As the word 'merge' suggests, the merged structure, passed as argument, does not survive the process; it is emptied of its items. To preserve it, perform a clone or copy before the merge operation.</item>
 		</list>
-		<paragraph>The class also provides implementations of prune, prune_all and wipe_out from
+		<paragraph>The class also provides implementations of prune, prune_all and wipe_out from 
 			<link>
 				<url>../../reference/structures/access/collection_chart.html</url>
 				<label>COLLECTION</label>
@@ -320,13 +320,13 @@ empty_property<symbol>:</symbol> is_empty <keyword>implies</keyword> <symbol>(</
 			<line_break/>  A circular chain also needs a notion of first item, if only to enable a client to initiate a traversal through procedure start. Similarly, there is a last item - the one just before the first in a cyclic traversal. (If the chain has just one item, it is both first and last.)
 			<line_break/> For circular chains, however, there is no reason why the first item should always remain the same. One of the benefits that clients may expect from the use of a circular
 			<line_break/> structure is the ability to choose any item as the logical first. Class CIRCULAR offers for that purpose the procedure set_start which designates the current cursor position as the first in the circular chain. Subsequent calls to start will move the cursor to this position; calls to finish will move the cursor to the cyclically preceding position. With most implementations, there will then be two notions of first position: the logical first, which clients may freely choose through calls to set_start; and the physical first, which results from the implementation. In a representation using an array with indices from 1 to capacity, for example, the physical first is position 1, and the logical first may be any index in the permitted range. In a linked representation, there will be a cell first element corresponding to the physical first, but the logical first is any cell in the chain.
-			<line_break/>  In such cases the circular chain classes have features called
+			<line_break/>  In such cases the circular chain classes have features called 
 			<code>
 				<feature_name>standard_first</feature_name>
-			</code>,
+			</code>, 
 			<code>
 				<feature_name>standard_last</feature_name>
-			</code>,
+			</code>, 
 			<code>
 				<feature_name>standard_start</feature_name>
 			</code> and so on, which are not exported (so that you will not see them in the flat-short forms) but serve to implement visible features such as first, last and forth. For example a possible implementation of forth for circular chains is
@@ -342,7 +342,7 @@ not_before_unless_empty<symbol>:</symbol> <feature_name>before</feature_name> <k
 not_after_unless_empty<symbol>:</symbol> <feature_name>after</feature_name> <keyword>implies</keyword> <feature_name>is_empty</feature_name>
 not_off_unless_empty<symbol>:</symbol> off <keyword>implies</keyword> <feature_name>is_empty</feature_name>
 		</code_block>
-		<paragraph>would not work if
+		<paragraph>would not work if 
 			<code>
 				<local_variable>lin</local_variable>
 			</code> is a non-empty circular structure: off would never become true, so that the loop would forever cycle over the structure?s items. The same would apply to a loop using finish and back instead of start and forth. This behavior is the natural result of the semantics defined for off , forth and back for circular structures. But it prevents us from using these features to perform a single traversal which will visit every item once.
@@ -412,11 +412,11 @@ not_off_unless_empty<symbol>:</symbol> off <keyword>implies</keyword> <feature_n
    <feature_name>lin</feature_name>.<feature_name>forth</feature_name>
 <keyword>end</keyword> 
 		</code_block>
-		<paragraph>will have as its run-time value (if not void) a reference to such an object, which is really a list header. The actual list content is given by the LINKABLE instances, each of which contains a value of type
+		<paragraph>will have as its run-time value (if not void) a reference to such an object, which is really a list header. The actual list content is given by the LINKABLE instances, each of which contains a value of type 
 			<code>
 				<class_name>SOME_TYPE</class_name>
 			</code> and a reference to the next item, called right.
-			<line_break/> Clearly, a header of type LINKED_LIST
+			<line_break/> Clearly, a header of type LINKED_LIST 
 			<code>
 				<symbol>[</symbol>
 			</code>
@@ -431,7 +431,7 @@ not_off_unless_empty<symbol>:</symbol> off <keyword>implies</keyword> <feature_n
 				<class_name>SOME_TYPE</class_name>
 			</code>
 			<code>
-				<class_name>SOME_TYPE</class_name>
+				<symbol>]</symbol>
 			</code>.
 			<line_break/> Features such as active and first are used only for the implementation; they are not exported, and so you will not find them in the flat-short specifications, although the figures show them to illustrate the representation technique.
 			<line_break/>  A similar implementation is used for two-way-linked structures such as two-way lists and two-way circular chains.
@@ -446,7 +446,7 @@ not_off_unless_empty<symbol>:</symbol> off <keyword>implies</keyword> <feature_n
 		<paragraph> The classes describing list cells are descendants of a deferred class called CELL, whose features are:</paragraph>
 		<list ordered="false">
 			<item>item, the contents of the cell.</item>
-			<item>put
+			<item>put 
 				<code>
 					<symbol>(</symbol>
 					<local_variable>v</local_variable>
@@ -492,13 +492,13 @@ not_off_unless_empty<symbol>:</symbol> off <keyword>implies</keyword> <feature_n
 		<warning>
 			<bold>Caution</bold>: As a consequence, you should not use one-way linked structures if you need to execute more than occasional back operations (and other operations requiring access to previous items, such as remove_left).
 		</warning>
-		<paragraph>Two-way linked structures, such as those described by TWO_WAY_LIST and TWO_WAY_CIRCULAR, treat the two directions symmetrically, so that back will be just as efficient as forth. Hence the following important advice: If you need to traverse a linked structure both ways, not just left to right, use the
+		<paragraph>Two-way linked structures, such as those described by TWO_WAY_LIST and TWO_WAY_CIRCULAR, treat the two directions symmetrically, so that back will be just as efficient as forth. Hence the following important advice: If you need to traverse a linked structure both ways, not just left to right, use the 
 			<code>
 				<class_name>TWO_WAY_</class_name>
-			</code> classes, not the
+			</code> classes, not the 
 			<code>
 				<class_name>LINKED_</class_name>
-			</code> versions. The
+			</code> versions. The 
 			<code>
 				<class_name>TWO_WAY_</class_name>
 			</code> structures will take up more space, since they use BI_LINKABLE rather than LINKABLE cells, but for most applications this space penalty is justified by the considerable gains in time that will result if right-to-left operations are frequently needed.
@@ -518,7 +518,7 @@ not_off_unless_empty<symbol>:</symbol> off <keyword>implies</keyword> <feature_n
 		<warning>
 			<bold>Caution</bold>: The situation of these features in ARRAYED_LIST is similar to the situation of back in classes describing one-way linked structures: it is convenient to include them because they may be needed once in a while and an implementation exists; but using them more than occasionally may result in serious inefficiencies. If you do need to perform arbitrary insertions and removal, use linked structures, not arrayed ones.
 		</warning>
-		<paragraph>Arrayed structures, however, use up less space than linked representations. So they are appropriate for chains on which, except possibly for insertions at the end, few insertion and removal operations or none at all are expected after creation. FIXED_LIST offers few advantages over ARRAYED_LIST. FIXED_LIST may be useful, however, for cases in which the fixed number of items is part of the specification, and any attempt to add more items must be treated as an error. For circular chains only one variant is available, ARRAYED_CIRCULAR, although writing a
+		<paragraph>Arrayed structures, however, use up less space than linked representations. So they are appropriate for chains on which, except possibly for insertions at the end, few insertion and removal operations or none at all are expected after creation. FIXED_LIST offers few advantages over ARRAYED_LIST. FIXED_LIST may be useful, however, for cases in which the fixed number of items is part of the specification, and any attempt to add more items must be treated as an error. For circular chains only one variant is available, ARRAYED_CIRCULAR, although writing a 
 			<code>
 				<class_name>FIXED_</class_name>
 			</code> version would be a simple exercise.

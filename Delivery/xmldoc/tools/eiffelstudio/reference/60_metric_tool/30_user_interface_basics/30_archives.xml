@@ -37,7 +37,7 @@
 				<border>0</border>
 			</image>
 		</paragraph>
-		<paragraph>Which allows archive creation update and comparison. for more details see section:
+		<paragraph>Which allows archive creation update and comparison. for more details see section: 
 			<link>
 				<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/30_handling_archives/00_introduction.xml</url>
 				<label>handling archives</label>

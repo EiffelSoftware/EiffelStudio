@@ -30,8 +30,8 @@
 			<size>4</size>Creation (common to 
 			<content>
 				<code>
-					<class_name>TIME</class_name>
-				</code> and to 
+					<class_name>TIME, </class_name>
+				</code>
 				<code>
 					<class_name>TIME_DURATION</class_name>
 				</code>)

@@ -7,7 +7,7 @@
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>The new feature dialog window lets you create simple Eiffel features using the coding standards described in
+	<paragraph>The new feature dialog window lets you create simple Eiffel features using the coding standards described in 
 		<link>
 			<url>http://www.eiffel.com/doc/oosc/</url>
 			<label>Object-Oriented Software Construction, Second Edition</label>
@@ -21,7 +21,7 @@
 			<size>2</size>Use it when...
 		</heading>
 		<list ordered="false">
-			<item>You want to be introduced to the style rules for Eiffel code as described in
+			<item>You want to be introduced to the style rules for Eiffel code as described in 
 				<link>
 					<url>http://www.eiffel.com/doc/oosc/</url>
 					<label>Object-Oriented Software Construction, Second Edition</label>

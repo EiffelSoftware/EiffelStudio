@@ -15,7 +15,7 @@
 			</item>
 			<item>
 				<paragraph>The editor can complete syntactic structures or part of them. The auto-complete is triggered when "Enter" or "Space" keys are pressed after a reserved word included in the following list:</paragraph>
-				<paragraph>The way these key words are completed is fully
+				<paragraph>The way these key words are completed is fully 
 					<link>
 						<url>../../85_preferences/20_preferences_reference/20_tools/30_editor/30_automatic_completion_preferences/20_syntax_autocomplete/index.xml</url>
 						<label>customizable</label>

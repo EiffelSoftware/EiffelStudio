@@ -6,7 +6,7 @@
 		<heading>
 			<size>2</size>Introduction
 		</heading>
-		<paragraph>Before making C++ calls in EiffelStudio, you may want to learn the basics of making
+		<paragraph>Before making C++ calls in EiffelStudio, you may want to learn the basics of making 
 			<link>
 				<url>10_c_externals.xml</url>
 				<label>C calls</label>
@@ -23,11 +23,11 @@
 			<item>You can apply to these objects all the corresponding operations from the C++ class: executing functions ("methods"), accessing data members, executing destructors.</item>
 			<item>You can use the Legacy++ tool to produce an Eiffel "wrapper class" encapsulating all the features of a C++ class, so that the result will look to the rest of the Eiffel software as if it had been written in Eiffel.</item>
 		</list>
-		<paragraph>The discussion concentrates on using C++ software from Eiffel. In the other direction, you can use the Cecil library (C-EiffelCall-In Library) described in chapter 24 of
+		<paragraph>The discussion concentrates on using C++ software from Eiffel. In the other direction, you can use the Cecil library (C-EiffelCall-In Library) described in chapter 24 of 
 			<link>
 				<url>http://vig.pearsoned.com/store/product/1,3498,store-3841_isbn-0132479257,00.xml</url>
 				<label/>
-			</link> with important complements in the
+			</link> with important complements in the 
 			<link>
 				<url>/technologies/cecil/index.xml</url>
 				<label>Cecil manual</label>
@@ -36,11 +36,11 @@
 		<heading>
 			<size>2</size>Syntax specification
 		</heading>
-		<paragraph>In the following specification, the syntax for
-			<span>External</span> and
-			<span>External_name</span> is retained unchanged from
-			<italic>Eiffel: The Language</italic>, where
-			<span>Language_name</span> is defined simply as
+		<paragraph>In the following specification, the syntax for 
+			<span>External</span> and 
+			<span>External_name</span> is retained unchanged from 
+			<italic>Eiffel: The Language</italic>, where 
+			<span>Language_name</span> is defined simply as 
 			<span>Manifest_string</span>; the rest covers the additional facilities.
 			<code_block>
     External == external Language_name [External_name]
@@ -105,22 +105,22 @@
 </code_block>
 		</paragraph>
 		<code> </code>
-		<paragraph>As with the C extensions of the previous appendix, the syntax description conventions are those of
-			<italic>Eiffel: The Language</italic>.
-			<span>==</span> means "is defined as". The vertical bar
-			<span>|</span> separates alternative choices, such as the three possibilities for Special_feature. The brackets
-			<span>[...]</span> enclose optional components; forexample a
-			<span>Language_name</span> is made of required quotes, a required Basic_language_name and three further components, any or all of which may be absent. The notation
-			<span>{Element Separator ...}</span> means: 0 or more occurrences ("specimens") of
-			<span>Element</span>separated, if more than one, by
+		<paragraph>As with the C extensions of the previous appendix, the syntax description conventions are those of 
+			<italic>Eiffel: The Language</italic>. 
+			<span>==</span> means "is defined as". The vertical bar 
+			<span>|</span> separates alternative choices, such as the three possibilities for Special_feature. The brackets 
+			<span>[...]</span> enclose optional components; forexample a 
+			<span>Language_name</span> is made of required quotes, a required Basic_language_name and three further components, any or all of which may be absent. The notation 
+			<span>{Element Separator ...}</span> means: 0 or more occurrences ("specimens") of 
+			<span>Element</span>separated, if more than one, by 
 			<span>Separator</span>.
 		</paragraph>
-		<paragraph>Several of the symbols of the syntax notation, such as the brackets or the vertical bar, also appear in the language; to avoid any confusion they are given in double quotes. For example thespecification for
-			<span>Include_files</span> begins with
-			<span>"|"</span> to indicate that an
-			<span>Include_files</span> part starts with a vertical bar. Single quotes may be used instead of double quotes when one of the quoted characters is itself a double quote; for example
-			<span>'%"'</span> appearing in the production for
-			<span>User_file_name</span> denotes the percent character followed by the double quote character. Special words such as
+		<paragraph>Several of the symbols of the syntax notation, such as the brackets or the vertical bar, also appear in the language; to avoid any confusion they are given in double quotes. For example thespecification for 
+			<span>Include_files</span> begins with 
+			<span>"|"</span> to indicate that an 
+			<span>Include_files</span> part starts with a vertical bar. Single quotes may be used instead of double quotes when one of the quoted characters is itself a double quote; for example 
+			<span>'%"'</span> appearing in the production for 
+			<span>User_file_name</span> denotes the percent character followed by the double quote character. Special words such as 
 			<bold>static</bold> in bold italics stand for themselves, unquoted.
 		</paragraph>
 		<heading>
@@ -129,29 +129,29 @@
 		<heading>
 			<size>3</size>Processing C++ features
 		</heading>
-		<paragraph>A
+		<paragraph>A 
 			<span>Special_C++_feature</span>, if present, indicates one of the following, all illustrated by examples in the next sections:
 		</paragraph>
 		<list ordered="false">
 			<item>If the special feature's declaration simply starts with a C++ class name, followed by the associated file name, it indicates that the Eiffel feature will call a C++ member function (also known as a "method") from that class. The name of the member function is by default the same as the name of the Eiffel feature; as usual, you can specify a different name through the alias clause of the external declaration.</item>
-			<item>If the declaration starts with
+			<item>If the declaration starts with 
 				<bold>static</bold>, it indicates a call to a C++ static function.
 			</item>
-			<item>If the declaration starts with
+			<item>If the declaration starts with 
 				<bold>new</bold>, it indicates a call to one of the constructors in the C++ class, which will create a new instance of that class and apply to it the corresponding constructor function.
 			</item>
-			<item>If the declaration starts with
-				<bold>delete</bold>, it indicates a call to a destructor from the C++ class. In this case the Eiffel class may inherit
+			<item>If the declaration starts with 
+				<bold>delete</bold>, it indicates a call to a destructor from the C++ class. In this case the Eiffel class may inherit 
 				<link>
 					<url>/libraries/base/reference/kernel/memory.xml</url>
 				</link> and redefine the dispose procedure to execute the destructor operations whenever the Eiffel objects are garbage-collected.
 			</item>
-			<item>If the declaration starts with
+			<item>If the declaration starts with 
 				<bold>data_member</bold>, it indicates access to a data member(attribute in Eiffel terminology) from the C++ class.
 			</item>
 		</list>
-		<paragraph>The rest of the possible components are the same as in the C interface:
-			<span>Signature</span> to specify types for arguments and results; possible
+		<paragraph>The rest of the possible components are the same as in the C interface: 
+			<span>Signature</span> to specify types for arguments and results; possible 
 			<span>Include</span> file.
 		</paragraph>
 		<heading>
@@ -177,8 +177,8 @@
 		cpp_add (object_ptr, new_int)
 	end
 </code_block>
-		<paragraph>where
-			<italic>object_ptr</italic> is a secret attribute of type
+		<paragraph>where 
+			<italic>object_ptr</italic> is a secret attribute of type 
 			<link>
 				<url>/libraries/base/reference/kernel/pointer.xml</url>
 			</link>, initialized by the creation procedures of the class. To the Eiffel developer, add looks like a normal object-oriented feature, which takes only the expected argument. Further examples appear below. This technique only works of course when the C++ object is implicit in the context of the Eiffel class.
@@ -196,7 +196,7 @@
 		<heading>
 			<size>3</size>Calling Legacy++
 		</heading>
-		<paragraph>Legacy++ is called with an argument denoting a
+		<paragraph>Legacy++ is called with an argument denoting a 
 			<italic>.h</italic> file that must contain C++ code: one or more classes and structure declarations. It will translate these declarations into Eiffel wrapper classes. Legacy++ is only available on Windows. It is located in the $ISE_EIFFEL\bench\spec\windows\bin directory, under the name h2e.exe. By default the installation program creates an entry for it in the Start menu.
 		</paragraph>
 		<paragraph>The following options are available:</paragraph>
@@ -209,12 +209,12 @@
 			</item>
 			<item>
 				<bold>-p</bold>
-				<italic>directories</italic>: use
+				<italic>directories</italic>: use 
 				<italic>directories</italic> as includepath.
 			</item>
 			<item>
 				<bold>-c</bold>
-				<italic>compiler</italic>: use
+				<italic>compiler</italic>: use 
 				<italic>compiler</italic> as the C++ compiler.
 			</item>
 			<item>
@@ -229,13 +229,13 @@
 		<paragraph>Legacy++ will generate Eiffel features for member functions(static or not).</paragraph>
 		<paragraph>It will also handle any constructors and destructors given in the C++ code, yielding the corresponding Eiffel creation procedures. If there is no explicit constructor, it will produce a creation procedure with no arguments and an empty body.</paragraph>
 		<paragraph>For any non-static member function or destructor, Legacy++ will generate a secret feature with an extra argument representing the object, as explained in the preceding section in this page. It will also produce a public feature with the same number of arguments as the C++ function, relying on a call to the secret feature, as illustrated for add and cpp_add above.</paragraph>
-		<paragraph>The char* type is translated into
+		<paragraph>The char* type is translated into 
 			<link>
 				<url>/libraries/base/reference/kernel/pointer.xml</url>
-			</link>. Pointer types, as well as reference types corresponding to classes and types that Legacy++ has processed, will be translated into
+			</link>. Pointer types, as well as reference types corresponding to classes and types that Legacy++ has processed, will be translated into 
 			<link>
 				<url>/libraries/base/reference/kernel/pointer.xml</url>
-			</link>. Other types will yield the type
+			</link>. Other types will yield the type 
 			<code>
 				<class_name>UNRESOLVED_TYPE</class_name>
 			</code>.
@@ -243,7 +243,7 @@
 		<heading>
 			<size>3</size>Legacy++ limitations
 		</heading>
-		<paragraph>It is up to you to supply Eiffel equivalents of all the needed types. If Legacy++ encounters the name of a C++ class or type that is does not know -- i.e. it is neither a predefined type nor a previously translated class -- it will use the Eiffel type name
+		<paragraph>It is up to you to supply Eiffel equivalents of all the needed types. If Legacy++ encounters the name of a C++ class or type that is does not know -- i.e. it is neither a predefined type nor a previously translated class -- it will use the Eiffel type name 
 			<code>
 				<class_name>UNRESOLVED_TYPE</class_name>
 			</code>. If you do not change that type in the generated class, the Eiffel compiler will produce an error (unknown class) at degree 5.

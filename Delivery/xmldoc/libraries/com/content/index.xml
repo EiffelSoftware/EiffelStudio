@@ -17,7 +17,7 @@
 					<link>
 						<url>../reference/interfaces/ecom_interface.html</url>
 						<label>ECOM_INTERFACE</label>
-					</link>,
+					</link>, 
 					<link>
 						<url>../reference/interfaces/ecom_queriable.html</url>
 						<label>ECOM_QUERIABLE</label>
@@ -40,7 +40,8 @@
 					</link>         cluster provides access to helper classes.
 				</item>
 			</list>
-			<seealso>See Also:
+			<seealso>
+				<bold>See Also</bold>
 				<line_break/>
 				<link>
 					<url>/technologies/com/index.html</url>

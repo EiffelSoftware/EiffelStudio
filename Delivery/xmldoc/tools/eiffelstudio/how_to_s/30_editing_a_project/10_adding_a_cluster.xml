@@ -18,7 +18,7 @@
 			<item>Click
 				<image>
 					<url>/images/eiffelstudio/icons/icon_new_cluster_color.gif</url>
-				</image> in the
+				</image> in the 
 				<link>
 					<url>../../reference/05_general_interface_description/30_main_toolbars.xml</url>
 					<label>standard toolbar</label>
@@ -27,25 +27,25 @@
 			<item>Click
 				<image>
 					<url>/images/eiffelstudio/icons/icon_new_cluster_small_color.gif</url>
-				</image> in the
+				</image> in the 
 				<link>
 					<url>/tools/eiffelstudio/reference/10_browsing_tools/20_cluster_tool/00_introduction.xml</url>
 					<label>Cluster tool</label>
 				</link>.
 			</item>
-			<item>Select
-				<bold>New cluster</bold> in the
+			<item>Select 
+				<bold>New cluster</bold> in the 
 				<bold>Tools</bold> menu.
 			</item>
 		</list>Using this dialog, you can either create a subcluster of an existing cluster or a top-level cluster.
 		<paragraph>If you decide to create a top-level cluster, you should give it a name and a path (if the selected path does not exist, it will be created). You can also choose its basic properties, such as whether it should be a library cluster and/or a recursive one (being a library cluster implies being recursive).</paragraph>
 		<paragraph>If you want to create a subcluster, give it a name and select its parent in the list of available clusters (read-only clusters are not displayed). Giving it a path is not required. If you do not set a path for a new subcluster, it will be located by default in a subdirectory of its parent cluster, named after the subcluster name. This is the recommended way of creating a subcluster (since its path in the Ace file will be automatically relative to the parent), but it is not compulsory.</paragraph>
-		<paragraph>To import an existing cluster, you can also go to the
-			<bold>Clusters</bold> tab in the
+		<paragraph>To import an existing cluster, you can also go to the 
+			<bold>Clusters</bold> tab in the 
 			<link>
 				<url>/tools/eiffelstudio/reference/25_project_settings/30_clusters.xml</url>
 				<label>Project Settings dialog</label>
-			</link> and click
+			</link> and click 
 			<bold>Add</bold>. Although this solution may be slightly more tedious, it gives access to more options.
 		</paragraph>
 		<seealso>

@@ -10,11 +10,11 @@
 		<table>
 			<row>
 				<cell>
-					<paragraph>The Externals property page is used to add any project
+					<paragraph>The Externals property page is used to add any project 
 						<link>
 							<url>#include_paths</url>
 							<label> include  paths</label>
-						</link>and any external
+						</link>and any external 
 						<link>
 							<url>#object_files</url>
 							<label> object files</label>
@@ -54,7 +54,7 @@
 					<paragraph>
 						<bold>Adding an Object File</bold>
 					</paragraph>
-					<paragraph>Adding an object file works in the same way in adding an
+					<paragraph>Adding an object file works in the same way in adding an 
 						<link>
 							<url>#include_paths</url>
 							<label>  Include Path</label>

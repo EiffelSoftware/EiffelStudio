@@ -23,7 +23,7 @@
 		</paragraph>
 		<paragraph>As you can see, it is divided in several parts: a top section, a left panel, a right panel and a status bar.</paragraph>
 		<paragraph>The top part is rather not surprising. It first contains a menu bar, which adapts itself to the context of the current project. It also contains two toolbars (the main toolbar and the project toolbar). Between the toolbars is located the main address bar.</paragraph>
-		<paragraph>The left panel contains various
+		<paragraph>The left panel contains various 
 			<italic>tools</italic> that help the navigation in the system.
 		</paragraph>
 		<paragraph>The right panel contains two major tools: the editor and the context tool.</paragraph>
@@ -111,7 +111,7 @@
 		<note>
 			<bold>Note</bold>: No more than three tools can be displayed at the same time in the left panel. Trying to add more will automatically minimize one of the displayed tools, in order to make room for the new tool.
 		</note>
-		<paragraph>Tools that can be closed have a corresponding entry in the
+		<paragraph>Tools that can be closed have a corresponding entry in the 
 			<bold>View/Explorer Bar</bold> menu. They also have a corresponding button in the main toolbar.
 		</paragraph>
 		<paragraph>The only tools that cannot be closed are the editor, and when in debug mode the debug tools.</paragraph>
@@ -124,19 +124,19 @@
 		</heading>
 		<paragraph>The context tool, located in the right panel, is a major part of EiffelStudio. It itself contains several tabs that each correspond to some powerful functionality.</paragraph>
 		<list ordered="false">
-			<item>The
+			<item>The 
 				<bold>Output</bold> tab is where general information and error messages are displayed
 			</item>
-			<item>The
+			<item>The 
 				<bold>Diagram</bold> tab uses the BON notation to analyze and design a project
 			</item>
-			<item>The
+			<item>The 
 				<bold>Class</bold> tab gives advanced information concerning a class
 			</item>
-			<item>The
+			<item>The 
 				<bold>Feature</bold> tab gives advanced information concerning a feature
 			</item>
-			<item>The
+			<item>The 
 				<bold>Metrics</bold> tab provides quantitative information concerning a system or some of its components
 			</item>
 		</list>

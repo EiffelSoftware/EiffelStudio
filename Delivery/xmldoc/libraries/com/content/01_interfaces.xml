@@ -22,7 +22,7 @@
 		<heading>
 			<size>2</size>ECOM_QUERIABLE
 		</heading>
-		<paragraph>Different languages handle the type    coercion in dissimilar ways. C    has a type cast; C++ introduces several type casting mechanisms; Eiffel    has an assignment attempt, etc. Every    COM interface exposes
+		<paragraph>Different languages handle the type    coercion in dissimilar ways. C    has a type cast; C++ introduces several type casting mechanisms; Eiffel    has an assignment attempt, etc. Every    COM interface exposes 
 			<code>
 				<feature_name>QueryInterface</feature_name>
 			</code>    function that allows a client to query the COM component for the    interfaces it exposes and receive a pointer to another interface.    Querying a component for an interface is similar to using an    assignment attempt in Eiffel. The    Eiffel implementation of the assignment attempt relies on the runtime    data. Since we could not change the Eiffel runtime and the    implementation of the assignment attempt, we have created a library    class 

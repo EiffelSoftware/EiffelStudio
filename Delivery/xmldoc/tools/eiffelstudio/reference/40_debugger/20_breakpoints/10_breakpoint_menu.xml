@@ -1,7 +1,7 @@
 <document title="Breakpoint menu" output="studio">
 	<meta_data/>
 	<paragraph>
-		<paragraph>In all flat views (
+		<paragraph>In all flat views ( 
 			<link>
 				<url>../../80_formatters/20_feature_formatters/10_flat_format.xml</url>
 				<label>feature flat view</label>
@@ -40,7 +40,7 @@
 				<url>../../../../../images/eiffelstudio/debugger/breakpoint_context_menu.png</url>
 			</image>
 		</paragraph>
-		<paragraph>Clicking one of the three first entries of the context menu changes the state of the breakpoint that was right-clicked. The last entry (
+		<paragraph>Clicking one of the three first entries of the context menu changes the state of the breakpoint that was right-clicked. The last entry ( 
 			<bold>Run to breakpoint</bold>) launches the debugged application so that it will stop as soon as the selected breakpoint is encountered, as if the breakpoint had been enabled.
 			<line_break/>
 		</paragraph>

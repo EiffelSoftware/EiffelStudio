@@ -16,12 +16,12 @@
 				</link>, and click
 				<image>
 					<url>/images/eiffelstudio/icons/icon_delete_color.gif</url>
-				</image> in the
+				</image> in the 
 				<link>
 					<url>../../reference/05_general_interface_description/30_main_toolbars.xml</url>
 					<label>standard toolbar</label>
-				</link> or select
-				<bold>Remove current item</bold> in the
+				</link> or select 
+				<bold>Remove current item</bold> in the 
 				<bold>Tools</bold> menu.
 			</item>
 			<item>
@@ -31,11 +31,11 @@
 				</link> of this component on
 				<image>
 					<url>/images/eiffelstudio/icons/icon_delete_color.gif</url>
-				</image> in the
+				</image> in the 
 				<link>
 					<url>../../reference/05_general_interface_description/30_main_toolbars.xml</url>
 					<label>standard toolbar</label>
-				</link> or in the
+				</link> or in the 
 				<link>
 					<url>../../reference/50_diagram_tool/00_introduction.xml</url>
 					<label>Diagram tool</label>
@@ -50,7 +50,7 @@
 			<bold>Caution</bold>: Removing a class from the system implies the deletion of the corresponding file on disk.
 		</warning>
 		<warning>
-			<bold>Caution</bold>: Picking a feature and dropping it on the delete icon, or calling
+			<bold>Caution</bold>: Picking a feature and dropping it on the delete icon, or calling 
 			<bold>Remove current item</bold> as the editor is centered on a feature, will not remove the feature but the class to which it belongs.
 		</warning>
 		<seealso>

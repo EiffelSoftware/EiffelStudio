@@ -15,10 +15,10 @@
 						<size>2</size>Page content
 					</heading>
 					<paragraph>To navigate to the desired page, select the page name which is displayed to the  left hand side of the window.</paragraph>
-					<paragraph>To cancel the wizard at any point, select the
+					<paragraph>To cancel the wizard at any point, select the 
 						<bold>Cancel</bold> button.
 					</paragraph>
-					<paragraph>To complete the wizard, using the current settings, select the
+					<paragraph>To complete the wizard, using the current settings, select the 
 						<bold>Finish</bold> button.
 						<heading>
 							<size>2</size>Navigation
@@ -27,7 +27,7 @@
 						<paragraph>
 							<bold>Overview</bold>
 						</paragraph>
-						<paragraph>This page displays the current settings that will be used when
+						<paragraph>This page displays the current settings that will be used when 
 							<bold>Finish</bold> is pressed.
 							<paragraph>
 								<bold>System Settings</bold>

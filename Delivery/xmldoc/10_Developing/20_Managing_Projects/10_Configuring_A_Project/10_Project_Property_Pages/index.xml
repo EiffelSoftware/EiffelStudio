@@ -14,7 +14,7 @@
 					<heading>
 						<size>2</size>Understanding The Property Page Dialog
 					</heading>
-					<paragraph>  The property page dialog is a common dialog to Visual Studio, it allows the  manipulate of your projects setting.To discover whateach one of the  property pages does see the below section
+					<paragraph>  The property page dialog is a common dialog to Visual Studio, it allows the  manipulate of your projects setting.To discover whateach one of the  property pages does see the below section 
 						<link>
 							<url>#property_pages</url>
 							<label>The Property  Pages</label>
@@ -33,20 +33,20 @@
 						</image>
 					</paragraph>
 					<paragraph>
-						<line_break/>  When viewing in multiple configurations some previously entered values (in a  single configuration) may not be display, or displayed correctly. This is  normal as the property page cannot find a common value for each one of the  configurations and so leaves it blank or replaces the value with a value that  represents different values. And example of this would be to have two projects  in a solution.
-						<bold>ProjectA</bold> and
-						<bold>ProjectB</bold> . The  system names (
+						<line_break/>  When viewing in multiple configurations some previously entered values (in a  single configuration) may not be display, or displayed correctly. This is  normal as the property page cannot find a common value for each one of the  configurations and so leaves it blank or replaces the value with a value that  represents different values. And example of this would be to have two projects  in a solution. 
+						<bold>ProjectA</bold> and 
+						<bold>ProjectB</bold> . The  system names ( 
 						<link>
 							<url>general_ppg.htm</url>
 							<label>General Property Page</label>
 						</link>) for these  projects are ProjectA and ProjectB respectively. When each one of the projects  is selected individually the general property page will display the respective  system name. However if both projects are selected when viewing their  properties the system name will not display anything as the two system names  are different. If we were then to change this value, then both ProjectA's and  ProjectB's system name will be changed to new value.
 					</paragraph>
 					<warning>
-						<bold>Recommended</bold> : It is recommended that when  making additions to your project(s) that the 'All Configurations' be selected  in the configuration drop down list box on the property page dialog. This is so  you can ensure that when adding a cluster, assembly reference, external or  setting any other basic property, all configurations will have these changes.  If these settings where to be made in a single configurations, then you will  have to switch to each one of the other configurations and reapply the settings  for each. Each one of the configurations modes (such as debug, release etc.)  should be reserved for use in setting configuration specific properties. An  example of a configuration specific property would be
+						<bold>Recommended</bold> : It is recommended that when  making additions to your project(s) that the 'All Configurations' be selected  in the configuration drop down list box on the property page dialog. This is so  you can ensure that when adding a cluster, assembly reference, external or  setting any other basic property, all configurations will have these changes.  If these settings where to be made in a single configurations, then you will  have to switch to each one of the other configurations and reapply the settings  for each. Each one of the configurations modes (such as debug, release etc.)  should be reserved for use in setting configuration specific properties. An  example of a configuration specific property would be 
 						<link>
 							<url>debugging_ppg.htm#generate_debug_info</url>
 							<label>Generate  Debug Info</label>
-						</link> in the
+						</link> in the 
 						<link>
 							<url>debugging_ppg.htm</url>
 							<label>Debugging Property Page</label>
@@ -56,8 +56,8 @@
 					<heading>
 						<size>2</size>Saving Your Configuration
 					</heading>
-					<paragraph>To save all of the changes made in the property pages click on the
-						<bold>Apply</bold>  or
+					<paragraph>To save all of the changes made in the property pages click on the 
+						<bold>Apply</bold>  or 
 						<bold>OK </bold>button located at the bottom right of the property page  dialog.
 					</paragraph>
 					<warning>
@@ -67,7 +67,7 @@
 					<heading>
 						<size>2</size>Switch Configurations and Projects
 					</heading>
-					<paragraph>The property page dialog is a non-modal window so you are able to change the  project that is being configured to another project, simply click clicking on  the desired project node in the
+					<paragraph>The property page dialog is a non-modal window so you are able to change the  project that is being configured to another project, simply click clicking on  the desired project node in the 
 						<link>
 							<url>/10_Developing\10_Getting_Started\10_Using_ENViSioN\20_Solution_Explorer\index.htm</url>
 							<label>  Solution Explorer</label>

@@ -90,10 +90,10 @@
 			<size>2</size>Input and output features
 		</heading>
 		<paragraph>Some of the features of ANY cover common input and output needs.
-			<line_break/>  Feature io, of type STD_FILES, gives access to standard input and output facilities. For example, io
+			<line_break/>  Feature io, of type STD_FILES, gives access to standard input and output facilities. For example, io 
 			<code>
 				<symbol>.</symbol>
-			</code>input is the standard input file and io.new_line will print a line feed on the standard output. Feature io is declared as a once function which, when first called, returns the value of an instance of STD_FILES that provides access to the standard input, the standard output and the error output. As a result, io is never void, so that operations such as io
+			</code>input is the standard input file and io.new_line will print a line feed on the standard output. Feature io is declared as a once function which, when first called, returns the value of an instance of STD_FILES that provides access to the standard input, the standard output and the error output. As a result, io is never void, so that operations such as io 
 			<code>
 				<symbol>.</symbol>
 			</code>new_line are always possible.
@@ -131,7 +131,7 @@
 			<code>
 				<symbol>.</symbol>
 			</code>out is (recursively) the concatenation of the result of applying out to the successive fields of the attached object, each labeled by the name of the corresponding attribute. You may redefine out in any class to specify any suitable format for displaying instances of the class. To obtain the default representation regardless of any redefinition of out, use tagged_out, declared as a frozen synonym of the original out.
-			<line_break/>  The call print
+			<line_break/>  The call print 
 			<code>
 				<symbol>(</symbol>
 			</code>
@@ -198,7 +198,7 @@
 			</code>
 			<code>
 				<symbol>.</symbol>
-			</code>is_equal
+			</code>is_equal 
 			<code>
 				<symbol>(</symbol>
 			</code>
@@ -286,7 +286,7 @@
 			</code>
 			<code>
 				<symbol>"</symbol>
-			</code>@
+			</code>@ 
 			<code>
 				<symbol>"</symbol>
 			</code>, so that you may also write the first assignment above more concisely as
@@ -300,10 +300,10 @@
 		</code>
 		<code>
 			<symbol>"</symbol>
-		</code>@
+		</code>@ 
 		<code>
 			<symbol>" </symbol>
-		</code>and put have preconditions requiring the index (
+		</code>and put have preconditions requiring the index ( 
 		<code>
 			<local_variable>i</local_variable>
 		</code>in the above calls) to be within the bounds of the array. This means that you can detect bounds violations (which correspond to bugs in the client software) by using a version of class ARRAY compiled with precondition checking on. The bounds of an array may be changed dynamically through procedure resize. Previously entered elements are retained. Rather than an explicit resize, you may use calls to procedure force which has the same signature as put but no precondition; if the index is not within the current bounds force will perform a resize as necessary.  
@@ -688,7 +688,7 @@
 				</code>
 				<code>
 					<symbol>.</symbol>
-				</code>share
+				</code>share 
 				<code>
 					<symbol>(</symbol>
 				</code>
@@ -706,7 +706,7 @@
 				</code>
 				<code>
 					<symbol>:=</symbol>
-				</code>clone
+				</code>clone 
 				<code>
 					<symbol>(</symbol>
 				</code>
@@ -724,7 +724,7 @@
 				</code>
 				<code>
 					<symbol>.</symbol>
-				</code>copy
+				</code>copy 
 				<code>
 					<symbol>(</symbol>
 				</code>
@@ -776,20 +776,20 @@
 			<line_break/>
 			<line_break/>
 			<code>
-				<local_variable>my_ file</local_variable>
+				<local_variable>my_file</local_variable>
 			</code>
 			<code>
 				<symbol>.</symbol>
 			</code>read_integer
 			<line_break/>
 			<code>
-				<local_variable>new_value</local_variable>
+				<local_variable>new_value </local_variable>
 			</code>
 			<code>
 				<symbol>:=</symbol>
 			</code>
 			<code>
-				<local_variable>my_ file</local_variable>
+				<local_variable> my_file</local_variable>
 			</code>
 			<code>
 				<symbol>.</symbol>
@@ -801,23 +801,23 @@
 			<line_break/>
 			<line_break/>
 			<code>
-				<keyword>if</keyword>
+				<keyword>if </keyword>
 			</code>
 			<code>
 				<local_variable>my_ file</local_variable>
 			</code>
 			<code>
 				<symbol>.</symbol>
-			</code>exists
+			</code>exists 
 			<code>
-				<keyword>and then</keyword>
+				<keyword>and then </keyword>
 			</code>
 			<code>
 				<local_variable>my_file</local_variable>
 			</code>
 			<code>
 				<symbol>.</symbol>
-			</code>is_readable
+			</code>is_readable 
 			<code>
 				<keyword>then</keyword>
 			</code>...
@@ -868,7 +868,7 @@
 			</code>; for example a routine of 
 			<code>
 				<class_name>C</class_name>
-			</code> may contain a call of the form basic_store
+			</code> may contain a call of the form basic_store 
 			<code>
 				<symbol>(</symbol>
 			</code>
@@ -1078,7 +1078,7 @@
 		</heading>
 		<paragraph>The features of class EXCEPTIONS enable you to determine whether a certain exception is a signal - an operating system event such as may result from a child process that disappears, a window that is resized, a user that hits the Break key and many others. But they do not give you more details because the exact set of possible signals is highly platform-dependent.
 			<line_break/>  Class UNIX_SIGNALS complements EXCEP_CONST by providing codes for the signals of Unix and similar systems, such as Sigkill for the 'kill' signal and Sigbus for bus error.
-			<line_break/> Query is_defined
+			<line_break/> Query is_defined 
 			<code>
 				<symbol>(</symbol>
 			</code>
@@ -1113,7 +1113,7 @@
 		<code_block>
 	<bold>your_system</bold> arg1 arg2 arg3 </code_block>
 		<paragraph> although one may conceive of other ways of entering the command arguments, such as tabular or graphical form-filling. In any case the software must be able to access the values passed as command arguments.
-			<line_break/> A language mechanism is available for that purpose: the Root Class rule indicates that the creation procedure of the root class may have a single argument (in the Eiffel sense of argument to a routine) of type ARRAY [STRING
+			<line_break/> A language mechanism is available for that purpose: the Root Class rule indicates that the creation procedure of the root class may have a single argument (in the Eiffel sense of argument to a routine) of type ARRAY [STRING 
 			<code>
 				<symbol>]</symbol>
 			</code>. The corresponding array of strings will be initialized at the beginning of the system's execution with the values entered as arguments to that execution of the command.

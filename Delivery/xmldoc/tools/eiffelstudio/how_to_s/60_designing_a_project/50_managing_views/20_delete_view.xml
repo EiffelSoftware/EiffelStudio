@@ -10,14 +10,14 @@
 	<paragraph>
 		<paragraph/>
 		<list ordered="true">
-			<item>To delete a view, select the view you want to remove using the
+			<item>To delete a view, select the view you want to remove using the 
 				<bold>View</bold> combo box.
 				<line_break/>
 				<image>
 					<url>/images/eiffelstudio/diagram/diagram-defaultview.png</url>
 				</image>
 			</item>
-			<item>Click the
+			<item>Click the 
 				<bold>Delete current view</bold> button.
 				<image>
 					<url>/images/eiffelstudio/icons/icon_delete_view_color.gif</url>

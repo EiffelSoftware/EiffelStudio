@@ -13,12 +13,12 @@
 		</code>
 		<heading>
 			<size>2</size>DESCRIPTION
-		</heading>The
-		<bold>eif_name()</bold> function returns the name of the class corresponding to
+		</heading>The 
+		<bold>eif_name()</bold> function returns the name of the class corresponding to 
 		<italic>tid</italic>.
 		<heading>
 			<size>2</size>RETURN VALUE
-		</heading>A statically allocated C string which is the name of the class. If
+		</heading>A statically allocated C string which is the name of the class. If 
 		<italic>tid</italic> is invalid, it returns NULL.
 		<heading>
 			<size>2</size>CONFORMANCE
@@ -26,12 +26,12 @@
 		<heading>
 			<size>2</size>COMPATIBILITY
 		</heading>
-		<bold>eif_name()</bold> is equivalent to
+		<bold>eif_name()</bold> is equivalent to 
 		<bold>eif_name_by_tid()</bold>.
 		<heading>
 			<size>2</size>SEE ALSO
 		</heading>
-		<bold>eif_type</bold>(1) ,
-		<bold>eif_type_by_reference</bold>(1),
+		<bold>eif_type</bold>(1) , 
+		<bold>eif_type_by_reference</bold>(1), 
 		<bold>eif_type_id</bold>(1). Markup created by  1. 0, November 15, 1999.
 	</paragraph></document>

@@ -47,8 +47,8 @@
 				<paragraph>The procedures 
 					<italic>make_read_only</italic> and 
 					<italic>make_write_only</italic> are    creation procedures, so that it is possible in a single instruction to    create a poller and set it up for read-only or write-only, as in 
-					<bold>create</bold>
-					<italic>poller</italic>l
+					<bold>create</bold> 
+					<italic>poller</italic>l. 
 					<italic>make_read_only</italic>. For clarity, however, the above    class and the next separate calls to these procedures from the creation    of the poller, which uses 
 					<italic>make</italic> as creation procedure.
 				</paragraph>

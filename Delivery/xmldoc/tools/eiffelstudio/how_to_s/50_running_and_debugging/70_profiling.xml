@@ -16,21 +16,21 @@
 		<paragraph>To use the profiler, the first thing to do is to enable it.</paragraph>
 		<paragraph>To enable the profiler:</paragraph>
 		<list ordered="false">
-			<item>Open the
+			<item>Open the 
 				<link>
 					<url>/tools/eiffelstudio/reference/25_project_settings/20_debug.xml</url>
 					<label>System Settings</label>
 				</link> dialog.
 			</item>
-			<item>In the
-				<bold>Debug/Profile</bold> tab, check the
+			<item>In the 
+				<bold>Debug/Profile</bold> tab, check the 
 				<bold>Profiling</bold> check box.
 			</item>
-			<item>Click
-				<bold>Apply</bold> or
+			<item>Click 
+				<bold>Apply</bold> or 
 				<bold>OK</bold>.
 			</item>
-			<item>You must
+			<item>You must 
 				<link>
 					<url>../40_compiling/10_generating_executables.xml</url>
 					<label>recompile</label>
@@ -39,21 +39,21 @@
 		</list>
 		<paragraph>By default the profiler will profile the entire program. However it is possible to enable or disable the profiler on certain clusters only. To do this:</paragraph>
 		<list ordered="false">
-			<item>Open the
+			<item>Open the 
 				<link>
 					<url>/tools/eiffelstudio/reference/25_project_settings/30_clusters.xml</url>
 					<label>System Settings</label>
 				</link> dialog.
 			</item>
-			<item>In the
-				<bold>Clusters</bold> tab, check the
+			<item>In the 
+				<bold>Clusters</bold> tab, check the 
 				<bold>Profile</bold> check box in the clusters where you want the profiler to be enabled.
 			</item>
-			<item>Click
-				<bold>Apply</bold> or
+			<item>Click 
+				<bold>Apply</bold> or 
 				<bold>OK</bold>.
 			</item>
-			<item>You must
+			<item>You must 
 				<link>
 					<url>../40_compiling/10_generating_executables.xml</url>
 					<label>recompile</label>
@@ -62,19 +62,19 @@
 		</list>
 		<paragraph>It is also possible to dynamically start and stop the profiler in a program. To do this:</paragraph>
 		<list ordered="false">
-			<item>Create an object of type
+			<item>Create an object of type 
 				<link>
 					<url>/libraries/base/reference/support/profiling_setting.xml</url>
 					<label>PROFILING_SETTING</label>
 				</link>.
 			</item>
-			<item>Call `
+			<item>Call ` 
 				<link>
 					<url>/libraries/base/reference/support/profiling_setting.html#f_start_profiling</url>
 					<label/>
 				</link>' on this object to start the profiler.
 			</item>
-			<item>Call `
+			<item>Call ` 
 				<link>
 					<url>/libraries/base/reference/support/profiling_setting.html#f_stop_profiling</url>
 					<label/>
@@ -94,12 +94,12 @@
 			<code_block><keyword>local</keyword>ps: PROFILER_SETTING<comment>-- Other local variables if necessary.</comment><keyword>do</keyword>  <keyword>create</keyword> psps.start_profiling<comment>-- What needs to be profiled.</comment>ps.stop_profiling<keyword>end</keyword></code_block>
 		</paragraph>
 		<note>
-			<bold>Note</bold>: Even if the profiler should only work in certain sections of code, the
-			<bold>Profiling</bold> check box of the
+			<bold>Note</bold>: Even if the profiler should only work in certain sections of code, the 
+			<bold>Profiling</bold> check box of the 
 			<link>
 				<url>/tools/eiffelstudio/reference/25_project_settings/20_debug.xml</url>
 				<label>System Settings</label>
-			</link> dialog must be checked or the
+			</link> dialog must be checked or the 
 			<bold>profile</bold> option must be set in certain clusters.
 		</note>
 		<paragraph>Once the profiler has been enabled and the program has been recompiled, it is necessary to launch the program.</paragraph>
@@ -107,7 +107,7 @@
 			<bold>Tip</bold>: It is possible to profile debuggable(frozen/melted) executables as well as finalized ones. It is more interesting to profile finalized executables, though, since the execution speed is more representative of what will be obtained by your end users.
 		</tip>
 		<paragraph>When the program exits, a file named 'profinfo' should be generated next to it.</paragraph>
-		<paragraph>All that's left to do is launch the
+		<paragraph>All that's left to do is launch the 
 			<link>
 				<url>/tools/eiffelstudio/reference/70_wizards_and_dialogs/10_profiler_wizard/00_introduction.xml</url>
 				<label>Profiler wizard</label>

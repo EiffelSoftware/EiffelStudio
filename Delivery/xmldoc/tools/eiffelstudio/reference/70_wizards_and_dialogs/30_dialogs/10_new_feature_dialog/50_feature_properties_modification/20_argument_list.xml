@@ -1,7 +1,7 @@
 <document title="Argument list" output="studio">
 	<meta_data/>
 	<paragraph>
-		<paragraph>For functions and procedures, you can build a formal argument list. You can do this by clicking on the
+		<paragraph>For functions and procedures, you can build a formal argument list. You can do this by clicking on the 
 			<bold>New argument</bold> button as many times as you need arguments.
 		</paragraph>
 		<note>
@@ -13,10 +13,10 @@
 			</image>
 		</div>
 		<note>
-			<bold>Note</bold>: if you add arguments to a routine, It is not possible anymore to select routine type
+			<bold>Note</bold>: if you add arguments to a routine, It is not possible anymore to select routine type 
 			<bold>once</bold>.
 		</note>
-		<paragraph>For every attribute you selected, enter a name in the textbox and a type using the
+		<paragraph>For every attribute you selected, enter a name in the textbox and a type using the 
 			<link>
 				<url>80_type_selection.xml</url>
 				<label>type selection</label>

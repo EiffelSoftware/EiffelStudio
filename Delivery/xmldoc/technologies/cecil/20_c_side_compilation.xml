@@ -35,7 +35,7 @@
 		<paragraph>or, if you are on Windows using Borland:</paragraph>
 		<code_block>bcc32 -c -I$ISE_EIFFEL\studio\spec\windows\include -I&amp;lt;SOME_INCLUDE_PATH&amp;gt; -D&amp;lt;SOME_FLAGS&amp;gt; your_file.c</code_block>
 		<sample>
-			<bold>Sample</bold>: if you want to use the multithreaded facilities of Eiffel, you should define the EIFFEL MT flags by adding "-DEIF_THREADS" to the command line and follow the instructions of your C compiler and platform to find out which additional flags you may need
+			<bold>Sample</bold>: if you want to use the multithreaded facilities of Eiffel, you should define the EIFFEL MT flags by adding "-DEIF_THREADS" to the command line and follow the instructions of your C compiler and platform to find out which additional flags you may need 
 			<bold>. For example:</bold> on Solaris you need to add "-DSOLARIS_THREADS -D_REENTRANT".
 		</sample>
 		<paragraph>You can specify a Makefile in your Ace file, so that your C files will be compiled automatically after the Eiffel compilation and before the final linking. Just add at the end of your Ace file in the external clause:</paragraph>

@@ -7,15 +7,15 @@
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>Some of
+	<paragraph>Some of 
 		<link>
 			<url>../../reference/20_editor/00_introduction.xml</url>
 			<label>the editor</label>
-		</link> properties are customizable.
+		</link> properties are customizable. 
 		<link>
 			<url>../../reference/20_editor/60_autocomplete/00_introduction.xml</url>
 			<label>Automatic completion</label>
-		</link>, for instance, can be partially or totally disabled, and inserted strings can be defined by the user. Some accelerators are customizable too. For more information, please refer to the
+		</link>, for instance, can be partially or totally disabled, and inserted strings can be defined by the user. Some accelerators are customizable too. For more information, please refer to the 
 		<link>
 			<url>../../reference/85_preferences/20_preferences_reference/20_tools/30_editor/00_introduction.xml</url>
 			<label>editor preferences reference</label>

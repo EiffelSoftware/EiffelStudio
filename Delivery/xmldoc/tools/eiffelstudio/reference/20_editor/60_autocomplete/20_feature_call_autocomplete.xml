@@ -8,10 +8,10 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>EiffelStudio editor now offers the possibility to complete feature calls automatically. This means that when the user types "
+		<paragraph>EiffelStudio editor now offers the possibility to complete feature calls automatically. This means that when the user types " 
 			<italic>an_identifier.an_incomplete_feature_name</italic>" and then triggers the auto-complete, the editor will propose a list of possible feature names correct in this situation.
-			<line_break/>To be more precise, a window will pop up and display the list of features that can be called on
-			<italic>an_identifier</italic> and that match
+			<line_break/>To be more precise, a window will pop up and display the list of features that can be called on 
+			<italic>an_identifier</italic> and that match 
 			<italic>an_incomplete_feature_name</italic>. The user can accept the suggested name, choose another name (in the list or not), or simply cancel the auto-complete.
 		</paragraph>
 		<paragraph>
@@ -19,8 +19,8 @@
 				<url>/images/eiffelstudio/editor_auto_completion_window.png</url>
 			</image>
 		</paragraph>
-		<paragraph>To trigger the auto complete, press the key combination "Ctrl+Space" or click on
-			<bold>Complete word</bold> in the
+		<paragraph>To trigger the auto complete, press the key combination "Ctrl+Space" or click on 
+			<bold>Complete word</bold> in the 
 			<bold>Advanced</bold> sub-menu of the
 			<bold/>
 			<link>
@@ -37,7 +37,7 @@
 		<list ordered="false">
 			<item>If the selected feature is a query, you can call the auto-complete again right after the previous completion. There is no need to type a dot.</item>
 			<item>You can call the auto-complete without an identifier. The auto-complete window will then show the features of the current class.</item>
-			<item>The keyboard shortcut for automatic completion can be changed in the
+			<item>The keyboard shortcut for automatic completion can be changed in the 
 				<link>
 					<url>../../85_preferences/20_preferences_reference/20_tools/30_editor/20_keyboard_shortcuts_preferences.xml</url>
 					<label>editor preferences</label>
@@ -51,7 +51,7 @@
 		<list ordered="false">
 			<item>Only identifiers that were already defined when the class was compiled for the last time can be completed, except for local entity names that can always be completed.</item>
 			<item>Only compiled features will appear in the auto-complete window.</item>
-			<item>By default, features from class ANY will be ignored by the auto-complete window. This can be changed in the
+			<item>By default, features from class ANY will be ignored by the auto-complete window. This can be changed in the 
 				<link>
 					<url>../../85_preferences/20_preferences_reference/20_tools/30_editor/10_general_editor_preferences.xml</url>
 					<label>editor preferences</label>

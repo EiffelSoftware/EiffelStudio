@@ -265,7 +265,7 @@
 			</code>
 			<code>
 				<symbol>.</symbol>
-			</code>make instruction must occur before the corresponding call to put
+			</code>make instruction must occur before the corresponding call to put 
 			<code>
 				<symbol>(</symbol>
 			</code>
@@ -588,7 +588,7 @@
 				<heading>
 					<size>3</size>Starting the actual processing
 				</heading>
-				<paragraph>The call build
+				<paragraph>The call build 
 					<code>
 						<symbol>(</symbol>
 					</code>document takes care of steps 

@@ -35,37 +35,37 @@
 			<size>2</size>Running
 		</heading>
 		<paragraph>After launching the application, you will see a window displayed with a similar appearance to the one above. </paragraph>
-		<paragraph>Click on the
-			<span>BUTTON</span> "Click Me!" and a message box will appear with the text that you have entered in the
+		<paragraph>Click on the 
+			<span>BUTTON</span> "Click Me!" and a message box will appear with the text that you have entered in the 
 			<span>TEXT_FIELD</span>.
 		</paragraph>
 		<paragraph/>
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>The application shows how to use the very useful
+		<paragraph>The application shows how to use the very useful 
 			<span>MESSAGE_BOX</span> control.
 		</paragraph>
-		<paragraph>An event (
-			<span>EVENT_HANDLER)</span> is associated to a control (here to the
-			<span>BUTTON</span>). So the line '
-			<code>. ( {}. make (Current, $ ))</code>' associates a click to
-			<span>my_button</span> to the feature
-			<span>on_my_button_clicked</span>. So every time the
+		<paragraph>An event ( 
+			<span>EVENT_HANDLER)</span> is associated to a control (here to the 
+			<span>BUTTON</span>). So the line ' 
+			<code>. ( {}. make (Current, $ ))</code>' associates a click to 
+			<span>my_button</span> to the feature 
+			<span>on_my_button_clicked</span>. So every time the 
 			<span>BUTTON</span>
-			<span>my_button</span> is clicked, the feature
+			<span>my_button</span> is clicked, the feature 
 			<span>on_my_button_clicked</span> is executed.
 		</paragraph>
-		<paragraph>The feature
-			<span>my_button_clicked</span>displays a
-			<span>MESSAGE_BOX</span> (
-			<span>feature</span> {
-			<span>WINFORMS_MESSAGE_BOX</span>}.
-			<span>show</span> (
-			<italic>msg</italic>)) with the text contained in
-			<span>TEXT_FIELD</span> (
-			<italic>msg</italic> :=
-			<span>my_text_field</span>.
+		<paragraph>The feature 
+			<span>my_button_clicked</span>displays a 
+			<span>MESSAGE_BOX</span> ( 
+			<span>feature</span> { 
+			<span>WINFORMS_MESSAGE_BOX</span>}. 
+			<span>show</span> ( 
+			<italic>msg</italic>)) with the text contained in 
+			<span>TEXT_FIELD</span> ( 
+			<italic>msg</italic> := 
+			<span>my_text_field</span>. 
 			<span>text</span>).
 		</paragraph>
 		<paragraph>This sample contains the following class:</paragraph>

@@ -42,9 +42,9 @@
 					<paragraph>
 						<bold>Target CLR Version</bold>
 					</paragraph>
-					<paragraph>If both version 1.0 and 1.1 of the .NET framework are installed then this option  becomes available for use. Setting to
-						<bold>v1.0.3705</bold> willforce  the compiler totarget your project for version 1.0 of the CLR. Setting to
-						<bold>  v1.1.4322</bold> will force the compiler to target your project for  version 1.1 of the CLR. The
+					<paragraph>If both version 1.0 and 1.1 of the .NET framework are installed then this option  becomes available for use. Setting to 
+						<bold>v1.0.3705</bold> willforce  the compiler totarget your project for version 1.0 of the CLR. Setting to 
+						<bold>  v1.1.4322</bold> will force the compiler to target your project for  version 1.1 of the CLR. The 
 						<bold>Automatic </bold>option will  automatically select the a version of the CLR depending upong what version of  Visual Studio .NET your project is loaded in. Visual Studio .NET 2002 will  target version 1.0 and Visual Studio .NET 2003 will target version 1.1 of the  CLR.
 					</paragraph>
 					<paragraph>NB. All referenced assemblies that reside in  %SystemRoot%\Microsoft.NET\Framework\&lt;any version&gt; folder will be  automatically changed to the correctversion corresponding to the  targetted version of the CLR.</paragraph>
@@ -55,10 +55,10 @@
 					<paragraph>
 						<bold>Support CLR Version</bold>
 					</paragraph>
-					<paragraph>Supportting a version of the CLR creates an application configuration file for  your project. Itcontains all ofthe required information for  demoting or premoting it's referenced assemblies, at runtime, to an alternative  version. Setting to
-						<bold>v1.0.3705</bold> will ensure that the CLR will  only load version 1.0of the referenced Microsoft .NET Base Class  Libraries. Setting to
-						<bold>v1.1.4322</bold> will ensure that the CLR will  only load version 1.1of the referenced Microsoft .NET Base Class  Libraries. Setting to
-						<bold>Both</bold> will support both version of  the CLR. The
+					<paragraph>Supportting a version of the CLR creates an application configuration file for  your project. Itcontains all ofthe required information for  demoting or premoting it's referenced assemblies, at runtime, to an alternative  version. Setting to 
+						<bold>v1.0.3705</bold> will ensure that the CLR will  only load version 1.0of the referenced Microsoft .NET Base Class  Libraries. Setting to 
+						<bold>v1.1.4322</bold> will ensure that the CLR will  only load version 1.1of the referenced Microsoft .NET Base Class  Libraries. Setting to 
+						<bold>Both</bold> will support both version of  the CLR. The 
 						<bold>Automatic </bold>option will automatically select the a  version of the CLR depending upong what version of Visual Studio .NET your  project is loaded in. Visual Studio .NET 2002 will target version 1.0 and  Visual Studio .NET 2003 will target version 1.1 of the CLR.
 						<line_break/>
 						<line_break/>

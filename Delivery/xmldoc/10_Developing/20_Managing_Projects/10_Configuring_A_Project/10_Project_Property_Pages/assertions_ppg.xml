@@ -10,13 +10,13 @@
 		<table>
 			<row>
 				<cell>
-					<paragraph>The Assertions property page allows you to choose which of the Design By  Contract assertions to apply globally to your project. It is possible to  override theses default assertions at the individual cluster level on the
+					<paragraph>The Assertions property page allows you to choose which of the Design By  Contract assertions to apply globally to your project. It is possible to  override theses default assertions at the individual cluster level on the 
 						<link>
 							<url>clusters_ppg.htm</url>
 							<label>  Clusters Property Page</label>
 						</link>.
 					</paragraph>
-					<paragraph>To learn more about Design By Contract please refer to the
+					<paragraph>To learn more about Design By Contract please refer to the 
 						<link>
 							<url>/general\guided_tour\language\tutorial-07.html</url>
 							<label>  Invitation To Eiffel</label>

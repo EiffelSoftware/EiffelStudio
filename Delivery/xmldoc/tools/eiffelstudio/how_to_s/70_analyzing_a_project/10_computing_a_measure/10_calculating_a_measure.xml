@@ -15,7 +15,7 @@
 		<paragraph>To evaluate a metric over a scope:</paragraph>
 		<list ordered="true">
 			<item>Select the object you want to evaluate the metric on (a feature, a class or a cluster. System is compulsory the running one).</item>
-			<item>Select the scope type from the
+			<item>Select the scope type from the 
 				<link>
 					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.html#scope</url>
 					<label>scope combo box</label>
@@ -32,7 +32,7 @@
 				<line_break/> Note: If you choose "Archive" as scope type, a dialog will ask for opening an archive file to compute the metric over. Select then an archive file.
 				<line_break/>
 			</item>
-			<item>Select a metric from the
+			<item>Select a metric from the 
 				<link>
 					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.html#metric</url>
 					<label>metric menu</label>
@@ -47,7 +47,7 @@
 				</image>
 				<line_break/>
 			</item>
-			<item>Click the
+			<item>Click the 
 				<link>
 					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.html#calculate</url>
 					<label>calculate</label>
@@ -66,7 +66,7 @@
 				<border>0</border>
 			</image>
 		</paragraph>
-		<paragraph>In some cases, you can get more information about the evaluated metric. See
+		<paragraph>In some cases, you can get more information about the evaluated metric. See 
 			<link>
 				<url>40_viewing_measure_details.xml</url>
 				<label>detailing a measure</label>

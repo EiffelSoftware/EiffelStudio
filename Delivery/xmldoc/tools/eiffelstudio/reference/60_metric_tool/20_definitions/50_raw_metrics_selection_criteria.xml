@@ -25,17 +25,17 @@
 			</item>
 		</list>
 		<paragraph>and so on. Many combinations of these properties may be worth counting on their own: you may ask for the number of secret attributes, of exported inherited features and so on. But if we define all of these metrics independently, we will soon have too many elementary metrics, while still failing to satisfy user needs if we have omitted a particular combination.</paragraph>
-		<paragraph>To avoid this we must identify a subset of elementary metrics as
-			<bold>raw metrics</bold>: metrics whose results are counted directly. "Number of features in a class" is a raw metric. From a raw metric, we may then derive other elementary metrics by applying
+		<paragraph>To avoid this we must identify a subset of elementary metrics as 
+			<bold>raw metrics</bold>: metrics whose results are counted directly. "Number of features in a class" is a raw metric. From a raw metric, we may then derive other elementary metrics by applying 
 			<bold>selection criteria</bold> such as "Is this feature an attribute?" or "Is this feature exported?" Here are the definitions:
 		</paragraph>
 		<note>
 			<bold>Raw metric, selection criterion, derived metric:</bold>
-			<line_break/>An elementary metric is either
-			<bold>raw</bold> or
-			<bold>derived</bold>. A
+			<line_break/>An elementary metric is either 
+			<bold>raw</bold> or 
+			<bold>derived</bold>. A 
 			<bold>selection criterion</bold> for a raw metric is a property, with a fixed set of possible values (two or more), characterizing the patterns or events being counted by the metric.
-			<line_break/> A
+			<line_break/> A 
 			<bold>derived metric</bold> is an elementary metric defined from a raw metric by counting only the patterns satisfying a certain combination of its selection criteria.
 		</note>
 		<paragraph>The metric menu of the metric tool classifies raw and derivedmetric:</paragraph>
@@ -45,7 +45,7 @@
 				<border>0</border>
 			</image>
 		</paragraph>
-		<paragraph>A set of raw metrics and selection criteria is provided by default by the metric tool, see
+		<paragraph>A set of raw metrics and selection criteria is provided by default by the metric tool, see 
 			<link>
 				<url>60_predefined_raw_metrics_selection_criteria.xml</url>
 				<label>predefined raw metrics and selection criteria</label>
@@ -60,7 +60,7 @@
 				<paragraph>An "and": count all the features that are both attributes and exported.</paragraph>
 			</item>
 		</list>
-		<paragraph>Our metric framework does not provide more general Boolean combinations, although they would be easy to add if necessary. Here is the interface provided to
+		<paragraph>Our metric framework does not provide more general Boolean combinations, although they would be easy to add if necessary. Here is the interface provided to 
 			<link>
 				<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/20_handling_new_metrics/10_defining_new_metrics/10_defining_derived_metrics.xml</url>
 				<label>define derived</label>

@@ -17,7 +17,7 @@
 			<italic>same_mach </italic>of the example directory
 		</note>
 		<paragraph>First, let us assume that the client and server run on the same    machine, so that we will use the UNIX_ versions of the classes (the next    example will be multi-machine). The communication protocol is also the    same as before: the client sends a list of strings, the server returns    it extended.</paragraph>
-		<paragraph>Here we will create and manipulate sockets directly. For that reason,    both classes inherit from the EiffelNet class SOCKET_RESOURCES
+		<paragraph>Here we will create and manipulate sockets directly. For that reason,    both classes inherit from the EiffelNet class SOCKET_RESOURCES 
 			<italic/>which introduces a number of constants and other useful    socket-related features.
 		</paragraph>
 		<paragraph>The two sockets must be able to refer to a common address. For a    communication within a single machine, as noted, this address is a path    name, again 
@@ -43,7 +43,7 @@
 				</paragraph>
 				<paragraph>When you use the _SERVER classes of the predefined level, as in the    earlier example, 5 is indeed the default; you can change the value to a    positive integer 
 					<italic>n</italic> through the call 
-					<italic>set_queued </italic>(
+					<italic>set_queued </italic>( 
 					<italic>n</italic>).
 				</paragraph>
 				<paragraph>Whenever the server needs to exchange objects with one of the    clients, it obtains access to the socket through the following sequence:    
@@ -52,7 +52,7 @@
 						<italic>accept </italic>ensures synchronization with the client. When    communication is established, 
 						<italic>accept</italic> creates a new socket which    will be accessible through attribute 
 						<italic>accepted</italic>, whose value is    here assigned to the local entity 
-						<italic>soc2</italic>. To receive objects, the    server will use operations of the form introduced earlier (
+						<italic>soc2</italic>. To receive objects, the    server will use operations of the form introduced earlier ( 
 						<link>
 							<url>20_overview.html#structures</url>
 							<label>An    overview of EiffelNet, sending and receiving object structures</label>
@@ -64,7 +64,7 @@
 							<italic>soc1 </italic>available    to accept connections with other clients, a fundamental feature of    client-server mechanisms.
 						</paragraph>
 						<paragraph>The operation 
-							<italic>soc2</italic>.
+							<italic>soc2</italic>. 
 							<italic>close</italic> which terminates the above    sequence closes the new socket. In principle this is not necessary,    since garbage collection should eventually reclaim the socket object,    and the 
 							<italic>dispose</italic> procedure of the corresponding socket class    includes a call to 
 							<italic>close</italic>. But the risk exists that you run out of    sockets before garbage collection reclaims all currently opened sockets,    so it is preferable to include the 
@@ -92,9 +92,7 @@
 											</cell>
 										</row>
 									</table>
-									<paragraph>Let us now assume that the client and the server will run on two    separate machines. Instead of UNIX_
-										<italic/>sockets, we must now use    sockets of type NETWORK_STREAM_SOCKET.
-									</paragraph>
+									<paragraph>Let us now assume that the client and the server will run on two    separate machines. Instead of UNIX_ sockets, we must now use    sockets of type NETWORK_STREAM_SOCKET.</paragraph>
 									<paragraph>The available creation procedures are slightly different. The server    will be set up so as to listen to clients from any machine; it    designates a 
 										<bold>port</bold>, identified by an integer, on which it will    listen. The socket creation on the server side is then    
 										<code_block>Missing code block</code_block>For the client, the creation will specify two elements of    information: the port number and the server. The server argument, a    string, identifies the machine used as a server; it may be the host name    of that machine, for example 

@@ -3,7 +3,7 @@
 		<help/>
 	</meta_data>
 	<paragraph>
-		<paragraph>Enter a local variable in the
+		<paragraph>Enter a local variable in the 
 			<code>
 				<keyword>local</keyword>
 			</code> field. A local variable clause will be added to the feature:

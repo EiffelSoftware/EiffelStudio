@@ -10,16 +10,16 @@
 			<url/>
 			<label>MANUAL IDENTIFICATION AND COPYRIGHT</label>
 		</link>
-		<note>This document is available both locally, as part of the ISE Eiffel delivery, and on the
+		<note>This document is available both locally, as part of the ISE Eiffel delivery, and on the 
 			<link>
 				<url>http://docs.eiffel.com/general/guided_tour/language/tutorial-00.xml</url>
 				<label>http://docs.eiffel.com</label>
 			</link> Web site.
-			<output output="studio">See the
+			<output output="studio">See the 
 				<link>
 					<url>../index.xml</url>
 					<label>list of introductory documents</label>
-				</link>. This is
+				</link>. This is 
 				<bold>not</bold> an introduction to the EiffelStudio development environment. Followthe preceding link for a Guided Tour of EiffelStudio.  You will also find there a detailed Eiffel Tutorial.
 			</output>
 		</note>

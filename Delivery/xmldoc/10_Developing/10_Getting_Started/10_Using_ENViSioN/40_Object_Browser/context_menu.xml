@@ -11,7 +11,7 @@
 		<table>
 			<row>
 				<cell>
-					<paragraph>Right clicking on any item displayed in the
+					<paragraph>Right clicking on any item displayed in the 
 						<link>
 							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/40_object_browser/index.htm</url>
 							<label>Object Browser</label>
@@ -25,13 +25,13 @@
 					</paragraph>
 					<paragraph>In this example, the tree node representing the Eiffel class APPLICATION is the subject of the context menu, which was opened as the result of a right click. The entries available on the context menu perform the following actions: </paragraph>
 					<list ordered="false">
-						<item>  Go to Definition - Opens the Eiffel class containing the definition in the
+						<item>  Go to Definition - Opens the Eiffel class containing the definition in the 
 							<link>
 								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/50_The_Eiffel_Editor/index.htm</url>
 								<label>Editor</label>
 							</link>.
 						</item>
-						<item>  Browse Definition - Sends the current target of the menu, to the current
+						<item>  Browse Definition - Sends the current target of the menu, to the current 
 							<link>
 								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/40_object_browser/index.htm</url>
 								<label>Object Browser</label>
@@ -39,32 +39,32 @@
 						</item>
 						<item>  Quick Find Symbol - Performs a quick find using the text of the curent target as the search argument. </item>
 						<item>  Copy - Copies the text of the current target to the clipboard. </item>
-						<item>  Sort Alphabetically - Sorts all items in the
+						<item>  Sort Alphabetically - Sorts all items in the 
 							<link>
 								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/40_object_browser/index.htm</url>
 								<label>Object Browser</label>
 							</link> alphabetically.
 						</item>
-						<item>  Sort By Type - Sorts all items in the
+						<item>  Sort By Type - Sorts all items in the 
 							<link>
 								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/40_object_browser/index.htm</url>
 								<label>Object Browser</label>
 							</link> by type.
 						</item>
-						<item>  Sort By Access - Sorts all items in the
+						<item>  Sort By Access - Sorts all items in the 
 							<link>
 								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/40_object_browser/index.htm</url>
 								<label>Object Browser</label>
 							</link> by access type.
 						</item>
-						<item>  Group By Type - Sorts all items in the
+						<item>  Group By Type - Sorts all items in the 
 							<link>
 								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/40_object_browser/index.htm</url>
 								<label>Object Browser</label>
 							</link> by type.
 						</item>
 					</list>
-					<paragraph> Depending on the type of node that you select in the
+					<paragraph> Depending on the type of node that you select in the 
 						<link>
 							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/40_object_browser/index.htm</url>
 							<label>Object Browser</label>

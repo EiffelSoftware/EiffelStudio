@@ -32,8 +32,8 @@
 		</heading>
 		<paragraph>There are two ways to set a Break Point:</paragraph>
 		<list ordered="false">
-			<item>   Select
-				<bold>New Breakpoint</bold> from the
+			<item>   Select 
+				<bold>New Breakpoint</bold> from the 
 				<bold>Debug</bold>  Menu which opens up a dialog allowing you to specify a new Break Point.
 			</item>
 			<item>   Left click on the left hand margin of the
@@ -60,8 +60,8 @@
 		<heading>
 			<size>2</size>Running To A Break Point
 		</heading>
-		<paragraph>Execute the Project using
-			<bold>Start</bold> From the
+		<paragraph>Execute the Project using 
+			<bold>Start</bold> From the 
 			<bold>Debug</bold> menu. The Project  will then execute until a Break point is reached:
 		</paragraph>
 		<paragraph>
@@ -143,7 +143,7 @@
 				<tab_index>0</tab_index>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>
 				<keywords>Eiffel Editor</keywords>&gt;Editor
-			</help_link>  that you wish to run to, and select
+			</help_link>  that you wish to run to, and select 
 			<bold>Run To Cursor</bold> from the context menu.
 		</paragraph>
 		<seealso>

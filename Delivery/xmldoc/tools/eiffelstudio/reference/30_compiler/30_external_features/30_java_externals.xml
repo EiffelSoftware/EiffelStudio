@@ -26,7 +26,7 @@
 			<size>3</size>Requirements
 		</heading>
 		<list ordered="false">
-			<item>JDK 1.1.4 correctly set (download it at
+			<item>JDK 1.1.4 correctly set (download it at 
 				<link>
 					<url>http://java.sun.com/products/jdk/1.1/index.xml</url>
 					<label>http://java.sun.com/products/jdk/1.1/index.html</label>

@@ -17,24 +17,24 @@
 			</code>
 		</paragraph>
 		<paragraph>
-			<italic>class_name</italic>, if present, must be the name of a class of the system to which ec is applied. This system is identified by its Ace file; by default this is the file called Ace.ace in the working directory, but you can select any other one through the -ace
-			<italic>file_name</italic> option. Similarly, the default project directory is the working directory, but you can select another through the project -directory_name option.
-			<italic>feature_name</italic>, if present, must be the final name of a feature of the class called
+			<italic>class_name</italic>, if present, must be the name of a class of the system to which ec is applied. This system is identified by its Ace file; by default this is the file called Ace.ace in the working directory, but you can select any other one through the -ace 
+			<italic>file_name</italic> option. Similarly, the default project directory is the working directory, but you can select another through the project -directory_name option. 
+			<italic>feature_name</italic>, if present, must be the final name of a feature of the class called 
 			<italic>class_name</italic>.
 			<line_break/>The table below lists the available options, the arguments they require, and their effect.
 		</paragraph>
 		<paragraph>command line compiler options</paragraph>
 		<paragraph>
-			<bold>Note</bold>: In the third column, to print means to produce the requested information on the default output of the
+			<bold>Note</bold>: In the third column, to print means to produce the requested information on the default output of the 
 			<bold>ec</bold> command.
 			<line_break/>
 		</paragraph>
 		<heading>
 			<size>2</size>Finalization
 		</heading>
-		<link/>To produce a finalized system, you may use the command
+		<link/>To produce a finalized system, you may use the command 
 		<bold>ec</bold> -finalize. The effect is the same as when you press the Finalize button in the graphical environment, except for two differences:
-		<line_break/>First, all assertion checking will by default be turned off in the resulting finalized system. In the graphical environment, an interactive panel asks you whether you want to keep or discard assertions. Command
+		<line_break/>First, all assertion checking will by default be turned off in the resulting finalized system. In the graphical environment, an interactive panel asks you whether you want to keep or discard assertions. Command 
 		<bold>ec</bold>, however, was designed to be callable automatically from shell scripts or programs, and for that reason never asks for interactive user input (except under the loop option). To retain the assertion checking options specified in the Ace file, use the option -keep in connection with -finalize (the order of the two options is arbitrary).
 		<line_break/>Second, at the end of the Eiffel part of the compilation you are presented with the message:
 		<line_break/>
@@ -42,8 +42,8 @@
 		<paragraph>
 			<code_block>System recompiled.You must now run "finish_freezing" in:<italic>your_project_path</italic>|EIFGEN|F_code</code_block>
 		</paragraph>
-		<paragraph>with | replaced by \ if your platform is Windows, / if it is Unix. To execute the C compilation and linking part of the finalization, change directory to
-			<italic>your_project_path</italic>|EIFGEN|F_code as indicated and execute
+		<paragraph>with | replaced by \ if your platform is Windows, / if it is Unix. To execute the C compilation and linking part of the finalization, change directory to 
+			<italic>your_project_path</italic>|EIFGEN|F_code as indicated and execute 
 			<bold>finish_freezing</bold>.
 		</paragraph>
 		<seealso>

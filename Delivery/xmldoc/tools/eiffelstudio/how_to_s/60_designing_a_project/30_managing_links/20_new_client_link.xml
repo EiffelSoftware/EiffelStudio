@@ -13,7 +13,7 @@
 	</meta_data>
 	<paragraph>
 		<list ordered="true">
-			<item>Select the button
+			<item>Select the button 
 				<bold>Create new client/supplier links</bold>.
 				<image>
 					<url>/images/eiffelstudio/icons/icon_new_supplier_color.gif</url>
@@ -21,12 +21,12 @@
 			</item>
 			<item>Start pick-and-drop on the class where the feature should be added.</item>
 			<item>Drop on the desired supplier class.</item>
-			<item>The
-				<bold>Create feature</bold> dialog appears. See
+			<item>The 
+				<bold>Create feature</bold> dialog appears. See 
 				<link>
 					<url>../../30_editing_a_project/30_adding_a_feature/40_adding_an_attribute.xml</url>
 					<label>Creating an attribute</label>
-				</link> or
+				</link> or 
 				<link>
 					<url>../../30_editing_a_project/30_adding_a_feature/30_adding_a_function.xml</url>
 					<label>Creating a function</label>

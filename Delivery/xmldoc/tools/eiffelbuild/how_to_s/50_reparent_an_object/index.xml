@@ -8,74 +8,74 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>To reparent an
+		<paragraph>To reparent an 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link>, you need to
+			</link>, you need to 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
 				<label>pick</label>
-			</link> the
+			</link> the 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link> and
+			</link> and 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
 				<label>drop</label>
-			</link> it on the
+			</link> it on the 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link> you wish it to be parented in. The
+			</link> you wish it to be parented in. The 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
 			</link> will be removed from its current parent, and inserted in the new parent at the next available position.
 		</paragraph>
-		<paragraph>When an
+		<paragraph>When an 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link> is inserted into a parent, it is always added at the next available position. If you wish to place an
+			</link> is inserted into a parent, it is always added at the next available position. If you wish to place an 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link> at a particular position within a parent, you must hold down the
-			<bold>Shift</bold> key, and drop on an
+			</link> at a particular position within a parent, you must hold down the 
+			<bold>Shift</bold> key, and drop on an 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link> already contained in parent, Your
+			</link> already contained in parent, Your 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link> will then be inserted in the parent, in the position preceding the child
+			</link> will then be inserted in the parent, in the position preceding the child 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
 			</link> that you dropped on.
 		</paragraph>
-		<paragraph>You can access
+		<paragraph>You can access 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>objects</label>
-			</link> from both the
+			</link> from both the 
 			<link>
 				<url>/tools/eiffelbuild/reference/60_builder_window/index</url>
 				<label>builder window</label>
-			</link> and
+			</link> and 
 			<link>
 				<url>/tools/eiffelbuild/reference/20_layout_constructor/index</url>
 				<label>layout constructor</label>
 			</link>.
 		</paragraph>
-		<paragraph>For more information about an
+		<paragraph>For more information about an 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>objects</label>
-			</link> capacity and permitted children, see the
+			</link> capacity and permitted children, see the 
 			<link>
 				<url>/libraries/vision2/00_introduction.html</url>
 				<label>EiffelVision2</label>

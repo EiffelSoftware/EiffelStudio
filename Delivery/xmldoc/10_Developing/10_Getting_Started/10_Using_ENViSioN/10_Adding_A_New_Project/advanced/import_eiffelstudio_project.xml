@@ -48,8 +48,8 @@
 			<line_break/> The next page of the wizard allows you to specify which classes you would like access to through the Solution Explorer. The classes are chosen on a clusterlevel, and all classes contain within those cluster will be visible in the Solution Explorer. By default all those clusters that are marked as library clusters or are clusters from the EiffelBase, WEL or EiffelVision areexcluded as there are many classes.
 			<line_break/>
 		</paragraph>
-		<paragraph>The 'Excluded Clusters' list is the list of clusters that will not have documentation generated for them and the 'Included Clusters' list will. You can include/exclude clustersusing one of the four selection buttons '
-			<bold>&lt;&lt;</bold>', '
+		<paragraph>The 'Excluded Clusters' list is the list of clusters that will not have documentation generated for them and the 'Included Clusters' list will. You can include/exclude clustersusing one of the four selection buttons ' 
+			<bold>&lt;&lt;</bold>', ' 
 			<bold>&lt;</bold>', '&gt;' or '&gt;&gt;'.
 		</paragraph>
 		<list ordered="false">
@@ -74,7 +74,7 @@
 			<line_break/> When the finish button is clicked, the wizard will being to import the EiffelStudio project supplied into Visual Studio.NET. This may take some time depending onthe size of your project.
 			<line_break/>
 		</paragraph>
-		<bold>Caution</bold>: Please check that the paths to any references in your project are still valid. Such references are the cluster paths, include paths, object files and locallyreferenced assemblies. These can be verified using the '
+		<bold>Caution</bold>: Please check that the paths to any references in your project are still valid. Such references are the cluster paths, include paths, object files and locallyreferenced assemblies. These can be verified using the ' 
 		<link>
 			<url>../ProjectConfiguration/GettingStarted/ProjectConfiguration.xml</url>
 			<label>Property  Pages</label>

@@ -13,54 +13,54 @@
 				<size>2</size>
 				<content>Levels of language description</content>
 			</heading>
-			<paragraph>Let's remind ourselves first of how the language is specified.  The book
+			<paragraph>Let's remind ourselves first of how the language is specified.  The book 
 				<span>
 					<link>
 						<url>http://www.eiffel.com/doc/#etl</url>
 						<label>Eiffel: The Language</label>
 					</link>
-				</span>, the language reference, carefully distinguishes between three levels of description:
-				<bold>syntax</bold>,
-				<bold>validity</bold> and
+				</span>, the language reference, carefully distinguishes between three levels of description: 
+				<bold>syntax</bold>, 
+				<bold>validity</bold> and 
 				<bold>semantics</bold> .  Their roles are clearly distinct:
 			</paragraph>
 			<list ordered="false">
 				<item>
-					<span>Syntax</span> defines the structure of software texts.  A typical syntax rule states that an assignment starts with a
+					<span>Syntax</span> defines the structure of software texts.  A typical syntax rule states that an assignment starts with a 
 					<code>
 						<syntax>Writable</syntax>
-					</code> entity, continues with the symbol
+					</code> entity, continues with the symbol 
 					<code>
 						<keyword>:=</keyword>
-					</code>, and ends with an
+					</code>, and ends with an 
 					<code>
 						<syntax>Expression</syntax>
-					</code> .  This is a purely structural specification, saying nothing for example about the types of the
+					</code> .  This is a purely structural specification, saying nothing for example about the types of the 
 					<code>
 						<syntax>Writable</syntax>
-					</code> and the
+					</code> and the 
 					<code>
 						<syntax>Expression</syntax>
 					</code>.
 				</item>
 				<item>
-					<span>Validity</span>, applicable only to syntactically legal texts, defines required consistency conditions.  A typical validity rule states that in an assignment the right-hand-side
+					<span>Validity</span>, applicable only to syntactically legal texts, defines required consistency conditions.  A typical validity rule states that in an assignment the right-hand-side 
 					<code>
 						<syntax>Expression</syntax>
-					</code> must
-					<span>conform</span> -- a property of its type, defined rigorously on the basis of inheritance -- to the left-hand-side
+					</code> must 
+					<span>conform</span> -- a property of its type, defined rigorously on the basis of inheritance -- to the left-hand-side 
 					<code>
 						<syntax>Writable</syntax>
-					</code>.  Eiffel has about 75 validity rules; part of the language's originality is that these rules are of the "
-					<span>if and only if</span> " form, not only telling you individual error cases ("this is valid
+					</code>.  Eiffel has about 75 validity rules; part of the language's originality is that these rules are of the " 
+					<span>if and only if</span> " form, not only telling you individual error cases ("this is valid 
 					<span>only if</span>
-					<span>...</span> ") but also reassuring you that your text will in fact be valid
+					<span>...</span> ") but also reassuring you that your text will in fact be valid 
 					<span>if</span> it satisfies the conditions listed exhaustively.
 				</item>
-				<item>Semantics, applicable only to valid texts, defines the software's expected run-time behavior.  A typical semantic rule states that an assignment replaces the value of its left-hand-side
+				<item>Semantics, applicable only to valid texts, defines the software's expected run-time behavior.  A typical semantic rule states that an assignment replaces the value of its left-hand-side 
 					<code>
 						<syntax>Writable</syntax>
-					</code> by the value of the right-hand-side
+					</code> by the value of the right-hand-side 
 					<code>
 						<syntax>Expression</syntax>
 					</code> at the time the assignment is executed, with precise rules on the different possible cases involving references, objects and simple values.
@@ -68,15 +68,15 @@
 			</list>
 			<paragraph>You may make an error at any of these levels:</paragraph>
 			<list ordered="false">
-				<item>Writing
+				<item>Writing 
 					<code>
 						<keyword>=</keyword>
-					</code> instead of
+					</code> instead of 
 					<code>
 						<keyword>:=</keyword>
 					</code> for the assignment symbol is a syntax error.
 				</item>
-				<item>Writing
+				<item>Writing 
 					<code>
 						<string>your_integer</string>
 					</code>
@@ -96,25 +96,25 @@
 				<size>2</size>
 				<content>A syntax error</content>
 			</heading>
-			<paragraph>To see what happens for a syntax error, replace the keyword
+			<paragraph>To see what happens for a syntax error, replace the keyword 
 				<code>
 					<keyword>is</keyword>
-				</code> by
+				</code> by 
 				<code>
 					<keyword>ist</keyword>
-				</code> in the first line of routine
+				</code> in the first line of routine 
 				<code>
 					<keyword>display</keyword>
-				</code> of class
+				</code> of class 
 				<code>
 					<keyword>PARENT</keyword>
-				</code> (click the position immediately after the
+				</code> (click the position immediately after the 
 				<code>
 					<keyword>s</keyword>
-				</code> and type a
+				</code> and type a 
 				<code>
 					<keyword>t</keyword>
-				</code> .).  Save the file by clicking the Save button or using CTRL-
+				</code> .).  Save the file by clicking the Save button or using CTRL- 
 				<code>
 					<keyword>S</keyword>
 				</code>.  EiffelStudio parses the class as it is saving it, and finds the error: The position of the error is highlighted in the class text.
@@ -129,15 +129,15 @@
 					</image>
 				</image_link>
 			</div>
-			<paragraph>To correct the error, just bring the mouse back to its location, remove the spurious
+			<paragraph>To correct the error, just bring the mouse back to its location, remove the spurious 
 				<code>
 					<keyword>t</keyword>
 				</code>, and click Save again; also click Compile to make sure that the project is recompiled up-to-date.
 			</paragraph>
-			<paragraph>You may wonder why the syntax error messages are not a little more verbose than just
+			<paragraph>You may wonder why the syntax error messages are not a little more verbose than just 
 				<code>
 					<keyword>Syntax error</keyword>
-				</code> .  The reason is merely that Eiffel's syntax, being simple and regular, does not require sophisticated error messages; syntax errors usually result from trivial oversights.  If you make a syntax error and the reason is not immediately clear, check the syntax summary in the appendix of
+				</code> .  The reason is merely that Eiffel's syntax, being simple and regular, does not require sophisticated error messages; syntax errors usually result from trivial oversights.  If you make a syntax error and the reason is not immediately clear, check the syntax summary in the appendix of 
 				<span>
 					<link>
 						<url>http://www.eiffel.com/doc/#etl</url>
@@ -151,27 +151,27 @@
 				<size>2</size>
 				<content>Avoiding "Gotcha" dialogs</content>
 			</heading>
-			<paragraph>This syntax error message also illustrates a user interface principle present throughout EiffelStudio.  At ISE, we believe that you have better things to do than spending your days clicking on
+			<paragraph>This syntax error message also illustrates a user interface principle present throughout EiffelStudio.  At ISE, we believe that you have better things to do than spending your days clicking on 
 				<code>
 					<keyword>OK</keyword>
 				</code> buttons.  Almost all messages that may appear to signal errors, display warnings, or request confirmation are of one of two kinds:
 			</paragraph>
 			<list ordered="false">
-				<item>Whenever possible, they give you
-					<bold>two</bold> or more possibilities.  A dialog with just one possibility is not much of a dialog.  (We'll resist the temptation to be pompous here by recalling the original Greek meaning of "
+				<item>Whenever possible, they give you 
+					<bold>two</bold> or more possibilities.  A dialog with just one possibility is not much of a dialog.  (We'll resist the temptation to be pompous here by recalling the original Greek meaning of " 
 					<span>dia</span> " in "dialog".  )
 				</item>
-				<item>If EiffelStudio cannot give two possibilities -- as in the case of an error message, for which it must let the user proceed after making sure the message has been seen -- EiffelStudio doesn't force you, like many of today's user interfaces, to acknowledge your sins by clicking an
+				<item>If EiffelStudio cannot give two possibilities -- as in the case of an error message, for which it must let the user proceed after making sure the message has been seen -- EiffelStudio doesn't force you, like many of today's user interfaces, to acknowledge your sins by clicking an 
 					<code>
 						<keyword>OK</keyword>
 					</code> button.  You simply correct the error and move on.
 				</item>
 			</list>
-			<paragraph>In the case of our syntax error there
-				<span>is</span> an
+			<paragraph>In the case of our syntax error there 
+				<span>is</span> an 
 				<code>
 					<keyword>OK</keyword>
-				</code> button and you may click it, but you don't have to.  It is there mostly to avoid troubling people (almost everyone, that is) who are used to the "Gotcha!" dialogs of the dominant user interfaces.  Once you get used to the EiffelStudio style, you won't bother clicking
+				</code> button and you may click it, but you don't have to.  It is there mostly to avoid troubling people (almost everyone, that is) who are used to the "Gotcha!" dialogs of the dominant user interfaces.  Once you get used to the EiffelStudio style, you won't bother clicking 
 				<code>
 					<keyword>OK</keyword>
 				</code> for a syntax error: you will correct the error, and when you click Save again the dialog will go away like a bad dream.
@@ -182,48 +182,48 @@
 				<size>2</size>
 				<content>A validity error</content>
 			</heading>
-			<paragraph>A validity error is a violation of one of the validity constraints given in
+			<paragraph>A validity error is a violation of one of the validity constraints given in 
 				<span>
 					<link>
 						<url>http://www.eiffel.com/doc/#etl</url>
 						<label>Eiffel: The Language</label>
 					</link>
-				</span> .  Every such constraint is identified by a four-letter code of the form
+				</span> .  Every such constraint is identified by a four-letter code of the form 
 				<code>
 					<keyword>V</keyword>
 				</code>
 				<code>
 					<string>XXX</string>
-				</code> (the first letter is always
+				</code> (the first letter is always 
 				<code>
 					<keyword>V</keyword>
 				</code>).
 			</paragraph>
 			<paragraph>A validity error will produce a precise error message, which includes the validity code.  Although short, the error message is usually sufficient to find out what the error is.  If not, you can get the complete rule, straight from the book.  </paragraph>
-			<paragraph>To see this mechanism at work, let us introduce a validity error.  There is in fact one ready for you in class
+			<paragraph>To see this mechanism at work, let us introduce a validity error.  There is in fact one ready for you in class 
 				<code>
 					<keyword>TESTROOT</keyword>
-				</code> .  Target a Development Window to this class; at the end of its text, just before the final
+				</code> .  Target a Development Window to this class; at the end of its text, just before the final 
 				<code>
 					<keyword>end</keyword>
 				</code>, you will find the following comment line:
 			</paragraph>
 			<code_block>
-				<keyword>-- inv: INVALID</keyword>
+	<keyword>-- inv: INVALID</keyword>
 			</code_block>
-			<paragraph>If uncommented, this is a declaration of a feature of type
+			<paragraph>If uncommented, this is a declaration of a feature of type 
 				<code>
 					<keyword>INVALID</keyword>
-				</code> .  A class called
+				</code> .  A class called 
 				<code>
 					<keyword>INVALID</keyword>
-				</code> indeed exists in file
+				</code> indeed exists in file 
 				<code>
 					<keyword>invalid.e</keyword>
-				</code> of the root cluster, but it contains a validity error.  To see what it is, remove the initial double-dash
+				</code> of the root cluster, but it contains a validity error.  To see what it is, remove the initial double-dash 
 				<code>
 					<keyword>--</keyword>
-				</code> in the above line from class
+				</code> in the above line from class 
 				<code>
 					<keyword>TESTROOT</keyword>
 				</code> so that it is not a comment any more.
@@ -238,10 +238,10 @@
 					</image>
 				</image_link>
 			</div>
-			<paragraph>Click
+			<paragraph>Click 
 				<code>
 					<keyword>Save</keyword>
-				</code>, then
+				</code>, then 
 				<code>
 					<keyword>Compile</keyword>
 				</code> .  Compilation starts but after a few degrees it stops with an error message that appears in the bottom Context Tool (you may have to do some resizing to see it in its entirety):
@@ -256,18 +256,18 @@
 					</image>
 				</image_link>
 			</div>
-			<paragraph>As the error message indicates, you have (shame on you) violated the validity rule
+			<paragraph>As the error message indicates, you have (shame on you) violated the validity rule 
 				<code>
 					<keyword>VUAR</keyword>
 				</code>, which requires the number and types of actual arguments in a routine call to match the number and types of formal arguments declared in the routine.
 			</paragraph>
-			<paragraph>One of the interesting properties of the error message is that everything in color is
+			<paragraph>One of the interesting properties of the error message is that everything in color is 
 				<bold>clickable</bold> : class name, feature name, but also the error code.  This means that you can start a Pick-and-Drop on any of these elements to find out more.
 			</paragraph>
-			<paragraph>For example, to see the exact context of the error, pick-and-drop the name of the affected feature,
+			<paragraph>For example, to see the exact context of the error, pick-and-drop the name of the affected feature, 
 				<code>
 					<string>display</string>
-				</code> -- appearing on the fifth non-blank line, after
+				</code> -- appearing on the fifth non-blank line, after 
 				<code>
 					<keyword>Feature:</keyword>
 				</code> -- and pick-and-drop it to the top Text window.  (As you remember this means: right-click on it and release; move the mouse to the text window, without clicking any button; right-click again.  During the move the cursor shows a cross, the symbol for features.  ) This displays the erroneous feature:
@@ -283,7 +283,7 @@
 				</image_link>
 			</div>
 			<paragraph>Note on this display a special property of Pick-and-Drop when its source is a feature name appearing in a validity error message: the instruction that causes the error is highlighted.  </paragraph>
-			<paragraph>In the error message in the Context Tool, the error code itself,
+			<paragraph>In the error message in the Context Tool, the error code itself, 
 				<code>
 					<keyword>VUAR</keyword>
 				</code>, is also clickable.  Assuming the message was not sufficient to understand the error, you can use it to start a Pick-and-Drop.  Do this now, by picking that code and starting to move the mouse, but not dropping yet:
@@ -298,7 +298,7 @@
 					</image>
 				</image_link>
 			</div>
-			<paragraph>The icon shape for such information elements is a question mark
+			<paragraph>The icon shape for such information elements is a question mark 
 				<code>
 					<keyword>?</keyword>
 				</code> .  If it is not on a droppable target, as in the bottom Context Tool, that icon will be crossed.   In principle the place to drop is the Explanation hole in the Project toolbar, the only one that remains highlighted during the Move step of Pick-and-Drop:
@@ -324,7 +324,7 @@
 					</image>
 				</image_link>
 			</div>
-			<paragraph>The result is to display the complete text of the violated rule, straight from the pages of
+			<paragraph>The result is to display the complete text of the violated rule, straight from the pages of 
 				<span>
 					<link>
 						<url>http://www.eiffel.com/doc/#etl</url>
@@ -332,15 +332,15 @@
 					</link>
 				</span> .
 			</paragraph>
-			<paragraph>The rule has several clauses, numbered.  Since the error message showed the error code as
+			<paragraph>The rule has several clauses, numbered.  Since the error message showed the error code as 
 				<code>
 					<keyword>VUAR(1)</keyword>
 				</code>, the violated clause is the first; this convention of showing the clause number in parentheses applies to all multi-clause validity constraints.
 			</paragraph>
-			<paragraph>To correct the error the easiest is to go back to class
+			<paragraph>To correct the error the easiest is to go back to class 
 				<code>
 					<string>TESTROOT</string>
-				</code> and reinstate the comment symbol
+				</code> and reinstate the comment symbol 
 				<code>
 					<comment>--</comment>
 				</code> (two consecutive dashes) on the erroneous line.  Save and compile to continue with a valid system.

@@ -8,7 +8,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>In the
+		<paragraph>In the 
 			<bold>Edit</bold> menu, the following commands are available:
 		</paragraph>
 		<list ordered="false">
@@ -28,7 +28,7 @@
 				<link>
 					<url>./30_clipboard_functionality.xml</url>
 					<label>Cut</label>
-				</link>: Cut
+				</link>: Cut 
 				<link>
 					<url>./20_selection.xml</url>
 					<label>selected</label>
@@ -38,7 +38,7 @@
 				<link>
 					<url>./30_clipboard_functionality.xml</url>
 					<label>Copy</label>
-				</link>: Copy
+				</link>: Copy 
 				<link>
 					<url>./20_selection.xml</url>
 					<label>selected</label>
@@ -60,7 +60,7 @@
 				<link>
 					<url>../10_browsing_tools/60_search_tool.xml</url>
 					<label>Find</label>
-				</link>:Show and go to the
+				</link>:Show and go to the 
 				<link>
 					<url>../10_browsing_tools/60_search_tool.xml</url>
 					<label>search panel</label>
@@ -70,7 +70,7 @@
 				<link>
 					<url>../10_browsing_tools/60_search_tool.xml</url>
 					<label>Replace</label>
-				</link>:Show and go to the
+				</link>:Show and go to the 
 				<link>
 					<url>../10_browsing_tools/60_search_tool.xml</url>
 					<label>search panel</label>

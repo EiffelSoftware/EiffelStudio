@@ -8,60 +8,60 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>An EiffelBuild
+		<paragraph>An EiffelBuild 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
 			</link> is a representation of a Vision2 component and its properties.
 		</paragraph>
-		<paragraph>To create a new instance of an object,
+		<paragraph>To create a new instance of an object, 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
 				<label>pick</label>
-			</link> a type from the
+			</link> a type from the 
 			<link>
 				<url>/tools/eiffelbuild/reference/30_type_selector/index</url>
 				<label>type selector</label>
-			</link> and
+			</link> and 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
 				<label>drop</label>
-			</link> onto an existing
+			</link> onto an existing 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link> (Accessible from the
+			</link> (Accessible from the 
 			<link>
 				<url>/tools/eiffelbuild/reference/20_layout_constructor/index</url>
 				<label>layout constructor</label>
-			</link> or
+			</link> or 
 			<link>
 				<url>/tools/eiffelbuild/reference/60_builder_window/index</url>
 				<label>builder window</label>
-			</link>). You will only be able to complete the
+			</link>). You will only be able to complete the 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
 				<label>drop</label>
-			</link> if the targeted
+			</link> if the targeted 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
 			</link> will accept a new object of the transported type.
 		</paragraph>
 		<note>
-			<bold>Note</bold>: Once an
+			<bold>Note</bold>: Once an 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link> has been
+			</link> has been 
 			<link>
 				<url>/tools/eiffelbuild/how_to_s/20_create_an_object/index</url>
 				<label>created</label>
-			</link>, it will always be contained in a parent
+			</link>, it will always be contained in a parent 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link> until
+			</link> until 
 			<link>
 				<url>/tools/eiffelbuild/how_to_s/30_delete_an_object/index</url>
 				<label>deleted</label>

@@ -7,11 +7,11 @@
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>By modifying EiffelStudio
+	<paragraph>By modifying EiffelStudio 
 		<link>
 			<url>../../reference/85_preferences/00_introduction.xml</url>
 			<label>preferences</label>
-		</link>, you can change the font and the colors used to display texts in the editor. For more information, refer to EiffelStudio
+		</link>, you can change the font and the colors used to display texts in the editor. For more information, refer to EiffelStudio 
 		<link>
 			<url>../../reference/85_preferences/20_preferences_reference/30_graphical_elements/10_texts_display_preferences.xml</url>
 			<label>graphical preferences reference</label>

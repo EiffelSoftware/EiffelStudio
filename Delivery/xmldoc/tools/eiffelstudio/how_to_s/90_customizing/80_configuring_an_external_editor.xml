@@ -7,24 +7,24 @@
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>By clicking on, or by
+	<paragraph>By clicking on, or by 
 		<link>
 			<url>../../reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.xml</url>
 			<label>dropping a pebble</label>
 		</link> on it, you can launch an external editor. By default, this editor is VI on Unix and Notepad on Windows. You can tell EiffelStudio to launch another editor by editing the preferences.
-		<paragraph>To do so, first open the
+		<paragraph>To do so, first open the 
 			<link>
 				<url>../../reference/85_preferences/10_overview.xml</url>
 				<label>preferences window</label>
-			</link> by choosing
-			<bold>Preferences...</bold> in the
-			<bold>Tools</bold> menu. Select then the "Global preferences" category in the preferences tree. Click on "Command used to launch an external editor" and modify the command line so that it calls your favorite editor. You can use keywords that represent the filename ($target)and the line number ($line) as is explained in the
+			</link> by choosing 
+			<bold>Preferences...</bold> in the 
+			<bold>Tools</bold> menu. Select then the "Global preferences" category in the preferences tree. Click on "Command used to launch an external editor" and modify the command line so that it calls your favorite editor. You can use keywords that represent the filename ($target)and the line number ($line) as is explained in the 
 			<link>
 				<url>../../reference/85_preferences/20_preferences_reference/10_global_preferences.xml</url>
 				<label>preferences reference</label>
 			</link>.
 		</paragraph>
-		<paragraph>After modifying the command line, click on
+		<paragraph>After modifying the command line, click on 
 			<bold>save and exit</bold> to complete the change.
 		</paragraph>
 		<seealso>

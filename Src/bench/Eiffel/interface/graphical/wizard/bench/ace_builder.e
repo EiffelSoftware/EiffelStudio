@@ -102,6 +102,7 @@ feature -- Graphical User Interface
 			!! default_option_box.make ("default_option_box", check_form)
 			!! multithreaded_toggle.make ("multithreaded", default_option_box)
 			!! console_application_toggle.make ("console application", default_option_box)
+			!! array_optimization_toggle.make ("array optimization", default_option_box)
 			!! dynamic_runtime_toggle.make ("dynamic runtime", default_option_box)
 			!! dead_code_removal_toggle.make ("dead_code_removal", default_option_box)
 			!! profiler_toggle.make ("profiler", default_option_box)
@@ -153,6 +154,7 @@ feature -- Graphical User Interface
 			creation_procedure_edit.set_text ("make");
 
 			console_application_toggle.set_text ("Console application")
+			array_optimization_toggle.set_text ("Array optimization")
 			dynamic_runtime_toggle.set_text ("Dynamic runtime")
 			multithreaded_toggle.set_text ("Multithreaded")
 			inlining_toggle.set_text ("Inlining - Threshold:")
@@ -337,8 +339,11 @@ feature -- Execution
 
 feature -- Toggles for the default option
 
+	array_optimization_toggle: TOGGLE_B
+			-- Toggle for enabling/disabling array optimizations
+
 	console_application_toggle: TOGGLE_B
-			-- Toggle for having a console application (only on UNIX)
+			-- Toggle for having a console application (only on Windows)
 
 	dynamic_runtime_toggle: TOGGLE_B
 			-- Toggle for using a shared version of the runtime.
@@ -559,62 +564,16 @@ feature {NONE} -- Implementation
 
 			!! default_options.make (0);
 
-			default_options.append ("%Tmultithreaded (")
-			if multithreaded_toggle.state then
-				default_options.append ("yes)%N")
-			else
-				default_options.append ("no)%N")
-			end
-
-			default_options.append ("%Tconsole_application (")
-			if console_application_toggle.state then
-				default_options.append ("yes)%N")
-			else
-				default_options.append ("no)%N")
-			end
-
-			default_options.append ("%Tdynamic_runtime (")
-			if dynamic_runtime_toggle.state then
-				default_options.append ("yes)%N")
-			else
-				default_options.append ("no)%N")
-			end
-
-			default_options.append ("%Tdead_code_removal (")
-			if dead_code_removal_toggle.state then
-				default_options.append ("yes)%N")
-			else
-				default_options.append ("no)%N")
-			end
-
-			default_options.append ("%Tprofile (")
-			if profiler_toggle.state then
-				default_options.append ("yes)%N")
-			else
-				default_options.append ("no)%N")
-			end
-
-			default_options.append ("%Tline_generation (")
-			if line_generation_toggle.state then
-				default_options.append ("yes)%N")
-			else
-				default_options.append ("no)%N")
-			end
-			
-			default_options.append ("%Tdebug (")
-			if debug_toggle.state then
-				default_options.append ("yes)%N")
-			else
-				default_options.append ("no)%N")
-			end
-			
-			default_options.append ("%Tinlining (")
-			if inlining_toggle.state then
-				default_options.append ("yes)%N%T")
-			else
-				default_options.append ("no)%N%T--")
-			end
-			default_options.append ("inlining_size (%"")
+			generate_option (default_options, multithreaded_toggle, "multithreaded")
+			generate_option (default_options, console_application_toggle, "console_application")
+			generate_option (default_options, dynamic_runtime_toggle, "dynamic_runtime")
+			generate_option (default_options, dead_code_removal_toggle, "dead_code_removal")
+			generate_option (default_options, profiler_toggle, "profile")
+			generate_option (default_options, line_generation_toggle, "line_generation")
+			generate_option (default_options, debug_toggle, "debug ")
+			generate_option (default_options, array_optimization_toggle, "array_optimization")
+			generate_option (default_options, inlining_toggle, "inlining")
+			default_options.append ("%Tinlining_size (%"")
 			default_options.append (inlining_size_edit.text)
 			default_options.append ("%")")
 
@@ -758,5 +717,20 @@ feature {NONE} -- Implementation
 				Result := a_file.laststring
 			end
 		end;
+
+feature {NONE} -- Implementation
+
+	generate_option (options: STRING; t: TOGGLE_B; option_name: STRING) is
+				-- Generate in the Ace file the corresponding option.
+		do
+			options.append ("%T")
+			options.append (option_name)
+			options.append (" (")
+			if t.state then
+				options.append ("yes)%N")
+			else
+				options.append ("no)%N")
+			end
+		end
 
 end -- class ACE_BUILDER

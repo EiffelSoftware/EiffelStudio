@@ -84,7 +84,7 @@ feature -- Generation
 			buffer.start_c_specific_code
 			if is_precompiling then
 				buffer.new_line
-				buffer.generate_static_declaration ("void", "build_desc" + class_id_string, <<"void">>);
+				buffer.generate_static_declaration ("void", "build_desc" + class_id_string, <<>>);
 				buffer.new_line
 				descriptor_generate_generic (buffer, class_id_string)
 				buffer.new_line
@@ -228,7 +228,7 @@ feature -- Generation
 			rtud.append ("));%N")
 
 
-			buffer.generate_extern_declaration ("void", init_name, <<"void">>);
+			buffer.generate_extern_declaration ("void", init_name, <<>>);
 
 			buffer.putstring ("void ");
 			buffer.putstring (init_name);

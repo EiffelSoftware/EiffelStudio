@@ -42,13 +42,11 @@ feature -- Basic operations
 			create access_feature.make
 			create precondition_access_feature_writer.make
 
-			create visitor
-
 			create an_access_name.make (100)
 			an_access_name.append (a_descriptor.interface_eiffel_name)
 			access_feature.set_name (an_access_name)
 
-			visitor.visit (a_descriptor.data_type)
+			visitor := a_descriptor.data_type.visitor 
 			access_feature.set_result_type (visitor.eiffel_type)
 			access_feature.set_comment (a_descriptor.description)
 			access_feature.set_deferred

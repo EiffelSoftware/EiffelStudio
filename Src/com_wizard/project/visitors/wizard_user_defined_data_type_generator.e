@@ -77,8 +77,7 @@ feature -- Processing
 			ce_function_signature.append ("an_alias")
 
 			a_type_descriptor := alias_descriptor.type_descriptor
-			create a_type_visitor
-			a_type_visitor.visit (a_type_descriptor)
+			a_type_visitor := a_type_descriptor.visitor
 			writable := a_type_visitor.writable
 
 			is_array_basic_type := a_type_visitor.is_array_basic_type

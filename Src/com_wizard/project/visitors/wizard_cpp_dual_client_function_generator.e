@@ -154,8 +154,7 @@ feature {NONE} -- Implementation
 			end
 
 			if not func_desc.return_type.name.is_equal (Void_c_keyword) then
-				create visitor
-				visitor.visit (func_desc.return_type)
+				visitor := func_desc.return_type.visitor
 
 				if visitor.is_basic_type or visitor.is_enumeration then
 					ccom_feature_writer.set_result_type (visitor.cecil_type)
@@ -203,8 +202,7 @@ feature {NONE} -- Implementation
 				until
 					arguments.after
 				loop
-					create visitor
-					visitor.visit (arguments.item.type)
+					visitor := arguments.item.type.visitor
 
 					if visitor.c_header_file /= Void and then not visitor.c_header_file.empty then
 						c_header_files.force (visitor.c_header_file)
@@ -280,8 +278,7 @@ feature {NONE} -- Implementation
 
 				if not (func_desc.return_type.type = Vt_void) then
 
-					create visitor
-					visitor.visit (func_desc.return_type)
+					visitor := func_desc.return_type.visitor
 
 					create return_value.make (1000)
 					return_value.append (New_line_tab)

@@ -26,8 +26,7 @@ feature -- Basic operations
 			create c_access_feature.make
 			create c_setting_feature.make
 
-			create visitor
-			visitor.visit (a_property.data_type)
+			visitor := a_property.data_type.visitor 
 
 			-- Access feature
 			create a_name.make (100)
@@ -154,24 +153,26 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (1000)
 			Result.append (Tab)
-			if visitor.is_basic_type then
+			if visitor.is_basic_type or visitor.is_enumeration then
 				Result.append (visitor.cecil_type)
 				Result.append (Space)
 				Result.append (Tmp_variable_name)
 				Result.append (Space_equal_space)
-				if is_boolean (visitor.vt_type) then
-					Result.append (Ce_mapper)
-					Result.append (Dot)
-					Result.append (visitor.ce_function_name)
-					Result.append (Space_open_parenthesis)
-					Result.append (Argument_name)
-					Result.append (Close_parenthesis)
-				else
-					Result.append (Open_parenthesis)
-					Result.append (visitor.cecil_type)
-					Result.append (Close_parenthesis)
-					Result.append (Argument_name)
-				end
+				Result.append (Open_parenthesis)
+				Result.append (visitor.cecil_type)
+				Result.append (Close_parenthesis)
+				Result.append (Argument_name)
+			elseif (visitor.vt_type = Vt_bool) then
+				Result.append (visitor.cecil_type)
+				Result.append (Space)
+				Result.append (Tmp_variable_name)
+				Result.append (Space_equal_space)
+				Result.append (Ce_mapper)
+				Result.append (Dot)
+				Result.append (visitor.ce_function_name)
+				Result.append (Space_open_parenthesis)
+				Result.append (Argument_name)
+				Result.append (Close_parenthesis)
 			else
 				Result.append (Eif_object)
 				Result.append (Space)

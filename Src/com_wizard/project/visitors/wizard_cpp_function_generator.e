@@ -38,14 +38,12 @@ feature {NONE} -- Implementation
 			until
 				arguments.off
 			loop
-				create visitor
-				visitor.visit (arguments.item.type)
+				visitor := arguments.item.type.visitor
 
 				if is_paramflag_fretval (arguments.item.flags) then
 					pointed_descriptor ?= arguments.item.type
 					if pointed_descriptor /= Void then
-						create visitor
-						visitor.visit (pointed_descriptor.pointed_data_type_descriptor)
+						visitor := pointed_descriptor.pointed_data_type_descriptor.visitor
 						if visitor.is_basic_type or visitor.is_enumeration or (visitor.vt_type = Vt_bool) then
 							ccom_feature_writer.set_result_type (visitor.cecil_type)
 						else
@@ -161,8 +159,7 @@ feature {NONE} -- Implementation
 			end
 
 			if not (func_desc.return_type.type = Vt_hresult) then
-				create visitor
-				visitor.visit (func_desc.return_type)
+				visitor := func_desc.return_type.visitor
 
 				if visitor.is_basic_type or visitor.is_enumeration then
 					ccom_feature_writer.set_result_type (visitor.cecil_type)

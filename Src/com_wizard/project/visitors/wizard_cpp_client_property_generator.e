@@ -40,8 +40,7 @@ feature {NONE} -- Basic operations
 			tmp_string, access_feature_name, set_feature_name: STRING
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			create visitor
-			visitor.visit (a_property.data_type)
+			visitor := a_property.data_type.visitor
 
 			create_access_feature (a_component, interface_name, lcid, a_property, visitor)
 

@@ -27,7 +27,6 @@ feature -- Basic operations
 			create changed_name.make (100)
 
 			create feature_writer.make
-			create visitor
 
 			if a_descriptor.coclass_eiffel_names.has (coclass_name) then
 				function_renamed := True
@@ -43,7 +42,7 @@ feature -- Basic operations
 			set_feature_result_type_and_arguments
 
 			-- Set return type for C server function
-			visitor.visit (func_desc.return_type)
+			visitor := func_desc.return_type.visitor 
 
 			-- Set description, function body
 			feature_writer.set_comment (func_desc.description)

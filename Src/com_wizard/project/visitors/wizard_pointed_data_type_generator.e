@@ -30,8 +30,7 @@ feature -- Basic operations
 			tmp_string: STRING
 		do
 			is_pointed := True
-			create pointed_visitor
-			pointed_visitor.visit (a_descriptor.pointed_data_type_descriptor)
+			pointed_visitor := a_descriptor.pointed_data_type_descriptor.visitor 
 
 			if 
 				pointed_visitor.is_interface and 
@@ -138,7 +137,7 @@ feature -- Basic operations
 				need_generate_ec := True
 
 				create ce_function_signature.make (100)
-				ce_function_signature.append (c_type)
+				ce_function_signature.append (Iunknown)
 				ce_function_signature.append (Space)
 				ce_function_signature.append ("a_interface_pointer")
 

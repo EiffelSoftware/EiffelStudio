@@ -32,8 +32,7 @@ feature -- Basic operations
 
 			-- Set return type.
 			if func_desc.return_type /= Void then
-				create visitor
-				visitor.visit (func_desc.return_type)
+				visitor := func_desc.return_type.visitor
 
 				if is_hresult (visitor.vt_type) then
 					ccom_feature_writer.set_result_type (Std_method_imp)
@@ -98,15 +97,13 @@ feature {NONE} -- Implementation
 				until
 					func_desc.arguments.after
 				loop
-					create visitor
-
 					if is_paramflag_fretval (func_desc.arguments.item.flags) then
 						pointed_data_type_descriptor ?= func_desc.arguments.item.type
 
 						if pointed_data_type_descriptor /= Void then
-							visitor.visit (pointed_data_type_descriptor.pointed_data_type_descriptor)
+							visitor := pointed_data_type_descriptor.pointed_data_type_descriptor.visitor
 						else
-							visitor.visit (func_desc.arguments.item.type)
+							visitor := func_desc.arguments.item.type.visitor
 						end
 						is_function := True
 						return_value.append (return_value_set_up (func_desc.arguments.item.name, func_desc.arguments.item.type))
@@ -115,7 +112,7 @@ feature {NONE} -- Implementation
 						cecil_call.append (cecil_function_set_up (visitor))
 
 					else
-						visitor.visit (func_desc.arguments.item.type)
+						visitor := func_desc.arguments.item.type.visitor
 
 						if is_paramflag_fout (func_desc.arguments.item.flags) then
 							
@@ -220,7 +217,7 @@ feature {NONE} -- Implementation
 			valid_arg_name: not arg_name.empty
 		do
 			create Result.make (1000)
-			if visitor.is_basic_type then
+			if visitor.is_basic_type or visitor.is_enumeration then
 				Result.append (visitor.cecil_type)
 				Result.append (Space)
 				Result.append (Tmp_clause)
@@ -229,9 +226,9 @@ feature {NONE} -- Implementation
 				Result.append (Open_parenthesis)
 				Result.append (visitor.cecil_type)
 				Result.append (Close_parenthesis)
-
 				Result.append (arg_name)
-			elseif is_boolean (visitor.vt_type) and not visitor.is_pointed then
+
+			elseif  (visitor.vt_type = Vt_bool) then
 				Result.append (Eif_boolean)
 				Result.append (Space)
 				Result.append (Tmp_clause)
@@ -362,13 +359,11 @@ feature {NONE} -- Implementation
 			visitor: WIZARD_DATA_TYPE_VISITOR
 			pointed_type_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 		do
-			create visitor
-
 			pointed_type_descriptor ?= type_descriptor
 			if pointed_type_descriptor /= Void then
-				visitor.visit (pointed_type_descriptor.pointed_data_type_descriptor)
+				visitor := pointed_type_descriptor.pointed_data_type_descriptor.visitor
 			else
-				visitor.visit (type_descriptor)
+				visitor := type_descriptor.visitor
 			end
 
 			create Result.make (1000)
@@ -376,7 +371,7 @@ feature {NONE} -- Implementation
 			Result.append (arg_name)
 			Result.append (Space_equal_space)
 
-			if visitor.is_basic_type then
+			if visitor.is_basic_type or visitor.is_enumeration then
 				Result.append (Open_parenthesis)
 				Result.append (visitor.c_type)
 				Result.append (Close_parenthesis)
@@ -449,7 +444,7 @@ feature {NONE} -- Implementation
 			return_type: STRING
 		do
 			create Result.make (1000)
-			if visitor.is_basic_type then
+			if visitor.is_basic_type or visitor.is_enumeration then
 				if is_int (visitor.vt_type) or is_integer2 (visitor.vt_type) or is_integer4 (visitor.vt_type) or is_unsigned_int (visitor.vt_type)
 						or is_unsigned_long (visitor.vt_type) or is_unsigned_short (visitor.vt_type) then
 					Result := cecil_function_code (Eif_integer_function, Eif_integer_function_name)
@@ -472,7 +467,7 @@ feature {NONE} -- Implementation
 					Result.append (Eif_double)
 					return_type := clone (Eif_double)
 				end
-			elseif is_boolean (visitor.vt_type) and not visitor.is_pointed then
+			elseif (visitor.vt_type = Vt_bool) then
 				Result := cecil_function_code (Eif_boolean_function, Eif_boolean_function_name)
 				Result.append (New_line_tab)
 				Result.append (Eif_boolean)
@@ -515,12 +510,11 @@ feature {NONE} -- Implementation
 				func_desc.arguments.off
 			loop
 				if not is_paramflag_fretval (func_desc.arguments.item.flags) then
-					create visitor
-					visitor.visit (func_desc.arguments.item.type)
+					visitor := func_desc.arguments.item.type.visitor
 					Result.append (Comma_space)
-					if visitor.is_basic_type then
+					if visitor.is_basic_type or visitor.is_enumeration then
 						Result.append (visitor.cecil_type)
-					elseif not visitor.is_pointed and is_boolean (visitor.vt_type) then
+					elseif (visitor.vt_type = Vt_bool) then
 						Result.append (Eif_boolean)
 					else
 						Result.append (Eif_reference)
@@ -531,7 +525,6 @@ feature {NONE} -- Implementation
 
 			Result.append (Close_parenthesis)
 			Result.append (Close_parenthesis)
-			
 		end
 
 	cecil_function_code (function_type, function_name: STRING): STRING is
@@ -620,8 +613,7 @@ feature {NONE} -- Implementation
 				until
 					func_desc.arguments.off
 				loop
-					create visitor
-					visitor.visit (func_desc.arguments.item.type)
+					visitor := func_desc.arguments.item.type.visitor
 
 					Result.append (Beginning_comment_paramflag)
 

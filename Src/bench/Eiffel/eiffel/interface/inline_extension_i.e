@@ -103,7 +103,10 @@ feature {NONE} -- Implementation
 			l_buffer: GENERATION_BUFFER
 			l_old, l_temp: GENERATION_BUFFER
 			l_values: ARRAY [STRING]
+			l_names: ARRAY [STRING]
+			l_max, l_current_max: INTEGER
 			i, nb: INTEGER
+			done: BOOLEAN
 		do
 			if is_cpp then
 				context.set_has_cpp_externals_calls (True)
@@ -112,74 +115,111 @@ feature {NONE} -- Implementation
 			generate_header_files
 
 			l_code := clone (Names_heap.item (alias_name_id))
-			l_code.right_adjust
-			l_code.left_adjust
-
-			if argument_names /= Void then
-					-- Generate all expressions corresponding to passed arguments.
-					-- We use a trick to use an empty generation buffer by replacing
-					-- shared one `context.buffer' by a temporary one.
-				l_old := context.buffer
-				create l_values.make (1, argument_names.count)
-				if parameters /= Void then
-					from
-						parameters.start
-						i := 1
-					until
-						parameters.after
-					loop
-						create l_temp.make (32)
-						context.set_buffer (l_temp)
-						parameters.item.print_register
-						l_values.put (l_temp, i)
-						parameters.forth
-						i := i + 1
+				-- If there was no alias clause then do nothing.
+			if l_code /= Void then
+				l_code.right_adjust
+				l_code.left_adjust
+	
+				if argument_names /= Void then
+						-- Generate all expressions corresponding to passed arguments.
+						-- We use a trick to use an empty generation buffer by replacing
+						-- shared one `context.buffer' by a temporary one.
+					l_old := context.buffer
+					create l_values.make (1, argument_names.count)
+					create l_names.make (1, argument_names.count)
+					if parameters /= Void then
+						from
+							parameters.start
+							i := 1
+						until
+							parameters.after
+						loop
+							create l_temp.make (32)
+							context.set_buffer (l_temp)
+							parameters.item.print_register
+							l_values.put (l_temp, i)
+							parameters.forth
+							i := i + 1
+						end
+					else
+							-- If parameters was Void, it means that we are generating code
+							-- in encapsulating routine.
+						from
+							i := 1
+							nb := argument_names.count
+						until
+							i > nb
+						loop
+							l_values.put ("arg" + i.out, i)
+							i := i + 1
+						end
 					end
-				else
-						-- If parameters was Void, it means that we are generating code
-						-- in encapsulating routine.
+					context.set_buffer (l_old)
+				
+						-- Extract names from arguments.
 					from
-						i := 1
-						nb := argument_names.count
+						i := 0
+						nb := argument_names.count - 1
 					until
 						i > nb
 					loop
-						l_values.put ("arg" + i.out, i)
+						l_arg := "$" + Names_heap.item (argument_names.item (i))
+						l_names.put (l_arg, i + 1)
+							-- Find out the length of the biggest one.
+						l_max := l_max.max (l_arg.count)
 						i := i + 1
 					end
+					
+						-- Now replace arguments by their real name. Note that we always start
+						-- with the bigger one to the small one. Not doing it was breaking
+						-- eweasel tests ccomp046, ccomp047 and final026.
+					from
+					until
+						done
+					loop
+						from
+							done := True
+							i := 1
+							nb := argument_names.count
+						until
+							i > nb
+						loop
+							l_arg := l_names.item (i)
+							if l_arg /= Void then
+								if l_arg.count >= l_max then
+									l_code.replace_substring_all (l_names.item (i), l_values.item (i))
+									l_names.put (Void, i)
+									done := False
+								else
+									l_current_max := l_current_max.max (l_arg.count)
+								end
+							end
+							i := i + 1
+						end
+						l_max := l_current_max
+						l_current_max := 0
+					end
 				end
-				context.set_buffer (l_old)
-			
-				from
-					i := 0
-					nb := argument_names.count - 1
-				until
-					i > nb
-				loop
-					l_arg := "$" +  Names_heap.item (argument_names.item (i))
-					l_code.replace_substring_all (l_arg, l_values.item (i + 1))
-					i := i + 1
+	
+					-- Replace `$$_result_type' if used by return type of current inlined function
+				l_code.replace_substring_all ("$$_result_type", a_ret_type.c_type.c_string)
+	
+					-- FIXME: Manu 03/26/2003:
+					-- When verbatim strings are used, on Windows we get a %R%N which
+					-- is annoying to see in generated code. We get rid of it here.
+				l_code.replace_substring_all ("%R", "")
+	
+				l_buffer := Context.buffer
+				if a_ret_type.is_void then
+					l_buffer.putstring (l_code)
+				else
+					if a_ret_type.is_boolean then
+						l_buffer.putstring ("EIF_TEST")
+					end
+					l_buffer.putchar ('(')
+					l_buffer.putstring (l_code)
+					l_buffer.putchar (')')
 				end
-			end
-
-				-- Replace `$$_result_type' if used by return type of current inlined function
-			l_code.replace_substring_all ("$$_result_type", a_ret_type.c_type.c_string)
-
-				-- FIXME: Manu 03/26/2003:
-				-- When verbatim strings are used, on Windows we get a %R%N which
-				-- is annoying to see in generated code. We get rid of it here.
-			l_code.replace_substring_all ("%R", "")
-
-			l_buffer := Context.buffer
-			if a_ret_type.is_void then
-				l_buffer.putstring (l_code)
-			else
-				if a_ret_type.is_boolean then
-					l_buffer.putstring ("EIF_TEST")
-				end
-				l_buffer.putchar ('(')
-				l_buffer.putstring (l_code)
-				l_buffer.putchar (')')
 			end
 		end
 

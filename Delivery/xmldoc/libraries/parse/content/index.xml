@@ -670,7 +670,9 @@ L [=] A ...
 				<paragraph>Two techniques are available to minimize backtracking. One, mentioned above, is to organize the production functions for choice construct classes so that they list the most frequent cases first. The other is to use the commit procedure in the production functions for aggregate constructs.</paragraph>
 				<paragraph>A call to commit in an aggregate A is a hint to the parser, which means:</paragraph>
 <code_block>
-"If you get to this point in trying to recognize a specimen of A as one among several possible choices for a choice construct C, and you later fail to obtain an A, then forget about other choices for C: you won't be able to find a C here.
+"If you get to this point in trying to recognize a specimen of A as one among several possible choices 
+for a choice construct C, and you later fail to obtain an A, then forget about other choices for C: you 
+won't be able to find a C here.
 You may go back to the next higher-level choice before C - or admit failure if there is no such choice left."
 </code_block>
 				<paragraph>Such a hint is useful when you want to let the parser benefit from some higher-level knowledge about the grammar, which is not directly deducible from the way the productions have been written.</paragraph>
@@ -696,7 +698,8 @@ You may go back to the next higher-level choice before C - or admit failure if t
 
 </code_block>
 				<paragraph>The commit after the recognition of the keyword "(" is there to use the following piece of higher-level knowledge:</paragraph>
-				<code_block>No choice production of the grammar that has <class_name>NESTED</class_name> as one of its alternatives has another alternative construct whose specimens could begin with an opening parenthesis "(".</code_block>
+				<code_block>No choice production of the grammar that has <class_name>NESTED</class_name> as one of its alternatives has 
+				another alternative construct whose specimens could begin with an opening parenthesis "(".</code_block>
 				<paragraph>Because of this property, if the parser goes so far as to recognize an opening parenthesis as part of parsing any construct 
 					<code>
 						<class_name>C</class_name>

@@ -10,13 +10,41 @@ indexing
 deferred class 
 	EV_APPLICATION_I
 	
-
-feature {NONE} -- Initialization
+feature {EV_APPLICATION} -- Initialization
 	
-	make (interf: EV_APPLICATION) is
+	make is
+			-- Create the application.
 		deferred
 		end
-	
+
+	launch (interface: EV_APPLICATION) is
+			-- Launch the main window and the application.
+		deferred
+		end
+
+feature -- Accelerators - command association
+
+	add_accelerator_command (acc: EV_ACCELERATOR; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when `acc' is completed by the user.
+		require
+			valid_command: cmd /= Void
+		deferred
+		end
+
+	remove_accelerator_commands (acc: EV_ACCELERATOR) is
+			-- Empty the list of commands to be executed when
+			-- `acc' is completed by the user.
+		deferred
+		end
+
+feature -- Basic operation
+
+	exit is
+			-- Exit the application
+		deferred
+		end
+
 feature {EV_APPLICATION} -- Implementation
 	
 	iterate is
@@ -24,11 +52,7 @@ feature {EV_APPLICATION} -- Implementation
                 deferred
                 end	
 
-	exit is
-			-- Exit the application
-		deferred
-		end
-end
+end -- class EV_APPLICATION_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -125,11 +125,12 @@ feature -- Status setting
 	raise is
 			-- Raise `Current'. ie: put the window on the front
 			-- of the screen.
+		local
+			hwnd: POINTER
 		do
-			set_z_order (hwnd_top)
-			set_focus
+			hwnd := feature {WEL_C_EXTERNALS}.set_active_window (wel_item)
 		end
-
+		
 	lower is
 			-- Lower `Current'. ie: put the window on the back
 			-- of the screen.

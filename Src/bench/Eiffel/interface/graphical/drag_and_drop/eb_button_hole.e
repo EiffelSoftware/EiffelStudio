@@ -67,10 +67,6 @@ feature -- For redefinition in the descendants.
 			Result := associated_command.icon_symbol
 		end;
 
-	text_window: TEXT_WINDOW is
-		do
-		end;
-
 feature -- Pick and Throw
 
 	receive (a_stone: STONE) is
@@ -86,7 +82,7 @@ feature -- Properties
 	tool: TOOL_W is
 			-- Tool attached to Current
 		do
-			Result := associated_command.text_window.tool
+			Result := associated_command.tool
 		end
 
 end -- class EB_BUTTON_HOLE

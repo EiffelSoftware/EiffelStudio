@@ -42,7 +42,7 @@ feature -- Formatting
 	format (stone: FEATURE_STONE) is
 			-- Show the "debug" format of `stone' if it is debuggable.
 		local
-			tool: BAR_AND_TEXT;
+			bar_and_text_tool: BAR_AND_TEXT;
 			e_feature: E_FEATURE;
 			message: STRING
 		do
@@ -51,9 +51,9 @@ feature -- Formatting
 				if e_feature.is_debuggable then
 					old_format (stone)
 				else
-					tool ?= text_window.tool;
+					bar_and_text_tool ?= tool;
 					if tool /= Void then
-						tool.showtext_frmt_holder.execute (stone)
+						bar_and_text_tool.showtext_frmt_holder.execute (stone)
 					end;
 					if e_feature.body_id = Void then
 							--FIXME need specify error message
@@ -76,7 +76,7 @@ feature -- Formatting
 							-- Cannot debug routines from the DC-set.
 						message := w_Cannot_debug_dynamics
 					end;
-					warner (text_window).gotcha_call (message)
+					warner (popup_parent).gotcha_call (message)
 				end;
 			end
 		end;
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.
 		do
-			text_window.display_header ("Computing stop point positions...")
+			tool.set_title ("Computing stop point positions...")
 		end;
 
 feature {NONE} -- Attributes

@@ -12,19 +12,13 @@ deferred class
 inherit
 
 	FORMATTER
+		rename
+			init_from_tool as make
 		redefine
-			format, execute, text_window
+			format, execute, tool
 		end;
 	SHARED_APPLICATION_EXECUTION;
 	EXEC_MODES
-
-feature -- Standard Initialization
-
-	make (a_text_window: PROJECT_TEXT) is
-			-- Initialize the command, and set an action.
-		do
-			init (a_text_window);
-		end;
 
 feature -- Execution
 
@@ -36,9 +30,9 @@ feature -- Execution
 			end
 			format (Void);
 			if argument = Format_and_run then
-				text_window.tool.debug_run_cmd_holder.associated_command.execute (Void)
+				tool.debug_run_cmd_holder.associated_command.execute (Void)
 			end;
-			text_window.set_last_format (holder)
+			tool.set_last_format (holder)
 		end;
 
 feature -- Formatting
@@ -51,8 +45,8 @@ feature -- Formatting
 
 feature -- Properties
 
-	text_window: PROJECT_TEXT;
-			-- Text to be displayed in the project tool.
+	tool: PROJECT_W;
+			-- Project tool
 
 feature {NONE} -- Attributes
 

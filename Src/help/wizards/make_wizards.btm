@@ -14,7 +14,7 @@ call make_vision2_wizard.btm >>& %INSTALL_LOG
 remtrace *****************************************************************
 remtrace *                Compiling Wizard Wizard                        *
 remtrace *****************************************************************
-call make_wizard_wizard.btm >>& %INSTALL_LOG
+REM call make_wizard_wizard.btm >>& %INSTALL_LOG
 remtrace *****************************************************************
 remtrace *              Compiling Precompilation Wizard                  *
 remtrace *****************************************************************

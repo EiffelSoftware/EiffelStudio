@@ -12,6 +12,22 @@ inherit
 
 feature {NONE} -- Implementation
 
+	impl_header_file_name (a_header_file_name: STRING): STRING is
+			-- Name of implementation header file.
+		require
+			non_void_header_file_name: a_header_file_name /= Void
+			non_empty_header_file_name: not a_header_file_name.empty
+			valid_header_file_name: a_header_file_name.substring_index (".h", 1) = 
+								a_header_file_name.count - 1
+		do
+			Result := clone (a_header_file_name)
+			Result.insert ("_impl", Result.count - 1)
+		ensure
+			non_void_header_file_name: Result /= Void
+			non_empty_header_file_name: not Result.empty
+			valid_header_file_name: Result.substring_index (".h", 1) = Result.count - 1
+		end
+
 	macro_accesser_name (record_name: STRING; 
 				field_descriptor: WIZARD_RECORD_FIELD_DESCRIPTOR): STRING is
 			-- Name of accesser function.

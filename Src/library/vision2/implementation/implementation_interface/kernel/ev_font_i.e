@@ -137,6 +137,8 @@ feature -- Status report
 
 	string_width (a_string: STRING): INTEGER is
 			-- Width in pixels of `a_string' in the current font.
+		require
+			a_string_not_void: a_string /= Void
 		deferred
 		ensure
 			positive: Result >= 0
@@ -209,6 +211,9 @@ end -- class EV_FONT_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/03 00:52:37  brendel
+--| Added precondition to string_width.
+--|
 --| Revision 1.12  2000/02/22 18:39:40  oconnor
 --| updated copyright date and formatting
 --|

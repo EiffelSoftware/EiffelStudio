@@ -93,7 +93,8 @@ inherit
 			on_en_change,
 			enable,
 			disable,
-			line_count
+			line_count,
+			background_brush
 		end
 
 	WEL_EM_CONSTANTS
@@ -356,6 +357,19 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- WEL Implementation
+
+	background_brush: WEL_BRUSH is
+			-- Current window background color used to refresh the window when
+			-- requested by the WM_ERASEBKGND windows message.
+		local
+			back: EV_COLOR_IMP
+		do
+			back ?= background_color.implementation
+			check
+				background_color_not_void: back /= Void
+			end
+			create Result.make_solid (back)
+		end
  
 	default_style: INTEGER is
 			-- Default windows style used to create `Current'.
@@ -371,7 +385,6 @@ feature {NONE} -- WEL Implementation
 		do
 			Result := Ws_ex_clientedge
 		end
-
 
 	on_en_change is
 			-- `Text' has been modified.

@@ -939,7 +939,7 @@ feature {NONE} -- Debugger Info List Access
 			else			
 				Result := dbg_info_modules.item (l_module_key)
 				if a_create_if_not_found and Result = Void then
-					create Result.make (l_module_key)
+					create Result.make (l_module_key, system.name)
 					dbg_info_modules.put (Result, l_module_key)
 				end
 				last_info_from_module := Result
@@ -1040,13 +1040,24 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 				loop
 					l_remote_project_directory := l_precomp_dirs.item_for_iteration
 					l_pfn := l_remote_project_directory.precomp_il_info_file
-					debug ("debugger_il_info_trace")
+					debug ("debugger_il_info_trace_extra")
 						print (l_pfn)
 						io.put_new_line
 					end
 					l_succeed := import_file_data (l_pfn, l_remote_project_directory.system_name, True)
 					load_successful := load_successful and l_succeed
 					l_precomp_dirs.forth
+				end
+			end
+			
+			debug ("debugger_il_info_trace_extra")
+				from
+					dbg_info_modules.start
+				until
+					dbg_info_modules.after
+				loop
+					dbg_info_modules.item_for_iteration.debug_display
+					dbg_info_modules.forth
 				end
 			end
 		end
@@ -1074,9 +1085,6 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 				create l_il_info_file.make (a_fn)
 				if not l_il_info_file.exists then
 						--| File does not exists !
---					check
---						Eiffel_debug_il_information_file_missing: False
---					end
 				else
 					l_il_info_file.open_read
 					l_retrieved := l_il_info_file.retrieved
@@ -1103,10 +1111,17 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 						loop
 							l_info_module := l_dbg_info_modules.item_for_iteration
 							update_imported_info_module (a_system_name, l_info_module)
-							dbg_info_modules.force (l_info_module, l_info_module.module_name)
-							check
-								info_module_inserted: dbg_info_modules.inserted
+
+							debug ("debugger_il_info_trace")
+								print (" :: Importing Module from [" + l_info_module.module_name + "] %N")
+							end							
+							
+							if dbg_info_modules.has (l_info_module.module_name) then
+								dbg_info_modules.item (l_info_module.module_name).merge (l_info_module)
+							else
+								dbg_info_modules.put (l_info_module, l_info_module.module_name)							
 							end
+							
 							l_dbg_info_modules.forth
 						end
 					else
@@ -1115,7 +1130,7 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 					end
 
 					dbg_info_class_types.merge (l_dbg_info_class_types)
-				end			
+				end
 			else
 				Result := False
 				loading_errors.extend ("Unable to load [" + a_fn + "]")
@@ -1128,7 +1143,7 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 	update_imported_info_module (a_system_name: STRING; a_info_module: IL_DEBUG_INFO_FROM_MODULE) is
 			-- Update imported module name to effective module name.
 		do
-			a_info_module.update_module_name (module_key (precompilation_module_name (a_system_name)))
+			a_info_module.update_module_name (module_key (precompilation_module_name (a_info_module.system_name)))
 		end
 
 	Il_info_file_name: FILE_NAME is
@@ -1137,7 +1152,6 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 			create Result.make_from_string (Workbench_generation_path)
 			Result.set_file_name (Il_info_name)
 			Result.add_extension (Il_info_extension)	
-		end	
-
+		end
 
 end -- class IL_DEBUG_INFO_RECORDER

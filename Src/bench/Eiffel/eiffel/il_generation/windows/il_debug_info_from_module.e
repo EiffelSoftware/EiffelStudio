@@ -28,12 +28,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_module_name: like module_name) is
+	make (a_module_name: like module_name; a_syst_name: STRING) is
 			-- Initialize `Current'.
 		require
 			mod_name_valid: a_module_name /= Void and then not a_module_name.is_empty
 		do
-			module_name := a_module_name
+			module_name := a_module_name		
+			system_name := a_syst_name
 			create list_class_type_id.make (10)
 			create list_feature_info.make (100)
 		end
@@ -59,11 +60,27 @@ feature {IL_DEBUG_INFO_RECORDER} -- Update Module Name
 		do
 			module_name := a_mod_name
 		end
+		
+	merge (other: like Current) is
+			-- Merge information from other into Current.
+		do
+			list_class_type_id.merge (other.list_class_type_id)
+			list_feature_info.merge (other.list_feature_info)
+		end		
+
+	set_system_name (s: STRING) is
+			-- 
+		do
+			system_name := s
+		end		
 
 feature -- Properties
 
 	module_name: STRING
 			-- formatted Module name 
+			
+	system_name: STRING
+			-- In case this module is a precompiled lib
 
 feature -- Queries Class
 
@@ -217,7 +234,7 @@ feature -- Cleaning operation
 			removed: not know_feature_from_token (a_feature_token)
 		end
 
-feature {NONE} -- Storage Implementation
+feature {IL_DEBUG_INFO_FROM_MODULE} -- Storage Implementation
 
 	list_class_type_id: HASH_TABLE [INTEGER, INTEGER] 
 			-- {static_type_id} <= {ClassToken}
@@ -225,6 +242,30 @@ feature {NONE} -- Storage Implementation
 	list_feature_info: HASH_TABLE [TUPLE [INTEGER, INTEGER], INTEGER]
 			-- {class_id, name_id} <= {feature_token}
 
+feature 
+
+	debug_display is
+			-- 
+		do
+			io.put_string ("************************************************************%N")
+			io.put_string ("* Module=" + module_name + "%N")
+			io.put_string ("************************************************************%N")
+			io.put_string ("%N Class Token  => static_class_type %N%N")
+
+			from
+				list_class_type_id.start
+			until
+				list_class_type_id.after
+			loop		
+				io.put_string (" - 0x" + list_class_type_id.key_for_iteration.to_hex_string)
+				io.put_string (" => " +	list_class_type_id.item_for_iteration.out)
+				io.put_string (" :: " + (Il_debug_info.class_types @ list_class_type_id.item_for_iteration).associated_class.name_in_upper)
+				io.put_new_line
+				
+				list_class_type_id.forth
+			end
+		end
+		
 invariant
 
 	module_name_not_void: module_name /= Void

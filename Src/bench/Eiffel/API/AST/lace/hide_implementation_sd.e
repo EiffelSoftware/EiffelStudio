@@ -39,7 +39,7 @@ feature {COMPILER_EXPORTER}
 				end;
 				if not error_raised then
 					if list = Void then
-						Context.current_cluster.set_hide_implementation;
+						Context.current_cluster.set_hide_implementation (is_hidden)
 					end
 				end;
 			end;

@@ -83,11 +83,11 @@ feature -- Last output
 	set_last_output (new_output: PROFILE_INFORMATION) is
 			-- Sets `new_output' to `last_output'.
 		require
-			no_ghosts: new_output /= Void
+			new_output_not_void: new_output /= Void
 		do
 			int_last_output := new_output
 		ensure
-			proper_work: last_output = new_output
+			last_output_set: last_output = new_output
 		end;
 
 feature {QUERY_EXECUTER} -- Implementation
@@ -97,7 +97,8 @@ feature {QUERY_EXECUTER} -- Implementation
 		local
 			retried: BOOLEAN;
 			current_item: STRING;
-			store: STORABLE
+			store: STORABLE;
+			line_str: STRING
 		do
 			if not retried then
 				current_item := expanded_filenames.item;
@@ -118,15 +119,13 @@ debug("SHOW_PROF_QUERY")
 	io.error.putstring ("profile information not VOID");
 	io.error.new_line
 end;
-						st.add_new_line;
-						st.add_new_line;
-						st.add_string (":::::::::::::::::::::::::::::::::::");
-						st.add_new_line;
 						st.add_string (current_item);
 						st.add_new_line;
-						st.add_string (":::::::::::::::::::::::::::::::::::")
+						!! line_str.make (current_item.count);
+						line_str.fill_character ('-');
+						st.add_string (line_str);
 						st.add_new_line;
-						st.add_new_line;
+						st.add_new_line
 					else
 debug("SHOW_PROF_QUERY")
 	io.error.putstring ("profile information VOID");
@@ -134,21 +133,17 @@ debug("SHOW_PROF_QUERY")
 end;
 					end
 				else
-					st.add_new_line;
-					st.add_new_line;
-					st.add_string (":::::::::::::::::::::::::::::::");
-					st.add_new_line;
 					st.add_string ("last output");
 					st.add_new_line;
-					st.add_string (":::::::::::::::::::::::::::::::");
+					st.add_string ("-----------");
 					st.add_new_line;
 					st.add_new_line;
 					profile_information := int_last_output
 				end
 			else
-				io.error.putstring ("Error during retrieval of: ");
-				io.error.putstring (current_item);
-				io.error.new_line
+				st.add_sting ("Error during retrieval of: ");
+				st.add_string (current_item);
+				st.add_new_line
 			end
 		rescue
 			retried := true;

@@ -299,6 +299,7 @@ feature -- Status settings
 			table_child: EV_TABLE_CHILD_IMP
 			child_imp: EV_WIDGET_IMP
 		do
+			child.implementation.on_parented
 			child_imp ?= child.implementation
 			check
 				valid_child: child_imp /= Void

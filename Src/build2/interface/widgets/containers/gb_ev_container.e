@@ -78,8 +78,10 @@ feature -- Access
 			merged_list.drop_actions.extend (agent new_merge)
 			merged_list.drop_actions.set_veto_pebble_function (agent veto_merge (?))
 			Result.extend (merged_list)
-			create propagate_foreground_color.make_with_text ("Propagate")
-			create propagate_background_color.make_with_text ("Propagate")
+			create propagate_foreground_color.make_with_text (gb_ev_container_propagate_foreground_color)
+			create propagate_background_color.make_with_text (gb_ev_container_propagate_background_color)
+			propagate_background_color.set_tooltip (gb_ev_container_propagate_background_color_tooltip)
+			propagate_foreground_color.set_tooltip (gb_ev_container_propagate_foreground_color_tooltip)
 			propagate_foreground_color.select_actions.extend (agent for_all_objects (agent {EV_CONTAINER}.propagate_foreground_color))
 			propagate_background_color.select_actions.extend (agent for_all_objects (agent {EV_CONTAINER}.propagate_background_color))
 				-- We now modify the editor item corresponding to

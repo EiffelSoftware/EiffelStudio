@@ -12,7 +12,7 @@ feature -- Access
 	reserved_words: ARRAYED_LIST [STRING] is
 			-- All reserved words of Eiffel as specified
 			-- in ETL3. In alphabetical order and all lowercase.
-		do
+		once
 			create Result.make (0)
 			Result.extend ("agent")
 			Result.extend ("alias")

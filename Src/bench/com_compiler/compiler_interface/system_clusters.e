@@ -244,6 +244,7 @@ feature -- Basic Operations
 			-- Checks to see if the cluster name is valid.
 		local
 			i: INTEGER
+			lower_name: STRING
 		do
 			Result := true
 			
@@ -272,6 +273,8 @@ feature -- Basic Operations
 				i := i + 1
 			end
 			
+			lower_name := a_name.clone (a_name)
+			lower_name.to_lower
 			-- check the reserved words
 			if Result = true then
 				if ace_accesser /= Void then
@@ -280,7 +283,7 @@ feature -- Basic Operations
 					until
 						ace_accesser.reserved_keywords.after or Result = false
 					loop
-						if ace_accesser.reserved_keywords.item.is_equal (a_name) then
+						if ace_accesser.reserved_keywords.item.is_equal (lower_name) then
 							Result := false
 						end	
 						ace_accesser.reserved_keywords.forth

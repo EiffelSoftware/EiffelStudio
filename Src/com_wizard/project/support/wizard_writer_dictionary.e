@@ -697,7 +697,9 @@ feature -- Generator constants -- 8
 
 	Iunknown_interface: STRING is "ECOM_IUNKNOWN_INTERFACE"
 
-	Empty_function_body: STRING is "%T%T%T-- Implementation here."
+	Empty_function_body: STRING is "%T%T%T-- Put Implementation here."
+
+	Exception_body: STRING is "%T%T%Ttrigger (E_notimpl)"
 
 	Result_clause: STRING is "Result := "
 

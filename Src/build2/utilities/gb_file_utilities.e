@@ -33,6 +33,7 @@ feature -- Basic operations
 		
 	move_file_between_directories (original, new: DIRECTORY; file_name: STRING) is
 			-- Move file named `file_name' from `original' directory to `new_directory'.
+			-- Do nothing if `original' is equivalent to `new'.
 		require
 			original_directory_exists: original.exists
 			new_directory_exists: new.exists
@@ -41,13 +42,15 @@ feature -- Basic operations
 			file: RAW_FILE
 			new_file_name, old_file_name: FILE_NAME
 		do
-			create new_file_name.make_from_string (new.name)
-			create old_file_name.make_from_string (original.name)
-			new_file_name.extend (file_name)
-			old_file_name.extend (file_name)
-			create file.make (old_file_name)
-			if file.exists then
-				file.change_name (new_file_name.string)
+			if not original.name.is_equal (new.name) then
+				create new_file_name.make_from_string (new.name)
+				create old_file_name.make_from_string (original.name)
+				new_file_name.extend (file_name)
+				old_file_name.extend (file_name)
+				create file.make (old_file_name)
+				if file.exists then
+					file.change_name (new_file_name.string)
+				end
 			end
 		end
 		

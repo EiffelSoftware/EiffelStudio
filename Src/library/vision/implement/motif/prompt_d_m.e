@@ -12,8 +12,11 @@ inherit
 	PROMPT_D_I;
 
 	PROMPT_M
+		rename
+			make as prompt_make
 		undefine
-			make, lower, raise, action_target
+			lower, raise, action_target, hide,
+			shown, show, destroy_xt_widget
 		redefine
 			define_cursor_if_shell, undefine_cursor_if_shell,
 			set_x, set_y, set_x_y, is_stackable
@@ -25,7 +28,7 @@ creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	make (a_prompt_dialog: PROMPT_D) is
 			-- Create a motif prompt dialog.

@@ -96,7 +96,7 @@ extern struct stack_list opstack_list;	/* List of all `opstack' allocated in eac
 #endif
 #endif
 
-extern char **st_alloc(register struct stack *stk, register int size);	/* Creates an empty stack */
+extern EIF_REFERENCE *st_alloc(register struct stack *stk, register int size);	/* Creates an empty stack */
 extern  int st_extend(register struct stack *stk, register int size);	/* Extends a stack */
 extern void st_truncate(register struct stack *stk);	/* Truncate stack if necessary */
 extern void st_wipe_out(register struct stchunk *chunk);/* Remove unneeded chunk from stack */

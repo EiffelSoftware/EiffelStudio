@@ -168,6 +168,60 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 		
+	assign_main_window_button: EV_TOOL_BAR_BUTTON is
+			-- `Result' is a tool bar button that
+			-- calls `add_new_directory'.
+		local
+			pixmaps: GB_SHARED_PIXMAPS
+		do
+			create Result
+			create pixmaps
+			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_titled_window_main_small_color"))
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+	objects: ARRAYED_LIST [GB_OBJECT] is
+			-- `Result' is all objects represented in `Current'.
+			-- No paticular order is guaranteed.
+		local
+			layout_item: GB_WINDOW_SELECTOR_ITEM
+			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+		do
+			create Result.make (2)
+			from
+				start
+			until
+				off
+			loop
+				layout_item ?= item
+				if layout_item /= Void then
+					Result.extend (layout_item.object)
+				else
+					directory_item ?= item
+					check
+						item_was_directory: directory_item /= Void
+					end
+					from
+						directory_item.start
+					until
+						directory_item.off
+					loop
+						layout_item ?= directory_item.item
+						check
+							item_was_layout_item: layout_item /= Void
+						end
+						Result.extend (layout_item.object)
+						directory_item.forth
+					end
+				end
+				forth
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+		
 feature -- Status setting
 
 	add_directory_item (directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM) is

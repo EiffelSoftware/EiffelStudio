@@ -164,7 +164,7 @@ create
 
 %type <TOKEN_LOCATION>		Position
 
-%expect 118
+%expect 121
 
 %%
 
@@ -1786,6 +1786,10 @@ Simple_factor:	TE_VOID
 			{ $$ := new_expr_call_as ($1) }
 	|	Agent_call
 			{ $$ := $1 }
+	|	New_call_on_static
+			{ $$ := new_expr_call_as ($1) }
+	|	New_a_static_call
+			{ $$ := new_expr_call_as ($1) }
 	|	TE_LPARAN Expression TE_RPARAN
 			{ $$ := new_paran_as ($2) }
 	|	TE_MINUS Factor
@@ -1816,10 +1820,6 @@ Typed_expression:	Typed
 			{ create {VALUE_AS} $$.initialize ($1) }
 	|	Typed_nosigned_real
 			{ create {VALUE_AS} $$.initialize ($1) }
-	|	New_call_on_static
-			{ $$ := new_expr_call_as ($1) }
-	|	New_a_static_call
-			{ $$ := new_expr_call_as ($1) }
 	|	Typed Simple_factor
 			{ create {TYPE_ADAPTATION_AS} $$.make ($1, $2) }
 	;

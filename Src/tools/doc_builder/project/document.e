@@ -93,7 +93,9 @@ feature --Validation
 			-- Is Current valid to the loaded schema?
 		do
 			if is_valid_xml then
-				schema_validator.validate_against_text (text, Shared_document_manager.schema.name)
+				if shared_document_manager.has_schema then
+					schema_validator.validate_against_text (text, Shared_document_manager.schema.name)
+				end				
 				Result := schema_validator.is_valid
 				if not Result then
 					error_report := schema_validator.error_report	
@@ -226,7 +228,7 @@ feature -- Query
 						-- Document defines no filtering
 				l_doc_filter.is_equal (shared_constants.output_constants.unfiltered) or			
 						-- Application level filtering matches document level filter type
-				l_curr_filter.is_equal (l_doc_filter)				
+				l_curr_filter.has_substring (l_doc_filter)				
 		end	
 
 	is_persisted: BOOLEAN is

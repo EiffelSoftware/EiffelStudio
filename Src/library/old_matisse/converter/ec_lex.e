@@ -128,7 +128,7 @@ feature -- Status setting
 			!!tmpsr.make(0);
 			!!tmpss.make(0);
 			!!file_name.make(0);
-			file_name.append("/tmp/ec_");
+		--	file_name.append("/tmp/ec_");
 			file_name.append(s);
 			file_name.append(".lex");
 			file_name.to_lower;

@@ -156,7 +156,7 @@ feature -- C code generation
 							-- Real body id to be stored in the id list of 
 							-- already called once routines.
 						file.putstring ("%TRTWO(")
-						file.putstring (real_body_id.generated_id)
+						real_body_id.generated_id (file)
 						file.putstring (");%N")
 					end
 					file.putstring ("%Treturn *PResult")

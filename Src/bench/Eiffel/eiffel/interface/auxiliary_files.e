@@ -319,7 +319,7 @@ feature -- Dynamic Library file
 
 									if Context.workbench_mode then
 										C_dynamic_lib_file.putstring ("RTUD(");
-										C_dynamic_lib_file.putstring (dl_exp.dl_class.actual_type.type_i.associated_class_type.id.generated_id);
+										dl_exp.dl_class.actual_type.type_i.associated_class_type.id.generated_id (C_dynamic_lib_file)
 										C_dynamic_lib_file.putchar (')');
 									else
 										C_dynamic_lib_file.putint (dl_exp.dl_class.actual_type.type_i.type_id - 1);

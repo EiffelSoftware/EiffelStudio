@@ -213,7 +213,7 @@ feature
 			then
 				rout_info := System.rout_info_table.item (rout_id)
 				file.putstring (" + RTWPA(")
-				file.putstring (rout_info.origin.generated_id)
+				rout_info.origin.generated_id (file)
 				file.putchar (',')
 				file.putint (rout_info.offset)
 				file.putstring (", Dtype(Current))")

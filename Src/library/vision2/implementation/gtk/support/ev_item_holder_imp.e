@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 			imp: EV_ANY_I
 		do
 			add_to_container (v)
-			if i <= count then
+			if i < count then
 				reorder_child (v, i)
 			end
 
@@ -137,6 +137,9 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/04/06 20:09:31  brendel
+--| Fixed bug in insert_i_th.
+--|
 --| Revision 1.22  2000/04/05 21:16:09  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

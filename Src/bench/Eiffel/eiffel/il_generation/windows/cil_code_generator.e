@@ -3778,20 +3778,22 @@ feature -- Addresses
 			type_is_expanded: a_type.is_expanded
 		do
 			inspect a_type.element_type
+			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_i then
+				method_body.put_opcode (feature {MD_OPCODES}.Ldind_i)
 			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_i1 then
 				method_body.put_opcode (feature {MD_OPCODES}.Ldind_i1)
-			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_u1 then
-				method_body.put_opcode (feature {MD_OPCODES}.Ldind_u1)
 			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_i2 then
 				method_body.put_opcode (feature {MD_OPCODES}.Ldind_i2)
-			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_u2 then
-				method_body.put_opcode (feature {MD_OPCODES}.Ldind_u2)
 			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_i4 then
 				method_body.put_opcode (feature {MD_OPCODES}.Ldind_i4)
-			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_u4 then
-				method_body.put_opcode (feature {MD_OPCODES}.Ldind_u4)
 			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_i8 then
 				method_body.put_opcode (feature {MD_OPCODES}.Ldind_i8)
+			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_u1 then
+				method_body.put_opcode (feature {MD_OPCODES}.Ldind_u1)
+			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_u2 then
+				method_body.put_opcode (feature {MD_OPCODES}.Ldind_u2)
+			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_u4 then
+				method_body.put_opcode (feature {MD_OPCODES}.Ldind_u4)
 			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_u8 then
 				method_body.put_opcode (feature {MD_OPCODES}.Ldind_u8)
 			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_boolean then
@@ -3802,8 +3804,6 @@ feature -- Addresses
 				method_body.put_opcode (feature {MD_OPCODES}.Ldind_r4)
 			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_r8 then
 				method_body.put_opcode (feature {MD_OPCODES}.Ldind_r8)
-			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_i then
-				method_body.put_opcode (feature {MD_OPCODES}.Ldind_i)
 			else
 					-- See comment on `generate_metamorphose' to see why we
 					-- use `implementation_id'.
@@ -3982,31 +3982,15 @@ feature -- Conversion
 			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_char then convert_to_character
 			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_r4 then convert_to_real
 			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_r8 then convert_to_double
+			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_u1 then convert_to_natural_8
+			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_u2 then convert_to_natural_16
+			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_u4 then convert_to_natural_32
+			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_u8 then convert_to_natural_64
 			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_i then convert_to_native_int
-			when
-				feature {MD_SIGNATURE_CONSTANTS}.Element_type_i1,
-				feature {MD_SIGNATURE_CONSTANTS}.Element_type_u1
-			then
-				convert_to_integer_8
-
-			when
-				feature {MD_SIGNATURE_CONSTANTS}.Element_type_i2,
-				feature {MD_SIGNATURE_CONSTANTS}.Element_type_u2
-			then
-				convert_to_integer_16
-
-			when
-				feature {MD_SIGNATURE_CONSTANTS}.Element_type_i4,
-				feature {MD_SIGNATURE_CONSTANTS}.Element_type_u4
-			then
-				convert_to_integer_32
-
-			when
-				feature {MD_SIGNATURE_CONSTANTS}.Element_type_i8,
-				feature {MD_SIGNATURE_CONSTANTS}.Element_type_u8
-			then
-				convert_to_integer_64
-
+			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_i1 then convert_to_integer_8
+			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_i2 then convert_to_integer_16
+			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_i4 then convert_to_integer_32
+			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_i8 then convert_to_integer_64
 			else
 				check
 					False
@@ -4043,6 +4027,31 @@ feature -- Conversion
 		do
 			method_body.put_opcode (feature {MD_OPCODES}.Conv_i8)
 		end
+
+	convert_to_natural_8 is
+			-- Convert top of stack into appropriate type.
+		do
+			method_body.put_opcode (feature {MD_OPCODES}.Conv_u1)
+		end
+
+	convert_to_natural_16 is
+			-- Convert top of stack into appropriate type.
+		do
+			method_body.put_opcode (feature {MD_OPCODES}.Conv_u2)
+		end
+
+	convert_to_natural_32 is
+			-- Convert top of stack into appropriate type.
+		do
+			method_body.put_opcode (feature {MD_OPCODES}.Conv_u4)
+		end
+
+	convert_to_natural_64 is
+			-- Convert top of stack into appropriate type.
+		do
+			method_body.put_opcode (feature {MD_OPCODES}.Conv_u8)
+		end
+
 
 	convert_to_double is
 			-- Convert top of stack into appropriate type.
@@ -5011,38 +5020,28 @@ feature -- Constants generation
 				put_character_constant ('%U')
 			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_r8 then
 				put_double_constant (0.0)
-			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_i then
-				put_integer_32_constant (0)
-				convert_to_native_int
-
 			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_r4 then
 				put_double_constant (0.0)
 				convert_to_real
-
-			when
-				feature {MD_SIGNATURE_CONSTANTS}.Element_type_i1,
-				feature {MD_SIGNATURE_CONSTANTS}.Element_type_u1
-			then
-				put_integer_8_constant (0)
-
-			when
-				feature {MD_SIGNATURE_CONSTANTS}.Element_type_i2,
-				feature {MD_SIGNATURE_CONSTANTS}.Element_type_u2
-			then
-				put_integer_16_constant (0)
-
-			when
-				feature {MD_SIGNATURE_CONSTANTS}.Element_type_i4,
-				feature {MD_SIGNATURE_CONSTANTS}.Element_type_u4
-			then
+			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_u1 then
+				put_natural_8_constant (0)
+			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_u2 then
+				put_natural_16_constant (0)
+			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_u4 then
+				put_natural_32_constant (0)
+			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_u8 then
+				put_natural_64_constant (0)
+			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_i then
 				put_integer_32_constant (0)
-
-			when
-				feature {MD_SIGNATURE_CONSTANTS}.Element_type_i8,
-				feature {MD_SIGNATURE_CONSTANTS}.Element_type_u8
-			then
+				convert_to_native_int
+			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_i1 then
+				put_integer_8_constant (0)
+			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_i2 then
+				put_integer_16_constant (0)
+			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_i4 then
+				put_integer_32_constant (0)
+			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_i8 then
 				put_integer_64_constant (0)
-
 			else
 				put_void
 			end
@@ -5093,13 +5092,13 @@ feature -- Constants generation
 			-- Put `i' as integer constant of type `type'.
 		require
 			type_not_void: type /= Void 
-			type_is_long: type.is_long
+			type_is_integer: type.is_integer
 		local
-			long: INTEGER_I
+			l_int: INTEGER_I
 		do
-			long ?= type
+			l_int ?= type
 			inspect
-				long.size
+				l_int.size
 			when 8 then put_integer_8_constant (i)
 			when 16 then put_integer_16_constant (i)
 			when 32 then put_integer_32_constant (i)
@@ -5132,6 +5131,54 @@ feature -- Constants generation
 			-- Put `i' as INTEGER_64 on IL stack
 		do
 			method_body.put_opcode_integer_64 (feature {MD_OPCODES}.Ldc_i8, i)
+		end
+
+	put_natural_constant (type: TYPE_I; i: INTEGER) is
+			-- Put `i' as natural constant of type `type'.
+		require
+			type_not_void: type /= Void 
+			type_is_natural: type.is_natural
+		local
+			l_nat: INTEGER_I
+		do
+			fixme ("Use NATURAL_I instead of INTEGER_I")
+			l_nat ?= type
+			inspect
+				l_nat.size
+			when 8 then put_natural_8_constant (i)
+			when 16 then put_natural_16_constant (i)
+			when 32 then put_natural_32_constant (i)
+			when 64 then put_natural_64_constant (i)
+			end
+		end
+
+	put_natural_8_constant,
+	put_natural_16_constant,
+	put_natural_32_constant (i: INTEGER) is
+			-- Put `i' as NATURAL_8, NATURAL_16, NATURAL on IL stack
+		do
+			fixme ("Use NATURAL_XX types")
+			inspect
+				i
+			when 0 then method_body.put_opcode (feature {MD_OPCODES}.Ldc_i4_0)
+			when 1 then method_body.put_opcode (feature {MD_OPCODES}.Ldc_i4_1)
+			when 2 then method_body.put_opcode (feature {MD_OPCODES}.Ldc_i4_2)
+			when 3 then method_body.put_opcode (feature {MD_OPCODES}.Ldc_i4_3)
+			when 4 then method_body.put_opcode (feature {MD_OPCODES}.Ldc_i4_4)
+			when 5 then method_body.put_opcode (feature {MD_OPCODES}.Ldc_i4_5)
+			when 6 then method_body.put_opcode (feature {MD_OPCODES}.Ldc_i4_6)
+			when 7 then method_body.put_opcode (feature {MD_OPCODES}.Ldc_i4_7)
+			when 8 then method_body.put_opcode (feature {MD_OPCODES}.Ldc_i4_8)
+			else
+				method_body.put_opcode_natural_32 (feature {MD_OPCODES}.Ldc_i4, i)
+			end
+		end
+
+	put_natural_64_constant (i: INTEGER_64) is
+			-- Put `i' as NATURAL_64 on IL stack
+		do
+			fixme ("Use NATURAL_XX types")
+			method_body.put_opcode_natural_64 (feature {MD_OPCODES}.Ldc_i8, i)
 		end
 
 	put_double_constant (d: DOUBLE) is

@@ -257,7 +257,9 @@ feature -- Commands
 				save_backup_info
 			end
 
-			stop_compilation
+			if not Eiffel_project.is_finalizing then
+				stop_compilation
+			end
 		ensure
 			increment_compilation_counter:
 				(successful and (System.has_been_changed or else System.freezing_occurred))

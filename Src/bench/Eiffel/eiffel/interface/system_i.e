@@ -4391,7 +4391,7 @@ feature -- Concurrent Eiffel
 			--| of the compilation or after retrieving a project
 			--| s this can raise an error
 		do
-			--Result := Concurrency_license.licensed
+			Result := Concurrency_license.licensed
 		end
 
 	has_separate: BOOLEAN

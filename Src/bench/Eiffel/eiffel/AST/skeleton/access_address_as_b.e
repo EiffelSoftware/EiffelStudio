@@ -10,7 +10,7 @@ inherit
 
 	ACCESS_ADDRESS_AS
 		redefine
-			make, feature_name, parameters
+			feature_name, parameters
 		end;
 
 	ACCESS_ID_AS_B

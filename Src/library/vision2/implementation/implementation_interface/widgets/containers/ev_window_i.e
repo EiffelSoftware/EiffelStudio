@@ -14,31 +14,18 @@ deferred class
 inherit
 	
 	EV_CONTAINER_I
-		rename
-			make as widget_make
-		export
-			{NONE} widget_make
-		end
-	
 		
 --	EV_WINDOW_MANAGER_EV_WINDOW_I
 
 	
 feature {NONE} -- Initialization
 	
-        make is
+        make (interface: EV_WINDOW) is
                         -- Create a window. Window does not have any
                         -- parents
 		deferred
 		end
 
-feature {NONE} -- Implementation
-
-	widget_make (parent: EV_CONTAINER) is
-			-- This has to be made effective, but is not used.
-		do
-		end
-		
 feature  -- Access
 
 

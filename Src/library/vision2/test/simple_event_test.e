@@ -37,7 +37,7 @@ feature -- Access
 			
 			s.set_pointer_position (
 				(x+(w/2)).truncated_to_integer,
-				(y+(h/2))).truncated_to_integer
+				(y+(h/2)).truncated_to_integer
 			)
 			sleep (1)
 			s.fake_pointer_button_press (1)

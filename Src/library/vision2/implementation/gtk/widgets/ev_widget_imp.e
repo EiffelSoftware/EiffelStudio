@@ -216,6 +216,32 @@ feature -- Access
 	popup_menu: EV_MENU
 			-- Menu popped up when button 3 is pressed on widget.
 
+	screen_x: INTEGER is
+			-- Horizontal offset relative to screen.
+		local
+			wind: EV_WINDOW_IMP
+		do 
+			wind ?= Current
+			if wind /= Void then
+				Result := x_position
+			elseif parent /= Void
+				then Result := x_position + parent.screen_x
+			end
+		end
+
+	screen_y: INTEGER is
+			-- Vertical offset relative to screen. 
+		local 
+			wind: EV_WINDOW_IMP 
+		do 
+			wind ?= Current
+			if wind /= Void then
+				Result := y_position
+			elseif parent /= Void then
+				Result := y_position + parent.screen_y
+			end
+		end
+	
 feature -- Status report
 
 	is_sensitive: BOOLEAN is
@@ -824,6 +850,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.63  2000/03/17 18:24:09  rogers
+--| Added screen_x and _screen_y using the old implementation taken directly from EV_WIDGET_I.
+--|
 --| Revision 1.62  2000/03/15 23:32:35  king
 --| Added code in set_pointer_style to set pointer_style attribute
 --|

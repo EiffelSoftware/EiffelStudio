@@ -24,7 +24,8 @@ feature
 	make is
 		local
 			init: INIT_CHECK;
-			mp: MOUSE_PTR
+			mp: MOUSE_PTR;
+			tg: STRING
 		do
 			no_message_on_failure;
 			if not retried then
@@ -45,9 +46,14 @@ feature
 			else
 				!! mp;
 				mp.restore;
+				if original_tag_name = Void then
+					tg := " "
+				else
+					tg := original_tag_name
+				end
 				Question_box.popup (Current,
 					Messages.internal_error_qu,
-					original_tag_name);
+					tg);
 				retried := False;
 				iterate
 			end;

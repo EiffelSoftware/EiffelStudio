@@ -243,6 +243,18 @@ feature -- Basic Operations
 			valid_header_name: not Result.is_empty
 		end
 
+	variable_name (a_type_name: STRING): STRING is
+			-- Variable naem that will contain instances of `a_type_name'
+		require
+			non_void_type_name: a_type_name /= Void
+		do
+			create Result.make (a_type_name.count + 2)
+			Result.append ("p_")
+			Result.append (a_type_name)
+		ensure
+			non_void_variable_name: Result /= Void
+		end
+		
 	standard_structures: HASH_TABLE [STRING, STRING] is
 			-- Names of standard structures.
 			-- Where item is Eiffel name, and key is C name

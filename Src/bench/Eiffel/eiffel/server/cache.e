@@ -92,6 +92,7 @@ feature -- Cache manipulations
 		local
 			i, j, size: INTEGER;
 			stop: BOOLEAN;
+			local_area: SPECIAL [T]
 		do
 			from
 					-- Iteration on the id queue which is implemented as
@@ -100,11 +101,12 @@ feature -- Cache manipulations
 					-- for insertion
 				size := array_capacity
 				i := out_index
+				local_area := area
 			until
 				i = in_index or else stop
 			loop
 				j := i
-				stop := equal (i_th (i).id, an_id)
+				stop := equal (local_area.item (i).id, an_id)
 				i := (i + 1) \\ size
 			end;
 			if stop then
@@ -120,11 +122,13 @@ feature -- Cache manipulations
 			-- Item which id is `an_id'
 		local
 			pos, size, j, i, last_index: INTEGER;
+			local_area: SPECIAL [T]
 		do
 			pos := index_of (an_id);
 			if pos /= in_index then
 					-- Successful search
-				Result := i_th (pos);
+				local_area := area
+				Result := local_area.item (pos);
 					-- Side effect: reorganization of queue; the founded
 					-- id in put in front of the queue.
 				from
@@ -135,11 +139,11 @@ feature -- Cache manipulations
 					i = last_index
 				loop
 					j := (i + 1) \\ size
-					put_i_th (i_th (j),i)
+					local_area.put (local_area.item (j),i)
 					i := j
 				end;
 					-- The asked id is put at the end of the queue.
-				put_i_th (Result, i)
+				local_area.put (Result, i)
 			end;
 		end;
 

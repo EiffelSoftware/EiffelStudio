@@ -57,6 +57,12 @@ feature -- Access
 			Result := return_code = 0
 		end
 
+	fonts: LINEAR [EV_FONT] is
+			-- List of fonts available on the system
+		do
+			--| FIXME IEK To be implemented
+		end
+
 end -- class EV_ENVIRONMENT_IMP
 
 --|----------------------------------------------------------------

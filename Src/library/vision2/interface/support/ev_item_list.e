@@ -96,7 +96,7 @@ feature -- Contract support
 			go_to (c)
 		end
 
-	lists_equal (list1, list2: LINKED_LIST [G]): BOOLEAN is
+	lists_equal (list1, list2: DYNAMIC_LIST [G]): BOOLEAN is
 			-- Are elements in `list1' equal to those in `list2'.
 		require
 			list1_not_void: list1 /= Void
@@ -104,22 +104,26 @@ feature -- Contract support
 		local
 			cur1, cur2: CURSOR
 		do
-			if list1.count = list2.count then
-				from
-					cur1 := list1.cursor
-					cur2 := list2.cursor
-					list1.start
-					list2.start
-					Result := True
-				until
-					list1.after or else Result = False
-				loop
-					Result := list1.item = list2.item
-					list1.forth
-					list2.forth
+			if list1 = list2 then
+				Result := True
+			else
+				if list1.count = list2.count then
+					from
+						cur1 := list1.cursor
+						cur2 := list2.cursor
+						list1.start
+						list2.start
+						Result := True
+					until
+						list1.after or else Result = False
+					loop
+						Result := list1.item = list2.item
+						list1.forth
+						list2.forth
+					end
+					list1.go_to (cur1)
+					list2.go_to (cur2)
 				end
-				list1.go_to (cur1)
-				list2.go_to (cur2)
 			end
 		end
 
@@ -162,6 +166,10 @@ end -- class EV_ITEM_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/04/19 01:36:39  pichery
+--| Modified `lists_equal' to take into account
+--| ARRAYED_LIST.
+--|
 --| Revision 1.14  2000/04/11 17:32:55  brendel
 --| Added `item_by_data'.
 --|

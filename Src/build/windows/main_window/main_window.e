@@ -10,14 +10,13 @@ indexing
 	Revision: "$Revision$"
 
 class
-
 	MAIN_WINDOW
 
 inherit
-
-	EV_WINDOW
+	EB_WINDOW
 		redefine
-			make_top_level
+			make_root,
+			set_geometry
 		end
 
 	WINDOWS
@@ -33,26 +32,23 @@ inherit
 
 	SHARED_CONTEXT
 
---	SHARED_LICENSE
+	MODE_CONSTANTS
 
---	MODE_CONSTANTS
+	SHARED_MODE
 
---	SHARED_MODE
-
---	SHARED_APPLICATION
+	SHARED_APPLICATION
 
 creation
+	make_root
 
-	make_top_level
+feature {NONE} -- Initialization
 
-feature -- Initialization
-
-	make_top_level is
+	make_root is
 			-- Create the main window.
 		local
 			hbox: EV_HORIZONTAL_BOX
 		do
-			{EV_WINDOW} Precursor
+			{EB_WINDOW} Precursor
 			create vertical_box.make (Current)
 
 			create menu_bar.make (Current)
@@ -69,10 +65,10 @@ feature -- Initialization
 					--| Command catalog
 			create command_catalog.make (vertical_split_area)
 					--| Context Editor
---			create context_editor.make (horizontal_split_area)
+			create context_editor.make (vertical_split_area)
 
 					--| Status bar
---			create status_bar.make (Current)
+			create status_bar.make (Current)
 
 			set_values
 			set_callbacks
@@ -81,12 +77,11 @@ feature -- Initialization
 	set_values is
  			-- Set the values for the GUI elements.
 		do
-			set_title (widget_names.main_panel)
+			set_title (widget_names.main_window)
 -- 			resources.check_fonts (base)
--- 			if Pixmaps.eiffelbuild_pixmap.is_valid then
--- 				set_icon_pixmap (Pixmaps.eiffelbuild_pixmap)
--- 			end
--- 			initialize_window_attributes
+			set_icon_pixmap (Pixmaps.eiffelbuild_pixmap)
+			set_geometry
+			unset_project_initialized
 		end
 
 	set_callbacks is
@@ -113,6 +108,15 @@ feature -- Initialization
 -- 			exit_menu_entry.add_activate_action (exit_cmd, Void)
 		end
 
+	set_geometry is
+		do
+			set_size (Resources.main_window_width, Resources.main_window_height)
+			set_x_y (Resources.main_window_x, Resources.main_window_y)
+
+			horizontal_split_area.set_position (Resources.tree_width)
+			vertical_split_area.set_position (Resources.cmd_catalog_height)
+		end
+
 feature -- Attributes
 
 	project_initialized: BOOLEAN
@@ -121,23 +125,20 @@ feature -- Attributes
 	project_changed: BOOLEAN
 			-- Project changed since last compilation
 
---	hide_show_windows: HIDE_SHOW_WINDOWS
-			-- Hide/show windows for Main panel iconization
-
 feature -- Implementation
 
 	set_saved_symbol is
 			-- Change the symbol appearing on `save_b' to represent
 			-- a saved folder.
 		do
---			save_b.set_saved_symbol
+			toolbar.save_b.set_saved_symbol
 		end
 
 	set_unsaved_symbol is
 			-- Change the symbol appearing on `save_b' to represent
 			-- an open folder.
 		do
---			save_b.set_unsaved_symbol
+			toolbar.save_b.set_unsaved_symbol
 			project_changed := True
 		end
 
@@ -159,6 +160,8 @@ feature -- Graphical interface
 
 	toolbar: MAIN_TOOLBAR
 
+	status_bar: EV_STATUS_BAR
+
 		--| Split Window
 	context_tree: CONTEXT_TREE
 			-- Context tree
@@ -166,7 +169,7 @@ feature -- Graphical interface
 			-- Context catalog
 	command_catalog: COMMAND_CATALOG
 			-- Command catalog
---	context_editor: CONTEXT_EDITOR_WIDGET
+	context_editor: CONTEXT_EDITOR_WIDGET
 			-- Context editor included in main panel.
 
 feature -- Status setting
@@ -174,35 +177,23 @@ feature -- Status setting
 	set_project_initialized is 
 			-- Set project_initialized to True.
 		do 		
---			project_initialized := True 
---			enable_menus
---			enable_toggle_buttons
---			set_mode (editing_mode)
+			project_initialized := True
+			enable
+			set_mode (editing_mode)
 		end
 
 	unset_project_initialized is 
 			-- Set project_initialized to False.
 		do 		
---			project_initialized := False 
---			set_title (Widget_names.main_panel)
---			disable_menus
---			disable_toggle_buttons
---			set_mode (executing_mode)
+			project_initialized := False
+			set_title (Widget_names.main_window)
+			disable
+			set_mode (executing_mode)
 		end
 
 feature -- Popup and popdown actions
 
 	was_popped_down: BOOLEAN
-
--- 	popup is
--- 		do
--- 			hide_show_windows.show
--- 		end
-
--- 	popdown is
--- 		do
--- 			hide_show_windows.hide
--- 		end
 
 feature -- Interface
 
@@ -238,25 +229,17 @@ feature -- Interface
 			end
 		end
 
---feature -- Raise
-
---	raise is
---			-- Raise main panel
---		do
---			base.raise
---		end
-
 feature -- Current state
 
---	current_state: BUILD_STATE
---			-- Current state
+	current_state: BUILD_STATE
+			-- Current state
 
---	set_current_state (s: BUILD_STATE) is
---			-- Set `current_state' to `s'.
---		do
---			current_state := s
---			current_state_label.set_text (s.label)
---		end
+	set_current_state (s: BUILD_STATE) is
+			-- Set `current_state' to `s'.
+		do
+			current_state := s
+			toolbar.current_state_label.set_text (s.label)
+		end
 
 feature -- Enable/Disable EiffelBuild
 

@@ -999,8 +999,20 @@ feature -- Element change
 			-- Set IUnknown interface reference value.
 		require
 			non_void: a_value /= Void
+		local
+			a_stub: ECOM_STUB
+			a_ptr: POINTER
 		do
-			ccom_set_unknown_interface_reference (item, a_value.item)
+			if not (a_value.item = Void) then
+				if (a_value.item.item = default_pointer) then
+					a_stub ?= a_value.item
+					if a_stub /= Void then
+						a_stub.create_item
+					end
+				end
+				a_ptr := a_value.item.item
+			end	
+			ccom_set_unknown_interface_reference (item, a_ptr)
 		end
 
 	set_dispatch_interface (a_value: ECOM_INTERFACE) is
@@ -1023,8 +1035,20 @@ feature -- Element change
 			-- Set IDispatch interface reference value.
 		require
 			non_void: a_value /= Void
+			local
+			a_stub: ECOM_STUB
+			a_ptr: POINTER
 		do
-			ccom_set_dispatch_interface_reference (item, a_value.item)
+			if not (a_value.item = Void) then
+				if (a_value.item.item = default_pointer) then
+					a_stub ?= a_value.item
+					if a_stub /= Void then
+						a_stub.create_item
+					end
+				end
+				a_ptr := a_value.item.item
+			end	
+			ccom_set_dispatch_interface_reference (item, a_value.item.item)
 		end
 
 	set_integer4_array (a_value: ECOM_ARRAY [INTEGER]) is
@@ -1123,7 +1147,7 @@ feature -- Element change
 			ccom_set_safearray_decimal (item, a_value)
 		end
 
-	set_dispatch_array (a_value: ECOM_ARRAY [ECOM_AUTOMATION_INTERFACE]) is
+	set_dispatch_array (a_value: ECOM_ARRAY [ECOM_INTERFACE]) is
 			-- Set ARRAY of ECOM_AUTOMATION_INTERFACEs.
 		require
 			non_void_value: a_value /= Void
@@ -1275,7 +1299,7 @@ feature -- Element change
 			ccom_set_safearray_decimal_reference (item, a_value.item)
 		end
 
-	set_dispatch_interface_array_reference (a_value: CELL[ECOM_ARRAY[ECOM_AUTOMATION_INTERFACE]]) is
+	set_dispatch_interface_array_reference (a_value: CELL[ECOM_ARRAY[ECOM_INTERFACE]]) is
 			-- Set ARRAY of ECOM_AUTOMATION_INTERFACEs.
 		require
 			non_void_value: a_value /= Void
@@ -1772,9 +1796,9 @@ feature {NONE} -- Externals
 			"C (VARIANT *): EIF_POINTER  |%"E_variant.h%""
 		end
 
-	ccom_set_unknown_interface_reference (a_ptr: POINTER; an_interface: ECOM_INTERFACE) is
+	ccom_set_unknown_interface_reference (a_ptr: POINTER; a: POINTER) is
 		external
-			"C (VARIANT *, EIF_OBJECT)  |%"E_variant.h%""
+			"C (VARIANT *, IUnknown *)  |%"E_variant.h%""
 		end
 
 	ccom_dispatch_interface (a_ptr: POINTER):  POINTER is
@@ -1792,9 +1816,9 @@ feature {NONE} -- Externals
 			"C (VARIANT *): EIF_POINTER  |%"E_variant.h%""
 		end
 
-	ccom_set_dispatch_interface_reference (a_ptr: POINTER; an_interface: ECOM_INTERFACE) is
+	ccom_set_dispatch_interface_reference (a_ptr: POINTER; a_value: POINTER) is
 		external
-			"C (VARIANT *, EIF_OBJECT)  |%"E_variant.h%""
+			"C (VARIANT *, IDispatch *)  |%"E_variant.h%""
 		end
 
 	ccom_safearray_unsigned_integer (a_ptr: POINTER): ECOM_ARRAY[INTEGER] is
@@ -2052,7 +2076,7 @@ feature {NONE} -- Externals
 			"C (VARIANT *, EIF_OBJECT)  |%"E_variant.h%""
 		end
 
-	ccom_set_safearray_dispatch_interface (a_ptr: POINTER; a_value: ECOM_ARRAY[ECOM_AUTOMATION_INTERFACE]) is
+	ccom_set_safearray_dispatch_interface (a_ptr: POINTER; a_value: ECOM_ARRAY[ECOM_INTERFACE]) is
 		external
 			"C (VARIANT *, EIF_OBJECT)  |%"E_variant.h%""
 		end
@@ -2147,7 +2171,7 @@ feature {NONE} -- Externals
 			"C (VARIANT *, EIF_OBJECT)  |%"E_variant.h%""
 		end
 
-	ccom_set_safearray_dispatch_interface_reference (a_ptr: POINTER; a_value: ECOM_ARRAY[ECOM_AUTOMATION_INTERFACE]) is
+	ccom_set_safearray_dispatch_interface_reference (a_ptr: POINTER; a_value: ECOM_ARRAY[ECOM_INTERFACE]) is
 		external
 			"C (VARIANT *, EIF_OBJECT)  |%"E_variant.h%""
 		end

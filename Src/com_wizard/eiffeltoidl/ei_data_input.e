@@ -23,12 +23,10 @@ feature -- Access
 
 feature -- Basic operation
 
-	input_from_file (input_file: FILE) is
-			-- Input data from 'input_file'.
+	input_from_file (a_file_name: STRING) is
+			-- Input data from 'a_file_name'.
 		require
-			non_void_file: input_file /= Void
-			file_exists: input_file.exists
-			valid_file: input_file.is_closed or input_file.is_open_read
+			non_void_file: a_file_name /= Void
 		deferred
 		end
 

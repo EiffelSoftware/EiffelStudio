@@ -9,6 +9,16 @@ class
 inherit
 	EI_DATA_INPUT
 
+	WIZARD_ERRORS
+		export
+			{NONE} all
+		end
+
+	WIZARD_SHARED_DATA
+		export
+			{NONE} all
+		end
+	
 create
 	make
 
@@ -27,81 +37,84 @@ feature -- Status report
 
 feature -- Basic operations
 
-	input_from_file (input_file: PLAIN_TEXT_FILE) is
-			-- Input features from text file.
+	input_from_file (a_file_name: STRING) is
+			-- Input features from text file `a_file_name'.
 		local
-			raw_features: ARRAYED_LIST [STRING]
-			l_name, l_description: STRING
-			feature_parser: EI_FEATURE_PARSER
+			l_features: ARRAYED_LIST [STRING]
+			l_name, l_description, l_last: STRING
+			l_parser: EI_FEATURE_PARSER
+			l_file: PLAIN_TEXT_FILE
+			l_retried: BOOLEAN
 		do
-			if input_file.is_closed then
-				input_file.open_read
-			end
-
-			from
-				input_file.start
-			until
-				input_file.end_of_file
-			loop
-				input_file.read_line
-
-				if not input_file.last_string.is_empty then
-					if input_file.last_string.substring_index (Class_header_indicator,1) > 0 then
-						class_not_found := False  
-
-						input_file.read_line
-						l_name := input_file.last_string.twin
-						l_name.left_adjust
-						l_name.right_adjust
-
-						create eiffel_class.make (l_name)
-
-						from
-						until
-							input_file.end_of_file
-						loop
-							input_file.read_line
-
-							if not input_file.last_string.is_empty then
-								if input_file.last_string.substring_index (Feature_indicator, 1) > 0 then									if raw_features /= Void and not raw_features.is_empty then
-										create feature_parser
-										feature_parser.parse_routine (raw_features)
-										if feature_parser.succeed then
-											eiffel_class.add_feature (feature_parser.parsed_feature)
+			if not l_retried then
+				create l_file.make (a_file_name)
+				if l_file.exists then
+					l_file.open_read				
+					from
+						l_file.start
+					until
+						l_file.end_of_file
+					loop
+						l_file.read_line
+						l_last := l_file.last_string
+						if not l_last.is_empty then
+							if l_last.substring_index (Class_header_indicator, 1) > 0 then
+								class_not_found := False  
+								l_file.read_line
+								l_last := l_file.last_string
+								l_name := l_last.twin
+								l_name.left_adjust
+								l_name.right_adjust
+								create eiffel_class.make (l_name)
+								from
+								until
+									l_file.end_of_file
+								loop
+									l_file.read_line
+									l_last := l_file.last_string
+									if not l_last.is_empty then
+										if l_last.substring_index (Feature_indicator, 1) > 0 then
+											if l_features /= Void and not l_features.is_empty then
+												create l_parser
+												l_parser.parse_routine (l_features)
+												if l_parser.succeed then
+													eiffel_class.add_feature (l_parser.parsed_feature)
+												end
+												l_features := Void
+											end
+			
+											create l_features.make (20)
+											l_features.extend (l_last.twin)
+										elseif l_last.substring_index ("--", 1) = 1 then
+											l_features.extend (l_last.twin)
 										end
-										raw_features := Void
 									end
-	
-									create raw_features.make (20)
-									raw_features.extend (input_file.last_string.twin)
-								elseif 
-									input_file.last_string.substring_index ("--", 1) = 1 
-								then
-									raw_features.extend (input_file.last_string.twin)
 								end
+								if l_features /= Void and not l_features.is_empty then
+									create l_parser
+									l_parser.parse_routine (l_features)
+									if l_parser.succeed then
+										eiffel_class.add_feature (l_parser.parsed_feature)
+									end
+								end
+							elseif l_last.substring_index (Description_indicator, 1) = 1 then
+								l_description := parsed_description (l_last.twin)
 							end
 						end
-						if raw_features /= Void and not raw_features.is_empty then
-							create feature_parser
-							feature_parser.parse_routine (raw_features)
-							if feature_parser.succeed then
-								eiffel_class.add_feature (feature_parser.parsed_feature)
-							end
+					end
+					l_file.close
+		
+					if not class_not_found then
+						if eiffel_class /= Void and l_description /= Void and not l_description.is_empty then
+							eiffel_class.set_description (l_description)
 						end
-
-					elseif input_file.last_string.substring_index (Description_indicator, 1) = 1 then
-						l_description := parsed_description (input_file.last_string.twin)
+						parse_eiffel_type
 					end
 				end
 			end
-			input_file.close
-
-			if not class_not_found then
-				if eiffel_class /= Void and l_description /= Void and not l_description.is_empty then
-					eiffel_class.set_description (l_description)
-				end
-				parse_eiffel_type
-			end
+		rescue
+			l_retried := True
+			environment.set_abort (Idl_generation_error)
 		end
 
 feature {NONE} -- Implementation

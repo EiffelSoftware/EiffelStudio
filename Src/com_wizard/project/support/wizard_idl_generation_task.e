@@ -14,8 +14,11 @@ feature -- Access
 	title: STRING is "Processing Eiffel Facade Class:"
 			-- Task title
 
-	steps_count: INTEGER is 1
+	steps_count: INTEGER is
 			-- Number of steps involved in task
+		do
+			Result := 1
+		end
 
 	internal_execute is
 			-- Implementation of `execute'.

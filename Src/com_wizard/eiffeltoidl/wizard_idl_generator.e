@@ -7,14 +7,12 @@ class
 	WIZARD_IDL_GENERATOR
 
 inherit
-	WIZARD_PROCESS_LAUNCHER
+	WIZARD_ERRORS
 		export
 			{NONE} all
-		redefine
-			launch
 		end
 
-	WIZARD_ERRORS
+	WIZARD_SHARED_DATA
 		export
 			{NONE} all
 		end
@@ -28,126 +26,79 @@ feature -- Basic operations
 	generate is
 			-- Generate IDL file
 		local
-			folder: DIRECTORY
-			command: STRING
-			input_data: EI_CLASS_DATA_INPUT
-			raw_file, idl_file: PLAIN_TEXT_FILE
-			midl_library: EI_MIDL_LIBRARY
-			midl_coclass_creator: EI_MIDL_COCLASS_CREATOR
+			l_dir: DIRECTORY
+			l_cmd: STRING
+			l_data: EI_CLASS_DATA_INPUT
+			l_idl_file, l_file: PLAIN_TEXT_FILE
+			l_midl_lib: EI_MIDL_LIBRARY
+			l_midl_coclass_creator: EI_MIDL_COCLASS_CREATOR
+			l_process_launcher: WEL_PROCESS_LAUNCHER
 		do
-			message_output.add_message (Current, "Processing Eiffel class")
-
+			message_output.add_message ("Generating IDL from Eiffel class " + environment.eiffel_class_name)
 			destination_folder := environment.destination_folder.twin
-
 			destination_folder.append ("idl")
-
-			create folder.make (destination_folder)
-
-			if not folder.exists then
-				folder.create_dir
+			create l_dir.make (destination_folder)
+			if not l_dir.exists then
+				l_dir.create_dir
 			end
+			create l_cmd.make (100)
+			l_cmd.append ("ec -flatshort -filter com ")
+			l_cmd.append (environment.eiffel_class_name)
+			l_cmd.append (" -project ")
+			l_cmd.append (environment.eiffel_project_name)
+			create l_file.make (Output_file_name)
+			if l_file.exists then
+				l_file.delete
+			end
+			create l_process_launcher
+			l_process_launcher.run_hidden
+			l_process_launcher.launch (l_cmd, destination_folder, agent write_to_output_file)
 
-			create command.make (100)
-			command.append (eiffel_compiler + " -flatshort -filter com ")
-			command.append (environment.eiffel_class_name)
-			command.append (" -project ")
-			command.append (environment.eiffel_project_name)
-
-			launch (command, destination_folder)
-
-			create raw_file.make (raw_file_name)
-
-			create input_data.make
-			input_data.input_from_file (raw_file)
-
-			if input_data.class_not_found then
-				message_output.add_message (Current, "Error: Class not in project")
-				environment.set_abort (Idl_generation_error)
-			else
-				if not environment.abort then
-					message_output.add_message (Current, "Generating IDL file")
-					
-					create midl_library.make (environment.eiffel_class_name)
-					create midl_coclass_creator.make
-					midl_coclass_creator.create_from_eiffel_class (input_data.eiffel_class)
-					midl_library.set_coclass (midl_coclass_creator.midl_coclass)
-
-					create idl_file.make_open_write (environment.idl_file_name)
-					idl_file.put_string (midl_library.code)
-					idl_file.flush
-					idl_file.close
+			if not environment.abort then
+				create l_data.make
+				l_data.input_from_file (Output_file_name)
+				if l_data.class_not_found then
+					environment.set_abort (Class_not_in_project)
+				else
+					if not environment.abort then						
+						create l_midl_lib.make (environment.eiffel_class_name)
+						create l_midl_coclass_creator.make
+						l_midl_coclass_creator.create_from_eiffel_class (l_data.eiffel_class)
+						l_midl_lib.set_coclass (l_midl_coclass_creator.midl_coclass)
+	
+						create l_idl_file.make_open_write (environment.idl_file_name)
+						l_idl_file.put_string (l_midl_lib.code)
+						l_idl_file.flush
+						l_idl_file.close
+					end
 				end
 			end
-		rescue
-			message_output.add_message (Current, "Error: Class not in project")
-			environment.set_abort (Idl_generation_error)
 		end
 
 feature {NONE} -- Basic operations
 
-	launch (a_command_line, a_working_directory: STRING) is
-			-- Launch process described in `a_command_line' from `a_working_directory'.
-			-- Wait for end of process and write output to `output_message'.
+	write_to_output_file (a_output: STRING) is
+			-- Write output to `Output_file_name'.
 		local
-			a_string: STRING
-			a_boolean: BOOLEAN
-			an_integer: INTEGER
-			a_last_process_result: INTEGER
-			a_output: STRING
-			output_file: PLAIN_TEXT_FILE
+			l_output_file: PLAIN_TEXT_FILE
+			l_retried: BOOLEAN
 		do
-			if not (a_command_line.item (1) = '"') then
-				a_command_line.prepend ("%"")
+			if not l_retried then
+				create l_output_file.make_open_append (Output_file_name)
+				l_output_file.put_string (a_output)
+				l_output_file.close
 			end
-			if not (a_command_line.item (a_command_line.count) = '"') then
-				a_command_line.append ("%"")
-			end
-			a_string := Console_spawn_application.twin
-			a_string.append (" ")
-			a_string.append (a_command_line)
-			spawn (a_string, a_working_directory)
-			output_pipe.close_input
-			from
-				output_pipe.read_stream (Block_size)
-				create a_output.make (100)
-			until
-				not output_pipe.last_read_successful or environment.abort
-			loop
-				a_output.append (output_pipe.last_string)
-
-				output_pipe.read_stream (Block_size)
-			end
-			a_output.replace_substring_all ("%R%N", "%N")
-
-			create output_file.make_open_write (raw_file_name)
-			output_file.put_string (a_output)
-			output_file.close
-
-			if not environment.abort then
-				an_integer := cwin_wait_for_single_object (process_info.process_handle, cwin_infinite)
-				check
-					valid_external_call: an_integer = cwin_wait_object_0
-				end
-				a_boolean := cwin_exit_code_process (process_info.process_handle, $a_last_process_result)
-				check
-					valid_external_call: a_boolean
-				end
-			end
-			cwin_close_handle (process_info.process_handle)
-			output_pipe.close_output
-			input_pipe.close_input
-			input_pipe.close_output
-			last_process_result := a_last_process_result
 		rescue
-			environment.set_abort (Idl_generation_error)
+			environment.set_abort (File_write_error)
+			environment.set_error_data ((create {EXECUTION_ENVIRONMENT}).current_working_directory + "\" + Output_file_name)
+			l_retried := True
 		end
 
-	raw_file_name: STRING is
+	Output_file_name: STRING is
 			-- Intermediate file for IDL generator.
 		once
 			Result := environment.destination_folder.twin
 			Result.append ("idl\e2idl.output")
-	
 		end
 
 end -- class WIZARD_IDL_GENERATOR

@@ -36,7 +36,8 @@ inherit
 			on_accelerator_command,
 			class_name,
 			is_displayed,
-			execute_resize_actions
+			execute_resize_actions,
+			has_title_bar
 		end
 		
 	EV_TITLED_WINDOW_ACTION_SEQUENCES_IMP
@@ -118,6 +119,13 @@ feature -- Status report
 			-- `Result' is False if `is_minimized'.
 		do
 			Result := Precursor {EV_WINDOW_IMP} and not is_minimized
+		end
+
+	has_title_bar: BOOLEAN is
+			-- Does current have a title bar?
+		do
+				-- Not a constant because some descendants do not have a title bar.
+			Result := True
 		end
 
 feature -- Status setting

@@ -163,7 +163,7 @@ end -- class EV_LIST
 
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
---! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
 --! May be used only with ISE Eiffel, under terms of user license. 
 --! Contact ISE for any other use.
@@ -182,6 +182,9 @@ end -- class EV_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/02/22 18:39:51  oconnor
+--| updated copyright date and formatting
+--|
 --| Revision 1.30  2000/02/17 01:09:25  oconnor
 --| fixed invariant
 --|

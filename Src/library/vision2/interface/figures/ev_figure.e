@@ -429,7 +429,7 @@ invariant
 
 end -- class EV_FIGURE
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -443,7 +443,7 @@ end -- class EV_FIGURE
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 
 
 --|-----------------------------------------------------------------------------
@@ -451,6 +451,9 @@ end -- class EV_FIGURE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/02/22 18:39:46  oconnor
+--| updated copyright date and formatting
+--|
 --| Revision 1.9  2000/02/21 21:48:15  brendel
 --| Improved implementation of Contract support features by saving cursor and
 --| using standard traversal routines.

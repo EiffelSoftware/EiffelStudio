@@ -160,9 +160,9 @@ invariant
 
 end -- class EV_RECTANGLE
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
---! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
 --! May be used only with ISE Eiffel, under terms of user license. 
 --! Contact ISE for any other use.
@@ -174,7 +174,7 @@ end -- class EV_RECTANGLE
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 
 
 --|-----------------------------------------------------------------------------
@@ -182,6 +182,9 @@ end -- class EV_RECTANGLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/02/22 18:39:48  oconnor
+--| updated copyright date and formatting
+--|
 --| Revision 1.6  2000/02/14 11:40:48  oconnor
 --| merged changes from prerelease_20000214
 --|

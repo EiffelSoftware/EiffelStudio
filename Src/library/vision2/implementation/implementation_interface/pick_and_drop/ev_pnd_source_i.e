@@ -250,7 +250,7 @@ end -- class EV_PICK_AND_DROPABLE_I
 
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
---! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
 --! May be used only with ISE Eiffel, under terms of user license. 
 --! Contact ISE for any other use.
@@ -269,6 +269,9 @@ end -- class EV_PICK_AND_DROPABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/02/22 18:39:41  oconnor
+--| updated copyright date and formatting
+--|
 --| Revision 1.16  2000/02/15 19:21:40  rogers
 --| Changed the export status of implementation features to EV_ANY_I.
 --|

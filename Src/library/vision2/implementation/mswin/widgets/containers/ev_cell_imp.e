@@ -110,7 +110,7 @@ end -- class EV_CELL_IMP
 
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
---! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
 --! May be used only with ISE Eiffel, under terms of user license. 
 --! Contact ISE for any other use.
@@ -129,6 +129,9 @@ end -- class EV_CELL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/22 18:39:45  oconnor
+--| updated copyright date and formatting
+--|
 --| Revision 1.4  2000/02/22 17:34:49  rogers
 --| Redefined move_and_resize from EV_WEL_CONTROL_CONTAINER_IMP, compute_minimum_width, compute_minimum_height and  compute_minimum_size from EV_SINGLE_CHILD_CONTAINER_IMP.
 --|

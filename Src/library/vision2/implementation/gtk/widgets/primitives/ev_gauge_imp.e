@@ -234,9 +234,9 @@ invariant
 
 end -- class EV_GAUGE_I
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
---! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
 --! May be used only with ISE Eiffel, under terms of user license. 
 --! Contact ISE for any other use.
@@ -248,13 +248,16 @@ end -- class EV_GAUGE_I
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/02/22 18:39:39  oconnor
+--| updated copyright date and formatting
+--|
 --| Revision 1.10  2000/02/16 04:01:01  brendel
 --| 1: Now provides `make' which creates default adjustment that satisfies
 --| is_in_default_state and initializes page_size to 0.

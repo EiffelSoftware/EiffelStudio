@@ -643,7 +643,7 @@ invariant
 
 end -- class EV_RELATIVE_POINT
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -657,7 +657,7 @@ end -- class EV_RELATIVE_POINT
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 
 
 --|-----------------------------------------------------------------------------
@@ -665,6 +665,9 @@ end -- class EV_RELATIVE_POINT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/22 18:39:47  oconnor
+--| updated copyright date and formatting
+--|
 --| Revision 1.4  2000/02/19 20:24:42  brendel
 --| Updated copyright to 1986-2000.
 --|

@@ -12,7 +12,11 @@ inherit
 	SHARED_DEBUG_LEVEL;
 	SHARED_VISIBLE_LEVEL;
 	SHARED_WORKBENCH;
-	SYSTEM_CONSTANTS
+	SYSTEM_CONSTANTS;
+	COMPARABLE
+		undefine
+			is_equal
+		end
 
 creation
 
@@ -298,6 +302,14 @@ end;
 			assertion_level := other.assertion_level;
 			visible_level := other.visible_level;
 			visible_name := other.visible_name;
+		end;
+
+feature -- Comparison
+
+	infix "<" (other: like Current): BOOLEAN is
+			-- Class name alphabetic order
+		do
+			Result := class_name < other.class_name
 		end;
 
 feature {NONE} -- Externals

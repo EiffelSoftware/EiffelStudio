@@ -31,7 +31,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is do Result := True end
+	needs_event_box: BOOLEAN is do Result := False end
 
 	initialize is
 		do
@@ -113,7 +113,6 @@ feature -- Access
 				end
 				update_splitter
 			end
-			--feature {EV_GTK_EXTERNALS}.gtk_widget_queue_resize (container_widget)
 		end
 
 	enable_item_expand (an_item: like item) is
@@ -165,7 +164,6 @@ feature -- Access
 			feature {EV_GTK_EXTERNALS}.gtk_container_remove (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (second_imp.c_object), second_imp.c_object)
 			feature {EV_GTK_EXTERNALS}.gtk_paned_pack1 (container_widget, first_imp.c_object, first_expandable, False)
 			feature {EV_GTK_EXTERNALS}.gtk_paned_pack2 (container_widget, second_imp.c_object, second_expandable, False)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, container_widget)
 		end
 
 	hide_separator is
@@ -175,11 +173,6 @@ feature -- Access
 		do
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_paned_set_gutter_size (container_widget, 0)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_paned_set_handle_size (container_widget, 0)
-			
-			if feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (container_widget) /= NULL then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (container_widget)
-				feature {EV_GTK_EXTERNALS}.gtk_container_remove (c_object, container_widget)				
-			end
 
 				-- If the separator is hidden, then `Current' can only contain at most, one widget.
 			if first /= Void then

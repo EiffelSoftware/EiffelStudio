@@ -8,7 +8,6 @@ class
 	CONDITION_VARIABLE
 
 inherit
-	OBJECT_OWNER
 	MEMORY
 		redefine
 			dispose
@@ -22,7 +21,6 @@ feature -- Initialization
 	make is
 			-- Create and initialize condition variable.
 		do
-			record_owner
 			cond_pointer := eif_thr_cond_create
 		end
 
@@ -93,7 +91,7 @@ feature {NONE} -- Removal
 			-- Called by the garbage collector when the condition
 			-- variable is collected.
 		do
-			if thread_is_owner and is_set then
+			if is_set then
 				destroy
 			end
 		end

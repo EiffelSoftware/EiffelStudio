@@ -10,7 +10,6 @@ class
 	SEMAPHORE
 
 inherit
-	OBJECT_OWNER
 	MEMORY
 		redefine
 			dispose
@@ -26,7 +25,6 @@ feature -- Initialization
 		require
 			count_positive:	count >= 0
 		do
-			record_owner
 			sem_pointer := eif_thr_sem_create (count)
 		ensure
 			valid_semaphore: sem_pointer /= default_pointer
@@ -88,7 +86,7 @@ feature {NONE} -- Removal
 			-- Called by the garbage collector when the semaphore
 			-- is collected.
 		do
-			if thread_is_owner and is_set then
+			if is_set then
 				destroy
 			end
 		end

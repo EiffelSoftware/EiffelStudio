@@ -66,16 +66,16 @@ feature -- Access
 			end
 			Result.append (
 					"external%N%
-					%	include_path:	%"$EIFFEL5\library\wel\spec\windows\include%",%N%
-					%			%"$EIFFEL5\library\com\spec\windows\include%",%N")
+					%	include_path:	%"$ISE_EIFFEL\library\wel\spec\windows\include%",%N%
+					%			%"$ISE_EIFFEL\library\com\spec\windows\include%",%N")
 		end
 
 	End_ace_file: STRING is
 			-- End of ace file used to precompile generated Eiffel system
-		"	object: 	%"$(EIFFEL5)\library\wel\spec\$(COMPILER)\lib\wel.lib%",%N%
-		%			%"$(EIFFEL5)\library\time\spec\msc\lib\datetime.lib%",%N%
-		%			%"$(EIFFEL5)\library\com\spec\msc\lib\com.lib%",%N%
-		%			%"$(EIFFEL5)\library\com\spec\msc\lib\com_runtime.lib%",%N"
+		"	object: 	%"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib%",%N%
+		%			%"$(ISE_EIFFEL)\library\time\spec\$(ISE_C_COMPILER)\lib\datetime.lib%",%N%
+		%			%"$(ISE_EIFFEL)\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib%",%N%
+		%			%"$(ISE_EIFFEL)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib%",%N"
 
 
 	Visible: STRING is "visible"
@@ -144,7 +144,7 @@ feature -- Access
 			create Result.make
 			Result.extend (
 					"	-- BASE%N%
-					%	all base:						%"$EIFFEL5\library\base%"%N%
+					%	all base:						%"$ISE_EIFFEL\library\base%"%N%
 					%		exclude%N%
 					%			%"table_eiffel3%";%N%
 					%			%"desc%"%N%
@@ -161,11 +161,11 @@ feature -- Access
 
 			Result.extend (
 					"	-- WEL%N%
-					%	all wel:						%"$EIFFEL5\library\wel%"%N%N")
+					%	all wel:						%"$ISE_EIFFEL\library\wel%"%N%N")
 
 			Result.extend (
 					"	-- TIME%N%
-					%	all time: 						%"$EIFFEL5\library\time%"%N%
+					%	all time: 						%"$ISE_EIFFEL\library\time%"%N%
 					%		exclude%N%
 					%			%"french%";%N%
 					%			%"german%"%N%
@@ -175,7 +175,7 @@ feature -- Access
 
 			Result.extend (
 					"	-- COM%N%
-					%	all ecom:						%"$EIFFEL5\library\com%"%N%
+					%	all ecom:						%"$ISE_EIFFEL\library\com%"%N%
 					%		visible%N%
 					%			ECOM_DECIMAL;%N%
 					%			ECOM_CURRENCY;%N%
@@ -244,7 +244,11 @@ feature -- Basic operations
 			end
 			
 			if Eiffel4_defined then
-				a_string.replace_substring_all ("EIFFEL5", "EIFFEL4")
+				a_string.replace_substring_all ("ISE_EIFFEL", "EIFFEL4")
+				a_string.replace_substring_all ("ISE_C_COMPILER", "COMPILER")
+			elseif Eiffel5_defined then
+				a_string.replace_substring_all ("ISE_EIFFEL", "EIFFEL5")
+				a_string.replace_substring_all ("ISE_C_COMPILER", "COMPILER")
 			end
 
 			if not is_empty_clib_folder (Client) then

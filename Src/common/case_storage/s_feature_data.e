@@ -124,7 +124,7 @@ feature -- Setting
 			is_expanded = True
 	end
 
-	set_is_deferred(b:BOOLEAN) is
+	set_is_deferred is
 			-- Set is_deferred to `True'.
 		do
 			is_deferred := True

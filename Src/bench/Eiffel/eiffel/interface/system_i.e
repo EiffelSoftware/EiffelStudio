@@ -41,7 +41,7 @@ inherit
 	SHARED_DLE;
 	COMPILER_EXPORTER
 
-feature 
+feature -- Properties
 
 	changed_body_ids: EXTEND_TABLE [CHANGED_BODY_ID_INFO, INTEGER] is
 		once
@@ -136,6 +136,9 @@ feature
 
 	pattern_table: PATTERN_TABLE;
 			-- Pattern table
+
+	address_table: ADDRESS_TABLE
+			-- Generate encapsulation of function pointers ($ operator)
 
 	successfull: BOOLEAN;
 			-- Was the last recompilation successfull ?

@@ -1,16 +1,8 @@
 	<LI><OBJECT type="text/sitemap"><param name="Name" value="reference"><param name="Local" value="libraries\com\reference\index.html"></OBJECT>
 	<UL>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="Clib"><param name="Local" value="libraries\com\reference\Clib\index.html"></OBJECT>
-		<UL>
-			<LI><OBJECT type="text/sitemap"><param name="Name" value="CVS"><param name="Local" value="libraries\com\reference\Clib\CVS\index.html"></OBJECT>
-		</UL>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="Clib_runtime"><param name="Local" value="libraries\com\reference\Clib_runtime\index.html"></OBJECT>
-		<UL>
-			<LI><OBJECT type="text/sitemap"><param name="Name" value="CVS"><param name="Local" value="libraries\com\reference\Clib_runtime\CVS\index.html"></OBJECT>
-		</UL>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="Constants"><param name="Local" value="libraries\com\reference\Constants\index.html"></OBJECT>
 		<UL>
-			<LI><OBJECT type="text/sitemap"><param name="Name" value="CVS"><param name="Local" value="libraries\com\reference\Constants\CVS\index.html"></OBJECT>
+	
 <LI><OBJECT type="text/sitemap"><param name="Name" value="ECOM_EXCEPTION_CODES"><param name="Local" value="libraries\com\reference\Constants\ecom_exception_codes_chart.html"></OBJECT>
 			<UL>
 			<LI><OBJECT type="text/sitemap"><param name="Name" value="cache_e_first"><param name="Local" value="libraries\com\reference\Constants\ecom_exception_codes.html#f_cache_e_first"></OBJECT>
@@ -485,10 +477,8 @@
 			<LI><OBJECT type="text/sitemap"><param name="Name" value="valid_var_type"><param name="Local" value="libraries\com\reference\Constants\ecom_var_type.html#f_valid_var_type"></OBJECT>
 			</UL>
 		</UL>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="CVS"><param name="Local" value="libraries\com\reference\CVS\index.html"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="Interfaces"><param name="Local" value="libraries\com\reference\Interfaces\index.html"></OBJECT>
 		<UL>
-			<LI><OBJECT type="text/sitemap"><param name="Name" value="CVS"><param name="Local" value="libraries\com\reference\Interfaces\CVS\index.html"></OBJECT>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="ECOM_AUTOMATION_INTERFACE"><param name="Local" value="libraries\com\reference\Interfaces\ecom_automation_interface_chart.html"></OBJECT>
 			<UL>
 			<LI><OBJECT type="text/sitemap"><param name="Name" value="make_from_pointer"><param name="Local" value="libraries\com\reference\Interfaces\ecom_automation_interface.html#f_make_from_pointer"></OBJECT>
@@ -984,25 +974,8 @@
 			<LI><OBJECT type="text/sitemap"><param name="Name" value="width_user_precondition"><param name="Local" value="libraries\com\reference\Interfaces\picture_interface.html#f_width_user_precondition"></OBJECT>
 			</UL>
 		</UL>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="spec"><param name="Local" value="libraries\com\reference\spec\index.html"></OBJECT>
-		<UL>
-			<LI><OBJECT type="text/sitemap"><param name="Name" value="CVS"><param name="Local" value="libraries\com\reference\spec\CVS\index.html"></OBJECT>
-			<LI><OBJECT type="text/sitemap"><param name="Name" value="msc"><param name="Local" value="libraries\com\reference\spec\msc\index.html"></OBJECT>
-			<UL>
-				<LI><OBJECT type="text/sitemap"><param name="Name" value="lib"><param name="Local" value="libraries\com\reference\spec\msc\lib\index.html"></OBJECT>
-			</UL>
-			<LI><OBJECT type="text/sitemap"><param name="Name" value="windows"><param name="Local" value="libraries\com\reference\spec\windows\index.html"></OBJECT>
-			<UL>
-				<LI><OBJECT type="text/sitemap"><param name="Name" value="CVS"><param name="Local" value="libraries\com\reference\spec\windows\CVS\index.html"></OBJECT>
-				<LI><OBJECT type="text/sitemap"><param name="Name" value="include"><param name="Local" value="libraries\com\reference\spec\windows\include\index.html"></OBJECT>
-				<UL>
-					<LI><OBJECT type="text/sitemap"><param name="Name" value="CVS"><param name="Local" value="libraries\com\reference\spec\windows\include\CVS\index.html"></OBJECT>
-				</UL>
-			</UL>
-		</UL>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="Structures"><param name="Local" value="libraries\com\reference\Structures\index.html"></OBJECT>
 		<UL>
-			<LI><OBJECT type="text/sitemap"><param name="Name" value="CVS"><param name="Local" value="libraries\com\reference\Structures\CVS\index.html"></OBJECT>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="ECOM_ARRAY"><param name="Local" value="libraries\com\reference\Structures\ecom_array_chart.html"></OBJECT>
 			<UL>
 			<LI><OBJECT type="text/sitemap"><param name="Name" value="initialize"><param name="Local" value="libraries\com\reference\Structures\ecom_array.html#f_initialize"></OBJECT>
@@ -1743,7 +1716,6 @@
 		</UL>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="Support"><param name="Local" value="libraries\com\reference\Support\index.html"></OBJECT>
 		<UL>
-			<LI><OBJECT type="text/sitemap"><param name="Name" value="CVS"><param name="Local" value="libraries\com\reference\Support\CVS\index.html"></OBJECT>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="ECOM_COOKIE_GENERATOR"><param name="Local" value="libraries\com\reference\Support\ecom_cookie_generator_chart.html"></OBJECT>
 			<UL>
 			<LI><OBJECT type="text/sitemap"><param name="Name" value="available_key_pool"><param name="Local" value="libraries\com\reference\Support\ecom_cookie_generator.html#f_available_key_pool"></OBJECT>

@@ -209,9 +209,9 @@ feature -- Basic operations
 			valid_type_info: a_type_info /= Void
 		local
 			i, l_count: INTEGER
-			l_descriptor: WIZARD_FUNCTION_DESCRIPTOR
+			l_func_descriptor: WIZARD_FUNCTION_DESCRIPTOR
 			l_desc: ECOM_FUNC_DESC
-			l_factory: WIZARD_FUNCTION_DESCRIPTOR_FACTORY
+			l_func_factory: WIZARD_FUNCTION_DESCRIPTOR_FACTORY
 			l_name: STRING
 		do
 			l_count := a_type_info.type_attr.count_func
@@ -223,12 +223,12 @@ feature -- Basic operations
 				i = l_count
 			loop
 				l_desc := a_type_info.func_desc (i)
-				create l_factory
-				l_descriptor := l_factory.create_descriptor (a_type_info, l_desc)
-				l_name := unique_identifier (l_descriptor.name, agent feature_names.has)
-				l_descriptor.set_name (l_name)
+				create l_func_factory
+				l_func_descriptor := l_func_factory.create_descriptor (a_type_info, l_desc)
+				l_name := unique_identifier (l_func_descriptor.name, agent feature_names.has)
+				l_func_descriptor.set_name (l_name)
+				function_table.force (l_func_descriptor)
 				feature_names.extend (l_name)
-				function_table.force (l_descriptor)
 				i := i + 1
 			end
 		ensure

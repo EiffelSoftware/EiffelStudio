@@ -12,8 +12,7 @@ creation
 
 feature -- Access
 
-	--implementation: SEPARATOR_IMP
-	implementation: SEPARATOR_WINDOWS -- VISIONLITE
+	implementation: SEPARATOR_WINDOWS
 
 feature -- Update
 

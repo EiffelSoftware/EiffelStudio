@@ -402,12 +402,12 @@ feature {NONE} -- Initialization
 			create vbox
 			vbox.set_border_width (Layout_constants.Small_border_size)
 
-			console_check := new_check_button (vbox, "Console application")
-			vape_check := new_check_button (vbox, "Enforce VAPE validity constraint")
-			dynamic_rt_check := new_check_button (vbox, "Dynamic runtime")
-			mt_runtime_check := new_check_button (vbox, "Multithreaded runtime")
-			address_expression_check := new_check_button (vbox, "Address expression")
-			shared_library_check := new_check_button (vbox, "Shared library definition")
+			console_check := new_check_button (vbox, "Console application", False)
+			vape_check := new_check_button (vbox, "Enforce VAPE validity constraint", False)
+			dynamic_rt_check := new_check_button (vbox, "Dynamic runtime", False)
+			mt_runtime_check := new_check_button (vbox, "Multithreaded runtime", False)
+			address_expression_check := new_check_button (vbox, "Address expression", False)
+			shared_library_check := new_check_button (vbox, "Shared library definition", False)
 
 			vbox.set_padding (Layout_constants.Tiny_padding_size)
 			create shared_library_field.make_with_text_and_parent (" Location: ", system_window.window)
@@ -436,14 +436,14 @@ feature {NONE} -- Initialization
 			create vbox
 			vbox.set_border_width (3)
 
-			array_optimization_check := new_check_button (vbox, "Array optimization")
-			dead_code_removal_check := new_check_button (vbox, "Dead code removal")
-			exception_trace_check := new_check_button (vbox, "Exception trace")
+			array_optimization_check := new_check_button (vbox, "Array optimization", False)
+			dead_code_removal_check := new_check_button (vbox, "Dead code removal", False)
+			exception_trace_check := new_check_button (vbox, "Exception trace", False)
 
 			create hbox
 			create inlining_size_field
 			inlining_size_field.value_range.resize_exactly (0, 100)
-			inlining_check := new_check_button (hbox, "Inlining ")
+			inlining_check := new_check_button (hbox, "Inlining ", False)
 			inlining_check.select_actions.extend (~desactivation_action
 					(inlining_check, inlining_size_field))
 			inlining_size_field.disable_sensitive

@@ -780,14 +780,14 @@ feature {NONE} -- Initialization
 			vbox.disable_item_expand (cluster_path)
 			
 			create hbox
-			override_cluster_check := new_check_button (hbox, "override")
+			override_cluster_check := new_check_button (hbox, "override", False)
 			override_cluster_check.select_actions.extend (~select_current_for_override)
 
 			hbox.extend (create {EV_CELL})
-			library_check := new_check_button (hbox, "library")
+			library_check := new_check_button (hbox, "library", False)
 			library_check.select_actions.extend (~select_for_library)
 			hbox.extend (create {EV_CELL})
-			all_check := new_check_button (hbox, "all")
+			all_check := new_check_button (hbox, "all", False)
 			all_check.select_actions.extend (~select_for_all)
 			
 			vbox.extend (hbox)
@@ -852,12 +852,12 @@ feature {NONE} -- Initialization
 			
 			create hbox
 			create vbox
-			override_default_assertions := new_check_button (vbox, "override default assertions")
-			check_check := new_check_button (vbox, "check")
-			require_check := new_check_button (vbox, "require")
-			ensure_check := new_check_button (vbox, "ensure")
-			loop_check := new_check_button (vbox, "loop")
-			invariant_check := new_check_button (vbox, "class invariant")
+			override_default_assertions := new_check_button (vbox, "override default assertions", False)
+			check_check := new_check_button (vbox, "check", False)
+			require_check := new_check_button (vbox, "require", False)
+			ensure_check := new_check_button (vbox, "ensure", False)
+			loop_check := new_check_button (vbox, "loop", False)
+			invariant_check := new_check_button (vbox, "class invariant", False)
 			hbox.extend (vbox)
 		
 				-- Set up exclusive between `override_default_assertions' and other
@@ -872,8 +872,8 @@ feature {NONE} -- Initialization
 				-- `trace_check'. `trace_box' is just there so that both
 				-- check boxes are disable in non-C generation.
 			create {EV_VERTICAL_BOX} trace_box
-			override_default_trace := new_check_button (trace_box, "override trace")
-			trace_check := new_check_button (trace_box, "trace")
+			override_default_trace := new_check_button (trace_box, "override trace", False)
+			trace_check := new_check_button (trace_box, "trace", False)
 			trace_check.disable_sensitive
 			override_default_trace.select_actions.extend (~desactivation_action
 				(override_default_trace, trace_check))
@@ -883,8 +883,8 @@ feature {NONE} -- Initialization
 				-- `profile_check'. `profile_box' is just there so that both
 				-- check boxes are disable in non-C generation.
 			create {EV_VERTICAL_BOX} profile_box
-			override_default_profile := new_check_button (profile_box, "override profile")
-			profile_check := new_check_button (profile_box, "profile")
+			override_default_profile := new_check_button (profile_box, "override profile", False)
+			profile_check := new_check_button (profile_box, "profile", False)
 			profile_check.disable_sensitive
 			override_default_profile.select_actions.extend (~desactivation_action
 				(override_default_profile, profile_check))

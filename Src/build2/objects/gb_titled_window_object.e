@@ -362,8 +362,20 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 	build_display_object is
 			-- Build `display_object' from type of `Current'
 			-- and hence `object'.
+		local
+			builder_win: GB_BUILDER_WINDOW
 		do
-			create display_object.make_as_root_window (create {EV_TITLED_WINDOW})
+			create builder_win
+			builder_win.set_size (Default_window_dimension, Default_window_dimension)
+			set_display_object (builder_win)
+			display_object.set_pebble_function (agent retrieve_pebble)
+			display_object.child.set_pebble_function (agent retrieve_pebble)
+			display_object.drop_actions.extend (agent add_new_object_wrapper (?))
+			display_object.drop_actions.extend (agent add_new_component_wrapper (?))
+			display_object.child.drop_actions.extend (agent add_new_object_wrapper (?))
+			display_object.child.drop_actions.extend (agent add_new_component_wrapper (?))
+			display_object.drop_actions.set_veto_pebble_function (agent can_add_child (?))
+			display_object.child.drop_actions.set_veto_pebble_function (agent can_add_child (?))
 		end
 		
 	set_display_object  (display_win: GB_BUILDER_WINDOW) is

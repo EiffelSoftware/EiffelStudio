@@ -353,6 +353,19 @@ feature -- Assertion features
 
 feature {NONE} -- Implementation
 
+	correct_child_sensitivity (w: EV_WIDGET_IMP) is
+			-- Update sensitivity of `w' to reflect its state as
+			-- seen from the interface.
+			-- This should be called when `w' is removed from `Current'.
+		do
+				-- If `w' is sensitive as seen from the interface and then
+				-- `w' is not currently sensitive then
+			if w.internal_non_sensitive = False and then w.is_sensitive = False then
+				w.enable_sensitive	
+			end
+		end
+		
+
 	tab_action (direction: BOOLEAN) is
 			-- Go to the next widget that takes the focus through to the tab
 			-- key. If `direction' it goes to the next widget otherwise, it
@@ -807,6 +820,8 @@ feature {NONE} -- Implementation
 			check
 				wel_win_not_void: wel_win /= Void
 			end
+			 	-- Update sensitivity of `v_imp'.
+			correct_child_sensitivity (v_imp)
 			ev_children.go_i_th (i)
 			ev_children.remove
 			disable_notebook_assertions
@@ -930,6 +945,15 @@ end -- EV_NOTEBOOK_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.59  2001/07/02 17:59:06  rogers
+--| `remove_i_th' now calls `correct_child_sensitivity' which fixes the bug
+--| described below:
+--|
+--| call `disable_sensitive' on a notebook.
+--| Add a widget that is sensitive
+--| remove the widget and place in another container that is_sensitive.
+--| The widget was still disabled.
+--|
 --| Revision 1.58  2001/06/07 23:08:15  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

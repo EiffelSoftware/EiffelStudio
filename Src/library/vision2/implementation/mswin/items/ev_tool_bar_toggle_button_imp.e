@@ -1,7 +1,6 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description:
-		"EiffelVision toogle tool bar, mswindows implementation."
+	description: "EiffelVision toogle tool bar, mswindows implementation."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,17 +11,15 @@ class
 inherit
 	EV_TOOL_BAR_TOGGLE_BUTTON_I
 		redefine
-			parent_imp
-		select
+			parent_imp,
 			interface
 		end
 
 	EV_TOOL_BAR_SELECT_BUTTON_IMP
-		rename
-			interface as ev_tool_bar_button_imp_interface
 		redefine
 			type,
-			parent_imp
+			parent_imp,
+			interface
 		end
 
 creation
@@ -54,9 +51,13 @@ feature -- Status setting
 			end
 		end
 
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_TOOL_BAR_TOGGLE_BUTTON
+
 end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
@@ -70,13 +71,17 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/04/07 00:14:00  rogers
+--| Added interface. Both inerited interfaces are now redefined.
+--| Formatting.
+--|
 --| Revision 1.14  2000/04/05 18:22:57  rogers
 --| Removed redefinition of on_activate from EV_TOOL_BAR_SELECT_BUTTON_IMP.
 --|

@@ -35,33 +35,45 @@ feature -- Initialization
 			location = new_location
 		end
 
-	make_from_xml_tree(node:XML_ELEMENT; path:FILE_NAME) is
+	make_from_xml_tree (node: XML_ELEMENT; path: FILE_NAME) is
 			-- Create this topic from XML-tree.
 		require
-			node_not_void: node /= Void and path /= Void
+			node_exists: node /= Void
+			path_exists: path /= Void
 		local
 			sub: XML_ELEMENT
 			c_item: XML_TEXT
 			node_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
 			new_topic: E_TOPIC
 			new_text: E_TEXT
+			resolved, error: BOOLEAN
+			new_loc: STRING
+			new_node: XML_ELEMENT
 		do
-			location := path
-
-			if node.attributes.has("LOCATION") then
-				-- Topic is reference, so come back later.
-				create location.make_from_string(node.attributes.item("LOCATION").value)
-				id := "unknown" -- Unknown yet.
-				make_from_file_name(location)
-			else
-				-- Get the ID
-				if node.attributes.has("ID") then
-					id := node.attributes.item("ID").value
+			from
+				location := path
+				sub := node
+			until
+				sub = Void or else not sub.attributes.has (topic_location_attr)
+			loop
+				if sub.attributes.has (topic_location_attr) then
+					new_loc := clone(sub.attributes.item (topic_location_attr).value)
+					transform_relative_path (path, new_loc)
+					sub := get_topic_node_from_file (new_loc)
+					if sub /= Void then
+						create location.make_from_string (new_loc)
+					end
+				end
+			end
+			if sub /= Void then
+				if sub.attributes.has("ID") then
+					id := sub.attributes.item("ID").value
+					-- There are no checks here yet.
+					-- Checks are performed at the end of this routine.
 				end
 
-				-- Get the HEAD and either the subtopics or the text.
 				from
-					node_cursor := node.new_cursor
+					node_cursor := sub.new_cursor
 					node_cursor.start
 				until
 					node_cursor.after
@@ -99,67 +111,48 @@ feature -- Initialization
 					end
 					node_cursor.forth
 				end
+			else
+				warning ("XML", "Unable to solve location of external topic.", main_window)
+				create location.make_from_string("<error>")
+				--! FIXME Exit application?
+			end
+			if id = Void then
+				warning ("XML", "A topic must always have an ID.", main_window)
+				id := "Missing ID"
+			end
+			if head = Void then
+				warning ("XML", "A topic must always have a head.", main_window)
+				head := "Missing HEAD"
+			end
+			if not contains_text and then not contains_subtopics then
+				warning ("XML", "Encountered an empty topic.", main_window)
 			end
 		end
 
-	make_from_file_name(file_name:FILE_NAME) is
-			-- Opens the XML file and calls 'make_from_xml_tree'.
-		require
-			file_name_not_void: file_name /= Void
+	get_topic_node_from_file (fn: STRING): XML_ELEMENT is
+			-- Open file `fn' and return the first topic in it.
 		local
-			file: RAW_FILE
-			s: STRING
-			parser: XML_TREE_PARSER
-			node_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
-			doc: XML_ELEMENT
-			err: BOOLEAN
+			file_name: FILE_NAME
+			sub: XML_ELEMENT
 		do
-			if not err then
-				create parser.make 
-				create file.make (file_name)
-				if file.exists then
-					file.open_read
-					file.read_stream (file.count)
-					create s.make(file.count)
-					s.append (file.last_string)
-					parser.parse_string(s)
-					parser.set_end_of_file
-					file.close
-	
-					-- Now find the first TOPIC-tag...
-					if parser.root_element.name.is_equal("EIFFEL_DOCUMENT") then
-						doc := find_first_node_with_tag("TOPIC", parser.root_element)
-						if doc /= Void then
-							make_from_xml_tree(doc, file_name)
-						else
-							head := "No TOPIC-tag found in: "+file_name
-						end
-					else
-						head := "No EIFFEL_DOCUMENT-tag found in: "+file_name
-					end
-				else
-					s:="The file " + file_name
-					warning("File not found",s,main_window)
-				end
-			else
-				s:="The file " + file_name
-				warning("File not accesible",s,main_window)
+			create file_name.make_from_string (fn)
+			sub := parse_xml_file (file_name)
+			if sub /= Void then
+				Result := find_first_node_with_tag (topic_tag, sub)
 			end
-		rescue
-			err := TRUE
-			retry
 		end
 
 feature -- Basic operations
 
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is current object less than `other'? (comparable)
+			-- We use the id in uppercase to compare.
 		local
-			s,os: STRING
+			s, os: STRING
 		do
-			s := deep_clone(id)
+			s := deep_clone (id)
 			s.to_upper
-			os := deep_clone(other.id)
+			os := deep_clone (other.id)
 			os.to_upper
 			Result := s < os
 		end
@@ -304,7 +297,15 @@ feature -- Implementation
 
 feature {VIEWER_WINDOW} -- Display
 
-	display(area: E_TOPIC_DISPLAY) is
+	display (area: E_TOPIC_DISPLAY) is
+			-- Show this topic in a quick, buffered way.
+		require
+			area_exists: area /= Void
+		do
+			area.display_topic (Current)
+		end
+
+	display_old(area: E_TOPIC_DISPLAY) is
 			-- Output the text (if any) on 'area'.
 		require
 			not_void: area /= Void
@@ -341,7 +342,7 @@ feature {VIEWER_WINDOW} -- Display
 					temp.display(area)
 					subtopics.forth
 				end
-			end				
+			end
 		end
 
 feature -- Access
@@ -355,10 +356,10 @@ feature -- Access
 	location: FILE_NAME
 			-- The file this topic is from.
 
-	paragraphs: LINKED_LIST[E_TEXT]
+	paragraphs: LINKED_LIST [E_TEXT]
 			-- A list of all paragraphs in this topic.
 
-	subtopics: LINKED_LIST[E_TOPIC]
+	subtopics: LINKED_LIST [E_TOPIC]
 			-- All the subtopics of this topic.
 
 invariant

@@ -7,6 +7,16 @@
 the <IMP>window</IMP> is divided in a <A TOPIC_ID="Left">left</A> and <A TOPIC_ID="Right">right</A> <IMP>section</IMP> divided
 by a <IMP>splitter</IMP>. You can move the splitter if you want to enlarge
 any of the two sections.</TEXT>
+
+<TEXT>There is a program available that converts the FrameMaker 5.5.6 XML output into
+our help-document format. Note: the current version only detects these tags:
+Section headers: xx-chapter, xx-sec2, xx-sec3
+Body text: xx-first, xx-normal, xx-small
+Bulleted list items: xx-bull, xx-bullnum
+The xx- part can be any character (nn-, bb-, ll-) or can be omitted.
+
+It also displays text in tables, but not formatted at all.</TEXT>
+
 <TEXT><FONT NAME="Tahoma" SIZE="15">This <FONT SIZE="18">is <FONT COLOR="blue">not</FONT> a test</FONT>, this is an actual <FONT SIZE="20" NAME="Arial">e<I>m</I>e<I>rge</I><B>ncy</B>!!!</FONT></FONT></TEXT>
 
 	</TOPIC>
@@ -15,10 +25,8 @@ any of the two sections.</TEXT>
 		<TOPIC ID="AboutXML">
 			<HEAD>About XML</HEAD>
 
-<TEXT>Help documents are    written in XML. XML stands for eXtensible
-
-	 Markup Language. For this help tool, some new tags were defined.
-These are the new tags:
+<TEXT>Help documents are written in XML. XML stands for eXtensible Markup Language.
+For this help tool, some new tags were defined. These are the new tags:
 <UL><LI><A TOPIC_ID="EIFFEL_DOCUMENT">EIFFEL_DOCUMENT</A>: Every help-file starts with this tag.</LI><LI><A TOPIC_ID="TOPIC">TOPIC</A>: Define a new help-topic.</LI><LI><A TOPIC_ID="HEAD">HEAD</A>: The title of the topic.</LI><LI><A TOPIC_ID="TEXT">TEXT</A>: The body text of a topic.</LI></UL>
 
 Furthermore, in the TEXT-tag, you can use some tags that are also
@@ -34,8 +42,7 @@ in a topic. You can put as many subtopics or text-paragraphs in it as
 you want.
 </TEXT>
 		</TOPIC>
-		<TOPIC LOCATION="helptags.xml">
-		</TOPIC>
+		<TOPIC LOCATION="helptags.xml"/>
 	</TOPIC>
 
 	<TOPIC ID="Interface">
@@ -71,6 +78,6 @@ you want.
 			</TOPIC>
 		</TOPIC>
 	</TOPIC>
-	<TOPIC LOCATION="helpother.xml"></TOPIC>
+	<TOPIC LOCATION="helpother.xml"/>
 </TOPIC>
 </EIFFEL_DOCUMENT>

@@ -2,11 +2,18 @@
 <TOPIC ID="Misc">
 	<HEAD>Some additional information for the Help-tool</HEAD>
 
-	<TEXT>It reads every 2 seconds the file "topic.dat". If the timestamp changed, the topic in that file is displayed.</TEXT>
-	<TEXT>It assumes there is a file "help.xml".</TEXT>
-	<TEXT>There are a few problems with using EV_RICH_TEXT:
-<UL><LI>No underlined text.</LI><LI>No wrapping of lines.</LI><LI>No possibility of displaying pictures.</LI><LI>No possiblity to change the mouse cursor when going over a link</LI><UL>
+	<TEXT>Every 2 seconds, the file "topic.dat" is accessed. If the timestamp
+changed, the topic in that file is displayed. This will be improved.</TEXT>
+	<TEXT>It assumes there is a file "./help.xml" or ".\HELP.XML". This will be improved as well.</TEXT>
+	<TEXT>Problems with help-tool on Unix:
+<UL><LI>No underlined text.</LI><LI>Crappy wrapping of lines.</LI><LI>No possibility of displaying pictures.</LI><LI>No possiblity to change the mouse cursor when going over a link.</LI><LI>Font name and size do not work.</LI><LI>No key-event in Textfields.</LI><LI>Italics not available on standard font.</LI><LI>Dialog boxes are not modal</LI><LI>Timer not implemented.</LI></UL></TEXT>
 
-Suggestion are welcome.</TEXT>
+	<TEXT>Problems with help-tool on Windows:
+<UL><LI>No underlined text.</LI><LI>No wrapping of lines.</LI><LI>No possibility of displaying pictures.</LI><LI>No possiblity to change the mouse cursor when going over a link.</LI></UL></TEXT>
+
+<TEXT>This not even everything that does not work yet. When Vision2 is finished a lot will
+be fixed. Please start using this help-tool, create documents and see
+if you can find bugs. Also, suggestions to improve the help-tool are
+more than welcome.</TEXT>
 </TOPIC>
 </EIFFEL_DOCUMENT>

@@ -204,7 +204,7 @@ feature -- Initialization
 				tree_cursor.forth		
 			end
 			if id = Void then
-				io.putstring ("Warning: No id found. However, we'll generate one for you.%N")
+				io.putstring ("Warning: No id found. However, we'll generate one for you!%N")
 				id := generate_unique_id
 			end
 			xml_string.append (leading_tabs + get_start_tag (topic_tag, get_attr (topic_id_attr, id)) + "%N")

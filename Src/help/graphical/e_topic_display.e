@@ -1,6 +1,8 @@
 indexing
 	description: "Display for help-topics. Based on EV_RICH_TEXT."
 	author: "Vincent Brendel"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	E_TOPIC_DISPLAY
@@ -13,18 +15,17 @@ inherit
 
 	FACILITIES
 
-creation
+create
 	make
 
 feature -- Initialization
 
-	make(par:EV_CONTAINER; vw:VIEWER_WINDOW) is
-			-- Initialize
+	make (par: EV_CONTAINER) is
+			-- Initialize.
 		local
 			com: EV_ROUTINE_COMMAND
 		do
 			make_rich(par)
-			viewer := vw
 			init_head_format
 			create text_format.make
 			reset_text_format
@@ -42,11 +43,11 @@ feature -- Initialization
 			create head_format.make
 			--create font.make_by_name("Arial")
 			--font.set_height(16)
-			create color.make_rgb(0,0,0)
+			--create color.make_rgb(0,0,0)
 			--head_format.set_font(font)
-			head_format.set_color(color)
+			--head_format.set_color(color)
 			head_format.set_bold(true)
-			head_format.set_italic(false)
+			--head_format.set_italic(false)
 		end
 
 feature -- Actions
@@ -62,14 +63,14 @@ feature -- Actions
 			md ?= data
 			link := get_link_from_position(md.x, md.y)
 			if link /= Void then
-				viewer.set_selected_topic_by_id(link.topic_id)
+				main_window.set_selected_topic_by_id(link.topic_id)
 			end
 		end
 
 feature -- Status setting
 
 	reset_text_format is
-			-- Initialize the font attributes for the body of the text.
+			-- Reset the font attributes for the body of the text.
 		local
 			font: EV_FONT
 			color: EV_COLOR
@@ -77,28 +78,27 @@ feature -- Status setting
 			--create font.make_by_name("Times New Roman")
 			--font.set_height(12)
 			--text_format.set_font(font)
-			text_format.set_bold(false)
-			text_format.set_italic(false)
-			create color.make_rgb(0,0,0)
-			text_format.set_color(color)
+			--text_format.set_bold(false)
+			--text_format.set_italic(false)
+			--create color.make_rgb(0,0,0)
+			--text_format.set_color(color)
 		end
 
-	append_hyperlinked_text(txt, link:STRING) is
-			-- Append Hyperlink.
+	add_hyperlink (first, last: INTEGER; link: STRING) is
+			-- Set a new hyperlink.
 		require
-			not_void: txt /= Void and link /= Void
+			valid_first: first >= 0
+			valid_last: last >= first
+			link_exists: link /= Void
 		local
 			new_link:E_TOPIC_LINK
-			first: INTEGER
 		do
-			first := text_length
-			append_text(txt)
-			create new_link.make(first, text_length, link)
-			hyperlinks.extend(new_link)
+			create new_link.make (first, last, link)
+			hyperlinks.extend (new_link)
 		end
 
 	remove_all_hyperlinks is
-			-- remove the hyperlinks.
+			-- Remove the hyperlinks.
 		do
 			hyperlinks.wipe_out
 		end
@@ -128,6 +128,149 @@ feature -- Implementation
 
 feature -- Display
 
+	get_bullet_list_item_str: STRING is
+		do
+			Result := "- "
+		end
+
+	get_line_break_str (indent: INTEGER): STRING is
+			-- Get string with line-break and spaces.
+		require
+			valid_indent: indent >= 0
+		local
+			i: INTEGER
+		do
+			Result := "%R%N"
+			from
+				i := indent
+			until
+				i <= 0
+			loop
+				Result.append ("    ")
+				i := i - 1
+			end
+		end
+
+	display_topic (topic: E_TOPIC) is
+			-- Displays a topic using a buffer.
+			-- Try to make this a bit faster please.
+		require
+			topic_exists: topic /= Void
+		local
+			buffer: STRING
+			etext: E_TEXT
+			part: E_TEXT_PART
+			attribs: LINKED_LIST [RICH_TEXT_ATTR]
+			tmp_attr: RICH_TEXT_ATTR
+			sp, ep: INTEGER
+			cf: EV_CHARACTER_FORMAT
+			counter: INTEGER
+		do
+			-- Reset character
+			create cf.make
+			set_character_format (cf)
+
+			-- Init
+			create buffer.make (0)
+			create attribs.make
+			remove_all_hyperlinks
+
+			-- Display head
+			create tmp_attr.make (1, topic.head.count)
+			tmp_attr.set_format (head_format)
+			attribs.extend (tmp_attr)
+			buffer.append (topic.head + "%R%N%R%N")
+
+			if topic.contains_text then
+				from
+					topic.paragraphs.start
+				until
+					topic.paragraphs.after
+				loop
+					from
+						etext := topic.paragraphs.item
+						etext.text_parts.start
+					until
+						etext.text_parts.after
+					loop
+						part := etext.text_parts.item
+						sp := buffer.count
+						buffer.append (part.text)
+						ep := buffer.count
+
+						if part.needs_character_format then
+							create tmp_attr.make (sp + 1, ep)
+							tmp_attr.set_format (part.get_character_format)
+							attribs.extend (tmp_attr)
+						end
+
+						if part.line_break then
+							buffer.append (get_line_break_str (part.list_depth))
+						end
+						if part.bullet then
+							buffer.append (get_bullet_list_item_str)
+						end
+						if part.hyperlink /= Void then
+							add_hyperlink (sp, ep, part.hyperlink)
+						end
+
+						etext.text_parts.forth
+					end
+					topic.paragraphs.forth
+					buffer.append ("%R%N")
+				end
+			elseif topic.contains_subtopics then
+				from
+					topic.subtopics.start
+					counter := 1
+				until
+					topic.subtopics.after
+				loop
+					buffer.append ("  " + counter.out + ": ")
+					counter := counter + 1
+
+					sp := buffer.count
+					buffer.append (topic.subtopics.item.head)
+					ep := buffer.count
+
+					--create tmp_attr.make (sp + 1, ep)
+					--tmp_attr.set_format (cf)
+					--attribs.extend (tmp_attr)
+					buffer.append ("%R%N")
+
+					add_hyperlink (sp + 1, ep, topic.subtopics.item.id)
+
+					topic.subtopics.forth
+				end
+			end
+			set_text (buffer)
+			from
+				attribs.start
+			until
+				attribs.after
+			loop
+				attribs.item.apply (Current)
+				attribs.forth
+			end
+		end
+
+feature -- Not used
+
+--! These features are not used anymore. The display speed was too slow.
+
+	append_hyperlinked_text(txt, link:STRING) is
+			-- Append Hyperlink.
+		require
+			not_void: txt /= Void and link /= Void
+		local
+			first: INTEGER
+		do
+			first := text_length
+			append_text(txt)
+			add_hyperlink (first, text_length, link)
+
+		end
+
 	set_head_format is
 			-- Set head format.
 		do
@@ -142,25 +285,16 @@ feature -- Display
 
 	bullet_list_item is
 		do
-			append_text("· ")
+			append_text(get_bullet_list_item_str)
 		end
 
 	line_break(indent:INTEGER) is
 			-- Insert a Carriage Return.
 		require
 			possible: indent >=0
-		local
-			i: INTEGER
+
 		do
-			append_text ("%R%N")
-			from
-				i := indent
-			until
-				i <= 0
-			loop
-				append_text("    ")
-				i := i - 1
-			end
+			append_text (get_line_break_str (indent))
 		end
 
 feature -- Access
@@ -173,13 +307,10 @@ feature -- Access
 
 feature -- Implementation
 
-	hyperlinks: LINKED_LIST[E_TOPIC_LINK]
+	hyperlinks: LINKED_LIST [E_TOPIC_LINK]
 			-- The list of all hyperlinks on the current page.
 
-	viewer: VIEWER_WINDOW
-			-- The main window.
-
 invariant
-	E_TOPIC_DISPLAY_not_void: hyperlinks /= Void and viewer /= Void and text_format /= Void and head_format /= VOid
+	E_TOPIC_DISPLAY_not_void: hyperlinks /= Void and text_format /= Void and head_format /= VOid
 
 end -- class E_TOPIC_DISPLAY

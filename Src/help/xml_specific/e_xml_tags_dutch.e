@@ -1,11 +1,11 @@
 indexing
-	description: "Objects that represent the help-format XML tags in English."
+	description: "Objects that represent the help-format XML tags in Dutch."
 	author: "Vincent Brendel"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	E_XML_TAGS
+	E_XML_TAGS_DUTCH
 
 feature -- Miscellaneous
 
@@ -70,13 +70,13 @@ feature -- Constants
 	topic_tag: STRING is
 			-- The topic-tag. Has 2 attributes: location and id.
 		once
-			Result := "TOPIC"
+			Result := "ONDERWERP"
 		end
 
 	topic_location_attr: STRING is
 			-- The location attribute of topic.
 		once
-			Result := "LOCATION"
+			Result := "LOCATIE"
 		end
 
 	topic_id_attr: STRING is
@@ -88,91 +88,91 @@ feature -- Constants
 	text_tag: STRING is
 			-- The paragraph tag.
 		once
-			Result := "TEXT"
+			Result := "TEKST"
 		end
 
 	head_tag: STRING is
 			-- The topic-title tag.
 		once
-			Result := "HEAD"
+			Result := "TITEL"
 		end
 
 	font_tag: STRING is
 			-- The font properties tag. Has 3 attributes: color, name and size.
 		once
-			Result := "FONT"
+			Result := "LETTER"
 		end
 
 	font_color_attr: STRING is
 			-- The color attribute of font.
 		once
-			Result := "COLOR"
+			Result := "KLEUR"
 		end
 
 	font_name_attr: STRING is
 			-- The name attribute of font.
 		once
-			Result := "NAME"
+			Result := "NAAM"
 		end
 
 	font_size_attr: STRING is
 			-- The size attribute of font.
 		once
-			Result := "SIZE"
+			Result := "GROOTTE"
 		end
 
 	line_break_tag: STRING is
 			-- The line-break tag. Recommended use: single tag.
 		once
-			Result := "BR"
+			Result := "REGELEINDE"
 		end
 
 	anchor_tag: STRING is
 			-- The anchor tag. Has 1 attribute: topic_id.
 		once
-			Result := "A"
+			Result := "ANKER"
 		end
 
 	anchor_topic_id_attr: STRING is
 			-- The topic_id attribute of anchor.
 		once
-			Result := "TOPIC_ID"
+			Result := "ONDERWERP_ID"
 		end
 
 	list_item_tag: STRING is
 			-- The bulleted list-item tag.
 		once
-			Result := "LI"
+			Result := "LIJSTONDERDEEL"
 		end
 
 	list_tag: STRING is
 			-- The unnumbered list tag.
 		once
-			Result := "UL"
+			Result := "LIJST"
 		end
 
 	bold_tag: STRING is
 			-- The bold-tag.
 		once
-			Result := "B"
+			Result := "VET"
 		end
 
 	italics_tag: STRING is
 			-- The italics-tag.
 		once
-			Result := "I"
+			Result := "CURSIEF"
 		end
 
 	underlined_tag: STRING is
 			-- The underlined-tag.
 		once
-			Result := "U"
+			Result := "ONDERSTREEPT"
 		end
 
 	keyword_tag: STRING is
 			-- The keyword-tag. Words between keyword tags are added to the index.
 		once
-			Result := "IMP"
+			Result := "TREFWOORD"
 		end
 
 feature {NONE} -- Implementation
@@ -185,4 +185,4 @@ feature {NONE} -- Implementation
 			"C [macro %"eif_misc.h%"]"
 		end
 
-end -- class E_XML_TAGS
+end -- class E_XML_TAGS_DUTCH

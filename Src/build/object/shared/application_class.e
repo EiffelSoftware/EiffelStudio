@@ -36,6 +36,7 @@ feature -- Creation
 			!! query_list.make
 			!! command_list.make
 			!! routine_list.make
+			!! generated_routines.make
 		end
 
 feature -- Attributes
@@ -51,6 +52,8 @@ feature -- Attributes
 
 	routine_list: LINKED_LIST [APPLICATION_ROUTINE]
 			-- List of routines
+
+	generated_routines: LINKED_LIST [APPLICATION_ROUTINE]
 
 feature -- Access
 
@@ -78,6 +81,14 @@ feature -- Access
 			routine_list.extend (a_routine)
 		end
 
+	add_generated_routine (a_routine: APPLICATION_ROUTINE) is
+			-- Add `a_routine' to the list of routines.
+		require
+			valid_routine: a_routine /= Void 
+		do
+			generated_routines.extend (a_routine)
+		end
+	
 feature -- SCROLLABLE_LIST_ELEMENT
 
 	value: STRING  is

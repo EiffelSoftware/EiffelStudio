@@ -1188,17 +1188,17 @@ void fb_set_button_bg_color (EIF_POINTER client, EIF_POINTER pix)
 		get the color of the parent) */
 
 	if (fbd->number_family)
-		XmChangeColor (XtParent((fbd->family_menu_buttons)[0]), pix);
+		XmChangeColor (XtParent((fbd->family_menu_buttons)[0]), (Pixel) pix);
 	if (fbd->number_slant)
-		XmChangeColor (XtParent((fbd->slant_menu_buttons)[0]), pix);
+		XmChangeColor (XtParent((fbd->slant_menu_buttons)[0]), (Pixel) pix);
 	if (fbd->number_width)
-		XmChangeColor (XtParent((fbd->width_menu_buttons)[0]), pix);
+		XmChangeColor (XtParent((fbd->width_menu_buttons)[0]), (Pixel) pix);
 	if (fbd->number_weight)
-		XmChangeColor (XtParent((fbd->weight_menu_buttons)[0]), pix);
+		XmChangeColor (XtParent((fbd->weight_menu_buttons)[0]), (Pixel) pix);
 	if (fbd->number_point)
-		XmChangeColor (XtParent((fbd->point_menu_buttons)[0]), pix);
+		XmChangeColor (XtParent((fbd->point_menu_buttons)[0]), (Pixel) pix);
 	if (fbd->number_resolution)
-		XmChangeColor (XtParent((fbd->resolution_menu_buttons)[0]), pix);
+		XmChangeColor (XtParent((fbd->resolution_menu_buttons)[0]), (Pixel) pix);
 	XmChangeColor (XtParent(fbd->stand_fonts_button), pix);
 }
 

@@ -114,6 +114,7 @@ feature -- Element change
 			pixmap_imp.lock
 			pixmap_imp.set_parent (Current)
 			set_minimum_size (pixmap_imp.width, pixmap_imp.height)
+			invalidate
 		end
 
 	unset_pixmap is

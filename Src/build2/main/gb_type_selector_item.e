@@ -49,9 +49,14 @@ feature {NONE} -- Initialization
 	make_with_text (a_text: STRING) is
 			-- Create `Current', assign `a_text' to `text'
 			-- and "EV_" + `a_text' to `type'.
+		local
+			pixmaps: GB_SHARED_PIXMAPS
 		do
 			Precursor {EV_TREE_ITEM} (a_text)
 			type := a_text
+				-- We must now add the correct pixmap.
+			create pixmaps
+			set_pixmap (pixmaps.pixmap_by_name (type))
 		end
 
 	initialize is

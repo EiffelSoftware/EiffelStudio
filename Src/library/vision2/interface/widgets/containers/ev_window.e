@@ -31,9 +31,21 @@ inherit
 
 create
 	default_create,
+	make_with_title,
 	make_for_test
 
-feature  -- Access
+feature {NONE} -- Initialization
+
+	make_with_title (a_title: STRING) is
+			-- Initialize with `a_title'.
+		require
+			a_title_not_void: a_title /= Void
+		do
+			default_create
+			set_title (a_title)
+		end
+
+feature -- Access
  
 	parent: EV_WINDOW is
 			-- Window of which `Current' is a child.
@@ -370,6 +382,9 @@ end -- class EV_WINDOW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.51  2000/03/21 23:05:31  brendel
+--| By request, make_with_title.
+--|
 --| Revision 1.50  2000/03/18 01:06:39  king
 --| Corrected set_status_bar
 --|

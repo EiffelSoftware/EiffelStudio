@@ -130,12 +130,12 @@ interface IEiffelCompletionEntry: IUnknown
 {
   [helpstring ("Feature name.")]
   HRESULT name ([out, retval] BSTR * return_value);
-	
+
   [helpstring ("Feature signature.")]
   HRESULT signature ([out, retval] BSTR * return_value);
 
   [helpstring ("Is entry a feature?")]
-  HRESULT is_feature ([out] VARIANT_BOOL* return_value);	
+  HRESULT is_feature ([out] VARIANT_BOOL* return_value);
 };
 //---------------------------------------------------------------------
 
@@ -146,8 +146,8 @@ interface IEiffelCompletionEntry: IUnknown
 ]
 interface IEiffelCompletionInfo: IUnknown
 {
-	[helpstring ("Features accessible from target.")]
-	HRESULT target_features ([in] BSTR target, [in] BSTR feature_name, [in] BSTR file_name, [out, retval] IEnumCompletionEntry ** return_value);
+  [helpstring ("Features accessible from target.")]
+  HRESULT target_features ([in] BSTR target, [in] BSTR feature_name, [in] BSTR file_name, [out, retval] IEnumCompletionEntry ** return_value);
 };
 //---------------------------------------------------------------------
 
@@ -904,22 +904,19 @@ interface IEiffelSystemAssemblies: IDispatch
   HRESULT store ();
 
   [helpstring ("Add a signed assembly to the project.")]
-  HRESULT add_signed_assembly ([in] BSTR assembly_prefix, [in] BSTR assembly_identifier, [in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey);
-
-  [helpstring ("Add a unsigned (local) assembly to the project.")]
-  HRESULT add_unsigned_assembly ([in] BSTR assembly_prefix, [in] BSTR assembly_identifier, [in] BSTR a_path);
+  HRESULT add_assembly ([in] BSTR assembly_prefix, [in] BSTR cluster_name, [in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey);
 
   [helpstring ("Remove an assembly from the project.")]
   HRESULT remove_assembly ([in] BSTR assembly_identifier);
 
-  [helpstring ("Cluster properties.")]
-  HRESULT assembly_properties ([in] BSTR assembly_identifier, [out, retval] IEiffelAssemblyProperties ** return_value);
+  [helpstring ("Assembly properties.")]
+  HRESULT assembly_properties ([in] BSTR cluster_name, [out, retval] IEiffelAssemblyProperties ** return_value);
 
-  [helpstring ("Checks to see if a assembly identifier is valid")]
-  HRESULT is_valid_identifier ([in] BSTR assembly_identifier, [out, retval] VARIANT_BOOL * return_value);
+  [helpstring ("Checks to see if a assembly cluster name is valid")]
+  HRESULT is_valid_cluster_name ([in] BSTR cluster_name, [out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("Checks to see if a assembly identifier has already been added to the project")]
-  HRESULT contains_assembly ([in] BSTR assembly_identifier, [out, retval] VARIANT_BOOL * return_value);
+  [helpstring ("Checks to see if a assembly cluster name has already been added to the project")]
+  HRESULT contains_assembly ([in] BSTR cluster_name, [out, retval] VARIANT_BOOL * return_value);
 
   [helpstring ("Checks to see if a signed assembly has already been added to the project")]
   HRESULT contains_signed_assembly ([in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey, [out, retval] VARIANT_BOOL * return_value);
@@ -927,20 +924,17 @@ interface IEiffelSystemAssemblies: IDispatch
   [helpstring ("Checks to see if a unsigned assembly has already been added to the project")]
   HRESULT contains_unsigned_assembly ([in] BSTR a_path, [out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("Retrieves the identifier for a signed assembly in the project")]
-  HRESULT identifier_from_signed_assembly ([in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey, [out, retval] BSTR * return_value);
+  [helpstring ("Retrieves the cluster name for a signed assembly in the project")]
+  HRESULT cluster_name_from_signed_assembly ([in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey, [out, retval] BSTR * return_value);
 
-  [helpstring ("Retrieves the identifier for a unsigned assembly in the project")]
-  HRESULT identifier_from_unsigned_assembly ([in] BSTR a_path, [out, retval] BSTR * return_value);
+  [helpstring ("Retrieves the cluster name for a unsigned assembly in the project")]
+  HRESULT cluster_name_from_unsigned_assembly ([in] BSTR a_path, [out, retval] BSTR * return_value);
 
   [helpstring ("Is 'prefix' a valid assembly prefix")]
   HRESULT is_valid_prefix ([in] BSTR assembly_prefix, [out, retval] VARIANT_BOOL * return_value);
 
   [helpstring ("Has the 'prefix' already been allocated to another assembly")]
   HRESULT is_prefix_allocated ([in] BSTR assembly_prefix, [out, retval] VARIANT_BOOL * return_value);
-
-  [helpstring ("Rename the assembly identifier")]
-  HRESULT rename_assembly ([in] BSTR assembly_new_identifier, [in] BSTR assembly_old_identifier);
 
   [id (200), propget, helpstring ("Returns all of the assemblies in an enumerator")]
   HRESULT assemblies ([out, retval] IEnumAssembly ** return_value);
@@ -1079,13 +1073,7 @@ interface IEiffelAssemblyProperties: IDispatch
   HRESULT assembly_culture ([out, retval] BSTR *path);
 
   [id (203), propget, helpstring ("Assembly public key token")]
-  HRESULT assembly_public_key ([out, retval] BSTR * return_value);
-
-  [id (204), propget, helpstring ("Assembly path")]
-  HRESULT assembly_path ([out, retval] BSTR * return_value);
-
-  [id (204), propput, helpstring ("Assembly path")]
-  HRESULT assembly_path ([in] BSTR a_path);
+  HRESULT assembly_public_key_token ([out, retval] BSTR * return_value);
 
   [id (205), propget, helpstring ("Is the assembly local")]
   HRESULT is_local ([out, retval] VARIANT_BOOL * a_bool);
@@ -1093,8 +1081,8 @@ interface IEiffelAssemblyProperties: IDispatch
   [id (208), propget, helpstring ("Is the assembly local")]
   HRESULT is_signed ([out, retval] VARIANT_BOOL * a_bool);
 
-  [id (206), propget, helpstring ("Assembly identifier.")]
-  HRESULT assembly_identifier ([out, retval] BSTR * return_value);
+  [id (206), propget, helpstring ("Assembly cluster name.")]
+  HRESULT assembly_cluster_name ([out, retval] BSTR * return_value);
 
   [id (207), propget, helpstring ("Prefix.")]
   HRESULT assembly_prefix ([out, retval] BSTR * return_value);

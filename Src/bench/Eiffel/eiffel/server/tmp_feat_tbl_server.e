@@ -30,10 +30,10 @@ feature
 			!!Result.make ((3 * Cache.cache_size) // 2)
 		end
 
-	Size_limit: INTEGER is 200
-			-- Size of the TMP_FEAT_TBL_SERVER file (200 Ko)
+	Size_limit: INTEGER is 400
+			-- Size of the TMP_FEAT_TBL_SERVER file (400 Ko)
 
-	Chunk: INTEGER is 150
+	Chunk: INTEGER is 500
 			-- Size of a HASH_TABLE block
 
 end

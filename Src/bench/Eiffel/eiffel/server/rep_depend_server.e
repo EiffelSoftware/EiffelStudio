@@ -61,8 +61,8 @@ feature -- Access
 
 feature -- Server size configuration
 
-	Size_limit: INTEGER is 75
-			-- Size of the REP_DEPEND_SERVER file (75 Ko)
+	Size_limit: INTEGER is 100
+			-- Size of the REP_DEPEND_SERVER file (100 Ko)
 
 	Chunk: INTEGER is 150
 			-- Size of a HASH_TABLE block

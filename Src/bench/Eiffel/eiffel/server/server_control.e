@@ -17,14 +17,23 @@ feature -- Initialization
 		do
 			{CACHE} Precursor
 			!! files.make (Chunk)
+			!! removed_files.make (Chunk)
 			!! file_counter.make
 		end
 
-feature
+feature -- Status
 
 	files: EXTEND_TABLE [SERVER_FILE, FILE_ID];
 			-- Table of all the files under the control of the
 			-- current object
+
+	removed_files: HASH_TABLE [SERVER_FILE, FILE_ID]
+			-- Table of all the removed files
+
+	remove_right_away: BOOLEAN
+			-- Should we remove the file as soon as we don't need them?
+			--| i.e. only in final mode were we don't need to preserve files
+			--| since there is no incrementality here
 
 	file_counter: FILE_COUNTER;
 			-- Server file id counter
@@ -35,13 +44,35 @@ feature
 	Chunk: INTEGER is 50;
 			-- Array chunk
 
+feature -- Update
+
+	set_remove_right_away (v: BOOLEAN) is
+			-- Set `v' to `remove_right_away'
+		do
+			remove_right_away := v
+		ensure
+			remove_right_away_set: remove_right_away = v
+		end
+
+feature -- Ids creation
+
 	compute_new_id is
 			-- Compute a new server file id and assign it to `last_computed_id'.
 		local
+			local_files: HASH_TABLE [SERVER_FILE, FILE_ID]
 			new_file: SERVER_FILE
 			id: FILE_ID
 		do
-			id := new_id
+				-- Get a new ID.
+			local_files := removed_files
+			if local_files.count > 0 then
+				local_files.start
+				id := local_files.key_for_iteration
+				local_files.remove (id)
+			else
+				id := file_counter.next_id
+			end
+
 			!! new_file.make (id)
 			files.put (new_file, id)
 			last_computed_id := id
@@ -50,7 +81,9 @@ debug ("SERVER")
 	io.error.put_string (id.file_name)
 	io.error.new_line
 end;
-		end;
+		end
+
+feature -- File operations
 
 	forget_file (f: SERVER_FILE) is
 			-- Close the server file and remove it
@@ -58,16 +91,22 @@ end;
 		require
 			good_argument: f /= Void
 		do
-			if f.is_open then
-					-- If the file is open then it is in the cache
-				f.close;
-				remove_id (f.id);
+			if remove_right_away then
+				remove_file (f)
+			else
+				if f.is_open then
+						-- If the file is open then it is in the cache
+					f.close;
+					remove_id (f.id);
 debug ("SERVER")
 	io.error.put_string ("Forget file: ");
 	io.error.put_string (f.id.file_name);
 	io.error.new_line;
 end;
-			end;
+				end;
+				files.remove (f.id)
+				removed_files.put (f, f.id)
+			end
 		end;
 
 	remove_file (f: SERVER_FILE) is
@@ -81,7 +120,9 @@ end;
 				remove_id (f.id);
 			end;
 				-- Remove `f' from the controler
-			files.put (Void, f.id);
+			files.remove (f.id)
+			removed_files.put (f, f.id)
+
 				-- Remove file from the disk
 			f.delete;
 debug ("SERVER")
@@ -95,43 +136,20 @@ end;
 			-- Remove all empty files from disk
 		local
 			file: SERVER_FILE
-			local_files: EXTEND_TABLE [SERVER_FILE, FILE_ID]
+			local_files: HASH_TABLE [SERVER_FILE, FILE_ID]
 		do
+				-- Delete files from disk which are already not used
 			from
-				local_files := files
+				local_files := removed_files
 				local_files.start
 			until
 				local_files.after
 			loop
 				file := local_files.item_for_iteration;
-				if
-					file /= Void
-					and then not file.precompiled
-					and then file.occurence = 0
-				then
+				if file.exists and then not file.precompiled then
 					remove_file (file);
 				end;
 				local_files.forth
-			end
-		end;
-
-	new_id: FILE_ID is
-			-- New id
-		local
-			local_files: EXTEND_TABLE [SERVER_FILE, FILE_ID]
-		do
-			from
-				local_files := files
-				local_files.start
-			until
-				local_files.after or else local_files.item_for_iteration = Void
-			loop
-				local_files.forth
-			end;
-			if not local_files.after then
-				Result := local_files.key_for_iteration
-			else
-				Result := file_counter.next_id
 			end
 		end;
 
@@ -196,7 +214,7 @@ feature -- Status report
 				not Result or local_files.after
 			loop
 				file:= local_files.item_for_iteration;
-				if file /= Void and then file.exists then
+				if file.exists then
 					Result := file.is_readable
 				end;
 				local_files.forth
@@ -217,7 +235,7 @@ feature -- Status report
 				not Result or local_files.after
 			loop
 				file:= local_files.item_for_iteration;
-				if file /= Void and then file.exists then
+				if file.exists then
 					if file.precompiled then
 						Result := file.is_readable
 					else
@@ -241,10 +259,7 @@ feature -- Status report
 			until
 				not Result or local_files.after
 			loop
-				file:= local_files.item_for_iteration;
-				if file /= Void then
-					Result := file.exists
-				end
+				Result := local_files.item_for_iteration.exists
 				local_files.forth
 			end
 		end	
@@ -263,10 +278,7 @@ feature -- Initialization
 			until
 				local_files.after
 			loop
-				file := local_files.item_for_iteration;
-				if file /= Void then
-					file.update_path
-				end;
+				local_files.item_for_iteration.update_path;
 				local_files.forth
 			end;
 		end;
@@ -305,10 +317,7 @@ feature -- Debug
 			until
 				local_files.after
 			loop
-				file := local_files.item_for_iteration;
-				if file /= Void then
-					file.trace
-				end;
+				local_files.item_for_iteration.trace;
 				local_files.forth
 			end
 		end;

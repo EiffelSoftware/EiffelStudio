@@ -106,6 +106,7 @@ feature
 			context_storer.retrieve (dir_name);
 
 			translation_storer.retrieve (dir_name);
+			Shared_translation_list.wipe_out;
 			Shared_translation_list.merge_right (translation_storer.retrieved_data);
 			command_storer.retrieve (dir_name);
 			commands := command_storer.retrieved_data;

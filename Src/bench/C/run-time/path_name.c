@@ -253,11 +253,11 @@ EIF_POINTER v;
         (eif_strset)(string, strlen ((char *)p));
 #else	/* not vms */
 	if (*((char *)p) != '\0')
- #ifdef __WINDOWS_386__
+#ifdef __WINDOWS_386__
 		strcat ((char *)p, "\\");
- #else
+#else
 		strcat ((char *)p, "/");
- #endif
+#endif
 
 	strcat ((char *)p, (char *)v);
 	(eif_strset)(string, strlen ((char *)p));
@@ -276,11 +276,11 @@ EIF_POINTER v;
 	strcat ((char *)p,"]");
 	(eif_strset)(string, strlen ((char *)p));
 #else
- #ifdef __WINDOWS_386__
+#ifdef __WINDOWS_386__
 	strcat ((char *)p, "\\");
- #else
+#else
 	strcat ((char *)p, "/");
- #endif
+#endif
 	strcat ((char *)p, (char *)v);
 	(eif_strset)(string, strlen ((char *)p));
 #endif

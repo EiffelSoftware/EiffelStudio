@@ -275,7 +275,8 @@ feature -- Sub makefile generation
 		local
 			new_makefile, old_makefile: INDENT_FILE;
 			baskets_count, i: INTEGER;
-			dir_name: STRING
+			f_name: FILE_NAME;
+			subdir_name: STRING
 		do
 			old_makefile := System.make_file;
 			from
@@ -284,14 +285,17 @@ feature -- Sub makefile generation
 			until
 				i > baskets_count
 			loop
+				
 				if system.in_final_mode then
-					dir_name := Final_generation_path
+					!!f_name.make_from_string (Final_generation_path)
 				else
-					dir_name := Workbench_generation_path
+					!!f_name.make_from_string (Workbench_generation_path)
 				end;
-				dir_name := build_path (dir_name, sub_dir);
-				dir_name.append_integer (i);
-				!!new_makefile.make (build_path (dir_name, Makefile_SH));
+				subdir_name := clone (sub_dir);
+				subdir_name.append_integer (i);
+				f_name.extend (subdir_name);
+				f_name.set_file_name (Makefile_SH);
+				!!new_makefile.make (f_name.path);
 				System.set_make_file (new_makefile);
 				Make_file.open_write;
 					-- Generate main /bin/sh preamble
@@ -326,17 +330,20 @@ feature -- Sub makefile generation
 		local
 			new_makefile, old_makefile: INDENT_FILE;
 			baskets_count, i: INTEGER;
-			dir_name: STRING
+			f_name: FILE_NAME
+			subdir_name: STRING
 		do
 			old_makefile := System.make_file;
 			if system.in_final_mode then
-				dir_name := Final_generation_path
+				!!f_name.make_from_string (Final_generation_path)
 			else
-				dir_name := Workbench_generation_path
+				!!f_name.make_from_string (Workbench_generation_path)
 			end;
-			dir_name := build_path (dir_name, System_object_prefix);
-			dir_name.append_integer (1);
-			!!new_makefile.make (build_path (dir_name, Makefile_SH));
+			subdir_name := clone (System_object_prefix);
+			subdir_name.append_integer (1);
+			f_name.extend (subdir_name);
+			f_name.set_file_name (Makefile_SH);
+			!!new_makefile.make (f_name.path);
 			System.set_make_file (new_makefile);
 			Make_file.open_write;
 				-- Generate main /bin/sh preamble
@@ -575,7 +582,7 @@ feature -- Generation (Linking rules)
 			Make_file.putchar (' ');
 			Make_file.putstring (System_object_prefix);
 			Make_file.putint (1);
-			Make_file.putchar (Directory_separator);
+			Make_file.putchar ('/');
 			Make_file.putstring (Emain);
 			Make_file.putstring (Dot_o);
 			Make_file.putstring (" Makefile%N");
@@ -595,7 +602,7 @@ feature -- Generation (Linking rules)
 			Make_file.putchar (' ');
 			Make_file.putstring (System_object_prefix);
 			Make_file.putint (1);
-			Make_file.putchar (Directory_separator);
+			Make_file.putchar ('/');
 			Make_file.putstring (Emain);
 			Make_file.putstring (Dot_o);
 			Make_file.putchar (' ');
@@ -637,7 +644,7 @@ feature -- Generation (Linking rules)
 				end;
 				Make_file.putstring (System_object_prefix);
 				Make_file.putint (1);
-				Make_file.putchar (Directory_separator);
+				Make_file.putchar ('/');
 				Make_file.putstring (System_object_prefix);
 				Make_file.putstring ("obj");
 				Make_file.putint (i);
@@ -663,7 +670,7 @@ feature -- Generation (Linking rules)
 				end;
 				Make_file.putstring (Feature_table_suffix);
 				Make_file.putint (i);
-				Make_file.putchar (Directory_separator);
+				Make_file.putchar ('/');
 				Make_file.putstring (Feature_table_suffix);
 				Make_file.putstring ("obj");
 				Make_file.putint (i);
@@ -687,7 +694,7 @@ feature -- Generation (Linking rules)
 				end;
 				Make_file.putstring (Descriptor_suffix);
 				Make_file.putint (i);
-				Make_file.putchar (Directory_separator);
+				Make_file.putchar ('/');
 				Make_file.putstring (Descriptor_suffix);
 				Make_file.putstring ("obj");
 				Make_file.putint (i);
@@ -711,7 +718,7 @@ feature -- Generation (Linking rules)
 				end;
 				Make_file.putstring (Class_suffix);
 				Make_file.putint (i);
-				Make_file.putchar (Directory_separator);
+				Make_file.putchar ('/');
 				Make_file.putstring (Class_suffix);
 				Make_file.putstring ("obj");
 				Make_file.putint (i);
@@ -862,7 +869,7 @@ feature -- Generation (Linking rules)
 		do
 			Make_file.putstring (System_object_prefix);
 			Make_file.putint (1);
-			Make_file.putchar (Directory_separator);
+			Make_file.putchar ('/');
 			Make_file.putstring ("emain.o: Makefile%N%T cd ");
 			Make_file.putstring (System_object_prefix);
 			Make_file.putint (1);
@@ -871,7 +878,7 @@ feature -- Generation (Linking rules)
 			from i := 1 until i > partial_system_objects loop
 				Make_file.putstring (System_object_prefix);
 				Make_file.putint (1);
-				Make_file.putchar (Directory_separator);
+				Make_file.putchar ('/');
 				Make_file.putstring (System_object_prefix);
 				Make_file.putstring ("obj");
 				Make_file.putint (i);
@@ -901,7 +908,7 @@ feature -- Generation (Linking rules)
 			loop
 				Make_file.putstring (Feature_table_suffix);
 				Make_file.putint (i);
-				Make_file.putchar (Directory_separator);
+				Make_file.putchar ('/');
 				Make_file.putstring (Feature_table_suffix);
 				Make_file.putstring ("obj");
 				Make_file.putint (i);
@@ -922,7 +929,7 @@ feature -- Generation (Linking rules)
 			loop
 				Make_file.putstring (Descriptor_suffix);
 				Make_file.putint (i);
-				Make_file.putchar (Directory_separator);
+				Make_file.putchar ('/');
 				Make_file.putstring (Descriptor_suffix);
 				Make_file.putstring ("obj");
 				Make_file.putint (i);
@@ -943,7 +950,7 @@ feature -- Generation (Linking rules)
 			loop
 				Make_file.putstring (Class_suffix);
 				Make_file.putint (i);
-				Make_file.putchar (Directory_separator);
+				Make_file.putchar ('/');
 				Make_file.putstring (Class_suffix);
 				Make_file.putstring ("obj");
 				Make_file.putint (i);
@@ -977,14 +984,14 @@ feature -- Cleaning rules
 			Make_file.putstring ("%Nsub_clean::%N");
 			Make_file.putstring ("%Tfor i in $(SUBDIRS); \%N");
 			Make_file.putstring ("%Tdo \%N%T%Tif [ -r $$i");
-			Make_file.putchar (Directory_separator);
+			Make_file.putchar ('/');
 			Make_file.putstring ("Makefile ]; then \%N%T%T%T");
 			Make_file.putstring ("(cd $$i ; $(MAKE) clean); \");
 			Make_file.putstring ("%N%T%Tfi \%N%Tdone%N%N");
 			Make_file.putstring ("sub_clobber::%N");
 			Make_file.putstring ("%Tfor i in $(SUBDIRS); \%N");
 			Make_file.putstring ("%Tdo \%N%T%Tif [ -r $$i");
-			Make_file.putchar (Directory_separator);
+			Make_file.putchar ('/');
 			Make_file.putstring ("Makefile ]; then \%N%T%T%T");
 			Make_file.putstring ("(cd $$i ; $(MAKE) clobber); \");
 			Make_file.putstring ("%N%T%Tfi \%N%Tdone%N%N")

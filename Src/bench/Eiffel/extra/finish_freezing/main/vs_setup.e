@@ -48,7 +48,7 @@ feature -- Initialization
 				l_batch_file.put_new_line
 				l_batch_file.put_string ("set PATH=")
 				l_batch_file.put_new_line
-				l_batch_file.put_string ("call " + short_path (vcvars_full_path))
+				l_batch_file.put_string ("call " + short_path (vcvars_full_path) + " > temp ")
 				l_batch_file.put_new_line
 				l_batch_file.put_string ("set > temp")
 				l_batch_file.put_new_line
@@ -98,23 +98,29 @@ feature -- Implementation
 		
 	synchronize_variable (a_string: STRING) is
 			-- Compare the variable value in 'variables' hashed by 'a_string' against
-			-- actual system variable value known by 'a_string'.  Result will contain 
+			-- actual system variable value known by 'a_string'. Result will contain 
 			-- all values in 'a_string' and in system without duplication.
 		require
 			a_string_not_void: a_string /= Void
 		local
 			l_system_var_values,
 			l_local_var_values: LIST [STRING]
-			l_new_var_value: STRING
+			l_var_value, l_new_var_value: STRING
 			l_value, l_name: WEL_STRING
 			success: BOOLEAN
 		do
 			create l_name.make (a_string)
 					-- Get the environment variable value for this process.
+			check
+				variables_has_a_string: variables.has (a_string)
+			end
 			l_local_var_values := variables.item (a_string).split (';')	
 			if l_local_var_values /= Void and not l_local_var_values.is_empty then
-						-- Get the corresponding system environment variable.
-				l_system_var_values := env.get (a_string).split (';')
+						-- Get the corresponding system environment variable if it existed before.
+				l_var_value := env.get (a_string)
+				if l_var_value /= Void then
+					l_system_var_values := l_var_value.split (';')
+				end
 				if l_system_var_values /= Void and not l_system_var_values.is_empty then
 					create l_new_var_value.make_empty
 					from
@@ -155,8 +161,11 @@ feature -- Keys
 			l_buffer: STRING
 			l_file: PLAIN_TEXT_FILE
 		once
-				-- VS.NET 2005
-			l_buffer := vc_product_dir_for_vs_dotnet ("8.0")
+				-- VS.NET 2005 on 32 and 64 bits
+			l_buffer := vc_product_dir_for_vs_dotnet ("8.0", 64)
+			if l_buffer = Void then
+				l_buffer := vc_product_dir_for_vs_dotnet ("8.0", 32)
+			end
 			if l_buffer /= Void then
 				create l_file.make (vcvars_bat_path_and_filename (l_buffer, 64))
 				if l_file.exists then
@@ -170,7 +179,7 @@ feature -- Keys
 			end
 				-- VS.NET 2003
 			if Result = Void then
-				l_buffer := vc_product_dir_for_vs_dotnet ("7.1")
+				l_buffer := vc_product_dir_for_vs_dotnet ("7.1", 32)
 				if l_buffer /= Void then
 					create l_file.make (vcvars_bat_path_and_filename (l_buffer, 32))
 					if l_file.exists then
@@ -181,7 +190,7 @@ feature -- Keys
 			
 				-- VS.NET 2002
 			if Result = Void then
-				l_buffer := vc_product_dir_for_vs_dotnet ("7.0")
+				l_buffer := vc_product_dir_for_vs_dotnet ("7.0", 32)
 				if l_buffer /= Void then
 					create l_file.make (vcvars_bat_path_and_filename (l_buffer, 32))
 					if l_file.exists then
@@ -206,11 +215,12 @@ feature -- Keys
 		
 feature {NONE} -- Keys
 		
-	vc_product_dir_for_vs_dotnet (a_version: STRING): STRING is
+	vc_product_dir_for_vs_dotnet (a_version: STRING; a_platform: INTEGER): STRING is
 			--Retrieve product dir for VC from a Visual Studio .NET installation
 		require
 			a_version_not_void: a_version /= Void
 			not_a_version_is_empty: not a_version.is_empty
+			a_platform_valid: a_platform = 32 or a_platform = 64
 		local
 			l_key_path: STRING
 		do
@@ -219,6 +229,15 @@ feature {NONE} -- Keys
 			l_key_path.append (a_version)
 			l_key_path.append ("\Setup\VC")
 			Result := vc_product_dir_from_key (l_key_path)
+			
+			if Result = Void and a_platform = 64 then
+					-- Search the key in the `Wow6432Node'.
+				create l_key_path.make (60 + a_version.count)
+				l_key_path.append ("hkey_local_machine\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\")
+				l_key_path.append (a_version)
+				l_key_path.append ("\Setup\VC")
+				Result := vc_product_dir_from_key (l_key_path)
+			end
 		ensure
 			valid_result: Result /= Void implies Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).directory_separator
 		end
@@ -266,7 +285,11 @@ feature {NONE} -- Keys
 			valid_a_product_dir: a_product_dir.item (a_product_dir.count) = (create {OPERATING_ENVIRONMENT}).directory_separator
 			valid_a_bit: a_bits = 32 or a_bits = 64
 		do
-			Result := a_product_dir + "bin\vcvars" + a_bits.out + ".bat"
+			if a_bits = 64 then 
+				Result := a_product_dir + "bin\amd64\vcvars_64.bat"
+			else
+				Result := a_product_dir + "bin\vcvars" + a_bits.out + ".bat"
+			end
 		ensure
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty

@@ -6,51 +6,47 @@ class
 	E_TEXT_PART
 
 creation
-	make,
-	make_old
+	make_empty,
+	make_from_other
 
 feature -- Initialization
 
-	make(txt:STRING; cf:EV_CHARACTER_FORMAT) is
+	make_empty is
+			-- Create nothing.
 		do
-			text := txt
-			char_format := cf
 		end
 
-	make_old(new_text:STRING; attribs:LINKED_LIST[E_ATTRIBUTE]) is
-			-- Initialize
+	make_from_other(other:E_TEXT_PART) is
+			-- Copy.
 		require
-			new_text_not_void: new_text /= Void
-			attribs_not_void: attribs /= Void
+			not_void: other /= Void
 		do
-			text := new_text
-			from
-				!! attributes.make
-				attribs.start
-			until
-				attribs.after
-			loop
-				attributes.extend(attribs.item)
-				attribs.forth
-			end
-		ensure
-			text_set: text = new_text
-			attributes_set: attributes.count = attribs.count
+			text := other.text
+			bold := other.bold
+			italic := other.italic
+			underline := other.underline
+			font_name := other.font_name
+			font_size := other.font_size
+			font_color := other.font_color
+			list_depth := other.list_depth
+			line_break := other.line_break
+			bullet := other.bullet
+			hyperlink := other.hyperlink
+			important := other.important
 		end
 
 	display(area: E_TOPIC_DISPLAY) is
 			-- Output marked-up text on 'area'.
+		require
+			area /= Void
 		local
 			cf: EV_CHARACTER_FORMAT
-			color: EV_COLOR
-			tag: STRING
-			link, recognized: BOOLEAN
-			topic_id: STRING
 		do
 			cf := area.text_format
 			cf.set_bold(bold)
 			cf.set_italic(italic)
-			--cf.set_underline(underline)
+		--	-- Underline is not supported by EV_RICH_TEXT.
+		--	cf.set_underline(underline)
 			if font_name /= Void then
 				cf.font.set_name(font_name)
 			end
@@ -58,49 +54,86 @@ feature -- Initialization
 				cf.font.set_height(font_size)
 			end
 			if font_color /= Void then
-				cf.set_color(font_size)
+				cf.set_color(font_color)
 			end
+			area.set_character_format(cf)
 			if line_break then
-				area.line_break
-				if list_depth > 0 then
-					area.append_text("__")
-				end
+				area.line_break(list_depth)
 			end
 			if bullet then
-				area.append_text("> ")
+				area.bullet_list_item
 			end
-			if link /= Void then
-				area.append_hyperlinked_text(text,link)
+			if hyperlink /= Void then
+				area.append_hyperlinked_text(text, hyperlink)
+			else
+				area.append_text(text)
 			end
 			area.reset_text_format
+		end
+
+	set_text(txt:STRING) is
+		do
+			text := txt
+		end
+
+	set_bold(b:BOOLEAN) is
+		do
+			bold := b
+		end
+
+	set_italic(b:BOOLEAN) is
+		do
+			italic := b
+		end
+
+	set_underline(b:BOOLEAN) is
+		do
+			underline := b
+		end
+
+	set_font_name(s: STRING) is
+		do
+			font_name := s
+		end
+
+	set_font_size(i: INTEGER) is
+		do
+			font_size := i
+		end
+
+	set_font_color(c: EV_COLOR) is
+		do
+			font_color := c
+		end
+
+	set_font_color_rgb(r,g,b:INTEGER) is
+		do
+			create font_color.make_rgb(r,g,b)
 		end
 
 	set_list_depth(i:INTEGER) is
 		do
 			list_depth := i
-		ensure
-			list_depth = i
 		end
 
 	set_line_break(b:BOOLEAN) is
 		do
 			line_break := b
-		ensure
-			line_break = b
 		end
 
 	set_bullet(b:BOOLEAN) is
 		do
 			bullet := b
-		ensure
-			bullet = b
 		end
 
-	set_link(s:STRING) is
+	set_hyperlink(s:STRING) is
 		do
-			link := s
-		ensure
-			link = s
+			hyperlink := s
+		end
+
+	set_important(b:BOOLEAN) is
+		do
+			important := b
 		end
 
 feature -- Access
@@ -129,12 +162,15 @@ feature -- Access
 	bullet: BOOLEAN
 		-- Display a bullet? (list item)
 
-	link: STRING
+	hyperlink: STRING
 		-- Where is this text linked to? (Void if none)
+
+	important: BOOLEAN
+		-- Should this text-part be included in the search-index?
 
 invariant
 	valid_list_depth: list_depth >= 0
 	valid_font_size: font_size >= 0
-	link_not_empty: (link = Void) or else (not link.empty)
+	hyperlink_not_empty: (hyperlink = Void) or else (not hyperlink.empty)
 
 end -- class E_TEXT_PART

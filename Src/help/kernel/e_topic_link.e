@@ -14,6 +14,10 @@ feature -- Initialization
 
 	make(f, l: INTEGER; id: STRING) is
 			-- Initialize
+		require
+			positive: f>= 0 
+			consistent: f <=l
+			not_void: id /= Void
 		do
 			first := f
 			last := l
@@ -25,12 +29,17 @@ feature -- Initialization
 		end
 
 	is_in_region(pos: INTEGER): BOOLEAN is
+		require
+			positive: pos >=0
 		do
-			Result := (pos>=first) and then (pos<=last)
+			Result := (pos>first) and then (pos<=last+1)
 		end
 
 	first, last: INTEGER
 
 	topic_id: STRING
 
+invariant
+	E_TOPIC_LINK_consistent: first <= last and first >= 0
+	E_TOPIC_LINK_exists: topic_id /= Void
 end -- class E_TOPIC_LINK

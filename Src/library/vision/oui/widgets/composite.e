@@ -20,20 +20,43 @@ feature -- Widget hierarchy
 
 	parent: COMPOSITE is
 			-- Parent of composite
-        do
-            Result ?= widget_manager.parent (Current)
-        end;
+		do
+			Result ?= widget_manager.parent (Current)
+		end;
 
 	children_count: INTEGER is
 			-- Number of children
 		require
-			exists: not destroyed
+			exists: not destroyed;
+		local
+			ch: ARRAYED_LIST [WIDGET]
 		do
-			Result:= implementation.children_count
+			ch := widget_manager.children_of (Current);
+			Result:= ch.count
 		ensure
-			Positive_result: Result >= 0
+			positive_result: Result >= 0
 		end;
 
+	children: ARRAYED_LIST [WIDGET] is
+			-- List of children for Current composite
+		require
+			exists: not destroyed
+		do
+			Result:= widget_manager.children_of (Current);
+		ensure
+			valid_result: Result /= Void
+		end;
+
+	descendents: ARRAYED_LIST [WIDGET] is
+			-- List of descendents for Current composite
+		require
+			exists: not destroyed
+		do
+			!! Result.make (10);
+			widget_manager.descendents_of (Current, Result);
+		ensure
+			valid_result: Result /= Void
+		end;
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 

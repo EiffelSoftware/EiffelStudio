@@ -141,10 +141,9 @@ feature -- Code generation
 			-- Generate IL code for real constant value.
 		do
 			if is_real_64 then
-				il_generator.put_double_constant (real_64_value)
+				il_generator.put_real_64_constant (real_64_value)
 			else
-				il_generator.put_double_constant (real_32_value)
-				il_generator.convert_to_real
+				il_generator.put_real_32_constant (real_32_value)
 			end
 		end
 

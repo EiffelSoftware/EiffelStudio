@@ -139,6 +139,5 @@ invariant
 	non_void_first_name: first_name /= Void
 	non_void_address: address /= Void
 	non_void_date_of_birth: date_of_birth /= Void
-		
-		
+
 end -- Class CUSTOMER

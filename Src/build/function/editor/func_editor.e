@@ -71,13 +71,20 @@ feature -- Edited function
 			-- Hides input and output stones if they
 			-- are not set
 		do
+				--| Guillaume
+				--| To be able to see the label of the hole
+				--| on Windows
+			input_hole.set_managed (True)
+			output_hole.set_managed (True)
+
 			if (input_stone.data = Void) then
 				input_stone.hide
 			end;
 			if (output_stone.data = Void) then
 				output_stone.hide
 			end;
-		end;
+
+	end;
 
 	reset_stone (s: ICON_STONE) is
 			-- Reset eith input and output stones 

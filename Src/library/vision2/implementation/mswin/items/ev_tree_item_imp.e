@@ -163,163 +163,52 @@ feature -- {EV_TREE_IMP}
 			index_not_changed: ev_children.index = old ev_children.index
 		end
 
-	reduce_image_list_references (i: INTEGER) is
-			-- Decrease any references to an image position > `i' by one.
-		require else
-			image_position_non_negative: i >= 0
-		local
-			original_index: INTEGER
-		do
-			original_index := ev_children.index
-			from	
-				ev_children.start
-			until
-				ev_children.off
-			loop
-				ev_children.item.reduce_image_list_references (i)
-				ev_children.forth
-			end
-			ev_children.go_i_th (original_index)
-				-- Restore original position in `ev_children'.
-			if image_index > i then
-				image_index := image_index - 1
-					-- Reduce `image_index'
-				set_image (image_index, image_index)
-					-- Image used is now the image at position `image index' in
-					-- the image list.
-				top_parent_imp.set_tree_item (Current)
-			end
-		end
-
-	remove_all_direct_references is
-			-- Recurse through all children and update 
-			--`top_parent_imp.current_image_list_info' removing images
-			-- from image list as required.
-		local	
-			original_index: INTEGER
-			loc_tuple: TUPLE[INTEGER, INTEGER]
-			current_images: HASH_TABLE [TUPLE[INTEGER, INTEGER], INTEGER]
-			item_value: INTEGER
-		do
-			original_index := ev_children.index
-			from
-				ev_children.start
-			until
-				ev_children.off
-			loop
-				ev_children.item.remove_all_direct_references
-				ev_children.forth
-			end
-			ev_children.go_i_th (original_index)
-				-- Restore original position in `ev_children.
-			if pixmap /= Void then
-				-- If the item has a pixmap then 
-				if pixmap_imp.icon.item /= Void then
-					item_value := cwel_pointer_to_integer 
-					(pixmap_imp.icon.item)
-				else
-					item_value := cwel_pointer_to_integer 
-					(pixmap_imp.bitmap.item)
-				end
-				current_images := top_parent_imp.current_image_list_info
-					-- Retrieve the information about the image list.
-				loc_tuple := current_images.item (item_value)
-					-- Retrieve the tuple of info correspoding to 
-					-- the pixmap of the item.
-				if loc_tuple.integer_item (2) > 0 then
-					loc_tuple.enter (loc_tuple.integer_item (2) - 1, 2)
-						-- Decrease and store the number of items referencing
-						-- this image.
-					if loc_tuple.integer_item (2) = 0 then
-						top_parent_imp.reduce_image_list_references (
-							image_index)
-							-- Reduce all indices greater than `image_index' by
-							-- one.
-						top_parent_imp.image_list.remove_image 
-							(loc_tuple.integer_item (1))
-							-- Remove the icon from the image_list
-						current_images.remove (item_value)
-							-- Remove the image from our 
-							-- current_image_list_info
-					end
-				end
-			end
-		end
-
+ 	remove_all_direct_references is
+ 			-- Recurse through all children and update 
+ 			--`top_parent_imp.current_image_list_info' removing images
+ 			-- from image list as required.
+ 		local	
+ 			original_index: INTEGER
+ 		do
+ 			original_index := ev_children.index
+ 			from
+ 				ev_children.start
+ 			until
+ 				ev_children.off
+ 			loop
+ 				ev_children.item.remove_all_direct_references
+ 				ev_children.forth
+ 			end
+ 				-- Restore original position in `ev_children.
+ 			ev_children.go_i_th (original_index)
+ 		end
+ 
 	set_pixmap_in_parent is
 			-- Add the pixmap to the parent by updating the parent's image 
 			-- list.
 		local
-			p_imp: EV_PIXMAP_IMP
-			loc_image_list: WEL_IMAGE_LIST
-			loc_top_parent_imp :EV_TREE_IMP
-			current_images: HASH_TABLE [TUPLE[INTEGER, INTEGER], INTEGER]
-			item_value: INTEGER
-			loc_tuple: TUPLE [INTEGER, INTEGER]
+			p_imp: EV_PIXMAP_IMP_STATE
+			image_list: EV_IMAGE_LIST_IMP
+			image_index: INTEGER
+			root_imp: like top_parent_imp
 		do
-			p_imp := pixmap_imp
-			loc_top_parent_imp := top_parent_imp
-			loc_image_list := loc_top_parent_imp.image_list
-			current_images := loc_top_parent_imp.current_image_list_info
-				-- Assign values to local variables for speed.
+			p_imp ?= pixmap_imp
+			root_imp := top_parent_imp
 
-			if p_imp.icon /= Void then
-				-- If the pixmap is an icon.
-				item_value := cwel_pointer_to_integer (p_imp.icon.item)
-					-- Assign `icon.item' to `item_value'
-				If not current_images.has (item_value) then
-					-- If `p_imp.icon' is not already in image_list then
-					loc_image_list.add_icon (p_imp.icon)
-					image_index := loc_image_list.last_position
-					current_images.extend ([image_index, 1], item_value)	
-					-- Add the icon to image_list and set image_index.
-				else
-					loc_tuple := current_images.item (item_value)
-					image_index := loc_tuple.integer_item (1)
-						-- `p_imp.icon' already in image list so set 
-						-- `image_index' to this.
-					loc_tuple.enter (loc_tuple.integer_item (2) + 1, 2)
-						-- Increase and store the number of items referencing
-						-- this image.
-				end
-			else
-				--|--------------------------------------------------------
-				--| FIXME ARNAUD: check that the image is not already in
-				--| `current_images'. Can you do that Julian?
-				--|--------------------------------------------------------
-				if p_imp.bitmap.height > tree_view_pixmap_height or
-					p_imp.bitmap.height > tree_view_pixmap_width then
-					p_imp.stretch (16, 16)
-				end
-				if p_imp.mask_bitmap /= Void then
-					loc_image_list.add_masked_bitmap(
-						p_imp.bitmap, 
-						p_imp.mask_bitmap
-						)
-				else
-					loc_image_list.add_bitmap(p_imp.bitmap)
-				end
-						
-				image_index := loc_image_list.last_position
+			image_list := root_imp.image_list
+				-- Create the image list and associate it
+				-- to the control if it's not already done.
+			if image_list = Void then
+				root_imp.setup_image_list (p_imp.width, p_imp.height)
+				image_list := root_imp.image_list
 			end
-			io.put_string (image_index.out)
+
+			image_list.add_pixmap (p_imp)
+			image_index := image_list.last_position
+
 			set_image (image_index, image_index)
-			loc_top_parent_imp.set_tree_item (Current)
+			root_imp.set_tree_item (Current)
 		end
-
-	image_index: INTEGER
-		-- The index into `image_list' of `top_parent_imp' for the standard 
-		-- displayed image.
-	
-	selected_image_index: INTEGER 
-		-- The index into `image_list' of `top_parent_imp' for the selected 
-		-- displayed image.
-
-	tree_view_pixmap_height: INTEGER is 16
-		-- The height of a pixmap in a windows tree view.
-	
-	tree_view_pixmap_width: INTEGER is 16
-		-- The width of a pixmap in a windows tree view.
 
 feature -- Access
 
@@ -529,9 +418,6 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TREE_ITEM
 
-invariant
-		pixmap_image_list_index_non_negative: image_index >= 0
-
 end -- class EV_TREE_ITEM_IMP
 
 --|----------------------------------------------------------------
@@ -556,6 +442,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.65  2000/04/25 01:16:35  pichery
+--| Changed the handling of pixmaps.
+--|
 --| Revision 1.64  2000/04/21 21:54:55  rogers
 --| Removed set_capture, release_capture, set_heavy_capture,
 --| release_heavy_capture and set_pointer_style.

@@ -32,7 +32,7 @@ feature -- Basic operations
 	process_function (a_function: WIZARD_FUNCTION_DESCRIPTOR) is
 			-- Process function.
 		local
-			function_generator: WIZARD_CPP_CLIENT_FUNCTION_GENERATOR
+			function_generator: WIZARD_CPP_VTABLE_CLIENT_FUNCTION_GENERATOR
 			disp_func_generator: WIZARD_CPP_DISPATCH_CLIENT_FUNCTION_GENERATOR
 		do
 			if a_function.func_kind = func_dispatch then

@@ -101,8 +101,6 @@ feature {NONE} -- Implementation
 		local
 			l_warner: ERROR_D
 		do
-			-- !! l_warner.make(profile_tool) --|if l_warner: WARNER_W
-			-- l_warner.gotcha_call (Warning_messages.w_Load_configuration);
 			!! l_warner.make (Warning_messages.w_Load_configuration, profile_tool)
 			l_warner.popup
 		end

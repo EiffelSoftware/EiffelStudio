@@ -21,6 +21,8 @@ inherit
 
 	WINDOWS
 
+	WINDOW_ATTRIBUTES
+
 	RESOURCE_USER
 		redefine
 			update_integer_resource
@@ -56,6 +58,7 @@ feature {NONE} -- Initialization
 			!! run_prof_query_cmd.make (Current);
 			set_delete_command (quit_cmd);
 			build_widgets
+			set_composite_attributes (Current);	
 		end
 
 feature -- Updating
@@ -68,6 +71,8 @@ feature -- Updating
 			if new_res.actual_value >= 0 then
 				if old_res = pr.tool_width then
 					set_width (new_res.actual_value)
+				elseif old_res = pr.tool_height then
+					set_height (new_res.actual_value)
 				elseif old_res = pr.query_tool_width then
 					from
 						open_tools.start
@@ -194,11 +199,7 @@ feature {NONE} -- Graphical User Interface
 	build_widgets is
 		local
 			horizontal_sep,
-			upper_sep,
-			-- text_sep: SEPARATOR;
-			--| or
-			text_sep: THREE_D_SEPARATOR;
-			--| but use VISIONLITE
+			upper_sep, text_sep: THREE_D_SEPARATOR;
 			switch_label,
 			language_label: LABEL;
 		do
@@ -278,13 +279,11 @@ feature {NONE} -- Graphical User Interface
 			global_form.attach_left_position (switch_label, 0);
 			global_form.attach_top_widget (switch_label, switch_form, 1);
 			global_form.attach_left_position (switch_form, 0);
-			-- global_form.attach_right_position (switch_form, 1);
 
 			global_form.attach_top_widget (upper_sep, language_label, 1);
 			global_form.attach_left_position (language_label, 1);
 			global_form.attach_top_widget (language_label, language_form, 1);
 			global_form.attach_left_position (language_form, 1);
-			-- global_form.attach_right_position (language_form, 1);
 
 			global_form.attach_top_widget (switch_form, horizontal_sep, 0);
 			global_form.attach_left (horizontal_sep, 0);
@@ -295,7 +294,6 @@ feature {NONE} -- Graphical User Interface
 			global_form.attach_bottom_widget (text_sep, text_form, 1);
 
 			global_form.attach_bottom_widget (button_form, text_sep, 1);
-			-- global_form.attach_right_position (text_form, 2);			
 			global_form.attach_left (text_form, 5)
 			global_form.attach_right (text_form, 5)
 			global_form.attach_left_position (text_sep, 0);
@@ -335,6 +333,7 @@ feature {NONE} -- Graphical User Interface
 
 				-- Sizing policy
 			set_width (Profiler_resources.tool_width.actual_value)
+			set_height (Profiler_resources.tool_height.actual_value)
 		end;
 
 	fill_menus is

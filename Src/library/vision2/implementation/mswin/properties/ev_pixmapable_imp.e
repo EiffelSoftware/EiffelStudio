@@ -41,20 +41,27 @@ inherit
 
 feature -- Access
 
+	pixmap: EV_PIXMAP is
+			-- Current pixmap
+		do
+			Result := pixmap_imp.interface
+		end
+
 	pixmap_imp: EV_PIXMAP_IMP
 			-- Implementation of the pixmap contained 
 
-feature -- Status setting
+feature -- Element change
 
-	add_pixmap (pixmap: EV_PIXMAP) is
-			-- Add a pixmap in the container
+	set_pixmap (pix: EV_PIXMAP) is
+			-- Make `pix' the new pixmap of the widget.
 		do
-			pixmap_imp ?= pixmap.implementation
-			check
-				pixmap_set: pixmap_imp /= Void
-			end
-		ensure then
-			pixmap_set: pixmap_imp /= Void
+			pixmap_imp ?= pix.implementation
+		end
+
+	unset_pixmap is
+			-- Remove the pixmap from the container
+		do
+			pixmap_imp ?= Void
 		end
 
 feature {EV_PIXMAP_IMP} -- Implementation
@@ -64,9 +71,8 @@ feature {EV_PIXMAP_IMP} -- Implementation
 		deferred
 		end
 
-	pixmap_size_changed is
-			-- Pixmap sized has changed.
-		do
+	interface: EV_ANY is
+		deferred
 		end
 
 feature {EV_CONTAINER_IMP} -- Implementation

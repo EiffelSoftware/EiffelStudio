@@ -47,7 +47,7 @@
 				<url>../../base/reference/kernel/string_chart.xml</url>
 				<label>STRING</label>
 			</link>]    similar to the earlier examples' OUR_MESSAGE
-			<italic/>(see 
+			<italic/> (see 
 			<link>
 				<url>50_working_at_predefined_level.xml</url>
 				<label>see    "Object structures"</label>
@@ -65,9 +65,8 @@
 			<link>
 				<url>../reference/polling/abstract/medium_poller_chart.xml</url>
 				<label>MEDIUM_POLLER</label>
-			</link>    to check any message coming from the server and immediately displays any    such message. It also checks a special connection, created with 
-			<italic>io</italic>l 
-			<italic>input</italic>    as a medium, to check what the user is typing and then send it to the    server. If the user types 
+			</link>    to check any message coming from the server and immediately displays any such message. It also checks a special connection, created with 
+			<italic>io</italic>l<italic>input</italic>    as a medium, to check what the user is typing and then send it to the    server. If the user types 
 			<italic>bye</italic>, the client terminates, sending a    message tagged 
 			<italic>over </italic>to the server.
 		</paragraph>

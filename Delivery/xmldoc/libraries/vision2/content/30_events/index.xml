@@ -25,18 +25,20 @@
 		<heading>
 			<size>2</size>How do I connect to an event?
 		</heading>
-		<paragraph>  Every widget and item has an action sequence associated with it that  relates to some kind of event, for example an EV_BUTTON has a  select_actions action sequence. This gets fired when the user  clicks/selects the button. To have a procedure called on this  event, you need to create an agent based on this procedure, and then add  this to the action sequence (via extend). For a more detailed description of agents and their uses click 
+		<paragraph>  Every widget and item has an action sequence associated with it that  relates to some kind of event, for example an <link><url>../../reference/interface/widgets/primitives/EV_BUTTON_chart.html</url><label>EV_BUTTON</label></link> has a  select_actions action sequence. This gets fired when the user  clicks/selects the button. To have a procedure called on this  event, you need to create an agent based on this procedure, and then add  this to the action sequence (via extend). For a more detailed description of agents and their uses click 
 			<link>
 				<url>/general/guided_tour/language/tutorial-12.xml</url>
 				<label>here</label>
 			</link>. 
 		</paragraph>
 		<paragraph>  An example of adding an agent to an action_sequence is as follows. </paragraph>
-		<code_block>Missing</code_block>
-		<paragraph>  All Vision2 action sequences inherit EV_ACTION_SEQUENCE and  when it is called, all of the agents held within are fired, thus calling all of the procedures represented by the agents. The signature of any agent that you place in an action sequence must conform to those of the action sequences actual generic parameter. </paragraph>
+<code_block>
+	<feature_name>button</feature_name>.<feature_name>select_actions</feature_name>.<feature_name>extend</feature_name> <symbol>(</symbol><keyword>agent</keyword> print <symbol>(</symbol><string>"Button Clicked!%N"</string><symbol>)</symbol><symbol>)</symbol> 
+</code_block>
+		<paragraph>  All Vision2 action sequences inherit <link><url>../../reference/interface/events/EV_ACTION_SEQUENCE_chart.html</url><label>EV_ACTION_SEQUENCE</label></link> and  when it is called, all of the agents held within are fired, thus calling all of the procedures represented by the agents. The signature of any agent that you place in an action sequence must conform to those of the action sequences actual generic parameter. </paragraph>
 		<paragraph>  When you want an agent to be called from a certain action sequence and  the signatures do not match, you may use 
 			<link>
-				<url>../../reference/interface/events/ev_action_sequence.xml#f_force_extend</url>
+				<url>../../reference/interface/events/EV_ACTION_SEQUENCE_chart.htmll#f_force_extend</url>
 				<label>force_extend</label>
 			</link>, this will call  your agent but has no guarantees on the arguments passed to your  procedure. 
 		</paragraph>

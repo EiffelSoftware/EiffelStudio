@@ -2,9 +2,6 @@
 	<meta_data/>
 	<paragraph>
 		<heading>
-			<size>1</size>The Predef Sample
-		</heading>
-		<heading>
 			<size>2</size>Compiling
 		</heading>
 		<paragraph> To compile the example, you must compile two projects: 
@@ -21,7 +18,7 @@
 				<bold>OK</bold>. 
 			</item>
 			<item>Browse to 
-				<italic>Eiffel52\examples\net\predef\client\</italic>. 
+				<italic>$ISE_EIFFEL\examples\net\predef\client\</italic>. 
 			</item>
 			<item>Choose 
 				<italic>Ace.mswin.ace</italic> on Windows platforms or 
@@ -42,7 +39,7 @@
 				<bold>OK</bold>. 
 			</item>
 			<item>Browse to 
-				<italic>Eiffel52\examples\net\predef\server\</italic>. 
+				<italic>$ISE_EIFFEL\examples\net\predef\server\</italic>. 
 			</item>
 			<item>Choose 
 				<italic>Ace.mswin.ace</italic> on Windows platforms or 

@@ -7,17 +7,17 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>  A WEL_SCROLL_BAR control is an encapsulation of the Windows scroll bar control and is often used to  specify which portion of a large control that cannot be viewed completely, is currently visible. </paragraph>
+		<paragraph>  A <link><url>../../reference/controls/WEL_SCROLL_BAR_chart.html</url><label>WEL_SCROLL_BAR</label></link> control is an encapsulation of the Windows scroll bar control and is often used to  specify which portion of a large control that cannot be viewed completely, is currently visible. </paragraph>
 		<heading>
 			<size>2</size>Appearance
-		</heading>A WEL_SCROLL_BAR created with `make_horizontal'.
+		</heading>A <link><url>../../reference/controls/WEL_SCROLL_BAR_chart.html</url><label>WEL_SCROLL_BAR</label></link> created with <code><feature_name>make_horizontal</feature_name></code>.
 		<line_break/>
 		<image> 
 			<url>images/wel_scroll_bar_horizontal.png</url> 
 			<alt_text>wel_scroll_bar_horizontal</alt_text>
 		</image>
 		<line_break/>
-		<line_break/>A WEL_SCROLL_BAR created with `make_vertical'.
+		<line_break/>A <link><url>../../reference/controls/WEL_SCROLL_BAR_chart.html</url><label>WEL_SCROLL_BAR</label></link> created with <code><feature_name>make_vertical</feature_name></code>.
 		<line_break/>
 		<image> 
 			<url>images/wel_scroll_bar_vertical.png</url> 

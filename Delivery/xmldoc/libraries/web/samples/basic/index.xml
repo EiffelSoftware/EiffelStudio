@@ -16,7 +16,7 @@
 						<bold>OK</bold>. 
 					</item>
 					<item>Browse to 
-						<italic>Eiffel52\examples\web\basic\</italic>. 
+						<italic>$ISE_EIFFEL\examples\web\basic\</italic>. 
 					</item>
 					<item>Choose 
 						<italic>Ace.ace</italic> on Windows platforms or 
@@ -36,7 +36,7 @@
 						<italic>path</italic> of the application. It is possible to set a registry entry        that will tell the Eiffel runtime where to find this file. The sample includes the file 
 						<italic>web.reg</italic>        that you can edit by replacing the line:
 					</paragraph>
-					<code>"MELT_PATH"="c:\\eiffel52\\examples\\web\\basic\\eifgen\\w_code"</code>
+					<code>"MELT_PATH"="c:\\eiffel55\\examples\\web\\basic\\EIFGEN\\W_code"</code>
 					<paragraph>        with the path to the 
 						<italic>W_Code</italic> folder where you have compiled the        example (the 
 						<italic>W_Code</italic> folder is located underneath the 
@@ -59,7 +59,7 @@
 					<heading>
 						<size>2</size>Under the Hood
 					</heading>
-					<paragraph> This basic sample has just one class SAMPLE which inherits from CGI_INTERFACE. SAMPLE implements execute which retrieves the name entered in the form and creates a new HTML page with it. </paragraph>
+					<paragraph> This basic sample has just one class <code><class_name>SAMPLE</class_name></code> which inherits from <code><class_name>CGI_INTERFACE. SAMPLE</class_name></code> implements execute which retrieves the name entered in the form and creates a new <code><class_name>HTML</class_name></code> page with it. </paragraph>
 					<paragraph> </paragraph>
 					<paragraph> See the 
 						<link>

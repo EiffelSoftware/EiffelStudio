@@ -7,7 +7,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>  A WEL_MULTIPLE_LINE_EDIT is used to display multiple lines of text. Using  set_read_only, the text can be made non-editable. </paragraph>
+		<paragraph>  A <link><url>../../reference/controls/WEL_MULTIPLE_LINE_EDIT_chart.html</url><label>WEL_MULTIPLE_LINE_EDIT</label></link> is used to display multiple lines of text. Using  set_read_only, the text can be made non-editable. </paragraph>
 		<heading>
 			<size>2</size>Appearance
 		</heading>

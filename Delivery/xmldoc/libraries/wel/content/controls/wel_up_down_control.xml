@@ -6,7 +6,7 @@
 			</toc>
 		</help>
 	</meta_data>
-	<paragraph> A WEL_UP_DOWN_CONTROL consists of a pair of arrows which are used to increment or decrement a value. Using set_buddy_window, a window of type WEL_WINDOW can be linked to this control, and is commonly used to display the current value. 
+	<paragraph> A <link><url>../../reference/controls/WEL_UP_DOWN_CONTROL_chart.html</url><label>WEL_UP_DOWN_CONTROL</label></link> consists of a pair of arrows which are used to increment or decrement a value. Using set_buddy_window, a window of type <link><url>../../reference/windows/WEL_WINDOW_chart.html</url><label>WEL_WINDOW</label></link> can be linked to this control, and is commonly used to display the current value. 
 		<heading>
 			<size>2</size>Appearance
 		</heading>

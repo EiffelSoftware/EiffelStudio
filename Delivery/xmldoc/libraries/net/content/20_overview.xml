@@ -56,7 +56,7 @@
 				</code> for multiple inheritance 
 				<italic>. </italic>Only the classes below the dotted line are    part of EiffelNet; the others are part of EiffelBase, the fundamental    data structure and algorithm library of ISE Eiffel [2].
 			</paragraph>
-			<paragraph>The most important property of this inheritance hierarchy is that it    shows how sockets fit within the overall structure. Thanks to the common    ancestor IO_MEDIUM,    socket classes have most of their features in common with files.</paragraph>
+			<paragraph>The most important property of this inheritance hierarchy is that it    shows how sockets fit within the overall structure. Thanks to the common    ancestor <code><class_name>IO_MEDIUM</class_name></code>,    socket classes have most of their features in common with files.</paragraph>
 			<paragraph>In normal usage, the only socket classes that you will need are four    classes appearing at the bottom of the above figure. They correspond to    two separate distinctions: single-machine versus multi-machine, and    reliable versus unreliable.</paragraph>
 			<paragraph>On the first distinction:    
 				<list ordered="false">
@@ -81,7 +81,7 @@
 				</paragraph>
 				<paragraph>The second distinction reflects two modes of socket communication:    stream communication and datagram communication. Both of these modes    support two-way communication between systems, but with different    properties:    
 					<list ordered="false">
-						<item>A stream socket, as provided by the STREAM_ classes,      provides sequenced communication without any loss or duplication of      data. Stream communication is normally synchronous: the sending      system waits until it has established a connection to the receiving      system and transmitted the data.</item>
+						<item>A stream socket, as provided by the <code><class_name>STREAM_</class_name></code> classes,      provides sequenced communication without any loss or duplication of      data. Stream communication is normally synchronous: the sending      system waits until it has established a connection to the receiving      system and transmitted the data.</item>
 						<item>A datagram socket, as provided by the 
 							<code>
 								<class_name>DATAGRAM_</class_name>
@@ -92,29 +92,33 @@
 					<heading>
 						<size>3</size>Sending and receiving simple values
 					</heading>
-					<paragraph>IO_MEDIUM    has all the basic input and output facilities applying to objects of    basic types, as also offered in FILE(see the specification of FILE    in reference [2]). So you can use sockets to send and receive    characters, integers, real numbers in simple or double precision and    strings. For example, if the type of</paragraph>
+					<paragraph><code><class_name>IO_MEDIUM</class_name></code>    has all the basic input and output facilities applying to objects of    basic types, as also offered in FILE(see the specification of<code><class_name> FILE</class_name></code>    in reference [2]). So you can use sockets to send and receive    characters, integers, real numbers in simple or double precision and    strings. For example, if the type of</paragraph>
 				</paragraph> `my_socket'     is one of the socket classes shown on the preceding figures, any of    the above calls will be valid:      
-				<code_block>						
-					</code_block>
+<code_block>
+	<feature_name>my_socket</feature_name>.<feature_name>putstring</feature_name> <symbol>(</symbol><string>"Some text"</string><symbol>)</symbol> <feature_name>my_socket</feature_name>.<feature_name>readint</feature_name>; <feature_name>my_last_integer</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>my_socketllastint</feature_name>
+</code_block>
 				<paragraph>Since sockets are bidirectional, these instructions may all appear as    part of the same class provided you make sure to guarantee proper    synchronization between senders and receivers. You may also prefer to    specialize certain sockets for sending and others for receiving.</paragraph>
 				<heading>
 					<size>3</size>Sending and receiving object structures
 				</heading>
 				<paragraph>In many cases, what you will want to send and receive is not just    simple values but non-basic objects (instances of arbitrary classes,    having as many fields as needed) and, more generally, entire object    structures.</paragraph>
-				<paragraph>The basic mechanism enabling a system to send objects through    EiffelNet is also the basic mechanism for storing objects into a file:    class STORABLE    from EiffelBase.</paragraph>
-				<paragraph>As documented in [2], STORABLE    provides features to store and retrieve complete object structures.    There are three storage procedures, called under the respective forms   
-					<code_block>
-						</code_block>
+				<paragraph>The basic mechanism enabling a system to send objects through    EiffelNet is also the basic mechanism for storing objects into a file:    class <code><class_name>STORABLE</class_name></code>    from EiffelBase.</paragraph>
+				<paragraph>As documented in [2], <code><class_name>STORABLE</class_name></code>    provides features to store and retrieve complete object structures.    There are three storage procedures, called under the respective forms   
+<code_block>
+	<feature_name>struct1</feature_name>.<feature_name>basic_store</feature_name> <symbol>(</symbol><feature_name>iom1</feature_name><symbol>)</symbol>
+	<feature_name>struct1</feature_name>.<feature_name>general_store</feature_name> <symbol>(</symbol><feature_name>iom1</feature_name><symbol>)</symbol>
+	<feature_name>struct1</feature_name>.<feature_name>independent_store</feature_name> <symbol>(</symbol><feature_name>iom1</feature_name><symbol>)</symbol>
+</code_block>
 					<paragraph>Assuming that the type of 
-						<italic>iom1 </italic>is IO_MEDIUM or    a conforming type such as 
+						<italic>iom1 </italic>is <code><class_name>IO_MEDIUM</class_name></code> or    a conforming type such as 
 						<link>
 							<url>../../base/reference/kernel/file_chart.xml</url>
 							<label>FILE</label>
-						</link>    or one of the _SOCKET classes, and that the type of 
-						<italic>struct1</italic>    conforms to STORABLE 
+						</link>    or one of the <code><class_name>_SOCKET</class_name></code> classes, and that the type of 
+						<italic>struct1</italic>    conforms to <code><class_name>STORABLE</class_name></code> 
 						<italic>.</italic>Note that reference [2] in its original version does not include 
 						<italic>independent_store</italic>,    and requires 
-						<italic>iom</italic> to be of type FILE    rather than the more general IO_MEDIUM.    The current version of EiffelBase, however, supports the more general    properties described here.
+						<italic>iom</italic> to be of type FILE    rather than the more general <code><class_name>IO_MEDIUM</class_name></code>.    The current version of EiffelBase, however, supports the more general    properties described here.
 					</paragraph>
 					<paragraph>All three storage procedures have the effect of sending to 
 						<italic>iom1 </italic>(whether    a file, a socket or some other IO-medium) a copy of the entire object    structure starting at 
@@ -122,7 +126,7 @@
 					</paragraph>
 					<table>
 						<row>
-							<cell>Whenever a routine of class STORABLE        stores an object into an external file, it stores with it the        dependents of that object.</cell>
+							<cell>Whenever a routine of class <code><class_name>STORABLE</class_name></code>        stores an object into an external file, it stores with it the        dependents of that object.</cell>
 							<cell>Whenever one of the associated retrieval routines retrieves a        previously stored object, it also retrieves all its dependents.</cell>
 						</row>
 					</table>
@@ -143,18 +147,11 @@
 							<italic>basic_store </italic>uses the most compact    representation, and 
 							<italic>independent_store</italic> the most verbose.
 						</paragraph>
-						<paragraph>The scheme for accessing an object structure produced by one of these    three procedures is the following, used in a descendant of class STORABLE:</paragraph>
-						<list ordered="false">
-							<item>
-								<code_block>
-							struct2 
-	<symbol>?=</symbol> retrieved 
-					<symbol>(</symbol>iom2
-								<symbol>)</symbol>																							</code_block>
-							</item>
-						</list>
+						<paragraph>The scheme for accessing an object structure produced by one of these    three procedures is the following, used in a descendant of class <code><class_name>STORABLE</class_name></code>:</paragraph>
+<code_block>	<feature_name>struct2</feature_name> <symbol>?=</symbol> <feature_name>retrieved </feature_name><symbol>(</symbol><feature_name>iom2</feature_name><symbol>)</symbol></code_block>
+
 						<paragraph>Here 
-							<italic>iom2</italic> must be of a type conforming to IO_MEDIUM.    The assignment attempt ?= checks that the root object of the structure    produced by the corresponding call to one of the 
+							<italic>iom2</italic> must be of a type conforming to <code><class_name>IO_MEDIUM</class_name></code>.    The assignment attempt ?= checks that the root object of the structure    produced by the corresponding call to one of the 
 							<italic>_store</italic>    procedures is of a type that conforms to the type of 
 							<italic>struct2</italic>; if    not, the assignment will assign to 
 							<italic>struct2</italic> a void reference.
@@ -166,11 +163,11 @@
 						<heading>
 							<size>3</size>Packets
 						</heading>
-						<paragraph>The classes PACKET    and DATAGRAM_PACKET
+						<paragraph>The classes <code><class_name>PACKET</class_name></code>    and <code><class_name>DATAGRAM_PACKET</class_name></code>
 							<italic/>are used to represent packets of data that can be sent to sockets.
 						</paragraph>
 						<paragraph>Their main use is for a system that relies on datagram communication.    As noted above, this mode does not guarantee sequencing, making each    system responsible for checking that packets arrive in the proper order.    This is possible through feature 
-							<italic>number </italic>of class DATAGRAM_PACKET,    which
+							<italic>number </italic>of class <code><class_name>DATAGRAM_PACKET</class_name></code>,    which
 							<italic/>gives the number of the current packet.
 						</paragraph>
 						<heading>
@@ -178,14 +175,14 @@
 						</heading>
 						<paragraph>EiffelNet supports a highly asynchronous (and hence efficient) mode    of operation by offering mechanisms through which you can specify that a    certain action must be executed whenever a certain medium becomes    available for reading, writing or handling of special cases (out of    bounds). This facility is provided by a set of related classes:    
 							<list ordered="false">
-								<item>The actions are represented by class POLL_COMMAND,      an heir of the EiffelBase class 
+								<item>The actions are represented by class <code><class_name>POLL_COMMAND</class_name></code>,      an heir of the EiffelBase class 
 									<code>
 										<class_name>COMMAND</class_name>
 									</code> with, in particular, the      procedure 
 									<italic>execute</italic>.
 								</item>
-								<item>Using MEDIUM_POLLER,      you can specify that a certain command (an instance of POLL_COMMAND)      must be executed whenever a certain medium becomes available for the      appropriate operation (read, write, handling of out-of-bounds      cases).</item>
-								<item>Using POLL_MASK,      you can set a mask to select the sockets or files on which your      instance of MEDIUM_POLLER      is working.</item>
+								<item>Using <code><class_name>MEDIUM_POLLER</class_name></code>,      you can specify that a certain command (an instance of <code><class_name>POLL_COMMAND</class_name></code>)      must be executed whenever a certain medium becomes available for the      appropriate operation (read, write, handling of out-of-bounds      cases).</item>
+								<item>Using <code><class_name>POLL_MASK</class_name></code>,      you can set a mask to select the sockets or files on which your      instance of <code><class_name>MEDIUM_POLLER</class_name></code>      is working.</item>
 							</list>
 						</paragraph>
 					</paragraph>

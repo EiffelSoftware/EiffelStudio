@@ -7,7 +7,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>  The WEL_SAVE_FILE_DIALOG is an encapsulation of the  Win32 save file dialog, and provides a means of specifying a file name and location for saving. </paragraph>
+		<paragraph>  The <link><url>../../reference/stddlgs/WEL_SAVE_FILE_DIALOG_chart.html</url><label>WEL_SAVE_FILE_DIALOG</label></link> is an encapsulation of the  Win32 save file dialog, and provides a means of specifying a file name and location for saving. </paragraph>
 		<heading>
 			<size>2</size>Appearance
 		</heading>

@@ -1,4 +1,4 @@
-<document output="studio" title="Two Mach">
+<document output="studio" title="Two Machines">
 	<meta_data/>
 	<paragraph>
 		<paragraph>             
@@ -19,7 +19,7 @@
 					<bold>OK</bold>. 
 				</item>
 				<item>Browse to 
-					<italic>Eiffel52\examples\net\two_mach\client\</italic>. 
+					<italic>$ISE_EIFFEL\examples\net\two_mach\client\</italic>. 
 				</item>
 				<item>Choose 
 					<italic>Ace.mswin.ace</italic> on Windows platforms or 
@@ -40,7 +40,7 @@
 					<bold>OK</bold>. 
 				</item>
 				<item>Browse to 
-					<italic>Eiffel52\examples\net\two_mach\server\</italic>. 
+					<italic>$ISE_EIFFEL\examples\net\two_mach\server\</italic>. 
 				</item>
 				<item>Choose 
 					<italic>Ace.mswin.ace</italic> on Windows platforms or 

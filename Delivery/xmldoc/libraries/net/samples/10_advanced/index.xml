@@ -19,7 +19,7 @@
 					<bold>OK</bold>.
 				</item>
 				<item>Browse to 
-					<italic>Eiffel52\examples\net\advanced\chat\</italic>.
+					<italic>$ISE_EIFFEL\examples\net\advanced\chat\</italic>.
 				</item>
 				<item>Select 
 					<italic>Ace.unix.ace</italic>  on Unix platforms.
@@ -39,7 +39,7 @@
 					<bold>OK</bold>.
 				</item>
 				<item>Browse to 
-					<italic>Eiffel52\examples\net\advanced\join\</italic>.
+					<italic>$ISE_EIFFEL\examples\net\advanced\join\</italic>.
 				</item>
 				<item>Select 
 					<italic>Ace.unix.ace</italic>  on Unix platforms.

@@ -4,7 +4,7 @@
 		<paragraph>When sending requests to the database, the request is first parsed then executed. Instead of parsing many times the same requests, i.e. with only changes in expression values, most of RDBMS enable to 
 			<bold>precompile</bold> requests. These requests can then be executed as routines and are identified by a name and a signature.
 		</paragraph>
-		<paragraph>EiffelStore lets you use stored procedures with DB_PROC class to:</paragraph>
+		<paragraph>EiffelStore lets you use stored procedures with <link><url>/libraries/store/reference/interface/DB_PROC_flatshort.html</url><label>DB_PROC</label></link> class to:</paragraph>
 		<list ordered="false">
 			<item>
 				<link>
@@ -24,13 +24,21 @@
 		</heading>
 		<paragraph>To execute a stored procedure:</paragraph>
 		<list ordered="false">
-			<item>Create a DB_PROC object and load the stored procedure you want to use:
-				<code_block>Missing</code_block>
+			<item>Create a <link><url>/libraries/store/reference/interface/DB_PROC_flatshort.html</url><label>DB_PROC</label></link> object and load the stored procedure you want to use:
+<code_block>
+	<feature_name>procedure</feature_name><symbol>:</symbol> <class_name>DB_PROC</class_name>
+	...
+	<keyword>create</keyword> <feature_name>procedure</feature_name>.<feature_name>make</feature_name> <symbol>(</symbol>"<class_name>UPDATE</class_name>"<symbol>)</symbol>
+	<feature_name>procedure</feature_name>.<feature_name>load</feature_name>
+	<keyword>if</keyword> <feature_name>procedure</feature_name>.<feature_name>exists</feature_name> <keyword>then</keyword>
+		...
+	<keyword>end</keyword>
+</code_block>
 			</item>
-			<item>Execute the procedure through a DB_SELECTION (if a result is expected) or a DB_CHANGE object (otherwise). 
+			<item>Execute the procedure through a <link><url>/libraries/store/reference/interface/DB_SELECTION_chart.html</url><label>DB_SELECTION</label></link> (if a result is expected) or a <link><url>/libraries/store/reference/interface/DB_CHANGE_chart.html</url><label>DB_CHANGE </label></link>object (otherwise). 
 				<note>
-					<bold>Note</bold>: Requests with a result (DB_SELECTION) or without (DB_CHANGE) are both abstract 
-					<bold>expressions</bold>. DB_PROC executes an abstract expression using an object of DB_EXPRESSION type, which corresponds to an abstract expression. DB_SELECTION and DB_CHANGE inherits from DB_EXPRESSION.
+					<bold>Note</bold>: Requests with a result (<link><url>/libraries/store/reference/interface/DB_SELECTION_chart.html</url><label>DB_SELECTION</label></link>) or without (<link><url>/libraries/store/reference/interface/DB_CHANGE_chart.html</url><label>DB_CHANGE</label></link>) are both abstract 
+					<bold>expressions</bold>. DB_PROC executes an abstract expression using an object of <link><url>/libraries/store/reference/interface/DB_EXPRESSION_chart.html</url><label>DB_EXPRESSION</label></link> type, which corresponds to an abstract expression. <link><url>/libraries/store/reference/interface/DB_SELECTION_chart.html</url><label>DB_SELECTION</label></link> and <link><url>/libraries/store/reference/interface/DB_CHANGE_chart.html</url><label>DB_CHANGE</label></link> inherits from <link><url>/libraries/store/reference/interface/DB_EXPRESSION_chart.html</url><label>DB_EXPRESSION</label></link>.
 				</note>You can execute your request mostly like a basic one:
 				<list ordered="false">
 					<item>Create your request.</item>
@@ -44,7 +52,13 @@
 						</note>
 					</item>
 					<item>Execute the query through the DB_PROC object.
-						<code_block>Missing</code_block>
+<code_block>
+	<feature_name>procedure</feature_name><symbol>:</symbol> <class_name>DB_PROC</class_name>
+	<feature_name>expr</feature_name><symbol>:</symbol> <class_name>DB_CHANGE</class_name>
+	...
+	<feature_name>procedure</feature_name>.<feature_name>execute</feature_name> <symbol>(</symbol>expr<symbol>)</symbol>
+	<feature_name>expr</feature_name>.<feature_name>clear_all</feature_name>
+</code_block>
 					</item>
 					<item>Check for errors and load result if any. </item>
 				</list>
@@ -59,7 +73,21 @@
 				<item>Use drop to delete one. </item>
 			</list>The following example shows how to overwrite a procedure in the database:
 		</paragraph> 
-		<code_block>Missing</code_block>
+<code_block>
+	<feature_name>procedure</feature_name><symbol>:</symbol> <class_name>DB_PROC</class_name>
+
+	...
+	<keyword>create</keyword> <feature_name>procedure</feature_name>.<feature_name>make</feature_name> <symbol>(</symbol>"<class_name>NEW_PROCEDURE</class_name>"<symbol>)</symbol>
+	<feature_name>procedure</feature_name>.<feature_name>load</feature_name>
+	<keyword>if</keyword> <feature_name>procedure</feature_name>.<feature_name>exists</feature_name> <keyword>then</keyword>
+		<feature_name>procedure</feature_name>.<feature_name>drop</feature_name>
+	<keyword>end</keyword>
+	<feature_name>procedure</feature_name>.<feature_name>load</feature_name>
+	<keyword>if</keyword> <keyword>not</keyword> <feature_name>procedure</feature_name>.<feature_name>exists</feature_name> <keyword>then</keyword>
+		<feature_name>procedure</feature_name>.<feature_name>set_arguments</feature_name> <symbol>(</symbol><symbol>&lt;</symbol><symbol>&lt;</symbol><string>"one_arg"</string><symbol>&gt;</symbol><symbol>&gt;</symbol>, <symbol>&lt;</symbol><symbol>&lt;</symbol><string>""</string><symbol>&gt;</symbol><symbol>&gt;</symbol><symbol>)</symbol>
+		<feature_name>procedure</feature_name>.<feature_name>store</feature_name> <symbol>(</symbol><string>"update contacts set firstname = one_arg where contactid = 1"</string><symbol>)</symbol>
+	<keyword>end</keyword>
+</code_block>
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/>

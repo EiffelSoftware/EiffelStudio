@@ -12,36 +12,144 @@
 			<size>3</size>9.1 Commands and events
 		</heading>
 		<paragraph>In the preceding examples each participant in a communication had to    get ready to send or receive at specific stages of its life. Although    this did not preclude asynchronous communication, it is sometimes    desirable to make the scheme even more asynchronous, and control more    decentralized, by letting each system simply specify certain    communication events that it wants to monitor, and certain commands to    be executed on occurrence of the specified events.</paragraph>
-		<paragraph>This event-command model of computation is of course not new with    EiffelNet. In ISE Eiffel 3, it is already used in EiffelVision and    especially in EiffelBuild, which makes it possible to build a graphical    application by specifying which command should be executed in response    to each of a set of specified interface events, such as mouse click or    keyboard entry. The commands are objects, instances of a general-purpose    class COMMAND or its proper descendants. Class COMMAND has, among its    features, a procedure 
+		<paragraph>This event-command model of computation is of course not new with    EiffelNet. In ISE Eiffel 3, it is already used in EiffelVision and    especially in EiffelBuild, which makes it possible to build a graphical    application by specifying which command should be executed in response    to each of a set of specified interface events, such as mouse click or    keyboard entry. The commands are objects, instances of a general-purpose    class <code><class_name>COMMAND </class_name></code>or its proper descendants. Class <code><class_name>COMMAND </class_name></code>has, among its    features, a procedure 
 			<italic>execute</italic> which executes the current command;    some commands are undoable and have an 
 			<italic>undo</italic> procedure.
 		</paragraph>
-		<paragraph>Class COMMAND
-			<italic/>and related classes used to be in EiffelVision    but because of their generality were moved to [2], although this    occurred after the publication of [2].
+		<paragraph>Class <code><class_name>COMMAND</class_name></code>
+			and related classes used to be in EiffelVision    but because of their generality were moved to [2], although this    occurred after the publication of [2].
 		</paragraph>
-		<paragraph>In EiffelNet the possible events associated with a socket will be of    three kind: a read event; a write event; or a special event (out of    bounds operation). The command classes will be descendants of POLL_COMMAND,    an heir of COMMAND.</paragraph>
+		<paragraph>In EiffelNet the possible events associated with a socket will be of    three kind: a read event; a write event; or a special event (out of    bounds operation). The command classes will be descendants of <link><url>/libraries/net/reference/polling/abstract/poll_command_chart.html</url><label>POLL_COMMAND</label></link>,    an heir of <code><class_name>COMMAND</class_name></code>.</paragraph>
 		<heading>
 			<size>3</size>9.2 Command classes
 		</heading>
-		<paragraph>The example uses four command classes: CLIENT_DATAGRAM_READER,    CLIENT_DATAGRAM_WRITER and their counterpart for servers, representing    operations that must be triggered in the case of a read event and a    write event.</paragraph>
+		<paragraph>The example uses four command classes: <code><class_name>CLIENT_DATAGRAM_READER</class_name></code>,    <code><class_name>CLIENT_DATAGRAM_WRITER</class_name></code> and their counterpart for servers, representing    operations that must be triggered in the case of a read event and a    write event.</paragraph>
 		<paragraph>Here is the reader command for clients:    
-			<code_block>Missing code</code_block>
+<code_block>
+	<keyword>class</keyword>
+		<class_name>CLIENT_DATAGRAM_READER</class_name>
+	
+	<keyword>inherit</keyword>
+	
+		<class_name>POLL_COMMAND</class_name> 
+			<keyword>redefine</keyword>
+				<feature_name>active_medium</feature_name>
+			<keyword>end</keyword>
+	
+	<keyword>creation</keyword>
+		<feature_name>make</feature_name>
+	
+	<keyword>feature</keyword>
+	
+		<feature_name>active_medium</feature_name><symbol>:</symbol> <class_name>NETWORK_DATAGRAM_SOCKET</class_name>
+	
+		<feature_name>execute</feature_name> <keyword>is</keyword>
+				<comment>-- Obtain a packet of ten characters and print them.</comment>
+			<keyword>local</keyword>
+				<local_variable>rec_pack</local_variable><symbol>:</symbol> <class_name>DATAGRAM_PACKET</class_name> 
+				<local_variable>i</local_variable><symbol>:</symbol> <class_name>INTEGER</class_name>
+			<keyword>do</keyword>
+				<local_variable>rec_pack</local_variable> <symbol>:</symbol><symbol>=</symbol> <feature_name>active_medium</feature_name>.<feature_name>received</feature_name> <symbol>(</symbol>10, 0<symbol>)</symbol>
+				<feature_name>io</feature_name>.<feature_name>putint</feature_name> <symbol>(</symbol><local_variable>rec_pack</local_variable>.<feature_name>packet_number</feature_name><symbol>)</symbol>
+				<feature_name>io</feature_name>.<feature_name>new_line</feature_name>
+				<keyword>from</keyword>
+					<local_variable>i</local_variable> <symbol>:</symbol><symbol>=</symbol> 0
+				<keyword>until</keyword>
+					<local_variable>i</local_variable> <symbol>&gt;</symbol> 9
+				<keyword>loop</keyword>
+					<feature_name>io</feature_name>.<feature_name>putchar</feature_name> <symbol>(</symbol><local_variable>rec_pack</local_variable>.<feature_name>element</feature_name> <symbol>(</symbol>i<symbol>)</symbol><symbol>)</symbol>; i <symbol>:</symbol><symbol>=</symbol> <local_variable>i</local_variable> <symbol>+</symbol> 1
+				<keyword>end</keyword>
+				<feature_name>io</feature_name>.<feature_name>new_line</feature_name>
+			<keyword>end</keyword>
+	
+	<keyword>end</keyword>
+
+</code_block>
 			<paragraph>The 
 				<italic>execute</italic> procedure reads a packet of ten characters and    prints these characters. Its counterpart in the writing command will    produce these ten packets:    
-				<code_block>Missing code</code_block>
+<code_block>
+	<keyword>class</keyword>
+		<class_name>CLIENT_DATAGRAM_WRITER</class_name>
+	
+	<keyword>inherit</keyword>
+	
+		<class_name>POLL_COMMAND</class_name> 
+			<keyword>redefine</keyword>
+				<feature_name>active_medium</feature_name>
+			<keyword>end</keyword>
+	
+		<class_name>BASIC_ROUTINES</class_name>
+	
+	<keyword>creation</keyword>
+		<feature_name>make</feature_name>
+	
+	<keyword>feature</keyword>
+	
+		<feature_name>active_medium</feature_name><symbol>:</symbol> <class_name>NETWORK_DATAGRAM_SOCKET</class_name>
+	
+		<feature_name>execute</feature_name> <keyword>is</keyword>
+				<comment>-- Make a packet with characters 'a' to 'k' in successive positions.</comment>
+			<keyword>local</keyword>
+				<local_variable>sen_pack</local_variable><symbol>:</symbol> <class_name>DATAGRAM_PACKET</class_name> 
+				<local_variable>ccode</local_variable><symbol>:</symbol> <class_name>INTEGER</class_name>
+			<keyword>do</keyword>
+				<keyword>create</keyword> <feature_name>sen_pack</feature_name>.<feature_name>make</feature_name> <symbol>(</symbol>10<symbol>)</symbol>
+				<keyword>from</keyword>
+					<local_variable>ccode</local_variable> <symbol>:</symbol><symbol>=</symbol> <feature_name>charcode</feature_name> <symbol>(</symbol><symbol>'</symbol><character>a</character><symbol>'</symbol><symbol>)</symbol>
+				<keyword>until</keyword>
+					<local_variable>ccode</local_variable> <symbol>&gt;</symbol> <local_variable>charcode</local_variable> <symbol>(</symbol><symbol>'</symbol><character>k</character><symbol>'</symbol><symbol>)</symbol>
+				<keyword>loop</keyword>
+					<feature_name>sen_pack</feature_name>.<feature_name>put_element</feature_name> <symbol>(</symbol><feature_name>charconv</feature_name> <symbol>(</symbol><local_variable>ccode</local_variable><symbol>)</symbol>, <local_variable>ccode</local_variable> -- <feature_name>charcode</feature_name> <symbol>(</symbol><symbol>'</symbol><character>a</character><symbol>'</symbol><symbol>)</symbol><symbol>)</symbol>
+					<local_variable>ccode</local_variable> <symbol>:</symbol><symbol>=</symbol> <local_variable>ccode</local_variable> <symbol>+</symbol> 1
+				<keyword>end</keyword>
+				<local_variable>sen_pack</local_variable>.<feature_name>set_packet_number</feature_name> <symbol>(</symbol>1<symbol>)</symbol>
+				<feature_name>active_medium</feature_name>.<feature_name>send</feature_name> <symbol>(</symbol><local_variable>sen_pack</local_variable>,<keyword> Void</keyword>, 0<symbol>)</symbol>
+			<keyword>end</keyword>
+	
+	<keyword>end</keyword>
+</code_block>
 				<heading>
 					<size>3</size>9.3 The server and the client
 				</heading>
 				<paragraph>Once the commands have been defined, it suffices for the server and    the client to associate instances of these commands with the    appropriate.</paragraph>
-				<paragraph>The abstraction needed for this purpose is provided by class MEDIUM_POLLER.    An instance of this class knows about a number of commands, each    associated with a certain socket in read, write or special event mode.    By applying procedure 
+				<paragraph>The abstraction needed for this purpose is provided by class <code><class_name>MEDIUM_POLLER</class_name></code>.    An instance of this class knows about a number of commands, each    associated with a certain socket in read, write or special event mode.    By applying procedure 
 					<italic>execute</italic> to such a medium poller, you direct    it to monitor these sockets for the corresponding events and to execute    the command associated with each event that will be received. Procedure 
 					<italic>execute</italic>    takes two integer arguments: the maximum number of sockets to monitor,    and the timeout in milliseconds.
 				</paragraph>
 				<paragraph>Here is the server built with this mechanism:    
-					<code_block>Missing code</code_block>
+<code_block>
+	<keyword>class</keyword>
+	
+		<class_name>POLLING_SERVER</class_name>
+	
+	<keyword>creation</keyword>
+		<feature_name>make</feature_name>
+	
+	<keyword>feature</keyword>
+	
+		<feature_name>make</feature_name> <keyword>is</keyword>
+				<comment>-- Create read and write commands, attach them to a poller,</comment>
+				<comment>-- set up the poller for execution.</comment>
+			<keyword>local</keyword>
+				<local_variable>soc</local_variable><symbol>:</symbol> <class_name>NETWORK_DATAGRAM_SOCKET</class_name> 
+				<local_variable>poller</local_variable><symbol>:</symbol> <class_name>MEDIUM_POLLER</class_name> 
+				<local_variable>readcomm</local_variable><symbol>:</symbol> <class_name>SERVER_DATAGRAM_READER</class_name>
+				<local_variable>writecomm</local_variable><symbol>:</symbol> <class_name>SERVER_DATAGRAM_WRITER</class_name>
+			<keyword>do</keyword>
+				<keyword>create</keyword> <local_variable>soc</local_variable>.<feature_name>make_server_by_port</feature_name> <symbol>(</symbol>6530<symbol>)</symbol>
+				<keyword>create</keyword> <local_variable>poller</local_variable>.<feature_name>make</feature_name>
+				<keyword>create</keyword> <local_variable>readcomm</local_variable>.<feature_name>make</feature_name> <symbol>(</symbol>soc<symbol>)</symbol>; <local_variable>poller</local_variable>.<feature_name>put_read_command</feature_name> <symbol>(</symbol><local_variable>readcomm</local_variable><symbol>)</symbol>
+				<keyword>create</keyword> <feature_name>writecomm</feature_name>.<feature_name>make</feature_name> <symbol>(</symbol>soc<symbol>)</symbol>; <local_variable>poller</local_variable>.<feature_name>put_write_command</feature_name> <symbol>(</symbol><local_variable>writecomm</local_variable><symbol>)</symbol>
+				<local_variable>poller</local_variable>.<feature_name>make_read_only</feature_name>; <local_variable>poller</local_variable>.<feature_name>execute</feature_name> <symbol>(</symbol>15, 20000<symbol>)</symbol>
+				<local_variable>poller</local_variable>.<feature_name>make_write_only</feature_name>; <local_variable>poller</local_variable>.<feature_name>execute</feature_name> <symbol>(</symbol>15, 20000<symbol>)</symbol>
+				<local_variable>soc</local_variable>.<feature_name>close</feature_name>
+			<keyword>end</keyword>
+	
+	<keyword>end</keyword>
+</code_block>
 				</paragraph>
 				<paragraph>Procedure 
-					<italic>make</italic> creates three objects: a socket, which it    associates with a specific port; a poller; and a read command (an    instance of SERVER_DATAGRAM_READER), which it attaches to the socket. It    then enters the read command into the poller, and does the same thing    with a write command. It sets up the poller to accept read commands only    and then executes the poller; this will enable the server to get the    read event triggered by the client's write command (as it appears below    in the text of class POLLING_CLIENT). Then the server reverses the    poller's set-up to write-only, and calls 
+					<italic>make</italic> creates three objects: a socket, which it    associates with a specific port; a poller; and a read command (an    instance of SERVER_DATAGRAM_READER), which it attaches to the socket. It    then enters the read command into the poller, and does the same thing    with a write command. It sets up the poller to accept read commands only    and then executes the poller; this will enable the server to get the    read event triggered by the client's write command (as it appears below    in the text of class <code><class_name>POLLING_CLIENT</class_name></code>). Then the server reverses the    poller's set-up to write-only, and calls 
 					<italic>execute</italic> again.
 				</paragraph>
 				<paragraph>The procedures 
@@ -53,7 +161,45 @@
 					<italic>make</italic> as creation procedure.
 				</paragraph>
 				<paragraph>The client follows the same scheme, reversing the order of read and    write operations:    
-					<code_block>Missing code</code_block>
+<code_block>
+<keyword>class</keyword>
+
+	<class_name>POLLING_CLIENT</class_name>
+
+<keyword>creation</keyword>
+	<feature_name>make</feature_name>
+
+<keyword>feature</keyword>
+
+	<feature_name>make</feature_name> <keyword>is</keyword>
+			<comment>-- Create read and write commands, attach them to a poller,</comment>
+			<comment>-- set up the poller for execution.</comment>
+		<keyword>local</keyword>
+			<local_variable>soc</local_variable><symbol>:</symbol> <class_name>NETWORK_DATAGRAM_SOCKET</class_name> 
+			<local_variable>poller</local_variable><symbol>:</symbol> <class_name>MEDIUM_POLLER</class_name> 
+			<local_variable>readcomm</local_variable><symbol>:</symbol> <class_name>DATAGRAM_READER</class_name>
+			<local_variable>writecomm</local_variable><symbol>:</symbol> <class_name>DATAGRAM_WRITER</class_name>
+		<keyword>do</keyword>
+			<keyword>create</keyword> <local_variable>soc</local_variable>.<feature_name>make_client_by_port</feature_name> <symbol>(</symbol>6530, <string>"serverhost"</string><symbol>)</symbol>
+			<keyword>create</keyword> <local_variable>poller</local_variable>.<feature_name>make</feature_name>
+			<keyword>create</keyword> <local_variable>readcomm</local_variable>.<feature_name>make</feature_name> <symbol>(</symbol><local_variable>soc</local_variable><symbol>)</symbol>
+			<local_variable>poller</local_variable>.<feature_name>put_read_command</feature_name> <symbol>(</symbol><local_variable>readcomm</local_variable><symbol>)</symbol>
+			<keyword>create</keyword> <feature_name>writecomm</feature_name>.<feature_name>make</feature_name> <symbol>(</symbol><local_variable>soc</local_variable><symbol>)</symbol>
+			<local_variable>poller</local_variable>.<feature_name>put_write_command</feature_name> <symbol>(</symbol><local_variable>writecomm</local_variable><symbol>)</symbol>
+			<local_variable>poller</local_variable>.<feature_name>make_write_only</feature_name>
+			<local_variable>poller</local_variable>.<feature_name>execute</feature_name> <symbol>(</symbol>15, 20000<symbol>)</symbol>
+			<local_variable>poller</local_variable>.<feature_name>make_read_only</feature_name>
+			<local_variable>poller</local_variable>.<feature_name>execute</feature_name> <symbol>(</symbol>15, 20000<symbol>)</symbol>
+			<local_variable>soc</local_variable>.<feature_name>close</feature_name>
+		<keyword>rescue</keyword>
+			<keyword>if</keyword> <local_variable>soc</local_variable> /<symbol>=</symbol> <keyword>Void</keyword> <keyword>and</keyword> <keyword>then</keyword> <keyword>not</keyword> <feature_name>soc</feature_name>.<feature_name>is_closed</feature_name> <keyword>then</keyword>
+				<feature_name>soc</feature_name>.<feature_name>close</feature_name>
+			<keyword>end</keyword>
+		<keyword>end</keyword>
+
+<keyword>end</keyword>
+
+</code_block>
 					<heading>
 						<size>3</size>9.4 A less deterministic scheme
 					</heading>

@@ -14,7 +14,7 @@
 					<bold>OK</bold>. 
 				</item>
 				<item>Browse to 
-					<italic>Eiffel52\examples\store\esql\</italic>. 
+					<italic>$ISE_EIFFEL\examples\store\esql\</italic>. 
 				</item>
 				<item>Choose the file that fits your platform and the DBMS you want to              use:              
 					<list ordered="false">
@@ -50,7 +50,7 @@ Password: mypass
 					</code_block>
 					<note>
 						<bold>Note:</bold>
-						<italic>Name</italic> and 
+						<italic> Name</italic> and 
 						<italic>Password</italic> are no required with          ODBC. If you don't need 
 						<italic>Name</italic> and 
 						<italic>Password</italic>,

@@ -1,7 +1,7 @@
 <document output="studio" title="Database Selection">
 	<meta_data/>
 	<paragraph>
-		<paragraph>Use the DB_SELECTION class to select data from the database. Once you have selected the data, you can 
+		<paragraph>Use the <link><url>/libraries/store/reference/interface/DB_SELECTION_flatshort.html</url><label>DB_SELECTION</label></link> class to select data from the database. Once you have selected the data, you can 
 			<link>
 				<url>../40_selection_access/index.xml</url>
 				<label>access</label>
@@ -14,10 +14,16 @@
 				<label>Database/Eiffel objects Coupling</label>
 			</link> if you need information about your database structure.
 		</note>
-		<paragraph>DB_SELECTION enables your application to get database content using SQL 'select' queries:</paragraph>
+		<paragraph><link><url>/libraries/store/reference/interface/DB_SELECTION_flatshort.html</url><label>DB_SELECTION</label></link> enables your application to get database content using SQL 'select' queries:</paragraph>
 		<list ordered="false">
 			<item>You can carry out 'select' queries in an intuitive way using directly the SQL language:
-				<code_block>Missing Code</code_block>
+<code_block>
+	<feature_name>selection</feature_name><symbol>:</symbol> <class_name>DB_SELECTION</class_name>
+	...
+	<keyword>create</keyword> <feature_name>selection</feature_name>.<feature_name>make</feature_name>
+	<feature_name>selection</feature_name>.<feature_name>set_query</feature_name> <symbol>(</symbol><string>"select * from CONTACTS where firstname = 'John'"</string><symbol>)</symbol>
+	<feature_name>selection</feature_name>.<feature_name>execute</feature_name>
+</code_block>
 				<tip>
 					<bold>Tip</bold>: Always check the database status for errors after your 'select' query.
 				</tip>

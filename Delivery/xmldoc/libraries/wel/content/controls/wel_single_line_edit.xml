@@ -6,7 +6,7 @@
 			</toc>
 		</help>
 	</meta_data>
-	<paragraph> A WEL_SINGLE_LINE_EDIT is a control used to input a single line of text.   
+	<paragraph> A <link><url>../../reference/controls/WEL_SINGLE_LINE_EDIT_chart.html</url><label>WEL_SINGLE_LINE_EDIT</label></link> is a control used to input a single line of text.   
 		<heading>
 			<size>2</size>Appearance
 		</heading>

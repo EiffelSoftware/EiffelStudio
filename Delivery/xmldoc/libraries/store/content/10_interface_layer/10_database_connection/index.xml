@@ -4,30 +4,38 @@
 		<list ordered="true">
 			<item>To connect to your database, you have to create a 
 				<bold>handle</bold>: this handle actually link the interface classes with corresponding implementation classes mapped to your DBMS. This handle is implemented by the DATABASE_APPL class:
-				<code_block>
-					Missing Code
-				</code_block>
+<code_block>
+	<feature_name>database_appl</feature_name><symbol>:</symbol> <class_name>DATABASE_APPL</class_name> <symbol>[</symbol><class_name>ODBC</class_name><symbol>]</symbol>
+		<comment>-- Database handle.</comment>
+	...
+	<keyword>create</keyword> <feature_name>database_appl</feature_name>.<feature_name>login</feature_name> <symbol>(</symbol><local_variable>a_name</local_variable>, <local_variable>a_psswd</local_variable><symbol>)</symbol>
+	<feature_name>database_appl</feature_name>.<feature_name>set_base</feature_name>
+</code_block>
 				<line_break/>
 				<note>
 					<bold>Note</bold>: Notice the call of set_base that enables to link EiffelStore interface to this specific handle.
 				</note>
 				<tip>
-					<bold>Tip</bold>: You can manage handles to many databases: as an instance of DATABASE_APPL stands for a specific database handle, you only have to create one instance of DATABASE_APPL for every DBMS handle you wish to create. Do not forget to call set_base to activate appropriate handle.
+					<bold>Tip</bold>: You can manage handles to many databases: as an instance of <code><class_name>DATABASE_APPL</class_name></code> stands for a specific database handle, you only have to create one instance of <code><class_name>DATABASE_APPL</class_name></code> for every DBMS handle you wish to create. Do not forget to call set_base to activate appropriate handle.
 				</tip>
 				<note>
-					<bold>Note</bold>: The generic parameter of DATABASE_APPL specifies the actual DBMS used.
+					<bold>Note</bold>: The generic parameter of <code><class_name>DATABASE_APPL</class_name></code> specifies the actual DBMS used.
 				</note>
 			</item>
-			<item>Once your handle is created, you have to create a session manager which will allow you to manage your database, specifically to establish connection, disconnect and also handle errors. The class DB_CONTROL enables your application to plainly control the functioning and status of your database and to request any information about it.
-				<code_block>
-					Missing Code
-				</code_block>
+			<item>Once your handle is created, you have to create a session manager which will allow you to manage your database, specifically to establish connection, disconnect and also handle errors. The class <code><class_name>DB_CONTROL</class_name></code> enables your application to plainly control the functioning and status of your database and to request any information about it.
+<code_block>
+	<feature_name>session_control</feature_name><symbol>:</symbol> <class_name>DB_CONTROL</class_name>
+		<comment>-- Session control.</comment>
+	...
+	<keyword>create</keyword> <feature_name>session_control</feature_name>.<feature_name>make</feature_name>
+	<feature_name>session_control</feature_name>.<feature_name>connect</feature_name>
+</code_block>
 				<note>
 					<bold>Note</bold>: Take a look at the 
 					<link>
 						<url>../80_database_control/index.xml</url>
 						<label>database control</label>
-					</link> part to see how to use DB_CONTROL capabilities.
+					</link> part to see how to use <code><class_name>DB_CONTROL</class_name></code> capabilities.
 				</note>
 			</item>
 		</list>

@@ -4,7 +4,7 @@
 		<heading>
 			<size>1</size>Description
 		</heading>
-		<paragraph>Version: 5.0</paragraph>
+		<paragraph>Version: 5.5</paragraph>
 		<paragraph>Availability: Basic Package.</paragraph>
 		<paragraph>Here is a set of five examples written thanks to the EiffelNet        library to show some basic        applications. Two of them rely on specific code to Unix Operating        systems and consequently could not be run under Windows.</paragraph>
 		<list ordered="false">

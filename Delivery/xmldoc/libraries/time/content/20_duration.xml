@@ -21,7 +21,7 @@
 			</code> or 
 			<code>
 				<class_name>DATE_TIME_DURATION</class_name>
-			</code> is an element of a group, i.e. there is a zero and addition operations (infix +,infix -, prefix + and prefix -). Duration is used as an amount of time, without link to an origin. It may be added to the respective absolute notion (time + time_duration is possible, not time + date_time_duration nor date_time +time_duration...see classes 
+			</code> is an element of a group, i.e. there is a zero and addition operations (infix +,infix -, prefix + and prefix -). Duration is used as an amount of time, without link to an origin. It may be added to the respective absolute notion (time + time_duration is possible, not time + date_time_duration nor date_time + time_duration...see classes 
 			<code>
 				<class_name>TIME</class_name>
 			</code>, 
@@ -85,7 +85,7 @@
 			<item>
 				<code>
 					<class_name>TIME_DURATION</class_name>
-				</code> inherits from GROUP_ELEMENT. infix and prefix +, infix andprefix - are available to compose instances of each other.
+				</code> inherits from GROUP_ELEMENT. infix and prefix +, infix and prefix - are available to compose instances of each other.
 			</item>
 		</list>
 		<heading>
@@ -196,7 +196,7 @@
 		<paragraph>There are, as in 
 			<code>
 				<class_name>DATE_DURATION</class_name>
-			</code>, definite and non definite durations. It  isthe date part which gives the definite non definite status. Features canonical and to_canonical are present in DATE_TIME_DURATION. They have to deal with the attributes time.
+			</code>, definite and non definite durations. It is the date part which gives the definite non definite status. Features canonical and to_canonical are present in DATE_TIME_DURATION. They have to deal with the attributes time.
 		</paragraph>
 		<heading>
 			<size>4</size>Creation
@@ -268,6 +268,6 @@
 					<class_name>DATE_TIME</class_name>
 				</code>). That will yield a final date. If this final date is after the origin (= the argument), the current duration is considered positive. Otherwise, it is considered negative. Finally time must be less than one day (if positive) or more than minus one day (if negative). To_canonical returns a duration equivalent to the current one (for the argument) and canonical.
 			</item>
-			<item>time_to_canonical looks like to_canonical but focuses mainly on time. Itr equires a definite duration so that it is possible to compare it to zero. It yields a definite duration equivalent to the current one with a canonical time. hour is then cut so that it stands in the range of one day (0 to 23 if positive and -23 to 0 if negative). The attributes day is also modified to keep the result equivalent to the current duration.time_to_canonical does not need any argument because only time and day are modified.</item>
+			<item>time_to_canonical looks like to_canonical but focuses mainly on time. It requires a definite duration so that it is possible to compare it to zero. It yields a definite duration equivalent to the current one with a canonical time. hour is then cut so that it stands in the range of one day (0 to 23 if positive and -23 to 0 if negative). The attributes day is also modified to keep the result equivalent to the current duration.time_to_canonical does not need any argument because only time and day are modified.</item>
 		</list>
 	</paragraph></document>

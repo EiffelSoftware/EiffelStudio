@@ -67,10 +67,10 @@ feature -- Initialization
 			create color_selec.make (edit_box, Current)
 			create font_selec.make (edit_box, Current)
 			
-			create sbar
-			set_status_bar (sbar)
-			create info_bar
-			sbar.extend (info_bar)
+--			create sbar
+--			set_status_bar (sbar)
+--			create info_bar
+--			sbar.extend (info_bar)
 			
 			fill_list
 			fill_menu
@@ -132,7 +132,7 @@ feature -- Update
 			text_selec.hide
 			color_selec.hide
 			font_selec.hide
-			info_bar.remove_text
+--			info_bar.remove_text
 		end
 
 feature -- Implementation
@@ -234,19 +234,19 @@ feature --Menu
 
 			create it.make_with_text ("Save%TCTRL+S")
 			itt.extend (it)
-			it.press_actions.extend (~save)
+			it.select_actions.extend (~save)
 
 			create it.make_with_text ("OK")
 			itt.extend (it)
-			it.press_actions.extend (~ok)
+			it.select_actions.extend (~ok)
 
 			create it.make_with_text ("Apply")
 			itt.extend (it)
-			it.press_actions.extend (~apply)
+			it.select_actions.extend (~apply)
 
 			create it.make_with_text ("Exit Tool")
 			itt.extend (it)
-			it.press_actions.extend (~destroy)
+			it.select_actions.extend (~destroy)
 
  			create itt.make_with_text ("Help")
 			menu.extend (itt)

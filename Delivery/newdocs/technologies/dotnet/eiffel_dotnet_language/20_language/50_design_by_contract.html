@@ -79,7 +79,7 @@
 		<P>Each Eiffel feature which is a routine, i.e. a function or procedure, can
 			support one assertion for a precondition and one for a postcondition.&nbsp;We
 			saw where precondition and postcondition fit into the structure of the routine
-			in <A href="../../eiffel_for_dotnet/20_language/20_adding_class_features.html">Adding Class
+			in <A href="../../eiffel_dotnet_language/20_language/20_adding_class_features.html">Adding Class
 				Features</A> . An assertion&nbsp;is expressed as one or more assertion
 			clauses&nbsp;which are logically <SPAN CLASS="ekeyword">and</SPAN>-ed together to produce the assertion.
 			Assertions clauses are boolean expressions that evaluate to true or false.</P>
@@ -301,7 +301,7 @@
 			Using the class invariant we are able to state&nbsp;what it means for an
 			instance of a class to be valid, or as it is sometimes put, in a stable state.</P>
 		<P>The class invariant is an assertion like precondition and postcondition, but
-			there is only one per class. Check&nbsp;<A href="../../eiffel_for_dotnet/20_language/10_eiffel_classes.html">Eiffel
+		there is only one per class. Check&nbsp;<A href="../../eiffel_dotnet_language/20_language/10_eiffel_classes.html">Eiffel
 				Classes</A> to see how&nbsp;the class invariant&nbsp;fits into the class
 			structure.</P>
 		<P>How would we code the class invariant for <SPAN CLASS="eclass">TIME_OF_DAY</SPAN>? An instance would be
@@ -377,7 +377,7 @@
 			preconditions, make calls to our routines&nbsp;from invalid states. So, maybe
 			we will leave precondition checking turned on for a while.</P>
 		<H2>Contracts and Inheritance</H2>
-		<P>In the section titled&nbsp;<A href="../../eiffel_for_dotnet/20_language/30_inheritance.html">Inheritance</A>
+		<P>In the section titled&nbsp;<A href="../../eiffel_dotnet_language/20_language/30_inheritance.html">Inheritance</A>
 			you saw that it was possible through inheritance to produce a new class that
 			has all the features of an existing one. This is a very powerful notion, and
 			could be dangerous. What would keep descendants from redefining inherited
@@ -452,7 +452,7 @@
 		<P>In Writing Assertions below you will see the syntax for weaking preconditions
 			and strengthening postconditions.</P>
 		<H2>Unfinished Business</H2>
-		<P>In the section <A href="../../eiffel_for_dotnet/20_language/20_adding_class_features.html">Adding
+		<P>In the section <A href="../../eiffel_dotnet_language/20_language/20_adding_class_features.html">Adding
 				Class Features</A>, we promised to explain two issues during this
 			discussion of Design by Contract.</P>
 		<h3>Short Routines</h3>
@@ -465,7 +465,7 @@
 			long. Hardly possible. So decomposition of complex computations into chunks
 			small enough to describe with assertions is what gets done.</P>
 		<h3>Command/Query Separation</h3>
-		<P>In <A href="../../eiffel_for_dotnet/20_language/20_adding_class_features.html">Adding Class
+		<P>In <A href="../../eiffel_dotnet_language/20_language/20_adding_class_features.html">Adding Class
 				Features</A>, we saw that we can categorize features as either queries or
 			commands. A query will ask a question or make an observation about an instance.
 			A command will tell the instance to take some action which may result in
@@ -599,7 +599,7 @@
 		<H2 style="LEFT: 5px; TOP: 5118px">Not Writing&nbsp;Assertions</H2>
 		<P>Let's close this discussion of Design by Contract with&nbsp;one more interesting
 			and&nbsp;point to make about assertions. The precondition and postcondition
-			parts of a routine are optional, as you may remember from <A href="../../eiffel_for_dotnet/20_language/20_adding_class_features.html">
+			parts of a routine are optional, as you may remember from <A href="../../eiffel_dotnet_language/20_language/20_adding_class_features.html">
 				Adding Class Features</A>. Suppose you write a routine and do not code
 			either precondition or postcondition. You might be tempted to think that you
 			have simply written a routine that has no contract. But, that would not be the

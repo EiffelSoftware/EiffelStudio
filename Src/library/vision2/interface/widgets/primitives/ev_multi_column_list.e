@@ -265,6 +265,9 @@ feature -- Element change
 		obsolete
 				"Not implemented. Please let us know why you need this feature."
 			do
+				check
+					not_implemented: False
+				end
 			end
 
 feature -- Event handling
@@ -393,6 +396,9 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.56  2000/04/21 16:27:29  rogers
+--| Added a check False to set_row_height.
+--|
 --| Revision 1.55  2000/04/21 00:59:56  king
 --| Corrected all alignment preconditions
 --|

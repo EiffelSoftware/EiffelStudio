@@ -204,36 +204,42 @@ feature -- Initialization
 			--pie
 		end
 
---	pixmap: EV_PIXMAP
+	pixmap: EV_PIXMAP
 
 	test_drawing_area is
 			-- Calls all drawing primitives.
 		local
 			file: RAW_FILE
+			env: EV_ENVIRONMENT
 		do
-			--create pixmap
-			--create file.make_open_read ("c:\work\examples\vision2\figure\open.bmp")
-			--pixmap.set_with_file (file)
-			--file.close
+			create env
+			create pixmap
+			if env.platform = env.Ev_platform_gtk then
+				create file.make_open_read ("/home/brendel/local/examples/vision2/figure/open.xpm")
+			elseif env.platform = env.Ev_platform_win32 then
+				create file.make_open_read ("")
+			end
+			pixmap.set_with_file (file)
 
 			create my_device
-			--my_device.set_background_color (create {EV_COLOR}.make_with_rgb (0, 0, 1))
 			my_device.set_minimum_size (300, 300)
 			first_window.extend (my_device)
 			my_device.expose_actions.extend (~on_repaint_test)
+			my_device.set_background_color (create {EV_COLOR}.make_with_rgb (0, 0, 1))
+			my_device.set_tile (pixmap)
+			--my_device.set_clip_area (create {EV_CLIP}.make (30, 30, 150, 190))
+			my_device.clear
 		end
 
 	on_repaint_test (x, y, w, h: INTEGER) is
 			-- Do the projection
 		do
-			--my_device.clear
-
 			my_device.enable_dashed_line_style
 
 			--my_device.set_foreground_color (create {EV_COLOR}.make_with_rgb (0, 1, 0))
 
 			--my_device.fill_rectangle (110, 210, 110, 115)
-			--my_device.fill_ellipse (150, 210, 50, 50)
+			my_device.fill_ellipse (150, 210, 50, 50)
 			my_device.fill_polygon (<<create {EV_COORDINATES}.set (180, 210),
 				create {EV_COORDINATES}.set (190, 220),
 				create {EV_COORDINATES}.set (190, 230)>>)
@@ -243,7 +249,7 @@ feature -- Initialization
 			my_device.draw_text (10, 200, "Text-primitive")
 			my_device.draw_segment (5, 5, 100, 50)
 			--my_device.draw_straight_line (100, 30, 120, 35)
-			--my_device.draw_pixmap (80, 16, pixmap)
+			my_device.draw_pixmap (80, 16, pixmap)
 			my_device.draw_arc (90, 25, 20, 30, 0, 0.75 * 3.14)
 			my_device.draw_rectangle (10, 110, 10, 15)
 			my_device.draw_ellipse (50, 110, 10, 15)
@@ -251,7 +257,7 @@ feature -- Initialization
 				create {EV_COORDINATES}.set (90, 120),
 				create {EV_COORDINATES}.set (90, 130)>>, True)
 			my_device.draw_pie_slice (100, 100, 20, 20, 0.1, 0.25 * 3.14)
-			my_device.draw_text (10, 200, "Text-primitive")
+			--my_device.draw_text (10, 200, "Text-primitive")
 		end
 
 	make_world is

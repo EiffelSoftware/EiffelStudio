@@ -12,7 +12,8 @@ inherit
 	EV_ITEM_I
 		redefine
 			interface,
-			parent_imp
+			parent_imp,
+			pixmap_equal_to
 		end
 
 	EV_PICK_AND_DROPABLE_I
@@ -21,8 +22,11 @@ inherit
 		end
 
 	EV_PIXMAPABLE_I
+		undefine
+			pixmap_equal_to
 		redefine
-			interface
+			interface,
+			pixmap_equal_to
 		end
 
 	EV_DESELECTABLE_I
@@ -46,17 +50,30 @@ feature -- Element Change
 	set_pixmap (a_pix: EV_PIXMAP) is
 			-- Set the rows `pixmap' to `a_pix'.
 		do
-			pixmap := clone (a_pix)
+			internal_pixmap := clone (a_pix)
 			update
 		end
+		
+	pixmap: EV_PIXMAP is
+			-- `Result' is pixmap displayed in `Current'.
+			-- We do not simply return `internal_pixmap' as
+			-- the image must be stretched to fit the size allocated
+			-- by `parent'.
+		do
+			Result := clone (internal_pixmap)
+			if internal_pixmap /= Void and parent /= Void then
+				Result.stretch (parent_imp.pixmaps_width, parent_imp.pixmaps_height)
+			end
+		end
+		
 
-	pixmap: EV_PIXMAP
+	internal_pixmap: EV_PIXMAP
 			-- Pixmap used at the start of the row.
 
 	remove_pixmap is
 			-- Remove the rows pixmap.
 		do
-			pixmap := Void
+			internal_pixmap := Void
 			update
 		end
 
@@ -101,7 +118,25 @@ feature {EV_ANY_I} -- Implementation
 		do
 			update_needed := False
 		end
+		
+feature {NONE} -- Contract support
 
+	pixmap_equal_to (a_pixmap: EV_PIXMAP): BOOLEAN is
+			-- Is `a_pixmap' equal to `pixmap'?
+		local
+			scaled_pixmap: EV_PIXMAP
+			multi_column_list: EV_MULTI_COLUMN_LIST
+		do
+			if parent /= Void then
+				scaled_pixmap := clone (a_pixmap)
+				multi_column_list ?= parent
+				scaled_pixmap.stretch (multi_column_list.pixmaps_width, multi_column_list.pixmaps_height)
+			else
+				scaled_pixmap := a_pixmap		
+			end
+			Result := scaled_pixmap.is_equal (pixmap)
+		end
+		
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MULTI_COLUMN_LIST_ROW

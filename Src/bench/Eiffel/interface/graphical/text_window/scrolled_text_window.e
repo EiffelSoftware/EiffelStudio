@@ -321,6 +321,7 @@ feature -- Text manipulation
 			-- Clear the text structures.
 		do
 			image.wipe_out;
+			clear;
 			disable_clicking;
 			position := 0;
 			text_position := 0;

@@ -230,7 +230,7 @@ feature -- Element change
 		local
 			source_x, source_y, target_x, target_y: INTEGER
 			source_top, source_bottom, target_top, target_bottom: INTEGER
-			dist, min_dist, x1, x2: INTEGER
+			dist, min_dist, lx: INTEGER
 			sbbox, tbbox: EV_RECTANGLE
 		do
 			if not is_reflexive then
@@ -260,40 +260,30 @@ feature -- Element change
 					then
 						-- horizontal
 						if source_x > target_x then
-							x1 := sbbox.left
-							x2 := tbbox.right
-							dist := x1 - x2
-							if dist < min_dist then
+							if sbbox.left - tbbox.right < min_dist then
 								reset
 							else
-								dist := dist // 2
-								set_i_th_point_position (3, x2 + dist, target_y)
-								set_i_th_point_position (2, x2 + dist, source_y)
+								lx := target_x
+								dist := (source_x - lx) // 2
+								set_i_th_point_position (3, lx + dist, target_y)
+								set_i_th_point_position (2, lx + dist, source_y)
 							end
 						else
-							x1 := sbbox.right
-							x2 := tbbox.left
-							dist := x2 - x1
-							if dist < min_dist then
+							if tbbox.left - sbbox.right < min_dist then
 								reset
 							else
-								dist := dist // 2
-								set_i_th_point_position (3, x2 - dist, target_y)
-								set_i_th_point_position (2, x2 - dist, source_y)
+								lx := target_x
+								dist := (lx - source_x) // 2
+								set_i_th_point_position (3, lx - dist, target_y)
+								set_i_th_point_position (2, lx - dist, source_y)
 							end
 						end
 					else
 						-- vertical
-						if source_y > target_y then
-							x1 := source_top
-							dist := line.arrow_size * 2 - line.line_width
-						else
-							x1 := source_bottom
-							dist := -line.arrow_size * 2 + line.line_width
-						end
+						dist := (source_y - target_y) // 2
 						
-						set_i_th_point_position (3, target_x, x1 - dist)
-						set_i_th_point_position (2, source_x, x1 - dist)
+						set_i_th_point_position (3, target_x, source_y - dist)
+						set_i_th_point_position (2, source_x, source_y - dist)
 					end
 				end
 			end

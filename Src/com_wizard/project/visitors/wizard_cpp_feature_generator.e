@@ -93,7 +93,8 @@ feature {NONE} -- Implementation
 			non_void_variable_name: variable_name /= Void
 			valid_variable_name: not variable_name.empty
 		do
-			Result := clone (New_line_tab)
+			create Result.make (1000)
+			Result.append (New_line_tab)
 			Result.append (If_keyword)
 			Result.append (Space_open_parenthesis)
 			Result.append (Hresult_variable_name)
@@ -154,7 +155,8 @@ feature {NONE} -- Implementation
 			valid_name: not variable_name.empty
 			non_void_variables: pointer_variables /= Void
 		do
-			Result := clone (Tab_tab)
+			create Result.make (1000)
+			Result.append (Tab_tab)
 			Result.append (If_keyword)
 			Result.append (Space_open_parenthesis)
 			Result.append (Failed)
@@ -342,7 +344,8 @@ feature {NONE} -- Implementation
 	initialize_excepinfo: STRING is
 			-- Code to initialize excepinfo
 		do
-			Result := clone (Tab)
+			create Result.make (1000)
+			Result.append (Tab)
 			Result.append (Excepinfo_access)
 			Result.append ("wCode")
 			Result.append (Space_equal_space)
@@ -416,7 +419,8 @@ feature {NONE} -- Implementation
 		do
 			type := visitor.vt_type
 			
-			Result := clone (Return)
+			create Result.make (1000)
+			Result.append (Return)
 			Result.append (Space)
  
 			if 
@@ -487,7 +491,8 @@ feature {NONE} -- Implementation
 			non_void_name: attribute_name /= Void
 			valid_name: not attribute_name.empty
 		do
-			Result := clone (Return_variant_variable_name)
+			create Result.make (500)
+			Result.append (Return_variant_variable_name)
 			Result.append (Dot)
 			Result.append (attribute_name)
 		ensure

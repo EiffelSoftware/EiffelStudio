@@ -39,7 +39,8 @@ feature -- Basic operations
 			a_string: STRING
 			a_file: RAW_FILE
 		do
-			a_string := clone (shared_wizard_environment.destination_folder)
+			create a_string.make (500)
+			a_string.append (shared_wizard_environment.destination_folder)
 			a_string.append (a_folder)
 			a_string.append_character (Directory_separator)
 			a_string.append (Resource_file_name)
@@ -53,8 +54,10 @@ feature -- Basic operations
 		local
 			str_buffer: STRING
 		do
-			Result := "1 typelib "
+			create Result.make (100)
+			Result.append ("1 typelib ")
 			Result.append (Double_quote)
+			
 			str_buffer := clone (Shared_wizard_environment.type_library_file_name)
 			str_buffer.replace_substring_all ("%H", "%H%H")
 
@@ -65,7 +68,8 @@ feature -- Basic operations
 	Resource_file_name: STRING is
 			-- Resource file name
 		do
-			Result := clone (Shared_wizard_environment.project_name)
+			create Result.make (100)
+			Result.append (Shared_wizard_environment.project_name)
 			Result.append (Resource_file_extension)
 		end
 

@@ -134,13 +134,15 @@ feature {NONE} -- Implementation
 			Result.set_effective
 			Result.set_comment ("Initialize server.")
 
-			local_var_string := clone (local_string_var)
+			create local_var_string.make (100)
+			local_var_string.append (local_string_var)
 			local_var_string.append (Colon)
 			local_var_string.append (Space)
 			local_var_string.append (String_type)
 			Result.add_local_variable (local_var_string)
 
-			tmp_body := clone (Tab_tab_tab)
+			create tmp_body.make (1000)
+			tmp_body.append (Tab_tab_tab)
 			-- default_show_cmd := Sw_shownormal
 
 			tmp_body.append (default_show_cmd)
@@ -379,7 +381,8 @@ feature {NONE} -- Implementation
 			Result.set_once
 			Result.set_comment ("Server main window")
 
-			tmp_body := clone (Tab_tab_tab)
+			create tmp_body.make (1000)
+			tmp_body.append (Tab_tab_tab)
 			tmp_body.append (Create_keyword)
 			tmp_body.append (Space)
 			tmp_body.append (Result_keyword)
@@ -416,7 +419,8 @@ feature {NONE} -- Implementation
 			Result.set_comment (tmp_comment)
 			Result.set_result_type (Integer_type)
 
-			tmp_body := clone (Tab_tab_tab)
+			create tmp_body.make (1000)
+			tmp_body.append (Tab_tab_tab)
 			tmp_body.append (Result_keyword)
 			tmp_body.append (Space)
 			tmp_body.append (Assignment)
@@ -462,7 +466,8 @@ feature {NONE} -- Implementation
 			tmp_comment.append ("Initialize COM ")
 			Result.set_comment (tmp_comment)
 
-			tmp_body := clone (Tab_tab_tab)
+			create tmp_body.make (1000)
+			tmp_body.append (Tab_tab_tab)
 			tmp_body.append (Ccom_initialize_com)
 
 			Result.set_body (tmp_body)
@@ -483,7 +488,8 @@ feature {NONE} -- Implementation
 			tmp_comment.append ("Clean up COM ")
 			Result.set_comment (tmp_comment)
 
-			tmp_body := clone (Tab_tab_tab)
+			create tmp_body.make (1000)
+			tmp_body.append (Tab_tab_tab)
 			tmp_body.append (Ccom_cleanup_com)
 
 			Result.set_body (tmp_body)
@@ -504,7 +510,8 @@ feature {NONE} -- Implementation
 			tmp_comment.append ("Register Server")
 			Result.set_comment (tmp_comment)
 
-			tmp_body := clone (Tab_tab_tab)
+			create tmp_body.make (1000)
+			tmp_body.append (Tab_tab_tab)
 			tmp_body.append (Ccom_register_server)
 
 			Result.set_body (tmp_body)
@@ -525,7 +532,8 @@ feature {NONE} -- Implementation
 			tmp_comment.append ("Unregister Server")
 			Result.set_comment (tmp_comment)
 
-			tmp_body := clone (Tab_tab_tab)
+			create tmp_body.make (1000)
+			tmp_body.append (Tab_tab_tab)
 			tmp_body.append (Ccom_unregister_server)
 
 			Result.set_body (tmp_body)
@@ -545,7 +553,8 @@ feature {NONE} -- Implementation
 
 			Result.set_comment ("Initialize COM.")
 
-			tmp_body := clone (Tab_tab_tab)
+			create tmp_body.make (1000)
+			tmp_body.append (Tab_tab_tab)
 			tmp_body.append (Double_quote)
 			tmp_body.append ("C++")
 			tmp_body.append (Open_bracket)
@@ -574,7 +583,8 @@ feature {NONE} -- Implementation
 
 			Result.set_comment ("Clean up COM.")
 
-			tmp_body := clone (Tab_tab_tab)
+			create tmp_body.make (1000)
+			tmp_body.append (Tab_tab_tab)
 			tmp_body.append (Double_quote)
 			tmp_body.append ("C++")
 			tmp_body.append (Open_bracket)
@@ -603,7 +613,8 @@ feature {NONE} -- Implementation
 
 			Result.set_comment ("Register server.")
 
-			tmp_body := clone (Tab_tab_tab)
+			create tmp_body.make (1000)
+			tmp_body.append (Tab_tab_tab)
 			tmp_body.append (Double_quote)
 			tmp_body.append ("C++")
 			tmp_body.append (Open_bracket)
@@ -632,7 +643,8 @@ feature {NONE} -- Implementation
 
 			Result.set_comment ("Unregister server.")
 
-			tmp_body := clone (Tab_tab_tab)
+			create tmp_body.make (1000)
+			tmp_body.append (Tab_tab_tab)
 			tmp_body.append (Double_quote)
 			tmp_body.append ("C++")
 			tmp_body.append (Open_bracket)

@@ -435,14 +435,18 @@ feature {NONE} -- Implementation
 			type: INTEGER
 		do
 			type := visitor.vt_type
-		
+			
+			create Result.make (10000)
+			
+			
 			if visitor.is_basic_type or visitor.is_enumeration then
-				tmp_string := clone (name)
-				Result := clone (New_line_tab)
+				create tmp_string.make (200)
+				tmp_string.append (name)
+				Result.append (New_line_tab)
 				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), tmp_string, visitor))
 
 			else
-				Result := clone (New_line_tab)
+				Result.append (New_line_tab)
 				Result.append (argument_type_set_up (position, type))
 
 				if visitor.is_array_basic_type or visitor.is_structure_pointer or visitor.is_interface_pointer
@@ -458,7 +462,8 @@ feature {NONE} -- Implementation
 					Result.append (Semicolon)
 					Result.append (New_line_tab)
 
-					tmp_string := clone (Ampersand)
+					create tmp_string.make (100)
+					tmp_string.append (Ampersand)
 					tmp_string.append (Tmp_clause)
 					tmp_string.append (name)
 					Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), tmp_string, visitor))	
@@ -476,10 +481,12 @@ feature {NONE} -- Implementation
 			tmp_value: STRING
 		do
 			if is_error (visitor.vt_type) or is_hresult (visitor.vt_type) then
-				Result := clone (New_line_tab)
+				create Result.make (500)
+				Result.append (New_line_tab)
 				Result.append (argument_type_set_up (position, visitor.vt_type))
 
-				tmp_value := clone (Ec_mapper)
+				create tmp_value.make (500)
+				tmp_value.append (Ec_mapper)
 				tmp_value.append (Dot)
 				tmp_value.append (visitor.ec_function_name)
 				tmp_value.append (Space_open_parenthesis)
@@ -508,17 +515,20 @@ feature {NONE} -- Implementation
 		do
 			type := visitor.vt_type
 
-			Result := clone (New_line_tab)
+			create Result.make (10000)
+			Result.append (New_line_tab)
 			Result.append (argument_type_set_up (position, type))
-
+			
 			if visitor.is_basic_type or visitor.is_enumeration or
 					is_hresult (visitor.vt_type) or is_error (visitor.vt_type) then
-				tmp_value := clone (name)
+				create tmp_value.make (100)
+				tmp_value.append (name)
 				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), tmp_value, visitor))
 
 			elseif (type = Vt_bool) then
 
-				tmp_value := clone (Ec_mapper)
+				create tmp_value.make (100)
+				tmp_value.append (Ec_mapper)
 				tmp_value.append (Dot)
 				tmp_value.append (visitor.ec_function_name)
 				tmp_value.append (Space_open_parenthesis)
@@ -529,7 +539,8 @@ feature {NONE} -- Implementation
 				
 			elseif visitor.is_basic_type_ref then
 
-				tmp_value := clone (Tmp_clause)
+				create tmp_value.make (100)
+				tmp_value.append (Tmp_clause)
 				tmp_value.append (name)
 				free_arguments.put_front (tmp_value)
 
@@ -584,13 +595,15 @@ feature {NONE} -- Implementation
 					Result.append_integer (position)
 					Result.append ("].decVal));")
 				else
-					tmp_value := clone (Asterisk)
+					create tmp_value.make (100)
+					tmp_value.append (Asterisk)
 					tmp_value.append (name)
 					Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), tmp_value, visitor))
 				end
 			else
 				if is_byref (type) then
-					tmp_value := clone (Tmp_clause)
+					create tmp_value.make (100)
+					tmp_value.append (Tmp_clause)
 					tmp_value.append (name)
 					free_arguments.put_front (tmp_value)
 
@@ -625,10 +638,11 @@ feature {NONE} -- Implementation
 					Result.append (Semicolon)
 					Result.append (New_line_tab)
 				else
+					create tmp_value.make (500)
 					if visitor.need_generate_ec then
-						tmp_value := clone (Generated_ec_mapper)
+						tmp_value.append (Generated_ec_mapper)
 					else
-						tmp_value := clone (Ec_mapper)
+						tmp_value.append (Ec_mapper)
 					end
 					tmp_value.append (Dot)
 					tmp_value.append (visitor.ec_function_name)
@@ -651,7 +665,8 @@ feature {NONE} -- Implementation
 			non_void_attribute_name: attribute_name /= Void
 			valid_name: not attribute_name.empty
 		do
-			Result := clone (Arguments_name)
+			create Result.make (500)
+			Result.append (Arguments_name)
 
 			Result.append (Open_bracket)
 			Result.append_integer (position)
@@ -666,7 +681,8 @@ feature {NONE} -- Implementation
 		require
 			valid_position: position >= 0
 		do
-			Result := clone (Arguments_variable_name)
+			create Result.make (500)
+			Result.append (Arguments_variable_name)
 			Result.append (Open_bracket)
 			Result.append_integer (position)
 			Result.append (Close_bracket)

@@ -24,7 +24,7 @@ feature -- Basic operation
 	generate (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Generate eiffel class for coclass.
 		local
-			local_string: STRING
+			a_description: STRING
 			a_visible: WIZARD_WRITER_VISIBLE_CLAUSE
 			interface_processor: WIZARD_COCLASS_INTERFACE_EIFFEL_PROCESSOR 
 						[WIZARD_COCLASS_INTERFACE_EIFFEL_SERVER_IMPL_GENERATOR]
@@ -45,9 +45,10 @@ feature -- Basic operation
 				interface_processor.process_interfaces
 				interface_processor := Void
 
-				local_string := clone (a_coclass.eiffel_class_name)
-				local_string.append (" Implementation.")
-				eiffel_writer.set_description (local_string)
+				create a_description.make (1000)
+				a_description.append (a_coclass.eiffel_class_name)
+				a_description.append (" Implementation.")
+				eiffel_writer.set_description (a_description)
 
 				set_default_ancestors (eiffel_writer)
 				add_creation
@@ -67,13 +68,14 @@ feature -- Basic operation
 			eiffel_writer.add_creation_routine (Make_word)
 		end
 
-	add_default_features (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR) is
+	add_default_features (a_component: WIZARD_COMPONENT_DESCRIPTOR) is
 			-- Add default features to coclass server. 
 			-- e.g. make, constructor etc.
 		do
 			eiffel_writer.add_feature (make_feature, Initialization)
+			eiffel_writer.add_feature (create_item_feature, Basic_operations)
+			eiffel_writer.add_feature (ccom_create_item_feature (a_component), Externals)
 		end
-
 
 	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is
 		do
@@ -107,6 +109,42 @@ feature {NONE} -- Implementation
 
 		end
 
+	ccom_create_item_feature (a_component: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_WRITER_FEATURE is
+			-- `create_item' feature.
+		local
+			feature_body: STRING
+			an_argument: STRING
+		do
+			create Result.make
+			Result.set_name ("ccom_create_item")
+			Result.set_comment ("Initialize %Qitem%'")
+
+			create an_argument.make (100)
+			an_argument.append ("eif_object: ")
+			an_argument.append (a_component.eiffel_class_name)
+			Result.add_argument (an_argument)
+
+			Result.set_result_type ("POINTER")
+
+			create feature_body.make (100)
+			feature_body.append (Tab_tab_tab)
+			feature_body.append ("%"C++ %(new ")
+			feature_body.append (a_component.c_type_name)
+			feature_body.append (Space)
+			feature_body.append (Percent_double_quote)
+			feature_body.append (a_component.c_header_file_name)
+			feature_body.append (Percent_double_quote)
+			feature_body.append (Close_bracket)
+			feature_body.append ("(EIF_OBJECT)")
+			feature_body.append (double_quote)
+
+			Result.set_external
+			Result.set_body (feature_body)
+		ensure
+			non_void_feature: Result /= Void
+			non_void_feature_name: Result.name /= Void
+			non_void_feature_body: Result.body /= Void
+		end
 
 end -- class WIZARD_COCLASS_EIFFEL_SERVER_GENERATOR
 

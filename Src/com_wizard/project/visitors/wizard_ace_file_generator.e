@@ -203,7 +203,8 @@ feature -- Access
 	Shared_library_option: STRING is
 			-- Dll definition file for Ace file
 		do
-			Result := "default%N%Tshared_library_definition (%""
+			create Result.make (1000)
+			Result.append ("default%N%Tshared_library_definition (%"")
 			Result.append (User_def_file_name)
 			Result.append ("%")")
 		end
@@ -211,7 +212,8 @@ feature -- Access
 	user_def_file_name: STRING is
 			-- ".def" file name used for DLL compilation
 		do
-			Result := clone (Shared_wizard_environment.project_name)
+			create Result.make (100)
+			Result.append (Shared_wizard_environment.project_name)
 			Result.append (Def_file_extension)
 		end
 	
@@ -230,7 +232,8 @@ feature -- Basic operations
 			a_string: STRING
 			a_file: RAW_FILE
 		do
-			a_string := clone (shared_wizard_environment.destination_folder)
+			create a_string.make (1000)
+			a_string.append (shared_wizard_environment.destination_folder)
 			a_string.append (a_folder)
 			a_string.append_character (Directory_separator)
 			a_string.append (Ace_file_name)
@@ -265,7 +268,9 @@ feature -- Basic operations
 			tmp_string: STRING
 		do
 			Result := client_generated_ace_file
-			tmp_string := clone (Registration_class_name)
+			
+			create tmp_string.make (1000)
+			tmp_string.append (Registration_class_name)
 			tmp_string.append (Colon)
 			tmp_string.append (Space)
 			tmp_string.append (double_quote)
@@ -282,7 +287,8 @@ feature -- Basic operations
 	client_generated_ace_file: STRING is
 			-- Common part in Ace file for both server and client.
 		do
-			Result := clone (System_keyword)
+			create Result.make (10000)
+			Result.append (System_keyword)
 			Result.append (New_line_tab)
 			Result.append (Shared_wizard_environment.project_name)
 			if Shared_wizard_environment.client then

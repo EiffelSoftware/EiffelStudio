@@ -85,7 +85,8 @@ feature {NONE} -- Implementation
 		local
 			a_message: STRING
 		do
-			a_message := clone (Processing)
+			create a_message.make (100)
+			a_message.append (Processing)
 			a_message.append (Space)
 			a_message.append (a_wizard_descriptor.name)
 			a_message.append (Space)

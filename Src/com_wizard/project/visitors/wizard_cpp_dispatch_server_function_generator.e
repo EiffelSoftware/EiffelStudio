@@ -110,13 +110,15 @@ feature {NONE} -- Implementation
 			cecil_call, arguments, variables, out_value, free_object: STRING
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			Result := clone (Ecatch)
+			create Result.make (100000)
+			Result.append (Ecatch)
 
 			if func_desc.argument_count = 0 and func_desc.return_type.name.is_equal (Void_c_keyword) then
 				Result.append (New_line_tab)
 				Result.append (empty_argument_body)
 			else
-				arguments := clone (Space_open_parenthesis)
+				create arguments.make (500)
+				arguments.append (Space_open_parenthesis)
 				arguments.append (Eif_access)
 				arguments.append (Space_open_parenthesis)
 				arguments.append (Eiffel_object)

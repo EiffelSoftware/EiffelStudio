@@ -54,9 +54,12 @@ feature -- Basic operation
 
 			if not visitor.is_basic_type and not is_boolean (visitor.vt_type) 
 					and not visitor.is_enumeration then
-				tmp_tag := "non_void_"
+				create tmp_tag.make (100)
+				tmp_tag.append ("non_void_")
 				tmp_tag.append (a_name)
-				tmp_body := clone (a_name)
+				
+				create tmp_body.make (100)
+				tmp_body.append (a_name)
 				tmp_body.append (" /= Void")
 
 				create tmp_writer.make (tmp_tag, tmp_body)
@@ -109,9 +112,12 @@ feature -- Basic operation
 			if not visitor.is_basic_type and not is_boolean (visitor.vt_type)
 					and not visitor.is_enumeration then
 				if ret_val then
-					tmp_tag := "non_void_"
+					create tmp_tag.make (100)
+					tmp_tag.append ("non_void_")
 					tmp_tag.append (a_name)
-					tmp_body := clone (Result_keyword)
+					
+					create tmp_body.make (100)
+					tmp_body.append (Result_keyword)
 					tmp_body.append (" /= Void")
 					create tmp_writer.make (tmp_tag, tmp_body)
 					assertions.extend (tmp_writer)
@@ -149,25 +155,35 @@ feature {NONE}
 					visitor.is_interface_pointer or
 					visitor.is_coclass_pointer 
 				then
-					tmp_tag := "valid_"
+					create tmp_tag.make (100)
+					tmp_tag.append ("valid_")
 					tmp_tag.append (a_name)
-					tmp_body := clone (a_name)
+					
+					create tmp_body.make (100)
+					tmp_body.append (a_name)
 					tmp_body.append (".item /= default_pointer")
 					create Result.make (tmp_tag, tmp_body)
 
 				elseif is_error (visitor.vt_type) or is_hresult (visitor.vt_type) then
 
 				elseif not visitor.is_basic_type_ref then
-					tmp_tag := "valid_"
+					
+					create tmp_tag.make (100)
+					tmp_tag.append ("valid_")
 					tmp_tag.append (a_name)
-					tmp_body := clone (a_name)
+					
+					create tmp_body.make (100)
+					tmp_body.append (a_name)
 					tmp_body.append (".item /= Void")
 					create Result.make (tmp_tag, tmp_body)
 				end
 			elseif visitor.is_structure then
-				tmp_tag := "valid_"
+				create tmp_tag.make (100)
+				tmp_tag.append ("valid_")
 				tmp_tag.append (a_name)
-				tmp_body := clone (a_name)
+				
+				create tmp_body.make (100)
+				tmp_body.append (a_name)
 				tmp_body.append (".item /= default_pointer")
 				create Result.make (tmp_tag, tmp_body)
 			end
@@ -188,12 +204,15 @@ feature {NONE}
 			pointed_descriptor ?= type
 			if pointed_descriptor /= Void  then
 				if  (visitor.vt_type = binary_or (Vt_ptr, Vt_byref)) then
-					tmp_tag := "valid_"
+					create tmp_tag.make (100)
+					tmp_tag.append ("valid_")
 					tmp_tag.append (a_name)
 					if ret_val then
-						tmp_body := clone (Result_keyword)
+						create tmp_body.make (100)
+						tmp_body.append (Result_keyword)
 					else
-						tmp_body := clone (a_name)
+						create tmp_body.make (100)
+						tmp_body.append (a_name)
 					end
 					tmp_body.append (".item /= default_pointer")
 					create Result.make (tmp_tag, tmp_body)
@@ -204,9 +223,12 @@ feature {NONE}
 					visitor.is_interface_pointer or 
 					visitor.is_coclass_pointer) 
 				then
-					tmp_tag := "valid_"
+					create tmp_tag.make (100)
+					tmp_tag.append ("valid_")
 					tmp_tag.append (a_name)
-					tmp_body := clone (Result_keyword)
+					
+					create tmp_body.make (100)
+					tmp_body.append (Result_keyword)
 					tmp_body.append (".item /= default_pointer")
 					create Result.make (tmp_tag, tmp_body)
 
@@ -216,23 +238,29 @@ feature {NONE}
 					not visitor.is_interface_pointer and
 					not visitor.is_coclass_pointer 
 				then
-					tmp_tag := "valid_"
+					create tmp_tag.make (100)
+					tmp_tag.append ("valid_")
 					tmp_tag.append (a_name)
 					if ret_val then
-						tmp_body := clone (Result_keyword)
+						create tmp_body.make (100)
+						tmp_body.append (Result_keyword)
 					else
-						tmp_body := clone (a_name)
+						create tmp_body.make (100)
+						tmp_body.append (a_name)
 					end
 					tmp_body.append (".item /= Void")
 					create Result.make (tmp_tag, tmp_body)
 				end
 			elseif visitor.is_structure then
-				tmp_tag := "valid_"
+				create tmp_tag.make (100)
+				tmp_tag.append ("valid_")
 				tmp_tag.append (a_name)
 				if ret_val then
-					tmp_body := clone (Result_keyword)
+					create tmp_body.make (100)
+					tmp_body.append (Result_keyword)
 				else
-					tmp_body := clone (a_name)
+					create tmp_body.make (100)
+					tmp_body.append (a_name)
 				end
 				tmp_body.append (".item /= default_pointer")
 				create Result.make (tmp_tag, tmp_body)

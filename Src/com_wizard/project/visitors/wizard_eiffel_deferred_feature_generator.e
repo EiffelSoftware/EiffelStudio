@@ -35,7 +35,8 @@ feature -- Basic operations
 
 			a_precondition_feature_writer.set_result_type (Boolean_type)
 
-			a_comment := clone (Precondition_function_comment)
+			create a_comment.make (100)
+			a_comment.append (Precondition_function_comment)
 			a_comment.append (Back_quote)
 			a_comment.append (function_name)
 			a_comment.append (Single_quote)

@@ -115,7 +115,8 @@ feature {NONE} -- Implementation
 			tmp_comment.append ("Register Server")
 			Result.set_comment (tmp_comment)
 
-			tmp_body := clone (Tab_tab_tab)
+			create tmp_body.make (500)
+			tmp_body.append (Tab_tab_tab)
 			tmp_body.append (Result_keyword)
 			tmp_body.append (Space)
 			tmp_body.append (Assignment)
@@ -140,7 +141,8 @@ feature {NONE} -- Implementation
 
 			Result.set_comment ("Register server.")
 
-			tmp_body := clone (Tab_tab_tab)
+			create tmp_body.make (1000)
+			tmp_body.append (Tab_tab_tab)
 			tmp_body.append (Double_quote)
 			tmp_body.append ("C++")
 			tmp_body.append (Open_bracket)
@@ -177,7 +179,8 @@ feature {NONE} -- Implementation
 			tmp_comment.append ("Unregister Server")
 			Result.set_comment (tmp_comment)
 
-			tmp_body := clone (Tab_tab_tab)
+			create tmp_body.make (500)
+			tmp_body.append (Tab_tab_tab)
 			tmp_body.append (Result_keyword)
 			tmp_body.append (Space)
 			tmp_body.append (Assignment)
@@ -202,7 +205,8 @@ feature {NONE} -- Implementation
 
 			Result.set_comment ("Unregister server.")
 
-			tmp_body := clone (Tab_tab_tab)
+			create tmp_body.make (1000)
+			tmp_body.append (Tab_tab_tab)
 			tmp_body.append (Double_quote)
 			tmp_body.append ("C++")
 			tmp_body.append (Open_bracket)
@@ -246,7 +250,8 @@ feature {NONE} -- Implementation
 			tmp_argument.append (Pointer_type)
 			Result.add_argument (tmp_argument)
 
-			tmp_body := clone (Tab_tab_tab)
+			create tmp_body.make (1000)
+			tmp_body.append (Tab_tab_tab)
 			tmp_body.append (Result_keyword)
 			tmp_body.append (Space)
 			tmp_body.append (Assignment)
@@ -282,7 +287,8 @@ feature {NONE} -- Implementation
 			tmp_argument.append (Pointer_type)
 			Result.add_argument (tmp_argument)
 
-			tmp_body := clone (Tab_tab_tab)
+			create tmp_body.make (1000)
+			tmp_body.append (Tab_tab_tab)
 			tmp_body.append (Double_quote)
 			tmp_body.append ("C++")
 			tmp_body.append (Open_bracket)
@@ -325,7 +331,8 @@ feature {NONE} -- Implementation
 			tmp_comment.append ("Can unload now?")
 			Result.set_comment (tmp_comment)
 
-			tmp_body := clone (Tab_tab_tab)
+			create tmp_body.make (1000)
+			tmp_body.append (Tab_tab_tab)
 			tmp_body.append (Result_keyword)
 			tmp_body.append (Space)
 			tmp_body.append (Assignment)
@@ -350,7 +357,8 @@ feature {NONE} -- Implementation
 
 			Result.set_comment ("Can unload now?")
 
-			tmp_body := clone (Tab_tab_tab)
+			create tmp_body.make (1000)
+			tmp_body.append (Tab_tab_tab)
 			tmp_body.append (Double_quote)
 			tmp_body.append ("C++")
 			tmp_body.append (Open_bracket)

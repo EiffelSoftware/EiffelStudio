@@ -111,7 +111,8 @@ feature {NONE} -- Implementation
 			Result.set_name ("make")
 			Result.set_comment ("Creation")
 
-			feature_body := clone (Tab_tab_tab)
+			create feature_body.make (1000)
+			feature_body.append (Tab_tab_tab)
 			feature_body.append (Initializer_variable)
 			feature_body.append (Space)
 			feature_body.append (Assignment)

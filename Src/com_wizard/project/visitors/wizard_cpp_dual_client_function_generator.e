@@ -186,10 +186,17 @@ feature {NONE} -- Implementation
 				-- Create call function argument list
 				arguments := func_desc.arguments
 	
-				out_value := clone (New_line_tab)
-				signature := clone (Open_parenthesis)
-				free_memory := clone (New_line_tab)
-				variables := clone (New_line_tab)
+				create out_value.make (1000)
+				out_value.append (New_line_tab)
+				
+				create signature.make (1000)
+				signature.append (Open_parenthesis)
+				
+				create free_memory.make (1000)
+				free_memory.append (New_line_tab)
+				
+				create variables.make (1000)
+				variables.append (New_line_tab)
 
 				from
 					arguments.start
@@ -252,7 +259,8 @@ feature {NONE} -- Implementation
 							if is_paramflag_fout (arguments.item.flags) then
 								out_value.append ( out_set_up (arguments.item.name, arguments.item.type.type, visitor))
 							else
-								tmp_name := clone (Tmp_clause)
+								create tmp_name.make (100)
+								tmp_name.append (Tmp_clause)
 								tmp_name.append (arguments.item.name)
 
 								if is_safearray (arguments.item.type.type) then
@@ -275,7 +283,8 @@ feature {NONE} -- Implementation
 					create visitor
 					visitor.visit (func_desc.return_type)
 
-					return_value := clone (New_line_tab)
+					create return_value.make (1000)
+					return_value.append (New_line_tab)
 					return_value.append (Return)
 
 					if visitor.is_basic_type or visitor.is_enumeration then

@@ -31,8 +31,8 @@ class CONSOLE inherit
 		redefine
 			make_open_stdin, make_open_stdout, count, is_empty, exists,
 			close, dispose, end_of_file, back, next_line,
-			read_integer, read_double,
-			readint, readdouble
+			read_integer, read_double, readint, readdouble, read_character,
+			readchar
 		end
 
 create {STD_FILES}
@@ -116,6 +116,27 @@ feature -- Input
 			read_double
 		end
 
+	read_character is
+			-- Read a new character.
+			-- Make result available in `last_character'.
+		local
+		  	a_code: INTEGER
+		do
+		  	a_code := reader.read
+		  	if a_code = - 1 then
+				internal_end_of_file := True
+		  	else
+				last_character := a_code.to_character
+		  	end
+		end
+
+	readchar is
+			-- Read a new character.
+			-- Make result available in `last_character'.
+		do
+			read_character
+		end
+
 feature -- Cursor movement
 
 	back is
@@ -128,13 +149,11 @@ feature -- Removal
 	close is
 			-- Do not close the streams.
 		do
-			
 		end
 
 	dispose is
 			-- This is closed by the operating system at completion.
 		do
-			-- file_close (file_pointer)
 		end
 
 feature {NONE} -- Inapplicable

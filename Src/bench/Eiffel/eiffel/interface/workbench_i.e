@@ -268,7 +268,7 @@ feature -- Commands
 		rescue
 			if Rescue_status.is_error_exception then
 				Error_handler.force_display
-				if error_handler.error_list.item.code.is_equal ("IL_Error") then
+				if error_handler.error_list.item.code.is_equal ("VIGE") then
 						-- An error occurs during IL generation, we need to
 						-- save current project otherwise EIFGEN is corrupted
 						-- due to a bad project file. We also increment

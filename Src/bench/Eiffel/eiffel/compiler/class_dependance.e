@@ -5,7 +5,7 @@ class CLASS_DEPENDANCE
 
 inherit
 
-	HASH_TABLE [SORTED_SET [DEPEND_UNIT], STRING];
+	EXTEND_TABLE [SORTED_SET [DEPEND_UNIT], STRING];
 	IDABLE
 		undefine
 			twin
@@ -35,6 +35,38 @@ feature
 			-- Associated class
 		do
 			Result := System.class_of_id (id);
+		end;
+
+	update is
+			-- Update the table, i.e. remove the dependance
+			-- if the supplier class does not exist in the system
+		local
+			set: SORTED_SET [DEPEND_UNIT];
+			modified: BOOLEAN;
+		do
+			from
+				start
+			until
+				offright
+			loop
+				set := item_for_iteration;
+				from
+					set.start
+				until
+					set.offright or modified
+				loop
+					if System.class_of_id (set.item.id) = Void then
+						modified := True
+					end;
+					set.forth;
+				end;
+				if modified = True  then
+					associated_class.insert_changed_feature (key_for_iteration);
+					remove (key_for_iteration);
+					modified := False;
+				end;
+				forth
+			end;
 		end;
 
 end

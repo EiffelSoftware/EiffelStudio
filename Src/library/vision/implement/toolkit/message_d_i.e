@@ -142,6 +142,14 @@ feature -- Removal
 		deferred
 		end;
 
+feature -- Display update
+
+    update_display is
+			-- Updates the display of all the windows in the application	
+			-- Windows implementation does not do anything
+        deferred
+        end
+
 end -- class MESSAGE_D_I
 
 --|----------------------------------------------------------------

@@ -194,7 +194,7 @@ rt_public EIF_INTEGER eif_system (char *s)
 	return result;
 }
 
-rt_public EIF_INTEGER eif_putenv (EIF_OBJ v, EIF_OBJ k)
+rt_public EIF_INTEGER eif_putenv (char *v, char *k)
 {
 		/* We need a copy of the string because the string will be
 			referenced in the environment and the eiffel string can
@@ -211,27 +211,27 @@ rt_public EIF_INTEGER eif_putenv (EIF_OBJ v, EIF_OBJ k)
 
 	GetModuleFileName (NULL, modulename, MAX_PATH);
 	appl_len = rindex (modulename, '.') - rindex (modulename, '\\') -1;
-	key_len = strlen (eif_access(k));
-	if ((key = (char *) eif_calloc (appl_len + 46+key_len, 1)) == NULL)
+	key_len = strlen (k);
+	if ((key = (char *) eif_calloc (appl_len + 46 + key_len, 1)) == NULL)
 		return (EIF_INTEGER) -1;
 
-	if ((lower_k = (char *) eif_calloc (key_len+1, 1)) == NULL) {
+	if ((lower_k = (char *) eif_calloc (key_len + 1, 1)) == NULL) {
 		eif_free (key);
 		return (EIF_INTEGER) -1;
 	}
 
-	strcpy (lower_k, eif_access(k));
+	strcpy (lower_k, k);
 	CharLowerBuff (lower_k, key_len);
 
 	strcpy (key, "Software\\ISE\\Eiffel42\\");
-	strncat (key, rindex(modulename, '\\')+1, appl_len);
+	strncat (key, rindex(modulename, '\\') + 1, appl_len);
 
 	if (RegCreateKeyEx (HKEY_CURRENT_USER, key, 0, "REG_SZ", REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hkey, &disp) != ERROR_SUCCESS) {
 		eif_free (key);
 		eif_free (lower_k);
 		return (EIF_INTEGER) -1;
 	}
-	if (RegSetValueEx (hkey, lower_k, 0, REG_SZ, eif_access(v), strlen(eif_access(v))+1) != ERROR_SUCCESS) {
+	if (RegSetValueEx (hkey, lower_k, 0, REG_SZ, v, strlen(v)+1) != ERROR_SUCCESS) {
 		eif_free (key);
 		eif_free (lower_k);
 		RegCloseKey (hkey);
@@ -250,15 +250,15 @@ rt_public EIF_INTEGER eif_putenv (EIF_OBJ v, EIF_OBJ k)
 	char *new_string; /* %%ss moved from above */
 	int l1, l2; /* %%ss moved from above */
 
-	l1 = strlen(eif_access(k));
-	l2 = strlen(eif_access(v));
+	l1 = strlen(k);
+	l2 = strlen(v);
 
 	if ((new_string = (char*)eif_malloc (l1+l2+2)) == (char*)0)
-		return (EIF_INTEGER)-1;
+		return (EIF_INTEGER) -1;
 
-	strcpy (new_string, eif_access(k));
+	strcpy (new_string, k);
 	strcat (new_string, "=");
-	strcat (new_string, eif_access(v));
+	strcat (new_string, v);
 
 	return (EIF_INTEGER) putenv (new_string);
 #endif

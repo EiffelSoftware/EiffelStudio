@@ -300,13 +300,6 @@ feature -- Generation
 			end
 		end
 
-feature -- Error reporting
-
-	vqmc: VQMC is
-		do
-			create {VQMC3} Result
-		end
-
 feature -- Trace
 
 	dump: STRING is

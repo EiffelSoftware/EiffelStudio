@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 		do
 			initialize (l)
 				-- Creation of a conformance table
-			!! conformance_table.make (1,1)
+			!! conformance_table.make (1,0)
 				-- Creation of the syntactical supplier list
 			!! syntactical_suppliers.make
 				-- Creation of the syntactical client list
@@ -238,7 +238,7 @@ feature -- Action
 						packet_nb := cl_type.packet_number
 	
 							-- Descriptor file removal
-						object_name := clone (Descriptor_suffix)
+						object_name := clone (C_prefix)
 						object_name.append_integer (packet_nb)
 						!! c_file_name.make_from_string (generation_dir)
 						c_file_name.extend (object_name)
@@ -255,7 +255,7 @@ feature -- Action
 						if file_exists then
 								-- We delete `finished' only if there was a file to delete
 								-- If there was no file, maybe it was simply a melted class.
-							finished_file_name.set_file_name ("finished")
+							finished_file_name.set_file_name (Finished_file_for_make)
 							!! finished_file.make (finished_file_name)
 							if finished_file.exists and then finished_file.is_writable then
 								finished_file.delete
@@ -264,7 +264,7 @@ feature -- Action
 	
 							-- C Code file removal
 						!! c_file_name.make_from_string (generation_dir)
-						object_name := clone (Class_suffix)
+						object_name := clone (C_prefix)
 						object_name.append_integer (packet_nb)
 						c_file_name.extend (object_name)
 						finished_file_name := clone (c_file_name)
@@ -283,7 +283,7 @@ feature -- Action
 						if file_exists then
 								-- We delete `finished' only if there was a file to delete
 								-- If there was no file, maybe it was simply a melted class.
-							finished_file_name.set_file_name ("finished")
+							finished_file_name.set_file_name (Finished_file_for_make)
 							!! finished_file.make (finished_file_name)
 							if finished_file.exists and then finished_file.is_writable then
 								finished_file.delete
@@ -295,7 +295,7 @@ feature -- Action
 
 				if not is_precompiled then
 					!! c_file_name.make_from_string (generation_dir)
-					object_name := clone (Feature_table_suffix)
+					object_name := clone (C_prefix)
 					object_name.append_integer (packet_number)
 					c_file_name.extend (object_name)
 					finished_file_name := clone (c_file_name)
@@ -310,7 +310,7 @@ feature -- Action
 						file.delete
 					end
 					if file_exists then
-						finished_file_name.set_file_name ("finished")
+						finished_file_name.set_file_name (Finished_file_for_make)
 						!! finished_file.make (finished_file_name)
 						if finished_file.exists and then finished_file.is_writable then
 							finished_file.delete
@@ -1655,7 +1655,7 @@ feature
 				Result := Workbench_generation_path
 			end
 			!! subdirectory.make (5)
-			subdirectory.append (Feature_table_suffix)
+			subdirectory.append (C_prefix)
 			subdirectory.append_integer (packet_number)
 
 			!! dir_name.make_from_string (Result)
@@ -1669,7 +1669,7 @@ feature
 			Result := f_name
 
 			!! finished_file_name.make_from_string (dir_name)
-			finished_file_name.set_file_name ("finished")
+			finished_file_name.set_file_name (Finished_file_for_make)
 			!! finished_file.make (finished_file_name)
 			if finished_file.exists and then finished_file.is_writable then
 				finished_file.delete	

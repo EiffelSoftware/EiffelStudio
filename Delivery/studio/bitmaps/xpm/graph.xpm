@@ -1,0 +1,27 @@
+/* XPM */
+static char *graph[] = {
+/* width height num_colors chars_per_pixel */
+"    16    16        4            1",
+/* colors */
+". c #000000",
+"# c #008000",
+"a c #c0c0c0",
+"b c #ffffff",
+/* pixels */
+"aaaaaaaaaaaaaaaa",
+"aaaaaaaaaaaaaaaa",
+"aa#a#aa#aaaaaaaa",
+"a#a#a###...aaaaa",
+"#a#a#a..bb..aaaa",
+"a#a#aa.bb..#.aaa",
+"#a#aaa.b..###.aa",
+"a#a#aa...#.###.a",
+"#a#aaaa...#.###.",
+"a#aaaaaa...#.##.",
+"#a#aaaaaa...#..a",
+"a#aaaaaaaa....aa",
+"#aaaaaaaaaa..aaa",
+"a#aaaaaaaaaaaaaa",
+"#aaaaaaaaaaaaaaa",
+"aaaaaaaaaaaaaaaa"
+};

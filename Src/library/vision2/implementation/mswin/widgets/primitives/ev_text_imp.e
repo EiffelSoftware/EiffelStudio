@@ -51,7 +51,9 @@ inherit
 			y as y_position,
 			move as wel_move,
 			move_and_resize as wel_move_and_resize,
-			resize as wel_resize
+			resize as wel_resize,
+			set_text as wel_set_text,
+			text as wel_text
 		undefine
 			window_process_message,
 			remove_command,
@@ -103,6 +105,22 @@ feature -- Access
 			Result := wel_line (i - 1)
 		end
 
+	text: STRING is
+			-- Edited by user.
+		do
+			Result := wel_text
+			Result.prune_all ('%R')
+		end
+
+	set_text (a_text: STRING) is
+			-- Assign `a_text' to `text'.
+		local
+			exp: STRING
+		do
+			exp := clone (a_text)
+			exp.replace_substring_all ("%N", "%R%N")
+			wel_set_text (exp)
+		end
 
 feature -- Status Report
 
@@ -383,6 +401,9 @@ end -- class EV_TEXT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/04/20 01:15:39  brendel
+--| Redefined text and set_text to strip out/add CR's to text.
+--|
 --| Revision 1.35  2000/04/14 20:40:10  brendel
 --| Is now vertically scrollable.
 --|

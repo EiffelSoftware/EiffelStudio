@@ -21,7 +21,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make_by_file (file: FILE) is
+	make_by_file (file: RAW_FILE) is
 			-- Create the dib by reading `file'.
 		require
 			file_not_void: file /= Void
@@ -47,6 +47,9 @@ feature {NONE} -- Initialization
 			memory_copy ($a, structure_size)
 			info_header.memory_copy (item, info_header.structure_size)
 			calculate_palette
+			file.close
+		ensure
+			file_closed: file.is_closed
 		end
 
 feature -- Access

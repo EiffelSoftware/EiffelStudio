@@ -338,7 +338,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	Testsize: INTEGER is 3
+	Testsize: INTEGER is 2
 			-- Order of test.
 
 	test_extend is
@@ -711,6 +711,9 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/04/06 01:59:52  brendel
+--| Decreased test size to keep memory usage down.
+--|
 --| Revision 1.26  2000/03/16 20:30:44  brendel
 --| Removed 2nd test of append.
 --|

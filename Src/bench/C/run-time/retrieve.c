@@ -117,7 +117,7 @@ int retrieve_read_with_compression (void);
 int old_retrieve_read_with_compression (void);
 
 int (*retrieve_read_func)(void) = retrieve_read_with_compression;
-int (*char_read_func)() = char_read;
+int (*char_read_func)(char *, int) = char_read;
 
 /*
  * Convenience functions
@@ -125,7 +125,7 @@ int (*char_read_func)() = char_read;
  
 /* Initialize retrieve function pointers and globals */
  
-rt_public void rt_init_retrieve(int (*retrieve_function) (void), int (*char_read_function)(void), int buf_size)
+rt_public void rt_init_retrieve(int (*retrieve_function) (void), int (*char_read_function)(char *, int), int buf_size)
 {
     retrieve_read_func = retrieve_function;
 	char_read_func = char_read_function;
@@ -145,7 +145,7 @@ rt_public void rt_reset_retrieve(void) {
  * Function definitions
  */
 
-rt_public char *portable_retrieve(EIF_INTEGER file_desc, int (*char_read_function)(void))
+rt_public char *portable_retrieve(EIF_INTEGER file_desc, int (*char_read_function)(char *, int))
 {
 	/* Retrieve object store in file `filename' */
 
@@ -1550,7 +1550,7 @@ rt_public int retrieve_read (void)
 	int part_read = 0, total_read = 0;
 
 	end_of_buffer = 0;
-	if ((char_read_func (&read_size, sizeof (short))) < sizeof (short))
+	if ((char_read_func ((char *)&read_size, sizeof (short))) < sizeof (short))
 		eio();
 
 	while (end_of_buffer < read_size) {

@@ -59,33 +59,35 @@ feature
 			!! file.make (feat.written_class.file_name);
 			start_pos := ast.start_position;
 			end_pos := ast.end_position;
-			if rout_fsas /= Void then
-				!! eiffel_file.make_for_feature_comments (file,
-					start_pos, end_pos);
-				comment := trailing_comment (start_pos);
-				rout_fsas.set_comment (comment);
-			end;
-			!! assert_server.make_for_feature (feat, ast);
-			set_context_features (feat, target_feat);
-			indent_one_more;
-			ast.format (Current);
-			if rout_fsas = Void then
-				--! Must have been an attribute or constant
-				begin;
-					indent_one_more;
-					indent_one_more;
-					if feat.written_class /= class_c then
-						next_line;
-						put_text_item (ti_Dashdash);
-						put_space;
-						put_comment_text ("(from ");
-						put_class_name (feat.written_class);
-						put_comment_text (")");
-						print_export_status;
-					else
-						print_export_status
-					end;
-				commit;
+			if file.exists then
+				if rout_fsas /= Void then
+					!! eiffel_file.make_for_feature_comments (file,
+						start_pos, end_pos);
+					comment := trailing_comment (start_pos);
+					rout_fsas.set_comment (comment);
+				end;
+				!! assert_server.make_for_feature (feat, ast);
+				set_context_features (feat, target_feat);
+				indent_one_more;
+				ast.format (Current);
+				if rout_fsas = Void then
+						--! Must have been an attribute or constant
+					begin;
+						indent_one_more;
+						indent_one_more;
+						if feat.written_class /= class_c then
+							next_line;
+							put_text_item (ti_Dashdash);
+							put_space;
+							put_comment_text ("(from ");
+							put_class_name (feat.written_class);
+							put_comment_text (")");
+							print_export_status;
+						else
+							print_export_status
+						end;
+					commit;
+				end
 			end
 			commit;
 			System.set_current_class (Void);

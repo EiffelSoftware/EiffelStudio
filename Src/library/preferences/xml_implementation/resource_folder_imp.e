@@ -13,12 +13,15 @@ inherit
 			{NONE} All
 		end
 
+	XM_CALLBACKS_FILTER_FACTORY
+		export {NONE} all end
+
 create
 	make, make_root, make_default, make_default_root
 
 feature -- Initialization
 
-	make (doc: XML_ELEMENT; struct: like structure) is
+	make (doc: XM_ELEMENT; struct: like structure) is
 			-- Initialization of Current, belonging to `struct',
 			-- according to `doc'.
 		do
@@ -37,39 +40,44 @@ feature -- Update
 	update_root (file_name: FILE_NAME) is
 			-- Update information with data from `file_name'.
 		local
-			file: RAW_FILE
-			s: STRING
-			parser: XML_TREE_PARSER
+			l_parser: XM_EIFFEL_PARSER
+			l_file: KL_BINARY_INPUT_FILE
+			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
+			l_concat_filter: XM_CONTENT_CONCATENATOR
 		do
 			name := "root"
 			description := "root folder"
 
-			create parser.make
-			create file.make (file_name)
-			if file.exists then
-				file.open_read
-				file.read_stream (file.count)
-				s := file.last_string
-				parser.parse_string (s)
-				parser.set_end_of_file
-				file.close
-				if not parser.root_element.name.is_equal ("EIFFEL_DOCUMENT") then
+			create l_file.make (file_name.out)
+			if l_file.exists then
+				l_file.open_read
+				create l_parser.make
+				create l_tree_pipe.make
+				create l_concat_filter.make_null
+				l_parser.set_callbacks (standard_callbacks_pipe (<<l_concat_filter, l_tree_pipe.start>>))
+				l_parser.parse_from_stream (l_file)
+				check
+					ok_parsing: l_parser.is_correct
+				end
+				l_file.close
+				
+				if not l_tree_pipe.document.root_element.name.is_equal ("EIFFEL_DOCUMENT") then
 					io.put_string (w_Invalid_preference_file_root (file_name))
 				else
-					xml_data := parser.root_element
+					xml_data := l_tree_pipe.document.root_element
 					update_attributes (xml_data)
 				end
 			end
 		end
 
-	update_attributes (doc: XML_ELEMENT) is
+	update_attributes (doc: XM_ELEMENT) is
 			-- Update Current, according to `doc'.
 		local
 			resource: RESOURCE
 			child: like Current
-			cursor, des_cursor: DS_BILINKED_LIST_CURSOR[XML_NODE]
-			node: XML_ELEMENT
-			txt: XML_TEXT
+			cursor, des_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			node: XM_ELEMENT
+			txt: XM_CHARACTER_DATA
 		do
 			cursor := doc.new_cursor
 			from
@@ -88,7 +96,7 @@ feature -- Update
 						loop
 							txt ?= des_cursor.item
 							if txt /= Void then
-								create description.make_from_string (txt.string)
+								create description.make_from_string (txt.content)
 							end
 							des_cursor.forth
 						end
@@ -105,9 +113,8 @@ feature -- Update
 						resource_list.extend (resource)
 						structure.replace_resource (resource)
 					elseif node.name.is_equal ("TOPIC") then
-						node.attributes.search("TOPIC_ID")
-						if node.attributes.found then
-							child := child_of_name(node.attributes.found_item.value)
+						if node.has_attribute_by_name ("TOPIC_ID") then
+							child := child_of_name (node.attribute_by_name ("TOPIC_ID").value)
 						else
 							child := Void
 						end

@@ -252,9 +252,28 @@ feature {EV_GRID_I} -- Implementation
 	enable_select is
 			-- Select `Current' in `parent_i'
 		do
+			remove_selection_from_children
 			selected_item_count := count
 			parent_i.redraw_client_area
 			fixme ("EV_GRID_COLUMN_I:enable_select - Perform a more optimal redraw when available")	
+		end
+
+	remove_selection_from_children is
+			-- Remove the selection from children in current
+		local
+			sel_items: ARRAYED_LIST [EV_GRID_ITEM]
+		do
+			sel_items := parent_i.selected_items
+			from
+				sel_items.start
+			until
+				sel_items.after
+			loop
+				if sel_items.item.column = interface then
+						sel_items.item.disable_select
+				end
+				sel_items.forth
+			end
 		end
 
 	disable_select is
@@ -275,6 +294,8 @@ feature {EV_GRID_I} -- Implementation
 				i := i + 1
 			end
 			selected_item_count := 0
+			parent_i.redraw_client_area
+			fixme ("EV_GRID_COLUMN_I:disable_select - Perform a more optimal redraw when available")	
 		end
 
 	destroy is

@@ -26,14 +26,16 @@ extern "C" {
 #define xfree	eif_rt_xfree
 
 /*
- * Use MT safe malloc functions.
+ * Documentation shows that mmap, and sbrk are 
+ * incompatible with parallel use of standard malloc 
+ * functions.
  */
 
-#ifdef EIF_THREADS
 #undef HAS_SMART_MMAP
 #undef HAS_SMART_SBRK
 #undef HAS_SBRK
-#endif	/* EIF_THREADS */
+
+
 
 
 /*

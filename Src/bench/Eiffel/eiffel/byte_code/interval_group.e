@@ -97,19 +97,19 @@ feature -- Element change
 			extend (interval.item.lower, interval.item.upper, true, true, interval, interval, 1)
 		ensure
 			added_as_lower:
-				interval.item.upper <= lower implies
+				count > old count and then interval.item.upper <= lower implies
 				(is_lower_included and then
 				lower = interval.item.lower and then upper = old upper and then
 				lower_interval = interval and then upper_interval = old upper_interval)
 			added_as_upper:
-				upper <= interval.item.lower implies 
+				count > old count and then upper <= interval.item.lower implies 
 				(is_upper_included and then
 				upper = interval.item.upper and then lower = old lower and then
 				upper_interval = interval and then lower_interval = old lower_interval)
 			count_incremented_by_1:
-				(interval.item.upper.is_next (old lower) or else (old upper).is_next (interval.item.lower)) implies count = old count + 1
+				count > old count and then (interval.item.upper.is_next (old lower) or else (old upper).is_next (interval.item.lower)) implies count = old count + 1
 			count_incremented_by_2:
-				interval.item.upper.is_next (old lower) or else (old upper).is_next (interval.item.lower) or else count = old count + 2
+				count = old count or else interval.item.upper.is_next (old lower) or else (old upper).is_next (interval.item.lower) or else count = old count + 2
 		end
 		
 	extend_with_lower_gap (value: like lower; is_value_included: BOOLEAN) is
@@ -137,13 +137,14 @@ feature -- Element change
 				is_lower_included := is_value_included
 			end
 		ensure
-			lower_set: lower = value
-			is_lower_included_set: is_lower_included = is_value_included
+			lower_set: lower = old lower or else lower = value
 			upper_unchanged: upper = old upper
 			is_upper_included_unchanged: is_upper_included = old is_upper_included
 			interval_unchanged: lower_interval = old lower_interval and then upper_interval = old upper_interval
 			count_incremented_at_most_by_1: count = old count or else count = old count + 1
 			count_incremented_implies_dense: count > old count implies is_dense
+			count_incremented_implies_lower_set: count > old count implies lower = value
+			count_incremented_implies_is_lower_included_set: count > old count implies is_lower_included = is_value_included
 		end
 		
 	extend_with_upper_gap (value: like lower; is_value_included: BOOLEAN) is
@@ -171,13 +172,14 @@ feature -- Element change
 				is_upper_included := is_value_included
 			end
 		ensure
-			upper_set: upper = value
-			is_upper_included_set: is_upper_included = is_value_included
+			upper_set: upper = old upper or else upper = value
 			lower_unchanged: lower = old lower
 			is_lower_included_unchanged: is_lower_included = old is_lower_included
 			interval_unchanged: lower_interval = old lower_interval and then upper_interval = old upper_interval
 			count_incremented_at_most_by_1: count = old count or else count = old count + 1
 			count_incremented_implies_dense: count > old count implies is_dense
+			count_incremented_implies_upper_set: count > old count implies upper = value
+			count_incremented_implies_is_upper_included_set: count > old count implies is_upper_included = is_value_included
 		end
 		
 	extend_with_group (group: INTERVAL_GROUP) is

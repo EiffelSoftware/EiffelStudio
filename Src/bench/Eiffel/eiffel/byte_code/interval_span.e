@@ -46,8 +46,10 @@ feature -- IL code generation
 			max_value_not_void: max_value /= Void
 			labels_not_void: labels /= Void
 			labels_not_empty: not labels.is_empty
-			labels_has_else_label: labels.lower = 0
+			labels_has_else_label: labels.lower <= 0
 			else_label_not_void: labels.item (0) /= Void
+			labels_has_end_label: labels.lower <= -1
+			end_label_not_void: labels.item (-1) /= Void
 			instruction_not_void: instruction /= Void
 		deferred
 		end

@@ -82,23 +82,22 @@ pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
 			if press_action = Ev_pnd_start_transport then
 				start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x, a_screen_y)
 				list_imp.set_source_true
-				list_imp.set_child_source (Current)
+				list_imp.set_pnd_child_source (Current)
 				list_imp.set_t_item_true
 			elseif press_action = Ev_pnd_end_transport then
 				end_transport (a_x, a_y, a_button)
 				list_imp.set_source_false
-				list_imp.set_child_source (Void)
+				list_imp.set_pnd_child_source (Void)
 				list_imp.set_t_item_false
 			else
 				list_imp.set_source_false
-				list_imp.set_child_source (Void)
+				list_imp.set_pnd_child_source (Void)
 				list_imp.set_t_item_false
 				check
 					disabled: press_action = Ev_pnd_disabled
 				end
 			end
 		end
-
 
 	set_capture is
 		local
@@ -218,6 +217,9 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/03/20 22:34:12  rogers
+--| Renamed set_child_source -> set_pnd_child_source.
+--|
 --| Revision 1.34  2000/03/17 23:29:01  rogers
 --| Implemented pnd_press, set_capture and release_capture.
 --|

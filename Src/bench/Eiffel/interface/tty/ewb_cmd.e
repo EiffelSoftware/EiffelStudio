@@ -23,7 +23,8 @@ inherit
 		rename
 			class_name as except_class_name
 		end;
-	SHARED_EXEC_ENVIRONMENT
+	SHARED_EXEC_ENVIRONMENT;
+	SHARED_RESOURCES
 
 
 feature -- Creation
@@ -568,7 +569,7 @@ feature
 			editor: STRING;
 			cmd: STRING;
 		do
-			editor := Execution_environment.get ("EIF_EDITOR");
+			editor := resources.get_string (r_Editor, Void);
 			if editor /= Void then
 				!!cmd.make (0);
 				cmd.append (editor);
@@ -576,7 +577,7 @@ feature
 				cmd.append (a_file);
 				Execution_environment.system (cmd);
 			else
-				io.error.putstring ("The variable EIF_EDITOR is not set%N");
+				io.error.putstring ("The resource EDITOR is not set%N");
 			end;
 		end;
 

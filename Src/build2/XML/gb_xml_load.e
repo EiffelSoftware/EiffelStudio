@@ -132,34 +132,24 @@ feature -- Basic operation
 		end
 
 feature {GB_OBJECT_HANDLER} -- Implementation
-
-	rebuild_window (window_object: GB_TITLED_WINDOW_OBJECT; window: XM_ELEMENT) is
-			-- Rebuild properties of `window_object' from `window'.
-			-- Note that the handling of children, and other miscellaneous operations
-			-- must be handled externally. This will simply reset `window_object' from `window'.
-		require
-			window_object_not_void: window_object /= Void
-			window_not_void: window /= Void
-		do
-			internal_build_window (window, window_selector, window_object)
-		end
 		
-	build_window (window: XM_ELEMENT; parent_list: EV_TREE_NODE_LIST) is
+	build_window (window: XM_ELEMENT; parent_common_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
 			-- Build a new window representing `window', represented in
 			-- directory representation `parent_list'.
 		require
 			window_not_void: window /= Void
-			parent_list_not_void: parent_list /= Void
+			parent_common_item_not_void: parent_common_item /= Void
 		do
-			internal_build_window (window, parent_list, Void)
+			internal_build_window (window, parent_common_item, Void)
 		end
 
-	internal_build_window (window: XM_ELEMENT; parent_list: EV_TREE_NODE_LIST; object: GB_OBJECT) is
+	internal_build_window (window: XM_ELEMENT; parent_common_item: GB_WINDOW_SELECTOR_COMMON_ITEM; object: GB_OBJECT) is
 			-- Build a window representing `window', represented in
-			-- `window' to directory `parent_list'. If `object' is Void we must create it.
+			-- `window' to directory `parent_common_item' or `window_selector' if `Void'.
+			-- If `object' is Void we must create it.
 		require
 			window_not_void: window /= Void
-			parent_list_not_void: parent_list /= Void
+			parent_common_item_not_void: parent_common_item /= Void
 		local
 			current_element: XM_ELEMENT
 			gb_ev_any: GB_EV_ANY
@@ -193,8 +183,8 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 						if current_name.is_equal (Internal_properties_string) then
 							an_object.modify_from_xml (current_element)
 							object_handler.add_object_to_objects (an_object)
-							unparent_tree_node (an_object.window_selector_item)
-							add_to_tree_node_alphabetically (parent_list, an_object.window_selector_item)
+							an_object.window_selector_item.unparent
+							parent_common_item.add_alphabetically (an_object.window_selector_item)
 						elseif current_name.is_equal (Events_string) then
 								-- We now add the event information from `current_element'
 								-- into `window_object'.
@@ -388,16 +378,17 @@ feature {NONE} -- Implementation
 			constants.build_deferred_elements
 		end
 		
-	build_window_structure (an_element: XM_ELEMENT; parent_node_list: EV_TREE_NODE_LIST) is
-			-- Build window represented by `an_element into `parent_node_list'.
+	build_window_structure (an_element: XM_ELEMENT; parent_common_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
+			-- Build window represented by `an_element into `parent_common_item'.
+			-- If `parent_common_item' is `Void', build directly into `window_selector'.
 		require
 			an_element_not_void: an_element /= Void
-			parent_node_list /= Void
+			parent_common_item_not_void: parent_common_item /= Void
 		local
 			current_element, constant_item_element: XM_ELEMENT
 			current_name, current_type: STRING
 			window_element: XM_ELEMENT
-			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			new_directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
 			from
 				an_element.start
@@ -419,14 +410,14 @@ feature {NONE} -- Implementation
 								if window_element /= Void then
 									current_name := window_element.name
 									if current_name.is_equal (Internal_properties_string)  then
-										create directory_item.make_with_name ("")
-										directory_item.modify_from_xml (window_element)
-										add_to_tree_node_alphabetically (parent_node_list, directory_item)
+										create new_directory_item.make_with_name ("")
+										new_directory_item.modify_from_xml (window_element)
+										parent_common_item.add_alphabetically (new_directory_item)
 									end
 								end
 								current_element.forth
 							end
-							build_window_structure (current_element, directory_item)
+							build_window_structure (current_element, new_directory_item)
 						elseif current_type.is_equal (Constants_string) then
 							from
 								current_element.start
@@ -440,14 +431,13 @@ feature {NONE} -- Implementation
 								current_element.forth
 							end
 						else
-							build_window (current_element, parent_node_list)							
+							build_window (current_element, parent_common_item)							
 						end
 					end
 				end
 				an_element.forth
 			end
 		end
-		
 
 	load_and_parse_xml_file (a_filename:STRING) is
 			-- Load file `a_filename' and parse.

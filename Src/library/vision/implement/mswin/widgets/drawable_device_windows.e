@@ -114,6 +114,8 @@ feature -- Status setting
 			gc_bg_color ?= background_color.implementation
 			if drawing_dc /= Void then
 				update_dc
+				drawing_dc.set_bk_color (gc_bg_color)
+				drawing_dc.rectangle (0, 0, width, height)
 			end
 		end 
 
@@ -359,10 +361,15 @@ feature -- Output
 			local_color: WEL_COLOR_REF
 		do
 			if is_drawable then
-				!! color_ref.make_system (Color_window)
+				if gc_bg_color /= Void then
+					color_ref := gc_bg_color
+				else
+					!! color_ref.make_system (Color_window)
+				end
 				!! a_rect.make (0, 0, width, height)
 				!! background_brush.make_solid (color_ref)
-				drawing_dc.fill_rect (a_rect, background_brush)
+				drawing_dc.select_brush (background_brush)
+				drawing_dc.rectangle (0, 0, width, height)
 			end
 		end
 
@@ -652,7 +659,8 @@ feature -- Implementation
 				offset := 1
 			end
 			if an_orientation = 0.0 or an_orientation = 180.0 then
-				drawing_dc.rectangle (center.x - (rwidth // 2), center.y - (rheight // 2), center.x + (rwidth // 2)+offset, center.y + (rheight // 2)+offset)
+				drawing_dc.rectangle (center.x - (rwidth // 2), center.y - (rheight // 2),
+					center.x + (rwidth // 2)+offset, center.y + (rheight // 2)+offset)
 			else
 				x1 := center.x + (rwidth //2 * cosine (an_orientation * Pi / 180)).rounded
 				y1 := center.y + (rheight //2 * sine (an_orientation * Pi / 180)).rounded

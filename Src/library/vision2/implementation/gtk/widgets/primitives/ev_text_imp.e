@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_scrolled_window_new (NULL, NULL))
+			C.gtk_scrolled_window_set_policy (c_object, C.GTK_POLICY_AUTOMATIC_ENUM, C.GTK_POLICY_AUTOMATIC_ENUM)
 			entry_widget := C.gtk_text_new (NULL, NULL)
 			C.gtk_widget_show (entry_widget)
 			C.gtk_container_add (c_object, entry_widget)

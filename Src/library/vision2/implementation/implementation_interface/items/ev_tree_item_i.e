@@ -20,10 +20,10 @@ inherit
 			interface
 		end
 
-	--EV_PICK_AND_DROPABLE_I
-	--	redefine
-	--		interface
-	--	end
+	EV_PICK_AND_DROPABLE_I
+		redefine
+			interface
+		end
 
 feature -- Access
 
@@ -104,6 +104,9 @@ end -- class EV_TREE_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/02/24 20:52:13  king
+--| Inheriting from pick and dropable
+--|
 --| Revision 1.26  2000/02/24 20:11:48  king
 --| Changed comment in parent_tree
 --|

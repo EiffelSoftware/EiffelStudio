@@ -29,11 +29,11 @@ inherit
 		end
 	
 
-	--EV_PICK_AND_DROPABLE
-	--	redefine
-	--		implementation,
-	--		create_action_sequences
-	--	end
+	EV_PICK_AND_DROPABLE
+		redefine
+			implementation,
+			create_action_sequences
+		end
 
 create
 	default_create
@@ -144,6 +144,7 @@ feature -- Implementation
 	create_action_sequences is
 		do
 			{EV_SIMPLE_ITEM} Precursor
+			{EV_PICK_AND_DROPABLE} Precursor
 			create select_actions
 			create deselect_actions
 			create expand_actions
@@ -174,6 +175,9 @@ end -- class EV_TREE_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/02/24 20:52:13  king
+--| Inheriting from pick and dropable
+--|
 --| Revision 1.30  2000/02/24 20:12:26  king
 --| Tidied up comments and tags
 --|

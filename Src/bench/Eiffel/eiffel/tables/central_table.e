@@ -143,9 +143,9 @@ end;
 					new_index := useless_ids.first;
 debug ("REFREEZING")
 	io.error.putstring ("Moving ");
-	io.error.putint (unit_index.id);
+	unit_index.trace;
 	io.error.putstring (" to ");
-	io.error.putint (new_index.id);
+	new_index.trace;
 	io.error.new_line;
 end;
 					useless_ids.prune_all (new_index);
@@ -203,7 +203,7 @@ feature {NONE} -- Keep track of the holes in the table
 			until
 				useless_ids.after
 			loop
-				io.error.putint (useless_ids.item.id);
+				useless_ids.item.trace;
 				io.error.new_line;
 				useless_ids.forth
 			end;
@@ -322,9 +322,9 @@ end;
 					new_index := useless_ids.first;
 debug ("REFREEZING")
 	io.error.putstring ("Moving ");
-	io.error.putint (unit_index.id);
+	unit_index.trace;
 	io.error.putstring (" to ");
-	io.error.putint (new_index.id);
+	new_index.trace;
 	io.error.new_line;
 end;
 					useless_ids.prune_all (new_index);

@@ -42,7 +42,7 @@ debug ("ONCE")
 	io.error.putstring ("Once routine `");
 	io.error.putstring (once_routine.name);
 	io.error.putstring ("' (");
-	io.error.putint (Debug_info.real_body_id (once_routine).id);
+	Debug_info.real_body_id (once_routine).trace;
 	if Result then
 		io.error.putstring (") already called.")
 	else

@@ -256,10 +256,10 @@ feature {NONE} -- Event handling
 			-- Toggle state of the selected expressions from the list.
 		local
 			sel: LIST [EV_MULTI_COLUMN_LIST_ROW]
-			sel_item: EV_MULTI_COLUMN_LIST_ROW
 			cv_expr: EB_EXPRESSION
+			sel_index: INTEGER			
 		do
-			sel_item := ev_list.selected_item
+			sel_index := ev_list.index_of (ev_list.selected_item, 1)
 			sel := ev_list.selected_items
 			from
 				sel.start
@@ -276,10 +276,11 @@ feature {NONE} -- Event handling
 				sel.forth
 			end
 			if not sel.is_empty then
-				on_item_deselected (Void)
-			end
-			if sel_item /= Void then
-				sel_item.enable_select			
+				if ev_list.valid_index (sel_index) then
+					ev_list.i_th (sel_index).enable_select
+				else
+					on_item_deselected (Void)
+				end
 			end
 		end
 
@@ -354,7 +355,7 @@ feature {NONE} -- Event handling
 			if ev_list.selected_item /= Void then
 				delete_expression_cmd.enable_sensitive
 				edit_expression_cmd.enable_sensitive
-				toggle_state_of_expression_cmd.enable_sensitive				
+				toggle_state_of_expression_cmd.enable_sensitive
 			else
 				delete_expression_cmd.disable_sensitive
 				edit_expression_cmd.disable_sensitive
@@ -425,6 +426,7 @@ feature {NONE} -- Implementation
 			-- Display current execution status.
 		local
 			lst: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
+			l_row: EV_MULTI_COLUMN_LIST_ROW
 			eval: BOOLEAN
 			l_expr: EB_EXPRESSION
 		do
@@ -432,6 +434,7 @@ feature {NONE} -- Implementation
 			if Application.is_running and Application.is_stopped then
 				eval := True
 			end
+			ev_list.remove_selection
 			ev_list.wipe_out
 			create lst.make (expressions.count)
 			from
@@ -441,23 +444,24 @@ feature {NONE} -- Implementation
 			loop
 				l_expr := expressions.item
 				if l_expr.evaluation_disabled then
-					lst.extend (disabled_expression_to_row (l_expr, Void))
+					l_row := disabled_expression_to_row (l_expr, Void)
 				else					
 					if eval then
 						expressions.item.evaluate
-						lst.extend (expression_to_row (l_expr, Void))
+						l_row:= expression_to_row (l_expr, Void)
 					else
-						lst.extend (unevaluated_expression_to_row (l_expr, Void))
+						l_row := unevaluated_expression_to_row (l_expr, Void)
 					end
 				end
-
+				lst.extend (l_row)
 				expressions.forth
 			end
 			ev_list.append (lst)
 		end
 		
 	recycle_row_item (a_item: EV_MULTI_COLUMN_LIST_ROW): EB_MULTI_COLUMN_LIST_ROW is
-			-- 
+			-- Recycle Row item to keep the object and reference
+			-- otherwise create a new one.
 		do
 			if a_item /= Void then
 				Result ?= a_item
@@ -566,7 +570,7 @@ feature {NONE} -- Implementation
 			)
 			
 			Result.set_data (expr)
-		end		
+		end
 
 	refresh_expression (expr: EB_EXPRESSION) is
 			-- Refresh the display of `expr'.
@@ -589,15 +593,16 @@ feature {NONE} -- Implementation
 			ev_list.go_i_th (pos)
 			l_item := ev_list.item
 			if expr.evaluation_disabled then
-				ev_list.replace (disabled_expression_to_row (expr, l_item))
+				l_item := disabled_expression_to_row (expr, l_item)
 			else				
 				if Application.is_running and Application.is_stopped then
 					expr.evaluate
-					ev_list.replace (expression_to_row (expr, l_item))
+					l_item := expression_to_row (expr, l_item)
 				else
-					ev_list.replace (unevaluated_expression_to_row (expr, l_item))
+					l_item := unevaluated_expression_to_row (expr, l_item)
 				end
 			end
+			ev_list.replace (l_item)
 		end
 
 	refresh_context_expressions is
@@ -618,10 +623,11 @@ feature {NONE} -- Implementation
 				if expr.on_context then
 					expr.evaluate
 					if expr.evaluation_disabled then
-						ev_list.replace (disabled_expression_to_row (expr, row))						
+						row:= disabled_expression_to_row (expr, row)
 					else
-						ev_list.replace (expression_to_row (expr, row))
+						row := expression_to_row (expr, row)
 					end
+					ev_list.replace (row)
 				end
 				ev_list.forth
 			end

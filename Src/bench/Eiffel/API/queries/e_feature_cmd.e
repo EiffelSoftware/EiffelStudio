@@ -25,6 +25,7 @@ feature -- Initialization
 			-- Make current command with current_feature as `a_feature'.
 		require
 			non_void_a_feature: a_feature /= Void
+			valid_class: a_feature.associated_class.has_feature_table
 		do
 			class_make (a_feature.associated_class);
 			current_feature := a_feature

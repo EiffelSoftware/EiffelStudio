@@ -42,6 +42,9 @@ symbol_features			|<A CLASS="esymbol" HREF="$file$#f_$feature$">*</A>
 class_name				|<A CLASS="eclass" HREF="$file$">*</A>
 
 -- Eiffel syntax items:
+non_generated_cluster	|<SPAN CLASS="necluster">*</SPAN>
+non_generated_class		|<SPAN CLASS="neclass">*</SPAN>
+non_generated_feature	|<SPAN CLASS="nefeature">*</SPAN>
 keyword					|<SPAN CLASS="ekeyword">*</SPAN>
 reserved_word			|<SPAN CLASS="ereserved">*</SPAN>
 symbol					|<SPAN CLASS="esymbol">*</SPAN>

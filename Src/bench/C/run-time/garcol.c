@@ -715,7 +715,8 @@ public void reclaim()
 
 	dle_reclaim();			/* Reclaim resources introduced by DLE */
 
-	exitprf();			/* Store profile information */
+	if (eif_profiler_on)
+		exitprf();			/* Store profile information */
 
 #ifdef DEBUG
 	dprintf(1)("reclaim: ready to die!\n");

@@ -1,0 +1,48 @@
+#!/usr/local/bin/perl
+#Script to update Vision2 copyright notice
+#Use find . -name "*.e" -print | xargs perl testscript.ps 
+
+$file_name = '/home/king/local/library/vision2/implementation/gtk/items/ev_item_imp.e';
+
+
+file_traversal($ARGV[0]);
+
+
+sub file_traversal
+{
+if (-T $ARGV[0] )
+{
+print ("\nProcessing ");
+print $ARGV[0];
+
+open(DATA, $_[0]);
+@file_lines = <DATA>;
+$file_length = $#file_lines;
+close(DATA);
+
+for ($n = 0; $n <= $file_length ; $n++)
+{
+	print update_string($file_lines[$n]);
+
+}
+}
+else
+{
+print ("\n");
+print $ARGV[0];
+print(" is not a text file (processing aborted)\n");
+}
+}
+
+sub update_string
+{
+local ($a);
+$a = $_[0];
+$a =~ s/EiffelVision/EiffelVision2/;
+$a =~ s/1986-1998/1986-1999/;
+$a =~ s/--\|/--!/;
+$a =~ s/!!/create /;
+$a =~ s/create  /create /;
+$a =~ s/Windows Eiffel Library/EiffelVision2/;
+$a;
+}

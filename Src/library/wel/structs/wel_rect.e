@@ -30,9 +30,6 @@ feature {NONE} -- Initialization
 			-- Make a rectangle and set `left', `top',
 			-- `right', `bottom' with `a_left', `a_top',
 			-- `a_right', `a_bottom'
-		require
-			right_larger_than_left: a_right >= a_left
-			bottom_larger_than_top: a_bottom >= a_top
 		do
 			structure_make
 			set_rect (a_left, a_top, a_right, a_bottom)
@@ -114,9 +111,6 @@ feature -- Element change
 			-- Quick set of `left', `top', `right', `bottom'
 			-- with `a_left', `a_top', `a_right', `a_bottom'
 			-- respectively.
-		require
-			right_larger_than_left: a_right >= a_left
-			bottom_larger_than_top: a_bottom >= a_top
 		do
 			cwin_set_rect (item, a_left, a_top, a_right, a_bottom)
 		ensure
@@ -198,7 +192,7 @@ feature -- Basic operations
 
 	subtract (rect1, rect2: WEL_RECT) is
 			-- Set the current rectangle by subtracting
-			-- `rect1' from `rect2'.
+			-- `rect2' from `rect1'.
 		require
 			rect1_not_void: rect1 /= Void
 			rect2_not_void: rect2 /= Void

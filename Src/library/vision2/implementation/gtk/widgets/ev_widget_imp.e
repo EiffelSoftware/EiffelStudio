@@ -48,7 +48,6 @@ feature {NONE} -- Initialization
 		once
 			Result := C.GDK_EXPOSURE_MASK_ENUM +
 			C.GDK_POINTER_MOTION_MASK_ENUM +
-		--	C.GDK_BUTTON_MOTION_MASK_ENUM +
 			C.GDK_BUTTON_PRESS_MASK_ENUM +
 			C.GDK_BUTTON_RELEASE_MASK_ENUM +
 			C.GDK_KEY_PRESS_MASK_ENUM +
@@ -56,13 +55,14 @@ feature {NONE} -- Initialization
 			C.GDK_ENTER_NOTIFY_MASK_ENUM +
 			C.GDK_LEAVE_NOTIFY_MASK_ENUM +
 			C.GDK_FOCUS_CHANGE_MASK_ENUM +
-			C.GDK_VISIBILITY_NOTIFY_MASK_ENUM-- +
-		--	C.GDK_PROXIMITY_IN_MASK_ENUM +
-		--	C.GDK_PROXIMITY_OUT_MASK_ENUM
+			C.GDK_VISIBILITY_NOTIFY_MASK_ENUM
 		end
 
 	initialize_events is
 		do
+			if not gtk_widget_no_window (c_object) then
+				C.gtk_widget_add_events (c_object, Gdk_events_mask)
+			end
 			if not gtk_widget_no_window (visual_widget) then
 				C.gtk_widget_add_events (visual_widget, Gdk_events_mask)
 			end
@@ -90,8 +90,8 @@ feature {NONE} -- Initialization
 			end
 	
 			on_key_event_intermediary_agent := agent gtk_marshal.on_key_event_intermediary (c_object, ?, ?, ?)
-			real_signal_connect (c_object, "key_press_event", on_key_event_intermediary_agent, key_event_translate_agent)
-			real_signal_connect (c_object, "key_release_event", on_key_event_intermediary_agent, key_event_translate_agent)
+			real_signal_connect (visual_widget, "key_press_event", on_key_event_intermediary_agent, key_event_translate_agent)
+			real_signal_connect (visual_widget, "key_release_event", on_key_event_intermediary_agent, key_event_translate_agent)
 				--| "button-press-event" is a special case, see below.
 				
 			connect_button_press_switch_agent := agent gtk_marshal.connect_button_press_switch_intermediary (c_object)

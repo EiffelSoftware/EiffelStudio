@@ -34,6 +34,11 @@ class STRING inherit
 		end
 
 	TO_SPECIAL [CHARACTER]
+		rename
+			item as area_item,
+			infix "@" as area_infix_at,
+			put as area_put,
+			valid_index as area_valid_index
 		redefine
 			copy, is_equal, out
 		end

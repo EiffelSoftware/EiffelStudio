@@ -22,6 +22,11 @@ class ARRAY [G] inherit
 		end
 
 	TO_SPECIAL [G]
+		rename
+			item as area_item,
+			infix "@" as area_infix_at,
+			put as area_put,
+			valid_index as area_valid_index
 		export
 			{ARRAY} set_area
 		redefine

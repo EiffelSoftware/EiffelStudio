@@ -50,3 +50,12 @@ lib^^libname.so:  objlist           @@\
 name: source				@@\
 	$(CC) $(JCFLAGS) -DTEST flags -o $@ source
 
+/*
+ * CustomObjectTarget:
+ *      Generate rules to create an object file. The 'objlist'
+ *      parameters are added to OBJECTS macros.
+ */
+#define CustomObjectTarget(objlist)    @!\
+++OBJECTS objlist @!\
+AllTarget(objlist)
+

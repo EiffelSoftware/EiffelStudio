@@ -479,11 +479,11 @@ feature {NONE} -- Generation
 						gen_file.putstring (", ")
 						gen_file.putint (feature_id)
 					end;
-					gen_file.putstring (", Dtype (Current))(Current")
+					gen_file.putstring (", Dtype (Current)))(Current")
 					if has_arguments then
 						generate_arg_list (args.count)
 					end
-					gen_file.putstring ("));%N")
+					gen_file.putstring (");%N")
 				end
 
 				gen_file.putstring ("%N}%N%N")

@@ -252,7 +252,7 @@ feature -- Conversion
 			Result := item.to_integer_8
 		end
 
-	to_integer: INTEGER is
+	to_integer, to_integer_32: INTEGER is
 			-- Convert `item' into an INTEGER_32 value.
 		do
 			Result := item.to_integer

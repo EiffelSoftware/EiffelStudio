@@ -30,13 +30,7 @@ feature -- Basic Operation
 	build is 
 			-- Build entries.
 		do
-				-- Only change windows, if necessary.
-				-- Coming from the third stage, this is not
-				-- necessary.
-			if main_window.is_show_requested then
-				graphically_replace_window (first_window, main_window)	
-			end
-			
+			first_window.set_size (dialog_unit_to_pixels(503), dialog_unit_to_pixels(385))
 			create locals_grouped.make_with_text ("Group attribute declarations? e.g. button1, button2: EV_BUTTON")
 			if project_settings.grouped_locals then
 				locals_grouped.enable_select
@@ -124,7 +118,7 @@ feature {NONE} -- Implementation
 	debugging_information: EV_CHECK_BUTTON
 	
 	project_settings: GB_PROJECT_SETTINGS is
-			--
+			-- 
 		do
 			Result := system_status.current_project_settings
 		end

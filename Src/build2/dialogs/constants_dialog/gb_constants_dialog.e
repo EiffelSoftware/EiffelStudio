@@ -576,6 +576,9 @@ feature {NONE} -- Implementation
 				if not a_color_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
 					color_constant.modify_value (a_color_dialog.color)
 				end
+					-- Now update the representation of the constant in the list.
+				row := constants_list.i_th (modify_constant_index)
+				row.set_pixmap (color_constant.small_pixmap)
 			elseif font_constant /= Void then
 				create a_font_dialog
 				a_font_dialog.set_title (select_font_location_modify_string + font_constant.name + "%"")

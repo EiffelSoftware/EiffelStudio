@@ -12,12 +12,8 @@ inherit
 
 feature -- Access
 
-	parent: EV_STATUS_BAR is
+	parent_imp: EV_STATUS_BAR_imp
 			-- Parent of the current item.
-		require
-			exists: not destroyed
-		deferred
-		end
 
 feature -- Measurement
 
@@ -47,11 +43,7 @@ feature -- Element change
 	set_parent (par: EV_STATUS_BAR) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
-		require
-			exists: not destroyed
 		deferred
-		ensure
-			parent_set: parent = par
 		end
 
 end -- class EV_STATUS_BAR_ITEM_I

@@ -121,7 +121,7 @@ feature {NONE}
 			args.put_i_th (Integer_type, 2);
 			!! Result;
 			Result.set_arguments (args);
-			Result.set_feature_name ("make");
+			Result.set_feature_name_id (Names_heap.make_name_id)
 		end;
 
 end

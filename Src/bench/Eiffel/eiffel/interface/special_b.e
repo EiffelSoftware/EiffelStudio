@@ -63,7 +63,7 @@ feature
 			!!f
 			f.set_position (1)
 			Result.set_type (f)
-			Result.set_feature_name ("item")
+			Result.set_feature_name_id (Names_heap.item_name_id)
 		end
 
 	Put_signature: DYN_PROC_I is
@@ -79,7 +79,7 @@ feature
 			args.put_i_th (Integer_type, 2)
 			!!Result
 			Result.set_arguments (args)
-			Result.set_feature_name ("put")
+			Result.set_feature_name_id (Names_heap.put_name_id)
 		end
 		
 	new_type (data: CL_TYPE_I): SPECIAL_CLASS_TYPE is

@@ -74,7 +74,7 @@ feature -- Miscellanous
 		do
 		end
 	
-feature {NONE} -- Implementation
+feature {CGI_FORMS}-- Access
 
 	form_data: HASH_TABLE[LINKED_LIST[STRING],STRING]
 			-- User provided data.

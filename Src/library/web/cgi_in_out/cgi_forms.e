@@ -54,7 +54,7 @@ feature -- Access
 
 feature -- Advanced Access
 
-fields: ARRAY[STRING] is
+	fields: ARRAY[STRING] is
 			-- Names of fields in the form.
 		once
 			Result := form_data.current_keys

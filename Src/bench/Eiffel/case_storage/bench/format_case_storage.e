@@ -36,7 +36,7 @@ feature -- Access
 
 	output_window: OUTPUT_WINDOW;
 
-	reverse_engineering_window: GRAPHICAL_DEGREE_OUTPUT
+	reverse_engineering_window: DEGREE_OUTPUT
 			-- Reverse engineering window
 
 	generate_all: BOOLEAN

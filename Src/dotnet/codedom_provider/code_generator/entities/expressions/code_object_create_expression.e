@@ -14,19 +14,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target_type: CODE_TYPE_REFERENCE; a_creation_routine: CODE_MEMBER_REFERENCE; a_arguments: LIST [CODE_EXPRESSION]) is
+	make (a_target_type: CODE_TYPE_REFERENCE; a_arguments: LIST [CODE_EXPRESSION]) is
 			-- Initialize `type', `arguments'.
 		require
 			non_void_target_type: a_target_type /= Void
-			non_void_creation_routine: a_creation_routine /= Void
-			non_void_arguments: a_arguments /= Void
 		do
 			target_type := a_target_type
-			creation_routine := a_creation_routine
 			arguments := a_arguments
 		ensure
 			type_set: target_type = a_target_type
-			creation_routine_set: creation_routine = a_creation_routine
 			arguments_set: arguments = a_arguments
 		end
 
@@ -34,9 +30,6 @@ feature -- Access
 
 	target_type: CODE_TYPE_REFERENCE
 			-- Type of created object
-
-	creation_routine: CODE_MEMBER_REFERENCE
-			-- Creation routine
 
 	arguments: LIST [CODE_EXPRESSION]
 			-- Arguments
@@ -62,23 +55,25 @@ feature -- Access
 				Result.append (target)
 			end
 			Result.append_character ('.')
-			Result.append (creation_routine.eiffel_name)
-			from
-				arguments.start
-				if not arguments.after then
-					Result.append (" (")
+			Result.append ("make")
+			if arguments /= Void then
+				from
+					arguments.start
+					if not arguments.after then
+						Result.append (" (")
+						Result.append (arguments.item.code)
+						arguments.forth
+					end
+				until
+					arguments.after
+				loop
+					Result.append (", ")
 					Result.append (arguments.item.code)
 					arguments.forth
 				end
-			until
-				arguments.after
-			loop
-				Result.append (", ")
-				Result.append (arguments.item.code)
-				arguments.forth
-			end
-			if arguments.count > 0 then
-				Result.append_character (')')
+				if arguments.count > 0 then
+					Result.append_character (')')
+				end
 			end
 			if new_line then
 				Result.append_character ('%N')
@@ -106,9 +101,7 @@ feature {CODE_ASSIGN_STATEMENT, CODE_METHOD_RETURN_STATEMENT} -- Element Setting
 		end
 
 invariant
-	non_void_type: type /= Void 
-	non_void_creation_routine: creation_routine /= Void
-	non_void_arguments: arguments /= Void
+	non_void_type: target_type /= Void 
 	
 end -- class CODE_OBJECT_CREATE_EXPRESSION
 

@@ -95,7 +95,7 @@ feature -- Status setting
 		require
 			exists: not destroyed
 			index_large_enough: index > 0
-			index_small_enough: index <= columns
+			index_small_enough: index <= count
 		deferred
 		end
 
@@ -104,7 +104,7 @@ feature -- Status setting
 		require
 			exists: not destroyed
 			index_large_enough: index > 0
-			index_small_enough: index <= columns
+			index_small_enough: index <= count
 		deferred
 		end
 

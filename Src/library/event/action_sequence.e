@@ -18,12 +18,13 @@ indexing
 		% birthday_actions: ACTIONS_SEQUENCE [like birthday_data] %
 		% create birthday_actions.make (%"birthday%", <<%"age%",%"name%">>) %
 		% send_card (age: INTEGER, name, from: STRING) is ...%
-		% increase_carma_points is ...  %
+		% buy_gift (age: INTEGER, name, gift, from: STRING) is ...%
 		% birthday_actions.extend (~send_card (?, ?, %"Sam%") %
-		% birthday_actions.extend (~increase_carma_points) %
+		% birthday_actions.extend (~buy_gift (?, ?, %"Wine%", %"Sam%") %
 		% birthday_actions.call ([35, %"Bretrand%"]) %
-		% causes calls to: send_card (35, %"Bertrand%", %"Sam%") %
-		%                  increase_carma_points"
+		% causes call to: send_card (35, %"Bertrand%", %"Sam%") %
+		%                 buy_gift (35, %"Bertrand%", %"Wine%", %"Sam%")"
+
 	status:
 		"See notice at end of class"
 	keywords:
@@ -34,7 +35,7 @@ indexing
 		"$Revision$"
 
 class
-	ACTION_SEQUENCE [EVENT_DATA -> TUPLE]
+	ACTION_SEQUENCE [EVENT_DATA -> TUPLE create make end]
 
 inherit
 	LINKED_LIST [PROCEDURE [ANY, EVENT_DATA]]
@@ -59,14 +60,13 @@ feature {NONE} -- Initialization
 			name_not_void: a_name /= Void
 			name_not_empty: not a_name.empty
 			event_data_names_not_void: some_event_data_names /= Void
---			correct_event_data_names_count:
---				 some_event_data_names.count = dummy_event_data_count
+			correct_event_data_names_ok:
+				 some_event_data_names.count = dummy_event_data.count
 		do
 			linked_list_make
 			create is_aborted_stack.make
 			create cursor_stack.make
 			create call_buffer.make
---			create dummy_event_data.make
 			name_internal := a_name
 			event_data_names_internal := some_event_data_names
 			state := Normal_state
@@ -140,17 +140,15 @@ feature -- Access
 			equal_to_name_internal: Result.is_equal (name_internal)
 		end
 
-	dummy_event_data: EVENT_DATA
+	dummy_event_data: EVENT_DATA is
 			-- Attribute of the generic type.
 			-- Useful for introspection and use in like statements.
-
---	dummy_event_data_count: INTEGER is
---		do
---			if dummy_event_data = Void then
---				create dummy_event_data.make
---			end
---			Result := dummy_event_data.count
---		end
+		do
+			if dummy_event_data_internal = Void then
+				create dummy_event_data_internal.make
+			end
+			Result := dummy_event_data_internal
+		end
 
 	event_data_names: ARRAY [STRING] is
 			-- Textual description of each event datum.
@@ -294,10 +292,13 @@ feature {NONE} -- Implementation
 			-- to be executed on `resume'.
 
 	name_internal: STRING
-			-- Textual description.
+			-- See name.
 
 	event_data_names_internal: ARRAY [STRING]
-			-- Textual description of each event datum.
+			-- See event_data_names.
+
+	dummy_event_data_internal: EVENT_DATA
+			-- See dummy_event_data.
 
 feature {NONE} -- Debug
 
@@ -306,7 +307,7 @@ feature {NONE} -- Debug
 		local
 			i, j: INTEGER
 		do
-			Result := name_internal + ".call ("
+			Result := "("+ cursor_stack.count.out + " nests) " + name_internal + ".call ("
 				from
 					i := event_data.lower
 					j := event_data_names_internal.lower
@@ -332,8 +333,7 @@ invariant
 	name_not_void: name_internal /= Void
 	name_not_empty: not name_internal.empty
 	event_data_names_not_void: event_data_names_internal /= Void
---	dummy_event_data_not_void: dummy_event_data /= Void
---	correct_event_data_names_count: event_data_names_internal.count = dummy_event_data.count
+	event_data_names_count_ok: event_data_names_internal.count = dummy_event_data.count
 
 	valid_state: state = Normal_state or state = Paused_state or state = Blocked_state
 	call_buffer_consistent: state = Normal_state implies call_buffer.empty
@@ -354,6 +354,11 @@ end
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.4  1999/10/27 17:54:20  oconnor
+--| fixed invariant/precondition to check number of event_data_names
+added logging of neting level
+fixed instructions
+--|
 --| Revision 1.3  1999/10/27 02:11:14  oconnor
 --| removed infeasible wrapper code
 --|

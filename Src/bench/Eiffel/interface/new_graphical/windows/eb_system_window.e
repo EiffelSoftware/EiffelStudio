@@ -224,10 +224,11 @@ feature -- Content saving
 				if Eiffel_ace.file_name = Void or else root_ast = Void then
 						-- Creation of AST.
 					create root_ast
+					ast := root_ast
+				else
+					ast := root_ast.duplicate
 				end
 	
-				ast := root_ast.duplicate
-
 				l_list.do_all ({EB_SYSTEM_TAB}~store (ast))				
 	
 				create st.make (2048)

@@ -36,6 +36,24 @@ feature {NONE} -- Initialization
 			gtk_object_ref (widget)
 		end
 
+feature -- Status report
+
+	text: STRING is
+			-- Text of the frame
+		do
+		end
+
+feature -- Status setting
+
+	set_text (txt: STRING) is
+			-- set the `text' of the frame
+		local
+			a: ANY
+		do
+			a := txt.to_c
+			gtk_frame_set_label (widget, $a)
+		end
+
 end -- class EV_FRAME_IMP
 
 --|----------------------------------------------------------------

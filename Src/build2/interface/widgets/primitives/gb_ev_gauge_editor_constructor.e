@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			-- Update the display window representation of
 			-- the gauge, to reflect change from user.
 		do
-			objects.first.set_value (user_event_widget.value)
+			for_first_object (agent {EV_GAUGE}.set_value (user_event_widget.value))
 			update_editors
 		end
 		
@@ -153,10 +153,8 @@ feature {NONE} -- Implementation
 		do
 			lower := lower_entry.text.to_integer
 			create interval.make (lower, integer)
-			first.value_range.adapt (interval)
-			if objects @ 2 /= Void then
-				(objects @ 2).value_range.adapt (interval)	
-			end
+			adapt_value_range (object, interval)
+			for_all_instance_referers (object, agent adapt_value_range (?, interval))
 				-- We update the system settings to reflect
 				-- the fact that a user modification has taken place.
 				-- This enables us to do things such as enable the save
@@ -165,10 +163,26 @@ feature {NONE} -- Implementation
 			update_editors
 		end
 		
+	adapt_value_range (an_object: GB_OBJECT; value_range: INTEGER_INTERVAL) is
+			-- Adapt value range of `an_object' to `value_range'.
+		require
+			object_not_void: an_object /= Void
+			value_range_not_void: value_range /= Void
+		local
+			gauge: EV_GAUGE
+		do
+			gauge ?= an_object.object
+			gauge.value_range.adapt (value_range)
+			gauge ?= an_object.real_display_object
+			if gauge /= Void then
+				gauge.value_range.adapt (value_range)
+			end
+		end
+
 	valid_upper (upper: INTEGER): BOOLEAN is
 			-- Is `upper' a valid upper?
 		do
-			Result := upper >= lower_entry.text.to_integer
+			Result := upper >= lower_entry.text.to_integer		
 		end
 		
 	set_lower (integer: INTEGER) is
@@ -181,10 +195,8 @@ feature {NONE} -- Implementation
 		do
 			upper := upper_entry.text.to_integer
 			create interval.make (integer, upper)
-			first.value_range.adapt (interval)
-			if objects @ 2 /= Void then
-				(objects @ 2).value_range.adapt (interval)	
-			end
+			adapt_value_range (object, interval)
+			for_all_instance_referers (object, agent adapt_value_range (?, interval))
 				-- We update the system settings to reflect
 				-- the fact that a user modification has taken place.
 				-- This enables us to do things such as enable the save

@@ -83,12 +83,13 @@ feature -- Initialization
 			m_feature_server := static.m_feature_server;
 			m_rout_id_server := static.m_rout_id_server;
 			m_desc_server := static.m_desc_server;
+			class_comments_server := static.class_comments_server;
 			id_array := static.id_array;
 			class_types := static.class_types;
 			type_set := static.type_set;
 			pattern_table := static.pattern_table;
 			successfull := static.successfull;
-			freeze := static.freeze;
+			private_freeze := static.private_freeze;
 			freezing_occurred := static.freezing_occurred;
 			history_control := static.history_control;
 			instantiator := static.instantiator;
@@ -151,6 +152,7 @@ feature -- Initialization
 			dle_frozen_nobid_table := static.dle_frozen_nobid_table;
 			dle_static_calls := static.dle_static_calls;
 			dle_system_name := static.system_name;
+			address_table := static.address_table;
 			!! sorter.make;
 
 				-- Save information concerning the static base system.
@@ -363,7 +365,7 @@ end;
 
 			if not Lace.compile_all_classes then
 					-- Externals incrementality
-				freeze := freeze or else not externals.equiv
+				private_freeze := private_freeze or else not externals.equiv
 			end;
 
 				-- Process the type system
@@ -384,7 +386,7 @@ end;
 				io.error.putstring ("Freezing system%N");
 
 				c_comp_actions_freeze_system;
-				freeze := False;
+				private_freeze := False;
 
 			else
 					-- Verbose
@@ -995,6 +997,8 @@ debug ("OPTIONS")
 end;
 					a_class.assertion_level.make_byte_code (Byte_array);
 					a_class.debug_level.make_byte_code (Byte_array);
+					a_class.trace_level.make_byte_code (Byte_array);
+					a_class.profile_level.make_byte_code (Byte_array)
 				end;
 				i := i + 1
 			end;
@@ -1356,6 +1360,9 @@ end;
 				-- Generate makefile
 			generate_make_file;
 
+				-- Address table
+			address_table.generate (True)
+
 				-- Generate DLE file
 			generate_dle_file;
 
@@ -1458,8 +1465,10 @@ feature -- Generation
 			generate_conformance_table;
 			is_conformance_table_melted := False;
 			melted_conformance_table := Void;
+			generate_plug;
 			generate_init_file;
 			generate_option_file;
+			address_table.generate (False);
 			generate_rout_info_table;
 			pattern_table.generate_dle;
 			generate_make_file;
@@ -2028,6 +2037,11 @@ end;
 					Option_file.putchar (';');
 					Option_file.new_line;
 
+					Option_file.putstring("dle_opt->profile_level = ");
+					a_class.profile_level.generate (Option_file);
+					Option_file.putchar (';');
+					Option_file.new_line;
+
 					Option_file.putstring("dle_opt->trace_level = ");
 					a_class.trace_level.generate (Option_file);
 					Option_file.putchar (';');
@@ -2037,15 +2051,17 @@ end;
 					Option_file.new_line;
 					a_class.debug_level.generate_dle (Option_file, a_class.id)
 				else
-					Option_file.putstring("dle_opt->assert_level = (int16 0);");
+					Option_file.putstring("dle_opt->assert_level = (int16) 0;");
 					Option_file.new_line;
-					Option_file.putstring("dle_opt->trace_level = (int16 0);");
+					Option_file.putstring("dle_opt->trace_level = (int16) 0;");
+					Option_file.new_line;
+					Option_file.putstring("dle_opt->profile_level = (int16) 0;");
 					Option_file.new_line;
 					Option_file.putstring("dle_dbg = &dle_opt->debug_level;");
 					Option_file.new_line;
-					Option_file.putstring("dle_dbg->debug_level = (int16 0);");
+					Option_file.putstring("dle_dbg->debug_level = (int16) 0;");
 					Option_file.new_line;
-					Option_file.putstring("dle_dbg->nb_keys = (int16 0);");
+					Option_file.putstring("dle_dbg->nb_keys = (int16) 0;");
 					Option_file.new_line;
 					Option_file.putstring("dle_dbg->keys = (char **) 0);");
 					Option_file.new_line
@@ -2289,11 +2305,21 @@ end;
 				Plug_file.putstring ("dynamic_dtype = ");
 				Plug_file.putint (dynamic_dtype - 1);
 				Plug_file.putchar (';');
+			else
+				Plug_file.putstring ("extern fnptr **eif_address_table;%N%N");
+				Plug_file.putstring ("extern fnptr *Deif_address_table[];%N%N");
+				Plug_file.putstring ("void dle_eplug()");
 				Plug_file.new_line;
-				Plug_file.exdent;
-				Plug_file.putchar ('}');
-				Plug_file.new_line
+				Plug_file.putchar ('{');
+				Plug_file.new_line;
+				Plug_file.indent;
+				Plug_file.putstring ("eif_address_table = Deif_address_table;");
 			end;
+			Plug_file.new_line;
+			Plug_file.exdent;
+			Plug_file.putchar ('}');
+			Plug_file.new_line;
+
 			Plug_file.close
 		end;
 
@@ -2356,6 +2382,8 @@ end;
 				DLE_file.new_line;
 				DLE_file.putstring ("extern void dle_evisib();");
 				DLE_file.new_line;
+				DLE_file.putstring ("extern void dle_eplug();");
+				DLE_file.new_line;
 				DLE_file.new_line;
 				DLE_file.putstring ("void dle_load()");
 				DLE_file.new_line;
@@ -2379,6 +2407,8 @@ end;
 				DLE_file.putstring ("dle_einit();");
 				DLE_file.new_line;
 				DLE_file.putstring ("dle_evisib();");
+				DLE_file.new_line;
+				DLE_file.putstring ("dle_eplug();");
 				DLE_file.new_line;
 				DLE_file.exdent;
 				DLE_file.putchar ('}');
@@ -2623,7 +2653,8 @@ feature -- Dead code removal
 					if a_class.inherits_from_dynamic then
 							-- Protection of features of descendants
 							-- of DYNAMIC in the DC-set.
-						a_class.mark_all_used (remover)
+						a_class.mark_all_used (remover);
+						a_class.dle_mark_make (remover)
 					end
 				end;
 				i := i + 1
@@ -2669,6 +2700,6 @@ invariant
 
 	extending: is_dynamic;
 	not_extendible: not extendible;
-	not_precompiling: not precompilation
+	not_precompiling: not Compilation_modes.is_precompiling
 
 end -- class DLE_SYSTEM_I

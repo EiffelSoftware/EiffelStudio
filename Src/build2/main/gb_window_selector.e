@@ -262,50 +262,6 @@ feature -- Access
 			position_not_changed: index = old index
 		end
 		
-	directory_of_window (selector_item: GB_WINDOW_SELECTOR_ITEM): GB_WINDOW_SELECTOR_DIRECTORY_ITEM is
-			-- `Result' is directory containing `selector_item', or Void if none.
-		local
-			layout_item: GB_WINDOW_SELECTOR_ITEM
-			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
-			found: BOOLEAN
-		do
-			from
-				start
-			until
-				off or found
-			loop
-				layout_item ?= item
-				if layout_item = selector_item then
-					Result := Void
-					found := True
-				elseif layout_item = Void then
-					directory_item ?= item
-					check
-						item_was_directory: directory_item /= Void
-					end
-					from
-						directory_item.start
-					until
-						directory_item.off or found
-					loop
-						layout_item ?= directory_item.item
-						check
-							item_was_layout_item: layout_item /= Void
-						end
-						if layout_item = selector_item then
-							Result := directory_item
-							found := True
-						end
-						directory_item.forth
-					end
-				end
-				forth
-			end
-			check
-				found: found
-			end
-		end
-		
 	tool_bar: EV_TOOL_BAR is
 			-- A tool bar containing all buttons associated with `Current'.
 		once
@@ -847,6 +803,9 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 			-- Rename generated files representing `object' to reflect a name change on `window_object'
 			-- from `old_name' to `new_name'.
 		require
+			object_not_void: object /= Void
+			names_not_void: old_name /= Void and new_name /= Void
+			names_not_empty: not old_name.is_empty and not new_name.is_empty
 			object_is_top_level_object: object.is_top_level_object
 		local
 			directory_object: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
@@ -857,11 +816,20 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 			file: RAW_FILE
 			file_contents: STRING
 			character_difference: INTEGER
+			directory_path: ARRAYED_LIST [STRING]
 		do
-			directory_object := directory_of_window (object.window_selector_item)
+			directory_object ?= object.window_selector_item.parent
 			file_name := generated_path
 			if directory_object /= Void then
-				file_name.extend (directory_object.text)
+				directory_path := directory_object.path
+				from
+					directory_path.start
+				until
+					directory_path.off
+				loop
+					file_name.extend (directory_path.item)
+					directory_path.forth
+				end
 			end
 			
 				--| FIXME we need a better solution for name changes on windows.
@@ -947,10 +915,7 @@ feature {GB_XML_LOAD, GB_XML_IMPORT} -- Implementation
 	select_main_window is
 			-- Select window marked as root of system.
 		local
-			object, found_object: GB_TITLED_WINDOW_OBJECT
-			found: BOOLEAN
-			directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
-			window: GB_WINDOW_SELECTOR_ITEM
+			object: GB_TITLED_WINDOW_OBJECT
 		do
 			object := Object_handler.root_window_object
 			check

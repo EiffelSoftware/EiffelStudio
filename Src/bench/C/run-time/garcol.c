@@ -289,6 +289,7 @@ rt_shared char **st_alloc(register struct stack *stk, register int size);		/* Cr
 rt_shared void st_truncate(register struct stack *stk);		/* Truncate stack if necessary */
 rt_shared void st_wipe_out(register struct stchunk *chunk);		/* Remove unneeded chunk from stack */
 rt_shared int st_extend(register struct stack *stk, register int size);			/* Extends size of stack */
+rt_shared EIF_REFERENCE *eif_once_set_addr (EIF_REFERENCE once);
 
 #ifdef DEBUG
 rt_private int reset(register1 struct stack *);				/* Reset stack to its initial state */
@@ -5070,6 +5071,39 @@ rt_public char *onceset(void)
 	return (char *) (once_set.st_top - 1);
 	EIF_END_GET_CONTEXT
 }
+
+rt_shared EIF_REFERENCE *eif_once_set_addr (EIF_REFERENCE once) 
+{
+	/* Similar to "hector_addr" from hector.c. This returns 
+	 * the indirection pointer from "once_set" corresponding to 
+	 * the once object "once". Maybe we should implement a generic
+	 * function instead. 
+	 */
+
+	EIF_GET_CONTEXT	/* MT-safe */
+	register1 int nb_items;			/* Number of items in arena */
+	register2 struct stchunk *s;	/* To walk through each stack's chunk */
+	register3 char **arena;			/* Current arena in chunk */
+	int done = 0;					/* Top of stack not reached yet */
+
+	for (s = once_set.st_hd; s && !done; s = s->sk_next) 
+	{
+		arena = s->sk_arena;				/* Start of stack */
+		if (s != once_set.st_cur)			/* Before current position? */
+			nb_items = s->sk_end - arena;	/* Take the whole chunk */
+		else {
+			nb_items = once_set.st_top - arena;	/* Stop at the top */
+			done = 1;								/* Reached end of stack */
+		}
+		for (; nb_items > 0; nb_items--, arena++)
+			if (*arena == once)						/* Found indirection */
+			{
+				EIF_END_GET_CONTEXT	/* MT-safe */
+				return (EIF_REFERENCE *) arena;				/* Return indirection ptr */
+			}
+	}	
+	
+} /* eif_once_set_addr */
 
 /*
  * Stack handling routines. Each of these require the address of the

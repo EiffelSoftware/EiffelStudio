@@ -98,6 +98,8 @@ extern void st_wipe_out(register struct stchunk *chunk);			/* Remove unneeded ch
 RT_LNK void eremb(char *obj);				/* Remembers old object */
 RT_LNK void erembq(char *obj);				/* Quick veersion (no GC call) of eremb */
 RT_LNK char *onceset(void);				/* Recording of once function result */
+extern EIF_REFERENCE *eif_once_set_addr (EIF_REFERENCE once);
+	/* Get stack address of "once" from "once_set". */
 extern int refers_new_object(register char *object);		/* Does an object refers to young ones ? */
 RT_LNK void gc_stop(void);				/* Stop the garbage collector */
 RT_LNK void gc_run(void);				/* Restart the garbage collector */

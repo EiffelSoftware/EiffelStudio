@@ -60,7 +60,7 @@ rt_public EIF_REFERENCE eif_finish_freezing (void)
 rt_public EIF_REFERENCE eif_preobj (void)
 {
 #if defined EIF_WIN32 || defined EIF_OS2
-	return RTMS ("preobj.obj");
+	return RTMS ("precomp.lib");
 #elif defined EIF_VMS
 	return RTMS ("preobj.olb");
 #else

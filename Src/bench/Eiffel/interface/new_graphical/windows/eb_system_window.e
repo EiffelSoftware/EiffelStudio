@@ -317,12 +317,12 @@ feature {NONE} -- Initialization
 			notebook.set_item_text (clusters_tab, clusters_tab.name)
 
 			if Platform_constants.is_windows then
-				create msil_tab.make
+				create msil_tab.make (Current)
 				notebook.extend (msil_tab)
 				notebook.set_item_text (msil_tab, msil_tab.name)
 			end
 
-			create externals_tab.make
+			create externals_tab.make (Current)
 			notebook.extend (externals_tab)
 			notebook.set_item_text (externals_tab, externals_tab.name)
 

@@ -10,10 +10,12 @@ inherit
 	EV_VERTICAL_BOX
 
 	EB_SYSTEM_TAB
+		rename
+			make as tab_make
 		undefine
 			default_create, is_equal, copy
 		redefine
-			reset, make
+			reset
 		end
 
 	EIFFEL_ENV
@@ -41,11 +43,16 @@ feature -- Access
 
 feature -- External access
 
-	include_path_list: EV_ADD_REMOVE_LIST
+	include_path_list: EV_ADD_REMOVE_PATH_LIST
 			-- List of include path.
 			
-	object_file_list: EV_ADD_REMOVE_LIST
+	object_file_list: EV_ADD_REMOVE_PATH_LIST
 			-- List of object file.
+
+feature -- Parent access
+
+	system_window: EB_SYSTEM_WINDOW
+			-- Graphical parent of Current.
 
 feature -- Store/Retrieve
 
@@ -161,22 +168,26 @@ feature -- Initialization
 
 feature {NONE} -- Initialization
 
-	make is
+	make (top: like system_window) is
 			-- Create widget corresponding to `Externals' tab in notebook.
 		local
 			frame: EV_FRAME
 		do
-			Precursor {EB_SYSTEM_TAB}
+			system_window := top
+			tab_make
+
 			default_create
 			set_border_width (5)
 			set_padding (3)
 			
-			create include_path_list.make
+			create include_path_list.make_with_parent (top.window)
+			include_path_list.set_browse_for_directory
 			create frame.make_with_text ("Include path")
 			frame.extend (include_path_list)
 			extend (frame)
 
-			create object_file_list.make
+			create object_file_list.make_with_parent (top.window)
+			object_file_list.set_browse_for_file (Void)
 			create frame.make_with_text ("Object file")
 			frame.extend (object_file_list)
 			extend (frame)

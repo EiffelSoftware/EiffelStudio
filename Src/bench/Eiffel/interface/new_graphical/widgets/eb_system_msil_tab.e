@@ -10,10 +10,12 @@ inherit
 	EV_VERTICAL_BOX
 
 	EB_SYSTEM_TAB
+		rename
+			make as tab_make
 		undefine
 			default_create, is_equal, copy
 		redefine
-			reset, make
+			reset
 		end
 
 	EB_CONSTANTS
@@ -53,8 +55,13 @@ feature -- Assembly information
 
 feature -- Assembly access
 
-	assembly_list: EV_ADD_REMOVE_LIST
+	assembly_list: EV_ADD_REMOVE_PATH_LIST
 			-- List of assembly used in Current project.
+
+feature -- Parent access
+
+	system_window: EB_SYSTEM_WINDOW
+			-- Graphical parent of Current.
 			
 feature -- Store/Retrieve
 
@@ -235,12 +242,13 @@ feature -- Initialization
 
 feature {NONE} -- Initialization
 
-	make is
+	make (top: like system_window) is
 			-- Create widget corresponding to `General' tab in notebook.
 		local
 			assembly_frame: EV_FRAME
 		do
-			Precursor {EB_SYSTEM_TAB}
+			system_window := top
+			tab_make
 			default_create
 			
 			extend (msil_info_frame (".NET application information"))
@@ -250,7 +258,8 @@ feature {NONE} -- Initialization
 			disable_item_expand (i_th (2))
 			
 			create assembly_frame.make_with_text ("Assemblies")
-			create assembly_list.make
+			create assembly_list.make_with_parent (top.window)
+			assembly_list.set_browse_for_file ("*.dll")
 			assembly_frame.extend (assembly_list)
 			extend (assembly_frame)
 

@@ -509,6 +509,7 @@ feature {NONE} -- Implementation
     		-- valid version of CLR
     	once
     		create Result.make_from_array(<<"v1.0.3705", "v1.1.4322">>)
+    		Result.compare_objects
     	end  	
 
 end -- class PROJECT_PROPERTIES

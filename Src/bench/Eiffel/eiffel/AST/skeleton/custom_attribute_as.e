@@ -217,8 +217,8 @@ feature {NONE} -- Type checking
 						-- `a_feat'.
 					l_ext_class ?= a_feat.written_class
 					if l_ext_class /= Void then
-							-- It has to have a setter and its name must be at least 5 characters (4 for get_ at least)
-						Result := l_ext_class.has_associated_property_setter (a_feat) and a_feat.feature_name.count > 4				
+							-- It has to have a setter
+						Result := l_ext_class.has_associated_property_setter (a_feat)
 					end
 				end
 			else

@@ -320,14 +320,19 @@ feature {NONE}
 	key_press_data (widget_oui: WIDGET): KYPRESS_DATA is
 			--
 		do
-			--!!Result.make (widget_oui, c_event_keypress_code, c_event_keypress_string, modifiers_state);
+			!! Result.make (widget_oui, 
+					c_event_keypress_code, 
+					c_event_keypress_string, 
+					modifiers_state);
 		end;
 
 	key_release_data (widget_oui: WIDGET): KEYREL_DATA is
 			--
-			
-			do
-					!!Result.make (widget_oui, c_event_keypress_code, c_event_keypress_string, modifiers_state)
+		do
+			!! Result.make (widget_oui, 
+					c_event_keypress_code, 
+					c_event_keypress_string, 
+					modifiers_state)
 		end; 
 
 	keymap_notify_data (widget_oui: WIDGET): KEYMAP_DATA is
@@ -358,6 +363,12 @@ feature {NONE}
 	motion_notify_data (widget_oui: WIDGET): MOTNOT_DATA is
 			--
 		do
+			!! Result.make (widget_oui,
+					c_event_x_relative,
+					c_event_y_relative,
+					c_event_x_pointer,
+					c_event_y_pointer,
+					buttons_state)
 		end;
 
 	no_expose_data (widget_oui: WIDGET): NOEXP_DATA is

@@ -253,7 +253,7 @@ feature -- Deletion
 
 feature -- Insertion
 
-	add_left (an_item: STRING) is
+	put_left (an_item: STRING) is
 			-- Put `an_item' to the left of cursor index.
 			-- Do not move cursor.
 			-- Synonym for `put_left'.
@@ -264,7 +264,7 @@ feature -- Insertion
 			(not (index = 2)) implies (index = old index+1)
 		end; 
 
-	add_right (an_item: STRING) is
+	put_right (an_item: STRING) is
 			-- Put item `v' to the right of cursor position.
 			-- Do not move cursor.
 			-- Synonym for `put_right'.
@@ -489,6 +489,18 @@ feature -- Obsolete
 			add_selection_action (a_command, argument)
 		end;
 	set_single_selection is do end;
+
+	add_right (an_item: STRING) is
+		Obsolete "Use `put_right'"
+		do
+			put_right (an_item)
+		end;
+
+	add_left (an_item: STRING) is
+		Obsolete "Use `put_right'"
+		do
+			put_left (an_item)
+		end;
 end
 
 

@@ -193,7 +193,7 @@ feature -- Status report
 			an_item.set_isubitem (j)
 			an_item.set_text (buffer)
 			an_item.set_cchtextmax (buffer_size)
-			cwin_send_message (an_item.item, Lvm_getitemtext, i, an_item.to_integer)
+			cwin_send_message (item, Lvm_getitemtext, i, an_item.to_integer)
 			Result := an_item.text			
 		end
 

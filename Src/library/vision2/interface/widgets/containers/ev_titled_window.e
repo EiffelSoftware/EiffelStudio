@@ -23,6 +23,11 @@ inherit
 			create_implementation,
 			initialize
 		end
+		
+	EV_TITLED_WINDOW_ACTION_SEQUENCES
+		redefine
+			implementation
+		end
 
 create
 	default_create,
@@ -125,14 +130,18 @@ feature -- Status setting
 			-- platform configurations.
 		require
 			not_destroyed: not is_destroyed
+			shown: is_show_requested
 		do
 			implementation.minimize
+		ensure
+			not_displayed: not is_displayed
 		end
 
 	maximize is
 			-- Display at maximum size.
 		require
 			not_destroyed: not is_destroyed
+			shown: is_show_requested
 		do
 			implementation.maximize
 		ensure

@@ -5432,13 +5432,6 @@ feature -- External C functions
 			"C (gint): gchar* | <gtk/gtk.h>"
 		end
 
-	frozen g_strescape (a_string: POINTER): POINTER is
-			-- gchar*	 g_strescape		(gchar	      *string);
-			-- (from C_GLIB)
-		external
-			"C (gchar*): gchar* | <gtk/gtk.h>"
-		end
-
 	frozen g_strfreev (a_str_array: POINTER) is
 			-- void     g_strfreev		(gchar       **str_array);
 			-- (from C_GLIB)
@@ -5774,15 +5767,6 @@ feature -- External C functions
 			"C (GTree*, gpointer) | <gtk/gtk.h>"
 		end
 
-	frozen g_tree_search (a_tree: POINTER; a_search_func: POINTER; a_data: POINTER): POINTER is
-			-- gpointer g_tree_search	 (GTree		*tree,
-			-- 			  GSearchFunc	 search_func,
-			-- 			  gpointer	 data);
-			-- (from C_GLIB)
-		external
-			"C (GTree*, GSearchFunc, gpointer): gpointer | <gtk/gtk.h>"
-		end
-
 	frozen g_tree_traverse (a_tree: POINTER; a_traverse_func: POINTER; a_traverse_type: INTEGER; a_data: POINTER) is
 			-- void	 g_tree_traverse (GTree		*tree,
 			-- 			  GTraverseFunc	 traverse_func,
@@ -6073,14 +6057,6 @@ feature -- External C functions
 			-- (from C_GDK)
 		external
 			"C (GdkColor*) | <gtk/gtk.h>"
-		end
-
-	frozen gdk_color_hash (a_colora: POINTER; a_colorb: POINTER): INTEGER is
-			-- guint        gdk_color_hash               (const GdkColor *colora,
-			-- 					   const GdkColor *colorb);
-			-- (from C_GDK)
-		external
-			"C (GdkColor*, GdkColor*): guint | <gtk/gtk.h>"
 		end
 
 	frozen gdk_color_parse (a_spec: POINTER; a_color: POINTER): BOOLEAN is
@@ -7597,14 +7573,6 @@ feature -- External C functions
 			"C (GdkRegion*, gint, gint) | <gtk/gtk.h>"
 		end
 
-	frozen gdk_region_union_with_rect (a_region: POINTER; a_rect: POINTER): POINTER is
-			-- GdkRegion*    gdk_region_union_with_rect  (GdkRegion	  *region,
-			-- 					   GdkRectangle	  *rect);
-			-- (from C_GDK)
-		external
-			"C (GdkRegion*, GdkRectangle*): GdkRegion* | <gtk/gtk.h>"
-		end
-
 --	gdk_regions_intersect (a_source1: POINTER; a_source2: POINTER): POINTER is
 --			-- GdkRegion*    gdk_regions_intersect	  (GdkRegion	  *source1,
 --			-- 					   GdkRegion	  *source2);
@@ -8741,22 +8709,6 @@ feature -- External C functions
 			-- (from C_GTK_EXTERNALS)
 		external
 			"C (GtkAccelGroup*) | <gtk/gtk.h>"
-		end
-
-	frozen gtk_accel_groups_activate (a_object: POINTER; a_accel_key: INTEGER; a_accel_mods: INTEGER): BOOLEAN is
-			-- gboolean        gtk_accel_groups_activate      	(GtkObject	*object,
-			-- 						 guint		 accel_key,
-			-- 						 GdkModifierType accel_mods);
-			-- (from C_GTK_EXTERNALS)
-		external
-			"C (GtkObject*, guint, GdkModifierType): gboolean | <gtk/gtk.h>"
-		end
-
-	frozen gtk_accel_groups_from_object (a_object: POINTER): POINTER is
-			-- GSList*	gtk_accel_groups_from_object		(GtkObject	*object);
-			-- (from C_GTK_EXTERNALS)
-		external
-			"C (GtkObject*): GSList* | <gtk/gtk.h>"
 		end
 
 	frozen gtk_accelerator_get_default_mod_mask: INTEGER is
@@ -14347,14 +14299,6 @@ feature -- External C functions
 			-- (from C_GTK_EXTERNALS)
 		external
 			"C (gchar*): gchar* | <gtk/gtk.h>"
-		end
-
-	frozen gtk_rc_find_pixmap_in_path (a_scanner: POINTER; a_pixmap_file: POINTER): POINTER is
-			-- gchar*		gtk_rc_find_pixmap_in_path	(GScanner    	*scanner,
-			-- 						 const gchar	*pixmap_file);
-			-- (from C_GTK_EXTERNALS)
-		external
-			"C (GScanner*, gchar*): gchar* | <gtk/gtk.h>"
 		end
 
 	frozen gtk_rc_get_default_files: POINTER is

@@ -63,6 +63,12 @@ feature -- Access
 			feature {EV_GTK_EXTERNALS}.g_free (edit_chars)
 		end
 
+	has_text: BOOLEAN is
+			-- Does clipboard contain text?
+		do
+			Result := not text.is_empty
+		end
+
 feature -- Status Setting
 
 	set_text (a_text: STRING) is

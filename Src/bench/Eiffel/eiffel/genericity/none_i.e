@@ -55,9 +55,7 @@ feature
 	description: ATTR_DESC is
 			-- Type description for skeleton
 		do
-			-- Do nothing
-		ensure then
-			False
+			Result := Reference_c_type.description
 		end
 
 	generate_cecil_value (buffer: GENERATION_BUFFER) is

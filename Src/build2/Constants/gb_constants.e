@@ -61,6 +61,38 @@ feature -- String representations of class names.
 	Ev_menu_bar_string: STRING is "EV_MENU_BAR"
 	
 	Ev_widget_string: STRING is "EV_WIDGET"
+	
+	Ev_cell_string: STRING is "EV_CELL"
+	
+	Ev_primitive_string: STRING is "EV_PRIMITIVE"
+	
+	Ev_tool_bar_string: STRING is "EV_TOOL_BAR"
+	
+	Ev_menu_string: STRING is "EV_MENU"
+	
+	Ev_menu_item_string: STRING is "EV_MENU_ITEM"
+	
+	Ev_tree_item_string: STRING is "EV_TREE_ITEM"
+	
+	Ev_container_string: STRING is "EV_CONTAINER"
+	
+	Ev_widget_list_string: STRING is "EV_WIDGET_LIST"
+	
+	Ev_table_string: STRING is "EV_TABLE"
+	
+	Ev_split_area_string: STRING is "EV_SPLIT_AREA"
+	
+	Ev_list_string: STRING is "EV_LIST"
+	
+	Ev_combo_box_string: STRING is "EV_COMBO_BOX"
+	
+	Ev_tree_string: STRING is "EV_TREE"
+	
+	Ev_item_string: STRING is "EV_ITEM"
+	
+	Ev_tool_bar_item_string: STRING is "EV_TOOL_BAR_ITEM"
+	
+	Ev_list_item_string: STRING is "EV_LIST_ITEM"
 
 feature -- Miscellaneous
 

@@ -322,6 +322,17 @@ feature -- Window Implementation
 			eb_shell.raise
 		end;
 
+	raise_forced is
+			-- Raise Current (even if popped down).
+		do
+			if is_a_shell then
+				if eb_shell.is_iconic_state then
+					eb_shell.set_normal_state
+				end;
+				eb_shell.raise
+			end
+		end;
+
 	create_edit_buttons is
 			-- Create the edit buttons needed for the edit bar.
 		local

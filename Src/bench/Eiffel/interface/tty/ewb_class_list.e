@@ -22,7 +22,7 @@ feature {NONE} -- Implementation
 	associated_cmd: E_SHOW_CLASSES is
 			-- Associated system command to be executed
 		do
-			!! Result.do_nothing
+			!! Result.make
 		end;
 
 end -- class EWB_CLASS_LIST

@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			make
 			ccom_set_ularge_integer (item, integer)
 		ensure	
-			item /= Default_pointer
+			exists
 		end
 
 feature -- Measurement

@@ -256,7 +256,7 @@ feature -- Basic operations
 feature {NONE} -- Implementation
 
 	create_wrapper (a_pointer: POINTER): POINTER is
-			- Create interface
+			-- Create interface
 		do
 			Result := ccom_create_c_type_info_from_pointer (a_pointer)
 		end

@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			item := a_pointer
 		ensure
 			wrapper_exist: initializer /= default_pointer and then
-					item /= default_pointer
+					exists
 			valid_item: item = a_pointer
 		end
 
@@ -40,6 +40,11 @@ feature -- Access
 	item: POINTER
 			-- Pointer to COM structure
 
+	exists: BOOLEAN is
+			-- Is wrapped structure initialized?
+		do
+			Result := exists
+		end
 
 feature {NONE} -- Implementation
 
@@ -66,7 +71,7 @@ feature {NONE} -- Implementation
 
 invariant
 	wrapper_invariant: initializer /= default_pointer and then
-					item /= default_pointer
+					exists
 
 end -- class ECOM_WRAPPER
 

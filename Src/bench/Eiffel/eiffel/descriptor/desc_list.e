@@ -79,18 +79,18 @@ feature -- Insertion
 		do
 			if f.has_poly_unit then
 				u := f.new_poly_unit (Invariant_rout_id);
-			end;
-			from
-				class_types.start;
-				start
-			until
-				class_types.after
-			loop
 				if u /= Void then
-					item.set_invariant_entry (u.entry (class_types.item));
-				end;
-				class_types.forth;
-				forth
+					from
+						class_types.start;
+						start
+					until
+						after
+					loop
+						item.set_invariant_entry (u.entry (class_types.item));
+						class_types.forth;
+						forth
+					end
+				end
 			end
 		end;
 
@@ -105,7 +105,8 @@ feature -- Insertion
 		local
 			u: POLY_UNIT;
 			ri: ROUT_INFO;
-			origin, offset, nb_routines: INTEGER;
+			origin: CLASS_ID;
+			origin_id, offset, nb_routines: INTEGER;
 			desc: DESCRIPTOR;
 			du: DESC_UNIT;
 			void_entry: ENTRY
@@ -115,52 +116,54 @@ feature -- Insertion
 
 			if f.has_poly_unit then
 				u := f.new_poly_unit (r_id);
-			end;
-
-				-- Get the origin of the routine of id `r_id' and
-				-- the offset of that routine in the origin class.
-				-- Also get the number of routines introduced in the
-				-- origin class.
-
-			ri := System.rout_info_table.item (r_id);
-			origin := ri.origin.id;
-			offset := ri.offset;
-			nb_routines := System.rout_info_table.descriptor_size (ri.origin);
-
-				-- For each class type, create the appropriate
-				-- entry, and insert it into the appropriate
-				-- DESC_UNIT structure.
-
-			from
-				class_types.start;
-				start
-			until
-				class_types.after
-			loop
-					-- Get the descriptor of the class type.
-				desc := item;
-					-- Create a desc_unit if an origin is encountered
-					-- for the first time and insert it in the descriptor, 
-					-- (otherwise recuperate existing one).
-				du := desc.table_item (origin);
-				if du = Void then
-					!! du.make (origin, nb_routines);
-					desc.table_put (du, origin)
-				end;
-					-- Insert the polymorphical entry correponding to
-					-- the current class type and routine of id `r_id'
-					-- into the descriptor unit, at the position `offset'.
-				check
-					offset >= du.lower;
-					offset <= du.upper
-				end;
 				if u /= Void then
-					du.put (u.entry (class_types.item), offset);
-				end;
-				class_types.forth;
-				forth
-			end
 
+						-- Get the origin of the routine of id `r_id' and
+						-- the offset of that routine in the origin class.
+						-- Also get the number of routines introduced in the
+						-- origin class.
+
+					ri := System.rout_info_table.item (r_id);
+					origin := ri.origin;
+					origin_id := origin.id;
+					offset := ri.offset;
+					nb_routines :=
+						System.rout_info_table.descriptor_size (origin);
+
+						-- For each class type, create the appropriate
+						-- entry, and insert it into the appropriate
+						-- DESC_UNIT structure.
+
+					from
+						class_types.start;
+						start
+					until
+						after
+					loop
+							-- Get the descriptor of the class type.
+						desc := item;
+							-- Create a desc_unit if an origin is encountered
+							-- for the first time and insert it in the
+							-- descriptor,  (otherwise recuperate existing one).
+						du := desc.table_item (origin_id);
+						if du = Void then
+							!! du.make (origin_id, nb_routines);
+							desc.table_put (du, origin_id)
+						end;
+							-- Insert the polymorphical entry correponding to
+							-- the current class type and routine of id `r_id'
+							-- into the descriptor unit, at the position
+							-- `offset'.
+						check
+							offset >= du.lower;
+							offset <= du.upper
+						end;
+						du.put (u.entry (class_types.item), offset);
+						class_types.forth;
+						forth
+					end
+				end
+			end
 		end;
 
 feature -- Melting

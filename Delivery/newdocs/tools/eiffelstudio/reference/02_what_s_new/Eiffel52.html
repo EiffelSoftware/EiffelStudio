@@ -54,7 +54,7 @@
           <li><span  class="eclass">STRING</span> changes:</li>
           <ul>
           <li>Fixed <span  class="efeature">is_integer</span> to return False for strings 
-          of the form &quot;(-|+)[a-zA-Z]*[0-9]*)&quot;</li>
+          of the form &quot;(-|+)[a-zA-Z]+[0-9]*)&quot;</li>
           <li>Improved speed of <span  class="efeature">to_lower</span> and <span  class="efeature">to_upper</span>.</li>
           <li>Updated for ELKS 2001 conformance:
           <ul>
@@ -92,7 +92,7 @@
         </ul>
         <h3>WEL</h3>
         <ul>
-          <li>Changed type of non-exported feature `internal_data' of 
+          <li>Changed type of non-exported feature <span class="efeature">internal_data</span> of 
           <span  class="eclass">WEL_WINDOW</span> from <span  class="eclass">INTEGER</span> to <span  class="eclass">POINTER</span>.</li>
           <li>Fixed a GDI memory leak when creating/releasing instances of 
           descendant of <span  class="eclass">WEL_CONTROL</span>.</li>

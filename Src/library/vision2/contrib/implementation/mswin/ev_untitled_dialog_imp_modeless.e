@@ -12,7 +12,7 @@ inherit
 		undefine
 			promote_to_dialog_window,
 			extra_minimum_height,
-			update_style_and_pixmap
+			update_style
 		redefine
 			interface,
 			other_imp

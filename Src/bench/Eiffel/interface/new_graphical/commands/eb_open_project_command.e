@@ -203,6 +203,7 @@ feature {NONE} -- Project Initialization
 			project_name: STRING
 			wd: EV_WARNING_DIALOG
 			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			l_display_system_info: BOOLEAN
 		do	
 				-- Retrieve the project
 			Eiffel_project.make (project_dir)
@@ -249,6 +250,11 @@ feature {NONE} -- Project Initialization
 				msg := Warning_messages.w_Cannot_open_project
 				create wd.make_with_text (msg)
 				wd.show_modal_to_window (parent_window)
+			else
+					-- There was no error, meaning that retrieval was successful
+					-- without a recompilation of the non-compatible project.
+					-- Therefore we display the system information.
+				l_display_system_info := True
 			end
 
 			if not Eiffel_project.error_occurred then
@@ -264,9 +270,13 @@ feature {NONE} -- Project Initialization
 				end
 				window_manager.display_message (title)
 				Recent_projects_manager.save_environment
-				
-					-- We print text in the project_tool text concerning the system.
-				output_manager.display_system_info
+	
+				if l_display_system_info then
+						-- We print text in the project_tool text concerning the system
+						-- because we were successful retrieving the project without
+						-- errors or conversion.
+					output_manager.display_system_info
+				end			
 			end
 		end
 

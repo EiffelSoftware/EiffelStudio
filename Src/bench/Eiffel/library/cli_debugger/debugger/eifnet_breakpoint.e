@@ -74,12 +74,8 @@ feature -- Access assertion
 	is_lower_case (a_string: STRING): BOOLEAN is
 		require
 			not_void: a_string /= Void
-		local
-			l_str: STRING
 		do
-			l_str:= clone (a_string)
-			l_str.to_lower
-			Result := l_str.is_equal (a_string)
+			Result := a_string.as_lower.is_equal (a_string)
 		end
 		
 feature -- access

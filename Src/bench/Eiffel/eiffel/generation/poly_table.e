@@ -328,7 +328,7 @@ feature
 						file.putstring (c_name);
 						file.putstring ("_pgtype");
 						file.putint (j);
-						file.putstring (" [] = {");
+						file.putstring (" [] = {0,");
 						file.putstring (entry.gen_type_string (True));
 						file.putstring ("-1};");
 						file.new_line;
@@ -436,6 +436,10 @@ feature
 					entry := local_copy.array_item (i)
 					ba.append_short_integer (entry.type_id - 1)
 					ba.append_short_integer (entry.feature_type_id - 1)
+					if entry.is_generic then
+						entry.make_gen_type_byte_code (ba)
+					end
+					ba.append_short_integer (-1)
 					i := i + 1
 				end
 			else

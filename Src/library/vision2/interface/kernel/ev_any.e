@@ -215,7 +215,7 @@ feature {EV_ANY} -- Contract support
 				aseqs := action_sequences
 				aseqs.start
 			until
-				aseqs.after
+				aseqs.off
 			loop
 				create label.make_with_text (aseqs.key_for_iteration)
 				label.align_text_left
@@ -227,6 +227,13 @@ feature {EV_ANY} -- Contract support
 				aseqs.forth
 			end
 		end
+
+	--|FIXME  HACK
+--	temp_list: LINKED_LIST [EV_LABEL] is
+--			-- Kill me
+--		once
+--			create Result.make
+--		end
 
 invariant
 	is_initialized: is_initialized
@@ -266,6 +273,9 @@ end -- class EV_ANY
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/03/01 03:12:30  oconnor
+--| added create make_for_testnterface/widgets/primitives/ev_vertical_separator.e
+--|
 --| Revision 1.10  2000/02/22 18:39:48  oconnor
 --| updated copyright date and formatting
 --|

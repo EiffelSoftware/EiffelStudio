@@ -15,6 +15,10 @@ inherit
 			implementation
 		end
 
+create
+	default_create,
+	make_for_test
+
 feature -- Access
 
 	has (v: like item): BOOLEAN is
@@ -106,6 +110,9 @@ end -- class EV_CELL
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/03/01 03:12:30  oconnor
+--| added create make_for_testnterface/widgets/primitives/ev_vertical_separator.e
+--|
 --| Revision 1.3  2000/02/22 18:39:50  oconnor
 --| updated copyright date and formatting
 --|

@@ -50,22 +50,34 @@ feature -- Status setting
 	align_text_center is
 			-- Display `text' centered.
 		do
-			C.gtk_misc_set_alignment (text_label, 0.5, 0.5)
-			C.gtk_label_set_justify (text_label, C.Gtk_justify_center_enum)
+			if c_object = Default_pointer then
+				print ("************************************")
+			else
+				C.gtk_misc_set_alignment (text_label, 0.5, 0.5)
+				C.gtk_label_set_justify (text_label, C.Gtk_justify_center_enum)
+			end
 		end
 
 	align_text_left is
 			-- Display `text' left aligned.
 		do
-			C.gtk_misc_set_alignment (text_label, 0, 0.5)
-			C.gtk_label_set_justify (text_label, C.Gtk_justify_left_enum)
+			if c_object = Default_pointer then
+				print ("************************************")
+			else
+				C.gtk_misc_set_alignment (text_label, 0, 0.5)
+				C.gtk_label_set_justify (text_label, C.Gtk_justify_left_enum)
+			end
 		end
 
 	align_text_right is
 			-- Display `text' right aligned.
 		do
-			C.gtk_misc_set_alignment (text_label, 1, 0.5)
-			C.gtk_label_set_justify (text_label, C.Gtk_justify_right_enum)
+			if c_object = Default_pointer then
+				print ("************************************")
+			else
+				C.gtk_misc_set_alignment (text_label, 1, 0.5)
+				C.gtk_label_set_justify (text_label, C.Gtk_justify_right_enum)
+			end
 		end
 	
 feature -- Element change	
@@ -121,6 +133,9 @@ end -- class EV_TEXTABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/03/01 03:12:30  oconnor
+--| added create make_for_testnterface/widgets/primitives/ev_vertical_separator.e
+--|
 --| Revision 1.21  2000/02/22 18:39:36  oconnor
 --| updated copyright date and formatting
 --|

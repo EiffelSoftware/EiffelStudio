@@ -58,7 +58,9 @@ feature -- Query
 			dir: DIRECTORY
 			cnt: INTEGER
 			file: RAW_FILE
-			l_last_entry: STRING
+			l_last_entry,
+			l_file_type: STRING
+			l_file_pixmap: EV_PIXMAP
 		do
 			create Result.make (5)
 			from
@@ -78,11 +80,15 @@ feature -- Query
 						node.set_text (short_name (dir.name))
 						node.set_pixmap (Shared_constants.Graphical_constants.Folder_closed_icon)
 						Result.extend (node)
-					elseif file.exists and then Shared_project.allowed_file_types.has (file_type (short_name (file.name))) then								
-						create file_node.make_with_text (root_dir.lastentry)
-						file_node.pointer_double_press_actions.force_extend (agent Shared_document_manager.load_document_from_file (file.name))
-						file_node.set_pixmap (Shared_constants.Graphical_constants.File_icon)
-						Result.extend (file_node)					
+					elseif file.exists then 
+						l_file_type := file_type (short_name (file.name))
+						if shared_constants.application_constants.allowed_file_types.has (l_file_type) then
+							l_file_pixmap := shared_constants.application_constants.allowed_file_types.item (l_file_type)	
+							create file_node.make_with_text (root_dir.lastentry)
+							file_node.pointer_double_press_actions.force_extend (agent Shared_document_manager.load_document_from_file (file.name))
+							file_node.set_pixmap (l_file_pixmap)
+							Result.extend (file_node)	
+						end											
 					end
 				end
 				cnt := cnt + 1

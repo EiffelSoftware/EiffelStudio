@@ -4270,12 +4270,18 @@ void ** ecom_runtime_ec::ccom_ec_pointed_pointer (EIF_REFERENCE eif_ref, void **
 
   eif_object = eif_protect (eif_ref);
 
-  result = (void **) CoTaskMemAlloc (sizeof (void *));
-  * result = (void *) eif_field (eif_access (eif_object), "item", EIF_POINTER);
-  eif_wean (eif_object);
+  if (NULL == old)
+  {
+	result = (void **) CoTaskMemAlloc (sizeof (void *));
+  }
+  else
+  {
+	result = old;
+  }
+  * result = (void *) eif_field (eif_wean (eif_object), "item", EIF_POINTER);
+
   if (old != NULL)
   {
-    *old = *result;
     return NULL;
   }
   else

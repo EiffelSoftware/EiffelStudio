@@ -16,14 +16,14 @@ feature -- Directory Paths
 		local
 			l_path: STRING
 		once
-			l_path := get ("EIFFEL_SRC")
-			if l_path /= Void then
-				create Result.make_from_string (l_path)		
-				Result.extend ("tools")
-				Result.extend ("doc_builder")						
-			else
+--			l_path := get ("EIFFEL_SRC")
+--			if l_path /= Void then
+--				create Result.make_from_string (l_path)		
+--				Result.extend ("tools")
+--				Result.extend ("doc_builder")						
+--			else
 				create Result.make_from_string ((create {EXECUTION_ENVIRONMENT}).current_working_directory)
-			end
+--			end
 		end
 
 	resources_directory: DIRECTORY_NAME is

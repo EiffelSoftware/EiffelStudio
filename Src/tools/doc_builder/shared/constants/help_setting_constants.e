@@ -20,6 +20,9 @@ feature -- Access
 	is_web_help: BOOLEAN
 			-- Help for web page content?
 			
+	is_tree_web_help: BOOLEAN
+			-- Is web help for a tree toc?
+			
 	toc: TABLE_OF_CONTENTS
 			-- Table of Contents
 			
@@ -117,10 +120,16 @@ feature -- Status Setting
 				is_html_help := False
 				is_vsip_help := True
 				is_web_help := False
-			when web_help then
+			when web_help_tree then
 				is_html_help := False
 				is_vsip_help := False
 				is_web_help := True
+				is_tree_web_help := True
+			when web_help_simple then				
+				is_html_help := False
+				is_vsip_help := False
+				is_web_help := True
+				is_tree_web_help := False
 			end
 		end			
 		
@@ -128,7 +137,8 @@ feature -- Implementation
 
 	html_help,
 	vsip_help,
-	web_help: INTEGER is unique
+	web_help_tree,
+	web_help_simple: INTEGER is unique
 			-- Transformation type chosen identifier
 		
 invariant

@@ -18,6 +18,7 @@
 #include "cecil.h"
 #include "hector.h"
 
+#ifndef EIF_THREADS
 /* The following stack records the addresses of objects which were given to
  * the C at some time. When Eiffel gives C an indirection pointer, it is an
  * address in the hec_stack structure (type EIF_OBJ as defined in cecil.h).
@@ -57,6 +58,7 @@ rt_private struct stack free_stack = {			/* Entries free in hector */
 	(char **) 0,			/* st_top */
 	(char **) 0,			/* st_end */
 };
+#endif /* EIF_THREADS */
 
 /* Private function declarations */
 rt_private EIF_OBJ hector_addr(char *root);		/* Maps an adress to an hector position */
@@ -162,6 +164,7 @@ rt_public EIF_OBJ ewean(EIF_OBJ object)
 	 * table. If the object is dead, the next GC cycle will collect it. The C
 	 * cannot reference the object through its EIF_OBJ handle any more.
 	 */
+	EIF_GET_CONTEXT
 	EIF_OBJ ret;
 	
 	if (-1 == epush(&free_stack, object)) {	/* Record free entry in the stack */
@@ -173,6 +176,7 @@ rt_public EIF_OBJ ewean(EIF_OBJ object)
 	eif_access(object) = (char *) 0;		/* Reset hector's entry */
 
 	return ret;				/* return unprotected address */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void eufreeze(char *object)
@@ -183,7 +187,7 @@ rt_public void eufreeze(char *object)
 	 * cleared and should the object be dead, it will be collected during the
 	 * next GC cycle.
 	 */
-
+	EIF_GET_CONTEXT
 	EIF_OBJ address;					/* Address in hector's stack */
 	char *unprotected_ref;
 
@@ -196,6 +200,7 @@ rt_public void eufreeze(char *object)
 	unprotected_ref = eif_access(address);
 	HEADER(unprotected_ref)->ov_size &= ~B_C;		/* Back to the Eiffel world */
 	eif_access(address) = (char *) 0;				/* Reset hector's entry */
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -209,7 +214,7 @@ rt_public EIF_OBJ hrecord(char *object)
 	 * in the table (indirection pointer).
 	 * If the object cannot be recorded, raise a "No more memory" exception.
 	 */
-
+	EIF_GET_CONTEXT
 	EIF_OBJ address;					/* Address in hector */
 
 	if (-1 == epush(&hec_stack, object)) {		/* Cannot record object */
@@ -221,6 +226,7 @@ rt_public EIF_OBJ hrecord(char *object)
 	eif_access(address) = object;		/* Record object's physical address */
 
 	return (EIF_OBJ) address;			/* Address in hector stack */
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -234,7 +240,7 @@ rt_public EIF_OBJ henter(char *object)
 	 * someone wants to create Eiffel objects via emalloc() and let the GC
 	 * see them by calling 'henter'--RAM.
 	 */
-	
+	EIF_GET_CONTEXT
 	char *address;						/* Address in hector */
 
 	address = hpop();					/* Check for an already free location */
@@ -248,6 +254,7 @@ rt_public EIF_OBJ henter(char *object)
 	eif_access(address) = object;		/* Record object's physical address */
 
 	return (EIF_OBJ) address;			/* Location in Hector table */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void hfree(EIF_OBJ address)
@@ -257,12 +264,13 @@ rt_public void hfree(EIF_OBJ address)
 	 * within the hector stack hec_saved is remembered in free_stack for later
 	 * reuse. Again, only guys wearing white hats should use this routine--RAM.
 	 */
-
+	EIF_GET_CONTEXT
 	eif_access(address) = (char *) 0;				/* Reset hector's entry */
 	if (-1 == epush(&free_stack, address)) {		/* Record free entry */
 		plsc();										/* Run GC cycle */
 		(void) epush(&free_stack, address);			/* Retry, discard errors */
 	}
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *spfreeze(char *object)
@@ -305,7 +313,7 @@ rt_private char *hpop(void)
 	 * null pointer. Otherwise the address points directly to a free entry
 	 * in hector's table.
 	 */
-	
+	EIF_GET_CONTEXT
 	char **top = free_stack.st_top;
 	struct stchunk *s;
 
@@ -331,6 +339,7 @@ rt_private char *hpop(void)
 	free_stack.st_top = --top;				/* Backup one location */
 
 	return *top;
+	EIF_END_GET_CONTEXT
 }
 
 rt_private EIF_OBJ hector_addr(char *root)
@@ -339,7 +348,7 @@ rt_private EIF_OBJ hector_addr(char *root)
 	 * associated with the physical address and return it. This is a linear
 	 * search, but the size of this stack should remain small.
 	 */
-
+	EIF_GET_CONTEXT
 	register1 int nb_items;			/* Number of items in arena */
 	register2 struct stchunk *s;	/* To walk through each stack's chunk */
 	register3 char **arena;			/* Current arena in chunk */
@@ -359,5 +368,6 @@ rt_private EIF_OBJ hector_addr(char *root)
 	}
 
 	panic(MTC "hector stack inconsistency");		/* We must have found it */
+	EIF_END_GET_CONTEXT
 }
 

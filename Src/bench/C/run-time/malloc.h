@@ -96,7 +96,7 @@ extern struct emallinfo *meminfo(int type);	/* Memory statistics */
 /*
  * Shared variables
  */
-extern struct stack hec_stack;		/* The hector stack (objects seen from C) */
+/*extern struct stack hec_stack;*//* %%ss *//* The hector stack (objects seen from C) */
 
 /*
  * Shared routines

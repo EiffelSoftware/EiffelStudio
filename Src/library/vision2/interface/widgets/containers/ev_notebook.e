@@ -36,6 +36,14 @@ inherit
 		redefine
 			implementation
 		end
+		
+	EV_FONTABLE
+		undefine
+			is_equal
+		redefine
+			implementation,
+			is_in_default_state
+		end
 
 create
 	default_create

@@ -24,6 +24,7 @@ extern "C" {
 #include "eif_config.h"
 #endif
 
+#include <limits.h>			/* To avoid redefinition of constants limits. */
 #ifdef EIF_WINDOWS
 #ifdef EIF_WIN32
 #include "eif_confmagic.h"

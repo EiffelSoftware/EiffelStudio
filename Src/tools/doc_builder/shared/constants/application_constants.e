@@ -326,6 +326,7 @@ feature -- Access
 			Result.extend (l_graphical_constants.jpg_file_icon, "jpg")
 			Result.extend (l_graphical_constants.css_file_icon, "css")
 			Result.extend (l_graphical_constants.js_file_icon, "js")
+			Result.extend (l_graphical_constants.png_file_icon, "bmp")
 		end	
 
 end -- class APPLICATION_CONSTANTS

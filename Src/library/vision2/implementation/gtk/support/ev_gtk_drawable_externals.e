@@ -25,31 +25,37 @@ feature {NONE} -- GTK C functions for general drawables
 feature {NONE} -- GTK C functions for pixmaps
 
 	gtk_pixmap_new (pixmap, mask: POINTER): POINTER is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end 
 
 feature {NONE} -- GTK C functions for drawing area
 
 	gtk_drawing_area_new : POINTER is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_drawing_area_size (drawable: POINTER; w, h: INTEGER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 feature {NONE} -- code in the glue library
 
 	c_gtk_pixmap_create_from_xpm (parent: POINTER; file_name: POINTER): POINTER is
-		external "C | %"gtk_eiffel.h%""
+		external
+			"C | %"gtk_eiffel.h%""
         end
 
 	c_gtk_pixmap_read_from_xpm (widget, parent: POINTER; file_name: POINTER) is
-		external "C | %"gtk_eiffel.h%""
+		external
+			"C | %"gtk_eiffel.h%""
 		end
 
 	c_gtk_pixmap_create_with_size (window_parent: POINTER; width, height: INTEGER): POINTER is
-		external "C | %"gtk_eiffel.h%""
+		external
+			"C | %"gtk_eiffel.h%""
 		end
 
 end -- class EV_GTK_DRAWABLE_EXTERNALS

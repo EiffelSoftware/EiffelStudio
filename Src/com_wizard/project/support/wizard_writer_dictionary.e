@@ -689,7 +689,7 @@ feature -- Generator constants -- 8
 
 	Iunknown_interface: STRING is "ECOM_IUNKNOWN_INTERFACE"
 
-	Empty_function_body: STRING is "%T%T%T-- DO NOT put implementation here as the wizard will override this class when you rerun wizard."
+	Empty_function_body: STRING is "%T%T%T-- Redefine in heir."
 
 	Result_clause: STRING is "Result := "
 

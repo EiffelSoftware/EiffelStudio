@@ -72,7 +72,6 @@ feature {NONE} -- Obsolete
 
 	add_to_container (v: EV_ITEM; v_imp: EV_ITEM_IMP) is
 			-- Add `v' to end of list.
-			--| FIXME VB Will be obsolete
 		do
 			C.gtk_container_add (list_widget, v_imp.c_object)
 			v_imp.set_item_parent_imp (Current)

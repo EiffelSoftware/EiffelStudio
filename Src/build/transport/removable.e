@@ -1,0 +1,10 @@
+
+deferred class REMOVABLE 
+	
+feature 
+
+	remove_yourself is
+		deferred
+		end;
+
+end

@@ -1,0 +1,580 @@
+
+-- General notion of user command
+-- i.e. editable command.
+
+class USER_CMD 
+
+inherit
+
+	CMD
+		redefine
+			set_editor, original_stone
+		end;
+	PIXMAPS
+		export
+			{NONE} all
+		end;
+	NAMABLE;
+	ERROR_POPUPER
+
+creation
+
+	make, session_init, storage_init
+
+feature -- Creation
+
+	make is
+			-- Initialize current user
+			-- command.
+		do
+			set_symbol (Command_pixmap);
+			int_generator.next;
+			identifier := int_generator.value;
+			!!arguments.make;
+			!!labels.make;
+		end;
+
+	session_init is
+			-- Intialize current user command
+			-- for a session.
+		do
+			!!arguments.make;
+			!!labels.make;
+		end;
+
+	storage_init (a: like arguments; l: like labels;
+			s: STRING; p: CMD; in,vn: STRING) is
+			-- Intialize current user command
+			-- for storage.
+		do
+			arguments := a;
+			labels := l;
+			eiffel_text := s;
+			parent_type := p;
+			set_internal_name (in);
+			set_visual_name (vn)	
+		end;
+
+feature -- Stone
+
+	original_stone: USER_CMD is
+		do
+			Result := Current
+		end;
+
+	identifier: INTEGER;
+			-- Unique identifier for storage
+			-- and retrieval
+
+	eiffel_type: STRING;
+			-- Name of the Eiffel class 
+			-- representing Current user 
+			-- command
+
+	arguments: EB_LINKED_LIST [ARG];
+			-- Arguments of Current command
+			-- (Defined in current or introduced
+			-- from a parent)
+
+	labels: EB_LINKED_LIST [CMD_LABEL];
+			-- Labels of Current command.
+			-- (Defined in current or introduced
+			-- from a parent)
+
+	eiffel_text: STRING;
+			-- Eiffel class text associated with
+			-- Current user command.
+
+	label: STRING is
+		do
+			if not (visual_name = Void) then
+				Result := visual_name
+			else
+				Result := eiffel_type
+			end;
+		end;
+
+feature -- Namable
+
+	visual_name: STRING;
+
+	set_visual_name (s: STRING) is
+		do
+			if (s = Void) then
+				visual_name := Void
+			else
+				visual_name := s.duplicate
+			end;
+			command_catalog.update_name_in_editors (Current);
+		end;
+
+feature -- Editor
+
+	set_editor (ed: CMD_EDITOR) is
+		do
+			command_editor := ed;
+			old_template := template;
+		end;
+
+feature -- Undoable and non-undoable
+
+	undoable: BOOLEAN;
+			-- Is Command undoable?
+
+	set_undoable (b: BOOLEAN) is
+			-- Set undoable to `b'
+		do
+			undoable := b
+		end
+
+feature -- Inheritance
+
+	has_parent: BOOLEAN is
+			-- Does current command inherit
+			-- from another command?
+		do
+			Result := not (parent_type = Void)
+		end;
+
+	set_parent (cmd: CMD) is 
+			-- Set parent of Current
+			-- user command to `cmd'.
+		local
+			set_parent_command: CMD_SET_PARENT
+		do 
+			!!set_parent_command;
+			if not (parent_type = Void) then
+				set_parent_command.set_previous_parent (parent_type);
+			end;
+			set_parent_command.set_parent_type (cmd);
+			set_parent_command.execute (Current);
+		end;
+
+	remove_parent is
+			-- Remove parent from Current.
+		local
+			cut_parent_command: CMD_CUT_PARENT
+		do
+			if parent_type /= Void then
+				!!cut_parent_command;
+				cut_parent_command.execute (Current);
+			end
+		end;
+
+	set_parent_type (c: CMD) is
+			-- Set parent_type to `c'.
+		do
+			parent_type := c
+		end;
+
+	parent_type: CMD;
+			-- Parent type of Current user
+			-- command
+
+	reset_inherit_stone is
+			-- Reset the inherit stone of command editor.
+		require
+			Edited: edited
+		do
+			command_editor.reset_inherit_stone
+		end;
+
+	update_inherit_stone (c: CMD) is
+			-- Update inherit stone of command editor
+		require
+			Edited: edited
+		do
+			command_editor.set_inherit_stone (c)
+		end;
+
+feature -- Naming
+
+	set_internal_name (s: STRING) is
+			-- Set internal name of
+			-- current user command.
+		do
+			if s.empty then
+				namer.next;
+				eiffel_type := namer.value;
+			else
+				eiffel_type := s
+			end;
+		end;
+
+feature {NONE} -- Naming
+
+	arg_entity_namer: LOCAL_NAMER is
+			-- Argument entities namer
+		once
+			!!Result.make ("argument")
+		end;
+
+	arg_param_namer: LOCAL_NAMER is
+			-- Argument parameters namer
+		once
+			!!Result.make ("arg")
+		end;
+
+	int_generator: INT_GENERATOR is
+			-- Generator of unique integers
+		once
+			!!Result
+		end;
+
+	namer: NAMER is
+			-- User command namer
+		once
+			!!Result.make ("Command");
+		end;
+
+feature -- Editing
+
+	update_instance_editors is
+			-- Update arguments in the instance 
+			-- editors of Current command.
+		local
+			inst_editors: LINKED_LIST [CMD_INST_EDITOR];
+			ed: CMD_INST_EDITOR
+		do
+			inst_editors := window_mgr.instance_editors;
+			from
+				inst_editors.start
+			until
+				inst_editors.after
+			loop
+				ed := inst_editors.item;
+				if 
+					(ed.command_instance.associated_command = Current)
+				then
+					ed.command_instance.update_arguments;
+					ed.update
+				end;
+				inst_editors.forth
+			end
+		end;
+ 
+	set_eiffel_text (s: STRING) is
+			-- Set the eiffel text to
+			-- `s'.
+		do
+			eiffel_text := s
+		end;
+
+	save is
+			-- Save edited arguments, labels and
+			-- eiffel text.
+		require
+			Editing: edited
+		do
+			save_arguments;
+			save_labels;
+		end;
+
+	save_text is	
+			-- Save text of Current command.
+		require
+			Editing: edited
+		do
+			eiffel_text := command_editor.eiffel_text.duplicate
+		end;
+
+	set_arguments (args: like arguments) is
+			-- Set arguments to `args'.
+		require
+			valid_arg: args /= Void
+		do
+			arguments := args
+		end;
+
+	set_labels (l: like labels) is
+			-- Set labels to `l'.
+		require
+			valid_labels: l /= Void
+		do
+			labels := l
+		end;
+
+feature {NONE}
+
+	save_arguments is 
+			-- Save arguments of Current command.
+		require
+			Editing: edited
+		local
+			l: EB_LINKED_LIST [ARG]
+		do 
+			from
+				!!l.make;
+				arguments.start;
+			until
+				arguments.after
+			loop
+				l.add (arguments.item);
+				arguments.forth
+			end;
+			arguments := l
+		end;
+
+	save_labels is 
+			-- Save labels of Current command.
+		require
+			Editing: edited
+		local
+			l: EB_LINKED_LIST [CMD_LABEL]
+		do 
+			from
+				!!l.make;
+				labels.start;
+			until
+				labels.after
+			loop
+				l.add (labels.item);
+				labels.forth
+			end;
+			labels := l
+		end;
+	
+feature  -- Generation 
+
+	template: STRING is
+			-- Template of the Eiffel
+			-- command.
+		local
+			parent_name: STRING;
+			inherited_args: LINKED_LIST [STRING]
+		do
+			!!Result.make (0);
+			Result.append ("class ");
+			Result.append (eiffel_type);
+			Result.append ("%N%Ninherit%N%N%T");
+			if (parent_type = Void) then
+				if undoable then
+					Result.append ("UNDOABLE_CMD");
+				else
+					Result.append ("NON_UNDOABLE_CMD");
+				end
+			else
+				Result.append (parent_type.eiffel_inherit_text);
+			end;
+			Result.append ("%N%Ncreation%N%N%Tmake");
+			Result.append ("%N%Nfeature%N%N");
+			from
+				labels.start
+			until
+				labels.after
+			loop
+				if (labels.item.parent_type = Void) then
+					Result.append ("%T");
+					Result.append (labels.item.label);
+					Result.append ("_label: STRING is %"");
+					Result.append (labels.item.label);
+					Result.append ("%";%N%N");
+				end;
+				labels.forth
+			end;
+			from
+				arg_entity_namer.reset;
+				arguments.start
+			until
+				arguments.after
+			loop
+				if (arguments.item.parent_type = Void) then
+					Result.append ("%T");
+					arg_entity_namer.next;
+					Result.append (arg_entity_namer.value);
+					Result.append (": ");
+					Result.append (arguments.item.eiffel_type);
+					Result.append (";%N%N");
+				end;
+				arguments.forth
+			end;
+			if (parent_type = Void) then
+				Result.append ("%Texecute is%N%T%Tdo%N%T%Tend;%N%N");
+			else
+				Result.append (parent_type.eiffel_body_text);
+			end;
+			Result.append ("%Tmake");
+			if
+				not arguments.empty
+			then
+				Result.append (" (");
+				from
+					arguments.start;
+					arg_param_namer.reset;
+				until
+					arguments.after
+				loop
+					arg_param_namer.next;
+					Result.append (arg_param_namer.value);
+					Result.append (": ");
+					Result.append (arguments.item.eiffel_type);
+					arguments.forth;
+					if not arguments.after then
+						Result.append ("; ")
+					end;
+				end;
+				Result.append (")");
+			end;
+			Result.append (" is%N%T%Tdo");
+			from
+				arguments.start;
+				arg_param_namer.reset;
+				arg_entity_namer.reset;
+				!!inherited_args.make;
+			until
+				arguments.after
+			loop
+				arg_param_namer.next;
+				if (arguments.item.parent_type = Void) then
+					arg_entity_namer.next;
+					Result.append ("%N%T%T%T");
+					Result.append (arg_entity_namer.value);
+					Result.append (" := ");
+					Result.append (arg_param_namer.value);	
+					Result.append (";");
+				else
+					inherited_args.add (arg_param_namer.value);
+				end;
+				arguments.forth
+			end;
+			Result.append ("%N");
+			if not (parent_type = Void) then
+				Result.append (parent_type.eiffel_creation_text (inherited_args));
+			end;
+			Result.append ("%T%Tend;%N%N");
+			if undoable then
+				Result.append ("%Tundo is%N%T%Tdo%N%T%Tend;%N%N");
+			end;
+			Result.append ("end%N");
+		end;
+
+feature -- Arguments 
+
+	add_argument (ts: TYPE_STONE) is
+			-- Add an argument to Current command.
+		require
+			Edited: edited
+		local
+			new_argument: ARG;
+			add_argument_cmd: CMD_ADD_ARGUMENT
+		do
+			!!new_argument.session_init (ts);
+			!!add_argument_cmd;
+			add_argument_cmd.set_element (new_argument);
+			add_argument_cmd.execute (Current);
+		end;
+ 
+	remove_argument (a: ARG) is
+			-- Remove `a' from the list of arguments
+			-- from current command.
+		require
+			Edited: edited
+		local
+			remove_argument_cmd: CMD_CUT_ARGUMENT
+		do
+			arguments.start;
+			arguments.search (a);
+			if
+				(not arguments.after) and then
+				(not arguments.item.inherited)
+			then
+				!!remove_argument_cmd;
+				remove_argument_cmd.set_index (arguments.index);
+				remove_argument_cmd.execute (Current);
+				update_instance_editors
+			end
+		end;
+
+feature -- labels {CMD_EDITOR}
+
+	add_label (l: STRING) is
+			-- Add a label to current command.
+		require
+			Edited: edited
+		local
+			lab: CMD_LABEL;
+			add_label_cmd: CMD_ADD_LABEL
+		do
+			!!lab.make (l);
+			!!add_label_cmd;
+			add_label_cmd.set_element (lab);
+			add_label_cmd.execute (Current);
+		end;
+ 
+	remove_label (l: CMD_LABEL) is
+			-- Remove `l' from the list of labels
+			-- from current command.
+		require
+			Edited: edited
+		local
+			remove_label_cmd: CMD_CUT_LABEL
+		do
+			labels.start;
+			labels.search (l);
+			if
+				(not labels.after) and then
+				(not labels.item.inherited)
+			then
+				!!remove_label_cmd;
+				remove_label_cmd.set_index (labels.index);
+				remove_label_cmd.execute (Current);
+			end
+		end;
+
+feature -- Text generation
+
+	old_template: STRING;
+
+	rescued: BOOLEAN;
+
+	update_text is
+			-- Update edited eiffel text by applying
+			-- a `diff3' between the current edited text
+			-- the previous template and the new template.
+		local
+			merger: MERGER;
+			temp: STRING;
+			mp: MOUSE_PTR;
+			msg: STRING
+		do
+			if not rescued then
+				!!mp;
+				mp.set_watch_shape;
+				if edited then
+					temp := command_editor.text_editor.text
+				else
+					temp := eiffel_text;
+				end;
+				!!merger;
+				temp := merger.integrate (temp, old_template, template);
+				if edited then
+					command_editor.text_editor.set_text ("");
+					command_editor.text_editor.append (temp);
+				end;
+				old_template := Void;
+				eiffel_text := temp;
+				mp.restore
+			else
+				rescued := False;
+				!!msg.make (0);
+				msg.append ("Cannot write to directory%N");
+				msg.append (merger.template_directory);
+				msg.append ("%NCould not update ");
+				msg.append (label);
+				msg.append (" text");
+				error_box.popup (Current, msg)
+			end
+		rescue
+			mp.restore;
+			rescued := True;
+			retry
+		end;
+
+	save_old_template is
+			-- Set old_template to template.
+		do
+			old_template := template
+		end;
+
+end
+	

@@ -1,0 +1,216 @@
+
+class APPLICATION_STORER 
+
+inherit
+
+	STORABLE_HDL
+		export
+			{NONE} all
+		end;
+
+	STORAGE_INFO
+		export
+			{NONE} all
+		end;
+
+	WINDOWS
+		export
+			{NONE} all
+		end;
+
+	APP_SHARED
+		export
+			{NONE} all
+		end
+
+
+
+	
+feature 
+
+	Return_transition: INTEGER is -1;
+
+	Exit_transition: INTEGER is - 2;
+
+	
+feature {NONE}
+
+	No_initial_circle: INTEGER is -1;
+
+	
+feature 
+
+	has_initial_circle: BOOLEAN is 
+		do
+			Result := (initial_circle /= -1)
+		end;
+
+	stored_graph: INT_H_TABLE [HASH_TABLE [INTEGER, STRING]];
+
+	initial_circle: INTEGER;
+
+	stored_circles: LINKED_LIST [S_CIRCLE];
+
+	stored_lines: LINKED_LIST [S_LINE];	
+
+	store (file_name: STRING) is
+		local
+			s_circle: S_CIRCLE;
+			s_line: S_LINE;
+			app_figures: APP_FIGURES;	
+			app_lines: APP_LINES;
+			app_circle: STATE_CIRCLE
+		do
+			if (app_editor.initial_state_circle = Void) then
+				initial_circle := No_initial_circle;
+			else
+				initial_circle := app_editor.initial_state_circle.identifier
+			end;
+			build_stored_graph;
+			!!stored_circles.make;
+			from
+				app_figures := app_editor.figures;
+				app_figures.start
+			until
+				app_figures.after
+			loop
+				app_circle ?= app_figures.figure;
+				if (app_circle = Void) then
+					io.putstring ("Does not know how to store black boxes yet%N");
+				end;
+				!!s_circle.make (app_circle);
+				stored_circles.add (s_circle);
+				app_figures.forth
+			end;
+			!!stored_lines.make;
+			from
+				app_lines := app_editor.lines;
+				app_lines.start
+			until
+				app_lines.after
+			loop
+				!!s_line.make (app_lines.line);
+				stored_lines.add (s_line);
+				app_lines.forth
+			end;
+			store_by_name (file_name);
+			stored_circles := Void;
+			stored_lines := Void;
+			stored_graph := Void
+		end;
+
+	
+feature {NONE}
+
+	build_stored_graph is
+		local
+			new_table: HASH_TABLE [INTEGER, STRING];
+			subtab: HASH_TABLE [GRAPH_ELEMENT, STRING];
+			s: STATE;
+			g: GRAPH_ELEMENT
+		do
+			!!stored_graph.make (graph.count);
+			from
+				graph.start
+			until
+				graph.offright	
+			loop
+				s ?= graph.key_for_iteration;
+				subtab := graph.item_for_iteration;
+				!!new_table.make (subtab.count);
+				stored_graph.put (new_table, s.identifier);
+				from
+					subtab.start
+				until
+					subtab.offright
+				loop
+					g := subtab.item_for_iteration;
+					if (g = Void) then
+							-- It is a Return transition.
+						new_table.put (Return_transition, subtab.key_for_iteration);
+					elseif (g = exit_element) then
+							-- It is an Exit transition.
+						new_table.put (Exit_transition, subtab.key_for_iteration);
+					else
+						s ?= g;
+						new_table.put (s.identifier, subtab.key_for_iteration);
+					end;
+					subtab.forth
+				end;
+				graph.forth
+			end;
+		end;
+
+	
+feature 
+
+	retrieve (file_name: STRING) is
+		local
+			figures: APP_FIGURES;
+			lines: APP_LINES;
+			line: STATE_LINE;
+			circle: STATE_CIRCLE
+		do
+			retrieve_by_name (file_name);
+			stored_circles := retrieved.stored_circles;
+			stored_lines := retrieved.stored_lines;
+			stored_graph := retrieved.stored_graph;
+			initial_circle := retrieved.initial_circle;
+			figures := app_editor.figures;
+			from
+				stored_circles.start
+			until
+				stored_circles.after
+			loop
+				circle := stored_circles.item.state_circle;
+				figures.append (circle);	
+				circle.set_center (stored_circles.item.center);
+				stored_circles.forth
+			end;
+			lines := app_editor.lines;
+			from
+				stored_lines.start
+			until
+				stored_lines.after
+			loop
+				line := stored_lines.item.state_line;
+				lines.drawing_list_append (line);	
+				stored_lines.forth
+			end;
+		end;
+
+	rebuild_graph is
+		local
+			new_table: HASH_TABLE [GRAPH_ELEMENT, STRING];	
+			subtab: HASH_TABLE [INTEGER, STRING];
+			void_element: GRAPH_ELEMENT;
+			subtab_item: INTEGER
+		do
+			from
+				stored_graph.start
+			until
+				stored_graph.offright
+			loop
+				subtab := stored_graph.item_for_iteration;
+				!!new_table.make (subtab.count);
+				graph.put (new_table, state_table.item (stored_graph.key_for_iteration));
+				from
+					subtab.start
+				until
+					subtab.offright
+				loop
+					subtab_item := subtab.item_for_iteration;
+					if (subtab_item = Return_transition) then
+						new_table.put (void_element, subtab.key_for_iteration);	
+					elseif (subtab_item = Exit_transition) then
+						new_table.put (exit_element, subtab.key_for_iteration);	
+					else
+						new_table.put (state_table.item (subtab_item), subtab.key_for_iteration);
+					end;
+					subtab.forth
+				end;
+				stored_graph.forth
+			end;
+		end;
+
+end

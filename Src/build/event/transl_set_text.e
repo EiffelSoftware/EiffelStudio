@@ -1,0 +1,37 @@
+
+class TRANSL_SET_TEXT 
+
+inherit
+
+	TRANSL_COMMAND
+	
+feature 
+
+	c_name: STRING is "Set translation text";
+
+	set_text (s: STRING) is
+		do
+			text := s.duplicate
+		end
+
+feature {NONE}
+
+	old_text, text: STRING;
+
+	trans_work is
+		do
+			old_text := translation.text.duplicate;
+			translation.set_text (text);
+			context_catalog.update_translation_page;
+			if translation.edited then
+				translation.editor.update_translation
+			end
+		end;
+
+	undo is
+		do
+			translation.set_text (old_text);
+			context_catalog.update_translation_page
+		end;
+
+end

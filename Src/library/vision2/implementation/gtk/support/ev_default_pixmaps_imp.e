@@ -314,78 +314,19 @@ feature {NONE} -- Externals
 
 end -- class EV_STOCK_PIXMAPS_IMP
 
---!-----------------------------------------------------------------------------
---! EiffelVision2: library of reusable components for ISE Eiffel.
---! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
---! All rights reserved. Duplication and distribution prohibited.
---! May be used only with ISE Eiffel, under terms of user license. 
---! Contact ISE for any other use.
---!
---! Interactive Software Engineering Inc.
---! ISE Building, 2nd floor
---! 270 Storke Road, Goleta, CA 93117 USA
---! Telephone 805-685-1006, Fax 805-685-6869
---! Electronic mail <info@eiffel.com>
---! Customer support e-mail <support@eiffel.com>
---! For latest info see award-winning pages: http://www.eiffel.com
---!-----------------------------------------------------------------------------
-
 --|----------------------------------------------------------------
---| CVS log
---|----------------------------------------------------------------
+--| EiffelVision2: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
 --|
---| $Log$
---| Revision 1.6  2001/07/14 12:16:27  manus
---| Cosmetics, replace the long:
---| --|-----------------------------------------------------------------------------
---| by the short version which is standard among all ISE libraries
---| --|----------------------------------------------------------------
---|
---| Revision 1.5  2001/06/07 23:08:05  rogers
---| Merged DEVEL branch into Main trunc.
---|
---| Revision 1.2.2.10  2000/11/06 19:38:29  king
---| Accounted for default to stock name change
---|
---| Revision 1.2.2.9  2000/10/07 03:16:12  andrew
---| Added print dialog xpms
---|
---| Revision 1.2.2.8  2000/06/28 21:41:57  pichery
---| Added 2 new default cursors: "Size North-East/South-West" and
---| "Size North-West/South-east"
---|
---| Revision 1.2.2.7  2000/05/08 22:05:42  king
---| Implemented default_pixmaps
---|
---| Revision 1.2.2.6  2000/05/04 19:14:34  king
---| Added cursor code externals
---|
---| Revision 1.2.2.4  2000/05/04 18:34:46  king
---| Made compilable with new cursor changes
---|
---| Revision 1.2.2.3  2000/05/04 18:13:18  king
---| Added dummy cursor implementation
---|
---| Revision 1.2.2.2  2000/05/03 22:00:50  king
---| merged from HEAD
---|
---| Revision 1.3  2000/05/03 21:34:49  king
---| Added default_pixmap externals
---|
---| Revision 1.2  2000/05/03 17:51:13  brendel
---| Added pixmap_imp.
---|
---| Revision 1.1  2000/05/03 16:37:22  pichery
---| New default pixmaps GTK implementation
---|
---| Revision 1.2  2000/05/03 00:23:57  pichery
---| Added default window pixmap.
---|
---| Revision 1.1  2000/04/29 03:21:55  pichery
---| Added new class with Default pixmaps
---|
---|
---|----------------------------------------------------------------
---| End of CVS log
+--| Interactive Software Engineering Inc.
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support: http://support.eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 

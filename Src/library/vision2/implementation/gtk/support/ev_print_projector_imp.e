@@ -124,56 +124,19 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_PRINT_PROJECTOR_IMP
 
---!-----------------------------------------------------------------------------
---! EiffelVision2: library of reusable components for ISE Eiffel.
---! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
---! All rights reserved. Duplication and distribution prohibited.
---! May be used only with ISE Eiffel, under terms of user license. 
---! Contact ISE for any other use.
---!
---! Interactive Software Engineering Inc.
---! ISE Building, 2nd floor
---! 270 Storke Road, Goleta, CA 93117 USA
---! Telephone 805-685-1006, Fax 805-685-6869
---! Electronic mail <info@eiffel.com>
---! Customer support e-mail <support@eiffel.com>
---! For latest info see award-winning pages: http://www.eiffel.com
---!-----------------------------------------------------------------------------
-
 --|----------------------------------------------------------------
---| CVS log
---|----------------------------------------------------------------
+--| EiffelVision2: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
 --|
---| $Log$
---| Revision 1.3  2001/07/14 12:16:27  manus
---| Cosmetics, replace the long:
---| --|-----------------------------------------------------------------------------
---| by the short version which is standard among all ISE libraries
---| --|----------------------------------------------------------------
---|
---| Revision 1.2  2001/06/07 23:08:05  rogers
---| Merged DEVEL branch into Main trunc.
---|
---| Revision 1.1.2.7  2001/04/26 19:00:49  king
---| Made releasable
---|
---| Revision 1.1.2.6  2000/11/15 01:04:11  king
---| Added feature comments
---|
---| Revision 1.1.2.4  2000/11/14 22:26:13  king
---| Implemented pipe output functionality
---|
---| Revision 1.1.2.3  2000/11/08 22:44:31  andrew
---| Corrected inheritance
---|
---| Revision 1.1.2.2  2000/11/08 17:59:10  andrew
---| Not for release
---|
---| Revision 1.1.2.1  2000/11/08 17:46:47  andrew
---| Initial
---|
---|
---|----------------------------------------------------------------
---| End of CVS log
+--| Interactive Software Engineering Inc.
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support: http://support.eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 

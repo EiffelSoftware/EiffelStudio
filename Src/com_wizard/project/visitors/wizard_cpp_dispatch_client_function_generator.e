@@ -268,7 +268,9 @@ feature {NONE} -- Implementation
 					create visitor
 					visitor.visit (arguments.item.type)
 
-					if is_paramflag_fout (arguments.item.flags) then
+					if is_paramflag_fin (arguments.item.flags) then
+						Result.append (in_parameter_set_up (arguments.item.name, counter, visitor))
+					else
 						out_variable := True  
 						Result.append (out_parameter_set_up (arguments.item.name, counter, visitor))
 
@@ -276,9 +278,6 @@ feature {NONE} -- Implementation
 						 		visitor.is_interface_pointer and not visitor.is_coclass_pointer then
 							return_value.append (out_return_value_set_up (arguments.item.name, counter,  visitor))
 						end
-
-					else
-						Result.append (in_parameter_set_up (arguments.item.name, counter, visitor))
 					end
 
 					visitor := Void
@@ -415,10 +414,12 @@ feature {NONE} -- Implementation
 				Result := clone (New_line_tab)
 				Result.append (argument_type_set_up (position, type))
 
-				if visitor.is_basic_type_ref then
+				if visitor.is_array_basic_type or visitor.is_structure_pointer or visitor.is_interface_pointer
+						or visitor.is_coclass_pointer then
+					Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), name, visitor))	
+				else
 					Result.append (visitor.c_type)
 					Result.remove (Result.count)
-					Result.append (Space)
 					Result.append (Tmp_clause)
 					Result.append (name)
 					Result.append (Space_equal_space)
@@ -426,49 +427,9 @@ feature {NONE} -- Implementation
 					Result.append (Semicolon)
 					Result.append (New_line_tab)
 
-					tmp_string := clone (Tmp_clause)
+					tmp_string := clone (Ampersand)
+					tmp_string.append (Tmp_clause)
 					tmp_string.append (name)
-					Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), tmp_string, visitor))	
-
-				elseif visitor.is_array_basic_type or visitor.is_structure_pointer or visitor.is_interface_pointer or
-						visitor.is_coclass_pointer then
-					Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), name, visitor))	
-				else
-					Result.append (visitor.c_type)
-					Result.remove (Result.count)
-					Result.append (Space)
-					Result.append (Tmp_clause)
-					Result.append (name)
-					Result.append (Semicolon)
-					Result.append (New_line_tab)
-
-					Result.append (Tmp_clause)
-					Result.append (name)
-					Result.append (Space_equal_space)
-					Result.append (Open_parenthesis)
-					Result.append (visitor.c_type)
-					Result.append (Close_parenthesis)
-
-					if visitor.need_generate_ec then
-						Result.append (Generated_ec_mapper)
-					else
-						Result.append (Ec_mapper)
-					end
-					Result.append (Dot)
-					Result.append (visitor.ec_function_name)
-					Result.append (Space_open_parenthesis)
-					Result.append (Eif_access)
-					Result.append (Space_open_parenthesis)
-					Result.append (name)
-					Result.append (Close_parenthesis)
-					if visitor.writable then
-						Result.append (Comma_space)
-						Result.append (Null)
-					end
-					Result.append (Close_parenthesis)
-					Result.append (Semicolon)
-					Result.append (New_line_tab)
-
 					Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), tmp_string, visitor))	
 				end
 			end

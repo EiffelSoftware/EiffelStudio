@@ -289,7 +289,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_long (long * an_integer, EIF_OBJE
 {
 	EIF_OBJECT result;
 	EIF_TYPE_ID type_id;
-	EIF_PROC set_item;
+	EIF_PROCEDURE set_item;
 
 	type_id = eif_type_id ("INTEGER_REF");
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
@@ -297,7 +297,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_long (long * an_integer, EIF_OBJE
 	else
 		result = an_object;
 
-	set_item = eif_proc ("set_item", type_id);
+	set_item = eif_procedure ("set_item", type_id);
 	set_item (eif_access (result), (EIF_INTEGER)*an_integer);
 
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))

@@ -3116,6 +3116,16 @@ void ** ecom_runtime_ec::ccom_ec_pointed_pointer (EIF_REFERENCE eif_ref, void **
 	else
 		return result;
 };
+
+SCODE * ecom_runtime_ec::ccom_ec_pointed_hresult (SCODE a_hresult)
+// create pointed SCODE from SCODE
+
+{
+	SCODE * result = (SCODE *)CoTaskMemAlloc(sizeof(SCODE));
+	result = &a_hresult;
+	return result;
+}
+
 //-----------------------------------------------------------------------------------
 
 void ** ecom_runtime_ec::ccom_ec_pointed_c_pointer (void * a_pointer)

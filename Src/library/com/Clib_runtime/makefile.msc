@@ -1,7 +1,7 @@
 # ecom_runtime.lib - Makefile for Microsoft C
 
 CC = cl
-CFLAGS = -c -Ox -I$(LIBRARY)\com\runtime\include -I$(EIFFEL4)\bench\spec\windows\include -I$(LIBRARY)\com\library\include\ 
+CFLAGS = -c -Zi -I$(LIBRARY)\com\runtime\include -I$(EIFFEL4)\bench\spec\windows\include -I$(LIBRARY)\com\library\include\ 
 
 .cpp.obj:
 	$(CC) $(CFLAGS) $<

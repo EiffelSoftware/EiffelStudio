@@ -217,7 +217,7 @@ feature -- Initialization
 			if env.platform = env.Ev_platform_gtk then
 				create file.make_open_read ("/home/brendel/local/examples/vision2/figure/open.xpm")
 			elseif env.platform = env.Ev_platform_win32 then
-				create file.make_open_read ("")
+				create file.make_open_read ("c:\work\examples\vision2\figure\open.bmp")
 			end
 			pixmap.set_with_file (file)
 
@@ -234,7 +234,7 @@ feature -- Initialization
 	cur_test: INTEGER
 	cur_text: STRING
 
-	rotate_tests (x, y, z: INTEGER; s,w,e:DOUBLE; sx,sy:INTEGER) is
+	rotate_tests (x, y, b: INTEGER; tx, ty, pr: DOUBLE; sx, sy: INTEGER) is
 		do
 			if cur_test = 1 then
 				my_device.remove_tile
@@ -248,14 +248,14 @@ feature -- Initialization
 			elseif cur_test = 2 then
 				my_device.set_foreground_color (create {EV_COLOR}.make_with_rgb (0, 0, 1))
 				my_device.set_background_color (create {EV_COLOR}.make_with_rgb (1, 1, 0.5))
-				my_device.set_tile (pixmap)
 				cur_text := "Different colors"
 			elseif cur_test = 3 then
 				my_device.set_tile (pixmap)
 				cur_text := "Tile test"
 			elseif cur_test = 4 then
+				my_device.clear
 				my_device.set_clip_area (create {EV_CLIP}.make (10, 30, 150, 190))
-				cur_text := "Tile test"
+				cur_text := "It's a clip area"
 			elseif cur_test = 5 then
 				my_device.enable_dashed_line_style
 				cur_text := "Dashed lines"
@@ -271,7 +271,7 @@ feature -- Initialization
 				cur_text := "Different font...@#$"
 			end
 			cur_test := cur_test + 1
-			if cur_test = 7 then
+			if cur_test = 8 then
 				cur_test := 1
 			end
 			my_device.redraw

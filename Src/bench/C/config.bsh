@@ -16,8 +16,8 @@ lib='lib'
 #
 # Standard runtime
 #-----------------
-ccflags='-q $debug -I$compiler_path\include -L$compiler_path\lib'
-mtccflags='-q $debug -tWM -DEIF_THREADS -I$compiler_path\include -L$compiler_path\lib'
+ccflags='-q $debug -DEIF_BORLAND -I$compiler_path\include -L$compiler_path\lib'
+mtccflags='-q $debug -tWM -DEIF_BORLAND -DEIF_THREADS -I$compiler_path\include -L$compiler_path\lib'
 output_libraries='standard mtstandard'
 #
 #

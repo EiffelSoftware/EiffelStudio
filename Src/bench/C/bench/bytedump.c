@@ -240,13 +240,12 @@ static  char    *bit_op_names [] = {
 
 /*------------------------------------------------------------------*/
 
-static  int             fpos;
+static  size_t          fpos;
 static  char            *byte_path;
 static  FILE            *ifp, *ofp;
 static  char            *body;
 static  BODY_INDEX      body_id;
 static  long            body_size;
-static  long            bcount;
 static  char            *ip;
 static  unsigned char   code;
 static  EIF_CHARACTER   **dtype_names;
@@ -267,7 +266,7 @@ static  void    panic (void);
 
 /*------------------------------------------------------------------*/
 
-static  EIF_INTEGER rlong (void);
+static  EIF_INTEGER_32 rlong (void);
 static  BODY_INDEX rbody_index (void);
 static  char    *rbuf (int);
 static  EIF_CHARACTER * rstr (void);
@@ -277,7 +276,7 @@ static  EIF_CHARACTER * rstr (void);
 static  EIF_BOOLEAN bbool (void);
 static  EIF_CHARACTER bchar (void);
 static  EIF_WIDE_CHAR bwchar (void);
-static  EIF_INTEGER blong (void);
+static  EIF_INTEGER_32 blong (void);
 static  BODY_INDEX bbody_index (void);
 static  EIF_INTEGER_16 bshort (void);
 static  uint32  buint32 (void);
@@ -383,7 +382,7 @@ static  void    print_byte_code ()
 
 {
 	uint32  rtype;  /* Type of routine */
-	long    rid;    /* Routine id      */
+	uint32    rid;    /* Routine id      */
 	char    rescue; /* Has rescue?     */
 	int     i;
 	int     is_once;
@@ -400,10 +399,10 @@ static  void    print_byte_code ()
 	NEWL;
 
 	rid = blong ();
-	fprintf (ofp,"Routine Id   : %ld\n", rid);
+	fprintf (ofp,"Routine Id   : %d\n", rid);
 
 	body_id = bbody_index ();
-	fprintf (ofp,"Body Id      : %ld\n", body_id);
+	fprintf (ofp,"Body Id      : %d\n", body_id);
 
 	fprintf (ofp,"Result Type  : ");
 	rtype = buint32 ();
@@ -467,7 +466,7 @@ static  void    print_byte_code ()
 	rescue = bbool ();
 	if (rescue)
 	{
-		fprintf (ofp,"Rescue offset: %ld\n", blong ());
+		fprintf (ofp,"Rescue offset: %d\n", blong ());
 	}
 
 	print_instructions ();
@@ -489,8 +488,7 @@ static  void    advance (int where)
 {
 	code   = *((unsigned char *) ip);
 
-	if ((((int) code) < 0) || (((int) code) > MAX_CODE))
-	{
+	if (((int) code) > MAX_CODE) {
 		fprintf (stderr, "Illegal byte code : %d (%d)\n", (int) code, where);
 		panic ();
 	}
@@ -505,7 +503,7 @@ static  void    print_instructions ()
 
 {
 	unsigned char   cval; /* !!! */
-	long            lval;
+	uint32            lval;
 	int             i;
 
 	advance (4);
@@ -532,7 +530,7 @@ static  void    print_instructions ()
 				break;
 			case  BC_CHECK :
 				/* If not enabled jump to 'offset' */
-				fprintf (ofp,"offset %ld ", blong ());
+				fprintf (ofp,"offset %d ", blong ());
 				break;
 			case  BC_INIT_VARIANT :
 				/* Index of local used in variant expression */
@@ -545,7 +543,7 @@ static  void    print_instructions ()
 			case  BC_DEBUG :
 				/* Nr. of debug keys */
 
-				fprintf (ofp,"nr_keys %ld ", (lval = blong ()));
+				fprintf (ofp,"nr_keys %d ", (lval = blong ()));
 
 				/* The keys - if any */
 				
@@ -558,25 +556,25 @@ static  void    print_instructions ()
 				}
 
 				/* If not enabled jump to 'offset' */
-				fprintf (ofp,"offset %ld", blong ());
+				fprintf (ofp,"offset %d", blong ());
 				break;
 			case  BC_CREAT_INV :
 				break;
 			case  BC_PRECOND :
 				/* If not enabled jump to 'offset' */
-				fprintf (ofp,"offset %ld", blong ());
+				fprintf (ofp,"offset %d", blong ());
 				break;
 			case  BC_END_PRE :
 				/* If not enabled jump to 'offset' */
-				fprintf (ofp,"offset %ld", blong ());
+				fprintf (ofp,"offset %d", blong ());
 				break;
 			case  BC_POSTCOND :
 				/* If not enabled jump to 'offset' */
-				fprintf (ofp,"offset %ld", blong ());
+				fprintf (ofp,"offset %d", blong ());
 				break;
 			case  BC_LOOP :
 				/* If not enabled jump to 'offset' */
-				fprintf (ofp,"offset %ld", blong ());
+				fprintf (ofp,"offset %d", blong ());
 				break;
 
 /* Assignments */
@@ -598,7 +596,7 @@ static  void    print_instructions ()
 			case  BC_ASSIGN :
 				/* Attribute */
 				/* Feature id */
-				fprintf (ofp,"fid %ld ", blong ());
+				fprintf (ofp,"fid %d ", blong ());
 				/* Static type of class */
 				print_ctype (bshort ());
 				/* True type */
@@ -607,7 +605,7 @@ static  void    print_instructions ()
 			case  BC_EXP_ASSIGN :
 				/* Attribute (expanded) */
 				/* Feature id */
-				fprintf (ofp,"fid %ld ", blong ());
+				fprintf (ofp,"fid %d ", blong ());
 				/* Static type of class */
 				print_ctype (bshort ());
 				/* True type */
@@ -616,18 +614,18 @@ static  void    print_instructions ()
 			case  BC_PASSIGN :
 				/* Precompiled attribute */
 				/* Org. id */
-				fprintf (ofp,"oid %ld ", blong ());
+				fprintf (ofp,"oid %d ", blong ());
 				/* Org. offset */
-				fprintf (ofp,"ooff %ld ", blong ());
+				fprintf (ofp,"ooff %d ", blong ());
 				/* True type */
 				print_dtype (0,buint32 ());
 				break;
 			case  BC_PEXP_ASSIGN :
 				/* Precompiled attribute (expanded)*/
 				/* Org. id */
-				fprintf (ofp,"oid %ld ", blong ());
+				fprintf (ofp,"oid %d ", blong ());
 				/* Org. offset */
-				fprintf (ofp,"ooff %ld ", blong ());
+				fprintf (ofp,"ooff %d ", blong ());
 				/* True type */
 				print_dtype (0,buint32 ());
 				break;
@@ -652,7 +650,7 @@ static  void    print_instructions ()
 			case  BC_REVERSE :
 				/* Attribute */
 				/* Feature id */
-				fprintf (ofp,"fid %ld ", blong ());
+				fprintf (ofp,"fid %d ", blong ());
 				/* Static type of class */
 				print_ctype (bshort ());
 				/* True type */
@@ -665,9 +663,9 @@ static  void    print_instructions ()
 			case  BC_PREVERSE :
 				/* Precompiled attribute */
 				/* Org. id */
-				fprintf (ofp,"oid %ld ", blong ());
+				fprintf (ofp,"oid %d ", blong ());
 				/* Org. offset */
-				fprintf (ofp,"ooff %ld ", blong ());
+				fprintf (ofp,"ooff %d ", blong ());
 				/* True type */
 				print_dtype (0,buint32 ());
 				/* Static type of target */
@@ -732,7 +730,7 @@ static  void    print_instructions ()
 						fprintf (ofp, " (BC_CLIKE) ");
 						print_ctype (bshort ());
 						/* Anchor id */
-						fprintf (ofp,"%ld", blong ());
+						fprintf (ofp,"%d", blong ());
 						break;
 					case  BC_PCLIKE :
 						/* like precompiled feature */
@@ -740,14 +738,14 @@ static  void    print_instructions ()
 						fprintf (ofp, " (BC_PCTYPE) ");
 
 						print_ctype (bshort ());
-						fprintf (ofp,"oid %ld ", blong ());
+						fprintf (ofp,"oid %d ", blong ());
 						/* Org. offset */
-						fprintf (ofp,"ooff %ld", blong ());
+						fprintf (ofp,"ooff %d", blong ());
 						break;
 					case BC_GEN_PARAM_CREATE:
 						fprintf (ofp, " (BC_GEN_PARAM_CREATE) ");
 						print_ctype (bshort());
-						fprintf (ofp,"pos %ld", blong ());
+						fprintf (ofp,"pos %d", blong ());
 						break;
 				}
 				break;
@@ -764,29 +762,29 @@ static  void    print_instructions ()
 				/* Feature id ('make') */
 				fprintf (ofp,"fid %d ", (int) bshort ());
 				/* Nr. of items */
-				fprintf (ofp,"%ld", blong ());
+				fprintf (ofp,"%d", blong ());
 				break;
 			case  BC_PARRAY :   /* Have to check this */
 				/* Manifest array precompiled */
 				/* Org. id (make) */
-				fprintf (ofp,"oid %ld ", blong ());
+				fprintf (ofp,"oid %d ", blong ());
 				/* Org. offset */
-				fprintf (ofp,"ooff %ld ", blong ());
+				fprintf (ofp,"ooff %d ", blong ());
 				/* Dynamic type */
 				print_ctype (bshort ());
 				print_cid ();
 				/* Nr. of items */
-				fprintf (ofp,"%ld", blong ());
+				fprintf (ofp,"%d", blong ());
 				break;
 
 			case BC_TUPLE:
 			case BC_PTUPLE:
 					/* Dynamic type of tuple */
-				fprintf (ofp, "dtype %ld ", bshort());
+				fprintf (ofp, "dtype %d ", bshort());
 					/* Full dynamic typle of tuple */
 				print_cid ();
 					/* Number of elements in tuple */
-				fprintf (ofp, " #%ld ", blong());
+				fprintf (ofp, " #%d ", blong());
 					/* Is TUPLE atomic? */
 				if (blong()) {
 					fprintf (ofp, "Atomic ");
@@ -802,7 +800,7 @@ static  void    print_instructions ()
 			case  BC_EXTERN :
 				/* External */
 				/* Feature id */
-				fprintf (ofp,"fid %ld ", blong ());
+				fprintf (ofp,"fid %d ", blong ());
 				/* Type of class */
 				print_ctype (bshort ());
 				/* Is precursor or static */
@@ -811,9 +809,9 @@ static  void    print_instructions ()
 			case  BC_PEXTERN :
 				/* External precompiled */
 				/* Org. id */
-				fprintf (ofp,"oid %ld ", blong ());
+				fprintf (ofp,"oid %d ", blong ());
 				/* Org. offset */
-				fprintf (ofp,"ooff %ld", blong ());
+				fprintf (ofp,"ooff %d", blong ());
 				/* Is precursor or static */
 				(void) bshort ();
 				break;
@@ -822,7 +820,7 @@ static  void    print_instructions ()
 				/* Feature name */
 				fprintf (ofp,"\"%s\" ", bstr (-1));
 				/* Feature id */
-				fprintf (ofp,"fid %ld ", blong ());
+				fprintf (ofp,"fid %d ", blong ());
 				/* Type of class */
 				print_ctype (bshort ());
 				/* Is precursor or static */
@@ -834,16 +832,16 @@ static  void    print_instructions ()
 				/* Feature name */
 				fprintf (ofp,"\"%s\" ", bstr (-1));
 				/* Org. id */
-				fprintf (ofp,"oid %ld ", blong ());
+				fprintf (ofp,"oid %d ", blong ());
 				/* Org. offset */
-				fprintf (ofp,"ooff %ld", blong ());
+				fprintf (ofp,"ooff %d", blong ());
 				/* Is precursor or static */
 				(void) bshort ();
 				break;
 			case  BC_FEATURE :
 				/* Routine */
 				/* Feature id */
-				fprintf (ofp,"fid %ld ", blong ());
+				fprintf (ofp,"fid %d ", blong ());
 				/* Type of class */
 				print_ctype (bshort ());
 				/* Is precursor or static */
@@ -853,9 +851,9 @@ static  void    print_instructions ()
 			case  BC_PFEATURE :
 				/* Routine precompiled */
 				/* Org. id */
-				fprintf (ofp,"oid %ld ", blong ());
+				fprintf (ofp,"oid %d ", blong ());
 				/* Org. offset */
-				fprintf (ofp,"ooff %ld", blong ());
+				fprintf (ofp,"ooff %d", blong ());
 				/* Is precursor or static */
 				(void) bshort ();
 				break;
@@ -864,7 +862,7 @@ static  void    print_instructions ()
 				/* Feature name */
 				fprintf (ofp,"\"%s\" ", bstr (-1));
 				/* Feature id */
-				fprintf (ofp,"fid %ld ", blong ());
+				fprintf (ofp,"fid %d ", blong ());
 				/* Type of class */
 				print_ctype (bshort ());
 				/* Is precursor or static */
@@ -875,9 +873,9 @@ static  void    print_instructions ()
 				/* Feature name */
 				fprintf (ofp,"\"%s\" ", bstr (-1));
 				/* Org. id */
-				fprintf (ofp,"oid %ld ", blong ());
+				fprintf (ofp,"oid %d ", blong ());
 				/* Org. offset */
-				fprintf (ofp,"ooff %ld", blong ());
+				fprintf (ofp,"ooff %d", blong ());
 				/* Is precursor or static */
 				(void) bshort ();
 				break;
@@ -885,7 +883,7 @@ static  void    print_instructions ()
 			case  BC_ATTRIBUTE :
 				/* Attribute */
 				/* Feature id */
-				fprintf (ofp,"fid %ld ", blong ());
+				fprintf (ofp,"fid %d ", blong ());
 				/* Type of class */
 				print_ctype (bshort ());
 				/* True type */
@@ -894,9 +892,9 @@ static  void    print_instructions ()
 			case  BC_PATTRIBUTE :
 				/* Attribute precompiled */
 				/* Org. id */
-				fprintf (ofp,"oid %ld ", blong ());
+				fprintf (ofp,"oid %d ", blong ());
 				/* Org. offset */
-				fprintf (ofp,"ooff %ld", blong ());
+				fprintf (ofp,"ooff %d", blong ());
 				/* True type */
 				print_dtype (0,buint32 ());
 				break;
@@ -905,7 +903,7 @@ static  void    print_instructions ()
 				/* Feature name */
 				fprintf (ofp,"\"%s\" ", bstr (-1));
 				/* Feature id */
-				fprintf (ofp,"fid %ld ", blong ());
+				fprintf (ofp,"fid %d ", blong ());
 				/* Type of class */
 				print_ctype (bshort ());
 				/* True type */
@@ -916,9 +914,9 @@ static  void    print_instructions ()
 				/* Feature name */
 				fprintf (ofp,"\"%s\" ", bstr (-1));
 				/* Org. id */
-				fprintf (ofp,"oid %ld ", blong ());
+				fprintf (ofp,"oid %d ", blong ());
 				/* Org. offset */
-				fprintf (ofp,"ooff %ld", blong ());
+				fprintf (ofp,"ooff %d", blong ());
 				/* True type */
 				print_dtype (0,buint32 ());
 				break;
@@ -942,7 +940,7 @@ static  void    print_instructions ()
 
 /* Casts */
 			case  BC_CAST_LONG :
-				fprintf (ofp,"%ld", blong ());
+				fprintf (ofp,"%d", blong ());
 				break;
 			case  BC_CAST_FLOAT :
 				break;
@@ -965,11 +963,11 @@ static  void    print_instructions ()
 
 			case  BC_AND_THEN :
 				/* Jump offset */
-				fprintf (ofp,"%ld ", blong ());
+				fprintf (ofp,"%d ", blong ());
 				break;
 			case  BC_OR_ELSE :
 				/* Jump offset */
-				fprintf (ofp,"%ld ", blong ());
+				fprintf (ofp,"%d ", blong ());
 				break;
 
 			case  BC_UPLUS :
@@ -1013,7 +1011,7 @@ static  void    print_instructions ()
 			case  BC_ADDR :
 				/* Address of routine */
 				/* Feature id */
-				fprintf (ofp,"%ld ", blong ());
+				fprintf (ofp,"%d ", blong ());
 				/* Static type */
 				print_ctype (bshort ());
 				fprintf (ofp," %d ", (int) bshort());
@@ -1021,14 +1019,14 @@ static  void    print_instructions ()
 			case  BC_OBJECT_ADDR :
 				/* Address of object */
 				/* Offset */
-				fprintf (ofp,"%ld ", buint32 ());
+				fprintf (ofp,"%d ", buint32 ());
 				break;
 			case  BC_OBJECT_EXPR_ADDR :
 				/* Address of expression */
 				/* Pointer */
-				fprintf (ofp,"%ld ", buint32 ());
+				fprintf (ofp,"%d ", buint32 ());
 				/* Value */
-				fprintf (ofp,"%ld ", buint32 ());
+				fprintf (ofp,"%d ", buint32 ());
 				break;
 
 			case BC_BASIC_OPERATIONS :
@@ -1056,22 +1054,22 @@ static  void    print_instructions ()
 				fprintf(ofp, "%d", (int) bchar ());
 				break;
 			case BC_INT16:
-				fprintf (ofp, "%ld", (int) bshort ());
+				fprintf (ofp, "%d", (int) bshort ());
 				break;
 			case BC_INT32:
-				fprintf (ofp,"%ld", blong ());
+				fprintf (ofp,"%d", blong ());
 				break;
 			case BC_INT64:
-				fprintf (ofp, "%ld", (EIF_INTEGER_64) bdouble ());
+				fprintf (ofp, "%" EIF_INTEGER_64_DISPLAY, (EIF_INTEGER_64) bdouble ());
 				break;
 			case BC_ONCE_STRING:
-				fprintf (ofp, "index %ld, ", blong ());
-				fprintf (ofp, "number %ld, ", blong ());
+				fprintf (ofp, "index %d, ", blong ());
+				fprintf (ofp, "number %d, ", blong ());
 				fprintf (ofp, "value \"%s\"", bstr (blong()));
 				break;
 			case BC_ALLOCATE_ONCE_STRINGS:
-				fprintf (ofp, "index %ld, ", blong ());
-				fprintf (ofp, "count %ld", blong ());
+				fprintf (ofp, "index %d, ", blong ());
+				fprintf (ofp, "count %d", blong ());
 				break;
 			case  BC_FLOAT :
 				fprintf (ofp,"%lf", bdouble ());
@@ -1080,17 +1078,17 @@ static  void    print_instructions ()
 				fprintf (ofp,"%lf", bdouble ());
 				break;
 			case  BC_NULL_POINTER :
-				fprintf (ofp,"%ld", 0);
+				fprintf (ofp,"%d", 0);
 				break;
 			case  BC_STRING :
 				fprintf (ofp,"\"%s\"", bstr (blong()));
 				break;
 			case  BC_BIT :
 				/* True number of bits */
-				fprintf (ofp, "%ld ", buint32 ());
+				fprintf (ofp, "%d ", buint32 ());
 				/* Bit count */
 				lval = buint32 ();
-				fprintf (ofp, "%ld", lval);
+				fprintf (ofp, "%d", lval);
 
 				i = (int) BIT_NBPACK(lval);
 
@@ -1106,11 +1104,11 @@ static  void    print_instructions ()
 
 			case  BC_RETRY :
 				/* Retry offset */
-				fprintf (ofp,"offset %ld", blong ());
+				fprintf (ofp,"offset %d", blong ());
 				break;
 			case  BC_RANGE :
 				/* When part of inspect. Jump offset */
-				fprintf (ofp,"offset %ld", blong ());
+				fprintf (ofp,"offset %d", blong ());
 				break;
 			case  BC_INSPECT :
 				break;
@@ -1126,7 +1124,7 @@ static  void    print_instructions ()
 				break;
 			case  BC_START_EVAL_OLD :
 				/* Offset if not enabled */
-				fprintf (ofp,"%ld", blong ());
+				fprintf (ofp,"%d", blong ());
 				break;
 			case  BC_END_EVAL_OLD :
 				break;
@@ -1138,7 +1136,7 @@ static  void    print_instructions ()
 				/* Dynamic type */
 				print_ctype (bshort ());
 				/* Nr. of items */
-				fprintf (ofp,"%ld ", blong ());
+				fprintf (ofp,"%d ", blong ());
 				break;
 			case  BC_ROTATE :
 				/* Rotate stack */
@@ -1157,31 +1155,31 @@ static  void    print_instructions ()
 				break;
 			case  BC_POP :
 				/* How many? */
-				fprintf (ofp,"%ld", buint32 ());
+				fprintf (ofp,"%d", buint32 ());
 				break;
 			case  BC_JMP_F :
 				/* Jump offset */
-				fprintf (ofp,"%ld", blong ());
+				fprintf (ofp,"%d", blong ());
 				break;
 			case  BC_JMP_T :
 				/* Jump offset */
-				fprintf (ofp,"%ld", blong ());
+				fprintf (ofp,"%d", blong ());
 				break;
 			case  BC_JMP :
 				/* Jump offset */
-				fprintf (ofp,"%ld", blong ());
+				fprintf (ofp,"%d", blong ());
 				break;
 			case  BC_HOOK :
 				/* For debugger */
-				fprintf (ofp,"%ld", blong ());
+				fprintf (ofp,"%d", blong ());
 				break;
 			case  BC_NHOOK :
 				/* For debugger */
-				fprintf (ofp,"%ld", blong ());
+				fprintf (ofp,"%d", blong ());
 				break;
 			case  BC_GOTO_BODY :
 				/* Offset */
-				fprintf (ofp,"%ld", blong ());
+				fprintf (ofp,"%d", blong ());
 				break;
 			case  BC_DEFERRED :
 				break;
@@ -1329,11 +1327,11 @@ static  EIF_WIDE_CHAR bwchar (void)
 }
 /*------------------------------------------------------------------*/
 
-static  EIF_INTEGER blong (void)
+static  EIF_INTEGER_32 blong (void)
 {
-	EIF_INTEGER result;
-	memcpy (&result, ip, sizeof(EIF_INTEGER));
-	ip += sizeof(EIF_INTEGER);
+	EIF_INTEGER_32 result;
+	memcpy (&result, ip, sizeof(EIF_INTEGER_32));
+	ip += sizeof(EIF_INTEGER_32);
 	
 	return result;
 }
@@ -1397,22 +1395,22 @@ static BODY_INDEX rbody_index ()
 
 	if (fread (&result, sizeof (BODY_INDEX), 1, ifp) != 1)
 	{
-		printf ("Read error (EIF_INTEGER)\n");
+		printf ("Read error (EIF_INTEGER_32)\n");
 		panic ();
 	}
 
 	return result;
 }
 
-static EIF_INTEGER rlong ()
+static EIF_INTEGER_32 rlong ()
 {
-	EIF_INTEGER result;
+	EIF_INTEGER_32 result;
 
-	fpos += sizeof (EIF_INTEGER);
+	fpos += sizeof (EIF_INTEGER_32);
 
-	if (fread (&result, sizeof (EIF_INTEGER), 1, ifp) != 1)
+	if (fread (&result, sizeof (EIF_INTEGER_32), 1, ifp) != 1)
 	{
-		printf ("Read error (EIF_INTEGER)\n");
+		printf ("Read error (EIF_INTEGER_32)\n");
 		panic ();
 	}
 

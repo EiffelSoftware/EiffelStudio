@@ -93,6 +93,13 @@ feature -- Access
 			"BS_LEFTTEXT"
 		end
 
+	Bs_pushlike: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"BS_PUSHLIKE"
+		end
+
 end -- class WEL_BS_CONSTANTS
 
 --|----------------------------------------------------------------

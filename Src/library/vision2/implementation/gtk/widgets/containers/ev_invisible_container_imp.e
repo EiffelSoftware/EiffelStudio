@@ -1,47 +1,23 @@
 indexing
 
 	description: 
-		"EiffelVision composite, gtk implementation."
+		"EiffelVision invisible container, gtk implementation."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
+--XX deferred class
 deferred class
 	
-	EV_CONTAINER_IMP
+	EV_INVISIBLE_CONTAINER_IMP
 	
 inherit
-	EV_CONTAINER_I
 	
-	EV_WIDGET_IMP
+	EV_INVISIBLE_CONTAINER_I
+		
+	EV_CONTAINER_IMP
 	
-feature {EV_CONTAINER}
-	
-	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add child into composite
-		do
-			gtk_container_add (widget, child_imp.widget)
-		end
-	
-
-feature -- Access
-	
-	client_width: INTEGER is
-			-- Width of the client area of container
-		do
-                        check
-                                not_yet_implemented: False
-                        end		
-		end
-	
-	client_height: INTEGER is
-			-- Height of the client area of container
-		do
-                        check
-                                not_yet_implemented: False
-                        end		
-		end
 end
 
 --|----------------------------------------------------------------

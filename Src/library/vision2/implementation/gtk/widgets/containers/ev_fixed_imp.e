@@ -1,32 +1,34 @@
 indexing
 
 	description: 
-		"EiffelVision event. General notion of event."
+		"EiffelVision fixed, gtk implementation."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
-	--temporary
 class
 	
-	EV_EVENT
+	EV_FIXED_IMP
+	
+inherit
+	
+	EV_FIXED_I
+		
+	EV_INVISIBLE_CONTAINER_IMP
 	
 creation
 	
 	make
-	
+
 feature {NONE} -- Initialization
 	
-	make (s: STRING) is
+        make (parent: EV_CONTAINER) is
+                        -- Create a fixed widget. 
 		do
-			type := clone (s)
-		end
+			widget := gtk_fixed_new ()
+		end	
 	
-feature  -- Access
-	
-	type: STRING
-			-- Type of the event in gtk
 end
 
 --|----------------------------------------------------------------

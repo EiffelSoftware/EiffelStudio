@@ -540,8 +540,7 @@ feature -- Element change
 		end
 
 	replace_substring (s: like Current; start_pos, end_pos: INTEGER) is
-			-- Copy the characters of `s' to positions
-			-- `start_pos' .. `end_pos'.
+			-- Replace characters from `start_pos' to `end_pos' with `s'.
 		require
 			string_exists: s /= Void
 			index_small_enough: end_pos <= count

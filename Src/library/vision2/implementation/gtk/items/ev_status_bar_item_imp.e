@@ -74,16 +74,35 @@ feature -- Status setting
 			-- Make `value' the new width of the item.
 			-- If -1, then the item adapt its size to fit the space
 			-- when the bar gets bigger.
+		local
+			par: POINTER
+			allocation: POINTER
+			fill, expand, pad, pack_type: INTEGER
 		do
+			par := parent_imp.c_object
 			C.gtk_widget_set_usize (c_object, value, -1)
 				-- set the minimum width but don't update `width'
-			C.c_gtk_widget_set_size (c_object, value, height)
-				-- XX update `width'
+			C.gtk_box_query_child_packing (
+				par, c_object,
+				$expand, $fill, $pad, $pack_type
+			)
+			allocation := C.c_gtk_allocation_struct_allocate
+			C.set_gtk_allocation_struct_height (allocation, height)
 			if (value = -1) then
-				C.c_gtk_box_set_child_options (parent_imp.c_object, c_object, 1, 1)
+				C.gtk_box_set_child_packing (
+					par, c_object,
+					True, fill.to_boolean, pad, pack_type
+				)
+				C.set_gtk_allocation_struct_width (allocation, 0)
 			else
-				C.c_gtk_box_set_child_options (parent_imp.c_object, c_object, 0, 1)
+				C.gtk_box_set_child_packing (
+					par, c_object,
+					False, fill.to_boolean, pad, pack_type
+				)
+				C.set_gtk_allocation_struct_width (allocation, value)
 			end
+			C.gtk_widget_size_allocate (c_object, allocation)
+			C.c_gtk_allocation_struct_free (allocation)
 		end
 
 feature {NONE} -- Implementation
@@ -126,6 +145,9 @@ end -- class EV_STATUS_BAR_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/04/18 19:46:13  oconnor
+--| Reimplemented without externals.
+--|
 --| Revision 1.24  2000/04/07 22:35:29  brendel
 --| Removed inheritance of EV_SIMPLE_ITEM.
 --|

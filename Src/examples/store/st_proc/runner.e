@@ -9,7 +9,7 @@ inherit
 
 	RDB_HANDLE
 
-creation
+create
 
 	make
 
@@ -43,12 +43,12 @@ feature
 			login (tmp_string, io.laststring)
 			set_base
 
-			!! repository.make (Table_name)
+			create repository.make (Table_name)
 
-			!! session_control.make
-			!! base_selection.make
+			create session_control.make
+			create base_selection.make
 
-			!! book.make
+			create book.make
 
 			session_control.connect
 
@@ -74,10 +74,10 @@ feature {NONE}
 			price: REAL
 			pub_date: DATE_TIME
 		do
-			!! author.make (10)
+			create author.make (10)
 			price := 51
-			!! pub_date.make (1984, 01, 01, 00, 00, 00)
-			!! proc.make (Proc_name)
+			create pub_date.make (1984, 01, 01, 00, 00, 00)
+			create proc.make (Proc_name)
 			proc.load
 			proc.set_arguments (<<"author", "price", "pub_date">>,
 						<<author, price, pub_date >>)

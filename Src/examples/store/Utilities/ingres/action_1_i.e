@@ -12,7 +12,7 @@ class ACTION_1_I inherit
 
 	ACTION_1
 
-creation
+create
         
 	make
 
@@ -26,7 +26,7 @@ feature
 			table_name: STRING
 			table_owner:STRING
 		do      
-			!! tuple.copy (selection.cursor)
+			create tuple.copy (selection.cursor)
 			table_name ?= tuple.item (1)
 			table_owner ?= tuple.item (2)
 			if table_name /= Void  then
@@ -35,8 +35,8 @@ feature
 				io.putstring (" Owner: ")
 				io.putstring (table_owner)
 				io.new_line
-				!! new_selection.make
-				!! my_action.make (new_selection)
+				create new_selection.make
+				create my_action.make (new_selection)
 				new_selection.set_action (my_action)
 				new_selection.set_map_name (table_name, "table_name")
 				new_selection.set_map_name (table_owner, "table_owner")

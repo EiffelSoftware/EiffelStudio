@@ -7,7 +7,7 @@ class ESQL_ODBC inherit
 			execute, init
 		end
 
-creation
+create
 
 	make
 
@@ -51,9 +51,9 @@ feature
 			--  the status of the database.
 			-- 'base_selection' provides a SELECT query mechanism.
 			-- 'base_update' provides updating facilities.
-			!! session_control.make
-			!! base_selection.make
-			!! base_update.make
+			create session_control.make
+			create base_selection.make
+			create base_update.make
 
 			-- Start session
 			session_control.connect
@@ -128,7 +128,7 @@ feature {NONE}
 
 	seq_string: SEQ_STRING is
 		once
-			!! Result.make (Stringlength)
+			create Result.make (Stringlength)
 		end
 	
 	is_select_statement(st: STRING): BOOLEAN is
@@ -172,7 +172,7 @@ feature {NONE}
 		do
 			from
 				i := 1
-				!! tuple.copy (base_selection.cursor)
+				create tuple.copy (base_selection.cursor)
 				io.new_line
 			until
 				i > tuple.count
@@ -201,10 +201,10 @@ feature {NONE}
 		do
 			from
 				i := 1
-				!! tuple.copy (base_selection.cursor)
-				!! r_int
-				!! r_real
-				!! r_double
+				create tuple.copy (base_selection.cursor)
+				create r_int
+				create r_real
+				create r_double
 			until
 				i > tuple.count
 			loop

@@ -4,7 +4,7 @@ inherit
 
 	EC_TYPES
 
-creation
+create
 
 	make 
 
@@ -12,10 +12,10 @@ feature
 
 	make is
 		do
-			!! descriptor.make;
-			!! book.make;
-			!! converter1.make;
-			!! converter2.make;
+			create descriptor.make;
+			create book.make;
+			create converter1.make;
+			create converter2.make;
 			execute
 		end
 

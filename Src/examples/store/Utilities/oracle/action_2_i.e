@@ -15,7 +15,7 @@ class ACTION_2_I inherit
 			execute
 		end
 
-creation
+create
         
 	make
 
@@ -26,7 +26,7 @@ feature
 			tuple: DB_TUPLE
 			column_name: STRING
 		do
-			!! tuple.copy (selection.cursor)
+			create tuple.copy (selection.cursor)
 			column_name ?= tuple.item (1)
 			if column_name /= Void then
 				io.putstring (column_name)

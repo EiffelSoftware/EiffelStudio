@@ -11,23 +11,23 @@ feature {NONE} -- Initialization
 		--
 	do
 		-- Create people and their relationships
-		!!p1.make("P1","Henri",255,"Employee") !!p2.make("P2","Jacques",49,"Manager")
-   	 !!p3.make("P3","Jean",35,"Employee") !!p4.make("P4","Pierre",48,"Manager")
+		create p1.make("P1","Henri",255,"Employee") create p2.make("P2","Jacques",49,"Manager")
+   	 create p3.make("P3","Jean",35,"Employee") create p4.make("P4","Pierre",48,"Manager")
 		p1.set_friends(p2,p4) p2.set_friends(p3,p4) p3.set_friends(p1,p4) p4.set_friends(p2,p1)
 
 		-- Store objects with standard storable
-        !!f.make_open_write("ise_basic_store_file")
+        create f.make_open_write("ise_basic_store_file")
         p1.ise_basic_store(f)
         f.close
 		-- Store objects with new storable
-        !!f.make_open_write("sol_basic_store_file")
+        create f.make_open_write("sol_basic_store_file")
 		p1.set_matisse_storer
         p1.sol_store(f)
         f.close
 
         -- Retrieve new file with standard storable
 		p1 := Void  p2 := Void p3 := Void  p4 := Void
-		!!p1.make("Mink","Thierry",34,"Manager")		
+		create p1.make("Mink","Thierry",34,"Manager")		
         p1.set_matisse_storer
 		p1 ?= p1.sol_retrieve_by_name("sol_basic_store_file")
 	end -- make

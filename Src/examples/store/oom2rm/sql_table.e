@@ -14,7 +14,7 @@ class SQL_TABLE inherit
 			make as linked_list_make
 		end;
 
-creation
+create
 
 	make, make_prefix
 

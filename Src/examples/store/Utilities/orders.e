@@ -1,6 +1,6 @@
 class ORDERS 
 	
-creation
+create
 	make
 
 feature 

@@ -15,7 +15,7 @@ feature {NONE}
 		-- Prints various information
 	do
 		-- 1/ Choose host name and database name. Adjust wait and priority so that it suits your needs.
-		!!appl.login("venus","COMPANY",0,0)
+		create appl.login("venus","COMPANY",0,0)
 
 		-- 2/ Choose working mode. See documentation for that.
 		appl.set_mode(OPENED_TRANSACTION,Void)
@@ -24,7 +24,7 @@ feature {NONE}
 		appl.set_base
 
 		-- 4/ Create a Matisse session.
-		!!session.make
+		create session.make
 		
 		-- 5/ Connect to database with the appropriate mode (given above).
 		session.connect
@@ -46,12 +46,12 @@ feature -- Status Setting
 		i: INTEGER
 	do
 		-- Get friends of object #659 = 1625
-		!!one_object.make(1625)
-		!!one_selection.make
-		!!query.make(Ooas) -- Use Oors and Ooirs for ObjectRelStream and ObjectIRelStream
+		create one_object.make(1625)
+		create one_selection.make
+		create query.make(Ooas) -- Use Oors and Ooirs for ObjectRelStream and ObjectIRelStream
 		one_selection.set_map_name(one_object,Object_map)
 		query.execute(one_selection)
-		!!one_container.make one_selection.set_container(one_container)
+		create one_container.make one_selection.set_container(one_container)
 		one_selection.load_result
 		from
 			one_container.start

@@ -14,7 +14,7 @@ feature {NONE}
 	do
 	
 		-- 1/ Choose host name and database name. Adjust wait and priority so that it suits your needs.
-		!!appl.login("venus","COMPANY",0,0)
+		create appl.login("venus","COMPANY",0,0)
 
 		-- 2/ Choose working mode. See documentation for that.
 		appl.set_mode(VERSION_ACCESS,Void)
@@ -23,7 +23,7 @@ feature {NONE}
 		appl.set_base
 
 		-- 4/ Create a Matisse session.
-		!!session.make
+		create session.make
 		
 		-- 5/ Connect to database with the appropriate mode (given above).
 		session.connect
@@ -49,7 +49,7 @@ feature -- Status Setting
 		-- Read a class name and depth of exploration. We choose a class
 		-- but inspect_* procedures accept ordinary objects.
 		io.putstring("Class ? ") io.readline a_name := io.last_string
-		!!one_class.make(a_name) !!one_object.make(one_class.cid)
+		create one_class.make(a_name) create one_object.make(one_class.cid)
 		io.putstring("Depth ? ") io.readint original_depth := io.lastint   
 		inspect_relationships(one_object,original_depth)
         inspect_inverse_relationships(one_object,original_depth)
@@ -130,7 +130,7 @@ feature -- Status Setting
 
 	relationship_class : MT_CLASS is 
 	once
-		!!Result.make("Mt Relationship")
+		create Result.make("Mt Relationship")
 	end -- relationship_class
 
 	put_tabs(depth:INTEGER) is

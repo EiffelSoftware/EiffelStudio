@@ -7,7 +7,7 @@ inherit
 			out
 		end
 
-creation
+create
 
 	make
 
@@ -59,7 +59,7 @@ feature
 		local
 			date: DATE 
 		do
-			!! date.make(y,1,1)
+			create date.make(y,1,1)
 			year.set_date(date)
 		end
 
@@ -94,16 +94,16 @@ feature
 
 	make is
 		do
-			!! title.make (80)
-			!! author.make (80)
-			!! year.make_now 
+			create title.make (80)
+			create author.make (80)
+			create year.make_now 
 		end
 
 
 	out: STRING is
 			-- Display contents
 		do
-			!! Result.make (100)
+			create Result.make (100)
 			if author /= Void then
 				Result.append ("Author:")
 				Result.append (author)

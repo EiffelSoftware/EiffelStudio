@@ -16,7 +16,7 @@ inherit
 
 feature -- Action
 
-    r : RANDOM is once !!Result.make end
+    r : RANDOM is once create Result.make end
 
     normal_object_action (object: ANY; is_exp: BOOLEAN) is
         -- Perform action on object inspected

@@ -396,6 +396,8 @@ feature {NONE} -- Implementation
 	on_cancel is
 			-- Execute `cancel' action.
 		do
+			private_replace_text := replace_edit.text
+			private_search_text := find_edit.text
 			cancel_actions.execute (Current, Void)
 			Terminate (Idcancel)
 		end

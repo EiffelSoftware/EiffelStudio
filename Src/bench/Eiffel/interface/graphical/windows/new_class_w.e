@@ -123,22 +123,13 @@ feature
 					class_i.set_date;
 					if cluster.classes.has (fname) then
 						fname.wipe_out;
-						str := clone (class_name);
-						str.to_upper;
-						fname.append ("Class ");
-						fname.append (str);
-						fname.append (" already exist in cluster");
 						warner.set_window (class_text);
-						warner.gotcha_call (fname);
+						warner.gotcha_call (w_Class_already_in_cluster (class_name));
 					elseif
 						(not file.exists and then not file.is_creatable)
 					then
-						str := clone (fname);
-						fname.wipe_out;
-						fname.append ("Cannot create file:%N");
-						fname.append (str);
 						warner.set_window (class_text);
-						warner.gotcha_call (fname);
+						warner.gotcha_call (w_Cannot_create_file (fname))
 					else 
 						stone := class_i.stone;
 						if not file.exists then
@@ -155,10 +146,8 @@ feature
 						elseif
 							not (file.is_readable and then file.is_plain)
 						then
-							fname.prepend ("File ");
-							fname.append ("%N cannot be read");
 							warner.set_window (class_text);
-							warner.gotcha_call (fname);
+							warner.gotcha_call (w_Cannot_read_file (fname))
 						else
 								--| Reading in existing file (created outside
 								--| ebench).
@@ -188,7 +177,7 @@ feature
 			if clu = Void then
 				aok := False;
 				warner.set_window (class_text);
-				warner.gotcha_call ("Invalid cluster name");
+				warner.gotcha_call (w_Invalid_cluster_name)
 			else
 				aok := True;
 				cluster := clu

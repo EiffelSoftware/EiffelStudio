@@ -97,6 +97,7 @@ extern "C" {
 #define RTLNTS(x,n,a)		tuple_malloc_specific(x,n,a)
 #define RTLNSMART(x)		smart_emalloc(x)
 #define RTLNR(x,y,z,a,o,c)	rout_obj_create((x),(y),(z),(a),(o),(c))
+#define RTLNR2(x,y,z,a,o)	rout_obj_create2((x),(y),(z),(a),(o))
 #define RTLNC(x)			eclone(x)
 #define RTLB(x)				bmalloc(x)
 #define RTMB(x,y)			makebit(x,y)

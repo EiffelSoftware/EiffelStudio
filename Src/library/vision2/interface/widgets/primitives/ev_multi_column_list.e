@@ -130,20 +130,16 @@ feature -- Status setting
 			implementation.clear_selection
 		end
 
-	set_multiple_selection is
-			-- Allow the user to do a multiple selection simply
-			-- by clicking on several choices.
-		require
+	enable_multiple_selection is
+			-- Allow more than one item to be selected.
 		do
-			implementation.set_multiple_selection	
+			implementation.enable_multiple_selection	
 		end
 
-	set_single_selection is
-			-- Allow the user to do only one selection. It is the
-			-- default status of the list
-		require
+	disable_multiple_selection is
+			-- Allow only one item to be selected.
 		do
-			implementation.set_single_selection
+			implementation.disable_multiple_selection
 		end
 
 	show_title_row is
@@ -160,7 +156,7 @@ feature -- Status setting
 			implementation.hide_title_row
 		end
 
-	set_left_alignment (column: INTEGER) is
+	align_text_left (column: INTEGER) is
 			-- Align the text of the column at left.
 			-- Cannot be used for the first column which is 
 			-- always left aligned.
@@ -170,7 +166,7 @@ feature -- Status setting
 			implementation.set_column_alignment (0, column)
 		end
 
-	set_center_alignment (column: INTEGER) is
+	align_text_center (column: INTEGER) is
 			-- Align the text of the column at left.
 			-- Cannot be used for the first column which is 
 			-- always left aligned.
@@ -180,7 +176,7 @@ feature -- Status setting
 			implementation.set_column_alignment (2, column)
 		end
 	
-	set_right_alignment (column: INTEGER) is
+	align_text_right (column: INTEGER) is
 			-- Align the text of the column at left.
 			-- Cannot be used for the first column which is 
 			-- always left aligned.
@@ -298,6 +294,9 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/03/02 18:40:42  rogers
+--| ev_multi_column_list.e
+--|
 --| Revision 1.31  2000/03/01 19:48:53  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|

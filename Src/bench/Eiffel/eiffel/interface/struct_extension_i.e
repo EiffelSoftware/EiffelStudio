@@ -72,6 +72,9 @@ feature -- Code generation
 				type: CL_TYPE_I; ret_type: TYPE_C) is
 			-- Generate the C name associated with the extension
 		do
+			if is_cpp then
+				context.set_has_cpp_externals_calls (True)
+			end
 			check
 				final_mode: Context.final_mode
 			end
@@ -97,7 +100,7 @@ feature -- Code generation
 				buffer.putstring (external_name)
 			else
 				parameters.start
-				buffer.putstring ("((")
+				buffer.putstring ("(((")
 				buffer.putstring (arg_types.item (1))
 				buffer.putstring (" *)")
 				parameters.item.print_register
@@ -108,6 +111,7 @@ feature -- Code generation
 				buffer.putstring (arg_types.item (2))
 				buffer.putstring (")(")
 				parameters.item.print_register
+				buffer.putchar (')')
 			end
 			buffer.putchar (')')
 		end

@@ -25,7 +25,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make_with_text_control (a_text_control: EV_TEXT) is
+	make_with_text_control (a_text_control: EV_TEXT; a_generation_button: EV_BUTTON) is
 			-- Create `Current' and assign `a_text_control' to
 			-- `text_control'.
 		require
@@ -42,6 +42,8 @@ feature {NONE} -- Initialization
 
 			hide_interface
 			class_text_output := a_text_control
+			generation_button := a_generation_button
+			generation_button.select_actions.extend (agent generate_current_test)
 		end		
 		
 feature -- Status setting
@@ -237,6 +239,15 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	generate_current_test is
+			-- Generate a stand alone test that may be compiled, based on
+			-- the selected test in `test_notebook'.
+		do
+			Test_generator.generate_project (class_names @ test_notebook.selected_item_index,
+				test_widget_type.substring (4, test_widget_type.count))	
+		end
+		
+		
 	class_texts: HASH_TABLE [STRING, STRING]
 		-- All texts of classes associated with each class filename.
 	
@@ -251,6 +262,15 @@ feature {NONE} -- Implementation
 	
 	class_text_output: EV_TEXT
 		-- An EV_TEXT to display all test class texts.
+		
+	generation_button: EV_BUTTON
+	
+	test_generator: WIDGET_TEST_PROJECT_GENERATOR is
+			-- Once access to a project generator.
+		once
+			create Result
+		end
+		
 
 invariant
 	test_notebook_not_void: test_notebook /= Void

@@ -29,6 +29,7 @@ feature
 			l_start, string_count: INTEGER
 			finished_file: PLAIN_TEXT_FILE
 			finished_file_name: FILE_NAME
+			new_make, old_make: PLAIN_TEXT_FILE
 		do
 				-- Create `big_file_name' with a number as a suffix, in order not to
 				-- confuse the C debugger.
@@ -47,11 +48,7 @@ feature
 			has_finished_file := finished_file.exists
 
 				-- Clean up previous conversion
-			if not is_root and then has_entry ("Makefile.SHold") then
-				create makefile_sh.make (path ("Makefile.SH"))
-				makefile_sh.delete
-				makefile_sh.make (path("Makefile.SHold"))
-				makefile_sh.change_name(path("Makefile.SH"))
+			if not is_root then
 				l_file_name := path (big_file_name) + ".x"
 				create l_file.make (l_file_name)
 				if l_file.exists then
@@ -197,20 +194,18 @@ end
 				big_file.change_name (l_big_file_name)
 			end
 
-			l_makefile_sh_name := clone (makefile_sh.name)
-			l_old_name := clone  (makefile_sh.name)
-			l_old_name.append ("old")
-			makefile_sh.change_name (l_old_name)
 			makefile_sh.open_read
 			makefile_sh.read_stream (makefile_sh.count)
 			makefile_sh.close
 
-			makefile_sh.last_string.replace_substring_all ("OBJECTS =",
-					"OBJECTS = " + big_file_name + "." + object_extension + "%N%N" + "OLDOBJECTS =")
-			create l_makefile_sh.make_open_write (l_makefile_sh_name)
-			l_makefile_sh.put_string (makefile_sh.last_string)
-			l_makefile_sh.put_string ("%N")
-			l_makefile_sh.close
+			if makefile_sh.last_string.substring_index ("OLDOBJECTS", 1) = 0 then
+				makefile_sh.last_string.replace_substring_all ("OBJECTS =",
+					"OBJECTS = " + big_file_name + "." + object_extension + "%N%N" + "OLDOBJECTS = ")
+				makefile_sh.open_write
+				makefile_sh.put_string (makefile_sh.last_string)
+				makefile_sh.put_string ("%N")
+				makefile_sh.close
+			end
 
 debug ("OUTPUT")
 		print ("Directories%N")

@@ -10,14 +10,6 @@ inherit
 	CLI_COM
 
 feature {ICOR_EXPORTER} -- Initialization
-
--- NOTA jfiat: removed for now, let's keep this commented for now
---	new_cordebug_pointer: POINTER is
---			-- Create a new instance of ICorDebug.
---		do
---			initialize_com
---			Result := c_new_cordebug
---		end
 		
 	new_cordebug_pointer_for (a_dbg_version: STRING): POINTER is
 			-- Create a new instance of ICorDebug for `a_dbg_version'.
@@ -34,35 +26,12 @@ feature {ICOR_EXPORTER} -- Initialization
 			l_hr := c_get_cordebug (l_version.item, $Result)	
 		end
 
--- NOTA jfiat: removed for now, let's keep this commented for now		
---	new_cordebug: ICOR_DEBUG is
---			-- Create a new instance of ICOR_DEBUG.
---		local
---			p: POINTER
---		do
---			p := new_cordebug_pointer
---			if p /= default_pointer then
---				create Result.make_by_pointer (p)
---			end
---		ensure
---			result_exist: Result /= Void
---		end
-
 feature {NONE} -- Externals
-
--- NOTA jfiat: removed for now, let's keep this commented for now
---	c_new_cordebug: POINTER is
---			-- New instance of ICorDebug
---		external
---			"C use %"cli_debugger.h%""
---		alias
---			"new_cordebug"
---		end
 
 	c_get_cordebug (a_dbg_version: POINTER; a_cor_debug: POINTER): INTEGER is
 			-- New instance of ICorDebug
 		external
-			"C use %"cli_debugger.h%""
+			"C signature (LPWSTR, EIF_POINTER **): EIF_INTEGER use %"cli_debugger.h%""
 		alias
 			"get_cordebug"
 		end

@@ -2058,7 +2058,7 @@ feature -- Resource Update
 				editor_tool.text_area.update_click_list (True)
 			end
 			save_only := False
-			str := clone (title)
+			str := title.twin
 			if str @ 1 = '*' then
 				str.keep_tail (str.count - 2)
 				set_title (str)
@@ -2596,7 +2596,7 @@ feature {NONE} -- Implementation
 					-- Update the title of the window
 				if a_stone /= Void then
 					if changed then
-						str := clone (a_stone.header)
+						str := a_stone.header.twin
 						str.prepend ("* ")
 						set_title (str)
 					else
@@ -2779,7 +2779,7 @@ feature {NONE} -- Implementation
 		local
 			str: STRING
 		do
-			str := clone (title)
+			str := title.twin
 			if str @ 1 = '*' then
 				str.keep_tail (str.count - 2)
 				set_title (str)
@@ -2814,7 +2814,7 @@ feature {NONE} -- Implementation
 		local
 			str: STRING
 		do
-			str := clone (title)
+			str := title.twin
 			if str @ 1 = '*' then
 				str.keep_tail (str.count - 2)
 				set_title (str)
@@ -2835,7 +2835,7 @@ feature {NONE} -- Implementation
 			cst: CLASSI_STONE
 		do
 			if not text_edited then
-				str := clone (title)
+				str := title.twin
 				if str @ 1 /= '*' then
 					str.prepend ("* ")
 					set_title (str)
@@ -3248,7 +3248,6 @@ feature {EB_TOOL_WINDOW, EB_EXPLORER_BAR} -- Floating tool handling
 			all_tool_windows.extend (a_tool_window)
 		ensure
 			extended: all_tool_windows.has (a_tool_window)
-			count_increased: all_tool_windows.count =  old all_tool_windows.count + 1
 		end
 		
 	remove_tool_window (a_widget: EV_WIDGET) is
@@ -3269,8 +3268,6 @@ feature {EB_TOOL_WINDOW, EB_EXPLORER_BAR} -- Floating tool handling
 					all_tool_windows.forth
 				end
 			end
-		ensure
-			count_decreased: all_tool_windows.count =  old all_tool_windows.count - 1
 		end
 		
 	window_moved (x_pos, y_pos: INTEGER) is

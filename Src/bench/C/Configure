@@ -110,9 +110,6 @@ fi
 test -d UU || mkdir UU
 cd UU && rm -f ./*
 
-d_bsd=''
-d_eunice=''
-d_xenix=''
 eunicefix=''
 Mcc=''
 awk=''
@@ -140,6 +137,7 @@ gcc=''
 grep=''
 inews=''
 ksh=''
+ldsharedflags='-shared -o'
 less=''
 line=''
 lint=''
@@ -200,7 +198,6 @@ afs=''
 alignbytes=''
 bin=''
 binexp=''
-installbin=''
 bitpbyte=''
 byteorder=''
 cc=''
@@ -390,7 +387,6 @@ spackage=''
 d_maypanic=''
 pidtype=''
 prefix=''
-prefixexp=''
 prototype=''
 ptrsize=''
 reg10=''
@@ -410,10 +406,8 @@ reg7=''
 reg8=''
 reg9=''
 registers=''
-sbrksmart=''
+d_sbrksmart=''
 installscript=''
-scriptdir=''
-scriptdirexp=''
 selecttype=''
 so=''
 d_keepalive=''
@@ -421,7 +415,6 @@ sharpbang=''
 shsharp=''
 spitshell=''
 startsh=''
-sysman=''
 uidtype=''
 nm_opt=''
 runnm=''
@@ -1956,269 +1949,6 @@ dflt="$orig_dflt"
 rm -f getfile.ok
 EOSC
 
-: determine root of directory hierarchy where package will be installed.
-case "$prefix" in
-'')
-	dflt=`./loc . /usr/local /usr/local /local /opt /usr`
-	;;
-*)
-	dflt="$prefix"
-	;;
-esac
-$cat <<EOM
-
-By default, $package will be installed in $dflt/bin, manual
-pages under $dflt/man, etc..., i.e. with $dflt as prefix for
-all installation directories. Typically set to /usr/local, but you
-may choose /usr if you wish to install $package among your system
-binaries. If you wish to have binaries under /bin but manual pages
-under /usr/local/man, that's ok: you will be prompted separately
-for each of the installation directories, the prefix being only used
-to set the defaults.
-
-EOM
-fn=d~
-rp='Installation prefix to use?'
-. ./getfile
-oldprefix=''
-case "$prefix" in
-'') ;;
-*)
-	case "$ans" in
-	"$prefix") ;;
-	*) oldprefix="$prefix";;
-	esac
-	;;
-esac
-prefix="$ans"
-prefixexp="$ansexp"
-
-: set the prefixit variable, to compute a suitable default value
-prefixit='case "$3" in
-""|none)
-	case "$oldprefix" in
-	"") eval "$1=\"\$$2\"";;
-	*)
-		case "$3" in
-		"") eval "$1=";;
-		none)
-			eval "tp=\"\$$2\"";
-			case "$tp" in
-			""|" ") eval "$1=\"\$$2\"";;
-			*) eval "$1=";;
-			esac;;
-		esac;;
-	esac;;
-*)
-	eval "tp=\"$oldprefix-\$$2-\""; eval "tp=\"$tp\"";
-	case "$tp" in
-	--|/*--|\~*--) eval "$1=\"$prefix/$3\"";;
-	/*-$oldprefix/*|\~*-$oldprefix/*)
-		eval "$1=\`echo \$$2 | sed \"s,^$oldprefix,$prefix,\"\`";;
-	*) eval "$1=\"\$$2\"";;
-	esac;;
-esac'
-
-: is AFS running?
-echo " "
-if test -d /afs; then
-	echo "AFS may be running... I'll be extra cautious then..." >&4
-	afs=true
-else
-	echo "AFS does not seem to be running..." >&4
-	afs=false
-fi
-
-: determine where public executables go
-echo " "
-set dflt bin bin
-eval $prefixit
-fn=d~
-rp='Pathname where the public executables will reside?'
-. ./getfile
-if $test "X$ansexp" != "X$binexp"; then
-	installbin=''
-fi
-bin="$ans"
-binexp="$ansexp"
-if $afs; then
-	$cat <<EOM
-
-Since you are running AFS, I need to distinguish the directory in which
-executables reside from the directory in which they are installed (and from
-which they are presumably copied to the former directory by occult means).
-
-EOM
-	case "$installbin" in
-	'') dflt=`echo $binexp | sed 's#^/afs/#/afs/.#'`;;
-	*) dflt="$installbin";;
-	esac
-	fn=de~
-	rp='Where will public executables be installed?'
-	. ./getfile
-	installbin="$ans"
-else
-	installbin="$binexp"
-fi
-
-: determine where manual pages are on this system
-echo " "
-case "$sysman" in
-'') 
-	syspath='/usr/man/man1 /usr/man/mann /usr/man/manl /usr/man/local/man1'
-	syspath="$syspath /usr/man/u_man/man1 /usr/share/man/man1"
-	syspath="$syspath /usr/catman/u_man/man1 /usr/man/l_man/man1"
-	syspath="$syspath /usr/local/man/u_man/man1 /usr/local/man/l_man/man1"
-	syspath="$syspath /usr/man/man.L /local/man/man1 /usr/local/man/man1"
-	sysman=`./loc . /usr/man/man1 $syspath`
-	;;
-esac
-if $test -d "$sysman"; then
-	echo "System manual is in $sysman." >&4
-else
-	echo "Could not find manual pages in source form." >&4
-fi
-
-: set the prefixup variable, to restore leading tilda escape
-prefixup='case "$prefixexp" in
-"$prefix") ;;
-*) eval "$1=\`echo \$$1 | sed \"s,^$prefixexp,$prefix,\"\`";;
-esac'
-
-: determine where manual pages go
-set mansrc mansrc none
-eval $prefixit
-$cat <<EOM
-
-$spackage has manual pages available in source form.
-EOM
-case "$nroff" in
-nroff)
-	echo "However, you don't have nroff, so they're probably useless to you."
-	case "$mansrc" in
-	'') mansrc="none";;
-	esac;;
-esac
-echo "If you don't want the manual sources installed, answer 'none'."
-case "$mansrc" in
-'')
-	lookpath="$prefixexp/man/man1 $prefixexp/man/u_man/man1"
-	lookpath="$lookpath $prefixexp/man/l_man/man1"
-	lookpath="$lookpath /usr/local/man/man1 /opt/man/man1 /usr/man/manl"
-	lookpath="$lookpath /usr/man/local/man1 /usr/man/l_man/man1"
-	lookpath="$lookpath /usr/local/man/u_man/man1 /usr/local/man/l_man/man1"
-	lookpath="$lookpath /usr/man/man.L"
-	mansrc=`./loc . $prefixexp/man/man1 $lookpath`
-	if $test -d "$mansrc"; then
-		dflt="$mansrc"
-	else
-		dflt="$sysman"
-	fi
-	set dflt
-	eval $prefixup
-	;;
-' ') dflt=none;;
-*)  dflt="$mansrc"
-	;;
-esac
-echo " "
-fn=dn~
-rp='Where do the manual pages (source) go?'
-. ./getfile
-if test "X$mansrcexp" != "X$ansexp"; then
-	installmansrc=''
-fi
-mansrc="$ans"
-mansrcexp="$ansexp"
-case "$mansrc" in
-'') mansrc=' '
-	installmansrc='';;
-esac
-if $afs; then
-	$cat <<EOM
-
-Since you are running AFS, I need to distinguish the directory in which
-manual pages reside from the directory in which they are installed (and from
-which they are presumably copied to the former directory by occult means).
-
-EOM
-	case "$installmansrc" in
-	'') dflt=`echo $mansrcexp | sed 's#^/afs/#/afs/.#'`;;
-	*) dflt="$installmansrc";;
-	esac
-	fn=de~
-	rp='Where will man pages be installed?'
-	. ./getfile
-	installmansrc="$ans"
-else
-	installmansrc="$mansrcexp"
-fi
-
-case "$mansrc" in
-' ') manext='0';;
-*l) manext=l;;
-*n) manext=n;;
-*o) manext=l;;
-*p) manext=n;;
-*C) manext=C;;
-*L) manext=L;;
-*L1) manext=L1;;
-*) manext=1;;
-esac
-
-: determine where public executable scripts go
-set scriptdir scriptdir
-eval $prefixit
-case "$scriptdir" in
-'')
-	dflt="$bin"
-	: guess some guesses
-	$test -d /usr/share/scripts && dflt=/usr/share/scripts
-	$test -d /usr/share/bin && dflt=/usr/share/bin
-	$test -d /usr/local/script && dflt=/usr/local/script
-	$test -d $prefixexp/script && dflt=$prefixexp/script
-	set dflt
-	eval $prefixup
-	;;
-*)  dflt="$scriptdir"
-	;;
-esac
-$cat <<EOM
- 
-Some installations have a separate directory just for executable scripts so
-that they can mount it across multiple architectures but keep the scripts in
-one spot.  You might, for example, have a subdirectory of /usr/share for this.
-Or you might just lump your scripts in with all your other executables.
- 
-EOM
-fn=d~
-rp='Where do you keep publicly executable scripts?'
-. ./getfile
-if $test "X$ansexp" != "X$scriptdirexp"; then
-	installscript=''
-fi
-scriptdir="$ans"
-scriptdirexp="$ansexp"
-if $afs; then
-	$cat <<EOM
-
-Since you are running AFS, I need to distinguish the directory in which
-scripts reside from the directory in which they are installed (and from
-which they are presumably copied to the former directory by occult means).
-
-EOM
-	case "$installscript" in
-	'') dflt=`echo $scriptdirexp | sed 's#^/afs/#/afs/.#'`;;
-	*) dflt="$installscript";;
-	esac
-	fn=de~
-	rp='Where will public scripts be installed?'
-	. ./getfile
-	installscript="$ans"
-else
-	installscript="$scriptdirexp"
-fi
-
 : see what memory models we can support
 case "$models" in
 '')
@@ -2373,7 +2103,6 @@ echo exit 1 >eunice
 echo exit 1 >xenix
 echo exit 1 >venix
 echo exit 1 >os2
-d_bsd="$undef"
 $cat /usr/include/signal.h /usr/include/sys/signal.h >foo 2>/dev/null
 if test -f /osf_boot || $contains 'OSF/1' /usr/include/ctype.h >/dev/null 2>&1
 then
@@ -2395,7 +2124,6 @@ elif test `echo abc | tr a-z A-Z` = Abc ; then
 	fi
 elif $contains SIGTSTP foo >/dev/null 2>&1 ; then
 	echo "Looks kind of like a BSD system, but we'll see..."
-	d_bsd="$define"
 	echo exit 0 >bsd
 else
 	echo "Looks kind of like a Version 7 system, but we'll see..."
@@ -2408,13 +2136,11 @@ There is, however, a strange, musty smell in the air that reminds me of
 something...hmm...yes...I've got it...there's a VMS nearby, or I'm a Blit.
 EOI
 	echo exit 0 >eunice
-	d_eunice="$define"
 : it so happens the Eunice I know will not run shell scripts in Unix format
 	;;
 *)
 	echo " "
 	echo "Congratulations.  You aren't running Eunice."
-	d_eunice="$undef"
 	;;
 esac
 case "$p_" in
@@ -2430,11 +2156,9 @@ esac
 if test -f /xenix; then
 	echo "Actually, this looks more like a XENIX system..."
 	echo exit 0 >xenix
-	d_xenix="$define"
 else
 	echo " "
 	echo "It's not Xenix..."
-	d_xenix="$undef"
 fi
 chmod +x xenix
 $eunicefix xenix
@@ -3152,7 +2876,7 @@ case "$nm_opt" in
 	elif $test -f /dgux; then
 		nm_opt='-p'
 	else
-		nm_opt=''
+		nm_opt='-C'
 	fi;;
 esac
 
@@ -3203,6 +2927,7 @@ xxx=normal
 case "$libc" in
 unknown)
 	set /usr/ccs/lib/libc.$so
+	$test -r $1 || set /lib/libc.$so
 	$test -r $1 || set /usr/lib/libc.$so
 	$test -r $1 || set /usr/shlib/libc.$so
 	$test -r $1 || \
@@ -3215,7 +2940,6 @@ unknown)
 			s/\n/ /' | \
 		 sort | $sed -e 's/^.* //'`
 	eval set \$$#
-	$test -r $1 || set /lib/libc.$so
 	$test -r $1 || set /lib/libsys_s.a
 	;;
 *)
@@ -3358,6 +3082,9 @@ else
 	if com="$sed -n -e 's/^.* [ADTSIW]  *_[_.]*//p' -e 's/^.* [ADTSIW] //p'";\
 		eval $xscan; $contains '^fprintf$' libc.list >/dev/null 2>&1
 	then
+echo Manu
+echo $nm_opt
+
 		nm_opt='-p'
 		eval $xrun
 	else
@@ -5930,12 +5657,12 @@ main()
 	exit(0);		/* Ok */
 }
 EOC
-	sbrksmart="$undef"
+	d_sbrksmart="$undef"
 	dumb='-- assuming dumb sbrk().'
 	if $cc $ccflags -o sbrk sbrk.c $libs >/dev/null 2>&1; then
 		./sbrk >/dev/null 2>&1
 		case $? in
-		0) sbrksmart="$define"
+		0) d_sbrksmart="$define"
 			echo "Yes, it can be used with negative values." ;;
 		1) echo "Sorry, not enough memory $dumb" ;;
 		2) echo "No it's not, and besides it seems to be buggy..." ;;
@@ -5949,7 +5676,7 @@ EOC
 	;;
 *)
 	echo "Since you don't have sbrk(), let's forget about the smart test!"
-	sbrksmart="$undef"
+	d_sbrksmart="$undef"
 	;;
 esac
 $rm -f sbrk sbrk.* core
@@ -6743,344 +6470,194 @@ echo " "
 echo "Creating config.sh..." >&4
 $spitshell <<EOT >config.sh
 $startsh
-#
-# This file was produced by running the Configure script. It holds all the
-# definitions figured out by Configure. Should you modify one of these values,
-# do not forget to propagate your changes by running "Configure -der". You may
-# instead choose to run each of the .SH files by yourself, or "Configure -S".
-#
+#--|----------------------------------------------------------------
+#--| Eiffel runtime configuration
+#--| Copyright (C) 1985-2004 Eiffel Software. All rights reserved.
+#--| Duplication and distribution prohibited.  May be used only with
+#--| ISE Eiffel, under terms of user license.
+#--| Contact Eiffel Software for any other use.
+#--|
+#--| Interactive Software Engineering Inc.
+#--| dba Eiffel Software
+#--| 356 Storke Road, Goleta, CA 93117 USA
+#--| Telephone 805-685-1006, Fax 805-685-6869
+#--| Contact us at: http://www.eiffel.com/general/email.html
+#--| Customer support: http://support.eiffel.com
+#--| For latest info on our award winning products, visit:
+#--|     http://www.eiffel.com
+#--|----------------------------------------------------------------
 
-# Configuration time: $cf_time
-# Configured by: $cf_by
-# Target system: $myuname
-
-d_bsdsig='undef'
-shared_prefix='lib'
-shared_suffix='.so'
-d_bsd='$d_bsd'
-d_eunice='$d_eunice'
-d_xenix='$d_xenix'
-eunicefix='$eunicefix'
-Mcc='$Mcc'
-awk='$awk'
-bash='$bash'
-bison='$bison'
-byacc='$byacc'
-cat='$cat'
-chgrp='$chgrp'
-chmod='$chmod'
-chown='$chown'
-comm='$comm'
-compress='$compress'
-cp='$cp'
-cpio='$cpio'
-cpp='$cpp'
-csh='$csh'
-date='$date'
-echo='$echo'
-egrep='$egrep'
-emacs='$emacs'
-expr='$expr'
-find='$find'
-flex='$flex'
-gcc='$gcc'
-grep='$grep'
-inews='$inews'
-ksh='$ksh'
-less='$less'
-line='$line'
-lint='$lint'
-ln='$ln'
-lp='$lp'
-lpr='$lpr'
-ls='$ls'
-mail='$mail'
-mailx='$mailx'
-make='$make'
-mkdir='$mkdir'
-more='$more'
-mv='$mv'
-nroff='$nroff'
-perl='$perl'
-pg='$pg'
-pmake='$pmake'
-pr='$pr'
-rm='$rm'
-rmail='$rmail'
-sed='$sed'
-sendmail='$sendmail'
-sh='$sh'
-shar='$shar'
-sleep='$sleep'
-smail='$smail'
-sort='$sort'
-submit='$submit'
-tail='$tail'
-tar='$tar'
-tbl='$tbl'
-test='$test'
-touch='$touch'
-tr='$tr'
-troff='$troff'
-uname='$uname'
-uniq='$uniq'
-uuname='$uuname'
-vi='$vi'
-zcat='$zcat'
-hint='$hint'
-myuname='$myuname'
-osname='$osname'
-osvers='$osvers'
-Author='$Author'
-Date='$Date'
-Header='$Header'
-Id='$Id'
-Locker='$Locker'
-Log='$Log'
-RCSfile='$RCSfile'
-Revision='$Revision'
-Source='$Source'
-State='$State'
-abortsig='$abortsig'
-add_log='$add_log'
-afs='$afs'
-alignbytes='$alignbytes'
-bin='$bin'
-binexp='$binexp'
-installbin='$installbin'
-bitpbyte='$bitpbyte'
+#Computation/sizes
 byteorder='$byteorder'
-cc='$cc'
-gccversion='$gccversion'
-ccflags='$ccflags'
-cppflags='$cppflags'
-ldflags='$ldflags'
-lkflags='$lkflags'
-optimize='$optimize'
-cf_by='$cf_by'
-cf_time='$cf_time'
+pagesize='$pagesize'
+alignbytes='$alignbytes'
+doublesize='$doublesize'
+intsize='$intsize'
+integer_64_size='8'
+floatsize='$floatsize'
+ptrsize='$ptrsize'
+longsize='$longsize'
+integer_32_size='4'
+integer_16_size='2'
 charsize='$charsize'
-contains='$contains'
-cpp_stuff='$cpp_stuff'
-cpplast='$cpplast'
-cppminus='$cppminus'
-cpprun='$cpprun'
-cppstdin='$cppstdin'
-d_gettblsz='$d_gettblsz'
+bitpbyte='$bitpbyte'
+lngpad_2='LNGPAD(2)'
+
+#Formatting
+#Check value for next 4
+inttypes_include=''
+eif_integer_64_display='"lld"'
+eif_pointer_display='"X"'
+eif_integer_64_constant='CAT2(x,LL)'
+
+#File system
 nofile='$nofile'
-tablesize='$tablesize'
-d_access='$d_access'
-d_bcmp='$d_bcmp'
-d_bcopy='$d_bcopy'
-d_bsdjmp='$d_bsdjmp'
-d_bzero='$d_bzero'
+groupstype='$groupstype'
+uidtype='$uidtype'
 d_chown='$d_chown'
-d_dlopen='$d_dlopen'
 d_dup2='$d_dup2'
+d_dirnamlen='$d_dirnamlen'
 d_eofpipe='$d_eofpipe'
 d_fcntl='$d_fcntl'
-d_fd_macros='$d_fd_macros'
-d_fd_set='$d_fd_set'
-d_fds_bits='$d_fds_bits'
-d_ftime='$d_ftime'
-d_gettimeod='$d_gettimeod'
-d_getgrps='$d_getgrps'
-d_gethid='$d_gethid'
-aphostname='$aphostname'
-d_gethname='$d_gethname'
-d_phostname='$d_phostname'
-d_uname='$d_uname'
-d_getopt='$d_getopt'
-d_getpagsz='$d_getpagsz'
-pagesize='$pagesize'
-d_keepsig='$d_keepsig'
-d_link='$d_link'
-d_lstat='$d_lstat'
-d_memcpy='$d_memcpy'
-d_memmove='$d_memmove'
-d_mkdir='$d_mkdir'
-d_mktime='$d_mktime'
-d_mmap='$d_mmap'
-d_open3='$d_open3'
-d_pidcheck='$d_pidcheck'
-d_portable='$d_portable'
-d_readdir='$d_readdir'
-d_rewinddir='$d_rewinddir'
-d_seekdir='$d_seekdir'
-d_telldir='$d_telldir'
-d_rename='$d_rename'
-d_rmdir='$d_rmdir'
-d_rusage='$d_rusage'
-d_safebcpy='$d_safebcpy'
-d_safemcpy='$d_safemcpy'
-d_sbrk='$d_sbrk'
-d_select='$d_select'
-d_siglist='$d_siglist'
-d_sigsetmk='$d_sigsetmk'
-d_sigaction='$d_sigaction'
-d_sigintrp='$d_sigintrp'
-d_sigvec='$d_sigvec'
-d_sigvectr='$d_sigvectr'
-d_smartmmap='$d_smartmmap'
-d_oldsock='$d_oldsock'
-d_socket='$d_socket'
-d_sockpair='$d_sockpair'
-sockethdr='$sockethdr'
-socketlib='$socketlib'
 d_geteuid='$d_geteuid'
 d_getgrgid='$d_getgrgid'
+d_getgrps='$d_getgrps'
 d_getpwuid='$d_getpwuid'
-d_index='$d_index'
-d_strchr='$d_strchr'
-d_strctcpy='$d_strctcpy'
-d_strdup='$d_strdup'
-d_strerrm='$d_strerrm'
-d_strerror='$d_strerror'
-d_sysernlst='$d_sysernlst'
-d_syserrlst='$d_syserrlst'
-d_time='$d_time'
-timetype='$timetype'
-clocktype='$clocktype'
-d_times='$d_times'
+d_link='$d_link'
+d_lstat='$d_lstat'
+d_mkdir='$d_mkdir'
+d_readdir='$d_readdir'
+d_rewinddir='$d_rewinddir'
+d_rename='$d_rename'
+d_rmdir='$d_rmdir'
 d_unlink='$d_unlink'
-d_usleep='$d_usleep'
-d_utime='$d_utime'
-d_voidsig='$d_voidsig'
-signal_t='$signal_t'
-doublesize='$doublesize'
-floatsize='$floatsize'
-gidtype='$gidtype'
-groupstype='$groupstype'
-h_fcntl='$h_fcntl'
-h_sysfile='$h_sysfile'
-i_direct='$i_direct'
-d_dirnamlen='$d_dirnamlen'
-direntrytype='$direntrytype'
 i_dirent='$i_dirent'
-i_dlfcn='$i_dlfcn'
 i_fcntl='$i_fcntl'
-i_fd_setsyss='$i_fd_setsyss'
 i_grp='$i_grp'
 i_limits='$i_limits'
-i_netns_ns='$i_netns_ns'
-i_niin='$i_niin'
-i_sysin='$i_sysin'
-d_pwage='$d_pwage'
-d_pwchange='$d_pwchange'
-d_pwclass='$d_pwclass'
-d_pwcomment='$d_pwcomment'
-d_pwexpire='$d_pwexpire'
-d_pwquota='$d_pwquota'
 i_pwd='$i_pwd'
-i_string='$i_string'
-strings='$strings'
 i_sysdir='$i_sysdir'
 i_sysfile='$i_sysfile'
 i_sysndir='$i_sysndir'
-i_sysresrc='$i_sysresrc'
-i_sysselct='$i_sysselct'
+
+#Network
+selecttype='$selecttype'
+d_keepalive='$d_keepalive'
+i_fd_setsyss='$i_fd_setsyss'
+i_niin='$i_niin'
+i_sysin='$i_sysin'
 i_syssock='$i_syssock'
+i_sysun='$i_sysun'
+
+#Time
+timetype='$timetype'
+d_ftime='$d_ftime'
+d_gettimeod='$d_gettimeod'
+d_rusage='$d_rusage'
+d_time='$d_time'
+d_times='$d_times'
+d_utime='$d_utime'
+i_sysresrc='$i_sysresrc'
 i_systimeb='$i_systimeb'
 i_systimes='$i_systimes'
-i_sysun='$i_sysun'
+i_time='$i_time'
 i_systime='$i_systime'
 i_systimek='$i_systimek'
-i_time='$i_time'
-timeincl='$timeincl'
-i_tmvlsyss='$i_tmvlsyss'
 i_utime='$i_utime'
+#Check value for next 1
+i_sysutime='undef'
+i_tmvlsyss='$i_tmvlsyss'
+
+#Signals
+abortsig='$abortsig'
+signal_t='$signal_t'
+d_bsdjmp='$d_bsdjmp'
+d_bsdsig='undef'
+d_keepsig='$d_keepsig'
+d_siglist='$d_siglist'
+d_sigsetmk='$d_sigsetmk'
+d_sigvec='$d_sigvec'
+d_sigvectr='$d_sigvectr'
+
+#System
+malloctype='$malloctype'
+pidtype='$pidtype'
+prototype='$prototype'
+d_gethid='$d_gethid'
+d_maypanic='$d_maypanic'
+d_pidcheck='$d_pidcheck'
+d_sbrk='$d_sbrk'
+d_sbrksmart='$d_sbrksmart'
+d_smartmmap='$d_smartmmap'
+d_strerror='$d_strerror'
+d_syserrlst='$d_syserrlst'
+d_sysernlst='$d_sysernlst'
+d_strerrm='$d_strerrm'
+d_usleep='$d_usleep'
 i_stdarg='$i_stdarg'
 i_varargs='$i_varargs'
-i_varhdr='$i_varhdr'
-i_xm_protocols='$i_xm_protocols'
-install='$install'
-installdir='$installdir'
-intsize='$intsize'
-lex='$lex'
-lexflags='$lexflags'
-libc='$libc'
-glibpth='$glibpth'
-libpth='$libpth'
-plibpth='$plibpth'
-xlibpth='$xlibpth'
-libs='$libs'
-lns='$lns'
-longsize='$longsize'
-d_mymalloc='$d_mymalloc'
-mallocobj='$mallocobj'
-mallocsrc='$mallocsrc'
-malloctype='$malloctype'
-usemymalloc='$usemymalloc'
-installmansrc='$installmansrc'
-manext='$manext'
-mansrc='$mansrc'
-mansrcexp='$mansrcexp'
-mkdep='$mkdep'
-huge='$huge'
-large='$large'
-medium='$medium'
-models='$models'
-small='$small'
-split='$split'
-mydomain='$mydomain'
-myhostname='$myhostname'
-phostname='$phostname'
-c='$c'
-n='$n'
-groupcat='$groupcat'
-hostcat='$hostcat'
-passcat='$passcat'
-orderlib='$orderlib'
-ranlib='$ranlib'
-package='$package'
-spackage='$spackage'
-d_maypanic='$d_maypanic'
-pidtype='$pidtype'
-prefix='$prefix'
-prefixexp='$prefixexp'
-prototype='$prototype'
-ptrsize='$ptrsize'
-reg10='$reg10'
-reg11='$reg11'
-reg12='$reg12'
-reg13='$reg13'
-reg14='$reg14'
-reg15='$reg15'
-reg16='$reg16'
-reg1='$reg1'
-reg2='$reg2'
-reg3='$reg3'
-reg4='$reg4'
-reg5='$reg5'
-reg6='$reg6'
-reg7='$reg7'
-reg8='$reg8'
-reg9='$reg9'
-registers='$registers'
-sbrksmart='$sbrksmart'
-installscript='$installscript'
-scriptdir='$scriptdir'
-scriptdirexp='$scriptdirexp'
-selecttype='$selecttype'
-so='$so'
-d_keepalive='$d_keepalive'
-sharpbang='$sharpbang'
-shsharp='$shsharp'
+
+#Shell
+eunicefix='$eunicefix'
+rm='$rm'
+sed='$sed'
 spitshell='$spitshell'
-startsh='$startsh'
-sysman='$sysman'
-uidtype='$uidtype'
-nm_opt='$nm_opt'
-runnm='$runnm'
-usenm='$usenm'
-incpath='$incpath'
-mips='$mips'
-mips_type='$mips_type'
-usrinc='$usrinc'
+
+#Compiler/Preprocessor
+add_log='$add_log'
+cc='$cc'
+ccflags='$ccflags'
+cpp='$cpp'
+cppflags='$cppflags'
+cpp_stuff='$cpp_stuff'
 defvoidused='$defvoidused'
+#Check value for next 2
+eif_win32='undef'
+eif_windows='undef'
+Mcc='$Mcc'
+#Check value for next 2
+mtccflags='$ccflags -DEIF_THREADS -DEIF_POSIX_THREADS'
+mtcppflags='$cppflags -DEIF_THREADS -DEIF_POSIX_THREADS'
+optimize='$optimize'
+sharedccflags='$ccflags'
 voidflags='$voidflags'
-yacc='$yacc'
-yaccflags='$yaccflags'
+#Check value for next 1
+warning_level='-Wall'
+wkoptimize='$optimize'
+
+#Makefiles
+ar='ar'
+command_makefile='make -f'
+concurrent_prefix='c'
+cp='$cp'
+eiflib='finalized'
+ld='ld'
+ldsharedflags='$ldsharedflags'
+ldflags='$ldflags'
+libs='$libs'
+ln='$ln'
+make='$make'
+mkdep='$mkdep'
+mtldsharedflags='$ldsharedflags'
+mtlibs='$libs'
+mt_prefix='mt'
+mv='$mv'
+prefix='lib'
+ranlib='$ranlib'
+shared_prefix='lib'
+shared_suffix='.so'
+shared_rt_suffix='.so'
+sharedlibs='$libs'
+sharedlibversion='.5.6'
+sharedlink='ld'
+suffix='.a'
+wkeiflib='wkbench'
+
+#testing
+start_test='if [ ! -f finished ] ; then'
+end_test='; fi'
+create_test='touch finished'
+
 EOT
 
 : add special variables

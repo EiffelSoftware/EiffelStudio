@@ -1,4 +1,4 @@
-<document title="Eiffel Class Libraries Samples" output="envision">
+<document title="Eiffel Class Library Samples" output="envision">
 	<meta_data/>
 	<paragraph>
 		<paragraph>The Eiffel Class Libraries Samples are samples illustrate how to use EiffelBase, WEL and EiffelVision 2, which are class libraries written by Eiffel Software.  These samples include a console based calculator, a WEL tutorial for Windows graphical programming, and a number of EiffelVision2 samples for multi-platform graphical programming.</paragraph>

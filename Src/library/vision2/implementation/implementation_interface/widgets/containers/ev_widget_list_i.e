@@ -87,14 +87,6 @@ feature -- Element change
 		deferred
 		end
 
-	put_left (v: like item) is
-			-- Add `v' to the left of cursor position.
-			-- Do not move cursor.
-		require
-			v_not_void: v /= Void
-		deferred
-		end
-
 feature -- Removal
 
 	prune (v: like item) is
@@ -151,6 +143,9 @@ end -- class WIDGET_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/03/03 19:41:05  brendel
+--| Removed feature `put_left'.
+--|
 --| Revision 1.4  2000/03/03 18:31:55  brendel
 --| Added deferred feature `put_left'.
 --|

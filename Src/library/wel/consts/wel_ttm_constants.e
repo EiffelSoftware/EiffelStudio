@@ -44,11 +44,32 @@ feature -- Access
 			"TTM_GETCURRENTTOOL"
 		end
 
+	Ttm_getdelaytime: INTEGER is
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"TTM_GETDELAYTIME"
+		end
+
 	Ttm_gettext: INTEGER is
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"TTM_GETTEXT"
+		end
+
+	Ttm_gettipbkcolor: INTEGER is
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"TTM_GETTIPBKCOLOR"
+		end
+
+	Ttm_gettiptextcolor: INTEGER is
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"TTM_GETTIPTEXTCOLOR"
 		end
 
 	Ttm_gettoolcount: INTEGER is
@@ -91,6 +112,20 @@ feature -- Access
 			"C [macro %"cctrl.h%"]"
 		alias
 			"TTM_SETDELAYTIME"
+		end
+
+	Ttm_settipbkcolor: INTEGER is
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"TTM_SETTIPBKCOLOR"
+		end
+
+	Ttm_settiptextcolor: INTEGER is
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"TTM_SETTIPTEXTCOLOR"
 		end
 
 	Ttm_settoolinfo: INTEGER is

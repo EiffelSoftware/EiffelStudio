@@ -16,7 +16,7 @@ inherit
 			create_implementation
 		end
 
-create {EV_PRINT_PROJECTOR_IMP}
+create {EV_PRINT_PROJECTOR_IMP, EV_MODEL_PRINT_PROJECTOR_IMP}
 	make_with_context
 
 feature {NONE} -- Initialization

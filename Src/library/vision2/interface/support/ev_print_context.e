@@ -199,7 +199,7 @@ feature {EV_PRINT_DIALOG_I} -- Status setting
 			output_to_file_true: output_to_file
 		end
 
-feature {EV_PRINT_DIALOG_I, EV_PRINT_PROJECTOR_I} -- Implementation
+feature {EV_PRINT_DIALOG_I, EV_PRINT_PROJECTOR_I, EV_MODEL_PRINT_PROJECTOR_I} -- Implementation
 
 	printer_context: POINTER
 			-- Pointer to the chosen printers handle.

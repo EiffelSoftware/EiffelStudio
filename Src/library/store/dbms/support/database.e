@@ -92,6 +92,11 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 		do
 		end
 
+	parse_dyn (descriptor: INTEGER; parameters: ARRAY[ANY]; uht: HASH_TABLE [ANY, STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN is
+			-- Prepare sql for dyn .
+		do
+		end
+
 	result_order (descriptor: INTEGER): INTEGER is
 			-- Fetch one row resulting from the sql query
 			-- Default value zero

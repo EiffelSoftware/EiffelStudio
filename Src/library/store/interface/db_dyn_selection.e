@@ -14,6 +14,14 @@ inherit
 			make
 		end
 
+	DB_SELECTION
+		redefine
+			implementation,
+			make
+		select
+			implementation
+		end
+
 creation
 	make
 

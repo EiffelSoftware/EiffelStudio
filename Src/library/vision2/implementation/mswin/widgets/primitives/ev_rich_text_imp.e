@@ -2,22 +2,22 @@ indexing
 	description:
 		" EiffelVision text. A text area that contains%
 		% a rich text."
-	note: "It doesn't inherit from EV_TEXT_AREA_IMP because%
+	note: "It doesn't inherit from EV_TEXT_IMP because%
 		% it is different from the WEL hierarchy."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EV_TEXT_IMP
+	EV_RICH_TEXT_IMP
 
 inherit
-	EV_TEXT_I
+	EV_RICH_TEXT_I
 		undefine
 			selected_text
 		end
 
-	EV_TEXT_AREA_IMP
+	EV_TEXT_IMP
 		rename
 			wel_make as multiple_line_edit_make
 		export
@@ -104,7 +104,7 @@ feature -- Status setting
 	apply_format (format: EV_TEXT_FORMAT) is
 			-- Apply the given format to the text.
 		local
-			tt: EV_TEXT
+			tt: EV_RICH_TEXT
 		do
 			tt ?= interface
 			format.apply (tt)
@@ -125,7 +125,7 @@ feature -- Element change
 	set_background_color (color: EV_COLOR) is
 			-- Make `color' the new `background_color'
 		do
-			{EV_TEXT_AREA_IMP} Precursor (color)
+			{EV_TEXT_IMP} Precursor (color)
 			wel_set_background_color (background_color_imp)
 		end
 
@@ -180,7 +180,7 @@ feature -- Basic operation
 			!! Result.set (wel.x, wel.y)
 		end
 
-end -- class EV_TEXT
+end -- class EV_RICH_TEXT
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -2573,11 +2573,12 @@ end:
 #endif
 		{
 			struct item *my_last;
-			char *my_tmp;
 			my_last = otop();
 			my_last->type = SK_POINTER;
-			my_tmp =  my_last->it_ref;
-			my_last->it_ptr = my_tmp;	
+				/* References and pointers are store as char * so no type
+				 * conversion is necessary. Only the type field has to be
+				 * updated.
+				 */
 			break;
 		}
 

@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
@@ -532,6 +531,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/02/18 23:54:11  oconnor
+--| released
+--|
 --| Revision 1.26  2000/02/18 22:26:02  king
 --| Added callback features to call action sequences so zero arg of PROCEDURE is of type EV_MULTI_COLUMN_LIST_IMP
 --|

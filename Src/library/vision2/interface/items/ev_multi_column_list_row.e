@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
@@ -111,6 +110,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/02/18 23:54:11  oconnor
+--| released
+--|
 --| Revision 1.22  2000/02/18 18:43:49  king
 --| Added deselect_actions with fixme as it is currently not connected
 --|

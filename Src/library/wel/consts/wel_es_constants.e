@@ -11,91 +11,91 @@ feature -- Access
 
 	Es_left: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ES_LEFT"
 		end
 
 	Es_center: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ES_CENTER"
 		end
 
 	Es_right: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ES_RIGHT"
 		end
 
 	Es_multiline: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ES_MULTILINE"
 		end
 
 	Es_uppercase: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ES_UPPERCASE"
 		end
 
 	Es_lowercase: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ES_LOWERCASE"
 		end
 
 	Es_password: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ES_PASSWORD"
 		end
 
 	Es_autovscroll: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ES_AUTOVSCROLL"
 		end
 
 	Es_autohscroll: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ES_AUTOHSCROLL"
 		end
 
 	Es_nohidesel: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ES_NOHIDESEL"
 		end
 
 	Es_oemconvert: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ES_OEMCONVERT"
 		end
 
 	Es_readonly: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ES_READONLY"
 		end
 
 	Es_wantreturn: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ES_WANTRETURN"
 		end

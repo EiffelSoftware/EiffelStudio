@@ -12,7 +12,7 @@ feature -- Access
 	Cp_none: INTEGER is
 			-- Output is not clipped
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CP_NONE"
 		end
@@ -20,7 +20,7 @@ feature -- Access
 	Cp_rectangle: INTEGER is
 			-- Output is clipped to rectangles
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CP_RECTANGLE"
 		end
@@ -28,7 +28,7 @@ feature -- Access
 	Cp_region: INTEGER is
 			-- Output is clipped to regions
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CP_REGION"
 		end

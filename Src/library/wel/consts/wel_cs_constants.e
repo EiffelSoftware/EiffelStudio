@@ -11,77 +11,77 @@ feature -- Access
 
 	Cs_vredraw: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CS_VREDRAW"
 		end
 
 	Cs_hredraw: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CS_HREDRAW"
 		end
 
 	Cs_owndc: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CS_OWNDC"
 		end
 
 	Cs_classdc: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CS_CLASSDC"
 		end
 
 	Cs_parentdc: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CS_PARENTDC"
 		end
 
 	Cs_savebits: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CS_SAVEBITS"
 		end
 
 	Cs_dblclks: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CS_DBLCLKS"
 		end
 
 	Cs_bytealignclient: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CS_BYTEALIGNCLIENT"
 		end
 
 	Cs_bytealignwindow: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CS_BYTEALIGNWINDOW"
 		end
 
 	Cs_noclose: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CS_NOCLOSE"
 		end
 
 	Cs_globalclass: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CS_GLOBALCLASS"
 		end

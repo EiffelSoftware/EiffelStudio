@@ -11,42 +11,42 @@ feature -- Access
 
 	Ansi_charset: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ANSI_CHARSET"
 		end
 
 	Default_charset: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"DEFAULT_CHARSET"
 		end
 
 	Symbol_charset: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SYMBOL_CHARSET"
 		end
 
 	Shiftjis_charset: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SHIFTJIS_CHARSET"
 		end
 
 	Hangeul_charset: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"HANGEUL_CHARSET"
 		end
 
 	Chinesebig5_charset: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CHINESEBIG5_CHARSET"
 		end
@@ -54,7 +54,7 @@ feature -- Access
 	Oem_charset: INTEGER is
 			-- (is operating-system dependent)
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"OEM_CHARSET"
 		end

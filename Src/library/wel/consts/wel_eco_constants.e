@@ -12,7 +12,7 @@ feature -- Access
 	Eco_autowordselection: INTEGER is
 			-- Automatic selection of word on doubleclick.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"ECO_AUTOWORDSELECTION"
 		end
@@ -20,7 +20,7 @@ feature -- Access
 	Eco_autovscroll: INTEGER is
 			-- Same as ES_AUTOVSCROLL style.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"ECO_AUTOVSCROLL"
 		end
@@ -28,7 +28,7 @@ feature -- Access
 	Eco_autohscroll: INTEGER is
 			-- Same as ES_AUTOHSCROLL style.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"ECO_AUTOHSCROLL"
 		end
@@ -36,7 +36,7 @@ feature -- Access
 	Eco_nohidesel: INTEGER is
 			-- Same as ES_NOHIDESEL style.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"ECO_NOHIDESEL"
 		end
@@ -44,7 +44,7 @@ feature -- Access
 	Eco_readonly: INTEGER is
 			-- Same as ES_READONLY style.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"ECO_READONLY"
 		end
@@ -52,7 +52,7 @@ feature -- Access
 	Eco_wantreturn: INTEGER is
 			-- Same as ES_WANTRETURN style.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"ECO_WANTRETURN"
 		end
@@ -60,7 +60,7 @@ feature -- Access
 	Eco_savesel: INTEGER is
 			-- Same as ES_SAVESEL style.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"ECO_SAVESEL"
 		end
@@ -68,7 +68,7 @@ feature -- Access
 	Eco_selectionbar: INTEGER is
 			-- Same as ES_SELECTIONBAR style.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"ECO_SELECTIONBAR"
 		end
@@ -77,7 +77,7 @@ feature -- Access
 			-- Same as ES_VERTICAL style. Available in
 			-- Asian-language versions only.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"ECO_VERTICAL"
 		end
@@ -85,7 +85,7 @@ feature -- Access
 	Ecoop_set: INTEGER is
 			-- Set the options to those specified by fOptions.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"ECOOP_SET"
 		end
@@ -94,7 +94,7 @@ feature -- Access
 			-- Combine the specified options with the current
 			-- options.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"ECOOP_OR"
 		end
@@ -103,7 +103,7 @@ feature -- Access
 			-- Retain only those current options that are also
 			-- specified by fOptions.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"ECOOP_AND"
 		end
@@ -112,7 +112,7 @@ feature -- Access
 			-- Retain only those current options that are not
 			-- specified by fOptions.
 		external
-			"C [macro <redit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"ECOOP_XOR"
 		end

@@ -11,56 +11,56 @@ feature -- Access
 
 	En_setfocus: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"EN_SETFOCUS"
 		end
 
 	En_killfocus: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"EN_KILLFOCUS"
 		end
 
 	En_change: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"EN_CHANGE"
 		end
 
 	En_update: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"EN_UPDATE"
 		end
 
 	En_errspace: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"EN_ERRSPACE"
 		end
 
 	En_maxtext: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"EN_MAXTEXT"
 		end
 
 	En_hscroll: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"EN_HSCROLL"
 		end
 
 	En_vscroll: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"EN_VSCROLL"
 		end

@@ -12,7 +12,7 @@ feature -- Access
 	driver_version: INTEGER is
 			-- Version number of the device driver
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"DRIVERVERSION"
 		end
@@ -21,7 +21,7 @@ feature -- Access
 			-- Device technology.
 			-- See class WEL_DEVICE_TECHNOLOGY_CONSTANTS
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"TECHNOLOGY"
 		end
@@ -29,7 +29,7 @@ feature -- Access
 	horizontal_size: INTEGER is
 			-- Width of the physical display in millimeters
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"HORZSIZE"
 		end
@@ -37,7 +37,7 @@ feature -- Access
 	vertical_size: INTEGER is
 			-- Height of the physical display in millimeters
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"VERTSIZE"
 		end
@@ -45,7 +45,7 @@ feature -- Access
 	horizontal_resolution: INTEGER is
 			-- Width of the display, in pixels
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"HORZRES"
 		end
@@ -53,7 +53,7 @@ feature -- Access
 	vertical_resolution: INTEGER is
 			-- Height of the display, in raster lines
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"VERTRES"
 		end
@@ -62,7 +62,7 @@ feature -- Access
 			-- Number of pixels per logical inch along
 			-- the display width
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LOGPIXELSX"
 		end
@@ -71,7 +71,7 @@ feature -- Access
 			-- Number of pixels per logical inch along
 			-- the display height
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LOGPIXELSY"
 		end
@@ -79,7 +79,7 @@ feature -- Access
 	bits_pixel: INTEGER is
 			-- Number of adjacent color bits for each pixel
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BITSPIXEL"
 		end
@@ -87,7 +87,7 @@ feature -- Access
 	planes: INTEGER is
 			-- Number of color planes
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PLANES"
 		end
@@ -95,7 +95,7 @@ feature -- Access
 	num_brushes: INTEGER is
 			-- Number of device-specific brushes
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"NUMBRUSHES"
 		end
@@ -103,7 +103,7 @@ feature -- Access
 	num_pens: INTEGER is
 			-- Number of device-specific pens
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"NUMPENS"
 		end
@@ -111,7 +111,7 @@ feature -- Access
 	num_markers: INTEGER is
 			-- Number of device-specific markers
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"NUMMARKERS"
 		end
@@ -119,7 +119,7 @@ feature -- Access
 	num_fonts: INTEGER is
 			-- Number of device-specific fonts
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"NUMFONTS"
 		end
@@ -127,7 +127,7 @@ feature -- Access
 	num_colors: INTEGER is
 			-- Number of entries in the device's color table
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"NUMCOLORS"
 		end
@@ -136,7 +136,7 @@ feature -- Access
 			-- Relative width of a device pixel
 			-- used for line drawing
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ASPECTX"
 		end
@@ -145,7 +145,7 @@ feature -- Access
 			-- Relative height of a device pixel
 			-- used for line drawing
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ASPECTY"
 		end
@@ -154,7 +154,7 @@ feature -- Access
 			-- Diagonal width of a device pixel
 			-- used for line drawing
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ASPECTXY"
 		end
@@ -162,7 +162,7 @@ feature -- Access
 	pdevice_size: INTEGER is
 			-- Size of the PDEVICE internal structure, in bytes
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"PDEVICESIZE"
 		end
@@ -170,7 +170,7 @@ feature -- Access
 	clip_caps: INTEGER is
 			-- See class WEL_CLIPPING_CAPABILITIES_CONSTANTS
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CLIPCAPS"
 		end
@@ -178,7 +178,7 @@ feature -- Access
 	size_palette: INTEGER is
 			-- Number of entries in the system palette
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"SIZEPALETTE"
 		end
@@ -186,7 +186,7 @@ feature -- Access
 	num_reserved: INTEGER is
 			-- Number of reserved entries in the system palette
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"NUMRESERVED"
 		end
@@ -194,7 +194,7 @@ feature -- Access
 	color_resolution: INTEGER is
 			-- Color resolution of the device in bits
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"COLORRES"
 		end
@@ -202,7 +202,7 @@ feature -- Access
 	raster_caps: INTEGER is
 			-- See class WEL_RASTER_CAPABILITIES_CONSTANTS
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"RASTERCAPS"
 		end
@@ -210,7 +210,7 @@ feature -- Access
 	curve_caps: INTEGER is
 			-- See class WEL_CURVE_CAPABILITIES_CONSTANTS
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CURVECAPS"
 		end
@@ -218,7 +218,7 @@ feature -- Access
 	line_caps: INTEGER is
 			-- See class WEL_LINE_CAPABILITIES_CONSTANTS
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"LINECAPS"
 		end
@@ -226,7 +226,7 @@ feature -- Access
 	polygonal_caps: INTEGER is
 			-- See class WEL_POLYGONAL_CAPABILITIES_CONSTANTS
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"POLYGONALCAPS"
 		end
@@ -234,7 +234,7 @@ feature -- Access
 	text_caps: INTEGER is
 			-- See class WEL_TEXT_CAPABILITIES_CONSTANTS
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"TEXTCAPS"
 		end

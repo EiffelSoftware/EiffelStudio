@@ -12,7 +12,7 @@ feature -- Access
 	Dt_plotter: INTEGER is
 			-- Vector plotter
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"DT_PLOTTER"
 		end
@@ -20,7 +20,7 @@ feature -- Access
 	Dt_rasdisplay: INTEGER is
 			-- Raster display
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"DT_RASDISPLAY"
 		end
@@ -28,7 +28,7 @@ feature -- Access
 	Dt_rasprinter: INTEGER is
 			-- Raster printer
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"DT_RASPRINTER"
 		end
@@ -36,7 +36,7 @@ feature -- Access
 	Dt_rascamera: INTEGER is
 			-- Raster camera
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"DT_RASCAMERA"
 		end
@@ -44,7 +44,7 @@ feature -- Access
 	Dt_charstream: INTEGER is
 			-- Character stream
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"DT_CHARSTREAM"
 		end
@@ -52,7 +52,7 @@ feature -- Access
 	Dt_metafile: INTEGER is
 			-- Metafile
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"DT_METAFILE"
 		end
@@ -60,7 +60,7 @@ feature -- Access
 	Dt_dispfile: INTEGER is
 			-- Display file
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"DT_DISPFILE"
 		end

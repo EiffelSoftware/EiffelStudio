@@ -11,77 +11,77 @@ feature -- Access
 
 	Cbn_errspace: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CBN_ERRSPACE"
 		end
 
 	Cbn_selchange: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CBN_SELCHANGE"
 		end
 
 	Cbn_dblclk: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CBN_DBLCLK"
 		end
 
 	Cbn_setfocus: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CBN_SETFOCUS"
 		end
 
 	Cbn_killfocus: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CBN_KILLFOCUS"
 		end
 
 	Cbn_editchange: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CBN_EDITCHANGE"
 		end
 
 	Cbn_editupdate: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CBN_EDITUPDATE"
 		end
 
 	Cbn_dropdown: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CBN_DROPDOWN"
 		end
 
 	Cbn_closeup: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CBN_CLOSEUP"
 		end
 
 	Cbn_selendok: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CBN_SELENDOK"
 		end
 
 	Cbn_selendcancel: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"CBN_SELENDCANCEL"
 		end

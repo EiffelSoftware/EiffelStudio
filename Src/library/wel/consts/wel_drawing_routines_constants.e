@@ -13,7 +13,7 @@ feature -- Constants fo `draw_edge' feature
 	Edge_bump: INTEGER is
 			-- Raised outer and sunken inner edges.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"EDGE_BUMP"
 		end
@@ -21,7 +21,7 @@ feature -- Constants fo `draw_edge' feature
 	Edge_etched: INTEGER is
 			-- Sunken outer and raised inner edges.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"EDGE_ETCHED"
 		end
@@ -29,7 +29,7 @@ feature -- Constants fo `draw_edge' feature
 	Edge_raised: INTEGER is
 			-- Raised inner and outer edges.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"EDGE_RAISED"
 		end
@@ -37,7 +37,7 @@ feature -- Constants fo `draw_edge' feature
 	Edge_sunken: INTEGER is
 			-- Sunken inner and outer edges.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"EDGE_SUNKEN"
 		end
@@ -45,7 +45,7 @@ feature -- Constants fo `draw_edge' feature
 	Bf_rect: INTEGER is
 			-- Entire border rectangle
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BF_RECT"
 		end
@@ -54,7 +54,7 @@ feature -- Constants fo `draw_edge' feature
 			-- Rectangle to be adjusted to leave space for 
 			-- client area.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BF_ADJUST"
 		end
@@ -62,7 +62,7 @@ feature -- Constants fo `draw_edge' feature
 	Bf_flat: INTEGER is
 			-- Flat border.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BF_FLAT"
 		end
@@ -70,7 +70,7 @@ feature -- Constants fo `draw_edge' feature
 	Bf_soft: INTEGER is
 			-- Soft buttons instead of tiles.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"BF_SOFT"
 		end
@@ -81,7 +81,7 @@ feature -- Constants fo `draw_state' feature
 			-- The image is a bitmap. The low-order word of the lData
 			-- parameter is the bitmap handle. 
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"DST_BITMAP"
 		end
@@ -91,7 +91,7 @@ feature -- Constants fo `draw_state' feature
 			-- DrawState calls the callback function specified by the
 			-- lpOutputFunc parameter.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"DST_COMPLEX"
 		end
@@ -100,7 +100,7 @@ feature -- Constants fo `draw_state' feature
 			-- The image is an icon. The low-order word of lData is 
 			-- the icon handle.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"DST_ICON"
 		end
@@ -114,7 +114,7 @@ feature -- Constants fo `draw_state' feature
 			-- specifies the length. If wData is zero, the string 
 			-- must be null-terminated.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"DST_PREFIXTEXT"
 		end
@@ -125,7 +125,7 @@ feature -- Constants fo `draw_state' feature
 			-- specifies the length. If wData is zero, the string
 			-- must be null-terminated.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"DST_TEXT"
 		end
@@ -133,7 +133,7 @@ feature -- Constants fo `draw_state' feature
 	Dss_normal: INTEGER is
 			-- Draws the image without any modification.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"DSS_NORMAL"
 		end
@@ -141,7 +141,7 @@ feature -- Constants fo `draw_state' feature
 	Dss_union: INTEGER is
 			-- Dithers the image.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"DSS_UNION"
 		end
@@ -149,7 +149,7 @@ feature -- Constants fo `draw_state' feature
 	Dss_disabled: INTEGER is
 			-- Embosses the image.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"DSS_DISABLED"
 		end
@@ -158,7 +158,7 @@ feature -- Constants fo `draw_state' feature
 			-- Draws the image using the brush specified by the
 			-- hbr parameter.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"DSS_MONO"
 		end

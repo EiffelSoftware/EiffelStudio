@@ -18,6 +18,10 @@
 
 */
 
+/*
+doc:<file name="eif_thread.c" header="eif_thread.h" version="$Id$" summary="Thread management routines">
+*/
+
 #include "eif_portable.h"
 #include "eif_eiffel.h"
 #include "rt_threads.h"
@@ -66,42 +70,51 @@ rt_private void remove_stack_from_gc (struct stack_list *, void *);
 rt_private void eif_stack_free (void *stack);
 
 /*
-doc:<file name="eif_thread.c" header="eif_thread.h">
-doc:	<attribute name="eif_global_key" return_type="EIF_TSD_TYPE">
+doc:	<attribute name="eif_global_key" return_type="EIF_TSD_TYPE" export="public">
 doc:		<summary>Key used to access per thread data.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</attribute>
-doc:	<attribute name="eif_thread_launch_mutex" return_type="EIF_LW_MUTEX_TYPE *">
+*/
+rt_public EIF_TSD_TYPE eif_global_key;
+
+/*
+doc:	<attribute name="eif_thread_launch_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="private">
 doc:		<summary>Mutex used to protect launching of a thread.</summary>
 doc:		<thread_safety>Safe, initialized once in `eif_thr_root_init'.</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:		<fixme>Mutex is not freed.</fixme>
 doc:	</attribute>
-doc:	<attribute name="eif_is_gc_collecting" return_type="int">
+*/
+rt_private EIF_LW_MUTEX_TYPE *eif_thread_launch_mutex = NULL;
+
+/*
+doc:	<attribute name="eif_is_gc_collecting" return_type="int" export="public">
 doc:		<summary>Is GC currently performing a collection?</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>eif_gc_mutex</synchronization>
 doc:	</attribute>
-doc:	<attribute name="yield_address" return_type="FARPROC">
+*/
+rt_public int volatile eif_is_gc_collecting = 0;
+
+#ifdef EIF_WIN32
+/*
+doc:	<attribute name="yield_address" return_type="FARPROC" export="private">
 doc:		<summary>Address of `yield' routine for Windows. Only implemented on Windows NT and above.</summary>
 doc:		<thread_safety>Save, initialized once in `eif_thr_root_init'.</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</attribute>
-doc:	<attribute name="eif_globals_list" return_type="struct stack_list">
+*/
+rt_private FARPROC yield_address = NULL;
+#endif
+
+/*
+doc:	<attribute name="eif_globals_list" return_type="struct stack_list" export="public">
 doc:		<summary>Used to store all per thread data of all running threads.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>eif_gc_mutex</synchronization>
 doc:	</attribute>
-doc:</file>
 */
-
-rt_public EIF_TSD_TYPE eif_global_key;
-rt_private EIF_LW_MUTEX_TYPE *eif_thread_launch_mutex = NULL;
-rt_public int volatile eif_is_gc_collecting = 0;
-#ifdef EIF_WIN32
-rt_private FARPROC yield_address = NULL;
-#endif
 rt_public struct stack_list eif_globals_list = {
 	(int) 0,	/* count */
 	(int) 0,	/* capacity */
@@ -1312,3 +1325,6 @@ rt_public void eif_thr_panic(char *msg)
 }
 
 #endif /* EIF_THREADS */
+/*
+doc:</file>
+*/

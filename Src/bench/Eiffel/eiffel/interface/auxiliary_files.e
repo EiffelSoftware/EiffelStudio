@@ -425,14 +425,16 @@ feature -- Plug and Makefile file
 	generate_plug is
 			-- Generate plug with run-time
 		local
-			string_cl, bit_cl, array_cl, rout_cl: CLASS_C
+			any_cl, string_cl, bit_cl, array_cl, rout_cl: CLASS_C
 			arr_type_id, str_type_id, type_id: INTEGER
 			id: INTEGER
-			to_c_feat, set_count_feat, set_make_feat, creation_feature: FEATURE_I
+			to_c_feat, set_count_feat, set_make_feat: FEATURE_I
+			creation_feature, correct_mismatch_feat: FEATURE_I
 			set_rout_disp_feat: FEATURE_I
 			creators: HASH_TABLE [EXPORT_I, STRING]
 			dispose_name, str_make_name, init_name, set_count_name, to_c_name: STRING
 			arr_make_name, set_rout_disp_name: STRING
+			correct_mismatch_name: STRING
 			special_cl: SPECIAL_B
 			cl_type: CLASS_TYPE
 			has_dispose, final_mode: BOOLEAN
@@ -470,6 +472,16 @@ feature -- Plug and Makefile file
 			str_type_id := cl_type.type_id
 			creators := string_cl.creators
 			creators.start
+
+				-- Make ANY declaration
+			any_cl := system.any_class.compiled_class
+			correct_mismatch_feat :=
+				any_cl.feature_table.item_id (Names_heap.correct_mismatch_name_id)
+			correct_mismatch_name := clone (Encoder.feature_name (any_cl.types.first.static_type_id,
+				correct_mismatch_feat.body_index))
+			buffer.putstring ("extern void ")
+			buffer.putstring (correct_mismatch_name)
+			buffer.putstring ("();%N")
 
 				-- Make string declaration
 			set_count_feat := string_cl.feature_table.item_id (Names_heap.set_count_name_id)
@@ -572,6 +584,11 @@ feature -- Plug and Makefile file
 			else
 				buffer.putstring ("0;%N")
 			end
+
+				-- Pointer on `correct_mismatch' of class ANY
+			buffer.putstring ("%Tegc_correct_mismatch = (void (*)(EIF_REFERENCE)) ")
+			buffer.putstring (correct_mismatch_name)
+			buffer.putstring (";%N")
 
 				-- Pointer on creation feature of class STRING
 			buffer.putstring ("%Tegc_strmake = (void (*)(EIF_REFERENCE, EIF_INTEGER)) ")

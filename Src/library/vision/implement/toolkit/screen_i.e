@@ -14,9 +14,6 @@ deferred class SCREEN_I
 inherit
 
 	DRAWING_I
-
-
-
 	
 feature 
 
@@ -65,7 +62,12 @@ feature
 		ensure
 			position_positive: Result >= 0;
 			position_small_enough: Result < height
-		end -- y
+		end; -- y
+
+	is_valid: BOOLEAN is
+			-- Is Current screen created?
+		deferred
+		end
 
 end -- class SCREEN_I
 

@@ -203,6 +203,8 @@ feature {NONE} -- External features
 	m_xtparent (value: POINTER): POINTER is
 		external
 			"C"
+		alias
+			"xt_parent"
 		end;
 
 end

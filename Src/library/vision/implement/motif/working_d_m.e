@@ -21,27 +21,10 @@ inherit
 			make
 		redefine
 			define_cursor_if_shell, undefine_cursor_if_shell
-		select
-			cc_set_pixmap
 		end;
 
 	DIALOG_M
-        rename
-		c_set_pixmap as c_c_set_pixmap,
-            xt_window as d_xt_window,
-            x_define_cursor as d_x_define_cursor,
-            set_boolean as d_set_boolean,
-            xt_unmanage_child as d_xt_unmanage_child,
-            xt_manage_child as d_xt_manage_child,
-            x_flush as d_x_flush,
-            xt_display as d_xt_display
-        export
-            {NONE}
-                d_xt_window, d_x_define_cursor,
-                d_set_boolean, d_xt_unmanage_child, d_x_flush,
-                d_xt_manage_child, d_xt_display
-        end
-
+		
 creation
 
 	make
@@ -49,18 +32,18 @@ creation
 feature {ALL_CURS_X}
 
 	define_cursor_if_shell (a_cursor: SCREEN_CURSOR) is
-            -- Define `cursor' if the current widget is a shell.
-        require else
-            a_cursor_exists: not (a_cursor = Void)
-        do
-            dialog_define_cursor_if_shell (a_cursor)
-        end;
+			-- Define `cursor' if the current widget is a shell.
+		require else
+			a_cursor_exists: a_cursor /= Void
+		do
+			dialog_define_cursor_if_shell (a_cursor)
+		end;
 
-    undefine_cursor_if_shell is
-            -- Undefine the cursor if the current widget is a shell.
-        do
-            dialog_undefine_cursor_if_shell
-        end;
+	undefine_cursor_if_shell is
+			-- Undefine the cursor if the current widget is a shell.
+		do
+			dialog_undefine_cursor_if_shell
+		end;
 
 feature 
 

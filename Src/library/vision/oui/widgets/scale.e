@@ -250,7 +250,7 @@ feature {NONE}
 			minimum = 0;
 			granularity = 10;
 			value = 0;
-			not is_horizontal;
+			--not is_horizontal;
 		end;
 
 feature 

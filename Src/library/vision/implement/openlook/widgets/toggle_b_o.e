@@ -35,7 +35,6 @@ feature {NONE}
 
 	arm is
 			-- Assign True to `state'.
-		
 		local
 			ext_name: ANY;
 		do
@@ -45,7 +44,18 @@ feature {NONE}
 			state_is_true: state
 		end; 
 
-	
+    set_toggle_on is
+            -- Set Current toggle on and set
+            -- state to True.
+        do
+        end;
+
+    set_toggle_off is
+            -- Set Current toggle off and set
+            -- state to False.
+        do
+        end;
+
 feature 
 
 	make (a_toggle_b: TOGGLE_B) is

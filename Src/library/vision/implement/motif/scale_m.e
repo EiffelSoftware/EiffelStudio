@@ -44,7 +44,6 @@ inherit
 			set_size, set_width, set_height, width, height
 		end;
 	
-
 	FONTABLE_M
 		rename
 			resource_name as MfontList
@@ -69,13 +68,13 @@ feature -- Creation
             a_scale.set_font_imp (Current);
             granularity := 10
         ensure
-            maximum = 100;
-            minimum = 0;
-            granularity = 10;
-            value = 0;
-            not is_horizontal;
-            not is_value_shown;
-            not is_maximum_right_bottom
+            mamimum_set: maximum = 100;
+            minimum_set: minimum = 0;
+            gradularity_set: granularity = 10;
+            value_equal_0: value = 0;
+            --not_horizontal: not is_horizontal;
+            --not_value_shown: not is_value_shown;
+            --not_max_right_bottom: not is_maximum_right_bottom
         end;
 
 feature 
@@ -119,7 +118,8 @@ feature
 	is_horizontal: BOOLEAN is
 			-- Is scale orientation horizontal?
 		do
-			Result := xt_unsigned_char (screen_object, Morientation) = MHORIZONTAL
+			Result := xt_unsigned_char 
+					(screen_object, Morientation) = MHORIZONTAL
 		end;
 
 	is_maximum_right_bottom: BOOLEAN is
@@ -604,7 +604,6 @@ feature {NONE}
 			Result := get_cardinal (screen_object, $ext_name_child)
 		end;
 
-	
 	child_list: POINTER;
 	MnumChildren: STRING is "numChildren";
 	Mchildren: STRING is "children";

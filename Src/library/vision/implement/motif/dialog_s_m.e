@@ -12,15 +12,11 @@ class DIALOG_S_M
 inherit
 
 	DIALOG_S_I
-		
 		export
 			{NONE} all
 		end;
 
-	WM_SHELL_M
-		rename 
-			c_set_pixmap as cc_set_pixmap
-		end;
+	WM_SHELL_M;
 
 	POPUP_S_M
 		redefine

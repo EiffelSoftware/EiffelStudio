@@ -52,6 +52,20 @@ feature -- Creation
 
 feature {NONE}
 
+    set_toggle_on is
+            -- Set Current toggle on and set
+            -- state to True.
+        do
+			xm_toggle_button_gadget_set_state  (screen_object, True, False)
+        end;
+
+    set_toggle_off is
+            -- Set Current toggle off and set
+            -- state to False.
+        do
+			xm_toggle_button_gadget_set_state  (screen_object, False, False)
+        end;
+
 	arm is
 			-- Assign True to `state'.
 		do

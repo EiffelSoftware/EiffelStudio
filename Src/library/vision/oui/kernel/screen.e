@@ -38,11 +38,17 @@ feature
 	make (a_screen_name: STRING) is
 			-- Create a screen specified by `a_screen_name'.
 		require
-			screen_name_exists: not (a_screen_name = Void)
+			screen_name_exists: a_screen_name /= Void
 		do
 			screen_name := clone (a_screen_name);
 			implementation := toolkit.screen (current)
 		end; -- Create
+
+	is_valid: BOOLEAN is
+			-- Is Current screen created?
+		do
+			Result := implementation.is_valid
+		end;
 
 	height: INTEGER is
 			-- Height of screen (in pixel)

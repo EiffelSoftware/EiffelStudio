@@ -987,6 +987,14 @@ feature {NONE} -- Translation
 				translate_appl
 			elseif lastline.count>14 and then lastline.substring (1,14).is_equal ("STATIC_CECIL =") then
 				translate_cecil_and_dll
+			elseif
+				lastline.count >= 28 and then
+				lastline.substring (1, 28).is_equal ("clean: sub_clean local_clean")
+			then
+					-- Add resource file dependency for IL system
+				makefile.putstring (options.get_string ("il_resource", Void))
+				makefile.putstring ("%N")
+				makefile.putstring (lastline)
 			else
 				debug ("translate_line_change")
 					debug ("output")

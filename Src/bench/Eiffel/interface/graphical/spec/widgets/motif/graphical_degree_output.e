@@ -57,7 +57,9 @@ feature -- Start output features
 		local
 			i_name: STRING
 		do
-			create_window
+			if is_destroyed then
+				create_window
+			end
 			total_number := total_nbr
 			current_degree := 6
 			processed := 0

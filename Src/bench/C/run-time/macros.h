@@ -508,7 +508,7 @@ extern int fcount;
 #define RTPR(x,y,z)	start_profile(x,y,z)				/* Start measurement of feature */
 #define RTXP		stop_profile()						/* Stop measurement of feature */
 #define RTLT		int current_call_level				/* Declare local trave variable */
-#define RTLP		char **saved_prof_rop		/* Declare local profiler variable */
+#define RTLP		char **saved_prof_top		/* Declare local profiler variable */
 #define RTPI		saved_prof_top = prof_stack->st_top		/* Create local profile stack
 																	 * during rescue clause
 																	 */

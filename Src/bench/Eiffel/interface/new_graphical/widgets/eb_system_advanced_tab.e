@@ -52,6 +52,9 @@ feature -- System analyzis access
 
 	exception_trace_check: EV_CHECK_BUTTON
 			-- RTEA status for current system.
+			
+	syntax_warning_check: EV_CHECK_BUTTON
+			-- Option to turn on or off detection of old syntactical constructs.
 
 feature -- Optimization access
 
@@ -114,18 +117,21 @@ feature -- Store/Retrieve
 			
 			defaults.finish
 			
-			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Check_vape, Void, vape_check.is_selected))
-			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Console_application, Void,
-				console_check.is_selected))
+			defaults.extend (new_special_option_sd (
+				feature {FREE_OPTION_SD}.Check_vape, Void, vape_check.is_selected))
+			defaults.extend (new_special_option_sd (
+				feature {FREE_OPTION_SD}.Console_application, Void, console_check.is_selected))
+			defaults.extend (new_special_option_sd (
+				feature {FREE_OPTION_SD}.syntax_warning, Void, syntax_warning_check.is_selected))
 
 			if address_expression_check.is_sensitive then
-				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.address_expression, Void,
-					address_expression_check.is_selected))
+				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.address_expression,
+					Void, address_expression_check.is_selected))
 			end
 
 			if array_optimization_check.is_sensitive then
-				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.array_optimization, Void,
-					array_optimization_check.is_selected))
+				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.array_optimization,
+					Void, array_optimization_check.is_selected))
 			end
 
 			if dead_code_removal_check.is_sensitive then
@@ -134,12 +140,13 @@ feature -- Store/Retrieve
 			end
 
 			if dynamic_rt_check.is_sensitive then
-				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.dynamic_runtime, Void,
-					dynamic_rt_check.is_selected))
+				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.dynamic_runtime,
+					Void, dynamic_rt_check.is_selected))
 			end
 
 			if exception_trace_check.is_sensitive then
-				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Exception_stack_managed, Void,
+				defaults.extend (new_special_option_sd (
+					feature {FREE_OPTION_SD}.Exception_stack_managed, Void,
 					exception_trace_check.is_selected))
 			end
 
@@ -153,8 +160,8 @@ feature -- Store/Retrieve
 			end
 
 			if mt_runtime_check.is_sensitive then
-				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.multithreaded, Void,
-					mt_runtime_check.is_selected))
+				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.multithreaded,
+					Void, mt_runtime_check.is_selected))
 			end
 
 			if shared_library_check.is_sensitive and then shared_library_check.is_selected then
@@ -250,6 +257,8 @@ feature {NONE} -- Filling
 					shared_library_field.set_text (val.value)
 				when feature {FREE_OPTION_SD}.check_vape then
 					set_selected (vape_check, val.is_yes)
+				when feature {FREE_OPTION_SD}.syntax_warning then
+					set_selected (syntax_warning_check, val.is_yes)
 				else
 					is_item_removable := False		
 				end
@@ -296,6 +305,7 @@ feature -- Initialization
 			disable_select (mt_runtime_check)
 			disable_select (shared_library_check)
 			enable_select (vape_check)
+			disable_select (syntax_warning_check)
 			inlining_size_field.set_value (inlining_size_field.value_range.lower)
 			shared_library_field.remove_text
 		ensure then
@@ -308,6 +318,7 @@ feature -- Initialization
 			inlining_check_not_selected: not inlining_check.is_selected
 			mt_runtime_check_not_selected: not mt_runtime_check.is_selected
 			vape_check_selected: vape_check.is_selected
+			syntax_warning_check_not_selected: not syntax_warning_check.is_selected
 			inlining_size_field_set: inlining_size_field.value = 0
 			shared_library_check_not_selected: not shared_library_check.is_selected
 			shared_library_field_is_insensitive: not shared_library_field.is_sensitive
@@ -369,18 +380,18 @@ feature {NONE} -- Initialization
 			hbox.extend (create {EV_CELL})
 
 				-- Create Load Ace button
-			create button.make_with_text_and_action (Interface_names.b_Load_ace,
+			create button.make_with_text_and_action (Interface_names.b_load_ace,
 				system_window~load_ace)
 			hbox.extend (button)
 			hbox.disable_item_expand (button)
 
-			create button.make_with_text_and_action (Interface_names.b_Edit_ace,
+			create button.make_with_text_and_action (Interface_names.b_edit_ace,
 				system_window~edit_ace)
 			hbox.extend (button)
 			hbox.disable_item_expand (button)
 
 
-			create button.make_with_text_and_action (Interface_names.b_New_ace,
+			create button.make_with_text_and_action (Interface_names.b_new_ace,
 				system_window~reset_content)
 			hbox.extend (button)
 			hbox.disable_item_expand (button)
@@ -403,6 +414,8 @@ feature {NONE} -- Initialization
 			vbox.set_border_width (Layout_constants.Small_border_size)
 
 			console_check := new_check_button (vbox, "Console application", False)
+			syntax_warning_check := new_check_button (vbox,
+				"Detect obsolete syntactical constructs", False)
 			vape_check := new_check_button (vbox, "Enforce VAPE validity constraint", False)
 			dynamic_rt_check := new_check_button (vbox, "Dynamic runtime", False)
 			mt_runtime_check := new_check_button (vbox, "Multithreaded runtime", False)
@@ -410,7 +423,8 @@ feature {NONE} -- Initialization
 			shared_library_check := new_check_button (vbox, "Shared library definition", False)
 
 			vbox.set_padding (Layout_constants.Tiny_padding_size)
-			create shared_library_field.make_with_text_and_parent (" Location: ", system_window.window)
+			create shared_library_field.make_with_text_and_parent (" Location: ",
+				system_window.window)
 			shared_library_field.set_browse_for_file ("*.def")
 			shared_library_field.disable_sensitive
 			vbox.extend (shared_library_field)
@@ -467,6 +481,7 @@ invariant
 	shared_library_check_not_void: shared_library_check /= Void
 	shared_library_field_not_void: shared_library_field /= Void
 	vape_check_not_void: vape_check /= Void
+	syntax_warning_check_not_void: syntax_warning_check /= Void
 	
 end -- class EB_SYSTEM_ADVANCED_TAB
 

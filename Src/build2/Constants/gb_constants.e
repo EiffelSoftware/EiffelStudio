@@ -50,6 +50,10 @@ feature -- String representations of class names.
 
 	Gb_primitive_object_class_name: STRING is "GB_PRIMITIVE_OBJECT"
 	
+	Gb_cell_object_class_name: STRING is "GB_CELL_OBJECT"
+	
+	Gb_container_object_class_name: STRING is "GB_CONTAINER_OBJECT"
+	
 	Ev_window_string: STRING is "EV_WINDOW"
 	
 	Ev_titled_window_string: STRING is "EV_TITLED_WINDOW"

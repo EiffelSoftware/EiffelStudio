@@ -12,17 +12,16 @@ deferred class
 	CGI_INTERFACE
 
 inherit
-	CGI_ENVIRONMENT;
-	SHARED_STDOUT;
-	SHARED_STDIN;
+	CGI_ENVIRONMENT
+
 	BASIC_ROUTINES
 		export
 			{NONE} all
-		end;
-	EXCEPTIONS
-		export
-			{NONE} all
 		end
+
+	CGI_FORMS
+
+	CGI_ERROR_HANDLING
 
 feature -- Initialization
 
@@ -32,95 +31,16 @@ feature -- Initialization
 			retried: BOOLEAN
 		do
 			if not retried then
-				parse_input;
-				if not error_happened then
-					execute
-				else
-					raise_error
-				end;
+				parse_input
+				execute
 			else
-				handle_exception
+				if debug_mode then
+					handle_exception
+				end
 			end
 		rescue
-			retried := True;
+			retried := True
 			retry
-		end
-
-	make_debug (args: ARRAY[STRING]) is
-			-- Set environment variables and proceed to regular execution.
-		local
-			retried: BOOLEAN
-		do
-			if not retried then
-				set_environment;
-				parse_arguments (args);
-				make
-			else
-				handle_exception
-			end
-		rescue
-			retried := True;
-			retry
-		end
-
-feature -- Access
-
-	fields: ARRAY[STRING] is
-			-- Names of fields in the form.
-		once
-			Result := form_data.current_keys;
-			Result.compare_objects
-		end
-
-	value (field_name: STRING): STRING is
-			-- First (unique?) value for a field.
-		require
-			field_not_Void: field_name /= Void;
-			field_exists: field_defined (field_name)
-		do
-			Result := form_data.item (field_name).first
-		ensure
-			value_exists: Result /= Void
-		end
-
-	value_count (field_name: STRING): INTEGER is
-			-- Number of values for a field.
-		require
-			field_not_Void: field_name /= Void;
-			field_exists: field_defined (field_name)
-		do
-			Result := form_data.item (field_name).count
-		ensure
-			valid_count: Result >= 0
-		end
-
-	value_list (field_name: STRING): LINKED_LIST[STRING] is
-			-- List of values for a field.
-		require
-			field_not_Void: field_name /= Void;
-			field_exists: field_defined (field_name)
-		do
-			Result := form_data.item (field_name)
-		ensure
-			valid_count: Result.count = value_count (field_name)
-		end
-
-feature -- Report
-
-	field_defined (field_name: STRING): BOOLEAN is
-			-- Is field `field_name' defined?
-		require
-			filed_name_not_void: field_name /= Void
-		do
-			result := fields.has (field_name)
-		end
-
-feature -- HTTP facilities
-
-	generate_html_header is
-			-- Generate CGI header reply.
-		once
-			stdout.putstring ("Content-type: text/html%N%N")
 		end
 
 feature -- Miscellanous
@@ -135,73 +55,14 @@ feature -- Miscellanous
 		do
 		end
 
-feature -- Status setting
+feature {CGI_INTERFACE} -- Access	
 
-	set_message is
-			-- Display error message.
-		do
-			debug_level := Dl_message
+	debug_mode: BOOLEAN is 
+		-- Is Current application executed in debug mode?
+		deferred
 		end
 
-	set_no_debug is
-			-- Do nothing.
-		do
-			debug_level := Dl_no
-		end
-
-feature {NONE} -- Implementation; error handling
-
-	debug_level: INTEGER
-			-- Debug level.
-
-	Dl_message: INTEGER is 1;
-			-- Display error message.
-
-	Dl_no: INTEGER is 0;
-			-- Do nothing.
-
-	error_happened: BOOLEAN
-			-- Did an error occur?
-
-	error_message: STRING
-			-- Message describing the error.
-
-	handle_exception is
-			-- General exception hanlding.
-		do
-			generate_html_header
-			inspect
-				debug_level
-			when Dl_no then
-					-- Do nothing
-			when Dl_message then
-					-- Display an error message
-				set_error ("Internal error");
-				raise_error
-			else
-					-- Do nothing
-			end
-		end
-
-	raise_error is
-			-- Display error message `msg' and exit.
-		do
-			generate_html_header;
-			stdout.putstring (error_message);
-			stdout.new_line;
-			die(0)
-		end
-
-	set_error (msg: STRING) is
-			-- Set error message.
-		do
-			if not error_happened then
-				error_message := msg;
-				error_happened := True
-			end
-		end
-	
-feature {NONE} -- Implementation
+feature {CGI_FORMS}-- Access
 
 	form_data: HASH_TABLE[LINKED_LIST[STRING],STRING]
 			-- User provided data.
@@ -259,7 +120,7 @@ feature {NONE} -- Implementation
 					stdin.read_stream (Content_length.to_integer);
 					Result := stdin.last_string
 				else
-					set_error ("Incorrect value for CONTENT_LENGTH")
+					raise_error ("Incorrect value for CONTENT_LENGTH")
 				end
 			else
 				Result := Query_string

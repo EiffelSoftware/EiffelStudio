@@ -1,7 +1,6 @@
 indexing
 	description: "Class which allows retrieving information relative to%
 					% a specific type of form."
-	author: "pascalf"
 	date: "$Date$"
 	revision: "$Revision$"
 

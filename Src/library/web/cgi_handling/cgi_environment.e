@@ -18,8 +18,7 @@ inherit
 			{NONE} all
 		redefine
 			eif_getenv, eif_putenv
-		end;
-	SHARED_STDOUT
+		end
 
 feature -- Not request-specific environment variables
 
@@ -127,6 +126,38 @@ feature -- Request specific environment variables
 			Result := get_env_variable ("SERVER_PROTOCOL")
 		end
 
+feature -- Cookies
+
+	Cookies: HASH_TABLE[STRING,STRING] is
+			-- Cookie Information relative to data
+		local
+			i,j: INTEGER
+			s: STRING
+		once
+			Create Result.make(20)
+			s := get_env_variable ("HTTP_COOKIE")
+			from
+				i := 1
+			until
+				i<1 
+			loop
+				i := s.index_of('=',1)
+				if i>0 then
+					j:= s.index_of(';',i)
+					if j>i then
+						Result.put(s.substring(1,i-1),s.substring(i+1,j-1))
+						if j< s.count-1 then
+							s.tail(s.count-j-1)
+						else
+							i := 0
+						end
+					else
+						i := 0
+					end
+				end
+			end
+		end
+
 feature -- Headerline based environment variables
 
 	Http_accept: STRING is
@@ -149,13 +180,6 @@ feature -- Environment variable setting
 			valid_variable: variable /= Void and then variable.count > 0;
 			valid_value: val /= Void
 		do
-			debug ("CGI_VARIABLE")
-				stdout.putstring ("Environment variable ");
-				stdout.putstring (variable);
-				stdout.putstring (" set to ");
-				stdout.putstring (val);
-				stdout.new_line
-			end;
 			variable.to_upper;
 			put (val, variable)
 		end
@@ -176,7 +200,7 @@ feature {NONE} -- Implementation
 			-- Value of environment variable `s',
 			-- even on Windows.
 		external
-			"C"
+			"C (char *): char * | <stdlib.h>"
 		alias
 			"getenv"
 		end;

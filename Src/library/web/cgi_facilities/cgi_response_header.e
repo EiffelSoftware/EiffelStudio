@@ -1,6 +1,5 @@
 indexing
 	description: "Class which deals with the output header"
-	author: "pascalf"
 	date: "$Date$"
 	revision: "$Revision$"
 

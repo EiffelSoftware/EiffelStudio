@@ -1,6 +1,5 @@
 indexing
 	description: "Error Handling"
-	author: "pascalf"
 	date: "$Date$"
 	revision: "$Revision$"
 

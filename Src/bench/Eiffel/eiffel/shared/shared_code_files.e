@@ -52,6 +52,8 @@ feature {NONE}
 			dir_name: DIRECTORY_NAME;
 			file_name: FILE_NAME;
 			temp: STRING
+			finished_file: PLAIN_TEXT_FILE
+			finished_file_name: FILE_NAME
 		do
 			subdir_name := clone (System_object_prefix);
 			subdir_name.append_integer (1);
@@ -67,6 +69,13 @@ feature {NONE}
 			temp.append (extension);
 			file_name.set_file_name (temp);
 			Result := file_name
+
+			!! finished_file_name.make_from_string (dir_name)
+			finished_file_name.set_file_name (finished_file_for_make)
+			!! finished_file.make (finished_file_name)
+			if finished_file.exists and then finished_file.is_writable then
+				finished_file.delete	
+			end
 		end;
 
 	workbench_file_name (base_name: STRING): STRING is
@@ -76,6 +85,8 @@ feature {NONE}
 			dir_name: DIRECTORY_NAME;
 			file_name: FILE_NAME;
 			temp: STRING
+			finished_file: PLAIN_TEXT_FILE
+			finished_file_name: FILE_NAME
 		do
 			subdir_name := clone (System_object_prefix);
 			subdir_name.append_integer (1);
@@ -91,6 +102,13 @@ feature {NONE}
 			temp.append (Dot_c);
 			file_name.set_file_name (temp);
 			Result := file_name
+
+			!! finished_file_name.make_from_string (dir_name)
+			finished_file_name.set_file_name (finished_file_for_make)
+			!! finished_file.make (finished_file_name)
+			if finished_file.exists and then finished_file.is_writable then
+				finished_file.delete	
+			end
 		end;
 
 end

@@ -210,7 +210,7 @@ feature -- Cecil
 			make_file.put_string (system_name)
 			make_file.put_string ("$(SHARED_SUFFIX)%N")
 			make_file.put_string ("dynamic_cecil: $(SHARED_CECIL) %N")
-			make_file.put_string ("SHARED_CECIL_OBJECT = $(OBJECTS) $(EXTERNALS) $(EIFLIB)")
+			make_file.put_string ("SHARED_CECIL_OBJECT = $(OBJECTS) ")
 			make_file.put_character (continuation)
 			make_file.put_new_line
 			generate_other_objects
@@ -219,7 +219,7 @@ feature -- Cecil
 			make_file.put_string ("SHAREDFLAGS = $(LDSHAREDFLAGS) $(SHARED_CECIL) %N");
 			make_file.put_string ("$(SHARED_CECIL): $(SHARED_CECIL_OBJECT) %N")
 			make_file.put_string ("%T$(RM) $(SHARED_CECIL) %N")
-			make_file.put_string ("%T$(SHAREDLINK) $(SHAREDFLAGS) $(SHARED_CECIL_OBJECT) $(SHAREDLIBS) %N")
+			make_file.put_string ("%T$(SHAREDLINK) $(SHAREDFLAGS) $(SHARED_CECIL_OBJECT) $(EXTERNALS) $(EIFLIB) $(SHAREDLIBS) %N")
 			
 			make_file.put_new_line
 			make_file.put_new_line
@@ -271,15 +271,15 @@ feature -- Generate Dynamic Library
 			make_file.put_string (" ; cd ..%N")
 
 			-- Continue the declaration for the SYSTEM_IN_DYNAMIC_LIB
-			make_file.put_string ("%NSYSTEM_IN_DYNAMIC_LIB_OBJ = $(EIFLIB) ")
+			make_file.put_string ("%NSYSTEM_IN_DYNAMIC_LIB_OBJ = $(OBJECTS) ")
 			make_file.put_character (continuation)
 			make_file.put_new_line
 			generate_other_objects
-			make_file.put_string ("%T%T$(OBJECTS) $(EXTERNALS) E1/edynlib.o E1/egc_dynlib.o ")
+			make_file.put_string ("%T%TE1/edynlib.o E1/egc_dynlib.o ")
 			make_file.put_string ("%NDYNLIBSHAREDFLAGS = $(LDSHAREDFLAGS) $(SYSTEM_IN_DYNAMIC_LIB) %N");
 			make_file.put_string ("$(SYSTEM_IN_DYNAMIC_LIB): $(SYSTEM_IN_DYNAMIC_LIB_OBJ) %N")
 			make_file.put_string ("%T$(RM) $(SYSTEM_IN_DYNAMIC_LIB) %N")
-			make_file.put_string ("%T$(SHAREDLINK) $(DYNLIBSHAREDFLAGS) $(SYSTEM_IN_DYNAMIC_LIB_OBJ) $(SHAREDLIBS) %N")
+			make_file.put_string ("%T$(SHAREDLINK) $(DYNLIBSHAREDFLAGS) $(SYSTEM_IN_DYNAMIC_LIB_OBJ) $(EXTERNALS) $(EIFLIB) $(SHAREDLIBS) %N")
 			
 			make_file.put_new_line
 			make_file.put_new_line

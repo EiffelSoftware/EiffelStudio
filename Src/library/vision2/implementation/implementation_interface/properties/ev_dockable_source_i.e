@@ -114,18 +114,30 @@ feature -- Status setting
 			-- Allow `Current' to be dragable
 		do
 			is_dragable := True
+			internal_enable_drag
 		ensure
 			is_dragable: is_dragable
 		end
 		
+	internal_enable_drag is
+			--
+		deferred
+		end
+
 	disable_drag is
 			-- Ensure `Current' is not dragable
 		do
 			is_dragable := False
+			internal_disable_drag
 		ensure
 			not_is_dragable: not is_dragable
 		end
 		
+	internal_disable_drag is
+			--
+		deferred
+		end
+
 	set_real_source (dockable_source: EV_DOCKABLE_SOURCE) is
 			-- Set `dockable_source' to be the widget moved when a
 			-- drag begins on `Current'.

@@ -192,15 +192,6 @@ feature {NONE} -- Implementation
 			ev_set_minimum_size (new_min_width, new_min_height)
 		end
 
-feature -- Obsolete
-
-	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
-		obsolete
-			"Do: ?? = item.implementation"
-		do
-			Result := a_child = item.implementation
-		end
-
 feature {NONE} -- WEL Implementation
 
 	on_size (size_type: INTEGER; a_width, a_height: INTEGER) is
@@ -305,6 +296,12 @@ feature {NONE} -- WEL Implementation
 			bk_brush.delete
 			main_region.delete
 		end
+		
+	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
+			-- Is `a_child' currently contained in `Current'.
+		do
+			Result := a_child = item.implementation
+		end
 
 end -- class EV_FIXED_IMP
 
@@ -329,6 +326,9 @@ end -- class EV_FIXED_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2001/06/08 21:53:21  rogers
+--| `is_child' is no longer obsolete.
+--|
 --| Revision 1.19  2001/06/07 23:08:15  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

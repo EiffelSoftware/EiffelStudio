@@ -210,13 +210,11 @@ feature {EV_ANY_I} -- WEL Implementation
 					client_width, client_height, True)
 			end
 		end
-	
-feature -- Obsolete
+		
+feature {NONE} -- Implementation
 
 	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
 			-- Is `a_child' a child of the container?
-		obsolete
-			"Do: ?? = item.implementation"
 		do
 			Result := a_child = item.implementation
 		end
@@ -244,6 +242,9 @@ end -- class EV_SINGLE_CHILD_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2001/06/08 21:50:26  rogers
+--| `is_child' is no longer obsolete.
+--|
 --| Revision 1.16  2001/06/07 23:08:13  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

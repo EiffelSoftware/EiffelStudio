@@ -104,8 +104,7 @@ feature -- Editing
 					l_widget.select_all
 				end
 				l_text := l_widget.selected_text
-				if l_widget.can_insert (l_text) then
-					--cut_text
+				if l_widget.can_insert (l_text) then					
 					l_widget.set_text ("")
 					Clipboard.set_text (l_widget.pretty_xml (l_text))
 					paste_text
@@ -114,6 +113,16 @@ feature -- Editing
 				end
 			end
 		end
+
+	toggle_word_wrap is
+			-- Toggle word wrap
+		do
+			if parent_window.wrap_menu_item.is_selected then
+				current_widget.internal_edit_widget.enable_word_wrapping
+			else
+				current_widget.internal_edit_widget.disable_word_wrapping
+			end	
+		end		
 
 feature -- GUI Commands			
 		
@@ -230,7 +239,7 @@ feature -- Commands
 	open_search_dialog is
 			-- Open the search dialog for text searching
 		do
-			Shared_dialogs.search_dialog.set_document (current_widget.internal_edit_widget)
+			Shared_dialogs.search_dialog.set_widget (current_widget.internal_edit_widget)
 			Shared_dialogs.search_dialog.show_relative_to_window (Application_window)
 		end
 
@@ -261,7 +270,7 @@ feature -- Query
 			-- Is clipboard empty?
 		do
 			Result := clipboard.text.is_empty
-		end		
+		end			
 
 feature -- Status Setting
 
@@ -287,7 +296,21 @@ feature -- Access
 	current_document: DOCUMENT
 			-- Currently open document
 
-feature -- Events		
+	current_widget: DOCUMENT_WIDGET is
+			-- Widget of `current_document'
+		do
+			if current_document /= Void then
+				Result := current_document.widget				
+			end
+		end
+
+	preferences: DOCUMENT_EDITOR_PREFERENCES is
+			-- Editor preferences
+		once
+			create Result.make (Current)
+		end		
+
+feature -- Events				
 		
 	document_changed is
 			-- User selected another open document in notebook
@@ -307,18 +330,10 @@ feature -- Access
 	parent_window: DOC_BUILDER_WINDOW
 			-- Parent window		
 		
-feature {DOCUMENT_EDITOR, DOC_BUILDER_WINDOW} -- Implementation
+feature {DOCUMENT_EDITOR, DOC_BUILDER_WINDOW, ERROR_ACTIONS} -- Implementation
 
 	notebook: EV_NOTEBOOK
 			-- Notebook
-	
-	current_widget: DOCUMENT_WIDGET is
-			-- Widget of `current_document'
-		do
-			if current_document /= Void then
-				Result := current_document.widget				
-			end
-		end
 
 feature {NONE} -- Implementation
 

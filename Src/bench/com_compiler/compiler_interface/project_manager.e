@@ -248,12 +248,12 @@ feature {NONE} -- Implementation
 		require
 			name_not_void: ace_name /= Void
 		local
-			ace_accesser: ACE_FILE_ACCESSER
+			ace_file: FILE
 		do
 			valid_ace_file := False
 			if not ace_name.is_empty then
-				create ace_accesser.make (ace_name)
-				valid_ace_file := ace_accesser.is_valid 
+				create {RAW_FILE} ace_file.make (ace_name)
+				valid_ace_file := ace_file.exists and ace_file.is_readable
 			end
 		end
 		

@@ -35,6 +35,7 @@ feature -- Initialization
 			-- Read XML data and analyzes syntactical suppliers.
 		local
 			l_reader: EIFFEL_XML_DESERIALIZER
+			l_ast: CLASS_AS
 		do
 				-- Initialize `external_class' which will be used later by
 				-- `initialize_from_xml_data', then it is discarded to save
@@ -56,7 +57,7 @@ feature -- Initialization
 				is_expanded := external_class.is_expanded
 				is_enum := external_class.is_enum
 				is_frozen := external_class.is_frozen
-
+				
 					-- Initializes inheritance structure
 				process_parents
 
@@ -69,6 +70,30 @@ feature -- Initialization
 				process_syntax_features (external_class.procedures)
 				process_syntax_features (external_class.functions)
 
+					-- Create abstract syntax tree.
+				create l_ast
+				l_ast.initialize (
+					create {ID_AS}.make (10),
+					external_class.dotnet_name,
+					is_deferred,
+					is_expanded,
+					False,	-- is_separate
+					is_frozen,
+					True,	-- is_external
+					Void,	-- top_indexes
+					Void,	-- bottom_indexes
+					Void,	-- generics
+					Void,	-- parents
+					Void,	-- creators
+					Void,	-- features
+					Void,	-- invariant_part
+					create {SUPPLIERS_AS}.make,	-- suppliers
+					Void,	-- obsolete_message
+					create {CLICK_LIST}.make (0))	-- click_list
+				l_ast.set_class_id (class_id)
+					
+				Tmp_ast_server.put (l_ast)
+				
 					-- Remove further processing except degree_4 since we assume that
 					-- imported XML is correct.
 				degree_3.remove_class (Current)
@@ -237,7 +262,7 @@ feature -- Query
 		end
 		
 feature {NONE} -- Initialization
-
+		
 	process_parents is
 			-- Initialize inheritance clause of Current using `external_class'
 		require

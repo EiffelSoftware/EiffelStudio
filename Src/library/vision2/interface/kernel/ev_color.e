@@ -492,7 +492,7 @@ feature {NONE} -- Contract support
 feature {EV_ANY_I, EV_STOCK_COLORS_IMP} -- Implementation
 
 	implementation: EV_COLOR_I
-			-- Responsible for interaction with the native graphics toolkit.
+			-- Responsible for interaction with native graphics toolkit.
 			
 feature {NONE} -- Implementation
 

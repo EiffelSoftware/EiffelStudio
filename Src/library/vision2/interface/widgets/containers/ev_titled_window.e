@@ -193,12 +193,12 @@ feature -- Element change
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_TITLED_WINDOW_I
-			-- Responsible for interaction with the native graphics toolkit.
+			-- Responsible for interaction with native graphics toolkit.
 
 feature {NONE} -- Implementation
 
 	create_implementation is
-			-- Responsible for interaction with the native graphics toolkit.
+			-- Responsible for interaction with native graphics toolkit.
 		do   
 			create {EV_TITLED_WINDOW_IMP} implementation.make (Current)
 		end

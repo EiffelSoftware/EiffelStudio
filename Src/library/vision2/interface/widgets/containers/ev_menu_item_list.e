@@ -40,7 +40,7 @@ feature -- Contract support
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_MENU_ITEM_LIST_I
-			-- Responsible for interaction with the underlying native graphics
+			-- Responsible for interaction with native graphics
 			-- toolkit.
 
 invariant

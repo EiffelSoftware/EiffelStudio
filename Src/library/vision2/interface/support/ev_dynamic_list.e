@@ -453,7 +453,7 @@ feature {NONE} -- Inapplicable
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_DYNAMIC_LIST_I [G]
-			-- Responsible for interaction with the underlying native graphics
+			-- Responsible for interaction with native graphics
 			-- toolkit.
 
 end -- class EV_DYNAMIC_LIST

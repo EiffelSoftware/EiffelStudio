@@ -100,7 +100,7 @@ feature {EV_ANY} -- Contract support
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_DRAWING_AREA_I
-		-- Responsible for interaction with the native graphics toolkit.
+		-- Responsible for interaction with native graphics toolkit.
 
 feature {NONE} -- Implementation
 

@@ -138,7 +138,7 @@ feature -- Implementation
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_ITEM_LIST_I [G]
-			-- Responsible for interaction with the underlying native graphics
+			-- Responsible for interaction with native graphics
 			-- toolkit.
 
 invariant

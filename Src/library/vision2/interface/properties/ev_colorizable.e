@@ -74,7 +74,7 @@ feature -- Status setting
 feature {EV_ANY_I} -- Implementation
 	
 	implementation: EV_COLORIZABLE_I
-			-- Responsible for interaction with the native graphics toolkit.
+			-- Responsible for interaction with native graphics toolkit.
 
 invariant
 

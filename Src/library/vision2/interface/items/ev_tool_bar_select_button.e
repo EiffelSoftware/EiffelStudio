@@ -41,7 +41,7 @@ feature -- Status setting
 feature {NONE} -- Implementation
 
 	implementation: EV_TOOL_BAR_SELECT_BUTTON_I
-			-- Responsible for interaction with the native graphics toolkit.
+			-- Responsible for interaction with native graphics toolkit.
 
 end -- class EV_TOOL_BAR_SELECT_BUTTON
 

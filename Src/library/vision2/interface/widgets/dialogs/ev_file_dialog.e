@@ -112,7 +112,7 @@ feature -- Element change
 feature {EV_ANY_I} -- implementation
 
 	implementation: EV_FILE_DIALOG_I
-		-- Responsible for interaction with the native graphics toolkit.
+		-- Responsible for interaction with native graphics toolkit.
 
 invariant
 	filter_not_void: filter /= Void

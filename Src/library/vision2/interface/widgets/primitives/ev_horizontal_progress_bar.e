@@ -26,7 +26,7 @@ create
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_HORIZONTAL_PROGRESS_BAR_I
-			-- Responsible for interaction with the native graphics toolkit.
+			-- Responsible for interaction with native graphics toolkit.
 
 feature {NONE} -- Implementation
 

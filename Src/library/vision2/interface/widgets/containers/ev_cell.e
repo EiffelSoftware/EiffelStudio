@@ -98,7 +98,7 @@ feature -- Conversion
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_CELL_I
-			-- Responsible for interaction with the native graphics toolkit.
+			-- Responsible for interaction with native graphics toolkit.
 
 feature {NONE} -- Implementation
 

@@ -91,7 +91,7 @@ feature {NONE} -- Contract support
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_RADIO_PEER_I
-			-- Responsible for interaction with the native graphics toolkit.
+			-- Responsible for interaction with native graphics toolkit.
 
 invariant
 	peers_not_void: peers /= Void

@@ -153,7 +153,7 @@ feature -- Duplication
 feature {EV_ANY_I, EV_IMAGE_LIST_IMP, EV_STOCK_PIXMAPS_IMP, EV_FIGURE_POSTSCRIPT_DRAWER} -- Implementation
 
 	implementation: EV_PIXMAP_I
-			-- Responsible for interaction with the native graphics toolkit.
+			-- Responsible for interaction with native graphics toolkit.
 			
 feature {NONE} -- Implementation
 

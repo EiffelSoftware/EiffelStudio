@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 					text_window.disable_clicking
 					if tool.stone /= Void and then Class_resources.parse_class_after_saving.actual_value then
 						if tool.parse_file then
-							tool.synchronize
+							tool.update
 						end
 					end
 					tool.update_save_symbol

@@ -11,7 +11,7 @@ inherit
 
 	QUIT_FILE
 		redefine 
-			work, loose_changes
+			work, save_changes
 		end
 
 creation
@@ -20,9 +20,12 @@ creation
 	
 feature -- Callbacks
 
-	loose_changes (argument: ANY) is
+	save_changes (argument: ANY) is
 			-- The user has been warned that he will lose his stuff
 		do
+			if tool.save_cmd_holder /= Void then
+				tool.save_cmd_holder.associated_command.execute (Void)
+			end
 			text_window.clear_window;
 			tool.hide;
 		end;

@@ -6,20 +6,11 @@ indexing
 	revision: "$Revision$"
 
 class
-
 	NEXT_OBJECT
 
 inherit
-
-	NEXT_TARGET
-		rename
-			work as nt_work
-		end;
-
 	NEXT_TARGET
 		redefine
-			work
-		select
 			work
 		end;
 
@@ -42,7 +33,7 @@ feature -- Execution
 			elseif not status.is_stopped then
 				warner (popup_parent).gotcha_call (Warning_messages.w_System_not_stopped)
 			else
-				nt_work (argument)
+				{NEXT_TARGET} Precursor (argument)
 			end
 		end;
 

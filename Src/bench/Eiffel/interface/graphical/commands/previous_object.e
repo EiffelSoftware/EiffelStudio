@@ -6,27 +6,17 @@ indexing
 	revision: "$Revision$"
 
 class
-
 	PREVIOUS_OBJECT
 
 inherit
-
-	PREVIOUS_TARGET
-		rename
-			work as pt_work
-		end;
-
 	PREVIOUS_TARGET
 		redefine
-			work
-		select
 			work
 		end;
 
 	SHARED_APPLICATION_EXECUTION
 
 creation
-
 	make
 
 feature {NONE} -- Implementation
@@ -42,7 +32,7 @@ feature {NONE} -- Implementation
 			elseif not status.is_stopped then
 				warner (popup_parent).gotcha_call (Warning_messages.w_System_not_stopped)
 			else
-				pt_work (argument)
+				{PREVIOUS_TARGET} Precursor (argument)
 			end
 		end;
 

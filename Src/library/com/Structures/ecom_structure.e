@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			item := co_task_mem_alloc (structure_size)
 			if item = default_pointer then
 				-- Memory allocation problem
-				c_enomem
+				(create {EXCEPTIONS}).raise ("No more memory")
 			end
 			initialize 
 			shared := False

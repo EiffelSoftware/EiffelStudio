@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			-- Initialize the notebook.
 		do
 			Precursor {EV_WIDGET_LIST_IMP}
-			selected_item_index := 0
+			selected_item_index_internal := 0
 		end
 
 feature -- Access
@@ -81,29 +81,35 @@ feature -- Status report
 			pn: INTEGER
 			imp: EV_WIDGET_IMP
 		do
-			pn := selected_item_index - 1
-			p := C.gtk_notebook_get_nth_page (
-				c_object,
-				pn
-			)
-			check
-				p_not_void: p /= NULL
-			end
-			imp ?= eif_object_from_c (p)
-			check
-				p_has_eif_object: imp /= Void
-			end
-
-			Result ?= imp.interface
-
-			check
-				imp_has_interface: Result /= Void
+			if count > 0 then
+				pn := selected_item_index_internal - 1
+				p := C.gtk_notebook_get_nth_page (
+					c_object,
+					pn
+				)
+				check
+					p_not_void: p /= NULL
+				end
+				imp ?= eif_object_from_c (p)
+				check
+					p_has_eif_object: imp /= Void
+				end
+	
+				Result ?= imp.interface
+	
+				check
+					imp_has_interface: Result /= Void
+				end
 			end
 		end
-
-	selected_item_index: INTEGER
-			-- Index `selected_item'
-
+			
+	selected_item_index: INTEGER is
+			-- 
+		do
+			if count > 0 then
+				Result := selected_item_index_internal
+			end
+		end
 
 	tab_position: INTEGER is
 			-- Position of tabs.
@@ -164,7 +170,11 @@ feature -- Element change
 			-- Remove item at `i'-th position.
 		do
 			Precursor {EV_WIDGET_LIST_IMP} (i)
-			selected_item_index := C.gtk_notebook_get_current_page (c_object) + 1
+			if count > 0 then
+				selected_item_index_internal := C.gtk_notebook_get_current_page (c_object) + 1
+			else
+				selected_item_index_internal := 0
+			end
 		end
 
 	replace (v: like item) is
@@ -207,17 +217,20 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			if not is_destroyed then
 				temp_ptr_ref ?= a_page.item (1)
 				temp_ptr := temp_ptr_ref.item
-				selected_item_index := C.gtk_notebook_page_num (
+				selected_item_index_internal := C.gtk_notebook_page_num (
 					c_object,
 					C.gtk_notebook_page_struct_child (temp_ptr)
 				) + 1
-				if selection_actions_internal /= Void then
+				if selection_actions_internal /= Void and count > 0 then
 					selection_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
 				end
 			end
 		end
 		
 feature {EV_ANY_I} -- Implementation
+
+	selected_item_index_internal: INTEGER
+			-- Index `selected_item'
 
 	on_new_item (an_item_imp: EV_WIDGET_IMP) is
 			-- Set `an_item's text empty.

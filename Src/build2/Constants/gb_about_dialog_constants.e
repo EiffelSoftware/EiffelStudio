@@ -11,7 +11,7 @@ feature -- Access
 
 	t_version_info: STRING is
 		once
-			Result := "EiffelBuild (5.6.0109)"
+			Result := "EiffelBuild (5.6.0110)"
 		end
 
 	t_Copyright_info: STRING is

@@ -66,6 +66,8 @@ feature -- Access
 	update_attribute_editor is
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
+			local
+				error_label: EV_LABEL
 		do
 			if first.pixmap /= Void then
 				add_pixmap_to_pixmap_container (first.pixmap)
@@ -79,6 +81,11 @@ feature -- Access
 					-- no need to remove it from the pixmap
 					-- as the pixmap will no be no longer visible.
 				filler_label.remove_tooltip
+				if first.pixmap_path /= Void then
+					create error_label.make_with_text ("Error - Pixmap does not exist")
+					error_label.set_tooltip (first.pixmap_path)
+					pixmap_container.extend (error_label)
+				end
 			end
 		end
 		
@@ -108,14 +115,16 @@ feature {GB_XML_STORE} -- Output
 			element_info := full_information @ (pixmap_path_string)	
 			if element_info /= Void then
 				create new_pixmap
-					--| FIXME error checking!!!!!!!
 				create file_name.make_from_string (element_info.data)
 				create file.make (file_name)
 				if file.exists then
 					new_pixmap.set_with_named_file (element_info.data)
-					for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap (new_pixmap))
-					for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap_path (element_info.data))
+					for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap (new_pixmap))	
+				else
+					new_pixmap.draw_text (10, 10, "Error - Pixmap does not exist")
+					new_pixmap.set_minimum_height (20)
 				end
+				for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap_path (element_info.data))
 			end
 		end
 

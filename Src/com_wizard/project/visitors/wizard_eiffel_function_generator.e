@@ -74,7 +74,6 @@ feature {NONE} -- Implementation
 					an_argument.append (Space)
 					an_argument.append (visitor.eiffel_type)
 					feature_writer.add_argument (an_argument)
-					add_enumeration_comments (arguments.item.name, arguments.item.type, visitor)
 				end
 				visitor := Void
 				arguments.forth
@@ -85,12 +84,13 @@ feature {NONE} -- Implementation
 			-- Eiffel will not have result type if the result type is "void" or "HRESULT"
 			if not is_hresult (visitor.vt_type) and not is_error (visitor.vt_type) and not is_void (visitor.vt_type) then
 				feature_writer.set_result_type (visitor.eiffel_type)
+				add_enumeration_comments ("Result", func_desc.return_type, visitor)
 			end
 
 		end
 
-	add_enumeration_comments (a_name: STRING; a_type: WIZARD_DATA_TYPE_DESCRIPTOR;
-				a_visitor: WIZARD_DATA_TYPE_VISITOR) is
+	enumeration_comment (a_name: STRING; a_type: WIZARD_DATA_TYPE_DESCRIPTOR;
+				a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- Add coments for enumeration types.
 		local
 			a_user_defined_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR
@@ -103,37 +103,54 @@ feature {NONE} -- Implementation
 				if (a_user_defined_descriptor /= Void) then
 					an_index := a_user_defined_descriptor.type_descriptor_index
 					a_type_descriptor := a_user_defined_descriptor.library_descriptor.descriptors.item (an_index)
-					if (feature_writer.comment = Void) then
-						create a_comment.make (100)
-					else
-						a_comment := feature_writer.comment
-					end
-					if not a_comment.empty then
-						a_comment.append ("%N%T%T%T-- ")
-					end
-					a_comment.append ("See ")
-					a_comment.append (a_type_descriptor.eiffel_class_name)
-					a_comment.append (" for possible ")
-					a_comment.append (Back_quote)
-					a_comment.append (a_name)
-					a_comment.append (Single_quote)
-					a_comment.append (" values.")
-					feature_writer.set_comment (a_comment)
+					create Result.make (100)
+		
+					Result.append ("See ")
+					Result.append (a_type_descriptor.eiffel_class_name)
+					Result.append (" for possible ")
+					Result.append (Back_quote)
+					Result.append (a_name)
+					Result.append (Single_quote)
+					Result.append (" values.")
 				end
+			else
+				create Result.make (0)
 			end
 		end
 
-	set_feature_assertions is
-			-- Set precondition.
+	add_enumeration_comments (a_name: STRING; a_type: WIZARD_DATA_TYPE_DESCRIPTOR;
+				a_visitor: WIZARD_DATA_TYPE_VISITOR) is
+			-- Add coments for enumeration types.
 		local
-			arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
-			a_comment, comments: STRING
-			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
-			a_type: WIZARD_DATA_TYPE_DESCRIPTOR
+			a_comment: STRING
 		do
-			arguments := func_desc.arguments
-			create comments.make (100)
+			if (feature_writer.comment = Void) then
+				create a_comment.make (100)
+			else
+				a_comment := feature_writer.comment
+			end
+			if not a_comment.empty and a_visitor.is_enumeration then
+				a_comment.append ("%N%T%T%T-- ")
+			end
 
+			a_comment.append (enumeration_comment (a_name, a_type, 	a_visitor))
+			if not a_comment.empty then
+				feature_writer.set_comment (a_comment)
+			end
+		end
+
+	add_feature_argument_comments is
+			-- Add comments
+		local
+			a_comment: STRING
+			arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
+		do
+			if (feature_writer.comment = Void) then
+				create a_comment.make (100)
+			else
+				a_comment := feature_writer.comment
+			end
+			arguments := func_desc.arguments
 			from
 				arguments.start
 			until 
@@ -141,9 +158,11 @@ feature {NONE} -- Implementation
 			loop
 
 				if not is_paramflag_fretval (arguments.item.flags) then
-					create a_comment.make (100)
-					a_comment.append (Double_dash)
-					a_comment.append (Space)
+					if not a_comment.empty then 
+						a_comment.append (New_line_tab_tab_tab)
+						a_comment.append (Double_dash)
+						a_comment.append (Space)
+					end
 
 					a_comment.append (Back_quote)
 					a_comment.append (arguments.item.name)
@@ -161,10 +180,34 @@ feature {NONE} -- Implementation
 					end
 					a_comment.append (Close_bracket)
 					a_comment.append (Dot)
-					a_comment.append (New_line_tab_tab_tab)
+					a_comment.append (Space)
+					a_comment.append (enumeration_comment (arguments.item.name, arguments.item.type, arguments.item.type.visitor))
+					a_comment.append (Space)
+					a_comment.append (arguments.item.description)
+				end
+				arguments.forth
+			end
+			if not a_comment.empty then
+				feature_writer.set_comment (a_comment)
+			end
+		end
 
-					comments.append (a_comment)
+	set_feature_assertions is
+			-- Set precondition.
+		local
+			arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
+			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
+			a_type: WIZARD_DATA_TYPE_DESCRIPTOR
+		do
+			arguments := func_desc.arguments
 
+			from
+				arguments.start
+			until 
+				arguments.off
+			loop
+
+				if not is_paramflag_fretval (arguments.item.flags) then
 					generate_precondition (arguments.item.name, arguments.item.type, 
 						is_paramflag_fin (arguments.item.flags),
 						is_paramflag_fout (arguments.item.flags))
@@ -178,10 +221,6 @@ feature {NONE} -- Implementation
 							assertions.forth
 						end
 					end
-				end
-
-				if not comments.empty then
-					feature_writer.set_comment (comments)
 				end
 
 				if is_paramflag_fout (arguments.item.flags) then

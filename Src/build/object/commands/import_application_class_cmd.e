@@ -21,28 +21,46 @@ feature
 	execute (arg: ANY) is
 			-- Read the description file and fill the internal structure.
 		local
+			directory: DIRECTORY
 			description_file: PLAIN_TEXT_FILE
 			description_name: DIRECTORY_NAME
 			line: STRING
+			dot_index: INTEGER
 		do
-			!! description_name.make_from_string (Common_directory)
-			description_name.extend (Description_file_name)
-			!! description_file.make (description_name)
-			if description_file.exists then
-				description_file.open_read
-				from
-					description_file.start
-					current_line := 0
-				until
-					description_file.end_of_file
-				loop
-					current_line := 1 + current_line
-					description_file.read_line
-					line := clone (description_file.last_string)
-					process_line (line)
+			!! directory.make_open_read (Common_directory)
+			from
+				directory.start
+				directory.readentry
+			until
+				directory.lastentry = Void
+			loop
+				dot_index := directory.lastentry.index_of ('.', 1)
+				line := directory.lastentry.substring (dot_index, directory.lastentry.count)
+				if line.is_equal (".bui") then
+					!! description_name.make_from_string (Common_directory)
+					description_name.extend (directory.lastentry)
+					!! description_file.make (description_name)
+					if description_file.exists then
+						description_file.open_read
+						from
+							description_file.start
+							current_line := 0
+						until
+							description_file.end_of_file
+						loop
+							current_line := 1 + current_line
+							description_file.read_line
+							line := clone (description_file.last_string)
+							process_line (line)
+						end
+						description_file.close
+						if current_application_class /= Void then
+							update_routine_list
+							update_query_list
+						end
+					end
 				end
-				description_file.close
-				update_routine_list
+				directory.readentry
 			end
 		end
 
@@ -294,16 +312,37 @@ feature {NONE} -- Implementation
 			cmd_list: LINKED_LIST [APPLICATION_COMMAND]
 			app_routine: APPLICATION_ROUTINE
 		do
-			if current_application_class /= Void then
-				cmd_list := current_application_class.command_list
-				from
-					cmd_list.start
-				until
-					cmd_list.after
-				loop
-					!! app_routine.make_from_command (cmd_list.item)
-					current_application_class.add_routine (app_routine)
-					cmd_list.forth
+			cmd_list := current_application_class.command_list
+			from
+				cmd_list.start
+			until
+				cmd_list.after
+			loop
+				!! app_routine.make_from_command (cmd_list.item)
+				current_application_class.add_routine (app_routine)
+				cmd_list.forth
+			end
+		end
+
+	update_query_list is
+			-- Update routine list of `current_application_class' with
+			-- command list at the end of file.
+		local
+			query_list: LINKED_LIST [APPLICATION_QUERY]
+		do
+			query_list := current_application_class.query_list
+			from
+				query_list.start
+			until
+				query_list.after
+			loop
+				query_list.item.sort_possible_methods (current_application_class)
+				if query_list.item.possible_commands.empty
+					and then query_list.item.possible_routines.empty
+				then
+					query_list.remove
+				else
+					query_list.forth
 				end
 			end
 		end

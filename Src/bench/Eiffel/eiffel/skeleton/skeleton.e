@@ -59,17 +59,25 @@ feature -- Access
 
 feature -- Comparison
 
-	equiv (other: SKELETON): BOOLEAN is
-			-- Is the current skeleton equivqlent to `other' ?
+	equiv (old_skeletons: ARRAY [SKELETON]; other: SKELETON): BOOLEAN is
+			-- Is the current skeleton equivalent to `other'?
+			-- For expanded attribute, we use the old version of its
+			-- associated skeleton (stored in old_skeletons which is indexed
+			-- by `type_id') to ensure that it did not change.
 		require
+			old_skeletons_not_void: old_skeletons /= Void
 			good_argument: other /= Void
 		local
-			i, nb: INTEGER
+			i, nb, expanded_pos: INTEGER
 			current_area, other_area: SPECIAL [ATTR_DESC]
+			l_exp_desc: EXPANDED_DESC
+			l_old_skel: SKELETON
 		do
 			nb := count
 			if nb = other.count then
+					-- First pass to ensure it is identical.
 				from
+					expanded_pos := -1
 					current_area := area
 					other_area := other.area
 					Result := True;
@@ -77,9 +85,47 @@ feature -- Comparison
 				until
 					not Result or else i = nb
 				loop
-					Result := current_area.item (i).same_as (other_area.item (i));
+					Result := current_area.item (i).same_as (other_area.item (i))
+					if expanded_pos = -1 and then current_area.item (i).level >= Expanded_level then
+						expanded_pos := i
+					end
 					i := i + 1
 				end;
+					-- Second pass for expanded attributes only. This is where we check that the skeleton
+					-- for the expanded type did not change. And we do it recursively until we do not find
+					-- anymore expanded attributes. Fixes eweasel test melt015 and possibly others.
+				if
+					Result and then
+					expanded_pos >= 0 and then expanded_pos < nb and then
+					current_area.item (expanded_pos).level >= Expanded_level
+				then
+					from
+						i := expanded_pos
+						nb := count - 1
+					until
+						not Result or else i > nb
+					loop
+						l_exp_desc ?= current_area.item (i)
+						check
+							l_exp_desc_not_void: l_exp_desc /= Void
+						end
+						l_old_skel := old_skeletons.item (l_exp_desc.class_type.type_id)
+						if l_old_skel /= Void then
+								-- We now checks the old skeleton associated to `l_exp_desc' with a new
+								-- one that we generate on the fly. It is definitely not the most efficient
+								-- way because of the creation of a skeleton we will not use, but at least
+								-- do the correct job at finding if a skeleton of a class having expanded
+								-- attributes has changed.
+							Result := l_old_skel.equiv (old_skeletons,
+								l_exp_desc.class_type.associated_class.skeleton.
+									instantiation_in (l_exp_desc.class_type))
+						else
+								-- Previous skeleton did not exist, then it definitely changed.
+							Result := False
+						end
+						i := i + 1
+					end
+				end
 			end;
 		end;
 

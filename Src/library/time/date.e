@@ -36,7 +36,9 @@ create
 	make_now,
 	make_by_days,
 	make_from_string_default,
+	make_from_string_default_with_base,
 	make_from_string,
+	make_from_string_with_base,
 	make_by_compact_date
 
 feature {DATE_TIME} -- Initialization
@@ -115,17 +117,33 @@ feature {DATE_TIME} -- Initialization
 
 	make_from_string_default (s: STRING) is
 			-- Initialize from a "standard" string of form
-			-- `date_default_format_string'
+			-- `date_default_format_string'.
+			-- (For 2-digit year specifications, the current century is used as
+			-- base century.)
 		require
 			s_exists: s /= Void;
-			date_valid: date_valid_default (s)
+			date_valid: date_valid (s, Date_default_format_string)
 		do
-			make_from_string (s, date_default_format_string)
+			make_from_string (s, Date_default_format_string)
+		end
+
+	make_from_string_default_with_base (s: STRING; base: INTEGER) is
+			-- Initialize from a "standard" string of form
+			-- `date_default_format_string' with base century `base'.
+		require
+			s_exists: s /= Void;
+			base_valid: base > 0 and (base \\ 100 = 0)
+			date_valid: 
+				date_valid_with_base (s, Date_default_format_string, base)
+		do
+			make_from_string_with_base (s, Date_default_format_string, base)
 		end
 
 	make_from_string (s: STRING; code: STRING) is
 			-- Initialize from a "standard" string of form
-			-- `code'
+			-- `code'.
+			-- (For 2-digit year specifications, the current century is used as
+			-- base century.)
 		require
 			s_exists: s /= Void;
 			c_exists: code /= Void
@@ -135,6 +153,24 @@ feature {DATE_TIME} -- Initialization
 			date: DATE
 		do
 			create code_string.make (code)
+			date := code_string.create_date (s)
+			make (date.year, date.month, date.day)
+		end
+
+	make_from_string_with_base (s: STRING; code: STRING; base: INTEGER) is
+			-- Initialize from a "standard" string of form
+			-- `code' with base century `base'.
+		require
+			s_exists: s /= Void;
+			c_exists: code /= Void
+			base_valid: base > 0 and (base \\ 100 = 0)
+			date_valid: date_valid_with_base (s, code, base)
+		local
+			code_string: DATE_TIME_CODE_STRING
+			date: DATE
+		do
+			create code_string.make (code)
+			code_string.set_base_century (base)
 			date := code_string.create_date (s)
 			make (date.year, date.month, date.day)
 		end

@@ -15,6 +15,7 @@
 #define _eif_types_h_
 
 #include "portable.h"
+#include "eif_constants.h"
 
 	/*------------*/
 	/*  except.h  */
@@ -278,6 +279,22 @@ struct s_table {
 	uint32 s_size;		/* Search table size */
 	uint32 s_count;		/* Count of inserted keys */
 	char **s_keys;		/* Search table keys */
+};
+
+
+    /* ----------------------------------------------------------------- */
+    /*  sig.h */
+    /* ----------------------------------------------------------------- */
+
+/* Structure used as FIFO stack for signal buffering. I really do not expect
+ * this stack to overflow, so it has a huge fixed size--RAM. Should it really
+ * overflow, we would panic immediately :-(.
+ */
+struct s_stack {
+    int s_min;              /* Minimum value of circular buffer */
+    int s_max;              /* Maximum value of circular buffer */
+    char s_pending;         /* Are any signals pending? */
+    char s_buf[SIGSTACK];   /* The circular buffer used as a FIFO stack */
 };
 
 

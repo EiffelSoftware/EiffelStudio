@@ -312,11 +312,9 @@ feature {NONE} -- Implementation
 		local
 			application_element: XML_ELEMENT
 			window_element: XML_ELEMENT
-			directory_element: XML_ELEMENT
 			current_element: XML_ELEMENT
 			current_name: STRING
 			current_type: STRING
-			directory_name: STRING
 			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
 			application_element := parser.document.root_element

@@ -61,7 +61,6 @@ feature {GB_XML_LOAD} -- Implementation
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
-			stripped_text: STRING
 		do
 			full_information := get_unique_full_info (element)
 			

@@ -496,10 +496,15 @@ feature {NONE} -- Incrementality
 				parent_cluster := 
 					Universe.cluster_of_name 
 							(parent_cluster.cluster_name);
-				check
-					parent_must_exist: parent_cluster /= Void
-				end;
-				parent_cluster.add_sub_cluster (new_cluster)
+				if parent_cluster = Void then
+					-- This implies that the parent is different in the
+					-- current system than in the precompile which means
+					-- this cluster will be processed later. But for now,
+					-- just add it to the system.
+					Eiffel_system.add_sub_cluster (new_cluster)
+				else
+					parent_cluster.add_sub_cluster (new_cluster)
+				end
 			end
 		end;
 

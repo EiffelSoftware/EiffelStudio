@@ -130,7 +130,7 @@ feature -- Event : command association
 			-- Make `command' executed when an item is
 			-- selected.
 		do
-			add_command ("selection_changed", cmd, arg)
+			add_command (widget, "selection_changed", cmd, arg)
 			-- add_command ("select_child", a_command, arguments)
 		end
 
@@ -140,7 +140,7 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed
 			-- when the selection has changed.
 		do
-			remove_commands (selection_changed_id)
+			remove_commands (widget, selection_changed_id)
 		end
 
 feature {EV_LIST_ITEM_IMP} -- Implementation

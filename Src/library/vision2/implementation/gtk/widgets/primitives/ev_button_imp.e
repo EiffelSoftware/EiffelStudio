@@ -56,7 +56,7 @@ feature -- Event - command association
 			-- Add 'com' to the list of commands to be
 			-- executed when the button is pressed
 		do
-			add_command ("clicked", com, arg)
+			add_command (widget, "clicked", com, arg)
 		end
 	
 feature -- Event -- removing command association
@@ -65,7 +65,7 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- the button is pressed.
 		do
-			remove_commands (clicked_id)
+			remove_commands (widget, clicked_id)
 		end
 	
 end -- class EV_BUTTON_IMP

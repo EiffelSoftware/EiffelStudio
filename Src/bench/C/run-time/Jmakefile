@@ -9,6 +9,8 @@
 CFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app -I./include -I$(TOP)/idrs
 DPFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app
 
+IDRS_OBJ = $(TOP)/idrs/idrs.o
+MTIDRS_OBJ = $(TOP)/idrs/MTidrs.o
 NETWORK_OBJ = $(TOP)/ipc/app/network.o
 MTNETWORK_OBJ = $(TOP)/ipc/app/MTnetwork.o
 
@@ -39,6 +41,7 @@ WADD = debug.c interp.c update.c wbench.c
  * the normal run-time archive.
  */
 WOBJ = \
+	$(IDRS_OBJ) \
 	$(NETWORK_OBJ) \
 |expand f!$(WADD)!
 	!f:\.c=.o \
@@ -51,6 +54,7 @@ WOBJ = \
  * Object files for finalized run-time archive
  */
 LOBJ = \
+	$(IDRS_OBJ) \
 |expand f!$(LSRC) $(OTHER)!
 	!f:\.c=.o \
 -expand \\
@@ -60,6 +64,7 @@ LOBJ = \
  * and avoid eating its own tail..., when using ebench in workbench mode).
  */
 EOBJ = \
+	$(IDRS_OBJ) \
 |expand f!$(WADD)!
 	!f:\.c=.o \
 -expand
@@ -75,6 +80,7 @@ EOBJ = \
  * the normal run-time archive.
  */
 MT_WOBJ = \
+	$(MTIDRS_OBJ) \
 	$(MTNETWORK_OBJ) \
 |expand f!$(WADD)!
 	MT!f:\.c=.o \
@@ -87,6 +93,7 @@ MT_WOBJ = \
  * Object files for finalized run-time archive
  */
 MT_LOBJ = \
+	$(MTIDRS_OBJ) \
 |expand f!$(LSRC) $(OTHER)!
 	MT!f:\.c=.o \
 -expand \\
@@ -189,6 +196,7 @@ mt: mtwork mtfinal
  */
 
 RemoteDependency($(TOP)/ipc/app,network.o)
+RemoteDependency($(TOP)/idrs,idrs.o)
 
 /*
  * Run-time tests

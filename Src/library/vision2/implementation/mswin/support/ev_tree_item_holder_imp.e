@@ -12,6 +12,32 @@ inherit
 
 	EV_HASH_TABLE_ITEM_HOLDER_IMP
 
+Feature -- Status report
+
+	find_item_recursively_by_data (data: ANY): EV_TREE_ITEM is
+			-- If `data' contained in a tree item at any level then
+			-- assign this item to `Result'.
+		local
+			list: ARRAYED_LIST [EV_ITEM_IMP]
+			litem: EV_TREE_ITEM
+		do
+			from
+				list := children
+				list.start
+			until
+				list.after or Result/= Void
+			loop
+				litem ?= list.item.interface
+				if equal (data, litem.data) then
+					Result ?= litem
+				else
+					Result ?= litem.find_item_by_data (data)
+				end
+				list.forth
+			end
+		end
+
+
 feature {NONE} -- Implementatin
 
 	item_type: EV_TREE_ITEM_IMP is

@@ -41,9 +41,6 @@ inherit
 		end
 		
 	GB_CONSTANTS
-		undefine
-			default_create, copy, is_equal
-		end
 		
 	GB_PICK_AND_DROP_SHIFT_MODIFIER
 		undefine

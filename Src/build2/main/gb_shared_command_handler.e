@@ -4,12 +4,19 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	GB_ACCESSIBLE_COMMAND_HANDLER
+
+
+inherit
+	ANY	
+		undefine
+			default_create, copy, is_equal
+		end
 	
 feature {NONE} -- Implementation
 
-	command_handler:GB_COMMAND_HANDLER is
+	command_handler: GB_COMMAND_HANDLER is
 			-- `Result' is the GB_COMMAND_HANDLER used by
 			-- the system. There should only be one handler.
 			-- Any class that needs access, simply inherits from

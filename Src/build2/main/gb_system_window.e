@@ -20,19 +20,13 @@ inherit
 		end
 		
 	GB_CONSTANTS
-		undefine
-			default_create, copy
-		end
 		
 	GB_ACCESSIBLE_SYSTEM_STATUS
 		undefine
-			default_create, copy
+			default_create, copy, is_equal
 		end
 		
 	GB_ACCESSIBLE_COMMAND_HANDLER
-		undefine
-			default_create, copy
-		end
 
 feature {NONE} -- Initialization
 

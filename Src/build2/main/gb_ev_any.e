@@ -25,9 +25,6 @@ inherit
 		end
 		
 	GB_CONSTANTS
-		undefine
-			default_create
-		end
 
 	GB_WIDGET_UTILITIES
 		undefine
@@ -40,9 +37,6 @@ inherit
 		end
 		
 	GB_ACCESSIBLE_COMMAND_HANDLER
-		undefine
-			default_create
-		end
 
 feature -- Initialization
 		

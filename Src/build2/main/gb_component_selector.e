@@ -19,9 +19,6 @@ inherit
 	GB_DEFAULT_STATE
 	
 	GB_CONSTANTS
-		undefine
-			default_create, is_equal, copy
-		end
 		
 	GB_WIDGET_UTILITIES
 		undefine
@@ -30,12 +27,12 @@ inherit
 		
 	GB_ACCESSIBLE_SYSTEM_STATUS
 		undefine
-			default_create, is_equal, copy
+			default_create, copy, is_equal
 		end
 		
 	GB_ACCESSIBLE_XML_HANDLER
 		undefine
-			default_create, is_equal, copy
+			default_create, copy, is_equal
 		end
 
 create

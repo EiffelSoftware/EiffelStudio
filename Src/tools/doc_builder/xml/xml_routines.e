@@ -413,7 +413,7 @@ feature -- Storage
 			io.putstring ("Unable to write file: " + a_doc_name)
 			retry
 		end
-
+		
 feature {NONE} -- Implementation
 
 	is_escaped (a_char: INTEGER): BOOLEAN is

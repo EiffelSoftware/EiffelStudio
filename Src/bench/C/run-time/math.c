@@ -111,3 +111,11 @@ float v;
 	return (float) fabs ((double) v);
 }
 
+public double math_power (v1, v2)
+double v1, v2;
+{
+	/* v1 ** v2*/
+
+	return (double) pow (v1, v2);
+}
+

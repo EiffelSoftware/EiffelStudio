@@ -55,6 +55,7 @@ feature -- Status report
 	proxy_host_ok (host: STRING): BOOLEAN is
 	 		-- Is host name of proxy correct?
 		do
+			Result := False
 		end
 	
 	Is_password_accepted: BOOLEAN is False

@@ -13,7 +13,6 @@ inherit
 			add_widget_callbacks, is_valid_parent,
 			is_able_to_be_grouped
 		end;
-
 	PULLDOWN_C
 		redefine
 			stored_node, create_context, full_name,
@@ -21,7 +20,8 @@ inherit
 			is_valid_parent, is_able_to_be_grouped
 		select
 			create_context, full_name
-		end
+		end;
+	G_ANY
 
 feature 
 
@@ -36,11 +36,16 @@ feature
 		end;
 
 	add_widget_callbacks is
+		local
+			ms_win: STRING
 		do
-			add_common_callbacks (widget.button);
-			initialize_transport;
-			if (parent = Void) or else not parent.is_group_composite then
-				widget.button.add_enter_action (eb_selection_mgr, parent);
+			ms_win := "MS_WINDOW";
+			if not ms_win.is_equal (toolkit.name) then
+				add_common_callbacks (widget.button);
+				initialize_transport;
+				if (parent = Void) or else not parent.is_group_composite then
+					widget.button.add_enter_action (eb_selection_mgr, parent);
+				end
 			end;
 		end;
 

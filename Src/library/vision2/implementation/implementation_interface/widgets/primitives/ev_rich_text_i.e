@@ -428,6 +428,27 @@ feature -- Status setting
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
+	set_with_named_file (a_filename: FILE_NAME) is
+			-- Set `text' and formatting of `Current' from file `a_filename' in RTF format.
+		require
+			filename_not_void: a_filename /= Void
+		local
+			text_file: PLAIN_TEXT_FILE
+			l_text: STRING
+			buffer: EV_RICH_TEXT_BUFFERING_STRUCTURES_I
+		do
+			create text_file.make_open_read (a_filename)
+			text_file.read_stream (text_file.count)
+			l_text := text_file.last_string
+			text_file.close
+			create buffer.set_rich_text (Current)
+			buffer.set_with_rtf (l_text)
+		ensure
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
+		end
+		
 	next_change_of_character (current_pos: INTEGER; a_text_length: INTEGER): INTEGER is
 			-- `Result' is caret position at next change of character from `current_pos',
 			-- checking maximum position `a_text_length'. By passing `a_text_length' as

@@ -385,7 +385,7 @@ feature {NONE} -- Externals
 		
 	cwin_reg_delete_key (key: POINTER; subkey: POINTER): BOOLEAN is
 		external
-			"C"
+			"C | %"registry.h%""
 		end
 
 	cwin_reg_enum_key (key: POINTER; index: INTEGER): POINTER is

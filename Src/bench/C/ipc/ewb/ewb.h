@@ -1,4 +1,3 @@
-
 /* REQUEST_CONST */
 
 #define REP_DB_INFO		1

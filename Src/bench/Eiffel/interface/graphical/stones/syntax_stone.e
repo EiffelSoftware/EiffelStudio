@@ -37,10 +37,10 @@ feature -- Properties
 feature -- Access
 
 	file_name: STRING is
-            -- The one from SYNTAX_ERROR: where it happened
-        do
+			-- The one from SYNTAX_ERROR: where it happened
+		do
 			Result := syntax_error_i.file_name
-        end;
+		end;
 
 	help_text: LINKED_LIST [STRING] is
 		do

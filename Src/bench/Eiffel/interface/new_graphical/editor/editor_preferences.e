@@ -68,6 +68,9 @@ feature -- Access
 		-- Are the spaces, the tabulations and the end_of_line
 		-- character visible?
 
+	smart_identation: BOOLEAN
+		-- Is smart identation enabled?
+
 		--| Font color Preferences
 
 	normal_text_color: WEL_COLOR_REF
@@ -158,7 +161,7 @@ feature -- Element Change (General preferences)
 		end
 
 	show_invisible_symbols is
-			-- Set `view_invisible_symbols' to True
+			-- Set `view_invisible_symbols' to True.
 		do
 			view_invisible_symbols := True
 		ensure
@@ -166,11 +169,27 @@ feature -- Element Change (General preferences)
 		end
 
 	hide_invisible_symbols is
-			-- Set `view_invisible_symbols' to True
+			-- Set `view_invisible_symbols' to False.
 		do
 			view_invisible_symbols := False
 		ensure
 			view_invisible_symbols_set: not view_invisible_symbols
+		end
+
+	turn_smart_ident_on is
+			-- Set `smart_identation' to True.
+		do
+			smart_identation := True
+		ensure
+			smart_identation_set: smart_identation
+		end
+
+	turn_smart_ident_off is
+			-- Set `smart_identation' to False.
+		do
+			smart_identation := False
+		ensure
+			smart_identation_set: not smart_identation
 		end
 
 feature -- Element Change (Font color Preferences)

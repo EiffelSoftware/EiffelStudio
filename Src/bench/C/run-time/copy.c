@@ -61,11 +61,6 @@ rt_private EIF_REFERENCE spclone(register EIF_REFERENCE source);/* Clone for spe
 rt_private void spcopy(register EIF_REFERENCE source, register EIF_REFERENCE target);
 rt_private void tuple_copy(register EIF_REFERENCE source, register EIF_REFERENCE target);
 
-#ifndef lint
-rt_private char *rcsid =
-	"$Id$";
-#endif
-
 rt_public EIF_REFERENCE eclone(register EIF_REFERENCE source)
 {
 	/* Clone an of Eiffel object `source'. Might move `source' */
@@ -123,10 +118,10 @@ rt_private EIF_REFERENCE spclone(EIF_REFERENCE source)
 	 */
 	
 	EIF_GET_CONTEXT
-	register4 EIF_REFERENCE result;		/* Clone pointer */
-	register1 union overhead *zone;		/* Pointer on source header */
-	register2 uint32 flags;				/* Source object flags */
-	register3 uint32 size;				/* Source object size */
+	EIF_REFERENCE result;		/* Clone pointer */
+	union overhead *zone;		/* Pointer on source header */
+	uint32 flags;				/* Source object flags */
+	uint32 size;				/* Source object size */
 	EIF_REFERENCE s_ref, r_ref;
 
 	if ((EIF_REFERENCE) 0 == source)
@@ -528,10 +523,10 @@ rt_public void eif_std_ref_copy(register EIF_REFERENCE source, register EIF_REFE
 	 * because the garbage collector needs to explore those references.
 	 */
 
-	register3 uint32 s_flags;			/* Source object flags */
-	register4 uint32 t_flags;			/* Source target flags */
-	register5 union overhead *s_zone;	/* Source object header */
-	register6 union overhead *t_zone;	/* Target object header */
+	uint32 s_flags;			/* Source object flags */
+	uint32 t_flags;			/* Source target flags */
+	union overhead *s_zone;	/* Source object header */
+	union overhead *t_zone;	/* Target object header */
 	EIF_REFERENCE enclosing;					/* Enclosing target object */
 	uint32 size;
 
@@ -682,11 +677,11 @@ rt_private void expanded_update(EIF_REFERENCE source, EIF_REFERENCE target, int 
 	 * is a composite object.
 	 */
 
-	register4 union overhead *zone;			/* Target Object header */
-	register2 long nb_ref;					/* Number of references */
-	register3 uint32 flags;					/* Target flags */
-	register1 EIF_REFERENCE t_reference;			/* Target reference */
-	register5 EIF_REFERENCE s_reference;			/* Source reference */
+	union overhead *zone;			/* Target Object header */
+	long nb_ref;					/* Number of references */
+	uint32 flags;					/* Target flags */
+	EIF_REFERENCE t_reference;			/* Target reference */
+	EIF_REFERENCE s_reference;			/* Source reference */
 	EIF_REFERENCE t_enclosing;						/* Enclosing object */
 	EIF_REFERENCE s_enclosing;						/* Enclosing object */
 	int t_offset = 0;						/* Offset within target */

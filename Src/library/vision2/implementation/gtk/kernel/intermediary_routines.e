@@ -127,7 +127,7 @@ feature {EV_ANY_IMP} -- Widget intermediary agent routines
 			a_widget: EV_WIDGET_IMP
 		do
 			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			if a_widget /= Void then
+			if a_widget /= Void and then not a_widget.is_destroyed then
 				a_widget.on_focus_changed (True)
 			end
 		end
@@ -138,7 +138,7 @@ feature {EV_ANY_IMP} -- Widget intermediary agent routines
 			a_widget: EV_WIDGET_IMP
 		do
 			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			if a_widget /= Void then
+			if a_widget /= Void and then not a_widget.is_destroyed then
 				a_widget.on_focus_changed (False)
 			end
 		end	

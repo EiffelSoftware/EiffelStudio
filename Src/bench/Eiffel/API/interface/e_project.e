@@ -415,7 +415,8 @@ feature -- Status setting
 			valid_arg: f_path /= Void 
 		do
 			if not f_path.is_equal (filter_path) then
-				filter_path.make_from_string (interpreted_string (f_path))
+				filter_path.make_from_string (clone 
+						(interpreted_string (f_path)))
 			end
 		end
 
@@ -425,7 +426,8 @@ feature -- Status setting
 			valid_arg: p_path /= Void 
 		do
 			if not p_path.is_equal (profile_path) then
-				profile_path.make_from_string (interpreted_string (p_path));
+				profile_path.make_from_string (clone 
+					(interpreted_string (p_path)))
 			end
 		end;
 

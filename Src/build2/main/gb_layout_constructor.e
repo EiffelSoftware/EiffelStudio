@@ -76,6 +76,15 @@ feature -- Basic operation
 		
 feature -- Access
 
+	root_item: GB_LAYOUT_CONSTRUCTOR_ITEM is
+			-- `Result' is layout constructor item of
+			-- root node or Void if none.
+		do
+			Result ?= first
+		ensure
+			not_empty_implies_has_root_object: not is_empty implies Result /= Void
+		end
+
 	expand_all_button: EV_TOOL_BAR_BUTTON is
 			-- `Result' is a tool bar button that
 			-- calls `add_new_directory'.
@@ -96,13 +105,7 @@ feature {GB_XML_LOAD} -- Implementation
 	update_expanded_state_from_root_object is
 			-- Update expanded state of root item and all children
 			-- recursively, from information held in each associated object.
-		local
-			root_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
-			root_item ?= first
-			check
-				root_item_not_void: root_item /= Void
-			end
 			Object_handler.recursive_do_all (root_item.object, agent expand_layout_item)
 		end
 	

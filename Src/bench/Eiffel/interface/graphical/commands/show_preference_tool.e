@@ -45,8 +45,8 @@ feature {NONE} -- Execution
 			att: WINDOW_ATTRIBUTES;
 			p_tool: EB_PREFERENCE_TOOL
 		do
+			!! mp.set_watch_cursor;
 			if preference_tool = Void then
-				!! mp.set_watch_cursor;
 				!! p_tool.make;
 				!! gpc.make (p_tool);
 				!! pwpc.make (p_tool);
@@ -68,10 +68,10 @@ feature {NONE} -- Execution
 				p_tool.add_preference_category (grpc);
 				p_tool.build_interface (Project_tool.screen);
 				preference_tool_cell.put (p_tool)
-				mp.restore;
 			end;
 			preference_tool.show_page_number (category.page_number);
-			preference_tool.display
+			preference_tool.display;
+			mp.restore
 		end
 
 feature -- Properties

@@ -545,7 +545,7 @@ feature {EV_TEXTABLE_IMP} -- Implementation
 			last_text_width := 0
 			last_text_height := 0
 			create screen_dc
-		--	screen_dc.get
+			screen_dc.get
 			screen_dc.select_font (wel_font)
 			from
 				n := 1
@@ -561,12 +561,14 @@ feature {EV_TEXTABLE_IMP} -- Implementation
 					last_text_height := last_text_height + extent.height
 					n := index + 1
 				else
-					-- End of string reached.
+					extent := screen_dc.string_size (a_string)
+					last_text_width := extent.width
+					last_text_height := extent.height
 					n := a_string.count + 1
 				end
 			end
-		--	screen_dc.unselect_font
-		--	screen_dc.release
+			screen_dc.unselect_font
+			screen_dc.quick_release
 		end
 
 feature {NONE} -- Not used
@@ -722,6 +724,9 @@ end -- class EV_FONT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/03/03 01:06:53  brendel
+--| Improved implementation of calculate_text_extent.
+--|
 --| Revision 1.25  2000/03/03 00:53:27  brendel
 --| Attempt to improve string_width. Testing required.
 --|

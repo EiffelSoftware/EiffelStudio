@@ -20,8 +20,7 @@ inherit
 			parent
 		redefine
 			parent_imp,
-			interface,
-			pnd_press
+			interface
 		end
 
 	EV_TEXTABLE_IMP
@@ -90,35 +89,6 @@ feature -- Status setting
 		end
 
 feature {EV_ANY_I} -- Access
-
-	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
-		local
-			list_imp: EV_LIST_IMP
-		do
-			list_imp ?= parent_imp
-			check
-				list_imp /= Void
-			end
-			if press_action = Ev_pnd_start_transport then
-				start_transport (a_x, a_y, a_button, 0, 0, 
-					0.5, a_screen_x, a_screen_y)
-				list_imp.set_parent_source_true
-				list_imp.set_item_source (Current)
-				list_imp.set_item_source_true
-			elseif press_action = Ev_pnd_end_transport then
-				end_transport (a_x, a_y, a_button)
-				list_imp.set_parent_source_false
-				list_imp.set_item_source (Void)
-				list_imp.set_item_source_false
-			else
-				list_imp.set_parent_source_false
-				list_imp.set_item_source (Void)
-				list_imp.set_item_source_false
-				check
-					disabled: press_action = Ev_pnd_disabled
-				end
-			end
-		end
 
 	index: INTEGER is
 			-- One-based Index of the current item.
@@ -213,6 +183,9 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.52  2000/04/21 22:27:10  rogers
+--| Removed redefined pnd_press.
+--|
 --| Revision 1.51  2000/04/21 22:09:26  rogers
 --| Removed set_capture, release_capture, set_heavy_capture,
 --| release_heavy_capture and set_pointer_style.

@@ -1930,8 +1930,7 @@ feature {NONE} -- XML
 				if node /= Void then
 					if node.name.is_equal ("CLASS_FIGURE") then
 						if node.has_attribute_by_name ("NAME") then
-							class_name := clone (node.attribute_by_name ("NAME").value)
-							class_name.to_upper
+							class_name := node.attribute_by_name ("NAME").value.as_upper
 							cf := class_figure_by_class_name (class_name)
 							if cf /= Void then
 								cf.set_with_xml_element (node)

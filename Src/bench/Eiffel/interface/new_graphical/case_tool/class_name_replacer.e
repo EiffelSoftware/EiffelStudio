@@ -125,8 +125,6 @@ feature {NONE} -- Implementation
 
 	perform_replacing (cl: LIST [CLASS_I]; s, r: STRING) is
 			-- Perform search/replace on `cl'.
-		local
-			up: STRING
 		do
 			Progress_dialog.set_title ("Progress")
 			Progress_dialog.set_degree ("Replacing:")
@@ -141,9 +139,7 @@ feature {NONE} -- Implementation
 			until
 				cl.after
 			loop
-				up := clone (cl.item.name)
-				up.to_upper
-				Progress_dialog.set_current_entity (up)
+				Progress_dialog.set_current_entity (cl.item.name_in_upper)
 				Progress_dialog.set_value (cl.index)
 				Progress_dialog.set_to_go ((cl.count - cl.index).out)
 				search_replace (cl.item, s, r)
@@ -178,8 +174,7 @@ feature {NONE} -- Implementation
 				text := ctm.text
 				click_list := ctm.class_as.click_list
 				disp := a_search_string.count - a_replace_string.count
-				ss := clone (a_search_string)
-				ss.to_lower
+				ss := a_search_string.as_lower
 
 				from
 					click_list.start

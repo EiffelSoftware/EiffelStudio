@@ -17,6 +17,7 @@
 #include "eif_eiffel.h"
 #include "eif_except.h"
 
+
 #ifdef __cplusplus
 extern "C" {
 #endif

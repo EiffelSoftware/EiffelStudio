@@ -221,6 +221,8 @@ rt_public void dbg_init_estudio_thread_handle () {
 
 	pseudo_th_hdl = GetCurrentThread();
 
+	estudio_thread_handle = (HANDLE) malloc (sizeof(HANDLE));
+
 	fSuccess = DuplicateHandle(
 			GetCurrentProcess(),
 			GetCurrentThread(),
@@ -237,6 +239,7 @@ rt_public void dbg_close_estudio_thread_handle () {
 	thread_hdl = estudio_thread_handle;
 	DBGTRACE_HR("[eStudio] CloseHandle of thread : handle = ", (HRESULT)thread_hdl);	/*D*/
 	CloseHandle (thread_hdl);
+	free (thread_hdl);
 }
 
 rt_public void dbg_suspend_estudio_thread () {

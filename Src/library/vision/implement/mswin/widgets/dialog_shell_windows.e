@@ -24,7 +24,10 @@ feature -- Initialization
 
 	make (a_dialog_shell: DIALOG_SHELL; oui_parent: COMPOSITE) is
 		do
+			!!private_attributes
+			parent ?= oui_parent.implementation
 			a_dialog_shell.set_wm_imp (Current)
+			managed := True
 		end
 
 feature -- Status report

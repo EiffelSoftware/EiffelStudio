@@ -755,10 +755,11 @@ feature {COMPILER_EXPORTER} -- Primitives
 						other_feature_i := feat_tbl.feature_of_rout_id (feature_i.rout_id_set.first)
 
 							-- Test if we found the specified feature name among the creation
-							-- procedures of `class_c'.
+							-- procedures of `class_c' and that it is exported to Current, since it
+							-- it is Current that will create instances of the generic parameter.
 						creators_table.search (other_feature_i.feature_name)
 						matched := creators_table.found
-							and then creators_table.found_item.valid_for (context_class)
+							and then creators_table.found_item.valid_for (associated_class)
 	
 						crc_list.forth
 					end

@@ -177,6 +177,14 @@ feature {NONE} -- Implementation
 				Result := an_object
 			end
 		end
+	
+	validate_true (a_string: STRING): BOOLEAN is
+			-- A procedure that matches type for validation,
+			-- and always returns True. Used when no validation
+			-- is to be performed on STRING data
+		do
+			Result := True
+		end
 		
 feature {GB_INTEGER_INPUT_FIELD, GB_STRING_INPUT_FIELD} -- Implementation
 

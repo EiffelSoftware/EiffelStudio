@@ -68,12 +68,6 @@ feature {EB_SHARED_PREFERENCES} -- Value
 		do
 			Result := show_all_text_in_project_toolbar_preference.value
 		end
-
-	display_dotnet_cmd: BOOLEAN is
-			-- Should we display the .Net command?
-		do
-			Result := display_dotnet_cmd_preference.value
-		end
 	
 	dotnet_debugger: ARRAY [STRING] is
 			-- .NET debugger to launch
@@ -95,7 +89,6 @@ feature -- Preference
 	default_expanded_view_size_preference: INTEGER_PREFERENCE
 	show_text_in_project_toolbar_preference: BOOLEAN_PREFERENCE	
 	show_all_text_in_project_toolbar_preference: BOOLEAN_PREFERENCE
-	display_dotnet_cmd_preference: BOOLEAN_PREFERENCE	
 	project_toolbar_layout_preference: ARRAY_PREFERENCE
 	dotnet_debugger_preference: ARRAY_PREFERENCE
 
@@ -130,7 +123,6 @@ feature {NONE} -- Preference Strings
 	critical_stack_depth_string: STRING is "debugger.critical_stack_depth"
 	show_text_in_project_toolbar_string: STRING is "debugger.show_text_in_project_toolbar"	
 	show_all_text_in_project_toolbar_string: STRING is "debugger.show_all_text_in_project_toolbar"
-	display_dotnet_cmd_String: STRING is "debugger.display_dotnet_cmd"
 	default_expanded_view_size_string: STRING is "debugger.default_expanded_view_size"
 	stack_element_width_string: STRING is "debugger.stack_element_width"
 	default_maximum_stack_depth_string: STRING is "debugger.default_maximum_stack_depth"
@@ -150,8 +142,7 @@ feature {NONE} -- Implementation
 			critical_stack_depth_preference := l_manager.new_integer_resource_value (l_manager, critical_stack_depth_string, 500)			
 			default_expanded_view_size_preference := l_manager.new_integer_resource_value (l_manager, default_expanded_view_size_string, 50)	
 			show_text_in_project_toolbar_preference := l_manager.new_boolean_resource_value (l_manager, show_text_in_project_toolbar_string, True)		
-			show_all_text_in_project_toolbar_preference := l_manager.new_boolean_resource_value (l_manager, show_all_text_in_project_toolbar_string, True)	
-			display_dotnet_cmd_preference := l_manager.new_boolean_resource_value (l_manager, display_dotnet_cmd_string, True)		
+			show_all_text_in_project_toolbar_preference := l_manager.new_boolean_resource_value (l_manager, show_all_text_in_project_toolbar_string, True)				
 			project_toolbar_layout_preference := l_manager.new_array_resource_value (l_manager, project_toolbar_layout_string, <<"Clear_bkpt__visible">>)
 			dotnet_debugger_preference := l_manager.new_array_resource_value (l_manager, dotnet_debugger_string, <<"EiffelStudio Dbg", "cordbg", "DbgCLR">>)
 		end
@@ -166,8 +157,7 @@ invariant
 	critical_stack_depth_preference_not_void: critical_stack_depth_preference /= Void
 	default_expanded_view_size_preference_not_void: default_expanded_view_size_preference /= Void
 	show_text_in_project_toolbar_preference_not_void: show_text_in_project_toolbar_preference /= Void
-	show_all_text_in_project_toolbar_preference_not_void: show_all_text_in_project_toolbar_preference /= Void
-	display_dotnet_cmd_preference_not_void: 	display_dotnet_cmd_preference /= Void
+	show_all_text_in_project_toolbar_preference_not_void: show_all_text_in_project_toolbar_preference /= Void	
 	project_toolbar_layout_preference_not_void: project_toolbar_layout_preference /= Void
 
 end -- class EB_DEBUGGER_DATA

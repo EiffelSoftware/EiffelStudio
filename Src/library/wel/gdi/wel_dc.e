@@ -33,11 +33,13 @@ inherit
 	WEL_DIB_COLORS_CONSTANTS
 		export
 			{NONE} all
+			{ANY} valid_dib_colors_constant
 		end
 
 	WEL_STRETCH_MODE_CONSTANTS
 		export
 			{NONE} all
+			{ANY} valid_stretch_mode_constant
 		end
 
 	WEL_FLOOD_FILL_CONSTANTS
@@ -48,21 +50,25 @@ inherit
 	WEL_TA_CONSTANTS
 		export
 			{NONE} all
+			{ANY} valid_text_alignment_constant
 		end
 
 	WEL_MM_CONSTANTS
 		export
 			{NONE} all
+			{ANY} valid_map_mode_constant
 		end
 
 	WEL_POLYGON_FILL_MODE_CONSTANTS
 		export
 			{NONE} all
+			{ANY} valid_polygon_fill_mode_constant
 		end
 
 	WEL_ROP2_CONSTANTS
 		export
 			{NONE} all
+			{ANY} valid_rop2_constant
 		end
 
 	WEL_CAPABILITIES_CONSTANTS

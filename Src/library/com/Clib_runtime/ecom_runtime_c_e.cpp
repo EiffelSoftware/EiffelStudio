@@ -1754,7 +1754,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_short (SAFEARRAY * a_safearray)
 		{
 			sa_indeces[i] = index [dim_count - 1 - i];
 		}
-		SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
+		hr = SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
+		if (hr != S_OK)
+		{
+			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		}
 		put (eif_access (result), (EIF_INTEGER)sa_element, eif_access (eif_index));
 
 	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index));
@@ -1862,7 +1866,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_long (SAFEARRAY * a_safearray)
 		{
 			sa_indeces[i] = index [dim_count - 1 - i];
 		}
-		SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
+		hr = SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
+		if (hr != S_OK)
+		{
+			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		}
 		put (eif_access (result), (EIF_INTEGER)sa_element, eif_access (eif_index));
 
 	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index));
@@ -2231,7 +2239,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_float (SAFEARRAY * a_safearray)
 		{
 			sa_indeces[i] = index [dim_count - 1 - i];
 		}
-		SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
+		hr = SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
+		if (hr != S_OK)
+		{
+			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		}
 		put (eif_access (result), (EIF_REAL)sa_element, eif_access (eif_index));
 
 	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index));
@@ -2339,7 +2351,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_double (SAFEARRAY * a_safearray
 		{
 			sa_indeces[i] = index [dim_count - 1 - i];
 		}
-		SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
+		hr = SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
+		if (hr != S_OK)
+		{
+			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		}
 		put (eif_access (result), (EIF_DOUBLE)sa_element, eif_access (eif_index));
 
 	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index));
@@ -2447,7 +2463,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_char (SAFEARRAY * a_safearray)
 		{
 			sa_indeces[i] = index [dim_count - 1 - i];
 		}
-		SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
+		hr = SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
+		if (hr != S_OK)
+		{
+			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		}
 		put (eif_access (result), (EIF_CHARACTER)sa_element, eif_access (eif_index));
 
 	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index));
@@ -2556,7 +2576,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_boolean (SAFEARRAY * a_safearra
 		{
 			sa_indeces[i] = index [dim_count - 1 - i];
 		}
-		SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
+		hr = SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
+		if (hr != S_OK)
+		{
+			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		}
 		eif_array_element = (sa_element == 0) ? EIF_FALSE : EIF_TRUE;
 		put (eif_access (result), eif_array_element, eif_access (eif_index));
 
@@ -2672,7 +2696,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_currency (SAFEARRAY * a_safearr
 		make (eif_access (eif_array_element));
 		sa_element = (CURRENCY *) eif_field (eif_access (eif_array_element), "item", EIF_POINTER);
 
-		SafeArrayGetElement (a_safearray, sa_indeces, sa_element);
+		hr = SafeArrayGetElement (a_safearray, sa_indeces, sa_element);
+		if (hr != S_OK)
+		{
+			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		}
 		put (eif_access (result), eif_access (eif_array_element), eif_access (eif_index));
 		eif_wean (eif_array_element);
 
@@ -2781,7 +2809,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_date (SAFEARRAY * a_safearray)
 		{
 			sa_indeces[i] = index [dim_count - 1 - i];
 		}
-		SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
+		hr = SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
+		if (hr != S_OK)
+		{
+			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		}
 		put (eif_access (result), ccom_ce_date (sa_element), eif_access (eif_index));
 
 	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index));
@@ -2896,7 +2928,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_decimal (SAFEARRAY * a_safearra
 		make (eif_access (eif_array_element));
 		sa_element = (DECIMAL *) eif_field (eif_access (eif_array_element), "item", EIF_POINTER);
 
-		SafeArrayGetElement (a_safearray, sa_indeces, sa_element);
+		hr = SafeArrayGetElement (a_safearray, sa_indeces, sa_element);
+		if (hr != S_OK)
+		{
+			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		}
 		put (eif_access (result), eif_access (eif_array_element), eif_access (eif_index));
 		eif_wean (eif_array_element);
 
@@ -3005,7 +3041,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_bstr (SAFEARRAY * a_safearray)
 		{
 			sa_indeces[i] = index [dim_count - 1 - i];
 		}
-		SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
+		hr = SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
+		if (hr != S_OK)
+		{
+			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		}
 		put (eif_access (result), ccom_ce_bstr (sa_element), eif_access (eif_index));
 
 	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index));
@@ -3120,7 +3160,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_variant (SAFEARRAY * a_safearra
 		make (eif_access (eif_array_element));
 		sa_element = (VARIANT *)eif_field (eif_access (eif_array_element), "item", EIF_POINTER);
 
-		SafeArrayGetElement (a_safearray, sa_indeces, sa_element);
+		hr = SafeArrayGetElement (a_safearray, sa_indeces, sa_element);
+		if (hr != S_OK)
+		{
+			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		}
 		put (eif_access (result), eif_access (eif_array_element), eif_access (eif_index));
 		eif_wean (eif_array_element);
 
@@ -3229,7 +3273,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_hresult (SAFEARRAY * a_safearra
 		{
 			sa_indeces[i] = index [dim_count - 1 - i];
 		}
-		SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
+		hr = SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
+		if (hr != S_OK)
+		{
+			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		}
 		put (eif_access (result), ccom_ce_hresult (sa_element), eif_access (eif_index));
 
 	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index));
@@ -3337,7 +3385,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_unknown (SAFEARRAY * a_safearra
 		{
 			sa_indeces[i] = index [dim_count - 1 - i];
 		}
-		SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
+		hr = SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
+		if (hr != S_OK)
+		{
+			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		}
 		put (eif_access (result), ccom_ce_pointed_unknown (sa_element), eif_access (eif_index));
 		sa_element->AddRef();
 
@@ -3446,7 +3498,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_dispatch (SAFEARRAY * a_safearr
 		{
 			sa_indeces[i] = index [dim_count - 1 - i];
 		}
-		SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
+		hr = SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
+		if (hr != S_OK)
+		{
+			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		}
 		put (eif_access (result), ccom_ce_pointed_dispatch (sa_element), eif_access (eif_index));
 		sa_element->AddRef();
 

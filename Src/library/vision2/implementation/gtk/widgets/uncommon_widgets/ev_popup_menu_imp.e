@@ -12,7 +12,8 @@ class
 
 inherit
 	EV_POPUP_MENU_I
-	EV_MENU_HOLDER_IMP
+
+	EV_MENU_ITEM_HOLDER_IMP
 
 creation
 	make
@@ -28,6 +29,17 @@ feature -- Access
 
 	parent: EV_CONTAINER is
 			-- Parent of the popup.
+		do
+		end
+
+	count: INTEGER is
+			-- Number of direct children of the holder.
+		do
+		end
+
+	get_item (index: INTEGER): EV_ITEM is
+			-- Give the item of the list at the zero-base
+			-- `index'.
 		do
 		end
 
@@ -57,6 +69,11 @@ feature -- Element change
 
 	remove_item (item_imp: EV_MENU_ITEM_IMP) is
 			-- Add `item_imp' into container.
+		do
+		end
+
+	set_parent (par: EV_CONTAINER) is
+			-- Make `par' the new parent of the popup.
 		do
 		end
 

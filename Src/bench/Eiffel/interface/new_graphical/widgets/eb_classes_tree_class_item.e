@@ -74,13 +74,21 @@ feature -- Status setting
 				if not a_class.compiled then
 					set_pixmap (Pixmaps.Icon_read_only_class_gray)
 				else
-					set_pixmap (Pixmaps.Icon_read_only_class_color)
+					if a_class.compiled_class.is_deferred then
+						set_pixmap (Pixmaps.Icon_deferred_read_only_class_color)
+					else
+						set_pixmap (Pixmaps.Icon_read_only_class_color)
+					end
 				end
 			else
 				if not a_class.compiled then
 					set_pixmap (Pixmaps.Icon_class_symbol_gray)
 				else
-					set_pixmap (Pixmaps.Icon_class_symbol_color)
+					if a_class.compiled_class.is_deferred then
+						set_pixmap (Pixmaps.Icon_deferred_class_symbol_color)
+					else
+						set_pixmap (Pixmaps.Icon_class_symbol_color)
+					end
 				end
 				drop_actions.extend (~on_class_drop)
 --| FIXME XR: When clusters can be moved effectively, uncomment this line.

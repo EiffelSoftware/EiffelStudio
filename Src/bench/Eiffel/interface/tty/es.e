@@ -807,6 +807,13 @@ feature -- Update
 				else
 					create {EWB_PRECOMP} command.make (True)
 				end
+			elseif option.is_equal ("-metadata_cache_path") then
+				if current_option + 1 < argument_count then
+					current_option := current_option + 1
+					
+				else
+					option_error := True
+				end
 			else
 				process_special_options
 			end

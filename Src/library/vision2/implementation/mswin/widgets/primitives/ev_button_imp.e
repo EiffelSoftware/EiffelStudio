@@ -239,7 +239,7 @@ feature {NONE} -- WEL Implementation
 	on_bn_clicked is
 			-- When the button is pressed
 		do
-			interface.press_actions.call ([])
+			interface.select_actions.call ([])
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
@@ -324,6 +324,9 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.43  2000/03/23 18:20:53  brendel
+--| replaced obsolete call.
+--|
 --| Revision 1.42  2000/03/14 03:02:56  brendel
 --| Merged changed from WINDOWS_RESIZING_BRANCH.
 --|

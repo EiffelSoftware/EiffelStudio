@@ -131,7 +131,7 @@ feature -- Array optimization
 			then
 					-- The target of the message matches `array_desc'
 					-- Check the message
-				Result := check_message
+				Result := message.is_special_feature
 			end;
 			Result := Result or else
 				target.calls_special_features (array_desc) or else
@@ -161,9 +161,9 @@ feature -- Array optimization
 				opt_context := optimizer.optimization_context;
 				if opt_context.generated_array_desc.has (array_desc) then
 					access_area := True
-					optimize := check_message;
+					optimize := message.is_special_feature;
 				elseif opt_context.generated_offsets.has (array_desc) then
-					optimize := check_message;
+					optimize := message.is_special_feature;
 				end;
 			end;
 			if optimize then
@@ -200,12 +200,6 @@ feature -- Array optimization
 				message := message.optimized_byte_node
 				target := target.optimized_byte_node
 			end;
-		end;
-
-	check_message: BOOLEAN is
-			-- Check to see if the message is a special feature
-		do
-			Result := message.is_special_feature
 		end;
 
 feature -- Inlining

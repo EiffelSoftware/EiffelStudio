@@ -39,7 +39,7 @@ feature -- Status
 			-- Is Current a representation of a manifest string and
 			-- not of an identifer.
 
-feature {LACE_AST_FACTORY} -- Access
+feature {LACE_AST_FACTORY, LACE_PARSER_ROUTINES} -- Access
 
 	set_is_string is
 			-- Set `is_string' to `True'.

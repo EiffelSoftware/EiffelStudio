@@ -949,7 +949,7 @@ feature -- Class info
 			l_meth_token: INTEGER
 			l_sig: like method_sig
 			l_field_sig: like field_sig
-			l_type_token: INTEGER
+			l_type_field_token: INTEGER
 			l_class_token: INTEGER
 			l_name_ca: MD_CUSTOM_ATTRIBUTE
 			l_class_name: STRING
@@ -1009,11 +1009,11 @@ feature -- Class info
 				l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
 					ise_eiffel_derivation_type_token)
 				uni_string.set_string ("$$____type")
-				l_type_token := md_emit.define_field (uni_string, l_class_token,
+				l_type_field_token := md_emit.define_field (uni_string, l_class_token,
 					feature {MD_FIELD_ATTRIBUTES}.Family, l_field_sig)
 
 				if is_cls_compliant then
-					define_custom_attribute (l_type_token, cls_compliant_ctor_token,
+					define_custom_attribute (l_type_field_token, cls_compliant_ctor_token,
 						not_cls_compliant_ca)
 				end
 
@@ -1037,7 +1037,7 @@ feature -- Class info
 				start_new_body (l_meth_token)
 				generate_current
 				generate_argument (1)
-				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stfld, l_type_token)
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stfld, l_type_field_token)
 				generate_return
 				method_writer.write_current_body
 
@@ -1059,7 +1059,7 @@ feature -- Class info
 
 				start_new_body (l_meth_token)
 				generate_current
-				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldfld, l_type_token)
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldfld, l_type_field_token)
 				generate_return
 				method_writer.write_current_body
 			end

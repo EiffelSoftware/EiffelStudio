@@ -12,7 +12,7 @@ class
 inherit
 	WEL_CONTROL
 		redefine
-			process_notification
+			process_notification_info
 		end
 
 	WEL_TVS_CONSTANTS
@@ -31,6 +31,11 @@ inherit
 		end
 
 	WEL_TVGN_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_TVAF_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -152,7 +157,7 @@ feature -- Element change
 
 feature -- Notifications
 
-	on_tvn_begindrag is
+	on_tvn_begindrag (info: WEL_NM_TREE_VIEW) is
 			-- A drag-and-drop operation involving the left mouse
 			-- button is being initiated.
 		require
@@ -160,14 +165,14 @@ feature -- Notifications
 		do
 		end
 
-	on_tvn_beginlabeledit is
+	on_tvn_beginlabeledit (info: WEL_NM_TREE_VIEW) is
 			-- A label editing for an item has started.
 		require
 			exists: exists
 		do
 		end
 
-	on_tvn_beginrdrag is
+	on_tvn_beginrdrag (info: WEL_NM_TREE_VIEW) is
 			-- A drag-and-drop operation involving the right mouse
 			-- button is being initiated.
 		require
@@ -175,21 +180,21 @@ feature -- Notifications
 		do
 		end
 
-	on_tvn_deleteitem is
+	on_tvn_deleteitem (info: WEL_NM_TREE_VIEW) is
 			-- An item has been deleted.
 		require
 			exists: exists
 		do
 		end
 
-	on_tvn_endlabeledit is
+	on_tvn_endlabeledit (info: WEL_NM_TREE_VIEW) is
 			-- A label editing for an item has ended.
 		require
 			exists: exists
 		do
 		end
 
-	on_tvn_itemexpanded is
+	on_tvn_itemexpanded (info: WEL_NM_TREE_VIEW) is
 			-- a parent item's list of child items has expanded
 			-- or collapsed.
 		require
@@ -197,7 +202,7 @@ feature -- Notifications
 		do
 		end
 
-	on_tvn_itemexpanding is
+	on_tvn_itemexpanding (info: WEL_NM_TREE_VIEW) is
 			-- a parent item's list of child items is about to
 			-- expand or collapse.
 		require
@@ -205,7 +210,7 @@ feature -- Notifications
 		do
 		end
 
-	on_tvn_keydown is
+	on_tvn_keydown (info: WEL_NM_TREE_VIEW) is
 			-- The user pressed a key and the tree-view control 
 			-- has the input focus.
 		require
@@ -213,14 +218,14 @@ feature -- Notifications
 		do
 		end
 
-	on_tvn_selchanged is
+	on_tvn_selchanged (info: WEL_NM_TREE_VIEW) is
 			-- Selection has changed from one item to another.
 		require
 			exists: exists
 		do
 		end
 
-	on_tvn_selchanging is
+	on_tvn_selchanging (info: WEL_NM_TREE_VIEW) is
 			-- Selection is about to change from one item to
 			-- another.
 		require
@@ -230,32 +235,35 @@ feature -- Notifications
 
 feature {WEL_COMPOSITE_WINDOW} -- Implementation
 
-	process_notification (notification_code: INTEGER) is
+	process_notification_info (notification_info: WEL_NMHDR) is
 			-- Process a `notification_code' sent by Windows
 			-- through the Wm_notify message
+		local
+			tree_info: WEL_NM_TREE_VIEW
+			code: INTEGER
 		do
-			if notification_code = Tvn_begindrag then
-				on_tvn_begindrag
-			elseif notification_code = Tvn_beginlabeledit then
-				on_tvn_beginlabeledit
-			elseif notification_code = Tvn_beginrdrag then
-				on_tvn_beginrdrag
-			elseif notification_code = Tvn_deleteitem then
-				on_tvn_deleteitem
-			elseif notification_code = Tvn_endlabeledit then
-				on_tvn_endlabeledit
-			elseif notification_code = Tvn_itemexpanded then
-				on_tvn_itemexpanded
-			elseif notification_code = Tvn_itemexpanding then
-				on_tvn_itemexpanding
-			elseif notification_code = Tvn_keydown then
-				on_tvn_keydown
-			elseif notification_code = Tvn_selchanged then
-				on_tvn_selchanged
-			elseif notification_code = Tvn_selchanging then
-				on_tvn_selchanging
-			else
-				default_process_notification (notification_code)
+			!! tree_info.make_by_nmhdr (notification_info)
+			code := notification_info.code 
+			if code = Tvn_begindrag then
+				on_tvn_begindrag (tree_info)
+			elseif code = Tvn_beginlabeledit then
+				on_tvn_beginlabeledit (tree_info)
+			elseif code = Tvn_beginrdrag then
+				on_tvn_beginrdrag (tree_info)
+			elseif code = Tvn_deleteitem then
+				on_tvn_deleteitem (tree_info)
+			elseif code = Tvn_endlabeledit then
+				on_tvn_endlabeledit (tree_info)
+			elseif code = Tvn_itemexpanded then
+				on_tvn_itemexpanded (tree_info)
+			elseif code = Tvn_itemexpanding then
+				on_tvn_itemexpanding (tree_info)
+			elseif code = Tvn_keydown then
+				on_tvn_keydown (tree_info)
+			elseif code = Tvn_selchanged then
+				on_tvn_selchanged (tree_info)
+			elseif code = Tvn_selchanging then
+				on_tvn_selchanging (tree_info)
 			end
 		end
 

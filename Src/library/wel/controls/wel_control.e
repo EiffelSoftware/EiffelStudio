@@ -114,6 +114,13 @@ feature {WEL_COMPOSITE_WINDOW}
 			default_process_notification (notification_code)
 		end
 
+	process_notification_info (notification_info:WEL_NMHDR) is
+			-- Process a `notification_info' sent by Windows
+		require
+			exists: exists
+		do
+		end 
+
 feature {NONE} -- Implementation
 
 	set_default_window_procedure is

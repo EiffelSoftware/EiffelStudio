@@ -437,13 +437,13 @@ feature {NONE} -- Constants
 	empty_tuple: TUPLE is
 			-- Empty tuple to avoid too many TUPLE creation which can be slow.
 		once
-			create Result.make
+			create Result
 		end
 
 	string_tuple: TUPLE [STRING] is
 			-- Tuple that contain only a string object.
 		once
-			create Result.make
+			create Result
 		end
 
 	base_types: ARRAY [STRING] is

@@ -16,19 +16,19 @@ inherit
 			{NONE} menu_accelerator, menu_help_widget, menu_history, mnemonic,
 			mnemonic_char_set, is_popup_enabled, radio_behavior, is_working_area,
 			is_menu_bar, is_menu_popup, is_menu_option, is_menu_pulldown,
-			sub_menu, is_tear_off_enabled,
+			is_tear_off_enabled,
 			set_menu_accelerator, set_menu_help_widget, set_menu_history,
 			set_mnemonic, set_mnemonic_char_set, set_popup_enabled, 
-			set_radio_behavior, set_sub_menu,
-			set_tear_off_enabled
+			set_radio_behavior, set_tear_off_enabled
 		redefine
 			make
 		end
 
 creation
-	make
+	make,
+	make_from_existing
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
 			-- Create a motif work area.
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			parent := a_parent;
 			widget_name := a_name.to_c;
 			screen_object := xm_create_work_area (a_parent.screen_object, $widget_name, default_pointer, 0);
-			Mel_widgets.put (Current, screen_object);
+			Mel_widgets.add (Current);
 			set_default;
 			if do_manage then
 				manage

@@ -62,7 +62,7 @@ BEGIN
                     SS_SUNKEN,5,5,100,145
     EDITTEXT        Proxy_Stub_Input_Edit,115,135,170,15,ES_AUTOHSCROLL | 
                     WS_DISABLED
-    LTEXT           "Enter the path to the marshaller: ",Proxy_Stub_Static,
+    LTEXT           "Enter the path to the marshaler: ",Proxy_Stub_Static,
                     115,125,132,10
     PUSHBUTTON      "Browse",Browse_Button,290,135,50,14,WS_DISABLED
     PUSHBUTTON      "Help",Help_Button,290,160,50,14
@@ -72,14 +72,14 @@ BEGIN
     CONTROL         "Virtual Table, Universal Marshalling",
                     Virtual_Table_Universal_Radio,"Button",
                     BS_AUTORADIOBUTTON,135,90,130,10
-    CONTROL         "Virtual Table, Standard Marshalling (requires marshaller dll)",
+    CONTROL         "Virtual Table, Standard Marshalling (requires marshaler dll)",
                     Virtual_Table_Standard_Radio,"Button",BS_AUTORADIOBUTTON,
                     135,105,200,10
     LTEXT           "Clients can access components through either Automation or directly interface's virtual table.",
                     Marshalling_Static,115,10,220,20
     LTEXT           "How should clients access the selected component?",
                     Marshalling_Question_Static,115,60,171,10
-    LTEXT           "Marshalling defines how to pass data between components. Universal Marshalling uses the marshaller built into Windows, while Standard Marshalling uses a component-specific marshaller.",
+    LTEXT           "Marshalling defines how to pass data between components. Universal Marshalling uses the marshaler built into Windows, while Standard Marshalling uses a component-specific marshaler.",
                     Marshallin_Description_Static,115,30,220,25
 END
 
@@ -106,7 +106,7 @@ BEGIN
                     141,115,129,10
     LTEXT           "How should clients access the selected component?",
                     Marshalling_Question_Static,115,70,171,10
-    LTEXT           "Marshalling defines how to pass data between components. Universal Marshalling uses the marshaller built into Windows, while Standard Marshalling uses a component-specific marshaller.",
+    LTEXT           "Marshalling defines how to pass data between components. Universal Marshalling uses the marshaler built into Windows, while Standard Marshalling uses a component-specific marshaler.",
                     Marshallin_Description_Static,115,30,220,30
 END
 
@@ -131,7 +131,7 @@ BEGIN
                     WS_TABSTOP,140,50,95,10
     CONTROL         "Extra information?",Information_Check,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,140,65,95,10
-    LTEXT           "By default, the wizard will stop on compilation error.",
+    LTEXT           "By default the wizard will stop on compilation error.",
                     Output2_Static,120,85,220,10
     CONTROL         "Do not stop on compilation error",Stop_check,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,140,100,120,10
@@ -155,13 +155,14 @@ BEGIN
     LTEXT           "Do you want to generate:",Code_Type_Static,120,5,95,10
     LTEXT           "What is the type of the component executable?",
                     Component_Type_Static,120,55,160,10
-    CONTROL         "Do not compile the Eiffel code",
+    CONTROL         "Do not compile the Eiffel code.",
                     Eiffel_Code_Compilation_Check,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,135,135,125,10
+                    WS_TABSTOP,135,117,125,10
     LTEXT           "By default the wizard will compile the generated C and Eiffel code",
                     Eiffel_Code_Compilation_Static,120,105,208,10
-    CONTROL         "Do not compile the C code",C_Code_Compilation_Check,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,135,120,125,10
+    CONTROL         "Do not compile the generated C code in Clib directories.",
+                    C_Code_Compilation_Check,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,135,130,194,10
     CONTROL         "Client code to access an existing component?",
                     Client_radio,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,
                     135,20,165,13
@@ -248,13 +249,13 @@ END
 
 WIZARD_ABOUT_DIALOG DIALOG DISCARDABLE  0, 0, 379, 201
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "About EiffelCOM Release 4.5 Build 3"
+CAPTION "About EiffelCOM Wizard"
 FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,161,164,50,14
     CONTROL         127,IDC_STATIC,"Static",SS_BITMAP | SS_CENTERIMAGE | 
                     SS_SUNKEN,7,7,220,137
-    LTEXT           "EiffelCOM 4.5 Build 3 \n\nCopyright (C) 1999-2000\nInteractive Software Engineering Inc. \n\n ISE Building, 2nd floor \n 270 Storke Road, Goleta, \nCA 93117 USA \n\nTel: (805)685-1006   Fax: (805)695-6869 \nEmail: <info@eiffel.com> \n Webpage: http://www.eiffel.com \n",
+    LTEXT           "",
                     ABOUT_STATIC,237,7,135,133
 END
 
@@ -275,6 +276,36 @@ BEGIN
                     Destination_Folder_Input_Static,116,58,100,8
     LTEXT           "The destination folder is the folder where the wizard will place all generated files.",
                     Destination_Folder_Static,115,22,175,16
+END
+
+IDD_DIALOG2 DIALOG DISCARDABLE  0, 0, 186, 95
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,129,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,129,24,50,14
+END
+
+Wizard_Backup_Dialog DIALOG DISCARDABLE  0, 0, 347, 181
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Backup files."
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "&Next >",IDOK,180,160,50,14
+    PUSHBUTTON      "< &Back",ID_BACK,130,160,50,14
+    CONTROL         117,Wizard4_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
+                    SS_SUNKEN,5,5,100,145
+    PUSHBUTTON      "Help",Help_Button,290,160,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,235,160,50,14
+    LTEXT           "By default the wizard will not empty the destination folder before starting the code generation. If you chose to clean the destination folder, all existing files will be lost.",
+                    Backup_Static,120,10,208,33
+    CONTROL         "Clean destination folder.",Clean_Check,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,140,50,175,10
+    LTEXT           "By default the wizard will backup existing files.",
+                    Backup2_Static,120,85,220,10
+    CONTROL         "Do not backup.",Backup_check,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,140,100,120,10
 END
 
 
@@ -371,6 +402,22 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 176
     END
+
+    IDD_DIALOG2, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 88
+    END
+
+    Wizard_Backup_Dialog, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 340
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 174
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -431,7 +478,7 @@ Splash_bitmap           BITMAP  DISCARDABLE     "WizardSplash.bmp"
 
 VS_VERSION_INFO VERSIONINFO
  FILEVERSION 1,0,0,1
- PRODUCTVERSION 1,0,0,2
+ PRODUCTVERSION 1,0,0,3
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -456,7 +503,7 @@ BEGIN
             VALUE "OriginalFilename", "Wizard.rc\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "Interactive Software Engineering Inc. EiffelCOM Wizard Application\0"
-            VALUE "ProductVersion", "1, 0, 0, 2\0"
+            VALUE "ProductVersion", "1, 0, 0, 3\0"
             VALUE "SpecialBuild", "\0"
         END
     END

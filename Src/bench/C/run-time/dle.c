@@ -518,7 +518,7 @@ if (body_id >= 0)
 #endif
 }
 
-rt_public EIF_REFERENCE dle_instance(int dtype, EIF_REFERENCE arg)
+rt_public EIF_REFERENCE dle_instance(EIF_CONTEXT int dtype, EIF_REFERENCE arg) /* %%ss mt last */
 {
 	/* Make an DLE object of dynamic type `dtype', initialized by 
 	 * procedure `make' of its base class, using `arg' as argument.

@@ -153,7 +153,7 @@ extern uint32 *onceadd(uint32 id);		/* Add once body_id to list */
 extern uint32 *onceitem(register uint32 id);		/* Item with body_id in list */
 
 /* Once result evaluation */
-extern struct item *docall(register uint32 body_id, register int arg_num);	/* Evaluate result of already called once func*/
+extern struct item *docall(EIF_CONTEXT register uint32 body_id, register int arg_num);	/* Evaluate result of already called once func*/ /* %%ss mt !last caller */
 
 /* Downloading byte code from compiler */
 extern int dmake_room(int new);		/* Pre-extend melting table */

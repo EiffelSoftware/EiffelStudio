@@ -250,6 +250,61 @@ end
 		<heading>
 			<size>2</size>Keywords
 		</heading>
+		<paragraph>
+			<table>
+				<row>
+					<cell><code><keyword>adapt</keyword></code></cell>
+					<cell><code><keyword>all</keyword></code></cell>
+					<cell><code><keyword>assertion</keyword></code></cell>
+					<cell><code><keyword>c</keyword></code></cell>
+					<cell><code><keyword>check</keyword></code></cell>
+					<cell><code><keyword>cluster</keyword></code></cell>
+				</row>
+				<row>
+					<cell><code><keyword>colon</keyword></code></cell>
+					<cell><code><keyword>comma</keyword></code></cell>
+					<cell><code><keyword>creation</keyword></code></cell>
+					<cell><code><keyword>debug</keyword></code></cell>
+					<cell><code><keyword>default</keyword></code></cell>
+					<cell><code><keyword>end</keyword></code></cell>
+				</row>
+								<row>
+					<cell><code><keyword>ensure</keyword></code></cell>
+					<cell><code><keyword>exclude</keyword></code></cell>
+					<cell><code><keyword>executable</keyword></code></cell>
+					<cell><code><keyword>export</keyword></code></cell>
+					<cell><code><keyword>external</keyword></code></cell>
+					<cell><code><keyword>generate</keyword></code></cell>
+				</row>
+				<row>
+					<cell><code><keyword>identifier</keyword></code></cell>
+					<cell><code><keyword>ignore</keyword></code></cell>
+					<cell><code><keyword>include</keyword></code></cell>
+					<cell><code><keyword>include_path</keyword></code></cell>
+					<cell><code><keyword>invariant</keyword></code></cell>
+					<cell><code><keyword>loop</keyword></code></cell>
+				</row>				<row>
+					<cell><code><keyword>make</keyword></code></cell>
+					<cell><code><keyword>no</keyword></code></cell>
+					<cell><code><keyword>object</keyword></code></cell>
+					<cell><code><keyword>optimize</keyword></code></cell>
+					<cell><code><keyword>option</keyword></code></cell>
+					<cell><code><keyword>precompiled</keyword></code></cell>
+				</row>
+				<row>
+					<cell><code><keyword>rename</keyword></code></cell>
+					<cell><code><keyword>require</keyword></code></cell>
+					<cell><code><keyword>root</keyword></code></cell>
+					<cell><code><keyword>system</keyword></code></cell>
+					<cell><code><keyword>trace</keyword></code></cell>
+					<cell><code><keyword>use</keyword></code></cell>
+				</row>
+				<row>
+					<cell><code><keyword>visible</keyword></code></cell>
+					<cell><code><keyword>yes</keyword></code></cell>
+				</row>
+			</table>
+		</paragraph>
 		<paragraph>Introduced with ISE EiffelBench 4.5 the keyword `
 			<code>
 				<keyword>all</keyword>

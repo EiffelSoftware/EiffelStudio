@@ -18,7 +18,7 @@
 				<label>Conventions</label>
 			</link>, provides you with an understanding of Eiffel terminology, conventions , and how they work with .NET.
 		</paragraph>
-		<paragraph>The remaining sections of this section are a reference for the Eiffel for.NET language. It is not a complete reference, though. Rather, it is intended to help you with the tasks that Eiffel programmers commonly encounter.</paragraph>
+		<paragraph>The remaining sections of this section are a reference for the Eiffel for .NET language. It is not a complete reference, though. Rather, it is intended to help you with the tasks that Eiffel programmers commonly encounter.</paragraph>
 		<list ordered="false">
 			<item>
 				<link>

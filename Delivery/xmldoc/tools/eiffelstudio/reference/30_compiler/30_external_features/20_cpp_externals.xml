@@ -92,7 +92,7 @@
 
     User_file_name == '%"' Manifest string '%"'
 
-    System_file_name == "<" Manifest_string ">"
+    System_file_name == "&lt;" Manifest_string "&gt;"
 
     Signature ==  "(" Type_list ")" [Result_type]
 
@@ -215,12 +215,12 @@ This scheme, however, is often inconvenient because it forces the Eiffel side to
 				<bold>-NE</bold>: do not apply the C preprocessor to the file.
 			</item>
 			<item>
-				<bold>-p</bold>
+				<bold>-p</bold> 
 				<italic>directories</italic>: use
 				<italic>directories</italic> as includepath.
 			</item>
 			<item>
-				<bold>-c</bold>
+				<bold>-c</bold> 
 				<italic>compiler</italic>: use
 				<italic>compiler</italic> as the C++ compiler.
 			</item>

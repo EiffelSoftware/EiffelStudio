@@ -19,11 +19,11 @@
 		<paragraph>Eiffel 
 			<link>
 				<url></url>
-				<label>FIXME</label>
-			</link> are features of a class which can be used to initialize instances. Classes can havemore than one creation procedure available. However, each creation proceduremust ensure that the 
+				<label>creation procedures</label>
+			</link> are features of a class which can be used to initialize instances. Classes can have more than one creation procedure available. However, each creation procedure must ensure that the 
 			<link>
 				<url></url>
-				<label>FIXME</label>
+				<label>class invariant</label>
 			</link> holds when the procedure completes execution. In other words, the creation procedure is there to initialize a newly created instance, and the class invariant guarantees that a newly initialized instance is actually valid. 
 		</paragraph>
 		<paragraph>There is nothing special about creation procedures themselves, they are just ordinary procedures (although by convention their names usually begin with the word "
@@ -66,7 +66,7 @@
 		</paragraph>
 		<paragraph>The .NET type 
 			<code>
-				<class_name>System. Drawing. Size</class_name>
+				<class_name>System.Drawing.Size</class_name>
 			</code> has an overloaded constructor with two versions. In the 
 			<code>
 				<cluster_name>System.Drawing</cluster_name>

@@ -1,0 +1,378 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>C++ externals</TITLE>
+		<META NAME="MS-HKWD" CONTENT="C++ externals">
+		<META NAME="MS-HKWD" CONTENT="externals, C++">
+		<LINK REL=Stylesheet HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>C++ externals</H1>
+        <h2>Introduction</h2>
+        <p>Before making C++ calls in EiffelStudio, you may want to learn the
+        basics of making <a href="10_c_externals.html">C calls</a>, since these basics are not repeated here but
+        they might be useful for C++ users as well and are necessary to fully
+        benefit from this document.
+        <p>The C++ interface and Legacy++ are part of all versions of ISE Eiffel
+        starting with version 4.1.</p>
+        <h2>Overview</h2>
+        <p>Eiffel software must interact with software written in other
+        languages. In this document you will learn about how to incorporate C++
+        classes in your Eiffel software.
+        <p>The C++/Eiffel interface offers the following mechanisms:
+        <ul>
+          <li>You can create instances of C++ classes from Eiffel, using the C++
+            &quot;constructor&quot; of your choice.
+          <li>You can apply to these objects all the corresponding operations
+            from the C++ class: executing functions (&quot;methods&quot;),
+            accessing data members, executing destructors.
+          <li>You can use the Legacy++ tool to produce an Eiffel &quot;wrapper
+            class&quot; encapsulating all the features of a C++ class, so that
+            the result will look to the rest of the Eiffel software as if it had
+            been written in Eiffel.</li>
+        </ul>
+        <p>The discussion concentrates on using C++ software from Eiffel. In the
+        other direction, you can use the
+        Cecil library (C-Eiffel Call-In Library) described in chapter 24 of <a href="http://www.eiffel.com/doc/eiffel/books.html"><i>Eiffel:
+        The Language</i></a> with important complements in the <a href="../40_advanced_topics/50_cecil_library/index.html">Cecil manual</a> and at ftp://ftp.eiffel.com.
+        <h2>Syntax specification</h2>
+        <p>In the following specification, the syntax for <font color="#aa00ff">External</font>
+        and <font color="#aa00ff">External_name</font> is retained unchanged
+        from <i>Eiffel: The Language</i>, where <font color="#aa00ff">Language_name</font>
+        is defined simply as <font color="#aa00ff">Manifest_string</font>; the
+        rest covers the additional facilities.<font color="#aa00ff">
+        <pre>    External == external Language_name [External_name]
+
+    Language_name ==
+            '&quot;'
+            Basic_language_name
+            [Special_external_declaration]
+            [Signature]
+            [Include_files]
+                    '&quot;'
+
+    Basic_language_name == &quot;C&quot; | &quot;C++&quot;
+
+    Special_external_declaration == &quot;[&quot; Special_feature &quot;]&quot;
+
+    Special_feature == Special_C_feature | Special_C++_feature
+
+    Special_C_feature == <font color="#ff0000">... See appendix E</font></font><font color="#ff0000"> of <i>Eiffel: The Language</i></font><font color="#aa00ff"><font color="#ff0000">...</font>
+
+    Special_C++_feature ==
+            Member_function_call|
+            Static_function_call |
+            Object_creation |
+            Object_deletion |
+            Data_member_access |
+
+    Member_function_call == C++_Class
+
+    C++_Class == Class_name File_name
+
+    Class_name == Identifier
+
+    Static_function_call == <b><font color="#000080">static</font></b> C++_Class
+
+    Object_creation == <b><font color="#000080">new</font></b> C++_Class
+
+    Object_deletion == <b><font color="#000080">delete</font></b> C++_Class
+
+    Data_member_access == <b><font color="#000080">data_member</font></b> C++_Class
+
+                <font color="#ff0000">-- The remaining elements are repeated</font>
+                <font color="#ff0000">-- from the C interface specification (page 291 in <i>Eiffel: The Environment</i>).</font> 
+
+    File_name ==  User_file_name | System_file_name
+
+    User_file_name == '%&quot;' Manifest string '%&quot;'
+
+    System_file_name == &quot;&lt;&quot; Manifest_string &quot;&gt;&quot;
+
+    Signature ==  &quot;(&quot; Type_list &quot;)&quot; [Result_type]
+
+    Type_list ==  {Type &quot;,&quot; ...}
+
+    Result_type ==  &quot;:&quot; Type
+
+    Include_files ==  &quot;|&quot; File_list
+
+    File_list ==  {File_name &quot;,&quot; ...}
+
+    External_name ==  <b><font color="#000080">alias</font></b> Manifest_string
+</pre>
+        </font>
+        <p>As with the C extensions of the previous appendix, the syntax
+        description conventions are those of <i>Eiffel: The Language</i>. <font color="#aa00ff">==</font> means
+        &quot;is defined as&quot;. The vertical bar <font color="#aa00ff">|</font>
+        separates alternative choices, such as the three possibilities for
+        Special_feature. The brackets <font color="#aa00ff">[...]</font> enclose
+        optional components; for example a <font color="#aa00ff">Language_name</font>
+        is made of required quotes, a required Basic_language_name and three
+        further components, any or all of which may be absent. The notation <font color="#aa00ff">{Element
+        Separator ...}</font> means: 0 or more occurrences
+        (&quot;specimens&quot;) of <font color="#aa00ff">Element</font>
+        separated, if more than one, by <font color="#aa00ff">Separator</font>.
+        <p>Several of the symbols of the syntax notation, such as the brackets
+        or the vertical bar, also appear in the language; to avoid any confusion
+        they are given in double quotes. For example the specification for <font color="#aa00ff">Include_files</font>
+        begins with <font color="#aa00ff">&quot;|&quot;</font> to indicate that
+        an <font color="#aa00ff">Include_files</font> part starts with a
+        vertical bar. Single quotes may be used instead of double quotes when
+        one of the quoted characters is itself a double quote; for example <font color="#aa00ff">'%&quot;'</font>
+        appearing in the production for <font color="#aa00ff">User_file_name</font>
+        denotes the percent character followed by the double quote character.
+        Special words such as <b><font color="#000080">static</font></b> in bold
+        italics stand for themselves, unquoted.
+        <h2>Available possibilities</h2>
+        <h3><i>Processing C++ features</i></h3>
+        <p>A <font color="#aa00ff">Special_C++_feature</font>, if present,
+        indicates one of the following, all illustrated by examples in the next
+        sections:
+        <ul>
+          <li>If the special feature's declaration simply starts with a C++
+            class name, followed by the associated file name, it indicates that
+            the Eiffel feature will call a C++ member function (also known as a
+            &quot;method&quot;) from that class. The name of the member function
+            is by default the same as the name of the Eiffel feature; as usual,
+            you can specify a different name through the alias clause of the
+            external declaration.
+          <li>If the declaration starts with <b><font color="#000080">static</font></b>,
+            it indicates a call to a C++ static function.
+          <li>If the declaration starts with <b><font color="#000080">new</font></b>,
+            it indicates a call to one of the constructors in the C++ class,
+            which will create a new instance of that class and apply to it the
+            corresponding constructor function.
+          <li>If the declaration starts with <b><font color="#000080">delete</font></b>,
+            it indicates a call to a destructor from the C++ class. In this case
+            the Eiffel class may inherit <a href="/library/base/reference/kernel/memory.e"><span class="eclass">MEMORY</span></a> and redefine the
+            dispose procedure to execute the destructor operations whenever the
+            Eiffel objects are garbage-collected.
+          <li>If the declaration starts with <b><font color="#000080">data_member</font></b>,
+            it indicates access to a data member (attribute in Eiffel
+            terminology) from the C++ class.</li>
+        </ul>
+        <p>The rest of the possible components are the same as in the C
+        interface: <font color="#aa00ff">Signature</font> to specify types for
+        arguments and results; possible <font color="#aa00ff">Include</font>
+        file.
+        <h3><i>Extra argument</i></h3>
+        <p>For a non-static C++ member function or destructor, the corresponding
+        Eiffel feature should include an extra argument of type POINTER, at the
+        first position. This argument represents the C++ object to which the
+        function will be applied.
+        <p>For example, a C++ function
+        <pre>    void add(int new_int);</pre>
+        <p>should have the Eiffel counterpart
+        <CODE><pre>	<span class="efeature">cpp_add</span> (obj: <span class="eclass">POINTER</span>; new_int: <span class="eclass">INTEGER</span>) <span class="ekeyword">is</span>
+		<span class="ecomment">-- Encapsulation of member function add.</span>
+	<span class="ekeyword">external</span>
+		&quot;C++ [IntArray %&quot;intarray.h%&quot;] (IntArray *, int)&quot;
+	<span class="ekeyword">end</span></pre>
+        </code>
+        This scheme, however, is often inconvenient because it forces the Eiffel
+        side to work on objects in a non-object-oriented way. (The
+        object-oriented way treats the current object, within a class, as
+        implicit.) A better approach, used by Legacy++, is to make a feature
+        such as cpp_add secret, and to export a feature whose signature
+        corresponds to that of the original C++ function, with no extra object
+        argument; that feature will use a secret attribute object_ptr to access
+        the object. In the example this will give the feature
+        <CODE><pre>	<span class="efeature">add</span> (new_int: <span class="eclass">INTEGER</span>) <span class="ekeyword">is</span>
+		<span class="ecomment">-- Encapsulation of member function add.</span>
+	<span class="ekeyword">do</span>
+		<span class="efeature">cpp_add</span> (object_ptr, new_int)
+	<span class="ekeyword">end</span></pre>
+        </code>
+        <p>where <i>object_ptr</i> is a secret attribute of type <a href="/library/base/reference/kernel/pointer.html"><span class="eclass">POINTER</span></a>,
+        initialized by the creation procedures of the class. To the Eiffel
+        developer, add looks like a normal object-oriented feature, which takes
+        only the expected argument. Further examples appear below. This
+        technique only works of course when the C++ object is implicit in the
+        context of the Eiffel class.
+        <p>There is no need for an extra argument in the case of static member
+        functions, constructors and data members.
+        <h2>Wrapping C++ classes: Legacy++</h2>
+        <p>Before taking a look at examples of the various facilities mentioned,
+        it is useful to consider the tool that will help you, in many cases,
+        avoid worrying about their details.
+        <h3><i>The role of Legacy++</i></h3>
+        <p>Often you will want to provide an Eiffel encapsulation of all the
+        facilities -- member functions, static functions, constructors,
+        destructors, data members -- of a C++ class. This means producing an
+        Eiffel class that will provide an Eiffel feature for each one of these
+        C++ facilities, using external declarations based on the mechanisms
+        listed in the preceding section.
+        <p>Rather than writing these external declarations and the class
+        structure manually, you can use the Legacy++ tool to produce the Eiffel
+        class automatically from the C++ class.
+        <h3><i>Calling Legacy++</i></h3>
+        <p>Legacy++ is called with an argument denoting a <i>.h</i> file that
+        must contain C++ code: one or more classes and structure declarations.
+        It will translate these declarations into Eiffel wrapper classes.
+        <p>The following options are available:
+        <ul>
+          <li><b>-E</b>: apply the C preprocessor to the file, so that it will
+            process #include, #define, #ifdef and other preprocessor directives.
+            This is in fact the default, so that you do not need to specify -E
+            explicitly (see next option).
+          <li><b>-NE</b>: do not apply the C preprocessor to the file.
+          <li><b>-p </b><i>directories</i>: use <i>directories</i> as include
+            path.
+          <li><b>-c</b><i>compiler</i>: use <i>compiler</i> as the C++ compiler.
+          <li><b>-g</b>: treat the C++ code as being intended for the GNU C++
+            compiler.</li>
+        </ul>
+        <h3><i>Result of applying Legacy++</i></h3>
+        <p>Running Legacy++ on a C++ file will produce the corresponding Eiffel
+        classes. Legacy++ processes not only C++ classes but also C++ &quot;structs&quot;;
+        in both cases it will generate an Eiffel class.
+        <p>Legacy++ knows about default specifiers: public for structs, private
+        for classes.
+        <p>Legacy++ will generate Eiffel features for member functions (static
+        or not).
+        <p>It will also handle any constructors and destructors given in the C++
+        code, yielding the corresponding Eiffel creation procedures. If there is
+        no explicit constructor, it will produce a creation procedure with no arguments
+        and an empty body.
+        <p>For any non-static member function or destructor, Legacy++ will
+        generate a secret feature with an extra argument representing the
+        object, as explained in the preceding section in this page. It will
+        also produce a public feature with the same number of arguments as the
+        C++ function, relying on a call to the secret feature, as illustrated
+        for add and cpp_add above.
+        <p>The char* type is translated into <a href="/library/base/reference/kernel/string.html"><span class="eclass">STRING</span></a>. Pointer types, as
+        well as reference types corresponding to classes and types that Legacy++
+        has processed, will be translated into <a href="/library/base/reference/kernel/pointer.html"><span class="eclass">POINTER</span></a>. Other types will
+        yield the type <span class="eclass">UNRESOLVED_TYPE</span>.
+        <h3><i>Legacy++ limitations</i></h3>
+        <p>It is up to you to supply Eiffel equivalents of all the needed types.
+        If Legacy++ encounters the name of a C++ class or type that is does not
+        know -- i.e. it is neither a predefined type nor a previously translated
+        class -- it will use the Eiffel type name <span class="eclass">UNRESOLVED_TYPE</span>. If you
+        do not change that type in the generated class, the Eiffel compiler will
+        produce an error (unknown class) at degree 5.
+        <p>Legacy++ does not handle inline function declarations.
+        <p>Legacy++ makes no effort to understand the C++ inheritance structure.
+        <p>More generally, given the differences in the semantic models of C++
+        and Eiffel, Legacy++ can only perform the basic Eiffel wrapping of a C++
+        class, rather than a full translation. You should always inspect the
+        result and be prepared to adapt it manually.
+        <p>Legacy++'s contribution is to take care of the bulk of the work, in
+        particular the tedious and repetitive parts. The final details are left
+        to the Eiffel software developer.
+        <h2>Example</h2>
+        <p>Consider the following C++ class, which has an example of every kind
+        of facility that one may wish to access from the Eiffel side:
+        <pre>    class IntArray
+            {
+            public:
+                IntArray(int size);
+                ~IntArray();
+                void output();
+                void add(int new_int);
+                static char * type();
+
+            protected:
+                int *_integers;
+            };
+</pre>
+        <p>Here is the result of applying Legacy++ to that class, which will
+        serve as an illustration of both the C++ interface mechanisms and
+        Legacy++:
+        <pre><span class="ekeyword">indexing</span>
+    <span class="ekeyword">description</span>: &quot;Eiffel encapsulation of C++ class IntArray&quot;;
+
+    <span class="ekeyword">date</span>: &quot;$Date$&quot;;
+    <span class="ekeyword">revision</span>: &quot;$Revision$&quot;
+
+<span class="ekeyword">class</span>
+    <span class="eclass">INTARRAY</span>
+
+<span class="ekeyword">inherit</span>
+    <span class="eclass">MEMORY</span>
+        <span class="ekeyword">redefine</span>
+            <span class="efeature">dispose</span>
+        <span class="ekeyword">end</span>
+
+<span class="ekeyword">creation</span>
+    <span class="efeature">make</span>
+
+<span class="ekeyword">feature</span> <span class="ecomment">-- Initialization</span>
+    <span class="efeature">make</span> (size: <span class="eclass">INTEGER</span>) <span class="ekeyword">is</span>
+            <span class="ecomment">-- Create Eiffel and C++ objects.</span>
+        <span class="ekeyword">do</span>
+            <span class="efeature">object_ptr</span> := <span class="efeature">cpp_new</span> (size)
+        <span class="ekeyword">end</span>
+
+<span class="ekeyword">feature</span> <span class="ecomment">-- Removal</span>
+    <span class="efeature">dispose</span> <span class="ekeyword">is</span>
+            <span class="ecomment">-- Delete C++ object.</span>
+        <span class="ekeyword">do</span>
+            <span class="efeature">cpp_delete</span> (<span class="efeature">object_ptr</span>)
+        <span class="ekeyword">end</span>
+
+<span class="ekeyword">feature</span>
+    <span class="efeature">output</span> <span class="ekeyword">is</span>
+            <span class="ecomment">-- Call C++ counterpart.</span>
+        <span class="ekeyword">do</span>
+            <span class="efeature">cpp_output</span> (<span class="efeature">object_ptr</span>)
+        <span class="ekeyword">end</span>
+
+    <span class="efeature">add</span> (new_int: <span class="eclass">INTEGER</span>) <span class="ekeyword">is</span>
+            <span class="ecomment">-- Call C++ counterpart.</span>
+        <span class="ekeyword">do</span>
+            <span class="efeature">cpp_add</span> (<span class="efeature">object_ptr</span>, new_int)
+        <span class="ekeyword">end</span>
+
+<span class="ekeyword">feature</span> {<span class="eclass">INTARRAY</span>}
+    <span class="efeature">underscore_integers</span>: <span class="eclass">POINTER</span> <span class="ekeyword">is</span>
+            <span class="ecomment">-- Value of corresponding C++ data member.</span>
+        <span class="ekeyword">do</span>
+            <span class="ekeyword">Result</span> := <span class="efeature">underscore_integers</span> (<span class="efeature">object_ptr</span>)
+        <span class="ekeyword">end</span>
+
+<span class="ekeyword">feature</span> {NONE} <span class="ekeyword">-- Externals</span>
+    <span class="efeature">cpp_new</span> (size: <span class="eclass">INTEGER</span>): <span class="eclass">POINTER</span> <span class="ekeyword">is</span>
+            <span class="ecomment">-- Call single constructor of C++ class.</span>
+        <span class="ekeyword">external</span>
+            &quot;C++ [new IntArray %&quot;INTARRAY.H%&quot;] (EIF_INTEGER)&quot;
+        <span class="ekeyword">end</span>
+
+    <span class="efeature">cpp_delete</span> (cpp_obj: <span class="eclass">POINTER</span>) <span class="ekeyword">is</span>
+            <span class="ecomment">-- Call C++ destructor on C++ object.</span>
+        <span class="ekeyword">external</span>
+            &quot;C++ [delete IntArray %&quot;INTARRAY.H%&quot;] ()&quot;
+        <span class="ekeyword">end</span>
+
+    <span class="efeature">cpp_output</span> (cpp_obj: <span class="eclass">POINTER</span>) <span class="ekeyword">is</span>
+            <span class="ecomment">-- Call C++ member function.</span>
+        <span class="ekeyword">external</span>
+            &quot;C++ [IntArray %&quot;INTARRAY.H%&quot;] ()&quot;
+        <span class="ekeyword">alias</span>
+            &quot;output&quot;
+        <span class="ekeyword">end</span>
+
+    <span class="efeature">cpp_add</span> (cpp_obj: <span class="eclass">POINTER</span>; new_int: <span class="eclass">INTEGER</span>) <span class="ekeyword">is</span>
+            <span class="ecomment">-- Call C++ member function.</span>
+        <span class="ekeyword">external</span>
+            &quot;C++ [IntArray %&quot;INTARRAY.H%&quot;] (EIF_INTEGER)&quot;
+        <span class="ekeyword">alias</span>
+            &quot;add&quot;
+        <span class="ekeyword">end</span>
+
+    <span class="efeature">cpp_underscore_integers</span> (cpp_obj: <span class="eclass">POINTER</span>): <span class="eclass">POINTER</span> <span class="ekeyword">is</span>
+            <span class="ecomment">-- Value of C++ data member</span>
+        <span class="ekeyword">external</span>
+            &quot;C++ [data_member IntArray %&quot;INTARRAY.H%&quot;]: EIF_POINTER&quot;
+        <span class="ekeyword">alias</span>
+            &quot;_integers&quot;
+        <span class="ekeyword">end</span>
+
+<span class="ekeyword">feature</span> {NONE} <span class="ecomment">-- Implementation</span>
+    <span class="efeature">object_ptr</span>: <span class="eclass">POINTER</span>
+
+<span class="ekeyword">end</span> <span class="ecomment">-- class INTARRAY</span></pre>
+	</BODY>
+</HTML>

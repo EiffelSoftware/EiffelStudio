@@ -1,0 +1,288 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>C externals</TITLE>
+		<META NAME="MS-HKWD" CONTENT="C externals">
+		<META NAME="MS-HKWD" CONTENT="externals, C">
+		<LINK REL=Stylesheet HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>C externals</H1>
+       <h2>General consideration</h2>
+       <p>As ISE's technology relies heavily on the use of a C/C++ ANSI
+        compiler, you have to be sure to always put the correct signature of an
+        external C/C++ routine. If it was not the case, the C compilation of
+        your system could fail. Most of the time a C compiler is more
+        comprehensive than a C++ compiler and most type errors won't cause you
+        any harm, but C++ compilers are not as lax as C compilers and they will
+        mostly generate errors.</p>
+        <p>The section concerning <a href="#macros">Macros</a> and <a href="#structs">Structs</a>
+        are also available for C++, i.e. if the macro or the struct is defined
+        in a C++ header file.</p>
+        <h2><a name="C">C routines</a></h2>
+        <p>You can encapsulate routines that are defined in a C header file. We
+        will take some examples and will show you how to write wrappers in
+        Eiffel.</p>
+        <p>If in a header file called `my_header.h', you have the following
+        declaration:</p>
+        <center>
+        <table bgColor="#ffffe6" border="0">
+          <tbody>
+            <tr>
+              <td width="100%">
+                <pre>		/* Routine with no parameter */
+	extern void no_param(void);
+
+		/* Routine with one parameter */
+	extern void one_param(int j);
+	
+		/* Routine returning a value with no parameter */
+	extern size_t no_param_return(void);
+	
+		/* Routine returning a value with one parameter */
+	extern size_t one_param_return(FILE *f);</pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </center>
+        <p>Here is the corresponding Eiffel code:</p>
+        <center>
+        <table bgColor="#ffffe6" border="0">
+          <tbody>
+            <tr>
+              <td width="100%">
+                <pre>	<span class="efeature">c_no_param</span> <span class="ekeyword">is</span>
+			<span class="ecomment">-- Encapsulation of a C routine with no parameter.</span>
+		<span class="ekeyword">external</span>
+			&quot;C | %&quot;my_header.h%&quot;&quot;
+		<span class="ekeyword">alias</span>
+			&quot;no_param&quot;
+		<span class="ekeyword">end</span>
+
+	<span class="efeature">c_one_param</span> (i: <span class="eclass">INTEGER</span>) <span class="ekeyword">is</span>
+			<span class="ecomment">-- Encapsulation of a C routine with one parameter.</span>
+		<span class="ekeyword">external</span>
+			&quot;C (int) | %&quot;my_header.h%&quot;&quot;
+		<span class="ekeyword">alias</span>
+			&quot;one_param&quot;
+		<span class="ekeyword">end</span>
+
+	<span class="efeature">c_no_param_return</span>: <span class="eclass">INTEGER</span> <span class="ekeyword">is</span>
+			<span class="ecomment">-- Encapsulation of a C routine with no parameter</span>
+			<span class="ecomment">-- returning an INTEGER</span>
+		<span class="ekeyword">external</span>
+			&quot;C (): EIF_INTEGER| %&quot;my_header.h%&quot;&quot;
+		<span class="ekeyword">alias</span>
+			&quot;no_param_return&quot;
+		<span class="ekeyword">end</span>
+
+	<span class="efeature">c_one_param_return</span> (p: <span class="eclass">POINTER</span>): <span class="eclass">INTEGER</span> <span class="ekeyword">is</span>
+			<span class="ecomment">-- Encapsulation of a C routine with one parameter</span>
+			<span class="ecomment">-- returning an INTEGER</span>
+		<span class="ekeyword">external</span>
+			&quot;C (FILE *): EIF_INTEGER| %&quot;my_header.h%&quot;&quot;
+		<span class="ekeyword">alias</span>
+			&quot;one_param_return&quot;
+		<span class="ekeyword">end</span></pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </center>
+        <h2><a name="macros">Macros</a></h2>
+        <p>If in a header file called `my_header.h', you have the following
+        declaration:</p>
+        <center>
+        <table bgColor="#ffffe6" border="0">
+          <tbody>
+            <tr>
+              <td width="100%">
+                <pre>		/* Predefined constants */
+	#define ID_MENU				128
+	#define ID_MENU_CHARACTER	'c'
+    
+		/* Access the `i'-th element of `a' where `a'
+		 * is an array of EIF_INTEGER */
+	#define i_th(a,i)				((a) + (i)*sizeof(EIF_INTEGER))</pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </center>
+        <p>Then, the corresponding Eiffel code will look like:</p>
+        <center>
+        <table bgColor="#ffffe6" border="0">
+          <tbody>
+            <tr>
+              <td width="100%">
+                <pre>	<span class="efeature">menu_id</span>: <span class="eclass">INTEGER</span> <span class="ekeyword">is</span>
+			<span class="ecomment">-- `ID_MENU' C encapsulation.</span>
+		<span class="ekeyword">external</span>
+			&quot;C [macro %&quot;my_header.h%&quot;] : EIF_INTEGER&quot;
+		<span class="ekeyword">alias</span>
+			&quot;ID_MENU&quot;
+		<span class="ekeyword">end</span>
+		
+	<span class="efeature">menu_id_character</span>: <span class="eclass">CHARACTER</span> <span class="ekeyword">is</span>
+			<span class="ecomment">-- `ID_MENU_CHARACTER' C encapsulation.</span>
+		<span class="ekeyword">external</span>
+			&quot;C [macro %&quot;my_header.h%&quot;] : EIF_CHARACTER&quot;
+		<span class="ekeyword">alias</span>
+			&quot;ID_MENU_CHARACTER&quot;
+		<span class="ekeyword">end</span>
+		
+	<span class="efeature">i_th</span> (p: <span class="eclass">POINTER</span>; i: <span class="eclass">INTEGER</span>): <span class="eclass">INTEGER</span> <span class="ekeyword">is</span>
+			<span class="ecomment">-- Access the `i'-th element of `p', array of C EIF_INTEGER.</span>
+		<span class="ekeyword">external</span>
+			&quot;C [macro %&quot;my_header.h%&quot;] (EIF_INTEGER *, EIF_INTEGER): EIF_INTEGER&quot;
+		<span class="ekeyword">alias</span>
+			&quot;i_th&quot;
+		<span class="ekeyword">end</span></pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </center>
+        <h2><a name="structs">Structs</a></h2>
+        <p>The struct encapsulation enables you to wrap C/C++ structures easily
+        without having to write any additional code in a C header file as it
+        was the case until ISE introduced this new keyword in the external
+        specification with ISE EiffelBench 4.5. With the struct encapsulation
+        you can set and retrieve the value of a certain field of a struct.</p>
+        <p>If in a header file called `my_header.h', you have the following
+        declaration of the `Point' structure whose `x' and `y' fields we want to access and
+        set:</p>
+        <center>
+        <table bgColor="#ffffe6" border="0">
+          <tbody>
+            <tr>
+              <td width="100%">
+                <pre>		/* Definition of `Point' */
+	typdef struct point {
+		int x;
+		int y;
+	} Point;</pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </center>
+        <p>Then, the corresponding Eiffel code will look like:</p>
+        <center>
+        <table bgColor="#ffffe6" border="0">
+          <tbody>
+            <tr>
+              <td width="100%">
+                <pre>	<span class="efeature">x</span> (p: <span class="eclass">POINTER</span>): <span class="eclass">INTEGER</span> <span class="ekeyword">is</span>
+			<span class="ecomment">-- Access field x of struct pointed by `p'.</span>
+		<span class="ekeyword">external</span>
+			&quot;C [struct %&quot;my_header.h%&quot;] (Point): EIF_INTEGER&quot;
+		<span class="ekeyword">alias</span>
+			&quot;x&quot;
+		<span class="ekeyword">end</span>
+
+	<span class="efeature">y</span> (p: <span class="eclass">POINTER</span>): <span class="eclass">INTEGER</span> <span class="ekeyword">is</span>
+			<span class="ecomment">-- Access field y of struct pointed by `p'.</span>
+		<span class="ekeyword">external</span>
+			&quot;C [struct %&quot;my_header.h%&quot;] (Point): EIF_INTEGER&quot;
+		<span class="ekeyword">alias</span>
+			&quot;y&quot;
+		<span class="ekeyword">end</span>
+
+	<span class="efeature">set_x</span> (p: <span class="eclass">POINTER</span>; v: <span class="eclass">INTEGER</span>) <span class="ekeyword">is</span>
+			<span class="ecomment">-- Set field x of struct pointed by `p'.</span>
+		<span class="ekeyword">external</span>
+			&quot;C [struct %&quot;my_header.h%&quot;] (Point, int)&quot;
+		<span class="ekeyword">alias</span>
+			&quot;x&quot;
+		<span class="ekeyword">end</span>
+
+	<span class="efeature">set_y</span> (p: <span class="eclass">POINTER</span>: v: <span class="eclass">INTEGER</span>) <span class="ekeyword">is</span>
+			<span class="ecomment">-- Set field y of struct pointed by `p' with `v'.</span>
+		<span class="ekeyword">external</span>
+			&quot;C [struct %&quot;my_header.h%&quot;] (Point, int)&quot;
+		<span class="ekeyword">alias</span>
+			&quot;y&quot;
+		<span class="ekeyword">end</span></pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </center>
+        <h2><a name="windows">Windows externals</a></h2>
+        <h3>DLLs</h3>
+        <p>With ISE EiffelStudio you now have two different ways to call C
+        routines exported in a DLL. Why two, because Windows provides two ways to
+        call a C routine in a DLL:</p>
+        <ul>
+          <li>_cdecl: referred to as the standard way
+          <li>__stdcall referred to as the Pascal way</li>
+        </ul>
+        <p>Therefore if you want to call an external routine defined in a DLL
+        supposed to be called using the `_cdecl' method, you have to use the `<font color="#0000ff"><b>dll32</b>'</font>
+        sub-language option. For `__stdcall' you need to use the `<b><font color="#0000ff">dllwin32</font></b>'
+        sub-language option. Here is an example:</p>
+        <center>
+        <table bgColor="#ffffe6" border="0">
+          <tbody>
+            <tr>
+              <td width="100%">
+                <pre>	<span class="efeature">my_cdecl_routine</span> (a: <span class="eclass">INTEGER</span>): <span class="eclass">POINTER</span> <span class="ekeyword">is</span>
+			<span class="ecomment">-- Encapsulation of a dll function with the `_cdecl' call mechanism.</span>
+		<span class="ekeyword">external</span>
+			&quot;C [dll32 %&quot;my_dll.dll%&quot;] (int): EIF_POINTER&quot;
+		<span class="ekeyword">end</span>
+
+	<span class="efeature">my_stdcall_routine</span> (a: <span class="eclass">INTEGER</span>): <span class="eclass">POINTER</span> <span class="ekeyword">is</span>
+			<span class="ecomment">-- Encapsulation of a dll function with the `_stdcall' call mechanism.</span>
+		<span class="ekeyword">external</span>
+			&quot;C [dllwin32 %&quot;my_dll.dll%&quot;] (int): EIF_POINTER&quot;
+		<span class="ekeyword">end</span></pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </center>
+              <p class="warning"><b>Caution</B>: Using wrongly <b><font color="#0000ff">dll32</font></b>
+                instead of <b><font color="#0000ff">dllwin32</font></b> and
+                reciprocally will conduce to a crash of your system since the C
+                call stack will be corrupted. For more information please read
+                your C compiler documentation.</p>
+        <h3>Windows API</h3>
+        <p>As described in the previous section concerning routines exported in
+        a DLL, the Windows API is using the `__stdcall' convention. As a
+        consequence, you cannot use the standard external mechanism to wrap them
+        because it is using the `_cdecl' convention. However, you can easily
+        wrap those function by using the `<b>macro</b>' sub-language.
+        <p>Here is an example that has been taken from WEL, the Windows Eiffel
+        Library, to encapsulate the Windows `SendMessage' function:
+        <center>
+        <table bgColor="#ffffe6" border="0">
+          <tbody>
+            <tr>
+              <td width="100%">Windows defined SendMessage as:
+                <pre><b>	LRESULT SendMessage(
+		HWND</b><i> hWnd</i><b>,      </b>// handle to destination window
+<b>		UINT</b><i> Msg</i><b>,       </b>// message
+<b>		WPARAM</b><i> wParam</i><b>,  </b>// first message parameter
+<b>		LPARAM</b><i> lParam</i>   // second message parameter
+<b>	);</b></pre>
+                In WEL, the encapsulation is written as:
+                <pre>	<span class="efeature">cwin_send_message</span> (hwnd: <span class="eclass">POINTER</span>; msg, wparam, param: <span class="eclass">INTEGER</span>) <span class="ekeyword">is</span>
+			<span class="ecomment">-- SDK SendMessage (without the result)</span>
+		<span class="ekeyword">external</span>
+			&quot;C [macro %&quot;wel.h%&quot;] (HWND, UINT, WPARAM, LPARAM)&quot;
+		<span class="ekeyword">alias</span>
+			&quot;SendMessage&quot;
+		<span class="ekeyword">end</span></pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </center>
+        <p class="seealso"><b>See also</b>:<br>
+        <a href="20_cpp_externals.html">C++ externals</a></p>
+	</BODY>
+</HTML>

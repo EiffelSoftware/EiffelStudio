@@ -1,0 +1,53 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Compilation of multithreaded systems</TITLE>
+		<META NAME="MS-HKWD" CONTENT="multithreaded systems, compile">
+		<LINK REL=Stylesheet HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Compilation of multithreaded systems</H1>
+        <h2><a name="SETTINGS">SETTINGS</a></h2>
+        <ul>
+          <li>Add the option multithreaded(yes) in your ace file. You can use
+            the HYPERLINK(project settings dialog advanced tab)project settings
+            dialog for this, in the tab <b>Advanced</b>.</li>
+          <li>Do not use non-multithreaded precompiled libraries. The
+            corresponding multithreaded libraries of base, WEL and Vision2 should
+            be located in $ISE_EIFFEL/precomp/spec/$PLATFORM/ with the mt
+            prefix or suffix.</li>
+          <li>You must include the thread cluster in your ace file:<br>
+            thread: &quot;$ISE_EIFFEL/library/thread&quot;;</li>
+          <li>When using external C libraries, be sure that they are MT-safe: on
+            the platforms where the Eiffel Threads are available, the
+            <A HREF="/libraries/vision2/reference/introduction.html">Vision2</A>, Mel,
+            <A HREF="/libraries/wel/reference/introduction.html">Wel</A>
+            and <A HREF="/libraries/net/reference/introduction.html">Net</A> multithreaded libraries can be recognized by the `mt'
+            prefix.</li>
+        </ul>
+        <h2><a name="COMPILATION">COMPILATION</a></h2>
+        <p>Just launch the compilation: the ISE compiler will generate and link
+        the multithreaded executable.
+        <h2><a name="EXTERNAL">EXTERNAL C FILES</a></h2>
+        <p>The C files that you link with a multithreaded Eiffel application
+        must be compiled in multithreaded mode. In addition, you should
+        follow some basic guidelines, which you can find in any documentation on threads. Here are the main
+        requirements:
+        <ul>
+          <li>Check what you are importing is safe: you cannot arbitrarily enter
+            non-threaded code in a multithreaded program. Check your include
+            files and libraries you use for the linking to decide if they can be
+            used in multithreaded mode.</li>
+          <li>If you are using CECIL in multithreaded mode, you must compile
+            your C files with the same defined symbols as those used to compile
+            the generated C-code in multithreaded mode.</li>
+          <li>Threaded code can safely refer to unsafe code ONLY from the
+            initial thread.</li>
+        </ul>
+        <p class="note"><b>Note</b>: if you use the libraries Net and MEL in multithreaded
+        mode, you should use libmtnet.a and libmtmel.a. When using MEL, you have
+        to be aware that Motif 1.2 is not threaded-safe (i.e not reentrant).
+        Motif 2.x is threaded-safe.</P>
+	</BODY>
+</HTML>

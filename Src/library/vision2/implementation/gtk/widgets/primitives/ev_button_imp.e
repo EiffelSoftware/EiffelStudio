@@ -44,7 +44,8 @@ inherit
 	EV_FONTABLE_IMP
 		redefine
 			interface,
-			initialize
+			initialize,
+			fontable_widget
 		end
 
 	EV_BUTTON_ACTION_SEQUENCES_IMP
@@ -96,7 +97,13 @@ feature {NONE} -- Initialization
 		ensure
 			button_box /= NULL
 		end
-	
+		
+	fontable_widget: POINTER is
+			-- Pointer to the widget that may have fonts set.
+		do
+			Result := text_label
+		end
+
 feature -- Access
 
 	is_default_push_button: BOOLEAN

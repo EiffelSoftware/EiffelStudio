@@ -12,14 +12,14 @@ inherit
 	WEL_STRUCTURE
 		rename
 			make as structure_make
-		undefine
-			copy, is_equal
 		end
 
 	WEL_SCROLL_BAR_CONSTANTS
 		export
 			{ANY} valid_sif_mask
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 create
@@ -95,7 +95,7 @@ feature -- Access
 		end
 
 feature -- Setting
-
+		
 	set_mask (i: INTEGER) is
 			-- Assign `i' to `fmask' field of Current.
 		require

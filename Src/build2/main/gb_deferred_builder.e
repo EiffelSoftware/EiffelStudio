@@ -54,7 +54,7 @@ feature {GB_XML_LOAD, GB_COMPONENT, GB_OBJECT_HANDLER} -- Basic operation
 	
 feature {GB_EV_ANY} -- Basic operation
 
-	defer_building (gb_ev: GB_EV_ANY; element: XML_ELEMENT;) is
+	defer_building (gb_ev: GB_EV_ANY; element: XM_ELEMENT;) is
 			-- Add `gb_ev' to `all_gb_ev', `element' to `all_element' and `objects' to `all_object'.
 		require
 			gb_ev_not_void: gb_ev /= Void
@@ -73,7 +73,7 @@ feature {GB_COMPONENT, GB_XML_LOAD} -- Implementation
 		-- All instances of `gb_ev_any' which have been set as
 		-- deferred in the building process.
 		
-	all_element: ARRAYED_LIST [XML_ELEMENT]
+	all_element: ARRAYED_LIST [XM_ELEMENT]
 		-- All the XML elements containing information for
 		-- building objects from the elements of `all_gb_ev'.
 		

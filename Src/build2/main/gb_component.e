@@ -36,7 +36,6 @@ feature {NONE} -- Initialization
 		ensure
 			name_set: name.is_equal (a_name)
 		end
-		
 
 feature -- Access
 
@@ -47,12 +46,12 @@ feature -- Access
 			-- `Result' is representation of `Current'
 			-- unique each time.
 		local
-			elements: ARRAYED_LIST [XML_ELEMENT]
+			elements: ARRAYED_LIST [XM_ELEMENT]
 			gb_ev: ARRAYED_LIST [GB_EV_ANY]
 			values: ARRAYED_LIST [INTEGER]
 			new_value: STRING
 			full_information1: HASH_TABLE [ELEMENT_INFORMATION, STRING]
-			current_element: XML_ELEMENT
+			current_element: XM_ELEMENT
 			ucstring: UCSTRING
 		do
 			Result := (new_object ((create {GB_SHARED_XML_HANDLER}).xml_handler.xml_element_representing_named_component (name), True))

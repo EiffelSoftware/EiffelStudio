@@ -51,7 +51,7 @@ extern int stck_nb_items (const struct stack stk);
 extern int stck_nb_items_free_stack ();
 #endif
 
-#ifdef ISE_GC
+#if defined(ISE_GC) && !defined(EIF_IL_DLL)
 RT_LNK EIF_REFERENCE efreeze(EIF_OBJECT object);	/* Freeze object's address (no more move) */
 RT_LNK EIF_OBJECT eadopt(EIF_OBJECT object);		/* The C wants to keep the reference */
 RT_LNK EIF_REFERENCE ewean(EIF_OBJECT object);		/* Weans a previously adopted reference */
@@ -61,7 +61,16 @@ RT_LNK EIF_OBJECT henter(EIF_REFERENCE object);		/* Low-level entry in hector ta
 RT_LNK void hfree(EIF_OBJECT address);				/* Low-level release from hector table */
 RT_LNK EIF_REFERENCE spfreeze(EIF_REFERENCE object);/* Freeze special object's address */
 RT_LNK void spufreeze(EIF_REFERENCE object);		/* Put frozen spec obj back to GC control */
-RT_LNK EIF_OBJECT hector_addr(EIF_REFERENCE root);	/* Maps an adress to an hector position */
+#else
+#define efreeze(object)	(object)
+#define eadopt(object)	(object)
+#define ewean(object)	(object)
+#define eufreeze(object)
+#define hrecord(object)	(object)
+#define henter(object)	(object)
+#define	hfree(object)
+#define spfreeze(object)	(object)
+#define spufreeze(object)
 #endif
 
 #ifdef __cplusplus

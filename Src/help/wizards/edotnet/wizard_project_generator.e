@@ -113,12 +113,14 @@ feature {NONE} -- Implementation
 			selected_assemblies: LINKED_LIST [ASSEMBLY_INFORMATION]
 			an_assembly: ASSEMBLY_INFORMATION
 			assembly_name: STRING
+			dependencies: LINKED_LIST [ASSEMBLY_INFORMATION]
+			a_dependency: ASSEMBLY_INFORMATION
+			a_dependency_name: STRING
 		do
 			create Result.make (1024)
 			Result.append ("%N%T%T-- .NET System%N")
 			selected_assemblies := wizard_information.selected_assemblies
 			from
-				
 				selected_assemblies.start
 			until
 				selected_assemblies.after
@@ -130,6 +132,19 @@ feature {NONE} -- Implementation
 				Result.append ("%Tall " + assembly_name + "_generated: %"" + an_assembly.eiffel_cluster_path + "%"%N%N")
 				selected_assemblies.forth
 			end
+			dependencies := wizard_information.dependencies
+			from
+				dependencies.start
+			until
+				dependencies.after
+			loop
+				a_dependency := dependencies.item					
+				a_dependency_name := clone (a_dependency.name)
+				a_dependency_name.replace_substring_all (".", "_")
+				a_dependency_name.to_lower
+				Result.append ("%Tall " + a_dependency_name + "_generated: %"" + a_dependency.eiffel_cluster_path + "%"%N%N")
+				dependencies.forth
+			end			
 		ensure
 			non_void_text: Result /= Void
 			not_empty_text: not Result.is_empty
@@ -143,6 +158,8 @@ feature {NONE} -- Implementation
 		local
 			selected_assemblies: LINKED_LIST [ASSEMBLY_INFORMATION]
 			an_assembly: ASSEMBLY_INFORMATION
+			dependencies: LINKED_LIST [ASSEMBLY_INFORMATION]
+			a_dependency: ASSEMBLY_INFORMATION
 		do
 			create Result.make (1024)
 			Result.append ("external%N%Tassembly:%N")
@@ -153,12 +170,27 @@ feature {NONE} -- Implementation
 				selected_assemblies.after
 			loop
 				an_assembly := selected_assemblies.item
-				Result.append ("%T%T%T%"" + assembly_location (an_assembly) + "%"")
+				Result.append ("%T%T%T%"" + assembly_location (an_assembly) + "%",%N")				
 				selected_assemblies.forth
-				if not selected_assemblies.after then
-					Result.append (",")
-				end
-				Result.append ("%N")
+			end
+			
+			dependencies := wizard_information.dependencies
+			from
+				dependencies.start
+			until
+				dependencies.after
+			loop
+				a_dependency := dependencies.item
+				Result.append ("%T%T%T%"" + assembly_location (a_dependency) + "%",%N")
+				dependencies.forth
+			end
+			
+			Result.right_adjust
+			if (Result @ Result.count) = '%N' then
+				Result.remove (Result.count)
+			end
+			if (Result @ Result.count ) = ',' then
+				Result.remove (Result.count)
 			end
 		ensure
 			non_void_text: Result /= Void
@@ -175,5 +207,5 @@ feature {NONE} -- Implementation
 			proxy := wizard_information.proxy
 			Result := proxy.assembly_location (info.name, info.version, info.culture, info.public_key)
 		end
-		
+	
 end -- class WIZARD_PROJECT_GENERATOR

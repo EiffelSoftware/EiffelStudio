@@ -28,7 +28,7 @@ feature {NONE} -- Implementation
 		
 feature -- Access
 
-	h_filename: STRING is "help\wizards\edotnet\docs\reference\01_welcome\index.html"
+	h_filename: STRING is "help/wizards/edotnet/docs/reference/01_welcome/index.html"
 			-- Path to HTML help file
 			
 feature -- basic Operations

@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	h_filename: STRING is "help\wizards\edotnet\docs\reference\10_project_name_and_location\index.html"
+	h_filename: STRING is "help/wizards/edotnet/docs/reference/10_project_name_and_location/index.html"
 			-- Path to HTML help file
 			
 end -- class DOTNET_WIZARD_PROJECT_NAME_AND_LOCATION_STATE

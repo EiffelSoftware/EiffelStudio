@@ -55,6 +55,7 @@ feature {NONE} -- Implementation
 
 end -- class DB_TABLES_ACCESS_USE
 
+
 --|----------------------------------------------------------------
 --| EiffelStore: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
@@ -66,7 +67,8 @@ end -- class DB_TABLES_ACCESS_USE
 --| ISE Building
 --| 360 Storke Road, Goleta, CA 93117 USA
 --| Telephone 805-685-1006, Fax 805-685-6869
---| Contact: http://contact.eiffel.com
---| Customer support: http://support.eiffel.com
+--| Electronic mail <info@eiffel.com>
+--| Customer support: http://support.eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+

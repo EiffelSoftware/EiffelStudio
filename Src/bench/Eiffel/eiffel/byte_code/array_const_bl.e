@@ -147,14 +147,6 @@ feature {NONE} -- C code generation
 			buf := buffer
 			buf.putstring (" = ");
 			buf.putstring ("RTLN(typres);");
---            if workbench_mode then
---                buf.putstring ("RTUD(");
---                real_ty.associated_class_type.id.generated_id (buf);
---                buf.putchar (')');
---            else
---                buf.putint (real_ty.type_id - 1);
---            end;
---            buf.putstring (gc_rparan_comma);
 			buf.new_line;
 			generate_block_close;
 		end;

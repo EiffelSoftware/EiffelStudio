@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			if not gtk_widget_no_window (c_object) then
 				feature {EV_GTK_EXTERNALS}.gtk_widget_add_events (c_object, Gdk_events_mask)
 			end
-			if not gtk_widget_no_window (visual_widget) then
+			if not gtk_widget_no_window (visual_widget) and then c_object /= visual_widget then
 				feature {EV_GTK_EXTERNALS}.gtk_widget_add_events (visual_widget, Gdk_events_mask)
 			end
 		end
@@ -549,7 +549,7 @@ feature -- Measurement
 		do	
 			if internal_minimum_width /= -1 then
 				Result := internal_minimum_width
-			else
+			elseif not is_destroyed then
 				update_request_size
 				gr := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_requisition (c_object)
 				Result := feature {EV_GTK_EXTERNALS}.gtk_requisition_struct_width (gr)
@@ -563,7 +563,7 @@ feature -- Measurement
 		do
 			if internal_minimum_height /= -1 then
 				Result := internal_minimum_height
-			else
+			elseif not is_destroyed then
 				update_request_size
 				gr := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_requisition (c_object)
 				Result := feature {EV_GTK_EXTERNALS}.gtk_requisition_struct_height (gr)

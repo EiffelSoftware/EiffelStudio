@@ -148,11 +148,6 @@ feature -- Status setting
 				current_icon_pixmap.decrement_reference
 				current_icon_pixmap := Void
 			end
-			
-				-- Destroy associated window class if it exists
-			if wnd_class /= Void then
-				wnd_class.unregister
-			end
 		end
 
 	minimize is

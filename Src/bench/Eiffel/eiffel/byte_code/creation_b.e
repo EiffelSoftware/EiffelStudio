@@ -1,9 +1,11 @@
--- Creation instruction
+indexing
+	description: "Byte node for a creation instruction"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class CREATION_B 
 
 inherit
-
 	INSTR_B
 		redefine
 			need_enlarging, enlarged,
@@ -14,51 +16,63 @@ inherit
 			inlined_byte_code, pre_inlined_code, generate_il
 		end
 	
-feature 
+feature -- Access
 
-	target: ACCESS_B;
+	target: ACCESS_B
 			-- Target to create
 
-	info: CREATE_INFO;
+	info: CREATE_INFO
 			-- Creation info for creating the right type
 
-	call: NESTED_B;
+	call: NESTED_B
 			-- Call after creation: can be Void
 
-	set_target (t: ACCESS_B) is
-			-- Assign `t' to `target'.
-		do
-			target := t;
-		end;
+feature -- Settings
 
-	set_info (i: CREATE_INFO) is
-			-- Assign `i' to `info'
+	set_target (a_target: ACCESS_B) is
+			-- Assign `a_target' to `target'.
+		require
+			t_not_void: a_target /= Void
 		do
-			info := i;
-		end;
+			target := a_target
+		ensure
+			target_set: target = a_target
+		end
+
+	set_info (an_info: CREATE_INFO) is
+			-- Assign `an_info' to `info'\
+		require
+			an_info_not_void: an_info /= Void
+		do
+			info := an_info
+		ensure
+			info_set: info = an_info
+		end
 
 	set_call (n: NESTED_B) is
 			-- Assign `i' to `call'.
 		do
-			call := n;
-		end;
+			call := n
+		ensure
+			call_set: call = n
+		end
 
 feature -- C code generation
 
-	need_enlarging: BOOLEAN is true;
+	need_enlarging: BOOLEAN is True
 			-- This node needs enlarging
 
 	enlarged: CREATION_BL is
 			-- Enlarge current node
 		do
-			!!Result;
-			Result.set_target (target.enlarged);
-			Result.set_info (info);
+			create Result
+			Result.set_target (target.enlarged)
+			Result.set_info (info)
 			if call /= Void then
-				Result.set_call (call.enlarged);
-			end;
+				Result.set_call (call.enlarged)
+			end
 			Result.set_line_number (line_number)
-		end;
+		end
 
 feature -- IL code generation
 
@@ -166,31 +180,32 @@ feature -- Byte code generation
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a creation instruction
 		local
-			target_type: TYPE_I;
+			target_type: TYPE_I
 			basic_type: BASIC_I
-			feat: FEATURE_B;
-			cl_type: CL_TYPE_I;
+			feat: FEATURE_B
+			cl_type: CL_TYPE_I
 		do
-debug
-	info.trace;
-end;
-			target_type := Context.real_type (target.type);
-			context.generate_melted_debugger_hook (ba);
+			debug
+				info.trace
+			end
+
+			target_type := Context.real_type (target.type)
+			context.generate_melted_debugger_hook (ba)
 			if target_type.is_separate then
-				ba.append (Bc_sep_create);
+				ba.append (Bc_sep_create)
 				cl_type ?= target_type -- can't be fail
-				ba.append_raw_string (cl_type.associated_class_type.associated_class.name_in_upper);
+				ba.append_raw_string (cl_type.associated_class_type.associated_class.name_in_upper)
 				if call = Void then
-					ba.append_raw_string ("_no_cf");
+					ba.append_raw_string ("_no_cf")
 				else
 					feat ?= call.message; -- Can't Fail here
-					ba.append_raw_string (feat.feature_name);
-				end;
-				target.make_assignment_code (ba, target_type);
+					ba.append_raw_string (feat.feature_name)
+				end
+				target.make_assignment_code (ba, target_type)
 				if call /= Void then
-					call.make_creation_byte_code (ba);
-				end;
-				ba.append (Bc_sep_create_end);
+					call.make_creation_byte_code (ba)
+				end
+				ba.append (Bc_sep_create_end)
 			else
 				if target_type.is_basic then
 					basic_type ?= target_type
@@ -204,17 +219,17 @@ end;
 						call.make_creation_byte_code (ba)
 					end
 				else
-					ba.append (Bc_create);
-					info.make_byte_code (ba);
-					target.make_assignment_code (ba, target_type);
+					ba.append (Bc_create)
+					info.make_byte_code (ba)
+					target.make_assignment_code (ba, target_type)
 					if call /= Void then
-						call.make_creation_byte_code (ba);
-					end;
-					target.make_byte_code (ba);
-					ba.append (Bc_create_inv);
+						call.make_creation_byte_code (ba)
+					end
+					target.make_byte_code (ba)
+					ba.append (Bc_create_inv)
 				end
-			end;
-		end;
+			end
+		end
 
 feature -- Array optimization
 
@@ -235,7 +250,7 @@ feature -- Array optimization
 			if call /= Void then
 				Result := call.is_unsafe
 			end
-		end;
+		end
 
 	optimized_byte_node: like Current is
 		do
@@ -245,7 +260,7 @@ feature -- Array optimization
 			if call /= Void then
 				call ?= call.optimized_byte_node
 			end
-		end;
+		end
 
 feature -- Inlining
 
@@ -259,6 +274,9 @@ feature -- Inlining
 	pre_inlined_code: like Current is
 			-- This routine should NEVER be called
 		do
+			check
+				not_called: False
+			end
 		end
 
 	inlined_byte_code: like Current is

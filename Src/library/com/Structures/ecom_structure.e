@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 				-- Memory allocation problem
 				c_enomem
 			end
+			initialize 
 			shared := False
 		end
 

@@ -35,12 +35,8 @@ feature {NONE} -- Initialization
 			-- widgets.
 		do
 			implementation.widget_make (Current)
-
-			if (par /= Void) then
-				managed := par.manager
-				implementation.set_parent (par)
-			else
-				managed := False
+			if par /= Void then
+				set_parent (par)
 			end
 		ensure
  			exists: not destroyed
@@ -270,12 +266,11 @@ feature -- Element change
 		require
 			exists: not destroyed
 		do
-			if (par /= Void) then
+			if par /= Void then
 				managed := par.manager
 			else
 				managed := False
 			end
-
 			implementation.set_parent (par)
 		ensure
 			parent_set: parent = par
@@ -751,10 +746,6 @@ feature -- Implementation
 
 	implementation: EV_WIDGET_I
 			-- Implementation of Current widget
-
-invariant
-
-  --XX      Widget_Positive_depth:  depth >= 0
 
 end -- class EV_WIDGET
 

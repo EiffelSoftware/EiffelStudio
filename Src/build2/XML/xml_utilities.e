@@ -151,6 +151,7 @@ feature -- Access
 		end
 
 	create_widget_instance (element: XML_ELEMENT; widget_name: STRING): XML_ELEMENT is
+			-- Create a new instance of a widget `widget_name' in `element'.
 		require
 			element_not_void: element /= Void
 			widget_name_not_void: widget_name /= Void

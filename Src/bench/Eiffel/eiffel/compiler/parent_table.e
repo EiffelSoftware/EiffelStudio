@@ -148,8 +148,10 @@ feature
 			-- Number of formal generics
 			ba.append_short_integer (generic_count)
 			-- Classname
-			fixme ("Ensure that classname is not longer than 256 characters - the limit imposed by run-time (see wclass_name in update.c)")
-			ba.append_raw_string (classname)
+			check
+				class_name_not_too_long: classname.count <= ba.max_string_count
+			end
+			ba.append_string (classname)
 			-- Expandedness
 			if is_expanded then
 				ba.append ('%/001/')

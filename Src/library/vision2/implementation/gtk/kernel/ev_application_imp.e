@@ -34,12 +34,16 @@ feature {NONE} -- Initialization
 	
 	make (an_interface: like interface) is
 			-- Set up the callback marshal and initialize GTK+.
+		local
+			locale_str: STRING
 		do
 			base_make (an_interface)
 
 			--put ("display_ip_address:0", "DISPLAY")
 			-- This line may be uncommented to allow for display redirection to another machine.
-				
+			
+			create locale_str.make_from_c (C.gtk_set_locale)
+			
 			gtk_init
 			C.gdk_rgb_init
 			

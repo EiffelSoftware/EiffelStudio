@@ -77,7 +77,7 @@ feature -- Access
 		do
 			c_list := c_get_children (screen_object, XmNchildren);
 			c_count := children_count;
-			!! Result.make (c_count);
+			!! Result.make_filled (c_count);
 			from
 				i := 1
 			until

@@ -47,9 +47,10 @@ feature -- Creation
         local
             ext_name: ANY
         do
+			widget_index := widget_manager.last_inserted_position;
             ext_name := a_label.identifier.to_c;
             screen_object := create_label ($ext_name,
-						a_label.parent.implementation.screen_object);
+					parent_screen_object (a_label, widget_index));
             a_label.set_font_imp (Current)
         end;
 

@@ -36,8 +36,10 @@ feature
 		local
 			ext_name: ANY
 		do
+			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_separator_gadget.identifier.to_c;
-			screen_object := create_separator_gadget ($ext_name, a_separator_gadget.parent.implementation.screen_object)
+			screen_object := create_separator_gadget ($ext_name, 
+					parent_screen_object (a_separator_gadget, widget_index));
 		ensure
 			is_horizontal
 		end;

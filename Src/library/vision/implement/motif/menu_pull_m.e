@@ -51,14 +51,23 @@ feature -- Creation
 			-- Create a motif pulldown menu.
 		local
 			pulldown_identifier: STRING;
-			ext_name: ANY
+			ext_name: ANY;
+			parent: MENU
 		do
+				-- The widget index is incremented by one since
+				-- the option_button will be inserted before Current
+				-- in the widget_manager.
+			widget_index := widget_manager.last_inserted_position + 1;
 			pulldown_identifier := clone (a_pulldown.identifier);
 			pulldown_identifier.append ("_pull");
-			!! menu_button.make (a_pulldown.identifier,a_pulldown.parent);
+			parent ?= widget_manager.parent_using_index (a_pulldown, widget_index);
+			check
+				intern: parent /= Void
+			end;
+			!! menu_button.make (a_pulldown.identifier, parent);
 			ext_name := pulldown_identifier.to_c;
 			screen_object := create_pulldown ($ext_name,
-					a_pulldown.parent.implementation.screen_object);
+					parent.implementation.screen_object);
 			abstract_menu := a_pulldown;
 			xm_attach_menu (menu_button.implementation.screen_object, screen_object);
 		end;

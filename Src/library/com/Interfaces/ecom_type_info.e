@@ -92,7 +92,7 @@ feature -- Access
 			tmp_pointer: POINTER
 		do
 			if func_desc_pointers = Void then
-				create var_desc_pointers.make
+				create func_desc_pointers.make
 			end
 			tmp_pointer := ccom_get_func_desc (initializer, an_index)
 			create Result.make_by_pointer (tmp_pointer)

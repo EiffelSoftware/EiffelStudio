@@ -100,7 +100,7 @@ feature -- Access
 		do
 			Result := ccom_typeattr_type_flags (item)
 		ensure
-			is_valid_typeflag (Result)
+			valid_flags: is_valid_typeflag (Result)
 		end
 
 	major_version_number: INTEGER is

@@ -32,6 +32,10 @@ cluster
 	base:						"$LIBRARY\base"
 	structures(base):			"$\structures"
 	kernel(base):				"$\kernel"
+		visible
+			ARRAY;
+			STRING;
+		end;
 	support(base):				"$\support"
 	access(structures):			"$\access"
 	cursors(structures):		"$\cursors"
@@ -67,7 +71,22 @@ cluster
 	ecom_library(ecom):						"$\library"
 	ecom_library_constants(ecom_library):	"$\constants"
 	ecom_library_interfaces(ecom_library):	"$\interfaces"
+		visible
+			ECOM_TYPE_INFO;
+		end;
 	ecom_library_structures(ecom_library):	"$\structures"
+		visible
+			ECOM_TYPE_LIB_FIND_NAME_RESULT;
+			ECOM_SAFE_ARRAY_BOUND
+				export
+					"make_by_pointer"
+				end;
+			ECOM_CURRENCY;
+			ECOM_DECIMAL;
+			ECOM_CUST_DATA_ITEM;
+			ECOM_DLL_ENTRY;
+			ECOM_DOCUMENTATION;
+		end;
 	ecom_library_support(ecom_library):		"$\support"	
 
 	-- EiffelTime

@@ -20,6 +20,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_MESSAGE_OUTPUT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -29,8 +34,8 @@ feature {NONE} -- Initialization
 			-- Initialize manager.
 		require
 			non_void_parent: a_parent /= Void
-			valid_parent: a_parent.exists
 		do
+			set_output_window (a_parent)
 			parent := a_parent
 		ensure
 			parent_set: parent = a_parent
@@ -39,7 +44,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	parent: MAIN_WINDOW
-			-- Parent window used to display messages
+			-- Parent window used to parent.add_title messages
 
 	Idl_compilation_title: STRING is "IDL Compilation"
 			-- IDL compilation title
@@ -56,54 +61,65 @@ feature -- Access
 	Link_title: STRING is "Creating Proxy Stub Dll"
 			-- Link title
 
+	Analysis_title: STRING is "Analysing Type Library"
+			-- Analysis title
+
 feature -- Basic Operations
 
 	run is
 			-- Start generation.
 		do
 			-- Compile IDL
-			display (Idl_compilation_title)
-			Idl_compiler.compile_idl
 			if shared_wizard_environment.abort then
 				finish
 			else
-			
-				-- Create Proxy/Stub
-				if not shared_wizard_environment.use_universal_marshaller then
-					-- Compile c iid file
-					display (Iid_compilation_title)
-					Idl_compiler.compile_iid
-					if shared_wizard_environment.abort then
-						finish
-					else
-
-						-- Compile c dlldata file
-						display (Data_compilation_title)
-						Idl_compiler.compile_data
+				parent.add_title (Idl_compilation_title)
+				parent.process_messages
+				Idl_compiler.compile_idl
+				if shared_wizard_environment.abort then
+					finish
+				else
+					-- Create Proxy/Stub
+					if not shared_wizard_environment.use_universal_marshaller then
+						-- Compile c iid file
+						parent.add_title (Iid_compilation_title)
+						parent.process_messages
+						Idl_compiler.compile_iid
 						if shared_wizard_environment.abort then
 							finish
 						else
-
-							-- Compile c proxy/stub file
-							display (Ps_compilation_title)
-							Idl_compiler.compile_ps
+							-- Compile c dlldata file
+							parent.add_title (Data_compilation_title)
+							parent.process_messages
+							Idl_compiler.compile_data
 							if shared_wizard_environment.abort then
 								finish
 							else
-
-								-- Final link
-								display (Link_title)
-								Idl_compiler.link
+								-- Compile c proxy/stub file
+								parent.add_title (Ps_compilation_title)
+								parent.process_messages
+								Idl_compiler.compile_ps
 								if shared_wizard_environment.abort then
 									finish
 								else
-									generate
+									-- Final link
+									parent.add_title (Link_title)
+									parent.process_messages
+									Idl_compiler.link
+									if shared_wizard_environment.abort then
+										finish
+									else
+										generate
+									end
 								end
 							end
 						end
 					end
 				end
 			end
+		rescue
+			shared_wizard_environment.set_abort (10)
+			retry
 		end
 
 feature {NONE} -- Implementation
@@ -111,7 +127,10 @@ feature {NONE} -- Implementation
 	generate is
 			-- Generate Eiffel/C++ code
 		do
-			set_system_descriptor (create {WIZARD_SYSTEM_DESCRIPTOR}.make (shared_wizard_environment.type_library_file_name))
+			parent.add_title (Analysis_title)
+			parent.process_messages
+			set_system_descriptor (create {WIZARD_SYSTEM_DESCRIPTOR}.make)
+			system_descriptor.generate (shared_wizard_environment.type_library_file_name)
 		end
 		
 	finish is
@@ -121,18 +140,7 @@ feature {NONE} -- Implementation
 		do
 			a_string := "Failed with return code "
 			a_string.append_integer (shared_wizard_environment.return_code)
-			display (a_string)
-		end
-
-	display (a_string: STRING) is
-			-- Display `a_string' in `parent'.
-		require
-			non_void_string: a_string /= Void
-		do
-			parent.new_line
-			parent.add_title (a_string)
-			parent.new_line
-			parent.process_messages
+			parent.add_error (a_string)
 		end
 
 	Idl_compiler: WIZARD_IDL_COMPILER is

@@ -43,7 +43,7 @@ feature -- Access
 	exists: BOOLEAN is
 			-- Is wrapped structure initialized?
 		do
-			Result := exists
+			Result := item /= default_pointer
 		end
 
 feature {NONE} -- Implementation

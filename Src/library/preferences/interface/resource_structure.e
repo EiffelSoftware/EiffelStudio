@@ -188,7 +188,8 @@ feature -- Modification
 		do
 			implementation.put_resource (res)
 		ensure
-			has_resource: item (res.name) = res
+			has_old_resource: (old item (res.name) /= Void) implies item (res.name) = old item (res.name)
+			has_new_resource: (old item (res.name) = Void) implies item (res.name) = res
 		end
 
 	replace_resource (res: RESOURCE) is

@@ -526,7 +526,7 @@ feature -- Event - command association
 			Result := implementation.last_command_id
 		end
 	
-feature {EV_WIDGET, EV_WIDGET_IMP} -- Implementation
+feature -- Implementation
 
 	implementation: EV_WIDGET_I
 			-- Implementation of Current widget

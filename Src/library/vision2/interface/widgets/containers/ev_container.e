@@ -52,7 +52,7 @@ feature -- Access
 			Result := True
 		end
 	
-feature {EV_WIDGET, EV_WIDGET_I} -- Implementation
+feature -- Implementation
 
         implementation: EV_CONTAINER_I
 	

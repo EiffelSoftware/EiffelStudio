@@ -189,7 +189,9 @@ feature -- Execution
 				end;
 				draw_segment (x0, y0, x1, y1);
 				widget.ungrab;
-				drag_source.update_after_transport (button_data);
+				if drag_source /= Void then
+					drag_source.update_after_transport (button_data)
+				end;
 				stone := Void;
 				drag_source := Void;
 			elseif argument = Drop_action then
@@ -199,13 +201,20 @@ feature -- Execution
 				widget.ungrab;
 				target := pointed_hole;
 				button_data ?= context_data;
+				if drag_source /= Void then
+					drag_source.update_after_transport (button_data)
+				end;
 				if target /= Void then
 					check
 						button_data /= Void
 					end;
-					target.receive (stone);
+					if stone /= Void then
+						target.receive (stone)
+					end;
 				end;
-				drag_source.update_after_transport (button_data);
+				--if drag_source /= Void then
+					--drag_source.update_after_transport (button_data)
+				--end;
 				stone := Void;
 				drag_source := Void;
 			end;

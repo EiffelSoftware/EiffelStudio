@@ -166,6 +166,16 @@ feature {NONE}
 			widget.set_title (new_title);
 		end;
 
+	widget_forbid_resize is
+		do
+			widget.forbid_resize
+		end
+
+	widget_allow_resize is
+		do
+			widget.allow_resize
+		end
+
 feature
 
 	update_visual_name_in_editor is

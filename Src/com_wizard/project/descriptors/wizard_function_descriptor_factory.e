@@ -78,8 +78,10 @@ feature -- Basic operations
 				name.append ("_")
 				name.append_integer (member_id)
 			end
-			if (invoke_kind = Invoke_propertyput) or (invoke_kind = Invoke_propertyputref) then
+			if is_propertyput (invoke_kind) then
 				name.prepend ("set_")
+			elseif is_propertyputref (invoke_kind) then
+				name.prepend ("set_ref_")
 			end
 			tmp_string := clone (name)
 			tmp_string.to_lower

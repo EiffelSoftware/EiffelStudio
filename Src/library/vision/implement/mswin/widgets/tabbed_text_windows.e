@@ -12,7 +12,8 @@ inherit
 
 	SCROLLED_TEXT_WINDOWS
 		redefine
-			realize
+			realize,
+                        default_style
 		end
 
 creation
@@ -27,21 +28,6 @@ feature -- Initialization
 			wc: WEL_COMPOSITE_WINDOW
 		do
 			if not realized then
-				default_style := Ws_child + Ws_visible + Ws_border
-					   + Es_nohidesel + Es_left
-					   + Es_multiline + Es_autovscroll
-				if not is_word_wrap_mode then
-					default_style := default_style + Es_autohscroll
-				end
-				if is_read_only then
-					default_style := default_style + Es_readonly
-				end
-				if is_horizontal_scrollbar then
-					default_style := default_style + Ws_hscroll
-				end
-				if is_vertical_scrollbar then
-					default_style := default_style + Ws_vscroll
-				end
 				if width = 0 then
 					set_width (200)
 				end
@@ -65,65 +51,45 @@ feature -- Initialization
 				if margin_width + margin_height > 0 then
 					set_margins (margin_width, margin_height)
 				end
-				if tab_positions /= Void then
-					if tab_positions.count = 1 then
-						set_tab_position (tab_positions.item (1))
-					else
-						set_tab_positions (tab_positions)
-					end
-				end
+			end
+		end
+
+feature -- Status setting
+
+	set_tab_length (new_length: INTEGER) is
+			-- Set `tab_length' to `new_length'.
+		do
+			tab_length := new_length
+			if exists then
+				set_tab_stops_array (<<tab_length*4>>)
+				invalidate
 			end
 		end
 
 feature -- Status report
 
-	tab_positions: ARRAY [INTEGER]
-			-- Positions of tabs.
+	tab_length: INTEGER
+			-- Size for each tabulation
 
-feature -- Status setting
+feature {NONE} -- Implementation
 
-	set_no_tabs is
-			-- Turn off tabulation
+	default_style: INTEGER is
+			-- Default style for creation.
 		do
-			if exists then
-				set_default_tab_stops
-				invalidate
+			Result := Ws_child + Ws_visible + Ws_border
+				   + Es_nohidesel + Es_left
+				   + Es_multiline + Es_autovscroll
+			if not is_word_wrap_mode then
+				Result := Result + Es_autohscroll
 			end
-			tab_positions := Void
-		end
-	
-	set_tab_position (tab_position: INTEGER) is
-			-- Set tabs at every `tab_position'
-		local
-			arr: ARRAY [INTEGER]
-		do
-			if exists then
-				set_tab_stops (tab_position * 4)
-				invalidate
+			if is_read_only then
+				Result := Result + Es_readonly
 			end
-			!! tab_positions.make (1,1)
-			tab_positions.put (tab_position, 1)
-		end
-
-	set_tab_positions (tab_position_array: ARRAY [INTEGER]) is
-			-- Set tabs at positions specified in `tab_position_array'
-		local
-			la: ARRAY [INTEGER]
-			i: INTEGER
-		do
-			tab_positions := clone (tab_position_array)
-			if exists then
-				from 
-					la := clone (tab_position_array)
-					i := la.lower
-				until
-					i > la.upper
-				loop
-					la.put (la.item (i) * 4, i)
-					i := i + 1
-				end
-				set_tab_stops_array (la)
-				invalidate
+			if is_horizontal_scrollbar then
+				Result := Result + Ws_hscroll
+			end
+			if is_vertical_scrollbar then
+				Result := Result + Ws_vscroll
 			end
 		end
 

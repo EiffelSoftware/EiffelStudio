@@ -308,9 +308,13 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			!! Result.make_from_existing (get_xm_string_table (screen_object, XmNlistItems), list_item_count)
+			!! Result.make_from_existing 
+				(get_xm_string_table (screen_object, XmNlistItems), 
+				list_item_count);
+			Result.set_shared
 		ensure
-			Result_not_void: Result /= Void
+			valid_Result: Result /= Void and then Result.is_valid;
+			Result_is_shared: Result.shared
 		end;
 
 	list_label_string: MEL_STRING is
@@ -508,11 +512,9 @@ feature -- Status setting
 			-- Set `list_items' to `a_list'.
 		require
 			exists: not is_destroyed;
-			a_list_exists: not a_list.is_destroyed
+			valid_list: a_list /= Void and then a_list.is_destroyed
 		do
 			set_xm_string_table (screen_object, XmNlistItems, a_list.handle)
-		ensure
-			a_list_set: list_items.is_equal (a_list)
 		end;
 
 	set_list_label_string (a_compound_string: MEL_STRING) is

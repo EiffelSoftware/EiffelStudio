@@ -16,7 +16,14 @@ feature {EV_MENU} -- Implementation
 			-- Add `a_menu' into container.
 		require
 			exists: not destroyed
+			add_menu_ok: add_menu_ok
 		deferred
+		end
+
+	add_menu_ok: BOOLEAN is
+			-- Can we add a menu to the Currrent widget?
+		do
+			Result := True
 		end
 
 end -- class EV_MENU_HOLDER_I

@@ -82,25 +82,45 @@ feature -- Access
 	custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
 			-- Expression representing custom attributes.
 		do
-			Result := internal_custom_attributes (Attribute_header)
+			Result := internal_custom_attributes (Metadata_header)
+			if Result /= Void then
+				Result.append (internal_custom_attributes (Attribute_header))
+			else
+				Result := internal_custom_attributes (Attribute_header)
+			end
 		end
 
 	class_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
 			-- Expression representing custom attributes.
 		do
-			Result := internal_custom_attributes (Class_attribute_header)
+			Result := internal_custom_attributes (Class_metadata_header)
+			if Result /= Void then
+				Result.append (internal_custom_attributes (Class_attribute_header))
+			else
+				Result := internal_custom_attributes (Class_attribute_header)
+			end
 		end
 
 	interface_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
 			-- Expression representing custom attributes.
 		do
-			Result := internal_custom_attributes (Interface_attribute_header)
+			Result := internal_custom_attributes (Interface_metadata_header)
+			if Result /= Void then
+				Result.append (internal_custom_attributes (Interface_attribute_header))
+			else
+				Result := internal_custom_attributes (Interface_attribute_header)
+			end
 		end
 		
 	assembly_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
 			-- Expression representing custom attributes for an assembly
 		do
-			Result := internal_custom_attributes (Assembly_attribute_header)
+			Result := internal_custom_attributes (Assembly_metadata_header)
+			if Result /= Void then
+				Result.append (internal_custom_attributes (Assembly_attribute_header))
+			else
+				Result := internal_custom_attributes (Assembly_attribute_header)
+			end
 		end
 
 	has_global_once: BOOLEAN is
@@ -178,16 +198,36 @@ feature -- Element change
 					l_index := lookup_table.found_item
 					l_index.index_list.append (v.index_list)
 				else
-					create l_index.initialize (v.tag, clone (v.index_list))
+					create l_index.initialize (v.tag, clone (v.index_list), clone (v.location))
 					lookup_table.put (l_index, l_index.tag)
+				end
+				if obsolete_tags.has (v.tag) then
+					Error_handler.insert_warning (
+						create {OBSOLETE_INDEXING_TAG}.make (
+							System.current_class, v.tag,
+							obsolete_tags.item (v.tag), v.location))
 				end
 			end
 		end
 
-feature -- Constants
+feature {NONE} -- Constants
 
 	External_header: STRING is "external_name"
 			-- Index name which holds name as seen by other languages.
+
+	Metadata_header: STRING is "metadata"
+			-- Index name which holds custom attributes applied to both implementation
+			-- and interface of current class.
+
+	Class_metadata_header: STRING is "class_metadata"
+			-- Index name which holds custom attributes applied to associated class only.
+
+	Interface_metadata_header: STRING is "interface_metadata"
+			-- Index name which holds custom attributes applied to associated interface only.
+			
+	Assembly_metadata_header: STRING is "assembly_metadata"
+			-- Index name which holds custom attributes applied to associated assembly.
+			-- They are only taken into account for the root_class.
 
 	Attribute_header: STRING is "attribute"
 			-- Index name which holds custom attributes applied to both implementation
@@ -217,6 +257,19 @@ feature -- Constants
 	
 	global_value: STRING is "global"
 			-- Value name of `Once_status_header'.
+
+	obsolete_tags: HASH_TABLE [STRING, STRING] is
+			-- Table indexed by obsoleted indexing tag, where key is new indexing tag that
+			-- should be used
+		do
+			create Result.make (5)
+			Result.put (Metadata_header, attribute_header)
+			Result.put (Class_metadata_header, Class_attribute_header)
+			Result.put (Interface_metadata_header, Interface_attribute_header)
+			Result.put (Assembly_metadata_header, Assembly_attribute_header)
+		ensure
+			obsolete_tags_not_void: Result /= Void
+		end
 
 feature {NONE} -- Implementation
 

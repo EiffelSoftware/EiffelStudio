@@ -146,7 +146,7 @@ feature -- Element change
 	set_font (ft: EV_FONT) is
 			-- Make `ft' new font of `Current'.
 		do
-			if not font.is_equal (ft) then
+			if not internal_font.is_equal (ft) then
 				Precursor {EV_FONTABLE_IMP} (ft)
 				if not text.is_empty then
 					accomodate_text (text)
@@ -232,7 +232,7 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 					-- Retrieve the font used to draw the text
 				draw_font := private_wel_font
 				if draw_font = Void then
-					font_imp ?= font.implementation
+					font_imp ?= internal_font.implementation
 					draw_font := font_imp.wel_font
 				end
 					-- Set the flag for the forthcoming call to

@@ -82,6 +82,21 @@ feature -- Access
 			Result.extend (name)
 		end
 
+	documents: ARRAYED_LIST [DOCUMENT] is
+			-- Get all project documents from disk		
+		do
+			if not all_documents_read then
+				progress_generator.set_title ("Retrieving Documents")
+				Progress_generator.set_heading_text ("Retrieving file...")
+				progress_generator.set_procedure (agent retrieve_documents (create {DIRECTORY}.make (root_directory)))
+				progress_generator.suppress_progress_bar (True)
+				progress_generator.generate
+				progress_generator.suppress_progress_bar (False)
+				all_documents_read := True
+			end
+			Result := Shared_document_manager.documents.linear_representation
+		end		
+
 feature -- Commands
 
 	update is
@@ -169,19 +184,6 @@ feature {VALIDATOR_TOOL_DIALOG} -- Validation
 			show_error_report
 		end
 
-	validate_links is
-			-- Validate links in all files recursively.
-		local
-			l_link_manager: LINK_MANAGER
-		do
-			create l_link_manager.make_with_documents (documents)
-			Progress_generator.set_upper_range (documents.count)
-			Progress_generator.set_title ("Link Validation")
-			Progress_generator.set_procedure (agent l_link_manager.check_links)
-			Progress_generator.set_heading_text ("Validating Links in file...")			
-			Progress_generator.generate
-		end	
-
 feature -- Links
 
 	update_links (a_old, a_new: DOCUMENT_LINK) is
@@ -193,7 +195,7 @@ feature -- Links
 			l_link_manager: LINK_MANAGER
 		do
 			create l_link_manager.make_with_documents (documents)
-			l_link_manager.run (a_old, a_new, False, False)
+			l_link_manager.update_links (a_old, a_new)
 		end	
 
 feature -- Status Setting	
@@ -269,27 +271,12 @@ feature -- Access
 			Result := preferences /= Void and then preferences.is_valid	
 		end		
 
-feature {DOCUMENT_PROJECT_PREFERENCES}
+feature {DOCUMENT_PROJECT_PREFERENCES} -- File
 
 	file: PLAIN_TEXT_FILE
 			-- Project file	
 
-feature {NONE} -- Implementation		
-		
-	documents: ARRAYED_LIST [DOCUMENT] is
-			-- Get all project documents from disk		
-		do
-			if not all_documents_read then
-				progress_generator.set_title ("Retrieving Documents")
-				Progress_generator.set_heading_text ("Retrieving file...")
-				progress_generator.set_procedure (agent retrieve_documents (create {DIRECTORY}.make (root_directory)))
-				progress_generator.suppress_progress_bar (True)
-				progress_generator.generate
-				progress_generator.suppress_progress_bar (False)
-				all_documents_read := True
-			end
-			Result := Shared_document_manager.documents.linear_representation
-		end				
+feature {NONE} -- Implementation				
 		
 	has_been_validated: BOOLEAN
 			-- Has Current been validated?

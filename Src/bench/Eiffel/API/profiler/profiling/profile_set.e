@@ -208,9 +208,6 @@ end;
 	stop_computation is
 			-- Stops computation i.e. computes the averages.
 		local
-			calls_avg_eiffel_real,
-			calls_avg_c_real,
-			calls_avg_cycle_real: REAL
 			count: INTEGER;
 		do
 			count := eiffel_profiling_list.count;
@@ -219,8 +216,7 @@ end;
 				total_avg_eiffel := total_avg_eiffel / count;
 				self_avg_eiffel := self_avg_eiffel / count;
 				descendants_avg_eiffel := descendants_avg_eiffel / count;
-				calls_avg_eiffel_real := calls_avg_eiffel / count;
-				calls_avg_eiffel := calls_avg_eiffel_real.truncated_to_integer;
+				calls_avg_eiffel := calls_avg_eiffel // count
 			end;
 
 			count := c_profiling_list.count;
@@ -229,8 +225,7 @@ end;
 				total_avg_c := total_avg_c / count;
 				self_avg_c := self_avg_c / count;
 				descendants_avg_c := descendants_avg_eiffel / count;
-				calls_avg_c_real := calls_avg_c / count;
-				calls_avg_c := calls_avg_c_real.truncated_to_integer;
+				calls_avg_c := calls_avg_c // count;
 			end;
 
 			count := cycle_profiling_list.count;
@@ -239,8 +234,7 @@ end;
 				total_avg_cycle := total_avg_cycle / count;
 				self_avg_cycle := self_avg_cycle / count;
 				descendants_avg_cycle := descendants_avg_cycle / count;
-				calls_avg_cycle_real := calls_avg_cycle / count;
-				calls_avg_cycle := calls_avg_cycle_real.truncated_to_integer;
+				calls_avg_cycle := calls_avg_cycle // count;
 			end;
 		end;
 

@@ -152,7 +152,7 @@ feature -- DATABASE_INTEGER
 
 feature -- DATABASE_BOOLEAN
 
-	sql_name_boolean: STRING is "NUMBER"
+	sql_name_boolean: STRING is "CHAR"
 
 feature -- LOGIN and DATABASE_APPL only for password_ok
 

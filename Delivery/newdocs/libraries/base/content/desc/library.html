@@ -1,0 +1,45 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>DESC, Creating a Library Object</TITLE>
+		<LINK REL=StyleSheet HREF="../../../../default.css">
+		<META NAME="MS-HKWD" CONTENT="DLL">
+		<META NAME="MS-HKWD" CONTENT="Shared Call">
+		<META NAME="MS-HKWD" CONTENT="DESC">
+	</HEAD>
+	<BODY>
+		<H1>Creating a Library Object</H1>
+		<P>
+			To Create a DESC object representing a library and load that library,
+			use  a declaration such as:
+			<P CLASS="code">
+				<SPAN CLASS="elocal">your_dll</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<SPAN CLASS="eclass"><A HREF="../../reference/desc/spec/win32/dll_32.html">
+				DLL_32</A></SPAN>
+			</P>
+		<P>
+			where <SPAN CLASS="elocal">your_dll</SPAN> should be replaced by whatever name you have chosen to
+			denote the library in your software, and execute a creation instruction of the form:
+			<P CLASS="code">
+				<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">your_dll</SPAN>.<SPAN CLASS="elocal">make</SPAN>
+				(<SPAN CLASS="estring">"your_lib_name"</SPAN>)
+			</P>
+		<P>
+			where <SPAN CLASS="elocal">your_lib_name</SPAN> is the name of the file containing the library.
+		<P>
+			After this call has been executed, the boolean value <SPAN CLASS="elocal">your_dll.meaningful</SPAN>
+			will be true if and only if the creation has been successful, that is to say, the
+			given name did correspond to an available library, and it was possible to load it.
+		<P>
+			If <SPAN CLASS="elocal">your_dll.meaningful</SPAN> is false, you can have more details about the error
+			by comparing the value of <SPAN CLASS="elocal">your_dll.error_code</SPAN>, an integer, to those of
+			constant attributes defined in class <A HRE
+			Two classes, <A HREF="../reference/desc/spec/win32/dll_32.html">DLL_32</A> and
+			<A HREF="../reference/desc/spec/win32/dll_32_routine.html">DLL_32_ROUTINE</A>
+			, supported by an auxiliary class <A HREF="../reference/desc/general/shared_library_constants.html">
+			SHARED_LIBRARY_CONSTANTS</A>. As expressed by an invariant of class
+			<A HREF="../reference/desc/spec/win32/dll_32.html">DLL_32</A>, the value of
+			<SPAN CLASS="elocal">meaningful</SPAN> is true if an only if <SPAN CLASS="elocal">error_code</SPAN>
+			= <SPAN CLASS="elocal">0</SPAN>.
+	</BODY>
+</HTML>

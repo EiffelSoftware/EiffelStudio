@@ -1,0 +1,32 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>DESC, Calling a Routine</TITLE>
+		<LINK REL=StyleSheet HREF="../../../../default.css">
+		<META NAME="MS-HKWD" CONTENT="DLL">
+		<META NAME="MS-HKWD" CONTENT="Shared Call">
+		<META NAME="MS-HKWD" CONTENT="DESC">
+	</HEAD>
+	<BODY>
+		<H1>Calling a Routine</H1>
+		<P>
+			Having <A HREF="routine.html">created</A> the object
+			representing the external routine and attached	it to entity
+			<SPAN CLASS="elocal">your_routine</SPAN>, you may now call the routine with
+			arbitrary actual arguments through the procedure <SPAN CLASS="elocal">call</SPAN>,
+			a	feature of class
+			<A HREF="../../reference/desc/spec/win32/dll_32_routine.html">DLL_32_ROUTINE</A>.
+		<P>
+			The procedure takes a single argument, of type
+			<A HREF="../../reference/kernel/array.html">ARRAY [ANY]</A>, containing
+			the successive actual arguments to be passed to the external routine.
+			The easiest technique is to use a manifest array, as in:
+			<P CLASS="code">
+				<SPAN CLASS="elocal">your_routine</SPAN>.<SPAN CLASS="elocal">call</SPAN>
+				<SPAN CLASS="esymbol">(&lt;&lt;</SPAN><SPAN CLASS="elocal">-325</SPAN><SPAN CLASS="esymbol">,</SPAN>
+				<SPAN CLASS="elocal">67.2</SPAN><SPAN CLASS="esymbol">,</SPAN>
+				<SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">,<SPAN>
+				<SPAN CLASS="elocal">a</SPAN><SPAN CLASS="esymbol">+</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">&gt;&gt;)</SPAN>
+			</P>
+	</BODY>
+</HTML>

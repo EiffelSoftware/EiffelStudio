@@ -1,0 +1,54 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>DESC, Creating a Routine Object</TITLE>
+		<LINK REL=StyleSheet HREF="../../../../default.css">
+		<META NAME="MS-HKWD" CONTENT="DLL">
+		<META NAME="MS-HKWD" CONTENT="Shared Call">
+		<META NAME="MS-HKWD" CONTENT="DESC">
+	</HEAD>
+	<BODY>
+		<H1>Creating a Routine Object</H1>
+		<P>
+			To create a DESC object representing a routine from a DLL, use a
+			declaration such as:
+			<P CLASS="code">
+				<SPAN CLASS="elocal">your_routine</SPAN><SPAN CLASS="esymbol">:</SPAN> <FONT CLASS="eclass">
+				<A HREF="../../reference/desc/spec/win32/dll_32_routine.html">
+				DLL_32_ROUTINE</A></FONT>
+			</P>
+		<P>
+			where <SPAN CLASS="elocal">your_routine</SPAN> should be replaced by whatever name you have chosen to
+			denote the routine in your software, and execute a creation instruction of the form:
+			<P CLASS="code">
+				<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">your_routine</SPAN>.<SPAN CLASS="elocal">make_by_name</SPAN> <SPAN CLASS="esymbol">(</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">your_dll</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="estring">"your_routine_name"</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="esymbol">&lt;&lt;</SPAN><SPAN CLASS="elocal">argtyp1<SPAN CLASS="esymbol">,</SPAN> argtyp2<SPAN CLASS="esymbol">, ...</SPAN></SPAN><SPAN CLASS="esymbol">&gt;&gt;,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">res_type</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			</P>
+		<P>
+			or, if you prefer for faster access to identify the routine by an integer index rather
+			than a name:
+			<P CLASS="code">
+				<SPAN CLASS="ekeyword">create</SPAN>
+				<SPAN CLASS="elocal">your_routine</SPAN>.<SPAN CLASS="elocal">make_by_index</SPAN>
+				<SPAN CLASS="esymbol">(</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">your_dll</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">your_routine_index</SPAN>,<SPAN CLASS="ecomment"> -- The only differing line</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="esymbol">&lt;&lt;</SPAN><SPAN CLASS="elocal">argtyp1<SPAN CLASS="esymbol">,</SPAN> argtyp2<SPAN CLASS="esymbol">, ...</SPAN></SPAN><SPAN CLASS="esymbol">&gt;&gt;,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">res_type</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			</P>
+			where <SPAN CLASS="elocal">your_dll</SPAN> is the library object created <A HREF="library.html">
+			previously</A>.
+		<P>
+			After either call has been executed, the boolean value <SPAN CLASS="elocal">your_routine.meaningful</SPAN>
+			will be true if and only if the creation has been successful, that is to say, the given
+			name or index did correspond to a routine of the library, and it was possible to
+			open it. If the value is false, you can have more details about the error by
+			comparing the value of <SPAN CLASS="elocal">your_routine.error_code</SPAN>, an integer, to those
+			of constants attributes defined in class
+			<A HREF="../reference/desc/general/shared_library_constants.html">
+			SHARED_LIBRARY_CONSTANTS</A>.
+	</BODY>
+</HTML>

@@ -15,7 +15,9 @@ inherit
 
 feature -- Access
 
-	debuggable_name: STRING is "debug_output"
+	debuggable_class_name: STRING is "DEBUG_OUTPUT"
+
+	debuggable_feature_name: STRING is "debug_output"
 
 	debug_output_feature_i (c: CLASS_C): FEATURE_I is
 			-- 
@@ -34,13 +36,13 @@ feature -- Access
 		do
 			lc := internal_debuggable_class.item
 			if lc = Void then
-				cis := Eiffel_universe.compiled_classes_with_name (debuggable_name)
+				cis := Eiffel_universe.compiled_classes_with_name (debuggable_class_name)
 				if not cis.is_empty then
 					Result := cis.first.compiled_class
 				end
 				internal_debuggable_class.put (Result)
 			elseif not lc.is_valid then
-				cis := Eiffel_universe.compiled_classes_with_name (debuggable_name)
+				cis := Eiffel_universe.compiled_classes_with_name (debuggable_class_name)
 				if not cis.is_empty then
 					Result := cis.first.compiled_class
 				end
@@ -59,7 +61,7 @@ feature -- Access
 				internal_debug_output_feature.item = Void
 			then
 				internal_debug_output_feature.put (
-					debuggable_class.feature_with_name (debuggable_name))
+					debuggable_class.feature_with_name (debuggable_feature_name))
 			end
 			Result := internal_debug_output_feature.item
 		end

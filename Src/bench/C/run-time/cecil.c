@@ -58,7 +58,7 @@ rt_private char *rcsid =
  * to get the address of a routine of an invisible class.
  */
 
-rt_shared unsigned char eif_ignore_invisible = (unsigned char) 0;
+rt_shared unsigned char eif_visible_is_off = (unsigned char) 0;
 #endif
 
 /* 
@@ -69,7 +69,7 @@ rt_public void eifvisex (void) {
     /* Enable the visible exception */
 
     EIF_GET_CONTEXT
-    eif_ignore_invisible = (unsigned char) 0;
+    eif_visible_is_off = (unsigned char) 0;
     EIF_END_GET_CONTEXT
 }
 
@@ -77,7 +77,7 @@ rt_public void eifuvisex (void)  {
     /* Disable visible exception */
 
     EIF_GET_CONTEXT
-    eif_ignore_invisible = (unsigned char) 1;
+    eif_visible_is_off = (unsigned char) 1;
     EIF_END_GET_CONTEXT
 }
 
@@ -267,7 +267,7 @@ rt_public EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid)
 #ifndef WORKBENCH
 	ref = (EIF_REFERENCE_FUNCTION *) ct_value(ptr_table, routine);	/* Code location */
 	if (!ref)	/* Was function found? */
-		if (eif_ignore_invisible)	/* Is Visible exception enabled? */
+		if (!eif_visible_is_off)	/* Is Visible exception enabled? */
 			eraise ("Unknown routine (visible?)", EN_PROG);	
 		else
 			return (EIF_REFERENCE_FUNCTION) 0;
@@ -275,7 +275,7 @@ rt_public EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid)
 	return *ref;	/* Return address of function. */
 #else
 	if ((feature_ptr = (int32 *) ct_value(ptr_table, routine)) == (int32*)0) {
-		if (!eif_ignore_invisible)
+		if (!eif_visible_is_off)
 			eraise ("Unknown routine (visible?)", EN_PROG);
 		return (EIF_REFERENCE_FUNCTION) 0;
 	}
@@ -313,7 +313,7 @@ rt_public EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid)
  * Class ID versus dynamic type
  */
 
-rt_public EIF_TYPE_ID eif_type_by_object (EIF_REFERENCE object)
+rt_public EIF_TYPE_ID eif_type_by_reference (EIF_REFERENCE object)
 {
 	/* Return type id of the direct reference "object" */
 	return Dftype (object);
@@ -321,7 +321,7 @@ rt_public EIF_TYPE_ID eif_type_by_object (EIF_REFERENCE object)
 	
 rt_public EIF_TYPE_ID eiftype(EIF_OBJECT object)
 {
-	/* Obsolete. Use "eif_type_by_object" instead.
+	/* Obsolete. Use "eif_type_by_reference" instead.
 	 * Return the Type id of the specified object. 
  	 */
 
@@ -378,7 +378,7 @@ rt_public void *eif_field_safe (EIF_REFERENCE object, char *name, int type_int, 
 	if (*ret != EIF_CECIL_OK)	/* Was "eifaddr" successfull? */
 		return addr;	/* Return "addr" with error code in "ret". */	
 
-	tid = eif_type_by_object (object);	/* Get type id for "eif_attribute_type" */
+	tid = eif_type_by_reference (object);	/* Get type id for "eif_attribute_type" */
 	if (tid == EIF_NO_TYPE)	/* No type id? */
 		eif_panic ("Object has no type id.");/* Should not happen. */
 
@@ -411,14 +411,15 @@ rt_public void *eifaddr(EIF_REFERENCE object, char *name, int * const ret)
 
 	i = locate(object, name);		/* Locate attribute in skeleton */
 	if (i == EIF_NO_ATTRIBUTE) {					/* Attribute not found */
-		*ret = EIF_NO_ATTRIBUTE;	/* Set "*ret" */
-		if (!eif_ignore_invisible)	
-			eraise ("Unknown attribute (visible?)", EN_PROG);
+		if (!eif_visible_is_off)	
+			eraise ("Unknown attribute", EN_PROG);
+		if (ret != NULL) 
+			*ret = EIF_NO_ATTRIBUTE;	/* Set "*ret" */
 		return &eif_default_pointer;	/* NOTREACHED */	
-						   
 	}
 
-	*ret = EIF_CECIL_OK; 	/* Set "*ret" for successfull return. */
+	if (ret != NULL)
+		*ret = EIF_CECIL_OK; 	/* Set "*ret" for successfull return. */
 #ifndef WORKBENCH
 	return (void *) (object + (System(Dtype(object)).cn_offsets[i]));
 #else

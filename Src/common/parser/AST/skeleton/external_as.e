@@ -6,7 +6,8 @@ inherit
 		redefine
 			is_external, byte_node, format, type_check
 		end;
-	SHARED_STATUS
+	SHARED_STATUS;
+	EXTERNAL_CONSTANTS
 
 feature -- Attributes
 
@@ -58,22 +59,38 @@ feature -- Conveniences
 	type_check is
 			-- Put a comment here please
 		local
-			ext_error: EXTERNAL_SYNTAX_ERROR;
+			sp_id: INTEGER;
+			ext_dll_sign: EXT_DLL_SIGN;
+			ext_same_sign: EXT_SAME_SIGN;
+			raise_an_error: BOOLEAN;
 		do
-			if language_name.has_arg_list then
-					-- check if the eiffel feature and the signature
-					-- have the same number of arguments
-				if not (language_name.arg_list.count = context.a_feature.argument_count) then
-						-- Raise an error
-						-- This error might not be raised on the right
-						-- line. Is it possible to raise it in EXTERNAL_LANG_AS?
-					!!ext_error.init;
-					ext_error.set_external_error_message 
-						("Wrong number of arguments for signature declaration in external%N %
-							%(feature and signature must have the same number of arguments)%N");
-					Error_handler.insert_error (ext_error);
+				-- Check if the signature has the proper number of elements
+				-- and if a result type is given only with a function
+			if language_name.has_signature then
+				if language_name.has_arg_list and then
+					not (language_name.arg_list.count = context.a_feature.argument_count)
+				then
+					raise_an_error := True;
+				elseif language_name.has_return_type and not context.a_feature.is_function then
+					raise_an_error := True;
+				end;
+				if raise_an_error then
+					!! ext_same_sign;
+					context.init_error (ext_same_sign);
+					Error_handler.insert_error (ext_same_sign);
 					Error_handler.raise_error;
 				end;
+			end;
+				-- For DLL - Windows, a signature is compulsory
+			sp_id := language_name.special_id;
+			if (sp_id = dll16_id) or (sp_id = dll32_id) and then
+				((context.a_feature.argument_count > 0 and not language_name.has_arg_list) or
+				(context.a_feature.is_function and not language_name.has_return_type))
+			then
+				!! ext_dll_sign;
+				context.init_error (ext_dll_sign);
+				Error_handler.insert_error (ext_dll_sign);
+				Error_handler.raise_error;
 			end;
 		end;
 

@@ -239,6 +239,8 @@ feature -- Basic operations
 
 	generate_mappers_and_c_alias is
 			-- Generating extra files
+		local
+			generated_globals: WIZARD_GENERATED_RT_GLOBALS_GENERATOR
 		do
 			if Shared_wizard_environment.abort then
 				message_output.add_message (Current, Generation_Aborted)
@@ -246,7 +248,7 @@ feature -- Basic operations
 				message_output.add_message (Current, Runtime_functions_generation)
 				progress_report.start
 				progress_report.set_title (Runtime_functions_generation)
-				progress_report.set_range (8)
+				progress_report.set_range (9)
 				Shared_file_name_factory.create_generated_mapper_file_name (Generated_ce_mapper_writer)
 				progress_report.step
 				Generated_ce_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
@@ -262,6 +264,8 @@ feature -- Basic operations
 				Shared_file_name_factory.create_c_alias_file_name (Alias_c_writer)
 				progress_report.step
 				Alias_c_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
+				progress_report.step
+				create generated_globals.generate 
 				progress_report.step
 			end
 			set_generated_ce_mapper (Void)

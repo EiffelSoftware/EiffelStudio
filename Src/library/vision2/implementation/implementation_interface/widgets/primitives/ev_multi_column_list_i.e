@@ -84,7 +84,7 @@ feature -- Status report
 		do
 			if a_column <= column_widths.count then
 				Result := column_widths @ a_column
-			elseif a_column <= column_count then
+			else
 				Result := Default_column_width
 			end
 		end
@@ -106,7 +106,7 @@ feature -- Status report
 				else
 					Result.set_right_alignment
 				end
-			elseif a_column <= column_count then
+			else
 				create Result.make_with_left_alignment
 			end
 		end
@@ -559,6 +559,9 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.51  2000/04/21 18:54:52  king
+--| Made column_width and column_alignment return default results for non set values
+--|
 --| Revision 1.50  2000/04/21 16:32:56  rogers
 --| Removed set_row_height.
 --|

@@ -175,7 +175,13 @@ feature -- Status setting
 		
 	set_effects (an_effect: EV_CHARACTER_FORMAT_EFFECTS) is
 			-- Make `an_effect' the new `effects'.
+		local
+			screen_dc: WEL_SCREEN_DC
 		do
+				-- Create a screen DC for access to metrics
+			create screen_dc
+			screen_dc.get
+			
 			if an_effect.is_underlined then
 				enable_underlined
 			else
@@ -186,7 +192,15 @@ feature -- Status setting
 			else
 				disable_striked_out
 			end
+			set_offset (pixel_to_point (screen_dc, an_effect.vertical_offset) * 20)
 			internal_effects := an_effect.twin
+			
+			screen_dc.release
+		end
+		
+	set_vertical_offset (an_offset: INTEGER) is
+			-- Assign `an_offset' to `vertical_offset'.
+		do
 		end
 
 feature {NONE} -- Implementation

@@ -37,6 +37,7 @@ http\://java.sun.com/products/jdk/1.1/docs/guide/jni/index.html:papers/eiffel2ja
 http\://www.eiffel.com/doc/oosc.html:eiffel/language/precursor_construct.html
 http\://www.aw.com/cp/eiffel.html:eiffel/books.html
 eiffel/manuals/net/execution.html:eiffel/manuals/net/datagram_sockets.html eiffel/manuals/net/complex_example.html eiffel/manuals/net/toc.html
+papers/eiffeltime.html:papers/eiffelstore.html
 http\://www.eiffel.com/products/com:release_notes.html
 /pictures/books/big/oue.jpg:eiffel/books.html
 icons/feather.gif:eiffel/manuals/net/bibliography.html eiffel/manuals/net/examples_introduction.html eiffel/manuals/net/predefined_level.html eiffel/manuals/net/datagram_sockets.html eiffel/manuals/net/complex_example.html eiffel/manuals/net/overview.html eiffel/manuals/net/toc.html eiffel/manuals/net/clients_and_servers.html eiffel/manuals/net/control.html eiffel/manuals/net/introduction.html eiffel/manuals/net/working.html
@@ -59,6 +60,7 @@ mailto\:info@eiffel.com:eiffel/manuals/net/bibliography.html eiffel/manuals/net/
 /doc/manuals/bench/tour/page23.html:eiffel/language/assertions.maker.html
 papers/net/introduction:papers/net/toc.html
 eiffel/manuals/net/toc.html:eiffel/manuals/net/bibliography.html eiffel/manuals/net/examples_introduction.html eiffel/manuals/net/predefined_level.html eiffel/manuals/net/datagram_sockets.html eiffel/manuals/net/complex_example.html eiffel/manuals/net/overview.html eiffel/manuals/net/clients_and_servers.html eiffel/manuals/net/control.html eiffel/manuals/net/introduction.html eiffel/manuals/net/working.html
+mailto\:support@eiffel.com:papers/eiffelstore.html
 /pictures/books/big/dubois.jpg:eiffel/books.html
 eiffel/manuals/net/introduction.html:eiffel/manuals/net/toc.html eiffel/manuals/net/clients_and_servers.html
 /g\:/pdf/guided_tour.pdf:eiffel/language/assertions.maker.html

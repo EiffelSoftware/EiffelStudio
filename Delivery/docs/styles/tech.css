@@ -9,7 +9,7 @@ margin-top: 0;
 
 P,UL,OL,TABLE {
 font-family: Arial, Helvetica;
-font-size: small;
+font-size: x-small;
 }
 
 PRE {
@@ -22,10 +22,6 @@ LI {
 	font-size: x-small;
 	}
 
-LI.small {
-	margin-top: 0;
-	}
-		
 H5 {
 font-size: x-large;
 font-family: arial, helvetica;

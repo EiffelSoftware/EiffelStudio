@@ -43,6 +43,12 @@ feature -- Type check, byte code and dead code removal
 			context.pop (1);
 			context.replace (t);
 
+			if t.is_separate then
+					-- The target of a separate call must be an argument
+					-- FIXME: the expression can be an argument access only
+				Error_handler.make_separate_syntax_error
+			end
+
 				-- Type check the message
 			message.type_check;
 		end;

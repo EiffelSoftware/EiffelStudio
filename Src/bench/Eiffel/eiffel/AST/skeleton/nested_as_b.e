@@ -36,7 +36,7 @@ feature -- Type check, byte code and dead code removal
 		local
 			curr_feat: FEATURE_I;
 			vape_check: BOOLEAN
-			
+			t: TYPE_A
 		do
 			vape_check := context.check_for_vape;
 				-- Type check the target
@@ -44,6 +44,14 @@ feature -- Type check, byte code and dead code removal
 			if context.level4 then
 				context.set_check_for_vape (False);	
 			end;
+
+			t := context.item
+			if t.is_separate then
+				if not target.is_argument then
+					Error_handler.make_separate_syntax_error
+				else
+				end
+			end
 
 				-- Type check the message
 			message.type_check;

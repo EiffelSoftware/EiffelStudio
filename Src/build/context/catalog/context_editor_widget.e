@@ -38,7 +38,6 @@ feature -- Creation
 	make (a_name: STRING a_parent: COMPOSITE) is
 		local
 			i: INTEGER
---			close_button: CLOSE_WINDOW_BUTTON
 			geometry_form: GEOMETRY_FORM
 			label_text_form: LABEL_TEXT_FORM
 			perm_wind_form: PERM_WIND_FORM
@@ -81,6 +80,7 @@ feature -- Creation
 			focus_area_form.attach_top (context_hole, 0)
 			focus_area_form.attach_top (context_editor_label, 3)
 			focus_area_form.attach_top (formats_rc, 0)
+			focus_area_form.attach_right (formats_rc, 0)
 			focus_area_form.attach_left (context_hole, 0)
 			focus_area_form.attach_left_widget (context_hole, context_editor_label, 5)
 			focus_area_form.attach_left_widget (context_editor_label, formats_rc, 5)

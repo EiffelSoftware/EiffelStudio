@@ -117,7 +117,7 @@ feature
 			other_bits ?= other;
 			Result :=	other_bits /= Void
 						and then
-						other_bits.base_type /= base_type
+						other_bits.base_type = base_type
 		end;
-			
+
 end

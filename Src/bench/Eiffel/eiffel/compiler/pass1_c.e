@@ -25,11 +25,11 @@ feature
 			temp: STRING
 		do
 				-- Verbose
-			io.error.putstring ("Degree 5: class ");
+			io.putstring ("Degree 5: class ");
 				temp := associated_class.class_name.duplicate;
 				temp.to_upper;
-			io.error.putstring (temp);
-			io.error.new_line;
+			io.putstring (temp);
+			io.new_line;
 
 			class_id := associated_class.id;
 			if new_compilation then

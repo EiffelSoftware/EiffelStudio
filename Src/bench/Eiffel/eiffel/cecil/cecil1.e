@@ -21,7 +21,8 @@ feature
 			routine_name: STRING;
 			feat: FEATURE_I;
 			c_type: TYPE_C;
-			class_type: CLASS_TYPE;
+			written_class: CLASS_C;
+			class_type, written_type: CLASS_TYPE;
 			actual_type: TYPE_A
 		do
 			file.putstring ("static char *(*cr");
@@ -33,21 +34,34 @@ feature
 				i > upper
 			loop
 				feat := values.item (i);
-				if feat = Void then
+				if 
+					(feat = Void) or else 
+					feat.is_external or else
+					feat.is_deferred
+				then
 					file.putstring ("(char *(*)()) 0");
 				else
+					written_class := System.class_of_id (feat.written_in);
 					class_type := System.class_type_of_id (type_id);
+					if (written_class.generics = Void) then
+						written_type := written_class.types.first
+					else
+						written_type := written_class.meta_type 
+											(class_type.type).associated_class_type;
+					end;
 					routine_name := Encoder.feature_name
-										(class_type.id, feat.body_id);
+										(written_type.id, feat.body_id);
 debug ("CECIL")
-	io.putstring ("Generating entry for feature: ");
-	io.putstring (feat.feature_name);
-	io.putstring (" of class: ");
-	io.putstring (class_type.associated_class.class_name);
-	io.putstring (", encoded name is: ");
-	io.putstring (routine_name);
-	io.new_line;
+    io.putstring ("Generating entry for feature: ");
+    io.putstring (feat.feature_name);
+    io.putstring (" of class: ");
+    io.putstring (written_type.associated_class.class_name);
+    io.putstring (", encoded name is: ");
+    io.putstring (routine_name);
+    io.new_line;
 end;
+
+
 					file.putstring ("(char *(*)()) ");
 					file.putstring (routine_name);
 

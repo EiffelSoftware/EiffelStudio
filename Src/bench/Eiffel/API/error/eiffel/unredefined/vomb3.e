@@ -6,7 +6,7 @@ inherit
 
 	VOMB
 		redefine
-			subcode
+			subcode, build_explain
 		end;
 
 feature
@@ -17,10 +17,18 @@ feature
 
 	interval: INTERVAL_B;
 			-- Interval of conflicting values
+
 	set_interval (t: INTERVAL_B) is
 			-- Assign `t' to `interval'.
 		do
 			interval := t;
+		end;
+
+	build_explain is
+		do
+			put_string ("Duplicate values: ");
+			interval.display (error_window);
+			new_line;
 		end;
 
 end

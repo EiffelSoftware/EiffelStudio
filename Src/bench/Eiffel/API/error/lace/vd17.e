@@ -34,9 +34,9 @@ feature
 
 	build_explain is
 		do
-			put_string ("Cluster path: `");
+			put_string ("Cluster path: ");
+-- FIXME
 			put_string (FIX ME!);
-			put_char ('%'');
 			new_line
 		end;
 end

@@ -19,9 +19,8 @@ feature
 
 	put_class_name is
 		do
-			put_string ("Class name: `");
+			put_string ("Class name: ");
 			put_string (class_name);
-			put_char ('%'');
 			new_line;
 		end;
 

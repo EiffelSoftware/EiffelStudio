@@ -28,11 +28,14 @@ feature
 	build_explain is
 			-- Build specific explanation explain for current error
 			-- in `error_window'.
+		local
+			wclass: CLASS_C;
 		do
-			put_string ("%Tfeature ");
-			a_feature.append_clickable_signature (error_window, a_feature.written_class);
-			put_string (" written in ");
-			a_feature.written_class.append_clickable_name (error_window);
+			wclass := a_feature.written_class;
+			put_string ("Deferred feature name: ");
+			a_feature.append_clickable_name (error_window, wclass);
+			put_string (" written in: ");
+			wclass.append_clickable_name (error_window);
 			new_line;
 		end;
 

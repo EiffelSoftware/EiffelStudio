@@ -14,18 +14,7 @@ inherit
 
 	D_OPTION_SD
 		redefine
-			adapt,
-			set, update_assertion, update_trace, update_debug,
-			update_optimize
-		select
-			adapt
-		end;
-	D_OPTION_SD
-		rename
-			adapt as old_adapt
-		redefine
-			set, update_assertion, update_trace, update_debug,
-			update_optimize
+			set, adapt
 		end;
 
 feature
@@ -53,7 +42,7 @@ feature
 			Error_handler.checksum;
 
 				-- Option adaptation
-			old_adapt;
+			option.adapt (value, context.current_cluster.classes, target_list);
 		end;
 
 	check_target_list is
@@ -69,7 +58,7 @@ feature
 				classes := cluster.classes;
 				target_list.start;
 			until
-				target_list.offright
+				target_list.after
 			loop
 				class_name := target_list.item.duplicate;
 				class_name.to_lower;
@@ -82,86 +71,6 @@ feature
 					Error_handler.insert_error (vd16);
 				end;
 
-				target_list.forth;
-			end;
-		end;
-
-	update_assertion (a: ASSERTION_I) is
-			-- Update assertion level for classes in the target list
-		local
-			classes: EXTEND_TABLE [CLASS_I, STRING];
-			class_name: STRING;
-		do
-			from
-				classes := context.current_cluster.classes;
-				target_list.start;
-			until
-				target_list.offright
-			loop
-				class_name := target_list.item.duplicate;
-				class_name.to_lower;
-				classes.item (class_name).set_assertion_level (a);
-	
-				target_list.forth;
-			end;
-		end;
-
-	update_trace (a: TRACE_I) is
-			-- Update trace level for classes in the target list
-		local
-			classes: EXTEND_TABLE [CLASS_I, STRING];
-			class_name: STRING;
-		do
-			from
-				classes := context.current_cluster.classes;
-				target_list.start;
-			until
-				target_list.offright
-			loop
-				class_name := target_list.item.duplicate;
-				class_name.to_lower;
-				classes.item (class_name).set_trace_level (a);
-	
-				target_list.forth;
-			end;
-		end;
-
-	update_debug (a: DEBUG_I) is
-			-- Update debug level for classes in the target list
-		local
-			classes: EXTEND_TABLE [CLASS_I, STRING];
-			class_name: STRING;
-		do
-			from
-				classes := context.current_cluster.classes;
-				target_list.start;
-			until
-				target_list.offright
-			loop
-				class_name := target_list.item.duplicate;
-				class_name.to_lower;
-				classes.item (class_name).set_debug_level (a);
-	
-				target_list.forth;
-			end;
-		end;
-
-	update_optimize (a: OPTIMIZE_I) is
-			-- Update optimization level for classes in the target list
-		local
-			classes: EXTEND_TABLE [CLASS_I, STRING];
-			class_name: STRING;
-		do
-			from
-				classes := context.current_cluster.classes;
-				target_list.start;
-			until
-				target_list.offright
-			loop
-				class_name := target_list.item.duplicate;
-				class_name.to_lower;
-				classes.item (class_name).set_optimize_level (a);
-	
 				target_list.forth;
 			end;
 		end;

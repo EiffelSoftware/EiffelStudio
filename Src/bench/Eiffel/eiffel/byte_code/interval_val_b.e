@@ -5,4 +5,10 @@ inherit
 	COMPARABLE;
 	BYTE_NODE;
 
+feature
+
+	display (a_clickable: CLICK_WINDOW) is
+		deferred
+		end;
+
 end

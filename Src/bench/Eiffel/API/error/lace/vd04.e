@@ -36,11 +36,10 @@ feature
 	build_explain is
 			-- Debug purpose
 		do
-			put_string ("Cluster path: `");
+			put_string ("Cluster path: ");
 			put_string (cluster.path);
-			put_string ("'; class name: `");
+			put_string ("%NClass name: ");
 			put_string (old_name);
-			put_char ('%'');
 			new_line
 		end;
 

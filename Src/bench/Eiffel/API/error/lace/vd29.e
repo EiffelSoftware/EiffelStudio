@@ -25,13 +25,12 @@ feature
 
 	build_explain is
 		do
-			put_string ("Cluster 1: `");
-			put_string (cluster.cluster_name);
-			put_string ("'%NCluster 2: `");
-			put_string (second_cluster_name);
-			put_string ("'%Nroot class name: `");
+			put_string ("Class name: ");
 			put_string (root_class_name);
-			put_char ('%'');
+			put_string ("%NFirst cluster: ");
+			put_string (cluster.cluster_name);
+			put_string ("%NSecond cluster: ");
+			put_string (second_cluster_name);
 			new_line
 		end;
 

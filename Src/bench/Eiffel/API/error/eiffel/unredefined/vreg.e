@@ -1,4 +1,4 @@
--- Error when there are two arguments with the same name
+-- Error when there are entities with the same name
 
 class VREG 
 
@@ -11,23 +11,23 @@ inherit
 	
 feature 
 
-	argument_name: ID_AS;
+	entity_name: STRING;
 			-- Argument name violating the VREG rule
 
 	code: STRING is "VREG";
 			-- Error code
 
-	set_argument_name (s: ID_AS) is
+	set_entity_name (s: STRING) is
 			-- Assign `s' to `argument_name'.
 		do
-			argument_name := s;
+			entity_name := s;
 		end;
 
 	build_explain is
 		do
-			put_string ("%T`");
-			put_string (argument_name);
-			put_string ("' can only appear once in the formal argument clause%N");
+			put_string ("Duplicate name: ");
+			put_string (entity_name);
+			new_line;
 		end;
 
 end

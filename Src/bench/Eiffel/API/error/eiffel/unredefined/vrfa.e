@@ -4,41 +4,31 @@ class VRFA
 
 inherit
 
-	EIFFEL_ERROR
+	FEATURE_ERROR
 		redefine
 			build_explain
 		end;
 	
 feature 
 
-	feature_i: FEATURE_I;
-			-- Involved feature
-
-	argument_name: ID_AS;
+	other_feature: FEATURE_I;
 			-- Argument name violating the VRFA rule
 
 	code: STRING is "VRFA";
 			-- Error code
 
-	set_feature_i (f: FEATURE_I) is
+	set_other_feature (f: FEATURE_I) is
 		do
-			feature_i := f;
-		end;
-
-	set_argument_name (s: ID_AS) is
-			-- Assign `s' to `argument_name'.
-		do
-			argument_name := s;
+			other_feature := f
 		end;
 
 	build_explain is
 		do
-			put_string ("%T%Tin feature `");
-			feature_i.append_clickable_name (error_window, feature_i.written_class);
-			put_string ("':%N%T%T");
-			put_string (argument_name);
-			put_string (" is a feature name and cannot%N%
-								%%T%Tbe used as an argument name%N");
+			put_string ("Formal argument name: ");
+			put_string (other_feature.feature_name);
+			put_string (" is defined as a feature: ");
+			other_feature.append_clickable_signature (error_window, other_feature.written_class);
+			new_line;
 		end;
 
 end

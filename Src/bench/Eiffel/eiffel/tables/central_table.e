@@ -124,7 +124,6 @@ end;
 				end;
 				forth
 			end;
-display_useless_ids;
 				-- Reorganize the table: the melted unit are put in the
 				-- holes in the frozen part or just moved closer to the
 				-- frozen part if there is no room left in the frozen
@@ -163,7 +162,6 @@ end;
 				forth
 			end;
 
-display_useless_ids;
 			if max_index > frozen_level then
 				frozen_level := max_index
 			end;

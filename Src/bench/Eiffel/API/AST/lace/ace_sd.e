@@ -101,16 +101,14 @@ feature -- Lace compilation
 				-- Reset the options of the CLASS_I
 			reset_options;
 
-				-- Thid general adaptation
-			adapt;
-
 			update_clusters;
 
 				-- Remove inexistant clusters from the system
 			process_removed_clusters;
 
-				-- Finaly process options
-			process_options;
+			process_system_level_options;
+
+			process_defaults_and_options;
 
 				-- Process root clause
 			root.adapt;
@@ -127,6 +125,33 @@ feature -- Lace compilation
 			end;
 		end;
 
+	process_defaults_and_options is
+		do
+			process_defaults;
+
+				-- Thid general adaptation
+			adapt;
+
+				-- Finaly process options
+			process_options;
+		end;
+
+	process_system_level_options is
+				-- Process the system level options
+		do
+			System.reset_system_level_options;
+			if defaults /= Void then
+				from
+					defaults.start
+				until
+					defaults.after
+				loop
+					defaults.item.process_system_level_options;
+					defaults.forth
+				end
+			end;
+		end;
+
 	build_clusters is
 			-- Analysis of the AS description of the SDF in order to 
 			-- build the clusters
@@ -135,7 +160,7 @@ feature -- Lace compilation
 				from
 					clusters.start
 				until
-					clusters.offright
+					clusters.after
 				loop
 					clusters.item.build;
 					clusters.forth;
@@ -150,7 +175,7 @@ feature -- Lace compilation
 				from
 					clusters.start
 				until
-					clusters.offright
+					clusters.after
 				loop
 					clusters.item.adapt_use;
 					clusters.forth;
@@ -175,42 +200,45 @@ feature -- Lace compilation
 				cluster_list := Universe.clusters;
 				cluster_list.start;
 			until
-				cluster_list.offright
+				cluster_list.after
 			loop
 				cluster_list.item.reset_options;
 				cluster_list.forth;
 			end;
 		end;
 
-	process_options is
-			-- Process options for the universe
+	process_defaults is
+			-- Process System-level defaults
 		local
 			cluster_list: LINKED_LIST [CLUSTER_I];
 		do
-				-- First Ace-level options and reset options
-			from
-				cluster_list := Universe.clusters;
-				cluster_list.start;
-			until
-				cluster_list.offright
-			loop
-				if defaults /= Void then
+			if defaults /= Void then
+				from
+					cluster_list := Universe.clusters;
+					cluster_list.start;
+				until
+					cluster_list.after
+				loop
 						-- Update current cluster visible by class D_OPTION_SD
 					context.set_current_cluster (cluster_list.item);
 
 						-- Compute defaults options for current cluster
 					defaults.adapt;
+
+					cluster_list.forth;
 				end;
-
-				cluster_list.forth;
 			end;
+		end;
 
+	process_options is
+			-- Process options for the universe
+		do
 				-- Process options in use file
 			if clusters /= Void then
 				from
 					clusters.start;
 				until
-					clusters.offright
+					clusters.after
 				loop
 					
 					clusters.item.process_options;
@@ -230,7 +258,7 @@ feature -- Lace compilation
 				cluster_list := Universe.clusters;
 				cluster_list.start;
 			until
-				cluster_list.offright
+				cluster_list.after
 			loop
 				cluster_list.item.update_cluster;
 				cluster_list.forth;
@@ -247,7 +275,7 @@ feature -- Lace compilation
 				old_clusters := Lace.old_universe.clusters;
 				old_clusters.start
 			until
-				old_clusters.offright
+				old_clusters.after
 			loop
 				cluster := old_clusters.item;
 				if not Universe.has_cluster_of_name (cluster.cluster_name) then

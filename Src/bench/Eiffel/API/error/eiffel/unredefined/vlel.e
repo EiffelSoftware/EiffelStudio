@@ -8,13 +8,20 @@ inherit
 	
 feature
 
-	parent_id: INTEGER;
+	parent: CLASS_C;
 			-- Parent node involved
 
-	set_parent_id (p: INTEGER) is
+	set_parent (p: CLASS_C) is
 			-- Assign `p' to `parent_id'.
 		do
-			parent_id := p;
+			parent := p;
+		end;
+
+	print_parent is
+		do
+			put_string ("Parent for which export list appears: ");
+			parent.append_clickable_name (error_window);
+			new_line;
 		end;
 
 	code: STRING is "VLEL";

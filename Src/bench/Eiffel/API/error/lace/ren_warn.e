@@ -23,9 +23,9 @@ feature
 
 	build_explain is
 		do
-			put_string ("Cluster name: `");
+			put_string ("Cluster name: ");
 			put_string (cluster_name);
-			put_string ("%'%N");
+			new_line;
 		end;
 
 end

@@ -73,4 +73,8 @@ feature
 		deferred
 		end;
 
+	vqmc: VQMC is
+		deferred
+		end;
+
 end

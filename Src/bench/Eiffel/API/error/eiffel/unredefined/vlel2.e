@@ -6,7 +6,7 @@ inherit
 
 	VLEL
 		redefine
-			subcode
+			subcode, build_explain
 		end;
 
 feature
@@ -23,6 +23,14 @@ feature
 			-- Assign `s' to `feature_name'.
 		do
 			feature_name := s;
+		end;
+
+	build_explain is
+		do
+			put_string ("Invalid feature name: ");
+			put_string (feature_name);
+			new_line;
+			print_parent;
 		end;
 
 end

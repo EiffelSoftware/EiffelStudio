@@ -30,7 +30,7 @@ feature
 
 	build_explain is
 		do
-			put_string ("%TUnknown option: ");
+			put_string ("Unknown option: ");
 			put_string (option_name);
 			new_line;
 		end;

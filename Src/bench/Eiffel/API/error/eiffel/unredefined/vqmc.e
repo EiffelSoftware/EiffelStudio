@@ -5,7 +5,10 @@ class VQMC
 inherit
 
 	EIFFEL_ERROR
-	
+		redefine
+			build_explain
+		end;
+
 feature 
 
 	feature_name: STRING;
@@ -21,5 +24,12 @@ feature
 
 	code: STRING is "VQMC";
 			-- Error code
+
+	build_explain is
+		do
+			put_string ("Constant name: ");
+			put_string (feature_name);
+			new_line;
+		end;
 
 end

@@ -28,7 +28,7 @@ feature
 			-- Build specific explanation image for current error
 			-- in `error_window'.
 		do
-			put_string ("Address_name: ");
+			put_string ("Address name: ");
 			put_string (address_name);
 			new_line;
 		end

@@ -31,6 +31,9 @@ feature
 	positive_value_found: BOOLEAN;
 			-- Is a positive value involved in the choices ?
 
+	positive_value: INTEGER;
+			-- One of the positive values found (error report)
+
 	unique_names: LINKED_SET [STRING];
 			-- Set of unique names already used 
 	
@@ -122,8 +125,7 @@ feature
 						-- Error
 					!!vomb3;
 					context.init_error (vomb3);
-					vomb3.set_interval (Result);
-					vomb3.set_multi_branch (node);
+					vomb3.set_interval (Result.intersection (int_intervals.item));
 					Error_handler.insert_error (vomb3);
 				end;
 				int_intervals.forth;
@@ -158,8 +160,7 @@ feature
 						-- Error
 					!!vomb3;
 					context.init_error (vomb3);
-					vomb3.set_interval (Result);
-					vomb3.set_multi_branch (node);
+					vomb3.set_interval (Result.intersection (char_intervals.item));
 					Error_handler.insert_error (vomb3);
 				end;
 				char_intervals.forth;
@@ -182,6 +183,7 @@ feature
 			written_class: CLASS_C;
 			int_value: INTEGER;
 			make_vomb5: BOOLEAN;
+			vomb5_value: INTEGER;
 			vomb5: VOMB5;
 			vomb4: VOMB4;
 			vomb6: VOMB6;
@@ -192,6 +194,7 @@ feature
 				!!Result.make (int_value);
 				if int_value > 0 then
 					positive_value_found := True;
+					positive_value := int_value;
 					make_vomb5 := not unique_names.empty;
 				end;
 			else
@@ -208,8 +211,7 @@ feature
 							-- Error
 						!!vomb4;
 						context.init_error (vomb4);
-						vomb4.set_multi_branch (node);
-						vomb4.set_unique_name (constant_name);
+						vomb4.set_unique_feature (constant_i);
 						Error_handler.insert_error (vomb4);
 					else
 						unique_names.add (constant_name);
@@ -220,9 +222,8 @@ feature
 								-- Error
 							!!vomb6;
 							context.init_error (vomb6);
-							vomb6.set_multi_branch (node);
-							vomb6.set_unique_name (constant_name);
-							vomb6.set_written_class (written_class);
+							vomb6.set_unique_feature (constant_i);
+							vomb6.set_written_class (last_class);
 							Error_handler.insert_error (vomb6);
 						end;
 					end;
@@ -230,6 +231,7 @@ feature
 				else
 					if int_value > 0 then
 						positive_value_found := True;
+						positive_value := int_value;
 						make_vomb5 := not unique_names.empty;
 					end;
 				end;
@@ -237,7 +239,7 @@ feature
 			if make_vomb5 then
 				!!vomb5;
 				context.init_error (vomb5);
-				vomb5.set_multi_branch (node);
+				vomb5.set_positive_value (positive_value);
 				Error_handler.insert_error (vomb5);
 			end;
 		end;

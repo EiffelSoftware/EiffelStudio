@@ -24,10 +24,9 @@ feature
 	build_explain is
 		do
 			put_cluster_name;
-			put_class_name;
-			put_string ("Option: `");
+			put_string ("Option: ");
 			put_string (node.option.option_name);
-			put_char ('%'');
-			new_line
+			new_line;
+			put_class_name;
 		end;
 end

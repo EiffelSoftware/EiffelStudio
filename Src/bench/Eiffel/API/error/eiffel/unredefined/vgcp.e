@@ -1,4 +1,3 @@
--- Error when a deferred class has a creation clause
 
 class VGCP 
 

@@ -4,32 +4,29 @@ class VHRC
 
 inherit
 
-	EIFFEL_ERROR
-	
+	FEATURE_NAME_ERROR
+		redefine
+			build_explain
+		end;
+
 feature 
 
-	parent_id: INTEGER;
-			-- Id of the invloved parent
-
-	feature_name: STRING;
-			-- Feature name not present in feature table of parent
-			-- class: this is an internal name so an infix notation
-			-- will have the name "_infix..." (smae thing for prefixed
-			-- notation.
+	parent: CLASS_C;
+			-- Involved parent
 
 	code: STRING is "VHRC";
 			-- Error for unvalid renaming
 
-	set_parent_id (i: INTEGER) is
-			-- Assgn `i' to `parent_id'.
+	set_parent (p: CLASS_C) is
 		do
-			parent_id := i;
+			parent := p;
 		end;
 
-	set_feature_name (s: STRING) is
-			-- Assign `s' to `feature_name'.
+	build_explain is
 		do
-			feature_name := s;
+			put_string ("Parent: ");
+			parent.append_clickable_name (error_window);
+			new_line;
 		end;
 
 end

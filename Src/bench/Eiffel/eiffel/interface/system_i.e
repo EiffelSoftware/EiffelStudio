@@ -260,6 +260,9 @@ feature
 	code_replication_off: BOOLEAN;
 			-- Is code replication off (by specifying the Ace option)
 
+	exception_stack_managed: BOOLEAN;
+			-- Is the exception stack managed in final mode
+
 	current_pass: PASS;
 			-- Current compiler pass
 			-- Useful for `current_class'
@@ -2936,6 +2939,11 @@ feature
 			code_replication_off := b;
 		end;
 
+	set_exception_stack_managed (b: BOOLEAN) is
+		do
+			exception_stack_managed := b;
+		end;
+
 	process_pass (a_pass: PASS) is
 			-- Process `a_pass'
 		do
@@ -3076,6 +3084,13 @@ feature -- Conveniences
 			executable_directory := Void;
 			c_directory := Void;
 			object_directory := Void;
+		end;
+
+	reset_system_level_options is
+		do
+			remover_off := False;
+			code_replication_off := False;
+			exception_stack_managed := False; 
 		end;
 
 	set_id_array (a: like id_array) is

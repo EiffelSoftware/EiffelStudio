@@ -17,12 +17,12 @@ feature
 
 	build_explain is
 		do
-			put_string ("Cluster 1: `");
-			put_string (cluster.cluster_name);
-			put_string ("'%NCluster 2: `");
-			put_string (second_cluster_name);
-			put_string ("'%N");
 			put_cluster_path;
+			put_string ("First cluster: ");
+			put_string (cluster.cluster_name);
+			put_string ("%NSecond cluster: ");
+			put_string (second_cluster_name);
+			new_line;
 		end;
 
 end

@@ -138,7 +138,6 @@ feature
 				compute_last_class (class_name, cluster);
 				if last_class = Void then
 					!!vd23;
-					vd23.set_cluster (cluster);
 					vd23.set_class_name (class_name);
 					Error_handler.insert_error (vd23);
 				elseif	Result /= Void 

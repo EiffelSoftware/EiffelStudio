@@ -84,7 +84,7 @@ feature -- Generation
 			from
 				start
 			until
-				offright
+				after
 			loop
 				Result.append (item_for_iteration.C_string);
 				forth
@@ -117,7 +117,7 @@ feature -- Generation
 				start;
 				i := 1
 			until
-				offright
+				after
 			loop
 				Result.append ("%TIDSC(desc");
 				Result.append_integer (class_type.id);
@@ -166,7 +166,7 @@ feature -- Melting
 			from
 				start
 			until
-				offright
+				after
 			loop
 				item_for_iteration.make_byte_code (ba);
 				forth

@@ -2,7 +2,7 @@
 -- when a redeclaration has a not an expanded type but the precursor does
 -- Note that expanded type doen't refer to the simple types...
 
-class VE02 
+class VE02 obsolete "NOT DEFINED IN THE BOOK"
 
 inherit
 

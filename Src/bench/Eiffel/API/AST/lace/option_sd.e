@@ -5,6 +5,9 @@ deferred class OPTION_SD
 inherit
 
 	AST_LACE
+		rename
+			adapt as ast_adapt
+		end;
 
 feature
 
@@ -42,6 +45,46 @@ feature -- Identfication
 			-- Is the option a trace one ?
 		do
 			-- Do nothing
-		end
+		end;
+
+	is_free_option: BOOLEAN is
+		do
+			-- Do nothing
+		end;
+
+
+feature --
+
+	is_valid: BOOLEAN is
+		do
+			Result := True;
+		end;
+
+	is_system_level: BOOLEAN is
+		do
+			-- Do nothing
+		end;
+
+feature -- Adapt
+
+	process_system_level_options (value: OPT_VAL_SD) is
+		do
+		end;
+
+	adapt (	value: OPT_VAL_SD;
+			classes:EXTEND_TABLE [CLASS_I, STRING];
+			list: LACE_LIST [ID_SD]) is
+		deferred
+		end;
+
+	error (option_value: OPT_VAL_SD) is
+		local
+			vd15: VD15
+		do
+			!!vd15;
+			vd15.set_option_name (option_name);
+			vd15.set_option_value (option_value.value);
+			Error_handler.insert_error (vd15);
+		end;
 
 end

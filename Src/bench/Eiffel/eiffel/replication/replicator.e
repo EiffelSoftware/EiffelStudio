@@ -67,7 +67,7 @@ feature
 						feat_table.start;
 						found := false
 					until
-						feat_table.offright or else found
+						feat_table.after or else found
 					loop
 						feature_i := feat_table.item_for_iteration;
 						if feature_i.body_id = body_id then

@@ -6,11 +6,16 @@ inherit
 
 	VLEL
 		redefine
-			subcode
+			subcode, build_explain
 		end;
 
 feature
 
 	subcode: INTEGER is 1;
+
+	build_explain is
+		do
+			print_parent;
+		end;
 
 end

@@ -6,14 +6,7 @@ inherit
 
 	VDJR
 		redefine
-			subcode
-		end;
-
-feature
-
-	subcode: INTEGER is
-		do
-			Result := 1
+			build_explain
 		end;
 
 feature
@@ -34,6 +27,22 @@ feature
 			-- Assign `t' to `old_type'.
 		do
 			old_type := t;
+		end;
+
+	print_types is
+		do
+			put_string ("First type: ");
+			old_type.append_clickable_signature (error_window);
+			put_string ("%NSecond type: ");
+			type.append_clickable_signature (error_window);
+			new_line;
+		end;
+
+	build_explain is
+		do
+			put_string ("Result types are different%N");
+			print_types;
+			print_signatures;
 		end;
 
 end

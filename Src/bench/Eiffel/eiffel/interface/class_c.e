@@ -1250,7 +1250,7 @@ feature -- Class initialization
 						-- Check if there is no anchor in the parent type
 					if	raw_type.has_like then
 						!!ve04;
-						ve04.set_class_id (id);
+						ve04.set_class (Current);
 						ve04.set_parent_type (parent_type);
 						Error_handler.insert_error (ve04);
 							-- Cannot ge on here
@@ -1606,7 +1606,7 @@ feature
 					-- anme of a class in the surrounding universe.
 				if Universe.class_named (generic_name, cluster) /= Void then
 					!!vcfg1;
-					vcfg1.set_class_id (id);
+					vcfg1.set_class (Current);
 					vcfg1.set_formal_name (generic_name);
 					Error_handler.insert_error (Vcfg1);
 				end;
@@ -1623,9 +1623,8 @@ feature
 					if next_dec /= generic_dec then
 						if next_dec.formal_name.is_equal (generic_name) then
 							!!vcfg2;
-							vcfg2.set_class_id (id);
-							vcfg2.set_formal_name1 (generic_name);
-							vcfg2.set_formal_name2 (next_dec.formal_name);
+							vcfg2.set_class (Current);
+							vcfg2.set_formal_name (generic_name);
 							Error_handler.insert_error (vcfg2);
 						end;
 					end;
@@ -1657,7 +1656,7 @@ feature
 
 				if Universe.class_named (generic_name, cluster) /= Void then
 					!!vcfg1;
-					vcfg1.set_class_id (id);
+					vcfg1.set_class (Current);
 					vcfg1.set_formal_name (generic_name);
 					Error_handler.insert_error (Vcfg1);
 				end;
@@ -1670,7 +1669,7 @@ feature -- Parent checking
 	check_parents is
 			-- Check generical parents
 		local
-			vtug4: VTUG4;
+			vtug: VTUG;
 			vtgg4: VTGG4;
 			parent_actual_type: CL_TYPE_A;
 		do
@@ -1682,10 +1681,9 @@ feature -- Parent checking
 				parent_actual_type := parents.item;
 				if not parent_actual_type.good_generics then
 						-- Wrong number of geneneric parameters in parent
-					!!vtug4;
-					vtug4.set_class_id (id);
-					vtug4.set_type (parent_actual_type);
-					Error_handler.insert_error (vtug4);
+					vtug := parent_actual_type.error_generics;
+					vtug.set_class (Current);
+					Error_handler.insert_error (vtug);
 						-- Cannot go on ...
 					Error_handler.raise_error;
 				end;
@@ -1817,7 +1815,7 @@ feature -- Supplier checking
 			else
 					-- ERROR: Cannot find a supplier class
 				!!vtct;
-				vtct.set_class_id (id);
+				vtct.set_class (Current);
 				vtct.set_class_name (cl_name);
 				Error_handler.insert_error (vtct);
 					-- Cannot go on here
@@ -1836,7 +1834,7 @@ feature -- Supplier checking
 				generics /= Void
 			then
 				!!vsrc1;
-				vsrc1.set_class_id (id);
+				vsrc1.set_class (Current);
 				Error_handler.insert_error (vsrc1);
 				Error_handler.checksum;
 			end;
@@ -1876,8 +1874,8 @@ feature -- Supplier checking
 					end;
 					if error then
 						!!vsrc2;
-						vsrc2.set_class_id (id);
-						vsrc2.set_creation_name (creation_name);
+						vsrc2.set_class (Current);
+						vsrc2.set_creation_feature (creation_proc);
 						Error_handler.insert_error (vsrc2);
 					end;
 					creators.forth;

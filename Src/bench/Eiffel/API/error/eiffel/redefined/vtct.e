@@ -23,11 +23,15 @@ feature
 			-- Error code
 
 	build_explain is
-            -- Build specific explanation explain for current error
-            -- in `error_window'.
-        do
-			put_string ("%Tclass name: ");
-			put_string (class_name);
+			-- Build specific explanation explain for current error
+			-- in `error_window'.
+		local
+			c_name: STRING;
+		do
+			c_name := class_name.duplicate;
+			c_name.to_upper;
+			put_string ("Unknown class name: ");
+			put_string (c_name);
 			new_line;
 		end;
 

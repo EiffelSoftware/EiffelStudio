@@ -20,6 +20,7 @@ inherit
 			solved_type, 
 			type_i,
 			good_generics,
+			error_generics,
 			check_generics,
 			has_formal_generic,
 			instantiated_in,
@@ -39,6 +40,7 @@ inherit
 			solved_type,
 			type_i,
 			good_generics,
+			error_generics,
 			check_generics,
 			has_formal_generic,
 			instantiated_in,
@@ -372,6 +374,34 @@ feature -- Primitives
 					Result := generics.item (i).good_generics;
 					i := i + 1
 				end
+			end;
+		end;
+
+	error_generics: VTUG is
+		local
+			base_generics: EIFFEL_LIST [FORMAL_DEC_AS];
+			i, generic_count: INTEGER;
+		do
+			base_generics := associated_class.generics;
+			if base_generics /= Void then
+				generic_count := base_generics.count;
+				if (generic_count = generics.count) then
+					from
+						i := 1
+					until
+						i > generic_count or else (Result /= Void)
+					loop
+						if not generics.item (i).good_generics then
+							Result := generics.item (i).error_generics
+						end;
+						i := i + 1
+					end
+				end;
+			end;
+			if Result = Void then
+				!!Result;
+				Result.set_type (Current);
+				Result.set_base_class (associated_class);
 			end;
 		end;
 

@@ -325,7 +325,7 @@ end;
 					deferred_found := True;
 					if non_deferred then
 						!!vcch1;
-						vcch1.set_class_id (associated_class.id);
+						vcch1.set_class (associated_class);
 						vcch1.set_a_feature (feature_i);
 						Error_handler.insert_error (vcch1);
 					end;
@@ -335,7 +335,7 @@ end;
 			end;
 			if not (non_deferred or else deferred_found) then
 				!!vcch2;
-				vcch2.set_class_id (associated_class.id);
+				vcch2.set_class (associated_class);
 				Error_handler.insert_error (vcch2);
 			end;
 		end;

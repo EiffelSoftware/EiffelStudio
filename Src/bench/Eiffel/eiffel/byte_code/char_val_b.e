@@ -34,6 +34,13 @@ feature
 			Result := value < other.value;
 		end;
 
+	display (a_clickable: CLICK_WINDOW) is
+		do
+			a_clickable.put_char ('%'');
+			a_clickable.put_char (value);
+			a_clickable.put_char ('%'');
+		end;
+
 feature --- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is

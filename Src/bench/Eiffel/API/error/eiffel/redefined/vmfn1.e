@@ -10,32 +10,33 @@ inherit
 			other_feature as inherited_feature,
 			set_other_feature as set_inherited_feature
 		redefine
-			build_explain, subcode
+			build_explain
 		end
 
 feature
 
-	parent_id: INTEGER;
-			-- Id of the parent class to which `inherited_feature' belongs
+	parent: CLASS_C;
+			-- Parent class to which `inherited_feature' belongs
 
-	set_parent_id (i: INTEGER) is
-			-- Assign `i' to `parent_id'.
+	set_parent (p: CLASS_C) is
 		do
-			parent_id := i;
+			parent := p;
 		end;
-
-	subcode: INTEGER is 1;
 
 	build_explain is
 			-- Build specific explanation explain for current error
 			-- in `error_window'.
 		do
-			put_string ("%Tfeature ");
+			put_string ("Feature: ");
 			a_feature.append_clickable_signature (error_window, a_feature.written_class);
-			put_string ("%N%Tand feature ");
+			put_string (" written in: ");
+			a_feature.written_class.append_clickable_name (error_window);
+			put_string ("%NFeature: ");
 			inherited_feature.append_clickable_signature (error_window, inherited_feature.written_class);
-			put_string (" inherited from ");
-			System.class_of_id (parent_id).append_clickable_name (error_window);
+			put_string (" inherited from: ");
+			parent.append_clickable_name (error_window);
+			put_string (" written in: ");
+			a_feature.written_class.append_clickable_name (error_window);
 			new_line;
 		end;
 

@@ -38,6 +38,13 @@ feature
 			Result := lower < other.lower;
 		end;
 
+	display (a_clickable: CLICK_WINDOW) is
+		do
+			lower.display (a_clickable);
+			a_clickable.put_string ("..");
+			upper.display (a_clickable);
+		end;
+
 feature -- Byte code generation
 
 	make_range (ba: BYTE_ARRAY) is

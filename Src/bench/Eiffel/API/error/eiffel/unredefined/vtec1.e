@@ -6,7 +6,7 @@ inherit
 
 	VTEC
 		redefine
-			subcode
+			subcode, build_explain
 		end;
 
 feature 
@@ -16,22 +16,21 @@ feature
 			Result := 1;
 		end;
 
-	body_id: INTEGER;
-			-- Body id of the invloved feature
-			-- [Note that it is written in class of id `class_id'.]
-
-	set_body_id (i: INTEGER) is
-			-- Assign `i' to `body_id'.
-		do
-			body_id := i;
-		end;
-
 	entity_name: STRING;
 			-- Entity name for source of error
 
 	set_entity_name (s: STRING) is
 		do
 			entity_name := s
+		end;
+
+	build_explain is
+		do
+			if entity_name /= Void then
+				put_string ("Entity name: ");
+				put_string (entity_name);
+				new_line;
+			end;
 		end;
 
 end

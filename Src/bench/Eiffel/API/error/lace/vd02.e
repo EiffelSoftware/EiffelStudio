@@ -20,9 +20,9 @@ feature
 	build_explain is
 		do
 			put_cluster_name;
-			put_string ("Use file: `");
+			put_string ("File name: ");
 			put_string (use_name);
-			put_string ("'%N");
+			new_line;
 		end;
 
 end

@@ -7,12 +7,21 @@ inherit
 
 	VDRS1
 		redefine
-			code
+			code, build_explain
 		end
 	
 feature 
 
 	code: STRING is "VDUS";
 			-- Error code
+
+	build_explain is
+		do
+			put_string ("Invalid feature name: ");
+			put_string (feature_name);
+			put_string ("%NIn Undefine clause for parent: ");
+			parent.append_clickable_name (error_window);
+			new_line;
+		end;
 
 end 

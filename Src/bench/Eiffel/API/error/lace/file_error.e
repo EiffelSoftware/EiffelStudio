@@ -19,9 +19,9 @@ feature
 
 	put_file_name is
 		do
-			put_string ("File: `");
+			put_string ("File name: ");
 			put_string (file_name);
-			put_string ("%'%N");
+			new_line;
 		end;
 
 	build_explain is

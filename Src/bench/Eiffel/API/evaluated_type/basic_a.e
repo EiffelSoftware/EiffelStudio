@@ -10,7 +10,7 @@ inherit
 		redefine
 			feature_type, instantiation_in, instantiation_of,
 			meta_type, is_basic, internal_conform_to,
-			good_generics, is_valid
+			good_generics, is_valid, error_generics
 		end
 
 feature
@@ -78,6 +78,10 @@ feature
 			-- Has the current type the tight numerb of generic types ?
 		do
 			Result := True;
+		end;
+
+	error_generics: VTUG is
+		do
 		end;
 
 end

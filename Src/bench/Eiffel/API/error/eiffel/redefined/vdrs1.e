@@ -11,8 +11,8 @@ inherit
 	
 feature 
 
-	parent_id: INTEGER;
-			-- Parent id
+	parent: CLASS_C;
+			-- Parent
 
 	feature_name: STRING;
 			-- Feature name involved
@@ -23,10 +23,9 @@ feature
 			feature_name := fn;
 		end;
 
-	set_parent_id (i: INTEGER) is
-			-- Assign `i' to `parent_id'.
+	set_parent (p: CLASS_C) is
 		do
-			parent_id := i;
+			parent := p;
 		end;
 
 	code: STRING is 
@@ -41,8 +40,10 @@ feature
 			-- Build specific explanation explain for current error
 			-- in `error_window'.
 		do
-			put_string ("%Tfeature: ");
+			put_string ("Invalid feature name: ");
 			put_string (feature_name);
+			put_string ("%NIn Redefine clause for parent: ");
+			parent.append_clickable_name (error_window);
 			new_line;
 		end;
 

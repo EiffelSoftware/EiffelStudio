@@ -29,7 +29,7 @@ feature
 			-- Build specific explanation explain for current error
 			-- in `error_window'.
 		do
-			put_string ("%Tfeature: ");
+			put_string ("Feature name: ");
 			put_string (feature_name);
 			new_line;
 		end;

@@ -1,10 +1,11 @@
 -- Error for violation of constrained genericity validity rule
 
-class VTGG 
+class VTGG -- It should be VTCG
+
 
 inherit
 
-	EIFFEL_ERROR
+	FEATURE_ERROR
 		redefine
 			build_explain
 		end
@@ -30,12 +31,12 @@ feature
 				error_list.after
 			loop
 				put_char ('%T');
-				error_list.item.build_explain;
+				error_list.item.build_explain (error_window);
 				error_list.forth;
 			end;
 		end;
 
-	code: STRING is "VTGG";
+	code: STRING is "VTCG";
 			-- Error code
 
 end

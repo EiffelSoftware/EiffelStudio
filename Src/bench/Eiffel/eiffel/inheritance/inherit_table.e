@@ -728,17 +728,17 @@ end;
 				elseif inherited_info.parent = Void then
 						-- The feature has two implementations in the class
 					!!vmfn;
-					vmfn.set_class_id (a_class.id);
+					vmfn.set_class (a_class);
 					vmfn.set_a_feature (feature_i);
 					vmfn.set_other_feature (inherited_features.item (feature_name));
 					Error_handler.insert_error (vmfn);
 				elseif not feature_i.is_code_replicated then
 						-- Name clash: a non-deferred feature is inherited
 					!!vmfn1;
-					vmfn1.set_class_id (a_class.id);
+					vmfn1.set_class (a_class);
 					vmfn1.set_a_feature (feature_i);
 					vmfn1.set_inherited_feature (inherited_info.a_feature);
-					vmfn1.set_parent_id (inherited_info.parent.parent_id);
+					vmfn1.set_parent (inherited_info.parent.parent);
 					Error_handler.insert_error (vmfn1);
 				end;
 			end;
@@ -953,7 +953,8 @@ end;
 			if Result.is_frozen and then Result.is_deferred then
 					-- A deferred feature cannot be frozen
 				!!vffd4;
-				vffd4.set_class_id (Result.written_in);
+				vffd4.set_class (Result.written_class);
+				vffd4.set_feature_name (Result.feature_name);
 				Error_handler.insert_error (vffd4);
 			end;
 		end;
@@ -1116,7 +1117,7 @@ end;
 					if inherit_feat.nb_features > 0 then
 							-- Cannot find a redefinition
 						!!vdrs4;
-						vdrs4.set_class_id (a_class.id);
+						vdrs4.set_class (a_class);
 						vdrs4.set_feature_name (key_for_iteration);
 						Error_handler.insert_error (vdrs4);
 					else
@@ -1260,7 +1261,7 @@ end;
 			inherited_features.put (f, feature_name);
 			if inherited_features.conflict then
 				!!vmfn;
-				vmfn.set_class_id (a_class.id);
+				vmfn.set_class (a_class);
 				vmfn.set_a_feature (inherited_features.item (feature_name));
 				vmfn.set_other_feature (f);
 				Error_handler.insert_error (vmfn);

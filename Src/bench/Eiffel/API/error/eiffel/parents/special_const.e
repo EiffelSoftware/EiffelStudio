@@ -4,7 +4,7 @@ class SPECIAL_CONST
 
 feature
 
-	Case_1: STRING is "Class TO_SPECIAL must have one formal generic paramter";
+	Case_1: STRING is "Class TO_SPECIAL must have one formal generic parameter";
 
 	Case_2: STRING is "Class TO_SPECIAL must have an attribute of type SPECIAL [T]";
 

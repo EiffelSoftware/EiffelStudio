@@ -45,4 +45,9 @@ feature
 			ba.append (char_val);
 		end;
 
+	vqmc: VQMC is
+		do
+			!VQMC2!Result;
+		end;
+
 end

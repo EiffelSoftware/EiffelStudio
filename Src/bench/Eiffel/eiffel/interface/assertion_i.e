@@ -62,4 +62,13 @@ feature
 		deferred
 		end;
 
+feature -- Debug
+
+	trace is
+		do
+			io.error.putstring ("Assertion level: ");
+			io.error.putstring (generator);
+			io.error.new_line;
+		end;
+
 end

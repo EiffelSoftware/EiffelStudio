@@ -6,23 +6,29 @@ inherit
 
 	VGCP
 		redefine
-			subcode
+			subcode, build_explain
 		end;
 
 feature
 
 	subcode: INTEGER is
 		do
-			Result := 21;
+			Result := 2;
 		end;
 
 	creation_feature: FEATURE_I;
 			-- Feature involved
 
-	set_creation_feature (f: FEATURE_I) is
+	set_feature (f: FEATURE_I) is
 			-- Assign `f' to `creation_feature'.
 		do
 			creation_feature := f;
+		end;
+
+	build_explain is
+		do
+			put_string ("Creation procedure name: ");
+			creation_feature.append_clickable_signature (error_window, creation_feature.written_class);
 		end;
 
 end

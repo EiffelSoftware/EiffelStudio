@@ -27,6 +27,11 @@ feature
 			Result := value < other.value;
 		end;
 
+	display (a_clickable: CLICK_WINDOW) is
+		do
+			a_clickable.put_int (value);
+		end;
+
 	generation_value: INTEGER is
 			-- Value to generate
 		do

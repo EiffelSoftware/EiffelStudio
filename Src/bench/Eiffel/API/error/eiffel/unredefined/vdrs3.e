@@ -6,24 +6,23 @@ inherit
 
 	EIFFEL_ERROR
 		redefine
-			subcode
+			subcode, build_explain
 		end;
 
 feature 
 
-	parent: PARENT_AS;
-			-- Parent node
+	parent_name: STRING;
+			-- Parent
 
-	feature_name: FEATURE_NAME;
+	feature_name: STRING;
 			-- Feature name node
 
-	set_parent (p: like parent) is
-			-- Assign `p' to `parent'.
+	set_parent_name (p: STRING) is
 		do
-			parent := p;
+			parent_name := p;
 		end;
 
-	set_feature_name (f: like feature_name) is
+	set_feature_name (f: STRING) is
 			-- Assign `f' to `feature_name'.
 		do
 			feature_name := f;
@@ -38,6 +37,15 @@ feature
 	subcode: INTEGER is
 		do
 			Result := 3;
+		end;
+
+	build_explain is
+		do
+			put_string ("Duplicate name: ");
+			put_string (feature_name);
+			put_string ("%NIn Redefine clause for parent: ");
+			put_string (parent_name);
+			new_line;
 		end;
 
 end

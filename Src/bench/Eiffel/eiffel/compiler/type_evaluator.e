@@ -33,8 +33,7 @@ feature
 					-- exception is raise in routine `solved_type' of
 					-- classes LIKE_ID_AS, LIKE_FEATURE and LIKE_ARGUMENT
 				error_msg := new_error;
-				error_msg.set_class_id (feat_table.associated_class.id);
-				error_msg.set_body_id (f.body_id);
+				error_msg.set_class (feat_table.associated_class);
 				error_msg.set_type (type);
 				update (error_msg);
 				Error_handler.insert_error (error_msg);

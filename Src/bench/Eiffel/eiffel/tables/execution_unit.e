@@ -66,11 +66,6 @@ feature
 					else
 						Result := Body_server.has (body_id)
 								or else has_replicated_body;
-if not Result then
-	io.error.putstring ("is_valid: body_server.has FALSE ");
-	io.error.putint (body_id);
-	io.error.new_line;
-end;
 					end;
 				end;
 			end;

@@ -50,4 +50,9 @@ feature
 			ba.append_integer (int_val);
 		end;
 
+	vqmc: VQMC is
+		do
+			!VQMC3!Result;
+		end;
+
 end

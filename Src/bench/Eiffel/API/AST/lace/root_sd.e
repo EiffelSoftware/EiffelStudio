@@ -67,7 +67,7 @@ feature -- Initialization
 					clusters := Universe.clusters;
 					clusters.start
 				until
-					clusters.offright
+					clusters.after
 				loop
 					if clusters.item.classes.has (root_class_name) then
 						if found then

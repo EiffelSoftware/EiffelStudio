@@ -7,7 +7,7 @@ inherit
 
 	EIFFEL_ERROR
 		redefine
-			subcode
+			subcode, build_explain
 		end;
 
 feature 
@@ -15,15 +15,25 @@ feature
 	code: STRING is "VCFG";
 			-- Error code
 
-	subcode: INTEGER is 1;
+	subcode: INTEGER is
+		do
+			Result := 1;
+		end;
 
-	formal_name: ID_AS;
+	formal_name: STRING;
 			-- Formal generic name
 
-	set_formal_name (s: ID_AS) is
+	set_formal_name (s: STRING) is
 			-- Assign `s' to `formal_name'.
 		do
 			formal_name := s;
+		end;
+
+	build_explain is
+		do
+			put_string ("Parameter name: ");
+			put_string (formal_name);
+			new_line;
 		end;
 
 end

@@ -1,6 +1,6 @@
 -- Error when a creation feature doesn't satisfy the export validity
 
-class VGCC8 
+class VGCC8 obsolete "NOT IN THE BOOK"
 
 inherit
 

@@ -6,7 +6,7 @@ inherit
 
 	EIFFEL_ERROR
 		redefine
-			subcode
+			build_explain, subcode
 		end;
 
 feature
@@ -17,13 +17,21 @@ feature
 	
 feature
 
-	creation_name: STRING;
+	creation_feature: FEATURE_I;
 			-- Creation procedure name involved in the error
 
-	set_creation_name (s: STRING) is
+	set_creation_feature (f: FEATURE_I) is
 			-- Assign `s' to `creation_name'.
 		do
-			creation_name := s;
+			creation_feature := f;
+		end;
+
+	build_explain is
+		do
+			put_string ("Creation feature: ");
+			creation_feature.append_clickable_signature (error_window,
+				creation_feature.written_class);
+			new_line;
 		end;
 
 end

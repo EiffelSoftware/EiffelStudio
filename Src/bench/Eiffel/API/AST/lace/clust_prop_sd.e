@@ -184,19 +184,44 @@ feature -- Lace compilation
 				default_prop := clust_prop.default_option;
 				if default_prop /= Void then
 						-- Process default options in use file
+					check_system_level_options (default_prop);
 					default_prop.adapt;
 				end;
 				option_prop := clust_prop.options;
 				if option_prop /= Void then
 						-- Process options in use file
+					check_system_level_options (option_prop);
 					option_prop.adapt;
 				end;
 			end;
 			if default_option /= Void then
+				check_system_level_options (default_option);
 				default_option.adapt;
 			end;
 			if options /= Void then
+				check_system_level_options (options);
 				options.adapt;
+			end;
+		end;
+
+	check_system_level_options (l: LACE_LIST [D_OPTION_SD]) is
+		local
+			d: D_OPTION_SD;
+			vd36: VD36
+		do
+			from
+				l.start
+			until
+				l.after
+			loop
+				d := l.item;
+				if d.option.is_system_level then
+					!!vd36;
+					vd36.set_cluster (context.current_cluster);
+					vd36.set_option_name (d.option.option_name);
+					Error_handler.insert_error (vd36);
+				end;
+				l.forth
 			end;
 		end;
 

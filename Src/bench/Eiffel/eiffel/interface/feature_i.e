@@ -851,7 +851,7 @@ feature -- Signature checking
 					!!vreg;
 					vreg.set_class (written_class);
 					vreg.set_feature (Current);
-					vreg.set_argument_name (arg_id);
+					vreg.set_entity_name (arg_id);
 					Error_handler.insert_error (vreg);
 				end;
 				if feat_table.has (arg_id) then
@@ -859,8 +859,8 @@ feature -- Signature checking
 						-- table.
 					!!vrfa;
 					vrfa.set_class (written_class);
-					vrfa.set_feature_i (Current);
-					vrfa.set_argument_name (arg_id);
+					vrfa.set_feature (Current);
+					vrfa.set_other_feature (feat_table.item (arg_id));
 					Error_handler.insert_error (vrfa);
 				end;
 				arg_names.forth
@@ -880,7 +880,7 @@ feature -- Signature checking
 			vffd6: VFFD6;
 			vffd7: VFFD7;
 			vffd8: VFFD8;
-			vtug1: VTUG1;
+			vtug: VTUG;
 			vtec1: VTEC1;
 			vtec2: VTEC2;
 			vtgg1: VTGG1;
@@ -889,8 +889,8 @@ feature -- Signature checking
 					-- We have an anchored type.
 					-- Check if the feature is not a once feature
 				!!vffd8;
-				vffd8.set_class_id (written_in);
-				vffd8.set_body_id (body_id);
+				vffd8.set_class (written_class);
+				vffd8.set_feature_name (feature_name);
 				Error_handler.insert_error (vffd8);
 			end;
 				-- Process an actual type for the feature; interpret
@@ -918,11 +918,11 @@ end;
 			if feat_table.associated_class = written_class then
 					-- Check valididty of a generic class type
 				if not solved_type.good_generics then
-					!!vtug1;
-					vtug1.set_class (written_class);
-					vtug1.set_body_id (body_id);
-					vtug1.set_type (solved_type);
-					Error_handler.insert_error (vtug1);
+					vtug := solved_type.error_generics;
+					vtug.set_class (written_class);
+					vtug.set_feature (Current);
+					vtug.set_entity_name ("Result");
+					Error_handler.insert_error (vtug);
 						-- Cannot go on here ..
 					Error_handler.raise_error;
 				end;
@@ -931,7 +931,7 @@ end;
 				if not Constraint_error_list.empty then
 					!!vtgg1;
 					vtgg1.set_class (written_class);
-					vtgg1.set_body_id (body_id);
+					vtgg1.set_feature (Current);
 					vtgg1.set_error_list
 										(deep_clone (Constraint_error_list));
 					Error_handler.insert_error (vtgg1);
@@ -945,8 +945,8 @@ end;
 			if is_once and then solved_type.has_formal_generic then
 					-- A once funtion cannot have a type with formal generics
 				!!vffd7;
-				vffd7.set_class_id (written_in);
-				vffd7.set_body_id (body_id);
+				vffd7.set_class (written_class);
+				vffd7.set_feature_name (feature_name);
 				Error_handler.insert_error (vffd7);
 			end;
 			solved_type.check_for_obsolete_class (feat_table.associated_class);
@@ -955,14 +955,14 @@ end;
 						-- Infixed features should have only one argument
 					!!vffd6;
 					vffd6.set_class (written_class);
-					vffd6.set_body_id (body_id);
+					vffd6.set_feature_name (feature_name);
 					Error_handler.insert_error (vffd6);
 				end;
 				if is_prefix and then argument_count /= 0 then
 						-- Prefixed features shouldn't have any argument
 					!!vffd5;
 					vffd5.set_class (written_class);
-					vffd5.set_body_id (body_id);
+					vffd5.set_feature_name (feature_name);
 					Error_handler.insert_error (vffd5);
 				end;
 					-- Check types of arguments
@@ -994,14 +994,12 @@ end;
 					if 	solved_type.expanded_deferred then
 						!!vtec1;
 						vtec1.set_class (written_class);	
-						vtec1.set_body_id (body_id);
-						vtec1.set_type (solved_type);
+						vtec1.set_feature (Current);
 						Error_handler.insert_error (vtec1);
 					elseif not solved_type.valid_expanded_creation then
 						!!vtec2;
 						vtec2.set_class (written_class);	
-						vtec2.set_body_id (body_id);
-						vtec2.set_type (solved_type);
+						vtec2.set_feature (Current);
 						Error_handler.insert_error (vtec2);
 					end
 				end;
@@ -1053,9 +1051,9 @@ end;
 				(not old_feature.is_external and then is_external)
 			then
 				!!ve01;
-				ve01.set_class_id (current_class.id);
-				ve01.set_feature1 (Current);
-				ve01.set_feature2 (old_feature);
+				ve01.set_class (current_class);
+				ve01.set_new_feature (Current);
+				ve01.set_old_feature (old_feature);
 				Error_handler.insert_error (ve01);
 			elseif is_external then
 				old_ext ?= old_feature;
@@ -1068,6 +1066,7 @@ end;
 				-- non-effective feature
 			if (not old_feature.is_deferred) and then is_deferred then
 				!!vdrd7;
+				vdrd7.set_class (current_class);
 				vdrd7.init (old_feature, Current);
 				Error_handler.insert_error (vdrd7);
 			end;
@@ -1103,16 +1102,14 @@ end;
 			if not current_class.valid_redeclaration (old_type, new_type) then
 				!!vdrd51;
 				vdrd51.init (old_feature, Current);
-				vdrd51.set_type (new_type);
-				vdrd51.set_precursor_type (old_type);
 				Error_handler.insert_error (vdrd51);
 			elseif
 				new_type.is_expanded /= old_type.is_expanded
 			then
 				!!ve02;
 				ve02.init (old_feature, Current);
-				ve02.set_type (new_type);
-				ve02.set_precursor_type (old_type);
+--				ve02.set_type (new_type);
+--				ve02.set_precursor_type (old_type);
 				Error_handler.insert_error (ve02);
 			end;
 
@@ -1152,18 +1149,15 @@ end;
 					then
 						!!vdrd53;
 						vdrd53.init (old_feature, Current);
-						vdrd53.set_type (new_type);
-						vdrd53.set_precursor_type (old_type);
-						vdrd53.set_argument_number (i);
 						Error_handler.insert_error (vdrd53);
 					elseif
 						new_type.is_expanded /= old_type.is_expanded
 					then
 						!!ve02a;
 						ve02a.init (old_feature, Current);
-						ve02a.set_type (new_type);
-						ve02a.set_precursor_type (old_type);
-						ve02a.set_argument_number (i);
+--						ve02a.set_type (new_type);
+--						ve02a.set_precursor_type (old_type);
+--						ve02a.set_argument_number (i);
 						Error_handler.insert_error (ve02a);
 					end;
 	

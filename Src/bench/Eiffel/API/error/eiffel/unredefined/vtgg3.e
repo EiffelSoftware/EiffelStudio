@@ -5,13 +5,32 @@ class VTGG3
 
 inherit
 
-	VTGG2
+	VTGG
 		redefine
-			subcode
+			build_explain
+		select
+			build_explain
+		end;
+	VTGG
+		rename
+			build_explain as old_build_explain
 		end;
 
 feature
 
-	subcode: INTEGER is 3;
+	entity_name: STRING;
+
+	set_entity_name (s: STRING) is
+		do
+			entity_name := s;
+		end;
+
+	build_explain is
+		do
+			put_string ("Entity name: ");
+			put_string (entity_name);
+			new_line;
+			old_build_explain;
+		end;
 
 end

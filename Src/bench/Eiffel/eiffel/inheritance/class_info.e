@@ -100,7 +100,7 @@ feature
 				-- Do nothing
 			elseif a_class.is_deferred then
 				!!vgcp1;
-				vgcp1.set_class_id (a_class.id);
+				vgcp1.set_class (a_class);
 				Error_handler.insert_error (vgcp1);
 			elseif creators.i_th (1).feature_list = Void then
 					--| no creation routines (i.e. not allowed
@@ -130,22 +130,22 @@ feature
 						a_feature := feat_table.item (feature_name);
 						if a_feature = Void then
 							!!vgcp2;
-							vgcp2.set_class_id (a_class.id);
+							vgcp2.set_class (a_class);
 							vgcp2.set_feature_name (feature_name);
 							Error_handler.insert_error (vgcp2);
 						else
 							if Result.has (feature_name) then
 								!!vgcp3;
-								vgcp3.set_class_id (a_class.id);
-								vgcp3.set_feature_name (feature_name);
+								vgcp3.set_class (a_class);
+								vgcp3.set_feature (a_feature);
 								Error_handler.insert_error (vgcp3);
 							else
 								Result.put (export_status, feature_name);
 							end;
 							if not a_feature.type.is_void then
 								!!vgcp21;
-								vgcp21.set_class_id (a_class.id);
-								vgcp21.set_creation_feature (a_feature);
+								vgcp21.set_class (a_class);
+								vgcp21.set_feature (a_feature);
 								Error_handler.insert_error (vgcp21);
 							end;
 							if a_class.is_expanded 
@@ -157,8 +157,8 @@ feature
 								)
 							then
 								!!vgcp4;
-								vgcp4.set_class_id (a_class.id);
-								vgcp4.set_creation_feature (a_feature);
+								vgcp4.set_class (a_class);
+								vgcp4.set_feature (a_feature);
 								Error_handler.insert_error (vgcp4);
 							end;
 						end;

@@ -78,7 +78,7 @@ feature
 					from
 						feature_table.start
 					until
-						feature_table.offright
+						feature_table.after
 					loop
 						other_feature := feature_table.item_for_iteration;
 						if other_feature.rout_id_set.has (rout_id_set.item (i)) then

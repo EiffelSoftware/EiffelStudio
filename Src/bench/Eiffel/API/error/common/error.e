@@ -37,13 +37,14 @@ feature -- Debug pupose
 			dummy_reference: CLASS_C
 		do
 			put_string (Error_string);
+			put_string ("code: ");
 			put_clickable_string (stone (dummy_reference), code);
 			if subcode /= 0 then
 				put_char ('(');
 				put_int (subcode);
-				put_string ("):%N");
+				put_string (")%N");
 			else
-				put_string (":%N");
+				new_line;
 			end;
 			print_short_help;
 		end;
@@ -92,7 +93,7 @@ feature -- Debug pupose
 
 	Error_string: STRING is
 		do
-			Result := "Error ";
+			Result := "Error";
 		end;
 
 feature -- Clicking

@@ -1,7 +1,7 @@
 -- Error when the target of an assignment or a reverse assignment is not
 -- a writable one or is of NONE type
 
-class VE03 
+class VE03 obsolete "NOT IN THE BOOK"
 
 inherit
 

@@ -82,10 +82,13 @@ feature -- Access
 			-- Exception code for I/O error raised by runtime functions
 			-- such as store/retrieve, file access...
 
-	Com_exception: INTEGER is 28;
+	Com_exception: INTEGER is 28
 			-- Exception code for a COM error.
 
-	number_of_codes: INTEGER is 28
+	Runtime_check_exception: INTEGER is 29
+			-- Exception code for runtime check being violated.
+
+	number_of_codes: INTEGER is 29
 			-- How many codes are there to represent exceptions?
 
 	valid_code (c: INTEGER): BOOLEAN is

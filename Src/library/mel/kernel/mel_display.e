@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 	argc: POINTER is
 			-- Here we need to give the address of the argc value to XtOpenDisplay.
 		external
-			"C : EIF_POINTER | %"argv.h%""
+			"C [macro %"argv.h%"]: EIF_POINTER"
 		alias
 			"&eif_argc"
 		end;

@@ -248,7 +248,7 @@ feature {NONE} -- Implementation
 
 	last_color_alloc_status: INTEGER is
 		external
-			"C : EIF_INTEGER | %"pixel.h%""
+			"C [macro %"pixel.h%"]: EIF_INTEGER"
 		alias
 			"last_color_alloc_status"
 		end;

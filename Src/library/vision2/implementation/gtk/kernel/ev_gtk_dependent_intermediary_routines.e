@@ -26,7 +26,7 @@ feature {EV_ANY_IMP} -- Gtk Dependent intermediary routines
 			Result := [feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_int (gtkarg2)]
 		end
 
-	mcl_event_intermediary (a_c_object: POINTER; a_event_number: INTEGER; a_tup_int: TUPLE [INTEGER]) is
+	mcl_event_intermediary (a_c_object: POINTER; a_event_number: INTEGER; a_int: INTEGER) is
 			-- Multi-column list event
 		local
 			a_mcl_imp: EV_MULTI_COLUMN_LIST_IMP
@@ -35,13 +35,13 @@ feature {EV_ANY_IMP} -- Gtk Dependent intermediary routines
 			inspect
 				a_event_number
 			when 1 then		
-				a_mcl_imp.select_callback (a_tup_int)
+				a_mcl_imp.select_callback (a_int)
 			when 2 then
-				a_mcl_imp.deselect_callback (a_tup_int)
+				a_mcl_imp.deselect_callback (a_int)
 			when 3 then
-				a_mcl_imp.column_click_callback (a_tup_int)
+				a_mcl_imp.column_click_callback (a_int)
 			when 4 then
-				a_mcl_imp.column_resize_callback (a_tup_int)
+				a_mcl_imp.column_resize_callback (a_int)
 			end
 		end
 
@@ -62,7 +62,7 @@ feature {EV_ANY_IMP} -- Toolbar intermediary agent routines
 			a_toolbar_button_imp: EV_TOOL_BAR_BUTTON_IMP
 		do
 			a_toolbar_button_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_toolbar_button_imp.select_actions_internal.call (empty_tuple)
+			a_toolbar_button_imp.select_actions_internal.call (Void)
 		end
 
 feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- List and list item intermediary agent routines
@@ -196,13 +196,6 @@ feature {EV_ANY_IMP} -- Tree intermediary agent routines
 			end
 		end
 	
-feature {EV_GTK_CALLBACK_MARSHAL, EV_ANY_IMP} -- Tuple optimizations
-
-	empty_tuple: TUPLE is
-		once
-			Result := []
-		end
-
 feature {EV_ANY_I} -- Externals
 
 	frozen c_get_eif_reference_from_object_id (a_c_object: POINTER): EV_ANY_IMP is

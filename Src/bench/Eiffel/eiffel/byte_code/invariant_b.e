@@ -4,7 +4,7 @@ class INVARIANT_B
 
 inherit
 
-	COMPILER_IDABLE;
+	IDABLE;
 	SHARED_BODY_ID;
 	BYTE_NODE
 		redefine

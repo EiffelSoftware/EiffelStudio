@@ -54,11 +54,19 @@ feature -- Access
 			ev_font: EV_FONT
 			font_imp: EV_FONT_IMP
 		do
-			create wel_font.make_indirect (log_font)
-			create ev_font
-			font_imp ?= ev_font.implementation
-			font_imp.set_by_wel_font (wel_font)
-			Result := ev_font
+				--| FIXME we return a default EV_FONT if the
+				--| user cancells the dialog, but we should make this,
+				--| and other standard dialogs all return the previously
+				--| set value. Julian 10/23/02.
+			if selected then
+				create wel_font.make_indirect (log_font)
+				create ev_font
+				font_imp ?= ev_font.implementation
+				font_imp.set_by_wel_font (wel_font)
+				Result := ev_font
+			else
+				create Result
+			end
 		end
 
 	title: STRING is "Font"

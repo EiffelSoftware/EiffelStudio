@@ -7,6 +7,7 @@ indexing
 class S_CLASS_DATA
 
 inherit
+
 	S_LINKABLE_DATA
 		rename
 			make as old_make
@@ -14,16 +15,15 @@ inherit
 			is_equal
 		redefine
 			chart, set_chart
-		end
-
-	S_CASE_INFO
-
+		end;
+	S_CASE_INFO;
 	HASHABLE
 		rename
 			hash_code as view_id
 		end
 
 creation
+
 	make
 
 feature
@@ -59,9 +59,6 @@ feature -- Properties
 
 	generics: FIXED_LIST [S_GENERIC_DATA];
 			-- Number of generic parameters
-
-	creation_features: LINKED_LIST [STRING]
-			-- Names of creation procedures of current class.
 
 	is_deferred: BOOLEAN;
 			-- Is the current class deferred?
@@ -157,6 +154,8 @@ feature -- Properties
 			Result := disk_content.chart
 		end;
 
+	creation_features	: LINKED_LIST	[ STRING	]
+
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
@@ -215,16 +214,6 @@ feature -- Setting
 			generics_set: generics = l
 		end;
 
-	set_creation_features (l: like creation_features) is
-			-- Set creation_features to `l'.
-		require
-			valid_l: l /= Void
-		do
-			creation_features := l
-		ensure
-			creation_features_set: creation_features = l
-		end
-
 	set_feature_number (i: INTEGER) is
 			-- Set feature_number to `i'.
 		do
@@ -260,6 +249,16 @@ feature -- Setting
 		do
 			disk_content.set_chart (ch);
 		end;
+
+       set_creation_features (l: like creation_features) is
+			   -- Set creation_features to `l'.
+               require
+                       valid_l: l /= Void
+               do
+                       creation_features := l
+               ensure
+                       creation_features_set: creation_features = l
+               end
 
 feature -- Storage
 
@@ -413,7 +412,7 @@ feature -- Reverse engineering details
 			is_reversed_engineered: is_reversed_engineered
 		end
 
-feature {CLASS_DATA, CLASS_CONTENT_SERVER, RESCUE_INFO, FORMAT_CASE_STORAGE} -- Implementation
+feature {CLASS_DATA, CLASS_CONTENT_SERVER, RESCUE_INFO,SYSTEM_DATA} -- Implementation
 
 	disk_content: S_CLASS_CONTENT;
 			-- Information stored to disk

@@ -95,11 +95,8 @@ feature -- Setting
 			is_attribute: is_attribute
 		end;
 
-	set_body (b: FEATURE_BODY_DATA) is
+	set_body (l: LINKED_LIST [STRING]) is
 			-- Set `body' to `l'.
-		require
-			body_exists: b /= Void;
-			body_not_empty: not b.empty;
 		do
 		end;
 

@@ -85,11 +85,17 @@ feature -- Access
 feature -- Status setting
 
 	show_text is
-			-- Show the text of the button and not the pixmap.
+			-- Show the text of the button and not the pixmap or icon.
 		require
 			exists: exists
 		do
-			set_style (clear_flag (style, Bs_bitmap))
+			if internal_bitmap /= Void then
+				set_style (clear_flag (style, Bs_bitmap))
+				invalidate
+			elseif internal_icon /= Void then
+				set_style (clear_flag (style, Bs_icon))
+				invalidate
+			end
 		end
 
 	show_bitmap is
@@ -140,7 +146,7 @@ feature -- Element change
 			-- Remove the bitmap or the icon from the button
 		require
 			exists: exists
-			valid_bitmap: bitmap /= Void
+			valid_bitmap: bitmap /= Void or icon /= Void
 		do
 			show_text
 			internal_bitmap := Void

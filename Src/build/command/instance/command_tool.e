@@ -131,7 +131,9 @@ feature
 			not_void_c: c /= Void
 		do
 			set_instance_only (c)
-			command_editor.set_command (command_instance.associated_command)
+			if realized and then command_editor_shown then
+				command_editor.set_command (c.associated_command)
+			end
 		end
 
 feature {COMMAND_TOOL_HOLE}
@@ -144,7 +146,6 @@ feature {COMMAND_TOOL_HOLE}
 			if command_instance /= Void then
 				command_instance.set_editor (Void)
 			end
---			clear
 			command_instance := c
 			c.set_editor (Current)
 			arguments.set (command_instance.arguments)
@@ -182,6 +183,14 @@ feature
 			-- Observer box of the command editor
 		do
 			Result := command_editor.observers
+		end
+
+	save_command is
+			-- Save command currently edited in command editor.
+		require
+			command_editor_shown: command_editor_shown
+		do
+			command_editor.save_command
 		end
 
 feature -- Update
@@ -280,9 +289,11 @@ feature -- COMMAND features
 		local
 			an_arrow: ARROW_B
 		do
-			an_arrow ?= arg
-			if an_arrow /= Void and then an_arrow = details_button then
-				details_action
+			if command_instance /= Void then
+				an_arrow ?= arg
+				if an_arrow /= Void and then an_arrow = details_button then
+					details_action
+				end
 			end
 		end
 
@@ -317,6 +328,17 @@ feature -- COMMAND features
 	show_command_editor is
 			-- Show command editor
 		deferred
+		end
+
+	hide_other_command_editor is
+			-- Before showing attached command editor, hide the
+			-- other one if exist.
+		require
+			command_instance_set: command_instance /= Void
+		do
+			if command_instance.associated_command.edited then
+				command_instance.associated_command.command_editor.hide_yourself
+			end
 		end
 
 end -- COMMAND_TOOL

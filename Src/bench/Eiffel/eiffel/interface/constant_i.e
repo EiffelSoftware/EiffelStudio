@@ -255,6 +255,7 @@ feature -- C code generation
 				else
 					buffer.indent
 					buffer.putstring ("return ")
+					type_i.c_type.generate_cast (buffer)
 					value.generate (buffer)
 					buffer.exdent
 				end

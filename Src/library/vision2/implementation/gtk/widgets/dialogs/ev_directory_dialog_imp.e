@@ -11,9 +11,12 @@ inherit
 	EV_DIRECTORY_DIALOG_I
 
 	EV_FILE_DIALOG_IMP
+		rename
+			file_name as directory_name
 		export {NONE}
-			file,
-			file_name
+			file
+		redefine
+			ok_widget_execute			
 		end
 
 creation
@@ -57,6 +60,23 @@ feature {NONE} -- Initialization
 		do
 			make (par)
 			set_title (txt)
+		end
+
+feature {EV_FILE_DIALOG_IMP} -- Execute procedure
+
+	ok_widget_execute (argument: EV_ARGUMENT1[EV_STANDARD_DIALOG_I]; data: EV_EVENT_DATA) is
+			-- Command to close the dialog when the user clicks
+			-- on the `ok' button, only if there is a directory selected.
+		local
+			dialog_imp: EV_STANDARD_DIALOG_IMP
+		do
+			if (not directory_name.is_equal ("")) then
+				dialog_imp ?= argument.first
+				dialog_imp.hide
+					-- Hide the gtk object
+					-- The user must no forget to destroy
+					-- the dialog when no more needed.
+			end
 		end
 
 end -- class EV_DIRECTORY_DIALOG_IMP

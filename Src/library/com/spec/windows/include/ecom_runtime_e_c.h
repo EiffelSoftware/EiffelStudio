@@ -43,11 +43,15 @@ class ecom_runtime_ec
 		VARIANT ccom_ec_variant (EIF_REFERENCE a_ref);
 
 		//Pointed
-		char * ccom_ec_pointed_character (EIF_REFERENCE a_ref, char * old);
 		DATE * ccom_ec_pointed_date (EIF_REFERENCE a_ref, DATE * old);
+		char * ccom_ec_pointed_character (EIF_REFERENCE a_ref, char * old);
 		short * ccom_ec_pointed_short (EIF_REFERENCE a_ref, short * old);
 		long * ccom_ec_pointed_long (EIF_REFERENCE a_ref, long * old);
 		int * ccom_ec_pointed_integer (EIF_REFERENCE a_ref, int * old);
+		unsigned char * ccom_ec_pointed_unsigned_character (EIF_REFERENCE a_ref, unsigned char * old);
+		unsigned short * ccom_ec_pointed_unsigned_short (EIF_REFERENCE a_ref, unsigned short * old);
+		unsigned long * ccom_ec_pointed_unsigned_long (EIF_REFERENCE a_ref, unsigned long * old);
+		unsigned int * ccom_ec_pointed_unsigned_integer (EIF_REFERENCE a_ref, unsigned int * old);
 		float * ccom_ec_pointed_real (EIF_REFERENCE a_ref, float * old);
 		double * ccom_ec_pointed_double (EIF_REFERENCE a_ref, double * old);
 		HRESULT * ccom_ec_pointed_hresult (EIF_REFERENCE a_ref, HRESULT *old);

@@ -10,6 +10,7 @@ indexing
 class OPT_PULL_M 
 
 inherit
+
 	OPT_PULL_I
 		export
 			{NONE} all
@@ -17,7 +18,7 @@ inherit
 
 	MENU_M
 		rename
-			set_foreground as menu_set_foreground,
+			set_foreground_color as menu_set_foreground_color,
 			set_background_color as menu_set_background_color,
 			set_size as menu_set_size,
 			set_width as menu_set_width,
@@ -33,11 +34,11 @@ inherit
 		redefine
 			set_x_y, set_size, set_width, set_height, real_x, real_y, x, y,
 			set_x, set_y, height, width, managed, set_managed,
-			set_foreground, set_background_color,
+			set_foreground_color, set_background_color,
 			set_insensitive, insensitive
 		select
 			set_size, set_width, set_height, 
-			set_foreground, set_background_color,
+			set_foreground_color, set_background_color,
 			set_managed, managed
 		end;
 creation
@@ -46,7 +47,7 @@ creation
 
 feature -- Creation
 
-	make (a_pulldown: OPT_PULL) is
+	make (a_pulldown: OPT_PULL; man: BOOLEAN) is
 			-- Create a motif pulldown menu.
 		local
 			pulldown_identifier: STRING;
@@ -59,17 +60,23 @@ feature -- Creation
 			widget_index := widget_manager.last_inserted_position + 1;
 			pulldown_identifier := clone (a_pulldown.identifier);
 			pulldown_identifier.append ("_pull");
-			parent ?= widget_manager.parent_using_index (a_pulldown, widget_index);
+			parent ?= widget_manager.parent_using_index (a_pulldown, 
+							widget_index);
 			check
 				intern: parent /= Void
 			end;
-			!! option_button.make (a_pulldown.identifier, parent);
+			if man then
+				!! option_button.make (a_pulldown.identifier, parent);
+			else
+				!! option_button.make_unmanaged (a_pulldown.identifier, parent);
+			end;
 			ext_name := pulldown_identifier.to_c;
 			screen_object := create_pulldown ($ext_name,
 					parent.implementation.screen_object);
 			abstract_menu := a_pulldown;
 			xm_attach_menu (xm_option_button_gadget 
-					(option_button.implementation.screen_object), screen_object)
+					(option_button.implementation.screen_object), 
+					screen_object)
 		end;
 
 feature
@@ -238,11 +245,11 @@ feature
 			option_button.set_height (new_height);
 		end;
 
-	set_foreground (a_color: COLOR) is
-			--set foreground color on both option button and menu pane
+	set_foreground_color (a_color: COLOR) is
+			--set foreground_color color on both option button and menu pane
 		do
-			option_button.set_foreground (a_color);
-			menu_set_foreground (a_color);
+			option_button.set_foreground_color (a_color);
+			menu_set_foreground_color (a_color);
 		end;
 
 	set_background_color (a_color: COLOR) is

@@ -10,6 +10,7 @@ indexing
 class MENU_PULL_M 
 
 inherit
+
 	MENU_PULL_I
 		export
 			{NONE} all
@@ -17,7 +18,7 @@ inherit
 
 	MENU_M
 		rename
-			set_foreground as menu_set_foreground,
+			set_foreground_color as menu_set_foreground_color,
 			set_background_color as menu_set_background_color,
 			set_size as menu_set_size,
 			set_width as menu_set_width,
@@ -35,19 +36,19 @@ inherit
 			real_x, real_y, 
 			x, y,
 			set_x, set_y, height, width, managed, set_managed,
-			set_foreground, set_background_color
+			set_foreground_color, set_background_color
 		select
 			set_size, set_width, set_height, 
-			set_foreground, set_background_color
+			set_foreground_color, set_background_color
 		end;
 
 creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
-	make (a_pulldown: MENU_PULL) is
+	make (a_pulldown: MENU_PULL; man: BOOLEAN) is
 			-- Create a motif pulldown menu.
 		local
 			pulldown_identifier: STRING;
@@ -60,16 +61,22 @@ feature -- Creation
 			widget_index := widget_manager.last_inserted_position + 1;
 			pulldown_identifier := clone (a_pulldown.identifier);
 			pulldown_identifier.append ("_pull");
-			parent ?= widget_manager.parent_using_index (a_pulldown, widget_index);
+			parent ?= widget_manager.parent_using_index (a_pulldown, 
+						widget_index);
 			check
 				intern: parent /= Void
 			end;
-			!! menu_button.make (a_pulldown.identifier, parent);
+			if man then
+				!! menu_button.make (a_pulldown.identifier, parent);
+			else
+				!! menu_button.make_unmanaged (a_pulldown.identifier, parent);
+			end;
 			ext_name := pulldown_identifier.to_c;
 			screen_object := create_pulldown ($ext_name,
 					parent.implementation.screen_object);
 			abstract_menu := a_pulldown;
-			xm_attach_menu (menu_button.implementation.screen_object, screen_object);
+			xm_attach_menu (menu_button.implementation.screen_object, 
+							screen_object);
 		end;
 
 feature
@@ -85,7 +92,6 @@ feature
 		do
 			menu_button.set_text(a_text)
 		end;
-
 
 	managed: BOOLEAN is
 		do
@@ -159,10 +165,10 @@ feature
 			menu_button.set_height (new_height);
 		end;
 
-	set_foreground (a_color: COLOR) is
+	set_foreground_color (a_color: COLOR) is
 		do
-			menu_button.set_foreground (a_color);
-			menu_set_foreground (a_color);
+			menu_button.set_foreground_color (a_color);
+			menu_set_foreground_color (a_color);
 		end;
 
 	set_background_color (a_color: COLOR) is

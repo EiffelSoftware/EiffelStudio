@@ -29,6 +29,8 @@ inherit
 			changeable_comparison_criterion,
 			default_create,
 			move
+		redefine
+			start
 		end
 
 	SET [G]
@@ -99,6 +101,12 @@ feature -- Status report
 		-- Is structured filled to capacity? (Answer: no.)
 
 feature -- Cursor movement
+
+	start is
+			-- Move to first position.
+		do
+			go_i_th (1)
+		end
 
 	back is
 			-- Move to previous position.
@@ -367,6 +375,9 @@ end -- class EV_ITEM_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/03/03 22:04:25  king
+--| Implemented start to set index to 1
+--|
 --| Revision 1.4  2000/03/01 23:43:21  king
 --| Added lists_equal linked_list comparison feature
 --|

@@ -225,7 +225,6 @@ feature -- Generation
 			generate_c_code: BOOLEAN
 			once_count:INTEGER
 			buffer, header_buffer: GENERATION_BUFFER
-			has_cpp_externals: BOOLEAN
 		do
 			final_mode := byte_context.final_mode
 
@@ -268,6 +267,10 @@ feature -- Generation
 				end
 
 				if generate_c_code then
+						-- First, we reset the `has_cpp_externals_calls' of `BYTE_CONTEXT'
+						-- which will enable us to know wether or not a C++ call has been
+						-- generated
+					byte_context.set_has_cpp_externals_calls (False)
 
 	
 					if not final_mode then
@@ -279,7 +282,7 @@ feature -- Generation
 					type.dump (buffer)
 					buffer.putstring ("%N */%N%N")
 						-- Includes wanted
-					buffer.putstring ("#include %"eif_eiffel.h%"%N%N")
+					buffer.putstring ("#include %"eif_eiffel.h%"%N")
 					if final_mode then
 						buffer.putstring ("#include %"")
 						buffer.putstring (base_file_name)
@@ -324,15 +327,6 @@ feature -- Generation
 							
 								-- Generate the C code of `feature_i'
 							generate_feature (feature_i, buffer)
-
-								-- If it is a C++ external, we need to set `has_cpp_externals'
-								-- for the generation of the file name.
-							if not has_cpp_externals then
-								external_i ?= feature_i
-								if external_i /= Void then
-									has_cpp_externals := external_i.is_cpp
-								end
-							end
 						end
 						feature_table.forth
 					end
@@ -365,7 +359,7 @@ feature -- Generation
 					end
 					buffer.close_c
 
-					file := open_generation_file (has_cpp_externals)
+					file := open_generation_file (byte_context.has_cpp_externals_calls)
 					file.put_string (buffer)
 					file.close
 

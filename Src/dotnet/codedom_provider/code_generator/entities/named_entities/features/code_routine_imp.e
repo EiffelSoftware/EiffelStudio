@@ -9,6 +9,8 @@ class
 inherit
 	CODE_ROUTINE
 
+	CODE_SHARED_NAME_FORMATTER
+
 create
 	make
 
@@ -20,9 +22,18 @@ feature {NONE} -- Specific implementation
 			create Result.make_empty
 			if not name.is_equal (".ctor") then
 				Result.append (indent_string)
-				Result.append ("make%N")
+				Result.append (Ctor_eiffel_name.twin)
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	Ctor_eiffel_name: STRING is
+				-- Eiffel name for `.ctor'
+			once
+				Result := Name_formatter.formatted_feature_name (".ctor")
+				Result.append_character ('%N')
+			end
 
 end -- class CODE_ROUTINE
 

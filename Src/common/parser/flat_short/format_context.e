@@ -45,6 +45,16 @@ feature -- Initialization
 			format_stack.extend (format);
 		end;
 
+	set_class_ast ( cl : CLASS_AS ) is
+		-- added by pascalf, for filling the body of feature
+		require
+			valid_ast: cl /= Void;
+		do
+			class_ast := cl
+		ensure
+			set: class_ast = cl
+		end
+
 feature -- Properties
 
 	class_ast: CLASS_AS;

@@ -49,6 +49,18 @@ feature -- Status report
 		do
 			Result := alignment = feature {EV_PARAGRAPH_CONSTANTS}.alignment_justified
 		end
+		
+	left_margin: INTEGER
+		-- Left margin between border and text in pixels
+		
+	right_margin: INTEGER
+		-- Right margin between line end and border in pixels
+		
+	top_spacing: INTEGER
+		-- Spacing between top of paragraph and previous line in pixels.
+		
+	bottom_spacing: INTEGER
+		-- Spacing between bottom of paragraph and next line in pixels.
 
 feature -- Status setting
 
@@ -82,6 +94,46 @@ feature -- Status setting
 			alignment := feature {EV_PARAGRAPH_CONSTANTS}.alignment_justified
 		ensure
 			is_justified: is_justified
+		end
+		
+	set_left_margin (a_margin: INTEGER) is
+			-- Set `left_margin' to `a_margin'.
+		require
+			margin_non_negative: a_margin >= 0
+		do
+			left_margin := a_margin
+		ensure
+			margin_set: left_margin = a_margin
+		end
+
+	set_right_margin (a_margin: INTEGER) is
+			-- Set `right_margin' to `a_margin'.
+		require
+			margin_non_negative: a_margin >= 0
+		do
+			right_margin := a_margin
+		ensure
+			margin_set: right_margin = a_margin
+		end
+		
+	set_top_spacing (a_margin: INTEGER) is
+			-- Set `top_spacing' to `a_margin'.
+		require
+			margin_non_negative: a_margin >= 0
+		do
+			top_spacing := a_margin
+		ensure
+			margin_set: top_spacing = a_margin
+		end
+		
+	set_bottom_spacing (a_margin: INTEGER) is
+			-- Set `bottom_spacing' to `a_margin'.
+		require
+			margin_non_negative: a_margin >= 0
+		do
+			bottom_spacing := a_margin
+		ensure
+			margin_set: bottom_spacing = a_margin
 		end
 
 invariant

@@ -64,7 +64,6 @@ feature {NONE} -- Initialization
 		do
 			linked_list_make
 			create is_aborted_stack.make
-			create cursor_stack.make
 			create call_buffer.make
 			name_internal := a_name
 			event_data_names_internal := some_event_data_names
@@ -98,8 +97,12 @@ feature -- Basic operations
 			-- Stop at current point in list on `abort'.
 		require
 			event_data_not_void: event_data /= Void
+		local
+			snapshot: LINKED_LIST [PROCEDURE [ANY, EVENT_DATA]]
 		do
 			debug ("EVENT_TRACE") print (call_log (event_data)) end
+			create snapshot.make
+			snapshot.fill (Current)
 			inspect
 				state
 			when
@@ -107,19 +110,18 @@ feature -- Basic operations
 			then
 				debug ("EVENT_TRACE") print (" calling "+count.out+" actions...%N") end
 				from
-					cursor_stack.extend (cursor)
 					is_aborted_stack.extend (False)
-					start
+					snapshot.start
+				variant
+					snapshot.count - snapshot.index
 				until
-					after
+					snapshot.after
 					or is_aborted_stack.item
 				loop
-					item.call (event_data)
-					forth
+					snapshot.item.call (event_data)
+					snapshot.forth
 				end
 				is_aborted_stack.remove
-				go_to (cursor_stack.item)
-				cursor_stack.remove
 			when
 				Paused_state
 			then
@@ -134,8 +136,6 @@ feature -- Basic operations
 		ensure
 			is_aborted_stack_unchanged:
 				old is_aborted_stack.is_equal (is_aborted_stack)
-			cursor_stack_unchanged:
-				old cursor_stack.is_equal (cursor_stack)
 		end
 
 feature -- Access
@@ -320,10 +320,6 @@ feature {NONE} -- Implementation
 			-- `item' holds abort status of
 			-- innermost of possibly recursive `call's.
 
-	cursor_stack: LINKED_STACK [CURSOR]
-			-- `item' holds position in second from innermost
-			-- of possibly recursive `call's.
-
 	call_buffer: LINKED_QUEUE [EVENT_DATA]
 			-- Holds calls made while `is_paused'
 			-- to be executed on `resume'.
@@ -344,7 +340,7 @@ feature {NONE} -- Debug
 		local
 			i, j: INTEGER
 		do
-			Result := "action_sequence ("+ cursor_stack.count.out + " nests) "
+			Result := "action_sequence ("+ is_aborted_stack.count.out + " nests) "
 				 + name_internal + ".call ("
 			from
 				i := event_data.lower
@@ -366,7 +362,6 @@ feature {NONE} -- Debug
 
 invariant
 	is_aborted_stack_not_void: is_aborted_stack /= Void
-	cursor_stack_not_void: cursor_stack /= Void
 	call_buffer_not_void: call_buffer /= Void
 	name_not_void: name_internal /= Void
 	name_not_empty: not name_internal.empty
@@ -411,6 +406,13 @@ end
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.14  2000/02/25 20:28:16  oconnor
+--| Removed cursor_stack.
+--| Copy contents of action sequence into local `snapshot' in `call'.
+--| This prevents problems arising from actions in the sequence modifing
+--| the sequence. No reference to the snapshot will be given to anyone
+--| so its integrity will be maintained.
+--|
 --| Revision 1.13  2000/01/20 22:24:44  oconnor
 --| formatting
 --|

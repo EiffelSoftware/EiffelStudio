@@ -66,6 +66,7 @@ feature {NONE}
 		do
 			register
 			top_shell_create (Widget_names.help_window, a_screen)
+			set_title (Widget_names.help_window)
 			!! window_menu_bar.make (menu_names.menu_bar, Current)
 			!! file_category.make (menu_names.file, window_menu_bar)
 			!! exit_tool_entry.make (menu_names.exit_tool, file_category)

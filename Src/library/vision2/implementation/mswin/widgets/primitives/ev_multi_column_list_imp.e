@@ -329,9 +329,9 @@ feature -- Status setting
 		do
 			if not has_headers then
 				if multiple_selection_enabled then
-					set_style (default_style)
+					set_style (default_style - Lvs_singlesel)
 				else
-					set_style (default_style + Lvs_singlesel)
+					set_style (default_style)
 				end
 			end
 		end
@@ -341,9 +341,9 @@ feature -- Status setting
 		do
 			if has_headers then
 				if multiple_selection_enabled then
-					set_style (default_style + Lvs_nocolumnheader)
+					set_style (default_style + Lvs_nocolumnheader - Lvs_singlesel)
 				else
-					set_style (default_style + Lvs_singlesel + 
+					set_style (default_style + 
 						Lvs_nocolumnheader)
 				end
 			end

@@ -1,22 +1,14 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "General check button implementation."
+	description: "Eiffel Vision check button. Implementation interface."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-
 	EV_CHECK_BUTTON_I 
 
 inherit
-
 	EV_TOGGLE_BUTTON_I
-		redefine
-			interface
-		end
-
-	EV_SELECT_BUTTON_I
 		redefine
 			interface
 		end
@@ -48,6 +40,9 @@ end -- class EV_CHECK_BUTTON_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/25 21:28:15  brendel
+--| Formatting.
+--|
 --| Revision 1.5  2000/02/24 20:32:36  brendel
 --| Added inheritance of EV_SELECT_BUTTON_I.
 --|

@@ -37,10 +37,12 @@ feature -- Status setting
 feature {NONE} -- Implementation
 
 	checked: BOOLEAN is
+			-- To be effected by WEL class.
 		deferred
 		end
 
 	set_checked is
+			-- To be effected by WEL class.
 		deferred
 		end
 
@@ -71,6 +73,9 @@ end -- class EV_SELECT_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.2  2000/02/25 21:28:16  brendel
+--| Formatting.
+--|
 --| Revision 1.1  2000/02/24 20:27:22  brendel
 --| Initial revision. Needed for rearranged radio-item inheritance structure.
 --|

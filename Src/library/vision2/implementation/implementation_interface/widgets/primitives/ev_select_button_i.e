@@ -1,7 +1,5 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-
-	description: "General toggle button implementation."
+	description: "Eiffel Vision select button. Implementation interface."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,7 +8,6 @@ deferred class
 	EV_SELECT_BUTTON_I 
 
 inherit
-
 	EV_BUTTON_I
 		redefine
 			interface
@@ -19,14 +16,14 @@ inherit
 feature -- Status report
 	
 	is_selected: BOOLEAN is
-			-- Is toggle button pressed ?
+			-- Is button depressed?
 		deferred
 		end 
 	
 feature -- Status setting
 
 	enable_select is
-                       -- Set `is_selected' `True'.
+			-- Set `is_selected' `True'.
 		deferred
 		ensure
 			is_selected: is_selected
@@ -59,6 +56,9 @@ end -- class EV_TOGGLE_BUTTON_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.2  2000/02/25 21:28:15  brendel
+--| Formatting.
+--|
 --| Revision 1.1  2000/02/24 18:11:44  oconnor
 --| New inheritance structure for buttons with state.
 --| New class EV_SELECT_BUTTON provides `is_selected' and `enable_select'.

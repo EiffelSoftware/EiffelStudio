@@ -1,6 +1,6 @@
 indexing
 	description: 
-		"Eiffel Vision select button. Button that has a selected state."
+		"Eiffel Vision select button. Buttons that have a state."
 	status: "See notice at end of class"
 	keywords: "state, toggle, button"
 	date: "$Date$"
@@ -65,6 +65,9 @@ end -- class EV_STATE_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.2  2000/02/25 21:28:16  brendel
+--| Formatting.
+--|
 --| Revision 1.1  2000/02/24 18:16:24  oconnor
 --| New inheritance structure for buttons with state.
 --| New class EV_SELECT_BUTTON provides `is_selected' and `enable_select'.

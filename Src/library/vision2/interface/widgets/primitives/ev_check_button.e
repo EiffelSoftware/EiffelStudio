@@ -1,6 +1,6 @@
 indexing
 	description:
-		"Eiffel Vision Check button. A labeled check box."
+		"Eiffel Vision check button. Labeled check boxes."
 	status: "See notice at end of class"
 	keywords: "toggle, check, tick, button, box"
 	date: "$Date$"
@@ -55,6 +55,9 @@ end -- class EV_CHECK_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/02/25 21:28:16  brendel
+--| Formatting.
+--|
 --| Revision 1.11  2000/02/22 18:39:51  oconnor
 --| updated copyright date and formatting
 --|

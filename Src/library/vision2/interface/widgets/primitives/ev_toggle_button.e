@@ -33,7 +33,7 @@ feature -- Status setting
 		end
 
 	toggle is
-			-- Change `is_selected'.
+			-- Invert the value of `is_selected'.
 		do
 			implementation.toggle
 		ensure
@@ -75,6 +75,9 @@ end -- class EV_TOGGLE_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/02/25 21:28:16  brendel
+--| Formatting.
+--|
 --| Revision 1.21  2000/02/24 18:16:24  oconnor
 --| New inheritance structure for buttons with state.
 --| New class EV_SELECT_BUTTON provides `is_selected' and `enable_select'.

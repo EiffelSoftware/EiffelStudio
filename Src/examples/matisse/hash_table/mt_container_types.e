@@ -28,3 +28,4 @@ feature {NONE}
 			Result.put("MT_HASH_TABLE", "ZIP_CODE_TABLE__zip_table")
 		end
 
+end

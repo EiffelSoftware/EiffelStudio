@@ -363,7 +363,7 @@ feature -- Once request
 			if l_icd_class /= Void then
 					--| now we have the correct ICOR_DEBUG_CLASS as a_icd_class
 					--| and we know the good CLASS_TYPE as
-				l_icd_frame := eifnet_debugger.current_icor_debug_frame
+				l_icd_frame := eifnet_debugger.current_stack_icor_debug_frame
 				l_icd_dv_result := l_eifnet_debugger.once_function_value_on_icd_class (l_icd_frame, l_icd_class, l_adapted_class_type, a_feat)
 				if l_icd_dv_result /= Void then
 					Result := debug_value_from_icdv (l_icd_dv_result)

@@ -265,7 +265,7 @@ feature -- Access
 	value_frame_dotnet: ICOR_DEBUG_FRAME is
 			-- ICorDebugFrame in this DUMP_VALUE context
 		do
-			Result := application.imp_dotnet.eifnet_debugger.current_icor_debug_frame
+			Result := application.imp_dotnet.eifnet_debugger.current_stack_icor_debug_frame
 		end
 	
 feature -- change

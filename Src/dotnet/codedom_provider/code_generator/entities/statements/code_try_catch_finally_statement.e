@@ -55,7 +55,7 @@ feature -- Access
 			-- |		end"
 		local
 			l_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]
-			l_locals: LIST [CODE_VARIABLE_DECLARATION_STATEMENT]
+			l_locals: LIST [CODE_VARIABLE]
 		do
 			create Result.make (100)
 			Result.append (Indent_string)

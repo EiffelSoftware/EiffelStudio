@@ -52,7 +52,7 @@ feature -- Access
 			-- Generate implementation feature that actually implements the try/catch paradigm.
 		local
 			l_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]
-			l_locals: LIST [CODE_VARIABLE_DECLARATION_STATEMENT]
+			l_locals: LIST [CODE_VARIABLE]
 			l_old_indent_string: STRING
 		do
 			create Result.make (500)

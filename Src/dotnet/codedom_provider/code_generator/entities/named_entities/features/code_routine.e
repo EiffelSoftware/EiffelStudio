@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			-- Initialize instance.
 		do
 			Precursor {CODE_FEATURE}  (a_name, a_eiffel_name)
-			create {ARRAYED_LIST [CODE_VARIABLE_DECLARATION_STATEMENT]} locals.make (4)
+			create {ARRAYED_LIST [CODE_VARIABLE]} locals.make (4)
 			create {ARRAYED_LIST [CODE_SNIPPET_VARIABLE]} snippet_locals.make (0)
 			create cast_locals.make (1)
 			create {ARRAYED_LIST [CODE_STATEMENT]} statements.make (32)
@@ -49,7 +49,7 @@ feature -- Access
 	arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]
 			-- Routine arguments
 
-	locals: LIST [CODE_VARIABLE_DECLARATION_STATEMENT]
+	locals: LIST [CODE_VARIABLE]
 			-- Routine local variables
 
 	snippet_locals: LIST [CODE_SNIPPET_VARIABLE]
@@ -154,7 +154,7 @@ feature {CODE_FACTORY} -- Status Setting
 			arguments_set: arguments = a_arguments
 		end
 
-	add_local (a_local_variable: CODE_VARIABLE_DECLARATION_STATEMENT) is
+	add_local (a_local_variable: CODE_VARIABLE) is
 			-- Add `a_local_variable' to `locals'.
 		require
 			non_void_local_variable: a_local_variable /= Void
@@ -368,7 +368,7 @@ feature {NONE} -- Implementation
 	cast_variable_name: STRING is
 			-- Unique cast variable name
 		do
-			Result := "cast_result_"
+			Result := "l_cast_result_"
 			cast_variable_count.set_item (cast_variable_count.item + 1)
 			Result.append (cast_variable_count.out)
 		end

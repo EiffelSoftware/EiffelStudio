@@ -86,7 +86,6 @@ feature {NONE} -- Implementation
 			grid_control_holder: EV_FRAME
 			status_bar: EV_FRAME
 			split_area: EV_HORIZONTAL_SPLIT_AREA
-			object: GB_OBJECT
 		do
 			create Result
 			set_default_icon_pixmap (Result)

@@ -260,7 +260,7 @@ feature -- Calls
 				-- proxy for this object
 				Result := jni.java_object_table.item (jo)
 				if Result = Void then
-					!!Result.make_from_pointer (jo)
+					create Result.make_from_pointer (jo)
 				end
 			end
 		end

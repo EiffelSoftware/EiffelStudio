@@ -2660,7 +2660,14 @@ end;
 if cl_type /= Void then
 				cl_type.generate_skeleton1;
 				if not final_mode then
-					cltype_array.put (cl_type, cl_type.id.id);
+						-- Doesn't use `cl_type' as first argument:
+						-- LINKED_LIST [INTEGER] introduced in two precompiled projects
+						-- must have only one derivation in the generated code, i.e. objects
+						-- created by one precompiled project can be used by the other as they are
+						-- of the same type.
+						-- Using cl_type.type.associated_class_type will make sure that both
+						-- derivations will share the same dynamic type.
+					cltype_array.put (cl_type.type.associated_class_type, cl_type.id.id);
 				end;
 else
 		-- FIXME

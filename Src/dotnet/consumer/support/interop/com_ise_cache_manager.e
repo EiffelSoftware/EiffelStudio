@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 		do
 			is_initialized := False
 		end
-		
+
 feature -- Access
 
 	is_successful: BOOLEAN is
@@ -30,16 +30,16 @@ feature -- Access
 		do
 			Result := impl.is_successful
 		end
-		
+
 	is_initialized: BOOLEAN 
 			-- has COM object been initialized?
-	
+
 	last_error_message: SYSTEM_STRING is
 			-- last error message
 		do
 			Result := impl.last_error_message.to_cil
 		end
-		
+
 feature -- Basic Oprtations
 
 	initialize is
@@ -52,7 +52,7 @@ feature -- Basic Oprtations
 		ensure
 			current_initialized: is_initialized
 		end
-		
+
 	initialize_with_path (a_path: SYSTEM_STRING) is
 			-- initialize object with path to specific EAC and initializes it if not already done.
 		require
@@ -96,23 +96,7 @@ feature -- Basic Oprtations
 			
 			impl.consume_gac_assembly (name, version, culture, key)
 		end
-		
-	consume_local_assembly (apath, adest: SYSTEM_STRING) is
-			-- consume a local assembly from 'apath' into 'adest'
-		require
-			current_initialized: is_initialized
-			non_void_path: apath /= Void
-			non_void_dest: adest /= Void
-			path_exists: (create {RAW_FILE}.make (create {STRING}.make_from_cil(apath))).exists
-			dest_exists: (create {DIRECTORY}.make (create {STRING}.make_from_cil(adest))).exists
-		local
-			path, dest: STRING
-		do	
-			create path.make_from_cil (apath)
-			create dest.make_from_cil (adest)
-			impl.consume_local_assembly (path, dest)
-		end
-		
+
 	relative_folder_name (aname, aversion, aculture, akey: SYSTEM_STRING): SYSTEM_STRING is
 			-- retruns the relative path to an assembly
 		require
@@ -132,13 +116,13 @@ feature -- Basic Oprtations
 			if akey /= Void and akey.length > 0 then
 				create key.make_from_cil (akey)				
 			end
-			
+
 			Result := impl.relative_folder_name (name, version, culture, key).to_cil
 		ensure
 			non_void_result: Result /= Void
 			non_empty_result: Result.length > 0
 		end
-		
+
 	assembly_info_from_assembly (apath: SYSTEM_STRING): COM_ASSEMBLY_INFORMATION is
 			-- retrieve a local assembly's information
 		require

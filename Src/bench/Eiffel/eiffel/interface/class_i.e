@@ -74,9 +74,6 @@ feature -- Properties
 	old_base_name: like base_name
 			-- `base_name' of previous location of Current class.
 
-	hidden: BOOLEAN;
-			-- Is the class hidden in the precompilation sets?
-
 	is_read_only: BOOLEAN
 			-- Is class editable?
 
@@ -141,13 +138,6 @@ feature -- Properties
 			retried := True
 			retry
 		end;
-
-	hide_implementation: BOOLEAN is
-			-- Hide the implementation code of 
-			-- precompiled classes?
-		do
-			Result := cluster.hide_implementation
-		end
 
 	class_name_changed: BOOLEAN is
 			-- Is stored `class_name' identical to one in associated class?
@@ -253,28 +243,17 @@ feature {COMPILER_EXPORTER} -- Properties
 	changed: BOOLEAN;
 			-- Must the class be recompiled ?
 
-	pass2_done: BOOLEAN;
-			-- Pass2 has been done?
-
 feature {COMPILER_EXPORTER, EB_CLUSTERS} -- Setting
 
 	reset_options is
 			-- Reset the option values of the class
 		do
-debug
-	io.error.putstring ("reset_options: ");
-	if name /= Void then
-		io.error.putstring (name);
-	end;
-	io.error.new_line;
-end;
 			create assertion_level.make_no
 			trace_level := No_option;
 			profile_level := No_option;
 			optimize_level := No_optimize;
 			debug_level := No_debug;
 			visible_level := Visible_default;
-			hidden := False
 		end;
 
 	set_changed (b: BOOLEAN) is
@@ -458,19 +437,6 @@ feature {COMPILER_EXPORTER} -- Setting
 			profile_level := t;
 		end;
 
-	set_hide_level (b: BOOLEAN) is
-			-- Assign `b' to `hidden'.
-		do
-			hidden := b
-debug ("HIDE_OPTION")
-	io.error.putstring ("class name: ");
-	io.error.putstring (name);
-	io.error.putstring (" is_hidden: ");
-	io.error.putbool (hidden);
-	io.error.new_line;
-end;
-		end;
-
 	set_optimize_level (o: OPTIMIZE_I) is
 			-- Assign `o' to `optimize_level'.
 		do
@@ -533,7 +499,6 @@ end;
 			assertion_level := other.assertion_level;
 			visible_level := other.visible_level;
 			visible_name := other.visible_name;
-			hidden := other.hidden;
 		end;
 
 feature {TEXT_FILTER} -- Document processing

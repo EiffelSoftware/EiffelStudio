@@ -267,14 +267,6 @@ feature {COMPILER_EXPORTER} -- Conveniences
 			parent_cluster := c
 		end;
 
-	set_hide_implementation (is_hidden: BOOLEAN) is
-			-- Set `hide_implementation' to True.
-		do
-			hide_implementation := is_hidden
-		ensure
-			hide_implementation: hide_implementation = is_hidden
-		end;
-
 	set_date (i: INTEGER) is
 			-- Assign `i' to `date'.
 		do
@@ -399,7 +391,6 @@ end;
 			is_precompiled := old_cluster_i.is_precompiled;
 			precomp_id := old_cluster_i.precomp_id;
 			precomp_ids := old_cluster_i.precomp_ids;
-			hide_implementation := old_cluster_i.hide_implementation;
 			set_date (old_cluster_i.date);
 			set_is_recursive (old_cluster_i.is_recursive)
 			set_is_library (old_cluster_i.is_library)

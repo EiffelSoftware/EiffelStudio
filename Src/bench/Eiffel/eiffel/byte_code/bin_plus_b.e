@@ -9,10 +9,18 @@ inherit
 		redefine
 			generate_operator, is_commutative,
 			is_simple, generate_simple, generate_plus_plus,
-			is_additive
-		end;
+			is_additive,
+			is_reverted
+		end
 	
-feature 
+feature -- Status report
+
+	is_reverted: BOOLEAN is true
+			-- Has result of expression to be converted back to original type of expression
+			-- so that result does not depend on implicit conversion performed by an underlying
+			-- platform to a type with higher precision?
+
+feature
 
 	is_commutative: BOOLEAN is True
 			-- Operation is commutative.
@@ -23,7 +31,7 @@ feature
 			Result := is_built_in
 		end
 
-	is_additive: BOOLEAN is true;
+	is_additive: BOOLEAN is true
 			-- Operation is additive.
 
 	generate_operator is

@@ -230,8 +230,30 @@ feature {EB_FEATURES_TREE} -- Status setting
 				if s = Void then
 					s := development_window.editor_tool.text_area.text
 				end
+				check
+					s_not_void: s /= Void
+				end
 				development_window.editor_tool.text_area.display_line_at_top_when_ready (
 					character_line (a_clause.end_position, s))
+			end
+		end
+
+	go_to_line (a_line: INTEGER) is
+			-- Text at `a_line' has been selected, the associated class
+			-- window should display the corresponding line.
+		local
+			s: STRING
+		do
+			if a_line > 0 then
+				s := current_compiled_class.text
+				if s = Void then
+					s := development_window.editor_tool.text_area.text
+				end
+				check
+					s_not_void: s /= Void
+				end
+				development_window.editor_tool.text_area.display_line_at_top_when_ready (
+					a_line)
 			end
 		end
 

@@ -3969,6 +3969,45 @@ feature -- Conveniences
 			makefile_names := Void
 			dotnet_resources_names := Void
 		end
+		
+	reset_lace_options is
+			-- Reset all system level options to their default value.
+		do
+			set_remover_off (False)
+			set_array_optimization_on (False)
+			set_inlining_on (False)
+			set_inlining_size (4)
+			set_exception_stack_managed (False)
+			server_controler.set_block_size (1024)
+			set_do_not_check_vape (False)
+			allow_address_expression (False)
+			set_dynamic_def_file (Void)
+			set_ise_gc_runtime (True)
+			set_il_verifiable (True)
+			set_msil_key_file_name (Void)
+			set_msil_generation_type ("exe")
+			set_msil_culture (Void)
+			set_system_namespace (Void)
+			set_use_cluster_as_namespace (True)
+			set_use_all_cluster_as_namespace (True)
+			set_check_generic_creation_constraint (True)
+			set_has_syntax_warning (False)
+			set_msil_use_optimized_precompile (False)
+			internal_msil_classes_per_module := 0
+			msil_version := Void
+			msil_assembly_compatibility := Void
+			set_line_generation (False)
+		end
+		
+	reset_loaded_precompiled_properties is
+			-- Resets all loaded precompiled properties that interfer
+			-- with a projects properties
+		do
+			is_precompiled := False
+			has_precompiled_preobj := False
+			cls_compliant := False
+			dotnet_naming_convention := False		
+		end
 
 	set_executable_directory (d: STRING) is
 			-- Assign `d' to `executable_directory'.

@@ -45,28 +45,16 @@ inherit
 			enable_sensitive,
 			focus_in_actions,
 			focus_out_actions,
-			create_focus_in_actions,
-			create_focus_out_actions,
 			key_press_actions,
-			create_key_press_actions,
 			key_press_string_actions,
-			create_key_press_string_actions,
 			key_release_actions,
-			create_key_release_actions,
 			pointer_button_press_actions,
-			create_pointer_button_press_actions,
 			pointer_button_release_actions,
-			create_pointer_button_release_actions,
 			pointer_double_press_actions,
-			create_pointer_double_press_actions,
 			pointer_enter_actions,
-			create_pointer_enter_actions,
 			pointer_leave_actions,
-			create_pointer_leave_actions,
 			pointer_motion_actions,
-			create_pointer_motion_actions,
-			resize_actions,
-			create_resize_actions
+			resize_actions
 		end
 
 	WEL_CONTROL_WINDOW
@@ -359,20 +347,10 @@ feature -- action sequences
 			Result := internal_text_field.focus_in_actions
 		end
 
-	create_focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE is
-		do
-			Result := internal_text_field.create_focus_in_actions
-		end
-
 	focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when keyboard focus is lost.
 		do
 			Result := internal_text_field.focus_out_actions
-		end
-
-	create_focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE is
-		do
-			Result := internal_text_field.create_focus_out_actions
 		end
 
 	key_press_actions: EV_KEY_ACTION_SEQUENCE is
@@ -381,20 +359,10 @@ feature -- action sequences
 			Result := internal_text_field.key_press_actions
 		end
 
-	create_key_press_actions: EV_KEY_ACTION_SEQUENCE is
-		do
-			Result := internal_text_field.create_key_press_actions
-		end
-
 	key_press_string_actions: EV_KEY_STRING_ACTION_SEQUENCE is
 			-- Actions to be performed when a keyboard key is pressed.
 		do
 			Result := internal_text_field.key_press_string_actions
-		end
-
-	create_key_press_string_actions: EV_KEY_STRING_ACTION_SEQUENCE is
-		do
-			Result := internal_text_field.create_key_press_string_actions
 		end
 
 	key_release_actions: EV_KEY_ACTION_SEQUENCE is
@@ -403,20 +371,10 @@ feature -- action sequences
 			Result := internal_text_field.key_release_actions
 		end
 
-	create_key_release_actions: EV_KEY_ACTION_SEQUENCE is
-		do
-			Result := internal_text_field.create_key_release_actions
-		end
-
 	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer button is pressed.
 		do
 			Result := internal_text_field.pointer_button_press_actions
-		end
-
-	create_pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
-		do
-			Result := internal_text_field.create_pointer_button_press_actions
 		end
 
 	pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
@@ -425,20 +383,10 @@ feature -- action sequences
 			Result := internal_text_field.pointer_button_release_actions
 		end
 
-	create_pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
-		do
-			Result := internal_text_field.create_pointer_button_release_actions
-		end
-
 	pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer is double clicked.
 		do
 			Result := internal_text_field.pointer_double_press_actions
-		end
-
-	create_pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
-		do
-			Result := internal_text_field.create_pointer_double_press_actions
 		end
 
 	pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE is
@@ -447,20 +395,10 @@ feature -- action sequences
 			Result := internal_text_field.pointer_enter_actions
 		end
 
-	create_pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE is
-		do
-			Result := internal_text_field.create_pointer_enter_actions
-		end
-
 	pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer leaves widget.
 		do
 			Result := internal_text_field.pointer_leave_actions
-		end
-
-	create_pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE is
-		do
-			Result := internal_text_field.create_pointer_leave_actions
 		end
 
 	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
@@ -469,20 +407,10 @@ feature -- action sequences
 			Result := internal_text_field.pointer_motion_actions
 		end
 
-	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
-		do
-			Result := internal_text_field.create_pointer_motion_actions
-		end
-		
 	resize_actions: EV_GEOMETRY_ACTION_SEQUENCE is
 			-- Actions to be performed when size changes.
 		do
 			Result := internal_text_field.resize_actions
-		end
-
-	create_resize_actions: EV_GEOMETRY_ACTION_SEQUENCE is
-		do
-			Result := internal_text_field.create_resize_actions
 		end
 
 feature -- EV_TEXT_COMPONENT_I implementation

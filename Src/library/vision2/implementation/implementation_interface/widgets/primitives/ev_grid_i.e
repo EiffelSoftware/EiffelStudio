@@ -695,7 +695,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implem
 	physical_column_count: INTEGER
 		-- Number of physical columns stored in `row_list'
 
-feature {EV_GRID_DRAWER_I} -- Implementation
+feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I} -- Implementation
 
 	column_offsets: ARRAYED_LIST [INTEGER]
 		-- Cumulative offset of each column in pixels.
@@ -715,14 +715,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 		
 	virtual_y_position: INTEGER
 			-- Virtual Y coordinate of `viewport' relative to top edge of grid.
-		
-	vertical_item_offset: INTEGER is
-			--
-		do
-			Result := vertical_scroll_bar.value
-		end
-		
-		
+
 	viewport: EV_VIEWPORT
 		-- Viewport containing `header' and `drawable', permitting the header to be offset
 		-- correctly in relation to the horizontal scroll bar.

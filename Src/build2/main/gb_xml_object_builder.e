@@ -31,7 +31,6 @@ feature {NONE} -- Implementation
 			type_string: UCSTRING
 			display_object: GB_DISPLAY_OBJECT
 			xml_element: XML_ELEMENT
-			layout_constructor_item: GB_LAYOUT_CONSTRUCTOR_ITEM		
 		do
 			create type_string.make_from_string ("type")
 			xml_element ?= element.first	
@@ -99,8 +98,6 @@ feature {NONE} -- Implementation
 			current_element: XML_ELEMENT
 			gb_ev_any: GB_EV_ANY
 			current_name: STRING
-			window_object: GB_OBJECT
-			layout_constructor_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			display_object: GB_DISPLAY_OBJECT
 			type_string: UCSTRING
 		do

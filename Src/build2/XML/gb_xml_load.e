@@ -130,8 +130,6 @@ feature {NONE} -- Implementation
 			current_element: XML_ELEMENT
 			gb_ev_any: GB_EV_ANY
 			current_name: STRING
-			window_object: GB_OBJECT
-			layout_constructor_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			display_object: GB_DISPLAY_OBJECT
 		do
 			new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value.to_utf8)

@@ -85,6 +85,11 @@ void* gtk_value_pointer (void* p)
 	return (GTK_VALUE_POINTER(*(GtkArg*)p));
 }
 
+int gtk_value_int (void* p)
+{
+	return (GTK_VALUE_INT(*(GtkArg*)p));
+}
+
 guint c_ev_gtk_callback_marshal_signal_connect (
     GtkObject* c_object, const gchar* signal, EIF_OBJECT agent
 )
@@ -372,6 +377,9 @@ guint c_ev_gtk_callback_marshal_delete_connect (
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.3  2000/02/18 19:11:52  oconnor
+// added GTK_VALUE_INT wrapper
+//
 // Revision 1.2  2000/02/14 12:05:08  oconnor
 // added from prerelease_20000214
 //

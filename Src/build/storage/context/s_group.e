@@ -178,8 +178,10 @@ feature -- Debugging
 		local
 			counter: INTEGER
 		do
-			io.error.putstring ("fn: ");
-			io.error.putstring (full_name);
+			if full_name /= Void then
+				io.error.putstring ("fn: ");
+				io.error.putstring (full_name);
+			end;
 			io.error.putstring (" int: ");
 			io.error.putstring (internal_name);
 			io.error.putstring (" id: ");

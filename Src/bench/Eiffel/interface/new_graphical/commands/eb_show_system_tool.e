@@ -56,18 +56,24 @@ feature {NONE} -- Execution
 								Eiffel_ace.set_file_name (fn)
 								execute (Void, data)
 							elseif f.exists and then not f.is_plain then
---								warner (project_tool.popup_parent).custom_call 
---									(Current, Warning_messages.w_Not_a_file_retry (fn), 
---									Interface_names.b_Ok, Void, Interface_names.b_Cancel)
+								create wd.make_with_text (associated_window, Interface_names.t_Warning,
+									Warning_messages.w_Not_a_file_retry (fn))
+								wd.show_ok_cancel_buttons	
+								wd.add_ok_command (Current, Void)
+								wd.show
 							else
---								warner (project_tool.popup_parent).custom_call 
---									(Current, Warning_messages.w_Cannot_read_file_retry (fn), 
---									Interface_names.b_Ok, Void, Interface_names.b_Cancel)
+								create wd.make_with_text (associated_window, Interface_names.t_Warning,
+									Warning_messages.w_Cannot_read_file_retry (fn))
+								wd.show_ok_cancel_buttons	
+								wd.add_ok_command (Current, Void)
+								wd.show
 							end
 						else
---							warner (project_tool.popup_parent).custom_call 
---								(Current, Warning_messages.w_Not_a_file_retry (fn), 
---								Interface_names.b_Ok, Void, Interface_names.b_Cancel)
+							create wd.make_with_text (associated_window, Interface_names.t_Warning,
+								Warning_messages.w_Not_a_file_retry (fn))
+							wd.show_ok_cancel_buttons	
+							wd.add_ok_command (Current, Void)
+							wd.show
 						end
 					end
 				else

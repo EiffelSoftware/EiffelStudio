@@ -25,7 +25,7 @@ inherit
 --			make
 		end
 
-	EV_MENU_HOLDER
+	EV_MENU_ITEM_LIST
 		redefine
 			implementation
 		end
@@ -98,6 +98,9 @@ end -- class EV_OPTION_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/02/19 01:08:26  oconnor
+--| removed refs to old EV_MENU_HOLDER class
+--|
 --| Revision 1.12  2000/02/14 11:40:52  oconnor
 --| merged changes from prerelease_20000214
 --|

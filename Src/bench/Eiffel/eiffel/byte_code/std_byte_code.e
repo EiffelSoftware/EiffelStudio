@@ -485,159 +485,35 @@ end
 	generate_expanded_variables is
 			-- Create local expanded variables and Result
 		local
-			i, count, exp_type_id: INTEGER
+			i, count: INTEGER
 			type_i: TYPE_I
-			cl_type_i: CL_TYPE_I
-			bit_i: BIT_I
-			gen_type: GEN_TYPE_I
-			creation_feature: FEATURE_I
-			class_type: CLASS_TYPE
-			written_class: CLASS_C
-			written_type: CLASS_TYPE
-			c_name: STRING
-			buf: GENERATION_BUFFER
 			used_upper: INTEGER
 		do
-			buf := buffer
 			if locals /= Void then
-				count := locals.count
 				from
 					i := locals.lower
+					count := locals.count
 					used_upper := context.local_vars.upper
 				until
 					i > count
 				loop
-					type_i := real_type (locals.item (i))
 							-- Generate only if variable used
 					if i <= used_upper and then context.local_vars.item(i) then
-						if type_i.is_true_expanded then
-							cl_type_i ?= type_i
-
-							gen_type  ?= cl_type_i
-
-							if gen_type /= Void then
-								generate_block_open
-								generate_gen_type_conversion (gen_type)
-							end
+						type_i := real_type (locals.item (i))
+						if type_i.is_true_expanded or type_i.is_bit then
 							context.local_var.set_position (i)
-							context.local_var.print_register
-							exp_type_id := cl_type_i.expanded_type_id - 1
-							if context.workbench_mode then
-									-- RTLX is a macro used to create
-									-- expanded types
-								if gen_type /= Void then
-									buf.putstring (" = RTLX(typres")
-								else
-									buf.putstring (" = RTLX(RTUD(")
-									buf.generate_type_id (cl_type_i.associated_class_type.static_type_id)
-									buf.putchar (')')
-								end
-							else
-								if gen_type /= Void then
-									buf.putstring (" = RTLN(typres")
-								else
-									buf.putstring (" = RTLN(")
-									buf.putint (exp_type_id)
-								end
-								class_type := cl_type_i.associated_class_type
-								creation_feature := class_type.associated_class.creation_feature
-								if creation_feature /= Void then
-									written_class := System.class_of_id (creation_feature.written_in)
-									if written_class.generics = Void then
-										written_type := written_class.types.first
-									else
-										written_type := written_class.meta_type (class_type.type).associated_class_type
-									end
-									c_name := Encoder.feature_name (written_type.static_type_id, creation_feature.body_index)
-									buf.putstring (");%N%T")
-									buf.putstring (c_name)
-									buf.putchar ('(')
-									context.local_var.print_register
-									Extern_declarations.add_routine_with_signature (Void_c_type,
-										c_name, <<"EIF_REFERENCE">>)
-								end
-							end
-							buf.putstring (gc_rparan_semi_c)
-
-							if gen_type /= Void then
-								generate_block_close
-							end
-							buf.new_line
-						elseif type_i.is_bit then
-							bit_i ?= type_i -- Cannot fail
-							context.local_var.set_position (i)
-							context.local_var.print_register
-							buf.putstring (" = RTLB(")
-							buf.putint (bit_i.size)
-							buf.putstring (gc_rparan_semi_c)
-							buf.new_line
+							type_i.generate_expanded_creation (Current, context.local_var,
+								context.workbench_mode)
 						end
 					end
 					i := i + 1
 				end
 			end
-			type_i := real_type (result_type)
 			if context.result_used then
-				if type_i.is_true_expanded then
-					cl_type_i ?= type_i
-					exp_type_id := cl_type_i.expanded_type_id - 1
-
-					gen_type  ?= cl_type_i
-
-					if gen_type /= Void then
-						generate_block_open
-						generate_gen_type_conversion (gen_type)
-					end
-					context.result_register.print_register
-					if context.workbench_mode then
-							-- RTLX is a macro used to create
-							-- expanded types
-						if gen_type /= Void then
-							buf.putstring (" = RTLX(typres")
-						else
-							buf.putstring (" = RTLX(RTUD(")
-							buf.generate_type_id (cl_type_i.associated_class_type.static_type_id)
-							buf.putchar (')')
-						end
-					else
-						if gen_type /= Void then
-							buf.putstring (" = RTLN(typres")
-						else
-							buf.putstring (" = RTLN(")
-							buf.putint (exp_type_id)
-						end
-						class_type := cl_type_i.associated_class_type
-						creation_feature := class_type.associated_class.creation_feature
-						if creation_feature /= Void then
-							written_class := System.class_of_id (creation_feature.written_in)
-							if written_class.generics = Void then
-								written_type := written_class.types.first
-							else
-								written_type := written_class.meta_type (class_type.type).associated_class_type
-							end
-							c_name := Encoder.feature_name (written_type.static_type_id, creation_feature.body_index)
-							buf.putstring (");%N%T")
-							buf.putstring (c_name)
-							buf.putchar ('(')
-							context.result_register.print_register
-							Extern_declarations.add_routine_with_signature (Void_c_type,
-								c_name, <<"EIF_REFERENCE">>)
-
-						end
-					end
-					buf.putstring (gc_rparan_semi_c)
-
-					if gen_type /= Void then
-						generate_block_close
-					end
-					buf.new_line
-				elseif type_i.is_bit then
-					bit_i ?= type_i -- Cannot fail
-					context.result_register.print_register
-					buf.putstring (" = RTLB(")
-					buf.putint (bit_i.size)
-					buf.putstring (gc_rparan_semi_c)
-					buf.new_line
+				type_i := real_type (result_type)
+				if type_i.is_true_expanded or type_i.is_bit then
+					type_i.generate_expanded_creation (Current, context.result_register,
+						context.workbench_mode)
 				end
 			end
 		end

@@ -97,7 +97,7 @@ int buf_len;
 		return -1;
 }
 			 
-EIF_INTEGER rtoa(num, buff, buf_len) 
+EIF_INTEGER realtoa(num, buff, buf_len) 
 /* change a FLOAT into string. 
  * Return the length of the streng.
 */
@@ -152,7 +152,7 @@ int buf_len;
 	return idx;
 }
 			 
-EIF_INTEGER dtoa(num, buff, buf_len)
+EIF_INTEGER doutoa(num, buff, buf_len)
 EIF_DOUBLE num;
 char *buff;
 int buf_len;
@@ -250,7 +250,7 @@ void c_get_host_name() {
 		c_raise_concur_exception(exception_implementation_error);
 	}
 	strcpy(_concur_hostname, host->h_name);
-	_concur_hostaddr = ((struct in_addr *)(host->h_addr))->s_addr;
+	_concur_hostaddr = htonl(((struct in_addr *)(host->h_addr))->s_addr);
 	return;
 }
 
@@ -258,7 +258,8 @@ char *c_get_name_from_addr(addr)
 EIF_INTEGER addr;
 {
 	struct hostent *host;
-	host=gethostbyaddr((char *)&addr, sizeof(EIF_INTEGER), AF_INET);
+	EIF_INTEGER real_addr = ntohl(addr);
+	host=gethostbyaddr((char *)&real_addr, sizeof(EIF_INTEGER), AF_INET);
 	if (!host) {
 		sprintf(_concur_crash_info, CURIMPERR19, addr, error_info());
 		c_raise_concur_exception(exception_implementation_error);
@@ -284,10 +285,10 @@ char *name;
 			sprintf(_concur_crash_info, CURIMPERR20, name, error_info());
 			c_raise_concur_exception(exception_implementation_error);
 		}
-		return ((struct in_addr *)(host->h_addr))->s_addr;
+		return htonl(((struct in_addr *)(host->h_addr))->s_addr);
 	}
 	else 
-		return c_concur_net_host_addr(name);
+		return htonl(c_concur_net_host_addr(name));
 
 }
 
@@ -606,7 +607,7 @@ EIF_INTEGER addr;
 #endif
 	fd = socket(AF_INET, SOCK_STREAM, 0);
 #if defined EIF_WIN32 || defined EIF_OS2
-	if fd == INVALID_SOCKET) {
+	if (fd == INVALID_SOCKET) {
 #else
 	if (fd < 0) {
 #endif
@@ -619,7 +620,7 @@ EIF_INTEGER addr;
 		}
 	}
 	my_bzero((char*)&_concur_caddr, sizeof(struct sockaddr_in));
-	c_concur_set_host_addr((EIF_POINTER)&(_concur_caddr.sin_addr), addr);
+	c_concur_set_host_addr((EIF_POINTER)&(_concur_caddr.sin_addr), ntohl(addr));
 	_concur_caddr.sin_family = AF_INET;
 	_concur_caddr.sin_port = htons((short)port); 
 	
@@ -714,7 +715,7 @@ EIF_INTEGER s;
 
 #ifdef EIF_WIN32
     if (fd == SOCKET_ERROR)
-        if (WSAGetLastError() != EWOULDBLOCK !_concur_exception_has_happened) {
+        if (WSAGetLastError() != EWOULDBLOCK && !_concur_exception_has_happened) {
 			add_nl;
 			sprintf(crash_info, "    Error happened when accepts from network(%s).", error_info());
 			c_raise_concur_exception(exception_implementation_error);
@@ -759,7 +760,8 @@ EIF_INTEGER len;
 		valid_memory(_concur_buffer);
 	}
 	res = c_concur_my_read_stream(sock, len, _concur_buffer);
-	if (res != len && _concur_command != constant_report_error) {
+/*	if (res != len && _concur_command != constant_report_error) { */
+	if (res != len && !_concur_exception_has_happened) {
 		add_nl;
 		sprintf(crash_info, CURERR6);
 		c_raise_concur_exception(exception_network_connection_crash);

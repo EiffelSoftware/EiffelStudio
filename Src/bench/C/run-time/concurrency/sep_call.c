@@ -22,7 +22,7 @@
 
 #define is_sep_obj(ref) eif_type_id("SEP_OBJ")==Dtype(ref)
 
-/*#define DEBUG 1/**/
+/*#define DEBUG 3/**/
 #define dprintf(n)	if (DEBUG & n) printf
 
 rt_private int locate_from_cecil(object, name)
@@ -160,12 +160,16 @@ void separate_call() {
 				sprintf(crash_info, "    Error in separate_call. Got %s.", command_text(_concur_command));
 				c_raise_concur_exception(exception_implementation_error);
 			}
+			sprintf(_concur_crash_info, "    Error happened when execute separate feature/attribute `%s'\nof `%s'.", _concur_command_feature, _concur_command_class);
 			dyn_type = Dtype(CUROBJ);
 			static_type = eif_type_id(_concur_command_class); 	/* Can be removed */
 #ifdef DEBUG
 printf("%d(%s) Got feature <%s> on class <%s>, with static_type %d, dyn_type %d\n", _concur_pid, _concur_class_name_of_root_obj, _concur_command_feature, _concur_command_class, static_type, dyn_type);
 #endif
-			ptr_table = &Cecil(dyn_type);		/* Get associated H table */
+			ptr_table = &(Cecil(dyn_type));		/* Get associated H table */
+#ifdef DEBUG
+printf("%d(%s) ptr_table=%x of feature <%s> on class <%s>\n", _concur_pid, _concur_class_name_of_root_obj, ptr_table, _concur_command_feature, _concur_command_class);
+#endif
 			is_extern = 0; /* It should be determined by the info transferred from caller, 
 							* or in some other way. 
 							*/
@@ -179,7 +183,7 @@ printf("%d(%s) Got feature <%s> on class <%s>, with static_type %d, dyn_type %d\
 					c_raise_concur_exception(exception_invalid_parameter);
 				}
 #ifndef WORKBENCH
-				offset = (System(dyn_type).cn_offsets[is_extern])[dyn_type]));	
+				offset = *((long *)System(dyn_type).cn_offsets[is_extern]);	
 #else
 				rout_id = System(dyn_type).cn_attr[is_extern];
 				CAttrOffs(offset,rout_id,dyn_type);
@@ -217,19 +221,23 @@ dprintf(1)("%d(%s) Got Attrib type 0x%x with rout_id %d\n", _concur_pid, _concur
 						sprintf(crash_info, "    Not implemented type(0x%x) of separate attribute.", type);
 						c_raise_concur_exception(exception_implementation_error);
 				}
-			}
+			} /* End of "ATTRIBUTE" */
 			else {
 				if (_concur_invariant_checked) 
-					nstcall = 1;			/* The feature is not the creation feature, 
-											 * so we check Invariant as we do in nested 
-											 * feature call 
-											 */
+					nstcall = 1;	/* The feature is not the creation feature, 
+									 * so we check Invariant as we do in nested 
+									 * feature call 
+									 */
 				else
-					nstcall = 0;			/* The feature is the creation feature, 
-											 * so we check Invariant when the feature is done. 
-											 */
+					nstcall = 0;	/* The feature is the creation feature, 
+									 * so we check Invariant when the feature is done. 
+									 */
 #ifndef WORKBENCH
 				fptr = ct_value(ptr_table, _concur_command_feature);
+				/* How to get the corresponding the entry in "separate_pattern" for the routine ?
+				 * "body_id" can't be used any more.
+				 */
+#ifdef CANTUSED
 				cn_routids = System(dyn_type).cn_routids;
 				if (cn_routids)
 					 rout_id = cn_routids[*feature_ptr];
@@ -239,32 +247,33 @@ dprintf(1)("%d(%s) Got Attrib type 0x%x with rout_id %d\n", _concur_pid, _concur
 				body_id = dispatch[body_index];
 
 				if (body_id < zeroc) {
+					fptr =  frozen[body_id];                /* Frozen feature */
 					sep_call = separate_pattern[FPatId(body_id)]; 
 				}
 				else 
 #ifndef DLE
 				{
-					IC = melt[body_id];	 				/* Position byte code to interpret */
+					IC = melt[body_id];		/* Position byte code to interpret */
+					fptr = pattern[MPatId(body_id)].toi;
 					sep_call = separate_pattern[MPatId(body_id)]; 
 				}
 #else
 				if (body_id < dle_level) {
-					IC = melt[body_id]; 					/* Position byte code to interpret */
+					IC = melt[body_id]; 	/* Position byte code to interpret */
+					fptr = pattern[MPatId(body_id)].toi;
 					sep_call = separate_pattern[MPatId(body_id)]; 
 				} else if (body_id < dle_zeroc) {
+					fptr = dle_frozen[body_id]; /* Frozen feature in the DC-set */
 					sep_call = separate_pattern[DLEFPatId(body_id)]; 
 				} else {
-					IC = dle_melt[body_id]; 				/* Position byte code to interpret */
+					IC = dle_melt[body_id];	/* Position byte code to interpret */
+					fptr = pattern[DLEMPatId(body_id)].toi;
 					sep_call = separate_pattern[DLEMPatId(body_id)]; 
 				}
 #endif
+#endif	/* CANTUSED */
 
-
-
-
-
-
-#else
+#else  		/* WORKBENCH  for "FEATURE" */
 				feature_ptr = (int32 *) ct_value(ptr_table, _concur_command_feature);
 #ifdef DEBUG
 dprintf(2)("%d(%s) Got feature ptr 0x%x\n", _concur_pid, _concur_class_name_of_root_obj, feature_ptr);
@@ -333,7 +342,6 @@ dprintf(2)("%d(%s) Got feature's sep_call 0x%x, fptr 0x%x\n", _concur_pid, _conc
 				if (!fptr || !sep_call) {
 					add_nl;
 					sprintf(crash_info, "    Error happened when tried to perform feature <%s> on \nobject from class <%s>", _concur_command_feature, _concur_command_class);
-					printf ("\n\n%s\n\n", _concur_crash_info);
 					c_raise_concur_exception(exception_implementation_error);
 				}
 				(sep_call) (fptr, is_extern);
@@ -345,10 +353,11 @@ dprintf(2)("%d(%s) Got feature's sep_call 0x%x, fptr 0x%x\n", _concur_pid, _conc
 					_concur_invariant_checked = 1;
 					RTCI(CUROBJ);
 				}
-			}
+			}	/* end of "FEATURE" */
 #ifdef DISP_MSG
 		printf("* %d(%s) Performed separate call.\n", _concur_pid, _concur_class_name_of_root_obj);
 #endif
+		_concur_crash_info[0] = '\0';
 	}
 
 	return;

@@ -12,6 +12,7 @@ int sock;
 char socket_is_not_writable = 0;
 EIF_INTEGER  child;
 int wait_sig_from_child = 0;
+char has_got_a_chd_signal = 0;
 
 main()
 {
@@ -425,15 +426,13 @@ printf("user=<%s>, Dir=<%s>, cmdline=<%s> cmdlinelen=%d\n", usrname, execdir, cm
 #endif
 #ifndef DIR_GOOD
 		fSuccess = SetCurrentDirectory(execdir);
-		if (! fSuccess)         
-			printf("Set Directory Error: %d\n", WSAGetLastError());
+		if (fSuccess)         
 		fSuccess = CreateProcess(NULL, cmdLine, NULL, NULL, FALSE, NORMAL_PRIORITY_CLASS, NULL, NULL, &si, &piChild);
 #else
 		if (execdir[strlen(execdir)-1] != '\\') 
 			strcat(execdir, "\\");
 		strcat(execdir, execfile);
 		strcat(execdir, ".exe"); 
-printf("DIR: <%s>\n", execdir);
 
 		fSuccess = CreateProcess(NULL, cmdLine, NULL, NULL, FALSE, NORMAL_PRIORITY_CLASS, NULL, execdir, &si, &piChild);
 #endif
@@ -478,8 +477,10 @@ printf("DIR: <%s>\n", execdir);
 			}
 #endif
 						
+#ifdef TEST
 			printf("Error in CreateProcess: %d\n", WSAGetLastError());
 			perror("CreateProcess");
+#endif
 		}
 #else
 
@@ -497,7 +498,7 @@ printf("DIR: <%s>\n", execdir);
 			}
 
 			int_val = c_get_host_name(hostname, HOSTNAME_LEN); 
-			sprintf(message, "Detected Error Happened Here: on host <%s> \nError Message:\n    DAEMON can't create processor for separate object from class <%s>(Error No: %d)\nWhen Execute File: <%s> In Directory: <%s>.\n    No more process in O.S. available.", hostname, descriptor[index][4], errno, execfile, execdir);
+			sprintf(message, "Detected Error Happened Here: on host <%s> \nError Message:\n    DAEMON can't create processor for separate object from class <%s>(Error No: %d)\nWhen Execute File: <%s> In Directory: <%s>.\n-- Maybe no more available process or no more memory for a process.", hostname, descriptor[index][4], errno, execfile, execdir);
 			p_len  = strlen(message);
 			p_type = STRING_TYPE;
 			if (dog_send_data(csock, &p_type, message, &p_len)) {
@@ -537,12 +538,6 @@ perror("AFTER EXECV");
 errno = 0;
 #endif
 
-			if ((j = kill(getppid(), SIGUSR1)) < 0) {
-				printf("%d ERROR in daemon.kill\n", getpid());
-				perror("kill");
-				exit(1);
-			}
-
 #ifdef CHK_CHILD
 			j = dog_send_command(csock, REPORT_ERROR, 1);
 
@@ -556,6 +551,13 @@ errno = 0;
 #endif
 			
 			csock = -2;
+
+			if ((j = kill(getppid(), SIGUSR1)) < 0) {
+				printf("%d ERROR in daemon.kill\n", getpid());
+				perror("kill");
+				exit(1);
+			}
+
 			exit(0);
 
 		}
@@ -569,15 +571,32 @@ errno = 0;
 #else
 			wait_sig_from_child = 1;
 			for(; !child_set_up;) {
-				sigpause(0);
+				sleep(constant_time_of_daemon_waiting_child);
+				if (!has_got_a_chd_signal)
+				/* means: time out for the sleep but no signal arrived */
+					break;
+				has_got_a_chd_signal = 0;
 			}
-			j = 0;
 #ifdef CHK_CHILD
 			if (child_set_up == SIGUSR2) {
 				j = dog_send_command(csock, START_SEP_OBJ_OK, 0);
 			}
 			else {
-				if (wait_sig_from_child==2) { 
+				if (child_set_up == 0) {
+				/* time out but no signal arrived, first, kill the process in
+ 				 * case that separate object did not die , then send error
+				 * message.
+				 */
+					wait_sig_from_child = 0;
+					j = kill(child, SIGKILL);					
+					j = dog_send_command(csock, REPORT_ERROR, 1);
+					int_val = c_get_host_name(hostname, HOSTNAME_LEN); 
+					sprintf(message, "DAEMON Detected Crash Happened: separate object `%s' on host <%s> \nError Message:\n    Child separate object did not response to the daemon for at leat %d seconds\n-- sometime the short of system resources(memory, file descriptore etc)\nwould cause the error.", descriptor[index][4], hostname, constant_time_of_daemon_waiting_child);
+					p_len  = strlen(message);
+					p_type = STRING_TYPE;
+					j = dog_send_data(csock, &p_type, message, &p_len);
+				} else
+				if (child_set_up == SIGUSR1 || wait_sig_from_child==2) { 
 					j = dog_send_command(csock, REPORT_ERROR, 1);
 					int_val = c_get_host_name(hostname, HOSTNAME_LEN); 
 					sprintf(message, "DAEMON Detected Crash Happened: separate object `%s' on host <%s> \nError Message:\n    Child separate object crashed\n-- sometime the short of system resources would cause the error.", descriptor[index][4], hostname);
@@ -635,9 +654,12 @@ void sig_chld(int sig) {
 #endif
 		ret = wait(&status);
 		if (ret==child && wait_sig_from_child) {
-			j = kill(getpid(), SIGUSR1);
+			child_set_up = SIGUSR1;
+/*			j = kill(getpid(), SIGUSR1);*/
 			wait_sig_from_child = 2;
 		}
+		else
+			has_got_a_chd_signal = 1;
 #ifdef TEST
 		printf("return code = %d, status = %d\n", ret, status);
 /*

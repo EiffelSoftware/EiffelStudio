@@ -43,12 +43,19 @@ feature -- Basic operations
 			wd: EV_WARNING_DIALOG
 		do
 			if not rescued then
-				create mem
-				mem.full_collect
-				mem.full_coalesce
-				mem.full_collect
 				if
---					Workbench.has_already_compiled and then
+					(create {EV_ENVIRONMENT}).application = Void or else
+					not (create {EV_ENVIRONMENT}).application.ctrl_pressed
+				then
+						-- Small addition to force a GC cycle when `we' want
+						-- to see if objects are indeed collected when we
+						-- think they should.
+					create mem
+					mem.full_collect
+					mem.full_coalesce
+					mem.full_collect
+				end
+				if
 					(not Workbench.is_compiling or else
 					Workbench.last_reached_degree <= 5)
 				then

@@ -9,7 +9,7 @@ inherit
 			is_numeric,
 			same_as,
 			description, sk_value, generate_cecil_value, hash_code,
-			generate_byte_code_cast, generated_id
+			generate_byte_code_cast, generated_id, typecode
 		end
 
 	BYTE_CONST
@@ -20,6 +20,12 @@ feature
 			-- Internal code for generation
 		do
 			Result := C_double
+		end
+
+	typecode: INTEGER is
+			-- Typecode for TUPLE element.
+		do
+			Result := feature {SHARED_TYPECODE}.double_code
 		end
 
 	generate_byte_code_cast (ba: BYTE_ARRAY) is

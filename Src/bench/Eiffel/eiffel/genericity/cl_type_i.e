@@ -115,6 +115,12 @@ feature -- Access
 			Result := Reference_c_type
 		end
 
+	typecode: INTEGER is
+			-- Typecode for TUPLE element.
+		do
+			Result := feature {SHARED_TYPECODE}.reference_code
+		end
+		
 	associated_class_type: CLASS_TYPE is
 			-- Associated class type
 		require

@@ -7,7 +7,7 @@ inherit
 			dump,
 			same_as,
 			description, hash_code, sk_value, generate_cecil_value,
-			generated_id
+			generated_id, typecode
 		end
 
 feature
@@ -16,6 +16,12 @@ feature
 			-- Internal code for generation
 		do
 			Result := C_char
+		end
+
+	typecode: INTEGER is
+			-- Typecode for TUPLE element.
+		do
+			Result := feature {SHARED_TYPECODE}.boolean_code
 		end
 
 	is_boolean: BOOLEAN is True

@@ -94,7 +94,7 @@ feature {NONE} -- Initialization
 			loop
 				keyword_name := completed_keywords.item
 				if keyword_name.has (' ') then
-					keyword_name := clone (keyword_name)
+					keyword_name := keyword_name.twin
 					keyword_name.replace_substring_all (" ", "_")
 				end
 				id := "autocomplete_" + keyword_name
@@ -313,7 +313,7 @@ feature -- Keybord shortcuts Customization
 		local
 			meta: ARRAY [BOOLEAN]
 		do
-			Result := clone (key_strings @ (key_codes_for_actions.i_th(action_number)))
+			Result := key_strings.item (key_codes_for_actions.i_th(action_number)).twin
 			Result.put (Result.item(1).upper, 1)
 			meta := ctrl_alt_shift_for_actions.item (action_number)
 			if meta.item (3) then
@@ -633,7 +633,7 @@ feature {NONE} -- Build preferences for autocomplete
 			loop
 				keyword_name := completed_keywords.i_th (i)
 				if keyword_name.has (' ') then
-					keyword_name := clone (keyword_name)
+					keyword_name := keyword_name.twin
 					keyword_name.replace_substring_all (" ", "_")
 				end
 				id := "autocomplete_" + keyword_name
@@ -712,15 +712,13 @@ feature {NONE} -- Build preferences for autocomplete
 			if name.is_empty then
 				Result := Key_strings.lower - 1
 			else
-				s1 := clone (name)
-				s1.to_lower
+				s1 := name.as_lower
 				from
 					i := Key_strings.lower
 				until
 					found or i > Key_strings.upper
 				loop
-					s2 := clone (Key_strings @ i)
-					s2.to_lower
+					s2 := Key_strings.item (i).as_lower
 					found := s1.is_equal (s2)
 					i := i + 1
 				end

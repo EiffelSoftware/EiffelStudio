@@ -23,8 +23,7 @@ feature {NONE} -- Initialization
 	make (a_name: STRING; a_parent: EB_FAVORITES_ITEM_LIST) is
 			-- Initialize Current with `name' set to `a_name'.
 		do
-			name := clone (a_name)
-			name.to_upper
+			name := a_name.as_upper
 			parent := a_parent
 		end
 

@@ -111,7 +111,7 @@ feature -- Observer Pattern
 				-- Add childs as well - if the added item was a folder -.
 			if a_item.is_folder then
 				a_folder_item ?= a_item
-				new_path := clone (a_path)
+				new_path := a_path.twin
 				new_path.extend (a_folder_item)
 				from
 					a_folder_item.start

@@ -522,7 +522,7 @@ feature -- Element change
 						create new_name.make_from_string (new_cluster.dollar_path)
 					end
 					new_name.set_subdirectory (moved_cluster.display_name)
-					saved_dollar_path := clone (moved_cluster.dollar_path)
+					saved_dollar_path := moved_cluster.dollar_path.twin
 					moved_cluster.set_dollar_path (new_name)
 					move_directory (dir.name, moved_cluster.path)
 					moved_cluster.set_dollar_path (saved_dollar_path)

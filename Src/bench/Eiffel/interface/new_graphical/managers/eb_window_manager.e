@@ -212,8 +212,7 @@ feature -- Access
 		do
 			create {ARRAYED_LIST [EB_DEVELOPMENT_WINDOW]} Result.make (managed_windows.count)
 
-			name_query := clone (cl_name)
-			name_query.to_upper
+			name_query := cl_name.as_upper
 
 			from
 				cur := managed_windows.cursor
@@ -223,9 +222,9 @@ feature -- Access
 			loop
 				a_dev ?= managed_windows.item
 				if a_dev /= Void then
-					name_item := clone (a_dev.class_name)
+					name_item := a_dev.class_name
 					if name_item /= Void then
-						name_item.to_upper
+						name_item := name_item.as_upper
 						if name_item.is_equal (name_query) then
 							Result.extend (a_dev)
 						end
@@ -304,8 +303,7 @@ feature -- Status report
 			a_dev: EB_DEVELOPMENT_WINDOW
 			cur: CURSOR
 		do
-			name_query := clone (cl_name)
-			name_query.to_upper
+			name_query := cl_name.as_upper
 
 			from
 				cur := managed_windows.cursor
@@ -315,8 +313,7 @@ feature -- Status report
 			loop
 				a_dev ?= managed_windows.item
 				if a_dev /= Void then
-					name_item := clone (a_dev.class_name)
-					name_item.to_upper
+					name_item := a_dev.class_name.as_upper
 					Result := name_item.is_equal (name_query)
 				end
 				managed_windows.forth
@@ -904,7 +901,7 @@ feature {NONE} -- Implementation
 							io.error.putstring ("Please report this error to ISE.%N")
 						end
 					end
-					tmp_name := clone (conv_dev.file_name)
+					tmp_name := conv_dev.file_name.twin
 					tmp_name.add_extension ("swp")
 					create tmp_file.make (tmp_name)
 					if 

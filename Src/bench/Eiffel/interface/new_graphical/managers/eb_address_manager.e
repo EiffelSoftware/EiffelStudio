@@ -183,8 +183,7 @@ feature -- Element change
 			name_copy: STRING
 			found: BOOLEAN
 		do
-			name_copy := clone (a_name)
-			name_copy.to_lower
+			name_copy := a_name.as_lower
 			from
 				known_formatters.start
 			until
@@ -498,13 +497,10 @@ feature {NONE} -- Execution
 			-- The choice `pos' has been selected, process the choice.
 		require
 			looking_for_a_cluster: cluster_list /= Void
-		local
-			cname: STRING
 		do
 			if pos /= 0 then
 				current_cluster := cluster_list.i_th (pos)
-				cname := clone (current_cluster.cluster_name)
-				cluster_address.set_text (cname)
+				cluster_address.set_text (current_cluster.cluster_name.twin)
 			end
 			cluster_list := Void
 			process_cluster
@@ -514,14 +510,10 @@ feature {NONE} -- Execution
 			-- The choice `pos' has been selected, process the choice.
 		require
 			looking_for_a_class: class_list /= Void
-		local
-			cname: STRING
 		do
 			if pos /= 0 then
 				class_i := class_list.i_th (pos)
-				cname := clone (class_i.name)
-				cname.to_upper
-				class_address.set_text (cname)
+				class_address.set_text (class_i.name_in_upper)
 			end
 			class_list := Void
 			if choosing_class then
@@ -535,14 +527,10 @@ feature {NONE} -- Execution
 			-- The choice `pos' has been selected, process the choice.
 		require
 			looking_for_a_feature: feature_list /= Void
-		local
-			fname: STRING
 		do
 			if pos > 0 then
 				current_feature := feature_list.i_th (pos)
-				fname := clone (current_feature.name)
-				fname.to_lower
-				feature_address.set_text (fname)
+				feature_address.set_text (current_feature.name.as_lower)
 			end
 			feature_list := Void
 			if choosing_class then
@@ -787,7 +775,7 @@ feature {NONE} -- Implementation
 				cluster_list.after
 			loop
 				clusteri := cluster_list.item
-				cname := clone (clusteri.cluster_name)
+				cname := clusteri.cluster_name.twin
 				cluster_names.extend (cname)
 				cluster_list.forth
 			end
@@ -827,7 +815,7 @@ feature {NONE} -- Implementation
 			create class_names.make (class_list.count)
 			from class_list.start until class_list.after loop
 				classi := class_list.item
-				cname := clone (classi.name)
+				cname := classi.name.twin
 				if
 					last_class /= Void and then
 					last_class.name.is_equal (cname)
@@ -949,7 +937,7 @@ feature {NONE} -- open new class
 			matching: SORTED_TWO_WAY_LIST [CLUSTER_I]
 		do
 			current_cluster := Void
-			fname := clone (cluster_address.text)
+			fname := cluster_address.text
 			if fname /= Void then
 				fname.left_adjust
 				fname.right_adjust
@@ -1007,7 +995,7 @@ feature {NONE} -- open new class
 			wd: EV_WARNING_DIALOG
 		do
 			class_i := Void
-			cname := clone (class_address.text)
+			cname := class_address.text
 			if cname /= Void then
 				cname.left_adjust
 				cname.right_adjust
@@ -1117,7 +1105,7 @@ feature {NONE} -- open new class
 			matcher: KMP_WILD
 		do
 			current_feature := Void
-			fname := clone (feature_address.text)
+			fname := feature_address.text
 			if not fname.is_empty then
 				fname.left_adjust
 				fname.right_adjust
@@ -1434,7 +1422,7 @@ feature {NONE} -- open new class
 				-- The text in `class_address' has changed => we don't know what's inside.
 			current_typed_class := Void
 			
-			str := clone (class_address.text)
+			str := class_address.text
 			if not str.is_empty and then (str @ (str.count) /= ' ') then
 				last_caret_position := class_address.caret_position
 				class_address.change_actions.block
@@ -1509,8 +1497,7 @@ feature {NONE} -- open new class
 						index := index + 1
 					end
 					if current_found /= Void then
-						current_found := clone (current_found)
-						current_found.to_upper
+						current_found := current_found.as_upper
 						class_address.set_text (current_found)
 						if nb < current_found.count then
 							class_address.select_region (nb + 1, current_found.count)
@@ -1552,7 +1539,7 @@ feature {NONE} -- open new class
 		do
 			cluster_address.change_actions.block
 			last_caret_position := cluster_address.caret_position
-			str := clone (cluster_address.text)
+			str := cluster_address.text
 			if not str.is_empty and then (str @ (str.count) /= ' ') then
 				str.left_adjust
 				str.right_adjust
@@ -1659,7 +1646,7 @@ feature {NONE} -- open new class
 			truncated: BOOLEAN
 		do
 			feature_address.change_actions.block
-			str := clone (feature_address.text)
+			str := feature_address.text
 			if not str.is_empty and then not (str.substring_index (l_From, 1) > 0) then
 				last_caret_position := feature_address.caret_position
 				str.left_adjust

@@ -24,7 +24,7 @@ the once mechanism is once per thread. --Manuelt
 
 #include "eif_once.h"
 #include "eif_lmalloc.h"
-#include "eif_globals.h"	/* EIF_GET_ROOT_CONTEXT */
+#include "eif_globals.h"	
 #include "eif_threads.h"	/* mutex */
 #include "eif_hector.h"
 #define OP_TABLE_SIZE 15 /* size of Once per Process Tables */
@@ -80,6 +80,8 @@ struct pop_list {
 
 rt_private struct pop_list **eif_pop_table = (struct pop_list **) 0; /* Table containing the list of struct pop_list */
 rt_private struct fop_list **eif_fop_table = (struct fop_list **) 0; /* Table containing list of struct fop_list */
+rt_private EIF_REFERENCE *eif_once_set_addr (EIF_REFERENCE once);
+	/* Get stack address of "once" from "once_set". */
 
 /* Private functions declarations */
 
@@ -155,7 +157,38 @@ rt_private struct pop_list *init_pop_list(EIF_PROCEDURE feature_address)
         return new;
 } /* init_pop_list */
 
+rt_private EIF_REFERENCE *eif_once_set_addr (EIF_REFERENCE once) 
+{
+	/* Similar to "hector_addr" from hector.c. This returns 
+	 * the indirection pointer from "once_set" corresponding to 
+	 * the once object "once". Maybe we should implement a generic
+	 * function instead. 
+	 */
 
+	EIF_GET_CONTEXT	/* MT-safe */
+	register1 int nb_items;			/* Number of items in arena */
+	register2 struct stchunk *s;	/* To walk through each stack's chunk */
+	register3 char **arena;			/* Current arena in chunk */
+	int done = 0;					/* Top of stack not reached yet */
+
+	for (s = once_set.st_hd; s && !done; s = s->sk_next) 
+	{
+		arena = s->sk_arena;				/* Start of stack */
+		if (s != once_set.st_cur)			/* Before current position? */
+			nb_items = s->sk_end - arena;	/* Take the whole chunk */
+		else {
+			nb_items = once_set.st_top - arena;	/* Stop at the top */
+			done = 1;								/* Reached end of stack */
+		}
+		for (; nb_items > 0; nb_items--, arena++)
+			if (*arena == once)						/* Found indirection */
+			{
+				EIF_END_GET_CONTEXT	/* MT-safe */
+				return (EIF_REFERENCE *) arena;				/* Return indirection ptr */
+			}
+	}	
+	
+} /* eif_once_set_addr */
 
 rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_POINTER  function_ptr)
 {					/* Current object */
@@ -215,7 +248,7 @@ rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_POINTER 
 	printf ("DEBUG: First call of feature once in process and creation of object\n");
 #endif
 		list = (struct fop_list *) init_fop_list (feature_address);
-		list->val = (EIF_REFERENCE *) hector_addr ( (char *) (feature_address (eif_access (Current))));
+		list->val = (EIF_REFERENCE *) eif_once_set_addr ( (char *) (feature_address (eif_access (Current))));
 
 		eif_fop_table [((uint32) feature_address) & OP_TABLE_SIZE] = list;
 		EIF_MUTEX_UNLOCK(eif_fop_table_mutex, "Couldn't unlock once per process table mutex");
@@ -237,7 +270,7 @@ rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_POINTER 
 #ifdef DEBUG
 	printf ("DEBUG: Creation of once object\n");
 #endif
-				list->next->val = (EIF_REFERENCE *) hector_addr (feature_address (eif_access (Current)));
+				list->next->val = (EIF_REFERENCE *) eif_once_set_addr (feature_address (eif_access (Current)));
 				EIF_MUTEX_UNLOCK(eif_fop_table_mutex, "Couldn't unlock once per process table mutex\n");
 		return ((EIF_REFERENCE) eif_access (list->next->val));	
 			}

@@ -81,7 +81,6 @@ extern char token_str[];
 %token		TE_COLON;
 %token		TE_COMMA;
 %token 		TE_CREATION;
-%token		TE_COMM;
 %token		TE_LARRAY;
 %token		TE_RARRAY;
 %token 		TE_RPARAN;

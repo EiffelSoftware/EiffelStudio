@@ -425,13 +425,13 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				loop
 					l_assembly := assemblies.item
 					create l_compiled_assembly.make_from_ast (l_assembly)
-					Universe.insert_cluster (l_compiled_assembly)
 					l_old_assembly ?= Lace.old_universe.
 						cluster_of_name (l_compiled_assembly.cluster_name)
 					if l_old_assembly = Void then
 						l_new_assemblies.extend (l_compiled_assembly)
+						Universe.insert_cluster (l_compiled_assembly)
 					else
-						l_compiled_assembly.make_from_old_cluster (l_old_assembly, Void)
+						Universe.insert_cluster (l_old_assembly)
 					end
 					assemblies.forth
 				end

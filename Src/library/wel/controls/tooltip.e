@@ -198,7 +198,7 @@ feature {NONE} -- Externals
 			"TOOLTIPS_CLASS"
 		end
 
-end -- class WEL_WEL_TOOLTIP
+end -- class WEL_TOOLTIP
 
 --|-------------------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel 3.

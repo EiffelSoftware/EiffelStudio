@@ -1,4 +1,6 @@
 TOP = ..
+OUTDIR= .
+INDIR= .
 CC = $cc
 CFLAGS = -I$(TOP)\run-time -I$(TOP) -I$(TOP)\ipc\shared
 DPFLAGS = -I$(TOP)

@@ -22,7 +22,7 @@ default
 
 
 cluster
-	root_cluster:		"E:\MyEiffelProjects\samples\winforms\accessible"
+	root_cluster:		"$ISE_EIFFEL\examples\dotnet\winforms\hello_world"
 
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude

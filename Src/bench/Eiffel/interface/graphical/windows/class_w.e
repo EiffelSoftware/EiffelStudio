@@ -27,7 +27,7 @@ inherit
 			update_boolean_resource,
 			update_integer_resource,
 			close, set_title, parse_file,
-			resources, history_window_title
+			resources, history_window_title, help_index, icon_id
 		end;
 	BAR_AND_TEXT
 		redefine
@@ -41,7 +41,7 @@ inherit
 			set_editable_text_window, has_editable_text, read_only_text_window,
 			set_read_only_text_window, process_feature_error,
 			update_boolean_resource, able_to_edit,
-			update_integer_resource,
+			update_integer_resource, help_index, icon_id,
 			close, set_title, parse_file, resources, history_window_title
 		select
 			reset, close_windows, set_stone
@@ -112,6 +112,14 @@ feature -- Properties
 			-- Text window that only reads text
 
 	version_cmd: CLASS_VERSIONS
+
+	help_index: INTEGER is 6
+
+	icon_id: INTEGER is
+			-- Icon id of Current window (only for windows)
+		do
+			Result := Interface_names.i_Class_id
+		end;
 
 feature -- Access
 

@@ -291,6 +291,12 @@ feature -- Status report
 				end	
 			end
 		end
+		
+	Default_left_margin: INTEGER is 20
+		-- Default size in pixels of the left side page margin.
+	
+	Default_bottom_margin: INTEGER is 20
+		-- Default size in pixels of the right side page margin.
 
 feature -- Contract support
 

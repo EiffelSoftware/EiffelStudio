@@ -109,6 +109,55 @@ feature {EV_ANY_I} -- Implementation
 	drop_actions_internal: EV_PND_ACTION_SEQUENCE
 			-- Implementation of once per object `drop_actions'.
 
+
+feature -- Event handling
+
+	cancel_actions: EV_PND_ACTION_SEQUENCE is
+			-- Actions to be performed when a PND is cancelled
+		do
+			if cancel_actions_internal = Void then
+				cancel_actions_internal :=
+					 create_cancel_actions
+			end
+			Result := cancel_actions_internal
+		ensure
+			not_void: Result /= Void
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	create_cancel_actions: EV_PND_ACTION_SEQUENCE is
+			-- Create a cancel action sequence.
+		deferred
+		end
+
+	cancel_actions_internal: EV_PND_ACTION_SEQUENCE
+			-- Implementation of once per object `cancel_actions'.
+
+feature -- Event handling
+
+	pnd_motion_actions: EV_PND_MOTION_ACTION_SEQUENCE is
+			-- Actions to be performed when screen pointer is moved,
+			-- during a pick and drop.
+		do
+			if pnd_motion_actions_internal = Void then
+				pnd_motion_actions_internal := create_pnd_motion_actions
+			end
+			Result := pnd_motion_actions_internal
+		ensure
+			not_void: Result /= Void
+		end
+		
+feature {EV_ANY_I} -- Implementation
+		
+	create_pnd_motion_actions: EV_PND_MOTION_ACTION_SEQUENCE is
+			-- Create a pnd motion action sequence.
+		deferred
+		end
+		
+	pnd_motion_actions_internal: EV_PND_MOTION_ACTION_SEQUENCE
+		-- Implementation of once per object `pnd_motion_actions'.
+		
 end
 
 --|----------------------------------------------------------------

@@ -128,11 +128,6 @@ cluster
 
 	preferences:	"$EIFFEL_SRC/library/preferences"
 
-	all graph:		"$EIFFEL_SRC\library\graph"
-		exclude
-			"CVS";
-		end
-
 external
 
 	include_path:

@@ -14,7 +14,7 @@
 #define _eif_str_h_
 
 #ifdef __cplusplus
-RT_LNK "C" {
+extern "C" {
 #endif
 
 #include "eif_portable.h"

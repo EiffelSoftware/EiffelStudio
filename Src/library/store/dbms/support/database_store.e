@@ -177,11 +177,14 @@ feature {NONE} -- Status setting
 			f, g, ind, idx: INTEGER
 			searched_name: STRING
 		do
-			if previous_type = 0 or else 
-					previous_type /= dynamic_type (object) then
+			if
+				previous_type = 0 or else 
+				previous_type /= dynamic_type (object)
+			then
 				previous_type := dynamic_type (object)
 				f := repository.dimension
 				g := field_count  (object)
+				map_table.clear_all
 				if db_spec.dim_rep_diff (f, g) then
 					make_default_table (g)
 				else

@@ -11,7 +11,6 @@ inherit
 	EV_CHECKABLE_LIST_I
 		undefine
 			wipe_out,
-			pixmaps_size_changed,
 			selected_items
 		redefine
 			interface

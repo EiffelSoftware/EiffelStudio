@@ -9,8 +9,6 @@ class
 
 inherit
 	EV_COMBO_BOX_I
-		undefine
-			pixmaps_size_changed
 		redefine
 			interface,
 			initialize

@@ -18,7 +18,6 @@ inherit
 			interface,
 			initialize,
 			remove_row_pixmap,
-			pixmaps_size_changed,
 			wipe_out
 		end
 

@@ -115,6 +115,15 @@ feature -- Access
 
 feature -- Element change
 
+	set_default_format is
+			-- Set Current to default formatting.
+		do
+			unset_bold
+			unset_italic
+			unset_strike_out
+			unset_underline
+		end
+
 	set_char_set (a_char_set: INTEGER) is
 			-- Set `char_set' with `a_char_set'.
 		do

@@ -96,11 +96,6 @@ feature {NONE}
 			!!Result.make;
 		end;
 
-	Tmp_m_rout_tbl_server: TMP_M_ROUT_TBL_SERVER is
-		once
-			io.putstring ("SHARED_TMP_SERVER. should not have been called%N");
-		end;
-
 	Tmp_m_rout_id_server: TMP_M_ROUT_ID_SERVER is
 		once
 			!!Result.make;

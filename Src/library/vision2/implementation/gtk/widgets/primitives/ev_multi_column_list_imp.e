@@ -632,6 +632,7 @@ feature -- Element change
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
 				-- Remove all items (GTK part)
+			clear_selection
 			C.gtk_clist_clear (list_widget)
 			from
 				ev_children.start

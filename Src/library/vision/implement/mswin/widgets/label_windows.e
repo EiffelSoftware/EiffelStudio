@@ -65,7 +65,8 @@ inherit
 			on_destroy,
 			on_set_cursor,
 			on_key_up,
-			on_key_down
+			on_key_down,
+			class_background
 		redefine
 			on_paint,
 			default_style,

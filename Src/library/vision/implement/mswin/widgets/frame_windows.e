@@ -52,6 +52,7 @@ inherit
 			release_capture as wel_release_capture,
 			item as wel_item
 		undefine
+			class_background,
 			on_show,
 			on_hide,
 			on_draw_item,

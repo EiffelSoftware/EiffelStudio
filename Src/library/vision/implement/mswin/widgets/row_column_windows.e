@@ -71,6 +71,7 @@ inherit
 			menu as wel_menu,
 			make as wel_make
 		undefine
+			class_background,
 			on_right_button_up,
 			on_left_button_down,
 			on_left_button_up,

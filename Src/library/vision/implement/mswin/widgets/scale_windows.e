@@ -60,7 +60,8 @@ inherit
 			on_left_button_down,
 			on_right_button_down,
 			on_mouse_move,
-			on_set_cursor
+			on_set_cursor,
+			class_background
 		redefine
 			on_size,
 			on_vertical_scroll_control,

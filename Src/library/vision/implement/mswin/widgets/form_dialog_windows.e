@@ -14,6 +14,7 @@ inherit
 			forbid_resize as forbid_recompute_size,
 			show as dialog_show
 		undefine
+			class_background,
 			child_has_resized,
 			on_destroy,
 			make_with_coordinates,
@@ -42,6 +43,7 @@ inherit
 			allow_resize as allow_recompute_size,
 			forbid_resize as forbid_recompute_size
 		undefine
+			class_background,
 			child_has_resized,
 			on_destroy,
 			make_with_coordinates,
@@ -75,12 +77,12 @@ inherit
 			realize_current,
 			default_style,
 			destroy,
-			class_background,
 			height,
 			minimal_height,
 			minimal_width,
 			move_and_resize,
 			on_menu_command,
+			on_accelerator_command,
 			on_paint,
 			realized,
 			resize_for_shell,

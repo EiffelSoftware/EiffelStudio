@@ -12,6 +12,7 @@ inherit
 	WINDOWS;
 	LIC_EXITER;
 	SHARED_RESCUE_STATUS;
+	SHARED_EXEC_ENVIRONMENT;
 	EXCEPTIONS
 
 creation
@@ -29,6 +30,20 @@ feature -- Creation
 			temp: STRING
 		do
 			if not retried then
+					-- Check that environment variables
+					-- are properly set.
+				temp := Execution_environment.get ("EIFFEL3");
+				if (temp = Void) or else temp.empty then
+					io.error.putstring
+					("ISE Eiffel3: the environment variable $EIFFEL3 is not set%N");
+					die (-1)
+				end;
+				temp := Execution_environment.get ("PLATFORM");
+				if (temp = Void) or else temp.empty then
+					io.error.putstring
+					("ISE Eiffel3: the environment variable $PLATFORM is not set%N");
+					die (-1)
+				end;
 
 				analyze_options;
 				if option_error then
@@ -44,11 +59,11 @@ feature -- Creation
 						command.work (Project_name, Ace_name);
 						output_window.close;
 					end;
-					discard_license
+					discard_licence
 				end;
 			end;
 		rescue
-			discard_license;
+			discard_licence;
 			io.error.putstring ("ISE Eiffel3: Session aborted%N");
 			io.error.putstring ("Exception tag: ");
 			temp := developer_exception_name;

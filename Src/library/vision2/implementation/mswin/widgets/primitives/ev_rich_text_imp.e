@@ -448,12 +448,6 @@ feature -- Status setting
 			set_character_format_selection (wel_character_format)
 		end
 		
-	format_paragraph (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT) is
-			-- Apply paragraph formatting `format' to lines `start_line', `end_line' inclusive.
-		do
-			
-		end
-		
 	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION) is
 			-- Modify formatting from `start_position' to `end_position' applying all attributes of `format' that are set to
 			-- `True' within `applicable_attributes', ignoring others.

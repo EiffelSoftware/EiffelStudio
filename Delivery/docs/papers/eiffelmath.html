@@ -1,0 +1,158 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>New Page 1</title>
+<link rel="stylesheet" href="../styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
+</head>
+
+<body><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC"></font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="center">
+<hr>
+
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1><a name="Introduction">Introduction</a></h1>
+<p>In this documentation we will explain you how to use EiffelMath in you
+Projects:</p>
+<ul>
+  <li><a href="#Introduction">Introduction</a></li>
+  <li><a href="#Technical Information">Technical Information</a></li>
+  <li><a href="#Getting Started">Getting Started</a></li>
+  <li><a href="#How to configure your Ace file">How to configure your Ace file</a></li>
+  <li><a href="#Some Working examples">Some working examples</a></li>
+</ul>
+<p>EiffelMath is a library of reusable object-oriented components for numerical<br>
+computation, providing developers of scientific software with the full power<br>
+of object technology.&nbsp;<br>
+</p>
+<p>EiffelMath is built on top of the extensive C library of mathematical software
+produced by the <b> Numerical Algorithms Group</b> (NAG, one of the oldest and most
+respected collections of quality numerical software). EiffelMath is not just a straight Eiffel encapsulation of the functions of the NAG library but presents
+developers with a full O-O view of numerical abstractions, taking full advantage
+of the Eiffel method.<br>
+By adding an object-oriented layer on top of the basic NAG routines, EiffelMath provides developers of numerical applications with a much
+simpler, natural and elegant interface.</p>
+<p>&nbsp;The benefits are due in particular to:&nbsp;</p>
+<ul>
+  <li>The abstraction facilities of the Eiffel method, allowing the grouping of the
+    available mechanisms into classes representing such concepts as integrator, matrix, discrete uniform function, exponential distribution and many others,
+    each of which represents "objects" that are readily understandable to a financial
+    analyst, mathematician, physicist or economist, and each of which is represented
+    in EiffelMath by a class.<br>
+    <br>
+  </li>
+  <li>Single and multiple inheritance, supporting hierarchical classification.<br>
+    <br>
+  </li>
+  <li>The assertion mechanism and &quot;<b><i>Design by Contract</i></b>&quot; principle, which enable
+    EiffelMath classes and routines to document their requirements and benefits precisely, and enforce them so that user errors are caught quickly.<br>
+    <br>
+  </li>
+  <li>The exception mechanism, providing a simple, consistent and powerful approach
+    to the handling of errors.<br>
+    <br>
+  </li>
+  <li>Garbage collection, relieving numerical application developers from tedious
+    and error-prone tasks of memory management that they must handle by themselves
+    with solutions directly based on COBOL, Fortran, C or C++.&nbsp;<br>
+  </li>
+</ul>
+<h1><a name="Technical Information">Technical Information</a></h1>
+<p>&nbsp;&nbsp;&nbsp; The EiffelMath library provides support for:&nbsp;</p>
+<ul>
+  <li>Probability and Statistics&nbsp;</li>
+  <li>Numerical Integration&nbsp;</li>
+  <li>Solution of Nonlinear Equations&nbsp;</li>
+  <li>Ordinary Differential Equations&nbsp;</li>
+  <li>Solution of Linear Equations&nbsp;</li>
+  <li>Solutions of Eigenproblems&nbsp;</li>
+  <li>Fitting and Interpolation&nbsp;</li>
+  <li>Orthogonal Factorizations and Linear Least Squares&nbsp;</li>
+  <li>Optimization&nbsp;</li>
+  <li>Special Functions&nbsp;</li>
+  <li>Fast Fourier Transforms&nbsp;</li>
+  <li>Time Series Analysis&nbsp;</li>
+  <li>and more....</li>
+</ul>
+<p>&nbsp;&nbsp;&nbsp; EiffelMath is described in detail in <a href="../Eiffel/books.html"> Paul
+Dubois's book</a> Object Technology for Scientific Computing, which presents the design of the library, explains how best
+to use it, and shows how best to use object technology for scientific developments.&nbsp;<br>
+<br>
+&nbsp;&nbsp;&nbsp; EiffelMath is fully supported on Windows, Windows NT and Windows
+9x and on a wide variety of Unix platforms, including SunOS, Solaris 2.4, HP 9000, IBM RS6000, DEC
+Alpha OSF/1, Data General Aviion, Silicon Graphics, Linux, UnixWare and SCO.</p>
+<p>The library is located in <b>$EIFFEL4/library/math</b> .<br>
+</p>
+<h1><a name="Getting Started">Getting Started</a></h1>
+<ul>
+  <li><u><b>On</b></u><u><b> Windows</b></u></li>
+</ul>
+<p>To install EiffelTime, you need to go to the directory $EIFFEL4\library\math\Clib and run
+<b> make_msc.bat</b> if your C compiler is Microsoft. (the Makefile for Borland
+does not exist yet).&nbsp;</p>
+<ul>
+  <li><b><u>On unix</u></b></li>
+</ul>
+<p>Just launch <b>finish_freezing - library</b> in the directory
+$EIFFEL4/library/math/Clib.</p>
+<p>&nbsp;</p>
+<h1><a name="How to configure your Ace file">How to configure your Ace file</a></h1>
+<p>In order to use EiffelMath in an Eiffel Project, you have to include in your
+project, the right clusters and the right external files. Thus, you need to
+configure your Ace file.<br>
+You can get all the information about Ace files <a href="lace.html">here</a>.</p>
+<p>To include the EiffelMath clusters you need to choose which one will be
+useful. By default you can include all the cluster of EiffelMath:</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>bvp:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&quot;$EIFFEL4\library\math\bvp&quot;;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; eifmath:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&quot;$EIFFEL4\library\math\eifmath&quot;;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; integrat:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&quot;$EIFFEL4\library\math\integrat&quot;;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; interpol:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&quot;$EIFFEL4\library\math\interpol&quot;;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; linear:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+"$EIFFEL4\library\math\linear";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ode:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+"$EIFFEL4\library\math\ode";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; optima:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+"$EIFFEL4\library\math\optima";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; random:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+"$EIFFEL4\library\math\random";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; regress:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+"$EIFFEL4\library\math\regress";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; roots:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+"$EIFFEL4\library\math\roots";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; special:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+"$EIFFEL4\library\math\special";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; transp:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&quot;$EIFFEL4\library\math\transp&quot;;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tsa:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&quot;$EIFFEL4\library\math\tsa&quot;;</b></p>
+<p>If you need more information about all these different clusters, you can
+consult <a href="../Eiffel/books.html"> Paul Dubois's book</a> Object Technology for
+Scientific Computing.</p>
+<h1><a name="Some Working examples">Some Working examples</a></h1>
+<p>We developed some examples that you can try to see how to use EiffelMath.</p>
+<p>All these examples are in : <b>$EIFFEL4/examples/math</b></p>
+<p>&nbsp;</p>
+<p><br>
+<br>
+<br>
+
+<!--msnavigation--></td></tr><!--msnavigation--></table></body>
+
+</html>

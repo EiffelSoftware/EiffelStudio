@@ -1,34 +1,34 @@
 BODY {
-	BACKGROUND=#FFFEEF;
-	FONT-FAMILY=Verdana, Arial, Helvetica, sans-serif;
-	MARGIN=5px 5px 5px 5px;
-	PADDING=0px 0px 0px 0px;
-	COLOR=#000000;
-	FONT-SIZE=70%;
-	WIDTH=100%;
+	BACKGROUND:#FFFEEF;
+	FONT-FAMILY:Verdana, Arial, Helvetica, sans-serif;
+	MARGIN:5px 5px 5px 5px;
+	PADDING:0px 0px 0px 0px;
+	COLOR:#000000;
+	FONT-SIZE:70%;
+	WIDTH:100%;
 }
 
 TABLE {
-	BACKGROUND=#FFFEEF;
-	FONT-FAMILY=Verdana, Arial, Helvetica, sans-serif;
-	MARGIN=5px 5px 5px 5px;
-	PADDING=0px 0px 0px 0px;
-	COLOR=#000000;
-	FONT-SIZE=100%;
-	WIDTH=90%;
+	BACKGROUND:#FFFEEF;
+	FONT-FAMILY:Verdana, Arial, Helvetica, sans-serif;
+	MARGIN:5px 5px 5px 5px;
+	PADDING:0px 0px 0px 0px;
+	COLOR:#000000;
+	FONT-SIZE:100%;
+	WIDTH:90%;
 }
 
 OL, UL {
-	MARGIN-TOP=.5em;
-	MARGIN-BOTTOM=2em; 
+	MARGIN-TOP:.5em;
+	MARGIN-BOTTOM:2em; 
 }
 
 LI {
-	MARGIN-BOTTOM=.5em;
+	MARGIN-BOTTOM:.5em;
 }
 
 UL {
-	MARGIN-TOP=.5em;
+	MARGIN-TOP:.5em;
 }
 
 DL {
@@ -54,156 +54,156 @@ PRE, CODE, .code {
 	PADDING-RIGHT: .5em;
 	PADDING-TOP: .5em;
 	PADDING-BOTTOM: .5em;
-	BACKGROUND=#EFEEDF;
+	BACKGROUND:#EFEEDF;
 	WIDTH: 90%;
 }
 
 TD, SPAN, DIV {
-	PADDING-BOTTOM=0.4mm; 
+	PADDING-BOTTOM:0.4mm; 
 }
 
 TD {
-	PADDING-BOTTOM=0.4mm; 
-	BACKGROUND=#EEEDDE;	
+	PADDING-BOTTOM:0.4mm; 
+	BACKGROUND:#EEEDDE;	
 }
 
 TD.title {
-	BACKGROUND=#DDDCCD;
+	BACKGROUND:#DDDCCD;
 }
 
 IMG {
-	BORDER=none; 
+	BORDER:none; 
 }
 
 P {
-	MARGIN=.5em 0em .5em 0em;
+	MARGIN:.5em 0em .5em 0em;
 }
 
 H1, H2, H3, H4 {
-	FONT-FAMILY=Verdana, Arial, Helvetica, sans-serif;
-	MARGIN-BOTTOM=.4em; 
-	MARGIN-TOP=1em;
-	FONT-WEIGHT=bold;
+	FONT-FAMILY:Verdana, Arial, Helvetica, sans-serif;
+	MARGIN-BOTTOM:.4em; 
+	MARGIN-TOP:1em;
+	FONT-WEIGHT:bold;
 }
 H3 {
-	COLOR=#990000;
-	FONT-SIZE=110%; 
-	TEXT-DECORATION=none
+	COLOR:#990000;
+	FONT-SIZE:110%; 
+	TEXT-DECORATION:none
 }
 H2 {
-	COLOR=#700000;
-	BACKGROUND=#FFCC00;
-	FONT-SIZE=120%;
-	WIDTH=90%;
+	COLOR:#700000;
+	BACKGROUND:#FFCC00;
+	FONT-SIZE:120%;
+	WIDTH:90%;
 	PADDING: 1px 6px;
 }
 H1 {
-	COLOR=#990000;
-	FONT-SIZE=150%;
-	MARGIN-TOP=0em;
+	COLOR:#990000;
+	FONT-SIZE:150%;
+	MARGIN-TOP:0em;
 }
 
 A {
-	FONT-FAMILY=Verdana, Lucida, Arial, Helvetica, sans-serif;
-	COLOR=#003399;
-	TEXT-DECORATION=none;
+	FONT-FAMILY:Verdana, Lucida, Arial, Helvetica, sans-serif;
+	COLOR:#003399;
+	TEXT-DECORATION:none;
 }
 
 A:hover {
-	COLOR=#006633;
-	TEXT-DECORATION=underline;
+	COLOR:#006633;
+	TEXT-DECORATION:underline;
 }
 
 .eclass {
-    COLOR=#0000AA;
+    COLOR:#0000AA;
 }
 
 .neclass {
-    COLOR=black;
+    COLOR:black;
 }
 
 .ekeyword {
-    COLOR=navy;
+    COLOR:navy;
 }
 
 .esymbol {
-    COLOR=navy;
+    COLOR:navy;
 }
 
 .eitag {
-    COLOR=sienna;
+    COLOR:#A0522D;
 }
 
 .estring {
-    COLOR=indigo;
+    COLOR:#4B0082;
 }
 
 .echar {
-    COLOR=indigo;
+    COLOR:#4B0082;
 }
 
 .enumber {
-    COLOR=indigo;
+    COLOR:#4B0082;
 }
 
 .etag {
-    COLOR=sienna;
+    COLOR:#A0522D;
 }
 
 .efeature {
-    COLOR=darkgreen;
+    COLOR:#006400;
 }
 
 .nefeature {
-    COLOR=black;
+    COLOR:black;
 }
 
 .ecomment {
-    COLOR=#990000;
+    COLOR:#990000;
 }
 
 .elocal, .equoted {
-    COLOR=darkgreen;
-    FONT-STYLE=italic;
+    COLOR:#006400;
+    FONT-STYLE:italic;
 }
 
 .ereserved {
-    COLOR=darkgreen;
+    COLOR:#006400;
 }
 
 .egeneric {
-    COLOR=dodgerblue;
+    COLOR:#1E90FF;
 }
 
 .ecluster {
-    COLOR=maroon;
-    FONT-VARIANT=small-caps;
+    COLOR:maroon;
+    FONT-VARIANT:small-caps;
 }
 
 .necluster {
-    COLOR=black;
-    FONT-VARIANT=small-caps;
+    COLOR:black;
+    FONT-VARIANT:small-caps;
 }
 
 .link1 {
-	BACKGROUND-COLOR=#006633;
-	COLOR=white;
+	BACKGROUND-COLOR:#006633;
+	COLOR:white;
 }
 
 .link2 {
-	BACKGROUND-COLOR=#330066;
-	COLOR=white;
+	BACKGROUND-COLOR:#330066;
+	COLOR:white;
 }
 
 .nolink1, .nolink2 {
-	BACKGROUND-COLOR=#FFCC00;
-	COLOR=#330066;
+	BACKGROUND-COLOR:#FFCC00;
+	COLOR:#330066;
 }
 
 .seealso {
-	MARGIN-LEFT=1em;
-	MARGIN-TOP=1em;
-	BACKGROUND-COLOR=#EDEFDD;
+	MARGIN-LEFT:1em;
+	MARGIN-TOP:1em;
+	BACKGROUND-COLOR:#EDEFDD;
 	BORDER-WIDTH: 1px;
 	BORDER-STYLE: solid;
 	BORDER-COLOR: #999999;
@@ -211,9 +211,9 @@ A:hover {
 }
 
 .note {
-	MARGIN-TOP=1em;
-	MARGIN-LEFT=1em;
-	BACKGROUND-COLOR=#FFECDD;
+	MARGIN-TOP:1em;
+	MARGIN-LEFT:1em;
+	BACKGROUND-COLOR:#FFECDD;
 	BORDER-WIDTH: 1px;
 	BORDER-STYLE: solid;
 	BORDER-COLOR: #999999;
@@ -221,9 +221,9 @@ A:hover {
 }
 
 .tip {
-	MARGIN-TOP=1em;
-	MARGIN-LEFT=1em;
-	BACKGROUND-COLOR=#EDECEF;
+	MARGIN-TOP:1em;
+	MARGIN-LEFT:1em;
+	BACKGROUND-COLOR:#EDECEF;
 	BORDER-WIDTH: 1px;
 	BORDER-STYLE: solid;
 	BORDER-COLOR: #999999;
@@ -231,9 +231,9 @@ A:hover {
 }
 
 .warning {
-	MARGIN-TOP=1em;
-	MARGIN-LEFT=1em;
-	BACKGROUND-COLOR=#FFECEF;
+	MARGIN-TOP:1em;
+	MARGIN-LEFT:1em;
+	BACKGROUND-COLOR:#FFECEF;
 	BORDER-WIDTH: 1px;
 	BORDER-STYLE: solid;
 	BORDER-COLOR: #999999;
@@ -241,15 +241,15 @@ A:hover {
 }
 
 .figuretitle {
-	MARGIN_TOP=.5em;
-	MARGIN_BOTTOM=3em;
-	FONT-WEIGHT=bold;
+	MARGIN-TOP:5em;
+	MARGIN-BOTTOM:3em;
+	FONT-WEIGHT:bold;
 }
 
 .sample {
-	MARGIN-LEFT=1em;
-	MARGIN-TOP=1em;
-	BACKGROUND-COLOR=#EDEFFD;
+	MARGIN-LEFT:1em;
+	MARGIN-TOP:1em;
+	BACKGROUND-COLOR:#EDEFFD;
 	BORDER-WIDTH: 1px;
 	BORDER-STYLE: solid;
 	BORDER-COLOR: #999999;

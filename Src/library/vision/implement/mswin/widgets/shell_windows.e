@@ -259,6 +259,8 @@ feature {NONE} -- Implementation
 			i, maxxw, maxyh, tmp, w, h: INTEGER
 			current_item: WIDGET_WINDOWS
 			fw: FORM_WINDOWS
+			dw: DIALOG_WINDOWS
+			psw: POPUP_SHELL_WINDOWS
 		do
 			from 
 				c := children_list
@@ -268,7 +270,13 @@ feature {NONE} -- Implementation
 			loop
 				current_item := c.item
 				if current_item /= Void and then current_item.managed then
-					tmp := current_item.x + current_item.width
+					dw ?= current_item
+					if dw = Void then
+						psw ?= current_item
+						if psw = Void then
+							tmp := current_item.x + current_item.width
+						end
+					end
 					if tmp > maxxw then
 						maxxw := tmp
 					end
@@ -281,11 +289,11 @@ feature {NONE} -- Implementation
 			end
 			w := private_attributes.width
 			h := private_attributes.height
-			if w < maxxw + shell_width and then h < maxyh + shell_height then 
-				set_size (maxxw + shell_width, maxyh + shell_height)
+			if w < maxxw and then h < maxyh then 
+				set_size (maxxw, maxyh)
 			else
-				if w < maxxw + shell_width then set_width (maxxw + shell_width) end
-				if h < maxyh + shell_height then set_height (maxyh + shell_height) end
+				if w < maxxw then set_width (maxxw) end
+				if h < maxyh then set_height (maxyh) end
 			end
 		end
 
@@ -374,7 +382,7 @@ feature {NONE} -- Implementation
 	default_ex_style: INTEGER is
 			-- Windows 3D look
 		once
-			Result := 768
+			Result := 0
 		end
 
 end -- SHELL_WINDOWS

@@ -121,7 +121,7 @@ feature {NONE} -- implementation
 	insert_menu_item (an_item_imp: EV_ITEM_IMP; pos: INTEGER) is
 			-- Generic menu item insertion.
 		do
-			an_item_imp.set_parent_imp (Current)
+			an_item_imp.set_item_parent_imp (Current)
 			C.gtk_menu_append (list_widget, an_item_imp.c_object)
 			C.gtk_menu_reorder_child (list_widget, an_item_imp.c_object, pos - 1)
 		end
@@ -226,7 +226,7 @@ feature {NONE} -- implementation
 				end
 			end
 
-			item_imp.set_parent_imp (Void)
+			item_imp.set_item_parent_imp (Void)
 		end
 
 feature -- Access

@@ -148,7 +148,7 @@ feature -- Removal
 				index > count
 			loop
 				item_imp ?= item.implementation
-				item_imp.set_parent_imp (Void)
+				item_imp.set_item_parent_imp (Void)
 				forth
 			end
 

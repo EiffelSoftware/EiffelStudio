@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 			imp ?= v.implementation
 			C.gtk_combo_set_item_string (container_widget, imp.c_object, eiffel_to_c (imp.text))
 			C.gtk_container_add (list_widget, imp.c_object)
-			imp.set_parent_imp (Current)
+			imp.set_item_parent_imp (Current)
 			temp_sig_id := c_signal_connect (imp.c_object, eiffel_to_c ("button-press-event"), agent on_item_clicked)
 			real_signal_connect (imp.c_object, "key-press-event", agent on_key_pressed, key_event_translate_agent)
 			if count = 1 and is_sensitive then
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 		do
 			imp ?= i_th (a_position).implementation
 			Precursor (a_position)
-			imp.set_parent_imp (Void)
+			imp.set_item_parent_imp (Void)
 			if count = 0 then
 				set_text (Void)
 			end

@@ -68,6 +68,26 @@ feature -- Initialization
 			repository_name.is_equal (name)
 		end
 
+feature -- Access
+
+	column_i_th(i: INTEGER): COLUMNS[DATABASE] is
+			-- Column corresponding to indice 'i'
+		require
+			indice_valid: i>=1 and i<=column_number
+		do
+			Result := implementation.column_i_th(i)
+		ensure
+			Result /= Void
+		end
+
+	column_number: INTEGER is
+			-- Column number
+		do
+			Result := implementation.column_number
+		ensure
+			Result >0
+		end
+
 feature -- Basic operations
 
 	load is
@@ -87,14 +107,15 @@ feature -- Basic operations
 			loaded
 		end
 
-	generate_class is
+	generate_class (f: FILE) is
 			-- Generate an Eiffel class template mapping
 			-- the loaded data description.
 		require
 			is_ok: is_ok
 			rep_loaded: loaded
+			file_exists: f /= Void and then f.exists
 		do
-			implementation.generate_class
+			implementation.generate_class(f)
 		end
 
 	change_name (new_name: STRING) is

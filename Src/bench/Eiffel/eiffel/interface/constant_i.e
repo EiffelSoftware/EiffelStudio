@@ -52,13 +52,13 @@ create
 	
 feature 
 
-	type: TYPE
+	type: TYPE_AS
 			-- Type of the constant
 
 	value: VALUE_I
 			-- Constant value
 
-	set_type (t: TYPE) is
+	set_type (t: TYPE_AS) is
 			-- Assign `t' to `type'.
 		do
 			type := t

@@ -45,7 +45,7 @@ feature -- Access
 	id_list: ARRAYED_LIST [INTEGER]
 			-- List of ids
 
-	type: TYPE
+	type: TYPE_AS
 			-- Type
 			
 	location: TOKEN_LOCATION

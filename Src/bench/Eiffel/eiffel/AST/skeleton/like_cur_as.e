@@ -7,7 +7,7 @@ indexing
 class LIKE_CUR_AS
 
 inherit
-	TYPE
+	TYPE_AS
 		redefine
 			has_like, simple_format
 		end

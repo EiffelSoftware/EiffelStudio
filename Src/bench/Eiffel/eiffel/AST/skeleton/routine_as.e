@@ -389,7 +389,7 @@ feature -- Type check, byte code and dead code removal
 			-- locals.
 		local
 			id_list: ARRAYED_LIST [INTEGER]
-			local_type: TYPE
+			local_type: TYPE_AS
 			local_class_c: CLASS_C
 			local_name_id: INTEGER
 			local_name: STRING
@@ -580,7 +580,7 @@ feature -- Type check, byte code and dead code removal
 			solved_type: TYPE_A
 			local_info: LOCAL_INFO
 			local_name_id: INTEGER
-			local_type: TYPE
+			local_type: TYPE_AS
 			counter: INTEGER
 		do
 			if locals /= Void then
@@ -632,7 +632,7 @@ feature -- Format Context
 			solved_type: TYPE_A
 			local_info: LOCAL_INFO
 			local_name_id: INTEGER
-			local_type: TYPE
+			local_type: TYPE_AS
 		do
 			if locals /= Void then
 				from

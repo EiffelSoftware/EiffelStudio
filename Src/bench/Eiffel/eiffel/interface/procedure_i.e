@@ -110,7 +110,7 @@ feature -- Initialization
 			argument_as_not_void: argument_as /= Void
 		local
 			i, j, count, dec_count, nb_arg: INTEGER
-			arg_type: TYPE
+			arg_type: TYPE_AS
 			arg_dec: TYPE_DEC_AS
 			id_list: ARRAYED_LIST [INTEGER]
 		do

@@ -45,7 +45,7 @@ feature -- Initialization/Checking
 			matching_class_and_feat_tbl: a_class = a_feat_tbl.associated_class
 		local
 			l_feat: CONVERT_FEAT_AS
-			l_type: TYPE
+			l_type: TYPE_AS
 			l_named_type: NAMED_TYPE_A
 			l_convert_to, l_convert_from: DS_HASH_TABLE [INTEGER, NAMED_TYPE_A]
 			l_name_id: INTEGER

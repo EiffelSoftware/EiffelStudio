@@ -447,7 +447,7 @@ feature -- Access
 			bits_symbol_set: Result.bits_symbol = s
 		end
 
-	new_body_as (a: EIFFEL_LIST [TYPE_DEC_AS]; t: TYPE; c: CONTENT_AS): BODY_AS is
+	new_body_as (a: EIFFEL_LIST [TYPE_DEC_AS]; t: TYPE_AS; c: CONTENT_AS): BODY_AS is
 			-- New BODY AST node
 		do
 			create Result
@@ -558,7 +558,7 @@ feature -- Access
 			has_externals_set: Result.has_externals = he
 		end
 
-	new_class_type_as (n: ID_AS; g: EIFFEL_LIST [TYPE]; is_ref, is_exp, is_sep: BOOLEAN): CLASS_TYPE_AS is
+	new_class_type_as (n: ID_AS; g: EIFFEL_LIST [TYPE_AS]; is_ref, is_exp, is_sep: BOOLEAN): CLASS_TYPE_AS is
 			-- New CLASS_TYPE AST node
 		require
 			n_not_void: n /= Void
@@ -613,7 +613,7 @@ feature -- Access
 			value_set: Result.value = v
 		end
 
-	new_convert_feat_as (cr: BOOLEAN; fn: FEATURE_NAME; t: EIFFEL_LIST [TYPE]): CONVERT_FEAT_AS is
+	new_convert_feat_as (cr: BOOLEAN; fn: FEATURE_NAME; t: EIFFEL_LIST [TYPE_AS]): CONVERT_FEAT_AS is
 			-- New convert feature entry AST node.
 		require
 			fn_not_void: fn /= Void
@@ -639,7 +639,7 @@ feature -- Access
 			feature_list_set: Result.feature_list = f
 		end
 
-	new_creation_as (tp: TYPE; tg: ACCESS_AS; c: ACCESS_INV_AS; l: TOKEN_LOCATION): CREATION_AS is
+	new_creation_as (tp: TYPE_AS; tg: ACCESS_AS; c: ACCESS_INV_AS; l: TOKEN_LOCATION): CREATION_AS is
 			-- New creation instruction AST node
 		require
 			tg_not_void: tg /= Void
@@ -655,7 +655,7 @@ feature -- Access
 			location_set: Result.location.is_equal (l)
 		end
 
-	new_creation_expr_as (t: TYPE; c: ACCESS_INV_AS; l: TOKEN_LOCATION): CREATION_EXPR_AS is
+	new_creation_expr_as (t: TYPE_AS; c: ACCESS_INV_AS; l: TOKEN_LOCATION): CREATION_EXPR_AS is
 			-- New creation expression AST node
 		require
 			t_not_void: t /= Void
@@ -933,7 +933,7 @@ feature -- Access
 			list_empty: Result.is_empty
 		end
 
-	new_eiffel_list_type (n: INTEGER): EIFFEL_LIST [TYPE] is
+	new_eiffel_list_type (n: INTEGER): EIFFEL_LIST [TYPE_AS] is
 			-- New empty list of TYPE
 		require
 			n_positive: n >= 0
@@ -1123,7 +1123,7 @@ feature -- Access
 			is_expanded_set: Result.is_expanded = is_exp
 		end
 
-	new_formal_dec_as (f: FORMAL_AS; c: TYPE; cf: EIFFEL_LIST [FEATURE_NAME]): FORMAL_DEC_AS is
+	new_formal_dec_as (f: FORMAL_AS; c: TYPE_AS; cf: EIFFEL_LIST [FEATURE_NAME]): FORMAL_DEC_AS is
 			-- New FORMAL_DECLARATION AST node
 		require
 			f_not_void: f /= Void
@@ -1368,7 +1368,7 @@ feature -- Access
 			expression_set: Result.expression = Void
 		end
 
-	new_operand_as (c: TYPE; t: ID_AS; e: EXPR_AS): OPERAND_AS is
+	new_operand_as (c: TYPE_AS; t: ID_AS; e: EXPR_AS): OPERAND_AS is
 			-- New OPERAND AST node
 		do
 			create Result
@@ -1422,7 +1422,7 @@ feature -- Access
 			parameters_set: Result.parameters = p
 		end
 
-	new_static_access_as (c: TYPE; f: ID_AS; p: EIFFEL_LIST [EXPR_AS]): STATIC_ACCESS_AS is
+	new_static_access_as (c: TYPE_AS; f: ID_AS; p: EIFFEL_LIST [EXPR_AS]): STATIC_ACCESS_AS is
 			-- New STATIC_ACCESS AST node
 		do
 			create Result.initialize (c, f, p)
@@ -1642,7 +1642,7 @@ feature -- Access
 			expressions_set: Result.expressions = exp
 		end
 
-	new_type_dec_as (i: ARRAYED_LIST [INTEGER]; t: TYPE; l: TOKEN_LOCATION): TYPE_DEC_AS is
+	new_type_dec_as (i: ARRAYED_LIST [INTEGER]; t: TYPE_AS; l: TOKEN_LOCATION): TYPE_DEC_AS is
 			-- New TYPE_DEC AST node
 		require
 			i_not_void: i /= Void

@@ -22,7 +22,7 @@ inherit
 
 feature -- Properties
 
-	type: TYPE;
+	type: TYPE_AS;
 			-- Type non evaluated
 
 	code: STRING is "VTAT";

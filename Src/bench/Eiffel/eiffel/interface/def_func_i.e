@@ -15,10 +15,10 @@ inherit
 	
 feature 
 
-	type: TYPE;
+	type: TYPE_AS;
 			-- Type of the function
 
-	set_type (t: TYPE) is
+	set_type (t: TYPE_AS) is
 			-- Assign `t' to `type'.
 		do
 			type := t

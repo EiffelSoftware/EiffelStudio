@@ -118,7 +118,7 @@ feature -- Primitives
 		local
 			origin_table: HASH_TABLE [FEATURE_I, INTEGER]
 			anchor_feature, orig_feat: FEATURE_I
-			anchor_type: TYPE
+			anchor_type: TYPE_AS
 		do
 			if not (System.current_class.class_id = class_id) then
 				debug

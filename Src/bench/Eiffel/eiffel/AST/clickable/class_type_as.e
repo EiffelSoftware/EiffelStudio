@@ -6,7 +6,7 @@ indexing
 class CLASS_TYPE_AS
 
 inherit
-	TYPE
+	TYPE_AS
 		redefine
 			has_like, simple_format, is_equivalent,
 			check_constraint_type, solved_type_for_format,
@@ -70,7 +70,7 @@ feature -- Attributes
 	class_name: ID_AS
 			-- Class type name
 
-	generics: EIFFEL_LIST [TYPE]
+	generics: EIFFEL_LIST [TYPE_AS]
 			-- Possible generical parameters
 
 	is_class: BOOLEAN is True
@@ -247,7 +247,7 @@ feature -- Conveniences
 			vtug: VTUG
 			error: BOOLEAN
 			nb_errors: INTEGER
-			t1, t2: TYPE
+			t1, t2: TYPE_AS
 			pos: INTEGER
 			is_tuple_type : BOOLEAN
 			l_gen_type: GEN_TYPE_A

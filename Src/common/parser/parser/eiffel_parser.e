@@ -4703,7 +4703,7 @@ end
 	yy_do_action_141 is
 			--|#line 903 "eiffel.y"
 		local
-			yyval63: TYPE
+			yyval63: TYPE_AS
 		do
 --|#line 903 "eiffel.y"
 debug ("GEYACC")
@@ -4731,7 +4731,7 @@ end
 	yy_do_action_142 is
 			--|#line 905 "eiffel.y"
 		local
-			yyval63: TYPE
+			yyval63: TYPE_AS
 		do
 --|#line 905 "eiffel.y"
 debug ("GEYACC")
@@ -5790,7 +5790,7 @@ end
 	yy_do_action_191 is
 			--|#line 1082 "eiffel.y"
 		local
-			yyval63: TYPE
+			yyval63: TYPE_AS
 		do
 --|#line 1082 "eiffel.y"
 debug ("GEYACC")
@@ -5809,7 +5809,7 @@ end
 	yy_do_action_192 is
 			--|#line 1084 "eiffel.y"
 		local
-			yyval63: TYPE
+			yyval63: TYPE_AS
 		do
 --|#line 1084 "eiffel.y"
 debug ("GEYACC")
@@ -5828,7 +5828,7 @@ end
 	yy_do_action_193 is
 			--|#line 1088 "eiffel.y"
 		local
-			yyval63: TYPE
+			yyval63: TYPE_AS
 		do
 --|#line 1088 "eiffel.y"
 debug ("GEYACC")
@@ -5848,7 +5848,7 @@ end
 	yy_do_action_194 is
 			--|#line 1090 "eiffel.y"
 		local
-			yyval63: TYPE
+			yyval63: TYPE_AS
 		do
 --|#line 1090 "eiffel.y"
 debug ("GEYACC")
@@ -5868,7 +5868,7 @@ end
 	yy_do_action_195 is
 			--|#line 1092 "eiffel.y"
 		local
-			yyval63: TYPE
+			yyval63: TYPE_AS
 		do
 --|#line 1092 "eiffel.y"
 debug ("GEYACC")
@@ -5888,7 +5888,7 @@ end
 	yy_do_action_196 is
 			--|#line 1094 "eiffel.y"
 		local
-			yyval63: TYPE
+			yyval63: TYPE_AS
 		do
 --|#line 1094 "eiffel.y"
 debug ("GEYACC")
@@ -5908,7 +5908,7 @@ end
 	yy_do_action_197 is
 			--|#line 1096 "eiffel.y"
 		local
-			yyval63: TYPE
+			yyval63: TYPE_AS
 		do
 --|#line 1096 "eiffel.y"
 debug ("GEYACC")
@@ -5928,7 +5928,7 @@ end
 	yy_do_action_198 is
 			--|#line 1098 "eiffel.y"
 		local
-			yyval63: TYPE
+			yyval63: TYPE_AS
 		do
 --|#line 1098 "eiffel.y"
 debug ("GEYACC")
@@ -5948,7 +5948,7 @@ end
 	yy_do_action_199 is
 			--|#line 1100 "eiffel.y"
 		local
-			yyval63: TYPE
+			yyval63: TYPE_AS
 		do
 --|#line 1100 "eiffel.y"
 debug ("GEYACC")
@@ -5968,7 +5968,7 @@ end
 	yy_do_action_200 is
 			--|#line 1104 "eiffel.y"
 		local
-			yyval63: TYPE
+			yyval63: TYPE_AS
 		do
 --|#line 1104 "eiffel.y"
 debug ("GEYACC")
@@ -5988,7 +5988,7 @@ end
 	yy_do_action_201 is
 			--|#line 1108 "eiffel.y"
 		local
-			yyval89: EIFFEL_LIST [TYPE]
+			yyval89: EIFFEL_LIST [TYPE_AS]
 		do
 --|#line 1108 "eiffel.y"
 debug ("GEYACC")
@@ -6016,7 +6016,7 @@ end
 	yy_do_action_202 is
 			--|#line 1110 "eiffel.y"
 		local
-			yyval89: EIFFEL_LIST [TYPE]
+			yyval89: EIFFEL_LIST [TYPE_AS]
 		do
 --|#line 1110 "eiffel.y"
 debug ("GEYACC")
@@ -6036,7 +6036,7 @@ end
 	yy_do_action_203 is
 			--|#line 1112 "eiffel.y"
 		local
-			yyval89: EIFFEL_LIST [TYPE]
+			yyval89: EIFFEL_LIST [TYPE_AS]
 		do
 --|#line 1112 "eiffel.y"
 debug ("GEYACC")
@@ -6056,7 +6056,7 @@ end
 	yy_do_action_204 is
 			--|#line 1116 "eiffel.y"
 		local
-			yyval89: EIFFEL_LIST [TYPE]
+			yyval89: EIFFEL_LIST [TYPE_AS]
 		do
 --|#line 1116 "eiffel.y"
 debug ("GEYACC")
@@ -6076,7 +6076,7 @@ end
 	yy_do_action_205 is
 			--|#line 1118 "eiffel.y"
 		local
-			yyval89: EIFFEL_LIST [TYPE]
+			yyval89: EIFFEL_LIST [TYPE_AS]
 		do
 --|#line 1118 "eiffel.y"
 debug ("GEYACC")
@@ -6096,7 +6096,7 @@ end
 	yy_do_action_206 is
 			--|#line 1122 "eiffel.y"
 		local
-			yyval89: EIFFEL_LIST [TYPE]
+			yyval89: EIFFEL_LIST [TYPE_AS]
 		do
 --|#line 1122 "eiffel.y"
 debug ("GEYACC")
@@ -6117,7 +6117,7 @@ end
 	yy_do_action_207 is
 			--|#line 1127 "eiffel.y"
 		local
-			yyval89: EIFFEL_LIST [TYPE]
+			yyval89: EIFFEL_LIST [TYPE_AS]
 		do
 --|#line 1127 "eiffel.y"
 debug ("GEYACC")
@@ -6435,7 +6435,7 @@ end
 	yy_do_action_219 is
 			--|#line 1237 "eiffel.y"
 		local
-			yyval96: PAIR [TYPE, EIFFEL_LIST [FEATURE_NAME]]
+			yyval96: PAIR [TYPE_AS, EIFFEL_LIST [FEATURE_NAME]]
 		do
 --|#line 1237 "eiffel.y"
 debug ("GEYACC")
@@ -6463,7 +6463,7 @@ end
 	yy_do_action_220 is
 			--|#line 1239 "eiffel.y"
 		local
-			yyval96: PAIR [TYPE, EIFFEL_LIST [FEATURE_NAME]]
+			yyval96: PAIR [TYPE_AS, EIFFEL_LIST [FEATURE_NAME]]
 		do
 --|#line 1239 "eiffel.y"
 debug ("GEYACC")
@@ -8790,7 +8790,7 @@ end
 	yy_do_action_328 is
 			--|#line 1660 "eiffel.y"
 		local
-			yyval63: TYPE
+			yyval63: TYPE_AS
 		do
 --|#line 1660 "eiffel.y"
 debug ("GEYACC")
@@ -8818,7 +8818,7 @@ end
 	yy_do_action_329 is
 			--|#line 1662 "eiffel.y"
 		local
-			yyval63: TYPE
+			yyval63: TYPE_AS
 		do
 --|#line 1662 "eiffel.y"
 debug ("GEYACC")
@@ -14276,7 +14276,7 @@ feature {NONE} -- Conversion
 			Result := (u = v)
 		end
 
-	yytype63 (v: ANY): TYPE is
+	yytype63 (v: ANY): TYPE_AS is
 		require
 			valid_type: yyis_type63 (v)
 		do
@@ -14287,7 +14287,7 @@ feature {NONE} -- Conversion
 
 	yyis_type63 (v: ANY): BOOLEAN is
 		local
-			u: TYPE
+			u: TYPE_AS
 		do
 			u ?= v
 			Result := (u = v)
@@ -14684,7 +14684,7 @@ feature {NONE} -- Conversion
 			Result := (u = v)
 		end
 
-	yytype89 (v: ANY): EIFFEL_LIST [TYPE] is
+	yytype89 (v: ANY): EIFFEL_LIST [TYPE_AS] is
 		require
 			valid_type: yyis_type89 (v)
 		do
@@ -14695,7 +14695,7 @@ feature {NONE} -- Conversion
 
 	yyis_type89 (v: ANY): BOOLEAN is
 		local
-			u: EIFFEL_LIST [TYPE]
+			u: EIFFEL_LIST [TYPE_AS]
 		do
 			u ?= v
 			Result := (u = v)
@@ -14786,7 +14786,7 @@ feature {NONE} -- Conversion
 			Result := (u = v)
 		end
 
-	yytype96 (v: ANY): PAIR [TYPE, EIFFEL_LIST [FEATURE_NAME]] is
+	yytype96 (v: ANY): PAIR [TYPE_AS, EIFFEL_LIST [FEATURE_NAME]] is
 		require
 			valid_type: yyis_type96 (v)
 		do
@@ -14797,7 +14797,7 @@ feature {NONE} -- Conversion
 
 	yyis_type96 (v: ANY): BOOLEAN is
 		local
-			u: PAIR [TYPE, EIFFEL_LIST [FEATURE_NAME]]
+			u: PAIR [TYPE_AS, EIFFEL_LIST [FEATURE_NAME]]
 		do
 			u ?= v
 			Result := (u = v)

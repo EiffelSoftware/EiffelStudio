@@ -8,7 +8,7 @@ class FEAT_ARG
 -- FIXME: redefine is_equivalent
 
 inherit
-	EIFFEL_LIST [TYPE]
+	EIFFEL_LIST [TYPE_AS]
 		rename
 			make as old_make
 		export
@@ -105,7 +105,7 @@ feature -- Access
 	pattern_types: ARRAY [TYPE_I] is
 			-- Pattern types of arguments
 		local
-			l_area: SPECIAL [TYPE]
+			l_area: SPECIAL [TYPE_AS]
 			r_area: SPECIAL [TYPE_I]
 			i, nb: INTEGER
 		do
@@ -154,7 +154,7 @@ feature -- Checking
 			vtug: VTUG
 			vtcg2: VTCG2
 			i, nb: INTEGER
-			l_area: SPECIAL [TYPE]
+			l_area: SPECIAL [TYPE_AS]
 			a_area: like argument_names
 			arg_eval: ARG_EVALUATOR
 			l_names_heap: like Names_heap
@@ -226,7 +226,7 @@ feature -- Checking
 			vtec1: VTEC1
 			vtec2: VTEC2
 			a_area: like argument_names
-			l_area: SPECIAL [TYPE]
+			l_area: SPECIAL [TYPE_AS]
 			i, nb: INTEGER
 			arg_eval: ARG_EVALUATOR
 			l_names_heap: like Names_heap
@@ -273,7 +273,7 @@ feature -- Checking
 			-- Evaluates argument types in the context of `feat_tbl'.
 			-- | Take care of possible anchored types.
 		local
-			l_area: SPECIAL [TYPE]
+			l_area: SPECIAL [TYPE_AS]
 			i, nb: INTEGER
 			arg_eval: ARG_EVALUATOR
 		do
@@ -295,7 +295,7 @@ feature -- Status report
 			-- All the types are still in the system
 		local
 			type_a: TYPE_A
-			l_area: SPECIAL [TYPE]
+			l_area: SPECIAL [TYPE_AS]
 			i, nb: INTEGER
 		do
 			from
@@ -318,7 +318,7 @@ feature -- Status report
 			good_argument: other /= Void
 			good_count: count = other.count
 		local
-			l_area, o_area: SPECIAL [TYPE]
+			l_area, o_area: SPECIAL [TYPE_AS]
 			i, nb: INTEGER
 		do
 			from
@@ -338,7 +338,7 @@ feature -- Debugging
 
 	trace is
 		local
-			l_area: SPECIAL [TYPE]
+			l_area: SPECIAL [TYPE_AS]
 			i, nb: INTEGER
 		do
 			io.put_string ("feature argument types%N")
@@ -360,7 +360,7 @@ feature {FEATURE_I}
 		local
 			i, c: INTEGER
 			t_a: TYPE_A
-			t: TYPE
+			t: TYPE_AS
 			args: ARRAYED_LIST [STRING]
 		do
 			c := count

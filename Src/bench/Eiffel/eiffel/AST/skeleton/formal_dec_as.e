@@ -52,7 +52,7 @@ feature -- Visitor
 
 feature -- Attributes
 
-	constraint: TYPE
+	constraint: TYPE_AS
 			-- Constraint of the formal generic
 	
 	creation_feature_list: EIFFEL_LIST [FEATURE_NAME]
@@ -214,7 +214,7 @@ feature {NONE} -- Access
 
 feature -- creation feature check
 
-	check_constraint_creation (current_class: CLASS_C; current_type: TYPE) is
+	check_constraint_creation (current_class: CLASS_C; current_type: TYPE_AS) is
 			-- Check validity of the creation clause in the constraint
 		require
 			current_class_exists: current_class /= Void

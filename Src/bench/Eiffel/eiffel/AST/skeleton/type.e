@@ -4,7 +4,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class TYPE
+deferred class TYPE_AS
 
 inherit
 	AST_EIFFEL
@@ -31,7 +31,7 @@ feature -- Properties
 
 feature -- Access
 
-	frozen is_deep_equal (other: TYPE): BOOLEAN is
+	frozen is_deep_equal (other: TYPE_AS): BOOLEAN is
 			-- Is the current type the same as `other' ?
 			--| `deep_equal' cannot be used as for STRINGS, the area
 			--| can have a different size but the STRING is still
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_as (other: TYPE): BOOLEAN is
+	same_as (other: TYPE_AS): BOOLEAN is
 			-- Is `other' the same as Current ?
 			--|Note: implemented only for descendants of TYPE_A
 		do
@@ -135,4 +135,4 @@ feature {COMPILER_EXPORTER}
 			ctxt.put_class_name (dump)
 		end;
 
-end -- class TYPE
+end -- class TYPE_AS

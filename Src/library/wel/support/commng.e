@@ -12,7 +12,7 @@ inherit
 	HASH_TABLE [WEL_COMMAND_EXEC, INTEGER]
 		rename
 			make as hash_table_make,
-			put as hash_table_put,
+			force as hash_table_force,
 			remove as hash_table_remove
 		end
 
@@ -29,13 +29,15 @@ feature -- Initialization
 
 feature -- Basic routines
 
-	put (command: WEL_COMMAND_EXEC; message: INTEGER) is
+	force (command: WEL_COMMAND_EXEC; message: INTEGER) is
 			-- Put `command' associated to `message'.
 		require
 			command_not_void: command /= Void
 			positive_message: message >= 0
 		do
-			hash_table_put (command, message)
+			hash_table_force (command, message)
+		ensure
+			exists: exists (message)
 		end
 
 	remove (message: INTEGER) is
@@ -44,6 +46,8 @@ feature -- Basic routines
 			positive_message: message >= 0
 		do
 			hash_table_remove (message)
+		ensure
+			not_exists: not exists (message)
 		end
 
 feature -- Status report

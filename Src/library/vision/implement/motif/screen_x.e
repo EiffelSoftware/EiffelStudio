@@ -131,61 +131,69 @@ feature
 
 	widget_pointed: WIDGET is
 			-- Widget currently pointed by the pointer
-		
 		local
 			last_widget_c: POINTER;
 			widget_c: POINTER;
 			void_pointer: POINTER;
-			found: BOOLEAN
+			found: BOOLEAN;
+			widget_list: LINKED_LIST [POINTER]
 		do
+			!! widget_list.make;
 			from
-				widget_c := x_query_window_pointer (display_pointer, root_window_object)
+				widget_c := x_query_window_pointer 
+					(display_pointer, root_window_object)
 			until
 				widget_c = void_pointer
 			loop
-				last_widget_c := widget_c
+				last_widget_c := widget_c;
+				widget_list.put_right (last_widget_c);
+				widget_list.forth;
 				widget_c := x_query_window_pointer (display_pointer, widget_c)
 			end;
+				-- Remove last item;
+			widget_list.remove;
 			from
-				widget_manager.start
+				widget_manager.start;
+				last_widget_c := xt_window_to_widget (display_pointer, last_widget_c);
 			until	
 				Result /= Void or widget_manager.after
 			loop
 				if last_widget_c = 
-					xt_window (widget_manager.item.implementation.screen_object) 
+					widget_manager.item.implementation.screen_object 
 				then
 					Result := widget_manager.item;
 				end;
 				widget_manager.forth
 			end;
 			if Result = Void then
+				widget_list.finish;
+				widget_list.remove;
 				--| Cannot find widget in widget_manager.
 				--| This means that this widget was created on the
 				--| C side and hasn't been recorded in the widget_manager.
 				--| The best we can do is to get the parent that has
 				--| been recorded in the w_manager.
 				from
-					widget_c := x_query_window_pointer 
-						(display_pointer, root_window_object)
+					widget_list.start
 				until
-					widget_c = void_pointer
+					widget_list.after
 				loop
+					widget_c := xt_window_to_widget (display_pointer, widget_list.item);
 					from
 						found := false;
 						widget_manager.start
 					until
 						found or widget_manager.after
 					loop
-						if widget_c = xt_window 
-							(widget_manager.item.implementation.screen_object) 
+						if widget_c = 
+							widget_manager.item.implementation.screen_object
 						then
 							Result := widget_manager.item;
 							found := true
 						end;
 						widget_manager.forth
 					end;
-					widget_c := x_query_window_pointer 
-									(display_pointer, widget_c)
+					widget_list.forth
 				end
 			end
 		end;
@@ -226,6 +234,11 @@ feature
 
 feature {NONE} -- External features
 
+	xt_window_to_widget (dspl_pointer, window: POINTER): POINTER is
+		external
+			"C"
+		end;
+
 	x_query_button_pointer (dspl_pointer: POINTER; pos: INTEGER): BOOLEAN is
 		external
 			"C"
@@ -242,11 +255,6 @@ feature {NONE} -- External features
 		end;
 
 	c_screen_width (dspl_pointer: POINTER): INTEGER is
-		external
-			"C"
-		end;
-
-	xt_window (scr_obj: POINTER): POINTER is
 		external
 			"C"
 		end;

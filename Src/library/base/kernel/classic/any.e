@@ -193,7 +193,7 @@ feature -- Duplication
 		ensure
 			equal: equal (Result, other)
 		end
-		
+
 	frozen standard_clone (other: ANY): like other is
 			-- Void if `other' is void; otherwise new object
 			-- field-by-field identical to `other'.
@@ -354,11 +354,7 @@ feature -- Basic operations
 			-- Result = Result.default
 		end
 
-	frozen Void: NONE
-			-- Void reference
-
 invariant
-
 	reflexive_equality: standard_is_equal (Current)
 	reflexive_conformance: conforms_to (Current)
 

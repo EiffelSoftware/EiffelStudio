@@ -79,26 +79,29 @@ feature {NONE} -- Initialization
 				item_id (feature {PREDEFINED_NAMES}.Standard_twin_name_id).rout_id_set.first
 			internal_finalize_rout_id := System.system_object_class.compiled_class.feature_table.
 				item_id (feature {PREDEFINED_NAMES}.finalize_name_id).rout_id_set.first
-			internal_to_string_rout_id := System.system_object_class.compiled_class.feature_table.
-				item_id (feature {PREDEFINED_NAMES}.to_string_name_id).rout_id_set.first
 		end
 
 feature -- Access
 
-	is_frozen_class: BOOLEAN
-			-- Is current class a SPECIAL one?
+	is_single_class: BOOLEAN
+			-- Can current class only be single inherited?
 
 	current_class_type: CLASS_TYPE
 			-- Currently class type being handled.
 
-	standard_twin_rout_id, internal_finalize_rout_id, internal_to_string_rout_id: INTEGER
-			-- Routine ID of `standard_twin', `finalize' and `to_string' from ANY.
+	standard_twin_rout_id, internal_finalize_rout_id: INTEGER
+			-- Routine ID of `standard_twin' and `finalize' from ANY.
 
 	last_parents: ARRAY [INTEGER]
 			-- List of parents tokens last described after call to `update_parents'.
 
 	single_inheritance_parent_id: INTEGER
-			-- Token of parent if `is_single_inheritance_implementation'.
+			-- Implementation ID of parent when no interface is being generated:
+			-- either if `is_single_inheritance_implementation' or if class `is_single'.
+
+	single_inheritance_token: INTEGER
+			-- Token of parent class when no interface is being generated:
+			-- either if `is_single_inheritance_implementation' or if class `is_single'.
 
 	output_file_name: FILE_NAME
 			-- File where assembly is stored.
@@ -772,7 +775,7 @@ feature -- Class info
 					external_class_mapping.put (l_type, name)
 					external_token_mapping.put (l_type_token, name)
 				else
-					if not class_c.is_frozen then
+					if not (class_c.is_frozen or class_c.is_single) then
 							-- Let's define interface class.
 						uni_string.set_string (name)
 						l_attributes := feature {MD_TYPE_ATTRIBUTES}.Public |
@@ -818,22 +821,14 @@ feature -- Class info
 					else
 						if class_c.is_frozen then
 							l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Sealed
-							l_type_token := md_emit.define_type (uni_string, l_attributes,
-								object_type_token, last_parents)
-						else
+						elseif not class_c.is_single then
 							one_element_array.put (class_type_token (class_type.static_type_id), 0)
-
-							if is_single_inheritance_implementation then
-								single_parent_mapping.put (single_inheritance_parent_id,
-									class_type.implementation_id)
-								l_type_token := md_emit.define_type (uni_string, l_attributes,
-									class_type_token (single_inheritance_parent_id),
-									one_element_array)
-							else
-								l_type_token := md_emit.define_type (uni_string, l_attributes,
-									object_type_token, one_element_array)
-							end
+							last_parents := one_element_array
 						end
+						single_parent_mapping.put (single_inheritance_parent_id,
+							class_type.implementation_id)
+						l_type_token := md_emit.define_type (uni_string, l_attributes,
+							single_inheritance_token, last_parents)
 
 						if
 							is_debug_info_enabled and
@@ -847,7 +842,7 @@ feature -- Class info
 					end
 
 					class_mapping.put (l_type_token, class_type.implementation_id)
-					if class_c.is_frozen then
+					if class_c.is_frozen or class_c.is_single then
 						class_mapping.put (l_type_token, class_type.static_type_id)
 					end
 					external_class_mapping.put (class_type.type, impl_name)
@@ -905,7 +900,7 @@ feature -- Class info
 			-- Define default constructor for implementation of `class_type'
 		require
 			class_type_not_void: class_type /= Void
-			not_external: not class_type.associated_class.is_external
+			class_type_can_be_created: not class_type.associated_class.is_interface
 		local
 			l_meth_token: INTEGER
 			l_sig: like method_sig
@@ -916,7 +911,7 @@ feature -- Class info
 			create l_uni_string.make (".ctor")
 			l_sig := default_sig
 
-			if class_type.is_precompiled then
+			if class_type.is_precompiled or else class_type.associated_class.is_external then
 				l_meth_token := md_emit.define_member_ref (l_uni_string,
 					class_type_token (class_type.implementation_id), l_sig)
 			else
@@ -928,15 +923,8 @@ feature -- Class info
 					feature {MD_METHOD_ATTRIBUTES}.Rt_special_name,
 					l_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
 
-				if
-					not is_single_inheritance_implementation or else 
-					single_parent_mapping.item (class_type.implementation_id) = object_type_id
-				then
-					l_ctor_token := object_ctor_token
-				else
-					l_ctor_token := constructor_token (single_parent_mapping.item (
+				l_ctor_token := constructor_token (single_parent_mapping.item (
 						class_type.implementation_id))
-				end
 
 				start_new_body (l_meth_token)
 				generate_current
@@ -1006,7 +994,8 @@ feature -- Class info
 
 			if
 				not is_single_inheritance_implementation or else
-				class_type.static_type_id = any_type_id
+				(class_type.static_type_id = any_type_id or else not
+				class_type.associated_class.main_parent.simple_conform_to (System.any_class.compiled_class))
 			then
 				l_meth_attr := l_meth_attr | feature {MD_METHOD_ATTRIBUTES}.Final
 
@@ -1088,6 +1077,7 @@ feature -- Class info
 			class_interface: CLASS_INTERFACE
 			i: INTEGER
 			l_parents: ARRAY [INTEGER]
+			l_parent_class: CLASS_C
 		do
 			parents := class_c.parents
 			create class_interface.make_from_context (class_c.class_interface, class_type)
@@ -1106,18 +1096,35 @@ feature -- Class info
 				id := cl_type.static_type_id
 				if not l_list.has (id) then
 					l_list.force (id)
-					if not cl_type.associated_class.is_external then
+					l_parent_class := cl_type.associated_class
+					if
+						not l_parent_class.is_single and
+						(not l_parent_class.is_external or else l_parent_class.is_interface)
+					then
 							-- Add parent interfaces only.
 						l_parents.put (class_type_token (cl_type.static_type_id), i)
-						if single_inheritance_parent_id = 0 then
-								-- We arbitrary take the first parent as principal parent.
+						i := i + 1
+						if
+							is_single_inheritance_implementation and then
+							not class_c.is_single and then not l_parent_class.is_interface and then
+							single_inheritance_parent_id = 0 and then l_parent_class = class_c.main_parent
+						then
+								-- We arbitrary take the first parent as principal parent if
+								-- it does not inherit already from an external class, in which
+								-- case it goes through a different line of code.
 								-- FIXME: Manu 4/15/2002: To optimize we should take the one
 								-- with the most features
 							single_inheritance_parent_id := cl_type.implementation_id
 						end
+					elseif l_parent_class.is_external or else l_parent_class.is_single then
+						check
+							single_inheritance_parent_id_not_set: single_inheritance_parent_id = 0
+						end
+						single_inheritance_parent_id := cl_type.implementation_id
+							-- Note: We do not add into `pars' as we only store there the
+							-- parents than can be included as interfaces.
 					end
-					pars.force (parent_type.associated_class_type.class_interface)
-					i := i + 1
+					pars.force (cl_type.class_interface)
 				end
 				parents.forth
 			end
@@ -1133,6 +1140,9 @@ feature -- Class info
 			end
 			if single_inheritance_parent_id = 0 then
 				single_inheritance_parent_id := object_type_id
+				single_inheritance_token := object_type_token
+			else
+				single_inheritance_token := class_type_token (single_inheritance_parent_id)
 			end
 				-- Restore byte context if any.
 			if current_class_type /= Void then
@@ -1146,6 +1156,7 @@ feature -- Features info
 			-- Generate features description of `class_type'.
 		require
 			class_c_not_void: class_c /= Void
+			not_external_class: not class_c.is_external
 			class_type_not_void: class_type /= Void
 		do
 			set_current_class_type (class_type)
@@ -1154,13 +1165,11 @@ feature -- Features info
 			current_class_token := class_type_token (current_type_id)
 
 				-- Generate interface features on Eiffel classes
-			if not class_c.is_external then
-				inst_context.set_cluster (class_c.cluster)
-				if not class_c.is_frozen then
-					generate_interface_features (class_c, class_type)
-				else
-					generate_implementation_features (class_c, class_type)
-				end
+			inst_context.set_cluster (class_c.cluster)
+			if not (class_c.is_frozen or class_c.is_single) then
+				generate_interface_features (class_c, class_type)
+			else
+				generate_implementation_features (class_c, class_type)
 			end
 		end
 
@@ -1202,13 +1211,13 @@ feature -- Features info
 		require
 			class_c_not_void: class_c /= Void
 			class_type_not_void: class_type /= Void
-			class_c_is_frozen: class_c.is_frozen
+			class_c_is_single: class_c.is_frozen or class_c.is_single
 		local
 			select_tbl: SELECT_TABLE
 			features: SEARCH_TABLE [INTEGER]
 			feat: FEATURE_I
 		do
-			is_frozen_class := True
+			is_single_class := True
 			from
 				select_tbl := class_c.feature_table.origin_table
 				features := class_type.class_interface.features
@@ -1220,7 +1229,7 @@ feature -- Features info
 				generate_feature (feat, False, False, False)
 				features.forth
 			end
-			is_frozen_class := False
+			is_single_class := False
 		end
 
 	define_feature_reference (a_type_id, a_feature_id: INTEGER;
@@ -1246,6 +1255,7 @@ feature -- Features info
 			l_signature: ARRAY [INTEGER]
 			l_is_c_external: BOOLEAN
 			l_class_token: like current_class_token
+			l_ext: IL_EXTENSION_I
 		do
 			l_class_type := class_types.item (a_type_id)
 			l_class_token := class_type_token (a_type_id)
@@ -1262,7 +1272,7 @@ feature -- Features info
 				l_signature.compare_references
 
 				l_return_type := argument_actual_type (l_feat.type.actual_type.type_i)
-				if (is_frozen_class or (not in_interface and is_static)) and l_is_attribute then
+				if (is_single_class or (not in_interface and is_static)) and l_is_attribute then
 					l_field_sig := field_sig
 					l_field_sig.reset
 					set_signature_type (l_field_sig, l_return_type)
@@ -1314,26 +1324,33 @@ feature -- Features info
 					end
 				end
 
-				if is_static then
-					if l_is_c_external then
-						l_name := encoder.feature_name (current_class_type.static_type_id,
-							l_feat.body_index)
-					else
-						if l_is_attribute then
-							l_name := "$$" + il_casing.camel_casing (l_feat.feature_name)
-						else
-							l_name := "$$" + il_casing.pascal_casing (l_feat.feature_name,
-								feature {IL_CASING_CONVERSION}.lower_case)
-						end
-					end
+					-- When we are handling with an external feature, we have to extract its
+					-- real name, not the Eiffel one.
+				l_ext ?= l_feat.extension
+				if l_ext /= Void then
+					l_name := l_ext.alias_name
 				else
-					l_name := il_casing.pascal_casing (l_feat.feature_name, 
-						feature {IL_CASING_CONVERSION}.lower_case)
+					if is_static then
+						if l_is_c_external then
+							l_name := encoder.feature_name (current_class_type.static_type_id,
+								l_feat.body_index)
+						else
+							if l_is_attribute then
+								l_name := "$$" + il_casing.camel_casing (l_feat.feature_name)
+							else
+								l_name := "$$" + il_casing.pascal_casing (l_feat.feature_name,
+									feature {IL_CASING_CONVERSION}.lower_case)
+							end
+						end
+					else
+						l_name := il_casing.pascal_casing (l_feat.feature_name, 
+							feature {IL_CASING_CONVERSION}.lower_case)
+					end
 				end
 
 				uni_string.set_string (l_name)
 
-				if (is_frozen_class or (not in_interface and is_static)) and l_is_attribute then
+				if (is_single_class or (not in_interface and is_static)) and l_is_attribute then
 					l_meth_token := md_emit.define_member_ref (uni_string, l_class_token,
 						l_field_sig)
 
@@ -1359,7 +1376,7 @@ feature -- Features info
 					end
 
 					if not is_override then
-						if is_frozen_class then
+						if is_single_class then
 							insert_implementation_feature (l_meth_token, a_type_id,
 								l_feat.feature_id)
 							insert_implementation_signature (l_signature, a_type_id,
@@ -1419,7 +1436,7 @@ feature -- Features info
 				l_signature.compare_references
 
 				l_return_type := argument_actual_type (feat.type.actual_type.type_i)
-				if (is_frozen_class or (not in_interface and is_static)) and l_is_attribute then
+				if (is_single_class or (not in_interface and is_static)) and l_is_attribute then
 					l_field_sig := field_sig
 					l_field_sig.reset
 					set_signature_type (l_field_sig, l_return_type)
@@ -1491,7 +1508,7 @@ feature -- Features info
 
 				uni_string.set_string (l_name)
 
-				if (is_frozen_class or (not in_interface and is_static)) and l_is_attribute then
+				if (is_single_class or (not in_interface and is_static)) and l_is_attribute then
 					l_field_attr := feature {MD_FIELD_ATTRIBUTES}.Public
 
 					l_meth_token := md_emit.define_field (uni_string, current_class_token,
@@ -1504,12 +1521,16 @@ feature -- Features info
 
 					if in_interface then
 						l_meth_attr := l_meth_attr | feature {MD_METHOD_ATTRIBUTES}.Virtual |
-							feature {MD_METHOD_ATTRIBUTES}.Abstract
+							feature {MD_METHOD_ATTRIBUTES}.Abstract |
+							feature {MD_METHOD_ATTRIBUTES}.New_slot
 					else
 						if is_static then
 							l_meth_attr := l_meth_attr | feature {MD_METHOD_ATTRIBUTES}.Static
 						else
 							l_meth_attr := l_meth_attr | feature {MD_METHOD_ATTRIBUTES}.Virtual
+							if feat.is_origin then
+								l_meth_attr := l_meth_attr | feature {MD_METHOD_ATTRIBUTES}.New_slot
+							end
 							if feat.is_deferred and not is_override then
 								l_meth_attr := l_meth_attr |
 									feature {MD_METHOD_ATTRIBUTES}.Abstract
@@ -1594,7 +1615,7 @@ feature -- Features info
 					end
 
 					if not is_override then
-						if is_frozen_class then
+						if is_single_class then
 							insert_implementation_feature (l_meth_token, current_type_id,
 								feat.feature_id)
 							insert_implementation_signature (l_signature, current_type_id,
@@ -1838,7 +1859,7 @@ feature -- IL Generation
 			-- Generate IL code for creation procedures in `class_c'.
 		require
 			class_c_not_void: class_c /= Void
-			eiffel_class: not class_c.is_external
+			not_external_class: not class_c.is_external
 			class_type_not_void: class_type /= Void
 		local
 			create_name: STRING
@@ -1872,7 +1893,11 @@ feature -- IL Generation
 
 				if l_creators = Void then
 					l_feat := class_c.default_create_feature
-					generate_creation_procedure (class_c, class_type, l_feat, l_is_generic)
+						-- It is not guaranteed that a class defines `default_create', e.g.
+						-- a class that does not inherit from ANY.
+					if l_feat /= Void then
+						generate_creation_procedure (class_c, class_type, l_feat, l_is_generic)
+					end
 				else
 					from
 						l_creators.start
@@ -1892,7 +1917,7 @@ feature -- IL Generation
 			-- Generate IL code for creation procedures in `class_c'.
 		require
 			class_c_not_void: class_c /= Void
-			eiffel_class: not class_c.is_external
+			not_external_class: not class_c.is_external
 			class_type_not_void: class_type /= Void
 			feat_not_void: feat /= Void
 			feat_not_attribute: not feat.is_attribute
@@ -1982,7 +2007,7 @@ feature -- IL Generation
 			-- Generate IL code for feature in `class_c'.
 		require
 			class_c_not_void: class_c /= Void
-			eiffel_class: not class_c.is_external
+			not_external_class: not class_c.is_external
 			class_type_not_void: class_type /= Void
 		deferred
 		end
@@ -2160,34 +2185,6 @@ feature -- IL Generation
 				"System.Boolean", False)
 		end
 
-	generate_finalize_feature (feat: FEATURE_I) is
-			-- Generate `Finalize' that calls `feat'. `feat' should already be
-			-- generated.
-		require
-			feat_not_void: feat /= Void
-		local
-			l_finalize_token: INTEGER
-			l_dotnet_finalize_token: INTEGER
-		do
-			l_finalize_token := implementation_feature_token (
-				implemented_type (feat.written_in, current_class_type.type).implementation_id,
-				feat.written_feature_id)
-
-				-- Generate `Finalize' that calls `finalize'.
-			uni_string.set_string ("Finalize")
-			l_dotnet_finalize_token := md_emit.define_method (uni_string, current_class_token,
-				feature {MD_METHOD_ATTRIBUTES}.Family |
-				feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
-				feature {MD_METHOD_ATTRIBUTES}.Virtual,
-				default_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
-
-			start_new_body (l_dotnet_finalize_token)
-			generate_current
-			method_body.put_call (feature {MD_OPCODES}.Call, l_finalize_token, 0, False)
-			method_body.put_opcode (feature {MD_OPCODES}.Ret)
-			method_writer.write_current_body
-		end
-
 	generate_invariant_feature (feat: INVARIANT_FEAT_I) is
 			-- Generate `_invariant' that checks `current_class_type' invariants.
 		local
@@ -2270,42 +2267,6 @@ feature -- IL Generation
 			method_writer.write_current_body
 		end
 
-	generate_to_string_feature (feat: FEATURE_I) is
-			-- Generate `ToString' that calls `to_string' definition from ANY.
-		require
-			feat_not_void: feat /= Void
-		local
-			l_to_string_token: INTEGER
-			l_dotnet_to_string_token: INTEGER
-			l_sig: like method_sig
-		do
-			generate_feature (feat, False, True, False)
-			generate_feature_code (feat)
-
-			l_to_string_token := implementation_feature_token (
-				implemented_type (feat.written_in, current_class_type.type).implementation_id,
-				feat.written_feature_id)
-
-				-- Generate `Finalize' that calls `finalize'.
-			l_sig := method_sig
-			l_sig.reset
-			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
-			l_sig.set_parameter_count (0)
-			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
-			uni_string.set_string ("ToString")
-			l_dotnet_to_string_token := md_emit.define_method (uni_string, current_class_token,
-				feature {MD_METHOD_ATTRIBUTES}.Public |
-				feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
-				feature {MD_METHOD_ATTRIBUTES}.Virtual,
-				l_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
-
-			start_new_body (l_dotnet_to_string_token)
-			generate_current
-			method_body.put_call (feature {MD_OPCODES}.Call, l_to_string_token, 0, False)
-			method_body.put_opcode (feature {MD_OPCODES}.Ret)
-			method_writer.write_current_body
-		end
-
 	start_new_body (method_token: INTEGER) is
 			-- Start a new body definition for method `method_token'.
 		require
@@ -2323,11 +2284,14 @@ feature -- IL Generation
 	override_counter: COUNTER
 			-- Number of generated override methods.
 
-	generate_method_impl (cur_feat: FEATURE_I; parent_type: CLASS_TYPE; inh_feat: FEATURE_I) is
+	generate_method_impl (cur_feat: FEATURE_I; parent_type: CLASS_TYPE; inh_feat: FEATURE_I;
+			from_implementation: BOOLEAN)
+		is
 			-- Generate a MethodImpl from `parent_type' and `inh_feat'
 			-- to `current_class_type' and `cur_feat'.
 		require
 			cur_feat_not_void: cur_feat /= Void
+			cur_feat_not_il_external: not cur_feat.is_il_external
 			parent_type_not_void: parent_type /= Void
 			inh_feat_not_void: inh_feat /= Void
 		local
@@ -2343,7 +2307,11 @@ feature -- IL Generation
 			l_name: STRING
 			l_return_type: TYPE_I
 		do
-			l_parent_type_id := parent_type.static_type_id
+			if from_implementation then
+				l_parent_type_id := parent_type.implementation_id
+			else
+				l_parent_type_id := parent_type.static_type_id
+			end
 			l_cur_sig := signatures (current_type_id, cur_feat.feature_id)
 			l_inh_sig := signatures (l_parent_type_id, inh_feat.feature_id)
 
@@ -2963,7 +2931,10 @@ feature -- Variables access
 			cl_type: CL_TYPE_I
 		do
 			cl_type ?= type_i
-			if cl_type /= Void and then cl_type.base_class.is_frozen then
+			if
+				cl_type /= Void and then
+				(cl_type.base_class.is_frozen or cl_type.base_class.is_single)
+			then
 				generate_attribute_access (cl_type, a_feature_id)
 			else
 					-- Attribute are accessed through their feature encapsulation.
@@ -3247,7 +3218,10 @@ feature -- Assignments
 			cl_type: CL_TYPE_I
 		do
 			cl_type ?= type_i
-			if cl_type /= Void and then cl_type.base_class.is_frozen then
+			if
+				cl_type /= Void and then
+				(cl_type.base_class.is_frozen or cl_type.base_class.is_single)
+			then
 				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stfld,
 					attribute_token (type_i.static_type_id, a_feature_id))
 			else

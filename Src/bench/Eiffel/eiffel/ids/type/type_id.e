@@ -6,7 +6,7 @@ inherit
 
 	COMPILER_ID
 		export
-			{BODY_ID} internal_id;
+			{BODY_ID, COMPILER_EXPORTER} internal_id;
 			{BODY_ID_SUBCOUNTER} compilation_id
 		end;
 	ENCODER

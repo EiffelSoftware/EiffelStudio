@@ -53,10 +53,12 @@ feature -- Status report
 			Result := id < other.id
 		end
 
-feature {COMPILER_SUBCOUNTER} -- Implementation
+feature {COMPILER_SUBCOUNTER, COMPILER_EXPORTER} -- Implementation
 
 	internal_id: INTEGER;
 			-- Internal compilation-level id
+
+feature {COMPILER_SUBCOUNTER} -- Implementation
 
 	compilation_id: INTEGER is
 			-- Compilation unit associated with the current id

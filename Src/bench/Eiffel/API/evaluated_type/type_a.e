@@ -1,7 +1,7 @@
 indexing
 	description: "Actual type description."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 deferred class TYPE_A
 

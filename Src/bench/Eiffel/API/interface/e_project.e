@@ -44,6 +44,7 @@ feature -- Initialization
  			Execution_environment.change_working_directory (project_directory.name)
 			retrieve
 			if not error_occurred then
+				Workbench.on_project_loaded
 				manager.on_project_create
 				manager.on_project_loaded
 			end

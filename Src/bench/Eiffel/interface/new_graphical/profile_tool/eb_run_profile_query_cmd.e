@@ -38,23 +38,23 @@ feature {NONE} -- Execution
 					--| Run the query
 				clear_values
 				if tool.fill_values (Current) then
-					!! profiler_query
+					create profiler_query
 					profiler_query.set_subqueries (subqueries)
 					profiler_query.set_subquery_operators (subquery_operators)
 
-					!! profiler_options
+					create profiler_options
 					profiler_options.set_output_names (clone (output_names))
 					profiler_options.set_filenames (clone (filenames))
 					profiler_options.set_language_names (clone (language_names))
 	
-					!! st.make
---					!! mp.set_watch_cursor
-					!! executer.make (st, profiler_query, profiler_options)
+					create st.make
+--					create mp.set_watch_cursor
+					create executer.make (st, profiler_query, profiler_options)
 					executer.execute
 					tool.show_new_window (st, profiler_query, profiler_options, executer.last_output)
 --					mp.restore
 				else
-					!! error_dialog.make_default (tool.container, "Error", message)
+					create error_dialog.make_default (tool.container, "Error", message)
 					error_dialog.show
 				end
 			end
@@ -64,7 +64,7 @@ feature {NONE} -- Help message
 
 	message: STRING is
 		once
-			!! Result.make(0)
+			create Result.make (0)
 			Result.append ("Please enter a correct query:%N%N")
 			Result.append ("Examples:%N%N")
 			Result.append ("	featurename = WORD.t*%N")

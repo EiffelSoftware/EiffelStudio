@@ -63,7 +63,7 @@ echo     - config.ssh (Configuration file for Symantec C++)
 pause
 echo @echo off > make.w32
 echo $make %%1>> make.w32
-rt-converter.exe make.w32 make.w32
+rt_converter.exe make.w32 make.w32
 del run-time\eif_config.h
 rem
 rem Copy the config 
@@ -109,33 +109,33 @@ rem
 rem Call the converter tranforming the makefile-win.sh to makefile
 rem
 cd ipc\shared
-..\..\rt-converter.exe makefile-win.sh makefile
+..\..\rt_converter.exe makefile-win.sh makefile
 cd ..\..\run-time
-..\rt-converter.exe makefile-win.sh makefile
+..\rt_converter.exe makefile-win.sh makefile
 cd ..\parsing\shared
-..\..\rt-converter.exe makefile-win.sh makefile
+..\..\rt_converter.exe makefile-win.sh makefile
 cd ..\eiffel
-..\..\rt-converter.exe makefile-win.sh makefile
+..\..\rt_converter.exe makefile-win.sh makefile
 cd ..\lace
-..\..\rt-converter.exe makefile-win.sh makefile
+..\..\rt_converter.exe makefile-win.sh makefile
 cd ..\..\platform
-..\rt-converter.exe makefile-win.sh makefile
+..\rt_converter.exe makefile-win.sh makefile
 cd ..\idrs
-..\rt-converter.exe makefile-win.sh makefile
+..\rt_converter.exe makefile-win.sh makefile
 cd ..\console
-..\rt-converter.exe makefile-win.sh makefile
+..\rt_converter.exe makefile-win.sh makefile
 cd ..\bench
-..\rt-converter.exe makefile-win.sh makefile
+..\rt_converter.exe makefile-win.sh makefile
 cd ..\ipc\daemon
-..\..\rt-converter.exe makefile-win.sh makefile
+..\..\rt_converter.exe makefile-win.sh makefile
 cd ..\ewb
-..\..\rt-converter.exe makefile-win.sh makefile
+..\..\rt_converter.exe makefile-win.sh makefile
 cd ..\app
-..\..\rt-converter.exe makefile-win.sh makefile
+..\..\rt_converter.exe makefile-win.sh makefile
 cd ..\shared
-..\..\rt-converter.exe makefile-win.sh makefile
+..\..\rt_converter.exe makefile-win.sh makefile
 cd ..\..\desc
-..\rt-converter.exe makefile-win.sh makefile
+..\rt_converter.exe makefile-win.sh makefile
 cd ..
 rem
 rem Call make

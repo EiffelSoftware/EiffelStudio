@@ -4,9 +4,8 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			format
+			simple_format
 		end;
-	SHARED_EXPORT_STATUS
 
 feature -- Attributes
 
@@ -23,73 +22,77 @@ feature -- Initialization
 			not (clients = Void or else clients.empty);
 		end;
 
-	export_status: EXPORT_I is
-			-- Associated export status
---		require
---			System.current_class /= Void;
+feature -- Equivalence
+
+	is_equiv (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to Current?
 		local
-			export_set: EXPORT_SET_I;
-			client_i: CLIENT_I;
+			other_clients: EIFFEL_LIST [ID_AS]
+			found: BOOLEAN
 		do
-			if clients.count = 1 and then ("none").is_equal (clients.first) then
-			   Result := Export_none;
-			else
-				!!client_i;
-				client_i.set_clients (clients);
-					-- Current class in second pass...
-				client_i.set_written_in (System.current_class.id);
-				!!export_set.make;
-				export_set.compare_objects;
-				export_set.put (client_i);
-				Result := export_set;
-			end;
+			Result := clients = Void and other.clients = Void or else other = Current
+
+			if not Result then
+				if clients /= Void then
+					if other.clients /= Void then
+						-- Both have clients.
+						other_clients := other.clients
+						if clients.count = other.clients.count then
+							from
+								found := True
+								clients.start
+							until
+								clients.after or else not found
+							loop
+								from
+									found := False
+									other_clients.start
+								until 
+									other_clients.after or else found
+								loop
+									found := clients.item.is_equal (other_clients.item)
+									other_clients.forth
+								end
+								clients.forth
+							end
+							Result := found
+						end
+					end
+				end
+			end
 		end;
 
-	format (ctxt : FORMAT_CONTEXT) is
+feature -- Simple formatting
+
+	simple_format (ctxt : FORMAT_CONTEXT) is
+			-- Reconstitute text.
 		local
 			temp: STRING;
-			cluster: CLUSTER_I;
-			client_classc: CLASS_C;
-			client_classi: CLASS_I
 		do
-			cluster := System.class_of_id (ctxt.class_c.id).cluster;
 			ctxt.begin;
 			ctxt.put_text_item (ti_L_curly);
 			ctxt.set_separator (ti_Comma);
 			ctxt.space_between_tokens;
-			if 	
-				ctxt.client = Void or else 
-				export_status.valid_for (ctxt.client)
-			then
+
+			if clients /= Void then
 				from
 					clients.start
 				until
 					clients.after
 				loop
 					temp := clone (clients.item)
-					client_classi := Universe.class_named (temp, cluster);
-					if client_classi /= Void then
-						client_classc := client_classi.compiled_class;
-						if client_classc /= Void then
-							ctxt.put_class_name (client_classc)
-						else
-							ctxt.put_classi_name (client_classi)
-						end
-					else
-						temp.to_upper;
-						ctxt.put_string (temp);
-					end
-					clients.forth;
+					temp.to_upper
+					ctxt.put_string (temp)
+					clients.forth
 					if not clients.after then
-						ctxt.put_text_item (ti_Comma);
+						ctxt.put_text_item (ti_Comma)
 						ctxt.put_space
 					end
-				end;
-				ctxt.put_text_item (ti_R_curly);
-				ctxt.commit
-			else
-				ctxt.rollback;
-			end;
+				end
+			end
+
+			ctxt.put_text_item (ti_R_curly);
+			ctxt.commit
 		end;
 
-end
+end -- class CLIENT_AS

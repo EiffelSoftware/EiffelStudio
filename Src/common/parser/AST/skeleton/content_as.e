@@ -1,13 +1,14 @@
--- Abstract description of the content of a feature
+indexing
+
+	description: "Abstract description of the content of a feature.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 deferred class CONTENT_AS
 
 inherit
 
 	AST_EIFFEL
-		redefine
-			byte_node
-		end
 
 feature -- Conveniences
 
@@ -66,22 +67,23 @@ feature -- Conveniences
 		deferred
 		end;
 
-feature -- Type check and byte code
+feature -- Status report
 
-	byte_node: BYTE_CODE is
-            -- Associated byte code
-		do
+	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
+			-- Does the current content has instruction `i'?
+		deferred
 		end;
+
+	index_of_instruction (i: INSTRUCTION_AS): INTEGER is
+			-- Index of `i' in current content.
+		deferred
+		end;
+
+feature -- Type check and byte code
 
 	check_local_names is
 			-- Check conflicts between local names and feature names
 		do
 		end;
 
-	local_table (f: FEATURE_I): EXTEND_TABLE [LOCAL_INFO, STRING] is
-		require
-			good_argument: f /= Void;
-		do
-		end;
-
-end
+end -- class CONTENT_AS

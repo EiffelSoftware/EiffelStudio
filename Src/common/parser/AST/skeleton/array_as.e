@@ -4,8 +4,7 @@ inherit
 
 	ATOMIC_AS
 		redefine
-			type_check, byte_node, format,
-			fill_calls_list, replicate, string_value
+			string_value, simple_format
 		end
 
 feature -- Attributes
@@ -27,76 +26,18 @@ feature -- Initialization
 			expressions_exists: expressions /= Void;
 		end;
 
-feature -- Type check, byte code, dead code removal and formatter
+feature -- Simple formatting
 
-	type_check is
-			-- Type check a manifest array
-		local
-			i, nb: INTEGER;
-			multi_type: MULTI_TYPE_A;
-		do
-			context.begin_expression;
-				-- Type check expression list
-			expressions.type_check;
-				-- Creation of a multi type
-			from
-				nb := expressions.count;
-				i := nb;
-				!!multi_type.make (nb);
-			until
-				i < 1
-			loop
-				multi_type.put (context.item, i);
-				context.pop (1);
-				i := i - 1;
-			end;
-				-- Update type stack
-			context.replace (multi_type);
-				-- Update the multi type stack
-			multi_line.insert (multi_type);
-		end;
-
-	byte_node: ARRAY_CONST_B is
-			-- Byte code for a manifest array
-		do
-			!!Result;
-			Result.set_expressions (expressions.byte_node);
-			Result.set_type (multi_line.item.type_i);
-				-- Update the multi_type stack
-			multi_line.forth;
-		end;
-
-	multi_line: LINE [MULTI_TYPE_A] is
-			-- Mutli type stack
-		once
-			Result := context.multi_line;
-		end;
-
-
-	format(ctxt : FORMAT_CONTEXT) is
+	simple_format (ctxt : FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
 			ctxt.put_text_item (ti_L_array);
 			ctxt.set_separator (ti_Comma);
-			ctxt.abort_on_failure;
 			ctxt.space_between_tokens;
-			expressions.format (ctxt);
+			expressions.simple_format (ctxt);
 			ctxt.put_text_item (ti_R_array);
 			ctxt.commit
-		end;	
-
-feature	-- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-		do
-			expressions.fill_calls_list (l);
-		end;
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-		do
-			Result := clone (Current);
-			Result.set_expressions (expressions.replicate (ctxt));
 		end;
 
 feature {ARRAY_AS}	-- Replication
@@ -115,4 +56,4 @@ feature -- Case storage
 			Result := "<< >>"
 		end;
 
-end
+end -- class ARRAY_AS

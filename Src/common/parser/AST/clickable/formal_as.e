@@ -1,4 +1,8 @@
--- Abstract description for formal generic type
+indexing
+
+	description: "Abstract description for formal generic type.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class FORMAL_AS
 
@@ -8,9 +12,13 @@ inherit
 		rename
 			position as text_position
 		redefine
-			format
+			simple_format
 		end;
-	STONABLE;
+	BASIC_ROUTINES
+		export
+			{NONE}
+				all
+		end;
 
 feature
 
@@ -32,6 +40,18 @@ feature -- Initialization
 			position := yacc_int_arg (0);
 		end;
 
+feature -- Simple formatting
+
+	simple_format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		local
+			id_as: ID_AS
+		do
+			id_as := ctxt.ast.generics.i_th (position).formal_name
+			id_as.to_upper
+			ctxt.put_string (id_as)
+		end;
+
 feature
 
 	dump: STRING is
@@ -41,44 +61,4 @@ feature
 			Result.append_integer (position);
 		end;
 
-	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): FORMAL_A is
-			-- Calculated type in function of the feature `f' which has
-			-- the type Current and the feautre table `feat_table'
-		do
-			Result := actual_type;
-		end;
-
-	actual_type: FORMAL_A is
-			-- Actual type for formal generic
-		do
-			!!Result;
-			Result.set_base_type (position);
-		end;
-
-feature -- stoning
- 
-	stone (reference_class: CLASS_C): CLASSC_STONE is
-		local
-			aclass: CLASS_C;
-		do  
-			aclass := actual_type.associated_class;
-			!!Result.make (aclass)
-		end;
-
-
-feature -- Formatting
-
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		local
-			s: STRING; 
-			new_type: TYPE;
-		do
-			new_type := ctxt.format.global_types.adapted_type (Current);
-			if new_type = void then
-				ctxt.put_string (ctxt.formal_name (position));
-			else
-				new_type.format (ctxt);
-			end
-		end;
-end
+end -- class FORMAL_AS

@@ -1,4 +1,10 @@
--- Abstract class for an Eiffel feature name: id or infix/prefix notation
+indexing
+
+	description:
+		"Abstract class for an Eiffel feature name: id or %
+		%infix/prefix notation.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 deferred class FEATURE_NAME
 
@@ -6,9 +12,8 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			format
+			simple_format
 		end;
-	STONABLE;
 	COMPARABLE
 		undefine
 			is_equal
@@ -34,8 +39,6 @@ feature -- Conveniences
 		do
 			Result := True;
 		end;
-
-
 
 feature -- Internal name computing
 
@@ -91,26 +94,9 @@ feature -- Internal name computing
 			Result.put ("or_else", "or else");
 		end
 
-feature -- stoning
- 
-	stone (reference_class: CLASS_C): FEATURE_STONE is
-		local
-			a_feature_i: FEATURE_I
-		do
-			a_feature_i := reference_class.feature_named (internal_name);
-			if a_feature_i /= Void then
-				Result := a_feature_i.stone (reference_class)
-			else
---io.error.putstring ("error in making feature stone ");
---io.error.putstring (internal_name);
---io.error.new_line;
-				!!Result.make (Void, reference_class, 0, 0);
-			end
-		end
+feature -- Simple formatting
 
-feature -- Formatting
-
-	format (ctxt: FORMAT_CONTEXT) is
+	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
 			if is_frozen then
@@ -120,6 +106,8 @@ feature -- Formatting
 			ctxt.prepare_for_feature (internal_name, void);
 			ctxt.put_current_feature;
 		end;
+
+feature -- Formatting
 
 	main_feature_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
@@ -140,4 +128,4 @@ feature -- Formatting
 			end
 		end
 
-end
+end -- class FEATURE_NAME

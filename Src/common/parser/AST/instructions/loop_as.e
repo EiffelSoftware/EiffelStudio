@@ -1,16 +1,17 @@
--- Abstract description of an Eiffel loop instruction
+indexing
+
+	description: "Abstract description of an Eiffel loop instruction";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class LOOP_AS
 
 inherit
 
-	SHARED_OPTIMIZATION_TABLES;
 	INSTRUCTION_AS
 		redefine
-			type_check, byte_node,
-			find_breakable, format,
-			fill_calls_list, replicate
-		end
+			simple_format
+		end;
 
 feature -- Attributes
 
@@ -43,105 +44,48 @@ feature -- Initialization
 			stop_exists: stop /= Void
 		end;
 
-feature -- Type check, byte code and dead code removal
+feature -- Equivalence
 
-	type_check is
-			-- Type check a loop instruction
+	is_equiv (other: INSTRUCTION_AS): BOOLEAN is
+			-- Is `other' instruction equivalent to Current?
 		local
-			current_context: TYPE_A;
-			vwbe4: VWBE4;
-			body_index: INTEGER;
-			opt_unit: OPTIMIZE_UNIT
+			loop_as: LOOP_AS
 		do
-			if from_part /= Void then
-					-- Type check the from part
-				from_part.type_check;
-			end;
-			if invariant_part /= Void then
-					-- Type check the invariant loop
-				invariant_part.type_check;
-			end;
-			if variant_part /= Void then
-					-- Type check th variant loop
-				variant_part.type_check;
-			end;
-				-- Type check the exit test.
-			stop.type_check;
-				-- Check if if is a boolean expression
-			current_context := context.item;
-			if not current_context.is_boolean then
-				!!vwbe4;
-				context.init_error (vwbe4);
-				vwbe4.set_type (current_context);
-				Error_handler.insert_error (vwbe4);
-			end;
-
-				-- Update the type stack
-			context.pop (1);
-
-			if compound /= Void then
-					-- Type check the loop compound
-				compound.type_check;
-			end;
-
-				-- Record the loop for optimizations in final mode
-			body_index := context.a_feature.body_index;
-debug ("OPTIMIZATION")
-	io.error.putstring ("Recording loop in class ");
-	io.error.putstring (context.a_class.class_name);
-	io.error.putstring (" (");
-	io.error.putint (context.a_class.id);
-	io.error.putstring ("), feature ");
-	io.error.putstring (context.a_feature.feature_name);
-	io.error.putstring (" (");
-	io.error.putint (body_index);
-	io.error.putstring (")%N");
-end;
-			!!opt_unit.make (context.a_class.id, body_index);
-			optimization_tables.feature_set.extend (opt_unit);
+			loop_as ?= other
+			if loop_as /= Void then
+				-- May be equivalent
+				Result := equiv (loop_as)
+			else
+				-- NOT equivalent
+				Result := False
+			end
 		end;
 
-	byte_node: LOOP_B is
-			-- Associated byte code
+	equiv (other: like Current): BOOLEAN is
+			-- Is `other' loop_as equivalent to Current?
 		do
-			!!Result;
-			if from_part /= Void then
-				Result.set_from_part (from_part.byte_node);
-			end;
-			if invariant_part /= Void then
-				Result.set_invariant_part (invariant_part.byte_node);
-			end;
-			if variant_part /= Void then
-				Result.set_variant_part (variant_part.byte_node);
-			end;
-			Result.set_stop (stop.byte_node);
-			if compound /= Void then
-				Result.set_compound (compound.byte_node);
-			end;
+			Result := deep_equal (from_part, other.from_part)
+			if Result then
+				-- May be equivalent
+				Result := deep_equal (invariant_part, other.invariant_part)
+				if Result then
+					-- May be equivalent
+					Result := deep_equal (variant_part, other.variant_part)
+					if Result then
+						-- May be equivalent
+						Result := deep_equal (stop, other.stop)
+						if Result then
+							-- May be equivalent
+							Result := deep_equal (compound, other.compound)
+						end
+					end
+				end
+			end
 		end;
 
-feature -- Debugger
+feature -- Simple formatting
 
-	find_breakable is
-			-- Look for breakable instruction;
-			-- Put a breakable point on each compound exit.
-		do
-			record_break_node;
-			if from_part /= Void then
-				from_part.find_breakable;
-			end;
-			record_break_node;
-			if compound /= Void then
-				compound.find_breakable;
-			end;
-			record_break_node;
-		end;
-
-
-
-feature -- Formatter
-
-	format (ctxt: FORMAT_CONTEXT) is
+	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
@@ -152,7 +96,7 @@ feature -- Formatter
 			if from_part /= void then
 				ctxt.indent_one_more;
 				ctxt.next_line;
-				from_part.format (ctxt);
+				from_part.simple_format (ctxt);
 				ctxt.indent_one_less;
 			end;
 			ctxt.put_breakable;
@@ -161,7 +105,7 @@ feature -- Formatter
 				ctxt.put_text_item (ti_Invariant_keyword);
 				ctxt.indent_one_more;
 				ctxt.next_line;
-				invariant_part.format (ctxt);
+				invariant_part.simple_format (ctxt);
 				ctxt.indent_one_less;
 			end;
 			if variant_part /= void then
@@ -169,21 +113,21 @@ feature -- Formatter
 				ctxt.put_text_item (ti_Variant_keyword);
 				ctxt.indent_one_more;
 				ctxt.next_line;
-				variant_part.format(ctxt);
+				variant_part.simple_format(ctxt);
 				ctxt.indent_one_less;
 			end;
 			ctxt.next_line;
 			ctxt.put_text_item (ti_Until_keyword);
 			ctxt.indent_one_more;
 			ctxt.next_line;
-			stop.format (ctxt);
+			stop.simple_format (ctxt);
 			ctxt.indent_one_less;
 			ctxt.next_line;
 			ctxt.put_text_item (ti_Loop_keyword);
 			if compound /= void then
 				ctxt.indent_one_more;
 				ctxt.next_line;
-				compound.format (ctxt);
+				compound.simple_format (ctxt);
 				ctxt.indent_one_less;
 			end;
 			ctxt.next_line;
@@ -191,54 +135,6 @@ feature -- Formatter
 			ctxt.put_text_item (ti_End_keyword);
 			ctxt.commit
 		end;
-
-feature -- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-			-- find calls to Current
-		local
-			new_list: CALLS_LIST;
-		do
-			if from_part /= void then
-				from_part.fill_calls_list (l);
-			end;
-			if invariant_part /= void then
-				invariant_part.fill_calls_list (l);
-			end;
-			if variant_part /= void then
-				variant_part.fill_calls_list (l);
-			end;
-			!!new_list.make;
-			stop.fill_calls_list (new_list);
-			l.merge (new_list);
-			if compound /= void then
-				compound.fill_calls_list (l);
-			end;
-		end;
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- Adapt to replication
-		do
-			Result := clone (Current);
-			if from_part /= void then
-				Result.set_from_part (
-					from_part.replicate (ctxt));
-			end;
-			if invariant_part /= void then
-				Result.set_invariant_part (
-					invariant_part.replicate (ctxt))
-			end;
-			if variant_part /= void then
-				Result.set_variant_part (
-					variant_part.replicate (ctxt));
-			end;
-			Result.set_stop (stop.replicate (ctxt));
-			if compound /= void then
-				Result.set_compound(
-					compound.replicate (ctxt));
-			end;
-		end;
-			
 
 feature {LOOP_AS} -- Replication
 
@@ -269,4 +165,4 @@ feature {LOOP_AS} -- Replication
 			compound := c
 		end;
 			
-end
+end -- class LOOP_AS

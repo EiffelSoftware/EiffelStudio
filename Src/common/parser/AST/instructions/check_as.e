@@ -1,4 +1,8 @@
--- Abstract description of a check clause
+indexing
+
+	description: "Abstract description of a check clause";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class CHECK_AS
 
@@ -6,9 +10,8 @@ inherit
 
 	INSTRUCTION_AS
 		redefine
-			type_check, byte_node, format,
-			fill_calls_list, replicate
-		end
+			simple_format
+		end;
 
 feature -- Attributes
 
@@ -23,26 +26,32 @@ feature -- Initialization
 			check_list ?= yacc_arg (0);
 		end;
 
-feature -- Type check, byte code and dead code removal
+feature -- Equivalence 
 
-	type_check is
-			-- Type check on check clause
+	is_equiv (other: INSTRUCTION_AS): BOOLEAN is
+			-- Is `other' instruction equivalent to Current?
+		local
+			check_as: CHECK_AS
 		do
-			if check_list /= Void then
-				check_list.type_check;
-			end;
+			check_as ?= other
+			if check_as /= Void then
+				-- May be equivalent
+				Result := equiv (check_as)
+			else
+				-- NOT equivalent
+				Result := False
+			end
 		end;
 
-	byte_node: CHECK_B is
-			-- Associated byte code
+	equiv (other: like Current): BOOLEAN is
+			-- Is `other' check_as equivalent to Current?
 		do
-			!!Result;
-			if check_list /= Void then
-				Result.set_check_list (check_list.byte_node);
-			end;
+			Result := deep_equal (check_list, other.check_list)
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+feature -- Simple formatting
+
+	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute Text
 		do
 			ctxt.begin;
@@ -51,39 +60,19 @@ feature -- Type check, byte code and dead code removal
 			if check_list /= void then
 				ctxt.indent_one_more;
 				ctxt.next_line;
-				check_list.format (ctxt);
+				check_list.simple_format (ctxt);
 				ctxt.indent_one_less;
 				ctxt.next_line;
 			end;
 			ctxt.put_text_item (ti_End_keyword);
 			ctxt.commit;
 		end;
-
-feature -- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-			-- Find calls to Current
-		do
-			if check_list /= void then
-				check_list.fill_calls_list (l);
-			end
-		end;
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- Adapt to replication
-		do
-			Result := clone (Current);
-			if check_list /= void then
-				Result.set_check_list(
-					check_list.replicate (ctxt));
-			end
-		end;
-
-feature {CHECK_AS}	-- Replication
+			
+feature {CHECK_AS} -- Replication
 	
 	set_check_list (c: like check_list) is
 		do
 			check_list := c
 		end;
 
-end
+end -- class CHECK_AS

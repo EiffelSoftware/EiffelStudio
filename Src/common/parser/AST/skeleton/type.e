@@ -1,10 +1,17 @@
--- Abstract class for Eiffel types
+indexing
+
+	description: "Abstract class for Eiffel types.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 deferred class TYPE
 
 inherit
 
-	AST_EIFFEL;
+	AST_EIFFEL
+		redefine
+			simple_format
+		end;
 
 feature
 
@@ -12,18 +19,6 @@ feature
 			-- Is the type an anchored type ?
 		do
 			-- Do nothing
-		end;
-
-	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): TYPE_A is
-			-- Calculated type in function of the feature `f' which has
-			-- the type Current and the feature table `feat_table'
-		deferred
-		end;
-
-	actual_type: TYPE_A is
-			-- Processed type of the type wthout taking care of the
-			-- anchored type
-		deferred
 		end;
 
 	trace is
@@ -34,11 +29,6 @@ feature
 	dump: STRING is
 			-- Dumped trace
 		deferred
-		end;
-
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
-		do
-			a_clickable.put_string (dump)
 		end;
 
 	is_solved: BOOLEAN is
@@ -76,20 +66,12 @@ feature
 			-- Do nothing
 		end;
 
-	check_constraint_type (a_class: CLASS_C) is
-			-- Is the constraint type valid in the
-			-- context of `a_class' ?
-			-- A valid type is a class type that exists
-			-- in the system
-		local
-			vcfg3: VCFG3;
+feature -- Simple formatting
+
+	simple_format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
 		do
-			if has_like then
-				!!vcfg3;
-				vcfg3.set_class (a_class);
-				vcfg3.set_formal_name ("Constraint genericity");
-				Error_handler.insert_error (vcfg3);
-			end
+			ctxt.put_string (dump)
 		end;
 
-end
+end -- class TYPE

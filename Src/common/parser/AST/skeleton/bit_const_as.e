@@ -1,4 +1,8 @@
--- Node for bit constant
+indexing
+
+	description: "Node for bit constant.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class BIT_CONST_AS
 
@@ -6,8 +10,8 @@ inherit
 
 	ATOMIC_AS
 		redefine
-			byte_node, type_check, value_i, format
-		end
+			simple_format
+		end;
 
 feature -- Attributes
 
@@ -24,43 +28,12 @@ feature -- Initialization
 			value_exists: not (value = Void or else value.empty);
 		end;
 
-feature -- Type check and byte code
+feature -- Simple formatting
 
-	type_check is
-			-- Type check a bit constant
-		local
-			bit_type: BITS_A;
+	simple_format (ctxt: FORMAT_CONTEXT) is
 		do
-			!!bit_type;
-			bit_type.set_base_type (value.count);
-				-- Update the type stack
-			context.put (bit_type);
-		end;
-
-	byte_node: BIT_CONST_B is
-			-- Associated byte code
-		do
-			!!Result;
-			Result.set_value (value);
-		end;
-
-feature
-
-	value_i: BIT_VALUE_I is
-			-- Interface constant value
-		do
-			!!Result;
-			Result.set_bit_val (value)
-		end;
-
-
-feature -- formatter
-
-	format (ctxt: FORMAT_CONTEXT) is
-		do
-			ctxt.always_succeed;
 			ctxt.put_string (value)
 			ctxt.put_string ("B");
 		end;
 
-end
+end -- class BIT_CONST_AS

@@ -4,8 +4,8 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			format
-		end
+			simple_format
+		end;
 
 feature -- Attributes
 
@@ -26,9 +26,30 @@ feature -- Initialization
 			feature_list ?= yacc_arg (1);
 		end;
 
-feature -- formatter
+feature -- Status report
 
-	format (ctxt : FORMAT_CONTEXT) is
+	has_feature_name (f: FEATURE_NAME): BOOLEAN is
+			-- Is `f' present in current creation?
+		local
+			cur: CURSOR
+		do
+			cur := feature_list.cursor
+			
+			from
+				feature_list.start
+			until
+				feature_list.after or else Result
+			loop
+				Result := feature_list.item <= f and feature_list.item >= f
+				feature_list.forth
+			end
+
+			feature_list.go_to (cur)
+		end;
+
+feature -- Simple formatting
+
+	simple_format (ctxt : FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		local
 			last_was_printed: BOOLEAN;
@@ -39,20 +60,29 @@ feature -- formatter
 			if clients = void then
 				last_was_printed := true
 			else
-				clients.format(ctxt);
-				last_was_printed := ctxt.last_was_printed;
+				clients.simple_format(ctxt);
+				--last_was_printed := ctxt.last_was_printed;
 			end;
-			if not last_was_printed then 
-				ctxt.rollback; -- check whether must retain if short
-			else
-				if feature_list /= Void then
-					ctxt.indent_one_more;
-					ctxt.next_line;
-					ctxt.set_separator (ti_Comma);
-					ctxt.new_line_between_tokens;
-					feature_list.format (ctxt);
-				end;
-				ctxt.commit
-			end
+			if feature_list /= Void then
+				ctxt.indent_one_more;
+				ctxt.next_line;
+				ctxt.set_separator (ti_Comma);
+				ctxt.new_line_between_tokens;
+				feature_list.simple_format (ctxt);
+			end;
+			ctxt.commit
 		end;
-end
+			
+feature -- Convenience
+
+	set_feature_list (f: like feature_list) is
+		do
+			feature_list := f
+		end;
+
+	set_clients (c: like clients) is
+		do
+			clients := c
+		end;
+
+end -- class CREATE_AS

@@ -4,9 +4,8 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			type_check, byte_node, format,
-			fill_calls_list, replicate
-		end
+			simple_format
+		end;
 
 feature -- Attributes
 
@@ -21,24 +20,6 @@ feature -- Initialization
 			assertions ?= yacc_arg (0);
 		end
 
-feature -- Type check, byte code, dead code removal and formatter
-
-	type_check is
-			-- Type check assertion list
-		do
-			if assertions /= Void then
-				assertions.type_check;
-			end;
-		end;
-
-	byte_node: BYTE_LIST [BYTE_NODE] is
-			-- Byte node associated to the assertion list
-		do
-			if assertions /= Void then
-				Result := assertions.byte_node;
-			end;
-		end;
-
 feature -- Incrementality
 
 	reset is
@@ -48,44 +29,47 @@ feature -- Incrementality
 			end;
 		end;
 
-feature -- Format
+feature -- Status report
 
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text
+	has_assertion (a: TAGGED_AS): BOOLEAN is
+			-- Does current list have assertion `a'?
 		local
-			source_cl, target_cl: CLASS_C;
+			cur: CURSOR
+		do
+			cur := assertions.cursor
+	
+			from 
+				assertions.start
+			until
+				assertions.after or else Result
+			loop
+				Result := assertions.item.is_equiv (a)
+				assertions.forth
+			end
+
+			assertions.go_to (cur)
+		end;
+
+feature -- Simple formatting
+
+	simple_format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text
 		do
 			if assertions /= void then
 				ctxt.begin;
 				ctxt.next_line;
 				put_clause_keywords (ctxt);
-				if not ctxt.troff_format then
-					source_cl := ctxt.format.global_types.source_class;
-					target_cl := ctxt.format.global_types.target_class;
-					if source_cl /= target_cl then
-						ctxt.put_space;
-						ctxt.put_text_item (ti_Dashdash);
-						ctxt.put_space;
-						ctxt.put_comment_text ("from ");
-						ctxt.put_class_name (source_cl);
-					end;
-				end;
-				ctxt.indent_one_more; 
+				ctxt.indent_one_more;
 				ctxt.next_line;
 				ctxt.set_separator (ti_Semi_colon);
 				ctxt.new_line_between_tokens;
-				ctxt.continue_on_failure;
 				format_assertions (ctxt);
-				if ctxt.last_was_printed then
-					ctxt.set_first_assertion (false);
-					ctxt.commit;
-				else
-					ctxt.rollback;
-				end;
-			end 			
+				ctxt.commit;
+			end
 		end;
 
 	format_assertions (ctxt: FORMAT_CONTEXT) is
+			-- Format assertions.
 		local
 			i, l_count: INTEGER;
 			not_first: BOOLEAN
@@ -95,49 +79,25 @@ feature -- Format
 				i := 1;
 				l_count := assertions.count;
 			until
-				i > l_count 
+				i > l_count
 			loop
 				ctxt.begin;
 				if not_first then
 					ctxt.put_separator;
 				end;
 				ctxt.new_expression;
-				assertions.i_th(i).format(ctxt);
-				if ctxt.last_was_printed then
-					not_first := True
-					ctxt.commit;
-				else
-					ctxt.rollback;
-				end;
+				assertions.i_th(i).simple_format(ctxt);
+				not_first := True
+				ctxt.commit;
 				i := i + 1
 			end;
 			if not_first then
 				ctxt.indent_one_less;
 				ctxt.commit
-			else
-				ctxt.rollback
-			end
-		end
-
-feature	-- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-		do
-			if assertions /= void then
-				assertions.fill_calls_list (l)
 			end
 		end;
 
-	replicate (ctxt: REP_CONTEXT): like Current is 
-		do
-			Result := clone (Current);
-			if assertions /= void then
-				Result.set_assertions (assertions.replicate (ctxt));
-			end;
-		end;
-
-
-feature {ASSERT_LIST_AS} -- Replication
+feature {ASSERT_LIST_AS, REQUIRE_MERGER, ENSURE_MERGER} -- Replication
 
 	set_assertions (l: like assertions) is
 		do
@@ -158,28 +118,4 @@ feature {NONE}
 		do
 		end;
 
-feature {ROUTINE_AS} -- Case Storage
-
-	storage_info (classc: CLASS_C): FIXED_LIST [S_TAG_DATA] is
-			-- Assertion storage info for Case in the 
-			-- context of class `class_c'
-		require
-			 valid_assertions: assertions /= Void
-		local
-			 ctxt: FORMAT_CONTEXT;
-		do
-			!! Result.make (assertions.count);
-			!! ctxt.make_for_case (classc);
-			from
-				Result.start
-				assertions.start
-			until
-				assertions.after
-			loop
-				Result.replace (assertions.item.storage_info (ctxt));
-				Result.forth;
-				assertions.forth
-			end
-		end;
-
-end
+end -- class ASSERT_LIST_AS

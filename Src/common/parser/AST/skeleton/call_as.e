@@ -1,18 +1,15 @@
--- Abstract description ao an EIffel call
+indexing
+
+	description: "Abstract description of an EIffel call.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 deferred class CALL_AS
 
 inherit
 
 	AST_EIFFEL	
-		undefine
-			byte_node
-		end
 
 feature
 
-	byte_node: CALL_B is
-		deferred
-		end;
-
-end
+end -- class CALL_AS

@@ -1,4 +1,8 @@
--- Abstract description of an Eiffel infixed feature name
+indexing
+
+	description: "Abstract description of an Eiffel infixed feature name.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class INFIX_AS
 
@@ -6,8 +10,8 @@ inherit
 
 	FEATURE_NAME
 		redefine
-			is_infix, is_valid, format, main_feature_format,
-			offset
+			is_infix, is_valid, main_feature_format,
+			offset, simple_format
 		end
 
 feature -- Attributes
@@ -25,7 +29,7 @@ feature -- Conveniences
 
 	infix "<" (other: FEATURE_NAME): BOOLEAN is
 		local
-			infix_feature: INFIX_AS;
+			infix_feature: like Current;
 			normal_feature: FEAT_NAME_ID_AS;
 		do
 			normal_feature ?= other;
@@ -53,6 +57,32 @@ feature -- Initialization
 			fix_operator_exists: fix_operator /= Void
 		end;
 
+feature -- Simple formatting
+
+	simple_format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.begin;
+			if is_frozen then
+				ctxt.put_text_item (ti_Frozen_keyword);
+				ctxt.put_space
+			end;
+			if is_infix then
+				ctxt.put_text_item (ti_Infix_keyword);
+				ctxt.put_space;
+				ctxt.put_text_item (ti_Double_quote);
+				ctxt.prepare_for_infix (internal_name, void);
+			else
+				ctxt.put_text_item (ti_Prefix_keyword);
+				ctxt.put_space;
+				ctxt.put_text_item (ti_Double_quote);
+				ctxt.prepare_for_prefix (internal_name);
+			end;
+			ctxt.put_text_item (ti_Double_quote);
+			ctxt.commit;
+		end;
+
+feature
 
 	set_name (s: STRING) is
 		do
@@ -130,31 +160,6 @@ feature
 			Result implies not code_table.has (fix_operator.value);
 		end;
 
-
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.begin;
-			if is_frozen then 
-				ctxt.put_text_item (ti_Frozen_keyword);
-				ctxt.put_space
-			end;
-			if is_infix then
-				ctxt.put_text_item (ti_Infix_keyword);
-				ctxt.put_space;
-				ctxt.put_text_item (ti_Double_quote);
-				ctxt.prepare_for_infix (internal_name, void);
-			else
-				ctxt.put_text_item (ti_Prefix_keyword);
-				ctxt.put_space;
-				ctxt.put_text_item (ti_Double_quote);
-				ctxt.prepare_for_prefix (internal_name);
-			end;
-			ctxt.put_fix_name (ctxt.new_types.final_name);
-			ctxt.put_text_item (ti_Double_quote);
-			ctxt.commit;
-		end;
-
 	main_feature_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
@@ -188,4 +193,4 @@ feature
 			end
 		end
 
-end
+end -- class INFIX_AS

@@ -4,10 +4,11 @@ inherit
 
 	ROUT_BODY_AS
 		redefine
-			is_deferred, byte_node, format
+			is_deferred, has_instruction, index_of_instruction,
+			simple_format
 		end
 
-feature -- Intialization
+feature -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -23,19 +24,25 @@ feature -- Conveniences
 			Result := True;
 		end;
 
-feature -- byte code
-
-	byte_node: DEF_BYTE_CODE is
-			-- Byte code for deferred feature
+	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
+			-- Has the current routine body an instruction `i'?
 		do
-			!!Result;
+			Result := False;
 		end;
 
-feature -- formatter
-
-	format (ctxt: FORMAT_CONTEXT) is
+	index_of_instruction (i: INSTRUCTION_AS): INTEGER is
+			-- Index of `i' in this deferred feature.
+			-- Result is `0'.
 		do
-			ctxt.always_succeed;
-			ctxt.put_text_item (ti_Deferred_keyword);
+			Result := 0
 		end;
-end
+
+feature -- Simple formatting
+
+    simple_format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+        do
+            ctxt.put_text_item (ti_Deferred_keyword);
+        end;
+
+end -- class DEFERRED_AS

@@ -1,16 +1,27 @@
--- Abstract node produce by yacc
+indexing
+
+	description: "Abstract node produce by yacc.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 deferred class AST_EIFFEL
 
 inherit
 
 	AST_YACC;
-	SHARED_WORKBENCH;
-	SHARED_TYPES;
 	SHARED_ERROR_HANDLER;
-	SHARED_ARG_TYPES;
-	SHARED_AST_CONTEXT;
 	SHARED_TEXT_ITEMS
+
+feature -- Simple formatting
+
+	simple_format (ctxt: FORMAT_CONTEXT) is
+			-- Reconsitute text according to context.
+		do
+			-- Do nothing
+
+			-- should do nothing. Now put AST class name
+			ctxt.put_string (generator);
+		end;
 
 feature {SERVER} -- Identity
 
@@ -26,45 +37,6 @@ feature {SERVER} -- Identity
 			-- Do nothing
 		end;
 
-feature -- Type check, byte code and dead code removal
-
-	type_check is
-			-- Recursive type check
-		do
-			-- Do nothing
-		end;
-
-	byte_node: BYTE_NODE is
-			-- Byte node associated to node
-		do
-			-- Do nothing
-		end;
-
-feature -- Debugger
- 
-	find_breakable is
-			-- Recursive traversal of the AST to record breakable points.
-		do
-			-- Do nothing
-		end;
- 
-	record_break_node is
-			-- Record node in instruction FIFO stack.
-		do
-			context.instruction_line.insert (Current);
-		end
-
-feature -- formatter
-
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconsitute text according to context.
-		do
-			-- Do nothing
-
-			-- should do nothing. Now put AST class name
-			ctxt.put_string (generator);
-		end;
-		
 	position: INTEGER is
 			-- position of the item in text
 		do
@@ -72,18 +44,4 @@ feature -- formatter
 				-- treated as unknown
 		end;
 
-feature -- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-			-- find calls to Current
-		do
-			-- Do nothing
-		end;
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- adapt to replication
-		do
-			Result := clone (Current)
-		end;
-		
-end
+end -- class AST_EIFFEL

@@ -1,4 +1,8 @@
--- Abstract description of a renaming pair
+indexing
+
+	description: "Abstract description of a renaming pair.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class RENAME_AS
 
@@ -6,8 +10,8 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			format
-		end
+			simple_format
+		end;
 
 feature -- Attributes
 
@@ -29,18 +33,30 @@ feature -- Initialization
 			new_name_exists: new_name /= Void;
 		end;
 
-feature -- Formatter
+feature -- Simple formatting
 
-	format (ctxt : FORMAT_CONTEXT) is
+	simple_format (ctxt : FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
-			old_name.format (ctxt);
+			old_name.simple_format (ctxt);
 			ctxt.put_space;
 			ctxt.put_text_item (ti_As_keyword);
 			ctxt.put_space;
-			new_name.format (ctxt);
+			new_name.simple_format (ctxt);
 			ctxt.commit
 		end;
+
+feature -- Replication
+
+	set_old_name (o: like old_name) is
+		do
+			old_name := o
+		end;
+
+	set_new_name (n: like new_name) is
+		do
+			new_name := n
+		end;
 	
-end
+end -- class RENAME_AS

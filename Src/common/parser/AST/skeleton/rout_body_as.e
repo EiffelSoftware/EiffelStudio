@@ -3,9 +3,6 @@ deferred class ROUT_BODY_AS
 inherit
 
 	AST_EIFFEL
-		redefine
-			byte_node
-		end
 
 feature -- Conveniences
 
@@ -27,12 +24,16 @@ feature -- Conveniences
 			-- Do nothing
 		end;
 
-feature -- Byte code
-
-	byte_node: BYTE_CODE is
-			-- Byte associated to the routine body (compound)
+	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
+			-- Has current routine body instruction `i'?
 		do
 			-- Do nothing
 		end;
 
-end
+	index_of_instruction (i: INSTRUCTION_AS): INTEGER is
+			-- Index of `i'.
+		do
+			-- Do nothing
+		end;
+
+end -- class ROUT_BODY_AS

@@ -4,7 +4,7 @@ inherit
 
 	INTERNAL_AS
 		redefine
-			is_once, byte_node
+			is_once
 		end;
 
 feature
@@ -15,15 +15,6 @@ feature
 			Result := true;
 		end;
 
-	byte_node: ONCE_BYTE_CODE is
-			-- Byte code for once body
-		do
-			!!Result;
-			if compound /= Void then
-				Result.set_compound (compound.byte_node);
-			end;
-		end;
-
 feature {}
 
 	begin_keyword: BASIC_TEXT is
@@ -32,4 +23,4 @@ feature {}
 			Result := ti_Once_keyword
 		end;
 
-end
+end -- class ONCE_AS

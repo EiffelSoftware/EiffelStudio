@@ -93,7 +93,18 @@ feature -- Basic Operations
 
 	compile_eiffel (a_folder: STRING) is
 			-- Compile Eiffel code in `a_folder'.
+		require
+			non_void_folder: a_folder /= Void
+			valid_folder: not a_folder.empty
+		local
+			displayed: BOOLEAN
 		do
+			generate_ace_file (a_folder)
+			displayed := displayed_while_running
+			set_displayed_while_running (True)
+			launch (eiffel_command, a_folder)
+			set_displayed_while_running (displayed)
+			check_return_code
 		end
 
 feature {NONE} -- Implementation
@@ -126,6 +137,24 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	generate_ace_file (a_folder: STRING) is
+			-- Generate server ace file in `a_folder'.
+		local
+			a_file: RAW_FILE
+			a_file_name: STRING
+		do
+			a_file_name := clone (a_folder)
+			a_file_name.append_character (Directory_separator)
+			a_file_name.append (Ace_file_name)
+			create a_file.make_create_read_write (a_file_name)
+			a_file.put_string (System_keyword)
+			a_file.put_string (New_line_tab)
+			a_file.put_string (Shared_wizard_environment.project_name)
+			a_file.put_string (New_line)
+			a_file.put_string (Partial_ace_file)
+			a_file.close
+		end
+			
 	Idl_compiler_command_line: STRING is
 			-- MIDL command line
 		do
@@ -189,4 +218,65 @@ feature {NONE} -- Implementation
 			Result.append (Rpc_library)
 		end
 
+	eiffel_command: STRING is
+			-- Eiffel compiler command line
+		do
+			Result := clone (Common_eiffel_command)
+			Result.append (Ace_file_name)
+		end
+
+	Common_eiffel_command: STRING is "es4 -precompile -ace "
+			-- Common Eiffel command line
+
+	Ace_file_name: STRING is "Ace.ace"
+			-- Ace file name
+
+	Partial_ace_file: STRING is
+			-- Ace file used to precompile generated Eiffel system
+"root%N%T															%
+%ANY%N%N															%
+%default%N%T														%
+%assertion (all)%N%T												%
+%multithreaded (no)%N%T												%
+%console_application (no)%N%T										%
+%dynamic_runtime (no)%N%T											%
+%dead_code_removal (yes)%N%T										%
+%profile (no)%N%T													%
+%line_generation (no)%N%T											%
+%debug  (no)%N%T													%
+%array_optimization (no)%N%T										%
+%inlining (no)%N%T													%
+%inlining_size (%"4%")%N%N											%
+%cluster%N%T														%
+%root_cluster: %".%";%N%T											%
+%server (root_cluster):				%"$\component%"%N%T%T			%
+%-- EiffelBase%N%T													%
+%all base:						%"$EIFFEL4\library\base%"%N%T%T		%
+%exclude%N%T%T%T													%
+%%"table_eiffel3%"%N%T%T											%
+%end%N%T															%
+%-- WEL%N%T															%
+%all wel:						%"$EIFFEL4\library\wel%"%N%N%T		%
+%all time: 						%"$EIFFEL4\library\time%"%N%T%T		%
+%exclude%N%T%T%T													%
+%%"french%";%N%T%T													%
+%%"german%"%N%T%T													%
+%end;%N%T															%
+%-- EiffelCOM%N%T													%
+%all ecom:						%"$EIFFEL4\library\com%"%N%T		%
+%all common:						%"..\common%"%N					%
+%external%N%T														%
+%include_path:	%"$EIFFEL4\library\wel\spec\windows\include%",%N%T%T%T%T%
+%%"$EIFFEL4\library\com\library\include%",%N%T%T%T%T				%
+%%"$EIFFEL4\library\com\runtime\include%",%N%T%T%T%T				%
+%%"..\common\include%",%N%T%T%T%T									%
+%%"include%";%N%N%T													%
+%object: 		%"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib%",%N%T%T%T%T%
+%%"$(EIFFEL4)\library\time\spec\msc\lib\datetime.lib%",%N%T%T%T%T	%
+%%"$(EIFFEL4)\library\com\spec\msc\lib\com.lib%",%N%T%T%T%T			%
+%%"$(EIFFEL4)\library\com\spec\msc\lib\com_runtime.lib%",%N%T%T%T%T	%
+%%"..\common\spec\msc\lib\ecom.lib%",%N%T%T%T%T						%
+%%"spec\msc\lib\ecom.lib%";%N										%
+%end"
+		
 end -- class WIZARD_IDL_COMPILER

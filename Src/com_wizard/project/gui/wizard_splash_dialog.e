@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 	Timer_id: INTEGER is 1
 			-- Timer identifier
 		
-	Time_out: INTEGER is 5000
+	Time_out: INTEGER is 3750
 			-- Time out in milliseconds
 		
 end -- class WIZARD_SPLASH_DIALOG

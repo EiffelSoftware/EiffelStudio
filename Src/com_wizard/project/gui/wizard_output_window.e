@@ -24,6 +24,14 @@ feature -- Basic Operations
 		deferred
 		end
 
+	add_continuous_message (a_text: STRING) is
+			-- Add `a_text' to output using standard format.
+			-- Do not add new line.
+		require
+			non_void_message: a_text /= Void
+		deferred
+		end
+
 	add_warning (a_text: STRING) is		
 			-- Add `a_text' to output using warning format.
 		require

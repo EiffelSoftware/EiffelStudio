@@ -1234,7 +1234,7 @@ FILE *f;
 
 public void file_go(f, pos)
 FILE *f;
-long pos;
+EIF_INTEGER pos;
 {
 	/* Go to absolute position 'pos' counted from start */
 
@@ -1246,7 +1246,7 @@ long pos;
 
 public void file_recede(f, pos)
 FILE *f;
-long pos;
+EIF_INTEGER pos;
 {
 	/* Go to absolute position 'pos' counted from end */
 
@@ -1258,7 +1258,7 @@ long pos;
 
 public void file_move(f, pos)
 FILE *f;
-long pos;
+EIF_INTEGER pos;
 {
 	/* Go to absolute position 'pos' counted from current position */
 

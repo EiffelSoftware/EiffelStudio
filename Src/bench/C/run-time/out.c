@@ -386,7 +386,7 @@ register2 int tab;
 }
 
 private void write_char (c, buf)
-char c;			/* The character */
+EIF_CHARACTER c;			/* The character */
 char *buf;		/* Where it should be written */
 {
 	/* Write a character in `buffer' */

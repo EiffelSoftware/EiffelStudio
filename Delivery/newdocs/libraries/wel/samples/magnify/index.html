@@ -1,0 +1,42 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Magnify</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+		<META NAME="MS-HKWD" CONTENT="WEL Samples, Magnify">
+	</HEAD>
+
+	<BODY>
+		<H1>Magnify Sample</H1>
+		<CENTER><IMG SRC="magnify.png" ALT="MAGNIFY" /></CENTER><BR><BR>
+		<H2>Compiling</H2>
+		<P>
+			To compile the example:
+		</P>
+		<UL>
+			<LI>Launch [BENCH].
+			<LI>Select <B>Use existing Ace (control file)</B> and click <B>OK</B>.
+			<LI>Browse to <I>Eiffel50\examples\wel\magnify\</I>.
+			<LI>Choose <I>Ace.ace</I>
+			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
+			<LI>Click <B>OK</B>.
+		</UL>
+		<H2>Running</H2>
+		After launching the application, you will see a window displayed with a similar appearance to the one above. Selecting "Quick reference..." from the "Help" menu will display the
+		full instructions for using this application.
+		<P>
+		</P>
+		<H2>Under the Hood</H2>
+		<P>In order to be able to control the output of the sample, <A CLASS="eclass" HREF="/libraries/wel/samples/magnify/root_cluster/main_win_chart.html">MAIN_WINDOW</A> redefines many features from <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_frame_window_chart.html">WEL_FRAME_WINDOW</A>. The feature <A CLASS="efeature" HREF="/libraries/wel/samples/magnify/root_cluster/main_window.html#f_draw_zoom_rectangle">draw_zoom_rectangle</A> is used to display the output and <A CLASS="efeature" HREF="/libraries/wel/samples/magnify/root_cluster/main_window.html#f_on_menu_command">on_menu_command</A> handles the
+		notifications sent to the window when a menu_selection has been made.</P>
+			
+		<P>This sample contains the following classes:
+			<UL>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/magnify/root_cluster/application_ids_chart.html">APPLICATION_IDS</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/magnify/root_cluster/main_win_chart.html">MAIN_WINDOW</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/magnify/root_cluster/magnify_demo_chart.html">MAGNIFY_DEMO</A>
+			</UL>
+		</P>
+	</BODY>
+</HTML>

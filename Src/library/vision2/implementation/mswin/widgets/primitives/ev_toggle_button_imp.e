@@ -1,5 +1,6 @@
 indexing
-	description: "Objects that ..."
+	description: "EiffelVision Toggle button.%
+				% Mswindows implementation"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,7 +11,6 @@ class
 inherit
 	EV_TOGGLE_BUTTON_I
 		
-	
 	EV_BUTTON_IMP
 		redefine
 			wel_window,
@@ -18,7 +18,7 @@ inherit
 		end
 
 creation
-	make_with_text
+	make, make_with_text
 
 
 feature -- Initialization
@@ -42,7 +42,7 @@ feature -- Status report
 	pressed: BOOLEAN is
 			-- Is toggle pressed
 		do
-			Result := True
+			Result := wel_window.checked
 		end 
 	
 
@@ -52,13 +52,18 @@ feature -- Status setting
 			-- Set Current toggle on and set
 			-- pressed to True.
 		do
+			if button_pressed then
+				wel_window.set_checked
+			else
+				wel_window.set_unchecked
+			end
 		end
-
 
 	toggle is
 			-- Change the state of the toggle button to
 			-- opposite
 		do
+			set_pressed (not pressed)
 		end
 
 feature -- Implementation

@@ -17,7 +17,7 @@ inherit
 		end
 
 creation
-	make_with_text
+	make, make_with_text
 
 
 feature -- Initialization

@@ -37,6 +37,7 @@ feature -- Access
 		end
 		
 	parent_imp: EV_ITEM_LIST_IMP [EV_ITEM] is
+			-- Parent implementation of `Current'.
 		deferred
 		end
 
@@ -75,6 +76,34 @@ feature -- Access
 			end
 		end
 
+	set_capture is
+			-- Grab user input.
+			-- Works only on current windows thread.
+		do
+			parent_imp.set_capture
+		end
+
+	release_capture is
+			-- Release user input.
+			-- Works only on current windows thread.
+		do
+			parent_imp.set_capture
+		end
+
+	set_heavy_capture is
+			-- Grab user input.
+			-- Works on all windows threads.
+		do
+			parent_imp.set_heavy_capture
+		end
+
+	release_heavy_capture is
+			-- Release user input
+			-- Works on all windows threads.
+		do
+			parent_imp.release_heavy_capture
+		end
+
 end -- class EV_PICK_AND_DROPABLE_ITEM_IMP
 
 --!-----------------------------------------------------------------------------
@@ -98,6 +127,10 @@ end -- class EV_PICK_AND_DROPABLE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/04/21 21:51:18  rogers
+--| Added set_capture, release_capture, set_heavy_capture and
+--| release_heavy_capture. Each item had these previously.
+--|
 --| Revision 1.4  2000/04/14 23:30:13  rogers
 --| Added pnd_original_parent and set_pnd_original_parent.
 --|

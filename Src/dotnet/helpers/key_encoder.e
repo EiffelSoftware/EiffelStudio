@@ -22,7 +22,7 @@ feature -- Access
 			until
 				i >= a_key.count
 			loop
-				create hex_rep.make_from_cil (a_key.item (i).to_string_string2 (x_string.to_cil).to_lower)
+				create hex_rep.make_from_cil (a_key.item (i).to_string_with_format (x_string.to_cil).to_lower)
 				if hex_rep.count < 2 then
 					hex_rep.prepend ("0")
 				end

@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 	initialize is
 		do
-			Precursor
+			Precursor {EV_PRIMITIVE_IMP}
 			ev_gauge_imp_initialize
 		end
 

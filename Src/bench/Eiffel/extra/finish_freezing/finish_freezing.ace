@@ -41,6 +41,7 @@ cluster
 
 	-- EiffelBase
 	kernel:		"$EIFFEL_SRC\library\base\kernel";
+	routines:		"$EIFFEL_SRC\library\base\routines";
 	support:		"$EIFFEL_SRC\library\base\support";
 	access:		"$EIFFEL_SRC\library\base\structures\access";
 	cursors:		"$EIFFEL_SRC\library\base\structures\cursors";

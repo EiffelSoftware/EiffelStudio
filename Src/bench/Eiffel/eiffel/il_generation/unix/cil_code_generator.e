@@ -746,6 +746,15 @@ feature -- Variables access
 		do
 		end
 
+	generate_attribute_access (type_i: TYPE_I; a_feature_id: INTEGER) is
+			-- Generate direct access to attribute of `a_feature_id' in implementation `type_i'.
+		require
+			type_i_not_void: type_i /= Void
+			positive_feature_id: a_feature_id > 0
+		do
+			
+		end
+
 	generate_attribute (type_i: TYPE_I; a_feature_id: INTEGER) is
 			-- Generate access to attribute of `a_feature_id' in `type_i'.
 		require
@@ -880,6 +889,13 @@ feature -- Assignments
 
 	generate_check_cast (source_type, target_type: TYPE_I) is
 			-- Generate `checkcast' byte code instruction.
+		require
+			target_type_not_void: target_type /= Void
+		do
+		end
+
+	generate_cast_to_implementation (target_type: TYPE_I) is
+			-- Generate `cast' to implementation of `target_type'.
 		require
 			target_type_not_void: target_type /= Void
 		do

@@ -32,7 +32,9 @@ inherit
 			on_key_down,
 			on_char,
 			interface,
-			initialize
+			initialize,
+			set_background_color,
+			set_foreground_color
 		end
 
 	EV_ITEM_LIST_IMP [EV_TREE_NODE]
@@ -55,7 +57,8 @@ inherit
 			y as y_position, resize as wel_resize,
 			move_and_resize as wel_move_and_resize,
 			has_capture as wel_has_capture,
-			set_tooltip as wel_set_tooltip
+			set_tooltip as wel_set_tooltip,
+			set_background_color as wel_set_background_color
 		undefine
 			set_width, set_height, on_left_button_down,
 			on_middle_button_down, on_right_button_down,
@@ -663,6 +666,28 @@ feature {EV_ANY_I} -- WEL Implementation
 			-- needs to be repainted.
 		do
 			disable_default_processing
+		end
+		
+	set_background_color (color: EV_COLOR) is
+			--
+		do
+			background_color_imp ?= color.implementation
+			wel_set_background_color (background_color_imp)
+			if is_displayed then
+				-- If the widget is not hidden then invalidate.
+				invalidate
+			end
+		end
+		
+	set_foreground_color (color: EV_COLOR) is
+			-- Make `color' the new `foreground_color'
+		do
+			foreground_color_imp ?= color.implementation
+			set_text_color (foreground_color_imp)
+			if is_displayed then
+				-- If the widget is not hidden then invalidate.
+				invalidate
+			end
 		end
 
 feature {NONE} -- Feature that should be directly implemented by externals

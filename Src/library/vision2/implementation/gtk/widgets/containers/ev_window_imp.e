@@ -17,6 +17,8 @@ inherit
 	EV_CONTAINER_IMP
 		undefine
 			initialize_colors
+		redefine
+			add_child
 		end
 	
 creation
@@ -37,34 +39,7 @@ feature {NONE} -- Initialization
 			initialize
 		end
 	
-feature {NONE} -- Implementation
-	
-	initialize is
-		local
-			i: INTEGER
-			a: ANY
-			s: string
-		do
-			-- connect delete and destroy events to exit signals
-			-- Temporary XXX!
-			!!s.make (0)
-			s := "destroy"
-			a ?= s.to_c
-						
-			-- Connect the signal
-			i := c_gtk_signal_connect (widget, $a, $window_closed, 
-						   $Current, Default_pointer, 
-						   Default_pointer, 
-						   Default_pointer, 0, False)
-			
-			-- What about delete signal?
-			s := "delete"
-			a ?= s.to_c
-			--			i := c_gtk_signal_connect (widget, $a, interface.routine_address($delete_window_action), Current, Default_pointer)
-		end
-	
 feature  -- Access
-
 
         icon_name: STRING is
                         -- Short form of application name to be
@@ -218,6 +193,57 @@ feature -- Resizing
 	set_maximum_height (max_height: INTEGER) is
 			-- Set `maximum_height' to `max_height'.
 		do
+		end
+
+
+feature {NONE} -- Implementation
+	
+	initialize is
+		local
+			i: INTEGER
+			a: ANY
+			s: string
+		do
+			-- connect delete and destroy events to exit signals
+			-- Temporary XXX!
+			!!s.make (0)
+			s := "destroy"
+			a ?= s.to_c
+						
+			-- Connect the signal
+			i := c_gtk_signal_connect (widget, $a, $window_closed, 
+						   $Current, Default_pointer, 
+						   Default_pointer, 
+						   Default_pointer, 0, False)
+			
+			-- What about delete signal?
+			s := "delete"
+			a ?= s.to_c
+			--			i := c_gtk_signal_connect (widget, $a, interface.routine_address($delete_window_action), Current, Default_pointer)
+
+			vbox := gtk_vbox_new (False, 0)
+			gtk_container_add (GTK_CONTAINER (widget), vbox)
+		end
+
+	vbox: POINTER
+		-- Vertical_box to have a possibility for a menu on the
+		-- top.
+
+feature {EV_CONTAINER, EV_WIDGET} -- Element change
+	
+	add_child (child_i: EV_WIDGET_I) is
+			-- Add child into composite
+		do
+			child ?= child_i
+			gtk_box_pack_end (vbox, child.widget, True, True, 0)
+		end
+
+feature {EV_STATIC_MENU_BAR_IMP} -- Implementation
+
+	add_static_menu (menu: EV_STATIC_MENU_BAR_IMP) is
+			-- Add a static menu bar at the top of the window.
+		do
+			gtk_box_pack_start (vbox, menu.widget, False, True, 0)
 		end
 
 end -- class EV_WINDOW_IMP

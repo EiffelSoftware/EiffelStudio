@@ -149,13 +149,13 @@ feature {NONE} -- Implementation
 		local
 			code_generator: GB_CODE_GENERATOR
 		do
-			create code_generator
-				-- If we select a drive and not a directory, we already have the directory separator in the directory string.
-			if (directory_entry.text @ (directory_entry.text.count)).is_equal (operating_environment.directory_separator) then
-				code_generator.generate (directory_entry.text + file_entry.text, class_entry.text)
-			else
-				code_generator.generate (directory_entry.text + operating_environment.directory_separator.out + file_entry.text, class_entry.text)
-			end
+--			create code_generator
+--				-- If we select a drive and not a directory, we already have the directory separator in the directory string.
+--			if (directory_entry.text @ (directory_entry.text.count)).is_equal (operating_environment.directory_separator) then
+--				code_generator.generate (directory_entry.text + file_entry.text, class_entry.text)
+--			else
+--				code_generator.generate (directory_entry.text + operating_environment.directory_separator.out + file_entry.text, class_entry.text)
+--			end
 		end
 
 	on_show_actions is

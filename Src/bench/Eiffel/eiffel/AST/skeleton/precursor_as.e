@@ -104,7 +104,7 @@ feature -- Type check, byte code and dead code removal
 				or else context.level2 -- invariant
 				or else context.level4 -- precondition
 			then
-				!! vupr1
+				create vupr1
 				context.init_error (vupr1)
 				Error_handler.insert_error (vupr1)
 					-- Cannot go on here.
@@ -116,7 +116,7 @@ feature -- Type check, byte code and dead code removal
 
 			if feat_ast.feature_names.count > 1 then
 					-- feature has multiple names.
-				!! vupr1
+				create vupr1
 				context.init_error (vupr1)
 				Error_handler.insert_error (vupr1)
 					-- Cannot go on here.
@@ -132,7 +132,7 @@ feature -- Type check, byte code and dead code removal
 				if parent_name /= Void then
 						-- The specified parent does not have
 						-- an effective precursor.
-					!! vupr2
+					create vupr2
 					context.init_error (vupr2)
 					Error_handler.insert_error (vupr2)
 						-- Cannot go on here.
@@ -140,7 +140,7 @@ feature -- Type check, byte code and dead code removal
 				else
 						-- No parent has an effective precursor
 						-- (not a redefinition)
-					!! vupr3
+					create vupr3
 					context.init_error (vupr3)
 					Error_handler.insert_error (vupr3)
 						-- Cannot go on here.
@@ -152,7 +152,7 @@ feature -- Type check, byte code and dead code removal
 				-- is not ambiguous.
 			if pre_table.count > 1 then
 					-- Ambiguous construct
-				!! vupr3
+				create vupr3
 				context.init_error (vupr3)
 				Error_handler.insert_error (vupr3)
 					-- Cannot go on here.
@@ -178,7 +178,7 @@ feature -- Type check, byte code and dead code removal
 			Result := True      -- because it's an unqualified call
 		end
 
-	access_type (p_type : CL_TYPE_A a_feature : FEATURE_I) : TYPE_A is
+	access_type (p_type: CL_TYPE_A; a_feature: FEATURE_I): TYPE_A is
 			-- Type check the access to `a_feature' in `p_type'.
 		local
 			arg_type: TYPE_A
@@ -196,7 +196,7 @@ feature -- Type check, byte code and dead code removal
 			vuar1: VUAR1
 			vuar2: VUAR2
 			obs_warn: OBS_FEAT_WARN
-			like_argument_detected : BOOLEAN
+			like_argument_detected: BOOLEAN
 			gen_type: GEN_TYPE_A
 		do
 			last_type := context.item
@@ -216,11 +216,11 @@ feature -- Type check, byte code and dead code removal
 
 				-- Supplier dependances update
 				-- Create self-dependance
-			!! depend_unit.make (context.a_class.class_id, context.a_feature)
+			create depend_unit.make (context.a_class.class_id, context.a_feature)
 			context.supplier_ids.extend (depend_unit)
 
 				-- Create dependance on precursor
-			!! depend_unit.make (last_id, a_feature)
+			create depend_unit.make (last_id, a_feature)
 			context.supplier_ids.extend (depend_unit)
 			
 				-- Attachments type check
@@ -264,7 +264,7 @@ feature -- Type check, byte code and dead code removal
 						-- genericity
 					current_item := context.i_th (context_count + i) 
 					if not current_item.conform_to (arg_type) then
-						!! vuar2
+						create vuar2
 						context.init_error (vuar2)
 						vuar2.set_called_feature (a_feature, last_class.class_id)
 						vuar2.set_argument_position (i)
@@ -316,7 +316,7 @@ feature -- Type check, byte code and dead code removal
 				and then (context.a_feature = Void or else
 					not context.a_feature.is_obsolete)
 			then
-				!! obs_warn
+				create obs_warn
 				obs_warn.set_class (context.a_class)
 				obs_warn.set_obsolete_class (context.last_class)
 				obs_warn.set_obsolete_feature (a_feature)
@@ -341,12 +341,12 @@ feature -- Type check, byte code and dead code removal
 			if parameters /= Void then
 				from
 					nb := parameters.count
-					!! params.make_filled (nb)
+					create params.make_filled (nb)
 					i := 1
 				until
 					i > nb
 				loop
-					!! p
+					create p
 					p.set_expression (parameters.i_th (i).byte_node)
 					params.put_i_th (p, i)
 					i := i + 1
@@ -435,7 +435,7 @@ feature -- Replication
 --			end
 
 --			if parameters /= void then
---				!! new_list.make
+--				create new_list.make
 --				parameters.fill_calls_list (new_list)
 --				l.merge (new_list)
 --			end
@@ -453,7 +453,7 @@ feature -- Replication
 
 feature {NONE}  -- precursor table
 
-	precursor_table : LINKED_LIST [PAIR[CL_TYPE_A, INTEGER]] is
+	precursor_table: LINKED_LIST [PAIR[CL_TYPE_A, INTEGER]] is
 				-- Table of parent types which have an effective
 				-- precursor of current feature. Indexed by
 				-- routine ids.

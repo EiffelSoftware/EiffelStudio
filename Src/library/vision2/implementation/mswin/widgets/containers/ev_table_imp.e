@@ -1,7 +1,7 @@
 indexing
 	description: 
-		"Eiffel Vision table. Ms windows implementation";
-	note: " This class doesn't inherit from%
+		"Eiffel Vision table. Ms windows implementation"
+	note: "This class doesn't inherit from%
 		% EV_INVISIBLE_CONTAINER_IMP because the children are%
 		% of type EV_TABLE_CHILD_IMP and not EV_WIDGET_IMP.%
 		% Yet, the implementation of the following features%
@@ -22,8 +22,8 @@ inherit
 			set_insensitive,
 			child_added,
 			compute_minimum_width, 
-			compute_minimum_height,
-			resize_from_minimum
+			compute_minimum_height
+	--		compute_minimum_size
 		end
 
 	EV_WEL_CONTROL_CONTAINER_IMP
@@ -45,12 +45,12 @@ feature {NONE} -- Initialization
 			fix: FIXED_LIST [INTEGER]
 		do
 			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor
-			!! ev_children.make (2)
-			!! columns_value.make (1)
-			!! fix.make_filled (4)
+			create ev_children.make (2)
+			create columns_value.make (1)
+			create fix.make_filled (4)
 			columns_value.extend (fix)
-			!! rows_value.make (0)
-			!! fix.make_filled (4)
+			create rows_value.make (0)
+			create fix.make_filled (4)
 			rows_value.extend (fix)
 			set_homogeneous (Default_homogeneous)
 			set_row_spacing (Default_row_spacing)

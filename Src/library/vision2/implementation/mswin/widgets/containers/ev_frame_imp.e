@@ -21,8 +21,7 @@ inherit
 			set_default_minimum_size,
 			compute_minimum_width,
 			compute_minimum_height,
-			resize_from_minimum,
-			resize_proportionnaly
+			compute_minimum_size
 		end
 
 	EV_FONTABLE_IMP
@@ -34,6 +33,7 @@ inherit
 			make,
 			on_paint,
 			top_level_window_imp,
+			move_and_resize,
 			set_text
 		end
 
@@ -94,11 +94,7 @@ feature -- Status setting
 		do
 			!! dc.make (Current)
 			dc.get
-			internal_set_minimum_height (box_text_height + 2 * box_width)
-			internal_set_minimum_width (dc.string_width (text) + 2 * box_width + 10)
-			if parent_imp /= Void then
-				notify_change (1 + 2)
-			end
+			internal_set_minimum_size (dc.string_width (text) + 2 * box_width + 10, box_text_height + 2 * box_width)
 			dc.release
 		end
 
@@ -139,27 +135,30 @@ feature {NONE} -- Implementation for automatic size compute.
 			end
 		end
 
-	resize_from_minimum (a_x, a_y, a_width, a_height: INTEGER) is
-			-- Resize from the minimum size of the children
+	compute_minimum_size is
+			-- Recompute both the minimum_width and then
+			-- minimum_height of the object.
 		do
-			move_and_resize (a_x, a_y, a_width, a_height, True)
 			if child /= Void then
-				child.set_move_and_size (box_width, box_text_height + box_width, 
-					client_width, client_height)
-			end
-		end
-
-	resize_proportionnaly (a_x, a_y, a_width, a_height: INTEGER) is
-			-- Resize everything by difference with the current size.
-		do
-			move_and_resize (a_x, a_y, a_width, a_height, True)
-			if child /= Void then
-				child.set_move_and_size (box_width, box_text_height + box_width, 
-					client_width, client_height)
+				internal_set_minimum_size (child.minimum_width + 2 * box_width,
+					child.minimum_height + box_text_height + 2 * box_width)
 			end
 		end
 
 feature {NONE} -- WEL Implementation
+
+	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+			-- Make `x' and `y' the new position of the current object and
+			-- `w' and `h' the new width and height of it.
+			-- If there is any child, it also adapt them to fit to the given
+			-- value.
+		do
+			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor (a_x, a_y, a_width, a_height, repaint)
+			if child /= Void then
+				child.set_move_and_size (box_width, box_text_height + box_width, 
+					client_width, client_height)
+			end
+		end
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 		local
@@ -210,11 +209,11 @@ feature {NONE} -- WEL Implementation
 			dc.get
 			dc.select_font (a_font)
 			if child /= Void then
-				internal_set_minimum_height (box_text_height + 2 * box_width + child.minimum_height)
-				internal_set_minimum_width (dc.string_width (text) + 2 * box_width + 10 + child.minimum_width)
+				internal_set_minimum_size (dc.string_width (text) + 2 * box_width + 10 + child.minimum_width,
+						box_text_height + 2 * box_width + child.minimum_height)
 			else
-				internal_set_minimum_height (box_text_height + 2 * box_width)
-				internal_set_minimum_width (dc.string_width (text) + 2 * box_width + 10)
+				internal_set_minimum_size (dc.string_width (text) + 2 * box_width + 10,
+						box_text_height + 2 * box_width)
 			end
 			dc.release
 		end

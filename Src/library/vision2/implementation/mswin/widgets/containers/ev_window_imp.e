@@ -17,7 +17,9 @@ inherit
 		undefine
 			set_width,
 			set_height,
-			set_default_colors
+			set_default_colors,
+			show,
+			hide
 		redefine
 			destroy,
 			set_parent,
@@ -30,6 +32,7 @@ inherit
 			set_default_minimum_size,
 			compute_minimum_width,
 			compute_minimum_height,
+			compute_minimum_size,
 			internal_set_minimum_width,
 			internal_set_minimum_height
 		end
@@ -38,6 +41,7 @@ inherit
 		rename
 			parent as wel_parent,
 			set_parent as wel_set_parent,
+			shown as displayed,
 			destroy as wel_destroy
 		undefine
 			remove_command,
@@ -71,7 +75,8 @@ inherit
 			on_show,
 			on_move,
 			closeable,
-			default_process_message
+			default_process_message,
+			move_and_resize
 		end
 
 	WEL_MA_CONSTANTS
@@ -140,8 +145,8 @@ feature -- Access
 			-- iconify them together
 		do
 			check
-                not_yet_implemented: False
-	        end
+				not_yet_implemented: False
+			end
 		end 
 
 	top_level_window_imp: like Current is
@@ -169,13 +174,14 @@ feature -- Status setting
 	set_default_minimum_size is
 			-- Initialize the size of the widget.
 		do
-			internal_set_minimum_width (system_metrics.window_minimum_width)
-			internal_set_minimum_height (system_metrics.window_minimum_height)
+			internal_set_minimum_size (system_metrics.window_minimum_width, system_metrics.window_minimum_height)
+--			internal_set_minimum_width (system_metrics.window_minimum_width)
+--			internal_set_minimum_height (system_metrics.window_minimum_height)
 			set_maximum_width (system_metrics.screen_width)
 			set_maximum_height (system_metrics.screen_height)
-			if parent_imp /= Void then
-				notify_change (1 + 2)
-			end
+--			if parent_imp /= Void then
+--				notify_change (1 + 2)
+--			end
 		end
 
 --	set_horizontal_resize (flag: BOOLEAN) is
@@ -410,27 +416,27 @@ feature {NONE} -- Implementation
 			-- Update the minimum_size of the window according
 			-- to the component inside the window.
 		local
-			value: INTEGER
+			mw, mh: INTEGER
 		do
-			-- For the width first
-			value := 2 * window_frame_width
-			if child /= Void then
-				value := value + child.minimum_width
-			end
-			internal_set_minimum_width (value)
+			-- We calculate the values first
+			mw := 2 * window_frame_width
+			mh := title_bar_height + window_border_height + 2 * window_frame_height
 
-			-- For the height then
-			value := title_bar_height + window_border_height + 2 * window_frame_height
 			if child /= Void then
-				value := value + child.minimum_height
+				mw := mw + child.minimum_width
+				mh := mh + child.minimum_height
 			end
 			if has_menu then
-				value := value + menu_bar_height
+				mh := mh + menu_bar_height
 			end
 			if status_bar /= Void then
-				value := value + status_bar.height
+				mh := mh + status_bar.height
 			end
-			internal_set_minimum_height (value)
+
+			-- Finaly, we set the value
+			internal_set_minimum_size (mw, mh)
+--			internal_set_minimum_width (value)
+--			internal_set_minimum_height (value)
 		end
 
 	internal_set_minimum_width (value: INTEGER) is
@@ -455,14 +461,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	compute_minimum_width is
-			-- Recompute the minimum_width of the object.
-		do
-			update_minimum_size
-		end
-
-	compute_minimum_height is
-			-- Recompute the minimum_width of the object.
+	compute_minimum_width, compute_minimum_height, compute_minimum_size is
+			-- Recompute the minimum size of the object.
 		do
 			update_minimum_size
 		end
@@ -502,6 +502,17 @@ feature {NONE} -- Implementation
 			Result := Ws_ex_controlparent
 		end
 
+
+	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+			-- Move the window to `a_x', `a_y' position and
+			-- resize it with `a_width', `a_height'.
+		do
+			{WEL_FRAME_WINDOW} Precursor (a_x, a_y, a_width, a_height, repaint)
+			if a_width = width and a_height = height then
+				on_size (0, a_width, a_height)
+			end
+		end
+
 	default_process_message (msg, wparam, lparam: INTEGER) is
 			-- Process `msg' which has not been processed by
 			-- `process_message'.
@@ -517,11 +528,9 @@ feature {NONE} -- Implementation
 			-- And it send the message to the child because wel
 			-- don't
 		do
-			if child /= Void and (bit_set (internal_changes, 1) or bit_set (internal_changes, 2)) then
-				internal_resize (x, y, (child.minimum_width + 2*system_metrics.window_frame_width).max (minimum_width),
-						(child.minimum_height + 2 * system_metrics.window_frame_height).max (minimum_height))
-				internal_changes := set_bit (internal_changes, 1, False)
-				internal_changes := set_bit (internal_changes, 2, False)
+			if child /= Void then
+				move_and_resize (x, y, (child.minimum_width + 2*system_metrics.window_frame_width).max (minimum_width),
+						(child.minimum_height + 2 * system_metrics.window_frame_height).max (minimum_height), True)
 			else
 				move_and_resize (x, y, minimum_width, minimum_height, True)
 			end
@@ -637,6 +646,15 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- it would be implemented by an external.
 		do
 			Result := c_mouse_message_y (lparam)
+		end
+
+	show_window (hwnd: POINTER; cmd_show: INTEGER) is
+			-- Encapsulation of the cwin_show_window function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
+		do
+			cwin_show_window (hwnd, cmd_show)
 		end
 
 	get_wm_hscroll_code (wparam, lparam: INTEGER): INTEGER is

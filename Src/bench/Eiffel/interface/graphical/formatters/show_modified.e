@@ -71,12 +71,9 @@ feature {NONE} -- Attributes
 		local
 			cmd: E_SHOW_MODIFIED_CLASSES
 		do
-			!! Result.make;
-			Result.add_string ("Classes modified since last compilation:");
-			Result.add_new_line;
-			Result.add_new_line;
-			!! cmd.make (Result);
-			cmd.execute
+			!! cmd.make;
+			cmd.execute;
+			Result := cmd.structured_text
 		end;
 
 feature {NONE} -- Implementation

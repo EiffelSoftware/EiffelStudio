@@ -60,9 +60,9 @@ feature {NONE} -- Properties
 		local
 			cmd: E_SHOW_STATISTICS
 		do
-			!! Result.make;
-			!! cmd.make (Result);
-			cmd.execute
+			!! cmd.make;
+			cmd.execute;
+			Result := cmd.structured_text
 		end;
 
 feature {NONE} -- Implementation

@@ -60,9 +60,9 @@ feature {NONE} -- Properties
 		local
 			cmd: E_SHOW_SUPPLIERS;
 		do
-			!! Result.make;
-			!! cmd.make (c.e_class, Result);
+			!! cmd.make (c.e_class);
 			cmd.execute;
+			Result := cmd.structured_text
 		end;
 
 feature {NONE} -- Implementation

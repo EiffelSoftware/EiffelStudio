@@ -88,7 +88,6 @@ feature -- Resolution
 			a_name_not_void: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
 			not_a_version_is_empty: a_version /= Void implies not a_version.is_empty
-			not_a_culture_is_empty: a_culture /= Void implies not a_culture.is_empty
 		local
 			l_cursor: CURSOR
 			l_paths: like resolve_paths
@@ -138,7 +137,7 @@ feature -- Resolution
 							if Result /= Void and then a_key /= Void then
 								l_key := l_name.get_public_key_token
 								if a_key.is_empty then
-									if l_name.get_public_key_token /= Void and then l_key.length > 0 then
+									if l_key /= Void and then l_key.length > 0 then
 										Result := Void
 									end
 								else
@@ -163,7 +162,7 @@ feature -- Resolution
 feature -- Extending
 
 	add_resolve_path (a_path: STRING) is
-			-- Adds `a_path' to list `'resolve_paths'
+			-- Adds `a_path' to list `resolve_paths'
 		require
 			a_path_not_void: a_path /= Void
 			not_a_path_is_empty: not a_path.is_empty
@@ -174,10 +173,21 @@ feature -- Extending
 			a_path_added: resolve_paths.has (normalize_path (a_path))
 		end
 		
+	add_resolve_path_from_file_name (a_file_name: STRING) is
+			-- Adds `a_file_name' location to list `resolve_paths'
+		require
+			a_file_name_not_void: a_file_name /= Void
+			not_a_file_name_is_empty: not a_file_name.is_empty
+		do
+			internal_resolve_paths.extend (normalize_path (resolver_path_from_file_name (a_file_name)))
+		ensure
+			a_path_added: resolve_paths.has (normalize_path (resolver_path_from_file_name (a_file_name)))
+		end
+		
 feature -- Removal
 
 	remove_resolve_path (a_path: STRING) is
-			-- Adds `a_path' to list `'resolve_paths'
+			-- Removes `a_path' to list `'resolve_paths'
 		require
 			a_path_not_void: a_path /= Void
 			not_a_path_is_empty: not a_path.is_empty
@@ -189,6 +199,20 @@ feature -- Removal
 			end
 		ensure
 			a_path_remove: not resolve_paths.has (normalize_path (a_path))
+		end
+		
+	remove_resolve_path_from_file_name (a_file_name: STRING) is
+			-- Removes `a_file_name' location to list `'resolve_paths'
+		require
+			a_file_name_not_void: a_file_name /= Void
+			not_a_file_name_is_empty: not a_file_name.is_empty
+		do
+			internal_resolve_paths.search (normalize_path (resolver_path_from_file_name (a_file_name)))
+			if not internal_resolve_paths.after then
+				internal_resolve_paths.remove
+			end
+		ensure
+			a_path_remove: not resolve_paths.has (normalize_path (resolver_path_from_file_name (a_file_name)))
 		end
 		
 feature -- Formatting
@@ -213,6 +237,7 @@ feature -- Formatting
 			
 			if l_unc_path then
 				i := 3
+				l_res.append ("\\")
 			else
 				i := 1
 			end
@@ -241,6 +266,38 @@ feature -- Formatting
 		end
 		
 feature {NONE} -- Implementation
+
+	resolver_path_from_file_name (a_file_name: STRING): STRING is
+			-- Retrieves path where `a_file_name' resides
+		require
+			non_void_file_name: a_file_name /= Void
+			valid_file_name: not a_file_name.is_empty
+			a_file_name_has_not_forward_slash: a_file_name.occurrences ('/') = 0
+		local
+			l_location: STRING
+			l_is_network_path: BOOLEAN
+		do
+			l_location := a_file_name.twin
+			if l_location.count > 2 and then l_location.substring (1, 2).is_equal ("\\") then
+					-- `PATH' doesn't evaluate network paths correctly so leading '\\'
+					-- requires removal.
+				l_is_network_path := True
+				l_location.prune_all_leading ('\')
+			end
+			l_location := {PATH}.get_directory_name (l_location)
+			if not l_location.is_empty then
+				if l_is_network_path then
+					l_location.prepend ("\\")
+				end
+				Result := l_location
+			else
+					-- If there is no directory then file is relative to CWD.
+				Result := (create {EXECUTION_ENVIRONMENT}).current_working_directory
+			end
+		ensure
+			result_not_void: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
 
 	split_assembly_name (a_full_name: STRING): LIST [STRING] is
 			-- Splits `a_full_name' into a 4 part list
@@ -289,6 +346,9 @@ feature {NONE} -- Implementation
 						i := l_item.substring_index ("culture=", 1)
 						if i >= 1 and i <= i + 9 then
 							l_culture := l_parts.item.substring (i + 8, l_item.count)
+							if l_culture.as_lower.is_equal ("neutral") then
+								create l_culture.make_empty
+							end
 							l_set_for_it := True
 						end
 					end
@@ -296,12 +356,10 @@ feature {NONE} -- Implementation
 						i := l_item.substring_index ("publickeytoken=", 1)
 						if i >= 1 then
 							if i <= i + 15 then
-								l_key := l_parts.item.substring (i + 14, l_item.count)
+								l_key := l_parts.item.substring (i + 15, l_item.count)
 								if l_key.as_lower.is_equal ("null") then
 									create l_key.make_empty
 								end
-							else
-								create l_key.make_empty
 							end
 						end
 					end

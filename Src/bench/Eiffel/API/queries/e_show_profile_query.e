@@ -55,6 +55,11 @@ feature -- Result computation
 				expand_columnnames;
 				expand_filenames;
 				expanded_filenames.start
+debug("SHOW_PROF_QUERY")
+	io.error.putstring ("About to `execute'%Nexpanded_filenames.after: ");
+	io.error.putbool(expanded_filenames.after);
+	io.error.new_line
+end;
 			until
 				expanded_filenames.after
 			loop
@@ -96,18 +101,37 @@ feature {QUERY_EXECUTER} -- Implementation
 		do
 			if not retried then
 				current_item := expanded_filenames.item;
+debug("SHOW_PROF_QUERY")
+	io.error.putstring ("current_item: ");
+	io.error.putstring (current_item);
+	io.error.new_line
+end;
 				if not current_item.is_equal ("last_output") then
-					profile_information ?= store.retrieve_by_name (expanded_filenames.item);
+debug("SHOW_PROF_QUERY")
+	io.error.putstring ("current_item /= last_output");
+	io.error.new_line
+end;
+					!! store;
+					profile_information ?= store.retrieve_by_name (current_item);
 					if profile_information /= Void then
+debug("SHOW_PROF_QUERY")
+	io.error.putstring ("profile information not VOID");
+	io.error.new_line
+end;
 						st.add_new_line;
 						st.add_new_line;
 						st.add_string (":::::::::::::::::::::::::::::::::::");
 						st.add_new_line;
-						st.add_string (expanded_filenames.item);
+						st.add_string (current_item);
 						st.add_new_line;
 						st.add_string (":::::::::::::::::::::::::::::::::::")
 						st.add_new_line;
 						st.add_new_line;
+					else
+debug("SHOW_PROF_QUERY")
+	io.error.putstring ("profile information VOID");
+	io.error.new_line
+end;
 					end
 				else
 					st.add_new_line;
@@ -121,6 +145,10 @@ feature {QUERY_EXECUTER} -- Implementation
 					st.add_new_line;
 					profile_information := int_last_output
 				end
+			else
+				io.error.putstring ("Error during retrieval of: ");
+				io.error.putstring (current_item);
+				io.error.new_line
 			end
 		rescue
 			retried := true;
@@ -152,6 +180,14 @@ feature {QUERY_EXECUTER} -- Implementation
 		do
 			from
 				i := 1
+debug("SHOW_PROF_QUERY")
+	io.error.putstring ("Expanding filenames.%Nprof_options.filenames.count: ");
+	io.error.putint (prof_options.filenames.count);
+	io.error.new_line;
+	io.error.putstring ("index (i): ");
+	io.error.putint (i);
+	io.error.new_line;
+end;
 			until
 				i > prof_options.filenames.count
 			loop
@@ -174,8 +210,21 @@ feature {QUERY_EXECUTER} -- Implementation
 						until
 							entries.after
 						loop
+debug("SHOW_PROF_QUERY")
+	io.error.putstring ("Entry from the directory: ");
+	io.error.putstring (entries.item);
+	io.error.new_line;
+	io.error.putstring ("Wildcarded name: ");
+	io.error.putstring (wc_name);
+	io.error.new_line;
+end;
 							wildcard_matcher.set_pattern (entries.item);
 							wildcard_matcher.search_for_pattern;
+debug("SHOW_PROF_QUERY")
+	io.error.putstring ("Did it match: ");
+	io.error.putbool(wildcard_matcher.found)
+	io.error.new_line;
+end;
 							if wildcard_matcher.found then
 								expanded_filenames.extend (entries.item)
 							end;
@@ -186,8 +235,21 @@ feature {QUERY_EXECUTER} -- Implementation
 					expanded_filenames.extend (name)
 				end;
 				i := i + 1
+debug("SHOW_PROF_QUERY")
+	io.error.putstring ("prof_options.filenames.count: ");
+	io.error.putint (prof_options.filenames.count);
+	io.error.new_line;
+	io.error.putstring ("index (i): ");
+	io.error.putint (i);
+	io.error.new_line;
+end;
 			end;
 
+debug("SHOW_PROF_QUERY")
+	io.error.putstring("DONE expanding filenames%Nexpanded_filenames.count: ")
+	io.error.putint (expanded_filenames.count)
+	io.error.new_line;
+end;
 				-- Copy filenames back in the original array
 				-- to keep them for the next run as default.
 			from
@@ -200,6 +262,13 @@ feature {QUERY_EXECUTER} -- Implementation
 				prof_options.filenames.force (expanded_filenames.item, prof_options.filenames.count + 1);
 				expanded_filenames.forth
 			end
+debug("SHOW_PROF_QUERY")
+	io.error.putstring("DONE copying the names back into `prof_options.filenames'")
+	io.error.new_line;
+	io.error.putstring ("prof_options.filenames.count: ");
+	io.error.putint (prof_options.filenames.count)
+	io.error.new_line;
+end;
 		end;
 
 	has_wildcards(name: STRING): BOOLEAN is
@@ -289,6 +358,14 @@ feature {QUERY_EXECUTER} -- Implementation
 			boolean_filter: PROFILE_FILTER;
 			last_op: STRING
 		do
+debug("SHOW_PROF_QUERY")
+	io.error.putstring ("Generating filters.");
+	io.error.new_line;
+	io.error.putstring ("prof_query.subquery_operators.count: ");
+	io.error.putint (prof_query.subquery_operators.count);
+	io.error.new_line;
+end;
+
 			if prof_query.subquery_operators.count > 0 then
 				if prof_query.operator_at (1).actual_operator.is_equal ("or") then
 					!OR_FILTER! first_filter.make;

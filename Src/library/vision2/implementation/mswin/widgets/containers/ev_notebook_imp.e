@@ -353,19 +353,6 @@ feature -- Assertion features
 
 feature {NONE} -- Implementation
 
-	correct_child_sensitivity (w: EV_WIDGET_IMP) is
-			-- Update sensitivity of `w' to reflect its state as
-			-- seen from the interface.
-			-- This should be called when `w' is removed from `Current'.
-		do
-				-- If `w' is sensitive as seen from the interface and then
-				-- `w' is not currently sensitive then
-			if w.internal_non_sensitive = False and then w.is_sensitive = False then
-				w.enable_sensitive	
-			end
-		end
-		
-
 	tab_action (direction: BOOLEAN) is
 			-- Go to the next widget that takes the focus through to the tab
 			-- key. If `direction' it goes to the next widget otherwise, it
@@ -820,8 +807,7 @@ feature {NONE} -- Implementation
 			check
 				wel_win_not_void: wel_win /= Void
 			end
-			 	-- Update sensitivity of `v_imp'.
-			correct_child_sensitivity (v_imp)
+			remove_item_actions.call ([v_imp.interface])
 			ev_children.go_i_th (i)
 			ev_children.remove
 			disable_notebook_assertions
@@ -945,6 +931,11 @@ end -- EV_NOTEBOOK_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.60  2001/07/02 18:14:36  rogers
+--| Correct fix for last commit. Removed `correctr_child_sensitivity' as the
+--| `remove_item_actions' already call a feature which does this. The problem
+--| was that `remove_item_actions' was not called from `remove_i_th'.
+--|
 --| Revision 1.59  2001/07/02 17:59:06  rogers
 --| `remove_i_th' now calls `correct_child_sensitivity' which fixes the bug
 --| described below:

@@ -44,8 +44,7 @@ inherit
 			compute_minimum_width,
 			compute_minimum_height,
 			compute_minimum_size,
-			interface,
-			initialize
+			interface
 		end
 
 	EV_HASH_TABLE_ITEM_HOLDER_IMP [EV_TOOL_BAR_ITEM]
@@ -124,7 +123,6 @@ feature {NONE} -- Initialization
 		do
 			create ctrl.make (default_parent, "EV_INTERNAL_TOOL_BAR_IMP")
 			wel_make (ctrl, 0)			
-			{EV_SIZEABLE_CONTAINER_IMP} Precursor
 			{EV_PRIMITIVE_IMP} Precursor
 			create ev_children.make (2)
 			--create children.make (1)
@@ -668,6 +666,9 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/03/14 20:09:08  brendel
+--| Rearranged initialization
+--|
 --| Revision 1.28  2000/03/14 03:02:56  brendel
 --| Merged changed from WINDOWS_RESIZING_BRANCH.
 --|

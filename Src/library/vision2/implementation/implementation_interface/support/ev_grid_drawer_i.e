@@ -69,6 +69,7 @@ feature -- Basic operations
 			column_offsets: ARRAYED_LIST [INTEGER]
 			invalid_x_start, invalid_x_end: INTEGER
 			current_column_width: INTEGER
+			rectangle_width: INTEGER
 		do
 			printing_values := False
 			if printing_values then
@@ -124,6 +125,9 @@ feature -- Basic operations
 				if last_column_index = 0 then
 					last_column_index := grid.column_count
 				end
+				if first_column_index = 0 then
+					first_column_index := grid.column_count
+				end
 				if printing_values then
 					print ("Columns : " + first_column_index.out + " " + last_column_index.out + "%N")
 				end
@@ -166,11 +170,18 @@ feature -- Basic operations
 						column_counter := column_counter + 1
 						current_index_in_row := current_index_in_row + 1
 					end
-					if temp + current_column_width < grid.width then
+				
+					if temp + current_column_width < grid.width or grid.is_horizontal_scrolling_per_item then
 							-- The columns that were drawn did not span to the very edge of
 							-- the grid, so we must fill the remainder in the current grid background color.
 						grid.drawable.set_foreground_color (grid.background_color)
-						grid.drawable.fill_rectangle (temp + current_column_width, y, grid.width - temp + current_column_width, height)
+						rectangle_width := grid.viewport.width - (temp - horizontal_buffer_offset + current_column_width)
+						if printing_values then
+							print ("rectangle_width : " + rectangle_width.out + "%N")
+						end
+						if rectangle_width >= 0 then
+							grid.drawable.fill_rectangle (temp + current_column_width, y, rectangle_width, height)
+						end
 					end
 					bool := True
 					row_counter := row_counter + 1

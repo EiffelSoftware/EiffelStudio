@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 			-- Table of error messages keyed by error codes
 		once
 			create Result.make (10)
-			Result.put ("No error", No_error)
+			Result.put (Void, No_error)
 			Result.put ("Unknown error", Generic_error)
 			Result.put ("Cycle in object graph", Cycle_error)
 			Result.put ("Type not in system", Type_not_in_system_error)

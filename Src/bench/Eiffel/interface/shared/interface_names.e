@@ -112,7 +112,7 @@ feature -- Graphical degree output
 	d_Clusters_to_go: STRING is					"Clusters to go:"
 	d_Compilation_class: STRING is				"Class:"
 	d_Compilation_cluster: STRING is			"Cluster:"
-	d_Compilation_progress: STRING is			"Compilation Progress"
+	d_Compilation_progress: STRING is			"Compilation Progress for "
 	d_Degree: STRING is							"Degree:"
 	d_Documentation: STRING is					"Documentation"
 	d_Features_processed: STRING is				"Completed: "

@@ -18,6 +18,7 @@ inherit
 	SHARED_EXEC_TABLE;
 	SHARED_DECLARATIONS;
 	SHARED_TABLE;
+	SHARED_INCLUDE;
 
 creation
 
@@ -183,56 +184,6 @@ feature -- Generation
 			end;
 		end;
 
-	generate_includes (feature_t: FEATURE_TABLE; file: INDENT_FILE) is
-			-- Generation of the include files given by external declaration
-		require
-			file_is_open: file.is_open_write;
-		local
-			include_set: LINKED_SET[STRING];
-			feature_i: FEATURE_I;
-			external_i: EXTERNAL_I;
-			k: INTEGER;
-		do
-			!!include_set.make;
-			include_set.compare_objects;	-- set comparison to objects, not to references
-			-- get the include files in all features of the given feature_table
-			from
-				feature_t.start
-			until
-				feature_t.after
-			loop
-				feature_i := feature_t.item_for_iteration;
-				if feature_i.is_external then
-					external_i ?= feature_i;
-					if external_i.has_macro then
-						include_set.extend (external_i.macro_file_name);
-					end;
-					if external_i.has_include_list then
-						from
-							k := external_i.include_list.lower
-						until
-							k > external_i.include_list.upper
-						loop
-							include_set.extend (external_i.include_list.item (k));
-							k := k + 1;
-						end;
-					end;
-				end;
-				feature_t.forth;
-			end;
-			-- add the include files to the C file
-			from
-				include_set.start
-			until
-				include_set.off
-			loop
-				file.putstring ("#include ");
-				file.putstring (include_set.item);	-- such files are supposed to have "" or <>
-				file.new_line;
-				include_set.forth;
-			end;
-		end;
-
 	pass4 is
 			-- Generation of the C file
 		local
@@ -249,7 +200,6 @@ feature -- Generation
 
 			current_class := associated_class;
 			current_class_id := current_class.id;
-
 			feature_table := current_class.feature_table;
 
 			if final_mode then
@@ -296,7 +246,6 @@ feature -- Generation
 				file.putstring (".h%"%N");
 				file.new_line;
 			end;
-			generate_includes (feature_table,file);
 			file.new_line;
 
 			byte_context.set_generated_file (file);
@@ -342,6 +291,8 @@ feature -- Generation
 					-- The file hasn't been generated
 				System.makefile_generator.record_empty_class_type (id)
 			end;
+				-- clean the list of shared include files
+			shared_include_set.wipe_out;
 		end;
 
 	generate_feature (f: FEATURE_I; file: INDENT_FILE) is

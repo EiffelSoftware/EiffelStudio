@@ -9,67 +9,94 @@ inherit
 			transfer_to as procedure_transfer_to
 		redefine
 			melt, execution_unit, generate,
-			access, is_external, new_rout_unit
+			access, is_external, new_rout_unit, valid_body_id
 		end;
 
 	PROCEDURE_I
 		redefine
 			transfer_to,
 			melt, execution_unit, generate,
-			access, is_external, new_rout_unit
+			access, is_external, new_rout_unit, valid_body_id
 		select
 			transfer_to
 		end;
 	
 feature -- external characteristics
 
-	has_macro: BOOLEAN;
-		-- Does the external declaration include a macro
+	is_special: BOOLEAN is
+			-- Does the external declaration include a macro
+		do
+			Result := (special_file_name /= Void);
+		end;
 
-	has_signature: BOOLEAN;
-		-- Does the external declaration include a signature ?
+	has_signature: BOOLEAN is
+			-- Does the external declaration include a signature ?
+		do
+			Result := (has_arg_list or else has_return_type);
+		end;
 
-	has_argument_list: BOOLEAN;
-		-- Does the signature include arguments ?
+	has_arg_list: BOOLEAN is
+			-- Does the signature include arguments ?
+		do
+			Result := (arg_list /= Void) and then (arg_list.count > 0);
+		end;
 
-	has_result_type: BOOLEAN;
-		-- Does the signature include a result type ?
+	has_return_type: BOOLEAN is
+			-- Does the signature include a result type ?
+		do
+			Result := (return_type /= Void);
+		end;
 
-	has_include_list: BOOLEAN;
-		-- Does the external declaration include a list of include files ?
+	has_include_list: BOOLEAN is
+			-- Does the external declaration include a list of include files ?
+		do
+			Result := (include_list /= Void) and then (include_list.count > 0);
+		end;
 
-	macro_type: STRING;
-		-- Type of macro; the name shoud be changed into macro_type or type_name
+	special_type: STRING;
+			-- special type of external if it is
 
-	macro_file_name: STRING;
-		-- File name including the macro definition
-
+	special_file_name: STRING;
+			-- File name including the macro definition
+ 
 	arg_list: ARRAY[STRING];
-		-- List of arguments for the signature
+			-- List of arguments for the signature
 
-	result_type: STRING;
-		-- Result type of signature
+	return_type: STRING;
+			-- Result type of signature
 
 	include_list: ARRAY[STRING];
-		-- List of include files
+			-- List of include files
 
-	set_external_characteristics (source: EXTERNAL_AS) is
-		-- Set local external characteristics according to the EXTERNAL_AS ones
-		local
-			ext_lang: EXTERNAL_LANG_AS;
-		do
-			ext_lang := source.language_name
-			has_macro := ext_lang.has_macro;
-			has_signature := ext_lang.has_signature;
-			has_argument_list := ext_lang.has_argument_list;
-			has_result_type := ext_lang.has_result_type;
-			has_include_list := ext_lang.has_include_list;
-			macro_type := ext_lang.macro_type;
-			macro_file_name := ext_lang.macro_file_name;
-			arg_list := ext_lang.arg_list;
-			result_type := ext_lang.result_type;
-			include_list := ext_lang.include_list;
-		end;
+	set_special_type (s: STRING) is
+			-- Assign `s' to `special_type'
+	do
+		special_type := s;
+	end;
+
+	set_special_file_name (s: STRING) is
+			-- Assign `s' to `special_file_name'
+	do
+		special_file_name := s;
+	end;
+
+	set_arg_list (a: ARRAY[STRING]) is
+			-- Assign `a' to `arg_list'
+	do
+		arg_list := a;
+	end;
+
+	set_return_type (s: STRING) is
+			-- Assign `s' to `return_type'
+	do
+		return_type := s;
+	end;
+
+	set_include_list (a: ARRAY[STRING]) is
+			-- Assign `a' to `include_list'
+	do
+		include_list := a;
+	end;
 
 feature 
 
@@ -78,9 +105,6 @@ feature
 
 	encapsulated: BOOLEAN;
 			-- Has the feature some assertion declared ?
-
-	c_type: STRING;
-			-- C type specified for declaring the external routine
 
 	set_alias_name (s: STRING) is
 			-- Assign `s' to `alias_name'.
@@ -92,12 +116,17 @@ feature
 			-- Assign `b' to `encapsulated'.
 		do
 			encapsulated := b;
-		end;
-
-	set_c_type (s: STRING) is
-			-- Assign `s' to `c_type'.	
-		do
-			c_type := s;
+				-- for a macro or a signature in an external declaration
+				-- the external is not handled as a `standard' external
+				-- and the system does not freeze by itself. We have to
+				-- tell it. In fact, this doesn't take the incrementality 
+				-- into account: if the macro definition is removed, there is no
+				-- need to freeze the system but no way to tell the 
+				-- system unless we use the same scheme as for the `standard'
+				-- externals.
+			if b then 
+				System.set_freeze (True);
+			end;
 		end;
 
 	is_external: BOOLEAN is
@@ -126,6 +155,12 @@ feature
 			external_b.set_type (access_type);
 			external_b.set_external_name (external_name);
 			external_b.set_encapsulated (encapsulated);
+			external_b.set_special_type (special_type);
+			external_b.set_special_file_name (special_file_name);
+			external_b.set_include_list (include_list);
+			external_b.set_arg_list (arg_list);
+			external_b.set_return_type (return_type);
+			
 			Result := external_b;
 		end;
 
@@ -135,7 +170,9 @@ feature
 			procedure_transfer_to (other);
 			other.set_alias_name (alias_name);
 			other.set_encapsulated (encapsulated);
-			other.set_c_type (c_type);
+			other.set_special_type (special_type);
+			other.set_arg_list (arg_list);
+			other.set_return_type (return_type);
 		end;
 
 	new_rout_unit: EXTERNAL_UNIT is
@@ -172,15 +209,47 @@ feature
 		end;
 
 	generate (class__type: CLASS_TYPE; file: INDENT_FILE) is
-			-- Generate feature written in `class__type' in `file'.
+				-- Generate feature written in `class__type' in `file'.
+		require else
+			valid_file: file /= Void;
+			file_open_for_writing: file.is_open_write or file.is_open_append;
+			written_in_type: class__type.associated_class.id = generation_class_id;
+			not_deferred: not is_deferred;
+		local
+			byte_code: BYTE_CODE;
 		do
-			-- Do nothing
+				-- if the external declaration has a macro or a signature
+				-- then encapsulated is True; otherwise do nothing
+			if encapsulated then
+				generate_header (file);
+				byte_code := Byte_server.disk_item (body_id);
+					-- Generation of C code for an Eiffel feature written in
+					-- the associated class of the current type.
+				byte_context.set_byte_code (byte_code);
+					-- Generation of the C routine
+				byte_code.analyze;
+				byte_code.set_real_body_id (real_body_id);
+				byte_code.generate;
+				byte_context.clear_all;
+			end;
 		end;
 
-	execution_unit (cl_type: CLASS_TYPE): EXT_EXECUTION_UNIT is
+	valid_body_id: BOOLEAN is
+				-- if the external is encapsulated then an EXECUTION_UNIT
+				-- has been defined instead of an EXT_EXECUTION_UNIT
+				-- and real_body_id can be called
+		do
+			Result := encapsulated;
+		end;
+
+	execution_unit (cl_type: CLASS_TYPE): EXECUTION_UNIT is
 			-- Execution unit
 		do
-			!!Result.make (cl_type, Current);
+			if is_special or has_signature then
+				!!Result.make (cl_type, Current);
+			else
+				!EXT_EXECUTION_UNIT!Result.make (cl_type, Current);
+			end;
 		end; 
 
 	melt (dispatch: DISPATCH_UNIT; exec: EXECUTION_UNIT) is

@@ -525,7 +525,12 @@ end;
 							f.written_in = id
 						then
 							ext ?= f;
-							Externals.remove_occurence (ext.external_name);
+								-- If the external is encapsulated then it was not added to
+								-- the list of new externals in inherit_table. Same thing
+								-- if it has to be removed
+							if not ext.encapsulated then
+								Externals.remove_occurence (ext.external_name);
+							end;
 						end;
 						ftable.forth
 					end;

@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			pattern_is_new_pattern: pattern = new_pattern;
 			text_is_new_text: text = new_text
 		end;
-			
+
 feature -- Status setting
 
 	set_pattern (new_pattern: STRING) is
@@ -89,7 +89,7 @@ feature -- Status report
 
 	found_at: INTEGER;
 		-- Index in `text' where `pattern' was found.
-		
+
 	character_representation: CHARACTER;
 			-- The character that represents any single
 			-- character in `text'
@@ -122,6 +122,12 @@ feature -- Search
 				tc := text.count;
 				pc := pattern.count;
 				tcmpc := tc - pc;
+				if
+					tcmpc = -1 and then
+					pattern.item (pc) = string_representation
+				then
+					found := text.is_equal (pattern.substring (1, tc))
+				end;
 				ta := text.area
 			until
 				found or else i >= tcmpc
@@ -212,7 +218,7 @@ feature {NONE} -- Implementation
 				sl.extend (str)
 			end
 		end;
-	
+
 	check_word (t, p: SPECIAL [CHARACTER]; i, pc: INTEGER) is
 			-- Checks whether `p' with length `pc'
 			-- is in `t' starting at `i'.
@@ -248,16 +254,3 @@ invariant
 	different_character_and_string_representation: string_representation /= character_representation
 
 end -- class KMP_WILD
-
---|----------------------------------------------------------------
---| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
---|   Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---|
---| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
---| Telephone 805-685-1006
---| Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---|----------------------------------------------------------------

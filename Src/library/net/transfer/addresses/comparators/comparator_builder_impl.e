@@ -117,7 +117,7 @@ feature -- Basic operations
 				if last /= cur then
 					if last = True then
 						create_comparator 
-							(start.ascii_char, start.ascii_char + count)
+							(start.to_character, start.to_character + count)
 					end
 					start := i
 					count := 0
@@ -127,7 +127,7 @@ feature -- Basic operations
 				i := i + 1
 			end
 			if character_array @ start = True then
-				create_comparator (start.ascii_char, (255).ascii_char)
+				create_comparator (start.to_character, (255).to_character)
 			end
 		end
 
@@ -233,7 +233,7 @@ feature {NONE} -- Implementation
 					tok.remove (1)
 				end
 				if tok.is_empty and 
-					(cur = Backslash.ascii_char and not quoted) then 
+					(cur = Backslash.to_character and not quoted) then 
 					cur := '%U' 
 				end
 				if quoted then
@@ -241,7 +241,7 @@ feature {NONE} -- Implementation
 					valid := True
 				end
 				if not valid then
-					if cur = Backslash.ascii_char and not quoted then 
+					if cur = Backslash.to_character and not quoted then 
 						quoted := True
 					elseif quoted then 
 						quoted := False

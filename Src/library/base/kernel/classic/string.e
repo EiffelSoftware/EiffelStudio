@@ -1132,7 +1132,7 @@ feature -- Element change
 						l_value := -i
 							-- Special case for minimum integer value as negating it
 							-- as no effect.
-						if l_value = feature {INTEGER_REF}.Min_value then
+						if l_value = {INTEGER_REF}.Min_value then
 							append_character ((-(l_value \\ 10) + 48).to_character)
 							l_value := -(l_value // 10)
 						end

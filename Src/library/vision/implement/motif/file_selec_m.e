@@ -150,7 +150,7 @@ feature -- Status report
 		do
 			ms := dir_spec;
 			Result := dir_spec.to_eiffel_string;
-			ms.free
+			ms.destroy
 		end;
 			
 	filter: STRING is
@@ -160,7 +160,7 @@ feature -- Status report
 		do
 			ms := dir_mask;
 			Result := dir_mask.to_eiffel_string;
-			ms.free
+			ms.destroy
 		end;
 
 	directory: STRING is
@@ -171,7 +171,7 @@ feature -- Status report
 		do
 			ms := mel_directory;
 			Result := ms.to_eiffel_string;
-			ms.free
+			ms.destroy
 		end;
 
 	pattern: STRING is
@@ -182,7 +182,7 @@ feature -- Status report
 		do
 			ms := mel_pattern;
 			Result := ms.to_eiffel_string;
-			ms.free
+			ms.destroy
 		end;
 
 feature -- Status setting
@@ -195,7 +195,7 @@ feature -- Status setting
 		do
 			!! ms.make_default_l_to_r (a_label);
 			set_file_list_label_string (ms);
-			ms.free
+			ms.destroy
 		end;
 
 	set_dir_list_label (a_label: STRING) is
@@ -206,7 +206,7 @@ feature -- Status setting
 		do
 			!! ms.make_default_l_to_r (a_label);
 			set_dir_list_label_string (ms);
-			ms.free
+			ms.destroy
 		end;
 
 	set_filter (a_filter: STRING) is
@@ -216,7 +216,7 @@ feature -- Status setting
 		do
 			!! ms.make_default_l_to_r (a_filter);
 			set_dir_mask (ms);
-			ms.free
+			ms.destroy
 		end;
 
 	set_directory (a_directory_name: STRING) is
@@ -227,7 +227,7 @@ feature -- Status setting
 		do
 			!! ms.make_default_l_to_r (a_directory_name);
 			mel_set_directory (ms);
-			ms.free
+			ms.destroy
 		end;
 
 	set_pattern (a_pattern: STRING) is
@@ -237,7 +237,7 @@ feature -- Status setting
 		do
 			!! ms.make_default_l_to_r (a_pattern);
 			mel_set_pattern (ms);
-			ms.free
+			ms.destroy
 		end;
 
 	set_filter_label (a_label: STRING) is
@@ -248,7 +248,7 @@ feature -- Status setting
 		do
 			!! ms.make_default_l_to_r (a_label);
 			set_filter_label_string (ms);
-			ms.free
+			ms.destroy
 		end;
 
 	set_directory_selection is

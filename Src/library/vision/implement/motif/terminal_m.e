@@ -177,11 +177,11 @@ feature {NONE} -- Implementation
 						set_xm_font_list (list.item, resource, a_font_list);
 						list.forth
 					end
-					a_font_list.free
+					a_font_list.destroy
 				else
 					io.error.putstring ("Warning can not allocate font%N");
 				end;
-				an_entry.free
+				an_entry.destroy
 			else
 				io.error.putstring ("Warning can not allocate font%N");
 			end;
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 			-- List of C button widget
 		local
 			w: POINTER;
-			list: FIXED_LIST [POINTER]
+			list: like children
 		do
 			!! Result.make;
 			list := children;
@@ -202,7 +202,8 @@ feature {NONE} -- Implementation
 			loop
 				w := list.item;
 				if xm_is_push_button_gadget (w) or else
-					xm_is_cascade_button_gadget (w)
+					xm_is_cascade_button_gadget (w) or else
+					xm_is_toggle_button_gadget (w)
 				then	
 					Result.put_front (w)
 				end;
@@ -216,7 +217,7 @@ feature {NONE} -- Implementation
 			-- List of C text widget
 		local
 			w: POINTER;
-			list: FIXED_LIST [POINTER]
+			list: like children
 		do
 			!! Result.make;
 			list := children;
@@ -241,7 +242,7 @@ feature {NONE} -- Implementation
 			-- List of C label widget
 		local
 			w: POINTER;
-			list: FIXED_LIST [POINTER]
+			list: like children
 		do
 			!! Result.make;
 			list := children;

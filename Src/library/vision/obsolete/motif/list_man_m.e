@@ -73,7 +73,7 @@ feature -- Access
 		do
 			!! ms.make_localized (an_item);
 			Result := item_exists (ms);
-			ms.free
+			ms.destroy
 		end; 
 
 	i_th (i: INTEGER): STRING is
@@ -89,7 +89,7 @@ feature -- Access
 		do
 			!! ms.make_localized (an_item);
 			Result := mel_index_of (ms, i);
-			ms.free
+			ms.destroy
 		end;
 
 	isfirst: BOOLEAN is
@@ -234,7 +234,7 @@ feature -- Element change
 			end;
 			add_item_unselected (ms, i);
 			index := i + 1;
-			ms.free;
+			ms.destroy;
 		end; 
 
 	put_right (an_item: STRING) is
@@ -249,7 +249,7 @@ feature -- Element change
 				i := index + 1
 			end;
 			add_item_unselected (ms, i);
-			ms.free
+			ms.destroy
 		end; 
 
 	merge_left (other: LIST [STRING]) is
@@ -278,7 +278,7 @@ feature -- Element change
 					add_items (list, index);
 					index := index + other.count
 				end;
-				list.free;
+				list.destroy;
 				other.wipe_out
 			end;
 		end;
@@ -303,7 +303,7 @@ feature -- Element change
 				else
 					add_items (list, index + 1);
 				end;
-				list.free;
+				list.destroy;
 				other.wipe_out
 			end;
 		end;
@@ -315,7 +315,7 @@ feature -- Element change
 		do
 			!! ms.make_localized (an_item);
 			replace_item_pos (ms, index);
-			ms.free
+			ms.destroy
 		end;
 
 	put_i_th (an_item: STRING; i: INTEGER) is
@@ -325,7 +325,7 @@ feature -- Element change
 		do
 			!! ms.make_localized (an_item);
 			replace_item_pos (ms, i);
-			ms.free
+			ms.destroy
 		end;
 
 	swap (i: INTEGER) is
@@ -340,8 +340,8 @@ feature -- Element change
 			s := mel_table.item (i).duplicate;
 			replace_item_pos (f, i);
 			replace_item_pos (s, index);
-			f.free;
-			s.free;
+			f.destroy;
+			s.destroy;
 		end;
 
 feature -- Duplication
@@ -429,7 +429,7 @@ feature -- Cursor movement
 		do
 			!! ms.make_localized (an_item);	
 			index := item_pos_from (ms, index);
-			ms.free;
+			ms.destroy;
 			if index = 0 then
 				index := count + 1
 			end
@@ -512,7 +512,7 @@ feature -- Removal
 			loop
 				delete_item (ms)
 			end;
-			ms.free;
+			ms.destroy;
 			index := count + 1;
 		end;
 
@@ -666,8 +666,7 @@ feature {NONE} -- Implementation
 		require
 			other_exists: other /= Void
 		local
-			i: INTEGER;
-			ext_name: ANY
+			i: INTEGER
 		do
 			if not other.empty then
 				!! Result.make (other.count);

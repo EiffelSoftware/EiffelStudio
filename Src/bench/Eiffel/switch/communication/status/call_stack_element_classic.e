@@ -109,33 +109,6 @@ feature -- Properties
 			Result := private_routine
 		end
 
-	result_value: ABSTRACT_DEBUG_VALUE is
-			-- Result value of routine
-		do
-			if not initialized then
-				initialize_stack
-			end
-			Result := private_result
-		end
-
-	locals: LIST [ABSTRACT_DEBUG_VALUE] is
-			-- Value of local variables
-		do
-			if not initialized then
-				initialize_stack
-			end
-			Result := private_locals
-		end
-
-	arguments: LIST [ABSTRACT_DEBUG_VALUE] is
-			-- Value of arguments
-		do
-			if not initialized then
-				initialize_stack
-			end
-			Result := private_arguments
-		end
-
 	object_address: STRING
 			-- Hector address of associated object 
 			--| Because the debugger is already in communication with
@@ -145,130 +118,6 @@ feature -- Properties
 			--| Initialially it is the physical address but is then
 			--| protected in the `set_hector_addr_for_current_object' routine.
 
-feature -- Output
-
-	display_arguments (st: STRUCTURED_TEXT) is
-			-- Display the arguments passed to the routine
-			-- associated with Current call.
-		local
-			args_list: like arguments
-		do
-			args_list := arguments
-			if args_list /= Void then
-				from
-					args_list.start
-					st.add_new_line
-					st.add_string ("Arguments:")
-					st.add_new_line
-				until
-					args_list.after
-				loop
-					st.add_indent
-					args_list.item.append_to (st, 0)
-					args_list.forth
-				end
-			end
-		end
-
-	display_locals (st: STRUCTURED_TEXT) is
-			-- Display the local entities and result (if it exists) of 
-			-- the routine associated with Current call.
-		local
-			local_names: SORTED_TWO_WAY_LIST [ABSTRACT_DEBUG_VALUE]
-			local_decl_grps: EIFFEL_LIST [TYPE_DEC_AS]
-			locals_list: like locals
-		do
-			locals_list := locals
-
-			if locals_list /= Void or else private_result /= Void then
-				st.add_new_line
-				st.add_string ("Local entities:")
-				st.add_new_line
-			end
-			if locals_list /= Void then
-				create local_names.make
-				from
-					locals_list.start
-				until	
-					locals_list.after
-				loop
-					local_names.put_front (locals_list.item)
-					locals_list.forth
-				end
-				local_names.sort
-				local_decl_grps := routine.locals
-				if local_decl_grps /= Void then
-					from
-						local_names.start
-					until
-						local_names.after
-					loop
-						st.add_indent
-						local_names.item.append_to (st, 0)
-						local_names.forth	
-					end
-				end
-			end
-			if private_result /= Void then
-					-- Display the Result entity value.
-				st.add_indent
-				private_result.append_to (st, 0)
-			end
-		end 
-
-	display_feature (st: STRUCTURED_TEXT) is
-			-- Display information about associated routine.
-		local
-			c, oc	: CLASS_C
-			last_pos: INTEGER
-		do
-			
-			c := dynamic_class
-			oc := origin_class
-				-- Print object address (14 characters)
-			st.add_string ("[")
-			if c /= Void then
-				st.add_address (display_object_address, routine_name, c)
-				last_pos := display_object_address.count + 2
-			else
-				st.add_string ("0x0")
-				last_pos := 5
-			end
-			st.add_string ("] ")
-			st.add_column_number (14)
-				-- Print class name
-			if c /= Void then
-				c.append_name (st)
-				st.add_string (" ")
-				last_pos := c.name.count + 14
-			else
-				st.add_string ("NOT FOUND ")
-				last_pos := 9 + 14 
-			end
-			st.add_column_number (26)
-
-			if is_melted then
-				st.add_string ("*")
-			end
-			st.add_feature_name (routine_name, oc)
-			if oc /= c then
-				st.add_string (" (From ")
-				if oc /= Void then
-					oc.append_name (st)
-				else
-					st.add_string ("Void")
-				end
-				st.add_string (")")
-			end
-			
-			-- print line number
-			st.add_string(" ( @ ")
-			st.add_int(break_index)
-			st.add_string(" )")
-			
-		ensure then
-			initialized_not_changed: old initialized = initialized
-		end
 
 feature {EIFFEL_CALL_STACK} -- Implementation
 
@@ -309,8 +158,8 @@ feature {NONE} -- Implementation
 
 	retrieve_locals_and_arguments is
 		do
-				debug ("DEBUGGER_TRACE"); io.error.putstring ("CALL_STACK_ELEMENT_CLASSIC: receiving locals & arguments%N"); end
-				debug ("DEBUGGER_TRACE"); io.error.putstring ("CALL_STACK_ELEMENT_CLASSIC: sending the request%N"); end
+			debug ("DEBUGGER_TRACE"); io.error.putstring ("CALL_STACK_ELEMENT_CLASSIC: receiving locals & arguments%N"); end
+			debug ("DEBUGGER_TRACE"); io.error.putstring ("CALL_STACK_ELEMENT_CLASSIC: sending the request%N"); end
 				-- send the request
 			send_rqst_1 (Rqst_dump_variables, level_in_stack)
 
@@ -355,8 +204,6 @@ feature {NONE} -- Implementation
 		end
 
 	initialize_stack is
-		require
-			not_initialized: not initialized
 		local
 			local_decl_grps	: EIFFEL_LIST [TYPE_DEC_AS]
 			id_list			: ARRAYED_LIST [INTEGER]
@@ -465,33 +312,20 @@ feature {NONE} -- Implementation
 			unprocessed_values := Void
 			initialized := True
 				debug ("DEBUGGER_TRACE"); io.putstring ("%TFinished initializating stack: "+routine_name+"%N"); end
-		ensure
-			initialized: initialized
+		ensure then
 			void_unprocessed: unprocessed_values = Void
 		end
 
 feature {NONE} -- Implementation Properties
 
-	initialized: BOOLEAN
-			-- Is the stack initialized
-
 	private_routine: like routine
 			-- Associated routine
-
-	private_locals: ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]
-			-- Associated locals
-
-	private_arguments: FIXED_LIST [ABSTRACT_DEBUG_VALUE]
-			-- Associated arguments
 
 	retrieved_arguments_count: INTEGER
 			-- How many arguments were successfully retrieved from the run-time?
 
 	retrieved_locals_count: INTEGER
 			-- How many locals were successfully retrieved from the run-time (Result included if any)?
-
-	private_result: like result_value
-			-- Associated result
 
 	unprocessed_values: ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]
 			-- Unprocessed values (locals and args) passed

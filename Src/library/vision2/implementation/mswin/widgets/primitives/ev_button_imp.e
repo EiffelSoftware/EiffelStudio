@@ -119,10 +119,17 @@ inherit
 			default_style,
 			on_bn_clicked,
 			wel_set_text,
-			process_message
+			process_message,
+			on_erase_background
 		end
 
 	EV_BUTTON_ACTION_SEQUENCES_IMP
+	
+	WEL_CONSTANTS
+	
+	WEL_ODS_CONSTANTS
+	
+	WEL_DT_CONSTANTS
 
 creation
 	make
@@ -159,27 +166,35 @@ feature -- Status setting
 	set_default_minimum_size is
 		-- Reset `Current' to its default minimum size.
 		local
-			fw: EV_FONT_IMP
+			font_imp: EV_FONT_IMP
 			w,h: INTEGER
 		do
-			if pixmap_imp /= Void then
-				w := pixmap_imp.width + 8
-				h := pixmap_imp.height + 8
-			elseif not text.is_empty then
+			if not text.is_empty then
 				if private_font /= Void then
-					fw ?= private_font.implementation
+					font_imp ?= private_font.implementation
 					check
-						font_not_void: fw /= Void
+						font_not_void: font_imp /= Void
 					end
-					w := extra_width + fw.string_width (wel_text)
-					h := 19 * fw.height // 9
+					w := extra_width + font_imp.string_width (wel_text)
+					h := h.max (19 * font_imp.height // 9)
 				else
 					w := extra_width + private_wel_font.string_width (wel_text)
-					h := 19 * private_wel_font.height // 9
+					h := h.max (19 * private_wel_font.height // 9)
 				end
-			else
-				w := extra_width
-				h := internal_default_height
+			end
+			
+			
+			if pixmap_imp /= Void then
+				if text.is_empty then
+					w := internal_pixmap.width + pixmap_border * 2
+				else
+					w := w + internal_pixmap.width + pixmap_border
+				end
+				h := internal_pixmap.height + pixmap_border * 2
+			end
+			if text.is_empty and pixmap_imp = Void then
+				w := w + extra_width
+				h := h + internal_default_height
 			end
 
 				-- Finaly, we set the minimum values.
@@ -231,14 +246,14 @@ feature -- Status setting
 	enable_default_push_button is
 			-- Set the style "default_push_button" of `Current'.
 		do
-			put_bold_border
+		--	put_bold_border
 			is_default_push_button := True
 		end
 
 	disable_default_push_button is
 			-- Remove the style "default_push_button"  of `Current'. 
 		do
-			remove_bold_border
+		--	remove_bold_border
 			is_default_push_button := False
 		end
 
@@ -255,18 +270,40 @@ feature -- Element change
 		local
 			wel_icon: WEL_ICON
 			a_wel_bitmap: WEL_BITMAP
+			internal_pixmap_state: EV_PIXMAP_IMP_STATE
+			font_imp: EV_FONT_IMP
+			size_difference: INTEGER
 		do
 			Precursor {EV_PIXMAPABLE_IMP} (pix)
-			wel_icon := pixmap_imp.icon
+			
+			internal_pixmap := clone (pix)
+			if not text.is_empty then
+				if private_font /= Void then
+
+				font_imp ?= private_font.implementation
+					check
+						font_not_void: font_imp /= Void
+					end
+					size_difference := font_imp.string_width (wel_text)
+				else
+					size_difference := private_wel_font.string_width (wel_text)
+				end
+			end
+			
+			internal_pixmap_state ?= internal_pixmap.implementation
+			wel_icon := internal_pixmap_state.icon
 			if wel_icon /= Void then
-				set_icon (pixmap_imp.icon)
+				set_icon (internal_pixmap_state.icon)
 			else
-				a_wel_bitmap := pixmap_imp.get_bitmap
+				a_wel_bitmap := internal_pixmap_state.get_bitmap
 				set_bitmap (a_wel_bitmap)
 				a_wel_bitmap.decrement_reference
 			end
 			set_default_minimum_size
 		end
+		
+
+	internal_pixmap: EV_PIXMAP
 
 	remove_pixmap is
 			-- Remove `pixmap' from `Current'.
@@ -274,6 +311,9 @@ feature -- Element change
 			Precursor {EV_PIXMAPABLE_IMP}
 			unset_bitmap
 			set_default_minimum_size
+				-- Why was this not done before?
+			internal_pixmap := Void
+			invalidate
 		end
 
 	wel_set_text (txt: STRING) is
@@ -281,20 +321,6 @@ feature -- Element change
 		do
 			Precursor {WEL_BITMAP_BUTTON} (txt)
 			set_default_minimum_size
-		end
-
-feature {EV_ANY_I} -- Implementation
-
-	put_bold_border is
-			-- Put a bold border to the button
-		do
-			cwin_send_message (wel_item, Bm_setstyle, Bs_pushbutton | Bs_defpushbutton, 1)
-		end
-
-	remove_bold_border is
-			-- Remove the bold border to the button
-		do
-			cwin_send_message (wel_item, Bm_setstyle, Bs_pushbutton, 1)
 		end
 
 feature {NONE} -- Implementation, focus event
@@ -316,8 +342,12 @@ feature {NONE} -- Implementation, focus event
 			top_level_dialog_imp ?= application_imp.window_with_focus
 			if top_level_dialog_imp /= Void then
 				top_level_dialog_imp.set_current_push_button (interface)
+			else
+				is_default_push_button := False
 			end
 		end
+		
+feature {EV_ANY_I} -- Implementation
 
 	redraw_current_push_button (focused_button: EV_BUTTON) is
 			-- Put a bold border on the default push button
@@ -328,11 +358,13 @@ feature {NONE} -- Implementation, focus event
 					-- Current is not the `focused_button' or there
 					-- is focused button at all. In all case, we should
 					-- remove our bold border.
-				remove_bold_border
+				is_default_push_button := False
+				invalidate
 			else
 					-- Current is the `focused_button' draw the
 					-- bold border.
-				put_bold_border
+				is_default_push_button := True
+				invalidate
 			end
 		end
 
@@ -341,7 +373,7 @@ feature {NONE} -- WEL Implementation
 	default_style: INTEGER is
 			-- Default style used to create `Current'.
 		do
-			Result := ws_visible + ws_child + ws_group + ws_tabstop + Ws_clipchildren + Ws_clipsiblings
+			Result := ws_visible + ws_child + ws_group + ws_tabstop + Ws_clipchildren + Ws_clipsiblings + Bs_ownerdraw
 		end
 
 	on_bn_clicked is
@@ -381,6 +413,415 @@ feature {NONE} -- WEL Implementation
 			else
 				Result := Precursor (hwnd, msg, wparam, lparam)
 			end
+		end
+
+feature {EV_ANY_I} -- Drawing implementation
+
+	button_in: INTEGER is
+			-- `Result' is code used to determine if button is in.
+			-- Ods constants do not seem to
+			-- match up well. See MSDN DRAWITEMSTRUCT for
+			-- more information regarding the allowable states.
+		once
+			Result := Ods_selected -- 1
+		end
+		
+	button_out: INTEGER is
+			-- Result is code used to determine if button is out.
+		once
+			Result := Ods_grayed -- 2
+		end
+		
+	has_pushed_appearence (state: INTEGER): BOOLEAN is
+			-- Should `Current' have the appearence of being
+			-- pressed?
+		do
+			Result := flag_set (state, Ods_selected)			
+		end
+		
+	pixmap_border: INTEGER is 4
+		-- spacing between image and edge of `Current'.
+		
+	focus_rect_border: INTEGER is 3
+		-- Distance of focus rectangle from edge of button.
+
+	internal_background_brush: WEL_BRUSH is
+			-- `Result' is 
+		local
+			color_imp: EV_COLOR_IMP
+		do
+			color_imp ?= background_color.implementation
+			create Result.make_solid (color_imp)
+		end
+		
+	on_draw_item (draw_item: WEL_DRAW_ITEM_STRUCT) is
+			-- Wm_drawitem message received. We must now draw `Current'
+			-- ourselves with the information in `draw_item'.
+		local
+			dc: WEL_CLIENT_DC
+				-- Temporary dc for quicker access to that of `draw_item'.
+			text_rect: WEL_RECT
+				-- Rect used to draw the text of `Current'.
+			internal_pixmap_state: EV_PIXMAP_IMP_STATE
+				-- Pixmap state used to retrieve information about the pixmap of `Current', Void
+				-- if there is no pixmap.
+			wel_bitmap: WEL_BITMAP
+				-- Bitmap used to draw `internal_pixmap_state' on `Current' if it is not Void.
+			rect: WEL_RECT
+				-- Rect of `Current' retrieved from `draw_item'.
+			focus_rect: WEL_RECT
+				-- Rect used to draw focus rect. Is `rect' inflated negatively, using `focus_rect_border'.
+			state: INTEGER
+				-- State of `Current' as retrieved from `draw_item'.
+			memory_dc: WEL_MEMORY_DC
+				-- Dc used to perform all drawing on. This cuts out the flicker that would be present if
+				-- we did not buffer the drawing.
+			font_imp: EV_FONT_IMP
+				-- Temporary font implementation used when retrieving font of `Current'.
+			height_offset: INTEGER
+				-- If `internal_pixmap_state' is not Void, this is used to find the number of pixels vertically from
+				-- the top of `Current' to where the pixmap should be drawn.
+			color_imp: EV_COLOR_IMP
+				-- Temporary color implementation.
+			color_ref: WEL_COLOR_REF
+				-- Temorary color ref.
+			image_width: INTEGER
+				-- Width of current image, or 0 when `internal_pixmap_state' is Void.
+			text_width: INTEGER
+				-- Width of text on `Current', or 0 if there is no text.
+			image_pixmap_space: INTEGER
+				-- Space between image and text.
+			combined_width: INTEGER
+				-- Width of image + image_pixmap_space + text.
+			left_position: INTEGER
+				-- Horizontal position to begin drawing either the image, or text. Note that if both are set,
+				-- this will be the start of the image, as the text is always to the right.
+			right_spacing: INTEGER
+				-- spacing required on right had side of image and text.
+				-- Equal to `image_pixmap_space' when there is a text, or
+				-- `pixmap_border' // 2 when there is no text.
+			left_spacing: INTEGER
+				-- spacing required on left had side of image and text.
+				-- Equal to `image_pixmap_space' when there is a text, or
+				-- `pixmap_border' // 2 when there is no text.
+				
+			text_gap: INTEGER
+
+			l_background_brush: WEL_BRUSH
+		do
+				-- Local access to information in `draw_item'.
+			dc := draw_item.dc
+			rect := draw_item.rect_item
+			state := draw_item.item_state
+
+				-- Create `memory_dc' for double buffering, and select
+				-- a bitmap compatible with `dc' ready for drawing.
+			create memory_dc.make_by_dc (dc)
+			create wel_bitmap.make_compatible (dc, dc.width, dc.height)
+			memory_dc.select_bitmap (wel_bitmap)
+			wel_bitmap.dispose
+
+				-- Now set both the font and background colors of `memory_dc'.
+			color_imp ?= background_color.implementation
+			memory_dc.set_background_color (color_imp)
+				-- We are unable to query the font directly from `dc', so we set it ourselves.
+				if private_font /= Void then
+					font_imp ?= private_font.implementation
+					check
+						font_not_void: font_imp /= Void
+					end
+					memory_dc.select_font (font_imp.wel_font)
+				else
+					memory_dc.select_font (private_wel_font)
+				end
+
+				-- We set the text color of `memory_dc' to white, so that if we are
+				-- a toggle button, and must draw the checked background, it uses white combined with
+				-- the current background color. We then restore the original `text_color' back into `memory_dc'.
+			color_ref := memory_dc.text_color
+			memory_dc.set_text_color (white)
+			l_background_brush := internal_background_brush
+			memory_dc.fill_rect (rect, l_background_brush)
+				-- We no longer use `l_background_brush'.
+			memory_dc.set_text_color (color_ref)
+			
+			
+			create focus_rect.make (rect.left, rect.top, rect.right, rect.bottom)
+			create text_rect.make (rect.left, rect.top, rect.right, rect.bottom)
+			focus_rect.inflate (-focus_rect_border, -focus_rect_border)
+
+			
+				-- Draw frame around `Current'. We must handle the three states, of it
+				-- being in, out or bolded in response to being a default push button.
+			if has_pushed_appearence (state) then
+				draw_frame (memory_dc, text_rect, Button_in)
+			else
+				if is_default_push_button then
+					draw_frame (memory_dc, text_rect, state)
+				else
+					draw_frame (memory_dc, text_rect, button_out)
+				end
+			end
+				
+				-- If there is a pixmap on `Current', then assign its implementation to
+				--`internal_pixmap_state' and store its width in `image_width'.
+			if internal_pixmap /= Void then
+				internal_pixmap_state ?= internal_pixmap.implementation				
+					-- Compute values for re-sizing
+				image_width := internal_pixmap_state.width	
+			end
+			
+				-- Compute width required to display `text' of `Current', and
+				-- aassign it to `text_width'.
+			text_width := memory_dc.tabbed_text_size (text).width
+				
+				-- Compute number of pixels space between an image and a text. This is also
+				-- used as the extra spacing on each side of the text of `Current'.
+			image_pixmap_space := extra_width // 2
+
+				-- Calculate `combined_space', `right_space', and `left_space' for
+				-- all three cases :- text only, pixmap only or both.
+			if text.is_empty then
+				combined_width := image_width
+				right_spacing := pixmap_border
+				left_spacing := pixmap_border
+			elseif internal_pixmap = Void then
+				combined_width := text_width
+				right_spacing := image_pixmap_space
+				left_spacing := image_pixmap_space
+			else
+				right_spacing := image_pixmap_space
+				combined_width := image_width + text_width + image_pixmap_space
+				left_spacing := pixmap_border
+			end
+
+				-- Calculate `left_position' which is the offset in pixels from the left of the button
+				-- to draw the first graphical element. If a pixmap is set in `Current', then it will always be the first,
+				-- as the text is always aligned to the right of the pixmap.
+			if interface.is_left_aligned then
+				left_position := left_spacing
+			elseif interface.is_center_aligned then
+				left_position := (width - combined_width) // 2 - ((right_spacing - left_spacing) // 2)
+			elseif interface.is_right_aligned then
+				left_position := width - combined_width - right_spacing
+			end
+			
+				-- Now assign the left edge of the text rectangle.
+				-- Note that if there is no image, `image_width' is 0, and we do not
+				-- add on `image_pixmap_space'.
+			text_rect.set_left (left_position + image_width + ((internal_pixmap /= Void).to_integer * image_pixmap_space))
+		
+				-- If the `button_in' flag is set in `state', then we must move the text one pixel
+				-- to the right and one pixel down to simulate the depression.
+			if flag_set (state, button_in) then
+				text_rect.offset (1, 1)
+			end
+
+				-- Draw `text' of `Current' on `memory_dc'.
+			draw_button_text_left (memory_dc, text_rect)
+			
+				-- If we have a pixmap set on `Current', then we must draw it.
+			if internal_pixmap_state /= Void then
+					-- Compute distance from top of button to display image.
+				height_offset := (height - internal_pixmap_state.height - pixmap_border * 2) // 2
+					-- Retrieve the image of `Current'.
+				wel_bitmap := internal_pixmap_state.get_bitmap
+					-- Perform the drawing.
+				draw_bitmap_on_button (memory_dc, wel_bitmap, left_position, pixmap_border + height_offset , state)
+			end
+
+				-- If `Current' has the focus, then we must draw the focus rectangle.
+			if flag_set (state, Ods_focus) then
+				draw_focus_rect (memory_dc, focus_rect)
+			end
+
+				-- Copy the image from `memory_dc' to `dc' which is the dc originally provided
+				-- in `draw_item_state'.
+			dc.bit_blt (rect.left, rect.top, rect.width, rect.height, memory_dc, 0, 0, feature {WEL_RASTER_OPERATIONS_CONSTANTS}.Srccopy) -- copy_dc (dc, draw_item.rect_item)
+
+				-- Clean up GDI objects created.
+			memory_dc.unselect_all
+			memory_dc.delete
+			l_background_brush.delete
+		end
+		
+	text_format: INTEGER is
+			-- `Result' is formatting used for `text' when
+			-- displayed in a WEL_RECT.
+		once
+			Result := set_flag (Result, Dt_left)
+			Result := set_flag (Result, Dt_vcenter)
+			Result := set_flag (Result, Dt_singleline)
+		end
+		
+		
+	draw_button_text_left (dc: WEL_DC; r: WEL_RECT) is
+			-- Draw `text' of `Current' on `dc', in `r'.
+			-- If not `is_sensitive' then perform appropriate
+			-- higlighting on text.
+		local
+			format: INTEGER
+			old_text_color: WEL_COLOR_REF
+		do
+			old_text_color := dc.text_color
+			if not is_sensitive then
+				r.offset (1, 1)
+				dc.set_background_transparent
+				dc.set_text_color (white)
+				dc.draw_text (text, r, text_format)
+				dc.set_text_color (color_gray_text)
+				r.offset (-1, -1)
+			else	
+				dc.set_text_color (Rtext_color)
+			end
+			dc.set_background_transparent
+			dc.draw_text (text, r, text_format)
+			dc.set_text_color (old_text_color)
+		end
+		
+	draw_bitmap_on_button (dc: WEL_DC; a_bitmap: WEL_BITMAP; an_x, a_y, state: INTEGER) is
+			-- Draw `a_bitmap' on `dc' at `an_x'. `a_y'. If `button_in' is set in `state' then draw bitmap
+			-- one pixel right, and one pixel down to simulate the button being depressed.
+			-- Take `is_sensitive' into acount, and draw `a_bitmap' greyed out if not `is_sensitive'.
+		local
+			actual_x, actual_y: INTEGER
+			draw_state_flags: INTEGER
+		do
+			if flag_set (state, button_in) then
+				actual_x := an_x + 1
+				actual_y := a_y + 1
+			else
+				actual_x := an_x
+				actual_y := a_y
+			end
+			if is_sensitive then
+				draw_state_flags := Wel_drawing_constants.Dss_normal
+			else
+				draw_state_flags := Wel_drawing_constants.Dss_disabled
+			end
+			dc.draw_state_bitmap (Void, a_bitmap, actual_x, actual_y, draw_state_flags)--, a_bitmap.width, a_bitmap.height)
+		end
+		
+	draw_focus_rect (dc: WEL_DC; r: WEL_RECT) is
+			-- Draw a focus rect represented by `r' on `dc'.
+		do
+			dc.draw_focus_rect (r)
+		end
+		
+	draw_frame (dc: WEL_DC; r: WEL_RECT; state: INTEGER) is
+			-- Draw frame around `Current', using `r' which represents the size of `Current',
+			-- into `dc'. Take `state' into acount, and draw it in, out or bolded
+			-- accordingly.
+		local
+			color: WEL_COLOR_REF
+		do
+				-- If `current' is a default puch button, then it must have a bold rectangle.
+				-- default push buttons are only used in dialogs.
+			if is_default_push_button then
+				create color.make_rgb (0, 0, 0)
+				Draw_Line(dc, r.left,  r.top, r.right, r.top, color)
+				Draw_Line(dc, r.left, r.top, r.left, r.bottom, color)
+				Draw_Line(dc, r.left, r.bottom - 1, r.right, r.bottom - 1, color)
+				Draw_Line(dc, r.right - 1, r.top, r.right - 1, r.bottom, color)
+				r.inflate (-1, -1)
+			end
+				-- If the button is out then display it accordingly. The further check
+				-- is used for handling toggle buttons.
+			if flag_set (state, button_out) or not flag_set (state, button_in) then
+				color := Rhighlight
+				Draw_Line(dc, r.left, r.top, r.right, r.top, color)
+				Draw_Line(dc, r.left, r.top,r.left,  r.bottom, color)
+				color := Rdark_shadow
+				Draw_Line(dc, r.left, r.bottom - 1, r.right, r.bottom - 1, color)
+				Draw_Line(dc, r.right - 1, r.top, r.right - 1, r.bottom, color)
+				r.Inflate(-1, -1)
+				color := rlight
+				Draw_Line(dc, r.left, r.top, r.right, r.top, color)
+				Draw_Line(dc, r.left, r.top, r.left, r.bottom, color)
+				color := rshadow
+				Draw_Line(dc, r.left, r.bottom - 1, r.right, r.bottom - 1, color)
+				Draw_Line(dc, r.right - 1, r.top, r.right - 1, r.bottom, color)
+			end
+			
+				-- If the button is in, then draw the appropriate border.
+	  		if flag_set (state, button_in) then
+	  			color := rdark_shadow
+				Draw_Line(dc, r.left, r.top, r.right, r.top, color)
+				Draw_Line(dc, r.left, r.top, r.left, r.bottom, color)
+				color := Rhighlight
+				Draw_Line(dc, r.left, r.bottom - 1, r.right, r.bottom - 1, color)
+				Draw_Line(dc, r.right - 1, r.top, r.right - 1, r.bottom, color)
+				r.Inflate(-1, -1)
+				color := rshadow;
+				Draw_Line(dc, r.left,  r.top, r.right - 1, r.top, color)
+				Draw_Line(dc, r.left,  r.top, r.left,  r.bottom - 1, color)
+			end
+		end
+		
+	draw_line (dc: WEL_DC; sx, sy, ex, ey: INTEGER; color_ref: WEL_COLOR_REF) is
+			-- Draw a line on `dc' in color `color_ref', from `sx', `sy' to
+			-- `ex', `ey'.
+		local
+			pen: WEL_PEN
+			old_pen: WEL_PEN
+			col: WEL_COLOR_REF
+		do
+			create pen.make_solid (1, color_ref)
+			dc.select_pen (pen)
+			dc.line (sx, sy, ex, ey)
+			dc.unselect_pen
+			pen.dispose
+		end
+		
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+			-- Wm_erase_background message has been received by Windows.
+			-- We must override the default processing, as if we do not, then
+			-- Windows will draw the background for us, even though it is not needed.
+			-- This causes flicker.
+		do
+			disable_default_processing
+		end
+		
+	color_gray_text: WEL_COLOR_REF is
+			-- `Result' is color corresponding to Windows color - Colorgraytext.
+		once
+			create Result.make_system ((create {WEL_COLOR_CONSTANTS}).Color_graytext)
+		end
+		
+	white: WEL_COLOR_REF is
+			-- `Result' is color corresponding to white
+		once
+			Create Result.make_rgb (255, 255, 255)
+		end
+
+	rtext_color: WEL_COLOR_REF is
+			-- `Result' is color corresponding to Windows color - Colorbtntext
+		once
+			create Result.make_system ((create {WEL_COLOR_CONSTANTS}).Color_btntext)
+		end
+
+	rlight: WEL_COLOR_REF is
+			-- `Result' is color corresponding to Windows color - Color3dlight
+		once
+			create Result.make_system ((create {WEL_COLOR_CONSTANTS}).Color_3dlight)
+		end
+		
+	rhighlight: WEL_COLOR_REF is
+			-- `Result' is color corresponding to Windows color - Colorbtnhighlight
+		once
+			create Result.make_system ((create {WEL_COLOR_CONSTANTS}).Color_btnhighlight)
+		end
+		
+	rshadow: WEL_COLOR_REF is
+			-- `Result' is color corresponding to Windows color - Colorbtnshadow.
+		once
+			create Result.make_system ((create {WEL_COLOR_CONSTANTS}).Color_btnshadow)
+		end
+		
+	rdark_shadow: WEL_COLOR_REF is
+			-- `Result' is color corresponding to Windows color -Color3ddkshadow
+		once
+			create Result.make_system ((create {WEL_COLOR_CONSTANTS}).Color_3ddkshadow)
 		end
 		
 feature {NONE} -- Feature that should be directly implemented by externals

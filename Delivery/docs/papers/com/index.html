@@ -31,22 +31,51 @@
     <td>
       <h1>Table of Contents</h1>
       <ol>
-        <li><a href="com.html">What is COM?</a> (<a href="../../pdf/com/com.pdf">PDF
-          version</a>)</li>
-        <li><a href="getting_started.html">Getting started.</a> (<a href="../../pdf/com/getting_started.pdf">PDF
-          version</a>)</li>
-        <li><a href="wizard.html">The EiffelCOM Wizard</a> (<a href="../../pdf/com/wizard.pdf">PDF
-          version</a>)</li>
-        <li><a href="library.html">The EiffelCOM library</a> (<a href="../../pdf/com/library.pdf">PDF
-          version</a>)</li>
+        <li><a href="com.html">What is COM?</a> &nbsp;</li>
+        <li><a href="getting_started.html">Getting started.</a> &nbsp;</li>
+        <li><a href="wizard.html">The EiffelCOM Wizard</a> &nbsp;</li>
+        <li><a href="library.html">The EiffelCOM library</a> &nbsp;</li>
       </ol>
-<p>
-<a href="../../pdf/com/eiffelcom.pdf">Full PDF version of manual</a>
       <p>&nbsp;</p>
-      <h1>Release Notes</h1>
+      <h1>Release Notes, Build 4</h1>
     </td>
   </tr>
 </table>
+<ol>
+  <li>Bug fixes:
+    <ul>
+      <li>Various compilation problems of the generated code are corrected.</li>
+      <li>Some restrictive preconditions are removed.</li>
+      <li>Multiple conversion function problems are corrected.</li>
+      <li>The wizard correctly recognizes [source] interfaces.</li>
+    </ul>
+  </li>
+  <li>New features:
+    <ul>
+      <li>Enhanced comment generation: the wizard generates link to a help file
+        if known; for each function argument the comments specify whether it is
+        [in] or [out]; for each optional argument the comments specify the
+        default value.</li>
+      <li>For each interface two implementations are always generated: client
+        implementation (simple wrapping) and server implementation, which
+        requires user completion.</li>
+      <li>Call backs are supported: Simple call back (passing interface pointer)
+        and connection points (supported only for clients (sinks)).</li>
+    </ul>
+  </li>
+  <li>Improvements: 
+    <ul>
+      <li>Increased speed of code generation.</li>
+    </ul>
+  </li>
+  <li>Known limitations:
+    <ul>
+      <li>Control containers are not implemented. </li>
+      <li>Connection points are not supported on the server side.</li>
+    </ul>
+    <p>&nbsp;</p>
+  </li>
+</ol>
 &nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>
 
 </html>

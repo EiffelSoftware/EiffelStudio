@@ -93,10 +93,6 @@ feature {NONE} -- Implementation
 			create inherit_clause.make
 			inherit_clause.set_name ("ECOM_STUB")
 			an_eiffel_writer.add_inherit_clause (inherit_clause)
-
-			create inherit_clause.make
-			inherit_clause.set_name ("ECOM_EXCEPTION")
-			an_eiffel_writer.add_inherit_clause (inherit_clause)
 		end
 
 	ccom_create_item_feature (an_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR): WIZARD_WRITER_FEATURE is

@@ -178,7 +178,8 @@ EIF_POINTER p;
 	for (s = p; *s; s++)
 		if ((*s == '\\') ||
 			(*s == '*') ||
-			(*s == '?'))
+			(*s == '?') ||
+			(*s == ':')) 
 				return EIF_FALSE;
 #endif
 				

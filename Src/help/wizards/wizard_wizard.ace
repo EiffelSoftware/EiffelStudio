@@ -2,59 +2,75 @@ system
 	wizard
 
 root
-	WIZARD_MANAGER (wizard_wizard): "make_and_launch"
+	WIZARD_MANAGER: make_and_launch
 
 default
-	assertion (require)
-	assertion (ensure)
-	assertion (check)
-	multithreaded (no)
-	console_application (no)
-	dynamic_runtime (no)
-	dead_code_removal (yes)
-	profile (no)
-	line_generation (no)
-	debug  (no)
-	array_optimization (no)
-	inlining (no)
-	inlining_size ("4")
-	arguments ("e:\eiffel50\bench\wizards\new_projects\wizard -callback c:\test.txt")
+	assertion(require)
+	assertion(ensure)
+	assertion(check)
+	address_expression(no)
+	array_optimization(no)
+	console_application(no)
+	dead_code_removal(yes)
+	dynamic_runtime(no)
+	exception_trace(no)
+	inlining(no)
+	multithreaded(no)
+	check_vape(yes)
+	arguments("d:\eiffel50\bench\wizards\new_projects\wizard")
+	arguments("e:\eiffel50\bench\wizards\new_projects\wizard -callback c:\test.txt")
+	arguments(" ")
+	disabled_debug(yes)
+	disabled_debug("win_dispatcher")
+	disabled_debug("wel")
+	disabled_debug("vision2_windows_gdi")
+	disabled_debug("vision2_windows")
+	disabled_debug("wel_gdi_count")
+	disabled_debug("gdi_count")
+	disabled_debug("wel_gdi_references")
+	disabled_debug("dlg_dispatcher")
+	debug(no)
+	line_generation(no)
+	profile(no)
+	trace(no)
+
+
+-- Root cluster
+-- Wel Wizard
+-- Bench Common
+-- EiffelBase
 
 cluster
-		-- Root cluster
-	root_cluster: "$EIFFEL_SRC\help\wizards"
-	
-		-- Wel Wizard
-	wizard_wizard (root_cluster): "$\ewizard\src"
-	
-		-- Bench Common
-	bench_common (root_cluster): "$\bench_common"
-	
-		-- EiffelBase
-	all base:				"$EIFFEL_SRC\library\base"
+	root_cluster:		"$EIFFEL_SRC\help\wizards"
+
+	wizard_wizard (root_cluster):		"$\ewizard\src"
+
+	bench_common (root_cluster):		"$\bench_common"
+
+	all base:		"$EIFFEL_SRC\library\base"
 		exclude
-			"desc";"table_eiffel3"
+			"desc"; "table_eiffel3"; 
 		end
 
-	all vision2: 			"$EIFFEL_SRC\library\vision2"
+	all vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
-			"gtk"
-			"test"
+			"gtk"; "test"; 
 		end
 
-	all wel: 				"$EIFFEL_SRC\library\wel"
+	all wel:		"$EIFFEL_SRC\library\wel"
 
 	all wizard_library:		"$EIFFEL_SRC\library\wizard"
 
-
 external
-	include_path:	
-			"$EIFFEL_SRC\library\wel\spec\windows\include",
-			"$EIFFEL_SRC\library\vision2\spec\include"
+
+	include_path:
+		"$EIFFEL_SRC\library\wel\spec\windows\include",
+		"$EIFFEL_SRC\library\vision2\spec\include"
 
 	object:
-			"$EIFFEL_SRC\library\wel\spec\msc\lib\wel.lib",
-			"$EIFFEL_SRC\library\vision2\spec\$(COMPILER)\lib\vision2.lib",
-			"$EIFFEL_SRC\library\vision2\spec\$(COMPILER)\lib\libpng.lib",
-			"$EIFFEL_SRC\library\vision2\spec\$(COMPILER)\lib\zlib.lib"
+		"$EIFFEL_SRC\library\wel\spec\msc\lib\wel.lib",
+		"$EIFFEL_SRC\library\vision2\spec\$(COMPILER)\lib\vision2.lib",
+		"$EIFFEL_SRC\C_library\libpng\libpng.lib",
+		"$EIFFEL_SRC\C_library\zlib\zlib.lib"
+
 end

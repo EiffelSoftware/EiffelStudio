@@ -86,8 +86,8 @@ void c_ev_any_imp_set_gtk_controls_object_life (GtkWidget* c_object)
     
             if (c_ev_any_imp_eif_object_references_c_object (c_object)) {
 //                g_object_unref (G_OBJECT (c_object));
-                g_object_remove_data (
-                    G_OBJECT (c_object),
+                gtk_object_remove_data (
+                    GTK_OBJECT (c_object),
                     "ref_from_eif"
                 );
             }
@@ -99,7 +99,7 @@ void c_ev_any_imp_set_eiffel_controls_object_life (GtkWidget* c_object)
         // Remove Eiffel reference from `c_object'.
         // Add GTK reference to `c_object'.
 {
-            g_object_remove_data (G_OBJECT (c_object), "eif_object");
+            gtk_object_remove_data (GTK_OBJECT (c_object), "eif_object");
  //           g_object_ref (G_OBJECT (c_object));
             g_object_set_data (
                 G_OBJECT (c_object),

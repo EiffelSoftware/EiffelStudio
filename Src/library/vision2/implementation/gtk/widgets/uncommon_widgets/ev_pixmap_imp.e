@@ -37,7 +37,8 @@ inherit
 			interface,
 			width,
 			height,
-			destroy
+			destroy,
+			dispose
 		end
 
 	EV_PIXMAP_ACTION_SEQUENCES_IMP
@@ -60,10 +61,12 @@ feature {NONE} -- Initialization
 			
 				-- Create a new pixmap
 			gdkpix := C.gdk_pixmap_new (default_gdk_window, 1, 1, Default_color_depth)
-			
 				-- Box the pixmap into a container to receive events
 			set_c_object (C.gtk_event_box_new)
 			gtk_pixmap := C.gtk_pixmap_new (gdkpix, gdkmask)
+			C.gdk_pixmap_unref (gdkpix)
+
+			
 			C.gtk_container_add (c_object, gtk_pixmap)
 			C.gtk_widget_show (gtk_pixmap)
 
@@ -86,7 +89,6 @@ feature {NONE} -- Initialization
 			if mask /= loc_default_pointer then
 				gdkmask := C.gdk_pixmap_new (NULL, a_x, a_y, Monochrome_color_depth)
 			end
-			
 			set_pixmap (gdkpix, gdkmask)
 		end
 
@@ -158,15 +160,14 @@ feature -- Element change
 			gdkpix := C.gdk_pixmap_new (default_gdk_window, a_x, a_y, Default_color_depth)
 			pixgc := C.gdk_gc_new (gdkpix)
 			C.gdk_draw_pixmap (gdkpix, pixgc, drawable, 0, 0, 0, 0, width, height)
-			C.gdk_gc_destroy (pixgc)
+			C.gdk_gc_unref (pixgc)
 
 			if mask /= loc_default_pointer then
 				gdkmask := C.gdk_pixmap_new (NULL, a_x, a_y, Monochrome_color_depth)
 				maskgc := C.gdk_gc_new (gdkmask)
 				C.gdk_draw_pixmap (gdkmask, maskgc, mask, 0, 0, 0, 0, width, height)
-				C.gdk_gc_destroy (maskgc)
+				C.gdk_gc_unref (maskgc)
 			end
-			
 			set_pixmap (gdkpix, gdkmask)
 		end
 
@@ -174,6 +175,12 @@ feature -- Element change
 		do
 			Precursor
 			C.gdk_gc_unref (gc)
+		end
+		
+	dispose is
+			-- 
+		do
+			Precursor
 		end
 
 feature -- Access
@@ -239,19 +246,17 @@ feature -- Duplication
 			other_imp ?= other.implementation
 			other_width := other.width
 			other_height := other.height
-
+			
  			gdkpix := C.gdk_pixmap_new (default_gdk_window, other_width, other_height, Default_color_depth)
 			pixgc := C.gdk_gc_new (gdkpix)
 			C.gdk_draw_pixmap (gdkpix, pixgc, other_imp.drawable, 0, 0, 0, 0, other_width, other_height)
-			C.gdk_gc_destroy (pixgc)
-			
+			C.gdk_gc_unref (pixgc)
 			if other_imp.mask /= loc_default_pointer then
 				gdkmask := C.gdk_pixmap_new (NULL, other_width, other_height, Monochrome_color_depth)
 				maskgc := C.gdk_gc_new (gdkmask)
 				C.gdk_draw_pixmap (gdkmask, maskgc, other_imp.mask, 0, 0, 0, 0, other_width, other_height)
-				C.gdk_gc_destroy (maskgc)
+				C.gdk_gc_unref (maskgc)
 			end
-			
 			set_pixmap (gdkpix, gdkmask)
 		end
 
@@ -277,9 +282,14 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 
 	set_pixmap (gdkpix, gdkmask: POINTER) is
 			-- Set the GtkPixmap using Gdk pixmap data and mask.
+		local
+			old_drawable, old_mask: POINTER
 		do
-			unref_data
 			C.gtk_pixmap_set (gtk_pixmap, gdkpix, gdkmask)
+			C.gdk_pixmap_unref (gdkpix)
+			if gdkmask /= NULL then
+				C.gdk_pixmap_unref (gdkmask)
+			end
 		end	
 
 	set_from_xpm_data (a_xpm_data: POINTER) is
@@ -296,6 +306,12 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
+	gdk_pixmap_unref (a_pixmap: POINTER) is 
+			-- void	   gdk_pixmap_unref		(GdkPixmap  *pixmap);
+		external
+			"C (GdkPixmap*) | <gtk/gtk.h>"
+		end
 
 	parent_widget: POINTER
 			-- Parent widget for Current.
@@ -315,21 +331,6 @@ feature {NONE} -- Implementation
 			end
 			C.gdk_gc_set_foreground (gc, fg)
 			C.c_gdk_color_struct_free (fg)
-		end
-	
-	create_mask (a_width, a_height: INTEGER): POINTER is
-		local
-			fg: POINTER
-			maskgc: POINTER
-		do
-			Result := C.gdk_pixmap_new (NULL, a_width, a_height, 1)
-			maskgc := C.gdk_gc_new (Result)
-			fg := C.c_gdk_color_struct_allocate
-			C.gdk_gc_set_foreground (maskgc, $fg)
-			C.gdk_draw_rectangle (Result, maskgc, 1, 10, 10, a_width, a_height)
-			
-			C.c_gdk_color_struct_free (fg)
-			C.gdk_gc_destroy (maskgc)
 		end
 
 	update_fields (
@@ -354,23 +355,12 @@ feature {NONE} -- Implementation
 			if error_code /= Loadpixmap_error_noerror then
 				(create {EXCEPTIONS}).raise ("Could not load image file.")
 			end
-
 			gdkpix := C.gdk_pixmap_new (default_gdk_window, pixmap_width, pixmap_height, Default_color_depth)
 			C.gdk_draw_rgb_image (gdkpix, gc, 0, 0, pixmap_width, pixmap_height, C.Gdk_rgb_dither_normal_enum, rgb_data, pixmap_width * 3)
 			if alpha_data /= Default_pointer then
 				gdkmask := C.gdk_bitmap_create_from_data (default_gdk_window, alpha_data, pixmap_width, pixmap_height)
 			end
-
 			set_pixmap (gdkpix, gdkmask)
-		end
-
-	unref_data is
-			-- Remove references to redundant image data.
-		do
-			C.gdk_pixmap_unref (drawable)
-			if mask /= NULL then
-				C.gdk_pixmap_unref (mask)
-			end
 		end
 
 feature {NONE} -- Constants

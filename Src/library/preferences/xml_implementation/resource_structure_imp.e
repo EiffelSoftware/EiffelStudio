@@ -96,7 +96,7 @@ feature {PREFERENCE_STRUCTURE} -- Resource Management
 					l_resource := resources.item
 					if not l_resource.is_default_value then
 						l_file.put_string ("%N%T<PREFERENCE ")
-						l_file.put_string ("NAME=%"" + l_resource.full_name + "%" ")
+						l_file.put_string ("NAME=%"" + l_resource.name + "%" ")
 						l_file.put_string ("VALUE=%"" + l_resource.string_value + "%" ")
 						l_file.put_string ("/>")
 					end

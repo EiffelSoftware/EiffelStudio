@@ -105,7 +105,7 @@ feature -- Contract support
 	item_width: INTEGER is
 			-- Width of `item'. Zero if `item' `Void'.
 		do
-			if item /= Void then
+			if readable then
 				Result := item.width
 			end
 		end
@@ -113,7 +113,7 @@ feature -- Contract support
 	item_height: INTEGER is
 			-- Height of `item'. Zero if `item' `Void'.
 		do
-			if item /= Void then
+			if readable then
 				Result := item.height
 			end
 		end
@@ -158,6 +158,9 @@ end -- class EV_VIEWPORT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/04/22 00:05:22  brendel
+--| Fixed contract suppport features.
+--|
 --| Revision 1.10  2000/04/21 22:37:20  brendel
 --| Corrected imp of y_offset.
 --|

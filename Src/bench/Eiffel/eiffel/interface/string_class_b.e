@@ -22,6 +22,7 @@ feature
 			-- Check validity of class STRING
 		local
 			set_count_feat: FEATURE_I;
+			internal_hash_code_feat: ATTRIBUTE_I
 			stop, error, done: BOOLEAN;
 			special_error: SPECIAL_ERROR;
 			creat_feat: FEATURE_I;
@@ -91,6 +92,16 @@ feature
 				create special_error.make (Case_17, Current);
 				Error_handler.insert_error (special_error);
 			end;
+
+				-- Presence of attribute `internal_hash_code'.
+			internal_hash_code_feat ?= feature_table.item_id (Names_heap.internal_hash_code_name_id)
+			if
+				internal_hash_code_feat = Void or else
+				not internal_hash_code_feat.type.same_as (Integer_type)
+			then
+				create special_error.make (Case_17_bis, Current)
+				Error_handler.insert_error (special_error)
+			end
 		end
 
 	To_special_parent: GEN_TYPE_A is

@@ -1,7 +1,5 @@
 indexing
-
-	description:	
-		"Class text field in routine tool."
+	description: "Class text field in routine tool."
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -33,7 +31,26 @@ feature -- Initialization
 			tool := a_tool
 		end;
 
+feature -- Properties
+
+	tool: ROUTINE_W;
+			-- Tool of the routine.
+
 feature -- Updating
+
+	update_choice_position is
+			-- Update the position of the choice window.
+		do
+			if choice /= Void then
+				choice.update_position
+			end
+		end;
+
+	update_text is
+			-- Update the text area after a resize
+		do
+			set_text (text)
+		end;
 
 	update_class_name (n: STRING) is
 			-- Redisplay the class name.
@@ -47,25 +64,6 @@ feature -- Updating
 			set_text (temp);
 		end
 
-	update_text is
-			-- Update the text area after a resize
-		do
-			set_text (text)
-		end;
-
-	update_choice_position is
-			-- Update the position of the choice window.
-		do
-			if choice /= Void then
-				choice.update_position
-			end
-		end;
-
-feature -- Properties
-
-	tool: ROUTINE_W;
-			-- Tool of the routine.
-
 feature -- Closure
 
 	close_choice_window is
@@ -75,11 +73,14 @@ feature -- Closure
 			end
 		end
 
-	popup_choice_window is
-			-- Popup the choice window for text field.
-		do
-			execute (Void)
-		end
+feature {NONE} -- Implementation
+
+	choice: CHOICE_W;
+			-- Window where the user can make his/her choices.
+
+	class_list: LINKED_LIST [CLASS_I];
+			-- List of compiled classes displayed in `choice'
+
 
 feature {ROUTINE_TEXT_FIELD} -- Implementation
 
@@ -89,7 +90,6 @@ feature {ROUTINE_TEXT_FIELD} -- Implementation
 			stone: CLASSC_STONE;
 			cname, class_name: STRING;
 			clusters: LINKED_LIST [CLUSTER_I];
-			classes: EXTEND_TABLE [CLASS_I, STRING];
 			sorted_classes: SORTED_TWO_WAY_LIST [CLASS_I];
 			mp: MOUSE_PTR;
 			choice_position: INTEGER;
@@ -98,6 +98,11 @@ feature {ROUTINE_TEXT_FIELD} -- Implementation
 			cluster_name: STRING;
 			cluster: CLUSTER_I;
 			pattern: STRING_PATTERN
+--			matcher: KMP_WILD
+			classes_c: CLASS_C_SERVER
+			classes: ARRAY [CLASS_C]
+			class_c: CLASS_C
+			i, nb: INTEGER
 		do
 			if (choice /= Void) and then arg = choice then
 				check
@@ -166,29 +171,35 @@ feature {ROUTINE_TEXT_FIELD} -- Implementation
 								end
 							end
 						else
-							!! mp.set_watch_cursor;
-							!! sorted_classes.make;
-							cname.head (cname.count - 1);
-							clusters := Eiffel_universe.clusters;
-							from clusters.start until clusters.after loop
-								classes := clusters.item.classes;
+							from
+								!! mp.set_watch_cursor;
+								!! sorted_classes.make;
+--								!! matcher.make (cname, "")
+								classes_c := Eiffel_system.system.classes;
+								classes_c.start
+							until
+								classes_c.after
+							loop
 								from
-									classes.start
+									classes := classes_c.item_for_iteration
+									i := classes.lower
+									nb := classes.upper
 								until
-									classes.after
+									i > nb
 								loop
-									class_name := classes.key_for_iteration;
-									class_i := classes.item_for_iteration
-									if
-										class_i.compiled and
-										pattern.matches (class_name)
-									then
-										sorted_classes.put_front (class_i)
-									end;
-									classes.forth
-								end;
-								clusters.forth
-							end;
+									class_c := classes.item (i)
+									if class_c /= Void then
+--										matcher.set_text (class_c.lace_class.name)
+--										if matcher.search_for_pattern then
+										if pattern.matches (class_c.lace_class.name) then
+											sorted_classes.put_front (class_c.lace_class)
+										end
+									end
+									i := i + 1
+								end
+								classes_c.forth
+							end
+
 							class_i := Void;
 							sorted_classes.sort;
 							class_list := sorted_classes;
@@ -249,11 +260,5 @@ feature {NONE} -- Implementation
 			end;
 			choice.popup (Current, class_names, Interface_names.t_Select_class)
 		end
-
-	choice: CHOICE_W;
-			-- Window where the user can make his/her choices.
-
-	class_list: LINKED_LIST [CLASS_I];
-			-- List of compiled classes displayed in `choice'
 
 end -- class ROUTINE_CLASS_TEXT_FIELD

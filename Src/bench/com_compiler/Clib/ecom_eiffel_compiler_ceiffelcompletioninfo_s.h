@@ -70,6 +70,18 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Flush temporary completion features for a specifi file
+	-----------------------------------------------------------*/
+	STDMETHODIMP flush_completion_features(  /* [in] */ BSTR a_file_name );
+
+
+	/*-----------------------------------------------------------
+	Initialize a feature for completion without compiltation
+	-----------------------------------------------------------*/
+	STDMETHODIMP initialize_feature(  /* [in] */ BSTR a_name, /* [in] */ VARIANT a_arguments, /* [in] */ VARIANT a_argument_types, /* [in] */ BSTR a_return_type, /* [in] */ ULONG a_feature_type, /* [in] */ BSTR a_file_name );
+
+
+	/*-----------------------------------------------------------
 	Decrement reference count
 	-----------------------------------------------------------*/
 	STDMETHODIMP_(ULONG) Release();

@@ -65,6 +65,18 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Flush temporary completion features for a specifi file
+	-----------------------------------------------------------*/
+	void ccom_flush_completion_features(  /* [in] */ EIF_OBJECT a_file_name );
+
+
+	/*-----------------------------------------------------------
+	Initialize a feature for completion without compiltation
+	-----------------------------------------------------------*/
+	void ccom_initialize_feature(  /* [in] */ EIF_OBJECT a_name,  /* [in] */ VARIANT * a_arguments,  /* [in] */ VARIANT * a_argument_types,  /* [in] */ EIF_OBJECT a_return_type,  /* [in] */ EIF_INTEGER a_feature_type,  /* [in] */ EIF_OBJECT a_file_name );
+
+
+	/*-----------------------------------------------------------
 	IUnknown interface
 	-----------------------------------------------------------*/
 	EIF_POINTER ccom_item();

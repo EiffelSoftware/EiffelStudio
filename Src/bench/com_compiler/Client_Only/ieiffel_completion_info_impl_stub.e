@@ -49,6 +49,25 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
+	flush_completion_features (a_file_name: STRING) is
+			-- Flush temporary completion features for a specifi file
+			-- `a_file_name' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	initialize_feature (a_name: STRING; a_arguments: ECOM_VARIANT; a_argument_types: ECOM_VARIANT; a_return_type: STRING; a_feature_type: INTEGER; a_file_name: STRING) is
+			-- Initialize a feature for completion without compiltation
+			-- `a_name' [in].  
+			-- `a_arguments' [in].  
+			-- `a_argument_types' [in].  
+			-- `a_return_type' [in].  
+			-- `a_feature_type' [in].  
+			-- `a_file_name' [in].  
+		do
+			-- Put Implementation here.
+		end
+
 	create_item is
 			-- Initialize `item'
 		do

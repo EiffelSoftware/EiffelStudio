@@ -70,7 +70,7 @@ feature -- Access
 
 feature -- Basic Operations
 		
-	find (target: STRING; use_overloading: BOOLEAN) is
+	find (target: STRING; use_overloading: BOOLEAN; a_ignore_call_type: BOOLEAN) is
 			-- Lookup `target' and set `found_item' according to `use_overloading'.
 		require
 			non_void_target: target /= Void
@@ -142,7 +142,7 @@ feature -- Element settings
 		ensure
 			arguments_set: arguments = a_arguments
 		end
-	
+		
 feature {NONE} -- Implementation
 
 	class_i: CLASS_I

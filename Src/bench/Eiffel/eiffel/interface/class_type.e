@@ -407,6 +407,7 @@ feature -- Generation
 						current_class.assertion_level.check_invariant)
 					then
 						inv_byte_code := Inv_byte_server.disk_item (current_class.class_id)
+						byte_context.set_byte_code (create {STD_BYTE_CODE})
 						inv_byte_code.generate_invariant_routine
 						byte_context.clear_all
 					end

@@ -384,7 +384,12 @@ feature {NONE} -- Implementation
 						-- No need to do anything special in case of a call to
 						-- a constructor. The generation of `target' of current call already
 						-- did any special transformation to perfom call.
-					if il_ext.type /= creator_type then
+						-- Same goes with `operators' as the result of the previous
+						-- call will be used as target of the current one.
+					if
+						il_ext.type /= creator_type and
+						il_ext.type /= operator_type
+					then
 						if is_message then
 							real_target := parent.target
 						else

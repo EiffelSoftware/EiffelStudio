@@ -1,8 +1,7 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
-		"Eiffel Vision option button. is a button that%
-		% displays a popup_menu when we click on it."
+		"Button that displays a `menu' when pressed.%N%
+		%The most recently `selected_item' is displayed on the button."
 	keywords: "button, menu, option, drop down, popup"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,24 +11,9 @@ class
 
 inherit
 	EV_BUTTON
-		rename
---			add_click_command as add_popup_command
-		export {NONE}
-			align_text_center,
-			align_text_left,
-			align_text_right,
+		redefine
+			initialiaze,
 			set_text
-		redefine
-			implementation,
-			create_implementation
---			make
-		end
-
-	EV_MENU_ITEM_LIST
-		undefine
-			create_action_sequences
-		redefine
-			implementation
 		end
 
 create
@@ -37,46 +21,83 @@ create
 	make_with_text,
 	make_for_test
 
+feature {EV_ANY} -- Initialization
+
+	initialize is
+			-- Create `menu' and connect event handlers.
+		do
+			{EV_BUTTON} Precursor
+			create menu
+			press_actions.extend (menu~show)
+--|FIXME add item_select_actions to EV_MENU
+--|			menu.item_select_actions.extend (~on_item_select)
+		end
+
 feature -- Access
 
-	menu: EV_MENU is
-			-- Displayed when clicked.
-		do
-			Result := implementation.menu
-		ensure
-			bridge_ok: Result = implementation.menu
-		end
+	menu: EV_MENU
+			-- Displayed when pressed.
 
 feature -- Status setting 
 
 	clear_selection is
-			-- Clear the selection by putting the `text'
-			-- of the menu on the option button if there is one,
-			-- otherwise the first menu item.
+			-- Make `selected_item' `Void'.
+			-- Assign `menu'.text to `text' if avalible,
+			-- otherwise assign `menu'.first.text to `text'.
 		do
-			implementation.clear_selection
+			if menu.text /= Void then
+				implementation.set_text (menu.text)
+			elseif menu.first /= Void and then menu.first.text /= Void then
+				implementation.set_text (menu.first.text)
+			else
+				remove_text
+			end
+			selected_item := Void
+		ensure
+			selected_item_void: selected_item = Void
+			menu_text_used_first:
+				menu.text /= Void implies text.is_equal (menu.text)
+			menu_first_text_used_otherwise:
+				menu.first /= Void and menu.first.text /= Void
+				implies text.is_equal (menu.first.text)
 		end
 
 feature -- Status report
 
-	selected_item: EV_MENU_ITEM is
-			-- which menu item is selected.
-			-- Void if the selection is the 'text' of the menu.
+	selected_item: EV_MENU_ITEM
+			-- Most recently selected `menu' item.
+
+feature -- Element change
+
+	set_text (a_text: STRING) is
+			-- Assign `a_text' to `text' and to `menu'.text.
 		do
-			Result := implementation.selected_item
+			implementation.set_text (a_text)
+			menu.set_text (a_text)
+		end
+  
+feature {NONE} -- Implmentation
+
+	on_item_select (an_item: EV_MENU_ITEM) is
+			-- Update `selected_item'
+			-- Update `text'
+		require
+			an_item_not_viod: an_item /= Void
+		do
+			selected_item := an_item
+			if an_item.text = Void then
+				remove_text
+			else
+				implementation.set_text (an_item.text)
+			end
+		ensure	
+			selected_item_assigned: selected_item = an_item
+			text_assigned: an_item.text = Void and text = Void
+				or text.is_equal (an_item.text)
 		end
 
-feature {NONE} -- Implementation
-
-	implementation: EV_OPTION_BUTTON_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
-
-	create_implementation is
-			-- Create implementation of option button.
-		do
-			create {EV_OPTION_BUTTON_IMP} implementation.make (Current)
-		end
+invariant
+	menu_not_void: is_useable implies menu /= Void
 
 end -- class EV_OPTION_BUTTON
 
@@ -101,6 +122,9 @@ end -- class EV_OPTION_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/03/20 20:05:22  oconnor
+--| proposed new platform independant implementation.
+--|
 --| Revision 1.16  2000/03/01 03:28:43  oconnor
 --| added make_for_test
 --|

@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			-- Create `Current' and initialize to default values.
 		do
 			main_window_class_name := "MAIN_WINDOW"
-			main_window_file_name := "main_window.e"
+			application_class_name := "VISION2_APPLICATION"
 			enable_complete_project
 			enable_grouped_locals
 		end
@@ -38,8 +38,8 @@ feature -- Access
 	main_window_class_name: STRING
 		-- Class name to be given to the main window in the generated code.
 		
-	main_window_file_name: STRING
-		-- File name to generate the main window class text into.
+	application_class_name: STRING
+		-- Class name to be given to the application in the generated code.
 		
 	complete_project: BOOLEAN
 		-- Should we generate an ace file and an application class to
@@ -68,7 +68,7 @@ feature -- Basic operation
 			create data.make (0)
 			data.extend ([project_location_string, project_location])
 			data.extend ([main_window_class_name_string, main_window_class_name])
-			data.extend ([main_window_file_name_string, main_window_file_name])
+			data.extend ([application_class_name_string, application_class_name])
 			data.extend ([complete_project_string, complete_project.out])
 			data.extend ([grouped_locals_string, grouped_locals.out])
 			data.extend ([debugging_output_string, debugging_output.out])
@@ -115,7 +115,7 @@ feature -- Basic operation
 				check
 					data_was_string: temp_string /= Void
 				end
-				set_main_window_file_name (temp_string)
+				set_application_class_name (temp_string)
 				
 				temp_tuple := data @ 4
 				temp_string ?= temp_tuple @ 2
@@ -185,14 +185,14 @@ feature -- Status Setting
 			main_window_class_name.is_equal (name)
 		end
 		
-	set_main_window_file_name (name: STRING) is
-			-- Assign `name' to `main_window_file_name'.
+	set_application_class_name (name: STRING) is
+			-- Assign `name' to `application_class_name'.
 		require
 			name_not_void: name /= Void
 		do
-			main_window_file_name := name
+			application_class_name := name
 		ensure
-			main_window_file_name.is_equal (name)
+			application_class_name.is_equal (name)
 		end
 		
 	enable_complete_project is
@@ -251,7 +251,7 @@ feature {NONE} --Implementation
 
 	main_window_class_name_string: STRING is "Main_window_class_name"
 		
-	main_window_file_name_string: STRING is "Main_window_file_name"
+	application_class_name_string: STRING is "Application_class_name"
 		
 	complete_project_string: STRING is "Complete_project"
 	

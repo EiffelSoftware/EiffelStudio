@@ -123,7 +123,7 @@ feature -- Recording Operation feature_token
 
 feature -- Queries once_tokens
 
-	once_tokens (a_feature_i: FEATURE_I): TUPLE [INTEGER, INTEGER, INTEGER] is
+	once_tokens (a_feature_i: FEATURE_I): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
 			-- data class token,  `_done' and `_result' tokens associated with `a_feature_i'
 		require
 			feature_i_not_void: a_feature_i /= Void
@@ -144,7 +144,9 @@ feature -- Queries once_tokens
 
 feature -- Recording Operation once_tokens
 
-	record_once_tokens (a_data_class_token, a_once_done_token, a_once_result_token: INTEGER; a_feature_i: FEATURE_I) is
+	record_once_tokens (a_data_class_token, 
+					a_once_done_token, a_once_result_token, a_once_exception_token: INTEGER; 
+					a_feature_i: FEATURE_I) is
 			-- Record the correspondance  
 			-- a_feature_i.feature_name_id => 
 			--			a_data_class_token,
@@ -154,10 +156,10 @@ feature -- Recording Operation once_tokens
 			feature_i_not_void: a_feature_i /= Void
 		local
 			l_feature_name_id: INTEGER
-			l_entry: TUPLE [INTEGER, INTEGER, INTEGER]
+			l_entry: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
 		do
 			l_feature_name_id := a_feature_i.feature_name_id
-			l_entry := [a_data_class_token, a_once_done_token, a_once_result_token]
+			l_entry := [a_data_class_token, a_once_done_token, a_once_result_token, a_once_exception_token]
 
 			if not list_once_tokens.has (l_feature_name_id) then
 				list_once_tokens.put (l_entry , l_feature_name_id)
@@ -167,10 +169,13 @@ feature -- Recording Operation once_tokens
 					l_entry.put_integer (a_data_class_token, 1)
 				end
 				if a_once_done_token /= 0 then
-					l_entry.put_integer (a_once_done_token, 1)
+					l_entry.put_integer (a_once_done_token, 2)
 				end
 				if a_once_result_token /= 0 then
-					l_entry.put_integer (a_once_result_token, 2)
+					l_entry.put_integer (a_once_result_token, 3)
+				end
+				if a_once_exception_token /= 0 then
+					l_entry.put_integer (a_once_exception_token, 4)
 				end
 			end
 		ensure
@@ -320,8 +325,8 @@ feature {NONE} -- Storage Implementation
 	list_feature_token: HASH_TABLE [INTEGER, INTEGER]
 			-- {feature_name_id} => {feature_token}
 
-	list_once_tokens: HASH_TABLE [TUPLE [INTEGER, INTEGER, INTEGER], INTEGER] 
-			-- feature_tokens[_data_class|_done|_result] <= [feature_name_id]
+	list_once_tokens: HASH_TABLE [TUPLE [INTEGER, INTEGER, INTEGER, INTEGER], INTEGER] 
+			-- feature_tokens[_data_class|_done|_result|_exception] <= [feature_name_id]
 
 	list_breakable_il_offset: HASH_TABLE [ARRAYED_LIST [TUPLE [INTEGER, LIST [INTEGER]]], INTEGER]
 			-- [bp index => [eiffel line, List [Offset IL]] ] <= [feature_name_id]

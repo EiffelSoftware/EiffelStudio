@@ -1,30 +1,24 @@
 indexing
-	description: "ComboBoxEx Style (CBES) messages."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "ComboBoxEx Style (CBES) messages."
+	status		: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	WEL_CBES_CONSTANTS
 
 feature -- Access
 
-	Cbes_ex_noeditimage: INTEGER is
+	Cbes_ex_noeditimage: INTEGER is 1
 			-- The edit box will not display an item image.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBES_EX_NOEDITIMAGE"
-		end
+			--
+			-- Declared in Windows as CBES_EX_NOEDITIMAGE
 
-	Cbes_ex_noeditimageindent: INTEGER is
+	Cbes_ex_noeditimageindent: INTEGER is 2
 			-- The edit box will not indend text to make room
 			-- for an item image.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBES_EX_NOEDITIMAGEINDENT"
-		end
+			--
+			-- Declared in Windows as CBES_EX_NOEDITIMAGEINDENT
 
 end -- class WEL_CBES_CONSTANTS
 

@@ -1,90 +1,46 @@
 indexing
-	description: "ComboBox notification message (CBN) constants."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "ComboBox notification message (CBN) constants."
+	status		: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	WEL_CBN_CONSTANTS
 
 feature -- Access
 
-	Cbn_errspace: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CBN_ERRSPACE"
-		end
+	Cbn_errspace: INTEGER is -1
+			-- Declared in Windows as CBN_ERRSPACE
 
-	Cbn_selchange: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CBN_SELCHANGE"
-		end
+	Cbn_selchange: INTEGER is 1
+			-- Declared in Windows as CBN_SELCHANGE
 
-	Cbn_dblclk: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CBN_DBLCLK"
-		end
+	Cbn_dblclk: INTEGER is 2
+			-- Declared in Windows as CBN_DBLCLK
 
-	Cbn_setfocus: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CBN_SETFOCUS"
-		end
+	Cbn_setfocus: INTEGER is 3
+			-- Declared in Windows as CBN_SETFOCUS
 
-	Cbn_killfocus: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CBN_KILLFOCUS"
-		end
+	Cbn_killfocus: INTEGER is 4
+			-- Declared in Windows as CBN_KILLFOCUS
 
-	Cbn_editchange: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CBN_EDITCHANGE"
-		end
+	Cbn_editchange: INTEGER is 5
+			-- Declared in Windows as CBN_EDITCHANGE
 
-	Cbn_editupdate: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CBN_EDITUPDATE"
-		end
+	Cbn_editupdate: INTEGER is 6
+			-- Declared in Windows as CBN_EDITUPDATE
 
-	Cbn_dropdown: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CBN_DROPDOWN"
-		end
+	Cbn_dropdown: INTEGER is 7
+			-- Declared in Windows as CBN_DROPDOWN
 
-	Cbn_closeup: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CBN_CLOSEUP"
-		end
+	Cbn_closeup: INTEGER is 8
+			-- Declared in Windows as CBN_CLOSEUP
 
-	Cbn_selendok: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CBN_SELENDOK"
-		end
+	Cbn_selendok: INTEGER is 9
+			-- Declared in Windows as CBN_SELENDOK
 
-	Cbn_selendcancel: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CBN_SELENDCANCEL"
-		end
+	Cbn_selendcancel: INTEGER is 10
+			-- Declared in Windows as CBN_SELENDCANCEL
 
 end -- class WEL_CBN_CONSTANTS
 

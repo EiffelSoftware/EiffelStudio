@@ -9,20 +9,10 @@ class
 
 feature -- Access
 
-	Icon_small: INTEGER is
-			-- Small icon
-		external
-			"C [macro %"windows.h%"]"
-		alias
-			"ICON_SMALL"
-		end
+	Icon_small: INTEGER is 0
+			-- Declared in Windows as ICON_SMALL
 
-	Icon_big: INTEGER is
-			-- Large icon
-		external
-			"C [macro %"windows.h%"]"
-		alias
-			"ICON_BIG"
-		end
+	Icon_big: INTEGER is 1
+			-- Declared in Windows as ICON_BIG
 
 end -- class WEL_ICON_CONSTANTS

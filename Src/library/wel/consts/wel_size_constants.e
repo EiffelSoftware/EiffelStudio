@@ -1,48 +1,28 @@
 indexing
-	description: "Size (SIZE) constants."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Size (SIZE) constants."
+	status		: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	WEL_SIZE_CONSTANTS
 
 feature -- Access
 
-	Size_maximized: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SIZE_MAXIMIZED"
-		end
+	Size_maximized: INTEGER is 2
+			-- Declared in Windows as SIZE_MAXIMIZED
 
-	Size_minimized: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SIZE_MINIMIZED"
-		end
+	Size_minimized: INTEGER is 1
+			-- Declared in Windows as SIZE_MINIMIZED
 
-	Size_restored: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SIZE_RESTORED"
-		end
+	Size_restored: INTEGER is 0
+			-- Declared in Windows as SIZE_RESTORED
 
-	Size_maxhide: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SIZE_MAXHIDE"
-		end
+	Size_maxhide: INTEGER is 4
+			-- Declared in Windows as SIZE_MAXHIDE
 
-	Size_maxshow: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SIZE_MAXSHOW"
-		end
+	Size_maxshow: INTEGER is 3
+			-- Declared in Windows as SIZE_MAXSHOW
 
 end -- class WEL_SIZE_CONSTANTS
 

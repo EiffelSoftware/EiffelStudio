@@ -1,48 +1,28 @@
 indexing
-	description: "Mouse and Key (MK) constants."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Mouse and Key (MK) constants."
+	status		: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	WEL_MK_CONSTANTS
 
 feature -- Access
 
-	Mk_control: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MK_CONTROL"
-		end
+	Mk_control: INTEGER is 8
+			-- Declared in Windows as MK_CONTROL
 
-	Mk_lbutton: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MK_LBUTTON"
-		end
+	Mk_lbutton: INTEGER is 1
+			-- Declared in Windows as MK_LBUTTON
 
-	Mk_mbutton: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MK_MBUTTON"
-		end
+	Mk_mbutton: INTEGER is 16
+			-- Declared in Windows as MK_MBUTTON
 
-	Mk_rbutton: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MK_RBUTTON"
-		end
+	Mk_rbutton: INTEGER is 2
+			-- Declared in Windows as MK_RBUTTON
 
-	Mk_shift: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MK_SHIFT"
-		end
+	Mk_shift: INTEGER is 4
+			-- Declared in Windows as MK_SHIFT
 
 end -- class WEL_MK_CONSTANTS
 

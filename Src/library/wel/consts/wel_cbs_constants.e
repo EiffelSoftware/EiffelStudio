@@ -1,90 +1,46 @@
 indexing
-	description: "ComboBox Style (CBS) messages."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "ComboBox Style (CBS) messages."
+	status		: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	WEL_CBS_CONSTANTS
 
 feature -- Access
 
-	Cbs_simple: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CBS_SIMPLE"
-		end
+	Cbs_simple: INTEGER is 1
+			-- Declared in Windows as CBS_SIMPLE
 
-	Cbs_dropdown: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CBS_DROPDOWN"
-		end
+	Cbs_dropdown: INTEGER is 2
+			-- Declared in Windows as CBS_DROPDOWN
 
-	Cbs_dropdownlist: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CBS_DROPDOWNLIST"
-		end
+	Cbs_dropdownlist: INTEGER is 3
+			-- Declared in Windows as CBS_DROPDOWNLIST
 
-	Cbs_ownerdrawfixed: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CBS_OWNERDRAWFIXED"
-		end
+	Cbs_ownerdrawfixed: INTEGER is 16
+			-- Declared in Windows as CBS_OWNERDRAWFIXED
 
-	Cbs_ownerdrawvariable: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CBS_OWNERDRAWVARIABLE"
-		end
+	Cbs_ownerdrawvariable: INTEGER is 32
+			-- Declared in Windows as CBS_OWNERDRAWVARIABLE
 
-	Cbs_autohscroll: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CBS_AUTOHSCROLL"
-		end
+	Cbs_autohscroll: INTEGER is 64
+			-- Declared in Windows as CBS_AUTOHSCROLL
 
-	Cbs_oemconvert: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CBS_OEMCONVERT"
-		end
+	Cbs_oemconvert: INTEGER is 128
+			-- Declared in Windows as CBS_OEMCONVERT
 
-	Cbs_sort: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CBS_SORT"
-		end
+	Cbs_sort: INTEGER is 256
+			-- Declared in Windows as CBS_SORT
 
-	Cbs_hasstrings: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CBS_HASSTRINGS"
-		end
+	Cbs_hasstrings: INTEGER is 512
+			-- Declared in Windows as CBS_HASSTRINGS
 
-	Cbs_nointegralheight: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CBS_NOINTEGRALHEIGHT"
-		end
+	Cbs_nointegralheight: INTEGER is 1024
+			-- Declared in Windows as CBS_NOINTEGRALHEIGHT
 
-	Cbs_disablenoscroll: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CBS_DISABLENOSCROLL"
-		end
+	Cbs_disablenoscroll: INTEGER is 2048
+			-- Declared in Windows as CBS_DISABLENOSCROLL
 
 end -- class WEL_CBS_CONSTANTS
 

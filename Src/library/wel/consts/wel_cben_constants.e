@@ -1,91 +1,64 @@
 indexing
-	description: "ComboBoxEx Notifications (CBEN) constants."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "ComboBoxEx Notifications (CBEN) constants."
+	status		: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	WEL_CBEN_CONSTANTS
 
 feature -- Access
 
-	Cben_getdispinfo: INTEGER is
+	Cben_getdispinfo: INTEGER is -800
 			-- Sent to retrieve display information about a callback item. 
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBEN_GETDISPINFO"	
-		end
+			--
+			-- Declared in Windows as CBEN_GETDISPINFO
 
-	Cben_insertitem: INTEGER is
+	Cben_insertitem: INTEGER is -801
 			-- Send when a new item has been inserted in the control.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBEN_INSERTITEM"
-		end
+			--
+			-- Declared in Windows as CBEN_INSERTITEM
 
-	Cben_deleteitem: INTEGER is
+	Cben_deleteitem: INTEGER is -802
 			-- Sent when an item has been deleted.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBEN_DELETEITEM"
-		end
+			--
+			-- Declared in Windows as CBEN_DELETEITEM
 
-	Cben_beginedit: INTEGER is
+	Cben_beginedit: INTEGER is -804
 			-- Sent when the user activates the drop-down list in the
 			-- control's edit box.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBEN_BEGINEDIT"
-		end
+			--
+			-- Declared in Windows as CBEN_BEGINEDIT
 
-	Cben_endedit: INTEGER is
+	Cben_endedit: INTEGER is -805
 			-- Sent when the user has concluded an operation within
 			-- the edit box or has selected an item from the control's
 			-- drop-down list.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBEN_ENDEDIT"
-		end
+			--
+			-- Declared in Windows as CBEN_ENDEDIT
 
 feature -- Access : notification flags
 
-	Cbenf_dropdown: INTEGER is
+	Cbenf_dropdown: INTEGER is 4
 			-- The user activated the drop-down list.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBENF_DROPDOWN"
-		end
+			--
+			-- Declared in Windows as CBENF_DROPDOWN
 
-	Cbenf_escape: INTEGER is
+	Cbenf_escape: INTEGER is 3
 			-- The user pressed the ESCAPE key.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBENF_ESCAPE"
-		end
+			--
+			-- Declared in Windows as CBENF_ESCAPE
 
-	Cbenf_killfocus: INTEGER is
+	Cbenf_killfocus: INTEGER is 1
 			-- The edit box lost the keyboard focus.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBENF_KILLFOCUS"
-		end
+			--
+			-- Declared in Windows as CBENF_KILLFOCUS
 
-	Cbenf_return: INTEGER is
+	Cbenf_return: INTEGER is 2
 			-- The user completed the edit operation by pressing
 			-- the ENTER key.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBENF_RETURN"
-		end
+			--
+			-- Declared in Windows as CBENF_RETURN
 
 end -- class WEL_CBEN_CONSTANTS
 

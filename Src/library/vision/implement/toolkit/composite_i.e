@@ -16,7 +16,7 @@ feature
 	children_count: INTEGER is
 			-- Count of managed children
 		deferred
-		end; -- children_count
+		end;
 
 end -- class COMPOSITE_I
 

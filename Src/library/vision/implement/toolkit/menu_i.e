@@ -18,17 +18,17 @@ feature
 		require
 			not_title_void: not (a_title = Void)
 		deferred
-		end; -- set_title
+		end;
 
 	title: STRING is
 			-- Title of menu
 		deferred
-		end; -- title
+		end;
 
 	remove_title is
 			-- Remove current menu title if any.
 		deferred
-		end; -- remove_title
+		end;
 
 end -- class MENU_I
 

@@ -24,7 +24,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_input_action
+		end;
 
 	add_resize_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
@@ -32,7 +32,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_resize_action
+		end;
 
 	remove_input_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -40,7 +40,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_input_action
+		end;
 
 	remove_resize_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -48,7 +48,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end -- remove_resize_action
+		end
 
 end --class D_AREA_I
 

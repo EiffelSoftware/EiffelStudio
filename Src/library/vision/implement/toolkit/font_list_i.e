@@ -27,60 +27,60 @@ feature
 	destroy is
 			-- Destroy current font list.
 		deferred
-		end; -- destroy
+		end;
 
 	empty: BOOLEAN is
 			-- Is the chain empty?
 		deferred
-		end; -- empty
+		end;
 
 	position: INTEGER is
 			-- Current cursor position, 0 if empty
 		deferred
-		end; -- position
+		end;
 
 	off: BOOLEAN is
 			-- Is cursor off?
 		deferred
-		end; -- off
+		end;
 
 	offleft: BOOLEAN is
 			-- Is cursor off left edge?
 		deferred
-		end; -- offleft
+		end;
 
 	offright: BOOLEAN is
 			-- Is cursor off right edge?
 		deferred
-		end; -- offright
+		end;
 
 	isfirst: BOOLEAN is
 			-- Is cursor at first position in the chain?
 		deferred
 		ensure
 			Result implies (not empty)
-		end; -- isfirst
+		end;
 
 	islast: BOOLEAN is
 			-- Is cursor at last position in the chain?
 		deferred
 		ensure
 			Result implies (not empty)
-		end; -- islast
+		end;
 
 	first: FONT is
 			-- Item at first position
 		require
 			not_empty: not empty
 		deferred
-		end; -- first
+		end;
 
 	item: like first is
 			-- Item at cursor position
 		require
 			not_off: not off
 		deferred
-		end; -- item
+		end;
 
 	i_th (i: INTEGER): like first is
 			-- Item at `i'_th position
@@ -88,21 +88,21 @@ feature
 			index_large_enough: i >= 1;
 			index_small_enough: i <= count;
 		deferred
-		end; -- i_th
+		end;
 
 	last: like first is
 			-- Item at last position
 		require
 			not_empty: not empty
 		deferred
-		end; -- last
+		end;
 
 	start is
 			-- Move cursor to first position.
 		deferred
 		ensure
 			empty or isfirst
-		end; -- start
+		end;
 
 	finish is
 			-- Move cursor to last position
@@ -110,7 +110,7 @@ feature
 		deferred
 		ensure
 			empty or islast
-		end; -- finish
+		end;
 
 	forth is
 			-- Move cursor forward one position.
@@ -119,7 +119,7 @@ feature
 		deferred
 		ensure
 			position >= 1 and position <= count + 1
-		end; -- forth
+		end;
 
 	back is
 			-- Move cursor backward one position.
@@ -128,7 +128,7 @@ feature
 		deferred
 		ensure
 --			position = old position - 1
-		end; -- back
+		end;
 
 	move (i: INTEGER) is
 			-- Move cursor `i' positions.
@@ -139,7 +139,7 @@ feature
 		deferred
 		ensure
 --			position = old position + i
-		end; -- move
+		end;
 
 	go (i: INTEGER) is
 			-- Move cursor to position `i'.
@@ -150,7 +150,7 @@ feature
 		deferred
 		ensure
 			position = i
-		end; -- go
+		end;
 
 	search_equal (v: like first) is
 			-- Move cursor to first position
@@ -162,7 +162,7 @@ feature
 		deferred
 		ensure
 			(not off) implies (v.is_equal (item))
-		end; -- search_equal
+		end;
 
 	index_of (v: like first; i: INTEGER): INTEGER is
 			-- Index of `i'-th item `v'; 0 if none
@@ -171,12 +171,12 @@ feature
 		deferred
 		ensure
 			Result >= 0
-		end; -- index_of
+		end;
 
 	has (v: like first): BOOLEAN is
 			-- Does `v' appear in the chain ?
 		deferred
-		end -- has
+		end
 
 invariant
 

@@ -19,14 +19,14 @@ feature
 	is_call_back_set: BOOLEAN is
 			-- Is a call back already set ?
 		deferred
-		end; -- is_call_back_set
+		end;
 
 	is_regular_call_back: BOOLEAN is
 			-- Is the call back set a regular one ?
 		require
 			is_call_back_set
 		deferred
-		end; -- is_regular_call_back
+		end;
 
 	set_next_call_back (a_delay: INTEGER; a_command: COMMAND; an_argument: ANY) is            -- Set `a_command' with `argument' to execute when `a_delay';
 			-- in milliseconds has expired.
@@ -37,7 +37,7 @@ feature
 		deferred
 		ensure
 			is_call_back_set and (not is_regular_call_back)
-		end; -- set_next_call_back
+		end;
 
 	set_no_call_back is
 			-- Remove any call-back already set.
@@ -46,7 +46,7 @@ feature
 		deferred
 		ensure
 			not is_call_back_set
-		end; -- set_no_call_back
+		end;
 
 	set_regular_call_back (a_time: INTEGER; a_command: COMMAND; an_argument: ANY) is
 			-- Set `a_command' with `argument' to execute all the `a_time'

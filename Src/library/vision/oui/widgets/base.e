@@ -25,9 +25,9 @@ feature {NONE} -- Creation
 			-- only if `a_name' not void otherwise identifier
 			-- will be defined as application name or the name
 			-- precised with -name option, and call `set_default'.
-        require
-            non_void_screen: a_screen /= Void; 
-            valid_screen: a_screen.is_valid
+		require
+			non_void_screen: a_screen /= Void; 
+			valid_screen: a_screen.is_valid
 		do
 			depth := 0;
 			widget_manager.new (Current, Void);

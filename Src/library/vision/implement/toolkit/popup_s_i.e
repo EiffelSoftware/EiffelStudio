@@ -39,14 +39,14 @@ feature
 		deferred
 		ensure
 			not is_popped_up
-		end; -- popdown
+		end;
 
 	popup is
 			-- Popup a popup shell with no grab on it.
 		deferred
 		ensure
 			is_popped_up
-		end; -- popup
+		end;
 
 	set_cascade_grab is
 			-- Specifies that the shell would be popped up with cascade grab
@@ -54,21 +54,21 @@ feature
 		deferred
 		ensure
 			is_cascade_grab
-		end; -- set_cascade_grab
+		end;
 
 	set_exclusive_grab is
 			-- Specifies that the shell would be popped up with exclusive grab.
 		deferred
 		ensure
 			is_exclusive_grab
-		end; -- set_exclusive_grab
+		end;
 
 	set_no_grab is
 			-- Specifies that the shell would be popped up with no grab.
 		deferred
 		ensure
 			is_no_grab
-		end -- set_no_grab
+		end
 
 end -- class POPUP_S_I
 

@@ -16,7 +16,7 @@ feature
 	popup is
 			-- Popup current popup menu on screen.
 		deferred
-		end -- popup
+		end
 
 end -- class POPUP_I
 

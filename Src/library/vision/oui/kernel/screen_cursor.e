@@ -48,8 +48,8 @@ feature
 		do
 			implementation.set_pixmap (pixmap, mask)
 		ensure
-			type = User_defined_pixmap
-		end; -- set_pixmap
+			user_pixmap_type: type = User_defined_pixmap
+		end;
 
 	set_type (new_type: INTEGER) is
 			-- Set type of current cursor to `new_type'.
@@ -58,18 +58,18 @@ feature
 		do
 			implementation.set_type (new_type)
 		ensure
-			type = new_type
-		end; -- set_type
+			type_set: type = new_type
+		end;
 
 	type: INTEGER is
 			-- Predefined type of current cursor
 		do
 			Result := implementation.type
-		end -- type
+		end
 
 invariant
 
-	((type >= X_cursor) and (type < Cursor_undefined)) or (type = User_defined_pixmap)
+	valid_type: ((type >= X_cursor) and (type < Cursor_undefined)) or (type = User_defined_pixmap)
 
 end
 

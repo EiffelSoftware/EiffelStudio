@@ -29,7 +29,7 @@ feature -- Callback (adding and removing)
 			valid_command: a_command /= Void
 		do
 			implementation.remove_single_action (a_command, argument)
-		end; -- remove_single_action
+		end;
 
 feature -- Access
 
@@ -75,7 +75,7 @@ feature -- Cursor
 			implementation.back
 		ensure
 			index = old index - 1
-		end; -- back
+		end;
 
 	empty: BOOLEAN is
 			-- Is current series empty?
@@ -146,7 +146,7 @@ feature -- Cursor
 			index_small_enough: i <= count;
 		do
 			Result := implementation.i_th (i)
-		end; -- i_th
+		end;
 
 	index_of (v: STRING; i: INTEGER): INTEGER is
 			-- Index of `i'-th item `v'; 0 if none
@@ -187,7 +187,7 @@ feature -- Cursor
 			implementation.start
 		ensure
 			empty or isfirst
-		end; -- start
+		end;
 
 	move (i: INTEGER) is
 			-- Move cursor `i' positions.

@@ -21,7 +21,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_action
+		end;
 
 	remove_action (a_command: COMMAND; an_argument: ANY) is
 			-- Remove `a_command' with `argument' to the list of action to
@@ -30,7 +30,7 @@ feature
 			not_a_command_void: not (a_command = Void);
 			not empty
 		deferred
-		end; -- remove_action
+		end;
 
 	empty: BOOLEAN is
 		deferred

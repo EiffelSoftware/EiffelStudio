@@ -16,7 +16,7 @@ feature
 	is_row_layout: BOOLEAN is
 			-- Is current row column layout items preferably in row ?
 		deferred
-		end; -- is_row_layout
+		end;
 
 	margin_height: INTEGER is
 			-- Amount of blank space between the top edge
@@ -25,7 +25,7 @@ feature
 		deferred
 		ensure
 			Result >= 0
-		end; -- margin_height
+		end;
 
 	margin_width: INTEGER is
 			-- Amount of blank space between the left edge
@@ -34,7 +34,7 @@ feature
 		deferred
 		ensure
 			Result >= 0
-		end; -- margin_width
+		end;
 
 	set_free_size is
 			-- Set size of items to be free, in vertical layout mode
@@ -42,7 +42,7 @@ feature
 			-- horizontal layout mode only height is set to be the same
 			-- as the tallest one.
 		deferred
-		end; -- set_free_size
+		end;
 
 	set_margin_height (new_margin_height: INTEGER) is
 			-- Set amount of blank space between the top edge
@@ -53,7 +53,7 @@ feature
 		deferred
 		ensure
 			margin_height = new_margin_height
-		end; -- set_margin_height
+		end;
 
 	set_margin_width (new_margin_width: INTEGER) is
 			-- Set amount of blank space between the left edge
@@ -64,7 +64,7 @@ feature
 		deferred
 		ensure
 			margin_width = new_margin_width
-		end; -- set_margin_width
+		end;
 
 	set_preferred_count (a_number: INTEGER) is
 			-- Set preferably count of row or column, according to
@@ -73,7 +73,7 @@ feature
 			not_negative_number: not (a_number < 0);
 			not_nul_number: not (a_number = 0)
 		deferred
-		end; -- set_preferred_count
+		end;
 
 	set_row_layout (flag: BOOLEAN) is
 			-- Set row column to layout items preferably in row if `flag',
@@ -81,13 +81,13 @@ feature
 		deferred
 		ensure
 			flag_correctly_set: is_row_layout = flag
-		end; -- set_row_layout
+		end;
 
 	set_same_size is
 			-- Set width of items to be the same as the widest one
 			-- and height as the tallest one.
 		deferred
-		end; -- set_same_size
+		end;
 
 	set_spacing (new_spacing: INTEGER) is
 			-- Set spacing between items to `new_spacing'.
@@ -96,14 +96,14 @@ feature
 		deferred
 		ensure
 			spacing = new_spacing
-		end; -- set_spacing
+		end;
 
 	spacing: INTEGER is
 			-- Spacing between items
 		deferred
 		ensure
 			Result >= 0
-		end -- spacing
+		end
 
 end -- class ROW_COLUMN_I
 

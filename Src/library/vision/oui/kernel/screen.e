@@ -39,8 +39,8 @@ feature
 		do
 			Result := implementation.buttons
 		ensure
-			not (Result = Void)
-		end; -- buttons
+			result_exists: Result /= Void
+		end;
 
 	make (a_screen_name: STRING) is
 			-- Create a screen specified by `a_screen_name'.
@@ -49,7 +49,7 @@ feature
 		do
 			screen_name := clone (a_screen_name);
 			implementation := toolkit.screen (current)
-		end; -- Create
+		end;
 
 	is_valid: BOOLEAN is
 			-- Is Current screen created?
@@ -67,7 +67,7 @@ feature
 			Result := implementation.height
 		ensure
 			height_large_enough: Result >= 0
-		end; -- height
+		end;
 
 	implementation: SCREEN_I;
 			-- Implementation of current screen
@@ -80,7 +80,7 @@ feature
 			other_exists: not (other = Void)
 		do
 			Result := other.implementation = implementation
-		end; -- same
+		end;
 
 	screen_name: STRING;
 			-- Screen name
@@ -91,7 +91,7 @@ feature
 			exists: not destroyed
 		do
 			Result := implementation.widget_pointed
-		end; -- widget_pointed
+		end;
 
 	width: INTEGER is
 			-- Width of screen (in pixel)
@@ -101,7 +101,7 @@ feature
 			Result := implementation.width
 		ensure
 			width_large_enough: Result >= 0
-		end; -- width
+		end;
 
 	x: INTEGER is
 			-- Current absolute horizontal coordinate of the mouse
@@ -112,7 +112,7 @@ feature
 		ensure
 			position_positive: Result >= 0;
 			position_small_enough: Result < width
-		end; -- x
+		end;
 
 	y: INTEGER is
 			-- Current absolute vertical coordinate of the mouse
@@ -123,7 +123,7 @@ feature
 		ensure
 			position_positive: Result >= 0;
 			position_small_enough: Result < height
-		end -- y
+		end
 
 end
 

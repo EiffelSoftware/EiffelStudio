@@ -38,11 +38,11 @@ feature
 			drawing_i.draw_text (coord_xy (x, y), a_text)
 		end;
 
-    fill_polygon (points: LIST [COORD_XY]) is
-            -- Fill a polygon.
-        require
-            points_exists: not (points = Void);
-            list_with_two_points_at_least: points.count >= 3
+	fill_polygon (points: LIST [COORD_XY]) is
+			-- Fill a polygon.
+		require
+			points_exists: points /= Void;
+			list_with_two_points_at_least: points.count >= 3
 		do
 			drawing_i.fill_polygon (points)
 		end;
@@ -55,8 +55,8 @@ feature {NONE}
 			!! Result;
 			Result.set (x, y)
 		ensure
-			Result.x = x;
-			Result.y = y
+			x_set: Result.x = x;
+			y_set: Result.y = y
 		end;
 
 	is_drawable: BOOLEAN is
@@ -78,7 +78,7 @@ feature
 			-- Set the color to use for the foreground.
 		require
 			drawing_set: valid_drawing;
-            color_exists: not (color = Void)
+			color_exists: color /= Void
 		do
 			drawing_i.set_foreground_gc_color (color)
 		end;
@@ -97,25 +97,25 @@ feature
 		require
 			drawing_set: valid_drawing;
 			width_positive: width >= 0;
-            height_positive: height >= 0;
-            orientation_positive: orientation >= 0;
-            orientation_less_than_360: orientation < 360
+			height_positive: height >= 0;
+			orientation_positive: orientation >= 0;
+			orientation_less_than_360: orientation < 360
 		do
 			drawing_i.draw_rectangle (coord_xy (x, y), width, height, orientation)
 		end;
 
 	fill_rectangle (x, y, width, height: INTEGER; orientation: REAL) is
-            -- Fill a rectangle whose center is at (`x', `y'),
-            -- whose size is (`width', `height').
-        require
-            drawing_set: valid_drawing;
-            width_positive: width >= 0;
-            height_positive: height >= 0;
-            orientation_positive: orientation >= 0;
-            orientation_less_than_360: orientation < 360
-        do
-            drawing_i.fill_rectangle (coord_xy (x, y), width, height, orientation)
-        end;
+			-- Fill a rectangle whose center is at (`x', `y'),
+			-- whose size is (`width', `height').
+		require
+			drawing_set: valid_drawing;
+			width_positive: width >= 0;
+			height_positive: height >= 0;
+			orientation_positive: orientation >= 0;
+			orientation_less_than_360: orientation < 360
+		do
+			drawing_i.fill_rectangle (coord_xy (x, y), width, height, orientation)
+		end;
 
 	draw_segment (x1, y1, x2, y2: INTEGER) is
 			-- Draw a segment between (`x1', `y1') and (`x2', `y2').
@@ -141,14 +141,14 @@ feature
 				drawing_i := a_drawing.implementation
 			end
 		ensure
-			(not (a_drawing = Void)) implies (drawing_i = a_drawing.implementation)
+			drawing_set: (a_drawing /= Void) implies (drawing_i = a_drawing.implementation)
 		end;
 
 	set_logical_mode (a_mode: INTEGER) is
 			-- Set drawing logical function to `a_mode'.
 		require
-			a_mode >= 0;
-			a_mode <= 15;
+			mode_large_enough: a_mode >= 0;
+			mode_small_enough: a_mode <= 15;
 			drawing_set: valid_drawing;
 		do
 			drawing_i.set_logical_mode (a_mode)
@@ -159,8 +159,8 @@ feature {NONE}
 	set_subwindow_mode (a_mode: INTEGER) is
 			-- Set subwindow mode to `a_mode'.
 		require
-			a_mode >= 0;
-			a_mode <= 1;
+			mode_large_enough: a_mode >= 0;
+			mode_small_enough: a_mode <= 1;
 			drawing_set: valid_drawing;
 		do
 			drawing_i.set_subwindow_mode (a_mode)

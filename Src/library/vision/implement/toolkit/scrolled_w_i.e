@@ -17,7 +17,7 @@ feature
 			-- Working area of window which will
 			-- be moved using scrollbars
 		deferred
-		end; -- working_area
+		end;
 
 	set_working_area (a_widget: WIDGET) is
 			-- Set work area of windon to `a_widget'.
@@ -26,7 +26,7 @@ feature
 		deferred
 		ensure
 			working_area = a_widget
-		end -- set_working_area
+		end
 
 end -- class SCROLLED_W_I
 

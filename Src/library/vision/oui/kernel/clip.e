@@ -12,14 +12,14 @@ feature
 	set (a_coin: COORD_XY; a_width, a_height: INTEGER) is
 			-- Set the clip
 		require
-			a_coin_exists: not (a_coin = Void);
+			a_coin_exists: a_coin /= Void;
 			a_width_positive: a_width >= 0;
 			a_height_positive: a_height >= 0
 		do
 			upper_left := a_coin;
 			width := a_width;
 			height := a_height
-		end; -- set
+		end; 
 
 	upper_left: COORD_XY;
 			-- Upper-left coiner of the clip area

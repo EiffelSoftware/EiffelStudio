@@ -19,7 +19,7 @@ feature
             -- Menu Button which appears at the lower right corner of the
             -- menu bar
         deferred
-        end; -- help_button
+		end;
 
     set_help_button (button: MENU_B) is
             -- Set the Menu Button which appears at the lower right corner
@@ -27,7 +27,7 @@ feature
         deferred
         ensure
             help_button.same (button)
-        end; -- set_help_button
+		end;
 
 	allow_recompute_size is
 		deferred

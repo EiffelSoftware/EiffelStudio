@@ -10,19 +10,19 @@ deferred class DRAWING
 feature 
 
 	same (other: like Current): BOOLEAN is
-            -- Does the current drawing and `other' share the same object
-            -- on screen ?
-        require
-            other_exists: not (other = Void)
-        deferred
-        end;
+			-- Does the current drawing and `other' share the same object
+			-- on screen ?
+		require
+			other_exists: other /= Void
+		deferred
+		end;
 
 	add_expose_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
 			-- current area is exposed.
 		require
 			exists: not destroyed
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		do
 			implementation.add_expose_action (a_command, argument)
 		end;
@@ -45,7 +45,7 @@ feature
 			-- current area is exposed.
 		require
 			exists: not destroyed
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		do
 			implementation.remove_expose_action (a_command, argument)
 		end;
@@ -54,7 +54,7 @@ feature
 			-- Set a clip area.
 		require
 			exists: not destroyed;
-			a_clip_exists: not (a_clip = Void)
+			a_clip_exists: a_clip /= Void
 		do
 			implementation.set_clip (a_clip)
 		end;

@@ -12,7 +12,7 @@ feature
 	font: FONT is
 			-- Font name of label
 		deferred
-		end; -- font
+		end;
 
 	set_font (a_font: FONT) is
 			-- Set font label to `font_name'.
@@ -20,7 +20,7 @@ feature
 			a_font_exists: not (a_font = Void);
 			a_font_specified: a_font.is_specified
 		deferred
-		end -- set_font
+		end
 
 end -- class FONTABLE_I
 

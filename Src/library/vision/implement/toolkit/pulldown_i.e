@@ -16,12 +16,12 @@ feature
 	text: STRING is
 			-- Label of menu button
 		deferred
-		end; -- text
+		end;
 
 	set_text (a_text: STRING) is
 			-- Set button text to `a_text'.
 		deferred
-		end; -- text
+		end;
 
 	allow_recompute_size is
 		deferred

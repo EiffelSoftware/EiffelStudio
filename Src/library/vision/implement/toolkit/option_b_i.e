@@ -16,7 +16,7 @@ feature
 	selected_button: BUTTON is
             -- Current Push Button selected in the option menu
         deferred
-        end; -- selected_button
+	end;
 
     set_selected_button (button: BUTTON) is
             -- Set `selected_button' to `button'
@@ -25,7 +25,7 @@ feature
         deferred
         ensure
             button = selected_button
-        end; -- set_selected_button
+		end;
 
 	attach_menu (a_menu: OPT_PULL) is
 			-- Attach menu `a_menu' to the menu button, it will
@@ -34,7 +34,7 @@ feature
 		require
 			menu_not_void: not (a_menu = Void)
 		deferred
-		end; -- attach_menu
+		end;
 
 	title: STRING is
 		deferred

@@ -15,7 +15,7 @@ feature
 		deferred
 		ensure
 			base_height = a_height
-		end; -- set_base_height
+		end;
 
  	base_height: INTEGER is
 			-- Base for a progression of preferred heights
@@ -26,7 +26,7 @@ feature
 		deferred
 		ensure
 			Result >= 0
-		end; -- base_height
+		end;
 
 	set_base_width (a_width: INTEGER) is
 			-- Set `base_width' to `a_width'.
@@ -35,7 +35,7 @@ feature
 		deferred
 		ensure
 			base_width = a_width
-		end; -- set_base_width
+		end;
 
 	base_width: INTEGER is
 			-- Base for a progression of preferred widths
@@ -46,7 +46,7 @@ feature
 		deferred
 		ensure
 			Result >= 0
-		end; -- base_width
+		end;
 
 	set_height_inc (an_increment: INTEGER) is
 			-- Set `height_inc' to `an_increment'.
@@ -55,7 +55,7 @@ feature
 		deferred
 		ensure
 			height_inc = an_increment
-		end; -- set_height_inc
+		end;
 
 	height_inc: INTEGER is
 			-- Increment for a progression of preferred
@@ -64,7 +64,7 @@ feature
 		deferred
 		ensure
 			Result >= 0
-		end; -- height_inc
+		end;
 
 	set_width_inc (an_increment: INTEGER) is
 			-- Set `width_inc' to `an_increment'.
@@ -73,7 +73,7 @@ feature
 		deferred
 		ensure
 			width_inc = an_increment
-		end; -- set_width_inc
+		end;
 
 	width_inc: INTEGER is
 			-- Increment for a progression of preferred
@@ -82,84 +82,84 @@ feature
 		deferred
 		ensure
 			Result >= 0
-		end; -- width_inc
+		end;
 
 	set_icon_mask (a_mask: PIXMAP) is
 			-- Set `icon_mask' to `a_mask'.
 		require
 			not_a_mask_void: not (a_mask = Void)
 		deferred
-		end; -- set_icon_mask
+		end;
 
 	icon_mask: PIXMAP is
 			-- Bitmap that could be used by window manager
 			-- to clip `icon_pixmap' bitmap to make the
 			-- icon nonrectangular 
 		deferred
-		end; -- icon_mask
+		end;
 
 	set_icon_pixmap (a_pixmap: PIXMAP) is
 			-- Set `icon_pixmap' to `a_pixmap'.
 		require
 			not_a_pixmap_void: not (a_pixmap = Void)
 		deferred
-		end; -- set_icon_pixmap
+		end;
 
 	icon_pixmap: PIXMAP is
 			-- Bitmap that could be used by the window manager
 			-- as the application's icon
 		deferred
-		end; -- icon_pixmap
+		end;
 
 	set_icon_x (x_value: INTEGER) is
 			-- Set `icon_x' to `x_value'.
 		deferred
-		end; -- set_icon_x
+		end;
 
 	icon_x: INTEGER is
 			-- Place to put application's icon
 			-- Since the window manager controls icon placement
 			-- policy, this may be ignored.
 		deferred
-		end; -- icon_x
+		end;
 
 	set_icon_y (y_value: INTEGER) is
 			-- Set `icon_y' to `y_value'.
 		deferred
-		end; -- set_icon_y
+		end;
 
 	icon_y: INTEGER is
 			-- Place to put application's icon
 			-- Since the window manager controls icon placement
 			-- policy, this may be ignored.
 		deferred
-		end; -- icon_y
+		end;
 
 	set_max_aspect_x (a_max: INTEGER) is
 			-- Set `max_aspect_x' to `a_max'.
 		deferred
 		ensure
 			max_aspect_x = a_max
-		end; -- set_max_aspect_x
+		end;
 
 	max_aspect_x: INTEGER is
 			-- Numerator of maximum aspect ratio (X/Y) that
 			-- application wishes widget instance to have
 		deferred
-		end; -- max_aspect_x
+		end;
 
 	set_max_aspect_y (a_max: INTEGER) is
 			-- Set `max_aspect_y' to `a_max'.
 		deferred
 		ensure
 			max_aspect_y = a_max
-		end; -- set_max_aspect_y
+		end;
 
 	max_aspect_y: INTEGER is
 			-- Denominator of maximum ration (X/Y) that
 			-- application wishes widget instance to have
 		deferred
-		end; -- max_aspect_y
+		end;
 
 	set_max_height (a_height: INTEGER) is
 			-- Set `max_height' to `a_height'.
@@ -168,7 +168,7 @@ feature
 		deferred
 		ensure
 			max_height = a_height
-		end; -- set_max_height
+		end;
 
 	max_height: INTEGER is
 			-- Maximum height that application wishes widget
@@ -176,7 +176,7 @@ feature
 		deferred
 		ensure
 			Result >= 1
-		end; -- max_height
+		end;
 
 	set_max_width (a_max: INTEGER) is
 			-- Set `max_width' to `a_max'.
@@ -185,7 +185,7 @@ feature
 		deferred
 		ensure
 			max_width = a_max
-		end; -- set_max_width
+		end;
 
 	max_width: INTEGER is
 			-- Maximum width that application wishes widget
@@ -193,33 +193,33 @@ feature
 		deferred
 		ensure
 			Result >= 1
-		end; -- max_width
+		end;
 
 	set_min_aspect_x (a_min: INTEGER) is
 			-- Set `min_aspect_x' to `a_min'.
 		deferred
 		ensure
 			min_aspect_x = a_min
-		end; -- set_min_aspect_x
+		end;
 
 	min_aspect_x: INTEGER is
 			-- Numerator of minimum aspect ratio (X/Y) that
 			-- application wishes widget instance to have
 		deferred
-		end; -- min_aspect_x
+		end;
 
 	set_min_aspect_y (a_min: INTEGER) is
 			-- Set `min_aspect_y' to `a_min'.
 		deferred
 		ensure
 			min_aspect_y = a_min
-		end; -- set_min_aspect_y
+		end;
 
 	min_aspect_y: INTEGER is
 			-- Denominator of minimum ration (X/Y) that
 			-- application wishes widget instance to have
 		deferred
-		end; -- min_aspect_y
+		end;
 
 	set_min_height (a_height: INTEGER) is
 			-- Set `min_height' to `a_height'.
@@ -228,7 +228,7 @@ feature
 		deferred
 		ensure
 			min_height = a_height
-		end; -- set_min_height
+		end;
 
 	min_height: INTEGER is
 			-- minimum height that application wishes widget
@@ -236,7 +236,7 @@ feature
 		deferred
 		ensure
 			Result >= 1
-		end; -- min_height
+		end;
 
 	set_min_width (a_min: INTEGER) is
 			-- Set `min_width' to `a_min'.
@@ -245,7 +245,7 @@ feature
 		deferred
 		ensure
 			min_width = a_min
-		end; -- set_min_width
+		end;
 
 	min_width: INTEGER is
 			-- minimum width that application wishes widget
@@ -253,25 +253,25 @@ feature
 		deferred
 		ensure
 			Result >= 1
-		end; -- min_width
+		end;
 
 	set_title (a_title: STRING) is
 			-- Set `title' to `a_title'.
 		require
 			not_a_title_void: not (a_title = Void)
 		deferred
-		end; -- set_title
+		end;
 
 	title: STRING is
 			-- Application name to be displayed by
 			-- the window manager
 		deferred
-		end; -- title
+		end;
 
 	set_widget_group (a_widget: WIDGET) is
 			-- Set `widget_group' to `a_widget'.
 		deferred
-		end; -- set_widget_group
+		end;
 
 	widget_group: WIDGET is
 			-- Widget with wich current widget is associated.
@@ -280,7 +280,7 @@ feature
 			-- a group in some way; for example, it may move or
 			-- iconify them together
 		deferred
-		end -- widget_group
+		end
 
 end -- class WM_SHELL_I
 

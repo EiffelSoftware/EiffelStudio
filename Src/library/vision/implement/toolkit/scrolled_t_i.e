@@ -15,32 +15,32 @@ feature
 	show_vertical_scrollbar is
 			-- Make vertical scrollbar visible.
 		deferred
-		end; -- show_vertical_scrollbar
+		end;
 
 	hide_vertical_scrollbar is
 			-- Make vertical scrollbar invisible.
 		deferred
-		end; -- hide_vertical_scrollbar
+		end;
 
 	show_horizontal_scrollbar is
 			-- Make horizontal scrollbar visible.
 		deferred
-		end; -- show_horizontal_scrollbar
+		end;
 
 	hide_horizontal_scrollbar is
 			-- Make horizontal scrollbar invisible.
 		deferred
-		end; -- hide_horizontal_scrollbar
+		end;
 
 	is_vertical_scrollbar: BOOLEAN is
 			-- Is vertical scrollbar visible?
 		deferred
-		end; -- is_vertical_scrollbar
+		end;
 
 	is_horizontal_scrollbar: BOOLEAN is
 			-- Is horizontal scrollbar visible?
 		deferred
-		end -- is_horizontal_scrollbar
+		end
 
 end -- class SCROLLED_T_I
 

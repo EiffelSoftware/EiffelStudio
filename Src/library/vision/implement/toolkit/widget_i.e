@@ -15,7 +15,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_button_motion_action
+		end;
 
 	add_button_press_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when the
@@ -23,7 +23,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_button_press_action
+		end;
 
 	add_button_release_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when the
@@ -31,7 +31,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_button_release_action
+		end;
 
 	add_button_click_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when the
@@ -39,7 +39,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_button_click_action
+		end;
 
 	set_multi_click_time (time: INTEGER) is
 			-- Set time granted for clicking
@@ -57,7 +57,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_destroy_action
+		end;
 
 	add_enter_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when the
@@ -65,7 +65,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_enter_action
+		end;
 
 	add_key_press_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when a key
@@ -73,7 +73,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_key_press_action
+		end;
 
 	add_key_release_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when a key
@@ -81,7 +81,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_key_release_action
+		end;
 
 	add_leave_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when the
@@ -89,7 +89,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_leave_action
+		end;
 
 	add_pointer_motion_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when the
@@ -97,19 +97,19 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_pointer_motion_action
+		end;
 
 	background_color: COLOR is
 			-- Background color of widget
 		deferred
 		ensure
 			valid_result: Result /= Void
-		end; -- background_color
+		end;
 
 	background_pixmap: PIXMAP is
 			-- Background pixmap of widget
 		deferred
-		end; -- background_pixmap
+		end;
 
 	cursor: SCREEN_CURSOR is
 			-- Cursor of current widget
@@ -124,7 +124,7 @@ feature
 			non_void_list: wid_list /= Void;
 			list_not_empty: not wid_list.empty
 		deferred
-		end; -- destroy
+		end;
 
 	grab (a_cursor: SCREEN_CURSOR) is
 			-- Grab the mouse and the keyboard.
@@ -140,7 +140,7 @@ feature
 		deferred
 		ensure
 			height_large_enough: Result >= 0
-		end; -- height
+		end;
 
 	hide is
 			-- Make widget invisible on the screen.
@@ -154,7 +154,7 @@ feature
 	insensitive: BOOLEAN is
 			-- Is current widget sensitive?
 		deferred
-		end; -- insensitive
+		end;
 
 	lower is
 		-- lower current to the bottom of its
@@ -198,12 +198,12 @@ feature
 		deferred
 		ensure
 			realized
-		end; -- realize
+		end;
 
 	realized: BOOLEAN is
 			-- Is screen window realized?
 		deferred
-		end; -- realized
+		end;
 
 	remove_action (a_translation: STRING) is
 			-- Remove the command executed when `a_translation' occurs.
@@ -211,7 +211,7 @@ feature
 		require
 			a_translation_exists: not (a_translation = Void)
 		deferred
-		end; -- remove_action
+		end;
 
 	remove_button_motion_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' to the list of action to execute when the
@@ -219,7 +219,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_button_motion_action
+		end;
 
 	remove_button_press_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' to the list of action to execute when the
@@ -227,7 +227,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_button_press_action
+		end;
 
 	remove_button_release_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' to the list of action to execute when the
@@ -235,7 +235,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_button_release_action
+		end;
 
 	remove_button_click_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' to the list of action to execute when the
@@ -243,7 +243,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_button_click_action
+		end;
 
 	remove_destroy_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -251,7 +251,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_destroy_action
+		end;
 
 	remove_enter_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when the
@@ -259,7 +259,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_enter_action
+		end;
 
 	remove_key_press_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' to the list of action to execute when a key
@@ -267,7 +267,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_key_press_action
+		end;
 
 	remove_key_release_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' to the list of action to execute when a key
@@ -275,7 +275,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_key_release_action
+		end;
 
 	remove_leave_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when the
@@ -283,7 +283,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_leave_action
+		end;
 
 	remove_pointer_motion_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' to the list of action to execute when the
@@ -291,19 +291,19 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_pointer_motion_action
+		end;
 
 	screen: SCREEN_I is
 			-- Screen of widget
 		deferred
 		ensure
 			not (Result = Void)
-		end; -- screen
+		end;
 
 	screen_object: POINTER is
 			-- Screen object implementation of current widget
 		deferred
-		end; -- screen_object
+		end;
 
 	set_action (a_translation: STRING; a_command: COMMAND; argument: ANY) is
 			-- Set `a_command' to be executed when `a_translation' occurs.
@@ -312,7 +312,7 @@ feature
 			not_a_command_void: not (a_command = Void);
 			a_translation_exists: not (a_translation = Void)
 		deferred
-		end; -- set_action
+		end;
 
 	set_background_color (new_color: COLOR) is
 			-- Set background color to `new_color'.
@@ -321,7 +321,7 @@ feature
 		deferred
 		ensure
 			background_color_set: background_color = new_color;
-		end; -- set_background_color
+		end;
 
 	set_background_pixmap (a_pixmap: PIXMAP) is
 			-- Set background pixmap to `a_pixmap'.
@@ -330,7 +330,7 @@ feature
 		deferred
 		ensure
 			background_pixmap_set: background_pixmap = a_pixmap;
-		end; -- set_background_pixmap
+		end;
 
 	set_cursor (a_cursor: SCREEN_CURSOR) is
 			-- Set `cursor' of current widget to `a_cursor'.
@@ -345,7 +345,7 @@ feature
 		require
 			height_large_enough: new_height >= 0
 		deferred
-		end; -- set_height
+		end;
 
 	set_insensitive (flag: BOOLEAN) is
 			-- Set current widget in insensitive mode if `flag'. This means
@@ -357,7 +357,7 @@ feature
 		deferred
 		ensure
 			flag = insensitive
-		end; -- set_insensitive
+		end;
 
 	set_managed (flag: BOOLEAN) is
 			-- Enable geometry managment on screen widget implementation,
@@ -366,7 +366,7 @@ feature
 		deferred
 		ensure
 			managed = flag
-		end; -- set_managed
+		end;
 
 	set_no_event_propagation is
 			-- Don't propagate event to direct ancestor.
@@ -382,7 +382,7 @@ feature
 			width_large_enough: new_width >= 0;
 			height_large_enough: new_height >= 0
 		deferred
-		end; -- set_size
+		end;
 
 	set_widget_default is
 		deferred
@@ -393,25 +393,25 @@ feature
 		require
 			width_large_enough: new_width >= 0;
 		deferred
-		end; -- set_width
+		end;
 
 	set_x (new_x: INTEGER) is
 			-- Put at horizontal position `new_x' relative
 			-- to parent.
 		deferred
-		end; -- set_x
+		end;
 
 	set_x_y (new_x: INTEGER; new_y: INTEGER) is
 			-- Put at horizontal position `new_x' and at
 			-- vertical position `new_y' relative to parent.
 		deferred
-		end; -- set_x_y
+		end;
 
 	set_y (new_y: INTEGER) is
 			-- Put at vertical position `new_y' relative
 			-- to parent.
 		deferred
-		end; -- set_y
+		end;
 
 	show is
 			-- Make widget visible on the screen.
@@ -434,7 +434,7 @@ feature
 		require
 			widget_realized: realized
 		deferred
-		end; -- ungrab
+		end;
 
 	unrealize is
 			-- Destroy screen window implementation and all
@@ -442,14 +442,14 @@ feature
 		deferred
 		ensure
 			not realized
-		end; -- unrealize
+		end;
 
 	width: INTEGER is
 			-- Width of widget
 		deferred
 		ensure
 			width_large_enough: Result >= 0
-		end; -- width
+		end;
 
 	x: INTEGER is
 			-- Horizontal position relative to parent
@@ -459,7 +459,7 @@ feature
 	y: INTEGER is
 			-- Vertical position relative to parent
 		deferred
-		end -- y
+		end
 
 feature 
 

@@ -20,42 +20,42 @@ feature
 	down: BOOLEAN is
 			-- Is the arrow direction down ?
 		deferred
-		end; -- down
+		end;
 
 	left: BOOLEAN is
 			-- Is the arrow direction left ?
 		deferred
-		end; -- left
+		end;
 
 	right: BOOLEAN is
 			-- Is the arrow direction right ?
 		deferred
-		end; -- right
+		end;
 
 	set_down is
 			-- Set the arrow direction to down.
 		deferred
-		end; -- set_down
+		end;
 
 	set_left is
 			-- Set the arrow direction to left.
 		deferred
-		end; -- set_left
+		end;
 
 	set_right is
 			-- Set the arrow direction to right.
 		deferred
-		end; -- set_right
+		end;
 
 	set_up is
 			-- Set the arrow direction to up.
 		deferred
-		end; -- set_up
+		end;
 
 	up: BOOLEAN is
 			-- Is the arrow direction up ?
 		deferred
-		end -- up
+		end
 
 end --class ARROW_B_I
 

@@ -21,7 +21,8 @@ feature
 			x := new_x;
 			y := new_y
 		ensure
-			x = new_x and y = new_y
+			x_set: x = new_x 
+			y_set: y = new_y
 		end
 
 end

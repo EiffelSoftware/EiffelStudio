@@ -94,9 +94,9 @@ feature {NONE} -- Initialization
 					Interface_names.t_Static_type>>)
 --| FIXME XR: Use preferences to store/restore column widths
 			stack_list.set_column_widths (<<100, 100, 100>>)
-			stack_list.drop_actions.extend (~on_element_drop)
-			stack_list.key_press_actions.extend (~key_pressed)
-			update_agent := ~real_update
+			stack_list.drop_actions.extend (agent on_element_drop)
+			stack_list.key_press_actions.extend (agent key_pressed)
+			update_agent := agent real_update
 			widget := box
 		end
 
@@ -110,12 +110,12 @@ feature {NONE} -- Initialization
 			create save_call_stack_cmd.make
 			save_call_stack_cmd.set_mini_pixmaps (Pixmaps.Icon_save_call_stack)
 			save_call_stack_cmd.set_tooltip (Interface_names.e_Save_call_stack)
-			save_call_stack_cmd.add_agent (~save_call_stack)
+			save_call_stack_cmd.add_agent (agent save_call_stack)
 			tb.extend (save_call_stack_cmd.new_mini_toolbar_item)
 			create set_stack_depth_cmd.make
 			set_stack_depth_cmd.set_mini_pixmaps (Pixmaps.Icon_set_stack_depth)
 			set_stack_depth_cmd.set_tooltip (Interface_names.e_Set_stack_depth)
-			set_stack_depth_cmd.add_agent (~set_stack_depth)
+			set_stack_depth_cmd.add_agent (agent set_stack_depth)
 			set_stack_depth_cmd.enable_sensitive
 			tb.extend (set_stack_depth_cmd.new_mini_toolbar_item)
 			create explorer_bar_item.make_with_mini_toolbar (explorer_bar, widget, title, False, tb)
@@ -339,7 +339,7 @@ feature {NONE} -- Implementation
 			Result.append ("Code: ")
 			Result.append (Application.status.exception_code.out)
 			Result.append (" (")
-			!!e
+			create e
 			s := e.meaning (Application.status.exception_code)
 			if s = Void then
 				s := "Undefined"
@@ -383,10 +383,10 @@ feature {NONE} -- Implementation
 				else
 					Result.extend (Interface_names.l_Same_class_name)
 				end
-				Result.set_pebble_function (~pebble_from_x_y (?, ?, level))
+				Result.set_pebble_function (agent pebble_from_x_y (?, ?, level))
 				Result.set_accept_cursor (Cursors.cur_Setstop)
 				Result.set_data (level)
-				Result.pointer_button_press_actions.extend (~select_element(?,?,?,?,?,?,?,?,level))
+				Result.pointer_button_press_actions.extend (agent select_element(?,?,?,?,?,?,?,?,level))
 				if level = Application.current_execution_stack_number then
 					Result.set_pixmap (Pixmaps.Icon_green_arrow)
 					arrowed_level := level
@@ -486,7 +486,7 @@ feature {NONE} -- Implementation
 			end
 				--| OK, now `fn' represents a file that does not exist.
 			fd.set_file_name (fn)
-			fd.save_actions.extend (~save_call_stack_to_file (fd))
+			fd.save_actions.extend (agent save_call_stack_to_file (fd))
 			fd.show_modal_to_window (Debugger_manager.debugging_window.window)
 		end
 
@@ -585,13 +585,13 @@ feature {NONE} -- Implementation: set stack depth command
 			dialog.extend (vb)
 
 				-- Set up actions.
-			cancelb.select_actions.extend (~close_dialog)
-			okb.select_actions.extend (~accept_dialog)
-			show_all_radio.select_actions.extend (element_nb~disable_sensitive)
-			rb2.select_actions.extend (element_nb~enable_sensitive)
+			cancelb.select_actions.extend (agent close_dialog)
+			okb.select_actions.extend (agent accept_dialog)
+			show_all_radio.select_actions.extend (agent element_nb.disable_sensitive)
+			rb2.select_actions.extend (agent element_nb.enable_sensitive)
 			dialog.set_default_push_button (okb)
 			dialog.set_default_cancel_button (cancelb)
-			dialog.show_actions.extend (element_nb~set_focus)
+			dialog.show_actions.extend (agent element_nb.set_focus)
 			
 			dialog.show_modal_to_window (Debugger_manager.debugging_window.window)
 		end

@@ -20,7 +20,7 @@ inherit
 	
 	SHARED_WORKBENCH
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			show_current_class_cluster_cmd.set_tooltip (Interface_names.e_Show_class_cluster)
 			show_current_class_cluster_cmd.set_mini_pixmaps (Pixmaps.Icon_view_small)
 			show_current_class_cluster_cmd.set_name ("Show_class_cluster")
-			show_current_class_cluster_cmd.add_agent (~show_current_class_cluster)
+			show_current_class_cluster_cmd.add_agent (agent show_current_class_cluster)
 			show_current_class_cluster_cmd.set_menu_name (Interface_names.m_Show_class_cluster)
 
 			create mini_toolbar
@@ -66,8 +66,8 @@ feature {NONE} -- Initialization
 			create sep
 			mini_toolbar.extend (sep)
 			but := show_current_class_cluster_cmd.new_mini_toolbar_item
-			but.drop_actions.extend (~show_class)
-			but.drop_actions.extend (~show_cluster)
+			but.drop_actions.extend (agent show_class)
+			but.drop_actions.extend (agent show_cluster)
 			mini_toolbar.extend (but)
 
 			widget.refresh

@@ -14,7 +14,7 @@ inherit
 			set_data
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -60,7 +60,7 @@ feature -- Status setting
 			data := a_class
 			set_pebble (stone)
 			drop_actions.wipe_out
-			drop_actions.set_veto_pebble_function (~droppable)
+			drop_actions.set_veto_pebble_function (agent droppable)
 			set_accept_cursor (Cursors.cur_Class)
 			set_deny_cursor (Cursors.cur_X_Class)
 --| FIXME XR: Tooltips do not work on tree items yet.
@@ -90,7 +90,7 @@ feature -- Status setting
 						set_pixmap (Pixmaps.Icon_class_symbol_color)
 					end
 				end
-				drop_actions.extend (~on_class_drop)
+				drop_actions.extend (agent on_class_drop)
 --| FIXME XR: When clusters can be moved effectively, uncomment this line.
 --				drop_actions.extend (~on_cluster_drop)
 			end
@@ -103,7 +103,7 @@ feature -- Status setting
 		do
 			associated_textable := textable
 			select_actions.wipe_out
-			select_actions.extend (~print_name)
+			select_actions.extend (agent print_name)
 		end
 
 	set_associated_window (window: like associated_window) is
@@ -112,7 +112,7 @@ feature -- Status setting
 			window /= Void
 		do
 			if associated_window = Void then
-				pointer_button_press_actions.extend (~double_press_action)
+				pointer_button_press_actions.extend (agent double_press_action)
 			end
 			associated_window := window
 		end

@@ -362,7 +362,7 @@ feature {NONE} -- Implementation
 				create minimize_button
 				minimize_button.set_pixmap (Pixmaps.icon_minimize @ 1)
 				minimize_button.enable_sensitive
-				minimize_button.select_actions.extend (~minimize)
+				minimize_button.select_actions.extend (agent minimize)
 				minimize_button.set_tooltip (Interface_names.f_Minimize)
 
 				system_toolbar.extend (minimize_button)
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 				create maximize_button
 				maximize_button.set_pixmap (Pixmaps.icon_maximize @ 1)
 				maximize_button.enable_sensitive
-				maximize_button.select_actions.extend (~maximize)
+				maximize_button.select_actions.extend (agent maximize)
 				maximize_button.set_tooltip (Interface_names.f_Maximize)
 
 				system_toolbar.extend (maximize_button)
@@ -382,7 +382,7 @@ feature {NONE} -- Implementation
 				create restore_button
 				restore_button.set_pixmap (Pixmaps.icon_restore @ 1)
 				restore_button.enable_sensitive
-				restore_button.select_actions.extend (~restore)
+				restore_button.select_actions.extend (agent restore)
 				restore_button.set_tooltip (Interface_names.f_Restore)
 			end
 
@@ -391,7 +391,7 @@ feature {NONE} -- Implementation
 			close_button.set_tooltip (Interface_names.f_Close)
 			if is_closeable then
 				close_button.enable_sensitive
-				close_button.select_actions.extend (~close)
+				close_button.select_actions.extend (agent close)
 			else
 				close_button.disable_sensitive
 			end

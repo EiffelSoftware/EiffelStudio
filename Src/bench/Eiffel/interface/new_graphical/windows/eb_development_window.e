@@ -110,7 +110,7 @@ inherit
 			{NONE} All
 		end
 
-creation {EB_WINDOW_MANAGER}
+create {EB_WINDOW_MANAGER}
 	make,
 	make_as_context_tool,
 	make_as_editor
@@ -2639,7 +2639,7 @@ feature {NONE} -- Implementation
 
 	update_save_symbol is
 		do
-			{EB_FILEABLE} Precursor
+			Precursor {EB_FILEABLE}
 			if changed then
 				save_cmd.enable_sensitive
 				address_manager.disable_formatters
@@ -2938,7 +2938,7 @@ feature {NONE} -- Implementation
 	recycle is
 			-- Call the precursors.
 		do
-			{EB_TOOL_MANAGER} Precursor
+			Precursor {EB_TOOL_MANAGER}
 			command_controller.recycle
 		end
 

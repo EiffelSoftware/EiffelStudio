@@ -81,13 +81,13 @@ feature {NONE} -- Initialization Implementation
 			if favorites_manager.development_window /= Void then
 				create menu_item
 				menu_item.set_text (Interface_names.m_Add_to_favorites)
-				menu_item.select_actions.extend (favorites_manager~add_class)
+				menu_item.select_actions.extend (agent favorites_manager.add_class)
 				extend (menu_item)
 			end
 
 			create menu_item
 			menu_item.set_text (Interface_names.m_Organize_favorites)
-			menu_item.select_actions.extend (favorites_manager~organize_favorites)
+			menu_item.select_actions.extend (agent favorites_manager.organize_favorites)
 			extend (menu_item)
 
 				-- Add the separator
@@ -107,7 +107,7 @@ feature {NONE} -- Initialization Implementation
 				else
 					a_class_item ?= an_item
 					create menu_item
-					menu_item.select_actions.extend (favorites_manager~go_to (a_class_item))
+					menu_item.select_actions.extend (agent favorites_manager.go_to (a_class_item))
 				end
 				menu_item.set_text (an_item.name)
 				menu_item.set_data (an_item)
@@ -139,7 +139,7 @@ feature {NONE} -- Initialization Implementation
 				else
 					a_class_item ?= an_item
 					create menu_item
-					menu_item.select_actions.extend (favorites_manager~go_to (a_class_item))
+					menu_item.select_actions.extend (agent favorites_manager.go_to (a_class_item))
 				end
 				menu_item.set_text (an_item.name)
 				menu_item.set_data (an_item)
@@ -170,7 +170,7 @@ feature -- Observer pattern
 				else
 					create menu_item
 					a_class_item ?= a_item
-					menu_item.select_actions.extend (favorites_manager~go_to (a_class_item))
+					menu_item.select_actions.extend (agent favorites_manager.go_to (a_class_item))
 				end
 				menu_item.set_text (a_item.name)
 				menu_item.set_data (a_item)

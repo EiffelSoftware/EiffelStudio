@@ -16,7 +16,7 @@ inherit
 
 	EB_SHARED_WINDOW_MANAGER
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

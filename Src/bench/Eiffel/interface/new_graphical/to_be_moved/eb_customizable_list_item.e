@@ -34,7 +34,7 @@ feature -- Initialization
 				is_separator := True
 			end -- if
 			set_pebble (Current)
-			drop_actions.extend (~add_to_parent_list)
+			drop_actions.extend (agent add_to_parent_list)
 		ensure
 			v_either_separator_or_command: data /= Void
 		end

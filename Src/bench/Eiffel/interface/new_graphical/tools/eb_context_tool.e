@@ -101,7 +101,7 @@ feature {NONE} -- Initialization
 				notebook.set_item_text (metrics.widget, interface_names.l_Tab_metrics)
 			end
 			notebook.set_tab_position (notebook.Tab_bottom)
-			notebook.selection_actions.extend (~on_tab_changed)
+			notebook.selection_actions.extend (agent on_tab_changed)
 			notebook.set_minimum_size (500, 200)
 
 			class_view.set_parent_notebook (notebook)

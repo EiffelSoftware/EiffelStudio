@@ -82,12 +82,12 @@ feature {NONE} -- Initialization
 				on_project_closed
 			end
 				-- Handle events.
-			edition_agent := ~on_project_edited
-			load_agent := ~on_project_loaded
-			create_agent := ~on_project_created
-			close_agent := ~on_project_closed
-			compile_start_agent := ~on_project_compiles
-			compile_stop_agent := ~on_project_compiled
+			edition_agent := agent on_project_edited
+			load_agent := agent on_project_loaded
+			create_agent := agent on_project_created
+			close_agent := agent on_project_closed
+			compile_start_agent := agent on_project_compiles
+			compile_stop_agent := agent on_project_compiled
 			mg.edition_agents.extend (edition_agent)
 			mg.create_agents.extend (create_agent)
 			mg.close_agents.extend (close_agent)
@@ -175,9 +175,9 @@ feature {NONE} -- Initialization
 			
 				-- Initialize timers.
 			create running_timer.make_with_interval (0)
-			running_timer.actions.extend (~update_running_icon)
+			running_timer.actions.extend (agent update_running_icon)
 			create compiling_timer.make_with_interval (0)
-			compiling_timer.actions.extend (~update_compiling_icon)
+			compiling_timer.actions.extend (agent update_compiling_icon)
 		end
 
 feature -- Status setting

@@ -15,7 +15,7 @@ inherit
 			pixmap
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

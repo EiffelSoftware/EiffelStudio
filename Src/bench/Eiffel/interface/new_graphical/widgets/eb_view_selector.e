@@ -20,7 +20,7 @@ feature -- Initialization
 			make_with_strings (Initial_strings)
 			set_text ("DEFAULT")
 			set_minimum_width (100)
-			return_actions.extend (~on_view_name_typed)
+			return_actions.extend (agent on_view_name_typed)
 		end
 
 feature {NONE} -- Events

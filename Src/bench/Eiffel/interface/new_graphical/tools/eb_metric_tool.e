@@ -50,7 +50,7 @@ feature -- Initialization
 			file_manager.add_observer (Current)
 			development_window := dw
 			context_tool := ctxt_tl
-			multi_column_list.drop_actions.extend (context_tool~launch_stone)
+			multi_column_list.drop_actions.extend (agent context_tool.launch_stone)
 		end
 
 feature -- Implementation
@@ -76,7 +76,7 @@ feature -- Implementation
 			create vb
 				create name
 				name.set_minimum_size (70, 22)
-				name.key_press_string_actions.extend (~enable_add)
+				name.key_press_string_actions.extend (agent enable_add)
 				vb.extend (name)
 				vb.disable_item_expand (name)
 			hb.extend (vb)
@@ -85,7 +85,7 @@ feature -- Implementation
 			create scope_label.make_with_text (" Scope ")
 			create scope_combobox
 			scope_combobox.set_minimum_size (80, 26)
-			scope_combobox.select_actions.extend (~scope_action)
+			scope_combobox.select_actions.extend (agent scope_action)
 			scope_combobox.disable_edit
 			create scopes.make
 
@@ -106,7 +106,7 @@ feature -- Implementation
 			create vb
 				metric_field.set_minimum_size (140, 22)
 				metric_field.set_text (interface_names.metric_classes)
-				metric_field.pointer_button_release_actions.extend (~metric_field_display_metric_menu)
+				metric_field.pointer_button_release_actions.extend (agent metric_field_display_metric_menu)
 				metric_field.disable_edit
 				vb.extend (metric_field)
 				vb.disable_item_expand (metric_field)
@@ -117,7 +117,7 @@ feature -- Implementation
 				vb.set_border_width (1)
 				create metric_button
 				metric_button.set_pixmap (Pixmaps.Icon_down_triangle)
-				metric_button.select_actions.extend (~display_metric_menu)
+				metric_button.select_actions.extend (agent display_metric_menu)
 				metric_button.set_minimum_size (15, 20)
 				vb.extend (metric_button)
 				vb.disable_item_expand (metric_button)
@@ -539,7 +539,7 @@ feature -- Combo box and field action.
 				if sub_menu /= Void then
 					enable_metric_menu (sub_menu)
 				else
-					a_menu.item.select_actions.extend (~metric_action (a_menu.item))
+					a_menu.item.select_actions.extend (agent metric_action (a_menu.item))
 				end
 				a_menu.forth
 			end
@@ -733,7 +733,7 @@ feature -- Archive
 			open_dialog.set_filter ("*.xml")
 			create ee
 			current_directory := ee.current_working_directory
-			open_dialog.open_actions.extend (~import_archive_for_measure)
+			open_dialog.open_actions.extend (agent import_archive_for_measure)
 			open_dialog.show_modal_to_window (development_window.window)
 			ee.change_working_directory (current_directory)
 		end
@@ -1014,7 +1014,7 @@ feature -- Displayed messages in column list form
 				--internal_multi_column_list.align_text_right (6)
 				--| Last column is always expanded on gtk.
 
-				internal_multi_column_list.pointer_button_press_actions.extend (~right_click_action)
+				internal_multi_column_list.pointer_button_press_actions.extend (agent right_click_action)
 
 			end
 			Result := internal_multi_column_list
@@ -1046,11 +1046,11 @@ feature -- Displayed messages in column list form
 			if a_button = 3 then
 				create menu
 				create menu_item.make_with_text ("Update selected row(s)")
-				menu_item.select_actions.extend (~update_selected_rows)
+				menu_item.select_actions.extend (agent update_selected_rows)
 				menu.extend (menu_item)
 
 				create menu_item.make_with_text ("Update all rows")
-				menu_item.select_actions.extend (~update_all)
+				menu_item.select_actions.extend (agent update_all)
 				menu.extend (menu_item)
 
 				menu.show

@@ -48,9 +48,9 @@ feature {NONE} -- Initialization
 			build_list
 
 				-- Add actions
- 			pointer_button_release_actions.extend (~button_action)
-			key_press_actions.extend (~key_action)
-			drop_actions.extend (~drop_class (?))
+ 			pointer_button_release_actions.extend (agent button_action)
+			key_press_actions.extend (agent key_action)
+			drop_actions.extend (agent drop_class (?))
 
 			set_minimum_height (80)
 		end

@@ -51,11 +51,11 @@ feature {NONE} -- Initialization
 
 				-- Initialize undoable command history.
 			create history 
-			history.do_actions.extend (~on_history_do_command)
-			history.undo_actions.extend (~on_history_undo_command)
-			history.undo_exhausted_actions.extend (~on_history_undo_exhausted)
-			history.redo_exhausted_actions.extend (~on_history_redo_exhausted)
-			project_close_agent := ~store
+			history.do_actions.extend (agent on_history_do_command)
+			history.undo_actions.extend (agent on_history_undo_command)
+			history.undo_exhausted_actions.extend (agent on_history_undo_exhausted)
+			history.redo_exhausted_actions.extend (agent on_history_redo_exhausted)
+			project_close_agent := agent store
 			Eiffel_project.manager.close_agents.extend (project_close_agent)
 			development_window.window_manager.add_observer (Current)
 
@@ -72,14 +72,14 @@ feature {NONE} -- Initialization
 			create horizontal_box
 			create vertical_scrollbar.make_with_value_range (create {INTEGER_INTERVAL}.make (0, 1))
 			vertical_scrollbar.set_step (15)
-			vertical_scrollbar.change_actions.extend (~on_vertical_scroll)
+			vertical_scrollbar.change_actions.extend (agent on_vertical_scroll)
 			create horizontal_scrollbar.make_with_value_range (create {INTEGER_INTERVAL}.make (0, 1))
 			horizontal_scrollbar.set_step (15)
-			horizontal_scrollbar.change_actions.extend (~on_horizontal_scroll)
+			horizontal_scrollbar.change_actions.extend (agent on_horizontal_scroll)
 			horizontal_box.extend (area)
 			horizontal_box.extend (vertical_scrollbar)
 			horizontal_box.disable_item_expand (vertical_scrollbar)
-			area.resize_actions.extend (~on_resizing)
+			area.resize_actions.extend (agent on_resizing)
 			create empty_world
 			empty_world.drop_actions.extend (agent default_drop_class_stone)
 			empty_world.drop_actions.extend (agent default_drop_cluster_stone)
@@ -206,11 +206,11 @@ feature {NONE} -- Initialization
 			bar_bar.disable_item_expand (view_menu_toolbar)
 
 			create view_selector.make_default
-			view_selector.select_actions.extend (~on_view_changed)
+			view_selector.select_actions.extend (agent on_view_changed)
 			bar_bar.extend (view_selector)
 			bar_bar.disable_item_expand (view_selector)
 
-			customize_area.pointer_button_release_actions.extend (~on_customize)
+			customize_area.pointer_button_release_actions.extend (agent on_customize)
 		end
 		
 	show_view_menu is
@@ -445,7 +445,7 @@ feature -- Status setting
 	
 				create area
 				area.disable_sensitive
-				area.resize_actions.extend (~on_resizing)
+				area.resize_actions.extend (agent on_resizing)
 				horizontal_box.extend (area)
 				horizontal_box.extend (vertical_scrollbar)
 				horizontal_box.disable_item_expand (vertical_scrollbar)
@@ -509,7 +509,7 @@ feature -- Status setting
 	
 				create area
 				area.disable_sensitive
-				area.resize_actions.extend (~on_resizing)
+				area.resize_actions.extend (agent on_resizing)
 				horizontal_box.extend (area)
 				horizontal_box.extend (vertical_scrollbar)
 				horizontal_box.disable_item_expand (vertical_scrollbar)
@@ -894,9 +894,9 @@ feature {CONTEXT_DIAGRAM, EB_CONTEXT_DIAGRAM_COMMAND, DIAGRAM_COMPONENT} -- Stat
 					end
 				end
 			end
-			toggle_inherit_cmd.current_button.select_actions.extend (toggle_inherit_cmd~execute)
-			toggle_supplier_cmd.current_button.select_actions.extend (toggle_supplier_cmd~execute)
-			toggle_labels_cmd.current_button.select_actions.extend (toggle_labels_cmd~execute)
+			toggle_inherit_cmd.current_button.select_actions.extend (agent toggle_inherit_cmd.execute)
+			toggle_supplier_cmd.current_button.select_actions.extend (agent toggle_supplier_cmd.execute)
+			toggle_labels_cmd.current_button.select_actions.extend (agent toggle_labels_cmd.execute)
 		end
 
 	reset_toggles (cd: CONTEXT_DIAGRAM) is	
@@ -1373,7 +1373,7 @@ feature {INHERITANCE_FIGURE} -- Events
 					toggle_inherit_cmd.execute
 				end
 			end
-			toggle_inherit_cmd.current_button.select_actions.extend (toggle_inherit_cmd~execute)
+			toggle_inherit_cmd.current_button.select_actions.extend (agent toggle_inherit_cmd.execute)
 		end
 
 feature {CLASS_TEXT_MODIFIER} -- Events
@@ -1395,7 +1395,7 @@ feature {CLASS_TEXT_MODIFIER} -- Events
 					toggle_supplier_cmd.execute
 				end
 			end
-			toggle_supplier_cmd.current_button.select_actions.extend (toggle_supplier_cmd~execute)
+			toggle_supplier_cmd.current_button.select_actions.extend (agent toggle_supplier_cmd.execute)
 		end
 
 feature {EB_CONTEXT_TOOL} -- XML Output

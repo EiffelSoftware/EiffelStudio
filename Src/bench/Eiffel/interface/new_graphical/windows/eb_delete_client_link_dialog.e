@@ -39,8 +39,8 @@ feature {NONE} -- Initialization
 			cancelled := False
 			set_title (Interface_names.t_Diagram_delete_client_link)
 
-			create ok_button.make_with_text_and_action (Interface_names.b_Ok, ~ok_action)
-			create cancel_button.make_with_text_and_action (Interface_names.b_Cancel_text, ~cancel_action)
+			create ok_button.make_with_text_and_action (Interface_names.b_Ok, agent ok_action)
+			create cancel_button.make_with_text_and_action (Interface_names.b_Cancel_text, agent cancel_action)
 			create vb
 			vb.set_padding (Layout_constants.small_padding_size)
 			vb.set_border_width (Layout_constants.default_border_size)

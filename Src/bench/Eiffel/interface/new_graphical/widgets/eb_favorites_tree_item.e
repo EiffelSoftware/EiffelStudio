@@ -33,15 +33,15 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			data := an_item
-			drop_actions.set_veto_pebble_function (~droppable)
-			drop_actions.extend (~remove_class)
-			drop_actions.extend (~remove_folder)
+			drop_actions.set_veto_pebble_function (agent droppable)
+			drop_actions.extend (agent remove_class)
+			drop_actions.extend (agent remove_folder)
 			conv_folder ?= an_item
 			if conv_folder /= Void then
 					-- `an_item' is either a folder...
 				set_pebble (conv_folder)
-				drop_actions.extend (conv_folder~add_class_stone)
-				drop_actions.extend (conv_folder~add_favorite_folder)
+				drop_actions.extend (agent conv_folder.add_class_stone)
+				drop_actions.extend (agent conv_folder.add_favorite_folder)
 				set_pixmap (Pixmaps.Icon_favorites_folder @ 1)
 			else
 					-- ...or a class.
@@ -52,8 +52,8 @@ feature {NONE} -- Initialization
 				else
 					set_pixmap (Pixmaps.Icon_class_symbol_gray)
 				end
-				drop_actions.extend (~drop_folder_after)
-				drop_actions.extend (~drop_class_stone_after)
+				drop_actions.extend (agent drop_folder_after)
+				drop_actions.extend (agent drop_class_stone_after)
 			end
 			set_accept_cursor (an_item.mouse_cursor)
 			set_deny_cursor (an_item.Xmouse_cursor)

@@ -14,7 +14,7 @@ inherit
 			set_data
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -25,8 +25,8 @@ feature -- Initialization
 			default_create
 			create classes_double_click_agents.make
 			set_data (a_cluster)
-			collapse_actions.extend (~fake_load)
-			expand_actions.extend (~load)
+			collapse_actions.extend (agent fake_load)
+			expand_actions.extend (agent load)
 		end
 
 feature -- Status report
@@ -66,8 +66,8 @@ feature -- Status setting
 				set_pixmap (Pixmaps.Icon_read_only_cluster)
 			else
 				set_pixmap (Pixmaps.Icon_cluster_symbol @ 1)
-				drop_actions.set_veto_pebble_function (~droppable)
-				drop_actions.extend (~on_class_drop)
+				drop_actions.set_veto_pebble_function (agent droppable)
+				drop_actions.extend (agent on_class_drop)
 --| FIXME XR: When clusters can be moved effectively, uncomment this line.
 --				drop_actions.extend (~on_cluster_drop)
 			end
@@ -248,7 +248,7 @@ feature -- Interactivity
 			conv_class: EB_CLASSES_TREE_CLASS_ITEM
 		do
 			if associated_window = Void then
-				pointer_button_press_actions.extend (~double_press_action)
+				pointer_button_press_actions.extend (agent double_press_action)
 			end
 
 			associated_window := a_window

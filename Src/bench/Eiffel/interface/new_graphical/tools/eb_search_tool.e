@@ -71,8 +71,8 @@ feature {NONE} -- Initialization
 			size := label.minimum_width
 
 			create keyword_field
-			keyword_field.change_actions.extend (~enable_disable_search_button)
-			keyword_field.key_press_actions.extend (~key_pressed (?, True))
+			keyword_field.change_actions.extend (agent enable_disable_search_button)
+			keyword_field.key_press_actions.extend (agent key_pressed (?, True))
 			keyword_field.set_minimum_width (Layout_constants.Dialog_unit_to_pixels (100))
 
 			create search_box
@@ -81,12 +81,12 @@ feature {NONE} -- Initialization
 			search_box.extend (keyword_field)
 
 			create replace_check_button.make_with_text (Interface_names.l_Replace_with)
-			replace_check_button.select_actions.extend (~switch_mode)
-			replace_check_button.key_press_actions.extend (~key_pressed (?, True ))
+			replace_check_button.select_actions.extend (agent switch_mode)
+			replace_check_button.key_press_actions.extend (agent key_pressed (?, True ))
 			size := size.max (replace_check_button.minimum_width)
 			create replace_field
 			replace_field.set_minimum_width (Layout_constants.Dialog_unit_to_pixels (100))
-			replace_field.key_press_actions.extend (~key_pressed (?, False))
+			replace_field.key_press_actions.extend (agent key_pressed (?, False))
 			create replace_text.make (0)
 
 			create replace_box
@@ -443,7 +443,7 @@ feature {NONE} -- Implementation
 
 			create options_button.make_with_text (Interface_names.l_Search_options_hide)
 			options_button.set_pixmap (Pixmaps.Icon_nothing)
-			options_button.pointer_button_press_actions.force_extend (~toggle_options)
+			options_button.pointer_button_press_actions.force_extend (agent toggle_options)
 			create options_toolbar
 			options_toolbar.extend (options_button)
 			create frm
@@ -504,9 +504,9 @@ feature {NONE} -- Implementation
 		local
 			cell: EV_CELL
 		do
-			create search_button.make_with_text_and_action (Interface_names.b_Search,~search)
+			create search_button.make_with_text_and_action (Interface_names.b_Search,agent search)
 			search_button.disable_sensitive
-			create replace_button.make_with_text_and_action (Interface_names.b_Replace,~replace)
+			create replace_button.make_with_text_and_action (Interface_names.b_Replace,agent replace)
 
 			create Result
 			Result.set_padding (Layout_constants.Small_padding_size)

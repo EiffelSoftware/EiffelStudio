@@ -46,13 +46,13 @@ feature {NONE} -- Initialization
 			hb.extend (new_tab (1))
 			hb.disable_item_expand (hb.last)
 			create feature_name_field.make_with_text ("new_feature")
-			feature_name_field.change_actions.force_extend (~on_declaration_change)
+			feature_name_field.change_actions.force_extend (agent on_declaration_change)
 			feature_name_field.set_minimum_width (70)
 			hb.extend (feature_name_field)
 			hb.extend (new_label (": "))
 			hb.disable_item_expand (hb.last)
 			create type_selector
-			type_selector.selector.change_actions.extend (~on_declaration_change)
+			type_selector.selector.change_actions.extend (agent on_declaration_change)
 			hb.extend (type_selector)
 			hb.extend (create {EV_CELL})
 			extend (hb)
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			add_label ("invariant", 0)
 			create invariant_field
 			invariant_field.set_text (Pc_none)
-			invariant_field.focus_in_actions.extend (~on_invariant_focus_gain)
+			invariant_field.focus_in_actions.extend (agent on_invariant_focus_gain)
 			add_indented (invariant_field, 1)
 
 			create procedure_check_box.make_with_text ("Generate set procedure")

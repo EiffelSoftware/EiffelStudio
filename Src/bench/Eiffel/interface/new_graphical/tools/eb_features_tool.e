@@ -19,7 +19,7 @@ inherit
 
 	SHARED_EIFFEL_PROJECT
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			if pixmap /= Void then
 				explorer_bar_item.set_pixmap (pixmap)
 			end
-			explorer_bar_item.show_actions.extend (~on_bar_item_shown)
+			explorer_bar_item.show_actions.extend (agent on_bar_item_shown)
 			explorer_bar.add (explorer_bar_item)
 			explorer_bar.repack_widgets
 		end

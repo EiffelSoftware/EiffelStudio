@@ -108,8 +108,8 @@ feature {NONE} -- Initialization
 			hb.set_padding (Layout_constants.small_padding_size)
 			hb.extend (create {EV_CELL})
 
-			create ok_button.make_with_text_and_action (Interface_names.b_Ok, ~on_ok_pressed)
-			create cancel_button.make_with_text_and_action (Interface_names.b_Cancel_text, ~on_cancel_pressed)
+			create ok_button.make_with_text_and_action (Interface_names.b_Ok, agent on_ok_pressed)
+			create cancel_button.make_with_text_and_action (Interface_names.b_Cancel_text, agent on_cancel_pressed)
 			extend_button (hb, ok_button)
 			extend_button (hb, cancel_button)
 

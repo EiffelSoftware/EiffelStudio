@@ -246,7 +246,7 @@ feature -- Settings
 			not_has_browse_button: not has_browse_button
 		do
 			has_browse_button := True
-			browse_button_action := ~browse_directory
+			browse_button_action := agent browse_directory
 		ensure
 			has_browse_button: has_browse_button
 		end
@@ -261,7 +261,7 @@ feature -- Settings
 			valid_filter: a_filter /= Void and then not a_filter.is_empty
 		do
 			has_browse_button := True
-			browse_button_action := ~browse_file
+			browse_button_action := agent browse_file
 			browse_file_filter := a_filter
 		ensure
 			has_browse_button: has_browse_button
@@ -325,7 +325,7 @@ feature {NONE} -- Implementation
 				file_selector.set_start_directory (starting_directory)
 			end
 			file_selector.set_filter (browse_file_filter)
-			file_selector.open_actions.extend(~file_selected(file_selector))
+			file_selector.open_actions.extend(agent file_selected(file_selector))
 			file_selector.show_modal_to_window (caller.first_window)
 		end
 
@@ -359,7 +359,7 @@ feature {NONE} -- Implementation
 			then
 				dir_selector.set_start_directory (start_directory)
 			end
-			dir_selector.ok_actions.extend(~directory_selected(dir_selector))
+			dir_selector.ok_actions.extend(agent directory_selected(dir_selector))
 			dir_selector.show_modal_to_window (caller.first_window)
 		end
 

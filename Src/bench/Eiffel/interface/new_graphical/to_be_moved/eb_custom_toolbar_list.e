@@ -13,7 +13,7 @@ inherit
 			extend
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

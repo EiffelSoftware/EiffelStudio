@@ -66,16 +66,16 @@ feature {NONE} -- Initialization
 			create button_bar
 			button_bar.extend (create {EV_CELL})
 			create cancel_button.make_with_text ("Cancel")
-			cancel_button.select_actions.extend (~cancel)
+			cancel_button.select_actions.extend (agent cancel)
 			extend_button (button_bar, cancel_button)
 			create previous_button.make_with_text ("Previous")
-			previous_button.select_actions.extend (~previous)
+			previous_button.select_actions.extend (agent previous)
 			extend_button (button_bar, previous_button)
 			create next_button.make_with_text ("Next")
-			next_button.select_actions.extend (~next)
+			next_button.select_actions.extend (agent next)
 			extend_button (button_bar, next_button)
 			create finish_button.make_with_text ("Finish")
-			finish_button.select_actions.extend (~finish)
+			finish_button.select_actions.extend (agent finish)
 			extend_button (button_bar, finish_button)
 			create wizard_area
 			wizard_area.align_text_center
@@ -115,10 +115,10 @@ feature {NONE} -- Initialization
 			directory_area.extend (hb)
 			directory_area.disable_item_expand (hb)
 			create directory_field.make_with_text (Eiffel_system.document_path)
-			directory_field.return_actions.extend (~on_directory_return_pressed)
+			directory_field.return_actions.extend (agent on_directory_return_pressed)
 			hb.extend (directory_field)
 			create b.make_with_text ("Browse...")
-			b.select_actions.extend (~on_browse)
+			b.select_actions.extend (agent on_browse)
 			hb.extend (b)
 			hb.disable_item_expand (b)
 			directory_area.extend (create {EV_CELL})
@@ -534,8 +534,8 @@ feature {NONE} -- Implementation
 					loop
 						create str_element.make_with_text (filter_names.item)
 						list.extend (str_element)
-						str_element.pointer_double_press_actions.force_extend (str_element~enable_select)
-						str_element.pointer_double_press_actions.force_extend (~next)
+						str_element.pointer_double_press_actions.force_extend (agent str_element.enable_select)
+						str_element.pointer_double_press_actions.force_extend (agent next)
 						if filter_names.item.is_equal (html_css_filter_name) then
 							selected := list.count
 						end
@@ -676,7 +676,7 @@ feature {NONE} -- Implementation
 			from af.start until af.after loop
 				create cf.make (af.item)
 				create cb.make_with_text (cf.description)
-				cb.select_actions.extend (~on_cf_toggle (cf, cb))
+				cb.select_actions.extend (agent on_cf_toggle (cf, cb))
 				if cf.is_generated then
 					cb.enable_select
 				end
@@ -705,7 +705,7 @@ feature {NONE} -- Implementation
 			create right_vb
 			create button_hb
 			create view_list
-			create set_view_button.make_with_text_and_action ("Set", ~on_set_view_button_pressed)
+			create set_view_button.make_with_text_and_action ("Set", agent on_set_view_button_pressed)
 			set_view_button.disable_sensitive
 			create view_label.make_with_text ("Select a cluster to display available views")
 			cluster_list := cluster_include.include_list
@@ -722,7 +722,7 @@ feature {NONE} -- Implementation
 					cluster_row.extend ("DEFAULT")
 					views := g.available_views
 					cluster_row.set_data (views)
-					cluster_row.select_actions.extend (~on_cluster_selected (cluster_row))
+					cluster_row.select_actions.extend (agent on_cluster_selected (cluster_row))
 					view_mcl.extend (cluster_row)
 					
 					if not views.is_empty then
@@ -816,7 +816,7 @@ feature {NONE} -- Implementation
 			path: STRING
 		do
 			create d
-			d.ok_actions.extend (~on_directory_change (d))
+			d.ok_actions.extend (agent on_directory_change (d))
 			path := directory_field.text
 			if not path.is_empty and then (create {DIRECTORY}.make (path)).exists then
 				d.set_start_directory (path)

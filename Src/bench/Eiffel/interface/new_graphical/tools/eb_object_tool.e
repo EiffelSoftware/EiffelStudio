@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			display_first_onces := False
 			display_first_special := True
 			display_first := True
-			update_agent := ~real_update
+			update_agent := agent real_update
 		end
 
 	build_interface is
@@ -72,14 +72,14 @@ feature {NONE} -- Initialization
 			create split
 			split.disable_flat_separator
 			create local_tree
-			local_tree.drop_actions.extend (~drop_stack_element)
-			local_tree.key_press_actions.extend (~debug_value_key_action (local_tree, ?))
+			local_tree.drop_actions.extend (agent drop_stack_element)
+			local_tree.key_press_actions.extend (agent debug_value_key_action (local_tree, ?))
 			local_tree.set_minimum_size (100, 100)
 			split.set_first (local_tree)
 			create object_tree
-			object_tree.drop_actions.extend (~add_object)
-			object_tree.key_press_actions.extend (~object_key_action)
-			object_tree.key_press_actions.extend (~debug_value_key_action (object_tree, ?))
+			object_tree.drop_actions.extend (agent add_object)
+			object_tree.key_press_actions.extend (agent object_key_action)
+			object_tree.key_press_actions.extend (agent debug_value_key_action (object_tree, ?))
 			split.set_second (object_tree)
 			split.enable_flat_separator
 			expand_result := True
@@ -415,7 +415,7 @@ feature {EB_SET_SLICE_SIZE_CMD}
 			Result.set_data (dv)
 			if dv.expandable then
 				Result.extend (create {EV_TREE_ITEM}.make_with_text ("Bug"))
-				Result.expand_actions.extend (~fill_item (Result))
+				Result.expand_actions.extend (agent fill_item (Result))
 			end
 			if dv.address /= Void then
 				create ost.make (dv.address, dv.name, dv.dynamic_class)
@@ -679,7 +679,7 @@ feature {NONE} -- Implementation
 						--| Add expand actions.
 					folder_item.extend (new_item)
 					folder_item.set_data (dv)
-					folder_item.expand_actions.extend (~fill_onces (folder_item))
+					folder_item.expand_actions.extend (agent fill_onces (folder_item))
 				end
 			end
 				-- We remove the dummy item.

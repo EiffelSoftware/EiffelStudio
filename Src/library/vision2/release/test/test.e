@@ -51,11 +51,9 @@ feature
 			first_window.set_title ("Eiffel Vision Widgets")
 			create menu_bar
 			first_window.set_menu_bar (menu_bar)
-			first_window.set_status_bar (create {EV_STATUS_BAR}.make_for_test)
 			create object_menu.make_with_text ("Other objects")
 			menu_bar.extend (object_menu)
 			create {EV_VERTICAL_BOX} box
-			box.extend (create {EV_TOOL_BAR}.make_for_test)
 			create hb
 			hb.extend (non_widgets_frame)
 			hb.disable_item_expand (non_widgets_frame)
@@ -84,7 +82,6 @@ feature
 					non_widgets.item.generating_type
 				)
 				object_menu.extend (menu_item)
-				menu_item.select_actions.extend (~display_test (non_widgets.item))
 				non_widgets.forth
 			end
 			create timer.make_with_interval (30*60*1000)
@@ -172,10 +169,14 @@ feature
 		local
 			i: INTEGER
 			scr: EV_SCREEN
+			x, y: INTEGER
 		do
 			create scr
 			scr.set_foreground_color (create {EV_COLOR}.make_with_rgb (1, 1, 1))
-			scr.draw_point (scr.pointer_position.x - 10 + random_int (20), scr.pointer_position.y - 10 + random_int (20))
+			x := scr.pointer_position.x - 10 + random_int (20)
+			y := scr.pointer_position.y - 10 + random_int (20)
+			scr.set_pointer_position (x, y)
+			scr.draw_point (x, y)
 			i := i + 1
 		end
 	
@@ -184,7 +185,7 @@ feature
 		local
 			snow_timer: EV_TIMEOUT
 		do
-			create snow_timer.make_with_interval (50)
+			create snow_timer.make_with_interval (200)
 			snow_timer.actions.extend (~snow)
 			a_tool.set_text (a_widget.generating_type)
 		end
@@ -381,7 +382,7 @@ feature
 			-- List of other Vision objects.
 		once
 			create Result.make
-			Result.extend (create {EV_FIGURE_ARC}.make_for_test)
+			Result.extend (create {EV_FIGURE_ARC})
 			Result.extend (create {EV_FIGURE_DOT}.make_for_test)
 --|FIXME		Result.extend (create {EV_FIGURE_DRAWER})
 			Result.extend (create {EV_FIGURE_ELLIPSE}.make_for_test)
@@ -392,7 +393,7 @@ feature
 			Result.extend (create {EV_FIGURE_PICTURE}.make_for_test)
 			Result.extend (create {EV_FIGURE_PIE_SLICE}.make_for_test)
 			Result.extend (create {EV_FIGURE_POLYGON}.make_for_test)
-			Result.extend (create {EV_FIGURE_POLYLINE}.make_for_test)
+			Result.extend (create {EV_FIGURE_POLYLINE})
 			Result.extend (create {EV_FIGURE_RECTANGLE}.make_for_test)
 			Result.extend (create {EV_FIGURE_TEXT}.make_for_test)
 			Result.extend (create {EV_FIGURE_WORLD})
@@ -525,17 +526,8 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.33  2000/04/26 21:43:25  oconnor
---| added snow
---|
---| Revision 1.32  2000/04/26 21:09:44  brendel
---| Added tool bar and status bar.
---|
---| Revision 1.31  2000/04/26 20:37:57  brendel
---| Added select actions in non-widget menu.
---|
---| Revision 1.30  2000/04/26 18:44:57  brendel
---| Created arc and polyline with make_for_test.
+--| Revision 1.34  2000/04/26 22:09:38  oconnor
+--| Snow II, the return!
 --|
 --| Revision 1.29  2000/04/26 18:32:35  brendel
 --| Reinserted changes.

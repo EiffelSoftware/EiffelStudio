@@ -284,9 +284,11 @@ internal class EiffelMethod
 
 			if (Is_C_External && is_static) {
 				Builder = ((TypeBuilder) current_class.Builder).
-					DefinePInvokeMethod( Name(), "Project.dll", Attributes,
+					DefinePInvokeMethod( Name(),
+					EiffelReflectionEmit.dll_name, Attributes,
 					CallingConventions.Standard, return_type, ParameterTypes,
 					CallingConvention.Cdecl, CharSet.Ansi);
+				((MethodBuilder) Builder).SetImplementationFlags (MethodImplAttributes.PreserveSig);
 			} else {
 //				if ((!IsInterfaceRoutine) && (!is_static || IsDeferred))
 //					Attributes = Attributes | MethodAttributes.NewSlot;

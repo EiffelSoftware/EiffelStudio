@@ -37,6 +37,10 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 				throw new ApplicationException ("Null current application domain");
 			AssemblyName assemblyName = new AssemblyName();
 			assemblyName.Name = Name;
+
+			dll_name = "lib" + Name + ".dll";
+			dll_prefix = Name;
+
 			FileStream fs = new FileStream (Location + "\\" + Name +
 											Key_filename_extension, FileMode.Open);
 //			assemblyName.KeyPair = new StrongNameKeyPair (fs);
@@ -2066,4 +2070,8 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 
 	// Last created Eiffel type
 	private static EiffelClass LastCreatedClass = null;
+
+	// Name of DLL containing C externals.
+	public static string dll_name;
+	public static string dll_prefix;
 }

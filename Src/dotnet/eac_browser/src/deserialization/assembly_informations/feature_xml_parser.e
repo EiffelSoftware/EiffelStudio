@@ -60,7 +60,6 @@ feature
 		local
 			l_name: STRING
 			l_attribute: STRING
-			l_column, l_line, l_byte: INTEGER
 		do
 --			print (start_tag.out)
 			if start_tag.name.is_equal (see_str) then

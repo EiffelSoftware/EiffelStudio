@@ -118,7 +118,6 @@ feature {NONE} -- Implementation
 			nt: CONSUMED_NESTED_TYPE
 			eac: EAC_BROWSER
 		do
-			--output.clear
 			create eac
 			ct := eac.consumed_type (assembly_of_dotnet_type, a_dotnet_type_name)
 			if ct /= Void then
@@ -275,13 +274,9 @@ feature {NONE} -- Scroolbar Setting
 			l_entity: ENTITY_LINE
 			l_data: CONSUMED_MEMBER
 			l_constructor_data: CONSUMED_CONSTRUCTOR
-			eac: EAC_BROWSER
-				--temp
 			stop: BOOLEAN
 			edit_box: EDIT_FEATURE_BOX
 		do
---			select_line_action (a_x, a_y, c, d, e, f, g, h)
-
 			from
 				i := first_line_to_display
 				factory_display.lines.go_i_th (first_line_to_display)
@@ -335,7 +330,7 @@ feature {NONE} -- Scroolbar Setting
 			-- action performed when double clicking.
 			-- | loop on all lines and set selected to False except for the selected line.
 		local
-			current_x_position, current_y_position: INTEGER
+			current_y_position: INTEGER
 			i: INTEGER
 			l_line: DISPLAYED_LINE
 			initial_cursor: CURSOR
@@ -393,7 +388,7 @@ feature {NONE} -- Scroolbar Setting
 	set_scroll_bares is
 			-- set scroll bares.
 		local
-			nb_line, max_index_range, i: INTEGER
+			nb_line, max_index_range: INTEGER
 		do
 			nb_line := factory_display.lines.count + (output.height / 2 / Nb_pixel_line).truncated_to_integer
 			max_index_range := (((nb_line * Nb_pixel_line) - output.height) / Nb_pixel_line).truncated_to_integer

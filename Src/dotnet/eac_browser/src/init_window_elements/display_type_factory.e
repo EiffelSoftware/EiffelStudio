@@ -324,7 +324,6 @@ feature {NONE} -- Implementation
 			-- Store all signatures functions contained in `array'.
 		local
 			i: INTEGER
-			signature_function: STRING
 			l_returned_type: CONSUMED_REFERENCED_TYPE
 			l_array_returned_type: CONSUMED_ARRAY_TYPE
 			functions_list: LINKED_LIST [COMPARABLE_CONSUMED_PROCEDURE]
@@ -417,8 +416,7 @@ feature {NONE} -- Implementation
 	print_properties (array: ARRAY [CONSUMED_PROPERTY]) is
 			-- Store all signatures properties contained in `array'.
 		local
-			i, j: INTEGER
-			signature_property: STRING
+			i: INTEGER
 			l_returned_type: CONSUMED_REFERENCED_TYPE
 			l_array_returned_type: CONSUMED_ARRAY_TYPE
 			properties_list: LINKED_LIST [COMPARABLE_CONSUMED_PROCEDURE]
@@ -501,8 +499,7 @@ feature {NONE} -- Implementation
 	print_events (array: ARRAY [CONSUMED_EVENT]) is
 			-- Store all signatures events contained in `array'.
 		local
-			i, j: INTEGER
-			signature_event: STRING
+			i: INTEGER
 			l_returned_type: CONSUMED_REFERENCED_TYPE
 			l_array_returned_type: CONSUMED_ARRAY_TYPE
 			events_list: LINKED_LIST [COMPARABLE_CONSUMED_PROCEDURE]
@@ -523,15 +520,12 @@ feature {NONE} -- Implementation
 				an_event := array.item (i)
 				if an_event.adder /= Void then
 					events_list.extend (create {COMPARABLE_CONSUMED_PROCEDURE}.make_with_consumed_procedure (an_event.adder))	
-					j := j + 1
 				end
 				if an_event.remover /= Void then
 					events_list.extend (create {COMPARABLE_CONSUMED_PROCEDURE}.make_with_consumed_procedure (an_event.remover))	
-					j := j + 1
 				end
 				if an_event.raiser /= Void then
 					events_list.extend (create {COMPARABLE_CONSUMED_PROCEDURE}.make_with_consumed_procedure (an_event.raiser))	
-					j := j + 1
 				end
 				
 				i := i + 1
@@ -594,7 +588,6 @@ feature {NONE} -- Implementation
 			-- Store all signatures attributes contained in `array'.
 		local
 			i: INTEGER
-			signature_field: STRING
 			attributes: SORTABLE_ARRAY [COMPARABLE_CONSUMED_FIELD]
 			l_field: CONSUMED_FIELD
 			l_constante_field: CONSUMED_LITERAL_FIELD

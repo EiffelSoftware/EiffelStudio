@@ -72,7 +72,6 @@ feature
 	on_end_tag (end_tag: XML_END_TAG) is
 			-- called whenever the parser findes an end element
 		local
-			l_str: STRING
 			l_number_of_char: INTEGER
 		do
 			if end_tag.name.is_equal (Members_str) then

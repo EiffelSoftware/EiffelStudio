@@ -18,9 +18,9 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		local
-			accelerator: EV_ACCELERATOR
-			key: EV_KEY
-			key_constants: EV_KEY_CONSTANTS
+--			accelerator: EV_ACCELERATOR
+--			key: EV_KEY
+--			key_constants: EV_KEY_CONSTANTS
 		do
 			Precursor {EV_DIALOG}
 			

@@ -1,0 +1,645 @@
+	<LI><OBJECT type="text/sitemap"><param name="Name" value="reference"><param name="Local" value="libraries\base_net\reference\index.html"></OBJECT>
+	<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="kernel"><param name="Local" value="libraries\base_net\reference\kernel\index.html"></OBJECT>
+		<UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="ANY"><param name="Local" value="libraries\base_net\reference\kernel\any_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="equals_object_object"><param name="Local" value="libraries\base_net\reference\kernel\any.html#f_equals_object_object"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_hash_code"><param name="Local" value="libraries\base_net\reference\kernel\any.html#f_get_hash_code"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_type"><param name="Local" value="libraries\base_net\reference\kernel\any.html#f_get_type"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\base_net\reference\kernel\any.html#f_is_equal"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="reference_equal"><param name="Local" value="libraries\base_net\reference\kernel\any.html#f_reference_equal"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string"><param name="Local" value="libraries\base_net\reference\kernel\any.html#f_to_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="void"><param name="Local" value="libraries\base_net\reference\kernel\any.html#f_void"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="ARRAY"><param name="Local" value="libraries\base_net\reference\kernel\array_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_is_fixed_size"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_get_is_fixed_size"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_is_read_only"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_get_is_read_only"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_is_synchronized"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_get_is_synchronized"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_length"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_get_length"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_rank"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_get_rank"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_sync_root"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_get_sync_root"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="count"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_count"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="item"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_item"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="lower"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_lower"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="put"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_put"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="upper"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_upper"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="binary_search"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_binary_search"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="binary_search_array_int32_int32_object"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_binary_search_array_int32_int32_object"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="binary_search_array_int32_int32_object_icomparer"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_binary_search_array_int32_int32_object_icomparer"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="binary_search_array_object_icomparer"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_binary_search_array_object_icomparer"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="clear"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_clear"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="clone"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_clone"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="copy"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_copy"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="copy_array_int32"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_copy_array_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="copy_to"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_copy_to"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="create_instance"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_create_instance"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="create_instance_type_array_int32_array_int32"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_create_instance_type_array_int32_array_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="create_instance_type_int32"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_create_instance_type_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="create_instance_type_int32_int32"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_create_instance_type_int32_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="create_instance_type_int32_int32_int32"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_create_instance_type_int32_int32_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_enumerator"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_get_enumerator"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_hash_code"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_get_hash_code"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_length_int32"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_get_length_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_lower_bound"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_get_lower_bound"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_upper_bound"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_get_upper_bound"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_value"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_get_value"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_value_array_int32"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_get_value_array_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_value_int32_int32"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_get_value_int32_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_value_int32_int32_int32"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_get_value_int32_int32_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="index_of"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_index_of"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="index_of_array_object_int32"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_index_of_array_object_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="index_of_array_object_int32_int32"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_index_of_array_object_int32_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="initialize"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_initialize"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_is_equal"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="last_index_of"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_last_index_of"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="last_index_of_array_object_int32"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_last_index_of_array_object_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="last_index_of_array_object_int32_int32"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_last_index_of_array_object_int32_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="reverse"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_reverse"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="reverse_array_int32"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_reverse_array_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="set_value"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_set_value"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="set_value_object_int32"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_set_value_object_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="set_value_object_int32_int32"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_set_value_object_int32_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="set_value_object_int32_int32_int32"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_set_value_object_int32_int32_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="sort"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_sort"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="sort_array_array"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_sort_array_array"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="sort_array_array_icomparer"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_sort_array_array_icomparer"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="sort_array_array_int32_int32"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_sort_array_array_int32_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="sort_array_array_int32_int32_icomparer"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_sort_array_array_int32_int32_icomparer"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="sort_array_icomparer"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_sort_array_icomparer"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="sort_array_int32_int32"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_sort_array_int32_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="sort_array_int32_int32_icomparer"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_sort_array_int32_int32_icomparer"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string"><param name="Local" value="libraries\base_net\reference\kernel\array.html#f_to_string"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="BOOLEAN"><param name="Local" value="libraries\base_net\reference\kernel\boolean_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="false_string"><param name="Local" value="libraries\base_net\reference\kernel\boolean.html#f_false_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="true_string"><param name="Local" value="libraries\base_net\reference\kernel\boolean.html#f_true_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_to"><param name="Local" value="libraries\base_net\reference\kernel\boolean.html#f_compare_to"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_hash_code"><param name="Local" value="libraries\base_net\reference\kernel\boolean.html#f_get_hash_code"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_type_code"><param name="Local" value="libraries\base_net\reference\kernel\boolean.html#f_get_type_code"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\base_net\reference\kernel\boolean.html#f_is_equal"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse"><param name="Local" value="libraries\base_net\reference\kernel\boolean.html#f_parse"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string"><param name="Local" value="libraries\base_net\reference\kernel\boolean.html#f_to_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string_iformat_provider"><param name="Local" value="libraries\base_net\reference\kernel\boolean.html#f_to_string_iformat_provider"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_and"><param name="Local" value="libraries\base_net\reference\kernel\boolean.html#f__infix_and"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_and_then"><param name="Local" value="libraries\base_net\reference\kernel\boolean.html#f__infix_and_then"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_implies"><param name="Local" value="libraries\base_net\reference\kernel\boolean.html#f__infix_implies"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_prefix_not"><param name="Local" value="libraries\base_net\reference\kernel\boolean.html#f__prefix_not"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_or"><param name="Local" value="libraries\base_net\reference\kernel\boolean.html#f__infix_or"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_or_else"><param name="Local" value="libraries\base_net\reference\kernel\boolean.html#f__infix_or_else"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_xor"><param name="Local" value="libraries\base_net\reference\kernel\boolean.html#f__infix_xor"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="BOX"><param name="Local" value="libraries\base_net\reference\kernel\box_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="has"><param name="Local" value="libraries\base_net\reference\kernel\box.html#f_has"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="changeable_comparison_criterion"><param name="Local" value="libraries\base_net\reference\kernel\box.html#f_changeable_comparison_criterion"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="full"><param name="Local" value="libraries\base_net\reference\kernel\box.html#f_full"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_empty"><param name="Local" value="libraries\base_net\reference\kernel\box.html#f_is_empty"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="object_comparison"><param name="Local" value="libraries\base_net\reference\kernel\box.html#f_object_comparison"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_objects"><param name="Local" value="libraries\base_net\reference\kernel\box.html#f_compare_objects"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_references"><param name="Local" value="libraries\base_net\reference\kernel\box.html#f_compare_references"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="linear_representation"><param name="Local" value="libraries\base_net\reference\kernel\box.html#f_linear_representation"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="implementation"><param name="Local" value="libraries\base_net\reference\kernel\box.html#f_implementation"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="CHARACTER"><param name="Local" value="libraries\base_net\reference\kernel\character_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_to"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_compare_to"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_hash_code"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_get_hash_code"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_numeric_value"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_get_numeric_value"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_numeric_value_string"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_get_numeric_value_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_type_code"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_get_type_code"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_unicode_category"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_get_unicode_category"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_unicode_category_string"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_get_unicode_category_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_control"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_is_control"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_control_string"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_is_control_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_digit"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_is_digit"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_digit_string"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_is_digit_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_is_equal"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_letter"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_is_letter"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_letter_or_digit"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_is_letter_or_digit"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_letter_or_digit_string"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_is_letter_or_digit_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_letter_string"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_is_letter_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_lower"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_is_lower"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_lower_string"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_is_lower_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_number"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_is_number"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_number_string"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_is_number_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_punctuation"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_is_punctuation"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_punctuation_string"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_is_punctuation_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_separator"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_is_separator"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_separator_string"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_is_separator_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_surrogate"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_is_surrogate"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_surrogate_string"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_is_surrogate_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_symbol"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_is_symbol"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_symbol_string"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_is_symbol_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_upper"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_is_upper"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_upper_string"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_is_upper_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_white_space"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_is_white_space"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_white_space_string"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_is_white_space_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_parse"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_lower"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_to_lower"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_lower_char_culture_info"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_to_lower_char_culture_info"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_to_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string_char"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_to_string_char"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string_iformat_provider"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_to_string_iformat_provider"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_upper"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_to_upper"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_upper_char_culture_info"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f_to_upper_char_culture_info"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_lt"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f__infix_lt"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_le"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f__infix_le"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_gt"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f__infix_gt"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_ge"><param name="Local" value="libraries\base_net\reference\kernel\character.html#f__infix_ge"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="CONTAINER"><param name="Local" value="libraries\base_net\reference\kernel\container_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="has"><param name="Local" value="libraries\base_net\reference\kernel\container.html#f_has"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="changeable_comparison_criterion"><param name="Local" value="libraries\base_net\reference\kernel\container.html#f_changeable_comparison_criterion"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_empty"><param name="Local" value="libraries\base_net\reference\kernel\container.html#f_is_empty"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="object_comparison"><param name="Local" value="libraries\base_net\reference\kernel\container.html#f_object_comparison"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_objects"><param name="Local" value="libraries\base_net\reference\kernel\container.html#f_compare_objects"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_references"><param name="Local" value="libraries\base_net\reference\kernel\container.html#f_compare_references"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="linear_representation"><param name="Local" value="libraries\base_net\reference\kernel\container.html#f_linear_representation"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="implementation"><param name="Local" value="libraries\base_net\reference\kernel\container.html#f_implementation"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="DOUBLE"><param name="Local" value="libraries\base_net\reference\kernel\double_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="epsilon"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f_epsilon"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="max_value"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f_max_value"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="min_value"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f_min_value"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_to"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f_compare_to"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_hash_code"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f_get_hash_code"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_type_code"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f_get_type_code"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f_is_equal"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_infinity"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f_is_infinity"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_na_n"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f_is_na_n"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_negative_infinity"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f_is_negative_infinity"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_positive_infinity"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f_is_positive_infinity"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f_parse"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse_string_iformat_provider"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f_parse_string_iformat_provider"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse_string_number_styles"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f_parse_string_number_styles"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse_string_number_styles_iformat_provider"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f_parse_string_number_styles_iformat_provider"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f_to_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string_iformat_provider"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f_to_string_iformat_provider"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string_string"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f_to_string_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string_string2"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f_to_string_string2"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_star"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f__infix_star"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_prefix_plus"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f__prefix_plus"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_plus"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f__infix_plus"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_minus"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f__infix_minus"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_prefix_minus"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f__prefix_minus"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_slash"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f__infix_slash"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_lt"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f__infix_lt"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_le"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f__infix_le"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_gt"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f__infix_gt"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_ge"><param name="Local" value="libraries\base_net\reference\kernel\double.html#f__infix_ge"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="ENUM"><param name="Local" value="libraries\base_net\reference\kernel\enum_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_to"><param name="Local" value="libraries\base_net\reference\kernel\enum.html#f_compare_to"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="format"><param name="Local" value="libraries\base_net\reference\kernel\enum.html#f_format"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_hash_code"><param name="Local" value="libraries\base_net\reference\kernel\enum.html#f_get_hash_code"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_name"><param name="Local" value="libraries\base_net\reference\kernel\enum.html#f_get_name"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_names"><param name="Local" value="libraries\base_net\reference\kernel\enum.html#f_get_names"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_type_code"><param name="Local" value="libraries\base_net\reference\kernel\enum.html#f_get_type_code"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_underlying_type"><param name="Local" value="libraries\base_net\reference\kernel\enum.html#f_get_underlying_type"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_values"><param name="Local" value="libraries\base_net\reference\kernel\enum.html#f_get_values"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_defined"><param name="Local" value="libraries\base_net\reference\kernel\enum.html#f_is_defined"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\base_net\reference\kernel\enum.html#f_is_equal"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse"><param name="Local" value="libraries\base_net\reference\kernel\enum.html#f_parse"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse_type_string_boolean"><param name="Local" value="libraries\base_net\reference\kernel\enum.html#f_parse_type_string_boolean"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_object"><param name="Local" value="libraries\base_net\reference\kernel\enum.html#f_to_object"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_object_type_int16"><param name="Local" value="libraries\base_net\reference\kernel\enum.html#f_to_object_type_int16"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_object_type_int32"><param name="Local" value="libraries\base_net\reference\kernel\enum.html#f_to_object_type_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_object_type_int64"><param name="Local" value="libraries\base_net\reference\kernel\enum.html#f_to_object_type_int64"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_object_type_object"><param name="Local" value="libraries\base_net\reference\kernel\enum.html#f_to_object_type_object"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string"><param name="Local" value="libraries\base_net\reference\kernel\enum.html#f_to_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string_iformat_provider"><param name="Local" value="libraries\base_net\reference\kernel\enum.html#f_to_string_iformat_provider"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string_string"><param name="Local" value="libraries\base_net\reference\kernel\enum.html#f_to_string_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string_string2"><param name="Local" value="libraries\base_net\reference\kernel\enum.html#f_to_string_string2"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="EXCEPTIONS"><param name="Local" value="libraries\base_net\reference\kernel\exceptions_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="class_name"><param name="Local" value="libraries\base_net\reference\kernel\exceptions.html#f_class_name"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="developer_exception_source"><param name="Local" value="libraries\base_net\reference\kernel\exceptions.html#f_developer_exception_source"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="exception"><param name="Local" value="libraries\base_net\reference\kernel\exceptions.html#f_exception"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="exception_trace"><param name="Local" value="libraries\base_net\reference\kernel\exceptions.html#f_exception_trace"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="help_link"><param name="Local" value="libraries\base_net\reference\kernel\exceptions.html#f_help_link"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="inner_exception"><param name="Local" value="libraries\base_net\reference\kernel\exceptions.html#f_inner_exception"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="original_class_name"><param name="Local" value="libraries\base_net\reference\kernel\exceptions.html#f_original_class_name"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="original_exception"><param name="Local" value="libraries\base_net\reference\kernel\exceptions.html#f_original_exception"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="original_recipient_name"><param name="Local" value="libraries\base_net\reference\kernel\exceptions.html#f_original_recipient_name"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="original_tag_name"><param name="Local" value="libraries\base_net\reference\kernel\exceptions.html#f_original_tag_name"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="recipient_name"><param name="Local" value="libraries\base_net\reference\kernel\exceptions.html#f_recipient_name"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="source"><param name="Local" value="libraries\base_net\reference\kernel\exceptions.html#f_source"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="tag_name"><param name="Local" value="libraries\base_net\reference\kernel\exceptions.html#f_tag_name"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="assertion_violation"><param name="Local" value="libraries\base_net\reference\kernel\exceptions.html#f_assertion_violation"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_developer_exception"><param name="Local" value="libraries\base_net\reference\kernel\exceptions.html#f_is_developer_exception"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="die"><param name="Local" value="libraries\base_net\reference\kernel\exceptions.html#f_die"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="raise"><param name="Local" value="libraries\base_net\reference\kernel\exceptions.html#f_raise"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="raise_from_exception"><param name="Local" value="libraries\base_net\reference\kernel\exceptions.html#f_raise_from_exception"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="EXCEPTION_MANAGER"><param name="Local" value="libraries\base_net\reference\kernel\exception_manager_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="last_exception"><param name="Local" value="libraries\base_net\reference\kernel\exception_manager.html#f_last_exception"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="raise"><param name="Local" value="libraries\base_net\reference\kernel\exception_manager.html#f_raise"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="FINITE"><param name="Local" value="libraries\base_net\reference\kernel\finite_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="has"><param name="Local" value="libraries\base_net\reference\kernel\finite.html#f_has"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="count"><param name="Local" value="libraries\base_net\reference\kernel\finite.html#f_count"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="changeable_comparison_criterion"><param name="Local" value="libraries\base_net\reference\kernel\finite.html#f_changeable_comparison_criterion"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="full"><param name="Local" value="libraries\base_net\reference\kernel\finite.html#f_full"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_empty"><param name="Local" value="libraries\base_net\reference\kernel\finite.html#f_is_empty"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="object_comparison"><param name="Local" value="libraries\base_net\reference\kernel\finite.html#f_object_comparison"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_objects"><param name="Local" value="libraries\base_net\reference\kernel\finite.html#f_compare_objects"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_references"><param name="Local" value="libraries\base_net\reference\kernel\finite.html#f_compare_references"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="linear_representation"><param name="Local" value="libraries\base_net\reference\kernel\finite.html#f_linear_representation"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="implementation"><param name="Local" value="libraries\base_net\reference\kernel\finite.html#f_implementation"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="HASH_TABLE"><param name="Local" value="libraries\base_net\reference\kernel\hash_table_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_make"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="current_keys"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_current_keys"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="dead_key"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_dead_key"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="found_item"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_found_item"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="has"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_has"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="has_item"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_has_item"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="item"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_item"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="item_for_iteration"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_item_for_iteration"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="key_at"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_key_at"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="key_for_iteration"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_key_for_iteration"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_@"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f__infix_@"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="capacity"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_capacity"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="count"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_count"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_is_equal"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="after"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_after"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="changeable_comparison_criterion"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_changeable_comparison_criterion"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_objects"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_compare_objects"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_references"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_compare_references"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="conflict"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_conflict"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="extendible"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_extendible"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="found"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_found"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="full"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_full"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="inserted"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_inserted"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_empty"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_is_empty"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_inserted"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_is_inserted"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="object_comparison"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_object_comparison"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="off"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_off"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="prunable"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_prunable"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="removed"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_removed"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="replaced"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_replaced"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="search"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_search"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="valid_key"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_valid_key"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="forth"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_forth"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="start"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_start"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="force"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_force"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="put"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_put"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="replace"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_replace"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="replace_key"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_replace_key"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="clear_all"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_clear_all"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="remove"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_remove"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="wipe_out"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_wipe_out"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="linear_representation"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_linear_representation"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="copy"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_copy"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="implementation"><param name="Local" value="libraries\base_net\reference\kernel\hash_table.html#f_implementation"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="INTEGER_16"><param name="Local" value="libraries\base_net\reference\kernel\integer_16_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="max_value"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f_max_value"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="min_value"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f_min_value"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_to"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f_compare_to"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_hash_code"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f_get_hash_code"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_type_code"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f_get_type_code"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f_is_equal"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f_parse"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse_string_iformat_provider"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f_parse_string_iformat_provider"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse_string_number_styles"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f_parse_string_number_styles"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse_string_number_styles_iformat_provider"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f_parse_string_number_styles_iformat_provider"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f_to_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string_iformat_provider"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f_to_string_iformat_provider"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string_string"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f_to_string_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string_string2"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f_to_string_string2"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_&"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f__infix_&"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_star"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f__infix_star"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_prefix_plus"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f__prefix_plus"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_plus"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f__infix_plus"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_minus"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f__infix_minus"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_prefix_minus"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f__prefix_minus"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_slash"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f__infix_slash"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_div"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f__infix_div"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_lt"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f__infix_lt"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_le"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f__infix_le"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_gt"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f__infix_gt"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_ge"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f__infix_ge"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_mod"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f__infix_mod"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_|"><param name="Local" value="libraries\base_net\reference\kernel\integer_16.html#f__infix_|"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="INTEGER_64"><param name="Local" value="libraries\base_net\reference\kernel\integer_64_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="max_value"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f_max_value"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="min_value"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f_min_value"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_to"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f_compare_to"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_hash_code"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f_get_hash_code"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_type_code"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f_get_type_code"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f_is_equal"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f_parse"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse_string_iformat_provider"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f_parse_string_iformat_provider"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse_string_number_styles"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f_parse_string_number_styles"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse_string_number_styles_iformat_provider"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f_parse_string_number_styles_iformat_provider"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f_to_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string_iformat_provider"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f_to_string_iformat_provider"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string_string"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f_to_string_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string_string2"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f_to_string_string2"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_&"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f__infix_&"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_star"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f__infix_star"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_prefix_plus"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f__prefix_plus"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_plus"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f__infix_plus"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_minus"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f__infix_minus"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_prefix_minus"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f__prefix_minus"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_slash"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f__infix_slash"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_div"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f__infix_div"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_lt"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f__infix_lt"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_le"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f__infix_le"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_gt"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f__infix_gt"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_ge"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f__infix_ge"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_mod"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f__infix_mod"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_|"><param name="Local" value="libraries\base_net\reference\kernel\integer_64.html#f__infix_|"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="INTEGER_8"><param name="Local" value="libraries\base_net\reference\kernel\integer_8_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="max_value"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f_max_value"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="min_value"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f_min_value"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_to"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f_compare_to"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_hash_code"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f_get_hash_code"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_type_code"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f_get_type_code"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f_is_equal"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f_parse"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse_string_iformat_provider"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f_parse_string_iformat_provider"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse_string_number_styles"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f_parse_string_number_styles"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse_string_number_styles_iformat_provider"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f_parse_string_number_styles_iformat_provider"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f_to_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string_iformat_provider"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f_to_string_iformat_provider"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string_string"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f_to_string_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string_string2"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f_to_string_string2"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_&"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f__infix_&"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_star"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f__infix_star"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_prefix_plus"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f__prefix_plus"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_plus"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f__infix_plus"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_minus"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f__infix_minus"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_prefix_minus"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f__prefix_minus"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_slash"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f__infix_slash"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_div"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f__infix_div"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_lt"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f__infix_lt"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_le"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f__infix_le"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_gt"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f__infix_gt"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_ge"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f__infix_ge"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_mod"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f__infix_mod"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_|"><param name="Local" value="libraries\base_net\reference\kernel\integer_8.html#f__infix_|"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="INTEGER"><param name="Local" value="libraries\base_net\reference\kernel\integer_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="max_value"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f_max_value"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="min_value"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f_min_value"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_to"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f_compare_to"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_hash_code"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f_get_hash_code"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_type_code"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f_get_type_code"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f_is_equal"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f_parse"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse_string_iformat_provider"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f_parse_string_iformat_provider"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse_string_number_styles"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f_parse_string_number_styles"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse_string_number_styles_iformat_provider"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f_parse_string_number_styles_iformat_provider"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f_to_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string_iformat_provider"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f_to_string_iformat_provider"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string_string"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f_to_string_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string_string2"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f_to_string_string2"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_&"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f__infix_&"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_star"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f__infix_star"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_prefix_plus"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f__prefix_plus"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_plus"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f__infix_plus"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_minus"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f__infix_minus"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_prefix_minus"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f__prefix_minus"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_slash"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f__infix_slash"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_div"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f__infix_div"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_lt"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f__infix_lt"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_le"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f__infix_le"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_gt"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f__infix_gt"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_ge"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f__infix_ge"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_mod"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f__infix_mod"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_|"><param name="Local" value="libraries\base_net\reference\kernel\integer.html#f__infix_|"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="LINEAR"><param name="Local" value="libraries\base_net\reference\kernel\linear_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="has"><param name="Local" value="libraries\base_net\reference\kernel\linear.html#f_has"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="index"><param name="Local" value="libraries\base_net\reference\kernel\linear.html#f_index"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="index_of"><param name="Local" value="libraries\base_net\reference\kernel\linear.html#f_index_of"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="item"><param name="Local" value="libraries\base_net\reference\kernel\linear.html#f_item"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="occurrences"><param name="Local" value="libraries\base_net\reference\kernel\linear.html#f_occurrences"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="search"><param name="Local" value="libraries\base_net\reference\kernel\linear.html#f_search"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="after"><param name="Local" value="libraries\base_net\reference\kernel\linear.html#f_after"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="changeable_comparison_criterion"><param name="Local" value="libraries\base_net\reference\kernel\linear.html#f_changeable_comparison_criterion"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="exhausted"><param name="Local" value="libraries\base_net\reference\kernel\linear.html#f_exhausted"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_empty"><param name="Local" value="libraries\base_net\reference\kernel\linear.html#f_is_empty"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="object_comparison"><param name="Local" value="libraries\base_net\reference\kernel\linear.html#f_object_comparison"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="off"><param name="Local" value="libraries\base_net\reference\kernel\linear.html#f_off"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_objects"><param name="Local" value="libraries\base_net\reference\kernel\linear.html#f_compare_objects"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_references"><param name="Local" value="libraries\base_net\reference\kernel\linear.html#f_compare_references"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="finish"><param name="Local" value="libraries\base_net\reference\kernel\linear.html#f_finish"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="forth"><param name="Local" value="libraries\base_net\reference\kernel\linear.html#f_forth"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="start"><param name="Local" value="libraries\base_net\reference\kernel\linear.html#f_start"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="linear_representation"><param name="Local" value="libraries\base_net\reference\kernel\linear.html#f_linear_representation"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="implementation"><param name="Local" value="libraries\base_net\reference\kernel\linear.html#f_implementation"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="POINTER"><param name="Local" value="libraries\base_net\reference\kernel\pointer_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="make_intptr"><param name="Local" value="libraries\base_net\reference\kernel\pointer.html#f_make_intptr"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="make_intptr_1"><param name="Local" value="libraries\base_net\reference\kernel\pointer.html#f_make_intptr_1"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_size"><param name="Local" value="libraries\base_net\reference\kernel\pointer.html#f_get_size"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="zero"><param name="Local" value="libraries\base_net\reference\kernel\pointer.html#f_zero"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_hash_code"><param name="Local" value="libraries\base_net\reference\kernel\pointer.html#f_get_hash_code"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\base_net\reference\kernel\pointer.html#f_is_equal"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_int32"><param name="Local" value="libraries\base_net\reference\kernel\pointer.html#f_to_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_int64"><param name="Local" value="libraries\base_net\reference\kernel\pointer.html#f_to_int64"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string"><param name="Local" value="libraries\base_net\reference\kernel\pointer.html#f_to_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_#=="><param name="Local" value="libraries\base_net\reference\kernel\pointer.html#f__infix_#=="></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_|="><param name="Local" value="libraries\base_net\reference\kernel\pointer.html#f__infix_|="></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="op_explicit"><param name="Local" value="libraries\base_net\reference\kernel\pointer.html#f_op_explicit"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="op_explicit_int32"><param name="Local" value="libraries\base_net\reference\kernel\pointer.html#f_op_explicit_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="op_explicit_int64"><param name="Local" value="libraries\base_net\reference\kernel\pointer.html#f_op_explicit_int64"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="op_explicit_int_ptr"><param name="Local" value="libraries\base_net\reference\kernel\pointer.html#f_op_explicit_int_ptr"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="REAL"><param name="Local" value="libraries\base_net\reference\kernel\real_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="epsilon"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f_epsilon"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="max_value"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f_max_value"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="min_value"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f_min_value"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_to"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f_compare_to"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_hash_code"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f_get_hash_code"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_type_code"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f_get_type_code"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f_is_equal"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_infinity"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f_is_infinity"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_na_n"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f_is_na_n"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_negative_infinity"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f_is_negative_infinity"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_positive_infinity"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f_is_positive_infinity"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f_parse"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse_string_iformat_provider"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f_parse_string_iformat_provider"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse_string_number_styles"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f_parse_string_number_styles"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="parse_string_number_styles_iformat_provider"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f_parse_string_number_styles_iformat_provider"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f_to_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string_iformat_provider"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f_to_string_iformat_provider"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string_string"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f_to_string_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string_string2"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f_to_string_string2"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_star"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f__infix_star"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_prefix_plus"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f__prefix_plus"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_plus"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f__infix_plus"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_minus"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f__infix_minus"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_prefix_minus"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f__prefix_minus"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_slash"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f__infix_slash"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_lt"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f__infix_lt"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_le"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f__infix_le"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_gt"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f__infix_gt"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_ge"><param name="Local" value="libraries\base_net\reference\kernel\real.html#f__infix_ge"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="STRING"><param name="Local" value="libraries\base_net\reference\kernel\string_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="empty"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_empty"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_chars"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_get_chars"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_length"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_get_length"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="clone"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_clone"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_compare"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_ordinal"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_compare_ordinal"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_ordinal_string_int32"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_compare_ordinal_string_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_string_int32_string_int32_int32"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_compare_string_int32_string_int32_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_string_int32_string_int32_int32_boolean"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_compare_string_int32_string_int32_int32_boolean"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_string_int32_string_int32_int32_boolean_culture_info"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_compare_string_int32_string_int32_int32_boolean_culture_info"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_string_string_boolean"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_compare_string_string_boolean"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_string_string_boolean_culture_info"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_compare_string_string_boolean_culture_info"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_to"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_compare_to"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_to_object"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_compare_to_object"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="concat"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_concat"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="concat_array_string"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_concat_array_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="concat_object"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_concat_object"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="concat_object_object"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_concat_object_object"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="concat_object_object_object"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_concat_object_object_object"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="concat_string_string"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_concat_string_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="concat_string_string_string"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_concat_string_string_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="concat_string_string_string_string"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_concat_string_string_string_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="copy"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_copy"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="copy_to"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_copy_to"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="ends_with"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_ends_with"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="equals_string"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_equals_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="equals_string_string"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_equals_string_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="format"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_format"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="format_iformat_provider"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_format_iformat_provider"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="format_string_object"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_format_string_object"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="format_string_object_object"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_format_string_object_object"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="format_string_object_object_object"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_format_string_object_object_object"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_enumerator"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_get_enumerator"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_hash_code"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_get_hash_code"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_type_code"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_get_type_code"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="index_of"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_index_of"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="index_of_any"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_index_of_any"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="index_of_any_array_char_int32"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_index_of_any_array_char_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="index_of_any_array_char_int32_int32"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_index_of_any_array_char_int32_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="index_of_char"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_index_of_char"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="index_of_char_int32"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_index_of_char_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="index_of_char_int32_int32"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_index_of_char_int32_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="index_of_string_int32"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_index_of_string_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="index_of_string_int32_int32"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_index_of_string_int32_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="insert"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_insert"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="intern"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_intern"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_is_equal"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_interned"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_is_interned"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="join"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_join"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="join_string_array_string_int32"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_join_string_array_string_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="last_index_of"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_last_index_of"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="last_index_of_any"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_last_index_of_any"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="last_index_of_any_array_char_int32"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_last_index_of_any_array_char_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="last_index_of_any_array_char_int32_int32"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_last_index_of_any_array_char_int32_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="last_index_of_char"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_last_index_of_char"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="last_index_of_char_int32"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_last_index_of_char_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="last_index_of_char_int32_int32"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_last_index_of_char_int32_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="last_index_of_string_int32"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_last_index_of_string_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="last_index_of_string_int32_int32"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_last_index_of_string_int32_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="pad_left"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_pad_left"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="pad_left_int32_char"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_pad_left_int32_char"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="pad_right"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_pad_right"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="pad_right_int32_char"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_pad_right_int32_char"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="remove"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_remove"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="replace"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_replace"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="replace_char"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_replace_char"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="split"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_split"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="split_array_char_int32"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_split_array_char_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="starts_with"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_starts_with"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="substring"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_substring"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="substring_int32_int32"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_substring_int32_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_char_array"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_to_char_array"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_char_array_int32"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_to_char_array_int32"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_lower"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_to_lower"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_lower_culture_info"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_to_lower_culture_info"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_to_string"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string_iformat_provider"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_to_string_iformat_provider"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_upper"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_to_upper"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_upper_culture_info"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_to_upper_culture_info"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="trim"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_trim"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="trim_array_char"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_trim_array_char"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="trim_end"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_trim_end"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="trim_start"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f_trim_start"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_#=="><param name="Local" value="libraries\base_net\reference\kernel\string.html#f__infix_#=="></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_|="><param name="Local" value="libraries\base_net\reference\kernel\string.html#f__infix_|="></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_lt"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f__infix_lt"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_le"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f__infix_le"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_gt"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f__infix_gt"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_ge"><param name="Local" value="libraries\base_net\reference\kernel\string.html#f__infix_ge"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="TABLE"><param name="Local" value="libraries\base_net\reference\kernel\table_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="item"><param name="Local" value="libraries\base_net\reference\kernel\table.html#f_item"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="_infix_@"><param name="Local" value="libraries\base_net\reference\kernel\table.html#f__infix_@"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="valid_key"><param name="Local" value="libraries\base_net\reference\kernel\table.html#f_valid_key"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="put"><param name="Local" value="libraries\base_net\reference\kernel\table.html#f_put"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="TRAVERSABLE"><param name="Local" value="libraries\base_net\reference\kernel\traversable_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="has"><param name="Local" value="libraries\base_net\reference\kernel\traversable.html#f_has"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="item"><param name="Local" value="libraries\base_net\reference\kernel\traversable.html#f_item"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="changeable_comparison_criterion"><param name="Local" value="libraries\base_net\reference\kernel\traversable.html#f_changeable_comparison_criterion"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_empty"><param name="Local" value="libraries\base_net\reference\kernel\traversable.html#f_is_empty"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="object_comparison"><param name="Local" value="libraries\base_net\reference\kernel\traversable.html#f_object_comparison"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="off"><param name="Local" value="libraries\base_net\reference\kernel\traversable.html#f_off"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_objects"><param name="Local" value="libraries\base_net\reference\kernel\traversable.html#f_compare_objects"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="compare_references"><param name="Local" value="libraries\base_net\reference\kernel\traversable.html#f_compare_references"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="start"><param name="Local" value="libraries\base_net\reference\kernel\traversable.html#f_start"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="linear_representation"><param name="Local" value="libraries\base_net\reference\kernel\traversable.html#f_linear_representation"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="implementation"><param name="Local" value="libraries\base_net\reference\kernel\traversable.html#f_implementation"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="TUPLE"><param name="Local" value="libraries\base_net\reference\kernel\tuple_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="boolean_item"><param name="Local" value="libraries\base_net\reference\kernel\tuple.html#f_boolean_item"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="character_item"><param name="Local" value="libraries\base_net\reference\kernel\tuple.html#f_character_item"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="double_item"><param name="Local" value="libraries\base_net\reference\kernel\tuple.html#f_double_item"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="integer_item"><param name="Local" value="libraries\base_net\reference\kernel\tuple.html#f_integer_item"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="real_item"><param name="Local" value="libraries\base_net\reference\kernel\tuple.html#f_real_item"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="valid_index"><param name="Local" value="libraries\base_net\reference\kernel\tuple.html#f_valid_index"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_boolean_item"><param name="Local" value="libraries\base_net\reference\kernel\tuple.html#f_is_boolean_item"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_character_item"><param name="Local" value="libraries\base_net\reference\kernel\tuple.html#f_is_character_item"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_double_item"><param name="Local" value="libraries\base_net\reference\kernel\tuple.html#f_is_double_item"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_integer_item"><param name="Local" value="libraries\base_net\reference\kernel\tuple.html#f_is_integer_item"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_numeric_item"><param name="Local" value="libraries\base_net\reference\kernel\tuple.html#f_is_numeric_item"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_real_item"><param name="Local" value="libraries\base_net\reference\kernel\tuple.html#f_is_real_item"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_reference_item"><param name="Local" value="libraries\base_net\reference\kernel\tuple.html#f_is_reference_item"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_uniform"><param name="Local" value="libraries\base_net\reference\kernel\tuple.html#f_is_uniform"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_uniform_boolean"><param name="Local" value="libraries\base_net\reference\kernel\tuple.html#f_is_uniform_boolean"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_uniform_character"><param name="Local" value="libraries\base_net\reference\kernel\tuple.html#f_is_uniform_character"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_uniform_double"><param name="Local" value="libraries\base_net\reference\kernel\tuple.html#f_is_uniform_double"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_uniform_integer"><param name="Local" value="libraries\base_net\reference\kernel\tuple.html#f_is_uniform_integer"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_uniform_real"><param name="Local" value="libraries\base_net\reference\kernel\tuple.html#f_is_uniform_real"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_uniform_reference"><param name="Local" value="libraries\base_net\reference\kernel\tuple.html#f_is_uniform_reference"></OBJECT>
+			</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="VALUE_TYPE"><param name="Local" value="libraries\base_net\reference\kernel\value_type_chart.html"></OBJECT>
+			<UL>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="get_hash_code"><param name="Local" value="libraries\base_net\reference\kernel\value_type.html#f_get_hash_code"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\base_net\reference\kernel\value_type.html#f_is_equal"></OBJECT>
+			<LI><OBJECT type="text/sitemap"><param name="Name" value="to_string"><param name="Local" value="libraries\base_net\reference\kernel\value_type.html#f_to_string"></OBJECT>
+			</UL>
+		</UL>
+	</UL>

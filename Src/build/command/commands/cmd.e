@@ -26,7 +26,7 @@ feature -- Editable
 	has_instances: BOOLEAN is
 			-- Does Current have instances?
 		local
-			s: STATE
+			s: BUILD_STATE
 			b: BEHAVIOR
 		do
 			from
@@ -63,7 +63,7 @@ feature -- Editable
 	contexts_with_instances: LINKED_LIST [CONTEXT] is
 			-- Contexts that use Current command instances
 		local
-			s: STATE
+			s: BUILD_STATE
 			b: BEHAVIOR
 			found: BOOLEAN
 		do
@@ -107,9 +107,8 @@ feature -- Editable
 	instances: LINKED_LIST [CMD_INSTANCE] is
 			-- Instances for Current command
 		local
-			s: STATE
+			s: BUILD_STATE
 			b: BEHAVIOR
---			command_tools: LINKED_LIST [COMMAND_TOOL]
 			command_tools: LINKED_LIST [COMMAND_TOOL]
 			ed: COMMAND_TOOL		
 			cmd_tool: COMMAND_TOOL

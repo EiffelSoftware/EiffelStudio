@@ -133,7 +133,7 @@ feature -- Namable
 			-- Update the instances name
 			-- Does Current have instances?
 		local
-			s: STATE
+			s: BUILD_STATE
 			b: BEHAVIOR
 			found: BOOLEAN
 			command_tools: LINKED_LIST [COMMAND_TOOL]

@@ -48,7 +48,6 @@ feature -- Type check, byte code and dead code removal
 			call.format (ctxt);
 		end;
 
-
 feature	-- Replication
 
 	fill_calls_list (l: CALLS_LIST) is
@@ -72,4 +71,5 @@ feature {EXPR_CALL_AS}
 		do
 			call := c;
 		end
+
 end

@@ -243,7 +243,7 @@
 					</TOPIC>
 					<TOPIC TOPIC_ID="alias" ICON="icon_preferences_folder">
 						<HEAD>alias</HEAD>
-						<TEXT DESCRIPTION="Autocomplete variant">autocomplete_alias<BOOLEAN>True</BOOLEAN></TEXT>
+						<TEXT DESCRIPTION="Autocomplete alias">autocomplete_alias<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_alias<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_alias_space<STRING> "$cursor$"</STRING></TEXT>
 						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_alias_return<STRING>%N$indent$%T"$cursor$"</STRING></TEXT>
@@ -432,7 +432,7 @@
 					</TOPIC>
 					<TOPIC TOPIC_ID="obsolete" ICON="icon_preferences_folder">
 						<HEAD>obsolete</HEAD>
-						<TEXT DESCRIPTION="Autocomplete variant">autocomplete_obsolete<BOOLEAN>True</BOOLEAN></TEXT>
+						<TEXT DESCRIPTION="Autocomplete obsolete">autocomplete_obsolete<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_obsolete<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_obsolete_space<STRING> "$cursor$"</STRING></TEXT>
 						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_obsolete_return<STRING>%N$indent$%T"$cursor$"</STRING></TEXT>

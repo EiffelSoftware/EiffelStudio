@@ -279,6 +279,19 @@ feature -- Status report
 			positive_height: Result.height >= 0
 		end
 
+	character_size (c: CHARACTER): WEL_SIZE is
+			-- Size of the string `s' using the selected font.
+		require
+			exists: exists
+		do
+			create Result.make (0, 0)
+			cwin_get_text_extend_point (item, $c, 1, Result.item)
+		ensure
+			result_exists: Result /= Void
+			positive_width: Result.width >= 0
+			positive_height: Result.height >= 0
+		end
+
 	string_width (s: STRING): INTEGER is
 			-- Width of the string `s' using the selected font.
 		require
@@ -2265,7 +2278,7 @@ feature {NONE} -- Externals
 		external
 			"C [macro <windows.h>] (HDC, LPCSTR, int, LPSIZE)"
 		alias
-			"GetTextExtentPoint"
+			"GetTextExtentPoint32"
 		end
 
 	cwin_get_tabbed_text_extent (hdc: POINTER; s: POINTER;

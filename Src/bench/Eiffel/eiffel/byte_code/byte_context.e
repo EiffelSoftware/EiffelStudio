@@ -1018,7 +1018,7 @@ feature -- Setting
 					buf.putstring ("RTXI(")
 				end
 				buf.putint (nb_refs)
-				buf.putstring (gc_rparan_comma)
+				buf.putstring (gc_rparan_semi_c)
 				buf.new_line
 				if system.has_separate then
 					reset_added_gc_hooks
@@ -1054,7 +1054,7 @@ feature -- Setting
 						buf.putint (nb_exp)
 						buf.putstring ("] = RTOF(arg")
 						buf.putint (argument_b.position)
-						buf.putstring (gc_rparan_comma)
+						buf.putstring (gc_rparan_semi_c)
 						buf.new_line
 						buf.put_argument_registration (position, argument_b.position)
 						buf.new_line
@@ -1062,7 +1062,7 @@ feature -- Setting
 						buf.putint (argument_b.position)
 						buf.putstring (" = (EIF_REFERENCE) RTEO(arg")
 						buf.putint (argument_b.position)
-						buf.putstring (gc_rparan_comma)
+						buf.putstring (gc_rparan_semi_c)
 						buf.new_line
 						buf.exdent
 						buf.putstring (gc_lacc_else_r_acc)

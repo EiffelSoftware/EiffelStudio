@@ -103,7 +103,7 @@ feature -- Access
 					id := array_desc.item
 					r_name := external_reg_name (id)
 					buf.putstring (r_name)
-					buf.putstring (gc_rparan_comma)
+					buf.putstring (gc_rparan_semi_c)
 							-- The Dtype has not been declared before
 					if
 						already_generated_offsets = Void
@@ -112,7 +112,7 @@ feature -- Access
 					then
 						buf.putstring (" RTADTYPE(")
 						buf.putstring (r_name)
-						buf.putstring (gc_rparan_comma)
+						buf.putstring (gc_rparan_semi_c)
 					end
 					buf.new_line
 					array_desc.forth
@@ -134,7 +134,7 @@ feature -- Access
 					buf.putstring (r_name)
 					buf.putstring ("); RTADOFFSETS(")
 					buf.putstring (r_name)
-					buf.putstring (gc_rparan_comma)
+					buf.putstring (gc_rparan_semi_c)
 					buf.new_line
 					generated_offsets.forth
 				end
@@ -172,7 +172,7 @@ feature -- Access
 					buf.putstring (external_reg_name (id))
 					buf.putstring (gc_comma)
 					register_acces (buf, id)
-					buf.putstring (gc_rparan_comma)
+					buf.putstring (gc_rparan_semi_c)
 					buf.new_line
 
 					array_desc.forth
@@ -191,7 +191,7 @@ feature -- Access
 					buf.putstring (r_name)
 					buf.putstring (gc_comma)
 					register_acces (buf, id)
-					buf.putstring (gc_rparan_comma)
+					buf.putstring (gc_rparan_semi_c)
 					buf.new_line
 					generated_offsets.forth
 				end
@@ -216,7 +216,7 @@ feature -- Access
 					buf.putstring (external_reg_name (id))
 					buf.putstring (gc_comma)
 					register_acces (buf, id)
-					buf.putstring (gc_rparan_comma)
+					buf.putstring (gc_rparan_semi_c)
 					buf.new_line
 					array_desc.forth
 				end

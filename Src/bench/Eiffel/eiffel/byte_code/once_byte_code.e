@@ -309,7 +309,7 @@ feature {NONE} -- Implementation
 					-- result)) and to allow result inspection.
 				buf.putstring ("RTWO(");
 				buf.generate_real_body_id (real_body_id)
-				buf.putstring (gc_rparan_comma);
+				buf.putstring (gc_rparan_semi_c);
 				buf.new_line
 			end;
 			init_dtype;

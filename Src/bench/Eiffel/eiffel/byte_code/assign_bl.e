@@ -434,7 +434,7 @@ feature
 				else
 					buf.putstring ("RTCL(");
 					source.print_register;
-					buf.putstring (gc_rparan_comma);
+					buf.putstring (gc_rparan_semi_c);
 				end;
 				buf.new_line;
 			end;

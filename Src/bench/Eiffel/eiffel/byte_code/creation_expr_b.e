@@ -259,7 +259,7 @@ feature -- Generation
 				then
 					buf.putstring ("RTCI(")
 					register.print_register
-					buf.putstring (gc_rparan_comma)
+					buf.putstring (gc_rparan_semi_c)
 					buf.new_line
 				end
 			end

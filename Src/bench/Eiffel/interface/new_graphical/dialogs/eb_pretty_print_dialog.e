@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			parent := cmd
 			
 				-- Create `slice_cmd'.
-			create slice_cmd.make (parent.tool)
+			create slice_cmd.make_for_pretty_print (Current)
 			
 				-- Building the dialog.
 			create dialog
@@ -40,12 +40,8 @@ feature {NONE} -- Initialization
 			create slice_button.make_with_text (Interface_names.b_Slice)
 			slice_button.select_actions.extend (slice_cmd~execute)
 			
-			dialog.set_default_cancel_button (exit_button)
-			
 				-- Setting up the editor.
-			create editor.make (Void)
-			editor.set_reference_window (dialog)
-			editor.disable_editable
+			create editor.make
 			
 			create f
 			create vb
@@ -67,6 +63,8 @@ feature {NONE} -- Initialization
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
 			dialog.extend (vb)
+			dialog.set_default_cancel_button (exit_button)
+			dialog.set_default_push_button (slice_button)
 			editor.drop_actions.extend (~on_stone_dropped)
 		end
 
@@ -84,6 +82,9 @@ feature -- Status report
 
 	current_object: OBJECT_STONE
 			-- Object `Current' is displaying.
+
+	dialog: EV_DIALOG
+			-- Dialog where `editor' is displayed.
 
 feature -- Status setting
 
@@ -108,47 +109,19 @@ feature -- Status setting
 	refresh is
 			-- Recompute the displayed text.
 		local
-			ec: CLASS_C
-			status: APPLICATION_STATUS
-			address: STRING
-			obj: DEBUGGED_OBJECT
-			att_list: LIST [ABSTRACT_DEBUG_VALUE]
+			dmp: DUMP_VALUE
 		do
 			if Application.status.is_stopped then
-				create text.make
-				if current_object /= Void then
-					address := current_object.object_address
-					if address = void then
-						text.add_string ("NONE = Void")
-					else
-						ec := current_object.dynamic_class
-						if ec /= void then
-							ec.append_name (text)
-							text.add_string (" [")
-							status := application.status
-							if status /= void and status.is_stopped then
-								text.add_address (address, " ", ec)
-							else
-								text.add_string (address)
-							end
-							text.add_string ("]")
-							text.add_new_line
-							create obj.make (address, slice_cmd.slice_min, slice_cmd.slice_max)
-							att_list := obj.attributes
-							from
-								att_list.start
-							until
-								att_list.after
-							loop
-								att_list.item.append_to (text, 1)
-								att_list.forth
-							end
-						else
-							text.add_string ("ANY = Unknown")
-						end
-					end
+				create dmp.make_object (current_object.object_address, current_object.dynamic_class)
+				if dmp.is_void then
+					editor.load_basic_text ("Void")
+				elseif dmp.has_formatted_output then
+					editor.load_basic_text (dmp.string_representation (slice_cmd.slice_min, slice_cmd.slice_max))
+				else
+						-- XR: This shouldn't happen, because the command should filter out
+						-- objects that have no formatted output.
+					editor.load_basic_text ("[" + current_object.object_address + "]")
 				end
-				editor.process_text (text)
 			else
 				editor.clear_window
 			end
@@ -193,7 +166,7 @@ feature -- Inapplicable
 
 feature {NONE} -- Implementation
 
-	editor: EB_CLICKABLE_EDITOR
+	editor: SELECTABLE_TEXT_PANEL
 			-- Editor where the object value is displayed.
 
 	text: STRUCTURED_TEXT
@@ -201,9 +174,6 @@ feature {NONE} -- Implementation
 
 	slice_cmd: EB_SET_SLICE_SIZE_CMD
 			-- Command that is supposed to resize special objects.
-
-	dialog: EV_DIALOG
-			-- Dialog where `editor' is displayed.
 
 	parent: EB_PRETTY_PRINT_CMD
 			-- Command that created `Current' and knows about it.

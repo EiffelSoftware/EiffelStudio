@@ -110,7 +110,7 @@ feature -- Access
 			Result.append (culture)
 			Result.append (", PublicKeyToken=")
 			Result.append (key)
-			Result.append (", Codebase=")
+			Result.append (", CodeBase=")
 			Result.append (location)
 		end
 		
@@ -161,6 +161,16 @@ feature -- Comparison
 			-- equal to current object?
 		do
 			Result := has_same_path (other.gac_path) or else has_same_path (other.location)
+		end
+		
+	is_assembly_info_equal (other: like Current): BOOLEAN is
+			-- Is `other' basic assembly information (name, version, culture and public key token)
+			-- equal to current instance?
+		require
+			other_not_void: other /= Void
+		do
+			Result := name.is_equal (other.name) and then version.is_equal (other.version) and then
+						culture.is_equal (other.culture) and then key.is_equal (other.key)
 		end
 		
 	has_same_path (a_path: STRING): BOOLEAN is

@@ -27,6 +27,7 @@ inherit
 
 	SHARED_COMPILATION_MODES
 
+
 creation
 	make
 
@@ -348,6 +349,8 @@ feature -- Update
 			syn_stone: CL_SYNTAX_STONE
 			e_class: E_CLASS
 			txt, msg: STRING
+			error_code: INTEGER --JOCE--
+			error_message: STRING --JOCE--
 		do
 			classc_stone ?= stone
 			if classc_stone /= Void then
@@ -356,15 +359,26 @@ feature -- Update
 						-- Only interested in compiled classes.
 					e_class.parse_ast
 					syn_error := e_class.last_syntax_error
+
+
 					if syn_error /= Void then	
 						txt := "Class has syntax error"
 						msg := syn_error.syntax_message
+						error_code := syn_error.error_code --JOCE--
+						error_message := syn_error.error_message --JOCE--
 						if not msg.empty then
 							txt.append (" (")
 							txt.append (msg)
 							txt.extend (')')
 						end
-						txt.extend ('.')
+						if error_code /= Void then --JOCE--
+							txt.append ("%N<")
+							txt.append_integer (error_code)
+							txt.append ("> ")
+							txt.append (error_message)
+							txt.append (".%N")
+						end
+						--txt.extend ('.')
 						txt.append ("%NSee highlighted area")
 							-- syntax error occurred
 						!! syn_stone.make (syn_error, e_class)

@@ -1,6 +1,9 @@
 REM Check out Build source.
 cvs co Src/build2
 
+REM Check out bitmaps from Build delivery
+cvs co Delivery/build/bitmaps
+
 REM Copy constants and eiffel environment to interface.
 XCOPY /Y Src\Build2\constants\gb_constants.e .\interface
 XCOPY /Y Src\Build2\utilities\eiffel_env.e .\interface
@@ -9,8 +12,10 @@ XCOPY /Y Src\Build2\utilities\gb_widget_utilities.e .\interface
 XCOPY /Y Src\Build2\utilities\ordered_string_handler.e .\interface
 XCOPY /Y Src\Build2\main\gb_supported_events.e .\interface
 
+REM Copy icons for different widget types across. The /E option moves the whole directory structure.
+XCOPY /Y /E /I Delivery\build\bitmaps .\bitmaps
 
-REM Copy modified vision2 interface failes needed.
+REM Copy modified vision2 interface files needed.
 XCOPY /Y Src\Build2\modified_libraries\vision2\ev_pixmap.e .\interface
 XCOPY /Y Src\Build2\modified_libraries\vision2\ev_pixmapable.e .\interface
 
@@ -44,3 +49,4 @@ XCOPY /Y Src\Build2\interface\properties\gb_ev_tooltipable_editor_constructor.e 
 
 REM Remove all temporary checked out files.
 rm -r Src
+rm -r Delivery

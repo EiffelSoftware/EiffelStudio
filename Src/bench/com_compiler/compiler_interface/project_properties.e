@@ -22,6 +22,7 @@ inherit
 			debug_info,
 			clusters,
 			compilation_type,
+			console_application,
 			assemblies,
 			apply,
 			set_system_name,
@@ -35,6 +36,7 @@ inherit
 			set_working_directory,
 			set_arguments,
 			set_compilation_type,
+			set_console_application,
 			set_debug_info,
 			add_cluster,
 			remove_cluster,
@@ -195,6 +197,14 @@ feature -- Access
 			end
 		end
 
+	console_application: BOOLEAN is
+			-- Is console application?
+		do
+			if is_valid then
+				Result := ace.is_console_application
+			end
+		end
+		
 	assemblies: ECOM_ARRAY [STRING] is
 			-- Imported assemblies.
 			-- Void if none.
@@ -342,6 +352,14 @@ feature -- Element change
 				elseif return_value = enum.is_library then
 					ace.set_il_generation (ace.Il_generation_dll)
 				end
+			end
+		end
+
+	set_console_application (return_value: BOOLEAN) is
+			-- Is console application?
+		do
+			if is_valid then
+				ace.set_console_application (return_value)
 			end
 		end
 		

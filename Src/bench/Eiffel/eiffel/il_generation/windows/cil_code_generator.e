@@ -1818,7 +1818,7 @@ feature -- Features info
 			create l_signature.make (0, l_parameter_count)
 			l_signature.compare_references
 
-			l_return_type := argument_actual_type (l_feat.type.actual_type.type_i)
+			l_return_type := result_type (l_feat)
 			if (l_is_single_class or (not in_interface and l_is_static)) and l_is_attribute then
 				l_field_sig := field_sig
 				l_field_sig.reset
@@ -2012,7 +2012,7 @@ feature -- Features info
 			create l_signature.make (0, l_parameter_count)
 			l_signature.compare_references
 
-			l_return_type := argument_actual_type (feat.type.actual_type.type_i)
+			l_return_type := result_type (feat)
 			if (is_single_class or (not in_interface and is_static)) and l_is_attribute then
 				l_field_sig := field_sig
 				l_field_sig.reset
@@ -2280,6 +2280,17 @@ feature -- Features info
 			valid_result: Result /= Void
 		end
 
+	result_type (feature_i: FEATURE_I): TYPE_I is
+			-- Actual type of a result of feature `feature_i'
+		require
+			feature_i_not_viod: feature_i /= Void
+		do
+			Result := argument_actual_type (feature_i.type.actual_type.type_i)
+		ensure
+			result_not_void: Result /= Void
+			void_if_procedure: not feature_i.has_return_value implies Result.is_void
+		end
+
 	set_method_return_type (a_sig: MD_METHOD_SIGNATURE; a_type: TYPE_I) is
 			-- Set `a_type' to return type of `a_sig'.
 		require
@@ -2510,7 +2521,7 @@ feature -- IL Generation
 		do
 			l_meth_token := feature_token (current_type_id, a_feat.feature_id)
 			start_new_body (l_meth_token)
-			l_type := argument_actual_type (a_feat.type.actual_type.type_i)
+			l_type := result_type (a_feat)
 			if not l_type.is_void then
 				put_default_value (l_type)
 			end
@@ -2553,7 +2564,7 @@ feature -- IL Generation
 				start_new_body (l_meth_token)
 				generate_current
 				generate_argument (1)
-				generate_check_cast (Void, argument_actual_type (feat.type.actual_type.type_i))
+				generate_check_cast (Void, result_type (feat))
 				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stfld, l_token)
 				generate_return (False)
 				method_writer.write_current_body
@@ -2883,7 +2894,7 @@ feature -- IL Generation
 					-- signature in current context.
 				Byte_context.set_class_type (parent_type)
 				generate_feature (inh_feat, False, False, True)
-				l_return_type := argument_actual_type (inh_feat.type.actual_type.type_i)
+				l_return_type := result_type (inh_feat)
 				Byte_context.set_class_type (current_class_type)
 
 					-- We need to restore the name right away.
@@ -4225,7 +4236,7 @@ feature -- Once management
 			if feature_i.has_return_value then
 				l_sig := field_sig
 				l_sig.reset
-				set_signature_type (l_sig, argument_actual_type (feature_i.type.actual_type.type_i))
+				set_signature_type (l_sig, result_type (feature_i))
 				uni_string.set_string (once_result_name (name))
 				result_token := md_emit.define_member_ref (uni_string, class_data_token, l_sig)
 			else
@@ -4257,27 +4268,38 @@ feature -- Once management
 			-- current_feature_not_void: byte_context.current_feature /= Void
 			-- current_feature_is_once: byte_context.current_feature.is_once
 		do
+				-- Body of a once feature is guarded by try/fault blocks
+				-- to avoid storing invalid result in case of exception:
+				--       done := true
+				--       try {
+				--          ... -- code of once feature body
+				--       }
+				--       fault {
+				--          done := false
+				--          result := default_value -- if required
+				--       }
+
 				-- Thread-relative code looks like
 				--    if not done then
-				--       done := true
-				--       ... -- code of once feature body
+				--       guarded_body -- see above
 				--    end
 				--    return result -- if required
 				
 				-- Process-relative code uses double-check algorithm and looks like
 				--    if not volatile ready then
-				--       lock (sync)
-				--       if not done then
-				--          done := true
-				--          ... -- code of once feature body
-				--          volatile ready := true
-				--       end
-				--       unlock (sync)
+				--       try {
+				--          lock (sync)
+				--          if not done then
+				--             guarded_body -- see above
+				--             volatile ready := true
+				--          end
+				--       }
+				--       finally {
+				--          unlock (sync)
+				--       }
 				--    end
 				--    return result -- if required
 
-			fixme ("Put try/finally block around lock/unlock to avoid permanetly locked sync object due to exception in once routine body")
-			
 				-- Initialize once code generation
 			set_once_generation (True)
 			generate_once_access_info (byte_context.current_feature)
@@ -4286,11 +4308,13 @@ feature -- Once management
 				check sync_token /= 0 end
 					-- Generate synchronization for process-relative feature:
 					--    if not volatile ready then
-					--       lock (sync)
+					--       try {
+					--          lock (sync)
 				method_body.put_opcode (feature {MD_OPCODES}.volatile)
 				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldsfld, ready_token)
 				once_ready_label := create_label
 				branch_on_true (once_ready_label)
+				method_body.once_finally_block.set_try_offset (method_body.count)
 				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.ldsfld, sync_token)
 				method_body.put_static_call (current_module.define_monitor_method_token ("Enter"), 1, False)
 			end
@@ -4298,11 +4322,13 @@ feature -- Once management
 				-- Generate code that is common for thread-relative and process-relative case:
 				--    if not done then
 				--       done := true
+				--       try {
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldsfld, done_token)
 			once_done_label := create_label
 			branch_on_true (once_done_label)
 			put_boolean_constant (True)
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld, done_token)
+			method_body.once_fault_block.set_try_offset (method_body.count)
 		ensure
 			once_generation: once_generation
 			done_token_set: done_token /= 0
@@ -4319,15 +4345,38 @@ feature -- Once management
 			-- current_feature_not_void: byte_context.current_feature /= Void
 			-- current_feature_is_once: byte_context.current_feature.is_once
 		local
+			fault_label: IL_LABEL
 			is_process_relative: BOOLEAN
 			has_result: BOOLEAN
 		do
+				-- Close try block and start fault block
+				--       }
+				--       fault {
+				--          done := false
+				--          result := default_value -- if required
+				--       }
+			fault_label := create_label
+			generate_leave_to (fault_label)
+			method_body.once_fault_block.set_try_end (method_body.count)
+			method_body.once_fault_block.set_handler_offset (method_body.count)
+			put_boolean_constant (False)
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld, done_token)
+			if result_token /= 0 then
+					-- Assign default value to result
+				has_result := True
+				put_default_value (result_type (byte_context.current_feature))
+				generate_once_store_result
+			end
+			method_body.put_opcode (feature {MD_OPCODES}.endfault)
+			method_body.once_fault_block.set_handler_end (method_body.count)
+			mark_label (fault_label)
+
 			if ready_token /= 0 then
+					-- Notify other threads that result is ready:
+					--          volatile ready := true
 				check sync_token /= 0 end
 				check once_ready_label /= Void end
 				is_process_relative := True
-					-- Notify other threads that result is ready:
-					--          volatile ready := true
 				put_boolean_constant (True)
 				method_body.put_opcode (feature {MD_OPCODES}.volatile)
 				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld, ready_token)
@@ -4339,17 +4388,24 @@ feature -- Once management
 
 			if is_process_relative then
 					-- Unlock synchronization object and close "if not volatile ready" block in process-relative case:
-					--       unlock (sync)
+					--       }
+					--       finally {
+					--          unlock (sync)
+					--       }
 					--    end
+				generate_leave_to (once_ready_label)
+				method_body.once_finally_block.set_try_end (method_body.count)
+				method_body.once_finally_block.set_handler_offset (method_body.count)
 				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.ldsfld, sync_token)
 				method_body.put_static_call (current_module.define_monitor_method_token ("Exit"), 1, False)
+				method_body.put_opcode (feature {MD_OPCODES}.endfinally)
+				method_body.once_finally_block.set_handler_end (method_body.count)
 				mark_label (once_ready_label)
 			end
 			
-			if result_token /= 0 then
+			if has_result then
 					-- Load result of a feature:
 					-- return result -- if required
-				has_result := True
 				generate_once_result
 			end
 			generate_return (has_result)

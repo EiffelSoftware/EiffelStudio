@@ -53,7 +53,7 @@ rt_public Malloc_t eif_malloc (register unsigned int nbytes)
  * free-list. Otherwise, the creation of thread would be quite costly     *
  * manuelt. */
 
-	return malloc (nbytes);
+	return (Malloc_t) malloc (nbytes);
 
 #elif defined EIF_WIN32 || defined EIF_VMS
 /* For Windows and VMS platforms we use malloc() implemented in the C-library */
@@ -88,7 +88,7 @@ rt_public Malloc_t eif_malloc (register unsigned int nbytes)
 rt_public Malloc_t eif_calloc (unsigned int nelem, unsigned int elsize)
 {
 #ifdef EIF_THREADS 
-	return calloc (nelem, elsize);
+	return (Malloc_t) calloc (nelem, elsize);
 
 #elif defined EIF_WIN32 || defined EIF_VMS
 	return calloc (nelem, elsize);
@@ -114,7 +114,7 @@ rt_public Malloc_t eif_calloc (unsigned int nelem, unsigned int elsize)
 rt_public Malloc_t eif_realloc (register void *ptr, register unsigned int nbytes)
 {
 #ifdef EIF_THREADS 
-	return realloc (ptr, nbytes);
+	return (Malloc_t) realloc (ptr, nbytes);
 
 #elif defined EIF_WIN32 || defined EIF_VMS
 	return realloc (ptr, nbytes);

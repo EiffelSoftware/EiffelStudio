@@ -1135,8 +1135,20 @@ feature {NONE} -- Debugging Implementation
 			create accelerator.make_with_key_combination (create {EV_KEY}.make_with_code ((create {EV_KEY_CONSTANTS}).key_3), True, False, False)
 			accelerator.actions.extend (agent write_all_objects)
 			accelerators.extend (accelerator)
+			create accelerator.make_with_key_combination (create {EV_KEY}.make_with_code ((create {EV_KEY_CONSTANTS}).key_4), True, False, False)
+			accelerator.actions.extend (agent check_nesting)
+			accelerators.extend (accelerator)
 		end
 		
+	check_nesting is
+			-- Check the nesting structures of all top level objects in `Current'.
+		local
+			checker: GB_NESTING_CHECKER
+		do
+			create checker
+			checker.check_nesting
+		end
+
 	full_garbage_collect is
 			-- Perform a full garbage collection
 		do

@@ -33,9 +33,6 @@ cluster
 			"table_eiffel3"; "desc"
 		end
 
-		-- GEL
-	all gel: "$ISE_EIFFEL/library/gel"
-
 		-- EiffelVision2
 	all vision2: "$ISE_EIFFEL/library/vision2"
 
@@ -43,11 +40,7 @@ external
 	include_path:
 			"\$(ISE_EIFFEL)/library/event/Clib",
 			"\$(ISE_EIFFEL)/library/vision2/spec/include",
-			"\$(ISE_EIFFEL)/library/vision2/implementation/gtk/Clib `gtk-config --cflags`"
+			"\$(ISE_EIFFEL)/library/vision2/implementation/gtk/Clib `$ISE_EIFFEL/library/vision2/implementation/gtk/Clib/vision2-gtk-config --include_path`"
 	object:
-			"$(ISE_EIFFEL)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o",
-			"$(ISE_EIFFEL)/library/vision2/spec/$(ISE_PLATFORM)/lib/load_pixmap.o `gtk-config --libs`",
-			"$(ISE_EIFFEL)/C_library/libpng/libpng.a",
-			"$(ISE_EIFFEL)/C_library/zlib/libz.a",
-			"-L/usr/X11R6/lib -lXtst"
+			"`$(ISE_EIFFEL)/library/vision2/implementation/gtk/Clib/vision2-gtk-config --object`"
 end

@@ -48,26 +48,7 @@ feature {NONE} -- Initialization
 			set_font (font)
 			set_default_size
 		end
-
-
-feature {NONE} -- Implementation
-       	
-	set_default_size is
-			-- Resize to a default size.
-		local
-			fw: EV_FONT_IMP
-		do
-			fw ?= font.implementation
-			check
-				font_not_void: fw /= Void
-			end
-			set_minimum_width (fw.string_width (Current, text) + Extra_width)
-			set_minimum_height (7 * fw.string_height (Current, text) // 4 - 2)
-			set_size (minimum_width, minimum_height)
-		end
-	
-	Extra_width: INTEGER is 10
-
+		
 feature {NONE} -- Implementation	
 	
 	wel_window: WEL_PUSH_BUTTON

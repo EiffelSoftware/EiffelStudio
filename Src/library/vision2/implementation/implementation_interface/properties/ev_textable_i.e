@@ -55,13 +55,6 @@ feature -- Element change
 			text_assigned: text.is_equal (a_text)
 		end
 
-	remove_text is
-			-- Make `text' empty.
-		deferred
-		ensure
-			text_empty: text.is_empty
-		end
-
 feature {NONE} -- Implementation
 
 	interface: EV_TEXTABLE

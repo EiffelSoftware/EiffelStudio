@@ -73,7 +73,7 @@ feature -- Duplication
 			-- (This is also used by `clone'.)
 		do
 			standard_copy (other)
-			socket_address.resize (other.count)
+			create socket_address.make (other.count)
 			socket_address.copy (other.socket_address)
 		ensure then
 			new_result_count: count = other.count or else count = address_size

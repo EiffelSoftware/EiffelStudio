@@ -48,7 +48,7 @@ feature
 			Result := not is_none_attribute
 		end
 
-	extension: EXTERNAL_EXT_I
+	extension: IL_EXTENSION_I
 			-- Deferred external information
 
 	new_rout_entry: ROUT_ENTRY is
@@ -111,7 +111,8 @@ feature -- Element Change
 				solved_type ?= type
 				if
 					solved_type.is_true_expanded and then
-					solved_type.associated_class = class_c
+					solved_type.associated_class = class_c and then
+					(extension = Void or else extension.type /= feature {SHARED_IL_CONSTANTS}.static_field_type)
 				then
 					create vlec
 					vlec.set_class (solved_type.associated_class)

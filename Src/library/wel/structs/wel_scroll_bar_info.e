@@ -1,6 +1,6 @@
 indexing
 	description: "The TV_DISPINFO structure retrieves and sets%
-				% information about a tree-view item."
+				% information about a scroll bar item."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

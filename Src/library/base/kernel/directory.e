@@ -242,14 +242,6 @@ feature -- Removal
 			end;
 		end;
 
-feature -- Obsolete
-
-	sequential_representation: ARRAYED_LIST [STRING] is
-				obsolete "Use ``linear_representation'' instead"
-		do
-			Result := linear_representation
-		end;
-
 feature {DIRECTORY} -- Implementation
 
 	directory_pointer: POINTER;

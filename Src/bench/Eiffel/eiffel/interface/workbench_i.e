@@ -37,9 +37,6 @@ feature -- Attributes
 	precompiled_driver: FILE_NAME
 			-- Full file name of the precompilation driver
 
-	precompiled_descobj: FILE_NAME
-			-- Full file name of the precompilation descriptor tables
-
 	compilation_counter: INTEGER;
 			-- Number of recompilations
 
@@ -79,14 +76,6 @@ feature -- Conveniences
 			precompiled_driver := pd
 		ensure
 			assigned: precompiled_driver = pd
-		end
-
-	set_precompiled_descobj (pd: like precompiled_descobj) is
-			-- Set `precompiled_descobj' to `pd'.
-		do
-			precompiled_descobj := pd
-		ensure
-			assigned: precompiled_descobj = pd
 		end
 
 feature -- Initialization
@@ -310,7 +299,6 @@ feature -- Merging
 		require
 			other_not_void: other /= Void
 		do
--- TO DO: Check compatibility between precompiled libraries here.
 			precompiled_directories.merge (other.precompiled_directories);
 			Precompilation_directories.copy (precompiled_directories);
 			universe.merge (other.universe);

@@ -8,7 +8,6 @@ class
 
 create
 	make
-
 feature {NONE} -- Initalization
 
 	make (a_clr_version: STRING) is
@@ -23,6 +22,7 @@ feature {NONE} -- Initalization
 			create di.make (info_path.substring (1, info_path.last_index_of ('\', info_path.count)).to_cil)
 			di.create_
 			create assemblies.make (1, 0)
+			assemblies.compare_objects
 			clr_version := a_clr_version
 		ensure
 			non_void_assemblies: assemblies /= Void
@@ -35,7 +35,7 @@ feature -- Access
 			-- Array of assemblies in EAC
 			
 	clr_version: STRING
-			-- Runtime version.
+			-- Runtime version.	
 
 feature {CACHE_WRITER} -- Element Settings
 	
@@ -47,12 +47,36 @@ feature {CACHE_WRITER} -- Element Settings
 		do
 			assemblies.force (ass, assemblies.count + 1)
 		end
+		
+	update_assembly (a_assembly: CONSUMED_ASSEMBLY) is
+			-- Updates `a_assembly' in `assemblies'
+		require
+			non_void_assembly: a_assembly /= Void
+			valid_assembly: assemblies.has (a_assembly)
+		local
+			i: INTEGER
+			l_done: BOOLEAN
+		do
+			from 
+				i := 1
+			until
+				l_done or i > assemblies.count
+			loop
+				if assemblies.item (i).is_equal (a_assembly) then
+					assemblies.put (a_assembly, i)
+					l_done := True
+				else
+					i := i + 1
+				end
+				
+			end
+		end
 
 	remove_assembly (ass: CONSUMED_ASSEMBLY) is
 			-- Remove `ass' from `assemblies'.
 		require
 			non_void_assembly: ass /= Void
-			valid_assembly: assemblies.has (ass)
+			--valid_assembly: assemblies.has (ass)
 		local
 			i, j: INTEGER
 			new: ARRAY [CONSUMED_ASSEMBLY]
@@ -74,5 +98,8 @@ feature {CACHE_WRITER} -- Element Settings
 		ensure
 			removed: not assemblies.has (ass)
 		end
-
+		
+invariant
+	non_void_assemblies: assemblies /= Void
+	
 end -- class CACHE_INFO

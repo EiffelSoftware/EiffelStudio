@@ -108,14 +108,14 @@ rt_private struct stack parent_expanded_stack = {	/* Records expanded parents */
  * decisions (heuristics).
  */
 #ifndef EIF_THREADS
-rt_shared struct gacinfo g_data = {			/* Global status */	/* %%zmt */
+rt_shared struct gacinfo g_data = {			/* Global status */
 	0L,			/* nb_full */
 	0L,			/* nb_partial */
 	0L,			/* mem_used */
 	0,			/* gc_to */
 	(char) 0,	/* status */
 };
-rt_shared struct gacstat g_stat[GST_NBR] = {	/* Run-time statistics */ /* %%zmt */
+rt_shared struct gacstat g_stat[GST_NBR] = {	/* Run-time statistics */
 	{
 		0L,		/* mem_collect */		 0L,		/* mem_avg */
 		0L,		/* real_avg */			 0L,		/* real_time */
@@ -900,8 +900,10 @@ rt_private void full_mark(EIF_CONTEXT_NOARG)
 	 * generation (thus they are allocated from the free-list). As with
 	 * locals, a double indirection is necessary.
 	 */
-	mark_stack(&once_set, MARK_SWITCH, moving);
 
+/* Not used any more, since onces per thread --ZS
+	mark_stack(&once_set, MARK_SWITCH, moving);
+*/
 	/* The hector stacks record the objects which has been given to C and may
 	 * have been kept by the C side. Those objects are alive, of course.
 	 */
@@ -2885,7 +2887,7 @@ rt_private int sweep_from_space(void)
 			if (flags & B_CTYPE)	/* Bloc is in a C chunk */
 				c_data.ml_used += size;
 			else								
-				e_data.ml_over += size;
+				e_data.ml_used += size;
 		}
 
 		/* Whenever we reach a "first" block which will be the first one in the
@@ -3261,6 +3263,8 @@ rt_private void find_to_space(struct sc_zone *to)
 	m_data.ml_used += (flags & B_SIZE) + OVERHEAD;
 	if (flags & B_CTYPE)
 		c_data.ml_used += (flags & B_SIZE) + OVERHEAD;
+	else
+		e_data.ml_used += (flags & B_SIZE) + OVERHEAD;
 
 #ifdef DEBUG
 	dprintf(1)("find_to_space: coalesced a to space at 0x%lx (#%d)\n",

@@ -60,6 +60,14 @@ feature -- Resizing
 			on_change
 		end
 
+	resize_exactly (min_index, max_index: INTEGER) is
+			-- Rearrange interval to go from
+			-- `min_index' to `max_index'
+		do
+			Precursor {INTEGER_INTERVAL} (min_index, max_index)
+			on_change
+		end
+
 feature -- Duplication
 
 	copy (other: like Current) is

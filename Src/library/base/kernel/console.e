@@ -103,7 +103,7 @@ feature -- Input
 			lastdouble := console_readdouble (file_pointer)
 		end;
 
-  readline is
+	readline is
 			-- Read a string until new line or end of file.
 			-- Make result available in `laststring'.
 			-- New line will be consumed but not part of `laststring'.

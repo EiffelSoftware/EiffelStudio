@@ -547,6 +547,10 @@ feature -- Generation, Header
 				make_file.putstring ("CPPFLAGS = $wkoptimize ")
 			end
 
+			if System.il_generation then
+				make_file.putstring ("$il_flags ")
+			end
+
 			if System.has_multithreaded then
 				make_file.putstring ("$mtcppflags $large ")
 			else

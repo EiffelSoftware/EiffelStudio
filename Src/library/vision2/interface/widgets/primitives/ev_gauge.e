@@ -25,7 +25,7 @@ inherit
 feature {NONE} -- Initialization
 
 	make_with_value_range (a_value_range: INTEGER_INTERVAL) is
-			-- Create with `a_value_range'.
+			-- Create and assign `a_value_range' to `value_range'.
 		require
 			a_value_range_not_void: a_value_range /= Void
 			a_value_range_not_empty: not a_value_range.is_empty
@@ -38,7 +38,6 @@ feature -- Access
 
 	value: INTEGER is
 			-- Current position within `value_range'.
-			-- Default: 0
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -184,7 +183,7 @@ feature -- Element change
 feature {EV_ANY} -- Contract support
 
 	is_in_default_state: BOOLEAN is
-			-- Is `Current' in its default state.
+			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_PRIMITIVE} and then
 				value_range.is_equal (0 |..| 100) and then

@@ -40,7 +40,7 @@ create
 feature -- Basic operations
 
 	redraw is
-			-- Call `expose_actions' for whole window when next idle.
+			-- Call `expose_actions' for `Current' when next idle.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -49,7 +49,7 @@ feature -- Basic operations
 
 	clear_and_redraw is
 			-- Clear the window.
-			-- Call `expose_actions' for whole window when next idle.
+			-- Call `expose_actions' for `Current' when next idle.
 		require
 			not_destroyed: not is_destroyed
 		do

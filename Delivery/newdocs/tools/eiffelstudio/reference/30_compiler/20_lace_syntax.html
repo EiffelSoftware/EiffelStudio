@@ -1,0 +1,287 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Lace syntax</TITLE>
+		<META NAME="MS-HKWD" CONTENT="Lace syntax">
+		<META NAME="MS-HKWD" CONTENT="ace file, syntax">
+		<LINK REL=Stylesheet HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Lace syntax</H1>
+		<h2>Introduction</h2>
+        <p>Ace files are central control files for Eiffel projects. They mainly
+        describe the compilation options of the project, its clusters and the
+        external references to C files necessary to compile the system
+        successfully.</p>
+        <p>From EiffelStudio 5.0 on, modifying Ace files manually is not
+        necessary any more. The <A HREF="project_settings_reference.html">project
+        settings dialog</A> takes care of everything graphically. If for some
+        reason you need to modify manually Ace files, the syntax is described
+        beneath.</p>
+        <h2>Overview</h2>
+        <p>Here is a standard Ace file:</p>
+        <div align="left">
+          <blockquote>
+            <blockquote>
+                <pre><SPAN class="ekeyword">system</span>
+	sample
+
+<SPAN class="ekeyword">root</span>
+	ROOT_CLASS: &quot;make&quot;
+
+<SPAN class="ekeyword">default</span>
+	address_expression (no)
+	array_optimization (no)
+	assertion (all)
+	check_vape (yes)
+	console_application (no)
+	collect (yes)
+	dead_code_removal (yes)
+	debug (no)
+	debug (&quot;DEBUG_TAG&quot;)
+	document (&quot;.&quot;)
+	dynamic_runtime (no)
+	exception_trace (no)
+	inlining (yes)
+	inlining_size (&quot;4&quot;)
+	line_generation (no)
+	multithreaded (no)
+	override_cluster(&quot;your_override_cluster&quot;)
+	profile (no)
+	shared_library_definition (&quot;file_name.def&quot;)
+	precompiled (&quot;$ISE_EIFFEL\precomp\spec\$PLATFORM\base&quot;);
+
+<SPAN class="ekeyword">cluster</span>
+	root_cluster: &quot;c:\temp&quot;;
+
+		<SPAN class="ecomment">-- EiffelBase</span>
+	all base:	&quot;$ISE_EIFFEL\library\base&quot;
+		exclude
+			&quot;desc&quot;;&quot;table_eiffel3&quot;
+		end
+
+	thread:	&quot;$ISE_EIFFEL\library\thread&quot;
+
+<SPAN class="ekeyword">external</span>
+	include_path:
+		&quot;$(ISE_EIFFEL)\library\wel\spec\windows\include&quot;
+	object:
+		&quot;$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib&quot;
+<SPAN class="ekeyword">end</span>
+</pre>
+            </blockquote>
+          </blockquote>
+        </div>
+        <p>The first part, introduced by the keyword <SPAN class="ekeyword">system</span>, gives the name of
+        the system.</p>
+        <p>The part starting with <SPAN class="ekeyword">root</span> names the root class and the feature that
+        starts the execution of the system.</p>
+        <p>Afterwards comes the list of the clusters of the system, introduced
+        by <SPAN class="ekeyword">cluster</span>.</p>
+        <p>The last part, after <SPAN class="ekeyword">external</span>, describes the files needed by the C
+        compilation. They include header files needed by the external features
+        of the system, and the library files.</p>
+        <p>Ace files always finish with the <SPAN class="ekeyword">end</span> keyword, like Eiffel classes.</p>
+        <p>The commenting conventions for Ace files are similar to the ones of
+        classes: comments are introduced by -- and include the end of the line.</p>
+        <h2>Default options</h2>
+        <p>We will describe each option as they are presented in the Ace file
+        above, in the option section, in alphabetical order. The default value
+        for each option is shown in bold.</p>
+        <ul>
+          <li><font color="#ff0000">address_expression (yes | <b>no</b>)</font>:
+            enables you to pass `<b>$(s.to_c)</b>' to a feature instead of
+            declaring `a' of type <b>ANY</b>, and then assigning `<b>s.to_c</b>'
+            to `a' and passing `<b>$a</b>'. Turn this option on only if you have
+            advanced knowledge of the garbage collector insides, since using
+            this syntax illegally can lead to bugs very hard to trace.
+          <li><font color="#ff0000">array_optimization (yes | <b>no</b>)</font>:
+            enables array optimization which increases performance of array
+            computation in loops. It is enabled only if arrays are used as local
+            variables or arguments of an Eiffel feature.
+          <li><font color="#ff0000">assertion (no | <b>require </b>| ensure |
+            invariant | loop | check | all)</font>: sets the assertion level of
+            an Eiffel system. Contrary to previous versions of the Eiffel
+            language, levels do not include the previous level, thus specifying
+            `loop' will no longer check for preconditions, postconditions, class
+            invariants, loop variants and loop invariants. With the new syntax,
+            you are free to decide which assertions are to be tested
+            independently from the others. Thus, it is now possible to check
+            preconditions and checks by writing<br>
+            assertion (require)<br>
+            assertion (check)<br>
+            in the Ace file, without having invariants and postconditions
+            checked.<br>
+            The all specification includes all checks.
+          <li><font color="#ff0000">check_vape (<b>yes</b> | no)</font>: enables
+            you to disable type checking for <b>VAPE</b> errors in preconditions,
+            which correspond to unsufficiently exported features used in
+            preconditions (ETL 2nd edition page 122).
+          <li><font color="#ff0000">console_application (yes | <b>no</b>)</font>:
+            has no effects on Unix and it was made for Windows users. It enables
+            Windows users to choose between creating a console application or a
+            GUI application (in which case a console will be created if needed,
+            instead of using the console the program was launched from).
+          <li><font color="#ff0000">collect (<b>yes</b> | no)</font>: not
+            applicable. One has to use the <b>MEMORY</b> class to activate or
+            stop the garbage collector.
+          <li><font color="#ff0000">dead_code_removal (<b>yes</b> | no)</font>:
+            it is a finalization option only. It enables you to not generate the
+            C code for Eiffel routines that are not called in your code, and
+            thus reducing the size of the generated application.
+          <li><font color="#ff0000">debug (yes | <b>no</b> | &quot;DEBUG_TAG&quot;)</font>:
+            enables you to activate or disable the code written inside `<font color="#0000ff"><b>debug</b></font>'
+            statement in your Eiffel code. If you marked your code with tagged `<font color="#0000ff"><b>debug</b></font>'
+            statement and if you specify a tag in the Ace file, only this kind
+            of `<span class="ekeyword">debug</span>' statement will be
+            executed. You can put several lines of `<font color="#0000ff"><b>debug</b></font>'
+            in the Ace file to enable several kinds of `<font color="#0000ff"><b>debug</b></font>'
+            statements.
+          <li><font color="#ff0000">document (&quot;path&quot;)</font>:
+            specifies in which directory the documentation generated by
+            EiffelStudio should be put (when using the <b>Project</b>/<b>Generate
+            documentation...</b> menu). If no directory is specified, the
+            documentation will be generated at the same level as your EIFGEN
+            directory in a directory called `Documentation'.
+          <li><font color="#ff0000">dynamic_runtime (yes | <b>no</b>)</font>:
+            enables the use of a shared library version of the runtime on both
+            Windows (DLL) and Unix platforms (.so) that supports shared libraries.
+          <li><font color="#ff0000">exception_trace (yes | <b>no</b>)</font>: it
+            is a finalization option only. It enables you to see a complete
+            exception trace when your finalized application is crashing. Because
+            it is adding some code to remember where the application was during
+            the crash it can slow down the performance of your application by a
+            factor of 5% to 30% depending of your platform.
+          <li><font color="#ff0000">inlining (yes | <b>no</b>)</font>: it is a
+            finalization option only. It enables to inline functions that can be
+            inlined (see `inlining_size' below). The ISE Eiffel inlining is very
+            powerful since it can inline a function in all your Eiffel code,
+            without scope limitation as in C or C++ compilers.
+          <li><font color="#ff0000">inlining_size (&quot;value&quot;)</font>: it
+            is a finalization option only, used in conjunction with the inlining
+            option. It enables to specify the size under which the compiler may
+            inline a function. The value given in parameter corresponds to the
+            number of instructions as the Eiffel compiler sees them (for example
+            a := b.f corresponds to 2 instructions for the Eiffel compiler).
+          <li><font color="#ff0000">line_generation (yes | <b>no</b>)</font>:
+            enables the generation of C pragmas `#line x' in the C generated
+            code. This option is mostly used by embedded Eiffel developers who
+            could not run the ISE EiffelStudio environment on their target
+            platform.
+          <li><font color="#ff0000">multithreaded (yes | <b>no</b>)</font>:
+            enables the generation of a multithreaded application. This option
+            cannot be changed during the development of your project and has to
+            be set correctly at the first compilation of your system.
+          <li><font color="#ff0000">override_cluster (cluster_name)</font>:
+            enables you to specify a certain `cluster_name' as override cluster.
+            As a result, all classes in `cluster_name' will override the classes
+            with the same names located in other clusters. Very useful when used
+            in conjunction with configuration management tools.
+          <li><font color="#ff0000">profile (yes | <b>no</b>)</font>: enables
+            the Eiffel profiling (to know more about Eiffel profiling click <a href="../70_wizards_and_dialogs/10_profiler_wizard/00_introduction.html">here</a>).
+          <li><font color="#ff0000">shared_library_definition
+            (&quot;file_name.def&quot;)</font>: enables you to specify `file_name.def'
+            as file where the Eiffel compiler will look when trying to generate
+            the exported function of the shared library you are developing. To
+            have more information concerning definition files, see the
+            <A HREF="40_advanced_topics/20_dynamic_library_generation/00_introduction.html">Dynamic library builder reference</A>.
+          <li><font color="#ff0000">precompiled (&quot;precompiled_library_path&quot;)</font>:
+            enables you to specify a precompiled library. Most examples given in
+            the ISE EiffelStudio delivery are using a precompiled library. It
+            makes the development of small application incredibly fast.</li>
+        </ul>
+        <h2>External options</h2>
+        <ul>
+          <li><font color="#ff0000">include_path</font>: enables you to specify
+            the path to the header files you are using in external clauses of
+            your Eiffel based source code.
+          <li><font color="#ff0000">object</font>: enables you to link your
+            application with specified object files.</li>
+        </ul>
+        <p class="seealso"><b>See also</b>:<br>
+        <A HREF="30_externals.html">External features</a></p>
+        <h2>Keywords</h2>
+                <table bgColor="#ffffe3" border="1" width="100%">
+                  <tbody>
+                    <tr>
+                      <td><span class="ekeyword">adapt</span></td>
+                      <td><span class="ekeyword">all</span></td>
+                      <td><span class="ekeyword">assertion</span></td>
+                      <td><span class="ekeyword">c</span></td>
+                      <td><span class="ekeyword">check</span></td>
+                      <td><span class="ekeyword">cluster</span></td>
+                    </tr>
+                    <tr>
+                      <td><span class="ekeyword">colon</span></td>
+                      <td><span class="ekeyword">comma</span></td>
+                      <td><span class="ekeyword">creation</span></td>
+                      <td><span class="ekeyword">debug</span></td>
+                      <td><span class="ekeyword">default</span></td>
+                      <td><span class="ekeyword">end</span></td>
+                    </tr>
+                    <tr>
+                      <td><span class="ekeyword">ensure</span></td>
+                      <td><span class="ekeyword">exclude</span></td>
+                      <td><span class="ekeyword">executable</span></td>
+                      <td><span class="ekeyword">export</span></td>
+                      <td><span class="ekeyword">external</span></td>
+                      <td><span class="ekeyword">generate</span></td>
+                    </tr>
+                    <tr>
+                      <td><span class="ekeyword">identifier</span></td>
+                      <td><span class="ekeyword">ignore</span></td>
+                      <td><span class="ekeyword">include</span></td>
+                      <td><span class="ekeyword">include_path</span></td>
+                      <td><span class="ekeyword">invariant</span></td>
+                      <td><span class="ekeyword">loop</span></td>
+                    </tr>
+                    <tr>
+                      <td><span class="ekeyword">make</span></td>
+                      <td><span class="ekeyword">no</span></td>
+                      <td><span class="ekeyword">object</span></td>
+                      <td><span class="ekeyword">optimize</span></td>
+                      <td><span class="ekeyword">option</span></td>
+                      <td><span class="ekeyword">precompiled</span></td>
+                    </tr>
+                    <tr>
+                      <td><span class="ekeyword">rename</span></td>
+                      <td><span class="ekeyword">require</span></td>
+                      <td><span class="ekeyword">root</span></td>
+                      <td><span class="ekeyword">system</span></td>
+                      <td><span class="ekeyword">trace</span></td>
+                      <td><span class="ekeyword">use</span></td>
+                    </tr>
+                    <tr>
+                      <td><span class="ekeyword">visible</span></td>
+                      <td><span class="ekeyword">yes</span></td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p>Introduced with ISE EiffelBench 4.5 the keyword `<span class="ekeyword">all</span>'
+                can appear before the name of a cluster. This new keyword is
+                now used in most Ace files given with your distribution. One
+                example can be found above and it is reproduced below with some
+                explanations:
+                <code>
+                        <div align="left">
+                        <pre>	-- EiffelBase
+all base: &quot;$ISE_EIFFEL\library\base&quot;
+	exclude
+		&quot;table_eiffel3&quot;
+	end</pre>
+                        </div>
+		</code>
+                <p>The meaning of `<span class="ekeyword">all</span>' is
+                to take into account all Eiffel files located below the
+                directory pointed by the `base' cluster. In addition, the
+                example above uses `<span class="ekeyword">exclude</span>' to make sure that the directory called `table_eiffel3'
+                and its descendants won't be
+                traversed. This is very useful when you have two clusters which
+                are used through a switch in your Ace file.</p>
+	</BODY>
+</HTML>

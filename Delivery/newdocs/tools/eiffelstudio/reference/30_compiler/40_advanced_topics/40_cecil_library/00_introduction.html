@@ -1,0 +1,62 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Introduction</TITLE>
+		<META NAME="MS-HKWD" CONTENT="CECIL">
+		<LINK REL=Stylesheet HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Introduction</H1>
+        <p class="note"><b>Note</b>: an online document is regularly updated
+        (corrections, examples, bug report, suggestions from customers). Please
+        make sure that you have downloaded the latest version at
+        <A HREF="http://www.eiffel.com/doc/manuals/technology/library/cecil/page.html">http://www.eiffel.com/doc/manuals/technology/library/cecil/page.html</A>.</p>
+        <p>This document provides an overview of the C-Eiffel Call-In Library
+        (CECIL) as defined in Eiffel: The Language (ETL). The first section
+        adresses how to compile and run a CECIL program, on the
+        <A HREF="10_compiling_a_system_for_cecil.html">Eiffel side</A> and
+        on the <A HREF="20_c_side_compilation.html">C side</A>. The <A HREF="30_cecil_interface.html">second part</A>
+        contains a more precise description of the Eiffel types, the protection
+        mechanism as well as how to write and use C externals.
+        <p>CECIL, designed by ISE, is the C library that permits C and C++
+        applications (as well as applications written in other languages) to
+        take advantage of almost all Eiffel facilities: create Eiffel objects,
+        apply features to them. The basics of CECIL are described in chapter 24
+        of the reference book on Eiffel, Eiffel: The Language, which covers
+        interfaces between Eiffel and other languages. Important material can
+        also be found in the ISE manual Eiffel: The Environment and on ISE's FTP
+        server. In particular, the FTP server contains a complete example which
+        you are strongly encouraged to download if you plan to make serious use
+        of CECIL. You can find the examples in
+        <ul>
+          <a href="ftp://ftp.eiffel.com/pub/examples/cecil/cecil.zip">ftp://ftp.eiffel.com/pub/examples/cecil/cecil.zip</a>
+        </ul>
+        (This is a zip of the entire example directory. You can also retrieve
+        individual files from that directory by looking at <a href="ftp://ftp.eiffel.com/pub/examples/cecil">ftp://ftp.eiffel.com/pub/examples/cecil</a>
+        and ignoring cecil.zip.)
+        <p>The updated examples for the ISE compiler 5.0 are in:
+        <ul>
+          <a href="ftp://ftp.eiffel.com/pub/examples/cecil/4-5">ftp://ftp.eiffel.com/pub/examples/cecil/4-5</a>
+        </ul>
+        <p>The CECIL documentation, man pages and examples are part of the
+        standard delivery with the ISE Compiler 4.5 and higher.
+        <p>The present document complements the descriptions of Eiffel: The
+        Language. Note that CECIL has been revised and improved since that book
+        was published, so the explanations below have precedence over those in the book.
+        <p>This document is intended for both Windows and Unix users. Only a few
+        of the sections, clearly marked, are platform-specific.</p>
+        To access Eiffel mechanisms from C or other external languages:
+        <ul>
+          <li>Compile your Eiffel system so as to generate &quot;Cecilized&quot;
+            code, that is to say code callable from the outside. See <a href="10_compiling_a_system_for_cecil.html">Compiling
+            your Eiffel system for CECIL</a>.
+          <li>In writing the external code that will use the facilities of the
+            Eiffel system, use the CECIL functions as specified in chapter 24 of
+            <i>Eiffel: The Language</i>. See also <a href="30_cecil_interface.html">The CECIL
+            interface overview</a>.
+          <li>C-compile and link that code. See <a href="20_c_side_compilation.html">Building
+            a C system using CECIL</a>.</li>
+        </ul>
+	</BODY>
+</HTML>

@@ -328,7 +328,6 @@ EIF_POINTER cwin_reg_query_value(
 	DWORD type;
     char* buffer;
 	REG_VALUE* RV;
-//	LPVOID lpMsgBuf;
 
 	buffer = (char *)malloc (256);	
     buffer[0] = 0;
@@ -347,8 +346,9 @@ EIF_POINTER cwin_reg_query_value(
 		RV->data = buffer;
 		RV->length = charCount;
 		return (EIF_POINTER) RV;	
+	} else {
+		return NULL;	
 	}
-
 }
 
 //////////////////////////////////////////////////////////////
@@ -364,7 +364,6 @@ EIF_POINTER cwin_reg_def_query_value(
 	DWORD type;
     char *buffer;
 	REG_VALUE* RV;
-//	LPVOID lpMsgBuf;
 
 	buffer = (char *)malloc (256);
     buffer[0] = 0;
@@ -381,6 +380,8 @@ EIF_POINTER cwin_reg_def_query_value(
 		RV->data = buffer;
 		RV->length = charCount;
 		return (EIF_POINTER) RV;	
+	} else {
+		return NULL;
 	}
 }
 
@@ -390,8 +391,8 @@ EIF_INTEGER cwin_reg_subkey_number(
 	LONG result;
 	DWORD nbkeys;
 	DWORD nbkey;
-	LPDWORD lpcchMaxClassLen;
-	LPDWORD lpcValues;
+	DWORD lpcchMaxClassLen;
+	DWORD lpcValues;
 
     result = RegQueryInfoKey ( (HKEY)key ,
         NULL,
@@ -399,8 +400,8 @@ EIF_INTEGER cwin_reg_subkey_number(
 		NULL,
 		(LPDWORD) &nbkeys,
 		(LPDWORD) &nbkey,
-		(LPDWORD)lpcchMaxClassLen,
-		(LPDWORD)lpcValues,
+		(LPDWORD) &lpcchMaxClassLen,
+		(LPDWORD) &lpcValues,
 		NULL,
 		NULL,
 		NULL,
@@ -419,7 +420,7 @@ EIF_INTEGER cwin_reg_value_number(
 	LONG result;
 	DWORD nbkeys;
 	DWORD nbkey;
-	LPDWORD lpcchMaxClassLen;
+	DWORD lpcchMaxClassLen;
 	DWORD Values;
 
     result = RegQueryInfoKey ( (HKEY)key ,
@@ -428,7 +429,7 @@ EIF_INTEGER cwin_reg_value_number(
 		NULL,
 		(LPDWORD) &nbkeys,
 		(LPDWORD) &nbkey,
-		(LPDWORD)lpcchMaxClassLen,
+		(LPDWORD) &lpcchMaxClassLen,
 		(LPDWORD) &Values,
 		NULL,
 		NULL,

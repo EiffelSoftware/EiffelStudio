@@ -16,7 +16,7 @@
 
 #include "wel_globals.h"
 
-//Temporary external used to get around genericity problem in Vision2.
+/* Temporary external used to get around genericity problem in Vision2. */
 EIF_REFERENCE generize (EIF_OBJECT g_item)
 {
 	return eif_access (g_item);

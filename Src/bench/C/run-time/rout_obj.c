@@ -110,7 +110,11 @@ rt_public void rout_obj_call_function (EIF_REFERENCE cur, EIF_REFERENCE res, EIF
 			break;
 		default:
 			*((EIF_REFERENCE *) resp) = result.rarg;
+#ifdef EIF_REM_SET_OPTIMIZATION
 			RTAS_OPT(result.rarg, 0, resp);
+#else
+			RTAS(result.rarg, resp);
+#endif
 			break;
 	}
 

@@ -19,14 +19,8 @@ feature -- Access
 
 	main_window: MAIN_WINDOW is
 			-- Main window of the example
-		local
-			arg: EV_ARGUMENT1[EV_APPLICATION]
-			cmd: APPLICATION_EXIT_COMMAND
 		once
 			!! Result.make_top_level 
-			!! cmd
-			!! arg.make (Current)
-			Result.add_close_command (cmd, arg);
 			Result.show
 		end
 	

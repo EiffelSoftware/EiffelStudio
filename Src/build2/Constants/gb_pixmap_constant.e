@@ -14,8 +14,14 @@ inherit
 		end
 		
 	GB_WIDGET_UTILITIES
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_PIXMAPS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_CONSTANTS
 	
@@ -65,13 +71,19 @@ feature {GB_PIXMAP_SETTINGS_DIALOG}
 			-- Convert representation of a pixmap constant, `Current', into
 			-- a fully referenced constant with a context.
 		require
-			directory_is_constant: Constants.directory_constant_by_name (directory) /= Void
+			directory_is_constant: not is_absolute implies Constants.directory_constant_by_name (directory) /= Void
+		local
+			file_name: FILE_NAME
 		do
 			if not is_absolute then
 				directory := Constants.directory_constant_by_name (directory).name
 				check
 					directory_matched: directory /= Void
 				end
+			else
+				create file_name.make_from_string (directory)
+				file_name.extend (filename)
+				value := file_name.out
 			end
 			create referers.make (4)
 			retrieve_pixmap_image
@@ -139,6 +151,39 @@ feature -- Status setting
 				add_element_containing_string (element, filename_string, filename)
 			end
 		end
+
+feature {GB_PIXMAP_SETTINGS_DIALOG, GB_DIRECTORY_CONSTANT} -- Implementation
+
+	update is
+			-- Rebuild representations of `Current', and update all referers within system.
+		local
+			constant_context: GB_CONSTANT_CONTEXT
+			gb_ev_any: GB_EV_ANY
+			execution_agent: PROCEDURE [ANY, TUPLE [EV_PIXMAP]]
+			file_name: FILE_NAME
+		do
+			if is_absolute then
+				create file_name.make_from_string (directory)
+				file_name.extend (filename)
+				value := file_name.out
+			end
+				-- Update image held internally.
+			retrieve_pixmap_image
+			from
+				referers.start
+			until
+				referers.off
+			loop
+				constant_context := referers.item
+				execution_agent ?= new_gb_ev_any (constant_context).execution_agents.item (constant_context.attribute)
+				check
+					execution_agent_not_void: execution_agent /= Void
+				end
+				execution_agent.call ([pixmap])
+				referers.forth
+			end
+		end
+		
 
 feature {NONE} -- Implementation
 

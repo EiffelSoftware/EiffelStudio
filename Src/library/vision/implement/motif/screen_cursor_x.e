@@ -35,10 +35,10 @@ feature {NONE}
 
 	dispose is
 			-- Called when garbaged.
-		require else
-			objects.empty
 		do
-			free_resources
+			if objects /= Void and then objects.empty then
+				free_resources
+			end
 		end; 
 	
 feature 

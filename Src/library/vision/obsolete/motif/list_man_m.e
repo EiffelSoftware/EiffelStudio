@@ -733,7 +733,7 @@ feature
 			until
 				current_position = last_position
 			loop
-				Result.put_left (get_i_th_table (motif_table, current_position));
+				Result.extend (get_i_th_table (motif_table, current_position));
 				current_position := current_position + 1
 			end
 		end;

@@ -41,7 +41,7 @@ feature -- Status setting
 			-- `Current' will not accept docking.
 		do
 			is_docking_enabled := False
-			(create {EV_ENVIRONMENT}).application.implementation.dockable_targets.prune (interface.object_id)
+			(create {EV_ENVIRONMENT}).application.implementation.dockable_targets.prune_all (interface.object_id)
 		ensure
 			not_dockable: not is_docking_enabled
 			id_not_stored_in_application: not (create {EV_ENVIRONMENT}).application.implementation.dockable_targets.has (interface.object_id)

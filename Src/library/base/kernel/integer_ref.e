@@ -286,6 +286,15 @@ feature -- Bit operations
 			Result := res
 		end
 
+	bit_shift_right (n: INTEGER): INTEGER is
+			-- Shift current from 'n' position to right.
+		require
+			n_positive: n >= 0
+			n_less_or_equal_to_32: n <=32
+		do
+			Result := Result // (2^n).rounded  
+		end
+
 feature -- Output
 
 	out: STRING is

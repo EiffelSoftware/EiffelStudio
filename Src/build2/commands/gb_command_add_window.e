@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 		do
 			History.cut_off_at_current_position
 			if a_new_directory /= Void then
-				parent_directory := a_new_directory.text
+				parent_directory := a_new_directory.path
 			end
 			original_id := window.id
 		end
@@ -96,7 +96,10 @@ feature -- Basic Operation
 			else
 				directory_item := window_selector.directory_object_from_name (parent_directory)
 				directory_item.extend (an_object.window_selector_item)
+					-- Ensure that the newly added item is visible.
+				directory_item.expand
 			end
+
 				-- If this is the only window contained, select it.
 			if window_selector.objects.count = 1 then
 				an_object.window_selector_item.enable_select
@@ -176,7 +179,7 @@ feature -- Basic Operation
 	
 feature {NONE} -- Implementation
 
-	parent_directory: STRING
+	parent_directory: ARRAYED_LIST [STRING]
 		-- Orignal directory that object referenced by `original_id' was added to.
 
 	original_id: INTEGER

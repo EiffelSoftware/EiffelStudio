@@ -589,7 +589,9 @@
 			<TEXT>development_window__show_project_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>development_window__show_general_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>development_window__show_text_in_general_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT>development_window__show_all_text_in_general_toolbar<BOOLEAN>False</BOOLEAN></TEXT>
 			<TEXT>debugger__show_text_in_project_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT>debugger__show_all_text_in_project_toolbar<BOOLEAN>False</BOOLEAN></TEXT>
 			<TEXT>debug_main_splitter_position<INTEGER>250</INTEGER></TEXT>
 			<TEXT>debugger__default_maximum_stack_depth<INTEGER>100</INTEGER></TEXT>
 			<TEXT>debugger__critical_stack_depth<INTEGER>1000</INTEGER></TEXT>

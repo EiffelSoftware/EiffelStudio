@@ -6,7 +6,8 @@ inherit
 		redefine
 			text_window
 		end;
-	SHARED_FORMAT_TABLES
+	SHARED_FORMAT_TABLES;
+	SHARED_RESOURCES
 
 creation
 
@@ -23,7 +24,7 @@ feature
 			Result := Execution_environment.get ("EIF_FILTER_NAME");
 			if Result = Void or else Result.empty then
 					-- EIF_FILTER_NAME was not set.
-				Result := "troff"
+				Result := resources.get_string (r_Filter_name, "troff")
 			end
 		end;
 
@@ -33,7 +34,7 @@ feature
 			Result := Execution_environment.get ("EIF_FILTER_COMMAND");
 			if Result = Void or else Result.empty then
 					-- EIF_FILTER_COMMAND was not set.
-				Result := "lpr $target"
+				Result := resources.get_string (r_Filter_command, "lpr $target")
 			end
 		end;
 

@@ -95,7 +95,8 @@ feature -- Access
 			then
 				Result := internal_procedures
 			else
-				create event_or_set_procedures.make (1, properties.count + events.count * 3)
+				
+				create event_or_set_procedures.make (1, 100)
 				if properties /= Void and then not properties.is_empty then
 					from
 						i := properties.lower
@@ -137,30 +138,38 @@ feature -- Access
 					end					
 				end
 				
-				create Result.make (1, internal_procedures.count + nb_prop_event_proc)
-				from
-					i := internal_procedures.lower
-					nb := internal_procedures.upper
-				until
-					i > nb
-				loop
-					Result.put (internal_procedures.item (i), i)
-					i := i + 1
+				if internal_procedures /= Void then
+					create Result.make (1, internal_procedures.count + nb_prop_event_proc)
+					from
+						i := internal_procedures.lower
+						nb := internal_procedures.upper
+					until
+						i > nb
+					loop
+						Result.put (internal_procedures.item (i), i)
+						i := i + 1
+					end
+				else
+					if nb_prop_event_proc > 0 then
+						i := 1
+						create Result.make (1, nb_prop_event_proc)
+					end
 				end
-				from
-					j := i
-					i := event_or_set_procedures.lower
-					nb := Result.upper
-				until
-					j > nb
-				loop
-					Result.put (event_or_set_procedures.item (i), j)
-					i := i + 1
-					j := j + 1
+
+				if Result /= Void then
+					from
+						j := i
+						i := event_or_set_procedures.lower
+						nb := Result.upper
+					until
+						j > nb
+					loop
+						Result.put (event_or_set_procedures.item (i), j)
+						i := i + 1
+						j := j + 1
+					end
 				end
 			end
-		ensure
-			non_void_result: Result /= Void
 		end
 
 	functions: ARRAY [CONSUMED_FUNCTION] is
@@ -190,30 +199,38 @@ feature -- Access
 					i := i + 1
 				end
 				
-				create Result.make (1, internal_functions.count + nb_getter)
-				from
-					i := internal_functions.lower
-					nb := internal_functions.upper
-				until
-					i > nb
-				loop
-					Result.put (internal_functions.item (i), i)
-					i := i + 1
+				if internal_functions /= Void then
+					create Result.make (1, internal_functions.count + nb_getter)
+					from
+						i := internal_functions.lower
+						nb := internal_functions.upper
+					until
+						i > nb
+					loop
+						Result.put (internal_functions.item (i), i)
+						i := i + 1
+					end
+				else
+					if nb_getter > 0 then
+						i := 1
+						create Result.make (1, nb_getter)
+					end
 				end
-				from
-					j := i
-					i := get_functions.lower
-					nb := Result.upper
-				until
-					j > nb 
-				loop
-					Result.put (get_functions.item (i), j)
-					i := i + 1
-					j := j + 1
+
+				if Result /= Void then
+					from
+						j := i
+						i := get_functions.lower
+						nb := Result.upper
+					until
+						j > nb 
+					loop
+						Result.put (get_functions.item (i), j)
+						i := i + 1
+						j := j + 1
+					end
 				end
 			end
-		ensure
-			non_void_result: Result /= Void
 		end
 
 
@@ -396,20 +413,41 @@ feature {NONE} -- Internal
 	consumed_type_entities (a_immediate: BOOLEAN): ARRAYED_LIST [CONSUMED_ENTITY] is
 			-- All fields, procedures, functions, properties and events implemented by type.
 			-- If `a_immediate' then return immediate features, else return inherited.
-		require
-			fields_not_void: fields /= Void
-			internal_functions_not_void: internal_functions /= Void
-			internal_procedures_not_void: internal_procedures /= Void
-			properties_not_void: properties /= Void
-			events_not_void: events /= Void
+		local
+			nb: INTEGER
 		do
-			create Result.make (fields.count + internal_functions.count +
-				internal_procedures.count + events.count + properties.count)
-			consumed_a_type_entities (fields, a_immediate, Result)
-			consumed_a_type_entities (internal_functions, a_immediate, Result)
-			consumed_a_type_entities (internal_procedures, a_immediate, Result)
-			consumed_a_type_entities (events, a_immediate, Result)
-			consumed_a_type_entities (properties, a_immediate, Result)
+			if fields /= Void then
+				nb := fields.count
+			end
+			if internal_functions /= Void then
+				nb := nb + internal_functions.count
+			end
+			if internal_procedures /= Void then
+				nb := nb + internal_procedures.count
+			end
+			if events /= Void then
+				nb := nb + events.count
+			end
+			if properties /= Void then
+				nb := nb + properties.count
+			end
+			
+			create Result.make (nb)
+			if fields /= Void then
+				consumed_a_type_entities (fields, a_immediate, Result)
+			end
+			if internal_functions /= Void then
+				consumed_a_type_entities (internal_functions, a_immediate, Result)
+			end
+			if internal_procedures /= Void then
+				consumed_a_type_entities (internal_procedures, a_immediate, Result)
+			end
+			if events /= Void then
+				consumed_a_type_entities (events, a_immediate, Result)
+			end
+			if properties /= Void then
+				consumed_a_type_entities (properties, a_immediate, Result)
+			end
 		ensure
 			result_not_void: Result /= Void
 		end

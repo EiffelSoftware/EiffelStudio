@@ -34,7 +34,7 @@ feature -- Access
 
 	set_interval (an_interval: INTEGER) is
 			-- Assign `an_interval' in milliseconds to `interval'.
-			-- Zero disables.  
+			-- Zero disables.
 		do
 			if timeout_connection_id > 0 then
 				C.gtk_timeout_remove (timeout_connection_id)
@@ -44,7 +44,7 @@ feature -- Access
 			if an_interval > 0 then
 				timeout_connection_id :=
 					c_ev_gtk_callback_marshal_timeout_connect (
-						an_interval, agent on_timeout
+						an_interval, timeout_agent
 					)
 			end
 			interval := an_interval
@@ -60,6 +60,18 @@ feature {NONE} -- Implementation
 		once
 			create Result
 		end
+		
+	timeout_agent: PROCEDURE [EV_TIMEOUT_IMP, TUPLE] is
+			-- 
+		do
+			if timeout_agent_internal = Void then
+				timeout_agent_internal := agent on_timeout
+			end
+			Result := timeout_agent_internal
+		end
+		
+	timeout_agent_internal: PROCEDURE [EV_TIMEOUT_IMP, TUPLE]
+		
 
 feature {EV_ANY_I} -- Implementation
 

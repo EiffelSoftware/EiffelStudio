@@ -238,7 +238,7 @@ feature {NONE} -- Externals
 		external
 			"C [macro %"ctype.h%"] (char): EIF_CHARACTER"
 		alias
-			"is_space"
+			"isspace"
 		end
 
 end -- class QUERY_PARSER

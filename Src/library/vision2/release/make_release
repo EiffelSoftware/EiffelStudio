@@ -13,8 +13,11 @@ make
 echo -n "."
 rm -rf documentation perlvision.pl test Makefile components extra
 mkdir test
+mkdir figure_test
 cp release/test/test.e test/
 cp release/test/Ace.ace test/
+cp release/figure_test/figure_test.e figure_test/
+cp release/figure_test/Ace.ace figure_test/
 rm -rf release
 echo -n "."
 rm -rf `find . -name '*_notes*'`

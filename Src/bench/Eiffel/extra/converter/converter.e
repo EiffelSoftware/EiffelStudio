@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 feature {NONE} -- Access
 
 	error: BOOLEAN
-			-- Did an error ocurr?
+			-- Did an error occur?
 
 	configure_file: RAW_FILE is
 			-- Name of the configure file

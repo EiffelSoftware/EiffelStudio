@@ -5,60 +5,68 @@ indexing
 	revision	: "$Revision$"
 
 class
-	EV_LAYOUT_CONSTANTS
+	EV_LAYOUT_CONSTANTS_IMP
 
 feature -- Access (button size constants)
 
 	Default_button_width: INTEGER is
 			-- Default width for buttons
-		once
-			Result := layout_implementation.Default_button_width
+		do
+			Result := dialog_unit_to_pixels (74)
 		end
 
 	Default_button_height: INTEGER is
 			-- Default height for buttons
-		once
-			Result := layout_implementation.Default_button_height
+		do
+			Result := dialog_unit_to_pixels (23)
 		end
 
 feature -- Access (padding constants)
 
 	Large_border_size: INTEGER is
 			-- Default size for borders
-		once
-			Result := layout_implementation.Large_border_size
+		do
+			Result := dialog_unit_to_pixels (10)
 		end
 
 	Default_padding_size: INTEGER is
 			-- Default size for padding
-		once
-			Result := layout_implementation.Default_padding_size
+		do
+			Result := dialog_unit_to_pixels (14)
 		end
 
 	Small_padding_size: INTEGER is
 			-- Small size for padding
-		once
-			Result := layout_implementation.Small_padding_size
+		do
+			Result := dialog_unit_to_pixels (10)
 		end
 
 	Tiny_padding_size: INTEGER is
 			-- Tiny size for padding
-		once
-			Result := layout_implementation.Tiny_padding_size
+		do
+			Result := dialog_unit_to_pixels (3)
 		end
 
 feature -- Access (border constants)
 
 	Default_border_size: INTEGER is
 			-- Default size for borders
-		once
-			Result := layout_implementation.Default_border_size
+		do
+			Result := dialog_unit_to_pixels (7)
 		end
 
 	Small_border_size: INTEGER is
 			-- Small size for borders
+		do
+			Result := dialog_unit_to_pixels (5)
+		end
+
+feature -- Access
+
+	resolution: INTEGER is
+			-- Screeen resolution.
 		once
-			Result := layout_implementation.Small_border_size
+			Result := (create {EV_FONT}).horizontal_resolution
 		end
 
 feature -- Operation
@@ -66,7 +74,9 @@ feature -- Operation
 	set_default_size_for_button (a_button: EV_BUTTON) is
 			-- Set the default size for `a_button'.
 		do
-			layout_implementation.set_default_size_for_button (a_button)
+			a_button.set_minimum_size (
+				a_button.minimum_width.max (Default_button_width),
+				a_button.minimum_height.max (Default_button_height))
 		end
 
 feature -- Conversion
@@ -75,15 +85,11 @@ feature -- Conversion
 			-- Convert `a_size' dialog units into pixels.
 			-- Used to get the same look&feel under all platforms
 		do
-			Result := layout_implementation.dialog_unit_to_pixels (a_size)
-		end
-		
-feature {NONE} -- Implementation
-
-	layout_implementation: EV_LAYOUT_CONSTANTS_IMP is
-			-- Underlying implementation
-		once
-			create Result
+			if resolution = 96 then
+				Result := a_size
+			else
+				Result := (a_size * resolution) // 96
+			end
 		end
 
 end -- class EV_LAYOUT_CONSTANTS

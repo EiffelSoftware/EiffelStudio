@@ -26,6 +26,7 @@ inherit
 
 create
 	default_create,
+	make_with_title,
 	make_for_test
 
 feature -- Access
@@ -220,6 +221,9 @@ end -- class EV_TITLED_WINDOW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/21 23:06:11  brendel
+--| Added creation procedure make_with_title.
+--|
 --| Revision 1.13  2000/03/21 22:10:39  oconnor
 --| added comment
 --|

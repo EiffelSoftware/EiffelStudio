@@ -2292,12 +2292,13 @@ rt_private void print_top(void (*append_trace)(char *))
 
 	buf[0] = '\0';
 
-	if (eif_except.from >= 0)
+	if (eif_except.from >= 0) {
 		if (eif_except.obj_id) {
 			if (eif_except.from != (int)Dtype(eif_except.obj_id))
 				sprintf(buf, "         (From %.15s)", Origin(eif_except.from));
 		} else
 			sprintf(buf, "         (From %.15s)", Origin(eif_except.from));
+	}
 
 	sprintf(buffer, "<%08lX> %-31.31s %-29.29s ", 
 			(unsigned long) eif_except.obj_id, buf, exception_string(code));

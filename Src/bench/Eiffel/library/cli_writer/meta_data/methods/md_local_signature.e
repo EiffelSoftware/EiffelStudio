@@ -26,10 +26,24 @@ feature {NONE} -- Initialization
 			-- Initialize current.
 		do
 			Precursor {MD_SIGNATURE}
+			reset
 			internal_put (feature {MD_SIGNATURE_CONSTANTS}.Local_sig, 0)
 			current_position := 1
 			state := local_count_state
 		ensure then
+			current_position_set: current_position = 1
+			state_set: state = local_count_state
+		end
+
+feature -- Reset
+
+	reset is
+			-- Reset content.
+		do
+			internal_put (feature {MD_SIGNATURE_CONSTANTS}.Local_sig, 0)
+			current_position := 1
+			state := local_count_state
+		ensure
 			current_position_set: current_position = 1
 			state_set: state = local_count_state
 		end

@@ -171,8 +171,8 @@ feature -- Removal
 
 	prune (v: like item) is
 			-- Remove `v' if present.
-			-- Do not move cursor except if the cursor was on `v',
-			-- move the cursor to right neighbor or after.
+			-- If cursor was on `v', move to right or after.
+			-- Do not move cursor otherwise.
 		do
 			implementation.prune (v)
 		end
@@ -312,6 +312,9 @@ end -- class EV_WIDGET_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/02 18:01:45  oconnor
+--| improved prune comment further :)
+--|
 --| Revision 1.6  2000/03/02 17:09:52  brendel
 --| Improved comment on `prune'.
 --|

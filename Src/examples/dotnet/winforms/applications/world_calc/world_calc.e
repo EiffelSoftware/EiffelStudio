@@ -54,7 +54,6 @@ feature -- Implementation
 			l_size: DRAWING_SIZE
 			l_point: DRAWING_POINT
 			i: INTEGER
-			l_button: WINFORMS_BUTTON
 		do
 			create components.make
 			create txt_formula.make

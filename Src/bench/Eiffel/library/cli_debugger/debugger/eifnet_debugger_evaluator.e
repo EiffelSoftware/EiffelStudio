@@ -60,7 +60,9 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Evaluation primitives
 			prepare_evaluation (a_frame, True)
 			last_icor_debug_eval.call_function (a_func, a_args)
 			Result := complete_function_evaluation
-			print ("End : " + generator + ".function_evaluation ... %N")			
+			debug ("debugger_trace_eval")
+				print ("End : " + generator + ".function_evaluation ... %N")
+			end
 		end
 
 	method_evaluation (a_frame: ICOR_DEBUG_FRAME; a_meth: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE]) is

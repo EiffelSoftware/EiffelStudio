@@ -48,8 +48,7 @@ feature {NONE} -- Implementation
 				buffer := ""
 			else
 				buffer := string.substring (last_position,
-					(last_position +
-					length - 1).min (string.count))
+					(last_position + length - 1).min (string.count))
 				last_position := last_position + length
 			end
 		end

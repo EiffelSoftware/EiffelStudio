@@ -13,7 +13,7 @@ default
 	line_generation (yes)
 	il_verifiable (yes)
 	cls_compliant (yes)
-	dotnet_naming_convention (no)
+	dotnet_naming_convention (yes)
 	msil_generation_type ("exe")
 	check_vape (yes)
 	console_application (no)
@@ -81,7 +81,6 @@ assembly
 	cscompmgd:	"cscompmgd",	"7.0.3300.0",	"neutral",	"b03f5f7f11d50a3a"
 
 external
-
 	include_path:
 		"$(ISE_EIFFEL)\library\vision2\spec\include",
 		"$(ISE_EIFFEL)\library\wel\spec\windows\include"
@@ -89,7 +88,7 @@ external
 	object:
 		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\ilvision2.lib",
 		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\ilwel.lib",
- 		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
- 		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib"
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib"
 
 end

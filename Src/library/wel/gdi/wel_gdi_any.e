@@ -72,9 +72,12 @@ feature {NONE} -- Removal
 					decrease_gdi_objects_count
 				end
 				delete_result := cwin_delete_object (item)
---				check
---					object_deleted: delete_result
---				end
+				debug ("WEL")
+					if not delete_result then
+						io.putstring ("DeleteObject failed for the following object%N")
+						print (Current)
+					end
+				end
 				item := p
 			end
 		ensure
@@ -117,16 +120,6 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (HGDIOBJ): BOOL"
 		alias
 			"DeleteObject"
-		end
-
-feature -- Obsolete
-
-	delete is
-			-- Delete the current gdi object
-		obsolete
-			"use `dispose' instead if object is not shared, or call `start_tracking_references' and then `decrement_reference'"
-		do
-			dispose
 		end
 
 end -- class WEL_GDI_ANY

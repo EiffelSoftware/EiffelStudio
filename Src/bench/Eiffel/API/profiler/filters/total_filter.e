@@ -2,7 +2,7 @@ indexing
 
 	description:
 		"Profile filter used to check whether the time spent in the function %
-		%plus its descendents is equal to the specified value.";
+		%plus its descendants is equal to the specified value.";
 	date: "$Date$";
 	revision: "$Revision$"
 

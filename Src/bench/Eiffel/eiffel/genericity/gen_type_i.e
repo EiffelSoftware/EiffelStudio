@@ -16,7 +16,54 @@ inherit
 			append_signature,
 			type_a,
 			generate_cid,
-			make_gen_type_byte_code
+			make_gen_type_byte_code,
+			is_identical
+		end
+
+feature -- Comparison
+
+	is_identical (other: TYPE_I): BOOLEAN is
+			-- Is `other' identical to Current ?
+			-- Takes `true_generics' into account!
+       local
+            i, count: INTEGER
+            local_copy: like true_generics
+            other_gen: like true_generics
+            gen_type_i: GEN_TYPE_I
+        do
+            gen_type_i ?= other
+            if gen_type_i /= Void then
+                Result := equal (base_id, gen_type_i.base_id)
+                        and then is_expanded = gen_type_i.is_expanded
+                        and then is_separate = gen_type_i.is_separate
+                        and then meta_generic.same_as (gen_type_i.meta_generic)
+                from
+                    i := 1
+                    local_copy := true_generics
+                    count := local_copy.count
+                    other_gen := gen_type_i.true_generics
+                until
+                    i > count or else not Result
+                loop
+                    Result := local_copy.item (i).is_identical (other_gen.item (i))
+                    i := i + 1
+                end
+            end
+		end
+
+	same_as (other: TYPE_I): BOOLEAN is
+			-- Is `other' equal to Current ?
+			-- NOTE: we do not compare `true_generics'!
+		local
+			gen_type_i: GEN_TYPE_I
+		do
+			gen_type_i ?= other
+			if gen_type_i /= Void then
+				Result := equal (base_id, gen_type_i.base_id)
+						and then is_expanded = gen_type_i.is_expanded
+						and then is_separate = gen_type_i.is_separate
+						and then meta_generic.same_as (gen_type_i.meta_generic)
+			end
 		end
 
 feature
@@ -46,21 +93,6 @@ feature
 				!!true_generics.make (1,0)
 			else
 				true_generics := tgen
-			end
-		end
-
-	same_as (other: TYPE_I): BOOLEAN is
-			-- Is `other' equal to Current ?
-			-- NOTE: we do not compare `true_generics'!
-		local
-			gen_type_i: GEN_TYPE_I
-		do
-			gen_type_i ?= other
-			if gen_type_i /= Void then
-				Result := equal (base_id, gen_type_i.base_id)
-						and then is_expanded = gen_type_i.is_expanded
-						and then is_separate = gen_type_i.is_separate
-						and then meta_generic.same_as (gen_type_i.meta_generic)
 			end
 		end
 

@@ -34,54 +34,49 @@ inherit
 	SHARED_RESCUE_STATUS;
 	SHARED_MELT_ONLY;
 	SHARED_ASSERTION_LEVEL;
-	COMPILER_EXPORTER
+	COMPILER_EXPORTER;
+	E_CLASS
+		rename
+			feature_table as api_feature_table,
+			comp_feature_table as feature_table
+		export
+			{ANY} feature_table, types, invariant_feature
+		redefine
+			generics, descendants, clients
+		end
 
 creation
 
 	make
 	
-feature
+feature {NONE} -- Initialization
 
-	e_class: E_CLASS;
-			-- Associated eiffel class
-
-	lace_class: CLASS_I is
-			-- Lace class
+	make (l: CLASS_I) is
+			-- Creation of Current class
+		require
+			good_argument: l /= Void;
 		do
-			Result := e_class.lace_class
+			initialize (l);
+				-- Creation of a conformance table
+			!! conformance_table.make (1,1);
+				-- Creation of the syntactical supplier list
+			!! syntactical_suppliers.make;
+				-- Creation of the syntactical client list
+			!! syntactical_clients.make;
+				-- Filter list creation
+			!! filters.make;
+			filters.compare_objects;
+				-- Feature id counter creation
+			!! feature_id_counter;
+				-- Changed features list creation
+			!! changed_features.make (20);
+				-- Propagator set creation
+			!! propagators.make;
+				-- Unique counter creation
+			!! unique_counter;
 		end;
 
-	obsolete_message: STRING is
-			-- Obsolete message
-			-- (Void if Current is not obsolete)
-		do
-			Result := e_class.obsolete_message
-		end;
-
-	parents: FIXED_LIST [CL_TYPE_A] is
-			-- Parent classes
-		do
-			Result := e_class.parents
-		end;
-
-	descendants: LINKED_LIST [E_CLASS] is
-			-- Direct descendants of the current class
-		do
-			Result := e_class.descendants
-		end;
-
-	clients: LINKED_LIST [E_CLASS] is
-			-- Clients of the class
-		do
-			Result := e_class.clients
-		end;
-
-	suppliers: SUPPLIER_LIST is
-			-- Suppliers of the class in terms of calls
-			-- [Useful for incremental type check].
-		do
-			Result := e_class.suppliers
-		end;
+feature -- Access
 
 	syntactical_suppliers: LINKED_LIST [SUPPLIER_CLASS];
 			-- Syntactical suppliers of the class
@@ -91,25 +86,14 @@ feature
 			-- Syntactical clients of the class
 			--| Useful for class removal
 
-	generics: EIFFEL_LIST_B [FORMAL_DEC_AS_B] is
+	generics: EIFFEL_LIST_B [FORMAL_DEC_AS_B];
 			-- Formal generical parameters
-		do
-			Result := e_class.private_generics
-		end;
 
-	topological_id: INTEGER is
-			-- Unique number for a class. Could change during a topological
-			-- sort on classes.
-		do
-			Result := e_class.topological_id
-		end;
+ 	descendants: LINKED_LIST [CLASS_C];
+			-- Direct descendants of the current class
 
-	reverse_engineered: BOOLEAN is
-			-- Does the Storage mechanism for EiffelCase need
-			-- to regenerate the EiffelCase description for Current class?
-		do
-			Result := e_class.reverse_engineered
-		end;
+	clients: LINKED_LIST [CLASS_C];
+			-- Clients of the class
 
 	changed2: BOOLEAN;
 			-- Has the compiler to apply the second pass to this class
@@ -152,23 +136,13 @@ feature
 			end
 		end
 
-	is_deferred: BOOLEAN is
-			-- Is the class deferred ?
+	is_debuggable: BOOLEAN is
+			-- Is the class able to be debugged?
+			-- (not if it doesn't have class types
+			-- or is a special class)
 		do
-			Result := e_class.is_deferred
-		end
-
-	is_expanded: BOOLEAN is
-			-- Is the class expanded ?
-		do
-			Result := e_class.is_expanded
-		end
-
-	is_separate: BOOLEAN is
-			-- Is the class separate ?
-		do
-			Result := e_class.is_separate
-		end
+			Result := (not (is_special or else is_basic)) and then has_types
+		end;
 
 	is_used_as_separate: BOOLEAN;
 			-- Is the class used as a separate class ?
@@ -183,13 +157,6 @@ feature
 			-- Conformance table of the class;: once a class has changed
 			-- it must be reprocessed and the conformance table of the
 			-- recursive descendants also.
-
-	types: TYPE_LIST is
-			-- Meta-class types associated to the class: it contains
-			-- only one type if the class is not generic
-		do
-			Result := e_class.types
-		end;
 
 	filters: FILTER_LIST; 	-- ## FIXME 2.3 Patch: redefinition of equal in
 							-- GEN_TYPE_I
@@ -210,12 +177,6 @@ feature
 			-- Set of class ids of the classes responsible for
 			-- a type check of the current class
 	
-	id: CLASS_ID is
-			-- Class id
-		do
-			Result := e_class.id
-		end;
-
 	creators: EXTEND_TABLE [EXPORT_I, STRING];
 			-- Creation procedure names
 
@@ -226,49 +187,13 @@ feature
 			-- Melting information list
 			-- [Processed by the third pass.]
 
-	invariant_feature: INVARIANT_FEAT_I;
-			-- Invariant feature
-
 	skeleton: GENERIC_SKELETON;
 			-- Attributes skeleton
-
-	is_obsolete: BOOLEAN is
-			-- Is the class obsolete ?
-		do
-			Result := e_class.is_obsolete
-		end;
 
 	changed: BOOLEAN is
 			-- Is the class syntactically changed ?
 		do	
 			Result := lace_class.changed
-		end;
-
-	make (ec: E_CLASS) is
-			-- Creation
-		require
-			good_argument: ec /= Void;
-		do
-			e_class := ec;
-				-- Creation of a conformance table
-			!!conformance_table.make (1,1);
-				-- Creation of the syntactical supplier list
-			!!syntactical_suppliers.make;
-				-- Creation of the syntactical client list
-			!!syntactical_clients.make;
-				-- Filter list creation
-			!!filters.make;
-			filters.compare_objects;
-				-- Feature id counter creation
-			!!feature_id_counter;
-				-- Changed features list creation
-			!!changed_features.make (20);
-				-- Propagator set creation
-			!!propagators.make;
-				-- Unique counter creation
-			!!unique_counter;
-			e_class.set_compiled_info (Current);
-			e_class.set_is_debuggable (not (is_special or else is_basic))
 		end;
 
 	already_compiled: BOOLEAN is
@@ -338,7 +263,7 @@ feature
 			end;
 		end;
 	
-	end_of_pass1 (ast: CLASS_AS_B) is
+	end_of_pass1 (ast_b: CLASS_AS_B) is
 				-- End of the first pass after syntax analysis
 		local
 			supplier_list: LINKED_LIST [ID_AS_B];
@@ -349,7 +274,7 @@ feature
 			invariant_info: READ_INFO;
 			old_syntactical_suppliers: like syntactical_suppliers;
 		do
-				-- Check suppliers of parsed class represented by `ast'.
+				-- Check suppliers of parsed class represented by `ast_b'.
 				-- Supplier classes not present already in the system
 				-- are introduced in it, after having verified that they
 				-- are avaible in the universe.
@@ -357,11 +282,11 @@ feature
 				-- to another one after duplicating it.
 			old_syntactical_suppliers := clone (syntactical_suppliers)
 			syntactical_suppliers.wipe_out;
-			supplier_list := ast.suppliers.supplier_ids;
+			supplier_list := ast_b.suppliers.supplier_ids;
 			if not supplier_list.empty then
 				check_suppliers (supplier_list);
 			end;
-			parent_list := ast.parents;
+			parent_list := ast_b.parents;
 			if parent_list /= Void then
 
 -- FIXME add incrementality check  Type check error d.add (Current) of type B not conform to A ...
@@ -369,11 +294,11 @@ feature
 			end;
 
 				-- Process a compiled form of the parents
-			class_info := ast.info;
+			class_info := ast_b.info;
 			class_info.set_id (id);
 
 				-- Initialization of the current class
-			init (ast, class_info, old_syntactical_suppliers);
+			init (ast_b, class_info, old_syntactical_suppliers);
 
 				-- Check sum error
 			Error_handler.checksum;
@@ -392,8 +317,8 @@ feature
 				-- Save the abstract syntax tree: the AST of a class
 				-- (instance of CLASS_C) is retrieved through the feature
 				-- `id' of CLASS_C and file ".TMP_AST".
-			ast.set_id (id);
-			Tmp_ast_server.put (ast);
+			ast_b.set_id (id);
+			Tmp_ast_server.put (ast_b);
 			if ast_context.has_unique then
 					-- Compute the values of the unique constants
 				class_info.set_unique_values (ast_context.unique_values);
@@ -429,7 +354,7 @@ feature
 					syntactical_suppliers.copy (old_syntactical_suppliers)
 				end;
 			end;
-		end; -- end_of_pass1
+		end;
 
 feature -- Building conformance table
 
@@ -487,7 +412,7 @@ feature -- Expanded rues validity
 		do
 debug ("CHECK_EXPANDED");
 io.error.putstring ("Checking expanded for: ");
-io.error.putstring (class_name);
+io.error.putstring (name);
 io.error.new_line;
 end;
 			feature_table.check_expanded;
@@ -1025,7 +950,7 @@ end;
 	print_clients is
 		do
 			io.error.putstring ("Clients of ");
-			io.error.putstring (class_name);
+			io.error.putstring (name);
 			io.error.new_line;
 			from
 				clients.start
@@ -1039,7 +964,7 @@ end;
 			end;
 			io.error.new_line;
 			io.error.putstring ("Syntactical clients of ");
-			io.error.putstring (class_name);
+			io.error.putstring (name);
 			io.error.new_line;
 			from
 				syntactical_clients.start
@@ -1047,7 +972,7 @@ end;
 				syntactical_clients.after
 			loop
 				io.error.putstring ("%T");
-				io.error.putstring (syntactical_clients.item.class_name);
+				io.error.putstring (syntactical_clients.item.name);
 				io.error.new_line;
 				syntactical_clients.forth
 			end;
@@ -1148,10 +1073,8 @@ end;
 			good_argument: new_suppliers /= Void;
 		local
 			supplier: E_CLASS;
-			supplier_clients: like clients;
-			ec: like e_class
+			supplier_clients: LINKED_LIST [E_CLASS]
 		do
-			ec := e_class;
 			from
 				suppliers.start
 			until
@@ -1160,8 +1083,8 @@ end;
 				supplier := suppliers.item.supplier;
 				supplier_clients := supplier.clients;
 				supplier_clients.start;
-				supplier_clients.compare_references
-				supplier_clients.search (ec);
+				supplier_clients.compare_references;
+				supplier_clients.search (Current);
 				supplier_clients.remove;
 				suppliers.forth
 			end;
@@ -1172,10 +1095,10 @@ end;
 			loop
 				supplier := new_suppliers.item.supplier;
 				supplier_clients := supplier.clients;
-				supplier_clients.put_front (ec);
+				supplier_clients.put_front (Current);
 				new_suppliers.forth
 			end;
-			e_class.set_suppliers (new_suppliers);
+			set_suppliers (new_suppliers);
 		end;
 
 feature -- Generation
@@ -1441,10 +1364,10 @@ feature
 			-- Generated base file name prefix
 		do
 			!!Result.make (11);
-			if class_name.count > Max_non_encrypted then
-				Result.append (class_name.substring (1, Max_non_encrypted));
+			if name.count > Max_non_encrypted then
+				Result.append (name.substring (1, Max_non_encrypted));
 			else
-				Result.append (class_name);
+				Result.append (name);
 			end;
 		end;
 
@@ -1470,7 +1393,7 @@ feature -- Skeleton processing
 		do
 debug ("SKELETON")
 io.error.putstring ("Class: ");
-io.error.putstring (class_name);
+io.error.putstring (name);
 io.error.putstring (" process_skeleton%N");
 end;
 			from
@@ -1522,10 +1445,10 @@ changed4 := False;
 
 feature -- Class initialization
 
-	init (ast: CLASS_AS_B; class_info: CLASS_INFO; old_suppliers: like syntactical_suppliers) is
+	init (ast_b: CLASS_AS_B; class_info: CLASS_INFO; old_suppliers: like syntactical_suppliers) is
 			-- Initialization of the class with AST produced by yacc
 		require
-			good_argument: ast /= Void;
+			good_argument: ast_b /= Void;
 		local
 			old_parents: like parents;
 			old_generics: like generics;
@@ -1554,12 +1477,12 @@ feature -- Class initialization
 		do
 				-- Check if obsolete clause was present.
 				-- (Void if none was present)
-			if ast.obsolete_message /= Void then
-				obs_msg := ast.obsolete_message.value;
+			if ast_b.obsolete_message /= Void then
+				obs_msg := ast_b.obsolete_message.value;
 			else
 				obs_msg := Void
 			end;
-			e_class.set_obsolete_message (obs_msg);
+			set_obsolete_message (obs_msg);
 			old_parents := parents;
 
 			if old_parents /= Void then
@@ -1571,17 +1494,17 @@ feature -- Class initialization
 			end;
 
 				-- Deferred mark
-			old_is_deferred := e_class.is_deferred;
-			e_class.set_is_deferred (ast.is_deferred);
+			old_is_deferred := is_deferred;
+			set_is_deferred (ast_b.is_deferred);
 			if (old_is_deferred /= is_deferred and then old_parents /= Void) then
 				pass2_controler.set_deferred_modified (Current);
 				changed_status := True;
 			end;
 
 				-- Expanded mark
-			old_is_expanded := e_class.is_expanded;
-			is_exp := ast.is_expanded;
-			e_class.set_is_expanded (is_exp);
+			old_is_expanded := is_expanded;
+			is_exp := ast_b.is_expanded;
+			set_is_expanded (is_exp);
 
 			if is_exp then
 					-- Record the fact that an expanded is in the system
@@ -1608,11 +1531,11 @@ feature -- Class initialization
 
 				-- Separate mark
 			old_is_separate := is_separate;
-			if ast.is_separate then
-				e_class.set_is_separate (True);
+			if ast_b.is_separate then
+				set_is_separate (True);
 				System.set_has_separate
 			else
-				e_class.set_is_separate (False);
+				set_is_separate (False);
 			end
 
 			if (is_separate /= old_is_separate and then old_parents /= Void) then
@@ -1670,7 +1593,7 @@ feature -- Class initialization
 				-- in the system (even if a parent is not already parsed).
 
 			Inst_context.set_cluster (cluster);
-			parents_as := ast.parents;
+			parents_as := ast_b.parents;
 			parent_list := class_info.parents;
 
 			if parents_as /= Void then
@@ -1719,7 +1642,7 @@ feature -- Class initialization
 							-- This ensures that routine `check_suppliers'
 							-- has been called before.
 					end;
-					parent_class.add_descendant (e_class);
+					parent_class.add_descendant (Current);
 					pars.put_i_th (parent_type, lower);
 					lower := lower + 1;
 				end;
@@ -1732,7 +1655,7 @@ feature -- Class initialization
 				!! pars.make (1);
 				pars.put_i_th (Any_type, 1);
 					-- Add a descendant to class ANY
-				System.any_class.compiled_class.add_descendant (e_class);
+				System.any_class.compiled_class.add_descendant (Current);
 					-- Fill parent list of corresponding class info
 				parent_list.put_i_th (Any_parent, 1);
 			else
@@ -1741,14 +1664,14 @@ feature -- Class initialization
 				!! pars.make (0);
 			end;
 
-			e_class.set_parents (pars);
+			set_parents (pars);
 
 				-- Init generics
 			old_generics := generics;
 
-			gens := ast.generics;
+			gens := ast_b.generics;
 
-			e_class.set_generics (gens);
+			set_generics (gens);
 
 			if gens /= Void then
 					-- Check generic parameter declaration rule
@@ -1975,11 +1898,9 @@ feature
 		require
 			parents_exists: parents /= Void;
 		local
-			cl: like clients;
-			ec: like e_class
+			cl: LINKED_LIST [E_CLASS]
 		do
 			remove_parent_relations;
-			ec := e_class;
 			from
 				suppliers.start
 			until
@@ -1988,7 +1909,7 @@ feature
 				cl := suppliers.item.supplier.clients;
 				cl.start;
 				cl.compare_references
-				cl.search (ec);
+				cl.search (Current);
 				if not cl.after then
 					cl.remove
 				end;
@@ -2002,11 +1923,10 @@ feature
 		require
 			parents_exists: parents /= Void;
 		local
-			des: like descendants;
-			ec, c: E_CLASS;
+			des: LINKED_LIST [E_CLASS];
+			c: E_CLASS
 		do
 			from
-				ec := e_class;
 				parents.start;
 			until
 				parents.after
@@ -2015,8 +1935,8 @@ feature
 				if c /= Void then
 					des := c.descendants;
 					des.start;
-					des.compare_references
-					des.search (ec);
+					des.compare_references;
+					des.search (Current);
 					if not des.after then
 						des.remove;
 					end;
@@ -2215,7 +2135,7 @@ feature -- Supplier checking
 				syntactical_suppliers.after or else recompile
 			loop
 				a_class := syntactical_suppliers.item.supplier;
-				Universe.compute_last_class (a_class.class_name, cluster);
+				Universe.compute_last_class (a_class.name, cluster);
 				if Universe.last_class /= a_class.lace_class then
 						-- one of the suppliers has changed (different CLASS_I)
 						-- recompile the client (Current class)
@@ -2336,7 +2256,7 @@ feature -- Supplier checking
 				Error_handler.insert_error (vsrc1);
 				Error_handler.checksum;
 			end;
-			if e_class.is_deferred then
+			if is_deferred then
 				!!vsrc2;
 				vsrc2.set_class (Current);
 				Error_handler.insert_error (vsrc2);
@@ -2395,7 +2315,7 @@ feature -- Supplier checking
 			then
 				!!vd27;
 				vd27.set_creation_routine (system_creation);
-				vd27.set_root_class (e_class);
+				vd27.set_root_class (Current);
 				Error_handler.insert_error (vd27);
 			end;
 			if (system_creation = Void)
@@ -2403,7 +2323,7 @@ feature -- Supplier checking
 			then
 				!!vd27;
 				vd27.set_creation_routine ("");
-				vd27.set_root_class (e_class);
+				vd27.set_root_class (Current);
 				Error_handler.insert_error (vd27);
 			end;
 			Error_handler.checksum;
@@ -2425,12 +2345,6 @@ feature -- Supplier checking
 		end;
 
 feature -- Order relation for inheritance and topological sort
-
-	infix "<" (other: CLASS_C): BOOLEAN is
-			-- Order relation on classes
-		do
-			Result := topological_id < other.topological_id;
-		end;
 
 	conform_to (other: CLASS_C): BOOLEAN is
 			-- Is `other' an ancestor of Current ?
@@ -2471,7 +2385,7 @@ feature -- Propagation
 				class_i := syntactical_clients.item.lace_class;
 				debug ("REMOVE_CLASS")
 					io.error.putstring ("Propagation to client: ");
-					io.error.putstring (class_i.class_name);
+					io.error.putstring (class_i.name);
 					io.error.new_line
 				end;
 				workbench.add_class_to_recompile (class_i);
@@ -2481,12 +2395,6 @@ feature -- Propagation
 		end;
 
 feature -- Convenience features
-
-	set_topological_id (i: INTEGER) is
-			-- Assign `i' to `topological_id'.
-		do
-			e_class.set_topological_id (i)
-		end;
 
 	set_changed (b: BOOLEAN) is
 			-- Mark the associated lace class changed.
@@ -2522,12 +2430,6 @@ feature -- Convenience features
 			is_used_as_separate := True
 		end;
 
-	set_id (i: like id) is
-			-- Assign `i' to `id'.
-		do
-			e_class.set_id (i)
-		end;
-
 	set_invariant_feature (f: INVARIANT_FEAT_I) is
 		do
 			invariant_feature := f;
@@ -2550,18 +2452,12 @@ feature -- Convenience features
 		require
 			good_argument: c /= Void;
 		local
-			desc: like descendants
+			desc: LINKED_LIST [E_CLASS]
 		do
 			desc := descendants;
 			if not desc.has (c) then
 				desc.put_front (c);	
 			end;
-		end;
-
-	class_name: STRING is
-			-- Raw class name
-		do
-			Result := e_class.name
 		end;
 
 	visible_name: STRING is
@@ -2574,12 +2470,6 @@ feature -- Convenience features
 			-- External name
 		do
 			Result := lace_class.external_name
-		end;
-
-	cluster: CLUSTER_I is
-			-- Cluster to which the class belongs to
-		do
-			Result := lace_class.cluster
 		end;
 
 	assertion_level: ASSERTION_I is
@@ -2596,14 +2486,6 @@ feature -- Convenience features
 			else
 				Result := lace_class.assertion_level
 			end
-		end;
-
-	hidden: BOOLEAN is
-			-- Is the class hidden in the precompilation sets?
-		do
-			Result := lace_class.hidden
-		ensure
-			hide_only_when_precompiled: Result implies is_precompiled
 		end;
 
 	trace_level: OPTION_I is
@@ -2630,16 +2512,10 @@ feature -- Convenience features
 			Result := lace_class.debug_level
 		end;
 
-	file_name: STRING is
-			-- FIle name of the class
-		do
-			Result := lace_class.file_name
-		end;
-
 	visible_level: VISIBLE_I is
 			-- Visible level
 		do
-			if is_used_as_separate or else  class_name.is_equal ("sep_obj") then
+			if is_used_as_separate or else name.is_equal ("sep_obj") then
 				!VISIBLE_EXPORT_I! Result
 			else
 				Result := lace_class.visible_level
@@ -2685,7 +2561,7 @@ feature -- Actual class type
 		do
 debug ("ACTIVITY")
 	io.error.putstring ("CLASS_C: ");
-	io.error.putstring (class_name);
+	io.error.putstring (name);
 	io.error.putstring ("%NChanged_feature: ");
 	io.error.putstring (feature_name);
 	io.error.new_line;
@@ -2701,12 +2577,6 @@ end;
 			index_small_enough: i <= generics.count;
 		do
 			Result := generics.i_th (i).constraint_type;
-		end;
-
-	feature_table: FEATURE_TABLE is
-			-- Feature table of the clas
-		do
-			Result := Feat_tbl_server.item (id);
 		end;
 
 	update_instantiator1 is
@@ -2767,7 +2637,7 @@ end;
 				
 debug ("GENERICITY")
 	io.error.putstring ("Update_types%N");
-	io.error.putstring (class_name);
+	io.error.putstring (name);
 	data.dump (io.error);
 end;
 			if not types.has_type (data) then
@@ -2826,7 +2696,7 @@ debug ("GENERICITY")
 	io.error.putstring ("Propagation of ");
 	filter.dump (io.error);
 	io.error.putstring ("propagation to ");
-	io.error.putstring (base_c.class_name);
+	io.error.putstring (base_c.name);
 	io.error.new_line;
 end;
 				base_c.update_types (filter);
@@ -3004,7 +2874,7 @@ feature -- Cecil
 			cecil_file: INDENT_FILE;
 		do
 			cecil_file := System.cecil_file;
-			if e_class.is_expanded then
+			if is_expanded then
 				Cecil_file.putstring ("SK_EXP + ");
 			end;
 			Cecil_file.putstring ("(uint32) ");
@@ -3017,7 +2887,7 @@ feature -- Cecil
 			no_generics: generics = Void;
 			one_type_only: types.count = 1;
 		do
-			if e_class.is_expanded then
+			if is_expanded then
 				Result := Sk_exp;
 			end;
 			Result := Result + types.first.type_id - 1;
@@ -3058,7 +2928,7 @@ feature -- Conformance table generation
 			until
 				desc.after
 			loop
-				desc.item.compiled_info.make_conformance_table (t);
+				desc.item.make_conformance_table (t);
 				desc.forth
 			end;
 		end;
@@ -3107,20 +2977,6 @@ feature {NONE} -- External features
 	c_parse (f: POINTER; s: POINTER): CLASS_AS_B is
 		external
 			"C"
-		end;
-
-feature -- PS
-
-	feature_named (n: STRING): FEATURE_I is
-			-- Feature whose internal name is `n'
-		do
-			if
-				Tmp_feat_tbl_server.has (id)
-			then
-				Result := Tmp_feat_tbl_server.item (id).item (n)
-			else
-				Result := Feat_tbl_server.item (id).item (n)
-			end
 		end;
 
 feature -- Replication
@@ -3197,7 +3053,7 @@ end;
 					feat_dep.remove;
 				end;
 debug ("REPLICATION")
-	io.error.putstring (class_c.class_name);
+	io.error.putstring (class_c.name);
 	io.error.new_line;
 end;
 			end;
@@ -3221,7 +3077,7 @@ end;
 			rep_class_info := Tmp_rep_info_server.item (id);
 debug ("ACTUAL_REPLICATION", "REPLICATION")
 	io.error.putstring ("Replication for class ");
-	io.error.putstring (class_name);
+	io.error.putstring (name);
 	io.error.new_line;
 	rep_class_info.trace;	
 end;
@@ -3321,16 +3177,6 @@ end;
 			Tmp_rep_server.clear_index;
 		end;
 
-feature -- EiffelCase stuff
-
-	set_reverse_engineered (b: BOOLEAN) is
-			-- Set reversed_engineered to `b'.
-		do
-			e_class.set_reverse_engineered (b)
-		ensure
-			reverse_engineered_set: reverse_engineered = b
-		end;
-
 	insert_changed_assertion (a_feature: FEATURE_I) is
 			-- Insert `a_feature' in the melted set
 		local
@@ -3348,19 +3194,7 @@ feature -- EiffelCase stuff
 			System.freeze_set1.put (id);
 		end;
 
-	has_types: BOOLEAN is
-			-- Are there any generic instantiations of Current
-			-- in the system or is Current a non generic class?
-		do
-			Result := e_class.has_types
-		end;
-
 feature -- Precompilation
-
-	is_precompiled: BOOLEAN is
-		do	
-			Result := id.is_precompiled
-		end;
 
 	nb_modifiable_types: INTEGER is
 			-- Number of modifiable types (i.e. precompiled or static)
@@ -3599,13 +3433,40 @@ feature -- Merging
 		require
 			other_not_void: other /= Void
 			same_class: id.is_equal (other.id)
+		local
+			classes: LINKED_LIST [E_CLASS];
+			class_c: CLASS_C
 		do
 			is_used_as_expanded :=
 				is_used_as_expanded or other.is_used_as_expanded;
 			is_used_as_separate :=
 				is_used_as_separate or other.is_used_as_separate;
 			filters.append (other.filters);
-			e_class.merge (other.e_class)
+			classes := other.clients;
+			from 
+				classes.start 
+			until 
+				classes.after 
+			loop
+				class_c := System.class_of_id (classes.item.id);
+				if not clients.has (class_c) then
+					clients.extend (class_c)
+				end;
+				classes.forth
+			end;
+			classes := other.descendants;
+			from 
+				classes.start 
+			until 
+				classes.after 
+			loop
+				class_c := System.class_of_id (classes.item.id);
+				if not descendants.has (class_c) then
+					descendants.extend (class_c)
+				end;
+				classes.forth
+			end;
+			types.append (other.types)
 				--| `syntactical_clients' is used when removing classes.
 				--| Since a precompiled class cannot be removed, it
 				--| doesn't matter if `syntactical_clients' is out-of-date.
@@ -3613,7 +3474,6 @@ feature -- Merging
 
 invariant
 
-	lace_class_exists: lace_class /= Void;
 	dynamic_constraint: System.is_dynamic implies (is_dynamic xor is_static)
 
-end
+end -- class CLASS_C

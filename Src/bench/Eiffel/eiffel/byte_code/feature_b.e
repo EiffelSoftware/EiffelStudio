@@ -204,7 +204,7 @@ debug ("OPTIMIZATION")
 	io.error.putstring ("%N%N%NTESTING is_unsafe for ");
 	io.error.putstring (feature_name);
 	io.error.putstring (" from ")
-	io.error.putstring (base_class.class_name);
+	io.error.putstring (base_class.name);
 	io.error.putstring (" is NOT safe%N");
 end;
 			optimizer.test_safety (f, base_class);
@@ -214,7 +214,7 @@ debug ("OPTIMIZATION")
 	if result then
 		io.error.putstring (f.feature_name);
 		io.error.putstring (" from ")
-		io.error.putstring (base_class.class_name);
+		io.error.putstring (base_class.name);
 		io.error.putstring (" is NOT safe%N");
 	end;
 end
@@ -487,7 +487,7 @@ feature -- Concurrent Eiffel
 				end;
 					-- keep the class name of the target of the feature call
 				class_type ?= context_type; -- Can't fail
-				ba.append_raw_string (class_type.base_class.e_class.name_in_upper);
+				ba.append_raw_string (class_type.base_class.name_in_upper);
 					-- keep the feature name of the feature call
 				ba.append_raw_string (feature_name);
 					-- keep the return value's type;
@@ -533,7 +533,7 @@ feature -- Concurrent Eiffel
 				end;
 					-- keep the class name of the target of the feature call
 				class_type ?= context_type; -- Can't fail
-				ba.append_raw_string (class_type.base_class.e_class.name_in_upper);
+				ba.append_raw_string (class_type.base_class.name_in_upper);
 					-- keep the feature name of the feature call
 				ba.append_raw_string (feature_name);
 					-- keep the return value's type;

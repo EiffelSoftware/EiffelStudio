@@ -136,7 +136,7 @@ feature
 			elseif is_separate then
 				st.add_string ("separate ");
 			end;
-			base_class.e_class.append_signature (st)
+			base_class.append_signature (st)
 		end;
 
 	dump (file: FILE) is
@@ -148,7 +148,7 @@ feature
 			elseif is_separate then
 				file.putstring ("separate ");
 			end;
-			s := clone (base_class.class_name);
+			s := clone (base_class.name);
 			s.to_upper;
 			file.putstring (s);
 		end;

@@ -24,7 +24,8 @@ feature
 		do
 			screen := a_screen;
 			identifier := an_identifier;
-			is_allocated := is_allocated_r
+			is_allocated := is_allocated_r;
+			screen_object := screen.screen_object;
 		ensure
 			screen = a_screen;
 			identifier = an_identifier;
@@ -33,6 +34,16 @@ feature
 
 	screen: SCREEN_I;
 			-- Pointer on the display used
+
+	screen_object: POINTER;
+			-- Screen's screen object.
+			--| The reason for a separate attribute (instead of 
+			--| using screen.screen_object) so that the Current objects
+			--| does not reference the `screen' in the dispose
+			--| routine. It is very important that no references
+			--| are used in the dispose routine because they maybe
+			--| garbage collected first. However, we can use expanded types
+			--| in the dispose routine.
 
 	is_allocated: BOOLEAN;
 			-- Is resource allocated by the program ?

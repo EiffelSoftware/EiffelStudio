@@ -130,6 +130,7 @@ feature -- Initialization
 			as113: ADDRESS_CURRENT_AS_B;
 			as114: ADDRESS_RESULT_AS_B;
 			as115: EXTERNAL_LANG_AS_B;
+			as116: EXPR_ADDRESS_AS_B;
 		do
 			!!as1;
 			as1.pass_address(class_as);
@@ -349,6 +350,8 @@ feature -- Initialization
 			as114.pass_address (address_result_as);
 			!!as115;
 			as115.pass_address (external_lang_as);
+			!!as116;
+			as116.pass_address (expr_address_as);
 		end;
 
 end -- class EBENCH_YACC_EIFFEL

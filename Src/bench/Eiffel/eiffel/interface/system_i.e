@@ -2267,6 +2267,13 @@ feature
 			do_not_check_vape := b;
 		end;
 
+	address_expression_allowed: BOOLEAN;
+	
+	allow_address_expression (b: BOOLEAN) is
+		do
+			address_expression_allowed := b
+		end
+
 feature -- Generation
 
 	generate_table is
@@ -3668,7 +3675,10 @@ feature -- Conveniences
 			inlining_size := 4;
 			code_replication_off := True;
 			exception_stack_managed := False; 
-			server_controler.set_chunk_size (10000)
+			server_controler.set_chunk_size (10000);
+
+			do_not_check_vape := False;
+			address_expression_allowed := False;
 		end;
 
 	set_freeze (b: BOOLEAN) is

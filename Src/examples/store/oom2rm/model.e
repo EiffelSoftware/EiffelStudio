@@ -45,7 +45,7 @@ feature
 			create Result.make (30);
 		ensure
 			result_not_void: Result /= Void;
-			keys_not_empty: not result.empty
+			keys_not_empty: not Result.is_empty
 		end;
 
 	output: FILE is

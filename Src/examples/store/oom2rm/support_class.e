@@ -66,7 +66,7 @@ feature {NONE}
 			-- What is the generic type of `array'?
 		require
 			array_not_void: array /= Void;
-			array_not_empty: not array.empty;
+			array_not_empty: not array.is_empty;
 			lower_item_not_void: array.item (array.lower) /= Void
 		do
 			Result := array.item (array.lower)
@@ -79,7 +79,7 @@ feature {NONE}
 			-- What is the generic type of `traversable'?
 		require
 			traversable_not_void: traversable /= Void;
-			traversable_not_empty: not traversable.empty
+			traversable_not_empty: not traversable.is_empty
 		do
 			traversable.start;
 			Result := traversable.item

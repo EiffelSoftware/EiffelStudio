@@ -41,8 +41,8 @@ feature
 			a_prefix_not_void: a_prefix /= Void
 		do
 			make (a_name);
-			a_name.insert ("_", 1);
-			a_name.insert (a_prefix, 1)
+			a_name.insert_string ("_", 1);
+			a_name.insert_string (a_prefix, 1)
 		end;
 
 	print_result (output: FILE) is

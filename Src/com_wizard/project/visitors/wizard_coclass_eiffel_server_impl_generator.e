@@ -30,29 +30,32 @@ feature -- Basic operation
 			a_visible: WIZARD_WRITER_VISIBLE_CLAUSE
 			definition_file_generator: WIZARD_DEFINITION_FILE_GENERATOR
 		do
-			create a_visible.make
-			a_visible.set_name (implemented_coclass_name (a_descriptor.eiffel_class_name))
-			system_descriptor.add_visible_class_component (a_visible)
-
-			create eiffel_writer.make
 			coclass_descriptor := a_descriptor
 
-			-- Set class name and description
-			eiffel_writer.set_class_name (implemented_coclass_name (a_descriptor.eiffel_class_name))
 			if not shared_wizard_environment.new_eiffel_project then
+				create a_visible.make
+				a_visible.set_name (implemented_coclass_name (a_descriptor.eiffel_class_name))
+				system_descriptor.add_visible_class_component (a_visible)
+
+				create eiffel_writer.make
+
+				-- Set class name and description
+				eiffel_writer.set_class_name (implemented_coclass_name (a_descriptor.eiffel_class_name))
 				-- Process interfaces.
 				process_interfaces
+
+				local_string := clone (coclass_descriptor.eiffel_class_name)
+				local_string.append (" Implementation.")
+				eiffel_writer.set_description (local_string)
+
+				set_default_ancestors (eiffel_writer)
+				add_creation
+				add_default_features (a_descriptor)
+
+				-- Generate code
+				Shared_file_name_factory.create_file_name (Current, eiffel_writer)
+				eiffel_writer.save_file (Shared_file_name_factory.last_created_file_name)
 			end
-
-			local_string := clone (coclass_descriptor.eiffel_class_name)
-			local_string.append (" Implementation.")
-			eiffel_writer.set_description (local_string)
-
-			set_default_ancestors (eiffel_writer)
-
-			-- Generate code
-			Shared_file_name_factory.create_file_name (Current, eiffel_writer)
-			eiffel_writer.save_file (Shared_file_name_factory.last_created_file_name)
 
 			if shared_wizard_environment.in_process_server then
 				create definition_file_generator
@@ -62,11 +65,16 @@ feature -- Basic operation
 		end
 
 	add_creation is
+			-- Add creation clause,.
 		do
+			eiffel_writer.add_creation_routine (Make_word)
 		end
 
 	add_default_features (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR) is
+			-- Add default features to coclass server. 
+			-- e.g. make, constructor etc.
 		do
+			eiffel_writer.add_feature (make_feature, Initialization)
 		end
 
 	generate_functions_and_properties (a_desc: WIZARD_INTERFACE_DESCRIPTOR;
@@ -175,6 +183,25 @@ feature {NONE} -- Implementation
 			tmp_writer.set_name ("ECOM_EXCEPTION")
 
 			an_eiffel_writer.add_inherit_clause (tmp_writer)
+		end
+
+	make_feature: WIZARD_WRITER_FEATURE is
+			-- `make' feature.
+		local
+			feature_body: STRING
+		do
+			create Result.make
+			Result.set_name ("make")
+			Result.set_comment ("Creation")
+
+			create feature_body.make (0)
+
+			Result.set_effective
+			Result.set_body (feature_body)
+		ensure
+			non_void_feature: Result /= Void
+			non_void_feature_name: Result.name /= Void
+			non_void_feature_body: Result.body /= Void
 		end
 
 end -- class WIZARD_COCLASS_EIFFEL_SERVER_GENERATOR

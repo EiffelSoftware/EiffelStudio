@@ -43,13 +43,17 @@ feature -- Access
 	first: EV_WIDGET is
 			-- First item.
 		do
-			Result := first_cell.item
+			if first_cell.readable then
+				Result := first_cell.item
+			end
 		end
 
 	second: EV_WIDGET is
 			-- Second item.
 		do
-			Result := second_cell.item
+			if second_cell.readable then
+				Result := second_cell.item
+			end
 		end
 
 	go_to_first is
@@ -327,6 +331,9 @@ end -- class EV_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/03/03 00:33:16  oconnor
+--| fixed first and second
+--|
 --| Revision 1.15  2000/03/01 19:59:07  rogers
 --| Fixed writeable and added readable.
 --|

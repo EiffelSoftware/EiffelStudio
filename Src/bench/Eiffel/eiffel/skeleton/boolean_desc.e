@@ -9,11 +9,8 @@ inherit
 	
 feature 
 
-	is_boolean: BOOLEAN is
+	is_boolean: BOOLEAN is True
 			-- Is the attribute a boolean one ?
-		do
-			Result := True;
-		end;
 
 	is_character: BOOLEAN is
 			-- Is the attribute a character one ?

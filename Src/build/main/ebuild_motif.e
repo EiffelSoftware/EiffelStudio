@@ -13,11 +13,12 @@ creation
 
 feature {NONE}
 
-	XeiffelBuild: STRING is "ebuild";
+	X_resources_file_name: STRING is "ebuild";
+			-- X resources file name for Eiffel build			
 
 	init_toolkit: MOTIF is 
 		once 
-			!! Result.make (XeiffelBuild) 
+			!! Result.make (X_resources_file_name) 
 		end
 
 end

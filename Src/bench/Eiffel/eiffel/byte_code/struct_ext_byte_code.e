@@ -7,9 +7,9 @@ indexing
 class STRUCT_EXT_BYTE_CODE
 
 inherit
-	EXT_EXT_BYTE_CODE
+	EXT_BYTE_CODE
 		redefine
-			is_special, generate, generate_body, generate_signature
+			is_special, generate_body
 		end
 
 feature -- Properties
@@ -41,12 +41,6 @@ feature -- Initialization
 
 feature -- Code generation
 
-	generate is
-		do
-			generate_include_files
-			generate_signature
-		end
-
 	generate_body is
 			-- Generate the body for an external of type macro
 		local
@@ -62,7 +56,9 @@ feature -- Code generation
 				context.set_has_cpp_externals_calls (True)
 			end
 			
-			name := Names_heap.item (field_name_id)
+			l_names_heap := Names_heap
+
+			name := l_names_heap.item (field_name_id)
 			if name = Void then
 				name := external_name
 			else
@@ -71,8 +67,6 @@ feature -- Code generation
 
 			setter := (new_syntax and then argument_types.count = 2)
 					or else (not new_syntax and then not has_return_type)
-
-			l_names_heap := Names_heap
 
 			if not setter then
 				buf.putstring ("return ");
@@ -109,12 +103,6 @@ feature -- Code generation
 				buf.putstring (")(arg2);");
 				buf.new_line;
 			end
-		end
-
-	generate_signature is
-			-- Generate the signature for the macro.
-		do
-			generate_basic_signature
 		end
 
 feature -- Convenience

@@ -6,19 +6,21 @@ indexing
 class IL_EXT_BYTE_CODE
 
 inherit
-	EXT_EXT_BYTE_CODE
+	EXT_BYTE_CODE
 		redefine
-			generate_signature, generate_body
+			generate
 		end
 
 feature -- Generation
 
-	generate_signature is
+	generate is
+			-- Not applicable
 		do
-		end
-
-	generate_body is
-		do
+			check
+				not_applicable: False
+			end
+		ensure then
+			not_applicable: False
 		end
 
 end -- class IL_EXT_BYTE_CODE

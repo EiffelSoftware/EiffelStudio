@@ -237,7 +237,7 @@ feature
 						extension.generate_header_files
 
 							-- In the case of a signature or a macro, the call will be direct
-						extension.generate_external_name (buf, external_name, typ, type_c)
+						extension.generate_external_name (buf, external_name, type_c)
 					end
 				else
 					if is_boolean then
@@ -261,7 +261,7 @@ feature
 								-- Generate the right name to call the external
 								-- In the case of a signature or a macro, the call will be direct
 								-- In the case of a dll, the encapsulation will be called (encoded name)
-							extension.generate_external_name (buf, external_name, typ, type_c);
+							extension.generate_external_name (buf, external_name, type_c);
 						else
 							local_argument_types := argument_types
 							buf.putchar ('(')
@@ -282,16 +282,19 @@ feature
 		local
 			is_macro_extension: BOOLEAN
 			is_struct_extension: BOOLEAN
+			is_inline_extension: BOOLEAN
 			is_cpp_extension: BOOLEAN
 			final_mode: BOOLEAN
 			not_polymorphic: BOOLEAN
 			cpp_ext: CPP_EXTENSION_I
 			struct_ext: STRUCT_EXTENSION_I
+			inline_ext: INLINE_EXTENSION_I
 			buf: GENERATION_BUFFER
 		do
 			if encapsulated then
 				is_struct_extension := extension.is_struct
 				is_macro_extension := extension.is_macro
+				is_inline_extension := extension.is_inline
 				is_cpp_extension := extension.is_cpp
 			end
 			final_mode := context.final_mode
@@ -318,6 +321,9 @@ feature
 				elseif is_struct_extension and then not_polymorphic then
 					struct_ext ?= extension
 					struct_ext.generate_struct_access (buf, external_name, parameters)
+				elseif is_inline_extension and then not_polymorphic then
+					inline_ext ?= extension
+					inline_ext.generate_inline_access (buf, parameters)
 				elseif is_cpp_extension and then not_polymorphic then
 					cpp_ext ?= extension
 					cpp_ext.generate (external_name, parameters)

@@ -6,25 +6,18 @@ indexing
 class C_EXT_BYTE_CODE
 
 inherit
-	EXT_EXT_BYTE_CODE
+	EXT_BYTE_CODE
 		redefine
-			generate_signature, generate_body
+			generate_body
 		end
 
 feature -- Generation
-
-	generate_signature is
-		do
-			if is_during_il then
-				Precursor {EXT_EXT_BYTE_CODE}
-			end
-		end
 
 	generate_body is
 		do
 			if is_during_il then
 				generate_c_extern_declaration
-				Precursor {EXT_EXT_BYTE_CODE}
+				Precursor {EXT_BYTE_CODE}
 			end
 		end
 
@@ -33,14 +26,16 @@ feature -- Generation
 		local
 			header: like Header_generation_buffer
 			l_args: like std_argument_types
+			l_names_heap: like Names_heap
 			l_type: TYPE_I
 			i, nb: INTEGER
 		do
 			header := Header_generation_buffer
 			if header_files = Void then
+				l_names_heap := Names_heap
 				header.putstring ("extern ")
 				if return_type > 0 then
-					header.putstring (Names_heap.item (return_type))
+					header.putstring (l_names_heap.item (return_type))
 				else
 					l_type := context.real_type (result_type)
 					if not l_type.is_void then
@@ -48,7 +43,7 @@ feature -- Generation
 					end
 				end
 
-				header.putstring (Names_heap.item (external_name_id))
+				header.putstring (l_names_heap.item (external_name_id))
 				
 				header.putchar ('(')
 				if argument_types /= Void then
@@ -58,7 +53,7 @@ feature -- Generation
 					until
 						i > nb
 					loop
-						header.putstring (Names_heap.item (argument_types.item (i)))
+						header.putstring (l_names_heap.item (argument_types.item (i)))
 						if i < nb then
 							header.putstring (", ")
 						end

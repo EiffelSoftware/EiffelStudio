@@ -108,7 +108,6 @@ feature -- Initialization
 						set_error_status (Retrieve_incompatible_error_status)
 						incompatible_version_number.append (p_eif.project_version_number)
 					end
-					p_eif.close
 				else
 --!! FIXME: check Concurrent_Eiffel license
 					Project_directory_name.make_from_string (project_directory.name)

@@ -12,6 +12,9 @@ class
 
 inherit
 	EV_COMBO_BOX_I
+		undefine
+			count
+		end
 
 	EV_LIST_ITEM_CONTAINER_IMP
 
@@ -23,49 +26,10 @@ inherit
 		
 	EV_BAR_ITEM_IMP
 
---	WEL_DROP_DOWN_COMBO_BOX
---		rename
---			make as wel_make,
---			parent as wel_parent,
---			font as wel_font,
---			set_font as wel_set_font,
---			destroy as wel_destroy,
---			selected_item as wel_selected_item,
---			select_item as wel_select_item,
---			height as wel_height
---		undefine
---			-- We undefine the features redefined by EV_WIDGET_IMP,
---			-- EV_PRIMITIVE_IMP and EV_TEXT_CONTAINER_IMP.
---			remove_command,
---			set_width,
---			set_height,
---			on_left_button_down,
---			on_right_button_down,
---			on_left_button_up,
---			on_right_button_up,
---			on_left_button_double_click,
---			on_right_button_double_click,
---			on_mouse_move,
---			on_char,
---			on_key_up,
---			text_length,
-	--		default_process_message,
---			-- XX Temporary
---			wel_height,
----			list_shown,
---			show_list,
---			hide_list
-			
---		redefine
---			on_cbn_selchange,
---			on_cbn_editupdate,
---			default_style
---		end
-
 	WEL_DROP_DOWN_LIST_COMBO_BOX
 		rename
 			make as wel_make,
-			parent as wel_parent,
+			set_parent as wel_set_parent,
 			font as wel_font,
 			set_font as wel_set_font,
 			destroy as wel_destroy,
@@ -221,16 +185,19 @@ feature {EV_CONTAINER_IMP} -- Implementation
    			-- When we resize a combo-box, we resize the list,
 			-- and not the appearance, it's why, we must not
 			-- change the height of the combo_box.
+		local
+			cc: EV_CHILD_CELL_IMP
 		do
-			child_cell.resize (minimum_width.max (a_width), minimum_height.max (a_height))
+			cc := child_cell
+			cc.resize (minimum_width.max (a_width), minimum_height.max (a_height))
  			if resize_type = 3 then
- 				move_and_resize (child_cell.x, child_cell.y, child_cell.width, height, True)
+ 				move_and_resize (cc.x, cc.y, cc.width, height, True)
  			elseif resize_type = 2 then
- 				move_and_resize ((child_cell.width - width) // 2 + child_cell.x, child_cell.y, width, height, True)
+ 				move_and_resize ((cc.width - width) // 2 + cc.x, cc.y, width, height, True)
  			elseif resize_type = 1 then
- 				move_and_resize (child_cell.x, (child_cell.height - height) // 2 + child_cell.y, child_cell.width, height, True)
+ 				move_and_resize (cc.x, (cc.height - height) // 2 + cc.y, cc.width, height, True)
 			else
- 				move ((child_cell.width - width) // 2 + child_cell.x, (child_cell.height - height) // 2 + child_cell.y)
+ 				move ((cc.width - width) // 2 + cc.x, (cc.height - height) // 2 + cc.y)
  			end
  		end
 

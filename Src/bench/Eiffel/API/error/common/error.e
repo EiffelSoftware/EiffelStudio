@@ -38,11 +38,11 @@ feature -- Properties
 
 feature -- Access
 
-    is_defined: BOOLEAN is
-            -- Is the error fully defined?
-        do
-            Result := True
-        end;
+	is_defined: BOOLEAN is
+			-- Is the error fully defined?
+		do
+			Result := True
+		end
 
 feature -- Comparison
 

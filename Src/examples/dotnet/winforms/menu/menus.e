@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 			l_size.make_from_width_and_height (5, 13)
 			my_window.set_auto_scale_base_size (l_size)
 			l_size.make_from_width_and_height (392, 117)
---			my_window.set_client_size_size (l_size)
+			my_window.set_client_size_size_2(l_size)
 			create main_menu.make
 			my_window.set_menu (main_menu)
 

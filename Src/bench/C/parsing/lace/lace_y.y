@@ -127,9 +127,9 @@ Clusters                : /* empty */
 							{$$ = NULL;}
                         ;
 
-Cluster_clause_list     : Cluster_clause
+Cluster_clause_list     : Cluster_clause ASemi
 							{list_push($1);}
-                        | Cluster_clause_list Cluster_clause
+                        | Cluster_clause_list Cluster_clause ASemi
 							{list_push($2);}
                         ;
 

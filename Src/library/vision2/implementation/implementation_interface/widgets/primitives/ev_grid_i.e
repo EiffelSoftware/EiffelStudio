@@ -355,6 +355,31 @@ feature -- Access
 
 feature -- Status setting
 
+	activate_item (a_item: EV_GRID_ITEM) is
+			-- Setup `a_item' for user interactive editing
+		require
+			a_item_not_void: a_item /= Void
+		local
+			popup_window: EV_WINDOW
+			x_coord, y_coord: INTEGER
+		do
+			create popup_window
+			x_coord := screen_x + viewable_x_offset - viewport_x_offset +a_item.virtual_x_position
+			y_coord := screen_y + viewable_y_offset - viewport_y_offset + a_item.virtual_y_position
+			popup_window.set_position (x_coord, y_coord)
+			popup_window.set_size (a_item.column.width, a_item.row.height)
+			popup_window.show
+			a_item.active_action (popup_window)
+		end
+
+	deactivate_item (a_item: EV_GRID_ITEM) is
+			-- Cleanup from previous call to `activate'
+		require
+			a_item_not_void: a_item /= Void
+		do
+			
+		end
+
 	enable_selection_on_click is
 			-- Enable selection handling of items when clicked upon
 		do

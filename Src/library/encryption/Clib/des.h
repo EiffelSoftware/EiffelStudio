@@ -17,8 +17,8 @@
 extern "C" {
 #endif
 
-extern int ise_desinit();		/* Initialize internal DES structures */
-extern void ise_setkey();		/* Set encryption/decryption key */
+extern int ise_desinit(int mode);		/* Initialize internal DES structures */
+extern void ise_setkey(char *key);		/* Set encryption/decryption key */
 extern void ise_endes(char *);		/* Perform DES encryption */
 extern void ise_dedes(char *);		/* Perform DES decryption */
 extern void ise_desdone();		/* Free internal structures allocated by ise_desinit */

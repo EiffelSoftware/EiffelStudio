@@ -95,6 +95,7 @@ feature -- Element change
 		require
 			not_destroyed: not is_destroyed
 			a_name_not_void: a_name /= Void
+			valid_file_name: valid_file_name (a_name)
 		do
 			implementation.set_file_name (a_name)
 		ensure
@@ -111,6 +112,19 @@ feature -- Element change
 		ensure
 			assigned: start_directory.is_equal (a_path)
 		end
+		
+feature -- Contract Support
+
+	valid_file_name (a_name: STRING): BOOLEAN is
+			-- Is `a_name' a valid file_name on the current platform?
+			-- Certain characters are not permissible and this is dependent
+			-- on the current platform. The following characters are not permitted,
+			-- and this list may not be exhaustive:
+			-- Windows - " * / : < > ? \ |
+			-- Linux - & *
+		do
+			Result := implementation.valid_file_name (a_name)
+		end
 
 feature {EV_ANY_I} -- implementation
 
@@ -122,6 +136,7 @@ invariant
 	start_directory_not_void: start_directory /= Void
 	file_name_not_void_implies_path_and_title_not_void: file_name /= Void
 		implies (file_title /= Void and then file_path /= Void)
+	valid_file_name: file_name /= Void implies valid_file_name (file_name)
 
 end -- class EV_FILE_DIALOG
 

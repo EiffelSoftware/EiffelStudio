@@ -294,7 +294,7 @@ feature
 		deferred
 		end;
 
-	scroll_list (a_list: SCROLL_LIST; managed: BOOLEAN): SCROLL_L_I is
+	scroll_list (a_list: SCROLL_LIST; managed, is_fixed: BOOLEAN): SCROLL_L_I is
 			-- Toolkit implementation of `a_list'
 		deferred
 		end;

@@ -163,8 +163,8 @@ feature -- Output
 		local
 			format_reg: FORMAT_REGISTRATION
 		do
+			format_reg := ctxt.format_registration;
 			if target_feature /= Void then
-				format_reg := ctxt.format_registration;
 				format_reg.assert_server.update_current_assertion (Current);
 				ctxt.init_feature_context (source_feature, 
 							target_feature, ast);

@@ -13,6 +13,13 @@ inherit
 			default_create
 		end
 		
+	GB_SHARED_OBJECT_EDITORS
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+		
 feature -- Access
 
 	ev_type: EV_CONTAINER
@@ -55,8 +62,8 @@ feature -- Access
 			propagate_background_color.set_pixmap (pixmap)
 			propagate_background_color.set_tooltip (gb_ev_container_propagate_background_color_tooltip)
 			propagate_foreground_color.set_tooltip (gb_ev_container_propagate_foreground_color_tooltip)
-			propagate_foreground_color.select_actions.extend (agent internal_propagate_background_color (object, True))
-			propagate_background_color.select_actions.extend (agent internal_propagate_background_color (object, False))
+			propagate_foreground_color.select_actions.extend (agent internal_propagate_color (object, True))
+			propagate_background_color.select_actions.extend (agent internal_propagate_color (object, False))
 				-- We now modify the editor item corresponding to
 				-- GB_EV_COLORIZABLE. It is much nicer, if the
 				-- propagate buttons are placed here, along with the color
@@ -177,7 +184,7 @@ feature {NONE} -- Implementation
 	propagate_foreground_color, propagate_background_color: EV_TOOL_BAR_BUTTON
 		-- Buttons used for color propagation.
 	
-	internal_propagate_background_color (an_object: GB_OBJECT; is_foreground_color: BOOLEAN) is
+	internal_propagate_color (an_object: GB_OBJECT; is_foreground_color: BOOLEAN) is
 			-- Propagate color setting specified by `is_foreground_color' of `an_object' to all children
 			-- recursively.
 		require
@@ -200,21 +207,21 @@ feature {NONE} -- Implementation
 				if constant_context /= Void then
 					constant := constant_context.constant
 				end
-				update_background_color (an_object, color, constant, is_foreground_color)
-				for_all_instance_referers (an_object, agent update_background_color (?, color, constant, is_foreground_color))
+				update_color (an_object, color, constant, is_foreground_color)
+				for_all_instance_referers (an_object, agent update_color (?, color, constant, is_foreground_color))
 				from
 					an_object.children.start
 				until
 					an_object.children.off
 				loop				
-					internal_propagate_background_color (an_object.children.item, is_foreground_color)
+					internal_propagate_color (an_object.children.item, is_foreground_color)
 					an_object.children.forth
 				end
 				enable_project_modified
 			end
 		end
 		
-	update_background_color (an_object: GB_OBJECT; color: EV_COLOR; constant: GB_CONSTANT; is_foreground_color: BOOLEAN) is
+	update_color (an_object: GB_OBJECT; color: EV_COLOR; constant: GB_CONSTANT; is_foreground_color: BOOLEAN) is
 			-- Update color of `an_object' to `color' setting a constant reference to `constant' if not Void.
 			-- If `constant' is Void then remove existing constant context if any.
 			-- `is_foreground_color' specifis if it is a foreground or background color.
@@ -260,6 +267,8 @@ feature {NONE} -- Implementation
 					colorizable.set_background_color (color)
 				end
 			end
+				-- Ensure that any existing object editors are updated to reflect this change.
+			update_editors_for_property_change (an_object.object, colorizable_type, parent_editor)
 		end
 		
 	colorizable_editor_item: GB_OBJECT_EDITOR_ITEM

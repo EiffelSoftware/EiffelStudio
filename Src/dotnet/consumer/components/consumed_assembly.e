@@ -48,6 +48,7 @@ feature {NONE} -- Initialization
 			location := loc.as_lower
 			gac_path := gp.as_lower
 			unique_id := id
+			is_in_gac := a_in_gac
 			
 			create folder_name.make (n.count + id.count + 1)
 			folder_name.append (n)
@@ -61,6 +62,7 @@ feature {NONE} -- Initialization
 			location_set: location = loc.as_lower
 			gac_path_set: gac_path = gp.as_lower
 			unique_id_set: unique_id = id
+			is_in_gac_set: is_in_gac = a_in_gac
 		end
 
 feature -- Access

@@ -9,7 +9,7 @@ class
 
 feature -- Access
 
-	Key_create_link: INTEGER is
+	frozen Key_create_link: INTEGER is
 			-- Permission to create a symbolic link.
 		external
 			"C [macro %"wel.h%"]"
@@ -17,7 +17,7 @@ feature -- Access
 			"KEY_CREATE_LINK"
 		end
 		
-	Key_create_sub_key: INTEGER is
+	frozen Key_create_sub_key: INTEGER is
 			-- Permission to create subkeys.
 		external
 			"C [macro %"wel.h%"]"
@@ -25,7 +25,7 @@ feature -- Access
 			"KEY_CREATE_SUB_KEY"
 		end
 		
-	Key_enumerate_sub_keys: INTEGER is
+	frozen Key_enumerate_sub_keys: INTEGER is
 			-- Permission to enumerate subkeys.
 		external
 			"C [macro %"wel.h%"]"
@@ -33,7 +33,7 @@ feature -- Access
 			"KEY_ENUMERATE_SUB_KEYS"
 		end
 		
-	Key_execute: INTEGER is
+	frozen Key_execute: INTEGER is
 			-- Permission for read access.
 		external
 			"C [macro %"wel.h%"]"
@@ -41,7 +41,7 @@ feature -- Access
 			"KEY_EXECUTE"
 		end
 		
-	Key_notify: INTEGER is
+	frozen Key_notify: INTEGER is
 			-- Permission for change notification.
 		external
 			"C [macro %"wel.h%"]"
@@ -49,7 +49,7 @@ feature -- Access
 			"KEY_NOTIFY"
 		end
 		
-	Key_query_value: INTEGER is
+	frozen Key_query_value: INTEGER is
 			-- Permission to query subkey data.
 		external
 			"C [macro %"wel.h%"]"
@@ -57,7 +57,7 @@ feature -- Access
 			"KEY_QUERY_VALUE"
 		end
 		
-	Key_set_value: INTEGER is
+	frozen Key_set_value: INTEGER is
 			-- Permission to set subkey data.
 		external
 			"C [macro %"wel.h%"]"
@@ -65,7 +65,7 @@ feature -- Access
 			"KEY_SET_VALUE"
 		end
 		
-	Key_all_access: INTEGER is
+	frozen Key_all_access: INTEGER is
 			-- Combines the KEY_QUERY_VALUE, KEY_ENUMERATE_SUB_KEYS, 
 			-- KEY_NOTIFY, KEY_CREATE_SUB_KEY, KEY_CREATE_LINK, and 
 			-- KEY_SET_VALUE access rights, plus all the standard 
@@ -76,7 +76,7 @@ feature -- Access
 			"KEY_ALL_ACCESS"
 		end
 		
-	Key_read: INTEGER is
+	frozen Key_read: INTEGER is
 			-- Combines the STANDARD_RIGHTS_READ, KEY_QUERY_VALUE, 
 			-- KEY_ENUMERATE_SUB_KEYS, and KEY_NOTIFY access rights.
 		external
@@ -85,7 +85,7 @@ feature -- Access
 			"KEY_READ"
 		end
 		
-	Key_write: INTEGER is
+	frozen Key_write: INTEGER is
 			-- Combines the STANDARD_RIGHTS_WRITE, KEY_SET_VALUE,
 			-- and KEY_CREATE_SUB_KEY access rights.
 		external

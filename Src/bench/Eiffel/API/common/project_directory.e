@@ -83,9 +83,9 @@ feature -- Access
 			w_code_dir, f_code_dir, comp_dir: DIRECTORY;
 			project_file: RAW_FILE
 		do
-			!! w_code_dir.make (Workbench_generation_path);
-			!! f_code_dir.make (Final_generation_path);
-			!! comp_dir.make (Compilation_path);
+			!! w_code_dir.make (temp_workbench_generation_path);
+			!! f_code_dir.make (temp_final_generation_path);
+			!! comp_dir.make (temp_compilation_path);
 			!! project_file.make (project_eif_file.name);
 			Result := is_base_readable and then w_code_dir.is_readable
 					and then f_code_dir.is_readable and then comp_dir.is_readable
@@ -101,9 +101,9 @@ feature -- Access
 			w_code_dir, f_code_dir, comp_dir: DIRECTORY;
 			project_file: RAW_FILE
 		do
-			!! w_code_dir.make (Workbench_generation_path);
-			!! f_code_dir.make (Final_generation_path);
-			!! comp_dir.make (Compilation_path);
+			!! w_code_dir.make (temp_workbench_generation_path);
+			!! f_code_dir.make (temp_final_generation_path);
+			!! comp_dir.make (temp_compilation_path);
 			!! project_file.make (project_eif_file.name);
 			Result := is_base_writable and then w_code_dir.is_writable
 					and then f_code_dir.is_writable and then comp_dir.is_writable
@@ -120,9 +120,9 @@ feature -- Access
 			w_code_dir, f_code_dir, comp_dir: DIRECTORY;
 			project_file: RAW_FILE
 		do
-			!! w_code_dir.make (Workbench_generation_path);
-			!! f_code_dir.make (Final_generation_path);
-			!! comp_dir.make (Compilation_path);
+			!! w_code_dir.make (temp_workbench_generation_path);
+			!! f_code_dir.make (temp_final_generation_path);
+			!! comp_dir.make (temp_compilation_path);
 			!! project_file.make (project_eif_file.name);
 			Result := base_exists and then w_code_dir.exists
 				and then f_code_dir.exists and then comp_dir.exists

@@ -29,4 +29,76 @@ feature {NONE} -- Initialization
 			current_position_set: current_position = 2
 		end
 
+feature -- Settings
+
+	put_integer_8 (i: INTEGER_8) is
+			-- Insert `i' at `current_position'.
+		local
+			l_pos: INTEGER
+		do
+			l_pos := current_position
+			allocate (l_pos + 1)
+			item.put_integer_8 (i, l_pos)
+			current_position := l_pos + 1
+		end
+
+	put_integer_16 (i: INTEGER_16) is
+			-- Insert `i' at `current_position'.
+		local
+			l_pos: INTEGER
+		do
+			l_pos := current_position
+			allocate (l_pos + 2)
+			item.put_integer_16 (i, l_pos)
+			current_position := l_pos + 2
+		end
+		
+	put_integer_32 (i: INTEGER) is
+			-- Insert `i' at `current_position'.
+		local
+			l_pos: INTEGER
+		do
+			l_pos := current_position
+			allocate (l_pos + 4)
+			item.put_integer_32 (i, l_pos)
+			current_position := l_pos + 4
+		end
+	
+	put_integer_64 (i: INTEGER_64) is
+			-- Insert `i' at `current_position'.
+		local
+			l_pos: INTEGER
+		do
+			l_pos := current_position
+			allocate (l_pos + 8)
+			item.put_integer_64 (i, l_pos)
+			current_position := l_pos + 8
+		end
+
+	put_string (s: STRING) is
+			-- Insert `s' at `current_position' using PackedLen encoding and
+			-- UTF-8.
+		local
+			l_pos: INTEGER
+			l_count: INTEGER
+			i: INTEGER
+		do
+			if s = Void then
+				put_integer_8 (0xFF)
+			else
+					-- Store count.
+				l_count := s.count
+				compress_data (l_count)
+				
+				from
+					i := 1
+				until
+					i > l_count
+				loop
+					put_integer_8 (s.item_code (i).to_integer_8)
+					i := i + 1
+				end
+			end
+		end
+		
 end -- class MD_CUSTOM_ATTRIBUTE

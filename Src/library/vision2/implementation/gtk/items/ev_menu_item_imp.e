@@ -175,7 +175,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 			feature {EV_GTK_EXTERNALS}.gtk_menu_item_deselect (c_object)
 			if select_actions_internal /= Void then
-				select_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
+				select_actions_internal.call (Void)
 			end
 		end
 

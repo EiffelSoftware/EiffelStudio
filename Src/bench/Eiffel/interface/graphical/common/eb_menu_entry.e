@@ -63,13 +63,14 @@ feature {NONE} -- Initialization
 				if p_tool = Void then
 					pos := m_name.index_of ('%T', 1);
 					if pos > 0 and then m_name.count > 1 then
-						m_name := m_name.substring (1, pos - 1);
+				--		m_name := m_name.substring (1, pos - 1);
 					end 
 				end
 			end;			
 			button_make (m_name, a_parent);	
 			act := a_cmd.accelerator;
-			if act /= Void and then (not is_windows or else p_tool /= Void) then	
+	--		if act /= Void and then (not is_windows or else p_tool /= Void) then	
+			if act /= Void then
 				set_accelerator_action (act)
 			end
 		end;

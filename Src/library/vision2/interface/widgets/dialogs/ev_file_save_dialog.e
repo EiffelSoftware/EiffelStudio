@@ -9,6 +9,24 @@ class
 
 inherit
 	EV_FILE_SELECTION_DIALOG
+		redefine
+			implementation
+		end
+
+creation
+	make
+
+feature {NONE} -- Initialization
+
+	make (par: EV_WINDOW) is
+			-- Create a window with a parent.
+		do
+			!EV_FILE_SAVE_DIALOG_IMP! implementation.make (par)
+		end
+
+feature -- Implementation
+
+	implementation: EV_FILE_SAVE_DIALOG_I
 
 end -- class EV_FILE_SAVE_DIALOG
 

@@ -1,0 +1,176 @@
+
+A Standard Eiffel Compilation:
+------------------------------
+
+Degree 6:
+---------
+
+Two choices are offered to the users:
+- Melt
+- Quick-melt
+
+Melt:
+	If the system is using some precompiled libraries, the LACE_I.recompile or 
+	LACE_I.do_recompilation will merge the precompiled libraries into the system.
+
+	Then we take all the remaining classes which are specified in the Ace file and
+	we make them available to the compiler
+
+Quick-Melt:
+	We check all the compiled class of the compiler and we check if they have
+	changed, if so we put them in `pass1_controler'
+
+Between Degree 6 and 5:
+-----------------------
+
+Before to start everything we check the validity of the precompilations.
+Then we check the validity of the added/removed classes.
+
+Set the value of `poofter_intialization' to True only when a class has been changed.
+This is used for the finalization process (still mysterious!!)
+
+Degree 5:
+---------
+
+We do a pass on `pass1_controler' and we apply execute from PASS1_C on each item,
+and then we remove the current item and we redo for the next one.
+
+For each item, if it is marked as `new_compilation' we reparsed it again, if not
+we retrieve the AST from either the TMP_AST_SERVER or AST_SERVER.
+
+1 - We first check that all the class used (both real suppliers and parents) in the Current
+class are part of the Universe, otherwise we generate a VTCT error message. When they
+are part of the Universe and not yet compiled, we add them in the `pass1_controller'
+and we create an associated CLASS_C.
+
+2 - We create an instance of CLASS_INFO with the list of parents for the current class
+and also the list of the creators of the Current class.
+
+3 - Init current instance of CLASS_C:
+a) Insert obsolete_message into CLASS_C
+b) If the class was already compiled, we remove the class from all the descendants list
+   of each parent (I.e. as if we removed the class from the system).
+c) If the class has changed the `deferred' status and if the class had some parents
+   we insert the class into `pass2_controler', and set `changed_status' to True.
+d) If the class is expanded we set the system to have an expanded type.
+e) If the class has changed its `expanded' status and if the class had some parents
+   we insert it into `pass2_controler' and set `changed_status' and `changed_expanded'
+f) If the class is separate we set the system to have a separate type.
+g) If the class has changed its `separate' status and if the class had some parents
+   we insert it into `pass2_controler' and set `changed_status' and `changed_separate'
+
+h) If the class has the `changed_status' flag, then we loop through all the syntactical
+   clients. If the class has changed its status for `expanded' or `separate' we insert
+   the client into `pass1_controler' if it does not have is `changed' flag set.
+   For all the clients we insert them into`pass2_controler', `pass3_controler'
+   and `pass4_controler' 
+   For each class_type of the current class, we mark it as `changed' and update the
+   `expanded' flag.
+
+i) If class has `parents' we go through each parent:
+	- first loop, we make sure that we do not have a `like' declaration, if there is one
+	  we generate a VE04 error.
+	- second loop, we update the corresponding CLASS_INFO.parents structures and the
+	  `parents' attributes of CLASS_C with the parents taken from the PARENT_AS node.
+	  we also add `Current' into the descendant of the parents CLASS_C.
+
+   Else if the class is not GENERAL, we add ANY as a parent of Current and add Current
+   as a descendant of ANY
+
+   If it is GENERAL we do nothing special.
+
+j) We now check if the class has some generic parameters. If there is some, we check their
+   validity, i.e. valid only if it is not a name of the surrounding universe, and if the name
+   does not appear twice in the declaration.
+
+k) If the class has its generic declaration part changed in one or two way, we marked
+   it as `changed_generics'.
+
+l) If `changed_generics', we add all the syntactical clients into `pass2_controler',
+   `pass3_controler' and `pass4_controler'.
+   We also update the syntactical relations, i.e we removed the current class from all
+   the suppliers and update the new syntactical relations. 
+   We removed the class from the system and add it again in all the `controlers'.
+
+m) Check if between two compilations we changed the inheritance.
+   If so, we marked the current class as `changed', `changed3a', and we need to mark
+   SYSTEM_I to `update_sort'
+   If not, we still need to do some work on it later, so we marked as `changed2'.
+
+   If it is the first compilation, we just marked SYSTEM_I to `update_sort'
+
+   There is a `if' statement which is never satisfied for `Conformance tables incrementality'
+
+4) We have a checksum for errors.
+
+5) If class is still part of the system, we do:
+a) Update the syntactical clients
+b) We set an id to the AST and we put it in TMP_AST_SERVER
+c) If the class a `unique' declaration we initialize the `unique_counter' and compute
+   the unique values with the AST and put the result in the corresponding CLASS_INFO.
+d) Get the index from the TMP_AST_SERVER for the just parsed class, and the invariant_info
+   and put them in the CLASS_INFO. We put the invariant_info into TMP_INV_AST_SERVER
+   We put CLASS_INFO into TMP_CLASS_INFO_SERVER
+   We clear the index of TMP_AST_SERVER
+e) We clean the `filters'.
+
+Note and improvements:
+----------------------
+
+1 - There is maybe a possibility to merge all the `passx_controler' into one pass
+2 - In `init' from CLASS_C, we have to remove all the call which add `Current' into
+    the controler and do it only once when `changed_status' is true.
+3 - In point 3-i) we can merge the two traversals of the `parents'
+4 - We can maybe get rid of `update_syntactical_relations' in `init' from CLASS_C (3-l) point)
+    since the call which just follows will delete all the added information.
+5 - There seems to be a problem with the inheritance removal bug that Michael fixed in
+    September 97.
+6 - We absolutely need to save the result of `same_parents' 3-m) otherwise we compute it
+    twice (and this is not a nice algorithm: two loops with a loop inside -((()
+6bis - What is written in 6 is stupid, because we can remove the full statement.
+    There is a `if' statement which is never satisfied for `Conformance tables incrementality'
+	which needs to be removed
+
+
+Between Degree 5 and 4:
+-----------------------
+
+Check generic paramaters of classes which have not been recompiled because one of their
+generic parameter can become a name of a new added class.
+
+If we are using a root class, it means that we are not in precompiled or compile all classes
+mode and as a consequence we need to make sure that the root class us not generic. We also
+need to remove all the useless classes (i.e. classes which are not part of the living
+universe anymore).
+
+If `update_sort' or if a class has been moved (added or removed) we need to redo a
+topological sort on `sorter', `pass2_controler', `pass3_controler' and `pass4_controler'.
+And then we have to rebuild the conformance table for all the classes. This implies that
+we need to reset the content of the melted_conformance_table.
+We clear `sorter'.
+
+Note and Improvements:
+----------------------
+
+We can merge CLASS_SORTER and TOPO_SORTER in one class
+
+
+Degree 4:
+---------
+
+We check the validity of each changed generic classes. I.e. we check that the generic
+parameter is not constraint to an anchored type or if the declaration itself does not
+contain an anchored type, and that the name of the constraint is part of the surrounding
+universe. When the constraint is also generic, we need to check the validity of the
+declaration.
+
+For each class of the controler we will do:
+1) Execution of `execute' from PASS2_C:
+a) We marked the class as non-reverse engineered.
+b) If class marked as changed we mark `do_pass2' and insert it in `pass3_controler'
+   and `pass4_controler'
+   Otherwise `do_pass2' has the value of `changed2' of current class
+c) If `do_pass2', we called `pass2' from INHERIT_TABLE.
+
+
+2)

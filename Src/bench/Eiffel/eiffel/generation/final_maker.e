@@ -43,7 +43,9 @@ feature
 				%.x.o:%N%
 				%%T$(EIFFEL4)/bench/spec/$(PLATFORM)/bin/x2c $< $*.c%N%
 				%%T$(CC) $(CFLAGS) -c $*.c%N%
-				%%T$(RM) $*.c%N%N");
+				%%T$(RM) $*.c%N%N%
+				%.x.c:%N%
+				%%T$(EIFFEL4)/bench/spec/$(PLATFORM)/bin/x2c $< $*.c%N%N")
 		end;
 
 	add_specific_objects is

@@ -19,8 +19,8 @@ mt_prefix='mt'
 
 # FIXME: Manu 02/14/2002: fix threads flag
 mtccflags='-pipe -fno-common'
-mtlibs=''
-mtsharedlibs=''
+mtlibs='-L/opt/local/lib -lcompat'
+mtsharedlibs='-L/opt/local/lib -lcompat'
 
 optimize='-Wall -O3'
 wkoptimize='-O'
@@ -29,8 +29,8 @@ start_test='if [ ! -f finished ] ; then'
 end_test='; fi'
 create_test='touch finished'
 
-libs=''
-sharedlibs=''
+libs='-L/opt/local/lib -lcompat'
+sharedlibs='-L/opt/local/lib -lcompat'
 ccflags='-pipe -fno-common'
 sharedccflags='-fPIC'
 
@@ -140,8 +140,8 @@ cc='gcc'
 gccversion='Apple cpp-precomp 6.14'
 cppflags=$ccflags
 mtcppflags=$mtccflags
-ldsharedflags='-dynamiclib -o'
-mtldsharedflags='-dynamiclib -o'
+ldsharedflags='-dynamiclib -flat_namespace -undefined suppress -o'
+mtldsharedflags='-dynamiclib -flat_namespace -undefined suppress -o'
 sharedlink='gcc'
 ldflags=''
 lkflags=''

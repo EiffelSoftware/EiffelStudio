@@ -238,6 +238,7 @@ feature {NONE} -- Implementation
 			t: WEL_SYSTEM_PARAMETERS_INFO
 			new_pos: INTEGER
 			window_dc: WEL_WINDOW_DC
+			wel_cursor: WEL_CURSOR
 		do
 				-- Are we moving the splitter?
 			if has_capture then
@@ -270,8 +271,30 @@ feature {NONE} -- Implementation
  --|					end
 				end
 			else
+					-- Ensure that the cursor is up to date when widgets are
+					-- contained that do not fully cover the background of `Current',
+					-- such as EV_NOTEBOOK.
+				if position_is_over_splitter (y_pos) then
+					create wel_cursor.make_by_predefined_id ((create {WEL_IDC_CONSTANTS}).Idc_sizens)
+					wel_cursor.enable_reference_tracking
+					wel_cursor.set
+					wel_cursor.decrement_reference
+				else
+					create wel_cursor.make_by_predefined_id ((create {WEL_IDC_CONSTANTS}).Idc_arrow)
+					wel_cursor.enable_reference_tracking
+					wel_cursor.set
+					wel_cursor.decrement_reference
+				end
 				Precursor {EV_SPLIT_AREA_IMP} (keys, x_pos, y_pos)
 			end
+		end
+		
+	position_is_over_splitter (y_pos: INTEGER): BOOLEAN is
+			-- Does `y_position' fall within the splitter?
+		require
+			y_pos_valid: y_pos >= 0 and y_pos <= width
+		do
+			Result := y_pos - (split_position + 1) <= splitter_width
 		end
 		
 	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
@@ -285,7 +308,7 @@ feature {NONE} -- Implementation
 				-- as if a notebook is placed inside, there are areas of `Current' that receive
 				-- the left button click. For example, to the right of the tabs.
 				-- This ensures that the splitter is only moved when it really should be. Julian
-			if not has_capture and y_pos - (split_position + 1) <= splitter_width  then
+			if not has_capture and position_is_over_splitter (y_pos) then
 				-- Start to move the splitter. We capture the mouse
 				-- message to be able to move the mouse over the
 				-- left or right control without losing the "mouse focus."

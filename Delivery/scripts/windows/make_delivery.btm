@@ -106,6 +106,7 @@ fullrd test_all_widgets
 fullrd test_events
 fullrd tests
 fullrd tutorial
+fullrd widget_test
 cd ..
 cd ..
 remtrace precomp

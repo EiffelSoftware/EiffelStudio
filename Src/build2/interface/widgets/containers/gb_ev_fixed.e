@@ -188,7 +188,10 @@ feature {GB_CODE_GENERATOR} -- Output
 					temp_x_position_string.count = temp_width_string.count and
 					temp_x_position_string.count = temp_height_string.count
 				strings_divisible_by_4: temp_x_position_string.count \\ 4 = 0
-				strings_correct_length: temp_x_position_string.count // 4 = first.count			
+					-- Cannot check this, as `Current' will have been built especially
+					-- for code generation purposes, and `objects' will be empty,
+					-- hence `first' will be Void.
+				--strings_correct_length: temp_x_position_string.count // 4 = first.count			
 			end
 			Result := Result + indent + "%T-- Size and position all children of `" + a_name + "'."
 			from

@@ -18,8 +18,6 @@ inherit
 
 	SHARED_AST_CONTEXT
 
-	SHARED_IL_CONSTANTS
-	
 	SHARED_GENERATION
 		export
 			{NONE} all
@@ -504,7 +502,7 @@ feature {NONE} -- Implementation
 									ext ?= nested_b.message
 									if ext /= Void then
 										il_ext ?= ext.extension
-										if il_ext /= Void and then il_ext.type = enum_field_type then
+										if il_ext /= Void and then il_ext.type = feature {SHARED_IL_CONSTANTS}.enum_field_type then
 											imp.add_catyped_arg (ext.external_name.to_integer, il_generator.static_id_of (ext.type))
 										else
 											check

@@ -1,7 +1,7 @@
 class C_MACRO_EXTENSION_AS_B
 
 inherit
-	C_MACRO_EXTENSION_AS;
+	C_MACRO_EXTENSION_AS
 	C_EXTENSION_AS_B
 		undefine
 			parse_special_part, is_macro

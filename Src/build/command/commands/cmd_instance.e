@@ -3,7 +3,7 @@ class CMD_INSTANCE
 
 inherit
 
-	CMD_INST_STONE;
+	DATA;
 	EDITABLE;
 	WINDOWS
 
@@ -41,6 +41,11 @@ feature -- Editable
 			end;
 			window_mgr.display (inst_editor);
 		end
+
+	help_file_name: STRING is
+		do
+			Result := Help_const.instance_help_fn
+		end;
 
 feature -- Editing
 
@@ -128,15 +133,79 @@ feature -- Stone
 			Result := Pixmaps.command_i_icon_pixmap 
 		end;
 
-	source: WIDGET is do end;
-
-	associated_command: CMD;
-
-	original_stone: CMD_INSTANCE is
+	data: CMD_INSTANCE is
 		do
 			Result := Current
 		end;
 
 	arguments: EB_LINKED_LIST [ARG_INSTANCE];
+
+	eiffel_arguments: STRING is
+			-- Eiffel text corresponding to
+			-- Current command instantiation
+		local
+			old_pos: INTEGER
+		do
+			!!Result.make (0);
+			if not arguments.empty then
+				Result.append ("(");
+				from
+					old_pos := arguments.index;
+					arguments.start
+				until
+					arguments.after
+				loop
+					if arguments.item.instantiated then
+						Result.append (arguments.item.context_name);
+					else
+						Result.append ("Void")
+					end;
+					arguments.forth;
+					if not arguments.after then
+						Result.append (", ");
+					end
+				end;
+				arguments.go_i_th (old_pos);
+				Result.append (")");
+			end
+		end;
+
+	complete: BOOLEAN is
+			-- Are all arguments of current
+			-- instance instantiated?
+		do
+			Result := True;
+			from
+				arguments.start
+			until
+				arguments.after or else not Result
+			loop
+				Result := arguments.item.instantiated;
+				arguments.forth
+			end;
+		end;
+
+feature -- Associated command
+
+	associated_command: CMD;
+
+	identifier: INTEGER is
+			-- Unique identifier of associated
+			-- command type
+		do
+			Result := associated_command.identifier
+		end;
+
+	labels: LINKED_LIST [CMD_LABEL] is
+			-- Exit labels defined for
+			-- associated command
+		do
+			Result := associated_command.labels
+		end;
+
+	eiffel_type: STRING is
+		do
+			Result := associated_command.eiffel_type
+		end;
 
 end

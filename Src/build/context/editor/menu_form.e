@@ -30,6 +30,11 @@ feature {NONE}
 			Result := Context_const.menu_sm_form_nbr
 		end;
 
+	format_number: INTEGER is
+		do
+			Result := Context_const.submenu_format_nbr
+		end;
+
 	Menu_cmd: MENU_CMD is
 		once
 			!!Result

@@ -8,14 +8,14 @@ inherit
 			reset_modified_flags as old_reset_modified_flags
 		redefine
 			stored_node, is_fontable, context_initialization,
-			widget, set_size, eiffel_creation
+			widget, eiffel_creation
 		end;
 
 	PRIMITIVE_C
 		redefine
 			stored_node, reset_modified_flags, copy_attributes, 
 			is_fontable, context_initialization, widget,
-			set_size, eiffel_creation
+			eiffel_creation
 		select
 			copy_attributes, reset_modified_flags
 		end
@@ -29,14 +29,14 @@ feature
 			Result := Pixmaps.scrolled_t_pixmap
 		end;
 
-	context_type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE is
 		do
 			Result := context_catalog.text_type
 		end;
 
 	create_oui_widget (a_parent: COMPOSITE) is
 		do
-			!! widget.make (entity_name, a_parent);
+			!! widget.make_unmanaged (entity_name, a_parent);
 			size_modified := True;
 			widget.set_size (110, 100)
 		end;
@@ -47,17 +47,6 @@ feature
 					Context_const.Geometry_format_nbr);
 			opt_list.put (Context_const.text_att_form_nbr,
 					Context_const.Attribute_format_nbr);
-		end;
-
-	set_size (new_w, new_h: INTEGER) is
-			-- Set new size of widget
-		local
-			eb_bulletin: SCALABLE;
-		do
-			size_modified := True;
-			widget.set_size (new_w, new_h);
-			eb_bulletin ?= parent.widget;
-			eb_bulletin.update_ratios (widget);
 		end;
 
 feature {NONE}

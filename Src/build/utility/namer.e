@@ -14,21 +14,20 @@ feature
 
 	reset is
 		do
-			integer_generator.reset
+			integer_value := 0;
+			Shared_namer_values.force (integer_value, seed)
 		end;
-
-	seed: STRING;
-			-- Seed for name generation.
 
 	value: STRING;
 			-- String value generated
 	
 feature {NONE}
 
-	integer_generator: INT_GENERATOR;
-			-- Generator of unique integers
+	seed: STRING;
+			-- Seed for name generation.
 
-feature 
+	integer_value: INTEGER;
+			-- Generated integer value
 
 	make (a_seed: STRING) is
 			-- Create the generator by setting its seed value.
@@ -37,21 +36,20 @@ feature
 		do
 			seed := clone (a_seed);
 			value := seed;
-			!!integer_generator;
-			if Shared_namer_values.has (a_seed) then
-				integer_generator.set (Shared_namer_values.item (a_seed));
-			end;
-		end; -- Create
+		end;
+
+feature
 
 	next is
 			-- Next unique string whose prefix is `value' and
 			-- suffix is the next integer
 		do
-			integer_generator.next;
+			integer_value := Shared_namer_values.item (seed);
+			integer_value := integer_value + 1;
 			!!value.make (10);
 			value.append (seed);
-			value.append_integer (integer_generator.value);
-			Shared_namer_values.force (integer_generator.value, seed)
+			value.append_integer (integer_value);
+			Shared_namer_values.force (integer_value, seed)
 		end; -- next
 
 end -- NAMER 

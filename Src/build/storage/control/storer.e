@@ -9,7 +9,6 @@ inherit
 	SHARED_STORAGE_INFO;
 	WINDOWS;
 	SHARED_CONTEXT;
-	SHARED_NAMER;
 	SHARED_APPLICATION;
 	SHARED_TRANSLATIONS
 
@@ -67,38 +66,35 @@ feature {NONE}
 	
 feature 
 
-	store (file_name: STRING) is
-		local
-			fn: STRING;	
+	store (dir_name: STRING) is
+			-- Store eiffelbuild application to
+			-- directory `dir_name'.
+		require
+			valid_dir_name: dir_name /= Void
 		do
-			file_name.extend (Environment.directory_separator);
+				-- Save storer temporarily
+			context_storer.tmp_store (dir_name);
+			group_storer.tmp_store (dir_name);
+			translation_storer.tmp_store (dir_name);
+			command_storer.tmp_store (dir_name);
+			state_storer.tmp_store (dir_name);
+			application_storer.tmp_store (dir_name);
+			namer_storer.tmp_store (dir_name);
 
-				fn := clone (file_name);
-				fn.append (Environment.interface_file_name);
-			context_storer.store (fn);
-				fn := clone (file_name);
-				fn.append (Environment.groups_file_name);
-			group_storer.store (fn);
-				fn := clone (file_name);
-				fn.append (Environment.translations_file_name);
-			translation_storer.store (fn);
-				fn := clone (file_name);
-				fn.append (Environment.commands_file_name);
-			command_storer.store (fn);
-				fn := clone (file_name);
-				fn.append (Environment.states_file_name);
-			state_storer.store (fn);
-				fn := clone (file_name);
-				fn.append (Environment.application_file_name);
-			application_storer.store (fn);
-				fn := clone (file_name);
-				fn.append (Environment.namer_file_name);
-			namer_storer.store (fn);
+				-- Move tmp file to saved file name
+			context_storer.save_stored_information (dir_name);
+			group_storer.save_stored_information (dir_name);
+			translation_storer.save_stored_information (dir_name);
+			command_storer.save_stored_information (dir_name);
+			state_storer.save_stored_information (dir_name);
+			application_storer.save_stored_information (dir_name);
+			namer_storer.save_stored_information (dir_name);
 		end;
 
-	retrieve (file_name: STRING) is
+	retrieve (dir_name: STRING) is
+		require
+			valid_dir_name: dir_name /= Void
 		local
-			fn: STRING;	
 			c: STATE_CIRCLE;
 			a_context: CONTEXT;
 			old_gc_status: BOOLEAN;
@@ -107,17 +103,11 @@ feature
 			collection_off;
 			for_save.set_item (True);
 			clear_all;
-			file_name.extend (Environment.directory_separator);
-
-				fn := clone (file_name);
-				fn.append (Environment.groups_file_name);
-			group_storer.retrieve (fn);
+			group_storer.retrieve (dir_name);
 			Shared_group_list.wipe_out;
 			Shared_group_list.merge_right (group_storer.retrieved_data);
 			context_catalog.update_groups;
-				fn := clone (file_name);
-				fn.append (Environment.interface_file_name);
-			context_storer.retrieve (fn);
+			context_storer.retrieve (dir_name);
 			contexts := context_storer.retrieved_data;
 			from
 				contexts.start;
@@ -130,34 +120,20 @@ feature
 				contexts.forth
 			end;
 			tree.enable_drawing;
-				fn := clone (file_name);
-				fn.append (Environment.translations_file_name);
-			translation_storer.retrieve (fn);
+			translation_storer.retrieve (dir_name);
 			Shared_translation_list.merge_right (translation_storer.retrieved_data);
-				fn := clone (file_name);
-				fn.append (Environment.commands_file_name);
-			command_storer.retrieve (fn);
+			command_storer.retrieve (dir_name);
 			commands := command_storer.retrieved_data;
 			command_catalog.merge (commands);
-				fn := clone (file_name);
-				fn.append (Environment.states_file_name);
-			state_storer.retrieve (fn);
+			state_storer.retrieve (dir_name);
 			states := state_storer.retrieved_data;
-				fn := clone (file_name);
-				fn.append (Environment.application_file_name);
-			application_storer.retrieve (fn);
-				fn := clone (file_name);
-				fn.append (Environment.namer_file_name);
-			namer_storer.retrieve (fn);
+			application_storer.retrieve (dir_name);
+			namer_storer.retrieve (dir_name);
 			application_storer.rebuild_graph;
 			if (application_storer.has_initial_circle) then
 				c := circle_table.item (application_storer.initial_circle);
 				app_editor.set_initial_state_circle (c);
 				c.set_double_thickness;
-			end;
-			app_editor.display_states;
-			if app_editor.realized and app_editor.shown then
-				app_editor.set_default_selected;
 			end;
 			clear_uneeded;
 			for_save.set_item (False);

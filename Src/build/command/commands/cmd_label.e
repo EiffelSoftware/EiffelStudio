@@ -4,23 +4,26 @@ class CMD_LABEL
 
 inherit
 
+	DATA;
 	EB_HASHABLE
 	LABEL_STONE;
 
 creation
 
 	make
-
-
 	
-feature 
+feature {NONE}
 
 	make (s: STRING) is
 		do
 			label := s;
 		end;
 
-	
+	help_file_name: STRING is
+		do
+			Result := Help_const.label_help_fn
+		end;
+
 feature {NONE}
 
 	hash_code: INTEGER is
@@ -33,16 +36,13 @@ feature {NONE}
 			Result := not (other = Void) and then
 				(label.is_equal (other.label))
 		end;
-
 	
 feature 
 
-	original_stone: CMD_LABEL is
+	data: CMD_LABEL is
 		do
 			Result := Current
 		end;
-
-	source: WIDGET is do end;
 
 	symbol: PIXMAP is
 		once
@@ -51,26 +51,24 @@ feature
 
 	label: STRING;
 
--- **************
--- Reuse features
--- **************
+feature
+
+	inh_renamed: BOOLEAN;
+
+	parent_type: CMD;
+		-- Command which defines
+		-- Current label if
+		-- introduced by inheritance
  
-    parent_type: CMD;
-        -- Command which defines
-        -- Current label if
-        -- introduced by inheritance
- 
-    set_parent (c: CMD) is
-        do
-            parent_type := c
-        end;
+	set_parent (c: CMD) is
+		do
+			parent_type := c
+		end;
 
 	inherited: BOOLEAN is
 		do
 			Result := not (parent_type = Void)
 		end;
-
-	inh_renamed: BOOLEAN;
 
 	set_renamed  is
 		require

@@ -11,16 +11,7 @@ inherit
 			element as line, 
 			append as drawing_list_append,
 			remove as drawing_list_remove,
-			execute as old_execute,
 			Second as set_stone_action
-		export
-			{NONE} all;
-			{ANY} current_point, set_offset, offset, after,
-				draw, empty, off, found, mark, start, 
-				offright, line, forth, finish, remove_selected, 
-				find, position, set_select_mode, set_find_mode, 
-				go, prune_all, drawing_list_append, 
-				enable_drawing, disable_drawing, search, wipe_out
 		redefine
 			has
 		select
@@ -30,74 +21,26 @@ inherit
 		rename
 			make as box_make,
 			selected_element as selected_line
-		export
-			{NONE} all;
 		redefine
-			remove, has, append, select_figure, execute
+			remove, has, append, select_figure
 		select
-			remove, append, select_figure, execute
+			remove, append, select_figure
 		end;
-	TRANS_STONE
-		export
-			{NONE} all
-		redefine
-			transportable
-		end;
-	REMOVABLE
-		export
-			{NONE} all
-		end
 	
 creation
 
 	make
 
-feature
+feature {NONE}
 
 	make (a_drawing: DRAWING_AREA) is
 			-- Create a app_lines with `a_drawing' as drawing_area,
 			-- `a_world' as world.
 		do
 			box_make (a_drawing);
-			drawing_area.add_button_press_action (1, Current, select_action);
-			drawing_area.add_button_press_action (3, Current, set_stone_action);
-			initialize_transport;
 		end; 
 
-feature {NONE} -- Removable
-
-	remove_yourself is
-		local
-			cut_line_command: APP_CUT_LINE;
-		do
-			!!cut_line_command;
-			cut_line_command.execute (original_stone)
-		end;
-
-feature {NONE} -- Stone
-
-	transportable: BOOLEAN;
-
-	original_stone: TRANS_STONE;
-
-	label: STRING is
-		do
-		end;
-
-	symbol: PIXMAP is
-		do
-		end;
-
-	source: WIDGET is
-		do
-			Result := drawing_area
-		end;
-	
 feature 
-
-	changed: BOOLEAN;
-			-- Has any figure been changed (i,e. selected
-			-- or deselected) ?
 
 	append (l: like selected_line) is
 			-- Append `l' to `Current'. If `l' already exists (i.e. 
@@ -214,8 +157,7 @@ feature
 			until
 				after
 			loop
-				if
-					line.source = figure or
+				if line.source = figure or
 					(line.destination = figure)
 				then
 					line.calculate
@@ -224,41 +166,4 @@ feature
 			end;
 		end; -- update
 
-feature {NONE} -- Execute
-
-	set_original_stone is
-			-- Find line (with mouse pointer) and if found set original_stone
-			-- to found line and set transportable to true.
-		do
-			find;
-			if
-				found 
-			then
-				original_stone := line.original_stone;
-				transportable := true
-			else
-				transportable := false
-			end;
-		end; -- set_original_stone
-
-	execute (argument: ANY) is
-		do
-			if
-				argument = set_stone_action
-			then
-				set_original_stone
-			else
-				old_execute (argument);
-				if
-					argument = select_action
-				then
-					if
-						off
-					then
-						changed := false
-					end
-				end
-			end;
-		end; 
-
-end 
+end

@@ -36,7 +36,7 @@ feature -- Widget type
 
 feature
 
-	context_type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE is
 		do
 			Result := context_catalog.perm_wind_type
 		end;

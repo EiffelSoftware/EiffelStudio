@@ -10,9 +10,9 @@ feature {NONE}
 	index: INTEGER;
 			-- Index of the removed element
 
-	element: STONE; 
+	element: DATA; 
 
-	list: LINKED_LIST [STONE] is
+	list: LINKED_LIST [DATA] is
 		deferred
 		end;
 	

@@ -17,8 +17,8 @@ inherit
 			full_name, intermediate_name, create_context, 
 			show_tree_elements, hide_tree_elements, tree_element, 
 			is_bulletin, is_in_a_group, is_a_group, save_widget, 
-			reset_callbacks, remove_callbacks, stored_node, widget,
-			set_modified_flags
+			reset_callbacks, stored_node, widget,
+			set_modified_flags, help_file_name
 		end;
 	COMPOSITE_C
 		redefine
@@ -28,8 +28,8 @@ inherit
 			full_name, intermediate_name, reset_modified_flags, create_context, 
 			show_tree_elements, hide_tree_elements, undo_cut, cut, tree_element, 
 			cut_list, is_bulletin, is_in_a_group, is_a_group, save_widget, 
-			reset_callbacks, remove_callbacks, stored_node, widget,
-			set_modified_flags
+			reset_callbacks, stored_node, widget,
+			set_modified_flags, help_file_name
 		select
 			reset_modified_flags, cut_list, cut, 
 			undo_cut, eiffel_callback_calls
@@ -37,12 +37,19 @@ inherit
 	
 feature 
 
+	widget: EB_BULLETIN;
+
 	symbol: PIXMAP is
 		do
 			Result := Pixmaps.group_pixmap
 		end;
 
-	context_type: CONTEXT_TYPE is
+	help_file_name: STRING is
+		do
+			Result := Help_const.group_help_fn
+		end;
+
+	type: CONTEXT_TYPE is
 		do
 			Result := group_type.context_type;
 		end;
@@ -53,8 +60,6 @@ feature
 			!! widget.make_unmanaged (entity_name, a_parent);
 			group_type.increment_counter;
 		end;
-
-	widget: EBUILD_BULLETIN;
 
 	add_to_option_list (opt_list: ARRAY [INTEGER]) is
 		do
@@ -86,19 +91,6 @@ feature
 					a_list.forth
 				end;
 				found := False;
-				subtree.forth
-			end;
-		end;
-
-	remove_callbacks is
-		do
-			remove_widget_callbacks;
-			from
-				subtree.start
-			until	
-				subtree.after
-			loop
-				subtree.item.remove_callbacks;
 				subtree.forth
 			end;
 		end;

@@ -143,9 +143,9 @@ feature
 			form.attach_top_widget (close_b, argument_sw, 2);
 			form.attach_top_widget (instance_hole, argument_sw, 2);
 			form.attach_top_widget (command_hole, argument_sw, 2);
-			form.attach_left (command_hole, 0);
-			form.attach_left_widget (command_hole, instance_hole, 0);
-			form.attach_left_widget (instance_hole, focus_label, 0);
+			form.attach_left (instance_hole, 0);
+			form.attach_left_widget (instance_hole, command_hole, 0);
+			form.attach_left_widget (command_hole, focus_label, 0);
 			form.attach_right_widget (close_b, focus_label, 0);
 			form.attach_right (close_b, 0);
 			form.attach_left (argument_sw, 0);

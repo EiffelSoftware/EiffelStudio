@@ -1,21 +1,21 @@
 
-
 class CONTEXT_TYPE 
 
 inherit
 
+	DRAG_SOURCE;
 	WINDOWS;
 	COMMAND_ARGS;
 	TYPE_STONE;
 	SHARED_STORAGE_INFO;
-	FOCUSABLE
+	FOCUSABLE;
+	TYPE_DATA
 
 creation
 
 	make
-
 	
-feature 
+feature  {NONE}
 
 	make (a_name: STRING; a_context: CONTEXT) is
 			-- create a context type associated with `a_context'
@@ -26,6 +26,8 @@ feature
 			identifier := int_generator.value;
 			context_type_table.put (Current, identifier);
 		end;
+
+feature
 
 	identifier: INTEGER;
 
@@ -99,7 +101,7 @@ feature
 			Result := dummy_context.symbol
 		end;
 
-	original_stone: TYPE_STONE is
+	type, data: CONTEXT_TYPE is
 		do
 			Result := Current
 		end;

@@ -44,7 +44,7 @@ feature
 		end;
 	
 	context: CONTEXT is
-			-- Current context for form.
+			-- Current context for form
 		require
 			valid_editor: editor /= Void;
 			valid_edited_context: editor.edited_context /= Void
@@ -54,10 +54,26 @@ feature
 			valid_context: Result /= Void
 		end;
 
+	associated_format_button: FORMAT_BUTTON is
+			-- Assocated format button for Current form
+		require
+			valid_editor: editor /= Void;
+		do
+			Result := editor.format_list @ (format_number)
+		ensure
+			valid_result: Result /= Void
+		end;
+
 feature {NONE}
 	
 	form_number: INTEGER is
 			-- Form number associated with Current form
+		deferred
+		end;
+
+	format_number: INTEGER is
+			-- Format number associated with Current form
+			-- (For format button shown in editor)
 		deferred
 		end;
 

@@ -20,12 +20,19 @@ feature
 
 	retrieved_data: LINKED_LIST [CONTEXT];
 
-	store (file_name: STRING) is
+	file_name: STRING is 
+		do
+			Result := Environment.interface_file_name
+		end;
+
+	tmp_store (dir_name: STRING) is
+		require
+			valid_dir_name: dir_name /= Void
 		do
 			build_stored_contexts;
 			current_table := Void;
 			retrieved := Void;
-			store_by_name (file_name);
+			tmp_store_by_name (dir_name);
 			stored_contexts := Void;
 		end;
 
@@ -68,11 +75,11 @@ feature {NONE}
 	
 feature 
 
-	retrieve (file_name: STRING) is
+	retrieve (dir_name: STRING) is
 		local
 			void_parent: COMPOSITE_C;
 		do
-			retrieve_by_name (file_name);
+			retrieve_by_name (dir_name);
 			stored_contexts := retrieved.stored_contexts;
 			!!retrieved_data.make;
 			from

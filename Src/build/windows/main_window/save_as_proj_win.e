@@ -20,7 +20,12 @@ creation
 
 	make
 	
-feature 
+feature {NONE}
+
+	title_name: STRING is
+		do
+			Result := Widget_names.Save_project_as_window
+		end;
 
 	rescued: BOOLEAN;
 
@@ -32,15 +37,14 @@ feature
 		local
 			cmd: SAVE_PROJECT_AS;
 			mp: MOUSE_PTR;
-			file: FILE_NAME
+			file: PLAIN_TEXT_FILE
 		do
 			if not rescued then
-				!!file.make (0);
+				!!file.make (Environment.project_directory);
 				old_project_name := clone (Environment.project_directory);
 				main_panel.set_title (clone (selected_file));
 				Environment.project_directory.wipe_out;
 				Environment.project_directory.append (clone (selected_file));
-				file.from_string (Environment.project_directory);
 				if file.exists then
 					if file.is_directory then
 						error_box.popup (Current, 

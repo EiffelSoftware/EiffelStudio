@@ -7,7 +7,7 @@ inherit
 			make as toggle_b_make,
 			state as armed
 		end;
-	LICENCE_COMMAND
+	LICENCE_COMMAND;
 
 feature {NONE}
 	

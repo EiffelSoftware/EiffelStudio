@@ -13,23 +13,13 @@ inherit
 
 	TYPE_STONE
 		redefine
-			stone_cursor, original_stone, initialize_transport
+			stone_cursor, data,
+			process, stone_type
 		end
-	
-feature {NONE}
-
-	initialize_transport is
-		do
-			source.set_action ("!Shift<Btn1Down>", show_command, Current);
-			source.set_action ("!Shift<Btn1Up>", show_command, Void);
-			source.set_action ("!<Btn3Down>", transport_command, Current);			
-			-- set create editor command as well
-			source.set_action ("!Shift<Btn3Down>", name_command, Current);
-		end;
-	
+		
 feature 
 
-	original_stone: CONTEXT is
+	data: CONTEXT is
 		deferred
 		end;
 
@@ -38,16 +28,15 @@ feature
 			Result := Cursors.context_cursor
 		end;
 
-	entity_name: STRING is
-			-- Eiffel entity name of context 
-			-- associated withe current stone	
-		deferred
-		end;	
+	process (hole: HOLE) is
+			-- Process Current stone dropped in hole `hole'.
+		do
+			hole.process_context (Current)
+		end;
 
-	eiffel_text: STRING is
-			-- Eiffel class text of context 
-			-- associated with current stone
-		deferred
+	stone_type: INTEGER is
+		do
+			Result := Stone_types.context_type
 		end;
 
 end

@@ -23,6 +23,10 @@ feature
 		deferred
 		end;
 
+	selected_symbol: PIXMAP is
+		deferred
+		end;
+
 	set_form_number (nbr: like form_number) is
 		require
 			valid_form_nbr: valid_form_nbr (nbr)
@@ -30,18 +34,28 @@ feature
 			-- Do nothing
 		end;
 
-	make (a_parent: COMPOSITE; ed: like editor) is
-		do
-			editor := ed;
-			make_visible (a_parent);
-		end;
-
 	valid_form_nbr (nbr: INTEGER): BOOLEAN is
 		do
 			Result := True
 		end;
 
+	unselect_symbol is
+		do
+			set_symbol (symbol)
+		end;
+
+	set_selected_symbol is
+		do
+			set_symbol (selected_symbol)
+		end;
+
 feature {NONE} -- command
+
+	make (a_parent: COMPOSITE; ed: like editor) is
+		do
+			editor := ed;
+			make_visible (a_parent);
+		end;
 
 	execute (argument: ANY) is
 		do

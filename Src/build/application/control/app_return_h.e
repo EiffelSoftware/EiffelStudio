@@ -5,9 +5,8 @@ inherit
 
 	APP_EDITOR_HOLE
 		redefine
-			stone, compatible
-		end;
-	LABELS
+			process_label
+		end
 
 creation
 
@@ -27,22 +26,18 @@ feature {NONE}
 	
 feature {NONE}
 
-	stone: LABEL_SCR_L;
-			-- Stone that Current will accept.
-
-	compatible (s: LABEL_SCR_L): BOOLEAN is
+	stone_type: INTEGER is
 		do
-			stone ?= s;
-			Result := stone /= Void;
+			Result := Stone_types.label_type
 		end;
 
-	process_stone is
+	process_label (dropped: LABEL_STONE) is
 			-- Set the return transition to the dropped stone. 
 		local
 			set_return_command: APP_SET_RETURN;
 		do
 			!!set_return_command;
-			set_return_command.execute (stone.label);
+			set_return_command.execute (dropped.data.label);
 		end;
 
 end 

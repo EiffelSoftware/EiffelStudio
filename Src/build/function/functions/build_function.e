@@ -14,19 +14,23 @@
 --===================================================================
 
 deferred class FUNCTION  
+
+inherit
+
+	DATA
 	
 feature -- Anchors
 
-	input_stone, output_stone: STONE;
-			-- Stones (dropped information) 
+	input_data, output_data: DATA;
+			-- Data (dropped information) 
 			-- comming from the entry holes
 			-- of a function editor.
 
-	input_list: EB_LINKED_LIST [like input_stone];
+	input_list: EB_LINKED_LIST [like input_data];
 			-- Input list representation of the
 			-- function.
 
-	output_list: EB_LINKED_LIST [like output_stone];
+	output_list: EB_LINKED_LIST [like output_data];
 			-- Output list representation of the
 			-- function.
 
@@ -36,7 +40,7 @@ feature {FUNC_EDITOR, FUNC_COMMAND} -- Function Editor
 			-- Editor used for editing Current
 	
 	drop_pair is
-			-- Append input_stone and output_stone
+			-- Append input_data and output_data
 			-- to corresponding lists input_list
 			-- and output_list.
 		require
@@ -44,9 +48,7 @@ feature {FUNC_EDITOR, FUNC_COMMAND} -- Function Editor
 		local
 			drop_command: FUNC_DROP
 		do
-			if
-				pair_is_valid
-			then
+			if pair_is_valid then
 				accept_pair;
 				!!drop_command;
 				drop_command.execute (Current);
@@ -87,22 +89,24 @@ feature {FUNC_EDITOR, FUNC_COMMAND} -- Function Editor
 		do
 			from
 				!!il.make;
-				input_list.finish
+				input_list.start
 			until
-				input_list.before
+				input_list.after
 			loop
 				il.put_right (input_list.item);
-				input_list.back
+				il.forth;
+				input_list.forth
 			end;
 			input_list := il;
 			from
 				!!ol.make;
-				output_list.finish
+				output_list.start
 			until
-				output_list.before
+				output_list.after
 			loop
 				ol.put_right (output_list.item);
-				output_list.back
+				ol.forth;
+				output_list.forth
 			end;
 			output_list := ol
 		end;
@@ -114,7 +118,7 @@ feature {NONE} -- Function Editor
 			-- has not already been entered, 
 			-- and if both input and output are
 			-- set then include the pair 
-			-- composed ofthe two stones
+			-- composed ofthe two datas
 			-- in the function.
 		require
 			Valid_pair: pair_is_valid;
@@ -122,14 +126,14 @@ feature {NONE} -- Function Editor
 		local
 			old_pos: INTEGER
 		do
-			add (input_stone, output_stone);
-			reset_input_stone;
-			reset_output_stone;
+			add (input_data, output_data);
+			reset_input_data;
+			reset_output_data;
 		end;
 
 feature -- Insertion and Delections
 
-	add_element_line (i: INTEGER; input_st, output_st: STONE) is
+	add_element_line (i: INTEGER; input_st, output_st: data) is
 			-- Add `input_st' and `output_st' at line
 			-- `position' in input_list and output_list.
 		do
@@ -143,7 +147,7 @@ feature -- Insertion and Delections
 			end
 		end; 
 
-	remove_element_line (elt: like input_stone; is_command: BOOLEAN) is
+	remove_element_line (elt: like input_data; is_command: BOOLEAN) is
 			-- Remove the element line that has `elt' as either
 			-- as the input or output element. If `is_command' is
 			-- True then insert into the history list for the
@@ -165,9 +169,9 @@ feature -- Insertion and Delections
 			end
 		end;
 
-feature -- Input and Output stones 
+feature -- Input and Output datas 
 		
-	find_input (elt: like input_stone) is
+	find_input (elt: like input_data) is
 			-- Find `elt'. If not found, 
 			-- cursor ends up after.
 		local
@@ -177,100 +181,102 @@ feature -- Input and Output stones
 				input_list.start;
 			until
 				input_list.after or else
-				(elt.equivalent (input_list.item))
+				input_list.item = elt
 			loop
 				input_list.forth
 			end;
-			if
-				not input_list.after
-			then
+			if not input_list.after then
 				pos := input_list.index;
 				output_list.go_i_th (pos);
 			end
 		end;
 
-	has_output (o: like output_stone): BOOLEAN is
+	has_output (o: like output_data): BOOLEAN is
 			-- Does the function already contain
 			-- the element contained in the input
 			-- hole?
 		do
-			Result := has_stone (output_list, o);
+			Result := has_data (output_list, o);
 		end;
 
-	has_input (i: like input_stone): BOOLEAN is
+	has_input (i: like input_data): BOOLEAN is
 			-- Does the function already contain
 			-- the element contained in the input
 			-- hole?
 		local
 			old_pos: INTEGER
 		do
-			Result := has_stone (input_list, i);
+			Result := has_data (input_list, i);
 		end;
 
-	input: like input_stone is 
+	input: like input_data is 
 			-- Current item in input_list
 		require
 			Not_off: not off
 		do 
-			Result := input_list.item.original_stone;
+			Result := input_list.item;
 		end;
 
-	output: like output_stone is 
+	output: like output_data is 
 			-- Current item in output_list
 		require
 			Not_off: not off
 		do 
-			Result := output_list.item.original_stone
+			Result := output_list.item
 		end;
-
 	
-	reset_input_stone is
-			-- `Forget' the input_stone and
-			-- set input_set to False.
+	reset_input_data is
+			-- `Forget' the input_data 
 		do
-			input_set := False;
-			input_stone := Void;
+			input_data := Void;
 		end;
 
-	reset_output_stone is
-			-- `Forget' the output_stone and
+	reset_output_data is
+			-- `Forget' the output_data and
 			-- set output_set to False.
 		do
-			output_set := False;
-			output_stone := Void;
+			output_data := Void;
 		end;
 
-	set_input_stone (s: like input_stone) is
-			-- Set `input_stone' to `s'.
+	set_input_data (s: like input_data) is
+			-- Set `input_data' to `s'.
 		do
-			input_set := True;
-			input_stone := s.original_stone;
+			input_data := s;
 		end;
 
-	set_output_stone (s: like output_stone) is
-			-- Set `input_stone' to `s'.
+	set_output_data (s: like output_data) is
+			-- Set `input_data' to `s'.
 		do
-			output_set := True;
-			output_stone := s.original_stone;
+			output_data := s;
 		end;
 
-	copy_lists (func: STONE) is
+	copy_lists (func: data) is
 			-- Copy the contents of `func' into edited function.
 		deferred
 		end;
 
 feature {NONE}
 
-	input_set, output_set: BOOLEAN;
-			-- Does the input (output) hole
-			-- contain a stone?
+	input_set: BOOLEAN is
+			-- Does the input hole
+			-- contain a data?
+		do
+			Result := input_data /= Void
+		end
 
-	input_list_put (elt: STONE) is
+	output_set: BOOLEAN is
+			-- Does the input hole
+			-- contain a data?
+		do
+			Result := output_data /= Void
+		end;
+
+	input_list_put (elt: DATA) is
 		do
 			input_list.put (elt);			
 		end;
 
-	output_list_put (elt: STONE) is
+	output_list_put (elt: DATA) is
 		do
 			output_list.put (elt);			
 		end;
@@ -278,26 +284,26 @@ feature {NONE}
 	pair_is_valid: BOOLEAN is
 		do
 			Result := (input_set and output_set) and then
-				(not has_input (input_stone))
+				(not has_input (input_data))
 		end;
 
 	
-	has_stone (l: EB_LINKED_LIST [STONE]; s: STONE): BOOLEAN is
-			-- Does the `l' contain stone `s'. 
+	has_data (l: EB_LINKED_LIST [DATA]; s: DATA): BOOLEAN is
+			-- Does the `l' contain data `s'. 
 		local
-			old_pos: INTEGER
+			old_pos: CURSOR
 		do
-			if not (s = Void) then
+			if s /= Void then
 				from
-					old_pos := l.index;
+					old_pos := l.cursor;
 					l.start
 				until
 					l.after or else Result
 				loop
-					Result := l.item.equivalent (s);
+					Result := l.item =  s;
 					l.forth
 				end;
-				l.go_i_th (old_pos)
+				l.go_to (old_pos)
 			end;
 		end;
 
@@ -320,7 +326,7 @@ feature {NONE}
 
 feature -- List operations
 
-	add (i: like input_stone; o: like output_stone) is
+	add (i: like input_data; o: like output_data) is
 			-- Append the pair (`i', `o') to Current
 			-- function.
 		require
@@ -330,7 +336,7 @@ feature -- List operations
 			output_list.extend (o);
 		end;
 
-	add_right (i: like input_stone; o: like output_stone) is
+	add_right (i: like input_data; o: like output_data) is
 			-- Add right  the pair (`i', `o') to Current
 			-- function.
 		require
@@ -390,13 +396,12 @@ feature -- List operations
 	merge (other: like Current) is
 			-- Merge `other' to Current.
 		local
-			il, ol: EB_LINKED_LIST [STONE];
+			il, ol: EB_LINKED_LIST [DATA];
 			c: INTEGER;
 			merge_command: FUNC_MERGE;
 		do
-			if
-				not (other = Current)
-				and (not other.input_list.empty)
+			if other /= Current and then
+				(not other.input_list.empty)
 			then
 				c := other.input_list.count;
 				other.input_list.start;
@@ -414,7 +419,7 @@ feature -- List operations
 						input_list.start
 					until
 						input_list.after or else
-						input_list.item.equivalent (il.item)
+						input_list.item = il.item
 					loop
 						input_list.forth
 					end;
@@ -428,9 +433,7 @@ feature -- List operations
 						ol.forth
 					end;
 				end;
-				if
-					not il.empty
-				then
+				if not il.empty then
 					!!merge_command;
 					merge_command := clone (merge_command);
 					merge_command.set_old_lists
@@ -483,42 +486,31 @@ feature {NONE}
 			-- Remove item in input_list and output_list at 
 			-- cursor position.
 		local
-			old_pos: INTEGER
+			old_pos: CURSOR
 		do
 			input_list.remove;
 			output_list.remove;
 			from
-				old_pos := input_list.index;
+				old_pos := input_list.cursor;
 				input_list.start;
 			until
 				input_list.after
 			loop
 				input_list.forth
 			end;
-			input_list.go_i_th (old_pos)
+			input_list.go_to (old_pos)
 		ensure
 			same_count: input_list.count = input_list.count
 		end; -- remove
 
-feature -- Stone
+feature -- data
 
-	original_stone: STONE is
-		deferred
-		end;
-
-	label: STRING is
+	data: data is
 		deferred
 		end;
 
 	set_label (s: STRING) is
 		deferred
-		end;
-
-	symbol: PIXMAP;
-
-	set_symbol (s: PIXMAP) is
-		do
-			symbol := s
 		end;
 
 end

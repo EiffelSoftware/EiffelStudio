@@ -50,7 +50,7 @@ feature
 			loop
 				if arguments.item > 0 then
 					cs := context_table.item (arguments.item);
-					ct := cs.context_type
+					ct := cs.type
 				else
 					ct := context_type_table.item (- arguments.item);
 					cs := Void

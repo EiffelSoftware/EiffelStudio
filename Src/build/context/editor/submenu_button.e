@@ -16,6 +16,11 @@ feature
 
 	form_number: INTEGER;
 
+	selected_symbol: PIXMAP is
+		once
+			Result := Pixmaps.selected_submenu_pixmap
+		end
+
 	symbol: PIXMAP is
 		once
 			Result := Pixmaps.submenu_pixmap

@@ -6,6 +6,9 @@ inherit
 	COMMAND;
 	EB_BUTTON_COM;
 	HOLE
+		redefine
+			process_command, process_instance
+		end
 
 creation
 
@@ -53,29 +56,30 @@ feature
 	
 feature {NONE}
 
-	process_stone is
+	stone_type: INTEGER is do end;
+
+	process_command (cmd_stone: CMD_STONE) is
 		local
-			inst: CMD_INSTANCE;
-			cmd_type: CMD_STONE;
-			cmd_instance: CMD_INST_STONE
+			inst: CMD_INSTANCE
 		do
-			cmd_type ?= stone;
-			cmd_instance ?= stone;
-			if not (cmd_type = Void) then
-				!!inst.session_init (cmd_type.original_stone);
-				instance_editor.set_instance (inst)
-			elseif not (cmd_instance = Void) then
-				!!inst.session_init (cmd_instance.associated_command);
-				instance_editor.set_instance (inst)
-			end
-		end; -- process_stone
+			!!inst.session_init (cmd_stone.data);
+			instance_editor.set_instance (inst)
+		end;
+
+	process_instance (inst_stone: CMD_INST_STONE) is
+		local
+			inst: CMD_INSTANCE
+		do
+			!!inst.session_init (inst_stone.associated_command);
+			instance_editor.set_instance (inst)
+		end; 
 
 	execute (argument: ANY) is
 		local
 			cmd: CMD;
 			inst: CMD_INSTANCE
 		do
-			if not (instance_editor.command_instance = Void) then
+			if instance_editor.command_instance /= Void then
 				cmd := instance_editor.command_instance.associated_command;
 				!!inst.session_init (cmd);
 				instance_editor.set_instance (inst)

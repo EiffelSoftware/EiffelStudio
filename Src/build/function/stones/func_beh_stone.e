@@ -5,14 +5,14 @@ inherit
 
 	B_ICON_STONE
 		rename
-			set_original_stone as old_set_original_stone
+			set_data as old_set_data
 		end;
 
 	B_ICON_STONE
 		redefine
-			set_original_stone
+			set_data
 		select
-			set_original_stone
+			set_data
 		end;
 
 	FUNC_DROPPED_STONE
@@ -27,16 +27,12 @@ feature {NONE}
 
 	associated_editor: STATE_EDITOR;
 
-	
-feature 
+feature {NONE}
 
 	make (ed: like associated_editor) is
 		do
 			associated_editor := ed
 		end;
-
-	
-feature {NONE}
 
 	dropped_stone: like Current is
 		do
@@ -45,13 +41,12 @@ feature {NONE}
 
 	forget_stone is
 		do
-			original_stone := Void
+			data := Void
 		end;
-
 	
 feature 
 
-	set_original_stone (s: like original_stone) is
+	set_data (s: like data) is
 		do
 			update_stone (s)
 		end;

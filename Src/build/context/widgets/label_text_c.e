@@ -9,14 +9,14 @@ inherit
 			reset_modified_flags as old_reset_modified_flags
 		redefine
 			is_fontable, context_initialization, 
-			set_visual_name
+			set_visual_name, retrieve_set_visual_name
 		end;
 
 	PRIMITIVE_C
 		redefine
 			reset_modified_flags, copy_attributes, 
 			is_fontable, context_initialization, 
-			set_visual_name 
+			set_visual_name, retrieve_set_visual_name
 		select
 			copy_attributes, reset_modified_flags
 		end
@@ -103,11 +103,16 @@ feature
 			end;
 		end;
 
-	set_text (s: STRING) is
+	retrieve_set_visual_name (s: STRING) is
 		do
 			text_modified := True;
 			visual_name := clone (s);
 			widget_set_text (label);
+		end;
+
+	set_text (s: STRING) is
+		do
+			retrieve_set_visual_name (s);
 			update_tree_element
 		end
 

@@ -39,7 +39,7 @@ feature {NONE}
 			then 
 				!!figure.make; 
 				figure.init; 
-				figure.set_stone (added_state.original_stone);
+				figure.set_stone (added_state.data);
 				do_specific_work;
 				update_history
 			end;

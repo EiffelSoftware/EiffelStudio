@@ -1,5 +1,5 @@
 
-class PAGE_BOX [T -> STONE] 
+class PAGE_BOX [T -> DATA] 
 
 inherit
 
@@ -68,7 +68,7 @@ feature
 			list_extend (elt);
 			finish;
 			icons.go_i_th (relative_position);
-			icons.item.set_original_stone (elt);
+			icons.item.set_data (elt);
 			icons.item.set_managed (True);
 			go_i_th ((page_number - 1) * page_size + 1);
 			if
@@ -205,19 +205,13 @@ feature
 				icons.after
 			loop
 				icon := icons.item;
-				if
-					after
-				then
+				if after then
 					icon.set_managed (False);
 				else
-					if
-						icon.original_stone /= item
-					then
-						icon.set_original_stone (item);
+					if icon.data /= item then
+						icon.set_data (item);
 					end;
-					if
-						not icon.managed
-					then
+					if not icon.managed then
 						icon.set_managed (True);
 					end;
 					forth;

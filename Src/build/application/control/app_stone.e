@@ -5,18 +5,23 @@ inherit
 
 	STONE
 		redefine
-			original_stone
+			data
 		
 		end
 	
 feature 
+
+    process (hole: HOLE) is
+            -- Process Current stone dropped in hole `hole'.
+        do
+        end;
 
     stone_cursor: SCREEN_CURSOR is
         do
             Result := Cursors.application_cursor
         end
 
-	original_stone: APP_STONE is
+	data: APP_STONE is
 		deferred
 		end;
 

@@ -96,12 +96,12 @@ feature {NONE}
 			until
 				s.off
 			loop
-				clbk := item (s.input.original_stone);
-				b := s.output.original_stone;
+				clbk := item (s.input.data);
+				b := s.output.data;
 				if not b.empty then
 					if (clbk = Void) then
 						!!clbk.make (s.output);
-						put (clbk, s.input.original_stone);
+						put (clbk, s.input.data);
 					else
 						clbk.update (s.output);
 					end;

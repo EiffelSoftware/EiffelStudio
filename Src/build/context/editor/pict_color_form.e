@@ -29,6 +29,11 @@ feature {NONE}
 			Result := Context_const.pict_color_att_form_nbr
 		end;
 
+	format_number: INTEGER is
+		do
+			Result := Context_const.attribute_format_nbr
+		end;
+
 	Pict_clr_cmd: PICT_CLR_CMD is
 		once
 			!!Result

@@ -13,6 +13,11 @@ creation
 	
 feature 
 
+	title_name: STRING is
+		do
+			Result := Widget_names.load_project_window
+		end;
+
 	ok_pressed is
 			-- Command executed when ok button
 			-- is pressed.
@@ -23,16 +28,13 @@ feature
 				context_catalog.clear;
 				command_catalog.clear;
 				command_catalog.initialize_pages;
+				window_mgr.clear_all_editors;
 				app_editor.clear;
 				history_window.wipe_out;
 				main_panel.unset_project_initialized;
 			end;
 			!!cmd;
-			if selected_file.empty then
-				cmd.execute (directory);
-			else
-				cmd.execute (selected_file);
-			end;
+			cmd.execute (selected_file);
 		end;
 
 end	

@@ -21,9 +21,9 @@ feature {NONE} -- Anchors
 	
 feature -- Anchors
 
-	input_list: FUNCTION_BOX [STONE];
-	output_list: FUNCTION_BOX [STONE];
-			-- Icons representing the edited
+	input_list: FUNCTION_BOX [DATA];
+	output_list: FUNCTION_BOX [DATA];
+			-- Data representing the edited
 			-- function visually
 
 feature -- Focus_label
@@ -60,23 +60,20 @@ feature -- Edited function
 			output_list.set (f.output_list);
 			edited_function.set_lists (input_list, output_list);
 			edited_function.set_editor (Current);
-			if
-				not input_list.empty
-			then
+			if not input_list.empty then
 				edited_function.go_i_th (1);
 			end;
 			display_page_number;
-			menu_bar.set_function (edited_function)
 		end;
 
 	hide_stones is
 			-- Hides input and output stones if they
 			-- are not set
 		do
-			if (input_stone.original_stone = Void) then
+			if (input_stone.data = Void) then
 				input_stone.hide
 			end;
-			if (output_stone.original_stone = Void) then
+			if (output_stone.data = Void) then
 				output_stone.hide
 			end;
 		end;
@@ -86,9 +83,9 @@ feature -- Edited function
 			-- according to `s'.
 		do
 			if (s = input_stone) then
-				edited_function.reset_input_stone;
+				edited_function.reset_input_data;
 			elseif (s = output_stone) then
-				edited_function.reset_output_stone;
+				edited_function.reset_output_data;
 			end;		
 		end;
 	
@@ -160,19 +157,26 @@ feature -- Display the page number details
 
 feature {ELMT_HOLE}
 
-	update (hole: ELMT_HOLE) is
+	update_input_hole (stone: STONE) is
 			-- Update the function with the
 			-- information contained in the
 			-- entry hole `hole'.
 		do
-			if not (edited_function = Void) then
-				if (hole = input_hole) then
-					set_input_stone (input_hole.stone.original_stone);
-					edited_function.set_input_stone (input_hole.stone.original_stone);
-				elseif (hole = output_hole) then
-					set_output_stone (output_hole.stone.original_stone);
-					edited_function.set_output_stone (output_hole.stone.original_stone)
-				end;
+			if edited_function /= Void then
+				set_input_stone (stone);
+				edited_function.set_input_data (stone.data);
+				edited_function.drop_pair;
+			end
+		end;
+
+	update_output_hole (stone: STONE) is
+			-- Update the function with the
+			-- information contained in the
+			-- entry hole `hole'.
+		do
+			if edited_function /= Void then
+				set_output_stone (stone);
+				edited_function.set_output_data (stone.data)
 				edited_function.drop_pair;
 			end
 		end;
@@ -180,15 +184,15 @@ feature {ELMT_HOLE}
 feature {NONE}
 
 	set_input_stone (st: STONE) is
-			-- Set original_stone of input_stone to `st'.
+			-- Set data of input_stone to `st'.
 		do
-			input_stone.set_original_stone (st);
+			input_stone.set_data (st.data);
 		end;
 
 	set_output_stone (st: STONE) is
-			-- Set original_stone of output_stone to `st'.
+			-- Set data of output_stone to `st'.
 		do
-			output_stone.set_original_stone (st);
+			output_stone.set_data (st.data);
 		end;
 
 feature
@@ -199,7 +203,7 @@ feature {NONE}
 
 	input_frame, output_frame: FRAME;
 	menu_bar: FUNCTION_BAR;
-	arrow_b, arrow_b1: ARROW_B;
+	left_arrow, right_arrow: ARROW_B;
 	page_label, row_label: LABEL_G;
 	page_number, number_of_pages: INTEGER;
 
@@ -226,8 +230,8 @@ feature {NONE}
 			!!input_form.make (Widget_names.form1, form);
 			!!output_form.make (Widget_names.form2, form);
 			!!button_form.make (Widget_names.form3, form);
-			!!arrow_b.make (Widget_names.button, button_form);
-			!!arrow_b1.make (Widget_names.button1, button_form);
+			!!left_arrow.make (Widget_names.button, button_form);
+			!!right_arrow.make (Widget_names.button1, button_form);
 			!!page_label.make (Widget_names.label, button_form);
 			!!row_label.make (Widget_names.label1, button_form);
 			create_input_stone (input_form);
@@ -246,14 +250,14 @@ feature {NONE}
 			!! tmp.make (0);
 			tmp.append (Widget_names.page_label);
 			tmp.append (" 1 of 1");
-			page_label.set_text ("Page 1 of 1");
+			page_label.set_text (tmp);
 
 				-- ******
 				-- Values
 				-- ******
 
-			arrow_b.set_left;
-			arrow_b1.set_right;
+			left_arrow.set_left;
+			right_arrow.set_right;
 
 				-- ***********
 				-- Attachments
@@ -265,8 +269,6 @@ feature {NONE}
 			form.attach_right (menu_bar, 1);
 			form.attach_top_widget (menu_bar, input_form, 3);
 			form.attach_top_widget (menu_bar, output_form, 3);
-			form.attach_bottom_widget (button_form,input_form, 5);
-			form.attach_bottom_widget (button_form,output_form,  5);
 			form.attach_left (input_form, 1);
 			form.attach_right (output_form, 1);
 			form.attach_right_position (input_form, 1);
@@ -274,6 +276,8 @@ feature {NONE}
 			form.attach_left (button_form, 1);
 			form.attach_right (button_form, 1);
 			form.attach_bottom (button_form, 1);
+			form.attach_bottom_widget (button_form, input_form, 5);
+			form.attach_bottom_widget (button_form, output_form,  5);
 
 			input_form.attach_top (input_hole, 1);
 			input_form.attach_top (input_stone, 1);
@@ -296,22 +300,23 @@ feature {NONE}
 			output_form.attach_left (output_hole, 3);
 
 
-			button_form.attach_right (arrow_b1, 2);
-			button_form.attach_bottom (arrow_b, 5);
-			button_form.attach_bottom (arrow_b, 5);
-			button_form.attach_right_widget (arrow_b1, arrow_b, 4);
+			button_form.attach_right (right_arrow, 2);
+			button_form.attach_right_widget (right_arrow, left_arrow, 4);
 			button_form.attach_left (page_label, 1);
-			button_form.attach_top (page_label, 5);
-			button_form.attach_top (row_label, 5);
-			button_form.attach_bottom (page_label, 5);
-			button_form.attach_bottom (row_label, 5);
+			button_form.attach_top (page_label, 1);
+			button_form.attach_top (row_label, 1);
+			button_form.attach_left_widget (page_label, row_label, 5);
+			button_form.attach_top (right_arrow, 0);
+			button_form.attach_top (left_arrow, 0);
+			button_form.attach_bottom (right_arrow, 5);
+			button_form.attach_bottom (left_arrow, 5);
 
 				-- *********
 				-- Callbacks
 				-- *********
 
-			arrow_b.add_activate_action (Current, First);
-			arrow_b1.add_activate_action (Current, Second);
+			left_arrow.add_activate_action (Current, First);
+			right_arrow.add_activate_action (Current, Second);
 			display_page_number;
 		end;
 

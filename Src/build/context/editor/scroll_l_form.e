@@ -26,6 +26,11 @@ feature {NONE}
 			Result := Context_const.scroll_l_att_form_nbr
 		end;
 
+	format_number: INTEGER is
+		do
+			Result := Context_const.attribute_format_nbr
+		end;
+
 	List_count_cmd: LIST_COUNT_CMD is
 		once
 			!!Result

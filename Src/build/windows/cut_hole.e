@@ -7,6 +7,8 @@ inherit
 	HOLE
 		rename
 			target as focus_source
+		redefine
+			process_any
 		end
 
 creation
@@ -39,16 +41,18 @@ feature {NONE}
 	
 feature {NONE}
 
-	process_stone is
+	stone_type: INTEGER is 
+		do 
+			Result := Stone_types.any_type
+		end;
+
+	process_any (dropped: STONE) is
 		local
 			r: REMOVABLE;
-			temp: ANY;
-			n: NAMABLE
 		do
-			r ?= stone;
+			r ?= dropped;
 			if (r /= Void) then
 				r.remove_yourself;
-				n ?= stone.original_stone;
 			end;
 		end;
 

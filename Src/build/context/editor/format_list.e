@@ -9,8 +9,6 @@ inherit
 	FIXED_LIST [FORMAT_BUTTON]
 		rename
 			make as list_make
-		export
-			{NONE} all
 		end
 
 creation

@@ -34,9 +34,10 @@ feature
 
 	set_context_attributes (a_context: OPT_PULL_C) is
 		do
-			if not (text = Void) then
-				a_context.set_text (text);
-			end;
+			-- if not (text = Void) then
+				-- a_context.set_text (text);
+			-- end;
+			--  alias visual_name
 			if not (title = Void) then
 				a_context.set_title (title)
 			end;
@@ -49,6 +50,7 @@ feature
 feature {NONE}
 
 	title, text: STRING;
+		-- to be removed (text)
 
 end
 

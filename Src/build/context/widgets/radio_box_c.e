@@ -6,12 +6,11 @@ inherit
 	GROUP_COMPOSITE_C
 		redefine
 			widget, stored_node
-		
 		end
 	
 feature 
 
-	context_type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE is
 		do
 			Result := context_catalog.set_page.radio_box_type
 		end;

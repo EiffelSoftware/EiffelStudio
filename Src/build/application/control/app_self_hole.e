@@ -5,23 +5,14 @@ inherit
 
 	APP_EDITOR_HOLE
 		redefine
-			stone, compatible
-		end;
-	LABELS
+			process_label
+		end
 
 creation
 
 	make
 	
 feature {NONE}
-
-	stone: LABEL_SCR_L;
-
-	compatible (s: LABEL_SCR_L): BOOLEAN is
-		do
-			stone ?= s;
-			Result := stone /= Void;
-		end;
 
 	focus_string: STRING is
 		do
@@ -33,13 +24,18 @@ feature {NONE}
 			Result := Pixmaps.self_label_pixmap
 		end;
 
-	process_stone is
+	stone_type: INTEGER is
+		do
+			Result := Stone_types.label_type
+		end;
+
+	process_label (dropped: LABEL_STONE) is
 			-- Update the transition to self. 
 		local
 			cut_label_command: APP_CUT_LABEL;
 		do
 			!!cut_label_command;
-			cut_label_command.execute (stone.label)
+			cut_label_command.execute (dropped.data.label)
 		end; 
 
 end 

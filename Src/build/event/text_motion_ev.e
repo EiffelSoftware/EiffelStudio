@@ -19,11 +19,14 @@ feature
 			Result := - Event_const.text_motion_ev_id
 		end;
 
-	make is
+	symbol: PIXMAP is
 		do
-			set_symbol (Pixmaps.scr_t_motion_pixmap);
-			set_label (Event_const.scr_t_motion_label);
-			event_table.put (Current, - identifier);
+			Result := Pixmaps.scr_t_motion_pixmap
+		end;
+
+	internal_name: STRING is
+		do
+			Result := Event_const.scr_t_motion_label
 		end;
 
 	eiffel_text: STRING is "add_motion_action (";

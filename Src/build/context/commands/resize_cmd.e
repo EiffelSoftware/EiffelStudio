@@ -21,7 +21,7 @@ feature {NONE}
 
 	context_work is
 		do
-			!!old_resize_policy.make;
+			!!old_resize_policy;
 			old_resize_policy := clone (context.resize_policy);
 		end;
 
@@ -29,7 +29,7 @@ feature {NONE}
 		local
 			new_policy: RESIZE_POLICY;
 		do
-			!!new_policy.make;
+			!!new_policy;
 			new_policy := clone (context.resize_policy);
 			context.set_resize_policy (old_resize_policy);
 			old_resize_policy := new_policy;

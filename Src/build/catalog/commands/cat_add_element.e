@@ -7,7 +7,7 @@ inherit
 	
 feature {NONE}
 
-	catalog: CATALOG [STONE] is 
+	catalog: CATALOG [DATA] is 
 		deferred
 		end;
 
@@ -22,7 +22,7 @@ feature
 		local
 			p: like page;
 			found: BOOLEAN;
-			pages: LINKED_LIST [CAT_PAGE [STONE]]
+			pages: LINKED_LIST [CAT_PAGE [DATA]]
 		do
 			page.start;
 			page.search (element);

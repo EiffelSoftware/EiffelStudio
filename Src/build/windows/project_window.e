@@ -4,22 +4,41 @@ inherit
 
 	FILE_SEL_D
 		rename
-			make as file_sel_d_create
+			make as file_sel_d_create,
+			popup as file_sel_d_popup
 		end;
-	COMMAND
-		export
-			{NONE} all
-		end;
-	COMMAND_ARGS
-		export
-			{NONE} all
+	COMMAND;
+	COMMAND_ARGS;
+	CLOSEABLE;
+	CONSTANTS
+
+feature {NONE}
+
+	last_cwd: STRING is
+		once
+			!! Result.make (0);
+		end
+
+	close is
+		do
+			last_cwd.wipe_out;
+			last_cwd.append (clone (directory));
+			destroy;
 		end;
 
-feature
-	
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	title_name: STRING is
+		deferred
+		end;
+
+	make (a_parent: COMPOSITE) is
+		local
+			del_window: DELETE_WINDOW
+			mp: MOUSE_PTR;
 		do
-			file_sel_d_create (a_name, a_parent);
+			!! mp;
+			mp.set_watch_shape;
+			file_sel_d_create (title_name, a_parent);
+			set_title (title_name);
 			hide_help_button;
 			add_ok_action (Current, First);
 			add_cancel_action (Current, Second);
@@ -27,9 +46,12 @@ feature
 			set_directory_selection;
 			hide_file_selection_list;
 			hide_file_selection_label;
+			dialog_command_target;
+			!! del_window.make (Current);
+			set_action ("<Unmap>", del_window, Void);
+			widget_command_target;
+			mp.restore;
 		end;
-
-feature {NONE}
 
 	execute (argument: ANY) is
 		do
@@ -37,9 +59,11 @@ feature {NONE}
 				if (not selected_file.empty or not directory.empty) then
 					popdown;
 					ok_pressed;
+					close
 				end;
 			elseif (argument = Second) then
 				popdown;
+				close;
 			end;
 		end;
 
@@ -48,5 +72,15 @@ feature {NONE}
 		deferred
 		end
 
+feature
+
+	popup is
+		do
+			if not last_cwd.empty then
+				set_directory (last_cwd);
+			end;
+			file_sel_d_popup
+		end;
+	
 end
 

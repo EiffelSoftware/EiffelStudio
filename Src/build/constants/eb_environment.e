@@ -23,11 +23,12 @@ feature -- Directory name constants
 	Library_name: STRING is "Library";
 	Platform_variable_name: STRING is "PLATFORM";
 	Resources_name: STRING is "resources";
-	Restore_name: STRING is ".restore";
+	Restore_name: STRING is "restore";
 	Spec_name: STRING is "spec";
 	State_name: STRING is "State";
 	Storage_name: STRING is "Storage";
-	Templates_name: STRING is ".templates";
+	Templates_name: STRING is "templates";
+	temporary_postfix: STRING is ".TMP";
 	Widgets_name: STRING is "Widgets";
 	Windows_name: STRING is "Windows";
 
@@ -63,7 +64,7 @@ feature -- File names for EiffelBuild
 
 	Ace_file: STRING is
 		once
-			Result := clone (Resources_directory);
+			Result := clone (EiffelBuild_directory);
 			Result.extend (directory_separator);
 			Result.append (Ace_name);
 			Result.extend (directory_separator);
@@ -83,7 +84,6 @@ feature -- Directory names for EiffelBuild
 			-- Directory containing the various
 			-- bitmaps for EiffelBuild.
 		local
-			dir: FILE_NAME;
 			win: WINDOWS
 		once
 			Result := clone (EiffelBuild_directory);
@@ -123,7 +123,7 @@ feature -- Directory names for EiffelBuild
 			plat := get (Platform_variable_name);
 			if plat /= Void then
 				Result.append (plat);
-                        	Result.extend (directory_separator);
+							Result.extend (directory_separator);
 			end;
 			Result.append (Bin_name);
 		end;
@@ -170,9 +170,7 @@ feature -- Directory names for projects
 			-- classes
 			--| Has separator at end
 		do
-			Result := clone (Project_directory);
-			Result.extend (directory_separator);
-			Result.append (Classes_name);
+			Result.append (Generated_directory);
 			Result.extend (directory_separator);
 		end;
 
@@ -263,6 +261,30 @@ feature -- File names for Project
 
 feature -- Directory creation
 
+	remove_project_directory is
+			-- Set up project directory by creating
+			-- the subdirectories and copy the Ace
+			-- file to the project directory.
+		require
+			Project_dir_defined: Project_directory.count > 0
+		local
+			ace_f: PLAIN_TEXT_FILE;
+		do
+			if is_directory (Generated_directory) then
+				remove_directory (Generated_directory);
+			end;
+			if is_directory (Storage_directory) then
+				remove_directory (Storage_directory);
+			end;
+			if is_directory (Restore_directory) then
+				remove_directory (Restore_directory)
+			end;
+			!! ace_f.make (Ace_file);
+			if ace_f.exists then
+				ace_f.delete
+			end;
+		end;
+
 	setup_project_directory is
 			-- Set up project directory by creating
 			-- the subdirectories and copy the Ace
@@ -271,10 +293,12 @@ feature -- Directory creation
 			Project_dir_defined: Project_directory.count > 0
 		local
 			ace_f: PLAIN_TEXT_FILE;
-			proj_ace_f: PLAIN_TEXT_FILE
+			proj_ace_f: PLAIN_TEXT_FILE;
+			file_name: FILE_NAME;
+			dir_name: DIRECTORY_NAME;
 		do
 			mkdir (Project_directory);
-			mkdir (Classes_directory);
+			mkdir (Generated_directory);
 			mkdir (Windows_directory);
 			mkdir (State_directory);
 			mkdir (Widgets_directory);
@@ -297,6 +321,51 @@ feature -- Directory creation
 			end
 		end;
 
+feature {NONE} -- Directory remove (recursive)
+
+	remove_directory (p: STRING) is
+			-- Remove directory and its sub-directories and their
+			-- contents with directory path `p'.
+		require
+			valid_p: p /= Void;
+			file_is_directory: is_directory (p);
+		local
+			dir: DIRECTORY;
+			dir_name: STRING;
+			full_file_name, file_name: STRING;
+			file: PLAIN_TEXT_FILE
+		do
+			dir_name := clone (p);
+			!! dir.make_open_read (dir_name);
+			from
+				dir.start;
+				dir.readentry;
+				file_name := dir.lastentry;
+			until
+				file_name = Void
+			loop
+				if not (file_name.is_equal (".") or else
+					file_name.is_equal (".."))
+				then
+					full_file_name := clone (p);
+					full_file_name.extend (Directory_separator);
+					full_file_name.append (file_name);
+					!! file.make (full_file_name);
+					if file.is_directory then
+						remove_directory (full_file_name)
+					end;
+					file.delete;
+				end;
+				dir.readentry;
+				file_name := dir.lastentry
+			end;
+			dir.close;
+		rescue
+			if dir /= Void and then not dir.is_closed then
+				dir.close
+			end;
+		end;
+
 feature -- {NONE}
 
 	mkdir (dn: STRING) is
@@ -311,6 +380,15 @@ feature -- {NONE}
 			if not dir.exists then
 				dir.create;
 			end
+		end;
+
+	is_directory (p: STRING): BOOLEAN is
+			-- Is `p' a directory ?
+		local
+			file: PLAIN_TEXT_FILE
+		do
+			!! file.make (p);
+			Result := file.is_directory
 		end;
 
 end	

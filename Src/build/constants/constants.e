@@ -22,12 +22,12 @@ feature
 			!! Result
 		end;
 
-	Icon_labels: ICON_LABEL_CONSTANTS is
+	Pixmaps: PIXMAPS is
 		once
 			!! Result
 		end;
 
-	Pixmaps: PIXMAPS is
+	Stone_types: STONE_TYPES is
 		once
 			!! Result
 		end;

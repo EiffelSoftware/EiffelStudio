@@ -191,7 +191,7 @@ feature -- Argument
 			new_argument: ARG
 			add_argument_cmd: CMD_ADD_ARGUMENT
 		do
-			if not (edited_command = Void) then
+			if edited_command /= Void then
 				if edited_command.has_instances then
 					popup_error_box (Messages.instance_add_arg_er)
 				else

@@ -40,6 +40,11 @@ feature {NONE}
 			Result := Context_const.scale_att_form_nbr
 		end;
 
+	format_number: INTEGER is
+		do
+			Result := Context_const.attribute_format_nbr
+		end;
+
 	Scale_dir_cmd: SCALE_DIR_CMD is
 		once
 			!!Result

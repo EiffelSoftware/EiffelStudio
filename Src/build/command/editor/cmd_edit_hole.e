@@ -6,11 +6,12 @@ inherit
 	CMD_EDITOR_HOLE
 		rename
 			make as old_make
-		end;
-	CMD_STONE
 		redefine
-			transportable
-		end
+			process_command, process_instance,
+			compatible
+		end;
+	DRAG_SOURCE;
+	CMD_STONE;
 	REMOVABLE
 
 creation
@@ -51,69 +52,37 @@ feature {NONE}
 
 feature
 
-	original_stone: CMD is
+	data: CMD is
 		do
 			Result := 
-				command_editor.current_command.original_stone
+				command_editor.current_command.data
 		end;
-
-	transportable: BOOLEAN is
-		do
-			Result := original_stone /= Void
-		end;
-
-	label: STRING is
-		do
-			Result := original_stone.label
-		end;
-
-	eiffel_text: STRING is
-		do
-			Result := original_stone.eiffel_text
-		end
-
-	identifier: INTEGER is
-		do
-			Result := original_stone.identifier
-		end
-
-	eiffel_type: STRING is
-		do
-			Result := original_stone.eiffel_type
-		end
-
-	arguments: EB_LINKED_LIST [ARG] is
-		do
-			Result := original_stone.arguments
-		end
-
-	labels: EB_LINKED_LIST [CMD_LABEL] is
-		do
-			Result := original_stone.labels
-		end
 
 feature {NONE}
 
-	process_stone is
-		local
-			cmd_type: CMD_STONE
-			cmd_inst: CMD_INST_STONE
+	compatible (st: STONE): BOOLEAN is
 		do
-			cmd_type ?= stone
-			cmd_inst ?= stone
-			if not (cmd_type = Void) then 
-				if cmd_type.original_stone.edited then
-					cmd_type.original_stone.command_editor.raise
-				else
-					command_editor.set_command (cmd_type.original_stone)
-				end
-			elseif not (cmd_inst = Void) then
-				if cmd_inst.associated_command.edited then
-					cmd_inst.associated_command.command_editor.raise
-				else	
-					command_editor.set_command (cmd_inst.associated_command)
-				end
+			Result := 
+				st.stone_type = Stone_types.command_type or else
+				st.stone_type = Stone_types.instance_type 
+		end;
+
+	process_command (dropped: CMD_STONE) is
+		do
+			if dropped.data.edited then
+				dropped.data.command_editor.raise
+			else
+				command_editor.set_command (dropped.data)
 			end
-		end -- process_stone
+		end;
+
+	process_instance (dropped: CMD_INST_STONE) is
+		do
+			if dropped.associated_command.edited then
+				dropped.associated_command.command_editor.raise
+			else	
+				command_editor.set_command (dropped.associated_command)
+			end
+		end 
 
 end 

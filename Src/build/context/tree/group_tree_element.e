@@ -7,7 +7,7 @@ inherit
 		rename
 			make as tree_element_create
 		redefine
-			coord_calc, original_stone, expand_action,
+			coord_calc, data, expand_action,
 			select_figure, deselect
 		end
 
@@ -23,7 +23,7 @@ feature
 			tree_element_create (a_context);
 		end;
 
-	original_stone: GROUP_C;
+	data: GROUP_C;
 
 	coord_calc: COORD_XY_FIG is
 			-- Recompute the position of the tree_element in the
@@ -38,7 +38,7 @@ feature
 			Result := tree.current_position.duplicate;
 			child_x := Result.x + string_width + 40;
 			child_y := Result.y;
-			list := original_stone.subtree;
+			list := data.subtree;
 			if show_children then
 				draw_circle := False;
 				from
@@ -90,7 +90,8 @@ feature
 			a_list: LINKED_LIST [CONTEXT]
 		do
 			selected := True;
-			a_list :=  original_stone.subtree;
+			a_list :=  data.subtree;
+			data.set_selected_color;
 			from
 				a_list.start
 			until
@@ -106,7 +107,8 @@ feature
 			a_list: LINKED_LIST [CONTEXT]
 		do
 			selected := False;
-			a_list :=  original_stone.subtree;
+			a_list :=  data.subtree;
+			data.deselect_color;
 			from
 				a_list.start
 			until
@@ -119,9 +121,9 @@ feature
 
 	expand_action is
 		do
-			if original_stone.subtree.count /= 0 then
+			if data.subtree.count /= 0 then
 				set_children_visibility (not show_children);
-				tree.display (original_stone);
+				tree.display (data);
 			end;
 		end;
 

@@ -19,11 +19,14 @@ feature
 			Result := - Event_const.but_rel_ev_id
 		end;
 
-	make is
+	symbol: PIXMAP is
 		do
-			set_symbol (Pixmaps.button_release_pixmap);
-			set_label (Event_const.button_release_label);
-			event_table.put (Current, - identifier);
+			Result := Pixmaps.button_release_pixmap
+		end;
+
+	internal_name: STRING is
+		do
+			Result := Event_const.button_release_label
 		end;
 
 	eiffel_text: STRING is "add_release_action (";

@@ -7,7 +7,6 @@ inherit
 	FUNCTION_BAR
 		redefine
 			edit_hole,
-			set_function,
 			make, unregister_holes
 		end
 
@@ -54,26 +53,5 @@ feature {NONE}
 feature
 
 	focus_label: FOCUS_LABEL;
-
-	hide_edit_stone is
-		do
-			if edit_hole.original_stone /= Void then
-				edit_hole.reset;
-			end;
-		end;
-
-	set_function (stone: STATE) is
-		do
-			if (stone = Void) then
-				edit_hole.reset;
-			else
-				edit_hole.set_state_stone (stone);
-			end
-		end;
-
-	update_name is
-		do
-			edit_hole.update_name;
-		end;
 
 end

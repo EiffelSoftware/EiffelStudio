@@ -13,7 +13,12 @@ feature
 	symbol: PIXMAP is
 		once
 			Result := Pixmaps.color_pixmap
-		end
+		end;
+
+	selected_symbol: PIXMAP is
+		once
+			Result := Pixmaps.selected_color_pixmap
+		end;
 
 	form_number: INTEGER is
 		do

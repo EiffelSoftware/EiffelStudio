@@ -10,22 +10,28 @@ feature {NAMER_STORER}
 
 	stored_data: HASH_TABLE [INTEGER, STRING];
 
-	
 feature 
 
-	store (file_name: STRING) is
+	file_name: STRING is
+		do
+			Result := Environment.namer_file_name
+		end;
+
+	tmp_store (dir_name: STRING) is
+		require
+			valid_dir_name: dir_name /= Void
 		do
 			stored_data := Shared_namer_values;
-			store_by_name (file_name);
+			tmp_store_by_name (dir_name);
 			stored_data := Void
 		end;
 
-	retrieve (file_name: STRING) is
+	retrieve (dir_name: STRING) is
 		local
 			i: INTEGER;
 			keys: ARRAY [STRING];
 		do
-			retrieve_by_name (file_name);
+			retrieve_by_name (dir_name);
 			stored_data := retrieved.stored_data;
 			Shared_namer_values.clear_all;
 			from

@@ -14,26 +14,29 @@ inherit
 
 	STONE
 		redefine
-			original_stone
+			data
 		end
 	
 feature 
 
-	identifier: INTEGER is
+	data: STATE is
 		deferred
 		end;
 
-	original_stone: STATE is
-		deferred
+	stone_type: INTEGER is
+		do
+			Result := Stone_types.state_type
 		end;
 
-	labels: LINKED_LIST [CMD_LABEL] is
-		deferred
+	process (hole: HOLE) is
+			-- Process Current stone dropped in hole `hole'.
+		do
+			hole.process_state (Current)
 		end;
 
 	stone_cursor: SCREEN_CURSOR is
 		do
 			Result := Cursors.state_cursor
-		end
+		end;
 
 end

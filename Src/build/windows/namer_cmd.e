@@ -18,9 +18,12 @@ feature {NONE}
 
 	old_visual_name: STRING;
 
-	work (argument: NAMABLE) is
+	namer_window: NAMER_WINDOW;
+
+	work (argument: ANY) is
 		do
-			namable := argument;
+			namer_window ?= argument;
+			namable := namer_window.namable;
 			if namable.visual_name /= Void then	
 				old_visual_name := clone (namable.visual_name);
 			end;
@@ -35,6 +38,11 @@ feature
 			new_name := namable.visual_name;
 			namable.set_visual_name (old_visual_name);
 			old_visual_name := new_name;
+			if namer_window.namable = namable and then
+				namer_window.realized 
+			then
+				namer_window.update_name
+			end;	
 		end;
 
 	redo is

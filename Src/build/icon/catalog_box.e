@@ -1,5 +1,5 @@
 
-class CATALOG_BOX [T -> STONE] 
+class CATALOG_BOX [T -> DATA] 
 
 inherit
 
@@ -14,7 +14,7 @@ creation
 
 feature {NONE}
 
-	associated_catalog: CATALOG [STONE];
+	associated_catalog: CATALOG [DATA];
 
 feature 
 

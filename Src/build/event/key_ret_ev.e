@@ -19,11 +19,14 @@ feature
 			Result := - Event_const.key_return_ev_id
 		end;
 
-	make is
+	symbol: PIXMAP is
 		do
-			set_symbol (Pixmaps.key_return_pixmap);
-			set_label (Event_const.key_return_label);
-			event_table.put (Current, - identifier);
+			Result := Pixmaps.key_return_pixmap
+		end;
+
+	internal_name: STRING is
+		do
+			Result := Event_const.key_return_label
 		end;
 
 	eiffel_text: STRING is "set_action (%"<Key>Return%", ";

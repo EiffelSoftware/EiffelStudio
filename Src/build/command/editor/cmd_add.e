@@ -7,15 +7,15 @@ inherit
 
 feature {NONE}
 
-	element: STONE;
+	element: DATA;
 
-	list: LINKED_LIST [STONE] is
+	list: LINKED_LIST [DATA] is
 		deferred
 		end; 
 
 feature 
 
-	set_element (s: STONE) is
+	set_element (s: DATA) is
 		do
 			element := s
 		end;
@@ -25,8 +25,13 @@ feature
 			edited_command.save_old_template;
 			list.finish;
 			list.remove;
-			edited_command.update_text;
+			update_information
 		end; -- undo
+
+	update_information is
+		do
+			edited_command.update_text;
+		end;
 
 feature {NONE}
 
@@ -34,7 +39,7 @@ feature {NONE}
 		do
 			edited_command.save_old_template;
 			list.extend (element);
-			edited_command.update_text;
+			update_information
 		end; 
 
 	worked_on: STRING is

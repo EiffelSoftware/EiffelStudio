@@ -24,7 +24,7 @@ feature -- Interface
 	make_visible (a_parent: COMPOSITE) is
 		do
 			initialize (Widget_names.behavior_form_name, a_parent);
-			!!event_catalog.make (Widget_names.event_catalog_name, Current);
+			!!event_catalog.make (Widget_names.event_catalog_name, Current, editor.focus_label);
 			!!behavior_editor.make (Widget_names.behaviour_editor_name, Current);
 
 			set_fraction_base(5);
@@ -55,6 +55,7 @@ feature -- Interface
 	unregister_holes is
 		do
 			if is_initialized then
+				event_catalog.unregister_holes;
 				behavior_editor.unregister_holes
 			end;
 		end;
@@ -70,6 +71,11 @@ feature {NONE}
 			Result := Context_const.behavior_form_nbr
 		end;
 
+	format_number: INTEGER is
+		do
+			Result := Context_const.behaviour_format_nbr
+		end;
+
 	reset is
 		local
 			behavior: BEHAVIOR;
@@ -79,11 +85,11 @@ feature {NONE}
 			event_catalog.update_pages (context);
 			current_state := behavior_editor.current_state;
 			if (current_state = Void) then
-				current_state := app_editor.initial_state_circle.original_stone;
+				current_state := app_editor.initial_state_circle.data;
 			end;
 			current_state.find_input (context);
 			if not current_state.after then
-				behavior := current_state.output.original_stone;
+				behavior := current_state.output.data;
 			else
 				!!behavior.make;
 				behavior.set_internal_name ("");

@@ -6,9 +6,9 @@ inherit
 
 	ICON_STONE
 		undefine
-			stone_cursor
+			stone_cursor, stone
 		redefine
-			original_stone, set_widget_default
+			data, set_widget_default
 		end;
 	CMD_INST_STONE;
 
@@ -19,16 +19,11 @@ feature
 			initialize_transport
 		end;
 			
-	original_stone: CMD_INSTANCE;
-
-	arguments: LINKED_LIST [ARG_INSTANCE] is
-		do
-			Result := original_stone.arguments
-		end;
+	data: CMD_INSTANCE;
 
 	associated_command: CMD is
 		do
-			Result := original_stone.associated_command
+			Result := data.associated_command
 		end
 
 end

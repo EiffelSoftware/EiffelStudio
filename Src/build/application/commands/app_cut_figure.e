@@ -54,7 +54,7 @@ feature
 			figures: APP_FIGURES;
 		do 
 			transitions := app_editor.transitions;
-			transitions.init_element (circle.original_stone);
+			transitions.init_element (circle.data);
 			lines := app_editor.lines;
 			figures := app_editor.figures;
 			figures.append (circle);
@@ -76,7 +76,7 @@ feature
 				not (state_editor = Void)
 			then
 				state_editor.set_edited_function
-					 (circle.original_stone)
+					 (circle.data)
 			end;
 		end; -- undo
 
@@ -149,13 +149,13 @@ feature {NONE}
 			end;
 			transitions := app_editor.transitions;
 			figures := app_editor.figures;
-			transitions.remove_element (circle.original_stone);
+			transitions.remove_element (circle.data);
 			figures.start;
 			figures.search (circle);
 			if not figures.after then
 				figures.remove
 			end;
-			state_editor := circle.original_stone.func_editor;
+			state_editor := circle.data.func_editor;
 			if
 				not (state_editor = Void)
 			then

@@ -44,9 +44,9 @@ feature
 
 	set_context_attributes (a_context: PERM_WIND_C) is
 		do
-			if not (title = Void) then
-				a_context.set_title (title)
-			end;
+			--if not (title = Void) then
+				--a_context.set_title (title)
+			--end;
 			if resize_policy_modified then
 				a_context.disable_resize_policy (resize_policy_disabled)
 			end;
@@ -66,6 +66,7 @@ feature
 feature {NONE}
 
 	title: STRING;
+		-- to be removed (same as visual name)
 
 	resize_policy_disabled: BOOLEAN;
 

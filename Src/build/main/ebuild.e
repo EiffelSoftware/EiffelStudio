@@ -7,7 +7,7 @@ inherit
 	ARGUMENTS;
 	WINDOWS;
 	SHARED_LICENSE;
-	GRAPHICS
+	GRAPHICS;
 
 feature 
 
@@ -75,13 +75,16 @@ feature {NONE}
 				if main_panel.project_initialized then
 					!! storer.make;
 					storer.store (Environment.restore_directory);
-					storer := Void;
+					io.error.putstring ("EiffelBuild: internal error%N");	
 				end
-			else
-				io.error.putstring ("EiffelBuild: internal error%N");	
 			end;
 		rescue
 			retried := True;
+			io.error.putstring ("EiffelBuild: internal error%N");	
+            if original_exception = Operating_system_exception then
+                io.error.putstring ("Reason:  ");
+                io.error.putstring (original_tag_name)
+            end;
 			retry
 		end;
 

@@ -27,12 +27,10 @@ feature
  	work (argument: Like Current) is
   		local
   	 		ed: CONTEXT_EDITOR;
-   			form: GEOMETRY_FORM;
   		do
 			ed := context_catalog.editor (context, Context_const.geometry_form_nbr);
 			if ed /= Void then
- 				form ?= ed.current_form;
- 				ed.current_form.reset;
+ 				ed.reset_geometry_form;
 			end;
   		end;
 
@@ -65,7 +63,7 @@ feature
    			end
 			ed := context_catalog.editor (context, Context_const.geometry_form_nbr);
 			if ed /= Void then
-	 			ed.current_form.reset;
+	 			ed.reset_geometry_form;
 			end;
   		end;
 

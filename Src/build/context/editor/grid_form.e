@@ -16,6 +16,11 @@ feature {NONE}
 			Result := Context_const.grid_form_nbr
 		end;
 
+	format_number: INTEGER is
+		do
+			Result := Context_const.grid_format_nbr
+		end;
+
 	no_grid: TOGGLE_B
 	grid5: TOGGLE_B
 	grid10: TOGGLE_B

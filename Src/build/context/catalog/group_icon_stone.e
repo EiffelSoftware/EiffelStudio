@@ -6,9 +6,9 @@ inherit
 
 	ICON_STONE
 		undefine
-			stone_cursor
+			stone_cursor, stone
 		redefine
-			original_stone, set_widget_default
+			data, set_widget_default
 		end;
 	TYPE_STONE;
 	REMOVABLE
@@ -20,7 +20,7 @@ feature
 			cut_command: CUT_GROUP_CMD
 		do
 			!!cut_command;
-			cut_command.execute (original_stone)
+			cut_command.execute (data)
 		end;
 
 	set_widget_default is
@@ -28,16 +28,6 @@ feature
 			initialize_transport;
 		end;
 			
-	original_stone: CONTEXT_GROUP_TYPE;
-
-	identifier: INTEGER is
-		do
-			Result := original_stone.group.identifier
-		end;
-
-	eiffel_type: STRING is
-		do
-			Result := original_stone.group.entity_name
-		end;
+	data: CONTEXT_GROUP_TYPE;
 
 end

@@ -20,7 +20,7 @@ feature
 			labs: LIST [CMD_LABEL];
 			arg: S_ARG
 		do
-			identifier := c.identifier;
+			identifier := c.data.identifier;
 			internal_name := c.eiffel_type;
 			visual_name := c.visual_name;
 			eiffel_text := c.eiffel_text;
@@ -123,17 +123,15 @@ feature
 
 		end;
 
-	get_new_text (fn: STRING): STRING is
+	get_new_text (dir_name: STRING): STRING is
 		local
-			cmd_file_name: FILE_NAME;
+			cmd_file_name: STRING;
 			cfile: PLAIN_TEXT_FILE;
 			s: STRING;
 		do
-			!!cmd_file_name.make (0);
-			cmd_file_name.from_string (fn);
-			cmd_file_name := cmd_file_name.path_name;
-			cmd_file_name.put (' ', cmd_file_name.count);
-			cmd_file_name := cmd_file_name.path_name;
+			!! cmd_file_name.make (10);
+			cmd_file_name.append (dir_name);
+			cmd_file_name.extend (Environment.directory_separator);
 			cmd_file_name.append (Environment.classes_name);
 			cmd_file_name.extend (Environment.directory_separator);
 			cmd_file_name.append (Environment.Commands_name);
@@ -142,8 +140,10 @@ feature
 			s.to_lower;
 			cmd_file_name.append (s);
 			cmd_file_name.append (".e");
-			if cmd_file_name.exists  and then cmd_file_name.readable then
-				cfile := cmd_file_name.to_file;
+			!! cfile.make (cmd_file_name);
+			if cfile.exists and then 
+				cfile.is_readable 
+			then
 				!!Result.make (0);
 				from
 					cfile.open_read;

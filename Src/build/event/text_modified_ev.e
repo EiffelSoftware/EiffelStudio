@@ -19,11 +19,14 @@ feature
 			Result := - Event_const.text_modified_ev_id
 		end;
 
-	make is
+	symbol: PIXMAP is
 		do
-			set_symbol (Pixmaps.scr_t_modify_pixmap);
-			set_label (Event_const.scr_t_modify_label);
-			event_table.put (Current, - identifier);
+			Result := Pixmaps.scr_t_modify_pixmap
+		end;
+
+	internal_name: STRING is
+		do
+			Result := Event_const.scr_t_modify_label
 		end;
 
 	eiffel_text: STRING is "add_modify_action (";

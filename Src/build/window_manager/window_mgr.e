@@ -129,6 +129,14 @@ feature
 			end;				
 		end;
 
+	clear_all_editors is
+		do
+			state_editors_list.clear_editors;
+			cmd_editors_list.clear_editors;
+			cmd_inst_editors_list.clear_editors;
+			context_editors_list.clear_editors;
+		end;
+
 	hide_all_editors is
 		do
 			state_editors_list.hide_editors;

@@ -2,8 +2,7 @@ class INTERFACE_B
 inherit
 
 	MAIN_PANEL_TOGGLE;
-	WINDOWS;
-	LICENCE_COMMAND
+	SHARED_CONTEXT
 
 creation
 	make
@@ -17,6 +16,6 @@ feature {NONE}
 			else
 				main_panel.hide_interface
 			end
-		end
+		end;
 
 end

@@ -4,7 +4,8 @@ inherit
 
 	EDIT_BUTTON
 		redefine
-			process_stone
+			process_command, process_instance,
+			compatible
 		end;
 
 creation
@@ -15,20 +16,28 @@ feature {NONE}
 	symbol: PIXMAP is
 		do
 			Result := Pixmaps.command_pixmap
-		end
+		end;
 
-	process_stone is
-		local
-			cmd_type: CMD;
-			cmd_inst: CMD_INSTANCE
+	stone_type: INTEGER is
 		do
-			cmd_type ?= stone.original_stone;
-			cmd_inst ?= stone.original_stone;
-			if cmd_type /= Void then
-				cmd_type.create_editor
-			elseif cmd_inst /= Void then
-				cmd_inst.associated_command.create_editor
-			end;
+			Result := Stone_types.command_type
+		end;
+
+	compatible (st: STONE): BOOLEAN is
+		do
+			Result :=
+				st.stone_type = Stone_types.command_type or else
+				st.stone_type = Stone_types.instance_type
+		end;
+
+	process_command (dropped: CMD_STONE) is
+		do
+			dropped.data.create_editor
+		end;
+
+	process_instance (dropped: CMD_INST_STONE) is
+		do
+			dropped.associated_command.create_editor
 		end;
 
 	focus_string: STRING is 

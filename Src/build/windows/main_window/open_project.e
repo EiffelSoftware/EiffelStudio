@@ -22,12 +22,14 @@ feature
 
 	execute (argument: STRING) is
 		local
-			dir: FILE_NAME;
-			bpdir: FILE_NAME;
-			restore_interface_name: FILE_NAME;
-			storage_interface_name: FILE_NAME;
+			dir: PLAIN_TEXT_FILE;
+			bpdir: PLAIN_TEXT_FILE;
+			restore_name: STRING;
+			storage_name: STRING;
 			char: CHARACTER;	
 			storer: STORER;
+			restore_file: PLAIN_TEXT_FILE;
+			storage_file: PLAIN_TEXT_FILE
 			proj_dir: STRING
 		do
 			proj_dir := Environment.project_directory;
@@ -38,23 +40,23 @@ feature
 			if char = Environment.directory_separator then
 				proj_dir.remove (proj_dir.count)
 			end;	
-			!!dir.make (0);
-			dir.from_string (proj_dir);
+			!! dir.make (proj_dir);
 			if dir.exists then
-				!!restore_interface_name.make (0);
-				restore_interface_name.from_string (Environment.restore_directory);
-				restore_interface_name.extend (Environment.directory_separator);
-				restore_interface_name.append (Environment.interface_file_name);
-				!! bpdir.make(0);
-				bpdir.from_string (Environment.storage_directory);
+				!!restore_name.make (0);
+				restore_name.append (Environment.restore_directory);
+				restore_name.extend (Environment.directory_separator);
+				restore_name.append (Environment.interface_file_name);
+				!! restore_file.make (restore_name);
+				!! bpdir.make(Environment.storage_directory);
 				if bpdir.exists then
-					!!storage_interface_name.make (0);
-					storage_interface_name.from_string (Environment.storage_directory);
-					storage_interface_name.extend (Environment.directory_separator);
-					storage_interface_name.append (Environment.interface_file_name);
+					!!storage_name.make (0);
+					storage_name.append (Environment.storage_directory);
+					storage_name.extend (Environment.directory_separator);
+					storage_name.append (Environment.interface_file_name);
+					!! storage_file.make (storage_name);
 					if 
-						restore_interface_name.exists and then
-						restore_interface_name.date >= storage_interface_name.date 
+						restore_file.exists and then
+						restore_file.date >= storage_file.date 
 					then
 						question_box.popup (Current, 
 							Messages.retrieve_crash_qu, Void);
@@ -62,80 +64,44 @@ feature
 						retrieve_project (Environment.storage_directory);
 					end;
 				else
-					handle_error (Messages.not_eb_project_er, bpdir.path_name);
+					handle_error (Messages.not_eb_project_er, bpdir.name);
 				end;
 			else
-				create_initial_directories
+				handle_error (Messages.eb_project_not_exists_er, proj_dir);
 			end
 		end;
 
-	continue_after_popdown (BOX: MESSAGE_D; yes: BOOLEAN) is
+	continue_after_popdown (box: MESSAGE_D; yes: BOOLEAN) is
 		do
 			if box = question_box then
 				if yes then
 					retrieve_project (Environment.restore_directory)
+					history_window.set_saved_application;
 				else
 					retrieve_project (Environment.storage_directory)
+					history_window.set_unsaved_application;
 				end;
 			end
 		end;	
 
 feature {NONE}
 
-	create_initial_directories is
-			-- Create directories for a project.
-		local
-			mp: MOUSE_PTR;
-			storer: STORER;
-			init_storage: BOOLEAN
-		do
-			if not rescued then
-				!!mp;
-				main_panel.set_title (Widget_names.create_project_label);
-				mp.set_watch_shape;
-				Environment.setup_project_directory;
-				app_editor.create_initial_state;
-				!!storer.make;
-				init_storage := True;
-				storer.store (Environment.storage_directory);
-				storer := Void;
-				display_init_windows;
-				mp.restore;
-				init_main_panel;
-			else
-				rescued := False;
-				main_panel.set_title (Widget_names.main_panel);
-				if init_storage then
-					handle_error (Messages.write_dir_er,
-						Environment.storage_directory)
-				else
-					handle_error (Messages.write_dir_er,
-						Environment.project_directory)
-				end;
-			end
-		rescue
-			mp.restore;
-			rescued := True;
-			retry
-		end;
-
 	retrieve_project (dir: STRING) is
 		local
-			file_name: FILE_NAME;
+			file: PLAIN_TEXT_FILE;
 			storer: STORER;
 			mp: MOUSE_PTR
 		do
 			if not rescued then
-				main_panel.set_title ("Retrieving project...");
-				!!file_name.make (0);
-				file_name.from_string (dir);
+				main_panel.set_title 
+					(Widget_names.retrieving_project_label);
+				!! file.make (dir);
 				for_import.set_item (False);
 				!!mp;
 				mp.set_watch_shape;
 				!!storer.make;
 				storer.retrieve (dir);
-				if not main_panel.project_initialized 
-				then
+				if not main_panel.project_initialized then
 					display_init_windows;
 				end;
 				storer.display_retrieved_windows;

@@ -16,11 +16,14 @@ feature
 			Result := - Event_const.pointer_motion_ev_id
 		end;
 
-	make is
+	symbol: PIXMAP is
 		do
-			set_symbol (Pixmaps.pointer_motion_pixmap);
-			set_label (Event_const.pointer_motion_label);
-			event_table.put (Current, - identifier);
+			Result := Pixmaps.pointer_motion_pixmap
+		end;
+
+	internal_name: STRING is
+		do
+			Result := Event_const.pointer_motion_label
 		end;
 
 	eiffel_text: STRING is "add_pointer_motion_action (";	

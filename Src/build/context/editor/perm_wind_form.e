@@ -42,6 +42,11 @@ feature {NONE}
 			Result := Context_const.perm_wind_att_form_nbr
 		end;
 
+	format_number: INTEGER is
+		do
+			Result := Context_const.attribute_format_nbr
+		end;
+
 	Win_set_default_position_cmd: WIN_SET_DEFAULT_POS_CMD is
 		once
 			!! Result

@@ -29,9 +29,10 @@ feature
 
 	set_context_attributes (a_context: BUTTON_C) is
 		do
-			if not (text = Void) then
-				a_context.set_text (text)
-			end;
+			--if not (text = Void) then
+				--a_context.set_text (text)
+				-- taken care by visual name
+			--end;
 			if resize_policy_disabled_modified then
 				a_context.disable_resize_policy (resize_policy_disabled);
 			end;
@@ -42,6 +43,7 @@ feature
 feature {NONE}
 
 	text: STRING;
+		-- to be removed (visual name)
 
 	resize_policy_disabled: BOOLEAN;
 

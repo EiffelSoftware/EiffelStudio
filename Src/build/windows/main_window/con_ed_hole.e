@@ -3,6 +3,9 @@ class CON_ED_HOLE
 inherit
 
 	EDIT_BUTTON
+		redefine
+			process_context
+		end
 
 creation
 
@@ -26,6 +29,16 @@ feature {NONE}
 		do
 			editor := window_mgr.context_editor;
 			window_mgr.display (editor)
+		end;
+
+	stone_type: INTEGER is
+		do
+			Result := Stone_types.context_type
+		end;
+
+	process_context (dropped: CONTEXT_STONE) is
+		do
+			dropped.data.create_editor
 		end;
 	
 end

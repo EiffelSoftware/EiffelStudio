@@ -3,118 +3,91 @@ class ARG_INST_ICON
 
 inherit
 
-	ARG_INST_STONE
-		redefine
-			transportable
-		end;
-	COMMAND;
-	COMMAND_ARGS;
 	ICON_STONE
 		rename
-			set_original_stone as old_set_original_stone
+			set_data as old_set_data
 		undefine
-			stone_cursor
+			stone_cursor, stone, initialize_transport
 		redefine
-			original_stone, set_widget_default
+			data, set_widget_default
 		end;
 	ICON_STONE
 		undefine
-			stone_cursor
+			initialize_transport
 		redefine
-			set_original_stone, original_stone, set_widget_default
+			set_data, data, set_widget_default, stone
 		select
-			set_original_stone
+			set_data
 		end;
 	HOLE
 		rename
 			target as source
 		redefine
-			stone, compatible
+			process_context
 		end;
-	ERROR_POPUPER
+	ERROR_POPUPER;
+	CONTEXT_DRAG_SOURCE
 
 feature 
 
 	set_widget_default is
 		do
 			register;
-			source.add_button_press_action (3, Current, First);
-			source.add_button_press_action (1, Current, Second);
 			initialize_transport;
-			source.set_action ("!Shift<Btn1Down>", show_command, Current);
-			source.set_action ("!Shift<Btn1Up>", show_command, Void);
 		end;
 
 -- **************
 -- Stone features
 -- **************
 
-	original_stone: ARG_INSTANCE;
-
+	data: ARG_INSTANCE;
 	
 feature {NONE}
 
-	transportable: BOOLEAN;
-
-	context: CONTEXT_STONE is
+	stone: STONE is
 		do
-			Result := original_stone.context
+			if data.instantiated then
+				Result := context
+			else
+				Result := type
+			end
+		end;
+
+	context: CONTEXT is
+		do
+			Result := data.context
 		end;
 	
 	identifier: INTEGER is
 		do
-			Result := original_stone.identifier
+			Result := data.identifier
 		end;
 
 	type: CONTEXT_TYPE is
 		do
-			Result := original_stone.type
+			Result := data.type
 		end;
 
-	
+	stone_type: INTEGER is
+		do
+			Result:= Stone_types.context_type
+		end;
+
 feature 
 
-	set_original_stone (arg: ARG_INSTANCE) is
+	set_data (arg: ARG_INSTANCE) is
 		do
-			old_set_original_stone (arg);
-			original_stone.set_icon_stone (Current);
+			old_set_data (arg);
+			data.set_icon_stone (Current);
 		end;
 
--- *************
--- Hole features
--- *************
-
-	
-feature {NONE}
-
-	stone: CONTEXT_STONE;
-
-	compatible (s: CONTEXT_STONE): BOOLEAN is
-		do
-			stone ?= s;
-			Result := stone /= Void;
-		end;
-	
-	execute (argument: ANY) is
-		do
-			if argument = First then
-				transportable := True
-			elseif argument = Second then
-				if instantiated then
-					transportable := True
-				else
-					transportable := False
-				end
-			end
-		end;
-
-	process_stone is
+	process_context (dropped: CONTEXT_STONE) is
 		local 	
 			instantiate_cmd: INSTANTIATE_CMD
 		do
-			if (original_stone.eiffel_type.is_equal (stone.eiffel_type)) then
-				!!instantiate_cmd.make (original_stone);
-				instantiate_cmd.execute (stone.original_stone);
+			if (data.type.eiffel_type.is_equal (dropped.data.eiffel_type)) then
+				!!instantiate_cmd.make (data);
+				instantiate_cmd.execute (dropped.data);
 			else
 				error_box.popup (Current, Messages.incomp_er, Void)
 			end;

@@ -29,7 +29,7 @@ feature
 		  Result := Pixmaps.dialog_shell_pixmap
 	   end;
 
-	context_type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE is
 		do
 			Result := context_catalog.temp_wind_type
 		end;
@@ -174,7 +174,7 @@ feature
 
 	shown: BOOLEAN is
 		do
-			Result := widget.is_poped_up;
+			Result := widget.is_popped_up;
 		end;
 
 feature {NONE}

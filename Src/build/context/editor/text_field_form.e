@@ -25,6 +25,11 @@ feature {NONE}
 			Result := Context_const.text_field_att_form_nbr
 		end;
 
+	format_number: INTEGER is
+		do
+			Result := Context_const.attribute_format_nbr
+		end;
+
 	text_field_cmd: TEXT_F_CMD is
 		once
 			!!Result

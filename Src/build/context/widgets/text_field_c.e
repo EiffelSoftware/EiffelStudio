@@ -28,7 +28,7 @@ feature
 			Result := Pixmaps.text_field_pixmap
 		end;
 
-	context_type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE is
 		do
 			Result := context_catalog.text_field_type
 		end;

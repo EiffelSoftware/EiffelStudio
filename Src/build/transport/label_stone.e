@@ -14,13 +14,24 @@ inherit
 
 	STONE
 		redefine
-			original_stone
+			data
 		end
 	
 feature 
 
-	original_stone: CMD_LABEL is
+	data: CMD_LABEL is
 		deferred
+		end;
+
+	stone_type: INTEGER is
+		do
+			Result := Stone_types.label_type
+		end;
+
+	process (hole: HOLE) is
+			-- Process Current stone dropped in hole `hole'.
+		do
+			hole.process_label (Current)
 		end;
 
 	stone_cursor: SCREEN_CURSOR is

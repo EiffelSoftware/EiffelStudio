@@ -9,14 +9,14 @@ inherit
 			create_context as old_create_context,
 			full_name as pulldown_full_name
 		redefine
-			reset_widget_callbacks, remove_widget_callbacks, 
+			reset_widget_callbacks, 
 			add_widget_callbacks, stored_node, initialize_transport,
 			is_selectionnable, widget
 		end;
 
 	PULLDOWN_C
 		redefine
-			reset_widget_callbacks, remove_widget_callbacks, 
+			reset_widget_callbacks, 
 			add_widget_callbacks, initialize_transport, 
 			stored_node, create_context, full_name,
 			is_selectionnable, widget
@@ -26,7 +26,7 @@ inherit
 
 feature 
 
-	context_type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE is
 		do
 			Result := context_catalog.submenu_type
 		end;
@@ -50,11 +50,6 @@ feature {NONE}
 	initialize_transport is
 		do
 			widget.button.add_button_press_action (3, transport_command, Current);
-		end;
-
-	remove_widget_callbacks is 
-		do 
-			widget.button.remove_button_press_action (3, transport_command, Current);
 		end;
 
 	reset_widget_callbacks is 

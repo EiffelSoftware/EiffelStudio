@@ -68,16 +68,6 @@ feature
 			Result.set (futur_x, futur_y);
 		end;
 
-	top_right: COORD_XY_FIG is
-		local
-			futur_x, futur_y: INTEGER
-		do
-			futur_x := base_left.x + string_width;
-			futur_y := base_left.y - string_ascent;
-			!!Result;
-			Result.set (futur_x, futur_y);
-		end;
-
 	top_left: COORD_XY_FIG is
 		local
 			futur_x, futur_y: INTEGER
@@ -159,7 +149,7 @@ feature
 	set_text (s: STRING) is
 		do
 			text := clone (s);
-			if not (drawing = Void) then
+			if drawing /= Void then
 				string_width := font.implementation.string_width (drawing_i_to_widget_i (drawing), text);
 			end;
 		end;

@@ -37,9 +37,10 @@ feature
 			if not (title = Void) then
 				a_context.set_title (title)
 			end;
-			if not (text = Void) then
-				a_context.set_text (text)
-			end;
+			--if not (text = Void) then
+				--a_context.set_text (text)
+			--end;
+			-- alias visual_name
 			set_attributes (a_context);
 		end;
 
@@ -47,6 +48,7 @@ feature
 feature {NONE}
 
 	title, text: STRING;
+		-- to be removed (text)
 
 end
 

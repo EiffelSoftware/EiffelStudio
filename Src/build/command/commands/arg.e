@@ -1,13 +1,10 @@
+-- Argument which is not instantiated
 
 class ARG 
 
 inherit
 
-	ARG_STONE
-
--- ***********************
--- Initialization features
--- ***********************
+	TYPE_DATA
 
 creation
 
@@ -24,33 +21,20 @@ feature
 		end;
 
 	session_init (other: TYPE_STONE) is
-		local
-			context: CONTEXT_STONE;
-			arg: ARG_STONE
 		do
-			context ?= other;
-			arg ?= other;
-			if not (context = Void) then
-				type := context.original_stone.context_type
-			elseif not (arg = Void) then
-				type := arg.type
-			else
-				type ?= other
-			end;
+			type := other.data.type
 		ensure
-			Type_set: not (type = Void) 
+			Type_set: type /= Void
 		end;
 
 	storage_init (other: CONTEXT_TYPE) is
 		do
 			set_type (other)
 		ensure
-			Type_set: not (type = Void) 
+			Type_set: type /= Void 
 		end;
 
--- ****
--- Data
--- ****
+feature -- Data
 
 	type: CONTEXT_TYPE;
 
@@ -59,18 +43,12 @@ feature
 			type := other
 		end;
 
--- **************
--- Stone features
--- **************
-
-	source: WIDGET is do end;
-
 	identifier: INTEGER is
 		do
 			Result := - type.identifier
 		end;
 
-	original_stone: ARG is
+	data: ARG is
 		do
 			Result := Current
 		end;
@@ -83,6 +61,11 @@ feature
 	symbol: PIXMAP is
 		do
 			Result := type.symbol
+		end;
+
+	eiffel_type: STRING is
+		do
+			Result := type.eiffel_type
 		end;
 
 -- **************

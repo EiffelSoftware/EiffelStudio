@@ -5,12 +5,10 @@ inherit
 	EB_BUTTON;
 	HOLE
 		redefine
-			stone, compatible
+			process_context
 		end
-	CONTEXT_STONE
-		redefine
-			transportable
-		end
+	CONTEXT_STONE;
+	CONTEXT_DRAG_SOURCE
 	
 creation
 	make
@@ -22,26 +20,6 @@ feature {NONE}
 	target: WIDGET is
 		do
 			Result := Current
-		end;
-
-	identifier: INTEGER is
-		do
-			Result := original_stone.identifier
-		end
-
-	eiffel_type: STRING is
-		do
-			Result := original_stone.eiffel_type
-		end
-
-	entity_name: STRING is
-		do
-			Result := original_stone.entity_name
-		end
-
-	eiffel_text: STRING is
-		do
-			Result := original_stone.entity_name
 		end;
 
 	focus_label: FOCUS_LABEL is
@@ -56,7 +34,7 @@ feature {NONE}
 
 feature 
 
-	original_stone: CONTEXT is
+	data: CONTEXT is
 		do
 			Result := associated_editor.edited_context
 		end;
@@ -68,21 +46,8 @@ feature
 
 	context_label: STRING is
 		do
-			Result := original_stone.label
+			Result := data.label
 		end;
-
-	transportable: BOOLEAN is
-		do
-			Result := original_stone /= Void
-		end;
-
-	stone: CONTEXT_STONE
-
-	compatible (s: CONTEXT_STONE): BOOLEAN is
-		do
-			stone ?= s
-			Result := stone /= Void
-		end
 
 	make (ed: CONTEXT_EDITOR; a_parent: COMPOSITE) is
 		require
@@ -99,17 +64,12 @@ feature
 			Result := Pixmaps.context_pixmap
 		end;
 
-	label: STRING is
-		do
-			Result := original_stone.label
-		end;
-
 feature {NONE}
 
-	process_stone is
+	process_context (dropped: CONTEXT_STONE) is
 			-- Set the new edited context
 		do
-			associated_editor.set_edited_context (stone.original_stone)
+			associated_editor.set_edited_context (dropped.data)
 		end
 
 end

@@ -15,6 +15,11 @@ feature
 			Result := Pixmaps.resize_pixmap
 		end
 
+	selected_symbol: PIXMAP is
+		once
+			Result := Pixmaps.selected_resize_pixmap
+		end
+
 	form_number: INTEGER is
 		do
 			Result := Context_const.bulletin_resize_form_nbr

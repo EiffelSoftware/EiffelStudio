@@ -14,7 +14,7 @@ feature
 
 	make (s: STATE_CIRCLE) is
 		do
-			identifier := s.identifier;
+			identifier := s.data.identifier;
 			x := s.center.x;
 			y := s.center.y
 		end;

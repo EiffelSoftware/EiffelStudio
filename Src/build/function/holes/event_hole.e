@@ -13,14 +13,13 @@ class EVENT_HOLE
 
 inherit
 
-	LABELS;
 	ELMT_HOLE
 		rename
 			make as elmt_hole_make
 		redefine
-			stone, associated_function,
+			associated_function,
 			associated_symbol, associated_label,
-			compatible
+			stone_type, process_event
 		end
 
 creation
@@ -34,12 +33,9 @@ feature
 			elmt_hole_make (a_parent, func);
 		end;
 
-	stone: EVENT_STONE;
-	
-	compatible (s: EVENT_STONE): BOOLEAN is
+	stone_type: INTEGER is
 		do
-			stone ?= s;
-			Result := stone /= Void;
+			Result := Stone_types.event_type
 		end;
 
 feature {NONE}
@@ -53,7 +49,12 @@ feature {NONE}
 
 	associated_label: STRING is
 		do
-			Result := Event_label
+			Result := Widget_names.event_label
+		end;
+
+	process_event (dropped: EVENT_STONE) is
+		do
+			associated_function.update_input_hole (dropped);
 		end;
 
 end

@@ -29,6 +29,11 @@ feature {NONE} -- Interface
 			Result := Context_const.label_text_att_form_nbr
 		end;
 
+	format_number: INTEGER is
+		do
+			Result := Context_const.attribute_format_nbr
+		end;
+
 	Label_alignment_cmd: LABEL_ALIGNMENT_CMD is
 		once
 			!!Result

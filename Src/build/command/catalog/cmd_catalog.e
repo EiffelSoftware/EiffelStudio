@@ -150,6 +150,8 @@ feature {NONE}
 
 feature 
 
+	focus_label: FOCUS_LABEL;
+
 	make (a_screen: SCREEN) is
 		local
 			del_com: DELETE_WINDOW;
@@ -236,21 +238,26 @@ feature
 			-- currently being edited (in either the type or
 			-- instance editors)
 		local
-			cmd_eds: LINKED_LIST [CMD_EDITOR]
+			cmd_eds: LINKED_LIST [CMD_EDITOR];
+			found: BOOLEAN;
+			ed: CMD_EDITOR
 		do
 			update_icon_stone (cmd);
 			cmd_eds := window_mgr.cmd_editors;
 			from
 				cmd_eds.start
 			until
-				cmd_eds.after or else 
-				cmd_eds.item.current_command.equivalent (cmd)
+				cmd_eds.after or else found
 				--! There is only one type editor per command
 			loop
+				ed := cmd_eds.item;
+				if ed.current_command /= Void then
+					found := ed.current_command = cmd
+				end;
 				cmd_eds.forth
 			end;		
-			if not cmd_eds.after then
-				cmd_eds.item.update_title
+			if found then
+				ed.update_title
 			end		
 		end;
 

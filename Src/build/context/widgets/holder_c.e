@@ -4,18 +4,9 @@ deferred class COMPOSITE_C
 inherit
 
 	CONTEXT
-		rename
-			process_stone as old_process_stone
 		redefine
-			widget
+			widget, compatible, process_context, process_type
 		end;
-
-	CONTEXT
-		redefine
-			process_stone, widget
-		select
-			process_stone
-		end
 
 feature 
 
@@ -42,67 +33,99 @@ feature
 			end;
 		end;
 
-	
+	default_foreground_color: COLOR is
+		do
+			Result := widget.foreground_color
+		end;
+
+	set_default_foreground_color (color: COLOR) is
+		do
+			widget.set_foreground_color (color)
+		end;
+
 feature {NONE}
 
-	process_stone is
+	compatible (st: STONE): BOOLEAN is
+		do
+			Result :=
+				st.stone_type = Stone_types.attribute_type or else 
+				st.stone_type = Stone_types.context_type or else
+				st.stone_type = Stone_types.type_stone_type
+		end;
+
+	process_type (dropped: TYPE_STONE) is
 			-- Process stone in current hole
 		local
 			context_stone: CONTEXT_STONE;
 			a_type: CONTEXT_TYPE;
 			group_stone: GROUP_ICON_STONE;
 			a_context: CONTEXT;
-			dropped_context: CONTEXT;
 			window_c: WINDOW_C;
-			a_temp_wind: TEMP_WIND_C;
-			new_x, new_y: INTEGER
+			type_stone: TYPE_STONE
 		do
-			old_process_stone;
-			if 
-				not original_stone.is_in_a_group 
-			then
-				group_stone ?= stone;
+			if not data.is_in_a_group then
+				type_stone ?= dropped;
+				group_stone ?= type_stone;
 				if group_stone /= Void then
-					stone := group_stone.original_stone;
+					type_stone := group_stone.data;
 				end;
-				a_type ?= stone;
-				context_stone ?= stone;	
+				a_type := type_stone.data.type;
 				if a_type /= Void then
-					if 
-						(a_type /= context_catalog.perm_wind_type) then
+					if (a_type /= context_catalog.perm_wind_type) then
 						if
 							(a_type = context_catalog.temp_wind_type) and
-							(context_type = context_catalog.perm_wind_type)
+							(type = context_catalog.perm_wind_type)
 						then
 							a_context := a_type.create_context (Current);
-						elseif 	
-							(a_type /= context_catalog.temp_wind_type) 
+						elseif
+							(a_type /= context_catalog.temp_wind_type)
 						then
 							a_context := a_type.create_context (Current);
 						end;
 					end;
-				elseif context_stone /= Void then
-					dropped_context := context_stone.original_stone;
-					window_c ?= dropped_context;
-					if (window_c = Void) then
-						a_context := dropped_context.create_context (Current);
-					elseif window_c.context_type = context_catalog.temp_wind_type and
-						context_type = context_catalog.perm_wind_type then
-						a_context := dropped_context.create_context (Current);
-					end;
-				end;
-				if a_context /= Void then
-					a_temp_wind ?= a_context;
-					if a_temp_wind = Void then
-						if a_context.parent /= Void and then a_context.parent.is_bulletin then
-							a_context.set_position (eb_screen.x, eb_screen.y)
-						end
-					else
-						a_temp_wind.popup;
-					end;
-					a_context.widget.manage;
-					tree.display (a_context);
+					process_created_context (a_context)
 				end;
 			end
 		end;
+
+	process_created_context (a_context: CONTEXT) is
+		local
+			a_temp_wind: TEMP_WIND_C;
+		do
+			if a_context /= Void then
+				a_temp_wind ?= a_context;
+				if a_temp_wind = Void then
+					if a_context.parent /= Void and then
+						a_context.parent.is_bulletin 
+					then
+						a_context.set_position (eb_screen.x, eb_screen.y);
+					end
+				else
+					a_temp_wind.popup
+				end;
+				a_context.widget.manage;
+				tree.display (a_context);
+			end;
+		end;
+
+	process_context (dropped: CONTEXT_STONE) is
+			-- Process stone in current hole
+		local
+			a_context: CONTEXT;
+			dropped_context: CONTEXT;
+			window_c: WINDOW_C;
+		do
+			if not data.is_in_a_group then
+				dropped_context := dropped.data;
+				window_c ?= dropped_context;
+				if (window_c = Void) then
+					a_context := dropped_context.create_context (Current);
+				elseif window_c.type = context_catalog.temp_wind_type and
+					type = context_catalog.perm_wind_type then
+					a_context := dropped_context.create_context (Current);
+				end;
+				process_created_context (a_context)
+			end
+		end;
+
 end

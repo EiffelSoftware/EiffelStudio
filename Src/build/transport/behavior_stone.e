@@ -13,30 +13,29 @@ inherit
 
 	STONE
 		redefine
-			original_stone
+			data
 		end
 	
 feature 
 
-	identifier: INTEGER is
-		deferred
-		end;
-
-	original_stone: BEHAVIOR is
-		deferred
-		end;
-
-	context: CONTEXT is
-		deferred
-		end;
-
-	labels: LINKED_LIST [CMD_LABEL] is
+	data: BEHAVIOR is
 		deferred
 		end;
 
 	stone_cursor: SCREEN_CURSOR is
 		do
 			Result := Cursors.behavior_cursor
-		end
+		end;
+
+	process (hole: HOLE) is
+			-- Process Current stone dropped in hole `hole'.
+		do
+			hole.process_behavior (Current)
+		end;
+
+	stone_type: INTEGER is
+		do
+			Result := Stone_types.behavior_type
+		end;
 
 end

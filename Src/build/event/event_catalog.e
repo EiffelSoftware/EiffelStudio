@@ -5,13 +5,15 @@ inherit
 	
 	EVENT_LABELS;
 	COMMAND_ARGS;
-	CATALOG [EVENT];
+	CATALOG [EVENT]
+		rename
+			make as catalog_make
+		end;
 
 creation
 
 	make
 
-	
 feature {NONE}
 
 	general_events: GENERAL_EVENTS;
@@ -32,12 +34,27 @@ feature {NONE}
 
 	text_f_events: TEXT_F_EVENTS;
 
-	
+	make (a_name: STRING; a_parent: COMPOSITE; fl: FOCUS_LABEL) is
+			-- Create the catalog interface with `a_screen'
+			-- as the parent.
+		require
+			valid_fl: fl /= Void
+		do
+			focus_label := fl;
+			catalog_make (a_name, a_parent);
+		end;
+
 feature 
+
+	focus_label: FOCUS_LABEL;
+			-- Focus label (context editor focus label)
 
 	create_interface is 
 			-- Create interface of an event_catalog 
 		do
+			!!button_rc.make (Widget_names.row_column, Current);
+			button_rc.set_preferred_count (1);
+			button_rc.set_row_layout;
 			!!general_events.make (Current);
 			!!mouse_events.make (Current);
 			!!translations_events.make (Current);
@@ -47,39 +64,27 @@ feature
 			!!drawing_events.make (Current);
 			!!list_events.make (Current);
 			!!scale_events.make (Current);
-			!!button_rc.make (Widget_names.row_column, Current);
 			!!page_sw.make (Widget_names.scroll, Current);
-			-- FIXME!!!
-			--!!focus_label.make (button_form);
-			--!!type_label.make (Widget_names.label1, button_form);
-
 			!!pages.make;
 
-			--button_form.attach_top (type_label, 0);
-			--button_form.attach_bottom (type_label, 0);
-			--button_form.attach_right (type_label, 0);
-			--button_form.attach_top (focus_label, 0);
-			--button_form.attach_bottom (focus_label, 0);
-			--button_form.attach_right_widget (type_label, focus_label, 10);
-			--button_form.detach_left (type_label);
-			--button_form.detach_left (focus_label);
-
-			--attach_left (button_form, 10);
-			--attach_right (button_form, 10);
-			--attach_top (button_form, 10);
-			attach_left (page_sw, 10);
-			attach_right (page_sw, 10);
-			--attach_top_widget (button_form, page_sw, 10);
-			attach_bottom (page_sw, 10);
+			attach_top (button_rc, 0);
+			attach_left (page_sw, 0);
+			attach_right (page_sw, 0);
+			attach_top_widget (button_rc, page_sw, 2);
+			attach_left (button_rc, 2);
+			attach_bottom (page_sw, 2);
 			define_event_pages;
 			update_interface;
+			if not current_page.empty then
+				current_page.go_i_th (1);
+				current_page.update_display
+			end;
 			button_events.hide_button;
 			text_events.hide_button;
 			text_f_events.hide_button;
 			drawing_events.hide_button;
 			list_events.hide_button;
 			scale_events.hide_button;
-			focus_label.set_text ("");
 		end;
 
 	define_event_pages is
@@ -112,6 +117,18 @@ feature
 			translations_events.update_content
 		end;
 
+	unregister_holes is
+		do
+			general_events.unregister_holes
+			mouse_events.unregister_holes
+			translations_events.unregister_holes
+			button_events.unregister_holes
+			text_events.unregister_holes
+			text_f_events.unregister_holes
+			drawing_events.unregister_holes
+			list_events.unregister_holes
+		end;
+
 	
 feature {NONE}
 
@@ -139,35 +156,33 @@ feature
 			list ?= a_context;
 			scale_c ?= a_context;
 
-			if not (button_c = Void) then
+			if button_c /= Void then
 				optional_page := button_events
-			elseif not (text_c = Void) then
+			elseif text_c /= Void then
 				optional_page := text_events
-			elseif not (text_f_c = Void) then
+			elseif text_f_c /= Void then
 				optional_page := text_f_events
-			elseif not (list = Void) then
+			elseif list /= Void then
 				optional_page := list_events
-			elseif not (scale_c = Void) then
+			elseif scale_c /= Void then
 				optional_page := scale_events
-			elseif not (dr_area_c = Void) then
+			elseif dr_area_c /= Void then
 				optional_page := drawing_events
 			else
 				optional_page := Void
 			end;
-			if 
-				(previous_optional_page /= optional_page) 
-			then
-				if not (previous_optional_page = Void) then
+			if previous_optional_page /= optional_page then
+				if previous_optional_page /= Void then
 					previous_optional_page.hide_button;
 				end;
-				if not (optional_page = Void) then
+				if optional_page /= Void then
 					optional_page.show_button
 				end;
 			end;
-			if not (optional_page = Void) then
-				execute (optional_page);
+			if optional_page /= Void then
+				update_page (optional_page);
 			else
-				execute (general_events);
+				update_page (general_events);
 			end;
 			if (optional_page = button_events) then
 				button_events.update_content (a_context)

@@ -19,11 +19,14 @@ feature
 			Result := - Event_const.move_ev_id
 		end;
 
-	make is
+	symbol: PIXMAP is
 		do
-			set_symbol (Pixmaps.move_pixmap);
-			set_label (Event_const.move_label);
-			event_table.put (Current, - identifier);
+			Result := Pixmaps.move_pixmap
+		end;
+
+	internal_name: STRING is
+		do
+			Result := Event_const.move_label
 		end;
 
 	eiffel_text: STRING is "add_move_action (";	

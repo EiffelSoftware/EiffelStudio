@@ -19,6 +19,8 @@ creation
 	
 feature 
 
+	data: CONTEXT;
+
 	mfont: FONT is
 		once
 			if Result = Void then
@@ -44,26 +46,28 @@ feature
 	select_figure is
 		do
 			selected := True;
+			data.set_selected_color;
 			from
-				original_stone.child_start
+				data.child_start
 			until
-				original_stone.child_offright
+				data.child_offright
 			loop
-				original_stone.child.tree_element.select_figure;
-				original_stone.child_forth
+				data.child.tree_element.select_figure;
+				data.child_forth
 			end;
 		end;
 
 	deselect is
 		do
+			data.deselect_color;
 			selected := False;
 			from
-				original_stone.child_start
+				data.child_start
 			until
-				original_stone.child_offright
+				data.child_offright
 			loop
-				original_stone.child.tree_element.deselect;
-				original_stone.child_forth
+				data.child.tree_element.deselect;
+				data.child_forth
 			end;
 		end;
 
@@ -85,11 +89,11 @@ feature
 		do
 			if show_children /= visibility then
 				if show_children then
-					original_stone.hide_tree_elements;
+					data.hide_tree_elements;
 					show_children := False;
 				else
 					show_children := True;
-					original_stone.show_tree_elements;
+					data.show_tree_elements;
 				end;
 			end;
 		end;
@@ -107,7 +111,7 @@ feature
 	make (a_context: CONTEXT) is
 		do
 			show_children := True;
-			original_stone := a_context;
+			data := a_context;
 			text_image_create;
 			set_foreground_color (App_const.black);
 			set_background_color (App_const.white);
@@ -148,11 +152,11 @@ feature
 			if show_children then
 				draw_circle := False;
 				from
-					original_stone.child_start
+					data.child_start
 				until
-					original_stone.child_offright
+					data.child_offright
 				loop
-					child := original_stone.child;
+					child := data.child;
 					tree.set_new_position (child_x, child_y, child_x);
 					child_position := child.tree_element.coord_calc;
 					if (child.left_sibling = Void) then
@@ -164,13 +168,13 @@ feature
 						child_y := tree.current_position.y;
 						max_y := child_position.y;
 					end;
-					original_stone.child_forth;
+					data.child_forth;
 				end;
-				if original_stone.arity /= 0 then
+				if data.arity /= 0 then
 					Result.set_y ((min_y + max_y) // 2);
 				end;
 			else
-				draw_circle := (original_stone.arity /= 0);
+				draw_circle := (data.arity /= 0);
 			end;
 			set_top_left (Result);
 			rect_center := middle_center;
@@ -181,12 +185,12 @@ feature
 			right_ref_point.set_x (right_ref_point.x + 5);
 			if show_children then
 				from
-					original_stone.child_start
+					data.child_start
 				until
-					original_stone.child_offright
+					data.child_offright
 				loop
-					original_stone.child.tree_element.set_parent_reference (right_ref_point);
-					original_stone.child_forth;
+					data.child.tree_element.set_parent_reference (right_ref_point);
+					data.child_forth;
 				end;	
 			end;	
 		end;
@@ -198,50 +202,10 @@ feature
 
 	expand_action is
 		do
-			if original_stone.arity /= 0 then
+			if data.arity /= 0 then
 				set_children_visibility (not show_children);
-				tree.display (original_stone);
+				tree.display (data);
 			end;
-		end;
-
-	-- *****************
-	-- * Stone Section *
-	-- *****************
-
-	original_stone: CONTEXT;
-
-	source: WIDGET is
-		do
-		end;
-
-	symbol: PIXMAP is
-		do
-			Result := original_stone.symbol
-		end;
-
-	label: STRING is
-		do
-			Result := original_stone.label
-		end;
-
-	identifier: INTEGER is
-		do
-			Result := original_stone.identifier
-		end;
-
-	eiffel_type: STRING is
-		do
-			Result := original_stone.eiffel_type
-		end;
-
-	entity_name: STRING is
-		do
-			Result := original_stone.entity_name
-		end;
-
-	eiffel_text: STRING is
-		do
-			Result := original_stone.eiffel_text
 		end;
 
 end

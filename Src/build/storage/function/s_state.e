@@ -68,8 +68,8 @@ feature
 			else
 				Result.set_internal_name (internal_name);
 			end;
-			if not (visual_name = Void) then
-				Result.set_visual_name (visual_name);
+			if visual_name /= Void then
+				Result.retrieve_set_visual_name (visual_name);
 			end;
 			from
 				input_list.start;

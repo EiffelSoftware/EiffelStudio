@@ -14,12 +14,17 @@ creation
 
 feature 
 
+	form_number: INTEGER;
+
 	symbol: PIXMAP is
 		once
 			Result := Pixmaps.attribute_pixmap
 		end;
 
-	form_number: INTEGER;
+	selected_symbol: PIXMAP is
+		once
+			Result := Pixmaps.selected_attribute_pixmap
+		end;
 
 	focus_string: STRING is 
 		do

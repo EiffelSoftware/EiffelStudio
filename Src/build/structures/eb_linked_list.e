@@ -1,4 +1,4 @@
-class EB_LINKED_LIST [T->STONE_PARENT]
+class EB_LINKED_LIST [T->DATA]
 
 inherit
 
@@ -36,18 +36,18 @@ feature
 			-- (Do not wipe out other).
 		local
 			copied_l: like other
-        do
+		do
 			copied_l := other.duplicate;
 			finish;
 			merge_right (copied_l);
-        end;
+		end;
 
-    set (other: EB_LINKED_LIST [like item]) is
-            -- Set the current list to `other' and manage the
-            -- corresponding icons to `other'.
-        do
-		wipe_out;
-		merge (other);	
-        end; -- set
+	set (other: EB_LINKED_LIST [like item]) is
+			-- Set the current list to `other' and manage the
+			-- corresponding icons to `other'.
+		do
+			wipe_out;
+			merge (other);	
+		end; -- set
 
 end

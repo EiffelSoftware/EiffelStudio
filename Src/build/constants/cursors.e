@@ -17,6 +17,11 @@ feature
 			Result := cursor_file_content ("behavior.curs")
 		end;
 
+	Color_cursor: SCREEN_CURSOR is
+		once
+			Result := cursor_file_content ("color.curs")
+		end;
+
 	Command_cursor: SCREEN_CURSOR is
 		once
 			Result := cursor_file_content ("command.curs")

@@ -73,8 +73,8 @@ feature {NONE}
 			cut_label_command: APP_CUT_LABEL
 		do
 			line := a_line;
-			source_element := line.source.original_stone;
-			dest_element := line.destination.original_stone;
+			source_element := line.source.data;
+			dest_element := line.destination.data;
 			!!labels_cut.make;
 			transitions := application_editor.transitions;
 			temp_tran := transitions.transition (source_element,
@@ -120,7 +120,7 @@ feature {NONE}
 			sel_figure := application_editor.selected_figure;
 			if
 				not (sel_figure = Void) and 
-				(sel_figure.original_stone = source_element) and
+				(sel_figure.data = source_element) and
 				not (labels_cut = Void) 
 				and not labels_cut.Empty
 			then

@@ -8,14 +8,13 @@ inherit
 		rename
 			create_context as button_create_context
 		redefine
-			add_widget_callbacks, remove_widget_callbacks,
-			initialize_transport,
+			add_widget_callbacks, initialize_transport,
 			stored_node, is_selectionnable, widget, add_to_option_list
 		end;
 
 	BUTTON_C
 		redefine
-			add_widget_callbacks, remove_widget_callbacks, initialize_transport,
+			add_widget_callbacks, initialize_transport,
 			stored_node, is_selectionnable, create_context, widget,
 			add_to_option_list
 		select
@@ -24,7 +23,7 @@ inherit
 	
 feature 
 
-	context_type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE is
 		do
 			Result := context_catalog.menu_entry_type
 		end;
@@ -46,11 +45,6 @@ feature {NONE}
 		do
 		end;
 
-	remove_widget_callbacks is
-		do
-		end;
-
-	
 feature 
 
 	create_oui_widget (a_parent: COMPOSITE) is
@@ -98,9 +92,13 @@ feature
 -- Storage features
 -- ****************
 
-	stored_node: S_MENU_ENTRY is
+	stored_node: S_MENU_ENTRY_R1 is
+		local
+			foobar: S_MENU_ENTRY
 		do
 			!!Result.make (Current);
+			if foobar = Void then end;
+				-- So it won't be dead code removed
 		end;
 
 end

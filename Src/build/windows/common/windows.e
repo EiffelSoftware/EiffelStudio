@@ -37,8 +37,12 @@ feature {NONE} -- Initial windowing
 
 	display_init_windows is
 		do
-			tree.realize
-			context_catalog.realize
+			if not tree.realized then
+				tree.realize
+			end;
+			if not context_catalog.realized then
+				context_catalog.realize
+			end
 		end
 
 feature {NONE} -- Windows
@@ -50,7 +54,7 @@ feature {NONE} -- Windows
 
 	app_editor: APP_EDITOR is
 		once
-			!!Result.make (eb_screen)
+			!!Result.make 
 		end
 
 	history_window: HISTORY_WND is

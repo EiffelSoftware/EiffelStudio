@@ -52,21 +52,11 @@ feature
 			set_label (associated_label);
 			set_symbol (associated_symbol);
 		end;
-
-	set_stone (st: STONE) is
-		do
-			stone := st
-		end; -- set_stone
-
 	
 feature {NONE}
 
-	process_stone is
-			-- Replace symbol and label of current
-			-- hole by those of received stone
-			-- and update associated function.
+	stone_type: INTEGER is 
 		do
-			associated_function.update (Current);
 		end;
 
 end

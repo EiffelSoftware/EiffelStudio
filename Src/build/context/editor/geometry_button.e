@@ -15,6 +15,11 @@ feature
 			Result := Pixmaps.geometry_pixmap
 		end
 
+	selected_symbol: PIXMAP is
+		once
+			Result := Pixmaps.selected_geometry_pixmap
+		end
+
 	form_number: INTEGER is
 		do
 			Result := Context_const.geometry_form_nbr

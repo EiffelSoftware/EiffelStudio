@@ -15,6 +15,11 @@ feature
 			Result := Pixmaps.grid_pixmap
 		end
 
+	selected_symbol: PIXMAP is
+		once
+			Result := Pixmaps.selected_grid_pixmap
+		end
+
 	form_number: INTEGER is
 		do
 			Result := Context_const.grid_form_nbr

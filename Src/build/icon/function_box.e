@@ -1,5 +1,5 @@
 
-class FUNCTION_BOX [T -> STONE] 
+class FUNCTION_BOX [T -> DATA] 
 
 inherit
 

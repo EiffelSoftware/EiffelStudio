@@ -1,5 +1,5 @@
 
-class ICON_BOX [T->STONE] 
+class ICON_BOX [T->DATA] 
 
 inherit
 
@@ -74,7 +74,7 @@ feature
 				end;
 				icons.go_i_th (index);
 				icon := icons.item;
-				icon.set_original_stone (elt);
+				icon.set_data (elt);
 				icon.set_managed (True);
 			end;
 		ensure then
@@ -150,7 +150,7 @@ feature
 		do
 			if not (icons = Void) then
 				icons.go_i_th (index);
-				icons.item.set_original_stone (item);
+				icons.item.set_data (item);
 			end
 		end;
 
@@ -170,8 +170,8 @@ feature
 				after 
 			loop
 				icon := icons.item;
-				if icon.original_stone /= item then
-					icon.set_original_stone (item);
+				if icon.data /= item then
+					icon.set_data (item);
 					if not icon.managed then
 						icon.set_managed (True);
 					end;

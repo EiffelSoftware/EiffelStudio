@@ -12,7 +12,6 @@ inherit
 			element,
 			page
 		end;
-
 	CAT_ADD_ELEMENT
 		redefine
 			undo, redo, catalog_work,
@@ -21,33 +20,26 @@ inherit
 		select
 			undo, redo, catalog_work
 		end;
-
 	WINDOWS
-		export
-			{NONE} all
-		end
 	
 feature {NONE}
+
+	element: CMD;
+
+	page: COMMAND_PAGE;
 
 	catalog: CMD_CATALOG is
 		do
 			Result := command_catalog
 		end;
 
-	element: CMD;
-
-	page: COMMAND_PAGE;
-
 	reset_element is
 		do
-			if
-				not (element.command_editor = Void)
-			then
+			if element.command_editor /= Void then
 				element.command_editor.clear;
 				element.reset
 			end
-		end
-
+		end;
 
 	catalog_work is
 		do

@@ -20,12 +20,12 @@ feature
 			if (state_circle = Void) then
 				io.putstring ("Does not know how to store black boxes yet%N");
 			end;
-			source := state_circle.identifier;
+			source := state_circle.data.identifier;
 			state_circle ?= s.destination;
 			if (state_circle = Void) then
 				io.putstring ("Does not know how to store black boxes yet%N");
 			end;
-			destination := state_circle.identifier;
+			destination := state_circle.data.identifier;
 			bidirectional := s.bi_directional;	
 			x1 := s.tail.x;
 			y1 := s.tail.y;

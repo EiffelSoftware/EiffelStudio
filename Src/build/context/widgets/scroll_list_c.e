@@ -10,14 +10,16 @@ inherit
 			reset_modified_flags as old_reset_modified_flags
 		redefine
 			stored_node, context_initialization, is_fontable,
-			widget, position_initialization, set_size
+			widget, position_initialization, set_size,
+			widget_creation_routine_name
 		end;
 
 	PRIMITIVE_C
 		redefine
 			stored_node, reset_modified_flags, copy_attributes, 
 			context_initialization, is_fontable, 
-			widget, position_initialization, set_size
+			widget, position_initialization, set_size,
+			widget_creation_routine_name
 		select
 			copy_attributes, reset_modified_flags
 		end;
@@ -29,7 +31,7 @@ feature
 			Result := Pixmaps.scroll_list_pixmap
 		end;
 
-	context_type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE is
 		do
 			Result := context_catalog.scroll_page.scroll_list_type
 		end;
@@ -39,7 +41,7 @@ feature
 			i: INTEGER;
 			text: STRING;
 		do
-			!! widget.make (entity_name, a_parent);
+			!! widget.make_fixed_size (entity_name, a_parent);
 			from
 				i := 1;
 			until
@@ -67,6 +69,11 @@ feature {NONE}
 		once
 			!!Result.make ("Scroll_list");
 		end;
+
+	widget_creation_routine_name: STRING is
+		once
+			Result := "make_fixed_size"
+		end
 
 feature 
 
@@ -114,17 +121,18 @@ feature
 		local
 			eb_bulletin: SCALABLE;
 			it_count: INTEGER;
-			not_managed: BOOLEAN
 		do
 			size_modified := True;
+			widget.unmanage;
 			widget.set_size (new_w, new_h);
-				-- Then shack it so the height will match
+				-- Then shake it so the height will match
 				-- the visible count
 			it_count := widget.visible_item_count;
 			widget.set_visible_item_count (it_count + 1);
 			widget.set_visible_item_count (it_count);
 			eb_bulletin ?= parent.widget;
 			eb_bulletin.update_ratios (widget);
+			widget.manage;
 		end;
 
 feature {NONE}
@@ -172,17 +180,12 @@ feature {CONTEXT}
 feature 
 
 	stored_node: S_SCROLL_LIST_R1 is
+		local
+			foobar: S_SCROLL_LIST
 		do
 			!!Result.make (Current);
-			if old_stored_node = Void then end;
+			if foobar = Void then end;
 				-- So it won't be dead code removed
-		end;
-
-	old_stored_node: S_SCROLL_LIST is
-			-- Ebuild can have a reference to it
-			-- in order to retrieve previous project
-			-- not having S_SCROLL_LIST_R1
-		do
 		end;
 
 end

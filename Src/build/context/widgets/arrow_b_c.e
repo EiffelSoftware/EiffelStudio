@@ -31,7 +31,7 @@ feature
 			Result := Pixmaps.arrow_b_pixmap
 		end;
 
-	context_type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE is
 		do
 			Result := context_catalog.primitive_page.arrow_b_type
 		end

@@ -37,7 +37,7 @@ feature {NONE}
 
 	remove_yourself is
 		do
-			associated_editor.edited_function.remove_element_line (original_stone, True);
+			associated_editor.edited_function.remove_element_line (data, True);
 		end;
  
 end

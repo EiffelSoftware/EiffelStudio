@@ -1,147 +1,147 @@
 class NAMER_WINDOW
 
 inherit
-    FORM_D
-        rename
-            make as form_d_make
-        end
-    COMMAND
+
+	TOP_SHELL
+		rename
+			make as shell_make
+		end
+	COMMAND;
+	CLOSEABLE;
+	CONSTANTS;
 
 creation
-    make
+	make
 
 feature
 	
-	association: RENAME_COMMAND
+	namable: NAMABLE
 
-feature {RENAME_COMMAND}
+	focus_label: FOCUS_LABEL
 
-    text: TEXT
-	ok_p: OK_BUTTON
-    cancel_p: CANCEL_BUTTON
-    new_name: STRING
+feature {NONE}
 
-    make (id: STRING; a_scr: SCREEN; who: RENAME_COMMAND) is
-        -- Build a namer with referenced by `id', on `a_scr'
-        -- making `who' the owner. the `who' association will
-        -- allow us to be intelligent enough to envoke the 
-        -- the rename feature of the caller.
-        require
-            has_identifier: id /= void
-            has_screen: a_scr /= void
-        local
-            shell: TOP_SHELL
-        do
-            -- keep track of our owner
-            association := who
+	text: TEXT
 
-            -- make the shell, to hold the widgets
-            !! shell.make ("shell", a_scr)
+	make (a_screen: SCREEN) is
+		local
+			form: FORM;
+			close_b: CLOSE_WINDOW_BUTTON;
+			del_com: DELETE_WINDOW;
+			ok_b: OK_BUTTON;
+			namer_hole: NAMER_WIN_EDIT_HOLE
+		do
+			-- make the form
+			shell_make (Widget_names.namer_window, a_screen)
+			!! form.make (Widget_names.form, Current);
+			!! focus_label.make (form);
+			!! close_b.make (Current, form, focus_label);
+			!! namer_hole.make (Current, form);
+			!! ok_b.make (Current, form);
+			!! text.make (Widget_names.textfield, form)
 
-            -- make the form
-            form_d_make (id, shell)
-            set_title ("Namer")
-            set_size (160, 70)
-			set_x_y (a_scr.x - real_x, a_scr.y - real_y)
-
-            -- a cancel (pict_color_b)
-           -- !! cancel_p.make ("cancel", Current)
-            attach_top (cancel_p, 3)
-            attach_right (cancel_p, 3)
-
-			-- an ok button (pict_color_b)
-			--!! ok_p.make ("ok", Current)
-			attach_top (ok_p, 3)
-			attach_right_widget (cancel_p, ok_p, 2)
-
-			-- micro help
-			!!focus_label.make (Current)
-			focus_label.set_text ("")
-			attach_top (focus_label, 3)
-			attach_left (focus_label, 3)
-			attach_right_widget (ok_p, focus_label, 3)
-
-            -- add a text field
-            !! text.make ("text", Current)
-            attach_left(text, 1)
-            attach_right(text, 1)
-			attach_top_widget (ok_p, text, 1)
-			attach_bottom (text, 1)
+			form.attach_top (namer_hole, 0)
+			form.attach_top (ok_b, 0)
+			form.attach_top (focus_label, 0)
+			form.attach_left (namer_hole, 0)
+			form.attach_right_widget (ok_b, focus_label, 0)
+			form.attach_left_widget (namer_hole, focus_label, 0)
+			form.attach_right_widget (close_b, ok_b, 0)
+			form.attach_right (close_b, 0);
+			form.attach_left(text, 2)
+			form.attach_right(text, 2)
+			form.attach_top_widget (focus_label, text, 0)
+			form.attach_top_widget (namer_hole, text, 0)
+			form.attach_top_widget (ok_b, text, 2)
+			form.attach_top_widget (close_b, text, 2)
+			form.attach_bottom (text, 2)
 
 			-- add callbacks and modal behaviour
-			text.set_action ("<Key>Return", Current, close_arg)
-			set_default_position (false)
-			set_action ("<Map>", Current, select_text)
-			set_action ("<Unmap>", Current, close_arg)
-
-            -- make sure the modal window is raised with each mouse move
-            add_pointer_motion_action(Current, raise_arg)
-            set_exclusive_grab
-
-			-- show the window
-			realize
-			popup
+			text.add_activate_action (Current, Current);
+			text.set_single_line_mode;
+			!! del_com.make (Current);
+			set_delete_command (del_com);
+			set_action ("<Map>,<Prop>", Current, Void);
 		end 
 
 feature
 
-	focus_label: FOCUS_LABEL
-
-	cancel is
-		-- discard the changes in the text field
-		-- then close the popup
+	set_namable (nam: like namable) is
+		require
+			valid_nam: nam /= Void
 		do
-			text.clear 
-			close	
-		end
+			namable := nam;
+			update_name;
+		end;
+
+	popup_with (nam: like namable) is
+		require
+			valid_nam: nam /= Void
+		do
+			set_namable (nam);
+			set_x_y (screen.x, screen.y);
+			if realized then
+				raise
+			else
+				realize;
+			end;
+		end;
+
+	popdown is
+		do
+			namable := Void;
+			text.clear;
+			set_title (Widget_names.translation_editor);
+			set_icon_name (Widget_names.translation_editor);
+			unrealize
+		end;
 
 	close is
-		-- close the popup
+			-- close the popup
 		do
-			set_no_grab
-			destroy
+			popdown
 		end
 
 	set_name is
-		-- set the name to text value
+			-- set the name to text value
+		local
+			namer_cmd: NAMER_CMD
 		do
-			new_name := text.text
-			association.named_object.set_visual_name(text.text)
-		end
+			!! namer_cmd;
+			namer_cmd.execute (Current);
+			namable.set_visual_name(text.text)
+		end;
+
+	update_name is
+		local
+			tmp: STRING;
+		do
+			!! tmp.make (0);
+			tmp.append (Widget_names.visual_name_label);
+			tmp.append (namable.label);
+			if namable.visual_name = Void then
+				text.clear;
+			else
+				text.set_text (namable.visual_name);
+			end;
+			set_title (tmp)
+			set_icon_name (tmp)
+		end;
 
 feature {NONE} -- Command Actions
 
-    close_arg: ANY is
-        once
-            !!Result
-        end
+	execute (arg: ANY) is
+		do
+			if arg = Void then
+				if text.text.count > 0 then
+					text.set_selection (0, text.text.count)
+				end
+			elseif not text.text.empty and then
+				not equal (text.text, namable.visual_name)
+			then
+				set_name;
+				popdown
+			end
+		end
 
-    raise_arg: ANY is
-        once
-            !!Result
-        end
-
-    select_text: ANY is
-        once
-            !!Result
-        end
-
-    execute (arg: ANY) is
-        do
-            if arg = raise_arg then
-                raise
-            end
-
-            if arg = select_text then
-                if text /= Void then
-                    text.set_selection (0, text.text.count)
-                end
-            end
-
-            if arg = close_arg then
-                new_name := text.text
-                association.named_object.set_visual_name(text.text)
-                close
-            end
-        end
-end -- NAMER_WINDOW
+end 

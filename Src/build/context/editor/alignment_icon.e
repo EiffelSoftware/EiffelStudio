@@ -8,7 +8,7 @@ inherit
 		rename
 			target as source
 		redefine
-			stone, compatible
+			process_context
 		end;
 	REMOVABLE
 
@@ -21,15 +21,6 @@ feature {NONE}
 
 	associated_box: ALIGNMENT_BOX;
 
-	stone: like Current;
-
-	compatible (s: like Current): BOOLEAN is
-		do
-			stone ?= s;
-			Result := stone /= Void;
-		end;
-
-	
 feature 
 
 	make (ab: ALIGNMENT_BOX) is
@@ -41,9 +32,10 @@ feature
 	
 feature {NONE}
 
-	process_stone is
+	process_context (dropped: CONTEXT_STONE) is
 		do
-			associated_box.insert_after (original_stone, stone.original_stone)
+			associated_box.insert_after (data, 
+							dropped.data)
 		end;
 
 	remove_yourself is

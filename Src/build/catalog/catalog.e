@@ -1,5 +1,5 @@
 
-deferred class CATALOG [T->STONE] 
+deferred class CATALOG [T->DATA] 
 
 inherit
 
@@ -8,7 +8,6 @@ inherit
 		rename
 			make as form_create
 		end;
-	COMMAND;
 
 feature 
 
@@ -28,7 +27,9 @@ feature {NONE}
 
 feature 
 
-	focus_label: FOCUS_LABEL;
+	focus_label: FOCUS_LABEL is
+		deferred
+		end;
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create the catalog interface with `a_screen' 
@@ -106,9 +107,13 @@ feature
 				opt_pages.forth
 			end;
 			current_page.make_unmanaged (page_sw);
-			page_sw.set_working_area (current_page);
-			current_page.manage;
 			current_page.set_selected_symbol
+			if not current_page.empty then
+				current_page.go_i_th (1);
+				current_page.update_display
+			end
+			current_page.manage;
+			page_sw.set_working_area (current_page);
 		end; -- update_interface 
 
 	set_initial_page (page: CAT_PAGE [T]) is
@@ -132,32 +137,34 @@ feature {NONE}
 			current_page_non_void: current_page /= Void
 		do
 			current_page.hide;
-			current_page.set_symbol
+			current_page.set_symbol;
 			page.set_selected_symbol
 			current_page := page;
 			page_sw.set_working_area (page);
 		end;
 
-	execute (argument: ANY) is
+feature
+
+	update_page (page: CAT_PAGE [T]) is
 			-- Execute the command.
 		local
-			page: CAT_PAGE [T]
+			mp: MOUSE_PTR
 		do
-			page ?= argument;
-			if  page /= Void then
-				if current_page /= page then
-					if not page.is_visible then
-						page.make_unmanaged (page_sw);
-						if not page.empty then
-							page.go_i_th (1);
-							page.update_display
-						end
-						page.manage;
-					else
-						page.show;
-					end;
-					set_current_page (page);
-				end
+			if current_page /= page then
+				if not page.is_visible then
+					!! mp;					
+					mp.set_watch_shape;
+					page.make_unmanaged (page_sw);
+					if not page.empty then
+						page.go_i_th (1);
+						page.update_display
+					end
+					page.manage;
+					mp.restore
+				else
+					page.show;
+				end;
+				set_current_page (page);
 			end
 		end; -- execute
 

@@ -3,10 +3,9 @@ class STATE
 
 inherit
 
-	STATE_STONE;
 	FUNCTION
 		redefine
-			func_editor, input_stone, output_stone,
+			func_editor, input_data, output_data,
 			drop_pair
 		end;
 	GRAPH_ELEMENT;
@@ -22,7 +21,6 @@ feature -- Creation
 
 	make is
 		do
-			set_symbol (Pixmaps.state_pixmap_small);
 			!!input_list.make;
 			!!output_list.make;
 			int_generator.next;
@@ -33,6 +31,16 @@ feature -- Creation
 		do
 			namer.reset;
 			int_generator.reset;
+		end;
+
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.state_pixmap_small
+		end;
+
+	help_file_name: STRING is
+		do
+			Result := Help_const.state_help_fn
 		end;
 
 feature -- Editable
@@ -52,9 +60,9 @@ feature -- Anchors
 
 	func_editor: STATE_EDITOR;
 
-	input_stone: CONTEXT;
+	input_data: CONTEXT;
 
-	output_stone: BEHAVIOR;
+	output_data: BEHAVIOR;
 
 feature -- Command Labels
 
@@ -66,12 +74,12 @@ feature -- Command Labels
 		do
 			!!Result.make;
 			from
-				old_pos := position;
-				start
+				old_pos := output_list.index;
+				output_list.start
 			until
-				off
+				output_list.after
 			loop
-				sublist := output.labels;
+				sublist := output_list.item.labels;
 				from
 					sublist.start
 				until
@@ -80,22 +88,22 @@ feature -- Command Labels
 					Result.put_right (sublist.item);
 					sublist.forth
 				end;
-				forth
+				output_list.forth
 			end;
-			go_i_th (old_pos)
+			output_list.go_i_th (old_pos)
 		end;
 
 	identifier: INTEGER;
 
 	set_internal_name (s: STRING) is
-        do
-            if s.empty then
-                namer.next;
-                set_label (namer.value)
-            else
-                set_label (s);
-            end;
-        end;
+		do
+			if s.empty then
+				namer.next;
+				set_label (namer.value)
+			else
+				set_label (s);
+			end;
+		end;
 
 feature {NONE}
 
@@ -108,6 +116,24 @@ feature {NONE}
 			-- Unique strings generator
 		once
 			!!Result.make ("State")
+		end;
+
+feature -- Query
+
+	has_command (cmd: CMD): BOOLEAN is
+		local
+			old_pos: INTEGER;
+		do
+			old_pos := output_list.index;
+			from
+				output_list.start
+			until
+				output_list.after
+			loop
+				Result := output_list.item.has_command (cmd);
+				output_list.forth
+			end;
+			output_list.go_i_th (old_pos)
 		end;
 
 feature -- Editing
@@ -139,19 +165,17 @@ feature -- Editing
 		local
 			drop_pair_command: FUNC_DROP;
 		do
-			if
-				pair_is_valid
-			then
-				add (input_stone, output_stone);
+			if pair_is_valid then
+				add (input_data, output_data);
 				!!drop_pair_command;
 				drop_pair_command.execute (Current);
 				func_editor.reset_stones;
 			elseif
-				output_set and then output_stone.context /= Void and then
-				(not has_input (output_stone.context.original_stone))
+				output_set and then output_data.context /= Void and then
+				(not has_input (output_data.context.data))
 			then
-				set_input_stone (output_stone.context.original_stone);
-				add (input_stone, output_stone);
+				set_input_data (output_data.context.data);
+				add (input_data, output_data);
 				!!drop_pair_command;
 				drop_pair_command.execute (Current);
 				func_editor.reset_stones;
@@ -198,24 +222,21 @@ feature -- Editing
 			app_editor.update_circle_text (Current);
 		end;
 
+	retrieve_set_visual_name (s: STRING) is
+		require
+			valid_s: s /= Void
+		do
+			visual_name := clone (s);
+		end;
+
 	copy_lists (func: like Current) is
 		do
 			copy_contents (func)
-		end;
-
--- **************
--- Stone features
--- **************
-
-	
-feature {NONE}
-
-	source: WIDGET is do end;
-
+		end;	
 	
 feature 
 
-	original_stone: STATE is
+	data: STATE is
 		do
 			Result := Current
 		end;

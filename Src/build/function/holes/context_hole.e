@@ -13,14 +13,13 @@ class CONTEXT_HOLE
 
 inherit
 
-	LABELS;
 	ELMT_HOLE
 		rename
 			make as elmt_hole_make
 		redefine
-			stone, associated_function,
+			associated_function,
 			associated_symbol, associated_label,
-			compatible
+			stone_type, process_context
 		end
 
 creation
@@ -34,12 +33,9 @@ feature
 			elmt_hole_make (a_parent, func);
 		end;
 
-	stone: CONTEXT_STONE;
-	
-	compatible (s: CONTEXT_STONE): BOOLEAN is
+	stone_type: INTEGER is
 		do
-			stone ?= s;
-			Result := stone /= Void;
+			Result := Stone_types.context_type
 		end;
 
 feature {NONE}
@@ -53,7 +49,13 @@ feature {NONE}
 
 	associated_label: STRING is
 		do
-			Result := Context_label
+			Result := Widget_names.context_label
 		end;
+
+	process_context (dropped: CONTEXT_STONE) is
+		do
+			associated_function.update_input_hole (dropped);
+		end;
+
 
 end

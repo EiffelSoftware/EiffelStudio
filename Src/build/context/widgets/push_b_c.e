@@ -11,7 +11,7 @@ inherit
 	
 feature 
 
-	context_type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE is
 		do
 			Result := context_catalog.push_b_type
 		end;
@@ -72,10 +72,13 @@ feature
 -- Storage features
 -- ****************
 
-	stored_node: S_PUSH_B is
+	stored_node: S_PUSH_B_R1 is
+		local
+			foobar: S_PUSH_B
 		do
 			!!Result.make (Current);
+			if foobar = Void then end;
+				-- So it won't be dead code removed
 		end;
-
 
 end

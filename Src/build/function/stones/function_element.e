@@ -13,14 +13,14 @@ feature {NONE}
 
 	associated_editor: FUNC_EDITOR;
 
-	original_stone: STONE is
+	data: DATA is
 		deferred
 		end;
 
 	initialize (ed: like associated_editor) is
 			-- Initialize function with `ed'.
 		require
-			not (ed = Void)
+			valid_ed: ed /= Void
 		do
 			associated_editor := ed
 		end;
@@ -28,6 +28,5 @@ feature {NONE}
 	process_stone is
 		do
 		end; -- process_stone
-
 
 end

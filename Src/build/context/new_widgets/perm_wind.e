@@ -22,17 +22,25 @@ creation
 
 	make
 
-feature 
+feature {NONE}
 
 	make (a_name: STRING; a_screen: SCREEN) is
 		do
 			!!top_shell.make (a_name, a_screen);
 			eb_bulletin_create (a_name, top_shell);
+			top_shell.set_action ("<Configure>", Current, Current);
 		end;
+
+feature
 
 	top_shell: TOP_SHELL;
 
-	raise is 
+	parent_shell: TOP_SHELL is
+		do
+			Result := top_shell;
+		end;
+
+	raise is
 		do
 			top_shell.raise;
 		end
@@ -40,11 +48,6 @@ feature
 	lower is
 		do
 			top_shell.lower;
-		end;
-
-	parent_shell: TOP_SHELL is
-		do
-			Result := top_shell;
 		end;
 
 	title: STRING is
@@ -72,8 +75,6 @@ feature
 			Result := top_shell.icon_name
 		end;
 
-
-
 	set_icon_name (a_name: STRING) is
 		do
 			top_shell.set_icon_name (a_name)
@@ -99,7 +100,7 @@ feature
 		end;
 
 	set_icon_pixmap_by_name (a_pixmap_name: STRING) is
-			-- Draw `a_pixmap_name' into the picture_button.
+			-- Draw `a_pixmap_name' into the perm_wind icon.
 		require
 			a_pixmap_name_exist: not (a_pixmap_name = Void)
 		local
@@ -116,7 +117,6 @@ feature
 			Result := top_shell.icon_pixmap;
 		end;
 
-
 	show is
 		do
 			top_shell.show
@@ -126,7 +126,6 @@ feature
 		do
 			top_shell.hide
 		end;
-
 
 	x: INTEGER is
 		do
@@ -203,5 +202,6 @@ feature
 		do
 			Result := top_shell.realized
 		end;
+
 end
 

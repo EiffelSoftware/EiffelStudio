@@ -10,45 +10,28 @@ inherit
 
 	STONE
 		redefine
-			original_stone
+			data
 		end
 
 feature 
+
+	stone_type: INTEGER is
+		do
+			Result := Stone_types.command_type
+		end;
+
+	process (hole: HOLE) is
+			-- Process Current stone dropped in hole `hole'.
+		do
+			hole.process_command (Current)
+		end;
 
 	stone_cursor: SCREEN_CURSOR is
 		do
 			Result := Cursors.command_cursor
 		end;
 
-	identifier: INTEGER is
-			-- Unique identifier
-		deferred
-		end;
-
-	original_stone:	CMD is
-		deferred
-		end;
-
-	eiffel_type: STRING is
-			-- Name of the class representing
-			-- Current command
-		deferred
-		end;
-
-	arguments: EB_LINKED_LIST [ARG] is
-			-- Arguments of Current command
-			-- (Currently restricted to contexts)
-		deferred
-		end;	
-
-	labels: EB_LINKED_LIST [CMD_LABEL] is
-			-- Exit labels of Current command
-		deferred
-		end;
-
-	eiffel_text: STRING is
-			-- Eiffel class text of Current
-			-- command
+	data: CMD is
 		deferred
 		end;
 

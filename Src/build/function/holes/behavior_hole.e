@@ -13,14 +13,13 @@ class BEHAVIOR_HOLE
 
 inherit
 
-	LABELS;
 	ELMT_HOLE
 		rename
 			make as elmt_hole_make
 		redefine
-			stone, associated_function,
+			associated_function,
 			associated_symbol, associated_label,
-			compatible
+			process_behavior, stone_type
 		end
 
 creation
@@ -34,20 +33,11 @@ feature
 			elmt_hole_make (a_parent, func)
 		end;
 
-	context: CONTEXT is
+	stone_type: INTEGER is
 		do
-			Result := stone.context
+			Result := Stone_types.behavior_type
 		end;
 
-	stone: BEHAVIOR_STONE;
-
-	compatible (s: BEHAVIOR_STONE): BOOLEAN is
-		do
-			stone ?= s;
-			Result := stone /= Void;
-		end;
-
-	
 feature {NONE}
 
 	associated_function: STATE_EDITOR;
@@ -59,7 +49,12 @@ feature {NONE}
 
 	associated_label: STRING is
 		do
-			Result := Behavior_label
+			Result := Widget_names.behaviour_label
+		end;
+
+	process_behavior (b_stone: BEHAVIOR_STONE) is
+		do
+			associated_function.update_output_hole (b_stone)
 		end;
 
 end

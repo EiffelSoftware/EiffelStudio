@@ -11,22 +11,25 @@ inherit
 			reset_modified_flags as menu_reset_modified_flags,
 			context_initialization as old_context_initialization
 		redefine
-			set_visual_name, widget, add_to_option_list
+			set_visual_name, widget, add_to_option_list,
+			retrieve_set_visual_name
 		end;
 
 	MENU_C
 		redefine
 			set_visual_name, context_initialization, copy_attributes, 
 			undo_cut, cut, widget, reset_modified_flags,
-			add_to_option_list
+			add_to_option_list,
+			retrieve_set_visual_name
 		select
 			cut, undo_cut, copy_attributes, context_initialization, 
 			reset_modified_flags
 		end;
 	
-
 	
 feature 
+
+	widget: PULLDOWN;
 
 	set_visual_name (s: STRING) is
 		do
@@ -39,7 +42,12 @@ feature
 			end;
 		end;
 
-	widget: PULLDOWN;
+	retrieve_set_visual_name (s: STRING) is
+		do
+			text_modified := True;
+			widget.set_text (s);
+			visual_name := clone (s);
+		end;
 
 	add_to_option_list (opt_list: ARRAY [INTEGER]) is
 		do
@@ -49,9 +57,7 @@ feature
 
 	set_text (a_string: STRING) is
 		do
-			text_modified := True;
-			widget.set_text (a_string);
-			visual_name := clone (a_string);
+			retrieve_set_visual_name (a_string);
 			update_tree_element
 		end;
 

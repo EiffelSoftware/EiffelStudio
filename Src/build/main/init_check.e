@@ -52,15 +52,12 @@ feature {NONE}
 			-- Set error to True if the Bitmaps
 			-- directory can not be found.
 		local
-			dir: FILE_NAME;
-			temp: STRING
+			dir: PLAIN_TEXT_FILE;
 		do
-			temp := clone (Environment.bitmaps_directory);
-			!!dir.make (0);
-			dir.from_string (temp);
+			!! dir.make (clone (Environment.bitmaps_directory));
 			if not dir.exists then
 				io.error.putstring ("Bitmap directory ");
-				io.error.putstring (temp);
+				io.error.putstring (dir.name);
 				io.error.putstring (" does not exist%N");
 				error := True
 			else
@@ -73,33 +70,31 @@ feature {NONE}
 			-- has not been set or the directory does 
 			-- not exist.
 		local
-			dir: FILE_NAME;
-			string: STRING
+			dir: PLAIN_TEXT_FILE;
+			path_name: STRING
 		do
-			string := Environment.get (Environment.eiffel3_variable_name);
-			if string = Void then
+			path_name := Environment.get (Environment.eiffel3_variable_name);
+			if path_name = Void then
 				io.error.putstring ("Environment variable ");
 				io.error.putstring (Environment.eiffel3_variable_name);
 				io.error.putstring (" not defined%N");
 				error := True
 			else
-				!!dir.make (0);
-				dir.from_string (string);
+				!! dir.make (path_name);
 				if not dir.exists then
 					io.error.putstring ("Directory ");
-					io.error.putstring (string);
+					io.error.putstring (path_name);
 					io.error.putstring (" does not exist%N");
 					io.error.putstring ("Environment varaible ");
 					io.error.putstring (Environment.eiffel3_variable_name);
 					io.error.putstring (" needs to be defined to the correct directory%N");
 					error := True
 				else
-					build_dir := clone (string);
-					!!dir.make (0);
-					dir.from_string (Environment.eiffelbuild_directory);
+					build_dir := clone (path_name);
+					!!dir.make (Environment.eiffelbuild_directory);
 					if not dir.exists then
 						io.error.putstring ("Directory ");
-						io.error.putstring (dir);
+						io.error.putstring (dir.name);
 						io.error.putstring (" does not exist%N");
 						error := True;
 					else

@@ -13,8 +13,8 @@ feature
 
 	make (resize_p: RESIZE_POLICY) is
 		do
-			x_fixed := resize_p.x_fixed;
-			y_fixed := resize_p.y_fixed;
+			x_fixed := not resize_p.to_follow_x;
+			y_fixed := not resize_p.to_follow_y;
 			is_width_resizeable := resize_p.is_width_resizeable;
 			is_height_resizeable := resize_p.is_height_resizeable;
 			follow_x_modified := resize_p.follow_x_modified;
@@ -40,7 +40,7 @@ feature
 
 	resize_policy (a_context: CONTEXT) : RESIZE_POLICY is
 		do
-			!!Result.make;
+			!!Result;
 			Result.set_context (a_context);
 			if follow_x_modified then
 				Result.follow_x (not x_fixed)

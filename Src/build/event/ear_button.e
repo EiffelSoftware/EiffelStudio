@@ -18,7 +18,7 @@ feature {NONE}
 
 	context_data_useful: BOOLEAN is True;
 
-	make (a_parent: COMPOSITE; ed: like editor) is
+	make (ed: like editor; a_parent: COMPOSITE) is
 		do
 			editor := ed;
 			make_visible (a_parent);
@@ -30,6 +30,7 @@ feature {NONE}
 	
 	focus_label: LABEL is
 		do
+			Result := editor.focus_label
 		end;
 
 	focus_string: STRING is 

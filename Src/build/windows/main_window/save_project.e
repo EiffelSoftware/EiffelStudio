@@ -12,7 +12,7 @@ inherit
 		redefine
 			licence_checked
 		end;
-	ERROR_POPUPER
+	ERROR_POPUPER;
 
 feature 
 
@@ -41,11 +41,17 @@ feature
 				end
 			else
 				rescued := False;
-				error_box.popup (Current, Messages.cannot_save_er,
-					Environment.storage_directory)
 			end
 		rescue
-				-- Check for no more memory
+			if original_exception = Operating_system_exception then
+				error_box.popup (Current,
+								Messages.cannot_save_os_er,
+									original_tag_name)
+			else
+				error_box.popup (Current,
+									Messages.cannot_save_er,
+									Environment.storage_directory)
+			end;
 			rescued := True;
 			mp.restore;
 			retry

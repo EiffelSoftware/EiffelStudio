@@ -28,7 +28,7 @@ feature {NONE}
 	work (a_state: STATE) is
 		do
 			init_state := a_state;
-			old_init_state := application_editor.initial_state_circle.original_stone;
+			old_init_state := application_editor.initial_state_circle.data;
 			if not (init_state = old_init_state) then
 				do_specific_work;
 				update_history

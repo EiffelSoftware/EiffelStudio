@@ -1,5 +1,5 @@
 
-deferred class CAT_PAGE [T -> STONE] 
+deferred class CAT_PAGE [T -> DATA] 
 
 inherit
 	
@@ -22,12 +22,12 @@ feature {CATALOG}
 		do
 		end;
 
-	button: ICON;
+	button: CAT_BUTTON;
 			-- Button which represents the page
 
 	focus_source: WIDGET is
 		do
-			Result := button.source_button
+			Result := button
 		end;
 
 	focus_label: FOCUS_LABEL is
@@ -69,10 +69,8 @@ feature {CATALOG}
 		require
 			not_void_form: button_rc /= Void;
 		do	
-			create_button;	
-			button.make_visible (button_rc);
+			!! button.make (Current, button_rc)
 			button.set_symbol (symbol);
-			button.add_activate_action (associated_catalog, Current);
 			initialize_focus
 		end;
 
@@ -86,10 +84,11 @@ feature {CATALOG}
 			button.set_symbol (symbol)
 		end;
 
-feature {NONE}
+feature
 
-	create_button is
-		deferred
+	select_it is
+		do
+			associated_catalog.update_page (Current);
 		end;
 
 end -- class CAT_PAGE 

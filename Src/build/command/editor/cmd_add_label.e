@@ -5,7 +5,7 @@ inherit
 
 	CMD_ADD
 		redefine
-			element
+			element, update_information
 		end;
 	
 feature {NONE}
@@ -20,6 +20,14 @@ feature {NONE}
 	list: EB_LINKED_LIST [CMD_LABEL] is
 		do
 			Result := edited_command.labels
+		end;
+
+	update_information is
+		do
+			edited_command.update_text;
+			if edited_command.has_instances then
+				App_editor.update_transitions_list (edited_command)
+			end
 		end;
 
 end

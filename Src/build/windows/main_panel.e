@@ -3,15 +3,15 @@ class MAIN_PANEL
 inherit
 
 	WINDOWS
-	LICENCE_COMMAND;
 	COMMAND_ARGS;
-	SHARED_CONTEXT;
 	CONSTANTS;
 	CLOSEABLE
 	QUEST_POPUPER	
 		redefine
 			continue_after_popdown
-		end
+		end;
+	SHARED_CONTEXT;
+	LICENCE_COMMAND
 
 creation
 	make
@@ -26,7 +26,8 @@ feature
 	set_title (s: STRING) is 
 			-- Set the title of the main panel.
 		do 
-			base.set_title (s) 
+			base.set_title (s);
+			base.set_icon_name (s);
 		end
 
 	set_project_initialized is 
@@ -39,7 +40,17 @@ feature
 			-- Set project_initialized to False.
 		do 		
 			project_initialized := False 
-		end
+		end;
+
+	set_saved_symbol is
+		do
+			save_b.set_saved_symbol
+		end;
+
+	set_unsaved_symbol is
+		do
+			save_b.set_unsaved_symbol
+		end;
 	
 feature {NONE}
 
@@ -51,6 +62,7 @@ feature
 	quit_b: CLOSE_WINDOW_BUTTON
 	create_proj_b: CREATE_PROJ_BUTTON
 	cut_b: CUT_HOLE
+	namer_b: NAMER_HOLE
 	help_b: HELP_HOLE
 	con_b: CON_ED_HOLE
 	cmd_b: CMD_ED_HOLE
@@ -89,6 +101,9 @@ feature
 			-- widget to attach forms to act as transporter
 			!! base.make (Widget_names.main_panel, a_screen)
 			base.forbid_resize
+			if Pixmaps.eiffelbuild_pixmap.is_valid then
+				base.set_icon_pixmap (Pixmaps.eiffelbuild_pixmap)
+			end;
 			!! form.make (Widget_names.form, base)
 			form.set_fraction_base (100)
 			set_title (Widget_names.main_panel)
@@ -104,7 +119,8 @@ feature
 			!! cmdi_b.make (form1, focus_label)
 			!! state_b.make (form1, focus_label)
 			!! cut_b.make (form1, focus_label)
-			!! help_b.make (Void, form1, focus_label)
+			!! namer_b.make (form1, focus_label)
+			!! help_b.make (form1, focus_label)
 			!! separator.make (Widget_names.separator, form1)
 			!! save_b.make (form1)
 			!! save_as_b.make (form1)	
@@ -118,6 +134,7 @@ feature
 			form1.attach_top (cmd_b, 0)
 			form1.attach_top (cmdi_b, 0)
 			form1.attach_top (cut_b, 0)
+			form1.attach_top (namer_b, 0)
 			form1.attach_top (help_b, 0)
 			form1.attach_top (create_proj_b, 0)
 			form1.attach_top (load_proj_b, 0)
@@ -127,9 +144,10 @@ feature
 			form1.attach_left_widget (con_b, cmd_b, 0)
 			form1.attach_left_widget (cmd_b, cmdi_b, 0)
 			form1.attach_left_widget (cmdi_b, state_b, 0)
-			form1.attach_left_widget (state_b, cut_b, 0)
-			form1.attach_left_widget (cut_b, help_b, 0)
-			form1.attach_left_widget (help_b, focus_label, 0)
+			form1.attach_left_widget (state_b, help_b, 0)
+			form1.attach_left_widget (help_b, namer_b, 0)
+			form1.attach_left_widget (namer_b, cut_b, 0)
+			form1.attach_left_widget (cut_b, focus_label, 0)
 			form1.attach_right_widget (create_proj_b, focus_label, 0)
 			form1.attach_right_widget (load_proj_b, create_proj_b, 0)
 			form1.attach_right_widget (save_b, load_proj_b, 0)
@@ -143,6 +161,7 @@ feature
 			form1.attach_bottom_widget (separator, cmd_b, 0)
 			form1.attach_bottom_widget (separator, cmdi_b, 0)
 			form1.attach_bottom_widget (separator, cut_b, 0)
+			form1.attach_bottom_widget (separator, namer_b, 0)
 			form1.attach_bottom_widget (separator, help_b, 0)
 			form1.attach_bottom_widget (separator, create_proj_b, 0)
 			form1.attach_bottom_widget (separator, load_proj_b, 0)
@@ -202,9 +221,10 @@ feature
 			form.attach_bottom (form3, 2)
 
 				-- default state for buttons
-			cont_cat_t.arm -- context catalog
-			cont_tree_t.arm -- context tree
-			editor_t.set_toggle_on -- Editor active
+			cont_cat_t.arm;
+			cont_tree_t.arm;
+			editor_t.set_toggle_on; 
+			interface_t.set_toggle_on;
 			!! del_com.make (Current);
 			base.set_delete_command (del_com)
 		end
@@ -214,39 +234,9 @@ feature
 			base.realize
 		end
 	
-feature {TRANSPORTER, TRANSPORTER_I}
-
-	work (arg: ANY) is
-		do
-		end
-	
-feature {INTERFACE_B}
-
-	hide_interface is
-		do
-			from
-				Shared_window_list.start
-			until
-				Shared_window_list.after
-			loop
-				Shared_window_list.item.hide
-				Shared_window_list.forth
-			end
-		end
-
-	show_interface is
-		do
-			from
-				Shared_window_list.start
-			until
-				Shared_window_list.after
-			loop
-				Shared_window_list.item.show
-				Shared_window_list.forth
-			end
-		end;
-
 feature -- Closing Current
+
+	work (arg: ANY) is do end;
 
 	save_question: BOOLEAN
 
@@ -278,6 +268,90 @@ feature -- Closing Current
 					!! quit_app_com;
 					quit_app_com.execute (Void)
 				end;
+			end
+		end;
+
+feature -- Popup and popdown actions
+
+	was_popped_down: BOOLEAN
+
+	popup is
+		do
+			if was_popped_down then
+				if cont_tree_t.armed then
+					Tree.show
+				end
+				if history_t.armed then
+					History_window.show
+				end;
+				if editor_t.armed then
+					Window_mgr.show_all_editors
+				end;
+				if cmd_cat_t.armed then
+					Command_catalog.show
+				end;
+				if app_edit_t.armed then
+					App_editor.show
+				end;
+				if interface_t.armed then
+					show_interface
+				end;
+			end;	
+			was_popped_down := False
+		end;
+
+	popdown is
+		do
+			was_popped_down := True;
+			if cont_tree_t.armed then
+				Tree.hide
+			end
+			if history_t.armed then
+				History_window.hide
+			end;
+			if editor_t.armed then
+				Window_mgr.hide_all_editors
+			end;
+			if cmd_cat_t.armed then
+				Command_catalog.hide
+			end;
+			if app_edit_t.armed then
+				App_editor.hide
+			end;
+			if interface_t.armed then
+				hide_interface
+			end;
+			if question_box.is_popped_up then
+				question_box.popdown;
+			end
+			if error_box.is_popped_up then
+				error_box.popdown;
+			end
+		end;
+
+feature -- Interface
+
+	hide_interface is
+		do
+			from
+				Shared_window_list.start
+			until
+				Shared_window_list.after
+			loop
+				Shared_window_list.item.hide
+				Shared_window_list.forth
+			end
+		end
+
+	show_interface is
+		do
+			from
+				Shared_window_list.start
+			until
+				Shared_window_list.after
+			loop
+				Shared_window_list.item.show
+				Shared_window_list.forth
 			end
 		end;
 

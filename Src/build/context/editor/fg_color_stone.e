@@ -4,10 +4,21 @@ class FG_COLOR_STONE
 inherit
 
 	ATTRIB_STONE
+		rename
+			make as old_make
+		end;
+	HOLE
+		redefine
+			process_color
+		end;
+
+creation
+
+	make
 	
 feature {NONE}
 
-	command: FG_STONE_CMD is
+	command: FG_COLOR_CMD is
 		once
 			!!Result
 		end;
@@ -16,7 +27,16 @@ feature {NONE}
 		do
 			Result := Pixmaps.fg_color_stone_pixmap
 		end;
-	
+
+	make (a_parent: COMPOSITE; tf: TEXT_FIELD; an_editor: like editor) is
+		do
+			old_make (a_parent, an_editor);
+			associated_tf := tf;	
+			register
+		end;
+
+	associated_tf: TEXT_FIELD
+
 feature 
 
 	eiffel_type: STRING is
@@ -38,7 +58,22 @@ feature
 			end;
 		end;
 
-	
+feature -- Hole
+
+	target: WIDGET is
+		do
+			Result := Current
+		end;
+
+	process_color (dropped: COLOR_STONE) is
+		local
+			cmd: FG_COLOR_CMD;
+		do
+			associated_tf.set_text (dropped.color_name);
+			!!cmd;
+			cmd.execute (editor);
+		end;
+
 feature {NONE}
 
 	modify_context (new_context: CONTEXT) is

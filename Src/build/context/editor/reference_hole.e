@@ -5,7 +5,7 @@ inherit
 
 	ICON_HOLE
 		redefine
-			stone, compatible
+			process_context
 		end
 
 creation
@@ -28,21 +28,18 @@ feature
 			reset;
 		end;
 
-	stone: CONTEXT_STONE;
-
-	compatible (s: CONTEXT_STONE): BOOLEAN is
+	stone_type: INTEGER is
 		do
-			stone ?= s;
-			Result := stone /= Void;
+			Result := Stone_types.context_type
 		end;
 
-	
+	context: CONTEXT;
+
 feature {NONE}
 
 	associated_label: STRING;
 			-- Label associated with current hole
 
-	
 feature 
 
 	reset is
@@ -52,27 +49,21 @@ feature
 		do
 			set_label (associated_label);
 			set_symbol (Pixmaps.context_pixmap);
-			stone := Void
 		end;
 
 	
 feature {NONE}
 
-	process_stone is
-			-- Replace symbol and label of current
-			-- hole by those of received stone
+	process_context (dropped: CONTEXT_STONE) is
 		do
-			if stone.original_stone.parent = alignment_form.editor.edited_context then
-				context :=  stone.original_stone;
-				set_label (stone.label);
-				set_symbol (stone.symbol);
+			if dropped.data.parent = 
+					alignment_form.editor.edited_context 
+			then
+				context :=  dropped.data;
+				set_label (dropped.data.label);
+				set_symbol (dropped.data.symbol);
 				alignment_form.reset_list;
 			end;
 		end;
-
-	
-feature 
-
-	context: CONTEXT;
 
 end

@@ -669,18 +669,20 @@ feature {NONE} -- Element Change
 			l_found: BOOLEAN
 		do
 			l_constructors := a_consumed_type.constructors
-			from
-				i := 1
-				l_count := l_constructors.count
-			until
-				i > l_count or l_found
-			loop
-				Result := l_constructors.item (i)
-				l_found := Result.eiffel_name.is_equal (a_feature.name)
-				i := i + 1
-			end
-			if not l_found then
-				Result := Void
+			if l_constructors /= Void then
+				from
+					i := 1
+					l_count := l_constructors.count
+				until
+					i > l_count or l_found
+				loop
+					Result := l_constructors.item (i)
+					l_found := Result.eiffel_name.is_equal (a_feature.name)
+					i := i + 1
+				end
+				if not l_found then
+					Result := Void
+				end
 			end
 		end
 

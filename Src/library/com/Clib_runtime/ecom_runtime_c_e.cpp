@@ -37,6 +37,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_currency (CURRENCY a_currency)
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_decimal (DECIMAL a_decimal)
 
 // Create ECOM_DECIMAL from C  
+{
 	EIF_OBJECT result = 0;
 	EIF_TYPE_ID eif_decimal_id = -1;
 	EIF_PROCEDURE make = 0;

@@ -44,6 +44,14 @@ inherit
 			implementation,
 			is_in_default_state
 		end
+		
+	EV_ITEM_PIXMAP_SCALER
+		undefine
+			is_equal
+		redefine
+			implementation,
+			is_in_default_state
+		end
 
 create
 	default_create
@@ -61,6 +69,17 @@ feature -- Access
 			bridge_ok: Result.is_equal (implementation.item_text (an_item))
 			not_void: Result /= Void
 			cloned: Result /= implementation.item_text (an_item)
+		end
+		
+	item_tab (an_item: EV_WIDGET): EV_NOTEBOOK_TAB is
+			-- Tab associated with `an_item'.
+		require
+			not_destroyed: not is_destroyed
+			has_an_item: has (an_item)
+		do
+			Result := implementation.item_tab (an_item)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature -- Status report
@@ -96,6 +115,16 @@ feature -- Status report
 			Result := implementation.tab_position
 		ensure
 			bridge_ok: Result = implementation.tab_position
+		end
+		
+	pointed_tab_index: INTEGER is
+			-- index of tab currently under mouse pointer, or 0 if none.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.pointed_tab_index
+		ensure
+			result_valid: result >= 0 and pointed_tab_index <= count
 		end
 
 feature -- Status setting

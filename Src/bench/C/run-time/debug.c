@@ -324,7 +324,10 @@ struct where *where;		/* Structure filled in with current position */
 	/* Now compute things the remote process will like to know. First, the
 	 * dynamic type of the current object...
 	 */
-	where->wh_type = Dtype(ex->ex_id);	/* Dynamic type */
+	if (ex->ex_id != 0)
+		where->wh_type = Dtype(ex->ex_id);	/* Dynamic type */
+	else
+		where->wh_type = -1;
 
 	/* If the execution top calling context on the debugger's stack has its
 	 * pointer within the Eiffel stack equal to 'ex', then we can say for sure
@@ -334,6 +337,9 @@ struct where *where;		/* Structure filled in with current position */
 	 */
 
 	dc = dtop();					/* Top calling structure recorded */
+	if (dc == (struct dcall *) 0) {
+		return;	
+	}
 	if (dc->dc_exec != ex)			/* No match */
 		where->wh_offset = -1;		/* Mark no valid offset */
 	else
@@ -694,6 +700,9 @@ public struct dcall *dtop()
 	 * is at the left edge of a chunk. Look for previous chunk then...
 	 */
 	prev = db_stack.st_cur->sk_prev;
+
+	if (prev == (struct stdchunk *) 0)		/* The stack is empty */
+		return (struct dcall *) 0;
 
 #ifdef MAY_PANIC
 	if (prev == (struct stdchunk *) 0)

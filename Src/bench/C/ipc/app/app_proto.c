@@ -234,11 +234,20 @@ int s;
 	}
 
 	ewhere(&wh);			/* Find out where we are */
-	rqst.st_wh.wh_name = wh.wh_name;		/* Feature name */
-	rqst.st_wh.wh_obj = (long) wh.wh_obj;	/* (char *) -> long for XDR */
-	rqst.st_wh.wh_origin = wh.wh_origin;	/* Written where? */
-	rqst.st_wh.wh_type = wh.wh_type;		/* Dynamic type */
-	rqst.st_wh.wh_offset = wh.wh_offset;	/* Offset in byte code */
+	if (wh.wh_type == -1) {	/* Could not compute position */
+		rqst.st_wh.wh_name = "Unknown";			/* Feature name */
+		rqst.st_wh.wh_obj = (long) 0;			/* (char *) -> long for XDR */
+		rqst.st_wh.wh_origin = 0;				/* Written where? */
+		rqst.st_wh.wh_type = 0;					/* Dynamic type */
+		rqst.st_wh.wh_offset = 0;				/* Offset in byte code */
+	}
+	else {
+		rqst.st_wh.wh_name = wh.wh_name;		/* Feature name */
+		rqst.st_wh.wh_obj = (long) wh.wh_obj;	/* (char *) -> long for XDR */
+		rqst.st_wh.wh_origin = wh.wh_origin;	/* Written where? */
+		rqst.st_wh.wh_type = wh.wh_type;		/* Dynamic type */
+		rqst.st_wh.wh_offset = wh.wh_offset;	/* Offset in byte code */
+	}
 
 #undef st_status
 #undef st_extag

@@ -1,8 +1,8 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
-		"A common class for the container with only%
-		% one child."
+		"A common class for Mswindows containers with one child without%N%
+		%commitment to a WEL control."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,35 +22,33 @@ inherit
 
 feature -- Access
 
-	child: EV_WIDGET_IMP is
-			-- The child of the container.
-		obsolete
-			"Use: item.implementation"
-		do
-			Result ?= item.implementation
-		end
-
 	item: EV_WIDGET
 			-- The child of the container.
 
-feature -- Status report
+	item_imp: EV_WIDGET_IMP is
+			-- `item'.`implementation'.
+		do
+			if item /= Void then
+				Result ?= item.implementation
+			end
+		end
+
+feature -- Status setting
 
 	enable_sensitive is
-			-- Set current widget in insensitive mode if
-   			-- `flag'.
+			-- Set `item' sensitive to user actions.
 		do
-			if child /= Void then
-				child.enable_sensitive
+			if item /= Void then
+				item.enable_sensitive
 			end
 			{EV_CONTAINER_IMP} Precursor
 		end
 
 	disable_sensitive is
-			-- Set current widget in insensitive mode if
-   			-- `flag'.
+			-- Set `item' insensitive to user actions.
 		do
-			if child /= Void then
-				child.disable_sensitive
+			if item /= Void then
+				item.disable_sensitive
 			end
 			{EV_CONTAINER_IMP} Precursor
 		end
@@ -60,37 +58,36 @@ feature -- Element change
 	remove is
 			-- Remove `item' from `Current'.
 		local
-			item_imp: EV_WIDGET_IMP
+			v_imp: EV_WIDGET_IMP
 		do
-			check
-				has_item: item /= Void
+			if item /= Void then
+				remove_item_actions.call ([item])
+				v_imp ?= item_imp
+				check
+					v_imp_not_void: v_imp /= Void
+				end	
+				v_imp.set_parent (Void)
+				v_imp.on_orphaned
+				item := Void
+				notify_change (2 + 1)
 			end
-			remove_item_actions.call ([item])
-			item_imp ?= item.implementation
-			check
-				item_imp_not_void: item_imp /= Void
-			end	
-			item_imp.set_parent (Void)
-			item_imp.on_orphaned
-			item := Void
-			notify_change (2 + 1)
 		end
 
 	insert (v: like item) is
-			-- Insert `v' in `Current'.
+			-- Assign `v' to `item'.
 		local
-			item_imp: EV_WIDGET_IMP
+			v_imp: EV_WIDGET_IMP
 		do
 			check
 				has_no_item: item = Void
 			end
 			v.implementation.on_parented
-			item_imp ?= v.implementation
+			v_imp ?= v.implementation
 			check
-				item_imp_not_void: item_imp /= Void
+				v_imp_not_void: v_imp /= Void
 			end
 			item := v
-			item_imp.set_parent (interface)
+			v_imp.set_parent (interface)
 			--| FIXME Was:
 			--| child_imp.parent_ask_resize (client_width, client_height)
 			notify_change (2 + 1)
@@ -105,9 +102,32 @@ feature -- Element change
 			extend (v)
 		end
 
+feature -- Basic operations
+
+	propagate_background_color is
+			-- Propagate the current background color of the container
+			-- to the children.
+		do
+			if item /= Void then
+				item.set_background_color (background_color)
+			end
+		end
+
+	propagate_foreground_color is
+			-- Propagate the current foreground color of the container
+			-- to the children.
+		do
+			if item /= Void then
+				item.set_foreground_color (foreground_color)
+			end
+		end
+
+feature -- Obsolete
+
 	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into composite
-		obsolete "Use put instead."
+		obsolete
+			"Use put instead."
 		do
 			put (child_imp.interface)
 		end
@@ -119,65 +139,46 @@ feature -- Element change
 			remove
 		end
 
-feature -- Basic operations
-
-	propagate_background_color is
-			-- Propagate the current background color of the container
-			-- to the children.
-		do
-			if child /= Void then
-				child.set_background_color (background_color)
-			end
-		end
-
-	propagate_foreground_color is
-			-- Propagate the current foreground color of the container
-			-- to the children.
-		do
-			if child /= Void then
-				child.set_foreground_color (foreground_color)
-			end
-		end
-
-feature -- Assertion
-
 	add_child_ok: BOOLEAN is
 			-- Used in the precondition of
 			-- 'add_child'. True, if it is ok to add a
 			-- child to container.
 		do
-			Result := child = Void
+			Result := item = Void
 		end
 
 	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
 			-- Is `a_child' a child of the container?
 		do
-			Result := a_child = child
+			Result := a_child = item.implementation
 		end
 
 end -- class EV_SINGLE_CHILD_CONTAINER_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/04/26 21:51:06  brendel
+--| Revised.
+--|
 --| Revision 1.9  2000/04/26 18:36:48  brendel
 --| First attempt to fix cell.
 --|

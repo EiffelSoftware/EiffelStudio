@@ -326,6 +326,18 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 			c_get_eif_reference_from_object_id (a_c_object).on_size_allocate (a_x, a_y, a_width, a_height)
 		end
 		
+	on_window_close_request (a_c_object: POINTER) is
+			-- 
+		local
+			a_window_imp: EV_WINDOW_IMP
+		do
+			a_window_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			check
+				a_window_imp_not_void: a_window_imp /= Void
+			end
+			a_window_imp.close_request_actions.call (empty_tuple)
+		end		
+	
 	on_tree_event_intermediary (a_c_object: POINTER; a_event_number: INTEGER; a_tree_item: POINTER) is
 			-- 
 		local
@@ -344,8 +356,7 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 				a_tree_imp.collapse_callback (a_tree_item)
 			end
 		end
-		
-		
+
 	kamikaze_agent (an_action_sequence: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]];
 		target: PROCEDURE [ANY, TUPLE]):
 		PROCEDURE [ANY, TUPLE []] is

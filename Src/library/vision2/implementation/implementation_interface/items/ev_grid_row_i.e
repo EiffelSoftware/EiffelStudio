@@ -117,7 +117,7 @@ feature -- Access
 			i_within_bounds: i > 0 and i <= count
 			is_parented: parent /= Void
 		do
-			Result := parent_grid_i.item (index, i)
+			Result := parent_grid_i.item (i, index)
 		ensure
 			item_not_void: Result /= Void
 		end
@@ -139,7 +139,7 @@ feature -- Access
 				i > count
 			loop
 					-- If `is_selected' then we need to make sure there are no Void items contained within `Current'
-				a_item := parent_grid_i.item_internal (index, i, create_if_void)
+				a_item := parent_grid_i.item_internal (i, index, create_if_void)
 				if a_item /= Void and then a_item.is_selected then
 					Result.extend (a_item.interface)
 				end
@@ -410,7 +410,7 @@ feature {EV_GRID_I} -- Implementation
 			until
 				i > count
 			loop
-				a_item := parent_grid_i.item_internal (index, i, False)
+				a_item := parent_grid_i.item_internal (i, index, False)
 				if a_item /= Void and then a_item.internal_is_selected then
 					a_item.disable_select_internal
 				end

@@ -862,7 +862,6 @@ feature {NONE} -- Actions
 	refresh is
 			-- Refresh control since it has been resized.
 		do
-			argument_list.set_column_width (argument_list.width - 30, 1)
 			if not argument_list.is_empty then
 				if argument_list.selected_item /= Void then
 					current_argument.set_text (argument_list.selected_item.i_th (1))
@@ -870,8 +869,6 @@ feature {NONE} -- Actions
 			else
 				current_argument.remove_text
 			end	
-		ensure
-			column_is_full_width: argument_list.column_width (1) = argument_list.width - 30
 		end
 
 	select_combo_item (a_string: STRING) is

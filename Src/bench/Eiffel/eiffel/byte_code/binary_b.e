@@ -46,7 +46,7 @@ feature -- Access
 	type: TYPE_I is
 			-- Type of the infixed feature
 		do
-			Result := access.type
+			Result := context.real_type (access.type)
 		end
 
 feature -- Settings
@@ -255,6 +255,7 @@ feature -- C code generation
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
+			type.c_type.generate_cast (buf)
 			buf.put_character ('(')
 			left.print_register
 			generate_operator

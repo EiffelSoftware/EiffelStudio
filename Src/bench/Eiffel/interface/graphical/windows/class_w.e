@@ -92,6 +92,7 @@ feature
 		end;
 
 	change_class_command: CHANGE_CLASS;
+	change_class_form: FORM;
 
 	update_class_name (s: STRING) is
 		require
@@ -136,7 +137,6 @@ feature {NONE}
 
 	hole: CLASS_HOLE;
 			-- Hole caraterizing current
-			-- ha ha ha ha ha ha ha hahahaha ...
 
 	set_default_size is
 		do
@@ -164,7 +164,8 @@ feature {NONE}
 
 	create_edit_buttons is
 		do
-			!!change_class_command.make (edit_bar, text_window);
+			!!change_class_form.make (new_name, edit_bar);
+			!!change_class_command.make (change_class_form, text_window);
 			!!open_command.make (edit_bar, text_window);
 			!!save_command.make (edit_bar, text_window);
 			!!save_as_command.make (edit_bar, text_window);
@@ -246,9 +247,13 @@ feature {NONE}
 		do
 			old_build_edit_bar;
 			edit_bar.detach_right (type_teller);
-			edit_bar.attach_left (change_class_command, 140);
-			edit_bar.attach_right_widget (change_class_command, type_teller, 0);
-			edit_bar.attach_right_widget (open_command, change_class_command, 0);
+			change_class_form.attach_left (change_class_command, 0);
+			change_class_form.attach_right (change_class_command, 0);
+			change_class_form.attach_top (change_class_command, 0);
+			change_class_form.attach_bottom (change_class_command, 0);
+			edit_bar.attach_left (change_class_form, 140);
+			edit_bar.attach_right_widget (change_class_form, type_teller, 0);
+			edit_bar.attach_right_widget (open_command, change_class_form, 0);
 			--format_label.make ("Format", text_window);	
 			--class_name_tf.make ("Class_name", text_window);	
 			--change_class_command.make (Current);	
@@ -262,11 +267,9 @@ feature {NONE}
 		end;
 
 	set_default_position is
-		local
-			i: INTEGER;
+			-- Display the window at the cursor position.
 		do
-			i := 10 * window_manager.class_windows_count;
-			set_x_y (220 + i, 100 + i)
+			set_x_y (screen.x, screen.y)
 		end;
 
 	showflat_command: SHOW_FLAT;

@@ -10,8 +10,7 @@ inherit
 	
 	EV_DIALOG
 		redefine
-			initialize,
-			show_modal_to_window
+			initialize
 		end
 	
 	EV_LAYOUT_CONSTANTS
@@ -111,17 +110,6 @@ feature -- Basic operation
 				tab_list.forth
 			end
 		end
-		
-		
-	show_modal_to_window (a_window: EV_WINDOW) is
-			-- Show `Current' relative to `a_window'.
-			-- Ensure that the information displayed in
-			-- `Current' reflects that of the current project.
-		do
-			display_project_information
-			Precursor {EV_DIALOG} (a_window)
-		end
-		
 
 feature {NONE} -- Initialization
 
@@ -191,6 +179,9 @@ feature {NONE} -- Initialization
 			if notebook.minimum_width < 200 and notebook.minimum_height < 200 then
 				notebook.set_minimum_size (200, 200)	
 			end
+				-- Every time the dialog is displayed, update the information from
+				-- the project into all tabs.
+			show_actions.extend (agent display_project_information)
 		end
 
 feature {NONE} -- Implementation

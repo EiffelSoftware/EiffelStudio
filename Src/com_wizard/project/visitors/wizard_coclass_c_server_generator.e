@@ -34,6 +34,10 @@ feature -- Basic operations
 
 			-- Import header file
 			cpp_class_writer.add_import (Ecom_server_rt_globals_h)
+			cpp_class_writer.add_import ("E_wide_string.h")
+			create tmp_string.make (0)
+			tmp_string.append ("RT_LNK HINSTANCE eif_hInstance;")
+			cpp_class_writer.add_other (tmp_string)
 
 			if shared_wizard_environment.out_of_process_server then
 				tmp_string := clone (a_descriptor.c_type_name)
@@ -597,35 +601,53 @@ feature {NONE} -- Implementation
 			Result.append (Open_curly_brace)
 			Result.append (New_line_tab_tab)
 
-			-- OLECHAR * tmp_value = OLESTR("file_name")
+			-- char c_buf[1024];
+		
+			Result.append (Char)
+			Result.append (Space)
+			Result.append ("c_buf ")
+			Result.append (Open_bracket)
+			Result.append ("1024")
+			Result.append (Close_bracket)
+			Result.append (Semicolon)
+			Result.append (New_line_tab_tab)
+
+			-- int c_buf_len = 1024;
+
+			Result.append (Int)
+			Result.append (Space)
+			Result.append ("c_buf_len")
+			Result.append (Space_equal_space)
+			Result.append ("1024")
+			Result.append (Semicolon)
+			Result.append (New_line_tab_tab)
+
+			-- if (GetModuleFileName (eif_hInstance, c_buf, c_buf_len) == 0)
+
+			Result.append ("if (GetModuleFileName (eif_hInstance, c_buf, c_buf_len) == 0)")
+			Result.append (New_line_tab_tab_tab)
+
+			-- 	returm 1;
+
+			Result.append (Return)
+			Result.append (Space)
+			Result.append (One)
+			Result.append (Semicolon)
+			Result.append (New_line_tab_tab)
+
+
+			-- 	OLECHAR * tmp_value = ccom_create_from_string (c_buf);
 			Result.append (Olechar)
 			Result.append (Space)
 			Result.append (Asterisk)
 			Result.append (Tmp_variable_name)
 			Result.append (Space_equal_space)
-			Result.append (Olestr)
-			Result.append (Open_parenthesis)
-			Result.append (Double_quote)
-
-			tmp_path := clone (shared_wizard_environment.type_library_file_name)
-
-			from
-				counter := 1
-			until
-				counter > tmp_path.count
-			loop
-				Result.append_character (tmp_path.item (counter))
-				if tmp_path.item (counter).is_equal('\') then
-					Result.append_character ('\')
-				end
-				counter := counter + 1
-			end			
-			Result.append (Double_quote)
-			Result.append (Close_parenthesis)
+			Result.append ("ccom_create_from_string (c_buf)")
 			Result.append (Semicolon)
 			Result.append (New_line_tab_tab)
 
 			--tmp_hr = LoadTypeLib (tmp_value, pTypeLib)
+
 			Result.append (Tmp_clause)
 			Result.append (Hresult_variable_name)
 			Result.append (Space_equal_space)
@@ -648,13 +670,18 @@ feature {NONE} -- Implementation
 			Result.append (Hresult_variable_name)
 			Result.append (Close_parenthesis)
 			Result.append (Close_parenthesis)
-			Result.append (New_line_tab_tab_tab)
+			Result.append (New_line_tab_tab)
+			Result.append (tab)
+
 			Result.append (Return)
 			Result.append (Space)
 			Result.append (Tmp_clause)
 			Result.append (Hresult_variable_name)
 			Result.append (semicolon)
 			Result.append (New_line_tab)
+
+			-- }
+
 			Result.append (Close_curly_brace)
 			Result.append (New_line_tab)
 

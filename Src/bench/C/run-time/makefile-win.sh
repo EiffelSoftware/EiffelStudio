@@ -70,6 +70,7 @@ OBJECTS = \
 	$(INDIR)\eif_project.$obj \
 	$(INDIR)\gen_conf.$obj \
 	$(INDIR)\rout_obj.$obj \
+	$(INDIR)\eif_special_table.$obj \
 	$(TOP)\ipc\shared\networku.$obj \
 	$(TOP)\ipc\shared\shword.$obj \
 	$(TOP)\console\winconsole.$lib \
@@ -129,6 +130,7 @@ WOBJECTS = \
 	$(INDIR)\weif_project.$obj \
 	$(INDIR)\wgen_conf.$obj \
 	$(INDIR)\wrout_obj.$obj \
+	$(INDIR)\weif_special_table.$obj \
 	$(TOP)\idrs\idr.$lib \
 	$(TOP)\console\winconsole.$lib \
 	$extra_object_files
@@ -186,6 +188,7 @@ EOBJECTS = \
 	$(INDIR)\weif_project.$obj \
 	$(INDIR)\wgen_conf.$obj \
 	$(INDIR)\wrout_obj.$obj \
+	$(INDIR)\weif_special_table.$obj \
 	$(TOP)\ipc\shared\networku.$obj \
 	$(TOP)\console\winconsole.$lib
 
@@ -362,6 +365,9 @@ $(INDIR)\gen_conf.$obj: $(RTSRC)\gen_conf.c
 $(INDIR)\rout_obj.$obj: $(RTSRC)\rout_obj.c
 	$(CC) $(JCFLAGS) $(RTSRC)\rout_obj.c
 
+$(INDIR)\eif_special_table.$obj: $(RTSRC)\eif_special_table.c
+	$(CC) $(JCFLAGS) $(RTSRC)\eif_special_table.c
+
 $(INDIR)\hash.$obj: $(RTSRC)\hash.c
 	$(CC) $(JCFLAGS) $(RTSRC)\hash.c
 
@@ -511,6 +517,9 @@ $(INDIR)\wgarcol.$obj: $(RTSRC)\garcol.c
 
 $(INDIR)\wgen_conf.$obj: $(RTSRC)\gen_conf.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)\gen_conf.c
+
+$(INDIR)\weif_special_table.$obj: $(RTSRC)\eif_special_table.c
+	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)\eif_special_table.c
 
 $(INDIR)\wrout_obj.$obj: $(RTSRC)\rout_obj.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)\rout_obj.c
@@ -754,6 +763,9 @@ $(INDIR)\wgen_conf.$obj : eif_gen_conf.h eif_struct.h
 
 $(INDIR)\rout_obj.$obj : eif_rout_obj.h
 $(INDIR)\wrout_obj.$obj : eif_rout_obj.h
+
+$(INDIR)\eif_special_table.$obj : eif_special_table.h
+$(INDIR)\eif_special_table.$obj : eif_special_table.h
 
 $(INDIR)\eif_threads.$obj : eif_threads.h eif_cond_var.h
 $(INDIR)\eif_cond_var.$obj : eif_cond_var.h

@@ -129,19 +129,11 @@ feature -- Access
 	get_item (index: INTEGER): EV_LIST_ITEM is
 			-- Give the item of the list at the zero-base
 			-- `index'.
-		local
-			the_item: EV_LIST_ITEM
 		do
-			the_item ?= (ev_children.i_th (index)).interface
+			Result ?= (ev_children.i_th (index)).interface
 		end
 
 feature -- Status report
-
---	count: INTEGER is
-			-- Number of lines
---		do
---			Result := wel_window.count
---		end
 
 	selected: BOOLEAN is
 			-- Is at least one item selected ?
@@ -210,11 +202,13 @@ feature -- Status setting
 		local
 			wel_imp: WEL_WINDOW
 		do
-			is_multiple_selection := True
-			wel_destroy
-			wel_imp ?= parent_imp
-			wel_make (wel_imp, 0, 0, 0, 0, 0)
-			copy_list (Current)
+			if not is_multiple_selection then
+				is_multiple_selection := True
+				wel_imp ?= parent_imp
+				wel_destroy
+				wel_make (wel_imp, 0, 0, 0, 0, 0)
+				copy_list
+			end
 		end
 
 	set_single_selection is
@@ -223,16 +217,18 @@ feature -- Status setting
 		local
 			wel_imp: WEL_WINDOW
 		do
-			is_multiple_selection := False
-			wel_destroy
-			wel_imp ?= parent_imp
-			wel_make (wel_imp, 0, 0, 0, 0, 0)
-			copy_list (Current)
+			if is_multiple_selection then
+				is_multiple_selection := False
+				wel_imp ?= parent_imp
+				wel_destroy
+				wel_make (wel_imp, 0, 0, 0, 0, 0)
+				copy_list
+			end
 		end
 
 feature {NONE} -- Implementation
 
-	copy_list (a_list: EV_LIST_IMP) is
+	copy_list is
 			-- Take an empty list and initialize all the children with
 			-- the contents of `ev_children'.
 		do
@@ -242,7 +238,7 @@ feature {NONE} -- Implementation
 				until
 					ev_children.after
 				loop
-					a_list.add_string (ev_children.item.text)
+					add_string (ev_children.item.text)
 					ev_children.forth
 				end
 			end
@@ -302,13 +298,9 @@ feature {NONE} -- Implementation : WEL features
 	default_style : INTEGER is
 		do
 			if is_multiple_selection then
-				Result := Ws_visible + Ws_child + Ws_group +
-				Ws_tabstop + Ws_border + Ws_vscroll +
-				Lbs_notify + Lbs_multiplesel
+				Result := {WEL_MULTIPLE_SELECTION_LIST_BOX} Precursor
 			else
-				Result := Ws_visible + Ws_child + Ws_group +
-				Ws_tabstop + Ws_border + Ws_vscroll +
-				Lbs_notify
+				Result := {WEL_SINGLE_SELECTION_LIST_BOX} Precursor
 			end
 		end
 	

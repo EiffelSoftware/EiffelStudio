@@ -29,6 +29,7 @@ inherit
 			set_position,
 			set_maximum_text_length,
 			select_region,
+			add_return_command,
 			add_activate_command,
 			add_change_command,
 			remove_activate_commands,
@@ -320,40 +321,31 @@ feature -- Event : command association
 
 	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is	
 			-- Make `command' executed when an item is
-			-- selected.
-		local
-			p: POINTER
+			-- selected or unselected.
+			-- WARNING: So far, due to GTK, the callback will be also called
+			-- if we add a first item.
 		do
-			p := widget
-			widget := list_widget
-			add_command (widget, "selection_changed", a_command, arguments)
-			widget := p
+			add_command (list_widget, "select_child", a_command, arguments, default_pointer)
 		end
 
 	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add 'cmd' to the list of commands to be
 			-- executed when the "Return" button is pressed
---		local
---			p: POINTER
 		do
---			p := widget
---			widget := entry_widget
---			add_command (widget, "activate", cmd,  arg)
---			widget := p
-			add_command (entry_widget, "activate", cmd,  arg)
+			add_return_command (cmd, arg)
+		end
+	add_return_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add 'cmd' to the list of commands to be
+			-- executed when the "Return" button is pressed
+		do
+			add_command (entry_widget, "activate", cmd,  arg, default_pointer)
 		end
 
 	add_change_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add 'cmd' to the list of commands to be executed 
 			-- when the text of the widget have changed.
---		local
---			p: POINTER
 		do
---			p := widget
---			widget := entry_widget
---			add_command (widget, "changed", cmd,  arg)
---			widget := p
-			add_command (entry_widget, "changed", cmd,  arg)
+			add_command (entry_widget, "changed", cmd,  arg, default_pointer)
 		end
 
 feature -- Event -- removing command association
@@ -366,7 +358,7 @@ feature -- Event -- removing command association
 		do
 			p := widget
 			widget := list_widget
-			remove_commands (widget, selection_changed_id)
+			remove_commands (widget, select_child_id)
 			widget := p
 		end
 

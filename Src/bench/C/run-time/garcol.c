@@ -291,7 +291,10 @@ rt_shared char **st_alloc(register struct stack *stk, register int size);		/* Cr
 rt_shared void st_truncate(register struct stack *stk);		/* Truncate stack if necessary */
 rt_shared void st_wipe_out(register struct stchunk *chunk);		/* Remove unneeded chunk from stack */
 rt_private int st_extend(register struct stack *stk, register int size);			/* Extends size of stack */
+
+#ifdef DEBUG
 rt_private int reset(register1 struct stack *);				/* Reset stack to its initial state */
+#endif
 
 /* Marking algorithm */
 #ifdef RECURSIVE_MARKING

@@ -204,8 +204,28 @@ feature -- Basic operations
 				invalidate
 				update
 			elseif  virtual_key = Vk_right and then cursor /= Void then
-	   			io.putstring("go right")
+	   			io.putstring("go right%N")
 				cursor.go_right_char
+				invalidate
+				update
+			elseif  virtual_key = Vk_up and then cursor /= Void then
+	   			io.putstring("go up%N")
+				cursor.go_up_line
+				invalidate
+				update
+			elseif  virtual_key = Vk_down and then cursor /= Void then
+	   			io.putstring("go down%N")
+				cursor.go_down_line
+				invalidate
+				update
+			elseif  virtual_key = Vk_home and then cursor /= Void then
+	   			io.putstring("go home%N")
+				cursor.go_start_line
+				invalidate
+				update
+			elseif  virtual_key = Vk_end and then cursor /= Void then
+	   			io.putstring("go end%N")
+				cursor.go_end_line
 				invalidate
 				update
 			else

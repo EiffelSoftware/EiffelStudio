@@ -3,6 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
+
 class
 	IL_ENVIRONMENT
 	
@@ -35,7 +36,7 @@ feature -- Access
 		end
 
 	dotnet_framework_path: STRING is
-			-- Path to .NET Framework.
+			-- Path to .NET Framework. 
 		require
 			is_dotnet_installed: is_dotnet_installed
 		local
@@ -47,8 +48,8 @@ feature -- Access
 				-- We allocate 2 * n bytes, as `p' will hold a unicode string.
 			p := p.memory_alloc (2 * n)
 			if get_core_system_directory (p, n, len) = 0 then
-				create path.make_empty (len + 1)
-				n := wcstombs (path.item, p, len)
+				create path.make_empty (last_core_path_length + 1)
+				n := wcstombs (path.item, p, last_core_path_length)
 				Result := path.string
 			end
 			p.memory_free
@@ -122,6 +123,7 @@ feature {NONE} -- Implementation
 		do
 			n := filled_length
 			Result := internal_get_core_system_directory (path, buf_size, $n);
+			last_core_path_length := n
 		end
 
 	internal_get_core_system_directory (path: POINTER; buf_size: INTEGER; filled_length: POINTER): INTEGER is
@@ -142,5 +144,8 @@ feature {NONE} -- Implementation
 		alias
 			"wcstombs"
 		end
-		
+	
+	last_core_path_length: INTEGER
+			-- Length of last retrived core system directory path
+
 end -- class IL_ENVIRONMENT

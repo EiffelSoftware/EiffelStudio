@@ -34,6 +34,11 @@ inherit
 			compute_minimum_width, compute_minimum_height, 
 			compute_minimum_size, interface
 		end
+		
+	EV_DOCKABLE_TARGET_IMP
+		redefine
+			interface
+		end
 
 	EV_ITEM_LIST_IMP [EV_TOOL_BAR_ITEM]
 		redefine
@@ -423,6 +428,11 @@ feature -- Basic operation
 		do
 			pre_drop_it := find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
+			
+			if pre_drop_it /= Void and then pre_drop_it.is_dragable and button = 1 and not is_dragging then
+				item_is_dockable_source := True
+				start_dragable (x_pos, y_pos, 1, 0, 0, 0, pt.x, pt.y, pre_drop_it.interface)
+			end
 
 			if pre_drop_it /= Void and not transport_executing
 				and not item_is_in_pnd then
@@ -877,6 +887,36 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 					check_button (t.id)
 				end
 			end
+		end
+		
+feature {EV_DOCKABLE_SOURCE_I} -- Implementation
+
+	insertion_position: INTEGER is
+			--
+		local
+			offset: INTEGER
+			temp1, temp2: INTEGER
+			button: EV_TOOL_BAR_BUTTON_IMP
+			item_index: INTEGER
+		do
+			Result := -1
+			offset := internal_screen.pointer_position.x - screen_x
+		--	button := find_item_at_position (offset, height // 2)
+			
+			item_index := find_button(offset, height // 2)
+			io.putstring ("Item index : " + item_index.out + "%N")
+			if item_index >= 0 and item_index < ev_children.count then
+				 button := ev_children.i_th (item_index + 1)
+			elseif item_index <= - 1 and item_index >= - count then
+				button := ev_children.i_th (item_index.abs)
+			elseif (item_index = -count - 1) then
+				Result := count + 1
+			end
+			
+			if button /= Void then
+				Result := internal_get_index (button)	
+			end
+			
 		end
 
 feature {EV_PND_TRANSPORTER_IMP}

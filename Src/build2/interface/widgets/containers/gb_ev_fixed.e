@@ -64,9 +64,6 @@ feature -- Access
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		local
-			label: EV_LABEL
-			second: like ev_type
-			check_button: EV_CHECK_BUTTON
 			button: EV_BUTTON
 		do
 			create button.make_with_text ("Position children")
@@ -89,7 +86,6 @@ feature {GB_XML_STORE} -- Output
 		local
 			temp_x_position_string, temp_y_position_string,
 			temp_width_string, temp_height_string: STRING
-			temp: STRING
 		do
 			temp_x_position_string := ""
 			temp_y_position_string := ""
@@ -141,9 +137,6 @@ feature {GB_XML_STORE} -- Output
 		
 	modify_from_xml (element: XML_ELEMENT) is
 			-- Update all items in `objects' based on information held in `element'.
-		local
-			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
-			element_info: ELEMENT_INFORMATION
 		do
 				-- All the building for an EV_FIXED needs to be deferred so
 				-- we set up some deferred building now.
@@ -296,8 +289,8 @@ feature {NONE} -- Implementation
 	layout_window: EV_DIALOG is
 			-- Window for laying out children of fixed.
 		local
-			horizontal_box, hb: EV_HORIZONTAL_BOX
-			vertical_box, vb, vb1: EV_VERTICAL_BOX
+			horizontal_box: EV_HORIZONTAL_BOX
+			vertical_box, vb1: EV_VERTICAL_BOX
 			ok_button: EV_BUTTON
 			list_item: EV_LIST_ITEM
 			grid_control_holder: EV_FRAME
@@ -471,9 +464,8 @@ feature {NONE} -- Implementation
 	draw_grid is
 			-- Draw snap to grid in `world'.
 		local
-			counter, counter2: INTEGER
+			counter: INTEGER
 			figure_line: EV_FIGURE_LINE
-			figure_dot: EV_FIGURE_DOT
 			color: EV_COLOR
 			relative_point: EV_RELATIVE_POINT
 		do
@@ -540,9 +532,8 @@ feature {NONE} -- Implementation
 			-- Track `x', `y' position of cursor, and 
 		local
 			widget: EV_WIDGET
-			old_width: INTEGER
 			temp: INTEGER
-			temp_x, temp_y: INTEGER
+			temp_x: INTEGER
 			new_x, new_y: INTEGER
 		do
 				-- Store `x' and `y' for use elsewhere.

@@ -96,7 +96,11 @@ feature -- Assertion
 	parent_set (par: EV_ANY): BOOLEAN is
 			-- Is the parent set
 		do
-			Result := parent_imp.interface = par
+			if parent_imp /= Void then
+				Result := parent_imp.interface = par
+			else
+				Result := par = Void
+			end				
 		end
 
 feature -- Event : command association

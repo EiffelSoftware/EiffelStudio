@@ -14,6 +14,7 @@ deferred class
 inherit
 	EV_PRIMITIVE_I
 	
+	EV_FONTABLE_I
 feature -- Access
 
         text: STRING is

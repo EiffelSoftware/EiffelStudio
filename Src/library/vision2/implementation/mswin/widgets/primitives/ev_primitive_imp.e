@@ -15,9 +15,16 @@ inherit
 	EV_PRIMITIVE_I	
 
 	EV_WIDGET_IMP
+		redefine
+			wel_window
+		end
 	
 	EV_SIZEABLE_IMP
-
+	
+feature {NONE} -- Implementation
+	
+	wel_window: WEL_CONTROL
+	
 end
 
 --|----------------------------------------------------------------

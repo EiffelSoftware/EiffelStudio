@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"EiffelVision widget, gtk implementation."
 	status: "See notice at end of class"
@@ -30,25 +29,38 @@ feature -- Status report
 	destroyed: BOOLEAN is
 			-- Is Current widget destroyed?
 		do
-			Result := not exists
+			Result := not wel_window.exists
 		end
 		
 	insensitive: BOOLEAN is
 			-- Is current widget insensitive?
                 do
-                        Result := not enabled
+                        Result := not wel_window.enabled
 		end
 
---	shown: from WEL_WINDOW
-
+	shown: BOOLEAN is
+		do
+			Result := wel_window.shown
+		end
+	
 feature -- Status setting
 
---	destroy: from WEL_WINDOW
-
---	hide: from WEL_WINDOW
+	destroy is
+		do
+			wel_window.destroy
+		end
+	
+	hide is
 			-- Make widget invisible on the screen.
---	show: from WEL_WINDOW
-
+		do
+			wel_window.hide
+		end
+	
+	show is
+		do
+			wel_window.show
+		end
+	
 	set_insensitive (flag: BOOLEAN) is
 			-- Set current widget in insensitive mode if
 			-- `flag'. This means that any events with an
@@ -60,36 +72,96 @@ feature -- Status setting
 			-- sensitive mode otherwise.
 		do
 			if flag then
-				disable
+				wel_window.disable
 			else
-				enable
+				wel_window.enable
 			end
 		end
 	
 feature -- Measurement
 	
---	x: from WEL_WINDOW
+	x: INTEGER is
+		do
+			Result := wel_window.x
+		end
+	
+	y: INTEGER is
+		do
+			Result := wel_window.y
+		end
+	
+	width: INTEGER is
+		do
+			Result := wel_window.width
+		end
+	
+	height: INTEGER is 
+		do
+			Result := wel_window.height
+		end
+	
+	minimum_width: INTEGER is
+			-- Minimum width of widget
+		once
+			Result := 0
+		end
 
---	y: from WEL_WINDOW
-
---	width: from WEL_WINDOW
-
---	height: from WEL_WINDOW
-
+	minimum_height: INTEGER is
+			-- Minimum height of widget
+		once
+			Result := 0
+		end
+	
 feature -- Resizing
 
---	set_size: from WEL_WINDOW (resize)
-
---	set_width: from WEL_WINDOW
+	set_size (new_width:INTEGER; new_height: INTEGER) is
+			-- Resize the widget and notify the parent of 
+			-- the resize
+		do
+			wel_window.resize (new_width, new_height)
+			if parent_imp /= Void then
+				parent_imp.child_has_resized (new_width, new_height)
+			end
+		end
 	
---	set_height: from WEL_WINDOW
-
---	set_x: from WEL_WINDOW
+	set_width (new_width :INTEGER) is
+		do
+			wel_window.set_width (new_width)
+			if parent_imp /= Void then
+				parent_imp.child_has_resized (new_width, height)
+			end
+		end
+		
+	set_height (new_height: INTEGER) is
+		do
+			wel_window.set_height (new_height)
+			if parent_imp /= Void then
+				parent_imp.child_has_resized (width, new_height)
+			end
+		end
 	
---	set_x_y: from WEL_WINDOW (move)
-
---	set_y: from WEL_WINDOW
-
+	set_x (new_x: INTEGER) is
+		do
+			wel_window.set_x (new_x)
+		end
+		
+	set_x_y (new_x: INTEGER; new_y: INTEGER) is
+		do
+			wel_window.move (new_x, new_y)
+		end
+	
+	set_y (new_y: INTEGER) is
+		do
+			wel_window.set_y (new_y)
+		end
+	
+	dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
+		-- Check if the dimensions of the widget are set to 
+		-- the values given or the minimum values possible 
+		-- for that widget
+		do
+			Result := (width = new_width or else width = minimum_width) and then (height = new_height or else height = minimum_height)
+		end
 feature -- Event - command association
 
 	add_command (event: EV_EVENT; command: EV_COMMAND; 
@@ -127,16 +199,23 @@ feature -- Event - command association
 	
 feature {EV_CONTAINER_IMP} -- Implementation
 	
-	set_parent (p: EV_CONTAINER_IMP) is
+	set_parent_imp (p: EV_CONTAINER_IMP) is
 		do
-			parent := p
+			parent_imp := p
 		end
 	
 feature {NONE} -- Implementation
 	
-	parent: EV_CONTAINER_IMP
+	parent_imp: EV_CONTAINER_IMP
 			-- Container parent of this widget
-		
+	
+feature {EV_WIDGET_IMP} -- Implementation
+	
+	wel_window: WEL_WINDOW is
+			-- Actual WEL component
+	        deferred
+		end
+	
 end
 
 --|----------------------------------------------------------------

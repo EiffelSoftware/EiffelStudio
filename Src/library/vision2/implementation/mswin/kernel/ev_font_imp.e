@@ -6,7 +6,10 @@ indexing
 
 class
 	EV_FONT_IMP
-
+	
+inherit
+	EV_FONT_I
+	
 creation
 	make,
 	make_by_wel

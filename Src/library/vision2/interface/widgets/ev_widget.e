@@ -40,14 +40,6 @@ feature -- Status report
 			Result := (implementation = Void)
 		end
 
-	realized: BOOLEAN is
-			-- Is Current widget realized?
-		require
-			exists: not destroyed
-		do
-			Result := implementation.realized
-		end
-
 	insensitive: BOOLEAN is
 			-- Is current widget insensitive to
 			-- user actions? (If it is, events will
@@ -63,7 +55,6 @@ feature -- Status report
 			-- Is current widget visible?
 		require
 			exists: not destroyed
-			widget_realized: realized
 		do
 			Result := implementation.shown
 		end
@@ -77,7 +68,10 @@ feature -- Status setting
 		do
 			if not destroyed then
 				implementation.destroy
+				remove_implementation
 			end
+		ensure
+			destroyed: destroyed
 		end
 
 	hide is
@@ -85,7 +79,6 @@ feature -- Status setting
 		 	-- invisible on the screen.
 		require
 			exists: not destroyed
-			widget_realized: realized
 		do
 			implementation.hide
 		ensure
@@ -97,37 +90,12 @@ feature -- Status setting
 		 	-- visible on the screen. (default)
 		require
 			exists: not destroyed
-			widget_realized: realized
 		do
 			implementation.show
 		ensure
 			shown
 		end
 	
-	realize is
-			-- Create actual screen object of Current
-			-- widget and of all children (recursively) 
-			-- and show them on the screen.
-		require
-			exists: not destroyed
-		do
-			implementation.realize
-		ensure
-			Realized: realized
-		end
-	
-
-	unrealize is
-			-- Destroy screen window implementation and
-			-- all screen window implementations of its
-			-- children.
-		require
-			exists: not destroyed
-		do
-			implementation.unrealize
-		ensure
-			not_realized: not realized
-		end
 
 	set_insensitive (flag: BOOLEAN) is
 			-- Set current widget in insensitive mode if
@@ -143,7 +111,7 @@ feature -- Status setting
 		do
 			implementation.set_insensitive (flag)
 		ensure
-			Sensitive: not insensitive	
+			flag = insensitive	
 		end
 	
 	-- What is this for?
@@ -155,7 +123,6 @@ feature -- Status setting
 -- 			-- will have `a_cursor' shape during the grab.
 -- 		require
 -- 			exists: not destroyed
--- 			widget_realized: realized
 -- 		do
 -- 			implementation.grab (a_cursor)
 -- 		end
@@ -165,7 +132,6 @@ feature -- Status setting
 -- 			-- from an earlier grab.
 -- 		require
 -- 			exists: not destroyed
--- 			widget_realized: realized
 -- 		do
 -- 			implementation.ungrab
 -- 		end 
@@ -212,6 +178,28 @@ feature -- Measurement
 			Positive_height: Result >= 0
 		end 
 	
+	minimum_width: INTEGER is
+			-- Minimum width of the widget specified by 
+			-- the underlying toolkit
+		require
+			exists: not destroyed
+		do
+			Result := implementation.height
+		ensure
+			Positive_height: Result >= 0
+		end 
+	
+	minimum_height: INTEGER is
+			-- Minimum height of the widget specified by 
+			-- the underlying toolkit
+		require
+			exists: not destroyed
+		do
+			Result := implementation.height
+		ensure
+			Positive_height: Result >= 0
+		end 
+	
 -- 	-- Do we need this?
 -- 	real_x: INTEGER is
 -- 			-- Vertical position relative to root window
@@ -235,7 +223,7 @@ feature -- Measurement
 
 feature -- Resizing
 
-	set_size (new_width:INTEGER; new_height: INTEGER) is
+	set_size (new_width: INTEGER; new_height: INTEGER) is
 			-- Set width and height to `new_width'
 			-- and `new_height'.
 		require
@@ -244,6 +232,8 @@ feature -- Resizing
 			Positive_height: new_height >= 0
 		do
 			implementation.set_size (new_width, new_height)
+		ensure
+			dimensions_set: implementation.dimensions_set (new_width, new_height)
 		end 
 
 	set_width (new_width :INTEGER) is
@@ -253,6 +243,8 @@ feature -- Resizing
 			Positive_width: new_width >= 0
 		do
 			implementation.set_width (new_width)
+		ensure
+			dimensions_set: implementation.dimensions_set (new_width, height)
 		end
 
 	set_height (new_height: INTEGER) is
@@ -262,6 +254,8 @@ feature -- Resizing
 			Positive_height: new_height >= 0
 		do
 			implementation.set_height (new_height)
+		ensure					
+			dimensions_set: implementation.dimensions_set (width, new_height)
 		end
 
 	set_x (new_x: INTEGER) is
@@ -271,6 +265,8 @@ feature -- Resizing
 			exists: not destroyed
 		do
 			implementation.set_x (new_x)
+		ensure
+			x_set: x = new_x
 		end
 
 	set_x_y (new_x: INTEGER; new_y: INTEGER) is
@@ -281,6 +277,9 @@ feature -- Resizing
 			exists: not destroyed
 		do
 			implementation.set_x_y (new_x, new_y)
+		ensure
+			x_set: x = new_x	
+			y_set: y = new_y	
 		end
 
 	set_y (new_y: INTEGER) is
@@ -290,6 +289,8 @@ feature -- Resizing
 			exists: not destroyed
 		do
 			implementation.set_y (new_y)
+		ensure
+			y_set: y = new_y		
 		end
 
 feature -- Comparison
@@ -338,6 +339,8 @@ feature -- Event - command association
 	last_command_id: INTEGER is
 			-- Id of the last command added by feature
 			-- 'add_command'
+		require		
+			exists: not destroyed
 		do
 			Result := implementation.last_command_id
 		end
@@ -348,7 +351,7 @@ feature {EV_WIDGET} -- Implementation
 	implementation: EV_WIDGET_I
 			-- Implementation of Current widget
 
-feature {W_MANAGER} -- Implementation
+feature {NONE} -- Implementation
 	
 	remove_implementation is
 			-- Remove implementation of Current widget.
@@ -356,7 +359,7 @@ feature {W_MANAGER} -- Implementation
                         implementation := Void
                 ensure
                         void_implementation: implementation = Void
-                end;
+                end
 
 feature {NONE} -- Implementation
 
@@ -367,7 +370,7 @@ feature {NONE} -- Implementation
                 do
                         implementation.build
 			parent.add_child (Current)
-                end;
+                end
 
 invariant
 

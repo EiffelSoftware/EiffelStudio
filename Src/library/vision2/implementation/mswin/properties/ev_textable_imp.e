@@ -14,11 +14,16 @@ inherit
 	EV_TEXT_CONTAINER_I
 	
 	EV_PRIMITIVE_IMP
-
+	
+	EV_FONTABLE_IMP
+	     
 feature -- Access
 
---	text: STRING is -- defined in WEL_WINDOW (WEL_PUSH_BUTTON)
-	
+	text: STRING is 
+		do
+			Result := wel_window.text
+		end
+		
 feature -- Status setting
 
         set_center_alignment is
@@ -47,9 +52,28 @@ feature -- Status setting
 	
 feature -- Element change	
 	
-	--set_text (a_text: STRING) is  -- defined in WEL_WINDOW (WEL_PUSH_BUTTON)
-			-- Set current button text to `a_text'.
+	set_text (t: STRING) is
+		do
+			wel_window.set_text (t)
+			set_default_size
+		end
 	
+	wel_font: WEL_FONT is
+		do
+			Result := wel_window.font
+		end
+
+	wel_set_font (f:WEL_FONT) is
+		do
+			wel_window.set_font (f)
+		end
+	
+feature -- Implementation
+	
+	set_default_size is
+		deferred
+		end
+		
 end
 
 --|----------------------------------------------------------------

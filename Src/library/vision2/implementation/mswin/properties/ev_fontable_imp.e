@@ -14,12 +14,13 @@ feature -- Access
 		require
 			exists: not destroyed
 		local
+			font_windows: EV_FONT_IMP
 			default_font: WEL_FONT
 		do
-			if private_font /= Void then
+			if private_font = Void then
 				!! private_font.make
 				!WEL_ANSI_VARIABLE_FONT! default_font.make
-				font_windows ?= privat_font.implementation
+				font_windows ?= private_font.implementation
 				font_windows.make_by_wel (default_font)
 			end
 			Result := private_font	
@@ -53,7 +54,7 @@ feature -- Status setting
 	wel_set_font (f:WEL_FONT) is
 		deferred
 		end
-
+	
 	destroyed: BOOLEAN is
 		deferred
 		end

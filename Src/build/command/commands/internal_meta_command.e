@@ -50,7 +50,7 @@ feature
 
 feature -- Access 
 
-	add_command (a_state: STATE; a_command: BUILD_CMD) is
+	add_command (a_state: BUILD_STATE; a_command: BUILD_CMD) is
 			-- Add `a_command' to be executed in the state `a_state'.
 		require
 			command_not_void: a_command /= Void
@@ -58,7 +58,7 @@ feature -- Access
 			associated_meta_command.add (a_state.identifier, a_command)
 		end
 
-	remove_command (a_state: STATE; a_command: BUILD_CMD) is
+	remove_command (a_state: BUILD_STATE; a_command: BUILD_CMD) is
 			-- Remove `a_command' in the state `a_state'.
 		require
 			command_not_void: a_command /= Void

@@ -11,7 +11,8 @@ class
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
-			new_toolbar_item
+			new_toolbar_item,
+			tooltext
 		end
 
 create
@@ -47,6 +48,12 @@ feature -- Status report
 			else
 				Result := Interface_names.e_Unify_stone
 			end
+		end
+
+	tooltext: STRING is
+			-- Text displayed on the toolbar button.
+		do
+			Result := Interface_names.b_Toggle_stone_management
 		end
 
 	menu_name: STRING is
@@ -129,33 +136,16 @@ feature -- Basic operations
 
 	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
-		local
-			tt: STRING
 		do
-				-- Add it to the managed toolbar items
-			if managed_toolbar_items = Void then
-				create managed_toolbar_items.make (1)
-			end
 				-- Create the button
 			create Result.make (Current)
-			if display_text and pixmap.count >= 2 then
-				Result.set_pixmap (pixmap @ 2)
-			else
-				Result.set_pixmap (pixmap @ 1)
-			end
+			initialize_toolbar_item (Result, display_text, use_gray_icons)
 			if window.unified_stone then
 				Result.toggle
 			end
 			Result.select_actions.extend (agent execute)
 			Result.select_actions.extend (agent toggle_buttons)
 			Result.enable_sensitive
-			tt := tooltip.twin
-			if accelerator /= Void then
-				tt.append (Opening_parenthesis)
-				tt.append (accelerator.out)
-				tt.append (Closing_parenthesis)
-			end
-			Result.set_tooltip (tt)
 		end
 
 feature {NONE} -- Implementation

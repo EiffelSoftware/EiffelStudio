@@ -76,11 +76,11 @@ feature
 			st.add_int (position)
 		end
 
-	dump (file: FILE) is
+	dump (buffer: GENERATION_BUFFER) is
 			-- Debug purpose
 		do
-			file.putstring ("Formal #")
-			file.putint (position)
+			buffer.putstring ("Formal #")
+			buffer.putint (position)
 		end
 
 	description: INTEGER_DESC is
@@ -89,7 +89,7 @@ feature
 			False
 		end
 
-	generate_cecil_value (f: INDENT_FILE) is
+	generate_cecil_value (buffer: GENERATION_BUFFER) is
 		do
 		ensure then
 			False

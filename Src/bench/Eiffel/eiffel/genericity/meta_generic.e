@@ -60,7 +60,7 @@ feature
 			end;
 		end;
 
-	generate_cecil_values (f: INDENT_FILE) is
+	generate_cecil_values (buffer: GENERATION_BUFFER) is
 			-- Generate Cecil meta-types
 		local
 			i: INTEGER;
@@ -72,8 +72,8 @@ feature
 			until
 				i > upper
 			loop
-				local_copy.item (i).generate_cecil_value (f);
-				f.putstring (",%N");
+				local_copy.item (i).generate_cecil_value (buffer);
+				buffer.putstring (",%N");
 				i := i + 1;
 			end;
 		end;

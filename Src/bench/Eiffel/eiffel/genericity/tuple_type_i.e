@@ -47,35 +47,35 @@ feature
 			Result.set_true_generics (clone (true_generics))
 		end
 
-	dump (file: FILE) is
+	dump (buffer: GENERATION_BUFFER) is
 
 		local
 			i, count, meta_type: INTEGER
 			s: STRING
 		do
 			if is_expanded then
-				file.putstring ("expanded ")
+				buffer.putstring ("expanded ")
 			end
 			s := clone (base_class.name)
 			s.to_upper
-			file.putstring (s)
+			buffer.putstring (s)
 
 			count := meta_generic.count
 
 			if count /= 0 then
-				file.putstring (" [")
+				buffer.putstring (" [")
 				from
 					i := 1
 				until
 					i > count
 				loop
-				meta_generic.item (i).dump (file)
+				meta_generic.item (i).dump (buffer)
 					if i < count then
-						file.putstring (", ")
+						buffer.putstring (", ")
 					end
 					i := i + 1
 				end
-				file.putchar (']')
+				buffer.putchar (']')
 			end
 		end
 
@@ -130,21 +130,21 @@ feature
 
 feature -- Generic conformance
 
-	generate_cid (f : INDENT_FILE; final_mode, use_info : BOOLEAN) is
+	generate_cid (buffer : GENERATION_BUFFER; final_mode, use_info : BOOLEAN) is
 
 		local
 			i, up : INTEGER
 		do
 			if use_info and then (cr_info /= Void) then
 				-- It's an ancored type 
-				cr_info.generate_cid (f, final_mode)
+				cr_info.generate_cid (buffer, final_mode)
 			end
-			f.putint (-15)
-			f.putstring (", ")
-			f.putint (true_generics.count)
-			f.putstring (", ")
-			f.putint (generated_id (final_mode))
-			f.putstring (", ")
+			buffer.putint (-15)
+			buffer.putstring (", ")
+			buffer.putint (true_generics.count)
+			buffer.putstring (", ")
+			buffer.putint (generated_id (final_mode))
+			buffer.putstring (", ")
 
 			from
 				i  := true_generics.lower
@@ -152,7 +152,7 @@ feature -- Generic conformance
 			until
 				i > up
 			loop
-				true_generics.item (i).generate_cid (f, final_mode, use_info)
+				true_generics.item (i).generate_cid (buffer, final_mode, use_info)
 				i := i + 1
 			end
 		end

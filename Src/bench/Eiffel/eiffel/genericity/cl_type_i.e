@@ -168,18 +168,18 @@ feature
 			base_class.append_signature (st)
 		end
 
-	dump (file: FILE) is
+	dump (buffer: GENERATION_BUFFER) is
 		local
 			s: STRING
 		do
 			if is_expanded then
-				file.putstring ("expanded ")
+				buffer.putstring ("expanded ")
 			elseif is_separate then
-				file.putstring ("separate ")
+				buffer.putstring ("separate ")
 			end
 			s := clone (base_class.name)
 			s.to_upper
-			file.putstring (s)
+			buffer.putstring (s)
 		end
 
 	has_associated_class_type: BOOLEAN is
@@ -232,15 +232,15 @@ feature
 			is_expanded := True
 		end
 
-	generate_cecil_value (file: INDENT_FILE) is
+	generate_cecil_value (buffer: GENERATION_BUFFER) is
 			-- Generate cecil value
 		do
 				-- FIXME????: separate
 			if not is_expanded then
-				file.putstring ("SK_DTYPE")
+				buffer.putstring ("SK_DTYPE")
 			else
-				file.putstring ("SK_EXP + (uint32) ")
-				file.putint (base_id.id)
+				buffer.putstring ("SK_EXP + (uint32) ")
+				buffer.putint (base_id.id)
 			end
 		end
 
@@ -313,7 +313,7 @@ feature -- Generic conformance
 			end
 		end
 
-	generate_cid (f : INDENT_FILE; final_mode, use_info : BOOLEAN) is
+	generate_cid (buffer : GENERATION_BUFFER; final_mode, use_info : BOOLEAN) is
 
 		do
 			if
@@ -321,10 +321,10 @@ feature -- Generic conformance
 				and then not (is_expanded or is_basic)
 			then
 				-- It's an anchored type 
-				cr_info.generate_cid (f, final_mode)
+				cr_info.generate_cid (buffer, final_mode)
 			end
-			f.putint (generated_id (final_mode))
-			f.putstring (", ")
+			buffer.putint (generated_id (final_mode))
+			buffer.putstring (", ")
 		end
 
 	make_gen_type_byte_code (ba : BYTE_ARRAY; use_info : BOOLEAN) is

@@ -16,15 +16,21 @@ feature
 		deferred
 		end
 
-	dump (file: FILE) is
+	dump (buffer: GENERATION_BUFFER) is
 			-- Debug purpose
+		require
+			buffer_exists: buffer /= Void
 		deferred
 		end
 
 	trace is
 			-- Debug purpose
+		local
+			s: GENERATION_BUFFER
 		do
-			dump (io.error)
+			!! s.make (0)
+			dump (s)
+			io.error.put_string (s)
 		end
 
 	same_as (other: TYPE_I): BOOLEAN is
@@ -175,7 +181,7 @@ feature
 		deferred
 		end; -- description
 
-	generate_cecil_value (file: INDENT_FILE) is
+	generate_cecil_value (buffer: GENERATION_BUFFER) is
 			-- Generate type value for cecil.
 		deferred
 		end; -- generate_cecil_value
@@ -209,15 +215,15 @@ feature -- Generic conformance
 			Result := -10       -- Invalid type id.
 		end
 
-	generate_cid (f : INDENT_FILE; final_mode, use_info : BOOLEAN) is
+	generate_cid (buffer : GENERATION_BUFFER; final_mode, use_info : BOOLEAN) is
 			-- Generate mode dependent sequence of type id's 
 			-- separated by commas. `use_info' is true iff 
 			-- we generate code for a creation instruction.
 		require
-			valid_file : f /= Void
+			valid_file : buffer /= Void
 		do
-			f.putint (generated_id (final_mode))
-			f.putstring (", ")
+			buffer.putint (generated_id (final_mode))
+			buffer.putstring (", ")
 		end
 
 	make_gen_type_byte_code (ba : BYTE_ARRAY; use_info : BOOLEAN) is

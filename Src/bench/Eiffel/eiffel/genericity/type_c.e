@@ -50,42 +50,38 @@ feature
 		deferred
 		end
 
-	generate (file: INDENT_FILE) is
-			-- Generate C type in file `file'.
+	generate (buffer: GENERATION_BUFFER) is
+			-- Generate C type in `buffer'.
 		require
-			good_argument: file /= Void
-			good_context: file.is_open_write or else file.is_open_append
+			good_argument: buffer /= Void
 		deferred
 		end
 
-	generate_cast (file: INDENT_FILE) is
-			-- Generate C cast in file `file'.
+	generate_cast (buffer: GENERATION_BUFFER) is
+			-- Generate C cast in `buffer'.
 		require
-			good_argument: file /= Void
-			good_context: file.is_open_write or else file.is_open_append
+			good_argument: buffer /= Void
 		deferred
 		end
 
-	generate_access_cast (file: INDENT_FILE) is
-			-- Generate access C cast in file `file'.
+	generate_access_cast (buffer: GENERATION_BUFFER) is
+			-- Generate access C cast in `buffer'.
 		require
-			good_argument: file /= Void
-			good_context: file.is_open_write or else file.is_open_append
+			good_argument: buffer /= Void
 		deferred
 		end
 
-	generate_function_cast (file: INDENT_FILE; arg_types: ARRAY [STRING]) is
-			-- Generate C function cast in file `file'.
+	generate_function_cast (buffer: GENERATION_BUFFER; arg_types: ARRAY [STRING]) is
+			-- Generate C function cast in `buffer'.
 		require
-			good_arguments: file /= Void and arg_types /= Void
-			good_context: file.is_open_write or else file.is_open_append
+			good_arguments: buffer /= Void and arg_types /= Void
 			good_array: arg_types.lower = 1
 		local
 			i, nb: INTEGER
 		do
-			file.putstring ("FUNCTION_CAST(")
-			file.putstring (c_string)
-			file.putstring (", (")
+			buffer.putstring ("FUNCTION_CAST(")
+			buffer.putstring (c_string)
+			buffer.putstring (", (")
 			from
 				i := 1
 				nb := arg_types.count
@@ -93,36 +89,33 @@ feature
 				i > nb
 			loop
 				if i /= 1 then
-					file.putstring (", ")
+					buffer.putstring (", ")
 				end
-				file.putstring (arg_types @ i)
+				buffer.putstring (arg_types @ i)
 				i := i + 1
 			end
-			file.putstring (")) ")
+			buffer.putstring (")) ")
 		end
 
-	generate_size (file: INDENT_FILE) is
+	generate_size (buffer: GENERATION_BUFFER) is
 			-- Generate size of C type
 		require
-			good_argument: file /= Void
-			good_context: file.is_open_write or else file.is_open_append
+			good_argument: buffer /= Void
 		deferred
 		end
 
-	generate_union (file: INDENT_FILE) is
+	generate_union (buffer: GENERATION_BUFFER) is
 			-- Generate discriminant of C structure "item" associated
-			-- to the current C type in `file'.
+			-- to the current C type in `buffer'.
 		require
-			good_argument: file /= Void
-			good_context: file.is_open_write or else file.is_open_append
+			good_argument: buffer /= Void
 		deferred
 		end
 
-	generate_sk_value (file: INDENT_FILE) is
-			-- Generate SK value associated to current C type in `file'.
+	generate_sk_value (buffer: GENERATION_BUFFER) is
+			-- Generate SK value associated to current C type in `buffer'.
 		require
-			good_argument: file /= Void
-			good_context: file.is_open_write or else file.is_open_append
+			good_argument: buffer /= Void
 		deferred
 		end
 

@@ -58,44 +58,44 @@ feature
 		end
 
 	metamorphose
-	(reg, value: REGISTRABLE; file: INDENT_FILE; workbench_mode: BOOLEAN) is
+	(reg, value: REGISTRABLE; buffer: GENERATION_BUFFER; workbench_mode: BOOLEAN) is
 			-- Generate the metamorphism from simple type to reference and
 			-- put result in register `reg'. The value of the basic type is
 			-- held in `value'.
 		require
 			valid_reg: reg /= Void
 			valid_value: value /= Void
-			valid_file: file /= Void
+			valid_file: buffer /= Void
 		do
 			reg.print_register
-			file.putstring (" = ")
-			file.putstring("RTLN(")
+			buffer.putstring (" = ")
+			buffer.putstring("RTLN(")
 			if workbench_mode then
-				file.putstring ("RTUD(")
-				associated_reference.id.generated_id (file)
-				file.putchar (')')
+				buffer.putstring ("RTUD(")
+				associated_reference.id.generated_id (buffer)
+				buffer.putchar (')')
 			else
-				file.putint (associated_dtype)
+				buffer.putint (associated_dtype)
 			end
-			file.putstring ("), *")
-			generate_access_cast (file)
+			buffer.putstring ("), *")
+			generate_access_cast (buffer)
 			reg.print_register
-			file.putstring (" = ")
+			buffer.putstring (" = ")
 			value.print_register
 		end
 
-	end_of_metamorphose (reg, value: REGISTRABLE; file: INDENT_FILE) is
+	end_of_metamorphose (reg, value: REGISTRABLE; buffer: GENERATION_BUFFER) is
 			-- After the metamorphosis, we need to put back the new value computed
 			-- in `reg' into `value' otherwise the metamorphosis has no effect.
 		require
 			valid_reg: reg /= Void
 			valid_value: value /= Void
-			valid_file: file /= Void
+			valid_file: buffer /= Void
 		do
 --			value.print_register
---			file.putstring (" = ")
---			file.putchar ('*')
---			generate_access_cast (file)
+--			buffer.putstring (" = ")
+--			buffer.putchar ('*')
+--			generate_access_cast (buffer)
 --			reg.print_register
 		end
 

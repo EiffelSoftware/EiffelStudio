@@ -122,7 +122,7 @@ end;
 				data := local_cursor.item;
 debug
 	io.error.putstring ("Adding data%N");
-	data.dump (io.error);
+	data.trace
 	io.error.new_line;
 end;
 				data.base_class.update_types (data);
@@ -298,7 +298,7 @@ feature -- Debug
 				local_cursor = Void
 			loop
 				data := local_cursor.item;
-				data.dump (io.error);
+				data.trace
 				io.error.new_line;
 				local_cursor := local_cursor.right;
 			end;

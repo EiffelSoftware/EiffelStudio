@@ -39,11 +39,11 @@ feature
 			st.add_int (size)
 		end
 
-	dump (file: FILE) is
+	dump (buffer: GENERATION_BUFFER) is
 			-- Debug purpose
 		do
-			file.putstring ("BIT ")
-			file.putint (size)
+			buffer.putstring ("BIT ")
+			buffer.putint (size)
 		end
 
 	same_as (other: TYPE_I): BOOLEAN is
@@ -64,11 +64,11 @@ feature
 			Result.set_value (size)
 		end
 
-	generate_cecil_value (file: INDENT_FILE) is
+	generate_cecil_value (buffer: GENERATION_BUFFER) is
 			-- Generate Cecil type value.
 		do
-			file.putstring ("SK_BIT + (uint32) ")
-			file.putint (size)
+			buffer.putstring ("SK_BIT + (uint32) ")
+			buffer.putint (size)
 		end
 
 	c_string: STRING is "char *"
@@ -80,28 +80,28 @@ feature
 	separate_send_macro: STRING is "not_implemented"
 			-- String generated to return the result of a separate call
 
-	generate (file: INDENT_FILE) is
-			-- Generate C type in file `file'.
+	generate (buffer: GENERATION_BUFFER) is
+			-- Generate C type in `buffer'.
 		do
-			file.putstring ("char *")
+			buffer.putstring ("char *")
 		end
 
-	generate_cast (file: INDENT_FILE) is
-			-- Generate C cast in file `file'.
+	generate_cast (buffer: GENERATION_BUFFER) is
+			-- Generate C cast in `buffer'.
 		do
-			file.putstring ("(char *) ")
+			buffer.putstring ("(char *) ")
 		end
 
-	generate_access_cast (file: INDENT_FILE) is
-			-- Generate access C cast in file `file'.
+	generate_access_cast (buffer: GENERATION_BUFFER) is
+			-- Generate access C cast in `buffer'.
 		do
-			file.putstring ("(char **) ")
+			buffer.putstring ("(char **) ")
 		end
 
-	generate_size (file: INDENT_FILE) is
+	generate_size (buffer: GENERATION_BUFFER) is
 			-- Generate size of C type
 		do
-			file.putstring ("sizeof(EIF_REFERENCE)")
+			buffer.putstring ("sizeof(EIF_REFERENCE)")
 		end
 
 	hash_code: INTEGER is
@@ -123,28 +123,28 @@ feature
 		end
 
 	metamorphose
-	(reg, value: REGISTRABLE; file: INDENT_FILE; workbench_mode: BOOLEAN) is
+	(reg, value: REGISTRABLE; buffer: GENERATION_BUFFER; workbench_mode: BOOLEAN) is
 			-- Generate the metamorphism from simple type to reference and
 			-- put result in register `reg'. The value of the basic type is
 			-- held in `value'. 
 		do
 			reg.print_register
-			file.putstring (" = ")
+			buffer.putstring (" = ")
 			value.print_register
 		end
 
-	generate_union (file: INDENT_FILE) is
+	generate_union (buffer: GENERATION_BUFFER) is
 			-- Generate discriminant of C structure "item" associated
-			-- to the current C type in `file'.
+			-- to the current C type in `buffer'.
 		do
-			 file.putstring ("it_bit")
+			 buffer.putstring ("it_bit")
 		end
 
-	generate_sk_value (file: INDENT_FILE) is
-			-- Generate SK value associated to current C type in `file'.
+	generate_sk_value (buffer: GENERATION_BUFFER) is
+			-- Generate SK value associated to current C type in `buffer'.
 		do
-			file.putstring ("SK_BIT + (uint32) ")
-			file.putint (size)
+			buffer.putstring ("SK_BIT + (uint32) ")
+			buffer.putint (size)
 		end
 
 	type_a: BITS_A is
@@ -160,13 +160,13 @@ feature -- Generic conformance
 			Result := -7        -- Code for BITs
 		end
 
-	generate_cid (f : INDENT_FILE; final_mode, use_info : BOOLEAN) is
+	generate_cid (buffer : GENERATION_BUFFER; final_mode, use_info : BOOLEAN) is
 
 		do
-			f.putint (generated_id (final_mode))
-			f.putstring (", ")
-			f.putint (size)
-			f.putstring (", ")
+			buffer.putint (generated_id (final_mode))
+			buffer.putstring (", ")
+			buffer.putint (size)
+			buffer.putstring (", ")
 		end
 
 	make_gen_type_byte_code (ba : BYTE_ARRAY; use_info : BOOLEAN) is

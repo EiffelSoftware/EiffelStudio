@@ -22,6 +22,7 @@
 #include "eif_lmalloc.h"	/* for eif_calloc, eif_malloc, eif_free */
 #include <errno.h>			/* For system calls error report */
 #include <sys/types.h>		/* For caddr_t */
+#include <assert.h>
 
 #ifdef HAS_SMART_MMAP
 #include <sys/mman.h>
@@ -39,6 +40,9 @@
 #include "x2c.header"			/* For macro LNGPAD */
 #include "eif_local.h"			/* For epop() */
 #include "eif_sig.h"
+#ifdef EIF_REM_SET_OPTIMIZATION
+#include "eif_special_table.h"	/* For the special table interface. */
+#endif	/* EIF_REM_SET_OPTIMIZATION */
 #ifndef TEST
 #include "eif_main.h"
 #endif
@@ -292,14 +296,44 @@ rt_public char *emalloc(uint32 ftype)
 	flush;
 #endif
 
-	/* Only true objects (i.e. non special) smaller than GS_LIMIT are entitled
-	 * to be allocated in the scavenge zone, if it exists at all. Also the
-	 * objects must not have any attached dispose routine.
+	/* Depending on the optimization chosen, we allocate the object in
+	 * the Generational Scavenge Zone (GSZ) or in the free-list.
+	 * If the flag EIF_MEMORY_OPTIMIZATION is defined then we put the 
+	 * memory objects in the GSZ (i.e those, which inherits from class
+	 * MEMORY, otherwise they are allocated in the free-list.
+	 * All the non-special objects smaller than GS_LIMIT are allocated in the
+	 * the GSZ, otherwise they are allocated in the free-list.
+	 * If the string optimization is on (no defined flag but a different 
+     * C-code is generated), then the special string are also allocated in the
+	 * GSZ with the function strmalloc, strrealloc (see malloc.c), otherwise
+	 * they are allocated in the free-list. -- ET 
 	 */
-	if (!(gen_scavenge & GS_OFF) && nbytes <= GS_LIMIT && 0 == Disp_rout(type)) {
+
+#ifdef EIF_MEMORY_OPTIMIZATION
+	if (!(gen_scavenge & GS_OFF) 
+		&& nbytes <= GS_LIMIT )
+#else	/* EIF_MEMORY_OPTIMIZATION */
+
+	if (!(gen_scavenge & GS_OFF) && nbytes <= GS_LIMIT && 0 == Disp_rout(type)) 
+#endif	/* EIF_MEMORY_OPTIMIZATION */
+	{
 		object = malloc_from_zone(nbytes);
 		if (object != (char *) 0)
 			{
+#ifdef EIF_MEMORY_OPTIMIZATION
+			/* Extra operations for `memory' objects. */
+			if (0 != Disp_rout (type))		/* It is a memory object.	*/
+			{
+				if (-1 == epush (&memory_set, object))
+										/* Push it in the memory set.*/
+				{
+					urgent_plsc(&object);			/* Full safe collection */
+					if (-1 == epush(&memory_set, object))	/* Still failed */
+						enomem(MTC_NOARG);				/* Critical exception */
+				}
+			}
+
+#endif	/* EIF_REM_SET_OPTIMIZATION */
 #ifdef EMCHK
 			char *ret_val;
 
@@ -363,6 +397,45 @@ rt_public char *emalloc(uint32 ftype)
 	EIF_END_GET_CONTEXT
 }
 
+rt_public char *strmalloc(unsigned int nbytes)
+
+{
+	/* String optimization: When allocating a special string, intead
+	 * doing it in the free-list, we tempt to allocate it in the 
+	 * GSZ. 
+	 */
+
+	char *object;		/* Pointer to the freshly created special object */
+	char *ret;			/* Return value: allocated object. */
+	EIF_GET_CONTEXT
+#ifdef STRMALLOC_DEBUG
+	printf ("STRMALLOC_DEBUG: Allocation of string of size %d\n", nbytes);
+#endif 	/* STRMALLOC_DEBUG */
+
+	if (nbytes > GS_LIMIT)		/* Is string too big to be 
+								 * generational scavenge zone. */
+	{
+#ifdef STRMALLOC_DEBUG
+	printf ("STRMALLOC_DEBUG: string will be allocated in free-list \n");
+#endif 	/* STRMALLOC_DEBUG */
+		ret = spmalloc (nbytes);
+		EIF_END_GET_CONTEXT
+		return ret;	/* Allocate it in Free-list. */
+	}
+
+	 object = malloc_from_zone(nbytes);	/* allocate it in scavenge zone. */
+#ifdef STRMALLOC_DEBUG
+	printf ("STRMALLOC_DEBUG: string allocated in GSZ : new string = 0x%x=%s\n", object, object);
+#endif 	/* STRMALLOC_DEBUG */
+
+	 if (object != (char *) 0)
+		return eif_strset(object, nbytes);			/* Special Eiffel object */
+	
+	eraise("String object allocation", EN_MEM);	/* No more memory */
+
+	return (char *) 0;				/* They chose to ignore EN_MEN */
+}
+
 rt_public char *spmalloc(unsigned int nbytes)
 
 {
@@ -387,6 +460,135 @@ rt_public char *spmalloc(unsigned int nbytes)
 	return (char *) 0;				/* They chose to ignore EN_MEN */
 }
 
+rt_public char *strrealloc(char *ptr, long int nbitems)
+		  			/* Original pointer */
+			 		/* New number of items wanted */
+{
+	/* Reallocation of a string object `ptr' for new count `nbitems' */
+	EIF_GET_CONTEXT
+	union overhead *zone;		/* Malloc information zone */
+	char *ref, *object;
+	long count, elem_size;
+	int dtype, dftype;
+	int size;		/* New size of string. */
+
+	/* At the end of the special object arena, there are two long values which
+	 * are kept up-to-date: the actual number of items held and the size in
+	 * byte of each item (the same for all items).
+	 */
+
+/********************** Preconditions ***********************/
+	assert (ptr != (char *) 0);			/* Object not NULL. */
+	assert (!(HEADER (ptr)->ov_size & B_FWD));	/* Cannot be forwarded. */
+	assert (HEADER (ptr)->ov_flags & EO_SPEC);	/* Must be a special object. */
+	assert (!(HEADER (ptr)->ov_flags & EO_REF));	
+							/* Cannot be full of references. */
+	assert (!(HEADER (ptr)->ov_flags & EO_COMP));	
+							/* cannot be a composite object. */
+/******************** End of Preconditions. *****************/
+
+	zone = HEADER(ptr);
+	assert (HEADER (ptr)->ov_flags & EO_SPEC);
+	ref = ptr + (zone->ov_size & B_SIZE) - LNGPAD_2;
+	count = *(long *) ref;
+	elem_size = *(long *) (ref + sizeof(long));
+	size = elem_size * nbitems + LNGPAD_2;
+
+#ifdef STRREALLOC_DEBUG
+		printf ("STRREALLOC_DEBUG: special string %x=%s reallocation, new size= %d, old_size = %d\n", ptr, ptr, size, HEADER(ptr)->ov_size & B_SIZE);
+#endif	/* STRREALLOC_DEBUG */
+
+	epush(&loc_stack, (char *)(&ptr));	/* Object may move if GC called */
+
+	/* FIXME with the case we realloc a smaller area. */
+	assert (!(HEADER(ptr)->ov_size & B_FWD));	/* Not forwarded. */
+	if (zone->ov_flags & (EO_NEW | EO_OLD))	/* Is it out of GSZ? */
+	{
+
+#ifdef STRREALLOC_DEBUG
+		printf ("STRREALLOC_DEBUG: special string %x is out of GSZ\n", ptr);
+#endif	/* STRREALLOC_DEBUG */
+
+		if (nbitems > count)				/* Then update memory usage. */
+			eiffel_usage += (nbitems - count) * elem_size;
+			
+		/* Reallocation in the free-list. */
+		object = xrealloc (ptr, size, GC_ON | GC_FREE);
+
+		assert (!(HEADER(ptr)->ov_size & B_FWD));	/* Not forwarded. */
+
+		/* Reset extra-items with zeros */
+		if (count < nbitems)
+			bzero(object + (count * elem_size), (nbitems - count) * elem_size);
+
+		if (ptr != object)		/* Has ptr moved in the reallocation? */
+		{
+			/* Then Update Header. */
+			zone->ov_size &= ~B_C;		/* Cannot freeze a special object */
+
+			if (HEADER(ptr)->ov_flags & EO_NEW) 
+			{		 								/* Original was new */
+				if (-1 == epush(&moved_set, object)) 
+				{									/* Cannot record object */
+					urgent_plsc(&object);			/* Full safe collection */
+					if (-1 == epush(&moved_set, object))/* Still failed */
+						enomem(MTC_NOARG);			/* Critical exception */
+				}
+			
+			}
+			if (zone->ov_size & B_FWD)		/* Does zone need to be updated? */
+					zone = HEADER (zone->ov_fwd);
+									/* `ptr' has moved, update zone. */
+			assert (!(zone->ov_size & B_FWD));	/* Not forwarded. */
+
+			if (object != ptr && zone->ov_flags & EO_REM)
+					erembq (object);
+		}
+	}
+	else	/* Was allocated in the GSZ. */
+	{
+		uint32 tflags;		/* Temporary Eiffel flags. */
+
+#ifdef STRREALLOC_DEBUG
+		printf ("STRREALLOC_DEBUG: special string %x small enough, reallocated in GSZ, size = %d\n", ptr, size);
+#endif	/* STRREALLOC_DEBUG */
+
+		assert (!(HEADER (ptr)->ov_size & B_BUSY));	/* In scavenge zone. */
+		object = strmalloc (size);	/* Reserve `size' bytes in GSZ. */
+		tflags = HEADER (object)->ov_flags;
+
+		/* Update the Eiffel flags of new reallocated object. */
+		HEADER (object)->ov_flags = HEADER (ptr)->ov_flags | tflags;
+
+		if ((char *) 0 == object) 
+		{
+			eraise("String reallocation", EN_MEM);
+			return (char *) 0;
+		}
+		/* Copy `ptr' in `object'.	*/
+		bcopy ((char *) ptr, (char *) object, (HEADER (ptr)->ov_size & B_SIZE) - LNGPAD_2);
+	}
+
+	if ((char *) 0 == object) 
+	{
+		eraise("String reallocation", EN_MEM);
+		return (char *) 0;
+	}
+
+	epop(&loc_stack, 1);	
+					/* Unprotect `ptr'. No more collection is expected. */
+
+	/* Update special attributes count and element size at the end */
+	zone = HEADER(object);
+	ref = object + (zone->ov_size & B_SIZE) - LNGPAD_2;
+	*(long *) ref = nbitems;						/* New count */
+	*(long *) (ref + sizeof(long)) = elem_size; 	/* New item size */
+
+	return object;
+
+	EIF_END_GET_CONTEXT
+}	/* strrealloc () */
+
 rt_public char *sprealloc(char *ptr, long int nbitems)
 		  			/* Original pointer */
 			 		/* New number of items wanted */
@@ -405,6 +607,7 @@ rt_public char *sprealloc(char *ptr, long int nbitems)
 	 */
 
 	zone = HEADER(ptr);
+	assert (HEADER (ptr)->ov_flags & EO_SPEC);
 	ref = ptr + (zone->ov_size & B_SIZE) - LNGPAD_2;
 	count = *(long *) ref;
 	elem_size = *(long *) (ref + sizeof(long));
@@ -443,8 +646,33 @@ rt_public char *sprealloc(char *ptr, long int nbitems)
 	 * have not been moved around wrt the GC stacks. But it doen't hurt--RAM.
 	 */
 
-	if (object != ptr && HEADER(ptr)->ov_flags & EO_REM)
-		erembq(object);				/* No GC call wanted */
+	if (zone->ov_size & B_FWD)				/* Does zone need to be updated? */
+			zone = HEADER (zone->ov_fwd);	/* `ptr' has moved, update zone. */
+
+	if (object != ptr && zone->ov_flags & EO_REM)
+	{
+#if EIF_REM_SET_OPTIMIZATION 
+		if (zone->ov_flags & EO_REF)
+		{
+#ifdef SPREALLOC_DEBUG
+			printf ("SPREALLOC: object %x has moved to %x\n", ptr, object);
+#endif
+			assert(!(is_in_rem_set (ptr)));
+			assert (is_in_special_rem_set (ptr));
+			assert (HEADER (object)->ov_flags & EO_REF);
+			assert (HEADER (object)->ov_flags & EO_SPEC);
+			assert (HEADER (object)->ov_flags & EO_REM);
+			assert (HEADER (object)->ov_flags & EO_OLD);
+			if (0 == special_erembq_replace (ptr, object))
+				eif_panic ("Special table botched");	
+		}
+		else
+			erembq (object);
+#else
+		erembq (object);	/* Usual remembrance process. */
+				/* A simple remembering for other special objects. */
+#endif	/* EIF_REM_SET_OPTIMIZATION */
+	}
 
 	/* Reset extra-items with zeros */
 	if (count < nbitems)
@@ -2826,6 +3054,36 @@ rt_shared char *eif_set(char *object, unsigned int nbytes, uint32 type)
 		nbytes, type & EO_TYPE, object, type & EO_NEW ? " (new)" : "");
 	flush;
 #endif
+
+	return object;
+	EIF_END_GET_CONTEXT
+}
+
+rt_shared char *eif_strset(char *object, unsigned int nbytes)
+{
+	EIF_GET_CONTEXT
+	register3 union overhead *zone;		/* Malloc info zone */
+
+	SIGBLOCK;					/* Critical section */
+	bzero(object, nbytes);		/* All set with zeros */
+
+	zone = HEADER(object);				/* Object's header */
+#ifdef EIF_TID 
+#ifdef EIF_THREADS
+    zone->ovs_tid = eif_thr_id; /* tid from eif_thr_context */
+#else
+    zone->ovs_tid = NULL; /* In non-MT-mode, it is NULL by convention */
+#endif  /* EIF_THREADS */
+#endif  /* EIF_TID */
+
+	zone->ov_size &= ~B_C;				/* Object is an Eiffel one */
+	zone->ov_flags = EO_SPEC;	/* Object is special and new */
+
+	SIGRESUME;					/* End of critical section */
+
+#ifdef EIF_STRSET_DEBUG
+	printf ("EIF_STRSET: %d bytes special at 0x%lx\n", nbytes, object);
+#endif	/* EIF_STRSET_DEBUG */
 
 	return object;
 	EIF_END_GET_CONTEXT

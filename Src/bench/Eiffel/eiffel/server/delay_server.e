@@ -98,7 +98,7 @@ end;
 				if not server_file.is_open then
 					Server_controler.open_file (server_file);
 				end;
-				Result := retrieve_all (server_file.descriptor, server_file.count, info.position);
+				Result := retrieve_all (server_file.descriptor, info.position);
 					-- Insert it in the queue
 				if cache.is_full then
 						-- If cache is full, oldest is removed

@@ -185,7 +185,7 @@ feature -- Contract support
 		local
 			c: CURSOR
 			l: LINEAR [EV_WIDGET]
-			cs: CURSOR_STRUCTURE
+			cs: CURSOR_STRUCTURE [EV_WIDGET]
 		do
 			Result := True
 			l := linear_representation
@@ -361,6 +361,9 @@ end -- class EV_CONTAINER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/03/18 00:09:24  brendel
+--| Added generic parameter.
+--|
 --| Revision 1.27  2000/03/18 00:05:03  brendel
 --| Added generic parameter.
 --|

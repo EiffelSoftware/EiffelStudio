@@ -39,7 +39,7 @@ feature -- Measurement
 		do
 			create Result.make (collector_type)
 		end
-
+	
 feature -- Status report
 
 	memory_threshold: INTEGER is
@@ -158,12 +158,21 @@ feature -- Status report
 		end
 		
 	objects_instance_of (an_object: ANY): SPECIAL [ANY] is
-				-- Objects that have same dynamic type as `an_object'.
-			do
-				check
-					False
-				end
+			-- Objects that have same dynamic type as `an_object'.
+		do
+			check
+				False
 			end
+		end
+
+	memory_map: HASH_TABLE [ARRAYED_LIST [ANY], INTEGER] is
+			-- Retrieves all object in system as a table indexed by dynamic type
+			-- where elements are all instances of a given data type.
+		do
+			check
+				False
+			end
+		end
 
 feature -- Status setting
 

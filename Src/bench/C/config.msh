@@ -44,8 +44,8 @@ link_mtline='$compiler_path\bin\lib -OUT:$@ $(MT_OBJECTS) $link_debug'
 link_mtwline='$compiler_path\bin\lib -OUT:$@ $(MT_WOBJECTS) $link_debug'
 #
 #
-#optimize='-O2 -Ogityb2 -Gs'
-optimize=''
+optimize='-O2 -Ogityb2 -Gs'
+#optimize=''
 debug=''
 #debug='Zi'
 link_debug=''

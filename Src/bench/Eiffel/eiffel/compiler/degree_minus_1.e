@@ -34,7 +34,7 @@ feature -- Processing
 		do
 			classes := System.classes.sorted_classes
 				-- Generation of the descriptor tables.
-			if System.first_compilation and Compilation_modes.is_precompiling then
+			if Compilation_modes.is_precompiling then
 				nb := count
 				Degree_output.put_start_degree (Degree_number, nb)
 				System.open_log_files
@@ -42,52 +42,6 @@ feature -- Processing
 					a_class := classes.item (i)
 					if a_class /= Void and then a_class.degree_minus_1_needed then
 						Degree_output.put_degree_minus_1 (a_class, nb)
-								debug ("COUNT")
-									io.error.put_string ("[")
-									io.error.put_integer (nb)
-									io.error.put_string ("] ")
-								end
-						a_class.generate_descriptor_tables
-						a_class.pass4
-
-						a_class.remove_from_degree_minus_1
-						nb := nb - 1
-					end
-					i := i + 1
-				end
-			elseif System.first_compilation then
-				nb := count
-				Degree_output.put_start_degree (Degree_number, nb)
-				System.open_log_files
-				from i := 1 until nb = 0 loop
-					a_class := classes.item (i)
-					if a_class /= Void and then a_class.degree_minus_1_needed then
-						Degree_output.put_degree_minus_1 (a_class, nb)
-								debug ("COUNT")
-									io.error.put_string ("[")
-									io.error.put_integer (nb)
-									io.error.put_string ("] ")
-								end
-						a_class.generate_workbench_files
-
-						a_class.remove_from_degree_minus_1
-						nb := nb - 1
-					end
-					i := i + 1
-				end
-			elseif Compilation_modes.is_precompiling then
-				nb := count
-				Degree_output.put_start_degree (Degree_number, nb)
-				System.open_log_files
-				from i := 1 until nb = 0 loop
-					a_class := classes.item (i)
-					if a_class /= Void and then a_class.degree_minus_1_needed then
-						Degree_output.put_degree_minus_1 (a_class, nb)
-								debug ("COUNT")
-									io.error.put_string ("[")
-									io.error.put_integer (nb)
-									io.error.put_string ("] ")
-								end
 						a_class.generate_descriptor_tables
 						a_class.pass4
 						a_class.remove_from_degree_minus_1
@@ -96,14 +50,16 @@ feature -- Processing
 					i := i + 1
 				end
 			else
-				descriptors := m_desc_server.current_keys
-				nb := descriptors.count
-				from i := 1 until i > nb loop
-					a_class := System.class_of_id (descriptors.item (i))
-					if a_class /= Void then
-						insert_class (a_class)
+				if System.first_compilation then
+					descriptors := m_desc_server.current_keys
+					nb := descriptors.count
+					from i := 1 until i > nb loop
+						a_class := System.class_of_id (descriptors.item (i))
+						if a_class /= Void then
+							insert_class (a_class)
+						end
+						i := i + 1
 					end
-					i := i + 1
 				end
 				nb := count
 				Degree_output.put_start_degree (Degree_number, nb)
@@ -112,13 +68,7 @@ feature -- Processing
 					a_class := classes.item (i)
 					if a_class /= Void and then a_class.degree_minus_1_needed then
 						Degree_output.put_degree_minus_1 (a_class, nb)
-								debug ("COUNT")
-									io.error.put_string ("[")
-									io.error.put_integer (nb)
-									io.error.put_string ("] ")
-								end
 						a_class.generate_workbench_files
-
 						a_class.remove_from_degree_minus_1
 						nb := nb - 1
 					end

@@ -6,15 +6,13 @@ CFLAGS = -c -Ox -I$(EIFFEL4)\library\wel\spec\windows\include -I$(EIFFEL4)\bench
 .c.obj:
 	$(CC) $(CFLAGS) $<
 
-OBJ = disptchr.obj enumfont.obj estream.obj
+OBJ = disptchr.obj enumfont.obj estream.obj msgboxpa.obj
 
 wel.lib: $(OBJ)
 	if exist $@ del $@
 	lib /OUT:$@ $(OBJ)
-	if not exist $(EIFFEL4)\library\wel\spec\msc mkdir $(EIFFEL4)\library\wel\spec\w32msc
-	if not exist $(EIFFEL4)\library\wel\spec\msc\lib mkdir $(EIFFEL4)\library\wel\spec\w32msc\lib
+	if not exist $(EIFFEL4)\library\wel\spec\msc mkdir $(EIFFEL4)\library\wel\spec\msc
+	if not exist $(EIFFEL4)\library\wel\spec\msc\lib mkdir $(EIFFEL4)\library\wel\spec\msc\lib
 	copy $@ $(EIFFEL4)\library\wel\spec\msc\lib
 	del $@
-	del disptchr.obj
-	del enumfont.obj
-	del estream.obj
+	del *.obj

@@ -46,8 +46,6 @@ feature {ICOR_EXPORTER} -- QueryInterface
 				create Result.make_by_pointer (p)
 				Result.add_ref
 			end
-		ensure
---			success: last_call_success = 0
 		end
 
 	query_interface_icor_debug_reference_value: ICOR_DEBUG_REFERENCE_VALUE is
@@ -59,8 +57,6 @@ feature {ICOR_EXPORTER} -- QueryInterface
 				create Result.make_by_pointer (p)
 				Result.add_ref
 			end
-		ensure
---			success: last_call_success = 0
 		end
 
 	query_interface_icor_debug_heap_value: ICOR_DEBUG_HEAP_VALUE is
@@ -72,8 +68,6 @@ feature {ICOR_EXPORTER} -- QueryInterface
 				create Result.make_by_pointer (p)
 				Result.add_ref
 			end
-		ensure
---			success: last_call_success = 0
 		end
 
 	query_interface_icor_debug_object_value: ICOR_DEBUG_OBJECT_VALUE is
@@ -85,8 +79,6 @@ feature {ICOR_EXPORTER} -- QueryInterface
 				create Result.make_by_pointer (p)
 				Result.add_ref
 			end
-		ensure
---			success: last_call_success = 0
 		end
 
 feature {ICOR_EXPORTER} -- QueryInterface HEAP
@@ -100,8 +92,6 @@ feature {ICOR_EXPORTER} -- QueryInterface HEAP
 				create Result.make_by_pointer (p)
 				Result.add_ref
 			end
-		ensure
---			success: last_call_success = 0
 		end
 
 	query_interface_icor_debug_string_value: ICOR_DEBUG_STRING_VALUE is
@@ -113,8 +103,6 @@ feature {ICOR_EXPORTER} -- QueryInterface HEAP
 				create Result.make_by_pointer (p)
 				Result.add_ref
 			end
-		ensure
---			success: last_call_success = 0
 		end
 
 	query_interface_icor_debug_array_value: ICOR_DEBUG_ARRAY_VALUE is
@@ -126,8 +114,6 @@ feature {ICOR_EXPORTER} -- QueryInterface HEAP
 				create Result.make_by_pointer (p)
 				Result.add_ref
 			end
-		ensure
---			success: last_call_success = 0
 		end
 
 feature {ICOR_EXPORTER} -- Access
@@ -201,7 +187,6 @@ feature {NONE} -- Implementation / Constants
 		alias
 			"((ICorDebugValue *) $obj)->QueryInterface (IID_ICorDebugGenericValue, (void **) $a_p)"
 		end
-
 		
 	cpp_query_interface_ICorDebugReferenceValue (obj: POINTER; a_p: POINTER): INTEGER is
 		external

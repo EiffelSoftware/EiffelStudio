@@ -66,6 +66,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Sets up `Current' ready for use.
 		do
+			widget_initialize
 			if feature {EV_GTK_EXTERNALS}.gtk_is_widget (c_object) then
 				feature {EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
 			end

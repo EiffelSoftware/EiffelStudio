@@ -103,6 +103,13 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
+feature {GB_EV_EDITOR_CONSTRUCTOR}
+
+	update_constant_display (a_value: STRING) is
+			--
+		do
+		end
+
 feature {NONE} -- Implementation
 
 	execution_agent: PROCEDURE [ANY, TUPLE [STRING]]

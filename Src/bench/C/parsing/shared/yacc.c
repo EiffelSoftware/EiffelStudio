@@ -163,13 +163,26 @@ char *list_new(int list_type)
 	object_top -= list_count;
 
 	/* Creation of an instance of CONSTRUCT_LIST and call of the creation
-	 * precedure of ARRAY in order to create a special object.
+	 * procedure of ARRAY in order to create a special object.
 	 */
-	dynamic_list_type = rtud_inv[yy_dt_array[list_type]];
+
+	if (rtud_inv)
+			/* In workbench mode, we need to use the `rtud_inv' table. */ 
+		dynamic_list_type = rtud_inv[yy_dt_array[list_type]];
+	else
+			/* In final mode, there is no `rtud_inv', it is safe to take
+			 * directly the type registered in `yy_dt_array' */
+		dynamic_list_type = yy_dt_array[list_type];
 
 	typearr [0] = -1;			/* No static call context */
 	typearr [1] = dynamic_list_type;	/* Base type of FIXED_LIST */
-	typearr [2] = rtud_inv[Dftype(object_stack [object_top])];			/* Parameter type */
+	if (rtud_inv)
+			/* In workbench mode, we need to use the `rtud_inv' table. */ 
+		typearr [2] = rtud_inv[Dftype(object_stack [object_top])];	/* Parameter type */
+	else
+			/* In final mode, there is no `rtud_inv', it is safe to take
+			 * directly the type registered in `Dftype'. */
+		typearr [2] = Dftype(object_stack [object_top]);			/* Parameter type */
 	typearr [3] = -1;			/* To specify the end of the array */
 
 	result = emalloc (eif_compound_id ((int16 *)0, (char *)0, (int16) dynamic_list_type, typearr));

@@ -383,6 +383,48 @@ feature -- Concrete evaluation
 			end
 		end
 
+feature {DBG_EXPRESSION_EVALUATOR_B} -- Restricted dotnet
+
+	dotnet_evaluate_function_with_name (a_addr: STRING; a_target: DUMP_VALUE;
+				a_feature_name, a_external_name: STRING; 
+				params: LIST [DUMP_VALUE]) is
+		require
+			application.is_dotnet
+		local
+			l_params: ARRAY [DUMP_VALUE]
+		do
+			if params /= Void and then not params.is_empty then
+				prepare_parameters (a_target.dynamic_class_type, Void, params)
+				l_params := dotnet_parameters
+				dotnet_parameters_reset
+			end			
+			last_result_value := dotnet_impl.dotnet_evaluate_function_with_name (a_addr, a_target, a_feature_name, a_external_name, l_params)
+			
+			if last_result_value = Void then
+				set_error_evaluation ("Unable to evaluate : " + a_external_name)
+				if a_addr /= Void then
+					error_evaluation_message.append_string (" on <" + a_addr + ">")
+				end
+			end
+			
+			if not error_occurred and then last_result_value /= Void then
+				last_result_static_type := last_result_value.dynamic_class
+				if last_result_static_type = Void then
+					last_result_static_type:= Workbench.Eiffel_system.Any_class.compiled_class
+				end
+				if
+					last_result_static_type /= Void and then
+					last_result_static_type.is_basic and
+					(last_result_value.address /= Void)
+				then
+						-- We expected a basic type, but got a reference.
+						-- This happens in "2 + 2" because we convert the first 2
+						-- to a reference and therefore get a reference.
+					last_result_value := last_result_value.to_basic
+				end
+			end			
+		end
+		
 feature {NONE} -- Implementation classic
 
 	classic_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f: E_FEATURE; 
@@ -498,8 +540,7 @@ feature {NONE} -- Implementation
 			-- For classic system
 			--| Warning: for classic system be sure `Init_recv_c' had been done before
 		require
-			f /= Void
-			f_is_not_attribute: not f.is_attribute
+			f_is_not_attribute: f = Void or else not f.is_attribute
 			params /= Void and then not params.is_empty
 		local
 			dmp: DUMP_VALUE
@@ -507,7 +548,9 @@ feature {NONE} -- Implementation
 		do
 				--| Prepare parameters ...
 			bak_ct := Byte_context.class_type
-			Byte_context.set_class_type (dt)
+			if dt /= Void then
+				Byte_context.set_class_type (dt)
+			end
 			parameters_init (params.count)
 			from
 				params.start
@@ -522,12 +565,18 @@ feature {NONE} -- Implementation
 					-- a basic type.
 					-- This happen when evaluation `my_hash_table.item (1)' where
 					-- `my_hash_table' is of type `HASH_TABLE [STRING, INTEGER]'.
-				if
-					dmp.is_basic and
-					(not Byte_context.real_type (
-						f.arguments.i_th (params.index).type_i).is_basic)
-				then
-					parameters_push_and_metamorphose (dmp)
+				if dmp.is_basic then
+					if
+						f /= Void
+						and then (not Byte_context.real_type (
+							f.arguments.i_th (params.index).type_i).is_basic)
+					then
+						parameters_push_and_metamorphose (dmp)
+					else
+						parameters_push (dmp)
+						-- FIXME jfiat : in very specific case we have  'f =  Void'
+						-- i.e: when we have only the feature_name with no more info
+					end
 				else
 					parameters_push (dmp)
 				end

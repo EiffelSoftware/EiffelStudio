@@ -186,7 +186,7 @@ feature -- Access
 				end
 			end
 		end
-		
+
 	dotnet_evaluate_function (addr: STRING; dvalue: DUMP_VALUE; f: FEATURE_I; ctype: CLASS_TYPE; a_params: ARRAY [DUMP_VALUE]): DUMP_VALUE is
 			-- Evaluate dotnet function
 		require
@@ -195,10 +195,6 @@ feature -- Access
 		local
 			l_icdv_obj: ICOR_DEBUG_VALUE
 			l_icd_function: ICOR_DEBUG_FUNCTION
-			l_result: ICOR_DEBUG_VALUE
-			l_adv: ABSTRACT_DEBUG_VALUE
-			l_icd_frame: ICOR_DEBUG_FRAME
-			l_icdv_args: ARRAY [ICOR_DEBUG_VALUE]
 			l_ctype: CLASS_TYPE
 		do
 			debug ("debugger_trace_eval")
@@ -211,20 +207,7 @@ feature -- Access
 			l_ctype := adapted_class_type (ctype, f)
 			
 				--| Get the target object : `l_icdv_obj'
-			if dvalue = Void then
-				l_icdv_obj := icd_value_by_address (addr)
-					-- FIXME JFIAT: l_icdv_obj might be Void if object not found ... how come ?
-					-- should be fixed now, but .. may occur regarding to .NET GC
-			else
-				if dvalue.is_basic then
-					l_icdv_obj := dotnet_metamorphose_basic_to_reference_value (dvalue).value_dotnet
-				else
-					l_icdv_obj := dvalue.value_dotnet
-				end
-				if l_icdv_obj = Void then
-					l_icdv_obj := dump_value_to_reference_icdv (dvalue)
-				end
-			end
+			l_icdv_obj := target_icor_debug_value (addr, dvalue)
 
 			if l_icdv_obj = Void then
 				error_occurred := True
@@ -236,46 +219,108 @@ feature -- Access
 				if l_icd_function = Void then
 					error_occurred := True
 				else
-					debug ("debugger_trace_eval_data")
-						display_funct_info_on_object (l_icd_function)
-					end
-
-						--| Build the arguments for dotnet
-					l_icdv_args := prepared_parameters (a_params, True)
-					if not error_occurred then
-						debug ("debugger_trace_eval_data")
-							print (generating_type + ".dotnet_evaluate_function: target ... %N")
-							display_info_on_object (l_icdv_obj)
-						end
-						
-						l_icdv_args.put (l_icdv_obj, 1) -- First arg is the obj on which the evaluation is done.
-
-						l_icd_frame := eifnet_debugger.current_stack_icor_debug_frame
-						if l_icd_frame = Void then
-								-- In case `associated_frame' is not set
-							l_icd_frame := new_active_icd_frame
-						end
-
-						l_result := eifnet_evaluator.function_evaluation (l_icd_frame, l_icd_function, l_icdv_args)
-						error_occurred := (eifnet_evaluator.last_call_success /= 0) or (eifnet_evaluator.last_eval_is_exception)
-						
-						if not error_occurred then
-							l_adv := debug_value_from_icdv (l_result)
-							Result := l_adv.dump_value
-						end
-					end
-				end
-			end
-			
-			debug ("debugger_trace_eval_data")
-				if l_result /= Void then
-					print (generating_type + ".dotnet_evaluate_function: result ... %N")
-					display_info_on_object (l_result)				
+					Result := dotnet_evaluate_icd_function (l_icdv_obj, l_icd_function, a_params)
 				end
 			end
 		end
+
+	dotnet_evaluate_function_with_name (addr: STRING; dvalue: DUMP_VALUE;
+				a_feature_name, a_external_name: STRING; 
+				a_params: ARRAY [DUMP_VALUE]): DUMP_VALUE is
+		local
+			l_icdv_obj: ICOR_DEBUG_VALUE
+			l_icd_function: ICOR_DEBUG_FUNCTION
+			edvi: EIFNET_DEBUG_VALUE_INFO
+		do
+				--| Get the target object : `l_icdv_obj'
+			l_icdv_obj := target_icor_debug_value (addr, dvalue)
+			if l_icdv_obj = Void then
+				error_occurred := True
+			else
+					--| Get the ICorDebugFunction to call.
+				create edvi.make (l_icdv_obj)
+				if edvi.has_object_interface then
+					l_icd_function := edvi.value_icd_function (a_external_name)
+				end
+				edvi.icd_prepared_value.clean_on_dispose
+				edvi.clean
+
+					--| And then let's process the following ...
+				if l_icd_function = Void then
+					error_occurred := True
+				else
+					Result := dotnet_evaluate_icd_function (l_icdv_obj, l_icd_function, a_params)
+				end
+			end
+		end		
 		
 feature {NONE} -- Implementation
+
+	dotnet_evaluate_icd_function (target_icdv: ICOR_DEBUG_VALUE; func: ICOR_DEBUG_FUNCTION; 
+					a_params: ARRAY [DUMP_VALUE]): DUMP_VALUE is
+		require
+			target_icdv /= Void
+			func /= Void
+		local
+			l_adv: ABSTRACT_DEBUG_VALUE
+			l_icd_frame: ICOR_DEBUG_FRAME
+			l_icdv_args: ARRAY [ICOR_DEBUG_VALUE]
+			l_result: ICOR_DEBUG_VALUE
+		do
+			debug ("debugger_trace_eval_data")
+				display_funct_info_on_object (func)
+			end
+
+				--| Build the arguments for dotnet
+			l_icdv_args := prepared_parameters (a_params, True)
+			if not error_occurred then
+				debug ("debugger_trace_eval_data")
+					print (generating_type + ".dotnet_evaluate_icd_function: target ... %N")
+					display_info_on_object (target_icdv)
+				end
+				
+				l_icdv_args.put (target_icdv, 1) -- First arg is the obj on which the evaluation is done.
+
+				l_icd_frame := eifnet_debugger.current_stack_icor_debug_frame
+				if l_icd_frame = Void then
+						-- In case `associated_frame' is not set
+					l_icd_frame := new_active_icd_frame
+				end
+
+				l_result := eifnet_evaluator.function_evaluation (l_icd_frame, func, l_icdv_args)
+				error_occurred := (eifnet_evaluator.last_call_success /= 0) or (eifnet_evaluator.last_eval_is_exception)
+				
+				if not error_occurred then
+					l_adv := debug_value_from_icdv (l_result)
+					Result := l_adv.dump_value
+				end
+			end
+			debug ("debugger_trace_eval_data")
+				if l_result /= Void then
+					print (generating_type + ".dotnet_evaluate_icd_function: result ... %N")
+					display_info_on_object (l_result)
+				end
+			end			
+		end
+
+	target_icor_debug_value (addr: STRING; dvalue: DUMP_VALUE): ICOR_DEBUG_VALUE is
+		do
+				--| Get the target object : `l_icdv_obj'
+			if dvalue = Void then
+				Result := icd_value_by_address (addr)
+					-- FIXME JFIAT: l_icdv_obj might be Void if object not found ... how come ?
+					-- should be fixed now, but .. may occur regarding to .NET GC
+			else
+				if dvalue.is_basic then
+					Result := dotnet_metamorphose_basic_to_reference_value (dvalue).value_dotnet
+				else
+					Result := dvalue.value_dotnet
+				end
+				if Result = Void then
+					Result := dump_value_to_reference_icdv (dvalue)
+				end
+			end
+		end
 
 	prepared_parameters (a_params: ARRAY [DUMP_VALUE]; with_first_empty_element: BOOLEAN): ARRAY [ICOR_DEBUG_VALUE] is
 			-- Prepared param for dotnet evaluation.

@@ -571,6 +571,7 @@ feature -- EXPR_B evaluation
 			ef: E_FEATURE
 			cl: CLASS_C
 			params: ARRAYED_LIST [DUMP_VALUE]
+			l_addr: STRING
 		do
 			if tmp_target /= Void then
 				cl := tmp_target.dynamic_class
@@ -585,7 +586,18 @@ feature -- EXPR_B evaluation
 			else
 				ef := cl.feature_with_name (a_external_b.feature_name)
 				if ef = Void then
-					set_error_expression (a_external_b.generator +  " => ERROR during evaluation of external call : " + a_external_b.feature_name)
+					if application.is_dotnet then
+						params := parameter_values_from_parameters_b (a_external_b.parameters)
+						if tmp_target /= Void then
+							l_addr := tmp_target.value_address
+						else
+							l_addr := context_address
+						end
+						dotnet_evaluate_function_with_name (l_addr, tmp_target, a_external_b.feature_name, a_external_b.external_name, params)
+							-- FIXME: What about static ? check ...
+					else
+						set_error_expression (a_external_b.generator +  " => ERROR during evaluation of external call : " + a_external_b.feature_name)
+					end
 				else
 					fi := ef.associated_feature_i
 					if fi.is_external then
@@ -865,6 +877,15 @@ feature -- Concrete evaluation
 		do
 			prepare_evaluation
 			Dbg_evaluator.evaluate_function (a_addr, a_target, f, params)
+			retrieve_evaluation
+		end
+
+	dotnet_evaluate_function_with_name (a_addr: STRING; a_target: DUMP_VALUE;
+				a_feature_name, a_external_name: STRING; 
+				params: LIST [DUMP_VALUE]) is
+		do
+			prepare_evaluation
+			Dbg_evaluator.dotnet_evaluate_function_with_name (a_addr, a_target, a_feature_name, a_external_name, params)
 			retrieve_evaluation
 		end
 

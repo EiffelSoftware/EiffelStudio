@@ -11,6 +11,8 @@ class
 	
 inherit
 	EV_COMBO_BOX_I
+		undefine
+			wipe_out
 		redefine
 			interface
 		end

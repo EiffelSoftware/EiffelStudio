@@ -11,9 +11,10 @@ class
 
 inherit
 	EV_LIST_I
-		redefine
-			interface,
+		undefine
 			wipe_out
+		redefine
+			interface
 		end
 
 	EV_LIST_ITEM_LIST_IMP
@@ -26,8 +27,7 @@ inherit
 			select_item,
 			deselect_item,
 			clear_selection,
-			on_item_clicked,
-			wipe_out
+			on_item_clicked
 		end	
 create
 	make
@@ -132,27 +132,6 @@ feature -- Status setting
 		do
 			switch_to_single_mode_if_necessary
 			Precursor {EV_LIST_ITEM_LIST_IMP}
-		end
-
-feature -- Removal
-
-	wipe_out is
-			-- Remove all items.
-		local
-			item_imp: EV_LIST_ITEM_IMP
-		do
-			C.gtk_list_clear_items (list_widget, 0, -1)
-			from
-				start
-			until
-				index > count
-			loop
-				item_imp ?= item.implementation
-				item_imp.set_item_parent_imp (Void)
-				forth
-			end
-
-			index := 0
 		end
 
 feature {EV_ANY_I} -- Implementation

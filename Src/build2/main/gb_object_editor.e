@@ -511,7 +511,7 @@ feature {NONE} -- Implementation
 			current_window_parent: EV_WINDOW
 			locked_in_here: BOOLEAN
 			horizontal_box: EV_HORIZONTAL_BOX
-			flatten_button: EV_BUTTON
+			flatten_button, shallow_flatten_button: EV_BUTTON
 		do
 			current_window_parent := parent_window (Current)
 			if current_window_parent /= Void and ((create {EV_ENVIRONMENT}).application.locked_window = Void) then
@@ -612,6 +612,12 @@ feature {NONE} -- Implementation
 				flatten_button.select_actions.extend (agent rebuild_associated_editors (object.object))
 				horizontal_box.extend (flatten_button)
 				horizontal_box.disable_item_expand (flatten_button)
+				
+				create shallow_flatten_button.make_with_text ("Shallow")
+				shallow_flatten_button.select_actions.extend (agent object.shallow_flatten)
+				shallow_flatten_button.select_actions.extend (agent rebuild_associated_editors (object.object))
+				horizontal_box.extend (shallow_flatten_button)
+				horizontal_box.disable_item_expand (shallow_flatten_button)
 			end
 
 			if current_window_parent /= Void and locked_in_here then

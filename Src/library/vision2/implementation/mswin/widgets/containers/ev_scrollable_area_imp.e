@@ -170,26 +170,17 @@ feature {NONE} -- Implementation
 			Result := Ws_ex_controlparent + Ws_ex_clientedge + Ws_ex_rightscrollbar
 		end
 
-	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
+				repaint: BOOLEAN) is
 			-- Move the window to `a_x', `a_y' position and
 			-- resize it with `a_width', `a_height'.
 		local
 			ch, cw: INTEGER
 		do
-			wel_cw_move_and_resize (a_x, a_y, a_width, a_height, repaint)
-	
+			Precursor (a_x, a_y, a_width, a_height, repaint)
 			if child /= Void then
-				child.set_move_and_size ((0).min (- x_offset),
-					(0).min (- y_offset), client_width, client_height)
 				cw := child.width - client_width
 				ch := child.height - client_height
-
-				if x_offset > cw then
-					set_x_offset (cw)
-				end
-				if y_offset > ch then
-					set_y_offset (ch)
-				end
 
 				if cw > 0 then
 					enable_horizontal_scroll_bar
@@ -232,6 +223,9 @@ end -- class EV_SCROLLABLE_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/04/22 01:23:47  brendel
+--| Improved wel_move_and_resize.
+--|
 --| Revision 1.25  2000/04/22 00:58:49  brendel
 --| Implemented.
 --|

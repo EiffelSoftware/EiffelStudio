@@ -21,8 +21,6 @@ inherit
 			interface,
 			make,
 			wel_move_and_resize
-		select
-			wel_move_and_resize
 		end
 
 	WEL_CONTROL_WINDOW
@@ -40,7 +38,7 @@ inherit
 			y as y_position,
 			move as wel_move,
 			resize as wel_resize,
-			move_and_resize as wel_cw_move_and_resize,
+			move_and_resize as wel_move_and_resize,
 			text as wel_text,
 			set_text as wel_set_text
 		undefine
@@ -71,7 +69,8 @@ inherit
 			on_destroy
 		redefine
 			default_style,
-			default_ex_style
+			default_ex_style,
+			wel_move_and_resize
 		end
 
 create
@@ -140,11 +139,24 @@ feature {NONE} -- Implementation
 				repaint: BOOLEAN) is
 			-- Move the window to `a_x', `a_y' position and
 			-- resize it with `a_width', `a_height'.
-			--| Scrollbars may NEVER be visible.
+		local
+			ch, cw: INTEGER
 		do
-			wel_cw_move_and_resize (a_x, a_y, a_width, a_height, repaint)
+			{WEL_CONTROL_WINDOW} Precursor (
+				a_x, a_y, a_width, a_height, repaint)
 			if child /= Void then
-				child.set_move_and_size (0, 0, client_width, client_height)
+				child.set_move_and_size (child.x_position,
+					child.y_position, client_width, client_height)
+
+				cw := child.width - client_width
+				ch := child.height - client_height
+
+				if x_offset > cw then
+					set_x_offset (cw)
+				end
+				if y_offset > ch then
+					set_y_offset (ch)
+				end
 			end
 		end
 
@@ -173,6 +185,9 @@ end -- class EV_VIEWPORT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/04/22 01:24:23  brendel
+--| Improved wel_move_and_resize.
+--|
 --| Revision 1.9  2000/04/21 22:35:58  brendel
 --| Improved implementation.
 --|

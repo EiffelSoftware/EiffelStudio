@@ -129,10 +129,10 @@ feature -- Status report
 	expandable: BOOLEAN is
 			-- Does the widget expand its cell to take the
 			-- size the parent would like to give to it.
-		require
-			exists: not destroyed
+		obsolete
+			"Use is_child_expandable of EV_BOX instead"
 		do
-			Result := implementation.expandable
+			Result := False
 		end
 
 	horizontal_resizable: BOOLEAN is
@@ -258,12 +258,15 @@ feature -- Status setting
 
 	set_expand (flag: BOOLEAN) is
 			-- Make `flag' the new expand option.
-		require
-			exists: not destroyed
+		obsolete
+			"Use set_child_expandable of EV_BOX"
+		local
+			box: EV_BOX
 		do
-			implementation.set_expand (flag)
-		ensure
-			flag_set: expandable = flag
+			box ?= parent
+			if box /= Void then
+				box.set_child_expandable (Current, flag)
+			end
 		end
 
 	set_horizontal_resize (flag: BOOLEAN) is

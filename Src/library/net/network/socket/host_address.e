@@ -12,22 +12,11 @@ class
 	HOST_ADDRESS
 
 inherit
-
-	TO_SPECIAL[CHARACTER]
-		rename
-			area as address_host,
-			copy as old_copy
-		redefine
-			is_equal
-		end
-
 	TO_SPECIAL[CHARACTER]
 		rename
 			area as address_host
 		redefine
 			copy, is_equal
-		select
-			copy
 		end
 
 creation
@@ -73,7 +62,7 @@ feature -- Measurement
 
 feature -- Comparison
 
-	is_equal (other: like current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN is
 			-- Are the two host address areas equal ?
 		do
 			Result := address_host.is_equal (other.address_host)
@@ -147,7 +136,7 @@ feature -- Duplication
 			-- Reinitialize by copying the characters of `other'.
 			-- (This is also used by `clone')
 		do
-			old_copy (other)
+			Precursor {TO_SPECIAL} (other)
 			make_area (other.count)
 			address_host.copy (other.address_host)
 		ensure then

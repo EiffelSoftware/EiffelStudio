@@ -12,24 +12,12 @@ class
 	SOCKET_ADDRESS
 
 inherit
-
-	TO_SPECIAL [CHARACTER]
-		rename
-			area as socket_address,
-			make_area as make_socket_address,
-			copy as old_copy
-		redefine
-			is_equal
-		end
-
 	TO_SPECIAL [CHARACTER]
 		rename
 			area as socket_address,
 			make_area as make_socket_address
 		redefine
 			copy, is_equal
-		select
-			copy
 		end
 
 creation
@@ -82,7 +70,7 @@ feature -- Duplication
 			-- Reinitialize by copying characters of `other'.
 			-- (This is also used by `clone'.)
 		do
-			old_copy (other);
+			Precursor {TO_SPECIAL} (other);
 			if other.count > address_size then
 				make_socket_address (other.count)
 			else

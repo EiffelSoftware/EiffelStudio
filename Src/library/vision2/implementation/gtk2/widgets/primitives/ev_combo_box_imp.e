@@ -147,6 +147,13 @@ feature -- Status report
 			end
 		end
 
+	selected_items: ARRAYED_LIST [EV_LIST_ITEM] is
+			-- List of all the selected items. Used for list_item.is_selected implementation
+		do
+			create Result.make (0)
+			Result.extend (selected_item)
+		end
+
 	select_item (an_index: INTEGER) is
 			-- Select an item at the one-based `index' of the list.
 		do

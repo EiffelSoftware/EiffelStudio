@@ -208,11 +208,11 @@ feature -- Clearing operations
 			implementation.clear
 		end
 
-	clear_rect (x1, y1, x2, y2: INTEGER) is
+	clear_rectangle (x1, y1, x2, y2: INTEGER) is
 			-- Erase rectangle (`x1, `y1') - (`x2', `y2') with
 			-- `background_color'.
 		do
-			implementation.clear_rect (x1, y1, x2, y2)
+			implementation.clear_rectangle (x1, y1, x2, y2)
 		end
 
 feature -- Drawing operations
@@ -463,8 +463,8 @@ end -- class EV_DRAWABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.16  2000/02/14 11:40:49  oconnor
---| merged changes from prerelease_20000214
+--| Revision 1.17  2000/02/16 18:06:57  pichery
+--| Cosmetics: renammed feature `clear_rect' into `clear_rectangle'.
 --|
 --| Revision 1.14.4.11.2.33  2000/01/28 20:00:09  oconnor
 --| released

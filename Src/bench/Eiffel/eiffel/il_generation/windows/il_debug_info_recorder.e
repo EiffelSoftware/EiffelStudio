@@ -878,7 +878,6 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 				l_object_to_save.set_entry_point_token (entry_point_token)
 
 					--| Save into file
---				create l_il_info_file.make_create_read_write (Il_info_file_name)
 				create l_il_info_file.make (Il_info_file_name)
 				l_il_info_file.open_write
 				l_il_info_file.independent_store (l_object_to_save)
@@ -925,7 +924,6 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 			-- Add data contained in `a_fn' into current structure
 		local
 			retried: BOOLEAN
-			l_data_to_save: TUPLE [ANY,ANY,INTEGER]
 			l_retrieved: ANY
 			l_retrieved_object: IL_DEBUG_INFO_STORAGE
 
@@ -945,6 +943,9 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 				create l_il_info_file.make (a_fn)
 				if not l_il_info_file.exists then
 						--| File does not exists !
+					check
+						Eiffel_debug_il_information_file_missing: False
+					end
 				else
 					l_il_info_file.open_read
 					l_retrieved := l_il_info_file.retrieved
@@ -956,13 +957,6 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 						l_modules_debugger_info     := l_retrieved_object.modules_debugger_info
 						l_class_types_debugger_info := l_retrieved_object.class_types_debugger_info
 						l_entry_point_token         := l_retrieved_object.entry_point_token
-					else --| Doomed to be removed
-						print ("Retrieved old data %N")
-						l_data_to_save ?= l_retrieved
-							--| Get values
-						l_modules_debugger_info ?= l_data_to_save.item (1)
-						l_class_types_debugger_info ?= l_data_to_save.item (2)
-						l_entry_point_token := l_data_to_save.integer_item (3)
 					end
 					
 						--| Assign values
@@ -993,6 +987,8 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 				end			
 			else
 				io.put_string ("ERROR: Unable to load IL INFO data from file [" + a_fn + "]%N")
+				io.put_string ("       Debugging will be disabled.%N")
+				io.put_string ("       Please reload, until you do not get this message.%N")
 			end
 		rescue
 			retried := True

@@ -81,6 +81,9 @@ feature -- Default values
 		
 	Default_width_of_type_selector: INTEGER is 180
 		-- The default width of the type selector.
+		
+	Default_height_of_type_selector: INTEGER is 250
+		-- The default_height of the type selector.
 
 feature -- Generation constants
 

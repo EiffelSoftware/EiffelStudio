@@ -12,7 +12,20 @@ inherit
 
 creation
 	make_by_id,
-	make_by_name
+	make_by_name,
+	make_from_array
+
+feature {NONE} -- Initialization
+
+	make_from_array (an_array: WEL_ARRAY [WEL_ACCELERATOR]) is
+			-- Initialize with accelerators in `an_array'.
+		require
+			an_array_not_void: an_array /= Void
+			an_array_exists: an_array.exists
+		do
+ 			item := cwin_create_accelerator_table (
+				an_array.item, an_array.count)
+		end
 
 feature {NONE} -- Implementation
 

@@ -1,60 +1,62 @@
---!----------------------------------------------------------------
---! PAINTBRUSH Project Ace-file for Windows platforms.
---!----------------------------------------------------------------
-
 system
 	paintbrush
 
-root 
-	PAINTBRUSH (root_cluster): "make_and_launch"
+root
+	PAINTBRUSH: make_and_launch
 
 default
-	assertion			(require)
-	multithreaded		(no)
-	console_application	(no)
-	dynamic_runtime		(no)
-	dead_code_removal	(yes)
-	profile				(no)
-	line_generation		(no)
-	debug				(no)
-	array_optimization	(no)
-	inlining			(no)
-	inlining_size		("4")
+	assertion(no)
+	address_expression(no)
+	array_optimization(no)
+	console_application(no)
+	dead_code_removal(yes)
+	dynamic_runtime(no)
+	exception_trace(no)
+	inlining(no)
+	multithreaded(no)
+	check_vape(yes)
+	arguments(" ")
+	disabled_debug(yes)
+	disabled_debug("wel")
+	disabled_debug("win_dispatcher")
+	disabled_debug("gdi_count")
+	disabled_debug("vision2_windows_gdi")
+	disabled_debug("vision2_windows")
+	disabled_debug("wel_gdi_count")
+	disabled_debug("wel_gdi_references")
+	disabled_debug("dlg_dispatcher")
+	debug(no)
+	line_generation(no)
+	profile(no)
+	trace(no)
 
-cluster 
-		-- Root cluster
+
+cluster
 	root_cluster:		"$ISE_EIFFEL\examples\vision2\pixmap"
 
-		-- EiffelBase
-	all base: 			"$ISE_EIFFEL\library\base"
+
+	all base:		"$ISE_EIFFEL\library\base"
 		exclude
-			"table_eiffel3"
+			"table_eiffel3"; "desc"; 
 		end
 
-		-- WEL
-	all wel:			"$ISE_EIFFEL\library\wel"
-
-		-- Vision2
-	event:				"$ISE_EIFFEL\library\event"
+	all wel:		"$ISE_EIFFEL\library\wel"
 
 	all vision2:		"$ISE_EIFFEL\library\vision2"
-		exclude 
-			"gtk"
-			"EIFGEN"
-			"tmp"
-			"temp"
-			"release"
-			"obsolete"
-			"bench_used"
+		exclude
+			"gtk"; "EIFGEN"; "tmp"; "temp"; "release"; "obsolete"; "CVS"; 
 		end
 
 external
-	include_path:		"$(ISE_EIFFEL)\library\vision2\spec\include",
-						"$(ISE_EIFFEL)\library\wel\spec\windows\include"
 
-	object: 			"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_COMPILER)\lib\vision2.lib",
-			 			"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_COMPILER)\lib\libpng.lib",
-			 			"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_COMPILER)\lib\zlib.lib",
-						"$(ISE_EIFFEL)\library\wel\spec\$(ISE_COMPILER)\lib\wel.lib"
+	include_path:
+		"$(ISE_EIFFEL)\library\wel\spec\windows\include",
+		"$(ISE_EIFFEL)\library\vision2\spec\include"
 
-end -- paintbrush
+	object:
+		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
+		"$(ISE_EIFFEL)\C_library\zlib\zlib.lib",
+		"$(ISE_EIFFEL)\C_library\libpng\libpng.lib"
+
+end

@@ -25,12 +25,21 @@ inherit
 create
 	make_and_launch
 
+feature -- Access
+
+	make_and_launch is
+		do
+			default_create
+			prepare
+			first_window.show
+			launch
+		end
+
 feature -- Initialization
 
 	prepare is
 			-- Initialize world.
 		local
-			basic_interval: INTEGER_INTERVAL
 			a_menu_bar: EV_MENU_BAR
 			a_menu: EV_MENU
 			a_menu_item: EV_MENU_ITEM
@@ -39,25 +48,25 @@ feature -- Initialization
 			a_toolbar_separator: EV_TOOL_BAR_SEPARATOR
 			a_icon: EV_PIXMAP
 			a_gray_icon: EV_PIXMAP
-			dib: WEL_DIB
-			file: RAW_FILE
+			
+			a_color: EV_COLOR
 		do
-				-- Create the container
-			create my_container
+			create a_color
+			a_color.set_rgb (1.0, 0.0, 0.0)
 
 				-- create Menus & menu items
 			create a_menu_bar
 			create a_menu.make_with_text ("File")
 			create a_menu_item.make_with_text ("Load")
-			a_menu_item.press_actions.extend (~on_menu_file_load)
+			a_menu_item.select_actions.extend (agent on_menu_file_load)
 			a_menu.extend (a_menu_item)
 			create a_menu_item.make_with_text ("Close")
-			a_menu_item.press_actions.extend (~on_menu_file_close)
+			a_menu_item.select_actions.extend (agent on_menu_file_close)
 			a_menu.extend (a_menu_item)
 			create a_menu_separator
 			a_menu.extend (a_menu_separator)
 			create a_menu_item.make_with_text ("Exit")
-			a_menu_item.press_actions.extend (~on_menu_file_exit)
+			a_menu_item.select_actions.extend (agent on_menu_file_exit)
 			a_menu.extend (a_menu_item)
 			a_menu_bar.extend (a_menu)
 			first_window.set_menu_bar (a_menu_bar)
@@ -66,36 +75,41 @@ feature -- Initialization
 			create my_toolbar
 
 			create a_icon
-			a_icon.set_with_named_file("magenta.png")
+			a_icon.set_with_named_file ("blue.ico")
 			create a_gray_icon
-			a_gray_icon.set_with_named_file("gray.png")
+			a_gray_icon.set_with_named_file ("gray.ico")
 			create a_toolbar_button
-			a_toolbar_button.set_pixmap(a_icon)
-			a_toolbar_button.set_gray_pixmap(a_gray_icon)
-			a_toolbar_button.set_text("PNG")
-			my_toolbar.extend(a_toolbar_button)
+			a_toolbar_button.set_pixmap (a_icon)
+			a_toolbar_button.set_gray_pixmap (a_gray_icon)
+			a_toolbar_button.set_text ("ICO")
+			my_toolbar.extend (a_toolbar_button)
 
 			create a_toolbar_separator
-			my_toolbar.extend(a_toolbar_separator)
+			my_toolbar.extend (a_toolbar_separator)
 			
 			create a_icon
-			a_icon.set_with_named_file("green.ico")
+			a_icon.set_with_named_file ("magenta.png")
 			create a_gray_icon
-			a_gray_icon.set_with_named_file("gray.ico")
+			a_gray_icon.set_with_named_file ("gray.png")
 			create a_toolbar_button
-			a_toolbar_button.set_pixmap(a_icon)
-			a_toolbar_button.set_gray_pixmap(a_gray_icon)
-			a_toolbar_button.set_text("ICO")
-			my_toolbar.extend(a_toolbar_button)
+			a_toolbar_button.set_pixmap (a_icon)
+			a_toolbar_button.set_gray_pixmap (a_gray_icon)
+			a_toolbar_button.set_text ("PNG")
+			my_toolbar.extend (a_toolbar_button)
 
-			my_container.extend(my_toolbar)
-			my_container.disable_item_expand(my_toolbar)
+			first_window.upper_bar.extend (create {EV_HORIZONTAL_SEPARATOR})
+			first_window.upper_bar.extend (my_toolbar)
+			first_window.upper_bar.extend (create {EV_HORIZONTAL_SEPARATOR})
+
+				-- Create the pixmap
+			create my_container
 
 				-- Create the pixmap
 			new_bitmap
 
 				-- Add widgets to our window
-			first_window.extend(my_container)
+			first_window.extend (my_container)
+			first_window.close_request_actions.extend (agent on_menu_file_exit)
 
 				-- Start the program.
 			my_pixmap.disable_sensitive
@@ -130,11 +144,6 @@ feature -- Process Vision2 events
 
 				-- create the new one & insert it
 			create my_pixmap
-			my_container.extend (my_pixmap)
---			my_pixmap.pointer_button_press_actions.extend(~on_mouse_button_down)
---			my_pixmap.pointer_button_release_actions.extend(~on_mouse_button_up)
---			my_pixmap.expose_actions.extend (~on_repaint)
---			my_pixmap.pointer_motion_actions.extend (~on_mouse_move)
 		end
 
 	on_menu_file_load is
@@ -145,8 +154,8 @@ feature -- Process Vision2 events
 			ofd: EV_FILE_OPEN_DIALOG
 		do
 			create ofd
-			ofd.ok_actions.extend (~effective_load_file (ofd))
-			ofd.show_modal
+			ofd.ok_actions.extend (agent effective_load_file (ofd))
+			ofd.show_modal_to_window (first_window)
 		end
 	
 	on_menu_file_close is
@@ -160,22 +169,23 @@ feature -- Process Vision2 events
 			-- Feature executed when the user select file/exit
 			-- in the menu.
 		do
-			first_window.destroy
+			first_window.destroy;
+			(create {EV_ENVIRONMENT}).application.destroy
 		end
 
 feature {NONE} -- Load/Save File handling
 
-	effective_load_file(file_d: EV_FILE_OPEN_DIALOG) is
+	effective_load_file (file_d: EV_FILE_OPEN_DIALOG) is
 			-- Actions performed when the user click on the
 			-- "OK" button of the FileOpenDialog box.
 		do
 				-- Read and parse the file.
 			file_name := file_d.file_name
-			my_pixmap.set_with_named_file(file_name)
+			my_pixmap.set_with_named_file (file_name)
 
 				-- Enable actions.
 			my_pixmap.enable_sensitive
-			my_pixmap.redraw
+			my_pixmap.draw_text (5, 5, "toto")
 		end
 
 feature {NONE} -- Initialisations and File status

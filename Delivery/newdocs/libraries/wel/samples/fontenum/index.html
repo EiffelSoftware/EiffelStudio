@@ -1,0 +1,44 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Fontenum</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+		<META NAME="MS-HKWD" CONTENT="WEL Samples, Fontenum">
+	</HEAD>
+
+	<BODY>
+		<H1>Font Enumarator Sample</H1>
+		<CENTER><IMG SRC="fontenum.png" ALT="fontenum" /></CENTER><BR><BR>
+		<H2>Compiling</H2>
+		<P>
+			To compile the example:
+		</P>
+		<UL>
+			<LI>Launch [BENCH].
+			<LI>Select <B>Use existing Ace (control file)</B> and click <B>OK</B>.
+			<LI>Browse to <I>Eiffel50\examples\wel\fontenum\</I>.
+			<LI>Choose <I>Ace.ace</I>
+			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
+			<LI>Click <B>OK</B>.
+		</UL>
+		<H2>Running</H2>
+		<P>After launching the program, a window will be displayed as illustarated above. Selecting one of the available fonts (Listed on the left hand side) will cause
+		a sample text to be displayed in the currently entered font size. Clicking the button marked "Close" will cause the program to end.
+		</P>
+		<H2>Under the Hood</H2>
+		<P><A CLASS="eclass" HREF="/libraries/wel/samples/fontenum/root_cluster/main_dialog_chart.html">MAIN_DIALOG</A> inherits from <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_main_dialog_chart.html">WEL_MAIN_DIALOG</A> and also
+		<A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_font_family_enumerator_chart.html">WEL_FONT_ENUMARATOR</A>.  <A CLASS="eclass" HREF="/libraries/wel/samples/fontenum/root_cluster/main_dialog_chart.html">MAIN_DIALOG</A> implements <A CLASS="eclass" HREF="/libraries/wel/samples/fontenum/root_cluster/main_dialog.html#f_action">action</A> which was
+		deferred from <A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_font_family_enumerator_chart.html">WEL_FONT_ENUMARATOR</A> and executed every an enumeration finds a new font. This new implementation is used to display the available fonts in the <A CLASS="eclass" HREF="/libraries/wel/reference/controls/wel_list_view_chart.html">WEL_LIST_VIEW</A>
+		</P>
+		
+		<P>This sample contains the following classes:
+			<UL>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/fontenum/root_cluster/application_ids_chart.html">APPLICATION_IDS</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/fontenum/root_cluster/fontenum_demo_chart.html">FONTENUM_DEMO</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/fontenum/root_cluster/main_dialog_chart.html">MAIN_DIALOG</A>
+				
+			</UL>
+		</P>
+	</BODY>
+</HTML>

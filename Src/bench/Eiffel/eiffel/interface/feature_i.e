@@ -9,38 +9,103 @@ deferred class FEATURE_I
 
 inherit
 
-	SHARED_WORKBENCH;
+	SHARED_WORKBENCH
+		rename
+			same_type as general_same_type
+		end;
 	SHARED_SERVER
+		rename
+			same_type as general_same_type
 		export
 			{ANY} all
 		end;
-	SHARED_INSTANTIATOR;
-	BASIC_ROUTINES;
-	SHARED_ERROR_HANDLER;
-	SHARED_TYPES;
-	SHARED_CONSTRAINT_ERROR;
-	SHARED_EVALUATOR;
-	SHARED_ARG_TYPES;
-	SHARED_TABLE;
-	SHARED_AST_CONTEXT;
+	SHARED_INSTANTIATOR
+		rename
+			same_type as general_same_type
+		end;
+	BASIC_ROUTINES
+		rename
+			same_type as general_same_type
+		end;
+	SHARED_ERROR_HANDLER
+		rename
+			same_type as general_same_type
+		end;
+	SHARED_TYPES
+		rename
+			same_type as general_same_type
+		end;
+	SHARED_CONSTRAINT_ERROR
+		rename
+			same_type as general_same_type
+		end;
+	SHARED_EVALUATOR
+		rename
+			same_type as general_same_type
+		end;
+	SHARED_ARG_TYPES
+		rename
+			same_type as general_same_type
+		end;
+	SHARED_TABLE
+		rename
+			same_type as general_same_type
+		end;
+	SHARED_AST_CONTEXT
+		rename
+			same_type as general_same_type
+		end;
 	SHARED_BYTE_CONTEXT
 		rename
+			same_type as general_same_type,
 			context as byte_context
 		end;
-	SHARED_ENCODER;
-	SHARED_CODE_FILES;
-	SHARED_PATTERN_TABLE;
-	SHARED_USED_TABLE;
-	SHARED_INST_CONTEXT;
+	SHARED_ENCODER
+		rename
+			same_type as general_same_type
+		end;
+	SHARED_CODE_FILES
+		rename
+			same_type as general_same_type
+		end;
+	SHARED_PATTERN_TABLE
+		rename
+			same_type as general_same_type
+		end;
+	SHARED_USED_TABLE
+		rename
+			same_type as general_same_type
+		end;
+	SHARED_INST_CONTEXT
+		rename
+			same_type as general_same_type
+		end;
 	SHARED_ID_TABLES
+		rename
+			same_type as general_same_type
 		export
 			{ANY} Body_index_table, Original_body_index_table
 		end;
-	SHARED_ARRAY_BYTE;
-	SHARED_EXEC_TABLE;
-	SHARED_OPTIMIZATION_TABLES;
-	HASHABLE;
-	PART_COMPARABLE;
+	SHARED_ARRAY_BYTE
+		rename
+			same_type as general_same_type
+		end;
+	SHARED_EXEC_TABLE
+		rename
+			same_type as general_same_type
+		end;
+	SHARED_OPTIMIZATION_TABLES
+		rename
+			same_type as general_same_type
+		end;
+	HASHABLE
+		rename
+			same_type as general_same_type
+		end;
+	PART_COMPARABLE
+		rename
+			same_type as general_same_type
+		end;
 	
 feature 
 
@@ -669,7 +734,9 @@ feature -- Check
 		do
 			if is_code_replicated then
 				Result := Rep_feat_server.item (body_id);
-			else
+			elseif
+				 Tmp_body_server.has (body_id) or Body_server.has (body_id)
+			then
 				Result := Body_server.item (body_id);
 			end;
 		end;

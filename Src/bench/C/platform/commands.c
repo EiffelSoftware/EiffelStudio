@@ -46,6 +46,15 @@ extern char *eif_getenv (char *);
 extern char *eif_getenv (char *);
 #endif
 
+void eif_beep (void)
+{
+#ifdef EIF_WIN32
+	MessageBeep (MB_ICONEXCLAMATION);
+#else
+	beep ();
+#endif
+}
+
 void async_shell_pass_address(fnptr send_address, fnptr set_address)
 {
 		/* Rescord the `set_command_name' and `send' function pointers */
@@ -84,7 +93,18 @@ void eif_call_finish_freezing(EIF_OBJ c_code_dir, EIF_OBJ freeze_cmd_name)
 	siStartInfo.hStdInput =  GetStdHandle (STD_INPUT_HANDLE);
 	siStartInfo.hStdError = GetStdHandle (STD_ERROR_HANDLE);
 
-	if (CreateProcess (cmd, NULL, NULL, NULL, TRUE, CREATE_NEW_CONSOLE, NULL, eif_access(c_code_dir), &siStartInfo, &procinfo)) {
+	if (CreateProcess (
+			cmd,					/* Command 	*/
+			NULL,					/* Command line */
+			NULL,					/* Process security attribute */
+			NULL,					/* Primary thread security attributes */
+			TRUE,					/* Handles are inherited */
+			CREATE_NEW_CONSOLE,		/* Creation flags */
+			NULL,					/* Use parent's environment */
+			eif_access(c_code_dir),	/* Use cmd's current directory */
+			&siStartInfo,			/* STARTUPINFO pointer */
+			&procinfo))				/* for PROCESS_INFORMATION */
+			{
 		CloseHandle (procinfo.hProcess);
 		CloseHandle (procinfo.hThread);
 	}
@@ -304,24 +324,6 @@ EIF_BOOLEAN eif_is_vms(void)
 EIF_BOOLEAN eif_is_windows(void)
 {
 #ifdef EIF_WINDOWS
-	return EIF_TRUE;
-#else
-	return EIF_FALSE;
-#endif
-}
-
-EIF_BOOLEAN eif_is_win32(void)
-{
-#ifdef EIF_WIN32
-	return EIF_TRUE;
-#else
-	return EIF_FALSE;
-#endif
-}
-
-EIF_BOOLEAN eif_is_windows_3_1(void)
-{
-#ifdef EIF_WIN_31
 	return EIF_TRUE;
 #else
 	return EIF_FALSE;

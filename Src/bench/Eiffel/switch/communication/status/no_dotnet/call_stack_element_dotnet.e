@@ -22,6 +22,10 @@ feature
 
 feature -- Properties
 
+	is_eiffel_call_stack_element: BOOLEAN is
+		do
+		end
+
 	routine: E_FEATURE
 			-- Routine being called
 			-- Note from Arnaud: Computation has been deferred for optimisation purpose

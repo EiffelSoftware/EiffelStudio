@@ -171,6 +171,8 @@ feature {COMPILER_EXPORTER}
 				until
 					after or else not Result
 				loop
+-- What is this code !!!!!
+-- FIXME !!!!!
 					Result := True;
 					--Result := other_set.valid_for (item.written_class);
 					forth;

@@ -1,5 +1,5 @@
 indexing
-	description: "Storage Routines"
+	description: "Storage Routines."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,7 @@ feature -- Basic Operations
 		local
 			wide_string: ECOM_WIDE_STRING
 		do
-			!! wide_string.make_from_string (a_name)
+			create wide_string.make_from_string (a_name)
 			Result := ccom_is_compound_file (initializer_routines, wide_string.item) = 1
 		end
 

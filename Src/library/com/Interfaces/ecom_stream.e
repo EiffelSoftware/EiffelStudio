@@ -1,5 +1,5 @@
 indexing
-	description: "Encapsulation of standard implementation of IStream interface"
+	description: "Encapsulation of standard implementation of IStream interface."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -8,7 +8,10 @@ class
 	ECOM_STREAM
 
 inherit
-	ECOM_WRAPPER
+	ECOM_QUERIABLE
+		redefine
+			dispose
+		end
 	
 	ECOM_STAT_FLAGS
 	
@@ -18,10 +21,23 @@ inherit
 
 	ECOM_STAT_FLAGS
 
-	EXCEPTIONS
+	ECOM_EXCEPTION
+		redefine
+			dispose
+		end
 
 creation
+	make_from_other,
 	make_from_pointer
+
+feature {NONE} -- Initialization
+
+	make_from_pointer (cpp_obj: POINTER) is
+			-- Make from pointer
+		do
+			initializer := ccom_create_c_istream (cpp_obj)
+			item := ccom_item (initializer)
+		end
 
 feature -- Access
 
@@ -53,7 +69,7 @@ feature -- Access
 			ptr: POINTER
 		do
 			ptr := ccom_stat (initializer, stat_flag)
-			!! Result.make_from_pointer (ptr)
+			create Result.make_from_pointer (ptr)
 		ensure
 			Result /= Void
 		end
@@ -251,7 +267,7 @@ feature -- Basic Operations
 		local
 			wel_string: WEL_STRING
 		do
-			!! wel_string.make (string)
+			create wel_string.make (string)
 			ccom_write_string (initializer, wel_string.item)
 		end
 
@@ -272,7 +288,7 @@ feature -- Basic Operations
 		local
 			large_integer: ECOM_LARGE_INTEGER
 		do
-			!! large_integer.make_from_integer (0)
+			create large_integer.make_from_integer (0)
 			seek (large_integer, Stream_seek_set)
 			end_of_stream := False
 		ensure
@@ -284,7 +300,7 @@ feature -- Basic Operations
 		local
 			large_integer: ECOM_LARGE_INTEGER
 		do
-			!! large_integer.make_from_integer (0)
+			create large_integer.make_from_integer (0)
 			seek (large_integer, Stream_seek_end)
 			end_of_stream := True
 		ensure
@@ -342,18 +358,12 @@ feature -- Basic Operations
 			-- the same bytes as Current
 			-- Seek pointer is also cloned
 		do
-			!! Result.make_from_pointer(ccom_clone(initializer))
+			create Result.make_from_pointer(ccom_clone(initializer))
 		ensure
 			clone_created: Result /= Void and then Result.exists
 		end
 
 feature {NONE} -- Implementation
-
-	create_wrapper (a_pointer: POINTER): POINTER is
-			-- Create root file.
-		do
-			Result := ccom_create_c_istream (a_pointer)
-		end
 
 	delete_wrapper is
 			-- Close root compound file.
@@ -361,6 +371,11 @@ feature {NONE} -- Implementation
 			ccom_delete_c_stream (initializer)
 		end
 
+	dispose is
+		do
+			Precursor {ECOM_QUERIABLE}
+			Precursor {ECOM_EXCEPTION}
+		end
 
 feature {NONE} -- Externals
 
@@ -476,7 +491,7 @@ feature {NONE} -- Externals
 			"C++ [E_IStream %"E_IStream.h%"] (): EIF_POINTER"
 		end
 
-	ccom_stream (cpp_obj: POINTER): POINTER  is
+	ccom_item (cpp_obj: POINTER): POINTER  is
 		external
 			"C++ [E_IStream %"E_IStream.h%"] (): EIF_POINTER"
 		end

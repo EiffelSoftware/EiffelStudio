@@ -74,6 +74,7 @@ feature -- Access
 			create horizontal_box
 			horizontal_box.set_border_width (2)
 			create button1.make_with_text (gb_ev_colorizable_restore_color)
+			button1.set_tooltip (background_color_restore)
 			button1.select_actions.extend (agent restore_background_color)
 			horizontal_box.extend (button1)
 			vertical_box.extend (horizontal_box)
@@ -113,6 +114,7 @@ feature -- Access
 			create horizontal_box
 			horizontal_box.set_border_width (2)
 			create button1.make_with_text (gb_ev_colorizable_restore_color)
+			button1.set_tooltip (foreground_color_restore)
 			button1.select_actions.extend (agent restore_foreground_color)
 			horizontal_box.extend (button1)
 			vertical_box.extend (horizontal_box)

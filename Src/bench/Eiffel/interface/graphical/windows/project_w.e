@@ -67,7 +67,6 @@ feature -- Initialization
 			!! history.make
 			register
 			forbid_resize
-			build_widgets
 			set_title (Interface_names.t_Project)
 			set_icon_name (tool_name)
 			if Pixmaps.bm_Project_icon.is_valid then
@@ -76,17 +75,21 @@ feature -- Initialization
 			set_action ("<Unmap>,<Prop>", Current, popdown)
 			set_action ("<Configure>", Current, remapped)
 			set_action ("<Visible>", Current, remapped)
-			set_delete_command (quit_cmd_holder.associated_command)
-			set_font_to_default
+
 			!! app_stopped_cmd
 			Application.set_before_stopped_command (app_stopped_cmd)
 			Application.set_after_stopped_command (app_stopped_cmd)
-			set_default_position
 			tooltip_initialize (Current)
+
+			build_widgets
+			set_delete_command (quit_cmd_holder.associated_command)
+			set_font_to_default
+			set_default_position
+
 			realize
 			focus_label.initialize_focusables (Current)
-			set_composite_attributes (Current)
 			init_text_window
+			set_composite_attributes (Current)
 			feature_part.init_text_window
 			object_part.init_text_window
 		end
@@ -736,16 +739,19 @@ feature -- Update
 	add_object_entry (o_w: OBJECT_W) is
 		do
 			add_tool_to_menu (o_w, menus @ open_objects_menu)
+			selector_part.add_tool_entry(o_w)
 		end
 
 	change_object_entry (o_w: OBJECT_W) is
 		do
 			change_tool_in_menu (o_w, menus @ open_objects_menu)
+			selector_part.change_tool_entry(o_w)
 		end
 
 	remove_object_entry (o_w: OBJECT_W) is
 		do
 			remove_tool_from_menu (o_w, menus @ open_objects_menu)
+			selector_part.remove_tool_entry(o_w)
 		end
 
 	add_explain_entry (e_w: EXPLAIN_W) is
@@ -1419,20 +1425,21 @@ feature -- Graphical Interface
 			common_form.attach_right (hori_split_window, 0)
 			common_form.attach_bottom (hori_split_window, 0)
 
- 			top_form.attach_left (top_verti_split_window, 0)
- 			top_form.attach_top (top_verti_split_window, 0)
- 			top_form.attach_right (top_verti_split_window, 0)
- 			top_form.attach_bottom (top_verti_split_window, 0)
+			top_form.attach_left (top_verti_split_window, 0)
+			top_form.attach_top (top_verti_split_window, 0)
+			top_form.attach_right (top_verti_split_window, 0)
+			top_form.attach_bottom (top_verti_split_window, 0)
 
- 			project_form.attach_left (text_window.widget, 0)
- 			project_form.attach_top (text_window.widget, 0)
- 			project_form.attach_right (text_window.widget, 0)
- 			project_form.attach_bottom (text_window.widget, 0)
+			project_form.attach_left (text_window.widget, 0)
+			project_form.attach_top (text_window.widget, 0)
+			project_form.attach_right (text_window.widget, 0)
+			project_form.attach_bottom (text_window.widget, 0)
 
-			selector_form.attach_left(selector_part,2)
- 			selector_form.attach_top (selector_part, 2)
- 			selector_form.attach_right (selector_part, 2)
- 			selector_form.attach_bottom (selector_part, 2)
+			selector_form.attach_left(selector_part,0)
+			selector_form.attach_top (selector_part, 0)
+			selector_form.attach_right (selector_part, 0)
+			selector_form.attach_bottom (selector_part, 0)
+
 		end
 
 	build_recent_project_menu_entries is
@@ -2002,6 +2009,73 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 			-- Is the toolkit motif?
 		once
 			Result := toolkit.name.is_equal ("MOTIF")
+		end
+
+feature -- Information
+
+	display_system_info is
+		local
+			st: STRUCTURED_TEXT
+		do
+			st := structured_system_info
+			if st /= Void then
+				debug_window.clear_window
+				debug_window.process_text (st)
+				debug_window.set_top_character_position (0)
+				debug_window.display
+			end
+		end
+
+	structured_system_info:STRUCTURED_TEXT is
+		local
+			root_class_name: STRING
+			root_class_c: CLASS_C
+			st: STRUCTURED_TEXT
+		do
+			if eiffel_project.system /= Void then	
+				root_class_name:= clone(eiffel_system.root_class_name)
+
+				!! st.make
+				st.add_new_line
+				st.add_comment_text(    "SYSTEM        : ")
+				st.add_string (eiffel_system.name)
+
+				if root_class_name /= Void then
+					st.add_new_line
+					st.add_comment_text("ROOT CLASS    : ")
+					root_class_c := Eiffel_universe.compiled_classes_with_name (root_class_name).i_th(0).compiled_class
+					root_class_name.to_upper
+					st.add_classi(root_class_c.lace_class,  root_class_name)
+					st.add_new_line
+
+					st.add_comment_text ("CREATION      : ")
+					st.add_feature_name (eiffel_ace.ast.root.creation_procedure_name, root_class_c)
+
+					st.add_new_line
+					st.add_new_line
+					st.add_comment_text ("ROOT CLUSTER  : ")
+					st.add_string (eiffel_system.root_cluster.cluster_name)
+					st.add_new_line
+					st.add_comment_text ("ACE FILE      : ")
+					st.add_string (eiffel_ace.file_name)
+					st.add_new_line
+					st.add_comment_text ("PROJECT PATH  : ")
+					st.add_string (eiffel_project.name)
+					st.add_new_line
+					st.add_new_line
+-- 					st.add_comment_text ("$EIFFEL4      = ")
+-- 					st.add_string (execution_environment.get ("EIFFEL4"))
+-- 					st.add_new_line
+-- 					st.add_comment_text ("$PLATFORM     = ")
+-- 					st.add_string (execution_environment.get ("PLATFORM"))
+-- 					st.add_new_line
+-- 					st.add_comment_text ("$COMPILER     = ")
+-- 					st.add_string (execution_environment.get ("COMPILER"))
+-- 					st.add_new_line
+				end
+			end
+
+			Result := st
 		end
 
 end -- class PROJECT_W

@@ -179,11 +179,6 @@ rt_private void eif_init_context(eif_global_context_t *eif_globals)
 
 	memset (eif_globals, 0, sizeof(eif_global_context_t));
 	
-		/*----------*/
-		/* cecil.c  */
-		/*----------*/
-	eif_ignore_invisible = (unsigned char) 0;
-
 #ifdef WORKBENCH
 		/*----------*/
 		/* debug.c  */

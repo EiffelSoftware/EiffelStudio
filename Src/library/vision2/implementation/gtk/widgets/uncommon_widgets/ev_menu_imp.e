@@ -48,11 +48,14 @@ feature -- Basic operations
 
 	show is
 			-- Pop up on the current pointer position.
+		local
+			pc: EV_COORDINATES
+			bw: INTEGER
 		do
+			pc := (create {EV_SCREEN}).pointer_position
+			bw := C.gtk_container_struct_border_width (list_widget)
 			if not interface.empty then
-				C.gtk_menu_popup (list_widget, Default_pointer,
-					Default_pointer, Default_pointer,
-					Default_pointer, 0, 0)
+				C.c_gtk_menu_popup (list_widget, pc.x + bw, pc.y + bw)
 			end
 		end
 
@@ -60,8 +63,10 @@ feature -- Basic operations
 			-- Pop up on `a_x', `a_y' relative to the top-left corner
 			-- of `a_widget'.
 		do
-			check
-				to_be_implemented: False
+			if not interface.empty then
+				C.c_gtk_menu_popup (list_widget,
+					a_widget.screen_x + a_x,
+					a_widget.screen_y + a_y)
 			end
 		end
 
@@ -70,7 +75,7 @@ feature {EV_ANY_I} -- Implementation
 	list_widget: POINTER
 
 	interface: EV_MENU
-	
+
 end -- class EV_MENU_IMP
 
 --!-----------------------------------------------------------------------------
@@ -94,6 +99,10 @@ end -- class EV_MENU_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/04/25 17:57:59  brendel
+--| Implemented show_at.
+--| Corrected show.
+--|
 --| Revision 1.32  2000/04/19 16:16:41  brendel
 --| Submenu is now always visible again, like on Windows.
 --|

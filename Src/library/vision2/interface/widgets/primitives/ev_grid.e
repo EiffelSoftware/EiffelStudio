@@ -157,7 +157,7 @@ feature -- Access
 		require
 			not_destroyed: not is_destroyed
 		do
-			to_implement ("EV_GRID.is_content_partially_dynamic")
+			Result := implementation.is_content_partially_dynamic
 		end
 		
 	is_content_completely_dynamic: BOOLEAN is

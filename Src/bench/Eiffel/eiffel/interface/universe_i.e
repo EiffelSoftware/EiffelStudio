@@ -660,6 +660,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			l_actions.put (agent system.set_routine_class, "ROUTINE")
 			l_actions.put (agent system.set_procedure_class, "PROCEDURE")
 			l_actions.put (agent system.set_function_class, "FUNCTION")
+			l_actions.put (agent system.set_type_class, "TYPE")
 
 				-- XX_REF classes
 			l_actions.put (agent system.set_bit_class, "BIT_REF")
@@ -684,6 +685,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 				l_actions.put (agent system.set_system_string_class, "SYSTEM_STRING")
 				l_actions.put (agent system.set_native_array_class, "NATIVE_ARRAY")
 				l_actions.put (agent system.set_arguments_class, "ARGUMENTS")
+				l_actions.put (agent system.set_system_type_class, "SYSTEM_TYPE")
 					-- In MSIL generation, WIDE_CHARACTER does not exist since
 					-- all characters are wide.
 			end

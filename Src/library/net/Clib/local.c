@@ -34,7 +34,7 @@ int net_local_is_empty = 0;
 
 #include <string.h>
 
-#include "eif_bitmask.h"
+#include "bitmask.h"
 
 EIF_INTEGER unix_address_size()
 	/*x Size of unix domain address data structure */

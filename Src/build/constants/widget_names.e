@@ -322,4 +322,10 @@ feature -- Application editor
 	State_name: STRING is "State"
 	Transition_name: STRING is "Transition"
 
+feature -- Question Box
+
+	Discard_name: STRING is "Discard";
+	New_choice_name: STRING is "New choice";
+	Open_name: STRING is "Open";
+
 end 

@@ -64,7 +64,7 @@ feature -- Constant strings
 	t_info:STRING is
 		once
 			if license.username /= Void and then not license.username.empty then
-				Result := "Registered version to: " + license.username + "%R%N%R%N"
+				Result := "Version registered to: " + license.username + "%R%N%R%N"
 			else
 				Result := ""
 			end

@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 			if (create {EV_ENVIRONMENT}).supported_image_formats.has ("ICO") then
 				filename.extend ("Windows")
 			else
-				filename.extend ("Unix")
+				filename.extend ("unix")
 			end
 			filename.extend ("ace_template.ace")
 			create ace_template_file.make_open_read (filename)

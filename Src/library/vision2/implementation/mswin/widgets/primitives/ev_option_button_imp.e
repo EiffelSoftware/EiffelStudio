@@ -98,7 +98,7 @@ feature -- Status setting
 			internal_set_text (menu.text)
 				-- Assign `menu.text' back to menu.
 			selected_item := Void
-				-- Item no longer sleected.
+				-- No item selected.
 		end
 
 feature -- Event association

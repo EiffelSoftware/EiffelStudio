@@ -41,6 +41,42 @@ RT_LNK void eif_thr_proxy_dispose(EIF_POINTER);
 /*---------------------------------------*/
 
 
+/* Defaults for semaphores */
+#ifndef EIF_NO_POSIX_SEM
+
+#ifndef HASNT_SEMAPHORE_H 
+#include <semaphore.h>
+#endif /* semaphore.h */
+
+#define EIF_SEM_TYPE    sem_t
+#define EIF_SEM_INIT(sem,count,msg) \
+    if (sem_init (sem, 0, (unsigned int) count)) eraise (msg, EN_EXT)
+#define EIF_SEM_CREATE(sem,count,msg) \
+    sem = (EIF_SEM_TYPE *) eif_malloc (sizeof(EIF_SEM_TYPE)); \
+    if (!sem) eraise ("Can't allocate memory for semaphore", EN_OMEM); \
+    EIF_SEM_INIT(sem,count,msg)
+#define EIF_SEM_POST(sem,msg) \
+    if (sem_post (sem)) eraise (msg, EN_EXT)
+#define EIF_SEM_WAIT(sem,msg) \
+    if (sem_wait (sem)) eraise (msg, EN_EXT)
+#define EIF_SEM_TRYWAIT(sem,r,msg) \
+    r = sem_trywait (sem)
+#define EIF_SEM_DESTROY(sem,msg) \
+    EIF_SEM_DESTROY0(sem,msg); eif_free(sem)
+#define EIF_SEM_DESTROY0(sem,msg) \
+    if (sem_destroy(sem)) eraise(msg, EN_EXT)
+#endif
+
+#ifdef  HAS_SEMA
+#define sem_t                   sema_t
+#define sem_init(sem,shr,count) sema_init(sem,count,USYNC_THREAD,0)
+#define sem_post                sema_post
+#define sem_wait                sema_wait
+#define sem_trywait             sema_trywait
+#define sem_destroy             sema_destroy
+#endif
+
+
 /* Tuning for FSU POSIX Threads */
 #ifdef EIF_FSUTHREADS
 #define HASNT_SCHED_H
@@ -141,42 +177,6 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 #define EIF_SCHED_FIFO    2  /* FIFO scheduling        */
 #define EIF_SCHED_RR      3  /* Round-robin scheduling */
 
-/* Defaults for semaphores */
-
-#ifndef EIF_NO_POSIX_SEM
-
-#ifndef HASNT_SEMAPHORE_H 
-#include <semaphore.h>
-#endif /* semaphore.h */
-
-#define EIF_SEM_TYPE    sem_t
-#define EIF_SEM_INIT(sem,count,msg) \
-    if (sem_init (sem, 0, (unsigned int) count)) eraise (msg, EN_EXT)
-#define EIF_SEM_CREATE(sem,count,msg) \
-    sem = (EIF_SEM_TYPE *) eif_malloc (sizeof(EIF_SEM_TYPE)); \
-    if (!sem) eraise ("Can't allocate memory for semaphore", EN_OMEM); \
-    EIF_SEM_INIT(sem,count,msg)
-#define EIF_SEM_POST(sem,msg) \
-    if (sem_post (sem)) eraise (msg, EN_EXT)
-#define EIF_SEM_WAIT(sem,msg) \
-    if (sem_wait (sem)) eraise (msg, EN_EXT)
-#define EIF_SEM_TRYWAIT(sem,r,msg) \
-    r = sem_trywait (sem)
-#define EIF_SEM_DESTROY(sem,msg) \
-    EIF_SEM_DESTROY0(sem,msg); eif_free(sem)
-#define EIF_SEM_DESTROY0(sem,msg) \
-    if (sem_destroy(sem)) eraise(msg, EN_EXT)
-#endif
-
-#ifdef  HAS_SEMA
-#define sem_t                   sema_t
-#define sem_init(sem,shr,count) sema_init(sem,count,USYNC_THREAD,0)
-#define sem_post                sema_post
-#define sem_wait                sema_wait
-#define sem_trywait             sema_trywait
-#define sem_destroy             sema_destroy
-#endif
-
 /* Defaults for condition variables */
 #ifdef EIF_NO_CONDVAR
 #define EIF_COND_TYPE		unsigned char
@@ -233,7 +233,20 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 #define EIF_MUTEX_TYPE          pthread_mutex_t
 #define EIF_TSD_TYPE            pthread_key_t
 
-/* Threads attributes initialization */
+/* Constants */
+#ifndef EIF_DEFAULT_PRIORITY
+#define EIF_DEFAULT_PRIORITY 0
+#endif
+
+#ifndef EIF_MIN_PRIORITY
+#define EIF_MIN_PRIORITY 0
+#endif
+
+#ifndef EIF_MAX_PRIORITY
+#define EIF_MAX_PRIORITY 255
+#endif
+
+/* Thread attributes initialization macros */
 #ifndef EIF_NO_SCHED
 #define EIF_THR_SET_SCHED(attr,sc) \
     switch(sc) { \
@@ -277,7 +290,6 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 
 #define EIF_THR_ATTR_DESTROY(attr) pthread_attr_destroy(&attr)
 
-
 /* Thread control macros */
 #define EIF_THR_CREATE(entry,arg,tid,msg) \
     if (pthread_create (&(tid), 0, (entry), (EIF_THR_ENTRY_ARG_TYPE)(arg))) \
@@ -294,20 +306,6 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 #define EIF_THR_GET_PRIORITY(tid,prio)
 
 
-/* Constants */
-#ifndef EIF_DEFAULT_PRIORITY
-#define EIF_DEFAULT_PRIORITY 0
-#endif
-
-#ifndef EIF_MIN_PRIORITY
-#define EIF_MIN_PRIORITY 0
-#endif
-
-#ifndef EIF_MAX_PRIORITY
-#define EIF_MAX_PRIORITY 255
-#endif
-
-/* Thread specific datas macros */
 
 #define EIF_TSD_CREATE(key,msg)             \
     if (pthread_key_create(&(key),NULL))    \
@@ -328,6 +326,7 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
     if (EIF_TSD_GET0(val_type,key,val) == (void *) 0) eraise(msg, EN_EXT)
 #endif
 #define EIF_TSD_DESTROY(key,msg, EN_EXT) if (pthread_key_delete(key) eraise(msg, EN_EXT)
+
 
 /*
  * Posix 1003.1b signals
@@ -376,9 +375,6 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 #define EIF_MUTEX_DESTROY0(m,msg) \
     if (pthread_mutex_destroy(m)) eraise(msg, EN_EXT)
 
-/* Thread Id */
-#define EIF_THR_SELF pthread_self()
-
 #elif defined EIF_WIN32
 
 /*-------------------------------*/
@@ -389,13 +385,13 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 #include <process.h>
 #include "eif_cond_var.h"
 
-/* Priority */
 #define EIF_MIN_PRIORITY 0			/*  - not used */
 #define EIF_MAX_PRIORITY 1000		/* - not used  */
 #define EIF_DEFAULT_PRIORITY 0		/* - not used  */
 
 
 /* Types */
+
 #define EIF_THR_ENTRY_TYPE      void
 #define EIF_THR_ENTRY_ARG_TYPE  void *
 #define EIF_THR_ATTR_TYPE       unsigned char /* FIXME - not used */
@@ -404,7 +400,6 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 #define EIF_THR_TYPE            HANDLE
 #define EIF_MUTEX_TYPE          HANDLE
 #define EIF_TSD_TYPE            DWORD
-
 
 /* Thread attributes initialization macros */
 #define EIF_THR_ATTR_INIT(attr,prio,sched,detach) /* FIXME - not used */
@@ -426,6 +421,7 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 #define EIF_THR_SET_PRIORITY(tid,prio)
 #define EIF_THR_GET_PRIORITY(tid,prio)
 
+
 /* Semaphore management */
 #define EIF_SEM_CREATE(sem,count,msg) \
         sem = CreateSemaphore (NULL, (LONG) count, (LONG) 0x7fffffff, NULL);  \
@@ -441,6 +437,19 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
         r = (r!=WAIT_TIMEOUT)
 #define EIF_SEM_DESTROY(sem,msg) \
         if (!CloseHandle(sem)) eraise (msg, EN_EXT)
+
+/* Thread Specific Data management */
+#define EIF_TSD_CREATE(key,msg) \
+    if ((key=TlsAlloc())==0xFFFFFFFF) eraise(msg, EN_EXT)
+#define EIF_TSD_SET(key,val,msg) \
+    if (!TlsSetValue((key),(EIF_TSD_VAL_TYPE)(val))) eraise(msg, EN_EXT)
+#define EIF_TSD_GET0(val_type,key,val) \
+    val=val_type TlsGetValue(key)
+#define EIF_TSD_GET(val_type,key,val,msg) \
+    EIF_TSD_GET0(val_type,key,val); \
+    if (GetLastError() != NO_ERROR) eraise(msg, EN_EXT)
+#define EIF_TSD_DESTROY(key,msg) \
+    if (!TlsFree(key)) eraise(msg, EN_EXT)
 
 /* Mutex management */
 #define EIF_MUTEX_CREATE(m,msg) \
@@ -458,19 +467,6 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 #define EIF_MUTEX_DESTROY(m,msg) \
         if (!CloseHandle(m)) eif_thr_panic(msg)
 
-/* Thread Specific Data management */
-#define EIF_TSD_CREATE(key,msg) \
-    if ((key=TlsAlloc())==0xFFFFFFFF) eraise(msg, EN_EXT)
-#define EIF_TSD_SET(key,val,msg) \
-    if (!TlsSetValue((key),(EIF_TSD_VAL_TYPE)(val))) eraise(msg, EN_EXT)
-#define EIF_TSD_GET0(val_type,key,val) \
-    val=val_type TlsGetValue(key)
-#define EIF_TSD_GET(val_type,key,val,msg) \
-    EIF_TSD_GET0(val_type,key,val); \
-    if (GetLastError() != NO_ERROR) eraise(msg, EN_EXT)
-#define EIF_TSD_DESTROY(key,msg) \
-    if (!TlsFree(key)) eraise(msg, EN_EXT)
-
 
 #elif defined SOLARIS_THREADS
 
@@ -486,22 +482,19 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 #include <synch.h>
 #endif
 
-/* Defaults */
+ /* Types */
+
+rt_public typedef struct {
+  int prio;
+  int pol;
+} eif_thr_attr_t;
+
 #define EIF_THR_CREATION_FLAGS THR_NEW_LWP | THR_DETACHED
 #define EIF_MIN_PRIORITY 0
 #define EIF_MAX_PRIORITY INT_MAX
 #define EIF_DEFAULT_PRIORITY 0
 #define EIF_THR_ATTR_DESTROY(attr)
 
-/* Tuning for condition variables */
-#ifndef EIF_NO_CONDVAR
-#define pthread_condattr_t		condattr_t
-#define pthread_cond_destroy	cond_destroy
-#define pthread_cond_init(a,b)	cond_init(a,USYNC_THREAD,b)
-#define pthread_cond_wait		cond_wait
-#define pthread_cond_signal		cond_signal
-#define pthread_cond_broadcast	cond_broadcast
-#endif	/* EIF_NO_CONDVAR */
 
 /* Types */
 
@@ -515,6 +508,16 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 #ifndef EIF_NO_CONDVAR
 #define pthread_cond_t			cond_t
 #endif
+
+/* Tuning for condition variables */
+#ifndef EIF_NO_CONDVAR
+#define pthread_condattr_t      condattr_t
+#define pthread_cond_destroy    cond_destroy
+#define pthread_cond_init(a,b)  cond_init(a,USYNC_THREAD,b)
+#define pthread_cond_wait       cond_wait
+#define pthread_cond_signal     cond_signal
+#define pthread_cond_broadcast  cond_broadcast
+#endif  /* EIF_NO_CONDVAR */
 
 /* Thread attributes initialization macros */
 /* -- There's no such thing as a thread attribute with Solaris threads. For
@@ -547,6 +550,18 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 #define EIF_THR_SET_PRIORITY(tid,prio) thr_setprio(tid,prio)
 #define EIF_THR_GET_PRIORITY(tid,prio) thr_setprio(tid,&(prio))
 
+/* Thread Specific Data management */
+#define EIF_TSD_CREATE(key,msg) \
+    if (thr_keycreate(&(key),NULL)) eraise(msg, EN_EXT)
+#define EIF_TSD_SET(key,val,msg) \
+    if (thr_setspecific((key),(EIF_TSD_VAL_TYPE)(val))) eraise(msg, EN_EXT)
+#define EIF_TSD_GET0(val_type,key,val) \
+    thr_getspecific(key,(void **)&(val))
+#define EIF_TSD_GET(val_type,key,val,msg) \
+    if (EIF_TSD_GET0(val_type,key,val)) eraise(msg, EN_EXT)
+
+#define EIF_TSD_DESTROY(key,msg)
+
 /* Mutex management */
 
 #define EIF_MUTEX_INIT(m,msg) \
@@ -566,31 +581,18 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 #define EIF_MUTEX_DESTROY(m,msg) \
     EIF_MUTEX_DESTROY0(m,msg); eif_free(m)
 
-/* Thread Specific Data management */
-#define EIF_TSD_CREATE(key,msg) \
-    if (thr_keycreate(&(key),NULL)) eraise(msg, EN_EXT)
-#define EIF_TSD_SET(key,val,msg) \
-    if (thr_setspecific((key),(EIF_TSD_VAL_TYPE)(val))) eraise(msg, EN_EXT)
-#define EIF_TSD_GET0(val_type,key,val) \
-    thr_getspecific(key,(void **)&(val))
-#define EIF_TSD_GET(val_type,key,val,msg) \
-    if (EIF_TSD_GET0(val_type,key,val)) eraise(msg, EN_EXT)
-
-#define EIF_TSD_DESTROY(key,msg)
-
-/* Thread Id */
-#define EIF_THR_SELF thr_self()
-
 #elif defined VXWORKS
 
 /*-------------------------*/
 /*---  VXWORKS Threads  ---*/
 /*-------------------------*/
 
-#include <taskLib.h>		/* 'thread' operations */
-#include <taskVarLib.h>		/* 'thread' 'specific data' */
-#include <semLib.h>			/* 'mutexes' and semaphores */
-#include <sched.h>			/* 'sched_yield' */
+
+#include <taskLib.h>        /* 'thread' operations */
+#include <taskVarLib.h>     /* 'thread' 'specific data' */
+#include <semLib.h>         /* 'mutexes' and semaphores */
+#include <sched.h>          /* 'sched_yield' */
+
 
 
 /* Constants */
@@ -603,17 +605,26 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 #define EIF_THR_ENTRY_TYPE      void
 #define EIF_THR_ENTRY_ARG_TYPE  int
 #define EIF_THR_ATTR_TYPE       int
+#define EIF_THR_TYPE            int
+#define EIF_THR_ATTR_TYPE       int
+#define EIF_TSD_TYPE            eif_global_context_t *
+
 /* For consistency with the other platforms, EIF_MUTEX_TYPE shouldn't
    be a pointer, that's why we use struct semaphore instead of SEM_ID
    because SEM_ID is equivalent to (struct semaphore *)
    */
 #define EIF_TSD_VAL_TYPE        eif_global_context_t *
-#define EIF_THR_TYPE            int
-#define EIF_THR_ATTR_TYPE       int
-#define EIF_TSD_TYPE            eif_global_context_t *
+/* Other definitions are in eif_threads.h */
+
 #ifdef EIF_NO_POSIX_SEM
 #define EIF_SEM_TYPE            struct semaphore
 #endif
+
+/* Thread attributes initialization macros */
+/* -- There's no such thing as a thread attribute under VxWorks, so for us,
+   -- the thread attribute is only its priority */
+#define EIF_THR_ATTR_INIT(attr,pr,sc,detach) attr = pr
+#define EIF_THR_ATTR_DESTROY(attr)
 
 /* Thread control macros */
 #define EIF_THR_CREATE(entry,arg,tid,msg)       \
@@ -660,7 +671,6 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 #define EIF_MUTEX_DESTROY(m,msg)    \
     if (semDelete(m)!=OK) eraise(msg, EN_EXT)
 
-/* Mutex management */
 #ifdef EIF_NO_POSIX_SEM
 #define EIF_SEM_CREATE(sem,count,msg) \
     if (!(sem = semCCreate (SEM_Q_FIFO, count))) eraise (msg, EN_EXT)
@@ -684,7 +694,7 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 #define EIF_TSD_GET(val_type,key,val,msg) val = key
 #define EIF_TSD_DESTROY(key,msg)
 
-#else
+#else	/* Not a supported platform */
 
 #error Sorry, this platform does not support multithreading
 

@@ -43,7 +43,7 @@ feature -- Basic operations
 			an_x_positive: an_x >= 0
 			a_y_positive: a_y >= 0
 		local
-			virtual_x_position, virtual_y_position: INTEGER
+			internal_client_x, internal_client_y: INTEGER
 			vertical_buffer_offset: INTEGER
 			horizontal_buffer_offset: INTEGER
 			column_widths: ARRAYED_LIST [INTEGER]
@@ -76,8 +76,8 @@ feature -- Basic operations
 			
 			visible_physical_column_indexes := grid.visible_physical_column_indexes
 			
-			virtual_x_position := grid.virtual_x_position
-			virtual_y_position := grid.virtual_y_position
+			internal_client_x := grid.internal_client_x
+			internal_client_y := grid.internal_client_y
 			
 			vertical_buffer_offset := grid.viewport.y_offset
 			horizontal_buffer_offset := grid.viewport.x_offset
@@ -103,8 +103,8 @@ feature -- Basic operations
 				from
 					column_offsets.start
 						-- Compute the virtual positions of the invalidated area.
-					invalid_x_start := virtual_x_position + an_x - horizontal_buffer_offset
---					invalid_x_end := virtual_x_position + an_x - horizontal_buffer_offset + a_width		
+					invalid_x_start := internal_client_x + an_x - horizontal_buffer_offset
+--					invalid_x_end := internal_client_x + an_x - horizontal_buffer_offset + a_width		
 				until
 					last_column_index_set or column_offsets.off
 				loop
@@ -128,8 +128,8 @@ feature -- Basic operations
 				
 					-- Calculate the rows that must be displayed.
 					-- Compute the virtual positions of the invalidated area.
-				invalid_y_start := virtual_y_position + a_y - vertical_buffer_offset
---				invalid_y_end := virtual_y_position + a_y - vertical_buffer_offset + a_height
+				invalid_y_start := internal_client_y + a_y - vertical_buffer_offset
+--				invalid_y_end := internal_client_y + a_y - vertical_buffer_offset + a_height
 				if grid.is_row_height_fixed then
 						-- If row heights are fixed we can calculate instead of searching.
 					first_row_index := ((invalid_y_start) // grid.row_height) + 1
@@ -174,7 +174,7 @@ feature -- Basic operations
 --			a_width_positive: a_width >= 0
 --			a_height_positive: a_height >= 0
 		local
-			virtual_x_position, virtual_y_position: INTEGER
+			internal_client_x, internal_client_y: INTEGER
 			vertical_buffer_offset: INTEGER
 			horizontal_buffer_offset: INTEGER
 			column_widths: ARRAYED_LIST [INTEGER]
@@ -210,8 +210,8 @@ feature -- Basic operations
 			
 			visible_physical_column_indexes := grid.visible_physical_column_indexes
 			
-			virtual_x_position := grid.virtual_x_position
-			virtual_y_position := grid.virtual_y_position
+			internal_client_x := grid.internal_client_x
+			internal_client_y := grid.internal_client_y
 			
 			vertical_buffer_offset := grid.viewport.y_offset
 			horizontal_buffer_offset := grid.viewport.x_offset
@@ -237,8 +237,8 @@ feature -- Basic operations
 				from
 					column_offsets.start
 						-- Compute the virtual positions of the invalidated area.
-					invalid_x_start := virtual_x_position + an_x - horizontal_buffer_offset
-					invalid_x_end := virtual_x_position + an_x - horizontal_buffer_offset + a_width		
+					invalid_x_start := internal_client_x + an_x - horizontal_buffer_offset
+					invalid_x_end := internal_client_x + an_x - horizontal_buffer_offset + a_width		
 				until
 					last_column_index_set or column_offsets.off
 				loop
@@ -262,8 +262,8 @@ feature -- Basic operations
 				
 					-- Calculate the rows that must be displayed.
 					-- Compute the virtual positions of the invalidated area.
-				invalid_y_start := virtual_y_position + a_y - vertical_buffer_offset
-				invalid_y_end := virtual_y_position + a_y - vertical_buffer_offset + a_height
+				invalid_y_start := internal_client_y + a_y - vertical_buffer_offset
+				invalid_y_end := internal_client_y + a_y - vertical_buffer_offset + a_height
 				if grid.is_row_height_fixed then
 						-- If row heights are fixed we can calculate instead of searching.
 					first_row_index := ((invalid_y_start) // grid.row_height) + 1
@@ -318,10 +318,10 @@ feature -- Basic operations
 					current_row := grid.row_list @ (row_counter - 1)
 					current_index_in_row := first_column_index
 					if grid.is_row_height_fixed then
-						current_item_y_position := (grid.row_height * (current_index_in_column - 1)) - (virtual_y_position - vertical_buffer_offset)
+						current_item_y_position := (grid.row_height * (current_index_in_column - 1)) - (internal_client_y - vertical_buffer_offset)
 						current_row_height := grid.row_height
 					else
-						current_item_y_position := (row_offsets @ (current_index_in_column)) - (virtual_y_position - vertical_buffer_offset)
+						current_item_y_position := (row_offsets @ (current_index_in_column)) - (internal_client_y - vertical_buffer_offset)
 						current_row_height := row_offsets @ (row_counter + 1) - row_offsets @ (row_counter)
 					end
 					from
@@ -357,7 +357,7 @@ feature -- Basic operations
 							end
 						end
 	
-						current_item_x_position  := (column_offsets @ (current_index_in_row)) - (virtual_x_position - horizontal_buffer_offset)
+						current_item_x_position  := (column_offsets @ (current_index_in_row)) - (internal_client_x - horizontal_buffer_offset)
 						current_column_width := column_offsets @ (column_counter + 1) - column_offsets @ (column_counter)
 						
 						if (grid.is_content_partially_dynamic or grid.is_content_completely_dynamic) and then not grid_item_exists and dynamic_content_function /= Void then
@@ -397,7 +397,7 @@ feature -- Basic operations
 				-- it is simply drawing a rectangle and dows not flicker.
 				
 			if last_column_index = grid.column_count then				
-				rectangle_width := grid.viewport.width - (column_offsets @ (column_offsets.count) - virtual_x_position)
+				rectangle_width := grid.viewport.width - (column_offsets @ (column_offsets.count) - internal_client_x)
 				if rectangle_width >= 0 then
 						-- Check to see if we must draw the background to the right of the items.
 					grid.drawable.set_foreground_color (grid.background_color)
@@ -407,9 +407,9 @@ feature -- Basic operations
 			if last_row_index = grid.row_count then
 				if grid.is_row_height_fixed then
 						-- Special handling for fixed row heights as `row_offsets' does not exist.
-					rectangle_height := grid.viewport.height - ((grid.row_height * grid.row_count) - virtual_y_position)
+					rectangle_height := grid.viewport.height - ((grid.row_height * grid.row_count) - internal_client_y)
 				else
-					rectangle_height := grid.viewport.height - (row_offsets @ (row_offsets.count) - virtual_y_position)
+					rectangle_height := grid.viewport.height - (row_offsets @ (row_offsets.count) - internal_client_y)
 				end
 				if rectangle_height >= 0 then
 						-- Check to see if must draw the background below the items.

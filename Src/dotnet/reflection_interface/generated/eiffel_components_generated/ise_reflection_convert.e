@@ -17,6 +17,13 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
+	empty_string: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.Convert"
+		alias
+			"EmptyString"
+		end
+
 	decode_key (a_key: ARRAY [INTEGER_8]): STRING is
 		external
 			"IL signature (System.Byte[]): System.String use ISE.Reflection.Convert"

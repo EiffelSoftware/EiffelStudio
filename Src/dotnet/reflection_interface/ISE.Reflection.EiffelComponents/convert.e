@@ -42,6 +42,12 @@ feature -- Access
 			retried := True
 			retry
 		end
+	
+	Empty_string: STRING is ""
+		indexing
+			description: "Empty string"
+			external_name: "EmptyString"
+		end
 
 	Neutral_culture: STRING is "neutral"
 		indexing
@@ -61,7 +67,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			hex_rep: STRING
 		do
-			Result := ""
+			Result := Empty_string
 			from
 				i := 0
 			until

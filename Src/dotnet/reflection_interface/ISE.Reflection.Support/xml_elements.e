@@ -113,6 +113,54 @@ feature -- Access
 			description: "Deferred element in XML file for a type"
 			external_name: "DeferredElement"
 		end
+
+	Generic_element: STRING is "generic"
+		indexing
+			description: "Generic element in XML file for a type"
+			external_name: "GenericElement"
+		end
+
+	Generic_derivations_element: STRING is "generic_derivations"
+		indexing
+			description: "Generic derivations element in XML file for a type"
+			external_name: "GenericDerivationsElement"
+		end
+
+	Generic_derivation_element: STRING is "generic_derivation"
+		indexing
+			description: "Generic derivation element in XML file for a type"
+			external_name: "GenericDerivationElement"
+		end
+
+	Derivation_count_element: STRING is "derivation_count"
+		indexing
+			description: "Derivation count element in XML file for a type"
+			external_name: "DerivationCountElement"
+		end
+
+	Derivation_element: STRING is "derivation"
+		indexing
+			description: "Derivation element in XML file for a type"
+			external_name: "DerivationElement"
+		end
+
+	Generic_type_eiffel_name_element: STRING is "generic_type_eiffel_name"
+		indexing
+			description: "Generic type eiffel name element in XML file for a type"
+			external_name: "GenericTypeEiffelNameElement"
+		end
+
+	Generic_type_external_name_element: STRING is "generic_type_external_name"
+		indexing
+			description: "Generic type external name element in XML file for a type"
+			external_name: "GenericTypeExternalNameElement"
+		end
+
+	Constraint_element: STRING is "constraint"
+		indexing
+			description: "Constraint element in XML file for a type"
+			external_name: "ConstraintElement"
+		end
 		
 	Class_eiffel_name_element: STRING is "class_eiffel_name"
 		indexing
@@ -389,7 +437,13 @@ feature -- Access
 			description: "Argument type external full name element in XML file for a type"
 			external_name: "ArgumentTypeFullNameElement"
 		end
-			
+
+	Generic_parameter_index_element: STRING is "generic_parameter_index"
+		indexing
+			description: "Generic parameter index element in XML file for a type"
+			external_name: "GenericParameterIndexElement"
+		end
+		
 	Return_type_element: STRING is "return_type"
 		indexing
 			description: "Return type element in XML file for a type (Eiffel name)"
@@ -401,7 +455,13 @@ feature -- Access
 			description: "Return type external full name element in XML file for a type"
 			external_name: "ReturnTypeFullNameElement"
 		end
-	
+
+	Return_type_generic_parameter_index_element: STRING is "return_type_generic_parameter_index"
+		indexing
+			description: "Return type generic parameter index element in XML file for a type (in case it is a generic return type)"
+			external_name: "ReturnTypeGenericParameterIndexElement"
+		end
+		
 	Comments_element: STRING is "comments"
 		indexing
 			description: "Comments element in XML file for a type"

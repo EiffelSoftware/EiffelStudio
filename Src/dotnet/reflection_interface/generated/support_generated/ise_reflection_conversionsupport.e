@@ -41,13 +41,6 @@ feature -- Basic Operations
 			"TargetFromText"
 		end
 
-	empty_string: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ConversionSupport"
-		alias
-			"EmptyString"
-		end
-
 	opening_curl_bracket: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ConversionSupport"

@@ -54,6 +54,7 @@ feature -- Access
 			base_path: STRING
 			read_lock: STRING
 			file: SYSTEM_IO_FILE
+			filestream: SYSTEM_IO_FILESTREAM
 		do
 			if not retried then
 				create type_description.make_xmltextreader_10 (a_filename)
@@ -70,17 +71,25 @@ feature -- Access
 				type_description.Close
 				Result := eiffel_class
 				eiffel_class := Void
+				slash_index := a_filename.last_index_of ("\")
+				if slash_index /= -1 then
+					base_path := a_filename.substring_int32_int32 (0, slash_index).trim
+					read_lock := base_path.concat_string_string (base_path, Read_lock_filename)
+					if file.exists (read_lock) then
+						file.Delete (read_lock)
+					end
+				end
 			else
 				Result := Void
 				slash_index := a_filename.last_index_of ("\")
 				if slash_index /= -1 then
 					base_path := a_filename.substring_int32_int32 (0, slash_index).trim
 					read_lock := base_path.concat_string_string (base_path, Read_lock_filename)
-					file.Delete (read_lock)
+					if file.exists (read_lock) then
+						file.Delete (read_lock)
+					end
 				end
 			end
-		ensure
-			non_void_eiffel_class: Result /= Void
 		rescue
 			retried := True
 			create_error (error_messages.Eiffel_class_generation_failed, error_messages.Eiffel_class_generation_failed_message)
@@ -110,6 +119,7 @@ feature -- Access
 			base_path: STRING
 			read_lock: STRING
 			file: SYSTEM_IO_FILE
+			filestream: SYSTEM_IO_FILESTREAM
 		do
 			if not retried then
 				create reflection_support.make
@@ -154,13 +164,23 @@ feature -- Access
 				a_descriptor.make (assembly_name, assembly_version, assembly_culture, assembly_public_key)
 				create Result.make (a_descriptor, eiffel_cluster_path, emitter_version_number)
 				assembly_description.Close
+				slash_index := a_filename.last_index_of ("\")
+				if slash_index /= -1 then
+					base_path := a_filename.substring_int32_int32 (0, slash_index).trim
+					read_lock := base_path.concat_string_string (base_path, Read_lock_filename)
+					if file.exists (read_lock) then
+						file.Delete (read_lock)
+					end
+				end
 			else
 				Result := Void
 				slash_index := a_filename.last_index_of ("\")
 				if slash_index /= -1 then
 					base_path := a_filename.substring_int32_int32 (0, slash_index).trim
 					read_lock := base_path.concat_string_string (base_path, Read_lock_filename)
-					file.Delete (read_lock)
+					if file.exists (read_lock) then
+						file.Delete (read_lock)
+					end
 				end
 			end
 		rescue
@@ -318,7 +338,7 @@ feature {NONE} -- Implementation
 			non_void_eiffel_class: eiffel_class /= Void
 			non_void_type_description: type_description /= Void
 		local
-			is_modified, is_frozen, is_expanded, is_deferred, create_none: STRING
+			is_modified, is_frozen, is_expanded, is_deferred, is_generic, create_none: STRING
 			class_name: STRING
 			simple_name: STRING
 			namespace: STRING
@@ -339,7 +359,9 @@ feature {NONE} -- Implementation
 				if type_description.get_name.equals_string (xml_elements.Modified_element) then
 					is_modified := type_description.Read_Element_String_String (xml_elements.Modified_element)
 					if is_modified.equals_string (xml_elements.True_string) then
-						eiffel_class.Set_Modified
+						eiffel_class.set_modified (True)
+					elseif is_modified.equals_string (xml_elements.False_string) then
+						eiffel_class.set_modified (False)
 					end
 				end
 				
@@ -367,6 +389,18 @@ feature {NONE} -- Implementation
 					eiffel_class.Set_Deferred (False)
 				end
 
+					-- Set `is_generic'.
+				is_generic := type_description.Read_Element_String_String (xml_elements.Generic_element)
+				if is_generic.equals_string (xml_elements.True_string) then
+					eiffel_class.set_generic (True)
+				elseif is_generic.equals_string (xml_elements.False_string) then
+					eiffel_class.set_generic (False)
+				end
+				
+				if type_description.get_name.equals_string (xml_elements.Generic_derivations_element) then
+					generate_generic_derivations
+				end
+				
 					-- Set `eiffel_name'.
 				class_name := type_description.Read_Element_String_String (xml_elements.Class_eiffel_name_element)
 				if class_name /= Void and then class_name.get_length > 0 then
@@ -428,21 +462,6 @@ feature {NONE} -- Implementation
 					-- Set `creation_routines'.
 				if type_description.get_Name.equals_string (xml_elements.Create_element) then
 					creation_routines_string := type_description.read_element_string_string (xml_elements.Create_element)
---					if creation_routines_string.get_length > 0 then
---						if creation_routines_string.Index_Of_Char (',') = -1 then
---							eiffel_class.Add_Creation_Routine (creation_routines_string)
---						else					
---							from
---							until
---								creation_routines_string.Index_Of_Char (',') = -1 
---							loop
---								comma_index := creation_routines_string.Index_Of_Char (',')
---								eiffel_class.Add_Creation_Routine (creation_routines_string.Substring_Int32_Int32 (0, comma_index))
---								creation_routines_string := creation_routines_string.Substring (comma_index + 1).Trim
---							end
---							eiffel_class.Add_Creation_Routine (creation_routines_string)
---						end
---					end
 				end
 
 					-- Set `create_none'.
@@ -458,6 +477,64 @@ feature {NONE} -- Implementation
 		rescue
 			retried := True
 			create_error (error_messages.Class_header_generation_failed, error_messages.Class_header_generation_failed_message)
+			retry
+		end
+	
+	generate_generic_derivations is
+		indexing
+			description: "Add generic derivations to `eiffel_class' if it is a generic class."
+			external_name: "GenerateGenericDerivations"
+		require
+			non_void_eiffel_class: eiffel_class /= Void
+			non_void_type_description: type_description /= Void
+			generic_derivations_currently_read: type_description.get_name.equals_string (xml_elements.Generic_derivations_element)
+			is_generic: eiffel_class.get_is_generic
+		local
+			derivation_count: STRING
+			generic_derivation: ISE_REFLECTION_GENERICDERIVATION
+			eiffel_name: STRING
+			external_name: STRING
+			a_constraint: STRING
+			a_type: ISE_REFLECTION_SIGNATURETYPE
+			convert: SYSTEM_CONVERT
+			retried: BOOLEAN
+		do
+			if not retried then
+				type_description.read_start_element_string (xml_elements.Generic_derivations_element)
+				from
+				until
+					 not type_description.get_name.equals_string (xml_elements.Generic_derivation_element)
+				loop
+					type_description.read_start_element_string (xml_elements.Generic_derivation_element)
+					derivation_count := type_description.read_element_string_string (xml_elements.derivation_count_element)
+					create generic_derivation.make1
+					generic_derivation.make (convert.to_int32_string (derivation_count))
+					from
+					until 
+						not type_description.get_name.equals_string (xml_elements.Derivation_element)
+					loop
+						type_description.read_start_element_string (xml_elements.Derivation_element)
+						eiffel_name := type_description.read_element_string_string (xml_elements.Generic_type_eiffel_name_element)
+						external_name := type_description.read_element_string_string (xml_elements.Generic_type_external_name_element)
+						a_constraint := type_description.read_element_string_string (xml_elements.Constraint_element)
+						if eiffel_name /= Void and then eiffel_name.get_length > 0 
+								and then external_name /= Void and then external_name.get_length > 0 
+								and then a_constraint /= Void then
+							create a_type.make1
+							a_type.make
+							a_type.set_type_eiffel_name (eiffel_name)
+							a_type.set_type_full_external_name (external_name)
+							generic_derivation.add_derivation_type (a_type, a_constraint)
+						end
+						type_description.read_end_element
+					end
+					type_description.read_end_element
+				end
+				type_description.read_end_element
+			end
+		rescue
+			retried := True
+			create_error (error_messages.Generic_derivation_generation_failed, error_messages.Generic_derivation_generation_failed_message)
 			retry
 		end
 	
@@ -720,7 +797,9 @@ feature {NONE} -- Implementation
 				if type_description.get_name.equals_string (xml_elements.Bit_or_infix_element) then
 					bit_or_infix := type_description.read_element_string_string (xml_elements.Bit_or_infix_element)
 					if bit_or_infix.equals_string (xml_elements.True_string) then
-						eiffel_class.set_bit_or_infix
+						eiffel_class.set_bit_or_infix (True)
+					elseif bit_or_infix.equals_string (xml_elements.False_string) then
+						eiffel_class.set_bit_or_infix (False)
 					end
 				end
 				type_description.read_end_element
@@ -747,8 +826,11 @@ feature {NONE} -- Implementation
 			return_type: STRING
 			return_type_full_name: STRING
 			signature_type: ISE_REFLECTION_SIGNATURETYPE
+			formal_signature_type: ISE_REFLECTION_FORMALSIGNATURETYPE
+			convert: SYSTEM_CONVERT
 			literal_value: STRING
 			retried: BOOLEAN
+			generic_parameter_index: STRING
 		do
 			if not retried then
 				from
@@ -785,24 +867,36 @@ feature {NONE} -- Implementation
 						-- Set `return_type'.
 					if type_description.get_Name.equals_string (xml_elements.Return_type_element) then
 						return_type := type_description.read_element_string_string (xml_elements.Return_type_element)
-						if return_type /= Void and then return_type.get_length > 0 then
-							create signature_type.make1
-							signature_type.make
-							signature_type.set_type_eiffel_name (return_type)
-						end
 					end
 
 						-- Set `return_type_full_name'.
 					if type_description.get_Name.equals_string (xml_elements.Return_type_full_name_element) then
 						return_type_full_name := type_description.read_element_string_string (xml_elements.Return_type_full_name_element) 
-						if return_type_full_name /= Void and then return_type_full_name.get_length > 0 then
-							if signature_type = Void then
-								create signature_type.make1
-								signature_type.make
-							end
-							signature_type.set_type_full_external_name (return_type_full_name)
-							eiffel_feature.Set_Return_Type (signature_type)
+					end
+					
+						-- Set `return_type_generic_parameter_index'.
+					if type_description.get_name.equals_string (xml_elements.Return_type_generic_parameter_index_element) then
+						generic_parameter_index := type_description.read_element_string_string (xml_elements.Return_type_generic_parameter_index_element)
+						create formal_signature_type.make_formalsignaturetype
+						formal_signature_type.make
+						formal_signature_type.set_generic_parameter_index (convert.to_int32_string (generic_parameter_index))
+						if return_type /= Void and then return_type.get_length > 0 then
+							formal_signature_type.set_type_eiffel_name (return_type)
 						end
+						if return_type_full_name /= Void and then return_type_full_name.get_length > 0 then
+							formal_signature_type.set_type_full_external_name (return_type_full_name)
+						end
+						eiffel_feature.set_return_type (formal_signature_type)
+					else
+						create signature_type.make1
+						signature_type.make
+						if return_type /= Void and then return_type.get_length > 0 then
+							signature_type.set_type_eiffel_name (return_type)
+						end
+						if return_type_full_name /= Void and then return_type_full_name.get_length > 0 then
+							signature_type.set_type_full_external_name (return_type_full_name)
+						end
+						eiffel_feature.set_return_type (signature_type)					
 					end
 					
 						-- Add `comments' (if any).
@@ -985,8 +1079,11 @@ feature {NONE} -- Implementation
 			external_name: STRING
 			type: STRING
 			type_full_name: STRING
+			formal_argument: ISE_REFLECTION_FORMALNAMEDSIGNATURETYPE
 			an_argument: ISE_REFLECTION_NAMEDSIGNATURETYPE
 			retried: BOOLEAN
+			generic_parameter_index: STRING
+			convert: SYSTEM_CONVERT
 		do
 			if not retried then
 				type_description.read_start_element_string (xml_elements.Arguments_element)
@@ -1015,13 +1112,25 @@ feature {NONE} -- Implementation
 					else
 						type_full_name := xml_elements.Empty_string
 					end
-					create an_argument.make_namedsignaturetype
-					an_argument.set_eiffel_name (eiffel_name)
-					an_argument.set_external_name (external_name)
-					an_argument.set_type_eiffel_name (type)
-					an_argument.set_type_full_external_name (type_full_name)
-					eiffel_feature.Add_Argument (an_argument)	
-
+					if type_description.get_name.equals_string (xml_elements.Generic_parameter_index_element) then
+						generic_parameter_index := type_description.read_element_string_string (xml_elements.Generic_parameter_index_element)
+						create formal_argument.make_formalnamedsignaturetype
+						formal_argument.make
+						formal_argument.set_generic_parameter_index (convert.to_int32_string (generic_parameter_index))
+						formal_argument.set_eiffel_name (eiffel_name)
+						formal_argument.set_external_name (external_name)
+						formal_argument.set_type_eiffel_name (type)
+						formal_argument.set_type_full_external_name (type_full_name)
+						eiffel_feature.add_argument (formal_argument)
+					else
+						create an_argument.make1
+						an_argument.make					
+						an_argument.set_eiffel_name (eiffel_name)
+						an_argument.set_external_name (external_name)
+						an_argument.set_type_eiffel_name (type)
+						an_argument.set_type_full_external_name (type_full_name)
+						eiffel_feature.Add_Argument (an_argument)	
+					end
 					type_description.read_end_element
 				end
 				type_description.read_end_element

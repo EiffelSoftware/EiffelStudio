@@ -24,13 +24,6 @@ feature -- Basic Operations
 			"IndexFilename"
 		end
 
-	dtd_extension: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.Dictionary"
-		alias
-			"DtdExtension"
-		end
-
 	space: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.Dictionary"
@@ -38,11 +31,11 @@ feature -- Basic Operations
 			"Space"
 		end
 
-	xml_extension: STRING is
+	dtd_extension: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.Dictionary"
 		alias
-			"XmlExtension"
+			"DtdExtension"
 		end
 
 	comma: STRING is
@@ -66,18 +59,25 @@ feature -- Basic Operations
 			"TrueString"
 		end
 
-	dash: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.Dictionary"
-		alias
-			"Dash"
-		end
-
 	dtd_type_filename: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.Dictionary"
 		alias
 			"DtdTypeFilename"
+		end
+
+	xml_extension: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.Dictionary"
+		alias
+			"XmlExtension"
+		end
+
+	dash: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.Dictionary"
+		alias
+			"Dash"
 		end
 
 	false_string: STRING is

@@ -79,12 +79,6 @@ feature -- Access
 			retried := True
 			retry
 		end
-
-	Empty_string: STRING is ""
-		indexing
-			description: "Empty string"
-			external_name: "EmptyString"
-		end		
 	
 	As_keyword: STRING is "as"
 		indexing

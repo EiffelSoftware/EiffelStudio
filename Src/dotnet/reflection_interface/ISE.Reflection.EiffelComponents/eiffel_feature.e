@@ -373,7 +373,7 @@ feature -- Status Setting
 
 feature -- Basic Operations
 
-	add_argument (an_argument: NAMED_SIGNATURE_TYPE) is
+	add_argument (an_argument: NAMED_SIGNATURE_TYPE_INTERFACE) is
 		indexing
 			description: "Add `an_argument to `arguments'."
 			external_name: "AddArgument"

@@ -97,11 +97,11 @@ feature -- Basic Operations
 			"ArgumentElement"
 		end
 
-	argument_external_name_element: STRING is
+	parent_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
-			"ArgumentExternalNameElement"
+			"ParentElement"
 		end
 
 	argument_type_element: STRING is
@@ -118,11 +118,18 @@ feature -- Basic Operations
 			"PreconditionElement"
 		end
 
-	alias_element: STRING is
+	modified_feature_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
-			"AliasElement"
+			"ModifiedFeatureElement"
+		end
+
+	derivation_count_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"DerivationCountElement"
 		end
 
 	invariants_element: STRING is
@@ -174,6 +181,13 @@ feature -- Basic Operations
 			"BitOrInfixElement"
 		end
 
+	select_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"SelectElement"
+		end
+
 	body_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
@@ -202,6 +216,13 @@ feature -- Basic Operations
 			"PostconditionElement"
 		end
 
+	alias_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"AliasElement"
+		end
+
 	enum_literal_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
@@ -216,11 +237,11 @@ feature -- Basic Operations
 			"AssemblyFilenameElement"
 		end
 
-	modified_feature_element: STRING is
+	feature_external_name_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
-			"ModifiedFeatureElement"
+			"FeatureExternalNameElement"
 		end
 
 	create_element: STRING is
@@ -251,6 +272,13 @@ feature -- Basic Operations
 			"PostconditionsElement"
 		end
 
+	generic_type_eiffel_name_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"GenericTypeEiffelNameElement"
+		end
+
 	assembly_type_filename_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
@@ -279,18 +307,11 @@ feature -- Basic Operations
 			"AssemblyTypesElement"
 		end
 
-	implementation_element: STRING is
+	constraint_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
-			"ImplementationElement"
-		end
-
-	postcondition_tag_element: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"PostconditionTagElement"
+			"ConstraintElement"
 		end
 
 	class_element: STRING is
@@ -342,11 +363,11 @@ feature -- Basic Operations
 			"RenameElement"
 		end
 
-	abstract_element: STRING is
+	postcondition_tag_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
-			"AbstractElement"
+			"PostconditionTagElement"
 		end
 
 	is_literal_element: STRING is
@@ -391,18 +412,18 @@ feature -- Basic Operations
 			"EmitterVersionNumberElement"
 		end
 
+	return_type_generic_parameter_index_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"ReturnTypeGenericParameterIndexElement"
+		end
+
 	new_slot_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
 			"NewSlotElement"
-		end
-
-	element_change_element: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"ElementChangeElement"
 		end
 
 	preconditions_element: STRING is
@@ -417,6 +438,13 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
 			"ParentNameElement"
+		end
+
+	generic_derivation_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"GenericDerivationElement"
 		end
 
 	infix_element: STRING is
@@ -447,11 +475,11 @@ feature -- Basic Operations
 			"UndefineElement"
 		end
 
-	redefine_element: STRING is
+	generic_parameter_index_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
-			"RedefineElement"
+			"GenericParameterIndexElement"
 		end
 
 	footer_element: STRING is
@@ -461,11 +489,11 @@ feature -- Basic Operations
 			"FooterElement"
 		end
 
-	select_element: STRING is
+	redefine_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
-			"SelectElement"
+			"RedefineElement"
 		end
 
 	enum_type_element: STRING is
@@ -489,6 +517,13 @@ feature -- Basic Operations
 			"SpecialsElement"
 		end
 
+	generic_derivations_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"GenericDerivationsElement"
+		end
+
 	comments_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
@@ -503,11 +538,11 @@ feature -- Basic Operations
 			"InvariantElement"
 		end
 
-	feature_external_name_element: STRING is
+	element_change_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
-			"FeatureExternalNameElement"
+			"ElementChangeElement"
 		end
 
 	export_element: STRING is
@@ -524,11 +559,25 @@ feature -- Basic Operations
 			"InvariantTagElement"
 		end
 
-	parent_element: STRING is
+	argument_external_name_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
-			"ParentElement"
+			"ArgumentExternalNameElement"
+		end
+
+	abstract_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"AbstractElement"
+		end
+
+	generic_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"GenericElement"
 		end
 
 	precondition_tag_element: STRING is
@@ -566,11 +615,32 @@ feature -- Basic Operations
 			"ExpandedElement"
 		end
 
+	implementation_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"ImplementationElement"
+		end
+
+	generic_type_external_name_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"GenericTypeExternalNameElement"
+		end
+
 	initialization_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
 			"InitializationElement"
+		end
+
+	derivation_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"DerivationElement"
 		end
 
 	header_element: STRING is

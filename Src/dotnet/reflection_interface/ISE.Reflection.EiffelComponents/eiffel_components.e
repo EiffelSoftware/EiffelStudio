@@ -20,6 +20,12 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
+	assembly_factory: EIFFEL_ASSEMBLY_FACTORY
+		indexing
+			description: "Assembly factory"
+			external_name: "AssemblyFactory"
+		end
+		
 	eiffel_class: EIFFEL_CLASS
 		indexing
 			description: "Eiffel class"

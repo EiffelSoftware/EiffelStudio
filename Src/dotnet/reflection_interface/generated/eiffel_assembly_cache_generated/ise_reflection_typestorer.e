@@ -134,11 +134,11 @@ feature -- Access
 
 feature -- Basic Operations
 
-	generate_xml_alias_element is
+	commit is
 		external
 			"IL signature (): System.Void use ISE.Reflection.TypeStorer"
 		alias
-			"GenerateXmlAliasElement"
+			"Commit"
 		end
 
 	generate_xml_element_from_list (xml_element: STRING; a_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
@@ -176,6 +176,13 @@ feature -- Basic Operations
 			"GenerateXmlFeaturesElement"
 		end
 
+	generate_generic_derivations is
+		external
+			"IL signature (): System.Void use ISE.Reflection.TypeStorer"
+		alias
+			"GenerateGenericDerivations"
+		end
+
 	generate_xml_elements_from_feature_arguments (arguments: SYSTEM_COLLECTIONS_ARRAYLIST) is
 		external
 			"IL signature (System.Collections.ArrayList): System.Void use ISE.Reflection.TypeStorer"
@@ -190,11 +197,11 @@ feature -- Basic Operations
 			"GenerateXmlInheritElement"
 		end
 
-	commit is
+	generate_xml_element_from_inheritance_clauses (xml_element: STRING; a_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
 		external
-			"IL signature (): System.Void use ISE.Reflection.TypeStorer"
+			"IL signature (System.String, System.Collections.ArrayList): System.Void use ISE.Reflection.TypeStorer"
 		alias
-			"Commit"
+			"GenerateXmlElementFromInheritanceClauses"
 		end
 
 	support: ISE_REFLECTION_CODEGENERATIONSUPPORT is
@@ -218,18 +225,18 @@ feature -- Basic Operations
 			"AddType"
 		end
 
-	generate_xml_element_from_inheritance_clauses (xml_element: STRING; a_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
-		external
-			"IL signature (System.String, System.Collections.ArrayList): System.Void use ISE.Reflection.TypeStorer"
-		alias
-			"GenerateXmlElementFromInheritanceClauses"
-		end
-
 	make_type_storer (a_folder_name: STRING) is
 		external
 			"IL signature (System.String): System.Void use ISE.Reflection.TypeStorer"
 		alias
 			"MakeTypeStorer"
+		end
+
+	generate_xml_alias_element is
+		external
+			"IL signature (): System.Void use ISE.Reflection.TypeStorer"
+		alias
+			"GenerateXmlAliasElement"
 		end
 
 	generate_xml_class_body is

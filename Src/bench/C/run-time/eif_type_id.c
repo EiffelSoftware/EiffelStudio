@@ -30,9 +30,9 @@ rt_private int is_expanded_or_reference_keyword (char *str, int count, struct ty
 rt_private int is_generic (struct cecil_info *type, struct type_array_element *type_entry);
 rt_private EIF_TYPE_ID eifcid(struct type_array_element *type_entry);
 rt_private int32 sk_type (int32 cecil_id);
-rt_private EIF_TYPE_ID compute_eif_type_id (int n, struct type_array_element *type_array);
-rt_private void eif_type_id_ex (int *error, struct cecil_info *type, int gen_number,
-		struct type_array_element *type_array, int16* typearr, int pos, int length);
+rt_private EIF_TYPE_ID compute_eif_type_id (size_t n, struct type_array_element *type_array);
+rt_private void eif_type_id_ex (int *error, struct cecil_info *type, uint32 gen_number,
+		struct type_array_element *type_array, int16* typearr, size_t pos, size_t length);
 
 /*------------------------------------------------------------------*/
 /* Compute the dynamic type corresponding to the C string type      */
@@ -43,9 +43,9 @@ rt_public EIF_TYPE_ID eif_type_id (char *type_string)
 	struct type_array_element *type_array = NULL;
 	char *string_type = NULL;
 	char c = (char) 0;
-	int i = 0;
+	size_t i = 0;
 	int state = 1, substate = 0;
-	int n = 0;	/* Number of elements in an the C generated array */
+	size_t n = 0;	/* Number of elements in an the C generated array */
 	int l = 0;	/* length of the currently analyzed string */
 	EIF_TYPE_ID result; /* Computed `type_id' */
 
@@ -235,7 +235,7 @@ rt_private EIF_TYPE_ID eifcid(struct type_array_element *type_entry)
 	}
 }
 
-rt_private EIF_TYPE_ID compute_eif_type_id (int n, struct type_array_element *type_array)
+rt_private EIF_TYPE_ID compute_eif_type_id (size_t n, struct type_array_element *type_array)
 {
 	struct cecil_info type;
 	EIF_TYPE_ID result = 0;
@@ -272,10 +272,10 @@ rt_private EIF_TYPE_ID compute_eif_type_id (int n, struct type_array_element *ty
 	}
 }
 
-rt_private void eif_type_id_ex (int *error, struct cecil_info *type, int gen_number,
-		struct type_array_element *type_array, int16* typearr, int pos, int length)
+rt_private void eif_type_id_ex (int *error, struct cecil_info *type, uint32 gen_number,
+		struct type_array_element *type_array, int16* typearr, size_t pos, size_t length)
 {
-	int i = 0;
+	size_t i = 0;
 	struct cecil_info ltype;
 	int32 cecil_id;
 	int32 *gtype;			/* Generic information for current type */

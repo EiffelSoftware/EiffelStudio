@@ -20,14 +20,19 @@ feature -- Access
 	Assembly_not_found_error: INTEGER is 0x04000002
 			-- Assembly not found
 
+	Type_initialization_error: INTEGER is 0x04000003
+			-- Type initialization error
+
+
 feature {NONE} -- Implementation
 
 	error_message_table: HASH_TABLE [STRING, INTEGER] is
 			-- Error messages
 		once
-			create Result.make (2)
+			create Result.make (3)
 			Result.put ("Could not serialize assembly", Serialization_error)
 			Result.put ("Could not find assembly", Assembly_not_found_error)
+			Result.put ("Could not serialize type.%NThis is usually due to an implementation problem in one of its features, or a missing resource.", Type_initialization_error)
 		end
 		
 end -- class ASSEMBLY_CONSUMPTION_ERRORS

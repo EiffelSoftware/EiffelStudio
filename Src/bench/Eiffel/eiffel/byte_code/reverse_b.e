@@ -77,33 +77,33 @@ feature -- IL code generation
 					source.generate_il_metamorphose (source_type, target_type, False)
 				end
 			end
-			il_generator.duplicate_top
 
 				-- Generate Test on type
 			il_generator.generate_is_instance_of (target_type)
-			success_label := il_label_factory.new_label
-			il_generator.branch_on_true (success_label)
-
-			il_generator.pop
+			
 			if target_type.is_expanded then
+				il_generator.duplicate_top
+	
+				success_label := il_label_factory.new_label
+				il_generator.branch_on_true (success_label)
+
+					-- Assignment attempt faild.
+					-- Remove duplicate obtained from call to `isinst'.
+				il_generator.pop
 					-- Assignment attempt failed, we simply load previous
 					-- value of `target'. It is ok to regenerate `target' as
 					-- it can only be a creatable entity: local, attribute, result.
 				target.generate_il
-			else			
-				il_generator.put_default_value (target_type)
-			end
 
-			failure_label := il_label_factory.new_label
-			il_generator.branch_to (failure_label)
-
-			il_generator.mark_label (success_label)
-
-			if target_type.is_expanded then
+				failure_label := il_label_factory.new_label
+				il_generator.branch_to (failure_label)
+	
+				il_generator.mark_label (success_label)
+	
 				il_generator.generate_unmetamorphose (target_type)
-			end
 
-			il_generator.mark_label (failure_label)
+				il_generator.mark_label (failure_label)
+			end
 
 				-- Generate assignment header depending of the type
 				-- of the target (local, attribute or result).

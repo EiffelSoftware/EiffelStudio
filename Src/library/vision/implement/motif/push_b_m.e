@@ -20,21 +20,21 @@ inherit
 
 	FONTABLE_M;
 
-    MEL_PUSH_BUTTON
-        rename
-            make as mel_pb_make,
-            foreground_color as mel_foreground_color,
-            set_foreground_color as mel_set_foreground_color,
-            background_color as mel_background_color,
-            background_pixmap as mel_background_pixmap,
-            set_background_color as mel_set_background_color,
-            set_background_pixmap as mel_set_background_pixmap,
-            destroy as mel_destroy,
-            screen as mel_screen,
+	MEL_PUSH_BUTTON
+		rename
+			make as mel_pb_make,
+			foreground_color as mel_foreground_color,
+			set_foreground_color as mel_set_foreground_color,
+			background_color as mel_background_color,
+			background_pixmap as mel_background_pixmap,
+			set_background_color as mel_set_background_color,
+			set_background_pixmap as mel_set_background_pixmap,
+			destroy as mel_destroy,
+			screen as mel_screen,
 			is_shown as shown
 		select
 			mel_pb_make
-        end
+		end
 
 creation
 
@@ -44,12 +44,14 @@ feature {NONE} -- Initialization
 
 	make (a_push_b: PUSH_B; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif push button.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-            mel_pb_make (a_push_b.identifier,
-                    mel_parent (a_push_b, widget_index),
-                    man);
-			a_push_b.set_font_imp (Current)
+			mel_pb_make (a_push_b.identifier, mc, man);
+			a_push_b.set_font_imp (Current);	
+			set_mnemonic_from_text (a_push_b.identifier, False)
 		end;
 
 feature -- Status setting
@@ -74,21 +76,21 @@ feature -- Element change
 			-- Add `a_command' to the list of action to execute when
 			-- current push button is activated.
 		do
-            add_activate_callback (mel_vision_callback (a_command), argument)
+			add_activate_callback (mel_vision_callback (a_command), argument)
 		end;
 
 	add_arm_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
 			-- current push button is armed.
 		do
-            add_arm_callback (mel_vision_callback (a_command), argument)
+			add_arm_callback (mel_vision_callback (a_command), argument)
 		end;
 
 	add_release_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
 			-- current push button is released.
 		do
-            add_disarm_callback (mel_vision_callback (a_command), argument)
+			add_disarm_callback (mel_vision_callback (a_command), argument)
 		end;
 
 feature -- Removal
@@ -97,21 +99,21 @@ feature -- Removal
 			-- Remove `a_command' from the list of action to execute when
 			-- current push button is activated.
 		do
-            remove_activate_callback (mel_vision_callback (a_command), argument)
+			remove_activate_callback (mel_vision_callback (a_command), argument)
 		end;
 
 	remove_arm_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- current push button is armed.
 		do
-            remove_arm_callback (mel_vision_callback (a_command), argument)
+			remove_arm_callback (mel_vision_callback (a_command), argument)
 		end;
 
 	remove_release_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- current push button is released.
 		do
-            remove_disarm_callback (mel_vision_callback (a_command), argument)
+			remove_disarm_callback (mel_vision_callback (a_command), argument)
 		end;
 
 end -- class PUSH_B_M

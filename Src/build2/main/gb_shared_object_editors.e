@@ -226,7 +226,6 @@ feature {NONE} -- Implementation
 			object_editor_window: GB_FLOATING_OBJECT_EDITOR_WINDOW
 			editor: GB_OBJECT_EDITOR
 			button: EV_BUTTON
-			wizard_shared: WIZARD_SHARED
 		do
 			create object_editor_window
 				-- We must now temporarily create a new button, and add it to `Current'
@@ -247,15 +246,7 @@ feature {NONE} -- Implementation
 			object_editor_window.extend (editor)
 			floating_object_editors.extend (editor)
 			editor.set_object (object)
-			if Visual_studio_information.Is_visual_studio_wizard then
-				--| FIXME not a very optimal solution, to create the object every time,
-				--| but maybe the referencing of shared information can be modified.
-				--| speed should not be an issue here, anyway, as this only gets executed
-				--| infrequently, as a direct response to a user action.
-				create wizard_shared
-				object_editor_window.show_relative_to_window (wizard_shared.first_window)
-				object_editor_window.set_default_icon
-			elseif (create {GB_SHARED_SYSTEM_STATUS}).system_status.tools_always_on_top then
+			if (create {GB_SHARED_SYSTEM_STATUS}).system_status.tools_always_on_top then
 				object_editor_window.show_relative_to_window ((create {GB_SHARED_TOOLS}).main_window)
 				object_editor_window.set_default_icon				
 			else

@@ -435,23 +435,9 @@ feature {NONE} -- Implementation
 			-- dependent in information in `system_status'.
 			-- Note that For Visual Studio, we need to
 			-- generate a debug and a release ace file.
-		local
-			debug_ace_file, release_ace_file: FILE_NAME
 		do
-			if system_status.is_wizard_system then
-				create debug_ace_file.make_from_string (visual_studio_information.wizard_installation_path)
-				debug_ace_file.extend ("templates")
-				debug_ace_file.extend ("windows")
-				release_ace_file := debug_ace_file.twin
-				debug_ace_file.extend ("debug.ace")
-				release_ace_file.extend ("release.ace")
-				generate_ace_file (release_ace_file, "release.ace")
-				generate_ace_file (debug_ace_file, "debug.ace")
-			else
-					-- Now generate ace files on both platforms as standard.
-				generate_ace_file (windows_ace_file_name.twin, windows_ace_name)
-				generate_ace_file (unix_ace_file_name.twin, unix_ace_name)
-			end	
+			generate_ace_file (windows_ace_file_name.twin, windows_ace_name)
+			generate_ace_file (unix_ace_file_name.twin, unix_ace_name)
 		end
 		
 	generate_ace_file (template_file_name, file_name: STRING) is
@@ -497,10 +483,6 @@ feature {NONE} -- Implementation
 					-- Now add the application class name.
 				add_generated_string (ace_text, project_settings.application_class_name.as_upper, application_tag)
 				
-				if Visual_studio_information.is_visual_studio_wizard then
-					add_generated_string (ace_text, Visual_studio_information.clr_version, Clr_version_tag)
-				end
-				
 				ace_file_name := generated_path.twin
 				ace_file_name.extend (file_name)
 						-- Store `ace_text'.
@@ -536,14 +518,8 @@ feature {NONE} -- Implementation
 			l_string: STRING
 		do	
 				--Firstly read the contents of the file.
-			if system_status.is_wizard_system then
-				create constants_file_name.make_from_string (visual_studio_information.wizard_installation_path)
-				constants_file_name.extend ("templates")
-				constants_file_name.extend ("constants_imp.e")
-				constants_file := open_text_file_for_read (constants_file_name)	
-			else
-				constants_file := open_text_file_for_read (constants_template_imp_file_name)	
-			end
+			constants_file := open_text_file_for_read (constants_template_imp_file_name)
+			
 			if constants_file /= Void then
 				constants_file.read_stream (constants_file.count)
 				constants_file.close
@@ -687,14 +663,7 @@ feature {NONE} -- Implementation
 						-- Now generate the interface class name for constants.
 						
 						--Firstly read the contents of the file.
-				if system_status.is_wizard_system then
-					create constants_file_name.make_from_string (visual_studio_information.wizard_installation_path)
-					constants_file_name.extend ("templates")
-					constants_file_name.extend ("constants.e")
-					constants_file := open_text_file_for_read (constants_file_name)
-				else
-					constants_file := open_text_file_for_read (constants_template_file_name)
-				end
+				constants_file := open_text_file_for_read (constants_template_file_name)
 				
 				if constants_file /= Void then
 					constants_file.read_stream (constants_file.count)
@@ -768,13 +737,8 @@ feature {NONE} -- Implementation
 			application_class_name: STRING
 			change_pos: INTEGER
 		do
-			if system_status.is_wizard_system then
-				create application_template.make_from_string (visual_studio_information.wizard_installation_path)
-				application_template.extend ("templates")
-				application_template.extend ("build_application_template.e")
-			else
-				application_template := application_template_file_name			
-			end
+			application_template := application_template_file_name
+			
 			application_template_file := open_text_file_for_read (application_template)
 			if application_template_file /= Void then
 				create application_text.make (application_template_file.count)
@@ -827,13 +791,8 @@ feature {NONE} -- Implementation
 			file_name.extend (a_class_name.as_lower + ".e")
 			
 				-- Retrieve the template for a class file to generate.
-			if system_status.is_wizard_system then
-				create window_template.make_from_string (visual_studio_information.wizard_installation_path)
-				window_template.extend ("templates")
-				window_template.extend ("build_class_template_imp.e")
-			else
-				window_template := window_template_imp_file_name		
-			end
+			window_template := window_template_imp_file_namE
+			
 			window_template_file := open_text_file_for_read (window_template)
 			if window_template_file /= Void then
 				create class_text.make (window_template_file.count)
@@ -1011,16 +970,9 @@ feature {NONE} -- Implementation
 			file_name := directory_name.twin
 			a_class_name := info.name.as_upper
 			file_name.extend (a_class_name.as_lower + ".e")
-			
-				-- Retrieve the template for a class file to generate.
-			if system_status.is_wizard_system then
-				create window_template.make_from_string (visual_studio_information.wizard_installation_path)
-				window_template.extend ("templates")
-				window_template.extend ("build_class_template.e")
-			else
-				window_template := window_template_file_name		
-			end
+			window_template := window_template_file_name		
 			window_template_file := open_text_file_for_read (window_template)
+			
 			if window_template_file /= Void then
 				create class_text.make (window_template_file.count)
 				window_template_file.start
@@ -1796,9 +1748,7 @@ feature {NONE} -- Implementation
 			if progress_bar /= Void then
 				create env
 				progress_bar.set_proportion (value)
-				if not system_status.is_wizard_system then
-					env.application.process_events	
-				end
+				env.application.process_events	
 			end
 		end
 		

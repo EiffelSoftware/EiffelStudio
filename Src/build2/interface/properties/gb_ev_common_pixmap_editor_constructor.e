@@ -25,8 +25,6 @@ inherit
 	GB_SHARED_PIXMAPS
 		export
 			{NONE} all
-		undefine
-			Visual_studio_information
 		end
 		
 	GB_SHARED_CONSTANTS

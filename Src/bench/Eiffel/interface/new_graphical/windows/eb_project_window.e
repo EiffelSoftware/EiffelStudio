@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Window holding a project tool"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,8 +14,6 @@ inherit
 			make, make_top_level
 		end
 
---	WINDOW_ATTRIBUTES
-
 	SYSTEM_CONSTANTS
 
 	SHARED_APPLICATION_EXECUTION
@@ -23,8 +21,6 @@ inherit
 	SHARED_EIFFEL_PROJECT
 
 	PROJECT_CONTEXT
-
---	WIDGET_ROUTINES
 
 	NEW_EB_CONSTANTS
 
@@ -44,10 +40,11 @@ feature -- Initialization
 			tool.build_interface
 
 			initialize_main_menu
-
---			base_make (Icon_id.out, a_screen)
+			tool.update
+			debug_tool.update
 
 			add_close_command (tool.close_cmd, Void)
+
 --			set_font_to_default
 --			set_default_position
 		end
@@ -61,10 +58,11 @@ feature -- Initialization
 			tool.build_interface
 
 			initialize_main_menu
+			tool.update
+			debug_tool.update
 
---			base_make (Icon_id.out, a_screen)
+			add_close_command (tool.close_cmd, Void)
 
---			add_destroy_command (tool.close_cmd, Void)
 --			set_font_to_default
 --			set_default_position
 		end
@@ -73,29 +71,7 @@ feature -- Access
 
 	tool: EB_PROJECT_TOOL
 
-	popdown: EV_ARGUMENT1 [ANY] is
-		once
-			create Result.make (Void)
-		end
-
-	remapped: EV_ARGUMENT1 [ANY] is
-		once
-			create Result.make (Void)
-		end
-
-	icon_id: INTEGER is
-			-- Icon id of Current window (for windows)
-		do
-			Result := Interface_names.i_Project_id
-		end
-
 feature -- Window Settings
-
-	force_raise is
-			-- Raise the project tool.
-		do
---			raise
-		end
 
 	set_default_size is
 		do
@@ -112,18 +88,7 @@ feature -- Window Settings
 --			set_x_y (default_x, default_y)
 		end
  
-	set_initialized is
-			-- Set `initialized' to true.
-		do
-			initialized := true
-		ensure
-			initialized = true
-		end
-
 feature -- Window Properties
-
-	initialized: BOOLEAN
-			-- Is the workbench created?
 
 	is_system_tool_hidden: BOOLEAN
 			-- Is the system tool hidden?
@@ -136,34 +101,6 @@ feature -- Window Properties
 
 	is_profile_tool_hidden: BOOLEAN
 			-- Is the profile tool hidden?
-
-	tool_name: STRING is
-			-- Name of the tool.
-		do
-				--| If the tool already has a name, we keep it, otherwise
-				--| we return the default name.
-			if title /= Void then
-				Result := title
-			else
-				Result := Interface_names.t_Project
-			end
-		end
-
-feature -- Window Holders
-
---	stop_points_hole_holder: HOLE_HOLDER
-
---	system_hole_holder: HOLE_HOLDER
-
---	class_hole_holder: HOLE_HOLDER
-
---	routine_hole_holder: HOLE_HOLDER
-
---	dynamic_lib_hole_holder: HOLE_HOLDER
-
---	object_hole_holder: HOLE_HOLDER
-
---	explain_hole_holder: HOLE_HOLDER
 
 feature -- Pulldown Menus
 
@@ -222,9 +159,6 @@ feature -- Pulldown Menus
 	format_object_menu: EV_MENU_ITEM
 			-- ID Format menu specific for the object part
 
-	recent_project_menu: INTEGER is 16
-			-- ID Recent project menu for the file menu
-
 	active_menus (erase: BOOLEAN) is
 			-- Enable all the menus and if `erase' clean
 			-- the content of the Project tool.
@@ -276,13 +210,8 @@ feature -- Update
 	initialize_main_menu is
 			-- Build the menu bar
 		local
---			sep: SEPARATOR
 --			case_storage_cmd: CASE_STORAGE
---			case_storage_menu_entry: EV_MENU_ITEM
---			document_submenu: EV_MENU
 --			generate_doc_cmd: DOCUMENT_GENERATION
---			generate_menu_entry: EV_MENU_ITEM
---			generate_submenu: EV_MENU
 		do
 			create menu_bar.make (Current)
 			create file_menu.make_with_text (menu_bar, Interface_names.m_File)
@@ -298,7 +227,7 @@ feature -- Update
 			build_file_menu (file_menu)
 			build_compile_menu
 			debug_tool.build_edit_menu (debug_menu)
-			debug_tool.build_special_menu (debug_menu)
+			debug_tool.build_debug_menu (debug_menu)
 			build_special_menu
 			build_windows_menu (window_menu)
 			build_help_menu (help_menu)
@@ -340,8 +269,6 @@ feature -- Update
 --			create generate_menu_item.make_with_text (generate_doc_cmd, generate_submenu)
 --			create generate_doc_cmd.make_text
 --			create generate_menu_item.make_with_text (generate_doc_cmd, generate_submenu)
-
-			build_top
 		end
 
 	build_file_menu (a_menu: EV_MENU_ITEM_HOLDER) is
@@ -361,8 +288,6 @@ feature -- Update
 			create open_menu_item.make_with_text (a_menu, m_Open_project)
 			open_menu_item.add_select_command (open_cmd, Void)
 
---			build_print_menu_entry
---
 --			build_recent_project_menu_entries
 
 			create quit_menu_item.make_with_text (a_menu, m_Exit_project)
@@ -429,21 +354,8 @@ feature -- Update
 			create open_case_cmd
 			create i.make_with_text (special_menu, "Case tool...")
 			i.add_select_command (open_case_cmd, Void)
-		end
-
-	build_toolbar_menu is
-			-- Build the toolbar menu under the special sub menu.
-		local
---			sep: EV_SEPARATOR
-			toolbar_t: EV_CHECK_MENU_ITEM
-		do
---			create sep.make (special_menu)
-			create toolbar_t.make_with_text (special_menu,"") -- project_toolbar.identifier)
-			toolbar_t.set_selected (True)
-			create toolbar_t.make_with_text (special_menu,"") -- format_bar.identifier)
-			toolbar_t.set_selected (True)
-			create toolbar_t.make_with_text (special_menu,"") -- selector_part.identifier)
-			toolbar_t.set_selected (True)
+			tool.build_special_menu (special_menu)
+			debug_tool.build_special_menu (special_menu)
 		end
 
 	build_windows_menu (a_menu: EV_MENU_ITEM_HOLDER) is
@@ -529,48 +441,6 @@ feature -- Update
 			create i.make_with_text (a_menu, s)
 			create about_cmd.make (tool)
 			i.add_select_command (about_cmd, Void) 
-		end
-
-	build_top is
-			--
-		local
---			tool_action: TOOLS_MANAGEMENT
---			tool_action_menu_entry: EV_MENU_ITEM
-
---			show_prof_cmd: EB_SHOW_PROFILE_TOOL
---			show_prof_menu_entry: EV_MENU_ITEM
-
---			sep: SEPARATOR
---			sep1, sep2: THREE_D_SEPARATOR
---			display_feature_cmd: DISPLAY_ROUTINE_PORTION
---			display_feature_button: EB_BUTTON
---			display_feature_menu_entry: EV_MENU_ITEM
---			display_object_cmd: DISPLAY_OBJECT_PORTION
---			display_object_button: EB_BUTTON
---			display_object_menu_entry: EV_MENU_ITEM
---			update_cmd: UPDATE_PROJECT
---			update_button: EB_BUTTON
---			quick_update_cmd: UPDATE_PROJECT
---			quick_update_button: EB_BUTTON
---  			version_button: PUSH_B
-
---			about_menu_entry: EV_MENU_ITEM
---			about_cmd: EB_LAUNCHER3
---			about_tool: EB_ABOUT_WINDOW
-			local_menu: EV_MENU_ITEM
-		do
-
-			-- Help Menu
---			create version_button.make (Version_number, help_menu)
-
---			create about_tool.make ("About_Dialog", screen)
---			create about_cmd.make (about_tool)
---			create about_menu_item.make_with_text_default (about_cmd, help_menu)
-
-				-- Regular menu entries.
---			create shell_cmd.make (Current)
---			create shell_button.make (shell_cmd, project_toolbar)
---			shell_button.add_third_button_action
 		end
 
 --	build_recent_project_menu_entries is

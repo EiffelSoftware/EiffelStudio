@@ -45,6 +45,14 @@ feature {NONE} -- Initialization
 			displayed_string_size: displayed_string_size = 50
 			current_execution_stack_number_is_one: current_execution_stack_number = 1
 		end
+		
+feature -- Recylcing
+
+	recycle is
+			-- Clean debugging session data
+		do
+			set_status (Void)
+		end
 
 feature -- execution mode
 

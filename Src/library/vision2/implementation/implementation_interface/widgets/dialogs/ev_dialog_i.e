@@ -5,19 +5,14 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+deferred class 
 	EV_DIALOG_I
 
 inherit
-	EV_WINDOW_IMP
-		export
-			{EV_DIALOG} make 
+	EV_WINDOW_I
 		redefine
 			build
 		end
-
-creation
-	make
 
 feature {EV_DIALOG} -- Initialization
 
@@ -31,7 +26,7 @@ feature {EV_DIALOG} -- Initialization
 			check
 				container_not_void: container_interface /= Void
 			end
-			{EV_WINDOW_IMP} Precursor
+			{EV_WINDOW_I} Precursor
 
 			!! dbox.make (container_interface)
 			dbox.set_homogeneous (False)
@@ -49,6 +44,8 @@ feature {EV_DIALOG} -- Initialization
 			action_area.set_expand (False)
 			action_area.set_minimum_height (30)
 			action_area.set_minimum_width (250)
+
+			forbid_resize
 		end
 
 feature -- Access

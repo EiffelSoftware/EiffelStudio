@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
 		"EiffelVision multi-column-list, Mswindows implementation."
@@ -286,17 +285,17 @@ feature -- Status setting
 			-- Therefore, we destroy the old WEL_LIST_VIEW,
 			-- and create another with the same information.
 
-		par_imp ?= parent_imp
-		a_x := x
-		a_y := y
-		a_width := width
-		a_height := height
-			-- Store parent, x, y, width, height
-		wel_destroy
-			-- Destroy the windows object.
-		wel_make (par_imp, a_x, a_y, a_width, a_height, 0)
-			-- Create a new windows object with information from
-			-- The previous.
+			par_imp ?= parent_imp
+			a_x := x
+			a_y := y
+			a_width := width
+			a_height := height
+				-- Store parent, x, y, width, height
+			wel_destroy
+				-- Destroy the windows object.
+			wel_make (par_imp, a_x, a_y, a_width, a_height, 0)
+				-- Create a new windows object with information from
+				-- The previous.
 			from
 				i := 1
 			until
@@ -640,7 +639,6 @@ feature {NONE} -- WEL Implementation
 	on_lvn_columnclick (info: WEL_NM_LIST_VIEW) is
 			-- A column was tapped.
 		do
-			--| FIXME execute_command (Cmd_column_click, Void)
 			interface.column_click_actions.call ([])
 			disable_default_processing
 		end
@@ -655,13 +653,12 @@ feature {NONE} -- WEL Implementation
 					not flag_set(info.uoldstate, Lvis_selected) then
 				item_imp := ev_children @ (info.iitem + 1)
 				item_imp.interface.select_actions.call ([])
-				--item_imp.execute_command (Cmd_item_activate, Void)
-				--execute_command (Cmd_select, Void)
+				interface.select_actions.call ([item_imp.interface])
 			elseif flag_set(info.uoldstate, Lvis_selected) and
 				not flag_set(info.unewstate, Lvis_selected) then
 				item_imp := ev_children @ (info.iitem + 1)
-				--item_imp.execute_command (Cmd_item_deactivate, Void)
 				item_imp.interface.deselect_actions.call ([])
+				interface.deselect_actions.call ([item_imp.interface])
 			end
 		end
 		end
@@ -758,16 +755,6 @@ feature {NONE} -- WEL Implementation
 			process_tab_key (virtual_key)
 		end
 
-feature -- Inapplicable
-
-	--make is
-	--		-- Not applicable
-	--	do
-	--		check
-	--			Inapplicable: False
-	--		end
-	--	end
-
 feature {EV_PND_TRANSPORTER_IMP}
 
 	child_y (child: EV_MULTI_COLUMN_LIST_ROW_IMP): INTEGER is
@@ -858,8 +845,8 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.45  2000/03/06 22:34:46  rogers
---| Removed old command association.
+--| Revision 1.46  2000/03/06 23:29:30  rogers
+--| Corrected formatting in set_columns, interface.select_actions and interface.deselect_Actions have been connected. Removed commented out make which is redundent.
 --|
 --| Revision 1.43  2000/03/06 17:13:33  rogers
 --| Added calls to row select and deselect actions. Added call to column_click_actions.

@@ -110,6 +110,9 @@ feature -- Access
 	none_type_id: INTEGER
 			-- Identifier for class ISE.Runtime.NONE_TYPE.
 
+	eiffel_type_info_type_id: INTEGER
+			-- Identifier for class ISE.Runtime.EIFFEL_TYPE_INFO.
+
 	once_generation: BOOLEAN
 			-- Are we currently generating a once feature?
 			
@@ -164,6 +167,16 @@ feature -- Settings
 		ensure
 			none_type_id_set: none_type_id = an_id
 		end
+
+	set_eiffel_type_info_type_id (an_id: like eiffel_type_info_type_id) is
+			-- Set `an_id' to `eiffel_type_info_type_id'.
+		require
+			valid_id: an_id > 0
+		do
+			eiffel_type_info_type_id := an_id
+		ensure
+			eiffel_type_info_type_id_set: eiffel_type_info_type_id = an_id
+		end
 		
 	set_basic_type_id (an_id: like basic_type_id) is
 			-- Set `an_id' to `basic_type_id'.
@@ -189,6 +202,13 @@ feature -- Settings
 			once_generation := v
 		ensure
 			once_generation_set: once_generation = v
+		end
+
+	set_any_type_id (an_id: INTEGER) is
+		require
+			valid_id: an_id > 0
+		do
+			implementation.set_any_type_id (an_id)
 		end
 
 feature -- Target of generation
@@ -422,6 +442,7 @@ feature -- Class info
 			implementation.generate_generic_type_class_mapping (generic_type_id)
 			implementation.generate_formal_type_class_mapping (formal_type_id)
 			implementation.generate_none_type_class_mapping (none_type_id)
+			implementation.generate_eiffel_type_info_type_class_mapping (eiffel_type_info_type_id)
 		end
 		
 	start_classes_descriptions is

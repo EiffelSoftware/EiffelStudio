@@ -264,7 +264,7 @@
 				</code>, including the original introduction of this feature in 
 				<code>
 					<string>LINEAR</string>
-				</code> and subsequent redeclaration(redefinitions or effectings).  The mention 
+				</code> and subsequent redeclarations (redefinitions or effectings).  The mention 
 				<code>
 					<keyword>(from version)</keyword>
 				</code> signals the version applicable to the current class, here 

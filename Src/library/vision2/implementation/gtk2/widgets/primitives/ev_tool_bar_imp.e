@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Implementation
 
-	needs_event_box: BOOLEAN is True
+	needs_event_box: BOOLEAN is False
 
 	make (an_interface: like interface) is
 			-- Create the tool-bar.

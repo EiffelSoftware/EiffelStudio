@@ -281,6 +281,14 @@ feature
 	makefile_generator: MAKEFILE_GENERATOR;
 			-- Makefile generator.
 
+	cecil_file: UNIX_FILE;
+
+	skeleton_file: UNIX_FILE;
+
+	conformance_file: UNIX_FILE;
+
+	make_file: UNIX_FILE;
+
 	array_make_name: STRING;
 			-- Name of the C routine corresponding to the
 			-- make routine of ARRAY[ANY]. Needed for the
@@ -1684,7 +1692,6 @@ end;
 			external_unit: EXT_EXECUTION_UNIT;
 			info: EXTERNAL_INFO;
 		do
-		
 				-- Real shake compresses the dispatch and execution tables
 				-- Not called because the descriptors must be reprocessed
 				-- if a dispatch unit is moved (real_body_index changes)
@@ -1726,6 +1733,12 @@ end;
 
 	
 feature -- Final mode generation
+
+	in_final_mode: BOOLEAN is
+			-- Generation of Final code ?
+		do
+			Result := byte_context.final_mode
+		end;
 
 	finalized_generation is
 			-- Finalizer generation
@@ -2105,6 +2118,7 @@ end;
 			final_mode := byte_context.final_mode;
 
 				-- Open skeleton file
+			Skeleton_file := Skeleton_f (final_mode);
 			Skeleton_file.open_write;
 
 			Skeleton_file.putstring ("#include %"struct.h%"%N");
@@ -2121,7 +2135,7 @@ if class_types.item (i) /= Void then
 end;
 					i := i + 1;
 				end;
-				f_name := generation_path.twin;
+				f_name := Final_generation_path.twin;
 				f_name.append ("/Eskelet.h");
 				Extern_declarations.generate (f_name);
 				Extern_declarations.wipe_out;
@@ -2261,6 +2275,7 @@ end;
 			end;
 				-- Close skeleton file
 			Skeleton_file.close;
+			Skeleton_file := Void;
 		end;
 
 	generate_cecil is
@@ -2274,6 +2289,7 @@ end;
 		do
 			final_mode := byte_context.final_mode;
 
+			Cecil_file := cecil_f (final_mode);
 			Cecil_file.open_write;
 			Cecil_file.putstring ("#include %"cecil.h%"%N");
 			if final_mode then
@@ -2296,7 +2312,7 @@ end;
 
 			if final_mode then
 					-- Extern declarations for previous file
-				f_name := generation_path.twin;
+				f_name := Final_generation_path.twin;
 				f_name.append ("/Ececil.h");
 				Extern_declarations.generate (f_name);
 				Extern_declarations.wipe_out;
@@ -2324,6 +2340,7 @@ end;
 			Cecil3.generate;
 
 			Cecil_file.close;
+			Cecil_file := Void;
 		end;
 
 	make_cecil_tables is
@@ -2376,6 +2393,7 @@ end;
 			i, nb: INTEGER;
 			cl_type: CLASS_TYPE;
 		do
+			Conformance_file := conformance_f (byte_context.final_mode);
 			Conformance_file.open_write;
 
 			Conformance_file.putstring ("#include %"struct.h%"%N%N");
@@ -2419,7 +2437,7 @@ end;
 			end;
 			Conformance_file.putstring ("};%N");
 			Conformance_file.close;
-
+			Conformance_file := Void;
 		end;
 
 	generate_initialization_table is
@@ -2580,6 +2598,7 @@ feature -- Plug and Makefile file
 		do
 			final_mode := byte_context.final_mode;
 
+			Plug_file := plug_f (final_mode);
 			Plug_file.open_write;
 
 			Plug_file.putstring ("#include %"portable.h%"%N%N");
@@ -2704,6 +2723,7 @@ feature -- Plug and Makefile file
 			special_cl.generate_dynamic_types;
 			generate_dynamic_ref_type;
 			Plug_file.close;
+			Plug_file := Void;
 		end;
 
 	generate_make_file is
@@ -3178,6 +3198,11 @@ feature -- Conveniences
 			-- Assign `i' to `max_class_id'.
 		do
 			max_class_id := i;
+		end;
+
+	set_make_file (f: UNIX_FILE) is
+		do
+			make_file := f;
 		end;
 
 	root_class: CLASS_I is

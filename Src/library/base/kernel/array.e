@@ -520,7 +520,7 @@ feature {NONE} -- Implementation
 	empty_area: BOOLEAN is
 			-- Is `area' empty?
 		do
-			Result := (area.count = 0)
+			Result := area = Void or else area.count = 0
 		end
 
 	spsubcopy (source, target: POINTER; s, e, i: INTEGER) is

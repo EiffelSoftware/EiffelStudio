@@ -54,8 +54,6 @@ doc:<file name="main.c" header="eif_main.h" version="$Id$" summary="Initializati
 #include "rt_boehm.h"
 #endif
 
-#define null (char *) 0					/* Null pointer */
-
 /* The following line is automatically uncommented when compiling a non commercial run-time */
 /*#define NON_COMMERCIAL*/
 
@@ -244,7 +242,7 @@ doc:	</attribute>
 rt_public long *nbref;						/* Gives # of references */
 #endif
 
-#define exvec() exset(null, 0, null)	/* How to get an execution vector */
+#define exvec() exset(NULL, 0, NULL)	/* How to get an execution vector */
 
 rt_public void failure(void);					/* The Eiffel exectution failed */
 rt_private Signal_t emergency(int sig);			/* Emergency exit */
@@ -393,13 +391,13 @@ rt_public void eif_alloc_init(void)
 
 	/* Special options. */
 	env_var = getenv ("EIF_NO_RECLAIM");
-	if (env_var != (char *) 0)
+	if (env_var != NULL)
 		eif_no_reclaim = atoi (env_var);
 		
 	/* Set chunk size. */
 	if (!chunk_size) {
 		env_var = getenv ("EIF_MEMORY_CHUNK");
-		if (env_var != (char *) 0) {
+		if ((env_var != NULL) && (strlen(env_var) > 0)) {
 			chunk_size = atoi (env_var);
 			mod = chunk_size % ALIGNMAX;
 			if (mod != 0)
@@ -415,7 +413,7 @@ rt_public void eif_alloc_init(void)
 	/* Set scavenge size. */
 	if (!scavenge_size) {
 		env_var = getenv ("EIF_MEMORY_SCAVENGE");
-		if (env_var != (char *) 0) {
+		if ((env_var != NULL) && (strlen(env_var) > 0)) {
 			scavenge_size = atoi (env_var);
 			mod = scavenge_size % ALIGNMAX;
 			if (mod != 0)
@@ -431,8 +429,7 @@ rt_public void eif_alloc_init(void)
 	if (!tenure_max)	/* Is maximum tenuring age not set yet? */
 	{
 		env_var = getenv ("EIF_TENURE_MAX");
-		if (env_var != (char *) 0)	/* Has user specified it? */
-		{
+		if ((env_var != NULL) && (strlen(env_var) > 0)) {	/* Has user specified it? */
 			tenure_max = atoi (env_var);
 
 			/* Must be in bounds. */
@@ -440,9 +437,9 @@ rt_public void eif_alloc_init(void)
 				tenure_max = 0;		/* Mimimun is 0. */
 			else if (tenure_max > TENURE_MAX)
 				tenure_max = TENURE_MAX;	/* Maximum is TENURE_MAX. */
-		}
-		else
+		} else {
 			tenure_max = TENURE_MAX;	/* RT default setting. */
+		}
 	}
 	eif_tenure_max = tenure_max;	
 
@@ -450,8 +447,7 @@ rt_public void eif_alloc_init(void)
 	if (!gs_limit)	/* Is maximum size of objects in GSZ not set yet? */
 	{
 		env_var = getenv ("EIF_GS_LIMIT");
-		if (env_var != (char *) 0)	/* Has user specified it? */
-		{
+		if ((env_var != NULL) && (strlen(env_var) > 0)) {	/* Has user specified it? */
 			gs_limit = atoi (env_var);
 			/* Must be in bounds. */
 			if (gs_limit < 0)		
@@ -459,19 +455,18 @@ rt_public void eif_alloc_init(void)
 			else if (gs_limit > GS_FLOATMARK)
 				gs_limit = GS_FLOATMARK;	/* Maximum we allow, may crash 
 											 * otherwise. */
-		}
-		else
+		} else {
 			gs_limit = GS_LIMIT;	/* RT default setting. */
+		}
 	}
 	eif_gs_limit = gs_limit;	
 								/* Reasonable gs_limit. */
 #endif /* ISE GC */
 
 	/* Set Size of local stack chunk. */
-	if (!stack_chunk)	/* Is maximum size of objects in GSZ not set yet? */
-	{
+	if (!stack_chunk) {	/* Is maximum size of objects in GSZ not set yet? */
 		env_var = getenv ("EIF_STACK_CHUNK");
-		if (env_var != (char *) 0) {	/* Has user specified it? */
+		if ((env_var != NULL) && (strlen(env_var) > 0)) {	/* Has user specified it? */
 			stack_chunk = atoi (env_var);
 			mod = stack_chunk % ALIGNMAX;
 			if (mod != 0)
@@ -484,10 +479,9 @@ rt_public void eif_alloc_init(void)
 
 #ifdef ISE_GC
 	/* Set full coalesce period. */
-	if (!c_per)	/* Is full coalesce period not set yet? */
-	{
+	if (!c_per) {	/* Is full coalesce period not set yet? */
 		env_var = getenv ("EIF_FULL_COALESCE_PERIOD");
-		if (env_var != (char *) 0)	/* Has user specified it? */
+		if ((env_var != NULL) && (strlen(env_var) > 0))	/* Has user specified it? */
 			c_per = atoi (env_var);
 		else
 			c_per = CLSC_PER;	/* RT default setting. */
@@ -495,10 +489,9 @@ rt_public void eif_alloc_init(void)
 	clsc_per = c_per >= 0 ? c_per : 0;	
 
 	/* Set full collection period. */
-	if (!p_per)	/* Is full collection period not set yet? */
-	{
+	if (!p_per) {	/* Is full collection period not set yet? */
 		env_var = getenv ("EIF_FULL_COLLECTION_PERIOD");
-		if (env_var != (char *) 0)	/* Has user specified it? */
+		if ((env_var != NULL) && (strlen(env_var) > 0))	/* Has user specified it? */
 			p_per = atoi (env_var);
 		else
 			p_per = PLSC_PER;	/* RT default setting. */
@@ -506,10 +499,9 @@ rt_public void eif_alloc_init(void)
 	plsc_per = p_per >= 0 ? p_per : 0;	
 
 	/* Set memory threshold. */
-	if (!thd)	/* Is memory threshold not set yet? */
-	{
+	if (!thd) {	/* Is memory threshold not set yet? */
 		env_var = getenv ("EIF_MEMORY_THRESHOLD");
-		if (env_var != (char *) 0)	/* Has user specified it? */
+		if ((env_var != NULL) && (strlen(env_var) > 0))	/* Has user specified it? */
 			thd = atoi (env_var);
 		else
 			thd = TH_ALLOC;	/* RT default setting. */
@@ -519,7 +511,7 @@ rt_public void eif_alloc_init(void)
 	/* Set stack overflow depth to a certain threshold */
 	if (!stk_limit) {	/* Is it set yet? */
 		env_var = getenv ("EIF_STACK_LIMIT");
-		if (env_var != NULL) {
+		if ((env_var != NULL) && (strlen(env_var) > 0)) {
 			stk_limit = (uint32) atoi (env_var);
 		} else {
 			stk_limit = OVERFLOW_STACK_LIMIT;
@@ -589,10 +581,11 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 	 * the ISE_TIMEOUT environment variable
 	 */
 	eif_timeout = getenv("ISE_TIMEOUT");
-	if (eif_timeout != (char *) 0)		/* Environment variable set */
+	if ((eif_timeout != NULL) && (strlen(eif_timeout) > 0)) {		/* Environment variable set */
 		TIMEOUT = (unsigned) atoi(eif_timeout);
-	else
+	} else {
 		TIMEOUT = 30;
+	}
 
 #ifdef WORKBENCH
 	xinitint();							/* Interpreter initialization */

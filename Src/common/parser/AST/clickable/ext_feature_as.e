@@ -51,7 +51,6 @@ feature {COMPILER_EXPORTER, AST_EIFFEL} -- Output
 				feature_names.simple_format (ctxt)
 			end
 			body.simple_format (ctxt)
-			ctxt.put_text_item (ti_Semi_colon)
 			cont := body.content
 			is_const_or_att := cont = Void or else cont.is_constant
 			if is_const_or_att and then c /= Void then

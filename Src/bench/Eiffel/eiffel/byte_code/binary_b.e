@@ -11,7 +11,8 @@ inherit
 			free_register, has_gcable_variable,
 			has_call, allocates_memory, make_byte_code,
 			is_unsafe, optimized_byte_node, calls_special_features,
-			size, pre_inlined_code, inlined_byte_code
+			size, pre_inlined_code, inlined_byte_code,
+			has_separate_call
 		end;
 	
 feature 
@@ -346,4 +347,20 @@ feature -- Inlining
 			end
 		end
 
+feature -- concurrent Eiffel
+
+	has_separate_call: BOOLEAN is
+		-- is there separate feature call in the assertion?
+		do
+			if left /= Void then
+				Result := left.has_separate_call;
+			end;
+			if not Result and access /= Void then
+				Result := access.has_separate_call;
+			end;
+			if not Result and right /= Void then
+				Result := right.has_separate_call;
+			end;
+		end
+	
 end

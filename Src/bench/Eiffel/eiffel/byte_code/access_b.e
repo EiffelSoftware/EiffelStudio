@@ -8,6 +8,8 @@ inherit
 		rename
 			print_register as old_print_register,
 			free_register as old_free_register
+		undefine 
+			has_separate_call
 		redefine
 			has_gcable_variable, propagate, generate, unanalyze,
 			optimized_byte_node, inlined_byte_code
@@ -16,7 +18,8 @@ inherit
 		redefine
 			free_register, print_register,
 			has_gcable_variable, propagate, generate, unanalyze,
-			optimized_byte_node, inlined_byte_code
+			optimized_byte_node, inlined_byte_code,
+			has_separate_call
 		select
 			print_register, free_register
 		end;
@@ -580,4 +583,12 @@ feature -- Inlining
 			Result := Current
 		end
 
+feature -- concurrent Eiffel
+
+	has_separate_call: BOOLEAN is
+		-- Is there separate feature call in the assertion?
+		do
+			Result := context_type.is_separate;
+		end
+	
 end

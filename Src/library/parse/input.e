@@ -114,7 +114,7 @@ feature  -- Input
 			if analyzer = Void then
 				!! analyzer.make
 			end;
-			!! retrieved_file.make_open_bbinary_read (filename);
+			!! retrieved_file.make_open_binary_read (filename);
 			analyzer ?= analyzer.retrieved (retrieved_file);
 			retrieved_file.close
 		end;

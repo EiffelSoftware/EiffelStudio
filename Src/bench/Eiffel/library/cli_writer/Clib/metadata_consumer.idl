@@ -3,8 +3,9 @@
 // typelib filename: EiffelSoftware.MetadataConsumer.tlb
 
 [
-  uuid(A2D37C7B-B9C0-31A5-914A-698D8267D9A2),
-  version(5.5)
+  uuid(D2BC8786-BF89-3F5B-B70F-33D74A1CAB05),
+  version(5.5),
+
 ]
 library EiffelSoftware_MetadataConsumer
 {
@@ -19,10 +20,11 @@ library EiffelSoftware_MetadataConsumer
 
     [
       odl,
-      uuid(E1FFE14C-4113-40E1-9BCC-E8B0CF3C0F5A),
+      uuid(E1FFE1FC-11B7-4757-88F7-9DAD46A40C44),
       version(1.0),
       dual,
-      oleautomation
+      oleautomation,
+
     ]
     interface EiffelSoftware_MetadataConsumer_COM_CACHE_MANAGER : IDispatch {
         [restricted] void Missing7();
@@ -81,10 +83,11 @@ library EiffelSoftware_MetadataConsumer
 
     [
       odl,
-      uuid(E1FFE1B6-5067-499A-9A25-E6DDA9076E77),
+      uuid(E1FFE100-F122-4DD9-914E-E37ED8FF236C),
       version(1.0),
       dual,
-      oleautomation
+      oleautomation,
+
     ]
     interface EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION : IDispatch {
         [id(0x60020000)]
@@ -95,18 +98,20 @@ library EiffelSoftware_MetadataConsumer
         [restricted] void Missing10();
         [id(0x60020004)]
         HRESULT is_consumed([out, retval] VARIANT_BOOL* pRetVal);
-        [restricted] void Missing12();
-        [id(0x60020006)]
-        HRESULT name([out, retval] BSTR* pRetVal);
+        [id(0x60020005)]
+        HRESULT is_in_gac([out, retval] VARIANT_BOOL* pRetVal);
+        [restricted] void Missing13();
         [id(0x60020007)]
-        HRESULT public_key_token([out, retval] BSTR* pRetVal);
+        HRESULT name([out, retval] BSTR* pRetVal);
         [id(0x60020008)]
+        HRESULT public_key_token([out, retval] BSTR* pRetVal);
+        [id(0x60020009)]
         HRESULT version([out, retval] BSTR* pRetVal);
     };
 
     [
-      uuid(E1FFE121-BD03-4F43-B575-655DAC9941A3),
-      version(1.0)
+      uuid(E1FFE1DE-1816-4209-AF21-FC599DAE7CAA),
+      version(1.0),
     ]
     coclass EiffelSoftware_MetadataConsumer_Impl_COM_CACHE_MANAGER {
         interface _Object;

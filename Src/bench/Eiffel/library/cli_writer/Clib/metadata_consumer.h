@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Tue Jun 08 09:22:50 2004
+/* at Thu Jun 17 13:50:21 2004
  */
 /* Compiler settings for metadata_consumer.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -95,7 +95,7 @@ EXTERN_C const IID IID_EiffelSoftware_MetadataConsumer_COM_CACHE_MANAGER;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
     
-    MIDL_INTERFACE("E1FFE14C-4113-40E1-9BCC-E8B0CF3C0F5A")
+    MIDL_INTERFACE("E1FFE1FC-11B7-4757-88F7-9DAD46A40C44")
     EiffelSoftware_MetadataConsumer_COM_CACHE_MANAGER : public IDispatch
     {
     public:
@@ -711,7 +711,7 @@ EXTERN_C const IID IID_EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
     
-    MIDL_INTERFACE("E1FFE1B6-5067-499A-9A25-E6DDA9076E77")
+    MIDL_INTERFACE("E1FFE100-F122-4DD9-914E-E37ED8FF236C")
     EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION : public IDispatch
     {
     public:
@@ -728,7 +728,10 @@ EXTERN_C const IID IID_EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION;
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE is_consumed( 
             /* [retval][out] */ VARIANT_BOOL *pRetVal) = 0;
         
-        virtual /* [restricted] */ void STDMETHODCALLTYPE Missing12( void) = 0;
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE is_in_gac( 
+            /* [retval][out] */ VARIANT_BOOL *pRetVal) = 0;
+        
+        virtual /* [restricted] */ void STDMETHODCALLTYPE Missing13( void) = 0;
         
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE name( 
             /* [retval][out] */ BSTR *pRetVal) = 0;
@@ -805,7 +808,11 @@ EXTERN_C const IID IID_EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION;
             EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION * This,
             /* [retval][out] */ VARIANT_BOOL *pRetVal);
         
-        /* [restricted] */ void ( STDMETHODCALLTYPE *Missing12 )( 
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *is_in_gac )( 
+            EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION * This,
+            /* [retval][out] */ VARIANT_BOOL *pRetVal);
+        
+        /* [restricted] */ void ( STDMETHODCALLTYPE *Missing13 )( 
             EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION * This);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *name )( 
@@ -871,8 +878,11 @@ EXTERN_C const IID IID_EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION;
 #define EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION_is_consumed(This,pRetVal)	\
     (This)->lpVtbl -> is_consumed(This,pRetVal)
 
-#define EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION_Missing12(This)	\
-    (This)->lpVtbl -> Missing12(This)
+#define EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION_is_in_gac(This,pRetVal)	\
+    (This)->lpVtbl -> is_in_gac(This,pRetVal)
+
+#define EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION_Missing13(This)	\
+    (This)->lpVtbl -> Missing13(This)
 
 #define EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION_name(This,pRetVal)	\
     (This)->lpVtbl -> name(This,pRetVal)
@@ -948,11 +958,23 @@ void __RPC_STUB EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION_is_cons
     DWORD *_pdwStubPhase);
 
 
-/* [restricted] */ void STDMETHODCALLTYPE EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION_Missing12_Proxy( 
+/* [id] */ HRESULT STDMETHODCALLTYPE EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION_is_in_gac_Proxy( 
+    EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION * This,
+    /* [retval][out] */ VARIANT_BOOL *pRetVal);
+
+
+void __RPC_STUB EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION_is_in_gac_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
+
+
+/* [restricted] */ void STDMETHODCALLTYPE EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION_Missing13_Proxy( 
     EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION * This);
 
 
-void __RPC_STUB EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION_Missing12_Stub(
+void __RPC_STUB EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION_Missing13_Stub(
     IRpcStubBuffer *This,
     IRpcChannelBuffer *_pRpcChannelBuffer,
     PRPC_MESSAGE _pRpcMessage,
@@ -1003,7 +1025,7 @@ EXTERN_C const CLSID CLSID_EiffelSoftware_MetadataConsumer_Impl_COM_CACHE_MANAGE
 
 #ifdef __cplusplus
 
-class DECLSPEC_UUID("E1FFE121-BD03-4F43-B575-655DAC9941A3")
+class DECLSPEC_UUID("E1FFE1DE-1816-4209-AF21-FC599DAE7CAA")
 EiffelSoftware_MetadataConsumer_Impl_COM_CACHE_MANAGER;
 #endif
 #endif /* __EiffelSoftware_MetadataConsumer_LIBRARY_DEFINED__ */

@@ -76,7 +76,7 @@ feature -- Status report
 		end
 
 	is_artificially_added: BOOLEAN is
-			-- Is feature deferred?
+			-- Is feature artificially added?
 		do
 			Result := f & feature {FEATURE_ATTRIBUTE}.Is_artificially_added =
 				feature {FEATURE_ATTRIBUTE}.Is_artificially_added
@@ -97,12 +97,19 @@ feature -- Status report
 		end
 
 	is_virtual: BOOLEAN is
-			-- Is current marked with `new_slot' flag?
+			-- Is feature virtual?
 		do
 			Result := f & feature {FEATURE_ATTRIBUTE}.Is_virtual =
 				feature {FEATURE_ATTRIBUTE}.Is_virtual
 		end
-			
+
+	is_attribute_setter: BOOLEAN is
+			-- Is feature an setter of an attribute of current class?
+		do
+			Result := f & feature {FEATURE_ATTRIBUTE}.Is_attribute_setter = 
+				feature {FEATURE_ATTRIBUTE}.Is_attribute_setter
+		end
+
 feature -- Settings
 
 	set_is_public (pub: like is_public) is

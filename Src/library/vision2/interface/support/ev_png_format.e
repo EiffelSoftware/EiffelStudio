@@ -51,7 +51,7 @@ feature {NONE} -- External
 			a_scale_height,
 			a_colormode: INTEGER) is
 		external
-			"C | %"load_pixmap.h%""
+			"C signature (char *, char *, int, int, int, int, int) use %"load_pixmap.h%""
 		end
 
 end -- class EV_PNG_FORMAT

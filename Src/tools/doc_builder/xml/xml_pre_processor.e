@@ -289,7 +289,9 @@ feature {NONE} -- Processing
 			l_parent,
 			l_script_tag: XM_ELEMENT
 		do
-			l_script_text := "function pageLoad (){if (parent.toc_frame){parent.toc_frame.documentLoaded();}}"
+			l_script_text := "doc = window.location.href;if (parent.toc_frame){parent.toc_frame.documentLoaded(doc);}%
+				%else{var now = new Date();var expdate = new Date (now.getTime () + 1 * 24 + 60 * 60 * 1000);%
+				%setCookie (%"redirecturl%", doc, expdate);window.location.replace (%"/index.html%");}"
 			l_parent := internal_xml.element_by_name ("document")
 			if l_parent /= Void then
 					-- Insert script in header
@@ -308,15 +310,7 @@ feature {NONE} -- Processing
 					l_script_tag.put_last (create {XM_CHARACTER_DATA}.make (l_script_tag, l_script_text))
 					l_parent.put_last (l_script_tag)
 				end
-			end	
-			l_parent := internal_xml.element_by_name ("document")
-			if l_parent /= Void then
-					-- Insert onload event handler in body
-				l_parent := l_parent.element_by_name ("paragraph")
-				if l_parent /= Void then
-					l_parent.put_last (create {XM_ATTRIBUTE}.make ("onLoad", create {XM_NAMESPACE}.make_default, "pageLoad()", l_parent))
-				end
-			end			
+			end						
 		end		
 
 	insert_includes is

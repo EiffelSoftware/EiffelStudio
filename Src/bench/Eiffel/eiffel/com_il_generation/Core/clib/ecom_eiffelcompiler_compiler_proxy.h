@@ -60,6 +60,18 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
+	void ccom_set_version(  /* [in] */ EIF_INTEGER build,  /* [in] */ EIF_INTEGER major,  /* [in] */ EIF_INTEGER minor,  /* [in] */ EIF_INTEGER revision );
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	void ccom_set_verifiability(  /* [in] */ EIF_BOOLEAN v );
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
 	void ccom_start_assembly_generation(  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_OBJECT fname,  /* [in] */ EIF_OBJECT location );
 
 

@@ -22,6 +22,42 @@ feature {NONE}
 			Result.append ("E000000");
 		end;
 
+	A_buffer: STRING is
+		once
+			!!Result.make (7);
+			Result.append ("A000000");
+		end;
+
+	B_buffer: STRING is
+		once
+			!!Result.make (7);
+			Result.append ("B000000");
+		end;
+
+	C_buffer: STRING is
+		once
+			!!Result.make (7);
+			Result.append ("C000000");
+		end;
+
+	D_buffer: STRING is
+		once
+			!!Result.make (7);
+			Result.append ("D000000");
+		end;
+
+	F_buffer: STRING is
+		once
+			!!Result.make (7);
+			Result.append ("F000000");
+		end;
+
+	P_buffer: STRING is
+		once
+			!!Result.make (7);
+			Result.append ("P000000");
+		end;
+
 feature {NONE} -- External features
 
 	eif000 (s: POINTER; i,j: INTEGER) is

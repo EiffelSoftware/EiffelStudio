@@ -14,7 +14,7 @@ libs='-L/usr/X11R6/lib -lbsd -lm'
 ccflags=''
 suffix='.a'
 wkeiflib='wkbench'
-
+command_makefile='make'
 
 d_bsd='undef'
 d_eunice='undef'

@@ -26,7 +26,7 @@ suffix='.a'
 shared_suffix='.so'
 shared_prefix='lib'
 wkeiflib='wkbench'
-
+command_makefile='make'
 
 d_bsd='undef'
 d_eunice='undef'

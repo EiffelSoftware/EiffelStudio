@@ -10,6 +10,7 @@
 # Configured by: manuelt
 # Target system: irix seattle 6.3 12161207 ip32 
 
+command_makefile='make'
 d_bsd='undef'
 d_bsdsig='define'
 d_eunice='undef'

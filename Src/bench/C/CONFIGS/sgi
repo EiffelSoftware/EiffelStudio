@@ -7,7 +7,7 @@
 #
 
 # Configured by: manuelt 02.05.99
-
+command_makefile='make'
 d_bsdsig='define'
 lngpad_2='8'
 d_bsd='undef'

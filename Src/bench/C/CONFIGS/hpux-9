@@ -39,6 +39,7 @@ mv='/bin/mv'
 ranlib=':'
 rm='/bin/rm'
 eunicefix=':'
+command_makefile='make'
 
 ###########################
 

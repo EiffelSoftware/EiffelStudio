@@ -29,6 +29,7 @@ eiflib='finalized'
 wkeiflib='wkbench'
 suffix='.a'
 
+command_makefile='make'
 d_bsd='define'
 d_eunice='undef'
 d_xenix='undef'

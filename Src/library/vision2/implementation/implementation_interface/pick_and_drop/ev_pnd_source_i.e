@@ -13,11 +13,23 @@ inherit
 
 feature -- Attributes 
 
-	transported_data: ANY
+	transported_data: ANY is
 			-- Transported data
+		local
+			interf: EV_PND_SOURCE
+		do
+			interf ?= interface
+			Result := interf.transported_data
+		end
 
-	data_type: EV_PND_TYPE
+	data_type: EV_PND_TYPE is
 			-- Type of the transported data
+		local
+			interf: EV_PND_SOURCE
+		do
+			interf ?= interface
+			Result := interf.data_type
+		end
 
 	initial_point: EV_COORDINATES
 			-- Initial point for the pick and drop
@@ -55,18 +67,6 @@ feature -- Access
 			-- Set the initial position for the pick and drop.
 		do
 			!! initial_point.set (a_x, a_y)
-		end
-
-	set_transported_data (dt: like transported_data) is
-			-- Set the `transported_data'.
-		do
-			transported_data := dt
-		end
-
-	set_data_type (dt_type: EV_PND_TYPE) is
-			-- Make `dt_type' the new data type.
-		do
-			data_type := dt_type
 		end
 
 feature -- Event - command association

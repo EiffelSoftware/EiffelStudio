@@ -176,7 +176,7 @@ feature -- Status setting
 				if wel_file_dialog.selected then
 					!! directory.make (0)
 					directory.set (wel_file_dialog.file_name,
-							1, wel_file_dialog.file_name_offset)
+							1, wel_file_dialog.file_name_offset - 2)
 					ok_actions.execute (Current, Void)
 				else
 					cancel_actions.execute (Current, Void)

@@ -114,7 +114,9 @@ feature {AST_EIFFEL} -- Output
 				ctxt.new_line;
 				ctxt.format_ast (from_part);
 				ctxt.new_line;
-				ctxt.exdent;
+				ctxt.exdent
+			else
+				ctxt.new_line
 			end;
 			ctxt.put_breakable;
 			if invariant_part /= Void then

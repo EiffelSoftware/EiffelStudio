@@ -29,10 +29,18 @@ feature -- basic Operations
 			-- Build user entries.
 		do 
 			Create generate_facade_b.make_with_text("Generate Facade")
-			generate_facade_b.enable_select
+			if state_information.generate_facade then
+				generate_facade_b.enable_select
+			else
+				generate_facade_b.disable_select
+			end
 			generate_facade_b.press_actions.extend(~change_entries)
 			Create new_project_b.make_with_text("Generate as a new Project")
-			new_project_b.enable_select
+			if state_information.new_project then
+				new_project_b.enable_select
+			else
+				new_project_b.disable_select
+			end
 			new_project_b.press_actions.extend(~change_entries)
 			main_box.extend(generate_facade_b)
 			main_box.extend(new_project_b)

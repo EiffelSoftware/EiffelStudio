@@ -54,6 +54,11 @@ feature {STATE_WINDOW} -- Settings
 			project_location := proj
 		end
 
+	set_generate_all_table(b: BOOLEAN) is
+		do
+			generate_every_table := b
+		end
+
 feature -- Access
 
 	location: STRING
@@ -82,6 +87,8 @@ feature -- Access
 
 	table_list: LINKED_LIST[CLASS_NAME]
 		-- List of the selected database tables.
+
+	generate_every_table: BOOLEAN
 
 invariant
 	default_exist :username /= Void

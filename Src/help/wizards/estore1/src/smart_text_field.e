@@ -8,7 +8,7 @@ class
 	SMART_TEXT_FIELD
 
 inherit
-	EV_HORIZONTAL_BOX
+	EV_VERTICAL_BOX
 		
 creation	
 	make
@@ -21,7 +21,7 @@ feature -- Initialization
 			Create label.make_with_text(lab)
 			Create tf.make_with_text(some_text)
 			label.set_minimum_width(lab_size)
-			label.align_text_right
+			label.align_text_left
 			tf.set_capacity(text_size)
 			tf.return_actions.extend(caller~next)
 			tf.change_actions.extend(caller~change_entries)

@@ -7,7 +7,6 @@ indexing
 class
 	DB_TABLE_SELECTION
 
-
 inherit
 	STATE_WINDOW
 		redefine
@@ -30,14 +29,36 @@ feature -- basic Operations
 			-- Build interface 
 		local
 			h1: EV_HORIZONTAL_BOX
+			v1: EV_VERTICAL_BOX
+			lab: EV_LABEL
+			txt: SMART_TEXT
 		do 
 			Create selected_items
 			Create unselected_items
-			Create h1
-			h1.extend(selected_items)
 			selected_items.select_actions.extend(~unselect_item)
 			unselected_items.select_actions.extend(~select_item)
-			h1.extend(unselected_items)
+
+			Create txt.make(main_box)
+			txt.add_line(" ")
+			txt.add_line("  Please select which columns you wish")
+			txt.add_line("  to be able to manipulate within your")
+			txt.add_line("  project.")
+
+			Create h1
+			Create v1
+			h1.extend(v1)
+			Create lab.make_with_text("To be generated")
+			v1.extend(lab)
+			v1.disable_child_expand(lab)
+			v1.extend(selected_items)		
+			
+			Create v1
+			h1.extend(v1)
+			Create lab.make_with_text("To be ignored")
+			v1.extend(lab)
+			v1.disable_child_expand(lab)
+			v1.extend(unselected_items)
+			
 			main_box.extend(h1)
 			fill_lists
 		end
@@ -74,7 +95,8 @@ feature -- basic Operations
 	proceed_with_current_info is 
 			-- Process user entries
 		do 
-			proceed_with_new_state(Create {DB_GENERATION_LOCATION}.make(state_information))
+			precursor
+			proceed_with_new_state(Create {DB_GENERATION_TYPE}.make(state_information))
 		end
 
 	update_state_information is
@@ -83,7 +105,6 @@ feature -- basic Operations
 			li: LINKED_LIST[CLASS_NAME]
 			cl_name: CLASS_NAME
 		do
-			precursor
 			from
 				Create li.make
 				selected_items.start
@@ -95,6 +116,7 @@ feature -- basic Operations
 				selected_items.forth
 			end
 			state_information.set_table_list(li)
+			precursor
 		end
 
 feature -- Implementation

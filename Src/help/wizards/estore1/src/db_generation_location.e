@@ -43,12 +43,18 @@ feature -- basic Operations
 	proceed_with_current_info is 
 			-- Process user entries
 		local
-			li: LINKED_LIST[CLASS_NAME]
 			next_step: DB_FINISH
+			message: EV_ERROR_DIALOG
 		do 
-			precursor
-			Create next_step.make(state_information)
-			proceed_with_new_state(next_step)
+			if location.text.count =0 then
+				Create message.make_with_text("Please provide a location.")
+				entries_checked := FALSE
+				entries_changed := TRUE
+				message.show_modal
+			else
+				precursor
+				proceed_with_new_state(Create {DB_FINISH}.make(state_information))
+			end
 		end
 
 	update_state_information is

@@ -21,6 +21,8 @@ inherit
 		undefine
 			default_create
 		end
+		
+	GB_CONSTANTS
 
 creation
 	make_and_launch 
@@ -57,7 +59,7 @@ feature {NONE} -- Initialization
 	Wizard_title: STRING is 
 			-- Window title for this wizard.
 		once
-			Result := "Eiffel Build Wizard"
+			Result := Build_wizard_title
 		ensure
 			Valid_result: Result /= Void and then not Result.is_empty
 		end

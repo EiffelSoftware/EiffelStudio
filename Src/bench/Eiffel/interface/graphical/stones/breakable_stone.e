@@ -2,7 +2,10 @@ class BREAKABLE_STONE
 
 inherit
 
-	UNFILED_STONE;
+	UNFILED_STONE
+		redefine
+			header
+		end;
 	SHARED_DEBUG
 
 creation
@@ -55,6 +58,8 @@ feature -- dragging
 
 	signature: STRING is "";
  
+	header: STRING is "Stop point";
+
 	click_list: ARRAY [CLICK_STONE] is do end;
 
 	icon_name: STRING is

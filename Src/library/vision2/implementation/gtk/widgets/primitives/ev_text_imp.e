@@ -20,13 +20,14 @@ inherit
 		redefine
 			interface,
 			internal_set_caret_position,
-			insert_text
+			insert_text,
+			visual_widget
 		end
 		
 	EV_FONTABLE_IMP
 		redefine
 			interface,
-			fontable_widget
+			visual_widget
 		end
 
 create
@@ -303,12 +304,6 @@ feature -- Assertions
 		
 feature {NONE} -- Implementation
 
-	fontable_widget: POINTER is
-			-- Widget that is fontable.
-		do
-			Result := entry_widget
-		end
-
 	vertical_adjustment_struct: POINTER is
 			-- Pointer to vertical adjustment struct use in the scrollbar.
 		do
@@ -327,6 +322,12 @@ feature {NONE} -- Implementation
 
 	entry_widget: POINTER
 		-- Pointer to the gtk text editable.
+		
+	visual_widget: POINTER is
+			-- Pointer to widget shown on screen.
+		do
+			Result := entry_widget
+		end
 
 feature {EV_ANY_I} -- Implementation
 

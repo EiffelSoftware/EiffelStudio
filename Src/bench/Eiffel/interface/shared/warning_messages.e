@@ -510,6 +510,6 @@ feature -- Warning messages
 
 	w_File_changed: STRING is "File has changed.%N Do you want to save changes?"
 
-	w_Specify_ace: STRING is "Unspecified ace file%NChoose one?"
+	w_Specify_ace: STRING is "Project requires an Ace file (control file)"
 
 end -- class WARNING_MESSAGES

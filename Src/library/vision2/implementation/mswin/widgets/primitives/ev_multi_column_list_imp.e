@@ -587,19 +587,16 @@ feature {NONE} -- Implementation, Pixmap handling
 	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP) is
 			-- Set row `a_row' pixmap to `a_pixmap'.
 		local
-			pixmap_imp		: EV_PIXMAP_IMP_STATE
 			image_index		: INTEGER
 			wel_row			: WEL_LIST_VIEW_ITEM
 		do
-			pixmap_imp ?= a_pixmap.implementation
-
 				-- Create the imagelist and associate it
 				-- to the control if it's not already done.
 			if image_list = Void then
 				setup_image_list
 			end
 
-			image_list.add_pixmap (pixmap_imp)
+			image_list.add_pixmap (a_pixmap)
 			image_index := image_list.last_position
 
 				-- Retrieve the first item of the row
@@ -925,6 +922,11 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.93  2000/04/26 04:06:20  pichery
+--| EV_IMAGE_LIST_IMP.add_pixmap now
+--| takes an EV_PIXMAP as parameter.
+--| -->Adapting
+--|
 --| Revision 1.92  2000/04/26 00:03:12  pichery
 --| Slight redesign of the pixmap handling in
 --| trees and multi-column lists.

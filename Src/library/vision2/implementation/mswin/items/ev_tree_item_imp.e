@@ -301,10 +301,7 @@ feature {EV_TREE_IMP, EV_TREE_ITEM_IMP} -- Pixmap Handling
 		require else
 			pixmap_not_void: pixmap /= Void
 		do
-			if pixmap = Void then
-				create pixmap
-			end
-				-- We copy `p' into pixmap.
+			create pixmap
 			pixmap.copy (p)
 
 				-- If the item is currently contained in the tree then
@@ -334,12 +331,10 @@ feature {EV_TREE_IMP, EV_TREE_ITEM_IMP} -- Pixmap Handling
 			-- Add the pixmap to the parent by updating the parent's image 
 			-- list.
 		local
-			p_imp: EV_PIXMAP_IMP_STATE
 			image_list: EV_IMAGE_LIST_IMP
 			image_index: INTEGER
 			root_imp: like top_parent_imp
 		do
-			p_imp ?= pixmap_imp
 			root_imp := top_parent_imp
 
 			image_list := root_imp.image_list
@@ -350,7 +345,7 @@ feature {EV_TREE_IMP, EV_TREE_ITEM_IMP} -- Pixmap Handling
 				image_list := root_imp.image_list
 			end
 
-			image_list.add_pixmap (p_imp)
+			image_list.add_pixmap (pixmap)
 			image_index := image_list.last_position
 
 			set_image (image_index, image_index)
@@ -495,6 +490,11 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.67  2000/04/26 04:05:20  pichery
+--| EV_IMAGE_LIST_IMP.add_pixmap now
+--| takes an EV_PIXMAP as parameter.
+--| -->Adapting
+--|
 --| Revision 1.66  2000/04/26 00:03:10  pichery
 --| Slight redesign of the pixmap handling in
 --| trees and multi-column lists.

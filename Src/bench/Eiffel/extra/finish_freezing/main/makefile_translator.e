@@ -1023,13 +1023,13 @@ feature {NONE} -- Translation
 			end
 			makefile.new_line
 
--- dynamic_cecil: $(SHARED_CECIL)
+				-- dynamic_cecil: $(SHARED_CECIL)
 			makefile.new_line
 			read_next
 			makefile.putstring (makefile_sh.laststring)
 			makefile.new_line
 
--- SHARED_CECIL_OBJECT
+				-- SHARED_CECIL_OBJECT
 			read_next
 			lastline := clone (makefile_sh.laststring)
 			lastline.replace_substring_all (".o", ".obj")
@@ -1039,14 +1039,13 @@ feature {NONE} -- Translation
 			makefile.putstring (lastline)
 			makefile.new_line
 
--- SHAREDFLAGS
+				-- SHAREDFLAGS
 			read_next
 			lastline := clone (makefile_sh.laststring)
 			makefile.putstring (lastline)
-			if options.has ("cecil_dll") 
-			then 
+			if options.has ("cecil_dynlib") then 
 				makefile.putstring (" \%N")
-				lastline := clone (options.get_string ("cecil_dll", Void))
+				lastline := clone (options.get_string ("cecil_dynlib", Void))
 				lastline.replace_substring_all ("$appl", appl)
 				makefile.putstring (lastline)
 				makefile.new_line
@@ -1054,24 +1053,24 @@ feature {NONE} -- Translation
 				makefile.new_line
 			end
 
--- SHARED_CECIL
+				-- SHARED_CECIL
 			read_next
 			makefile.putstring (makefile_sh.laststring)
 			makefile.putstring (" $(DEF_FILE)")
 			makefile.new_line 
 
--- $(RM) "$(SHARD_CECIL)"
+				-- $(RM) "$(SHARD_CECIL)"
 			read_next
 			makefile.putstring (makefile_sh.laststring)
 			makefile.new_line
 
--- $(SHAREDLINK) $(SHAREDFLAGS) $(SHARED_CECIL_OBJECT) $(SHAREDLIBS)
+				-- $(SHAREDLINK) $(SHAREDFLAGS) $(SHARED_CECIL_OBJECT) $(SHAREDLIBS)
 			read_next
 			makefile.putstring (makefile_sh.laststring)
 			makefile.new_line
 
--------------------------------------------------
--- Search the beginning of the SYSTEM_IN_DYNAMIC_LIB part
+				-------------------------------------------------
+				-- Search the beginning of the SYSTEM_IN_DYNAMIC_LIB part
 			read_next
 			lastline := clone (makefile_sh.laststring)
 			from
@@ -1084,23 +1083,23 @@ feature {NONE} -- Translation
 
 			makefile.putstring ("%N#SYSTEM_IN_DYNAMIC_LIB PART%N%N")
 
--- SYSTEM_IN_DYNAMIC_LIB= appl.dll
+				-- SYSTEM_IN_DYNAMIC_LIB= appl.dll
 			lastline.replace_substring_all (".so", ".dll")
 			makefile.putstring (lastline)
 			makefile.new_line
 
--- DEF_FILE= appl.def
+				-- DEF_FILE= appl.def
 			makefile.putstring ("DEF_FILE= ")
 			makefile.putstring (appl)
 			makefile.putstring (".def")
 			makefile.new_line
 
--- dynlib: $(SYSTEM_IN_DYNAMIC_LIB)
+				-- dynlib: $(SYSTEM_IN_DYNAMIC_LIB)
 			read_next
 			makefile.putstring (makefile_sh.laststring)
 			makefile.new_line
 
--- egc_dynlib.obj
+				-- egc_dynlib.obj
 			read_next
 			lastline := clone (makefile_sh.laststring)
 			lastline.replace_substring_all (".o", ".obj")
@@ -1134,7 +1133,7 @@ feature {NONE} -- Translation
 			makefile.putstring (makefile_sh.laststring)
 			makefile.new_line
 
--- edynlib.obj
+				-- edynlib.obj
 			read_next
 			lastline := clone (makefile_sh.laststring)
 			lastline.replace_substring_all (".o", ".obj")
@@ -1156,7 +1155,7 @@ feature {NONE} -- Translation
 			makefile.putstring (makefile_sh.laststring)
 			makefile.new_line
 
--- SYSTEM_IN_DYNAMIC_LIB_OBJ
+				-- SYSTEM_IN_DYNAMIC_LIB_OBJ
 			read_next
 			lastline := clone (makefile_sh.laststring)
 			lastline.replace_substring_all (".o", ".obj")
@@ -1166,7 +1165,7 @@ feature {NONE} -- Translation
 			makefile.putstring (lastline)
 			makefile.new_line
 
--- DYNLIBSHAREDFLAGS
+				-- DYNLIBSHAREDFLAGS
 			read_next
 			lastline := clone (makefile_sh.laststring)
 			makefile.putstring (lastline)

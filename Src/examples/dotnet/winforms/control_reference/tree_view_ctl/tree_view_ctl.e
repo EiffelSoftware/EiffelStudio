@@ -31,9 +31,9 @@ feature {NONE} -- Initialization
 		do
 			initialize_components
 			
-			fill_directory_tree
-			image_list_combo_box.set_selected_index (1)
-			indent_up_down.set_value (l_dec.op_implicit_integer (directory_tree.indent)) --(create {DECIMAL}).op_implicit_integer (directory_tree.indent))
+			--fill_directory_tree
+			--image_list_combo_box.set_selected_index (1)
+			--indent_up_down.set_value (l_dec.op_implicit_integer (directory_tree.indent)) --(create {DECIMAL}).op_implicit_integer (directory_tree.indent))
 			
 			feature {WINFORMS_APPLICATION}.run_form (Current)
 		end
@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 			l_point: DRAWING_POINT
 			l_decimal: DECIMAL
 		do
-			create resources.make_from_resource_source (Current.get_type)-- = new System.Resources.ResourceManager(typeof(TreeViewCtl))
+			create resources.make_from_resource_source (Current.get_type)
 
 			create components.make
 			create check_box_7.make
@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 
 			l_size.make_from_width_and_height (5, 13)
 			set_auto_scale_base_size (l_size)
-			l_size.make_from_width_and_height (392, 117)
+			l_size.make_from_width_and_height (502, 293)
 			set_client_size (l_size)
 			set_text (("TreeView").to_cil)
 
@@ -367,7 +367,7 @@ feature {NONE} -- Implementation
 		do
 			drives := feature {ENVIRONMENT}.get_logical_drives
 			from
-				i := 0
+--				i := 0
 			until
 				i > drives.count
 			loop
@@ -378,6 +378,9 @@ feature {NONE} -- Implementation
 --				end
 				i := i + 1
 			end
+		rescue
+			i := i + 1
+			retry
 		end
 
 	path_from_node (node: WINFORMS_TREE_NODE): SYSTEM_STRING is

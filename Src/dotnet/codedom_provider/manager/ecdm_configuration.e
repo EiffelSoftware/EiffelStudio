@@ -58,7 +58,7 @@ feature -- Initialization
 				else
 					set_name ("NoName")
 				end
-			end	
+			end
 		end
 
 feature -- Comparison
@@ -155,6 +155,11 @@ feature -- Basic Operations
 					l_config_file.put_string (precompile)
 					l_config_file.put_string ("</precompile>%N")
 				end
+				if metadata_cache /= Void then
+					l_config_file.put_string ("%T%T<metadata_cache>")
+					l_config_file.put_string (metadata_cache)
+					l_config_file.put_string ("</metadata_cache>%N")
+				end
 				l_config_file.put_string ("%T</compiler>%N")
 				l_config_file.put_string ("</configuration>")
 				l_config_file.close
@@ -227,10 +232,14 @@ feature -- Element Settings
 
 	set_precompile (a_value: STRING) is
 			-- Set `precompile' with `a_value'.
-		require
-			non_void_precompile: a_value /= Void
 		do
 			config_values.force (a_value, "precompile")
+		end
+
+	set_metadata_cache (a_value: STRING) is
+			-- Set `metadata_cache' with `a_value'.
+		do
+			config_values.force (a_value, "metadata_cache")
 		end
 
 	set_default_root_class (a_value: STRING) is
@@ -264,7 +273,7 @@ feature -- Element Settings
 		
 invariant
 	non_void_configuration_folder: folder /= Void
-	valid_configuration_folder: folder.item (folder.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
+	valid_configuration_folder: not folder.is_empty and then folder.item (folder.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator
 	non_void_configuration_name: name /= Void
 	non_void_log_source_name: log_source_name /= Void
 	non_void_log_server_name: log_server_name /= Void

@@ -74,53 +74,120 @@ feature -- Access
 			Result := setting (show_tooltip_name) = 2
 		end
 
+	saved_precompiled_paths: LIST [STRING] is
+			-- List of saved values for precompiled library combo
+		do
+			Result := saved_list (precompiled_paths)
+		end
+		
+	saved_metadata_cache_paths: LIST [STRING] is
+			-- List of saved values for metadata cache combo
+		do
+			Result := saved_list (metadata_cache_paths)
+		end
+		
 feature -- Element settings
 
 	save_height (a_value: INTEGER) is
 			-- Set starting window height
 		do
-			set_setting (height_key_name, a_value)
+			set_setting (Height_key_name, a_value)
 		end
 
 	save_width (a_value: INTEGER) is
 			-- Set starting window width
 		do
-			set_setting (width_key_name, a_value)
+			set_setting (Width_key_name, a_value)
 		end
 
 	save_x_pos (a_value: INTEGER) is
 			-- Set starting window x position
 		do
-			set_setting (x_pos_key_name, a_value)
+			set_setting (X_pos_key_name, a_value)
 		end
 
 	save_y_pos (a_value: INTEGER) is
 			-- Set starting window y position.
 		do
-			set_setting (y_pos_key_name, a_value)
+			set_setting (Y_pos_key_name, a_value)
 		end
 
 	save_show_text (a_value: BOOLEAN) is
 			-- Set `show text' checkable menu item state.
 		do
 			if a_value then
-				set_setting (show_text_name, 2)
+				set_setting (Show_text_name, 2)
 			else
-				set_setting (show_text_name, 1)
+				set_setting (Show_text_name, 1)
 			end
 		end
 		
 	save_show_tooltip (a_value: BOOLEAN) is
-			-- Set `show text' checkable menu item state.
+			-- Set `show tooltip' checkable menu item state.
 		do
 			if a_value then
-				set_setting (show_tooltip_name, 2)
+				set_setting (Show_tooltip_name, 2)
 			else
-				set_setting (show_tooltip_name, 1)
+				set_setting (Show_tooltip_name, 1)
 			end
+		end
+	
+	save_precompiled_paths (a_paths: LIST [STRING]) is
+			-- Set precompiled library paths.
+		require
+			non_void_paths: a_paths /= Void
+		do
+			save_list (Precompiled_paths, a_paths)
+		end
+		
+	save_metadata_cache_paths (a_paths: LIST [STRING]) is
+			-- Set Metadata Cache paths.
+		require
+			non_void_paths: a_paths /= Void
+		do
+			save_list (Metadata_cache_paths, a_paths)
 		end
 		
 feature {NONE} -- Implementation
+
+	save_list (a_name: STRING; a_list: LIST [STRING]) is
+			-- Save `a_list' using key `a_name'.
+		require
+			non_void_list: a_list /= Void
+		local
+			l_items: STRING
+		do
+			from
+				create l_items.make (240 * a_list.count)
+				a_list.start
+				if not a_list.after then
+					l_items.append (a_list.item)
+					a_list.forth
+				end
+			until
+				a_list.after
+			loop
+				l_items.append_character (';')
+				l_items.append (a_list.item)
+				a_list.forth
+			end
+			set_text_setting (a_name, l_items)
+		end
+
+	saved_list (a_name: STRING): LIST [STRING] is
+			-- List of saved values with key `a_name' if any
+		require
+			non_void_name: a_name /= Void
+		local
+			l_paths: STRING
+		do
+			l_paths := text_setting (a_name)
+			if l_paths /= Void then
+				Result := l_paths.split (';')
+			end
+		end
+		
+feature {NONE} -- Private Access
 
 	height_key_name: STRING is "height"
 			-- Height key name
@@ -139,6 +206,12 @@ feature {NONE} -- Implementation
 			
 	show_tooltip_name: STRING is "show_tooltip"
 			-- Show tooltip menu item
+			
+	precompiled_paths: STRING is "precompiled_paths"
+			-- Precompiled paths
+			
+	metadata_cache_paths: STRING is "metadata_cache_paths"
+			-- Metadata Cache paths
 			
 end -- class ECDM_SAVED_SETTINGS
 

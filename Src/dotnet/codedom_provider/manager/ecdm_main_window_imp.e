@@ -83,12 +83,17 @@ feature {NONE}-- Initialization
 			create compiler_titles_box
 			create default_root_clas_label
 			create precompile_label
+			create metadata_cache_label
 			create compiler_values_box
 			create root_class_text_field
 			create precompile_box
 			create precompile_combo
 			create precompile_padding_cell
 			create browse_button
+			create metadata_cache_box
+			create metadata_cache_combo
+			create metadata_cache_cell
+			create metadata_cache_browse_button
 			create prefixes_frame
 			create prefixes_box
 			create prefixes_list
@@ -159,12 +164,17 @@ feature {NONE}-- Initialization
 			compiler_box.extend (compiler_titles_box)
 			compiler_titles_box.extend (default_root_clas_label)
 			compiler_titles_box.extend (precompile_label)
+			compiler_titles_box.extend (metadata_cache_label)
 			compiler_box.extend (compiler_values_box)
 			compiler_values_box.extend (root_class_text_field)
 			compiler_values_box.extend (precompile_box)
 			precompile_box.extend (precompile_combo)
 			precompile_box.extend (precompile_padding_cell)
 			precompile_box.extend (browse_button)
+			compiler_values_box.extend (metadata_cache_box)
+			metadata_cache_box.extend (metadata_cache_combo)
+			metadata_cache_box.extend (metadata_cache_cell)
+			metadata_cache_box.extend (metadata_cache_browse_button)
 			edit_box.extend (prefixes_frame)
 			prefixes_frame.extend (prefixes_box)
 			prefixes_box.extend (prefixes_list)
@@ -187,7 +197,7 @@ feature {NONE}-- Initialization
 			buttons_box.extend (right_buttons_padding_cell)
 			
 			set_minimum_width (500)
-			set_minimum_height (400)
+			set_minimum_height (500)
 			set_title (product_title)
 			set_background_pixmap (new_png)
 			file_menu.set_text ("File")
@@ -272,6 +282,8 @@ feature {NONE}-- Initialization
 			default_root_clas_label.align_text_left
 			precompile_label.set_text ("Precompiled library")
 			precompile_label.align_text_left
+			metadata_cache_label.set_text ("Metadata cache")
+			metadata_cache_label.align_text_left
 			compiler_values_box.set_padding_width (5)
 			compiler_values_box.set_border_width (5)
 			root_class_text_field.set_minimum_width (80)
@@ -280,6 +292,11 @@ feature {NONE}-- Initialization
 			precompile_padding_cell.set_minimum_width (5)
 			browse_button.set_text ("...")
 			browse_button.set_minimum_width (40)
+			metadata_cache_box.disable_item_expand (metadata_cache_cell)
+			metadata_cache_box.disable_item_expand (metadata_cache_browse_button)
+			metadata_cache_cell.set_minimum_width (5)
+			metadata_cache_browse_button.set_text ("...")
+			metadata_cache_browse_button.set_minimum_width (40)
 			prefixes_frame.set_text ("Assembly Prefixes")
 			prefixes_box.set_padding_width (5)
 			prefixes_box.set_border_width (5)
@@ -342,9 +359,11 @@ feature {NONE}-- Initialization
 			precompile_combo.select_actions.extend (agent on_precompiled_select)
 			precompile_combo.change_actions.extend (agent on_precompiled_select)
 			browse_button.select_actions.extend (agent on_precompiled_browse)
+			metadata_cache_combo.select_actions.extend (agent on_metadata_cache_select)
+			metadata_cache_browse_button.select_actions.extend (agent on_metadata_cache_browse)
 			prefixes_list.select_actions.extend (agent on_assembly_file_name_select (?))
 			prefixes_list.deselect_actions.extend (agent on_assembly_file_name_deselect (?))
-			prefixes_list.column_resize_actions.extend (agent on_column_resize (?))
+			prefixes_list.column_resized_actions.extend (agent on_column_resize (?))
 			prefix_text_field.change_actions.extend (agent on_prefix_change)
 			assembly_file_name_text_field.change_actions.extend (agent on_assembly_file_name_change)
 			assembly_file_name_browse_button.select_actions.extend (agent on_assembly_file_name_browse)
@@ -370,20 +389,21 @@ feature -- Access
 	show_text_menu_item, show_tooltips_menu_item: EV_CHECK_MENU_ITEM
 	window_box, configurations_box, edit_box, general_titles_box, general_values_box, 
 	compiler_titles_box, compiler_values_box, prefixes_box, applications_box: EV_VERTICAL_BOX
-	tool_bars_box, main_box, general_box, compiler_box, precompile_box, prefix_components_box, 
-	assembly_file_name_buttons_box, buttons_box: EV_HORIZONTAL_BOX
+	tool_bars_box, main_box, general_box, compiler_box, precompile_box, metadata_cache_box, 
+	prefix_components_box, assembly_file_name_buttons_box, buttons_box: EV_HORIZONTAL_BOX
 	main_tool_bar, help_tool_bar: EV_TOOL_BAR
 	new_button, save_button, revert_button, properties_button, delete_button, help_button: EV_TOOL_BAR_BUTTON
-	tool_bars_padding_cell, precompile_padding_cell, left_buttons_padding_cell, right_buttons_padding_cell: EV_CELL
+	tool_bars_padding_cell, precompile_padding_cell, metadata_cache_cell, left_buttons_padding_cell, 
+	right_buttons_padding_cell: EV_CELL
 	configurations_list, applications_list: EV_LIST
 	general_frame, compiler_frame, prefixes_frame, applications_frame: EV_FRAME
 	fail_on_error_label, log_server_label, log_level_label, default_root_clas_label, 
-	precompile_label: EV_LABEL
+	precompile_label, metadata_cache_label: EV_LABEL
 	fail_on_error_check_button: EV_CHECK_BUTTON
 	log_server_text_field, root_class_text_field, prefix_text_field, assembly_file_name_text_field: EV_TEXT_FIELD
-	log_level_combo, precompile_combo: EV_COMBO_BOX
-	browse_button, assembly_file_name_browse_button, assembly_file_name_add_button, 
-	assembly_file_name_remove_button, add_button, remove_button: EV_BUTTON
+	log_level_combo, precompile_combo, metadata_cache_combo: EV_COMBO_BOX
+	browse_button, metadata_cache_browse_button, assembly_file_name_browse_button, 
+	assembly_file_name_add_button, assembly_file_name_remove_button, add_button, remove_button: EV_BUTTON
 	prefixes_list: EV_MULTI_COLUMN_LIST
 
 feature {NONE} -- Implementation
@@ -491,6 +511,16 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
+	on_metadata_cache_select is
+			-- Called by `select_actions' of `metadata_cache_combo'.
+		deferred
+		end
+	
+	on_metadata_cache_browse is
+			-- Called by `select_actions' of `metadata_cache_browse_button'.
+		deferred
+		end
+	
 	on_assembly_file_name_select (an_item: EV_MULTI_COLUMN_LIST_ROW) is
 			-- Called by `select_actions' of `prefixes_list'.
 		deferred
@@ -502,7 +532,7 @@ feature {NONE} -- Implementation
 		end
 	
 	on_column_resize (a_column: INTEGER) is
-			-- Called by `column_resize_actions' of `prefixes_list'.
+			-- Called by `column_resized_actions' of `prefixes_list'.
 		deferred
 		end
 	

@@ -20,7 +20,7 @@ create
 
 feature
 
-	make (a_path: STRING; extension_type: STRING; is_root: BOOLEAN) is
+	make (a_path: STRING; extension_type: STRING; a_is_root: BOOLEAN) is
 			-- Create new EIFFEL_F_CODE_DIRECTORY.
 		require
 			a_path_not_void: a_path /= Void
@@ -34,6 +34,8 @@ feature
 			finished_file: PLAIN_TEXT_FILE
 			finished_file_name: FILE_NAME
 		do
+			is_root := a_is_root
+
 				-- Create `l_big_file_name' with a number as a suffix, in order not to
 				-- confuse the C debugger.
 			l_start := a_path.last_index_of (Directory_separator, a_path.count)
@@ -129,6 +131,8 @@ feature
 				end
 				l_files.forth
 			end
+		ensure
+			is_root_set: is_root = a_is_root
 		end
 
 	concat is
@@ -138,13 +142,18 @@ feature
 			l_has_c_file, l_has_cpp_file, l_has_x_file, l_has_xpp_file: BOOLEAN
 			l_new_objects: STRING
 		do
-			if makefile_sh /= Void then
-				l_directories := directories.linear_representation
-
-				debug ("OUTPUT")
-					print ("x/c files%N")
+			if is_root then
+					-- Do the work an all subdirectories
+				from
+					l_directories := directories.linear_representation
+					l_directories.start
+				until
+					l_directories.off
+				loop
+					l_directories.item.concat
+					l_directories.forth
 				end
-
+			elseif makefile_sh /= Void then
 				if not c_files.is_empty then
 					l_has_c_file := True
 					concat_files (c_files, big_file_name (False, True, False))
@@ -190,28 +199,6 @@ feature
 					makefile_sh.put_string ("%N")
 					makefile_sh.close
 				end
-
-				debug ("OUTPUT")
-					print ("Directories%N")
-				end
-					-- Do the work an all subdirectories
-				from
-					l_directories.start
-				until
-					l_directories.off
-				loop
-					debug ("OUTPUT")
-						print (l_directories.item.name)
-						io.new_line
-					end
-					l_directories.item.concat
-					l_directories.forth
-				end
-				debug ("OUTPUT")
-					print ("Makefile SH%N")
-					print (makefile_sh.name)
-					io.new_line
-				end
 			else
 					-- makefile_sh = void
 				io.put_string("WARNING: Directory '")
@@ -228,6 +215,9 @@ feature
 		end
 
 feature -- Access
+
+	is_root: BOOLEAN
+			-- Is current directory the root of W_code of F_code?
 
 	object_extension: STRING
 			-- Extension name of the object files, depends on the platform.

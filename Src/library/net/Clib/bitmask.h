@@ -21,7 +21,7 @@
 #include <sys/param.h>		/* For NOFILE */
 #endif
 
-#include "portable.h"
+#include "eif_portable.h"
 
 #undef BPI
 #ifdef WORD_BIT				/* Some systems may not define this */

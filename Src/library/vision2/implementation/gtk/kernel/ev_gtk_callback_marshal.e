@@ -87,23 +87,8 @@ feature {EV_ANY_IMP} -- Access
 		require
 			an_agent_not_void: an_agent /= Void
 			translate_not_void: translate /= Void
-		local
-			t: TUPLE
 		do
-			t := translate.item (integer_pointer_tuple)
-			if
-				--| FIXME IEK This needs to be optimized.
-				t /= empty_tuple and then internal.type_conforms_to (
-					internal.dynamic_type (an_agent),
-					f_of_tuple_type_id
-				)
-			then
-				-- This is a call to {ACTION_SEQUENCE}.call ([])
-				tuple_tuple.put (t, 1)
-				an_agent.call (tuple_tuple)
-			else	
-				an_agent.call (t)
-			end
+			an_agent.call (translate.item (integer_pointer_tuple))
 		end
 		
 	motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER] is
@@ -139,6 +124,8 @@ feature {EV_ANY_IMP} -- Access
 		
 feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 
+	time_delta: INTEGER
+
 	gdk_event_to_tuple (n_args: INTEGER; args: POINTER): TUPLE is
 			-- A TUPLE containing `args' data from a GdkEvent.
 			-- `n_args' is ignored.
@@ -149,20 +136,46 @@ feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 			p: POINTER
 			event_type, keyval: INTEGER
 			key: EV_KEY
+			timeval: POINTER
+			secondval, eventval: STRING
+			currenttime, eventtime: INTEGER
+			motion_pressure: REAL
 		do
 			gdk_event := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args)
-			Result := empty_tuple
 			if feature {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event) < 100000 then
 				event_type := feature {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event)
 	
 				if event_type = feature {EV_GTK_ENUMS}.Gdk_motion_notify_enum
 				then
+						-- Retrieve current time and event time and format them so that they may be compared
+					timeval := feature {EV_GTK_EXTERNALS}.c_g_timeval_struct_allocate
+					feature {EV_GTK_EXTERNALS}.g_get_current_time (timeval)
+					secondval := feature {EV_GTK_EXTERNALS}.g_timeval_struct_tv_sec (timeval).out
+					secondval.keep_tail (7)
+					currenttime := secondval.to_integer
+					eventval := feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_time (gdk_event).out
+					eventval.keep_head (7)
+					eventtime := eventval.to_integer
+					
+					if time_delta = 0 then
+							-- Find out the difference in event timings to be used as a guide for following motion events
+						time_delta := currenttime - eventtime
+					end
+					
+					if False then--currenttime - (eventtime + time_delta) > 1 then
+							-- If the event lag is greater than a second then we mark motion pressure as 0.0, this will prevent the action sequence from being fired
+						motion_pressure := 0.0
+					else
+						motion_pressure := 0.5
+					end
+
+					timeval.memory_free
 					set_motion_tuple (
 						feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x (gdk_event).truncated_to_integer,
 						feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y (gdk_event).truncated_to_integer,
 						0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_xtilt (gdk_event),
 						0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_ytilt (gdk_event),
-						0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_pressure (gdk_event),
+						motion_pressure,--feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_pressure (gdk_event),
 						feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
 						feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
 					)

@@ -54,7 +54,6 @@ XCOPY /Y Src\Build2\modified_libraries\vision2\ev_pixmapable.e .\interface
 
 REM Copy all the editor constructor classes into interface.
 XCOPY /Y Src\Build2\interface\gb_ev_pixmap_handler.e .\interface
-XCOPY /Y Src\Build2\interface\widgets\gb_ev_widget_editor_constructor.e .\interface
 XCOPY /Y Src\Build2\interface\widgets\containers\gb_ev_box_editor_constructor.e .\interface
 XCOPY /Y Src\Build2\interface\widgets\containers\gb_ev_container_editor_constructor.e .\interface
 XCOPY /Y Src\Build2\interface\widgets\containers\gb_ev_fixed_editor_constructor.e .\interface

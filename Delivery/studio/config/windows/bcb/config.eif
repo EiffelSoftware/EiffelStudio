@@ -65,7 +65,7 @@ cp: "copy"
 ranlib: "echo"
 
 -- platform remove command
-rm: "-del"
+rm: "del"
 rmdir: "rd"
 
 -- make program
@@ -78,7 +78,7 @@ continuation: "\"
 
 appl_make: "$appl.exe: $appl.res e1\emain.obj Makefile $precompilelibs $(OBJECTS) $(EXTERNALS)%N%
 %%T$(MV) $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\version.eif .%N%
-%%T$(RM) $@%N%
+%%Tif exist $@ $(RM) $@%N%
 %%T$(ISE_EIFFEL)\bcc55\bin\ilink32 @&&|%N%
 %%T$(LDFLAGS) e1\emain.obj c0w32.obj, $appl.exe,,%
 %$(EIFLIB) $precompile_libs_command $(LIBS) %
@@ -95,7 +95,7 @@ appl_make: "$appl.exe: $appl.res e1\emain.obj Makefile $precompilelibs $(OBJECTS
 
 -- precompilation
 precompile: "driver.exe: driver.res e1\emain.obj $(OBJECTS) precomp.lib $precompilelibs%N%
-%%T$(RM) driver.exe%N%
+%%Tif exist driver.exe $(RM) driver.exe%N%
 %%T$(ISE_EIFFEL)\bcc55\bin\ilink32 @&&|%N%
 %%T$(LDFLAGS) e1\emain.obj c0w32.obj, driver.exe,,%
 %$(EIFLIB) $precompile_libs_command $(LIBS) $(OBJECTS) $(EXTERNALS) %
@@ -104,8 +104,8 @@ precompile: "driver.exe: driver.res e1\emain.obj $(OBJECTS) precomp.lib $precomp
 %%Tif not exist $(ISE_C_COMPILER) mkdir $(ISE_C_COMPILER)%N%
 %%T$(MV) driver.exe .\$(ISE_C_COMPILER)\driver.exe%N%
 %%T$(MV) precomp.lib .\$(ISE_C_COMPILER)\precomp.lib%N%
-%%T$(RM) driver.exe%N%
-%%T$(RM) precomp.lib%N%
+%%Tif exist driver.exe $(RM) driver.exe%N%
+%%Tif exist precomp.lib $(RM) precomp.lib%N%
 %%N%
 %driver.rc: $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc%N%
 %%T$(MV) $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc driver.rc%N%
@@ -114,12 +114,12 @@ precompile: "driver.exe: driver.res e1\emain.obj $(OBJECTS) precomp.lib $precomp
 %%T$(ISE_EIFFEL)\BCC55\bin\brc32 -I$(ISE_EIFFEL)\bcc55\include -r driver.rc%N%
 %%N%
 %precomp.lib: $(C_OBJECTS) $(EXTERNALS)%N%
-%%T$(RM) $@%N%
+%%Tif exist $@ $(RM) $@%N%
 %%T&$(ISE_EIFFEL)\BCC55\bin\tlib /p512 $@ +$** %N%
 %%N"
 
 cecil_make: "$(STATIC_CECIL): $(EIFLIB) $(OBJECTS) $(EXTERNALS) $precompilelibs%N%
-%%T$(RM) $@%N%
+%%Tif exist $@ $(RM) $@%N%
 %%T&$(ISE_EIFFEL)\BCC55\bin\tlib /p512 $@ +$**"
 
 completed: "%Techo done > completed.eif"
@@ -128,7 +128,7 @@ all: "all:: "
 
 intermediate_file_ext: "lib"
 
-make_intermediate: "%T$(RM) $@%N%
+make_intermediate: "%Tif exist $@ $(RM) $@%N%
 %%T&$(ISE_EIFFEL)\BCC55\bin\tlib /p512 $@ +$**%N%T$(CREATE_TEST)%
 %%N%
 %.c.obj:%N%

@@ -433,7 +433,7 @@ feature -- Document processing
 				if 
 					i > 2 and then
 					bname.item (i - 1) = Dot and then
-					eif_valid_class_file_extension (bname.item (i))
+					valid_class_file_extension (bname.item (i))
 				then
 					bname.head (i - 2);
 				end;
@@ -445,16 +445,18 @@ feature {NONE} -- Document processing
 
 	No_word: STRING is "no"
 
+feature {NONE} -- Implementation
+
+	valid_class_file_extension (c: CHARACTER): BOOLEAN is
+			-- Is `c' a valid class file extension?
+		do
+			Result := c = 'e' or c = 'E'
+		end
+
 feature {NONE} -- Externals
 
 	eif_date (s: POINTER): INTEGER is
 			-- Date of file of name `str'.
-		external
-			"C"
-		end
-
-	eif_valid_class_file_extension (c: CHARACTER): BOOLEAN is
-			-- Is `c' a valid class file extension?
 		external
 			"C"
 		end

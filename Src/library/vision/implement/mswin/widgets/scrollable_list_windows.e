@@ -931,7 +931,7 @@ feature {NONE} -- Implementation
 	set_widget_default is
 			-- Set the defaults for current widget.
 		local
-			sl: SCROLL_LIST
+			sl: SCROLLABLE_LIST
 		do
 			sl ?= owner
 			if sl /= Void then

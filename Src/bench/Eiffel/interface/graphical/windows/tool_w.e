@@ -11,20 +11,40 @@ deferred class TOOL_W
 inherit
 
 	NAMER;
-	PAINTER;
-	COMMAND_W
-		redefine
-			execute
-		end;
-	SHARED_TABS
+	SHARED_TABS;
+	SHARED_PIXMAPS;
+	WINDOWS;
+	INTERFACE_W;
+	HOLE
+		rename
+			target as text_window
+		export
+			{ANY} receive
+		end
 
 feature -- Window Properties
+
+	history: STONE_HISTORY;
+			-- History list for Current.
+
+	last_format: FORMATTER;
+			-- Last format used.
+
+	stone: STONE;
+			-- Stone in tool
+
+	stone_type: INTEGER is
+			-- Stone type
+		do
+		end;
 
 	text_window: TEXT_WINDOW;
 			-- Text window attached to Current
 
-	tool_name: STRING is do end;
+	tool_name: STRING is 
 			-- Name of the tool
+		do
+		end;
 
 	realized: BOOLEAN is
 			-- Is Current realized?
@@ -41,8 +61,9 @@ feature -- Window Properties
 		deferred
 		end;
 
-	hole: HOLE is
+	hole: EB_BUTTON_HOLE is
 			-- Hole associated with Current.
+			-- Void by default
 		do
 		end;
 
@@ -51,7 +72,29 @@ feature -- Window Properties
 		do
 		end;
 
+	reset_stone is
+			-- Reset the stone to Void.
+		do
+			stone := Void
+		ensure
+			stone = Void
+		end;
+
 feature -- Window Implementation
+
+	display is
+			-- Display tool.
+		do
+			if realized then
+				if not shown then
+					show
+				else
+					raise
+				end
+			else
+				realize
+			end
+		end;
 
 	realize is
 			-- Realize Current.
@@ -112,21 +155,102 @@ feature -- Window settings
 		deferred
 		end;
 
+feature {TEXT_WINDOW} -- Status setting
+
+	set_stone (s: like stone) is
+		require
+			valid_stone_type: s /= Void implies s.stone_type = stone_type
+		do
+			stone := s;
+			if s = Void then
+				set_icon_name (tool_name);
+			else
+				set_icon_name (s.icon_name);
+				if hole /= Void then
+					hole.set_full_symbol
+				end;
+			end
+		ensure
+			set: s = stone
+		end;
+
+	set_last_format (f: like last_format) is
+			-- Assign `f' to `last_format'.
+		require
+			format_exists: f /= Void
+		do
+			if last_format /= f then
+				if not history.islast then
+					history.extend (stone)
+				end;
+				if last_format /= Void then
+					last_format.darken (False)
+				end;
+				last_format := f;
+				last_format.darken (True)
+			end
+		ensure
+			last_format = f
+		end;
+
 feature -- Update
 
-	synchronize is
-			-- Synchronize the contents of `text_window'.
+	update_save_symbol is
+			-- Update the save symbol in tool.
 		do
-			text_window.synchronize
+			if save_cmd_holder /= Void then
+				if text_window.changed then
+					save_cmd_holder.associated_button.darken (true)
+				else
+					save_cmd_holder.associated_button.darken (false)
+				end
+			end
+		end;
+
+	synchronize is
+			-- Synchronize clickable elements with text, if possible.
+		do
+			synchronise_stone
+		end;
+
+	synchronise_stone is
+			-- Synchronize the root stone of the window
+			-- and the history's stones.
+		local
+			old_do_format: BOOLEAN
+		do
+			history.extend (stone);
+			history.synchronize;
+			if
+				stone /= Void and then
+				stone.synchronized_stone /= Void
+			then
+					-- The root stone is still valid.
+				old_do_format := last_format.do_format;
+				last_format.set_do_format (true);
+				last_format.execute (history.item);
+				last_format.set_do_format (old_do_format)
+			else
+					-- The root stone is not valid anymore.
+				history.forth;
+				check 
+					history.after 
+				end;
+				set_default_format;
+				text_window.set_cursor_position (0);
+				text_window.clean;
+				text_window.clear;
+				text_window.display;
+				text_window.set_changed (False);
+				update_save_symbol;
+				set_title (tool_name);
+				if hole /= Void then
+					hole.set_empty_symbol
+				end;
+			end
 		end;
 
 feature -- Pick and Throw Implementation
-
-	receive (dropped: STONE) is
-			-- Deal with element `dropped'.
-		do
-			text_window.receive (dropped)
-		end;
 
 	reset is
 			-- Reset the window contents.
@@ -141,45 +265,16 @@ feature -- Pick and Throw Implementation
 			end;
 		end;
 
-	transport (element: like last_transported; a_text: TEXT_WINDOW;
-				start_x, start_y: INTEGER) is
-			-- Grab cursor and leave a track when the pointer
-			-- moves on the screen.
-		require
-			tranported_not_void: element /= Void
+	unregister_holes is
+			-- Unregister holes.
 		do
-			if not transporting then
-				transporting := True;
-				origin_text := a_text;
-				last_transported := element;
-				x0 := start_x; y0 := start_y;
-				x1 := start_x; y1 := start_y;
-				draw_point (start_x, start_y);
-				grab (cursor_table.item (element.stone_type))
-			end;
+			unregister;
 		ensure
-			origin_text = a_text;
-			last_transported = element
+			current_unregistered: not registered
 		end;
-	
+
 feature {NONE} -- Implementation
 
-	transporter_init is
-			-- Initialize tranport stuff.
-		local
-			void_reference: ANY
-		do
-			!! abort;
-			set_drawing (screen);
-			set_logical_mode (10);
-			set_subwindow_mode (1);
-			add_pointer_motion_action (Current, Current);
---			add_button_click_action (3, Current, text_window);
-			add_button_press_action (3, Current, text_window);
-			add_button_release_action (1, Current, abort);
-			add_button_release_action (2, Current, abort);
-		end;
-	
 	raise_grabbed_popup is
 			-- Raise popup windows with exclusive grab set.
 		do
@@ -203,143 +298,20 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-feature {NONE} -- Execution Implementation
+feature -- Focus Label
 
-	execute (argument: ANY) is
-			-- Leave a track when the pointer moves on the screen,
-			-- ungrab when button is released
-		local
-			pointed_widget: WIDGET;
-			pointed_text: TEXT_WINDOW;
-			pointed_hole: HOLE;
-			transported_hole: HOLE;
-			transported_node: like last_transported;
-		do
-			if (argument = Current) then
-				-- Motion action (when grabbed)
-				if transporting then
-					draw_segment (x0, y0, x1, y1);
-					x1 := screen.x; y1 := screen.y;
-					draw_segment (x0, y0, x1, y1)
-				end;
-			elseif (argument = abort) then
-				-- The Pick and Throw is aborted.
-				draw_segment (x0, y0, x1, y1);
-				if origin_text /= Void then
-					origin_text.deselect_all
-				end;
-				ungrab;
-				transporting := False;
-			elseif argument /= Void then
-				-- Finally, the user really threw the pebble
-				-- in a hole.
-				draw_segment (x0, y0, x1, y1);
-				if origin_text /= Void then
-					origin_text.deselect_all
-				end;
-				transporting := False;
-				ungrab;
-				pointed_widget := screen.widget_pointed;
-				pointed_hole ?= pointed_widget;
-				pointed_text ?= pointed_widget;
-				transported_node ?= last_transported;
-				transported_hole ?= last_transported;
-				if pointed_text /= Void then
-					if
-						transported_hole /= Void
-							and then
-						pointed_text.clickable
-					then
-						pointed_text.change_focus;
-						transported_hole.receive
-							(pointed_text.focus);
-						pointed_text.deselect_all;
-					elseif
-						transported_node /= Void
-					then
-						pointed_text.receive
-							(transported_node);
-					end
-				elseif pointed_hole /= Void then
-					if transported_node /= Void then
-						pointed_hole.receive
-							(transported_node);
-					end
-				end;
-			else
-				-- Must be something, we cannot deal with.
-				work (argument)
-			end
-		end;
-
-	work (arg: ANY) is
-			-- Not used.
-		do
-			-- Do Nothing
-		end;
-
-feature {NONE} -- Cursor grabbing
-
-	grab (cursor: SCREEN_CURSOR) is
-			-- Grab all events in the system.
-		deferred
-		end;
-
-	ungrab is
-			-- Stop grabbing all events in the system.
-		deferred
-		end;
-
-feature {NONE} -- Properties
-
-	abort: ANY;
-			-- Argument passed when Pick and Throw is aborted.
-
-	transporting: BOOLEAN;
-			-- Is a stone currently being transported?
-
-	origin_text: TEXT_WINDOW;
-			-- Text window where the last transported element came
-			-- from, Void if last transported was a hole
- 
-	last_transported: STONE;
-			-- Last transported element, Void between grabs
-
-	screen: SCREEN is
-			-- The screen where Current is shown.
+	tell_type (a_type_name: STRING) is
+			-- Display `a_type_name' in type teller.
 		deferred
 		end;
  
-	x0, y0, x1, y1: INTEGER;
-			-- Initial and current pointer coordinates
-
-feature {NONE} -- Action Adding
-
-	add_pointer_motion_action (a_command: COMMAND; argument: ANY) is
-			-- Add action for motion of the mouse pointer.
-			-- Pass `argument' down to `a_command' when action
-			-- occurs.
+	clean_type is
+			-- Clean what's said in the type teller window.
 		deferred
 		end;
 
-	--add_button_click_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
-		--deferred
-		--end;
+invariant
 
-	add_button_press_action (number: INTEGER; a_command: COMMAND;
-				argument: ANY) is
-			-- Add action for pressing a mouse button.
-			-- Pass `argument' down to `a_command' when button
-			-- `number' is pressed.
-		deferred
-		end;
-
-	add_button_release_action (number: INTEGER; a_command: COMMAND;
-				argument: ANY) is
-			-- Add action for releasing a mouse button.
-			-- Pass `argument' down to `a_command' when button
-			-- `number' is released.
-		deferred
-		end;
+	non_void_history: history /= Void
 
 end -- class TOOL_W

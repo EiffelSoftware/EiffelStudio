@@ -10,7 +10,7 @@ LIBNAME = ipc.$lib
 LIBARCH = $(LIBDIR)\$(LIBNAME)
 LIBRUN = $(TOP)\run-time -I$(TOP)\run-time\include
 LIBIDR = $(TOP)\idrs
-LIBIDRNAME = idr.$lib
+LIBIDRNAME = idrs.$obj
 LIBIDRARCH = $(LIBIDR)\$(LIBIDRNAME)
 LIBS = $(LIBIDRARCH) $(LIBARCH)
 
@@ -31,7 +31,7 @@ OBJECTS = \
 all:: estudio.exe
 
 $microsoftestudio.exe: $(LIBS) estudio.lmk
-	link $(LDFLAGS) $(LIBS) -OUT:$@ @estudio.lmk
+	link $(LDFLAGS) $(LIBS) -SUBSYSTEM:WINDOWS -OUT:$@ @estudio.lmk
 
 estudio.res: estudio.rc
 	$resource_compiler -r estudio.rc
@@ -46,19 +46,6 @@ $borlandestudio.exe: $(LIBS) estudio.lbk
 estudio.lbk: $(OBJECTS) estudio.res
 	del estudio.lbk
 	echo $compiler_path\lib\c0w32.$obj $(OBJECTS), \
-	estudio.exe,, CW32 IMPORT32 ..\shared\ipc.lib \
-	$(TOP)\idrs\idr.lib,,estudio.res >> estudio.lbk
-
-$watcomestudio.exe: $(LIBS) estudio.lwk
-	wlink @estudio.lwk
-	wrc /fe=estudio.exe estudio
-
-estudio.lwk: $(OBJECTS)
-	echo SYSTEM nt_win > estudio.lwk
-	echo OPTION CASEEXACT >> estudio.lwk
-	echo NAME estudio.exw >> estudio.lwk
-	for %i in ($(OBJECTS)) do echo FILE %i >> estudio.lwk
-	echo LIB ..\shared\ipc.lwb >> estudio.lwk
-	echo LIB $(TOP)\idrs\idr.lwb >> estudio.lwk
+	estudio.exe,, CW32 IMPORT32 $(LIBS),,estudio.res >> estudio.lbk
 
 listen.$obj: ..\shared\select.h

@@ -21,6 +21,13 @@ extern "C" {
 #include "eif_globals.h"
 
 
+#if defined(__VMS)  /* avoid potential conflicts with X libraries */
+#define xcalloc	eif_rt_xcalloc
+#define xmalloc	eif_rt_xmalloc
+#define xfree	eif_rt_xfree
+#endif /* __VMS */
+
+
 /*
  * Useful shortcuts for accessing fields.
  */

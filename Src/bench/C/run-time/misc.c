@@ -22,7 +22,7 @@
 
 #include <ctype.h>			/* For toupper(), is_alpha(), ... */
 
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 #include <windows.h>
 #endif
 
@@ -168,7 +168,7 @@ char *s;
 {
 	EIF_INTEGER result;
 
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	extern void wmhandler_yield();
 #endif
 
@@ -177,7 +177,7 @@ char *s;
 #ifdef SIGCLD
 	old_signal_hdlr = signal (SIGCLD, SIG_IGN);
 #endif
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	result = WinExec (s, SW_SHOWNORMAL);
 	if (result > 32){
 		while (GetModuleUsage(result))
@@ -205,7 +205,7 @@ EIF_OBJ v,k;
 	int l1, l2;
 	char *s1;
 
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	EIF_INTEGER result;
 	char *ini;
 	extern char **_argv;
@@ -236,7 +236,7 @@ EIF_OBJ v,k;
 public EIF_OBJ eif_getenv (k)
 EIF_OBJ k;
 {
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	char *ini;
 	static char buf[128];
 	extern char **_argv;

@@ -37,7 +37,7 @@
 
 /* Make sure NSIG is defined. If not, set it to 32 (cross your fingers)--RAM */
 #ifndef NSIG
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 #define NSIG 8
 #else
 #define NSIG 32		/* Number of signals (acess from 1 to NSIG-1) */
@@ -484,7 +484,7 @@ shared void initsig()
 	for (sig = 1; sig < NSIG; sig++)
 		osig_ign[sig] = sig_ign[sig];
 
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	for (sig = 1; sig < NSIG; sig++)
 		sig_ign[sig] = 0;
 #endif

@@ -24,7 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "err_msg.h"
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 #include <stdlib.h>
 #include <fcntl.h>
 #endif
@@ -85,7 +85,7 @@ char **envp;
 	 * formatting purpose).
 	 */
 
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	extern int _argc;
 	extern char **_argv;
 
@@ -141,7 +141,7 @@ char **envp;
 		char temp = 0;
 		int i;
 
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 		for (i=1;i<_argc;i++) {
 			if (0 == strcmp (_argv[i], "-ignore_updt")) {
 #else
@@ -172,7 +172,7 @@ char **envp;
 #endif
 #endif
 
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	umain(_argc, _argv, envp);			/* User's initializations */
 	arg_init(_argc, _argv);				/* Save copy for class ARGUMENTS */
 #else

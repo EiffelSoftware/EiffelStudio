@@ -113,7 +113,7 @@ feature {APPLICATION_EXECUTION} -- load and save
 		local
 			w_dlg: EV_WARNING_DIALOG
 		do
-			Il_debug_info_recorder.load_workbench_data
+			Il_debug_info_recorder.load_data_for_debugging
 			if not Il_debug_info_recorder.load_successful then
 				if (create {EV_ENVIRONMENT}).application /= Void then
 					create w_dlg.make_with_text (Il_debug_info_recorder.loading_errors_message)

@@ -49,7 +49,8 @@ feature -- Properties
 
 	access_name: STRING is
 		do
---FIXME
+			-- Void because a Precursor call is like a client call but without
+			-- a client, so there is no variable which is accessing the feature.
 		end
 
 	is_precursor: BOOLEAN is True

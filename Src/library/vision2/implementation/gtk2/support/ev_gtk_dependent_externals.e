@@ -1522,6 +1522,11 @@ feature -- Externals
 		external
 			"C signature (gchar*, gssize, gsize*, gsize*, GError**): gchar* use <gtk/gtk.h> "
 		end
+
+	frozen g_filename_to_utf8 (a_string: POINTER; a_length: INTEGER; byte_read, bytes_written, gerror: TYPED_POINTER [INTEGER]): POINTER is
+		external
+			"C signature (gchar*, gssize, gsize*, gsize*, GError**): gchar* use <gtk/gtk.h> "
+		end
 	
 	frozen g_utf8_strlen (a_utf8_string: POINTER; maximum: INTEGER): INTEGER is
 		external
@@ -1530,7 +1535,19 @@ feature -- Externals
 			"g_utf8_strlen ((gchar*) $a_utf8_string, (gssize) $maximum)"
 		end
 
+	frozen g_utf8_validate (a_utf8_string: POINTER; maximum: INTEGER; a_end: TYPED_POINTER [POINTER]): BOOLEAN is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_utf8_validate ((gchar*) $a_utf8_string, (gssize) $maximum, (gchar**) $a_end)"
+		end
+
 	frozen g_locale_from_utf8 (a_string: POINTER; a_length: INTEGER; byte_read, bytes_written, gerror: TYPED_POINTER [INTEGER]): POINTER is
+		external
+			"C signature (gchar*, gssize, gsize*, gsize*, GError**): gchar* use <gtk/gtk.h> "
+		end
+
+	frozen g_filename_from_utf8 (a_string: POINTER; a_length: INTEGER; byte_read, bytes_written, gerror: TYPED_POINTER [INTEGER]): POINTER is
 		external
 			"C signature (gchar*, gssize, gsize*, gsize*, GError**): gchar* use <gtk/gtk.h> "
 		end

@@ -168,13 +168,14 @@ feature -- {EV_TREE_IMP}
 			p_imp: EV_PIXMAP_IMP
 			loc_image_list: WEL_IMAGE_LIST
 			loc_top_parent_imp :EV_TREE_IMP
-			current_images: HASH_TABLE [INTEGER, INTEGER]
+			current_images: HASH_TABLE [TUPLE[INTEGER, INTEGER], INTEGER]
 			item_value: INTEGER
+			loc_tuple: TUPLE[INTEGER, INTEGER]
 		do
 			p_imp := pixmap_imp
 			loc_top_parent_imp := top_parent_imp
 			loc_image_list := loc_top_parent_imp.image_list
-			current_images := loc_top_parent_imp.current_image_list_images
+			current_images := loc_top_parent_imp.current_image_list_info
 				-- Assign values to local variables for speed.
 
 			if p_imp.icon /= Void then
@@ -186,10 +187,13 @@ feature -- {EV_TREE_IMP}
 					loc_image_list.add_icon (p_imp.icon)
 					image_index := loc_image_list.last_position
 						-- Add the icon to image_list and set image_index.
-					current_images.extend (image_index, item_value)	
+					current_images.extend ([image_index, 1], item_value)	
 				else
-					image_index := current_images.item (item_value)
+					loc_tuple := current_images.item (item_value)
+					image_index := loc_tuple.integer_item (1)
 						-- `p_imp.icon' already in image list so set `image_index' to this.
+					loc_tuple.enter (loc_tuple.integer_item (2) + 1, 2)
+						-- Increase and store the number of items referencing this image.
 				end
 			elseif p_imp.mask_bitmap /= Void and p_imp.bitmap /= Void then
 				--|FIXME This does not work correctly yet.
@@ -463,6 +467,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.43  2000/03/27 17:36:49  rogers
+--| Modified set_pixmap_in_parent to work with the new type of current_images. A record of the number of items referencing an image in the image list is now also recorded.
+--|
 --| Revision 1.42  2000/03/24 20:51:52  rogers
 --| Added on_parented and set_pixmap_in_parent. This allows the pixmaps to be set before parenting the items.
 --|

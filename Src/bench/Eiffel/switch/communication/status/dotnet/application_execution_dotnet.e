@@ -999,7 +999,7 @@ feature -- Call stack related
 			l_eiffel_bp_slot: INTEGER
 			l_il_offset: INTEGER
 		do
-			l_output := ""
+			create l_output.make (100)
 			if a_frame = Void then
 				--| FIXME: JFIAT
 				l_output := "Debugger not synchronized => no information available%N" 
@@ -1015,13 +1015,15 @@ feature -- Call stack related
 					l_module_display.keep_tail (20)
 					l_module_display.prepend_string (" ..")
 	
-					l_class_type := Il_debug_info_recorder.class_type_for_module_class_token (l_module_name, l_class_token)
+					if il_debug_info_recorder.has_info_about_module (l_module_name) then
+						l_class_type := Il_debug_info_recorder.class_type_for_module_class_token (l_module_name, l_class_token)
+						l_feature_i := Il_debug_info_recorder.feature_i_by_module_feature_token (l_module_name, l_feature_token)
+					end
 					if l_class_type /= Void then
 						l_class_name := l_class_type.associated_class.name_in_upper
 					else
 						l_class_name := "<?"+ l_class_token.out + "?>"
 					end
-					l_feature_i := Il_debug_info_recorder.feature_i_by_module_feature_token (l_module_name, l_feature_token)
 					if l_feature_i /= Void then
 						l_feature_name := Il_debug_info_recorder.feature_i_by_module_feature_token (l_module_name, l_feature_token).feature_name
 					else

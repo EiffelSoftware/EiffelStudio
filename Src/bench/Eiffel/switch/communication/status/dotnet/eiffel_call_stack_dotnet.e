@@ -187,41 +187,43 @@ feature {NONE} -- Initialization
 									l_class_token := l_func.get_class.get_token
 									l_module_name := l_func.get_module.get_name
 
-									l_class_type := Il_debug_info_recorder.class_type_for_module_class_token (l_module_name, l_class_token)
-									l_feature_i := Il_debug_info_recorder.feature_i_by_module_feature_token (l_module_name, l_feature_token)
-
-									if l_feature_i = Void then
-										if l_feature_token = Il_debug_info_recorder.entry_point_token then
-											l_feature_i := Il_debug_info_recorder.entry_point_feature_i
+									if il_debug_info_recorder.has_info_about_module (l_module_name) then
+										l_class_type := Il_debug_info_recorder.class_type_for_module_class_token (l_module_name, l_class_token)
+										l_feature_i := Il_debug_info_recorder.feature_i_by_module_feature_token (l_module_name, l_feature_token)
+	
+										if l_feature_i = Void then
+											if l_feature_token = Il_debug_info_recorder.entry_point_token then
+												l_feature_i := Il_debug_info_recorder.entry_point_feature_i
+											end
 										end
-									end
-									if l_class_type /= Void and then l_feature_i /= Void then
+										if l_class_type /= Void and then l_feature_i /= Void then
+											
+											l_il_offset := l_frame_il.get_ip
+											l_line_number := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset (l_class_type, l_feature_i, l_il_offset)
 										
-										l_il_offset := l_frame_il.get_ip
-										l_line_number := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset (l_class_type, l_feature_i, l_il_offset)
-									
-
-											--| Here we have a valid Eiffel callstack point
-										create call.make(level)
-
-											-- Compute data to get address and co ...
-										l_stack_object := l_frame_il.get_argument (0)
-										l_stack_adv := debug_value_from_icdv (l_stack_object)
-										l_hexaddress := l_stack_adv.address
-
-										call.set_private_current_object (l_stack_adv)
-										call.set_routine (
-												l_frame_il,
-												False, -- is_melted (this is a dotnet system)
-												l_hexaddress,
-												l_class_type, -- dyn type
-												l_feature_i.written_class, -- origin class
-												l_feature_i, -- routine, routine_name ...
-												l_line_number -- break_index / line number
-											)
-										extend (call)
-
-										level := level + 1
+	
+												--| Here we have a valid Eiffel callstack point
+											create call.make(level)
+	
+												-- Compute data to get address and co ...
+											l_stack_object := l_frame_il.get_argument (0)
+											l_stack_adv := debug_value_from_icdv (l_stack_object)
+											l_hexaddress := l_stack_adv.address
+	
+											call.set_private_current_object (l_stack_adv)
+											call.set_routine (
+													l_frame_il,
+													False, -- is_melted (this is a dotnet system)
+													l_hexaddress,
+													l_class_type, -- dyn type
+													l_feature_i.written_class, -- origin class
+													l_feature_i, -- routine, routine_name ...
+													l_line_number -- break_index / line number
+												)
+											extend (call)
+	
+											level := level + 1
+										end
 									end
 								end
 								i := i + 1

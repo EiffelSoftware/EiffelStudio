@@ -31,25 +31,20 @@ feature
 
 	add_action (a_command: COMMAND; an_argument: ANY) is
 			-- Add `a_command' with `argument' to the list of action to execute 
-		    -- while the system is waiting for user events.
-		require else
-			not_a_command_void: not (a_command = Void);
-		
+			-- while the system is waiting for user events.
 		local
 			command_info: COMMAND_EXEC;
 		do
 			if not is_call_back_set then
 				c_task_set_call_back (c_data);
 			end;
-			!!command_info.make (a_command, an_argument);
-			finish;
-			put_right (command_info);
+			!! command_info.make (a_command, an_argument);
+			extend (command_info);
 		ensure then
 			not empty;
 			is_call_back_set;
 		end;
 
-	
 feature {NONE}
 
 	c_data: POINTER;
@@ -84,7 +79,9 @@ feature
 		do
 			linked_list_make;
 			c_data := c_task_create (an_application_context, Current, $call_back);
-			call_back;
+			if false then
+				call_back
+			end;
 		end; 
 
 	
@@ -126,7 +123,34 @@ feature
 			empty /= is_call_back_set;
 		end;
 
+	destroy is
+			-- Free `c_data' C structure.
+		local
+			null_pointer: POINTER
+		do
+			check
+				not_freed: null_pointer /= c_data
+			end;
+			c_free_task (c_data);
+			c_data := null_pointer;
+		ensure then
+			is_data_freed: is_data_freed
+		end
+		
+	is_data_freed: BOOLEAN is
+			-- Is `c_data' freed ?
+		local
+			null_pointer: POINTER
+		do
+			Result := null_pointer = c_data
+		end;
+	
 feature {NONE} -- External features
+
+	c_free_task (data: POINTER) is
+		external
+			"C"
+		end;
 
 	c_task_set_call_back (data: POINTER) is
 		external

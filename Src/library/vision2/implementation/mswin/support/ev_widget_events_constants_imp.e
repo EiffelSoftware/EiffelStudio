@@ -1,12 +1,13 @@
 indexing
-	description: "This class is used by EV_WIDGET_IMP. It gives%
-				% the identifications of the different events%
-				% that can occur. It is a class of constants"
+	description:
+		" This class is used by EV_WIDGET_IMP. It gives%
+		% the identifications of the different events%
+		% that can occur. It is a class of constants"
+	note: " The gap in the numbers correspond to the pick%
+		% and drop events EV_PND_EVENTS_CONSTANTS_IMP."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	note: "The gap in the numbers correspond to the pick and drop events%
-			% EV_PND_EVENTS_CONSTANTS_IMP."
 
 class
 	EV_WIDGET_EVENTS_CONSTANTS_IMP
@@ -91,6 +92,11 @@ feature -- Event for text_components
 	Cmd_change: INTEGER is 20
 			-- The text in the text container have changed.
 
+feature -- Event for the gauge
+
+	Cmd_gauge: INTEGER is 21
+			-- The value has been changed by the user.
+
 feature -- Event for notebook
 
 	Cmd_switch: INTEGER is 18
@@ -98,7 +104,7 @@ feature -- Event for notebook
 
 feature -- Upper constants value
 
-	command_count: INTEGER is 20
+	command_count: INTEGER is 21
 			-- Number of different events.
 
 end -- class EV_WIDGET_EVENTS_CONSTANTS_IMP

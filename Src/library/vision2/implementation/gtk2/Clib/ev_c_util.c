@@ -20,7 +20,7 @@ void ev_gtk_log (
 	char* level;
 	int fatal = FALSE;
 	int a_debug_mode;
-	a_debug_mode = (int) user_data;
+	a_debug_mode = (int) (rt_int_ptr) user_data;
 
 	if (a_debug_mode > 0)
 	{
@@ -72,19 +72,19 @@ void enable_ev_gtk_log (int a_mode)
 {
 	g_log_set_handler ("Gtk", G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL |
 		G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO |
-		G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION, ev_gtk_log, (gpointer) a_mode);
+		G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION, ev_gtk_log, (gpointer) (rt_int_ptr) a_mode);
 
 	g_log_set_handler ("Gdk", G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL |
         	G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO |
-		G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION, ev_gtk_log, (gpointer) a_mode);
+		G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION, ev_gtk_log, (gpointer) (rt_int_ptr) a_mode);
 
 	g_log_set_handler ("GLib",  G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL |
         	G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO |
-        	G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION, ev_gtk_log, (gpointer) a_mode);
+        	G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION, ev_gtk_log, (gpointer) (rt_int_ptr) a_mode);
 
 	g_log_set_handler (NULL,  G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL |
         	G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO |
-        	G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION, ev_gtk_log, (gpointer) a_mode);
+        	G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION, ev_gtk_log, (gpointer) (rt_int_ptr) a_mode);
 }
 
 /* XPM */
@@ -1148,6 +1148,10 @@ char **wait_cursor_xpm (void) {
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.7  2005/02/12 01:23:42  manus
+// Removed C compiler warnings by adding cast to (rt_int_ptr) before convert to
+//   or from a pointer.
+//
 // Revision 1.6  2004/08/04 20:08:25  king
 // Added RECURSION glog flag as previously this was missing and going to the default handler which would abort the program
 // Formatting

@@ -15,7 +15,6 @@ EIF_POINTER screen_pointer;
 	int	root_x, root_y;
 	int	win_x, win_y;
 	unsigned int keys_buttons;
-	Display *temp;
 	
 	XQueryPointer ((Display *) display_pointer, 
 					RootWindowOfScreen ((Screen *) screen_pointer),
@@ -84,5 +83,6 @@ EIF_INTEGER button;
 		case 3: return (EIF_BOOLEAN) ((keys_buttons & Button3Mask) != 0);
 		case 4: return (EIF_BOOLEAN) ((keys_buttons & Button4Mask) != 0);
 		case 5: return (EIF_BOOLEAN) ((keys_buttons & Button5Mask) != 0);
+		default: return (EIF_BOOLEAN) 0;
 	}
 }

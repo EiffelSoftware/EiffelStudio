@@ -240,7 +240,11 @@ feature -- Stone process
 				pos := s.error_position;
 				txt := text_window.text;
 				if txt.count > pos then
-					end_pos := txt.index_of ('%N', pos);
+					if txt.item (pos) = '%N' then	
+						end_pos := txt.index_of ('%N', pos + 1);
+					else
+						end_pos := txt.index_of ('%N', pos);
+					end;
 					if pos /= 0 then
 						text_window.highlight_selected (pos, end_pos)
 					end

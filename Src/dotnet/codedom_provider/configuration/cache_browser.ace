@@ -62,7 +62,7 @@ assembly
 			"WINFORMS_"
 		end
 
-end -- system EiffelSoftware.CacheBrowser
+end -- system EiffelSoftware.CodeDom.CacheBrowser
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider

@@ -57,10 +57,13 @@ feature -- Generation
 	generate is
 			-- Generate a .NET assembly
 		local
-			file_name: STRING
+			file_name, location: STRING
+			output_file_name: FILE_NAME
 			retried, is_assembly_loaded, is_error_available: BOOLEAN
+			deletion_successful: BOOLEAN
 			il_md_gen: IL_META_DATA_GENERATOR
 			classes: ARRAY [CLASS_C]
+			output_file: RAW_FILE
 		do
 			if not retried then
 				create il_md_gen
@@ -80,7 +83,22 @@ feature -- Generation
 
 					-- Compute name of generated file if any.
 				file_name := System.name + "." + System.msil_generation_type
-				il_generator.start_assembly_generation (System.name, file_name)
+				
+				if System.in_final_mode then
+					location := (create {PROJECT_CONTEXT}).Final_generation_path
+				else
+					location := (create {PROJECT_CONTEXT}).Workbench_generation_path
+				end
+				
+				il_generator.start_assembly_generation (System.name, file_name, location)
+				
+				create output_file_name.make_from_string (location)
+				output_file_name.set_file_name (file_name)
+				create output_file.make (output_file_name)
+				if output_file.exists then
+					output_file.delete
+				end
+				deletion_successful := True
 
 					-- Set attributes of generated executable.
 				if System.msil_generation_type.is_equal (dll_type) then
@@ -128,7 +146,14 @@ feature -- Generation
 				if not is_assembly_loaded or not is_error_available then
 					Error_handler.insert_error (create {IL_ERROR}.make_com_error)
 				else
-					Error_handler.insert_error (create {IL_ERROR}.make (il_generator.last_error))
+					if deletion_successful then
+						Error_handler.insert_error (create {IL_ERROR}.make (il_generator.last_error))
+					else
+						check
+							file_name_not_void: file_name /= Void
+						end
+						Error_handler.insert_error (create {IL_ERROR}.make_output_in_use (file_name))
+					end
 				end
 				retried := True
 				retry

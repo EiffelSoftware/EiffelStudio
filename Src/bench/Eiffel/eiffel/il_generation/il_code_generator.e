@@ -258,7 +258,7 @@ feature -- Generation settings
 
 feature -- Generation Structure
 
-	start_assembly_generation (assembly_name, file_name: STRING) is
+	start_assembly_generation (assembly_name, file_name, location: STRING) is
 			-- Create Assembly with `name'.
 		require
 			not_started: not assembly_generation_started
@@ -266,14 +266,10 @@ feature -- Generation Structure
 			assembly_name_not_empty: not assembly_name.is_empty
 			file_name_not_void: file_name /= Void
 			file_name_not_empty: not file_name.is_empty
+			location_not_void: location /= Void
+			location_not_empty: not location.is_empty
 		do
-			if System.in_final_mode then
-				implementation.start_assembly_generation (assembly_name, file_name,
-					(create {PROJECT_CONTEXT}).Final_generation_path)
-			else
-				implementation.start_assembly_generation (assembly_name, file_name,
-					(create {PROJECT_CONTEXT}).Workbench_generation_path)
-			end
+			implementation.start_assembly_generation (assembly_name, file_name, location)
 			assembly_generation_started := True
 		ensure
 			assembly_generation_started: assembly_generation_started

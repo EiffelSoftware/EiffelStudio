@@ -50,9 +50,26 @@ feature -- Register and code generation
 		end;
 
 	print_register is
+		local
+			inlined_feature: INLINED_FEAT_B
+			current_type: CL_TYPE_I
+			current_reg: REGISTRABLE
 		do
 			--Context.current_register.print_register
-			System.remover.inliner.inlined_feature.current_reg.print_register
+			--System.remover.inliner.inlined_feature.current_reg.print_register
+			inlined_feature := System.remover.inliner.inlined_feature
+
+			current_type := Context.current_type
+			current_reg := Context.inlined_current_register
+
+			Context.set_current_type (inlined_feature.caller_type)
+			Context.set_inlined_current_register (Void)
+
+			inlined_feature.current_reg.print_register
+
+			Context.set_current_type (current_type)
+			Context.set_inlined_current_register (current_reg)
+
 		end;
 
 	register_name: STRING is

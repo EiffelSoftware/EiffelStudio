@@ -112,6 +112,32 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
+	system_directory: STRING is
+			-- Path of the Windows system directory
+		local
+			a: ANY
+		do
+			!! Result.make (cwin_get_system_directory (default_pointer, 0))
+			Result.fill_blank
+			a := Result.to_c
+			Result.head (cwin_get_system_directory ($a, Result.count))
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	windows_directory: STRING is
+			-- Path of the Windows directory
+		local
+			a: ANY
+		do
+			!! Result.make (cwin_get_windows_directory (default_pointer, 0))
+			Result.fill_blank
+			a := Result.to_c
+			Result.head (cwin_get_windows_directory ($a, Result.count))
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature {NONE} -- Implementation
 
 	wr_main_args: WEL_MAIN_ARGUMENTS is
@@ -174,10 +200,27 @@ feature {NONE} -- Externals
 		end
 
 	cwin_output_debug_string (s: POINTER) is
+			-- SDK OutputDebugString
 		external
 			"C [macro <wel.h>] (LPCSTR)"
 		alias
 			"OutputDebugString"
+		end
+
+	cwin_get_system_directory (buffer: POINTER; size: INTEGER): INTEGER is
+			-- SDK GetSystemDirectory
+		external
+			"C [macro <wel.h>] (LPSTR, UINT): EIF_INTEGER"
+		alias
+			"GetSystemDirectory"
+		end
+
+	cwin_get_windows_directory (buffer: POINTER; size: INTEGER): INTEGER is
+			-- SDK GetWindowsDirectory
+		external
+			"C [macro <wel.h>] (LPSTR, UINT): EIF_INTEGER"
+		alias
+			"GetWindowsDirectory"
 		end
 
 	cwel_is_win32: BOOLEAN is

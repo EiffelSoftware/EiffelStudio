@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			implementation.set_interface (Current)
 		end
 
-	make_from_file (par: EV_PIXMAPABLE; file_name: STRING) is
+	make_from_file (file_name: STRING) is
 			-- Load the pixmap described in 'file_name'.
 			-- If the file does not exist, an exception is
 			-- raised, (but the pixmap object is created 

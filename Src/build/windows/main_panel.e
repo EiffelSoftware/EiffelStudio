@@ -5,10 +5,7 @@ inherit
 	PIXMAPS;
 	WIDGET_NAMES;
 	WINDOWS
-	LICENCE_COMMAND
-		redefine
-			cancel_request
-		end
+	LICENCE_COMMAND;
 	COMMAND_ARGS;
 	SHARED_CONTEXT;
 	CONSTANTS
@@ -231,24 +228,6 @@ feature {TRANSPORTER, TRANSPORTER_I}
 		do
 		end
 	
-feature
-
-	cancel_request (arg: ANY) is
-		local
-			t: TOGGLE_B
-		do
-			t ?= arg
-			if t /= Void then
-				t.remove_value_changed_action(current, t)
-				if t.state then t.disarm else t.arm end
-				t.add_value_changed_action(current, t)
-			end
-		end
-
-	continue_after_popdown (box: MESSAGE_D ok: BOOLEAN) is
-		do
-		end
-
 feature {INTERFACE_B}
 
 	hide_interface is

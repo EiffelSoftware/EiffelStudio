@@ -135,39 +135,11 @@ feature -- Access
 				
 				-- Now execute the deferred building.	
 			deferred_builder.build
-			
-			
-				-- Now we must rename the objects, as if they were created with names, we need to
-				-- make sure that the names are not repeated.
-			object_handler.recursive_do_all (Result, agent ensure_names_unique (?))
+
 		ensure
 			result_not_void: Result /= Void
 		end
 		
-	ensure_names_unique (an_object: GB_OBJECT) is
-			-- Ensure that name of `an_object' is unique, and does not
-			-- clash with any feature names also.
-		local
-			temp_name, original_name: STRING
-			counter: INTEGER
-		do
-			if not an_object.name.is_empty then
-				from
-					original_name := an_object.name
-					temp_name := original_name
-					counter := 1
-				until
-					not object_handler.string_is_feature_name (temp_name, an_object) and
-					not object_handler.string_is_object_name (temp_name, an_object, False)
-				loop
-					temp_name := original_name + counter.out
-					counter := counter + 1
-				end
-				an_object.set_name (temp_name)	
-				an_object.layout_item.set_text (name_and_type_from_object (an_object))
-			end
-		end
-
 	root_element_type: STRING is
 			-- `Result' is type of root element.
 		do

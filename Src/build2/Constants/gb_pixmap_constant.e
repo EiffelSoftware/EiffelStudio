@@ -62,6 +62,7 @@ feature {GB_PIXMAP_SETTINGS_DIALOG}
 			directory := clone (a_directory)
 			filename := clone (a_filename)
 			is_absolute := absolute
+			create referers.make (4)
 		ensure
 			name_set: name.is_equal (a_name) and name /= a_name
 			value_set: value.is_equal (a_Value) and value /= a_value

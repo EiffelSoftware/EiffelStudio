@@ -29,6 +29,7 @@ feature -- Geometry
 	set_geometry is
 		do
 			set_width (Resources.history_wnd_width)
+			set_height (Resources.history_wnd_height)
 		end;
 	
 feature 
@@ -200,7 +201,7 @@ feature
 			end;
 			history_list.put_right (cmd);
 			history_list.forth;
-			list.put_right (cmd.name);
+			list.put_right (cmd);
 			list.forth;
 			set_unsaved;
 			select_item
@@ -328,7 +329,7 @@ feature -- Interface
 
 			undo_button.add_activate_action (Current, First);
 			redo_button.add_activate_action (Current, Second);
-			list.add_single_action (Current, Fourth);
+			list.add_click_action (Current, Fourth);
 			!!history_list.make;
 			set_saved;
 
@@ -349,7 +350,7 @@ feature -- Interface
 
 feature {NONE}
 
-	list: SCROLL_LIST;
+	list: SCROLLABLE_LIST;
 	row_column: ROW_COLUMN;
 	undo_button: PUSH_B;
 	redo_button: PUSH_B;

@@ -1,9 +1,11 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "EiffelVision pixmap. Mswindows implementation"
-	status: "See notice at end of class"
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "EiffelVision pixmap. Mswindows implementation for %
+				  %simple pixmap (not drawable, not self-displayable)"
+	status		: "See notice at end of class"
+	date		: "$Date$"
+	revision	: "$Revision$"
+	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 
 class
 	EV_PIXMAP_IMP
@@ -14,75 +16,14 @@ inherit
 			interface
 		end
 
-	EV_DRAWING_AREA_IMP
+	EV_PIXMAP_IMP_STATE
+
+	EXCEPTIONS
 		rename
-			dc as display_dc,
-			height as display_height,
-			width as display_width
+			raise as exception_raise,
+			class_name as exception_class_name
 		redefine
-			destroy,
-			clear,
-			clear_rectangle,
-			draw_point,
-			draw_text,
-			draw_segment,
-			draw_straight_line,
-			draw_arc,
-			draw_pixmap,
-			draw_rectangle,
-			draw_ellipse,
-			draw_polyline,
-			draw_pie_slice,
-			fill_rectangle,
-			fill_ellipse,
-			fill_polygon,
-			fill_pie_slice,
-			interface,
-			initialize,
-			set_size,
-			on_parented
-		end
-
-	EV_DRAWING_AREA_IMP
-		redefine
-			dc,
-			destroy,
-			width,
-			height,
-			clear,
-			clear_rectangle,
-			draw_point,
-			draw_text,
-			draw_segment,
-			draw_straight_line,
-			draw_arc,
-			draw_pixmap,
-			draw_rectangle,
-			draw_ellipse,
-			draw_polyline,
-			draw_pie_slice,
-			fill_rectangle,
-			fill_ellipse,
-			fill_polygon,
-			fill_pie_slice,
-			interface,
-			initialize,
-			set_size,
-			on_parented
-		select
-			dc,
-			width,
-			height
-		end
-
-	WEL_DIB_COLORS_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_RASTER_OPERATIONS_CONSTANTS
-		export
-			{NONE} all
+			default_create
 		end
 
 creation
@@ -90,24 +31,29 @@ creation
 
 feature {NONE} -- Initialization
 
-	--| We have the DC for drawing area, but we want that to be
-	--| the one for the pixmap, and redefine all primitives to apply
-	--| the updated bitmap-dc to the screen-dc.
+	make (an_interface: like interface) is
+			-- Create an empty drawing area.
+		do
+			base_make (an_interface)
+		end
 
 	initialize is
+			-- Initialize a default 1x1 pixmap.
 		local
 			s_dc: WEL_SCREEN_DC
-			m_dc: WEL_MEMORY_DC
 		do
 			create s_dc
 			s_dc.get
-			create internal_bitmap.make_compatible (s_dc, 1, 1)
-			create bitmap_dc.make_by_dc(s_dc)
-			bitmap_dc.select_bitmap (internal_bitmap)
+			create bitmap.make_compatible (s_dc, 1, 1)
 			s_dc.release
 
-			{EV_DRAWING_AREA_IMP} Precursor
+			width := 1
+			height := 1
+
+			is_initialized := True
 		end
+
+feature -- Loading/Saving
 
 	read_from_file (a_file: IO_MEDIUM) is
 			-- Load the pixmap described in 'file_name'. 
@@ -115,17 +61,24 @@ feature {NONE} -- Initialization
 			--|        an exception is raised.
 		local
 			dib: EV_WEL_DIB
+			s_dc: WEL_SCREEN_DC
 		do
-			create dib.make_by_stream (a_file)
-			bitmap_dc.select_palette (dib.palette)
-			create internal_bitmap.make_by_dib (
-				bitmap_dc, 
-				dib, 
-				Dib_rgb_colors
-				)
+			create s_dc
+			s_dc.get
 
-				-- Initialize the new device context
-			dc_to_reset := True
+			create dib.make_by_stream (a_file)
+			s_dc.select_palette (dib.palette)
+			create bitmap.make_by_dib (
+				s_dc, 
+				dib, 
+				Dib_colors_constants.Dib_rgb_colors
+				)
+			s_dc.unselect_palette
+			s_dc.release
+
+				-- Update width & height attributes.
+			width := bitmap.width
+			height := bitmap.height
 		end
 
 	read_from_named_file (file_name: STRING) is
@@ -136,34 +89,32 @@ feature {NONE} -- Initialization
 		local
 			filename_ptr: ANY
 		do
+				-- Disable invariant checking.
+			is_initialized := False
+
 			filename_ptr := file_name.to_c
 			c_ev_load_pixmap($Current, $filename_ptr, $update_fields)
 		end
 
 	update_fields(
-		error_code		: INTEGER; -- Loadpixmap_error_xxxx 
-		data_type		: INTEGER; -- Loadpixmap_hicon, ...
-		pixmap_width	: INTEGER; -- Height of the loaded pixmap
-		pixmap_height	: INTEGER; -- Width of the loaded pixmap
-		rgb_data		: POINTER; -- Pointer on a C memory zone
-		alpha_data		: POINTER; -- Pointer on a C memory zone
+		error_code		: INTEGER -- Loadpixmap_error_xxxx 
+		data_type		: INTEGER -- Loadpixmap_hicon, ...
+		pixmap_width	: INTEGER -- Height of the loaded pixmap
+		pixmap_height	: INTEGER -- Width of the loaded pixmap
+		rgb_data		: POINTER -- Pointer on a C memory zone
+		alpha_data		: POINTER -- Pointer on a C memory zone
 		) is
 			-- Callback function called from the C code by c_ev_load_pixmap.
 			-- 
 			-- See `read_from_named_file'
 			-- Exceptions "Unable to retrieve icon information",
 			--            "Unable to load the file"
-		require
-			valid_data_type: 
-				data_type = Loadpixmap_hicon or 
-				data_type = Loadpixmap_hbitmap or 
-				data_type = Loadpixmap_rgb_data or 
-				data_type = Loadpixmap_alpha_data
 		local
 			icon_info: WEL_ICON_INFO
 			dib: WEL_DIB
 			size_row: INTEGER
 			memory_dc: WEL_MEMORY_DC
+			s_dc: WEL_SCREEN_DC
 		do
 			if error_code = Loadpixmap_error_noerror then
 					-- No error while loading the file
@@ -174,7 +125,7 @@ feature {NONE} -- Initialization
 						-- retrieve the bitmap from the icon.
 					icon_info := icon.get_icon_info
 					if icon_info /= Void then
-						internal_bitmap := icon_info.color_bitmap
+						bitmap := icon_info.color_bitmap
 						mask_bitmap := icon_info.mask_bitmap
 					else
 						exception_raise ("Unable to retrieve icon information")
@@ -182,9 +133,9 @@ feature {NONE} -- Initialization
 				end
 
 				if data_type = Loadpixmap_hbitmap then
-					create internal_bitmap.make_by_pointer(rgb_data)
+					create bitmap.make_by_pointer(rgb_data)
 --| FIXME ARNAUD: see if the following lines are correct for the GC.
---					internal_bitmap.set_unshared
+--					bitmap.set_unshared
 					create mask_bitmap.make_by_pointer(alpha_data)
 --					mask_bitmap.set_unshared
 				end
@@ -195,11 +146,14 @@ feature {NONE} -- Initialization
 						rgb_data, 
 						size_row * pixmap_height + 40
 						)
-					create internal_bitmap.make_by_dib(
-						bitmap_dc, 
+					create s_dc
+					s_dc.get
+					create bitmap.make_by_dib(
+						s_dc, 
 						dib, 
-						Dib_rgb_colors
+						Dib_colors_constants.Dib_rgb_colors
 						)
+					s_dc.release
 					palette := dib.palette
 
 					size_row := 4 * ((pixmap_width * 1 + 31) // 32)
@@ -210,7 +164,7 @@ feature {NONE} -- Initialization
 					create memory_dc.make
 					create mask_bitmap.make_by_dib (
 						memory_dc, dib, 
-						Dib_rgb_colors
+						Dib_colors_constants.Dib_rgb_colors
 						)
 				end
 			else
@@ -218,33 +172,28 @@ feature {NONE} -- Initialization
 				exception_raise ("Unable to load the file")
 			end
 
-				-- Initialize the new device context
-			dc_to_reset := True
+				-- Update width & height
+			width := bitmap.width
+			height := bitmap.height
+			
+				-- Enable invariant checking again
+			is_initialized := True
 		end
 
 feature -- Access
 
-	dc: WEL_DC is
-			-- The device context of the control.
-		do
-			if not bitmap_dc.bitmap_selected then
-				bitmap_dc.select_bitmap(internal_bitmap)
-			end
-			Result := bitmap_dc
-		end
-
-	bitmap: WEL_BITMAP is
+	bitmap: WEL_BITMAP
 			-- Current bitmap used. Void if not initialized, not
 			-- Void otherwise (see Invariant at the end of class).
-		do
-			if bitmap_dc.bitmap_selected then	
-				bitmap_dc.unselect_bitmap
-			end
-			Result := internal_bitmap
-		end
 
 	mask_bitmap: WEL_BITMAP
 		-- Monochrome bitmap used as mask. Void if none.
+
+	has_mask: BOOLEAN is
+			-- Has the current pixmap a mask?
+		do
+			Result := mask_bitmap /= Void
+		end
 
 	icon: WEL_ICON
 		-- Current icon used. Void if none.
@@ -258,7 +207,7 @@ feature -- Access
 feature -- Status setting
 
 	set_with_buffer (a_buffer: STRING) is
-			-- Load pixmap data from `a_buffer' intoemory.
+			-- Load pixmap data from `a_buffer' into memory.
 		do
 			--|FIXME Implement
 			check
@@ -266,231 +215,37 @@ feature -- Status setting
 			end
 		end
 
-	stretch, stretch_image (new_width, new_height: INTEGER) is
+	stretch (new_width, new_height: INTEGER) is
 			-- Stretch the image to fit in size 
 			-- `new_width' by `new_height'.
 		local
-			s_dc				: WEL_SCREEN_DC
-			a_mask_bitmap_dc	: WEL_MEMORY_DC
-			old_bitmap_dc		: like bitmap_dc
-			old_mask_bitmap_dc	: WEL_MEMORY_DC
-			old_width			: INTEGER
-			old_height			: INTEGER
+			new_bitmap			: WEL_BITMAP
+			new_mask			: WEL_BITMAP
 			wel_rect			: WEL_RECT
 		do
-				-- Operation not possible on icons, so we convert..
-			convert_icon_to_bitmap
-			reset_dc(True)
+				-- Operation not possible on icons.
+			icon := Void	-- Stop using icons.
 
-				-- Retrieve the current values
-			old_bitmap_dc := bitmap_dc
-			old_width := width
-			old_height := height
-
-				-- create and assign a new bitmap & bitmap_dc
-			create bitmap_dc.make
-			create s_dc
-			s_dc.get
-			create internal_bitmap.make_compatible (
-				s_dc, 
-				new_width, 
+				-- Stretch the bitmap
+			bitmap := stretch_wel_bitmap (
+				bitmap,
+				new_width,
 				new_height
 				)
-			s_dc.release
-			bitmap_dc.select_bitmap (internal_bitmap)
 
-				-- Stretch the content of the old bitmap into the
-				-- new one
-			bitmap_dc.stretch_blt(
-				0, 							-- x dest.
-				0, 							-- y dest.
-				new_width,					-- width dest
-				new_height,					-- height dest
-				old_bitmap_dc, 				-- dc source
-				0,							-- x source
-				0, 							-- y source
-				old_width,					-- width source
-				old_height,					-- height source
-				Srccopy						-- copy mode
-				)
-
-				-- Initialize the new device context
-			bitmap_dc.set_background_opaque
-			bitmap_dc.set_background_transparent
-			reset_pen
-			reset_brush
-
-				-- Delete the old bitmap_dc.
-			old_bitmap_dc.delete
-			old_bitmap_dc := Void
-
-			------------------------------
-			-- Resize the mask (if any) --
-			------------------------------
+				-- Stretch the mask if any.
 			if mask_bitmap /= Void then
-				
-				-- Create the mask dc.
-				create old_mask_bitmap_dc.make
-				old_mask_bitmap_dc.select_bitmap(mask_bitmap)
-
-					-- create and assign a new bitmap & bitmap_dc
-				create a_mask_bitmap_dc.make
-				create mask_bitmap.make_compatible (
-					a_mask_bitmap_dc, 
-					new_width, 
+				mask_bitmap := stretch_wel_bitmap (
+					mask_bitmap,
+					new_width,
 					new_height
 					)
-				a_mask_bitmap_dc.select_bitmap (mask_bitmap)
-
-					-- Copy the content of the old bitmap into the
-					-- new one
-				a_mask_bitmap_dc.stretch_blt(
-					0,							-- x dest.
-					0,							-- y dest.
-					new_width,					-- width dest
-					new_height,					-- height dest
-					old_mask_bitmap_dc,			-- dc source
-					0,							-- x source
-					0,							-- y source
-					old_width,					-- width source
-					old_height,					-- height source
-					Srccopy						-- copy mode
-					)
-				a_mask_bitmap_dc.unselect_bitmap
-				a_mask_bitmap_dc.delete
-			end
-		
-				-- Set the dc to be reseted.
-			dc_to_reset := True
-			bitmap_dc.unselect_bitmap
-		end
-
-	set_size (new_width, new_height: INTEGER) is
-			-- Resize the current bitmap. If the new size
-			-- is smaller than the old one, the bitmap is
-			-- clipped.
-		local
-			s_dc				: WEL_SCREEN_DC
-			a_mask_bitmap_dc	: WEL_MEMORY_DC
-			old_bitmap_dc		: like bitmap_dc
-			old_mask_bitmap_dc	: WEL_MEMORY_DC
-			old_width			: INTEGER
-			old_height			: INTEGER
-			wel_rect			: WEL_RECT
-		do
-				-- Operation not possible on icons, so we convert..
-			convert_icon_to_bitmap
-			reset_dc(True)
-
-				-- Retrieve the current values
-			old_bitmap_dc := bitmap_dc
-			old_width := width
-			old_height := height
-
-				-- create and assign a new bitmap & bitmap_dc
-			create bitmap_dc.make
-			create s_dc
-			s_dc.get
-			create internal_bitmap.make_compatible (
-				s_dc, 
-				new_width, 
-				new_height
-				)
-			s_dc.release
-			bitmap_dc.select_bitmap (internal_bitmap)
-
-			if new_width > old_width or new_height > old_height then
-				-- Set the "new" pixels to the background color
-				create wel_rect.make(0, 0, new_width, new_height)
-				bitmap_dc.fill_rect(wel_rect, our_background_brush)
 			end
 
-				-- Copy the content of the old bitmap into the
-				-- new one
-			bitmap_dc.bit_blt(
-				0,							-- x dest.
-				0, 							-- y dest.
-				new_width.min(old_width),	-- width
-				new_height.min(old_height),	-- height
-				old_bitmap_dc, 				-- dc source
-				0, 							-- x source
-				0, 							-- y source
-				Srccopy						-- copy mode
-				)
-
-				-- Initialize the new device context
-			bitmap_dc.set_background_opaque
-			bitmap_dc.set_background_transparent
-			reset_pen
-			reset_brush
-
-				-- Delete the old bitmap_dc.
-			old_bitmap_dc.delete
-			old_bitmap_dc := Void
-
-			------------------------------
-			-- Resize the mask (if any) --
-			------------------------------
-			if mask_bitmap /= Void then
-				
-				-- Create the mask dc.
-				create old_mask_bitmap_dc.make
-				old_mask_bitmap_dc.select_bitmap(mask_bitmap)
-
-					-- create and assign a new bitmap & bitmap_dc
-				create a_mask_bitmap_dc.make
-				create mask_bitmap.make_compatible (
-					a_mask_bitmap_dc, 
-					new_width, 
-					new_height
-					)
-				a_mask_bitmap_dc.select_bitmap (mask_bitmap)
-
-					-- Fill in the mask with zeros...
-				a_mask_bitmap_dc.pat_blt(
-					0, 							-- x dest
-					0, 							-- y dest
-					new_width, 					-- width
-					new_height, 				-- height
-					Blackness					-- pat mode
-					)
-
-					-- Copy the content of the old bitmap into the
-					-- new one
-				a_mask_bitmap_dc.bit_blt(
-					0,							-- x dest.
-					0,							-- y dest.
-					new_width.min(old_width),	-- width
-					new_height.min(old_height),	-- height
-					old_mask_bitmap_dc,			-- dc source
-					0,							-- x source
-					0,							-- y source
-					Srccopy						-- copy mode
-					)
-			end
-		
-				-- Finally, call the precursor.
-			Precursor (new_width, new_height)
-
-				-- Set the dc to be reseted.
-			dc_to_reset := True
+				-- Update the width & height attributes
+			width := bitmap.width
+			height := bitmap.height
 		end
-
-feature -- Measurement
-
-	width: INTEGER is
-			-- Width of the pixmap.
-		do
-			Result := internal_bitmap.width
-		end
-
-	height: INTEGER is
-			-- Height of the pixmap.
-		do
-			Result := internal_bitmap.height
-		end
-
-feature -- Element change
 
 	set_transparent_color (value: EV_COLOR) is
 			-- Make `value' the new transparent color.
@@ -501,360 +256,69 @@ feature -- Element change
 			end
 		end
 
-	reset_dc(always_reset: BOOLEAN) is
-			-- Perform the reset of the dc.
-		do
-			if dc_to_reset and (in_container or always_reset) then
-				dc_to_reset := False
+feature -- Measurement
 
-				if bitmap_dc.palette_selected then
-					bitmap_dc.unselect_palette
-				end
-				if palette /= Void then
-					bitmap_dc.select_palette (palette)
-				end
-	
-				if bitmap_dc.bitmap_selected then
-					bitmap_dc.unselect_bitmap
-				end
-				bitmap_dc.select_bitmap (internal_bitmap)
+	width: INTEGER
+			-- Width of the pixmap.
 
-				bitmap_dc.set_background_opaque
-				bitmap_dc.set_background_transparent
-				reset_pen
-				reset_brush
-				update_display_bitmap := True
-			end
-		end
+	height: INTEGER
+			-- Height of the pixmap.
 
-feature {NONE} -- Internal states and Operations
+feature -- Delegated features
 
-	update_display is
-			-- Update the screen.
-		do
-				-- If the bitmap is exposed, then ask for
-				-- redrawing it (`invalidate' causes
-				-- `paint_bitmap' to be called)
-			if parent /= Void then
-				invalidate
-			end
-			update_display_bitmap := True
-		end
-
-	update_display_bitmap: BOOLEAN
-			-- Should we update the temporary bitmap used
-			-- for display.
-
-	dc_to_reset: BOOLEAN
-			-- Should we perform a reset of the dc before
-			-- drawing?
-
-	in_container: BOOLEAN
-			-- Is the pixmap in a container?
-	
-	on_parented is
-			-- `Current' has just been added to a container
-		do
-			convert_icon_to_bitmap
-			dc_to_reset := True
-			in_container := True
-			reset_dc(True)
-			interface.expose_actions.extend (~paint_bitmap)
-		end
-
-feature {EV_PIXMAP_IMP} -- Implementation
-
-	bitmap_dc: WEL_MEMORY_DC
-			-- The DC of the bitmap in memory.
-
-	internal_bitmap: WEL_BITMAP
-			-- Current picture.
-
-	display_bitmap: WEL_BITMAP
-			-- Temporary bitmap used for display (in feature paint_bitmap)
-
-	display_mask_bitmap: WEL_BITMAP
-			-- Temporary bitmap used for display (in feature paint_bitmap)
-
-	display_bitmap_dc: WEL_MEMORY_DC
-			-- Temporary device context used for display
-			-- (in feature paint_bitmap)
-
-	display_mask_dc: WEL_MEMORY_DC
-			-- Temporary device context bitmap used for display
-			-- (in feature paint_bitmap)
-
-	interface: EV_PIXMAP
-
-	destroy is
-			-- Destroy actual object.
-		do
-			bitmap_dc.delete
-			screen_dc.delete
-		end
-
-	convert_icon_to_bitmap is
-			-- Stop using the WEL_ICON internally.
-			-- Drawing on a WEL_ICON is not possible so
-			-- we stop using icon.
-		do
-			if icon /= Void then
-				dc_to_reset := True		
-					-- Stop using the icon...
-				icon := Void
-			end	
-		end
-
-	paint_bitmap (a_x, a_y, a_width, a_height: INTEGER) is
-			-- Paint the bitmap onto the screen (i.e. the display_dc).
+	set_size (new_width, new_height: INTEGER) is
+			-- Resize the current bitmap. If the new size
+			-- is smaller than the old one, the bitmap is
+			-- clipped.
 		local
-			wel_rect: WEL_RECT
-			bitmap_top, bitmap_left: INTEGER
-				-- Coordinates of the top-left corner of the 
-				-- bitmap inside the drawn area
-			bitmap_right, bitmap_bottom: INTEGER
-				-- Coordinates of the bottom-right corner of the
-				--- bitmap inside the drawn area
-			bitmap_width, bitmap_height: INTEGER
-			window_width, window_height: INTEGER
+			old_interface: like interface
 		do
-			reset_dc(False)
-			bitmap_dc.select_bitmap(internal_bitmap)
-
-				-- Compute usefull constants
-			bitmap_height := height
-			bitmap_width := width
-			window_width := display_width
-			window_height := display_height
-			bitmap_left := (display_width - bitmap_width) // 2
-			bitmap_top := (display_height - bitmap_height) // 2
-			bitmap_right := bitmap_left + bitmap_width
-			bitmap_bottom := bitmap_top + bitmap_height
-						
-				-- Draw the bitmap (If it is larger than the displayed
-				-- area, it will be clipped by Windows.
-			if icon /= Void then
-					-- Erase the background (otherwise we cannot 
-					-- apply the mask
-				create wel_rect.make (
-					bitmap_left, 
-					bitmap_top, 
-					bitmap_right, 
-					bitmap_bottom
-					)
-				display_dc.fill_rect(
-					wel_rect, 
-					our_background_brush
-					)
-
-				display_dc.draw_icon(
-					icon, 
-					bitmap_left, 
-					bitmap_top
-					)
-			elseif mask_bitmap /= Void then
-					-- Create the mask and image used for display. 
-					-- They are different than the real image because 
-					-- we need to apply logical operation in order 
-					-- to display the masked bitmap.
-				if display_bitmap = Void or 
-				   display_mask_bitmap = Void or 
-				   update_display_bitmap then
-					create display_mask_bitmap.make_by_bitmap(mask_bitmap)
-					create display_mask_dc.make
-					--_by_dc(display_dc)
-					display_mask_dc.select_bitmap(display_mask_bitmap)
-					display_mask_dc.pat_blt(
-						0, 
-						0, 
-						bitmap_width, 
-						bitmap_height, 
-						Dstinvert
-						)
-
-					create display_bitmap.make_by_bitmap(internal_bitmap)
-					create display_bitmap_dc.make_by_dc(display_dc)
-					display_bitmap_dc.select_bitmap(display_bitmap)
-					display_bitmap_dc.bit_blt (
-						0, 
-						0, 
-						bitmap_width, 
-						bitmap_height, 
-						display_mask_dc, 
-						0, 
-						0, 
-						Srcand
-						)
-
-					update_display_bitmap := False
-				end
-
-					-- Erase the background (otherwise we cannot apply 
-					-- the mask
-				create wel_rect.make (
-					bitmap_left, 
-					bitmap_top, 
-					bitmap_right, 
-					bitmap_bottom
-					)
-				display_dc.fill_rect(
-					wel_rect, 
-					our_background_brush
-					)
-
-				display_dc.bit_blt (
-					bitmap_left, 
-					bitmap_top, 
-					bitmap_width, 
-					bitmap_height, 
-					display_mask_dc, 
-					0, 
-					0, 
-					Maskpaint
-					)
-
-				display_dc.bit_blt (
-					bitmap_left, 
-					bitmap_top,
-					bitmap_width, 
-					bitmap_height, 
-					display_bitmap_dc, 
-					0, 
-					0, 
-					Srcpaint
-					)
-			else
-				display_dc.bit_blt (
-					bitmap_left, 
-					bitmap_top, 
-					bitmap_width, 
-					bitmap_height, 
-					bitmap_dc, 
-					0, 
-					0, 
-					Srccopy
-					)
-			end
-			
-
-				--|  If the displayed area is larger than the bitmap, 
-				--|  we erase the background that is outside the bitmap
-				--|  (i.e: AREA 1, 2, 3 & 4)
-				--|
-				--|  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-				--|  X                             X
-				--|  X          AREA 1             X
-				--|  X                             X
-				--|  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-				--|  X         X         X         X
-				--|  X AREA 3  X BITMAP  X  AREA 4 X
-				--|  X         X         X         X
-				--|  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-				--|  X                             X
-				--|  X          AREA 2             X
-				--|  X                             X
-				--|  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
-			create wel_rect.make (0, 0, 0, 0)
-				-- fill AREA 1
-			if bitmap_top > 0 then
-				wel_rect.set_rect (
-					0, 
-					0, 
-					window_width, 
-					bitmap_top
-					)
-				display_dc.fill_rect(wel_rect, our_background_brush)
-			end
-
-				-- fill AREA 2
-			if bitmap_bottom < window_height then
-				wel_rect.set_rect (
-					0, 
-					bitmap_bottom, 
-					window_width, 
-					window_height
-					)
-				display_dc.fill_rect(wel_rect, our_background_brush)
-			end
-
-				-- fill AREA 3
-			if bitmap_left > 0 then
-				wel_rect.set_rect (
-					0, 
-					bitmap_top, 
-					bitmap_left, 
-					bitmap_bottom
-					)
-				display_dc.fill_rect(wel_rect, our_background_brush)
-			end
-
-				-- fill AREA 4
-			if bitmap_right < window_width then
-				wel_rect.set_rect (
-					bitmap_right, 
-					bitmap_top, 
-					window_width, 
-					bitmap_bottom
-					)
-				display_dc.fill_rect(wel_rect, our_background_brush)
-			end
+			promote_to_drawable
+			interface.implementation.set_size (new_width, new_height)
 		end
-
-feature -- Drawing primitives
 
 	clear is
-			-- Call precursor and apply bitmap.
+			-- Erase `Current' with `background_color'.
 		do
-			convert_icon_to_bitmap
-			reset_dc(False)
-			Precursor
-			update_display
+			promote_to_drawable
+			interface.implementation.clear
 		end
 
 	clear_rectangle (x1, y1, x2, y2: INTEGER) is
-			-- Call precursor and apply bitmap.
+			-- Erase rectangle (`x1, `y1) - (`x2', `y2') with
+			-- `background_color'.
 		do
-			convert_icon_to_bitmap
-			reset_dc(False)
-			Precursor (x1, y1, x2, y2)
-			update_display
+			promote_to_drawable
+			interface.implementation.clear_rectangle (x1, y1, x2, y2)
 		end
 
 	draw_point (a_x, a_y: INTEGER) is
-			-- Call precursor and apply bitmap.
+			-- Draw point at (`x', 'y').
 		do
-			convert_icon_to_bitmap
-			reset_dc(False)
-			Precursor (a_x, a_y)
-			update_display
+			promote_to_drawable
+			interface.implementation.draw_point (a_x, a_y)
 		end
 
 	draw_text (a_x, a_y: INTEGER; a_text: STRING) is
-			-- Call precursor and apply bitmap.
+			-- Draw `a_text' at (`x', 'y') using `font'.
 		do
-			convert_icon_to_bitmap
-			reset_dc(False)
-			Precursor (a_x, a_y, a_text)
-			update_display
+			promote_to_drawable
+			interface.implementation.draw_text (a_x, a_y, a_text)
 		end
 
 	draw_segment (x1, y1, x2, y2: INTEGER) is
-			-- Call precursor and apply bitmap.
+			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
 		do
-			convert_icon_to_bitmap
-			reset_dc(False)
-			Precursor (x1, y2, x2, y2)
-			update_display
+			promote_to_drawable
+			interface.implementation.draw_segment (x1, y1, x2, y2)
 		end
 
 	draw_straight_line (x1, y1, x2, y2: INTEGER) is
-			-- Call precursor and apply bitmap.
+			-- Draw infinite straight line through (`x1', 'y1') and 
+			-- (`x2', 'y2').
 		do
-			convert_icon_to_bitmap
-			reset_dc(False)
-			Precursor (x1, y1, x2, y2)
-			update_display
+			promote_to_drawable
+			interface.implementation.draw_straight_line (x1, y1, x2, y2)
 		end
 
 	draw_arc (
@@ -865,37 +329,54 @@ feature -- Drawing primitives
 		a_start_angle		: REAL
 		an_aperture			: REAL
 		) is
-			-- Call precursor and apply bitmap.
+			-- Draw a part of an ellipse centered on (`x', 'y') with
+			-- size `a_vertical_radius' and `a_horizontal_radius'.
+			-- Start at `a_start_angle' and stop at `a_start_angle'
+			-- + `an_aperture'.
+			-- Angles are measured in radians.
 		do
-			convert_icon_to_bitmap
-			reset_dc(False)
-			Precursor (
-				a_x, 
-				a_y, 
-				a_vertical_radius, 
-				a_horizontal_radius, 
-				a_start_angle, 
+			promote_to_drawable
+			interface.implementation.draw_arc (
+				a_x,
+				a_y,
+				a_vertical_radius,
+				a_horizontal_radius,
+				a_start_angle,
 				an_aperture
 				)
-			update_display
 		end
 
-	draw_pixmap (a_x, a_y: INTEGER; a_pixmap: EV_PIXMAP) is
-			-- Call precursor and apply bitmap.
+	draw_pixmap (
+		a_x					: INTEGER
+		a_y					: INTEGER
+		a_pixmap			: EV_PIXMAP
+		) is
+			-- Draw `a_pixmap' with upper-left corner on (`x', 'y').
 		do
-			convert_icon_to_bitmap
-			reset_dc(False)
-			Precursor (a_x, a_y, a_pixmap)
-			update_display
+			promote_to_drawable
+			interface.implementation.draw_pixmap (
+				a_x,
+				a_y,
+				a_pixmap
+				)
 		end
 
-	draw_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
-			-- Call precursor and apply bitmap.
+	draw_rectangle (
+		a_x					: INTEGER
+		a_y					: INTEGER
+		a_width				: INTEGER
+		a_height			: INTEGER
+		) is
+			-- Draw rectangle with upper-left corner on (`x', 'y')
+			-- with size `a_width' and `a_height'.
 		do
-			convert_icon_to_bitmap
-			reset_dc(False)
-			Precursor (a_x, a_y, a_width, a_height)
-			update_display
+			promote_to_drawable
+			interface.implementation.draw_rectangle (
+				a_x,
+				a_y,
+				a_width,
+				a_height
+				)
 		end
 
 	draw_ellipse (
@@ -904,21 +385,28 @@ feature -- Drawing primitives
 		a_vertical_radius	: INTEGER
 		a_horizontal_radius	: INTEGER
 		) is
-			-- Call precursor and apply bitmap.
+			-- Draw an ellipse centered on (`x', 'y') with
+			-- size `a_vertical_radius' and `a_horizontal_radius'.
 		do
-			convert_icon_to_bitmap
-			reset_dc(False)
-			Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius)
-			update_display
+			promote_to_drawable
+			interface.implementation.draw_ellipse (
+				a_x,
+				a_y,
+				a_vertical_radius,
+				a_horizontal_radius
+				)
 		end
 
-	draw_polyline (points: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is
-			-- Call precursor and apply bitmap.
+	draw_polyline (
+		points				: ARRAY [EV_COORDINATES]
+		is_closed			: BOOLEAN
+		) is
+			-- Draw line segments between subsequent points in
+			-- `points'. If `is_closed' draw line segment between first
+			-- and last point in `points'.
 		do
-			convert_icon_to_bitmap
-			reset_dc(False)
-			Precursor (points, is_closed)
-			update_display
+			promote_to_drawable
+			interface.implementation.draw_polyline (points, is_closed)
 		end
 
 	draw_pie_slice (
@@ -929,28 +417,41 @@ feature -- Drawing primitives
 		a_start_angle		: REAL 
 		an_aperture			: REAL
 		) is
-			-- Call precursor and apply bitmap.
+			-- Draw a part of an ellipse centered on (`x', 'y') with
+			-- size `a_vertical_radius' and `a_horizontal_radius'.
+			-- Start at `a_start_angle' and stop at `a_start_angle' + 
+			-- `an_aperture'.
+			-- The arc is then closed by two segments through (`x', 'y').
+			-- Angles are measured in radians.
 		do
-			convert_icon_to_bitmap
-			reset_dc(False)
-			Precursor (
-				a_x, 
-				a_y, 
-				a_vertical_radius, 
-				a_horizontal_radius, 
-				a_start_angle, 
+			promote_to_drawable
+			interface.implementation.draw_pie_slice (
+				a_x,
+				a_y,
+				a_vertical_radius,
+				a_horizontal_radius,
+				a_start_angle,
 				an_aperture
 				)
-			update_display
 		end
 
-	fill_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
-			-- Call precursor and apply bitmap.
+	fill_rectangle (
+		a_x					: INTEGER
+		a_y					: INTEGER
+		a_width				: INTEGER
+		a_height			: INTEGER
+		) is
+			-- Draw rectangle with upper-left corner on (`x', 'y')
+			-- with size `a_width' and `a_height'. Fill with 
+			-- `background_color'.
 		do
-			convert_icon_to_bitmap
-			reset_dc(False)
-			Precursor (a_x, a_y, a_width, a_height)
-			update_display
+			promote_to_drawable
+			interface.implementation.fill_rectangle (
+				a_x,
+				a_y,
+				a_width,
+				a_height
+				)
 		end
 
 	fill_ellipse (
@@ -959,21 +460,27 @@ feature -- Drawing primitives
 		a_vertical_radius	: INTEGER
 		a_horizontal_radius	: INTEGER
 		) is
-			-- Call precursor and apply bitmap.
+			-- Draw an ellipse centered on (`x', 'y') with
+			-- size `a_vertical_radius' and `a_horizontal_radius'.
+			-- Fill with `background_color'.
 		do
-			convert_icon_to_bitmap
-			reset_dc(False)
-			Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius)
-			update_display
+			promote_to_drawable
+			interface.implementation.fill_ellipse (
+				a_x,
+				a_y,
+				a_vertical_radius,
+				a_horizontal_radius
+				)
 		end
 
-	fill_polygon (points: ARRAY [EV_COORDINATES]) is
-			-- Call precursor and apply bitmap.
+	fill_polygon (
+		points				: ARRAY [EV_COORDINATES]
+		) is
+			-- Draw line segments between subsequent points in `points'.
+			-- Fill with `background_color'.
 		do
-			convert_icon_to_bitmap
-			reset_dc(False)
-			Precursor (points)
-			update_display
+			promote_to_drawable
+			interface.implementation.fill_polygon (points)
 		end
 
 	fill_pie_slice (
@@ -984,65 +491,663 @@ feature -- Drawing primitives
 		a_start_angle		: REAL
 		an_aperture			: REAL
 		) is
-			-- Call precursor and apply bitmap.
+			-- Draw a part of an ellipse centered on (`x', 'y') with
+			-- size `a_vertical_radius' and `a_horizontal_radius'.
+			-- Start at `a_start_angle' and stop at `a_start_angle'
+			-- + `an_aperture'.
+			-- The arc is then closed by two segments through (`x', 'y').
+			-- Angles are measured in radians. Fill with `background_color'.
 		do
-			convert_icon_to_bitmap
-			reset_dc(False)
-			Precursor (
-				a_x, 
-				a_y, 
-				a_vertical_radius, 
-				a_horizontal_radius, 
-				a_start_angle, 
+			promote_to_drawable
+			interface.implementation.fill_pie_slice (
+				a_x,
+				a_y,
+				a_vertical_radius,
+				a_horizontal_radius,
+				a_start_angle,
 				an_aperture
 				)
-			update_display
+			end
+
+	clip_area: EV_RECTANGLE is
+		do
+				-- Simple pixmap => default drawing state.
+			Result := Void
 		end
 
-feature -- Duplication
+	dashed_line_style: BOOLEAN is
+			-- Are lines drawn dashed?
+		do
+				-- Simple pixmap => default drawing state.
+			Result := False
+		end
 
-	copy_pixmap (other: EV_PIXMAP) is
+	disable_dashed_line_style is
+			-- Draw lines solid.
+		do
+			promote_to_drawable
+			interface.implementation.disable_dashed_line_style
+		end
+
+	drawing_mode: INTEGER is
+			-- Logical operation on pixels when drawing.
+		do
+				-- Simple pixmap => default drawing state.
+			Result := Ev_drawing_mode_copy
+		end
+
+	enable_dashed_line_style is
+			-- Draw lines dashed.
+		do
+			promote_to_drawable
+			interface.implementation.enable_dashed_line_style
+		end
+
+	font: EV_FONT is
+			-- Character appearance.
+		do
+				-- Simple pixmap => default drawing state.
+			create Result
+		end
+
+	line_width: INTEGER is
+			-- Line thickness.
+		do
+				-- Simple pixmap => default drawing state.
+			Result := 1
+		end
+
+	remove_clip_area is
+			-- Do not apply any clipping.
+		do
+			promote_to_drawable
+			interface.implementation.remove_clip_area
+		end
+
+	remove_tile is
+			-- Do not apply a tile when filling.
+		do
+			promote_to_drawable
+			interface.implementation.remove_tile
+		end
+
+	set_clip_area (an_area: EV_RECTANGLE) is
+			-- Set area which will be refreshed.
+		do
+			promote_to_drawable
+			interface.implementation.set_clip_area (an_area)
+		end
+
+	set_drawing_mode (a_mode: INTEGER) is
+			-- Set drawing mode to `a_logical_mode'.
+		do
+			promote_to_drawable
+			interface.implementation.set_drawing_mode (a_mode)
+		end
+
+	set_font (a_font: EV_FONT) is
+			-- Set `font' to `a_font'.
+		do
+			promote_to_drawable
+			interface.implementation.set_font (a_font)
+		end
+
+	set_line_width (a_width: INTEGER) is
+			-- Assign `a_width' to `line_width'.
+		do
+			promote_to_drawable
+			interface.implementation.set_line_width (a_width)
+		end
+
+	set_tile (a_pixmap: EV_PIXMAP) is
+			-- Set tile used to fill figures.
+			-- Set to Void to use `background_color' to fill.
+		do
+			promote_to_drawable
+			interface.implementation.set_tile (a_pixmap)
+		end
+
+	tile: EV_PIXMAP is
+			-- Pixmap that is used to instead of background_color.
+			-- If set to Void, `background_color' is used to fill.
+		do
+				-- Simple implementation => no tile.
+			Result := Void
+		end
+
+	disable_capture is
+            -- Ungrab the user input.
+		local
+			new_imp: EV_PIXMAP_IMP_WIDGET 
+		do
+			promote_to_widget
+			new_imp ?= interface.implementation
+			new_imp.disable_capture
+		end
+
+	disable_transport is
+			-- Deactivate pick/drag and drop mechanism.
+		do
+			promote_to_widget
+			interface.implementation.disable_transport
+		end
+
+	draw_rubber_band is
+			-- Erase previously drawn rubber band.
+			-- Draw a rubber band between initial pick point and cursor.
+		do
+			promote_to_widget
+			interface.implementation.draw_rubber_band
+		end
+
+	enable_capture is
+            -- Grab the user input.
+		local
+			new_imp: EV_PIXMAP_IMP_WIDGET
+		do
+			promote_to_widget
+			new_imp ?= interface.implementation
+			new_imp.enable_capture
+		end
+
+	enable_transport is
+            -- Activate pick/drag and drop mechanism.
+		local
+			new_imp: EV_PIXMAP_IMP_WIDGET
+		do
+			promote_to_widget
+			new_imp ?= interface.implementation
+			new_imp.enable_transport
+		end
+
+	end_transport (
+			a_x: INTEGER
+			a_y: INTEGER
+			a_button: INTEGER
+		) is
+			-- Terminate the pick and drop mechanism.
+		do
+			promote_to_widget
+			interface.implementation.end_transport(
+				a_x,
+				a_y,
+				a_button
+				)
+		end
+
+	erase_rubber_band is
+			-- Erase previously drawn rubber band.
+		do
+			promote_to_widget
+			interface.implementation.erase_rubber_band
+		end
+
+	pointed_target: EV_PICK_AND_DROPABLE is
+			-- Target at mouse position
+		do
+			promote_to_widget
+			Result := interface.implementation.pointed_target
+		end
+
+	set_pointer_style (c: EV_CURSOR) is
+			-- Set `c' as new cursor pixmap
+		local
+			new_imp: EV_PIXMAP_IMP
+		do
+			promote_to_widget
+			new_imp ?= interface.implementation
+			new_imp.set_pointer_style(c)
+		end
+
+	start_transport (
+			a_x: INTEGER
+			a_y: INTEGER
+			a_button: INTEGER
+			a_x_tilt: DOUBLE
+			a_y_tilt: DOUBLE
+			a_pressure: DOUBLE
+			a_screen_x: INTEGER
+			a_screen_y: INTEGER
+		) is
+			-- Start a pick and drop transport.
+		do
+			promote_to_widget
+			interface.implementation.start_transport (
+				a_x,
+				a_y,
+				a_button,
+				a_x_tilt,
+				a_y_tilt,
+				a_pressure,
+				a_screen_x,
+				a_screen_y
+				)
+		end
+
+	background_color: EV_COLOR is
+			-- Color used for erasing of canvas.
+			-- Default: white.
+		do
+				-- Returns default background color.
+			create Result.make_with_rgb (1, 1, 1)
+		end
+
+	dimensions_set (new_width: INTEGER; new_height: INTEGER): BOOLEAN is
+			-- Check if the dimensions of the widget are set to 
+			-- the values given or the minimum values possible 
+			-- for that widget.
+		obsolete "don't use it"
+		do
+			promote_to_widget
+			Result := interface.implementation.dimensions_set (
+				new_width,
+				new_height
+				)
+		end
+
+	disable_sensitive is
+			-- Disable sensitivity to user input events.
+		do
+			promote_to_widget
+			interface.implementation.disable_sensitive
+		end
+
+	enable_sensitive is
+			-- Enable sensitivity to user input events.
+		do
+			promote_to_widget
+			interface.implementation.enable_sensitive
+		end
+
+	foreground_color: EV_COLOR is
+		do
+				-- Returns default foreground color.
+			create Result.make_with_rgb (0, 0, 0)
+		end
+
+	has_focus: BOOLEAN is
+			-- Does widget have the keyboard focus?
+		do
+			Result := False
+		end
+
+	hide is
+			-- Request that `Current' not be displayed when its parent is.
+		do
+			promote_to_widget
+			interface.implementation.hide
+		end
+
+	is_displayed: BOOLEAN is
+			-- Is `Current' visible on the screen?
+			-- False if `Current' is entirely obscured by another window.
+		do
+				-- Simple pixmap => not in a container.
+			Result := False
+		end
+
+	is_sensitive: BOOLEAN is
+			-- Does `Current' respond to user input events.
+		do
+				-- Simple pixmap => not in a container.
+			Result := False
+		end
+
+	is_show_requested: BOOLEAN is
+			-- Will `Current' be displayed when its parent is?
+			-- See also `is_displayed'.
+		do
+				-- Simple pixmap => not in a container.
+			Result := False
+		end
+
+	minimum_dimensions_set (
+			new_width: INTEGER; 
+			new_height: INTEGER
+		): BOOLEAN is
+			-- Check if the dimensions of the widget are set to 
+			-- the values given or the minimum values possible 
+			-- for that widget.
+			-- When the widget is not shown, the result is 0
+		obsolete "don't use it"
+		do
+			promote_to_widget
+			Result := interface.implementation.minimum_dimensions_set (
+				new_width,
+				new_height
+				)
+		end
+
+	minimum_height: INTEGER is
+			-- Minimum vertical size in pixels.
+		do
+			Result := height
+		end
+
+	minimum_width: INTEGER is
+			-- Minimum horizontal size in pixels.
+		do
+			Result := width
+		end
+
+	parent: EV_CONTAINER is
+			-- Container widget that contains `Current'.
+			-- (Void if `Current' is not in a container)
+		do
+				-- Simple pixmap => not in a container.
+			Result := Void
+		end
+
+	pointer_position: EV_COORDINATES is
+            -- Position of the screen pointer relative to `Current'.
+		do
+				-- The pixmap is not on the screen, we
+				-- return (0,0)
+			create Result
+			Result.set (0, 0)
+		end
+
+	pointer_style: EV_CURSOR is
+			-- Cursor displayed when screen pointer is over current widget.
+		do
+			promote_to_widget
+			Result := interface.implementation.pointer_style
+		end
+
+	position_set (
+			new_x: INTEGER
+			new_y: INTEGER
+		): BOOLEAN is
+			-- Check if the dimensions of the widget are set to 
+			-- the values given or the minimum values possible 
+			-- for that widget.
+			-- When the widget is not shown, the result is -1
+		obsolete "don't use it"
+		do
+			promote_to_widget
+			Result := interface.implementation.position_set (
+				new_x,
+				new_y
+				)
+		end
+
+	remove_tooltip is
+			-- Set `tooltip' to `Void'.
+		do
+			promote_to_widget
+			interface.implementation.remove_tooltip
+		end
+
+	screen_x: INTEGER is
+			-- Horizontal offset relative to screen.
+		do
+			promote_to_widget
+			Result := interface.implementation.screen_x
+		end
+
+	screen_y: INTEGER is
+			-- Vertical offset relative to screen.
+		do
+			promote_to_widget
+			Result := interface.implementation.screen_y
+		end
+
+	set_background_color (a_color: EV_COLOR) is
+			-- Assign `a_color' to `background_color'.
+		do
+			promote_to_drawable
+			interface.implementation.set_background_color(a_color)
+		end
+
+	set_focus is
+			-- Grab keyboard focus.
+		do
+			promote_to_widget
+			interface.implementation.set_focus
+		end
+
+	set_foreground_color (a_color: EV_COLOR) is
+			-- Assign `a_color' to `foreground_color'
+		do
+			promote_to_drawable
+			interface.implementation.set_foreground_color(a_color)
+		end
+
+	set_minimum_height (a_minimum_height: INTEGER) is
+			-- Set the minimum vertical size to `a_minimum_height' in pixels.
+		do
+			promote_to_widget
+			interface.implementation.set_minimum_height(a_minimum_height)
+		end
+
+	set_minimum_size (
+			a_minimum_width: INTEGER
+			a_minimum_height: INTEGER
+		) is
+			-- Set the minimum horizontal size to `a_minimum_width' in pixels.
+			-- Set the minimum vertical size to `a_minimum_height' in pixels.
+		do
+			promote_to_widget
+			interface.implementation.set_minimum_size (
+				a_minimum_width,
+				a_minimum_height
+				)
+		end
+
+
+	set_minimum_width (a_minimum_width: INTEGER) is
+			-- Set the minimum horizontal size to `a_minimum_width' in pixels.
+		do
+			promote_to_widget
+			interface.implementation.set_minimum_width(a_minimum_width)
+		end
+
+	set_tooltip (a_text: STRING) is
+			-- Set `tooltip' to `a_text'.
+		do
+			promote_to_widget
+			interface.implementation.set_tooltip(a_text)
+		end
+
+	show is
+			-- Request that `Current' be displayed when its parent is.
+		do
+			promote_to_widget
+			interface.implementation.show
+		end
+
+	tooltip: STRING is
+			-- Text displayed when user moves mouse over widget.
+		do
+			promote_to_widget
+			Result := interface.implementation.tooltip
+		end
+
+	x_position: INTEGER is
+			-- Horizontal offset relative to parent `x_position' in pixels.
+		do
+			promote_to_widget
+			Result := interface.implementation.x_position
+		end
+
+	y_position: INTEGER is
+			-- Vertical offset relative to parent `y_position' in pixels.
+		do
+			promote_to_widget
+			Result := interface.implementation.y_position
+		end
+
+	on_parented is
+			-- `Current' has just been added to a container
+		do
+			promote_to_widget
+			interface.implementation.on_parented
+		end
+
+feature {EV_PIXMAP_I} -- Implementation
+
+	destroy is
+			-- Destroy actual object.
+		do
+				-- Turn off invariant checking.
+			is_initialized := False
+
+			bitmap.delete
+			bitmap := Void
+		end
+
+feature {EV_PIXMAP_I, EV_PIXMAP_IMP_STATE} -- Duplication
+
+	copy_pixmap (other_interface: EV_PIXMAP) is
 			-- Update `Current' to have same appearence as `other'.
 			-- (So as to satisfy `is_equal'.)
 		local
-			other_implementation: like Current
-			a_bitmap: WEL_BITMAP
+			simple_pixmap: EV_PIXMAP_IMP
+			other: EV_PIXMAP_IMP_STATE
 		do
-			other_implementation ?= other.implementation
-			bitmap_dc ?= other_implementation.bitmap_dc
-			create internal_bitmap.make_by_bitmap(other_implementation.bitmap)
-			create mask_bitmap.make_by_bitmap(other_implementation.mask_bitmap)
-			icon := other_implementation.icon
-			transparent_color := other_implementation.transparent_color
+			other ?= other_interface.implementation
+
+				-- Disable invariant checking
+			is_initialized := False
+
+			create bitmap.make_by_bitmap(other.bitmap)
+			if other.has_mask then
+				create mask_bitmap.make_by_bitmap(other.mask_bitmap)
+			end
+			simple_pixmap ?= other
+			if simple_pixmap /= Void then
+				icon := simple_pixmap.icon
+			end
+			transparent_color := other.transparent_color
+
+			width := bitmap.width
+			height := bitmap.height
+
+				-- Enable invariant checking
+			is_initialized := True
 		end
 
-feature -- Obsolete
+feature {NONE} -- Implementation
 
---|----------------------------------------------------------------------------
---| FIXME ARNAUD: To be removed after April 7th.
---|----------------------------------------------------------------------------
---	internal_dc: WEL_MEMORY_DC is
---		obsolete
---			"Use: dc"
---		do
---			Result := bitmap_dc
---		end
---
---	character_representation: ARRAY [CHARACTER] is
---			-- Return a representation of the pixmap in
---			-- an array of character.
---		local
---			info: WEL_BITMAP_INFO
---		do
---			create info.make_by_dc (bitmap_dc, internal_bitmap, Dib_rgb_colors)
---			Result := bitmap_dc.di_bits (
---				internal_bitmap,
---				0,
---				height,
---				info,
---				Dib_rgb_colors
---				)
---		end
+	promote_to_drawable is
+			-- Promote the current implementation to
+			-- EV_PIXMAP_IMP_DRAWABLE which allows
+			-- drawing operations on the pixmap.
+		local
+			drawable_pixmap: EV_PIXMAP_IMP_DRAWABLE
+		do
+			create drawable_pixmap.make_with_simple(Current)
+			interface.replace_implementation(drawable_pixmap)
+		end
+
+	promote_to_widget is
+			-- Promote the current implementation to
+			-- EV_PIXMAP_IMP_WIDGET which allows
+			-- drawing operations on the pixmap and
+			-- display on the screen.
+		local
+			widget_pixmap: EV_PIXMAP_IMP_WIDGET
+		do
+			create widget_pixmap.make_with_simple(Current)
+			interface.replace_implementation(widget_pixmap)
+		end
+
+	stretch_wel_bitmap(
+			old_bitmap	: WEL_BITMAP
+			new_width	: INTEGER
+			new_height	: INTEGER
+		): WEL_BITMAP is
+			-- Stretch `old_bitmap' to fit in size `new_width' by 
+			-- `new_height'. The resulting bitmap is stored into
+			-- `Result'
+		local
+			new_bitmap	: WEL_BITMAP
+			new_dc		: WEL_MEMORY_DC
+			old_dc		: WEL_MEMORY_DC
+			old_width	: INTEGER
+			old_height	: INTEGER
+			s_dc		: WEL_SCREEN_DC
+		do
+				-- Get a screen dc to create our temporary DCs
+			create s_dc
+			s_dc.get
+
+				-- Retrieve the current values
+			old_width := old_bitmap.width
+			old_height := old_bitmap.height
+			create old_dc.make_by_dc(s_dc)
+			old_dc.select_bitmap(old_bitmap)
+
+				-- create and assign a new bitmap & bitmap_dc
+			create new_dc.make_by_dc (s_dc)
+			create new_bitmap.make_compatible (
+				s_dc, 
+				new_width, 
+				new_height
+				)
+			new_dc.select_bitmap (new_bitmap)
+
+				-- Stretch the content of the old bitmap into the
+				-- new one
+			new_dc.stretch_blt(
+				0, 							-- x dest.
+				0, 							-- y dest.
+				new_width,					-- width dest
+				new_height,					-- height dest
+				old_dc, 					-- dc source
+				0,							-- x source
+				0, 							-- y source
+				old_width,					-- width source
+				old_height,					-- height source
+				Raster_operations_constants.Srccopy	-- copy mode
+				)
+
+				-- Clean up the DCs.
+			new_dc.unselect_bitmap
+			new_dc.delete
+			new_dc := Void	-- The GC can collect it.
+			old_dc.unselect_bitmap
+			old_dc.delete
+			old_dc := Void	-- The GC can collect it.
+			s_dc.release
+			s_dc := Void	-- The GC can collect it.
+
+			Result := new_bitmap
+		end
+
+feature {NONE} -- Constants
+
+	Loadpixmap_error_noerror: INTEGER is 0
+		-- No error
+
+	Loadpixmap_rgb_data: INTEGER is 0
+		-- Pointer on a DIB structure
+
+	Loadpixmap_hicon: INTEGER is 2
+		-- Pointer on a HICON handle
+
+	Loadpixmap_hbitmap: INTEGER is 3
+		-- Pointer on a HBITMAP handle
+
+	Dib_colors_constants: WEL_DIB_COLORS_CONSTANTS is
+			-- Class containing the DIB_COLORS constants
+		once
+			create Result
+		end
+
+	Raster_operations_constants: WEL_RASTER_OPERATIONS_CONSTANTS is
+			-- Class containing the RASTER_OPERATIONS constants
+		once
+			create Result
+		end
+
+feature {
+		EV_PIXMAP_IMP, 
+		EV_PIXMAP_IMP_DRAWABLE,
+		EV_PIXMAP_IMP_WIDGET
+		} -- Implementation
+
+	interface: EV_PIXMAP
 
 feature {NONE} -- Externals
 
@@ -1055,20 +1160,25 @@ feature {NONE} -- Externals
 			"C | %"load_pixmap.h%""
 		end
 
-	Loadpixmap_error_noerror: INTEGER is 0
-	Loadpixmap_rgb_data: INTEGER is 0
-	Loadpixmap_alpha_data: INTEGER is 1
-	Loadpixmap_hicon: INTEGER is 2
-	Loadpixmap_hbitmap: INTEGER is 3
-
 invariant
-	bitmap_not_void: is_initialized implies internal_bitmap /= Void
+	bitmap_not_void: 
+		is_initialized implies bitmap /= Void
+
+	valid_bitmap_width: 
+		is_initialized implies width = bitmap.width
+
+	valid_bitmap_height: 
+		is_initialized implies height = bitmap.height
 	
+	valid_mask_condition:
+		(has_mask implies mask_bitmap /= Void) and
+		(mask_bitmap /= Void implies has_mask)
+
 end -- class EV_PIXMAP_IMP
 
 --|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| EiffelVision2: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.
@@ -1087,101 +1197,10 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.28  2000/03/30 18:22:33  pichery
---| fixed compilation bug
---|
---| Revision 1.27  2000/03/30 17:41:14  pichery
---| Last commit before splitting the implementation into 2 or more differents
---| implementations.
---|
---| Revision 1.26  2000/03/29 06:58:58  pichery
---| Implemented `stretch'.
---| Fixed lots of bugs everywhere. Seems to start working smoothly now...
---|
---| Revision 1.24  2000/03/28 20:08:59  pichery
---| fixed compilation bug
---|
---| Revision 1.23  2000/03/28 19:18:27  pichery
---| - Implemented `set_size'
---| - Formatting
---|
---| Revision 1.22  2000/03/23 23:24:14  brendel
---| Renamed on_contained to on_parented.
---|
---| Revision 1.21  2000/03/20 23:18:02  pichery
---| - Entirely reviewed the implementation of pixmaps.
---| - Added mask notion
---| - Added ICON support (a pixmap can be internally stored as an HICON)
---| - Added multiple format loading (Currently supported under Windows: BMP,
---|   ICO & PNG)
---|
---| Revision 1.20  2000/02/25 01:07:51  pichery
---| Added a small trick to speed up the display of pixmaps under Windows.
---|
---| Revision 1.19  2000/02/24 05:06:35  pichery
---| Work on the Windows implementation of EV_PIXMAP. Some work remains but
---| the main part is done.
---|
---| Revision 1.18  2000/02/20 20:29:27  pichery
---| created a factory that build WEL objects (pens & brushes). This factory
---| keeps created objects into an hashtable in order to avoid multiple object
---| creation for the same pen or brush.
---| factory is here used to retrieve pens and brushes in drawing areas
---|
---| Revision 1.17  2000/02/19 06:57:54  manus
---| fixed broken fixme
---|
---| Revision 1.16  2000/02/19 05:45:01  oconnor
---| released
---|
---| Revision 1.15  2000/02/16 20:16:15  pichery
---| - implemented set_size for EV_PIXMAP under windows.
---|
---| Revision 1.14  2000/02/16 18:08:52  pichery
---| implemented the newly added features: redraw_rectangle, clear_and_redraw, 
---| clear_and_redraw_rectangle
---|
---| Revision 1.12.6.10  2000/01/29 01:05:04  brendel
---| Tweaked inheritance clause.
---|
---| Revision 1.12.6.9  2000/01/27 19:30:31  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.12.6.8  2000/01/21 23:20:08  brendel
---| Changed apply_pixmap to do nothing temporarily.
---|
---| Revision 1.12.6.7  2000/01/20 18:30:51  king
---| Changed export status of interface.
---| Fixed compiler error in character_representation.
---|
---| Revision 1.12.6.6  2000/01/20 18:01:46  king
---| Renamed internal_dc to bitmap_dc.
---| Updated with new EV_DRAWABLE.
---| Moved useless features to Obsolete clause at bottom.
---|
---| Revision 1.12.6.5  2000/01/19 17:56:28  king
---| Changed to comply with EV_DRAWABLE.
---|
---| Revision 1.12.6.4  2000/01/18 01:31:14  king
---| Removed old invariant.
---|
---| Revision 1.12.6.3  1999/12/22 19:26:37  rogers
---| added set_with_buffer and stretch, both are not yet implemented yet
---| though. read from_file now takes an IO_MEDIUM.
---|
---| Revision 1.12.6.2  1999/12/17 00:20:17  rogers
---| Altered to fit in with the review branch. Also altered to allow 
---| compilation. The last version commited to CVS would not compile at all. 
---| These changes have not been tested thoroughly.
---|
---| Revision 1.12.6.1  1999/11/24 17:30:36  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.12.2.4  1999/11/04 23:10:46  oconnor
---| updates for new color model, removed exists: not destroyed
---|
---| Revision 1.12.2.3  1999/11/02 17:20:10  oconnor
---| Added CVS log, redoing creation sequence
+--| Revision 1.29  2000/04/12 01:34:55  pichery
+--| New pixmap implementation.
+--| Use 3 differents states depending on
+--| what the user is doing with the pixmap.
 --|
 --|
 --|-----------------------------------------------------------------------------

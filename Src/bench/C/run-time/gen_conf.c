@@ -3131,7 +3131,7 @@ rt_public EIF_TYPE_ID eif_type_id (char *type_string)
 	result = compute_eif_type_id (n, type_string_array);
 
 		/* Free all the allocated memory */
-	for (i=0; i < n - 1; i++) {
+	for (i=0; i <= n - 1; i++) {
 		string_type = type_string_array [i];
 		free (string_type);
 	}

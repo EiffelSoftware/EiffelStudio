@@ -8,12 +8,6 @@
 
 /*------------------------------------------------------------------*/
 
-typedef unsigned    uint32;
-typedef int         int32;
-typedef short       int16;
-
-/*------------------------------------------------------------------*/
-
 static  char    *melt_path;
 static  FILE    *ifp, *bfp, *mfp;
 static  char    **melt;
@@ -1088,7 +1082,7 @@ static  void    print_dtype (uint32 type)
 			case SK_BIT:    fprintf (mfp," [BIT]"); break;
 			case SK_EXP:    fprintf (mfp,"ET %u", type & SK_DTYPE);
 
-							if (dtype <= dtype_max)
+							if ((dtype <= dtype_max) && (dtype_names [dtype] != NULL))
 								fprintf (mfp, " [%s]", dtype_names [dtype]);
 							else
 								fprintf (mfp, " [?]");
@@ -1096,7 +1090,7 @@ static  void    print_dtype (uint32 type)
 							break;
 			case SK_REF:    fprintf (mfp,"RT %u", type & SK_DTYPE);
 
-							if (dtype <= dtype_max)
+							if ((dtype <= dtype_max) && (dtype_names [dtype] != NULL))
 								fprintf (mfp, " [%s]", dtype_names [dtype]);
 							else
 								fprintf (mfp, " [?]");

@@ -168,7 +168,7 @@ rt_public void xinitint(void);			/* Initialization of the interpreter */
 rt_private void interpret(int flag, int where);	/* Run the interpreter */
 
 /* Feature call and/or access  */
-rt_public struct item *dynamic_eval(int fid, int stype, int is_extern, int is_precompiled, struct item* previous_otop);
+rt_public struct item *dynamic_eval(int fid, int stype, int is_extern, int is_precompiled, int is_basic_type, struct item* previous_otop);
 rt_private int icall(int fid, int stype, int is_extern, int ptype);					/* Interpreter dispatcher (in water) */
 rt_private int ipcall(int32 origin, int32 offset, int is_extern, int ptype);					/* Interpreter precomp dispatcher */
 rt_private void interp_access(int fid, int stype, uint32 type);			/* Access to an attribute */
@@ -236,6 +236,83 @@ rt_private char *rcsid =
 	"$Id$";
 #endif
 
+rt_public void metamorphose_top()
+{
+	EIF_REFERENCE volatile new_obj = NULL;
+	uint32 head_type;
+	register2 struct item * volatile last;	/* Last pushed value */
+	unsigned long stagval;
+	STACK_PRESERVE;			/* Stack contextual informations */
+	RTXD;					/* Store stack contexts */
+
+	dstart();					/* Get calling record */
+	SAVE(db_stack, dcur, dtop);	/* Save debugger stack */
+	SAVE(op_stack, scur, stop);	/* Save operation stack */
+
+	last = opop();
+	stagval = tagval;
+	head_type = last->type & SK_HEAD;
+	if (head_type != SK_BIT) {
+		switch (head_type) {
+		case SK_BOOL:
+			new_obj = RTLN(egc_bool_ref_dtype);
+			*new_obj = last->it_char;
+			break;
+		case SK_CHAR:	
+			new_obj = RTLN(egc_char_ref_dtype);
+			*new_obj = last->it_char;
+			break;
+		case SK_WCHAR:	
+			new_obj = RTLN(egc_wchar_ref_dtype);
+			*(EIF_WIDE_CHAR *) new_obj = last->it_wchar;
+			break;
+		case SK_INT8:
+			new_obj = RTLN(egc_int8_ref_dtype);
+			*(EIF_INTEGER_8 *) new_obj = last->it_int8;
+			break;
+		case SK_INT16:
+			new_obj = RTLN(egc_int16_ref_dtype);
+			*(EIF_INTEGER_16 *) new_obj = last->it_int16;
+			break;
+		case SK_INT32:
+			new_obj = RTLN(egc_int32_ref_dtype);
+			*(EIF_INTEGER_32 *) new_obj = last->it_int32;
+			break;
+		case SK_INT64:
+			new_obj = RTLN(egc_int64_ref_dtype);
+			*(EIF_INTEGER_64 *) new_obj = last->it_int64;
+			break;
+		case SK_FLOAT:
+			new_obj = RTLN(egc_real_ref_dtype);
+			*(EIF_REAL *) new_obj = last->it_float;
+			break;
+		case SK_DOUBLE:
+			new_obj = RTLN(egc_doub_ref_dtype);
+			*(EIF_DOUBLE *) new_obj = last->it_double;
+			break;
+		case SK_POINTER:
+			new_obj = RTLN(egc_point_ref_dtype);
+			*(char **) new_obj = last->it_ptr;
+			break;
+		case SK_REF:			/* Had to do this for bit operations */
+			new_obj = last->it_ref;
+			break;
+		default: 
+			eif_panic(MTC "illegal metamorphose type");
+		}
+		last = iget();
+		last->type = SK_REF;
+		last->it_ref = new_obj;
+	} else {
+		/* Bit metamorhose is a clone */
+		new_obj = b_clone(last->it_bit);
+		last = iget();
+		last->type = SK_REF;
+		last->it_ref = new_obj;
+	}
+	if (tagval != stagval)				/* If G.C calls melted dispose */
+		sync_registers(MTC scur, stop);
+}
 
 rt_public void xinterp(unsigned char *icval)
 {
@@ -1726,74 +1803,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_METAMORPHOSE\n");
 #endif 	
-		{	EIF_REFERENCE volatile new_obj = NULL;
-			uint32 head_type;
-			unsigned long stagval;
-
-			last = opop();
-			stagval = tagval;
-			head_type = last->type & SK_HEAD;
-			if (head_type != SK_BIT) {
-				switch (head_type) {
-				case SK_BOOL:
-					new_obj = RTLN(egc_bool_ref_dtype);
-					*new_obj = last->it_char;
-					break;
-				case SK_CHAR:	
-					new_obj = RTLN(egc_char_ref_dtype);
-					*new_obj = last->it_char;
-					break;
-				case SK_WCHAR:	
-					new_obj = RTLN(egc_wchar_ref_dtype);
-					*(EIF_WIDE_CHAR *) new_obj = last->it_wchar;
-					break;
-				case SK_INT8:
-					new_obj = RTLN(egc_int8_ref_dtype);
-					*(EIF_INTEGER_8 *) new_obj = last->it_int8;
-					break;
-				case SK_INT16:
-					new_obj = RTLN(egc_int16_ref_dtype);
-					*(EIF_INTEGER_16 *) new_obj = last->it_int16;
-					break;
-				case SK_INT32:
-					new_obj = RTLN(egc_int32_ref_dtype);
-					*(EIF_INTEGER_32 *) new_obj = last->it_int32;
-					break;
-				case SK_INT64:
-					new_obj = RTLN(egc_int64_ref_dtype);
-					*(EIF_INTEGER_64 *) new_obj = last->it_int64;
-					break;
-				case SK_FLOAT:
-					new_obj = RTLN(egc_real_ref_dtype);
-					*(EIF_REAL *) new_obj = last->it_float;
-					break;
-				case SK_DOUBLE:
-					new_obj = RTLN(egc_doub_ref_dtype);
-					*(EIF_DOUBLE *) new_obj = last->it_double;
-					break;
-				case SK_POINTER:
-					new_obj = RTLN(egc_point_ref_dtype);
-					*(char **) new_obj = last->it_ptr;
-					break;
-				case SK_REF:			/* Had to do this for bit operations */
-					new_obj = last->it_ref;
-					break;
-				default: 
-					eif_panic(MTC "illegal metamorphose type");
-				}
-				last = iget();
-				last->type = SK_REF;
-				last->it_ref = new_obj;
-			} else {
-				/* Bit metamorhose is a clone */
-				new_obj = b_clone(last->it_bit);
-				last = iget();
-				last->type = SK_REF;
-				last->it_ref = new_obj;
-			}
-			if (tagval != stagval)				/* If G.C calls melted dispose */
-				sync_registers(MTC scur, stop);
-		}
+		metamorphose_top();
 		break;
 
 	/*
@@ -4809,11 +4819,12 @@ rt_private void eif_interp_bit_operations (void)
  * Function calling routines
  */
 
-rt_public struct item *dynamic_eval(int fid, int stype, int is_extern, int is_precompiled, struct item* previous_otop)
+rt_public struct item *dynamic_eval(int fid, int stype, int is_extern, int is_precompiled, int is_basic_type, struct item* previous_otop)
 						/* Feature ID or offset if the feature is precompiled */
 						/* Static type (entity where feature is applied) */
 						/* Is it an external or an Eiffel feature */
 						/* Precompiled ? (0=no, other=yes) */
+						/* Is the call performed on a basic type? (INTEGER...) */
 	{
 	/* This is the debugger dispatcher for routine calls. It is called when
 	 * the user want to dynamically evaluate a feature. Depending on the
@@ -4845,7 +4856,10 @@ rt_public struct item *dynamic_eval(int fid, int stype, int is_extern, int is_pr
 	STACK_PRESERVE;
 	RTXD; /* declares the variables used to save the run-time stacks context */
 	RTLXD;
-	
+
+	if (is_basic_type)
+			/* We need to create a reference to the basic type on the fly */
+		metamorphose_top();
 	if (! is_precompiled) {
 		rout_id = Routids(stype)[fid];
 		CBodyId(body_id,rout_id,Dtype(otop()->it_ref));

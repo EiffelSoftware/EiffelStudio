@@ -211,8 +211,6 @@ feature {COMPILER_EXPORTER} -- Setting
 
 	reset_options is
 			-- Reset the option values of the class
-		local
-			c: like compiled_class
 		do
 debug
 	io.error.putstring ("reset_options: ");
@@ -228,7 +226,6 @@ end;
 			debug_level := No_debug;
 			visible_level := Visible_default;
 			dynamic_calls := No_dynamic;
-			c := compiled_class;
 			hidden := False
 		end;
 

@@ -16,8 +16,6 @@ inherit
 		end
 
 	EV_DRAWABLE_IMP
-		undefine
-			C
 		redefine
 			interface,
 			make,
@@ -65,7 +63,6 @@ feature {NONE} -- Initialization
 			set_c_object (C.gtk_event_box_new)
 			gtk_pixmap := C.gtk_pixmap_new (gdkpix, gdkmask)
 			C.gdk_pixmap_unref (gdkpix)
-
 			
 			C.gtk_container_add (c_object, gtk_pixmap)
 			C.gtk_widget_show (gtk_pixmap)

@@ -24,6 +24,9 @@ feature {NONE}
 	batch_cmd_name: STRING is "batch"
 
 	callers_cmd_name: STRING is "callers"
+	
+	c_compile_cmd_name: STRING is "c_compile"
+			-- Name of command launching C compilation
 
 	change_operator_cmd_name: STRING is "operator"
 

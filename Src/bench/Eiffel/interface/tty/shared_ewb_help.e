@@ -25,6 +25,8 @@ feature {NONE}
 
 	batch_help: STRING is "launch the compilation without user request"
 
+	c_compile_help: STRING is "launch C compilation if needed"
+
 	callers_help: STRING is "show the callers of a feature"
 
 	change_operator_help: STRING is "change the boolean operator"

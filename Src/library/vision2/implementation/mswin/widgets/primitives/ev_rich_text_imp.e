@@ -15,8 +15,6 @@ inherit
 		end
 	
 	EV_TEXT_IMP
-		rename
-			text_length as wel_text_length
 		undefine
 			default_ex_style,
 			default_style,
@@ -36,9 +34,12 @@ inherit
 			interface,
 			initialize,
 			make,
-			wel_text_length,
 			enable_word_wrapping,
-			disable_word_wrapping
+			disable_word_wrapping,
+			first_position_from_line_number,
+			last_position_from_line_number,
+			caret_position,
+			set_caret_position
 		select
 			wel_line_index,
 			wel_item,
@@ -58,8 +59,7 @@ inherit
 			wel_has_capture,
 			x_position,
 			y_position,
-			wel_move_and_resize,
-			wel_text_length
+			wel_move_and_resize
 		end
 		
 	WEL_RICH_EDIT
@@ -215,12 +215,6 @@ feature -- Status report
 			Result := wel_text
 			Result.prune_all ('%R')
 		end
-		
-	wel_text_length: INTEGER is
-			-- Text length
-		do
-			Result := wel_text.count
-		end
 
 	character_format (character_index: INTEGER): EV_CHARACTER_FORMAT is
 			-- `Result' is character format of character `character_index'
@@ -295,6 +289,40 @@ feature -- Status report
 		
 	tab_width: INTEGER 
 			-- Default width in pixels of each tab in `Current'.
+			
+	first_position_from_line_number (a_line: INTEGER): INTEGER is	
+			-- Position of the first character on the `i'-th line.
+		do
+			Result := wel_line_index (a_line - 1) + 1
+		end
+
+	last_position_from_line_number (a_line: INTEGER): INTEGER is
+			-- Position of the last character on the `i'-th line.
+		local
+			new_lines_to_first_position: INTEGER
+		do
+			if
+				valid_line_index (a_line + 1)
+			then
+				Result := first_position_from_line_number (a_line + 1) - 1
+			else
+				new_lines_to_first_position := wel_text.substring (1, wel_line_index (a_line - 1)).occurrences ('%R')
+				Result := wel_text_length - 1 - new_lines_to_first_position
+			end
+		end
+		
+	caret_position: INTEGER is
+			-- Current position of caret.
+		do
+			Result := internal_caret_position + 1
+		end
+		
+	set_caret_position (pos: INTEGER) is
+			-- set current caret position.
+			--| This position is used for insertions.
+		do
+			internal_set_caret_position (pos - 1)
+		end
 
 feature -- Status setting
 

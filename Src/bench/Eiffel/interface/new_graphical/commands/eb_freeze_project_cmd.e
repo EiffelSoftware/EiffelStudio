@@ -8,77 +8,51 @@ class
 
 inherit
 	EB_MELT_PROJECT_CMD
-		rename
---			choose_template as execute_warner_help,
---			warner_ok as freeze_now
 		redefine
 			launch_c_compilation,
 			confirm_and_compile,
 --			name, menu_name, accelerator,
 			perform_compilation
---			freeze_now, execute_warner_help
 		end
  
 creation
 
 	make
 
-feature -- Callbacks
-
---	execute_warner_help is
---			-- Process the callback of the help button.
---		do
---			if warner_was_popped_up then
---				warner_was_popped_up := False
---				start_c_compilation := False
---				freeze_now (last_warner)
---			else
---				load_default_ace
---			end
---		end
-
---	freeze_now (argument: ANY) is
---		do
---			if Eiffel_ace.file_name = Void then
---				Precursor (argument)
---			elseif Application.is_running then
---				end_run_confirmed := true
---				confirmer (popup_parent).call (Current,
---						"Recompiling project will end current run.%N%
---						%Start compilation anyway?", "Compile")
---			else
---				compile (argument)
---			end
---		end
-
 feature {NONE} -- Implementation
 
-	confirm_and_compile (argument: ANY) is
+	confirm_and_compile (arg: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
 			-- Ask for confirmation, and compile thereafter.
+		local
+			wd: EV_WARNING_DIALOG
+			cmd: EV_ROUTINE_COMMAND
 		do
---			if 
---				(argument = tool) or else
---				(argument = Current) or else
---				(argument /= Void and then 
---				argument = last_confirmer and not end_run_confirmed) 
---			then
---				warner_was_popped_up := True		
+			if arg = freeze_no_c then
+				start_c_compilation := False
+			elseif arg = freeze_now then
+				start_c_compilation := True
+			end				
+			if
+				(arg = Void)
+			then
+				create wd.make_with_text (tool.parent, Interface_names.t_Warning,
+					Warning_messages.w_Freeze_warning)
+				wd.show_yes_no_cancel_buttons
+				create cmd.make (~confirm_and_compile)
+				wd.add_yes_command (cmd, freeze_now)
+				wd.add_no_command (cmd, freeze_no_c)
+				wd.show
 --				warner (popup_parent).custom_call (Current, 
 --					Warning_messages.w_Freeze_warning,
 --					Interface_names.b_Freeze_now,
 --					Interface_names.b_Freeze_now_but_no_c, 
 --					Interface_names.b_Cancel)
---			elseif (argument /= Void and then argument = last_warner) then
---					freeze_now (argument)
---			elseif 
---				argument /= Void and 
---				argument = last_confirmer and end_run_confirmed 
---			then
-				compile (argument)
---			end
+			else
+				precursor (arg, data)
+			end
 		end
 
-	launch_c_compilation (argument: ANY) is
+	launch_c_compilation is
 			-- Launch the C compilation in the background.
 		local
 			window: EB_CLICKABLE_RICH_TEXT
@@ -109,8 +83,17 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Attributes
 
-	warner_was_popped_up: BOOLEAN
-			-- Was the warner popped up?
+	freeze_now: EV_ARGUMENT1 [ANY] is
+			-- Argument used for a normal request.
+		once
+			create Result.make (Void)
+		end
+
+	freeze_no_c: EV_ARGUMENT1 [ANY] is
+			-- Argument used when files needs to be saved before compiling.
+		once
+			create Result.make (Void)
+		end
 
 --	name: STRING is
 --			-- Name of the command.

@@ -127,13 +127,13 @@ feature -- Execution
 			inspect 
 				format_type
 			when flat_type then
-				!! cmd.make_flat (filter_name, Project_tool.progress_dialog)
+				!! cmd.make_flat (filter_name, Progress_dialog)
 			when flat_short_type then
-				!! cmd.make_flat_short (filter_name, Project_tool.progress_dialog)
+				!! cmd.make_flat_short (filter_name, Progress_dialog)
 			when text_type then
-				!! cmd.make_text (filter_name, Project_tool.progress_dialog)
+				!! cmd.make_text (filter_name, Progress_dialog)
 			when short_type then
-				!! cmd.make_short (filter_name, Project_tool.progress_dialog)
+				!! cmd.make_short (filter_name, Progress_dialog)
 			end
 			if do_parents then
 				cmd.set_do_parents

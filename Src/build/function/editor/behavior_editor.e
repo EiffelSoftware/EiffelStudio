@@ -67,11 +67,7 @@ feature -- Editing features
 			-- the label in the menu_bar.
 		do
 			current_state := s;
-			if s.visual_name /= Void then
-				menu_bar.label1.set_text (s.visual_name)
-			else
-				menu_bar.label1.set_text (s.internal_name)
-			end;
+			menu_bar.label1.set_text (s.label)
 		end;
 
 	set_context_editor (ed: CONTEXT_EDITOR) is

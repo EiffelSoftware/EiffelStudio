@@ -99,6 +99,13 @@ inherit
 		undefine
 			copy, is_equal, default_create
 		end
+		
+	GB_GENERAL_UTILITIES
+		export
+			{NONE} all
+		undefine
+			copy, is_equal, default_create
+		end
 
 feature -- Initialization
 
@@ -326,16 +333,7 @@ feature {GB_SHARED_OBJECT_EDITORS} -- Implementation
 			name_field.change_actions.resume
 		end
 
-feature {NONE} -- Implementation
-
-	do_not_allow_object_type (transported_object: GB_OBJECT): BOOLEAN is
-		do
-				-- If the object is not void, it means that
-				-- we are not currently picking a type.
-			if transported_object.object /= Void then
-				Result := True
-			end
-		end
+feature {GB_OBJECT_EDITOR} -- Implementation
 
 	update_event_selection_button_text is
 			-- Change text displayed on `event_selection_button',
@@ -345,6 +343,17 @@ feature {NONE} -- Implementation
 				event_selection_button.set_text (Event_selection_text)
 			else
 				event_selection_button.set_text (Event_modification_text)
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	do_not_allow_object_type (transported_object: GB_OBJECT): BOOLEAN is
+		do
+				-- If the object is not void, it means that
+				-- we are not currently picking a type.
+			if transported_object.object /= Void then
+				Result := True
 			end
 		end
 
@@ -478,6 +487,8 @@ feature {NONE} -- Implementation
 	update_visual_representations_on_name_change is
 			-- Update visual representations of `object' to reflect new name
 			-- in `name_field'.
+		local
+			titled_window_object: GB_TITLED_WINDOW_OBJECT
 		do
 			if valid_class_name (name_field.text) or name_field.text.is_empty  then
 				object.set_edited_name (name_field.text)
@@ -488,10 +499,11 @@ feature {NONE} -- Implementation
 				else
 					name_field.set_foreground_color (black)
 				end
-				if name_field.text.is_empty then
-					object.layout_item.set_text (object.type.substring (4, object.type.count))
-				else
-					object.layout_item.set_text (name_field.text + ": " + object.type.substring (4, object.type.count))			
+				io.putstring ("Name change called")
+				object.layout_item.set_text (name_and_type_from_object (object))
+				titled_window_object ?= object
+				if titled_window_object /= Void then
+					titled_window_object.window_selector_item.set_text (name_and_type_from_object (titled_window_object))
 				end
 					-- Update title of window.
 				set_title_from_name

@@ -130,10 +130,12 @@ feature -- Hole features
 			parent_command_tool.set_command (dropped.data)
 		end
 
-feature {NONE} -- Attribute
+feature {CONTEXT} -- Attribute
 
 	parent_command_tool: COMMAND_TOOL
 			-- Command tool to which Current belongs
+
+feature {NONE} -- Command execution
 
 	execute (arg: ANY) is
 			-- Retarget the command tool to a new instance of the currently
@@ -153,11 +155,6 @@ feature -- Drag source features
 		do
 			Result := Current
 		end
-
---	stone: like Current is
---		do
---			Result := Current
---		end
 
 feature -- Stone features
 

@@ -92,6 +92,7 @@ in case there is no way to use the .NET constructor mechanism, but we will try
 to stick as much as possible on the use of .NET constructor.</p>
 
 <h2>
+<a name="Real example"></a>
 A real example</h2>
 
 <p>
@@ -152,6 +153,66 @@ have a look at what we should generate as an inheritance hierarchy:<p align="cen
 <p>The hierarchy is quite complex, but it is required to export the Eiffel
 multiple inheritance to other languages. So far not other simple solutions have
 been found, apart from implemented natively multiple inheritance on .NET.</p>
+<pre>.interface A {
+	f ();
+	g (X x);
+}
+
+.class A_IMP: A {
+	f () {};
+	g (X x) {};
+}</pre>
+
+<pre>.interface B: A {
+	h ();
+	g (Y y);
+}
+
+.class B_IMP: B, A_IMP {
+	h {} {
+		.override A_IMP::f
+		call A_IMP::f
+	};
+
+	g (Y y) {};
+
+	private __g (X x) {
+		.override A_IMP::g
+		call B_IMP::g ((Y)x))
+	}
+}</pre>
+
+<pre>.interface C: A
+
+.class C_IMP: C, A_IMP</pre>
+
+<pre>.interface D: B, C {
+	C_g (X x);
+}
+
+.class D_IMP: D, B_IMP {
+	f() {};		// Same implementation as A_IMP::f
+	C_g (X x) {};	// Same implementation as A_IMP::g
+}</pre>
+
+<pre>.interface F {
+	f();
+}
+
+.class F_IMP: F {
+	f() {};
+}</pre>
+
+<pre>.interface E: C, F
+
+.class E_IMP: E, C_IMP {
+	f() {};		// Same implementation as F_IMP::f
+	private __f () {
+		.override C_IMP::f
+		throw InvalidCallException;
+	}
+}</pre>
+
 </body>
 
 </html>

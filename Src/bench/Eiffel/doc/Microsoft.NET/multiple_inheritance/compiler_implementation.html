@@ -12,6 +12,32 @@
 
 <h1>Compiler implementation</h1>
 
+<h2>Data structures</h2>
+<p>Since by default there is no notion of interface in Eiffel
+and because we will have to generate both .NET classes and interfaces, the
+Eiffel compiler needs to know exactly what it should generate as implementation
+classes and interfaces. For example, in <a href="dotnet_mapping.html#Real example">our
+big picture example</a> class B simply does a renaming and a covariant
+redefinition and the B interface defines both <span  class="efeature">h</span> and
+<span  class="efeature">g (y: Y) </span>even though <span  class="efeature">f</span> and
+<span  class="efeature">g(x :X)</span> are defined in the A interface.</p>
+
+<p>To find out what really needs to be generated in every interface
+corresponding to an Eiffel class, we introduced the <span class ="eclass">CLASS_INTERFACE</span>
+class which keeps all the feature that needs to be generated in the
+corresponding interface of an Eiffel class.</p>
+
+<p>The same way we have done it for interface, we need to do it for the
+corresponding implementation class of an <span class ="eclass">CLASS_INTERFACE</span>,
+we introduced the <span class ="eclass">CLASS_IMPLEMENTATION</span> class.</p>
+
+<p>Both classes have the following information:</p>
+
+<ul>
+  <li>Knowledge of parents.</li>
+  <li>Knowledge of which features need to be generated.</li>
+</ul>
+
 </body>
 
 </html>

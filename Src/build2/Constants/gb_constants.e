@@ -395,6 +395,9 @@ feature -- Generation constants
 		
 	client_window_string: STRING is "window"
 		-- Name used to access window as a client.
+
+	Create_command_string: STRING is "create "
+			-- String corresponding to creation instruction in generated_code.
 		
 
 feature -- Wizard
@@ -531,6 +534,8 @@ feature -- Warning Dialogs
 	Matching_class_and_application_names_warning: STRING is "Application and class names conflict."
 	
 	Invalid_bpr_file: STRING is "The .BPR file you are attempting to load was created with the beta version of EiffelBuild.%NThe information stored in the project settings are incompatible with this version of EiffelBuild.%NClick 'Continue' if you wish to load the project, with default EiffelBuild settings."
+	
+	Not_all_windows_named_string: STRING is "Some of the windows you are attempting to generate are not named.%NThe name is required for the generation and is used for both the class and file names.%NDo you wish EiffelBuild to assign default names to those windows that are unnamed?"
 
 feature -- Object editor properties
 

@@ -142,7 +142,7 @@ feature -- Element Change
 					msg_box.error_message_box (Void, "Could not delete registry keys", "Uninstall Error")
 				else
 					close_key (subkey)
-					if not delete_key (key, Analyzer_clsid) then
+					if not (delete_key (key, Analyzer_clsid)) then
 						!! msg_box.make
 						msg_box.error_message_box (Void, "Unexpected error", "Uninstall Error")
 					end

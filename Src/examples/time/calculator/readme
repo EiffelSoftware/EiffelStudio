@@ -1,0 +1,10 @@
+CALCULATOR example
+
+Type h for help.
+
+y: To add an amount of years
+d: To add an amount of days
+s: To set the new year, the new month and the new day
+w: To add an amount of weeks
+m: To add an amount of month
+q; exit

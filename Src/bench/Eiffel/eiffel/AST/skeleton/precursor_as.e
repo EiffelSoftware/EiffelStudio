@@ -299,30 +299,18 @@ feature -- Type check, byte code and dead code removal
 
 				-- Get the type of Current feature.
 			Result ?= a_feature.type
-
-			if last_type.is_formal then
-				if Result.is_formal then
-					formal_type ?= Result
-				else
-					formal_type ?= Result.actual_type
-				end
-				if formal_type /= Void then
-					Result := last_constrained.generics.item (formal_type.position)
-				end
-			elseif last_type.is_like then
- 				if Result.is_formal then
- 					formal_type ?= Result
- 				else
- 					formal_type ?= Result.actual_type
- 				end
- 				if formal_type /= Void then
- 					Result := last_type.actual_type.generics.item (formal_type.position)
- 				end
-			end
 			Result := Result.conformance_type
 			context.pop (count)
 			current_item := context.actual_class_type
-			Result := Result.instantiation_in (current_item, current_item.associated_class.id).actual_type
+			if Result.actual_type.is_formal then
+					-- We need to evaluate the formal parameter in the context of `last_type'
+					-- which knows about the current generic derivation.
+				Result := Result.instantiation_in (last_type, last_id).actual_type
+			else
+					-- The result is clearly defined so we need to find its type in the 
+					-- context of the caller of `Precursor'.
+				Result := Result.instantiation_in (current_item, current_item.associated_class.id).actual_type
+			end
 
 			if
 				a_feature.is_obsolete

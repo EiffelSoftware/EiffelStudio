@@ -1,15 +1,16 @@
 
 !>P
-!>READDIR
 >ABORTSIG
 >BSD
 >BYTEORDER
+>CAN_KEEPALIVE
 >CAT2
 >Caddr_t
 >Clock_t
 >DIRNAMLEN
 >EOFPIPE
 >F_OK
+>Groups_t
 >HAS_BCMP
 >HAS_BCOPY
 >HAS_BZERO
@@ -19,6 +20,7 @@
 >HAS_FTIME
 >HAS_GETEUID
 >HAS_GETGRGID
+>HAS_GETGROUPS
 >HAS_GETHOSTID
 >HAS_GETHOSTNAME
 >HAS_GETOPT
@@ -30,6 +32,7 @@
 >HAS_LSTAT
 >HAS_MEMMOVE
 >HAS_MKDIR
+>HAS_MKTIME
 >HAS_READDIR
 >HAS_RENAME
 >HAS_REWINDDIR
@@ -82,7 +85,6 @@
 >I_UTIME
 >I_VARARGS
 >I_XM_PROTOCOLS
->KEEPALIVE
 >MAY_PANIC
 >MEM_ALIGNBYTES
 >Malloc_t
@@ -96,6 +98,7 @@
 >Pid_t
 >R_OK
 >SIGNALS_KEPT
+>Select_fd_set_t
 >Signal_t
 >Strerror
 >Time_t
@@ -171,6 +174,7 @@ d_lstat
 d_maypanic
 d_memmove
 d_mkdir
+d_mktime
 d_open3
 d_phostname
 d_pidcheck
@@ -207,6 +211,7 @@ doublesize
 eunicefix
 floatsize
 grep
+groupstype
 i_direct
 i_dirent
 i_fcntl
@@ -266,6 +271,7 @@ sbrksmart
 sbrktype
 scriptdir
 sed
+selecttype
 signal_t
 spitshell
 startsh

@@ -15,3 +15,8 @@
 #ifdef I_XM_PROTOCOLS
 #endif
 
+/* symbols used by EiffelTime */
+
+#ifdef HAS_MKTIME
+#endif
+

@@ -94,7 +94,7 @@ feature -- Status setting
 	set_do_it (b: BOOLEAN) is
 			-- Set `do_it' to `b'.
 		do
-			xm_text_set_do_it (b)
+			c_text_set_do_it (b, handle)
 		ensure
 			set: do_it = b
 		end;
@@ -146,9 +146,10 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
-	xm_text_set_do_it (b: BOOLEAN) is
+	c_text_set_do_it (b: BOOLEAN; ptr: POINTER) is
 		external
-			"C"
+			"C [macro <callback_struct.h>] %
+					%(EIF_BOOLEAN, XmTextVerifyCallbackStruct *)"
 		end;
 
 end -- class MEL_TEXT_VERIFY_CALLBACK_STRUCT

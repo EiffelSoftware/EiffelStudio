@@ -20,6 +20,8 @@ inherit
 	BASE
 		rename
 			make as base_make
+		export
+			{GRAPHICAL_DEGREE_OUTPUT} implementation
 		end;
 	EXCEPTIONS
 		rename

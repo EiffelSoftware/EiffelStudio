@@ -10,7 +10,8 @@ class E_GENERATE_DOCUMENTATION
 inherit
 
 	E_CMD;
-	SHARED_EIFFEL_PROJECT
+	SHARED_EIFFEL_PROJECT;
+	SHARED_TEXT_ITEMS
 
 creation
 	make_flat, 
@@ -99,7 +100,8 @@ feature -- Execution
 			dir: DIRECTORY;
 			d_output: DEGREE_OUTPUT;
 			type: STRING;
-			st, text_st: STRUCTURED_TEXT
+			st, text_st: STRUCTURED_TEXT;
+			s_name: STRING
 		do
 			clusters := Eiffel_universe.clusters;
 			if not clusters.empty then
@@ -117,7 +119,13 @@ feature -- Execution
 						end
 					end;
 					!! st.make;
-					Eiffel_universe.generate_cluster_list (st);
+					st.add (ti_Before_class_declaration);
+					s_name := clone (Eiffel_System.name);
+					s_name.to_upper;
+					st.add_string (s_name);
+					st.add_new_line;
+					st.add_new_line;
+					generate_cluster_list (st, Eiffel_system.sub_clusters, 1);
 					generate_output (filter, file_name, st)
 				end;
 				!! list.make;
@@ -141,6 +149,7 @@ feature -- Execution
 								!! st.make;
 								a_cluster.generate_class_list (st);
 								generate_output (filter, file_name, st)
+								st.add (ti_After_class_declaration);
 							end
 						end;
 						classes := a_cluster.classes;
@@ -311,6 +320,31 @@ feature {NONE} -- Implementation
 				file_window.put_string (image);
 				file_window.close
 			end;
-		end
+		end;
+
+	generate_cluster_list (st: STRUCTURED_TEXT; 
+				clusters: ARRAYED_LIST [CLUSTER_I]; 
+				indent: INTEGER) is
+			-- Generate the cluster list for universe to `st'.
+		require
+			valid_st: st /= Void
+		local
+			c: CLUSTER_I;
+			s_name: STRING
+		do
+			from
+				clusters.start
+			until
+				clusters.after
+			loop
+				c := clusters.item;
+				add_tabs (st, indent);
+				st.add_indent;
+				st.add_cluster (c, c.name_in_upper);
+				st.add_new_line;
+				generate_cluster_list (st, c.sub_clusters, indent + 1);
+				clusters.forth
+			end
+		end;
 
 end -- class E_GENERATE_DOCUMENTATION

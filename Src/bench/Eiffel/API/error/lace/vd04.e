@@ -36,7 +36,7 @@ feature -- Output
 			st.add_new_line
 		end;
 
-feature {CLUST_PROP_SD} -- Setting
+feature {CLUST_PROP_SD, CLUST_ADAPT_SD} -- Setting
 
 	set_old_name (s: ID_SD) is
 			-- Assign `s' to `old_name'.

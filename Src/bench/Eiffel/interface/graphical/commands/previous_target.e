@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 				warner (text_window).gotcha_call (w_Beginning_of_history)
 			else
 				history.back;
-				text_window.last_format_2.execute (history.item)
+				text_window.last_format.execute (history.item)
 			end
 		end;
 

@@ -54,18 +54,14 @@ feature -- Access
 		end;
 
 	focus_string: STRING is
-		local
-			s: STRING
 		do
-			s := clone (associated_command.name);
-			s.append (" DONE");
-			Result := s
+			Result := associated_command.name
 		end
 
 feature -- Status Setting
 
-	darken (b: BOOLEAN) is
-			-- Darken the symbol of current button if `b', lighten it otherwize
+	set_selected (b: BOOLEAN) is
+			-- Darken the symbol of current button if `b', lighten it otherwise.
 		do
 			if b then
 				set_symbol (dark_symbol)

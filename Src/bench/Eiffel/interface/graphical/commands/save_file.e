@@ -78,7 +78,8 @@ feature {NONE} -- Implementation
 					end;
 					new_file.close;
 					text_window.clear_clickable;
-					text_window.set_changed (false)
+					text_window.set_changed (false);
+					text_window.tool.update_save_symbol;
 				end
 			end
 		end;

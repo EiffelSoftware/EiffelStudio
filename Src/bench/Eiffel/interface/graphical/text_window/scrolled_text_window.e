@@ -86,12 +86,6 @@ feature -- Drag source/Hole properties
 
 feature -- Formats
 
-	--last_format: FORMATTER is
-			---- Last format used.
-		--do
-			--Result := tool.last_format
-		--end;
-
 	history: STONE_HISTORY is
 			-- History list for Current.
 		do
@@ -103,16 +97,6 @@ feature -- Formats
 		do
 			set_read_only	
 		end;
-
-	--set_last_format (f: like last_format) is
-			---- Assign `f' to `last_format'.
-		--require	
-			--format_exists: f /= Void
-		--do
-			--tool.set_last_format (f)
-		--ensure
-			--last_format = f
-		--end;
 
 feature -- Properties
 
@@ -420,7 +404,8 @@ feature {NONE} -- Callback values
 	add_default_callbacks is
 			-- Set some default callbacks.
 		do
-			add_modify_action (Current, modify_event)
+			add_modify_action (Current, modify_event);
+			set_action ("!c<Btn3Down>", Current, new_tooler)
 		end;
 	
 feature {TOOL_W} -- Objects in Current text area

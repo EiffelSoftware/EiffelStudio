@@ -24,7 +24,6 @@ feature -- Standard Initialization
 			-- Initialize the command, and set an action.
 		do
 			init (a_text_window);
-			set_action ("!c<Btn1Down>", Current, Format_and_run)
 		end;
 
 feature -- Execution
@@ -39,7 +38,7 @@ feature -- Execution
 			if argument = Format_and_run then
 				text_window.tool.debug_run_cmd_holder.associated_command.execute (Void)
 			end;
-			text_window.set_last_format_2 (holder)
+			text_window.set_last_format (holder)
 		end;
 
 feature -- Formatting

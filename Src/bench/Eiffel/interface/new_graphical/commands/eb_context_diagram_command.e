@@ -7,7 +7,7 @@ deferred class
 	EB_CONTEXT_DIAGRAM_COMMAND
 
 inherit
-	EB_TOOLBARABLE_COMMAND
+	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 
 	EB_TARGET_COMMAND
 		rename
@@ -34,6 +34,13 @@ feature -- Access
 
 	history: EB_HISTORY_DIALOG
 			-- History of undoable commands.
+	
+	menu_name: STRING is
+			-- Name on corresponding menu items
+		do
+			Result := "Diagram command"
+		end
+		
 
 end -- class EB_CONTEXT_DIAGRAM_COMMAND
 

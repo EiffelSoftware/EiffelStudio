@@ -48,38 +48,47 @@ feature -- Execution
 	execute (argument: ANY) is
 			-- Ask for a confirmation before executing the format.
 		local
-			mp: MOUSE_PTR
+			mp: MOUSE_PTR;
+			f: FOCUSABLE
 		do
-			if last_warner /= Void then
-				last_warner.popdown
-			end;
-			if last_confirmer /= Void and argument = last_confirmer then
-					-- The user wants to execute this format,
-					-- even though it's a long format.
-				if not text_window.changed then
-					execute_licenced (formatted);
-				else
-					warner (popup_parent).call (Current, l_File_changed)
-				end
-			elseif argument = control_click then
-					-- No confirmation required.
-				formatted ?= tool.stone;
-				if not text_window.changed then
-					!! mp.set_watch_cursor;
-					execute_licenced (formatted);
-					mp.restore
-				else
-					warner (popup_parent).call (Current, l_File_changed)
-				end
-			else
-				if argument = tool then
-					formatted ?= tool.stone
-				else
-					formatted ?= argument
+			if is_sensitive then
+				if holder /= Void then
+					f ?= holder.associated_button
 				end;
-				confirmer (popup_parent).call (Current, 
-						"This format requires exploring the entire%N%
-						%system and may take a long time...", "Continue")
+				if f /= Void then
+					f.popdown
+				end;
+				if last_warner /= Void then
+					last_warner.popdown
+				end;
+				if last_confirmer /= Void and argument = last_confirmer then
+						-- The user wants to execute this format,
+						-- even though it's a long format.
+					if not text_window.changed then
+						execute_licenced (formatted);
+					else
+						warner (popup_parent).call (Current, l_File_changed)
+					end
+				elseif argument = control_click then
+						-- No confirmation required.
+					formatted ?= tool.stone;
+					if not text_window.changed then
+						!! mp.set_watch_cursor;
+						execute_licenced (formatted);
+						mp.restore
+					else
+						warner (popup_parent).call (Current, l_File_changed)
+					end
+				else
+					if argument = tool then
+						formatted ?= tool.stone
+					else
+						formatted ?= argument
+					end;
+					confirmer (popup_parent).call (Current, 
+							"This format requires exploring the entire%N%
+							%system and may take a long time...", "Continue")
+				end
 			end
 		end;
 

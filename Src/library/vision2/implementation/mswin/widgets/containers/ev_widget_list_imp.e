@@ -55,21 +55,17 @@ feature {NONE} -- Implementation
 			v_imp: EV_WIDGET_IMP
 			v_parent_imp: EV_CONTAINER_IMP
 		do
-			remove_item_actions.call ([item])
-
 			v_imp ?= i_th (i).implementation
 			check
 				v_imp_not_void: v_imp /= Void
 			end
-
+			remove_item_actions.call ([v_imp.interface])
 			ev_children.go_i_th (i)
 			ev_children.remove
-
 			v_parent_imp ?= v_imp.parent_imp
 			check
 				v_parent_imp_not_void: v_parent_imp /= Void
 			end
-
 			v_parent_imp.remove_child (v_imp)
 		end
 
@@ -100,6 +96,9 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/04/06 00:06:57  brendel
+--| Corrected argument of action sequence.
+--|
 --| Revision 1.17  2000/04/05 21:16:12  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

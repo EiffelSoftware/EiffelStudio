@@ -30,6 +30,7 @@ To be revised:
     ev_dynamic_tree_item.e
 
 To do:
+- Redo windows dialog implementation.
 - Right click interface to pick and drop.
 - The event `expose_actions' is triggered twice on a container when a window
   is resized. !! This makes resizing take twice as long!!
@@ -76,14 +77,14 @@ X   complete but found to have bugs
 
                                                         IF   WEL  GEL  TEST
   Base:                                        
-    kernel/ev_any.e                                     *    .    *    .
-    properties/ev_drawable.e                            *    .    *    .
-    properties/ev_drawable_constants.e                  *    .    *    .
-    properties/ev_fontable.e                            *    .    o    .
+    kernel/ev_any.e                                     *    _    *    .
+    properties/ev_drawable.e                            *    *    *    .
+    properties/ev_drawable_constants.e                  *    *    *    .
+    properties/ev_fontable.e                            *    o    o    .
     properties/ev_pick_and_dropable.e                   o    o    o    .
     properties/ev_pixmapable.e                          *    o    *    .
     properties/ev_textable.e                            *    o    *    .
-    support/ev_dynamic_list.e                           o    .    o    .
+    support/ev_dynamic_list.e                           o    o    o    .
     widgets/ev_widget.e                                 o    o    o    .
     widgets/primitives/ev_primitive.e                   *    o    *    .
     items/ev_item.e                                     *    o    *    .
@@ -92,17 +93,17 @@ X   complete but found to have bugs
     support/ev_item_list.e                              o    o    *    .
     
   Support:
-    support/ev_default_colors.e                         o    .    *    .
-    kernel/ev_accelerator.e                             *    .    *    .
+    support/ev_default_colors.e                         o    X    *    .
+    kernel/ev_accelerator.e                             *    o    *    .
     kernel/keys.def                                     o    -    -    -
-    kernel/ev_color.e                                   *    .    *    .
+    kernel/ev_color.e                                   *    *    *    .
     kernel/ev_coordinates.e                             *    -    -    .
     kernel/ev_cursor.e                                  o    o    o    .
     kernel/ev_cursor_code.e                             o    *    o    .
-    kernel/ev_font.e                                    o    .    *    .
-    kernel/ev_rectangle.e                               o    .    -    .
-    kernel/ev_timeout.e                                 *    .    *    .
-    support/ev_default_font.e                           *    .    -    .
+    kernel/ev_font.e                                    o    o    *    .
+    kernel/ev_rectangle.e                               o    -    -    .
+    kernel/ev_timeout.e                                 *    *    *    .
+    support/ev_default_font.e                           *    -    -    .
     support/ev_radio_peer.e                             *    *    *    .
 
   System:
@@ -131,7 +132,7 @@ X   complete but found to have bugs
 
   Gauges:
     widgets/primitives/ev_gauge.e                       *    *    *    .
-    widgets/primitives/ev_spin_button.e                 *    .    *    .
+    widgets/primitives/ev_spin_button.e                 *    o    *    .
     widgets/primitives/ev_progress_bar.e                *    *    *    .
     widgets/primitives/ev_horizontal_progress_bar.e     *    *    *    .
     widgets/primitives/ev_vertical_progress_bar.e       *    *    *    .
@@ -161,18 +162,18 @@ X   complete but found to have bugs
     widgets/containers/ev_aggregate_cell.e              o    .    *    .
     widgets/containers/ev_frame.e                       *    o    *    .
     widgets/containers/ev_window.e                      *    o    o    .
-    widgets/containers/ev_dialog.e                      o    .    *    .
+    widgets/containers/ev_dialog.e                      o    X    *    .
     widgets/containers/ev_titled_window.e               o    o    o    .
-    widgets/containers/ev_viewport.e                    *    .    o    .
-    widgets/containers/ev_scrollable_area.e             *    .    o    .
+    widgets/containers/ev_viewport.e                    *    o    o    .
+    widgets/containers/ev_scrollable_area.e             *    o    o    .
     widgets/containers/ev_widget_list.e                 *    o    *    .
-    widgets/containers/ev_widget_list_cursor.e          *    .    *    .
+    widgets/containers/ev_dynamic_list_cursor.e         *    o    o    .
     widgets/containers/ev_notebook.e                    *    *    *    .
     widgets/containers/ev_box.e                         *    *    *    .
     widgets/containers/ev_horizontal_box.e              *    *    *    .
     widgets/containers/ev_vertical_box.e                *    *    *    .
-    widgets/containers/ev_aggregate_box.e               *    .    *    .
-    widgets/containers/ev_split_area.e                  o    .    -    .
+    widgets/containers/ev_aggregate_box.e               *    *    *    .
+    widgets/containers/ev_split_area.e                  X    -    -    .
     widgets/containers/ev_horizontal_split_area.e       o    o    -    .
     widgets/containers/ev_vertical_split_area.e         o    o    -    .
 
@@ -194,9 +195,9 @@ X   complete but found to have bugs
     widgets/primitives/ev_tool_bar.e                    o    *    *    .
     items/ev_tool_bar_item.e                            *    o    *    .
     items/ev_tool_bar_button.e                          o    o    *    .
-    items/ev_tool_bar_radio_button.e                    *    .    o    .
+    items/ev_tool_bar_radio_button.e                    *    o    o    .
     items/ev_tool_bar_separator.e                       *    .    *    .
-    items/ev_tool_bar_toggle_button.e                   *    .    *    .
+    items/ev_tool_bar_toggle_button.e                   *    o    *    .
 
   Tree:
     widgets/primitives/ev_tree.e                        o    o    X    .

@@ -31,13 +31,19 @@ creation
 
 feature 
 
+	c_widget: POINTER;
+
 	make (a_name: STRING; a_parent: COMPOSITE; a_tool: TOOL_W) is
+		local
+			implement: SCROLLED_T_I
 		do
 			text_create (a_name, a_parent);
 			!! history.make (10);
 			tool := a_tool;
 			set_read_only;
 			add_callbacks;
+			implement ?= implementation;
+			c_widget := implement.action_target;
 			upper := -1 			-- Init clickable array.
 		end;
 
@@ -336,7 +342,7 @@ feature
 		local
 			cur_pos: INTEGER
 		do
-			cur_pos := unexpanded_position (text_window_cur_pos (c_widget, screen.x - real_x, screen.y - real_y));
+			cur_pos := unexpanded_position (character_position (screen.x - real_x, screen.y - real_y));
 			update_focus (cur_pos);
 			highlight_focus
 		end;
@@ -408,10 +414,10 @@ feature {NONE}
 	stone_type: INTEGER is do end;
 
 	execute (argument: ANY) is
-		
 		local
 			clicked_type: INTEGER;
 			cursor_x, cursor_y: INTEGER;
+			start_pos: INTEGER;
 		do
 			tab_execute (argument);
 			if not changed then
@@ -424,8 +430,9 @@ feature {NONE}
 					warner.popdown;
 					if clickable_count /= 0 then
 						change_focus;
-						cursor_x  := text_window_x_pos (c_widget, expanded_position (focus_start), real_x, real_y);
-						cursor_y := text_window_y_pos (c_widget, expanded_position (focus_start), real_x, real_y);
+						start_pos := expanded_position (focus_start);
+						cursor_x  := x_coordinate (start_pos) + real_x;
+						cursor_y := y_coordinate (start_pos) + real_y;
 						tool.transport (focus, current, cursor_x, cursor_y)
 					end
 				elseif argument = new_tooler then
@@ -479,29 +486,6 @@ feature {NONE} -- Callback values
 	raise_explain_w: ANY is
 		once
 			!! Result
-		end;
-
-feature {NONE} -- External features
-
-	text_window_y_pos (p: POINTER; i, j, k: INTEGER): INTEGER is
-		external
-			"C"
-		alias
-			"y_pos"
-		end;
-
-	text_window_x_pos (p: POINTER; i, j, k: INTEGER): INTEGER is
-		external
-			"C"
-		alias
-			"x_pos"
-		end;
-
-	text_window_cur_pos (p: POINTER; i, j: INTEGER): INTEGER is
-		external
-			"C"
-		alias
-			"cur_pos"
 		end;
 
 invariant

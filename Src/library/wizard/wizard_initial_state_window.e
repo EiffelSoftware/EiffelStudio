@@ -35,7 +35,7 @@ feature -- Basic Operations
 			title.set_background_color (white_color)
 			title.align_text_left
 			title.set_font (welcome_title_font)
-			title.set_minimum_height (40)
+			title.set_minimum_height (dialog_unit_to_pixels(40))
 
 			create message
 			message.set_background_color (white_color)
@@ -47,15 +47,15 @@ feature -- Basic Operations
 			display_state_text
 			create message_and_title_box
 			message_and_title_box.set_background_color (white_color)			
-			message_and_title_box.set_border_width (7)
-			message_and_title_box.set_padding (14)
+			message_and_title_box.set_border_width (Default_border_size)
+			message_and_title_box.set_padding (Default_padding_size)
 			message_and_title_box.extend (title)
 			message_and_title_box.disable_item_expand (title)
 			message_and_title_box.extend (message)
 			message_and_title_box.extend (choice_box)
 
 			local_pixmap := pixmap.ev_clone
-			local_pixmap.set_minimum_height (312)
+			local_pixmap.set_minimum_height (dialog_unit_to_pixels(312))
 			local_pixmap.set_minimum_width (165)
 			local_pixmap.draw_pixmap (91, 9, pixmap_icon)
 

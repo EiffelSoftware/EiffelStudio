@@ -18,7 +18,7 @@ feature  -- Initialization
 	make is
 			-- Assign default values
 		do
-			location:= "C:\Compils"
+			location := "C:\MyProjects\"
 			compile_project := True
 			icon_location := wizard_resources_path + "\eiffel.ico"
 			project_name := "my_wel_project"

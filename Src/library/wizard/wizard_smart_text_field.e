@@ -7,6 +7,9 @@ indexing
 class
 	WIZARD_SMART_TEXT_FIELD
 
+inherit
+	WIZARD_SHARED
+
 creation	
 	make
 
@@ -42,7 +45,7 @@ feature -- Initialization
 				browse_button.select_actions.extend (browse_button_action)
 
 				create textfield_box
-				textfield_box.set_padding (5)
+				textfield_box.set_padding (dialog_unit_to_pixels(5))
 				textfield_box.extend (textfield)
 				textfield_box.extend (browse_button)
 				textfield_box.disable_item_expand (browse_button)
@@ -57,12 +60,12 @@ feature -- Initialization
 				label.set_text (" "+label_string)
 			end
 			textfield.set_capacity (textfield_capacity)
-			textfield.set_minimum_height (23)
+			textfield.set_minimum_height (Default_button_height)
 			textfield.return_actions.extend (caller~next)
 			textfield.change_actions.extend (caller~change_entries)
 
 			create empty_space
-			empty_space.set_minimum_height (2)
+			empty_space.set_minimum_height (dialog_unit_to_pixels(2))
 
 			create {EV_VERTICAL_BOX} internal_widget
 			internal_widget.extend (label)

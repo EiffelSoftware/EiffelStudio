@@ -27,7 +27,7 @@ feature -- Initialization
 		do
 			default_create
 			disable_user_resize
-			set_size (503, 385)
+			set_size (dialog_unit_to_pixels(503), dialog_unit_to_pixels(385))
 			create wizard_page
 			create v1
 			v1.extend (wizard_page)	
@@ -63,25 +63,25 @@ feature -- Initialization
 			h1.disable_item_expand (h2)
 
 			h2.extend (previous_b)
-			previous_b.set_minimum_width (74)
-			previous_b.set_minimum_height (23)
+			previous_b.set_minimum_width (Default_button_width)
+			previous_b.set_minimum_height (Default_button_height)
 			previous_b.align_text_center
 			h2.disable_item_expand(previous_b)
 
 			h2.extend (next_b)
-			next_b.set_minimum_width (74)
-			next_b.set_minimum_height (23)
+			next_b.set_minimum_width (Default_button_width)
+			next_b.set_minimum_height (Default_button_height)
 			next_b.align_text_center
 			h2.disable_item_expand (next_b)
 
 			h1.extend (cancel_b)
 			h1.disable_item_expand (cancel_b)
-			cancel_b.set_minimum_width (74)
-			cancel_b.set_minimum_height (23)
+			cancel_b.set_minimum_width (Default_button_width)
+			cancel_b.set_minimum_height (Default_button_height)
 			cancel_b.align_text_center
 
-			h1.set_padding (11)
-			h1.set_border_width (11)
+			h1.set_padding (dialog_unit_to_pixels(11))
+			h1.set_border_width (dialog_unit_to_pixels(11))
 		end
 
 	load_first_state is

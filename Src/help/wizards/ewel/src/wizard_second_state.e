@@ -34,7 +34,7 @@ feature -- Basic Operation
 			icon_location.enable_file_browse_button ("*.ico")
 			icon_location.generate
 
-			choice_box.set_padding (10)
+			choice_box.set_padding (Default_padding_size)
 			choice_box.extend (project_name.widget)
 			choice_box.disable_item_expand (project_name.widget)
 			choice_box.extend (icon_location.widget)

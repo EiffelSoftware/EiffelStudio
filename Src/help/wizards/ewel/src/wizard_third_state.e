@@ -36,7 +36,7 @@ feature -- Basic Operation
 				to_compile_b.disable_select
 			end
 
-			choice_box.set_padding (10)
+			choice_box.set_padding (Default_padding_size)
 			choice_box.extend (location.widget)
 			choice_box.disable_item_expand(location.widget)
 			choice_box.extend (to_compile_b)
@@ -51,11 +51,13 @@ feature -- Basic Operation
 	proceed_with_current_info is 
 		local
 			dir: DIRECTORY
+			dir_name: DIRECTORY_NAME
 			next_window: WIZARD_STATE_WINDOW
 			rescued: BOOLEAN
 		do
 			if not rescued then
-				create dir.make (location.text)
+				create dir_name.make_from_string (location.text)
+				create dir.make (dir_name)
 				if not dir.exists then
 					-- Try to create the directory
 					dir.create_dir
@@ -63,14 +65,14 @@ feature -- Basic Operation
 
 				Precursor
 				if not dir.exists then
-					create {WIZARD_ERROR_LOCATION}next_window.make (wizard_information)
+					create {WIZARD_ERROR_LOCATION} next_window.make (wizard_information)
 				else
-					create {WIZARD_FINAL_STATE}next_window.make (wizard_information)
+					create {WIZARD_FINAL_STATE} next_window.make (wizard_information)
 				end
 			else
 				-- Something went wrong when checking that the selected directory exists
 				-- or when trying to create the directory, go to error.
-				create {WIZARD_ERROR_LOCATION}next_window.make (wizard_information)
+				create {WIZARD_ERROR_LOCATION} next_window.make (wizard_information)
 			end
 
 			Precursor

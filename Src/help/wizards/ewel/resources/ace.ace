@@ -7,7 +7,9 @@ root
 	ROOT_CLASS (root_cluster): "make"
 
 default
-	assertion (all)
+	assertion (require)
+	assertion (ensure)
+	assertion (check)
 	multithreaded (no)
 	console_application (no)
 	dynamic_runtime (no)

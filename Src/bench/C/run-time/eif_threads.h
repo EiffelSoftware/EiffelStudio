@@ -69,7 +69,7 @@ extern void eif_register_thread(void);
 #include <thread.h>
 
 
-#define EIF_THR_ENTRY_TYPE		void 
+#define EIF_THR_ENTRY_TYPE		void
 #define EIF_THR_ENTRY_ARG_TYPE	void *
 
 #define EIF_THR_CREATION_FLAGS	THR_NEW_LWP
@@ -89,7 +89,7 @@ extern void eif_register_thread(void);
 #define EIF_TSD_VAL_TYPE				void *
 #define EIF_TSD_CREATE(key,msg)			if (thr_keycreate(&(key),NULL)) panic(msg)
 #define EIF_TSD_SET(key,val,msg)		if (thr_setspecific((key),(EIF_TSD_VAL_TYPE)(val))) panic(msg)
-#define EIF_TSD_GET(key,val,msg)		if (thr_getspecific((key),(void **)&(val)) panic(msg)
+#define EIF_TSD_GET(key,val,msg)		if (thr_getspecific((key),(void **)&(val))) panic(msg)
 #define EIF_TSD_GET_CONTEXT(key,val,msg)	EIF_TSD_GET(key,val,msg)
 #define EIF_TSD_DESTROY(key,errcode)
 

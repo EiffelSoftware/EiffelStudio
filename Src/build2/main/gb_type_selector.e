@@ -26,7 +26,7 @@ inherit
 		end
 		
 	GB_DEFAULT_STATE
-
+	
 create
 	default_create
 
@@ -37,17 +37,23 @@ feature {NONE} -- Initialization
 			-- Fill with supported Widgets.
 		local
 			tree_item1, tree_item2, tree_item3, tree_item4: EV_TREE_ITEM
+			shared_pixmaps: GB_SHARED_PIXMAPS
 		do
 			Precursor {EV_TREE}
+			create shared_pixmaps
 			create tree_item1.make_with_text ("Widgets")
+			tree_item1.set_pixmap (shared_pixmaps.pixmap_by_name ("widgets"))
 			extend (tree_item1)
 			create tree_item3.make_with_text ("Containers")
+			tree_item3.set_pixmap (shared_pixmaps.pixmap_by_name ("containers"))
 			tree_item1.extend (tree_item3)
 			add_tree_items (containers, tree_item3)
 			create tree_item2.make_with_text ("Primitives")
+			tree_item2.set_pixmap (shared_pixmaps.pixmap_by_name ("primitives"))
 			tree_item1.extend (tree_item2)
 			add_tree_items (primitives, tree_item2)
 			create tree_item4.make_with_text ("Items")
+			tree_item4.set_pixmap (shared_pixmaps.pixmap_by_name ("items"))
 			extend (tree_item4)
 			add_tree_items (items, tree_item4)
 				-- Expand the types when the project is started.

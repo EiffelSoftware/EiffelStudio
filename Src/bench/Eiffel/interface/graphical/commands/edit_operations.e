@@ -9,7 +9,8 @@ class EDIT_OPERATIONS
 
 inherit
 
-	TOOL_COMMAND
+	TOOL_COMMAND;
+	SYSTEM_CONSTANTS
 
 creation
 	make_paste, 
@@ -55,30 +56,36 @@ feature {NONE} -- Initialization
 
 	menu_name: STRING is
 			-- Name used in menu entry
+		local
+			is_win: BOOLEAN
 		do
-			inspect
-				edit_type
-			when copy_type then
-				Result := Interface_names.m_copy
-			when cut_type then
-				Result := Interface_names.m_cut
-			when paste_type then
-				Result := Interface_names.m_paste
+			is_win := Platform_constants.is_windows;
+				-- Use the default accelerator
+			if is_win then
+				inspect
+					edit_type
+				when copy_type then
+					Result := Interface_names.m_Windows_copy
+				when cut_type then
+					Result := Interface_names.m_Windows_cut
+				when paste_type then
+					Result := Interface_names.m_Windows_paste
+				end
+			else
+				inspect
+					edit_type
+				when copy_type then
+					Result := Interface_names.m_Unix_copy
+				when cut_type then
+					Result := Interface_names.m_Unix_cut
+				when paste_type then
+					Result := Interface_names.m_Unix_paste
+				end
 			end
 		end;
 
 	accelerator: STRING is
-			-- Accelerator action for menu entry
 		do
-			inspect
-				edit_type
-			when copy_type then
-				Result := Interface_names.a_copy
-			when cut_type then
-				Result := Interface_names.a_cut
-			when paste_type then
-				Result := Interface_names.a_paste
-			end
 		end
 
 feature -- Execution

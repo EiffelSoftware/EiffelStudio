@@ -29,8 +29,9 @@ feature {NONE}
 	undo is
 		do
 			edited_command.save_old_template;
-			remove_parent;
-			if previous_parent /= Void then
+			if previous_parent = Void then
+				remove_parent
+			else
 				set_parent (previous_parent);
 			end;
 			edited_command.update_text

@@ -146,7 +146,7 @@ extern struct dcall *dtop(void);	/* Current top value */
 extern void dmove(int offset);			/* Move active routine cursor */
 
 /* Breakpoint handling */
-extern rt_shared void dbreak(int why);	/* Program execution stopped */
+extern rt_shared void dbreak(EIF_CONTEXT int why);	/* Program execution stopped */
 
 /* Once list handling */
 extern uint32 *onceadd(uint32 id);		/* Add once body_id to list */	

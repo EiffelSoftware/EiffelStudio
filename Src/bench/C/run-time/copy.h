@@ -17,6 +17,7 @@
 extern "C" {
 #endif
 
+#include "eif_globals.h"
 #include "portable.h"
 
 /* 
@@ -25,7 +26,7 @@ extern "C" {
 
 extern char *eclone(register char *source);			/* Clone of an Eiffel object */
 extern char *spclone(register char *source);			/* Clone for a special object */
-extern char *edclone(char *source);			/* Deep clone of an Eiffel object */
+extern char *edclone(EIF_CONTEXT char *source);			/* Deep clone of an Eiffel object */
 extern char *rtclone(char *source);			/* The Eiffel clone operation (run-time) */
 extern void ecopy(register char *source, register char *target);			/* Standard copy of a normal Eiffel object */
 extern void xcopy(char *source, char *target);			/* Expanded copy with possible exception */

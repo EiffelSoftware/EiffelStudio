@@ -333,6 +333,8 @@ feature -- Window Holders
 
 	routine_hole_holder: HOLE_HOLDER
 
+	dynamic_lib_hole_holder: HOLE_HOLDER
+
 	object_hole_holder: HOLE_HOLDER
 
 	explain_hole_holder: HOLE_HOLDER
@@ -698,34 +700,37 @@ feature -- Update
 	add_routine_entry (r_w: ROUTINE_W) is
 		do
 			add_tool_to_menu (r_w, menus @ open_routines_menu)
+			selector_part.add_tool_entry(r_w)
 		end
 
 	change_routine_entry (r_w: ROUTINE_W) is
 		do
 			change_tool_in_menu (r_w, menus @ open_routines_menu)
+			selector_part.change_tool_entry(r_w)
 		end
 
 	remove_routine_entry (r_w: ROUTINE_W) is
 		do
 			remove_tool_from_menu (r_w, menus @ open_routines_menu)
+			selector_part.remove_tool_entry(r_w)
 		end
 
 	add_class_entry (c_w: CLASS_W) is
 		do
 			add_tool_to_menu (c_w, menus @ open_classes_menu)
-			selector_part.add_class_entry(c_w)
+			selector_part.add_tool_entry(c_w)
 		end
 
 	change_class_entry (c_w: CLASS_W) is
 		do
 			change_tool_in_menu (c_w, menus @ open_classes_menu)
-			selector_part.change_class_entry(c_w)
+			selector_part.change_tool_entry(c_w)
 		end
 
 	remove_class_entry (c_w: CLASS_W) is
 		do
 			remove_tool_from_menu (c_w, menus @ open_classes_menu)
-			selector_part.remove_class_entry(c_w)
+			selector_part.remove_tool_entry(c_w)
 		end
 
 	add_object_entry (o_w: OBJECT_W) is
@@ -1018,6 +1023,11 @@ feature -- Graphical Interface
 			stop_points_menu_entry: EB_MENU_ENTRY
 			stop_points_status_cmd: STOPPOINTS_STATUS
 			stop_points_status_menu_entry: EB_MENU_ENTRY
+
+			dynamic_lib_cmd: DYNAMIC_LIB_HOLE
+			dynamic_lib_button: EB_BUTTON_HOLE
+			dynamic_lib_menu_entry: EB_MENU_ENTRY
+
 			show_pref_cmd: SHOW_PREFERENCE_TOOL
 			show_pref_menu_entry: EB_MENU_ENTRY
 
@@ -1094,6 +1104,11 @@ feature -- Graphical Interface
 			!! class_button.make (class_cmd, project_toolbar)
 			!! class_menu_entry.make (class_cmd, menus @ open_classes_menu)
 			!! class_hole_holder.make (class_cmd, class_button, class_menu_entry)
+
+			!! dynamic_lib_cmd.make (Current)
+			!! dynamic_lib_button.make (dynamic_lib_cmd, project_toolbar)
+			!! dynamic_lib_menu_entry.make (dynamic_lib_cmd, menus @ window_menu)
+			!! dynamic_lib_hole_holder.make (dynamic_lib_cmd, dynamic_lib_button, dynamic_lib_menu_entry)
 
 			!! routine_cmd.make (Current)
 			!! routine_button.make (routine_cmd, project_toolbar)
@@ -1174,6 +1189,11 @@ feature -- Graphical Interface
 			project_toolbar.attach_left_widget (class_button, routine_button, 0)
 			project_toolbar.attach_left_widget (routine_button, shell_button, 0)
 			project_toolbar.attach_top (routine_button, 0)
+			project_toolbar.attach_left_widget (routine_button, dynamic_lib_button, 0)
+			project_toolbar.attach_top (dynamic_lib_button, 0)
+
+			project_toolbar.attach_left_widget (dynamic_lib_button, shell_button, 0)
+
 			project_toolbar.attach_top (shell_button, 0)
 			project_toolbar.attach_left_widget (shell_button, object_button, 0)
 			project_toolbar.attach_top (object_button, 0)
@@ -1429,7 +1449,7 @@ feature -- Graphical Interface
 			!! environment_variable
 
 				--| Need to put the string in SYSTEM_CONSTANTS
-			last_opened_projects := environment_variable.get ("BENCH_RECENT_FILES")
+			last_opened_projects := environment_variable.get (Bench_Recent_Files)
 			!! recent_project_list.make	
 			recent_project_list.compare_objects
 
@@ -1957,15 +1977,9 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 			-- Show the object portion and the menu entries
 			-- regarding the feature tool.
 		local
-			object_height: INTEGER
-			object_width: INTEGER
 			mp: MOUSE_PTR
 		do
 			!! mp.set_watch_cursor
-
-			object_height := height // 3 
-			object_width := width // 3
-
 			shown_portions := shown_portions + 1
 
 			menus.item (edit_object_menu).button.set_sensitive
@@ -1974,10 +1988,8 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 
 			allow_resize
 			if not hori_split_window.is_vertical then
---  				object_form.set_height (object_height)
 				object_form.manage
 			else
---  				object_form.set_width (object_width)
 				object_form.manage
 			end
 			forbid_resize

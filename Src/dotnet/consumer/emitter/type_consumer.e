@@ -65,7 +65,11 @@ feature {NONE} -- Initialization
 					-- Resize array only if needed. To ensure that it contains
 					-- no void element in case no interfaces were added to it
 					-- in the above loop.
-				interfaces := interfaces.subarray (1, count)
+				if count > 0 then
+					interfaces := interfaces.subarray (1, count)
+				else
+					create interfaces.make (1, 0)
+				end
 			end
 
 			if t.is_nested_public or t.is_nested_family or t.is_nested_fam_or_assem then

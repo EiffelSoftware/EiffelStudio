@@ -81,6 +81,18 @@ feature -- Status report
 				Cb_getdroppedstate, 0, 0) = 1
 		end
 
+	get_image_list: WEL_IMAGE_LIST is
+       		-- Get the image list associated with this combination box.
+       		-- Returns Void if none.\
+       	local 
+       		handle: POINTER
+       	do
+       		handle := cwel_integer_to_pointer ( cwin_send_message_result (item, Cbem_getimagelist, 0, 0) )
+       		if handle /= default_pointer then
+       			create Result.make_by_pointer(handle)
+       		end
+       	end
+
 feature -- Status setting
 
 	set_item_info (index: INTEGER; an_item: WEL_COMBO_BOX_EX_ITEM) is
@@ -113,6 +125,20 @@ feature -- Status setting
 		ensure
 			list_not_shown: not list_shown
 		end
+
+	set_image_list(an_imagelist: WEL_IMAGE_LIST) is
+    		-- Set the current image list to `an_imagelist'.
+       		-- If `an_imagelist' is set to Void, it removes
+       		-- the current associated image list (if any).
+       	do
+       		-- Then, associate the image list to the combination box.
+       		if an_imagelist /= Void then
+       			cwin_send_message (item, Cbem_setimagelist, 0, cwel_pointer_to_integer (an_imagelist.item))
+       		else
+       			cwin_send_message (item, Cbem_setimagelist, 0, 0)
+       			-- 0 correspond to NULL.
+       		end
+       	end
 
 feature -- Element change
 

@@ -182,7 +182,7 @@ feature {NONE} -- Externals
 	create_table (size: INTEGER): POINTER is
 			-- Create a C array of `size'.
 		external
-			"C | %"special_tables.h%""
+			"C (int): EIF_POINTER | %"special_tables.h%""
 		alias
 			"table_malloc"
 		end
@@ -190,23 +190,21 @@ feature {NONE} -- Externals
 	table_free (p: POINTER) is
 			-- Free the previously created table with `create_table'.
 		external
-			"C | %"special_tables.h%""
-		alias
-			"table_free"
+			"C (AREA_TYPE) | %"special_tables.h%""
 		end
 
 	get_value (p: POINTER; class_type_id: INTEGER): INTEGER is
 			-- Get the polymorphic status for current table `p' corresponding
 			-- to a certain ROUTINE_ID and a certain `class_type_id'.
 		external
-			"C | %"special_tables.h%""
+			"C (AREA_TYPE, int): EIF_INTEGER | %"special_tables.h%""
 		end
 
 	put_value (p: POINTER; class_type_id: INTEGER; v: BOOLEAN) is
 			-- Set the polymorphic status for current table `p' corresponding
 			-- to a certain ROUTINE_ID and a certain `class_type_id'.
 		external
-			"C | %"special_tables.h%""
+			"C (AREA_TYPE, int, EIF_BOOLEAN) | %"special_tables.h%""
 		end
 
 	is_feature_polymorphic: INTEGER is 3

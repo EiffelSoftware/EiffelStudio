@@ -62,23 +62,6 @@ feature -- Access
 	parent_imp: EV_MENU_ITEM_HOLDER_IMP
 			-- Parent of the current widget.
 
---	count: INTEGER is
---			-- Number of direct children of the holder.
---		do
---			check
---				To_be_implemented: False
---			end
---		end
-
---	get_item (pos: INTEGER): EV_ITEM is
---			-- Give the item of the list at the zero-base
---			-- `pos'.
---		do
----			check
---				To_be_implemented: False
---			end
---		end
-
 	index: INTEGER is
 			-- Index of the current item.
 		do

@@ -65,8 +65,6 @@ feature -- Status setting
 	set_position (value: INTEGER) is
 			-- Make `value' the new position of the splitter.
 			-- `value' is given in pixel.
-			-- This function works only when the window, in which
-			-- the paned is, is shown.
 		do
 			gtk_paned_set_position (widget, value)
 		end

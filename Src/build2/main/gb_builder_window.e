@@ -17,8 +17,20 @@ inherit
 		end
 		
 	GB_CONSTANTS
+		export
+			{NONE} all
+		end
 		
 	GB_COMMAND_HANDLER
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+		
+	GB_WIDGET_UTILITIES
+		export
+			{NONE} all
 		undefine
 			default_create, copy
 		end
@@ -31,22 +43,12 @@ feature -- Initialization
 			button: EV_BUTTON
 		do
 			Precursor {EV_DIALOG}
-			set_title (gb_builder_window_title)
-			
-				-- We must now temporarily create a new button, and add it to `Current'
-				-- as the default cancel button. We then remove it. This is necessary so
-				-- that we have access to the minimize, maximize and close buttons.
-				-- Note that we have custom implementations of EV_DIALOG_IMP, in order to
-				-- fire these actions when the button is not visible.
-			create button
-			extend (button)
-			button.select_actions.extend (agent show_hide_builder_window_command.disable_selected)
-			set_default_cancel_button (button)
-			prune (button)
-			
+			set_title (gb_builder_window_title)			
+				-- Set up cancel actions on `Current'.
+			fake_cancel_button (Current, agent show_hide_builder_window_command.execute)
 			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_builder_window @ 1)
 		end
-		
+
 feature -- Access
 
 	object: GB_OBJECT

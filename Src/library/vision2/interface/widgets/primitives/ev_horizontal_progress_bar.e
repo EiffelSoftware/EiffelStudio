@@ -3,8 +3,8 @@ indexing
 		"Horizontal bar graph gauge for displaying progress of a process."
 	appearance:
 		"+-------------+%N%
-		"|###   25%    |%N%
-		"+-------------+"
+		%|###   25%    |%N%
+		%+-------------+"
 	status: "See notice at end of class"
 	keywords: "status, progress, bar, horizontal"
 	date: "$Date$"
@@ -61,6 +61,9 @@ end -- class EV_HORIZONTAL_PROGRESS_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/03/21 02:23:51  oconnor
+--| syntax
+--|
 --| Revision 1.8  2000/03/21 02:09:45  oconnor
 --| comments and formatting
 --|

@@ -19,24 +19,6 @@ feature -- Access
 			Result := wel_text
 		end
 
-	alignment: EV_TEXT_ALIGNMENT is
-			-- Alignment of `text' on `Current'.
-		do
-			inspect text_alignment
-				when text_alignment_left then 
-					create Result.make_with_left_alignment
-				when text_alignment_right then
-					create Result.make_with_right_alignment
-				when text_alignment_center then
-					create Result.make_with_center_alignment
-				end
-		end
-
-	text_alignment: INTEGER
-			-- Current text alignment. Possible value are
-			--	* Text_alignment_left
-			--	* Text_alignment_right
-			--	* Text_alignment_center
 
 feature -- Element change
 
@@ -46,34 +28,7 @@ feature -- Element change
 			wel_set_text (a_text)
 		end
 
-	align_text_center is
-			-- Display `text' centered.
-		do
-			text_alignment := text_alignment_center
-		end
-
-	align_text_right is
-			-- Display `text' right aligned.
-		do
-			text_alignment := text_alignment_right
-		end
-        
-	align_text_left is
-			-- Display `text' left aligned.
-		do
-			text_alignment := text_alignment_left 	
-		end
-
 feature {NONE} -- Implementation
-
-	Text_alignment_left: INTEGER is 0
-			-- Left aligned text.
-
-	Text_alignment_right: INTEGER is 1
-			-- Right aligned text.
-
-	Text_alignment_center: INTEGER is 2
-			-- Centered text.
 
 	wel_set_text (a_text: STRING) is
 			-- Set `a_text' in WEL object.

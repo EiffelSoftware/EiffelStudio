@@ -36,11 +36,15 @@ feature
 			-- Initialization
 		do
 			basic_make (cl_type, f);
+			is_cpp := f.is_cpp;
 			external_name := f.external_name;
 		end;
 
 	is_external: BOOLEAN is True
 			-- Is the current executino unit an external one ?
+
+	is_cpp: BOOLEAN
+			-- Is Current a C++ member?
 
 	compound_name: STRING is
 			-- Compound C routine name

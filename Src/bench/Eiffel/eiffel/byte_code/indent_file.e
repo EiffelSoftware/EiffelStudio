@@ -1,4 +1,7 @@
--- A file with primitives for indenting
+indexing
+	description: "A file with primitives for indenting"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class INDENT_FILE
 
@@ -21,7 +24,7 @@ inherit
 		end
 
 create
-	make, make_open_append, make_open_write, make_c_code_file
+	make, make_open_write, make_c_code_file
 
 feature {NONE} -- Initialization
 

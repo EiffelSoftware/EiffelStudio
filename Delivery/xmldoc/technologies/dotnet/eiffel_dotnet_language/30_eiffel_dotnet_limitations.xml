@@ -5,16 +5,12 @@
 			<size>2</size>Differences between Eiffel and Eiffel for .NET
 		</heading>
 		<heading>
-			<size>3</size>Limitation of Eiffel for .NET in version 5. 1
+			<size>3</size>Limitation of Eiffel for .NET in version 5. 2
 		</heading>
-		<paragraph>Most of the Eiffel mechanisms are supported in 5. 1. All missing features listed below are planned for addition in 5. 2:</paragraph>
+		<paragraph>Most of the Eiffel mechanisms are supported in 5. 2. All missing features listed below are planned for addition in future releases: </paragraph>
 		<list ordered="false">
-			<item>No expanded class support</item>
-			<item>No generic parameter creation</item>
-			<item>No correct creation of object whose type is anchored to another one. </item>
-			<item>Partial implementation of generic conformance (same as what was supported up to and including ISE Eiffel 4. 2). </item>
-			<item>Eiffel classes cannot inherit from .NET classes, they can only be clients</item>
-			<item>Compiler performances are poor (both in terms of memory usage and speed)</item>
+			<item>No creation of Eiffel expanded class support</item>
+			<item>Partial implementation of generic conformance (same as what was supported up to and including ISE Eiffel 4.2). </item>
 		</list>
 		<paragraph>Eiffel for .NET supports:</paragraph>
 		<list ordered="false">
@@ -30,15 +26,15 @@
 		</heading>
 		<paragraph>The following syntax can be used to declare .NET custom attributes on Eiffel entities (features and classes):</paragraph>
 		<code_block>
-empty: BOOLEAN is
-	indexing
-		description: "Is Current empty?"
-		attribute: create {SYSTEM_OBSOLETEATTRIBUTE}.make_obsoleteattribute_1 ("Use `is_empty' instead") end
-	obsolete
-		"Use is_empty instead"
-	do
-		Result := is_empty
-	end
+	<feature_name>empty</feature_name><symbol>:</symbol> <class_name>BOOLEAN</class_name> <keyword>is</keyword>
+		<keyword>indexing</keyword>
+			<comment>description</comment><symbol>:</symbol> "<string>Is Current empty?</string>"
+			<comment>attribute</comment><symbol>:</symbol> <keyword>create</keyword> <symbol>{</symbol><class_name>SYSTEM_OBSOLETEATTRIBUTE</class_name><symbol>}</symbol><feature_name></feature_name>.<feature_name>make_obsoleteattribute_1</feature_name> <symbol>(</symbol>"<string>Use `is_empty</string><symbol>'</symbol> instead"<symbol>)</symbol> <keyword>end</keyword>
+		<keyword>obsolete</keyword>
+			"<string>Use is_empty instead</string>"
+		<keyword>do</keyword>
+			Result <symbol>:</symbol><symbol>=</symbol> is_empty
+		<keyword>end</keyword>
 </code_block>
 		<paragraph>The previous example shows the declaration of the obsolete feature 
 			<code>

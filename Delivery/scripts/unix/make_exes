@@ -5,6 +5,7 @@ remtrace Update all source files.
 cd $EIFFEL_SRC
 exprt -r $DEFAULT_CVS_TAG -d Eiffel Eiffel
 exprt -r $DEFAULT_CVS_TAG -d C runtime
+exprt -r $DEFAULT_CVS_TAG -d dotnet Src/dotnet
 exprt -r $DEFAULT_CVS_TAG -d C_library Src/C_library
 
 # These directories should already have been created by make_delivery. Whatever...
@@ -32,69 +33,37 @@ if [ ! "$NO_NEW_EC" ]; then
 	move ec.tar.gz $EXPORT_DIR
 
 	if [ "$MULTIPLE_EDITIONS" ]; then
-   remtrace Student edition
-	cd $EIFFEL_SRC/Eiffel/API/constants
-   sed -e "s/has_metrics:\ BOOLEAN\ is\ True/has_metrics:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
-   move new_eiffel_env.e eiffel_env.e
-   sed -e "s/has_documentation_generation:\ BOOLEAN\ is\ True/has_documentation_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
-   move new_eiffel_env.e eiffel_env.e
-   sed -e "s/has_profiler:\ BOOLEAN\ is\ True/has_profiler:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
-   move new_eiffel_env.e eiffel_env.e
-   sed -e "s/has_xmi_generation:\ BOOLEAN\ is\ True/has_xmi_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
-   move new_eiffel_env.e eiffel_env.e
-   sed -e "s/has_dll_generation:\ BOOLEAN\ is\ True/has_dll_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
-   move new_eiffel_env.e eiffel_env.e                                               
-	cd $EIFFEL_SRC/Eiffel/switch/license/license
-	sed -e "s/Studio_unix_enterprise_key_51/studio_unix_student_key_51/g" bench_licence.e >> new_bench_license.e
-	move new_bench_license.e bench_licence.e
-   cd $FINALIZATION_DIR
-   clean_project
-   finalize $NEW_EIFFEL_SRC/Eiffel/Ace/newbench.linux.ace
-   tgz_ccode ec
-   if [ ! -e ec.tar.gz ]; then
-      echo Could not finalize a new EiffelStudio
-      CANCEL
-   fi
-   clean_project
-   move ec.tar.gz $EXPORT_DIR/ecstudent.tar.gz
-
-	remtrace Home edition
-	cd $EIFFEL_SRC/Eiffel/API/constants
-   sed -e "s/has_case:\ BOOLEAN\ is\ True/has_case:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
-   move new_eiffel_env.e eiffel_env.e
-	cd $EIFFEL_SRC/Eiffel/switch/license/license
-	sed -e "s/studio_unix_student_key_51/studio_unix_home_key_51/g" bench_licence.e >> new_bench_license.e
-	move new_bench_license.e bench_licence.e
-	cd $FINALIZATION_DIR
-   clean_project
-   finalize $NEW_EIFFEL_SRC/Eiffel/Ace/newbench.linux.ace
-   tgz_ccode ec
-   if [ ! -e ec.tar.gz ]; then
-      echo Could not finalize a new EiffelStudio
-      CANCEL
-   fi
-   clean_project
-   move ec.tar.gz $EXPORT_DIR/echome.tar.gz
-
-   remtrace Professional edition
-   cd $EIFFEL_SRC/Eiffel/API/constants
-   sed -e "s/has_documentation_generation:\ BOOLEAN\ is\ False/has_documentation_generation:\ BOOLEAN\ is\ True/g" eiffel_env.e >> new_eiffel_env.e
-   move new_eiffel_env.e eiffel_env.e
-   sed -e "s/has_dll_generation:\ BOOLEAN\ is\ False/has_dll_generation:\ BOOLEAN\ is\ True/g" eiffel_env.e >> new_eiffel_env.e
-   move new_eiffel_env.e eiffel_env.e
-	cd $EIFFEL_SRC/Eiffel/switch/license/license
-	sed -e "s/studio_unix_home_key_51/studio_unix_professional_key_51/g" bench_licence.e >> new_bench_license.e
-	move new_bench_license.e bench_licence.e
-   cd $FINALIZATION_DIR
-   clean_project
-   finalize $NEW_EIFFEL_SRC/Eiffel/Ace/newbench.linux.ace
-   tgz_ccode ec
-   if [ ! -e ec.tar.gz ]; then
-      echo Could not finalize a new EiffelStudio
-      CANCEL
-   fi
-   clean_project
-   move ec.tar.gz $EXPORT_DIR/ecpro.tar.gz
+		remtrace Free version edition
+		cd $EIFFEL_SRC/Eiffel/API/constants
+		sed -e "s/Version_type_name:\ STRING\ is\ \"Enterprise\ Edition\"/Version_type_name:\ STRING\ is\ \"Free\ Edition\"/g" system_constants.e >> new_system_constants.e
+		move new_system_constants.e system_constants.e
+		sed -e "s/has_case:\ BOOLEAN\ is\ True/has_case:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
+		move new_eiffel_env.e eiffel_env.e
+		sed -e "s/has_metrics:\ BOOLEAN\ is\ True/has_metrics:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
+		move new_eiffel_env.e eiffel_env.e
+		sed -e "s/has_profiler:\ BOOLEAN\ is\ True/has_profiler:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
+		move new_eiffel_env.e eiffel_env.e
+		sed -e "s/has_documentation_generation:\ BOOLEAN\ is\ True/has_documentation_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
+		move new_eiffel_env.e eiffel_env.e
+		sed -e "s/has_xmi_generation:\ BOOLEAN\ is\ True/has_xmi_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
+		move new_eiffel_env.e eiffel_env.e
+		sed -e "s/has_dll_generation:\ BOOLEAN\ is\ True/has_dll_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
+		move new_eiffel_env.e eiffel_env.e
+		sed -e "s/\has_signable_generation:\ BOOLEAN\ is\ True/\has_signable_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
+		move new_eiffel_env.e eiffel_env.e
+		cd $EIFFEL_SRC/Eiffel/switch/license/license
+		sed -e "s/Is_free_version:\ BOOLEAN\ is\ False/\Is_free_version:\ BOOLEAN\ is\ True/g" bench_licence.e >> new_bench_license.e
+		move new_bench_license.e bench_licence.e
+		cd $FINALIZATION_DIR
+		clean_project
+		finalize $NEW_EIFFEL_SRC/Eiffel/Ace/newbench.linux.ace
+		tgz_ccode ec
+		if [ ! -e ec.tar.gz ]; then
+			echo Could not finalize a new EiffelStudio
+			CANCEL
+		fi
+		clean_project
+		move ec.tar.gz $EXPORT_DIR/ecfree.tar.gz
 	fi
 else
 	# FIXME doesn't work.
@@ -112,5 +81,3 @@ if [ ! -f quick_finalize.tar.gz ]; then
 fi
 clean_project
 move quick_finalize.tar.gz $EXPORT_DIR
-
-

@@ -11,39 +11,47 @@ inherit
 
 	BAR_AND_TEXT
 		rename
-			attach_all as default_attach_all,
-			make as normal_create,
 			default_format as old_default_format,
 			close_windows as old_close_windows
 		redefine
-			text_window, build_format_bar, hole, build_widgets,
+			text_window, build_format_bar, hole, build_widgets, attach_all,
 			tool_name, set_default_format, stone, stone_type, synchronize,
-			process_object, hole_button
+			process_object, hole_button, build_basic_bar,
+			close
 		end;
 	BAR_AND_TEXT
 		rename
 			default_format as old_default_format
 		redefine
 			text_window, build_format_bar, hole, close_windows,
-			tool_name, make, build_widgets, attach_all, set_default_format,
-			stone, stone_type, synchronize, process_object, hole_button
+			tool_name, build_widgets, attach_all, set_default_format,
+			stone, stone_type, synchronize, process_object, hole_button,
+			build_basic_bar, close
 		select
-			make, attach_all, close_windows
+			close_windows
 		end;
 	SHARED_APPLICATION_EXECUTION;
 	WARNING_MESSAGES
 
 creation
 
-	make
+	make, form_create
 
 feature -- Initialization
 
-	make (a_screen: SCREEN) is
+	make (a_shell: EB_SHELL) is
 			-- Create an object tool.
 		do
-			normal_create (a_screen);
+			show_menus := True;
+			make_shell (a_shell);
 			text_window.set_read_only;
+		end;
+
+	form_create (a_form: FORM) is
+			-- Create Current as a form.
+		do
+			show_menus := False;
+			make_form (a_form)
 		end;
 
 feature -- Window Properties
@@ -65,7 +73,7 @@ feature -- Window Properties
 			Result := Object_type
 		end
  
-  feature -- Access
+feature -- Access
  
 	kept_objects: LINKED_SET [STRING] is
 			-- Hector addresses of displayed clickable objects and
@@ -89,8 +97,8 @@ feature -- Window Properties
 			history.go_i_th (pos)
 		end;
  
-  feature -- Update
- 
+feature -- Update
+
 	hang_on is
 			-- Make object addresses unclickable.
 		do
@@ -104,11 +112,11 @@ feature -- Window Properties
 		do
 			status := Application.status;
 			if status = Void then
-				warner (Current).gotcha_call (w_System_not_running)
+				warner (eb_shell).gotcha_call (w_System_not_running)
 			elseif not status.is_stopped then
-				warner (Current).gotcha_call (w_System_not_stopped)
+				warner (eb_shell).gotcha_call (w_System_not_stopped)
 			elseif not a_stone.is_valid then
-				warner (Current).gotcha_call (w_Object_not_inspectable)
+				warner (eb_shell).gotcha_call (w_Object_not_inspectable)
 			else
 				text_window.last_format.execute (a_stone);
 				history.extend (a_stone)
@@ -122,13 +130,40 @@ feature -- Window Properties
 		do
 			status := Application.status;
 			if status = Void then
-				warner (Current).gotcha_call (w_System_not_running)
+				warner (eb_shell).gotcha_call (w_System_not_running)
 			elseif not status.is_stopped then
-				warner (Current).gotcha_call (w_System_not_stopped)
+				warner (eb_shell).gotcha_call (w_System_not_stopped)
 			else
 				synchronise_stone
 			end
 		end
+
+	close_windows is
+			-- Close sub-windows.
+		local
+			sc: SLICE_COMMAND;
+			sw: SLICE_W
+		do
+			old_close_windows;
+			sc ?= slice_cmd_holder.associated_command;
+			sw ?= sc.slice_window
+			if sw.is_popped_up then
+				sw.popdown
+			end
+		end;
+
+feature -- Resetting
+
+	close is
+			-- Reset
+		do
+			if is_a_shell then
+				hide;
+				reset
+			else
+				Project_tool.display_object_cmd_holder.associated_command.work (Void)
+			end
+		end;
 
 feature -- Settings
 
@@ -137,7 +172,7 @@ feature -- Settings
 		do
 			text_window.set_last_format (default_format);
 		end;
-
+		
 feature -- Commands
 
 	showattr_frmt_holder: FORMAT_HOLDER;
@@ -163,23 +198,72 @@ feature {NONE} -- Properties; Forms And Holes
 	command_bar: FORM;
 			-- Bar with the command buttons
 
-feature {NONE} -- Implementation; Window Settings
-
-	close_windows is
-			-- Close sub-windows.
-		local
-			sc: SLICE_COMMAND;
-			sw: SLICE_W
-		do
-			old_close_windows;
-			sc ?= slice_cmd_holder.associated_command;
-			sw ?= sc.slice_window
-			if sw.is_popped_up then
-				sw.popdown
-			end
-		end;
-
 feature {NONE} -- Implementation; Graphical Interface
+
+	build_basic_bar is
+			-- Build top bar (only the basics).
+		local
+			quit_cmd: QUIT_FILE;
+			quit_button: EB_BUTTON;
+			quit_menu_entry: EB_MENU_ENTRY;
+			exit_menu_entry: EB_MENU_ENTRY;
+			change_font_cmd: CHANGE_FONT;
+			change_font_button: EB_BUTTON;
+			change_font_menu_entry: EB_MENU_ENTRY;
+			search_cmd: SEARCH_STRING;
+			search_button: EB_BUTTON;
+			search_menu_entry: EB_MENU_ENTRY;
+		do
+				-- Creation of all the commands, holes, buttons, and menu entries
+			!! hole.make (text_window);
+			!! hole_button.make (hole, edit_bar);
+			!! hole_holder.make_plain (hole);
+			hole_holder.set_button (hole_button);
+			!! search_cmd.make (edit_bar, text_window);
+			!! search_button.make (search_cmd, edit_bar);
+			if show_menus then
+				!! search_menu_entry.make (search_cmd, edit_menu);
+				!! search_cmd_holder.make (search_cmd, search_button, search_menu_entry);
+			else
+				!! search_cmd_holder.make_plain (search_cmd);
+				search_cmd_holder.set_button (search_button)
+			end;
+			!! change_font_cmd.make (text_window);
+			!! change_font_button.make (change_font_cmd, edit_bar);
+			if not change_font_cmd.tabs_disabled then
+				change_font_button.add_button_click_action (3, change_font_cmd, change_font_cmd.tab_setting)
+			end;
+			if show_menus then
+				!! change_font_menu_entry.make (change_font_cmd, preference_menu);
+				!! change_font_cmd_holder.make (change_font_cmd, change_font_button, change_font_menu_entry)
+			else
+				!! change_font_cmd_holder.make_plain (change_font_cmd);
+				change_font_cmd_holder.set_button (change_font_button)
+			end;
+			!! quit_cmd.make (text_window);
+			!! quit_button.make (quit_cmd, edit_bar);
+			if show_menus then
+				!! quit_menu_entry.make (quit_cmd, file_menu);
+				!! quit.make (quit_cmd, quit_button, quit_menu_entry);
+				!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu);
+				!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command);
+				exit_cmd_holder.set_menu_entry (exit_menu_entry);
+			else
+				!! quit.make_plain (quit_cmd);
+				quit.set_button (quit_button)
+			end
+
+				-- Attachments are done here, because of speed.
+				-- I know it's not really maintainable.
+			edit_bar.attach_left (hole_button, 0);
+			edit_bar.attach_top (hole_button, 0);
+			edit_bar.attach_top (search_button, 0);
+			edit_bar.attach_top (change_font_button, 0);
+			edit_bar.attach_top (quit_button, 0);
+			edit_bar.attach_right_widget (change_font_button, search_button, 0);
+			edit_bar.attach_right_widget (quit_button, change_font_button, 5);
+			edit_bar.attach_right (quit_button, 0);
+		end;
 
 	build_format_bar is
 			-- Build formatting buttons in `format_bar'.
@@ -194,12 +278,22 @@ feature {NONE} -- Implementation; Graphical Interface
 				-- First we create all objects.
 			!! once_cmd.make (text_window);
 			!! once_button.make (once_cmd, format_bar);
-			!! once_menu_entry.make (once_cmd, format_menu);
-			!! showonce_frmt_holder.make (once_cmd, once_button, once_menu_entry);
+			if show_menus then
+				!! once_menu_entry.make (once_cmd, format_menu);
+				!! showonce_frmt_holder.make (once_cmd, once_button, once_menu_entry)
+			else
+				!! showonce_frmt_holder.make_plain (once_cmd);
+				showonce_frmt_holder.set_button (once_button)
+			end;
 			!! attr_cmd.make (text_window);
 			!! attr_button.make (attr_cmd, format_bar);
-			!! attr_menu_entry.make (attr_cmd, format_menu);
-			!! showattr_frmt_holder.make (attr_cmd, attr_button, attr_menu_entry);
+			if show_menus then
+				!! attr_menu_entry.make (attr_cmd, format_menu);
+				!! showattr_frmt_holder.make (attr_cmd, attr_button, attr_menu_entry);
+			else
+				!! showattr_frmt_holder.make_plain (attr_cmd);
+				showattr_frmt_holder.set_button (attr_button)
+			end;
 
 				-- Now we do the attachments (for reason of speed).
 			format_bar.attach_top (attr_button, 0);
@@ -210,27 +304,55 @@ feature {NONE} -- Implementation; Graphical Interface
 
 	build_widgets is
 		do
-			set_default_size;
-			if tabs_disabled then
-				!! text_window.make (new_name, global_form, Current);
-			else
-				!OBJECT_TAB_TEXT! text_window.make (new_name, global_form, Current);
+			if eb_shell /= Void then
+				set_default_size
 			end;
-			build_menus;
+			if tabs_disabled then
+				!! text_window.make (new_name, Current, Current)
+			else
+				!OBJECT_TAB_TEXT! text_window.make (new_name, Current, Current)
+			end;
+			if show_menus then
+				build_menus
+			end
 			!! edit_bar.make (new_name, global_form);
 			build_bar;
 			!! format_bar.make (new_name, global_form);
 			build_format_bar;
 			!! command_bar.make (new_name, global_form);
 			build_command_bar;
-			fill_menus;
+			if show_menus then
+				fill_menus
+			end
 			text_window.set_last_format (default_format);
 			attach_all
 		end;
 
 	attach_all is
 		do
-			default_attach_all;
+			if show_menus then
+				global_form.attach_left (menu_bar, 0);
+				global_form.attach_right (menu_bar, 0);
+				global_form.attach_top (menu_bar, 0)
+			end;
+
+			global_form.attach_left (edit_bar, 0);
+			global_form.attach_right (edit_bar, 0);
+			if show_menus then
+				global_form.attach_top_widget (menu_bar, edit_bar, 0)
+			else
+				global_form.attach_top (edit_bar, 0)
+			end
+
+			global_form.attach_left (text_window, 0);
+			global_form.attach_right (text_window, 0);
+			global_form.attach_bottom_widget (format_bar, text_window, 0);
+			global_form.attach_top_widget (edit_bar, text_window, 0);
+
+			global_form.attach_left (format_bar, 0);
+			global_form.attach_right (format_bar, 0);
+			global_form.attach_bottom (format_bar, 0);
+
 			global_form.detach_right (text_window);
 			global_form.attach_right (command_bar, 0);
 			global_form.attach_bottom (command_bar, 0);
@@ -253,32 +375,57 @@ feature {NONE} -- Implementation; Graphical Interface
 			slice_cmd: SLICE_COMMAND;
 			slice_button: EB_BUTTON;
 			slice_menu_entry: EB_MENU_ENTRY;
-			sep: SEPARATOR
+			sep: SEPARATOR;
+			history_list_cmd: OBJECT_HISTORY
 		do
 				-- Here we create all objects needed for the attachments.
 			!! slice_cmd.make (command_bar, text_window);
 			!! slice_button.make (slice_cmd, command_bar);
 			slice_button.add_button_click_action (3, slice_cmd, Void);
-			!! slice_menu_entry.make (slice_cmd, special_menu);
-				-- This is a little hack, since we want the slice window to come up.
-				-- The appropriate argument for command is than Void instead of
-				-- the `text_window'.
-			slice_menu_entry.remove_activate_action (slice_cmd, slice_cmd.text_window);
-			slice_menu_entry.add_activate_action (slice_cmd, Void);
-			!! slice_cmd_holder.make (slice_cmd, slice_button, slice_menu_entry);
-			!! sep.make (new_name, special_menu);
+			if show_menus then
+				!! slice_menu_entry.make (slice_cmd, special_menu);
+					-- This is a little hack, since we want the slice window to come up.
+					-- The appropriate argument for command is than Void instead of
+					-- the `text_window'.
+				slice_menu_entry.remove_activate_action (slice_cmd, slice_cmd.text_window);
+				slice_menu_entry.add_activate_action (slice_cmd, Void);
+				!! slice_cmd_holder.make (slice_cmd, slice_button, slice_menu_entry)
+			else
+				!! slice_cmd_holder.make_plain (slice_cmd);
+				slice_cmd_holder.set_button (slice_button)
+			end;
 			!! current_target_cmd.make (text_window);
 			!! current_target_button.make (current_target_cmd, command_bar);
-			!! current_target_menu_entry.make (current_target_cmd, special_menu);
-			!! current_target_cmd_holder.make (current_target_cmd, current_target_button, current_target_menu_entry);
+			if show_menus then
+				!! sep.make (new_name, special_menu);
+				!! current_target_menu_entry.make (current_target_cmd, special_menu);
+				!! current_target_cmd_holder.make (current_target_cmd, current_target_button, current_target_menu_entry);
+			else
+				!! current_target_cmd_holder.make_plain (current_target_cmd);
+				current_target_cmd_holder.set_button (current_target_button)
+			end;
 			!! next_target_cmd.make (text_window);
 			!! next_target_button.make (next_target_cmd, command_bar);
-			!! next_target_menu_entry.make (next_target_cmd, special_menu);
-			!! next_target_cmd_holder.make (next_target_cmd, next_target_button, next_target_menu_entry);
+			if show_menus then
+				!! next_target_menu_entry.make (next_target_cmd, special_menu);
+				!! next_target_cmd_holder.make (next_target_cmd, next_target_button, next_target_menu_entry);
+			else
+				!! next_target_cmd_holder.make_plain (next_target_cmd);
+				next_target_cmd_holder.set_button (next_target_button)
+			end;
 			!! previous_target_cmd.make (text_window);
 			!! previous_target_button.make (previous_target_cmd, command_bar);
-			!! previous_target_menu_entry.make (previous_target_cmd, special_menu);
-			!! previous_target_cmd_holder.make (previous_target_cmd, previous_target_button, previous_target_menu_entry);
+			if show_menus then
+				!! previous_target_menu_entry.make (previous_target_cmd, special_menu);
+				!! previous_target_cmd_holder.make (previous_target_cmd, previous_target_button, previous_target_menu_entry);
+			else
+				!! previous_target_cmd_holder.make_plain (previous_target_cmd);
+				previous_target_cmd_holder.set_button (previous_target_button)
+			end;
+
+			!! history_list_cmd.make (text_window);
+			next_target_button.add_button_click_action (3, history_list_cmd, next_target_button);
+			previous_target_button.add_button_click_action (3, history_list_cmd, previous_target_button);
 
 				-- Here we do the attachments (for reasons of speed).
 			command_bar.attach_left (slice_button, 0);
@@ -295,10 +442,15 @@ feature {NONE} -- Implementation; Graphical Interface
 			command_bar.attach_bottom_widget (next_target_button, previous_target_button, 0);
 		end;
 
+feature {NONE} -- Properties
+
 	default_format: FORMAT_HOLDER is
 			-- Default format shows attributes' values
 		do
 			Result := showattr_frmt_holder
 		end;
+
+	show_menus: BOOLEAN
+			-- Should the menus be shown?
 
 end -- class OBJECT_W

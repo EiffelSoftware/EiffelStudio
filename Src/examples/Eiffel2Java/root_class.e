@@ -8,7 +8,7 @@ class
 inherit
 	SHARED_JNI_ENVIRONMENT
 
-creation
+create
 	make
 
 feature -- Creation

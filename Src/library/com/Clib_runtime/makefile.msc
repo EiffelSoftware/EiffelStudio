@@ -8,10 +8,10 @@ CFLAGS = -c -Ox -I$(LIBRARY)\com\runtime\include -I$(EIFFEL4)\bench\spec\windows
 
 OBJ = ecom_exception.obj  ecom_runtime_c_e.obj ecom_runtime_ce_arrays.obj ecom_runtime_e_c.obj
 
-ecom_runtime.lib: $(OBJ)
+com_runtime.lib: $(OBJ)
 	if exist $@ del $@
 	lib /OUT:$@ $(OBJ)
-	if not exist $(LIBRARY)\com\runtime\clib\lib mkdir $(LIBRARY)\com\runtime\clib\lib
-	copy $@ $(LIBRARY)\com\runtime\clib\lib
+	if not exist $(LIBRARY)\com\runtime\lib mkdir $(LIBRARY)\com\runtime\lib
+	copy $@ $(LIBRARY)\com\runtime\lib
 	del $@
 	del *.obj

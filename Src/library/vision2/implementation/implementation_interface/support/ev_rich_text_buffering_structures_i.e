@@ -194,7 +194,7 @@ feature -- Status Setting
 				-- Add the first line which is always 1.
 			paragraph_start_indexes.extend (1)
 			
-			build_paragraph_from_format (rich_text.paragraph_format (1))
+			build_paragraph_from_format (rich_text.internal_paragraph_format (1))
 				-- Now iterate `a_string' and determine each line as determined by `%N'.
 			from
 				counter := 1
@@ -202,12 +202,12 @@ feature -- Status Setting
 				counter > a_text.count
 			loop
 				if a_text.item (counter).is_equal ('%N') then
-				if not rich_text.paragraph_format_contiguous (counter, counter + 2) then--rich_text.paragraph_format_contiguous (paragraph_start_indexes.last, counter + 2) then
+				if not rich_text.internal_paragraph_format_contiguous (counter, counter + 2) then
 						-- Note that we checked "counter + 2" as we find the %N that signifies a new line, and then
 						-- we must add one to convert to caret positions, and one to check that we are checking the first character
 						-- of the next line (past the %N) to determine if the format changed.
 					paragraph_start_indexes.extend (counter + 1)
-					build_paragraph_from_format (rich_text.paragraph_format (counter + 1))
+					build_paragraph_from_format (rich_text.internal_paragraph_format (counter + 1))
 				end
 				end
 				counter := counter + 1

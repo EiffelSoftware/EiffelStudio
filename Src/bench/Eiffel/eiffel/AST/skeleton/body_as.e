@@ -216,11 +216,13 @@ feature -- New feature description
 					if (ras = Void) then
 						const.set_value (constant.value_i)
 					else
+							-- We are handling a REAL constant so we need to convert
+							-- the `VALUE_I' object from REAL_VALUE_I into FLOAT_VALUE_I.
 						cvi := constant.value_i
 						if cvi.is_double then
 							rvi ?= cvi
 							create fvi
-							fvi.set_real_val (rvi.real_val)
+							fvi.set_real_value (rvi.double_value)
 							const.set_value (fvi)
 						else
 							const.set_value (cvi)

@@ -15,6 +15,8 @@ inherit
 
 	NEW_EB_CONSTANTS
 
+	EB_PROJECT_TOOL_DATA
+
 	EB_DEBUG_TOOL_DATA
 
 	EB_TOOL_COMMAND
@@ -139,9 +141,9 @@ feature -- Project initialization
 				create wd.make_default (Project_tool.parent, Interface_names.t_Warning, msg)
 			elseif project_dir.eifgen_exists then
 				msg := Warning_messages.w_Project_exists (project_dir.name)
---				create qd.make_with_text (Project_tool.parent, Interface_names.t_Warning, msg)
-				create qd.make (Project_tool.parent)
-				qd.set_message (msg)
+				create qd.make_with_text (Project_tool.parent, Interface_names.t_Warning, msg)
+--				create qd.make (Project_tool.parent)
+--				qd.set_message (msg)
 				create cmd.make (~execute_warner_ok)
 				qd.show_yes_no_buttons
 				qd.add_yes_command (cmd, Void)
@@ -155,7 +157,7 @@ feature -- Project initialization
 			-- Initialize project.
 		local
 			e_displayer: BENCH_ERROR_DISPLAYER
---			g_degree_output: GRAPHICAL_DEGREE_OUTPUT
+			g_degree_output: EB_GRAPHICAL_DEGREE_OUTPUT
 			msg: STRING
 		do
 			Eiffel_project.make_new (project_dir)
@@ -168,10 +170,10 @@ feature -- Project initialization
 			create e_displayer.make (Error_window)
 			Eiffel_project.set_error_displayer (e_displayer)
 			Application.set_interrupt_number (Debug_resources.interrupt_every_n_instructions.actual_value)
---			if not Project_resources.graphical_output_disabled.actual_value then
---				!! g_degree_output
---				Project_tool.set_progress_dialog (g_degree_output)
---			end
+			if not Project_resources.graphical_output_disabled.actual_value then
+				create g_degree_output.make (Project_tool.parent_window)
+				Project_tool.set_progress_dialog (g_degree_output)
+			end
 				-- We erase the content of the Project window
 			project_tool.active_menus (True)
 		end

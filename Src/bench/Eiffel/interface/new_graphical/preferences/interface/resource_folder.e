@@ -4,40 +4,61 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	RESOURCE_FOLDER
- 
+
+create
+	make
+
 feature -- Initialization
 
-	load_attributes is
-		deferred
+	make (imp: RESOURCE_FOLDER_I) is
+		do
+			implementation := imp
 		end
 
-feature -- Implementation
+feature -- Access
 
 --	path: STRING
 		-- Id of Current, it is unique.
 
-	name: STRING
-		-- Id of Current, it is unique.
+	name: STRING is
+			-- Id of Current, it is unique.
+		do
+			Result := implementation.name
+		end
 
-	description: STRING
-		-- Description of Current.
+	description: STRING is
+			-- Description of Current.
+		do
+			Result := implementation.description
+		end
 
-	resource_list: LINKED_LIST [RESOURCE]
-		-- List of resources.
+	resource_list: LINKED_LIST [RESOURCE] is
+			-- List of resources.
+		do
+			Result := implementation.resource_list
+		end
 
-	child_list: LINKED_LIST [like Current]
-		-- List of Categories.
+	child_list: LINKED_LIST [RESOURCE_FOLDER] is
+			-- List of Categories.
+		local
+			child_list_i: LINKED_LIST [RESOURCE_FOLDER_I]
+		do
+			child_list_i := implementation.child_list
+			create Result.make
+			from
+				child_list_i.start
+			until
+				child_list_i.after
+			loop
+				Result.extend (child_list_i.item.interface)
+				child_list_i.forth
+			end
+		end
 
-	structure: RESOURCE_STRUCTURE
+feature {NONE} -- Implementation
 
-feature -- Status Report
-
-	non_automatic_loading: BOOLEAN
-		-- Are contents of Current not computed at creation?
-
-	loading_not_done: BOOLEAN
-		-- Are contents of Current not been computed yet?
+	implementation: RESOURCE_FOLDER_I
 
 end -- class RESOURCE_FOLDER

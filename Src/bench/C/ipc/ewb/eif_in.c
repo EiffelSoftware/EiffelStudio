@@ -1,9 +1,9 @@
-#include "eif_io.h"
-#include "ewb.h"
 #include "eif_macros.h"
+#include "eif_io.h"
+#include "eif_in.h"
+#include "ewb.h"
 
 #ifdef EIF_WIN32
-#include "stream.h"
 extern STREAM *sp;
 #endif
 
@@ -41,7 +41,6 @@ void rqst_handler_to_c(EIF_OBJ eif_rqst_hdlr, EIF_INTEGER rqst_type, EIF_PROC ei
 	}
 }
 
-EIF_OBJ request_dispatch (Request rqst);
 
 EIF_OBJ request_handler (void)
 {
@@ -53,9 +52,6 @@ EIF_OBJ request_handler (void)
 #ifndef EIF_WIN32
 	STREAM *sp = stream_by_fd[EWBOUT];
 #endif
-	char *buf;
-	char *eif_string;
-
 	Request_Clean (rqst);
 		/* ensure Request is all 0 (recognized as non initialized) -- Didier */
 #ifdef EIF_WIN32
@@ -69,7 +65,6 @@ EIF_OBJ request_handler (void)
 
 EIF_OBJ request_dispatch (Request rqst)
 {
-	char *buf;
 	char *eif_string;
 
 	switch (rqst.rq_type) {

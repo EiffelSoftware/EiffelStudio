@@ -1,7 +1,7 @@
 TOP = ..\..
 CC = $cc
-RUN_TIME = $(TOP)\run-time
-CFLAGS = -I$(TOP) -I$(LIBDIR) -I$(RUN_TIME) -I$(LIBIDR)
+RUN_TIME = $(TOP)\run-time 
+CFLAGS = -I$(TOP) -I$(LIBDIR) -I$(RUN_TIME) -I$(TOP)\console -I$(LIBIDR)
 JCFLAGS = $(CFLAGS) $ccflags $optimize
 MAKE = make
 MV = copy

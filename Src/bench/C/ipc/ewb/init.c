@@ -38,7 +38,6 @@ extern HANDLE global_ewbin, global_ewbout, global_event_r, global_event_w;
 
 rt_public void init_connect(void)
 {
-	int s;			/* The connected socket descriptor */
 	STREAM *sp;		/* Stream used for communications with ised */
 
 #ifdef USE_ADD_LOG

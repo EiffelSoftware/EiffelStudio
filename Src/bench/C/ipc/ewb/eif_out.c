@@ -12,6 +12,8 @@
 
 #include "eif_io.h"
 #include "eif_eiffel.h"
+#include "eproto.h"
+
 #include "stack.h"
 
 #ifdef EIF_WIN32
@@ -263,7 +265,7 @@ rt_public void send_run_request(long int code, char *buf, long int len)
 */
 }
 
-request_dump (void)
-{
+void request_dump (void) {
 	send_rqst_1 (DUMP, 2L /* ST_FULL */);
 }
+

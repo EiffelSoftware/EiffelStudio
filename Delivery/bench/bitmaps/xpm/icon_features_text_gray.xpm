@@ -1,0 +1,42 @@
+/* XPM */
+static char *noname[] = {
+/* width height ncolors chars_per_pixel */
+"70 20 15 1",
+/* colors */
+"  c #000000",
+". c #E6E6E6",
+"X c #DADADA",
+"o c #D6D6D6",
+"O c #CECECE",
+"+ c #C0C0C0",
+"@ c #B6B6B6",
+"# c #929292",
+"$ c #868686",
+"% c #7A7A7A",
+"& c #626262",
+"* c #FFFFFF",
+"= c #4A4A4A",
+"- c #3E3E3E",
+"; c #1A1A1A",
+/* pixels */
+"ooooo%%oo%%%%%%%%ooooooooooooooooooooooooooooooooooooooooooooooooooooo",
+"oooo%**%%*****... oooooooooooooooooooooooooooooooooooooooooooooooooooo",
+"oooo%*O**OOOOOOO@* ooooooooooooooooooooooooooooooooooooooooooooooooooo",
+"oooo%*O##OOOO$$$$$* oooooooooooooooooooooooooooooooooooooooooooooooooo",
+"oooo%*-;;%$O#$-   $ oooooooooooooooooooooooooooooooooooooooooooooooooo",
+"oooo%%-oo-;O# -oo   oooooooooooooooooooooooooooooooooooooooooooooooooo",
+"oooooooooo;O$ oooooooo     ooooooooooooo ooooooooooooooooooooooooooooo",
+"oooooooooo;O$ oooooooo ooooooooooooooooo ooooooooooooooooooooooooooooo",
+"oo&&&& ooo$$= oooooooo oooooo   ooo   oo   o ooo o o oo   ooo   oooooo",
+"o&****+ o$*OO& ooooooo     o ooo ooooo o ooo ooo o  oo ooo o ooooooooo",
+"&&&&&&&&&&*$&= ooooooo ooooo     oo    o ooo ooo o ooo     o  oooooooo",
+"&********&*$&= ooooooo ooooo ooooo ooo o ooo ooo o ooo ooooooo  oooooo",
+"&***XXOO@&O$&= ooooooo ooooo ooo o ooo o ooo ooo o ooo ooo oooo oooooo",
+"&**XXOO@@&O$&= ooooooo oooooo   ooo    oo  oo    o oooo   oo   ooooooo",
+"&*XXOO@@@&O$&= ooooooooooooooooooooooooooooooooooooooooooooooooooooooo",
+"&*XOO@@@$&O$&= ooooooooooooooooooooooooooooooooooooooooooooooooooooooo",
+"&*OO@@@$$&O$&= ooooooooooooooooooooooooooooooooooooooooooooooooooooooo",
+"&*@@@@$$$&O$&= ooooooooooooooooooooooooooooooooooooooooooooooooooooooo",
+"         &&=== ooooooooooooooooooooooooooooooooooooooooooooooooooooooo",
+"oooooooooo    oooooooooooooooooooooooooooooooooooooooooooooooooooooooo"
+};

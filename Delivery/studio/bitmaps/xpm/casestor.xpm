@@ -4,8 +4,8 @@ static char *noname[] = {
 "16 16 4 1",
 /* colors */
 "  c #000000",
-". c #C0C0C0",
-"X c #808080",
+". c #D6D6CE",
+"X c #848484",
 "o c #FFFFFF",
 /* pixels */
 "................",

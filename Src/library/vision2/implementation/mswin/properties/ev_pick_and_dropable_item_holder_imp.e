@@ -42,16 +42,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
-			-- Wm_lbuttondown message
-		local
-			pt: WEL_POINT
-		do
-			internal_propagate_pointer_press (keys, x_pos, y_pos, 1)
-			pt := client_to_screen (x_pos, y_pos)
-			interface.pointer_button_press_actions.call ([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
-		end
-
 	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_mbuttondown message
 			-- See class WEL_MK_CONSTANTS for `keys' value
@@ -80,7 +70,23 @@ feature {NONE} -- Implementation
 			interface.pointer_button_press_actions.call ([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])	
 		end
 
-
+	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_rbuttondown message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		local
+			pt: WEL_POINT
+			item_is_pnd_source_at_entry: BOOLEAN
+		do
+			item_is_pnd_source_at_entry := item_is_pnd_source
+			create pt.make (x_pos, y_pos)
+			pt := client_to_screen (x_pos, y_pos)
+			internal_propagate_pointer_press (keys, x_pos, y_pos, 1)
+			if item_is_pnd_source = item_is_pnd_source_at_entry then
+				pnd_press (x_pos, y_pos, 1, pt.x, pt.y)
+			end
+			interface.pointer_button_press_actions.call ([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])	
+		end
+	
 	client_to_screen (x_pos, y_pos: INTEGER): WEL_POINT is
 		deferred
 		end

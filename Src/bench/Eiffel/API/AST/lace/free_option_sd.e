@@ -62,7 +62,7 @@ feature {NONE}
 			Result.force (inlining_size, "inlining_size");
 			Result.force (check_vape, "check_vape");
 			Result.force (collect, "collect");
-			Result.force (exception_stack_managed, "exception_stack_managed");
+			Result.force (exception_stack_managed, "exception_trace");
 			Result.force (precompilation, "precompiled");
 			Result.force (code_replication, "code_replication");
 			Result.force (fail_on_rescue, "fail_on_rescue");

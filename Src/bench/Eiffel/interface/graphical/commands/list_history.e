@@ -35,7 +35,7 @@ feature -- Properties
 	accelerator: STRING is
 			-- Accelerator action for menu entry
 		do
-			Result := Interface_names.a_List_targets
+			Result := Interface_names.t_empty
 		end
 
 feature {NONE} -- Execution

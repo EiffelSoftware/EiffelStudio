@@ -32,13 +32,6 @@ inherit
 			on_parented
 		end
 
-	WEL_LIST_VIEW_ITEM
-		rename
-			make as wel_make,
-			text as wel_text,
-			set_text as wel_set_text
-		end
-
 create
 	make
 
@@ -49,7 +42,6 @@ feature {NONE} -- Initialization
 			-- The sub-items start at 2. 1 is the index of
 			-- the current item.
 		do
-			wel_make
 			base_make (an_interface)
 		end
 
@@ -137,6 +129,10 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.43  2000/04/25 01:15:10  pichery
+--| Removed useless (and confusing)
+--| inheritance.
+--|
 --| Revision 1.42  2000/04/22 00:22:46  rogers
 --| Formatting.
 --|

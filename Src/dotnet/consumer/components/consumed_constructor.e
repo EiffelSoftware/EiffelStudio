@@ -15,6 +15,7 @@ inherit
 			dotnet_eiffel_name,
 			has_arguments, arguments, is_public,
 			is_frozen,
+			is_constructor,
 			set_is_public
 		end
 
@@ -56,6 +57,9 @@ feature -- Access
 
 	is_frozen: BOOLEAN is True
 			-- A constructor cannot be redefined.
+			
+	is_constructor: BOOLEAN is True
+			-- A constructor is a constructor.
 
 	dotnet_name: STRING is ".ctor"
 			-- Name of a .NET constructor.

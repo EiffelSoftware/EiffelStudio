@@ -957,6 +957,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_interface (void * a_interface_poi
     nstcall = 0;
     (FUNCTION_CAST ( void, (EIF_REFERENCE,
         EIF_POINTER))make) (eif_access (result), (EIF_POINTER)a_interface_pointer);
+		// FIXME: 10/13/2003: Looks like adding this removes a memory leak, but at this
+		// stage this hasn't been fully tested.
+	((IUnknown *) a_interface_pointer)->Release ();
     return eif_wean (result);
   }
   else

@@ -20,7 +20,7 @@ feature -- Initialization
 		do
 			default_create
 			par.extend(Current)
-			par.disable_child_expand(Current)
+			par.disable_item_expand(Current)
 		end
 
 feature -- basic Operations 

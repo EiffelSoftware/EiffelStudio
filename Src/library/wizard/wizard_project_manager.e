@@ -39,6 +39,7 @@ feature -- Initialization
 			-- avoid to violate the invariant of class EV_APPLICATION.
 		do
 			first_window.set_title("Wizard Version 1.1")
+			first_window.show
 		end 
  	
 end -- class WIZARD_PROJECT_MANAGER

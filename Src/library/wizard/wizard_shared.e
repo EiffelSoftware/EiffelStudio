@@ -70,6 +70,13 @@ feature -- Access
 			Create Result
 		end
 
+feature -- Colors
+
+	white_color: EV_COLOR is
+		once
+			Create Result.make_with_rgb (1,1,1)
+		end
+
 invariant
 	memory_for_pixmap_allocated: pixmap /= Void
 	wizard_resource_path_exists: wizard_resources_path /= Void

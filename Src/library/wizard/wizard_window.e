@@ -26,10 +26,11 @@ feature -- Initialization
 			v1: EV_VERTICAL_BOX
 		do
 				default_create
-				set_size(400,300)
+				disable_user_resize
+				set_size(500,386)
 				Create wizard_page
 				Create v1
-				extend(v1)		
+				extend(v1)
 				v1.extend(wizard_page)	
 				build_navigation_bar(v1)
 
@@ -51,8 +52,8 @@ feature -- Initialization
 			a_box.extend (h1)
 			a_box.disable_item_expand (h1)
 
-			Create previous_b.make_with_text_and_action ("<< Previous ", ~previous_page)
-			Create next_b.make_with_text_and_action ("Next >>", ~next_page)	
+			Create previous_b.make_with_text_and_action ("< Back ", ~previous_page)
+			Create next_b.make_with_text_and_action ("Next >", ~next_page)	
 			Create cancel_b.make_with_text_and_action ("Cancel", ~cancel_actions)
 
 			h1.extend (create {EV_CELL})
@@ -62,22 +63,25 @@ feature -- Initialization
 			h1.disable_item_expand (h2)
 
 			h2.extend (previous_b)
-			previous_b.set_minimum_width (60)
+			previous_b.set_minimum_width (74)
+			previous_b.set_minimum_height (23)
 			previous_b.align_text_center
 			h2.disable_item_expand(previous_b)
 
 			h2.extend (next_b)
-			next_b.set_minimum_width (60)
+			next_b.set_minimum_width (74)
+			next_b.set_minimum_height (23)
 			next_b.align_text_center
 			h2.disable_item_expand (next_b)
 
 			h1.extend (cancel_b)
 			h1.disable_item_expand (cancel_b)
-			cancel_b.set_minimum_width (60)
+			cancel_b.set_minimum_width (74)
+			cancel_b.set_minimum_height (23)
 			cancel_b.align_text_center
 
-			h1.set_padding (20)
-			h1.set_border_width (10)
+			h1.set_padding (11)
+			h1.set_border_width (11)
 		end
 
 	load_first_state is
@@ -104,14 +108,18 @@ feature -- Implementation
 		-- needed to be completed by the user in order
 		-- to be performed.
 
+	is_final: BOOLEAN
+
 feature {WIZARD_FINAL_STATE_WINDOW} -- Basic Operations	
 
-	set_final_state is
+	set_final_state (text: STRING) is
 			-- Current state is final, hence a special
 			-- process.
 		do
-				previous_b.disable_sensitive
-				next_b.set_text("Finish")
+--			previous_b.disable_sensitive
+			next_b.set_text(text)
+			is_final := TRUE
+--			next_b.press_actions.wipe_out
 		end
 
 feature -- Basic Operations
@@ -128,11 +136,14 @@ feature -- Basic Operations
 	update_navigation is
 			-- Update navigation buttons.
 		do
-			if history.count<1 or else history.isfirst or else 
-				history.item.is_final_state then
+			if history.count<1 or else history.isfirst  then
 				previous_b.disable_sensitive
+			elseif is_final then
+				previous_b.enable_sensitive
+				is_final := FALSE
 			else
 				previous_b.enable_sensitive
+				next_b.set_text("Next >")				
 			end
 		end
 

@@ -101,5 +101,5 @@ feature {NONE} -- Implementation
 		-- State relative to Current State.
 
 invariant
-	state_information_defined: wizard_information /= Void
+--	state_information_defined: wizard_information /= Void
 end -- class WIZARD_STATE_MANAGER

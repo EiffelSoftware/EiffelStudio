@@ -25,28 +25,28 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	assembly_name: STRING is
+	name: STRING is
 			-- Assembly name.
 		do
-			Result := ccom_assembly_name (initializer)
+			Result := ccom_name (initializer)
 		end
 
-	assembly_version: STRING is
+	version: STRING is
 			-- Assembly version.
 		do
-			Result := ccom_assembly_version (initializer)
+			Result := ccom_version (initializer)
 		end
 
-	assembly_culture: STRING is
+	culture: STRING is
 			-- Assembly culture.
 		do
-			Result := ccom_assembly_culture (initializer)
+			Result := ccom_culture (initializer)
 		end
 
-	assembly_public_key_token: STRING is
+	public_key_token: STRING is
 			-- Assembly public key token
 		do
-			Result := ccom_assembly_public_key_token (initializer)
+			Result := ccom_public_key_token (initializer)
 		end
 
 	is_local: BOOLEAN is
@@ -55,16 +55,16 @@ feature -- Access
 			Result := ccom_is_local (initializer)
 		end
 
-	assembly_cluster_name: STRING is
+	cluster_name: STRING is
 			-- Assembly cluster name.
 		do
-			Result := ccom_assembly_cluster_name (initializer)
+			Result := ccom_cluster_name (initializer)
 		end
 
-	assembly_prefix: STRING is
+	prefix1: STRING is
 			-- Prefix.
 		do
-			Result := ccom_assembly_prefix (initializer)
+			Result := ccom_prefix1 (initializer)
 		end
 
 	is_prefix_read_only: BOOLEAN is
@@ -73,13 +73,39 @@ feature -- Access
 			Result := ccom_is_prefix_read_only (initializer)
 		end
 
+feature -- Status Report
+
+	last_error_code: INTEGER is
+			-- Last error code.
+		do
+			Result := ccom_last_error_code (initializer)
+		end
+
+	last_error_description: STRING is
+			-- Last error description.
+		do
+			Result := ccom_last_error_description (initializer)
+		end
+
+	last_error_help_file: STRING is
+			-- Last error help file.
+		do
+			Result := ccom_last_error_help_file (initializer)
+		end
+
+	last_source_of_exception: STRING is
+			-- Last source of exception.
+		do
+			Result := ccom_last_source_of_exception (initializer)
+		end
+
 feature -- Basic Operations
 
-	set_assembly_prefix (return_value: STRING) is
+	set_prefix (pbstr_prefix: STRING) is
 			-- Prefix.
-			-- `return_value' [in].  
+			-- `pbstr_prefix' [in].  
 		do
-			ccom_set_assembly_prefix (initializer, return_value)
+			ccom_set_prefix (initializer, pbstr_prefix)
 		end
 
 feature {NONE}  -- Implementation
@@ -92,76 +118,100 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_assembly_name (cpp_obj: POINTER): STRING is
+	ccom_name (cpp_obj: POINTER): STRING is
 			-- Assembly name.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelAssemblyProperties_impl_proxy.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelAssemblyProperties_impl_proxy.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_assembly_version (cpp_obj: POINTER): STRING is
+	ccom_version (cpp_obj: POINTER): STRING is
 			-- Assembly version.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelAssemblyProperties_impl_proxy.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelAssemblyProperties_impl_proxy.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_assembly_culture (cpp_obj: POINTER): STRING is
+	ccom_culture (cpp_obj: POINTER): STRING is
 			-- Assembly culture.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelAssemblyProperties_impl_proxy.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelAssemblyProperties_impl_proxy.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_assembly_public_key_token (cpp_obj: POINTER): STRING is
+	ccom_public_key_token (cpp_obj: POINTER): STRING is
 			-- Assembly public key token
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelAssemblyProperties_impl_proxy.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelAssemblyProperties_impl_proxy.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_is_local (cpp_obj: POINTER): BOOLEAN is
 			-- Is the assembly local
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelAssemblyProperties_impl_proxy.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelAssemblyProperties_impl_proxy.h%"](): EIF_BOOLEAN"
 		end
 
-	ccom_assembly_cluster_name (cpp_obj: POINTER): STRING is
+	ccom_cluster_name (cpp_obj: POINTER): STRING is
 			-- Assembly cluster name.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelAssemblyProperties_impl_proxy.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelAssemblyProperties_impl_proxy.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_assembly_prefix (cpp_obj: POINTER): STRING is
+	ccom_prefix1 (cpp_obj: POINTER): STRING is
 			-- Prefix.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelAssemblyProperties_impl_proxy.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelAssemblyProperties_impl_proxy.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_set_assembly_prefix (cpp_obj: POINTER; return_value: STRING) is
+	ccom_set_prefix (cpp_obj: POINTER; pbstr_prefix: STRING) is
 			-- Prefix.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelAssemblyProperties_impl_proxy.h%"](EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelAssemblyProperties_impl_proxy.h%"](EIF_OBJECT)"
 		end
 
 	ccom_is_prefix_read_only (cpp_obj: POINTER): BOOLEAN is
 			-- Is assembly prefix read only.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelAssemblyProperties_impl_proxy.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelAssemblyProperties_impl_proxy.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_delete_ieiffel_assembly_properties_impl_proxy (a_pointer: POINTER) is
 			-- Release resource
 		external
-			"C++ [delete ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelAssemblyProperties_impl_proxy.h%"]()"
+			"C++ [delete ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelAssemblyProperties_impl_proxy.h%"]()"
 		end
 
 	ccom_create_ieiffel_assembly_properties_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
 			-- Create from pointer
 		external
-			"C++ [new ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelAssemblyProperties_impl_proxy.h%"](IUnknown *)"
+			"C++ [new ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelAssemblyProperties_impl_proxy.h%"](IUnknown *)"
 		end
 
 	ccom_item (cpp_obj: POINTER): POINTER is
 			-- Item
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelAssemblyProperties_impl_proxy.h%"]():EIF_POINTER"
+			"C++ [ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelAssemblyProperties_impl_proxy.h%"]():EIF_POINTER"
+		end
+
+	ccom_last_error_code (cpp_obj: POINTER): INTEGER is
+			-- Last error code
+		external
+			"C++ [ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelAssemblyProperties_impl_proxy.h%"]():EIF_INTEGER"
+		end
+
+	ccom_last_error_description (cpp_obj: POINTER): STRING is
+			-- Last error description
+		external
+			"C++ [ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelAssemblyProperties_impl_proxy.h%"]():EIF_REFERENCE"
+		end
+
+	ccom_last_error_help_file (cpp_obj: POINTER): STRING is
+			-- Last error help file
+		external
+			"C++ [ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelAssemblyProperties_impl_proxy.h%"]():EIF_REFERENCE"
+		end
+
+	ccom_last_source_of_exception (cpp_obj: POINTER): STRING is
+			-- Last source of exception
+		external
+			"C++ [ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelAssemblyProperties_impl_proxy.h%"]():EIF_REFERENCE"
 		end
 
 end -- IEIFFEL_ASSEMBLY_PROPERTIES_IMPL_PROXY

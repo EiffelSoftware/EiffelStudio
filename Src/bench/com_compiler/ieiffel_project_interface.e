@@ -10,15 +10,22 @@ inherit
 
 feature -- Status Report
 
-	retrieve_eiffel_project_user_precondition (a_project_file_name: STRING): BOOLEAN is
+	retrieve_eiffel_project_user_precondition (bstr_project_file_name: STRING): BOOLEAN is
 			-- User-defined preconditions for `retrieve_eiffel_project'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	create_eiffel_project_user_precondition (a_ace_file_name: STRING; a_project_directory_path: STRING): BOOLEAN is
+	create_eiffel_project_user_precondition (bstr_ace_file_name: STRING; bstr_project_directory: STRING): BOOLEAN is
 			-- User-defined preconditions for `create_eiffel_project'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	generate_new_eiffel_project_user_precondition (bstr_project_name: STRING; bstr_ace_file_name: STRING; bstr_root_class_name: STRING; bstr_creation_routine: STRING; bstr_project_directory: STRING): BOOLEAN is
+			-- User-defined preconditions for `generate_new_eiffel_project'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -45,8 +52,8 @@ feature -- Status Report
 			Result := True
 		end
 
-	valid_project_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `valid_project'.
+	is_valid_project_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `is_valid_project'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -101,8 +108,8 @@ feature -- Status Report
 			Result := True
 		end
 
-	html_doc_generator_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `html_doc_generator'.
+	html_documentation_generator_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `html_documentation_generator'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -110,21 +117,34 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	retrieve_eiffel_project (a_project_file_name: STRING) is
+	retrieve_eiffel_project (bstr_project_file_name: STRING) is
 			-- Retrieve Eiffel Project
-			-- `a_project_file_name' [in].  
+			-- `bstr_project_file_name' [in].  
 		require
-			retrieve_eiffel_project_user_precondition: retrieve_eiffel_project_user_precondition (a_project_file_name)
+			retrieve_eiffel_project_user_precondition: retrieve_eiffel_project_user_precondition (bstr_project_file_name)
 		deferred
 
 		end
 
-	create_eiffel_project (a_ace_file_name: STRING; a_project_directory_path: STRING) is
-			-- Create new Eiffel project.
-			-- `a_ace_file_name' [in].  
-			-- `a_project_directory_path' [in].  
+	create_eiffel_project (bstr_ace_file_name: STRING; bstr_project_directory: STRING) is
+			-- Create new Eiffel project from an existing ace file.
+			-- `bstr_ace_file_name' [in].  
+			-- `bstr_project_directory' [in].  
 		require
-			create_eiffel_project_user_precondition: create_eiffel_project_user_precondition (a_ace_file_name, a_project_directory_path)
+			create_eiffel_project_user_precondition: create_eiffel_project_user_precondition (bstr_ace_file_name, bstr_project_directory)
+		deferred
+
+		end
+
+	generate_new_eiffel_project (bstr_project_name: STRING; bstr_ace_file_name: STRING; bstr_root_class_name: STRING; bstr_creation_routine: STRING; bstr_project_directory: STRING) is
+			-- Create new Eiffel project from scratch.
+			-- `bstr_project_name' [in].  
+			-- `bstr_ace_file_name' [in].  
+			-- `bstr_root_class_name' [in].  
+			-- `bstr_creation_routine' [in].  
+			-- `bstr_project_directory' [in].  
+		require
+			generate_new_eiffel_project_user_precondition: generate_new_eiffel_project_user_precondition (bstr_project_name, bstr_ace_file_name, bstr_root_class_name, bstr_creation_routine, bstr_project_directory)
 		deferred
 
 		end
@@ -153,10 +173,10 @@ feature -- Basic Operations
 
 		end
 
-	valid_project: BOOLEAN is
+	is_valid_project: BOOLEAN is
 			-- Is project valid?
 		require
-			valid_project_user_precondition: valid_project_user_precondition
+			is_valid_project_user_precondition: is_valid_project_user_precondition
 		deferred
 
 		end
@@ -217,10 +237,10 @@ feature -- Basic Operations
 
 		end
 
-	html_doc_generator: IEIFFEL_HTMLDOC_GENERATOR_INTERFACE is
+	html_documentation_generator: IEIFFEL_HTML_DOCUMENTATION_GENERATOR_INTERFACE is
 			-- Help documentation generator
 		require
-			html_doc_generator_user_precondition: html_doc_generator_user_precondition
+			html_documentation_generator_user_precondition: html_documentation_generator_user_precondition
 		deferred
 
 		end

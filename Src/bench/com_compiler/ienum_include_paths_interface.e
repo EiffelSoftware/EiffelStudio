@@ -10,14 +10,14 @@ inherit
 
 feature -- Status Report
 
-	next_user_precondition (rgelt: CELL [STRING]; pcelt_fetched: INTEGER_REF): BOOLEAN is
+	next_user_precondition (pbstr_include_path: CELL [STRING]; pul_fetched: INTEGER_REF): BOOLEAN is
 			-- User-defined preconditions for `next'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	skip_user_precondition (celt: INTEGER): BOOLEAN is
+	skip_user_precondition (ul_count: INTEGER): BOOLEAN is
 			-- User-defined preconditions for `skip'.
 			-- Redefine in descendants if needed.
 		do
@@ -31,14 +31,14 @@ feature -- Status Report
 			Result := True
 		end
 
-	clone1_user_precondition (ppenum: CELL [IENUM_INCLUDE_PATHS_INTERFACE]): BOOLEAN is
+	clone1_user_precondition (pp_ienum_include_paths: CELL [IENUM_INCLUDE_PATHS_INTERFACE]): BOOLEAN is
 			-- User-defined preconditions for `clone1'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	ith_item_user_precondition (an_index: INTEGER; rgelt: CELL [STRING]): BOOLEAN is
+	ith_item_user_precondition (ul_index: INTEGER; pbstr_include_path: CELL [STRING]): BOOLEAN is
 			-- User-defined preconditions for `ith_item'.
 			-- Redefine in descendants if needed.
 		do
@@ -54,25 +54,25 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	next (rgelt: CELL [STRING]; pcelt_fetched: INTEGER_REF) is
+	next (pbstr_include_path: CELL [STRING]; pul_fetched: INTEGER_REF) is
 			-- No description available.
-			-- `rgelt' [out].  
-			-- `pcelt_fetched' [out].  
+			-- `pbstr_include_path' [out].  
+			-- `pul_fetched' [out].  
 		require
-			non_void_rgelt: rgelt /= Void
-			non_void_pcelt_fetched: pcelt_fetched /= Void
-			next_user_precondition: next_user_precondition (rgelt, pcelt_fetched)
+			non_void_pbstr_include_path: pbstr_include_path /= Void
+			non_void_pul_fetched: pul_fetched /= Void
+			next_user_precondition: next_user_precondition (pbstr_include_path, pul_fetched)
 		deferred
 
 		ensure
-			valid_rgelt: rgelt.item /= Void
+			valid_pbstr_include_path: pbstr_include_path.item /= Void
 		end
 
-	skip (celt: INTEGER) is
+	skip (ul_count: INTEGER) is
 			-- No description available.
-			-- `celt' [in].  
+			-- `ul_count' [in].  
 		require
-			skip_user_precondition: skip_user_precondition (celt)
+			skip_user_precondition: skip_user_precondition (ul_count)
 		deferred
 
 		end
@@ -85,29 +85,29 @@ feature -- Basic Operations
 
 		end
 
-	clone1 (ppenum: CELL [IENUM_INCLUDE_PATHS_INTERFACE]) is
+	clone1 (pp_ienum_include_paths: CELL [IENUM_INCLUDE_PATHS_INTERFACE]) is
 			-- No description available.
-			-- `ppenum' [out].  
+			-- `pp_ienum_include_paths' [out].  
 		require
-			non_void_ppenum: ppenum /= Void
-			clone1_user_precondition: clone1_user_precondition (ppenum)
+			non_void_pp_ienum_include_paths: pp_ienum_include_paths /= Void
+			clone1_user_precondition: clone1_user_precondition (pp_ienum_include_paths)
 		deferred
 
 		ensure
-			valid_ppenum: ppenum.item /= Void
+			valid_pp_ienum_include_paths: pp_ienum_include_paths.item /= Void
 		end
 
-	ith_item (an_index: INTEGER; rgelt: CELL [STRING]) is
+	ith_item (ul_index: INTEGER; pbstr_include_path: CELL [STRING]) is
 			-- No description available.
-			-- `an_index' [in].  
-			-- `rgelt' [out].  
+			-- `ul_index' [in].  
+			-- `pbstr_include_path' [out].  
 		require
-			non_void_rgelt: rgelt /= Void
-			ith_item_user_precondition: ith_item_user_precondition (an_index, rgelt)
+			non_void_pbstr_include_path: pbstr_include_path /= Void
+			ith_item_user_precondition: ith_item_user_precondition (ul_index, pbstr_include_path)
 		deferred
 
 		ensure
-			valid_rgelt: rgelt.item /= Void
+			valid_pbstr_include_path: pbstr_include_path.item /= Void
 		end
 
 	count: INTEGER is

@@ -187,7 +187,7 @@ feature {NONE}  -- Externals
 	ccom_create_item (eif_object: IEIFFEL_CLASS_DESCRIPTOR_IMPL_STUB): POINTER is
 			-- Initialize `item'
 		external
-			"C++ [new ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_stub.h%"](EIF_OBJECT)"
+			"C++ [new ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_stub %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_stub.h%"](EIF_OBJECT)"
 		end
 
 end -- IEIFFEL_CLASS_DESCRIPTOR_IMPL_STUB

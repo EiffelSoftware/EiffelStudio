@@ -33,19 +33,19 @@ feature -- Access
 
 feature -- Basic Operations
 
-	next (rgelt: CELL [IEIFFEL_CLUSTER_PROPERTIES_INTERFACE]; pcelt_fetched: INTEGER_REF) is
+	next (pp_ieiffel_cluster_properties: CELL [IEIFFEL_CLUSTER_PROPERTIES_INTERFACE]; pul_fetched: INTEGER_REF) is
 			-- No description available.
-			-- `rgelt' [out].  
-			-- `pcelt_fetched' [out].  
+			-- `pp_ieiffel_cluster_properties' [out].  
+			-- `pul_fetched' [out].  
 		do
-			ccom_next (initializer, rgelt, pcelt_fetched)
+			ccom_next (initializer, pp_ieiffel_cluster_properties, pul_fetched)
 		end
 
-	skip (celt: INTEGER) is
+	skip (ul_count: INTEGER) is
 			-- No description available.
-			-- `celt' [in].  
+			-- `ul_count' [in].  
 		do
-			ccom_skip (initializer, celt)
+			ccom_skip (initializer, ul_count)
 		end
 
 	reset is
@@ -54,19 +54,19 @@ feature -- Basic Operations
 			ccom_reset (initializer)
 		end
 
-	clone1 (ppenum: CELL [IENUM_CLUSTER_PROP_INTERFACE]) is
+	clone1 (pp_ienum_cluster_prop: CELL [IENUM_CLUSTER_PROP_INTERFACE]) is
 			-- No description available.
-			-- `ppenum' [out].  
+			-- `pp_ienum_cluster_prop' [out].  
 		do
-			ccom_clone1 (initializer, ppenum)
+			ccom_clone1 (initializer, pp_ienum_cluster_prop)
 		end
 
-	ith_item (an_index: INTEGER; rgelt: CELL [IEIFFEL_CLUSTER_PROPERTIES_INTERFACE]) is
+	ith_item (ul_index: INTEGER; pp_ieiffel_cluster_properties: CELL [IEIFFEL_CLUSTER_PROPERTIES_INTERFACE]) is
 			-- No description available.
-			-- `an_index' [in].  
-			-- `rgelt' [out].  
+			-- `ul_index' [in].  
+			-- `pp_ieiffel_cluster_properties' [out].  
 		do
-			ccom_ith_item (initializer, an_index, rgelt)
+			ccom_ith_item (initializer, ul_index, pp_ieiffel_cluster_properties)
 		end
 
 feature {NONE}  -- Implementation
@@ -79,13 +79,13 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_next (cpp_obj: POINTER; rgelt: CELL [IEIFFEL_CLUSTER_PROPERTIES_INTERFACE]; pcelt_fetched: INTEGER_REF) is
+	ccom_next (cpp_obj: POINTER; pp_ieiffel_cluster_properties: CELL [IEIFFEL_CLUSTER_PROPERTIES_INTERFACE]; pul_fetched: INTEGER_REF) is
 			-- No description available.
 		external
 			"C++ [ecom_EiffelComCompiler::IEnumClusterProp_impl_proxy %"ecom_EiffelComCompiler_IEnumClusterProp_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
 		end
 
-	ccom_skip (cpp_obj: POINTER; celt: INTEGER) is
+	ccom_skip (cpp_obj: POINTER; ul_count: INTEGER) is
 			-- No description available.
 		external
 			"C++ [ecom_EiffelComCompiler::IEnumClusterProp_impl_proxy %"ecom_EiffelComCompiler_IEnumClusterProp_impl_proxy_s.h%"](EIF_INTEGER)"
@@ -97,13 +97,13 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelComCompiler::IEnumClusterProp_impl_proxy %"ecom_EiffelComCompiler_IEnumClusterProp_impl_proxy_s.h%"]()"
 		end
 
-	ccom_clone1 (cpp_obj: POINTER; ppenum: CELL [IENUM_CLUSTER_PROP_INTERFACE]) is
+	ccom_clone1 (cpp_obj: POINTER; pp_ienum_cluster_prop: CELL [IENUM_CLUSTER_PROP_INTERFACE]) is
 			-- No description available.
 		external
 			"C++ [ecom_EiffelComCompiler::IEnumClusterProp_impl_proxy %"ecom_EiffelComCompiler_IEnumClusterProp_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_ith_item (cpp_obj: POINTER; an_index: INTEGER; rgelt: CELL [IEIFFEL_CLUSTER_PROPERTIES_INTERFACE]) is
+	ccom_ith_item (cpp_obj: POINTER; ul_index: INTEGER; pp_ieiffel_cluster_properties: CELL [IEIFFEL_CLUSTER_PROPERTIES_INTERFACE]) is
 			-- No description available.
 		external
 			"C++ [ecom_EiffelComCompiler::IEnumClusterProp_impl_proxy %"ecom_EiffelComCompiler_IEnumClusterProp_impl_proxy_s.h%"](EIF_INTEGER,EIF_OBJECT)"

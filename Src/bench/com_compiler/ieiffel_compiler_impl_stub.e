@@ -12,7 +12,25 @@ inherit
 
 feature -- Access
 
-	is_successful: BOOLEAN is
+	compiler_version: STRING is
+			-- Compiler version.
+		do
+			-- Put Implementation here.
+		end
+
+	has_signable_generation: BOOLEAN is
+			-- Is the compiler a trial version.
+		do
+			-- Put Implementation here.
+		end
+
+	can_run: BOOLEAN is
+			-- Can product be run? (i.e. is it activated or was run less than 10 times)
+		do
+			-- Put Implementation here.
+		end
+
+	was_compilation_successful: BOOLEAN is
 			-- Was last compilation successful?
 		do
 			-- Put Implementation here.
@@ -20,12 +38,6 @@ feature -- Access
 
 	freezing_occurred: BOOLEAN is
 			-- Did last compile warrant a call to finish_freezing?
-		do
-			-- Put Implementation here.
-		end
-
-	compiler_version: STRING is
-			-- Compiler version.
 		do
 			-- Put Implementation here.
 		end
@@ -42,78 +54,19 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	has_signable_generation: BOOLEAN is
-			-- Is the compiler a trial version.
-		do
-			-- Put Implementation here.
-		end
-
-	output_pipe_name: STRING is
-			-- Output pipe's name
-		do
-			-- Put Implementation here.
-		end
-
-	is_output_piped: BOOLEAN is
-			-- Is compiler output sent to pipe `output_pipe_name'
-		do
-			-- Put Implementation here.
-		end
-
-	can_run: BOOLEAN is
-			-- Can product be run? (i.e. is it activated or was run less than 10 times)
-		do
-			-- Put Implementation here.
-		end
-
 feature -- Basic Operations
 
-	compile is
+	compile (mode: INTEGER) is
 			-- Compile.
+			-- `mode' [out]. See ECOM_EIF_COMPILATION_MODE_ENUM for possible `mode' values. 
 		do
 			-- Put Implementation here.
 		end
 
-	finalize is
-			-- Finalize.
-		do
-			-- Put Implementation here.
-		end
-
-	precompile is
-			-- Precompile.
-		do
-			-- Put Implementation here.
-		end
-
-	compile_to_pipe is
-			-- Compile with piped output.
-		do
-			-- Put Implementation here.
-		end
-
-	finalize_to_pipe is
-			-- Finalize with piped output.
-		do
-			-- Put Implementation here.
-		end
-
-	precompile_to_pipe is
-			-- Precompile with piped output.
-		do
-			-- Put Implementation here.
-		end
-
-	expand_path (a_path: STRING): STRING is
-			-- Takes a path and expands it using the env vars.
-			-- `a_path' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	generate_msil_keyfile (filename: STRING) is
-			-- Generate a cyrptographic key filename.
-			-- `filename' [in].  
+	compile_to_pipe (mode: INTEGER; bstr_pipe_name: STRING) is
+			-- Compile to an already established named pipe.
+			-- `mode' [out]. See ECOM_EIF_COMPILATION_MODE_ENUM for possible `mode' values. 
+			-- `bstr_pipe_name' [out].  
 		do
 			-- Put Implementation here.
 		end
@@ -124,16 +77,23 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
-	set_output_pipe_name (return_value: STRING) is
-			-- Set output pipe's name
-			-- `return_value' [in].  
+	set_display_warnings (arg_1: BOOLEAN) is
+			-- Should warning events be raised when compilation raises a warning?
+			-- `arg_1' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	set_display_warnings (vb_show: BOOLEAN) is
-			-- Set state indicating if compiler warnings should be displayed
-			-- `vb_show' [in].  
+	expand_path (bstr_path: STRING): STRING is
+			-- Takes a path and expands it using the env vars.
+			-- `bstr_path' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	generate_msil_key_file_name (bstr_file_name: STRING) is
+			-- Generate a cyrptographic key filename.
+			-- `bstr_file_name' [in].  
 		do
 			-- Put Implementation here.
 		end

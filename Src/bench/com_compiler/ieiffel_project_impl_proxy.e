@@ -43,10 +43,10 @@ feature -- Access
 			Result := ccom_project_directory (initializer)
 		end
 
-	valid_project: BOOLEAN is
+	is_valid_project: BOOLEAN is
 			-- Is project valid?
 		do
-			Result := ccom_valid_project (initializer)
+			Result := ccom_is_valid_project (initializer)
 		end
 
 	last_exception: IEIFFEL_EXCEPTION_INTERFACE is
@@ -91,27 +91,38 @@ feature -- Access
 			Result := ccom_completion_information (initializer)
 		end
 
-	html_doc_generator: IEIFFEL_HTMLDOC_GENERATOR_INTERFACE is
+	html_documentation_generator: IEIFFEL_HTML_DOCUMENTATION_GENERATOR_INTERFACE is
 			-- Help documentation generator
 		do
-			Result := ccom_html_doc_generator (initializer)
+			Result := ccom_html_documentation_generator (initializer)
 		end
 
 feature -- Basic Operations
 
-	retrieve_eiffel_project (a_project_file_name: STRING) is
+	retrieve_eiffel_project (bstr_project_file_name: STRING) is
 			-- Retrieve Eiffel Project
-			-- `a_project_file_name' [in].  
+			-- `bstr_project_file_name' [in].  
 		do
-			ccom_retrieve_eiffel_project (initializer, a_project_file_name)
+			ccom_retrieve_eiffel_project (initializer, bstr_project_file_name)
 		end
 
-	create_eiffel_project (a_ace_file_name: STRING; a_project_directory_path: STRING) is
-			-- Create new Eiffel project.
-			-- `a_ace_file_name' [in].  
-			-- `a_project_directory_path' [in].  
+	create_eiffel_project (bstr_ace_file_name: STRING; bstr_project_directory: STRING) is
+			-- Create new Eiffel project from an existing ace file.
+			-- `bstr_ace_file_name' [in].  
+			-- `bstr_project_directory' [in].  
 		do
-			ccom_create_eiffel_project (initializer, a_ace_file_name, a_project_directory_path)
+			ccom_create_eiffel_project (initializer, bstr_ace_file_name, bstr_project_directory)
+		end
+
+	generate_new_eiffel_project (bstr_project_name: STRING; bstr_ace_file_name: STRING; bstr_root_class_name: STRING; bstr_creation_routine: STRING; bstr_project_directory: STRING) is
+			-- Create new Eiffel project from scratch.
+			-- `bstr_project_name' [in].  
+			-- `bstr_ace_file_name' [in].  
+			-- `bstr_root_class_name' [in].  
+			-- `bstr_creation_routine' [in].  
+			-- `bstr_project_directory' [in].  
+		do
+			ccom_generate_new_eiffel_project (initializer, bstr_project_name, bstr_ace_file_name, bstr_root_class_name, bstr_creation_routine, bstr_project_directory)
 		end
 
 feature {NONE}  -- Implementation
@@ -124,16 +135,22 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_retrieve_eiffel_project (cpp_obj: POINTER; a_project_file_name: STRING) is
+	ccom_retrieve_eiffel_project (cpp_obj: POINTER; bstr_project_file_name: STRING) is
 			-- Retrieve Eiffel Project
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelProject_impl_proxy %"ecom_EiffelComCompiler_IEiffelProject_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_create_eiffel_project (cpp_obj: POINTER; a_ace_file_name: STRING; a_project_directory_path: STRING) is
-			-- Create new Eiffel project.
+	ccom_create_eiffel_project (cpp_obj: POINTER; bstr_ace_file_name: STRING; bstr_project_directory: STRING) is
+			-- Create new Eiffel project from an existing ace file.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelProject_impl_proxy %"ecom_EiffelComCompiler_IEiffelProject_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
+		end
+
+	ccom_generate_new_eiffel_project (cpp_obj: POINTER; bstr_project_name: STRING; bstr_ace_file_name: STRING; bstr_root_class_name: STRING; bstr_creation_routine: STRING; bstr_project_directory: STRING) is
+			-- Create new Eiffel project from scratch.
+		external
+			"C++ [ecom_EiffelComCompiler::IEiffelProject_impl_proxy %"ecom_EiffelComCompiler_IEiffelProject_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT,EIF_OBJECT,EIF_OBJECT)"
 		end
 
 	ccom_project_file_name (cpp_obj: POINTER): STRING is
@@ -154,7 +171,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelComCompiler::IEiffelProject_impl_proxy %"ecom_EiffelComCompiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_valid_project (cpp_obj: POINTER): BOOLEAN is
+	ccom_is_valid_project (cpp_obj: POINTER): BOOLEAN is
 			-- Is project valid?
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelProject_impl_proxy %"ecom_EiffelComCompiler_IEiffelProject_impl_proxy_s.h%"](): EIF_BOOLEAN"
@@ -202,7 +219,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelComCompiler::IEiffelProject_impl_proxy %"ecom_EiffelComCompiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_html_doc_generator (cpp_obj: POINTER): IEIFFEL_HTMLDOC_GENERATOR_INTERFACE is
+	ccom_html_documentation_generator (cpp_obj: POINTER): IEIFFEL_HTML_DOCUMENTATION_GENERATOR_INTERFACE is
 			-- Help documentation generator
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelProject_impl_proxy %"ecom_EiffelComCompiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"

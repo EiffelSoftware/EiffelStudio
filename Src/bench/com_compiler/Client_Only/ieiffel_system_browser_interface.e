@@ -59,49 +59,49 @@ feature -- Status Report
 			Result := True
 		end
 
-	cluster_descriptor_user_precondition (cluster_name: STRING): BOOLEAN is
+	cluster_descriptor_user_precondition (bstr_class_name: STRING): BOOLEAN is
 			-- User-defined preconditions for `cluster_descriptor'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	class_descriptor_user_precondition (class_name1: STRING): BOOLEAN is
+	class_descriptor_user_precondition (bstr_cluster_name: STRING): BOOLEAN is
 			-- User-defined preconditions for `class_descriptor'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	feature_descriptor_user_precondition (class_name1: STRING; feature_name: STRING): BOOLEAN is
+	feature_descriptor_user_precondition (bstr_class_name: STRING; bstr_feature_name: STRING): BOOLEAN is
 			-- User-defined preconditions for `feature_descriptor'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	search_classes_user_precondition (a_string: STRING; is_substring: BOOLEAN): BOOLEAN is
+	search_classes_user_precondition (bstr_search_str: STRING; vb_is_substring: BOOLEAN): BOOLEAN is
 			-- User-defined preconditions for `search_classes'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	search_features_user_precondition (a_string: STRING; is_substring: BOOLEAN): BOOLEAN is
+	search_features_user_precondition (bstr_search_str: STRING; vb_is_substring: BOOLEAN): BOOLEAN is
 			-- User-defined preconditions for `search_features'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	description_from_dotnet_type_user_precondition (a_assembly_name: STRING; a_full_dotnet_type: STRING): BOOLEAN is
+	description_from_dotnet_type_user_precondition (bstr_assembly_name: STRING; bstr_full_dotnet_name: STRING): BOOLEAN is
 			-- User-defined preconditions for `description_from_dotnet_type'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	description_from_dotnet_feature_user_precondition (a_assembly_name: STRING; a_full_dotnet_type: STRING; a_feature_signature: STRING): BOOLEAN is
+	description_from_dotnet_feature_user_precondition (bstr_assembly_name: STRING; bstr_full_dotnet_name: STRING; bstr_feature_signature: STRING): BOOLEAN is
 			-- User-defined preconditions for `description_from_dotnet_feature'.
 			-- Redefine in descendants if needed.
 		do
@@ -166,71 +166,71 @@ feature -- Basic Operations
 
 		end
 
-	cluster_descriptor (cluster_name: STRING): IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE is
+	cluster_descriptor (bstr_class_name: STRING): IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE is
 			-- Cluster descriptor.
-			-- `cluster_name' [in].  
+			-- `bstr_class_name' [in].  
 		require
-			cluster_descriptor_user_precondition: cluster_descriptor_user_precondition (cluster_name)
+			cluster_descriptor_user_precondition: cluster_descriptor_user_precondition (bstr_class_name)
 		deferred
 
 		end
 
-	class_descriptor (class_name1: STRING): IEIFFEL_CLASS_DESCRIPTOR_INTERFACE is
+	class_descriptor (bstr_cluster_name: STRING): IEIFFEL_CLASS_DESCRIPTOR_INTERFACE is
 			-- Class descriptor.
-			-- `class_name1' [in].  
+			-- `bstr_cluster_name' [in].  
 		require
-			class_descriptor_user_precondition: class_descriptor_user_precondition (class_name1)
+			class_descriptor_user_precondition: class_descriptor_user_precondition (bstr_cluster_name)
 		deferred
 
 		end
 
-	feature_descriptor (class_name1: STRING; feature_name: STRING): IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE is
+	feature_descriptor (bstr_class_name: STRING; bstr_feature_name: STRING): IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE is
 			-- Feature descriptor.
-			-- `class_name1' [in].  
-			-- `feature_name' [in].  
+			-- `bstr_class_name' [in].  
+			-- `bstr_feature_name' [in].  
 		require
-			feature_descriptor_user_precondition: feature_descriptor_user_precondition (class_name1, feature_name)
+			feature_descriptor_user_precondition: feature_descriptor_user_precondition (bstr_class_name, bstr_feature_name)
 		deferred
 
 		end
 
-	search_classes (a_string: STRING; is_substring: BOOLEAN): IENUM_EIFFEL_CLASS_INTERFACE is
+	search_classes (bstr_search_str: STRING; vb_is_substring: BOOLEAN): IENUM_EIFFEL_CLASS_INTERFACE is
 			-- Search classes with names matching `a_string'.
-			-- `a_string' [in].  
-			-- `is_substring' [in].  
+			-- `bstr_search_str' [in].  
+			-- `vb_is_substring' [in].  
 		require
-			search_classes_user_precondition: search_classes_user_precondition (a_string, is_substring)
+			search_classes_user_precondition: search_classes_user_precondition (bstr_search_str, vb_is_substring)
 		deferred
 
 		end
 
-	search_features (a_string: STRING; is_substring: BOOLEAN): IENUM_FEATURE_INTERFACE is
+	search_features (bstr_search_str: STRING; vb_is_substring: BOOLEAN): IENUM_FEATURE_INTERFACE is
 			-- Search feature with names matching `a_string'.
-			-- `a_string' [in].  
-			-- `is_substring' [in].  
+			-- `bstr_search_str' [in].  
+			-- `vb_is_substring' [in].  
 		require
-			search_features_user_precondition: search_features_user_precondition (a_string, is_substring)
+			search_features_user_precondition: search_features_user_precondition (bstr_search_str, vb_is_substring)
 		deferred
 
 		end
 
-	description_from_dotnet_type (a_assembly_name: STRING; a_full_dotnet_type: STRING): STRING is
+	description_from_dotnet_type (bstr_assembly_name: STRING; bstr_full_dotnet_name: STRING): STRING is
 			-- Retrieve description from dotnet type
-			-- `a_assembly_name' [in].  
-			-- `a_full_dotnet_type' [in].  
+			-- `bstr_assembly_name' [in].  
+			-- `bstr_full_dotnet_name' [in].  
 		require
-			description_from_dotnet_type_user_precondition: description_from_dotnet_type_user_precondition (a_assembly_name, a_full_dotnet_type)
+			description_from_dotnet_type_user_precondition: description_from_dotnet_type_user_precondition (bstr_assembly_name, bstr_full_dotnet_name)
 		deferred
 
 		end
 
-	description_from_dotnet_feature (a_assembly_name: STRING; a_full_dotnet_type: STRING; a_feature_signature: STRING): STRING is
+	description_from_dotnet_feature (bstr_assembly_name: STRING; bstr_full_dotnet_name: STRING; bstr_feature_signature: STRING): STRING is
 			-- Retrieve description from dotnet feature
-			-- `a_assembly_name' [in].  
-			-- `a_full_dotnet_type' [in].  
-			-- `a_feature_signature' [in].  
+			-- `bstr_assembly_name' [in].  
+			-- `bstr_full_dotnet_name' [in].  
+			-- `bstr_feature_signature' [in].  
 		require
-			description_from_dotnet_feature_user_precondition: description_from_dotnet_feature_user_precondition (a_assembly_name, a_full_dotnet_type, a_feature_signature)
+			description_from_dotnet_feature_user_precondition: description_from_dotnet_feature_user_precondition (bstr_assembly_name, bstr_full_dotnet_name, bstr_feature_signature)
 		deferred
 
 		end

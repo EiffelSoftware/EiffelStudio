@@ -20,17 +20,17 @@ feature -- Access
 
 feature -- Basic Operations
 
-	next (rgelt: CELL [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]; pcelt_fetched: INTEGER_REF) is
+	next (pp_ieiffel_class_descriptor: CELL [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]; pul_fetched: INTEGER_REF) is
 			-- No description available.
-			-- `rgelt' [out].  
-			-- `pcelt_fetched' [out].  
+			-- `pp_ieiffel_class_descriptor' [out].  
+			-- `pul_fetched' [out].  
 		do
 			-- Put Implementation here.
 		end
 
-	skip (celt: INTEGER) is
+	skip (ul_count: INTEGER) is
 			-- No description available.
-			-- `celt' [in].  
+			-- `ul_count' [in].  
 		do
 			-- Put Implementation here.
 		end
@@ -41,17 +41,17 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
-	clone1 (ppenum: CELL [IENUM_EIFFEL_CLASS_INTERFACE]) is
+	clone1 (pp_ienum_eiffel_class: CELL [IENUM_EIFFEL_CLASS_INTERFACE]) is
 			-- No description available.
-			-- `ppenum' [out].  
+			-- `pp_ienum_eiffel_class' [out].  
 		do
 			-- Put Implementation here.
 		end
 
-	ith_item (an_index: INTEGER; rgelt: CELL [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]) is
+	ith_item (ul_index: INTEGER; pp_ieiffel_class_descriptor: CELL [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]) is
 			-- No description available.
-			-- `an_index' [in].  
-			-- `rgelt' [out].  
+			-- `ul_index' [in].  
+			-- `pp_ieiffel_class_descriptor' [out].  
 		do
 			-- Put Implementation here.
 		end
@@ -67,7 +67,7 @@ feature {NONE}  -- Externals
 	ccom_create_item (eif_object: IENUM_EIFFEL_CLASS_IMPL_STUB): POINTER is
 			-- Initialize `item'
 		external
-			"C++ [new ecom_eiffel_compiler::IEnumEiffelClass_impl_stub %"ecom_eiffel_compiler_IEnumEiffelClass_impl_stub.h%"](EIF_OBJECT)"
+			"C++ [new ecom_EiffelComCompiler::IEnumEiffelClass_impl_stub %"ecom_EiffelComCompiler_IEnumEiffelClass_impl_stub.h%"](EIF_OBJECT)"
 		end
 
 end -- IENUM_EIFFEL_CLASS_IMPL_STUB

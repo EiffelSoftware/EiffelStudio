@@ -23,7 +23,8 @@ inherit
 		end
 
 creation
-	make
+	make,
+	make_test
 
 feature {NONE}  -- Initialization
 
@@ -50,7 +51,12 @@ feature {NONE}  -- Initialization
 				cleanup_com
 			end
 		end
-		
+	
+	make_test is
+			-- creates test version of compiler
+		do
+			--| Please add implementation as appropriate
+		end
 		
 feature -- Access
 

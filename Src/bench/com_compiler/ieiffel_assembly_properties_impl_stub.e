@@ -12,25 +12,25 @@ inherit
 
 feature -- Access
 
-	assembly_name: STRING is
+	name: STRING is
 			-- Assembly name.
 		do
 			-- Put Implementation here.
 		end
 
-	assembly_version: STRING is
+	version: STRING is
 			-- Assembly version.
 		do
 			-- Put Implementation here.
 		end
 
-	assembly_culture: STRING is
+	culture: STRING is
 			-- Assembly culture.
 		do
 			-- Put Implementation here.
 		end
 
-	assembly_public_key_token: STRING is
+	public_key_token: STRING is
 			-- Assembly public key token
 		do
 			-- Put Implementation here.
@@ -42,13 +42,13 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	assembly_cluster_name: STRING is
+	cluster_name: STRING is
 			-- Assembly cluster name.
 		do
 			-- Put Implementation here.
 		end
 
-	assembly_prefix: STRING is
+	prefix1: STRING is
 			-- Prefix.
 		do
 			-- Put Implementation here.
@@ -62,9 +62,9 @@ feature -- Access
 
 feature -- Basic Operations
 
-	set_assembly_prefix (return_value: STRING) is
+	set_prefix (pbstr_prefix: STRING) is
 			-- Prefix.
-			-- `return_value' [in].  
+			-- `pbstr_prefix' [in].  
 		do
 			-- Put Implementation here.
 		end

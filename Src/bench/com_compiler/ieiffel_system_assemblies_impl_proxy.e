@@ -59,20 +59,20 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	wipe_out is
+	flush_assemblies is
 			-- Wipe out current list of assemblies
 		do
-			ccom_wipe_out (initializer)
+			ccom_flush_assemblies (initializer)
 		end
 
-	add_assembly (a_prefix: STRING; a_cluster_name: STRING; a_path: STRING; a_copy: BOOLEAN) is
+	add_assembly (bstr_prefix: STRING; bstr_cluster_name: STRING; bstr_file_name: STRING; vb_copy_locally: BOOLEAN) is
 			-- Add an assembly to the project.
-			-- `a_prefix' [in].  
-			-- `a_cluster_name' [in].  
-			-- `a_path' [in].  
-			-- `a_copy' [out].  
+			-- `bstr_prefix' [in].  
+			-- `bstr_cluster_name' [in].  
+			-- `bstr_file_name' [in].  
+			-- `vb_copy_locally' [out].  
 		do
-			ccom_add_assembly (initializer, a_prefix, a_cluster_name, a_path, a_copy)
+			ccom_add_assembly (initializer, bstr_prefix, bstr_cluster_name, bstr_file_name, vb_copy_locally)
 		end
 
 	store is
@@ -91,13 +91,13 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_wipe_out (cpp_obj: POINTER) is
+	ccom_flush_assemblies (cpp_obj: POINTER) is
 			-- Wipe out current list of assemblies
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemAssemblies_impl_proxy_s.h%"]()"
 		end
 
-	ccom_add_assembly (cpp_obj: POINTER; a_prefix: STRING; a_cluster_name: STRING; a_path: STRING; a_copy: BOOLEAN) is
+	ccom_add_assembly (cpp_obj: POINTER; bstr_prefix: STRING; bstr_cluster_name: STRING; bstr_file_name: STRING; vb_copy_locally: BOOLEAN) is
 			-- Add an assembly to the project.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemAssemblies_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT,EIF_BOOLEAN)"

@@ -30,7 +30,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	valid_project: BOOLEAN is
+	is_valid_project: BOOLEAN is
 			-- Is project valid?
 		do
 			-- Put Implementation here.
@@ -78,7 +78,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	html_doc_generator: IEIFFEL_HTMLDOC_GENERATOR_INTERFACE is
+	html_documentation_generator: IEIFFEL_HTML_DOCUMENTATION_GENERATOR_INTERFACE is
 			-- Help documentation generator
 		do
 			-- Put Implementation here.
@@ -86,17 +86,28 @@ feature -- Access
 
 feature -- Basic Operations
 
-	retrieve_eiffel_project (a_project_file_name: STRING) is
+	retrieve_eiffel_project (bstr_project_file_name: STRING) is
 			-- Retrieve Eiffel Project
-			-- `a_project_file_name' [in].  
+			-- `bstr_project_file_name' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	create_eiffel_project (a_ace_file_name: STRING; a_project_directory_path: STRING) is
-			-- Create new Eiffel project.
-			-- `a_ace_file_name' [in].  
-			-- `a_project_directory_path' [in].  
+	create_eiffel_project (bstr_ace_file_name: STRING; bstr_project_directory: STRING) is
+			-- Create new Eiffel project from an existing ace file.
+			-- `bstr_ace_file_name' [in].  
+			-- `bstr_project_directory' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	generate_new_eiffel_project (bstr_project_name: STRING; bstr_ace_file_name: STRING; bstr_root_class_name: STRING; bstr_creation_routine: STRING; bstr_project_directory: STRING) is
+			-- Create new Eiffel project from scratch.
+			-- `bstr_project_name' [in].  
+			-- `bstr_ace_file_name' [in].  
+			-- `bstr_root_class_name' [in].  
+			-- `bstr_creation_routine' [in].  
+			-- `bstr_project_directory' [in].  
 		do
 			-- Put Implementation here.
 		end

@@ -115,10 +115,10 @@ feature -- Access
 			Result := ccom_implementers (initializer)
 		end
 
-	implementer_count: INTEGER is
+	implementers_count: INTEGER is
 			-- Number of feature implementers.
 		do
-			Result := ccom_implementer_count (initializer)
+			Result := ccom_implementers_count (initializer)
 		end
 
 	ancestor_versions: IENUM_FEATURE_INTERFACE is
@@ -127,10 +127,10 @@ feature -- Access
 			Result := ccom_ancestor_versions (initializer)
 		end
 
-	ancestor_version_count: INTEGER is
+	ancestor_versions_count: INTEGER is
 			-- Number of ancestor versions.
 		do
-			Result := ccom_ancestor_version_count (initializer)
+			Result := ccom_ancestor_versions_count (initializer)
 		end
 
 	descendant_versions: IENUM_FEATURE_INTERFACE is
@@ -139,10 +139,10 @@ feature -- Access
 			Result := ccom_descendant_versions (initializer)
 		end
 
-	descendant_version_count: INTEGER is
+	descendant_versions_count: INTEGER is
 			-- Number of descendant versions.
 		do
-			Result := ccom_descendant_version_count (initializer)
+			Result := ccom_descendant_versions_count (initializer)
 		end
 
 	exported_to_all: BOOLEAN is
@@ -237,12 +237,12 @@ feature -- Access
 
 feature -- Basic Operations
 
-	feature_location (file_path: CELL [STRING]; line_number: INTEGER_REF) is
+	feature_location (pbstr_path: CELL [STRING]; pul_line: INTEGER_REF) is
 			-- Feature location, full path to file and line number
-			-- `file_path' [out].  
-			-- `line_number' [out].  
+			-- `pbstr_path' [out].  
+			-- `pul_line' [out].  
 		do
-			ccom_feature_location (initializer, file_path, line_number)
+			ccom_feature_location (initializer, pbstr_path, pul_line)
 		end
 
 feature {NONE}  -- Implementation
@@ -303,7 +303,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_feature_location (cpp_obj: POINTER; file_path: CELL [STRING]; line_number: INTEGER_REF) is
+	ccom_feature_location (cpp_obj: POINTER; pbstr_path: CELL [STRING]; pul_line: INTEGER_REF) is
 			-- Feature location, full path to file and line number
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
@@ -351,7 +351,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_implementer_count (cpp_obj: POINTER): INTEGER is
+	ccom_implementers_count (cpp_obj: POINTER): INTEGER is
 			-- Number of feature implementers.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
@@ -363,7 +363,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_ancestor_version_count (cpp_obj: POINTER): INTEGER is
+	ccom_ancestor_versions_count (cpp_obj: POINTER): INTEGER is
 			-- Number of ancestor versions.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
@@ -375,7 +375,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_descendant_version_count (cpp_obj: POINTER): INTEGER is
+	ccom_descendant_versions_count (cpp_obj: POINTER): INTEGER is
 			-- Number of descendant versions.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"

@@ -50,31 +50,31 @@ feature {NONE}  -- Externals
 	ccom_name (cpp_obj: POINTER): STRING is
 			-- Parameter name
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelParameterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelParameterDescriptor_impl_proxy.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelParameterDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelParameterDescriptor_impl_proxy.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_display (cpp_obj: POINTER): STRING is
 			-- Parameter display
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelParameterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelParameterDescriptor_impl_proxy.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelParameterDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelParameterDescriptor_impl_proxy.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_delete_ieiffel_parameter_descriptor_impl_proxy (a_pointer: POINTER) is
 			-- Release resource
 		external
-			"C++ [delete ecom_eiffel_compiler::IEiffelParameterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelParameterDescriptor_impl_proxy.h%"]()"
+			"C++ [delete ecom_EiffelComCompiler::IEiffelParameterDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelParameterDescriptor_impl_proxy.h%"]()"
 		end
 
 	ccom_create_ieiffel_parameter_descriptor_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
 			-- Create from pointer
 		external
-			"C++ [new ecom_eiffel_compiler::IEiffelParameterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelParameterDescriptor_impl_proxy.h%"](IUnknown *)"
+			"C++ [new ecom_EiffelComCompiler::IEiffelParameterDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelParameterDescriptor_impl_proxy.h%"](IUnknown *)"
 		end
 
 	ccom_item (cpp_obj: POINTER): POINTER is
 			-- Item
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelParameterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelParameterDescriptor_impl_proxy.h%"]():EIF_POINTER"
+			"C++ [ecom_EiffelComCompiler::IEiffelParameterDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelParameterDescriptor_impl_proxy.h%"]():EIF_POINTER"
 		end
 
 end -- IEIFFEL_PARAMETER_DESCRIPTOR_IMPL_PROXY

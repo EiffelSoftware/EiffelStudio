@@ -24,7 +24,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_cluster_path_user_precondition (path: STRING): BOOLEAN is
+	set_cluster_path_user_precondition (pbstr_path: STRING): BOOLEAN is
 			-- User-defined preconditions for `set_cluster_path'.
 			-- Redefine in descendants if needed.
 		do
@@ -38,7 +38,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_override_user_precondition (return_value: BOOLEAN): BOOLEAN is
+	set_override_user_precondition (pvb_override: BOOLEAN): BOOLEAN is
 			-- User-defined preconditions for `set_override'.
 			-- Redefine in descendants if needed.
 		do
@@ -52,7 +52,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_is_library_user_precondition (return_value: BOOLEAN): BOOLEAN is
+	set_is_library_user_precondition (pvb_library: BOOLEAN): BOOLEAN is
 			-- User-defined preconditions for `set_is_library'.
 			-- Redefine in descendants if needed.
 		do
@@ -66,7 +66,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_all_user_precondition (return_value: BOOLEAN): BOOLEAN is
+	set_all_user_precondition (pvb_all: BOOLEAN): BOOLEAN is
 			-- User-defined preconditions for `set_all'.
 			-- Redefine in descendants if needed.
 		do
@@ -80,7 +80,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_use_system_default_user_precondition (return_value: BOOLEAN): BOOLEAN is
+	set_use_system_default_user_precondition (pvb_use_defaults: BOOLEAN): BOOLEAN is
 			-- User-defined preconditions for `set_use_system_default'.
 			-- Redefine in descendants if needed.
 		do
@@ -122,7 +122,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_assertions_user_precondition (evaluate_check: BOOLEAN; evaluate_require: BOOLEAN; evaluate_ensure: BOOLEAN; evaluate_loop: BOOLEAN; evaluate_invariant: BOOLEAN): BOOLEAN is
+	set_assertions_user_precondition (vb_check: BOOLEAN; vb_require: BOOLEAN; vb_ensure: BOOLEAN; vb_loop: BOOLEAN; vb_invariant: BOOLEAN): BOOLEAN is
 			-- User-defined preconditions for `set_assertions'.
 			-- Redefine in descendants if needed.
 		do
@@ -136,14 +136,14 @@ feature -- Status Report
 			Result := True
 		end
 
-	add_exclude_user_precondition (dir_name: STRING): BOOLEAN is
+	add_exclude_user_precondition (bstr_name: STRING): BOOLEAN is
 			-- User-defined preconditions for `add_exclude'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	remove_exclude_user_precondition (dir_name: STRING): BOOLEAN is
+	remove_exclude_user_precondition (bstr_name: STRING): BOOLEAN is
 			-- User-defined preconditions for `remove_exclude'.
 			-- Redefine in descendants if needed.
 		do
@@ -206,7 +206,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_cluster_namespace_user_precondition (a_namespace: STRING): BOOLEAN is
+	set_cluster_namespace_user_precondition (pbstr_namespace: STRING): BOOLEAN is
 			-- User-defined preconditions for `set_cluster_namespace'.
 			-- Redefine in descendants if needed.
 		do
@@ -231,11 +231,11 @@ feature -- Basic Operations
 
 		end
 
-	set_cluster_path (path: STRING) is
+	set_cluster_path (pbstr_path: STRING) is
 			-- Full path to cluster.
-			-- `path' [in].  
+			-- `pbstr_path' [in].  
 		require
-			set_cluster_path_user_precondition: set_cluster_path_user_precondition (path)
+			set_cluster_path_user_precondition: set_cluster_path_user_precondition (pbstr_path)
 		deferred
 
 		end
@@ -248,11 +248,11 @@ feature -- Basic Operations
 
 		end
 
-	set_override (return_value: BOOLEAN) is
+	set_override (pvb_override: BOOLEAN) is
 			-- Should this cluster classes take priority over other classes with same name?
-			-- `return_value' [in].  
+			-- `pvb_override' [in].  
 		require
-			set_override_user_precondition: set_override_user_precondition (return_value)
+			set_override_user_precondition: set_override_user_precondition (pvb_override)
 		deferred
 
 		end
@@ -265,11 +265,11 @@ feature -- Basic Operations
 
 		end
 
-	set_is_library (return_value: BOOLEAN) is
+	set_is_library (pvb_library: BOOLEAN) is
 			-- Should this cluster be treated as library?
-			-- `return_value' [in].  
+			-- `pvb_library' [in].  
 		require
-			set_is_library_user_precondition: set_is_library_user_precondition (return_value)
+			set_is_library_user_precondition: set_is_library_user_precondition (pvb_library)
 		deferred
 
 		end
@@ -282,11 +282,11 @@ feature -- Basic Operations
 
 		end
 
-	set_all (return_value: BOOLEAN) is
+	set_all (pvb_all: BOOLEAN) is
 			-- Should all subclusters be included?
-			-- `return_value' [in].  
+			-- `pvb_all' [in].  
 		require
-			set_all_user_precondition: set_all_user_precondition (return_value)
+			set_all_user_precondition: set_all_user_precondition (pvb_all)
 		deferred
 
 		end
@@ -299,11 +299,11 @@ feature -- Basic Operations
 
 		end
 
-	set_use_system_default (return_value: BOOLEAN) is
+	set_use_system_default (pvb_use_defaults: BOOLEAN) is
 			-- Should use system default?
-			-- `return_value' [in].  
+			-- `pvb_use_defaults' [in].  
 		require
-			set_use_system_default_user_precondition: set_use_system_default_user_precondition (return_value)
+			set_use_system_default_user_precondition: set_use_system_default_user_precondition (pvb_use_defaults)
 		deferred
 
 		end
@@ -348,15 +348,15 @@ feature -- Basic Operations
 
 		end
 
-	set_assertions (evaluate_check: BOOLEAN; evaluate_require: BOOLEAN; evaluate_ensure: BOOLEAN; evaluate_loop: BOOLEAN; evaluate_invariant: BOOLEAN) is
+	set_assertions (vb_check: BOOLEAN; vb_require: BOOLEAN; vb_ensure: BOOLEAN; vb_loop: BOOLEAN; vb_invariant: BOOLEAN) is
 			-- Set assertions for cluster.
-			-- `evaluate_check' [in].  
-			-- `evaluate_require' [in].  
-			-- `evaluate_ensure' [in].  
-			-- `evaluate_loop' [in].  
-			-- `evaluate_invariant' [in].  
+			-- `vb_check' [in].  
+			-- `vb_require' [in].  
+			-- `vb_ensure' [in].  
+			-- `vb_loop' [in].  
+			-- `vb_invariant' [in].  
 		require
-			set_assertions_user_precondition: set_assertions_user_precondition (evaluate_check, evaluate_require, evaluate_ensure, evaluate_loop, evaluate_invariant)
+			set_assertions_user_precondition: set_assertions_user_precondition (vb_check, vb_require, vb_ensure, vb_loop, vb_invariant)
 		deferred
 
 		end
@@ -369,20 +369,20 @@ feature -- Basic Operations
 
 		end
 
-	add_exclude (dir_name: STRING) is
-			-- Add a directory to exclude.
-			-- `dir_name' [in].  
+	add_exclude (bstr_name: STRING) is
+			-- Add a item to exclude.
+			-- `bstr_name' [in].  
 		require
-			add_exclude_user_precondition: add_exclude_user_precondition (dir_name)
+			add_exclude_user_precondition: add_exclude_user_precondition (bstr_name)
 		deferred
 
 		end
 
-	remove_exclude (dir_name: STRING) is
-			-- Remove a directory to exclude.
-			-- `dir_name' [in].  
+	remove_exclude (bstr_name: STRING) is
+			-- Remove a item from being excluded.
+			-- `bstr_name' [in].  
 		require
-			remove_exclude_user_precondition: remove_exclude_user_precondition (dir_name)
+			remove_exclude_user_precondition: remove_exclude_user_precondition (bstr_name)
 		deferred
 
 		end
@@ -451,11 +451,11 @@ feature -- Basic Operations
 
 		end
 
-	set_cluster_namespace (a_namespace: STRING) is
+	set_cluster_namespace (pbstr_namespace: STRING) is
 			-- Cluster namespace.
-			-- `a_namespace' [in].  
+			-- `pbstr_namespace' [in].  
 		require
-			set_cluster_namespace_user_precondition: set_cluster_namespace_user_precondition (a_namespace)
+			set_cluster_namespace_user_precondition: set_cluster_namespace_user_precondition (pbstr_namespace)
 		deferred
 
 		end

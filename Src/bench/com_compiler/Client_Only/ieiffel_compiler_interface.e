@@ -10,62 +10,6 @@ inherit
 
 feature -- Status Report
 
-	compile_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `compile'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	finalize_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `finalize'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	precompile_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `precompile'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	compile_to_pipe_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `compile_to_pipe'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	finalize_to_pipe_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `finalize_to_pipe'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	precompile_to_pipe_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `precompile_to_pipe'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	is_successful_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `is_successful'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	freezing_occurred_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `freezing_occurred'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
 	compiler_version_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `compiler_version'.
 			-- Redefine in descendants if needed.
@@ -73,15 +17,43 @@ feature -- Status Report
 			Result := True
 		end
 
-	expand_path_user_precondition (a_path: STRING): BOOLEAN is
-			-- User-defined preconditions for `expand_path'.
+	has_signable_generation_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `has_signable_generation'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	generate_msil_keyfile_user_precondition (filename: STRING): BOOLEAN is
-			-- User-defined preconditions for `generate_msil_keyfile'.
+	can_run_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `can_run'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	compile_user_precondition (mode: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `compile'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	compile_to_pipe_user_precondition (mode: INTEGER; bstr_pipe_name: STRING): BOOLEAN is
+			-- User-defined preconditions for `compile_to_pipe'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	was_compilation_successful_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `was_compilation_successful'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	freezing_occurred_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `freezing_occurred'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -101,13 +73,6 @@ feature -- Status Report
 			Result := True
 		end
 
-	has_signable_generation_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `has_signable_generation'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
 	remove_file_locks_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `remove_file_locks'.
 			-- Redefine in descendants if needed.
@@ -115,99 +80,28 @@ feature -- Status Report
 			Result := True
 		end
 
-	output_pipe_name_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `output_pipe_name'.
+	set_display_warnings_user_precondition (arg_1: BOOLEAN): BOOLEAN is
+			-- User-defined preconditions for `set_display_warnings'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_output_pipe_name_user_precondition (return_value: STRING): BOOLEAN is
-			-- User-defined preconditions for `set_output_pipe_name'.
+	expand_path_user_precondition (bstr_path: STRING): BOOLEAN is
+			-- User-defined preconditions for `expand_path'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	is_output_piped_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `is_output_piped'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	can_run_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `can_run'.
+	generate_msil_key_file_name_user_precondition (bstr_file_name: STRING): BOOLEAN is
+			-- User-defined preconditions for `generate_msil_key_file_name'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
 feature -- Basic Operations
-
-	compile is
-			-- Compile.
-		require
-			compile_user_precondition: compile_user_precondition
-		deferred
-
-		end
-
-	finalize is
-			-- Finalize.
-		require
-			finalize_user_precondition: finalize_user_precondition
-		deferred
-
-		end
-
-	precompile is
-			-- Precompile.
-		require
-			precompile_user_precondition: precompile_user_precondition
-		deferred
-
-		end
-
-	compile_to_pipe is
-			-- Compile with piped output.
-		require
-			compile_to_pipe_user_precondition: compile_to_pipe_user_precondition
-		deferred
-
-		end
-
-	finalize_to_pipe is
-			-- Finalize with piped output.
-		require
-			finalize_to_pipe_user_precondition: finalize_to_pipe_user_precondition
-		deferred
-
-		end
-
-	precompile_to_pipe is
-			-- Precompile with piped output.
-		require
-			precompile_to_pipe_user_precondition: precompile_to_pipe_user_precondition
-		deferred
-
-		end
-
-	is_successful: BOOLEAN is
-			-- Was last compilation successful?
-		require
-			is_successful_user_precondition: is_successful_user_precondition
-		deferred
-
-		end
-
-	freezing_occurred: BOOLEAN is
-			-- Did last compile warrant a call to finish_freezing?
-		require
-			freezing_occurred_user_precondition: freezing_occurred_user_precondition
-		deferred
-
-		end
 
 	compiler_version: STRING is
 			-- Compiler version.
@@ -217,20 +111,53 @@ feature -- Basic Operations
 
 		end
 
-	expand_path (a_path: STRING): STRING is
-			-- Takes a path and expands it using the env vars.
-			-- `a_path' [in].  
+	has_signable_generation: BOOLEAN is
+			-- Is the compiler a trial version.
 		require
-			expand_path_user_precondition: expand_path_user_precondition (a_path)
+			has_signable_generation_user_precondition: has_signable_generation_user_precondition
 		deferred
 
 		end
 
-	generate_msil_keyfile (filename: STRING) is
-			-- Generate a cyrptographic key filename.
-			-- `filename' [in].  
+	can_run: BOOLEAN is
+			-- Can product be run? (i.e. is it activated or was run less than 10 times)
 		require
-			generate_msil_keyfile_user_precondition: generate_msil_keyfile_user_precondition (filename)
+			can_run_user_precondition: can_run_user_precondition
+		deferred
+
+		end
+
+	compile (mode: INTEGER) is
+			-- Compile.
+			-- `mode' [out]. See ECOM_EIF_COMPILATION_MODE_ENUM for possible `mode' values. 
+		require
+			compile_user_precondition: compile_user_precondition (mode)
+		deferred
+
+		end
+
+	compile_to_pipe (mode: INTEGER; bstr_pipe_name: STRING) is
+			-- Compile to an already established named pipe.
+			-- `mode' [out]. See ECOM_EIF_COMPILATION_MODE_ENUM for possible `mode' values. 
+			-- `bstr_pipe_name' [out].  
+		require
+			compile_to_pipe_user_precondition: compile_to_pipe_user_precondition (mode, bstr_pipe_name)
+		deferred
+
+		end
+
+	was_compilation_successful: BOOLEAN is
+			-- Was last compilation successful?
+		require
+			was_compilation_successful_user_precondition: was_compilation_successful_user_precondition
+		deferred
+
+		end
+
+	freezing_occurred: BOOLEAN is
+			-- Did last compile warrant a call to finish_freezing?
+		require
+			freezing_occurred_user_precondition: freezing_occurred_user_precondition
 		deferred
 
 		end
@@ -251,14 +178,6 @@ feature -- Basic Operations
 
 		end
 
-	has_signable_generation: BOOLEAN is
-			-- Is the compiler a trial version.
-		require
-			has_signable_generation_user_precondition: has_signable_generation_user_precondition
-		deferred
-
-		end
-
 	remove_file_locks is
 			-- Remove file locks
 		require
@@ -267,35 +186,29 @@ feature -- Basic Operations
 
 		end
 
-	output_pipe_name: STRING is
-			-- Output pipe's name
+	set_display_warnings (arg_1: BOOLEAN) is
+			-- Should warning events be raised when compilation raises a warning?
+			-- `arg_1' [in].  
 		require
-			output_pipe_name_user_precondition: output_pipe_name_user_precondition
+			set_display_warnings_user_precondition: set_display_warnings_user_precondition (arg_1)
 		deferred
 
 		end
 
-	set_output_pipe_name (return_value: STRING) is
-			-- Set output pipe's name
-			-- `return_value' [in].  
+	expand_path (bstr_path: STRING): STRING is
+			-- Takes a path and expands it using the env vars.
+			-- `bstr_path' [in].  
 		require
-			set_output_pipe_name_user_precondition: set_output_pipe_name_user_precondition (return_value)
+			expand_path_user_precondition: expand_path_user_precondition (bstr_path)
 		deferred
 
 		end
 
-	is_output_piped: BOOLEAN is
-			-- Is compiler output sent to pipe `output_pipe_name'
+	generate_msil_key_file_name (bstr_file_name: STRING) is
+			-- Generate a cyrptographic key filename.
+			-- `bstr_file_name' [in].  
 		require
-			is_output_piped_user_precondition: is_output_piped_user_precondition
-		deferred
-
-		end
-
-	can_run: BOOLEAN is
-			-- Can product be run? (i.e. is it activated or was run less than 10 times)
-		require
-			can_run_user_precondition: can_run_user_precondition
+			generate_msil_key_file_name_user_precondition: generate_msil_key_file_name_user_precondition (bstr_file_name)
 		deferred
 
 		end

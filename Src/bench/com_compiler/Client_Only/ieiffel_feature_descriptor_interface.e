@@ -66,7 +66,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	feature_location_user_precondition (file_path: CELL [STRING]; line_number: INTEGER_REF): BOOLEAN is
+	feature_location_user_precondition (pbstr_path: CELL [STRING]; pul_line: INTEGER_REF): BOOLEAN is
 			-- User-defined preconditions for `feature_location'.
 			-- Redefine in descendants if needed.
 		do
@@ -122,8 +122,8 @@ feature -- Status Report
 			Result := True
 		end
 
-	implementer_count_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `implementer_count'.
+	implementers_count_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `implementers_count'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -136,8 +136,8 @@ feature -- Status Report
 			Result := True
 		end
 
-	ancestor_version_count_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `ancestor_version_count'.
+	ancestor_versions_count_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `ancestor_versions_count'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -150,8 +150,8 @@ feature -- Status Report
 			Result := True
 		end
 
-	descendant_version_count_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `descendant_version_count'.
+	descendant_versions_count_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `descendant_versions_count'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -328,19 +328,18 @@ feature -- Basic Operations
 
 		end
 
-	feature_location (file_path: CELL [STRING]; line_number: INTEGER_REF) is
+	feature_location (pbstr_path: CELL [STRING]; pul_line: INTEGER_REF) is
 			-- Feature location, full path to file and line number
-			-- `file_path' [in, out].  
-			-- `line_number' [in, out].  
+			-- `pbstr_path' [out].  
+			-- `pul_line' [out].  
 		require
-			non_void_file_path: file_path /= Void
-			valid_file_path: file_path.item /= Void
-			non_void_line_number: line_number /= Void
-			feature_location_user_precondition: feature_location_user_precondition (file_path, line_number)
+			non_void_pbstr_path: pbstr_path /= Void
+			non_void_pul_line: pul_line /= Void
+			feature_location_user_precondition: feature_location_user_precondition (pbstr_path, pul_line)
 		deferred
 
 		ensure
-			valid_file_path: file_path.item /= Void
+			valid_pbstr_path: pbstr_path.item /= Void
 		end
 
 	all_callers: IENUM_FEATURE_INTERFACE is
@@ -399,10 +398,10 @@ feature -- Basic Operations
 
 		end
 
-	implementer_count: INTEGER is
+	implementers_count: INTEGER is
 			-- Number of feature implementers.
 		require
-			implementer_count_user_precondition: implementer_count_user_precondition
+			implementers_count_user_precondition: implementers_count_user_precondition
 		deferred
 
 		end
@@ -415,10 +414,10 @@ feature -- Basic Operations
 
 		end
 
-	ancestor_version_count: INTEGER is
+	ancestor_versions_count: INTEGER is
 			-- Number of ancestor versions.
 		require
-			ancestor_version_count_user_precondition: ancestor_version_count_user_precondition
+			ancestor_versions_count_user_precondition: ancestor_versions_count_user_precondition
 		deferred
 
 		end
@@ -431,10 +430,10 @@ feature -- Basic Operations
 
 		end
 
-	descendant_version_count: INTEGER is
+	descendant_versions_count: INTEGER is
 			-- Number of descendant versions.
 		require
-			descendant_version_count_user_precondition: descendant_version_count_user_precondition
+			descendant_versions_count_user_precondition: descendant_versions_count_user_precondition
 		deferred
 
 		end

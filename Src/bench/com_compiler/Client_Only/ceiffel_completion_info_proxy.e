@@ -25,60 +25,60 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	add_local (name: STRING; type: STRING) is
+	add_local (bstr_name: STRING; bstr_type: STRING) is
 			-- Add a local variable used for solving member completion list
-			-- `name' [in].  
-			-- `type' [in].  
+			-- `bstr_name' [in].  
+			-- `bstr_type' [in].  
 		do
-			ccom_add_local (initializer, name, type)
+			ccom_add_local (initializer, bstr_name, bstr_type)
 		end
 
-	add_argument (name: STRING; type: STRING) is
+	add_argument (bstr_name: STRING; bstr_type: STRING) is
 			-- Add an argument used for solving member completion list
-			-- `name' [in].  
-			-- `type' [in].  
+			-- `bstr_name' [in].  
+			-- `bstr_type' [in].  
 		do
-			ccom_add_argument (initializer, name, type)
+			ccom_add_argument (initializer, bstr_name, bstr_type)
 		end
 
-	target_features (target: STRING; feature_name: STRING; file_name: STRING; return_names: ECOM_VARIANT; return_signatures: ECOM_VARIANT; return_image_indexes: ECOM_VARIANT) is
+	target_features (bstr_target: STRING; bstr_feature_name: STRING; bstr_file_name: STRING; pvar_names: ECOM_VARIANT; pvar_signatures: ECOM_VARIANT; pvar_image_indexes: ECOM_VARIANT) is
 			-- Features accessible from target.
-			-- `target' [in].  
-			-- `feature_name' [in].  
-			-- `file_name' [in].  
-			-- `return_names' [out].  
-			-- `return_signatures' [out].  
-			-- `return_image_indexes' [out].  
+			-- `bstr_target' [in].  
+			-- `bstr_feature_name' [in].  
+			-- `bstr_file_name' [in].  
+			-- `pvar_names' [out].  
+			-- `pvar_signatures' [out].  
+			-- `pvar_image_indexes' [out].  
 		do
-			ccom_target_features (initializer, target, feature_name, file_name, return_names.item, return_signatures.item, return_image_indexes.item)
+			ccom_target_features (initializer, bstr_target, bstr_feature_name, bstr_file_name, pvar_names.item, pvar_signatures.item, pvar_image_indexes.item)
 		end
 
-	target_feature (target: STRING; feature_name: STRING; file_name: STRING): IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE is
+	target_feature (bstr_target: STRING; bstr_feature_name: STRING; bstr_file_name: STRING): IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE is
 			-- Feature information
-			-- `target' [in].  
-			-- `feature_name' [in].  
-			-- `file_name' [in].  
+			-- `bstr_target' [in].  
+			-- `bstr_feature_name' [in].  
+			-- `bstr_file_name' [in].  
 		do
-			Result := ccom_target_feature (initializer, target, feature_name, file_name)
+			Result := ccom_target_feature (initializer, bstr_target, bstr_feature_name, bstr_file_name)
 		end
 
-	flush_completion_features (a_file_name: STRING) is
-			-- Flush temporary completion features for a specifi file
-			-- `a_file_name' [in].  
+	flush_completion_features (bstr_file_name: STRING) is
+			-- Flush temporary completion features for a specific file
+			-- `bstr_file_name' [in].  
 		do
-			ccom_flush_completion_features (initializer, a_file_name)
+			ccom_flush_completion_features (initializer, bstr_file_name)
 		end
 
-	initialize_feature (a_name: STRING; a_arguments: ECOM_VARIANT; a_argument_types: ECOM_VARIANT; a_return_type: STRING; a_feature_type: INTEGER; a_file_name: STRING) is
+	initialize_feature (bstr_name: STRING; var_arguments: ECOM_VARIANT; var_argument_types: ECOM_VARIANT; bstr_return_type: STRING; ul_feature_type: INTEGER; bstr_file_name: STRING) is
 			-- Initialize a feature for completion without compiltation
-			-- `a_name' [in].  
-			-- `a_arguments' [in].  
-			-- `a_argument_types' [in].  
-			-- `a_return_type' [in].  
-			-- `a_feature_type' [in].  
-			-- `a_file_name' [in].  
+			-- `bstr_name' [in].  
+			-- `var_arguments' [in].  
+			-- `var_argument_types' [in].  
+			-- `bstr_return_type' [in].  
+			-- `ul_feature_type' [in].  
+			-- `bstr_file_name' [in].  
 		do
-			ccom_initialize_feature (initializer, a_name, a_arguments.item, a_argument_types.item, a_return_type, a_feature_type, a_file_name)
+			ccom_initialize_feature (initializer, bstr_name, var_arguments.item, var_argument_types.item, bstr_return_type, ul_feature_type, bstr_file_name)
 		end
 
 feature {NONE}  -- Implementation
@@ -91,58 +91,58 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_add_local (cpp_obj: POINTER; name: STRING; type: STRING) is
+	ccom_add_local (cpp_obj: POINTER; bstr_name: STRING; bstr_type: STRING) is
 			-- Add a local variable used for solving member completion list
 		external
-			"C++ [ecom_eiffel_compiler::CEiffelCompletionInfo %"ecom_eiffel_compiler_CEiffelCompletionInfo.h%"](EIF_OBJECT,EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::CEiffelCompletionInfo %"ecom_EiffelComCompiler_CEiffelCompletionInfo.h%"](EIF_OBJECT,EIF_OBJECT)"
 		end
 
-	ccom_add_argument (cpp_obj: POINTER; name: STRING; type: STRING) is
+	ccom_add_argument (cpp_obj: POINTER; bstr_name: STRING; bstr_type: STRING) is
 			-- Add an argument used for solving member completion list
 		external
-			"C++ [ecom_eiffel_compiler::CEiffelCompletionInfo %"ecom_eiffel_compiler_CEiffelCompletionInfo.h%"](EIF_OBJECT,EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::CEiffelCompletionInfo %"ecom_EiffelComCompiler_CEiffelCompletionInfo.h%"](EIF_OBJECT,EIF_OBJECT)"
 		end
 
-	ccom_target_features (cpp_obj: POINTER; target: STRING; feature_name: STRING; file_name: STRING; return_names: POINTER; return_signatures: POINTER; return_image_indexes: POINTER) is
+	ccom_target_features (cpp_obj: POINTER; bstr_target: STRING; bstr_feature_name: STRING; bstr_file_name: STRING; pvar_names: POINTER; pvar_signatures: POINTER; pvar_image_indexes: POINTER) is
 			-- Features accessible from target.
 		external
-			"C++ [ecom_eiffel_compiler::CEiffelCompletionInfo %"ecom_eiffel_compiler_CEiffelCompletionInfo.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT,VARIANT *,VARIANT *,VARIANT *)"
+			"C++ [ecom_EiffelComCompiler::CEiffelCompletionInfo %"ecom_EiffelComCompiler_CEiffelCompletionInfo.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT,VARIANT *,VARIANT *,VARIANT *)"
 		end
 
-	ccom_target_feature (cpp_obj: POINTER; target: STRING; feature_name: STRING; file_name: STRING): IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE is
+	ccom_target_feature (cpp_obj: POINTER; bstr_target: STRING; bstr_feature_name: STRING; bstr_file_name: STRING): IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE is
 			-- Feature information
 		external
-			"C++ [ecom_eiffel_compiler::CEiffelCompletionInfo %"ecom_eiffel_compiler_CEiffelCompletionInfo.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::CEiffelCompletionInfo %"ecom_EiffelComCompiler_CEiffelCompletionInfo.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT): EIF_REFERENCE"
 		end
 
-	ccom_flush_completion_features (cpp_obj: POINTER; a_file_name: STRING) is
-			-- Flush temporary completion features for a specifi file
+	ccom_flush_completion_features (cpp_obj: POINTER; bstr_file_name: STRING) is
+			-- Flush temporary completion features for a specific file
 		external
-			"C++ [ecom_eiffel_compiler::CEiffelCompletionInfo %"ecom_eiffel_compiler_CEiffelCompletionInfo.h%"](EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::CEiffelCompletionInfo %"ecom_EiffelComCompiler_CEiffelCompletionInfo.h%"](EIF_OBJECT)"
 		end
 
-	ccom_initialize_feature (cpp_obj: POINTER; a_name: STRING; a_arguments: POINTER; a_argument_types: POINTER; a_return_type: STRING; a_feature_type: INTEGER; a_file_name: STRING) is
+	ccom_initialize_feature (cpp_obj: POINTER; bstr_name: STRING; var_arguments: POINTER; var_argument_types: POINTER; bstr_return_type: STRING; ul_feature_type: INTEGER; bstr_file_name: STRING) is
 			-- Initialize a feature for completion without compiltation
 		external
-			"C++ [ecom_eiffel_compiler::CEiffelCompletionInfo %"ecom_eiffel_compiler_CEiffelCompletionInfo.h%"](EIF_OBJECT,VARIANT *,VARIANT *,EIF_OBJECT,EIF_INTEGER,EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::CEiffelCompletionInfo %"ecom_EiffelComCompiler_CEiffelCompletionInfo.h%"](EIF_OBJECT,VARIANT *,VARIANT *,EIF_OBJECT,EIF_INTEGER,EIF_OBJECT)"
 		end
 
 	ccom_delete_ceiffel_completion_info_coclass (a_pointer: POINTER) is
 			-- Release resource
 		external
-			"C++ [delete ecom_eiffel_compiler::CEiffelCompletionInfo %"ecom_eiffel_compiler_CEiffelCompletionInfo.h%"]()"
+			"C++ [delete ecom_EiffelComCompiler::CEiffelCompletionInfo %"ecom_EiffelComCompiler_CEiffelCompletionInfo.h%"]()"
 		end
 
 	ccom_create_ceiffel_completion_info_coclass_from_pointer (a_pointer: POINTER): POINTER is
 			-- Create from pointer
 		external
-			"C++ [new ecom_eiffel_compiler::CEiffelCompletionInfo %"ecom_eiffel_compiler_CEiffelCompletionInfo.h%"](IUnknown *)"
+			"C++ [new ecom_EiffelComCompiler::CEiffelCompletionInfo %"ecom_EiffelComCompiler_CEiffelCompletionInfo.h%"](IUnknown *)"
 		end
 
 	ccom_item (cpp_obj: POINTER): POINTER is
 			-- Item
 		external
-			"C++ [ecom_eiffel_compiler::CEiffelCompletionInfo %"ecom_eiffel_compiler_CEiffelCompletionInfo.h%"]():EIF_POINTER"
+			"C++ [ecom_EiffelComCompiler::CEiffelCompletionInfo %"ecom_EiffelComCompiler_CEiffelCompletionInfo.h%"]():EIF_POINTER"
 		end
 
 end -- CEIFFEL_COMPLETION_INFO_PROXY

@@ -12,48 +12,118 @@ inherit
 
 feature -- Basic Operations
 
-	should_continue (a_boolean: BOOLEAN_REF) is
-			-- Should compilation continue.
-			-- `a_boolean' [in, out].  
+	begin_compile is
+			-- Beginning compilation.
 		do
-			on_should_continue (a_boolean)
+			on_begin_compile
 		end
 
-	on_should_continue (a_boolean: BOOLEAN_REF) is
-			-- Should compilation continue.
-			-- `a_boolean' [in, out].  
+	on_begin_compile is
+			-- Beginning compilation.
 		do
 			-- Put Implementation here.
 		end
 
-	output_string (a_string: STRING) is
-			-- Output string.
-			-- `a_string' [in].  
+	begin_degree (ul_degree: INTEGER) is
+			-- Start of new degree phase in compilation.
+			-- `ul_degree' [in].  
 		do
-			on_output_string (a_string)
+			on_begin_degree (ul_degree)
 		end
 
-	on_output_string (a_string: STRING) is
-			-- Output string.
-			-- `a_string' [in].  
+	on_begin_degree (ul_degree: INTEGER) is
+			-- Start of new degree phase in compilation.
+			-- `ul_degree' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	last_error (error_message: STRING; file_name: STRING; line_number: INTEGER) is
-			-- Last error.
-			-- `error_message' [in].  
-			-- `file_name' [in].  
-			-- `line_number' [in].  
+	end_compile (vb_sucessful: BOOLEAN) is
+			-- Finished compilation.
+			-- `vb_sucessful' [in].  
 		do
-			on_last_error (error_message, file_name, line_number)
+			on_end_compile (vb_sucessful)
 		end
 
-	on_last_error (error_message: STRING; file_name: STRING; line_number: INTEGER) is
+	on_end_compile (vb_sucessful: BOOLEAN) is
+			-- Finished compilation.
+			-- `vb_sucessful' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	should_continue (pvb_continue: BOOLEAN_REF) is
+			-- Should compilation continue.
+			-- `pvb_continue' [in, out].  
+		do
+			on_should_continue (pvb_continue)
+		end
+
+	on_should_continue (pvb_continue: BOOLEAN_REF) is
+			-- Should compilation continue.
+			-- `pvb_continue' [in, out].  
+		do
+			-- Put Implementation here.
+		end
+
+	output_string (bstr_output: STRING) is
+			-- Output string.
+			-- `bstr_output' [in].  
+		do
+			on_output_string (bstr_output)
+		end
+
+	on_output_string (bstr_output: STRING) is
+			-- Output string.
+			-- `bstr_output' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	output_error (bstr_full_error: STRING; bstr_short_error: STRING; bstr_code: STRING; bstr_file_name: STRING; ul_line: INTEGER; ul_col: INTEGER) is
 			-- Last error.
-			-- `error_message' [in].  
-			-- `file_name' [in].  
-			-- `line_number' [in].  
+			-- `bstr_full_error' [in].  
+			-- `bstr_short_error' [in].  
+			-- `bstr_code' [in].  
+			-- `bstr_file_name' [in].  
+			-- `ul_line' [in].  
+			-- `ul_col' [in].  
+		do
+			on_output_error (bstr_full_error, bstr_short_error, bstr_code, bstr_file_name, ul_line, ul_col)
+		end
+
+	on_output_error (bstr_full_error: STRING; bstr_short_error: STRING; bstr_code: STRING; bstr_file_name: STRING; ul_line: INTEGER; ul_col: INTEGER) is
+			-- Last error.
+			-- `bstr_full_error' [in].  
+			-- `bstr_short_error' [in].  
+			-- `bstr_code' [in].  
+			-- `bstr_file_name' [in].  
+			-- `ul_line' [in].  
+			-- `ul_col' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	output_warning (bstr_full_warning: STRING; bstr_short_warning: STRING; bstr_code: STRING; bstr_file_name: STRING; ul_line: INTEGER; ul_col: INTEGER) is
+			-- Last warning.
+			-- `bstr_full_warning' [in].  
+			-- `bstr_short_warning' [in].  
+			-- `bstr_code' [in].  
+			-- `bstr_file_name' [in].  
+			-- `ul_line' [in].  
+			-- `ul_col' [in].  
+		do
+			on_output_warning (bstr_full_warning, bstr_short_warning, bstr_code, bstr_file_name, ul_line, ul_col)
+		end
+
+	on_output_warning (bstr_full_warning: STRING; bstr_short_warning: STRING; bstr_code: STRING; bstr_file_name: STRING; ul_line: INTEGER; ul_col: INTEGER) is
+			-- Last warning.
+			-- `bstr_full_warning' [in].  
+			-- `bstr_short_warning' [in].  
+			-- `bstr_code' [in].  
+			-- `bstr_file_name' [in].  
+			-- `ul_line' [in].  
+			-- `ul_col' [in].  
 		do
 			-- Put Implementation here.
 		end
@@ -69,7 +139,7 @@ feature {NONE}  -- Externals
 	ccom_create_item (eif_object: IEIFFEL_COMPILER_EVENTS_IMPL_STUB): POINTER is
 			-- Initialize `item'
 		external
-			"C++ [new ecom_eiffel_compiler::IEiffelCompilerEvents_impl_stub %"ecom_eiffel_compiler_IEiffelCompilerEvents_impl_stub.h%"](EIF_OBJECT)"
+			"C++ [new ecom_EiffelComCompiler::IEiffelCompilerEvents_impl_stub %"ecom_EiffelComCompiler_IEiffelCompilerEvents_impl_stub.h%"](EIF_OBJECT)"
 		end
 
 end -- IEIFFEL_COMPILER_EVENTS_IMPL_STUB

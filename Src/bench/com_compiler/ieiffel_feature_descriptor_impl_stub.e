@@ -102,7 +102,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	implementer_count: INTEGER is
+	implementers_count: INTEGER is
 			-- Number of feature implementers.
 		do
 			-- Put Implementation here.
@@ -114,7 +114,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	ancestor_version_count: INTEGER is
+	ancestor_versions_count: INTEGER is
 			-- Number of ancestor versions.
 		do
 			-- Put Implementation here.
@@ -126,7 +126,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	descendant_version_count: INTEGER is
+	descendant_versions_count: INTEGER is
 			-- Number of descendant versions.
 		do
 			-- Put Implementation here.
@@ -224,10 +224,10 @@ feature -- Access
 
 feature -- Basic Operations
 
-	feature_location (file_path: CELL [STRING]; line_number: INTEGER_REF) is
+	feature_location (pbstr_path: CELL [STRING]; pul_line: INTEGER_REF) is
 			-- Feature location, full path to file and line number
-			-- `file_path' [out].  
-			-- `line_number' [out].  
+			-- `pbstr_path' [out].  
+			-- `pul_line' [out].  
 		do
 			-- Put Implementation here.
 		end

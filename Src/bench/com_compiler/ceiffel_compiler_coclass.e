@@ -130,9 +130,7 @@ feature -- Basic Operations
 
 	event_output_string (bstr_output: STRING) is
 			-- Output string.
-			-- `bstr_output' [in].
-		require
-			non_void_output: bstr_output /= Void
+			-- `bstr_output' [in].  
 		do
 			if ieiffel_compiler_events_call_back_interface_table /= Void then
 				from
@@ -153,29 +151,15 @@ feature -- Basic Operations
 			-- `bstr_code' [in].  
 			-- `bstr_file_name' [in].  
 			-- `ul_line' [in].  
-			-- `ul_col' [in].
-		require
-			non_void_full_error: bstr_full_error /= Void
-			valid_full_error: not bstr_full_error.is_empty
-			non_void_code: bstr_code /= Void
-			valid_code: not bstr_code.is_empty
-			non_void_file_name: bstr_file_name /= Void
-			valid_file_name: not bstr_file_name.is_empty
-		local
-			actual_short: STRING
+			-- `ul_col' [in].  
 		do
-			if bstr_short_error = Void then
-				actual_short := bstr_full_error
-			else
-				actual_short := bstr_short_error
-			end
 			if ieiffel_compiler_events_call_back_interface_table /= Void then
 				from
 					ieiffel_compiler_events_call_back_interface_table.start
 				until
 					ieiffel_compiler_events_call_back_interface_table.after
 				loop
-					ieiffel_compiler_events_call_back_interface_table.item_for_iteration.output_error (bstr_full_error, actual_short, bstr_code, bstr_file_name, ul_line, ul_col)
+					ieiffel_compiler_events_call_back_interface_table.item_for_iteration.output_error (bstr_full_error, bstr_short_error, bstr_code, bstr_file_name, ul_line, ul_col)
 					ieiffel_compiler_events_call_back_interface_table.forth
 				end
 			end
@@ -189,28 +173,14 @@ feature -- Basic Operations
 			-- `bstr_file_name' [in].  
 			-- `ul_line' [in].  
 			-- `ul_col' [in].  
-		require
-			non_void_full_warning: bstr_full_warning /= Void
-			valid_full_warning: not bstr_full_warning.is_empty
-			non_void_code: bstr_code /= Void
-			valid_code: not bstr_code.is_empty
-			non_void_file_name: bstr_file_name /= Void
-			valid_file_name: not bstr_file_name.is_empty
-		local
-			actual_short: STRING
 		do
-			if bstr_short_warning = Void then
-				actual_short := bstr_full_warning
-			else
-				actual_short := bstr_short_warning
-			end
 			if ieiffel_compiler_events_call_back_interface_table /= Void then
 				from
 					ieiffel_compiler_events_call_back_interface_table.start
 				until
 					ieiffel_compiler_events_call_back_interface_table.after
 				loop
-					ieiffel_compiler_events_call_back_interface_table.item_for_iteration.output_warning (bstr_full_warning, actual_short, bstr_code, bstr_file_name, ul_line, ul_col)
+					ieiffel_compiler_events_call_back_interface_table.item_for_iteration.output_warning (bstr_full_warning, bstr_short_warning, bstr_code, bstr_file_name, ul_line, ul_col)
 					ieiffel_compiler_events_call_back_interface_table.forth
 				end
 			end

@@ -20,17 +20,17 @@ feature -- Access
 
 feature -- Basic Operations
 
-	next (rgelt: CELL [STRING]; pcelt_fetched: INTEGER_REF) is
+	next (pbstr_exclude: CELL [STRING]; pul_fetched: INTEGER_REF) is
 			-- No description available.
-			-- `rgelt' [out].  
-			-- `pcelt_fetched' [out].  
+			-- `pbstr_exclude' [out].  
+			-- `pul_fetched' [out].  
 		do
 			-- Put Implementation here.
 		end
 
-	skip (celt: INTEGER) is
+	skip (ul_count: INTEGER) is
 			-- No description available.
-			-- `celt' [in].  
+			-- `ul_count' [in].  
 		do
 			-- Put Implementation here.
 		end
@@ -41,17 +41,17 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
-	clone1 (ppenum: CELL [IENUM_CLUSTER_EXCLUDES_INTERFACE]) is
+	clone1 (pp_ienum_cluster_excludes: CELL [IENUM_CLUSTER_EXCLUDES_INTERFACE]) is
 			-- No description available.
-			-- `ppenum' [out].  
+			-- `pp_ienum_cluster_excludes' [out].  
 		do
 			-- Put Implementation here.
 		end
 
-	ith_item (an_index: INTEGER; rgelt: CELL [STRING]) is
+	ith_item (ul_index: INTEGER; pbstr_exclude: CELL [STRING]) is
 			-- No description available.
-			-- `an_index' [in].  
-			-- `rgelt' [out].  
+			-- `ul_index' [in].  
+			-- `pbstr_exclude' [out].  
 		do
 			-- Put Implementation here.
 		end

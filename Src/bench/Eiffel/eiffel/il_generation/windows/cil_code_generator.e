@@ -3097,10 +3097,8 @@ feature -- Addresses
 					attribute_token (cl_type.implementation_id, a_feature_id))
 			else
 					-- Attribute are accessed through their feature encapsulation.
-				duplicate_top
 				internal_generate_feature_access (type_i.static_type_id, a_feature_id,
 					0, True, True)
-				duplicate_top
 				Byte_context.add_local (attr_type)
 				local_number := Byte_context.local_list.count
 				put_dummy_local_info (attr_type, local_number)

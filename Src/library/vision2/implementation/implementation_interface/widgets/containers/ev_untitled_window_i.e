@@ -141,6 +141,18 @@ feature -- Status setting
 			maximum_height_set: maximum_height = value
 		end
 
+	set_maximum_size (mw, mh: INTEGER) is
+			-- Make `mw' the new minimum_width and `mh' the new
+			-- minimum_height.
+		require
+			exists: not destroyed
+--			valid_width: value >= minimum_width
+--			valid_height: value >= minimum_height
+		do
+			set_maximum_width (mw)
+			set_maximum_height (mh)
+		end
+
 	set_title (txt : STRING) is
 			-- Make `text' the new title.
 		require

@@ -1083,7 +1083,6 @@ end;
 		require
 			is_override_cluster: is_override_cluster
 		local
-			l_classes: like classes
 			l_class: CLASS_I
 		do
 			from

@@ -4080,30 +4080,32 @@ feature -- Once manifest string manipulation
 			allocate_array_label: IL_LABEL
 			done_label: IL_LABEL
 		do
-			allocate_array_label := create_label
-			done_label := create_label
-				-- Check if the array is already allocated.
-			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.ldsfld, current_module.once_string_field_token (true))
-			method_body.put_opcode (feature {MD_OPCODES}.dup)
-			branch_on_false (allocate_array_label)
-			method_body.put_opcode (feature {MD_OPCODES}.dup)
-			method_body.put_opcode (feature {MD_OPCODES}.ldlen)
-			put_integer_32_constant (byte_context.original_body_index)
-			method_body.put_opcode_label (feature {MD_OPCODES}.blt, allocate_array_label.id)
-			put_integer_32_constant (byte_context.original_body_index)
-			method_body.put_opcode (feature {MD_OPCODES}.ldelem_ref)
-			method_body.put_opcode (feature {MD_OPCODES}.dup)
-			branch_on_true (done_label)
-			mark_label (allocate_array_label)
-				-- Array is not allocated.
-				-- Call allocation routine.
-			put_integer_32_constant (byte_context.original_body_index)
-			put_integer_32_constant (count)
-			method_body.put_static_call (current_module.once_string_allocation_routine_token, 2, false)
-				-- Done.
-			mark_label (done_label)
-				-- Remove null from stack top.
-			method_body.put_opcode (feature {MD_OPCODES}.pop)
+			if count > 0 then
+				allocate_array_label := create_label
+				done_label := create_label
+					-- Check if the array is already allocated.
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.ldsfld, current_module.once_string_field_token (true))
+				method_body.put_opcode (feature {MD_OPCODES}.dup)
+				branch_on_false (allocate_array_label)
+				method_body.put_opcode (feature {MD_OPCODES}.dup)
+				method_body.put_opcode (feature {MD_OPCODES}.ldlen)
+				put_integer_32_constant (byte_context.original_body_index)
+				method_body.put_opcode_label (feature {MD_OPCODES}.blt, allocate_array_label.id)
+				put_integer_32_constant (byte_context.original_body_index)
+				method_body.put_opcode (feature {MD_OPCODES}.ldelem_ref)
+				method_body.put_opcode (feature {MD_OPCODES}.dup)
+				branch_on_true (done_label)
+				mark_label (allocate_array_label)
+					-- Array is not allocated.
+					-- Call allocation routine.
+				put_integer_32_constant (byte_context.original_body_index)
+				put_integer_32_constant (count)
+				method_body.put_static_call (current_module.once_string_allocation_routine_token, 2, false)
+					-- Done.
+				mark_label (done_label)
+					-- Remove null from stack top.
+				method_body.put_opcode (feature {MD_OPCODES}.pop)
+			end
 		end
 
 	generate_once_string (number: INTEGER; value: STRING; is_cil_string: BOOLEAN) is

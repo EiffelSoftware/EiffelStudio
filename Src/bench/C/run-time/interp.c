@@ -2286,7 +2286,9 @@ int where;					/* Invariant after or before */
 				if (tagval != stagval)			/* Resynchronize registers */
 					sync_registers(scur, stop);
 	
-			} else {							/* Melted invariant */
+			} else 
+#ifndef DLE
+			{				/* Melted invariant */
 				last = iget();					/* Push `obj' */
 				last->type = SK_REF;
 				last->it_ref = obj;
@@ -2304,6 +2306,31 @@ int where;					/* Invariant after or before */
 
 				sync_registers(scur, stop);		/* Resynchronize registers */
 			}
+#else
+			if (body_id < dle_level) {
+					/* Static melted invariant */
+				last = iget();					/* Push `obj' */
+				last->type = SK_REF;
+				last->it_ref = obj;
+
+				xiinv(melt[body_id], where);
+				sync_registers(scur, stop);		/* Resynchronize registers */
+			} else if (body_id < dle_zeroc) {
+					/* Dynamic frozen invariant */
+				unsigned long stagval = tagval;	/* Tag value backup */
+				((void (*)()) dle_frozen[body_id])(obj, where);
+				if (tagval != stagval)			/* Resynchronize registers */
+					sync_registers(scur, stop);
+			} else {
+					/* Dynamic melted invariant */
+				last = iget();					/* Push `obj' */
+				last->type = SK_REF;
+				last->it_ref = obj;
+
+				xiinv(dle_melt[body_id], where);
+				sync_registers(scur, stop);		/* Resynchronize registers */
+			}
+#endif
 		}
 	}
 
@@ -2937,7 +2964,9 @@ int is_extern;			/* Is it an external or an Eiffel feature */
 		(pattern[pid].toc)(frozen[body], is_extern); /* Call pattern */
 		if (tagval != stagval)		/* Interpreted function called */
 			result = 1;				/* Resynchronize registers */
-	} else {
+	} else 
+#ifndef DLE
+	{
 	
 		/*IC = melt[body];					/* Melted byte code */
 		/*interpret(INTERP_CMPD, 0);		/* Interpret (tagval not set) */
@@ -2952,6 +2981,23 @@ int is_extern;			/* Is it an external or an Eiffel feature */
 	
 		result = 1;							/* Compulsory synchronisation */
 	}
+#else
+	if (body < dle_level) {
+			/* Static melted routine */
+		xinterp(melt[body]);
+		result = 1;							/* Compulsory synchronisation */
+	} else if (body < dle_zeroc) {
+			/* Dynamic frozen routine */
+		pid = (uint32) DLEFPatId(body);
+		(pattern[pid].toc)(dle_frozen[body], is_extern); /* Call pattern */
+		if (tagval != stagval)		/* Interpreted function called */
+			result = 1;				/* Resynchronize registers */
+	} else {
+			/* Dynamic melted routine */
+		xinterp(dle_melt[body]);
+		result = 1;							/* Compulsory synchronisation */
+	}
+#endif
 	IC = old_IC;					/* Restore IC back-up */
 	return result;
 }
@@ -3087,12 +3133,25 @@ int stype;				/* Static type (entity where feature is applied) */
 	CBodyIdx(body_index,rout_id,icur_dtype);
 	body = dispatch[body_index];
 
-	if (body >= zeroc)
+	if (body < zeroc) {
+			/* Static frozen routine */
+		last = iget();
+		last->type = SK_POINTER;
+		last->it_ptr = (char *) frozen[body];
+	} else
+#ifndef DLE
 		xraise(EN_DOL);				/* $ applied to melted feature */
+#else
+	if (body < dle_level)
+		xraise(EN_DOL);				/* $ applied to melted feature */
+	else if (body < dle_zeroc) {
+			/* Dynamic frozen routine */
+		last = iget();
+		last->type = SK_POINTER;
+		last->it_ptr = (char *) dle_frozen[body];
+	}
+#endif
 
-	last = iget();
-	last->type = SK_POINTER;
-	last->it_ptr = (char *) frozen[body];
 }
 
 

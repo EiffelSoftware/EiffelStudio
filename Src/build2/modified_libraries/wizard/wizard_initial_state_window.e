@@ -55,7 +55,7 @@ feature -- Basic Operations
 			message_and_title_box.disable_item_expand (title)
 			fill_message_and_title_box (message_and_title_box)
 
-			local_pixmap := clone (pixmap)
+			local_pixmap := pixmap.twin
 			local_pixmap.set_minimum_size (
 				dialog_unit_to_pixels(165),
 				dialog_unit_to_pixels(312))

@@ -493,7 +493,7 @@ rt_public void eif_thr_register(void)
 	 * Allocates memory for onces (for non-root threads)
 	 */
 
-	static once = 0;	/* For initial eif_thread, we don't know how
+	static int once = 0;	/* For initial eif_thread, we don't know how
 						 * many once values we have to allocate */
 
 	eif_global_context_t *eif_globals;
@@ -513,6 +513,7 @@ rt_public void eif_thr_register(void)
 	   */
 
 		EIF_once_values = (char **) malloc (EIF_once_count * sizeof (char *));
+			/* needs malloc; crashes otherwise on some pure C-ansi compiler (SGI)*/
 		if (EIF_once_values == (char **) 0) /* Out of memory */
 			enomem();
 		bzero((char *) EIF_once_values, EIF_once_count * sizeof (char *));

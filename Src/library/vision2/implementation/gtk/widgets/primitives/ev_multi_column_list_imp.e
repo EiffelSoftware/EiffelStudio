@@ -988,7 +988,6 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING) is
 			-- Set cell text at (a_column, a_row) to `a_text'.
 		local
-			row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 			pixmap_imp: EV_PIXMAP_IMP
 			a_cs: C_STRING
 		do

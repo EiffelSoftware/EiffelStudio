@@ -15,7 +15,7 @@ inherit
 		redefine
 			help_message, name, abbreviation
 		end;
-	EB_CONSTANTS
+	TTY_CONSTANTS
 
 creation
 
@@ -59,7 +59,7 @@ feature {NONE} -- Execution
 		do
 			!! Result.do_nothing;
 			Result.set_feature_clause_order 
-				(Class_tool_resources.feature_clause_order.actual_value)
+				(Class_resources.feature_clause_order.actual_value)
 		end;
 
 end -- class EWB_SHORT

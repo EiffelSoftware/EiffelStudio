@@ -20,7 +20,7 @@ inherit
 		redefine
 			new_license
 		end;
-	SHARED_RESOURCES
+	SHARED_CONFIGURE_RESOURCES
 
 creation
 
@@ -33,7 +33,7 @@ feature -- Initialization
 			-- execute the appropriate command.
 		local
 			temp: STRING
-			new_resources: RESOURCES
+			new_resources: TTY_RESOURCES
 			expiration: INTEGER
 		do
 			if not retried then
@@ -62,7 +62,6 @@ feature -- Initialization
 						end
 					end
 						-- Read the resource files
-					if resources /= Void then end
 					!! new_resources.initialize;
 
 					analyze_options;
@@ -105,7 +104,7 @@ feature -- Initialization
 				io.error.putstring (temp);
 			end;
 			io.error.new_line;
-			if not resources.get_boolean (r_Fail_on_rescue, False) then
+			if not fail_on_rescue then
 				retried := True;
 				retry
 			end;

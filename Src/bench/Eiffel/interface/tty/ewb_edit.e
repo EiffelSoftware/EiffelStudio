@@ -9,7 +9,7 @@ class EWB_EDIT
 
 inherit
 
-	SHARED_BENCH_RESOURCES;
+	EB_CONSTANTS;
 
 feature -- Element change
 
@@ -22,7 +22,7 @@ feature -- Element change
 			cmd: STRING;
 			cmd_exec: EXTERNAL_COMMAND_EXECUTOR
 		do
-			editor := resources.get_string (r_Editor, Void);
+			editor := General_resources.editor.value;
 			if editor /= Void then
 				!!cmd.make (0);
 				cmd.append (editor);

@@ -10,10 +10,7 @@ class WINDOW_MGR
 inherit
 	
 	W_MAN_GEN;
-	WINDOWS
-		rename
-			explain_window as win_explain
-		end;
+	WINDOWS;
 	EB_CONSTANTS;
 	RESOURCE_USER
 		redefine
@@ -26,15 +23,15 @@ creation
 
 feature -- Initialization
 
-	make (a_screen: SCREEN; i: INTEGER) is
+	make (a_screen: SCREEN) is
 			-- Make a window manager. All editors will be create 
 			-- using `a_screen' as the parent. Allow `i' amount for
 			-- the free list.
 		do
-			!!routine_win_mgr.make (a_screen, i);
-			!!class_win_mgr.make (a_screen, i);
-			!!object_win_mgr.make (a_screen, i);
-			!!explain_win_mgr.make (a_screen, i);
+			!!routine_win_mgr.make (a_screen);
+			!!class_win_mgr.make (a_screen);
+			!!object_win_mgr.make (a_screen);
+			!!explain_win_mgr.make (a_screen);
 			Graphical_resources.add_user (Current)	
 		end;
 
@@ -187,9 +184,12 @@ feature -- Update
 
 	update_font_resource (old_res, new_res: FONT_RESOURCE) is
 			-- Update Current to reflect changes in `a_modified_resource'.
+		local
+			gr: like Graphical_resources
 		do
+			gr := Graphical_resources;
 			need_to_resynchronize := True;
-			if old_res = Graphical_resources.font then
+			if old_res = gr.font then
 				need_to_update_attributes := True;
 			end;
 			old_res.update_with (new_res)
@@ -197,11 +197,14 @@ feature -- Update
  
 	update_color_resource (old_res, new_res: COLOR_RESOURCE) is
 			-- Update Current to reflect changes in `a_modified_resource'.
+		local
+			gr: like Graphical_resources
 		do
+			gr := Graphical_resources;
 			need_to_resynchronize := True;
 			if 
-				old_res = Graphical_resources.background_color or else 
-				old_res = Graphical_resources.foreground_color 
+				old_res = gr.background_color or else 
+				old_res = gr.foreground_color 
 			then
 				need_to_update_attributes := True;
 			end;

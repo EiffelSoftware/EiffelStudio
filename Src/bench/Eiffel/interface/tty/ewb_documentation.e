@@ -8,9 +8,10 @@ indexing
 class EWB_DOCUMENTATION 
 
 inherit
+	TTY_CONSTANTS
 
-	TTY_CONSTANTS;
-	WINDOWS;
+	WINDOWS
+
 	EWB_FILTER_SYSTEM
 		redefine
 			execute, loop_action
@@ -28,8 +29,8 @@ feature -- Initialization
 			-- Initialize document generation to flat.
 			-- Set `do_parents' to `b'.
 		do
-			format_type := flat_type;
-			filter_name := f_name;
+			format_type := flat_type
+			filter_name := f_name
 			do_parents := b
 		end;
 
@@ -37,27 +38,27 @@ feature -- Initialization
 			-- Initialize document generation to flat_short.
 			-- Set `do_parents' to `b'.
 		do
-			format_type := flat_short_type;
-			do_parents := b;
+			format_type := flat_short_type
 			filter_name := f_name
+			do_parents := b
 		end;
 
 	make_text (f_name: like filter_name) is
 			-- Initialize document generation to text.
 			-- Set `do_parents' to `b'.
 		do
-			format_type := text_type;
-			do_parents := False;
+			format_type := text_type
 			filter_name := f_name
+			do_parents := False
 		end;
 
 	make_short (f_name: like filter_name; b: BOOLEAN) is
 			-- Initialize document generation to text.
 			-- Set `do_parents' to `b'.
 		do
-			format_type := short_type;
-			do_parents := b;
+			format_type := short_type
 			filter_name := f_name
+			do_parents := b
 		end;
 
 feature -- Access

@@ -93,8 +93,6 @@ feature -- Status setting
 			end  
  		end
 
-feature -- Element Change
-	
 	set_index (pos: INTEGER) is
 			-- Make `pos' the new index of the item in the
 			-- list.

@@ -14,10 +14,12 @@ inherit
 			parent_imp
 		end
 
+
 	EV_SEPARATOR_ITEM_IMP
 		redefine
 			parent_imp
 		end
+
 
 create
 	make

@@ -45,6 +45,7 @@ feature -- Element Change
 			set_index (pos)
 		end
 
+
 	set_parent (par: like parent) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void.
@@ -58,7 +59,7 @@ feature -- Element Change
 			if parent_imp /= Void then
 				gtk_object_ref (widget)
 				parent_imp.remove_item (Current)
-				parent_imp ?= Void
+				parent_imp := Void
 			end
 			if par /= Void then
 				parent_imp ?= par.implementation

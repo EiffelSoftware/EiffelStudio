@@ -70,8 +70,6 @@ feature -- Initialization
 
 feature -- Access
 
-	parent_imp: EV_STATUS_BAR_IMP
-
 	context_id: INTEGER
 
 	message_id: INTEGER
@@ -120,6 +118,7 @@ feature -- Status setting
 		end
 	
 feature -- Element change
+
 
 	set_index (pos: INTEGER) is
 			-- Make `pos' the new index of the item in the
@@ -210,6 +209,8 @@ feature {NONE} -- Implementation
 			set_pixmap_widget (default_pointer)
 --			pixmap_imp.set_parent (Void)
 		end
+
+	parent_imp: EV_STATUS_BAR_IMP
 
 end -- class EV_STATUS_BAR_ITEM_IMP
 

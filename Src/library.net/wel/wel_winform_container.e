@@ -59,7 +59,7 @@ feature {NONE} -- Messages
 			-- needs to be repainted.
 		do
 			disable_default_processing
-			set_message_return_value (1)
+			set_message_return_value (to_lresult (1))
 		end
 
 feature -- Access

@@ -7,18 +7,14 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class
-
-	SERVER
-
-inherit
+deferred class SERVER inherit
 
 	SOCKET_RESOURCES
 
 feature -- Access
 
 	in : SOCKET;
-			-- Listen socket.
+			-- Listen socket
 
 	outflow : like in;
 			-- Service socket
@@ -27,10 +23,11 @@ feature -- Access
 			-- Last message from socket
 
 	execute is
+			-- Execute transfer loop.
 		do
 			from
 			until
-				false
+				False
 			loop
 				receive;
 				process_message;
@@ -42,11 +39,13 @@ feature -- Access
 	queued: INTEGER;
 
 	resend (msg: ANY) is
+			-- Resend `msg'.
 		do
 			outflow.independent_store (msg)
 		end;
 
-	set_queued (n:INTEGER) is
+	set_queued (n: INTEGER) is
+			-- Set `queued' to `n'.
 		require
 			valid_queue_number: n > 0 and n < 6
 		do
@@ -56,27 +55,31 @@ feature -- Access
 		end;
 
 	cleanup is
+			-- Cleanup server.
 		deferred
 		end;
 
 	close is
+			-- Close sockets.
 		deferred
 		end;
 
 	process_message is 
+			-- Process the received message.
 		deferred
 		end;
 
 	respond is
+			-- Respond to client.
 		do
 		end;
 
 	receive is
+			-- Receive message.
 		deferred
 		end
 
 end -- class SERVER
-
 
 --|----------------------------------------------------------------
 --| EiffelNet: library of reusable components for ISE Eiffel.

@@ -14,6 +14,7 @@
 #include "eif_eiffel.h"
 #include <wtypes.h>
 
+Formatter f;
 Formatter::Formatter()
 {
 }

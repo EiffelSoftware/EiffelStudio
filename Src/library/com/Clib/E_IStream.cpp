@@ -48,7 +48,7 @@ EIF_INTEGER E_IStream::ccom_end_of_stream_reached()
 	hr = pStream->Read(&byte, 1, &bytes_read);
 	if (FAILED(hr))
 	{	
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 	else if (hr == S_FALSE)
@@ -67,7 +67,7 @@ EIF_INTEGER E_IStream::ccom_end_of_stream_reached()
 		hr = pStream->Seek (li, 0, NULL);
 		if (FAILED(hr))
 		{
-			Formatter  f;
+			//Formatter  f;
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
 	}
@@ -90,7 +90,7 @@ void E_IStream::ccom_read (void * p_buffer, ULONG number_bytes)
 	
 	if (FAILED(hr))
 	{	
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 	else if (hr == S_FALSE)
@@ -114,7 +114,7 @@ EIF_CHARACTER E_IStream::ccom_read_character()
 	hr = pStream->Read((void *)&character, (ULONG)sizeof(EIF_CHARACTER), &bytes_read);
 	if (FAILED(hr))
 	{	
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 	else if (hr == S_FALSE)
@@ -139,7 +139,7 @@ EIF_INTEGER E_IStream::ccom_read_integer()
 	hr = pStream->Read((void *)&integer, (ULONG)sizeof(EIF_INTEGER), &bytes_read);
 	if (FAILED(hr))
 	{	
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 	else if (hr == S_FALSE)
@@ -164,7 +164,7 @@ EIF_REAL E_IStream::ccom_read_real()
 	hr = pStream->Read((void *)&real, (ULONG)sizeof(EIF_REAL), &bytes_read);
 	if (FAILED(hr))
 	{	
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 	else if (hr == S_FALSE)
@@ -189,7 +189,7 @@ EIF_BOOLEAN E_IStream::ccom_read_boolean()
 	hr = pStream->Read((void *)&boolean, (ULONG)sizeof(EIF_BOOLEAN), &bytes_read);
 	if (FAILED(hr))
 	{	
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 	else if (hr == S_FALSE)
@@ -217,7 +217,7 @@ EIF_REFERENCE E_IStream::ccom_read_string()
 	hr = pStream->Read((void *)&size, (ULONG)sizeof(EIF_INTEGER), &bytes_read);
 	if (FAILED(hr))
 	{	
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 	else if (hr == S_FALSE)
@@ -233,7 +233,7 @@ EIF_REFERENCE E_IStream::ccom_read_string()
 	hr = pStream->Read((void *)string, size + 1, &bytes_read);
 	if (FAILED(hr))
 	{	
-		Formatter  f;
+		//Formatter  f;
 		free (string);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
@@ -267,7 +267,7 @@ void E_IStream::ccom_write (void * p_buffer, ULONG number_bytes)
 	hr = pStream->Write(p_buffer, number_bytes, NULL);
 	if (hr != S_OK)
 	{
-		Formatter f;
+		//Formatter f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
@@ -282,7 +282,7 @@ void E_IStream::ccom_write_character (EIF_CHARACTER character)
 	hr = pStream->Write((void *)&character, (ULONG)sizeof(EIF_CHARACTER), NULL);
 	if (hr != S_OK)
 	{
-		Formatter f;
+		//Formatter f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
@@ -297,7 +297,7 @@ void E_IStream::ccom_write_integer (EIF_INTEGER integer)
 	hr = pStream->Write((void *)&integer, (ULONG)sizeof(EIF_INTEGER), NULL);
 	if (hr != S_OK)
 	{
-		Formatter f;
+		//Formatter f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
@@ -312,7 +312,7 @@ void E_IStream::ccom_write_real (EIF_REAL real)
 	hr = pStream->Write((void *)&real, (ULONG)sizeof(EIF_REAL), NULL);
 	if (hr != S_OK)
 	{
-		Formatter f;
+		//Formatter f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
@@ -327,7 +327,7 @@ void E_IStream::ccom_write_boolean (EIF_BOOLEAN boolean)
 	hr = pStream->Write((void *)&boolean, (ULONG)sizeof(EIF_BOOLEAN), NULL);
 	if (hr != S_OK)
 	{
-		Formatter f;
+		//Formatter f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
@@ -344,14 +344,14 @@ void E_IStream::ccom_write_string (EIF_POINTER string)
 	hr = pStream->Write((void *)&size, (ULONG)sizeof(EIF_INTEGER), NULL);
 	if (hr != S_OK)
 	{
-		Formatter f;
+		//Formatter f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 
 	hr = pStream->Write((void *)string, size + 1, NULL);
 	if (hr != S_OK)
 	{
-		Formatter f;
+		//Formatter f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
@@ -375,7 +375,7 @@ void E_IStream::ccom_seek (EIF_POINTER offset, EIF_INTEGER origin)
 	hr = pStream->Seek (*dlibMove, (DWORD)origin, NULL);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
@@ -394,7 +394,7 @@ void E_IStream::ccom_set_size (EIF_POINTER new_size)
 	hr = pStream->SetSize(*libNewSize);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
@@ -415,7 +415,7 @@ void E_IStream::ccom_copy_to (IStream * pDestination, EIF_POINTER cb)
 	hr = pStream->CopyTo (pDestination, *uliNumBytes, NULL, NULL);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
@@ -439,7 +439,7 @@ void E_IStream::ccom_lock_region (EIF_POINTER offset,
 	hr = pStream->LockRegion (*ulibOffset, *uliNumBytes, (DWORD)dwLockType);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
@@ -464,7 +464,7 @@ void E_IStream::ccom_unlock_region (EIF_POINTER offset,
 	hr = pStream->UnlockRegion (*ulibOffset, *uliNumBytes, (DWORD)dwLockType);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
@@ -488,7 +488,7 @@ STATSTG * E_IStream::ccom_stat (EIF_INTEGER grfStatFlag)
 	hr = pStream->Stat (pstatstg, (DWORD)grfStatFlag);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		if (pstatstg->pwcsName != NULL)
 			CoTaskMemFree (pstatstg->pwcsName);
 		free (pstatstg);
@@ -510,7 +510,7 @@ IStream * E_IStream::ccom_clone ()
 	hr = pStream->Clone (&pClonedStream);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 	return pClonedStream;

@@ -27,7 +27,7 @@ E_IType_Lib::E_IType_Lib(OLECHAR * file_name)
 	hr = LoadTypeLib (file_name, &pTypeLib);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
@@ -70,7 +70,7 @@ EIF_REFERENCE E_IType_Lib::ccom_find_name (OLECHAR * szName, EIF_INTEGER count)
 	hr = pTypeLib->FindName (szName, 0, ppTInfo, rgMemId, &cFound);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 
@@ -138,7 +138,7 @@ EIF_REFERENCE E_IType_Lib::ccom_get_documentation (EIF_INTEGER index)
 			&HelpContext, &BstrHelpFile);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 
@@ -175,7 +175,7 @@ TLIBATTR * E_IType_Lib::ccom_get_lib_attr ()
 	hr = pTypeLib->GetLibAttr (&p_tlib_attr);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 	return p_tlib_attr;
@@ -194,7 +194,7 @@ ITypeComp * E_IType_Lib::ccom_get_type_comp ()
 	hr = pTypeLib->GetTypeComp(&p_type_comp);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 	return p_type_comp;
@@ -213,7 +213,7 @@ ITypeInfo * E_IType_Lib::ccom_get_type_info (int index)
 	hr = pTypeLib->GetTypeInfo (index, &p_type_info);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 	return p_type_info;
@@ -240,7 +240,7 @@ ITypeInfo * E_IType_Lib::ccom_get_type_info_of_guid (EIF_POINTER a_guid)
 	hr = pTypeLib->GetTypeInfoOfGuid (*guid, &p_type_info);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 	return p_type_info;
@@ -257,7 +257,7 @@ EIF_INTEGER E_IType_Lib::ccom_get_type_info_type (int index)
 	hr = pTypeLib->GetTypeInfoType (index, &type_kind);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 	return (EIF_INTEGER) type_kind;
@@ -275,7 +275,7 @@ EIF_BOOLEAN E_IType_Lib::ccom_is_name (OLECHAR * szName)
 	hr = pTypeLib->IsName (szName, 0, &local_b);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 	if (local_b)

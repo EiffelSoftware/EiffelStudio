@@ -17,7 +17,7 @@
 #include <stdlib.h> 
 #include <malloc.h>
 #include "eif_except.h"
-#include "ecom_exception.h"
+#include "ecom_rt_globals.h"
 
 class E_IEnumSTATSTG
 {

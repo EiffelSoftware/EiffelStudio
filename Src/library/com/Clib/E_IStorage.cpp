@@ -43,7 +43,7 @@ void E_IStorage::ccom_create_doc_file (WCHAR * pwcsName, DWORD grfMode)
 	 hr = StgCreateDocfile (pwcsName, grfMode, 0, &pStorage);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		pStorage = NULL;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
@@ -64,7 +64,7 @@ void E_IStorage::ccom_open_root_storage (WCHAR * pwcsName, DWORD grfMode)
 			NULL, 0, &pStorage);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		pStorage = NULL;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
@@ -96,7 +96,7 @@ IStream * E_IStorage::ccom_create_stream (WCHAR * pwcsName, DWORD grfMode)
 	hr = pStorage->CreateStream (pwcsName, grfMode, 0, 0, &pStream);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		pStream = NULL;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}	
@@ -119,7 +119,7 @@ IStream * E_IStorage::ccom_open_stream (WCHAR * pwcsName, DWORD grfMode)
 	hr = pStorage->OpenStream (pwcsName, NULL, grfMode, 0, &pStream); 
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		pStream = NULL;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
@@ -141,7 +141,7 @@ IStorage * E_IStorage::ccom_create_storage (WCHAR * pwcsName, DWORD grfMode)
 	hr = pStorage->CreateStorage (pwcsName, grfMode, 0, 0, &pSubStorage);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		pSubStorage = NULL;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
@@ -165,7 +165,7 @@ IStorage * E_IStorage::ccom_open_storage (WCHAR * pwcsName, DWORD grfMode)
 			NULL, 0, &pSubStorage);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		pSubStorage = NULL;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
@@ -191,7 +191,7 @@ void E_IStorage::ccom_copy_to (DWORD ciidExclude, IID * rgiidExclude,
 			NULL, pstgDest);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
@@ -216,7 +216,7 @@ void E_IStorage::ccom_move_element_to (WCHAR * pwcsName, IStorage * pstgDest,
 			pwcsNewName, grfFlags);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
@@ -238,7 +238,7 @@ void E_IStorage::ccom_commit(DWORD grfCommitFlags)
 	hr = pStorage->Commit (grfCommitFlags);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
@@ -253,7 +253,7 @@ void E_IStorage::ccom_revert ()
 	hr = pStorage->Revert(); 
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
@@ -270,7 +270,7 @@ IEnumSTATSTG * E_IStorage::ccom_enum_elements ()
 	hr = pStorage->EnumElements(0, NULL, 0, &pEnumSTATSTG);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		pEnumSTATSTG = NULL;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
@@ -289,7 +289,7 @@ void E_IStorage::ccom_destroy_element (WCHAR * pwcsName)
 	hr = pStorage->DestroyElement(pwcsName); 
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
@@ -308,7 +308,7 @@ void E_IStorage::ccom_rename_element (WCHAR * pwcsOldName, WCHAR * pwcsNewName)
 	hr = pStorage->RenameElement(pwcsOldName, pwcsNewName);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
@@ -335,7 +335,7 @@ void E_IStorage::ccom_set_element_times (WCHAR * pwcsName, FILETIME * pctime,
 			patime, pmtime);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
@@ -352,7 +352,7 @@ void E_IStorage::ccom_set_class (REFCLSID clsid)
 	hr = pStorage->SetClass(clsid);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
@@ -374,7 +374,7 @@ STATSTG * E_IStorage::ccom_stat (DWORD grfStatFlag)
 	hr = pStorage->Stat(pSTATSTG, grfStatFlag);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		if (pSTATSTG->pwcsName != NULL)
 			CoTaskMemFree (pSTATSTG->pwcsName);
 		free (pSTATSTG);

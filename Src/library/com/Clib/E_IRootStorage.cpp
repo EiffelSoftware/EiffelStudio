@@ -32,7 +32,7 @@ void E_IRootStorage::ccom_switch_to_file (EIF_POINTER filename)
 	hr = pIRootStorage->SwitchToFile ((WCHAR *)filename);
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };

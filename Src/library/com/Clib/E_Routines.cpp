@@ -30,7 +30,7 @@ int E_Routines::ccom_is_compound_file (WCHAR * pwcsName)
 		result = 0;
 	else 
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 	return result;

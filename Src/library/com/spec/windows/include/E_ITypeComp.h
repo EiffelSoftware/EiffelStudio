@@ -17,7 +17,7 @@
 #include <oleauto.h>
 #include "eif_eiffel.h"
 #include "eif_except.h"
-#include "ecom_exception.h"
+#include "ecom_rt_globals.h"
 
 class E_IType_Comp
 {

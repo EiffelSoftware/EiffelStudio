@@ -171,6 +171,13 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
 #define Timeval struct timeval	/* Structure used by gettimeofday() */
 #endif
 
+/* HAS_GETGROUPS:
+ *	This symbol, if defined, indicates that the getgroups() routine is
+ *	available to get the list of process groups.  If unavailable, multiple
+ *	groups are probably not supported.
+ */
+#$d_getgrps HAS_GETGROUPS		/**/
+
 /* HAS_GETHOSTID:
  *	This symbol, if defined, indicates that the gethostid system call is
  *	available to get the host id.
@@ -242,6 +249,12 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  *	exec /bin/mkdir.
  */
 #$d_mkdir HAS_MKDIR		/**/
+
+/* HAS_MKTIME:
+ *	This symbol, if defined, indicates that the mktime routine is
+ *	available.
+ */
+#$d_mktime HAS_MKTIME		/**/
 
 /* PIDCHECK:
  *	This symbol, if defined, means that the kill(pid, 0) will
@@ -426,6 +439,18 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  *	handler using "Signal_t handler(sig)".
  */
 #define Signal_t $signal_t	/* Signal handler's return type */
+
+/* Groups_t:
+ *	This symbol holds the type used for the second argument to
+ *	getgroups().  Usually, this is the same of gidtype, but
+ *	sometimes it isn't.  It can be int, ushort, uid_t, etc... 
+ *	It may be necessary to include <sys/types.h> to get any 
+ *	typedef'ed information.  This is only required if you have
+ *	getgroups().
+ */
+#ifdef HAS_GETGROUPS
+#define Groups_t $groupstype	/* Type for 2nd arg to getgroups() */
+#endif
 
 /* I_DIRENT:
  *	This symbol, if defined, indicates to the C program that it should
@@ -641,11 +666,19 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  */
 #define Caddr_t $sbrktype	/* <core address> type */
 
-/* KEEPALIVE:
+/* Select_fd_set_t:
+ *	This symbol holds the type used for the 2nd, 3rd, and 4th
+ *	arguments to select.  Usually, this is 'fd_set *', if HAS_FD_SET
+ *	is defined, and 'int *' otherwise.  This is only useful if you 
+ *	have select(), of course.
+ */
+#define Select_fd_set_t 	$selecttype	/**/
+
+/* CAN_KEEPALIVE:
  *	This symbol if defined indicates to the C program that the SO_KEEPALIVE
  *	option of setsockopt() will work as advertised in the manual.
  */
-#$d_keepalive KEEPALIVE		/**/
+#$d_keepalive CAN_KEEPALIVE		/**/
 
 /* Uid_t:
  *	This symbol holds the type used to declare user ids in the kernel.

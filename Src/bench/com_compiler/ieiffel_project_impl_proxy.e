@@ -91,6 +91,12 @@ feature -- Access
 			Result := ccom_completion_information (initializer)
 		end
 
+	html_doc_generator: IEIFFEL_HTMLDOC_GENERATOR_INTERFACE is
+			-- Help documentation generator
+		do
+			Result := ccom_html_doc_generator (initializer)
+		end
+
 feature -- Basic Operations
 
 	retrieve_project (a_project_file_name: STRING) is
@@ -192,6 +198,12 @@ feature {NONE}  -- Externals
 
 	ccom_completion_information (cpp_obj: POINTER): IEIFFEL_COMPLETION_INFO_INTERFACE is
 			-- Completion information
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_html_doc_generator (cpp_obj: POINTER): IEIFFEL_HTMLDOC_GENERATOR_INTERFACE is
+			-- Help documentation generator
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end

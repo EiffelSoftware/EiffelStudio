@@ -24,6 +24,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	precompile_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `precompile'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	is_successful_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `is_successful'.
 			-- Redefine in descendants if needed.
@@ -94,6 +101,14 @@ feature -- Basic Operations
 			-- Finalize.
 		require
 			finalize_user_precondition: finalize_user_precondition
+		deferred
+
+		end
+
+	precompile is
+			-- Precompile.
+		require
+			precompile_user_precondition: precompile_user_precondition
 		deferred
 
 		end

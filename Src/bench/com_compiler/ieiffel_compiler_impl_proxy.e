@@ -81,6 +81,12 @@ feature -- Basic Operations
 			ccom_finalize (initializer)
 		end
 
+	precompile is
+			-- Precompile.
+		do
+			ccom_precompile (initializer)
+		end
+
 	remove_file_locks is
 			-- Remove file locks
 		do
@@ -105,6 +111,12 @@ feature {NONE}  -- Externals
 
 	ccom_finalize (cpp_obj: POINTER) is
 			-- Finalize.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelCompiler_impl_proxy %"ecom_eiffel_compiler_IEiffelCompiler_impl_proxy_s.h%"]()"
+		end
+
+	ccom_precompile (cpp_obj: POINTER) is
+			-- Precompile.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelCompiler_impl_proxy %"ecom_eiffel_compiler_IEiffelCompiler_impl_proxy_s.h%"]()"
 		end

@@ -68,6 +68,12 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
+	precompile is
+			-- Precompile.
+		do
+			-- Put Implementation here.
+		end
+
 	remove_file_locks is
 			-- Remove file locks
 		do

@@ -12,32 +12,6 @@ inherit
  			is_equal
  		end
  
-create
- 	make,
- 	make_from_info
- 
-feature {NONE} -- Implementation
-
- 	make_from_info (a_source_name: like source_name; a_target_name: like target_name) is 
- 		indexing
- 			description: "[
- 						Set `source_name' with `a_source_name'.
- 						Set `target_name' with `a_target_name'.
- 					  ]"
- 			external_name: "MakeFromInfo"
- 		require
- 			non_void_source_name: a_source_name /= Void
- 			not_empty_source_name: a_source_name.get_length > 0		
- 	 		non_void_target_name: a_target_name /= Void
- 			not_empty_target_name: a_target_name.get_length > 0		
- 		do
- 			set_source_name (a_source_name)
- 			set_target_name (a_target_name)
- 		ensure
- 			source_name_set: source_name.equals_string (a_source_name)
- 			target_name_set: target_name.equals_string (a_target_name)
- 		end
-
 feature -- Access
 
 	target_name: STRING 
@@ -74,12 +48,17 @@ feature -- Access
 
 feature -- Status Report
 
-	is_equal (obj: RENAME_CLAUSE): BOOLEAN is
+	is_equal (obj: ANY): BOOLEAN is
 		indexing
 			description: "Is Current equal to `obj'?"
 			external_name: "Equals"
+		local
+			a_clause: RENAME_CLAUSE
 		do
-			Result := source_name.to_lower.equals_string (obj.source_name.to_lower) and target_name.to_lower.equals_string (obj.target_name.to_lower)
+			a_clause ?= obj
+			if a_clause /= Void then
+				Result := source_name.to_lower.equals_string (a_clause.source_name.to_lower) and target_name.to_lower.equals_string (a_clause.target_name.to_lower)
+			end
 		end
 
 feature -- Status Setting

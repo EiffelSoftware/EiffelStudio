@@ -1,0 +1,173 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Parsing: The Parse Library</TITLE>
+		<LINK REL=StyleSheet HREF="../../../default.css">
+		<META NAME="MS-HKWD" CONTENT="Parsing">
+	</HEAD>
+	</HEAD>
+
+	<BODY>
+		<H1>Parsing: The Parse Library</H1>
+
+		<H2>OVERVIEW</H2>
+
+		<P>Parsing is the task of analyzing the structure of documents such as programs, specifications or other structured texts.</P>
+
+		<P>Many systems need to parse documents. The best-known examples are compilers, interpreters and other software development tools; but as soon as a system provides its users with a command language, or processes input data with a non-trivial structure, it will need parsing facilities.</P>
+
+		<P>This chapter describes the Parse library, which you can use to process documents of many different types. It provides a simple and flexible parsing scheme, resulting from the full application of object-oriented principles.</P>
+
+		<P>Because it concentrates on the higher-level structure, the Parse library requires auxiliary mechanisms for identifying a document’s lexical components: words, numbers and other such elementary units. To address this need it is recommended, although not required, to complement Parse with the Lex library studied in the previous chapter.</P>
+
+		<P>Figure 1 shows the inheritance structure of the classes discussed in this chapter.</P>
+
+		<IMG SRC=figure2.png>
+		<P CLASS="figuretitle">Figure 1: Parse class structure</P>
+
+		<H2>WHY USE THE PARSE LIBRARY</H2>
+
+		<P>Let us fist look at the circumstances under which you may want - or not want - to use the Parse library.</P>
+
+		<H3>The Parse library vs. parser generators</H3>
+
+		<P>Parsing is a heavily researched area of computing science and many tools are available to generate parsers. In particular, the popular Yacc tool, originally developed for Unix, is widely used to produce parsers.</P>
+
+		<P>In some cases Yacc or similar tools are perfectly adequate. It is also sometimes desirable to write a special-purpose parser for a language, not relying on any parser generator. Several circumstances may, however, make the Parse library attractive:</P>
+
+		<UL>
+			<LI>The need to interface the parsing tasks with the rest of an object-oriented system (such as a compiler or more generally a "document processor" as defined below) in the simplest and most convenient way.</LI>
+			<LI>The desire to apply object-oriented principles as fully as possible to all aspects of a system, including parsing, so as to gain the method’s many benefits, in particular reliability, reusability and extendibility.</LI>
+			<LI>The need to tackle languages whose structure is not easily reconciled with the demands of common parser generator, which usually require the grammar to be LALR (1). (The Parse library uses a more tolerant LL scheme, whose only significant constraint is absence of left-recursivity; the library provides mechanisms to detect this condition, which is easy to correct.)</LI>
+			<LI>The need to define several possible semantic treatments on the same syntactic structure.</LI>
+		</UL>
+
+		<P>The last reason may be the most significant practical argument in favor of using Parse. Particularly relevant is the frequent case of a software development environment in which a variety of tools all work on the same basic syntactic structure. For example an environment supporting a programming language such as Pascal or Eiffel may include a compiler, an interpreter, a pretty-printer, software documentation tools (such as Eiffel’s short and flat-short facilities), browsing tools and several other mechanisms that all need to perform semantic actions on software texts that have the same syntactic structure. With common parser generators such as Yacc, the descriptions of syntactic structure and semantic processing are inextricably mixed, so that you normally need one new specification for each tool. This makes design, evolution and reuse of specifications difficult and error-prone.</P>
+
+		<P>In contrast, the Parse library promotes a specification style whereby syntax and semantics are kept separate, and uses inheritance to allow many different semantic descriptions to rely on the same syntactic stem. This will make Parse particularly appropriate in such cases.</P>
+
+		<H3>A word of caution</H3>
+
+		<P>At the time of publication the Parse library has not reached the same degree of maturity as the other libraries presented in this book. It should thus be used with some care. You will find at the end of this chapter a few comments about the work needed to bring the library to its full realization.</P>
+
+		<H2>AIMS AND SCOPE OF THE PARSE LIBRARY</H2>
+
+		<P>To understand the Parse library it is necessary to appreciate the role of parsing and its place in the more general task of processing documents of various kinds.</P>
+
+		<H3>Basic terminology</H3>
+
+		<P>First, some elementary conventions. The word <B>document</B> will denote the texts to be parsed. The software systems which perform parsing as part of their processing will be called <B>document processors</B>.</P>
+
+		<P>Typical document processors are compilers, interpreters, program checkers, specification analyzers and documentation tools. For example the [BENCH] environment contains a number of document processors, used for compiling, documentation and browsing; the language to which they apply is either Eiffel itself or the Lace control language.</P>
+
+		<H3>Parsing, grammars and semantics</H3>
+
+		<P>Parsing is seldom an end in itself; rather, it serves as an intermediate step for document processors which perform various other actions.</P>
+
+		<P>Parsing takes care of one of the basic tasks of a document processor: reconstructing the logical organization of a document, which must conform to a certain <B>syntax</B> (or structure), defined by a <B>grammar</B>.</P>
+
+		<P CLASS="note"><B>Note</B>: the more complete name <B>syntactic grammar</B> avoids any confusion with the <I>lexical</I> grammars discussed in the <A HREF="lexical.html">previous chapter</A>. By default, "grammar" with no further qualification will always denote a syntactic grammar. A syntactic grammar normally relies on a lexical grammar, which gives the form of the most elementary components - the tokens - appearing in the syntactic structure.</P>
+
+		<P>Once parsing has reconstructed the structure of a document, the document processor will perform various operations on the basis of that structure. For example a compiler will generate target code corresponding to the original text; a command language interpreter will execute the operations requested in the commands; and a documentation tool such as the short and flat-short commands for Eiffel will produce some information on the parsed document. Such operations are called <B>semantic actions</B>. One of the principal requirements on a good parsing mechanism is that it should make it easy to graft semantics onto syntax, by adding semantic actions of many possible kinds to the grammar.</P>
+
+		<P>The Parse library provides predefined classes which handle the parsing aspect automatically and provide the hooks for adding semantic actions in a straightforward way. This enables developers to write full document processors - handling both syntax and semantics - simply and efficiently.</P>
+
+		<P>As noted at the beginning of this chapter, it is possible to build a single syntactic base and use it for several processors (such as a compiler and a documentation tool) with semantically different goals, such as compilation and documentation. In the Parse library the semantic hooks take the form of deferred routines, or of routines with default implementations which you may redefine in descendants.</P>
+
+		<H2>LIBRARY CLASSES</H2>
+
+		<P>The Parse library contains a small number of classes which cover common document processing applications. The classes, whose inheritance structure was shown at the beginning of this chapter, are:</P>
+
+		<UL>
+			<LI>CONSTRUCT, describing the general notion of syntactical construct.</LI>
+			<LI>AGGREGATE, describing constructs of the "aggregate" form.</LI>
+			<LI>CHOICE, describing constructs of the "choice" form.</LI>
+			<LI>REPETITION, describing constructs of the "repetition" form.</LI>
+			<LI>TERMINAL, describing "terminal" constructs with no further structure.</LI>
+			<LI>KEYWORD, describing how to handle keywords.</LI>
+			<LI>L_INTERFACE, providing a simple interface with the lexical analysis process and the Lex library.</LI>
+			<LI>INPUT, describing how to handle the input document.</LI>
+		</UL>
+
+		<H2>EXAMPLES</H2>
+
+		The [BENCH] delivery includes (in the examples/library/parse subdirectory) a simple example using the Parse Library  classes. The example is a processor for "documents" which describe computations involving polynomials with variables. The corresponding processor is a system which obtains polynomial specifications and variable values from
+		a user, and computes the corresponding polynomials.</P>
+
+		<P>This example illustrates the most important mechanisms of the Parsing Library and provides a guide for using the facilities described in this chapter. The components of its grammar appear as illustrations in the next sections.</P>
+
+		<H2>CONSTRUCTS AND PRODUCTIONS</H2>
+
+		<P>A set of documents possessing common properties, such as the set of all valid Eiffel classes or the set of all valid polynomial descriptions, is called a <B>language</B>.</P>
+
+		<P>In addition to its lexical aspects, the description of a language includes both syntactic and semantic properties. The grammar - the syntactic specification - describes the structure of the language (for example how an Eiffel class is organized into a number of clauses); the semantic specification defines the meaning of documents
+		written in the language (for example the run-time properties of instances of the class, and the effect of feature calls).</P>
+
+		<P>To discuss the Parse library, it is simpler to consider "language' as a purely syntactic notion; in other words, a language is simply the set of documents conforming to a certain syntactic grammar (taken here to include the supporting lexical grammar). Any semantic aspect will be considered to belong to the province of a specific document processor for the language, although the technique used for specifying the grammar will
+		make it easy to add the specification of the semantics, or several alternative semantic specifications if desired.</P>
+
+		<P>This section explains how you may define the syntactic base - the grammar.</P>
+
+		<H3>Constructs</H3>
+
+		<P>A grammar consists of a number of <B>constructs</B>, each representing the structure of documents, or document components, called the <B>specimens</B> of the construct. For example, a grammar for Eiffel will contain constructs such as Class, Feature_clause and Instruction. A particular class text is a specimen of construct Class.</P>
+
+		<P>Each construct will be defined by a <B>production</B>, which gives the structure of the construct’s specimens. For example, a production for Class in an Eiffel grammar should express that a class (a specimen of the Class construct) is made of an optional Indexing part, a Class_header, an optional Formal_generics part and so on. The production for Indexing will indicate that any specimen of this construct - any Indexing part - consists of the keyword <I><B>indexing</I></B> followed by zero or more specimens of Index_clause.
+
+		<P>Although some notations for syntax descriptions such as BNF allow more than one production per construct, the Parse library relies on the convention that every construct is defined by <B>at most one</B> production. Depending on whether there is indeed such a production, the construct is either <B>non-terminal</B> or <B>terminal</B>:
+
+		<UL>
+			<LI>A non-terminal construct (so called because it is defined in terms of others) is specified by a production, which may be of one of three types: aggregate, choice and repetition. The construct will accordingly be called an aggregate, choice or repetition construct.</LI>
+			<LI>A terminal construct has no defining production. This means that it must be defined outside of the syntactical grammar. Terminals indeed come from the <B>lexical grammar</B>. Every terminal construct corresponds to a token type (regular expression or keyword) of the lexical grammar, for which the parsing duty will be delegated to lexical mechanisms, assumed in the rest of this chapter to be provided by the Lex library although others may be substituted if appropriate.</LI>
+		</UL>
+
+		<P>All specimens of terminal constructs are instances of class TERMINAL. A special case is that of keyword constructs, which have a single specimen corresponding to a keyword of the language. For example, <SPAN CLASS="ekeyword">if</SPAN> is a keyword of Eiffel. Keywords are described by class KEYWORD, an heir of TERMINAL.</P>
+
+		<P>The rest of this section concentrates on the parsing-specific part: non-terminal constructs and productions. Terminals will be studied in the discussion of how to interface parsing with lexical analysis.</P>
+
+		<H3>Varieties of non-terminal constructs and productions</H3>
+
+		<P>An aggregate production defines a construct whose specimens are obtained by concatenating ("aggregating") specimens of a list of specified constructs, some of which may be optional. For example, the production for construct Conditional in an Eiffel grammar may read:</P>
+
+		<CODE>Conditional [=] if Then_part_list [Else_part] end</CODE>
+
+		<P>This means that a specimen of Conditional (a conditional instruction) is made of the keyword <SPAN CLASS="ekeyword">if</SPAN>, followed by a specimen of Then_part_list, followed by zero or one specimen of Else_part (the square brackets represent an optional component), followed by the keyword <SPAN CLASS="ekeyword">end</SPAN>.</P>
+
+		<P CLASS="note"><B>Note</B>: this notation for productions uses conventions similar to those of the book <A HREF="http://eiffel.com/doc/documentation.html#etl">Eiffel: The Language</A>. Keywords are written in <I><B>boldface italics</B></I> and stand for themselves. Special symbols, such as the semicolon, are written in double quotes, as in ";". The [=] symbol means "is defined as" and is more accurate mathematically than plain =, which, however, is often used for this purpose (see <A HREF="http://eiffel.com/doc/documentation.html#itpl">Introduction to the Theory of Programming Languages, Prentice Hall, 1991</A>, for a more complete discussion of this issue).</P>
+
+		<P>A choice production defines a construct whose specimens are specimens of one among a number of specified constructs. For example, the production for construct Type 	in an Eiffel grammar may read:</P>
+
+		<CODE>Type [=] Class_type | Class_type_expanded | Formal_generic_name | Anchored | Bit_type</CODE>
+
+		<P>This means that a specimen of Type is either a specimen of Class_type, or a specimen of Class_type_expanded etc.</P>
+
+		<P>Finally, a repetition production defines a construct whose specimens are sequences of zero or more specimens of a given construct (called the <B>base</B> of the repetition construct), separated from each other by a <B>separator</B>. For example, the production for construct Compound in an Eiffel grammar may read</P>
+
+		<CODE>Compound [=] {Instruction ";" ...}</CODE>
+
+		<P>This means that a specimen of Compound is made of zero or more specimens of Instruction, each separated from the next (if any) by a semicolon.</P>
+
+		<P>These three mechanisms - aggregate, choice and repetition - suffice to describe the structure of a wide array of practical languages. Properties which cannot be handled by them should be dealt with through <B>semantic actions</B>, as explained below.</P>
+
+		<H3>An example grammar</H3>
+
+		<P>The example directory included in the delivery implements a processor for a grammar describing a simple language for expressing polynomials. A typical "document" in this language is the line</P>
+
+		<P>x; y: x * (y + 8 - (2 * x))</P>
+
+		<P>The beginning of the line, separated from the rest by a colon, is the list of variables used in the polynomial, separated by semicolons. The rest of the line is the expression defining the polynomial.</P>
+
+		<P>Using the conventions defined above, the grammar may be written as:</P>
+
+		<CODE><PRE>Line       [=] Variables ":" Sum
+Variables  [=] {Identifier ";" ...}
+Sum        [=] {Diff "+" ...}
+Diff       [=] {Product "-" ...}
+Product    [=] {Term " * " ...}
+Term       [=] Simple_var Int_constant Nested
+Nested     [=] "(" Sum ")"</PRE></CODE>
+
+		<P>This grammar assumes a terminal Identifier, which must be defined as a token type in the lexical grammar. The other terminals are keywords, shown as strings appearing in double quotes, for example "+".</P>
+	</BODY>
+</HTML>

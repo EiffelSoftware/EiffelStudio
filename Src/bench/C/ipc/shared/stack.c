@@ -100,7 +100,7 @@ rt_private void send_dump(int s, struct dump *dp)
  * Iterator initialization and final clean up.
  */
 
-rt_private void stk_start(int what)
+rt_private void stk_start(EIF_CONTEXT int what)
          		/* Dumping status wanted */
 {
 	/* Initialize the dumping procedure. This whole package is nothing more
@@ -144,7 +144,7 @@ rt_private void stk_start(int what)
 	}
 }
 
-rt_private void stk_end(int what)
+rt_private void stk_end(EIF_CONTEXT int what)
 {
 	/* Restore context of all the stack we had to modify/inspect */
 
@@ -357,7 +357,7 @@ rt_private void init_var_dump(struct dcall *call)
 	if (call == (struct dcall *) 0)
 		return;
 
-	sync_registers(call->dc_cur, call->dc_top);
+	sync_registers(MTC call->dc_cur, call->dc_top);
 }
 
 rt_private struct dump *variable(void)
@@ -417,7 +417,7 @@ rt_private struct dump *local(int n)
 	struct item *ip;					/* Partial item pointer */
 	static struct dump dumped;			/* Item returned */
 
-	ip = ivalue(IV_LOCAL, n);
+	ip = ivalue(MTC IV_LOCAL, n);
 	if (ip == (struct item *) 0)
 		return (struct dump *) 0;
 	
@@ -446,7 +446,7 @@ rt_private struct dump *argument(int n)
 	struct item *ip;					/* Partial item pointer */
 	static struct dump dumped;			/* Item returned */
 
-	ip = ivalue(IV_ARG, n);
+	ip = ivalue(MTC IV_ARG, n);
 	if (ip == (struct item *) 0)
 		return (struct dump *) 0;
 	
@@ -511,7 +511,7 @@ rt_public void send_once_result(int s, uint32 body_id, int arg_num)
 	struct item *ip;					/* Partial item pointer */
 	struct dump dumped;					/* Item to send */
 
-	ip = docall(body_id, arg_num);
+	ip = docall(MTC body_id, arg_num);
 	dumped.dmp_type = DMP_ITEM;			/* We are dumping a variable */
 	dumped.dmp_item = ip;
 

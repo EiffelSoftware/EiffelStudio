@@ -44,24 +44,20 @@ feature -- Access
 		require
 			valid_index: valid_index (index)
 		do
-			Result ?= native_array.item (index - 1)
-			if Result = Void then
-					-- This is not an Eiffel reference type, it must be
-					-- a basic type. If not we do nothing.
-				inspect arg_item_code (index)
-				when boolean_code then Result := boolean_item (index)
-				when character_code then Result := character_item (index)
-				when double_code then Result := double_item (index)
-				when real_code then Result := real_item (index)
-				when pointer_code then Result := pointer_item (index)
-				when integer_code then Result := integer_32_item (index)
-				when integer_8_code then Result := integer_8_item (index)
-				when integer_16_code then Result := integer_16_item (index)
-				when integer_64_code then Result := integer_64_item (index)
-				when reference_code then
-						-- It is a reference which is not of type ANY. We return
-						-- Void for now.
-				end
+				-- If it is a basic type, then we need to do a promotion.
+				-- If not, then we simply get the element.
+			inspect arg_item_code (index)
+			when boolean_code then Result := boolean_item (index)
+			when character_code then Result := character_item (index)
+			when double_code then Result := double_item (index)
+			when real_code then Result := real_item (index)
+			when pointer_code then Result := pointer_item (index)
+			when integer_code then Result := integer_32_item (index)
+			when integer_8_code then Result := integer_8_item (index)
+			when integer_16_code then Result := integer_16_item (index)
+			when integer_64_code then Result := integer_64_item (index)
+			when reference_code then
+				Result := native_array.item (index - 1)
 			end
 		end
 
@@ -71,7 +67,7 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_reference: is_reference_item (index)
 		do
-			Result ?= native_array.item (index - 1)
+			Result := native_array.item (index - 1)
 		end
 
 	boolean_item (index: INTEGER): BOOLEAN is

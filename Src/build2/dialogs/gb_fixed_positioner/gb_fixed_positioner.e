@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		do
 			set_icon_pixmap (Icon_build_window @ 1)
+			set_title ("EV_FIXED child positioner")
 		end
 		
 	make_with_editor (an_editor: GB_EV_FIXED_EDITOR_CONSTRUCTOR) is

@@ -269,6 +269,18 @@ feature -- Basic operation
 			end
 		end
 		
+	update_title is
+			-- Update title displayed in `Current' to include project location
+			-- if necessary.
+		do
+			if system_status.project_open and not visual_studio_information.is_visual_studio_wizard then
+					-- No project location is displayed for the visual studio wizard.
+				set_title ("EiffelBuild - " + system_status.current_project_settings.project_location)
+			else
+				set_title ("EiffelBuild")
+			end
+		end
+
 	smart_disable_sensitive is
 			-- Disable all contents of `Current', except the status bar.
 		require

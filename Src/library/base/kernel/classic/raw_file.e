@@ -91,14 +91,14 @@ feature -- Input
 			last_double := file_gdb (file_pointer)
 		end
 
-	read_data (p: POINTER; nb_char: INTEGER) is
-			-- Read a string of at most `nb_char' bound characters
+	read_data (p: POINTER; nb_bytes: INTEGER) is
+			-- Read a string of at most `nb_bytes' bound bytes
 			-- or until end of file.
 			-- Make result available in `p'.
 		local
 			new_count: INTEGER
 		do
-			new_count := file_gss (file_pointer, p, nb_char)
+			new_count := file_fread (p, 1, nb_bytes, file_pointer)
 		end
 
 feature {NONE} -- Implementation
@@ -163,6 +163,15 @@ feature {NONE} -- Implementation
 			-- Put `d' to end of `file'.
 		external
 			"C (FILE *, EIF_DOUBLE) | %"eif_file.h%""
+		end
+
+	file_fread (dest: POINTER; elem_size, nb_elems: INTEGER; file: POINTER): INTEGER is
+			-- Read `nb_elems' of size `elem_size' in file `file' and store them
+			-- in location `dest'.
+		external
+			"C macro signature (void *, size_t, size_t, FILE *): EIF_INTEGER use <stdio.h>"
+		alias
+			"fread"
 		end
 
 invariant

@@ -95,7 +95,7 @@ feature
 			a_class: CLASS_C;
 			types: TYPE_LIST;
 			cl_type: CLASS_TYPE;
-			object_name, file_name: STRING;
+			object_name, file_name: STRING
 		do
 			from
 				i := 1;
@@ -119,14 +119,14 @@ feature
 							!!file_name.make (16);
 							file_name.append (object_name);
 							file_name.append (Dot_o);
-							object_basket.put (file_name);
+							object_baskets.item (cl_type.packet_number).put (file_name);
 
 								-- Descriptor file
 							!!file_name.make (16);
 							file_name.append (object_name);
 							file_name.append (Descriptor_suffix);
 							file_name.append (Dot_o);
-							object_basket.put (file_name);
+							descriptor_baskets.item (cl_type.packet_number).put (file_name);
 						end;
 
 						types.forth;
@@ -140,7 +140,7 @@ feature
 						file_name.append_integer (i);
 						file_name.append (Feature_table_suffix);
 						file_name.append (Dot_o);
-						object_basket.put (file_name);
+						feat_table_baskets.item (a_class.packet_number).put (file_name);
 					end;
 				end;
 				i := i + 1;
@@ -166,11 +166,9 @@ feature
 
 	generate_additional_rules is
 		do
-			if partial_objects > 0 then
-				Make_file.putstring ("%T$(RM) ");
-				generate_objects_macros (partial_objects, False);
-				Make_file.new_line;
-			end;
+			Make_file.putstring ("%T$(RM) ");
+			generate_objects_macros;
+			Make_file.new_line;
 		end;
  
 end

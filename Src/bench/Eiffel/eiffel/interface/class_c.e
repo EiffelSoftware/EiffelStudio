@@ -1322,16 +1322,30 @@ feature -- Workbench feature and descriptor table generation
 			end;
 		end;
 
+feature
+
 	full_file_name: STRING is
-			-- Generated file name prefix
+			-- Generated file name prefix;
+			-- Side effect: Create the corresponding subdirectory if it
+			-- doesnot exist yet.
 		local
-			fname: STRING;
+			subdirectory: STRING;
+			dir: DIRECTORY
 		do
 			if System.in_final_mode then
-				Result := build_path (Final_generation_path, base_file_name)
+				Result := Final_generation_path
 			else
-				Result := build_path (Workbench_generation_path, base_file_name)
+				Result := Workbench_generation_path
 			end;
+			!!subdirectory.make (5);
+			subdirectory.append (Feature_table_suffix);
+			subdirectory.append_integer (packet_number);
+			Result := build_path (Result, subdirectory)
+			!!dir.make (Result);
+			if not dir.exists then	
+				dir.create
+			end;
+			Result := build_path (Result, base_file_name)
 		end;
 
 	base_file_name: STRING is
@@ -1343,6 +1357,17 @@ feature -- Workbench feature and descriptor table generation
 			else
 				Result.append (class_name);
 			end;
+		end;
+
+	packet_number: INTEGER is
+			-- Packet in which the file will be generated
+		do
+			if System.in_final_mode then
+				Result := id // System.makefile_generator.Packet_number + 1
+			else
+				Result := ((id - System.max_precompiled_id)
+						// System.makefile_generator.Packet_number) + 1
+			end
 		end;
 
 feature -- Skeleton processing

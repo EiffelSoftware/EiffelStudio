@@ -36,8 +36,16 @@ feature
 			-- Finish generation of `current_file'.
 		local
 			file_name: STRING;
+			subdir: DIRECTORY
 		do
-			file_name := build_path (Final_generation_path, Infix_file_name);
+			file_name := clone (System_object_prefix);
+			file_name.append_integer (1);
+			file_name := build_path (Final_generation_path, file_name);
+			!! subdir.make (file_name);
+			if not subdir.exists then
+				subdir.create
+			end;
+			file_name := build_path (file_name, Infix_file_name);
 			file_name.append_integer (file_counter);
 			file_name.append (Dot_h);
 			Extern_declarations.generate (file_name);

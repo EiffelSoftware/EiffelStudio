@@ -307,7 +307,7 @@ feature -- Generation
 		local
 			file_name: STRING;
 		do
-			file_name := full_file_name;
+			file_name := full_file_name (Class_suffix);
 			if byte_context.final_mode then
 				file_name.append (Dot_x)
 			else
@@ -323,7 +323,7 @@ feature -- Generation
 		local
 			file_name: STRING;
 		do
-			file_name := full_file_name;
+			file_name := full_file_name (Descriptor_suffix);
 			file_name.append (Descriptor_suffix);
 			file_name.append (Dot_c);
 			!!Result.make (file_name);
@@ -332,17 +332,32 @@ feature -- Generation
 	extern_declaration_filename: STRING is
 			-- File for external declarations in final mode
 		do
-			Result := full_file_name;
+			Result := full_file_name (Class_suffix);
 			Result.append (Dot_h);
 		end;
 
-	full_file_name: STRING is
-			-- Generated file name prefix
+	full_file_name (sub_dir_prefix: STRING): STRING is
+			-- Generated file name prefix;
+			-- Side effect: Create the corresponding subdirectory if it
+			-- doesnot exist yet.
 		local
-			fname: STRING;
+			subdirectory: STRING;
+			dir: DIRECTORY
 		do
-			Result := associated_class.full_file_name;
-			Result.append_integer (id);
+			if System.in_final_mode then
+				Result := Final_generation_path
+			else
+				Result := Workbench_generation_path
+			end;
+			!!subdirectory.make (5);
+			subdirectory.append (sub_dir_prefix);
+			subdirectory.append_integer (packet_number);
+			Result := build_path (Result, subdirectory);
+			!!dir.make (Result);
+			if not dir.exists then
+				dir.create
+			end;
+			Result := build_path (Result, base_file_name)
 		end;
 
 	base_file_name: STRING is
@@ -351,7 +366,18 @@ feature -- Generation
 			Result := associated_class.base_file_name;
 			Result.append_integer (id);
 		end;
-	
+
+	packet_number: INTEGER is
+			-- Packet in which the file will be generated
+		do
+			if System.in_final_mode then
+				Result := id // System.makefile_generator.Packet_number + 1
+			else
+				Result := ((id - System.max_precompiled_type_id)
+						// System.makefile_generator.Packet_number) + 1
+			end
+		end;
+
 	has_creation_routine: BOOLEAN is
 			-- Does the class type need an initialization routine ?
 			--| i.e has the skeleton a bit or an expanded attribute at least ?

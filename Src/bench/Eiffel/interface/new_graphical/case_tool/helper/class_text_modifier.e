@@ -332,9 +332,7 @@ feature -- Modification (Add/Remove feature)
 					end
 				end
 				commit_modification
-				create class_file.make (class_i.file_name)
-				check class_file.exists end
-				date := class_file.date
+				reset_date
 			end
 		end
 
@@ -361,9 +359,7 @@ feature -- Modification (Add/Remove feature)
 				insert_code ("%T" + a_name + "%N%N")
 			end
 			commit_modification
-			create class_file.make (class_i.file_name)
-			check class_file.exists end
-			date := class_file.date
+			reset_date
 		end
 		
 	remove_features (data: LIST [FEATURE_AS]) is
@@ -446,9 +442,7 @@ feature -- Modification (Add/Remove feature)
 					data.forth
 				end
 				commit_modification
-				create class_file.make (class_i.file_name)
-				check class_file.exists end
-				date := class_file.date
+				reset_date
 			end
 		end
 			
@@ -486,9 +480,7 @@ feature -- Modification (Add/Remove feature)
 				end
 			end
 			commit_modification
-			create class_file.make (class_i.file_name)
-			check class_file.exists end
-			date := class_file.date
+			reset_date
 		end
 		
 	delete_code (data: LIST [TUPLE [STRING, INTEGER]]) is
@@ -530,9 +522,7 @@ feature -- Modification (Add/Remove feature)
 				end
 			end
 			commit_modification
-			create class_file.make (class_i.file_name)
-			check class_file.exists end
-			date := class_file.date
+			reset_date
 		end
 	
 	new_query_from_diagram (preset_type: STRING; x_pos, y_pos, screen_w, screen_h: INTEGER) is
@@ -642,9 +632,7 @@ feature -- Modification (Add/Remove feature)
 						end
 						set_position_by_feature_clause (fcw.clause_export, fcw.clause_comment)
 						insert_code (fcw.code)
-						if valid_syntax then
-							commit_modification
-						else
+						if not valid_syntax then
 							create warning_dialog.make_with_text (Warning_messages.w_New_feature_syntax_error)
 							warning_dialog.show_modal_to_window (Window_manager.last_focused_development_window.window)
 							warning_dialog := Void
@@ -656,6 +644,8 @@ feature -- Modification (Add/Remove feature)
 						warning_dialog := Void
 						invalidate_text
 					end
+					commit_modification
+					reset_date
 				else
 					create warning_dialog.make_with_text (
 						Warning_messages.w_Class_syntax_error_before_generation (class_i.name_in_upper))
@@ -1267,14 +1257,12 @@ feature {NONE} -- Implementation
 						fcw.feature_type,
 						fcw.precondition
 						)
-					--last_added_code.put_front ([new_code, insertion_position])
 					insert_code (new_code)
 					reparse
 				end
 				if valid_syntax then
 					set_position_by_feature_clause (fcw.clause_export, fcw.clause_comment)
 					new_code := fcw.code
-					--last_added_code.put_front ([new_code, insertion_position])
 					insert_code (new_code)
 					set_last_feature_as (fcw.feature_name)
 					if valid_syntax then
@@ -1291,12 +1279,7 @@ feature {NONE} -- Implementation
 							
 							reparse
 						end	
-						if valid_syntax then
-							commit_modification
-							create class_file.make (class_i.file_name)
-							check class_file.exists end
-							date := class_file.date
-						else
+						if not valid_syntax then
 							create warning_dialog.make_with_text (Warning_messages.w_New_feature_syntax_error)
 							warning_dialog.show_modal_to_window (context_editor.development_window.window)
 							warning_dialog := Void
@@ -1310,6 +1293,8 @@ feature {NONE} -- Implementation
 						extend_from_diagram_successful := False
 						invalidate_text
 					end
+					commit_modification
+					reset_date
 				else
 					create warning_dialog.make_with_text (Warning_messages.w_New_feature_syntax_error)
 					warning_dialog.show_modal_to_window (context_editor.development_window.window)

@@ -208,6 +208,7 @@ feature {NONE} -- Implementation
 				end
 				if is_occurrence_found then
 					ctm.commit_modification
+					ctm.reset_date
 				end
 			end
 		end

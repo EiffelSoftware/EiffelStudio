@@ -9,6 +9,7 @@ import "oaidl.idl";
 
 interface IEiffelProject;
 interface IEiffelCompiler;
+interface IEiffelCompilerEvents;
 interface IEiffelSystemBrowser;
 interface IEiffelClassDescriptor;
 interface IEiffelFeatureDescriptor;
@@ -54,6 +55,20 @@ interface IEiffelCompiler: IUnknown
 	
 	[helpstring ("Last error message.")]
 	HRESULT last_error_message ([out, retval] BSTR * return_value);
+};
+
+[
+	oleautomation,
+	uuid (B16070BD-DECE-4e7a-803C-F7A45924CB88),
+	helpstring ("Eiffel Compiler Events.")
+]
+interface IEiffelCompilerEvents: IUnknown
+{
+	[helpstring ("Should compilation continue.")]
+	HRESULT continue ([in, out] VARIANT_BOOL * a_boolean);
+		
+	[helpstring ("Output string.")]
+	HRESULT output_string ([out, retval] BSTR * return_value);
 };
 
 [
@@ -210,5 +225,16 @@ library eiffel_compiler
 	coclass CEiffelProject
 	{
 		[default] interface IEiffelProject;
-	}
+	};
+
+	[
+		uuid (86D23C62-E03D-4a16-83F6-8F79D628110E),
+		noncreatable 
+	]
+	coclass CEiffelCompiler
+	{
+		[default] interface IEiffelCompiler;
+		[default, source] interface IEiffelCompilerEvents;
+	};
+
 };

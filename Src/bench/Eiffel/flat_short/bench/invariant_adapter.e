@@ -40,7 +40,7 @@ feature -- Output
 		do
 			ctxt.begin;
 			ctxt.set_source_class (source_class);
-			ast.format (ctxt);
+			ctxt.format_ast (ast)
 		end;
 
 end -- class class INVARIANT_ADAPTER

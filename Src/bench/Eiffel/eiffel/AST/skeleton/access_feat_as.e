@@ -126,6 +126,7 @@ feature -- Type check, byte code and dead code removal
 			open_type: OPEN_TYPE_A
 			is_in_creation_expression: BOOLEAN
 			multi: MULTI_TYPE_A
+			was_overloaded: BOOLEAN
 		do
 			last_type := context_last_type
 
@@ -165,19 +166,20 @@ feature -- Type check, byte code and dead code removal
 				-- Look for a feature in the class associated to the
 				-- last actual type onto the context type stack. If it
 				-- is a generic take the associated constraint.
-			a_feature := last_class.feature_table.item (feature_name)
+			if last_class.feature_table.has_overloaded (feature_name) then
+				a_feature := overloaded_feature (last_type, last_class)
+				was_overloaded := True
+			else
+				a_feature := last_class.feature_table.item (feature_name)
+			end
 			if valid_feature (a_feature) then
-					-- Supplier dependances update
-				create depend_unit.make (last_id, a_feature)
-				context.supplier_ids.extend (depend_unit)
-				
 					-- Attachments type check
 				count := parameter_count
 				arg_count := a_feature.argument_count
 
 				if (count = 0) and then (arg_count /= 0) and then is_delayed then
-					-- Delayed call with all arguments open.
-					-- Create parameters.
+						-- Delayed call with all arguments open.
+						-- Create parameters.
 					from
 						create parameters.make_filled (arg_count)
 						parameters.start
@@ -200,8 +202,12 @@ feature -- Type check, byte code and dead code removal
 						-- Cannot go on here: too dangerous
 					Error_handler.raise_error
 				elseif parameters /= Void then
-						-- Type check on parameters
-					parameters.type_check
+					if not was_overloaded then
+							-- Type check on parameters only if feature was not overloaded. Type
+							-- checking is already done in `overloaded_feature' because needed to
+							-- resolve overloading.
+						parameters.type_check
+					end
 
 						-- Conformance initialization
 					Argument_types.init2 (a_feature)
@@ -212,23 +218,17 @@ feature -- Type check, byte code and dead code removal
 						i < 1
 					loop
 						arg_type ?= a_feature.arguments.i_th (i)
-							-- Evaluation of the actual type of the
-							-- argument declaration
 						if arg_type.is_like_argument then
-							arg_type := arg_type.conformance_type
-							arg_type := arg_type.instantiation_in
-											(last_type, last_id).actual_type
+							arg_type := feature_arg_type (a_feature, i, last_type, last_id)
 							if metamorphosis_disabled then
 								like_argument_detected := arg_type.is_basic
 							else
 								like_argument_detected := True
 							end
 						else
-								-- Instantiation of it in the context of
-								-- the context of the target
-							arg_type := arg_type.instantiation_in
-											(last_type, last_id).actual_type
+							arg_type := feature_arg_type (a_feature, i, last_type, last_id)
 						end
+
 							-- Conformance: take care of constrained
 							-- genericity
 						current_item := context.i_th (context_count + i); 
@@ -301,14 +301,14 @@ feature -- Type check, byte code and dead code removal
 						Result := last_constrained.generics.item (formal_type.position)
 					end
 				elseif last_type.is_like then
- 					if Result.is_formal then
- 						formal_type ?= Result
- 					else
- 						formal_type ?= Result.actual_type
- 					end
- 					if formal_type /= Void then
- 						Result := last_type.actual_type.generics.item (formal_type.position)
- 					end
+					if Result.is_formal then
+						formal_type ?= Result
+					else
+						formal_type ?= Result.actual_type
+					end
+					if formal_type /= Void then
+						Result := last_type.actual_type.generics.item (formal_type.position)
+					end
 				end
 				Result := Result.conformance_type
 				context.pop (count)
@@ -347,20 +347,20 @@ feature -- Type check, byte code and dead code removal
 						-- In precondition and checking for vape
 					context_export := context.current_feature.export_status
 					feature_export := a_feature.export_status
-debug
-	io.error.putstring ("feature ")
-	io.error.putstring (context.current_feature.feature_name)
-	io.error.putstring (" export ")
-	io.error.new_line
-	context_export.trace
-	io.error.new_line
-	io.error.putstring ("feature ")
-	io.error.putstring (a_feature.feature_name)
-	io.error.putstring (" export ")
-	io.error.new_line
-	feature_export.trace
-	io.error.new_line
-end
+					debug
+						io.error.putstring ("feature ")
+						io.error.putstring (context.current_feature.feature_name)
+						io.error.putstring (" export ")
+						io.error.new_line
+						context_export.trace
+						io.error.new_line
+						io.error.putstring ("feature ")
+						io.error.putstring (a_feature.feature_name)
+						io.error.putstring (" export ")
+						io.error.new_line
+						feature_export.trace
+						io.error.new_line
+					end
 					if 
 						a_feature.feature_name_id /= feature {PREDEFINED_NAMES}.void_name_id
 						and then not context_export.is_subset (feature_export) 
@@ -373,6 +373,10 @@ end
 					end
 				end
 
+					-- Supplier dependances update
+				create depend_unit.make (last_id, a_feature)
+				context.supplier_ids.extend (depend_unit)
+	
 					-- Access managment
 				access_b := new_call_access (a_feature, Result.type_i)
 				context.access_line.insert (access_b)
@@ -418,6 +422,7 @@ end
 				create veen
 				context.init_error (veen)
 				veen.set_identifier (feature_name)
+				veen.set_parameter_count (parameter_count)
 				error_handler.insert_error (veen)
 				error_handler.raise_error
 			end
@@ -559,6 +564,380 @@ feature {COMPILER_EXPORTER} -- Replication {ACCESS_FEAT_AS, USER_CMD, CMD}
 	set_parameters (p: like parameters) is
 		do
 			parameters := p
+		end
+
+feature {NONE} -- Implementation
+
+	overloaded_feature (last_type: TYPE_A; last_class: CLASS_C): FEATURE_I is
+			-- Find overloaded feature that could match Current. The rules are taken from
+			-- C# ECMA specification "14.4.2 Overload Resolution".
+		require
+			last_type_not_void: last_type /= Void
+			last_class_not_void: last_class /= Void
+			last_class_has_overloaded: last_class.feature_table.has_overloaded (feature_name)
+		local
+			last_id: INTEGER
+			l_features: LIST [FEATURE_I]
+			viof: VIOF
+			l_list: ARRAYED_LIST [TYPE_A]
+			i, nb, context_count: INTEGER
+		do
+			last_id := last_class.class_id
+
+				-- At this stage we know this is an overloaded routine.
+			l_features := last_class.feature_table.overloaded_items (feature_name)
+
+				-- Remove all features that are not valid for Current call.
+				-- C# ECMA 14.4.2.1
+			l_features := applicable_overloaded_features (l_features, last_type, last_id)
+
+			if l_features.is_empty then
+			elseif l_features.count = 1 then
+				Result := l_features.first
+			else
+					-- Now that we have all valid features for this call, we need to find the
+					-- best match. If we find more than one, there is an ambiguity.
+					-- C# ECMA 14.4.2.2 and 14.4.2.3
+				l_features := best_overloaded_features (l_features, last_type, last_id)
+
+				if l_features.is_empty then
+				elseif l_features.count = 1 then
+					Result := l_features.first
+				else
+						-- Raise a VIOF error which states type of arguments of current call and list
+						-- all possible features that matches the above types.
+					from
+						i := 1
+						nb := parameter_count
+						context_count := context.count - nb
+						create l_list.make (nb)
+					until
+						i > nb
+					loop
+						l_list.extend (context.i_th (context_count + i))
+						i := i + 1
+					end
+					create viof.make (System.current_class, context.current_feature,
+						l_features, feature_name, last_id, l_list)
+					Error_handler.insert_error (viof)
+						-- Cannot go on here
+					Error_handler.raise_error
+				end
+			end
+		end
+
+	applicable_overloaded_features
+			(a_features: LIST [FEATURE_I]; last_type: TYPE_A; last_id: INTEGER): LIST [FEATURE_I]
+		is
+			-- Use C# ECMA specification 14.4.2.1 to find list of matching features in
+			-- `a_features' that matches given arguments.
+			-- That is to say it keeps features that have the same number of parameters,
+			-- that are agent creations with full open type specification and whose
+			-- signature is valid for given arguments.
+		require
+			a_features_not_void: a_features /= Void
+			last_type_not_void: last_type /= Void
+			last_id_nonnegative: last_id >= 0
+		local
+			l_feature: FEATURE_I
+			i, count, context_count: INTEGER
+			l_done: BOOLEAN
+			l_arg_type: TYPE_A
+			current_item: TYPE_A
+			open_type: OPEN_TYPE_A
+		do
+			create {ARRAYED_LIST [FEATURE_I]} Result.make (a_features.count)
+			count := parameter_count
+
+				-- First remove not valid feature and feature with incorrect number of arguments.
+			from
+				a_features.start
+			until
+				a_features.after
+			loop
+				l_feature := a_features.item
+				if valid_feature (l_feature) and then l_feature.argument_count = count then
+					Result.extend (l_feature)
+				end
+				a_features.forth
+			end
+			
+			if Result.is_empty then
+			elseif Result.count = 1 then
+					-- Only one feature remaining, we still need to do the type checking on the
+					-- parameters as it is expected by callers of current feature.
+				if parameters /= Void then
+					parameters.type_check
+				end
+			else
+				if parameters /= Void then
+						-- Type check on parameters
+					parameters.type_check
+		
+						-- Iterate through all found features and find all the features whose
+						-- signature matches the one from the given arguments.
+						-- In other words, for every `arg_i' of the given parameters, find
+						-- all features where `arg_i' conforms to `formal_arg_i', formal argument
+						-- type of the feature.
+						-- Corresponds to second point of C# spec 14.4.2.1
+					from
+						Result.start
+					until
+						Result.after
+					loop
+						l_feature := Result.item
+
+							-- Conformance checking
+						from
+							l_done := False
+							i := count
+							context_count := context.count - count
+						until
+							i < 1 or l_done
+						loop
+							l_arg_type := feature_arg_type (l_feature, i, last_type, last_id)
+							current_item := context.i_th (context_count + i); 
+								-- We must generate an error when `l_arg_type' becomes
+								-- an OPEN_TYPE_A, for example "~equal (?, b)" will
+								-- check that the type of `b' conforms to type of `?'
+								-- since `equal' is defined as `equal (a: ANY; b: like a)'.
+								-- However `conform_to' does not work when parameter
+								-- is an OPEN_TYPE_A type. Since this checks can only
+								-- happens in type checking of an agent, we can do it
+								-- at only one place, ie here.
+							open_type ?= l_arg_type
+							if
+								open_type /= Void or else not current_item.conform_to (l_arg_type)
+							then
+									-- Error, we cannot continue. Let's check the next feature.
+								l_done := True
+							end
+							i := i - 1
+						end
+						if l_done then
+							Result.remove
+						else
+							Result.forth
+						end
+					end
+				end
+			end
+		ensure
+			applicable_overloaded_features_not_void: Result /= Void
+		end
+
+	best_overloaded_features
+			(a_features: LIST [FEATURE_I]; last_type: TYPE_A; last_id: INTEGER): LIST [FEATURE_I]
+		is
+			-- Use C# ECMA specification 14.4.2.2 and 14.4.2.3 to find list of best matching
+			-- features in `a_features' that matches given arguments.
+		require
+			a_features_not_void: a_features /= Void
+			a_features_has_two_items_at_least: a_features.count > 1
+			all_features_have_arguments: a_features.for_all (agent {FEATURE_I}.has_arguments)
+			last_type_not_void: last_type /= Void
+			last_id_nonnegative: last_id >= 0
+		local
+			l_feature1, l_feature2, l_better_feature: FEATURE_I
+			feature_count, arg_count: INTEGER
+			l_place_found: BOOLEAN
+			l_set: SEARCH_TABLE [FEATURE_I]
+			l_set_traversal: ARRAYED_LIST [FEATURE_I]
+		do
+				-- Our goal is to build `l_set' which is the set of features that are better
+				-- functions. If this set contains only one item, then it is the best function,
+				-- if it contains more than one element, it means that they are not comparable
+				-- (meaning they are neither worse nor better than the other).
+				--
+				-- We iterate on all features in `a_features'. For each feature, we compare
+				-- if it can be ordered in `l_set', if it can then we replace all worse feature
+				-- by the one that can be ordered. Once all features of `a_features' have been
+				-- handled, `l_set' is properly filled.
+				--
+				-- To summarize:
+				-- For each feature f1 in `a_features' do
+				--   For each feature f2 in `l_set' do
+				--     if f1 better than f2, replace f2 by f1 in `l_set'
+				--     if f2 better than f1, nothing
+				--     if f1 is no better or no worse than f2, it is not ordered
+				--   end for
+				--   if f1 was for each iteration in `l_set' not ordered then
+				--     we add it to `l_set'.
+				--   end if
+				-- end for
+			from
+				a_features.start
+				feature_count := a_features.count
+				arg_count := a_features.first.argument_count
+				create l_set.make (feature_count)
+			until
+				a_features.after
+			loop
+				l_feature1 := a_features.item
+				l_set_traversal := l_set.linear_representation
+				from
+					l_place_found := False
+					l_set_traversal.start
+				until
+					l_set_traversal.after
+				loop
+					l_feature2 := l_set_traversal.item
+					l_better_feature := better_feature (l_feature1, l_feature2, last_type, last_id)
+					if l_better_feature = l_feature1 then
+							-- Replace `l_feature2' by `l_feature1' since we found a better match.
+						l_set.remove (l_feature2)
+						l_set.put (l_feature1)
+						l_place_found := True
+					elseif l_better_feature = l_feature2 then
+						l_place_found := True
+					end
+					l_set_traversal.forth
+				end
+				if not l_place_found then
+						-- `l_feature1' could not be ordered in `l_set_traversal'
+						-- so we need to add it to `l_set'.
+					l_set.put (l_feature1)
+				end
+				a_features.forth
+			end
+			Result := l_set.linear_representation	
+		ensure
+			applicable_overloaded_features_not_void: Result /= Void
+		end
+
+	better_feature (a_feat1, a_feat2: FEATURE_I; last_type: TYPE_A; last_id: INTEGER): FEATURE_I is
+			-- If `a_feat1' is better for overloading that `a_feat2', returns `a_feat1',
+			-- if `a_feat2' is better for overloading than `a_feat1', returns `a_feat2',
+			-- otherwise returns Void.
+		require
+			a_feat1_not_void: a_feat1 /= Void
+			a_feat2_not_void: a_feat2 /= Void
+			a_feat1_has_arguments: a_feat1.has_arguments
+			a_feat2_has_arguments: a_feat2.has_arguments
+			a_feat1_and_a_feat2_have_same_argument_count:
+				a_feat1.argument_count = a_feat2.argument_count
+			last_type_not_void: last_type /= Void
+			last_id_nonnegative: last_id >= 0
+		local
+			l_target1, l_target2, l_better: TYPE_A
+			l_current_item: TYPE_A
+			i, arg_count, context_count: INTEGER
+			l_done: BOOLEAN
+		do
+			from
+				arg_count := a_feat1.argument_count
+				Result := Void
+				l_done := False
+				i := arg_count
+				context_count := context.count - arg_count
+			until
+				i < 1 or l_done
+			loop
+					-- Extract argument info from `a_feat1'.
+				l_target1 := feature_arg_type (a_feat1, i, last_type, last_id)
+
+					-- Extract argument info from `a_feat2'.
+				l_target2 := feature_arg_type (a_feat2, i, last_type, last_id)
+
+					-- Extract passed argument info.
+				l_current_item := context.i_th (context_count + i); 
+
+				if not l_target1.same_as (l_target2) then
+					l_better := better_conversion (l_current_item, l_target1, l_target2)
+					if l_better = Void then
+							-- No better conversion found, it means that we can skip
+							-- this feature `a_feat2'.
+						l_done := True
+						Result := Void
+					else
+						if Result = Void then
+							if l_better = l_target1 then
+									-- It means that at the moment `a_feat1' seems
+									-- to be a better feature, we store `a_feat1'
+									-- as best routine.
+								Result := a_feat1
+							else
+								Result := a_feat2
+							end
+						else
+								-- We had already assigned `Result', so we
+								-- really have a better feature, so we need to ensure the new 
+								-- better conversion matches the better found feature.
+							if Result = a_feat1 then
+								l_done := l_better = l_target2
+							else
+								l_done := l_better = l_target1
+							end
+							if l_done then
+								Result := Void
+							end
+						end
+					end
+				end
+				i := i - 1
+			end
+		ensure
+			better_function_valid: Result = Void or Result = a_feat1 or Result = a_feat2
+		end
+		
+	better_conversion (source_type, target1, target2: TYPE_A): TYPE_A is
+			-- Using C# ECMA 14.4.2.3 terminology, given `source_type' find which of `target1'
+			-- or `target2' is a better conversion.
+			-- Return type is either `target1' or `target2' if there is a better conversion,
+			-- otherwise Void.
+		require
+			source_type_not_void: source_type /= Void
+			target1_not_void: target1 /= Void
+			target2_not_void: target2 /= Void
+			target1_different_from_target2: not target1.same_as (target2)
+			source_conforms_to_targets: source_type.conform_to (target1) and
+				source_type.conform_to (target2)
+		do
+			if source_type.same_as (target1) then
+				Result := target1
+			elseif source_type.same_as (target2) then
+				Result := target2
+			else
+				if target1.conform_to (target2) then
+					Result := target1
+				elseif target2.conform_to (target1) then
+					Result := target2
+				end
+			end
+		ensure
+			better_conversion_found: Result /= Void implies (Result = target1 or Result = target2)
+		end
+
+	feature_arg_type
+			(a_feature: FEATURE_I; a_pos: INTEGER; last_type: TYPE_A; last_id: INTEGER): TYPE_A
+		is
+			-- Find type of argument at position `a_pos' of feature `a_feature' in context
+			-- of `last_type', `last_id'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_has_arguments: a_feature.has_arguments
+			a_pos_valid: a_feature.arguments.valid_index (a_pos)
+			last_type_not_void: last_type /= Void
+			last_id_nonnegative: last_id >= 0
+		do
+				-- Get type from FEATURE_I. It should be evaluated already and therefore
+				-- assignment attempt should work.
+			Result ?= a_feature.arguments.i_th (a_pos)
+			check
+				feature_evaluated: Result /= Void
+			end
+
+				-- Evaluation of the actual type of the
+				-- argument declaration
+			if Result.is_like_argument then
+				Result := Result.conformance_type
+			end
+
+				-- Instantiation of `Result' in context of target represented by `last_type' and
+				-- `last_id'.
+			Result := Result.instantiation_in (last_type, last_id).actual_type
+		ensure
+			feature_arg_type_not_void: Result /= Void
 		end
 
 end -- class ACCESS_FEAT_AS

@@ -1445,7 +1445,7 @@ feature {NONE} -- Implementation
 			destroy_actions.execute (Current, cd)
 		end;
 
-	on_set_cursor (hit_code: INTEGER): BOOLEAN is
+	on_set_cursor (hit_code: INTEGER) is
 			-- Wm_setcursor
 		local 
 			scw: SCREEN_CURSOR_WINDOWS
@@ -1453,18 +1453,15 @@ feature {NONE} -- Implementation
 			scw := grabbed_cursor
 			if scw /= Void then
 				scw.set
-				Result := true
 			else
 				scw := screen_cursor
 				if scw /= Void then
 					scw.set
-					Result := true
 					disable_default_processing
 				else
 					scw := global_cursor_windows
 					if scw /= Void then
 						scw.set
-						Result := true
 					end
 				end
 			end

@@ -50,6 +50,9 @@ feature {NONE} -- Initialization
 		local
 			par_imp: EV_CONTAINER_IMP
 		do
+			check
+				to_be_implemented: False
+			end
 --			par_imp ?= par.implementation
 --			check
 --				parent_ok: par_imp /= Void
@@ -81,12 +84,18 @@ feature -- Event - command association
 			-- `arg' will be passed to `cmd' whenever it is
 			-- invoked as a callback.
 		do
+			check
+				to_be_implemented: False
+			end
 		end
 
 	add_paint_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when the widget has to be redrawn.
 		do
+			check
+				to_be_implemented: False
+			end
 		end
 
 feature -- Event - command removal
@@ -95,12 +104,18 @@ feature -- Event - command removal
 			-- Remove the list of commands to be executed when
 			-- current area is resized.
 		do
+			check
+				to_be_implemented: False
+			end
 		end
 
 	remove_paint_commands is
 			-- Empty the list of commands to be executed when
 			-- the widget has to be redrawn.
 		do
+			check
+				to_be_implemented: False
+			end
 		end
 
 end -- class EV_DRAWING_AREA_IMP

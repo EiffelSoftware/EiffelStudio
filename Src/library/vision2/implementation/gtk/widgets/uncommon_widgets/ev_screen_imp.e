@@ -19,6 +19,9 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a screen object.
 		do
+			check
+				To_be_implemented: False
+			end
 		end
 
 feature -- Status report
@@ -26,6 +29,9 @@ feature -- Status report
 	destroyed: BOOLEAN is
 			-- Is Current object destroyed?
 		do
+			check
+				To_be_implemented: False
+			end
 		end
 
 feature -- Status setting
@@ -33,6 +39,9 @@ feature -- Status setting
 	destroy is
 			-- Destroy actual object.
 		do
+			check
+				To_be_implemented: False
+			end
 		end
 
 end -- class EV_SCREEN_IMP

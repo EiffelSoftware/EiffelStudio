@@ -246,7 +246,7 @@ typedef unsigned char YY_CHAR;
 typedef int zz_state_type;
 
 #define YY_USES_REJECT
-FILE *zzin = (const int)stdin, *zzout = (const int)stdout;
+FILE *zzin = stdin, *zzout = stdout;
 extern int zzlineno;
 int zzlineno = 1;
 extern char zztext[];
@@ -601,7 +601,7 @@ char *zztext_ptr;
 
 /* private functions for lex */
 static int get_string();
-static int eif_char();
+static int eif_char(char);
 
 
 /* Macros after this point can all be overridden by user definitions in

@@ -251,9 +251,21 @@ feature -- Hash code
 	}
 
 /*
+feature -- Conformance
+*/
+
+	public static Boolean conforms_to (Object obj1, Object obj2)
+		// Does dynamic type of object attached to `obj1' conform to
+		// dynamic type of object attached to `obj2'?
+		// Only called for Eiffel object.
+	{
+		return GENERIC_CONFORMANCE.conforms_to (obj1, obj2);
+	}
+
+/*
 feature -- Equality
 */
-	public static Boolean standard_equal (EIFFEL_TYPE_INFO target, EIFFEL_TYPE_INFO source) 
+	public static Boolean standard_equal (object target, object source) 
 		// Is `target' equal to `source'?
 		// Simple Object comparison attribute by attribute.
 	{
@@ -261,8 +273,10 @@ feature -- Equality
 		Boolean Result = false;
 		Object l_attr;
 
+#if ASSERTIONS
 		ASSERTIONS.REQUIRE ("target_not_void", target != null);
 		ASSERTIONS.REQUIRE ("source_not_void", source != null);
+#endif
 
 		if (target.GetType ().Equals (source.GetType ())) {
 			attributes = source.GetType().GetFields (
@@ -286,16 +300,17 @@ feature -- Equality
 	}
 
 
-	public static Boolean deep_equal (EIFFEL_TYPE_INFO o1, EIFFEL_TYPE_INFO o2) 
+	public static Boolean deep_equal (object o1, object o2) 
 		// Is `o1' recursively equal to `o2'?
 	{
 		Hashtable traversed_objects;
 		Boolean Result;
 
+		
 		if (o1 == o2) {
 			Result = true;
-		} else if ((o1 == null) || (o2 == null)) {
-			Result = false;
+		} else if (o1 == null) {
+			Result = o2 == null;
 		} else {
 				// `traversed_objects' is a correspondance between processed
 				// objects reachable from `obj' and newly created one that
@@ -328,32 +343,39 @@ feature -- Type creation
 feature -- Duplication
 */
 
-	public static EIFFEL_TYPE_INFO deep_clone (EIFFEL_TYPE_INFO obj)
+	public static object deep_clone (object obj)
 		// New object structure recursively duplicated from
 		// one attached to `other'.
 	{
 		Hashtable traversed_objects;
-		EIFFEL_TYPE_INFO target;
+		EIFFEL_TYPE_INFO target, source;
 		
+#if ASSERTIONS
+		ASSERTIONS.REQUIRE ("source_not_void", obj != null);
+		ASSERTIONS.REQUIRE ("Valid type", obj is EIFFEL_TYPE_INFO);
+#endif
+
+		source = (EIFFEL_TYPE_INFO) obj;
+
 			// `traversed_objects' is a correspondance between processed
 			// objects reachable from `obj' and newly created one that
 			// are reachable from `target'.
 		traversed_objects = new Hashtable (100);
 		
-			// Create an empty copy of `obj'.
-		target = GENERIC_CONFORMANCE.create_like_object(obj);
+			// Create an empty copy of `source'.
+		target = GENERIC_CONFORMANCE.create_like_object(source);
 
-			// Add `obj' and associates it with `target' to
-			// resolve future references to `obj' into `target'.
-		traversed_objects.Add (target, obj);
+			// Add `source' and associates it with `target' to
+			// resolve future references to `source' into `target'.
+		traversed_objects.Add (target, source);
 
 			// Performs deep traversal.
-		internal_deep_clone (target, obj, traversed_objects);
+		internal_deep_clone (target, source, traversed_objects);
 
 		return target;
 	}
 
-	public static void standard_copy (EIFFEL_TYPE_INFO target, EIFFEL_TYPE_INFO source)
+	public static void standard_copy (object target, object source)
 		// Copy `source' onto `target'.
 		// `target' and `source' are assumed to be non Void and of the same type.
 	{
@@ -366,6 +388,19 @@ feature -- Duplication
 		foreach (FieldInfo attribute in attributes) {
 			attribute.SetValue (target, attribute.GetValue (source));
 		}
+	}
+
+	public static object standard_clone (object obj)
+		//
+	{
+		EIFFEL_TYPE_INFO source;
+
+#if ASSERTIONS
+		ASSERTIONS.REQUIRE ("Valid type", obj is EIFFEL_TYPE_INFO);
+#endif
+
+		source = (EIFFEL_TYPE_INFO) obj;
+		return GENERIC_CONFORMANCE.create_like_object (source);
 	}
 
 /*

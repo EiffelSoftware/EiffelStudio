@@ -131,6 +131,8 @@ feature -- Creation
 			import_cmd: IMPORT_APPLICATION_CLASS_CMD
 			del_com: DELETE_WINDOW
 		do
+			available_list.add_default_action (Current, First)
+			selected_list.add_default_action (Current, Second)
 			select_button.add_activate_action (Current, First)
 			unselect_button.add_activate_action (Current, Second)
 			refresh_button.add_activate_action (Current, Third)
@@ -247,6 +249,11 @@ feature -- Command execution
 					end
 					selected_items.forth
 				end
+				if not finished then
+					selected_list.select_item	
+				else
+					selected_list.select_i_th (selected_list.index - 2)	
+				end
 			end
 		end
 
@@ -295,6 +302,7 @@ feature -- Command execution
 					end
 					selected_items.forth
 				end
+				selected_list.select_i_th (selected_list.count)
 			end
 		end
 

@@ -482,7 +482,7 @@ feature {NONE} -- Implementation
 			-- Finish freezing command line
 		do
 			create Result.make (100)
-			Result.append (Eiffel4_location + "\bench\spec\windows\bin\finish_freezing -silent")
+			Result.append (Eiffel4_location + "\studio\spec\windows\bin\finish_freezing -silent")
 		end
 
 	Eifgen: STRING is "EIFGEN"

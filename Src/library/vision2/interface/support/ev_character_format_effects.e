@@ -51,7 +51,7 @@ feature -- Status setting
 		ensure
 			is_underlined: is_underlined
 		end
-		
+
 	disable_underlined is
 			-- Ensure characters are not displayed as underlined, and set `is_underlined' to False.
 		do

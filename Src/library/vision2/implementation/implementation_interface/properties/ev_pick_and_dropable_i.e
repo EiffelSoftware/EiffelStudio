@@ -155,7 +155,6 @@ feature -- Status setting
 			-- target that accepts `pebble' during pick and drop.
 		do
 			accept_cursor := a_cursor
-			update_pointer_style (pointed_target)
 		end 
 
 	set_deny_cursor (a_cursor: EV_CURSOR) is
@@ -163,7 +162,6 @@ feature -- Status setting
 			-- target that doesn't accept `pebble' during pick and drop.
 		do
 			deny_cursor := a_cursor
-			update_pointer_style (pointed_target)
 		end
 
 	enable_pebble_positioning is

@@ -6,7 +6,8 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			byte_node, type_check, format
+			byte_node, type_check, format,
+			fill_calls_list, replicate
 		end;
 	SHARED_INSPECT;
 
@@ -38,18 +39,7 @@ feature -- Type check and byte code
 			vomb2: VOMB2;
 			error_found: BOOLEAN;
 			error_type: TYPE_A;
-			id_as: ID_AS;
 		do
-			if lower.is_id then
-				id_as ?= lower;
-				context.supplier_ids.add (id_as.depend_unit);
-			end;
-			if upper /= Void then
-				if upper.is_id then
-					id_as ?= upper;
-					context.supplier_ids.add (id_as.depend_unit);
-				end;
-			end;
 			Inspect_control.set_interval (Current);
 			if Inspect_control.integer_type then
 				if not good_integer_interval then
@@ -116,6 +106,47 @@ feature -- Type check and byte code
 				upper.format (ctxt);
 			end;
 			ctxt.always_succeed;
+		end;
+
+feature -- Replication
+
+	fill_calls_list (l: CALLS_LIST) is
+			-- find calls to Current
+		local
+			new_list: like l
+		do
+			!!new_list.make;
+			lower.fill_calls_list (new_list);
+			l.merge (new_list);
+			if upper /= void then
+				new_list.make;
+				upper.fill_calls_list (new_list);
+				l.merge (new_list);
+			end
+		end;
+
+
+	replicate (ctxt: REP_CONTEXT): like Current is
+			-- Adapt to Replication
+		do
+			Result := twin;
+			Result.set_lower (lower.replicate (ctxt));
+			if upper /= void then
+				Result.set_upper (
+					upper.replicate (ctxt))
+			end
+		end;
+
+feature {INTERVAL_AS} -- Replication
+
+	set_lower (l: like lower) is
+		do
+			lower := l
+		end;
+
+	set_upper (u: like upper) is
+		do
+			upper := u
 		end;
 
 end

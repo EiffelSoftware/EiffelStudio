@@ -6,7 +6,8 @@ inherit
 
 	INSTRUCTION_AS
 		redefine
-			type_check, byte_node, format
+			type_check, byte_node, format,
+			fill_calls_list, replicate
 		end
 
 feature -- Attributes
@@ -116,5 +117,38 @@ feature {}
 		
 
 	constant_assign_symbol: STRING is " := ";
+
+feature -- Replication
+
+	fill_calls_list (l: CALLS_LIST) is
+			-- Find calls to Current.
+		local
+			new_list: like l;
+		do
+			target.fill_calls_list (l);
+			!!new_list.make;
+			source.fill_calls_list (new_list);
+			l.merge (new_list);
+		end;
+
+	replicate (ctxt: REP_CONTEXT): like Current is
+			-- Adapt to replication.
+		do
+			Result := twin;
+			Result.set_target (target.replicate (ctxt));
+			Result.set_source (source.replicate (ctxt.new_ctxt));
+		end;
+
+feature {ASSIGN_AS}	-- Replication
+		
+	set_target (t: like target) is
+		do
+			target := t
+		end;
+
+	set_source (s: like source) is
+		do
+			source := s
+		end;
 
 end

@@ -12,7 +12,8 @@ inherit
 		redefine
 			byte_node, type_check,
 			find_breakable,
-			format
+			format,
+			fill_calls_list, replicate
 		end;
 	CONSTRUCT_LIST [T]
 
@@ -115,7 +116,47 @@ feature -- Formatter
 			else
 				ctxt.commit;
 			end;
-		end;	
+		end;
+
+feature -- Replication
+
+	fill_calls_list (l: CALLS_LIST) is
+			-- find calls to Current
+		local
+			new_list: like l;
+			i, l_count: INTEGER;
+		do
+			from
+				!!new_list.make;
+				i := 1;
+				l_count := count;
+			until
+				i > l_count
+			loop
+				i_th (i).fill_calls_list (new_list);
+				l.merge (new_list);
+				new_list.make;
+				i := i + 1;
+			end
+		end;
+
+	replicate (ctxt: REP_CONTEXT): like Current is
+			-- Adapt to replication
+		local
+			i, l_count: INTEGER;
+		do
+			Result := twin;
+			from 
+				i := 1;
+				l_count := count;
+			until
+				i > l_count
+			loop
+				Result.put_i_th (i_th (i).replicate (ctxt.new_ctxt), i);
+				i := i + 1;
+			end;
+		end;
+		
 
 end
 

@@ -7,7 +7,7 @@ inherit
 
 	EXPR_AS
 		redefine
-			type_check, byte_node, format
+			type_check, byte_node, format, fill_calls_list, replicate
 		end
 
 feature -- Attributes
@@ -154,4 +154,43 @@ feature -- Type check, byte code and dead code removal
 		do
 			Result := false;
 		end;
+
+feature -- Replication
+
+	fill_calls_list (l: CALLS_LIST) is
+			-- Find calls to Current.
+		local
+			new_list: like l;
+		do
+			!!new_list.make;
+			expr.fill_calls_list (new_list);
+			l.merge (new_list)
+		end;
+
+	replicate (ctxt: REP_CONTEXT): UNARY_AS is
+			-- Adapt to replication
+		local
+			new_expression: like expr;
+			u: UN_FREE_AS;
+		do
+			new_expression := expr.replicate (ctxt);
+			ctxt.adapt_name (prefix_feature_name);
+			if prefix_feature_name.is_equal (ctxt.adapted_name) then
+				Result := twin
+			else
+				!!u;
+				u.set_prefix_feature_name (ctxt.adapted_name);
+				Result := u
+			end;
+			Result.set_expr (new_expression);
+		end;
+			
+
+feature {UNARY_AS}	-- Replication
+
+	set_expr (e: like expr) is
+		do
+			expr := e
+		end;
+
 end

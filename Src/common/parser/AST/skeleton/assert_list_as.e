@@ -4,7 +4,8 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			type_check, byte_node, format
+			type_check, byte_node, format,
+			fill_calls_list, replicate
 		end
 
 feature -- Attributes
@@ -61,6 +62,32 @@ feature -- Type check, byte code, dead code removal and formatter
 			end 			
 		end;
 
+feature	-- Replication
+
+	fill_calls_list (l: CALLS_LIST) is
+		do
+			if assertions /= void then
+				assertions.fill_calls_list (l)
+			end
+		end;
+
+	replicate (ctxt: REP_CONTEXT): like Current is 
+		do
+			if assertions /= void then
+				Result := twin;
+				Result.set_assertions (assertions.replicate (ctxt));
+			else
+				Result := Current
+			end;
+		end;
+
+
+feature {ASSERT_LIST_AS} -- Replication
+
+	set_assertions (l: like assertions) is
+		do
+			assertions := l
+		end;
 	
 feature {}
 	

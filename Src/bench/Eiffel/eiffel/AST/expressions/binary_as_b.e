@@ -7,7 +7,8 @@ inherit
 
 	EXPR_AS
 		redefine
-			type_check, byte_node, format
+			type_check, byte_node, format,
+			fill_calls_list, replicate
 		end;
 	SHARED_ARG_TYPES
 
@@ -292,4 +293,50 @@ feature -- Type check, byte code and dead code removal
 			Result := infix_function_name;	
 		end;
 
+feature -- Replication
+
+	fill_calls_list (l: CALLS_LIST)  is
+			
+		local
+			new_list: like l;
+		do
+			!!new_list.make;
+			left.fill_calls_list (new_list);
+			l.merge (new_list);
+			new_list.make;
+			right.fill_calls_list (new_list);
+			l.merge (new_list)
+		end;
+
+
+	replicate (ctxt: REP_CONTEXT): BINARY_AS is
+			-- Adapt to replication.
+		local
+			new_left: like left;
+			b: BIN_FREE_AS;
+		do
+			new_left := left.replicate (ctxt);
+			ctxt.adapt_name (infix_function_name);
+			if infix_function_name.is_equal (ctxt.adapted_name) then
+				Result := twin;
+			else
+				!!b;
+				b.set_infix_function_name (ctxt.adapted_name);
+				Result := b;
+			end;
+			Result.set_left (new_left);
+			Result.set_right (right.replicate (ctxt.new_ctxt));
+		end;
+
+feature {BINARY_AS}	-- Replication
+
+	set_left (l: like left) is
+		do
+			left := l
+		end;
+
+	set_right (l: like right) is
+		do
+			right := l
+		end;
 end

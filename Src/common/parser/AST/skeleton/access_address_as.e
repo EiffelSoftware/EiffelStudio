@@ -6,7 +6,8 @@ inherit
 
 	ACCESS_ID_AS
 		redefine
-			feature_access_type, format
+			feature_access_type, format,
+			fill_calls_list, replicate
 		end
 
 creation
@@ -75,6 +76,21 @@ feature -- Type check
 			else
 				ctxt.rollback
 			end
+		end;
+
+feature	-- Replication
+	
+	fill_calls_list (l: CALLS_LIST) is
+ 		do
+			l.add (feature_name);
+		end;
+
+	replicate (ctxt: REP_CONTEXT): like Current is
+		do
+			Result := twin;
+			ctxt.adapt_name (feature_name);
+			Result.set_feature_name (ctxt.adapted_name);
+			ctxt.stop_adaptation;
 		end;
 
 end

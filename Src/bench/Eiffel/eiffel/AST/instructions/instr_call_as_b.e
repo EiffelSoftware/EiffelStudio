@@ -6,7 +6,8 @@ inherit
 
 	INSTRUCTION_AS
 		redefine
-			type_check, byte_node, format
+			type_check, byte_node, format,
+			fill_calls_list, replicate
 		end
 
 feature -- Attributes
@@ -59,6 +60,28 @@ feature -- Type check, byte code and dead code removal
 		do
 			call.format (ctxt);
 			ctxt.put_breakable;
+		end;
+
+feature	-- Replication
+
+	fill_calls_list (l: CALLS_LIST) is
+			-- find calls to Current
+		do
+			call.fill_calls_list (l);
+		end;
+
+	replicate (ctxt: REP_CONTEXT): like Current is
+			-- Adapt to replication
+		do
+			Result := twin;
+			Result.set_call (call.replicate (ctxt));
+		end;
+
+feature {INSTR_CALL_AS} -- Replication
+
+	set_call (c: like call) is
+		do
+			call := c;
 		end;
 
 end

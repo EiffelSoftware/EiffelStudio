@@ -6,7 +6,8 @@ inherit
 
 	EXPR_AS
 		redefine
-			type_check, byte_node, format
+			type_check, byte_node, format,
+			 fill_calls_list, replicate
 		end
 
 feature -- Attributes
@@ -43,9 +44,30 @@ feature -- Type check, byte code and dead code removal
 
 	format(ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
-			--| might be the right place for new_expression
 		do
 			call.format (ctxt);
 		end;
 
+
+feature	-- Replication
+
+	fill_calls_list (l: CALLS_LIST) is
+			-- find calls to Current
+		do
+			call.fill_calls_list (l);
+		end;
+
+	replicate (ctxt: REP_CONTEXT): like Current is
+			-- Adapt to replication
+		do
+			Result := twin;
+			Result.set_call (call.replicate (ctxt));
+		end;
+
+feature {EXPR_CALL_AS}
+
+	set_call (c: like call) is
+		do
+			call := c;
+		end
 end

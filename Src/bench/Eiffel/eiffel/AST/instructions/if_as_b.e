@@ -7,7 +7,8 @@ inherit
 	INSTRUCTION_AS
 		redefine
 			type_check, byte_node,
-			find_breakable, format
+			find_breakable, format,
+			fill_calls_list, replicate
 		end
 
 feature -- Attributes
@@ -144,5 +145,68 @@ feature -- Formatter
 			ctxt.put_keyword ("end");
 			ctxt.put_breakable;
 			ctxt.commit;
+		end;
+
+feature	-- Replication
+
+	fill_calls_list (l: CALLS_LIST) is
+			-- Find calls to Current
+		local
+			new_list: like l;
+		do
+			!!new_list.make;
+			condition.fill_calls_list (new_list);
+			l.merge (new_list);
+			if compound /= void then
+				compound.fill_calls_list (l);
+			end;
+			if elsif_list /= void then
+				elsif_list.fill_calls_list (l);
+			end;
+			if else_part /= void then
+				else_part.fill_calls_list (l);
+			end;
+		end;
+
+	replicate (ctxt: REP_CONTEXT): like Current is
+			-- Adapt to replication
+		do
+			Result := twin;
+			Result.set_condition (condition.replicate (ctxt));
+			if compound /= void then
+				Result.set_compound (
+					compound.replicate (ctxt));
+			end;
+			if elsif_list /= void then
+				Result.set_elsif_list (
+					elsif_list.replicate (ctxt));
+			end;
+			if else_part /= void then
+				Result.set_else_part (
+					else_part.replicate (ctxt));
+			end;
+		end;
+
+
+feature {IF_AS}	-- Replication
+
+	set_condition (c: like condition) is
+		do
+			condition := c
+		end;
+
+	set_compound (c: like compound) is
+		do
+			compound := c
+		end;
+
+	set_elsif_list (e: like elsif_list) is
+		do
+			elsif_list := e
+		end;
+
+	set_else_part (e: like else_part) is
+		do
+			else_part := e
 		end;
 end

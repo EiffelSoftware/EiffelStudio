@@ -4,7 +4,8 @@ inherit
 
 	ATOMIC_AS
 		redefine
-			type_check, byte_node, format
+			type_check, byte_node, format,
+			fill_calls_list, replicate
 		end
 
 feature -- Attributes
@@ -18,6 +19,10 @@ feature -- Initialization
 			-- Yacc initialization
 		do
 			expressions ?= yacc_arg (0);
+			if expressions = Void then
+				-- Create empty list
+				!!expressions.make (0)
+			end
 		ensure then
 			expressions_exists: expressions /= Void;
 		end;
@@ -86,6 +91,23 @@ feature -- Type check, byte code, dead code removal and formatter
 			end;
 		end;	
 
-			
-			
+feature	-- Replication
+
+	fill_calls_list (l: CALLS_LIST) is
+		do
+			expressions.fill_calls_list (l);
+		end;
+
+	replicate (ctxt: REP_CONTEXT): like Current is
+		do
+			Result := twin;
+			Result.set_expressions (expressions.replicate (ctxt));
+		end;
+
+feature {ARRAY_AS}	-- Replication
+
+	set_expressions (e: like expressions) is
+		do
+			expressions := e
+		end;
 end

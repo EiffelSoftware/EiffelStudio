@@ -7,7 +7,8 @@ inherit
 	INSTRUCTION_AS
 		redefine
 			type_check, byte_node,
-			find_breakable, format
+			find_breakable, format,
+			fill_calls_list, replicate
 		end;
 	SHARED_INSPECT
 
@@ -138,4 +139,53 @@ feature -- Formatter
 			ctxt.commit;
 		end;
 
+feature -- Replication
+
+	fill_calls_list (l: CALLS_LIST) is
+			-- find calls to Current
+		local
+			new_list: like l;
+		do
+			!!new_list.make;
+			switch.fill_calls_list (new_list);
+			l.merge (new_list);
+			if case_list /= void then
+				case_list.fill_calls_list (l);
+			end;
+			if else_part /= void then
+				else_part.fill_calls_list (l);
+			end;
+		end;
+
+	replicate (ctxt: REP_CONTEXT): like Current is
+			-- Adapt to replication
+		do
+			Result := twin;
+			Result.set_switch (switch.replicate (ctxt));
+			if case_list /= void then
+				Result.set_case_list (
+					case_list.replicate (ctxt));
+			end;
+			if else_part /= void then
+				Result.set_else_part (
+					else_part.replicate (ctxt));
+			end;
+		end;
+
+feature {INSPECT_AS} -- Replication
+
+	set_switch (s: like switch) is
+		do
+			switch := s
+		end;
+
+	set_case_list (c: like case_list) is
+		do
+			case_list := c
+		end;
+
+	set_else_part (e: like else_part) is
+		do
+			else_part := e
+		end;
 end

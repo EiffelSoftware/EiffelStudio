@@ -7,7 +7,8 @@ inherit
 	AST_EIFFEL
 		redefine
 			type_check, byte_node,
-			find_breakable, format
+			find_breakable, format,
+			fill_calls_list, replicate
 		end
 
 feature -- Attributes
@@ -86,7 +87,7 @@ feature -- Formatter
 		do
 			ctxt.begin;
 			ctxt.put_keyword ("elseif ");
-		    ctxt.new_expression;
+		    	ctxt.new_expression;
 			expr.format (ctxt);
 			ctxt.put_keyword (" then");
 			ctxt.indent_one_more;
@@ -95,5 +96,38 @@ feature -- Formatter
 			ctxt.next_line;
 			compound.format (ctxt);
 			ctxt.commit;
+		end;
+
+feature	-- Replication
+
+	fill_calls_list (l: CALLS_LIST) is
+			-- Find calls to Current
+		do
+			expr.fill_calls_list (l);
+			if compound /= void then
+				compound.fill_calls_list (l)
+			end
+		end;
+
+	replicate (ctxt: REP_CONTEXT): like Current is
+		do
+			Result := twin;
+			Result.set_expr (expr.replicate (ctxt));
+			if compound /= void then
+				Result.set_compound (
+					compound.replicate (ctxt))
+			end;
+		end;
+			
+feature {ELSIF_AS} -- Replication
+
+	set_expr (e: like expr) is
+		do
+			expr := e
+		end;
+
+	set_compound (c: like compound) is
+		do
+			compound := c
 		end;
 end

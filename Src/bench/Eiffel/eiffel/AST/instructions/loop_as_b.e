@@ -7,7 +7,8 @@ inherit
 	INSTRUCTION_AS
 		redefine
 			type_check, byte_node,
-			find_breakable, format
+			find_breakable, format,
+			fill_calls_list, replicate
 		end
 
 feature -- Attributes
@@ -167,4 +168,80 @@ feature -- Formatter
 			ctxt.put_breakable;
 			ctxt.commit
 		end;
+
+feature -- Replication
+
+	fill_calls_list (l: CALLS_LIST) is
+			-- find calls to Current
+		local
+			new_list: like l;
+		do
+			if from_part /= void then
+				from_part.fill_calls_list (l);
+			end;
+			if invariant_part /= void then
+				invariant_part.fill_calls_list (l);
+			end;
+			if variant_part /= void then
+				variant_part.fill_calls_list (l);
+			end;
+			!!new_list.make;
+			stop.fill_calls_list (new_list);
+			l.merge (new_list);
+			if compound /= void then
+				compound.fill_calls_list (l);
+			end;
+		end;
+
+	replicate (ctxt: REP_CONTEXT): like Current is
+			-- Adapt to replication
+		do
+			Result := twin;
+			if from_part /= void then
+				Result.set_from_part (
+					from_part.replicate (ctxt));
+			end;
+			if invariant_part /= void then
+				Result.set_invariant_part (
+					invariant_part.replicate (ctxt))
+			end;
+			if variant_part /= void then
+				Result.set_variant_part (
+					variant_part.replicate (ctxt));
+			end;
+			Result.set_stop (stop.replicate (ctxt));
+			if compound /= void then
+				Result.set_compound(
+					compound.replicate (ctxt));
+			end;
+		end;
+			
+
+feature {LOOP_AS} -- Replication
+
+	set_from_part (f: like from_part) is
+		do
+			from_part := f
+		end;
+
+	set_invariant_part (i: like invariant_part) is
+		do
+			invariant_part := i
+		end;
+
+	set_variant_part (v: like variant_part) is
+		do
+			variant_part := v
+		end;
+
+	set_stop (s: like stop) is
+		do
+			stop := s
+		end;
+
+	set_compound (c: like compound) is
+		do
+			compound := c
+		end;
+			
 end

@@ -5,7 +5,7 @@ inherit
 	BINARY_AS
 		redefine
 			type_check, byte_node, operator_is_keyword,
-			operator_is_special, operator_name
+			operator_is_special, operator_name, replicate
 		end
 
 feature
@@ -79,5 +79,14 @@ feature {}
 	
 	constant_name: STRING is "_infix_=";
 
+feature -- Replication
 
+	replicate (ctxt: REP_CONTEXT): BINARY_AS is
+			-- Adapt to replication.
+		do
+			Result := twin;
+			Result.set_left (left.replicate (ctxt));
+			Result.set_right (right.replicate (ctxt.new_ctxt));
+		end;
+ 
 end

@@ -80,4 +80,10 @@ feature -- Type check and byte code
 		do
 		end;
 
+	local_table (f: FEATURE_I): EXTEND_TABLE [LOCAL_INFO, STRING] is
+		require
+			good_argument: f /= Void;
+		do
+		end;
+
 end

@@ -1,9 +1,9 @@
 system
-	es3sh
+	es4sh
 
 root
 
-	es3sh (es3sh): "make"
+	es4sh (es4sh): "make"
 
 default
 
@@ -31,7 +31,7 @@ default
 
 cluster
 
-	es3sh:			"main";
+	es4sh:			"main";
 				
 	resources:		"..\..\API\resources\common";
 	

@@ -42,9 +42,7 @@ inherit
 			background_color as wel_background_color,
 			foreground_color as wel_foreground_color,
 			move as wel_move,
-			item as wel_item,
-			background_color as wel_single_background_color,
-			foreground_color as wel_single_foreground_color
+			item as wel_item
 		undefine
 			on_hide,
 			on_show,
@@ -64,9 +62,7 @@ inherit
 			on_lbn_selchange
 		select
 			wel_single_selected,
-			wel_single_select_item,
-			wel_single_background_color,
-			wel_single_foreground_color
+			wel_single_select_item
 		end
 
 	WEL_MULTIPLE_SELECTION_LIST_BOX
@@ -108,9 +104,7 @@ inherit
 			background_color as wel_background_color,
 			foreground_color as wel_foreground_color,
 			move as wel_move,
-			item as wel_item,
-			background_color as wel_multiple_background_color,
-			foreground_color as wel_multiple_foreground_color
+			item as wel_item
 		undefine
 			on_hide,
 			on_show,

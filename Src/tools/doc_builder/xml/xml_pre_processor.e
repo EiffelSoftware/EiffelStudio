@@ -294,13 +294,7 @@ feature {NONE} -- Processing
 					-- Insert script in header
 				l_parent := l_parent.element_by_name ("meta_data")
 				if l_parent /= Void then
-						-- External Javascript includes
-					create l_script_tag.make (l_parent, "script", create {XM_NAMESPACE}.make_default)
-					l_script_tag.put_last (create {XM_ATTRIBUTE}.make ("Language", create {XM_NAMESPACE}.make_default, "JavaScript", l_script_tag))
-					l_script_tag.put_last (create {XM_ATTRIBUTE}.make ("type", create {XM_NAMESPACE}.make_default, "text/javascript", l_script_tag))
-					l_script_tag.put_last (create {XM_ATTRIBUTE}.make ("src", create {XM_NAMESPACE}.make_default, "/style_changer.js", l_script_tag))
-					l_parent.put_last (l_script_tag)	
-					
+						-- External Javascript includes					
 					create l_script_tag.make (l_parent, "script", create {XM_NAMESPACE}.make_default)
 					l_script_tag.put_last (create {XM_ATTRIBUTE}.make ("Language", create {XM_NAMESPACE}.make_default, "JavaScript", l_script_tag))
 					l_script_tag.put_last (create {XM_ATTRIBUTE}.make ("type", create {XM_NAMESPACE}.make_default, "text/javascript", l_script_tag))
@@ -321,8 +315,7 @@ feature {NONE} -- Processing
 				if l_parent /= Void then
 					l_parent.put_last (create {XM_ATTRIBUTE}.make ("onLoad", create {XM_NAMESPACE}.make_default, "pageLoad()", l_parent))
 				end
-			end
-			
+			end			
 		end		
 
 	insert_includes is

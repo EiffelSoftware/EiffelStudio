@@ -45,8 +45,8 @@ feature
 			-- Build specific explanation image for current error
 			-- in `error_window'.
 		do
-			put_string ("Target name: ");
-			put_string (target_name);
+--			put_string ("Target name: ");
+--			put_string (target_name);
 			put_string ("%NTarget type: ");
 			target_type.append_clickable_signature (error_window);
 			put_string ("%NSource_type: ");

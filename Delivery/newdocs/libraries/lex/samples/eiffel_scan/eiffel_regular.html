@@ -1,0 +1,100 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>EiffelLex Samples</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+	</HEAD>
+
+	<BODY>
+<PRE>
+Real $R
+Integer $Z
+String ("\"" -> "\"")
+Div "//"
+Mod "\\"
+Quotient '/'
+Product '*'
+Plus '+'
+Minus '-'
+Relational ('=' | '<' | '>' | ('<' '=') |  ('>' '=') | ('/' '='))
+Comment ("--" -> "\n") *(' '| '\t') *("--" -> "\n")
+FeatureAddress '$'
+Dot '.'
+Dotdot ".."
+Semicolon ';'
+Colon ':'
+Comma ','
+Assign ":="
+ReverseAssign "?="
+Lparan '('
+Rparan ')'
+Lcurly '{'
+Rcurly '}'
+Lsquare '['
+Rsquare ']'
+Bang '!'
+LeftArray "<<"
+RightArray ">>"
+Power '^'
+Constraint "->"
+Character (('\''$P'\'') | ('\'''\\'['t'|'n'|'r'|'f']'\'') | ('\''+('0'..'7')'\''))
+Identifier ~('a'..'z') *(~('a'..'z') | '_' | ('0'..'9'))
+-- Keywords
+as
+and
+check
+class
+current
+debug
+deferred
+do
+else
+elseif
+end
+ensure
+expanded
+export
+external
+false
+feature
+from
+if
+implies
+indexing
+infix
+inherit
+inspect
+integer
+invariant
+is
+language
+like
+local
+loop
+not
+obsolete
+old
+once
+or
+prefix
+real
+redefine
+require
+rename
+rescue
+result
+retry
+select
+strip
+then
+true
+undefine
+unique
+until
+variant
+void
+when
+xor</PRE>
+	</BODY>
+</HTML>

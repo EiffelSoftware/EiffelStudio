@@ -75,7 +75,6 @@ feature
 			rout_info: ROUT_INFO;
 			base_class: CLASS_C;
 			buf: GENERATION_BUFFER
-			gen_type_i: GEN_TYPE_I
 			cl_type_i: CL_TYPE_I
 		do
 			is_nested := not is_first;
@@ -115,9 +114,8 @@ feature
 						-- of dynamic type of Current.
 					buf.put_string ("RTUD(");
 
-					gen_type_i ?= context.current_type
-					if gen_type_i /= Void then
-						cl_type_i := precursor_type.instantiation_in (gen_type_i)
+					if context.class_type.is_generic then
+						cl_type_i := precursor_type.instantiation_in (context.class_type)
 						buf.put_static_type_id (cl_type_i.associated_class_type.static_type_id)
 					else
 						buf.put_static_type_id (precursor_type.associated_class_type.static_type_id)

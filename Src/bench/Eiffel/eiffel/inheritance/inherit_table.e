@@ -732,7 +732,7 @@ end;
 					vmfn.set_a_feature (feature_i);
 					vmfn.set_other_feature (inherited_features.item (feature_name));
 					Error_handler.insert_error (vmfn);
-				elseif not feature_i.is_replicated then
+				elseif not feature_i.is_code_replicated then
 						-- Name clash: a non-deferred feature is inherited
 					!!vmfn1;
 					vmfn1.set_class_id (a_class.id);
@@ -839,7 +839,10 @@ end;
 			feature_i := feature_table.item (feature_name);
 			if feature_i /= Void then
 				old_feature_in_class := feature_i.written_in = a_class.id;
-				if old_feature_in_class and not feature_i.is_replicated then
+				if 	
+					old_feature_in_class and then 
+					not feature_i.is_code_replicated 
+				then
 						-- Found a feature of same name and written in the
 						-- same class.
 					old_body_id := feature_i.original_body_id;
@@ -899,7 +902,7 @@ end;
 					-- old body id should be remove from the body
 					-- server after compilation if successfull.
 					if old_feature_in_class then
-						if not feature_i.is_replicated then
+						if not feature_i.is_code_replicated then
 							Tmp_body_server.desactive (old_body_id);
 						else
 							Tmp_rep_feat_server.desactive (old_body_id);

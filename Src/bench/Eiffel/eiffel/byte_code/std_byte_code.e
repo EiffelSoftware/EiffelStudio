@@ -836,68 +836,14 @@ feature
 
 feature -- Byte code generation
 
-	formulate_inherited_assertions (assert_id_set: ASSERT_ID_SET) is
-			-- Formulate inherited post and pre conditions
-			-- from the precursor definition of feature `feat'
-			-- and save the details in inherited_assertion.
-		require
-			valid_arg: assert_id_set /= Void;
-			current_not_basic: not Context.associated_class.is_basic;
-		local
-			byte_code: BYTE_CODE;
-			inh_f: INH_ASSERT_INFO;
-			ct: CLASS_TYPE;
-			inh_c: CLASS_C;
-			bd_id, i: INTEGER;
-		do
-			from
-				i := 1;
-			until
-				i > assert_id_set.count
-			loop
-				inh_f := assert_id_set.item (i);
-				if inh_f.has_assertion then
-					--! Has assertion
-					inh_c := System.class_of_id (inh_f.written_in);
-					if inh_c.generics = Void then
-						ct := inh_c.types.first;
-					else
-						ct := inh_c.meta_type (Context.current_type).associated_class_type;
-					end;
-					bd_id := System.body_index_table.item (inh_f.body_index);
-					byte_code := System.byte_server.item (bd_id);
-					if inh_f.has_precondition then
-						Context.inherited_assertion.add_precondition_type (ct, byte_code);
-					end;
-					if inh_f.has_postcondition then
-						Context.inherited_assertion.add_postcondition_type (ct, byte_code);
-					end;
-				end;
-				i := i + 1;
-			end;
-		end;
-
 	make_body_code (ba: BYTE_ARRAY) is
 			-- Generate compound byte code
 		local
 			have_assert: BOOLEAN;
-			feat: FEATURE_I;
 			inh_assert: INHERITED_ASSERTION;
+			position: INTEGER;
 		do
-			feat := Context.associated_class.feature_table.item (feature_name);
 			inh_assert := Context.inherited_assertion;
-			inh_assert.init;
-debug ("ACTIVITY")
-			io.putstring ("feature name: ");
-			io.putstring (feature_name);
-			io.new_line;
-end;
-			if 	Context.has_inherited_assertion and then 
-				not Context.associated_class.is_basic and then
-				feat.assert_id_set /= Void then
-				--! Do not get inherited pre & post for basic types
-				formulate_inherited_assertions (feat.assert_id_set);
-			end;
 			have_assert := precondition /= Void or else inh_assert.has_precondition;
 			if have_assert then
 				context.set_assertion_type (In_precondition);
@@ -929,12 +875,14 @@ end;
 					--! Order is important since interpretor pops expression
 					--! bottom up.
 				from
-					old_expressions.finish
+					position := local_count + 1;
+					old_expressions.start
 				until
-					old_expressions.before
+					old_expressions.after
 				loop
 					old_expressions.item.make_initial_byte_code (ba);
-					old_expressions.back
+					position := + 1;
+					old_expressions.forth
 				end
 			end;
 				-- Make byte code for inherited old expressions
@@ -964,7 +912,6 @@ end;
 			if have_assert then
 				ba.write_forward;
 			end;
-			inh_assert.wipe_out;
 		end;
 
 end

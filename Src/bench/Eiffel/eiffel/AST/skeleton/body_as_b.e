@@ -285,12 +285,6 @@ feature -- Replication
 
 	fill_calls_list (l: CALLS_LIST) is
 		do
-			if arguments /= void then
-				arguments.fill_calls_list (l)
-			end;
-			if type /= void then
-				type.fill_calls_list (l)
-			end;
 			if content /= void then
 				content.fill_calls_list (l);
 			end;

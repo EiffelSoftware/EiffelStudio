@@ -51,7 +51,7 @@ feature -- Type check, byte code and dead code removal
 	
 				-- Check conformance to boolean
 			current_context := context.item;
-			if 	not current_context.conform_to (Boolean_type) then
+			if 	not Boolean_type.conform_to (current_context) then
 				!!vwbe1;
 				context.init_error (vwbe1);
 				vwbe1.set_conditional (Current);

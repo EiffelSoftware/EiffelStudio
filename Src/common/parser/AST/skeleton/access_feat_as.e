@@ -139,12 +139,16 @@ feature -- Type check, byte code and dead code removal
 					Error_handler.raise_error;
 				elseif parameters /= Void then
 						-- Type check on parameters
-					vape_check := context.check_for_vape;
 					if context.level4 then
+						vape_check := context.check_for_vape;
+							-- Do not want check for vape
+							-- for parameters
 						context.set_check_for_vape (False);
+						parameters.type_check;
+						context.set_check_for_vape (vape_check);
+					else
+						parameters.type_check;
 					end;
-					parameters.type_check;
-					context.set_check_for_vape (vape_check);
 						-- Conformance initialization
 					Argument_types.init2 (a_feature);
 					from

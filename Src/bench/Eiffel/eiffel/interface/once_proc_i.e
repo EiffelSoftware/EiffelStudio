@@ -5,7 +5,7 @@ inherit
 	DYN_PROC_I
 		redefine
 			is_once,
-			redefinable,
+			--redefinable,
 			replicated,
 			unselected
 		end
@@ -15,7 +15,7 @@ feature
 	is_once: BOOLEAN is True;
 			-- Is the current feature a once one ?
 
-	redefinable: BOOLEAN is False;
+	--redefinable: BOOLEAN is False;
 			-- Is a once feature redefinable ?
 
 	replicated: FEATURE_I is

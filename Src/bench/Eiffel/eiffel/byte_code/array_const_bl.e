@@ -128,7 +128,8 @@ feature {NONE} -- C code generation
 			actual_type: TYPE_I;
 			basic_i: BASIC_I;
 			metamorphosed: BOOLEAN;
-			is_expanded: BOOLEAN
+			is_expanded: BOOLEAN;
+			position: INTEGER;
 		do
 			is_expanded := target_type.is_expanded;
 			array_area_reg.print_register;
@@ -150,7 +151,8 @@ feature {NONE} -- C code generation
 				generated_file.new_line;
 			end;
 			from
-				expressions.start
+				expressions.start;
+				position := 0;
 			until
 				expressions.after
 			loop
@@ -159,6 +161,9 @@ feature {NONE} -- C code generation
 				actual_type := context.real_type (expr.type);
 				if need_metamorphosis (actual_type) then
 					basic_i ?= actual_type;
+					if basic_i.is_bit then
+						expr.generate;
+					end;
 					basic_i.metamorphose 
 						(metamorphose_reg, expr, generated_file, context.workbench_mode);
 					generated_file.putchar (';');
@@ -172,29 +177,30 @@ feature {NONE} -- C code generation
 					expr.print_register;
 					generated_file.putstring (", ");
 					array_area_reg.print_register;
-					generated_file.putstring (" + OVERHEAD);");
-					generated_file.new_line;
-					array_area_reg.print_register;
-					generated_file.putstring (" += elem_size");
+					generated_file.putstring (" + OVERHEAD + elem_size * ");
+					generated_file.putint (position);
+					generated_file.putchar (')');
 				else
 					generated_file.putstring ("*");
 					target_type.c_type.generate_access_cast (generated_file);
+					generated_file.putchar ('(');
 					array_area_reg.print_register;
+					generated_file.putstring (" + ");
+					generated_file.putint (position);
+					generated_file.putstring (" * ");
+					target_type.c_type.generate_size (generated_file);
+					generated_file.putchar (')');
 					generated_file.putstring (" = ");
 					if metamorphosed then
 						metamorphose_reg.print_register
 					else
 						expr.print_register;
 					end;
-					generated_file.putchar (';');
-					generated_file.new_line;
-					array_area_reg.print_register;
-					generated_file.putstring (" += ");
-					target_type.c_type.generate_size (generated_file);
 				end;
-				generated_file.putchar (';'); 
+				generated_file.putchar (';');
 				generated_file.new_line;
 				expressions.forth;
+				position := position + 1;
 			end;
 			if (is_expanded and expressions.count > 0) then
 				generated_file.exdent;

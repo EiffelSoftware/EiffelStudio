@@ -39,9 +39,9 @@ feature
 			class_type: BITS_A;
 		do
 			class_type ?= t;
-			Result := 	class_type /= Void
+			Result :=	class_type /= Void 
 						and then
-						class_type.base_type = bit_val.count;
+						bit_val.count <= class_type.base_type 
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is

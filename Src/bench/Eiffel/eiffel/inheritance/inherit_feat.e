@@ -159,16 +159,24 @@ feature
 				next := feat.item;
 				feature_name := next.a_feature.feature_name;
 				parent := next.parent;
-				if parent.is_renaming (feature_name) then
+				if not next.renaming_processed and then
+					parent.is_renaming (feature_name) 
+				then
 						-- Detection of a renaming clause: check repeated
 						-- inheritance possible replication
 					new_name := parent.renaming.item (feature_name);
-					if System.replication_off then
+					if System.code_replication_off then
 						pos := feat.position;
 						from
-								-- Looking for a case of replication through
-								-- repeated inheritance. There must be two same
-								-- body ids.
+							-- Looking for a case of replication through
+							-- repeated inheritance. There must be two same
+							-- body ids. This case of replication is
+							-- limited :- it only detects replication
+							-- through renaming (this is the old method
+							-- for detection and has been used by the 
+							-- compiler since the dawn of time). We 
+							-- still have this here just in case the
+							-- that code replication causes problems.
 							body_id := next.a_feature.code_id;
 							feat.start;
 						until
@@ -203,13 +211,15 @@ feature
 						else
 							replication := next.a_feature.twin;
 						end;
-						replication.set_feature_name (new_name);
 
-						-- Move the inherit feature information under 
-						-- 'new_name'.
 					else
 						replication := next.a_feature.twin;
 					end;
+						-- Mark it as processed
+					next.set_renaming_processed;
+						-- Move the inherit feature information under 
+						-- 'new_name'.
+					replication.set_feature_name (new_name);
 					next.set_a_feature (replication);
 					Inherit_table.add_inherited_feature (next, new_name);
 						-- Remove the information

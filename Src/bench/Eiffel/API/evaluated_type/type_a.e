@@ -33,6 +33,21 @@ feature
 			-- Void
 		end;
 
+	check_conformance (target_type: TYPE_A) is
+			-- Check if Current conforms to `other'.
+			-- If not, insert error into Error handler.
+		local
+			vjar: VJAR;
+		do
+			if not conform_to (target_type) then
+				!!vjar;
+				context.init_error (vjar);
+				vjar.set_source_type (Current);
+				vjar.set_target_type (target_type);
+				Error_handler.insert_error (vjar);
+			end;
+		end;
+
 	conform_to (other: TYPE_A): BOOLEAN is
 			-- Does Current conform to `other' ?
 		do

@@ -24,7 +24,6 @@ inherit
 	SHARED_CODE_FILES;
 	SHARED_BODY_ID;
 	SHARED_PASS;
-	SHARED_DIALOG;
 	EXCEPTIONS;
 	MEMORY;
 	SK_CONST;
@@ -591,7 +590,22 @@ end;
 				elseif ((not feature_i.in_pass3) or else
 							-- The feature is deferred and written in the current class
 						(feature_i.is_deferred and then id = feature_i.written_in)) then
+					if feature_i.is_deferred then
+							-- Just type check it. See if VRRR or
+							-- VMRX error has occurred.
+						ast_context.set_a_feature (feature_i);
+						feature_i.type_check;
+						ast_context.clear2;
+					end;
 					record_suppliers (feature_i, dependances);
+				elseif (feature_i.is_deferred or else
+						feature_i.is_external) and then
+					(id = feature_i.written_in) then
+						-- Just type check it. See if VRRR or
+						-- VMRX error has occurred.
+					ast_context.set_a_feature (feature_i);
+					feature_i.type_check;
+					ast_context.clear2;
 				end;
 
 				feat_table.forth;
@@ -638,7 +652,7 @@ end;
 						-- Second pass desactive body id of changed
 						-- features only. Deactive body ids of removed
 						-- features.
-					if Tmp_body_server.has (body_id) then
+					if not feature_i.is_code_replicated then
 						Tmp_body_server.desactive (body_id)
 					else
 						Tmp_rep_feat_server.desactive (body_id)
@@ -1778,7 +1792,9 @@ feature -- Supplier checking
 				--  for the system.
 			Universe.compute_last_class (cl_name, cluster);
 			supplier_class := Universe.last_class;
-			if supplier_class /= Void then
+			if supplier_class /= Void 
+				and then not cl_name.is_equal ("none")
+			then
 					-- The supplier class is in the universe associated
 					-- to `cluster'.
 				if not supplier_class.compiled then
@@ -2524,7 +2540,7 @@ feature -- Process the creation feature
 			-- Assign the first creation procedure (if any) to
 			-- `creation_feature'.
 		do
-			if creators /= Void then
+			if creators /= Void and then not creators.empty then
 				creators.start;
 				creation_feature := tbl.item (creators.key_for_iteration);
 			else
@@ -2713,27 +2729,40 @@ feature -- Replication
 				unit := feat_dep.item;
 				class_c := System.class_of_id (unit.id);
 					-- Get feature table
-				f_table := class_c.feature_table;
-					-- Get feature_i to be propagated (if valid)
-				feat := f_table.item (unit.feature_name);
-				if 
-					(feat /= Void) and then
-					(feat.rout_id_set.same_as (unit.rout_id_set))
-				then
-					-- Then Propagate
-					class_c.set_changed2 (True);
-					pass2_controler.insert_new_class (class_c);
-					if Rep_depend_server.has (unit.id) then
-						rep_depend := Rep_depend_server.item (unit.id);
-						feat_depend := rep_depend.item (unit.feature_name);
-						if feat_depend /= Void then
-							propagate_replication (feat_depend);
-							if feat_depend.count > 0 then
-								Tmp_rep_depend_server.put (rep_depend)
-							else
-								Tmp_rep_depend_server.remove (unit.id)
-							end;
-						end
+				if class_c /= Void then
+					-- Class exists in system
+					f_table := class_c.feature_table;
+						-- Get feature_i to be propagated (if valid)
+					feat := f_table.item (unit.feature_name);
+					if 
+						(feat /= Void) and then
+						(feat.rout_id_set.same_as (unit.rout_id_set))
+					then
+						-- Then Propagate
+						class_c.set_changed2 (True);
+						pass2_controler.insert_new_class (class_c);
+						if Rep_depend_server.has (unit.id) then
+							rep_depend := Rep_depend_server.item (unit.id);
+							feat_depend := rep_depend.item (unit.feature_name);
+							if feat_depend /= Void then
+								propagate_replication (feat_depend);
+								if feat_depend.count > 0 then
+									Tmp_rep_depend_server.put (rep_depend)
+								else
+									Tmp_rep_depend_server.remove (unit.id)
+								end;
+							end
+						end;
+						feat_dep.forth;
+					else
+							-- Remove depend unit
+						feat_dep.remove;
+debug ("REPLICATION")
+	io.error.putstring ("removing dependency to feature: ");
+	io.error.putstring (unit.feature_name);
+	io.error.putstring ("from class : ");
+	io.error.new_line;
+end;
 					end;
 debug ("REPLICATION")
 	io.error.putstring ("propagating feature: ");
@@ -2741,7 +2770,6 @@ debug ("REPLICATION")
 	io.error.putstring ("to class : ");
 	io.error.new_line;
 end;
-					feat_dep.forth;
 				else
 debug ("REPLICATION")
 	io.error.putstring ("removing dependency to feature: ");
@@ -2749,6 +2777,7 @@ debug ("REPLICATION")
 	io.error.putstring ("from class : ");
 	io.error.new_line;
 end;
+						-- Remove depend unit
                     feat_dep.remove;
 				end;
 debug ("REPLICATION")
@@ -2813,10 +2842,10 @@ end;
 						then
 							new_body_id := System.body_id_counter.next;
 							insert_changed_feature (new_feat.feature_name);
-							if Tmp_body_server.has (old_body_id) then
-								Tmp_body_server.desactive (old_body_id);
-							else
+							if Tmp_rep_feat_server.has (old_body_id) then
 								Tmp_rep_feat_server.desactive (old_body_id)
+							else
+								Tmp_body_server.desactive (old_body_id);
 							end;
 debug ("REPLICATION")
 	io.error.putstring ("following feature AST was NOT equiv to previous%N")

@@ -257,7 +257,7 @@ feature
 	remover_off: BOOLEAN;
 			-- Is the remover off (by specifying the Ace option)
 
-	replication_off: BOOLEAN;
+	code_replication_off: BOOLEAN;
 			-- Is code replication off (by specifying the Ace option)
 
 	current_pass: PASS;
@@ -2930,10 +2930,10 @@ feature --Workbench option file generation
 
 feature 
 
-	set_replication_off (b: BOOLEAN) is
+	set_code_replication_off (b: BOOLEAN) is
 			-- Assign `b' to `replication_off'
 		do
-			replication_off := b;
+			code_replication_off := b;
 		end;
 
 	process_pass (a_pass: PASS) is
@@ -2954,23 +2954,23 @@ feature
 			Result := (current_pass = pass3_controler)
 		end;
 
-	clear is
+	--clear is
 				-- Clear the servers
-		do
-			Tmp_ast_server.clear;
-			Tmp_feat_tbl_server.clear;
-			Tmp_body_server.clear;
-			Tmp_class_info_server.clear;
-			Tmp_rep_info_server.clear;
-			Tmp_byte_server.clear;
-			Tmp_inv_byte_server.clear;
-			Tmp_inv_ast_server.clear;
-			Tmp_depend_server.clear;
-			Tmp_rep_depend_server.clear;
-			Tmp_rep_server.clear;
-			Tmp_rep_feat_server.clear;
-			Tmp_rep_info_server.clear;
-		end;
+		--do
+			--Tmp_ast_server.clear;
+			--Tmp_feat_tbl_server.clear;
+			--Tmp_body_server.clear;
+			--Tmp_class_info_server.clear;
+			--Tmp_rep_info_server.clear;
+			--Tmp_byte_server.clear;
+			--Tmp_inv_byte_server.clear;
+			--Tmp_inv_ast_server.clear;
+			--Tmp_depend_server.clear;
+			--Tmp_rep_depend_server.clear;
+			--Tmp_rep_server.clear;
+			--Tmp_rep_feat_server.clear;
+			--Tmp_rep_info_server.clear;
+		--end;
 
 	System_chunk: INTEGER is 500;
 

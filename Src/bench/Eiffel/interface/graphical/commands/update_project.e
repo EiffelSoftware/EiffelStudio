@@ -28,7 +28,6 @@ feature {NONE}
 			-- Recompile the project.
 		local
 			project_dir: PROJECT_DIR;
-			file: UNIX_FILE;
 		do
 			debug_info.wipe_out;
 			if project_tool.initialized then
@@ -40,10 +39,7 @@ feature {NONE}
 					if Workbench.successfull then
 						project_tool.set_changed (false);
 						system.server_controler.wipe_out; -- ???
-						!!file.make (Project_file_name);
-						file.open_write;
-						workbench.basic_store (file);
-						file.close;
+						save_workbench_file;
 						error_window.put_string ("System recompiled%N");
 					end;
 					restore_cursors;
@@ -78,11 +74,22 @@ feature {NONE}
 			else
 				warner.call(Current, l_Initialize);
 			end;
+		end;
+
+	save_workbench_file is
+			-- Save the `.workbench' file.
+		local
+			file: UNIX_FILE
+		do
+			!!file.make (Project_file_name);
+			file.open_write;
+			workbench.basic_store (file);
+			file.close;
 		rescue
 			if not file.is_closed then
 				file.close
 			end;
-			Dialog_window.display ("Error in reading/writing .workbench file ");
+			Dialog_window.display ("Error in opening/writing .workbench file ");
 			retry
 		end;
 

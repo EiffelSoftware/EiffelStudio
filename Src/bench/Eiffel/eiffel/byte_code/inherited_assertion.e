@@ -460,6 +460,43 @@ feature -- inherited postcondition
 			restore_current_context;
 		end;
 
+	setup_local_variables (pos: INTEGER) is
+			-- Set up the local variable type for
+			-- old expressions. 
+		local
+			old_expressions: LINKED_LIST [UN_OLD_B];
+			item: UN_OLD_B;
+			position: INTEGER
+		do
+			position := pos;
+			from
+				postcondition_start
+			until
+				postcondition_after
+			loop
+				old_expressions := old_expression_list.item;
+				if old_expressions /= Void then
+					--! Old expressions can be void
+					postcondition_context_init;
+					from
+						old_expressions.start
+					until
+						old_expressions.after
+					loop
+						item := old_expressions.item;
+						Context.add_local
+								(context.real_type (item.type));
+						item.set_position (position);
+						old_expressions.forth;
+					end;
+				end;
+				postcondition_forth;
+			end;
+			restore_current_context;
+		ensure
+			context_restored: restored
+		end;
+
 	make_old_exp_byte_code (ba: BYTE_ARRAY) is
 			-- Make byte code for inherited old expressions.
 		require
@@ -477,12 +514,12 @@ feature -- inherited postcondition
 					--! Old expressions can be void
 					postcondition_context_init;
 					from
-						old_expressions.finish
+						old_expressions.start
 					until
-						old_expressions.before
+						old_expressions.after
 					loop
 						old_expressions.item.make_initial_byte_code (ba);
-						old_expressions.back;
+						old_expressions.forth;
 					end;
 				end;
 				postcondition_forth;

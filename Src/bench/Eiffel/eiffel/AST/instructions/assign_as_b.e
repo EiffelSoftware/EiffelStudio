@@ -77,13 +77,7 @@ feature -- Type check, byte code production, dead_code_removal
 			context.pop (1);
 			target_type := context.item.actual_type;
 
-			if not source_type.conform_to (target_type) then
-				!!vjar;
-				context.init_error (vjar);
-				vjar.set_source_type (source_type);
-				vjar.set_target_type (target_type);
-				Error_handler.insert_error (vjar);
-			end;
+			source_type.check_conformance (target_type);
 				-- Update type stack
 			context.pop (1);
 		end;

@@ -79,6 +79,7 @@ feature -- Type check, byte code and dead code removal
 			vwoe1: VWOE1;
 			vhne: VHNE;
 			vkcn: VKCN;
+			vuex: VUEX;
 		do
 				-- First type check the left operand
 			left.type_check;
@@ -114,6 +115,16 @@ feature -- Type check, byte code and dead code removal
 				vwoe.set_node (Current);
 				Error_handler.insert_error (vwoe);
 					-- Cannot go on here.
+				Error_handler.raise_error;
+			end;
+
+				-- Export validity
+			if not infix_function.is_exported_for (last_class) then
+				!!vuex;
+				context.init_error (vuex);
+				vuex.set_static_class (last_class);
+				vuex.set_feature_name (infix_function_name);
+				Error_handler.insert_error (vuex);
 				Error_handler.raise_error;
 			end;
 

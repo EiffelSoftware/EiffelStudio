@@ -254,6 +254,7 @@ feature -- Type check, byte code and dead code removal
 			vreg2: VREG2;
 			curr_feat: FEATURE_I;
 		do
+			context_class := context.a_class;
 			if 
 				(is_deferred or is_external)
 				and then not locals.empty 
@@ -263,7 +264,6 @@ feature -- Type check, byte code and dead code removal
 				io.error.new_line;
 			else
 				from
-					context_class := context.a_class;
 					curr_feat := context.a_feature;
 					track_local :=
 						curr_feat.written_in = context_class.id;
@@ -544,10 +544,6 @@ feature	-- Replication
 		do
 			if precondition /= void then
 				precondition.fill_calls_list (l);
-			end;
-			if locals /= void then
-				locals.fill_calls_list (l);
-				--| adapt the like
 			end;
 			routine_body.fill_calls_list (l);
 			if postcondition /= void then

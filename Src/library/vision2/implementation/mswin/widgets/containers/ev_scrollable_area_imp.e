@@ -35,12 +35,12 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	top_level_window_imp: EV_WINDOW_IMP
+	top_level_window_imp: EV_UNTITLED_WINDOW_IMP
 			-- Top level window that contains the current widget.
 
 feature -- Element change
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
+	set_top_level_window_imp (a_window: EV_UNTITLED_WINDOW_IMP) is
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of the widget.
 		do

@@ -56,7 +56,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_parent (par: EV_WINDOW) is
+	set_parent (par: EV_UNTITLED_WINDOW) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
 		do

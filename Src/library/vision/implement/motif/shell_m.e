@@ -19,7 +19,7 @@ inherit
 	COMPOSITE_M
 		redefine
 			define_cursor_if_shell, undefine_cursor_if_shell,
-			real_x, real_y, set_managed
+			real_x, real_y, set_managed, managed
 		end
 
 feature 
@@ -90,9 +90,11 @@ feature
 			-- by window manager of parent widget if `flag', disable it
 			-- otherwise.
 		do
-		ensure then
-			managed = flag
+			managed := flag
 		end;
+
+	managed: BOOLEAN;
+			-- Is Current Shell managed ?
 
 feature {ALL_CURS_X}
 

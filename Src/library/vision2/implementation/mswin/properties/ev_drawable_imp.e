@@ -229,7 +229,7 @@ feature -- Element change
 			clip_area := Void
 			create region.make_rect (0, 0, width, height)
 			get_dc
-			dc.select_clip_region (region)
+			dc.remove_clip_region
 			release_dc
 			region.delete
 		end

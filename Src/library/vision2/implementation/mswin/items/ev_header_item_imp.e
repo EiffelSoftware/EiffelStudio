@@ -164,7 +164,11 @@ feature -- Status setting
 		local
 			l_format: INTEGER
 		do
-		 	l_format := format
+			if flag_set (mask, feature {WEL_HDI_CONSTANTS}.hdi_format) then
+				l_format := format
+			else
+				l_format := 0
+			end
 		 	l_format := l_format & hdf_left.bit_not
 			l_format := l_format & hdf_right.bit_not
 			Precursor {EV_TEXT_ALIGNABLE_IMP}
@@ -177,7 +181,11 @@ feature -- Status setting
 		local
 			l_format: INTEGER
 		do
-		 	l_format := format
+		 	if flag_set (mask, feature {WEL_HDI_CONSTANTS}.hdi_format) then
+				l_format := format
+			else
+				l_format := 0
+			end
 		 	l_format := l_format & hdf_left.bit_not
 			l_format := l_format & hdf_center.bit_not
 			Precursor {EV_TEXT_ALIGNABLE_IMP}
@@ -190,7 +198,11 @@ feature -- Status setting
 		local
 			l_format: INTEGER
 		do
-		 	l_format := format
+		 	if flag_set (mask, feature {WEL_HDI_CONSTANTS}.hdi_format) then
+				l_format := format
+			else
+				l_format := 0
+			end
 		 	l_format := l_format & hdf_center.bit_not
 			l_format := l_format & hdf_right.bit_not
 			Precursor {EV_TEXT_ALIGNABLE_IMP}

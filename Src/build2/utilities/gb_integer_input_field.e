@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 		do
 			call_default_create (any)
 			add_label (label_text, tooltip)
-			internal_type := a_type
+			internal_property := a_type
 			internal_gb_ev_any ?= any
 			check
 				internal_gb_ev_any /= Void
@@ -103,7 +103,7 @@ feature {NONE} -- Initialization
 			a_validate_agent_not_void: a_validate_agent /= Void
 		do
 			call_default_create (any)
-			internal_type := a_type
+			internal_property := a_type
 			internal_gb_ev_any ?= any
 			check
 				internal_gb_ev_any /= Void
@@ -186,8 +186,9 @@ feature {NONE} -- Implementation
 	internal_gb_ev_any: GB_EV_ANY
 		-- instance of GB_EV_ANY that is client of `Current'.
 		
-	internal_type: STRING
-		--| FIXME &**^*678LK6;78LK6;78K
+	internal_property: STRING
+		-- Property referenced by `Current'. This is required, so that the constants can
+		-- be correctly handled. For example "Padding" or "Minimum_width".
 
 	validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]
 		-- Is integer a valid integer for `execution_agent'.
@@ -350,8 +351,8 @@ feature {NONE} -- Implementation
 				list_item.set_data (integer_constants.item)
 				
 				constants_combo_box.extend (list_item)
-				if internal_type /= Void then
-					lookup_string := internal_gb_ev_any.type + internal_type
+				if internal_property /= Void then
+					lookup_string := internal_gb_ev_any.type + internal_property
 					if internal_gb_ev_any.object.constants.has (lookup_string) and
 						integer_constants.item = internal_gb_ev_any.object.constants.item (lookup_string).constant then
 						constants_button.enable_select
@@ -383,7 +384,7 @@ feature {NONE} -- Implementation
 			
 				if validate_agent.last_result then
 					execute_agent (constant.value)
-					create constant_context.make_with_context (constant, object, internal_gb_ev_any.type, internal_type)
+					create constant_context.make_with_context (constant, object, internal_gb_ev_any.type, internal_property)
 					constant.add_referer (constant_context)
 					object.add_constant_context (constant_context)
 					remove_selected_constant
@@ -407,7 +408,7 @@ feature {NONE} -- Implementation
 			constant_context: GB_CONSTANT_CONTEXT
 		do
 			if last_selected_constant /= Void then
-				constant_context := object.constants.item (internal_gb_ev_any.type + internal_type)
+				constant_context := object.constants.item (internal_gb_ev_any.type + internal_property)
 				constant ?= constant_context.constant
 				if not constants_combo_box.is_displayed then
 						-- Now assign the value of `last_selected_item' to the control, but only
@@ -420,7 +421,7 @@ feature {NONE} -- Implementation
 					end
 				end
 				last_selected_constant.remove_referer (constant_context)
-				object.constants.remove (internal_gb_ev_any.type + internal_type)
+				object.constants.remove (internal_gb_ev_any.type + internal_property)
 				last_selected_constant := Void
 			end
 		end

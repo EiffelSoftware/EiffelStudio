@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"EiffelVision container. Container is a widget that can hold children inside it"
 	status: "See notice at end of class"
@@ -8,16 +7,13 @@ indexing
 	revision: "$Revision$"
 	
 deferred class 
-	
 	EV_CONTAINER
 
 inherit
-
 	EV_WIDGET
 		redefine
 			implementation
 		end
-	
 	
 feature -- Access
 	

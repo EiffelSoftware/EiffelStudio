@@ -24,7 +24,7 @@ creation
 
 feature {NONE} -- Initialization
 
-        make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER) is
                         -- Create a table widget with `par' as
                         -- parent.
 		do

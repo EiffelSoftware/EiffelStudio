@@ -194,11 +194,6 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_close_command (c: EV_COMMAND) is
-		do
-			implementation.set_close_command (c)
-		end
-
 	set_maximum_width (max_width: INTEGER) is
 			-- Make `max_width' the new `maximum_width'.
 		require
@@ -268,22 +263,31 @@ feature -- Element change
 
 feature -- Event - command association
 
-	add_resize_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Add `command' to the list of commands to be executed when the
-			-- widget is resized.
+	set_close_command (cmd: EV_COMMAND) is
+			-- Make `cmd' the executed command when the window is closed.
 		require
 			exists: not destroyed
+			valid_command: cmd /= Void
 		do
-			implementation.add_resize_command (command, arguments)
+			implementation.set_close_command (cmd)
 		end
 
-	add_move_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Add `command' to the list of commands to be executed when the
-			-- widget is resized.
+	add_resize_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Make `cmd' the executed command when the window is resized.
 		require
 			exists: not destroyed
+			valid_command: cmd /= Void
 		do
-			implementation.add_move_command (command, arguments)
+			implementation.add_resize_command (cmd, arg)
+		end
+
+	add_move_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Make `cmd' the executes command when the widget is resized.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		do
+			implementation.add_move_command (cmd, arg)
 		end
 
 feature -- Implementation

@@ -7,10 +7,10 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 	
-class EV_FIXED
+class
+	EV_FIXED
 
 inherit
-
 	EV_INVISIBLE_CONTAINER
 		redefine
 			make,
@@ -24,9 +24,9 @@ creation
 	
 feature {NONE} -- Initialization
 
-        make (par: EV_CONTAINER) is
-                        -- Create a fixed widget with, `par' as
-                        -- parent
+	make (par: EV_CONTAINER) is
+			-- Create a fixed widget with, `par' as
+			-- parent
 		do
 			!EV_FIXED_IMP!implementation.make (par)
 			widget_make (par)

@@ -10,10 +10,10 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class EV_SPLIT_AREA
+deferred class
+	EV_SPLIT_AREA
 
 inherit
-
 	EV_CONTAINER 
 		redefine
 			implementation

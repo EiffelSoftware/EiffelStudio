@@ -1,0 +1,21 @@
+<document output="studio" title="Lex/Parse Samples">
+	<meta_data/>
+	<paragraph>
+		<heading>
+			<size>1</size>Lex &amp; Parse Samples
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>eiffel_scan/index.html</url>
+					<label>Eiffel scanner</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>process/index.html</url>
+					<label>Polynomial example language</label>
+				</link>
+			</item>
+		</list>
+	</paragraph></document>

@@ -1240,7 +1240,7 @@ rt_public struct item *docall(EIF_CONTEXT register uint32 body_id, register int 
 	EIF_GET_CONTEXT
 	char *old_IC;				/* IC back up */
 	uint32 pid;					/* Pattern id of the frozen feature */
-	register3 i;
+	register3 int i;
 
 	for (i = 0; i <= arg_num ; i++)		/* Push arg_num + 1 null items */
 		iget();							/* on the operational stack */

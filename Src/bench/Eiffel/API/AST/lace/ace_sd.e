@@ -68,6 +68,8 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 
 				-- Initialization
 			Use_properties.clear_all;
+			Eiffel_system.wipe_out_sub_clusters;
+
 			if System.is_dynamic then
 					-- First re-insert the static clusters into the
 					-- universe (when compiling a dynamic class set).
@@ -95,6 +97,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					-- Remove inexistant clusters from the system
 				process_removed_clusters
 			end;
+
 			Degree_output.put_end_degree_6;
 
 			process_system_level_options;
@@ -275,7 +278,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 
 	build_precompiled is
 			-- Re-insert the precompiled clusters into
-			-- the unverse.
+			-- the universe.
 		local
 			old_clusters: LINKED_LIST [CLUSTER_I];
 			old_cluster, cluster: CLUSTER_I;
@@ -290,6 +293,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				if old_cluster.is_precompiled then
 					!!cluster.make_from_old_cluster (old_cluster);
 					Universe.insert_cluster (cluster);
+					update_sub_clusters (cluster, old_cluster);
 				end;
 				old_clusters.forth
 			end;
@@ -311,7 +315,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 		end;
 
 	adapt is
-			-- Check cluster adaptation
+			-- Check cluster adaptation.
 		do
 			if clusters /= Void then
 				clusters.adapt;
@@ -398,7 +402,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 	update_clusters is
 			-- Update the clusters: remove the classes removed
 			-- from the system, examine the differences in the
-			-- ignore and rename clauses
+			-- ignore and rename clauses.
 		local
 			cluster_list: LINKED_LIST [CLUSTER_I];
 			cluster: CLUSTER_I
@@ -474,6 +478,31 @@ feature {NONE} -- Incrementality
 			end
 		end
 
+	update_sub_clusters (new_cluster, old_cluster: CLUSTER_I) is
+			-- Update the subcluster for `new_cluster' using
+			-- `old_cluster'
+		require
+			non_void_args: new_cluster /= Void and then old_cluster /= Void;
+			valid_clusters: equal (new_cluster.cluster_name,
+								old_cluster.cluster_name)
+		local
+			parent_cluster: CLUSTER_I	
+		do
+			parent_cluster := old_cluster.parent_cluster;
+			if parent_cluster = Void then
+				Eiffel_system.add_sub_cluster (new_cluster)
+			else
+					-- Get the real parent.
+				parent_cluster := 
+					Universe.cluster_of_name 
+							(parent_cluster.cluster_name);
+				check
+					parent_must_exist: parent_cluster /= Void
+				end;
+				parent_cluster.add_sub_cluster (new_cluster)
+			end
+		end;
+
 feature {COMPILER_EXPORTER} -- DLE
 
 	build_static is
@@ -504,7 +533,7 @@ feature {COMPILER_EXPORTER} -- DLE
 	update_dle_clusters is
 			-- Update the dynamic clusters: remove the classes removed
 			-- from the system, examine the differences in the
-			-- ignore and rename clauses.
+			-- ignore and rename clauses. 
 		require
 			dynamic_system: System.is_dynamic
 		local
@@ -647,5 +676,5 @@ feature {COMPILER_EXPORTER} -- DLE
 			Compilation_modes.set_is_extending (Result /= Void)
 			Compilation_modes.set_is_extendible (extendible)
 		end;
-			
+
 end -- class ACE_SD

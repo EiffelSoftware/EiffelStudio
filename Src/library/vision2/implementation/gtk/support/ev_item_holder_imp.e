@@ -131,9 +131,9 @@ feature -- Element change
 			-- Add `v' to beginning.
 			-- Do not move cursor.
 		do
-			index := index + 1
 			add_to_container (v)
 			reorder_child (v, 1)
+			index := index + 1
 		end
 
 	put_right (v: like item) is
@@ -268,6 +268,9 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/03/15 00:54:48  king
+--| Indenting
+--|
 --| Revision 1.16  2000/03/13 22:06:55  king
 --| Added position preconditions, reference handling on item reordering
 --|

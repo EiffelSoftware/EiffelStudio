@@ -41,8 +41,7 @@ feature {NONE} -- Initialization
 			-- Create `Current' from `an_object'.
 		do
 			xml_handler.add_new_component (an_object, a_name)
-			make_with_text (a_name)
-			set_pebble_function (agent generate_pebble)
+			make_with_name (a_name)
 		end
 		
 	make_with_name (a_name: STRING) is

@@ -60,7 +60,7 @@ feature -- Access
 			-- Application name to be displayed by
 			-- the window manager.
 		do
-				Result := internal_title
+				Result := clone (internal_title)
 		end
 
 	internal_title: STRING
@@ -72,7 +72,7 @@ feature -- Access
 			-- displayed by the window manager when
 			-- application is iconified.
 		do
-			Result := internal_icon_name
+			Result := clone (internal_icon_name)
 		end
 
 	icon_pixmap: EV_PIXMAP is

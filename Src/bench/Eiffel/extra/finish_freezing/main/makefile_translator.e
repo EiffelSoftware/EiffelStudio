@@ -34,6 +34,9 @@ feature -- Initialization
 			directory_separator := options.get_string ("directory_separator", "\")
 			object_extension := clone (options.get_string ("obj_file_ext", "obj"))
 			object_extension.prepend_character ('.')
+
+			lib_extension := clone (options.get_string ("intermediate_file_ext", "lib"))
+			lib_extension.prepend_character ('.')
 		end
 
 feature -- Access
@@ -87,6 +90,10 @@ feature -- Access
 
 	object_extension: STRING
 			-- File extension name for C generated object files.
+
+	lib_extension: STRING
+			-- File extension name for C generated object files for
+			-- each C*, D* and F* directory.
 
 feature -- Execution
 
@@ -620,7 +627,7 @@ feature {NONE} -- Translation
 				makefile.putstring (dir)
 				makefile.putstring (directory_separator)
 				makefile.putchar (dir.item (1))
-				makefile.putstring (options.get_string ("obj_file_ext", Void))
+				makefile.putstring ("obj")
 				makefile.putstring (dir.substring (2, dir.count))
 				makefile.putchar ('.')
 				makefile.putstring (options.get_string ("intermediate_file_ext", Void))
@@ -658,7 +665,7 @@ feature {NONE} -- Translation
 				makefile.putstring (dir)
 				makefile.putstring (directory_separator)
 				makefile.putchar (dir.item (1))
-				makefile.putstring (options.get_string ("obj_file_ext", Void))
+				makefile.putstring ("obj")
 				makefile.putstring (dir.substring (2, dir.count))
 				makefile.putchar ('.')
 				makefile.putstring (options.get_string ("intermediate_file_ext", Void))
@@ -702,7 +709,7 @@ feature {NONE} -- Translation
 				makefile.putstring (dir)
 				makefile.putstring (directory_separator)
 				makefile.putchar (dir.item (1))
-				makefile.putstring (options.get_string ("obj_file_ext", Void))
+				makefile.putstring ("obj")
 				makefile.putint (number)
 				makefile.putchar ('.')
 				makefile.putstring (options.get_string ("intermediate_file_ext", Void))
@@ -965,7 +972,7 @@ feature {NONE} -- Translation
 			makefile.putstring ("%N#STATIC_CECIL PART%N")
 
 			lastline := clone (makefile_sh.laststring)
-			lastline.replace_substring_all (".a",".lib")
+			lastline.replace_substring_all (".a", lib_extension)
 			makefile.putstring (lastline)
 			makefile.new_line
 			
@@ -1321,7 +1328,7 @@ feature {NONE}	-- substitutions
 			end
 
 			line.replace_substring_all (options.get_string ("all", Void).substring (1, 4), options.get_string("all", Void))
-			line.replace_substring_all (".o", ".lib")
+			line.replace_substring_all (".o", lib_extension)
 
 			start := 1
 			

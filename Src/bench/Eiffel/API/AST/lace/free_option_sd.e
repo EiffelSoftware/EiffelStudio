@@ -445,11 +445,11 @@ feature {COMPILER_EXPORTER}
 					end
 					
 				when msil_key_file_name then
---					if value.is_name then
---						System.set_msil_key_file_name (value.value)	
---					else
---						error_found := True
---					end
+					if value.is_name then
+						System.set_msil_key_file_name (value.value)	
+					else
+						error_found := True
+					end
 
 				when line_generation then
 					if value.is_no then

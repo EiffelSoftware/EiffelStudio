@@ -22,12 +22,14 @@ feature -- Basic operation
 	documentation_file: STRING is
 			-- Return the full name of the documentation file.
 		do
+
 			Result := clone (library_path)
 			Result.append_character (Operating_environment.directory_separator)
 			Result.append ("documentation")
 			Result.append_character (Operating_environment.directory_separator)
 			Result.append (class_name)
 			Result.append (".txt")
+
 		end
 
 	class_file: STRING  is
@@ -39,6 +41,7 @@ feature -- Basic operation
 			Result.append_character (Operating_environment.directory_separator)
 			Result.append (class_name)
 			Result.append (".rtf")
+
 		end
 
 	example_file: STRING is

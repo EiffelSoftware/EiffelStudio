@@ -380,8 +380,8 @@ rt_public struct ex_vect *new_exset(char *name, int origin, char *object, unsign
 	vector->ex_rout = name;			/* Set the routine name */
 	vector->ex_orig = origin;		/* And its origin (where it was written) */
 	vector->ex_id = object;			/* The value of Current (Object ID) */
-#ifdef WORKBENCH
 	vector->ex_linenum = 0;			/* breakable line number */
+#ifdef WORKBENCH
 	vector->ex_locnum = loc_nb;		/* number of local variables in the feature */
 	vector->ex_argnum = arg_nb;		/* number of arguments the feature takes */
 	vector->ex_bodyid = bid;		/* body id of the feature */
@@ -831,9 +831,7 @@ rt_public void eraise(char *tag, long num)
 	char 			*tg;
 	EIF_REFERENCE obj = NULL;
 	unsigned char	type;
-#ifdef WORKBENCH
 	int				line_number;	/* line number within feature */
-#endif
 
 	if (echmem & MEM_PANIC)		/* In panic mode, do nothing */
 		return;
@@ -897,9 +895,7 @@ rt_public void eraise(char *tag, long num)
 	if (vector == (struct ex_vect *) 0) {
 		echrt = (char *) 0;	/* Null routine name */
 		echclass = 0;		/* Null class name */
-#ifdef WORKBENCH
 		line_number = 0;	/* Invalid line number */
-#endif
 	} else {
 		if (in_assertion) {
 			tg = vector->ex_name;
@@ -911,15 +907,11 @@ rt_public void eraise(char *tag, long num)
 			if (vector == (struct ex_vect *) 0) {   /* Stack is full now */
 				echrt = (char *) 0;	/* Null routine name */
 				echclass = 0;		/* Null class name */
-#ifdef WORKBENCH
 				line_number = 0;	/* Invalid line number */
-#endif
 			} else {
 				echrt = vector->ex_rout;	/* Record routine name */
 				echclass = vector->ex_orig; /* Record class name */
-#ifdef WORKBENCH
 				line_number = vector->ex_linenum; /* Record line number */
-#endif
 				vector = exget(&eif_stack);
 				if (vector == (struct ex_vect *) 0) {   /* Stack is full now */
 					echmem |= MEM_FULL;				 /* Signal it */
@@ -935,17 +927,13 @@ rt_public void eraise(char *tag, long num)
 		} else {
 			echrt = vector->ex_rout;	/* Record routine name */
 			echclass = vector->ex_orig; /* Record class name */
-#ifdef WORKBENCH
 			line_number = vector->ex_linenum; /* Record line number */
-#endif
 		}
 	}
 
 	trace->ex_where = echrt;			/* Save routine in trace for exorig */
 	trace->ex_from = echclass;			/* Save class in trace for exorig */
-#ifdef WORKBENCH
 	trace->ex_linenum = line_number;	/* Save line number in trace */
-#endif
 
 	/* Maintain the notion of original exception at this level, despite any
 	 * extra explicit raises, by recomputing the code each time. Due to the
@@ -2203,9 +2191,7 @@ rt_private void print_top(void (*append_trace)(char *))
 	char			buf[32];				/* To pre-compute the (From orig) string */
 	char			buffer[256];
 	char			rout_name_buffer[256];	/* To add line number at end of routine name */
-#ifdef WORKBENCH
 	int				line_number;
-#endif
 	char			code = eif_except.code;	/* Exception's code */
 	struct ex_vect	*top;					/* Top of stack */
 
@@ -2237,7 +2223,6 @@ rt_private void print_top(void (*append_trace)(char *))
 
 	/* get the line number, it's situated in the next satck element (the current bottom */
 	/* element gives only the reason of crashes                                         */
-#ifdef WORKBENCH
 	line_number = (eif_trace.st_bot)->ex_linenum;
 
 	/* create the 'routine_name@line_number' string */
@@ -2246,7 +2231,6 @@ rt_private void print_top(void (*append_trace)(char *))
 		sprintf(rout_name_buffer, "%s @%d", eif_except.rname, line_number);
 	else
 		/* the line number is not valid, so we are forgetting it */
-#endif
 		sprintf(rout_name_buffer, "%s", eif_except.rname);
 
 	if (eif_except.tag)
@@ -3044,9 +3028,7 @@ rt_private void cur_print_top(void)
 
 	char cur_buf[200];
 	char rout_name_buffer[256];		/* To add line number at end of routine name */
-#ifdef WORKBENCH
 	int line_number;
-#endif
 	char code = eif_except.code;	/* Exception's code */
 	struct ex_vect *top;			/* Top of stack */
 
@@ -3067,18 +3049,14 @@ rt_private void cur_print_top(void)
 	}
 
 	eif_except.previous = code;	 /* Update previous exception code */
-#ifdef WORKBENCH
 	line_number = (eif_trace.st_bot)->ex_linenum;
-#endif
 
-#ifdef WORKBENCH
 	/* create the 'routine_name@line_number' string */
 	if (line_number>0)
 		/* the line number seems valid, so we are going to print it */
 		sprintf(rout_name_buffer, "%s @%d", eif_except.rname, line_number);
 	else
 		/* the line number is not valid, so we are forgetting it */
-#endif
 		sprintf(rout_name_buffer, "%s", eif_except.rname);
 
 	if (eif_except.tag)

@@ -58,8 +58,8 @@ struct ex_vect {
 	unsigned char	ex_type;	/* Function call, pre-condition, etc... */
 	unsigned char	ex_retry;	/* True if function has been retried */
 	unsigned char	ex_rescue;	/* True if function entered its rescue clause */
-#ifdef WORKBENCH
 	int				ex_linenum;	/* current line number (line number <=> breakpoint slot) */
+#ifdef WORKBENCH
 	int 			ex_bodyid;	/* body id of the feature */
 	unsigned char	ex_locnum;	/* number of local variables in the function */
 	unsigned char	ex_argnum;	/* number of arguments of the function */

@@ -1,7 +1,7 @@
 # wel.lib - Makefile for Borland C
 
 CC = bcc32
-CFLAGS = -c -O2 -X -w- -I$(EIFFEL3)\library\wel\spec\windows\include -I$(EIFFEL3)\bench\spec\w32bcc\include
+CFLAGS = -c -O2 -X -I$(EIFFEL3)\library\wel\spec\windows\include -I$(EIFFEL3)\bench\spec\w32bcc\include
 
 .c.obj:
 	$(CC) $(CFLAGS) $<

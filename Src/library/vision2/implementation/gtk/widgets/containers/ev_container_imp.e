@@ -78,7 +78,7 @@ feature -- Element change
 				feature {EV_GTK_EXTERNALS}.gtk_container_add (container_widget, w.c_object)
 				on_new_item (w)
 			end
-		end		
+		end
 	
 feature {EV_RADIO_BUTTON_IMP, EV_CONTAINER_IMP} -- Access
 

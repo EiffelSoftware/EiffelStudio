@@ -84,9 +84,9 @@ feature
 					b.set_context (c);
 					Result.add (c, b);
 				else
-					io.putstring ("behaviour lost for ");
-					io.putstring (input_list.item.full_name);
-					io.new_line;
+					io.error.putstring ("Behaviour lost for ");
+					io.error.putstring (input_list.item.full_name);
+					io.error.new_line;
 				end;
 				input_list.forth;
 				output_list.forth

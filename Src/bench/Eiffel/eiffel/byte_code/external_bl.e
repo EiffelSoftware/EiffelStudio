@@ -198,8 +198,9 @@ feature
 				Extern_declarations.add_routine_table (table_name);
 			else
 					-- The call is not polymorphic in the given context,
-					-- so the name can be hardwired.
-				if encapsulated then
+					-- so the name can be hardwired. If we check assertions, we need
+					-- to call associated encapsulation.
+				if encapsulated or else system.keep_assertions then
 						-- In the case of encapsulated externals, we call the associated
 						-- encapsulation.
 					rout_table ?= Eiffel_table.poly_table (routine_id)
@@ -246,13 +247,14 @@ feature
 			c_ext: C_EXTENSION_I
 			buf: GENERATION_BUFFER
 			l_type: TYPE_I
+			l_args: like argument_types
 		do
 			generate_access_on_type (gen_reg, class_type)
 				-- Now generate the parameters of the call, if needed.
 			buf := buffer
 			if context.final_mode then
 				if
-					not encapsulated and (is_static_call or
+					not (encapsulated or else system.keep_assertions) and (is_static_call or
 					Eiffel_table.is_polymorphic (routine_id, class_type.type_id, True) < 0)
 				then
 					check
@@ -276,17 +278,26 @@ feature
 						check
 							is_c_extension: c_ext /= Void
 						end
-						c_ext.generate_access (external_name, parameters, argument_types, l_type)
+							-- Remove `Current' from argument types.
+						l_args := argument_types
+						if argument_types.count > 1 then
+							l_args := l_args.subarray (l_args.lower + 1, l_args.upper)
+						else
+							create l_args.make (1, 0)
+						end
+						c_ext.generate_access (external_name, parameters, l_args, l_type)
 					end
 				else
 						-- Call is done like a normal Eiffel routine call.
 					buf.putchar ('(')
+					gen_reg.print_register
 					generate_parameters_list
 					buf.putchar (')')
 				end
 			else
 					-- Call is done like a normal Eiffel routine call.
 				buf.putchar ('(')
+				gen_reg.print_register
 				generate_parameters_list
 				buf.putchar (')')
 			end
@@ -317,25 +328,21 @@ feature
 	generate_parameters_list is
 			-- Generate the parameters list for C function call
 		local
-			expr: EXPR_B;
 			buf: GENERATION_BUFFER
 		do
 			if parameters /= Void then
 				from
 					buf := buffer
-					parameters.start;
+					parameters.start
 				until
 					parameters.after
 				loop
-					expr := parameters.item;	-- Cannot fail
-					expr.print_register;
-					if not parameters.islast then
-						buf.putstring (gc_comma);
-					end;
-					parameters.forth;
-				end;
-			end;
-		end;
+					buf.putstring (gc_comma)
+					parameters.item.print_register
+					parameters.forth
+				end
+			end
+		end
 
 	release_hector_protection is
 			-- Release all the hector variables

@@ -361,11 +361,8 @@ feature -- Settings
 			end
 		end
 
-	generate_current: BOOLEAN is
-			-- Is Current included in argument generatin?
-		do
-			Result := True
-		end
+	generate_current: BOOLEAN is True
+			-- Is Current included in argument generation?
 
 	argument_types: ARRAY [STRING] is
 			-- Declare C parameters, if any, as part of the definition.

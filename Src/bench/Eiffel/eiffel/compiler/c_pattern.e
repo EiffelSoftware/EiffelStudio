@@ -1,5 +1,8 @@
--- C Pattern of a feature: it is constitued of the meta types of the
--- arguments and result.
+indexing
+	description: "C Pattern of a feature: it is constitued of the meta types of the %
+		%arguments and result."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class C_PATTERN 
 
@@ -165,20 +168,15 @@ feature -- Pattern generation
 			end;
 		end;
 
-	argument_type_array (include_current: BOOLEAN): ARRAY [STRING] is
+	argument_type_array: ARRAY [STRING] is
 			-- Argument types for code generation
 		local
 			i, j, nb: INTEGER
 		do
 			nb := argument_count
-			if include_current then
-				create Result.make (1, nb + 1)
-				Result.put ("EIF_REFERENCE", 1)
-				j := 2
-			else
-				create Result.make (1, nb)
-				j := 1
-			end
+			create Result.make (1, nb + 1)
+			Result.put ("EIF_REFERENCE", 1)
+			j := 2
 			from
 				i := 1;
 			until
@@ -236,8 +234,7 @@ feature -- Pattern generation
 			f_name.append_integer (id);
 
 			buffer.generate_function_signature ("void", f_name, False, buffer,
-					<<"ptr", "is_extern">>,
-					<<"fnptr", "int">>);
+					<<"ptr">>, <<"fnptr">>);
 
 			buffer.putstring ("%
 				%%TEIF_REFERENCE Current;%N%
@@ -249,10 +246,8 @@ feature -- Pattern generation
 			end;
 			generate_argument_declaration (1, buffer);
 			generate_separate_get (buffer);
-			buffer.putstring ("%Tif (is_extern)%N%T%T");
-			generate_routine_call (True, buffer);
-			buffer.putstring ("%Telse%N%T%T");
-			generate_routine_call (False, buffer);
+			buffer.putchar ('%T')
+			generate_routine_call (buffer);
 			if result_type.is_void then
 				buffer.putstring ("%TCURSPA(_concur_current_client->sock, ack);%N")
 			else
@@ -272,8 +267,7 @@ feature -- Pattern generation
 			f_name.append_integer (id);
 
 			buffer.generate_function_signature ("void", f_name, False, buffer,
-					<<"ptr", "is_extern">>,
-					toc_arg_types);
+					<<"ptr">>, <<"fnptr">>);
 			buffer.putstring ("%
 				%%TEIF_REFERENCE Current;%N");
 			if not result_type.is_void then
@@ -283,10 +277,8 @@ feature -- Pattern generation
 			end;
 			generate_argument_declaration (1, buffer);
 			generate_toc_pop (buffer);
-			buffer.putstring ("%Tif (is_extern)%N%T%T");
-			generate_routine_call (True, buffer);
-			buffer.putstring ("%Telse%N%T%T");
-			generate_routine_call (False, buffer);
+			buffer.putchar ('%T');
+			generate_routine_call (buffer);
 			if not result_type.is_void then
 				buffer.putstring ("%Tit = iget();%N");
 				buffer.putstring ("%Tit->type = ");
@@ -310,7 +302,7 @@ feature -- Pattern generation
 
 			result_string := result_type.c_string;
 
-			arg_types := argument_type_array (True);
+			arg_types := argument_type_array
 
 			buffer.generate_function_signature
 				(result_string, f_name, False, buffer,
@@ -402,7 +394,7 @@ feature -- Pattern generation
 			end
 		end;
 
-	generate_routine_call (is_extern: BOOLEAN; buffer: GENERATION_BUFFER) is
+	generate_routine_call (buffer: GENERATION_BUFFER) is
 			-- Generate C routine call
 		local
 			i, nb: INTEGER;
@@ -411,20 +403,13 @@ feature -- Pattern generation
 			if not result_type.is_void then
 				buffer.putstring ("result = ");
 			end;
-			if is_extern and then result_type.is_boolean then
-				generate_test_macro := True;
-				buffer.putstring ("EIF_TEST((");
-			else
-				buffer.putchar ('(');
-			end;
-			result_type.generate_function_cast (buffer, argument_type_array (not is_extern));
+			buffer.putchar ('(');
+			result_type.generate_function_cast (buffer, argument_type_array);
 			buffer.putstring ("ptr)(");
 			nb := argument_count;
-			if not is_extern then
-				buffer.putstring ("Current");
-				if nb > 0 then
-					buffer.putchar (',');
-				end;
+			buffer.putstring ("Current");
+			if nb > 0 then
+				buffer.putchar (',');
 			end;
 			from
 				i := 1;
@@ -464,13 +449,6 @@ feature -- Pattern generation
 		end;
 
 feature {NONE} -- Implemantation
-
-	 toc_arg_types: ARRAY [STRING] is
-			-- Types of the toc functions
-
-		once
-			Result := <<"fnptr", "int">>
-		end
 
 	equivalent_type (first_type, other_type: TYPE_C): BOOLEAN is
 			-- Are `first_type' and `other_type' equivalent regarding C types

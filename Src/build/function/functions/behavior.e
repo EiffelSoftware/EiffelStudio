@@ -21,68 +21,68 @@ feature {NONE}
 
 	make is
 		do
-			!!input_list.make;
-			!!output_list.make;
-			int_generator.next;
-			identifier := int_generator.value;
-		end;
+			!!input_list.make
+			!!output_list.make
+			int_generator.next
+			identifier := int_generator.value
+		end
 
 	symbol: PIXMAP is
 		do
 			Result := Pixmaps.behavior_pixmap
-		end;
+		end
 
 	help_file_name: STRING is
 		do
 			Result := Help_const.behavior_help_fn
-		end;
+		end
 	
 feature 
 
-	input_data: EVENT;
+	input_data: EVENT
 
-	output_data: CMD_INSTANCE;
+	output_data: CMD_INSTANCE
 
-	func_editor: BEHAVIOR_EDITOR;
+	func_editor: BEHAVIOR_EDITOR
 
 feature -- Query
 
 	has_command (cmd: CMD): BOOLEAN is
 		local
-			old_pos: INTEGER;
+			old_pos: INTEGER
 		do
-			old_pos := output_list.index;
+			old_pos := output_list.index
 			from
 				output_list.start
 			until
 				output_list.after or else Result
 			loop
-				Result := output_list.item.associated_command = cmd;
+				Result := output_list.item.associated_command = cmd
 				output_list.forth
-			end;
+			end
 			output_list.go_i_th (old_pos)
-		end;
+		end
 
 feature -- Copying
 
     copy_contents (func: like Current) is
         local
-            il: like input_list;
-            ol: like output_list;
+            il: like input_list
+            ol: like output_list
         do
-            il := func.input_list;
-            ol := func.output_list;
+            il := func.input_list
+            ol := func.output_list
             from
-                il.start;
-                ol.start;
+                il.start
+                ol.start
             until
                 ol.after
             loop
-                add (il.item, ol.item);
-                il.forth;
-                ol.forth;
+                add (il.item, ol.item)
+                il.forth
+                ol.forth
             end
-        end;
+        end
 
 feature -- Command labels
 
@@ -90,79 +90,79 @@ feature -- Command labels
 			-- Command labels contained in Current
 			-- behavior
 		local
-			old_pos: INTEGER;
+			old_pos: INTEGER
 			sublist: LINKED_LIST [CMD_LABEL]	
 		do
-			!!Result.make;
+			!!Result.make
 			from
-				old_pos := output_list.index;
+				old_pos := output_list.index
 				output_list.start
 			until
 				output_list.after
 			loop
-				sublist := output_list.item.labels;
+				sublist := output_list.item.labels
 				from
 					sublist.start
 				until
 					sublist.after
 				loop
-					Result.put_right (sublist.item);
+					Result.put_right (sublist.item)
 					sublist.forth
-				end;
+				end
 				output_list.forth
-			end;
+			end
 			output_list.go_i_th (old_pos)
-		end;
+		end
 
 	set_internal_name (s: STRING) is
 		do
 			if s.empty then
-				namer.next;
+				namer.next
 				set_label (namer.value)
 			else
-				set_label (s);
-			end;
-		end;
+				set_label (s)
+			end
+		end
 	
 feature {NONE}
 
 	int_generator: INT_GENERATOR is
 		once
 			!!Result
-		end;
+		end
 
 	namer: NAMER is
 			-- Unique strings generator
 		once
 			!!Result.make ("Behavior")
-		end;
+		end
 
 feature  -- Editing features
 
-	label: STRING;
+	label: STRING
 
-	context: CONTEXT;
+	context: CONTEXT
 			-- Context associated with the behavior
 
 	set_context (c: CONTEXT_STONE) is
 			-- Set context to `c'.
 		do
 			context := c.data
-		end;
+		end
 
 	set_label (s: STRING) is
 		do
 			label := s
-		end;
+		end
 
 feature -- Datum features
 
-	identifier: INTEGER;
+	identifier: INTEGER
 
 	data: BEHAVIOR is
 		do
 			Result := Current
-		end;
+		end
 
 feature {FUNC_DROP, FUNC_CUT} -- Adding and removing commands on the interface.
 
@@ -189,7 +189,6 @@ feature {FUNC_DROP, FUNC_CUT} -- Adding and removing commands on the interface.
 			-- Add `a_command' to `context' on interface.
 		require
 			event_not_void: input_data /= Void
-			editor_not_void: func_editor /= Void
 		do
 			input_data.add_interface_command (context, a_command)
 		end
@@ -211,7 +210,7 @@ feature {NONE} -- Attribute
 
 feature {STATE} -- Interface command
 
-	add_interface_command_from_storage (a_context: CONTEXT; a_state: STATE) is
+	add_interface_command_from_storage (a_context: CONTEXT a_state: STATE) is
 			-- Add the command corresponding to `output_data'
 			-- on the widget corresponding to `a_context'.
 		require

@@ -197,7 +197,12 @@ public class AssemblyManagerInterface: IAssemblyManagerInterface
 		support.CleanAssemblies();
 		RInterface.SetLastError( null );
 	}
-	
+
+/*
+ * Implementation
+ *
+ */
+ 	// Internal implementation of `ImportedAssemblies'
 	protected String [] PrivateImportedAssemblies( ArrayList ImportedAssemblies )
 	{
 		int i, j;
@@ -223,6 +228,7 @@ public class AssemblyManagerInterface: IAssemblyManagerInterface
 		return Assemblies;
 	}
 
+	// Internal implementation of `LocalAssemblyDependencies'
 	protected ArrayList InternLocalAssemblyDependencies( Assembly assembly )
 	{
 		ArrayList dependencies;

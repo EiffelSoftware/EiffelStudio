@@ -20,7 +20,7 @@ library AssemblyManagerInterface
       odl,
       uuid(2CAE334B-54E8-34BF-86AA-78C3E39B804F),
       version(1.0),
-      oleautomation
+      oleautomation    
 
     ]
     interface IAssemblyManagerInterface : IUnknown {

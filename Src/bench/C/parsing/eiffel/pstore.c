@@ -37,17 +37,6 @@ EIF_INTEGER f_desc;
     lseek((int)f_desc,0,SEEK_END);
 }
 
-long nb_object(obj)
-char *obj;
-{
-	/* Return the number of objects reached from `obj'. */
-
-	obj_nb = 0;
-	traversal (obj,0);
-
-	return obj_nb;
-}
-
 long store_append(f_desc, o, mid, s)
 EIF_INTEGER f_desc;
 char *o;

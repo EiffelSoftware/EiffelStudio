@@ -58,16 +58,11 @@ feature {NONE} -- Implementation
 		local
 			environment: EV_ENVIRONMENT
 			an_object: GB_OBJECT
-			widget: EV_WIDGET
 			component: GB_COMPONENT
 		do
 			create environment
 			if environment.application.ctrl_pressed then
 				an_object ?= new_object (xml_handler.xml_element_representing_named_component (text), True)
-				widget ?= an_object.display_object
-				check
-					widget_not_void: widget /= Void
-				end
 				create component.make_with_name (text)
 				component_viewer.set_component (component)
 					-- We don't call execute on the component viewer command

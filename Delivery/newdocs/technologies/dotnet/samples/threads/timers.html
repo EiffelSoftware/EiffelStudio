@@ -20,10 +20,10 @@
 <h1>
 Timers example</h1>
 
-<p>This sample consist in a command line demonstrating the use of the <span class="eClass">TIMER</span> 
-(Timer) class to generate a periodic callback to a method. The sample creates a 
-<span class="eClass">TIMER</span> object and passes to it a delegate object. When the <span class="eClass">TIMER</span> fires, the 
-delegate is invoked, and a static method is called asynchronously by a worker 
+<p>This sample consist in a command line demonstrating the use of the <span class="eClass">TIMER</span>
+(Timer) class to generate a periodic callback to a method. The sample creates a
+<span class="eClass">TIMER</span> object and passes to it a delegate object. When the <span class="eClass">TIMER</span> fires, the
+delegate is invoked, and a static method is called asynchronously by a worker
 thread in the thread pool.</p>
 
 <p>&nbsp;</p>
@@ -33,8 +33,8 @@ thread in the thread pool.</p>
 <!--
 var path_to_ace_file = Eiffel_version + "\\examples\\dotnet\\winforms\\menu\\";
 var ace_file_name = "Ace";
-var path_eifp_file = "..\\..\\examples\\threading\\timers\\"
-var eifp_name = "Eiffel project.eifp";
+var path_eifp_file = "..\\..\\Samples\\threading\\timers\\"
+var eifp_name = "timers.eifp";
 
 if (eiffel_studio) {
 	write_eiffel_studio_compiling_instruction (path_to_ace_file, ace_file_name)
@@ -60,15 +60,15 @@ Checking Status.
 Checking Status.
 ...</PRE>
 		<P>
-			When the display is finished, the application wait for you to 
+			When the display is finished, the application wait for you to
             pressed the return key to finished the application.</P>
 		<P>
 			&nbsp;</P>
 <h2>Under the Hood</h2>
 <p>This application shows how to use the thread
   <a href="mk:/libraries/vision2/reference/interface/kernel/ev_accelerator_chart.html">
-  TIMER</a>. The timer is launched (<span class="eKeyword">create</span> <span class="eLocal">my_timer</span>.<span class="eFeature">make_with_callback</span> (<span class="eKeyword">create</span> {<span class="eClass">TIMER_CALLBACK</span>}.<span class="eFeature">make</span> 
-(Current, $<span class="eFeature">check_status</span>), Void, 0, 2000)) and call the feature <span class="eFeature">check_status</span> that 
+  TIMER</a>. The timer is launched (<span class="eKeyword">create</span> <span class="eLocal">my_timer</span>.<span class="eFeature">make_with_callback</span> (<span class="eKeyword">create</span> {<span class="eClass">TIMER_CALLBACK</span>}.<span class="eFeature">make</span>
+(Current, $<span class="eFeature">check_status</span>), Void, 0, 2000)) and call the feature <span class="eFeature">check_status</span> that
 displays the message <span class="eString">&quot;Checking Status.&quot;</span> every two seconds.</p>
 <p>This sample contains the following class: </p>
 <ul>
@@ -83,8 +83,8 @@ displays the message <span class="eString">&quot;Checking Status.&quot;</span> e
 <p>&nbsp;</p>
 
 <h2>Notes</h2></a>
-<p class="Text">This sample is translated from the example located in the 
-Samples\Technologies\Threading\Timers subdirectory of the .NET Framework SDK 
+<p class="Text">This sample is translated from the example located in the
+Samples\Technologies\Threading\Timers subdirectory of the .NET Framework SDK
 samples directory of Microsoft Visual Studio .NET.</p>
 
 </body>

@@ -20,10 +20,10 @@
 <h1>
 Pools example</h1>
 
-<p class="Text">This sample demonstrates use of the <span class="eClass">THREAD_POOL</span> (ThreadPool) 
-class. The sample queues up an asynchronous method call that is executed by a 
-thread from the thread pool managed by the Common Language Runtime. The method 
-&quot;does some work&quot; and then sets an event indicating that the work has finished. 
+<p class="Text">This sample demonstrates use of the <span class="eClass">THREAD_POOL</span> (ThreadPool)
+class. The sample queues up an asynchronous method call that is executed by a
+thread from the thread pool managed by the Common Language Runtime. The method
+&quot;does some work&quot; and then sets an event indicating that the work has finished.
 The main thread waits on the event and then exits.</p>
 <p class="Text">&nbsp;</p>
 
@@ -32,8 +32,8 @@ The main thread waits on the event and then exits.</p>
 <!--
 var path_to_ace_file = Eiffel_version + "\\examples\\dotnet\\winforms\\menu\\";
 var ace_file_name = "Ace";
-var path_eifp_file = "..\\..\\examples\\threading\\pools\\"
-var eifp_name = "Eiffel project.eifp";
+var path_eifp_file = "..\\..\\Samples\\threading\\pools\\"
+var eifp_name = "pools.eifp";
 
 if (eiffel_studio) {
 	write_eiffel_studio_compiling_instruction (path_to_ace_file, ace_file_name)
@@ -55,20 +55,20 @@ Main thread: Performing other operations.
 WorkItem thread: Performing asynchronous operation
 Main thread: Waiting for asynchronous operation to complete.</PRE>
 		<P>
-			When the display is finished, the application wait for you to 
+			When the display is finished, the application wait for you to
             pressed the return key to finished the application.</P>
 		<P>
 			&nbsp;</P>
 <h2>Under the Hood</h2>
 <p>This application shows how to use the thread
   <span class="eClass">
-  THREAD_POOL</span>. An asynchronous thread is launched (<span class="eKeyword">feature</span> {<span class="eClass">THREAD_POOL</span>}.<span class="eFeature">queue_user_work_item_wait_callback_object</span> 
-(<span class="eKeyword">create</span> {<span class="eClass">WAIT_CALLBACK</span>}.<span class="eFeature">make</span> (<span class="eKeyword">Current</span>, $<span class="eFeature">my_async_operation</span>), 
-<span class="eLocal">l_async_operation_done</span>)) and is associated to the 
-local variable 
-<span class="eLocal">l_async_operation_done. </span>Both threads perform 
-simultaneously some operations. The 
-main thread wait for the asynchronous thread to complete his own operations (<span class="eLocal">l_async_operation_done</span>.<span class="eFeature">wait_one</span>) 
+  THREAD_POOL</span>. An asynchronous thread is launched (<span class="eKeyword">feature</span> {<span class="eClass">THREAD_POOL</span>}.<span class="eFeature">queue_user_work_item_wait_callback_object</span>
+(<span class="eKeyword">create</span> {<span class="eClass">WAIT_CALLBACK</span>}.<span class="eFeature">make</span> (<span class="eKeyword">Current</span>, $<span class="eFeature">my_async_operation</span>),
+<span class="eLocal">l_async_operation_done</span>)) and is associated to the
+local variable
+<span class="eLocal">l_async_operation_done. </span>Both threads perform
+simultaneously some operations. The
+main thread wait for the asynchronous thread to complete his own operations (<span class="eLocal">l_async_operation_done</span>.<span class="eFeature">wait_one</span>)
 to close the application.</p>
 <p>This sample contains the following class: </p>
 <ul>
@@ -86,8 +86,8 @@ to close the application.</p>
 <p>&nbsp;</p>
 
 <h2>Notes</h2></a>
-<p class="Text">This sample is translated from the example located in the 
-Samples\Technologies\Threading\Pools subdirectory of the .NET Framework SDK 
+<p class="Text">This sample is translated from the example located in the
+Samples\Technologies\Threading\Pools subdirectory of the .NET Framework SDK
 samples directory of Microsoft Visual Studio .NET. </p>
 
 </body>

@@ -423,6 +423,7 @@ char *cr_exp(uint32 type)
 	 * a creation routine then call it.
 	 */
 
+	EIF_GET_CONTEXT
 	char *result;
 	register1 struct cnode *exp_desc;	/* Expanded object description */
 
@@ -448,6 +449,7 @@ char *cr_exp(uint32 type)
 	}
 	epop(&loc_stack, 1);            /* Remove protection */
 	return result;
+	EIF_END_GET_CONTEXT
 }
 
 /*

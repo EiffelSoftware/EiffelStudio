@@ -237,6 +237,7 @@ rt_public void gc_stat(long int type)
 	 * the integrity of the data (otherwise, the memory statistics could
 	 * suddenly be changed by a call to the GC)--RAM.
 	 */
+	
 	EIF_GET_CONTEXT
 	struct gacstat *gs = &g_stat[type];	/* Get structure by type */
 
@@ -314,6 +315,8 @@ rt_public double gc_infod(long int field)
 
 rt_public char gc_ison(void)
 {
+	EIF_GET_CONTEXT
 	return g_data.status & GC_STOP ? '\0' : '\01';
+	EIF_END_GET_CONTEXT
 }
 

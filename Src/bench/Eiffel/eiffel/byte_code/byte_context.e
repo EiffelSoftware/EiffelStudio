@@ -673,12 +673,11 @@ feature -- Setting
 		local
 			assign: ASSIGN_BL
 			call: CALL_B
-			constant_b: CONSTANT_B
+			expr_b: EXPR_B
+			instruction_call: INSTR_CALL_B
 			attribute_b: ATTRIBUTE_B
 			compound: BYTE_LIST [BYTE_NODE]
 			byte_node: BYTE_NODE
-			source_type: TYPE_I
-			target_type: TYPE_I
 			tmp: BOOLEAN
 		do
 				-- We won't need any RTLI if the only statement is an expanded
@@ -692,7 +691,7 @@ feature -- Setting
 				-- If there are some pre/post conditions to check, we choose
 				-- to be safe by encapsulating even when not needed if the checks
 				-- are generated.
-			tmp := has_rescue or byte_code.has_inlined_code or has_pre_post
+			tmp := System.has_multithreaded or has_rescue or byte_code.has_inlined_code or has_pre_post
 
 			if not tmp and then assertion_type /= In_invariant then
 				tmp := True	
@@ -703,8 +702,7 @@ feature -- Setting
 					assign ?= byte_node
 					if assign /= Void then
 						if assign.expand_return then
-								-- Assignment in Result is expanded in a
-								-- return instruction
+								-- Assignment in Result is expanded in a return instruction
 							tmp := False
 						else
 							call ?= assign.source
@@ -713,37 +711,44 @@ feature -- Setting
 								if has_invariant then
 									tmp := True
 								else
-									constant_b ?= call
-									if (constant_b /= Void) then
-											-- If it is a constant. we don't need registers
+									if call.is_constant then
 										tmp := False
-									elseif assign.target.is_result then
-											-- If we can optimize result := call, no registers
-											-- except if metamorphosis on Result
-										target_type := real_type (assign.target.type)
-										source_type := real_type (call.type)
-										tmp := not (target_type.is_basic or else
-											(not source_type.is_basic))
+									elseif assign.target.is_predefined then
+											-- Assignment on a predefined target is always safe.
+										tmp := False
 									else
-										attribute_b ?= call
-										if attribute_b /= Void then
-												-- An attribute access is safe
-											tmp := False
-										else
-												-- If it is not an instruction result := call but the
-												-- source is a predefined item (local, current, result
-												-- or argument), we can still optimize. Xavier
-											tmp := not call.is_predefined
+											-- We can optimize target := call when
+											-- no metamorphosis occurs on source.
+										tmp := not real_type (assign.target.type).is_basic and
+											real_type (call.type).is_basic
+										
+										if not tmp then
+											attribute_b ?= call
+											if attribute_b /= Void then
+													-- An attribute access is always safe
+												tmp := False
+											else
+													-- If it is an instruction target := call
+													-- where the source is a predefined item
+													-- (local, current, result or argument),
+													-- we can still optimize. Xavier
+												tmp := not call.is_predefined
+											end
 										end
 									end
 								end
+							else
+								expr_b ?= assign.source
+								tmp := expr_b.has_call or expr_b.allocates_memory
 							end
 						end
 					else
-						call ?= byte_node
-						if call /= Void and then call.is_single then
-							-- A single call
-							tmp := has_invariant
+						instruction_call ?= byte_node
+						if instruction_call /= Void then
+							if instruction_call.call.is_single then
+									-- A single instruction call
+								tmp := has_invariant
+							end
 						end
 					end
 				end

@@ -30,7 +30,9 @@ feature {NONE} -- Initialization
 			value.replace_substring_all ("_","")
 			constant_type := a_type
 		ensure
-			value_set: value.is_equal (r)
+			value_not_void: value /= Void
+			value_set: not r.has ('_') implies value.is_equal (r)
+				-- and then r.has ('_') implies value.is_equal (r) (modulo removed underscores)
 			constant_type_set: constant_type = a_type
 		end
 

@@ -7,7 +7,7 @@ AR = $(ISE_EIFFEL)\BCC55\bin\tlib.exe
 #	-I..\spec\include \
 #	-I$(VISION_PRERELEASE)\libpng \
 #	-I$(VISION_PRERELEASE)\zlib \
-#	-I$(ISE_EIFFEL)\bench\spec\windows\include \
+#	-I$(ISE_EIFFEL)\studio\spec\windows\include \
 #	-I$(ISE_EIFFEL)\BCC55\include  -L$(ISE_EIFFEL)\BCC55\lib 
 
 
@@ -16,7 +16,7 @@ CFLAGS = -c -O1 \
 	-I..\spec\include \
 	-I$(ISE_EIFFEL)\C_library\libpng \
 	-I$(ISE_EIFFEL)\C_library\zlib \
-	-I$(ISE_EIFFEL)\bench\spec\windows\include \
+	-I$(ISE_EIFFEL)\studio\spec\windows\include \
 	-I$(ISE_EIFFEL)\BCC55\include  -L$(ISE_EIFFEL)\BCC55\lib 
 
 .c.obj:

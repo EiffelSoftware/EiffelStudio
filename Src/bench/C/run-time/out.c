@@ -11,6 +11,7 @@
 */
 
 #include <stdio.h>
+#include "eif_project.h"
 #include "eif_config.h"
 #include "eif_eiffel.h"
 #include "eif_out.h"
@@ -326,22 +327,22 @@ rt_private void rec_swrite(EIF_CONTEXT register char *object, int tab)
 				write_tab(tab + 1);
 				sprintf(buffero, "%ld: ", old_count - count);
 				write_out();
-				if (dt_type == sp_char) {
+				if (dt_type == egc_sp_char) {
 					write_char(*o_ref, buffero);
 					write_out();
-				} else if (dt_type == sp_int) {
+				} else if (dt_type == egc_sp_int) {
 					sprintf(buffero, "INTEGER = %ld\n", *(long *)o_ref);
 					write_out();
-				} else if (dt_type == sp_bool) {
+				} else if (dt_type == egc_sp_bool) {
 					sprintf(buffero, "BOOLEAN = %s\n", (*o_ref ? "True" : "False"));
 					write_out();
-				} else if (dt_type == sp_real) {
+				} else if (dt_type == egc_sp_real) {
 					sprintf(buffero, "REAL = %g\n", *(float *)o_ref);
 					write_out();
-				} else if (dt_type == sp_double) {
+				} else if (dt_type == egc_sp_double) {
 					sprintf(buffero, "DOUBLE = %.17g\n", *(double *)o_ref);
 					write_out();
-				} else if (dt_type == sp_pointer) {
+				} else if (dt_type == egc_sp_pointer) {
 					sprintf(buffero, "POINTER = C pointer 0x%lX\n", *(fnptr *)o_ref);
 					write_out();
 				} else {

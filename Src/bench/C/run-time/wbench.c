@@ -9,6 +9,7 @@
 		Workbench primitives
 */
 
+#include "eif_project.h"
 #include "eif_config.h"
 #include "eif_macros.h"
 #include "eif_malloc.h"
@@ -19,7 +20,6 @@
 #include "eif_wbench.h"
 #include "eif_interp.h"
 #include "eif_plug.h"
-#include "eif_project.h"			/* for tabinit() */
 
 /* The following functions implement the access to object features and 
  * attributes in workbench mode, they are:
@@ -54,7 +54,7 @@ rt_public EIF_FN_REF wfeat(int static_type, int32 feature_id, int dyn_type)
 	body_id = dispatch[body_index];
 
 	if (body_id < zeroc) {
-		return frozen[body_id];			 /* Frozen feature */
+		return egc_frozen[body_id];			 /* Frozen feature */
 	}
 	else 
 #ifndef DLE
@@ -91,7 +91,7 @@ rt_public EIF_FN_REF wpfeat(int32 origin, int32 offset, int dyn_type)
 	body_id = dispatch[desc_tab[origin][dyn_type][offset].info];
 
 	if (body_id < zeroc) {
-		return frozen[body_id];			 /* Frozen feature */
+		return egc_frozen[body_id];			 /* Frozen feature */
 	}
 	else 
 #ifndef DLE
@@ -141,7 +141,7 @@ rt_public EIF_FN_REF wfeat_inv(int static_type, int32 feature_id, char *name, ch
 	body_id = dispatch[body_index];
 
 	if (body_id < zeroc)
-		return frozen[body_id];
+		return egc_frozen[body_id];
 	else 
 #ifndef DLE
 	{
@@ -189,7 +189,7 @@ rt_public EIF_FN_REF wpfeat_inv(int32 origin, int32 offset, char *name, char *ob
 	body_id = dispatch[desc_tab[origin][dyn_type][offset].info];
 
 	if (body_id < zeroc)
-		return frozen[body_id];
+		return egc_frozen[body_id];
 	else 
 #ifndef DLE
 	{
@@ -234,7 +234,7 @@ rt_public void wexp(int static_type, int32 feature_id, int dyn_type, char *objec
 
 	OLD_IC = IC;								/* Save old IC */
 	if (body_id < zeroc) 
-		((void (*)()) (frozen[body_id])) (object);	/* Frozen feature */
+		((void (*)()) (egc_frozen[body_id])) (object);	/* Frozen feature */
 									/* Call frozen creation routine */
 	else 
 #ifndef DLE
@@ -287,7 +287,7 @@ rt_public void wpexp(int32 origin, int32 offset, int dyn_type, char *object)
 
 	OLD_IC = IC;								/* Save old IC */
 	if (body_id < zeroc) 
-		((void (*)()) (frozen[body_id])) (object);	/* Frozen feature */
+		((void (*)()) (egc_frozen[body_id])) (object);	/* Frozen feature */
 									/* Call frozen creation routine */
 	else 
 #ifndef DLE
@@ -462,11 +462,11 @@ rt_public EIF_FN_REF wdisp(int dyn_type)
 	uint32 body_id;
 
 	nstcall = 0;								/* No invariant check */
-	CBodyIdx(body_index,disp_rout_id,dyn_type);	/* Get the body index */
+	CBodyIdx(body_index,egc_disp_rout_id,dyn_type);	/* Get the body index */
 	body_id = dispatch[body_index];
 
 	if (body_id < zeroc) {
-		return frozen[body_id];		 /* Frozen feature */
+		return egc_frozen[body_id];		 /* Frozen feature */
 	}
 	else 
 #ifndef DLE
@@ -562,7 +562,7 @@ rt_public void init_desc(void)
 		bounds_tab[i] = def;
 
 	desc_fill = 0;
-	tabinit();
+	egc_tabinit();
 }
 
 rt_public void put_desc(struct desc_info *desc_ptr, int org, int dtype)
@@ -666,7 +666,7 @@ rt_public void create_desc(void)
 	/* Actually fill the call structure */
 
 	desc_fill = 1;
-	tabinit();
+	egc_tabinit();
 
 	/* Fill the call structures with the melted descriptors */
 

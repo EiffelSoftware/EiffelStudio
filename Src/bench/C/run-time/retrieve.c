@@ -10,6 +10,7 @@
 	Eiffel retrieve mechanism.
 */
 
+#include "eif_project.h" /* for egc_ce_gtype, egc_bit_dtype */
 #include "eif_config.h"
 #include "eif_portable.h"
 #include "eif_macros.h"
@@ -491,7 +492,7 @@ rt_public char *grt_nmake(EIF_CONTEXT long int objectCount)
 			spec_type = dtypes[flags & EO_TYPE];
 			vis_name = System(spec_type).cn_generator;
 
-			info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
+			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
 			if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
 			/* Generic type, :
 			 *	"dtype visible_name size nb_generics {meta_type}+"
@@ -682,7 +683,7 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 			vis_name = System(spec_type).cn_generator;
 
 
-			info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
+			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
 			if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
 			/* Generic type, :
 			 *	"dtype visible_name size nb_generics {meta_type}+"
@@ -1141,7 +1142,7 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 	
 
 			/* Generic class */
-			info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
+			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
 			if (info == (struct gt_info *) 0)
 				eraise(vis_name, EN_RETR);	/* Cannot find class */
 
@@ -1180,7 +1181,7 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 			int32 *addr;
 
 			/* Non generic class */
-			addr = (int32 *) ct_value(&ce_type, vis_name);
+			addr = (int32 *) ct_value(&egc_ce_type, vis_name);
 			if (addr == (int32 *) 0)
 				eraise(vis_name, EN_RETR);	/* Cannot find class */
 			new_dtype = *addr & SK_DTYPE;
@@ -1277,7 +1278,7 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 	
 
 			/* Generic class */
-			info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
+			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
 			if (info == (struct gt_info *) 0)
 				eraise(vis_name, EN_RETR);	/* Cannot find class */
 
@@ -1316,7 +1317,7 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 			int32 *addr;
 
 			/* Non generic class */
-			addr = (int32 *) ct_value(&ce_type, vis_name);
+			addr = (int32 *) ct_value(&egc_ce_type, vis_name);
 			if (addr == (int32 *) 0)
 				eraise(vis_name, EN_RETR);	/* Cannot find class */
 			new_dtype = *addr & SK_DTYPE;
@@ -1650,7 +1651,7 @@ rt_private void gen_object_read (char *object, char *parent)
 							uint32 old_flags;
 							struct bit *bptr = (struct bit *)(object + attrib_offset);
 
-							HEADER(bptr)->ov_flags = bit_dtype;
+							HEADER(bptr)->ov_flags = egc_bit_dtype;
 							buffer_read((char *) (&old_flags), sizeof(uint32));
 							HEADER(bptr)->ov_flags |= old_flags & (EO_COMP | EO_REF);
 
@@ -1696,7 +1697,7 @@ rt_private void gen_object_read (char *object, char *parent)
 			vis_name = System(o_type).cn_generator;
 
 
-			info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
+			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
 			if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
 			/* Generic type, :
 			 *	"dtype visible_name size nb_generics {meta_type}+"
@@ -1838,7 +1839,7 @@ rt_private void object_read (char *object, char *parent)
 							uint32 old_flags;
 							struct bit *bptr = (struct bit *)(object + attrib_offset);
 
-							HEADER(bptr)->ov_flags = bit_dtype;
+							HEADER(bptr)->ov_flags = egc_bit_dtype;
 							ridr_norm_int (&old_flags);
 							HEADER(bptr)->ov_flags |= old_flags & (EO_COMP | EO_REF);
 
@@ -1900,7 +1901,7 @@ rt_private void object_read (char *object, char *parent)
 			vis_name = System(o_type).cn_generator;
 
 
-			info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
+			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
 			if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
 			/* Generic type, :
 			 *	"dtype visible_name size nb_generics {meta_type}+"

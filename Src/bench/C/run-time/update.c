@@ -16,6 +16,7 @@
 #include <stdio.h>
 */
 
+#include "eif_project.h"
 #include "eif_config.h"
 #ifdef EIF_WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -37,7 +38,6 @@
 #include "eif_file.h"
 #include "eif_err_msg.h"
 #include "eif_dle.h"
-#include "eif_project.h"				/* For rcdt, rcorigin, rcoffset, ... */
 #include "eif_main.h"
 
 #ifdef DEBUG
@@ -159,7 +159,7 @@ rt_public void update(char ignore_updt)
 	dprintf(1)("New class type count: %ld\n", count);
 #endif
 		/* Get the Eiffel profiler status */
-	prof_enabled = wlong();
+	egc_prof_enabled = wlong();
 
 	dle_level = wlong();		/* DLE: Read the new value of DLE level */
 	dle_zeroc = dle_level;		/* DLE: New value of DLE frozen level */
@@ -169,19 +169,19 @@ rt_public void update(char ignore_updt)
 	esystem = (struct cnode *) cmalloc((count+1) * sizeof(struct cnode));
 	if (esystem == (struct cnode *) 0)
 		enomem();				/* Not enough room */
-	bcopy(fsystem, esystem, (scount+1) * sizeof(struct cnode));
+	bcopy(egc_fsystem, esystem, (scount+1) * sizeof(struct cnode));
 #else
 	esystem = (struct cnode *) cmalloc(count * sizeof(struct cnode));
 	if (esystem == (struct cnode *) 0)
 		enomem(MTC_NOARG);				/* Not enough room */
-	bcopy(fsystem, esystem, scount * sizeof(struct cnode));
+	bcopy(egc_fsystem, esystem, scount * sizeof(struct cnode));
 #endif
 
 	/* Allocation of the variable `ecall' */
 	ecall = (int32 **) cmalloc(count * sizeof(int32 *));
 	if (ecall == (int32 **) 0)
 		enomem(MTC_NOARG);
-	bcopy(fcall, ecall, scount * sizeof(int32 *));
+	bcopy(egc_fcall, ecall, scount * sizeof(int32 *));
 
 	/* FIX ME: `ecall' is indexed by original (static) type id, not by dynamic type
 	 * id. Therefore it should be resized using `scount' which is the number of
@@ -219,7 +219,7 @@ rt_public void update(char ignore_updt)
 		enomem(MTC_NOARG);
 
 	/* Copy of the frozen dispatch table into `dispatch' */
-	bcopy(fdispatch, dispatch, dcount * sizeof(uint32));
+	bcopy(egc_fdispatch, dispatch, dcount * sizeof(uint32));
 	dcount = count;
 
 	/* Update of the dispatch table */
@@ -339,14 +339,14 @@ rt_private void root_class_updt (void)
 {
 	/* Update the root class info */
 
-	rcorigin = wlong();
-	rcdt = wlong();
-	rcoffset = wlong();
-	rcarg = wlong();
+	egc_rcorigin = wlong();
+	egc_rcdt = wlong();
+	egc_rcoffset = wlong();
+	egc_rcarg = wlong();
 
 #ifdef DEBUG
-	dprintf(1)("Root class info:\n\trcorigin = %ld, rcdt = %ld\n", rcorigin, rcdt);
-	dprintf(1)("\trcoffset = %ld, rcarg = %ld\n", rcoffset, rcarg);
+	dprintf(1)("Root class info:\n\tegc_rcorigin = %ld, egc_rcdt = %ld\n", egc_rcorigin, egc_rcdt);
+	dprintf(1)("\tegc_rcoffset = %ld, egc_rcarg = %ld\n", egc_rcoffset, egc_rcarg);
 #endif
 }
 
@@ -612,8 +612,8 @@ rt_private void cecil_updt(void)
 	struct gt_info *gtype_val;
 	int32 *gt_gen;
 	int16 *gt_type;
-	struct ctable *ce_nogeneric = &ce_type;
-	struct ctable *ce_generic = &ce_gtype;
+	struct ctable *ce_nogeneric = &egc_ce_type;
+	struct ctable *ce_generic = &egc_ce_gtype;
 
 	/* First, non-generic class table */
 	count = wshort();					/* Table size */

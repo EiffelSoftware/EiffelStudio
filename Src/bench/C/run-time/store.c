@@ -10,6 +10,7 @@
 	Eiffel storing mechanism.
 */
 
+#include "eif_project.h" /* for egc_ce_gtype */
 #include "eif_config.h"
 #include "eif_portable.h"
 #include "eif_macros.h"
@@ -585,7 +586,7 @@ rt_private void gen_object_write(char *object)
 			vis_name = System(o_type).cn_generator;
 
 
-			info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
+			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
 			if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
 			/* Generic type, write in file:
 			 *	"dtype visible_name size nb_generics {meta_type}+"
@@ -751,7 +752,7 @@ rt_private void object_write(char *object)
 			vis_name = System(o_type).cn_generator;
 
 
-			info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
+			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
 			if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
 			/* Generic type, write in file:
 			 *	"dtype visible_name size nb_generics {meta_type}+"
@@ -933,7 +934,7 @@ rt_private void make_header(EIF_CONTEXT_NOARG)
 				s_buffer = (char *) xrealloc (s_buffer, bsize, GC_OFF);
 		}
 
-		info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
+		info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
 		if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
 			/* Generic type, write in file:
 			 *	"dtype visible_name size nb_generics {meta_type}+"
@@ -1107,7 +1108,7 @@ rt_private void imake_header(EIF_CONTEXT_NOARG)
 				s_buffer = (char *) xrealloc (s_buffer, bsize, GC_OFF);
 		}
 
-		info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
+		info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
 		if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
 			/* Generic type, write in file:
 			 *	"dtype visible_name size nb_generics {meta_type}+"

@@ -63,11 +63,6 @@ feature
 			ba.append (char_val);
 		end;
 
-	vqmc: VQMC is
-		do
-			!VQMC2!Result;
-		end;
-
 	dump: STRING is
 		do
 			Result := char_val.out;

@@ -1,5 +1,4 @@
 indexing
-
 	description: "Registry manager"
 	status: "See notice at end of class";
 	date: "$Date$";
@@ -8,79 +7,33 @@ indexing
 class
 	WEL_REGISTRY_KEY
 
-inherit
-	MEMORY
-		redefine
-			dispose
-		end
-
 creation
-	make_from_pointer
+	make
 	
 feature -- Initialization
 
-	make_from_pointer (ptr: POINTER) is
-			-- Set `item' with `ptr'
+	make (a_name, a_class_id: STRING; a_modification_time: WEL_FILE_TIME) is
+			-- Create current instance.
 		do
-			item := ptr
+			name := a_name
+			class_id := a_class_id
+			last_change := a_modification_time
+		ensure
+			name_set: name = a_name
+			class_id_set: class_id = a_class_id
+			last_change_set: last_change = a_modification_time
 		end
 		
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of key
-		do
-			!! Result.make (0)
-			Result.from_c (cwin_reg_key_name (item))
-		end
 		
-	class_id: STRING is
+	class_id: STRING
 			-- Class of key
-		do
-			!! Result.make (0)
-			Result.from_c (cwin_reg_key_class (item))
-		end
-		
-	last_change: WEL_FILE_TIME is
+
+	last_change: WEL_FILE_TIME
 			-- Last modification time
-		do
-			!! Result.make_by_pointer (cwin_reg_key_time (item))
-		end
-
-feature {NONE} -- Implementation
-
-	item: POINTER
-			-- Pointer to C structure.
-
-feature {NONE} -- Removal
-
-	dispose is
-			-- Free C structure
-		do
-			cwin_reg_key_destroy (item)
-		end
-
-feature {NONE} -- Externals
-
-	cwin_reg_key_name (ptr: POINTER): POINTER is
-		external
-			"C [macro %"registry_key.h%"] (REG_KEY*): EIF_POINTER"
-		end
-		
-	cwin_reg_key_class (ptr: POINTER): POINTER is
-		external
-			"C [macro %"registry_key.h%"] (REG_KEY*): EIF_POINTER"
-		end
-		
-	cwin_reg_key_time (ptr: POINTER): POINTER is
-		external
-			"C [macro %"registry_key.h%"] (REG_KEY*): EIF_POINTER"
-		end
-	
-	cwin_reg_key_destroy (ptr: POINTER) is
-		external
-			"C [macro %"registry_key.h%"] (REG_KEY*)"
-		end
 
 end -- class WEL_REGISTRY_KEY
 

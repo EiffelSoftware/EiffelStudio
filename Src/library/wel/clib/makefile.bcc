@@ -8,7 +8,7 @@ CFLAGS = -c -O2 -I$(ISE_EIFFEL)\library\wel\spec\windows\include -I$(ISE_EIFFEL)
 	$(CFLAGS) $<
 |
 
-OBJ = disptchr.obj enumfont.obj choose_folder.obj estream.obj msgboxpa.obj registry.obj diskspace.obj dynload.obj
+OBJ = disptchr.obj enumfont.obj choose_folder.obj estream.obj msgboxpa.obj diskspace.obj dynload.obj
 
 wel.lib: $(OBJ)
 	if exist $@ del $@
@@ -17,7 +17,6 @@ wel.lib: $(OBJ)
 	tlib $@ +estream.obj
 	tlib $@ +choose_folder.obj
 	tlib $@ +msgboxpa.obj
-	tlib $@ +registry.obj
 	if not exist $(ISE_EIFFEL)\library\wel\spec\bcc mkdir $(ISE_EIFFEL)\library\wel\spec\bcc
 	if not exist $(ISE_EIFFEL)\library\wel\spec\bcc\lib mkdir $(ISE_EIFFEL)\library\wel\spec\bcc\lib
 	copy $@ $(ISE_EIFFEL)\library\wel\spec\bcc\lib

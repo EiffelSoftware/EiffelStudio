@@ -9,7 +9,7 @@ RM = rm
 .c.o:
 	$(CC) $(CFLAGS) $<
 
-OBJ = disptchr.o choose_folder.o enumfont.o estream.o msgboxpa.o registry.o diskspace.o
+OBJ = disptchr.o choose_folder.o enumfont.o estream.o msgboxpa.o diskspace.o
 
 wel.a: $(OBJ)
 	if [ -f $@ ] ; then $(RM) $@ ; fi

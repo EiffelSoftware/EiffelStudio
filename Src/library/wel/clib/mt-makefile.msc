@@ -6,8 +6,7 @@ CFLAGS = -W3 -c -MT -DEIF_THREADS -Ox -I..\spec\windows\include -I$(ISE_EIFFEL)\
 .c.obj:
 	$(CC) $(CFLAGS) $<
 
-OBJ = 	registry.obj \
-		disptchr.obj \
+OBJ = 	disptchr.obj \
 		enumfont.obj \
 		estream.obj \
 		msgboxpa.obj \

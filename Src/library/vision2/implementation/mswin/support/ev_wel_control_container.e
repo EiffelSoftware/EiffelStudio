@@ -16,6 +16,7 @@ inherit
 			set_parent as wel_set_parent,
 			destroy as wel_destroy
 		undefine
+			window_process_message,
 			set_width,
 			set_height,
 			remove_command,
@@ -43,7 +44,7 @@ inherit
 feature {NONE} -- Initialization
 
 	make is
-				-- Create the box with the default options.
+			-- Create the box with the default options.
 		do
 			wel_make (default_parent.item, "")
 		end
@@ -57,8 +58,8 @@ feature {NONE} -- WEL Implementation
 
 	default_style: INTEGER is
 		do
-			Result := Ws_child + Ws_visible + Ws_clipchildren
-						+ Ws_clipsiblings
+			Result := Ws_child + Ws_clipchildren
+					+ Ws_clipsiblings + Ws_visible
 		end
 
 	default_ex_style: INTEGER is

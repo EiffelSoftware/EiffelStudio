@@ -109,7 +109,7 @@ feature -- Status setting
 		end
 
 	enable_item_expand (an_item: EV_WIDGET) is
-			-- Expand `an_item' to occupy avalible spare space.
+			-- Expand `an_item' to occupy available spare space.
 		require
 			not_destroyed: not is_destroyed
 			has_an_item: has (an_item)
@@ -120,7 +120,7 @@ feature -- Status setting
 		end
 
 	disable_item_expand (an_item: EV_WIDGET) is
-			-- Do not expand `an_item' to occupy avalible spare space.
+			-- Do not expand `an_item' to occupy available spare space.
 		require
 			not_destroyed: not is_destroyed
 			has_an_item: has (an_item)

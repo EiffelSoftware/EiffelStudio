@@ -74,16 +74,16 @@ feature -- Byte code special generation
 				check integer_type: type_of (basic_type) = integer_type end
 				ba.append (Bc_cast_char)
 			when to_integer_8_type then
-				ba.append (Bc_cast_long)
+				ba.append (Bc_cast_integer)
 				ba.append_integer (8)
 			when to_integer_16_type then
-				ba.append (Bc_cast_long)
+				ba.append (Bc_cast_integer)
 				ba.append_integer (16)
 			when to_integer_32_type then
-				ba.append (Bc_cast_long)
+				ba.append (Bc_cast_integer)
 				ba.append_integer (32)
 			when to_integer_64_type then
-				ba.append (Bc_cast_long)
+				ba.append (Bc_cast_integer)
 				ba.append_integer (64)
 			when to_real_64_type then
 				ba.append (Bc_cast_real64)

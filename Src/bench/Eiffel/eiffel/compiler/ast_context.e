@@ -178,6 +178,22 @@ feature -- Setting
 		ensure
 			current_class_set: current_class = cl
 		end
+		
+	set_current_class_with_actual_type (cl: CLASS_C; ct: CL_TYPE_A) is
+			-- Assign `cl' to `current_class' and `ct' to `actual_class_type'
+		require
+			cl_not_void: cl /= Void
+		do
+			current_class := cl
+			if ct /= Void then
+				actual_class_type := ct
+			else
+				actual_class_type := cl.actual_type
+			end
+			feature_table := cl.feature_table
+		ensure
+			current_class_set: current_class = cl
+		end		
 
 	set_current_feature (f: FEATURE_I) is
 			-- Assign `f' to `current_feature'.

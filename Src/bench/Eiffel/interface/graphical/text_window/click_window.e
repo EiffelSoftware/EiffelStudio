@@ -24,7 +24,7 @@ inherit
 		undefine
 			copy, setup, consistent, is_equal
 		redefine
-			image, put_address, put_feature_name, put_feature,
+			put_address, put_feature_name, put_feature,
 			put_error, put_class, put_classi, put_cluster,
 			put_class_syntax, put_ace_syntax
 		end

@@ -35,7 +35,6 @@ feature -- Status setting
 			set_h_c: SET_HOMOGENEOUS_COMMAND
 			a: EV_ARGUMENT2 [EV_BOX, EV_TOGGLE_BUTTON]
 			a2: EV_ARGUMENT2 [EV_BOX, EV_TEXT_FIELD]
-			e: EV_EVENT
 			homogeneous_tb: EV_TOGGLE_BUTTON
 			box_widget: EV_BOX
 			spacing_entry: EV_TEXT_FIELD_WITH_LABEL
@@ -43,18 +42,16 @@ feature -- Status setting
                 do
 			Precursor
 			!!box_controls.make (main_box)
-			!!homogeneous_tb.make_with_label (box_controls, "Homogeneous")
-			!!e.make ("toggled")
+			!!homogeneous_tb.make_with_text (box_controls, "Homogeneous")
 			!!set_h_c
 			box_widget ?= active_widget
 			!!a.make_2 (box_widget, homogeneous_tb)
-			homogeneous_tb.add_command (e, set_h_c, a)
+			homogeneous_tb.add_click_command (set_h_c, a)
 			
 			!!spacing_entry.make_with_label (box_controls, "Spacing:")
-			!!e.make ("activate")
 			!!a2.make_2 (box_widget, spacing_entry)
 			!!set_spacing_c
-			spacing_entry.add_command (e, set_spacing_c, a2)
+			spacing_entry.add_activate_command (set_spacing_c, a2)
 		end
 	
 end

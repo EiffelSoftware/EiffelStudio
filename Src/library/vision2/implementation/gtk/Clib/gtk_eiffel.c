@@ -87,7 +87,7 @@ void c_gtk_signal_destroy_data (gpointer data)
 }
 
 
-/* Connect a call back to a widget/event pair 
+/* Connect a callback to a widget/event pair 
 
    widget = gtk widget
    name = name of the signal

@@ -23,15 +23,13 @@ feature {NONE} --Initialization
 	make_button (main_w: MAIN_WINDOW; button_name: STRING; cmd: DEMO_WINDOW) is
 		local
 
-			e: EV_EVENT
 			a: EV_ARGUMENT1[MAIN_WINDOW]
 		do
 			make (main_w.container)
 			set_text (button_name)
 			
-			!!e.make ("clicked")
 			!!a.make (main_w)
-			add_command (e, cmd, a)
+			add_click_command (cmd, a)
 		end
 	
 end

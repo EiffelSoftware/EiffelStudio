@@ -223,7 +223,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_BUTTON_EVENT_DATA!ev_data.make
-			add_command ("button_press_event", command, arguments, ev_data, mouse_button, False)
+			add_command_with_event_data ("button_press_event", command, arguments, ev_data, mouse_button, False)
 		end
 	
 	
@@ -234,7 +234,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_BUTTON_EVENT_DATA!ev_data.make
-			add_command ("button_release_event", command, arguments, ev_data, mouse_button, False)
+			add_command_with_event_data ("button_release_event", command, arguments, ev_data, mouse_button, False)
 		end
 	
 	add_double_click_command (mouse_button: INTEGER; 
@@ -244,7 +244,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_BUTTON_EVENT_DATA!ev_data.make
-			add_command ("button_press_event", command, arguments, ev_data, mouse_button, True)
+			add_command_with_event_data ("button_press_event", command, arguments, ev_data, mouse_button, True)
 		end		
 	
 	add_motion_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
@@ -252,7 +252,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_MOTION_EVENT_DATA!ev_data.make
-			add_command ("motion_notify_event", command, arguments, ev_data, 0, False)
+			add_command_with_event_data ("motion_notify_event", command, arguments, ev_data, 0, False)
 		end
 	
 	add_delete_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
@@ -260,7 +260,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA		
 		do
 			!EV_EVENT_DATA!ev_data.make-- temporary, craeta a correct object here XX
-			add_command ("delete_event", command, arguments, ev_data, 0, False)
+			add_command_with_event_data ("delete_event", command, arguments, ev_data, 0, False)
 		end
 	
 	add_expose_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
@@ -268,7 +268,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_EXPOSE_EVENT_DATA!ev_data.make
-			add_command ("expose_event", command, arguments, ev_data, 0, False)
+			add_command_with_event_data ("expose_event", command, arguments, ev_data, 0, False)
 		end
 	
 	add_key_press_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
@@ -276,7 +276,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_KEY_EVENT_DATA!ev_data.make
-			add_command ("key_press_event", command, arguments, ev_data, 0, False)
+			add_command_with_event_data ("key_press_event", command, arguments, ev_data, 0, False)
 		end
 			
 	add_key_release_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
@@ -284,7 +284,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_KEY_EVENT_DATA!ev_data.make
-			add_command ("key_press_event", command, arguments, ev_data, 0, False)
+			add_command_with_event_data ("key_press_event", command, arguments, ev_data, 0, False)
 		end	
 	
 	add_enter_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
@@ -292,7 +292,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA		
 		do
 			!EV_EVENT_DATA!ev_data.make-- temporary, craeta a correct object here XX
-			add_command ("enter_notify_event", command, arguments, ev_data, 0, False)
+			add_command_with_event_data ("enter_notify_event", command, arguments, ev_data, 0, False)
 		end
 	
 	add_leave_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
@@ -300,7 +300,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA		
 		do
 			!EV_EVENT_DATA!ev_data.make  -- temporary, craeta a correct object here XX
-			add_command ("leave_notify_event", command, arguments, ev_data, 0, False)
+			add_command_with_event_data ("leave_notify_event", command, arguments, ev_data, 0, False)
 		end
 	
 
@@ -317,12 +317,12 @@ feature -- Event - command association
 	
 	last_command_id: INTEGER
 			-- Id of the last command added by feature
-			-- 'add_command'
+			-- 'add_command' or 'add_command_with_event_data'
 	
 
 feature {NONE} -- Implementation
 
-	add_command (event: STRING; command: EV_COMMAND; 
+	add_command_with_event_data (event: STRING; command: EV_COMMAND; 
 		     arguments: EV_ARGUMENTS; ev_data: EV_EVENT_DATA;
 		     mouse_button: INTEGER; double_click: BOOLEAN) is
 			-- Add `command' at the end of the list of
@@ -338,7 +338,6 @@ feature {NONE} -- Implementation
 		require		
 			valid_event: event /= Void
 			valid_command: command /= Void
-			valid_event_data: ev_data /= Void
 		local
 			a: ANY
 			cmd: EV_COMMAND
@@ -373,6 +372,35 @@ feature {NONE} -- Implementation
 						      double_click)
 		end
         
+	add_command (event: STRING; command: EV_COMMAND; 
+		     arguments: EV_ARGUMENTS) is
+			-- Add `command' at the end of the list of
+			-- actions to be executed when the 'event'
+			-- happens `arguments' will be passed to
+			-- `command' whenever it is invoked as a
+			-- callback. 'arguments' can be Void, which
+			-- means that no arguments are passed to the
+			-- command. 
+			
+		require		
+			valid_event: event /= Void
+			valid_command: command /= Void
+		local
+			a: ANY
+                do
+			a := event.to_c
+			-- check if to use gtk signals or x events
+			last_command_id := 
+				c_gtk_signal_connect (widget,
+						      $a,
+						      command.execute_address,
+						      $command,
+						      $arguments,
+						      Default_pointer,
+						      Default_pointer,
+						      0,
+						      False)
+		end
 	
 feature {EV_WIDGET_IMP} -- Implementation
 	

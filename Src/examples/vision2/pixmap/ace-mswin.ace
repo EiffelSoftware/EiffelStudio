@@ -1,0 +1,53 @@
+--!----------------------------------------------------------------
+--! PAINTBRUSH Project Ace-file for Windows platforms.
+--!----------------------------------------------------------------
+
+system
+	paintbrush
+
+root 
+	EV_PAINTBRUSH (root_cluster): "make_and_launch"
+
+default
+	assertion			(all)
+	multithreaded		(no)
+	console_application	(no)
+	dynamic_runtime		(no)
+	dead_code_removal	(yes)
+	profile				(no)
+	line_generation		(no)
+	debug				(no)
+	array_optimization	(no)
+	inlining			(no)
+	inlining_size		("4")
+
+cluster 
+		-- Root cluster
+	root_cluster:		"$EIFFEL4\examples\vision2\pixmap"
+
+		-- EiffelBase
+	all base: 			"$EIFFEL4\library\base"
+		exclude
+			"table_eiffel3"
+		end
+
+		-- WEL
+	all wel:			"$EIFFEL4\library\wel"
+
+		-- Vision2
+	event:				"$EIFFEL4\library\event"
+
+	all vision2:		"$EIFFEL4\library\vision2"
+		exclude 
+			"gtk"
+			"EIFGEN"
+			"tmp"
+			"temp"
+			"release"
+		end
+
+external
+	include_path:		"$(EIFFEL4)\library\wel\spec\windows\include"
+	object: 			"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib"
+
+end -- paintbrush

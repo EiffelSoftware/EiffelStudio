@@ -584,7 +584,7 @@ feature -- Syntax completion
 					when 'T' then
 						to_be_inserted.remove (i)
 						to_be_inserted.remove (i)
-						to_be_inserted.insert (tabulation_symbol, i)
+						to_be_inserted.insert_string (tabulation_symbol, i)
 						i := i + tabulation_symbol.count
 					else
 						i := i + 1

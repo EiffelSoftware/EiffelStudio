@@ -257,9 +257,9 @@ feature {NONE} -- Implementation
 				ep := click_ast.end_position
 			end
 			text.replace_substring ("", sp, ep)
-			text.insert (new_name, sp)
+			text.insert_string (new_name, sp)
 			if not new_generics.is_empty then
-				text.insert (" " + new_generics, sp + new_name.count)
+				text.insert_string (" " + new_generics, sp + new_name.count)
 			end
 		end
 

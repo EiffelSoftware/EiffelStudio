@@ -93,7 +93,7 @@ feature -- Initialization
 				new_name := clone (Eiffel_gen_path)
 				if new_name.item (new_name.count) = ']' then
 						-- VMS specification. We need to append `_old' before the `]'.
-					new_name.insert ("_old", new_name.count - 1)
+					new_name.insert_string ("_old", new_name.count - 1)
 				else
 					new_name.append ("_old")
 				end

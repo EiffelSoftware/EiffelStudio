@@ -898,7 +898,7 @@ feature {CLASS_NAME_REPLACER} -- Implementation
 		require
 			text_managed: text_managed
 		do
-			text.insert (a_text, insertion_position)
+			text.insert_string (a_text, insertion_position)
 			insertion_position := insertion_position + a_text.count
 			is_modified := True
 		ensure

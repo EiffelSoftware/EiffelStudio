@@ -870,7 +870,7 @@ feature {NONE} -- Text processing
 							if i > s.count then
 								s.append (rep)
 							else
-								s.insert (rep, i)
+								s.insert_string (rep, i)
 							end
 							i := i + rep.count
 						else

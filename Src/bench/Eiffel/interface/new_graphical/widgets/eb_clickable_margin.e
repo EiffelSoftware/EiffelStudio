@@ -132,7 +132,7 @@ feature {NONE} -- Events
 			l_number: INTEGER
 			bkstn: BREAKABLE_STONE
 		do
-			if button = 1 and then text_panel.pick_n_drop_status /= text_panel.pnd_drop then
+			if button = 1 then
 				l_number := (y_pos // text_panel.line_height) + first_line_displayed
 				if l_number <= text_panel.number_of_lines then
 					ln := text_panel.text_displayed.line (l_number)

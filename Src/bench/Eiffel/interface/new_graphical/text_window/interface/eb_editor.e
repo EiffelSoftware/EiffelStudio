@@ -190,7 +190,7 @@ feature -- Status setting
 		require
 			text_exists: not is_empty
 		do
-			text_displayed.set_changed (val)
+			text_displayed.set_changed (val, True)
 		end
 
 feature -- Element Change
@@ -1099,7 +1099,7 @@ feature {NONE} -- Text Loading
 		do
 			{SELECTABLE_TEXT_PANEL} Precursor
 			if open_backup then
-				text_observer_manager.set_changed (True)
+				text_observer_manager.set_changed (True, True)
 			end
 		end
 

@@ -94,7 +94,7 @@ feature -- Status setting
 			not use_smart_indentation
 		end
 
-	set_changed (value: BOOLEAN) is
+	set_changed (value: BOOLEAN; directly_edited: BOOLEAN) is
 			-- Assign `value' to `changed'
 		do
 			if value then
@@ -103,7 +103,7 @@ feature -- Status setting
 				history.enable_mark
 				history.set_mark
 			end
-			Precursor (value)
+			Precursor (value, directly_edited)
 		end	
 
 feature -- Basic Operations

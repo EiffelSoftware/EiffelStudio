@@ -21,7 +21,7 @@ feature
 	select_string: STRING is
 		once
 			Result := 
-			"select TABLE_NAME from ACCESSIBLE_TABLES"
+			"select TABLE_NAME from USER_TABLES"
 		end
 
 end -- class TEST_I

@@ -22,13 +22,25 @@ namespace ISE.Runtime {
 
 
 		public static bool is_assertion_checked = true;
+				// Are assertions checked?
 
 		public static bool check_assert (bool val) {
+				// Enable or disable checking of assertions?
 			bool tmp = is_assertion_checked;
 			is_assertion_checked = val;
 			return tmp;
 		}
 
+		public static int generic_parameter_count (object o) {
+				// Number of generic Parameter if any.
+			_IGeneric gen;		
+			if (o is _IGeneric) {
+				gen = (_IGeneric) o;
+				return gen.____count();
+			} else {
+				return 0;
+			}
+		}
 	}
 
 	public class EXCEPTION_MANAGER
@@ -45,4 +57,18 @@ namespace ISE.Runtime {
 		}
 
 	}
+
+	[CLSCompliantAttribute (false)]
+	public interface _IGeneric {
+		int ____count();
+	}
+
+	public class EIFFEL_TYPES {
+		public static EIFFEL_TYPE_INFO [] eiffel_types;
+			// List all computed Eiffel types.
+	}
+
+	public class EIFFEL_TYPE_INFO {
+	}
 }
+

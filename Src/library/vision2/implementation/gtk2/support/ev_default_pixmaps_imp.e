@@ -251,149 +251,149 @@ feature {NONE} -- Implementation
 			pixmap_imp.set_from_stock_id (a_cs.item)
 		end
 
-feature {NONE} -- Externals
+feature {EV_GTK_DEPENDENT_APPLICATION_IMP} -- Externals
 
-	information_pixmap_xpm: POINTER is
+	frozen information_pixmap_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"information_pixmap_xpm"
 		end
 
-	error_pixmap_xpm: POINTER is
+	frozen error_pixmap_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"error_pixmap_xpm"
 		end
 
-	warning_pixmap_xpm: POINTER is
+	frozen warning_pixmap_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"warning_pixmap_xpm"
 		end
 
-	question_pixmap_xpm: POINTER is
+	frozen question_pixmap_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"question_pixmap_xpm"
 		end
 
-	collate_pixmap_xpm: POINTER is
+	frozen collate_pixmap_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"collate_pixmap_xpm"
 		end
 
-	no_collate_pixmap_xpm: POINTER is
+	frozen no_collate_pixmap_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"no_collate_pixmap_xpm"
 		end
 
-	landscape_pixmap_xpm: POINTER is
+	frozen landscape_pixmap_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"landscape_pixmap_xpm"
 		end
 
-	portrait_pixmap_xpm: POINTER is
+	frozen portrait_pixmap_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"portrait_pixmap_xpm"
 		end
 		
-	busy_cursor_xpm: POINTER is
+	frozen busy_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"busy_cursor_xpm"
 		end
 		
-	crosshair_cursor_xpm: POINTER is
+	frozen crosshair_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"crosshair_cursor_xpm"
 		end
 		
-	help_cursor_xpm: POINTER is
+	frozen help_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"help_cursor_xpm"
 		end
 		
-	ibeam_cursor_xpm: POINTER is
+	frozen ibeam_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"ibeam_cursor_xpm"
 		end
 		
-	no_cursor_xpm: POINTER is
+	frozen no_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"no_cursor_xpm"
 		end
 		
-	sizeall_cursor_xpm: POINTER is
+	frozen sizeall_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"sizeall_cursor_xpm"
 		end
 		
-	sizenesw_cursor_xpm: POINTER is
+	frozen sizenesw_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"sizenesw_cursor_xpm"
 		end
 		
-	sizens_cursor_xpm: POINTER is
+	frozen sizens_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"sizens_cursor_xpm"
 		end
 		
-	sizenwse_cursor_xpm: POINTER is
+	frozen sizenwse_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"sizenwse_cursor_xpm"
 		end
 		
-	sizewe_cursor_xpm: POINTER is
+	frozen sizewe_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"sizewe_cursor_xpm"
 		end
 	
-	standard_cursor_xpm: POINTER is
+	frozen standard_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"standard_cursor_xpm"
 		end
 		
-	uparrow_cursor_xpm: POINTER is
+	frozen uparrow_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"uparrow_cursor_xpm"
 		end
 		
-	wait_cursor_xpm: POINTER is
+	frozen wait_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias

@@ -202,11 +202,8 @@ feature -- Status report
 		require
 			exists: exists
 			index_large_enough: index >= 0
-			index_small_enough: index < count
+			index_small_enough: index <= count
 		do
-			if not exists then
-				io.putstring ("Not exists")
-			end
 			create Result.make (0, 0, 0, 0)
 			cwin_send_message (item, Lvm_getitemrect, index, cwel_pointer_to_integer(Result.item))
 		end

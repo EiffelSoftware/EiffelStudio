@@ -100,9 +100,11 @@ feature
 					check
 						a_local_part.is_equal (Name_str)
 					end
-					current_comment.append_character ('`')
-					current_comment.append (name_formatter.formatted_variable_name (a_value))
-					current_comment.append_character ('%'')
+					if not a_value.is_empty then
+						current_comment.append_character ('`')
+						current_comment.append (name_formatter.formatted_variable_name (a_value))
+						current_comment.append_character ('%'')
+					end
 				elseif current_tag.last.is_equal (See_also_str) then
 					check
 						a_local_part.is_equal (Cref_str)

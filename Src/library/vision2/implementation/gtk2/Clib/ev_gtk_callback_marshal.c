@@ -173,7 +173,6 @@ int c_ev_gtk_callback_marshal_delayed_agent_callback (EIF_OBJECT agent)
           0,
           (EIF_POINTER) NULL
       );
-      eif_wean (agent);
       return FALSE;
 }
 
@@ -185,11 +184,13 @@ void c_ev_gtk_callback_marshal_delayed_agent_call (
 		// only called once.
 {
       gint connection_id;
-      connection_id = gtk_timeout_add (
+      connection_id = g_timeout_add_full (
+				G_PRIORITY_HIGH_IDLE,
 				delay,
-				(GtkFunction)
+				(GSourceFunc)
         c_ev_gtk_callback_marshal_delayed_agent_callback,
-        eif_adopt (agent)
+        eif_adopt (agent), // User data for function
+	(GDestroyNotify) eif_wean // To call on hook disconnect.
 			);
 }
 
@@ -199,13 +200,13 @@ guint c_ev_gtk_callback_marshal_timeout_connect (
         // Call an `agent' every `delay' milliseconds.
 {
       guint connection_id;
-      connection_id = gtk_timeout_add_full (
+      connection_id = g_timeout_add_full (
+				G_PRIORITY_DEFAULT,
 				delay,
-				(GtkFunction)
+				(GSourceFunc)
         c_ev_gtk_callback_marshal_true_callback,
-        NULL,                       // No special marshal needed.
         eif_adopt (agent),          // User data for function.
-        (GtkDestroyNotify) eif_wean // To call on hook disconnect.
+        (GDestroyNotify) eif_wean // To call on hook disconnect.
 			);
 		return (connection_id);
 }

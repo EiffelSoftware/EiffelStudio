@@ -173,24 +173,32 @@ end
 					if make_f.exists and then make_f.date > uf.date then
 							-- The Makefile file is more recent than the 
 							-- application
---						warner (popup_parent).custom_call (Current, 
---							Warning_messages.w_Makefile_more_recent (Makefile_SH), 
---							Interface_names.b_Ok, Void, Interface_names.b_Cancel)
+--						create wd.make_with_text (tool.parent, Interface_names.t_Warning,
+--							Warning_messages.w_Makefile_more_recent (Makefile_SH)) 
+--							wd.show_ok_cancel_buttons
+--							wd.add_ok_command (Current, Void)
+--							wd.show
 					else
 						launch_program := True
 						if Application.has_breakpoints and then Application.is_ignoring_stop_points then	
---							warner (popup_parent).custom_call (Current,
---								Warning_messages.w_Ignoring_all_stop_points, Interface_names.b_Ok, Void, Interface_names.b_Cancel)
+--							create wd.make_with_text (tool.parent, Interface_names.t_Warning,
+--								Warning_messages.w_Ignoring_all_stop_points)
+--							wd.show_ok_cancel_buttons
+--							wd.add_ok_command (Current, Void)
+--							wd.show
 						else
 							start_program
 						end
 					end
 				elseif make_f.exists then
 						-- There is no application
---					warner (popup_parent).custom_call (Current, 
---						Warning_messages.w_No_system_generated, Interface_names.b_Ok, Void, Interface_names.b_Cancel)
+--					create wd.make_with_text (tool.parent, Interface_names.t_Warning,
+--						Warning_messages.w_No_system_generated)
+--					wd.show_ok_cancel_buttons
+--					wd.add_ok_command (Current, Void)
+--					wd.show
 				else
-					create wd.make_default (tool.parent, Interface_names.t_Warning, 
+					create wd.make_default (tool.parent, Interface_names.t_Warning,
 						Warning_messages.w_Must_compile_first)
 				end
 			else

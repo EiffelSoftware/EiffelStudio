@@ -524,13 +524,6 @@ feature
 feature {NONE}
 
 	make is
-			-- The meaning of this was not clear. I changed this to call make_visible
-			-- samik
-		do
-			make_visible		
-		end;
-
-	make_visible is
 			-- Create app_editor interface 
 		local
 			del_com: DELETE_WINDOW;
@@ -539,14 +532,15 @@ feature {NONE}
 				-- Create widgets
 				-- **************
 			top_create (Widget_names.application_editor, Eb_screen);
+			set_title (Widget_names.application_editor)
 			!!form.make (Widget_names.form, Current);
-            !!form1.make (Widget_names.form1, form);
-            !!drawing_sw.make (Widget_names.scroll, form);
+			!!form1.make (Widget_names.form1, form);
+			!!drawing_sw.make (Widget_names.scroll, form);
 			!!drawing_area.make_visible (Widget_names.drawingarea, drawing_sw);
-		    !! transitions    
+			!! transitions    
               
-                !!lines.make (drawing_area);
-                !!figures.make (drawing_area);
+			!!lines.make (drawing_area);
+			!!figures.make (drawing_area);
 
 			!!menu_bar.make (Widget_names.bar, form, Current);
 			!!state_label.make (Widget_names.state_name, form1);
@@ -599,7 +593,6 @@ feature {NONE}
 			drawing_area.set_background_color (Resources.app_dr_area_color);
 			drawing_area.set_size (Resources.app_dr_area_width,
 							Resources.app_dr_area_height);
-			--add_sub_application_command.Create (Current);
 			!!labels_wnd.make (form);
 				-- *************
 				-- Set callbacks

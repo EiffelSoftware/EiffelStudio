@@ -333,6 +333,9 @@ int where;			/* Are we checking invariant before or after compound? */
 	char *rvar;						/* Result address for once */
 	int32 rout_id;					/* Routine id */
 	int32 body_id;					/* Body id of once routine */
+	int current_trace_level;	/* Saved call level for trace, only needed when routine is retried */
+	int my_p_call_level;	/* Saved call level for profile, only needed when routine is retried */
+	struct profile_stack *old_p_stk;	/* Saved prof_stack for rescued, and recursive features */
 	struct item *result_val;		/* Postcondition result value */
 	RTSN;							/* Save nested flag */
 
@@ -478,6 +481,7 @@ int where;			/* Are we checking invariant before or after compound? */
 			 * stack).
 			 */
 			RTEA(string, code, icurrent->it_ref);
+			check_options(eoption[icur_dtype], icur_dtype);
 			dexset(exvect);
 			scur = op_stack.st_cur;		/* Save stack context */
 			stop = op_stack.st_top;		/* needed for setjmp() and calls */
@@ -572,6 +576,9 @@ int where;			/* Are we checking invariant before or after compound? */
 				l_cur = loc_set.st_cur;
 				h_top = hec_stack.st_top;	/* Save hector stack */
 				h_cur = hec_stack.st_cur;
+				current_trace_level = trace_call_level;	/* Save trace call level */
+				old_p_stk = prof_stack;
+				p_init();
 				exvect->ex_jbuf = (char *) exenv;	/* Longjmp address */
 				if (setjmp(exenv))
 					IC = rescue;				/* Jump to rescue clause */
@@ -622,6 +629,10 @@ end:
 #ifdef DEBUG
 		dprintf(2)("BC_RETRY\n");
 #endif
+		trace_call_level = current_trace_level;
+		p_rewind();
+		p_free();
+		prof_stack = old_p_stk;
 		in_assertion = 0;
 		offset = get_long();					/* Get the retry offset */
 		IC += offset;

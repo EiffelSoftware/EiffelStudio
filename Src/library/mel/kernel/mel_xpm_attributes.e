@@ -141,7 +141,7 @@ feature {NONE} -- Externals
 	c_malloc (a_size: INTEGER): POINTER is
 			-- C malloc
 		external
-			"C (unsigned int): EIF_POINTER | %"eiffel.h%""
+			"C (unsigned int): EIF_POINTER | %"eif_eiffel.h%""
 		alias
 			"cmalloc"
 		end;
@@ -149,7 +149,7 @@ feature {NONE} -- Externals
 	x_free (ptr: POINTER) is
 			-- C free
 		external
-			"C (char *) | %"eiffel.h%""
+			"C (char *) | %"eif_eiffel.h%""
 		alias
 			"xfree"
 		end;

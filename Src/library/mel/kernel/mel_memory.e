@@ -63,7 +63,7 @@ feature -- Status report
 
 	is_shared: BOOLEAN
 			-- Is `handle' shared by another object?
-			-- If False (by default except for descendents of
+			-- If False (by default except for descendants of
 			-- MEL_RESOURCE), `handle' will be automatically destroyed by `dispose'.
 
 feature -- Status setting

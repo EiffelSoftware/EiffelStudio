@@ -150,10 +150,10 @@ feature -- Status setting
 	set_foreground, set_foreground_color (a_color: MEL_PIXEL) is
 			-- Set `foreground' and `foreground_color' to `a_color'.
 		local
-			list: like descendents;
+			list: like descendants;
 			color_id: POINTER
 		do
-			list :=descendents;
+			list :=descendants;
 			set_xt_pixel (screen_object, XmNforeground, a_color);
 			from
 				list.start
@@ -169,12 +169,12 @@ feature -- Status setting
 	set_background, set_background_color (a_color: MEL_PIXEL) is
 			-- Set `background' and `background_color' to `a_color'.
 		local
-			list: like descendents;
+			list: like descendants;
 			color_id: POINTER
 		do
 			color_id := a_color.identifier;
 			set_xt_pixel (screen_object, XmNbackground, a_color);
-			list :=descendents;
+			list :=descendants;
 			from
 				list.start
 			until

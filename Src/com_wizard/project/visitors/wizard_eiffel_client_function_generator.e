@@ -33,7 +33,6 @@ feature -- Basic operations
 			feature_writer.set_comment (func_desc.description)
 			external_feature_writer.set_comment (func_desc.description)
 
-			-- Set function name used in ccom
 			if a_descriptor.coclass_eiffel_names.has (a_component_descriptor.name) then
 				function_renamed := True
 				original_name := a_descriptor.interface_eiffel_name
@@ -47,16 +46,12 @@ feature -- Basic operations
 			end
 			external_feature_writer.set_name (ccom_func_name)
 
-			-- Set arguments and precondition for eiffel code
-
 			external_feature_writer.add_argument (default_pointer_argument)
 
 			set_feature_result_type_and_arguments
 
-			-- Argument for external feature
 			set_external_feature_result_type_and_arguments
 
-			-- Set description, function body
 			feature_writer.set_effective
 			feature_writer.set_body (client_body (ccom_func_name))
 

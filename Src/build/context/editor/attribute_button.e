@@ -49,6 +49,7 @@ feature
 				nbr = Context_const.scroll_l_att_form_nbr or else
 				nbr = Context_const.text_field_att_form_nbr or else
 				nbr = Context_const.temp_wind_att_form_nbr or else
+                nbr = Context_const.toggle_att_form_nbr or else
 				nbr = Context_const.drawing_box_att_form_nbr
 		end;
 

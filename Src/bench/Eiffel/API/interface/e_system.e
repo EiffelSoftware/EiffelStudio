@@ -220,6 +220,15 @@ feature {CALL_STACK_ELEMENT, RUN_INFO, REFERENCE_VALUE, APPLICATION_STATUS}
 			end
 		end;
 
+	type_of_dynamic_id (i: INTEGER): CLASS_TYPE is
+			-- Class type of dynamic id `id'
+		require
+			positive_i: i >= 0;
+			valid_i: valid_dynamic_id (i)
+		do
+			Result := System.class_types.item (i)
+		end
+
 feature {NONE} -- Implementation
 
 	System_chunk: INTEGER is 500

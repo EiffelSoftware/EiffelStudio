@@ -1,3 +1,4 @@
+--| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 
@@ -51,6 +52,9 @@ end -- class EV_MENU_ITEM_HOLDER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/02/18 17:22:58  brendel
+--| Unreleased
+--|
 --| Revision 1.12  2000/02/14 11:40:49  oconnor
 --| merged changes from prerelease_20000214
 --|

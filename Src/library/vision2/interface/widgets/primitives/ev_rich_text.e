@@ -17,17 +17,23 @@ inherit
 			is_in_default_state
 		end
 		
+	EV_RICH_TEXT_ACTION_SEQUENCES
+		redefine
+			implementation
+		end
+		
 feature -- Access
 
-	character_format (character_index: INTEGER): EV_CHARACTER_FORMAT is
-			-- `Result' is character format of character `character_index'
+	character_format (caret_index: INTEGER): EV_CHARACTER_FORMAT is
+			-- `Result' is character format at caret position `caret_index'.
 		require
 			not_destroyed: not is_destroyed
-			valid_character_index: character_index >= 1 and character_index <= text_length
+			valid_character_index: caret_index >= 1 and caret_index <= text_length + 1
 		do
-			Result := implementation.character_format (character_index)
+			Result := implementation.character_format (caret_index)
 		ensure
 			result_not_void: Result /= Void
+			caret_not_moved: caret_position = old caret_position
 		end
 		
 	buffer_locked_in_format_mode: BOOLEAN is
@@ -107,6 +113,16 @@ feature -- Access
 		end
 
 feature -- Status setting
+
+	set_current_format (format: EV_CHARACTER_FORMAT) is
+			-- apply `format' to current caret position, applicable
+			-- to next typed characters.
+		require
+			not_destroyed: not is_destroyed
+			format_not_void: format /= Void
+		do
+			implementation.set_current_format (format)
+		end
 
 	format_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT) is
 			-- Apply `format' to all characters between the caret positions `start_position' and `end_position'.

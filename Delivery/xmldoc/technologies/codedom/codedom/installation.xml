@@ -8,7 +8,7 @@
 
 		 (where vx.x.xxxx corresponds to the .NET Framework version number). 
 		The available CodeDom Providers are listed under the <italic>&lt;compilers&gt;</italic> XML node. The 
-		<bold>Eiffel CodeDom Provider</bold> implements a.NET Installer class so that should you need to add
+		Eiffel CodeDom Provider implements a.NET Installer class so that should you need to add
 		 the Eiffel CodeDom Provider to the machine configuration file, simply run the .NET SDK command line 
 		utility <italic>InstallUtil</italic> as follows:
 
@@ -23,5 +23,12 @@
 			<bold>Note</bold>: The <bold>ASP.NET Enabler</bold> installation program will take care of registering 
 			and unregistering the Eiffel CodeDom Provider properly.
 		</note>
+		<seealso>
+			<bold>See also</bold>: 
+			<link>
+				<url>supported_constructs.xml</url>
+				<label>Supported constructs</label>
+			</link>
+		</seealso>
 	</paragraph>
 </document>

@@ -47,5 +47,12 @@
 			</link>
 			) for configuring ASP.NET properly. In particular, be aware that by default ASP.NET is disabled on Windows 2003 Server.
 		</paragraph>
+		<seealso>
+			<bold>See also:</bold> 
+			<link>
+				<url>getting_started.xml</url>
+				<label>Getting Started</label>
+			</link>
+		</seealso>
 	</paragraph>
 </document>

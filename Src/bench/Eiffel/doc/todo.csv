@@ -92,8 +92,8 @@ Formats,,,,,,
 
 
 
-debugger,,,,,,
-,5,Feature evaluation,Arnaud,DBG0001,,
+debugger,,,,
+,5,Feature evaluation,Arnaud,DBG0001
 ,4,debug_output feature used to display objects in the debugger,Xavier,DBG0002,,
 ,4,STRING viewer in the object tool,Xavier,DBG0003,Xavier,2
 ,4,Stack overflow detection,Xavier,DBG0004,,
@@ -110,8 +110,8 @@ debugger,,,,,,
 ,4,When the debugged application stops we should raise the debugging window (preference),Xavier,DBG0015,,
 ,4,Exception text field is too short,Xavier,DBG0016,Xavier,1
 ,2,"Add a ""Remove all breakpoints except this one"" in the breakpoint context menu",Julian,DBG0017,,
-,1,Gray out the step into command when it is not possible to step into,Julian,DBG0018,,
-,3,Improve step by step/step out relatively to dot calls,Xavier,DBG0019,,
+,1,Gray out the step into command when it is not possible to step into,Julian,DBG0018
+,3,Improve step by step/step out relatively to dot calls,Xavier,DBG0019
 ,3,"In the call stack tool, let the user choose the columns that should be displayed",Xavier,DBG0020
 ,2,"Let the user set breakpoints in features of SPECIAL, only not in put and item",Xavier,DBG0021
 ,4,Show full dynamic type in debugger (I.e. LIST [TOTO] instead of just LIST),Manus,DBG0022
@@ -139,7 +139,7 @@ editor,,,,
 ,3,Shift F3 should be able to search the selection backwards for symmetry with F3,Raphael,EDT0012
 ,3,Only display syntax errors once per class instead of once per editor,Julian,EDT0013
 ,5,Give a warning when loading a class that is already being edited elsewhere,Julian,EDT0014
-
+,5,Completion of features should show complete signature (i.e. return type too),Manus,EDT0015
 
 
 

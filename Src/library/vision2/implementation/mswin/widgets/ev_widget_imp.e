@@ -813,9 +813,9 @@ feature {NONE} -- Implementation
 		local
 			character_string: STRING
 		do
-			create character_string.make(1)
-			character_string.append_character(character_code.to_character)
 			if key_press_string_actions_internal /= Void then
+				create character_string.make(1)
+				character_string.append_character(character_code.to_character)
 				key_press_string_actions_internal.call ([character_string])
 			end
 		end

@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 					create_local ("window")
 				end
 					-- Generate the widget declarations and creation lines.
-				generate_declarations (current_document.root_element, 1)
+				generate_declarations
 				
 					-- Create storage for all generated feature names.
 				create all_generated_events.make (0)
@@ -483,44 +483,27 @@ feature {NONE} -- Implementation
 		end
 		
 
-	generate_declarations (element: XML_ELEMENT; depth: INTEGER) is
+	generate_declarations is
 			-- With information in `element', generate code which includes the
 			-- attribute declarations and creation of all components in system.
 		local
-			current_element: XML_ELEMENT
-			current_name: STRING
-			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
-			element_info: ELEMENT_INFORMATION
-			current_type: STRING
+			generated_info: GB_GENERATED_INFO
 		do
-			if element.has_attribute_by_name (type_string) then
-				current_type := element.attribute_by_name (type_string).value.to_utf8
-			end
 			from
-				element.start
+				all_ids.start
 			until
-				element.off
+				all_ids.off
 			loop
-				current_element ?= element.item_for_iteration
-				if current_element /= Void then
-					current_name := current_element.name.to_utf8
-					if current_name.is_equal (Item_string) then
-						generate_declarations (current_element, depth + 1)
+				generated_info := document_info.generated_info_by_id.item (all_ids.item)
+				if generated_info.name /= Void and then not generated_info.name.is_empty then
+					if system_status.current_project_settings.grouped_locals then
+						add_local_on_grouped_line (generated_info.type, generated_info.name)
 					else
-						if current_name.is_equal (Internal_properties_string) and depth > 2 then
-								full_information := get_unique_full_info (current_element)
-								element_info := full_information @ (name_string)
-									-- If `Grouped_locals' then group all locals together.
-								if system_status.current_project_settings.grouped_locals then
-									add_local_on_grouped_line (current_type, element_info.data)
-								else
-									add_local_on_single_line (current_type, element_info.data)
-								end
-								create_local (element_info.data)
-						end
+						add_local_on_single_line (generated_info.type, generated_info.name)
 					end
+					create_local (generated_info.name)
 				end
-				element.forth
+				all_ids.forth
 			end
 		end
 

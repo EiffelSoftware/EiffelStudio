@@ -278,14 +278,6 @@ feature {NONE} -- Implementation
 			can_add: BOOLEAN
 		do
 			formatted_path := format_external (external_item)
-
---			-- replace path to Eiffel installation with $ISE_EIFFEL			
---			external_copy := external_item.as_lower
---			eiffel_dir := ace_accesser.ise_eiffel.as_lower
---			if external_copy.substring_index (eiffel_dir, 1) = 1 then
---				formatted_path := formatted_path.substring (eiffel_dir.count + 1,  formatted_path.count)
---				formatted_path.prepend (ace_accesser.Ise_eiffel_envvar)
---			end
 			
 			from
 				can_add := true

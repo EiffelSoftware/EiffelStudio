@@ -44,6 +44,8 @@ feature
 
 	eiffel_type: STRING is "RADIO_BOX";
 
+	full_type_name: STRING is "Radio box"
+
 	unarm_all_toggles_except (t: TOGGLE_B_C) is
 			-- Unarm all toggles in Current except for `t'.
 		local

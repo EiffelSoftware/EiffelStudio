@@ -1,28 +1,17 @@
+indexing
+	description: "Context representing a window in general."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
+
 deferred class WINDOW_C 
 
 inherit
 
-	COMMAND;
-	SHARED_CONTEXT;
-	COMPOSITE_C
-		rename
-			reset_modified_flags as composite_reset_modified_flags,
-			position_modified as default_position,
-			undo_cut as old_undo_cut,
-			link_to_parent as add_to_window_list,
-			title_label as comp_title_label,
-			show as old_show,
-			hide as old_hide
-		redefine
-			create_context, cut, position_initialization,
-			is_in_a_group, root, set_position,
-			intermediate_name, is_bulletin, full_name,
-			deleted, remove_yourself, group_name,
-			set_x_y, set_size, set_visual_name,
-			raise, x, y, set_real_x_y, is_window,
-			add_to_window_list, retrieve_set_visual_name, 
-			shown, is_able_to_be_grouped, realize, is_movable
-		end;
+	COMMAND
+
+	SHARED_CONTEXT
+
 	COMPOSITE_C
 		rename
 			position_modified as default_position,
@@ -38,13 +27,13 @@ inherit
 			add_to_window_list, retrieve_set_visual_name, 
 			shown, is_able_to_be_grouped, title_label,
 			show, hide, realize, is_movable
-		select
-			reset_modified_flags, undo_cut, title_label, hide, show
-		end;
+		end
+
+	UNDO_REDO_ACCELERATOR
 	
 feature -- Specification
 
-	is_movable: BOOLEAN is False;
+	is_movable: BOOLEAN is False
 
 	group_name: STRING is do end
 
@@ -60,7 +49,7 @@ feature -- Specification
 
 	start_hidden_modified: BOOLEAN
 
-	is_really_shown: BOOLEAN;
+	is_really_shown: BOOLEAN
 			-- Setting show/hide does not set `shown' instantly (always
 			-- false if calling show/hide until the next event loop).
 			-- I needed this info immediately after a hide/show hence
@@ -83,19 +72,19 @@ feature -- Setting values
 	set_default_position (b: BOOLEAN) is
 		do
 			default_position := b
-		end;
+		end
 
 	set_title (new_title: STRING) is
 			-- Set`title' to `new_title'
 		do
 			title_modified := True
 			widget_set_title (new_title)
-			visual_name := clone (new_title);
-			update_tree_element;
+			visual_name := clone (new_title)
+			update_tree_element
 			if namer_window.namable = Current then
 				namer_window.update_name
-			end;
-		end;
+			end
+		end
 
 	disable_resize_policy (flag: BOOLEAN) is
 		do
@@ -109,8 +98,8 @@ feature -- Setting values
 
 	reset_modified_flags is
 		do
-			composite_reset_modified_flags
-			start_hidden := False;
+			Precursor
+			start_hidden := False
 			title_modified := False
 			resize_policy_modified := False
 		end
@@ -119,7 +108,7 @@ feature -- File names
 
 	base_file_name_without_dot_e: FILE_NAME is
 		deferred
-		end;
+		end
 
 feature {NONE}
 
@@ -131,14 +120,14 @@ feature
 
 	title_label: STRING is
 		do
-			Result := comp_title_label;
+			Result := Precursor
 				-- Only concerned after Current is retrieved
 			if retrieved_node = Void and then 
 				not is_really_shown 
 			then
-				Result.extend ('*');
+				Result.extend ('*')
 			end
-		end;
+		end
 
 	set_start_hidden (flag: BOOLEAN) is
 		do
@@ -147,7 +136,7 @@ feature
 
 	retrieve_set_visual_name (s: STRING) is
 		do
-			visual_name := clone (s);
+			visual_name := clone (s)
 			title_modified := True
 			widget_set_title (label)
 		end
@@ -155,12 +144,12 @@ feature
 	set_visual_name (s: STRING) is
 		do
 			if (s = Void) then
-				visual_name := Void;
+				visual_name := Void
 				title_modified := False
 			else
-				visual_name := clone (s);
+				visual_name := clone (s)
 				title_modified := True
-			end;
+			end
 			widget_set_title (label)
 			update_tree_element
 		end
@@ -178,17 +167,17 @@ feature
 			-- Is Current a window? (True)
 		do
 			Result := True
-		end;
+		end
 
 	is_in_a_group: BOOLEAN is
 			-- Is Current in a group? (False)
 		do
-		end;
+		end
 
 	is_able_to_be_grouped: BOOLEAN is
 			-- Is Current able to be grouped? (False)
 		do
-		end;
+		end
 
 	add_to_window_list is
 		require else
@@ -202,33 +191,33 @@ feature
 			valid_parent: True
 		do
 			Result := Current
-		end;
+		end
 
 	set_position (x_pos, y_pos: INTEGER) is
 		require else
 			no_parent_restrictions: True
 		do
 			set_x_y (x_pos, y_pos)
-		end;
+		end
 
 	set_real_x_y (new_x, new_y: INTEGER) is
 			-- Set new position of widget
 		require else
 			no_parent_restrictions: True
 		do
-			set_x_y (new_x - x_offset, new_y - y_offset);
-		end;
+			set_x_y (new_x - x_offset, new_y - y_offset)
+		end
 
 	set_x_y (new_x, new_y: INTEGER) is
 			-- Set new position of widget
 		require else
 			no_parent_restrictions: True
 		do
-			widget.set_x_y (new_x, new_y);
-			old_x := new_x;
-			old_y := new_y;
-			x := old_x;
-			y := old_y;
+			widget.set_x_y (new_x, new_y)
+			old_x := new_x
+			old_y := new_y
+			x := old_x
+			y := old_y
 			configure_count := configure_count + 1
 		end
 
@@ -237,10 +226,10 @@ feature
 		require else
 			no_parent_restrictions: True
 		do
-			size_modified := True;
-			widget.set_size (new_w, new_h);
-			old_width := new_w;
-			old_height := new_h;
+			size_modified := True
+			widget.set_size (new_w, new_h)
+			old_width := new_w
+			old_height := new_h
 		end
 
 feature {CONTEXT}
@@ -272,7 +261,7 @@ feature
 				Result.set_size (width, height)
 				copy_attributes (Result)
 			end
-			!!create_command
+			!! create_command
 			create_command.execute (Result)
 		ensure then
 			in_window_list: Shared_window_list.has (Result)
@@ -287,7 +276,7 @@ feature
 		local
 			command: CONTEXT_CUT_CMD
 		do
-			!!command
+			!! command
 			command.execute (Current)
 			tree.display (Current)
 		end
@@ -296,10 +285,10 @@ feature
 		require else
 			no_parent: True
 		do
-			hide;
-			Shared_window_list.start;
-			Shared_window_list.prune (Current);
-			tree.cut (tree_element);
+			hide
+			Shared_window_list.start
+			Shared_window_list.prune (Current)
+			tree.cut (tree_element)
 			context_catalog.clear_editors (Current)
 			--added by samik
 			widget.set_managed(False)		
@@ -309,65 +298,65 @@ feature
 
 	undo_cut is
 		do
-			show;
-			old_undo_cut
+			show
+			Precursor
 		ensure then
 			in_window_list: Shared_window_list.has (Current)
-		end;
+		end
 
 	add_window_geometry_action is 
 		require 
 			widget_not_void: widget /= Void
 		deferred
-		end;
+		end
 
 	remove_window_geometry_action is 
 		require 
 			widget_not_void: widget /= Void
 		deferred
-		end;
+		end
 
 	shown: BOOLEAN is
 		do
 			Result := widget.realized and then widget.shown
-		end;
+		end
 
 	show is
 		do
-			old_show;
-			update_label (True);
-		end;
+			Precursor
+			update_label (True)
+		end
 
 	hide is
 		do
-			old_hide;
-			update_label (False);
-		end;
+			Precursor
+			update_label (False)
+		end
 
 	raise is
 		do
 			if not shown then
 				show
-			end;
+			end
 			widget.raise
-		end;
+		end
 
 	realize is
 		do
-			widget.realize;
-			update_label (True);
-		end;
+			widget.realize
+			update_label (True)
+		end
 
 	update_label (is_shown: BOOLEAN) is
 			-- Update label for window visibility.
 		local
 			cur: CURSOR
 		do
-			is_really_shown := is_shown;
-			cur := Shared_window_list.cursor;
-			update_tree_element;
-			Shared_window_list.go_to (cur);
-		end;
+			is_really_shown := is_shown
+			cur := Shared_window_list.cursor
+			update_tree_element
+			Shared_window_list.go_to (cur)
+		end
 
 feature
 
@@ -383,23 +372,23 @@ feature
 					-- Only concerned if the window is shown
 				shown
 			then
-				x := widget.x - x_offset;
-				y := widget.y - y_offset;
+				x := widget.x - x_offset
+				y := widget.y - y_offset
 					-- Configure event
 				if old_x /= x or else old_y /= y or else
 					old_height /= height or else old_width /= width
 				then
-					!! win_cmd.make (Current);
-					old_x := x;
-					old_y := y;
-					old_width := width;
-					old_height := height;
+					!! win_cmd.make (Current)
+					old_x := x
+					old_y := y
+					old_width := width
+					old_height := height
 					win_cmd.execute (argument)
 				end
-			end;
+			end
 			if configure_count > 0 then
 				configure_count := configure_count - 1
-			end;
+			end
 		end
 
 	old_x, old_y, old_width, old_height: INTEGER
@@ -407,10 +396,10 @@ feature
 
 feature -- Hack for motif
 
-	x: INTEGER;
+	x: INTEGER
 			-- (See comments for x_offset)
 
-	y: INTEGER;
+	y: INTEGER
 			-- (See comments for y_offset)
 
 	x_offset: INTEGER is	
@@ -426,7 +415,7 @@ feature -- Hack for motif
 			if toolkit.name.is_equal ("MOTIF") then
 				Result := widget.real_x - old_x
 			end
-		end;
+		end
 
 	y_offset: INTEGER is	
 			-- See above comments
@@ -436,7 +425,7 @@ feature -- Hack for motif
 			if toolkit.name.is_equal ("MOTIF") then
 				Result := widget.real_y - old_y
 			end
-		end;
+		end
 
 feature {NONE} -- Code generation
 

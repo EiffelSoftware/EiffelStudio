@@ -23,6 +23,7 @@ inherit
 		select
 			create_context, full_name
 		end;
+-- samik	G_ANY
 
 feature 
 
@@ -39,7 +40,10 @@ feature
 	add_widget_callbacks is
 		local
 			ms_win: STRING
+			mode_backup: INTEGER
 		do
+			mode_backup := executing_or_editing_mode
+			set_mode (editing_mode)
 			ms_win := "MS_WINDOWS";
 			if not ms_win.is_equal (toolkit.name) then
 				add_common_callbacks (widget.button);
@@ -48,6 +52,7 @@ feature
 					widget.button.add_enter_action (eb_selection_mgr, parent);
 				end
 			end;
+			set_mode (mode_backup)
 		end;
 
 	remove_widget_callbacks is
@@ -135,6 +140,8 @@ feature {NONE}
 feature 
 
 	eiffel_type: STRING is "MENU_PULL";
+
+	full_type_name: STRING is "Menu pull"
 
 	create_context (a_parent: COMPOSITE_C): like Current is
 		local

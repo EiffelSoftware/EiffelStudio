@@ -7,6 +7,7 @@ inherit
 		redefine
 			stored_node, widget,
 			set_bg_pixmap_name
+--			add_widget_callbacks
 		end
 	
 feature 
@@ -18,7 +19,7 @@ feature
 
 	create_oui_widget (a_parent: COMPOSITE) is
 		do
-			!!widget.make_unmanaged (entity_name, a_parent);
+			!! widget.make_unmanaged (entity_name, a_parent);
 			disable_resize_policy (True);
 		end;
 
@@ -28,6 +29,19 @@ feature
 		do
 			Result := Pixmaps.push_b_pixmap
 		end;
+	
+--	add_widget_callbacks is
+--		local
+--			old_mode: INTEGER
+--			test_cmd: TEST_COMMAND
+--		do	
+--			precursor
+--			!! test_cmd.make
+--			old_mode := executing_or_editing_mode
+--			set_mode (executing_mode)
+--			widget.add_activate_action (test_cmd, Void)
+--			set_mode (old_mode)
+--		end
 	
 feature {NONE}
 
@@ -67,6 +81,8 @@ feature {NONE}
 feature 
 
 	eiffel_type: STRING is "PUSH_B";
+
+	full_type_name: STRING is "Push button"
 
 -- ****************
 -- Storage features

@@ -68,6 +68,8 @@ feature
 
 	eiffel_type: STRING is "ARROW_B";
 
+	full_type_name: STRING is "Arrow button"
+
 	create_context (a_parent: COMPOSITE_C): like Current is
 			-- Create a context of the same type
 		do

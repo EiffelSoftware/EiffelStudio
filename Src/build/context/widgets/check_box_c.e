@@ -45,6 +45,8 @@ feature
 
 	eiffel_type: STRING is "CHECK_BOX";
 
+	full_type_name: STRING is "Check box"
+
 -- ****************
 -- Storage features
 -- ****************

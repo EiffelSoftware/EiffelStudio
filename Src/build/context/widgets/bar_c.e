@@ -22,11 +22,17 @@ feature
 		end;
 
 	create_oui_widget (a_parent: COMPOSITE) is
+		local
+			parent_perm_wind: PERM_WIND
 		do
-			!!widget.make_unmanaged (entity_name, a_parent);
-			forbid_recompute_size;
-			set_size (40, 40);
-			allow_recompute_size;
+			parent_perm_wind ?= a_parent
+			if parent_perm_wind /= Void then
+				!! widget.make_unmanaged (entity_name, parent_perm_wind.top_shell)
+			end
+				--| The next lines are needed on Motif platforms.
+--			forbid_recompute_size;
+--			set_size (40, 40);
+--			allow_recompute_size;
 		end;
 
 	widget: BAR;
@@ -49,6 +55,8 @@ feature {NONE}
 feature 
 
 	eiffel_type: STRING is "BAR";
+
+	full_type_name: STRING is "Bar"
 
 
 	forbid_recompute_size is

@@ -73,6 +73,8 @@ feature
 
 	eiffel_type: STRING is "PICT_COLOR_B";
 
+	full_type_name: STRING is "Picture color button"
+
 	-- ***********************
 	-- * specific attributes *
 	-- ***********************

@@ -60,6 +60,8 @@ feature
 
 	eiffel_type: STRING is "TEXT_FIELD";
 
+	full_type_name: STRING is "Text field"
+
 	-- ***********************
 	-- * specific attributes *
 	-- ***********************

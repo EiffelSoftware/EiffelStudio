@@ -78,6 +78,8 @@ feature
 
 	eiffel_type: STRING is "SCROLLABLE_LIST";
 
+	full_type_name: STRING is "Scrollable list"
+
 	add_to_option_list (opt_list: ARRAY [INTEGER]) is
 		do
 			opt_list.put (Context_const.geometry_form_nbr,

@@ -4,9 +4,12 @@ class SELECTION_MANAGER
 inherit
 
 	WINDOWS;
-	COMMAND
+--	COMMAND
+	INTERNAL_META_COMMAND
 		redefine
-			context_data_useful
+			context_data_useful,
+			execute,
+			make
 		end;
 	COMMAND_ARGS;
 	CONSTANTS;
@@ -26,6 +29,7 @@ feature {NONE} -- Creation
 			set_drawing (eb_screen);
 			set_logical_mode (10); -- GXinvert
 			!!group.make;
+			Precursor
 		end;
 	
 	wipe_out_group is
@@ -597,7 +601,19 @@ feature {NONE} -- Cursor shape
 
 feature {PERM_WIND_C}
 
-	execute (argument: ANY) is
+	execute (arg: ANY) is
+			-- Execute `associated_meta_command' if current mode is
+			-- `Executing_mode'. Execute `editing_command' if current
+			-- mode is `Editing_mode'.
+		do
+			if editing_or_executing_mode = Executing_mode then
+				associated_meta_command.execute (arg)
+			else
+				execute_current (arg)
+			end
+		end
+
+	execute_current (argument: ANY) is
 		local
 			bull: BULLETIN_C;
 			a_context: CONTEXT;
@@ -614,6 +630,7 @@ feature {PERM_WIND_C}
 					if not grabbed then
 						-- First call
 						-- Keep track of old values
+						context.set_insensitive
 						begin_mvt
 					elseif cursor_shape = Cursors.move_cursor then
 						move_rectangle
@@ -643,6 +660,7 @@ feature {PERM_WIND_C}
 						end_mvt
 					end
 				end;
+				context.set_sensitive
 			elseif (argument = Third) then
 					-- Button press
 				if context.is_selectionable then

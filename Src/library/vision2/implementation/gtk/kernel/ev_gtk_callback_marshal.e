@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 		once
 			c_ev_gtk_callback_marshal_init (Current, $marshal)
 		end
-		
+
 feature {EV_ANY_IMP} -- Access
 
 	translate_and_call (
@@ -101,7 +101,7 @@ feature {EV_ANY_IMP} -- Access
 	motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER] is
 			-- 
 		once
-			Result := [0, 0, 0, 0, 0, 0, 0]
+			Result := [0, 0, 0.0, 0.0, 0.0, 0, 0]
 		end
 		
 	set_motion_tuple (a_1, a_2: INTEGER; a_3, a_4, a_5: DOUBLE; a_6, a_7: INTEGER) is

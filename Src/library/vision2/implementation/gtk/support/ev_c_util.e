@@ -1,18 +1,6 @@
 class
 	EV_C_UTIL
 
---inherit
---	C_GSLIST_STRUCT
-
-feature -- Initialization
-
-	enable_ev_gtk_log (a_mode: INTEGER) is
-			-- Connect GTK+ logging to Eiffel exception handler.
-			-- `a_mode' = 0 means no log messages, 1 = messages, 2 = messages with exceptions.
-		external
-			"C (EIF_INTEGER) | %"ev_c_util.h%""
-		end
-
 feature -- Output
 
 	safe_print (s: STRING) is
@@ -107,12 +95,6 @@ feature {NONE} -- Nasty hack
 			-- Because Result := $x causes a syntax error.
 		do
 			Result := p
-		end
-
-	calloc (nmemb, size: INTEGER): POINTER is
-			-- void *calloc(size_t nmemb, size_t size);
-		external
-			"C (size_t, size_t): void* | <stdlib.h>"
 		end
 
 	c_free (ptr: POINTER) is

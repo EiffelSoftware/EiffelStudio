@@ -9,7 +9,7 @@ inherit
 
 	AST_LACE
 		redefine
-			adapt
+			adapt, adapt_defaults
 		end;
 
 feature {D_OPTION_SD, LACE_AST_FACTORY} -- Initialization
@@ -77,6 +77,12 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			-- Cluster adaptation
 		do
 			option.adapt (value, context.current_cluster.classes, Void) 
+		end
+
+	adapt_defaults is
+			-- Cluster adaptation
+		do
+			option.adapt_defaults (value, context.current_cluster.classes, Void) 
 		end
 
 end -- class D_OPTION_SD

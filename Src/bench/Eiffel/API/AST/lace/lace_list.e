@@ -12,7 +12,7 @@ inherit
 		undefine 
 			copy, is_equal
 		redefine
-			adapt
+			adapt, adapt_defaults
 		end
 
 	CONSTRUCT_LIST [T]
@@ -38,6 +38,23 @@ feature {COMPILER_EXPORTER}
 				i = nb
 			loop
 				l_area.item (i).adapt
+				i := i + 1
+			end
+		end
+
+	adapt_defaults is
+			-- Adaptation iteration for system default clause to current.
+		local
+			l_area: SPECIAL [T]
+			i, nb: INTEGER;
+		do
+			from
+				l_area := area
+				nb := count
+			until
+				i = nb
+			loop
+				l_area.item (i).adapt_defaults
 				i := i + 1
 			end
 		end

@@ -602,7 +602,6 @@ feature {AST_EIFFEL} -- Output
 				-- We simply use an empty feature in
 				-- order to print the parameter list.
 			if parameter_count > 0 then
-				ctxt.put_text_item (ti_space)
 				ctxt.prepare_for_feature ("", parameters)
 				ctxt.put_current_feature
 			end

@@ -665,7 +665,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_wm_paint is
+	on_wm_paint (wparam: INTEGER) is
 			-- Wm_paint message.
 			-- A WEL_DC and WEL_PAINT_STRUCT are created and
 			-- passed to the `on_paint' routine.
@@ -678,7 +678,7 @@ feature {NONE} -- Implementation
 		local
 			paint_dc: WEL_PAINT_DC
 		do
-			!! paint_dc.make (Current)
+			!! paint_dc.make_by_pointer (Current, cwel_integer_to_pointer(wparam))
 			paint_dc.get
 			if scroller /= Void then
 				paint_dc.set_viewport_origin (-scroller.horizontal_position,
@@ -824,10 +824,10 @@ feature {WEL_DISPATCHER}
 		do
 			-- Call the `process_message' routine of the
 			-- parent class.
-			Result := window_process_message (hwnd, msg,
-				wparam, lparam)
+			Result := window_process_message (hwnd, msg, wparam, lparam)
+
 			if msg = Wm_paint then
-				on_wm_paint
+				on_wm_paint (wparam)
 			elseif msg = Wm_command then
 				on_wm_command (wparam, lparam)
 			elseif msg = Wm_syscommand then

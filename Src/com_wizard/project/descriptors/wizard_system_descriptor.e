@@ -7,6 +7,9 @@ indexing
 class
 	WIZARD_SYSTEM_DESCRIPTOR
 
+inherit 
+	WIZARD_REJECTED_TYPE_LIBRARIES
+
 creation
 	make
 
@@ -80,6 +83,16 @@ feature -- Access
 
 	type_lib_guid: ECOM_GUID
 			-- GUID of Type Library that started system.
+
+feature -- Status report
+
+	is_generated_coclass (a_coclass: WIZARD_COCLASS_DESCRIPTOR): BOOLEAN is
+			-- Is `a_coclass' generated?
+		require
+			non_void_coclass: a_coclass /= Void
+		do
+			Result := not Non_generated_type_libraries.has (a_coclass.type_library_descriptor.guid)
+		end
 
 feature -- Basic operations
 

@@ -89,8 +89,7 @@ feature -- Add objects in baskets
 			i, nb: INTEGER
 		do
 			add_in_system_basket (Eref);
-			add_in_system_basket (Esize);
-			add_in_system_basket (Eplug);
+			add_in_system_basket (Esize)
 
 				-- Routine tables.
 			from

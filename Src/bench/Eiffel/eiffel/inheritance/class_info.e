@@ -13,7 +13,10 @@ inherit
 
 	SHARED_ERROR_HANDLER;
 	SHARED_EXPORT_STATUS;
-	SHARED_SERVER;
+	SHARED_SERVER
+		export
+			{ANY} all
+		end;
 	IDABLE;
 
 feature 

@@ -50,8 +50,16 @@ feature
 
 				-- Evaluation of the execution unit
 			execution_unit := melted_feat.execution_unit (class_type);
+debug
+	io.error.putstring ("MELTED_INFO.dispatch_unit %N");
+	execution_unit.trace;
+end;
 			Execution_table.put (execution_unit);
 			execution_unit := Execution_table.last_unit;
+debug
+	execution_unit.trace;
+	io.error.putstring ("MELTED_INFO end dispatch_unit%N%N%N");
+end;
 
 				-- Udpdate of the dispatch and execution tables
 			Result.set_execution_unit (execution_unit);

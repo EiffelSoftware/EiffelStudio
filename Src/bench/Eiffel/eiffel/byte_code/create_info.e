@@ -32,4 +32,10 @@ feature -- Byte code generation
 		deferred
 		end;
 
+feature -- Debug
+
+	trace is
+		deferred
+		end
+
 end

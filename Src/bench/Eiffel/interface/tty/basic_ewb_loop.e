@@ -146,9 +146,12 @@ feature -- Initialization
 		local
 			ewb_cmd: EWB_CMD;
 		do
-			!!Result.make (1, 1);
+			!!Result.make (1, 2);
 
 			!EWB_COMP! ewb_cmd;
+			Result.add_entry  (ewb_cmd);
+
+			!EWB_RUN! ewb_cmd;
 			Result.add_entry  (ewb_cmd);
 		end;
 

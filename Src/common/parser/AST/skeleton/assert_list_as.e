@@ -39,6 +39,17 @@ feature -- Type check, byte code, dead code removal and formatter
 			end;
 		end;
 
+feature -- Incrementality
+
+	reset is
+		do
+			if assertions /= Void then
+				assertions.start
+			end;
+		end;
+
+feature -- Format
+
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text
 		local

@@ -10,7 +10,10 @@ deferred class FEATURE_I
 inherit
 
 	SHARED_WORKBENCH;
-	SHARED_SERVER;
+	SHARED_SERVER
+		export
+			{ANY} all
+		end;
 	SHARED_INSTANTIATOR;
 	BASIC_ROUTINES;
 	SHARED_ERROR_HANDLER;
@@ -29,7 +32,10 @@ inherit
 	SHARED_PATTERN_TABLE;
 	SHARED_USED_TABLE;
 	SHARED_INST_CONTEXT;
-	SHARED_ID_TABLES;
+	SHARED_ID_TABLES
+		export
+			{ANY} Body_index_table, Original_body_index_table
+		end;
 	SHARED_ARRAY_BYTE;
 	SHARED_EXEC_TABLE;
 	HASHABLE;
@@ -286,6 +292,15 @@ end;
 			if Result and then has_arguments then
 				Result := arguments.is_valid;
 			end;
+		end;
+
+	same_type (other: FEATURE_I): BOOLEAN is
+			-- Has `other' the same resulting type than Current ?
+		require
+			good_argument: other /= Void;
+			same_names: other.feature_name.is_equal (feature_name);
+		do
+			Result := 	type.same_as (other.type);
 		end;
 
 	same_interface (other: FEATURE_I): BOOLEAN is

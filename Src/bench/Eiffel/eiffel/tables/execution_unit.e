@@ -144,4 +144,22 @@ feature
 			file.putstring (",%N");
 		end;
 
+feature -- Debug
+
+	trace is
+		do
+			io.error.putstring (generator);
+			io.error.putstring ("%NBody_id: ");
+			io.error.putint (body_id);
+			io.error.putstring ("%NIndex: ");
+			io.error.putint (index);
+			io.error.putstring ("%NPattern id: ");
+			io.error.putint (pattern_id);
+			io.error.putstring ("%Nwritten_in: ");
+			io.error.putint (written_in);
+			io.error.putstring ("%NType: ");
+			type.trace;
+			io.error.new_line;
+		end;
+
 end

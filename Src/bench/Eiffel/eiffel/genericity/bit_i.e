@@ -137,7 +137,7 @@ feature
 	generate_sk_value (file: UNIX_FILE) is
 			-- Generate SK value associated to current C type in `file'.
 		do
-			file.putstring ("SK_BIT + ");
+			file.putstring ("SK_BIT + (uint32) ");
 			file.putint (size);
 		end;
 

@@ -227,6 +227,12 @@ feature -- New feature description
 		do
 			Result := deep_equal (type, other.type) and then
 					deep_equal (arguments, other.arguments);
+debug
+	io.error.putstring ("BODY_AS.is_body_equiv%N");
+	if not Result then
+		io.error.putstring ("Different signatures%N");
+	end;
+end;
 			if Result then
 				if (content = Void) and (other.content = Void) then
 				elseif (content = Void) or else (other.content = Void) then
@@ -235,6 +241,11 @@ feature -- New feature description
 						-- The two objects are of the same type.
 						-- There is no global typing problem.
 					Result := content.is_body_equiv (other.content)
+debug
+	if not Result then
+		io.error.putstring ("Different bodies%N");
+	end;
+end
 				else
 					Result := False
 				end;

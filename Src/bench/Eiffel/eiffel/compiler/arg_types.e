@@ -6,6 +6,9 @@ class ARG_TYPES
 inherit
 
 	SHARED_AST_CONTEXT
+		export
+			{ANY} context
+		end
 	
 feature
 

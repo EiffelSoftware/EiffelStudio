@@ -59,7 +59,9 @@ feature {NONE}
 
 	quit_cmd_name: STRING is "quit"
 
-	routines_cmd_name: STRING is "features"
+	routines_cmd_name: STRING is "routines"
+
+	run_cmd_name: STRING is "run"
 
 	short_cmd_name: STRING is "short"
 

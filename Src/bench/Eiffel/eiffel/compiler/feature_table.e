@@ -155,6 +155,7 @@ end;
 			depend_unit: DEPEND_UNIT;
 			external_i: EXTERNAL_I;
 			propagate_feature: BOOLEAN;
+			same_interface, same_type: BOOLEAN;
 		do
 				-- Iteration on the features of the current feature
 				-- table.
@@ -171,13 +172,20 @@ end;
 				feature_name := old_feature_i.feature_name;
 					-- New feature
 				new_feature_i := other.item (feature_name);
+				if new_feature_i /= Void then
+					same_type := True;
+					same_interface := old_feature_i.same_interface (new_feature_i)
+					if not same_interface then
+						same_type := old_feature_i.same_type (new_feature_i);
+					end;
+				end;
 					-- First condition, `other' must have the feature
 					-- name. Second condition, `old_feature_i' and
 					-- `new_feature_i' must have the same interface
 					-- Finally, they must have the same `is_deferred' value
 				if not (	(new_feature_i /= Void
 							and then
-							old_feature_i.same_interface (new_feature_i)
+							same_interface
 							and then
 							old_feature_i.export_status.equiv (new_feature_i.export_status)
 							and then
@@ -239,7 +247,8 @@ end;
 
 				if 	new_feature_i /= Void
 					and then
-					old_feature_i.is_attribute /= new_feature_i.is_attribute
+					(old_feature_i.is_attribute /= new_feature_i.is_attribute or else
+					 not same_type)
 				then
 						-- Detect an attribute changed into a function.
 					if depend_unit = Void then

@@ -30,10 +30,12 @@ feature
 			if not error_occurred then
 				print_header;
 				compile;
-				terminate_project;
-				print_tail;
-				if System.freezing_occurred then
-					prompt_finish_freezing (False)
+				if System.successfull then
+					terminate_project;
+					print_tail;
+					if System.freezing_occurred then
+						prompt_finish_freezing (False)
+					end;
 				end;
 			end;
 		end;

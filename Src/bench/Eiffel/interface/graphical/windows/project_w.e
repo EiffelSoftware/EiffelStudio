@@ -5,10 +5,6 @@
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
--- First window of the project
--- TODO:
---	Xterminal stuff
-
 class PROJECT_W
 
 inherit
@@ -72,9 +68,7 @@ feature
 		local
 			void_reference: ANY;
 			a_screen: SCREEN;
---xterm_name: STRING
 		do
---xterm_name := "Tregastel vaincra";
 			if popup /= Void then end;
 			if popdown /= Void then end;
 			a_screen := display;
@@ -91,11 +85,11 @@ feature
 			set_icon_name (tool_name);
 			set_action ("<Unmap>,<Prop>", Current, popdown);
 			set_action ("<Map>,<Prop>", Current, popup);
---get_xterm_in_xterminal (xterm_name);
 		end;
 
-    set_default_position is do end;
-    set_default_size is do end;
+	set_default_position is do end;
+
+	set_default_size is do end;
 
 	close_windows is 
 		do 
@@ -134,39 +128,20 @@ feature
 
 feature -- xterminal
 
-	build_xterminal is
-			-- Build drawing for xterminal.
-		do
-			!!xterminal.make (new_name, form_manager);
-			xterminal.add_resize_action (Current, Void);
-		end;
-
-	get_xterm_in_xterminal (wname: STRING) is
-		 	-- Get xterm and sqeeze it into `xterminal'.
-		local
-			n: ANY
-		do
-			n := wname.to_c;
-			squeeze (xt_display (implementation.screen_object), $n,
-				xt_window (xterminal.implementation.screen_object), xterminal.width, xterminal.height)
-		end;
-
 	text_window: PROJECT_TEXT;
-
-	xterminal: DRAWING_AREA;
-			-- Form where the xterminal is squeezed;
 
 	execute (arg: ANY) is
 			-- Resize xterm window when drawing area is resized
 		do
-			--resize_xterm (xt_display (implementation.screen_object), xterminal.width, xterminal.height)
 			if arg = popup then
 				window_manager.show_all_editors
 				if hidden_system_window then
 					system_tool.display
 					hidden_system_window := False;
 				end;
-				raise
+				if initialized then
+					raise
+				end
 			elseif arg = popdown then
 				window_manager.hide_all_editors;
 				if 	
@@ -199,7 +174,6 @@ feature -- rest
 			build_text;
 			build_top;
 			build_icing;
---build_xterminal;
 			attach_all
 		end; -- build
 
@@ -344,28 +318,6 @@ feature -- rest
 			-- Assign `f' to `changed'.
 		do
 			changed := f
-		end
-
-feature {NONE} -- external
-
-	xt_window (scr_obj: POINTER): POINTER is
-		external
-			"C"
-		end;
- 
-	xt_display (scr_obj: POINTER): POINTER is
-		external
-			"C"
-		end;
-
-	squeeze (disp: POINTER; xname: ANY; xwin: POINTER; w, h: INTEGER) is
-		external
-			"C"
-		end;
-
-	resize_xterm (disp: POINTER; w, h: INTEGER) is
-		external
-			"C"
 		end
 
 end

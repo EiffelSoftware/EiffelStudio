@@ -40,6 +40,13 @@ feature -- Initialization
 			ctxt.commit;
 		end;
 
+feature -- Incrementality
+
+	reset is
+		do
+			id_list.start
+		end;
+
 feature  -- Replication
 
 	fill_calls_list (l: CALLS_LIST) is
@@ -73,5 +80,23 @@ feature {TYPE_DEC_AS} -- Replication
 		do
 			id_list := id
 		end; 
+
+feature -- Debug
+
+	trace is
+		do
+			type.trace;
+			io.error.putstring (id_list.tagged_out);
+			from
+				id_list.start
+			until
+				id_list.after
+			loop
+				io.error.putstring ("Name: ");
+				io.error.putstring (id_list.item);
+				io.error.new_line;
+				id_list.forth
+			end;
+		end
 
 end

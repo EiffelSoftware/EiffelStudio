@@ -79,22 +79,11 @@ feature {NONE} -- Initialization
 			a_columns_positive: a_columns > 0
 		local
 			i: INTEGER
-			col_titles: ARRAYED_LIST [STRING]
-			col_widths: ARRAYED_LIST [INTEGER]
 			old_list_widget: POINTER
+			temp_title: STRING
+			temp_width: INTEGER
 		do
 			if list_widget /= Default_pointer then
-				from
-					i := 1
-					create col_titles.make (column_count)
-					create col_widths.make (column_count)
-				until
-					i > column_count
-				loop
-					col_titles.extend (column_title (i))
-					col_widths.extend (column_width (i))
-					i := i + 1
-				end
 				old_list_widget := list_widget
 			end
 
@@ -110,25 +99,29 @@ feature {NONE} -- Initialization
 
 			C.gtk_widget_show (list_widget)
 
+			show_title_row
 
-			-- We need to specify a width for the columns
-			-- otherwise the value given by gtk would be wrong.
 			from
 				i := 1
 			until
 				i > a_columns
 			loop
-				if col_titles /= Void and then col_titles.valid_index (i) then
-					set_column_width (col_widths.i_th (i), i)
-					if col_titles.i_th (i) /= Void then
-						set_column_title (col_titles.i_th (i), i)
-					end
+				if column_titles.valid_index (i) and then column_titles.i_th (i) /= Void then
+					temp_title := column_titles.i_th (i)
 				else
-					set_column_width (80, i)
+					temp_title := ""
 				end
+				if column_widths.valid_index (i) then
+					temp_width := column_widths.i_th (i)
+				else
+					temp_width := Default_column_width
+				end
+
+				column_title_changed (temp_title, i)
+				column_width_changed (temp_width, i)
+
 				i := i + 1
 			end
-			show_title_row
 
 			from
 				ev_children.start
@@ -145,7 +138,6 @@ feature {NONE} -- Initialization
 				C.gtk_container_remove (scroll_window, old_list_widget)
 			end
 			C.gtk_container_add (scroll_window, list_widget)
-
 		end
 
 	select_callback (int: TUPLE [INTEGER]) is
@@ -225,8 +217,7 @@ feature -- Access
 					list_widget,
 					0
 				)		
-				Result ?= 
-					(ev_children @ (an_index + 1)).interface
+				Result ?= (ev_children @ (an_index + 1)).interface
 			end
 		end
 
@@ -399,21 +390,24 @@ feature -- Status setting
 
 feature -- Element change
 
-	column_title_changed (txt: STRING; column: INTEGER) is
-			-- Make `txt' the title of the column number
-			-- `number'.
+	column_title_changed (a_txt: STRING; a_column: INTEGER) is
+			-- Make `a_txt' the title of the column number.
 		local
 			a: ANY
 		do
-			a := txt.to_c
-			C.gtk_clist_set_column_title (list_widget, column - 1, $a)
+			if list_widget /= Default_pointer then
+				a := a_txt.to_c
+				C.gtk_clist_set_column_title (list_widget, a_column - 1, $a)
+			end
 		end
 
 	column_width_changed (value: INTEGER; column: INTEGER) is
 			-- Make `value' the new width of the column number
 			-- `column'.
 		do
-			C.gtk_clist_set_column_width (list_widget, column - 1, value)
+			if list_widget /= Default_pointer then
+				C.gtk_clist_set_column_width (list_widget, column - 1, value)
+			end
 		end
 
 	set_row_height (value: INTEGER) is
@@ -459,6 +453,7 @@ feature -- Element change
 feature {EV_APPLICATION_IMP} -- Implementation
 
 	pebble_over_widget (a_gdkwin: POINTER; a_x, a_y: INTEGER): BOOLEAN is
+			-- Is the PND pebble hovering above list.
 		local
 			gdkwin_parent, gdkwin_parent_parent: POINTER
 			clist_parent: POINTER
@@ -475,15 +470,26 @@ feature {EV_APPLICATION_IMP} -- Implementation
 feature {NONE} -- Implementation
 
 	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING) is
+			-- Set cell text at (a_column, a_row) to `a_text'.
 		local
 			a: ANY
+			row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
+			pixmap_imp: EV_PIXMAP_IMP
+			pixmap_pointer: POINTER
 		do
 			a := a_text.to_c
+
+			row_imp := ev_children.i_th (a_row)
+			if row_imp.pixmap /= Void and a_column = 1 then
+				pixmap_imp ?= row_imp.pixmap.implementation
+				pixmap_pointer := pixmap_imp.c_object
+			end
+
 			C.c_gtk_clist_set_pixtext (
 				list_widget,
 				a_row - 1,
 				a_column - 1,
-				Default_pointer,
+				pixmap_pointer,
 				$a
 			)
 		end
@@ -626,6 +632,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.53  2000/03/28 21:29:26  king
+--| Implemented to deal with setting of titles and widths
+--|
 --| Revision 1.52  2000/03/28 01:09:43  king
 --| Using ev_children for count
 --|

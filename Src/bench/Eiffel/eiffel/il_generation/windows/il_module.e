@@ -91,6 +91,7 @@ feature {NONE} -- Initialization
 			end
 			c_module_name := a_c_module_name
 			object_type_id := system.system_object_class.compiled_class.types.first.static_type_id
+			value_type_id := system.system_value_type_class.compiled_class.types.first.static_type_id
 			any_type_id := system.any_class.compiled_class.types.first.static_type_id
 		ensure
 			module_file_name_set: module_file_name = a_file_name
@@ -181,6 +182,9 @@ feature -- Access: tokens
 	object_type_token: INTEGER
 			-- Token for `System.Object' in `mscorlib'.
 
+	value_type_token: INTEGER
+			-- Token for `System.ValueType' in `mscorlib'.
+
 	math_type_token: INTEGER
 			-- Token for `System.Math' type in `mscorlib'.
 
@@ -195,9 +199,6 @@ feature -- Access: tokens
 
 	power_method_token: INTEGER
 			-- Token for `System.Math.Power' feature in `mscorlib'.
-
-	object_ctor_token: INTEGER
-			-- Token for `System.Object' constructor feature in `mscorlib'.
 
 	cls_compliant_ctor_token: INTEGER
 			-- Token for `System.CLSCompliantAttribute' constructor.
@@ -265,8 +266,8 @@ feature -- Access: types
 		do
 		end
 
-	object_type_id, any_type_id: INTEGER
-			-- Type id of SYSTEM_OBJECT and ANY class.
+	object_type_id, value_type_id, any_type_id: INTEGER
+			-- Type id of SYSTEM_OBJECT, VALUE_TYPE and ANY class.
 
 feature {NONE} -- Access: code generation
 
@@ -560,10 +561,7 @@ feature -- Code generation
 				generate_argument_array
 			end
 
-			if
-				a_class_type.associated_class.is_frozen or 
-				a_class_type.associated_class.is_single
-			then
+			if a_class_type.is_generated_as_single_type then
 				il_code_generator.method_body.put_call (feature {MD_OPCODES}.Callvirt,
 					feature_token (l_type_id, a_feature_id), 0, False)
 			else
@@ -619,13 +617,12 @@ feature -- Metadata description
 		require
 			is_generated: is_generated
 			class_type_not_void: class_type /= Void
-			external_class: class_type.associated_class.is_external
+			not_external_class_type: class_type.is_external
 		local
 			class_c: CLASS_C
 			l_native_array: NATIVE_ARRAY_CLASS_TYPE
 			name: STRING
 			l_type_token: INTEGER
-			l_type: CL_TYPE_I
 			l_nested_parent_class: CLASS_C
 			l_external_class: EXTERNAL_CLASS_C
 			l_nested_parent_class_token: INTEGER
@@ -661,16 +658,7 @@ feature -- Metadata description
 				end
 				class_mapping.put (l_type_token, class_type.static_type_id)
 
-					-- Fix `class_type.type' as it only contains a valid
-					-- class id, nothing else.
-				l_type := class_type.type
-				if l_type.base_class.is_basic then
-					l_type := l_type.base_class.actual_type.type_i
-				elseif l_type.base_class.is_expanded then
-					l_type := l_type.twin
-					l_type.set_is_true_expanded (True)
-				end
-				il_code_generator.external_class_mapping.put (l_type, name)
+				il_code_generator.external_class_mapping.put (class_type.type, name)
 				internal_external_token_mapping.put (l_type_token, name)
 			end
 		end
@@ -712,7 +700,7 @@ feature -- Metadata description
 					feature {MD_TYPE_ATTRIBUTES}.Auto_layout |
 					feature {MD_TYPE_ATTRIBUTES}.Ansi_class
 
-				if not (class_c.is_frozen or class_c.is_single) then
+				if not class_type.is_generated_as_single_type then
 					l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Is_interface |
 						feature {MD_TYPE_ATTRIBUTES}.Abstract
 					l_type_token := md_emit.define_type (l_uni_string, l_attributes, 0,
@@ -754,8 +742,7 @@ feature -- Metadata description
 		require
 			is_generated: is_generated
 			class_type_not_void: class_type /= Void
-			not_frozen: not class_type.associated_class.is_frozen
-			not_single: not class_type.associated_class.is_single
+			not_generated_as_single_type: not class_type.is_generated_as_single_type
 		local
 			l_name: STRING
 			class_c: CLASS_C
@@ -784,7 +771,7 @@ feature -- Metadata description
 					l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Abstract
 				end
 			
-				if not class_c.is_single then
+				if not class_type.is_generated_as_single_type then
 					last_parents := << class_type_token (class_type.static_type_id) >>
 				elseif last_parents = Void then
 					last_parents := << ise_eiffel_type_info_type_token >>
@@ -800,7 +787,7 @@ feature -- Metadata description
 					single_inheritance_token, last_parents)
 
 				if not il_code_generator.is_single_module then
-					if not (class_c.is_frozen or class_c.is_single) then
+					if not class_type.is_generated_as_single_type then
 						class_type.set_last_implementation_type_token (l_type_token)
 					else
 						class_type.set_last_type_token (l_type_token)
@@ -830,7 +817,7 @@ feature -- Metadata description
 		local
 			parents: FIXED_LIST [CL_TYPE_A]
 			parent_type: CL_TYPE_I
-			cl_type: CLASS_TYPE
+			l_parent_type: CLASS_TYPE
 			l_list: SEARCH_TABLE [INTEGER]
 			id: INTEGER
 			i: INTEGER
@@ -849,19 +836,22 @@ feature -- Metadata description
 			until
 				parents.after
 			loop
+					-- We need to reset context at each iteration because calls to
+					-- `class_type_token' might trigger a recursive call to `update_parents'
+					-- thus changing the context.
 				byte_context.set_class_type (class_type)
 				parent_type ?= byte_context.real_type (parents.item.type_i)
-				cl_type := parent_type.associated_class_type
-				id := cl_type.static_type_id
+				l_parent_type := parent_type.associated_class_type
+				id := l_parent_type.static_type_id
 				if not l_list.has (id) then
 					l_list.force (id)
-					l_parent_class := cl_type.associated_class
+					l_parent_class := l_parent_type.associated_class
 					if
 						not l_parent_class.is_single and
 						(not l_parent_class.is_external or else l_parent_class.is_interface)
 					then
 							-- Add parent interfaces only.
-						l_parents.put (class_type_token (cl_type.static_type_id), i)
+						l_parents.put (class_type_token (l_parent_type.static_type_id), i)
 						i := i + 1
 						if
 							is_single_inheritance_implementation and then
@@ -874,13 +864,13 @@ feature -- Metadata description
 								-- case it goes through a different line of code.
 								-- FIXME: Manu 4/15/2002: To optimize we should take the one
 								-- with the most features
-							l_single_inheritance_parent_id := cl_type.implementation_id
+							l_single_inheritance_parent_id := l_parent_type.implementation_id
 						end
-					elseif l_parent_class.is_external or else l_parent_class.is_single then
+					elseif l_parent_type.is_generated_as_single_type then
 						check
 							single_inheritance_parent_id_not_set: l_single_inheritance_parent_id = 0
 						end
-						l_single_inheritance_parent_id := cl_type.implementation_id
+						l_single_inheritance_parent_id := l_parent_type.implementation_id
 							-- Note: We do not add into `pars' as we only store there the
 							-- parents than can be included as interfaces.
 					end
@@ -889,8 +879,13 @@ feature -- Metadata description
 			end
 
 			if l_single_inheritance_parent_id = 0 then
-				single_inheritance_parent_id := object_type_id
-				single_inheritance_token := object_type_token
+				if class_type.is_expanded then
+					single_inheritance_parent_id := value_type_id
+					single_inheritance_token := value_type_token
+				else
+					single_inheritance_parent_id := object_type_id
+					single_inheritance_token := object_type_token
+				end
 			else
 				single_inheritance_token := class_type_token (l_single_inheritance_parent_id)
 				single_inheritance_parent_id := l_single_inheritance_parent_id
@@ -933,7 +928,7 @@ feature -- Metadata description
 
 			if
 				is_reference or
-				class_type.is_precompiled or l_class.is_external or
+				class_type.is_precompiled or class_type.is_external or
 				il_code_generator.il_module (class_type) /= Current
 			then
 				l_meth_token := md_emit.define_member_ref (l_uni_string,
@@ -1166,7 +1161,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 					is_generated: is_generated
 				end
 				l_class_type := class_types.item (a_type_id)
-				if l_class_type.associated_class.is_external then
+				if l_class_type.is_external then
 					generate_external_class_mapping (l_class_type)
 				elseif a_type_id = l_class_type.static_type_id then
 					generate_interface_class_mapping (l_class_type)
@@ -1541,7 +1536,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 					module_reference_token (a_class_type), a_class_type.implementation_id)
 			else
 				if
-					not a_class_type.associated_class.is_external and then
+					not a_class_type.is_external and then
 					a_class_type.is_precompiled
 				then
 					l_precompiled_assembly := a_class_type.assembly_info
@@ -1730,6 +1725,7 @@ feature {NONE} -- Once per modules being generated.
 		do
 			mscorlib_token := 0
 			object_type_token := 0
+			value_type_token := 0
 			math_type_token := 0
 			system_exception_token := 0
 			compute_mscorlib_token
@@ -1808,6 +1804,8 @@ feature {NONE} -- Once per modules being generated.
 		do
 			object_type_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make ("System.Object"), mscorlib_token)
+			value_type_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make ("System.ValueType"), mscorlib_token)
 			runtime_type_handle_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make (type_handle_class_name), mscorlib_token)
 			math_type_token := md_emit.define_type_ref (
@@ -1828,10 +1826,6 @@ feature {NONE} -- Once per modules being generated.
 				create {UNI_STRING}.make ("System.Runtime.InteropServices.ComVisibleAttribute"),
 				mscorlib_token)
 			uni_string.set_string (".ctor")
-
-				-- Define `.ctor' from `System.Object'.
-			object_ctor_token := md_emit.define_member_ref (uni_string, object_type_token,
-				default_sig)
 
 				-- Define `.ctor' from `System.CLSCompliantAttribute' and
 				-- `System.Runtime.InteropServices.ComVisibleAttribute'.
@@ -1860,6 +1854,7 @@ feature {NONE} -- Once per modules being generated.
 				l_debugger_step_through_token, l_sig)
 		ensure
 			object_type_token_set: object_type_token /= 0
+			value_type_token_set: value_type_token /= 0
 			math_type_token_set: math_type_token /= 0
 			system_exception_token_set: system_exception_token /= 0
 		end

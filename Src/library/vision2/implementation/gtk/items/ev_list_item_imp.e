@@ -112,18 +112,20 @@ feature -- Status setting
 		local
 			par: POINTER
 		do
-			par := parent_imp.list_widget
-			if par /= NULL then
-				C.gtk_list_select_child (par, c_object);
---| FIXME hack to ensure the element is selected.				
-				if
-					C.g_list_find (
-						C.gtk_list_struct_selection (par),
-						c_object
-					) = NULL
-				then
+			if not is_selected then
+				par := parent_imp.list_widget
+				if par /= NULL then
 					C.gtk_list_select_child (par, c_object);
-				end
+	--| FIXME hack to ensure the element is selected.				
+					if
+						C.g_list_find (
+							C.gtk_list_struct_selection (par),
+							c_object
+						) = NULL
+					then
+						C.gtk_list_select_child (par, c_object);
+					end
+				end				
 			end
 		end
 
@@ -132,10 +134,13 @@ feature -- Status setting
 		local
 			par: POINTER
 		do
-			par := parent_imp.list_widget
-			if par /= NULL then
-				C.gtk_list_unselect_child (par, c_object);
+			if is_selected then
+				par := parent_imp.list_widget
+				if par /= NULL then
+					C.gtk_list_unselect_child (par, c_object);
+				end				
 			end
+
 		end
 
 feature {EV_ANY_I} -- Implementation

@@ -38,12 +38,14 @@ inherit
 
 	EV_WIDGET_ACTION_SEQUENCES_IMP
 		export
-			{INTERMEDIARY_ROUTINES} 
+			{EV_INTERMEDIARY_ROUTINES} 
 				focus_in_actions_internal,
 				focus_out_actions_internal,
 				pointer_motion_actions_internal,
 				pointer_button_release_actions,
-				pointer_leave_actions
+				pointer_leave_actions,
+				pointer_leave_actions_internal,
+				pointer_enter_actions_internal
 		redefine
 			interface
 		end
@@ -113,7 +115,7 @@ feature {NONE} -- Initialization
 	button_press_switch_is_connected: BOOLEAN
 			-- Is `button_press_switch' connected to its event source.
 		
-feature {EV_WINDOW_IMP, INTERMEDIARY_ROUTINES} -- Implementation
+feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- Used for key event actions sequences.
@@ -192,8 +194,7 @@ feature {EV_WINDOW_IMP, INTERMEDIARY_ROUTINES} -- Implementation
 	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Gtk_Widget."size-allocate" happened.
 		do
-			--| FIXME VB 05/11/2000
-			--| Temporary implementation.
+
 			if not in_resize_event then
 				in_resize_event := True
 				if last_width /= a_width or else last_height /= a_height then
@@ -412,10 +413,17 @@ feature -- Element change
 
 			--| FIXME IEK If a_cursor_imp has no mask then routine seg faults.
 			a_cursor_ptr := C.gdk_cursor_new_from_pixmap (cur_pix, a_cursor_imp.mask, fg, bg, a_cursor.x_hotspot, a_cursor.y_hotspot)
-			C.gdk_window_set_cursor (C.gtk_widget_struct_window (c_object), a_cursor_ptr)
+			set_composite_widget_pointer_style (a_cursor_ptr)
 			C.gdk_cursor_destroy (a_cursor_ptr)
 		end
 		
+	set_composite_widget_pointer_style (a_cursor_ptr: POINTER) is
+			-- Used to set the gdkcursor for composite widgets.
+		do
+			C.gdk_window_set_cursor (C.gtk_widget_struct_window (visual_widget), a_cursor_ptr)
+			C.gdk_window_set_cursor (C.gtk_widget_struct_window (c_object), a_cursor_ptr)
+		end
+	
 	bg_color: POINTER is
 			-- Default allocated background color.
 		local
@@ -440,25 +448,20 @@ feature -- Element change
 	set_minimum_width (a_minimum_width: INTEGER) is
 			-- Set the minimum horizontal size to `a_minimum_width'.
 		do
-			set_minimum_size (a_minimum_width, minimum_height.max (1))
+			internal_set_minimum_size (a_minimum_width, minimum_height)
 		end
 
 	set_minimum_height (a_minimum_height: INTEGER) is
 			-- Set the minimum vertical size to `a_minimum_height'.
 		do
-			set_minimum_size (minimum_width.max (1), a_minimum_height)
+			internal_set_minimum_size (minimum_width, a_minimum_height)
 		end
 
 	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
 			-- Set the minimum horizontal size to `a_minimum_width'.
 			-- Set the minimum vertical size to `a_minimum_height'.
 		do
-			if widget_in_fixed then
-				fixed_minimum_height := 0
-				fixed_minimum_width := 0
-				widget_in_fixed := False
-			end				
-			C.gtk_widget_set_usize (c_object, a_minimum_width, a_minimum_height)
+			internal_set_minimum_size (a_minimum_width, a_minimum_height)
 		end
 
 	set_popup_menu (a_menu: EV_MENU) is
@@ -482,8 +485,6 @@ feature -- Element change
 		end
 
 feature -- Measurement
-
-	--| FIXME x/y_position needs testing.
 	
 	x_position: INTEGER is
 			-- Horizontal offset relative to parent `x_position'.
@@ -500,6 +501,7 @@ feature -- Measurement
 					Result := tmp_struct_x
 				end
 			end
+			Result := Result.max (0)
 		end
 
 	y_position: INTEGER is
@@ -517,6 +519,7 @@ feature -- Measurement
 					Result := tmp_struct_y
 				end
 			end
+			Result := Result.max (0)
 		end	
 
 	width: INTEGER is
@@ -661,6 +664,17 @@ feature {NONE} -- Agent functions.
 
 feature {NONE} -- Implementation
 
+	internal_set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
+			-- Abstracted implementation for minumum size setting.
+		do
+			if widget_in_fixed then
+				fixed_minimum_height := 0
+				fixed_minimum_width := 0
+				widget_in_fixed := False
+			end				
+			C.gtk_widget_set_usize (c_object, a_minimum_width, a_minimum_height)
+		end
+
 	gtk_widget_has_focus (a_c_object: POINTER): BOOLEAN is
 			-- Does `a_c_object' have the focus.
 		do
@@ -672,16 +686,18 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
-	update_child_requisition (a_child: POINTER) is
-			-- Force the event loop to update the requistion of `a_child'.
-		local
-			temp_int: INTEGER
-		do
-			if is_displayed then
-				temp_int := C.gtk_main_iteration_do (False)
-			end
-		end
+
+
+--| FIXME IEK 10/28/02 Removed until further notice		
+--	update_child_requisition (a_child: POINTER) is
+--			-- Force the event loop to update the requistion of `a_child'.
+--		local
+--			temp_int: INTEGER
+--		do
+--			if is_displayed then
+--				temp_int := C.gtk_main_iteration_do (False)
+--			end
+--		end
 
 	propagate_foreground_color_internal (a_color: EV_COLOR; a_c_object: POINTER) is
 			-- Propagate `a_color' to the foreground color of `a_c_object's children.

@@ -18,12 +18,13 @@ inherit
 	
 	EV_PRIMITIVE_IMP
 		redefine
-			interface
+			interface,
+			set_composite_widget_pointer_style
 		end
 
 	EV_TEXT_COMPONENT_ACTION_SEQUENCES_IMP
 		export
-			{INTERMEDIARY_ROUTINES} change_actions_internal	
+			{EV_INTERMEDIARY_ROUTINES} change_actions_internal	
 		redefine
 			create_change_actions
 		end
@@ -130,8 +131,18 @@ feature -- Basic operation
 			-- Select (highlight) the text between 
 			-- 'start_pos' and 'end_pos'.
 		do
-			C.gtk_editable_select_region (entry_widget, start_pos - 1, end_pos)
+			select_region_internal (start_pos, end_pos)
+			internal_timeout_imp ?= (create {EV_TIMEOUT}).implementation
+			internal_timeout_imp.interface.actions.extend 
+				(agent select_region_internal (start_pos, end_pos))
+			internal_timeout_imp.set_interval_kamikaze (0)
 		end	
+
+	select_region_internal (start_pos, end_pos: INTEGER) is
+			-- Select region
+		do
+			C.gtk_editable_select_region (entry_widget, start_pos - 1, end_pos)
+		end
 
 	deselect_all is
 			-- Unselect the current selection.
@@ -177,13 +188,26 @@ feature -- Basic operation
 			insert_text (clipboard_content)
 			set_position (pos)
 		end
+		
+feature {NONE} -- Implementation
+		
+	set_composite_widget_pointer_style (a_cursor_ptr: POINTER) is
+			-- 
+		do
+			{EV_PRIMITIVE_IMP} Precursor (a_cursor_ptr)
+			--C.gtk_widget_realize (entry_widget)
+			--C.gtk_widget_realize (C.gtk_entry_struct_text_area (entry_widget))
+			C.gdk_window_set_cursor (C.gtk_widget_struct_window (C.gtk_entry_struct_text_area (entry_widget)), a_cursor_ptr)
+		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
+
+	internal_timeout_imp: EV_TIMEOUT_IMP
+			-- Timeout to call 'select_region'
 
 	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
 		do
 			create Result
-			--real_connect_signal_to_actions (entry_widget, "changed", Result, Void)
 			real_signal_connect (entry_widget, "changed", agent gtk_marshal.text_component_change_intermediary (c_object), Void)
 		end
 
@@ -194,11 +218,39 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TEXT_COMPONENT
 
+	stored_text: STRING
+			-- Value of 'text' prior to a change action, used to compare
+			-- between old and new text.
+
+	in_change_action: BOOLEAN
+			-- Is Current being changed?
+
+	toggle_in_change_action (a_flag: BOOLEAN) is
+			-- Set 'in_change_action' to 'a_flag'
+		do
+			in_change_action := a_flag
+		end
+
+	on_change_actions is
+			-- A change action has occurred.
+		do
+			if stored_text /= Void then
+				if not text.is_equal (stored_text) then
+						-- The text has actually changed
+					stored_text := text
+					change_actions_internal.call ([])
+				end
+			else
+				stored_text := text
+				change_actions_internal.call ([])
+			end
+		end
+
 end -- class EV_TEXT_COMPONENT_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision2: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2001 Inte9ractive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.

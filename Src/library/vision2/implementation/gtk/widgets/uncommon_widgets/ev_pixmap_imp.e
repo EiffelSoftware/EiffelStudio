@@ -24,7 +24,8 @@ inherit
 			width,
 			height,
 			destroy,
-			drawable
+			drawable,
+			draw_full_pixmap
 		end
 
 	EV_PRIMITIVE_IMP
@@ -75,6 +76,13 @@ feature {NONE} -- Initialization
 			initialize_graphical_context
 			init_default_values
 		end
+		
+	draw_full_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; x_src, y_src, src_width, src_height: INTEGER) is
+			-- 
+		do
+			Precursor {EV_DRAWABLE_IMP} (x, y, a_pixmap, x_src, y_src, src_width, src_height)
+			flush	
+		end
 
 	reset_to_size (a_x, a_y: INTEGER) is
 			-- Create new pixmap data of size `a_x' by `a_y'.
@@ -93,8 +101,8 @@ feature -- Drawing operations
 
 	flush is
 		do
-			if is_show_requested then
-				C.gtk_widget_draw (gtk_pixmap, NULL)
+			if is_displayed then
+				C.gtk_widget_queue_draw (gtk_pixmap)
 			end
 		end
 
@@ -422,14 +430,17 @@ feature {NONE} -- Implementation
 		end
 		
 	destroy is
+			-- Destroy the pixmap and resources.
 		do
 			Precursor {EV_PRIMITIVE_IMP}
-			C.gdk_gc_unref (gc)
-			gc := NULL
+			if gc /= NULL then
+				C.gdk_gc_unref (gc)
+				gc := NULL	
+			end
 		end
 		
 	dispose is
-			-- 
+			-- Clear up resources if needed in object disposal.
 		do
 			if gc /= NULL then
 				gdk_gc_unref (gc)

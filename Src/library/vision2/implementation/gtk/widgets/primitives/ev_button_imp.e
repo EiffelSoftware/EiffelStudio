@@ -49,7 +49,7 @@ inherit
 
 	EV_BUTTON_ACTION_SEQUENCES_IMP
 		export
-			{INTERMEDIARY_ROUTINES} select_actions_internal
+			{EV_INTERMEDIARY_ROUTINES} select_actions_internal
 		redefine
 			interface,
 			visual_widget
@@ -89,10 +89,10 @@ feature {NONE} -- Initialization
 			box := C.gtk_hbox_new (False, 0)
 			C.gtk_container_add (visual_widget, box)
 			C.gtk_widget_show (box)
-			C.gtk_box_pack_start (box, text_label, True, True, padding)
-			C.gtk_widget_hide (text_label)
-			C.gtk_box_pack_end (box, pixmap_box, True, False, padding)
+			C.gtk_box_pack_start (box, pixmap_box, False, True, padding)
 			C.gtk_widget_hide (pixmap_box)
+			C.gtk_box_pack_end (box, text_label, True, True, padding)
+			C.gtk_widget_hide (text_label)
 		ensure
 			button_box /= NULL
 		end

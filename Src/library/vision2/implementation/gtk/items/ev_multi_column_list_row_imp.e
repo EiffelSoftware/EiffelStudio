@@ -48,12 +48,9 @@ feature -- Status report
 
 	is_selected: BOOLEAN is
 			-- Is the item selected.
-		local
-			row: EV_MULTI_COLUMN_LIST_ROW
-		do
-			row ?= Current.interface			
-			Result := (parent_imp.selected_items.has (row))
-			 or (parent_imp.selected_item = row)
+		do			
+			Result := (parent_imp.selected_items.has (interface))
+			 or (parent_imp.selected_item = interface)
 		end
 
 feature -- Status setting
@@ -69,13 +66,17 @@ feature -- Status setting
 	enable_select is
 			-- Select the row in the list.
 		do
-			C.gtk_clist_select_row (parent_imp.list_widget, index - 1, 0)
+			if not is_selected then
+				C.gtk_clist_select_row (parent_imp.list_widget, index - 1, 0)
+			end
 		end
 
 	disable_select is
 			-- Deselect the row from the list.
 		do
-			C.gtk_clist_unselect_row (parent_imp.list_widget, index - 1, 0)
+			if is_selected then
+				C.gtk_clist_unselect_row (parent_imp.list_widget, index - 1, 0)
+			end
 		end
 
 feature -- PND
@@ -84,7 +85,7 @@ feature -- PND
 		do
 			is_transport_enabled := True
 			if parent_imp /= Void then
-				parent_imp.update_pnd_status
+				parent_imp.update_pnd_connection (True)
 			end
 		end
 

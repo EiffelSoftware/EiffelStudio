@@ -27,7 +27,6 @@ inherit
 			set_background_color
 		redefine
 			interface,
-		--	has_focus,
 			disconnect_all_signals,
 			default_key_processing_blocked,
 			screen_x,
@@ -110,18 +109,16 @@ feature {NONE} -- Implementation
 
 	redraw is
 		do
-			if expose_actions_internal /= Void then
-				expose_actions_internal.call ([0, 0, width, height])
-			end
+			redraw_rectangle (0, 0, width, height)
 		end
 
 	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
 		do
-			if expose_actions_internal /= Void then
-				expose_actions_internal.call ([a_x, a_y, a_width, a_height])
-			end
+			if not full_redraw_needed then
+				C.gtk_widget_queue_draw_area (c_object, a_x, a_y, a_width, a_height)
+			end							
 		end
-
+		
 	clear_and_redraw is
 		do
 			clear
@@ -137,8 +134,11 @@ feature {NONE} -- Implementation
 	flush is
 			-- Redraw the screen immediately (useless with GTK)
 		do
-			-- do nothing
 		end
+		
+	full_redraw_needed: BOOLEAN
+		-- Is a full redraw needed
+
 
 feature {EV_DRAWABLE_IMP} -- Implementation
 
@@ -147,7 +147,18 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 			Result := C.gtk_widget_struct_window (c_object)
 		end
 		
-feature {INTERMEDIARY_ROUTINES} -- Implementation
+feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
+
+	call_expose_actions (a_x, a_y, a_width, a_height: INTEGER) is
+			-- Call the expose actions for the drawing area.
+		do
+			if expose_actions_internal /= Void then
+				expose_actions_internal.call ([a_x, a_y, a_width, a_height])
+			end
+		end
+		
+	expose_actions_called: BOOLEAN
+		-- Are the expose actions currently being called?
 
 	lose_focus is
 		do
@@ -173,8 +184,10 @@ feature {NONE} -- Implementation
 	destroy is
 		do
 			Precursor {EV_PRIMITIVE_IMP}
-			C.gdk_gc_unref (gc)
-			gc := NULL
+			if gc /= NULL then
+				C.gdk_gc_unref (gc)
+				gc := NULL
+			end
 		end
 		
 	dispose is

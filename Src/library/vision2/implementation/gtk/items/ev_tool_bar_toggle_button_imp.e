@@ -44,13 +44,17 @@ feature -- Status setting
 	disable_select is
 			-- Unselect `Current'.
 		do
-			C.gtk_toggle_button_set_active (c_object, False)
+			if is_selected then
+				C.gtk_toggle_button_set_active (c_object, False)
+			end
 		end
 
 	enable_select is
 			-- Select `Current'.
 		do
-			C.gtk_toggle_button_set_active (c_object, True)
+			if not is_selected then
+				C.gtk_toggle_button_set_active (c_object, True)
+			end
 		end	
 
 feature -- Status report

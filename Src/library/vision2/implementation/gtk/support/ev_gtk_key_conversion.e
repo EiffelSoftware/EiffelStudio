@@ -283,9 +283,177 @@ feature {NONE} -- Implementation
 			Result.put (Key_ctrl, Key_right_ctrl_keysym)
 			Result.put (Key_left_meta, Key_left_meta_keysym)
 			Result.put (Key_right_meta, Key_right_meta_keysym)
+			Result.put (Key_backquote, Key_tilde_keysym)
+			Result.put (Key_1, Key_exclamation_keysym)
+			Result.put (Key_2, Key_at_keysym)
+			Result.put (Key_3, Key_numbersign_keysym)
+			Result.put (Key_4, Key_dollar_keysym)
+			Result.put (Key_5, Key_percent_keysym)
+			Result.put (Key_6, Key_asciicircum_keysym)
+			Result.put (Key_7, Key_ampersand_keysym)
+			Result.put (Key_8, Key_asterisk_keysym)
+			Result.put (Key_9, Key_parenleft_keysym)
+			Result.put (Key_0, Key_parenright_keysym)
+			Result.put (Key_dash, Key_underscore_keysym)
+			Result.put (Key_equal, Key_plus_keysym)
+			Result.put (Key_semicolon, Key_colon_keysym)
+			Result.put (Key_quote, Key_quotedbl_keysym)
+			Result.put (Key_comma, Key_less_keysym)
+			Result.put (Key_period, Key_greater_keysym)
+			Result.put (Key_slash, Key_question_keysym)
+			Result.put (Key_open_bracket, Key_braceleft_keysym)
+			Result.put (Key_close_bracket, Key_braceright_keysym)
+			Result.put (Key_backslash, Key_bar_keysym)
 		end
 
 feature {NONE} -- Externals
+
+	Key_tilde_keysym: INTEGER is
+		external
+			"C [macro <gdk/gdkkeysyms.h>]"
+		alias
+			"GDK_asciitilde"
+		end
+		
+	Key_exclamation_keysym: INTEGER is
+		external
+			"C [macro <gdk/gdkkeysyms.h>]"
+		alias
+			"GDK_exclam"
+		end
+		
+	Key_at_keysym: INTEGER is
+		external
+			"C [macro <gdk/gdkkeysyms.h>]"
+		alias
+			"GDK_at"
+		end
+
+	Key_numbersign_keysym: INTEGER is
+		external
+			"C [macro <gdk/gdkkeysyms.h>]"
+		alias
+			"GDK_numbersign"
+		end
+		
+	Key_dollar_keysym: INTEGER is
+		external
+			"C [macro <gdk/gdkkeysyms.h>]"
+		alias
+			"GDK_dollar"
+		end
+		
+	Key_percent_keysym: INTEGER is
+		external
+			"C [macro <gdk/gdkkeysyms.h>]"
+		alias
+			"GDK_percent"
+		end
+
+	Key_asciicircum_keysym: INTEGER is
+		external
+			"C [macro <gdk/gdkkeysyms.h>]"
+		alias
+			"GDK_asciicircum"
+		end
+		
+	Key_ampersand_keysym: INTEGER is
+		external
+			"C [macro <gdk/gdkkeysyms.h>]"
+		alias
+			"GDK_ampersand"
+		end
+		
+	Key_asterisk_keysym: INTEGER is
+		external
+			"C [macro <gdk/gdkkeysyms.h>]"
+		alias
+			"GDK_asterisk"
+		end
+		
+	Key_parenleft_keysym: INTEGER is
+		external
+			"C [macro <gdk/gdkkeysyms.h>]"
+		alias
+			"GDK_parenleft"
+		end
+		
+	Key_parenright_keysym: INTEGER is
+		external
+			"C [macro <gdk/gdkkeysyms.h>]"
+		alias
+			"GDK_parenright"
+		end
+		
+	Key_underscore_keysym: INTEGER is
+		external
+			"C [macro <gdk/gdkkeysyms.h>]"
+		alias
+			"GDK_underscore"
+		end
+		
+	Key_plus_keysym: INTEGER is
+		external
+			"C [macro <gdk/gdkkeysyms.h>]"
+		alias
+			"GDK_plus"
+		end
+		
+	Key_colon_keysym: INTEGER is
+		external
+			"C [macro <gdk/gdkkeysyms.h>]"
+		alias
+			"GDK_colon"
+		end
+		
+	Key_quotedbl_keysym: INTEGER is
+		external
+			"C [macro <gdk/gdkkeysyms.h>]"
+		alias
+			"GDK_quotedbl"
+		end
+		
+	Key_less_keysym: INTEGER is
+		external
+			"C [macro <gdk/gdkkeysyms.h>]"
+		alias
+			"GDK_less"
+		end
+		
+	Key_greater_keysym: INTEGER is
+		external
+			"C [macro <gdk/gdkkeysyms.h>]"
+		alias
+			"GDK_greater"
+		end
+		
+	Key_question_keysym: INTEGER is
+		external
+			"C [macro <gdk/gdkkeysyms.h>]"
+		alias
+			"GDK_question"
+		end
+		
+	Key_braceleft_keysym: INTEGER is
+		external
+			"C [macro <gdk/gdkkeysyms.h>]"
+		alias
+			"GDK_braceleft"
+		end
+		
+	Key_braceright_keysym: INTEGER is
+		external
+			"C [macro <gdk/gdkkeysyms.h>]"
+		alias
+			"GDK_braceright"
+		end
+		
+	Key_bar_keysym: INTEGER is
+		external
+			"C [macro <gdk/gdkkeysyms.h>]"
+		alias
+			"GDK_bar"
+		end
 
 	Key_0_keysym: INTEGER is
 		external
@@ -683,14 +851,14 @@ feature {NONE} -- Externals
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_quoteleft"
+			"GDK_quoteright"
 		end
 
 	Key_backquote_keysym: INTEGER is
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_quoteright"
+			"GDK_quoteleft"
 		end
 
 	Key_dash_keysym: INTEGER is

@@ -3,8 +3,6 @@ indexing
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class 
 	EV_LIST_IMP
@@ -146,7 +144,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_LIST
 	
-feature {INTERMEDIARY_ROUTINES} -- Implementation	
+feature {EV_INTERMEDIARY_ROUTINES} -- Implementation	
 	
 	set_is_out (a_value: BOOLEAN) is
 			-- Assign `a_value' to `is_out'.
@@ -232,15 +230,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_to_container (v: like item) is
+	add_to_container (v: like item; v_imp: EV_ITEM_IMP) is
 			-- Add `v' to end of list.
 			-- (from EV_ITEM_LIST_IMP)
 			-- (export status {NONE})
-		local
-			v_imp: EV_ITEM_IMP
 		do
-			Precursor {EV_LIST_ITEM_LIST_IMP} (v)
-			v_imp ?= v.implementation
+			Precursor {EV_LIST_ITEM_LIST_IMP} (v, v_imp)
 			real_signal_connect (
 				v_imp.c_object,
 				"focus-out-event",

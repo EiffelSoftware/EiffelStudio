@@ -36,8 +36,8 @@ EIF_REFERENCE c_ev_any_imp_get_eif_reference_from_object_id (GtkWidget* c_object
         );
 #endif /* DEBUG */
     // require
-            g_assert (c_object != NULL);
-            g_assert (GTK_IS_WIDGET (c_object));
+            //g_assert (c_object != NULL);
+            //g_assert (GTK_IS_WIDGET (c_object));
     // do
             if ((eif_oid = (int) gtk_object_get_data (
                 GTK_OBJECT (c_object),
@@ -66,9 +66,9 @@ void c_ev_any_imp_c_object_dispose (GtkWidget* c_object, int eif_oid)
         );
 #endif /* DEBUG */
     // require
-            g_assert (c_object != NULL);
-            g_assert (GTK_IS_WIDGET (c_object));
-            g_assert (eif_oid != 0);
+            //g_assert (c_object != NULL);
+            //g_assert (GTK_IS_WIDGET (c_object));
+            //g_assert (eif_oid != 0);
     // do
             eif_reference = eif_id_object (eif_oid);
             if (eif_reference) {
@@ -90,8 +90,8 @@ gboolean c_ev_any_imp_c_object_references_eif_object (GtkWidget* c_object)
         );
 #endif /* DEBUG */
     // require
-            g_assert (c_object != NULL);
-            g_assert (GTK_IS_WIDGET (c_object));
+            //g_assert (c_object != NULL);
+            //g_assert (GTK_IS_WIDGET (c_object));
     // do
             return ((gboolean) gtk_object_get_data (
                 GTK_OBJECT (c_object),
@@ -113,8 +113,8 @@ gboolean c_ev_any_imp_eif_object_references_c_object (GtkWidget* c_object)
         );
 #endif /* DEBUG */
     // require
-            g_assert (c_object != NULL);
-            g_assert (GTK_IS_WIDGET (c_object));
+            //g_assert (c_object != NULL);
+            //g_assert (GTK_IS_WIDGET (c_object));
     // do
             return ((gboolean) gtk_object_get_data (
                 GTK_OBJECT (c_object),
@@ -140,13 +140,13 @@ void c_ev_any_imp_set_gtk_controls_object_life (GtkWidget* c_object)
         );
 #endif /* DEBUG */
     // require
-            g_assert (c_object != NULL);
-            g_assert (GTK_IS_WIDGET (c_object));
-            g_assert (! c_ev_any_imp_c_object_references_eif_object (c_object));
+            //g_assert (c_object != NULL);
+            //g_assert (GTK_IS_WIDGET (c_object));
+            //g_assert (! c_ev_any_imp_c_object_references_eif_object (c_object));
     // do
             eif_reference =
                 c_ev_any_imp_get_eif_reference_from_object_id (c_object);
-            g_assert (eif_reference != NULL);
+            //g_assert (eif_reference != NULL);
             //eif_object = eif_protect (eif_reference);
 		eif_object = c_ev_any_imp_get_eif_reference_from_object_id (c_object);
             gtk_object_set_data_full (
@@ -164,8 +164,8 @@ void c_ev_any_imp_set_gtk_controls_object_life (GtkWidget* c_object)
                 );
             }
     // ensure
-            g_assert (c_ev_any_imp_c_object_references_eif_object (c_object));
-            g_assert (! c_ev_any_imp_eif_object_references_c_object (c_object));
+            //g_assert (c_ev_any_imp_c_object_references_eif_object (c_object));
+            //g_assert (! c_ev_any_imp_eif_object_references_c_object (c_object));
     // end
 }
 
@@ -183,11 +183,11 @@ void c_ev_any_imp_set_eiffel_controls_object_life (GtkWidget* c_object)
         );
 #endif /* DEBUG */
     // require
-            g_assert (c_object != NULL);
-            g_assert (GTK_IS_WIDGET (c_object));
-            g_assert (c_object->parent == NULL);
-            g_assert (c_ev_any_imp_c_object_references_eif_object (c_object));
-            g_assert (! c_ev_any_imp_eif_object_references_c_object (c_object));
+            //g_assert (c_object != NULL);
+            //g_assert (GTK_IS_WIDGET (c_object));
+            //g_assert (c_object->parent == NULL);
+            //g_assert (c_ev_any_imp_c_object_references_eif_object (c_object));
+            //g_assert (! c_ev_any_imp_eif_object_references_c_object (c_object));
     // do
             gtk_object_remove_data (GTK_OBJECT (c_object), "eif_object");
  //           gtk_object_ref (GTK_OBJECT (c_object));
@@ -197,8 +197,8 @@ void c_ev_any_imp_set_eiffel_controls_object_life (GtkWidget* c_object)
                 (gpointer*) TRUE
             );
     // ensure
-            g_assert (! c_ev_any_imp_c_object_references_eif_object (c_object));
-            g_assert (c_ev_any_imp_eif_object_references_c_object (c_object));
+            //g_assert (! c_ev_any_imp_c_object_references_eif_object (c_object));
+            //g_assert (c_ev_any_imp_eif_object_references_c_object (c_object));
     // end
 }
 
@@ -257,12 +257,12 @@ void c_ev_any_imp_set_eif_oid_in_c_object (
         );
 #endif /* DEBUG */
     // require
-            g_assert (c_object != NULL);
-            g_assert (GTK_IS_WIDGET (c_object));
-            g_assert (eif_oid != 0);
-            g_assert (c_object_dispose != NULL);
-            g_assert (GTK_OBJECT (c_object)->ref_count == 1);
-            g_assert (GTK_OBJECT_FLOATING(c_object) || GTK_IS_WINDOW(c_object));
+            //g_assert (c_object != NULL);
+            //g_assert (GTK_IS_WIDGET (c_object));
+            //g_assert (eif_oid != 0);
+            //g_assert (c_object_dispose != NULL);
+            //g_assert (GTK_OBJECT (c_object)->ref_count == 1);
+            //g_assert (GTK_OBJECT_FLOATING(c_object) || GTK_IS_WINDOW(c_object));
     // do
             ev_any_imp_c_object_dispose = c_object_dispose;
             gtk_object_set_data (
@@ -283,7 +283,7 @@ void c_ev_any_imp_set_eif_oid_in_c_object (
 					"ref_from_eif",
 					(gpointer*) TRUE
 				);
-				g_assert (GTK_OBJECT (c_object)->ref_count == 2);
+				//g_assert (GTK_OBJECT (c_object)->ref_count == 2);
             } else {
 //gtk_object_ref (GTK_OBJECT (c_object));
                 gtk_signal_connect (
@@ -292,12 +292,12 @@ void c_ev_any_imp_set_eif_oid_in_c_object (
                     c_ev_any_imp_on_c_object_parent_set,
                     NULL
                 );
-				g_assert (GTK_OBJECT (c_object)->ref_count == 1);
+				//g_assert (GTK_OBJECT (c_object)->ref_count == 1);
             }
     // ensure
-            g_assert (eif_oid ==
-                (int) gtk_object_get_data (GTK_OBJECT (c_object), "eif_oid"));
-            g_assert (ev_any_imp_c_object_dispose == c_object_dispose);
+            //g_assert (eif_oid ==
+            //    (int) gtk_object_get_data (GTK_OBJECT (c_object), "eif_oid"));
+            //g_assert (ev_any_imp_c_object_dispose == c_object_dispose);
     // end
 }
 
@@ -341,6 +341,13 @@ rt_private void c_eif_wean (gpointer data)
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.11  2002/11/26 21:21:19  king
+// Merged with changes from 52 branch
+//
+// Revision 1.10.6.1  2002/10/21 18:36:19  king
+// Commented out g_asserts
+// Should be excluded with an #ifdef DEBUG
+//
 // Revision 1.10  2001/09/17 00:26:04  king
 // All mem man is now done via Eiffel GC
 //

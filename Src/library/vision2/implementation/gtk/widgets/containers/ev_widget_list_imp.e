@@ -48,7 +48,7 @@ feature {NONE} -- Implementation
 	insert_i_th (v: like item; i: INTEGER) is
 			-- Insert `v' at position `i'.
 		local
-			v_imp: EV_ANY_IMP
+			v_imp: EV_WIDGET_IMP
 			a_c_object: POINTER
 		do
 			v_imp ?= v.implementation
@@ -57,13 +57,13 @@ feature {NONE} -- Implementation
 			end
 			a_c_object := v_imp.c_object
 			C.gtk_container_add (list_widget, a_c_object)
+			
 			child_array.go_i_th (i)
 			child_array.put_left (v)
 			if i < count then
 				gtk_reorder_child (list_widget, a_c_object, i - 1)
-			end
-			update_child_requisition (a_c_object)
-			on_new_item (v)
+			end			
+			on_new_item (v_imp)
 		end
 
 	remove_i_th (i: INTEGER) is

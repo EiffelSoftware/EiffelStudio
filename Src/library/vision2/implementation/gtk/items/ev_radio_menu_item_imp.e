@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object (C.gtk_radio_menu_item_new (NULL))
 			C.gtk_check_menu_item_set_show_toggle (c_object, True)
-			C.gtk_check_menu_item_set_active (c_object, True)
+			enable_select
 		end
 
 feature -- Status report
@@ -59,7 +59,12 @@ feature -- Status setting
 	enable_select is
 			-- Select this menu item.
 		do
-			C.gtk_check_menu_item_set_active (c_object, True)
+			if not is_selected then
+				-- We do not want select actions to be called.
+				ignore_select_actions := True
+				C.gtk_check_menu_item_set_active (c_object, True)
+				ignore_select_actions := False
+			end
 		end
 		
 feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
@@ -71,6 +76,19 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
+	disable_select is
+			-- Used to deselect is without firing actions.
+		do
+			if is_selected then
+				ignore_select_actions := True
+				C.gtk_check_menu_item_set_active (c_object, False)
+				ignore_select_actions := False				
+			end
+		end
+
+	ignore_select_actions: BOOLEAN
+		-- Should select_actions be called.
+
 	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
 
 	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
@@ -79,7 +97,7 @@ feature {EV_ANY_I} -- Implementation
 
 	on_activate is
 		do
-			if is_selected then
+			if is_selected and not ignore_select_actions then
 				Precursor
 			end
 		end

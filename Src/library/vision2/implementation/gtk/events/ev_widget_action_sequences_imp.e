@@ -57,15 +57,14 @@ feature -- Event handling
 	create_pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Create a pointer_enter action sequence.
 			-- Attach to GTK "enter-notify-event" signal.
-		local
-			action_sequence: ACTION_SEQUENCE [TUPLE]
 		do
-			create action_sequence
-			action_sequence.extend (agent Gtk_marshal.pointer_enter_actions_intermediary (c_object))
 			create Result
-			real_connect_signal_to_actions (c_object, "enter-notify-event", 
-				action_sequence,
-				default_translate)
+			real_signal_connect (
+				c_object,
+				"enter-notify-event", 
+				agent Gtk_marshal.pointer_enter_actions_intermediary (c_object),
+				default_translate
+			)
 		end
 
 	create_pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE is
@@ -111,7 +110,6 @@ feature -- Event handling
 			-- Create a focus_out action sequence.
 			-- Attach to GTK "focus-out-event" signal.
 		do
-			--real_connect_signal_to_actions (visual_widget, "focus-out-event", Result, default_translate)
 			create Result
 			real_signal_connect (visual_widget, "focus-out-event", agent gtk_marshal.widget_focus_out_intermediary (c_object), Void)
 		end

@@ -344,11 +344,16 @@ feature -- Implementation
 
 			call_press_actions (target, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 			
-			
-			if pointer_style /= Void then
-				internal_set_pointer_style (pointer_style)
-			else
-				C.gdk_window_set_cursor (C.gtk_widget_struct_window (c_object), NULL)
+			if not is_destroyed then
+				if pointer_style /= Void then
+					internal_set_pointer_style (pointer_style)
+				else
+					-- Reset the cursors.
+					C.gdk_window_set_cursor (C.gtk_widget_struct_window (c_object), NULL)
+					C.gdk_window_set_cursor (C.gtk_widget_struct_window (visual_widget), NULL)
+				end
+				C.gtk_widget_draw (c_object, NULL)
+				C.gtk_widget_draw (visual_widget, NULL)				
 			end
 			
 			check
@@ -390,7 +395,7 @@ feature -- Implementation
 	post_drop_steps is
 			-- Steps to perform once an attempted drop has happened.
 		do
-			if mode_is_pick_and_drop then
+			if mode_is_pick_and_drop and not is_destroyed then
 				signal_emit_stop (c_object, "button-press-event")
 			end
 			app_implementation.on_drop (pebble)

@@ -5,7 +5,33 @@ indexing
 	revision: "$Revision$"
 
 class
-	INTERMEDIARY_ROUTINES
+	EV_INTERMEDIARY_ROUTINES
+	
+feature {EV_ANY_IMP} -- Timeout intermediary agent routine
+
+	on_timeout_intermediary (a_c_object: POINTER) is
+			-- Timeout has occurred.
+		local
+			a_timeout_imp: EV_TIMEOUT_IMP
+		do
+			a_timeout_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			if a_timeout_imp /= Void then
+				-- Timeout may possibly have been gc'ed.
+				a_timeout_imp.call_timeout_actions
+			end
+		end
+		
+	on_timeout_kamikaze_intermediary (a_c_object: POINTER) is
+			-- Kamikaze Timeout has occurred.
+		local
+			a_timeout_imp: EV_TIMEOUT_IMP
+		do
+			a_timeout_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			if a_timeout_imp /= Void then
+				-- Timeout may possibly have been gc'ed.
+				a_timeout_imp.call_timeout_actions
+			end
+		end
 
 feature {EV_ANY_IMP} -- Notebook intermediary agent routines
 
@@ -35,7 +61,7 @@ feature {EV_ANY_IMP} -- Toolbar intermediary agent routines
 			a_toolbar_button_imp: EV_TOOL_BAR_BUTTON_IMP
 		do
 			a_toolbar_button_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_toolbar_button_imp.select_actions_internal.call ([])
+			a_toolbar_button_imp.select_actions_internal.call (empty_tuple)
 		end
 
 feature {EV_ANY_IMP} -- Drawing Area intermediary agent routines
@@ -58,10 +84,10 @@ feature {EV_ANY_IMP} -- Drawing Area intermediary agent routines
 	create_expose_actions_intermediary (a_c_object: POINTER; x, y, width, height: INTEGER) is
 			-- Area needs to be redrawn
 		local
-			a_drawing_action_sequence: EV_DRAWING_AREA_ACTION_SEQUENCES_IMP
+			a_drawing_area_imp: EV_DRAWING_AREA_IMP
 		do
-			a_drawing_action_sequence ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_drawing_action_sequence.expose_actions_internal.call ([x, y, width, height])
+			a_drawing_area_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			a_drawing_area_imp.call_expose_actions (x, y, width, height)
 		end
 
 feature {EV_ANY_IMP} -- Gauge intermediary agent routines
@@ -226,7 +252,9 @@ feature {EV_ANY_IMP} -- Text component intermediary agent routines
 			a_text_component_imp: EV_TEXT_COMPONENT_IMP
 		do
 			a_text_component_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_text_component_imp.change_actions_internal.call (Empty_tuple)
+			a_text_component_imp.toggle_in_change_action (True)
+			a_text_component_imp.on_change_actions
+			a_text_component_imp.toggle_in_change_action (False)
 		end
 		
 	text_field_return_intermediary (a_c_object: POINTER) is
@@ -289,7 +317,19 @@ feature {EV_ANY_IMP} -- Window intermediary agent routines
 				a_window_imp_not_void: a_window_imp /= Void
 			end
 			a_window_imp.call_close_request_actions
-		end		
+		end
+		
+	on_window_show (a_c_object: POINTER) is
+			-- Window has been shown
+		local
+			a_window_imp: EV_WINDOW_IMP
+		do
+			a_window_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			check
+				a_window_imp_not_void: a_window_imp /= Void
+			end
+			a_window_imp.show_actions_internal.call (Empty_tuple)
+		end
 	
 feature {EV_ANY_IMP} -- Tree intermediary agent routines	
 	
@@ -329,7 +369,9 @@ feature {EV_ANY_IMP} -- Menu intermediary agent routines
 			a_menu_item_imp: EV_MENU_ITEM_IMP
 		do
 			a_menu_item_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_menu_item_imp.on_activate
+			if a_menu_item_imp.parent_imp /= Void then
+				a_menu_item_imp.on_activate
+			end
 		end
 
 feature {EV_ANY_IMP} -- Pick and Drop intermediary agent routines
@@ -420,7 +462,7 @@ feature {EV_ANY_IMP} -- Pointer intermediary agent routines
 			widget: EV_WIDGET_IMP
 		do
 			widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			widget.pointer_leave_actions.call ([])
+			widget.pointer_leave_actions_internal.call (empty_tuple)
 		end
 		
 	pointer_enter_actions_intermediary (a_c_object: POINTER) is
@@ -429,7 +471,7 @@ feature {EV_ANY_IMP} -- Pointer intermediary agent routines
 			widget: EV_WIDGET_IMP
 		do
 			widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			widget.pointer_enter_actions.call ([])
+			widget.pointer_enter_actions_internal.call (empty_tuple)
 		end
 		
 feature {EV_ANY_IMP} -- Dialog intermediary agent routines			
@@ -514,10 +556,10 @@ feature {EV_ANY_IMP} -- Accelerator intermediary agent routines
 			a_accelerator_imp: EV_ACCELERATOR_IMP
 		do
 			a_accelerator_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_accelerator_imp.actions_internal.call ([])
+			a_accelerator_imp.actions_internal.call (empty_tuple)
 		end
 
-feature {NONE} -- Tuple optimizations
+feature {EV_GTK_CALLBACK_MARSHAL, EV_ANY_IMP} -- Tuple optimizations
 
 	empty_tuple: TUPLE is
 		once
@@ -534,4 +576,4 @@ feature {NONE} -- Externals
 			"c_ev_any_imp_get_eif_reference_from_object_id"
 		end
 
-end -- class INTERMEDIARY_ROUTINES
+end -- class EV_INTERMEDIARY_ROUTINES

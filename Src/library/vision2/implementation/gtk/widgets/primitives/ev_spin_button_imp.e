@@ -15,7 +15,9 @@ inherit
 
 	EV_GAUGE_IMP
 		undefine
-			visual_widget
+			visual_widget,
+			set_composite_widget_pointer_style,
+			on_key_event
 		redefine
 			interface,
 			initialize,

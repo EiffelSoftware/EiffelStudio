@@ -34,6 +34,7 @@ feature -- Initialization
 	initialize is 
 		do 
 			is_initialized := True
+			timeout_agent_internal := agent Gtk_marshal.on_timeout_intermediary (c_object)
 		end
 
 feature -- Access
@@ -53,37 +54,56 @@ feature -- Access
 
 			if an_interval > 0 then
 				timeout_connection_id :=
-					c_ev_gtk_callback_marshal_timeout_connect (
-						an_interval, timeout_agent
+					Gtk_marshal.c_ev_gtk_callback_marshal_timeout_connect (
+						an_interval, timeout_agent_internal
 					)
 			end
 			interval := an_interval
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY_IMP, EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
+
+	set_interval_kamikaze (an_interval: INTEGER) is
+			-- Assign `an_interval' in milliseconds to `interval'.
+			-- The timeout will only be executed once.
+		require
+			valid_interval: an_interval >= 0
+		do
+			if timeout_kamikaze_agent_internal = Void then
+				timeout_kamikaze_agent_internal := agent Gtk_marshal.on_timeout_kamikaze_intermediary (c_object)
+			end
+			Gtk_marshal.c_ev_gtk_callback_marshal_delayed_agent_call (
+				an_interval, timeout_kamikaze_agent_internal
+			)		
+		end
+		
+	timeout_kamikaze_agent_internal: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE]
+		-- Kamikaze agent used to call timeout actions only once.
+
+feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
+
+	call_timeout_actions is
+			-- Call the timeout actions.
+			-- FIXME This should be done in the implementation interface to avoid repeated timeouts.
+		do
+			if not actions_called then
+				actions_called := True
+				on_timeout
+				actions_called := False
+			end	
+		end
+		
+	actions_called: BOOLEAN
+		-- Are the timeout actions in the process of being called.
 
 	interface: EV_TIMEOUT
+	
+feature {NONE} -- Implementation
 
 	timeout_connection_id: INTEGER
 		-- GTK handle on timeout connection.
 
---	C: EV_C_EXTERNALS is
---			-- Access to external C functions.
---		once
---			create Result
---		end
-		
-	timeout_agent: PROCEDURE [EV_TIMEOUT_IMP, TUPLE] is
-			-- 
-		do
-			if timeout_agent_internal = Void then
-				timeout_agent_internal := agent on_timeout
-			end
-			Result := timeout_agent_internal
-		end
-		
-	timeout_agent_internal: PROCEDURE [EV_TIMEOUT_IMP, TUPLE]
-		
+	timeout_agent_internal: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE]
 
 feature {EV_ANY_I} -- Implementation
 
@@ -91,16 +111,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Render `Current' unusable.
 		do 
 			set_interval (0)
-			is_destroyed := True
-		end
-
-feature -- External implementation
-
-	c_ev_gtk_callback_marshal_timeout_connect
-		(a_delay: INTEGER; an_agent: PROCEDURE [ANY, TUPLE]): INTEGER is
-			-- Call `an_agent' after `a_delay'.
-		external
-			"C (gint, EIF_OBJECT): EIF_INTEGER | %"gtk_eiffel.h%""
+			Precursor {EV_ANY_IMP}
 		end
 
 end -- class EV_TIMEOUT_IMP

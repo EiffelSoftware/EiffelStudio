@@ -39,7 +39,9 @@ feature {NONE} -- Initialization
 			family := Family_sans
 			weight := Weight_regular
 			shape := Shape_regular
-			height := 10
+			
+			-- The height of the default font needs to be returned from the current gtk style.
+			set_height_internal (App_implementation.default_font_height)
 
 			create preferred_families
 			preferred_families.add_actions.extend (agent update_preferred_faces)
@@ -64,13 +66,11 @@ feature -- Access
 	shape: INTEGER
 			-- Preferred font slant.
 
-	height: INTEGER
+	height: INTEGER is
 			-- Preferred font height measured in screen pixels.
-
--- FIXME ARNAUD
---	preferred_face: STRING
---			-- Preferred user font.
---			-- `family' will be ignored when not Void.
+		do
+			Result := internal_height
+		end
 
 feature -- Element change
 
@@ -98,7 +98,7 @@ feature -- Element change
 	set_height (a_height: INTEGER) is
 			-- Set `a_height' as preferred font size in screen pixels
 		do
-			height := a_height
+			internal_height := a_height
 			update_font_face
 		end
 
@@ -110,7 +110,7 @@ feature -- Element change
 			family := a_family
 			weight := a_weight
 			shape := a_shape
-			height := a_height
+			internal_height := a_height
 			preferred_families.add_actions.wipe_out
 			preferred_families.remove_actions.wipe_out
 			preferred_families := a_preferred_families
@@ -141,8 +141,6 @@ feature -- Status report
 	width: INTEGER is
 			-- Character width of current fixed-width font.
 		do
-			--| FIXME This sometimes returns 0.
-			--| Result := substring_dash (full_name, Ev_gdk_font_string_index_width).to_integer
 			Result := string_width ("x")
 		end
 
@@ -191,6 +189,14 @@ feature {NONE} -- Implementation
 			-- Previously cached font structures.
 		once
 			create Result.make (10)
+			Result.compare_objects
+		end
+		
+	fonts_not_found: LINKED_LIST [STRING] is
+			-- List of XLFD not found on system.
+		once
+			create Result.make
+			Result.compare_objects
 		end
 
 	try_font (a_try_string: STRING; a_try_face: STRING): EV_GDK_FONT is
@@ -201,11 +207,15 @@ feature {NONE} -- Implementation
 				Result := preloaded.item (a_try_string)
 				name := a_try_face
 			else
-				exp_name := match_name (a_try_string)
-				if exp_name /= Void and then not exp_name.is_empty then
-					create Result.make (exp_name)
-					preloaded.put (Result, a_try_string)
-					name := a_try_face
+				if not fonts_not_found.has (a_try_string) then
+					exp_name := match_name (a_try_string)
+					if exp_name /= Void and then not exp_name.is_empty then
+						create Result.make (exp_name)
+						preloaded.put (Result, a_try_string)
+						name := a_try_face
+					else
+							fonts_not_found.extend (a_try_string)
+					end
 				end
 			end
 		end
@@ -524,12 +534,27 @@ feature {EV_FONTABLE_IMP} -- Implementation
 			-- 
 		do
 			c_object := a_c_object
-		end	
+		end
+		
+	set_height_internal (a_height: INTEGER) is
+			-- 
+		do
+			internal_height := a_height
+		end
 
 feature {NONE} -- Implementation
 		
 	full_name: STRING
 			-- The full name of the string.
+			
+	internal_height: INTEGER
+			-- Height of font in screen pixels.
+			
+	app_implementation: EV_APPLICATION_IMP is
+			-- Return the instance of EV_APPLICATION_IMP.
+		once
+			Result ?= (create {EV_ENVIRONMENT}).application.implementation
+		end		
 
 feature {EV_ANY_I} -- Implementation
 

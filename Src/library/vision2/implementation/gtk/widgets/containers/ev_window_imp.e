@@ -26,7 +26,7 @@ inherit
 			screen_y,
 			minimum_width,
 			minimum_height,
-			set_minimum_size,
+			internal_set_minimum_size,
 			interface,
 			initialize,
 			destroy,
@@ -35,6 +35,7 @@ inherit
 			width,
 			height,
 			on_size_allocate,
+			show,
 			hide
 		end
 
@@ -59,8 +60,6 @@ feature -- Initialization
 			C.gdk_window_set_functions (C.gtk_widget_struct_window (c_object), 0)
 			
 			C.gtk_window_set_policy (c_object, 0, 1, 0) -- allow_shrink = False, allow_grow = True, auto_shrink = False
-			default_height := -1
-			default_width := -1
 		end
 
 feature  -- Access
@@ -71,14 +70,25 @@ feature  -- Access
 	screen_x, x_position: INTEGER is
 			-- Horizontal position relative to parent.
 		do
-			Result := inner_screen_x
+			if positioned_by_user then
+				Result := user_x_position
+			else
+				Result := inner_screen_x
+			end
 		end
 
 	screen_y, y_position: INTEGER is
 			-- Vertical position relative to parent.
 		do
-			Result := inner_screen_y
+			if positioned_by_user then
+				Result := user_y_position
+			else
+				Result := inner_screen_y
+			end
 		end
+		
+	user_x_position, user_y_position: INTEGER
+			-- Used to store user x and y positions whilst Window is off screen.
 
 	width: INTEGER is
 			-- Horizontal size measured in pixels.
@@ -103,15 +113,35 @@ feature  -- Access
  	maximum_width: INTEGER
 			-- Maximum width that application wishes widget
 			-- instance to have.
-
-	minimum_width: INTEGER	
-			-- Minimum width for the window.
-	
+			
 	maximum_height: INTEGER
 			-- Maximum height that application wishes widget
 			-- instance to have.
+			
+	minimum_width: INTEGER is
+			-- Minimum width that the widget may occupy.
+		do
+			if internal_minimum_width /= -1 then
+				Result := internal_minimum_width
+			else
+				Result := Precursor
+			end
+		end
+		
+	minimum_height: INTEGER is
+			-- Minimum width that the widget may occupy.
+		do
+			if internal_minimum_height /= -1 then
+				Result := internal_minimum_height
+			else
+				Result := Precursor
+			end
+		end
 
-	minimum_height: INTEGER
+	internal_minimum_width: INTEGER	
+			-- Minimum width for the window.
+
+	internal_minimum_height: INTEGER
 			-- Minimum height for the window.
 
 	title: STRING is
@@ -123,6 +153,9 @@ feature  -- Access
 			p := C.gtk_window_struct_title (c_object)
 			if p /= NULL then
 				create Result.make_from_c (p)
+				if Result.is_equal ("%T") then
+					Result := ""
+				end
 			else
 				Result := ""
 			end
@@ -134,7 +167,9 @@ feature  -- Access
 	is_modal: BOOLEAN is
 			-- Must the window be closed before application continues?
 		do
-			Result := C.gtk_window_struct_modal (c_object) = 1
+			if not is_destroyed then
+				Result := C.gtk_window_struct_modal (c_object) = 1
+			end
 		end
 
 feature -- Status setting
@@ -148,7 +183,7 @@ feature -- Status setting
 			until
 				is_destroyed or else not is_show_requested
 			loop
-				dummy := C.gtk_main_iteration_do (True)
+				dummy := C.gtk_main_iteration_do (False)
 			end
 		end
 
@@ -180,8 +215,10 @@ feature -- Status setting
 			-- Set horizontal offset to parent to `a_x'.
 			-- Set vertical offset to parent to `a_y'.
 		do
-			C.gtk_window_set_position (c_object, C.Gtk_win_pos_none_enum)
+			user_x_position := a_x
+			user_y_position := a_y
 			C.gtk_widget_set_uposition (c_object, a_x, a_y)
+			positioned_by_user := True
 		end
 
 	set_width (a_width: INTEGER) is
@@ -222,18 +259,30 @@ feature -- Status setting
 	destroy is
 			-- Render `Current' unusable.
 		do
+			lower_bar.wipe_out
+			upper_bar.wipe_out
 			remove_menu_bar
-		--	lower_bar.destroy
-		--	upper_bar.destroy
 			Precursor {EV_CONTAINER_IMP}
+		end
+		
+	show is
+			-- Map the Window to the screen.
+		do
+			if not is_show_requested then
+				{EV_CONTAINER_IMP} Precursor
+				if positioned_by_user then
+					app_implementation.process_events
+					set_position (user_x_position, user_y_position)
+					--| This is a hack to make sure window is positioned correctly
+					positioned_by_user := False
+				end				
+			end
 		end
 
 	hide is
+			-- Unmap the Window from the screen.
 		do
 			if is_show_requested then
-				C.gtk_window_set_position (c_object, C.Gtk_win_pos_none_enum)
-			--	C.gtk_widget_set_uposition (c_object, x_position, y_position)
-				-- This line causes gdk error with preferences windows on item selection
 				Precursor		
 			end
 		end
@@ -259,60 +308,49 @@ feature -- Element change
 			if v /= Void then
 				w ?= v.implementation
 				C.gtk_box_pack_end (hbox, w.c_object, True, True, 0)
-				on_new_item (v)
+				on_new_item (w)
 			end
 			item := v
 		end
 
 	set_maximum_width (max_width: INTEGER) is
 			-- Set `maximum_width' to `max_width'.
+		local
+			a_geometry: POINTER
 		do
-			-- to be tested
-			C.gdk_window_set_hints (
-				C.gtk_widget_struct_window (c_object),
-				x_position,
-				y_position,
-				minimum_width,
-				minimum_height,
-				max_width,
-				maximum_height,
-				1
-			)
+			a_geometry := C.c_gdk_geometry_struct_allocate
+			C.set_gdk_geometry_struct_max_width (a_geometry, max_width)
+			C.set_gdk_geometry_struct_max_height (a_geometry, maximum_height)
+			C.gtk_window_set_geometry_hints (c_object, NULL, a_geometry, C.Gdk_hint_max_size_enum)
+			C.c_gdk_geometry_struct_free (a_geometry)
 			maximum_width := max_width
 		end 
 
 	set_maximum_height (max_height: INTEGER) is
 			-- Set `maximum_height' to `max_height'.
+		local
+			a_geometry: POINTER
 		do
-			-- to be tested
-			C.gdk_window_set_hints (
-				C.gtk_widget_struct_window (c_object),
-				x_position,
-				y_position,
-				minimum_width,
-				minimum_height,
-				maximum_width,
-				max_height,
-				1
-			)
+			a_geometry := C.c_gdk_geometry_struct_allocate
+			C.set_gdk_geometry_struct_max_width (a_geometry, maximum_width)
+			C.set_gdk_geometry_struct_max_height (a_geometry, max_height)
+			C.gtk_window_set_geometry_hints (c_object, NULL, a_geometry, C.Gdk_hint_max_size_enum)
+			C.c_gdk_geometry_struct_free (a_geometry)
 			maximum_height := max_height
-		end
-
-	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
-			-- Set the minimum horizontal size to `a_minimum_width'.
-			-- Set the minimum vertical size to `a_minimum_height'.
-		do
-			minimum_width := a_minimum_width
-			minimum_height := a_minimum_height
-			C.gtk_widget_set_usize (c_object, a_minimum_width, a_minimum_height)
-		end
+		end 
 
 	set_title (new_title: STRING) is
 			-- Set `title' to `new_title'.
 		local
+			a_title: STRING
 			a_gs: GEL_STRING
 		do
-			create a_gs.make (new_title)
+			a_title := new_title
+			if a_title.is_equal ("") then
+				-- Some window managers do not like empty strings as titles and show it as an error.
+				a_title := "%T"
+			end
+			create a_gs.make (a_title)
 			C.gtk_window_set_title (c_object, a_gs.item)
 
 			-- Make sure the gtk window has a corresponding gdk window
@@ -385,21 +423,16 @@ feature {EV_WIDGET_IMP} -- Position retrieval
 
 	inner_screen_x: INTEGER is
 			-- Horizontal position of the window on screen, 
-			-- decoration are not taken into account.
 		local
 			a_x: INTEGER
 			a_aux_info: POINTER
 		do
-				--| The following piece of code works fine with kwn (RH7.1 KDE2.1)
-				--| It should be test with other window managers
-			if is_displayed then
-				C.gdk_window_get_position (
+			if is_displayed then		
+				C.gdk_window_get_root_origin (
 					C.gtk_widget_struct_window (c_object),
-					$a_x,
-					NULL
-				)
-				Result := a_x
-			else	
+					$a_x, NULL)
+					Result := a_x
+			else
 				a_aux_info := aux_info_struct
 				if a_aux_info /= NULL then
 					Result := C.gtk_widget_aux_info_struct_x (a_aux_info)
@@ -409,22 +442,16 @@ feature {EV_WIDGET_IMP} -- Position retrieval
 		
 	inner_screen_y: INTEGER is
 			-- Vertical position of the window on screen, 
-			-- decoration are not taken into account.
 		local
 			a_y: INTEGER
 			a_aux_info: POINTER
 		do
-				--| The following piece of code works fine with kwn (RH7.1 KDE2.1)
-				--| It should be test with other window managers
-			if is_show_requested then
-				
-			C.gdk_window_get_position (
-				C.gtk_widget_struct_window (c_object),
-				NULL,
-				$a_y
-			)
-			Result := a_y
-			else	
+			if is_displayed then		
+				C.gdk_window_get_root_origin (
+					C.gtk_widget_struct_window (c_object),
+				    NULL, $a_y)
+				Result := a_y
+			else
 				a_aux_info := aux_info_struct
 				if a_aux_info /= NULL then
 					Result := C.gtk_widget_aux_info_struct_y (a_aux_info)
@@ -444,6 +471,18 @@ feature {EV_ANY_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
+	positioned_by_user: BOOLEAN
+		-- Has the Window been positioned by the user?
+
+	internal_set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
+			-- Set the minimum horizontal size to `a_minimum_width'.
+			-- Set the minimum vertical size to `a_minimum_height'.
+		do
+			internal_minimum_width := a_minimum_width
+			internal_minimum_height := a_minimum_height
+			C.gtk_widget_set_usize (c_object, a_minimum_width, a_minimum_height)
+		end
+
 	default_width: INTEGER
 			-- Default width for the window if set, -1 otherwise.
 			-- (see. `gtk_window_set_default_size' for more information)
@@ -455,11 +494,20 @@ feature {NONE} -- Implementation
 	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Gtk_Widget."size-allocate" happened.
 		do
-				--| `default_width' and `default_height' are not useful anymore
+			--| `default_width' and `default_height' are not useful anymore
 			default_width := -1
 			default_height := -1
 			Precursor (a_x, a_y, a_width, a_height)
+			if x_position /= previous_x or y_position /= previous_y then
+				previous_x := x_position
+				previous_y := y_position
+				if move_actions_internal /= Void then
+					move_actions_internal.call ([previous_x, previous_y, width, height])
+				end	
+			end
 		end
+		
+	previous_x, previous_y: INTEGER
 
 	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- Used for key event actions sequences.
@@ -499,10 +547,17 @@ feature {NONE} -- Implementation
 			C.gtk_window_add_accel_group (c_object, accel_group)
 			create upper_bar
 			create lower_bar
-			set_maximum_size (32000, 32000)
+
+			maximum_width := 32000
+			maximum_height := 32000
+			
 			signal_connect_true ("delete_event", agent gtk_marshal.on_window_close_request (c_object))
 			initialize_client_area
 			enable_user_resize
+			default_height := -1
+			default_width := -1
+			internal_minimum_width := -1
+			internal_minimum_height := -1
 			is_initialized := True
 		end
 		
@@ -533,13 +588,12 @@ feature {NONE} -- Implementation
 
 			app_implementation.window_oids.extend (object_id)
 		end
-		
 
 	vbox: POINTER
 			-- Vertical_box to have a possibility for a menu on the
 			-- top and a status bar at the bottom.
 
-feature {INTERMEDIARY_ROUTINES}
+feature {EV_INTERMEDIARY_ROUTINES}
 
 	call_close_request_actions is
 			-- Call the close request actions.

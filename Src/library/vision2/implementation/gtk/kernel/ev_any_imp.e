@@ -82,31 +82,33 @@ feature {EV_ANY, EV_ANY_IMP} -- Command
 			item_imp: EV_ITEM_IMP
 			widget_imp: EV_WIDGET_IMP
 		do
-			debug ("EV_GTK_DESTROY")
-				safe_print (generator + ".destroy")
-			end
-			item_imp ?= Current
-			if item_imp /= Void and then item_imp.parent_imp /= Void then
-					item_imp.parent_imp.interface.prune_all (item_imp.interface)
-			else
-				widget_imp ?= Current
-				if widget_imp /= Void and then widget_imp.parent_imp /= Void then
-					widget_imp.parent_imp.interface.prune_all (widget_imp.interface)
+			if not is_destroyed then
+				debug ("EV_GTK_DESTROY")
+					safe_print (generator + ".destroy")
 				end
+				item_imp ?= Current
+				if item_imp /= Void and then item_imp.parent_imp /= Void then
+						item_imp.parent_imp.interface.prune_all (item_imp.interface)
+				else
+					widget_imp ?= Current
+					if widget_imp /= Void and then widget_imp.parent_imp /= Void then
+						widget_imp.parent_imp.interface.prune_all (widget_imp.interface)
+					end
+				end
+				
+				l := action_sequences.count
+				from i := 1 until i > l loop
+					action_sequences.i_th (i).block
+					i := i + 1
+				end
+				is_destroyed := True
+	--			disconnect_all_signals
+				if C.gtk_is_window (c_object) then
+					C.gtk_object_unref (c_object)
+				end
+				C.gtk_object_destroy (c_object)
+				c_object := NULL
 			end
-			
-			l := action_sequences.count
-			from i := 1 until i > l loop
-				action_sequences.i_th (i).block
-				i := i + 1
-			end
-			is_destroyed := True
---			disconnect_all_signals
-			if C.gtk_is_window (c_object) then
-				C.gtk_object_unref (c_object)
-			end
-			C.gtk_object_destroy (c_object)
-			c_object := NULL
 		ensure then
 			c_object_detached: c_object = NULL
 		end
@@ -228,85 +230,6 @@ feature {EV_ANY_I} -- Event handling
 			signal_ids.prune_all (a_connection_id)
 		end
 
-	connect_signal_to_actions (
-		a_signal_name: STRING;
-		an_action_sequence: ACTION_SEQUENCE [TUPLE];
-		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE]
-		) is
-			-- Connect `a_signal_name' to `an_action_sequence'.
-			-- Use `translate' to convert GTK+ event data to TUPLE.
-		require
-			a_signal_name_not_void: a_signal_name /= Void
-			a_signal_name_not_empty: not a_signal_name.is_empty
-			an_action_sequence_not_void: an_action_sequence /= Void
-		do
-			real_connect_signal_to_actions (
-				c_object,
-				a_signal_name,
-				an_action_sequence,
-				translate
-			)
-		end
-
-	real_connect_signal_to_actions (
-		a_c_object: POINTER;
-		a_signal_name: STRING;
-		an_action_sequence: ACTION_SEQUENCE [TUPLE];
-		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE]
-		) is
-			-- Connect `a_signal_name' for `a_c_object' to `an_action_sequence'.
-			-- Use `translate' to convert GTK+ event data to TUPLE.
-			-- Connection delayed until `an_actions_sequence' is not empty.
-		require
-			a_c_object_not_void: a_c_object /= NULL
-			a_signal_name_not_void: a_signal_name /= Void
-			a_signal_name_not_empty: not a_signal_name.is_empty
-			an_action_sequence_not_void: an_action_sequence /= Void
-		do
-			an_action_sequence.not_empty_actions.extend (
-				agent connect_signal_to_actions_now (
-					a_c_object,
-					a_signal_name,
-					an_action_sequence,
-					translate
-				)
-			)
-			if not an_action_sequence.is_empty then
-				connect_signal_to_actions_now (
-					a_c_object,
-					a_signal_name,
-					an_action_sequence,
-					translate
-				)
-			end
-			action_sequences.extend (an_action_sequence)
-		end
-
-	connect_signal_to_actions_now (
-		a_c_object: POINTER;
-		a_signal_name: STRING;
-		an_action_sequence: ACTION_SEQUENCE [TUPLE];
-		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE]
-		) is
-			-- Connect `a_signal_name' for `a_c_object' to `an_action_sequence'.
-			-- Use `translate' to convert GTK+ event data to TUPLE.
-		local
-			disconnect_agent: PROCEDURE [ANY, TUPLE []]
-		do
-			real_signal_connect (
-				a_c_object,
-				a_signal_name,
-				--agent an_action_sequence.call (?),
-				Gtk_marshal.agent_from_action_sequence (an_action_sequence),
-				translate
-			)
-			disconnect_agent := agent gtk_marshal.signal_disconnect_agent_routine (c_object, last_signal_connection_id, signal_ids)
-			an_action_sequence.empty_actions.extend (disconnect_agent)
-			an_action_sequence.empty_actions.extend (
-				gtk_marshal.kamikaze_agent (an_action_sequence.empty_actions, disconnect_agent)
-			)
-		end
-
 	default_translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE] is		
 		once
 			Result := agent gtk_marshal.gdk_event_to_tuple
@@ -327,11 +250,14 @@ feature {NONE} -- Implementation
 			end
 			if c_object /= NULL and then not is_in_final_collect and then not gtk_marshal.is_destroyed then
 				-- Destroy has been explicitly called.
-				gtk_signal_disconnect_by_data (c_object, object_id)
-					--| This is the signal attached in ev_any_imp.c
-					--| used for GC/Ref-Counting interaction.
+				if internal_id /= 0 then
+					gtk_signal_disconnect_by_data (c_object, internal_id)
+				end			
+				--| This is the signal attached in ev_any_imp.c
+				--| used for GC/Ref-Counting interaction.
 				gtk_object_destroy (c_object)
 				gtk_object_unref (c_object)
+				c_object := NULL
 			end
 			Precursor {IDENTIFIED}
 		end
@@ -359,39 +285,48 @@ feature {NONE} -- Implementation
 
 	default_gtk_window: POINTER is
 			-- Pointer to a default GtkWindow.
-		once
-			Result := default_window_imp.c_object
+		do
+			Result := App_implementation.default_gtk_window
 		end
 
 	default_gdk_window: POINTER is
 			-- Pointer to a default GdkWindow that may be used to
 			-- access default visual information (color depth).
 		do
-			Result := C.gtk_widget_struct_window (default_gtk_window)
+			Result := App_implementation.default_gdk_window
 		end
 		
 	default_window: EV_WINDOW is
 			-- Default Window used for creation of agents and holder of clipboard widget.
-		once
-			create Result
+		do
+			Result := App_implementation.default_window
 		end
 		
 	default_window_imp: EV_WINDOW_IMP is
 			--
-		once
-			Result ?= default_window.implementation
+		do
+			Result := App_implementation.default_window_imp
 		end
 		
 	default_font_height: INTEGER is
 			--
-		local
-			temp_style: POINTER
-		once
-			temp_style := C.gtk_widget_struct_style (default_gtk_window)
-			Result := C.gdk_font_struct_ascent (C.gtk_style_struct_font (temp_style)) +
-				C.gdk_font_struct_descent (C.gtk_style_struct_font (temp_style))
+		do
+			Result := App_implementation.default_font_height
 		end
-	
+
+	gtk_marshal: EV_GTK_CALLBACK_MARSHAL is
+			-- 
+		once
+			create Result
+		end
+		
+	empty_tuple: TUPLE is
+		once
+			Result := []
+		end
+		
+feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
+
 	app_implementation: EV_APPLICATION_IMP is
 			-- 
 		local
@@ -404,17 +339,6 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	gtk_marshal: EV_GTK_CALLBACK_MARSHAL is
-			-- 
-		once
-			create Result
-		end
-		
-	empty_tuple: TUPLE is
-		once
-			Result := []
-		end
-
 feature {NONE} -- External implementation
 
 	set_eif_oid_in_c_object (a_c_object: POINTER; eif_oid: INTEGER;

@@ -152,8 +152,14 @@ feature {NONE} -- Implementation
 	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 		do
 			Precursor {EV_WINDOW_IMP} (a_key, a_key_string, a_key_press)
-			if a_key /= Void and then a_key.code = app_implementation.Key_constants.key_escape and then not a_key_press then
-				on_ok
+			if a_key /= Void and then not a_key_press then
+				if a_key.code = app_implementation.Key_constants.key_escape then
+					on_cancel
+				else
+					if a_key.code = app_implementation.Key_constants.key_enter then
+						on_ok
+					end
+				end
 			end				
 		end
 
@@ -166,7 +172,7 @@ feature {NONE} -- Implementation
 			until
 				is_destroyed or else selected_button /= Void
 			loop
-				dummy := C.gtk_main_iteration_do (True)
+				dummy := C.gtk_main_iteration_do (False)
 			end
 		end
 
@@ -190,7 +196,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_STANDARD_DIALOG
 
-feature {INTERMEDIARY_ROUTINES} -- Implmentation
+feature {EV_INTERMEDIARY_ROUTINES} -- Implmentation
 
 	on_ok is
 			-- Close window and call action sequence.

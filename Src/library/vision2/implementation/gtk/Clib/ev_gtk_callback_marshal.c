@@ -33,17 +33,17 @@ void c_ev_gtk_callback_marshal_init (
         );
 		*/
     // require
-            g_assert (callback_marshal_object != NULL);
-            g_assert (callback_marshal != NULL);
+            //g_assert (callback_marshal_object != NULL);
+            //g_assert (callback_marshal != NULL);
     // do
             ev_gtk_callback_marshal_object = eif_adopt(callback_marshal_object);
             ev_gtk_callback_marshal = callback_marshal;
     // ensure
-            g_assert (
-                eif_access (ev_gtk_callback_marshal_object)
-                == eif_access (callback_marshal_object)
-            );
-            g_assert (ev_gtk_callback_marshal == callback_marshal);
+            //g_assert (
+             //   eif_access (ev_gtk_callback_marshal_object)
+              //  == eif_access (callback_marshal_object)
+           // );
+            //g_assert (ev_gtk_callback_marshal == callback_marshal);
     // end
 }
 
@@ -77,8 +77,8 @@ void c_ev_gtk_callback_marshal (
             // `object' == NULL on idle callback.
             // We do not use `object', so no need for precondition.
             // g_assert (object != NULL);
-            g_assert (agent != NULL);
-            g_assert (ev_gtk_callback_marshal_object != NULL || ev_gtk_callback_marshal == NULL);
+            //g_assert (agent != NULL);
+            //g_assert (ev_gtk_callback_marshal_object != NULL || ev_gtk_callback_marshal == NULL);
     // do
 			if (ev_gtk_callback_marshal != NULL) {
 				ev_gtk_callback_marshal (
@@ -123,11 +123,11 @@ guint c_ev_gtk_callback_marshal_signal_connect (
         );
 		*/
     // require
-            g_assert (c_object != NULL);
-            g_assert (signal != NULL);
-            g_assert (agent != NULL);
-            g_assert (ev_gtk_callback_marshal_object != NULL);
-            g_assert (ev_gtk_callback_marshal != NULL);
+            //g_assert (c_object != NULL);
+            //g_assert (signal != NULL);
+            //g_assert (agent != NULL);
+            //g_assert (ev_gtk_callback_marshal_object != NULL);
+            //g_assert (ev_gtk_callback_marshal != NULL);
     // do
             connection_id = gtk_signal_connect_full (
                 c_object,                  // Object which emits the signal.
@@ -142,7 +142,7 @@ guint c_ev_gtk_callback_marshal_signal_connect (
                 FALSE                      // Invoke handler after the signal.
             );
     // ensure
-            g_assert (connection_id > 0);
+            //g_assert (connection_id > 0);
     // end
 	return connection_id;
 }
@@ -168,11 +168,11 @@ guint c_ev_gtk_callback_marshal_signal_connect_true (
         );
 		*/
     // require
-            g_assert (c_object != NULL);
-            g_assert (signal != NULL);
-            g_assert (agent != NULL);
-            g_assert (ev_gtk_callback_marshal_object != NULL);
-            g_assert (ev_gtk_callback_marshal != NULL);
+            //g_assert (c_object != NULL);
+            //g_assert (signal != NULL);
+            //g_assert (agent != NULL);
+            //g_assert (ev_gtk_callback_marshal_object != NULL);
+            //g_assert (ev_gtk_callback_marshal != NULL);
     // do
             connection_id = gtk_signal_connect_full (
                 c_object,                  // Object which emits the signal.
@@ -186,7 +186,7 @@ guint c_ev_gtk_callback_marshal_signal_connect_true (
                 FALSE                      // Invoke handler after the signal.
             );
 	//ensure
-			g_assert (connection_id > 0);
+			//g_assert (connection_id > 0);
 	// end
 	return connection_id;
 }
@@ -204,9 +204,9 @@ int c_ev_gtk_callback_marshal_true_callback (EIF_OBJECT agent)
         );
 		*/
     // require
-            g_assert (agent != NULL);
-            g_assert (ev_gtk_callback_marshal_object != NULL);
-            g_assert (ev_gtk_callback_marshal != NULL);
+            //g_assert (agent != NULL);
+            //g_assert (ev_gtk_callback_marshal_object != NULL);
+            //g_assert (ev_gtk_callback_marshal != NULL);
     // do
             ev_gtk_callback_marshal (
                 eif_access (ev_gtk_callback_marshal_object),
@@ -231,11 +231,11 @@ int c_ev_gtk_callback_marshal_true_event_callback (
         );
 		*/
     // require
-            g_assert (widget != NULL);
-            g_assert (event != NULL);
-            g_assert (agent != NULL);
-            g_assert (ev_gtk_callback_marshal_object != NULL);
-            g_assert (ev_gtk_callback_marshal != NULL);
+            //g_assert (widget != NULL);
+            //g_assert (event != NULL);
+            //g_assert (agent != NULL);
+            //g_assert (ev_gtk_callback_marshal_object != NULL);
+            //g_assert (ev_gtk_callback_marshal != NULL);
     // do
             ev_gtk_callback_marshal (
                 eif_access (ev_gtk_callback_marshal_object),
@@ -259,9 +259,9 @@ int c_ev_gtk_callback_marshal_delayed_agent_callback (EIF_OBJECT agent)
         );
 		*/
     // require
-            g_assert (agent != NULL);
-            g_assert (ev_gtk_callback_marshal_object != NULL);
-            g_assert (ev_gtk_callback_marshal != NULL);
+            //g_assert (agent != NULL);
+            //g_assert (ev_gtk_callback_marshal_object != NULL);
+            //g_assert (ev_gtk_callback_marshal != NULL);
     // do
             ev_gtk_callback_marshal (
                 eif_access (ev_gtk_callback_marshal_object),
@@ -292,10 +292,10 @@ void c_ev_gtk_callback_marshal_delayed_agent_call (
         );
 		*/
     // require
-            g_assert (delay >= 0);
-            g_assert (agent != NULL);
-            g_assert (ev_gtk_callback_marshal_object != NULL);
-            g_assert (ev_gtk_callback_marshal != NULL);
+            //g_assert (delay >= 0);
+            //g_assert (agent != NULL);
+            //g_assert (ev_gtk_callback_marshal_object != NULL);
+            //g_assert (ev_gtk_callback_marshal != NULL);
     // do
             connection_id = gtk_timeout_add (
 				delay,
@@ -304,7 +304,7 @@ void c_ev_gtk_callback_marshal_delayed_agent_call (
                 eif_adopt (agent)
 			);
     // ensure
-            g_assert (connection_id > 0);
+            //g_assert (connection_id > 0);
     // end
 }
 
@@ -324,10 +324,10 @@ guint c_ev_gtk_callback_marshal_timeout_connect (
         );
 		*/
     // require
-            g_assert (delay >= 0);
-            g_assert (agent != NULL);
-            g_assert (ev_gtk_callback_marshal_object != NULL);
-            g_assert (ev_gtk_callback_marshal != NULL);
+            //g_assert (delay >= 0);
+            //g_assert (agent != NULL);
+            //g_assert (ev_gtk_callback_marshal_object != NULL);
+            //g_assert (ev_gtk_callback_marshal != NULL);
     // do
             connection_id = gtk_timeout_add_full (
 				delay,
@@ -339,7 +339,7 @@ guint c_ev_gtk_callback_marshal_timeout_connect (
                 eif_wean                    // To call on hook disconnect.
 			);
     // ensure
-            g_assert (connection_id > 0);
+            //g_assert (connection_id > 0);
     // end
 		return (connection_id);
 }
@@ -358,9 +358,9 @@ guint c_ev_gtk_callback_marshal_idle_connect (EIF_OBJECT agent)
         );
 		*/
     // require
-            g_assert (agent != NULL);
-            g_assert (ev_gtk_callback_marshal_object != NULL);
-            g_assert (ev_gtk_callback_marshal != NULL);
+            //g_assert (agent != NULL);
+            //g_assert (ev_gtk_callback_marshal_object != NULL);
+            //g_assert (ev_gtk_callback_marshal != NULL);
     // do
             connection_id = gtk_idle_add_full (
 				GTK_PRIORITY_DEFAULT,      // Priority.
@@ -372,7 +372,7 @@ guint c_ev_gtk_callback_marshal_idle_connect (EIF_OBJECT agent)
 				eif_wean                   // To call on hook disconnect.
 			);
     // ensure
-            g_assert (connection_id > 0);
+            //g_assert (connection_id > 0);
     // end
 		return (connection_id);
 }
@@ -392,9 +392,9 @@ guint c_ev_gtk_callback_marshal_delete_connect (
 		);
 		*/
 	// require
-		g_assert (agent != NULL);
-		g_assert (ev_gtk_callback_marshal_object != NULL);
-		g_assert (ev_gtk_callback_marshal != NULL);
+		//g_assert (agent != NULL);
+		//g_assert (ev_gtk_callback_marshal_object != NULL);
+		//g_assert (ev_gtk_callback_marshal != NULL);
 	// do
 		connection_id = gtk_signal_connect_full (
 			c_object,                  // Object which emits the signal.
@@ -411,7 +411,7 @@ guint c_ev_gtk_callback_marshal_delete_connect (
 			FALSE                      // Invoke handler after the signal.
 		);
 	// ensure
-		g_assert (connection_id > 0);
+		//g_assert (connection_id > 0);
 	// end
 		return (connection_id);
 }
@@ -437,6 +437,13 @@ guint c_ev_gtk_callback_marshal_delete_connect (
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.13  2002/11/26 21:21:19  king
+// Merged with changes from 52 branch
+//
+// Revision 1.12.6.1  2002/10/21 18:36:19  king
+// Commented out g_asserts
+// Should be excluded with an #ifdef DEBUG
+//
 // Revision 1.12  2001/06/29 19:55:20  king
 // Returning signal connection on signal connect true
 //

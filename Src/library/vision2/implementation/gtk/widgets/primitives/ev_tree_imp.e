@@ -40,6 +40,7 @@ inherit
 	EV_ITEM_LIST_IMP [EV_TREE_NODE]
 		redefine
 			interface,
+			insert_i_th,
 			remove_i_th,
 			reorder_child,
 			i_th,
@@ -69,7 +70,7 @@ feature {NONE} -- Initialization
 				C.GTK_POLICY_AUTOMATIC_ENUM,
 				C.GTK_POLICY_AUTOMATIC_ENUM
 			)
-			C.gtk_scrolled_window_set_placement (c_object, C.gtk_corner_top_left_enum)
+			C.gtk_scrolled_window_set_placement (c_object, C.GTK_CORNER_TOP_LEFT_ENUM)
 
 			list_widget := C.gtk_ctree_new (1, 0)
 			
@@ -100,12 +101,14 @@ feature {NONE} -- Initialization
 		local
 			a_wid: INTEGER
 		do
+			timer.set_interval (0)
+			C.gtk_clist_freeze (list_widget)
 			a_wid := C.gtk_clist_columns_autosize (list_widget) + 16
 			if tree_width /= a_wid then
 				C.gtk_widget_set_usize (list_widget, a_wid, -1)
 				tree_width := a_wid
 			end
-			timer.set_interval (0)
+			C.gtk_clist_thaw (list_widget)
 		end
 	
 	visual_widget: POINTER is
@@ -183,6 +186,7 @@ feature {NONE} -- Initialization
 				a_screen_x, a_screen_y]
 
 			tree_item_imp := row_from_y_coord (a_y)
+			C.gtk_clist_freeze (list_widget)
 	
 			if a_type = C.GDK_BUTTON_PRESS_ENUM then
 				if not is_transport_enabled and then pointer_button_press_actions_internal /= Void then
@@ -190,7 +194,7 @@ feature {NONE} -- Initialization
 				end
 				if 
 					tree_item_imp /= Void and then
-					tree_item_imp.pointer_button_press_actions_internal /= Void then
+					tree_item_imp.pointer_button_press_actions_internal /= Void and then tree_item_imp = selected_item_imp then
 						tree_item_imp.pointer_button_press_actions_internal.call (t)
 				end
 
@@ -200,11 +204,12 @@ feature {NONE} -- Initialization
 				end
 				if 
 					tree_item_imp /= Void and then
-					tree_item_imp.pointer_double_press_actions_internal /= Void then
+					tree_item_imp.pointer_double_press_actions_internal /= Void and then tree_item_imp = selected_item_imp then
 						tree_item_imp.pointer_double_press_actions_internal.call (t)
 				end
 			end
-        	end
+			C.gtk_clist_thaw (list_widget)
+		end
 
 	motion_handler (a_x, a_y: INTEGER; a_a, a_b, a_c: DOUBLE; a_d, a_e: INTEGER) is
 		local
@@ -265,23 +270,22 @@ feature {NONE} -- Implementation
 	dummy_tree_node: POINTER
 		-- Added to prevent seg fault on wipeout by adding temporarily
 		
-feature {INTERMEDIARY_ROUTINES} -- Implementation
+feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	expand_callback (a_tree_item: POINTER) is
 			-- Expand callback passing expanded `a_tree_item' node pointer.
 		local
 			a_tree_node_imp: EV_TREE_NODE_IMP
 		do
-			--C.gtk_clist_freeze (list_widget)
+			C.gtk_clist_freeze (list_widget)
 			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
 			if a_tree_node_imp /= Void then
 				a_tree_node_imp.expand_callback
 			end
 			if timer.interval = 0 then
 				timer.set_interval (500)
-			end
-			
-			--C.gtk_clist_thaw (list_widget)
+			end	
+			C.gtk_clist_thaw (list_widget)
 		end
 
 	collapse_callback (a_tree_item: POINTER) is
@@ -306,8 +310,9 @@ feature {INTERMEDIARY_ROUTINES} -- Implementation
 			-- Called when a tree item is selected
 		local
 			a_tree_node_imp: EV_TREE_NODE_IMP
-		do		
+		do
 			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
+			--C.gtk_clist_freeze (list_widget)
 			if a_tree_node_imp /= Void and then a_tree_node_imp /= selected_node then
 				if select_actions_internal /= Void then
 					select_actions_internal.call (empty_tuple)
@@ -316,6 +321,7 @@ feature {INTERMEDIARY_ROUTINES} -- Implementation
 					a_tree_node_imp.select_actions_internal.call (empty_tuple)
 				end
 			end
+			--C.gtk_clist_thaw (list_widget)
 			selected_node := a_tree_node_imp
 		end
 		
@@ -325,6 +331,7 @@ feature {INTERMEDIARY_ROUTINES} -- Implementation
 			a_tree_node_imp: EV_TREE_NODE_IMP
 		do
 			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
+			C.gtk_clist_freeze (list_widget)
 			if a_tree_node_imp /= Void and selected_node /= Void then
 				if deselect_actions_internal /= Void then
 					deselect_actions_internal.call (empty_tuple)
@@ -333,11 +340,23 @@ feature {INTERMEDIARY_ROUTINES} -- Implementation
 					a_tree_node_imp.deselect_actions_internal.call (empty_tuple)
 				end
 			end
+			C.gtk_clist_thaw (list_widget)
 		end
 
 feature -- Status report
 
 	selected_item: EV_TREE_NODE is
+			-- Item which is currently selected.
+		local
+			a_tree_node_imp: EV_TREE_NODE_IMP
+		do	
+			a_tree_node_imp := selected_item_imp		
+			if a_tree_node_imp /= Void then
+				Result := a_tree_node_imp.interface
+			end
+		end
+		
+	selected_item_imp: EV_TREE_NODE_IMP is
 			-- Item which is currently selected.
 		local
 			temp_item_ptr: POINTER
@@ -346,9 +365,9 @@ feature -- Status report
 			if temp_item_ptr /= NULL then
 				temp_item_ptr := C.g_list_nth_data (temp_item_ptr, 0)
 				-- This is incase of unwanted items due to wipeout hack.
-				Result := tree_node_ptr_table.item (temp_item_ptr).interface
+				Result := tree_node_ptr_table.item (temp_item_ptr)
 			end
-		end
+		end			
 
 	selected: BOOLEAN is
 			-- Is one item selected?
@@ -396,7 +415,6 @@ feature -- Implementation
 
 	connect_pnd_callback is
 		do
-
 			check
 				button_release_not_connected: button_release_connection_id = 0
 			end
@@ -434,16 +452,21 @@ feature -- Implementation
 				a_enable_flag := ev_children.item.is_transport_enabled_iterator
 				i := i + 1
 			end
-
+			update_pnd_connection (a_enable_flag)
+		end
+		
+	update_pnd_connection (a_enable: BOOLEAN) is
+			-- Update the PND connection status for `Current'.
+		do
 			if not is_transport_enabled then
-				if a_enable_flag or pebble /= Void then
+				if a_enable or pebble /= Void then
 					connect_pnd_callback
 				end
-			elseif not a_enable_flag and pebble = Void then
+			elseif not a_enable and pebble = Void then
 				disable_transport_signals
 				is_transport_enabled := False
-			end
-		end
+			end			
+		end		
 
 	start_transport_filter (
 			a_type: INTEGER
@@ -650,9 +673,6 @@ feature {NONE} -- Implementation
 			end
 			C.gtk_clist_thaw (list_widget)
 		end
-
-	spacing: INTEGER is 3
-			-- Spacing between pixmap and text.
 			
 	previous_selected_item: EV_TREE_NODE
 			-- Item that was selected previously.
@@ -677,19 +697,6 @@ feature {NONE} -- Implementation
 			C.gtk_clist_thaw (list_widget)
 		end
 
-	add_to_container (v: like item) is
-			-- Add `v' to tree.
-		local
-			item_imp: EV_TREE_NODE_IMP
-		do
-			item_imp ?= v.implementation
-			item_imp.set_parent_imp (Current)
-			item_imp.set_item_and_children (NULL)
-			item_imp.check_branch_pixmaps
-			ev_children.force (item_imp)
-			update_pnd_status
-		end
-
 	wipe_out is
 			-- Remove all items.
 		local
@@ -708,9 +715,7 @@ feature {NONE} -- Implementation
 				ev_children.forth
 			end
 
-				-- Remove all items (Eiffel part)
---			ev_children.wipe_out
---			child_array.wipe_out
+			-- Remove all items (Eiffel part)
 			create ev_children.make (0)
 			create child_array.make (5)
 			tree_node_ptr_table.clear_all
@@ -718,6 +723,33 @@ feature {NONE} -- Implementation
 			index := 0
 
 			update_pnd_status
+		end
+		
+	insert_i_th (v: like item; i: INTEGER) is
+			-- Insert `v' at position `i'.
+		local
+			item_imp: EV_TREE_NODE_IMP
+		do	
+			-- add_to_container (v, v_imp)
+			item_imp ?= v.implementation
+			item_imp.set_parent_imp (Current)
+			item_imp.set_item_and_children (NULL)
+			item_imp.check_branch_pixmaps
+			ev_children.force (item_imp)
+			
+			if item_imp.is_transport_enabled_iterator then
+				update_pnd_connection (True)
+			end
+			
+			child_array.go_i_th (i)
+			child_array.put_left (v)
+			if i < count then
+				-- reorder_child (v, v_imp, i)
+				C.gtk_clist_row_move (list_widget, item_imp.index - 1, i - 1)
+				ev_children.prune_all (item_imp)
+				ev_children.go_i_th (i)
+				ev_children.put_left (item_imp)
+			end
 		end
 
 	remove_i_th (a_position: INTEGER) is
@@ -741,17 +773,21 @@ feature {NONE} -- Implementation
 
 			update_pnd_status
 		end
-
-	reorder_child (v: like item; a_position: INTEGER) is
-			-- Move `v' to `a_position' in Current.
-		local
-			item_imp: EV_TREE_NODE_IMP
+		
+	add_to_container (v: like item; v_imp: EV_ITEM_IMP) is
+			-- Add `v' to tree.
 		do
-			item_imp ?= v.implementation
-			C.gtk_clist_row_move (list_widget, item_imp.index - 1, a_position - 1)
-			ev_children.prune_all (item_imp)
-			ev_children.go_i_th (a_position)
-			ev_children.put_left (item_imp)	
+			check
+				do_not_call: False
+			end
+		end
+
+	reorder_child (v: like item; v_imp: EV_ITEM_IMP; a_position: INTEGER) is
+			-- Move `v' to `a_position' in Current.
+		do
+			check
+				do_not_call: False
+			end
 		end
 
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
@@ -761,6 +797,9 @@ feature {NONE} -- Implementation
 		end
 
 feature {EV_TREE_NODE_IMP} -- Implementation
+
+	spacing: INTEGER is 5
+			-- Spacing between pixmap and text.
 
 	row_height: INTEGER is
 			-- 

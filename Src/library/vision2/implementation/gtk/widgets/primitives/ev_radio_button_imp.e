@@ -42,6 +42,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_radio_button_new (NULL))
+			enable_select
 		end
 
 	initialize is
@@ -63,18 +64,22 @@ feature -- Status setting
 	enable_select is
 			-- Set `is_selected' `True'.
 		do
-			C.gtk_toggle_button_set_active (visual_widget, True)
+			if not is_selected then
+				C.gtk_toggle_button_set_active (visual_widget, True)	
+			end
 		end
 
 feature {EV_ANY_I} -- Implementation
 
 	widget_object (a_list: POINTER): POINTER is
 			-- Returns the c_object of the radio item in `a_list'.
-		local
-			item_ptr: POINTER
+--		local
+--			item_ptr: POINTER
 		do
-			item_ptr := C.gslist_struct_data (a_list)
-			Result := C.gtk_widget_struct_parent (item_ptr)
+			--item_ptr := C.gslist_struct_data (a_list)
+			--Result := C.gtk_widget_struct_parent (item_ptr)
+			-- Above is the implementation should an event box need to be introduced.
+			Result := C.gslist_struct_data (a_list)
 		end
 
 	radio_group: POINTER is

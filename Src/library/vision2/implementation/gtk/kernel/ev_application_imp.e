@@ -54,15 +54,19 @@ feature {NONE} -- Initialization
 			-- Initialize the marshal object.
 			create gtk_marshal
 		end
+		
+	a_timeout_imp: EV_TIMEOUT_IMP
+			-- Timeout used to call post_launch_actions
 
 	launch is
 			-- Display the first window, set up the post_launch_actions,
 			-- and start the event loop.
 		do
-			gtk_marshal.c_ev_gtk_callback_marshal_delayed_agent_call (
-				0,
-				agent (interface.post_launch_actions).call (empty_tuple)
-			)
+			a_timeout_imp ?= (create {EV_TIMEOUT}).implementation
+			a_timeout_imp.interface.actions.extend (agent (interface.post_launch_actions).call (empty_tuple))
+			a_timeout_imp.set_interval_kamikaze (0)
+
+
 			internal_idle_actions.not_empty_actions.extend (
 				agent connect_internal_idle_actions
 			)
@@ -162,16 +166,21 @@ feature -- Basic operation
 		local
 			main_not_running: INTEGER
 		do
-			from
-			until 
-				C.gtk_events_pending = 0
-			loop
-				main_not_running := C.gtk_main_iteration_do (False)
-				check
-					main_running: main_not_running = 0
+			-- We do not want nested loops of process events.
+			if not processing_events then
+				from
+					processing_events := True
+				until 
+					C.gtk_events_pending = 0
+				loop
+					main_not_running := C.gtk_main_iteration_do (False)
 				end
+				processing_events := False
 			end
 		end
+		
+	processing_events: BOOLEAN
+		-- Is process_events in the middle of execution?
 
 	sleep (msec: INTEGER) is
 			-- Wait for `msec' milliseconds and return.
@@ -342,6 +351,43 @@ feature -- Implementation
 		do
 			temp_ptr := C.gdk_window_get_pointer (default_pointer, $temp_x, $temp_y, $temp_mask)
 			Result := temp_mask
+		end
+		
+feature {EV_ANY_I, EV_FONT_IMP} -- Implementation
+
+	default_gtk_window: POINTER is
+			-- Pointer to a default GtkWindow.
+		once
+			Result := default_window_imp.c_object
+			window_oids.prune_all (Default_window_imp.object_id)
+		end
+
+	default_gdk_window: POINTER is
+			-- Pointer to a default GdkWindow that may be used to
+			-- access default visual information (color depth).
+		do
+			Result := C.gtk_widget_struct_window (default_gtk_window)
+		end
+		
+	default_window: EV_WINDOW is
+			-- Default Window used for creation of agents and holder of clipboard widget.
+		once
+			create Result
+		end
+		
+	default_window_imp: EV_WINDOW_IMP is
+			--
+		once
+			Result ?= default_window.implementation
+		end
+		
+	default_font_height: INTEGER is
+			--
+		local
+			temp_style: POINTER
+		once
+			temp_style := C.gtk_widget_struct_style (default_gtk_window)
+			Result := C.gdk_font_struct_ascent (C.gtk_style_struct_font (temp_style)) + 1
 		end
 		
 feature -- External implementation

@@ -19,8 +19,6 @@ feature -- Event handling
 	create_expose_actions: EV_GEOMETRY_ACTION_SEQUENCE is
 			-- Create a expose action sequence.
 			-- Attach to GTK "expose-event" signal.
-		local
-			action_sequence: ACTION_SEQUENCE [TUPLE]
 		do
 			create Result
 			real_signal_connect (c_object, "expose-event", agent gtk_marshal.create_expose_actions_intermediary (c_object, ?, ?, ?, ?), default_translate)

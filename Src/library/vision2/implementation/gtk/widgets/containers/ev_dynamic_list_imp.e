@@ -75,18 +75,6 @@ feature {EV_ANY_I} -- Implementation
 			Result := c_object
 		end
 
-feature -- Event handling
-
-	on_new_item (an_item: G) is
-			-- Called after `an_item' is added.
-		deferred
-		end
-
-	on_removed_item (an_item: G) is
-			-- Called just before `an_item' is removed.
-		deferred
-		end
-
 feature {NONE} -- Implementation
 
 	child_array: ARRAYED_LIST [G]

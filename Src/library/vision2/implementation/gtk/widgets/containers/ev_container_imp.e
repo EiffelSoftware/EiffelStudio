@@ -75,8 +75,7 @@ feature -- Element change
 			if v /= Void then
 				w ?= v.implementation
 				C.gtk_container_add (container_widget, w.c_object)
-				update_child_requisition (w.c_object)
-				on_new_item (v)
+				on_new_item (w)
 			end
 		end		
 	
@@ -197,8 +196,7 @@ feature -- Status setting
 
 				if a_item_pointer /= NULL then
 					an_item_imp ?= eif_object_from_c (
-						C.gtk_widget_struct_parent (a_item_pointer)
-						-- c_object for radio button is event box.
+						a_item_pointer
 					)
 					check an_item_imp_not_void: an_item_imp /= Void end
 					set_radio_group (an_item_imp.radio_group)
@@ -279,6 +277,7 @@ feature -- Basic operations
 			-- Propagate the current foreground color of the
 			-- container to the children.
 		do
+			{EV_CONTAINER_I} Precursor
 			propagate_foreground_color_internal (foreground_color, c_object)
 		end
 
@@ -286,6 +285,7 @@ feature -- Basic operations
 			-- Propagate the current background color of the
 			-- container to the children.
 		do
+			{EV_CONTAINER_I} Precursor
 			propagate_background_color_internal (background_color, c_object)
 		end
 
@@ -299,23 +299,22 @@ feature -- Command
 			--| the `c_object'. This prevents them from
 			--| being destroyed when the container is destroyed.
 		do
-			interface.wipe_out
-			Precursor {EV_WIDGET_IMP}
+			if not is_destroyed then
+				interface.wipe_out
+				Precursor {EV_WIDGET_IMP}				
+			end
 		end
 
 feature -- Event handling
 
-	on_new_item (an_item: EV_WIDGET) is
+	on_new_item (an_item_imp: EV_WIDGET_IMP) is
 			-- Called after `an_item' is added.
-		local
-			a_widget_imp: EV_WIDGET_IMP
 		do
-			a_widget_imp ?= an_item.implementation
-			a_widget_imp.set_parent_imp (Current)
-			add_radio_button (an_item)
-			if new_item_actions_internal /= Void then
-				new_item_actions_internal.call ([an_item])
-			end
+			an_item_imp.set_parent_imp (Current)
+			add_radio_button (an_item_imp.interface)
+--			if new_item_actions_internal /= Void then
+--				new_item_actions_internal.call ([an_item])
+--			end
 		end
 
 	on_removed_item (an_item: EV_WIDGET) is

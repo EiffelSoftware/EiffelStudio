@@ -41,7 +41,8 @@ inherit
 	EV_LIST_ITEM_LIST_IMP
 		undefine
 			set_default_colors,
-			visual_widget
+			visual_widget,
+			set_composite_widget_pointer_style
 		redefine
 			select_callback,
 			remove_i_th,
@@ -107,6 +108,7 @@ feature {NONE} -- Initialization
 			
 			create timer.make_with_interval (0)
 			timer.actions.extend (agent launch_select_actions)
+			timer_imp ?= timer.implementation
 			activate_id := C.gtk_combo_struct_activate_id (container_widget)
 			C.gtk_signal_handler_block (entry_widget, activate_id)
 			
@@ -173,6 +175,7 @@ feature -- Status setting
 		do
 			avoid_callback := True
 			Precursor {EV_TEXT_FIELD_IMP} (a_text)
+			avoid_callback := False
 		end
 
 	set_maximum_text_length (len: INTEGER) is
@@ -230,7 +233,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_to_container (v: like item) is
+	add_to_container (v: like item; v_imp: EV_ITEM_IMP) is
 			-- Add `v' to container.
 		local
 			imp: EV_LIST_ITEM_IMP
@@ -274,9 +277,11 @@ feature {NONE} -- Implementation
 			Result := C.gtk_style_struct_fg (C.gtk_widget_struct_style (list_widget))
 		end
 		
-	timer: EV_TIMEOUT
+	timer: EV_TIMEOUT; timer_imp: EV_TIMEOUT_IMP
+		-- Timer and its associated implementation needed for selection hack.
 	
 	triggering_item: EV_LIST_ITEM_IMP
+		-- Item that has been selected.
 	
 	container_widget: POINTER
 			-- Gtk combo struct
@@ -294,9 +299,8 @@ feature {NONE} -- Implementation
 		do	
 			--| FIXME IEK Remove hacks when gtk+ 2.0 is out
 			if is_displayed then
-				if not avoid_callback then
+				if not avoid_callback then			
 				 	triggering_item ?= eif_object_from_c (gtk_marshal.gtk_value_pointer (an_item))
-					timer.set_interval (1)
 				 	if not button_pressed then
 						popwin := C.gtk_combo_struct_popwin (container_widget)
 						C.gtk_widget_hide (popwin)
@@ -306,6 +310,7 @@ feature {NONE} -- Implementation
 						end
 					end
 					avoid_callback := True
+					timer_imp.set_interval_kamikaze (1)
 				else
 					avoid_callback := False
 				end
@@ -337,19 +342,23 @@ feature {NONE} -- Implementation
 				--	success := C.gtk_widget_activate (entry_widget)
 					C.gtk_signal_handler_block (entry_widget, activate_id)
 			end
-			Precursor (a_key, a_key_string, a_key_press)
+			Precursor {EV_TEXT_FIELD_IMP} (a_key, a_key_string, a_key_press)
 		end
 	
 	launch_select_actions is
 			-- 
+		local
+			a_triggering_item: EV_LIST_ITEM_IMP
 		do
-			timer.set_interval (0)
-			if triggering_item /= Void then
-				call_select_actions (triggering_item)
-				triggering_item := Void
+			timer.actions.wipe_out
+			a_triggering_item := triggering_item
+			if a_triggering_item /= Void then
+				call_select_actions (a_triggering_item)
 			end
+			triggering_item := Void
+			timer.actions.extend (agent launch_select_actions)
 		end
-	
+
 	destroy is
 			-- Destroy Current
 		do
@@ -359,7 +368,7 @@ feature {NONE} -- Implementation
 			Precursor {EV_TEXT_FIELD_IMP}
 		end
 		
-feature {INTERMEDIARY_ROUTINES} -- Implementation
+feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		
 	on_button_released is
 		do

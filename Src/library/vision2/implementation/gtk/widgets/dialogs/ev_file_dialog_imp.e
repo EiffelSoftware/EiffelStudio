@@ -152,7 +152,7 @@ feature -- Element change
 			)
 		end
 
-feature {INTERMEDIARY_ROUTINES} -- Implementation
+feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	on_ok is
 			-- The user has requested that the dialog be activated.

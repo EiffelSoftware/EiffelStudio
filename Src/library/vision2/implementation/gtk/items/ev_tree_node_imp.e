@@ -18,6 +18,7 @@ inherit
 			interface as item_list_interface
 		redefine
 			add_to_container,
+			insert_i_th,
 			remove_i_th,
 			reorder_child,
 			i_th,
@@ -78,8 +79,13 @@ feature -- Status report
 
 	is_selected: BOOLEAN is
 			-- Is the item selected?
+		local
+			a_tree_imp: EV_TREE_IMP
 		do
-			Result := parent_tree_imp.selected_item = interface
+			a_tree_imp := parent_tree_imp
+			if a_tree_imp /= Void then
+				Result := a_tree_imp.selected_item = interface
+			end
 		end
 
 	is_expanded: BOOLEAN
@@ -93,8 +99,7 @@ feature -- Status setting
 			C.gtk_ctree_select (
 				parent_tree_imp.list_widget,
 				tree_node_ptr
-			)
-			
+			)		
 		end
 
 	disable_select is
@@ -126,13 +131,15 @@ feature -- Status setting
 	set_text (a_text: STRING) is
 			-- 
 		do
-			internal_text := a_text
+			internal_text := clone (a_text)
+			insert_pixmap
 		end
 		
 	remove_text is
 			-- 
 		do
 			internal_text := ""
+			insert_pixmap
 		end	
 
 feature -- PND
@@ -297,7 +304,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			is_leaf, is_expded: INTEGER
 		do
 			create a_gs.make (text)
-			if gdk_pixmap /= NULL and then parent_tree_imp /= Void then
+			if parent_tree_imp /= Void then
 				if pix_height > parent_tree_imp.row_height then
 					C.gtk_clist_set_row_height (parent_tree_imp.list_widget, pix_height)
 				end
@@ -305,7 +312,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 					parent_tree_imp.list_widget,
 					tree_node_ptr,
 					a_gs.item,-- text,
-					3, -- spacing
+					parent_tree_imp.spacing, -- spacing
 					gdk_pixmap,
 					gdk_mask,
 					gdk_pixmap,
@@ -335,11 +342,6 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			loop
 				ev_children.item.set_item_and_children (tree_node_ptr)
 				ev_children.forth
-			end
-			
-			if tree_node_ptr = NULL then
-					-- Reset here as descendants access `parent_imp' in iteration.
-				set_parent_imp (Void)
 			end
 		end
 		
@@ -479,35 +481,52 @@ feature {EV_TREE_IMP} -- Implementation
 			Result := (ev_children @ i).interface
 		end
 
-	add_to_container (v: like item) is
+	add_to_container (v: like item; v_imp: EV_ITEM_IMP) is
 			-- Add `v' to tree items tree at position `i'.
+		do
+			check
+				do_not_call: False
+			end
+		end
+
+	reorder_child (v: like item; v_imp: EV_ITEM_IMP; a_position: INTEGER) is
+			-- Move `v' to `a_position' in Current.
+		do
+			check
+				do_not_call: False
+			end
+		end
+		
+	insert_i_th (v: like item; i: INTEGER) is
+			-- Insert `v' at position `i'.
 		local
 			item_imp: EV_TREE_NODE_IMP
 			par_t_imp: EV_TREE_IMP
 		do
+			--add_to_container (v, v_imp)
 			item_imp ?= v.implementation
 			item_imp.set_parent_imp (Current)
 			ev_children.force (item_imp)
+
 
 			-- Using a local prevents recalculation
 			par_t_imp := parent_tree_imp
 			if par_t_imp /= Void then
 				item_imp.set_item_and_children (tree_node_ptr)
-				par_t_imp.update_pnd_status
+				if item_imp.is_transport_enabled_iterator then
+					par_t_imp.update_pnd_connection (True)
+				end	
 				item_imp.check_branch_pixmaps
+			end			
+	
+			child_array.go_i_th (i)
+			child_array.put_left (v)
+			if i < count then
+				--reorder_child (v, v_imp, i)
+				ev_children.prune_all (item_imp)
+				ev_children.go_i_th (i)
+				ev_children.put_left (item_imp)
 			end
-		end
-
-	reorder_child (v: like item; a_position: INTEGER) is
-			-- Move `v' to `a_position' in Current.
-		local
-			item_imp: EV_TREE_NODE_IMP
-		do
-			item_imp ?= v.implementation
-			--| FIXME The gtk actual tree item move needs implementing.
-			ev_children.prune_all (item_imp)
-			ev_children.go_i_th (a_position)
-			ev_children.put_left (item_imp)	
 		end
 
 	remove_i_th (a_position: INTEGER) is
@@ -524,6 +543,9 @@ feature {EV_TREE_IMP} -- Implementation
 				if count = 1 and then not is_expanded then
 					--| Hack needed to prevent seg fault on removal if last item in collapse_actions.
 					remove_on_expand_node := item_imp.tree_node_ptr
+					a_timeout_imp ?= (create {EV_TIMEOUT}).implementation
+					a_timeout_imp.interface.actions.extend (agent remove_dummy_node)
+					a_timeout_imp.set_interval_kamikaze (0)
 				else
 					C.gtk_ctree_remove_node (par_tree_imp.list_widget, item_imp.tree_node_ptr)
 				end
@@ -544,14 +566,21 @@ feature {EV_TREE_IMP} -- Implementation
 			end
 		end
 		
+	a_timeout_imp: EV_TIMEOUT_IMP
+			-- Timeout used for expand node removal hack.
+		
 	remove_on_expand_node: POINTER
+			-- Pointer used as hack to prevent gtk sigsegv on removal of last item.
 	
 	remove_dummy_node is
 			--
+		local
+			a_d_node: POINTER
 		do
+			a_d_node := remove_on_expand_node
 			if remove_on_expand_node /= NULL then
-				C.gtk_ctree_remove_node (parent_tree_imp.list_widget, remove_on_expand_node)
 				remove_on_expand_node := NULL
+				C.gtk_ctree_remove_node (parent_tree_imp.list_widget, a_d_node)		
 			end
 		end
 
@@ -571,19 +600,17 @@ feature {EV_ITEM_LIST_IMP} -- Implementation
 			-- to its corresponding GtkCTreeNode.
 		local
 			cnt: INTEGER
-			itm_imp: EV_TREE_NODE_IMP
 		do
 			insert_pixmap
-			cnt := count
-			if parent_tree_imp /= Void and then cnt > 0 then
+			cnt := ev_children.count
+			if cnt > 0 then
 				from
-					start
+					ev_children.start
 				until
-					index > cnt
+					ev_children.index > cnt
 				loop
-					itm_imp ?= item.implementation
-					itm_imp.check_branch_pixmaps
-					forth
+					ev_children.item.check_branch_pixmaps
+					ev_children.forth
 				end
 			end
 		end

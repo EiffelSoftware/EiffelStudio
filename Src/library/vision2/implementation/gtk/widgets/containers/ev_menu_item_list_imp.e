@@ -170,8 +170,10 @@ feature {NONE} -- implementation
 						if temp_item_pointer = radio_imp.c_object then
 							temp_item_pointer := C.g_slist_nth_data (radio_imp.radio_group, 1)
 						end
-						--Check temp_item_pointer_not_void: temp_item_pointer /= NULL end
-						C.gtk_check_menu_item_set_active (temp_item_pointer, True)
+						radio_imp ?= c_get_eif_reference_from_object_id (temp_item_pointer)
+						if radio_imp /= Void then
+							radio_imp.enable_select
+						end
 					end
 				end
 				C.gtk_radio_menu_item_set_group (radio_imp.c_object, NULL)
@@ -196,7 +198,7 @@ feature {NONE} -- implementation
 								radio_imp.set_radio_group (radio_group)
 								set_radio_group (radio_imp.radio_group)
 							end
-							C.gtk_check_menu_item_set_active (radio_imp.c_object, False)
+							radio_imp.disable_select
 						end
 						interface.forth
 					end

@@ -9,15 +9,13 @@ class
 	EV_SCROLLABLE_AREA_IMP
 
 inherit
-
 	EV_SCROLLABLE_AREA_I
 
 	EV_CONTAINER_IMP
 		redefine
 			child_minwidth_changed,
 			child_minheight_changed,
-			set_move_and_size,
-			parent_ask_resize
+			update_display
 		end
 
 	WEL_CONTROL_WINDOW
@@ -40,10 +38,11 @@ inherit
 			on_char,
 			on_key_up,
 			on_draw_item,
+			background_brush,
 			on_menu_command
 		redefine
 			default_style,
-			background_brush
+			move_and_resize
 		end
 
 creation
@@ -63,33 +62,8 @@ feature {NONE} -- Initialization
 			!! scroller.make_with_options (Current, 0, 10, 0, 10, 1, 20, 1, 20)
 		end
 
-feature {EV_WIDGET_IMP} -- Implementation
+feature {NONE} -- Implementation
 
-	parent_ask_resize (new_width, new_height: INTEGER) is
-			-- A scrollable area doesn't resize its children.
-			-- The ratio between the size of the container and the size
-			-- of the child has changed. It is as if the child had changed
-			-- its size.
-		local
-			step: INTEGER
-		do
-			resize (minimum_width.max(new_width), minimum_height.max (new_height))
-			if client_width > child.width + child.x and child.x < 0 then
-				step :=(client_width - child.width - child.x).min (-child.x)	
-				set_horizontal_range (0, maximal_horizontal_position - step)
-				horizontal_update (step, (horizontal_position + step).min (maximal_horizontal_position))
-			else
-				change_horizontal_range (child.width)
-			end
-			if client_height > child.height + child.y and child.y < 0 then
-				step := (client_height - child.height - child.y).min (-child.y) 
-				set_vertical_range (0, maximal_vertical_position - step)
-				vertical_update (step , (vertical_position + step).min (maximal_vertical_position))
-			else
-				change_vertical_range (child.height)
-			end
-		end
-	
 	change_horizontal_range (value: INTEGER) is
 			-- Change the horizontal range according to the child's size.
 		do
@@ -107,6 +81,41 @@ feature {EV_WIDGET_IMP} -- Implementation
 				set_vertical_range (0, value - client_height)
 			else
 				set_vertical_range (0, 0)
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	update_display is
+			-- Do nothing for a non manager container.
+		do
+		end
+
+feature {NONE} -- Implementation for automatic size compute.
+
+	move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
+			repaint: BOOLEAN) is
+			-- Move the window to `a_x', `a_y' position and
+			-- resize it with `a_width', `a_height'.
+		local
+			step: INTEGER
+		do
+			{WEL_CONTROL_WINDOW} Precursor (a_x, a_y, a_width, a_height, repaint)
+			if child /= Void and then not child.destroyed then
+				if client_width > child.width + child.x and child.x < 0 then
+					step :=(client_width - child.width - child.x).min (-child.x)	
+					set_horizontal_range (0, maximal_horizontal_position - step)
+					horizontal_update (step, (horizontal_position + step).min (maximal_horizontal_position))
+				else
+					change_horizontal_range (child.width)
+				end
+				if client_height > child.height + child.y and child.y < 0 then
+					step := (client_height - child.height - child.y).min (-child.y) 
+					set_vertical_range (0, maximal_vertical_position - step)
+					vertical_update (step , (vertical_position + step).min (maximal_vertical_position))
+				else
+					change_vertical_range (child.height)
+				end
 			end
 		end
 
@@ -128,14 +137,6 @@ feature {EV_WIDGET_IMP} -- Implementation
 		do
 		end
 
-	set_move_and_size (a_x, a_y, new_width, new_height: INTEGER) is
-			-- When the parent asks to move and resize, it does it
-			-- and the notice the child.
-		do
-			move (a_x, a_y)
-			parent_ask_resize (new_width, new_height)
-		end
-
 feature {NONE} -- WEL implementation
 
 	default_style: INTEGER is
@@ -144,17 +145,6 @@ feature {NONE} -- WEL implementation
 		do
 			Result := {WEL_CONTROL_WINDOW} Precursor 
 					+ Ws_clipchildren + Ws_clipsiblings
-		end
-
-	background_brush: WEL_BRUSH is
-			-- Current window background color used to refresh the window when
-			-- requested by the WM_ERASEBKGND windows message.
-			-- By default there is no background
-		do
-			if background_color /= Void then
-				!! Result.make_solid (background_color_imp)
---				disable_default_processing
-			end
 		end
 
 end -- class EV_SCROLLABLE_AREA_IMP

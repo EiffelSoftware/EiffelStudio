@@ -19,7 +19,7 @@ default
 	inlining (no)
 	inlining_size ("4")
 	exception_trace (yes)
-	arguments ("C:\50dev\help\wizards\ewel -callback c:\test.txt")
+	arguments ("C:\Eiffel50\bench\wizards\new_projects\wel -callback c:\test.txt")
 
 cluster
 		-- Root cluster

@@ -87,6 +87,8 @@ feature -- Basic Operations
 	delete_selection (start_selection: TEXT_CURSOR; end_selection: TEXT_CURSOR) is
 			-- Delete text between `start_selection' until `end_selection'.
 			-- `end_selection' is not included.
+		require
+				right_order: start_selection < end_selection
 		local
 			s, aux: STRING
 			line: EDITOR_LINE

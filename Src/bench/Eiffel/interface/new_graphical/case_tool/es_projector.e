@@ -25,6 +25,12 @@ inherit
 		rename
 			drawable as drawable_in_the_cell
 		end
+	
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+	
 create
 	make_with_buffer
 	
@@ -278,12 +284,6 @@ feature {NONE} -- Implementation
 		
 	area_centered: BOOLEAN
 			-- Is `area' showing the central part of `drawable', i.e. the buffer ?
-
-	ev_application: EV_APPLICATION is
-			-- Current application.
-		once
-			Result := (create {EV_ENVIRONMENT}).application
-		end		
 
 feature {NONE} -- Constants 		
 

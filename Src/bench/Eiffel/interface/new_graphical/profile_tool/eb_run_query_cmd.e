@@ -12,7 +12,7 @@ inherit
 	EV_COMMAND
 	SHARED_QUERY_VALUES
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

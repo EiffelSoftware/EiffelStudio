@@ -7,7 +7,7 @@ indexing
 class
 	XML_RESOURCE
 
-creation
+create
 	make
 
 feature -- Initialization

@@ -10,7 +10,7 @@ class
 inherit
 	WIZARD_ERROR_STATE_WINDOW
 
-creation
+create
 	make
 
 feature -- basic Operations

@@ -24,7 +24,7 @@ inherit
 			initialize_resources
 		end
 
-creation 
+create 
 	initialize
 
 feature {NONE} -- Initialization

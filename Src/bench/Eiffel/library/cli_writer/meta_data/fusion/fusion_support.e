@@ -9,7 +9,7 @@ class
 inherit
 	COM_OBJECT
 	
-creation {FUSION_FACTORY}
+create {FUSION_FACTORY}
 	make_by_pointer
 	
 feature -- Access

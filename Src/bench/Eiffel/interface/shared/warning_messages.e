@@ -660,7 +660,7 @@ feature -- Cluster tree warnings
 		local
 			upper_name: STRING
 		do	
-			!!Result.make (70);
+			create Result.make (70);
 			Result.append ("Cluster with path ");
 			upper_name := clone (path);
 			upper_name.to_upper;
@@ -674,7 +674,7 @@ feature -- Cluster tree warnings
 		local
 			upper_name: STRING
 		do	
-			!!Result.make (70);
+			create Result.make (70);
 			Result.append ("Cluster with name ");
 			upper_name := clone (name);
 			upper_name.to_upper;
@@ -688,7 +688,7 @@ feature -- Cluster tree warnings
 		local
 			upper_name: STRING
 		do	
-			!!Result.make (60);
+			create Result.make (60);
 			Result.append ("Directory with name ");
 			upper_name := clone (base_name)
 			upper_name.to_lower

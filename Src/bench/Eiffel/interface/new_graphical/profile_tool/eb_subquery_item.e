@@ -9,7 +9,7 @@ class
 inherit
 	EV_MULTI_COLUMN_LIST_ROW
 
-creation
+create
 	make_normal, make_first
 
 feature -- Creation

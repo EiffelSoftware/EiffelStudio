@@ -12,7 +12,7 @@ inherit
 			set_value, make, xml_trace, registry_name
 		end
  
-creation
+create
 	make
 
 feature {NONE} -- Initialization

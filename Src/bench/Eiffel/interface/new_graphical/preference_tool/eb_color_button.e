@@ -9,7 +9,7 @@ class
 inherit
 	EV_BUTTON
 
-creation
+create
 	make,
 	make_with_color
 

@@ -5,7 +5,7 @@ class CONSTRUCT_LIST [T]
 inherit
 	ARRAYED_LIST [T]
 
-creation
+create
 	make, make_filled
 
 feature

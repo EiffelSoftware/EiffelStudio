@@ -16,7 +16,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -28,10 +28,10 @@ feature {NONE} -- Initialization
 			a_parent_exists: a_parent.exists
 		do
 			make_by_id (a_parent, Idd_register_constant)
-			!! id_ok.make_by_id (Current, Idok)
-			!! idc_user.make_by_id (Current, Idc_user_constant)
-			!! idc_key.make_by_id (Current, Idc_key_constant)
-			!! id_cancel.make_by_id (Current, Idcancel)
+			create id_ok.make_by_id (Current, Idok)
+			create idc_user.make_by_id (Current, Idc_user_constant)
+			create idc_key.make_by_id (Current, Idc_key_constant)
+			create id_cancel.make_by_id (Current, Idcancel)
 
 			license_info := license
 			previous_dialog := a_parent
@@ -51,7 +51,7 @@ feature -- Behavior
 				destroy
 			else
 				previous_dialog.set_registered_user (False)
-				!! error_box.make
+				create error_box.make
 				error_box.error_message_box (Current, "Invalid key.%NPlease make sure you typed it correctly and try again.", "Registration Error")
 			end
 		end

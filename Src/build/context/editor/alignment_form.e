@@ -13,6 +13,8 @@ creation
 	
 feature -- Interface
 	
+	vertical: TOGGLE_B;
+
 	make_visible (a_parent: COMPOSITE) is
 		local	
 			radio_box_direction: RADIO_BOX;
@@ -101,6 +103,11 @@ feature {ALIGNMENT_HOLE}
 			Result := reference.context
 		end;
 
+	clear_alignment_box is
+		do
+			context_list.wipe_out
+		end;
+
 	add_item (item: CONTEXT) is
 			-- add an item in the list of context
 		local
@@ -152,7 +159,7 @@ feature {NONE}
 						if offset.state then
 							new_y := ref_context.y + i * offset_value.value + list_height	
 						else
-							new_y := a_context.y
+							new_y := ref_context.y
 						end;
 						if top_left.state then
 							new_x := ref_context.x
@@ -165,7 +172,7 @@ feature {NONE}
 						if offset.state then
 							new_x := ref_context.x + i * offset_value.value + list_width
 						else
-							new_x := a_context.x
+							new_x := ref_context.x
 						end;
 						if top_left.state then
 							new_y := ref_context.y
@@ -192,7 +199,7 @@ feature {NONE}
 	align_hole: ALIGNMENT_HOLE;
 			-- Hole for adding new contexts
 
-	vertical, horizontal: TOGGLE_B;
+	horizontal: TOGGLE_B;
 
 	top_left, center, bottom_right: TOGGLE_B;
 
@@ -220,7 +227,7 @@ feature {NONE}
 			reference.reset;
 			horizontal.arm;
 			top_left.arm;
-			offset.disarm;
+			offset.arm;
 			reset_list
 		end;
 

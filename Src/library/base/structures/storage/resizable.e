@@ -13,12 +13,6 @@ deferred class RESIZABLE [G] inherit
 
 	BOUNDED [G];
 
-	BASIC_ROUTINES
-		export
-			{NONE} all
-		end
-
-
 feature -- Measurement
 
 
@@ -32,7 +26,7 @@ feature -- Measurement
 			-- Proposed number of additional items
 			--| Result is a reasonable value, resulting from a space-time tradeoff.
 		do
-			Result := max (Minimal_increase, (capacity * Growth_percentage // 100))
+			Result := Minimal_increase.max (capacity * Growth_percentage // 100)
 		ensure
 			At_least_one: Result >= 1	
 		end;

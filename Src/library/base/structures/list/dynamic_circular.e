@@ -27,14 +27,6 @@ deferred class DYNAMIC_CIRCULAR [G] inherit
 			duplicate
 		end;
 
-	BASIC_ROUTINES
-		export
-			{NONE} all
-		redefine
-			copy, is_equal,
-			consistent, setup
-		end;
-
 feature -- Duplication
 
    duplicate (n: INTEGER): like Current is
@@ -47,7 +39,7 @@ feature -- Duplication
 			from
 				Result := new_chain;
 				pos := cursor;
-				to_be_removed := min (count, n)
+				to_be_removed := count.min (n)
 			until
 				counter = to_be_removed
 			loop

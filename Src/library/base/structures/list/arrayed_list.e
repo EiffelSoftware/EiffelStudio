@@ -80,13 +80,6 @@ class ARRAYED_LIST [G] inherit
 			count
 		end;
 
-	BASIC_ROUTINES
-		export
-			{NONE} all
-		redefine
-			copy, setup, is_equal
-		end;
-
 creation
 
 	make, make_filled
@@ -546,7 +539,7 @@ feature -- Duplication
 		local
 			pos: INTEGER
 		do
-			!! Result.make (min (n, count - index + 1));
+			!! Result.make (n.min (count - index + 1));
 			from
 				Result.start;
 				pos := index

@@ -30,11 +30,6 @@ deferred class CURSOR_TREE [G] inherit
 			off
 		end;
 
-	BASIC_ROUTINES
-		export
-			{NONE} all
-		end
-
 feature -- Access
 
 	parent_item: G is
@@ -605,7 +600,7 @@ feature {NONE} -- Implementation
 				until
 					after
 				loop
-					Result := max (Result, depth_from_active + 1);
+					Result := Result.max (depth_from_active + 1);
 					forth
 				end;
 				up

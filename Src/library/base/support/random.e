@@ -15,11 +15,6 @@ class RANDOM inherit
 			has
 		end;
 
-	BASIC_ROUTINES
-		export
-			{NONE} all
-		end;
-
 	DOUBLE_MATH
 		export
 			{NONE} all
@@ -174,7 +169,7 @@ feature {NONE} -- Implementation
 			x: DOUBLE
 		do
 			x := double_mod (dmul * xn + dinc, dmod)
-			Result := double_to_integer (x)
+			Result := x.truncated_to_integer
 		end
 
 	double_mod (x,m: DOUBLE): DOUBLE is

@@ -391,7 +391,7 @@ feature -- Element change
 		do
 			implementation.insert_new_column (a_index)
 		ensure
-			column_count_set: column_count = old column_count + 1
+			column_count_set: (a_index < old column_count implies column_count = old column_count + 1) or else (a_index > old column_count implies a_index = column_count) 
 			visible_column_count_set: visible_column_count = old visible_column_count + 1
 		end
 

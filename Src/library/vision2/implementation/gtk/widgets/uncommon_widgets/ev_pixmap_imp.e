@@ -62,7 +62,7 @@ feature -- Element change
 		local
 			 a: ANY
 		do
-			a ?= file_name.to_c
+			a := file_name.to_c
 			
 			if widget = Void then
 				widget := c_gtk_pixmap_create_from_xpm (parent_widget, 
@@ -81,6 +81,7 @@ feature {NONE} -- Inapplicable
 
 	old_make is
 		do
+
 			check
 				Inapplicable: False
 			end

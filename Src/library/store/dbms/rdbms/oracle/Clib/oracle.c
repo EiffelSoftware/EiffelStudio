@@ -19,14 +19,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
-
-#include <oratypes.h>
-#include <ocidfn.h>
-#include <ociapr.h>
 
 #include "oracle.h"
-
 
 #define MAX_BINDS 12
 #define MAX_ITEM_BUFFER_SIZE 255

@@ -17,7 +17,12 @@
    Database: "ORACLE"
 */
 
-#include "oci.h"
+
+#include <ctype.h>
+
+#include <ocidfn.h>
+#include <ociapr.h>
+
 
 #ifndef ORATYPES
 #include <oratypes.h>

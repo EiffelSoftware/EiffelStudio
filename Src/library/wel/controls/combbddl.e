@@ -47,7 +47,7 @@ feature -- Status report
 			exists: exists
 		do
 			Result := cwin_send_message_result (item,
-					Cb_getdroppedstate, 0, 0) = 1
+					Cb_getdroppedstate, 0, 0) /= 0
 		end
 feature {NONE} -- Implementation
 

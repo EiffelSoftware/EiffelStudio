@@ -147,7 +147,7 @@ feature {NONE} -- Update
 					save_project_again
 				else
 					if stop_on_error then
-						lic_die (-1);
+						lic_die (-1)
 					end;
 					if command_line_io.termination_requested then
 						exit := True

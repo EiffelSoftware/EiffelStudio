@@ -64,7 +64,7 @@ feature -- Element change
 			valid_color: is_valid (color)
 		deferred
 		ensure
-			background_color_set: background_color.same (color)
+			background_color_set: background_color.equal_color (color)
 		end
 
 	set_foreground_color (color: EV_COLOR) is
@@ -74,7 +74,7 @@ feature -- Element change
 			valid_color: is_valid (color)
 		deferred
 		ensure
-			foreground_color_set: foreground_color.same (color)
+			foreground_color_set: foreground_color.equal_color (color)
 		end
 
 	set_line_width (value: INTEGER) is

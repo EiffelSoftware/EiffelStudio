@@ -30,7 +30,8 @@ inherit
 		rename
 			raise as raise_exception
 		end;
-	SHARED_WORKBENCH
+	SHARED_WORKBENCH;
+	SET_WINDOW_ATTRIBUTES
 
 creation
 
@@ -79,7 +80,9 @@ feature
 			set_action ("<Unmap>,<Prop>", Current, popdown);
 			set_action ("<Configure>", Current, remapped);
 			set_action ("<Visible>", Current, remapped);
-			set_delete_command (quit_command)
+			set_delete_command (quit_command);
+			set_composite_attributes (Current);
+			text_window.set_font_to_default
 		end;
 
 	set_default_size is do end;
@@ -137,6 +140,8 @@ feature -- xterminal
 					if hidden_system_window then
 						system_tool.show
 						hidden_system_window := False;
+					elseif system_tool.text_window.in_use then
+						system_tool.show
 					end;
 					raise
 					if hidden_warner then

@@ -135,7 +135,7 @@ feature
 	select_i_th (i: INTEGER) is
 			-- Select item at the `i'-th position.
 		do
-			if i <= list.count then
+			if i <= list.count and then i > 0 then
 				list.select_i_th (i)
 			end
 		end;

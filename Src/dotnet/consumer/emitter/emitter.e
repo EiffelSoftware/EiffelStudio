@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Creation procedure.
 		do
+			exec_from_cli := True
 			parser_make (<<help_switch, help_spelled_switch, no_logo_switch, list_assemblies_switch, 
 						list_assemblies_short, verbose_switch, verbose_short, add_switch, add_short,
 						remove_switch, remove_short, compact_switch, nice_switch, nice_short, fullname_switch,
@@ -50,7 +51,6 @@ feature {NONE} -- Initialization
 			if not successful then
 				process_error (error_message)
 			else
-				exec_from_cli := True
 				if clr_version = Void then
 						-- If it is Void, either an error was thrown, or we ask for
 						-- usage information.

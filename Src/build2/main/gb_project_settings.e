@@ -26,6 +26,12 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_NAMING_UTILITIES
+		export
+			{NONE} all
+			{ANY} valid_class_name
+		end
 
 create
 	default_create,
@@ -61,6 +67,7 @@ feature {NONE} -- Initialization
 			enable_grouped_locals
 			enable_rebuild_ace_file
 			disable_constant_loading
+			constants_class_name := "CONSTANTS"
 		end
 
 feature -- Access
@@ -90,6 +97,9 @@ feature -- Access
 		
 	application_class_name: STRING
 		-- Class name to be given to the application in the generated code.
+		
+	constants_class_name: STRING
+		-- Class name used for generated constants file.
 		
 	complete_project: BOOLEAN
 		-- Should we generate an ace file and an application class to
@@ -147,6 +157,7 @@ feature -- Basic operation
 			data.extend ([client_of_window_string, client_of_window.out])
 			data.extend ([rebuild_ace_file_string, rebuild_ace_file.out])
 			data.extend ([load_constants_string, load_constants.out])
+			data.extend ([constants_class_name_string, constants_class_name])
 			
 			create file_name.make_from_string (project_location)
 			file_name.extend (project_filename)
@@ -171,7 +182,7 @@ feature -- Basic operation
 				check
 					data_not_void: data /= Void
 				end
-				if data.count = 11 or data.count = 12 then
+				if data.count > 10 and data.count < 14 then
 					set_integer_attribute (data @ 1, agent set_project_type (?))
 					set_string_attribute (data @ 2, agent set_project_name (?))
 					set_string_attribute (data @ 3, agent set_project_location (?))
@@ -184,10 +195,15 @@ feature -- Basic operation
 					set_boolean_attribute (data @ 10, agent enable_client_of_window, agent disable_client_of_window)
 					set_boolean_attribute (data @ 11, agent enable_rebuild_ace_file, agent disable_rebuild_ace_file)
 				end
-				if data.count = 12 then
+				if data.count > 11 then
 					set_boolean_attribute (data @ 12, agent enable_constant_loading, agent disable_constant_loading)
 				end
-				if data.count /= 11 and data.count /= 12 then
+				if data.count > 12 then
+					set_string_attribute (data @ 13, agent set_constants_class_name (?))
+				else
+					set_constants_class_name ("CONSTANTS")
+				end
+				if data.count < 11 or data.count > 13 then
 					create dialog.make_with_text (invalid_bpr_file)
 					dialog.button ((create {EV_DIALOG_CONSTANTS}).ev_abort).select_actions.extend (agent cancel_load)
 					dialog.show_modal_to_window (main_window)
@@ -200,7 +216,6 @@ feature -- Basic operation
 		do
 			load_cancelled := True
 		end
-		
 
 feature -- Status Setting
 
@@ -226,8 +241,9 @@ feature -- Status Setting
 			-- Assign `name' to `main_window_class_name'.
 		require
 			name_not_void: name /= Void
+			valid_class_name: valid_class_name (name)
 		do
-			main_window_class_name := name
+			main_window_class_name := clone (name)
 		ensure
 			main_window_class_name.is_equal (name)
 		end
@@ -236,12 +252,24 @@ feature -- Status Setting
 			-- Assign `name' to `application_class_name'.
 		require
 			name_not_void: name /= Void
+			valid_class_name: valid_class_name (name)
 		do
-			application_class_name := name
+			application_class_name := clone (name)
 		ensure
 			application_class_name.is_equal (name)
 		end
 		
+	set_constants_class_name (name: STRING) is
+			-- Assign `name' to `constants_class_name'.
+		require
+			name_not_void: name /= Void
+			valid_class_name: valid_class_name (name)
+		do
+			constants_class_name := clone (name)
+		ensure
+			constants_class_name.is_equal (name)
+		end
+
 	set_project_name (name: STRING) is
 			--  Assign `name' to `project_name'.
 		require
@@ -350,6 +378,8 @@ feature {NONE} --Implementation
 	main_window_class_name_string: STRING is "Main_window_class_name"
 		
 	application_class_name_string: STRING is "Application_class_name"
+	
+	constants_class_name_string: STRING is "Constants_class_name"
 		
 	complete_project_string: STRING is "Complete_project"
 	

@@ -482,7 +482,7 @@ feature -- Label texts
 	l_Flat: STRING is					"flat view"
 	l_Flatshort: STRING is				"interface view"
 	l_Generate_profile_from_rtir: STRING is "Generate profile from Run-time information record"
-	l_Generate_creation: STRING is		"Generate the creation feature"
+	l_Generate_creation: STRING is		"Generate creation procedure"
 	l_Homonyms: STRING is				"homonyms"
 	l_Homonym_confirmation: STRING is	"Extracting the homonyms%Nmay take a long time."
 	l_Identification: STRING is			"Identification"

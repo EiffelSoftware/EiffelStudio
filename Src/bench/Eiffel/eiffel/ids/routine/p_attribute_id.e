@@ -12,7 +12,7 @@ inherit
 		rename
 			make as make_id
 		undefine
-			compilation_id, prefix_string
+			compilation_id, prefix_name, is_precompiled
 		end
 
 creation

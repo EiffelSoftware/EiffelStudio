@@ -1,5 +1,5 @@
 @echo off
-remtrace Set up the environment
+REM Set up the environment
 on break goto broken
 TIMER ON /1 >> NUL
 TIMER ON /2 >> NUL

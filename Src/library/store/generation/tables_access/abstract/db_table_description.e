@@ -17,7 +17,7 @@ feature -- Initialization
 		do
 		end
 
-feature -- Access
+feature -- Access (table description)
 
 	Table_name: STRING is
 			-- Database table name.
@@ -82,40 +82,6 @@ feature -- Access
 		deferred
 		end
 
-	attribute (code: INTEGER): ANY is
-			-- Value of attribute with `code'.
-		require
-			valid_code: valid (code)
-		deferred
-		end
-
-	printable_attribute (code: INTEGER): STRING is
-			-- String value of attribute with `code'.
-		require
-			valid_code: valid (code)
-		local
-			r_any: ANY
-		do
-			r_any := attribute (code)
-			if r_any /= Void then
-				Result := r_any.out
-			else
-				Result := ""
-			end
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	set_attribute (code: INTEGER; value: ANY) is
-			-- Set attribute with `code' to `value'.
-			-- `value' must be of type STRING, INTEGER, BOOLEAN, CHARACTER,
-			-- DOUBLE or DATE_TIME. References are made automatically from
-			-- expanded types.
-		require
-			valid_code: valid (code)
-		deferred
-		end
-
 	id_name: STRING is
 			-- Table ID attribute name.
 		do
@@ -146,44 +112,30 @@ feature -- Access
 	
 	Date_time_type: INTEGER is 21;
 
-	new_parameter_list: ARRAYED_LIST [STRING] is
-			-- Feature parameter name list: a parameter name
-			-- consists in the feature name with a "N_" prefix.
-		do
-			if npl_impl = Void then
-				create npl_impl.make (Attribute_number)
-				from
-					description_list.start
-				until
-					description_list.after
-				loop
-					npl_impl.extend ("N_" + description_list.item)
-					description_list.forth
-				end
-			end
-			Result := npl_impl
-		ensure
-			Result_not_void: Result /= Void
+feature -- Access (table row values)
+
+	attribute (code: INTEGER): ANY is
+			-- Value of attribute with `code'.
+		require
+			valid_code: valid (code)
+		deferred
 		end
 
-	mapped_list (s_prefix, s_suffix: STRING; action: PROCEDURE [STRING, TUPLE [STRING]]): ARRAYED_LIST [STRING] is
-			-- Feature list mapped with `s_prefix' and `s_suffix'.
-			-- This can be useful to create tags. `action' enables
-			-- to change attributes description case for instance.
+	printable_attribute (code: INTEGER): STRING is
+			-- String value of attribute with `code'.
+		require
+			valid_code: valid (code)
 		local
-			tmp: STRING
+			r_any: ANY
 		do
-			create Result.make (Attribute_number)
-			from
-				description_list.start
-			until
-				description_list.after
-			loop
-				tmp := s_prefix + description_list.item + s_suffix
-				action.call ([tmp])
-				Result.extend (tmp)
-				description_list.forth
+			r_any := attribute (code)
+			if r_any /= Void then
+				Result := r_any.out
+			else
+				Result := ""
 			end
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	id: ANY is
@@ -196,6 +148,38 @@ feature -- Access
 			-- String value of table row ID.
 		do
 			Result := id.out
+		end
+
+	attribute_list: ARRAYED_LIST [ANY] is
+			-- Table row attribute values.
+		do
+			create Result.make (Attribute_number)
+			from
+				attribute_code_list.start
+			until
+				attribute_code_list.after
+			loop
+				Result.extend (attribute (attribute_code_list.item))
+				attribute_code_list.forth
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
+	printable_attribute_list: ARRAYED_LIST [STRING] is
+			-- Table row attribute string values.
+		do
+			create Result.make (Attribute_number)
+			from
+				attribute_code_list.start
+			until
+				attribute_code_list.after
+			loop
+				Result.extend (printable_attribute (attribute_code_list.item))
+				attribute_code_list.forth
+			end
+		ensure
+			not_void: Result /= Void
 		end
 
 	selected_attribute_list (list: ARRAYED_LIST [INTEGER]): ARRAYED_LIST [ANY] is
@@ -234,36 +218,43 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	attribute_list: ARRAYED_LIST [ANY] is
-			-- Table row attribute values.
+	mapped_list (action: FUNCTION [ANY, TUPLE [STRING], STRING]): ARRAYED_LIST [STRING] is
+			-- Feature list mapped with `action'.
+			-- This can be useful to create tags.
+		local
+			tmp: STRING
 		do
 			create Result.make (Attribute_number)
 			from
-				attribute_code_list.start
+				description_list.start
 			until
-				attribute_code_list.after
+				description_list.after
 			loop
-				Result.extend (attribute (attribute_code_list.item))
-				attribute_code_list.forth
+				tmp := clone (description_list.item)
+				action.call ([tmp])
+				Result.extend (action.last_result)
+				description_list.forth
 			end
-		ensure
-			not_void: Result /= Void
 		end
 
-	printable_attribute_list: ARRAYED_LIST [STRING] is
-			-- Table row attribute string values.
+feature -- Status report
+
+	valid (code: INTEGER): BOOLEAN is
+			-- Is `code' a valid attribute code?
 		do
-			create Result.make (Attribute_number)
-			from
-				attribute_code_list.start
-			until
-				attribute_code_list.after
-			loop
-				Result.extend (printable_attribute (attribute_code_list.item))
-				attribute_code_list.forth
-			end
-		ensure
-			not_void: Result /= Void
+			Result := code > 0 and then code <= Attribute_number
+		end
+
+feature -- Basic operations
+
+	set_attribute (code: INTEGER; value: ANY) is
+			-- Set attribute with `code' to `value'.
+			-- `value' must be of type STRING, INTEGER, BOOLEAN, CHARACTER,
+			-- DOUBLE or DATE_TIME. References are made automatically from
+			-- expanded types.
+		require
+			valid_code: valid (code)
+		deferred
 		end
 
 	set_id (value: ANY) is
@@ -273,52 +264,6 @@ feature -- Access
 		do
 			set_attribute (Id_code, value)
 		end
-
-	update_from (other: DB_TABLE) is
-			-- Update `Current' with not Void attributes
-			-- of `other'.
-		local
-			tmp: ANY
-			other_description: DB_TABLE_DESCRIPTION
-		do
-			other_description := other.table_description
-			from
-				attribute_code_list.start
-			until
-				attribute_code_list.after
-			loop
-				tmp := other_description.attribute (attribute_code_list.item)
-				if tmp /= Void then
-					set_attribute (attribute_code_list.item, tmp)
-				end
-				attribute_code_list.forth
-			end
-		end
-
-	replace (new_object: DB_TABLE) is
-			-- Replace every attribute value.
-		do
-		end
-
-	valid (code: INTEGER): BOOLEAN is
-			-- Is `code' a valid attribute code?
-		do
-			Result := code > 0 and then code <= Attribute_number
-		end
-
-feature -- Status report
-
-	has_warning: BOOLEAN
-			-- has set_feature_values been completed
-			-- without warnings?
-
-	warning_message: STRING
-			-- Warning message.
-
-feature {NONE} -- Implementation
-
-	npl_impl: ARRAYED_LIST [STRING]
-			-- Backup of new_parameter_list.
 
 end -- class DB_TABLE_DESCRIPTION
 

@@ -19,9 +19,9 @@ Feature -- Status report
 		local
 			temp_cursor: CURSOR
 		do
+			temp_cursor := cursor
 			from
 				interface.start
-				temp_cursor := cursor
 			until
 				interface.after or Result /= Void
 			loop

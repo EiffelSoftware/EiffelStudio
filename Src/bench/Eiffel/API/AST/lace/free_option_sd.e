@@ -422,10 +422,8 @@ feature {COMPILER_EXPORTER}
 						-- break a lot of stuff.
 					if value.is_no then
 						System.set_cls_compliant (False)
-						System.set_dotnet_naming_convention (False)
 					elseif value.is_yes then
 						System.set_cls_compliant (True)
-						System.set_dotnet_naming_convention (True)
 					else
 						error_found := True
 					end

@@ -10,6 +10,22 @@ deferred class
 inherit
 	EV_ANY_I
 
+feature -- Access
+
+	count: INTEGER is
+			-- Number of items
+		deferred
+		end
+
+	get_item (index: INTEGER): EV_TREE_ITEM is
+			-- Give the item of the tree (or tree item) at
+			-- `index'.
+		require
+			exists: not destroyed
+			item_exists: (index <= count) and (index >= 0)
+		deferred
+		end
+
 feature -- Element change
 
 	add_item (an_item: EV_TREE_ITEM_IMP) is

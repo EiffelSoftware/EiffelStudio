@@ -170,7 +170,7 @@ feature -- Element change
 
 	set_format_name (a_name: STRING) is
 			-- Set `format_name' to `a_name'.
-			-- `a_name' can not be Void nor empty.
+			-- `a_name' cannot be Void nor empty.
 		require
 			a_name_non_void: a_name /= Void
 			a_name_non_empty: not a_name.is_empty
@@ -434,38 +434,7 @@ feature -- Updating
 			clu_stone: CLUSTER_STONE
 			fst: FEATURE_STONE
 		do
-			fst ?= history_manager.active
-			if fst /= Void then
-				feature_address.set_text (fst.e_feature.name)
-				if mode then
-					class_address.set_text (fst.e_feature.associated_class.name_in_upper)
-					cluster_address.set_text (fst.e_feature.associated_class.cluster.cluster_name)
-				else
-					class_address.set_text (fst.e_feature.written_class.name_in_upper)
-				end
-			else
-				feature_address.remove_text
-				class_stone ?= history_manager.active
-				if class_stone /= Void then
-					class_name := clone (class_stone.class_name)
-					class_name.to_upper
-					class_address.set_text (class_name)
-					if mode then
-						cluster_address.set_text (class_stone.class_i.cluster.cluster_name)
-					end
-				else
-					class_address.remove_text
-					feature_address.remove_text
-					if mode then
-						clu_stone ?= history_manager.active
-						if clu_stone /= Void then
-							cluster_address.set_text (clu_stone.cluster_i.cluster_name)
-						else
-							cluster_address.remove_text
-						end
-					end
-				end
-			end
+			update_combos
 		end
 
 	on_project_created is
@@ -607,12 +576,15 @@ feature {NONE} -- Execution
 							end
 						end
 --| FIXME XR: Propose to create a new feature in current_class instead?
+					elseif mode then
+						parent.advanced_set_stone (create {FEATURE_STONE}.make (current_feature))
+					elseif current_feature.written_class.has_feature_table then
+						parent.advanced_set_stone (create {FEATURE_STONE}.make (
+							current_feature.written_class.feature_with_body_index (current_feature.body_index)
+						))
 					else
-						if mode then
-							parent.advanced_set_stone (create {FEATURE_STONE}.make (current_feature))
-						else
-							parent.advanced_set_stone (create {FEATURE_STONE}.make (current_feature.ancestor_version (current_feature.written_class)))
-						end
+							-- Gasp, we are in the editor address and we can't find the origin feature...
+						parent.advanced_set_stone (create {FEATURE_STONE}.make (current_feature))
 					end
 				else
 					parent.advanced_set_stone (create {CLASSC_STONE}.make (current_class))
@@ -1481,7 +1453,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 						class_address.set_text (conv_class.class_i.name_in_upper)
 						conv_f ?= c_stone
 						if conv_f /= Void then
-							feature_address.set_text (conv_f.feature_name)
+							feature_address.set_text (conv_f.origin_name)
 						else
 							feature_address.remove_text
 						end

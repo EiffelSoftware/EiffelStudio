@@ -28,6 +28,11 @@ inherit
 			{NONE} all
 		end
 
+	ECOM_VAR_FLAGS
+		export
+			{NONE} all
+		end
+
 	WIZARD_VARIABLE_NAME_MAPPER
 
 feature -- Basic operations
@@ -37,41 +42,40 @@ feature -- Basic operations
 		require
 			valid_type_info: a_type_info /= Void
 		local
-			a_var_desc: ECOM_VAR_DESC
-			a_type_desc: ECOM_TYPE_DESC
-			a_documentation: ECOM_DOCUMENTATION
-			tmp_type_lib: ECOM_TYPE_LIB
-			tmp_guid: ECOM_GUID
-			tmp_lib_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
+			l_var_desc: ECOM_VAR_DESC
+			l_type_desc: ECOM_TYPE_DESC
+			l_documentation: ECOM_DOCUMENTATION
+			l_type_lib: ECOM_TYPE_LIB
+			l_guid: ECOM_GUID
+			l_lib_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 		do
-			a_var_desc := a_type_info.var_desc (a_index)
-			member_id := a_var_desc.member_id
-			var_kind := a_var_desc.var_kind
-			var_flags := a_var_desc.var_flags
-			a_documentation := a_type_info.documentation (a_var_desc.member_id)
-			if a_documentation.name = Void or else a_documentation.name.count = 0 then
-				tmp_type_lib := a_type_info.containing_type_lib
-				tmp_guid := tmp_type_lib.library_attributes.guid
-				tmp_lib_descriptor := system_descriptor.library_descriptor (tmp_guid)
+			l_var_desc := a_type_info.var_desc (a_index)				
+			member_id := l_var_desc.member_id
+			is_read_only := is_varflag_freadonly (l_var_desc.var_flags)
+			l_type_desc := l_var_desc.elem_desc.type_desc
+			l_documentation := a_type_info.documentation (member_id)
+			if l_documentation.name = Void or else l_documentation.name.count = 0 then
+				l_type_lib := a_type_info.containing_type_lib
+				l_guid := l_type_lib.library_attributes.guid
+				l_lib_descriptor := system_descriptor.library_descriptor (l_guid)
 				create name.make (100)
 				name.append ("property_")
-				name.append (tmp_lib_descriptor.name)
+				name.append (l_lib_descriptor.name)
 				name.append ("_")
 				name.append_integer (a_type_info.index_in_type_lib + 1)
 				name.append ("_")
 				name.append_integer (member_id)
 			else
-				name := a_documentation.name.twin
+				name := l_documentation.name.twin
 			end
 
 			eiffel_name := name_for_feature_with_keyword_check (name)
 
-			if is_forbidden_c_word (name) and not shared_wizard_environment.new_eiffel_project then
-				name.prepend ("a_")
+			if is_forbidden_c_word (name) and not environment.is_eiffel_interface then
+				name.prepend ("x_")
 			end
-			description := a_documentation.doc_string.twin
-			a_type_desc := a_var_desc.elem_desc.type_desc
-			data_type := data_type_descriptor_factory.create_data_type_descriptor (a_type_info, a_type_desc, system_descriptor)
+			description := l_documentation.doc_string.twin
+			data_type := data_type_descriptor_factory.create_data_type_descriptor (a_type_info, l_type_desc, system_descriptor)
 
 			create Result.make (Current)
 		ensure
@@ -88,8 +92,7 @@ feature -- Basic operations
 			a_descriptor.set_description (description)
 			a_descriptor.set_data_type (data_type)
 			a_descriptor.set_member_id (member_id)
-			a_descriptor.set_var_kind (var_kind)
-			a_descriptor.set_var_flags (var_flags)
+			a_descriptor.set_is_read_only (is_read_only)
 			a_descriptor.set_interface_eiffel_name (eiffel_name)
 		end
 
@@ -110,11 +113,8 @@ feature {NONE} -- Implementation
 	member_id: INTEGER
 			-- Member ID
 
-	var_kind: INTEGER
-			-- See class ECOM_VAR_KIND for values
-
-	var_flags: INTEGER
-			-- See class ECOM_VAR_FLAGS for values
+	is_read_only: BOOLEAN
+			-- Is property read only?
 
 end -- class WIZARD_PROPERTY_DESCRIPTOR_FACTORY
 

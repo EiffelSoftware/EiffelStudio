@@ -13,11 +13,6 @@ inherit
 			disambiguate_interface_names
 		end
 
-	ECOM_VAR_KIND
-		export
-			{WIZARD_PROPERTY_DESCRIPTOR_FACTORY} all
-		end
-
 	ECOM_VAR_FLAGS
 		export
 			{WIZARD_PROPERTY_DESCRIPTOR_FACTORY} all
@@ -47,23 +42,19 @@ feature -- Access
 	data_type: WIZARD_DATA_TYPE_DESCRIPTOR
 			-- Field's type
 
-	var_kind: INTEGER
-			-- See class ECOM_VAR_KIND for values
-
-	var_flags: INTEGER
-			-- See class ECOM_VAR_FLAGS for values
+	is_read_only: BOOLEAN
+			-- Is property read-only?
 
 	to_string: STRING is
 			-- String representation used for output
 		do
 			Result := name.twin
-			Result.append (Colon)
-			Result.append (Space)
+			Result.append (": ")
 			Result.append (data_type.name)
-			Result.append (Space)
+			Result.append (" (")
 			Result.append (Open_parenthesis)
 			Result.append (member_id.out)
-			Result.append (Close_parenthesis)
+			Result.append (")")
 		end
 
 feature -- Status Report
@@ -167,24 +158,12 @@ feature {WIZARD_PROPERTY_DESCRIPTOR_FACTORY} -- Basic operations
 			valid_member_id: member_id = a_member_id
 		end
 
-	set_var_kind (a_kind: INTEGER) is
-			-- Set `var_kind' with `a_kind'.
-		require
-			valid_kind: is_valid_var_kind (a_kind)
+	set_is_read_only (a_bool: BOOLEAN) is
+			-- Set `is_read_only' with `a_bool'.
 		do
-			var_kind := a_kind
+			is_read_only := a_bool
 		ensure
-			valid_var_kind: is_valid_var_kind (var_kind) and var_kind = a_kind
-		end
-
-	set_var_flags (some_flags: INTEGER) is
-			-- Set `var_flags' with `some_flags'.
-		require
-			valid_flags: is_valid_varflag (some_flags)
-		do
-			var_flags := some_flags
-		ensure
-			valid_var_flags: is_valid_varflag (var_flags) and var_flags = some_flags
+			is_read_only_set: is_read_only = a_bool
 		end
 
 feature {NONE} -- Implementation

@@ -381,6 +381,7 @@ feature -- Status Report
 		local
 			l_cursor: CURSOR
 			l_id, l_invoke_kind: INTEGER
+			l_func: WIZARD_FUNCTION_DESCRIPTOR
 		do
 			l_cursor := function_table.cursor
 			l_id := a_function.member_id
@@ -390,8 +391,9 @@ feature -- Status Report
 			until
 				function_table.after or Result /= Void
 			loop
-				if l_id = function_table.item.member_id and l_invoke_kind = function_table.item.invoke_kind then
-					Result := function_table.item
+				l_func := function_table.item
+				if l_id = l_func.member_id and l_invoke_kind = l_func.invoke_kind then
+					Result := l_func
 				else			
 					function_table.forth
 				end
@@ -438,8 +440,7 @@ feature -- Status Report
 				Result
 			loop
 				Result := a_property.member_id = properties.item.member_id and
-					a_property.var_flags = properties.item.var_flags
-				
+					a_property.is_read_only = properties.item.is_read_only
 				properties.forth
 			end
 			properties.go_to (cursor)
@@ -526,11 +527,12 @@ feature -- Miscellaneous
 					l_virtual_function := vtable_functions.item
 					l_dispatch_function := dispinterface_descriptor.dual_function (l_virtual_function)	
 					if l_dispatch_function /= Void then
-						if dispatch_access (l_virtual_function, l_dispatch_function) then
-							vtable_functions.replace (l_dispatch_function)
-						else
+--						if dispatch_access (l_virtual_function, l_dispatch_function) then
+--							vtable_functions.replace (l_dispatch_function)
+--						else
+--							l_virtual_function.set_dual (True)
+--						end
 							l_virtual_function.set_dual (True)
-						end
 						l_functions.prune (l_dispatch_function)
 					end
 					vtable_functions.forth
@@ -745,14 +747,17 @@ feature {WIZARD_INTERFACE_DESCRIPTOR} -- Implementation
 			l_count: INTEGER
 			l_type: INTEGER
 		do
-			if a_dispatch_function.return_type /= Void then
-				l_type := a_dispatch_function.return_type.type
-			end		
-			l_count := a_dispatch_function.argument_count
-			if l_type /= Void and l_type /= Vt_void and l_type /= Vt_empty and l_type /= Vt_null then
-				l_count := l_count + 1
+			Result := a_function.return_type = Void or else a_function.return_type.type = Vt_hresult
+			if not Result then
+				l_count := a_dispatch_function.argument_count
+				if a_dispatch_function.return_type /= Void then
+					l_type := a_dispatch_function.return_type.type
+					if l_type /= Void and l_type /= Vt_void and l_type /= Vt_empty and l_type /= Vt_null then
+						l_count := l_count + 1
+					end
+				end
+				Result := a_function.argument_count /= l_count
 			end
-			Result := a_function.return_type = Void or else a_function.return_type.type = Vt_hresult or a_function.argument_count /= l_count
 		end
 
 end -- class WIZARD_INTERFACE_DESCRIPTOR

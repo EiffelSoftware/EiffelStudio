@@ -27,13 +27,6 @@ inherit
 			is_equal
 		end
 
-	WIZARD_SHARED_DATA
-		export
-			{NONE} all
-		undefine
-			is_equal
-		end
-
 	ECOM_TYPE_KIND
 		export
 			{NONE} all
@@ -209,11 +202,10 @@ feature -- Basic operations
 			i: INTEGER
 			l_type_info: ECOM_TYPE_INFO
 		do
-			progress_report.set_range (progress_report.range + type_lib.type_info_count)
 			from
 				i := 0
 			until
-				i = type_lib.type_info_count or Shared_wizard_environment.abort
+				i = type_lib.type_info_count or environment.abort
 			loop
 				l_type_info := type_lib.type_info (i)
 				if descriptors.item (i + 1) = Void then
@@ -488,7 +480,7 @@ feature -- Basic operations
 					if l_type.type_kind = Tkind_interface or l_type.type_kind = Tkind_dispatch then
 						l_interface ?= l_type
 						if l_interface /= Void then
-							if (shared_wizard_environment.server or system_descriptor.is_iunknown or 
+							if (not environment.is_client or system_descriptor.is_iunknown or 
 									not referees.item (i).is_empty) and not Non_generated_type_libraries.has (guid) and
 									l_interface.inherited_interface /= Void then
 								system_descriptor.interfaces.force (l_interface.implemented_interface)

@@ -40,7 +40,7 @@ feature -- Access
 			-- Registration class name
 		do
 			Result := Ecom_prefix.twin
-			Result.append (to_eiffel_name (Shared_wizard_environment.project_name))
+			Result.append (to_eiffel_name (environment.project_name))
 			Result.append (Registration_suffix)
 			Result.to_upper
 		end
@@ -191,7 +191,7 @@ feature -- Basic Operations
 		do
 			Result := name_for_feature (a_name)
 
-			if Eiffel_keywords.has (Result) and not shared_wizard_environment.new_eiffel_project then
+			if Eiffel_keywords.has (Result) and not environment.is_eiffel_interface then
 				Result.append (One)
 			end
 		ensure
@@ -227,7 +227,7 @@ feature -- Basic Operations
 			end
 			Result.append ("_")
 			Result.append (a_name)
-			if shared_wizard_environment.server then
+			if not environment.is_client then
 				Result.append ("_s")
 			end
 			Result.append (".h")

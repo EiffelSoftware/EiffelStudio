@@ -307,9 +307,6 @@ feature -- Generation
 						generate_creation_routine (file, extern_decl_file)
 					end
 
-						-- Declaration of index offset variable for the `onces' array.
-					extern_decl_file.putstring ("extern int EIF_oidx_off;%N")
-
 					from
 						feature_table.start
 						byte_context.init (Current)
@@ -322,6 +319,11 @@ feature -- Generation
 									-- If it's a once, give it a key.
 								byte_context.set_once_index (once_count)
 								once_count := once_count + 1
+								if once_count = 1 then
+										--| First declaration of EIF_oidx_off in the
+										--| C code
+									file.putstring ("static int EIF_oidx_off = 0;%N")
+								end
 							end
 							generate_feature (feature_i, file)
 						end
@@ -329,10 +331,6 @@ feature -- Generation
 					end
 
 						-- Create module initialization procedure
-					if once_count > 0 then
-						file.putstring ("static int EIF_oidx_off = 0;%N")
-					end
-
 					file.generate_function_signature ("void", id.module_init_name, True, extern_decl_file, <<"">>, <<"void">>)
 	
 					if once_count > 0 then
@@ -512,7 +510,7 @@ feature -- Generation
 			i, nb_ref: INTEGER
 			exp_desc: EXPANDED_DESC
 			class_type, sub_class_type: CLASS_TYPE
-			saved_pos: INTEGER
+			old_cursor: CURSOR
 			c_name, creat_name: STRING
 			bits_desc: BITS_DESC
 			creation_feature: FEATURE_I
@@ -524,8 +522,7 @@ feature -- Generation
 				-- Generate a procedure which will be in charge of all the
 				-- initialisation bulk.
 
-			file.generate_function_signature ("void", c_name,
-				True, h_file,
+			file.generate_function_signature ("void", c_name, True, h_file,
 				<<"Current", "parent">>, <<"EIF_REFERENCE", "EIF_REFERENCE">>)
 
 			file.indent
@@ -570,9 +567,9 @@ feature -- Generation
 				file.indent
 				file.putstring("l[0] + ")
 					-- There is a side effect with generation
-				saved_pos := skeleton.index
+				old_cursor := skeleton.cursor
 				skeleton.generate(file)
-				skeleton.go_i_th (saved_pos)
+				skeleton.go_to (old_cursor)
 				file.putchar (';')
 				file.new_line
 				file.exdent
@@ -581,7 +578,7 @@ feature -- Generation
 					-- Initialize dynaminc type of the expanded object
 				file.putstring ("HEADER(l[0] + ")
 				skeleton.generate(file)
-				skeleton.go_i_th (saved_pos)
+				skeleton.go_to (old_cursor)
 				file.putstring(")->ov_flags = ")
 				file.putint(exp_desc.type_id - 1)
 				file.putchar (';')
@@ -590,15 +587,15 @@ feature -- Generation
 					-- Mark expanded object
 				file.putstring ("HEADER(l[0] + ")
 				skeleton.generate(file)
-				skeleton.go_i_th (saved_pos)
+				skeleton.go_to (old_cursor)
 				file.putstring(")->ov_flags |= EO_EXP;")
 				file.new_line
 				file.putstring ("HEADER(l[0] + ")
 				skeleton.generate(file)
-				skeleton.go_i_th (saved_pos)
+				skeleton.go_to (old_cursor)
 				file.putstring(")->ov_size = ")
 				skeleton.generate(file)
-				skeleton.go_i_th (saved_pos)
+				skeleton.go_to (old_cursor)
 				file.putstring (" + (l[0] - l[1]);")
 				file.new_line
 
@@ -613,7 +610,7 @@ feature -- Generation
 					file.putchar ('(')
 					file.putstring ("l[0] + ")
 					skeleton.generate(file)
-					skeleton.go_i_th (saved_pos)
+					skeleton.go_to (old_cursor)
 					file.putstring (");");	
 					file.new_line
 				end

@@ -25,7 +25,8 @@ inherit
 			make_gen_type_byte_code,
 			generate_cid_array,
 			generate_cid_init,
-			generate_gen_type_il
+			generate_gen_type_il,
+			generate_expanded_creation
 		end
 	
 	DEBUG_OUTPUT
@@ -34,6 +35,16 @@ inherit
 		end
 
 	SHARED_IL_CASING
+		export
+			{NONE} all
+		end
+
+	SHARED_GENERATION
+		export
+			{NONE} all
+		end
+
+	SHARED_DECLARATIONS
 		export
 			{NONE} all
 		end
@@ -189,14 +200,6 @@ feature -- Access
 			-- Type id of the correponding class type
 		do
 			Result := associated_class_type.type_id
-		end
-
-	expanded_type_id: INTEGER is
-			-- Type id of the corresponding expanded class type
-		do
-			is_true_expanded := False
-			Result := base_class.types.search_item (Current).type_id
-			is_true_expanded := True
 		end
 
 	sk_value: INTEGER is
@@ -376,6 +379,71 @@ feature -- Formatting
 		end
 
 feature -- C generation
+
+	generate_expanded_creation (byte_code: BYTE_CODE; reg: REGISTRABLE; workbench_mode: BOOLEAN) is
+			-- Generate creation of expanded object associated to Current.
+		local
+			gen_type: GEN_TYPE_I
+			written_class: CLASS_C
+			class_type, written_type: CLASS_TYPE
+			creation_feature: FEATURE_I
+			c_name: STRING
+			buffer: GENERATION_BUFFER
+		do
+			buffer := byte_code.buffer
+
+			gen_type  ?= Current
+
+			if gen_type /= Void then
+				byte_code.generate_block_open
+				byte_code.generate_gen_type_conversion (gen_type)
+			end
+			reg.print_register
+			if workbench_mode then
+					-- RTLX is a macro used to create
+					-- expanded types
+				if gen_type /= Void then
+					buffer.putstring (" = RTLX(typres")
+				else
+					buffer.putstring (" = RTLX(RTUD(")
+					buffer.generate_type_id (associated_class_type.static_type_id)
+					buffer.putchar (')')
+				end
+			else
+				if gen_type /= Void then
+					buffer.putstring (" = RTLN(typres")
+				else
+					buffer.putstring (" = RTLN(")
+					buffer.putint (type_id - 1)
+				end
+				class_type := associated_class_type
+				creation_feature := class_type.associated_class.creation_feature
+				if creation_feature /= Void then
+					written_class := System.class_of_id (creation_feature.written_in)
+					if written_class.generics = Void then
+						written_type := written_class.types.first
+					else
+						written_type :=
+							written_class.meta_type (class_type.type).associated_class_type
+					end
+					c_name := Encoder.feature_name (written_type.static_type_id,
+						creation_feature.body_index)
+					buffer.putstring (");%N%T")
+					buffer.putstring (c_name)
+					buffer.putchar ('(')
+					reg.print_register
+					Extern_declarations.add_routine_with_signature (Void_c_type,
+						c_name, <<"EIF_REFERENCE">>)
+				end
+			end
+			buffer.putchar (')')
+			buffer.putchar (';')
+
+			if gen_type /= Void then
+				byte_code.generate_block_close
+			end
+			buffer.new_line
+		end
 
 	generate_cecil_value (buffer: GENERATION_BUFFER) is
 			-- Generate cecil value

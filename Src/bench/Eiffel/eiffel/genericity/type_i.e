@@ -315,6 +315,17 @@ feature -- Code generation
 		deferred
 		end
 
+	generate_expanded_creation (byte_code: BYTE_CODE; reg: REGISTRABLE; workbench_mode: BOOLEAN) is
+			-- Generate object associated to current.
+		require
+			byte_code_not_void: byte_code /= Void
+			reg_not_void: reg /= Void
+		do
+			check
+				not_called: False
+			end
+		end
+		
 	sk_value: INTEGER is
 			-- Generate SK value associated to the current type.
 		deferred

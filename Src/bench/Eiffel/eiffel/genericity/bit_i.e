@@ -9,7 +9,7 @@ inherit
 			metamorphose, append_signature,
 			generate_cid, generated_id, make_gen_type_byte_code,
 			generate_cid_array, generate_cid_init,
-			generate_basic_creation
+			generate_default_value, generate_expanded_creation
 		end
 
 feature
@@ -183,19 +183,34 @@ feature -- Generic conformance
 		end
 
 feature
-
-	generate_basic_creation (buffer : GENERATION_BUFFER) is
-
+	
+	generate_default_value (buffer : GENERATION_BUFFER) is
+			-- Generate default value associated to current basic type.
 		do
 			buffer.putstring ("RTLB(")
 			buffer.putint (size)
 			buffer.putchar (')')
 		end
 	
-	make_basic_creation_byte_code (ba : BYTE_ARRAY) is
-
+	make_default_byte_code (ba: BYTE_ARRAY) is
+			-- Generate default value of basic type on stack.
 		do
+			ba.append (Bc_bit)
 			ba.append_integer (size)
+			ba.append_bit (create {STRING}.make_filled ('0', size))
 		end 
 
+	generate_expanded_creation (byte_code: BYTE_CODE; reg: REGISTRABLE; workbench_mode: BOOLEAN) is
+			-- Generate object associated to current.
+		local
+			l_buffer: GENERATION_BUFFER
+		do
+			l_buffer := byte_code.buffer
+			reg.print_register
+			l_buffer.putstring (" = RTLB(")
+			l_buffer.putint (size)
+			l_buffer.putstring (Gc_rparan_semi_c)
+			l_buffer.new_line
+		end
+		
 end

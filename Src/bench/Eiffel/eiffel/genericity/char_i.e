@@ -213,15 +213,16 @@ feature -- Generic conformance
 		end
 feature
 
-	make_basic_creation_byte_code (ba : BYTE_ARRAY) is
-
+	make_default_byte_code (ba: BYTE_ARRAY) is
+			-- Generate default value of basic type on stack.
 		do
 			if is_wide then
 				ba.append (Bc_wchar)
+				ba.append_integer (0)
 			else
 				ba.append (Bc_char)
+				ba.append ('%U')
 			end
-			ba.append ('%U')
 		end
 
 feature {NONE} -- Constants

@@ -122,8 +122,8 @@ feature -- Generic conformance
 
 feature
 
-	make_basic_creation_byte_code (ba : BYTE_ARRAY) is
-
+	make_default_byte_code (ba: BYTE_ARRAY) is
+			-- Generate default value of basic type on stack.
 		do
 			ba.append (Bc_bool)
 			ba.append ('%U')

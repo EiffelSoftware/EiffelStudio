@@ -289,16 +289,23 @@ feature -- IL code generation
 
 feature -- Byte code generation
 
-	make_basic_creation_byte_code (ba : BYTE_ARRAY) is
-
+	make_default_byte_code (ba: BYTE_ARRAY) is
+			-- Generate default value of basic type on stack.
 		do
 			inspect size
-			when 8 then ba.append (Bc_int8)
-			when 16 then ba.append (Bc_int16)
-			when 32 then ba.append (Bc_int32)
-			when 64 then ba.append (Bc_int64)
+			when 8 then
+				ba.append (Bc_int8)
+				ba.append ('%U')
+			when 16 then
+				ba.append (Bc_int16)
+				ba.append_short_integer (0)
+			when 32 then
+				ba.append (Bc_int32)
+				ba.append_integer (0)
+			when 64 then
+				ba.append (Bc_int64)
+				ba.append_integer_64 (0)
 			end
-			ba.append_integer (0)
 		end 
 
 feature {NONE} -- Constants for generation

@@ -120,7 +120,7 @@ meltpath = win_eif_getenv ("MELT_PATH", "es4");
 		filename = (char *)cmalloc (UPDTLEN + 3);
 	}
 	if (filename == (char *)0){
-		enomem();	
+		enomem(MTC_NOARG);	
 		exit (1);	
 	}
 	if (meltpath)
@@ -177,14 +177,14 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 #else
 	esystem = (struct cnode *) cmalloc(count * sizeof(struct cnode));
 	if (esystem == (struct cnode *) 0)
-		enomem();				/* Not enough room */
+		enomem(MTC_NOARG);				/* Not enough room */
 	bcopy(fsystem, esystem, scount * sizeof(struct cnode));
 #endif
 
 	/* Allocation of the variable `ecall' */
 	ecall = (int32 **) cmalloc(count * sizeof(int32 *));
 	if (ecall == (int32 **) 0)
-		enomem();
+		enomem(MTC_NOARG);
 	bcopy(fcall, ecall, scount * sizeof(int32 *));
 
 	/* FIX ME: `ecall' is indexed by original (static) type id, not by dynamic type
@@ -220,7 +220,7 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 	/* Allocation of variable `dispatch' */
 	dispatch = (uint32 *) cmalloc(count * sizeof(uint32));
 	if (dispatch == (uint32 *) 0)
-		enomem();
+		enomem(MTC_NOARG);
 
 	/* Copy of the frozen dispatch table into `dispatch' */
 	bcopy(fdispatch, dispatch, dcount * sizeof(uint32));
@@ -242,11 +242,11 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 	/* Allocation of the variable `melt' */
 	melt = (char **) cmalloc(melt_count * sizeof(char *));
 	if (melt == (char **) 0)
-		enomem();
+		enomem(MTC_NOARG);
 	/* Allocation of the variable `mpatidtab' */
 	mpatidtab = (int *) cmalloc(melt_count * sizeof(int));
 	if (mpatidtab == (int *) 0)
-		enomem();
+		enomem(MTC_NOARG);
 
 	while ((body_id = wlong()) != -1) {
 		bsize = wlong();
@@ -255,7 +255,7 @@ if (body_id >= 0)
 		mpatidtab[body_id] = (int) pattern_id;
 		bcode = cmalloc(bsize * sizeof(char));
 		if (bcode == (char *) 0)
-			enomem();
+			enomem(MTC_NOARG);
 		/* Read the byte code */
 		wread(bcode, (int)(bsize * sizeof(char)));
 if (body_id >= 0)
@@ -289,7 +289,7 @@ if (body_id >= 0)
 	/* Option table */
 	eoption = (struct eif_opt *)cmalloc(scount * sizeof(struct eif_opt));
 	if (eoption == (struct eif_opt *) 0)
-		enomem();
+		enomem(MTC_NOARG);
 	option_updt();
 
 	/* Routine info table */
@@ -379,7 +379,7 @@ rt_public void cnode_updt(void)
 	str_count = wshort();
 	str = cmalloc((str_count + 1) * sizeof(char));
 	if (str == (char *) 0)
-		enomem();
+		enomem(MTC_NOARG);
 	node->cn_generator = str;
 	wread(str, str_count * sizeof(char));
 	str[str_count] = '\0';
@@ -398,11 +398,11 @@ rt_public void cnode_updt(void)
 	if (nbattr > 0) {
 		names = (char **) cmalloc(nbattr * sizeof(char *));
 		if (names == (char **) 0)
-			enomem();
+			enomem(MTC_NOARG);
 		node->cn_names = names;
 		types = (uint32 *) cmalloc(nbattr * sizeof(uint32));
 		if (types == (uint32 *) 0)
-			enomem();
+			enomem(MTC_NOARG);
 		node->cn_types = types;
 #ifdef DEBUG
 	dprintf(4)("\tattribute names = ");
@@ -411,7 +411,7 @@ rt_public void cnode_updt(void)
 			str_count = wshort();
 			str = cmalloc((str_count + 1) * sizeof(char));
 			if (str == (char *) 0)
-				enomem();
+				enomem(MTC_NOARG);
 			wread(str, str_count * sizeof(char));
 			str[str_count] = '\0';
 			names[i] = str;
@@ -438,7 +438,7 @@ rt_public void cnode_updt(void)
 	nbparents = wshort();
 	parents = (int *) cmalloc((nbparents + 1) * sizeof(int));
 	if (parents == (int *) 0)
-		enomem();
+		enomem(MTC_NOARG);
 	node->cn_parents = parents;
 #ifdef DEBUG
 	dprintf(4)("\n\tparents = ");
@@ -455,7 +455,7 @@ rt_public void cnode_updt(void)
 	if (nbattr > 0) {
 		rout_ids = (int32 *) cmalloc(nbattr * sizeof(int32));
 		if (rout_ids == (int32 *) 0)
-			enomem();
+			enomem(MTC_NOARG);
 		node->cn_attr = rout_ids;
 		wread((char *)rout_ids, nbattr * sizeof(int32));
 #ifdef DEBUG
@@ -513,7 +513,7 @@ rt_public void routid_updt(void)
 		if (array_size > 0) {
 			cn_eroutid = (int32 *) cmalloc(array_size * sizeof(int32));
 			if (cn_eroutid == (int32 *) 0)
-				enomem();
+				enomem(MTC_NOARG);
 			wread((char *) cn_eroutid, array_size * sizeof(int32));
 		} else {
 			 cn_eroutid = (int32 *) 0;
@@ -531,7 +531,7 @@ rt_public void routid_updt(void)
 			names = names_updt((short) size);
 			feature_ids = (uint32 *) cmalloc(size * sizeof(uint32));
 			if (feature_ids == (uint32 *) 0)
-				enomem();
+				enomem(MTC_NOARG);
 			wread((char *) feature_ids, size * sizeof(uint32));
 		}
 		while ((dtype = wlong()) != -1L) {	/* Dynamic type */
@@ -567,12 +567,12 @@ rt_public void conform_updt(void)
 		/* Allocation of the conformance table */
 	co_table = (struct conform **) cmalloc(scount*sizeof(struct conform *));
 	if (co_table == (struct conform **) 0)
-		enomem();
+		enomem(MTC_NOARG);
 
 	while ((dtype = wshort()) != -1) {	/* Get a dynamic type */
 		new = (struct conform *) cmalloc(sizeof(struct conform));
 		if (new == (struct conform *) 0)
-			enomem();
+			enomem(MTC_NOARG);
 
 		min = wshort();
 		new->co_min = min;
@@ -584,7 +584,7 @@ rt_public void conform_updt(void)
 		area_size = ((max - min + 1) / 8) * sizeof(char);
 		area = cmalloc(area_size);
 		if (area == (char *) 0)
-			enomem();
+			enomem(MTC_NOARG);
 		new->co_tab = area;
 		wread(area, area_size);
 
@@ -612,7 +612,7 @@ rt_private void cecil_updt(void)
 	ce_nogeneric->h_keys = names_updt(count);
 	type_val = (uint32 *) cmalloc(count * sizeof(uint32));
 	if (type_val == (uint32 *) 0)
-		enomem();
+		enomem(MTC_NOARG);
 	wread((char *) type_val, count * sizeof(uint32));
 	ce_nogeneric->h_values = (char *) type_val;
 
@@ -623,7 +623,7 @@ rt_private void cecil_updt(void)
 	ce_generic->h_keys = names_updt(count);
 	gtype_val = (struct gt_info *) cmalloc(count * sizeof(struct gt_info));
 	if (gtype_val == (struct gt_info *) 0)
-		enomem();
+		enomem(MTC_NOARG);
 	ce_generic->h_values = (char *) gtype_val;
 	for (i=0; i<count; gtype_val++,i++) {
 		nb_generics = wshort();				/* Number of generic parameters */
@@ -634,13 +634,13 @@ rt_private void cecil_updt(void)
 		n = nb_generics * nb_types;
 		gt_gen = (int32 *) cmalloc((n + 1) * sizeof(int32));
 		if (gt_gen == (int32 *) 0)
-			enomem();
+			enomem(MTC_NOARG);
 		wread((char *) gt_gen, n * sizeof(int32));	/* Read meta type desc */
 		gt_gen[n] = SK_INVALID;
 		gtype_val->gt_gen = gt_gen;
 		gt_type = (int16 *) cmalloc(nb_types * sizeof(int16));
 		if (gt_type == (int16 *) 0)
-			enomem();
+			enomem(MTC_NOARG);
 		wread((char *) gt_type, nb_types * sizeof(int16));
 		gtype_val->gt_type = gt_type;
 	}
@@ -656,7 +656,7 @@ rt_private char **names_updt(short int count)
 
 	result = (char **) cmalloc(count * sizeof(char *));
 	if (result == (char **) 0)
-		enomem();
+		enomem(MTC_NOARG);
 	for (i=0; i<count; i++) {
 		len = wshort();			/* Read string count */
 		if (len == 0) {
@@ -665,7 +665,7 @@ rt_private char **names_updt(short int count)
 		}
 		name = (char *) cmalloc((len + 1) * sizeof(char));
 		if (name == (char *) 0)
-			enomem();
+			enomem(MTC_NOARG);
 		wread(name, len);		/* Read string content */
 		name[len] = '\0';
 		result[i] = name;
@@ -702,7 +702,7 @@ rt_public void option_updt(void)
 		case BCAS_INVARIANT:	as_level = AS_INVARIANT;	break;
 		case BCAS_LOOP:			as_level = AS_LOOP;			break;
 		case BCAS_CHECK:		as_level = AS_CHECK;		break;
-		default:				panic("invalid assertion level");
+		default:				panic(MTC "invalid assertion level");
 		}
 		current->assert_level = as_level;
 
@@ -719,7 +719,7 @@ rt_public void option_updt(void)
 						debug_count = wshort();
 						keys = (char **) cmalloc(debug_count * sizeof(char *));
 						if (keys == (char **) 0)
-							enomem();
+							enomem(MTC_NOARG);
 						debug_opt->keys = keys;
 						debug_opt->nb_keys = debug_count;
 						for (i=0; i<debug_count; i++) {
@@ -727,13 +727,13 @@ rt_public void option_updt(void)
 							debug_tag =
 								(char *) cmalloc((count + 1) * sizeof(char));
 							if (debug_tag == (char *) 0)
-								enomem();
+								enomem(MTC_NOARG);
 							wread(debug_tag, count);
 							debug_tag[count] = '\0';
 							keys[i] = debug_tag;
 						}
 						break;
-		default:		panic("invalid debug level");
+		default:		panic(MTC "invalid debug level");
 		}
 		debug_opt->debug_level = debug_level;
 		wread(&c, 1);		   /* Assertion level byte code */
@@ -743,7 +743,7 @@ rt_public void option_updt(void)
 	break;
 		case BC_YES:			o_level = OPT_ALL;
 	break;
-		default:			panic("invalid trace level");
+		default:			panic(MTC "invalid trace level");
 		}
 		current->trace_level = o_level;
 
@@ -754,7 +754,7 @@ rt_public void option_updt(void)
 	break;
 		case BC_YES:		    o_level = OPT_ALL;
 	break;
-		default:			panic("invalid profile level");
+		default:			panic(MTC "invalid profile level");
 		}
 		current->profile_level = o_level;
 	}
@@ -772,7 +772,7 @@ rt_public void routinfo_updt(void)
 	count = wuint32();
 	eorg_table = (struct rout_info *) cmalloc(count * sizeof(struct rout_info));
 	if (eorg_table == (struct rout_info *) 0)
-		enomem();
+		enomem(MTC_NOARG);
 	
 	for (i=0;i<count;i++) {
 		ri.origin = wshort();
@@ -801,7 +801,7 @@ rt_public void desc_updt(void)
 				desc_ptr = (struct desc_info *) 
 						cmalloc (rout_count * sizeof(struct desc_info));
 				if (desc_ptr == (struct desc_info *) 0)
-					enomem();
+					enomem(MTC_NOARG);
 				for (i=0; i<rout_count;i++) {
 					desc_ptr[i].info = wshort();
 					desc_ptr[i].type = wshort();

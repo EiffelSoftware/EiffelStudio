@@ -70,8 +70,8 @@ rt_private void internal_store(char *object);
 rt_private void st_store(char *object);				/* Second pass of the store */
 rt_private void ist_write(char *object);
 rt_private void gst_write(char *object);
-rt_private void make_header(void);				/* Make header */
-rt_private void imake_header(void);				/* Make header */
+rt_private void make_header(EIF_CONTEXT_NOARG);				/* Make header */
+rt_private void imake_header(EIF_CONTEXT_NOARG);				/* Make header */
 rt_private int store_buffer();		/* %%ss undefined not used in run-time */
 rt_private void object_write (char *object);
 rt_private void gen_object_write (char *object);
@@ -97,7 +97,7 @@ rt_private char *rcsid =
 
 /*function pointers to save on if statements*/
 
-void (*make_header_func)(void) = make_header;
+void (*make_header_func)(EIF_CONTEXT_NOARG) = make_header;
 void (*st_write_func)(char *) = st_write;
 void (*flush_buffer_func)(void) = flush_st_buffer;
 void (*store_write_func)(void) = store_write;
@@ -892,7 +892,7 @@ rt_private void object_write(char *object)
 
 
 
-rt_private void make_header(void)
+rt_private void make_header(EIF_CONTEXT_NOARG)
 {
 	/* Generate header for stored hiearchy retrivable by other systems. */
 	int i;
@@ -903,11 +903,11 @@ rt_private void make_header(void)
 	jmp_buf exenv;
 	RTXD;
 
-	excatch((char *) exenv);	/* Record pseudo execution vector */
+	excatch(MTC (char *) exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		RTXSC;					/* Restore stack contexts */
 		st_clean();				/* Clean data structure */
-		ereturn();				/* Propagate exception */
+		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 
 	s_buffer = (char *) xmalloc (bsize * sizeof( char), C_T, GC_OFF);
@@ -1061,7 +1061,7 @@ printf ("Freeing s_attr %lx\n", s_attr);
 		}
 }
 
-rt_private void imake_header(void)
+rt_private void imake_header(EIF_CONTEXT_NOARG)
 {
 	/* Generate header for stored hiearchy retrivable by other systems. */
 	int i;
@@ -1073,11 +1073,11 @@ rt_private void imake_header(void)
 	jmp_buf exenv;
 	RTXD;
 
-	excatch((char *) exenv);	/* Record pseudo execution vector */
+	excatch(MTC (char *) exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		RTXSC;					/* Restore stack contexts */
 		st_clean();				/* Clean data structure */
-		ereturn();				/* Propagate exception */
+		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 
 	s_buffer = (char *) xmalloc (bsize * sizeof( char), C_T, GC_OFF);

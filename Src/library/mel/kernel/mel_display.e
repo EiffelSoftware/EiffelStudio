@@ -28,8 +28,6 @@ feature {NONE} -- Initialization
 			-- and application class name `app_class_name'.
 		require
 			application_context_not_null: application_context.is_valid;
-			application_name_not_void: app_name /= Void;
-			application_class_name_not_void: app_class_name /= Void
 		local
 			disp_name, app_name_ext, app_class_name_ext: ANY;
 			nb_screens: INTEGER;
@@ -40,8 +38,12 @@ feature {NONE} -- Initialization
 			if a_display_name /= Void then
 				disp_name := a_display_name.to_c
 			end;
-			app_name_ext := app_name.to_c;
-			app_class_name_ext := app_class_name.to_c;
+			if app_name /= Void then
+				app_name_ext := app_name.to_c;
+			end;
+			if app_class_name /= Void then
+				app_class_name_ext := app_class_name.to_c;
+			end;
 			if a_display_name /= Void then
 				a_display := xt_open_display (application_context.handle, $disp_name, 
 						$app_name_ext, $app_class_name_ext, default_pointer, 0, argc, argv)

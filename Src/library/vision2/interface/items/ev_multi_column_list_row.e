@@ -103,6 +103,28 @@ feature -- Element Change
 			implementation.set_text (a_text)
 		end
 
+feature -- Event : command association
+
+	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Make `cmd' the executed command when the item is 
+			-- activated.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		do
+			implementation.add_activate_command (cmd, arg)
+		end	
+
+	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Make `cmd' the executed command when the item is
+			-- unactivated.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		do
+			implementation.add_deactivate_command (cmd, arg)		
+		end
+
 feature {EV_MULTI_COLUMN_LIST_I} -- Implementation
 
 	implementation: EV_MULTI_COLUMN_LIST_ROW_I

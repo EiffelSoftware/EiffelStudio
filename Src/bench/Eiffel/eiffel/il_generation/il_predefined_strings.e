@@ -9,7 +9,7 @@ class
 feature -- Access
 
 	runtime_namespace: STRING is "EiffelSoftware.Runtime"
-	runtime_class_name: STRING is "EiffelSoftware.Runtime.RUN_TIME"
+	runtime_class_name: STRING is "EiffelSoftware.Runtime.ISE_RUNTIME"
 	assertions_class_name: STRING is "EiffelSoftware.Runtime.ASSERTIONS"
 	type_class_name: STRING is "EiffelSoftware.Runtime.Types.TYPE"
 	type_array_class_name: STRING is "EiffelSoftware.Runtime.Types.TYPE[]"

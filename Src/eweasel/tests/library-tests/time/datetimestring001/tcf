@@ -1,0 +1,16 @@
+test_name make-from-string
+test_description Create different DATE/TIME formats from strings
+
+define OUTPUT $TEST
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work NONE NONE
+execute_result ok
+
+test_end

@@ -90,7 +90,11 @@ feature -- Access
 	dotnet_name: STRING is
 			-- .NET name
 		do
-			create Result.make_from_cil (internal_method.get_name)
+			if internal_method.get_is_special_name and internal_method.get_name.starts_with (("get_").to_cil) then
+				create name.make_from_cil (meth.get_name.substring (4))
+			else
+				create Result.make_from_cil (internal_method.get_name)
+			end
 		end
 	
 	eiffel_name: STRING
@@ -158,7 +162,7 @@ feature -- Comparison
 			Result := arguments.count < other.arguments.count
 		end
 		
-feature {METHOD_SOLVER} -- Implementation
+feature {METHOD_SOLVER, OVERLOAD_SOLVER} -- Implementation
 
 	internal_method: METHOD_INFO
 			-- Method to be consumed

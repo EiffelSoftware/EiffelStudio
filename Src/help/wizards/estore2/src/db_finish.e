@@ -28,7 +28,12 @@ feature -- basic Operations
 		do 
 			build_finish
 			launch_operations
+			send_errors
 			Precursor
+				-- FIXME: `Precursor' should be used but there is a bug in EiffelVision2.
+	--		entries_changed := False
+	--		current_application.destroy
+				--
 		end
 
 	display_state_text is
@@ -66,27 +71,25 @@ feature -- basic Operations
 			choice_box.wipe_out
 			choice_box.set_border_width (10)
 			create progress 
-			progress.set_minimum_height(20)
-			progress.set_minimum_width(100)
+			progress.set_minimum_height (20)
+			progress.set_minimum_width (100)
 			create progress_text
-			choice_box.extend(create {EV_CELL})
-			choice_box.extend(progress)
-			choice_box.disable_item_expand(progress)
-			choice_box.extend(progress_text)
-			choice_box.extend(create {EV_CELL})
+			choice_box.extend (create {EV_CELL})
+			choice_box.extend (progress)
+			choice_box.disable_item_expand (progress)
+			choice_box.extend (progress_text)
+			choice_box.extend (create {EV_CELL})
 
 			choice_box.set_background_color (white_color)
 			progress.set_background_color (white_color)
 			progress_text.set_background_color (white_color)
 			choice_box.show
-	--		main_box.show
 		end
 
 	launch_operations is
 			-- Generate the classes and the example. Modified by Cedric R.
 		local
 			li: ARRAYED_LIST [CLASS_NAME]
-			dir: DIRECTORY
 			b: BOOLEAN
 			class_number: INTEGER
 			s: STRING
@@ -94,10 +97,9 @@ feature -- basic Operations
 		do
 			if not b then
 				if wizard_information.compile_project then
-					to_compile := TRUE
+					to_compile := True
 					if wizard_information.new_project then
-						create dir.make (wizard_information.location)
-						dir.delete_content
+						setup_directory
 					end
 				end
 			end
@@ -107,7 +109,7 @@ feature -- basic Operations
 			total := li.count
 			if wizard_information.new_project then	
 				total := total + 8
-				if is_oracle then
+				if is_oracle (wizard_information.dbms_code) then
 					total := total - 1
 				end
 			end
@@ -134,10 +136,12 @@ feature -- basic Operations
 				notify_user ("generating class " + s)
 				create rep.make (s)
 				rep.load
-				repositories.extend (rep)
-				generate_class (rep, class_number, Container_type)
-				generate_class (rep, class_number, Description_type)
-				class_number := class_number + 1
+				if rep.exists then
+					repositories.extend (rep)
+					generate_class (rep, class_number, Container_type)
+					generate_class (rep, class_number, Description_type)
+					class_number := class_number + 1
+				end
 				li.forth
 			end
 			generate_access_class
@@ -150,14 +154,13 @@ feature -- basic Operations
 				load_example_classes	
 				if wizard_information.vision_example then
 					generate_db_interface_class
-					generate_db_connection_class
 				else
 					generate_repositories	
 					generate_example
 				end				
 				if to_compile then
-					progress_text.set_text(" Preparing for Compilation ....")		
-					if wizard_information.is_oracle then
+					progress_text.set_text (" Preparing for Compilation ...")		
+					if is_oracle (wizard_information.dbms_code) then
 						create ebench_launcher.make ("ace_mswin_oracle.ace", wizard_information.location, wizard_information.project_name)
 					else
 						create ebench_launcher.make ("ace_mswin_odbc.ace", wizard_information.location, wizard_information.project_name)
@@ -175,6 +178,68 @@ feature -- basic Operations
 
 feature {NONE} -- Processing
 
+	setup_directory is
+			-- Setup directory to create the project.
+			-- Delete EIFGEN directory and *.epr files.
+		local
+			fn: DIRECTORY_NAME
+			dir: DIRECTORY
+			rescued: BOOLEAN
+		do
+			if not rescued then
+				create fn.make_from_string (wizard_information.location)
+				fn.extend ("EIFGEN")
+				create dir.make (fn)
+				if dir.exists then
+					dir.delete_content
+					dir.delete
+				end
+			else
+				to_compile := False
+				add_error ("The project directory cannot be correctly set up %Nto compile your project. Please compile your %
+						%project manually.%N")
+			end
+		rescue
+			rescued := True
+			retry
+		end
+
+	add_error (mess: STRING) is
+			-- Inform the user of a problem that occured
+			-- during operations.
+		require
+			not_void: mess /= Void
+		do
+			if warning_list = Void then
+				create warning_list.make (5)
+			end
+			warning_list.extend (mess)
+		end
+
+	warning_list: ARRAYED_LIST [STRING]
+			-- Warning messages list.
+
+	send_errors is
+			-- Sends a report on the errors occured to the user.
+		local
+			dialog: EV_WARNING_DIALOG
+			mess: STRING
+		do
+			if warning_list /= Void and then not warning_list.is_empty then
+				mess := "Errors occured during the process.%NPlease read the following error report:%N%N"
+				from
+					warning_list.start
+				until
+					warning_list.after
+				loop
+					mess.append ("* " + warning_list.item + "%N")
+					warning_list.forth
+				end
+				create dialog.make_with_text (mess)
+				dialog.show_modal_to_window (first_window)
+			end
+		end
+
 	initialize_table_constraints_generator is
 			-- Initialize `table_constraints_generator'.
 		local
@@ -182,7 +247,7 @@ feature {NONE} -- Processing
 			scope_tables: ARRAYED_LIST [STRING]
 			tmp: STRING
 		do
-			create table_constraints_generator.make
+			create table_constraints_generator.make (wizard_information.dbms_code)
 			li := wizard_information.table_list
 			from
 				li.start
@@ -260,118 +325,6 @@ feature {NONE} -- Processing
 			end
 		end
 
-	specific_code (s: STRING) is
-		local
-			i1, i2, i3, i4, j1, j2: INTEGER
-			new_begin_code, new_end_code, squeleton: STRING
-			fi: PLAIN_TEXT_FILE
-			file_name: FILE_NAME
-		do
-			file_name := clone (wizard_resources_path)
-			file_name.set_file_name ("table_squeleton_class.e")
-			create fi.make_open_read_write (file_name)
-			fi.read_stream (fi.count)
-			squeleton:= clone (fi.last_string)
-			fi.close
-
-			i1:= squeleton.substring_index ("<FL_ANCHOR_BEGIN=YES>", 1)
-			new_begin_code:= "%N%N"
-			i2:= squeleton.substring_index ("<FL_ANCHOR_END=YES>", 1)
-			new_end_code:= "%N%N"
-
-			i3:= s.substring_index ("create", 1)
-			i4:= s.substring_index ("end --", 1)
-
-			if  i1 /= 0 then
-				j1:= squeleton.substring_index ("</FL_ANCHOR_BEGIN>", 1)
-				new_begin_code:= "%N%N" + squeleton.substring (i1 + 22, j1 - 1) + "%N"
-			end
-			if  i2 /= 0 then
-				j2:= squeleton.substring_index ("</FL_ANCHOR_END>", 1)
-				new_end_code:= "%N" + squeleton.substring (i2 + 19, j2 - 1) + "%N"
-			end
-			
-			s.replace_substring (new_begin_code, i3 - 2, i3 - 1)
-			s.replace_substring (new_end_code, i4 + new_begin_code.count - 4 , i4 + new_begin_code.count - 3)
-
-		end
-
-	add_get_feature (s: STRING) is
-			-- Add the fields enabling to inherit from 'queryable' class. 
-			-- Works on a class representing a database table. Added by Cedric R.
-		local
-			fi: PLAIN_TEXT_FILE
-			inheritance_text, new_begin_code, new_end_code: STRING
-			mi, di, ti: INTEGER
-			file_name: FILE_NAME
-		do
-			file_name := clone (wizard_resources_path)
-			file_name.set_file_name ("ev_queryable_inh.e")
-			create fi.make_open_read_write (file_name)
-			fi.read_stream (fi.count)
-			inheritance_text:= clone (fi.last_string)
-			fi.close
-
-			mi:= inheritance_text.substring_index ("<FL_DECL_INH_END>", 1)
-			new_begin_code:= "%N%N" + inheritance_text.substring (1, mi-1) + "%N"
-			new_end_code:= "%N" + inheritance_text.substring (mi + 17, inheritance_text.count) + "%N"
-
-			di:= s.substring_index ("create", 1)
-			ti:= s.substring_index ("end --", 1)
-		
-			s.replace_substring (new_begin_code, di - 2, di - 1)
-			s.replace_substring (new_end_code, ti + new_begin_code.count - 4, ti + new_begin_code.count - 3)
-		end
-
-	replace_tags (s: STRING; rep: DB_REPOSITORY) is
-			-- Works on a class representing a database table. Added by Cedric R.
-			-- Replace the tags in 's' to match the columns names in the database.
-			-- 'rep' enables to get the attribute names of the loaded class.
-		local
-			i, type_code: INTEGER
-			g_replacing_string, g_repl_string_template, g_tmp: STRING
-			s_replacing_string, s_repl_string_template, s_tmp: STRING
-		do
-			rep.column_i_th(1).column_name.to_lower
-			s.replace_substring_all ("<FIRST_ATTR_NAME>", rep.column_i_th(1).column_name)
-				-- Type_code represents a code for a type: this code depends on the database.
-				-- This class handles generic class 'TYPES [G]' to cope with this dependency.
-			type_code:= rep.column_i_th(1).eiffel_type
-				-- 'match_type' replace the tags to make the conversion from 'string' to the 
-				-- attribute type.
-			match_type (s, type_code)
-			g_repl_string_template:= "%T%T%Telseif attr.is_equal (%"<OTHER_ATTR_NAME>%") then%N%
-								%%T%T%T%TResult := <OTHER_ATTR_NAME>.out%N"
-			s_repl_string_template:= "%T%T%Telseif attr.is_equal (%"<OTHER_ATTR_NAME>%") then%N%
-								%<FOR_DATE_TIME%N%
-								%>%T%T%T%T<OTHER_ATTR_NAME> := <VALUE><CONVERSION>%N"
-			create g_replacing_string.make (10)
-			create s_replacing_string.make (10)
-			from
-					i:= 2
-				until
-					i > rep.column_number
-				loop
-					g_tmp:= clone (g_repl_string_template)
-					s_tmp:= clone (s_repl_string_template)
-					rep.column_i_th(i).column_name.to_lower
-					g_tmp.replace_substring_all ("<OTHER_ATTR_NAME>", rep.column_i_th(i).column_name)
-					s_tmp.replace_substring_all ("<OTHER_ATTR_NAME>", rep.column_i_th(i).column_name)
-
-						-- Type_code represents a code for a type: this code depends on the database.
-						-- This class handles generic class 'TYPES [G]' to cope with this dependency.
-					type_code:= rep.column_i_th(i).eiffel_type
-						-- 'match_type' replace the tags to make the conversion from 'string' to the 
-						-- attribute type.
-					match_type (s_tmp, type_code)
-					g_replacing_string.append (g_tmp) 
-					s_replacing_string.append (s_tmp) 
-					i:= i + 1
-				end
-			s.replace_substring_all ("<ELSEIF_GET>", g_replacing_string)
-			s.replace_substring_all ("<ELSEIF_SET>", s_replacing_string)
-		end
-
 	normalize (s: STRING) is
 		do
 			if s.has ('$') then
@@ -388,45 +341,51 @@ feature {NONE} -- Processing
 			f: PLAIN_TEXT_FILE
 			f_name: FILE_NAME
 			s,s2,repository_name: STRING
+			rescued: BOOLEAN
 		do
-			notify_user ("generating Class REPOSITORIES ...")
-			create f_name.make_from_string (wizard_information.location)
-			f_name.extend ("repositories")
-			f_name.add_extension ("e")
-			s:= "indexing%N%Tdescription:%"Module which contains all the repositories information%""
-			s.append ("%N%Nclass%N%TREPOSITORIES%N%N")
-			s.append ("feature -- Access%N")
-			from
-				repositories.start
-			until
-				repositories.after
-			loop
-				s2:= clone(repositories.item.repository_name)
-				repository_name:= clone(s2)
-				repository_name.to_lower
-				repository_name.replace_substring_all (" ","_")
-				s.append ("%N%T"+repository_name+"_repository: DB_REPOSITORY is")
-				s.append ("%N%T%T%T-- Load the repository '"+repository_name+"'")
-				s.append ("%N%T%Tonce%N%T%T%Tcreate Result.make (%""+s2+"%")")
-				s.append ("%N%T%T%TResult.load%N%T%Tensure%N%T%T%Tloaded: Result.loaded%N%T%Tend%N")
-				repositories.forth
+			if not rescued then
+				notify_user ("generating Class REPOSITORIES ...")
+				create f_name.make_from_string (wizard_information.location)
+				f_name.extend ("repositories")
+				f_name.add_extension ("e")
+				s:= "indexing%N%Tdescription:%"Module which contains all the repositories information%""
+				s.append ("%N%Nclass%N%TREPOSITORIES%N%N")
+				s.append ("feature -- Access%N")
+				from
+					repositories.start
+				until
+					repositories.after
+				loop
+					s2:= clone (repositories.item.repository_name)
+					repository_name:= clone (s2)
+					repository_name.to_lower
+					repository_name.replace_substring_all (" ","_")
+					s.append ("%N%T"+repository_name+"_repository: DB_REPOSITORY is")
+					s.append ("%N%T%T%T-- Load the repository '"+repository_name+"'")
+					s.append ("%N%T%Tonce%N%T%T%Tcreate Result.make (%""+s2+"%")")
+					s.append ("%N%T%T%TResult.load%N%T%Tensure%N%T%T%Tloaded: Result.loaded%N%T%Tend%N")
+					repositories.forth
+				end
+				s.append ("%N%Nend -- Class Repositories")
+				create f.make_open_write (f_name)
+				f.put_string (s)
+				f.close
+			else
+				add_error ("Cannot generate repository class.%N")
 			end
-			s.append ("%N%Nend -- Class Repositories")
-			create f.make_open_write (f_name)
-			f.put_string (s)
-			f.close
+		rescue
+			rescued := True
+			retry
 		end
 
 	load_management_classes is
 			-- Load classes to use EiffelStore. Modified by Cedric R.
 		do
-			notify_user ("Importing db_shared ...")
-			copy_db_shared
-			notify_user ("Importing db_action_dyn ...")
-			copy_class ("db_action_dyn")
-			notify_user ("Importing parameter_hdl ...")
---XXX			copy_file ("parameter_hdl", "e", wizard_information.location)
-			if is_odbc then
+			if not wizard_information.vision_example then
+				notify_user ("Importing db_shared ...")
+				copy_db_shared
+			end
+			if is_odbc (wizard_information.dbms_code) then
 				notify_user ("Importing store_odbc.lib ...")
 				copy_file ("odbc_store", "lib", wizard_information.location)
 			end
@@ -438,11 +397,10 @@ feature {NONE} -- Processing
 			if wizard_information.vision_example then
 				copy_class ("application")
 				copy_class ("main_window")
-				copy_class ("select_window")
-				copy_class ("sel_res_window")
-				copy_class ("insert_window")
-				copy_class ("my_db_info")
-				copy_class("db_connection")
+				copy_class ("table_window")
+				copy_class ("status_window")
+				copy_class ("specific_factory")
+				copy_class ("shared")
 			else
 				copy_class ("estore_example")
 				copy_class ("estore_root")
@@ -454,30 +412,38 @@ feature {NONE} -- Processing
 			f1,f_name: FILE_NAME
 			fi: PLAIN_TEXT_FILE
 			new_s,s: STRING
+			rescued: BOOLEAN
 		do
-			create f1.make_from_string(wizard_resources_path)
-			f_name := clone(f1)
-			f_name.extend("db_shared")
-			f_name.add_extension("e")
-			create fi.make_open_read(f_name)
-			fi.read_stream(fi.count)
-			s := fi.last_string
-			new_s := clone (s)
-			if wizard_information.is_oracle then
-				new_s.replace_substring_all("<FL_HANDLE>", "ORACLE")
+			if not rescued then
+				create f1.make_from_string (wizard_resources_path)
+				f_name := clone (f1)
+				f_name.extend ("db_shared")
+				f_name.add_extension ("e")
+				create fi.make_open_read (f_name)
+				fi.read_stream (fi.count)
+				s := fi.last_string
+				new_s := clone (s)
+				if is_oracle (wizard_information.dbms_code) then
+					new_s.replace_substring_all ("<FL_HANDLE>", "ORACLE")
+				else
+					new_s.replace_substring_all ("<FL_HANDLE>", "ODBC")
+				end
+				fi.close
+				create f_name.make_from_string (wizard_information.location)
+				f_name.extend ("db_shared")
+				f_name.add_extension ("e")
+				create fi.make_open_write (f_name)
+				fi.put_string (new_s)
+				fi.close
 			else
-				new_s.replace_substring_all("<FL_HANDLE>", "ODBC")
+				add_error ("Could not generate 'db_shared.e' class.")
 			end
-			fi.close
-			create f_name.make_from_string(wizard_information.location)
-			f_name.extend("db_shared")
-			f_name.add_extension("e")
-			create fi.make_open_write(f_name)
-			fi.put_string(new_s)
-			fi.close
+		rescue
+			rescued := True
+			retry
 		end
 
-	copy_class(name: STRING) is
+	copy_class (name: STRING) is
 			-- Copy Class whose name is 'name'.
 		require
 			name /= Void
@@ -485,24 +451,32 @@ feature {NONE} -- Processing
 			f1,f_name: FILE_NAME
 			fi: PLAIN_TEXT_FILE
 			s: STRING
+			rescued: BOOLEAN
 		do
-			create f1.make_from_string(wizard_resources_path)
-			f_name := clone(f1)
-			f_name.extend(name)
-			f_name.add_extension("e")
-			create fi.make_open_read(f_name)
-			fi.read_stream(fi.count)
-			s := fi.last_string
-			fi.close
-			create f_name.make_from_string(wizard_information.location)
-			f_name.extend(name)
-			f_name.add_extension("e")
-			create fi.make_open_write(f_name)
-			fi.put_string(s)
-			fi.close
+			if not rescued then
+				create f1.make_from_string (wizard_resources_path)
+				f_name := clone (f1)
+				f_name.extend (name)
+				f_name.add_extension ("e")
+				create fi.make_open_read (f_name)
+				fi.read_stream (fi.count)
+				s := fi.last_string
+				fi.close
+				create f_name.make_from_string (wizard_information.location)
+				f_name.extend (name)
+				f_name.add_extension ("e")
+				create fi.make_open_write (f_name)
+				fi.put_string (s)
+				fi.close
+			else
+				add_error ("Class '" + name + "' could not be generated.")
+			end
+		rescue
+			rescued := True
+			retry
 		end
 
-	copy_ace(name: STRING; path_root_class: STRING) is
+	copy_ace (name: STRING; path_root_class: STRING) is
 			-- Copy Class whose name is 'name'.
 		require
 			name /= Void
@@ -510,28 +484,36 @@ feature {NONE} -- Processing
 			f1,f_name: FILE_NAME
 			fi: PLAIN_TEXT_FILE
 			new_s,s: STRING
+			rescued: BOOLEAN
 		do
-			create f1.make_from_string (wizard_resources_path)
-			f_name := clone (f1)
-			f_name.extend (name)
-			f_name.add_extension ("ace")
-			create fi.make_open_read (f_name)
-			fi.read_stream(fi.count)
-			s := fi.last_string
-			new_s := clone (s)
-			new_s.replace_substring_all ("<FL_PATH>", path_root_class)
-			if wizard_information.precompiled_base then
-				new_s.replace_substring_all ("<FL_TAG_PRECOMPILED>","")
+			if not rescued then
+				create f1.make_from_string (wizard_resources_path)
+				f_name := clone (f1)
+				f_name.extend (name)
+				f_name.add_extension ("ace")
+				create fi.make_open_read (f_name)
+				fi.read_stream (fi.count)
+				s := fi.last_string
+				new_s := clone (s)
+				new_s.replace_substring_all ("<FL_PATH>", path_root_class)
+				if wizard_information.precompiled_base then
+					new_s.replace_substring_all ("<FL_TAG_PRECOMPILED>","")
+				else
+					new_s.replace_substring_all ("<FL_TAG_PRECOMPILED>","--")
+				end			
+				fi.close
+				create f_name.make_from_string (wizard_information.location)
+				f_name.extend (name)
+				f_name.add_extension ("Ace")
+				create fi.make_open_write (f_name)
+				fi.put_string (new_s)
+				fi.close
 			else
-				new_s.replace_substring_all ("<FL_TAG_PRECOMPILED>","--")
-			end			
-			fi.close
-			create f_name.make_from_string (wizard_information.location)
-			f_name.extend (name)
-			f_name.add_extension ("Ace")
-			create fi.make_open_write (f_name)
-			fi.put_string (new_s)
-			fi.close
+				add_error ("File '" + name + "' could not be generated.")
+			end
+		rescue
+			rescued := True
+			retry
 		end
 
 	generate_ace_file is
@@ -541,15 +523,15 @@ feature {NONE} -- Processing
 
 				-- Switch the Ace file depending on the example to generate.
 			if wizard_information.vision_example then
-				if wizard_information.is_oracle then
+				if is_oracle (wizard_information.dbms_code) then
 					copy_ace ("ace_mswin_vision_oracle", wizard_information.location)
-				else
+				elseif is_odbc (wizard_information.dbms_code) then
 					copy_ace ("ace_mswin_vision_odbc", wizard_information.location)
 				end
  			else
-				if wizard_information.is_oracle then
+				if is_oracle (wizard_information.dbms_code) then
 					copy_ace ("Ace_mswin_oracle", wizard_information.location)
-				else
+				elseif is_odbc (wizard_information.dbms_code) then
 					copy_ace ("Ace_mswin_odbc", wizard_information.location)
 				end
 			end
@@ -563,35 +545,43 @@ feature {NONE} -- Processing
 			s: STRING
 			example_generator: EXAMPLE_GENERATOR 
 			root_generator: ROOT_GENERATOR
+			rescued: BOOLEAN
 		do
-			notify_user ("Generating Example...")
-			create example_generator.make (repositories)
-			s := example_generator.result_string
-			create f1.make_from_string (wizard_information.location)
-			f_name := clone (f1)
-			f_name.extend ("estore_example")
-			f_name.add_extension ("e")
-			create fi.make_open_read_append (f_name)
-			fi.put_string (s)
-			fi.close
-			
-			notify_user ("Generating Root Class...")
-			create f1.make_from_string (wizard_information.location)
-			f_name := clone (f1)
-			f_name.extend ("estore_root")
-			f_name.add_extension ("e")
-			create fi.make_open_read (f_name)
-			fi.read_stream (fi.count)
-			s := fi.last_string
-			fi.close
-			create root_generator.make (example_generator,s,
-					wizard_information.username,
-					wizard_information.password,
-					wizard_information.data_source)
-			s := root_generator.result_string
-			create fi.make_open_write (f_name)
-			fi.put_string (s)
-			fi.close
+			if not rescued then
+				notify_user ("Generating Example...")
+				create example_generator.make (repositories)
+				s := example_generator.result_string
+				create f1.make_from_string (wizard_information.location)
+				f_name := clone (f1)
+				f_name.extend ("estore_example")
+				f_name.add_extension ("e")
+				create fi.make_open_read_append (f_name)
+				fi.put_string (s)
+				fi.close
+				
+				notify_user ("Generating Root Class...")
+				create f1.make_from_string (wizard_information.location)
+				f_name := clone (f1)
+				f_name.extend ("estore_root")
+				f_name.add_extension ("e")
+				create fi.make_open_read (f_name)
+				fi.read_stream (fi.count)
+				s := fi.last_string
+				fi.close
+				create root_generator.make (example_generator,s,
+						wizard_information.username,
+						wizard_information.password,
+						wizard_information.data_source)
+				s := root_generator.result_string
+				create fi.make_open_write (f_name)
+				fi.put_string (s)
+				fi.close
+			else
+				add_error ("Could not generate simple example classes.%N")
+			end
+		rescue
+			rescued := True
+			retry
 		end
 	
 	generate_db_interface_class is
@@ -600,90 +590,48 @@ feature {NONE} -- Processing
 			f1,f_name: FILE_NAME
 			f: PLAIN_TEXT_FILE
 			s: STRING
+			rescued: BOOLEAN
 		do
-			notify_user ("Generating DB interface...")
-			create f1.make_from_string (wizard_information.location)
-			f_name := clone (f1)
-			f_name.extend ("my_db_info")
-			f_name.add_extension ("e")
-			create f.make_open_read_write (f_name)
-			f.read_stream (f.count)
-			s:= clone (f.last_string)
-				-- Replace tags owing to wizard_information.
-			replace_interface_tags (s)
-			f.close
-			f.wipe_out
-			create f.make_open_read_write (f_name)
-			f.put_string (s)
-			f.close
+			if not rescued then
+				notify_user ("Generating SHARED class...")
+				create f1.make_from_string (wizard_information.location)
+				f_name := clone (f1)
+				f_name.extend ("shared")
+				f_name.add_extension ("e")
+				create f.make_open_read_write (f_name)
+				f.read_stream (f.count)
+				s:= clone (f.last_string)
+					-- Replace tags owing to wizard_information.
+				replace_interface_tags (s)
+				f.close
+				f.wipe_out
+				create f.make_open_read_write (f_name)
+				f.put_string (s)
+				f.close
+			else
+				add_error ("Could not generate SHARED class%N")
+			end
+		rescue
+			rescued := True
+			retry
 		end
 			
 	replace_interface_tags (s: STRING) is
 			-- Replace the tags to match the user's given information (in MY_DB_INFO). Added by Cedric R.
 		local
-				-- Useful to map combo_box creation
+				-- Useful to map combo box creation.
 			replacing_string, repl_string_template, tmp : STRING
 				-- Useful to map local declarations.
 			local_rs_template, local_rs, loc_tmp : STRING
 				-- To change the case
 			table_class : STRING
 		do
-			if is_oracle then
-				s.replace_substring_all ("<DATABASE_NAME>", "ORACLE")
-			else
-				s.replace_substring_all ("<DATABASE_NAME>", "ODBC")				
+			if is_oracle (wizard_information.dbms_code) then
+				s.replace_substring_all ("<FL_HANDLE>", "ORACLE")
+			elseif is_odbc (wizard_information.dbms_code) then
+				s.replace_substring_all ("<FL_HANDLE>", "ODBC")				
 			end 
-			repl_string_template:= "%N%T%T%Tcreate eli.make_with_text (%"<TAG_TABLE_NAME>%")%N%
-								%%T%T%Tcreate <TAG_TABLE_NAME>_obj.make%N%
-								%%T%T%Teli.set_data (<TAG_TABLE_NAME>_obj)%N%
-								%%T%T%Teli.select_actions.extend (~update_active_rows_cb (%"<TAG_TABLE_NAME>%"))%N%
-								%%T%T%Teli.select_actions.extend (~update_active_rows_vb (%"<TAG_TABLE_NAME>%"))%N%
-								%%T%T%Ttables_cb.extend (eli)%N"
-			local_rs_template:= "%T%T%T<TAG_TABLE_NAME>_obj: <TAG_TABLE_CLASS>%N"
-			create replacing_string.make (10)
-			create local_rs.make (10)
-			from
-				wizard_information.table_list.start
-			until
-				wizard_information.table_list.after
-			loop
-				tmp:= clone (repl_string_template)
-				loc_tmp:= clone (local_rs_template)
-				tmp.replace_substring_all ("<TAG_TABLE_NAME>", wizard_information.table_list.item.table_name)
-				loc_tmp.replace_substring_all ("<TAG_TABLE_NAME>", wizard_information.table_list.item.table_name)
-				table_class:= clone (wizard_information.table_list.item.table_name)
-				table_class.to_upper
-				loc_tmp.replace_substring_all ("<TAG_TABLE_CLASS>", table_class)
-				replacing_string.append (tmp)
-				local_rs.append (loc_tmp)
-				wizard_information.table_list.forth
-			end
-			s.replace_substring_all ("<TAG_CREATION_TABLES>", replacing_string)
-			s.replace_substring_all ("<TAG_LOCAL_DEFINITIONS%N>", local_rs)
-		end
-
-	generate_db_connection_class is
-			-- Generate the interface class enabling the graphic HCI to access data from the database.
-		local
-			f1,f_name: FILE_NAME
-			f: PLAIN_TEXT_FILE
-			s: STRING
-		do
-			notify_user ("Generating DB connection mapper...")
-			create f1.make_from_string (wizard_information.location)
-			f_name := clone (f1)
-			f_name.extend ("db_connection")
-			f_name.add_extension ("e")
-			create f.make_open_read_write (f_name)
-			f.read_stream (f.count)
-			s:= clone (f.last_string)
-				-- Replace tags owing to wizard_information.
 			replace_db_connection_tags (s)
-			f.close
-			f.wipe_out
-			create f.make_open_read_write (f_name)
-			f.put_string (s)
-			f.close
 		end
 
 	replace_db_connection_tags (s: STRING) is
@@ -693,53 +641,6 @@ feature {NONE} -- Processing
 			s.replace_substring_all ("<TAG_USERNAME>", wizard_information.username)
 			s.replace_substring_all ("<TAG_PASSWORD>", wizard_information.password)
 			s.replace_substring_all ("<TAG_DATA_SOURCE>", wizard_information.data_source)
-		end
-
-feature {NONE} -- Implementation
-	
-	match_type (s: STRING; type_code: INTEGER) is
-			-- Map a piece of the 'set_feature_value' feature of a table class to the type of the attribute.
-		require
-			not_void: s /= Void
-		do
-				-- Type_code represents a code for a type: this code depends on the database.
-				-- This class handles generic class 'TYPES [G]' to cope with this dependency.
-				-- 'types' inherited from class 'WIZARD_SPECIFIC'.
-			if type_code = types.Integer_type_database then
-				s.replace_substring_all ("<FOR_DATE_TIME%N>", "")
-				s.replace_substring_all ("<VALUE>", "value")
-				s.replace_substring_all ("<CONVERSION>", ".to_integer")
-			elseif type_code = types.Boolean_type_database then
-				s.replace_substring_all ("<FOR_DATE_TIME%N>", "")
-				s.replace_substring_all ("<VALUE>", "value")
-				s.replace_substring_all ("<CONVERSION>", ".to_boolean")
-			elseif type_code = types.Real_type_database then
-				s.replace_substring_all ("<FOR_DATE_TIME%N>", "")
-				s.replace_substring_all ("<VALUE>", "value")
-				s.replace_substring_all ("<CONVERSION>", ".to_double")
-			elseif type_code = types.Float_type_database then
-				s.replace_substring_all ("<FOR_DATE_TIME%N>", "")
-				s.replace_substring_all ("<VALUE>", "value")
-				s.replace_substring_all ("<CONVERSION>", ".to_double")
-			elseif type_code = types.String_type_database or type_code = types.Character_type_database then
---				if col.data_length = 1 then
---				s.replace_substring_all ("<FOR_DATE_TIME%N>", "")
---				s.replace_substring_all ("<VALUE>", "value")
---				else
-				s.replace_substring_all ("<FOR_DATE_TIME%N>", "")
-				s.replace_substring_all ("<VALUE>", "value")
-				s.replace_substring_all ("<CONVERSION>", "")
---				end
-			elseif type_code = types.Date_type_database then
-				s.replace_substring_all ("<FOR_DATE_TIME%N>", "%T%T%T%Tcreate dt.make_now%N%
-					%%T%T%T%Tdt.make_from_string_default (value)%N")
-				s.replace_substring_all ("<VALUE>", "dt")
-				s.replace_substring_all ("<CONVERSION>", "")
-			else
-				s.replace_substring_all ("<FOR_DATE_TIME%N>", "")
-				s.replace_substring_all ("<VALUE>", "value")
-				s.replace_substring_all ("<CONVERSION>", "")
-			end
 		end
 		
 feature {NONE} -- Implementation
@@ -809,24 +710,34 @@ feature {NONE} -- Implementation
 		
 	retrieve_resource_file_content (file_name: STRING): STRING is
 			-- Return content of resource file named `file_name'.
+		require
+			not_void: file_name /= Void
 		local
 			f_name: FILE_NAME
 			fi: PLAIN_TEXT_FILE
+			rescued: BOOLEAN
 		do
-			create f_name.make_from_string (wizard_resources_path)
-			f_name.set_file_name (file_name)
-			create fi.make (f_name)
-			if fi.exists and then fi.is_readable then
-				fi.open_read
-				fi.read_stream (fi.count)
-				Result := clone (fi.last_string)
-				fi.close
+			if not rescued then
+				create f_name.make_from_string (wizard_resources_path)
+				f_name.set_file_name (file_name)
+				create fi.make (f_name)
+				if fi.exists and then fi.is_readable then
+					fi.open_read
+					fi.read_stream (fi.count)
+					Result := clone (fi.last_string)
+					fi.close
+				else
+					add_error ("File '" + file_name + "' does not exist or is unreadable.%N")
+				 	Result := ""
+				end
 			else
-			 	-- Add error handling.
-			 	Result := ""
+				add_error ("Cannot retrieve content of file: " + file_name + "%N")
 			end
 		ensure
 			Result_not_void: Result /= Void
+		rescue
+			rescued := True
+			retry
 		end
 		
 	generate_file (file_name, file_content: STRING) is
@@ -835,18 +746,26 @@ feature {NONE} -- Implementation
 		local
 			f_name: FILE_NAME
 			fi: PLAIN_TEXT_FILE
+			rescued: BOOLEAN
 		do
-			create f_name.make_from_string (wizard_information.location)
-			f_name.set_file_name (file_name)
-			create fi.make (f_name)
-			if fi.exists then
-				fi.wipe_out
-				fi.open_write
+			if not rescued then
+				create f_name.make_from_string (wizard_information.location)
+				f_name.set_file_name (file_name)
+				create fi.make (f_name)
+				if fi.exists then
+					fi.wipe_out
+					fi.open_write
+				else
+					fi.open_append
+				end
+				fi.putstring (file_content)
+				fi.close
 			else
-				fi.open_append
+				add_error ("Cannot generate file: " + file_name + "%N")
 			end
-			fi.putstring (file_content)
-			fi.close
+		rescue
+			rescued := True
+			retry
 		end
 		
 	copy_file (name, extension, destination: STRING) is
@@ -858,21 +777,29 @@ feature {NONE} -- Implementation
 			f1, f_name: FILE_NAME
 			fi: RAW_FILE
 			s: STRING
+			rescued: BOOLEAN
 		do
-			create f1.make_from_string (wizard_resources_path)
-			f_name := clone (f1)
-			f_name.extend (name)
-			f_name.add_extension (extension)
-			create fi.make_open_read (f_name)
-			fi.read_stream (fi.count)
-			s := fi.last_string
-			fi.close
-			create f_name.make_from_string (destination)
-			f_name.extend (name)
-			f_name.add_extension (extension)
-			create fi.make_open_write (f_name)
-			fi.put_string (s)
-			fi.close
+			if not rescued then
+				create f1.make_from_string (wizard_resources_path)
+				f_name := clone (f1)
+				f_name.extend (name)
+				f_name.add_extension (extension)
+				create fi.make_open_read (f_name)
+				fi.read_stream (fi.count)
+				s := fi.last_string
+				fi.close
+				create f_name.make_from_string (destination)
+				f_name.extend (name)
+				f_name.add_extension (extension)
+				create fi.make_open_write (f_name)
+				fi.put_string (s)
+				fi.close
+			else
+				add_error ("Cannot generate file: " + name + "%N")
+			end
+		rescue
+			rescued := True
+			retry
 		end
 
 end -- class DB_FINISH

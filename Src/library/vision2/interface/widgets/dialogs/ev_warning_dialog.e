@@ -10,14 +10,14 @@ class
 	EV_WARNING_DIALOG
 
 inherit
-
 	EV_MESSAGE_DIALOG
 		redefine
 			implementation
 		end
 
 creation
-	make, make_default
+	make,
+	make_default
 
 feature {NONE} -- Initialization
 

@@ -6,17 +6,18 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EV_INFORMATION_DIALOG
+class
+	EV_INFORMATION_DIALOG
 
 inherit
-
 	EV_MESSAGE_DIALOG
 		redefine
 			implementation
 		end
 
 creation
-	make, make_default
+	make,
+	make_default
 
 feature {NONE} -- Initialization
 

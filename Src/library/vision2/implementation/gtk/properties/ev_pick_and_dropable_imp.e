@@ -502,18 +502,6 @@ feature -- Implementation
 				end			
 			end
 		end
-		
-	app_implementation: EV_APPLICATION_IMP is
-			-- 
-		local
-			env: EV_ENVIRONMENT
-		once
-			create env
-			Result ?= env.application.implementation
-			check
-				Result_not_void: Result /= Void
-			end
-		end
 
 	create_drop_actions: EV_PND_ACTION_SEQUENCE is
 		do
@@ -614,6 +602,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2001/06/29 22:20:22  king
+--| Removed app_implementation as this is now in application_imp
+--|
 --| Revision 1.4  2001/06/21 22:32:25  king
 --| Removed unused locals and implementation
 --|

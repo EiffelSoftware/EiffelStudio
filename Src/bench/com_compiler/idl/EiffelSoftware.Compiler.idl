@@ -8,7 +8,7 @@
 // Notes			: Interfaces, enums and structs relating to ENViSioN! 2.0
 
 // GUID's for type library
-#include "ise_compiler_guid.h"
+#include "eiffelsoftware_compiler_guid.h"
 
 // Dependencies
 import "oaidl.idl";
@@ -1432,6 +1432,12 @@ interface IEiffelProjectProperties: IDispatch
 
 	[id (DISPID_EiffelComCompiler_WorkingDirectory), helpstring ("Project working directory"), propput]
 	HRESULT WorkingDirectory ([in] BSTR bstrWorkingDirectory);
+
+	[id (DISPID_EiffelComCompiler_MetadataCachePath), helpstring ("Metadata cache path"), propget]
+	HRESULT MetadataCachePath ([out, retval] BSTR* pbstrMetadataCachePath);
+
+	[id (DISPID_EiffelComCompiler_MetadataCachePath), helpstring ("Metadata cache path"), propput]
+	HRESULT MetadataCachePath ([in] BSTR bstrMetadataCachePath);
 
 	[id (DISPID_EiffelComCompiler_Apply), helpstring ("Apply changes")]
 	HRESULT Apply ();

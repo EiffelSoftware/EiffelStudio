@@ -1,4 +1,4 @@
-LIBRARY	"ISE.CompilerPS.dll"
+LIBRARY	"EiffelSoftware.CompilerPS.dll"
 
 EXPORTS
 	DllGetClassObject 	PRIVATE

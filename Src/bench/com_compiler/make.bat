@@ -27,6 +27,8 @@ copy generated\Common\Include Clib
 
 copy generated\Eif_compiler.tlb ace_file\.
 
+copy generated\Eif_compiler.tlb .\
+
 copy to_replace\*.e .\
 
 copy to_replace\*.cpp Clib

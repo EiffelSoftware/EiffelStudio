@@ -35,7 +35,7 @@ cluster
 
 	finish_freezing:	".\main";
 				
-	resources:		"$EIFFEL_SRC\common\resources";
+	resources:		"$EIFFEL_SRC\Eiffel\common\resources";
 	
 	-- Windows status box
 	statusbox:		".\spec\windows";

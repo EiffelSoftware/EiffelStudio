@@ -8,6 +8,7 @@ inherit
 	SHARED_EIFFEL_PROJECT;
 	PROJECT_CONTEXT;
 	ICONED_COMMAND;
+	SHARED_APPLICATION_EXECUTION
 
 creation
 
@@ -20,7 +21,6 @@ feature
 			text_window := a_text_window
 		end;
 
-	
 feature {NONE}
 
 	work (argument: ANY) is
@@ -81,7 +81,8 @@ feature
 			ok: BOOLEAN;
 			temp: STRING;
 			fn: FILE_NAME;
-			title: STRING
+			title: STRING;
+			e_displayer: DEFAULT_ERROR_DISPLAYER
 		do
 			ok := True;
 			if not project_dir.exists then
@@ -99,6 +100,9 @@ feature
 				else
 						-- Create a new project.
 					Eiffel_project.make (project_dir);
+					Application.initialize;
+					!! e_displayer.make (Error_window);
+					Eiffel_project.set_error_displayer (e_displayer)
 					title := clone (l_New_project);
 					title.append (": ");
 					title.append (project_dir.name);
@@ -119,6 +123,9 @@ feature
 					set_global_cursor (watch_cursor);
 					retrieve_project (project_dir);
 					if not Eiffel_project.error_occurred then
+						Application.initialize;
+						!! e_displayer.make (Error_window);
+						Eiffel_project.set_error_displayer (e_displayer)
 						title := clone (l_Project);
 						title.append (": ");
 						title.append (project_dir.name);

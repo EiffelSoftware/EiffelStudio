@@ -5,7 +5,7 @@ class CURRENT_OBJECT
 inherit
 
 	ICONED_COMMAND;
-	SHARED_DEBUG
+	SHARED_APPLICATION_EXECUTION
 
 creation
 
@@ -25,20 +25,24 @@ feature {NONE}
 		local
 			e_class: E_CLASS;
 			address: STRING;
-			stone: OBJECT_STONE
+			stone: OBJECT_STONE;
+			status: APPLICATION_STATUS
 		do
-			address := Run_info.object_address;
-			if not Run_info.is_running then
+			status := Application.status;
+			if status = Void then
 				warner (text_window).gotcha_call (w_System_not_running)
-			elseif not Run_info.is_stopped then
+			elseif not status.is_stopped then
 				warner (text_window).gotcha_call (w_System_not_stopped)
-			elseif address = Void or Run_info.class_type = Void then
-					-- Should never happen.
-				warner (text_window).gotcha_call (w_Unknown_object)
 			else
-				e_class := Run_info.class_type.associated_class.e_class;
-				!! stone.make (address, e_class);
-				text_window.receive (stone)
+				address := status.object_address;
+				if address = Void or status.dynamic_class = Void then
+						-- Should never happen.
+					warner (text_window).gotcha_call (w_Unknown_object)
+				else
+					e_class := status.dynamic_class;
+					!! stone.make (address, e_class);
+					text_window.receive (stone)
+				end
 			end
 		end;
 

@@ -32,12 +32,13 @@
 			<li><b>Grouped</b> - Should different objects of same type be declared individually, or grouped?<BR><BR>&nbsp;&nbsp;button1: EV_BUTTON<BR>&nbsp;&nbsp;button2: EV_BUTTON<BR>&nbsp;&nbsp;button3: EV_BUTTON<BR><B>or</B><BR>&nbsp;&nbsp;
 button1, button2, button3: EV_BUTTON</LI>
 		</UL>
-	<LI><B>Attributes declared as locals</B></LI>
-		<P>Should attribute declarations be local to initialization feature, or attributes of the class?
 	<LI><B>Generate debugging information</B></LI>
 		<P>If selected, then for every feature connected to an event, code will be generated which outputs to the console, the name of the feature, and the values of all arguments.</P>
 	<LI><B>Client of windows</B></LI>
-		<P>If selected, then every generated class representing a window or dialog will use the window as a client. If not selected, the generated classes inherit the window classes directly.</P>
+		<P>If selected, then every generated class representing a window or dialog will use the window as a client. If not selected, the generated classes inherit the window classes directly.</LI>
+	<li><b>Load constants from file</b>
+</LI><P>If selected, a file named "constants.txt" is generated, containing values of all String and Integer constants, with the generated system loading the values of its constants from this file. See <A HREF="/tools/eiffelbuild/reference/75_constants/index.html">constants</A> for more information.
+</P>
 </UL>
 
 
@@ -45,6 +46,7 @@ button1, button2, button3: EV_BUTTON</LI>
 	<A HREF="/tools/eiffelbuild/reference/90_code_generation/index.html">Code generation</A></BR>
 	<A HREF="index.html">Project settings window</A><BR>
 	<A HREF="20_build.html">Build tab</A><BR>
+<A HREF="/tools/eiffelbuild/reference/75_constants/index.html">Constants</A>
 </P>
 
 </body>

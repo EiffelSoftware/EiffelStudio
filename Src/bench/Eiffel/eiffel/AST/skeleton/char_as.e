@@ -9,7 +9,7 @@ inherit
 	ATOMIC_AS
 		redefine
 			is_character, type_check, byte_node, value_i,
-			good_character, make_character
+			good_character, is_inspect_value, make_character
 		end
 
 	CHARACTER_ROUTINES
@@ -42,6 +42,12 @@ feature -- Properties
 
 	good_character: BOOLEAN is True
 			-- Is the current atomic a good character?
+
+	is_inspect_value (type: TYPE_A): BOOLEAN is
+			-- Is the atomic a good bound for multi-branch of the given `type'?
+		do
+			Result := type.is_character
+		end
 
 feature -- Comparison
 

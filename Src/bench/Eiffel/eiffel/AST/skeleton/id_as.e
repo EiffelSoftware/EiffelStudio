@@ -11,7 +11,7 @@ inherit
 			copy, out, is_equal
 		redefine
 			is_id, is_equivalent,
-			good_integer, good_character,
+			good_integer, good_character, is_inspect_value,
 			make_integer, make_character,
 			record_dependances
 		end
@@ -92,6 +92,15 @@ feature -- Conveniences
 			constant_i ?= context.current_class.feature_table.item (Current)
 			Result := constant_i /= Void
 						and then constant_i.value.is_character
+		end
+
+	is_inspect_value (type: TYPE_A): BOOLEAN is
+			-- Is the atomic a good bound for multi-branch of the given `type'?
+		local
+			constant_i: CONSTANT_I
+		do
+			constant_i ?= context.current_class.feature_table.item (Current)
+			Result := constant_i /= Void and then constant_i.value.valid_type (type)
 		end
 
 	make_integer: INT_CONST_VAL_B is

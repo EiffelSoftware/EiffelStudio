@@ -75,7 +75,7 @@ feature
 			if rescue_clause /= Void then
 				rescue_clause.analyze;
 			end;
-			if workbench_mode then
+			if exception_stack_managed then
 					-- For RTEA call
 				context.mark_current_used;
 			end;
@@ -217,23 +217,6 @@ feature
 		local
 			type_i: TYPE_I;
 		do
-				-- Record the once BEFORE we remove the GC hooks, otherwise
-				-- the excpetion recovery would remove them twice (in case
-				-- something strange happens while we record the once).
-			if is_once and not (result_type.is_void) and context.result_used
-			then
-					-- The Result entity is still in the local variable array
-				if real_type(result_type).c_type.is_pointer then
-					if context.ref_var_used > 0 then
-						generated_file.putstring ("Result = ");
-						context.Result_register.print_register_by_name;
-						generated_file.putchar (';');
-						generated_file.new_line;
-					end;
-					generated_file.putstring("RTOC;");
-					generated_file.new_line;
-				end;
-			end;
 				-- Do not forget to remove the GC hooks before returning
 				-- if they have already been generated. For instance, when
 				-- generating return for a once function, hooks have not
@@ -459,8 +442,8 @@ feature
 				context.assertion_level.check_invariant
 			then
 				generated_file.putstring ("RTSN;");
+				generated_file.new_line;
 			end;
-			generated_file.new_line;
 			if context.workbench_mode then
 					-- Generate local variable for saving the workbench
 					-- mode assertion level of the current object.
@@ -663,7 +646,8 @@ feature
 	exception_stack_managed: BOOLEAN is
 			-- Do we have to manage the exception stack
 		do
-			Result := context.workbench_mode;
+--			Result := context.workbench_mode;
+			Result := true;
 		end;
 
 	generate_execution_declarations is

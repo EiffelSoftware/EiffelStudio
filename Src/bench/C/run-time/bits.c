@@ -489,7 +489,7 @@ long s;
 
 public char *b_rotate(bit, s)
 char *bit;
-int s;
+long s;
 {
 	/* Rotates `bit' by `s' positions. If s is positive, rotation is done to
 	 * the right, otherwise to the left. A null value does nothing.
@@ -506,7 +506,7 @@ int s;
 
 private char *b_right_rotate(bit, s)
 char *bit;
-int s;
+long s;
 {
 	/* Rotates `bit' by `s' positions to the right */
 

@@ -4,7 +4,7 @@ deferred class BYTE_CODE
 
 inherit
 
-	COMPILER_IDABLE
+	IDABLE
 		rename
 			id as byte_id,
 			set_id as set_byte_id
@@ -394,7 +394,7 @@ feature -- Inherited Assertions
 					end;
 					bd_index := inh_f.body_index;
 					bd_id := System.body_index_table.item (bd_index);
-					byte_code := System.byte_server.item (bd_id.id);
+					byte_code := System.byte_server.item (bd_id);
 					if inh_f.has_precondition and gen_prec then
 						Context.inherited_assertion.add_precondition_type (ct, byte_code);
 					end;

@@ -15,6 +15,7 @@ inherit
 		redefine
 			licence_checked
 		end;
+	SYSTEM_CONSTANTS;
 	WARNER_CALLBACKS
 		rename
 			execute_warner_ok as save_it
@@ -51,32 +52,32 @@ feature -- Callbacks
 				then
 					aok := False;
 					warner (popup_parent).gotcha_call 
-						(w_Not_a_plain_file (fn))
+						(Warning_messages.w_Not_a_plain_file (fn))
 				elseif 
 					argument = last_name_chooser and then 
 					(new_file.exists and then new_file.is_writable)
 				then
 					aok := False;
 					warner (popup_parent).custom_call (Current, 
-						w_File_exists (fn), 
-						l_Overwrite, Void, l_Cancel);
+						Warning_messages.w_File_exists (fn), 
+						Interface_names.b_Overwrite, Void, Interface_names.b_Cancel);
 				elseif
 					new_file.exists and then (not new_file.is_writable)
 				then
 					aok := False;
 					warner (popup_parent).gotcha_call 
-						(w_Not_writable (fn))
+						(Warning_messages.w_Not_writable (fn))
 				elseif
 					not new_file.is_creatable
 				then
 					aok := False;
 					warner (popup_parent).gotcha_call 
-						(w_Not_creatable (fn))
+						(Warning_messages.w_Not_creatable (fn))
 				end
 			else
 				aok := False;
 				warner (popup_parent).gotcha_call 
-					(w_Not_a_plain_file (fn))
+					(Warning_messages.w_Not_a_plain_file (fn))
 			end;
 			if aok then
 				new_file.open_write;
@@ -107,7 +108,7 @@ feature -- Properties
 	symbol: PIXMAP is 
 			-- Pixmap for the button.
 		once 
-			Result := bm_Save_as 
+			Result := Pixmaps.bm_Save_as 
 		end;
 
 feature {NONE} -- Implementation
@@ -121,6 +122,7 @@ feature {NONE} -- Implementation
 				save_it (argument)
 			elseif argument = tool then
 				chooser := name_chooser (popup_parent);
+				chooser.set_save_file;
 				chooser.call (Current)
 			end
 		end;
@@ -139,7 +141,18 @@ feature {NONE}
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := l_Save_as
+			Result := Interface_names.f_Save_as
 		end
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Save_as
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+		end;
 
 end -- class SAVE_AS_FILE

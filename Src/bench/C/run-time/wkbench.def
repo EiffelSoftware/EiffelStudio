@@ -58,7 +58,7 @@ EXPORTS
 	wtype
 	xinterp
 	zeroc
-	;IC
+	IC
 	ccount
 	check_options
 	check_options_stop
@@ -96,7 +96,7 @@ EXPORTS
 	exresc
 
 	EIF_once_count
-	;EIF_once_values
+	EIF_once_values
 	arg_number
 	arg_option
 	argarr
@@ -256,7 +256,7 @@ EXPORTS
 	eif_set_chunk_size
 	eif_set_directory
 	eif_set_max_mem
-	;eif_stack
+	eif_stack
 	eif_system
 	eif_volume_name
 	emalloc
@@ -281,7 +281,7 @@ EXPORTS
 	estore
 	estypeg
 	ewean
-	;exdata
+	exdata
 	exset
 	failure
 	file_access
@@ -349,14 +349,14 @@ EXPORTS
 	get_argcargv
 	ghInstance
 	hashcode
-	;hec_stack
+	hec_stack
 	henter
 	hrecord
-	;in_assertion
+	in_assertion
 	initprf
 	initsig
 	initstk
-	;loc_set
+	loc_set
 	makestr
 	math_power
 	math_racos
@@ -383,11 +383,11 @@ EXPORTS
 	mem_tget
 	mem_tiny
 	mem_tset
-	;nstcall
+	nstcall
 	onceset
 	plsc
 	reclaim
-	;root_obj
+	root_obj
 	scount
 	sp_count
 	spclearall
@@ -427,6 +427,7 @@ EXPORTS
 	str_rmall
 	str_rmchar
 	str_search
+	str_last_search
 	str_str
 	str_tail
 	str_take

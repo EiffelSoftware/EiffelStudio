@@ -211,6 +211,8 @@ feature -- Initialization
 		local
 			file: RAW_FILE
 			env: EV_ENVIRONMENT
+			box: EV_VERTICAL_BOX
+			but: EV_BUTTON
 		do
 			create env
 			create pixmap
@@ -221,11 +223,15 @@ feature -- Initialization
 			end
 			pixmap.set_with_file (file)
 
+			create but.make_with_text ("Test next drawable-feature")
 			create my_device
+			create box
 			my_device.set_minimum_size (300, 300)
-			first_window.extend (my_device)
+			first_window.extend (box)
+			box.extend (but)
+			box.extend (my_device)
 			my_device.expose_actions.extend (~on_repaint_test)
-			my_device.pointer_button_press_actions.extend (~rotate_tests)
+			but.pointer_button_press_actions.extend (~rotate_tests)
 			cur_test := 1
 			cur_text := "Pre-init"
 			my_device.redraw
@@ -263,11 +269,13 @@ feature -- Initialization
 				my_device.set_line_width (5)
 				cur_text := "line width = 5"
 			elseif cur_test = 7 then
-				my_device.set_font (create {EV_FONT}.make_with_values (
+				create font.make_with_values (
 					Ev_font_family_modern,
 					Ev_font_weight_bold,
 					Ev_font_shape_italic,
-					19))
+					19)
+				io.put_string (font.system_name + "%N")
+				my_device.set_font (font)
 				cur_text := "Different font...@#$"
 			end
 			cur_test := cur_test + 1

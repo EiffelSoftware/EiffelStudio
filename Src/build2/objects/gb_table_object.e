@@ -12,6 +12,8 @@ inherit
 		redefine
 			object, add_child_object, is_full
 		end
+		
+	DOUBLE_MATH
 
 create
 	make_with_type,
@@ -96,6 +98,30 @@ feature -- Basic operation
 				layout_item.go_i_th (position)
 				layout_item.put_left (an_object.layout_item)			
 			end
+		end
+		
+feature {GB_OBJECT_HANDLER} -- Implementation
+		
+	resize_to_accomodate (children_count: INTEGER) is
+			-- Resize `display_object' and `object' of `object' to
+			-- smallest square dimensions that will accomodate `children_count'
+			-- children.
+		local
+			temp_table: EV_TABLE
+			new_dimension: INTEGER
+			double: DOUBLE
+		do
+			double := children_count
+			new_dimension := (sqrt (double)).ceiling
+			object.resize (new_dimension, new_dimension)
+			temp_table ?= display_object.child
+			check
+				temp_table /= Void
+			end
+			temp_table.resize (new_dimension, new_dimension)
+		ensure
+			may_accomodate_children: object.count >= children_count and
+				display_object.count >= children_count
 		end
 
 end -- class GB_TABLE_OBJECT

@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 	
 	make_with_text_and_action
 		(a_text: STRING; an_action: PROCEDURE [ANY, TUPLE []]) is
-			-- Create with 'a_text' and `an_action' in `press_actions'.
+			-- Create with 'a_text' and `an_action' in `select_actions'.
 		require
 			text_not_void: a_text /= Void
 			an_action_not_void: an_action /= Void
@@ -50,16 +50,17 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			set_text (a_text)
-			press_actions.extend (an_action)
+			select_actions.extend (an_action)
 		ensure
 			text_assigned: text.is_equal (a_text)
-			press_actions_has_an_action: press_actions.has (an_action)
+			select_actions_has_an_action: select_actions.has (an_action)
 		end
 	
 feature -- Event handling
 
-	press_actions: EV_NOTIFY_ACTION_SEQUENCE
+	select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when button is pressed and then released.
+
 
 feature {EV_ANY_I} -- Implementation
 
@@ -72,7 +73,7 @@ feature {NONE} -- Implementation
 			-- See `{EV_ANY}.create_action_sequences'.
 		do
 			{EV_PRIMITIVE} Precursor
-			create press_actions
+			create select_actions
 		end
 
 	create_implementation is
@@ -87,11 +88,20 @@ feature {NONE} -- Contract support
 			-- Create with action for testing purposes.
 		do
 			{EV_PRIMITIVE} Precursor
-			press_actions.extend (~print (text + " button pressed.%N"))
+			select_actions.extend (~print (text + " button pressed.%N"))
+		end
+
+feature -- Obsolete
+
+	press_actions: EV_NOTIFY_ACTION_SEQUENCE is
+		obsolete
+			"use select_actions"
+		do
+			Result := select_actions
 		end
 
 invariant
-	press_actions_not_void: press_actions /= Void
+	select_actions_not_void: select_actions /= Void
  
 end -- class EV_BUTTON
 
@@ -116,6 +126,9 @@ end -- class EV_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/03/22 22:16:02  oconnor
+--| renamed press_actions -> select_actions to be consistant with everything else
+--|
 --| Revision 1.28  2000/03/21 01:52:45  oconnor
 --| comments and formatting
 --|

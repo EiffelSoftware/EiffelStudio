@@ -45,7 +45,7 @@ feature -- Attributes
 			-- Number of partial object files needed
 			-- for system object files
 
-	Packet_number: INTEGER is 200
+	Packet_number: INTEGER is 100
 			-- Maximum number of files in a single linking phase
 
 feature -- Initialization
@@ -531,10 +531,16 @@ feature -- Generation, Header
 				%CC = $cc%N%
 				%CPP = $cpp%N")
 
-			if System.has_multithreaded then
-				make_file.putstring ("CFLAGS = $optimize $mtccflags $large ")
+			if System.in_final_mode then
+				make_file.putstring ("CFLAGS = $optimize ")
 			else
-				make_file.putstring ("CFLAGS = $optimize $ccflags $large ")
+				make_file.putstring ("CFLAGS = $wkoptimize ")
+			end
+
+			if System.has_multithreaded then
+				make_file.putstring ("$mtccflags $large ")
+			else
+				make_file.putstring ("$ccflags $large ")
 			end
 
 			if System.has_dynamic_runtime then
@@ -548,10 +554,16 @@ feature -- Generation, Header
 			generate_specific_defines
 			make_file.putstring ("-I%H$(EIFFEL4)/bench/spec/%H$(PLATFORM)/include %H$(INCLUDE_PATH)%N")
 
-			if System.has_multithreaded then
-				make_file.putstring ("CPPFLAGS = $optimize $mtcppflags $large ")
+			if System.in_final_mode then
+				make_file.putstring ("CPPFLAGS = $optimize ")
 			else
-				make_file.putstring ("CPPFLAGS = $optimize $cppflags $large ")
+				make_file.putstring ("CPPFLAGS = $wkoptimize ")
+			end
+
+			if System.has_multithreaded then
+				make_file.putstring ("$mtcppflags $large ")
+			else
+				make_file.putstring ("$cppflags $large ")
 			end
 
 			if System.has_separate then
@@ -610,6 +622,10 @@ feature -- Generation, Header
 				make_file.putstring ("COMMAND_MAKEFILE = %N")
 			end
 
+			make_file.putstring ("START_TEST = $start_test %N")
+			make_file.putstring ("END_TEST = $end_test %N")
+			make_file.putstring ("CREATE_TEST = $create_test %N")
+
 			make_file.putstring ("%
 				%!GROK!THIS!%N%
 				%$spitshell >>Makefile <<'!NO!SUBS!'%N")
@@ -618,7 +634,7 @@ feature -- Generation, Header
 feature -- Generation, Object list(s)
 
 	generate_system_objects_lists is
-			-- Generate the EOBJECTS/EOBJ1,EOBJ2,EOBJ3... macros in Makefile
+			-- Generate the EOBJECTS/OBJECTS,OBJECTS2,OBJECTS3... macros in Makefile
 		local
 			i: INTEGER
 			macro_name: STRING
@@ -629,8 +645,10 @@ feature -- Generation, Object list(s)
 				i > partial_system_objects
 			loop
 				!!macro_name.make (4)
-				macro_name.append ("EOBJ")
-				macro_name.append_integer (i)
+				macro_name.append ("OBJECTS")
+				if i /= 1 then
+					macro_name.append_integer (i)
+				end
 				generate_system_macro (macro_name)
 				i := i + 1
 			end
@@ -1049,6 +1067,8 @@ feature -- Generation (Linking rules)
 			make_file.putint (index)
 			make_file.putstring (".o $(OBJECTS)")
 
+			make_file.putstring ("%N%T$(CREATE_TEST)")
+
 			if remove_after_partial then
 				make_file.putstring ("%N%T$(RM) $(OBJECTS)")
 			end
@@ -1071,8 +1091,10 @@ feature -- Generation (Linking rules)
 				make_file.putstring (System_object_prefix)
 				make_file.putstring ("obj")
 				make_file.putint (i)
-				make_file.putstring (".o: $(EOBJ")
-				make_file.putint (i)
+				make_file.putstring (".o: $(OBJECTS")
+				if i /= 1 then
+					make_file.putint (i)
+				end
 				make_file.putstring (") Makefile")
 				make_file.new_line
 					-- The following is not portable (if people want to use
@@ -1082,13 +1104,18 @@ feature -- Generation (Linking rules)
 				make_file.putstring (System_object_prefix)
 				make_file.putstring ("obj")
 				make_file.putint (i)
-				make_file.putstring (".o $(EOBJ")
-				make_file.putint (i)
+				make_file.putstring (".o $(OBJECTS")
+				if i /= 1 then
+					make_file.putint (i)
+				end
 				make_file.putchar (')')
 
+				make_file.putstring ("%N%T$(CREATE_TEST)")
 				if remove_after_partial then
-					make_file.putstring ("%N%T$(RM) $(EOBJ")
-					make_file.putint (i)
+					make_file.putstring ("%N%T$(RM) $(OBJECTS")
+					if i /= 1 then
+						make_file.putint (i)
+					end
 					make_file.putchar (')')
 				end
 
@@ -1119,11 +1146,12 @@ feature -- Generation (Linking rules)
 
 			make_file.putstring (" E1/emain.c")
 
-			make_file.putstring ("%N%T cd ")
+			make_file.putstring ("%N%Tcd ")
 			make_file.putstring (System_object_prefix)
 			make_file.putint (1)
 			make_file.putstring (" ; $(SHELL) Makefile.SH ; ")
-			make_file.putstring ("$(MAKE) emain.o%N%N")
+			make_file.putstring ("$(MAKE) emain.o%N")
+			make_file.putstring ("%T$(RM) emain.c%N%N")
 
 			from i := 1 until i > partial_system_objects loop
 				make_file.putstring (System_object_prefix)
@@ -1135,11 +1163,11 @@ feature -- Generation (Linking rules)
 				make_file.putstring (".o: Makefile%N%Tcd ")
 				make_file.putstring (System_object_prefix)
 				make_file.putint (1)
-				make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE) ")
+				make_file.putstring (" ; $(START_TEST) $(SHELL) Makefile.SH ; $(MAKE) ")
 				make_file.putstring (System_object_prefix)
 				make_file.putstring ("obj")
 				make_file.putint (i)
-				make_file.putstring (".o%N%N")
+				make_file.putstring (".o $(END_TEST)%N%N")
 				i := i + 1
 			end
 		end
@@ -1166,7 +1194,7 @@ feature -- Generation (Linking rules)
 					make_file.putstring (".o: Makefile%N%Tcd ")
 					make_file.putstring (Feature_table_suffix)
 					make_file.putint (i)
-					make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE)")
+					make_file.putstring (" ; $(START_TEST) $(SHELL) Makefile.SH ; $(MAKE) $(END_TEST)")
 					make_file.new_line
 					make_file.new_line
 				end
@@ -1189,7 +1217,7 @@ feature -- Generation (Linking rules)
 					make_file.putstring (".o: Makefile%N%Tcd ")
 					make_file.putstring (Descriptor_suffix)
 					make_file.putint (i)
-					make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE)")
+					make_file.putstring (" ; $(START_TEST) $(SHELL) Makefile.SH ; $(MAKE) $(END_TEST)")
 					make_file.new_line
 					make_file.new_line
 				end
@@ -1212,7 +1240,7 @@ feature -- Generation (Linking rules)
 					make_file.putstring (".o: Makefile%N%Tcd ")
 					make_file.putstring (Class_suffix)
 					make_file.putint (i)
-					make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE)")
+					make_file.putstring (" ; $(START_TEST) $(SHELL) Makefile.SH ; $(MAKE) $(END_TEST)")
 					make_file.new_line
 					make_file.new_line
 				end

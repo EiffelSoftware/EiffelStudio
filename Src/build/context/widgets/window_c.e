@@ -100,6 +100,9 @@ feature -- Setting values
 			if flag then
 					-- The current size must be saved
 				size_modified := True
+				widget_forbid_resize
+			else
+				widget_allow_resize
 			end
 		end
 
@@ -117,12 +120,19 @@ feature -- File names
 		deferred
 		end
 
-feature {NONE}
+feature {NONE} -- Widget access
 
 	widget_set_title (s: STRING) is
 		deferred
 		end
 
+	widget_forbid_resize is
+		deferred
+		end
+
+	widget_allow_resize is
+		deferred
+		end
 feature 
 
 	title_label: STRING is
@@ -252,7 +262,6 @@ feature {CONTEXT}
 			Result := full_name
 		end
 
-	
 feature 
 
 	create_context (a_parent: COMPOSITE_C): like Current is

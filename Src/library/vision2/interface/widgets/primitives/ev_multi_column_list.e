@@ -168,8 +168,8 @@ feature -- Status setting
 			implementation.ensure_item_visible (an_item)
 		end
 
-	clear_selection is
-			-- Make `selected_items' empty.
+	remove_selection is
+			-- Ensure that `selected_items' is empty.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -348,7 +348,20 @@ feature -- Element change
 		ensure
 			column_alignments_assigned: column_alignments_assigned (alignments)
 		end
+
+feature {NONE} -- Obsolete
 		
+	clear_selection is
+			-- Make `selected_items' empty.
+		obsolete "Please use `remove_selection' instead."
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.clear_selection
+		ensure
+			selected_items_empty: selected_items.is_empty
+		end
+	
 feature {NONE} -- Contract support
 	
 	is_in_default_state: BOOLEAN is

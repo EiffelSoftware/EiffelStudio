@@ -29,8 +29,12 @@ feature {NONE} -- Initialization
 
 	make_with_name (a_name: STRING) is
 			-- Create `Current' and assign `a_name' to `name'.
+		require
+			name_not_empty_or_void: a_name /= Void and then not a_name.is_empty
 		do
 			set_name (a_name)
+		ensure
+			name_set: name.is_equal (a_name)
 		end
 		
 
@@ -144,7 +148,7 @@ feature -- Access
 					counter := counter + 1
 				end
 				an_object.set_name (temp_name)	
-				an_object.layout_item.set_text (an_object.name + ": " + an_object.type.substring (4, an_object.type.count))			
+				an_object.layout_item.set_text (name_and_type_from_object (an_object))
 			end
 		end
 		

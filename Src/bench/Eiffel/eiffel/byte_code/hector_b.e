@@ -10,7 +10,7 @@ inherit
 			calls_special_features, is_unsafe, optimized_byte_node,
 			pre_inlined_code, inlined_byte_code,
 			analyze, print_register,
-			generate, generate_il
+			generate, generate_il, size
 		end
 
 creation
@@ -42,7 +42,7 @@ feature
 			Result := Current;
 		end;
 
-	is_hector: BOOLEAN is true;
+	is_hector: BOOLEAN is True;
 			-- The expression is an hector one.
 
 	analyze is
@@ -163,14 +163,22 @@ feature -- Inlining
 
 	pre_inlined_code: like Current is
 		do  
-			Result := Current
-			expr ?= expr.pre_inlined_code
+			check
+				not_called: False
+			end
 		end
 
 	inlined_byte_code: like Current is
 		do
 			Result := Current
 			expr := expr.inlined_byte_code
+		end
+
+	size: INTEGER is
+		do
+				-- We cannot inline a feature that contains an address
+				-- computation.
+			Result := 101
 		end
 
 end

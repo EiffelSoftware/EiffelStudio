@@ -20,7 +20,7 @@ external C library
 				/* Motion, button */
 #define c_gdk_event_x(p) (((GdkEventButton*)p)->x)/* double */
 #define c_gdk_event_y(p) (((GdkEventButton*)p)->y) /* double */
-#define c_gdk_event_state(p) (((GdkEventButton*)p)->state) /* integer */
+#define c_gdk_event_state(p) (((GdkEventKey*)p)->state) /* integer */
 
 				/* Button */
 #define c_gdk_event_button(p) (((GdkEventButton*)p)->button)/* integer */

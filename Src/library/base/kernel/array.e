@@ -220,7 +220,7 @@ feature -- Status report
 		end;
 
 feature -- Element change
- 
+
 	frozen put, enter (v: like item; i: INTEGER) is
 			-- Replace `i'-th entry, if in index interval, by `v'.
 		do
@@ -272,7 +272,7 @@ feature -- Removal
 		ensure
 			all_cleared: all_cleared
 		end;
- 
+
 feature -- Resizing
 
 	grow (i: INTEGER) is
@@ -309,14 +309,14 @@ feature -- Resizing
 				end
 			end;
 			new_size := new_upper - new_lower + 1;
-			if not empty_area then 
+			if not empty_area then
 				old_size := area.count;
 				old_count := upper - lower + 1
 			end;
 			if empty_area then
 				make_area (new_size);
 			elseif new_size > old_size or new_lower < lower then
-				area := arycpy ($area, new_size, 
+				area := arycpy ($area, new_size,
 					lower - new_lower, old_count)
 			end;
 			lower := new_lower;
@@ -433,7 +433,7 @@ feature {NONE} -- Implementation
 				end
 			end;
 			new_size := new_upper - new_lower + 1;
-			if not empty_area then 
+			if not empty_area then
 				old_size := area.count;
 				if new_size > old_size
 					 and new_size - old_size < additional_space
@@ -444,7 +444,7 @@ feature {NONE} -- Implementation
 			if empty_area then
 				make_area (new_size);
 			elseif new_size > old_size or new_lower < lower then
-					area := arycpy ($area, new_size, 
+					area := arycpy ($area, new_size,
 						lower - new_lower, capacity)
 			end;
 			lower := new_lower;

@@ -135,7 +135,6 @@ feature -- Access
 			go_to (pos)
 		end;
 
-	
 feature -- Cursor movement
 
 	start is

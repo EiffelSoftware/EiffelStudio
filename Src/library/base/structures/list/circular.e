@@ -53,7 +53,6 @@ feature -- Access
 			go_to (p)
 		end
 		
-
 	last: like first is
 			-- Item at position currently defined as last
 		local
@@ -270,7 +269,6 @@ feature {CIRCULAR} -- Implementation
 		deferred
 		end;	
 
-		
 invariant
 
 	not_before_unless_empty: before implies empty;

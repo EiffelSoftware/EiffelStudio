@@ -49,7 +49,6 @@ feature -- Access
 			Result := count <= other.count
 		end;
 
-
 feature -- Measurement
 
 	count: INTEGER is

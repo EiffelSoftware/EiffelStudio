@@ -243,7 +243,6 @@ feature -- Measurement
 			end
 		end;
 			
-
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is

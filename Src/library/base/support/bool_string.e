@@ -67,7 +67,6 @@ feature -- Element change
 			area.put (v, i - 1)
 		end; 
 
-
 	all_true is
 			-- Set all booleans to true.
 		do

@@ -336,7 +336,6 @@ feature -- Element change
 			end
 		end;
 				
-
 	merge_right (other: ARRAYED_LIST [G]) is
 		local
 			old_index: INTEGER;
@@ -473,8 +472,6 @@ feature -- Removal
 		ensure then
 			is_after: after;
 		end;	
-					
-					
 					
 	remove_left is
 			-- Remove item to the left of cursor position.

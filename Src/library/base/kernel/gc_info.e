@@ -20,7 +20,6 @@ creation
 
 feature -- Initialization
 
-	
 	make, update (memory: INTEGER) is
 			-- Fill in statistics for `memory' type
 		do
@@ -122,7 +121,6 @@ feature -- Access
 			-- Average amount of kernel time between two cycles,
 			-- for `type' before last call to `update'
 
-	
 feature {NONE} -- Implementation
 
 	gc_stat (mem: INTEGER) is

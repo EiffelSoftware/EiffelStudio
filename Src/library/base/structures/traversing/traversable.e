@@ -27,13 +27,12 @@ feature -- Access
 		deferred
 		end;
 	
-
 feature -- Status report
 
 	off: BOOLEAN is
 			-- Is there no current item?
 		deferred
-		end;	
+		end
 
 feature -- Cursor movement
 

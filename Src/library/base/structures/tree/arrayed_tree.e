@@ -133,7 +133,6 @@ feature -- Access
 		
 feature -- Element change
 
-
 	child_put, child_replace (v: like item) is
 			-- Replace current child item with `v'.
 		do
@@ -203,7 +202,6 @@ feature -- Element change
 			al_merge_left (other)
 		end;
 
-
 	merge_tree_after (other: like first_child) is
 			-- Merge children of `other' into current structure
 			-- after cursor position. Do not move cursor.
@@ -213,7 +211,6 @@ feature -- Element change
 			al_merge_right (other)
 		end;
 		
-	
 feature -- Removal
 
 	remove_child is

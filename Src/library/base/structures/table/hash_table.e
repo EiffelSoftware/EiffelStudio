@@ -199,7 +199,6 @@ feature -- Status report
 			Result = ((k /= Void) and then k.is_hashable)
 		end;
 
- 
 	conflict: BOOLEAN is
 			-- Did last operation cause a conflict?
 		do
@@ -465,7 +464,6 @@ feature {HASH_TABLE} -- Implementation
 	Size_threshold: INTEGER is 80;
 			-- Filling percentage over which some resizing is done
 
- 
 	set_content (c: like content) is
 			-- Assign `c' to `content'.
 		do

@@ -10,7 +10,7 @@ indexing
 class
 	ARGUMENTS
 
-feature -- Access 
+feature -- Access
 
 	argument (i: INTEGER): STRING is
 			-- `i'-th argument of command that started system execution
@@ -19,9 +19,9 @@ feature -- Access
 			index_large_enough: i >= 0;
 			index_small_enough: i <= argument_count
 		do
-			Result := arg_option (i) 
+			Result := arg_option (i)
 		end;
-	
+
 	argument_array: ARRAY [STRING] is
 			-- Array containing command name (position 0) and arguments
 		local
@@ -36,7 +36,7 @@ feature -- Access
 				i := i + 1
 			end
 		end
-	
+
 	command_line: STRING is
 			-- Total command line
 		local
@@ -57,7 +57,7 @@ feature -- Access
 
 	command_name: STRING is
 			-- Name of command that started system execution
-		once	
+		once
 			Result := arg_option (0)
 		ensure
 			definition: Result = argument (0)
@@ -125,14 +125,14 @@ feature -- Status report
 		do
 			p := has_character_option (opt)
 			if p /= 0 then
-				if p = argument_count or else 
+				if p = argument_count or else
 					argument_array.item (p+1).item (1) = option_sign
 				then
 					Result := ""
 				else
 					Result := argument_array.item (p+1)
 				end
-			end	
+			end
 		end
 
 	separate_word_option_value (opt: STRING): STRING is
@@ -149,14 +149,14 @@ feature -- Status report
 		do
 			p := has_word_option (opt)
 			if p /= 0 then
-				if p = argument_count or else 
+				if p = argument_count or else
 					argument_array.item (p+1).item (1) = option_sign
 				then
 					Result := ""
 				else
 					Result := argument_array.item (p+1)
 				end
-			end	
+			end
 		end
 
 	coalesced_option_character_value (opt: CHARACTER): STRING is
@@ -176,7 +176,7 @@ feature -- Status report
 				Result.remove (1)
 			end
 		end
- 
+
 	coalesced_option_word_value (opt: STRING): STRING is
 			-- The value, if any, specified for option `opt' on the command line.
 			-- Defined as follows (where `o' is `opt' and X is `option_sign'):
@@ -194,7 +194,7 @@ feature -- Status report
 				Result.remove (1)
 			end
 		end
- 
+
 	option_sign: CHARACTER is
 			-- The character used to signal options on the command line.
 			-- Default: the `-' sign.
@@ -248,12 +248,12 @@ feature {NONE} -- Implementation
 			-- Is `arg' equal to the word option `w'?
 		do
 			if internal_option_sign = '%U' then
-				Result := arg.is_equal (w)  
+				Result := arg.is_equal (w)
 			elseif arg.item (1) = option_sign then
-				Result := arg.substring (2,arg.count).is_equal (w)  
+				Result := arg.substring (2,arg.count).is_equal (w)
 			end
 		end
-	
+
 	option_character_equal (arg: STRING; c : CHARACTER): BOOLEAN is
 			-- Does `arg' contain the character option `c'?
 		do
@@ -263,8 +263,8 @@ feature {NONE} -- Implementation
 				Result := arg.substring (2,arg.count).has (c)
 			end
 		end
-	
-end -- class ARGUMENTS 
+
+end -- class ARGUMENTS
 
 
 --|----------------------------------------------------------------

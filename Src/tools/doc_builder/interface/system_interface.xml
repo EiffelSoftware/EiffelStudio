@@ -5,18 +5,21 @@
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_undo_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_undo.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_undo.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_undo.ico</Filename>
 		</Constant>
-	<Constant ><type >INTEGER</type>
-		<Name >button_width</Name>
-		<Value >80</Value>
+	<Constant ><type >PIXMAP</type>
+		<Name >icon_cut_color_ico</Name>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_cut_color.ico</Value>
+		<is_absolute >False</is_absolute>
+		<Directory >pixmap_directory</Directory>
+		<Filename >icon_cut_color.ico</Filename>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_open_file_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_open_file.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_open_file.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_open_file.ico</Filename>
@@ -27,7 +30,7 @@
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_copy_color_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_copy_color.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_copy_color.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_copy_color.ico</Filename>
@@ -38,21 +41,21 @@
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_new_doc_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_new_doc.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_new_doc.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_new_doc.ico</Filename>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_info_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_info.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_info.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_info.ico</Filename>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_search_ico_1</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_search.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_search.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_search.ico</Filename>
@@ -67,7 +70,7 @@
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_search_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_search.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_search.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_search.ico</Filename>
@@ -78,42 +81,42 @@
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_validate_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_validate.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_validate.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_validate.ico</Filename>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_back_color_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_back_color.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_back_color.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_back_color.ico</Filename>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_close_folder_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_close_folder.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_close_folder.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_close_folder.ico</Filename>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_envision_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_envision.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_envision.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_envision.ico</Filename>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_toc_folder_open_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_toc_folder_open.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_toc_folder_open.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_toc_folder_open.ico</Filename>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_toc_file_node_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_toc_file_node.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_toc_file_node.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_toc_file_node.ico</Filename>
@@ -132,7 +135,7 @@
 		</Constant>
 	<Constant ><type >DIRECTORY</type>
 		<Name >pixmap_directory</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons</Value>
 		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >button_save_text</Name>
@@ -140,7 +143,7 @@
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_ie_icon_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_ie_icon.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_ie_icon.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_ie_icon.ico</Filename>
@@ -155,7 +158,7 @@
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_save_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_save.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_save.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_save.ico</Filename>
@@ -164,9 +167,13 @@
 		<Name >dialog_width</Name>
 		<Value >400</Value>
 		</Constant>
+	<Constant ><type >INTEGER</type>
+		<Name >button_width</Name>
+		<Value >80</Value>
+		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_widget_edit_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_widget_edit.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_widget_edit.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_widget_edit.ico</Filename>
@@ -181,14 +188,14 @@
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_redo_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_redo.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_redo.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_redo.ico</Filename>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_file_close_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_file_close.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_file_close.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_file_close.ico</Filename>
@@ -203,7 +210,7 @@
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_settings_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_settings.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_settings.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_settings.ico</Filename>
@@ -218,35 +225,35 @@
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_paste_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_paste.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_paste.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_paste.ico</Filename>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_close_color_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_close_color.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_close_color.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_close_color.ico</Filename>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_ie_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_ie.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_ie.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_ie.ico</Filename>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_format_text_color_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_format_text_color.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_format_text_color.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_format_text_color.ico</Filename>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_forth_color_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_forth_color.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_forth_color.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_forth_color.ico</Filename>
@@ -265,14 +272,14 @@
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_new_color_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_new_color.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_new_color.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_new_color.ico</Filename>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_studio_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_studio.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_studio.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_studio.ico</Filename>
@@ -283,7 +290,7 @@
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_new_editor_color_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_new_editor_color.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_new_editor_color.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_new_editor_color.ico</Filename>
@@ -291,13 +298,6 @@
 	<Constant ><type >STRING</type>
 		<Name >button_next_text</Name>
 		<Value >Next</Value>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >icon_cut_color_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_cut_color.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >icon_cut_color.ico</Filename>
 		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >studio_filtered_text</Name>
@@ -309,14 +309,14 @@
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_new_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_new.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_new.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_new.ico</Filename>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_toc_folder_closed_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_toc_folder_closed.ico</Value>
+		<Value >D:\Src\tools\doc_builder\resources\icons\icon_toc_folder_closed.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_toc_folder_closed.ico</Filename>
@@ -2663,6 +2663,7 @@
 								<EV_PIXMAPABLE />
 								<EV_CONTAINER />
 								<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >173</id>
+										<name >toc_12_title_box</name>
 										<Expanded >1</Expanded>
 										</Internal_properties>
 									<EV_COLORIZABLE />
@@ -2679,8 +2680,7 @@
 											</Internal_properties>
 										<EV_COLORIZABLE />
 										<EV_FONTABLE />
-										<EV_SENSITIVE ><Is_sensitive >False</Is_sensitive>
-											</EV_SENSITIVE>
+										<EV_SENSITIVE />
 										<EV_TEXTABLE ><Text ><![CDATA[Title]]></Text>
 											</EV_TEXTABLE>
 										<EV_TOOLTIPABLE />
@@ -2691,11 +2691,9 @@
 											<name >toc_12_title_text</name>
 											<Expanded >0</Expanded>
 											</Internal_properties>
-										<EV_COLORIZABLE ><Background_color >212208200</Background_color>
-											</EV_COLORIZABLE>
+										<EV_COLORIZABLE />
 										<EV_FONTABLE />
-										<EV_SENSITIVE ><Is_sensitive >False</Is_sensitive>
-											</EV_SENSITIVE>
+										<EV_SENSITIVE />
 										<EV_TEXTABLE />
 										<EV_TOOLTIPABLE />
 										<EV_WIDGET />
@@ -2703,6 +2701,7 @@
 										</item>
 									</item>
 								<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >176</id>
+										<name >toc_12_location_box</name>
 										<Expanded >1</Expanded>
 										</Internal_properties>
 									<EV_COLORIZABLE />
@@ -2719,8 +2718,7 @@
 											</Internal_properties>
 										<EV_COLORIZABLE />
 										<EV_FONTABLE />
-										<EV_SENSITIVE ><Is_sensitive >False</Is_sensitive>
-											</EV_SENSITIVE>
+										<EV_SENSITIVE />
 										<EV_TEXTABLE ><Text ><![CDATA[Location]]></Text>
 											</EV_TEXTABLE>
 										<EV_TOOLTIPABLE />
@@ -2731,11 +2729,9 @@
 											<name >toc_12_location_text</name>
 											<Expanded >0</Expanded>
 											</Internal_properties>
-										<EV_COLORIZABLE ><Background_color >212208200</Background_color>
-											</EV_COLORIZABLE>
+										<EV_COLORIZABLE />
 										<EV_FONTABLE />
-										<EV_SENSITIVE ><Is_sensitive >False</Is_sensitive>
-											</EV_SENSITIVE>
+										<EV_SENSITIVE />
 										<EV_TEXTABLE />
 										<EV_TOOLTIPABLE />
 										<EV_WIDGET />
@@ -2743,6 +2739,7 @@
 										</item>
 									</item>
 								<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >179</id>
+										<name >toc_12_pseudo_box</name>
 										<Expanded >1</Expanded>
 										</Internal_properties>
 									<EV_COLORIZABLE />
@@ -2759,8 +2756,7 @@
 											</Internal_properties>
 										<EV_COLORIZABLE />
 										<EV_FONTABLE />
-										<EV_SENSITIVE ><Is_sensitive >False</Is_sensitive>
-											</EV_SENSITIVE>
+										<EV_SENSITIVE />
 										<EV_TEXTABLE ><Text ><![CDATA[Pseudo Name]]></Text>
 											</EV_TEXTABLE>
 										<EV_TOOLTIPABLE />
@@ -2771,11 +2767,9 @@
 											<name >toc_12_pseudo_text</name>
 											<Expanded >0</Expanded>
 											</Internal_properties>
-										<EV_COLORIZABLE ><Background_color >212208200</Background_color>
-											</EV_COLORIZABLE>
+										<EV_COLORIZABLE />
 										<EV_FONTABLE />
-										<EV_SENSITIVE ><Is_sensitive >False</Is_sensitive>
-											</EV_SENSITIVE>
+										<EV_SENSITIVE />
 										<EV_TEXTABLE />
 										<EV_TOOLTIPABLE />
 										<EV_WIDGET />
@@ -2811,6 +2805,7 @@
 								<EV_PIXMAPABLE />
 								<EV_CONTAINER />
 								<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >184</id>
+										<name >toc_20_title_box</name>
 										<Expanded >1</Expanded>
 										</Internal_properties>
 									<EV_COLORIZABLE />
@@ -2827,8 +2822,7 @@
 											</Internal_properties>
 										<EV_COLORIZABLE />
 										<EV_FONTABLE />
-										<EV_SENSITIVE ><Is_sensitive >False</Is_sensitive>
-											</EV_SENSITIVE>
+										<EV_SENSITIVE />
 										<EV_TEXTABLE ><Text ><![CDATA[Title]]></Text>
 											</EV_TEXTABLE>
 										<EV_TOOLTIPABLE />
@@ -2839,11 +2833,9 @@
 											<name >toc_20_title_text</name>
 											<Expanded >0</Expanded>
 											</Internal_properties>
-										<EV_COLORIZABLE ><Background_color >212208200</Background_color>
-											</EV_COLORIZABLE>
+										<EV_COLORIZABLE />
 										<EV_FONTABLE />
-										<EV_SENSITIVE ><Is_sensitive >False</Is_sensitive>
-											</EV_SENSITIVE>
+										<EV_SENSITIVE />
 										<EV_TEXTABLE />
 										<EV_TOOLTIPABLE />
 										<EV_WIDGET />
@@ -2851,6 +2843,7 @@
 										</item>
 									</item>
 								<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >187</id>
+										<name >toc_20_location_box</name>
 										<Expanded >1</Expanded>
 										</Internal_properties>
 									<EV_COLORIZABLE />
@@ -2867,8 +2860,7 @@
 											</Internal_properties>
 										<EV_COLORIZABLE />
 										<EV_FONTABLE />
-										<EV_SENSITIVE ><Is_sensitive >False</Is_sensitive>
-											</EV_SENSITIVE>
+										<EV_SENSITIVE />
 										<EV_TEXTABLE ><Text ><![CDATA[Location]]></Text>
 											</EV_TEXTABLE>
 										<EV_TOOLTIPABLE />
@@ -2879,11 +2871,9 @@
 											<name >toc_20_location_text</name>
 											<Expanded >0</Expanded>
 											</Internal_properties>
-										<EV_COLORIZABLE ><Background_color >212208200</Background_color>
-											</EV_COLORIZABLE>
+										<EV_COLORIZABLE />
 										<EV_FONTABLE />
-										<EV_SENSITIVE ><Is_sensitive >False</Is_sensitive>
-											</EV_SENSITIVE>
+										<EV_SENSITIVE />
 										<EV_TEXTABLE />
 										<EV_TOOLTIPABLE />
 										<EV_WIDGET />
@@ -2891,6 +2881,7 @@
 										</item>
 									</item>
 								<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >190</id>
+										<name >toc_20_pseudo_box</name>
 										<Expanded >1</Expanded>
 										</Internal_properties>
 									<EV_COLORIZABLE />
@@ -2907,8 +2898,7 @@
 											</Internal_properties>
 										<EV_COLORIZABLE />
 										<EV_FONTABLE />
-										<EV_SENSITIVE ><Is_sensitive >False</Is_sensitive>
-											</EV_SENSITIVE>
+										<EV_SENSITIVE />
 										<EV_TEXTABLE ><Text ><![CDATA[Pseudo Name]]></Text>
 											</EV_TEXTABLE>
 										<EV_TOOLTIPABLE />
@@ -2919,11 +2909,9 @@
 											<name >toc_20_pseudo_text</name>
 											<Expanded >0</Expanded>
 											</Internal_properties>
-										<EV_COLORIZABLE ><Background_color >212208200</Background_color>
-											</EV_COLORIZABLE>
+										<EV_COLORIZABLE />
 										<EV_FONTABLE />
-										<EV_SENSITIVE ><Is_sensitive >False</Is_sensitive>
-											</EV_SENSITIVE>
+										<EV_SENSITIVE />
 										<EV_TEXTABLE />
 										<EV_TOOLTIPABLE />
 										<EV_WIDGET />
@@ -3347,9 +3335,7 @@ loaded project:]]></Text>
 					<EV_SENSITIVE />
 					<EV_TEXTABLE ><Text ><![CDATA[New..]]></Text>
 						</EV_TEXTABLE>
-					<EV_PIXMAPABLE ><Pixmap_path ><Constant >icon_new_doc_ico</Constant>
-							</Pixmap_path>
-						</EV_PIXMAPABLE>
+					<EV_PIXMAPABLE />
 					</item>
 				<item type="EV_MENU_SEPARATOR"><Internal_properties ><id >225</id>
 						<Expanded >0</Expanded>
@@ -3418,7 +3404,7 @@ loaded project:]]></Text>
 				</item>
 			<item type="EV_MENU"><Internal_properties ><id >232</id>
 					<name >document_menu</name>
-					<Expanded >1</Expanded>
+					<Expanded >0</Expanded>
 					</Internal_properties>
 				<EV_SENSITIVE />
 				<EV_TEXTABLE ><Text ><![CDATA[Edit]]></Text>
@@ -3463,7 +3449,7 @@ loaded project:]]></Text>
 					</item>
 				<item type="EV_MENU"><Internal_properties ><id >237</id>
 						<name >doc_format</name>
-						<Expanded >1</Expanded>
+						<Expanded >0</Expanded>
 						</Internal_properties>
 					<EV_SENSITIVE />
 					<EV_TEXTABLE ><Text ><![CDATA[Format]]></Text>
@@ -3515,7 +3501,7 @@ loaded project:]]></Text>
 				</item>
 			<item type="EV_MENU"><Internal_properties ><id >243</id>
 					<name >view_menu</name>
-					<Expanded >1</Expanded>
+					<Expanded >0</Expanded>
 					</Internal_properties>
 				<EV_SENSITIVE />
 				<EV_TEXTABLE ><Text ><![CDATA[View]]></Text>
@@ -3615,7 +3601,7 @@ loaded project:]]></Text>
 				</item>
 			<item type="EV_MENU"><Internal_properties ><id >253</id>
 					<name >project_menu</name>
-					<Expanded >1</Expanded>
+					<Expanded >0</Expanded>
 					</Internal_properties>
 				<EV_SENSITIVE />
 				<EV_TEXTABLE ><Text ><![CDATA[Project]]></Text>
@@ -3698,7 +3684,7 @@ loaded project:]]></Text>
 			<EV_PIXMAPABLE />
 			<EV_CONTAINER />
 			<item type="EV_FRAME"><Internal_properties ><id >262</id>
-					<Expanded >1</Expanded>
+					<Expanded >0</Expanded>
 					</Internal_properties>
 				<EV_COLORIZABLE />
 				<EV_FONTABLE />
@@ -3846,7 +3832,9 @@ loaded project:]]></Text>
 						<EV_TEXTABLE />
 						<EV_TOOLTIPABLE ><Tooltip ><![CDATA[Document Properties]]></Tooltip>
 							</EV_TOOLTIPABLE>
-						<EV_PIXMAPABLE />
+						<EV_PIXMAPABLE ><Pixmap_path ><Constant >icon_info_ico</Constant>
+								</Pixmap_path>
+							</EV_PIXMAPABLE>
 						</item>
 					<item type="EV_TOOL_BAR_SEPARATOR"><Internal_properties ><id >276</id>
 							<Expanded >0</Expanded>
@@ -4132,7 +4120,8 @@ loaded project:]]></Text>
 															</EV_TOOLTIPABLE>
 														<EV_WIDGET />
 														<EV_TEXT_ALIGNABLE />
-														<EV_PIXMAPABLE ><Pixmap_path >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_open_file.ico</Pixmap_path>
+														<EV_PIXMAPABLE ><Pixmap_path ><Constant >icon_open_file_ico</Constant>
+																</Pixmap_path>
 															</EV_PIXMAPABLE>
 														</item>
 													<item type="EV_BUTTON"><Internal_properties ><id >301</id>
@@ -4149,7 +4138,8 @@ loaded project:]]></Text>
 															<Minimum_height >24</Minimum_height>
 															</EV_WIDGET>
 														<EV_TEXT_ALIGNABLE />
-														<EV_PIXMAPABLE ><Pixmap_path >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_save.ico</Pixmap_path>
+														<EV_PIXMAPABLE ><Pixmap_path ><Constant >icon_save_ico</Constant>
+																</Pixmap_path>
 															</EV_PIXMAPABLE>
 														</item>
 													<item type="EV_BUTTON"><Internal_properties ><id >302</id>
@@ -4164,7 +4154,8 @@ loaded project:]]></Text>
 															</EV_TOOLTIPABLE>
 														<EV_WIDGET />
 														<EV_TEXT_ALIGNABLE />
-														<EV_PIXMAPABLE ><Pixmap_path >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_new_editor_color.ico</Pixmap_path>
+														<EV_PIXMAPABLE ><Pixmap_path ><Constant >icon_new_editor_color_ico</Constant>
+																</Pixmap_path>
 															</EV_PIXMAPABLE>
 														</item>
 													<item type="EV_CELL"><Internal_properties ><id >303</id>
@@ -4205,7 +4196,8 @@ loaded project:]]></Text>
 															</EV_TOOLTIPABLE>
 														<EV_WIDGET />
 														<EV_TEXT_ALIGNABLE />
-														<EV_PIXMAPABLE ><Pixmap_path >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_format_text_color.ico</Pixmap_path>
+														<EV_PIXMAPABLE ><Pixmap_path ><Constant >icon_format_text_color_ico</Constant>
+																</Pixmap_path>
 															</EV_PIXMAPABLE>
 														</item>
 													<item type="EV_BUTTON"><Internal_properties ><id >306</id>
@@ -4659,7 +4651,9 @@ loaded project:]]></Text>
 														<EV_SENSITIVE />
 														<EV_TEXTABLE />
 														<EV_TOOLTIPABLE />
-														<EV_PIXMAPABLE />
+														<EV_PIXMAPABLE ><Pixmap_path ><Constant >icon_close_color_ico</Constant>
+																</Pixmap_path>
+															</EV_PIXMAPABLE>
 														</item>
 													</item>
 												</item>

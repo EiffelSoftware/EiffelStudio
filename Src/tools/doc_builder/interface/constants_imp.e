@@ -129,16 +129,6 @@ feature -- Access
 			Result := 175
 		end
 
-	icon_search_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.extend ("icon_search.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
 	empty_cell_width: INTEGER is 
 			-- `Result' is INTEGER constant named empty_cell_width.
 		once
@@ -484,6 +474,16 @@ feature -- Access
 			create Result
 			create a_file_name.make_from_string (pixmap_directory)
 			a_file_name.extend ("icon_new.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	icon_search_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.extend ("icon_search.ico")
 			set_with_named_file (Result, a_file_name)
 		end
 

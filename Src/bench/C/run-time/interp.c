@@ -144,9 +144,12 @@ private void interpret();				/* Run the interpreter */
 
 /* Feature call and/or access  */
 private int icall();					/* Interpreter dispatcher (in water) */
+private int ipcall();					/* Interpreter precomp dispatcher */
 private void interp_access();			/* Access to an attribute */
+private void interp_paccess();			/* Access to a precompiled attribute */
 private void address();					/* Address of a routine */
 private void assign();					/* Assignment in an attribute */
+private void passign();					/* Assignment in a precomp attribute */
 
 /* Calling protocol */
 private void init_var();				/* Initialize to 0 a variable entity */
@@ -1458,6 +1461,36 @@ end:
 		break;
 
 	/*
+	 * Calling a precompiled external function.
+	 */
+	case BC_PEXTERN:
+#ifdef DEBUG
+		dprintf(2)("BC_PEXTERN\n");
+#endif
+		is_extern = 1;
+		/* Fall through */
+
+	/*
+	 * Calling a precompiled Eiffel feature.
+	 */
+	case BC_PFEATURE:
+#ifdef DEBUG
+		if (!is_extern)
+			dprintf(2)("BC_PFEATURE\n");
+#endif
+		{
+			int32 origin, offset;
+
+			origin = get_long();			/* Get the origin class id */
+			offset = get_long();			/* Get the offset in origin */
+			nstcall = 0;					/* Invariant check turned off */
+			if (ipcall(origin, offset, is_extern))
+				sync_registers(scur, stop);
+			is_extern = 0;
+			break;
+		}
+
+	/*
 	 * Calling an external in a nested expression (invariant check needed).
 	 */
 	case BC_EXTERN_INV:
@@ -1486,6 +1519,41 @@ end:
 			sync_registers(scur, stop);
 		is_extern = 0;						/* No side effect */
 		break;
+
+	/*
+	 * Calling a precompiled external in a nested expression (invariant check needed).
+	 */
+	case BC_PEXTERN_INV:
+#ifdef DEBUG
+		dprintf(2)("BC_PEXTERN_INV");
+#endif
+		is_extern = 1;
+		/* Fall through */
+
+	/*
+	 * Calling a precompiled Eiffel feature in a nested expression
+	 * (invariant check).
+	 */
+	case BC_PFEATURE_INV:
+#ifdef DEBUG
+		if (!is_extern)
+			dprintf(2)("BC_PFEATURE_INV\n");
+#endif
+		{
+			int32 offset, origin;
+
+			string = IC;					/* Get the feature name */
+			IC += strlen(IC) + 1;
+			if (otop()->it_ref == (char *) 0)/* Called on a void reference? */
+				eraise(string, EN_VOID);	/* Yes, raise exception */
+			origin = get_long();			/* Get the origin class id */
+			offset = get_long();			/* Get the offset in origin */
+			nstcall = 1;					/* Invariant check turned on */
+			if (ipcall(origin, offset, is_extern))
+				sync_registers(scur, stop);
+			is_extern = 0;						/* No side effect */
+			break;
+		}
 
 	/*
 	 * Access to an attribute.
@@ -3036,6 +3104,72 @@ int is_extern;			/* Is it an external or an Eiffel feature */
 	return result;
 }
 
+private int ipcall(origin, offset, is_extern)
+int32 origin;			/* Origin class ID of the feature.*/
+int32 offset;			/* offset of the feature in the origin class */
+int is_extern;			/* Is it an external or an Eiffel feature */
+{
+	/* This is the interpreter dispatcher for precompiled routine calls.
+	 * Depending on the routine's temperature, the snow version (i.e. C code)
+	 * is called and the result, if any, is left on the operational stack.
+	 * The I->C pattern is called to push the parameters on the "C stack"
+	 * correctly. Otherwise, the interpreter is called. The function returns
+	 * 1 to the caller if a resynchronization of registers is needed.
+	 */
+
+	uint32 body;					/* Value of selected body ID */
+	unsigned long stagval = tagval;	/* Save tag value */
+	char *old_IC;					/* IC back-up */
+	int result = 0;					/* A priori, no need for sync_registers */
+	uint32 pid;						/* Pattern id of the frozen feature */
+	int16 body_index;
+
+	body_index = desc_tab[origin][Dtype(otop()->it_ref)][offset].info;
+	body = dispatch[body_index];	/* Body id of the eiffel routine */
+	old_IC = IC;				/* IC back up */
+	if (body < zeroc) {			/* We are below zero Celsius, i.e. ice */
+		pid = (uint32) FPatId(body);
+		(pattern[pid].toc)(frozen[body], is_extern); /* Call pattern */
+		if (tagval != stagval)		/* Interpreted function called */
+			result = 1;				/* Resynchronize registers */
+	} else 
+#ifndef DLE
+	{
+	
+		/*IC = melt[body];					/* Melted byte code */
+		/*interpret(INTERP_CMPD, 0);		/* Interpret (tagval not set) */
+
+		/* The proper way to start the interpretation of a melted
+		 * feature is to call `xinterp' in order to initialize the
+		 * calling context (which is not done by `interpret').
+		 * `tagval' will therefore be set, but we have to 
+		 * resynchronize the registers anyway. --ericb
+		 */
+		xinterp(melt[body]);
+	
+		result = 1;							/* Compulsory synchronisation */
+	}
+#else
+	if (body < dle_level) {
+			/* Static melted routine */
+		xinterp(melt[body]);
+		result = 1;							/* Compulsory synchronisation */
+	} else if (body < dle_zeroc) {
+			/* Dynamic frozen routine */
+		pid = (uint32) DLEFPatId(body);
+		(pattern[pid].toc)(dle_frozen[body], is_extern); /* Call pattern */
+		if (tagval != stagval)		/* Interpreted function called */
+			result = 1;				/* Resynchronize registers */
+	} else {
+			/* Dynamic melted routine */
+		xinterp(dle_melt[body]);
+		result = 1;							/* Compulsory synchronisation */
+	}
+#endif
+	IC = old_IC;					/* Restore IC back-up */
+	return result;
+}
+
 private void interp_access(fid, stype, type)
 int fid;				/* Feature ID */
 int stype;				/* Static type (entity where feature is applied) */
@@ -3072,6 +3206,42 @@ uint32 type;			/* Get attribute meta-type */
 	}
 }
 
+private void interp_paccess(origin, f_offset, type)
+int32 origin;			/* Origin class ID of the attribute.*/
+int32 f_offset;			/* offset of the feature in the origin class */
+uint32 type;			/* Get attribute meta-type */
+{
+	/* Fetch the attribute value of offset 'offset' in the origin class
+	 * 'origin', with Current being place on top of the operational stack.
+	 * The value of Current is removed and the value of the attribute
+	 * replace it on the stack.
+	 */
+
+	char *current;							/* Current object */
+	struct ac_info *attrinfo;				/* Call info for attribute */
+	struct item *last;						/* Value on top of the stack */
+	long offset;							/* Attribute offset */
+
+	last = otop();
+	current = last->it_ref;
+	offset = RTWPA(origin, f_offset, Dtype(current));
+	last->type = type;			/* Store type of accessed attribute */
+	switch (type & SK_HEAD) {
+	case SK_BOOL:
+	case SK_CHAR: last->it_char = *(current + offset); break;
+	case SK_INT: last->it_long = *(long *) (current + offset); break;
+	case SK_FLOAT: last->it_float = *(float *) (current + offset); break;
+	case SK_DOUBLE: last->it_double = *(double *) (current + offset); break;
+	case SK_BIT: last->it_bit = (current + offset); break;
+	case SK_POINTER: last->it_ptr = *(char **) (current + offset); break;
+	case SK_REF: last->it_ref = *(char **) (current + offset); break;
+	case SK_EXP: last->it_ref = (current + offset); break;
+	default:
+		panic("unknown attribute type");
+		/* NOTREACHED */
+	}
+}
+
 private void assign(fid, stype, type)
 long fid;				/* Feature ID */
 int stype;				/* Static type (entity where feature is applied) */
@@ -3089,6 +3259,70 @@ uint32 type;			/* Attribute meta-type */
 
 	/* Attribute access information evaluation */
 	offset = RTWA(stype, fid, icur_dtype);
+
+	last = opop();					/* Value to be assigned */
+
+#define l last
+#define b break
+#define i icurrent
+
+	switch (type & SK_HEAD) {
+	case SK_BOOL:
+	case SK_CHAR: *(i->it_ref + offset) = l->it_char; b;
+	case SK_INT:
+		switch (last->type) {
+		case SK_INT: *(long *)(i->it_ref + offset) = l->it_long; b;
+		case SK_FLOAT: *(long *) (i->it_ref + offset) = (long) l->it_float; b;
+		case SK_DOUBLE: *(long *) (i->it_ref + offset) = (long) l->it_double; b;
+		default: panic(unknown_type);
+		}
+		break;
+	case SK_FLOAT:
+		switch (last->type) {
+		case SK_FLOAT: *(float *) (i->it_ref + offset) = l->it_float; b;
+		case SK_DOUBLE: *(float *) (i->it_ref + offset) = (float) l->it_double;b;
+		default: panic(unknown_type);
+		}
+		break;
+	case SK_DOUBLE: *(double *) (i->it_ref + offset) = l->it_double; b;
+	case SK_POINTER: *(char **) (i->it_ref + offset) = l->it_ptr; b;
+	case SK_BIT: b_copy(l->it_bit, i->it_ref + offset); b;
+	case SK_REF:
+		/* Perform aging tests: if the reference is new and is assigned to an
+		 * old object which is not yet remembered, then we need to put it in
+		 * the remembered set. This has to be done before doing the actual
+		 * assignment, as RTAR may call eremb() which in turn may call the GC.
+		 */
+		ref = icurrent->it_ref;
+		RTAR(last->it_ref, ref);
+		*(char **) (ref + offset) = last->it_ref;
+		break;
+	default: panic(unknown_type);
+	}
+
+
+#undef i
+#undef b
+#undef l
+}
+
+private void passign(origin, f_offset, type)
+int32 origin;			/* Origin class ID of the attribute.*/
+int32 f_offset;			/* offset of the feature in the origin class */
+uint32 type;			/* Attribute meta-type */
+{
+	/* Assign the value on top of the stack to the attribute described by its
+	 * origin class `origin' and with offset `offset' in that class. The value
+	 * is then popped off from the stack.
+	 */
+	
+	long offset;					/* Offset of the attribute */
+	struct item *last;				/* Value on top of the stack */
+	struct ac_info *info;			/* Attribute access information */
+	char *ref;
+
+	/* Attribute access information evaluation */
+	offset = RTWPA(origin, f_offset, icur_dtype);
 
 	last = opop();					/* Value to be assigned */
 
@@ -4760,6 +4994,36 @@ char *start;
 		break;
 
 	/*
+	 * Calling a precompiled external function.
+	 */
+	case BC_PEXTERN:
+		{
+			int32 origin, offset;
+
+			origin = get_long();			/* Get the origin class id */
+			offset = get_long();			/* Get the offset in the origin */
+			fprintf(fd, "0x%lX %s origin=%ld, offset=%ld\n",
+				IC - sizeof(long) - sizeof(long) - 1,
+				"BC_PEXTERN", origin, offset);
+			break;
+		}
+
+	/*
+	 * Calling a precompiled Eiffel feature.
+	 */
+	case BC_PFEATURE:
+		{
+			int32 origin, offset;
+
+			origin = get_long();			/* Get the origin class id */
+			offset = get_long();			/* Get the offset in the origin */
+			fprintf(fd, "0x%lX %s origin=%ld, offset=%ld\n",
+				IC - sizeof(long) - sizeof(long) - 1,
+				"BC_PFEATURE", origin, offset);
+			break;
+		}
+
+	/*
 	 * Calling an external in a nested expression (invariant check needed).
 	 */
 	case BC_EXTERN_INV:
@@ -4782,6 +5046,38 @@ char *start;
 		fprintf(fd, "0x%lX %s fid=%d, st=%d, \"%s\"\n", string - 1,
 			"BC_FEATURE_INV", offset, code, string);
 		break;
+
+	/*
+	 * Calling a precompiled external in a nested expression (invariant check needed).
+	 */
+	case BC_PEXTERN_INV:
+		{
+			int32 origin, offset;
+
+			string = IC;				/* Get the feature name */
+			IC += strlen(IC) + 1;
+			origin = get_long();			/* Get the origin class id */
+			offset = get_long();			/* Get the offset in the origin */
+			fprintf(fd, "0x%lX %s origin=%ld, offset=%ld, \"%s\"\n", string - 1,
+				"BC_PEXTERN_INV", origin, offset, string);
+			break;
+		}
+	/*
+	 * Calling a precompiled Eiffel feature in a nested expression
+	 * (invariant check).
+	 */
+	case BC_PFEATURE_INV:
+		{
+			int32 origin, offset;
+
+			string = IC;				/* Get the feature name */
+			IC += strlen(IC) + 1;
+			origin = get_long();			/* Get the origin class id */
+			offset = get_long();			/* Get the offset in the origin */
+			fprintf(fd, "0x%lX %s origin=%ld, offset=%ld, \"%s\"\n", string - 1,
+				"BC_PFEATURE_INV", origin, offset, string);
+			break;
+		}
 
 	/*
 	 * Access to an attribute.

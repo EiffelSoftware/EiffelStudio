@@ -15,8 +15,10 @@ feature -- Status setting
 	
 	set_event_data (p: POINTER) is
 		do
-			!!data.make (p)
-			data := data.metamorphosis (p)
+			-- Do we have data associated with this event
+			if data /= Void then
+				data.initialize (p)
+			end
 		end
 
 	
@@ -28,6 +30,13 @@ feature -- Access
 			-- Address of feature set_event_data
 		do
 			Result := routine_address ($set_event_data)
+		end
+	
+feature {EV_WIDGET_I} -- Element change
+	
+	set_data (d: EV_EVENT_DATA) is		
+		do
+			data := d
 		end
 	
 feature {NONE} -- Implementation

@@ -40,8 +40,8 @@ feature {NONE} -- Initialization
                 end
 	
 feature {NONE} -- Implementation
-        
-        gtk_command_id: INTEGER
+	
+	gtk_command_id: INTEGER
                         -- Id of the command handler
         
         

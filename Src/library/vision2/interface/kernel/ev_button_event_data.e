@@ -13,20 +13,20 @@ inherit
 	
 	EV_EVENT_DATA	
 		redefine
-			make_and_initialize,
+			initialize,
 			implementation,
 			print_contents
 		end
 	
 	
 creation
-	make_and_initialize
+	make
 	
-feature {NONE} -- Initialization
+feature -- Initialization
 	
-	make_and_initialize (p: POINTER) is
+	initialize (p: POINTER) is
 		do
-			!EV_BUTTON_EVENT_DATA_IMP!implementation.make_and_initialize (Current, p)
+			!EV_BUTTON_EVENT_DATA_IMP!implementation.make (Current, p)
 		end
 
 feature -- Access	
@@ -78,7 +78,11 @@ feature -- Debug
 			io.put_double (y)
 			io.put_string (") Button: ")			
 			io.put_integer (button)
-			io.put_string (")%N")		
+			io.put_string (" State: ")			
+			io.put_integer (state)
+			io.put_string (" Keyval: ")			
+			io.put_integer (keyval)
+			io.put_string ("%N")		
 		end
 	
 	

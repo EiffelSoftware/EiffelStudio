@@ -313,21 +313,6 @@ feature -- Event - command association
 		deferred
 		end
 	
-	add_command (event: STRING; command: EV_COMMAND; 
-		     arguments: EV_ARGUMENTS) is
-			-- Add `command' at the end of the list of
-			-- actions to be executed when the 'event'
-			-- happens `arguments' will be passed to
-			-- `command' whenever it is invoked as a
-			-- callback. 'arguments' can be Void, which
-			-- means that no arguments are passed to the
-			-- command.
-		require
-			exists: not destroyed
-			Valid_event: event /= Void
-			Valid_command: command /= Void
-		deferred
-		end
 
 	remove_command (command_id: INTEGER) is
 			-- Remove the command associated with

@@ -12,27 +12,24 @@ class
 	EV_EVENT_DATA
 	
 creation
-	make, make_and_initialize
+	make
 	
-feature {NONE}  -- Initialization
+feature {NONE}  -- Creation
 	
-	make (p: POINTER) is
+	make is
 		do
-			-- Initialize implementation
-			!EV_EVENT_DATA_IMP!implementation.make
+			-- do nothing, because the initialization is 
+			-- done in 'Initialize'
 		end
 	
-	make_and_initialize (p: POINTER) is
+feature -- Initialization
+	
+	initialize (p: POINTER) is
+			-- Initialize from c using C pointer 'p'
 		do
-			!EV_EVENT_DATA_IMP!implementation.make_and_initialize (Current, p)
+			!EV_EVENT_DATA_IMP!implementation.make (Current, p)
 		end
 	
-feature -- Metamorphosis
-	
-	metamorphosis (p: POINTER): EV_EVENT_DATA is
-		do
-			Result := implementation.metamorphosis (p)
-		end
 		
 feature -- Access
 	

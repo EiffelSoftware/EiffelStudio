@@ -13,16 +13,16 @@ inherit
 	
 	EV_EVENT_DATA_IMP
 		redefine
-			make_and_initialize
+			make
 		end
 	
 	
 creation
-	make_and_initialize
+	make
 	
 feature {NONE} -- Initialization
 	
-	make_and_initialize (parent: EV_BUTTON_EVENT_DATA; p: POINTER) is
+	make (parent: EV_BUTTON_EVENT_DATA; p: POINTER) is
 			-- Creation and initialization of 'parent's 
 			-- fields according to C pointer 'p'
 		do

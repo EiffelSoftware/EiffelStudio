@@ -212,10 +212,17 @@ feature -- Basic operations
 		ensure
 			Result_not_void: Result /= Void
 		end
+		
+	item_at_virtual_position (an_x, a_y: INTEGER): EV_GRID_ITEM_I is
+			-- `Result' is item at virtual position `an_x', `a_y' relative to the top
+			-- left hand corner of the virtual size.
+		do
+			Result := item_at_position (an_x - grid.internal_client_x + grid.viewable_x_offset, a_y - grid.internal_client_y + grid.viewport.y_offset)
+		end
 
 	item_at_position (an_x, a_y: INTEGER): EV_GRID_ITEM_I is
 			-- `Result' is item at position `an_x', `a_y' relative to the top left corner
-			-- of the viewport in which the grid is displayed.
+			-- of the `grid.drawable' in which the grid is displayed.
 		require
 			an_x_positive: an_x >= 0
 			a_y_positive: a_y >= 0
@@ -228,10 +235,17 @@ feature -- Basic operations
 				Result := grid.item_internal (horizontal_span_items.first, vertical_span_items.first, False)
 			end
 		end
+		
+	redraw_area_in_virtual_coordinates (an_x, a_y, a_width, a_height: INTEGER) is
+			-- Redraw grid contents at coordinates `an_x', `a_y', `a_width', `a_height'
+			-- relative to the upper left corner of the virtual area.
+		do
+			redraw_area_in_drawable_coordinates (an_x - grid.internal_client_x + grid.viewable_x_offset, a_y - grid.internal_client_y + grid.viewport.y_offset, a_width, a_height)
+		end
 
-	partial_redraw (an_x, a_y, a_width, a_height: INTEGER) is
-			-- Redraw part of client area within `grid' specified by
-			-- coordinates `an_x', `a_y', `a_width', `a_height'.
+	redraw_area_in_drawable_coordinates (an_x, a_y, a_width, a_height: INTEGER) is
+			-- Redraw grid contents at coordinates `an_x', `a_y', `a_width', `a_height'
+			-- relative to the upper left corner of the `drawable' widget of `grid'.
 		require
 --			an_x_positive: an_x >= 0
 --			a_y_positive: a_y >= 0
@@ -565,11 +579,6 @@ feature -- Basic operations
 											 
 											if drawing_subrow and then parent_node_index = current_column_index then
 												
---												print ("Parent subrow count : " + parent_row_i.subrow_count.out + "%N")
---												print ("Parent subrow count recursive : " + parent_row_i.subnode_count_recursive.out + "%N")
---												print ("Item index : " + current_row.index.out + "%N")
---												print ("Parent row index : " + parent_row_i.index.out + "%N")
---												print ("index diff : " + (current_row.index - parent_row_i.index).out + "%N")
 												current_horizontal_pos := current_item_x_position.max (parent_x_indent_position)
 												if are_tree_node_connectors_shown then
 													grid.drawable.set_foreground_color (black)
@@ -663,7 +672,7 @@ feature -- Basic operations
 				-- being drawn at once. This does not matter as it is simpler to implement, has no real performance impact as
 				-- it is simply drawing a rectangle and dows not flicker.
 				
-			if last_column_index = grid.column_count then				
+			if last_column_index = grid.column_count or last_column_index = 0 then				
 				rectangle_width := internal_client_width - (column_offsets @ (column_offsets.count) - internal_client_x)
 				if rectangle_width >= 0 then
 						-- Check to see if we must draw the background to the right of the items.

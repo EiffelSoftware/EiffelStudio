@@ -23,9 +23,9 @@ REM File management
 REM Copy also hidden files, keep attributes, overwrite automatically
 alias copy *copy /hkz
 REM Remove completely a directory
-alias fullrd del /syqxz >>& %INSTALL_LOG
+alias fullrd del /syeqxz >>& %INSTALL_LOG
 REM Remove a file
-alias fullrf del /yqz
+alias fullrf del /yqze
 REM Retrieve a file from the old delivery and put it in the new one
 alias quick_move `iff "%2" == "" then & copy %ISE_EIFFEL\%1 %INSTALL_DIR\%1 >>& %INSTALL_LOG & else & copy %1 %ISE_EIFFEL\%2 %INSTALL_DIR\%2 >>& %INSTALL_LOG & endiff`
 REM Create a directory if it doesn't exist already

@@ -46,6 +46,7 @@ EIF_POINTER p;
 
 	len = strlen (p);
 	s = (char *) malloc (len + 1);
+		/* FIXME: memory leak */
 	strcpy (s, p);
 	c = s + len - 1;
 	last_bslash = 0;
@@ -218,6 +219,7 @@ EIF_POINTER p;
 
 	len = strlen (p);
 	s = (char *) malloc (len + 1);
+		/* FIXME: memory leak */
 	strcpy (s, p);
 	c = s + len -1;
 	for (i = len; i >= 0; i --, c--)

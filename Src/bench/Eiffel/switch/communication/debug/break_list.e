@@ -5,11 +5,9 @@
 -- same real_body_id and offset).
 
 class
-
 	BREAK_LIST
 
 inherit
-
 	HASH_TABLE [BREAKPOINT, BREAKPOINT]
 		rename
 			make as ht_make,
@@ -18,7 +16,6 @@ inherit
 		end
 
 creation
-
 	make
 
 feature -- Initialization

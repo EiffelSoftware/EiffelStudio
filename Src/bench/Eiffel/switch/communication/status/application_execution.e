@@ -22,7 +22,7 @@ inherit
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all;
-			{ANY} Eiffel_project, project_initialized
+			{ANY} Eiffel_project
 		end;
 	SHARED_CONFIGURE_RESOURCES
 

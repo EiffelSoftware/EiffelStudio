@@ -827,6 +827,9 @@ feature {NONE} -- Text loading
 				-- Reset the editor state
 			reset
 
+				-- Setup the editor just before string loading begins.
+			string_loading_setup
+
 				-- Read and parse the file.
 			text_displayed.set_first_read_block_size (number_of_lines_displayed)
 			text_displayed.load_string (s)
@@ -844,6 +847,11 @@ feature {NONE} -- Text loading
 			set_offset (0)
 			first_line_displayed := 1
 			vertical_scrollbar.set_value (1)
+		end
+
+	string_loading_setup is
+			-- Setup the editor just before string loading begins.
+		do
 		end
 
 	setup_editor is

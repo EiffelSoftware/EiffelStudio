@@ -7,14 +7,14 @@ inherit
 	SHARED_CONTEXT;
 	CONTEXT_CMD
 		redefine
-			work, undo, redo, n_ame
+			work, undo, redo, name
 		end;
 
 feature {NONE}
 
 	group_type: CONTEXT_GROUP_TYPE;
 
-	n_ame: STRING is
+	name: STRING is
 		do
 			!!Result.make (20);
 			Result.append (c_name);

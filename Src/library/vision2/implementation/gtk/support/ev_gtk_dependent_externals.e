@@ -8,21 +8,21 @@ class
 
 feature -- Externals
 
-	signal_disconnect (a_object: POINTER; a_handler_id: INTEGER) is
+	frozen signal_disconnect (a_object: POINTER; a_handler_id: INTEGER) is
 		external
 			"C (GtkObject*, guint) | <gtk/gtk.h>"
 		alias
 			"gtk_signal_disconnect"
 		end
 
-	signal_disconnect_by_data (a_c_object: POINTER; data: INTEGER) is
+	frozen signal_disconnect_by_data (a_c_object: POINTER; data: INTEGER) is
 		external
 			"C (GtkObject*, gpointer) | <gtk/gtk.h>"
 		alias
 			"gtk_signal_disconnect_by_data"
 		end
 
-	signal_handler_block (a_object: POINTER; a_handler_id: INTEGER) is
+	frozen signal_handler_block (a_object: POINTER; a_handler_id: INTEGER) is
 			-- void   gtk_signal_handler_block (GtkObject *object, guint handler_id);)
 		external
 			"C (GtkObject*, guint) | <gtk/gtk.h>"
@@ -30,7 +30,7 @@ feature -- Externals
 			"gtk_signal_handler_block"
 		end
 
-	signal_handler_unblock (a_object: POINTER; a_handler_id: INTEGER) is
+	frozen signal_handler_unblock (a_object: POINTER; a_handler_id: INTEGER) is
 			-- void   gtk_signal_handler_unblock      (GtkObject           *object,
 			--                                         guint                handler_id);
 		external
@@ -39,7 +39,7 @@ feature -- Externals
 			"gtk_signal_handler_unblock"
 		end
 
-	signal_emit_stop_by_name (a_object: POINTER; a_name: POINTER) is
+	frozen signal_emit_stop_by_name (a_object: POINTER; a_name: POINTER) is
 			-- void   gtk_signal_emit_stop_by_name    (GtkObject           *object,
 			--                                         const gchar         *name);
 		external
@@ -48,28 +48,28 @@ feature -- Externals
 			"gtk_signal_emit_stop_by_name"
 		end
 		
-	gtk_editable_struct_selection_start (a_c_struct: POINTER): INTEGER is
+	frozen gtk_editable_struct_selection_start (a_c_struct: POINTER): INTEGER is
 		external
 			"C [struct <gtk/gtk.h>] (GtkEditable): EIF_INTEGER"
 		alias
 			"selection_start_pos"
 		end
 		
-	gtk_editable_struct_selection_end (a_c_struct: POINTER): INTEGER is
+	frozen gtk_editable_struct_selection_end (a_c_struct: POINTER): INTEGER is
 		external
 			"C [struct <gtk/gtk.h>] (GtkEditable): EIF_INTEGER"
 		alias
 			"selection_end_pos"
 		end
 
-	gtk_style_set_font (a_c_struct: POINTER; a_font: POINTER) is
+	frozen gtk_style_set_font (a_c_struct: POINTER; a_font: POINTER) is
 		external
 			"C [struct <gtk/gtk.h>] (GtkStyle, GdkFont*)"
 		alias
 			"font"
 		end
 
-	gtk_style_get_font (a_c_struct: POINTER): POINTER is
+	frozen gtk_style_get_font (a_c_struct: POINTER): POINTER is
 			-- (from C_GTK_STYLE_STRUCT)
 		external
 			"C [struct <gtk/gtk.h>] (GtkStyle): EIF_POINTER"
@@ -77,34 +77,34 @@ feature -- Externals
 			"font"
 		end
 
-	gtk_paned_set_gutter_size (a_paned: POINTER; a_size: INTEGER) is
+	frozen gtk_paned_set_gutter_size (a_paned: POINTER; a_size: INTEGER) is
 		external
 			"C (GtkPaned*, guint16) | <gtk/gtk.h>"
 		end
 
-	gtk_paned_set_handle_size (a_paned: POINTER; a_size: INTEGER) is
+	frozen gtk_paned_set_handle_size (a_paned: POINTER; a_size: INTEGER) is
 		external
 			"C (GtkPaned*, guint16) | <gtk/gtk.h>"
 		end
 
-	gtk_menu_bar_set_shadow_type (a_menu_bar: POINTER; a_type: INTEGER) is
+	frozen gtk_menu_bar_set_shadow_type (a_menu_bar: POINTER; a_type: INTEGER) is
 		external
 			"C (GtkMenuBar*, GtkShadowType) | <gtk/gtk.h>"
 		end
 
-	gtk_editable_get_editable (a_c_struct: POINTER): BOOLEAN is
+	frozen gtk_editable_get_editable (a_c_struct: POINTER): BOOLEAN is
 		do
 			Result := gtk_editable_struct_editable (a_c_struct) /= 0
 		end
 
-	gtk_widget_set_default_visual (a_visual: POINTER) is
+	frozen gtk_widget_set_default_visual (a_visual: POINTER) is
 			-- void	     gtk_widget_set_default_visual   (GdkVisual	  *visual);
 			-- (from C_GTK_WIDGET)
 		external
 			"C (GdkVisual*) | <gtk/gtk.h>"
 		end
 
-	object_destroy (a_c_object: POINTER) is
+	frozen object_destroy (a_c_object: POINTER) is
 			-- Only for use in dispose.
 			-- (Dispose cannot call C.gtk_object_destroy)
 		external
@@ -113,14 +113,14 @@ feature -- Externals
 			"gtk_object_destroy"
 		end
 
-	object_ref (a_c_object: POINTER) is
+	frozen object_ref (a_c_object: POINTER) is
 		external
 			"C (GtkObject*) | <gtk/gtk.h>"
 		alias
 			"gtk_object_ref"
 		end
 
-	object_unref (a_c_object: POINTER) is
+	frozen object_unref (a_c_object: POINTER) is
 		external
 			"C (GtkObject*) | <gtk/gtk.h>"
 		alias
@@ -129,13 +129,13 @@ feature -- Externals
 
 feature {NONE} -- Implementation
 
-        gtk_editable_struct_editable (a_c_struct: POINTER): INTEGER is
-                        -- (from C_GTK_EDITABLE_STRUCT)
-                external
-                        "C [struct <gtk/gtk.h>] (GtkEditable): EIF_INTEGER"
-                alias
-                        "editable"
-                end
+	frozen gtk_editable_struct_editable (a_c_struct: POINTER): INTEGER is
+			-- (from C_GTK_EDITABLE_STRUCT)
+		external
+			"C [struct <gtk/gtk.h>] (GtkEditable): EIF_INTEGER"
+		alias
+			"editable"
+		end
 
 end
 

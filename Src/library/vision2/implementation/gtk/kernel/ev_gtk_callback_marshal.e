@@ -389,7 +389,7 @@ feature {EV_ANY_IMP} -- Tuple optimizations.
 
 feature {NONE} -- Externals
 
-	c_ev_gtk_callback_marshal_init (
+	frozen c_ev_gtk_callback_marshal_init (
 		object: EV_GTK_CALLBACK_MARSHAL; a_marshal: POINTER
 		) is
 			-- See ev_gtk_callback_marshal.c
@@ -397,7 +397,7 @@ feature {NONE} -- Externals
 			"C | %"ev_gtk_callback_marshal.h%""
 		end
 
-	c_ev_gtk_callback_marshal_destroy
+	frozen c_ev_gtk_callback_marshal_destroy
 		is
 			-- See ev_gtk_callback_marshal.c
 		external
@@ -406,19 +406,19 @@ feature {NONE} -- Externals
 
 feature {EV_ANY_IMP} -- Externals
 
-	gtk_value_pointer (arg: POINTER): POINTER is
+	frozen gtk_value_pointer (arg: POINTER): POINTER is
 			-- Pointer to the value of a GtkArg.
 		external
 			"C | %"ev_gtk_callback_marshal.h%""
 		end
 
-	gtk_value_int (arg: POINTER): INTEGER is
+	frozen gtk_value_int (arg: POINTER): INTEGER is
 			-- Integer value from a GtkArg.
 		external
 			"C | %"ev_gtk_callback_marshal.h%""
 		end
 		
-	gtk_args_array_i_th (args_array: POINTER; an_index: INTEGER): POINTER is
+	frozen gtk_args_array_i_th (args_array: POINTER; an_index: INTEGER): POINTER is
 			-- GtkArg* gtk_args_array_i_th (GtkArg** args_array, int index) {
 			--	return (GtkArg*)(args_array + index);
 			-- }
@@ -426,7 +426,7 @@ feature {EV_ANY_IMP} -- Externals
 			"C | %"ev_c_util.h%""
 		end
 		
-	set_eif_oid_in_c_object (a_c_object: POINTER; eif_oid: INTEGER;
+	frozen set_eif_oid_in_c_object (a_c_object: POINTER; eif_oid: INTEGER;
 		c_object_dispose_address: POINTER) is
 				-- Store Eiffel object_id in `gtk_object'.
 				-- Set up signal handlers.
@@ -436,7 +436,7 @@ feature {EV_ANY_IMP} -- Externals
 			"c_ev_any_imp_set_eif_oid_in_c_object"
 		end
 
-	c_signal_connect (a_c_object: POINTER; a_signal_name: POINTER;
+	frozen c_signal_connect (a_c_object: POINTER; a_signal_name: POINTER;
 		an_agent: PROCEDURE [ANY, TUPLE]): INTEGER is
 			-- Connect `an_agent' to 'a_signal_name' on `a_c_object'.
 		external
@@ -445,7 +445,7 @@ feature {EV_ANY_IMP} -- Externals
 			"c_ev_gtk_callback_marshal_signal_connect"
 		end
 
-	c_signal_connect_true (a_c_object: POINTER; a_signal_name: POINTER;
+	frozen c_signal_connect_true (a_c_object: POINTER; a_signal_name: POINTER;
 		an_agent: PROCEDURE [ANY, TUPLE]): INTEGER is
 			-- Connect `an_agent' to 'a_signal_name' on `a_c_object'.
 		external
@@ -456,14 +456,14 @@ feature {EV_ANY_IMP} -- Externals
 		
 feature {EV_APPLICATION_IMP, EV_TIMEOUT_IMP} -- Externals
 
-	c_ev_gtk_callback_marshal_timeout_connect
+	frozen c_ev_gtk_callback_marshal_timeout_connect
 		(a_delay: INTEGER; an_agent: PROCEDURE [ANY, TUPLE]): INTEGER is
 			-- Call `an_agent' after `a_delay'.
 		external
 			"C (gint, EIF_OBJECT): EIF_INTEGER | %"ev_gtk_callback_marshal.h%""
 		end
 		
-	c_ev_gtk_callback_marshal_delayed_agent_call
+	frozen c_ev_gtk_callback_marshal_delayed_agent_call
 				(a_delay: INTEGER; an_agent: PROCEDURE [ANY, TUPLE]) is
 			-- Call `an_agent' after `a_delay'.
 		external

@@ -264,7 +264,7 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 			
 					-- Draw the text
 				draw_dc.select_font (draw_font)
-				if flag_set (draw_item_struct.item_state, Ods_disabled) then
+				if not is_sensitive then
 					-- Label is disabled
 					draw_dc.draw_disabled_text (internal_text, draw_rect, 
 						draw_flags)

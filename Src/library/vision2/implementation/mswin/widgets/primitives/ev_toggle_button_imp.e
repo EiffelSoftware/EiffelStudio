@@ -17,9 +17,9 @@ inherit
 		undefine
 			--| FIXME Get back to this.
 			wel_make,
-			make_by_id
+			make_by_id,
 
-			default_style,
+			default_style
 		redefine
 			interface
 		end
@@ -115,6 +115,9 @@ end -- class EV_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/03/22 22:57:10  brendel
+--| Fixed comma's.
+--|
 --| Revision 1.25  2000/03/22 22:49:56  brendel
 --| Fixed to have comments on a single line.
 --|

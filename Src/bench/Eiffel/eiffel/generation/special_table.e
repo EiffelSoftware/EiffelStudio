@@ -1,4 +1,4 @@
--- Special routine table: invariant routine table and initialization
+-- Special routine table: dispose routine table and initialization
 -- routine table
 
 class SPECIAL_TABLE
@@ -25,7 +25,7 @@ feature
 		end;
 
 	generate (file: INDENT_FILE) is
-			-- Generation of the routine table in file "_rout.c".
+			-- Generation of the routine table in file "erout*.c".
 		local
 			entry: ROUT_ENTRY;
 			i, nb, min_id, max_id: INTEGER;

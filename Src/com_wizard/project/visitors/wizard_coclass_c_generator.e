@@ -66,7 +66,9 @@ feature {NONE} -- Implementation
 			non_void_guid: guid /= Void
 			valid_guid: guid.item /= default_pointer
 		do
-			Result := clone (Const)
+			create Result.make (0)
+			Result.append ("static ")
+			Result.append (Const)
 			Result.append (Space)
 			Result.append (Iid_type)
 			Result.append (Space)
@@ -88,6 +90,7 @@ feature {NONE} -- Implementation
 			valid_name: not a_name.empty
 		do
 			create Result.make (0)
+			Result.append ("static ")
 			Result.append (Const)
 			Result.append (Space)
 			Result.append (Clsid_type)

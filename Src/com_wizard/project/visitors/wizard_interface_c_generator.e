@@ -25,7 +25,6 @@ feature -- Access
 			cpp_class_writer.set_name (a_descriptor.c_type_name)
 			cpp_class_writer.set_header (a_descriptor.description)
 			cpp_class_writer.set_header_file_name (a_descriptor.c_header_file_name)
-			cpp_class_writer.add_other (iid_declaration (a_descriptor.name))
 			cpp_class_writer.add_other_source (iid_definition (a_descriptor.name, a_descriptor.guid))
 
 			if a_descriptor.inherited_interface /= Void then
@@ -82,34 +81,6 @@ feature -- Access
 		end
 
 feature {NONE} -- Implementation
-
-	iid_declaration (a_name: STRING): STRING is
-			-- Declaration of IID in header file.
-		require
-			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
-		do
-			-- extern "C" IID IID_`a_name';
-
-			create Result.make (0)
-			Result.append (Extern)
-			Result.append (Space)
-			Result.append (Double_quote)
-			Result.append ("C")
-			Result.append (Double_quote)
-			Result.append (Space)
-			Result.append (Const)
-			Result.append (Space)
-			Result.append (Iid_type)
-			Result.append (Space)
-			Result.append (Iid_type)
-			Result.append ("_")
-			Result.append (a_name)
-			Result.append (Semicolon)
-		ensure
-			non_void_declaration: Result /= Void
-			valid_declaration: not Result.empty
-		end
 
 	iid_definition (a_name: STRING; a_guid: ECOM_GUID): STRING is
 			-- Definition of IID in source file.

@@ -813,9 +813,9 @@ feature -- Eiffel types -- 9
 
 	Ecom_decimal: STRING is "ECOM_DECIMAL"
 
-	Ecom_generic_interface: STRING  is "ECOM_GENERIC_INTERFACE"
+	Ecom_unknown_interface: STRING  is "ECOM_UNKNOWN_INTERFACE"
 
-	Ecom_generic_dispinterface: STRING is "ECOM_GENERIC_DISPINTERFACE"
+	Ecom_automation_interface: STRING is "ECOM_AUTOMATION_INTERFACE"
 
 	String_type: STRING is "STRING"
 

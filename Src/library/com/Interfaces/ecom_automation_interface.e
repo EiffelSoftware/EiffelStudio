@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	ECOM_GENERIC_DISPINTERFACE
+	ECOM_AUTOMATION_INTERFACE
 
 feature -- Initialization
 
@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 invariant
 	invariant_clause: -- Your invariant here
 
-end -- class ECOM_GENERIC_DISPINTERFACE
+end -- class ECOM_AUTOMATION_INTERFACE
 
 --|----------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.

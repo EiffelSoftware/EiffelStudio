@@ -165,7 +165,7 @@ rt_public EIF_OBJ eadopt(EIF_OBJ object)
 
 }
 
-rt_public EIF_OBJ ewean(EIF_OBJ object)
+rt_public EIF_REFERENCE ewean(EIF_OBJ object)
 {
 	/* The C wants to get rid of a reference which was previously kept. It may
 	 * be only be an adopted one. Anyway, we remove the object from hector

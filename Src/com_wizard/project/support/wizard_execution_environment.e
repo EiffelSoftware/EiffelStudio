@@ -12,10 +12,11 @@ feature -- Access
 	Eiffel4_location: STRING is
 			-- Location of Eiffel compiler.
 		once
-			Result := execution_environment.get (Eiffel5)
-			if Result = Void then
-				Result := execution_environment.get (Eiffel4)
-				Eiffel4_defined := True
+			Result := execution_environment.get (Eiffel4)
+			if Result /= Void then
+				Eiffel4_defined_cell.set_item (True)
+			else
+				Result := execution_environment.get (Eiffel5)
 			end
 		ensure
 			non_void_location: Result /= Void
@@ -25,7 +26,7 @@ feature -- Access
 			-- Name of Eiffel compiler executable.
 		require
 			non_void_eiffel_location: Eiffel4_location /= Void
-			valid_location: not Eiffel4_location.empty
+			valid_location: not Eiffel4_location.is_empty
 		local
 			directory: DIRECTORY
 		once
@@ -41,11 +42,19 @@ feature -- Access
 			non_void_compiler: Result /= Void
 		end
 	
-	Eiffel4_defined: BOOLEAN
+	Eiffel4_defined: BOOLEAN is
 			-- Is EIFFEL4 environment variable defined?
+		do
+			Result := Eiffel4_defined_cell.item
+		end
 			
 feature {NONE} -- Implementation
 
+	Eiffel4_defined_cell: BOOLEAN_REF is
+		once
+			create Result
+		end
+		
 	execution_environment: EXECUTION_ENVIRONMENT is
 			-- Execution environment.
 		once

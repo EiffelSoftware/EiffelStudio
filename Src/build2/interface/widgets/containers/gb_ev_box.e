@@ -273,7 +273,7 @@ feature {GB_CODE_GENERATOR} -- Output
 			element_info := full_information @ (Is_homogeneous_string)
 			if element_info /= Void then
 				if element_info.data.is_equal (True_string) then
-					Result := info.name + ".enable_homgeneous"
+					Result := info.name + ".enable_homogeneous"
 				else
 					Result := info.name + ".disable_homogeneous"
 				end

@@ -16,7 +16,8 @@ inherit
 	EB_MENUABLE_COMMAND
 		redefine
 			disable_sensitive,
-			enable_sensitive
+			enable_sensitive,
+			initialize_menu_item
 		end
 
 feature -- Status setting
@@ -91,6 +92,17 @@ feature -- Status setting
 					end
 				end
 				is_sensitive := False
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	initialize_menu_item (a_menu_item: EB_COMMAND_MENU_ITEM) is
+			-- Create a new menu entry for this command.
+		do
+			Precursor {EB_MENUABLE_COMMAND} (a_menu_item)
+			if pixmap /= Void then
+				a_menu_item.set_pixmap (pixmap @ 1)	
 			end
 		end
 

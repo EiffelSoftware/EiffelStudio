@@ -315,6 +315,7 @@ feature -- Clearing operations
 					a_width,
 					a_height)
 				set_foreground_color (tmp_fg_color)
+				flush
 			end
 		end
 
@@ -451,10 +452,12 @@ feature -- Drawing operations
 			-- Draw an ellipse bounded by top left (`x', `y') with
 			-- size `a_width' and `a_height'.
 		do
-			if drawable /= NULL then
-				C.gdk_draw_arc (drawable, gc, 0, x,
-					y, a_width - 1,
-					a_height - 1, 0, whole_circle)
+			if drawable /= NULL then 
+				if (a_width > 0 and a_height > 0 ) then
+					C.gdk_draw_arc (drawable, gc, 0, x,
+						y, (a_width - 1),
+						(a_height - 1), 0, whole_circle)
+				end
 			end
 		end
 

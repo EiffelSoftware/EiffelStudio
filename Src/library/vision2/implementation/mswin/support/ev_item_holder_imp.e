@@ -1,9 +1,9 @@
 indexing
-	description: "EiffelVision item container. This class  %
-			% has been created to centralise the     %
-			% implementation of several features for %
+	description: "EiffelVision item container. This class%
+			% has been created to centralise the%
+			% implementation of several features for%
 			% EV_LIST_IMP and EV_MENU_ITEM_CONTAINER"
-	author: ""
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -23,24 +23,23 @@ feature {NONE} -- Implementation
 --		deferred
 --		end
 
-	name_item: STRING
-			-- Name of the item that is going to be add
-			-- When an item is created, it called this feature
-			-- to stock his name temporary and once the string has
-			-- been added in the menu, the name of the item is
-			-- stored in the menu
-
 feature {EV_ITEM_IMP} -- Implementation
 
-	set_name (new_name: STRING) is
-			-- Set `name_item' to `new_name'. This string corresponds
-			-- to the name of the item that will be added next.
-			-- This feature avoid to have a name feature on each
-			-- menu item.
-		require
-			new_name /= Void
+	current_widget: EV_WIDGET is
+			-- Current widget related to the container
+		local
+			cwidget: EV_WIDGET_IMP
+			citem: EV_ITEM_IMP
 		do
-			name_item := new_name
+			cwidget ?= Current
+			if cwidget /= Void then
+				Result ?= cwidget.interface
+			else
+				citem ?= Current
+				if citem /= Void then
+					Result := citem.parent_widget
+				end
+			end
 		end
 
 feature {EV_CONTAINER_IMP} -- Implementation

@@ -242,11 +242,11 @@ feature -- Element Settings
 		local
 			l_meth: METHOD_INFO
 		do
-			l_meth := property.get_get_method
+			l_meth := property.get_get_method_boolean (True)
 			if l_meth /= Void then
 				internal_add_method (l_meth, True)
 			end
-			l_meth := property.get_set_method
+			l_meth := property.get_set_method_boolean (True)
 			if l_meth /= Void then
 				internal_add_method (l_meth, False)
 			end
@@ -261,15 +261,15 @@ feature -- Element Settings
 			l_meth: METHOD_INFO
 			property_name: STRING
 		do
-			l_meth := event.get_raise_method
+			l_meth := event.get_raise_method_boolean (True)
 			if l_meth /= Void then
 				internal_add_method (l_meth, False)
 			end
-			l_meth := event.get_add_method
+			l_meth := event.get_add_method_boolean (True)
 			if l_meth /= Void then
 				internal_add_method (l_meth, False)
 			end
-			l_meth := event.get_remove_method
+			l_meth := event.get_remove_method_boolean (True)
 			if l_meth /= Void then
 				internal_add_method (l_meth, False)
 			end

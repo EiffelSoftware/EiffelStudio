@@ -44,11 +44,6 @@
 #include <winsock.h>
 #endif
 
-#ifdef __VMS
- #define cma$tis_errno_get_addr CMA$TIS_ERRNO_GET_ADDR
- #include <errno.h>	/* redefine cma$tis... to caps before this include! */
-#endif
-
 /*#define DEBUG_GENERAL_STORE	/**/
 
 /*#define DEBUG 1 /**/

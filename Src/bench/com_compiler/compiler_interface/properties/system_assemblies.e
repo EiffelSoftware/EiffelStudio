@@ -83,7 +83,7 @@ feature -- Access
 			l_cluster_name.to_lower
 			
 			if not assemblies_table.has (l_cluster_name) then
-				if a_prefix /= Void then
+				if a_prefix /= Void and not a_prefix.is_empty then
 					create l_assembly.initialize (new_id_sd (l_cluster_name, True), new_id_sd (a_path, True), new_id_sd (a_prefix, False), Void, Void, Void)					
 				else
 					create l_assembly.initialize (new_id_sd (l_cluster_name, True), new_id_sd (a_path, True), Void, Void, Void, Void)

@@ -72,7 +72,7 @@ typedef union
 #include <memory.h>
 #endif
 
-/* #include <values.h> */
+#include <values.h>
 
 #ifdef __cplusplus
 
@@ -110,7 +110,7 @@ YYSTYPE *xxv;
 static int xxmaxdepth = YYMAXDEPTH;
 # define YYERRCODE 256
 
-# line 482 "lace_y.y"
+# line 484 "lace_y.y"
 
 
 xxwrap()
@@ -121,170 +121,223 @@ xxtabelem xxexca[] ={
 -1, 1,
 	0, -1,
 	-2, 0,
--1, 12,
-	277, 28,
-	295, 28,
-	-2, 27,
--1, 21,
-	277, 32,
-	295, 32,
-	-2, 31,
--1, 135,
+-1, 11,
+	277, 26,
+	295, 26,
+	-2, 149,
+-1, 17,
+	260, 55,
+	268, 55,
+	277, 55,
+	287, 55,
+	289, 55,
+	295, 55,
+	297, 55,
+	-2, 149,
+-1, 20,
+	277, 30,
+	295, 30,
+	-2, 149,
+-1, 26,
+	277, 13,
+	295, 13,
+	-2, 149,
+-1, 31,
+	277, 41,
+	295, 41,
+	-2, 149,
+-1, 37,
+	270, 149,
+	276, 149,
+	-2, 97,
+-1, 59,
+	270, 149,
+	-2, 111,
+-1, 74,
+	0, 149,
+	270, 149,
+	299, 149,
+	-2, 59,
+-1, 117,
+	277, 122,
+	295, 122,
+	-2, 149,
+-1, 149,
+	270, 18,
 	275, 18,
 	276, 18,
-	294, 18,
-	-2, 24,
--1, 142,
-	294, 128,
-	-2, 131,
+	277, 18,
+	295, 18,
+	-2, 23,
+-1, 156,
+	267, 130,
+	274, 130,
+	290, 130,
+	-2, 127,
 	};
-# define YYNPROD 150
-# define YYLAST 291
+# define YYNPROD 151
+# define YYLAST 408
 xxtabelem xxact[]={
 
-    98,    40,   150,   154,   103,   107,     6,   158,     7,    41,
-   143,    10,    40,   100,   130,   115,    15,   149,    15,    15,
-    41,   109,    85,   101,    72,   102,    58,    97,    42,    15,
-    38,     7,    79,    99,    16,   169,    16,    16,    43,    42,
-    51,   136,    96,   122,    83,   105,   128,    16,    15,    43,
-    91,    80,    66,   183,    60,    81,   132,    82,   129,    87,
-    46,    12,    53,    34,    21,   161,    16,   195,   171,   120,
-    74,     8,    18,   197,   176,   198,   159,   179,   170,   156,
-   164,   147,   118,   116,   110,    63,    25,   180,   157,    29,
-   192,   191,   190,    90,   166,   152,   138,   141,    14,    39,
-   125,    19,   113,     3,    23,    68,    78,    77,    59,    56,
-    37,    17,   137,    32,   121,   189,   184,    44,   123,   112,
-    75,    50,   134,    76,    54,   193,    57,   185,   124,   108,
-    36,    26,   165,   145,    67,    48,   151,    64,    49,    71,
-    47,    30,    73,    31,    22,    84,    55,    35,    61,    44,
-    27,    95,    13,    89,   104,   160,   182,   175,   140,   106,
-   148,   131,    52,   111,    33,    94,    84,    93,    92,    88,
-   163,    65,    70,    69,    28,    20,    57,    11,   119,     5,
-    86,    24,   114,    62,    45,     9,     4,     2,     1,     0,
-     0,     0,     0,     0,     0,   117,     0,     0,     0,    44,
-    71,     0,     0,     0,     0,     0,    84,     0,   126,   135,
-     0,     0,   139,     0,   142,   127,     0,     0,     0,     0,
-     0,    84,     0,   133,     0,   153,     0,     0,     0,     0,
-     0,     0,     0,   146,    44,   144,   167,   114,   168,   155,
-     0,     0,     0,   126,   162,     0,     0,   139,   173,   142,
-     0,     0,   177,   172,     0,   178,   174,     0,     0,     0,
-     0,   153,     0,     0,     0,     0,   181,     0,     0,     0,
-   167,   187,     0,     0,   186,     0,   188,   194,     0,     0,
-     0,     0,   196,     0,     0,     0,     0,     0,     0,   199,
-   200 };
+   108,    44,   165,   117,   113,     6,     7,     7,    14,    45,
+    23,     9,    44,   110,   184,   150,   134,   164,    14,    14,
+    45,   115,   141,   111,   101,   112,    15,   107,    46,    14,
+    42,    74,    89,   109,   142,    68,    15,    15,    47,    46,
+    99,   146,   106,    97,    93,    50,    11,    15,    14,    47,
+    59,    90,    37,   198,    20,    91,   176,    92,   210,   186,
+   101,   132,    83,    17,   212,   191,    15,   174,   213,   194,
+   185,   170,   179,   162,   130,   129,   122,    71,    26,   195,
+   171,    31,   207,   206,   205,   100,   181,   167,     3,   152,
+    13,   155,    18,    63,   138,    24,    67,    88,   125,    87,
+    76,    41,    43,    16,    35,   151,   133,   204,   199,   135,
+    48,   124,    84,   148,    86,    55,    60,    56,   208,   200,
+   137,    64,   118,    48,    40,    27,   180,   160,    75,    52,
+   166,    54,    32,    72,    51,    79,    34,    80,    21,    62,
+    69,    38,    65,    94,    29,    64,    12,   175,   197,   190,
+   154,   105,   116,   163,   114,   145,    95,    58,    79,    36,
+   104,   103,   102,   178,    73,    78,    77,    94,    30,    94,
+    19,    10,     5,    96,    25,    70,   120,    49,     8,     4,
+   131,     2,   126,     1,     0,     0,   127,     0,     0,     0,
+     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+     0,    48,     0,     0,     0,     0,     0,    94,     0,     0,
+     0,     0,     0,   149,     0,     0,   153,     0,   156,     0,
+    48,   139,   126,   143,     0,     0,     0,     0,     0,     0,
+     0,   168,   157,     0,    22,     0,   159,   156,   169,     0,
+   139,     0,     0,   182,     0,   183,   172,     0,     0,     0,
+     0,     0,    28,   153,   188,    33,     0,     0,     0,   192,
+   187,    39,   193,     0,     0,     0,    53,     0,   168,     0,
+    57,     0,    61,   196,     0,     0,    66,   182,   202,     0,
+     0,   201,     0,   203,   209,     0,     0,     0,     0,   211,
+    81,    82,     0,     0,    85,     0,   214,   215,     0,     0,
+    98,     0,     0,     0,     0,     0,     0,     0,     0,   119,
+     0,   121,     0,     0,     0,   123,     0,     0,     0,     0,
+     0,     0,   128,     0,     0,     0,     0,     0,     0,     0,
+     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+     0,     0,   136,     0,     0,   140,     0,     0,     0,     0,
+   144,     0,   147,     0,     0,     0,     0,     0,     0,     0,
+     0,     0,     0,   158,     0,     0,     0,     0,   161,     0,
+     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+   173,     0,   177,     0,     0,     0,     0,     0,     0,     0,
+     0,     0,     0,     0,     0,     0,     0,   189 };
 xxtabelem xxpact[]={
 
-  -290,-10000000,-10000000,  -199,  -282,  -218,-10000000,  -261,-10000000,  -197,
-  -261,  -208,-10000000,  -261,-10000000,-10000000,-10000000,  -177,-10000000,-10000000,
-  -168,-10000000,  -261,-10000000,  -212,-10000000,  -259,  -222,  -197,-10000000,
-  -261,  -254,-10000000,  -214,-10000000,  -261,  -268,-10000000,  -228,  -228,
--10000000,-10000000,-10000000,-10000000,-10000000,  -179,  -261,  -236,  -261,  -270,
--10000000,  -261,  -200,-10000000,  -229,  -272,-10000000,  -223,  -259,  -240,
-  -258,-10000000,-10000000,  -261,  -247,  -294,-10000000,  -273,-10000000,-10000000,
--10000000,  -180,  -261,-10000000,-10000000,  -229,  -279,-10000000,  -181,-10000000,
--10000000,-10000000,-10000000,-10000000,-10000000,  -261,  -182,  -261,-10000000,-10000000,
-  -201,-10000000,  -249,-10000000,-10000000,-10000000,-10000000,-10000000,-10000000,-10000000,
--10000000,-10000000,-10000000,-10000000,-10000000,-10000000,-10000000,-10000000,  -248,  -261,
-  -232,-10000000,  -280,-10000000,  -226,  -229,-10000000,-10000000,  -261,  -251,
--10000000,  -261,-10000000,  -261,  -284,-10000000,  -228,-10000000,-10000000,-10000000,
-  -229,  -183,  -283,-10000000,  -261,  -267,-10000000,  -186,-10000000,  -171,
-  -287,-10000000,  -194,  -248,  -184,  -261,-10000000,  -261,  -257,-10000000,
--10000000,  -187,-10000000,-10000000,-10000000,  -202,  -261,  -261,  -261,-10000000,
-  -193,  -261,-10000000,-10000000,  -261,  -188,-10000000,  -172,-10000000,-10000000,
-  -261,-10000000,-10000000,-10000000,-10000000,  -221,-10000000,-10000000,-10000000,  -261,
-  -261,-10000000,  -240,-10000000,  -261,  -261,-10000000,-10000000,  -203,  -261,
-  -192,-10000000,-10000000,  -190,-10000000,-10000000,  -192,  -261,  -261,-10000000,
--10000000 };
+  -291,-10000000,-10000000,-10000000,  -282,  -233,-10000000,  -269,  -206,  -269,
+  -218,  -284,  -269,-10000000,-10000000,-10000000,  -185,  -284,-10000000,  -176,
+  -284,  -269,-10000000,-10000000,-10000000,  -223,  -284,  -259,-10000000,  -237,
+  -206,  -284,  -269,-10000000,  -269,  -284,  -226,  -284,  -269,-10000000,
+  -259,  -284,  -247,  -247,-10000000,-10000000,-10000000,-10000000,-10000000,  -187,
+  -269,  -257,  -269,-10000000,  -269,  -284,  -284,-10000000,  -208,  -284,
+  -229,-10000000,  -269,-10000000,  -239,  -284,-10000000,  -230,  -258,-10000000,
+-10000000,  -269,  -271,  -296,  -284,  -269,  -284,-10000000,-10000000,  -188,
+  -284,-10000000,-10000000,-10000000,  -229,-10000000,  -229,  -284,  -189,-10000000,
+-10000000,-10000000,-10000000,-10000000,-10000000,-10000000,  -190,  -269,-10000000,-10000000,
+  -209,-10000000,  -276,-10000000,-10000000,-10000000,-10000000,-10000000,-10000000,-10000000,
+-10000000,-10000000,-10000000,-10000000,-10000000,-10000000,-10000000,  -284,  -248,-10000000,
+  -284,-10000000,  -256,-10000000,  -229,  -284,  -241,  -284,-10000000,-10000000,
+  -269,  -277,-10000000,  -269,-10000000,  -269,-10000000,  -248,  -284,  -247,
+-10000000,-10000000,-10000000,  -284,-10000000,  -191,  -283,-10000000,  -269,  -292,
+-10000000,  -194,-10000000,  -179,  -269,  -284,  -203,  -284,-10000000,  -192,
+  -269,-10000000,  -269,  -278,-10000000,-10000000,  -195,-10000000,-10000000,  -211,
+  -269,  -269,  -284,-10000000,-10000000,  -202,  -269,-10000000,-10000000,  -269,
+  -196,-10000000,  -180,-10000000,-10000000,  -269,-10000000,-10000000,-10000000,-10000000,
+  -221,-10000000,-10000000,-10000000,  -269,  -269,-10000000,  -266,-10000000,  -269,
+  -269,-10000000,-10000000,  -212,  -269,  -201,-10000000,-10000000,  -197,-10000000,
+-10000000,  -201,  -269,  -269,-10000000,-10000000 };
 xxtabelem xxpgo[]={
 
-     0,   188,   187,   186,   185,   184,   183,   181,   109,   180,
-   179,   177,   175,    95,   174,   105,   173,   172,    94,   111,
-   171,   110,   100,   170,    91,   108,   168,   167,   165,   164,
-   107,   106,   162,   102,   161,   160,   159,   158,    97,   157,
-   156,    93,    96,    90,   103,    99,   155,   153,   152,   150,
-   147,   146,   144,   143,   141,   138,   136,   135,   134,   133,
-   132,   131,   130,   129,   128,   127,   125,   124,   123,   122,
-   120,   119,   118,   116,    92,   115,   114,   112 };
+     0,   183,   181,   179,   178,   177,   175,   174,    93,   173,
+   172,   171,   170,    87,   168,   100,   166,   165,    86,   103,
+   164,   101,    94,   163,    83,    96,   162,   161,   160,   159,
+    99,    97,   157,    98,   155,   153,   152,   150,    91,   149,
+   148,    85,    89,    82,    88,   102,   147,   146,   144,   141,
+   139,   234,   138,   136,   132,   131,   130,   129,   128,   127,
+   126,   125,   124,   122,   120,   119,   118,   116,   114,   113,
+   112,   111,   109,   108,    84,   107,   106,   105 };
 xxtabelem xxr1[]={
 
-     0,     1,     1,     2,    48,     3,    49,     4,     5,     5,
-     6,     6,     7,    50,     7,    51,    51,     8,     8,     8,
-     8,     9,     9,    44,    10,    10,    11,    11,    52,    11,
-    12,    12,    54,    12,    53,    53,    55,    55,    56,    56,
-    13,    14,    57,    14,    58,    58,    15,    15,    15,    16,
-    59,    17,    60,    60,    18,    19,    61,    19,    20,    63,
-    20,    62,    62,    21,    21,    21,    47,    47,    45,    45,
-    45,    45,    45,    64,    64,    22,    22,    23,    65,    23,
-    66,    66,    24,    24,    25,    25,    26,    26,    26,    27,
-    27,    27,    28,    28,    28,    28,    28,    29,    67,    29,
-    68,    68,    30,    69,    30,    31,    31,    31,    31,    31,
-    31,    32,    70,    32,    71,    71,    33,    33,    34,    34,
-    35,    35,    36,    72,    36,    37,    37,    38,    38,    38,
-    38,    46,    46,    39,    73,    39,    40,    75,    40,    74,
-    74,    41,    76,    41,    77,    77,    42,    42,    43,    43 };
+     0,     1,     1,     2,    47,     3,    48,     4,     5,     5,
+     6,     6,     7,    49,     7,     7,    50,    50,     8,     8,
+     9,     9,    44,    10,    10,    11,    52,    11,    11,    12,
+    54,    12,    12,    53,    53,    55,    55,    56,    56,    13,
+    14,    57,    14,    14,    58,    58,    15,    15,    16,    59,
+    17,    60,    60,    18,    19,    61,    19,    19,    20,    63,
+    20,    20,    62,    62,    21,    21,    21,    21,    45,    45,
+    45,    45,    45,    64,    64,    22,    23,    65,    23,    66,
+    66,    24,    24,    25,    25,    26,    26,    26,    27,    27,
+    27,    28,    28,    28,    28,    28,    29,    67,    29,    29,
+    68,    68,    69,    30,    31,    31,    31,    31,    31,    31,
+    32,    70,    32,    32,    71,    71,    33,    34,    34,    35,
+    35,    36,    72,    36,    36,    37,    37,    38,    38,    38,
+    46,    46,    39,    73,    39,    40,    75,    40,    74,    74,
+    41,    76,    41,    77,    77,    42,    42,    43,    43,    51,
+    51 };
 xxtabelem xxr2[]={
 
-     0,     3,     5,    15,     1,     7,     1,    11,     1,     7,
-     1,     5,     1,     1,     7,     3,     7,     1,     9,    11,
-    13,     1,     7,    15,     1,     5,     1,     3,     1,     7,
-     1,     3,     1,     7,     3,     7,     3,     7,     3,     7,
-     3,     1,     1,     7,     3,     7,     1,     3,     3,     7,
-     1,    11,     3,     7,     7,     1,     1,     7,     1,     1,
-     7,     3,     7,     1,     7,     5,     1,     5,     3,     3,
-     3,     3,     3,     3,     7,     1,     7,     1,     1,     9,
-     3,     7,     1,     3,     1,     7,     3,     3,     3,     3,
-     3,     3,     3,     3,     3,     3,     3,     1,     1,     7,
-     3,     7,     1,     1,     9,     3,     3,     3,     3,     3,
-     3,     1,     1,     7,     3,     7,     1,     9,     1,     7,
-     3,     3,     1,     1,     7,     3,     7,     1,     3,     5,
-    13,     1,     5,     1,     1,     7,     1,     1,     7,     3,
-     7,     1,     1,     7,     3,     7,     1,     7,     3,     3 };
+     0,     3,     3,    15,     1,     7,     1,    11,     1,     7,
+     1,     5,     1,     1,     7,     5,     3,     5,     9,    13,
+     1,     7,    15,     1,     5,     1,     1,     7,     5,     1,
+     1,     7,     5,     5,     7,     5,     7,     3,     7,     3,
+     1,     1,     7,     5,     5,     7,     3,     3,     7,     1,
+    11,     3,     7,     7,     1,     1,     7,     5,     1,     1,
+     7,     5,     5,     7,     5,     7,     9,     5,     3,     3,
+     3,     3,     3,     5,     7,     7,     1,     1,     9,     3,
+     7,     1,     3,     1,     7,     3,     3,     3,     3,     3,
+     3,     3,     3,     3,     3,     3,     1,     1,     7,     5,
+     5,     7,     1,     9,     3,     3,     3,     3,     3,     3,
+     1,     1,     7,     5,     5,     7,     9,     1,     7,     3,
+     3,     1,     1,     7,     5,     5,     7,     3,     5,    13,
+     1,     5,     1,     1,     7,     1,     1,     7,     3,     7,
+     1,     1,     7,     3,     7,     1,     7,     3,     3,     0,
+     2 };
 xxtabelem xxchk[]={
 
--10000000,    -1,    -2,   -44,    -3,   -10,   296,   298,   270,    -4,
-   293,   -11,   279,   -48,   -43,   277,   295,   -19,   269,   -43,
-   -12,   272,   -52,   -43,    -7,   263,   -61,   -49,   -14,   257,
-   -54,   -53,   -43,   -29,   275,   -50,   -62,   -21,   289,   -45,
-   260,   268,   287,   297,   -43,    -5,   282,   -19,   -57,   -55,
-   -43,   294,   -32,   276,   -67,   -51,    -8,   -43,   294,   -25,
-   282,   -25,    -6,   264,   -43,   -20,   288,   -58,   -15,   -16,
-   -17,   -43,   294,   -43,   270,   -70,   -68,   -30,   -31,   261,
-   280,   284,   286,   273,   -43,   294,    -9,   282,   -21,   -47,
+-10000000,    -1,    -2,   -44,    -3,   -10,   296,   298,    -4,   293,
+   -11,   279,   -47,   -43,   277,   295,   -19,   269,   -43,   -12,
+   272,   -52,   -51,   294,   -43,    -7,   263,   -61,   -51,   -48,
+   -14,   257,   -54,   -51,   -53,   -43,   -29,   275,   -49,   -51,
+   -62,   -21,   289,   -45,   260,   268,   287,   297,   -43,    -5,
+   282,   -19,   -57,   -51,   -55,   -43,   -43,   -51,   -32,   276,
+   -67,   -51,   -50,    -8,   -43,   -21,   -51,   -25,   282,   -25,
+    -6,   264,   -43,   -20,   288,   -58,   -15,   -16,   -17,   -43,
+   -43,   -51,   -51,   270,   -70,   -51,   -68,   -30,   -31,   261,
+   280,   284,   286,   273,   -43,    -8,    -9,   282,   -51,   270,
    -41,   290,   -26,   -27,   -28,   -43,   300,   285,   258,   291,
-   271,   281,   283,   262,   -43,   292,   -36,   299,   -63,   294,
-   264,   -43,   -71,   -33,   -31,   294,   264,    -8,   264,   -43,
-   270,   -76,   292,   -72,   -64,   -22,   -45,   -15,   278,   290,
-   294,   -34,   282,   -30,   -69,   -43,   292,   -77,   -42,   -43,
-   -37,   -38,   -43,   294,   -25,   -59,   -33,   264,   -35,   300,
-   285,   -56,   -13,   -43,   270,   -44,   265,   259,   294,   270,
-   -46,   259,   -22,   -23,   264,   -60,   -18,   -43,   -43,   292,
-   265,   270,   -42,   -43,   -38,   -39,   267,   -43,   -43,   265,
-   259,   -13,   -40,   274,   -73,   -65,   -18,   -43,   -41,   -75,
-   -74,   -24,   -43,   -66,   -24,   270,   -74,   265,   265,   -24,
-   -24 };
+   271,   281,   283,   262,   -43,   292,   -36,   299,   -63,   -51,
+   -15,   -51,   264,   -51,   -71,   -33,   -31,   -30,   -51,   264,
+   264,   -43,   270,   -76,   292,   -72,   -51,   -64,   -22,   -45,
+   -51,   278,   290,   -33,   -51,   -34,   282,   -51,   -69,   -43,
+   292,   -77,   -42,   -43,   -37,   -38,   -43,   -22,   -51,   -25,
+   -59,   -51,   264,   -35,   300,   285,   -56,   -13,   -43,   -44,
+   265,   259,   -38,   -51,   270,   -46,   259,   -51,   -23,   264,
+   -60,   -18,   -43,   -43,   292,   265,   270,   -42,   -43,   -51,
+   -39,   267,   -43,   -43,   265,   259,   -13,   -40,   274,   -73,
+   -65,   -18,   -43,   -41,   -75,   -74,   -24,   -43,   -66,   -24,
+   270,   -74,   265,   265,   -24,   -24 };
 xxtabelem xxdef[]={
 
-    24,    -2,     1,     0,     0,    26,     4,     0,     2,    55,
-     0,    30,    -2,     0,    25,   148,   149,    12,    56,     6,
-    41,    -2,     0,     5,    97,    13,    63,     8,    55,    42,
-     0,    29,    34,   111,    98,    17,    57,    61,    84,    84,
-    68,    69,    70,    71,    72,    10,     0,    58,    46,    33,
-    36,     0,     0,   112,   102,    14,    15,    21,    63,    66,
-     0,    65,     7,     0,     0,   122,    59,    43,    44,    47,
-    48,     0,     0,    35,     3,   116,    99,   100,     0,   105,
-   106,   107,   108,   109,   110,    17,     0,     0,    62,    64,
-     0,   142,     0,    86,    87,    88,    89,    90,    91,    92,
-    93,    94,    95,    96,    11,     9,    23,   123,    75,    46,
-     0,    37,   113,   114,   118,   102,   103,    16,     0,     0,
-    67,   146,    85,   127,    60,    73,    84,    45,    49,    50,
-   116,     0,     0,   101,     0,    -2,    22,   143,   144,     0,
-   124,   125,    -2,    75,    77,     0,   115,     0,     0,   120,
-   121,   104,    38,    40,    19,     0,   146,     0,   127,   129,
-   133,     0,    74,    76,     0,    51,    52,     0,   117,   119,
-     0,    20,   145,   147,   126,   136,   134,   132,    78,     0,
-     0,    39,   141,   137,    82,    82,    53,    54,     0,    82,
-   135,   139,    83,    79,    80,   130,   138,    82,    82,   140,
-    81 };
+    23,    -2,     1,     2,     0,    25,     4,     0,    54,     0,
+    29,    -2,     0,    24,   147,   148,    12,    -2,     6,    40,
+    -2,     0,    28,   150,     5,    96,    -2,     0,    57,     8,
+    54,    -2,     0,    32,    27,   149,   110,    -2,     0,    15,
+    56,   149,    83,    83,    68,    69,    70,    71,    72,    10,
+     0,    58,     0,    43,    31,   149,   149,    33,     0,    -2,
+     0,    99,    14,    16,    20,   149,    62,    64,     0,    67,
+     7,     0,     0,   121,    -2,    42,   149,    46,    47,     0,
+   149,    35,    34,     3,     0,   113,    98,   149,     0,   104,
+   105,   106,   107,   108,   109,    17,     0,     0,    63,    65,
+     0,   141,     0,    85,    86,    87,    88,    89,    90,    91,
+    92,    93,    94,    95,    11,     9,    22,    -2,     0,    61,
+   149,    44,     0,    36,   112,   149,   117,   149,   100,   102,
+     0,     0,    66,   145,    84,     0,   124,    60,   149,    83,
+    45,    48,    49,   149,   114,     0,     0,   101,     0,    -2,
+    21,   142,   143,     0,   123,   149,    -2,   149,    73,    76,
+     0,   115,     0,     0,   119,   120,   103,    37,    39,     0,
+   145,     0,   149,   125,   128,   132,     0,    74,    75,     0,
+    50,    51,     0,   116,   118,     0,    19,   144,   146,   126,
+   135,   133,   131,    77,     0,     0,    38,   140,   136,    81,
+    81,    52,    53,     0,    81,   134,   138,    82,    78,    79,
+   129,   137,    81,    81,   139,    80 };
 typedef struct
 #ifdef __cplusplus
 	xxtoktype
@@ -355,7 +408,7 @@ char * xxreds[] =
 {
 	"-no such reduction-",
 	"Ace_or_Properties : Ace",
-	"Ace_or_Properties : Cluster_properties LAC_END",
+	"Ace_or_Properties : Cluster_properties",
 	"Ace : System Root Defaults Clusters Externals Generation LAC_END",
 	"System : LAC_SYSTEM",
 	"System : LAC_SYSTEM Name",
@@ -368,11 +421,10 @@ char * xxreds[] =
 	"Clusters : /* empty */",
 	"Clusters : LAC_CLUSTER",
 	"Clusters : LAC_CLUSTER Cluster_clause_list",
+	"Clusters : LAC_CLUSTER ASemi",
 	"Cluster_clause_list : Cluster_clause",
-	"Cluster_clause_list : Cluster_clause_list LAC_SEMICOLON Cluster_clause",
-	"Cluster_clause : /* empty */",
+	"Cluster_clause_list : Cluster_clause_list Cluster_clause",
 	"Cluster_clause : Name Parent_tag LAC_COLUMN Name",
-	"Cluster_clause : Name Parent_tag LAC_COLUMN Name LAC_END",
 	"Cluster_clause : Name Parent_tag LAC_COLUMN Name Cluster_properties LAC_END",
 	"Parent_tag : /* empty */",
 	"Parent_tag : LAC_LEFT_PARAM Name LAC_RIGHT_PARAM",
@@ -381,25 +433,25 @@ char * xxreds[] =
 	"Use : LAC_USE Name",
 	"Include : /* empty */",
 	"Include : LAC_INCLUDE",
-	"Include : LAC_INCLUDE",
 	"Include : LAC_INCLUDE Include_file_list",
+	"Include : LAC_INCLUDE ASemi",
 	"Exclude : /* empty */",
 	"Exclude : LAC_EXCLUDE",
-	"Exclude : LAC_EXCLUDE",
 	"Exclude : LAC_EXCLUDE Exclude_file_list",
-	"Include_file_list : Name",
-	"Include_file_list : Include_file_list LAC_SEMICOLON Name",
-	"Exclude_file_list : Name",
-	"Exclude_file_list : Exclude_file_list LAC_SEMICOLON Name",
+	"Exclude : LAC_EXCLUDE ASemi",
+	"Include_file_list : Name ASemi",
+	"Include_file_list : Include_file_list Name ASemi",
+	"Exclude_file_list : Name ASemi",
+	"Exclude_file_list : Exclude_file_list Name ASemi",
 	"File_list : File_clause",
 	"File_list : File_list LAC_COMMA File_clause",
 	"File_clause : Name",
 	"Name_adapt : /* empty */",
 	"Name_adapt : LAC_ADAPT",
 	"Name_adapt : LAC_ADAPT Cluster_adapt_list",
-	"Cluster_adapt_list : Cluster_adapt_clause",
-	"Cluster_adapt_list : Cluster_adapt_list LAC_SEMICOLON Cluster_adapt_clause",
-	"Cluster_adapt_clause : /* empty */",
+	"Name_adapt : LAC_ADAPT ASemi",
+	"Cluster_adapt_list : Cluster_adapt_clause ASemi",
+	"Cluster_adapt_list : Cluster_adapt_list Cluster_adapt_clause ASemi",
 	"Cluster_adapt_clause : Cluster_ignore",
 	"Cluster_adapt_clause : Cluster_rename_clause",
 	"Cluster_ignore : Name LAC_COLUMN LAC_IGNORE",
@@ -411,24 +463,24 @@ char * xxreds[] =
 	"Defaults : /* empty */",
 	"Defaults : LAC_DEFAULT",
 	"Defaults : LAC_DEFAULT D_option_clause_list",
+	"Defaults : LAC_DEFAULT ASemi",
 	"Options : /* empty */",
 	"Options : LAC_OPTION",
 	"Options : LAC_OPTION O_option_clause_list",
-	"D_option_clause_list : D_option_clause",
-	"D_option_clause_list : D_option_clause_list LAC_SEMICOLON D_option_clause",
-	"D_option_clause : /* empty */",
-	"D_option_clause : LAC_PRECOMPILED Option_mark Precompiled_adaptation",
+	"Options : LAC_OPTION ASemi",
+	"D_option_clause_list : D_option_clause ASemi",
+	"D_option_clause_list : D_option_clause_list D_option_clause ASemi",
+	"D_option_clause : LAC_PRECOMPILED Option_mark",
+	"D_option_clause : LAC_PRECOMPILED Option_mark LAC_END",
+	"D_option_clause : LAC_PRECOMPILED Option_mark External_rename LAC_END",
 	"D_option_clause : Option_name Option_mark",
-	"Precompiled_adaptation : /* empty */",
-	"Precompiled_adaptation : External_rename LAC_END",
 	"Option_name : LAC_ASSERTION",
 	"Option_name : LAC_DEBUG",
 	"Option_name : LAC_OPTIMIZE",
 	"Option_name : LAC_TRACE",
 	"Option_name : Name",
-	"O_option_clause_list : O_option_clause",
-	"O_option_clause_list : O_option_clause_list LAC_SEMICOLON O_option_clause",
-	"O_option_clause : /* empty */",
+	"O_option_clause_list : O_option_clause ASemi",
+	"O_option_clause_list : O_option_clause_list O_option_clause ASemi",
 	"O_option_clause : Option_name Option_mark Target_list",
 	"Target_list : /* empty */",
 	"Target_list : LAC_COLUMN Name",
@@ -453,9 +505,9 @@ char * xxreds[] =
 	"Externals : /* empty */",
 	"Externals : LAC_EXTERNAL",
 	"Externals : LAC_EXTERNAL Language_contrib_list",
-	"Language_contrib_list : Language_contrib",
-	"Language_contrib_list : Language_contrib_list LAC_SEMICOLON Language_contrib",
-	"Language_contrib : /* empty */",
+	"Externals : LAC_EXTERNAL ASemi",
+	"Language_contrib_list : Language_contrib ASemi",
+	"Language_contrib_list : Language_contrib_list Language_contrib ASemi",
 	"Language_contrib : Language_name LAC_COLUMN",
 	"Language_contrib : Language_name LAC_COLUMN File_list",
 	"Language_name : LAC_C",
@@ -467,9 +519,9 @@ char * xxreds[] =
 	"Generation : /* empty */",
 	"Generation : LAC_GENERATE",
 	"Generation : LAC_GENERATE Language_gen_list",
-	"Language_gen_list : Language_generation",
-	"Language_gen_list : Language_gen_list LAC_SEMICOLON Language_generation",
-	"Language_generation : /* empty */",
+	"Generation : LAC_GENERATE ASemi",
+	"Language_gen_list : Language_generation ASemi",
+	"Language_gen_list : Language_gen_list Language_generation ASemi",
 	"Language_generation : Language_name Generate_option LAC_COLUMN Name",
 	"Generate_option : /* empty */",
 	"Generate_option : LAC_LEFT_PARAM Generate_option_value LAC_RIGHT_PARAM",
@@ -478,9 +530,9 @@ char * xxreds[] =
 	"Visible : /* empty */",
 	"Visible : LAC_VISIBLE",
 	"Visible : LAC_VISIBLE Class_visi_list",
-	"Class_visi_list : Class_visibility",
-	"Class_visi_list : Class_visi_list LAC_SEMICOLON Class_visibility",
-	"Class_visibility : /* empty */",
+	"Visible : LAC_VISIBLE ASemi",
+	"Class_visi_list : Class_visibility ASemi",
+	"Class_visi_list : Class_visi_list Class_visibility ASemi",
 	"Class_visibility : Name",
 	"Class_visibility : Name LAC_END",
 	"Class_visibility : Name External_name Creation_restriction Export_restriction External_rename LAC_END",
@@ -503,13 +555,15 @@ char * xxreds[] =
 	"ExternaL_rename_pair : Name LAC_AS Name",
 	"Name : LAC_IDENTIFIER",
 	"Name : LAC_STRING",
+	"ASemi : /* empty */",
+	"ASemi : LAC_SEMICOLON",
 };
 #endif /* YYDEBUG */
 /*
  * Copyright (c) 1993 by Sun Microsystems, Inc.
  */
 
-/* #pragma ident	"@(#)yaccpar	6.12	93/06/07 SMI" */
+#pragma ident	"@(#)yaccpar	6.12	93/06/07 SMI"
 
 /*
 ** Skeleton parser driver for yacc output
@@ -1041,7 +1095,7 @@ case 1:
 {rn_ast = xxpvt[-0].node;} break;
 case 2:
 # line 89 "lace_y.y"
-{rn_ast = xxpvt[-1].node;} break;
+{rn_ast = xxpvt[-0].node;} break;
 case 3:
 # line 93 "lace_y.y"
 {
@@ -1084,164 +1138,164 @@ case 14:
 # line 125 "lace_y.y"
 {xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
 case 15:
-# line 129 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+# line 127 "lace_y.y"
+{xxval.node = NULL;} break;
 case 16:
 # line 131 "lace_y.y"
 {list_push(xxpvt[-0].node);} break;
 case 17:
-# line 135 "lace_y.y"
-{xxval.node = NULL;} break;
+# line 133 "lace_y.y"
+{list_push(xxpvt[-0].node);} break;
 case 18:
-# line 138 "lace_y.y"
+# line 137 "lace_y.y"
 {xxval.node = create_node4 (CLUSTER_SD,xxpvt[-3].node,xxpvt[-0].node,NULL,xxpvt[-2].node);} break;
 case 19:
-# line 140 "lace_y.y"
-{xxval.node = create_node4 (CLUSTER_SD,xxpvt[-4].node,xxpvt[-1].node,NULL,xxpvt[-3].node);} break;
-case 20:
-# line 142 "lace_y.y"
+# line 139 "lace_y.y"
 {xxval.node = create_node4 (CLUSTER_SD,xxpvt[-5].node,xxpvt[-2].node,xxpvt[-1].node,xxpvt[-4].node);} break;
+case 20:
+# line 143 "lace_y.y"
+{xxval.node = NULL;} break;
 case 21:
-# line 146 "lace_y.y"
-{xxval.node = NULL;} break;
-case 22:
-# line 148 "lace_y.y"
+# line 145 "lace_y.y"
 {xxval.node = xxpvt[-1].node;} break;
-case 23:
-# line 152 "lace_y.y"
+case 22:
+# line 149 "lace_y.y"
 {xxval.node = create_node7 (CLUST_PROP_SD,xxpvt[-6].node,xxpvt[-5].node,xxpvt[-4].node,xxpvt[-3].node,xxpvt[-2].node,xxpvt[-1].node,xxpvt[-0].node);} break;
+case 23:
+# line 153 "lace_y.y"
+{xxval.node = NULL;} break;
 case 24:
-# line 156 "lace_y.y"
-{xxval.node = NULL;} break;
-case 25:
-# line 158 "lace_y.y"
+# line 155 "lace_y.y"
 {xxval.node = xxpvt[-0].node;} break;
-case 26:
-# line 162 "lace_y.y"
+case 25:
+# line 159 "lace_y.y"
 {xxval.node = NULL;} break;
+case 26:
+# line 160 "lace_y.y"
+{list_init();} break;
 case 27:
+# line 161 "lace_y.y"
+{xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
+case 28:
 # line 163 "lace_y.y"
 {xxval.node = NULL;} break;
-case 28:
-# line 164 "lace_y.y"
-{list_init();} break;
 case 29:
-# line 165 "lace_y.y"
-{xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
+# line 167 "lace_y.y"
+{xxval.node = NULL;} break;
 case 30:
-# line 169 "lace_y.y"
-{xxval.node = NULL;} break;
+# line 168 "lace_y.y"
+{list_init();} break;
 case 31:
-# line 170 "lace_y.y"
-{xxval.node = NULL;} break;
+# line 169 "lace_y.y"
+{xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
 case 32:
 # line 171 "lace_y.y"
-{list_init();} break;
+{xxval.node = NULL;} break;
 case 33:
-# line 172 "lace_y.y"
-{xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
+# line 175 "lace_y.y"
+{list_push(create_node1(INCLUDE_SD,xxpvt[-1].node));} break;
 case 34:
-# line 176 "lace_y.y"
-{list_push(create_node1(INCLUDE_SD,xxpvt[-0].node));} break;
+# line 177 "lace_y.y"
+{list_push(create_node1(INCLUDE_SD,xxpvt[-1].node));} break;
 case 35:
-# line 178 "lace_y.y"
-{list_push(create_node1(INCLUDE_SD,xxpvt[-0].node));} break;
+# line 181 "lace_y.y"
+{list_push(create_node1(EXCLUDE_SD,xxpvt[-1].node));} break;
 case 36:
-# line 182 "lace_y.y"
-{list_push(create_node1(EXCLUDE_SD,xxpvt[-0].node));} break;
+# line 183 "lace_y.y"
+{list_push(create_node1(EXCLUDE_SD,xxpvt[-1].node));} break;
 case 37:
-# line 184 "lace_y.y"
-{list_push(create_node1(EXCLUDE_SD,xxpvt[-0].node));} break;
+# line 187 "lace_y.y"
+{list_push(xxpvt[-0].node);} break;
 case 38:
-# line 188 "lace_y.y"
+# line 189 "lace_y.y"
 {list_push(xxpvt[-0].node);} break;
 case 39:
-# line 190 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
-case 40:
-# line 194 "lace_y.y"
+# line 193 "lace_y.y"
 {xxval.node = xxpvt[-0].node;} break;
+case 40:
+# line 197 "lace_y.y"
+{xxval.node = NULL;} break;
 case 41:
 # line 198 "lace_y.y"
-{xxval.node = NULL;} break;
+{list_init();} break;
 case 42:
 # line 199 "lace_y.y"
-{list_init();} break;
-case 43:
-# line 200 "lace_y.y"
 {xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
-case 44:
-# line 204 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
-case 45:
-# line 206 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
-case 46:
-# line 210 "lace_y.y"
+case 43:
+# line 201 "lace_y.y"
 {xxval.node = NULL;} break;
-case 47:
-# line 212 "lace_y.y"
+case 44:
+# line 205 "lace_y.y"
+{list_push(xxpvt[-1].node);} break;
+case 45:
+# line 207 "lace_y.y"
+{list_push(xxpvt[-1].node);} break;
+case 46:
+# line 211 "lace_y.y"
 {xxval.node = create_node1 (CLUST_IGN_SD,xxpvt[-0].node);} break;
-case 48:
-# line 214 "lace_y.y"
+case 47:
+# line 213 "lace_y.y"
 {xxval.node = create_node2 (CLUST_REN_SD,xxpvt[-0].node,list_new(CONSTRUCT_LIST_SD));} break;
-case 49:
-# line 218 "lace_y.y"
+case 48:
+# line 217 "lace_y.y"
 {xxval.node = xxpvt[-2].node;} break;
+case 49:
+# line 220 "lace_y.y"
+{list_init();} break;
 case 50:
 # line 221 "lace_y.y"
-{list_init();} break;
-case 51:
-# line 222 "lace_y.y"
 {xxval.node = xxpvt[-4].node;} break;
+case 51:
+# line 225 "lace_y.y"
+{list_push(xxpvt[-0].node);} break;
 case 52:
-# line 226 "lace_y.y"
+# line 227 "lace_y.y"
 {list_push(xxpvt[-0].node);} break;
 case 53:
-# line 228 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
-case 54:
-# line 232 "lace_y.y"
+# line 231 "lace_y.y"
 {xxval.node = create_node2 (TWO_NAME_SD,xxpvt[-2].node,xxpvt[-0].node);} break;
+case 54:
+# line 235 "lace_y.y"
+{xxval.node = NULL;} break;
 case 55:
 # line 236 "lace_y.y"
-{xxval.node = NULL;} break;
+{list_init();} break;
 case 56:
 # line 237 "lace_y.y"
-{list_init();} break;
-case 57:
-# line 238 "lace_y.y"
 {xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
+case 57:
+# line 239 "lace_y.y"
+{xxval.node= NULL;} break;
 case 58:
-# line 242 "lace_y.y"
+# line 243 "lace_y.y"
 {xxval.node = NULL;} break;
 case 59:
-# line 243 "lace_y.y"
+# line 244 "lace_y.y"
 {list_init();} break;
 case 60:
-# line 244 "lace_y.y"
+# line 245 "lace_y.y"
 {xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
 case 61:
-# line 248 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+# line 247 "lace_y.y"
+{xxval.node = NULL;} break;
 case 62:
-# line 250 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+# line 251 "lace_y.y"
+{list_push(xxpvt[-1].node);} break;
 case 63:
-# line 254 "lace_y.y"
-{xxval.node = NULL;} break;
+# line 253 "lace_y.y"
+{list_push(xxpvt[-1].node);} break;
 case 64:
-# line 256 "lace_y.y"
-{xxval.node = create_node3(D_PRECOMPILED_SD,create_node(PRECOMPILED_SD),xxpvt[-1].node,xxpvt[-0].node);} break;
+# line 257 "lace_y.y"
+{xxval.node = create_node3(D_PRECOMPILED_SD,create_node(PRECOMPILED_SD),xxpvt[-0].node,NULL);} break;
 case 65:
-# line 258 "lace_y.y"
-{xxval.node = create_node2 (D_OPTION_SD,xxpvt[-1].node,xxpvt[-0].node);} break;
+# line 259 "lace_y.y"
+{xxval.node = create_node3(D_PRECOMPILED_SD,create_node(PRECOMPILED_SD),xxpvt[-1].node,NULL);} break;
 case 66:
-# line 262 "lace_y.y"
-{xxval.node = NULL;} break;
+# line 261 "lace_y.y"
+{xxval.node = create_node3(D_PRECOMPILED_SD,create_node(PRECOMPILED_SD),xxpvt[-2].node,xxpvt[-1].node);} break;
 case 67:
-# line 264 "lace_y.y"
-{xxval.node = xxpvt[-1].node;} break;
+# line 263 "lace_y.y"
+{xxval.node = create_node2 (D_OPTION_SD,xxpvt[-1].node,xxpvt[-0].node);} break;
 case 68:
 # line 268 "lace_y.y"
 {xxval.node = create_node(ASSERTION_SD);} break;
@@ -1259,239 +1313,236 @@ case 72:
 {xxval.node = create_node1(FREE_OPTION_SD,xxpvt[-0].node);} break;
 case 73:
 # line 280 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+{list_push(xxpvt[-1].node);} break;
 case 74:
 # line 282 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+{list_push(xxpvt[-1].node);} break;
 case 75:
 # line 286 "lace_y.y"
-{xxval.node = NULL;} break;
-case 76:
-# line 288 "lace_y.y"
 {xxval.node = create_node3 (O_OPTION_SD,xxpvt[-2].node,xxpvt[-1].node,xxpvt[-0].node);} break;
+case 76:
+# line 290 "lace_y.y"
+{xxval.node = NULL;} break;
 case 77:
 # line 292 "lace_y.y"
-{xxval.node = NULL;} break;
+{list_init(); list_push (xxpvt[-0].node);} break;
 case 78:
 # line 294 "lace_y.y"
-{list_init(); list_push (xxpvt[-0].node);} break;
-case 79:
-# line 296 "lace_y.y"
 {xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
+case 79:
+# line 298 "lace_y.y"
+{list_push(xxpvt[-0].node);} break;
 case 80:
 # line 300 "lace_y.y"
 {list_push(xxpvt[-0].node);} break;
 case 81:
-# line 302 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+# line 304 "lace_y.y"
+{xxval.node = NULL;} break;
 case 82:
 # line 306 "lace_y.y"
-{xxval.node = NULL;} break;
-case 83:
-# line 308 "lace_y.y"
 {xxval.node = xxpvt[-0].node;} break;
+case 83:
+# line 310 "lace_y.y"
+{xxval.node = NULL;} break;
 case 84:
 # line 312 "lace_y.y"
-{xxval.node = NULL;} break;
-case 85:
-# line 314 "lace_y.y"
 {xxval.node = xxpvt[-1].node;} break;
+case 85:
+# line 316 "lace_y.y"
+{xxval.node = xxpvt[-0].node;} break;
 case 86:
 # line 318 "lace_y.y"
 {xxval.node = xxpvt[-0].node;} break;
 case 87:
 # line 320 "lace_y.y"
-{xxval.node = xxpvt[-0].node;} break;
-case 88:
-# line 322 "lace_y.y"
 {xxval.node = create_node1 (NAME_SD,xxpvt[-0].node);} break;
+case 88:
+# line 324 "lace_y.y"
+{xxval.node = create_node1(YES_SD,lace_id("yes"));} break;
 case 89:
 # line 326 "lace_y.y"
-{xxval.node = create_node1(YES_SD,lace_id("yes"));} break;
+{xxval.node = create_node1(NO_SD,lace_id("no"));} break;
 case 90:
 # line 328 "lace_y.y"
-{xxval.node = create_node1(NO_SD,lace_id("no"));} break;
-case 91:
-# line 330 "lace_y.y"
 {xxval.node = create_node1(ALL_SD,lace_id("all"));} break;
+case 91:
+# line 332 "lace_y.y"
+{xxval.node = create_node1(REQUIRE_SD,lace_id("require"));} break;
 case 92:
 # line 334 "lace_y.y"
-{xxval.node = create_node1(REQUIRE_SD,lace_id("require"));} break;
+{xxval.node = create_node1(ENSURE_SD,lace_id("ensure"));} break;
 case 93:
 # line 336 "lace_y.y"
-{xxval.node = create_node1(ENSURE_SD,lace_id("ensure"));} break;
+{xxval.node = create_node1(INVARIANT_SD,lace_id("invariant"));} break;
 case 94:
 # line 338 "lace_y.y"
-{xxval.node = create_node1(INVARIANT_SD,lace_id("invariant"));} break;
+{xxval.node = create_node1(LOOP_SD,lace_id("loop"));} break;
 case 95:
 # line 340 "lace_y.y"
-{xxval.node = create_node1(LOOP_SD,lace_id("loop"));} break;
-case 96:
-# line 342 "lace_y.y"
 {xxval.node = create_node1(CHECK_SD,lace_id("check"));} break;
-case 97:
-# line 346 "lace_y.y"
+case 96:
+# line 344 "lace_y.y"
 {xxval.node = NULL;} break;
-case 98:
-# line 347 "lace_y.y"
+case 97:
+# line 345 "lace_y.y"
 {list_init();} break;
+case 98:
+# line 346 "lace_y.y"
+{xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
 case 99:
 # line 348 "lace_y.y"
-{xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
+{xxval.node = NULL;} break;
 case 100:
 # line 352 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+{list_push(xxpvt[-1].node);} break;
 case 101:
 # line 354 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+{list_push(xxpvt[-1].node);} break;
 case 102:
-# line 358 "lace_y.y"
-{xxval.node = NULL;} break;
-case 103:
-# line 359 "lace_y.y"
+# line 357 "lace_y.y"
 {list_init();} break;
-case 104:
-# line 360 "lace_y.y"
+case 103:
+# line 358 "lace_y.y"
 {xxval.node = create_node2 (LANG_TRIB_SD,xxpvt[-3].node,list_new(CONSTRUCT_LIST_SD));} break;
-case 105:
-# line 364 "lace_y.y"
+case 104:
+# line 362 "lace_y.y"
 {xxval.node =
 		create_node1(C_NAME_SD,lace_id("c"));} break;
-case 106:
-# line 367 "lace_y.y"
+case 105:
+# line 365 "lace_y.y"
 {xxval.node =
 		create_node1(INCLUDE_PATH_NAME_SD,lace_id("include_path"));} break;
-case 107:
-# line 370 "lace_y.y"
+case 106:
+# line 368 "lace_y.y"
 {xxval.node =
 		create_node1(MAKE_NAME_SD,lace_id("make"));} break;
-case 108:
-# line 373 "lace_y.y"
+case 107:
+# line 371 "lace_y.y"
 {xxval.node =
 		create_node1(OBJECT_NAME_SD,lace_id("object"));} break;
-case 109:
-# line 376 "lace_y.y"
+case 108:
+# line 374 "lace_y.y"
 {xxval.node =
 		create_node1(EXECUTABLE_NAME_SD,lace_id("executable"));} break;
-case 110:
-# line 379 "lace_y.y"
+case 109:
+# line 377 "lace_y.y"
 {xxval.node = create_node1(LANGUAGE_NAME_SD,xxpvt[-0].node);} break;
-case 111:
-# line 383 "lace_y.y"
+case 110:
+# line 381 "lace_y.y"
 {xxval.node = NULL;} break;
-case 112:
-# line 384 "lace_y.y"
+case 111:
+# line 382 "lace_y.y"
 {list_init();} break;
+case 112:
+# line 383 "lace_y.y"
+{xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
 case 113:
 # line 385 "lace_y.y"
-{xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
+{xxval.node = NULL;} break;
 case 114:
 # line 389 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+{list_push(xxpvt[-1].node);} break;
 case 115:
 # line 391 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+{list_push(xxpvt[-1].node);} break;
 case 116:
 # line 395 "lace_y.y"
-{xxval.node = NULL;} break;
-case 117:
-# line 397 "lace_y.y"
 {xxval.node = create_node3 (LANG_GEN_SD,xxpvt[-3].node,xxpvt[-2].node,xxpvt[-0].node);} break;
+case 117:
+# line 399 "lace_y.y"
+{xxval.node = NULL;} break;
 case 118:
 # line 401 "lace_y.y"
-{xxval.node = NULL;} break;
-case 119:
-# line 403 "lace_y.y"
 {xxval.node = xxpvt[-1].node;} break;
+case 119:
+# line 405 "lace_y.y"
+{xxval.node = create_node (YES_SD);} break;
 case 120:
 # line 407 "lace_y.y"
-{xxval.node = create_node (YES_SD);} break;
-case 121:
-# line 409 "lace_y.y"
 {xxval.node = create_node (NO_SD);} break;
-case 122:
-# line 413 "lace_y.y"
+case 121:
+# line 411 "lace_y.y"
 {xxval.node = NULL;} break;
-case 123:
-# line 414 "lace_y.y"
+case 122:
+# line 412 "lace_y.y"
 {list_init();} break;
+case 123:
+# line 413 "lace_y.y"
+{xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
 case 124:
 # line 415 "lace_y.y"
-{xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
+{xxval.node = NULL;} break;
 case 125:
 # line 419 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+{list_push(xxpvt[-1].node);} break;
 case 126:
 # line 421 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+{list_push(xxpvt[-1].node);} break;
 case 127:
 # line 425 "lace_y.y"
-{xxval.node = NULL;} break;
+{xxval.node = create_node5 (CLAS_VISI_SD,xxpvt[-0].node,NULL,NULL,NULL,NULL);} break;
 case 128:
 # line 427 "lace_y.y"
-{xxval.node = create_node5 (CLAS_VISI_SD,xxpvt[-0].node,NULL,NULL,NULL,NULL);} break;
+{xxval.node = create_node5 (CLAS_VISI_SD,xxpvt[-1].node,NULL,NULL,NULL,NULL);} break;
 case 129:
 # line 429 "lace_y.y"
-{xxval.node = create_node5 (CLAS_VISI_SD,xxpvt[-1].node,NULL,NULL,NULL,NULL);} break;
-case 130:
-# line 431 "lace_y.y"
 {xxval.node = create_node5 (CLAS_VISI_SD,xxpvt[-5].node,xxpvt[-4].node,xxpvt[-3].node,xxpvt[-2].node,xxpvt[-1].node);} break;
+case 130:
+# line 433 "lace_y.y"
+{xxval.node = NULL;} break;
 case 131:
 # line 435 "lace_y.y"
-{xxval.node = NULL;} break;
-case 132:
-# line 437 "lace_y.y"
 {xxval.node = xxpvt[-0].node;} break;
+case 132:
+# line 439 "lace_y.y"
+{xxval.node = NULL;} break;
 case 133:
-# line 441 "lace_y.y"
-{xxval.node = NULL;} break;
+# line 440 "lace_y.y"
+{list_init();} break;
 case 134:
-# line 442 "lace_y.y"
-{list_init();} break;
+# line 441 "lace_y.y"
+{xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
 case 135:
-# line 443 "lace_y.y"
-{xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
-case 136:
-# line 447 "lace_y.y"
+# line 445 "lace_y.y"
 {xxval.node = NULL;} break;
-case 137:
-# line 448 "lace_y.y"
+case 136:
+# line 446 "lace_y.y"
 {list_init();} break;
-case 138:
-# line 449 "lace_y.y"
+case 137:
+# line 447 "lace_y.y"
 {xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
+case 138:
+# line 451 "lace_y.y"
+{list_push(xxpvt[-0].node);} break;
 case 139:
 # line 453 "lace_y.y"
 {list_push(xxpvt[-0].node);} break;
 case 140:
-# line 455 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
-case 141:
-# line 459 "lace_y.y"
+# line 457 "lace_y.y"
 {xxval.node = NULL;} break;
-case 142:
-# line 460 "lace_y.y"
+case 141:
+# line 458 "lace_y.y"
 {list_init();} break;
-case 143:
-# line 461 "lace_y.y"
+case 142:
+# line 459 "lace_y.y"
 {xxval.node = list_new(CONSTRUCT_LIST_SD);} break;
+case 143:
+# line 463 "lace_y.y"
+{list_push(xxpvt[-0].node);} break;
 case 144:
 # line 465 "lace_y.y"
 {list_push(xxpvt[-0].node);} break;
 case 145:
-# line 467 "lace_y.y"
-{list_push(xxpvt[-0].node);} break;
+# line 469 "lace_y.y"
+{xxval.node = NULL;} break;
 case 146:
 # line 471 "lace_y.y"
-{xxval.node = NULL;} break;
-case 147:
-# line 473 "lace_y.y"
 {xxval.node = create_node2 (TWO_NAME_SD,xxpvt[-2].node,xxpvt[-0].node);} break;
+case 147:
+# line 475 "lace_y.y"
+{xxval.node = lace_id (token_str);} break;
 case 148:
 # line 477 "lace_y.y"
-{xxval.node = lace_id (token_str);} break;
-case 149:
-# line 479 "lace_y.y"
 {xxval.node = lace_id (token_str);} break;
 	}
 	goto xxstack;		/* reset registers in driver code */

@@ -364,10 +364,11 @@
 		<row><td>LibraryDotNet</td><td>{E05D8E65-9CEB-4E1D-8353-72E4663A9DA1}</td><td>LIBRARY.NET</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>MDRegFiles</td><td>{507C0807-FE24-4381-A19B-C3E1699DB266}</td><td>BIN1</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>PrecompAceFile</td><td>{FE6A533D-B2B6-40AD-BB04-E844118BAEFF}</td><td>PRECOMP1</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>PrecompFiles</td><td>{05CE14DC-C21E-49A7-B910-7278A3F86E4D}</td><td>PRECOMP</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>PrecompFiles</td><td>{05CE14DC-C21E-49A7-B910-7278A3F86E4D}</td><td>PRECOMPILE</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>SamplesFiles</td><td>{48631DB0-DD04-46BF-AA0B-A84D7B320573}</td><td>SAMPLES1</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>VirtualDirComponent</td><td>{70E9460C-4F29-4900-A0DD-A32B0052696C}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>XCACLS</td><td>{8D0F564F-1893-493C-A036-0A18BE7210E1}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ecdp.chm</td><td>{08C9F2BA-3334-4311-A331-8F76C65417B7}</td><td>DOCUMENTATION</td><td>8</td><td/><td>ecdp.chm</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ecdpc.exe</td><td>{A1290663-9EDB-4E4C-9BA3-2D19F4370EF4}</td><td>BIN1</td><td>8</td><td/><td>ecdpc.exe</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ecdpman.exe</td><td>{AFD93E19-EFAA-430F-BB6C-C3B9E5DFFBF9}</td><td>BIN</td><td>8</td><td/><td>ecdpman.exe</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>esplit.exe</td><td>{53402B41-5E64-48C7-870D-6CFB931EBB78}</td><td>BIN</td><td>8</td><td/><td>esplit.exe</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -1036,7 +1037,7 @@
 		<row><td>Directory_</td><td>ISCEApp</td></row>
 		<row><td>EIFINIT</td><td>EifinitFiles</td></row>
 		<row><td>INSTALLDIR</td><td>VirtualDirComponent</td></row>
-		<row><td>PRECOMP</td><td>PrecompFiles</td></row>
+		<row><td>PRECOMPILE</td><td>PrecompFiles</td></row>
 	</table>
 
 	<table name="CustomAction">
@@ -1119,6 +1120,7 @@
 		<col def="S255">ISFolderName</col>
 		<row><td>ALLUSERSPROFILE</td><td>TARGETDIR</td><td>.:ALLUSE~1|All Users</td><td/><td>0</td><td/></row>
 		<row><td>ASP.NET_ENABLER_2.0</td><td>ProgramFilesFolder</td><td>ASP_NE~1|ASP.NET Enabler 2.0</td><td/><td>0</td><td/></row>
+		<row><td>ASPEnablerShortcut</td><td>ProgramMenuFolder</td><td>##ID_STRING9##</td><td>ASP.NET Enabler</td><td>1</td><td/></row>
 		<row><td>ASSEMBLIES</td><td>INSTALLDIR</td><td>ASSEMB~1|Assemblies</td><td/><td>0</td><td/></row>
 		<row><td>AdminToolsFolder</td><td>TARGETDIR</td><td>.:Admint~1|AdminTools</td><td/><td>0</td><td/></row>
 		<row><td>AppDataFolder</td><td>TARGETDIR</td><td>.:APPLIC~1|Application Data</td><td/><td>0</td><td/></row>
@@ -1131,6 +1133,7 @@
 		<row><td>CommonAppDataFolder</td><td>TARGETDIR</td><td>.:Common~1|CommonAppData</td><td/><td>0</td><td/></row>
 		<row><td>CommonFiles64Folder</td><td>TARGETDIR</td><td>.:Common64</td><td/><td>0</td><td/></row>
 		<row><td>CommonFilesFolder</td><td>TARGETDIR</td><td>.:Common</td><td/><td>0</td><td/></row>
+		<row><td>DOCUMENTATION</td><td>INSTALLDIR</td><td>DOCUME~1|Documentation</td><td/><td>0</td><td/></row>
 		<row><td>DesktopFolder</td><td>TARGETDIR</td><td>.:Desktop</td><td/><td>3</td><td/></row>
 		<row><td>EIFINIT</td><td>COMPILER</td><td>eifinit</td><td/><td>0</td><td/></row>
 		<row><td>ERRORS</td><td>HELP</td><td>errors</td><td/><td>0</td><td/></row>
@@ -1149,8 +1152,8 @@
 		<row><td>LIBRARY.NET</td><td>COMPILER</td><td>LIBRAR~1|library.net</td><td/><td>0</td><td/></row>
 		<row><td>LocalAppDataFolder</td><td>TARGETDIR</td><td>.:LocalA~1|LocalAppData</td><td/><td>0</td><td/></row>
 		<row><td>MyPicturesFolder</td><td>TARGETDIR</td><td>.:MyPict~1|MyPictures</td><td/><td>0</td><td/></row>
-		<row><td>PRECOMP</td><td>INSTALLDIR</td><td>Precomp</td><td/><td>0</td><td/></row>
 		<row><td>PRECOMP1</td><td>COMPILER</td><td>precomp</td><td/><td>0</td><td/></row>
+		<row><td>PRECOMPILE</td><td>INSTALLDIR</td><td>PRECOM~1|Precompile</td><td/><td>0</td><td/></row>
 		<row><td>PersonalFolder</td><td>TARGETDIR</td><td>.:Personal</td><td/><td>0</td><td/></row>
 		<row><td>PrimaryVolumePath</td><td>TARGETDIR</td><td>.:Primar~1|PrimaryVolumePath</td><td/><td>0</td><td/></row>
 		<row><td>ProgramFiles64Folder</td><td>TARGETDIR</td><td>.:Prog64~1|Program Files 64</td><td/><td>0</td><td/></row>
@@ -1175,7 +1178,6 @@
 		<row><td>WINDOWS1</td><td>SPEC</td><td>windows</td><td/><td>0</td><td/></row>
 		<row><td>WindowsFolder</td><td>TARGETDIR</td><td>.:Windows</td><td/><td>0</td><td/></row>
 		<row><td>WindowsVolume</td><td>TARGETDIR</td><td>.:WinRoot</td><td/><td>0</td><td/></row>
-		<row><td>newfolder1</td><td>ProgramMenuFolder</td><td>##ID_STRING9##</td><td/><td>1</td><td/></row>
 	</table>
 
 	<table name="DrLocator">
@@ -1431,6 +1433,7 @@
 		<row><td>Feature</td><td>PrecompFiles</td></row>
 		<row><td>Feature</td><td>VirtualDirComponent</td></row>
 		<row><td>Feature</td><td>XCACLS</td></row>
+		<row><td>Feature</td><td>ecdp.chm</td></row>
 		<row><td>Feature</td><td>ecdpc.exe</td></row>
 		<row><td>Feature</td><td>ecdpman.exe</td></row>
 		<row><td>Feature</td><td>esplit.exe</td></row>
@@ -1457,6 +1460,7 @@
 		<row><td>default.aspx</td><td>SamplesFiles</td><td>DEFAUL~1.ASP|default.aspx</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_SAMPLES_FILES&gt;\default.aspx</td><td>1</td><td/></row>
 		<row><td>default.css</td><td>SamplesFiles</td><td>default.css</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_SAMPLES_FILES&gt;\default.css</td><td>1</td><td/></row>
 		<row><td>default.ecd</td><td>DefaultConfigFile</td><td>default.ecd</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_CONFIGS_FILES&gt;\default.ecd</td><td>1</td><td/></row>
+		<row><td>ecdp.chm</td><td>ecdp.chm</td><td>ecdp.chm</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_CODEDOM_PROVIDE_FILES&gt;\ecdp.chm</td><td>1</td><td/></row>
 		<row><td>ecdpc.exe</td><td>ecdpc.exe</td><td>ecdpc.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES1&gt;\ecdpc.exe</td><td>1</td><td/></row>
 		<row><td>ecdpman.exe</td><td>ecdpman.exe</td><td>ecdpman.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\ecdpman.exe</td><td>1</td><td/></row>
 		<row><td>eiffelsoftware.codedom.base.</td><td>EiffelSoftware.CodeDom.Base.dll</td><td>EIFFEL~1.DLL|EiffelSoftware.CodeDom.Base.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\EiffelSoftware.CodeDom.Base.dll</td><td>1</td><td/></row>
@@ -1673,6 +1677,7 @@
 		<row><td>SamplesFiles</td><td/><td/><td>_1768F1B0_B374_455C_8A90_A00012558DE7_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>VirtualDirComponent</td><td/><td/><td>_2186BDB6_DC0C_4E01_A286_C99E24D4AD50_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>XCACLS</td><td/><td/><td>_96C105CC_743D_435E_967F_7F073187F62F_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>ecdp.chm</td><td/><td/><td>_9A8A4912_3CD6_457C_845C_F4AB40E3575A_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ecdpc.exe</td><td/><td/><td>_382F364B_6535_423A_A204_2CF8E6919AF0_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ecdpman.exe</td><td/><td/><td>_4CA602A0_97DB_48E1_B7C1_B210D3FBE797_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>esplit.exe</td><td/><td/><td>_9B6A26C6_6E3E_47EB_A4EC_19DC5F5C982F_FILTER</td><td/><td/><td/><td/></row>
@@ -1817,7 +1822,7 @@
 		<col def="S255">Cabinet</col>
 		<col def="S32">VolumeLabel</col>
 		<col def="S32">Source</col>
-		<row><td>1</td><td>Beta 1</td><td>Beta 1</td><td>0</td><td/><td/><td/><td/></row>
+		<row><td>1</td><td>Beta 2</td><td>Beta 2</td><td>0</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISLogicalDiskFeatures">
@@ -1948,7 +1953,7 @@
 		<col key="yes" def="s72">ISProductConfiguration</col>
 		<col def="S255">ProductConfigurationFlags</col>
 		<col def="I4">GeneratePackageCode</col>
-		<row><td>Beta 1</td><td/><td>1</td></row>
+		<row><td>Beta 2</td><td/><td>1</td></row>
 		<row><td>Final</td><td/><td>1</td></row>
 		<row><td>Test</td><td/><td>1</td></row>
 	</table>
@@ -1964,9 +1969,9 @@
 		<col key="yes" def="s72">ISProductConfiguration_</col>
 		<col key="yes" def="s72">Property</col>
 		<col def="L255">Value</col>
-		<row><td>Beta 1</td><td>MSIPackageFileName</td><td>enabler_beta1</td></row>
-		<row><td>Beta 1</td><td>ProductName</td><td>ASP.NET Enabler 2.0 Beta 1</td></row>
-		<row><td>Beta 1</td><td>SetupFileName</td><td>setup</td></row>
+		<row><td>Beta 2</td><td>MSIPackageFileName</td><td>enabler_beta2</td></row>
+		<row><td>Beta 2</td><td>ProductName</td><td>ASP.NET Enabler 2.0 Beta 2</td></row>
+		<row><td>Beta 2</td><td>SetupFileName</td><td>setup</td></row>
 		<row><td>Final</td><td>MSIPackageFileName</td><td>enabler</td></row>
 		<row><td>Final</td><td>ProductName</td><td>ASP.NET Enabler 2.0</td></row>
 		<row><td>Final</td><td>ProductVersion</td><td>2.01.1319</td></row>
@@ -2007,7 +2012,7 @@
 		<col def="S255">DotNetBuildConfiguration</col>
 		<col def="S255">MsiCommandLine</col>
 		<col def="I4">ISSetupPrerequisiteLocation</col>
-		<row><td>Beta 1</td><td>Beta 1</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>1</td><td>1033</td><td>2</td><td>1</td><td>Intel</td><td/><td>1033</td><td>0</td><td>0</td><td>1</td><td>0</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>8527884</td><td/><td/><td/><td/></row>
+		<row><td>Beta 2</td><td>Beta 2</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>1</td><td>1033</td><td>2</td><td>1</td><td>Intel</td><td/><td>1033</td><td>0</td><td>0</td><td>1</td><td>0</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>8527884</td><td/><td/><td/><td/></row>
 		<row><td>Final</td><td>Final</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>1</td><td>1033</td><td>2</td><td>1</td><td>Intel</td><td/><td>1033</td><td>0</td><td>0</td><td>0</td><td>0</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>8595468</td><td/><td/><td/><td/></row>
 		<row><td>Test</td><td>Test</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>1</td><td>1033</td><td>2</td><td>2</td><td>Intel</td><td/><td>1033</td><td>3</td><td>0</td><td>0</td><td>0</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>8464397</td><td/><td/><td/><td/></row>
 	</table>
@@ -2043,8 +2048,8 @@
 		<col def="I4">MsiEngineVersion</col>
 		<col def="S255">WinMsi30Url</col>
 		<col def="S255">CertPassword</col>
-		<row><td>Beta 1</td><td>Beta 1</td><td>0</td><td>http://</td><td>0</td><td>install</td><td>install</td><td>[WindowsFolder]Downloaded Installations</td><td>0</td><td>http://www.installengine.com/Msiengine20</td><td>http://www.installengine.com/Msiengine20</td><td>0</td><td>http://www.installengine.com/cert03/isengine</td><td/><td/><td/><td/><td>3</td><td>http://www.installengine.com/cert03/dotnetfx</td><td>0</td><td>1033</td><td/><td/><td/><td/><td>16</td><td>3</td><td>4</td><td>http://www.installengine.com/Msiengine30</td><td/></row>
 		<row><td>Beta 1</td><td>Final</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>Beta 2</td><td>Beta 2</td><td>0</td><td>http://</td><td>0</td><td>install</td><td>install</td><td>[WindowsFolder]Downloaded Installations</td><td>0</td><td>http://www.installengine.com/Msiengine20</td><td>http://www.installengine.com/Msiengine20</td><td>0</td><td>http://www.installengine.com/cert03/isengine</td><td/><td/><td/><td/><td>3</td><td>http://www.installengine.com/cert03/dotnetfx</td><td>0</td><td>1033</td><td/><td/><td/><td/><td>16</td><td>3</td><td>4</td><td>http://www.installengine.com/Msiengine30</td><td/></row>
 		<row><td>Copy of Final</td><td>Final</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>Final</td><td>Final</td><td>0</td><td>http://</td><td>0</td><td>install</td><td>install</td><td>[WindowsFolder]Downloaded Installations</td><td>1</td><td>http://www.installengine.com/Msiengine20</td><td>http://www.installengine.com/Msiengine20</td><td>1</td><td>http://www.installengine.com/cert03/isengine</td><td/><td/><td/><td/><td>3</td><td>http://www.installengine.com/cert03/dotnetfx</td><td>0</td><td>1033</td><td/><td/><td/><td/><td>24</td><td>3</td><td>4</td><td>http://www.installengine.com/Msiengine30</td><td/></row>
 		<row><td>Test</td><td>Test</td><td>0</td><td>http://</td><td>0</td><td>install</td><td>install</td><td>[WindowsFolder]Downloaded Installations</td><td>0</td><td>http://www.installengine.com/Msiengine20</td><td>http://www.installengine.com/Msiengine20</td><td>0</td><td>http://www.installengine.com/cert03/isengine</td><td/><td/><td/><td/><td>3</td><td>http://www.installengine.com/cert03/dotnetfx</td><td>0</td><td>1033</td><td/><td/><td/><td/><td>16</td><td>3</td><td>4</td><td>http://www.installengine.com/Msiengine30</td><td/></row>
@@ -2752,6 +2757,8 @@
 		<row><td>ID_STRING24</td><td>1033</td><td>ASP.NET Enabler Samples</td><td>0</td><td/><td>496538540</td></row>
 		<row><td>ID_STRING25</td><td>1033</td><td>NAMEMA~1|Name Mapper</td><td>0</td><td/><td>1704490185</td></row>
 		<row><td>ID_STRING26</td><td>1033</td><td>.NET to Eiffel types and members names mapper</td><td>0</td><td/><td>1704516809</td></row>
+		<row><td>ID_STRING27</td><td>1033</td><td>DOCUME~1|Documentation</td><td>0</td><td/><td>-1650928846</td></row>
+		<row><td>ID_STRING28</td><td>1033</td><td>ASP.NET Enabler Documentation</td><td>0</td><td/><td>-1650947214</td></row>
 		<row><td>ID_STRING3</td><td>1033</td><td>info@eiffel.com</td><td>0</td><td/><td>-1659328693</td></row>
 		<row><td>ID_STRING4</td><td>1033</td><td>http://support.eiffel.com</td><td>0</td><td/><td>-1659326645</td></row>
 		<row><td>ID_STRING5</td><td>1033</td><td>1-805-685-1006</td><td>0</td><td/><td>-1659320501</td></row>
@@ -2827,6 +2834,7 @@
 		<row><td>NewShortcut1_9A6FB091D3454C2B9B8BEB345DB1F04D.exe</td><td/><td>&lt;PATH_TO_MANAGER_FILES&gt;\ecdpman.ico</td><td>0</td></row>
 		<row><td>NewShortcut2_9A6FB091D3454C2B9B8BEB345DB1F04D.exe</td><td/><td>&lt;ISProjectFolder&gt;\ecdp.ico</td><td>0</td></row>
 		<row><td>NewShortcut3_9A6FB091D3454C2B9B8BEB345DB1F04D.exe</td><td/><td>&lt;ISProjectFolder&gt;\ecdp.ico</td><td>0</td></row>
+		<row><td>NewShortcut4_9A6FB091D3454C2B9B8BEB345DB1F04D.chm</td><td/><td>&lt;PATH_TO_CODEDOM_PROVIDE_FILES&gt;\ecdp.chm</td><td>0</td></row>
 	</table>
 
 	<table name="IniFile">
@@ -3381,9 +3389,10 @@ VABlAHMAdAABAFQAZQBzAHQA
 		<col def="L255">FileName</col>
 		<col def="s72">DirProperty</col>
 		<col def="i2">InstallMode</col>
-		<row><td>NewShortcut1</td><td>ecdpman.exe</td><td/><td>newfolder1</td><td>2</td></row>
-		<row><td>NewShortcut2</td><td>esplitter.exe</td><td/><td>newfolder1</td><td>2</td></row>
-		<row><td>NewShortcut3</td><td>nmap.exe</td><td/><td>newfolder1</td><td>2</td></row>
+		<row><td>NewShortcut1</td><td>ecdpman.exe</td><td/><td>ASPEnablerShortcut</td><td>2</td></row>
+		<row><td>NewShortcut2</td><td>esplitter.exe</td><td/><td>ASPEnablerShortcut</td><td>2</td></row>
+		<row><td>NewShortcut3</td><td>nmap.exe</td><td/><td>ASPEnablerShortcut</td><td>2</td></row>
+		<row><td>NewShortcut4</td><td>ecdp.chm</td><td/><td>ASPEnablerShortcut</td><td>2</td></row>
 	</table>
 
 	<table name="RemoveIniFile">
@@ -3465,9 +3474,10 @@ VABlAHMAdAABAFQAZQBzAHQA
 		<col def="S255">ISComments</col>
 		<col def="S255">ISShortcutName</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>EcdpmanShortcut</td><td>newfolder1</td><td>##ID_STRING10##</td><td>ecdpman.exe</td><td>[INSTALLDIR]CodeDom\bin\ecdpman.exe</td><td/><td>##ID_STRING11##</td><td/><td>NewShortcut1_9A6FB091D3454C2B9B8BEB345DB1F04D.exe</td><td/><td>1</td><td>BIN</td><td/><td/><td/></row>
-		<row><td>NewShortcut3</td><td>newfolder1</td><td>##ID_STRING25##</td><td>nmap.exe</td><td>[INSTALLDIR]CodeDom\bin\nmap.exe</td><td/><td>##ID_STRING26##</td><td/><td>NewShortcut3_9A6FB091D3454C2B9B8BEB345DB1F04D.exe</td><td/><td>1</td><td/><td/><td/><td/></row>
-		<row><td>eSplitterShortcut</td><td>newfolder1</td><td>##ID_STRING21##</td><td>esplitter.exe</td><td>[INSTALLDIR]CodeDom\bin\esplitter.exe</td><td/><td>##ID_STRING22##</td><td/><td>NewShortcut2_9A6FB091D3454C2B9B8BEB345DB1F04D.exe</td><td/><td>1</td><td>BIN</td><td/><td/><td/></row>
+		<row><td>EcdpmanShortcut</td><td>ASPEnablerShortcut</td><td>##ID_STRING10##</td><td>ecdpman.exe</td><td>[INSTALLDIR]CodeDom\bin\ecdpman.exe</td><td/><td>##ID_STRING11##</td><td/><td>NewShortcut1_9A6FB091D3454C2B9B8BEB345DB1F04D.exe</td><td/><td>1</td><td>BIN</td><td/><td/><td/></row>
+		<row><td>NewShortcut3</td><td>ASPEnablerShortcut</td><td>##ID_STRING25##</td><td>nmap.exe</td><td>[INSTALLDIR]CodeDom\bin\nmap.exe</td><td/><td>##ID_STRING26##</td><td/><td>NewShortcut3_9A6FB091D3454C2B9B8BEB345DB1F04D.exe</td><td/><td>1</td><td/><td/><td/><td/></row>
+		<row><td>NewShortcut4</td><td>ASPEnablerShortcut</td><td>##ID_STRING27##</td><td>ecdp.chm</td><td>[INSTALLDIR]Docs\ecdp.chm</td><td/><td>##ID_STRING28##</td><td/><td/><td>1</td><td>1</td><td/><td/><td/><td/></row>
+		<row><td>eSplitterShortcut</td><td>ASPEnablerShortcut</td><td>##ID_STRING21##</td><td>esplitter.exe</td><td>[INSTALLDIR]CodeDom\bin\esplitter.exe</td><td/><td>##ID_STRING22##</td><td/><td>NewShortcut2_9A6FB091D3454C2B9B8BEB345DB1F04D.exe</td><td/><td>1</td><td>BIN</td><td/><td/><td/></row>
 	</table>
 
 	<table name="Signature">

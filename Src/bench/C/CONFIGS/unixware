@@ -4,9 +4,6 @@
 # Configured by: manuelt
 # Target system: unix_sv emc 4.2mp 2.1 i386 x86at 
 
-#added by ET: use default sigwaiting in MT-mode
-d_dfltsigwaiting='define'
-
 ld='ld'
 ar='ar'
 d_bsd='undef'
@@ -48,7 +45,7 @@ lpr=''
 ls=''
 mail=''
 mailx=''
-make=''
+make='make'
 mkdir='/usr/bin/mkdir'
 more=''
 mv='/usr/bin/mv'
@@ -106,7 +103,7 @@ cc='cc'
 gccversion=''
 
 ccflags=''
-mtccflags='-Kthread -D_REENTRANT -DEIF_THREADS -DUNIXWARE_THREADS'
+mtccflags='-Kthread -DEIF_THREADS -DUNIXWARE_THREADS'
 
 
 cppflags=''
@@ -188,7 +185,7 @@ d_getgrgid='define'
 d_getpwuid='define'
 d_index='undef'
 d_strchr='define'
-d_strctcpy='define'
+d_strctcpy='undef'
 d_strdup='define'
 d_strerrm='strerror(e)'
 d_strerror='define'

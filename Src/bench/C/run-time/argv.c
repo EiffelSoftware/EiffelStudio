@@ -21,7 +21,7 @@
 rt_public int eif_argc;			/* Initial argc value (argument count) */
 rt_public char **eif_argv;			/* Copy of initial argv (argument vector) */
 
-rt_private char *error = "can't set argument vector";
+#define ERROR_MSG "can't set argument vector"
 
 rt_public EIF_INTEGER arg_number(void)
 {
@@ -39,13 +39,13 @@ rt_public void arg_init(int eargc, char **eargv)
 	/* Allocate memory for array duplication */
 	eif_argv = (char **) cmalloc((eargc + 1) * sizeof(char *));
 	if (eif_argv == (char **)0)
-		fatal_error(MTC error);
+		fatal_error(ERROR_MSG);
 
 	/* Duplicate arguments array */
 	for (i = 0; i < eargc; i++) {
 		eif_argv[i] = cmalloc(strlen(eargv[i]) + 1);
 		if (eif_argv[i] == (char *)0)
-			fatal_error(MTC error);
+			fatal_error(ERROR_MSG);
 		strcpy (eif_argv[i], eargv[i]);
 	}
 

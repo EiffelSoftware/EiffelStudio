@@ -71,7 +71,7 @@ feature -- Output
 --			ctxt.put_text_item_without_tabs (ti_Double_quote);
 --		end
 
-feature {INFIX_AS} 
+feature {INFIX_PREFIX_AS} 
 
 	set_value (s: STRING) is
 		do

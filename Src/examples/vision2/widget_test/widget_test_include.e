@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 			tool_bar_combo_box_test: TOOL_BAR_COMBO_BOX_TEST
 			
 			--| FIXME remove
-			table_testing_test: TABLE_TESTING_TEST
+			--table_testing_test: TABLE_TESTING_TEST
 		do
 		end
 

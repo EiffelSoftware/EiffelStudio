@@ -67,24 +67,23 @@ feature -- Generation
 		local
 			cmd: E_GENERATE_DOCUMENTATION
 		do
-            inspect
-                format_type
-            when flat_type then
-                !! cmd.make_flat (filter_name, Project_tool.progress_dialog)
-            when flat_short_type then
-                !! cmd.make_flat_short (filter_name, Project_tool.progress_dialog)
-            when text_type then
-                !! cmd.make_text (filter_name, Project_tool.progress_dialog)
-            when short_type then
-                !! cmd.make_short (filter_name, Project_tool.progress_dialog)
-            end
-            if do_parents then
-                cmd.set_do_parents
-            end;
-            cmd.set_error_window (Project_tool.text_window);
-            cmd.set_feature_clause_order
-                (Class_resources.feature_clause_order.actual_value);
-            cmd.execute;
+			inspect
+				format_type
+			when flat_type then
+				!! cmd.make_flat (filter_name, Project_tool.progress_dialog)
+			when flat_short_type then
+				!! cmd.make_flat_short (filter_name, Project_tool.progress_dialog)
+			when text_type then
+				!! cmd.make_text (filter_name, Project_tool.progress_dialog)
+			when short_type then
+				!! cmd.make_short (filter_name, Project_tool.progress_dialog)
+			end
+			if do_parents then
+				cmd.set_do_parents
+			end;
+			cmd.set_error_window (Project_tool.text_window);
+			cmd.set_feature_clause_order (Class_resources.feature_clause_order.actual_value);
+			cmd.execute;
 		end;
  
 feature -- Status report
@@ -131,17 +130,19 @@ feature -- Execution
 	work (argument: ANY) is
 			-- Perform edit operations.
 		do
-			if argument = tool then
-				filter_window.call (Current)
-			elseif argument = Current then
-					-- Comes from filter window
-				filter_name := filter_window.selected_filter
-				if filter_name /= Void then
-					warner (Project_tool).custom_call 
-						(Current, Warning_messages.w_Include_parents, 
-							Interface_names.b_Yes, 	
-							Interface_names.b_No,
-							Void)
+			if Project_tool.initialized then
+				if argument = tool then
+					filter_window.call (Current)
+				elseif argument = Current then
+						-- Comes from filter window
+					filter_name := filter_window.selected_filter
+					if filter_name /= Void then
+						warner (Project_tool).custom_call 
+							(Current, Warning_messages.w_Include_parents, 
+								Interface_names.b_Yes, 	
+								Interface_names.b_No,
+								Void)
+					end
 				end
 			end
 		end;

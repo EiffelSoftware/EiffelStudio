@@ -16,5 +16,6 @@
 	(Q) Quit         : terminate session.
 	(Y) Yank         : yank (save) output of last command to a file.
 </code_block>
-		<paragraph>Each command will prompt you for the name of a class and the name of a feature in that class; you can specify these names (or just the class name) after the command. The Ancestor versions and Descendant versions of a feature are all the versions that appeared in ancestors and descendants. Callers gives you the list of classes which contain calls to the feature; Implementers, the list of classes where the feature is redeclared.</paragraph>
+		<paragraph>Each command will prompt you for the name of a class, the name of a feature in that class and a filter name; 
+		you can specify these names (or just the class name) after the command. The Ancestor versions and Descendant versions of a feature are all the versions that appeared in ancestors and descendants. Callers gives you the list of classes which contain calls to the feature; Implementers, the list of classes where the feature is redeclared.</paragraph>
 	</paragraph></document>

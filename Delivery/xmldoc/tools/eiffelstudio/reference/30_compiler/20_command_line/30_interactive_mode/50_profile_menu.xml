@@ -7,19 +7,59 @@
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>An execution of an instrumented system will generate a file that contains profiling information. This file (named profinfo) is located in the same directory as your compiled system. You must process it through a profile converter to produce the Execution Profile.
-		<line_break/>The profile menu will enable you to produce the Execution profile and to extract information from it.
-		<paragraph>The menu (obtained by selecting (P) Profile in the main menu)looks like this:</paragraph>
-		<code_block>(S) Switches : show the output switches.(U) Query : manipulate sub queries.(I) Input : specify input file (filename or last_output).(L) Language : specify language (eiffel, c, cycles)(R) Run : run the query.(G) Generate : generate profile information for latest run.(E) Defaults : reset all values to their defaults.(H) Help : show list of commands.(M) Main : go back to main menu.(Q) Quit : terminate session.(Y) Yank : yank (save) output of last command to a file.</code_block>
+	<paragraph>
+		An execution of an instrumented system will generate a file that contains profiling information. This file (named profinfo) is located in the same directory as your compiled system. You must process it through a profile converter to produce the Execution Profile.
+		<paragraph>The profile menu will enable you to produce the Execution profile and to extract information from it.</paragraph>
+		<paragraph>The menu (obtained by selecting (P) Profile in the main menu) looks like this:</paragraph>
+		<code_block>
+        (S) Switches     : show the output switches
+                                #Call-E Name-E  Total-D
+                                Self-D  Desc-D  %Time-D.
+        (U) Query        : manipulate subqueries.
+        (I) Input        : specify input file (filename or last_output)
+                                [*.pfi].
+        (L) Language     : specify language (eiffel, c, cycles)
+                                [eiffel].
+        (R) Run          : run the query.
+        (G) Generate     : generate profile information for latest run.
+        (E) Defaults     : reset all values to their defaults.
+
+        (H) Help         : show list of commands.
+        (M) Main         : go back to main menu.
+        (Q) Quit         : terminate session.
+        (Y) Yank         : yank (save) output of last command to a file.</code_block>
 		<heading>
 			<size>2</size>Switches submenu
 		</heading>The (S) Switches submenu enables you to set global options. It leads you to the following set of choices:
-		<code_block>(N) Calls : disable output of number of calls to a feature [enabled].(F) Feature name : disable output of feature names [enabled].(T) Total : enable output of time spent in both the function and its descendants [disabled].(S) Self : enable output of time spent in a function itself [disabled].(D) Descendants : enable output of time spent in descendants of a function [disabled].(P) Percentage : enable output of percentage of time spent in a feature [disabled].(H) Help : show list of commands.(M) Main : go back to main menu.(U) Parent menu : go back to parent menu.(Q) Quit : terminate session.(Y) Yank : yank (save) output of last command to a file.</code_block>
+		<code_block>
+        (N) Calls        : disable output of number of calls to a feature                       [enabled].
+        (F) Featurename  : disable output of feature names                                      [enabled].
+        (T) Total        : enable output of time spent in both the function and its descendants [disabled].
+        (S) Self         : enable output of time spent in a function itself                     [disabled].
+        (D) Descendants  : enable output of time spent in descendants of a function             [disabled].
+        (P) Percentage   : enable output of percentage of time spent in a feature               [disabled].
+
+        (H) Help         : show list of commands.
+        (M) Main         : go back to main menu.
+        (U) Parent menu  : go back to parent menu.
+        (Q) Quit         : terminate session.
+        (Y) Yank         : yank (save) output of last command to a file.</code_block>
 		<paragraph>Each one of these commands switches on or off the corresponding column output. The default is set on for the first two, off for the others. To enable or disable a column, type the name with a toggle effect.</paragraph>
 		<heading>
 			<size>2</size>Query submenu
 		</heading>The (U) Query submenu enables you to define a set of queries. The result will be a Total Query; by default it is the boolean and all the queries you have entered individually, but you may deactivate some of these and choose other boolean operators.
-		<code_block>(A) Add : add a sub query.(I) Inactivate : inactivate sub query.(R) Reactivate : reactivate sub query.(C) Operator : change the boolean operator.(S) Show : show the list of queries.(H) Help : show list of commands.(M) Main : go back to main menu.(U) Parent menu : go back to parent menu.(Q) Quit : terminate session.(Y) Yank : yank (save) output of last command to a file.</code_block>
+		<code_block>
+	(A) Add : add a sub query.
+	(I) Inactivate : inactivate sub query.
+	(R) Reactivate : reactivate sub query.
+	(C) Operator : change the boolean operator.
+	(S) Show : show the list of queries.
+	
+	(H) Help : show list of commands.
+	(M) Main : go back to main menu.
+	(U) Parent menu : go back to parent menu.
+	(Q) Quit : terminate session.
+	(Y) Yank : yank (save) output of last command to a file.</code_block>
 		<paragraph>To get useful information, you should add the appropriate queries through (A) Add. Each individual query has the following form: attribute operator value, where attribute is one of:</paragraph>
 		<list ordered="false">
 			<item>feature name</item>
@@ -32,7 +72,7 @@
 		<paragraph>and value is one of:</paragraph>
 		<list ordered="false">
 			<item>An integer (for calls)</item>
-			<item>A string (for feature name). The string may contain wild cardcharacters:\x11?, standing for arbitrary characters, and *,standing for arbitrary substrings.</item>
+			<item>A string (for feature name). The string may contain wild card characters: ?, standing for arbitrary characters, and *,standing for arbitrary substrings.</item>
 			<item>A real value (for other attributes)</item>
 			<item>An interval, of the form a-b for two values a and b.</item>
 			<item>max</item>
@@ -41,20 +81,63 @@
 		</list>The (S) Show command will display the current queries, each with an associated number. The output includes the total query, explained next.
 		<paragraph>To inactivate a query, use (I) Inactivate. You will be prompted for a query index, which you may retrieve from (S) Show. This is useful if you make a change about a query, or want to set it aside for future use.</paragraph>
 		<paragraph>To reactivate a query, use (R) Reactivate. Again you will have to provide a query index.</paragraph>
-		<paragraph>The Total Query resulting from a succession of (A) Add commands, possibly with some (I) Inactivate and (R) Reactivate commands, is a boolean query resulting by default from adding all the currently active queries. For example after the following set of commands(note that command a outputs help lines, which have been skipped here):</paragraph>
-		<code_block>Command =&amp;gt; a--&amp;gt; Subquery: featurename = put*Command =&amp;gt; a--&amp;gt; Subquery: calls = 3-- Here we change our mind and deactivate the second query-- to replace it by calls = 3:Command =&amp;gt; s[1] featurename = put* is active[2] calls = 3 is activeThe total active query:featurename = put* andcalls &amp;gt; 5Command =&amp;gt; i--&amp;gt; Subquery index: 2Command =&amp;gt; a--&amp;gt; Subquery: calls &amp;gt; 5</code_block>
+		<paragraph>The Total Query resulting from a succession of (A) Add commands, possibly with some (I) Inactivate and (R) Reactivate commands, is a boolean query resulting by default from adding all the currently active queries. For example after the following set of commands(note that commands output help lines, which have been skipped here):</paragraph>
+		<code_block>
+Command =&amp;gt; a
+--&amp;gt; Subquery: featurename = put*
+
+Command =&amp;gt; a
+--&amp;gt; Subquery: calls = 3
+	-- Here we change our mind and deactivate the second query
+	-- to replace it by calls = 3:
+
+Command =&amp;gt; s
+[1] featurename = put* is active
+[2] calls = 3 is active
+
+The total active query:
+featurename = put* and
+calls &amp;gt; 
+		
+Command =&amp;gt; i
+--&amp;gt; Subquery index: 2
+	
+Command =&amp;gt; a
+--&amp;gt; Subquery: calls &amp;gt; 5</code_block>
 		<line_break/>The (S) Show command will show the following result:
-		<code_block>Command =&amp;gt; sAll subqueries:[1] featurename = put* is active[2] calls = 3 is active[3] calls &amp;gt; 5 is activeThe total active query:featurename = put* andcalls &amp;gt; 5</code_block>
+		<code_block>
+Command =&amp;gt; s
+All subqueries:
+[1] featurename = put* is active
+[2] calls = 3 is inactive
+[3] calls &amp;gt; 5 is active
+		
+The total active query:
+featurename = put* and
+calls &amp;gt; 5</code_block>
+
 		<paragraph>To change the boolean operator to 'or' rather than 'and', use the (C) Operator command. It will prompt you for the index of the operator and the new value:</paragraph>
-		<code_block>Command =&amp;gt; c--&amp;gt; Operator index followed by operator ('and' or 'or'): 1 orCommand =&amp;gt; sAll subqueries:[1] featurename = put* is active[2] calls = 3 is activeThe total active query:featurename = put* orcalls &amp;gt; 5</code_block>
+		<code_block>
+Command =&amp;gt; c
+--&amp;gt; Operator index followed by operator ('and' or 'or'): 1 or
+	
+Command =&amp;gt; s
+All subqueries:
+[1] featurename = put* is active
+[2] calls = 3 is inactive
+[3] calls &amp;gt; 5 is active
+		
+The total active query:
+featurename = put* or
+calls &amp;gt; 5</code_block>
 		<heading>
 			<size>2</size>Input command
 		</heading>The (I) Input command serves to load Execution Profiles. It is initially set to *.pfi meaning that it will load all files with extension pfi. By calling the command repeatedly with new arguments, you are able to load more Execution Profiles. If you use the command without any argument, and the set of input files contained just one file, then the queries will use the last generated output. This avoids explicitly loading a file.
 		<heading>
 			<size>2</size>Language command
 		</heading>The (L) Language command enables you to specify the languages to which profiling should be applied. You can specify Eiffel only, C only, or both. If you specify only one language, the query results will not contain any information about routines written in the other language.
-		<paragraph>The default is Eiffel only. To switch to both Eiffel and C, use Command =&amp;gt; l eiffel and c</paragraph>
-		<paragraph>To return to just Eiffel, simply type l.</paragraph>
+		<paragraph>The default is Eiffel only. To switch to both Eiffel and C, use Command =&amp;gt; L eiffel and c</paragraph>
+		<paragraph>To return to just Eiffel, simply type L.</paragraph>
 		<heading>
 			<size>2</size>Run Command
 		</heading>To run the current total query, use (R) Run.
@@ -62,11 +145,12 @@
 			<size>2</size>Generate command
 		</heading>To run the profile converter under the command-line interface, use the (G) Generate command. This will generate an Execution Profile, stored in a file with the extension .pfi.
 		<paragraph>When running the Generate command with no arguments, you will be prompted for the following information:</paragraph>
-		<paragraph>&amp;amp;middot; Name of file to be converted (default: profinfo).
-			<line_break/>&amp;amp;middot; Compilation mode: workbench or finalized (default:workbench).
-			<line_break/>&amp;amp;middot; Name of profiler tool (default: eiffel).
-		</paragraph>
-		<paragraph>You can also type in the arguments directly without waiting to be prompted, as in command =&amp;gt; g profinfo freeze eiffel
+		<list ordered="false">
+			<item>Name of file to be converted (default: profinfo).</item>
+			<item>Compilation mode: workbench or finalized (default: workbench).</item>
+			<item>Name of profiler tool (default: eiffel).</item>
+		</list>
+		<paragraph>You can also type in the arguments directly without waiting to be prompted, as in command =&amp;gt; g profinfo finalize eiffel
 			<line_break/>
 		</paragraph>
 		<seealso>

@@ -39,12 +39,7 @@ feature {DATE_TIME} -- Initialization
 	make (y, m, d: INTEGER) is
 			-- Set `year', `month' and `day' to `y', `m', `d' respectively.
 		require
-			month_large_enough: m >= 1;
-			month_small_enough: m <= Months_in_year;
-			day_large_enough: d >= 1;
-			day_small_enough: d <= days_in_i_th_month (m, y)
-			year_small_enough: y <= 65535;
-			year_positive: y>0
+			correct_date: is_correct_date (y, m, d)
 		do
 			compact_date := c_make_date (d, m, y)
 		ensure
@@ -56,12 +51,7 @@ feature {DATE_TIME} -- Initialization
 	make_month_day_year (m, d, y: INTEGER) is
 			-- Set `month', `day' and `year' to `m', `d' and `y' respectively.
 		require
-			month_large_enough: m >= 1;
-			month_small_enough: m <= Months_in_year;
-			day_large_enough: d >= 1;
-			day_small_enough: d <= days_in_i_th_month (m, y)
-			year_small_enough: y <= 65535;
-			year_positive: y>0
+			correct_date: is_correct_date (y, m, d)
 		do
 			make (y, m, d)
 		ensure
@@ -73,12 +63,7 @@ feature {DATE_TIME} -- Initialization
 	make_day_month_year (d, m, y: INTEGER) is
 			-- Set `day', `month' and `year' to `d', `m' and `y' respectively.
 		require
-			month_large_enough: m >= 1;
-			month_small_enough: m <= Months_in_year;
-			day_large_enough: d >= 1;
-			day_small_enough: d <= days_in_i_th_month (m, y)
-			year_small_enough: y <= 65535;
-			year_positive: y>0
+			correct_date: is_correct_date (y, m, d)
 		do
 			make (y, m, d)
 		ensure
@@ -124,7 +109,7 @@ feature {DATE_TIME} -- Initialization
 		end;
 
 	make_from_string_default (s: STRING) is
-			-- Initialise from a "standard" string of form
+			-- Initialize from a "standard" string of form
 			-- `date_default_format_string'
 		require
 			s_exists: s /= Void;
@@ -134,7 +119,7 @@ feature {DATE_TIME} -- Initialization
 		end
 
 	make_from_string (s: STRING; code: STRING) is
-			-- Initialise from a "standard" string of form
+			-- Initialize from a "standard" string of form
 			-- `code'
 		require
 			s_exists: s /= Void;
@@ -171,15 +156,26 @@ feature -- Preconditions
 			code_exists: code_string /= Void
 		local
 			code: DATE_TIME_CODE_STRING
+			date: DATE
+			retried: BOOLEAN
 		do
-			!! code.make (code_string)
-			Result := code.precise_date and code.correspond (s)
+			if not retried then 
+				!! code.make (code_string)
+				if code.precise_date and code.correspond (s) then
+					date := code.create_date (s)
+					Result := True
+				end
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	date_valid_default (s: STRING): BOOLEAN is
 			-- Is the code_string enough precise
 			-- To create an instance of type DATE
-			-- And does the string `s' correspond to `date_default_format_string'?
+			-- And does the string `s' correspond to 
+			-- `date_default_format_string'?
 		require
 			s_exists: s /= Void
 		do
@@ -197,6 +193,17 @@ feature -- Preconditions
 			Result := (m >= 1 and m <= Months_in_year and
 			d >= 1 and d <= days_in_i_th_month (m, y) and
 			y <= 65535);
+		end
+
+	is_correct_date (y, m, d: INTEGER): BOOLEAN is
+			-- Is date specified by `y', `m', and `d' a correct date?
+		require
+			year_non_negative: y >= 0
+			month_non_negative: m >= 0
+			day_non_negative: d >= 0
+		do
+			Result := m >= 1 and m <= Months_in_year and then d >= 1 and 
+				d <= days_in_i_th_month (m, y) and then y <= 65535 and y > 0
 		end
 
 feature -- Access
@@ -224,7 +231,8 @@ feature -- Measurement
 	duration: DATE_DURATION is
 			-- Definite duration elapsed since `origin'
 		do
-			!! Result.make_by_days (days_from (origin.year) + year_day - origin.year_day)
+			!! Result.make_by_days (days_from (origin.year) + year_day - 
+				origin.year_day)
 		ensure then
 			definite_result: Result.definite
 			duration_set: ((Current - origin).duration).is_equal (Result)
@@ -276,7 +284,8 @@ feature -- Status report
 				if day_of_january_1st > 0 then
 					Result := div (year_day - day_of_the_week, days_in_week) + 1
 				else
-					Result := div (year_day - day_of_the_week + day_of_january_1st - 1, days_in_week)
+					Result := div (year_day - day_of_the_week + 
+						day_of_january_1st - 1, days_in_week)
 				end
 			else
 				Result := 0
@@ -295,8 +304,9 @@ feature -- Status report
 				Result := days_in_non_leap_year
 			end
 		ensure
-			valid_result: (leap_year implies Result = days_in_leap_year) and then
-				(not leap_year implies Result = days_in_non_leap_year)
+			valid_result: 
+				(leap_year implies Result = days_in_leap_year) and then
+					(not leap_year implies Result = days_in_non_leap_year)
 		end;
 
 	day_of_the_week: INTEGER is
@@ -323,9 +333,9 @@ feature -- Status report
 			-- Days between the current year and year `y'
 		do
 			Result := (year - y) * days_in_non_leap_year +
-				(div(year - 1, 4) - div(y - 1, 4)) -
-				(div(year - 1,100) - div(y - 1,100)) +
-				(div(year - 1,400) - div(y - 1,400))
+				(div (year - 1, 4) - div(y - 1, 4)) -
+				(div (year - 1, 100) - div (y - 1, 100)) +
+				(div (year - 1, 400) - div (y - 1, 400))
 		end
 
 feature -- Conversion
@@ -346,7 +356,8 @@ feature -- Basic operations
 			Result.add (d)
 		ensure
 			result_exists: Result /= Void;
-			definite_set: d.definite implies (Result - Current).duration.is_equal (d)
+			definite_set: d.definite implies 
+					(Result - Current).duration.is_equal (d)
 		end;
 
 	add (d: DATE_DURATION) is
@@ -408,7 +419,8 @@ feature -- Basic operations
 
 	month_forth is
 			-- Move to next month.
-			-- Can move days backward if next month has less days than the current month.
+			-- Can move days backward if next month has less days than the 
+			-- current month.
 		do
 			if month = Months_in_year then
 				set_month (1);
@@ -423,7 +435,8 @@ feature -- Basic operations
 
 	month_back is
 			-- Move to previous month.
-			-- Can move days backward if previous month has less days than the current month.
+			-- Can move days backward if previous month has less days than the 
+			-- current month.
 		local
 			days_in_new_month: INTEGER
 		do
@@ -572,7 +585,7 @@ invariant
 	month_large_enough: month >= 1;
 	month_small_enough: month <= Months_in_year;
 	year_small_enough: year <= 65535;
-	year_positive: year >0
+	year_positive: year > 0
 
 end -- class DATE
 

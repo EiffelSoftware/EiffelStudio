@@ -383,7 +383,7 @@ end;
 			file.putstring (temp);
 
 			file.new_line;
-			file.putstring ("void dle_efrozen()");
+			file.putstring ("void dle_efrozen(void)");
 			file.new_line;
 			file.putchar ('{');
 			file.new_line;

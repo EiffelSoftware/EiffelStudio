@@ -103,24 +103,6 @@ feature {NONE} -- Implementation
 	acc_array: WEL_ARRAY [WEL_ACCELERATOR]
 			-- Array used to create and recreate the accelerators.
 
-feature {NONE} -- Externals
-
-	cwin_destroy_accelerator_table (p: POINTER) is
-			-- SDK DestroyAcceleratorTable
-		external
-			"C [macro <wel.h>] (HACCEL)"
-		alias
-			"DestroyAcceleratorTable"
-		end
-
-	cwin_create_accelerator_table (p: POINTER; entries: INTEGER): POINTER is
-			-- SDK CreateAcceleratorTable
-		external
-			"C [macro <wel.h>] (LPACCEL, int): EIF_POINTER"
-		alias
-			"CreateAcceleratorTable"
-		end
-
 end -- class ACCELERATOR_WINDOWS
 
 --|----------------------------------------------------------------

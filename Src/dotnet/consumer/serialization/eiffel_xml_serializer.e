@@ -32,6 +32,8 @@ inherit
 			{NONE} all
 		end
 
+	TYPE_NAME_ID
+
 feature -- Basic Operations
 
 	serialize (a: ANY; path: STRING) is
@@ -175,7 +177,7 @@ feature {NONE} -- Implementation
 			boolean_array: ARRAY [BOOLEAN]
 			ar: ARRAY [ANY]
 			i, count: INTEGER
-			type_attribute: SYSTEM_STRING
+			type_attribute: STRING
 			elem: ANY
 		do
 			write_tabs (f, tab_count)
@@ -332,12 +334,9 @@ feature {NONE} -- Implementation
 										i > ar.upper or type_attribute /= Void
 									loop
 										if ar.item (i) /= Void then
-											type_attribute := ar.item (i).generating_type.to_cil											
+											type_attribute := ar.item (i).generating_type
 										end
 										i := i + 1
-									end
-									if type_attribute = Void then
-										type_attribute := None_node										
 									end
 									count := ar.count
 									f.write_integer (ar.lower)
@@ -348,7 +347,11 @@ feature {NONE} -- Implementation
 									f.write_string (Quote_space)
 									f.write_string (Type_xml_attribute)
 									f.write_string (Equal_quote)
-									f.write_string (type_attribute)
+									if type_attribute = Void then
+										f.write_string (None_node)
+									else
+										f.write_integer (id_from_type (type_attribute))
+									end
 									f.write_string (End_element)
 									f.write_string (New_line)
 									from
@@ -392,7 +395,7 @@ feature {NONE} -- Implementation
 			f.write_string (Quote_space)
 			f.write_string (Type_xml_attribute)
 			f.write_string (Equal_quote)
-			f.write_string (obj.generating_type.to_cil)
+			f.write_integer (id_from_type (obj.generating_type))
 			f.write_string (End_element)
 			f.write_string (New_line)
 			from
@@ -485,7 +488,6 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-
 		
 invariant
 	error_message_if_failed: not successful implies last_error_context /= Void

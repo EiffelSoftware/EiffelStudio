@@ -6,7 +6,7 @@ class ROUT_INFO_TABLE
 
 inherit
 
-	HASH_TABLE [ROUT_INFO, ROUTINE_ID]
+	EXTEND_TABLE [ROUT_INFO, ROUTINE_ID]
 		rename
 			make as ht_make,
 			put as table_put
@@ -90,7 +90,7 @@ feature -- Offset processing
 			Result := counter.next
 		end;
 
-	offset_counters: HASH_TABLE [COUNTER, CLASS_ID];
+	offset_counters: EXTEND_TABLE [COUNTER, CLASS_ID];
 			-- Offset counters for feature introducted
 			-- in the corresponding class
 
@@ -314,5 +314,17 @@ feature -- DLE
 			Result.append (";%N%Nvoid dle_ecall()%N%
 					%{%N%Teorg_table = Dforg_table;%N}%N")
 		end;
+
+feature -- Merging
+
+	append (other: like Current) is
+			-- Append `other' to `Current'.
+			-- Used when merging precompilations.
+		require
+			other_not_void: other /= Void
+		do
+			merge (other);
+			offset_counters.merge (other.offset_counters)
+		end
 
 end

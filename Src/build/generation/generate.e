@@ -99,35 +99,35 @@ feature
 				-- ===========================
 				--now done from command editor
 				-- every time the command is changed
-			--from
-				--user_cmds := command_catalog.user_commands;
-			--	user_cmds.start
-			--until
-			--	user_cmds.after
-			--loop
-			--	cmd_list := user_cmds.item;
-			--	from
-			--		cmd_list.start
-			--	until
-			--		cmd_list.after
-			--	loop
-			----		cmd := cmd_list.item;
-			--		!!doc;
-			--		doc.set_directory_name (Command_directory);
-			--		doc.set_document_name (cmd.eiffel_type);
-			--		temp := clone (cmd.eiffel_text);
-			--		if temp.item (1) /= '-' and cmd.label /= Void 
-			--		  and then not cmd.label.empty then
-			----			temp.prepend ("%N");
-			--			temp.prepend (cmd.label);
-			--			temp.prepend ("-- ");
-			--		end;
-			--		doc.update (temp);
-			--		doc := Void;
-			--		cmd_list.forth
-			--	end;
-			--	user_cmds.forth;
-			--end;
+			from
+				user_cmds := command_catalog.user_commands;
+				user_cmds.start
+			until
+				user_cmds.after
+			loop
+				cmd_list := user_cmds.item;
+				from
+					cmd_list.start
+				until
+					cmd_list.after
+				loop
+					cmd := cmd_list.item;
+					!!doc;
+					doc.set_directory_name (Environment.commands_directory);
+					doc.set_document_name (cmd.eiffel_type);
+					temp := clone (cmd.eiffel_text);
+					if temp.item (1) /= '-' and cmd.label /= Void 
+					  and then not cmd.label.empty then
+						temp.prepend ("%N");
+						temp.prepend (cmd.label);
+						temp.prepend ("-- ");
+					end;
+					doc.update (temp);
+					doc := Void;
+					cmd_list.forth
+				end;
+				user_cmds.forth;
+			end;
 				
 				-- =========================
 				-- Windows class generation.

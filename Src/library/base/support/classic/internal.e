@@ -160,6 +160,8 @@ feature -- Access
 	
 	natural_64_type: INTEGER is 16
 
+	max_predefined_type: INTEGER is 16
+
 	class_name (object: ANY): STRING is
 			-- Name of the class associated with `object'
 		require

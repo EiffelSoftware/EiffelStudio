@@ -428,7 +428,7 @@ feature {NONE} -- Sort
 		do
 			from
 				i := 1
-				nb := system_classes.count
+				nb := system_classes.capacity
 				create Result.make (i, nb)
 			variant
 				nb - i + 1

@@ -16,9 +16,9 @@ class
 
 feature -- Constants
 
-	--| FIXME Remove all the old Ev_ prefiexed constants
+	--| FIXME Remove all the old Ev_ prefixed constants
 
-	drawing_mode_copy: INTEGER is 0
+	Drawing_mode_copy: INTEGER is 0
 	Ev_drawing_mode_copy: INTEGER is 0
 			-- Normal drawing mode.
 			--
@@ -28,7 +28,7 @@ feature -- Constants
 			-- -------------
 			--   1 | 0 | 1 |
 
-	drawing_mode_xor: INTEGER is 1
+	Drawing_mode_xor: INTEGER is 1
 	Ev_drawing_mode_xor: INTEGER is 1
 			-- Drawing mode where bitwise XOR is performed when a
 			-- pixel is drawn.
@@ -39,7 +39,7 @@ feature -- Constants
 			-- -------------
 			--   1 | 1 | 0 |
 
-	drawing_mode_invert: INTEGER is 2
+	Drawing_mode_invert: INTEGER is 2
 	Ev_drawing_mode_invert: INTEGER is 2
 			-- Drawing mode where bits are inverted before drawn.
 			--
@@ -49,7 +49,7 @@ feature -- Constants
 			-- -------------
 			--   1 | 1 | 0 |
 
-	drawing_mode_and: INTEGER is 3
+	Drawing_mode_and: INTEGER is 3
 	Ev_drawing_mode_and: INTEGER is 3
 			-- Drawing mode where bitwise AND is performed when a
 			-- pixel is drawn.
@@ -60,7 +60,7 @@ feature -- Constants
 			-- -------------
 			--   1 | 0 | 1 |
 
-	drawing_mode_or: INTEGER is 4
+	Drawing_mode_or: INTEGER is 4
 	Ev_drawing_mode_or: INTEGER is 4
 			-- Drawing mode where bitwise OR is performed when a
 			-- pixel is drawn.
@@ -76,11 +76,11 @@ feature -- Contract support
 	valid_drawing_mode (a_mode: INTEGER): BOOLEAN is
 			-- Is `a_mode' a valid drawing mode?
 		do
-			Result := a_mode = drawing_mode_copy or else
-				a_mode = drawing_mode_xor or else
-				a_mode = drawing_mode_invert or else
-				a_mode = drawing_mode_and or else
-				a_mode = drawing_mode_or
+			Result := a_mode = Drawing_mode_copy or else
+				a_mode = Drawing_mode_xor or else
+				a_mode = Drawing_mode_invert or else
+				a_mode = Drawing_mode_and or else
+				a_mode = Drawing_mode_or
 		end
 
 end -- class EV_DRAWABLE_CONSTANTS

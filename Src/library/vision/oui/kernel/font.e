@@ -1,61 +1,86 @@
 indexing
 
-	description: "Description of a font";
+	description: 
+		"Description of a font.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class FONT 
+class 
+	FONT 
 
 inherit
 
 	G_ANY
-		export
-			{NONE} all;
-			{FONT_LIST_I, FONT_LIST} is_equal
-		end
 
 creation
 
-	make
+	make, 
+	make_for_screen
 
-feature 
+feature {NONE} -- Initialization
 
-	ascent (a_screen: WIDGET): INTEGER is
+	make is
+			-- Create a font. 
+			-- (By default, font allocated will be for 
+			-- the last created screen).
+		do
+			implementation := toolkit.font (Current)
+		end;
+
+	make_for_screen (a_screen: SCREEN) is
+			-- Create a font for `a_screen'.
+		require
+			valid_screen: a_screen /= Void and then a_screen.is_valid
+		do
+			implementation := toolkit.font_for_screen (Current, a_screen)
+		end;
+
+feature -- Access
+
+	implementation: FONT_I;
+			-- Implementation of font
+
+	is_font_valid: BOOLEAN is
+			-- Is the font valid?
+		require
+			font_specified: is_specified
+		do
+			Result := implementation.is_valid 
+		end;
+
+	font_ascent: INTEGER is
 			-- Ascent value in pixel of the font loaded for `a_screen'.
 		require
-			a_screen_exists: a_screen /= Void;
 			font_specified: is_specified;
-			font_valid_for_a_screen: is_valid (a_screen)
+			valid_font: is_font_valid 
 		do
-			Result := implementation.ascent (a_screen.implementation)
+			Result := implementation.ascent 
 		ensure
 			non_negative_result: Result >= 0
 		end;
 
-	descent (a_screen: WIDGET): INTEGER is
-			-- Descent value in pixel of the font loaded for `a_screen'.
+	font_descent: INTEGER is
+			-- Descent value in pixel of the font loaded 
 		require
-			a_screen_exists: a_screen /= Void;
 			font_specified: is_specified;
-			font_valid_for_a_screen: is_valid (a_screen)
+			valid_font: is_font_valid 
 		do
-			Result := implementation.descent (a_screen.implementation)
+			Result := implementation.descent 
 		ensure
 			non_negative_result: Result >= 0
 		end;
 
-	string_width (a_screen: WIDGET; a_text: STRING): INTEGER is
-			-- Width in pixel of `a_text' in the current font loaded for `a_screen'.
+	width_of_string (a_text: STRING): INTEGER is
+			-- Width in pixel of `a_text' in the current font loaded 
 		require
-			a_screen_exists: a_screen /= Void;
 			a_text_exists: a_text /= Void;
 			font_specified: is_specified;
-			font_valid_for_a_screen: is_valid (a_screen)
+			valid_font: is_font_valid 
 		do
-			Result := implementation.string_width (a_screen.implementation, a_text)
+			Result := implementation.width_of_string (a_text)
 		ensure
-			valid_result: Result >= 0
+			non_negative_result: Result >= 0
 		end;
 
 	average_width: INTEGER is
@@ -78,14 +103,6 @@ feature
 			Result := implementation.character_set
 		ensure
 			result_exists: Result /= Void
-		end;
-
-	make is
-			-- Create a font.
-		do
-			implementation := toolkit.font (Current)
-		ensure
-			implementation_exists: implementation /= Void
 		end;
 
 	family: STRING is
@@ -131,9 +148,6 @@ feature
 			positive_result: Result > 0
 		end;
 
-	implementation: FONT_I;
-			-- Implementation of font
-
 	is_proportional: BOOLEAN is
 			-- Is the font proportional ?
 		require
@@ -149,14 +163,6 @@ feature
 			font_specified: is_specified
 		do
 			Result := implementation.is_standard
-		end;
-
-	is_valid (a_screen: WIDGET): BOOLEAN is
-			-- Is the font valid in `a_screen''s display ?
-		require
-			font_specified: is_specified
-		do
-			Result := implementation.is_valid (a_screen.implementation)
 		end;
 
 	is_specified: BOOLEAN is
@@ -185,16 +191,6 @@ feature
 			Result := implementation.point
 		ensure
 			positive_result: Result > 0
-		end;
-
-	set_name (a_name: STRING) is
-			-- Set `name' to `a_name'.
-		require
-			a_name_exists: a_name /= Void
-		do
-			implementation.set_name (a_name)
-		ensure
-			name_set: is_specified implies a_name.is_equal (a_name)
 		end;
 
 	slant: CHARACTER is
@@ -239,12 +235,78 @@ feature
 			result_exists: Result /= Void
 		end
 
+feature -- Status setting
+
+	set_name (a_name: STRING) is
+			-- Set `name' to `a_name'.
+		require
+			a_name_exists: a_name /= Void
+		do
+			implementation.set_name (a_name)
+		ensure
+			name_set: is_specified implies a_name.is_equal (a_name)
+		end;
+
+feature -- Obsolete features
+
+	is_valid (a_screen: WIDGET): BOOLEAN is
+			-- Is the font valid in `a_screen''s display ?
+		obsolete
+			"Use `is_font_valid' instead."
+		require
+			font_specified: is_specified
+		do
+			Result := is_font_valid
+		end;
+
+	ascent (a_screen: WIDGET): INTEGER is
+			-- Ascent value in pixel of the font loaded for `a_screen'.
+		obsolete
+			"Use `font_ascent' instead."
+		require
+			a_screen_exists: a_screen /= Void;
+			font_specified: is_specified;
+			font_valid_for_a_screen: is_valid (a_screen)
+		do
+			Result := font_ascent 
+		ensure
+			non_negative_result: Result >= 0
+		end;
+
+	descent (a_screen: WIDGET): INTEGER is
+			-- Descent value in pixel of the font loaded for `a_screen'.
+		obsolete
+			"Use `font_descent' instead."
+		require
+			a_screen_exists: a_screen /= Void;
+			font_specified: is_specified;
+			font_valid_for_a_screen: is_valid (a_screen)
+		do
+			Result := font_descent
+		ensure
+			non_negative_result: Result >= 0
+		end;
+
+	string_width (a_screen: WIDGET; a_text: STRING): INTEGER is
+			-- Width in pixel of `a_text' in the current font loaded for `a_screen'.
+		obsolete
+			"Use `width_of_string' instead."
+		require
+			a_screen_exists: a_screen /= Void;
+			a_text_exists: a_text /= Void;
+			font_specified: is_specified;
+			font_valid_for_a_screen: is_valid (a_screen)
+		do
+			Result := width_of_string (a_text)
+		ensure
+			valid_result: Result >= 0
+		end;
+
 invariant
 
 	valid_implementation: implementation /= Void
 
-end
-
+end -- class FONT
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

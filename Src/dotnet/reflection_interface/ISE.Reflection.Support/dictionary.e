@@ -9,74 +9,74 @@ class
 feature -- Access
 
 	Comma: STRING is ","
-			-- Comma string
 		indexing
+			description: "Comma as a string"
 			external_name: "Comma"
 		end
 		
 	Dash: STRING is "-"
-			-- Dash as a string
 		indexing
+			description: "Dash as a string"
 			external_name: "Dash"
 		end
 		
 	Dot_string: STRING is "."
-			-- Dot as a string
 		indexing
+			description: "Dot as a string"
 			external_name: "DotString"
 		end
 
 	DTD_extension: STRING is ".dtd"
-			-- Extension of DTD file
 		indexing
+			description: "Extension of DTD file"
 			external_name: "DtdExtension"
 		end
 
 	DTD_assembly_filename: STRING is "assembly_description"
-			-- DTD file name
 		indexing
+			description: "DTD file name for `assembly_description.xml'"
 			external_name: "DtdAssemblyFilename"
 		end
 		
 	DTD_type_filename: STRING is "type"
-			-- DTD file name
 		indexing
+			description: "DTD file name for XML type description"
 			external_name: "DtdTypeFilename"
 		end
 		
 	Empty_string: STRING is ""
-			-- Empty string
 		indexing
+			description: "Empty string"
 			external_name: "EmptyString"
 		end
 		
 	False_string: STRING is "False"
-			--False as a string
 		indexing
+			description: "False as a string"
 			external_name: "FalseString"
 		end
 
 	Index_filename: STRING is "index"
-			-- Filename of index containing names of all assemblies in the database
 		indexing
+			description: "Filename of index containing names of all assemblies in the database"
 			external_name: "IndexFilename"
 		end
 
 	Space: STRING is " "
-			-- Space string
 		indexing
+			description: "Space string"
 			external_name: "Space"
 		end
 		
 	True_string: STRING is "True"
-			--True as a string
 		indexing
+			description: "True as a string"
 			external_name: "TrueString"
 		end
 	
 	Xml_extension: STRING is ".xml"
-			-- Xml file extension
-		indexing
+		indexing	
+			description: "Xml file extension"
 			external_name: "XmlExtension"
 		end
 

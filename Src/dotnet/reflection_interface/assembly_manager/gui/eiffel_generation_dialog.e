@@ -17,9 +17,9 @@ create
 feature {NONE} -- Initialization
 
 	make (an_assembly_descriptor: like assembly_descriptor; an_eiffel_path: like eiffel_path) is
-			-- Set `assembly_descriptor' with `an_assembly_descriptor'.
-			-- Set `eiffel_path' with `an_eiffel_path'.
 		indexing
+			description: "[Set `assembly_descriptor' with `an_assembly_descriptor'.%
+					%Set `eiffel_path' with `an_eiffel_path'.]"
 			external_name: "Make"
 		require
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void
@@ -42,8 +42,8 @@ feature {NONE} -- Initialization
 feature -- Access
 		
 	dictionary: EIFFEL_GENERATION_DIALOG_DICTIONARY is
-			-- Dictionary
 		indexing
+			description: "Dictionary"
 			external_name: "Dictionary"
 		once
 			create Result
@@ -58,8 +58,8 @@ feature -- Access
 feature -- Basic Operations
 
 	initialize_gui is
-			-- Initialize GUI.
 		indexing
+			description: "Initialize GUI."
 			external_name: "InitializeGUI"
 		local
 			a_size: SYSTEM_DRAWING_SIZE
@@ -87,7 +87,7 @@ feature -- Basic Operations
 				-- OK button
 			create ok_button.make_button
 			a_point.set_X ((dictionary.Window_width // 2) - (dictionary.Margin //2) - dictionary.Button_width) 
-			a_point.set_Y (5 * dictionary.Margin + 8 * dictionary.Label_height)
+			a_point.set_Y (5 * dictionary.Margin + 9 * dictionary.Label_height)
 			ok_button.set_location (a_point)
 			ok_button.set_text (dictionary.Ok_button_label)
 			ok_button.set_height (dictionary.Button_height)
@@ -98,7 +98,7 @@ feature -- Basic Operations
 				-- Cancel button
 			create cancel_button.make_button
 			a_point.set_X ((dictionary.Window_width // 2) + (dictionary.Margin //2))
-			a_point.set_Y (5 * dictionary.Margin + 8 * dictionary.Label_height)
+			a_point.set_Y (5 * dictionary.Margin + 9 * dictionary.Label_height)
 			cancel_button.set_location (a_point)
 			cancel_button.set_height (dictionary.Button_height)
 			cancel_button.set_width (dictionary.Button_width)
@@ -114,8 +114,8 @@ feature -- Basic Operations
 feature -- Event handling
 
 	on_ok_event_handler (sender: ANY; arguments: SYSTEM_EVENTARGS) is
-			-- Process `ok_button' activation.
 		indexing
+			description: "Process `ok_button' activation."
 			external_name: "OnOkEventHandler"
 		require
 			non_void_sender: sender /= Void
@@ -127,8 +127,8 @@ feature -- Event handling
 feature {NONE} -- Implementation
 
 	generate_eiffel_classes is
-			-- Generate Eiffel classes for the assembly corresponding to `assembly_descriptor' without its dependancies.
 		indexing
+			description: "Generate Eiffel classes for the assembly corresponding to `assembly_descriptor' without its dependancies."
 			external_name: "GenerateEiffelClasses"
 		require	
 			non_void_assembly_descriptor: assembly_descriptor /= Void
@@ -141,8 +141,8 @@ feature {NONE} -- Implementation
 		end
 	
 	generate_classes (sender: ANY; arguments: SYSTEM_EVENTARGS) is
-			-- Generate Eiffel classes for the assembly corresponding to `assembly_descriptor' without its dependancies.
 		indexing
+			description: "Generate Eiffel classes for the assembly corresponding to `assembly_descriptor' without its dependancies."
 			external_name: "GenerateClasses"
 		require	
 			non_void_assembly_descriptor: assembly_descriptor /= Void

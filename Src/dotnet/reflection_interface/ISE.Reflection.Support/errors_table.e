@@ -12,8 +12,8 @@ create
 feature {NONE} -- Initialization
 
 	make is
-			-- Initialize `errors_table'.
 		indexing
+			description: "Initialize `errors_table'."
 			external_name: "Make"
 		do
 			create errors_table.make
@@ -24,16 +24,17 @@ feature {NONE} -- Initialization
 feature -- Access
 	
 	errors_table: SYSTEM_COLLECTIONS_HASHTABLE
-			-- Key: error code
-			-- Value: [error name, error description]
-			-- | ARRAY [STRING]
+			-- | Key: error code
+			-- | Value: [error name, error description]
+			-- | (ARRAY [STRING])
 		indexing
+			description: "Errors table"
 			external_name: "ErrorsTable"
 		end
 
 	error_name (a_code: INTEGER): STRING is
-			-- Error name corresponding to `a_code'
 		indexing
+			description: "Error name corresponding to `a_code'"
 			external_name: "ErrorName"
 		require
 			valid_code: a_code >= 0 and errors_table.ContainsKey (a_code)
@@ -50,8 +51,8 @@ feature -- Access
 		end
 
 	error_description (a_code: INTEGER): STRING is
-			-- Error name corresponding to `a_code'
 		indexing
+			description: "Error name corresponding to `a_code'"
 			external_name: "ErrorDescription"
 		require
 			valid_code: a_code >= 0 and errors_table.ContainsKey (a_code)
@@ -68,8 +69,8 @@ feature -- Access
 		end
 
 	error_info (a_code: INTEGER): ERROR_INFO is
-			-- Error info from `a_code'
 		indexing
+			description: "Error info from `a_code'"
 			external_name: "ErrorInfo"
 		require
 			valid_code: a_code >= 0 and errors_table.ContainsKey (a_code)
@@ -89,9 +90,9 @@ feature -- Access
 		end
 
 	errors: SYSTEM_COLLECTIONS_ARRAYLIST is
-			-- Errors currently in `errors_table'
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ERROR_INFO]
 		indexing
+			description: "Errors currently in `errors_table'"
 			external_name: "Errors"
 		local
 			enumerator: SYSTEM_COLLECTIONS_IENUMERATOR
@@ -116,8 +117,8 @@ feature -- Access
 feature -- Basic Operations
 
 	add_error (an_error: ERROR_INFO) is
-			-- Add `an_error' to `errors_table'.
 		indexing
+			description: "Add `an_error' to `errors_table'."
 			external_name: "AddError"
 		require
 			non_void_error: an_error /= Void
@@ -135,8 +136,8 @@ feature -- Basic Operations
 		end
 	
 	replace_error_name (a_code: INTEGER; new_name: STRING) is
-			-- Replace error name corresponding to `a_code' with `new_name'.
 		indexing
+			description: "Replace error name corresponding to `a_code' with `new_name'."
 			external_name: "ReplaceErrorName"
 		require
 			valid_code: a_code >= 0 and errors_table.containskey (a_code)
@@ -159,8 +160,8 @@ feature -- Basic Operations
 		end
 
 	replace_error_description (a_code: INTEGER; new_description: STRING) is
-			-- Replace error description corresponding to `a_code' with `new_description'.
 		indexing
+			description: "Replace error description corresponding to `a_code' with `new_description'."
 			external_name: "ReplaceErrorDescription"
 		require
 			valid_code: a_code >= 0 and errors_table.ContainsKey (a_code)
@@ -183,8 +184,8 @@ feature -- Basic Operations
 		end
 	
 	remove_error (a_code: INTEGER) is
-			-- Remove error corresponding to `a_code' from `errors_table'.
 		indexing
+			description: "Remove error corresponding to `a_code' from `errors_table'."
 			external_name: "RemoveError"
 		require
 			valid_code: a_code >= 0 and errors_table.containskey (a_code)

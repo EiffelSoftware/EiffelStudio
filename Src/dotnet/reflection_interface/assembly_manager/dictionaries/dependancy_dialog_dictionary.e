@@ -41,14 +41,14 @@ feature -- Access
 		end
 
 	Window_height: INTEGER is 340
-			-- Window height
 		indexing
+			description: "Window height"
 			external_name: "WindowHeight"
 		end		
 
 	Window_width: INTEGER is 660
-			-- Window width
 		indexing
+			description: "Window width"
 			external_name: "WindowWidth"
 		end
 

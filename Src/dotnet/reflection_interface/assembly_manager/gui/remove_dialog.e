@@ -17,9 +17,9 @@ create
 feature {NONE} -- Initialization
 
 	make (an_assembly_descriptor: like assembly_descriptor; assembly_dependancies: like dependancies) is
-			-- Set `assembly_descriptor' with `an_assembly_descriptor'.
-			-- Set `dependancies' with `assembly_dependancies'.
 		indexing
+			description: "[Set `assembly_descriptor' with `an_assembly_descriptor'.%
+					%Set `dependancies' with `assembly_dependancies'.]"
 			external_name: "Make"
 		require
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void
@@ -56,8 +56,8 @@ feature -- Access
 		end
 		
 	dependancies: ARRAY [SYSTEM_REFLECTION_ASSEMBLYNAME]
-			-- Assembly dependancies
 		indexing
+			description: "Assembly dependancies"
 			external_name: "Dependancies"
 		end
 	
@@ -68,34 +68,34 @@ feature -- Access
 		end
 		
 	dictionary: REMOVE_DIALOG_DICTIONARY is
-			-- Dictionary
 		indexing
+			description: "Dictionary"
 			external_name: "Dictionary"
 		once
 			create Result
 		end
 	
 	question_label: SYSTEM_WINDOWS_FORMS_LABEL
-			-- Question label
 		indexing
+			description: "Question label"
 			external_name: "QuestionLabel"
 		end
 
 	dependancies_check_box: SYSTEM_WINDOWS_FORMS_CHECKBOX
-			-- Check box to remove dependancies 
 		indexing
+			description: "Check box to remove dependancies"
 			external_name: "DependanciesCheckBox"
 		end
 				
 	yes_button: SYSTEM_WINDOWS_FORMS_BUTTON
-			-- Yes button
 		indexing
+			description: "Yes button"
 			external_name: "YesButton"
 		end
 
 	no_button: SYSTEM_WINDOWS_FORMS_BUTTON
-			-- No button
 		indexing
+			description: "No button"
 			external_name: "NoButton"
 		end
 
@@ -160,8 +160,8 @@ feature -- Status Setting
 feature -- Basic Operations
 
 	initialize_gui is
-			-- Initialize GUI.
 		indexing
+			description: "Initialize GUI."
 			external_name: "InitializeGUI"
 		local
 			a_size: SYSTEM_DRAWING_SIZE
@@ -251,8 +251,8 @@ feature -- Basic Operations
 feature -- Event handling
 
 	on_yes_event_handler (sender: ANY; arguments: SYSTEM_EVENTARGS) is
-			-- Process `yes_button' activation.
 		indexing
+			description: "Process `yes_button' activation."
 			external_name: "OnYesEventHandler"
 		require
 			non_void_sender: sender /= Void
@@ -297,8 +297,8 @@ feature -- Event handling
 		end
 
 	on_no_event_handler (sender: ANY; arguments: SYSTEM_EVENTARGS) is
-			-- Process `no_button' activation.
 		indexing
+			description: "Process `no_button' activation."
 			external_name: "OnNoEventHandler"
 		require
 			non_void_sender: sender /= Void
@@ -310,8 +310,8 @@ feature -- Event handling
 feature {NONE} -- Implementation
 		
 	remove_assembly is
-			-- Remove the assembly corresponding to `assembly_descriptor'.
 		indexing
+			description: "Remove the assembly corresponding to `assembly_descriptor'."
 			external_name: "RemoveAssembly"
 		require
 			non_void_assembly_descriptor: assembly_descriptor /= Void
@@ -336,8 +336,8 @@ feature {NONE} -- Implementation
 		end
 		
 	remove_assembly_and_dependancies is
-			-- Remove the assembly corresponding to `assembly_descriptor' and its dependancies.
 		indexing
+			description: "Remove the assembly corresponding to `assembly_descriptor' and its dependancies."
 			external_name: "RemoveAssemblyAndDependancies"
 		require
 			non_void_assembly_descriptor: assembly_descriptor /= Void

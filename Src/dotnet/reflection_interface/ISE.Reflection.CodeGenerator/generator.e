@@ -11,8 +11,8 @@ create
 feature {NONE} -- Initialization
 
 	make is
-			-- Creation routine
 		indexing
+			description: "Creation routine"
 			external_name: "Make"
 		do
 		end
@@ -20,20 +20,20 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	eiffel_generator: EIFFEL_CODE_GENERATOR
-			-- Eiffel generator
 		indexing
+			description: "Eiffel generator"
 			external_name: "EiffelGenerator"
 		end
 	
 	eiffel_generator_from_xml: EIFFEL_CODE_GENERATOR_FROM_XML
-			-- Eiffel generator from Xml
 		indexing
+			description: "Eiffel generator from Xml"
 			external_name: "EiffelGeneratorFromXml"
 		end
 	
 	xml_generator: XML_CODE_GENERATOR
-			-- Xml generator
 		indexing
+			description: "Xml generator"
 			external_name: "XmlGenerator"
 		end
 			

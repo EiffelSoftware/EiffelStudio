@@ -12,8 +12,8 @@ create
 feature {NONE} -- Initialization
 
 	make is
-			-- Initialize attributes.
 		indexing
+			description: "Initialize attributes."
 			external_name: "Make"
 		do
 			create arguments.make
@@ -30,58 +30,58 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	eiffel_name: STRING
-			-- Eiffel name
 		indexing
+			description: "Eiffel name"
 			external_name: "EiffelName"
 		end
 		
 	external_name: STRING
-			-- External name
 		indexing
+			description: "External name"
 			external_name: "ExternalName"
 		end
 		
 	arguments: SYSTEM_COLLECTIONS_ARRAYLIST
-			-- Feature Arguments
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [NAMED_SIGNATURE_TYPE]
 		indexing
+			description: "Feature Arguments"
 			external_name: "Arguments"
 		end
 		
 	return_type: SIGNATURE_TYPE	
-			-- Eiffel name of feature return type
 		indexing
+			description: "Eiffel name of feature return type"
 			external_name: "ReturnType"
 		end
 				
 	preconditions: SYSTEM_COLLECTIONS_ARRAYLIST
-			-- Feature preconditions
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ARRAY [STRING]]
 			-- | Array with precondition tag and precondition text
 		indexing
+			description: "Feature preconditions"
 			external_name: "Preconditions"
 		end
 		
 	postconditions: SYSTEM_COLLECTIONS_ARRAYLIST
-			-- Feature postconditions
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ARRAY [STRING]]
 			-- | Array with postcondition tag and postcondition text
 		indexing
+			description: "Feature postconditions"
 			external_name: "Postconditions"
 		end
 		
 	comments: SYSTEM_COLLECTIONS_ARRAYLIST
-			-- Feature comments
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [STRING]
 		indexing
+			description: "Feature comments"
 			external_name: "Comments"
 		end
 
 feature -- Eiffel names from .NET information
 
 	argument_from_info (info: SYSTEM_REFLECTION_PARAMETERINFO): ARRAY [STRING] is 
-			-- Eiffel name and type of argument corresponding to `info'.
 		indexing
+			description: "Eiffel name and type of argument corresponding to `info'"
 			external_name: "ArgumentFromInfo"
 		require
 			non_void_info: info /= Void
@@ -122,62 +122,61 @@ feature -- Eiffel names from .NET information
 feature -- Status Report
 
 	is_frozen: BOOLEAN
-			-- Is feature frozen?
 		indexing
+			description: "Is feature frozen?"
 			external_name: "IsFrozen"
 		end
 		
 	is_static: BOOLEAN
-			-- Is feature static?
 		indexing
+			description: "Is feature static?"
 			external_name: "IsStatic"
 		end
 		
 	is_abstract: BOOLEAN
-			-- Is feature abstract?
 		indexing
+			description: "Is feature abstract?"
 			external_name: "IsAbstract"
 		end
 		
 	is_method: BOOLEAN
-			-- Is feature a method?
 		indexing
+			description: "Is feature a method?"
 			external_name: "IsMethod"
 		end
 		
 	is_field: BOOLEAN
-			-- Is feature a field?
 		indexing
+			description: "Is feature a field?"
 			external_name: "IsField"
 		end
 		
 	is_creation_routine: BOOLEAN
-			-- Is feature a creation routine?
 		indexing
+			description: "Is feature a creation routine?"
 			external_name: "IsCreationRoutine"
 		end
 		
 	is_prefix: BOOLEAN
-			-- Is feature a prefix?
 		indexing
+			description: "Is feature a prefix?"
 			external_name: "IsPrefix"
 		end
 		
 	is_infix: BOOLEAN
-			-- Is feature an infix?
 		indexing
+			description: "Is feature an infix?"
 			external_name: "IsInfix"
 		end
 		
---##TEMPORARY
+--##FIXME
 	postcondition: BOOLEAN
 --
-
 feature -- Status Setting
 
 	set_frozen (a_value: like is_frozen) is
-			-- Set `is_frozen' with `a_value'.
 		indexing
+			description: "Set `is_frozen' with `a_value'."
 			external_name: "SetFrozen"
 		do
 			is_frozen := a_value
@@ -186,8 +185,8 @@ feature -- Status Setting
 		end
 	
 	set_static (a_value: like is_static) is
-			-- Set `is_static' with `a_value'.
 		indexing
+			description: "Set `is_static' with `a_value'."
 			external_name: "SetStatic"
 		do
 			is_static := a_value
@@ -196,8 +195,8 @@ feature -- Status Setting
 		end
 
 	set_abstract (a_value: like is_abstract) is
-			-- Set `is_abstract' with `a_value'.
 		indexing
+			description: "Set `is_abstract' with `a_value'."
 			external_name: "SetAbstract"
 		do
 			is_abstract := a_value
@@ -206,8 +205,8 @@ feature -- Status Setting
 		end
 		
 	set_method (a_value: like is_method) is
-			-- Set `is_method' with `a_value'.
 		indexing
+			description: "Set `is_method' with `a_value'."
 			external_name: "SetMethod"
 		do
 			is_method := a_value
@@ -216,8 +215,8 @@ feature -- Status Setting
 		end
 		
 	set_field (a_value: like is_field) is
-			-- Set `is_field' with `a_value'.
 		indexing
+			description: "Set `is_field' with `a_value'."
 			external_name: "SetField"
 		do
 			is_field := a_value
@@ -226,8 +225,8 @@ feature -- Status Setting
 		end
 		
 	set_creation_routine (a_value: like is_creation_routine) is
-			-- Set `is_creation_routine' with `a_value'.
 		indexing
+			description: "Set `is_creation_routine' with `a_value'."
 			external_name: "SetCreationRoutine"
 		do
 			is_creation_routine := a_value
@@ -236,8 +235,8 @@ feature -- Status Setting
 		end
 
 	set_prefix (a_value: like is_prefix) is
-			-- Set `is_prefix' with `a_value'.
 		indexing
+			description: "Set `is_prefix' with `a_value'."
 			external_name: "SetPrefix"
 		do
 			is_prefix := a_value
@@ -246,8 +245,8 @@ feature -- Status Setting
 		end
 
 	set_infix (a_value: like is_infix) is
-			-- Set `is_infix' with `a_value'.
 		indexing
+			description: "Set `is_infix' with `a_value'."
 			external_name: "SetInfix"
 		do
 			is_infix := a_value
@@ -256,8 +255,8 @@ feature -- Status Setting
 		end
 		
 	set_eiffel_name (a_name: like eiffel_name) is
-			-- Set `eiffel_name' with `a_name'.
 		indexing
+			description: "Set `eiffel_name' with `a_name'."
 			external_name: "SetEiffelName"
 		require
 			non_void_name: a_name /= Void
@@ -269,8 +268,8 @@ feature -- Status Setting
 		end	
 
 	set_external_name (a_name: like external_name) is
-			-- Set `external_name' with `a_name'.
 		indexing
+			description: "Set `external_name' with `a_name'."
 			external_name: "SetExternalName"
 		require
 			non_void_name: a_name /= Void
@@ -282,8 +281,8 @@ feature -- Status Setting
 		end		
 	
 	set_return_type (a_type: like return_type) is
-			-- Set `return_type' with `a_type'.
 		indexing
+			description: "Set `return_type' with `a_type'."
 			external_name: "SetReturnType"
 		require
 			non_void_type: a_type /= Void
@@ -293,21 +292,22 @@ feature -- Status Setting
 			return_type_set: return_type = a_type
 		end
 	
---##TEMPORARY
+--##FIXME
 	set_postcondition (a_postcondition: like postcondition) is
-			-- Set `postcondition' with `a_postcondition'.
+		indexing
+			description: "Set `postcondition' with `a_postcondition'."
+			external_name: "SetPostcondition"
 		do
 			postcondition := a_postcondition
 		ensure
 			postcondition_set: postcondition = a_postcondition
 		end
---##
 
 feature -- Basic Operations
 
 	add_argument (an_argument: NAMED_SIGNATURE_TYPE) is
-			-- Add `an_argument to `arguments'.
 		indexing
+			description: "Add `an_argument to `arguments'."
 			external_name: "AddArgument"
 		require
 			non_void_argument: an_argument /= Void
@@ -318,8 +318,8 @@ feature -- Basic Operations
 		end
 			
 	add_precondition (a_tag, a_text: STRING) is
-			-- Add new precondition (built from `a_tag' and `a_text'  to `preconditions'.
 		indexing
+			description: "Add new precondition (built from `a_tag' and `a_text'  to `preconditions'."
 			external_name: "AddPrecondition"
 		require
 			non_void_tag: a_tag /= Void
@@ -336,8 +336,8 @@ feature -- Basic Operations
 		end
 
 	add_postcondition (a_tag, a_text: STRING) is
-			-- Add new postcondition (built from `a_tag' and `a_text'  to `postconditions'.
 		indexing
+			description: "Add new postcondition (built from `a_tag' and `a_text'  to `postconditions'."
 			external_name: "AddPostcondition"
 		require
 			non_void_tag: a_tag /= Void
@@ -354,8 +354,8 @@ feature -- Basic Operations
 		end
 
 	add_comment (a_comment: STRING) is
-			-- Add `a_comment' to `comments'.
 		indexing
+			description: "Add `a_comment' to `comments'."
 			external_name: "AddComment"
 		require
 			non_void_comment: a_comment /= Void

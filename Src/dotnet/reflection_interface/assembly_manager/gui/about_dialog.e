@@ -47,7 +47,7 @@ feature -- Basic Operations
 			a_size: SYSTEM_DRAWING_SIZE
 			a_point: SYSTEM_DRAWING_POINT
 			an_image: SYSTEM_DRAWING_IMAGE
-			a_button: SYSTEM_WINDOWS_FORMS_BUTTON
+			a_panel: SYSTEM_WINDOWS_FORMS_PANEL
 		do
 			set_enabled (True)
 			set_text (dictionary.Title)
@@ -61,20 +61,19 @@ feature -- Basic Operations
 			
 				-- Image
 			an_image := image_factory.fromfile (dictionary.Image_filename)
-			create a_button.make_button
-			a_button.set_flatstyle (dictionary.Flat_style)
-			a_button.set_height (an_image.height)
-			a_button.set_width (an_image.width)
-			a_button.set_image (an_image)			
-			controls.add (a_button)	
+			create a_panel.make_panel
+			a_panel.set_height (an_image.height)
+			a_panel.set_width (an_image.width)
+			a_panel.set_backgroundimage (an_image)			
+			controls.add (a_panel)	
 			
 				-- Text
 			create main_panel.make_panel
 			main_panel.set_backcolor (dictionary.White_color)
-			a_size.set_width (dictionary.Window_width - a_button.width)
+			a_size.set_width (dictionary.Window_width - a_panel.width)
 			a_size.set_height (dictionary.Window_width)
 			main_panel.set_size (a_size)
-			a_point.set_x (a_button.width)
+			a_point.set_x (a_panel.width)
 			a_point.set_y (0)
 			main_panel.set_location (a_point)
 			controls.add (main_panel)

@@ -1,5 +1,5 @@
 indexing
-	description: "Provide support for code generation and reflection."
+	description: "Root class"
 	external_name: "ISE.Reflection.Supports"
 
 class
@@ -11,8 +11,8 @@ create
 feature {NONE} -- Initialization
 
 	make is
-			-- Creation routine
 		indexing
+			description: "Creation routine"
 			external_name: "Make"
 		do
 		end
@@ -20,20 +20,20 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	reflection_support: REFLECTION_SUPPORT
-			-- Reflection support
 		indexing
+			description: "Reflection support"
 			external_name: "ReflectionSupport"
 		end
 	
 	code_generation_support: CODE_GENERATION_SUPPORT
-			-- Code generation support
 		indexing
+			description: "Code generation support"
 			external_name: "CodeGenerationSupport"
 		end
 
 	conversion_support: CONVERSION_SUPPORT
-			-- Conversion support
 		indexing
+			description: "Conversion support"
 			external_name: "ConversionSupport"
 		end
 		

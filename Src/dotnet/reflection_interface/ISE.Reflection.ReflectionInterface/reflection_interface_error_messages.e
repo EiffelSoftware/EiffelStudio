@@ -12,118 +12,118 @@ inherit
 feature -- Access	
 
 	File_access_failed: STRING is "File access failed"
-			-- Error name: File access failed
 		indexing
+			description: "Error name: File access failed"
 			external_name: "FileAccessFailed"
 		end
 
 	File_access_failed_message: STRING is "The XML file access has failed. There may be a sharing violation or the path may be invalid."
-			-- Error message when an XML file access has failed
 		indexing
+			description: "Error message when an XML file access has failed"
 			external_name: "FileAccessFailedMessage"
 		end
 		
 		
 	Has_write_lock: STRING is "Has write lock"
-			-- Error name: Has write lock
 		indexing
+			description: "Error name: Has write lock"
 			external_name: "HasWriteLock"
 		end
 
 	Has_write_lock_message: STRING is "This assembly is currently accessed (for writing) by another process. Please try to access Eiffel repository later."
-			-- Error message when there is a write lock
 		indexing
+			description: "Error message when there is a write lock"
 			external_name: "HasWriteLockMessage"
 		end
 		
 		
 	Has_read_lock: STRING is "Has read lock"
-			-- Error name: has read lock
 		indexing
+			description: "Error name: has read lock"
 			external_name: "HasReadLock"
 		end
 
 	Has_read_lock_message: STRING is "This assembly is currently accessed (for reading) by another process. Please try to access Eiffel repository later."
-			-- Error message when there is a read lock
 		indexing
+			description: "Error message when there is a read lock"
 			external_name: "HasReadLockMessage"
 		end
 
 		
 	Read_lock_creation_failed: STRING is "Read lock creation failed"
-			-- Error name: read lock creation failed
 		indexing
+			description: "Error name: read lock creation failed"
 			external_name: "ReadLockCreationFailed"
 		end
 
 	Read_lock_creation_failed_message: STRING is "Creation of a read lock in assembly repository has failed. The folder may be corrupted."
-			-- Error message when a write lock creation has failed
 		indexing
+			description: "Error message when a write lock creation has failed"
 			external_name: "ReadLockCreationFailedMessage"
 		end
 
 	
 	Assemblies_retrieval_failed: STRING is "Assemblies retrieval failed"
-			-- Error name: Assemblies retrieval failed
 		indexing
+			description: "Error name: Assemblies retrieval failed"
 			external_name: "AssembliesRetrievalFailed"
 		end
 
 	Assemblies_retrieval_failed_message: STRING is "The retrieval of assemblies from Eiffel repository has failed. There may be a sharing violation."
-			-- Error message when assemblies retrieval has failed
 		indexing
+			description: "Error message when assemblies retrieval has failed"
 			external_name: "AssembliesRetrievalFailedMessage"
 		end
 		
 
 	Assembly_retrieval_failed: STRING is "Assembly retrieval failed"
-			-- Error name: Assembly retrieval failed
 		indexing
+			description: "Error name: Assembly retrieval failed"
 			external_name: "AssemblyRetrievalFailed"
 		end
 
 	Assembly_retrieval_failed_message: STRING is "The retrieval of this assembly from Eiffel repository has failed. There may be a sharing violation."
-			-- Error message when assembly retrieval has failed
 		indexing
+			description: "Error message when assembly retrieval has failed"
 			external_name: "AssemblyRetrievalFailedMessage"
 		end		
 
 
 	Type_retrieval_failed: STRING is "Type retrieval failed"
-			-- Error name: Type retrieval failed
 		indexing
+			description: "Error name: Type retrieval failed"
 			external_name: "TypeRetrievalFailed"
 		end
 
 	Type_retrieval_failed_message: STRING is "The retrieval of this type from Eiffel repository has failed. There may be a sharing violation."
-			-- Error message when assembly retrieval has failed
 		indexing
+			description: "Error message when assembly retrieval has failed"
 			external_name: "TypeRetrievalFailedMessage"
 		end	
 
 
 	Assembly_removal_failed: STRING is "Assembly removal failed"
-			-- Error name: Assembly removal failed
 		indexing
+			description: "Error name: Assembly removal failed"
 			external_name: "AssemblyRemovalFailed"
 		end
 
 	Assembly_removal_failed_message: STRING is "The removal of this assembly from Eiffel repository has failed. There may be a sharing violation."
-			-- Error message when assembly removal has failed
 		indexing
+			description: "Error message when assembly removal has failed"
 			external_name: "AssemblyRemovalFailedMessage"
 		end	
 
 
 	Invalid_assembly_qualified_name: STRING is "Invalid assembly qualified name"
-			-- Error name: Invalid assembly qualified name
 		indexing
+			description: "Error name: Invalid assembly qualified name"
 			external_name: "InvalidAssemblyQualifiedName"
 		end
 
 	Invalid_assembly_qualified_name_message: STRING is "The assembly qualified name of this type is invalid."
-			-- Error message when the assembly qualified name is invalid
 		indexing
+			description: "Error message when the assembly qualified name is invalid"
 			external_name: "InvalidAssemblyQualifiedNameMessage"
 		end
 

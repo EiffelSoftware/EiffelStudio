@@ -15,8 +15,8 @@ create
 feature {NONE} -- Initialization
 
 	make is
-			-- Creation routine
 		indexing
+			description: "Initialize `error_messages' and `xml_elements'."
 			external_name: "Make"
 		do
 			create error_messages
@@ -29,20 +29,20 @@ feature {NONE} -- Initialization
 feature -- Access				
 		
 	Write_lock_filename: STRING is "write_lock.txt"
-			-- Read lock filename
 		indexing
+			description: "Read lock filename"
 			external_name: "WriteLockFilename"
 		end
 		
 	Read_lock_filename: STRING is "read_lock.txt"
-			-- Read lock filename
 		indexing
+			description: "Read lock filename"
 			external_name: "ReadLockFilename"
 		end
 
 	eiffel_class_from_xml (a_filename: STRING): ISE_REFLECTION_EIFFELCLASS is
-			-- Instance of `eiffel_class' corresponding to Xml file with filename `a_filename'.
 		indexing
+			description: "Instance of `eiffel_class' corresponding to Xml file with filename `a_filename'"
 			external_name: "EiffelClassFromXml"
 		require
 			non_void_filename: a_filename /= Void
@@ -79,8 +79,8 @@ feature -- Access
 		end	
 
 	eiffel_assembly_from_xml (a_filename: STRING): EIFFEL_ASSEMBLY is
-			-- Instance of `eiffel_assembly' corresponding to Xml file with filename `a_filename'.
 		indexing
+			description: "Instance of `eiffel_assembly' corresponding to Xml file with filename `a_filename'"
 			external_name: "EiffelAssemblyFromXml"
 		require
 			non_void_filename: a_filename /= Void
@@ -95,8 +95,10 @@ feature -- Access
 			emitter_version_number: STRING
 			a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
 			retried: BOOLEAN
+			reflection_support: REFLECTION_SUPPORT
 		do
 			if not retried then
+				create reflection_support.make
 				create assembly_description.make_xmltextreader_10 (a_filename)	
 					-- WhitespaceHandling = None
 				assembly_description.set_WhitespaceHandling (2)
@@ -126,6 +128,9 @@ feature -- Access
 					-- Set `eiffel_cluster_path'.
 				if assembly_description.Name.Equals_String (xml_elements.Eiffel_cluster_path_element) then
 					eiffel_cluster_path := assembly_description.ReadElementString_String (xml_elements.Eiffel_cluster_path_element)
+					if eiffel_cluster_path.indexof (reflection_support.Eiffel_key) > - 1 then
+						eiffel_cluster_path := eiffel_cluster_path.replace (reflection_support.Eiffel_key, reflection_support.Eiffel_delivery_path)
+					end
 				end
 
 				-- Set `emitter_version_number'.
@@ -148,8 +153,8 @@ feature -- Access
 feature -- Status Report
 
 	has_write_lock (a_folder_name: STRING): BOOLEAN is
-			-- Does folder with name `a_folder_name' have a `write_lock' file?
 		indexing
+			description: "Does folder with name `a_folder_name' have a `write_lock' file?"
 			external_name: "HasWriteLock"
 		require
 			non_void_folder_name: a_folder_name /= Void
@@ -170,8 +175,8 @@ feature -- Status Report
 		end
 
 	has_read_lock (a_folder_name: STRING): BOOLEAN is
-			-- Does folder with name `a_folder_name' have a `read_lock' file?
 		indexing
+			description: "Does folder with name `a_folder_name' have a `read_lock' file?"
 			external_name: "HasReadLock"
 		require
 			non_void_folder_name: a_folder_name /= Void
@@ -192,8 +197,8 @@ feature -- Status Report
 		end
 
 	valid_path (a_path: STRING): BOOLEAN is
-			-- Is `a_path' valid?
 		indexing
+			description: "Is `a_path' valid?"
 			external_name: "ValidPath"
 		require
 			non_void_path: a_path /= Void
@@ -207,8 +212,8 @@ feature -- Status Report
 feature -- Basic Operations
 
 	create_folder (a_path: STRING) is
-			-- Create folder with path `a_path' (recursively).
 		indexing
+			description: "Create folder with path `a_path' (recursively)."
 			external_name: "CreateFolder"
 		require
 			non_void_path: a_path /= Void
@@ -256,38 +261,38 @@ feature -- Basic Operations
 feature {NONE} -- Implementation
 
 	error_messages: CODE_GENERATION_SUPPORT_ERROR_MESSAGES
-			-- Error messages
 		indexing
+			description: "Error messages"
 			external_name: "ErrorMessages"
 		end
 		
 	xml_elements: XML_ELEMENTS
-			-- XML elements
 		indexing
+			description: "XML elements"
 			external_name: "XmlElements"
 		end
 		
 	type_description: SYSTEM_XML_XMLTEXTREADER
-			-- Xml reader corresponding to type description XML file
 		indexing
+			description: "Xml reader corresponding to type description XML file"
 			external_name: "TypeDescription"
 		end
 		
 	eiffel_class: ISE_REFLECTION_EIFFELCLASS
-			-- Eiffel class generated from `assembly_description' and `type_description'
 		indexing
+			description: "Eiffel class generated from `assembly_description' and `type_description'"
 			external_name: "EiffelClass"
 		end
 
 	eiffel_feature: ISE_REFLECTION_EIFFELFEATURE
-			-- Eiffel feature built from `type_description'.
 		indexing
+			description: "Eiffel feature built from `type_description'"
 			external_name: "EiffelFeature"
 		end
 		
 	generate_class_header is
-			-- Set `eiffel_class' attributes corresponding to the XML element `header'.
 		indexing
+			description: "Set `eiffel_class' attributes corresponding to the XML element `header'."
 			external_name: "GenerateClassHeader"
 		require
 			non_void_eiffel_class: eiffel_class /= Void
@@ -421,8 +426,8 @@ feature {NONE} -- Implementation
 		end
 	
 	generate_parents is
-			-- Add parents to `eiffel_class' (if any).
 		indexing
+			description: "Add parents to `eiffel_class' (if any)."
 			external_name: "GenerateParents"
 		require
 			non_void_eiffel_class: eiffel_class /= Void
@@ -582,8 +587,8 @@ feature {NONE} -- Implementation
 		end
 	
 	generate_class_body is
-			-- Set `eiffel_class' attributes corresponding to the XML element `body'.
 		indexing
+			description: "Set `eiffel_class' attributes corresponding to the XML element `body'."
 			external_name: "GenerateClassBody"
 		require
 			non_void_eiffel_class: eiffel_class /= Void
@@ -643,8 +648,8 @@ feature {NONE} -- Implementation
 		end
 
 	generate_features (element_name: STRING) is
-			-- Add features from xml element with name `element_name' to `eiffel_class'.
 		indexing
+			description: "Add features from xml element with name `element_name' to `eiffel_class'."
 			external_name: "GenerateFeatures"
 		require
 			non_void_eiffel_class: eiffel_class /= Void
@@ -775,8 +780,8 @@ feature {NONE} -- Implementation
 		end
 	
 	set_feature_info is
-			-- Set `is_frozen', `is_static', `is_abstract', `is_field', `is_creation_routine', `is_prefix', `is_infix' from `type_description' to `eiffel_feature'.
 		indexing
+			description: "Set `is_frozen', `is_static', `is_abstract', `is_field', `is_creation_routine', `is_prefix', `is_infix' from `type_description' to `eiffel_feature'."
 			external_name: "SetFeatureInfo"
 		require
 			non_void_feature: eiffel_feature /= Void
@@ -859,8 +864,8 @@ feature {NONE} -- Implementation
 		end
 	
 	generate_arguments is
-			-- Add arguments to `eiffel_feature'.
 		indexing
+			description: "Add arguments to `eiffel_feature'."
 			external_name: "GenerateArguments"
 		require
 			non_void_feature: eiffel_feature /= Void
@@ -913,8 +918,8 @@ feature {NONE} -- Implementation
 		end
 
 	generate_comments is
-			-- Add comments to `eiffel_feature'.
 		indexing
+			description: "Add comments to `eiffel_feature'."
 			external_name: "GenerateComments"
 		require
 			non_void_feature: eiffel_feature /= Void
@@ -949,8 +954,8 @@ feature {NONE} -- Implementation
 		end		
 
 	generate_feature_assertions (element_name: STRING) is
-			-- Add preconditions or postconditions (depending on `element_name') to `eiffel_feature'.
 		indexing
+			description: "Add preconditions or postconditions (depending on `element_name') to `eiffel_feature'."
 			external_name: "GenerateFeatureAssertions"
 		require
 			non_void_feature: eiffel_feature /= Void
@@ -1001,8 +1006,8 @@ feature {NONE} -- Implementation
 		end
 		
 	generate_class_footer is
-			-- Set `eiffel_class' attributes corresponding to the XML element `footer'.
 		indexing
+			description: "Set `eiffel_class' attributes corresponding to the XML element `footer'."
 			external_name: "GenerateClassFooter"
 		require
 			non_void_eiffel_class: eiffel_class /= Void

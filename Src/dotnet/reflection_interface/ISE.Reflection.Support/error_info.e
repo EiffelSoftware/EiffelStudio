@@ -12,10 +12,10 @@ create
 feature {NONE} -- Initialization
 
 	make (a_code: like code; a_name: like name; a_description: like description) is
-			-- Set `code' with `a_code'.
-			-- Set `name' with `a_name'.
-			-- Set `description' with `a_description'.
 		indexing
+			description: "[Set `code' with `a_code'.%
+					%Set `name' with `a_name'.%
+					%Set `description' with `a_description'.]"
 			external_name: "Make"
 		require
 			valid_code: a_code >= 0
@@ -36,20 +36,20 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	code: INTEGER
-			-- Error code
 		indexing
+			description: "Error code"
 			external_name: "Code"
 		end
 
 	name: STRING 
-			-- Error name
 		indexing
+			description: "Error name"
 			external_name: "Name"
 		end			
 			
 	description: STRING 
-			-- Error description
 		indexing
+			description: "Error description"
 			external_name: "Description"
 		end	
 

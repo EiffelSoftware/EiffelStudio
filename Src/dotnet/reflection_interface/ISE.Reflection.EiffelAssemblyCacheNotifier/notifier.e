@@ -11,8 +11,8 @@ create
 feature {NONE} -- Initialization
 
 	make is
-			-- Creation routine
 		indexing
+			description: "Initialize `add_observers' and `remove_observers'."
 			external_name: "Make"
 		do
 			create add_observers.make
@@ -25,24 +25,24 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	add_observers: SYSTEM_COLLECTIONS_ARRAYLIST
-			-- Observers called when a type is added to the database or an assembly is removed from the database.
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [SYSTEM_DELEGATE]
 		indexing
+			description: "Observers called when a type is added to the database or an assembly is removed from the database"
 			external_name: "AddObservers"
 		end
 
-	remove_observers: SYSTEM_COLLECTIONS_ARRAYLIST
-			-- Observers called when a type is added to the database or an assembly is removed from the database.
+	remove_observers: SYSTEM_COLLECTIONS_ARRAYLIST 
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [SYSTEM_DELEGATE]
 		indexing
+			description: "Observers called when a type is added to the database or an assembly is removed from the database"
 			external_name: "RemoveObservers"
 		end
 		
 feature -- Status Setting
 
 	add_addition_observer (an_observer: SYSTEM_DELEGATE) is
-			-- Add `an_observer' to `add_observers'.
 		indexing
+			description: "Add `an_observer' to `add_observers'."
 			external_name: "AddAdditionObserver"
 		require
 			non_void_observer: an_observer /= Void
@@ -55,8 +55,8 @@ feature -- Status Setting
 		end
 
 	add_remove_observer (an_observer: SYSTEM_DELEGATE) is
-			-- Add `an_observer' to `remove_observers'.
 		indexing
+			description: "Add `an_observer' to `remove_observers'."
 			external_name: "AddRemoveObserver"
 		require
 			non_void_observer: an_observer /= Void
@@ -71,8 +71,8 @@ feature -- Status Setting
 feature -- Basic Operations
 
 	notify_add (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
-			-- Notify that assembly corresponding to `an_assembly_descriptor' has been added to the database.
 		indexing
+			description: "Notify that assembly corresponding to `an_assembly_descriptor' has been added to the database."
 			external_name: "NotifyAdd"
 		require
 			non_void_observers: add_observers /= Void
@@ -96,8 +96,8 @@ feature -- Basic Operations
 		end
 
 	notify_remove (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
-			-- Notify that assembly corresponding to `an_assembly_descriptor' has been removed from the database.
 		indexing
+			description: "Notify that assembly corresponding to `an_assembly_descriptor' has been removed from the database."
 			external_name: "NotifyRemove"
 		require
 			non_void_observers: remove_observers /= Void

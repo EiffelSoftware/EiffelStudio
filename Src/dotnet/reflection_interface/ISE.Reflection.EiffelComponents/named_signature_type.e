@@ -15,22 +15,22 @@ create
 feature -- Access
 
 	eiffel_name: STRING
-			-- Eiffel name
 		indexing
+			description: "Eiffel name"
 			external_name: "EiffelName"
 		end
 	
 	external_name: STRING
-			-- External name
 		indexing
+			description: "External name"
 			external_name: "ExternalName"
 		end
 
 feature -- Status Setting
 
 	set_eiffel_name (a_name: like eiffel_name) is
-			-- Set `eiffel_name' with `a_name'.
 		indexing
+			description: "Set `eiffel_name' with `a_name'."
 			external_name: "SetEiffelName"
 		require
 			non_void_name: a_name /= Void
@@ -42,8 +42,8 @@ feature -- Status Setting
 		end
 
 	set_external_name (a_name: like external_name) is
-			-- Set `external_name' with `a_name'.
 		indexing
+			description: "Set `external_name' with `a_name'."
 			external_name: "SetExternalName"
 		require
 			non_void_name: a_name /= Void

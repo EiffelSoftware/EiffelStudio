@@ -18,8 +18,8 @@ create
 feature {NONE} -- Initialization
 
 	make_reflection_interface is
-			-- Creation routine
 		indexing
+			description: "Creation routine"
 			external_name: "MakeReflectionInterface"
 		do
 			create error_messages
@@ -30,45 +30,44 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	last_error: ISE_REFLECTION_ERRORINFO
-			-- Last error (either during storage or retrieval)
 		indexing
+			description: "Last error (either during storage or retrieval)"
 			external_name: "LastError"
 		end
 
 	search_result: ISE_REFLECTION_EIFFELASSEMBLY
-			-- Assembly found
-			-- Result of `search'
 		indexing
+			description: "Assembly found: Result of `search'"
 			external_name: "SearchResult"
 		end
 		
 	Has_write_lock_code: INTEGER is
-			-- Error code 
 		indexing
+			description: "Write lock error code"
 			external_name: "HasWriteLockCode"
 		once
 			Result := support.errorstable.errorstable.count
 		end
 
 	Has_read_lock_code: INTEGER is
-			-- Error code 
 		indexing
+			description: "Read lock error code"
 			external_name: "HasReadLockCode"
 		once
 			Result := support.errorstable.errorstable.count
 		end
 
 	Read_lock_creation_failed_code: INTEGER is
-			-- Error code 
 		indexing
+			description: "Read lock creation error code"
 			external_name: "ReadLockCreationFailedCode"
 		once
 			Result := support.errorstable.errorstable.count
 		end
 
 	assembly_descriptor_from_type (a_type: SYSTEM_TYPE): ISE_REFLECTION_ASSEMBLYDESCRIPTOR is
-			-- Retrieve assembly version, culture and public key from `a_type'.
 		indexing	
+			description: "Retrieve assembly version, culture and public key from `a_type'."
 			external_name: "AssemblyDescriptorFromType"
 		require
 			non_void_type: a_type /= Void
@@ -137,24 +136,23 @@ feature -- Access
 feature -- Status Report
 		
 	last_read_successful: BOOLEAN
-			-- Was last retrieval successful?
 		indexing
+			description: "Was last retrieval successful?"
 			external_name: "LastReadSuccessful"
 		end
 	
 	found: BOOLEAN
-			-- Has assembly been found? 
-			-- Result of `search'.
 		indexing
+			description: "Has assembly been found? (Result of `search')"
 			external_name: "Found"
 		end
 
 feature -- Basic Operations
 
 	search (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
-			-- Search for assembly corresponding to `a_descriptor' in the database.
-			-- Make result available in `found.'
 		indexing
+			description: "[Search for assembly corresponding to `a_descriptor' in the database.%
+					%Make result available in `found.']"
 			external_name: "Search"
 		require
 			non_void_descriptor: a_descriptor /= Void
@@ -185,13 +183,13 @@ feature -- Basic Operations
 feature -- Retrieval
 
 	assemblies: SYSTEM_COLLECTIONS_ARRAYLIST is
-			-- Assemblies in the data base
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_ASSEMBLY]
 			-- | For each folder in `$EIFFEL\dotnet\assemblies', check if there is a write or read lock.
 			-- | If a lock already exists, set `last_read_successful' to False, else
 			-- | call `eiffel_assembly' with assembly description xml file as parameter.
 			-- | If no lock has been found, set `last_read_successful' to True.
 		indexing
+			description: "Assemblies in the data base"
 			external_name: "Assemblies"
 		local
 			xml_reader: SYSTEM_XML_XMLTEXTREADER
@@ -262,12 +260,12 @@ feature -- Retrieval
 		end
 		
 	assembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): ISE_REFLECTION_EIFFELASSEMBLY is
-			-- Retrieve assembly xml description (by using `a_descriptor' to find file location).
-			-- Generate instance of `EIFFEL_ASSEMBLY' from the xml file.
 			-- | Generate a `read_lock' file when user starts reading and remove it when reading is over.
 			-- | If a read or write lock already exists in the folder access is requested, set `last_read_successful' to False,
 			-- | else call `eiffel_assembly' with xml file name and set `last_read_successful' to True.
 		indexing
+			description: "[Retrieve assembly xml description (by using `a_descriptor' to find file location).%
+					%Generate instance of `EIFFEL_ASSEMBLY' from the xml file.]"
 			external_name: "Assembly"
 		require
 			non_void_assembly_descriptor: a_descriptor /= Void
@@ -320,12 +318,12 @@ feature -- Retrieval
 		end
 		
 	type (a_type: SYSTEM_TYPE): ISE_REFLECTION_EIFFELCLASS is
-			-- Retrieve xml file corresponding to `a_type'.
-			-- Generate instance of `EIFFEL_CLASS' from the xml file.
 			-- | Generate a `read_lock' file when user starts reading and remove it when reading is over.
 			-- | If a read or write lock already exists in the folder access is requested, set `last_read_successful' to False,
 			-- | else call `eiffel_type' with xml file name and set `last_read_successful' to True.
 		indexing
+			description: "[Retrieve xml file corresponding to `a_type'.%
+					%Generate instance of `EIFFEL_CLASS' from the xml file.]"
 			external_name: "Type"
 		require
 			non_void_type: a_type /= Void
@@ -350,7 +348,7 @@ feature -- Retrieval
 				if not found then
 					Result := Void
 				else
-					create formatter.make_formatter
+					create formatter.make
 					assembly_path := reflection_support.Eiffeldeliverypath
 					assembly_path := assembly_path.concat_string_string (assembly_path, reflection_support.AssemblyFolderPathFromInfo (a_descriptor))
 					if support.HasReadLock (assembly_path) then
@@ -391,12 +389,12 @@ feature -- Retrieval
 feature -- Removal
 	
 	remove_assembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
-			-- Remove assembly corresponding to `a_descriptor' from the database.
 			-- | Build a string from `a_descriptor'
 			-- | and use hash value to retrieve assembly folder name where `assembly_description.xml' is.
 			-- | Check for write or read lock before removing the assembly.
 			-- | Update `last_removal_successful'.
 		indexing
+			description: "Remove assembly corresponding to `a_descriptor' from the database."
 			external_name: "RemoveAssembly"
 		require
 			non_void_assembly_descriptor: a_descriptor /= Void
@@ -421,8 +419,8 @@ feature -- Removal
 feature {NONE} -- Implementation
 
 	support: ISE_REFLECTION_CODEGENERATIONSUPPORT is
-			-- Support
 		indexing
+			description: "Support"
 			external_name: "Support"
 		once
 			create Result.make_codegenerationsupport
@@ -432,14 +430,14 @@ feature {NONE} -- Implementation
 		end
 		
 	error_messages: REFLECTION_INTERFACE_ERROR_MESSAGES
-			-- Error messages
 		indexing
+			description: "Error messages"
 			external_name: "ErrorMessages"
 		end
 					
 	eiffel_assembly (xml_filename: STRING): ISE_REFLECTION_EIFFELASSEMBLY is
-			-- Generate instance of `EIFFEL_ASSEMBLY' from `xml_filename'.
 		indexing
+			description: "Generate instance of `EIFFEL_ASSEMBLY' from `xml_filename'."
 			external_name: "EiffelAssembly"
 		require
 			non_void_filename: xml_filename /= Void
@@ -458,8 +456,8 @@ feature {NONE} -- Implementation
 		end
 	
 	eiffel_type (xml_filename: STRING): ISE_REFLECTION_EIFFELCLASS is
-			-- Generate instance of `EIFFEL_CLASS' from `xml_filename'.
 		indexing
+			description: "Generate instance of `EIFFEL_CLASS' from `xml_filename'."
 			external_name: "EiffelType"
 		require
 			non_void_filename: xml_filename /= Void

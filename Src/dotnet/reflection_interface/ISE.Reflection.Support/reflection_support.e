@@ -15,8 +15,8 @@ create
 feature {NONE} -- Initialization
 
 	make is
-			-- Creation routine
 		indexing
+			description: "Initialize `error_messages' and `dictionary'."
 			external_name: "Make"
 		do
 			create error_messages
@@ -29,14 +29,14 @@ feature {NONE} -- Initialization
 feature -- Access				
 
 	Eiffel_key: STRING is "$ISE_EIFFEL"
-			-- Eiffel key
 		indexing
+			description: "Environment variable giving path to Eiffel delivery"
 			external_name: "EiffelKey"
 		end
 		
 	Eiffel_delivery_path: STRING is 
-			-- Path to Eiffel delivery
 		indexing
+			description: "Path to Eiffel delivery"
 			external_name: "EiffelDeliveryPath"
 		local
 			env: SYSTEM_ENVIRONMENT
@@ -51,15 +51,14 @@ feature -- Access
 		end
 		
 	Assemblies_folder_path: STRING is "\dotnet\assemblies\"
-			-- Path to `$EIFFEL\dotnet\assemblies' directory
 		indexing
+			description: "Path to `$EIFFEL\dotnet\assemblies' directory"
 			external_name: "AssembliesFolderPath"
 		end
 
 	assembly_folder_path_from_info (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): STRING is
-			-- Assembly folder name corresponding to `a_descriptor'.
-			-- | Code string built from `a_version', `a_culture' and `a_public_key' by using the MD5 hash algorithm.
 		indexing
+			description: "Assembly folder name corresponding to `a_descriptor'."
 			external_name: "AssemblyFolderPathFromInfo"
 		require
 			non_void_assembly_descriptor: a_descriptor /= Void
@@ -85,8 +84,8 @@ feature -- Access
 		end			
 
 	xml_assembly_filename (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): STRING is
-			-- Xml filename corresponding to `an_assembly_descriptor' 
 		indexing
+			description: "Xml filename corresponding to `an_assembly_descriptor' "
 			external_name: "XmlAssemblyFilename"
 		require
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void
@@ -114,14 +113,14 @@ feature -- Access
 		end
 	
 	Default_xml_type_filename: STRING is "type.xml"
-			-- Default xml type filename
 		indexing
+			description: "Default xml type filename"
 			external_name: "DefaultXmlTypeFilename"
 		end
 		
 	xml_type_filename (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; type_full_external_name: STRING): STRING is
-			-- Xml filename corresponding to `type_full_external_name' in assembly corresponding to `an_assembly_descriptor'
 		indexing
+			description: "Xml filename corresponding to `type_full_external_name' in assembly corresponding to `an_assembly_descriptor'"
 			external_name: "XmlTypeFilename"
 		require
 			non_void_full_external_name: type_full_external_name /= Void
@@ -133,7 +132,7 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				create formatter.make_formatter
+				create formatter.make
 				assembly_folder_path := Eiffel_key
 				Result := assembly_folder_path.concat_string_string (assembly_folder_path, assembly_folder_path_from_info (an_assembly_descriptor))
 				Result := Result.Concat_String_String_String_String (Result, "\", formatter.FormatTypeName (type_full_external_name).ToLower, dictionary.Xml_extension)
@@ -151,26 +150,26 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	Key: STRING is "ISE_EIFFEL"
-			-- Environment variable for Eiffel delivery path
 		indexing
+			description: "Environment variable for Eiffel delivery path"
 			external_name: "Key"
 		end
 		
 	error_messages: REFLECTION_SUPPORT_ERROR_MESSAGES
-			-- Error messages
 		indexing
+			description: "Error messages"
 			external_name: "ErrorMessages"
 		end
 		
 	dictionary: DICTIONARY
-			-- Dictionary
 		indexing
+			description: "Dictionary"
 			external_name: "Dictionary"
 		end
 
 	Assembly_description_filename: STRING is "assembly_description"
-			-- Filename of XML file describing the assembly
 		indexing
+			description: "Filename of XML file describing the assembly"
 			external_name: "AssemblyDescriptionFilename"
 		end
 		

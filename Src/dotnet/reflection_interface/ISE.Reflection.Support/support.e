@@ -9,14 +9,14 @@ deferred class
 feature -- Access
 
 	last_error: ERROR_INFO
-			-- Last error
 		indexing
+			description: "Last error"
 			external_name: "LastError"
 		end
 
 	errors_table: ERRORS_TABLE is
-			-- Errors table
 		indexing
+			description: "Errors table"
 			external_name: "ErrorsTable"
 		once
 			create Result.make
@@ -27,8 +27,8 @@ feature -- Access
 feature -- Basic Operations
 
 	create_error (a_name, a_description: STRING) is
-			-- Create `last_error_info' and add it to `errors_table'.
 		indexing
+			description: "Create `last_error_info' and add it to `errors_table'."
 			external_name: "CreateError"
 		require
 			non_void_name: a_name /= Void
@@ -47,8 +47,8 @@ feature -- Basic Operations
 		end
 
 	create_error_from_info (a_code: INTEGER; a_name, a_description: STRING) is
-			-- Create error info from `a_code', `a_name' and `a_description'.
 		indexing
+			description: "Create error info from `a_code', `a_name' and `a_description'."
 			external_name: "CreateErrorFromInfo"
 		require
 			non_void_name: a_name /= Void

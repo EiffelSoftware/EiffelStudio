@@ -28,12 +28,6 @@ feature -- Access
 			external_name: "Fax"
 		end
 		
-	Flat_style: INTEGER is 0
-		indexing
-			description: "Button flat style"
-			external_name: "FlatStyle"
-		end
-		
 	Image_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\Eiffel_tower.png"
 		indexing
 			description: "Image on the left side of the dialog"

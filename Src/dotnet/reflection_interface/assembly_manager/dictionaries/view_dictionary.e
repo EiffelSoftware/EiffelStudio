@@ -33,8 +33,8 @@ feature -- Access
 		end	
 		
 	Window_width: INTEGER is 750
-			-- Window width
 		indexing
+			description: "Window width"
 			external_name: "WindowWidth"
 		end
 	

@@ -17,9 +17,9 @@ create
 feature {NONE} -- Initialization
 
 	make (an_assembly: like assembly) is
-			-- Set `assembly' with `an_assembly'.
-			-- Set `assembly_descriptor' and build `type_list'.
 		indexing
+			description: "[Set `assembly' with `an_assembly'.%
+					%Set `assembly_descriptor' and build `type_list'.]"
 			external_name: "Make"
 		require
 			non_void_assembly: an_assembly /= Void
@@ -45,8 +45,8 @@ feature {NONE} -- Initialization
 feature -- Access
 	
 	dictionary: ASSEMBLY_VIEW_DICTIONARY is
-			-- Dictionary
 		indexing
+			description: "Dictionary"
 			external_name: "Dictionary"
 		once
 			create Result
@@ -59,17 +59,17 @@ feature -- Access
 		end
 		
 	type_list: SYSTEM_COLLECTIONS_ARRAYLIST
-			-- Assembly types
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_EIFFELCLASS]
 		indexing
+			description: "Assembly types"
 			external_name: "TypeList"
 		end
 
 feature -- Basic Operations
 
 	initialize_gui is
-			-- Initialize GUI.
 		indexing
+			description: "Initialize GUI."
 			external_name: "InitializeGUI"
 		local
 			a_size: SYSTEM_DRAWING_SIZE
@@ -195,8 +195,8 @@ feature -- Basic Operations
 feature {TYPE_VIEW} -- Status Setting
 
 	set_children (an_eiffel_class: ISE_REFLECTION_EIFFELCLASS; children_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
-			-- Replace children of `an_eiffel_class' by `children_list' in `children_table'.
 		indexing
+			description: "Replace children of `an_eiffel_class' by `children_list' in `children_table'."
 			external_name: "SetChildren"
 		require
 			non_void_eiffel_class: an_eiffel_class /= Void
@@ -253,21 +253,22 @@ feature {NONE} -- Implementation
 		end
 		
 	type_factory: SYSTEM_TYPE
-			-- Statics needed to create a type
 		indexing
+			description: "Statics needed to create a type"
 			external_name: "TypeFactory"
 		end
 	
 	types: SYSTEM_COLLECTIONS_HASHTABLE
-			-- Key: Eiffel name
-			-- Value: Instance of `ISE_REFLECTION_EIFFELCLASS'
+			-- | Key: Eiffel name
+			-- | Value: Instance of `ISE_REFLECTION_EIFFELCLASS'
 		indexing
+			description: "Types"
 			external_name: "Types"
 		end
 	
 	children_factory: CHILDREN_FACTORY is
-			-- Children factory
 		indexing
+			description: "Children factory"
 			external_name: "ChildrenFactory"
 		require
 			non_void_type_list: type_list /= Void
@@ -278,9 +279,10 @@ feature {NONE} -- Implementation
 		end
 	
 	children_table: SYSTEM_COLLECTIONS_HASHTABLE
-			-- Key: instance of `ISE_REFLECTION_EIFFELCLASS'
-			-- Value: List of children (instance of `SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_EIFFELCLASS]')
+			-- | Key: instance of `ISE_REFLECTION_EIFFELCLASS'
+			-- | Value: List of children (instance of `SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_EIFFELCLASS]')
 		indexing
+			description: "Children table"
 			external_name: "ChildrenTable"
 		end
 		

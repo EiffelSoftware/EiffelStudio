@@ -22,22 +22,41 @@ feature -- Access
 			description: "Filename of icon appearing in dialogs header"
 			external_name: "AssemblyManagerIconFilename"
 		end
+
+	Base_filename: STRING is
+		indexing
+			description: "Path to folder where icons are stored"
+			external_name: "BaseRelativeFilename"
+		local
+			support: ISE_REFLECTION_REFLECTIONSUPPORT
+		once
+			create support.make_reflectionsupport
+			support.make
+			Result := support.Eiffeldeliverypath
+			Result := Result.concat_string_string (Result, Base_relative_filename)
+		end
+
+	Base_relative_filename: STRING is "\bench\wizards\new_projects\dotnet\pixmaps\"
+		indexing
+			description: "Path to folder where icons are stored"
+			external_name: "BaseRelativeFilename"
+		end
 		
 	Border_style: INTEGER is 3
-			-- Window border style: a fixed, single line border
 		indexing
+			description: "Window border style: a fixed, single line border"
 			external_name: "BorderStyle"
 		end
 				
 	Button_height: INTEGER is 27
-			-- Button height
 		indexing
+			description: "Button height"
 			external_name: "ButtonHeight"
 		end
 		
 	Button_width: INTEGER is 73
-			-- Width of current buttons
 		indexing
+			description: "Width of current buttons"
 			external_name: "ButtonWidth"
 		end
 
@@ -60,14 +79,14 @@ feature -- Access
 		end
 		
 	Font_family_name: STRING is "Verdana"
-			-- Name of label font family
 		indexing
+			description: "Name of label font family"
 			external_name: "FontFamilyName"
 		end
 
 	Font_size: REAL is 8.0
-			-- Font size
 		indexing
+			description: "Font size"
 			external_name: "FontSize"
 		end
 
@@ -84,20 +103,20 @@ feature -- Access
 		end
 		
 	Label_font_size: REAL is 10.0
-			-- Label font size
 		indexing
+			description: "Label font size"
 			external_name: "LabelFontSize"
 		end
 
 	Label_height: INTEGER is 20
-			-- Label height
 		indexing
+			description: "Label height"
 			external_name: "LabelHeight"
 		end
 		
 	Margin: INTEGER is 10
-			-- Margin
 		indexing
+			description: "Margin"
 			external_name: "Margin"
 		end
 
@@ -112,41 +131,11 @@ feature -- Access
 			description: "OK message box button"
 			external_name: "OkMessageBoxButton"
 		end
-
-	Question_caption: STRING is "Question - ISE Assembly Manager"
-		indexing
-			description: "Caption for question message boxes"
-			external_name: "QuestionCaption"
-		end
-		
-	Question_icon: INTEGER is 32
-		indexing
-			description: "Icon for question message boxes"
-			external_name: "QuestionIcon"
-		end
-		
+	
 	Regular_style: INTEGER is 0
-			-- Regular style
 		indexing
+			description: "Regular style"
 			external_name: "RegularStyle"
-		end
-
-	System_event_handler_type: STRING is "System.EventHandler"
-			-- System.EventHandler type
-		indexing
-			external_name: "SystemEventHandlerType"
-		end
-
-	Yes: INTEGER is 6
-		indexing
-			description: "Value in case user clicked on `Yes'"
-			external_name: "Yes"
-		end
-		
-	Yes_no_message_box_buttons: INTEGER is 4
-		indexing
-			description: "Yes/No message box buttons"
-			external_name: "YesNoMessageBoxButtons"
 		end
 		
 end -- class DICTIONARY

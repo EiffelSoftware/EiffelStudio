@@ -59,8 +59,8 @@ feature -- Access
 		end
 		
 	Title: STRING is "Assembly view"
-			-- Window title
 		indexing
+			description: "Window title"
 			external_name: "Title"
 		end
 

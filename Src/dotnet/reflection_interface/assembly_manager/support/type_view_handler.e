@@ -17,10 +17,10 @@ create
 feature {NONE} -- Initialization
 
 	make (an_eiffel_class: like eiffel_class; a_type_modification: like type_modifications; a_type_view: like type_view) is
-			-- Set `eiffel_class' with `an_eiffel_class'.
-			-- Set `type_modifications' with `a_type_modification'.
-			-- Set `type_view' with `a_type_view'.
 		indexing
+			description: "[Set `eiffel_class' with `an_eiffel_class'.%
+					%Set `type_modifications' with `a_type_modification'.%
+					%Set `type_view' with `a_type_view'.]"
 			external_name: "Make"
 		require
 			non_void_eiffel_class: an_eiffel_class /= Void
@@ -49,8 +49,8 @@ feature {NONE} -- Initialization
 feature -- Access
 	
 	eiffel_class: ISE_REFLECTION_EIFFELCLASS
-			-- Eiffel class `inheritance_clauses' should belong to
 		indexing
+			description: "Eiffel class `inheritance_clauses' should belong to"
 			external_name: "EiffelClass"
 		end
 	
@@ -61,27 +61,27 @@ feature -- Access
 		end
 		
 	type_view: TYPE_VIEW
-			-- Type view
 		indexing
+			description: "Type view"
 			external_name: "TypeView"
 		end
 		
 	class_error_message: STRING 
-			-- Error message in case the class name is not valid
 		indexing
+			description: "Error message in case the class name is not valid"
 			external_name: "ClassErrorMessage"
 		end
 	
 	children: SYSTEM_COLLECTIONS_ARRAYLIST
-			-- Children of `eiffel_class'
 		indexing
+			description: "Children of `eiffel_class'"
 			external_name: "Children"
 		end
 	
 	assembly_types: SYSTEM_COLLECTIONS_ARRAYLIST is
-			-- Assembly types
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_EIFFELCLASS]
 		indexing
+			description: "Assembly types"
 			external_name: "AssemblyTypes"
 		do
 			Result := type_view.assembly_types
@@ -104,8 +104,8 @@ feature -- Access
 feature -- Status Report
 
 	is_valid: BOOLEAN 
-			-- Is valid? (Result of `check_validity')
 		indexing
+			description: "Is valid? (Result of `check_validity')"
 			external_name: "IsValid"
 		end
 	
@@ -177,9 +177,9 @@ feature -- Basic Operations
 feature {NONE} -- Implementation
 
 	update_class is
-			-- Check for name clashes and update class name if name is valid. 
-			-- Make result of check available in `is_valid'.
 		indexing
+			description: "[Check for name clashes and update class name if name is valid.%
+					%Make result of check available in `is_valid'.]"
 			external_name: "UpdateClass"
 		require
 			non_void_new_name: type_modifications.new_name /= Void
@@ -198,9 +198,9 @@ feature {NONE} -- Implementation
 		end
 		
 	update_features (a_feature_modifications: FEATURE_MODIFICATIONS; a_feature: ISE_REFLECTION_EIFFELFEATURE) is
-			-- Check for name clashes and update feature name, create clauses and inheritance clauses (if needed) if name is valid. 
-			-- Make result of check available in `is_valid'.
 		indexing
+			description: "[Check for name clashes and update feature name, create clauses and inheritance clauses (if needed) if name is valid. %
+					%Make result of check available in `is_valid'.]"
 			external_name: "UpdateFeatures"
 		require
 			non_void_feature_modifications: a_feature_modifications /= Void
@@ -288,9 +288,9 @@ feature {NONE} -- Implementation
 		end
 	
 	update_arguments (new_name: STRING; an_argument: ISE_REFLECTION_NAMEDSIGNATURETYPE; a_feature: ISE_REFLECTION_EIFFELFEATURE) is
-			-- Check for name clashes with other arguments or feature names and update argument name.
-			-- Make result of check available in `is_valid'.
 		indexing
+			description: "[Check for name clashes with other arguments or feature names and update argument name.%
+					%Make result of check available in `is_valid'.]"
 			external_name: "UpdateArguments"
 		require
 			non_void_new_name: new_name /= Void
@@ -347,12 +347,13 @@ feature {NONE} -- Implementation
 			-- Key: Parent name
 			-- Value: List of inheritance clauses
 		indexing
+			description: "New inheritance clauses"
 			external_name: "NewInheritanceClauses"
 		end
 		
 	class_exists (a_class_name: STRING): BOOLEAN is
-			-- Does a class with name `a_class_name' already exist in assembly types?
 		indexing
+			description: "Does a class with name `a_class_name' already exist in assembly types?"
 			external_name: "ClassExists"
 		require
 			non_void_class_name: a_class_name /= Void
@@ -373,8 +374,8 @@ feature {NONE} -- Implementation
 		end
 	
 	rename_class (new_name: STRING) is
-			-- Rename `eiffel_class' with `new_name' and update `assembly_types'.
 		indexing
+			description: "Rename `eiffel_class' with `new_name' and update `assembly_types'."
 			external_name: "RenameClass"
 		require
 			non_void_name: new_name /= Void
@@ -400,8 +401,8 @@ feature {NONE} -- Implementation
 		end
 
 	rename_children_parent (new_name: STRING) is
-			-- Rename `children' according to `new_name' of `eiffel_class'.
 		indexing
+			description: "Rename `children' according to `new_name' of `eiffel_class'."
 			external_name: "RenameChildrenParent"
 		require
 			non_void_new_name: new_name /= Void
@@ -431,8 +432,8 @@ feature {NONE} -- Implementation
 		end
 	
 	exists (a_class: ISE_REFLECTION_EIFFELCLASS; a_feature_name: STRING): BOOLEAN is
-			-- Does a feature with `a_feature_name' exist in `eiffel_class'?
 		indexing
+			description: "Does a feature with `a_feature_name' exist in `eiffel_class'?"
 			external_name: "Exists"
 		require
 			non_void_class: a_class /= Void
@@ -449,8 +450,8 @@ feature {NONE} -- Implementation
 		end
 	
 	recursive_exists (a_feature_name: STRING): BOOLEAN is
-			-- Call `exists' on each child of `children' list.
 		indexing
+			description: "Call `exists' on each child of `children' list."
 			external_name: "RecursiveExists"
 		require
 			non_void_feature_name: a_feature_name /= Void
@@ -476,8 +477,8 @@ feature {NONE} -- Implementation
 		end
 		
 	has_feature (a_list: SYSTEM_COLLECTIONS_ARRAYLIST; a_feature_name: STRING): BOOLEAN is
-			-- Does `a_list' contain feature with name `a_feature_name'?
 		indexing
+			description: "Does `a_list' contain feature with name `a_feature_name'?"
 			external_name: "HasFeature"
 		require
 			non_void_list: a_list /= Void
@@ -500,14 +501,14 @@ feature {NONE} -- Implementation
 		end
 
 	eiffel_feature: ISE_REFLECTION_EIFFELFEATURE
-			-- Eiffel feature (Result of `has_feature')
 		indexing
+			description: "Eiffel feature (Result of `has_feature')"
 			external_name: "EiffelFeature"
 		end
 	
 	rename_feature_in_children (old_name, new_name: STRING) is
-			-- Rename feature implemented in children with `new_name'.
 		indexing
+			description: "Rename feature implemented in children with `new_name'."
 			external_name: "RenameFeatureInChildren"
 		require
 			non_void_new_name: new_name /= Void
@@ -542,8 +543,8 @@ feature {NONE} -- Implementation
 		end
 		
 	recursive_update_inheritance_clauses (old_name, new_name: STRING) is
-			-- Update of all inheritance clauses to tke `new_name' into account.
 		indexing
+			description: "Update of all inheritance clauses to tke `new_name' into account."
 			external_name: "RecursiveUpdateInheritanceClauses"
 		require
 			non_void_old_name: old_name /= Void
@@ -583,8 +584,8 @@ feature {NONE} -- Implementation
 		end
 		
 	update_inheritance_clauses (parent_name, old_name, new_name: STRING) is
-			-- Update `rename_clauses', `undefine_clauses', `redefine_clauses', `select_clauses' by replacing `old_name' by `new_name'.
 		indexing
+			description: "Update `rename_clauses', `undefine_clauses', `redefine_clauses', `select_clauses' by replacing `old_name' by `new_name'."
 			external_name: "UpdateInheritanceClauses"
 		require
 			non_void_parent_name: parent_name /= Void
@@ -609,8 +610,8 @@ feature {NONE} -- Implementation
 		end
 		
 	intern_update_inheritance_clauses (old_name, new_name: STRING) is
-			-- Update inheritance clauses by replacing `old_name' by `new_name'.
 		indexing
+			description: "Update inheritance clauses by replacing `old_name' by `new_name'."
 			external_name: "InternUpdateInheritanceClauses"
 		require
 			non_void_old_name: old_name /= Void
@@ -653,8 +654,8 @@ feature {NONE} -- Implementation
 		end
 
 	commit_parent_changes (parent_name: STRING) is
-			-- Set new inheritance clauses to parent of `eiffel_class' with name `parent_name'.
 		indexing
+			description: "Set new inheritance clauses to parent of `eiffel_class' with name `parent_name'."
 			external_name: "CommitParentChanges"
 		require
 			non_void_parent_name: parent_name /= Void
@@ -667,8 +668,8 @@ feature {NONE} -- Implementation
 		end
 	 
 	commit (an_eiffel_class: ISE_REFLECTION_EIFFELCLASS) is
-			-- Commit changes in parents inheritance clauses
 		indexing
+			description: "Commit changes in parents inheritance clauses"
 			external_name: "Commit"
 		require
 			non_void_eiffel_class: an_eiffel_class /= Void
@@ -677,9 +678,9 @@ feature {NONE} -- Implementation
 		end
 		
 	inheritance_clauses: ARRAY [SYSTEM_COLLECTIONS_ARRAYLIST] is
-			-- New inheritance clauses 
 			-- | Built from `rename_clauses', `undefine_clauses', `redefine_clauses' and `select_clauses'.
 		indexing
+			description: "Inheritance clauses"
 			external_name: "InheritanceClauses"		
 		local
 			a_list: SYSTEM_COLLECTIONS_ARRAYLIST
@@ -697,9 +698,9 @@ feature {NONE} -- Implementation
 		end
 		
 	update_children_inheritance_clauses (old_name, new_name: STRING) is
-			-- Update children inheritance clauses in case some of them references the renamed feature:
-			-- replace `old_name' by `new_name'.
 		indexing
+			description: "[Update children inheritance clauses in case some of them references the renamed feature:%
+					%replace `old_name' by `new_name'.]"
 			external_name: "UpdateChildrenInheritanceClauses"
 		require
 			non_void_old_name: old_name /= Void
@@ -742,8 +743,8 @@ feature {NONE} -- Implementation
 		end
 	
 	build_inheritance_clauses (parent_name: STRING) is
-			-- Build `undefine_clauses', `redefine_clauses', `select_clauses' for parent with name `parent_name'.
 		indexing
+			description: "Build `undefine_clauses', `redefine_clauses', `select_clauses' for parent with name `parent_name'."
 			external_name: "BuildInheritanceClauses"
 		require
 			non_void_parent_name: parent_name /= Void
@@ -767,37 +768,37 @@ feature {NONE} -- Implementation
 		end
 
 	rename_clauses: SYSTEM_COLLECTIONS_ARRAYLIST
-			-- Rename clauses for parent with `parent_name' in `eiffel_class'
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_INHERITANCECLAUSE]
 		indexing
+			description: "Rename clauses for parent with `parent_name' in `eiffel_class'"
 			external_name: "RenameClauses"
 		end
 		
 	undefine_clauses: SYSTEM_COLLECTIONS_ARRAYLIST
-			-- Undefine clauses for parent with `parent_name' in `eiffel_class'
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_INHERITANCECLAUSE]
 		indexing
+			description: "Undefine clauses for parent with `parent_name' in `eiffel_class'"
 			external_name: "UndefineClauses"
 		end
 
 	redefine_clauses: SYSTEM_COLLECTIONS_ARRAYLIST
-			-- Redefine clauses for parent with `parent_name' in `eiffel_class'
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_INHERITANCECLAUSE]
 		indexing
+			description: "Redefine clauses for parent with `parent_name' in `eiffel_class'"
 			external_name: "RedefineClauses"
 		end
 
 	select_clauses: SYSTEM_COLLECTIONS_ARRAYLIST
-			-- Select clauses for parent with `parent_name' in `eiffel_class'
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_INHERITANCECLAUSE]
 		indexing
+			description: "Select clauses for parent with `parent_name' in `eiffel_class'"
 			external_name: "SelectClauses"
 		end
 		
 	is_in_list (a_list: SYSTEM_COLLECTIONS_ARRAYLIST; a_feature_name: STRING): BOOLEAN is
-			-- Does `a_feature_name' appear in `a_list'?
-			-- Make index of feature name available in `index_in_list'.
 		indexing
+			description: "[Does `a_feature_name' appear in `a_list'?%
+					%Make index of feature name available in `index_in_list'.]"
 			external_name: "IsInList"
 		require
 			non_void_feature_name: a_feature_name /= Void
@@ -820,14 +821,14 @@ feature {NONE} -- Implementation
 		end
 	
 	index_in_list: INTEGER 
-			-- Index in inheritance clauses list (Result of `is_in_list' or `has_rename_clause')
 		indexing
+			description: "Index in inheritance clauses list (Result of `is_in_list' or `has_rename_clause')"
 			external_name: "IndexInList"
 		end
 	
 	has_rename_clause (a_name: STRING): BOOLEAN is
-			-- Does a name appear as target of a rename clause of `eiffel_class'?
 		indexing
+			description: "Does a name appear as target of a rename clause of `eiffel_class'?"
 			external_name: "HasRenameClause"
 		require
 			non_void_name: a_name /= Void
@@ -852,14 +853,14 @@ feature {NONE} -- Implementation
 		end
 
 	rename_source: STRING 
-			-- Rename clause source (Result of `has_rename_clause')
 		indexing
+			description: "Rename clause source (Result of `has_rename_clause')"
 			external_name: "RenameSource"
 		end
 		
 	argument_exists (new_name: STRING; a_feature: ISE_REFLECTION_EIFFELFEATURE): BOOLEAN is
-			-- Does `a_feature' has an argument with name `new_name'?
 		indexing
+			description: "Does `a_feature' has an argument with name `new_name'?"
 			external_name: "ArgumentExists"
 		require
 			non_void_new_name: new_name /= Void

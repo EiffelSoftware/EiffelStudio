@@ -11,150 +11,150 @@ inherit
 feature -- Access
 	
 	Add_button_label: STRING is "Add"
-			-- Add button label
 		indexing
+			description: "Add button label"
 			external_name: "AddButtonLabel"
 		end
 
 	Alignment: INTEGER is 5
-			-- Alignment in list view
 		indexing
+			description: "Alignment in list view"
 			external_name: "Alignment"
 		end
 
 	As_keyword: STRING is "as"
-			-- As keyword
 		indexing
+			description: "As keyword"
 			external_name: "AsKeyword"
 		end
 		
 	Cancel_button_label: STRING is "Cancel"
-			-- Cancel button label
 		indexing
+			description: "Cancel button label"
 			external_name: "CancelButtonLabel"
 		end
 		
 	Class_label_text: STRING is "Class: "
-			-- Text of class label
 		indexing
+			description: "Text of class label"
 			external_name: "ClassLabelText"
 		end
 
 	Closing_bracket: STRING is ")"
-			-- Closing bracket
 		indexing
+			description: "Closing bracket"
 			external_name: "ClosingBracket"
 		end
 	
 	Colon: STRING is ":"
-			-- Colon
 		indexing
+			description: "Colon"
 			external_name: "Colon"
 		end
 
 	External_name_keyword: STRING is "External name"
-			-- External name
 		indexing
+			description: "External name keyword"
 			external_name: "ExternalNameKeyword"
 		end
 		
 	Inverted_comma: STRING is "%""
-			-- Inverted comma
 		indexing
+			description: "Inverted comma"
 			external_name: "ExternalName"
 		end
 
 	List_height: INTEGER is 
-			-- Rename list height
 		indexing
+			description: "Rename list height"
 			external_name: "ListHeight"
 		once
 			Result := Window_height - 12 * Margin - 6 * Label_height - 2 * Button_height
 		end
 
 	List_view_border_style: INTEGER is 1
-			-- List view border style
 		indexing
+			description: "List view border style"
 			external_name: "ListViewBorderStyle"
 		end
 
 	New_clause: STRING is "-- New clause"
-			-- New clause
 		indexing
+			description: "New clause"
 			external_name: "NewClause"
 		end
 		
 	Ok_button_label: STRING is "OK"
-			-- OK button label
 		indexing
+			description: "OK button label"
 			external_name: "OkButtonLabel"
 		end
 
 	Opening_bracket: STRING is "("
-			-- Opening bracket
 		indexing
+			description: "Opening bracket"
 			external_name: "OpeningBracket"
 		end
 		
 	Panel_border_style: INTEGER is 0
-			-- Panel border style: none
 		indexing
+			description: "Panel border style: none"
 			external_name: "PanelBorderStyle"
 		end
 		
 	Parent_label_text: STRING is "Parent: " 
-			-- Text of parent label
 		indexing
+			description: "Text of parent label"
 			external_name: "ParentLabelText"
 		end
 
 	Red_color: SYSTEM_DRAWING_COLOR is
-			-- Red color
 		indexing
+			description: "Red color"
 			external_name: "RedColor"
 		once
 			Result := Result.Red
 		end
 
 	Rename_clause_text: STRING is "Rename clause: "
-			-- Rename clause label text
 		indexing
+			description: "Rename clause label text"
 			external_name: "RenameClauseText"
 		end
 		
 	Rename_clauses_text: STRING is "Rename clauses: "
-			-- Rename clauses label text
 		indexing
+			description: "Rename clauses label text"
 			external_name: "RenameClausesText"
 		end
 		
 	Space: STRING is " "
-			-- Space
 		indexing
+			description: "Space"
 			external_name: "Space"
 		end
 		
 	Title: STRING is "Inheritance clauses viewer"
-			-- Window title
 		indexing
+			description: "Window title"
 			external_name: "Title"
 		end
 
 	View: INTEGER is 3
-			-- View property for list view
 		indexing
+			description: "View property for list view"
 			external_name: "View"
 		end
 
 	Window_height: INTEGER is 400
-			-- Window height
 		indexing
+			description: "Window height"
 			external_name: "WindowHeight"
 		end
 
 	Window_width: INTEGER is 650
-			-- Window width
 		indexing
+			description: "Window width"
 			external_name: "WindowWidth"
 		end
 		

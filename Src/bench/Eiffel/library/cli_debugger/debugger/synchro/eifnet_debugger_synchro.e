@@ -34,6 +34,15 @@ feature -- Synchro Initialization
 			c_terminate_dbg_synchronisation
 		end
 		
+	disable_next_estudio_notification is
+			-- Disable next estudio notification
+		do
+			debug ("debugger_trace_synchro")
+				io.error.put_string (">>Disable next estudio notification%N")
+			end
+			c_disable_next_estudio_notification
+		end
+		
 	is_dbg_synchronizing: BOOLEAN is
 			-- Are we still synchronizing ?
 		do
@@ -160,6 +169,14 @@ feature {NONE} -- External DBG Timer
 		alias
 			"dbg_terminate_synchro"
 		end
+
+	c_disable_next_estudio_notification  is
+		external
+			"C use %"cli_debugger.h%" "
+		alias
+			"dbg_disable_next_estudio_notification"
+		end		
+		
 		
 	c_dbg_enable_estudio_callback (obj: EIFNET_DEBUGGER_SYNCHRO; p_cb: POINTER) is
 		external

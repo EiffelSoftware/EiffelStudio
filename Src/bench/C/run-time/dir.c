@@ -620,8 +620,13 @@ rt_public void eif_dir_delete(char *name)
 **/
 
 #ifdef  USE_VMS_WRAPPERS
-typedef struct { size_t siz; int magic; DIR* dirp; char *prev; } EIF_VMS_DIR;
-static const int magic = 7652;
+typedef struct {
+	size_t siz;
+	int magic;
+	DIR* dirp;
+	char *prev;
+} EIF_VMS_DIR;
+#define MAGIC 7652
 
 #undef opendir   
 #undef closedir  
@@ -640,7 +645,7 @@ rt_public DIR* eif_vms_opendir (const char *dirname)
     struct dirent *ep;
     if ( (res = calloc (1, sizeof *res)) ) {
 	if ( (res->prev = calloc (FILENAME_MAX +1, sizeof(char))) ) {
-	    res->magic = magic;		/* magic number */
+	    res->magic = MAGIC;		/* magic number */
 	    res->siz = sizeof *res;		/* size of structure */
 	    res->dirp = DECC$OPENDIR (dirname);
 	} 

@@ -219,7 +219,7 @@ feature {NONE} -- Class constants
 	Wide_char_name: STRING is "WIDE_CHARACTER"
 	Integer_8_name: STRING is "INTEGER_8"
 	Integer_16_name: STRING is "INTEGER_16"
-	Integer_32_name: STRING is "INTEGER"
+	Integer_32_name: STRING is "INTEGER_32"
 	Integer_64_name: STRING is "INTEGER_64"
 	Double_name: STRING is "DOUBLE"
 	Real_name: STRING is "REAL"

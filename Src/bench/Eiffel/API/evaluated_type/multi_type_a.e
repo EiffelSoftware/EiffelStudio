@@ -129,10 +129,13 @@ feature {COMPILER_EXPORTER}
 	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
 			-- Does Current conform to `other' ?
 			-- The rule is the following:
-			-- <<e1,...,en>> conforms to A, if and only if, for each element ei
-			-- in manifest array, type ARRAY [Type of ei] conforms to A.
+			-- <<e1,...,en>> conforms to A means that:
+			-- if A is an ARRAY of T type, every element type of current conforms
+			-- to T.
+			-- Otherwise, computed type of Current conforms to A.
 		local
 			gen_type, array_type: GEN_TYPE_A
+			generic_param, type_a: TYPE_A
 			l_generics: ARRAY [TYPE_A]
 			i, nb: INTEGER
 		do
@@ -144,16 +147,16 @@ feature {COMPILER_EXPORTER}
 			then
 				Result := True
 				if nb > 0 then
-					create l_generics.make (1, 1)
-					create array_type.make (l_generics)
-					array_type.set_base_class_id (System.array_id)
+					generic_param := gen_type.generics.item (1)
 					from
 						i := 1
 					until
-						(i > nb) or else (not Result)
+						(i > count) or else (not Result)
 					loop
-						l_generics.put (item (i), 1)
-						Result := array_type.conform_to (gen_type) 
+						type_a := item (i)
+						Result := type_a.conform_to (generic_param) 
+									and then not (type_a.is_true_expanded 
+									and not generic_param.is_true_expanded)
 						i := i + 1
 					end
 				end

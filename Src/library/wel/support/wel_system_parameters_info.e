@@ -56,7 +56,7 @@ feature {NONE} -- Externals
 
 	c_system_parameters_info (action, param: INTEGER; p_param: POINTER; win_ini: INTEGER): BOOLEAN is
 		external
-			"C macro signature (UINT, UINT, PVOID, UINT): EIF_INTEGER use <windows.h>"
+			"C [macro <windows.h>]"
 		alias
 			"SystemParametersInfo"
 		end

@@ -518,7 +518,10 @@ feature {COMPILER_EXPORTER} -- Implementation
 				end	
 
 					-- Check it is an EXTERNAL_CLASS_I instance.
-				if not system.system_string_class.is_external_class then
+				if
+					system.system_string_class = Void or else
+					not system.system_string_class.is_external_class
+				then
 						-- Report error here
 						-- FIXME: Manu: 06/03/2003
 				end	

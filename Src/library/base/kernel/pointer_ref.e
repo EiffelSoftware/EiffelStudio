@@ -95,11 +95,30 @@ feature -- Allocation/free
 			Result := c_malloc (a_size)
 		end
 
+	memory_realloc (a_size: INTEGER): POINTER is
+			-- Realloc `Current'.
+		require
+			valid_size: a_size >= 0
+		do
+			Result := c_realloc (item, a_size)
+		end
+
 	memory_free is
 			-- Free allocated memory with `malloc'.
 		do
 			c_free (item)
 			item := default_pointer
+		end
+
+feature -- Comparison
+
+	memory_compare (other: POINTER; a_size: INTEGER): BOOLEAN is
+			-- True if `Current' and `other' are identical on `a_size' bytes.
+		require
+			valid_size: a_size > 0
+			valid_other: other /= default_pointer
+		do
+			Result := c_memcmp (item, other, a_size) = 0
 		end
 
 feature -- Output
@@ -158,12 +177,28 @@ feature {NONE} -- Implementation
 			"memset"
 		end
 
+	c_memcmp (source, other: POINTER; count: INTEGER): INTEGER is
+			-- C memcmp
+		external
+			"C (void *, void *, size_t): EIF_INTEGER | <string.h>"
+		alias
+			"memcmp"
+		end
+
 	c_malloc (size: INTEGER): POINTER is
 			-- C malloc
 		external
 			"C (size_t): EIF_POINTER | <stdlib.h>"
 		alias
 			"malloc"
+		end
+
+	c_realloc (source: POINTER; size: INTEGER): POINTER is
+			-- C realloc
+		external
+			"C (void *, size_t): EIF_POINTER | <stdlib.h>"
+		alias
+			"realloc"
 		end
 
 	c_free (p: POINTER) is

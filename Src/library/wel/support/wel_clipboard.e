@@ -11,7 +11,8 @@ inherit
 
 feature -- Access
 
-	clipboard_open: BOOLEAN	
+	clipboard_open: BOOLEAN
+		-- Is clipboard open?
 
 	last_string: STRING
 			-- Text retrieved from Clipboard
@@ -19,8 +20,6 @@ feature -- Access
 			-- `retrieve_clipboard_text'
 
 	is_clipboard_format_available (format: INTEGER): BOOLEAN is
-		local
-			i_result: INTEGER
 		do
 			Result :=  cwel_is_clipboard_format_available (format)
 		end
@@ -42,6 +41,17 @@ feature -- Element Change
 			last_string := shared_string.last_string
 		end
 
+	set_clipboard_text (a_text: STRING) is
+			-- Assign `a_text' to the clipboard
+		require
+			clipboard_open: clipboard_open
+		local
+			shared_string: WEL_SHARED_MEMORY_STRING
+		do
+			create shared_string.make_from_string (a_text)
+			cwel_set_clipboard_data (Cf_text, shared_string.handle)
+		end
+
 	open_clipboard (window: WEL_WINDOW) is
 		require
 			window_exists: window /= Void and then window.exists
@@ -50,17 +60,36 @@ feature -- Element Change
 		end
 
 	close_clipboard is
+			-- Close clipboard.
 		local
 			b_result: BOOLEAN
 		do
 			b_result := cwel_close_clipboard
 			check
-				success: b_result
+				clipboard_closed: b_result /= Void
 			end
 		end	
 
+	empty_clipboard is
+			-- Empty clipboard.
+		local
+			b_result: BOOLEAN
+		do
+			b_result := cwel_empty_clipboard
+			check
+				clipboard_emptied: b_Result /= Void	
+			end
+		end
+
 
 feature {NONE} -- Externals
+
+	cwel_empty_clipboard: BOOLEAN is
+		external
+			"C | %"wel.h%""
+		alias
+			"EmptyClipboard"
+		end
 
 	cwel_open_clipboard (hwnd_owner: POINTER): BOOLEAN is
 			-- Opens the clipboard
@@ -89,6 +118,14 @@ feature {NONE} -- Externals
 			"GetClipboardData"
 		end
 
+	cwel_set_clipboard_data (format: INTEGER; text: POINTER) is
+			-- Format is one of the constants in WEL_CLIPBOARD_CONSTANTS
+		external
+			"C | %"wel.h%""
+		alias
+			"SetClipboardData"
+		end
+
 	cwel_is_clipboard_format_available (format: INTEGER): BOOLEAN is
 			-- Determines whether the clipboard contains data in the specified format. 
 		external
@@ -97,8 +134,6 @@ feature {NONE} -- Externals
 			"IsClipboardFormatAvailable"
 		end
 	
- 
-
 end -- class WEL_CLIPBOARD
 
 --|----------------------------------------------------------------

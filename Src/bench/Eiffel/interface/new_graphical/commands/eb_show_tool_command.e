@@ -15,7 +15,9 @@ inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			new_toolbar_item,
-			new_menu_item
+			new_menu_item,
+			tooltext,
+			is_tooltext_important
 		end
 
 	EB_SELECTABLE
@@ -34,6 +36,8 @@ feature {NONE} -- Initialization
 			explorer_bar_item := an_explorer_bar_item
 			explorer_bar_item.set_associated_command (Current)
 			is_selected := explorer_bar_item.is_visible
+			is_sensitive := True
+				-- Show tools are always sensitive
 		end
 
 feature -- Access
@@ -45,6 +49,18 @@ feature -- Access
 			-- Tooltip for Current
 		do
 			Result := description
+		end
+
+	tooltext: STRING is
+			-- Text for toolbar button.
+		do
+			Result := explorer_bar_item.title
+		end
+
+	is_tooltext_important: BOOLEAN is
+			-- Is the tooltext important shown when view is 'Selective Text'
+		do
+			Result := True
 		end
 
 	description: STRING is
@@ -95,32 +111,13 @@ feature -- Basic operations
 
 	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
-		local
-			tt: STRING
 		do
-				-- Add it to the managed toolbar items
-			if managed_toolbar_items = Void then
-				create managed_toolbar_items.make (1)
-			end
-				-- Create the button
 			create Result.make (Current)
-			if display_text and pixmap.count >= 2 then
-				Result.set_pixmap (pixmap @ 2)
-			else
-				Result.set_pixmap (pixmap @ 1)
-			end
+			initialize_toolbar_item (Result, display_text, use_gray_icons)
 			if is_selected then
 				Result.enable_select
 			end
 			Result.select_actions.extend (agent execute)
-			Result.enable_sensitive
-			tt := tooltip.twin
-			if accelerator /= Void then
-				tt.append (Opening_parenthesis)
-				tt.append (accelerator.out)
-				tt.append (Closing_parenthesis)
-			end
-			Result.set_tooltip (tt)
 		end
 
 	new_menu_item: EB_COMMAND_CHECK_MENU_ITEM is

@@ -8,6 +8,8 @@ deferred class
 	WEL_ANY
 
 inherit
+	ANY
+
 	MEMORY
 		export
 			{NONE} all

@@ -68,8 +68,8 @@ feature -- Element change
 			w: EV_WIDGET_IMP
 		do
 			if not interface.is_empty then
-				on_removed_item (interface.item)
 				w ?= interface.item.implementation
+				on_removed_item (w)
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (w.c_object)
 				feature {EV_GTK_EXTERNALS}.gtk_container_remove (container_widget, w.c_object)
 			end
@@ -219,14 +219,14 @@ feature -- Status setting
 			end
 		end
 
-	add_radio_button (w: EV_WIDGET) is
+	add_radio_button (a_widget_imp: EV_WIDGET_IMP) is
 			-- Called every time a widget is added to the container.
 		require
-			w_not_void: w /= Void
+			a_widget_imp_not_void: a_widget_imp /= Void
 		local
 			r: EV_RADIO_BUTTON_IMP
 		do
-			r ?= w.implementation
+			r ?= a_widget_imp
 			if r /= Void then
 				if radio_group /= NULL then
 					feature {EV_GTK_EXTERNALS}.gtk_radio_button_set_group (r.visual_widget, radio_group)
@@ -237,10 +237,10 @@ feature -- Status setting
 			end
 		end
 
-	remove_radio_button (w: EV_WIDGET) is
+	remove_radio_button (a_widget_imp: EV_WIDGET_IMP) is
 			-- Called every time a widget is removed from the container.
 		require
-			w_not_void: w /= Void
+			a_widget_imp_not_void: a_widget_imp /= Void
 		local
 			r: EV_RADIO_BUTTON_IMP
 			a_max_index: INTEGER
@@ -248,7 +248,7 @@ feature -- Status setting
 			a_item_pointer: POINTER
 			an_item_imp: EV_RADIO_BUTTON_IMP
 		do
-			r ?= w.implementation
+			r ?= a_widget_imp
 			if r /= Void then
 				a_max_index := feature {EV_GTK_EXTERNALS}.g_slist_length (radio_group) - 1
 				a_item_index := feature {EV_GTK_EXTERNALS}.g_slist_index (radio_group, r.visual_widget)
@@ -399,20 +399,17 @@ feature -- Event handling
 			-- Called after `an_item' is added.
 		do
 			an_item_imp.set_parent_imp (Current)
-			add_radio_button (an_item_imp.interface)
+			add_radio_button (an_item_imp)
 --			if new_item_actions_internal /= Void then
 --				new_item_actions_internal.call ([an_item])
 --			end
 		end
 
-	on_removed_item (an_item: EV_WIDGET) is
+	on_removed_item (an_item_imp: EV_WIDGET_IMP) is
 			-- Called just before `an_item' is removed.
-		local
-			a_widget_imp: EV_WIDGET_IMP
 		do
-			a_widget_imp ?= an_item.implementation
-			a_widget_imp.set_parent_imp (Void)
-			remove_radio_button (an_item)
+			an_item_imp.set_parent_imp (Void)
+			remove_radio_button (an_item_imp)
 		end
 		
 feature {EV_WIDGET_IMP} -- Implementation

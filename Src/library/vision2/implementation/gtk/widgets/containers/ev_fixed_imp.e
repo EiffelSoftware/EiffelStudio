@@ -63,14 +63,11 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	on_removed_item (an_item: EV_WIDGET) is
+	on_removed_item (a_widget_imp: EV_WIDGET_IMP) is
 			-- Reset minimum size.
-		local
-			item_imp: EV_WIDGET_IMP
 		do
-			Precursor (an_item)
-			item_imp ?= an_item.implementation
-			item_imp.reset_minimum_size
+			Precursor (a_widget_imp)
+			a_widget_imp.reset_minimum_size
 		end			
 
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is

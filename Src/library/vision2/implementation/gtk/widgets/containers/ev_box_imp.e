@@ -26,6 +26,23 @@ feature {NONE} -- Initialization
                         -- Create a fixed widget. 
 		deferred
 		end	
+
+feature -- Element change (box specific)
+	
+	set_homogeneous (homogeneous: BOOLEAN) is
+			-- Homogenous controls whether each object in
+			-- the box has the same size. If homogenous =
+			-- True, expand argument for each child is
+			-- automatically True
+		do
+			gtk_box_set_homogeneous (widget, homogeneous)
+		end
+	
+	set_spacing (spacing: INTEGER) is
+			-- Spacing between the objects in the box
+		do
+			gtk_box_set_spacing (widget, spacing)
+		end	
 	
 feature {EV_BOX} -- Implementation
 	

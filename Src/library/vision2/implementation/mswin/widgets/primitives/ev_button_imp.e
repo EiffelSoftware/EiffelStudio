@@ -18,12 +18,12 @@ inherit
        
 	EV_BAR_ITEM_IMP
         
-	EV_TEXT_CONTAINER_IMP
+	EV_TEXTABLE_IMP
 		redefine
 			set_default_size
 		end
 	
-	EV_PIXMAP_CONTAINER_IMP
+	EV_PIXMAPABLE_IMP
 		undefine
 			pixmap_size_ok
 		redefine
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 	add_pixmap (pixmap: EV_PIXMAP) is
 			-- Add a pixmap in the container
 		do
-			{EV_PIXMAP_CONTAINER_IMP} Precursor (pixmap)
+			{EV_PIXMAPABLE_IMP} Precursor (pixmap)
 			set_default_size
 		end
 

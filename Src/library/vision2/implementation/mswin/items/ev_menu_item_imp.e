@@ -22,7 +22,7 @@ inherit
 			parent_imp
 		end
 
-	EV_PIXMAP_CONTAINER_IMP
+	EV_PIXMAPABLE_IMP
 		undefine
 			pixmap_size_ok
 		end

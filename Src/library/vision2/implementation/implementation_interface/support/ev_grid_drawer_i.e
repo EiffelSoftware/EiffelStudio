@@ -97,14 +97,16 @@ feature -- Basic operations
 					-- they should have done.
 				end
 				
-				row_offsets := grid.row_offsets
 					-- Calculate the columns that must be displayed.
+					-- If row heights are fixed we can perform a quick search.
+				
+				row_offsets := grid.row_offsets					
 					fixme ("implement using a binary search")
 				from
 					column_offsets.start
 						-- Compute the virtual positions of the invalidated area.
 					invalid_x_start := virtual_x_position + an_x - horizontal_buffer_offset
-					invalid_x_end := virtual_x_position + an_x - horizontal_buffer_offset + a_width
+					invalid_x_end := virtual_x_position + an_x - horizontal_buffer_offset + a_width		
 				until
 					last_column_index_set or column_offsets.off
 				loop
@@ -127,25 +129,34 @@ feature -- Basic operations
 				end
 				
 					-- Calculate the rows that must be displayed.
+					
+				invalid_y_start := virtual_y_position + a_y - vertical_buffer_offset
+				invalid_y_end := virtual_y_position + a_y - vertical_buffer_offset + a_height
+				if grid.is_row_height_fixed then
+						-- If row heights are fixed we can calculate instead of searching.
+					first_row_index := ((invalid_y_start) // grid.row_height) + 1
+					last_row_index := ((invalid_y_end) // grid.row_height) + 1
+				else
 					fixme ("implement using a binary search")
-				from
-					row_offsets.start
-						-- Compute the virtual positions of the invalidated area.
-					invalid_y_start := virtual_y_position + a_y - vertical_buffer_offset
-					invalid_y_end := virtual_y_position + a_y - vertical_buffer_offset + a_height
-				until
-					last_row_index_set or row_offsets.off
-				loop
-					i := row_offsets.item
-					if not first_row_index_set and then i > invalid_y_start then
-						first_row_index := row_offsets.index - 1
-						first_row_index_set := True
+					from
+						row_offsets.start
+							-- Compute the virtual positions of the invalidated area.
+--						invalid_y_start := virtual_y_position + a_y - vertical_buffer_offset
+--						invalid_y_end := virtual_y_position + a_y - vertical_buffer_offset + a_height
+					until
+						last_row_index_set or row_offsets.off
+					loop
+						i := row_offsets.item
+						if not first_row_index_set and then i > invalid_y_start then
+							first_row_index := row_offsets.index - 1
+							first_row_index_set := True
+						end
+						if not last_row_index_set and then invalid_y_end < row_offsets.item then
+							last_row_index := row_offsets.index - 1
+							last_row_index_set := True
+						end
+						row_offsets.forth
 					end
-					if not last_row_index_set and then invalid_y_end < row_offsets.item then
-						last_row_index := row_offsets.index - 1
-						last_row_index_set := True
-					end
-					row_offsets.forth
 				end
 				if last_row_index = 0 then
 					last_row_index := grid.row_count
@@ -167,18 +178,25 @@ feature -- Basic operations
 					current_index_in_column := first_row_index
 				until
 					row_counter > last_row_index or
-					row_counter > row_offsets.count or first_row_index = 0
+					(grid.is_row_height_fixed and row_counter > (grid.row_count)) or
+					(not grid.is_row_height_fixed and row_counter > row_offsets.count) or
+					first_row_index = 0
 				loop
 					if not bool and printing_values then
 						print ("%N%NStarting to draw row%N")
 					end
 					current_row := grid.row_list @ (row_counter - 1)
 					current_index_in_row := first_column_index
-					current_item_y_position := (row_offsets @ (current_index_in_column)) - (virtual_y_position - vertical_buffer_offset)
-					current_row_height := row_offsets @ (row_counter + 1) - row_offsets @ (row_counter)
+					if grid.is_row_height_fixed then
+						current_item_y_position := (grid.row_height * (current_index_in_column - 1)) - (virtual_y_position - vertical_buffer_offset)
+						current_row_height := grid.row_height
+					else
+						current_item_y_position := (row_offsets @ (current_index_in_column)) - (virtual_y_position - vertical_buffer_offset)
+						current_row_height := row_offsets @ (row_counter + 1) - row_offsets @ (row_counter)
+					end
 					from
 						column_counter := first_column_index
-						current_item_x_position  := 0
+						current_item_x_position := 0
 					until
 						column_counter > last_column_index or
 						column_counter > column_offsets.count or first_column_index = 0
@@ -211,7 +229,7 @@ feature -- Basic operations
 							-- The columns that were drawn did not span to the very edge of
 							-- the grid, so we must fill the remainder in the current grid background color.
 						grid.drawable.set_foreground_color (grid.background_color)
-						rectangle_width := grid.viewport.width - (current_item_x_position  - horizontal_buffer_offset + current_column_width)
+						rectangle_width := grid.viewport.width - (column_offsets @ (column_offsets.count) - virtual_x_position)
 						if printing_values then
 							print ("rectangle_width : " + rectangle_width.out + "%N")
 						end
@@ -227,7 +245,11 @@ feature -- Basic operations
 							-- The rows that were drawn did not span to the very bottom of
 							-- the grid, so we must fill the remainder in the current grid background color.
 						grid.drawable.set_foreground_color (grid.background_color)
-						rectangle_height := grid.viewport.height - (current_item_y_position - vertical_buffer_offset + current_row_height)
+						if grid.is_row_height_fixed then
+							rectangle_height := grid.viewport.height - virtual_y_position + (grid.row_height * grid.row_count)
+						else
+							rectangle_height := grid.viewport.height - virtual_y_position + row_offsets @ (row_offsets.count)
+						end
 						if rectangle_height >= 0 then
 							if printing_values then
 								print ("rectangle_height : " + rectangle_height.out + "%N")

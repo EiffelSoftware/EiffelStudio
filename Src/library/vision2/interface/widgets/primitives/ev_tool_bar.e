@@ -14,7 +14,8 @@ inherit
 	EV_PRIMITIVE
 		redefine
 			implementation,
-			create_action_sequences
+			create_action_sequences,
+			make_for_test
 		end
 
 	EV_ITEM_LIST [EV_TOOL_BAR_ITEM]
@@ -39,6 +40,20 @@ feature {NONE} -- Implementation
 		do
 			{EV_PRIMITIVE} Precursor
 			{EV_ITEM_LIST} Precursor
+		end
+
+feature {NONE} -- Contract support
+
+	make_for_test is
+		do
+			{EV_PRIMITIVE} Precursor
+			extend (create {EV_TOOL_BAR_BUTTON}.make_with_text ("ToolBar%NButton"))
+			extend (create {EV_TOOL_BAR_SEPARATOR})
+			extend (create {EV_TOOL_BAR_TOGGLE_BUTTON}.make_with_text ("ToolBar%NToggle Button"))
+			extend (create {EV_TOOL_BAR_SEPARATOR})
+			extend (create {EV_TOOL_BAR_RADIO_BUTTON}.make_with_text ("ToolBar%NRadio Button 1"))
+			extend (create {EV_TOOL_BAR_RADIO_BUTTON}.make_with_text ("ToolBar%NRadio Button 2"))
+			extend (create {EV_TOOL_BAR_RADIO_BUTTON}.make_with_text ("ToolBar%NRadio Button 3"))
 		end
 
 feature {EV_ANY_I} -- Initialization
@@ -69,6 +84,9 @@ end -- class EV_TOOL_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/05/02 20:25:26  king
+--| Added basic make_for_test
+--|
 --| Revision 1.14  2000/04/11 23:32:46  king
 --| Removed merge_radio_button_groups
 --|

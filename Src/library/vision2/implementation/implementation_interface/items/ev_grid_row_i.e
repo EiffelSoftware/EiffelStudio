@@ -54,6 +54,7 @@ feature {EV_GRID_I} -- Initialization
 			-- Make `Current' associated with `a_grid_i'
 		require
 			a_grid_i_not_void: a_grid_i /= Void
+			grid_not_already_set: parent_grid_i = Void
 		do
 			parent_grid_i := a_grid_i
 		ensure

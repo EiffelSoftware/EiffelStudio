@@ -13,24 +13,24 @@ cluster
 	$root_cluster_line
 
 		-- EiffelBase
-	base:				"$EIFFEL4\library\base"
-	structures(base):		"$\structures"
+	base:				"$EIFFEL4/library/base"
+	structures(base):		"$/structures"
 	
-	kernel(base):			"$\kernel"
-	support(base):			"$\support"
-	access(structures):		"$\access"
-	cursors(structures):		"$\cursors"
-	cursor_tree(structures):	"$\cursor_tree"
-	dispenser(structures):		"$\dispenser"
-	iteration(structures):		"$\iteration"
-	list(structures):		"$\list"
-	set(structures):		"$\set"
-	sort(structures):		"$\sort"
-	storage(structures):		"$\storage"
-	table(structures):		"$\table"
-	traversing(structures):		"$\traversing"
-	tree(structures):		"$\tree"
+	kernel(base):			"$/kernel"
+	support(base):			"$/support"
+	access(structures):		"$/access"
+	cursors(structures):		"$/cursors"
+	cursor_tree(structures):	"$/cursor_tree"
+	dispenser(structures):		"$/dispenser"
+	iteration(structures):		"$/iteration"
+	list(structures):		"$/list"
+	set(structures):		"$/set"
+	sort(structures):		"$/sort"
+	storage(structures):		"$/storage"
+	table(structures):		"$/table"
+	traversing(structures):		"$/traversing"
+	tree(structures):		"$/tree"
 
-	thread:				"$EIFFEL4\library\thread"
+	thread:				"$EIFFEL4/library/thread"
 
 end

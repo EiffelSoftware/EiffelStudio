@@ -153,7 +153,7 @@ feature -- Status setting
 		require
 			is_parented: parent /= Void
 		do
-			implementation.expand
+			implementation.collapse
 		ensure
 			not_is_expanded: not is_expanded
 		end

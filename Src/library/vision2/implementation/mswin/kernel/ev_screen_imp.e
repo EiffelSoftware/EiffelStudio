@@ -23,6 +23,14 @@ inherit
 			{NONE} all
 		end
 
+	WEL_UNIT_CONVERSION
+		rename
+			horizontal_resolution as wel_horizontal_resolution,
+			vertical_resolution as wel_vertical_resolution
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -170,6 +178,18 @@ feature -- Measurement
 		do
 			Result := dc.height
 		end
+		
+	vertical_resolution: INTEGER is
+			-- Number of pixels per inch along screen height.
+		do
+			Result := get_device_caps (dc.item, logical_pixels_y)
+		end
+		
+	horizontal_resolution: INTEGER is
+			-- Number of pixels per inch along screen width.
+		do
+			Result := get_device_caps (dc.item, logical_pixels_x)
+		end
 
 feature -- Status setting
 
@@ -198,6 +218,9 @@ feature {NONE} -- Constants
 		once
 			create Result
 		end
+		
+invariant
+	dc_not_void: dc /= Void
 
 end -- class EV_SCREEN_IMP
 

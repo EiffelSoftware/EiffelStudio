@@ -55,10 +55,7 @@ feature {NONE} -- Agent Handlers
 	test_system_properties (args: ARRAYED_LIST [STRING]) is
 			--
 		local
-			l_system_name: STRING
 			l_properties: IEIFFEL_PROJECT_PROPERTIES_INTERFACE
-			l_new_system_name: STRING
-			retried: BOOLEAN
 		do
 			l_properties := project_manager.project_properties
 			put_string ("%NTesting System%N")
@@ -79,10 +76,7 @@ feature {NONE} -- Agent Handlers
 	test_root_properties (args: ARRAYED_LIST [STRING]) is
 			--
 		local
-			l_orig_string: STRING
 			l_properties: IEIFFEL_PROJECT_PROPERTIES_INTERFACE
-			l_new_string: STRING
-			retried: BOOLEAN
 		do
 			l_properties := project_manager.project_properties
 			put_string ("%NTesting Root%N")
@@ -133,6 +127,49 @@ feature {NONE} -- Agent Handlers
 			test_string ("Version", agent l_properties.version, agent l_properties.set_version, <<"5.2.0.0", "NoLegalVersion", Void>>)
 		end
 		
+	on_cluster_properties (args: ARRAYED_LIST [STRING]) is
+			-- test system cluster properites
+		do
+			-- reset failure count
+			test_failure_count := 0
+			-- call test(s)
+			call_test (agent test_system_clusters, args, False, True)
+			-- display number of failures
+			display_failure_count
+		end
+		
+	test_system_clusters (args: ARRAYED_LIST [STRING]) is
+			-- create cluster properties test menu
+		require
+			non_void_project_manager: project_manager /= Void
+			non_void_project_properties: project_manager.project_properties /= Void
+		local
+			l_tests: SYSTEM_CLUSTER_TESTER
+		do
+			create l_tests.make (project_manager.project_properties.clusters)
+		end
+		
+	on_assembly_properties (args: ARRAYED_LIST [STRING]) is
+			--
+		do
+			-- reset failure count
+			test_failure_count := 0
+			-- call test(s)
+			call_test (agent test_system_properties, args, False, True)
+			call_test (agent test_root_properties, args, False, True)
+			call_test (agent test_defaults_properties, args, False, True)
+			-- display number of failures
+			display_failure_count
+		end
+		
+	on_external_properties (args: ARRAYED_LIST [STRING]) is
+			-- create external properties test menu
+		local
+			l_tests: EXTERNAL_PROPERTIES_TESTER
+		do
+			create l_tests.make
+		end
+		
 feature {NONE} -- Implementation
 
 	add_menu_items is
@@ -141,9 +178,9 @@ feature {NONE} -- Implementation
 			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("1", "Test System Properties [system_name]", agent on_system_properties))
 			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("2", "Test Root Properties [root_class] [create_routine]", agent on_root_properties))
 			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("3", "Test Ace Defaults", agent on_defaults_properties))
---			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("4", "Test Clusters", agent on_cluster_properties))
---			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("5", "Test Assemblies", agent on_assembly_properties))
---			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("6", "Test Externals", agent on_external_properties))
+			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("4", "Test Clusters", agent on_cluster_properties))
+			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("5", "Test Assemblies", agent on_assembly_properties))
+			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("6", "Test Externals", agent on_external_properties))
 			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("a", "Test All Defaults", agent on_test_all_properties))
 			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("x", "Exit Menu", Void))
 			menu.set_return_item (menu.items.last)

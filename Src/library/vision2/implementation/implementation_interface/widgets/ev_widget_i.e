@@ -111,7 +111,6 @@ feature -- Status Report
 			-- want to resize the widget
 		require
 			exists: not destroyed
---			managed: managed
 		deferred
 		end
 
@@ -120,7 +119,13 @@ feature -- Status Report
 			-- want to resize the widget
 		require
 			exists: not destroyed
---			managed: managed
+		deferred
+		end
+
+	has_focus: BOOLEAN is
+			-- Does the Current widget has the focus.
+		require
+			exists: not destroyed
 		deferred
 		end
 
@@ -149,6 +154,8 @@ feature -- Status setting
 		require
 			exists: not destroyed
 		deferred
+		ensure
+			has_focus: has_focus
 		end
 
 	set_insensitive (flag: BOOLEAN) is
@@ -164,7 +171,7 @@ feature -- Status setting
 			exists: not destroyed
 		deferred
 		ensure
-			flag = insensitive
+			state_set: flag = insensitive
 		end
 
 	set_default_options is
@@ -203,14 +210,13 @@ feature -- Status setting
 			exists: not destroyed
 		deferred	
 		ensure
-			expand_set: expandable = flag
+			flag_set: expandable = flag
 		end
 
 	set_horizontal_resize (flag: BOOLEAN) is
 			-- Make `flag' the new horizontal_resizable status.
 		require
 			exists: not destroyed
---			managed: managed
 		deferred
 		ensure
 			horizontal_resize_set: horizontal_resizable = flag
@@ -220,7 +226,6 @@ feature -- Status setting
 			-- Make `flag' the new vertical_resizable status.
 		require
 			exists: not destroyed
---			managed: managed
 		deferred
 		ensure
 			vertical_resize_set: vertical_resizable = flag

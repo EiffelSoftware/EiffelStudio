@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision push button.%
@@ -318,6 +317,9 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/02/19 05:45:01  oconnor
+--| released
+--|
 --| Revision 1.36  2000/02/14 11:40:44  oconnor
 --| merged changes from prerelease_20000214
 --|

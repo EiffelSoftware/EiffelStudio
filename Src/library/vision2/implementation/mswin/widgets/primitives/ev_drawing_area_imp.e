@@ -1,4 +1,3 @@
---| FIXME Not for release
 indexing
 	description: "EiffelVision drawing area. Mswindows implementation."
 	status: "See notice at end of class"
@@ -280,6 +279,9 @@ end -- class EV_DRAWING_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/02/19 05:45:01  oconnor
+--| released
+--|
 --| Revision 1.28  2000/02/16 18:08:52  pichery
 --| implemented the newly added features: redraw_rectangle, clear_and_redraw, clear_and_redraw_rectangle
 --|

@@ -1,4 +1,3 @@
---| FIXME Not for release
 indexing
 	description: "EiffelVision menu. Mswindows implementation."
 	status: "See notice at end of class"
@@ -74,6 +73,9 @@ end -- class EV_MENU_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/02/19 05:45:01  oconnor
+--| released
+--|
 --| Revision 1.14  2000/02/14 11:40:45  oconnor
 --| merged changes from prerelease_20000214
 --|

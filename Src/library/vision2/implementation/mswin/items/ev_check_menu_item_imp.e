@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing	
 	description: 
@@ -120,6 +119,9 @@ end -- class EV_CHECK_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/02/19 05:44:59  oconnor
+--| released
+--|
 --| Revision 1.10  2000/02/19 04:35:44  oconnor
 --| added deferred features
 --|

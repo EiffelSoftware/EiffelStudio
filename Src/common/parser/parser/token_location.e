@@ -1,14 +1,13 @@
 indexing
-
 	description: "Token locations in files"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class TOKEN_LOCATION
+class
+	TOKEN_LOCATION
 
-creation
-
+create
 	reset
 
 feature -- Access
@@ -18,6 +17,9 @@ feature -- Access
 
 	line_number: INTEGER
 			-- Line number in file
+			
+	start_column_position, end_column_position: INTEGER
+			-- Position in Current line at `line_number' line in file.
 
 feature -- Setting
 
@@ -26,11 +28,14 @@ feature -- Setting
 		do
 			start_position := 0
 			end_position := 0
+			reset_column_positions
 			line_number := 1
 		ensure
 			start_position_set: start_position = 0
 			end_position_set: end_position = 0
 			line_number_set: line_number = 1
+			start_column_position_set: start_column_position = 0
+			end_column_position_set: end_column_position = 0
 		end
 
 	go_to (c: INTEGER) is
@@ -39,17 +44,50 @@ feature -- Setting
 		do
 			start_position := end_position
 			end_position := end_position + c
+			start_column_position := end_column_position
+			end_column_position := end_column_position + c
 		ensure
 			start_position_set: start_position = old end_position
 			end_position_set: end_position = old end_position + c
+			start_column_position_set: start_column_position = old start_column_position + c
 		end
 
+	reset_column_positions is
+			-- Reset `column_position' to `0' as we have most likely started a new line.
+		do
+			start_column_position := 0
+			end_column_position := 0
+		ensure
+			start_column_position_set: start_column_position = 0
+			end_column_position_set: end_column_position = 0
+		end
+		
 	set_line_number (l: INTEGER) is
 			-- Set `line_number' to `l'.
 		do
 			line_number := l
 		ensure
 			line_number_set: line_number = l
+		end
+
+feature {AST_EIFFEL} -- Settings
+
+	set_start_position (s: like start_position) is
+		require
+			valid_s: s > 0
+		do
+			start_position := s
+		ensure
+			start_position_set: start_position = s
+		end
+
+	set_end_position (s: like end_position) is
+		require
+			valid_s: s > 0
+		do
+			end_position := s
+		ensure
+			end_position_set: end_position = s
 		end
 
 end -- class TOKEN_LOCATION

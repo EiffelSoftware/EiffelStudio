@@ -2,7 +2,7 @@ rm -rf %TEMP%\vision2_precompile
 mkdir %TEMP%\vision2_precompile
 XCOPY /Y win32_root_none.ace %TEMP%\Vision2_precompile
 XCOPY /Y flatshort_instructions.txt %TEMP%\Vision2_precompile
-D:\Eiffel55\studio\spec\windows\bin\ec -precompile -ace %TEMP%\Vision2_precompile\win32_root_none.ace -project_path %TEMP%\vision2_precompile
+%ISE_EIFFEL%\studio\spec\windows\bin\ec -precompile -ace %TEMP%\Vision2_precompile\win32_root_none.ace -project_path %TEMP%\vision2_precompile
 
 REM now perform generation based on "flatshort_instructions.txt"
 

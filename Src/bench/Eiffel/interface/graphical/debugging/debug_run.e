@@ -19,7 +19,7 @@ inherit
 		export
 			{NONE} all
 		end;
-	ICONED_COMMAND
+	PIXMAP_COMMAND
 		redefine
 			tool
 		end;
@@ -32,14 +32,13 @@ creation
 
 feature -- Initialization
 
-	make (c: COMPOSITE; a_tool: PROJECT_W) is
+	make (a_tool: PROJECT_W) is
 			-- Initialize the command, create a couple of requests and windows.
 			-- Add some actions as well.
 		do
 			init_from_tool (a_tool);
 			!! run_request.make (Rqst_application);
-			!! cont_request.make (Rqst_cont);
-			argument_window.initialize (c, Current);
+			!! cont_request.make (Rqst_cont)
 		end;
 
 feature -- Callbacks
@@ -63,6 +62,9 @@ feature -- Properties
 		once 
 			Result := bm_Debug_run 
 		end;
+
+	parent: COMPOSITE
+			-- Parent for the argument window
 
 feature -- Close window
 
@@ -98,6 +100,9 @@ feature -- Execution
 				update_command.execute (text_window);
 				update_command.set_run_after_melt (false)
 			elseif argument = specify_args then
+				if argument_window.destroyed then
+					argument_window.initialize (popup_parent, Current)
+				end
 				argument_window.call
 			elseif 
 				not tool.initialized or else 

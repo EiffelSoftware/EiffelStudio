@@ -8,16 +8,9 @@ deferred class
 	EV_MESSAGE_DIALOG_I
 
 inherit
-	EV_ANY_I
+	EV_STANDARD_DIALOG_I
 
 feature {NONE} -- Initialization
-
-	make (par: EV_CONTAINER) is
-			-- Create a message dialog with `par' as parent.
-		require
-			valid_parent: is_valid (par)
-		deferred
-		end
 
 	make_with_text (par: EV_CONTAINER; a_title, a_msg: STRING) is
 			-- Create a message box with `par' as parent, `a_title' as
@@ -106,15 +99,6 @@ feature -- Status setting
 			-- in the dialog box.
 		require
 			exist: not destroyed
-		deferred
-		end
-
-	show is
-			-- Show the window.
-			-- As the window is modal, nothing can be done
-			-- until the user closed the window.
-		require
-			exists: not destroyed
 		deferred
 		end
 

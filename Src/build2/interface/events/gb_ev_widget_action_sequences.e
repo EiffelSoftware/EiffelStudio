@@ -45,8 +45,8 @@ feature -- Access
 			Result.extend ("EV_KEY_ACTION_SEQUENCE")
 			Result.extend ("EV_KEY_STRING_ACTION_SEQUENCE")
 			Result.extend ("EV_KEY_ACTION_SEQUENCE")
-			Result.extend ("EV_FOCUS_ACTION_SEQUENCE")
-			Result.extend ("EV_FOCUS_ACTION_SEQUENCE")
+			Result.extend ("EV_NOTIFY_ACTION_SEQUENCE")
+			Result.extend ("EV_NOTIFY_ACTION_SEQUENCE")
 			Result.extend ("EV_GEOMETRY_ACTION_SEQUENCE")
 		end
 	

@@ -48,6 +48,14 @@ feature -- Initialization
 			source_enclosing_class := source.written_class;
 			target_enclosing_class := target_class;
 			target_feature_table := target_class.feature_table;
+debug ("FLAT_SHORT")
+	io.error.putstring ("%Tsource feature: ");
+	io.error.putstring (source.feature_name);
+	io.error.putstring (" target feature: ");
+	io.error.putstring (target.feature_name);
+	io.error.new_line
+end
+
 		ensure
 			set: source_enclosing_feature = source and then
 				target_enclosing_feature = target and then

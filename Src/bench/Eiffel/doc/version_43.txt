@@ -16,3 +16,14 @@ New changes in 4.3:
 	 degree -3		|	degree -1
 	 degree -4		|	degree -2
 	 degree -5		|	degree -3
+
+- Fixed a bug in generation of once function returning an expanded type: 
+  the expanded type was not created, thus it was generating mostly a
+  Void applied to target.
+
+- Fixed the DESC examples and library files.
+
+- Most of the case of anchored types are now handled correctly:
+  - like Current
+  - like x, where x is a function or a redefined feature
+  

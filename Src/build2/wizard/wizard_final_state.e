@@ -116,6 +116,8 @@ feature {NONE} -- Implementation
 			build
 				-- Remove ability to resize from window.
 			first_window.disable_user_resize
+			first_window.disable_maximize
+			main_window.hide_all_floating_tools
 				-- Set size back to standard dialog size. Note that
 				-- we cannot do this in `build' as it is only called the
 				-- first time that the page is built. After that it is cached.

@@ -47,6 +47,7 @@ feature {NONE} -- Initialization
 		require
 			valid_window: w /= Void
 		do
+			old_index := -1
 			create_dialog
 			dialog.show_modal_to_window (w)
 			if is_valid then
@@ -176,7 +177,15 @@ feature -- Status setting
 			if external_command /= Void then
 				command_field.set_text (external_command)
 			end
+			old_index := index
 			dialog.show_modal_to_window (w)
+			if is_valid then
+				if old_index /= index then
+					commands.put (Void, old_index)
+					commands.put (Current, index)
+				end
+			end
+			old_index := -1
 		end
 
 feature -- Status report
@@ -323,12 +332,12 @@ feature {NONE} -- Implementation
 			wd: EV_WARNING_DIALOG
 			ix: INTEGER
 		do
-			if name_field.text.is_empty or command_field.text.is_empty then
+			ix := index_field.value
+			if name_field.text.is_empty or command_field.text.is_empty or ix < 0 or ix > 9 then
 				create wd.make_with_text (Warning_messages.w_Invalid_options)
 				wd.show_modal_to_window (dialog)
 			else
-				ix := index_field.value
-				if commands.item (ix) /= Void then
+				if commands.item (ix) /= Void and then commands.item (ix) /= Current then
 					create wd.make_with_text (Warning_messages.w_Index_already_taken)
 					wd.show_modal_to_window (dialog)
 				else
@@ -497,5 +506,8 @@ feature {NONE} -- Implementation
 
 	finished_file_name: FILE_NAME
 			-- Name of the file that tells that execution completed (non Windows platforms).
+
+	old_index: INTEGER
+			-- Index of `Current' before we edited its properties.
 
 end -- class EB_EXTERNAL_COMMAND

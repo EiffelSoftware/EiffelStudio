@@ -8,8 +8,6 @@ default
 	assertion (check)
 	assertion (require)
 	assertion (ensure)
-	arguments ("-g")
-	working_directory ("E:\com_wizard\project\new_gui")
 	disabled_debug (yes)
 	disabled_debug ("dlg_dispatcher")
 	disabled_debug ("refactor_fixme")
@@ -33,6 +31,7 @@ default
 	exception_trace (yes)
 	inlining (no)
 	multithreaded (yes)
+	arguments ("-g")
 
 
 -------------------------------------------------
@@ -46,7 +45,6 @@ default
 
 cluster
 	root_cluster:		"$EIFFEL_SRC\com_wizard\root"
-
 
 	all new_gui:		"$EIFFEL_SRC\com_wizard\project\new_gui"
 		exclude

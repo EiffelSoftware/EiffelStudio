@@ -14,10 +14,8 @@ inherit
 		end;
 
 	INSTRUCTION_AS_B
-		undefine
-			simple_format
 		redefine
-			type_check, byte_node, format,
+			type_check, byte_node, 
 			fill_calls_list, replicate
 		end
 
@@ -105,21 +103,6 @@ feature -- Type check, byte code production, dead_code_removal
 			Result.set_source (source.byte_node);
 		end;
 
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconsitute text.
-		do
-			ctxt.begin;
-			ctxt.put_breakable;
-			ctxt.new_expression;
-			target.format (ctxt);
-			ctxt.put_space;
-			ctxt.put_text_item (assign_symbol);
-			ctxt.put_space;
-			ctxt.new_expression;
-			source.format (ctxt);
-			ctxt.commit;
-		end;
-		
 feature -- Replication
 
 	fill_calls_list (l: CALLS_LIST) is

@@ -75,9 +75,17 @@ feature {NONE} -- Implementation
 				top_level_window_imp.set_focus_widget (Current)
 			else
 				top_level_window_imp.set_focus_widget (Void)
-				deselect_all
+				if remove_selection_on_lose_focus then
+					deselect_all
+				end
 			end
 			Precursor {EV_PRIMITIVE_IMP} (a_has_focus)
+		end
+
+	remove_selection_on_lose_focus: BOOLEAN is
+			-- Should `Current' lose selection when focus is lost?
+		do
+			Result := True
 		end
 
 feature {EV_ANY_I} -- Implementation		

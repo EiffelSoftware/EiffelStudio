@@ -1,5 +1,6 @@
 indexing 
 	description: "EiffelVision horizontal Progress bar."
+	note: "By default, the step is 10."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +15,8 @@ inherit
 		end
 
 creation
-	make
+	make,
+	make_with_range
 
 feature {NONE} -- Initialization
 
@@ -22,6 +24,14 @@ feature {NONE} -- Initialization
 			-- Create a progress bar with `par' as parent.
 		do
 			!EV_HORIZONTAL_PROGRESS_BAR_IMP! implementation.make
+			widget_make (par)
+		end
+
+	make_with_range (par: EV_CONTAINER; min: INTEGER; max: INTEGER) is
+			-- Create a spin-button with `min' as minimum, `max' as maximum
+			-- and `par' as parent.
+		do
+			!EV_HORIZONTAL_PROGRESS_BAR_IMP! implementation.make_with_range (min, max)
 			widget_make (par)
 		end
 

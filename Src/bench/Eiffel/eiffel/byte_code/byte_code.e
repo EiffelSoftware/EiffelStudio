@@ -1,4 +1,7 @@
--- Byte code for a routine.
+indexing
+	description: "Byte code for a routine."
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class BYTE_CODE 
 
@@ -28,7 +31,7 @@ inherit
 			{NONE} all
 		end
 
-feature 
+feature -- Access
 
 	real_body_id: INTEGER
 			-- Real body id of the feature to which current byte code belongs
@@ -36,6 +39,9 @@ feature
 	feature_name_id: INTEGER
 			-- Name ID of the feature to which the current byte code tree
 			-- belongs to.
+
+	end_location: TOKEN_LOCATION
+			-- Position where `end' keyword is located.
 			
 	feature_name: STRING is
 			-- Final name of the feature
@@ -115,6 +121,8 @@ feature
 			-- Do nothing
 		end
 
+feature -- Settings
+
 	set_feature_name_id (id: INTEGER) is
 			-- Assign `id' to `feature_name_id'.
 		require
@@ -129,6 +137,16 @@ feature
 			-- Assign `i' to `real_body_id'.
 		do
 			real_body_id := i
+		end
+
+	set_end_location (e: like end_location) is
+			-- Assign `e' to `end_location'.
+		require
+			e_not_void: e /= Void
+		do
+			end_location := e
+		ensure
+			end_location_set: end_location = e
 		end
 
 	set_rout_id (i: INTEGER) is
@@ -510,6 +528,9 @@ feature -- IL code generation
 			-- Generate IL byte code
 		do
 			generate_il_body
+			if system.line_generation then
+				il_generator.put_debug_info (end_location)
+			end
 			generate_il_return (not context.real_type(result_type).is_void)
 		end
 

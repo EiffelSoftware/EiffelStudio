@@ -11,7 +11,7 @@ inherit
 
 	FILTERABLE
 		redefine
-			dark_symbol, display_temp_header, post_fix
+			dark_symbol, display_temp_header, post_fix, make
 		end
 
 creation
@@ -20,9 +20,9 @@ creation
 	
 feature -- Initialization
 
-	make (a_text_window: TEXT_WINDOW) is 
+	make (a_tool: TOOL_W) is 
 		do 
-			init (a_text_window);
+			tool := a_tool;
 			do_format := true
 		end; 
 

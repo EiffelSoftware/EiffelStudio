@@ -321,9 +321,9 @@ run-time/bits.h
 run-time/boolstr.c
 run-time/cecil.c
 run-time/cecil.h
+run-time/console.c
 run-time/copy.c
-cun-time/copy.h
-cun-time/console.c
+run-time/copy.h
 run-time/debug.c
 run-time/debug.h
 run-time/dir.c

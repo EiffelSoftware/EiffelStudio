@@ -104,8 +104,7 @@ feature -- Status setting
 	update_to_reflect_name_change is
 			-- Update `Current' to reflect a name change of `object'.
 		do
-			name := object.name
-			tree_item.set_text (name_and_type_from_object (object))
+			tree_item.set_text (object.name.as_upper)
 		end
 	
 feature --{NONE} -- Implementation

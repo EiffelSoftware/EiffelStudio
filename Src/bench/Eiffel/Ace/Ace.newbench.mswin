@@ -4,7 +4,8 @@ root
 	 EB_KERNEL (new_main): "make"
 
 default
-	assertion (require);
+	assertion (ensure);
+	console_application (yes);
 	dead_code_removal (yes);
 -- RTEA version
 	exception_trace (yes);
@@ -35,54 +36,12 @@ default
 cluster
 
 		-- EiffelBase:
-	base:				"$EIFFEL_SRC\library\base";
-	structures(base):		"$\structures";
+	all base:				"$EIFFEL_SRC\library\base";
+		exclude
+			"table";"desc"
+		end
 
-	kernel(base):		"$\kernel";
-	support(base):		"$\support";
-	access(structures):	"$\access";
-	cursors(structures):	"$\cursors";
-	dispenser(structures):	"$\dispenser";
-	list(structures):		"$\list";
-	set(structures):		"$\set";
-	sort(structures):		"$\sort";
-	storage(structures):	"$\storage";
-	table(structures):		"$\table_eiffel3";
-	traversing(structures):	"$\traversing";
-	tree(structures):		"$\tree";
-
-
-	wel:						"$EIFFEL_SRC\library\wel";
-	wel_constants(wel):			"$\consts";
-	wel_controls(wel):			"$\controls";
-	wel_gdi(wel):				"$\gdi";
-	wel_gdi_stocks(wel):		"$\gdistock";
-	wel_standard_dialogs(wel):	"$\stddlgs";
-	wel_structures(wel):		"$\structs";
-	wel_support(wel):			"$\support";
-	wel_windows(wel):			"$\windows";
-	wel_messages(wel):			"$\messages";
-
-		-- EiffelVision (old)
-	old_vision:							"$EIFFEL_SRC\library\vision"
-	old_vision_kernel(old_vision):			"$\oui\kernel"
-	old_vision_widgets (old_vision):		"$\oui\widgets"
-	old_vision_context_data (old_vision):	"$\oui\context_data"
-
-	old_vision_tools (old_vision):			"$\tools"
-
-		-- EiffelVision Toolkit
-	old_vision_toolkit (old_vision):				"$\implement\toolkit"
-	old_vision_toolkit_kernel (old_vision_toolkit):	"$\kernel"
-	old_vision_toolkit_widgets (old_vision_toolkit):"$\widgets"
-	old_vision_toolkit_support (old_vision_toolkit):"$\support"
-
-		-- EiffelVision implementation clusters for Ms Windows
-	old_vision_imp (old_vision):				"$\implement\mswin"
-	old_vision_imp_kernel (old_vision_imp):		"$\kernel"
-	old_vision_imp_widgets (old_vision_imp):	"$\widgets"
-	old_vision_imp_support (old_vision_imp):	"$\support"
-	old_vision_imp_command (old_vision_imp):	"$\commands"
+	all wel:				"$EIFFEL_SRC\library\wel";
 
 		-- EiffelVision
 	vision:		"$EIFFEL_SRC\library\vision2\interface";

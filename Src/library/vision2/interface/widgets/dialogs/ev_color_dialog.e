@@ -1,5 +1,5 @@
 indexing 
-	description: "EiffelVision color selection dialog.
+	description: "EiffelVision color selection dialog."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"

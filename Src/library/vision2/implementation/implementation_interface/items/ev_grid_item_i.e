@@ -102,7 +102,7 @@ feature -- Access
 			if parent_i /= Void then
 					-- If there is no parent, then return 0
 					
-				Result := parent_i.column_offsets @ (row_i.index)
+				Result := parent_i.column_offsets @ (column_i.index)
 			end
 		end
 		
@@ -128,6 +128,22 @@ feature -- Access
 		end
 
 feature -- Status setting
+
+	activate is
+			-- Setup `Current' for user interactive editing
+		require
+			parented: is_parented
+		do
+			parent_i.activate_item (interface)
+		end
+
+	deactivate is
+			-- Cleanup from previous call to `activate'
+		require
+			parented: is_parented
+		do
+			parent_i.deactivate_item (interface)
+		end
 
 	enable_select is
 			-- Set `is_selected' `True'.

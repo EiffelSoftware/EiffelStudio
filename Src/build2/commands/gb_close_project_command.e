@@ -32,6 +32,8 @@ inherit
 	GB_CONSTANTS
 	
 	EV_DIALOG_CONSTANTS
+	
+	GB_SHARED_ID
 
 create
 	make
@@ -110,8 +112,11 @@ feature -- Basic operations
 				end
 					-- Remove the history.
 				history.wipe_out
-	
-				command_handler.update	
+				
+					-- Restore Id counter to default
+				reset_id_counter
+				
+				command_handler.update
 			end
 
 end -- class GB_CLOSE_PROJECT_COMMAND

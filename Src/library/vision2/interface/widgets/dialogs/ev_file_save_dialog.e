@@ -1,0 +1,7 @@
+class EV_FILE_SAVE_DIALOG
+
+inherit
+
+	FILE_SELECTION_DIALOG
+
+end -- class EV_FILE_SAVE_DIALOG

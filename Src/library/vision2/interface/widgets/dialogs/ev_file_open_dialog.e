@@ -1,0 +1,7 @@
+class EV_FILE_OPEN_DIALOG
+
+inherit
+
+	FILE_SELECTION_DIALOG
+
+end -- class EV_FILE_OPEN_DIALOG

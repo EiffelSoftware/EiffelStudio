@@ -1,0 +1,9 @@
+class EV_SINGLE_LINE_ENTRY
+
+inherit
+
+	ENTRY
+
+	EV_BAR_ITEM
+
+end -- class EV_SINGLE_LINE_ENTRY

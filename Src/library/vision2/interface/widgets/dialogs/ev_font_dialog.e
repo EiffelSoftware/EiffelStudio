@@ -1,0 +1,7 @@
+class EV_FONT_SELECTION_DIALOG
+
+inherit
+
+	DIALOG
+
+end -- class EV_FONT_SELECTION_DIALOG

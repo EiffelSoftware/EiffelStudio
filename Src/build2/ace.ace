@@ -13,19 +13,17 @@ default
 	assertion (no)
 	disabled_debug (yes)
 	disabled_debug ("dlg_dispatcher")
-	disabled_debug ("gelex")
-	disabled_debug ("geyacc")
 	disabled_debug ("vision2_windows")
 	disabled_debug ("vision2_windows_gdi")
 	disabled_debug ("wel")
 	disabled_debug ("wel_gdi_count")
 	disabled_debug ("wel_gdi_references")
 	disabled_debug ("win_dispatcher")
-	disabled_debug ("xml_parser")
 	debug (no)
 	line_generation (yes)
 	profile (no)
 	trace (no)
+	override_cluster ("preferences")
 	check_vape (no)
 	console_application (no)
 	syntax_warning (no)
@@ -59,7 +57,7 @@ cluster
 			"wel_modeless_dialog.e"; 
 		end
 
-	all vision2:		"$EIFFEL_SRC\library\vision2"
+	all vision2:	"$EIFFEL_SRC\library\vision2"
 		include
 			"ev_button"; 
 		exclude
@@ -73,14 +71,14 @@ cluster
 			assertion (no)
 		end
 
-	all wizard_library:		"$EIFFEL_SRC\library\wizard"
+	all wizard_library:	"$EIFFEL_SRC\library\wizard"
 		exclude
 			"unix"; "wizard_window.e"; "wizard_project_manager.e"; "wizard_shared.e"; "wizard_initial_state_window.e"; 
 		end
 
-	all preferences: "$EIFFEL_SRC\library\preferences"
+	all preferences:		"$EIFFEL_SRC\library\preferences"
 		exclude
-			"xml_implementation";
+			"xml_implementation"; 
 		end
 
 external

@@ -2,12 +2,12 @@ class
 	WIZARD_IDL_COMPILER
 
 inherit
-	SHARED_DATA
+	WIZARD_SHARED_DATA
 		export
 			{NONE} all
 		end
 
-	PROCESS_LAUNCHER
+	WIZARD_PROCESS_LAUNCHER
 		export
 			{NONE} all
 		end

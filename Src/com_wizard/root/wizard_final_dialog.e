@@ -12,7 +12,7 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_DATA
+	WIZARD_SHARED_DATA
 		export
 			{NONE} all
 		end

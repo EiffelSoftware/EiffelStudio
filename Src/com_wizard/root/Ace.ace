@@ -58,13 +58,27 @@ cluster
 	wel_windows(wel):		"$\windows"
 
 	-- EiffelCOM
-	ecom_wizard:							"$LIBRARY\com\Wizard";
+	ecom:								"$LIBRARY\com"
+	ecom_wizard(ecom):					"$\Wizard"
 	ecom_wizard_visitors(ecom_wizard):		"$\visitors"
 	ecom_wizard_descriptors(ecom_wizard):	"$\descriptors"
-	ecom_wizard_support(ecom_wizard):		"$\root"
+	ecom_wizard_support(ecom_wizard):		"$\support"
+	ecom_library(ecom):					"$\library"
+	ecom_library_constants(ecom_library):	"$\constants"
+	ecom_library_interfaces(ecom_library):	"$\interfaces"
+	ecom_library_structures(ecom_library):	"$\structures"
+	ecom_library_support(ecom_library):		"$\support"	
+
+	-- EiffelTime
+	time:					"$LIBRARY\time"
+	format(time):				"$\format"
+	english(format):			"$\english"
 
 external
-	include_path:	"$(EIFFEL4)\library\wel\spec\windows\include";
+	include_path:	"$LIBRARY\wel\spec\windows\include",
+				"$LIBRARY\com\library\include",
+				"$LIBRARY\com\runtime\include";
+
 	object: 		"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib",
 					"$DEVSTUDIO\vc\lib\shell32.lib",
 					"$DEVSTUDIO\vc\lib\comctl32.lib";

@@ -5,7 +5,7 @@ class
 	WIZARD_MANAGER
 
 inherit
-	SHARED_DATA
+	WIZARD_SHARED_DATA
 		export
 			{NONE} all
 		end

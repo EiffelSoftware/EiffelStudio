@@ -19,7 +19,7 @@ inherit
 			class_name as storable_class_name
 		end
 
-	SHARED_DATA
+	WIZARD_SHARED_DATA
 		export
 			{NONE} all
 		end

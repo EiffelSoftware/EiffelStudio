@@ -131,22 +131,22 @@ feature {EDITOR_TOKEN} -- Properties used to display the token
 
 	selected_text_color: WEL_COLOR_REF is
 		do
-			create Result.make_rgb(255,255,255)
+			Result := editor_preferences.selected_text_color
 		end
 
 	selected_background_color: WEL_COLOR_REF is
 		do
-			create Result.make_rgb(0,0,128)
+			Result := editor_preferences.selected_background_color
 		end
 
 	text_color: WEL_COLOR_REF is
 		do
-			create Result.make_rgb(0,0,0)
+			Result := editor_preferences.normal_text_color
 		end
 
 	background_color: WEL_COLOR_REF is
 		do
-			create Result.make_rgb(255,255,255)
+			Result := editor_preferences.normal_background_color
 		end
 
 	font: WEL_FONT is

@@ -11,7 +11,9 @@ inherit
 	EDITOR_TOKEN
 		redefine
 			display_selected,
-			display_half_selected
+			display_half_selected,
+			text_color,
+			background_color
 		end
 
 create
@@ -154,5 +156,17 @@ feature {NONE} -- Private Constants
 			-- String representation of what is displayed
 			-- when the "invisible" symbols (spaces, end of lines
 			-- & tabulations) are set to be visible.
+
+feature {NONE} -- Implementation
+	
+	text_color: WEL_COLOR_REF is
+		do
+			Result := editor_preferences.spaces_text_color
+		end
+
+	background_color: WEL_COLOR_REF is
+		do
+			Result := editor_preferences.spaces_background_color
+		end
 
 end -- class EDITOR_TOKEN_SPACE

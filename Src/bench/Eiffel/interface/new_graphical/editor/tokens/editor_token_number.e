@@ -1,8 +1,8 @@
 indexing
-	description: "Objects that ..."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Token that describe an number (integer, real, ...) "
+	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	EDITOR_TOKEN_NUMBER
@@ -19,13 +19,13 @@ create
 feature {NONE} -- Implementation
 	
 	text_color: WEL_COLOR_REF is
-		once
-			create Result.make_rgb(0,0,128)
+		do
+			Result := editor_preferences.number_text_color
 		end
 
 	background_color: WEL_COLOR_REF is
-		once
-			create Result.make_rgb(196,196,0)
+		do
+			Result := editor_preferences.number_background_color
 		end
 
 end -- class EDITOR_TOKEN_NUMBER

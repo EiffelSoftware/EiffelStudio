@@ -68,8 +68,6 @@ feature -- Access
 			type_path := absolute_assembly_path_from_consumed_assembly (ca) + Classes_path + type + ".xml"			
 			des.deserialize (type_path)
 			Result ?= des.deserialized_object
-		ensure
-			non_void_info: Result /= Void
 		end
 		
 	assembly_mapping (aname: ASSEMBLY_NAME): CONSUMED_ASSEMBLY_MAPPING is

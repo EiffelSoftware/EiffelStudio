@@ -1,8 +1,6 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing	
-	description: "EiffelVision base item, mswindows implementation"
+	description: "Eiffel Vision item. Mswindows implementation."
 	status: "See notice at end of class"
-	id: "$$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,10 +9,19 @@ deferred class
 
 inherit
 	EV_ITEM_I
-	
-	EV_EVENT_HANDLER_IMP
+		redefine
+			interface
+		end
 
-	EV_ITEM_EVENTS_CONSTANTS_IMP
+	EV_PIXMAPABLE_IMP
+		redefine
+			interface
+		end
+
+	EV_PICK_AND_DROPABLE_IMP
+		redefine
+			interface
+		end
 
 feature -- Status setting
 
@@ -29,63 +36,69 @@ feature -- Status setting
 		end
 
 	set_parent (a_parent: like parent) is
-			-- Make `a_parent' the parent of the menu-item.
+			-- Assign `a_parent' to `parent'.
 		deferred
 		ensure
 			assigned: parent = a_parent
 		end
 
-	align_text_center is
-			-- Set text alignment of current label to center.
-		do
-           end
-
-	align_text_right is
-			-- Set text alignment of current label to right.
-		do
-		end
-
-	align_text_left is
-			-- Set text alignment of current label to left.
-		do
-		end
-	
-	destroyed: BOOLEAN is
-		do
-		end
+feature {EV_PICK_AND_DROPABLE_I} -- Status report
 
 	cursor_on_widget: CELL [EV_WIDGET_IMP] is
+			-- Widget currently under the pointer.
 		do
 			check
-				to_be_implemented: FALSE	
+				to_be_implemented: False
 			end
 		end
 
-	pnd_motion (x, y, a_x, a_y: INTEGER) is
-		deferred
-		end
+feature {EV_PICK_AND_DROPABLE_I} -- Implementation
 
-	pnd_press (x, y, button, a_x, a_y: INTEGER) is
-		deferred
+	--pnd_motion (x, y, a_x, a_y: INTEGER) is
+	--		-- Pointer moved over `Current' on position `x', `y'.
+	--		-- Screen coordinates are `a_x', a_y'.
+	--	deferred
+	--	end
+
+	--pnd_press (x, y, button, a_x, a_y: INTEGER) is
+	--		-- Pointer click happened on `Current' on position `x', `y'.
+	--		-- Screen coordinates are `a_x', a_y'.
+	--	deferred
+	--	end
+
+	invalidate is
+			-- Should invalidate the top parent.
+		do
+			--| FIXME Explanation why body empty.
 		end
 
 feature {EV_ITEM_LIST_I} -- Implementation
 
 	on_parented is
 			-- `Current' has just been put into a container.
-			--| FIXME To be implemented
 		do
+			-- Does nothing by default.
 		end
 
 	on_orphaned is
 			-- `Current' has just been removed from its container.
-			--| FIXME To be implemented
 		do
+			-- Does nothing by default.
 		end
 
-	invalidate is
-			-- Should invalidate the top parent.
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_ITEM
+
+feature -- Inapplicable
+
+	align_text_center,
+	align_text_right,
+	align_text_left is
 		do
+			check
+				inapplicable: False
+			end
 		end
 
 end -- class EV_ITEM_IMP
@@ -111,6 +124,9 @@ end -- class EV_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/04/07 22:31:14  brendel
+--| Revised.
+--|
 --| Revision 1.18  2000/03/30 19:49:21  rogers
 --| Added pnd_motion and pnd_press as deferred.
 --|

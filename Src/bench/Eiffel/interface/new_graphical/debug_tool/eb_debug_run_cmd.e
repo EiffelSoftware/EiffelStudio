@@ -46,8 +46,8 @@ feature -- Initialization
 			-- Add some actions as well.
 		do
 			precursor (a_tool)
---			create run_request.make (Rqst_application)
---			create cont_request.make (Rqst_cont)
+			create run_request.make (Rqst_application)
+			create cont_request.make (Rqst_cont)
 		end
 
 feature -- Callbacks
@@ -267,10 +267,10 @@ feature {NONE} -- Attributes
 			Result := Interface_names.a_Debug_run
 		end
 
---	run_request: RUN_REQUEST
+	run_request: RUN_REQUEST
 			-- Request for the run.
 
---	cont_request: EWB_REQUEST
+	cont_request: EWB_REQUEST
 			-- Request for continuation.
 
 	launch_program: BOOLEAN

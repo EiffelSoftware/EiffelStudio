@@ -6,7 +6,7 @@ CC = cl
 #	-I..\spec\include \
 #	-I$(VISION_PRERELEASE)\libpng \
 #	-I$(VISION_PRERELEASE)\zlib \
-#	-I$(ISE_EIFFEL)\bench\spec\windows\include
+#	-I$(ISE_EIFFEL)\studio\spec\windows\include
 
 # Release version
 CFLAGS = -c -O1 \

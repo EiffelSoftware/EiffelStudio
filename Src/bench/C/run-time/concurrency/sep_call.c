@@ -152,9 +152,12 @@ void separate_call() {
 #endif
 			break;
 		default:
+#ifdef DISP_MSG
+		printf("* %d(%s) Now to perform separate call `%s'(%s)\n", _concur_pid, _concur_class_name_of_root_obj, _concur_command_feature, command_text(_concur_command));
+#endif
 			if (_concur_command < 0) {
-				printf("!!!!!!!! Error happened in separate_call. Got command %s\n", command_text(_concur_command));
-				sprintf(crash_info, "    Error in separate_call.");
+				add_nl;
+				sprintf(crash_info, "    Error in separate_call. Got %s.", command_text(_concur_command));
 				c_raise_concur_exception(exception_implementation_error);
 			}
 			dyn_type = Dtype(CUROBJ);
@@ -343,6 +346,9 @@ dprintf(2)("%d(%s) Got feature's sep_call 0x%x, fptr 0x%x\n", _concur_pid, _conc
 					RTCI(CUROBJ);
 				}
 			}
+#ifdef DISP_MSG
+		printf("* %d(%s) Performed separate call.\n", _concur_pid, _concur_class_name_of_root_obj);
+#endif
 	}
 
 	return;

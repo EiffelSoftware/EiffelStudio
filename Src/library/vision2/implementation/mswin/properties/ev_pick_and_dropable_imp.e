@@ -242,7 +242,8 @@ feature {EV_ANY_I} -- Implementation
 			-- Actually start the pick/drag and drop mechanism.
 		require
 			not_already_transporting: not is_pnd_in_transport and
-				not is_dnd_in_transport
+				not is_dnd_in_transport and
+				application_imp.pick_and_drop_source = Void
 			original_window_void: original_top_level_window_imp = Void
 		local
 			pt, win_pt: WEL_POINT
@@ -344,12 +345,6 @@ feature {EV_ANY_I} -- Implementation
 				internal_set_pointer_style (Default_pixmaps.Standard_cursor)
 			end
 
-			create env
-			
-			application_imp.transport_ended
-
-			application_imp.set_transport_just_ended
-
 			if
 				(a_button = 3 and is_pnd_in_transport) or
 				(a_button = 1 and is_dnd_in_transport)
@@ -369,6 +364,12 @@ feature {EV_ANY_I} -- Implementation
 			end
 			enable_transport
 				-- Return state ready for next drag/pick and drop.
+			
+				-- Update `application_imp' to reflect end of transport.
+			create env
+			application_imp.transport_ended
+			application_imp.set_transport_just_ended
+			
 			interface.pointer_motion_actions.resume
 				-- Resume `pointer_motion_actions'.
 			

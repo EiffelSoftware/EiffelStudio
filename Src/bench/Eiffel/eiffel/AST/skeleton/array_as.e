@@ -125,10 +125,14 @@ feature -- Type check, byte code, dead code removal and formatter
 			i, nb: INTEGER
 			l_conversion: CONVERSION_INFO
 			l_expressions: BYTE_LIST [BYTE_NODE]
+			l_expr: EXPR_B
 		do
+			l_expressions := expressions.byte_node
+			
 			array_line := context.array_line
 			l_array_type := array_line.item.last_type
 			l_array_element_type := l_array_type.generics.item (1)
+			
 				-- Update the array-line stack
 			array_line.forth
 			
@@ -137,26 +141,20 @@ feature -- Type check, byte code, dead code removal and formatter
 			from
 				i := 1
 				nb := expression_types.count
-				create l_expressions.make_filled (nb)
 			until
 				i > nb
 			loop
 				l_element_type := expression_types.item (i)
 				if not l_element_type.conform_to (l_array_element_type) then
 					if l_element_type.convert_to (system.current_class, l_array_element_type) then
-						l_conversion := context.last_conversion_info
-					else
+						l_expr ?= l_expressions.i_th (i)
 						check
-							False	-- If it does not conform, then it should at least convert.
+								-- Not Void, because it is actually a list of EXPR_B object.
+							l_expr_not_void: l_expr /= Void
 						end
+						l_expressions.put_i_th (
+							context.last_conversion_info.byte_node (l_expr), i)
 					end
-				else
-					l_conversion := Void
-				end
-				if l_conversion = Void then
-					l_expressions.put_i_th (expressions.i_th (i).byte_node, i)
-				else
-					l_expressions.put_i_th (l_conversion.byte_node (expressions.i_th (i).byte_node), i)
 				end
 				i := i + 1
 			end

@@ -17,7 +17,7 @@ inherit
 			implementation
 		end
 
-	EV_TEXT_CONTAINER
+	EV_TEXTABLE
 		rename
 			make as wrong_make,
 			make_with_text as wrong_make_with_text

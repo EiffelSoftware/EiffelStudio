@@ -7,7 +7,7 @@ feature {NONE}
 	Inherit_table: INHERIT_TABLE is
 			-- inheritance table for second pass
 		once
-			!!Result.make (500);
+			!!Result.make (100);
 		end;
 
 end

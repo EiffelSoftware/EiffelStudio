@@ -14,6 +14,12 @@ feature {NONE}
 			!!Result;
 		end;
 
+	Pointer_c_type: POINTER_I is
+			-- Pointer C type
+		once
+			!! Result
+		end
+
 	Long_c_type: LONG_I is
 			-- long C type
 		once
@@ -44,4 +50,9 @@ feature {NONE}
 			!!Result;
 		end;
 
+	None_c_type: NONE_I is
+			-- None C type
+		once
+			!! Result
+		end
 end

@@ -85,6 +85,9 @@ feature -- Basic operation
 		do
 			list.wipe_out
 			similar_list.wipe_out
+			check
+				testcase_correct: list.empty and then similar_list.empty
+			end
 			description.append ("Testing feature `" + name + "' with state `empty'...")
 			test_agent.call ([])
 			append_result
@@ -95,6 +98,9 @@ feature -- Basic operation
 			fill_lists
 			list.start
 			similar_list.start
+			check
+				testcase_correct: list.isfirst and then similar_list.isfirst
+			end
 			description.append ("Testing feature `" + name + "' with state `isfirst'...")
 			test_agent.call ([])
 			append_result
@@ -105,6 +111,9 @@ feature -- Basic operation
 			fill_lists
 			list.go_i_th (Testsize)
 			similar_list.go_i_th (Testsize)
+			check
+				testcase_correct: not list.off and then not similar_list.off
+			end
 			description.append ("Testing feature `" + name + "' with cursor somewhere in middle...")
 			test_agent.call ([])
 			append_result
@@ -115,6 +124,9 @@ feature -- Basic operation
 			fill_lists
 			list.finish
 			similar_list.finish
+			check
+				testcase_correct: list.islast and then similar_list.islast
+			end
 			description.append ("Testing feature `" + name + "' with state `islast'...")
 			test_agent.call ([])
 			append_result
@@ -125,6 +137,9 @@ feature -- Basic operation
 			fill_lists
 			list.go_i_th (0)
 			similar_list.go_i_th (0)
+			check
+				testcase_correct: list.before and then similar_list.before
+			end
 			description.append ("Testing feature `" + name + "' with state `before'...")
 			test_agent.call ([])
 			append_result
@@ -135,6 +150,9 @@ feature -- Basic operation
 			fill_lists
 			list.go_i_th (list.count + 1)
 			similar_list.go_i_th (similar_list.count + 1)
+			check
+				testcase_correct: list.after and then similar_list.after
+			end
 			description.append ("Testing feature `" + name + "' with state `after'...")
 			test_agent.call ([])
 			append_result
@@ -468,8 +486,8 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.8  2000/03/01 22:57:22  brendel
---| Added testcases for `islast', `before' and cursor in middle.
+--| Revision 1.9  2000/03/01 23:00:55  brendel
+--| Added check if testcase assumption is correct.
 --|
 --| Revision 1.6  2000/03/01 19:16:56  brendel
 --| Improved test sequence.

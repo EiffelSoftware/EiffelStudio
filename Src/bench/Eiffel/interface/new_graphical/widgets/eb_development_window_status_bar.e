@@ -182,14 +182,9 @@ feature -- Status setting
 		require
 			valid_pos: l >= 0 and c >= 0
 		local
-			fi: FORMAT_INTEGER
 			s: STRING
 		do
 			create s.make (10)
---			create fi.make (4)
---			fi.set_fill (' ')
---			fi.right_justify
---			fi.remove_separator
 			s.append (l.out)
 			s.append_character (':')
 			s.append (c.out)
@@ -393,7 +388,6 @@ feature {NONE} -- Implementation
 			f: EV_FONT
 			s: STRING
 			w: INTEGER
-			cnt: EV_CONTAINER
 		do
 			f := project_label.font
 			create s.make (n.count + 2)

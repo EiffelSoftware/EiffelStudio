@@ -922,9 +922,9 @@ char *standard_cursor_xpm[] = {
 "bbaab``baaaaaaaaaaaaaaaaaaaaaaaa",
 "baaaab``baaaaaaaaaaaaaaaaaaaaaaa",
 "aaaaab``baaaaaaaaaaaaaaaaaaaaaaa",
-"aaaaaab``baaaaaaaaaaaaaaaaaaaaaa",
-"aaaaaab``baaaaaaaaaaaaaaaaaaaaaa",
-"aaaaaaabbbaaaaaaaaaaaaaaaaaaaaaa",
+"aaaaaabbaaaaaaaaaaaaaaaaaaaaaaaa",
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -1049,6 +1049,9 @@ char *wait_cursor_xpm[] = {
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.14  2001/10/16 17:29:36  king
+// Shortened the default cursor tail to be equal to that of the default X one
+//
 // Revision 1.13  2001/10/15 23:35:20  king
 // Removed static declaration on xpms
 //

@@ -32,9 +32,9 @@ feature {NONE} -- Initialization
 			if interface.context.printer_context /= Default_pointer then
 				create print_dc.make_by_pointer (interface.context.printer_context)
 			else
-				--create print_dc.make
 				-- Create a print dc of the default printer
 				-- Set DC with info from context.
+				create {WEL_DEFAULT_PRINTER_DC} print_dc.make
 			end
 			create a_printer.make_with_context (print_dc)
 			drawable := a_printer

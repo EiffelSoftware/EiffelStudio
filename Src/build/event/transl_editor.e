@@ -25,6 +25,7 @@ feature -- Geometry
 	set_geometry is
 		do
 			set_width (Resources.trans_ed_width)
+			set_height (Resources.trans_ed_height)
 		end;
 
 feature {NONE, EAR_BUTTON}

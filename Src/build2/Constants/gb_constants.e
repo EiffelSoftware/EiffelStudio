@@ -432,9 +432,6 @@ feature -- XML constants
 		
 	Root_window_string: STRING is "Is_root_window"
 		-- String constant used for root window of system
-		
-	Constants_string: STRING is "Constants"
-		-- String constant representing constants in XML.
 	
 feature -- Dialogs
 
@@ -661,5 +658,12 @@ feature -- Constants
 	
 	constant_value_string: STRING is "Value"
 		-- Used to represent a constant value in XML
+	
+	Constants_string: STRING is "Constants"
+		-- String constant representing constants in XML.
+		
+	Constant_string: STRING is "Constant"
+		-- String constant representing single constant in XML.
+
 
 end -- class GB_CONSTANTS

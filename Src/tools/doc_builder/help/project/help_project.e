@@ -30,15 +30,12 @@ feature -- Initialization
 feature -- Initialization
 
 	initialize is
-			-- Initialize
-		local
-			l_dir: DIRECTORY		
+			-- Initialize	
 		do
-			create l_dir.make (help_directory)
-			if l_dir.exists then
-				l_dir.recursive_delete
+			if help_directory.exists then
+				help_directory.recursive_delete
 			end
-			l_dir.create_dir
+			help_directory.create_dir
 			build_table_of_contents
 			create settings.make (Current)	
 		end
@@ -89,10 +86,10 @@ feature {HELP_GENERATOR} -- File
 		deferred
 		end
 
-	help_directory: DIRECTORY_NAME is
+	help_directory: DIRECTORY is
 			-- Help directory
 		once
-			Result := Shared_constants.Application_constants.Temporary_help_directory
+			create Result.make (Shared_constants.Application_constants.Temporary_help_directory)
 		end
 		
 	full_toc_text: STRING is
@@ -119,7 +116,7 @@ feature {HELP_PROJECT_SETTINGS_FILE, HELP_TABLE_OF_CONTENTS} -- Implementation
 	project_file_name: FILE_NAME is
 			-- Name for generated project file
 		do
-			create Result.make_from_string (help_directory)
+			create Result.make_from_string (help_directory.name)
 			Result.extend (name)
 			Result.add_extension (project_filename_extension)	
 		end
@@ -127,7 +124,7 @@ feature {HELP_PROJECT_SETTINGS_FILE, HELP_TABLE_OF_CONTENTS} -- Implementation
 	compiled_file_name: FILE_NAME is
 			-- Compiled file name
 		do
-			create Result.make_from_string (help_directory)
+			create Result.make_from_string (help_directory.name)
 			Result.extend (name)
 			Result.add_extension (compiled_filename_extension)	
 		end
@@ -135,7 +132,7 @@ feature {HELP_PROJECT_SETTINGS_FILE, HELP_TABLE_OF_CONTENTS} -- Implementation
 	toc_file_name: FILE_NAME is
 			-- Table of Contents file name
 		do
-			create Result.make_from_string (help_directory)
+			create Result.make_from_string (help_directory.name)
 			Result.extend (name)
 			Result.add_extension (toc_filename_extension)	
 		end
@@ -143,7 +140,7 @@ feature {HELP_PROJECT_SETTINGS_FILE, HELP_TABLE_OF_CONTENTS} -- Implementation
 	error_file_name: FILE_NAME is
 			-- Error/Log file
 		do
-			create Result.make_from_string (help_directory)
+			create Result.make_from_string (help_directory.name)
 			Result.extend ("log.txt")
 		end
 

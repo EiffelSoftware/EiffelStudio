@@ -16,12 +16,6 @@ feature -- File
 	
 	default_url: STRING is "index.xml"
 			-- Url identifier to be used for folder nodes (i.e "index.xml"), if any
-		
-	chart_suffix: STRING is "_chart"
-			-- Suffix for code chart view files
-		
-	contract_suffix: STRING is "_short"
-			-- Suffix for code contract view
 			
 	xml_extension: STRING is "xml"
 			-- XML extension
@@ -36,7 +30,7 @@ feature -- Pixmaps
 			create Result
 			create l_file.make_from_string (Constants.Icon_resources_directory)
 			l_file.extend ("icon_toc_folder_closed.ico")
-			Result.set_with_named_file (l_file)
+			Result.set_with_named_file (l_file.string)
 		end
 		
 	folder_open_icon: EV_PIXMAP is
@@ -47,7 +41,7 @@ feature -- Pixmaps
 			create Result
 			create l_file.make_from_string (Constants.Icon_resources_directory)
 			l_file.extend ("icon_toc_folder_open.ico")
-			Result.set_with_named_file (l_file)
+			Result.set_with_named_file (l_file.string)
 		end
 		
 	file_icon: EV_PIXMAP is
@@ -58,8 +52,19 @@ feature -- Pixmaps
 			create Result
 			create l_file.make_from_string (Constants.Icon_resources_directory)
 			l_file.extend ("icon_format_text_color.ico")
-			Result.set_with_named_file (l_file)
+			Result.set_with_named_file (l_file.string)
 		end
+			
+	excluded_node_icon: EV_PIXMAP is
+			-- Excluded node icon
+		local
+			l_file: FILE_NAME
+		once
+			create Result
+			create l_file.make_from_string (Constants.Icon_resources_directory)
+			l_file.extend ("icon_toc_exclude.ico")
+			Result.set_with_named_file (l_file.string)
+		end		
 			
 	cluster_icon: STRING is
 			-- Cluster icon

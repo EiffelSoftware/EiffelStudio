@@ -7,11 +7,18 @@ class
 	TABLE_OF_CONTENTS_NODE
 
 inherit	
-	TABLE_OF_CONTENTS_CONSTANTS		
+	TABLE_OF_CONTENTS_CONSTANTS
+		undefine
+			is_equal
+		end
+
+	COMPARABLE
 
 	HASHABLE
 		rename
 			hash_code as id
+		undefine
+			is_equal
 		end
 		
 create
@@ -28,14 +35,24 @@ feature -- Creation
 			title_not_void: a_title /= Void
 		do
 			id := a_id
-			set_parent (a_parent)
-			set_url (a_url)
-			set_title (a_title)		
+			set_parent (a_parent)			
+			set_title (a_title)
+			if a_url /= Void then
+				set_url (a_url)
+			end
+			initialize
 		end	
 
 	make_root is
 			-- Make as root node
-		do			
+		do
+			initialize
+		end		
+
+	initialize is
+			-- Initialize
+		do
+			set_include (True)
 		end		
 
 feature -- Retrieval
@@ -98,18 +115,32 @@ feature -- Element change
 			has_child: children.has (a_child)
 		end		
 		
-	delete_node (a_child: TABLE_OF_CONTENTS_NODE) is
-			-- Delete child
+	delete_node (a_id: INTEGER) is
+			-- Delete child with `a_id' from `children' if it exists
 		require
-			node_not_void: a_child /= Void
+			valid_id: a_id > 0
+		local
+			done: BOOLEAN
+			l_node: like Current
 		do
-			if children.has (a_child) then
+			from
 				children.start
-				children.prune (a_child)
-				print ("deleted " + a_child.url)
+			until
+				children.after or done
+			loop
+				if children.item.id = a_id then
+					l_node := children.item
+					done := True
+				else
+					children.forth
+				end
+			end		
+			
+			if l_node /= Void then
+				children.start
+				children.prune (l_node)
+				print ("deleted " + a_id.out)
 			end
-		ensure
-			not_has_child: not children.has (a_child)
 		end
 		
 	move_nodes_to_parent is
@@ -122,8 +153,29 @@ feature -- Element change
 					children.after
 				loop
 					parent.add_node (children.item)
-					delete_node (children.item)
+					delete_node (children.item.id)
 					children.forth
+				end
+			end	
+		end			
+		
+	sort is
+			-- Sort children
+		local
+			l_sorted_list: SORTED_TWO_WAY_LIST [like Current]
+		do
+			if has_child then
+				create l_sorted_list.make				
+				l_sorted_list.append (children)
+				l_sorted_list.sort
+				children.wipe_out
+				from
+					l_sorted_list.start
+				until
+					l_sorted_list.after
+				loop
+					children.extend (l_sorted_list.item)
+					l_sorted_list.forth
 				end
 			end	
 		end		
@@ -213,7 +265,7 @@ feature -- Status Setting
 			url_not_void: a_url /= Void
 		do
 			if not names_heap.has (a_url) then		
-				names_heap.put (a_url)
+				names_heap.put (a_url.string)
 			end
 			url_id := names_heap.found_item
 		ensure
@@ -227,7 +279,7 @@ feature -- Status Setting
 		title_not_void: a_title /= Void
 		do
 			if not names_heap.has (a_title) then
-				names_heap.put (a_title)
+				names_heap.put (a_title.string)
 			end
 			title_id := names_heap.found_item
 		ensure
@@ -241,7 +293,7 @@ feature -- Status Setting
 			icon_not_void: a_icon_name /= Void
 		do
 			if not names_heap.has (a_icon_name) then
-				names_heap.put (a_icon_name)
+				names_heap.put (a_icon_name.string)
 			end
 			icon_id := names_heap.found_item
 		ensure
@@ -266,6 +318,12 @@ feature -- Status Setting
 			children.compare_objects
 		ensure
 			children_set: children = a_children
+		end		
+
+	set_include (a_flag: BOOLEAN) is
+			-- Set `include'
+		do
+			include := a_flag	
 		end		
 
 feature -- Access
@@ -293,13 +351,25 @@ feature -- Access
 		do
 			Result := names_heap.item (icon_id)
 		end
+		
+	icon_pixmap: EV_PIXMAP is
+			-- Icon pixmap of icon
+		do
+			if icon /= Void then
+				create Result
+				Result.set_with_named_file (icon)
+			end	
+		end		
 	
 	children: ARRAYED_LIST [TABLE_OF_CONTENTS_NODE]
 			-- Children
 	
+	include: BOOLEAN
+			-- Include in sorting?
+	
 feature -- Convenience
 
-	files (recursive: BOOLEAN): ARRAYED_LIST [FILE_NAME] is
+	files (recursive: BOOLEAN): ARRAYED_LIST [STRING] is
 			-- List of file names which `children' urls refer to.  If `recursive'
 			-- include childrens files.  Includes directory file names also.
 		local
@@ -316,7 +386,7 @@ feature -- Convenience
 					l_node := children.item
 					l_filename := l_node.url
 					if l_filename /= Void then
-						Result.extend (create {FILE_NAME}.make_from_string (l_filename))
+						Result.extend (l_filename)
 					end					
 					if recursive and then l_node.has_child then
 						Result.append (l_node.files (recursive))
@@ -366,7 +436,15 @@ feature -- Convenience
 			end
 		end		
 	
-feature {TABLE_OF_CONTENTS, TABLE_OF_CONTENTS_WIDGET_FORMATTER} -- Implementation
+feature -- Comparison
+
+	infix "<" (other: like Current): BOOLEAN is
+			-- Is current object less than `other'?
+		do
+			Result := other.title > title
+		end
+	
+feature {TABLE_OF_CONTENTS} -- Implementation
 
 	url_id,
 	title_id,
@@ -377,6 +455,6 @@ feature {TABLE_OF_CONTENTS, TABLE_OF_CONTENTS_WIDGET_FORMATTER} -- Implementatio
 			-- Names heap
 		once
 			create Result.make			
-		end
+		end	
 
 end -- class TABLE_OF_CONTENTS_NODE

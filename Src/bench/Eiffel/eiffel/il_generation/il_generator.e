@@ -13,6 +13,11 @@ inherit
 	SHARED_IL_CODE_GENERATOR
 
 	SHARED_BYTE_CONTEXT
+
+	SHARED_AST_CONTEXT
+		rename
+			context as ast_context
+		end
 	
 	SHARED_ERROR_HANDLER
 	
@@ -22,6 +27,11 @@ inherit
 		end
 
 	COMPILER_EXPORTER
+
+	SHARED_COUNTER
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -34,6 +44,14 @@ feature {NONE} -- Initialization
 			degree_output := deg_output
 		end
 
+feature -- Access
+
+	classes_count: INTEGER
+			-- Number of classes in Universe.
+
+	compiled_classes_count: INTEGER
+			-- Number of classes generated in IL.
+
 feature -- Generation
 
 	generate is
@@ -41,30 +59,58 @@ feature -- Generation
 		local
 			file_name: STRING
 			retried: BOOLEAN
-			il_meta_data_generator: IL_META_DATA_GENERATOR
+			il_md_gen: IL_META_DATA_GENERATOR
+			classes: ARRAY [CLASS_C]
 		do
 			if not retried then
 				if System.java_generation then
-					il_generator.set_java_generation
+					check
+						False
+					end
+--					il_generator.set_java_generation
+--					create {JVM_META_DATA_GENERATOR} il_md_gen.make
 				else
+					create {MSIL_META_DATA_GENERATOR} il_md_gen.make
 					il_generator.set_msil_generation
 				end
+				il_generator.set_meta_data_generator (il_md_gen)
 
+					-- Compute name of generated file if any.
 				file_name := System.system_name + "." + System.msil_generation_type
 				il_generator.start_assembly_generation (System.system_name, file_name)
-				generate_reference_to_assemblies
-				il_generator.start_module_generation (file_name, System.line_generation)
-				generate_types
-				if System.generate_eac_metadata then
-					if System.java_generation then
-						create {JVM_META_DATA_GENERATOR} il_meta_data_generator.make
-					else
-						create {MSIL_META_DATA_GENERATOR} il_meta_data_generator.make
-					end
-					il_meta_data_generator.generate_metadata (sorted_classes (System.classes))
+
+					-- Set attributes of generated executable.
+				if System.msil_generation_type.is_equal (dll_type) then
+					il_generator.set_dll
+				elseif System.is_console_application then
+					il_generator.set_console_application
+				else
+					il_generator.set_window_application
 				end
-				generate_il_code
+
+					-- Generate reference to assemblies on which Current system depends on.
+				generate_reference_to_assemblies
+
+					-- We currently have one module per assembly, in the future we might
+					-- generate our code using as many modules as C directories if we
+					-- were in our C code generation.
+				il_generator.start_module_generation (file_name, System.line_generation)
+
+				classes_count := System.classes.count
+				classes := sorted_classes (System.classes)
+
+					-- Generate types metadata description and IL code
+				generate_types (il_md_gen, classes)
+
+					-- Generate Eiffel Assembly Cache metadata (XML files)
+				if System.generate_eac_metadata then
+					il_md_gen.generate_metadata (classes)
+				end
+
+					-- Generate entry point, if any.
 				generate_entry_point
+
+					-- Finish code generation.
 				il_generator.end_module_generation
 				il_generator.end_assembly_generation
 			else
@@ -78,7 +124,7 @@ feature -- Generation
 			end
 		end
 
-feature -- Assembly imports
+feature {NONE} -- Assembly imports
 
 	generate_reference_to_assemblies is
 			-- Generate inclusion of assemblies specified in Ace file
@@ -98,183 +144,46 @@ feature -- Assembly imports
 			end
 		end
 
-feature -- Type description
+feature {NONE} -- Type description
 
-	generate_types is
+	generate_types (il_md_gen: IL_META_DATA_GENERATOR; classes: ARRAY [CLASS_C]) is
 			-- Generate all classes in compiled system.
 		require
 			valid_system: System.classes /= Void
-		local
-			classes: ARRAY [CLASS_C]
-			class_c: CLASS_C
-			i, nb: INTEGER
-			il_meta_data_generator: IL_META_DATA_GENERATOR
-			types: TYPE_LIST
 		do
-				-- Prepare generation by ordering classes following
-				-- their topological order as done in degree 4.
-			classes := sorted_classes (System.classes)
-
-			if System.java_generation then
-				create {JVM_META_DATA_GENERATOR} il_meta_data_generator.make
-			else
-				create {MSIL_META_DATA_GENERATOR} il_meta_data_generator.make
-			end
-
 				-- Generate set of types as they are known from Eiffel
-			from
-				i := classes.lower
-				nb := classes.upper
-				il_generator.start_class_mappings (max_type_id)
-			variant
-				nb - i + 1
-			until
-				i > nb
-			loop
-				class_c := classes.item (i)
-				if class_c /= Void then
-					from
-						types := class_c.types
-						types.start
-					until
-						types.after
-					loop
-						il_meta_data_generator.generate_class_mappings (types.item)
-						types.forth
-					end
-				end
-				i := i + 1
-			end
-
-				-- Generate only pure Eiffel type description.
-				-- First only the non-array classes.
-				-- Then the array classes.
-				-- Reason: because we can have an ARRAY [B] and B has not yet
-				-- been described yet. So we do first a description of B before
-				-- doing the description of ARRAY [B]
-			generate_classes_description (classes, il_meta_data_generator, False)
-			generate_classes_description (classes, il_meta_data_generator, True)
+				-- We simply define a basic correspondance between Eiffel
+				-- and IDs used by the IL code generator in a topological
+				-- order.
+			generate_class_mappings (classes, il_md_gen)
 
 				-- Generate only features description for each Eiffel class type
-			from
-				i := classes.lower
-				nb := classes.upper
-			variant
-				nb - i + 1
-			until
-				i > nb
-			loop
-				class_c := classes.item (i)
-				if class_c /= Void then
-					from
-						types := class_c.types
-						types.start
-					until
-						types.after
-					loop
-						il_meta_data_generator.generate_il_features_description (class_c, types.item)
-						types.forth
-					end
-				end
-				i := i + 1
-			end
-
-				-- Generate custom attributes defined on `classes'.
-			generate_custom_attributes (classes, il_meta_data_generator)
+				-- with their IL code.
+			generate_features_description (classes, il_md_gen)
+			generate_features_implementation (classes, il_md_gen)
 
 			il_generator.end_classes_descriptions
 		end
 
-feature -- Description
-
-	generate_classes_description (classes: ARRAY [CLASS_C]; il_md_gen: IL_META_DATA_GENERATOR; only_arrays: BOOLEAN) is
-			-- Generate only pure Eiffel type description
+	generate_class_mappings (classes: ARRAY [CLASS_C]; il_md_gen: IL_META_DATA_GENERATOR) is
+			-- Generate mapping between Eiffel and IL generator with `classes' sorted in
+			-- topological order.
 		require
 			classes_not_void: classes /= Void
 			il_md_gen_not_void: il_md_gen /= Void
 		local
-			class_c: CLASS_C
-			i, nb: INTEGER
-			types: TYPE_LIST
-		do
-			from
-				i := classes.lower
-				nb := classes.upper
-				il_generator.start_classes_descriptions
-			variant
-				nb - i + 1
-			until
-				i > nb
-			loop
-				class_c := classes.item (i)
-				if class_c /= Void and then class_c.is_special = only_arrays then
-					from
-						types := class_c.types
-						types.start
-					until
-						types.after
-					loop
-						il_md_gen.generate_il_class_description (class_c, types.item)
-						types.forth
-					end
-				end
-				i := i + 1
-			end
-		end
-
-feature -- Code generation
-
-	generate_custom_attributes (classes: ARRAY [CLASS_C]; il_md_gen: IL_META_DATA_GENERATOR) is
-			-- Generate custom attributes of `classes' if any.
-		require
-			classes_not_void: classes /= Void
-			il_md_gen_not_void: il_md_gen /= Void
-		local
-			class_c: CLASS_C
-			i, nb: INTEGER
-			types: TYPE_LIST
-		do
-			from
-				i := classes.lower
-				nb := classes.upper
-				il_generator.start_classes_descriptions
-			variant
-				nb - i + 1
-			until
-				i > nb
-			loop
-				class_c := classes.item (i)
-				if class_c /= Void then
-					from
-						types := class_c.types
-						types.start
-					until
-						types.after
-					loop
-						il_md_gen.generate_class_custom_attribute (types.item)
-						types.forth
-					end
-				end
-				i := i + 1
-			end
-		end
-		
-	generate_il_code is
-			-- Generate IL code for all features in system.
-		require
-			valid_system: System.classes /= Void
-		local
-			classes: ARRAY [CLASS_C]
 			class_c: CLASS_C
 			i, j, nb: INTEGER
 			types: TYPE_LIST
+			cl_type: CLASS_TYPE
+			not_is_external: BOOLEAN
 		do
 			from
-				classes := sorted_classes (System.classes)
-				j := System.classes.count
 				i := classes.lower
 				nb := classes.upper
-				il_generator.start_il_generations
+				compiled_classes_count := 0
+				il_generator.start_class_mappings (static_type_id_counter.count)
+				j := classes_count
 				degree_output.put_start_degree (1, j)
 			variant
 				nb - i + 1
@@ -283,23 +192,129 @@ feature -- Code generation
 			loop
 				class_c := classes.item (i)
 				if class_c /= Void then
-					if not class_c.is_external then
-						degree_output.put_degree_1 (class_c, j)
-						from
-							types := class_c.types
-							types.start
-						until
-							types.after
-						loop
-							context.init (types.item)
-							il_generator.generate_il (class_c, types.item)
-							types.forth
+					degree_output.put_degree_1 (class_c, j)
+					j := j - 1
+					from
+						not_is_external := not class_c.is_external
+						if not_is_external then
+							compiled_classes_count := compiled_classes_count + 1
+						end
+						types := class_c.types
+						types.start
+					until
+						types.after
+					loop
+						cl_type := types.item
+							-- Generate correspondance between Eiffel IDs and
+							-- CIL information.
+						il_md_gen.generate_class_mappings (cl_type)
 
-								-- Generate entity to represent current Eiffel class
+							-- Generate precise description of classes: nature
+							-- and inheritance hierarchy.
+						il_md_gen.generate_il_class_description (class_c, cl_type)
+
+							-- Generate custom attributes if defined on Eiffel classes
+							-- to be generated.
+						if not_is_external then
+							ast_context.set_a_class (class_c)
+							il_md_gen.generate_class_custom_attribute (cl_type)
+						end
+						types.forth
+					end
+				end
+				i := i + 1
+			end
+			degree_output.put_end_degree
+		end
+
+	generate_features_description (classes: ARRAY [CLASS_C]; il_md_gen: IL_META_DATA_GENERATOR) is
+			-- Generate mapping between Eiffel and IL generator with `classes'
+			-- sorted in the topological order.
+		require
+			classes_not_void: classes /= Void
+			il_md_gen_not_void: il_md_gen /= Void
+		local
+			class_c: CLASS_C
+			i, j, nb: INTEGER
+			types: TYPE_LIST
+		do
+			from
+				i := classes.lower
+				nb := classes.upper
+				j := compiled_classes_count
+				degree_output.put_start_degree (-1, j)
+			variant
+				nb - i + 1
+			until
+				i > nb
+			loop
+				class_c := classes.item (i)
+				if class_c /= Void and then not class_c.is_external then
+					degree_output.put_degree_minus_1 (class_c, j)
+					j := j - 1
+					from
+						types := class_c.types
+						types.start
+					until
+						types.after
+					loop
+						context.init (types.item)
+							-- Generate entity to represent current Eiffel interface class
+						il_md_gen.generate_il_features_description (class_c, types.item)
+
+						if not class_c.is_frozen then
+							il_generator.start_il_generation (types.item.static_type_id)
 							il_generator.end_class
 						end
+						types.forth
+					end
+				end
+				i := i + 1
+			end
+			degree_output.put_end_degree
+		end
+
+	generate_features_implementation (classes: ARRAY [CLASS_C]; il_md_gen: IL_META_DATA_GENERATOR) is
+			-- Generate mapping between Eiffel and IL generator with `classes'
+			-- sorted in the topological order.
+		require
+			classes_not_void: classes /= Void
+			il_md_gen_not_void: il_md_gen /= Void
+		local
+			class_c: CLASS_C
+			i, j, nb: INTEGER
+			types: TYPE_LIST
+		do
+			from
+				i := classes.lower
+				nb := classes.upper
+				j := compiled_classes_count
+				degree_output.put_start_degree (-2, j)
+			variant
+				nb - i + 1
+			until
+				i > nb
+			loop
+				class_c := classes.item (i)
+				if class_c /= Void and then not class_c.is_external then
+					degree_output.put_degree_minus_2 (class_c, j)
+					if j = 62 then
+						print ("")
 					end
 					j := j - 1
+					from
+						types := class_c.types
+						types.start
+					until
+						types.after
+					loop
+						context.init (types.item)
+							-- Generate entity to represent current Eiffel implementation class
+						il_generator.generate_il_implementation (class_c, types.item)
+						il_generator.end_class
+
+						types.forth
+					end
 				end
 				i := i + 1
 			end
@@ -319,7 +334,8 @@ feature -- Code generation
 					-- Update the root class info
 				a_class := System.root_class.compiled_class
 				root_feat := a_class.feature_table.item (System.creation_name)
-				il_generator.define_entry_point (a_class.types.first.static_type_id, root_feat.feature_id)
+				il_generator.define_entry_point (a_class.types.first.implementation_id,
+					root_feat.feature_id)
 			end
 		end
 		
@@ -335,8 +351,8 @@ feature {NONE} -- Sort
 			class_c: CLASS_C
 		do
 			from
-				i := system_classes.lower
-				nb := system_classes.upper
+				i := 1
+				nb := system_classes.count
 				create Result.make (i, nb)
 			variant
 				nb - i + 1
@@ -354,39 +370,6 @@ feature {NONE} -- Sort
 			-- classes_sorted: Result.is_topologically_sorted
 		end
 
-	max_type_id: INTEGER is
-			-- Maximum static type id number of classes in system.
-		require
-			system_classes_not_void: System.classes /= Void
-		local
-			i, nb: INTEGER
-			system_classes: CLASS_C_SERVER
-			types: TYPE_LIST
-		do
-			from
-				system_classes := System.classes
-				i := system_classes.lower
-				nb := system_classes.upper
-			variant
-				nb - i + 1
-			until
-				i > nb
-			loop
-				if system_classes.item (i) /= Void then
-					from
-						types := system_classes.item (i).types
-						types.start
-					until
-						types.after
-					loop
-						Result := Result.max (types.item.static_type_id)
-						types.forth
-					end
-				end
-				i := i + 1
-			end
-		end
-
 feature {NONE} -- Progression
 
 	degree_output: DEGREE_OUTPUT
@@ -395,8 +378,10 @@ feature {NONE} -- Progression
 	degree_number: INTEGER is 1
 			-- Degree in which compilation is performed.
 
-invariant
+	dll_type: STRING is "dll"
+			-- Type of generation
 
+invariant
 	system_exists: System /= Void
 
 end -- class IL_GENERATOR

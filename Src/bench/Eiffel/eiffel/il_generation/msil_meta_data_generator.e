@@ -10,6 +10,8 @@ inherit
 	IL_META_DATA_GENERATOR
 		rename
 			context as byte_context
+		redefine
+			generate_il_features_description
 		end
 
 	SHARED_INST_CONTEXT
@@ -32,20 +34,193 @@ feature -- Generation
 
 	generate_il_class_description (class_c: CLASS_C; class_type: CLASS_TYPE) is
 			-- Generate class description of `class_type'.
+		local
+			is_frozen: BOOLEAN
 		do
-			current_class_type := class_type
-			is_class_external := class_c.is_external
+			set_current_class_type (class_type)
+			set_current_class (class_c)
 
+			if class_c.is_external then
 				-- Generate class nature description
-			il_generator.generate_class_header (class_c.is_fully_deferred,
-				class_c.is_deferred, class_c.is_expanded, is_class_external, class_type.static_type_id)
+				il_generator.generate_class_header (class_c.is_fully_deferred,
+					class_c.is_deferred, class_c.is_frozen, class_c.is_expanded,
+					True, -- Class is external
+					class_type.static_type_id)
+			else
+				is_frozen := class_c.is_frozen
 
-			if not is_class_external then
-					-- Generate ancestors for non-external classes
-					--| We do not need to do it for external classes
-					--| because the .NET run-time already knows about them.
-				generate_ancestors (class_c, class_type)
+				if not is_frozen then
+						-- Define interface
+					il_generator.generate_class_header (
+						True, -- is_fully_deferred
+						True, -- is_deferred
+						False, -- is_frozen
+						False, -- is_expanded,
+						False, -- Class is not external,
+						class_type.static_type_id)
+					generate_interface_ancestors (class_c, class_type)
+				end
+
+					-- Define implementation
+				il_generator.generate_class_header (
+					False, -- is_fully_deferred
+					class_c.is_deferred,
+					is_frozen,
+					class_c.is_expanded,
+					False, -- is_external
+					class_type.implementation_id)
+
+				if not is_frozen then
+					generate_implementation_ancestors (class_c, class_type)
+				else
+					generate_interface_ancestors (class_c, class_type)
+				end
 			end
+		end
+
+	generate_il_features_description (class_c: CLASS_C; class_type: CLASS_TYPE) is
+			-- Generate features description of `class_type'.
+		do
+			set_current_class_type (class_type)
+			set_current_class (class_c)
+
+				-- Generate interface features on Eiffel classes
+			if not class_c.is_external then
+				inst_context.set_cluster (class_c.cluster)
+				if not class_c.is_frozen then
+					generate_interface_features (class_c, class_type)
+				else
+					generate_implementation_features (class_c, class_type)
+				end
+			end
+		end
+
+	generate_interface_features (class_c: CLASS_C; class_type: CLASS_TYPE) is
+			-- Generate features written in `class_c'.
+		require
+			class_c_not_void: class_c /= Void
+		local
+			feat_tbl: FEATURE_TABLE
+			features: SEARCH_TABLE [FEATURE_INFO]
+			f_info: FEATURE_INFO
+			feat: FEATURE_I
+			written_static_type_id: INTEGER
+		do
+			from
+				feat_tbl := class_c.feature_table
+				features := class_type.class_interface.features
+				written_static_type_id := current_class_type.static_type_id
+				il_generator.start_features_list (written_static_type_id)
+				features.start
+			until
+				features.after
+			loop
+				f_info := features.item_for_iteration
+				if f_info.is_in_interface then
+					feat := feat_tbl.item_id (f_info.feature_name_id)
+					generate_interface_feature (feat, written_static_type_id)
+				end
+				features.forth
+			end
+
+			il_generator.end_features_list
+		end
+
+	generate_implementation_features (class_c: CLASS_C; class_type: CLASS_TYPE) is
+			-- Generate features written in `class_c'.
+		local
+			feat_tbl: FEATURE_TABLE
+			features: SEARCH_TABLE [FEATURE_INFO]
+			f_info: FEATURE_INFO
+			feat: FEATURE_I
+			written_static_type_id: INTEGER
+		do
+			from
+				feat_tbl := class_c.feature_table
+				features := class_type.class_interface.features
+				written_static_type_id := current_class_type.static_type_id
+				il_generator.start_features_list (written_static_type_id)
+				features.start
+			until
+				features.after
+			loop
+				f_info := features.item_for_iteration
+				if f_info.is_in_interface then
+					feat := feat_tbl.item_id (f_info.feature_name_id)
+					generate_feature (feat, True, written_static_type_id, False)
+				end
+				features.forth
+			end
+
+			il_generator.end_features_list
+		end
+		
+feature {NONE} -- Implementation: ancestors description
+
+	generate_interface_ancestors (class_c: CLASS_C; class_type: CLASS_TYPE) is
+			-- Generate ancestors map of `class_c'.
+		require
+			class_c_not_void: class_c /= Void
+		local
+			parents: FIXED_LIST [CL_TYPE_A]
+			parent_type: CL_TYPE_I
+			cl_type: CLASS_TYPE
+			l_list: SEARCH_TABLE [INTEGER]
+			id: INTEGER
+			pars: SEARCH_TABLE [CLASS_INTERFACE]
+			class_interface: CLASS_INTERFACE
+		do
+			parents := class_c.parents
+			create class_interface.make_from_context (class_c.class_interface, class_type)
+			create pars.make (parents.count)
+			from
+				byte_context.set_class_type (class_type)
+				il_generator.start_parents_list
+				create l_list.make (parents.count)
+				parents.start
+			until
+				parents.after
+			loop
+				parent_type ?= byte_context.real_type (parents.item.type_i)
+				cl_type := parent_type.associated_class_type
+				if not cl_type.associated_class.is_external then
+					id := cl_type.static_type_id
+					if not l_list.has (id) then
+							-- We only insert once a parent, for .NET it is useless to
+							-- do it twice.
+						l_list.force (id)
+						il_generator.add_to_parents_list (id)
+						pars.force (parent_type.associated_class_type.class_interface)
+					end
+				end
+				parents.forth
+			end
+			class_interface.set_parents (pars)
+			class_type.set_class_interface (class_interface)
+			il_generator.end_parents_list
+		end
+
+	generate_implementation_ancestors (class_c: CLASS_C; class_type: CLASS_TYPE) is
+			-- Generate ancestors map of `class_c'.
+		require
+			class_c_not_void: class_c /= Void
+		local
+--			parents: FIXED_LIST [CL_TYPE_A]
+--			parent_type: CL_TYPE_I
+--			cl_type: CLASS_TYPE
+--			pars: SEARCH_TABLE [CLASS_INTERFACE]
+--			class_interface: CLASS_INTERFACE
+		do
+-- FIXME: following code to use when we are able to do single inheritance
+-- to avoid code duplication of stubs.
+-- 			parents := class_c.parents
+-- 			byte_context.set_class_type (class_type)
+-- 			il_generator.start_parents_list
+-- 			parent_type ?= byte_context.real_type (parents.first.type_i)
+-- 			cl_type := parent_type.associated_class_type
+-- 			il_generator.add_to_parents_list (cl_type.implementation_id)
+			il_generator.add_interface (class_type.static_type_id)
+			il_generator.end_parents_list
 		end
 
 	generate_metadata (classes: ARRAY [CLASS_C]) is
@@ -78,27 +253,38 @@ feature -- Generation
 
 feature {NONE} -- Feature generation
 
-	generate_feature (feat: FEATURE_I; in_current_class: BOOLEAN; type_id: INTEGER) is
+	generate_interface_feature (feat: FEATURE_I; type_id: INTEGER) is
+			-- Generate interface `feat' description.
+		do
+			if feat.feature_name_id /= Names_heap.void_name_id then
+				if feat.has_arguments then
+					il_generator.start_feature_description (feat.arguments.count)
+				else
+					il_generator.start_feature_description (0)
+				end
+
+				il_generator.generate_interface_feature_identification (feat.external_name,
+					feat.feature_id, feat.is_attribute)
+
+				generate_arguments (feat)
+				generate_return_type (feat)
+
+				il_generator.create_feature_description
+
+				generate_feature_custom_attribute (current_class_type, feat)
+			end
+		end
+
+	generate_feature (feat: FEATURE_I; in_current_class: BOOLEAN; type_id: INTEGER; is_static: BOOLEAN) is
 			-- Generate `feat' description.
 		local
 			is_deferred: BOOLEAN
 			is_redefined: BOOLEAN
 			is_frozen: BOOLEAN
-			need_generation: BOOLEAN
-			ext: EXTERNAL_I
-			def: DEF_PROC_I
-			attr: ATTRIBUTE_I
-			il_ext: IL_EXTENSION_I
 			inv: INVARIANT_FEAT_I
+			name: STRING
 		do
-			need_generation := True
-
-			attr ?= feat
-			if attr /= Void then
-				need_generation := not attr.feature_name.is_equal (void_name)
-			end
-
-			if need_generation then
+			if feat.feature_name_id /= Names_heap.void_name_id then
 				if feat.has_arguments then
 					il_generator.start_feature_description (feat.arguments.count)
 				else
@@ -108,71 +294,25 @@ feature {NONE} -- Feature generation
 				inv ?= feat
 				is_redefined := not feat.is_origin and then inv = Void
 				is_frozen := feat.is_frozen
-
-				if not is_class_external then
-					if in_current_class then
-						il_generator.generate_feature_nature (is_redefined, is_deferred, is_frozen, feat.is_attribute)
-						il_generator.generate_feature_identification (feat.external_name,
-							feat.feature_id, feat.rout_id_set, in_current_class, type_id)
-
-						generate_arguments (feat)
-						generate_return_type (feat)
-
-						if inv /= Void then
-							il_generator.mark_invariant (feat.feature_id)
-						end
-						il_generator.create_feature_description
-						il_generator.check_renaming_and_redefinition
-
-						generate_feature_custom_attribute (current_class_type, feat)
-					else
-						il_generator.generate_feature_identification (feat.external_name,
-								feat.feature_id, feat.rout_id_set, in_current_class, type_id)
-						il_generator.check_renaming
-					end
+				
+				if is_static then
+					name := "$$" + feat.external_name
 				else
-					if in_current_class then
-						ext ?= feat
-						if ext /= Void then
-							il_ext ?= ext.extension
-							check
-								has_alias: il_ext /= Void
-							end
-							il_generator.generate_external_identification (feat.feature_name,
-									ext.alias_name_id, il_ext.type, feat.feature_id,
-									  feat.rout_id_set.first, in_current_class, type_id,
-									  il_ext.argument_types, il_ext.return_type)
-							generate_arguments (feat)
-							generate_return_type (feat)
-						else
-							def ?= feat
-							if def /= Void then								
-								il_ext ?= def.extension
-								il_generator.generate_external_identification (feat.feature_name,
-										il_ext.alias_name_id, il_ext.type, feat.feature_id,
-										feat.rout_id_set.first, in_current_class, type_id,
-										il_ext.argument_types, il_ext.return_type)
-								generate_arguments (feat)
-								generate_return_type (feat)
-							else
-								if attr /= Void then
-									il_ext ?= attr.extension
-									il_generator.generate_external_identification (feat.feature_name,
-											il_ext.alias_name_id, il_ext.type, feat.feature_id,
-											feat.rout_id_set.first, in_current_class, type_id,
-											il_ext.argument_types, il_ext.return_type)
-									generate_return_type (feat)
-								else	
-									-- Special case of manually added function in class of basic types.
-									-- Does not need special generation
-								end
-							end
-						end
-					else
-						il_generator.generate_feature_identification (feat.external_name,
-							 feat.feature_id, feat.rout_id_set, in_current_class, type_id)
-					end
+					name := feat.external_name
 				end
+
+				il_generator.generate_feature_identification (name, feat.feature_id,
+					is_redefined, is_deferred, is_frozen, feat.is_attribute,
+					is_static and then feat.is_c_external, is_static)
+
+				generate_arguments (feat)
+				generate_return_type (feat)
+
+				if inv /= Void then
+					il_generator.mark_invariant (feat.feature_id)
+				end
+				il_generator.create_feature_description
+				generate_feature_custom_attribute (current_class_type, feat)
 			end
 		end
 

@@ -11,6 +11,18 @@ inherit
 
 	IL_CONST
 
+feature -- Target of generation
+
+	set_for_interfaces is
+			-- Set generation mode for `interfaces'.
+		deferred
+		end
+
+	set_for_implementations is
+			-- Set generation mode for `implementations'.
+		deferred
+		end
+
 feature -- Generation Structure
 
 	start_assembly_generation (assembly_name, file_name, location: STRING) is
@@ -61,6 +73,23 @@ feature -- Generation Structure
 		deferred
 		end
 
+feature -- Generation type
+
+	set_console_application is
+			-- Current generated application is a CONSOLE application.
+		deferred
+		end
+
+	set_window_application is
+			-- Current generated application is a WINDOW application.
+		deferred
+		end
+
+	set_dll is
+			-- Current generated application is a DLL.
+		deferred
+		end
+
 feature -- Class info
 
 	start_class_mappings (class_count: INTEGER) is
@@ -69,26 +98,18 @@ feature -- Class info
 		 print ("")
 		end
 
-	generate_class_mappings (class_name: STRING; id: INTEGER; filename: STRING) is
+	generate_class_mappings (class_name: STRING;
+			id, interface_id: INTEGER; filename, element_type: STRING)
+		is
 			-- Create a mapping table between `id' and `class_name'.
 			-- `filename' is the path to the source file of `class_name'
 		require
 			name_not_void: class_name /= Void
 			name_not_empty: not class_name.is_empty
 			id_positive: id > 0
+			interface_id_positive: interface_id > 0
 			non_void_filename: filename /= Void
-			non_empty_filename: not filename.is_empty
-		deferred
-		end
-
-	generate_array_class_mappings (class_name, element_type_name: STRING; id: INTEGER) is
-			-- Create a correspondance table between `id' and `class_name'.
-		require
-			name_not_void: class_name /= Void
-			name_not_empty: not class_name.is_empty
-			element_type_name_not_void: element_type_name /= Void
-			element_type_name_not_empty: not element_type_name.is_empty
-			id_positive: id > 0
+			element_type_not_void: element_type /= Void
 		deferred
 		end
 
@@ -102,7 +123,7 @@ feature -- Class info
 		do
 		end
 
-	generate_class_header (is_interface, is_deferred, is_expanded, is_external: BOOLEAN; type_id: INTEGER) is
+	generate_class_header (is_interface, is_deferred, is_frozen, is_expanded, is_external: BOOLEAN; type_id: INTEGER) is
 			-- Generate `class_name' and its specifier.
 		require
 			positive_type_id: type_id > 0
@@ -122,6 +143,13 @@ feature -- Class info
 	add_to_parents_list (type_id: INTEGER) is
 			-- Add class of `type_id' into list of parents of current type.
 			-- `start_parents_list' should have been called before.
+		require
+			positive_type_id: type_id > 0
+		deferred
+		end
+
+	add_interface (type_id: INTEGER) is
+			-- Add interface of `type_id' into list of parents of current type.
 		require
 			positive_type_id: type_id > 0
 		deferred
@@ -169,21 +197,27 @@ feature -- Features info
 		deferred
 		end
 
-	generate_feature_nature (is_redefined, is_deferred, is_frozen, is_attribute: BOOLEAN) is
-			-- Generate nature of current feature.
+	generate_interface_feature_identification (name: STRING; feature_id: INTEGER;
+			is_attribute: BOOLEAN)
+		is
+			-- Generate feature identification for feature located in interface.
 		require
-			valid_combination: is_frozen implies not is_deferred
+			name_not_void: name /= Void
+			name_not_empty: not name.is_empty
+			positive_feature_id: feature_id > 0
 		deferred
 		end
 
-	generate_feature_identification (name: STRING; feature_id: INTEGER; routine_ids: ARRAY [INTEGER]; in_current_class: BOOLEAN; written_type_id: INTEGER) is
+	generate_feature_identification (name: STRING; feature_id: INTEGER;
+			is_redefined, is_deferred, is_frozen, is_attribute, is_c_external, is_static: BOOLEAN)
+		is
 			-- Generate feature identification.
 		require
 			name_not_void: name /= Void
 			name_not_empty: not name.is_empty
 			positive_feature_id: feature_id > 0
-			positive_written_type_id: written_type_id > 0
-			routine_ids_not_void: routine_ids /= Void
+			non_deferred_frozen: is_frozen implies not is_deferred
+			non_deferred_attribute: is_attribute implies not is_deferred
 		deferred
 		end
 
@@ -249,9 +283,37 @@ feature -- IL Generation
 		deferred
 		end
 
-	generate_feature_il (feature_id: INTEGER) is
+	generate_feature_il (feature_id, type_id, code_feature_id: INTEGER) is
+			-- Specifies for which feature of `feature_id' written in class of `type_id'
+			-- IL code will be generated. If `type_id' is different from current type id,
+			-- it means that `feature_id' is simply a delegation to a call on `code_feature_id'
+			-- defined in `type_id'.
+		require
+			positive_feature_id: feature_id > 0
+			positive_type_id: type_id > 0
+			positive_code_feature_id: code_feature_id > 0
+		deferred
+		end
+
+	generate_implementation_feature_il (feature_id: INTEGER) is
 			-- Specifies for which feature of `feature_id' written in class of `type_id'
 			-- IL code will be generated.
+		require
+			positive_feature_id: feature_id > 0
+		deferred
+		end
+
+	generate_method_impl (feature_id, parent_type_id, parent_feature_id: INTEGER) is
+			-- Generate a MethodImpl from `parent_type_id' and `parent_feature_id'
+			-- to `current_class_type' and `feature_id'.
+		require
+			positive_feature_id: feature_id > 0
+			positive_parent_type_id: parent_type_id > 0
+			positive_parent_feature_id: parent_feature_id > 0
+		deferred
+		end
+
+	generate_feature_internal_clone (feature_id: INTEGER) is
 		require
 			positive_feature_id: feature_id > 0
 		deferred
@@ -364,6 +426,14 @@ feature -- Variables access
 		deferred
 		end
 
+	generate_precursor_feature_access (type_id, feature_id: INTEGER) is
+			-- Generate access to feature of `feature_id' in `type_id'.
+		require
+			positive_type_id: type_id > 0
+			positive_feature_id: feature_id > 0
+		deferred
+		end
+
 	generate_argument (n: INTEGER) is
 			-- Generate access to `n'-th argument of current feature.
 			-- Cannot be `0', reserved for `Current'.
@@ -461,10 +531,11 @@ feature -- Assignments
 		deferred
 		end
 
-	generate_attribute_assignment (feature_id: INTEGER) is
+	generate_attribute_assignment (type_id, feature_id: INTEGER) is
 			-- Generate assignment to attribute of `feature_id' in current class.
 		require
 			positive_feature_id: feature_id > 0
+			positive_type_id: type_id > 0
 		deferred
 		end
 
@@ -477,6 +548,22 @@ feature -- Assignments
 
 	generate_result_assignment is
 			-- Generate assignment to Result variable of current feature.
+		deferred
+		end
+
+feature -- Conversion
+
+	convert_to_native_int,
+	convert_to_integer8,
+	convert_to_integer16,
+	convert_to_integer32,
+	convert_to_integer64,
+	convert_to_double,
+	convert_to_real,
+	convert_to_boolean,
+	convert_to_character
+		is
+			-- Convert top of stack into an appropriate type.
 		deferred
 		end
 
@@ -650,11 +737,31 @@ feature -- Constants generation
 		deferred
 		end
 
+	put_integer8_constant (i: INTEGER) is
+			-- Put `i' as INTEGER_8 on IL stack
+		deferred
+		end
+		
+	put_integer16_constant (i: INTEGER) is
+			-- Put `i' as INTEGER_16 on IL stack.
+		deferred
+		end
+		
 	put_integer32_constant (i: INTEGER) is
 			-- Put `i' on IL stack.
 		deferred
 		end
 
+	put_integer64_constant (i: INTEGER) is
+			-- Put `i' as INTEGER_64 on IL stack.
+		deferred
+		end
+		
+	put_real_constant (r: REAL) is
+			-- put `r' on IL stack.
+		deferred
+		end
+		
 	put_double_constant (d: DOUBLE) is
 			-- Put `d' on IL stack.
 		deferred
@@ -731,11 +838,6 @@ feature -- Binary_operator generation
 
 	generate_star is
 			-- Generate `*' operator.
-		deferred
-		end
-
-	generate_slash is
-			-- Generate `/' operator.
 		deferred
 		end
 
@@ -821,6 +923,39 @@ feature -- Unary operator generation
 		deferred
 		end
 
+	generate_bitwise_not is
+			-- Generate `bitwise not' operator
+		deferred
+		end
+		
+feature -- Basic feature
+
+	generate_max (type_id: INTEGER) is
+			-- Generate `max' on basic types.
+		require
+			valid_type_id: type_id > 0
+		deferred
+		end
+
+	generate_min (type_id: INTEGER) is
+			-- Generate `min' on basic types.
+		require
+			valid_type_id: type_id > 0
+		deferred
+		end
+
+	generate_abs (type_id: INTEGER) is
+			-- Generate `abs' on basic types.
+		require
+			valid_type_id: type_id > 0
+		deferred
+		end
+
+	generate_to_string is
+			-- Generate call on `ToString'.
+		deferred
+		end
+		
 feature -- Line info
 
 	put_line_info (n: INTEGER) is

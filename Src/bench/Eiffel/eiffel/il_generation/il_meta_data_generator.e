@@ -16,6 +16,33 @@ inherit
 
 	SHARED_BYTE_CONTEXT
 
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
+
+feature {IL_CODE_GENERATOR} -- Settings
+
+	set_current_class_type (cl_type: like current_class_type) is
+			-- Set `current_class_type' to `cl_type'.
+		require
+			cl_type_not_void: cl_type /= Void
+		do
+			current_class_type := cl_type
+		ensure
+			current_class_type_set: current_class_type = cl_type
+		end
+
+	set_current_class (cl: like current_class) is
+			-- Set `current_class' to `cl'.
+		require
+			cl_not_void: cl /= Void
+		do
+			current_class := cl
+		ensure
+			current_class_set: current_class = cl
+		end
+
 feature -- Generation
 
 	generate_class_mappings (class_type: CLASS_TYPE) is
@@ -24,20 +51,38 @@ feature -- Generation
 			class_type_not_void: class_type /= Void
 		local
 			name, element_name: STRING
-			sp: SPECIAL_CLASS_TYPE
+			native_array: NATIVE_ARRAY_CLASS_TYPE
+			is_frozen_class: BOOLEAN
+			class_c: CLASS_C
 		do
-			sp ?= class_type
-			if sp /= Void then
-				name := sp.il_type_name
-				element_name := sp.il_element_type_name
-				il_generator.generate_array_class_mappings (name, element_name,
-																		  class_type.static_type_id)
+			native_array ?= class_type
+			if native_array /= Void then
+				name := native_array.il_type_name
+				element_name := native_array.il_element_type_name
+				il_generator.generate_class_mappings (name,
+					class_type.static_type_id, -1, "", element_name)
 			else
 				name := class_type.type.il_type_name
-				il_generator.generate_class_mappings (name, class_type.static_type_id,
-																  class_type.associated_class.lace_class.base_name)
-			end
+				class_c := class_type.associated_class
+				is_frozen_class := class_c.is_frozen
 
+				if class_c.is_external or else not is_frozen_class then
+					il_generator.generate_class_mappings (name,
+						class_type.static_type_id, class_type.static_type_id,
+						class_c.lace_class.base_name, "")
+				end
+				if not class_c.is_external then
+					if not is_frozen_class then
+						il_generator.generate_class_mappings ("Implementation." + name,
+							class_type.implementation_id,
+							class_type.static_type_id, class_c.lace_class.base_name, "")
+					else
+						il_generator.generate_class_mappings (name,
+							class_type.implementation_id,
+							class_type.static_type_id, class_c.lace_class.base_name, "")
+					end
+				end
+			end
 		end
 
 	generate_class_custom_attribute (class_type: CLASS_TYPE) is
@@ -66,79 +111,12 @@ feature -- Generation
 		require
 			class_c_not_void: class_c /= Void
 			class_type_not_void: class_type /= Void
-		do
-			current_class_type := class_type
-			is_class_external := class_c.is_external
-
-						-- Generate features
-			generate_features (class_c)
+		deferred
 		end
+		
+feature {IL_CODE_GENERATOR} -- Feature generation
 
-feature {NONE} -- Ancestors
-
-	generate_ancestors (class_c: CLASS_C; class_type: CLASS_TYPE) is
-			-- Generate ancestors map of `class_c'.
-		require
-			class_c_not_void: class_c /= Void
-		local
-			parents: FIXED_LIST [CL_TYPE_A]
-			parent_type: CL_TYPE_I
-		do
-			parents := class_c.parents
-			if not parents.is_empty then
-				from
-					context.set_class_type (class_type)
-					il_generator.start_parents_list
-					parents.start
-				until
-					parents.after
-				loop
-					parent_type ?= context.real_type (parents.item.type_i)
-					il_generator.add_to_parents_list (parent_type.associated_class_type.static_type_id)
-					parents.forth
-				end
-				il_generator.end_parents_list
-			end
-		end
-
-feature {NONE} -- Feature generation
-
-	generate_features (class_c: CLASS_C) is
-			-- Generate features written in `class_c'.
-		require
-			class_c_not_void: class_c /= Void
-		local
-			feat_tbl: FEATURE_TABLE
-			feat: FEATURE_I
-			in_current_class: BOOLEAN
-			written_static_type_id: INTEGER
-		do
-			from
-				feat_tbl := class_c.feature_table
-				feat_tbl.start
-				il_generator.start_features_list (current_type_id)
-			until
-				feat_tbl.after
-			loop
-				feat := feat_tbl.item_for_iteration
-				in_current_class := feat.written_in = class_c.class_id
-				written_static_type_id := written_type_id (class_c, feat)
-				generate_feature (feat, in_current_class, written_static_type_id)
-				feat_tbl.forth
-			end
-			if class_c.has_invariant then
-				feat := class_c.invariant_feature
-				in_current_class := feat.written_in = class_c.class_id
-				written_static_type_id := written_type_id (class_c, feat)
-				generate_feature (feat, in_current_class, written_static_type_id)
-			end
-
---			generate_creation_routines (class_c)
-				
-			il_generator.end_features_list
-		end
-
-	generate_feature (feat: FEATURE_I; in_current_class: BOOLEAN; type_id: INTEGER) is
+	generate_feature (feat: FEATURE_I; in_current_class: BOOLEAN; type_id: INTEGER; is_static: BOOLEAN) is
 			-- Generate `feat' description.
 		require
 			feat_not_void: feat /= Void
@@ -182,7 +160,6 @@ feature {NONE} -- Feature generation
 		local
 			feat_arg: FEAT_ARG
 			type_i: TYPE_I
-			gen_type_i: GEN_TYPE_I
 			i: INTEGER
 		do
 			if feat.has_arguments then
@@ -207,9 +184,8 @@ feature {NONE} -- Feature generation
 							end
 						end
 					else
-						gen_type_i ?= current_class_type.type
-						type_i := type_i.instantiation_in (gen_type_i)
-						il_generator.generate_feature_argument (feat_arg.item_name (i), type_i)
+ 						il_generator.generate_feature_argument (feat_arg.item_name (i),
+							context.real_type (type_i))
 					end
 					feat_arg.forth
 					i := i + 1
@@ -225,7 +201,6 @@ feature {NONE} -- Feature generation
 			feat_not_void: feat /= Void
 		local
 			type_i: TYPE_I
-			gen_type_i: GEN_TYPE_I
 		do
 			if
 				feat.is_function or
@@ -245,9 +220,7 @@ feature {NONE} -- Feature generation
 						end
 					end
 				else
-					gen_type_i ?= current_class_type.type
-					type_i := type_i.instantiation_in (gen_type_i)
-					il_generator.generate_feature_return_type (type_i)
+ 					il_generator.generate_feature_return_type (context.real_type (type_i))
 				end
 			end
 		end
@@ -297,8 +270,8 @@ feature {NONE} -- Implementation
 			Result := current_class_type.static_type_id
 		end
 
-	is_class_external: BOOLEAN
-			-- Is current class an external one?
+	current_class: CLASS_C
+			-- Current class being treated.
 
 	void_name: STRING is "void"
 			-- Name of `Void' attribute of class ANY.

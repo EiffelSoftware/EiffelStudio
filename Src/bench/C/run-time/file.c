@@ -925,7 +925,7 @@ int op;
 #ifdef HAS_GETEUID
 		if (uid == geteuid())
 			return (EIF_BOOLEAN) ((mode & S_IRUSR) ? '\01' : '\0');
-		else if (gid = getegid())
+		else if (gid == getegid())
 			return (EIF_BOOLEAN) ((mode & S_IRGRP) ? '\01' : '\0');
 		else
 #endif
@@ -934,7 +934,7 @@ int op;
 #ifdef HAS_GETEUID
 		if (uid == geteuid())
 			return (EIF_BOOLEAN) ((mode & S_IWUSR) ? '\01' : '\0');
-		else if (gid = getegid())
+		else if (gid == getegid())
 			return (EIF_BOOLEAN) ((mode & S_IWGRP) ? '\01' : '\0');
 		else
 #endif
@@ -943,7 +943,7 @@ int op;
 #ifdef HAS_GETEUID
 		if (uid == geteuid())
 			return (EIF_BOOLEAN) ((mode & S_IXUSR) ? '\01' : '\0');
-		else if (gid = getegid())
+		else if (gid == getegid())
 			return (EIF_BOOLEAN) ((mode & S_IXGRP) ? '\01' : '\0');
 		else
 #endif

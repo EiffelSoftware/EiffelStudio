@@ -214,27 +214,14 @@ feature -- Element change
 				end
 
 				gray_pixmap := button.gray_pixmap_imp
-				if gray_pixmap /= Void then
-					add_masked_bitmap (
-						gray_pixmap.bitmap,
-						gray_pixmap.mask_bitmap
-					)
-					add_hot_masked_bitmap(
-						pixmap.bitmap,
-						pixmap.mask_bitmap
-					)
-				else
+				if gray_pixmap = Void then
 						-- No gray pixmap, so both normal and hot state will
 						-- have the same bitmap.
-					add_masked_bitmap (
-						pixmap.bitmap,
-						pixmap.mask_bitmap
-					)
-					add_hot_masked_bitmap(
-						pixmap.bitmap,
-						pixmap.mask_bitmap
-					)
+					gray_pixmap := pixmap
 				end
+
+				add_pixmap (gray_pixmap)
+				add_hot_pixmap (pixmap)
 				but.set_bitmap_index (last_bitmap_index)
 			end
 
@@ -393,6 +380,48 @@ feature {NONE} -- Implementation
 				list.forth
 			end
 			ev_children.go_i_th (original_index)
+		end
+
+feature {NONE} -- Implementation
+
+	add_pixmap(a_pixmap_imp: EV_PIXMAP_IMP) is
+			-- Add a pixmap to the "toolbar" list of bitmaps.
+		local
+			mask_bitmap: WEL_BITMAP
+			pixmap_icon: WEL_ICON
+		do
+			pixmap_icon := a_pixmap_imp.icon
+			if pixmap_icon /= Void then
+				add_icon(pixmap_icon)
+			else
+				mask_bitmap := a_pixmap_imp.mask_bitmap
+					-- The bitmap should be selected in the device
+					-- context, otherwise it is invalide.
+				if mask_bitmap /= Void then
+					add_masked_bitmap(a_pixmap_imp.bitmap, mask_bitmap)
+				else
+					add_bitmap(a_pixmap_imp.bitmap)
+				end
+			end
+		end
+		
+	add_hot_pixmap(a_pixmap_imp: EV_PIXMAP_IMP) is
+			-- Add a pixmap to the "toolbar" list of hot bitmaps.
+		local
+			mask_bitmap: WEL_BITMAP
+			pixmap_icon: WEL_ICON
+		do
+			pixmap_icon := a_pixmap_imp.icon
+			if pixmap_icon /= Void then
+				add_icon(pixmap_icon)
+			else
+				mask_bitmap := a_pixmap_imp.mask_bitmap
+				if mask_bitmap /= Void then
+					add_hot_masked_bitmap(a_pixmap_imp.bitmap, mask_bitmap)
+				else
+					add_hot_bitmap(a_pixmap_imp.bitmap)
+				end
+			end
 		end
 
 feature {NONE} -- WEL Implementation
@@ -679,6 +708,9 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/03/29 06:58:06  pichery
+--| Modification of the add of a pixmap in a button.
+--|
 --| Revision 1.34  2000/03/27 17:32:17  brendel
 --| Added redefinition of initialize.
 --|

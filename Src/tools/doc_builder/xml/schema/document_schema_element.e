@@ -361,8 +361,6 @@ feature -- Elements
 	
 	attribute_xml: STRING is
 			-- Xml for attribute values
-		local
-			default_value: STRING
 		do
 			create Result.make_empty
 			from 
@@ -409,9 +407,6 @@ feature -- Processing
 
 	process_attributes is
 			-- Process attributes of current
-		local
-			temp_type: DOCUMENT_SCHEMA_ELEMENT
-			temp_att: DOCUMENT_SCHEMA_ATTRIBUTE		
 		do
 			create attributes.make (5)
 			if is_complex_type then

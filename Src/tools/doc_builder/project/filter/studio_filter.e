@@ -99,8 +99,6 @@ feature -- Processing
 			-- Process element `e'
 		require
 			e_not_void: e/= Void
-		local
-			l_start_tag: STRING
 		do			
 			last := e
 			if not in_filterable_element then

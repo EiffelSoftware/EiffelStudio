@@ -191,7 +191,6 @@ feature {DOCUMENT_SCHEMA_ELEMENT} -- Element Query
 			a_type_not_void: a_type /= Void
 		local
 			l_name: STRING
-			found: BOOLEAN
 		do
 			from 
 				types.start

@@ -14,9 +14,7 @@ feature -- Element Rendering
 		require
 			schema_not_void: schema /= Void
 			tree_not_void: tree /= Void
-		local
-			cnt: INTEGER
-			dotnet_elem: XML_XML_SCHEMA_ELEMENT
+		local			
 			elem: DOCUMENT_SCHEMA_ELEMENT
 		do
 			from
@@ -37,7 +35,6 @@ feature -- Element Rendering
 			tree_not_void: tree /= Void
 		local
 			curr_elem: DOCUMENT_SCHEMA_ELEMENT
-			type: XML_XML_SCHEMA_TYPE
 		do
 			from
 				schema.types.start
@@ -84,7 +81,6 @@ feature {NONE} -- Element Rendering
 			element_not_void: elem /= Void
 		local
 			item: EV_TREE_ITEM
-			l_string: STRING
 		do
 			create item. make_with_text (elem.name)			
 			item.set_data (elem)

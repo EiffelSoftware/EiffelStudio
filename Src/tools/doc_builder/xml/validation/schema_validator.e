@@ -33,8 +33,6 @@ feature -- Schema Validation
 			reader: XML_XML_TEXT_READER
 			validation_reader: XML_XML_VALIDATING_READER
 			event_handler: XML_VALIDATION_EVENT_HANDLER
-			exception: XML_XML_SCHEMA_EXCEPTION
-			retried: BOOLEAN
 		do
 			create reader.make_from_url (filename.to_cil)
 			create event_handler.make  (Current, $validation_callback)
@@ -59,7 +57,6 @@ feature -- Schema and file validation
 		local
 			vr: XML_XML_VALIDATING_READER
 			reader: XML_XML_TEXT_READER
-			schemas: XML_XML_SCHEMA_COLLECTION
 			vr_handler: XML_VALIDATION_EVENT_HANDLER
 		do  
 			create reader.make_from_url (a_filename.to_cil)

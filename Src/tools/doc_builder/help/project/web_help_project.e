@@ -128,7 +128,6 @@ feature {NONE} -- Implementation
 		local
 			l_filters: HASH_TABLE [DOCUMENT_FILTER, STRING]
 			l_output_filter: OUTPUT_FILTER
-			l_show: BOOLEAN
 			l_filter_count: INTEGER
 			l_toc_name: STRING
 			l_toc_url: FILE_NAME

@@ -110,5 +110,13 @@ feature -- Access
 		-- A STRING constant representing the view type of the RTF document.
 
 	default_font: STRING is "\cf1\highlight2\f0\fs"
+	
+	rtf_control_character: CHARACTER is '\'
+	
+	rtf_open_brace_character: CHARACTER is '{'
+	
+	rtf_close_brace_character: CHARACTER is '}'
+	
+	rtf_fonttable: STRING is "fonttbl"
 
 end -- class EV_RICH_TEXT_CONSTANTS_I

@@ -22,23 +22,45 @@ feature -- Status report
 	is_connected: BOOLEAN
 			-- Has connection to the data base server succeeded?
 
-	error_code: INTEGER
-			-- Error code
+	is_error_updated: BOOLEAN is
+			-- Has an Oracle/ODBC function been called since last update which may have
+			-- updated error status?
+		do
+			Result := implementation.is_error_updated
+		end
 
-	found: BOOLEAN
+	error_code: INTEGER is
+			-- Error code prompted by database server
+		do
+			if not is_error_updated then
+				update_error_status
+			end
+			Result := error_code_stored
+		end
+
+	found: BOOLEAN is
 			-- Is there any record matching the last
 			-- selection condition used ?
+		do
+			Result := implementation.found
+		end
 
-	error_message: STRING-- is
+	error_message: STRING is
 			-- SQL error message prompted by database server
-	--	do
-	--		Result := implementation.error_message
-	--	end
+		do
+			if not handle.status.is_error_updated then
+				update_error_status
+			end
+			Result := error_message_stored
+		end
 
 	warning_message: STRING is
 			-- SQL warning message prompted by database server
 		do
-			Result := implementation.warning_message
+			if not handle.status.is_error_updated then
+				update_error_status
+			end
+			Result := warning_message_stored
 		end
 
 	is_ok_mat : BOOLEAN is
@@ -59,35 +81,49 @@ feature -- Status setting
 		end
 
 	set (new_value: INTEGER) is
-			-- Set `ok' with `new_value'.
+			-- Should be removed!
 		do
-			if error_code = 0 then
-				error_code := new_value
-				error_message := implementation.error_message
-			end
-		ensure
-			error_code_resetting: old error_code = 0 implies error_code = new_value
 		end
 
 	reset is
-			-- Reset database status to default values.
+			-- Reset database error status.
+			
 		do
-			error_code := 0
-			found := false
-		ensure then
-			error_code_set_to_zero: error_code = 0
-			found_set_to_false: not found
-		end
-
-	set_found (value: INTEGER) is
-			-- Change state of `found'.
-		do
-			found := value > 0
+			implementation.reset
+			error_code_stored := 0
+			error_message_stored := ""
+			warning_message_stored := ""
+		ensure
+			no_error: error_code_stored = 0
+			no_message_error: error_message_stored.is_equal ("") 
+			no_message_warning: warning_message_stored.is_equal ("") 
 		end
 
 feature {NONE} -- Implementation
 
 	implementation: DATABASE_STATUS [DATABASE]
+
+feature {NONE} -- error status implementation
+
+	error_message_stored: STRING
+			-- error message
+
+	warning_message_stored: STRING
+			-- warning message
+
+	error_code_stored: INTEGER
+			-- error code
+
+	update_error_status is
+			-- set `error_message_stored', `error_code_stored', `warning_message_stored' with
+			-- error_status from the database server.
+		do
+			error_message_stored := implementation.error_message
+			error_code_stored := implementation.error_code
+			warning_message_stored := implementation.warning_message
+		ensure
+			is_error_updated
+		end
 
 feature {NONE} -- Initialization
 

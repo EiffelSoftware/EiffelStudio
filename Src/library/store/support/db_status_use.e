@@ -9,21 +9,18 @@ indexing
 class DB_STATUS_USE
 
 inherit
-
 	HANDLE_USE
-
-feature -- error status
-
-	message_error: STRING
-
-	message_warning: STRING
-
-	code_error: INTEGER
 
 feature {NONE} -- Status report
 
+	exhausted: BOOLEAN is
+			-- Is there any more resulting row?
+		do
+			Result := not handle.status.found
+		end
+
 	is_connected: BOOLEAN is
-			-- Has connection to the data base server succeeded?
+			-- Has connection to the database server succeeded?
 		do
 			Result := handle.status.is_connected
 		end
@@ -32,7 +29,6 @@ feature {NONE} -- Status report
 			-- Error code of last transaction
 		do
 			Result := handle.status.error_code
-			code_error := Result
 		end
 
 	is_ok: BOOLEAN is
@@ -41,11 +37,8 @@ feature {NONE} -- Status report
 			--if handle.status.is_ok_mat /= Void then
 			--	Result := handle.status.is_ok_mat or handle.status.error_code = 0
 			--else 
-				Result := handle.status.error_code = 0
 			--end
-			if not Result then
-				message_error := handle.status.error_message
-			end
+			Result := error_code = 0
 		end
 
 	is_ok_mat: BOOLEAN is
@@ -59,25 +52,25 @@ feature {NONE} -- Status report
 			-- SQL error message prompted by database server
 		do
 			Result := handle.status.error_message
-		--	message_error:= Result
 		end
 	
 	warning_message: STRING is
 			-- SQL warning message prompted by database server
 		do
 			Result := handle.status.warning_message
-			message_warning:= Result
 		end
 
 feature {NONE} -- Status setting
 
 	reset is
-			-- Reset `is_ok' and `error_code' after error occurred
+			-- Reset `is_ok', `error_code_stored',`error_message_stored' and `warning_message' after error occurred.
 		do
 			handle.status.reset
 		ensure
 			is_ok: is_ok
 			no_error: error_code = 0
+			no_message_error: error_message.is_equal ("") 
+			no_message_warning: warning_message.is_equal ("") 
 		end
 
 end -- class DB_STATUS_USE

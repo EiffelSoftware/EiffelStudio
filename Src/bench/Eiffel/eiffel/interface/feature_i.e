@@ -658,6 +658,9 @@ feature -- Export checking
 		local
 			type_a: TYPE_A
 			a_class: CLASS_C
+			depend_unit: DEPEND_UNIT
+			feature_i: FEATURE_I
+			like_feat: LIKE_FEATURE
 		do
 				-- Create the supplier set for the feature
 			type_a ?= type
@@ -665,6 +668,14 @@ feature -- Export checking
 				a_class := type_a.associated_class
 				if a_class /= Void then
 					feat_depend.add_supplier (a_class)
+				end
+				like_feat ?= type
+				if like_feat /= Void then
+					-- we must had a dependance to the anchor feature
+					a_class := like_feat.class_id.associated_class
+					feature_i := a_class.feature_table.item (like_feat.feature_name)
+					!! depend_unit.make (like_feat.class_id, feature_i)
+					feat_depend.extend (depend_unit)
 				end
 			end
 			if has_arguments then
@@ -856,6 +867,7 @@ feature -- Byte code computation
 		local
 			new_body_id, old_body_id: BODY_ID
 			changed_body_id_info: CHANGED_BODY_ID_INFO
+			update_dep: BOOLEAN
 		do
 			old_body_id := body_id
 			new_body_id := System.body_id_counter.next_id
@@ -871,7 +883,6 @@ debug ("SERVER")
 	io.putstring (new_body_id.dump)
 	io.new_line
 end
-			System.depend_server.change_ids (new_body_id, old_body_id)
 			if not is_code_replicated then
 				Body_server.change_id (new_body_id, old_body_id)
 			else
@@ -881,9 +892,11 @@ end
 				-- Update the body index table
 			Body_index_table.force (new_body_id, body_index)
 			System.onbidt.put (new_body_id, old_body_id)
-			!!changed_body_id_info.make (is_code_replicated, body_index, new_body_id)
+			update_dep := depend_server.has (written_in)
+			!!changed_body_id_info.make (is_code_replicated, body_index, new_body_id, written_in, update_dep)
 			System.changed_body_ids.force (changed_body_id_info, old_body_id)
-			if depend_server.has (written_in) then
+			depend_server.change_ids (new_body_id, old_body_id)
+			if update_dep then
 				depend_server.item (written_in).replace_key (new_body_id, old_body_id)
 			end
 		end

@@ -358,7 +358,7 @@ temp_alpha_int: INTEGER
 			a_gdkimage := C.gdk_image_get (C.gtk_pixmap_struct_pixmap (gtk_pixmap), 0, 0, width, height)
 			from
 				a_width := width * 4
-				a_color_map := C.gdk_window_get_colormap (C.gtk_widget_struct_window (Default_gtk_window))
+				a_color_map := C.gdk_rgb_get_cmap
 				color_struct_size := C.c_gdk_color_struct_size
 				array_size := a_width * height
 				array_area := Result.area
@@ -412,7 +412,7 @@ feature {NONE} -- Implementation
 				-- Create the color black (default with calloc)
 
 			allocated := C.gdk_colormap_alloc_color (
-				C.gdk_colormap_get_system,
+				C.gdk_rgb_get_cmap,
 				fg,
 				False,
 				True
@@ -523,6 +523,9 @@ end -- EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.39  2001/06/14 20:11:50  king
+--| Changed to use rgb cmap
+--|
 --| Revision 1.38  2001/06/07 23:08:07  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

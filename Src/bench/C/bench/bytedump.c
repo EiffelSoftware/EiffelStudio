@@ -148,7 +148,7 @@ static  char    *names [] = {
 "BC_GEN_PARAM_CREATE" ,
 "BC_CREATE_EXP" ,
 "BC_NULL_POINTER" ,
-"UNUSED_137" ,
+"BC_MAX" ,
 "UNUSED_138" ,
 "UNUSED_139" ,
 "UNUSED_140" ,
@@ -1013,6 +1013,8 @@ static  void    print_instructions ()
 			case  BC_PLUS :
 				break;
 			case  BC_OR :
+				break;
+			case BC_MAX :
 				break;
 			case  BC_ADDR :
 				/* Address of routine */

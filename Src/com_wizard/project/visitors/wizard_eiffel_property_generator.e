@@ -11,7 +11,11 @@ inherit
 	WIZARD_PROPERTY_GENERATOR
 
 	WIZARD_EIFFEL_ASSERTION_GENERATOR
+		export
+			{NONE} all
+		end
 
+	ECOM_VAR_FLAGS
 		export
 			{NONE} all
 		end

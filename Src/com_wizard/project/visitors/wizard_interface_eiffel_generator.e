@@ -33,15 +33,10 @@ feature -- Access
 					not a_descriptor.inherited_interface.name.is_equal(Iunknown_type) and then
 					not a_descriptor.inherited_interface.name.is_equal (Idispatch_type) then
 				inherit_clause_writer.set_name (a_descriptor.inherited_interface.eiffel_class_name)
-				eiffel_writer.add_inherit_clause (inherit_clause_writer)
+			else
+				inherit_clause_writer.set_name ("ECOM_INTERFACE")
 			end
-
-			create item_writer.make
-			item_writer.set_deferred
-			item_writer.set_name ("item")
-			item_writer.set_comment ("Pointer to C interface.")
-			item_writer.set_result_type (Pointer_type)
-			eiffel_writer.add_feature (item_writer, Access)
+			eiffel_writer.add_inherit_clause (inherit_clause_writer)
 
 			if a_descriptor.properties /= Void and then not a_descriptor.properties.empty then
 				process_properties (a_descriptor.properties)
@@ -70,9 +65,7 @@ feature {NONE} -- Implementation
 			until
 				functions.off
 			loop
-				create func_generator
-
-				func_generator.generate (functions.item)
+				create func_generator.generate (functions.item)
 				if func_generator.feature_writer.result_type /= Void and then func_generator.feature_writer.result_type.empty 
 						and func_generator.feature_writer.arguments.empty then
 					eiffel_writer.add_feature (func_generator.feature_writer, Access)
@@ -98,9 +91,7 @@ feature {NONE} -- Implementation
 			until
 				properties.off
 			loop
-				create prop_generator
-
-				prop_generator.generate (properties.item)
+				create prop_generator.generate (properties.item)
 				eiffel_writer.add_feature (prop_generator.access_feature, Access)
 				eiffel_writer.add_feature (prop_generator.precondition_access_feature_writer, Status_report)
 

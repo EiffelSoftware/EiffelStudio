@@ -12,36 +12,13 @@ inherit
 
 	WIZARD_COMPONENT_C_SERVER_GENERATOR
 
-feature -- Access
-
-feature -- Measurement
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
 feature -- Basic operations
 
 	generate (a_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
 			-- Generate C server for implemented interface.
 		local
 			member_writer: WIZARD_WRITER_C_MEMBER
+			interface_generator: WIZARD_COMPONENT_INTERFACE_C_SERVER_GENERATOR
 		do
 			create cpp_class_writer.make
 
@@ -83,8 +60,8 @@ feature -- Basic operations
 			member_writer.set_comment ("Eiffel type id")
 			cpp_class_writer.add_member (member_writer, Private)
 
-
-			generate_functions_and_properties (a_descriptor, a_descriptor.interface_descriptor, a_descriptor.interface_descriptor.name)
+			create interface_generator.make (a_descriptor, a_descriptor.interface_descriptor, cpp_class_writer)
+			interface_generator.generate_functions_and_properties (a_descriptor.interface_descriptor)
 
 			cpp_class_writer.add_constructor (constructor (a_descriptor))
 
@@ -101,10 +78,6 @@ feature -- Basic operations
 		do
 			a_factory.process_coclass_c_server
 		end
-
-feature -- Obsolete
-
-feature -- Inapplicable
 
 feature {NONE} -- Implementation
 

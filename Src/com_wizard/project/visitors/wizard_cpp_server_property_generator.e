@@ -12,11 +12,13 @@ inherit
 
 feature -- Basic operations
 
-	generate (coclass_name: STRING; a_descriptor: WIZARD_PROPERTY_DESCRIPTOR) is
+	generate (a_component: WIZARD_COMPONENT_DESCRIPTOR; 
+					a_property: WIZARD_PROPERTY_DESCRIPTOR) is
 			-- Generate C server access and setting features.
 		require
-			non_void_descriptor: a_descriptor /= Void
-			non_void_coclass_name: coclass_name /= Void
+			non_void_component: a_component /= Void
+			non_void_coclass_name: a_component.name /= Void
+			non_void_property: a_property /= Void
 		local
 			tmp_string: STRING
 			visitor: WIZARD_DATA_TYPE_VISITOR
@@ -25,29 +27,21 @@ feature -- Basic operations
 			create c_setting_feature.make
 
 			create visitor
-			visitor.visit (a_descriptor.data_type)
+			visitor.visit (a_property.data_type)
 
 			-- Access feature
 			tmp_string := clone (Get_clause)
-			tmp_string.append (a_descriptor.name)
+			tmp_string.append (a_property.name)
 			c_access_feature.set_name (tmp_string)
 
 			-- Set c access body
-			if a_descriptor.coclass_eiffel_names.has (coclass_name) then
-				tmp_string := clone (a_descriptor.coclass_eiffel_names.item (coclass_name))
-			else
-				tmp_string := clone (a_descriptor.interface_eiffel_name)
-			end
-
-			c_access_feature.set_body (access_body (tmp_string, visitor))
-
-			visitor.visit (a_descriptor.data_type)
+			c_access_feature.set_body (access_body (a_property.eiffel_name (a_component), visitor))
 
 			-- Set result type.
 			c_access_feature.set_result_type (Std_method_imp)
 
 			-- Set comment
-			c_access_feature.set_comment (a_descriptor.description)
+			c_access_feature.set_comment (a_property.description)
 
 			-- Set c signature
 			tmp_string := clone (Beginning_comment_paramflag)
@@ -62,23 +56,19 @@ feature -- Basic operations
 
 			-- Setting feature
 			tmp_string := clone (Set_clause)
-			tmp_string.append (a_descriptor.name)
+			tmp_string.append (a_property.name)
 			c_setting_feature.set_name (tmp_string)
 
 			-- set c setting body
 			tmp_string := clone (Set_clause)
-			if a_descriptor.coclass_eiffel_names.has (coclass_name) then
-				tmp_string.append (a_descriptor.coclass_eiffel_names.item (coclass_name))
-			else
-				tmp_string.append (a_descriptor.interface_eiffel_name)
-			end
+			tmp_string.append (a_property.eiffel_name (a_component))
 			c_setting_feature.set_body (setting_body (tmp_string, visitor))
 
 			--  Set result type
 			c_setting_feature.set_result_type (Std_method_imp)
 
 			-- Set comment
-			c_setting_feature.set_comment (a_descriptor.description)
+			c_setting_feature.set_comment (a_property.description)
 
 			-- Set c signature
 			tmp_string := clone (Beginning_comment_paramflag)

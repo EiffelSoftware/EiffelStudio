@@ -15,11 +15,9 @@ feature -- Access
 			-- Generate c writer.
 		local
 			func_generator: WIZARD_CPP_VIRTUAL_FUNCTION_GENERATOR
-			prop_generator: WIZARD_CPP_VIRTUAL_PROPERTY_GENERATOR
 		do
 			create cpp_class_writer.make
 			cpp_class_writer.set_abstract
-			create prop_generator
 			create func_generator
 
 			cpp_class_writer.set_name (a_descriptor.c_type_name)

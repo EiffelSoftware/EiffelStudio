@@ -8,26 +8,9 @@ deferred class
 	WIZARD_COMPONENT_C_GENERATOR
 
 inherit
-	WIZARD_CPP_WRITER_GENERATOR
-
-feature -- Access
-
-	dispatch_interface: BOOLEAN
-			-- Is coclass contained dispatch interface?
+	WIZARD_WRITER_DICTIONARY
 
 feature -- Basic operations
-
-	generate_functions_and_properties (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR;
-				descriptor: WIZARD_INTERFACE_DESCRIPTOR; an_interface_name: STRING) is
-			-- Generate functions and properties.
-		require
-			non_void_component: a_component_descriptor /= Void
-			non_void_descriptor: descriptor /= Void
-			non_void_cpp_class_writer: cpp_class_writer /= Void
-			non_void_interface_name: an_interface_name /= Void
-			valid_interface_name: not an_interface_name.empty
-		deferred
-		end
 
 	iid_name (a_name: STRING): STRING is
 			-- Name of IID constant.

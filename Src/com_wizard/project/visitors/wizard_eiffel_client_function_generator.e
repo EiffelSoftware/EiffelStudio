@@ -1,5 +1,5 @@
 indexing
-	description: ""
+	description: "Eiffel client function generator."
 	status: "See notice at end of class";
 	date: "$Date$"
 	revision: "$Revision$"
@@ -8,9 +8,12 @@ class
 	WIZARD_EIFFEL_CLIENT_FUNCTION_GENERATOR
 
 inherit
-	WIZARD_EIFFEL_FUNCTION_GENERATOR
+	WIZARD_EIFFEL_EFFECTIVE_FUNCTION_GENERATOR
 
 	WIZARD_VARIABLE_NAME_MAPPER
+
+create
+	generate
 
 feature -- Access
 
@@ -20,9 +23,6 @@ feature -- Basic operations
 
 	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
 			-- Generate client feature
-		require
-			non_void_descriptor: a_descriptor /= Void
-			non_void_component: a_component_descriptor /= Void
 		local
 			ccom_func_name: STRING
 		do
@@ -62,9 +62,6 @@ feature -- Basic operations
 
 			external_feature_writer.set_external
 			external_feature_writer.set_body (external_client_body (a_component_descriptor.c_type_name, a_component_descriptor.c_header_file_name))
-		ensure
-			non_void_feature_writer: feature_writer /= Void
-			non_void_external_feature_writer: external_feature_writer /= Void
 		end
 
 feature {NONE} -- Implementation

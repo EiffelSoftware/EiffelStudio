@@ -8,55 +8,54 @@ class
 	WIZARD_COCLASS_EIFFEL_SERVER_IMPL_GENERATOR
 
 inherit
-	WIZARD_COCLASS_EIFFEL_GENERATOR
+	WIZARD_COCLASS_EIFFEL_GENERATOR [WIZARD_COCLASS_INTERFACE_EIFFEL_SERVER_IMPL_GENERATOR]
 		redefine
 			generate,
-			set_default_ancestors,
-			process_interfaces
+			set_default_ancestors
 		end
 
-	WIZARD_COMPONENT_EIFFEL_SERVER_GENERATOR
+	WIZARD_COMPONENT_EIFFEL_SERVER_GENERATOR 
 		redefine
-			set_default_ancestors,
-			generate_functions_and_properties
-			end
+			set_default_ancestors
+		end
 
 feature -- Basic operation
 
-	generate (a_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
+	generate (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Generate eiffel class for coclass.
 		local
 			local_string: STRING
 			a_visible: WIZARD_WRITER_VISIBLE_CLAUSE
+			interface_processor: WIZARD_COCLASS_INTERFACE_EIFFEL_PROCESSOR 
+						[WIZARD_COCLASS_INTERFACE_EIFFEL_SERVER_IMPL_GENERATOR]
 		do
-			coclass_descriptor := a_descriptor
+			coclass_descriptor := a_coclass
 
 			if not shared_wizard_environment.new_eiffel_project then
 				create a_visible.make
-				a_visible.set_name (implemented_coclass_name (a_descriptor.eiffel_class_name))
+				a_visible.set_name (implemented_coclass_name (a_coclass.eiffel_class_name))
 				system_descriptor.add_visible_class_component (a_visible)
 
 				create eiffel_writer.make
 
 				-- Set class name and description
-				eiffel_writer.set_class_name (implemented_coclass_name (a_descriptor.eiffel_class_name))
+				eiffel_writer.set_class_name (implemented_coclass_name (a_coclass.eiffel_class_name))
 				-- Process interfaces.
-				process_interfaces
+				create interface_processor.make (a_coclass, eiffel_writer)
+				interface_processor.process_interfaces
 
-				local_string := clone (coclass_descriptor.eiffel_class_name)
+				local_string := clone (a_coclass.eiffel_class_name)
 				local_string.append (" Implementation.")
 				eiffel_writer.set_description (local_string)
 
 				set_default_ancestors (eiffel_writer)
 				add_creation
-				add_default_features (a_descriptor)
+				add_default_features (a_coclass)
 
 				-- Generate code
 				Shared_file_name_factory.create_file_name (Current, eiffel_writer)
 				eiffel_writer.save_file (Shared_file_name_factory.last_created_file_name)
 			end
-
-
 		end
 
 	add_creation is
@@ -72,60 +71,6 @@ feature -- Basic operation
 			eiffel_writer.add_feature (make_feature, Initialization)
 		end
 
-	generate_functions_and_properties (a_desc: WIZARD_INTERFACE_DESCRIPTOR;
-				a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR;
-				an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS;
-				inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE) is
-			-- Process functions and properties
-		local
-			prop_generator: WIZARD_EIFFEL_SERVER_PROPERTY_GENERATOR
-			func_generator: WIZARD_EIFFEL_SERVER_FUNCTION_GENERATOR
-			tmp_original_name, tmp_changed_name: STRING
-		do
-			if not a_desc.functions.empty then
-				from
-					a_desc.functions.start
-				until
-					a_desc.functions.off
-				loop
-					-- Generate feature writer
-					create func_generator
-					func_generator.generate (a_component_descriptor.name, a_desc.functions.item)
-
-					if func_generator.feature_writer.result_type = Void or else 
-						func_generator.feature_writer.result_type.empty 
-					then
-						an_eiffel_writer.add_feature (func_generator.feature_writer, Basic_operations)
-					else
-						an_eiffel_writer.add_feature (func_generator.feature_writer, Access)
-					end
-					a_desc.functions.forth
-				end
-			end
-			if not a_desc.properties.empty then
-				from
-					a_desc.properties.start
-				until
-					a_desc.properties.off
-				loop
-					-- Generate feature writer
-					create prop_generator
-					prop_generator.generate(a_component_descriptor.eiffel_class_name, a_desc.properties.item)
-					an_eiffel_writer.add_feature (prop_generator.setting_feature, Element_change)
-					an_eiffel_writer.add_feature (prop_generator.access_feature, Access)
-
-					a_desc.properties.forth
-				end
-			end
-
-			if 
-				a_desc.inherited_interface /= Void and not
-				a_desc.inherited_interface.guid.is_equal (Iunknown_guid) and then
-				not a_desc.inherited_interface.guid.is_equal (Idispatch_guid) 
-			then
-				generate_functions_and_properties (a_desc.inherited_interface, a_component_descriptor, an_eiffel_writer, inherit_clause)
-			end		
-		end
 
 	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is
 		do
@@ -133,32 +78,6 @@ feature -- Basic operation
 		end
 
 feature {NONE} -- Implementation
-
-	process_interfaces is
- 			-- Process inherited interfaces.
-		local
-			dummy_object: WIZARD_WRITER_INHERIT_CLAUSE
-		do
-			create dummy_object.make
-
-			from
-				coclass_descriptor.interface_descriptors.start
-			until
-				coclass_descriptor.interface_descriptors.off
-			loop
-
-				if coclass_descriptor.interface_descriptors.item.dispinterface or else
-					coclass_descriptor.interface_descriptors.item.dual
-				then
-					dispatch_interface := True
-				end
-
-				generate_functions_and_properties (coclass_descriptor.interface_descriptors.item, 
-						coclass_descriptor, eiffel_writer, dummy_object)
-
-				coclass_descriptor.interface_descriptors.forth
-			end
-		end
 
 	set_default_ancestors (an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS) is
 		local
@@ -178,26 +97,13 @@ feature {NONE} -- Implementation
 			tmp_writer.set_name ("ECOM_EXCEPTION")
 
 			an_eiffel_writer.add_inherit_clause (tmp_writer)
+
+			create tmp_writer.make
+			tmp_writer.set_name ("ECOM_STUB")
+			an_eiffel_writer.add_inherit_clause (tmp_writer)
+
 		end
 
-	make_feature: WIZARD_WRITER_FEATURE is
-			-- `make' feature.
-		local
-			feature_body: STRING
-		do
-			create Result.make
-			Result.set_name ("make")
-			Result.set_comment ("Creation")
-
-			create feature_body.make (0)
-
-			Result.set_effective
-			Result.set_body (feature_body)
-		ensure
-			non_void_feature: Result /= Void
-			non_void_feature_name: Result.name /= Void
-			non_void_feature_body: Result.body /= Void
-		end
 
 end -- class WIZARD_COCLASS_EIFFEL_SERVER_GENERATOR
 

@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Server implemented interface generator."
 	status: "See notice at end of class";
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,32 +27,37 @@ feature -- Initialization
 
 feature -- Basic operations
 
-	generate (a_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
+	generate (an_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
 			-- Generate 
 		local
 			a_class_name: STRING
 			inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE
 			a_visible: WIZARD_WRITER_VISIBLE_CLAUSE
+			interface_generator: WIZARD_COMPONENT_INTERFACE_EIFFEL_SERVER_GENERATOR
 		do
 			create a_visible.make
-			a_visible.set_name (a_descriptor.eiffel_class_name)
+			a_visible.set_name (an_interface.eiffel_class_name)
 			system_descriptor.add_visible_class_component (a_visible)
 
 			create eiffel_writer.make
 
-			a_class_name := name_for_class (a_descriptor.name, a_descriptor.type_kind, False)
+			a_class_name := name_for_class (an_interface.name, an_interface.type_kind, False)
 
-			dispatch_interface := (a_descriptor.interface_descriptor.dispinterface or a_descriptor.interface_descriptor.dual)
+			dispatch_interface := (an_interface.interface_descriptor.dispinterface or 
+					an_interface.interface_descriptor.dual)
 			eiffel_writer.set_class_name (a_class_name)
-			eiffel_writer.set_description (a_descriptor.description)
+			eiffel_writer.set_description (an_interface.description)
 
 			create inherit_clause.make
-			inherit_clause.set_name (a_descriptor.interface_descriptor.eiffel_class_name)
-			generate_functions_and_properties (a_descriptor.interface_descriptor, a_descriptor, eiffel_writer, inherit_clause)
+			inherit_clause.set_name (an_interface.interface_descriptor.eiffel_class_name)
+
+			create interface_generator.make (an_interface, an_interface.interface_descriptor, eiffel_writer, inherit_clause)
+			interface_generator.generate_functions_and_properties (an_interface.interface_descriptor)
 			eiffel_writer.add_inherit_clause (inherit_clause)
 			set_default_ancestors (eiffel_writer)
 			add_creation
-			add_default_features (a_descriptor)
+			add_default_features (an_interface)
+			
 			Shared_file_name_factory.create_file_name (Current, eiffel_writer)
 			eiffel_writer.save_file (Shared_file_name_factory.last_created_file_name)
 
@@ -65,21 +70,33 @@ feature -- Basic operations
 			a_factory.process_coclass_eiffel_server
 		end
 
-feature -- Obsolete
-
-feature -- Inapplicable
-
 feature {NONE} -- Implementation
 
 	add_creation is
 			-- Add creation routines.
 		do
+			eiffel_writer.add_creation_routine (Make_word)
 		end
 
-	add_default_features (a_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
+	add_default_features (an_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
 			-- Add default features,
 			-- e.g. make, constructor, destructor, delete wrapper etc.
 		do
+			eiffel_writer.add_feature (make_feature, Initialization)
+		end
+
+	set_default_ancestors (an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS) is
+			-- Set default ancestors
+		local
+			inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE
+		do
+			create inherit_clause.make
+			inherit_clause.set_name ("ECOM_STUB")
+			an_eiffel_writer.add_inherit_clause (inherit_clause)
+
+			create inherit_clause.make
+			inherit_clause.set_name ("ECOM_EXCEPTION")
+			an_eiffel_writer.add_inherit_clause (inherit_clause)
 		end
 
 invariant

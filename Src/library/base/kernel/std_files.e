@@ -150,7 +150,7 @@ feature -- Element change
 	put_new_line, new_line is
 			-- Write line feed at end of default output.
 		do
-			standard_default.new_line
+			standard_default.put_new_line
 		end
 
 feature -- Input

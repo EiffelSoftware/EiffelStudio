@@ -31,6 +31,7 @@ feature -- Basic Operations
 		local
 			p_client_site_item: POINTER
 			a_stub: ECOM_STUB
+			a_client_site: IOLE_CLIENT_SITE_IMPL_PROXY
 		do
 			if p_client_site /= Void then
 				if (p_client_site.item = default_pointer) then
@@ -39,7 +40,8 @@ feature -- Basic Operations
 						a_stub.create_item
 					end
 				end
-				p_client_site_item := p_client_site.item
+				create a_client_site.make_from_other (p_client_site)
+				p_client_site_item := a_client_site.item
 			end
 			ccom_set_client_site (initializer, p_client_site_item)
 		end
@@ -190,8 +192,15 @@ feature -- Basic Operations
 			-- No description available.
 			-- `dw_draw_aspect' [in].  
 			-- `psizel' [in].  
+		local
+			retried: BOOLEAN
 		do
-			ccom_set_extent (initializer, dw_draw_aspect, psizel.item)
+			if not retried then
+				ccom_set_extent (initializer, dw_draw_aspect, psizel.item)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	get_extent (dw_draw_aspect: INTEGER; psizel: TAG_SIZEL_RECORD) is

@@ -65,7 +65,7 @@ void ecom_control_library::IOleObject_impl_proxy::ccom_set_client_site(  /* [in]
   };
   };
   
-  hr = p_IOleObject->SetClientSite(p_client_site);
+  hr = p_IOleObject->SetClientSite(static_cast<::IOleClientSite*>(p_client_site));
   if (FAILED (hr))
   {
     if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -349,7 +349,7 @@ void ecom_control_library::IOleObject_impl_proxy::ccom_do_verb(  /* [in] */ EIF_
     com_eraise (f.c_format_message (hr), EN_PROG);
   };
   
-  grt_ce_control_interfaces2.free_memory_202 (tmp_hwnd_parent);
+ 
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

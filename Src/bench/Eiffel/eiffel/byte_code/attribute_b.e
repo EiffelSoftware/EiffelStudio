@@ -98,6 +98,8 @@ feature -- IL code generation
 			cl_type: CL_TYPE_I
 			target_type: TYPE_I
 			class_c: CLASS_C
+			l_feature_call: FEATURE_B
+			l_cancel_attribute_generation: BOOLEAN
 		do
 				-- Type of attribute in current context
 			r_type := Context.real_type (type)
@@ -138,25 +140,49 @@ feature -- IL code generation
 					generate_il_metamorphose (cl_type, target_type, need_real_metamorphose (cl_type))
 				end
 
-					-- We push code to access Current attribute.
-				class_c := System.class_of_id (written_in)
-				if class_c.is_frozen then
-					il_generator.generate_attribute (target_type, attribute_id)
-				else
-					il_generator.generate_feature_access (target_type, attribute_id, 0, True, True)
+					-- Let's try to prepare call to `XXX.attribute.copy' in
+					-- case of `attribute' is a basic type.
+				if parent /= Void and r_type.is_basic then
+					l_feature_call ?= parent.message
+						-- It is safe to use `cl_type' because previous value is not used
+						-- after this point.
+					cl_type ?= r_type
+					if
+						l_feature_call /= Void and then
+						l_feature_call.is_il_feature_special (cl_type) and then
+						l_feature_call.Il_special_routines.function_type =
+							feature {IL_SPECIAL_FEATURES}.set_item_type
+					then
+							-- Since we do not need to load attribute value onto the stack,
+							-- we cancel the attribute generation.
+							-- IL_SPECIAL_FEATURES.generate_set_item will know that Object
+							-- where Current belongs is on top of the stack.
+						l_cancel_attribute_generation := True
+					end
 				end
 
-					-- Generate cast if we have to generate verifiable code
-					-- since attribute might have been redefined and in this
-					-- case its type for IL generation is the one from the
-					-- parent not the redefined one. Doing the cast enable
-					-- the verifier to find out that what we are doing is
-					-- correct.
-				if
-					system.il_verifiable and then not r_type.is_expanded
-					and then not r_type.is_none
-				then
-					il_generator.generate_check_cast (r_type, r_type)
+				if not l_cancel_attribute_generation then
+						-- We push code to access Current attribute.
+					class_c := System.class_of_id (written_in)
+					if class_c.is_frozen then
+						il_generator.generate_attribute (target_type, attribute_id)
+					else
+						il_generator.generate_feature_access (target_type,
+							attribute_id, 0, True, True)
+					end
+
+						-- Generate cast if we have to generate verifiable code
+						-- since attribute might have been redefined and in this
+						-- case its type for IL generation is the one from the
+						-- parent not the redefined one. Doing the cast enable
+						-- the verifier to find out that what we are doing is
+						-- correct.
+					if
+						system.il_verifiable and then not r_type.is_expanded
+						and then not r_type.is_none
+					then
+						il_generator.generate_check_cast (r_type, r_type)
+					end
 				end
 			end
 		end

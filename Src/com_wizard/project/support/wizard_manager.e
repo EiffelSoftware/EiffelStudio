@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 						system_descriptor.interfaces.after
 					loop
 						a_range := a_range + 1
-						system_descriptor.forth
+						system_descriptor.interfaces.forth
 					end
 
 					from

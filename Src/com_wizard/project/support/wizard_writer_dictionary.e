@@ -769,6 +769,8 @@ feature -- Generator constants -- 8
 
 	Objbase_h: STRING is "objbase.h"
 
+	Ecom_server_rt_globals_h: STRING is "ecom_server_rt_globals.h"
+
 	An_object: STRING is "an_object"
 
 	Eif_array: STRING is "eif_array"
@@ -875,7 +877,7 @@ feature -- COM function names -- 10
 
 	Dll_unregister_server: STRING is "DllUnregisterServer"
 
-	Dll_get_class_object: STRING is "DlGetClassObject"
+	Dll_get_class_object: STRING is "DllGetClassObject"
 
 	Dll_can_unload_now: STRING is "DllCanUnloadNow"
 
@@ -920,6 +922,8 @@ feature -- Paths -- 11
 	Lib_file_extension: STRING is ".lib"
 
 	Object_file_extension: STRING is ".obj"
+
+	Definition_file_extension: STRING is ".def"
 
 feature -- Commands -- 12
 	

@@ -194,6 +194,12 @@ feature {WIZARD_TYPE_GENERATOR} -- Visitor
 			process_c_server
 		end
 
+	process_definition_file is
+			-- Create filename for 'a_generator'
+		do
+			process_definition_file_writer
+		end
+
 feature {NONE} -- Implementation
 
 	transient_writer: WIZARD_WRITER
@@ -331,6 +337,26 @@ feature {NONE} -- Implementation
 			end
 			last_created_file_name.append (an_eiffel_writer.class_name)
 			last_created_file_name.append (Eiffel_file_extension)
+		end
+
+	process_definition_file_writer is
+			-- Set 'last_created_file_name' with 'system_name'.def
+		require
+			non_void_writer: transient_writer /= Void
+		local
+			a_definition_file_writer: WIZARD_WRITER_DEFINITION_FILE
+		do
+			last_created_file_name := clone (shared_wizard_environment.destination_folder)
+			last_created_file_name.append (Server)
+			last_created_file_name.append_character (Directory_separator)
+			last_created_file_name.append (Component)
+			last_created_file_name.append_character (Directory_separator)
+
+			a_definition_file_writer ?= transient_writer
+			if a_definition_file_writer /= Void then
+				last_created_file_name.append (a_definition_file_writer.system_name)
+			end
+			last_created_file_name.append (Definition_file_extension)
 		end
 
 	header_to_c_file_name (a_filename: STRING; is_cpp: BOOLEAN): STRING is

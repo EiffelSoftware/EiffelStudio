@@ -32,7 +32,7 @@ feature -- Access
 	generated_code: STRING is
 			-- Generated code
 		do
-			Result := "Export feature (s) of system : "
+			Result := "-- Export feature (s) of system : "
 			Result.append (system_name)
 			Result.append (New_line)
 			Result.append (New_line)
@@ -63,16 +63,16 @@ feature -- Element Change
 			non_void_name: a_name /= Void
 			valid_name: not a_name.empty
 		do
-			system_name := clone ('a_name')
+			system_name := clone (a_name)
 		ensure
 			name_set: system_name.is_equal (a_name)
 		end
 
-	add_entries (an_entry: WIZARD_WRITER_DEFINITION_ENTRY) is
+	add_entry (an_entry: WIZARD_WRITER_DEFINITION_ENTRY) is
 			-- Add `a_function' to functions.
 		require
 			non_void_entry: an_entry /= Void
-			valid_entry: an_entry.valid
+			valid_entry: an_entry.can_generate
 		do
 			entries.extend (an_entry)
 		ensure

@@ -21,7 +21,6 @@ feature {NONE} -- Initialization
 			create root_class_name.make (0)
 			create class_creation_feature_name.make (0)
 			create export_feature_name.make (0)
-			create feature_index.make (0)
 		end
 
 feature -- Access
@@ -36,11 +35,12 @@ feature -- Access
 				Result.append (class_creation_feature_name)
 				Result.append (Close_parenthesis)
 			end
+			Result.append (Space)
 			Result.append (Colon)
 			Result.append (Space)
 			Result.append (export_feature_name)
 			if feature_index > 0 then
-				Result.append (" @")
+				Result.append (" @ ")
 				Result.append_integer (feature_index)
 			end
 
@@ -78,7 +78,7 @@ feature -- Status
 
 feature -- Element Change
 
-	set_root_class_name (a_name: like name) is
+	set_root_class_name (a_name: like root_class_name) is
 			-- Set `root_class_name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
@@ -97,7 +97,7 @@ feature -- Element Change
 		do
 			class_creation_feature_name := clone (a_feature_name)
 		ensure
-			name_set: class_creation_feature_name.is_equal (a_name)
+			name_set: class_creation_feature_name.is_equal (a_feature_name)
 		end
 
 	set_export_feature_name (a_feature_name: like export_feature_name) is
@@ -108,7 +108,7 @@ feature -- Element Change
 		do
 			export_feature_name := clone (a_feature_name)
 		ensure
-			name_set:export_feature_name.is_equal (a_name)
+			name_set:export_feature_name.is_equal (a_feature_name)
 		end
 
 	set_feature_index (an_index: INTEGER) is
@@ -121,7 +121,7 @@ feature -- Element Change
 			index_set: feature_index = an_index
 		end
 
-	set_feature_alias (an_alias: like feature_alias)
+	set_feature_alias (an_alias: like feature_alias) is
 			-- Set 'feature_alias' with 'an_alias'
 		require
 			non_void_alias: an_alias /= Void

@@ -31,6 +31,8 @@ feature -- Access
 
 	generate (a_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Generate eiffel class for coclass.
+		local
+			definition_file_generator: WIZARD_DEFINITION_FILE_GENERATOR
 		do
 			Precursor {WIZARD_COCLASS_EIFFEL_GENERATOR} (a_descriptor)
 			coclass_descriptor := a_descriptor
@@ -44,6 +46,11 @@ feature -- Access
 			-- Generate code and file name.
 			Shared_file_name_factory.create_file_name (Current, eiffel_writer)
 			eiffel_writer.save_file (Shared_file_name_factory.last_created_file_name)
+
+			if shared_wizard_environment.in_process_server then
+				create definition_file_generator
+				definition_file_generator.generate (coclass_descriptor)
+			end
 		end
 
 feature --  Basic operation

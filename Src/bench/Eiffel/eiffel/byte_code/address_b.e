@@ -95,6 +95,7 @@ feature
 					table_name.append (context.current_type.
 						associated_class_type.id.address_table_name (feature_id))
 
+					generated_file.putstring ("(EIF_POINTER) ");
 					generated_file.putstring (table_name);
 
 						-- Remember extern declarations

@@ -22,9 +22,7 @@ class frame_window;
 
 #include "ecom_server_rt_globals.h"
 
-
-
-#include "ecom_control_library_IOleInPlaceFrame_s.h"
+#include "ecom_control_library_ioleinplaceframe_s.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -37,8 +35,7 @@ extern "C" {
 namespace ecom_control_library
 {
 class frame_window : 
-  public ecom_control_library::IOleInPlaceFrame, 
-  public IProvideClassInfo2
+  public ::IOleInPlaceFrame
 {
 public:
   frame_window (EIF_TYPE_ID tid);
@@ -48,7 +45,7 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP GetWindow(  /* [out] */ ecom_control_library::wireHWND * phwnd );
+  STDMETHODIMP GetWindow(  /* [out] */ HWND * phwnd );
 
 
   /*-----------------------------------------------------------
@@ -78,25 +75,25 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP SetActiveObject(  /* [in] */ ecom_control_library::IOleInPlaceActiveObject * p_active_object, /* [in] */ LPWSTR psz_obj_name );
+  STDMETHODIMP SetActiveObject(  /* [in] */ ::IOleInPlaceActiveObject * p_active_object, /* [in] */ LPWSTR psz_obj_name );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP InsertMenus(  /* [in] */ ecom_control_library::wireHMENU hmenu_shared, /* [in, out] */ ecom_control_library::tagOleMenuGroupWidths * lp_menu_widths );
+  STDMETHODIMP InsertMenus(  /* [in] */ wireHMENU hmenu_shared, /* [in, out] */ tagOleMenuGroupWidths * lp_menu_widths );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP SetMenu(  /* [in] */ ecom_control_library::wireHMENU hmenu_shared, /* [in] */ ecom_control_library::wireHGLOBAL holemenu, /* [in] */ ecom_control_library::wireHWND hwnd_active_object );
+  STDMETHODIMP SetMenu(  /* [in] */ wireHMENU hmenu_shared, /* [in] */ wireHGLOBAL holemenu, /* [in] */ wireHWND hwnd_active_object );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP RemoveMenus(  /* [in] */ ecom_control_library::wireHMENU hmenu_shared );
+  STDMETHODIMP RemoveMenus(  /* [in] */ wireHMENU hmenu_shared );
 
 
   /*-----------------------------------------------------------
@@ -114,7 +111,7 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP TranslateAccelerator(  /* [in] */ ecom_control_library::tagMSG * lpmsg, /* [in] */ USHORT w_id );
+  STDMETHODIMP TranslateAccelerator(  /* [in] */ tagMSG * lpmsg, /* [in] */ USHORT w_id );
 
 
   /*-----------------------------------------------------------
@@ -133,19 +130,6 @@ public:
   Query Interface.
   -----------------------------------------------------------*/
   STDMETHODIMP QueryInterface( REFIID riid, void ** ppv );
-
-
-  /*-----------------------------------------------------------
-  GetClassInfo
-  -----------------------------------------------------------*/
-  STDMETHODIMP GetClassInfo( ITypeInfo ** ppti );
-
-
-  /*-----------------------------------------------------------
-  GetGUID
-  -----------------------------------------------------------*/
-  STDMETHODIMP GetGUID( DWORD dwKind, GUID * pguid );
-
 
 
 protected:

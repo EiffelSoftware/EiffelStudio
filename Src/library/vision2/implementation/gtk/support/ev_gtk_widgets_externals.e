@@ -9,6 +9,20 @@ class
 
 feature
 
+	gdk_root_parent: POINTER is
+		external
+			"C [macro <gdk/gdkx.h>]"
+		alias
+			"GDK_ROOT_PARENT()"
+		end
+
+	gtk_is_window (w: POINTER): BOOLEAN is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_IS_WINDOW"
+		end
+
 	c_gtk_widget_has_focus (w: POINTER): BOOLEAN is
 		external 
 			"C [macro <gtk/gtk.h>] (GtkWidget *): EIF_BOOLEAN"

@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 			item: EV_TREE_ITEM
 			f: EV_TREE_ITEM_HOLDER
 			ijk : INTEGER
+			frame: EV_FRAME
 
 			b: EV_BUTTON
 		do
@@ -35,7 +36,7 @@ feature {NONE} -- Initialization
 
 				-- container creation
 			create container.make (parent)
-			container.set_minimum_size (500,340)
+--			container.set_minimum_size (500,340)
 --			container.forbid_resize
 			container.set_border_width (4)	
 			container.set_spacing (4)	
@@ -46,13 +47,14 @@ feature {NONE} -- Initialization
 
 				-- toolbar construction
 			create toolbar.make (container)
+			container.set_child_expandable (toolbar, False)
 			from
 				panel_list.start
 			until
 				panel_list.after
 			loop
 				create b.make (toolbar)
---				b.set_pixmap (panel_list.item.symbol)
+				b.set_pixmap (panel_list.item.symbol)
 				panel_list.item.raise_cmd.set_button (b)
 				panel_list.forth
 			end
@@ -64,8 +66,9 @@ feature {NONE} -- Initialization
 				-- tree construction
 
 			create tree.make (panels_box)
-			tree.set_minimum_size (150, 300)
-			panels_box.set_child_expandable (tree, False)
+--			tree.set_minimum_size (150, 300)
+			tree.set_minimum_width (120)
+--			panels_box.set_child_expandable (tree, False)
 			create leaves.make (1, panel_list.number_of_tree_items)
 			from
 				ijk := 1

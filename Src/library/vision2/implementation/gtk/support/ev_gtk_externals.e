@@ -2476,113 +2476,6 @@ feature -- External C functions
 			"C (gpointer): gboolean | <gtk/gtk.h>"
 		end
 
-	frozen g_int_equal (a_v: POINTER; a_v2: POINTER): INTEGER is
-			-- gint  g_int_equal (gconstpointer   v,
-			-- 		   gconstpointer   v2);
-			-- (from C_GLIB)
-		external
-			"C (gconstpointer, gconstpointer): gint | <gtk/gtk.h>"
-		end
-
-	frozen g_int_hash (a_v: POINTER): INTEGER is
-			-- guint g_int_hash  (gconstpointer   v);
-			-- (from C_GLIB)
-		external
-			"C (gconstpointer): guint | <gtk/gtk.h>"
-		end
-
-	frozen g_io_add_watch (a_channel: POINTER; a_condition: INTEGER; a_func: POINTER; a_user_data: POINTER): INTEGER is
-			-- guint    g_io_add_watch         (GIOChannel    *channel,
-			-- 			         GIOCondition   condition,
-			-- 			         GIOFunc        func,
-			-- 			         gpointer       user_data);
-			-- (from C_GLIB)
-		external
-			"C (GIOChannel*, GIOCondition, GIOFunc, gpointer): guint | <gtk/gtk.h>"
-		end
-
-	frozen g_io_add_watch_full (a_channel: POINTER; a_priority: INTEGER; a_condition: INTEGER; a_func: POINTER; a_user_data: POINTER; a_notify: POINTER): INTEGER is
-			-- guint     g_io_add_watch_full   (GIOChannel    *channel,
-			-- 			         gint           priority,
-			-- 			         GIOCondition   condition,
-			-- 			         GIOFunc        func,
-			-- 			         gpointer       user_data,
-			-- 			         GDestroyNotify notify);
-			-- (from C_GLIB)
-		external
-			"C (GIOChannel*, gint, GIOCondition, GIOFunc, gpointer, GDestroyNotify): guint | <gtk/gtk.h>"
-		end
-
-	frozen g_io_channel_close (a_channel: POINTER) is
-			-- void      g_io_channel_close    (GIOChannel    *channel);
-			-- (from C_GLIB)
-		external
-			"C (GIOChannel*) | <gtk/gtk.h>"
-		end
-
-	frozen g_io_channel_init (a_channel: POINTER) is
-			-- void        g_io_channel_init   (GIOChannel    *channel);
-			-- (from C_GLIB)
-		external
-			"C (GIOChannel*) | <gtk/gtk.h>"
-		end
-
-	frozen g_io_channel_read (a_channel: POINTER; a_buf: POINTER; a_count: INTEGER; a_bytes_read: POINTER): INTEGER is
-			-- GIOError    g_io_channel_read   (GIOChannel    *channel,
-			-- 			         gchar         *buf,
-			-- 			         guint          count,
-			-- 			         guint         *bytes_read);
-			-- (from C_GLIB)
-		external
-			"C (GIOChannel*, gchar*, guint, guint*): GIOError | <gtk/gtk.h>"
-		end
-
-	frozen g_io_channel_ref (a_channel: POINTER) is
-			-- void        g_io_channel_ref    (GIOChannel    *channel);
-			-- (from C_GLIB)
-		external
-			"C (GIOChannel*) | <gtk/gtk.h>"
-		end
-
-	frozen g_io_channel_seek (a_channel: POINTER; a_offset: INTEGER; a_type: INTEGER): INTEGER is
-			-- GIOError  g_io_channel_seek     (GIOChannel    *channel,
-			-- 			         gint           offset,
-			-- 			         GSeekType      type);
-			-- (from C_GLIB)
-		external
-			"C (GIOChannel*, gint, GSeekType): GIOError | <gtk/gtk.h>"
-		end
-
-	frozen g_io_channel_unix_get_fd (a_channel: POINTER): INTEGER is
-			-- gint        g_io_channel_unix_get_fd (GIOChannel *channel);
-			-- (from C_GLIB)
-		external
-			"C (GIOChannel*): gint | <gtk/gtk.h>"
-		end
-
-	frozen g_io_channel_unix_new (a_fd: INTEGER): POINTER is
-			-- GIOChannel* g_io_channel_unix_new    (int         fd);
-			-- (from C_GLIB)
-		external
-			"C (int): GIOChannel* | <gtk/gtk.h>"
-		end
-
-	frozen g_io_channel_unref (a_channel: POINTER) is
-			-- void        g_io_channel_unref  (GIOChannel    *channel);
-			-- (from C_GLIB)
-		external
-			"C (GIOChannel*) | <gtk/gtk.h>"
-		end
-
-	frozen g_io_channel_write (a_channel: POINTER; a_buf: POINTER; a_count: INTEGER; a_bytes_written: POINTER): INTEGER is
-			-- GIOError  g_io_channel_write    (GIOChannel    *channel,
-			-- 			         gchar         *buf,
-			-- 			         guint          count,
-			-- 			         guint         *bytes_written);
-			-- (from C_GLIB)
-		external
-			"C (GIOChannel*, gchar*, guint, guint*): GIOError | <gtk/gtk.h>"
-		end
 
 	frozen g_list_alloc: POINTER is
 			-- GList* g_list_alloc		(void);
@@ -4290,30 +4183,6 @@ feature -- External C functions
 			"C (GTuples*, gint, gint): gpointer | <gtk/gtk.h>"
 		end
 
-	frozen gdk_add_client_message_filter (a_message_type: INTEGER; a_func: POINTER; a_data: POINTER) is
-			-- void gdk_add_client_message_filter (GdkAtom       message_type,
-			-- 				    GdkFilterFunc func,
-			-- 				    gpointer      data);
-			-- (from C_GDK)
-		external
-			"C (GdkAtom, GdkFilterFunc, gpointer) | <gtk/gtk.h>"
-		end
-
-	frozen gdk_atom_intern (a_atom_name: POINTER; a_only_if_exists: INTEGER): INTEGER is
-			-- GdkAtom  gdk_atom_intern     (const gchar  *atom_name,
-			--                               gint          only_if_exists);
-			-- (from C_GDK)
-		external
-			"C (gchar*, gint): GdkAtom | <gtk/gtk.h>"
-		end
-
-	frozen gdk_atom_name (a_atom: INTEGER): POINTER is
-			-- gchar*   gdk_atom_name       (GdkAtom       atom);
-			-- (from C_GDK)
-		external
-			"C (GdkAtom): gchar* | <gtk/gtk.h>"
-		end
-
 	frozen gdk_beep is
 			-- void gdk_beep (void);
 			-- (from C_GDK)
@@ -4523,6 +4392,14 @@ feature -- External C functions
 --		external
 --			"C (GdkColorContext*, GdkColor*, gint): gint | <gtk/gtk.h>"
 --		end
+
+	frozen gdk_atom_intern (a_atom_name: POINTER; a_only_if_exists: INTEGER): POINTER is
+			-- GdkAtom  gdk_atom_intern     (const gchar  *atom_name,
+			--                               gint          only_if_exists);
+			-- (from C_GDK)
+		external
+			"C (gchar*, gint): GdkAtom | <gtk/gtk.h>"
+		end
 
 	frozen gdk_color_copy (a_color: POINTER): POINTER is
 			-- GdkColor*    gdk_color_copy               (const GdkColor *color);
@@ -4766,7 +4643,7 @@ feature -- External C functions
 			"C (guint32, GdkDragProtocol*): guint32 | <gtk/gtk.h>"
 		end
 
-	frozen gdk_drag_get_selection (a_context: POINTER): INTEGER is
+	frozen gdk_drag_get_selection (a_context: POINTER): POINTER is
 			-- GdkAtom          gdk_drag_get_selection (GdkDragContext   *context);
 			-- (from C_GDK)
 		external
@@ -5908,51 +5785,6 @@ feature -- External C functions
 			"C (guint32) | <gtk/gtk.h>"
 		end
 
-	frozen gdk_property_change (a_window: POINTER; a_property: INTEGER; a_type: INTEGER; a_format: INTEGER; a_mode: INTEGER; a_data: POINTER; a_nelements: INTEGER) is
-			-- void     gdk_property_change (GdkWindow    *window,
-			--                               GdkAtom       property,
-			--                               GdkAtom       type,
-			--                               gint          format,
-			--                               GdkPropMode   mode,
-			--                               guchar       *data,
-			--                               gint          nelements);
-			-- (from C_GDK)
-		external
-			"C (GdkWindow*, GdkAtom, GdkAtom, gint, GdkPropMode, guchar*, gint) | <gtk/gtk.h>"
-		end
-
-	frozen gdk_property_delete (a_window: POINTER; a_property: INTEGER) is
-			-- void     gdk_property_delete (GdkWindow    *window,
-			--                               GdkAtom       property);
-			-- (from C_GDK)
-		external
-			"C (GdkWindow*, GdkAtom) | <gtk/gtk.h>"
-		end
-
-	frozen gdk_property_get (a_window: POINTER; a_property: INTEGER; a_type: INTEGER; a_offset: INTEGER; a_length: INTEGER; a_pdelete: INTEGER; a_actual_property_type: POINTER; a_actual_format: POINTER; a_actual_length: POINTER; a_data: POINTER): BOOLEAN is
-			-- gboolean gdk_property_get    (GdkWindow    *window,
-			--                               GdkAtom       property,
-			--                               GdkAtom       type,
-			--                               gulong        offset,
-			--                               gulong        length,
-			--                               gint          pdelete,
-			--                               GdkAtom      *actual_property_type,
-			--                               gint         *actual_format,
-			--                               gint         *actual_length,
-			--                               guchar      **data);
-			-- (from C_GDK)
-		external
-			"C (GdkWindow*, GdkAtom, GdkAtom, gulong, gulong, gint, GdkAtom*, gint*, gint*, guchar**): gboolean | <gtk/gtk.h>"
-		end
-
-	frozen gdk_query_depths (a_depths: POINTER; a_count: POINTER) is
-			-- void gdk_query_depths	    (gint	    **depths,
-			-- 			     gint	     *count);
-			-- (from C_GDK)
-		external
-			"C (gint**, gint*) | <gtk/gtk.h>"
-		end
-
 	frozen gdk_query_visual_types (a_visual_types: POINTER; a_count: POINTER) is
 			-- void gdk_query_visual_types (GdkVisualType  **visual_types,
 			-- 			     gint	     *count);
@@ -6216,53 +6048,6 @@ feature -- External C functions
 			"C (): gint | <gtk/gtk.h>"
 		end
 
-	frozen gdk_selection_convert (a_requestor: POINTER; a_selection: INTEGER; a_target: INTEGER; a_time: INTEGER) is
-			-- void	   gdk_selection_convert   (GdkWindow	 *requestor,
-			-- 				    GdkAtom	  selection,
-			-- 				    GdkAtom	  target,
-			-- 				    guint32	  time);
-			-- (from C_GDK)
-		external
-			"C (GdkWindow*, GdkAtom, GdkAtom, guint32) | <gtk/gtk.h>"
-		end
-
-	frozen gdk_selection_owner_get (a_selection: INTEGER): POINTER is
-			-- GdkWindow* gdk_selection_owner_get (GdkAtom	  selection);
-			-- (from C_GDK)
-		external
-			"C (GdkAtom): GdkWindow* | <gtk/gtk.h>"
-		end
-
-	frozen gdk_selection_owner_set (a_owner: POINTER; a_selection: INTEGER; a_time: INTEGER; a_send_event: INTEGER): BOOLEAN is
-			-- gboolean   gdk_selection_owner_set (GdkWindow	 *owner,
-			-- 				    GdkAtom	  selection,
-			-- 				    guint32	  time,
-			-- 				    gint	  send_event);
-			-- (from C_GDK)
-		external
-			"C (GdkWindow*, GdkAtom, guint32, gint): gboolean | <gtk/gtk.h>"
-		end
-
-	frozen gdk_selection_property_get (a_requestor: POINTER; a_data: POINTER; a_prop_type: POINTER; a_prop_format: POINTER): BOOLEAN is
-			-- gboolean   gdk_selection_property_get (GdkWindow  *requestor,
-			-- 				       guchar	 **data,
-			-- 				       GdkAtom	  *prop_type,
-			-- 				       gint	  *prop_format);
-			-- (from C_GDK)
-		external
-			"C (GdkWindow*, guchar**, GdkAtom*, gint*): gboolean | <gtk/gtk.h>"
-		end
-
-	frozen gdk_selection_send_notify (a_requestor: INTEGER; a_selection: INTEGER; a_target: INTEGER; a_property: INTEGER; a_time: INTEGER) is
-			-- void	   gdk_selection_send_notify (guint32	    requestor,
-			-- 				      GdkAtom	    selection,
-			-- 				      GdkAtom	    target,
-			-- 				      GdkAtom	    property,
-			-- 				      guint32	    time);
-			-- (from C_GDK)
-		external
-			"C (guint32, GdkAtom, GdkAtom, GdkAtom, guint32) | <gtk/gtk.h>"
-		end
 
 	frozen gdk_set_locale: POINTER is
 			-- gchar*	  gdk_set_locale	   	(void);
@@ -6382,15 +6167,6 @@ feature -- External C functions
 			-- (from C_GDK)
 		external
 			"C (GdkFont*, gchar*, gint): gint | <gtk/gtk.h>"
-		end
-
-	frozen gdk_text_property_to_text_list (a_encoding: INTEGER; a_format: INTEGER; a_text: POINTER; a_length: INTEGER; a_list: POINTER): INTEGER is
-			-- gint       gdk_text_property_to_text_list (GdkAtom encoding, gint format,
-			-- 					   guchar *text, gint length,
-			-- 					   gchar ***list);
-			-- (from C_GDK)
-		external
-			"C (GdkAtom, gint, guchar*, gint, gchar***): gint | <gtk/gtk.h>"
 		end
 
 	frozen gdk_text_width (a_font: POINTER; a_text: POINTER; a_text_length: INTEGER): INTEGER is
@@ -9481,7 +9257,7 @@ feature -- External C functions
 			"C (GdkDragContext*, gboolean, gboolean, guint32) | <gtk/gtk.h>"
 		end
 
-	frozen gtk_drag_get_data (a_widget: POINTER; a_context: POINTER; a_target: INTEGER; a_time: INTEGER) is
+	frozen gtk_drag_get_data (a_widget: POINTER; a_context: POINTER; a_target: POINTER; a_time: NATURAL_32) is
 			-- void gtk_drag_get_data (GtkWidget      *widget,
 			-- 			GdkDragContext *context,
 			-- 			GdkAtom         target,
@@ -12887,7 +12663,7 @@ feature -- External C functions
 			"C (GtkScrolledWindow*, GtkAdjustment*) | <gtk/gtk.h>"
 		end
 
-	frozen gtk_selection_add_target (a_widget: POINTER; a_selection: INTEGER; a_target: INTEGER; a_info: INTEGER) is
+	frozen gtk_selection_add_target (a_widget: POINTER; a_selection: POINTER; a_target: POINTER; a_info: NATURAL_32) is
 			-- void gtk_selection_add_target (GtkWidget           *widget,
 			-- 			       GdkAtom              selection,
 			-- 			       GdkAtom              target,
@@ -12897,7 +12673,7 @@ feature -- External C functions
 			"C (GtkWidget*, GdkAtom, GdkAtom, guint) | <gtk/gtk.h>"
 		end
 
-	frozen gtk_selection_add_targets (a_widget: POINTER; a_selection: INTEGER; a_targets: POINTER; a_ntargets: INTEGER) is
+	frozen gtk_selection_add_targets (a_widget: POINTER; a_selection: POINTER; a_targets: POINTER; a_ntargets: NATURAL_32) is
 			-- void gtk_selection_add_targets (GtkWidget            *widget,
 			-- 				GdkAtom               selection,
 			-- 				const GtkTargetEntry *targets,
@@ -12915,7 +12691,7 @@ feature -- External C functions
 			"C (GtkWidget*, GdkEventSelection*): gint | <gtk/gtk.h>"
 		end
 
-	frozen gtk_selection_convert (a_widget: POINTER; a_selection: INTEGER; a_target: INTEGER; a_time: INTEGER): INTEGER is
+	frozen gtk_selection_convert (a_widget: POINTER; a_selection: POINTER; a_target: POINTER; a_time: NATURAL_32): INTEGER is
 			-- gint gtk_selection_convert   (GtkWidget 	  *widget,
 			-- 			      GdkAtom    	   selection,
 			-- 			      GdkAtom    	   target,
@@ -12939,7 +12715,7 @@ feature -- External C functions
 			"C (GtkSelectionData*) | <gtk/gtk.h>"
 		end
 
-	frozen gtk_selection_data_set (a_selection_data: POINTER; a_type: INTEGER; a_format: INTEGER; a_data: POINTER; a_length: INTEGER) is
+	frozen gtk_selection_data_set (a_selection_data: POINTER; a_type: POINTER; a_format: INTEGER; a_data: POINTER; a_length: INTEGER) is
 			-- void gtk_selection_data_set (GtkSelectionData *selection_data,
 			-- 			     GdkAtom           type,
 			-- 			     gint              format,
@@ -12966,7 +12742,7 @@ feature -- External C functions
 --			"C (GtkWidget*, GdkEventSelection*): gint | <gtk/gtk.h>"
 --		end
 
-	frozen gtk_selection_owner_set (a_widget: POINTER; a_selection: INTEGER; a_time: INTEGER): INTEGER is
+	frozen gtk_selection_owner_set (a_widget: POINTER; a_selection: POINTER; a_time: NATURAL_32): INTEGER is
 			-- gint gtk_selection_owner_set (GtkWidget 	  *widget,
 			-- 			      GdkAtom    	   selection,
 			-- 			      guint32    	   time);
@@ -13606,64 +13382,6 @@ feature -- External C functions
 			-- (from C_GTK_TABLE)
 		external
 			"C (GtkTable*, guint) | <gtk/gtk.h>"
-		end
-
-	frozen gtk_target_list_add (a_list: POINTER; a_target: INTEGER; a_flags: INTEGER; a_info: INTEGER) is
-			-- void           gtk_target_list_add       (GtkTargetList  *list,
-			-- 				  	  GdkAtom         target,
-			-- 					  guint           flags,
-			-- 					  guint           info);
-			-- (from C_GTK_EXTERNALS)
-		external
-			"C (GtkTargetList*, GdkAtom, guint, guint) | <gtk/gtk.h>"
-		end
-
-	frozen gtk_target_list_add_table (a_list: POINTER; a_targets: POINTER; a_ntargets: INTEGER) is
-			-- void           gtk_target_list_add_table (GtkTargetList        *list,
-			-- 					  const GtkTargetEntry *targets,
-			-- 					  guint                 ntargets);
-			-- (from C_GTK_EXTERNALS)
-		external
-			"C (GtkTargetList*, GtkTargetEntry*, guint) | <gtk/gtk.h>"
-		end
-
-	frozen gtk_target_list_find (a_list: POINTER; a_target: INTEGER; a_info: POINTER): BOOLEAN is
-			-- gboolean       gtk_target_list_find      (GtkTargetList  *list,
-			-- 					  GdkAtom         target,
-			-- 					  guint          *info);
-			-- (from C_GTK_EXTERNALS)
-		external
-			"C (GtkTargetList*, GdkAtom, guint*): gboolean | <gtk/gtk.h>"
-		end
-
-	frozen gtk_target_list_new (a_targets: POINTER; a_ntargets: INTEGER): POINTER is
-			-- GtkTargetList *gtk_target_list_new       (const GtkTargetEntry *targets,
-			-- 					  guint                 ntargets);
-			-- (from C_GTK_EXTERNALS)
-		external
-			"C (GtkTargetEntry*, guint): GtkTargetList* | <gtk/gtk.h>"
-		end
-
-	frozen gtk_target_list_ref (a_list: POINTER) is
-			-- void           gtk_target_list_ref       (GtkTargetList  *list);
-			-- (from C_GTK_EXTERNALS)
-		external
-			"C (GtkTargetList*) | <gtk/gtk.h>"
-		end
-
-	frozen gtk_target_list_remove (a_list: POINTER; a_target: INTEGER) is
-			-- void           gtk_target_list_remove    (GtkTargetList  *list,
-			-- 					  GdkAtom         target);
-			-- (from C_GTK_EXTERNALS)
-		external
-			"C (GtkTargetList*, GdkAtom) | <gtk/gtk.h>"
-		end
-
-	frozen gtk_target_list_unref (a_list: POINTER) is
-			-- void           gtk_target_list_unref     (GtkTargetList  *list);
-			-- (from C_GTK_EXTERNALS)
-		external
-			"C (GtkTargetList*) | <gtk/gtk.h>"
 		end
 
 --	gtk_theme_engine_get (a_name: POINTER): POINTER is
@@ -17428,24 +17146,20 @@ feature -- External C structs
 		end
 
 	frozen gtk_input_dialog_struct_close_button (a_c_struct: POINTER): POINTER is
-			-- (from C_GTK_INPUT_DIALOG_STRUCT)
 		external
 			"C [struct <gtk/gtk.h>] (GtkInputDialog): EIF_POINTER"
 		alias
 			"close_button"
 		end
 
-	frozen gtk_input_dialog_struct_current_device (a_c_struct: POINTER): INTEGER is
-			-- (from C_GTK_INPUT_DIALOG_STRUCT)
+	frozen gtk_input_dialog_struct_current_device (a_c_struct: POINTER): POINTER is
 		external
-			"C [struct <gtk/gtk.h>] (GtkInputDialog): EIF_INTEGER"
+			"C [struct <gtk/gtk.h>] (GtkInputDialog): EIF_POINTER"
 		alias
 			"current_device"
 		end
 
 	frozen gtk_input_dialog_struct_dialog (a_c_struct: POINTER): POINTER is
-			-- Pointer to GtkDialog.
-			-- (from C_GTK_INPUT_DIALOG_STRUCT)
 		external
 			"C [struct <gtk/gtk.h>] (GtkInputDialog): EIF_POINTER"
 		alias
@@ -17453,7 +17167,6 @@ feature -- External C structs
 		end
 
 	frozen gtk_input_dialog_struct_keys_list (a_c_struct: POINTER): POINTER is
-			-- (from C_GTK_INPUT_DIALOG_STRUCT)
 		external
 			"C [struct <gtk/gtk.h>] (GtkInputDialog): EIF_POINTER"
 		alias

@@ -1,0 +1,75 @@
+--- Generated Ace file, using the EiffelStore Wizard.
+
+system
+	SAMPLE
+
+root
+	APPLICATION: "make_and_launch"
+
+default
+	assertion (ensure)
+	multithreaded (no)
+	exception_trace (no)
+	console_application (yes)
+	dynamic_runtime (no)
+	dead_code_removal (yes)
+	profile (no)
+	line_generation (no)
+	debug  (no)
+	array_optimization (no)
+	inlining (no)
+	inlining_size ("4")
+	<FL_TAG_PRECOMPILED>precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base");
+
+
+cluster
+	
+	root_cluster: "<FL_PATH>"
+
+		-- EiffelBase
+	all base:				"$EIFFEL4/library/base"
+		exclude
+			"desc";"table_eiffel3"
+		end
+
+		-- Vision
+
+	all wel:				"$EIFFEL4\library\wel"
+	all vision2: 			"$EIFFEL4\library\vision2"
+		exclude
+			"gtk"
+			"test"
+		end
+	all Events:				"$EIFFEL4\library\event"
+
+
+		-- EiffelTime
+	time:				"$EIFFEL4\library\time";
+	time_format(time):	"$\format";
+	time_english(time):	"$\format\english";
+
+		-- EiffelStore
+	estore_support:		"$EIFFEL4\library\store\support"
+	estore_interface:	"$EIFFEL4\library\store\interface"
+	estore_db_support:	"$EIFFEL4\library\store\dbms\support"
+	estore_rdbms:		"$EIFFEL4\library\store\dbms\rdbms\oracle"
+
+
+external
+	include_path:		
+						"$EIFFEL4\library\store\dbms\rdbms\oracle\Clib",
+						"$EIFFEL4\library\wel\spec\windows\include",
+						"$EIFFEL4\library\vision2\spec\include",
+						
+						"c:\oracle\ora81\OCI\include"
+
+	object: 			"$EIFFEL4\library\store\spec\$(COMPILER)\lib\support.lib",
+						"$EIFFEL4\library\store\spec\$(COMPILER)\lib\oracle_store.lib",
+						"c:\oracle\ora81\OCI\lib\msvc\oci.lib",
+						"$EIFFEL4\library\time\spec\$(COMPILER)\lib\datetime.lib",
+						"$EIFFEL4\library\wel\spec\msc\lib\wel.lib",
+						"$EIFFEL4\library\vision2\spec\$(COMPILER)\lib\vision2.lib",
+						"$EIFFEL4\library\vision2\spec\$(COMPILER)\lib\libpng.lib",
+						"$EIFFEL4\library\vision2\spec\$(COMPILER)\lib\zlib.lib"
+end
+

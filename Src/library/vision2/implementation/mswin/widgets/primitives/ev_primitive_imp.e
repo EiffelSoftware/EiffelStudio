@@ -1,14 +1,14 @@
 indexing
-
 	description: 
 		"EiffelVision primitive, mswin implementation."
+	note: "This class would be the equivalent of a wel_control in%
+			% the wel hierarchy."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
 deferred class
-	
 	EV_PRIMITIVE_IMP
 	
 inherit
@@ -17,38 +17,6 @@ inherit
 	EV_WIDGET_IMP
 		
 	EV_SIZEABLE_IMP
-
-	WEL_CONTROL
-		rename
-			parent as wel_parent,
-			font as wel_font,
-			set_font as wel_set_font
-		undefine
-				-- We undefine the features that are redefine by WEL objects
-			width,
-			height,
-			set_text,
-			text_length,
-			default_ex_style,
-			set_default_window_procedure,
-			call_default_window_procedure,
-			process_notification,
-				-- We undefine what was redefine by EV_WIDGET_IMP
-			set_height,
-			set_width,
-			remove_command,
-			on_left_button_down,
-			on_right_button_down,
-			on_left_button_up,
-			on_right_button_up,
-			on_left_button_double_click,
-			on_right_button_double_click,
-			on_mouse_move,
-			on_char,
-			on_key_up
-		redefine
-			destroy
-		end		
 
 feature -- Status setting
 
@@ -59,7 +27,16 @@ feature -- Status setting
 			if parent_imp /= Void then
 				parent_imp.set_insensitive (False)
 			end
-			{WEL_CONTROL} Precursor
+			wel_destroy
+		end
+
+feature -- Implementation : deferred features of WEL_CONTROL
+		-- that are used here but not defined
+
+	wel_destroy is
+			-- Destroy the window and quit the application
+			-- if `Current' is the application's main window.
+		deferred
 		end
 
 end -- class EV_PRIMITIVE_IMP

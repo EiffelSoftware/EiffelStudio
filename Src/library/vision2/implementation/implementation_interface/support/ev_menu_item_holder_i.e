@@ -10,7 +10,7 @@ deferred class
 	EV_MENU_ITEM_HOLDER_I
 
 inherit
-	EV_ANY_I
+	EV_ITEM_HOLDER_I
 
 feature -- Element change
 	

@@ -12,6 +12,8 @@ deferred class
 inherit
 	EV_PRIMITIVE_I
 
+	EV_ITEM_HOLDER_I
+
 feature {NONE} -- Initialization
 
 	make_with_size (col_nb: INTEGER) is         
@@ -34,28 +36,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	rows: INTEGER is
-			-- Number of rows
-		require
-			exists: not destroyed
-		deferred
-		end
-
 	columns: INTEGER is
 			-- Number of columns in the list.
 		require
 			exists: not destroyed
 		deferred
-		end
-
-	get_item (index: INTEGER): EV_MULTI_COLUMN_LIST_ROW is
-			-- Give the item of the list at the one-base
-			-- `index'.
-		require
-			exists: not destroyed
-			item_exists: index <= rows
-		do
-			Result ?= (ev_children @ index).interface
 		end
 
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
@@ -242,38 +227,6 @@ feature -- Element change
 		deferred
 		end
 
-	clear_items is
-			-- Clear all the items of the list.
-		require
-			exists: not destroyed
-		deferred
-		end
-
-feature -- Basic operation
-
-	find_item_by_data (data: ANY): EV_MULTI_COLUMN_LIST_ROW is
-			-- Find a child with data equal to `data'.
-		require
-			exists: not destroyed
-			valid_data: data /= Void
-		local
-			list: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
-			litem: EV_MULTI_COLUMN_LIST_ROW
-		do
-			from
-				list := ev_children
-				list.start
-			until
-				list.after or Result /= Void
-			loop
-				litem ?= list.item.interface
-				if litem.data.is_equal (data) then
-					Result ?= litem
-				end
-				list.forth
-			end
-		end
-
 feature -- Event : command association
 
 	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
@@ -334,7 +287,7 @@ invariant
 end -- class EV_MULTI_COLUMN_LIST_I
 
 --|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 

@@ -16,6 +16,8 @@ inherit
 			set_default_colors
 		end
 
+	EV_ITEM_HOLDER_I
+
 feature {EV_WIDGET} -- Initialization
 
 	set_default_colors is
@@ -30,22 +32,6 @@ feature {EV_WIDGET} -- Initialization
 		end
 
 feature -- Access
-
-	count: INTEGER is
-			-- Number of lines
-		do
-			Result := ev_children.count
-		end
-
-	get_item (index: INTEGER): EV_LIST_ITEM is
-			-- Give the item of the list at the zero-base
-			-- `index'.
-		require
-			exists: not destroyed
-			item_exists: (index <= count) and (index >= 0)
-		do
-			Result ?= (ev_children.i_th (index)).interface
-		end
 
 	selected_item: EV_LIST_ITEM is
 			-- Item which is currently selected
@@ -147,45 +133,6 @@ feature -- Status setting
 		require
 			exists: not destroyed
 		deferred
-		end
-
-feature -- Element change
-
-	clear_items is
-			-- Clear all the items of the list.
-		require
-			exists: not destroyed
-		deferred
-		end
-
-	add_item (item: EV_LIST_ITEM_IMP) is
-			-- Add `item' to the list
-		deferred
-		end
-
-feature -- Basic operation
-
-	find_item_by_data (data: ANY): EV_LIST_ITEM is
-			-- Find a child with data equal to `data'.
-		require
-			exists: not destroyed
-			valid_data: data /= Void
-		local
-			list: ARRAYED_LIST [EV_LIST_ITEM_IMP]
-			litem: EV_LIST_ITEM
-		do
-			from
-				list := ev_children
-				list.start
-			until
-				list.after or Result /= Void
-			loop
-				litem ?= list.item.interface
-				if litem.data.is_equal (data) then
-					Result ?= litem
-				end
-				list.forth
-			end
 		end
 
 feature -- Event : command association

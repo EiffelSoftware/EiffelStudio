@@ -21,18 +21,6 @@ create
 	default_create,
 	make_with_text
 
-feature -- Status Setting
-
-	set_peer (peer: EV_TOOL_BAR_RADIO_BUTTON) is
-			-- Put in same group as peer
-		require
-		do
-			implementation.set_peer (peer)
-		ensure
-			implementation.is_peer (peer)
-		end
-
-
 feature {EV_ANY_I} -- Implementation
 
 	create_implementation is
@@ -69,6 +57,9 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/02/17 01:41:31  king
+--| Removed deprecated set_peer function
+--|
 --| Revision 1.6  2000/02/14 13:38:56  oconnor
 --| released
 --|

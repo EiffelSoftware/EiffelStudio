@@ -6,16 +6,9 @@ deferred class
 	IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE
 
 inherit
-	ECOM_INTERFACE
+	IEIFFEL_COMPLETION_ENTRY_INTERFACE
 
 feature -- Status Report
-
-	name_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `name'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
 
 	external_name_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `external_name'.
@@ -47,13 +40,6 @@ feature -- Status Report
 
 	feature_location_user_precondition (file_path: CELL [STRING]; line_number: INTEGER_REF): BOOLEAN is
 			-- User-defined preconditions for `feature_location'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	signature_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `signature'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -250,14 +236,6 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	name: STRING is
-			-- Feature name.
-		require
-			name_user_precondition: name_user_precondition
-		deferred
-
-		end
-
 	external_name: STRING is
 			-- Feature external name.
 		require
@@ -303,14 +281,6 @@ feature -- Basic Operations
 
 		ensure
 			valid_file_path: file_path.item /= Void
-		end
-
-	signature: STRING is
-			-- Feature signature.
-		require
-			signature_user_precondition: signature_user_precondition
-		deferred
-
 		end
 
 	all_callers: IENUM_FEATURE_INTERFACE is

@@ -18,6 +18,12 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
+	signature: STRING is
+			-- Feature signature.
+		do
+			-- Put Implementation here.
+		end
+
 	external_name: STRING is
 			-- Feature external name.
 		do
@@ -38,12 +44,6 @@ feature -- Access
 
 	description: STRING is
 			-- Feature description.
-		do
-			-- Put Implementation here.
-		end
-
-	signature: STRING is
-			-- Feature signature.
 		do
 			-- Put Implementation here.
 		end
@@ -211,6 +211,13 @@ feature -- Access
 		end
 
 feature -- Basic Operations
+
+	is_feature (return_value: BOOLEAN_REF) is
+			-- Is entry a feature?
+			-- `return_value' [out].  
+		do
+			-- Put Implementation here.
+		end
 
 	feature_location (file_path: CELL [STRING]; line_number: INTEGER_REF) is
 			-- Feature location, full path to file and line number

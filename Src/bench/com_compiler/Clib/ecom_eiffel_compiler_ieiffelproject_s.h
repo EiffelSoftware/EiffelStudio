@@ -57,6 +57,16 @@ class IEiffelProjectProperties;
 
 
 
+#ifndef __ecom_eiffel_compiler_IEiffelCompletionInfo_FWD_DEFINED__
+#define __ecom_eiffel_compiler_IEiffelCompletionInfo_FWD_DEFINED__
+namespace ecom_eiffel_compiler
+{
+class IEiffelCompletionInfo;
+}
+#endif
+
+
+
 #ifdef __cplusplus
 extern "C" {
 #ifndef __ecom_eiffel_compiler_IEiffelProject_INTERFACE_DEFINED__
@@ -139,6 +149,12 @@ public:
 	Project Properties.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP project_properties(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelProjectProperties * * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Completion information
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP completion_information(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelCompletionInfo * * return_value ) = 0;
 
 
 

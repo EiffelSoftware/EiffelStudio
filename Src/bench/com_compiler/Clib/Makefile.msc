@@ -8,8 +8,10 @@ CFLAGS = -W0 -Ox -D_WIN32_DCOM -c -I$(ISE_EIFFEL)\studio\spec\windows\include -I
 
 OBJ = ceiffelcompiler_factory.obj \
 ceiffelproject_factory.obj \
+ceiffelcompletioninfo_factory.obj \
 ecom_eiffel_compiler_ceiffelcompiler_s.obj \
 ecom_eiffel_compiler_ceiffelproject_s.obj \
+ecom_eiffel_compiler_ceiffelcompletioninfo_s.obj \
 ecom_eiffel_compiler_ieiffelclassdescriptor_impl_stub_s.obj \
 ecom_eiffel_compiler_ieiffelclusterdescriptor_impl_stub_s.obj \
 ecom_eiffel_compiler_ieiffelclusterproperties_impl_stub_s.obj \
@@ -46,8 +48,10 @@ ecom_eiffel_compiler_ienumobjectfiles_impl_stub_s.obj
 
 WOBJ = wceiffelcompiler_factory.obj \
 wceiffelproject_factory.obj \
+wceiffelcompletioninfo_factory.obj \
 wecom_eiffel_compiler_ceiffelcompiler_s.obj \
 wecom_eiffel_compiler_ceiffelproject_s.obj \
+wecom_eiffel_compiler_ceiffelcompletioninfo_s.obj \
 wecom_eiffel_compiler_ieiffelclassdescriptor_impl_stub_s.obj \
 wecom_eiffel_compiler_ieiffelclusterdescriptor_impl_stub_s.obj \
 wecom_eiffel_compiler_ieiffelclusterproperties_impl_stub_s.obj \
@@ -107,6 +111,9 @@ ecom_final.lib: $(OBJ)
 wceiffelcompiler_factory.obj: ceiffelcompiler_factory.cpp
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
 
+wceiffelcompletioninfo_factory.obj: ceiffelcompletioninfo_factory.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
 wceiffelproject_factory.obj: ceiffelproject_factory.cpp
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
 
@@ -114,6 +121,9 @@ wecom_eiffel_compiler_ceiffelcompiler_s.obj: ecom_eiffel_compiler_ceiffelcompile
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ceiffelproject_s.obj: ecom_eiffel_compiler_ceiffelproject_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_eiffel_compiler_ceiffelcompletioninfo_s.obj: ecom_eiffel_compiler_ceiffelcompletioninfo_s.cpp
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ieiffelclassdescriptor_impl_stub_s.obj: ecom_eiffel_compiler_ieiffelclassdescriptor_impl_stub_s.cpp

@@ -1,0 +1,120 @@
+/*-----------------------------------------------------------
+ Help file: 
+-----------------------------------------------------------*/
+
+#ifndef __ECOM_EIFFEL_COMPILER_CEIFFELCOMPLETIONINFO_S_H__
+#define __ECOM_EIFFEL_COMPILER_CEIFFELCOMPLETIONINFO_S_H__
+#ifdef __cplusplus
+extern "C" {
+
+
+namespace ecom_eiffel_compiler
+{
+class CEiffelCompletionInfo;
+}
+
+}
+#endif
+
+#include "eif_com.h"
+
+#include "eif_eiffel.h"
+
+#include "ecom_server_rt_globals.h"
+
+#include "server_registration.h"
+
+#include "CEiffelCompletionInfo_factory.h"
+
+#include "ecom_eiffel_compiler_IEiffelCompletionInfo_s.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern "C" const CLSID CLSID_CEiffelCompletionInfo_;
+
+#ifdef __cplusplus
+extern "C" {
+namespace ecom_eiffel_compiler
+{
+class CEiffelCompletionInfo : public ecom_eiffel_compiler::IEiffelCompletionInfo, public IProvideClassInfo2
+{
+public:
+	CEiffelCompletionInfo (EIF_TYPE_ID tid);
+	CEiffelCompletionInfo (EIF_OBJECT eif_obj);
+	virtual ~CEiffelCompletionInfo ();
+
+	/*-----------------------------------------------------------
+	Features accessible from target.
+	-----------------------------------------------------------*/
+	STDMETHODIMP target_features(  /* [in] */ BSTR target, /* [in] */ BSTR feature_name, /* [in] */ BSTR file_name, /* [out, retval] */ ecom_eiffel_compiler::IEnumCompletionEntry * * return_value );
+
+
+	/*-----------------------------------------------------------
+	Decrement reference count
+	-----------------------------------------------------------*/
+	STDMETHODIMP_(ULONG) Release();
+
+
+	/*-----------------------------------------------------------
+	Increment reference count
+	-----------------------------------------------------------*/
+	STDMETHODIMP_(ULONG) AddRef();
+
+
+	/*-----------------------------------------------------------
+	Query Interface.
+	-----------------------------------------------------------*/
+	STDMETHODIMP QueryInterface( REFIID riid, void ** ppv );
+
+
+	/*-----------------------------------------------------------
+	GetClassInfo
+	-----------------------------------------------------------*/
+	STDMETHODIMP GetClassInfo( ITypeInfo ** ppti );
+
+
+	/*-----------------------------------------------------------
+	GetGUID
+	-----------------------------------------------------------*/
+	STDMETHODIMP GetGUID( DWORD dwKind, GUID * pguid );
+
+
+
+protected:
+
+
+private:
+	/*-----------------------------------------------------------
+	Reference counter
+	-----------------------------------------------------------*/
+	LONG ref_count;
+
+
+	/*-----------------------------------------------------------
+	Corresponding Eiffel object
+	-----------------------------------------------------------*/
+	EIF_OBJECT eiffel_object;
+
+
+	/*-----------------------------------------------------------
+	Eiffel type id
+	-----------------------------------------------------------*/
+	EIF_TYPE_ID type_id;
+
+
+
+
+};
+}
+}
+#endif
+
+#ifdef __cplusplus
+}
+#endif
+#include "ecom_grt_globals_ISE.h"
+
+
+#endif

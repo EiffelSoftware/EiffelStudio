@@ -28,6 +28,8 @@ class IEiffelProject_impl_proxy;
 
 #include "ecom_eiffel_compiler_IEiffelProjectProperties_s.h"
 
+#include "ecom_eiffel_compiler_IEiffelCompletionInfo_s.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -112,6 +114,12 @@ public:
 	Project Properties.
 	-----------------------------------------------------------*/
 	EIF_REFERENCE ccom_project_properties(  );
+
+
+	/*-----------------------------------------------------------
+	Completion information
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_completion_information(  );
 
 
 	/*-----------------------------------------------------------

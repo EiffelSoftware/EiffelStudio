@@ -384,6 +384,36 @@ STDMETHODIMP ecom_eiffel_compiler::CEiffelProject::project_properties(  /* [out,
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_eiffel_compiler::CEiffelProject::completion_information(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelCompletionInfo * * return_value )
+
+/*-----------------------------------------------------------
+	Completion information
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_REFERENCE_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_reference_function ("completion_information", type_id);
+	EIF_REFERENCE tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "completion_information", EIF_REFERENCE);
+	if (tmp_value != NULL)
+	{
+		EIF_OBJECT tmp_object = eif_protect (tmp_value);
+		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_18 (eif_access (tmp_object));
+		eif_wean (tmp_object);
+	}
+	else
+		*return_value = NULL;
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP_(ULONG) ecom_eiffel_compiler::CEiffelProject::Release()
 
 /*-----------------------------------------------------------

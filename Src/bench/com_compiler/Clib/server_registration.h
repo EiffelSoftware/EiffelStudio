@@ -17,6 +17,10 @@ Component registration code
 
 #include "CEiffelCompiler_factory.h"
 
+#include "ecom_eiffel_compiler_CEiffelCompletionInfo_s.h"
+
+#include "CEiffelCompletionInfo_factory.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

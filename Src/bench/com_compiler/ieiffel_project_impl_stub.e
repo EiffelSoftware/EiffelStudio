@@ -72,6 +72,12 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
+	completion_information: IEIFFEL_COMPLETION_INFO_INTERFACE is
+			-- Completion information
+		do
+			-- Put Implementation here.
+		end
+
 feature -- Basic Operations
 
 	retrieve_project (a_project_file_name: STRING) is

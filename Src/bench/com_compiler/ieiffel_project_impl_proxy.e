@@ -85,6 +85,12 @@ feature -- Access
 			Result := ccom_project_properties (initializer)
 		end
 
+	completion_information: IEIFFEL_COMPLETION_INFO_INTERFACE is
+			-- Completion information
+		do
+			Result := ccom_completion_information (initializer)
+		end
+
 feature -- Basic Operations
 
 	retrieve_project (a_project_file_name: STRING) is
@@ -180,6 +186,12 @@ feature {NONE}  -- Externals
 
 	ccom_project_properties (cpp_obj: POINTER): IEIFFEL_PROJECT_PROPERTIES_INTERFACE is
 			-- Project Properties.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_completion_information (cpp_obj: POINTER): IEIFFEL_COMPLETION_INFO_INTERFACE is
+			-- Completion information
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end

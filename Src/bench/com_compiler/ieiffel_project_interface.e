@@ -94,6 +94,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	completion_information_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `completion_information'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 feature -- Basic Operations
 
 	retrieve_project (a_project_file_name: STRING) is
@@ -191,6 +198,14 @@ feature -- Basic Operations
 			-- Project Properties.
 		require
 			project_properties_user_precondition: project_properties_user_precondition
+		deferred
+
+		end
+
+	completion_information: IEIFFEL_COMPLETION_INFO_INTERFACE is
+			-- Completion information
+		require
+			completion_information_user_precondition: completion_information_user_precondition
 		deferred
 
 		end

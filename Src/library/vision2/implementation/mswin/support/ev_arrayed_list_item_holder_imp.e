@@ -27,11 +27,12 @@ feature -- Element change
 			-- Remove `ev_children' without destroying them.
 		do
 			from
-				ev_children.start
+				ev_children.finish
 			until
 				ev_children.count = 0
 			loop
 				ev_children.item.set_parent (Void)
+				ev_children.back
 			end
 		end
 

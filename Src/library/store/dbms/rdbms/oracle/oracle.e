@@ -16,6 +16,10 @@ inherit
 			convert_string_type
 		end
 
+feature
+
+	database_handle_name: STRING is "ORACLE"
+
 feature -- For DATABASE_STATUS
 
 	is_ok_mat: BOOLEAN

@@ -30,6 +30,10 @@ inherit
 			unset_catalog_flag
 		end
 
+feature 
+
+	database_handle_name: STRING is "ODBC"
+
 feature -- For DATABASE_STATUS
 
 	is_ok_mat: BOOLEAN

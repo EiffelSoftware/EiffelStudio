@@ -25,8 +25,6 @@ feature -- Project name and Location state
 	
 	l_Compile_project: STRING is "Compile the generated project"
 	
-	l_Console_application: STRING is "Console application"
-	
 feature -- Project name error state
 
 	t_Project_name_error_state: STRING is "Project Name Error"

@@ -273,7 +273,7 @@ feature -- Basic Operations
 feature {NONE} -- Implementation
 
 	trim_end_digits (s: STRING) is
-			-- 	Remove end digits from `s'.
+			-- 	Remove end digits from `s' and append `_' if needed.
 		require
 			non_void_string: s /= Void
 		local
@@ -294,6 +294,11 @@ feature {NONE} -- Implementation
 				end
 				i := i - 1
 			end
+			if s.item (s.count) /= '_' then
+				s.append_character ('_')
+			end
+		ensure
+			trimmed: s.item (s.count) = '_'
 		end
 		
 	eiffel_format (s: STRING): STRING is

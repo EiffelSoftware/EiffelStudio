@@ -45,4 +45,5 @@ feature {NONE}
 	click_elem_sd: INTEGER is 141;
 
 	executable_name_sd: INTEGER is 157;
+	include_path_name_sd: INTEGER is 159;
 end

@@ -12,13 +12,13 @@ class
 inherit
 	EV_DIALOG
 
-	EB_CONSTANTS
+	NEW_EB_CONSTANTS
 
 	EIFFEL_ENV
 
 	EV_COMMAND
 
-	WINDOW_ATTRIBUTES
+--	WINDOW_ATTRIBUTES
 
 creation
 	make_default

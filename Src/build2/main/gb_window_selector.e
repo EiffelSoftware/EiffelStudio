@@ -333,9 +333,13 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 			original, new: FILE_NAME
 		do
 			create original.make_from_string (generated_path.string)
-			original.extend (current_directory.text)
+			if current_directory /= Void then
+				original.extend (current_directory.text)	
+			end
 			create new.make_from_string (generated_path.string)
-			new.extend (new_directory.text)
+			if new_directory /= Void then
+				new.extend (new_directory.text)	
+			end
 			move_file_between_directories (original, new, window_item.object.name.as_lower + ".e")
 			move_file_between_directories (original, new, (window_item.object.name + Class_implementation_extension).as_lower + ".e")
 		end

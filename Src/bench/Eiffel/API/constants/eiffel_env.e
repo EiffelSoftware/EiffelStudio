@@ -339,5 +339,8 @@ feature -- Version limitation
 
 	has_dll_generation: BOOLEAN is True
 			-- Does this version have the DLL generation?
+			
+	has_signable_generation: BOOLEAN is True
+			-- Does this version allow the signing of .NET assemblies
 
 end -- class EIFFEL_ENV

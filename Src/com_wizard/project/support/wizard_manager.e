@@ -363,8 +363,8 @@ feature {NONE} -- Implementation
 			when Standard_abort_value then
 				a_string := clone (Standard_failure_error_message)
 			else
-				a_string.append_integer (Shared_wizard_environment.return_code)
 				a_string := clone (Failed_message)
+				a_string.append_integer (Shared_wizard_environment.return_code)
 			end
 			parent.add_error (a_string)
 			if running then

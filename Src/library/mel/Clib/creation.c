@@ -49,18 +49,28 @@ EIF_POINTER xm_create_option_menu_with_label (EIF_POINTER a_parent, char *a_name
 	return (EIF_POINTER) XmCreateOptionMenu ((Widget) a_parent, (String) a_name , args, 1);
 }
 
-EIF_POINTER xm_create_scrolled_text_detailed ( EIF_POINTER a_parent, char *a_name,
+EIF_POINTER xm_create_scrolled_text (EIF_POINTER a_parent, char *a_name)
+{
+	Arg args[1];
+
+	XtSetArg (args[0], XmNeditMode, XmMULTI_LINE_EDIT);
+
+	return (EIF_POINTER) XmCreateScrolledText ((Widget) a_parent, (String) a_name, args, 1);
+}
+
+EIF_POINTER xm_create_scrolled_text_detailed (EIF_POINTER a_parent, char *a_name,
 	EIF_BOOLEAN scroll_hor, EIF_BOOLEAN scroll_vert, EIF_BOOLEAN scroll_top,
 	EIF_BOOLEAN scroll_left)
 {
-	Arg args[4];
+	Arg args[5];
 
-	XtSetArg (args[0], XmNscrollHorizontal, (Boolean) scroll_hor);
-	XtSetArg (args[1], XmNscrollVertical, (Boolean) scroll_vert);
-	XtSetArg (args[2], XmNscrollTopSide, (Boolean) scroll_top);
-	XtSetArg (args[3], XmNscrollLeftSide, (Boolean) scroll_left);
+	XtSetArg (args[0], XmNeditMode, XmMULTI_LINE_EDIT);
+	XtSetArg (args[1], XmNscrollHorizontal, (Boolean) scroll_hor);
+	XtSetArg (args[2], XmNscrollVertical, (Boolean) scroll_vert);
+	XtSetArg (args[3], XmNscrollTopSide, (Boolean) scroll_top);
+	XtSetArg (args[4], XmNscrollLeftSide, (Boolean) scroll_left);
 
-	return (EIF_POINTER) XmCreateScrolledText ((Widget) a_parent, (String) a_name, args, 4);
+	return (EIF_POINTER) XmCreateScrolledText ((Widget) a_parent, (String) a_name, args, 5);
 }
 
 EIF_POINTER xm_create_scrolled_window_with_automatic_scrolling

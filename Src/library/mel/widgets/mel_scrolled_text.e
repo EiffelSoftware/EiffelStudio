@@ -42,10 +42,11 @@ feature -- Initialization
 		do
 			widget_name := a_name.to_c;
 			screen_object := xm_create_scrolled_text 
-				(a_parent.screen_object, $widget_name, default_pointer, 0);
+				(a_parent.screen_object, $widget_name);
 			!! parent.make_from_existing (xt_parent (screen_object), a_parent);
 			Mel_widgets.add (Current);
 			set_default;
+
 			if do_manage then
 				manage
 			end
@@ -55,11 +56,14 @@ feature -- Initialization
 			name_set: name.is_equal (a_name);
 		end;
 
-	make_detailed (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN;
-							scroll_hor, scroll_vert, scroll_top, scroll_left: BOOLEAN) is
-			-- Create a motif scrolled text with the eventual appearing horizontal
-			-- scroll bar at the top or bottom, eventual appearing vertical scroll bar
-			-- at the left or right.
+	make_detailed (a_name: STRING; a_parent: MEL_COMPOSITE; 
+		       do_manage: BOOLEAN;
+		       scroll_hor, scroll_vert, 
+		       scroll_top, scroll_left: BOOLEAN) is
+			-- Create a motif scrolled text with the
+			-- eventual appearing horizontal scroll bar at
+			-- the top or bottom, eventual appearing
+			-- vertical scroll bar at the left or right.
 		require
 			name_exists: a_name /= Void;
 			parent_exists: a_parent /= Void and then not a_parent.is_destroyed
@@ -67,8 +71,13 @@ feature -- Initialization
 			widget_name: ANY
 		do
 			widget_name := a_name.to_c;
-			screen_object := xm_create_scrolled_text_detailed (a_parent.screen_object,
-								$widget_name, scroll_hor, scroll_vert, scroll_top, scroll_left);
+			screen_object := 
+				xm_create_scrolled_text_detailed (a_parent.screen_object,
+								  $widget_name, 
+								  scroll_hor, 
+								  scroll_vert, 
+								  scroll_top, 
+								  scroll_left);
 			!! parent.make_from_existing (xt_parent (screen_object), a_parent);
 			Mel_widgets.add (Current);
 			set_default;
@@ -149,11 +158,9 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	xm_create_scrolled_text (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_scrolled_text (a_parent, a_name: POINTER): POINTER is
 		external
-			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/Text.h>"
-		alias
-			"XmCreateScrolledText"
+			"C"
 		end;
 
 	xm_create_scrolled_text_detailed (a_parent, a_name: POINTER; scroll_hor, scroll_vert, scroll_top, scroll_left: BOOLEAN): POINTER is

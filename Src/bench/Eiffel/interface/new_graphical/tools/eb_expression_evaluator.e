@@ -54,11 +54,11 @@ feature {NONE} -- Initialization
 										Interface_names.l_Expression,
 										Interface_names.l_Value>>)
 			ev_list.set_column_widths (<<70, 120, 100>>)
-			ev_list.drop_actions.extend (~on_element_drop)
-			ev_list.key_press_actions.extend (~key_pressed)
-			ev_list.select_actions.extend (~on_item_selected)
-			ev_list.deselect_actions.extend (~on_item_deselected)
-			update_agent := ~real_update
+			ev_list.drop_actions.extend (agent on_element_drop)
+			ev_list.key_press_actions.extend (agent key_pressed)
+			ev_list.select_actions.extend (agent on_item_selected)
+			ev_list.deselect_actions.extend (agent on_item_deselected)
+			update_agent := agent real_update
 		end
 
 	build_explorer_bar is
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 			create create_expression_cmd.make
 			create_expression_cmd.set_mini_pixmaps (Pixmaps.Icon_new_expression)
 			create_expression_cmd.set_tooltip (Interface_names.e_New_expression)
-			create_expression_cmd.add_agent (~define_new_expression)
+			create_expression_cmd.add_agent (agent define_new_expression)
 			create_expression_cmd.enable_sensitive
 			tb.extend (create_expression_cmd.new_mini_toolbar_item)
 			
@@ -82,7 +82,7 @@ feature {NONE} -- Initialization
 			create edit_expression_cmd.make
 			edit_expression_cmd.set_mini_pixmaps (Pixmaps.Icon_edit_expression)
 			edit_expression_cmd.set_tooltip (Interface_names.e_Edit_expression)
-			edit_expression_cmd.add_agent (~edit_expression)
+			edit_expression_cmd.add_agent (agent edit_expression)
 			tbb := edit_expression_cmd.new_mini_toolbar_item
 --			tbb.drop_actions.extend (~edit_dropped)
 			tb.extend (tbb)
@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 			create delete_expression_cmd.make
 			delete_expression_cmd.set_mini_pixmaps (Pixmaps.Icon_delete_very_small)
 			delete_expression_cmd.set_tooltip (Interface_names.e_Remove_expressions)
-			delete_expression_cmd.add_agent (~remove_selected)
+			delete_expression_cmd.add_agent (agent remove_selected)
 			tbb := delete_expression_cmd.new_mini_toolbar_item
 --			tbb.drop_actions.extend (~delete_dropped)
 			tb.extend (tbb)
@@ -206,7 +206,7 @@ feature {NONE} -- Event handling
 			dlg: EB_EXPRESSION_DEFINITION_DIALOG
 		do
 			create dlg.make
-			dlg.set_callback (~add_expression (dlg))
+			dlg.set_callback (agent add_expression (dlg))
 			dlg.show_modal_to_window (Debugger_manager.debugging_window.window)
 		end
 
@@ -221,7 +221,7 @@ feature {NONE} -- Event handling
 			if sel /= Void then
 				expr ?= sel.data
 				create dlg.make_with_expression (expr)
-				dlg.set_callback (~refresh_expression (expr))
+				dlg.set_callback (agent refresh_expression (expr))
 				dlg.show_modal_to_window (Debugger_manager.debugging_window.window)
 			end
 		end
@@ -258,13 +258,13 @@ feature {NONE} -- Event handling
 			ost ?= s
 			if ost /= Void then
 				create dlg.make_with_object (ost.object_address)
-				dlg.set_callback (~add_expression (dlg))
+				dlg.set_callback (agent add_expression (dlg))
 				dlg.show_modal_to_window (Debugger_manager.debugging_window.window)
 			else
 				cst ?= s
 				if cst /= Void then
 					create dlg.make_with_class (cst.e_class)
-					dlg.set_callback (~add_expression (dlg))
+					dlg.set_callback (agent add_expression (dlg))
 					dlg.show_modal_to_window (Debugger_manager.debugging_window.window)
 				end
 			end

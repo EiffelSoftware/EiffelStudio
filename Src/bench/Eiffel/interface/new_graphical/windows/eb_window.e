@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			create window
 			init_size_and_position
 			window.close_request_actions.wipe_out
-			window.close_request_actions.put_front (~destroy)
+			window.close_request_actions.put_front (agent destroy)
 			window.set_icon_pixmap (pixmap)
 
 				-- Initialize commands and connect them.
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 			end
 			create help_engine.make
 
-			window.focus_in_actions.extend (window_manager~set_focused_window (Current))
+			window.focus_in_actions.extend (agent window_manager.set_focused_window (Current))
 		
 			initialized := True
 		end
@@ -119,29 +119,29 @@ feature -- Access
 		do
 			create Result
 			create item.make_with_text (Interface_names.m_Close_short)
-			item.select_actions.extend (~destroy)
+			item.select_actions.extend (agent destroy)
 			Result.extend (item)
 			create item.make_with_text (Interface_names.m_Minimize)
-			item.select_actions.extend (window~minimize)
+			item.select_actions.extend (agent window.minimize)
 			if window.is_minimized then
 				item.disable_sensitive
 			end
 			Result.extend (item)
 			create item.make_with_text (Interface_names.m_Maximize)
-			item.select_actions.extend (window~maximize)
+			item.select_actions.extend (agent window.maximize)
 			if window.is_maximized then
 				item.disable_sensitive
 			end
 			Result.extend (item)
 			create item.make_with_text (Interface_names.m_Raise)
-			item.select_actions.extend (~raise)
+			item.select_actions.extend (agent raise)
 			Result.extend (item)
 
 			create sep
 			Result.extend (sep)
 		
 			create item.make_with_text (Interface_names.m_New_window)
-			item.select_actions.extend (window_manager~create_window)
+			item.select_actions.extend (agent window_manager.create_window)
 			Result.extend (item)
 		end
 
@@ -270,7 +270,7 @@ feature -- Window management / Status Setting
 					else
 						create cd.make_with_text (Warning_messages.w_Exiting_stops_debugger)
 					end
-					cd.button ("OK").select_actions.extend (window_manager~try_to_destroy_window (Current))
+					cd.button ("OK").select_actions.extend (agent window_manager.try_to_destroy_window (Current))
 					cd.show_modal_to_window (window)
 				else
 					window_manager.try_to_destroy_window (Current)
@@ -350,7 +350,7 @@ feature {NONE} -- Menus initializations
 			create file_menu.make_with_text (Interface_names.m_File)
 
 			create menu_item.make_with_text (Interface_names.m_Close)
-			menu_item.select_actions.extend (~destroy)
+			menu_item.select_actions.extend (agent destroy)
 			file_menu.extend (menu_item)
 
 			command_menu_item := Exit_application_cmd.new_menu_item
@@ -379,13 +379,13 @@ feature {NONE} -- Menus initializations
 
 					-- Dynamic Library Window
 			create menu_item.make_with_text (Interface_names.m_New_dynamic_lib)
-			menu_item.select_actions.extend (show_dynamic_lib_tool~execute)
+			menu_item.select_actions.extend (agent show_dynamic_lib_tool.execute)
 			tools_menu.extend (menu_item)
 
 					-- Profiler Window
 			create show_profiler
 			create menu_item.make_with_text (Interface_names.m_Profile_tool)
-			menu_item.select_actions.extend (show_profiler~execute)
+			menu_item.select_actions.extend (agent show_profiler.execute)
 			tools_menu.extend (menu_item)
 
 					-- Precompile Wizard
@@ -423,22 +423,22 @@ feature {NONE} -- Menus initializations
 
 				-- Guided Tour
 			create menu_item.make_with_text (Interface_names.m_Guided_tour)
-			menu_item.select_actions.extend (~display_guided_tour)
+			menu_item.select_actions.extend (agent display_guided_tour)
 			help_menu.extend (menu_item)
 
 				-- Contents
 			create menu_item.make_with_text (Interface_names.m_Contents)
-			menu_item.select_actions.extend (~display_help_contents)
+			menu_item.select_actions.extend (agent display_help_contents)
 			help_menu.extend (menu_item)
 
 				-- How to's
 			create menu_item.make_with_text (Interface_names.m_How_to_s)
-			menu_item.select_actions.extend (~display_how_to_s)
+			menu_item.select_actions.extend (agent display_how_to_s)
 			help_menu.extend (menu_item)
 
 				-- Eiffel introduction
 			create menu_item.make_with_text (Interface_names.m_Eiffel_introduction)
-			menu_item.select_actions.extend (~display_eiffel_introduction)
+			menu_item.select_actions.extend (agent display_eiffel_introduction)
 			help_menu.extend (menu_item)
 
 				-- Add the separator
@@ -448,7 +448,7 @@ feature {NONE} -- Menus initializations
 				-- About
 			create menu_item.make_with_text (Interface_names.m_About)
 			create about_cmd
-			menu_item.select_actions.extend (about_cmd~execute) 
+			menu_item.select_actions.extend (agent about_cmd.execute) 
 			help_menu.extend (menu_item)
 		ensure
 			help_menu_created: help_menu /= Void

@@ -51,11 +51,11 @@ feature {NONE} -- Initialization
 			set_title (Interface_names.t_Diagram_history_tool)
 			set_minimum_size (200, 230)
 
-			create cancel_button.make_with_text_and_action (Interface_names.b_Close, ~close_action)
+			create cancel_button.make_with_text_and_action (Interface_names.b_Close, agent close_action)
 			create vb
 			create hb
 			create action_list
-			action_list.select_actions.extend (~on_select)
+			action_list.select_actions.extend (agent on_select)
 
 			hb.extend (create {EV_CELL})
 			hb.extend (cancel_button)
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 			set_default_cancel_button (cancel_button)
 
 			close_request_actions.wipe_out
-			close_request_actions.extend (~hide)
+			close_request_actions.extend (agent hide)
 
 			user_selected := True
 		end
@@ -139,7 +139,7 @@ feature -- Basic operations
 				check t /= Void end
 				action_array ?= t.item (1)
 				check action_array /= Void end
-				do_agent := (~procedure_array_call (action_array))
+				do_agent := (agent procedure_array_call (action_array))
 			end
 			undo_proc ?= undo_procedure
 			if undo_proc /= Void then
@@ -149,7 +149,7 @@ feature -- Basic operations
 				check t /= Void end
 				undo_array ?= t.item (1)
 				check undo_array /= Void end
-				undo_agent := (~procedure_array_call (undo_array))
+				undo_agent := (agent procedure_array_call (undo_array))
 			end
 			do_agent.call (Void)
 			create undo_pair.make (undo_agent, do_agent)
@@ -210,7 +210,7 @@ feature -- Basic operations
 				check t /= Void end
 				action_array ?= t.item (1)
 				check action_array /= Void end
-				do_agent := (~procedure_array_call (action_array))
+				do_agent := (agent procedure_array_call (action_array))
 			end
 			undo_proc ?= undo_procedure
 			if undo_proc /= Void then
@@ -220,7 +220,7 @@ feature -- Basic operations
 				check t /= Void end
 				undo_array ?= t.item (1)
 				check undo_array /= Void end
-				undo_agent := (~procedure_array_call (undo_array))
+				undo_agent := (agent procedure_array_call (undo_array))
 			end
 			create undo_pair.make (undo_agent, do_agent)
 			undo_pair.set_name (a_name)

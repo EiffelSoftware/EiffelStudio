@@ -99,7 +99,7 @@ feature {NONE} -- Initialization Implementation
 				if an_item /= Void then
 						-- Build the menu item and add it to the menu.
 					create menu_item
-					menu_item.select_actions.extend (history_manager~go_i_th (history_list.index))
+					menu_item.select_actions.extend (agent history_manager.go_i_th (history_list.index))
 					menu_item.set_text (an_item.history_name)
 					menu_item.set_data (an_item)
 					extend (menu_item)
@@ -124,7 +124,7 @@ feature -- Observer pattern
 		do
 				-- Create a new entry for `a_item' in the menu.
 			create menu_item
-			menu_item.select_actions.extend (history_manager~go_i_th (index_item))
+			menu_item.select_actions.extend (agent history_manager.go_i_th (index_item))
 			menu_item.set_text (an_item.history_name)
 			menu_item.set_data (index_item)
 			extend (menu_item)

@@ -52,9 +52,9 @@ feature {NONE} -- Initialization
 			a_box.extend (h1)
 			a_box.disable_item_expand (h1)
 
-			Create previous_b.make_with_text_and_action ("< Back ", ~previous_page)
-			Create next_b.make_with_text_and_action ("Next >", ~next_page)	
-			Create cancel_b.make_with_text_and_action ("Cancel", ~cancel_actions)
+			Create previous_b.make_with_text_and_action ("< Back ", agent previous_page)
+			Create next_b.make_with_text_and_action ("Next >", agent next_page)	
+			Create cancel_b.make_with_text_and_action ("Cancel", agent cancel_actions)
 
 			h1.extend (create {EV_CELL})
 

@@ -42,9 +42,9 @@ feature {NONE} -- Initialization
 			supplier_depth := 1
 			set_title (Interface_names.t_Diagram_context_depth)
 
-			create ok_button.make_with_text_and_action (Interface_names.b_Ok, ~ok_action)
+			create ok_button.make_with_text_and_action (Interface_names.b_Ok, agent ok_action)
 			Layout_constants.set_default_size_for_button (ok_button)
-			create cancel_button.make_with_text_and_action (Interface_names.b_Cancel, ~cancel_action)
+			create cancel_button.make_with_text_and_action (Interface_names.b_Cancel, agent cancel_action)
 			Layout_constants.set_default_size_for_button (cancel_button)
 			create frm.make_with_text ("Include")
 			create frm2.make_with_text ("Up to depth of")
@@ -166,9 +166,9 @@ feature {NONE} -- Initialization
 			subcluster_depth := 1
 			set_title (Interface_names.t_Diagram_context_depth)
 
-			create ok_button.make_with_text_and_action (Interface_names.b_Ok, ~ok_action)
+			create ok_button.make_with_text_and_action (Interface_names.b_Ok, agent ok_action)
 			Layout_constants.set_default_size_for_button (ok_button)
-			create cancel_button.make_with_text_and_action (Interface_names.b_Cancel, ~cancel_action)
+			create cancel_button.make_with_text_and_action (Interface_names.b_Cancel, agent cancel_action)
 			Layout_constants.set_default_size_for_button (cancel_button)
 			create frm.make_with_text ("Include")
 			create frm2.make_with_text ("Up to depth of")

@@ -143,7 +143,7 @@ feature -- Activation
 			conv_folder: EB_CLASSES_TREE_FOLDER_ITEM
 		do
 			if window = Void then
-				key_press_actions.extend (~on_key_pushed)
+				key_press_actions.extend (agent on_key_pushed)
 			end
 			window := a_window
 			from

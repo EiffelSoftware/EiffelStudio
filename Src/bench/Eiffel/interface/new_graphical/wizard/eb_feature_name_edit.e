@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 	initialize is
 		do
 			Precursor
-			change_actions.extend (~on_text_change)
+			change_actions.extend (agent on_text_change)
 		end
 
 feature -- Status report

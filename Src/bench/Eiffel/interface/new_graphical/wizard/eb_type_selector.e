@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			extend (selector)
 			extend (generic_box)
 			disable_item_expand (generic_box)
-			selector.change_actions.extend (~on_selection_change)
+			selector.change_actions.extend (agent on_selection_change)
 			expanded_needed := False
 		end
 
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 				generic_box.extend (new_label (" ["))
 				generic_box.disable_item_expand (generic_box.last)
 				add_generic_button := new_create_button
-				add_generic_button.select_actions.extend (~on_add_generic)
+				add_generic_button.select_actions.extend (agent on_add_generic)
 				generic_box.extend (add_generic_button)
 				generic_box.extend (new_label ("]"))
 				generic_box.disable_item_expand (generic_box.last)

@@ -40,10 +40,10 @@ feature {NONE} -- Initialization
 			favorites_manager := a_favorites_manager
 			build_tree
 			favorites.add_observer (Current)
-			drop_actions.extend (~remove_class_stone)
-			drop_actions.extend (~remove_folder)
-			drop_actions.extend (~add_class_stone)
-			drop_actions.extend (~add_folder)
+			drop_actions.extend (agent remove_class_stone)
+			drop_actions.extend (agent remove_folder)
+			drop_actions.extend (agent add_class_stone)
+			drop_actions.extend (agent add_folder)
 			
 			if favorites_manager.Favorites.sensitive then
 				enable_sensitive
@@ -112,7 +112,7 @@ feature {NONE} -- Initialization Implementation
 					a_class_item ?= an_item
 					create tree_item.make (a_class_item)
 					if is_clickable then
-						tree_item.select_actions.extend (favorites_manager~go_to (a_class_item))
+						tree_item.select_actions.extend (agent favorites_manager.go_to (a_class_item))
 					end
 				end
 				tree_item.set_text (an_item.name)
@@ -149,7 +149,7 @@ feature {NONE} -- Initialization Implementation
 					a_class_item ?= an_item
 					create tree_item.make (a_class_item)
 					if is_clickable then
-						tree_item.select_actions.extend (favorites_manager~go_to (a_class_item))
+						tree_item.select_actions.extend (agent favorites_manager.go_to (a_class_item))
 					end
 				end
 				tree_item.set_text (an_item.name)
@@ -182,7 +182,7 @@ feature -- Observer pattern
 					create tree_item.make (a_item)
 					a_class_item ?= a_item
 					if is_clickable then
-						tree_item.select_actions.extend (favorites_manager~go_to (a_class_item))
+						tree_item.select_actions.extend (agent favorites_manager.go_to (a_class_item))
 					end
 				end
 				tree_item.set_text (a_item.name)

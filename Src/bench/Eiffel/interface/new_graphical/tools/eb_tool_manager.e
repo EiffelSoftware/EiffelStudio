@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			initialized := False -- Reset the flag since initializion is not yet complete.
 
 				-- Track the changes of size of the window.
-			window.resize_actions.extend (~on_size)
+			window.resize_actions.extend (agent on_size)
 
 			initialized := True
 		end
@@ -99,7 +99,7 @@ feature {EB_TOOL_MANAGER} -- Initialization
 			panel.extend (right_panel.widget)
 			panel.disable_item_expand (left_panel.widget)
 			panel.enable_flat_separator
-			left_panel.widget.resize_actions.extend (~on_size)
+			left_panel.widget.resize_actions.extend (agent on_size)
 
 				-- Create the status bar.
 			create status_bar.make
@@ -267,7 +267,7 @@ feature {NONE} -- Menus initializations
 				show_toolbar_commands.after
 			loop
 				command_menu_item := show_toolbar_commands.item.new_menu_item
-				command_menu_item.select_actions.extend (~save_toolbar_state)
+				command_menu_item.select_actions.extend (agent save_toolbar_state)
 				add_recyclable (command_menu_item)
 				Result.extend (command_menu_item)
 
@@ -280,13 +280,13 @@ feature {NONE} -- Menus initializations
 
 				-- Customize.
 			create menu_item.make_with_text (Interface_names.m_Customize_general)
-			menu_item.select_actions.extend (general_customizable_toolbar~customize)
-			menu_item.select_actions.extend (~save_general_toolbar)
+			menu_item.select_actions.extend (agent general_customizable_toolbar.customize)
+			menu_item.select_actions.extend (agent save_general_toolbar)
 			Result.extend (menu_item)
 
 			create menu_item.make_with_text (Interface_names.m_Customize_project)
-			menu_item.select_actions.extend (project_customizable_toolbar~customize)
-			menu_item.select_actions.extend (~save_project_toolbar)
+			menu_item.select_actions.extend (agent project_customizable_toolbar.customize)
+			menu_item.select_actions.extend (agent save_project_toolbar)
 			Result.extend (menu_item)
 		end
 

@@ -27,7 +27,7 @@ feature -- Initialization
 			an_explorer_bar_exists: an_explorer_bar /= Void
 		do
 			Precursor (a_manager, an_explorer_bar)
-			text_area.drop_actions.extend (a_manager~set_stone)
+			text_area.drop_actions.extend (agent a_manager.set_stone)
 		end
 
 feature -- Access

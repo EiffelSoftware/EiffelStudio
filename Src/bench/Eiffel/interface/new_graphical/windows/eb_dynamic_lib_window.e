@@ -30,7 +30,7 @@ inherit
 
 	PLATFORM_CONSTANTS
 
-creation {EB_WINDOW_MANAGER}
+create {EB_WINDOW_MANAGER}
 	make
 
 feature {NONE} -- Initialization
@@ -66,9 +66,9 @@ feature {NONE} -- Initialization
 			else
 				exports_list.set_column_titles (<<Interface_names.t_Class, Interface_names.t_Creation_routine, Interface_names.t_Exported_feature, Interface_names.t_Alias>>)
 			end
-			exports_list.select_actions.extend (~item_selected)
-			exports_list.deselect_actions.extend (~item_deselected)
-			exports_list.drop_actions.extend (~drop_feature)
+			exports_list.select_actions.extend (agent item_selected)
+			exports_list.deselect_actions.extend (agent item_deselected)
+			exports_list.drop_actions.extend (agent drop_feature)
 			exports_list.disable_multiple_selection
 			vb.extend (exports_list)
 			window.extend (vb)
@@ -124,7 +124,7 @@ feature {NONE} -- Initialization
 			new_cmd.set_name ("new_dynamic_lib_definition")
 			new_cmd.set_accelerator (create {EV_ACCELERATOR}.make_with_key_combination (
 					create {EV_KEY}.make_with_code (kcsts.Key_n), True, False, False))
-			new_cmd.add_agent (~new_def_file)
+			new_cmd.add_agent (agent new_def_file)
 			new_cmd.enable_sensitive
 			
 				-- Create `open_cmd'.
@@ -133,7 +133,7 @@ feature {NONE} -- Initialization
 			open_cmd.set_tooltip (Interface_names.e_Open_dynamic_lib_definition)
 			open_cmd.set_menu_name (Interface_names.m_Open_new)
 			open_cmd.set_name ("open_dynamic_lib_definition")
-			open_cmd.add_agent (~open_def_file)
+			open_cmd.add_agent (agent open_def_file)
 			open_cmd.set_accelerator (create {EV_ACCELERATOR}.make_with_key_combination (
 					create {EV_KEY}.make_with_code (kcsts.Key_o), True, False, False))
 			open_cmd.enable_sensitive
@@ -144,7 +144,7 @@ feature {NONE} -- Initialization
 			save_cmd.set_tooltip (Interface_names.e_Save_dynamic_lib_definition)
 			save_cmd.set_menu_name (Interface_names.m_Save_new)
 			save_cmd.set_name ("save_dynamic_lib_definition")
-			save_cmd.add_agent (~save_def_file)
+			save_cmd.add_agent (agent save_def_file)
 			save_cmd.set_accelerator (create {EV_ACCELERATOR}.make_with_key_combination (
 					create {EV_KEY}.make_with_code (kcsts.Key_s), True, False, False))
 			save_cmd.enable_sensitive
@@ -153,7 +153,7 @@ feature {NONE} -- Initialization
 			create save_as_cmd.make
 			save_as_cmd.set_menu_name (Interface_names.m_Save_as)
 			save_as_cmd.set_name ("save_dynamic_lib_definition_as")
-			save_as_cmd.add_agent (~save_def_file_as)
+			save_as_cmd.add_agent (agent save_def_file_as)
 			save_as_cmd.enable_sensitive
 			
 				-- Create `add_feature_cmd'.
@@ -162,7 +162,7 @@ feature {NONE} -- Initialization
 			add_feature_cmd.set_tooltip (Interface_names.e_Add_exported_feature)
 			add_feature_cmd.set_menu_name (Interface_names.	m_Add_exported_feature)
 			add_feature_cmd.set_name ("add_exported_feature")
-			add_feature_cmd.add_agent (~add_feature)
+			add_feature_cmd.add_agent (agent add_feature)
 			add_feature_cmd.set_accelerator (create {EV_ACCELERATOR}.make_with_key_combination (
 					create {EV_KEY}.make_with_code (kcsts.Key_a), True, False, False))
 			add_feature_cmd.enable_sensitive
@@ -173,7 +173,7 @@ feature {NONE} -- Initialization
 			edit_feature_cmd.set_tooltip (Interface_names.e_Edit_exported_feature)
 			edit_feature_cmd.set_menu_name (Interface_names.m_Edit_exported_feature)
 			edit_feature_cmd.set_name ("edit_exported_feature")
-			edit_feature_cmd.add_agent (~edit_selected_feature)
+			edit_feature_cmd.add_agent (agent edit_selected_feature)
 			edit_feature_cmd.set_accelerator (create {EV_ACCELERATOR}.make_with_key_combination (
 					create {EV_KEY}.make_with_code (kcsts.Key_e), True, False, False))
 			edit_feature_cmd.disable_sensitive
@@ -184,7 +184,7 @@ feature {NONE} -- Initialization
 			remove_feature_cmd.set_tooltip (Interface_names.e_Remove_exported_feature)
 			remove_feature_cmd.set_menu_name (Interface_names.m_Remove_exported_feature)
 			remove_feature_cmd.set_name ("remove_exported_feature")
-			remove_feature_cmd.add_agent (~remove_selected_feature)
+			remove_feature_cmd.add_agent (agent remove_selected_feature)
 			remove_feature_cmd.set_accelerator (create {EV_ACCELERATOR}.make_with_key_combination (
 					create {EV_KEY}.make_with_code (kcsts.Key_delete), False, False, False))
 			remove_feature_cmd.disable_sensitive
@@ -195,7 +195,7 @@ feature {NONE} -- Initialization
 			check_exports_cmd.set_tooltip (Interface_names.e_Check_exports)
 			check_exports_cmd.set_menu_name (Interface_names.m_Check_exports)
 			check_exports_cmd.set_name ("check_exports")
-			check_exports_cmd.add_agent (~check_exported_features)
+			check_exports_cmd.add_agent (agent check_exported_features)
 			check_exports_cmd.set_accelerator (create {EV_ACCELERATOR}.make_with_key_combination (
 					create {EV_KEY}.make_with_code (kcsts.Key_c), True, False, False))
 			check_exports_cmd.enable_sensitive
@@ -230,7 +230,7 @@ feature {NONE} -- Initialization
 			file_menu.extend (menu_sep)
 
 			create menu_item.make_with_text (Interface_names.m_Close)
-			menu_item.select_actions.extend (~destroy)
+			menu_item.select_actions.extend (agent destroy)
 			file_menu.extend (menu_item)
 		end
 
@@ -382,7 +382,7 @@ feature -- Status setting
 		do
 			if changed and not confirmed then
 				create cd.make_with_text (Warning_messages.w_Unsaved_changes)
-				cd.button ("OK").select_actions.extend (~force_destroy)
+				cd.button ("OK").select_actions.extend (agent force_destroy)
 				cd.show_modal_to_window (window)
 			else
 				Precursor {EB_WINDOW}
@@ -453,10 +453,10 @@ feature {NONE} -- Implementation: File operations
 		do
 			if changed then
 				create cd.make_with_text (Warning_messages.w_Unsaved_changes)
-				cd.button ("OK").select_actions.extend (~ask_for_file_name (True, ~load_dynamic_lib))
+				cd.button ("OK").select_actions.extend (agent ask_for_file_name (True, agent load_dynamic_lib))
 				cd.show_modal_to_window (window)
 			else
-				ask_for_file_name (True, ~load_dynamic_lib)
+				ask_for_file_name (True, agent load_dynamic_lib)
 			end
 		end
 
@@ -473,7 +473,7 @@ feature {NONE} -- Implementation: File operations
 				actually_save
 			else
 				create qd.make_with_text (Warning_messages.w_Save_invalid_definition)
-				qd.button ("Yes").select_actions.extend (~actually_save)
+				qd.button ("Yes").select_actions.extend (agent actually_save)
 				qd.show_modal_to_window (window)
 			end
 		end
@@ -487,10 +487,10 @@ feature {NONE} -- Implementation: File operations
 		do
 			pb := export_definition_problem
 			if pb = 0 then
-				ask_for_file_name (False, ~actually_save)
+				ask_for_file_name (False, agent actually_save)
 			else
 				create qd.make_with_text (Warning_messages.w_Save_invalid_definition)
-				qd.button ("Yes").select_actions.extend (~ask_for_file_name (False, ~actually_save))
+				qd.button ("Yes").select_actions.extend (agent ask_for_file_name (False, agent actually_save))
 				qd.show_modal_to_window (window)
 			end
 		end
@@ -503,7 +503,7 @@ feature {NONE} -- Implementation: File operations
 		do
 			if changed then
 				create cd.make_with_text (Warning_messages.w_Unsaved_changes)
-				cd.button ("OK").select_actions.extend (~reset)
+				cd.button ("OK").select_actions.extend (agent reset)
 				cd.show_modal_to_window (window)
 			else
 				reset
@@ -561,7 +561,7 @@ feature {NONE} -- Implementation: Feature operations
 				current_alias := Void
 				current_index := 0
 				current_calling_convention := Void
-				choose_creation_routine (~generate_new_exported_feature)
+				choose_creation_routine (agent generate_new_exported_feature)
 			end
 		end
 
@@ -829,7 +829,7 @@ feature {NONE} -- Implementation: Creation routine selection
 			end
 		ensure
 			not_void_result: Result /= Void
-			only_valid_creation_routines: Result.for_all (~valid_creation_routine (?, cl))
+			only_valid_creation_routines: Result.for_all (agent valid_creation_routine (?, cl))
 		end
 
 	display_creation_routine_choice is
@@ -854,7 +854,7 @@ feature {NONE} -- Implementation: Creation routine selection
 				if feature_names.count = 1 then
 					process_creation_routine_callback (1)
 				else
-					create choice.make_default (~process_creation_routine_callback (?))
+					create choice.make_default (agent process_creation_routine_callback (?))
 					choice.set_title (Interface_names.t_Select_feature)
 					choice.set_list (feature_names)
 					choice.set_position (window.screen_x + window.width // 3, window.screen_y + window.height // 3)
@@ -926,7 +926,7 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 					save_ok := True
 				else
 						-- It is really a save as operation.
-					ask_for_file_name (False, ~save_dynamic_lib)
+					ask_for_file_name (False, agent save_dynamic_lib)
 				end
 			else
 				if file_name /= Void then
@@ -968,7 +968,7 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 						changed := False
 					end
 				else
-					ask_for_file_name (True, ~load_dynamic_lib)
+					ask_for_file_name (True, agent load_dynamic_lib)
 				end
 			else
 				if file_name /= Void then
@@ -1026,7 +1026,7 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 			end
 			dd.set_start_directory (Eiffel_project.name)
 			dd.set_filter ("*.def")
-			dd.ok_actions.extend (~file_was_chosen (dd))
+			dd.ok_actions.extend (agent file_was_chosen (dd))
 			dd.show_modal_to_window (window)
 		end
 
@@ -1154,9 +1154,9 @@ feature {NONE} -- Implementation: Properties dialog
 			if for_modification then
 				class_field.disable_edit
 			else
-				class_field.return_actions.extend (~new_class_name)
-				class_field.focus_out_actions.extend (~new_class_name)
-				class_field.focus_in_actions.extend (~remove_push_button)
+				class_field.return_actions.extend (agent new_class_name)
+				class_field.focus_out_actions.extend (agent new_class_name)
+				class_field.focus_in_actions.extend (agent remove_push_button)
 			end
 			class_field.set_minimum_width (f.string_width ("A_LONG_CLASS_NAME"))
 			hb.extend (class_field)
@@ -1187,7 +1187,7 @@ feature {NONE} -- Implementation: Properties dialog
 			if for_modification then
 				feature_field.disable_edit
 			else
-				feature_field.return_actions.extend (~on_creation_ok)
+				feature_field.return_actions.extend (agent on_creation_ok)
 			end
 			hb.extend (feature_field)
 			vb.extend (hb)
@@ -1264,15 +1264,15 @@ feature {NONE} -- Implementation: Properties dialog
 			create okb.make_with_text (Interface_names.b_Ok)
 			Layout_constants.set_default_size_for_button (okb)
 			if for_modification then
-				okb.select_actions.extend (~on_modification_ok)
-				properties_dialog.show_actions.extend (alias_field~set_focus)
+				okb.select_actions.extend (agent on_modification_ok)
+				properties_dialog.show_actions.extend (agent alias_field.set_focus)
 			else
-				okb.select_actions.extend (~on_creation_ok)
-				properties_dialog.show_actions.extend (class_field~set_focus)
+				okb.select_actions.extend (agent on_creation_ok)
+				properties_dialog.show_actions.extend (agent class_field.set_focus)
 			end
 			create cancelb.make_with_text (Interface_names.b_Cancel)
 			Layout_constants.set_default_size_for_button (cancelb)
-			cancelb.select_actions.extend (properties_dialog~destroy)
+			cancelb.select_actions.extend (agent properties_dialog.destroy)
 			
 			create hb
 			hb.set_padding (Layout_constants.default_padding_size)

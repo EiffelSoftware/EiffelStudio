@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			create argument_list
 			vb.extend (argument_list)
 			add_argument_button := new_create_button
-			add_argument_button.select_actions.extend (~on_new_argument)
+			add_argument_button.select_actions.extend (agent on_new_argument)
 			vb.extend (routine_is_part)
 			
 			extend (hb)
@@ -108,22 +108,22 @@ feature {NONE} -- Initialization
 			create do_button.make_with_text ("do")
 			body_type_box.extend (do_button)
 			body_type_box.disable_item_expand (do_button)
-			do_button.select_actions.extend (~on_body_change (do_button.text))
+			do_button.select_actions.extend (agent on_body_change (do_button.text))
 
 			create once_button.make_with_text ("once")
 			body_type_box.extend (once_button)
 			body_type_box.disable_item_expand (once_button)
-			once_button.select_actions.extend (~on_body_change (once_button.text))
+			once_button.select_actions.extend (agent on_body_change (once_button.text))
 
 			create deferred_button.make_with_text ("deferred")
 			body_type_box.extend (deferred_button)
 			body_type_box.disable_item_expand (deferred_button)
-			deferred_button.select_actions.extend (~on_body_change (deferred_button.text))
+			deferred_button.select_actions.extend (agent on_body_change (deferred_button.text))
 
 			create external_button.make_with_text ("external")
 			body_type_box.extend (external_button)
 			body_type_box.disable_item_expand (external_button)
-			external_button.select_actions.extend (~on_body_change (external_button.text))
+			external_button.select_actions.extend (agent on_body_change (external_button.text))
 		end
 
 feature -- Status report

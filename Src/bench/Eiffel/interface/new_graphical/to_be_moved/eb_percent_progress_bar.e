@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 				-- Switch to "widget" implementation.
 			enable_sensitive
-			resize_actions.extend (~on_size)
+			resize_actions.extend (agent on_size)
 		end
 
 feature -- Access

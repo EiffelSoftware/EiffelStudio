@@ -16,7 +16,7 @@ inherit
 
 	SHARED_APPLICATION_EXECUTION
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -29,9 +29,9 @@ feature {NONE} -- Initialization
 			create f
 			f.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_lowered)
 			create text_area.make (a_tool)
-			text_area.drop_actions.extend (~drop_class)
-			text_area.drop_actions.extend (~drop_feature)
-			text_area.drop_actions.extend (~drop_cluster)
+			text_area.drop_actions.extend (agent drop_class)
+			text_area.drop_actions.extend (agent drop_feature)
+			text_area.drop_actions.extend (agent drop_cluster)
 			f.extend (text_area.widget)
 			widget := f
 			graphical_output_manager.extend (Current)

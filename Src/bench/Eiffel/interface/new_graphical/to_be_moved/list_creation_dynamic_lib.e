@@ -11,7 +11,7 @@ indexing
 class
 	LIST_CREATION_DYNAMIC_LIB
 
-creation
+create
 	make
 
 feature -- Initialization

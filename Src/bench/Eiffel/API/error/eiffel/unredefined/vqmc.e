@@ -66,7 +66,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			a_const_not_void: a_const /= Void
 		local
 			bit_value: BIT_VALUE_I
-			l_nat, l_int: INTEGER_CONSTANT
+			l_int: INTEGER_CONSTANT
 		do
 			if a_const.is_bit then
 				bit_value ?= a_const
@@ -79,21 +79,10 @@ feature {COMPILER_EXPORTER} -- Setting
 				constant_type := Real_64_type
 			elseif a_const.is_integer then
 				l_int ?= a_const
-				inspect
-					l_int.size
-				when 8 then constant_type := Integer_8_type
-				when 16 then constant_type := Integer_16_type
-				when 32 then constant_type := Integer_type
-				when 64 then constant_type := Integer_64_type
+				check
+					l_int /= Void
 				end
-			elseif a_const.is_natural then
-				l_nat ?= a_const
-				inspect l_nat.size
-				when 8 then constant_type := natural_8_type
-				when 16 then constant_type := natural_16_type
-				when 32 then constant_type := natural_32_type
-				when 64 then constant_type := natural_64_type
-				end
+				constant_type := l_int.manifest_type
 			elseif a_const.is_string then
 				create {CL_TYPE_A} constant_type.make (System.string_id)
 			else

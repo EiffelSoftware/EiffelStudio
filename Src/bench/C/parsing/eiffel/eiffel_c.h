@@ -43,3 +43,5 @@ extern char		*create_generic(char *gen_name, char *constrained);
 
 extern char *str_save(char *);			/* String duplication */
 extern char *inspect_else(void);        /* Inspect default list */
+
+extern char *rescue_instr(void);      /* Rescue instruction list */

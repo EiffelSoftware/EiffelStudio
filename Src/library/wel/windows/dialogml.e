@@ -22,14 +22,14 @@ feature -- Basic operations
 			-- `result_id' will contain `a_result'.
 		do
 			from
-				dialog_child.start
+				dialog_children.start
 			until
-				dialog_child.off
+				dialog_children.off
 			loop
-				unregister_window (dialog_child.item)
-				dialog_child.item.set_exists (False)
-				dialog_child.item.set_item (default_pointer)
-				dialog_child.forth
+				unregister_window (dialog_children.item)
+				dialog_children.item.set_exists (False)
+				dialog_children.item.set_item (default_pointer)
+				dialog_children.forth
 			end
 			result_id := a_result
 			cwin_destroy_window (item)

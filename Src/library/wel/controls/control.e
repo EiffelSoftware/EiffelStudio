@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		do
 			parent := a_parent
 			id := an_id
-			a_parent.dialog_child.extend (Current)
+			a_parent.dialog_children.extend (Current)
 		ensure
 			parent_set: parent = a_parent
 			id_set: id = an_id

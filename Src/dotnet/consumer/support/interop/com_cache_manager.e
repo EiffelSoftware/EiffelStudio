@@ -48,14 +48,13 @@ feature -- Basic Exportations
 			valid_path: a_path.length > 0
 			not_void_clr_version: a_clr_version /= Void
 			valid_clr_version: a_clr_version.length > 0
-			path_exists: (create {DIRECTORY}.make (create {STRING}.make_from_cil (a_path))).exists
 		local
 			cr: CACHE_READER
 		do
 			clr_version := a_clr_version
 			eac_path := a_path
 			create cr.make (a_clr_version)
-			cr.set_internal_eiffel_path (eac_path)
+			cr.set_internal_eiffel_cache_path (eac_path)
 			if not cr.is_initialized then
 				(create {EIFFEL_XML_SERIALIZER}).serialize (
 				create {CACHE_INFO}.make (a_clr_version),

@@ -200,8 +200,10 @@ feature -- Basic operations
 							descriptors.item (i).c_header_file_name.insert 
 								(tmp_string, descriptors.item (i).c_header_file_name.index_of ('.', 1))
 						end
-						descriptors.item (i).c_type_name.append (tmp_string)
-						descriptors.item (i).name.append (tmp_string)
+						if (descriptors.item (i).type_kind = Tkind_interface) or (descriptors.item (i).type_kind = Tkind_dispatch) then
+							descriptors.item (i).c_type_name.append (tmp_string)
+							descriptors.item (i).name.append (tmp_string)
+						end
 					end
 					system_descriptor.eiffel_names.force (descriptors.item (i).eiffel_class_name)
 				end

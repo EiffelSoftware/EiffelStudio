@@ -40,12 +40,12 @@ feature -- Initialization
 	realize_current is
 			-- Realize current widget.
 		local
-			mp: MENU_WINDOWS
+			mw: MENU_WINDOWS
 		do
-			associated_root ?= parent
-			mp ?= parent
-			if mp /= Void and then mp.realized then
-				mp.add_a_child (Current)
+			mw ?= parent
+			associated_root ?= mw.associated_root
+			if mw /= Void and then mw.realized then
+				mw.add_a_child (Current)
 				associated_shell.wel_draw_menu
 			end
 			realized := True

@@ -294,6 +294,8 @@ feature {NONE} -- Implementation: access
 			put ("as_integer_64") check found_item = as_integer_64_name_id end
 			put ("to_real_32") check found_item = to_real_32_name_id end
 			put ("to_real_64") check found_item = to_real_64_name_id end
+			put ("is_lower") check found_item = is_lower_name_id end
+			put ("is_upper") check found_item = is_upper_name_id end
 		end
 		
 invariant

@@ -213,7 +213,6 @@ invariant
 	wizard_pixmaps_path_exists: wizard_pixmaps_path /= Void
 	wizard_source_exists: wizard_source /= Void
 	history_exists: history /= Void
-	window_exists: first_window /= Void
 
 end -- class WIZARD_SHARED
 

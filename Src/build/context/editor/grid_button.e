@@ -35,7 +35,7 @@ feature
 
 	create_focus_label is
 		do
-			set_focus_string (Focus_labels.show_window_label)
+			set_focus_string (Focus_labels.grid_label)
 		end;
 
 end

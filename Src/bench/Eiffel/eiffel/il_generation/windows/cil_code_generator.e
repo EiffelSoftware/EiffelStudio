@@ -1599,7 +1599,7 @@ feature -- Features info
 							feature {MD_METHOD_ATTRIBUTES}.Preserve_sig)
 						md_emit.define_pinvoke_map (l_meth_token,
 							feature {MD_PINVOKE_CONSTANTS}.Charset_ansi |
-							feature {MD_PINVOKE_CONSTANTS}.Cdecl, uni_string, c_module_token)
+							feature {MD_PINVOKE_CONSTANTS}.Stdcall, uni_string, c_module_token)
 					else
 							-- Normal method
 						l_meth_token := md_emit.define_method (uni_string, current_class_token,

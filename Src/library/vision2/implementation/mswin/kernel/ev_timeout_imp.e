@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 	initialize is
 		do
-			internal_timeout.add_timeout (Current)
+			Internal_timeout.add_timeout (Current)
 			is_initialized := True
 		end
 
@@ -47,7 +47,7 @@ feature -- Status setting
 		do
 			if interval /= an_interval then
 				interval := an_interval
-				internal_timeout.change_interval (id, interval)
+				Internal_timeout.change_interval (id, interval)
 			end
 		end
 
@@ -62,7 +62,7 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	internal_timeout: EV_INTERNAL_TIMEOUT_IMP is
+	Internal_timeout: EV_INTERNAL_TIMEOUT_IMP is
 			-- Window that launch the timeout commands.
 		once
 			create result.make_top ("EiffelVision timeout window")

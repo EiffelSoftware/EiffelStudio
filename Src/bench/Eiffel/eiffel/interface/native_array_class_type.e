@@ -132,7 +132,7 @@ feature -- IL code generation
 
 				when make_name_id then
 					if ref /= Void and then not is_expanded then
-						generic_type_id := System.any_class.compiled_class.
+						generic_type_id := System.system_object_class.compiled_class.
 							types.first.static_type_id
 					else
 						cl_type ?= type.true_generics.item (1)

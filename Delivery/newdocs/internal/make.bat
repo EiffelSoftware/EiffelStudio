@@ -1,11 +1,14 @@
 rd /q /s newdocs
-cvs export -r HEAD -d newdocs Delivery/newdocs
+call cvs export -r HEAD -d newdocs Delivery/newdocs
 cd newdocs
-copy ..\document\eifgen\f_code\document.exe .
-document /g
+copy internal\eiffel.hhc .
+copy internal\eiffel.hhp .
+copy internal\stop_words.stp .
+copy ..\document.exe .
+call document /g
 REM Remove goto.html
-REM Add one-minute summary
 call vi eiffel.hhc
-copy d:\delivery\newdocs\default.css .
-set PATH=%PATH%;c:\dev\htmlhelp
-hhc eiffel.hhp
+copy ..\docs\default.css .
+set PATH=%PATH%;d:\apps\html_help
+call hhc eiffel.hhp
+cd ..

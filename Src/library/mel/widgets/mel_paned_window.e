@@ -305,7 +305,7 @@ feature -- Status setting
 		do
 			set_xt_boolean (a_widget.screen_object, XmNallowResize, b)
 		ensure
-			widget_allowed_to_resize: is_widget_allowed_to_resize (a_widget)
+			widget_allowed_to_resize: is_widget_allowed_to_resize (a_widget) = b
 		end;
 
 	set_widget_pane_minimum (a_widget: MEL_RECT_OBJ; a_dimension: INTEGER) is

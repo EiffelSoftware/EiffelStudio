@@ -122,7 +122,7 @@ feature {NONE}
 	error_window: OUTPUT_WINDOW is
 			-- Error window that displays error message
 		once
-			if batch_mode then
+			if mode.item then
 				Result := term_window
 			else
 				Result := bench_error_window
@@ -158,20 +158,6 @@ feature {NONE}
 			!! Result.make_plain
 		end;
 
-feature -- Compilation Mode
-
-	batch_mode: BOOLEAN is
-			-- Is the compiler in batch mode?
-		do
-			Result := mode.item
-		end;
-
-	set_batch_mode (compiler_mode: BOOLEAN) is
-			-- Set `batch_mode' to `compiler_mode'
-		do
-			mode.put (compiler_mode)
-		end;
-
 feature {NONE} -- Implementation
 
 	last_warner_cell: CELL [WARNER_W] is
@@ -200,7 +186,7 @@ feature {NONE} -- Implementation
 
 	mode: CELL [BOOLEAN] is
 		once
-			!! Result.put (False)
+			!! Result.put (True)
 		end;
 
 	bench_error_window: TEXT_WINDOW is
@@ -212,5 +198,15 @@ feature {NONE} -- Implementation
 		once
 			!! Result
 		end;
+
+feature {NONE} -- Implementation
+
+    init_windowing is
+            -- Initialize the windowing environment.
+        do
+            if project_tool = Void then end;
+            project_tool.popup_file_selection;
+			mode.put (False)
+        end
 
 end -- class WINDOWS

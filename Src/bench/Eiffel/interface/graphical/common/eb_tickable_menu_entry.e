@@ -31,8 +31,8 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-    associated_command: TOOL_COMMAND is
-            -- The associated_command
+	associated_command: TOOL_COMMAND is
+			-- The associated_command
 		do	
 		end;
 

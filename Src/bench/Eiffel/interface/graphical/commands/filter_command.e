@@ -74,8 +74,8 @@ feature -- Properties
 				loop
 					dir_entry.to_lower;
 					found := dir_entry.is_equal (file_name);
-                    filter_dir.readentry;
-                    dir_entry := filter_dir.lastentry
+					filter_dir.readentry;
+					dir_entry := filter_dir.lastentry
 				end
 			end;
 			if not found then

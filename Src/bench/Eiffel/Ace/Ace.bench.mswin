@@ -137,12 +137,12 @@ cluster
 external
 
 	object:
-		"$(BENCH)\C\parsing\eiffel\eiffel.lib";
-		"$(BENCH)\C\parsing\lace\lace.lib";
-		"$(BENCH)\C\parsing\shared\parsing.lib";
-		"$(BENCH)\C\platform\platform.lib";
-		"$(BENCH)\C\ipc\ewb\ewb.lib";
-		"$(BENCH)\C\ipc\shared\ipc.lib";
+		"$(BENCH)\C\parsing\eiffel\eiffel.lib",
+		"$(BENCH)\C\parsing\lace\lace.lib",
+		"$(BENCH)\C\parsing\shared\parsing.lib",
+		"$(BENCH)\C\platform\platform.lib",
+		"$(BENCH)\C\ipc\ewb\ewb.lib",
+		"$(BENCH)\C\ipc\shared\ipc.lib",
 		"$(BENCH)\C\idrs\idr.lib"
 
 end

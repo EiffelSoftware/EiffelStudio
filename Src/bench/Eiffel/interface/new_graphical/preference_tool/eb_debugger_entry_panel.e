@@ -7,16 +7,18 @@ class
 	EB_DEBUGGER_ENTRY_PANEL
 
 inherit
-	NEW_EB_CONSTANTS
-		rename
-			Debugger_resources as parameters
-		export
-			{NONE} all
-		end
 	EB_ENTRY_PANEL
 		redefine
 			make
 		end
+
+	EB_DEBUG_TOOL_DATA
+		rename
+			Debug_resources as parameters
+		export
+			{NONE} all
+		end
+	NEW_EB_CONSTANTS
 
 creation
 	make
@@ -27,13 +29,13 @@ feature -- Initialization
 		do
 			Precursor (par, a_tool)
 
-			Create debugger_feature_height.make_with_resource (Current, parameters.debugger_feature_height)
-			Create debugger_object_height.make_with_resource (Current, parameters.debugger_object_height)
-			Create debugger_show_all_callers.make_with_resource (
+			create debugger_feature_height.make_with_resource (Current, parameters.debugger_feature_height)
+			create debugger_object_height.make_with_resource (Current, parameters.debugger_object_height)
+			create debugger_show_all_callers.make_with_resource (
 				Current, parameters.debugger_show_all_callers)
-			Create debugger_do_flat_in_breakpoints.make_with_resource (
+			create debugger_do_flat_in_breakpoints.make_with_resource (
 				Current, parameters.debugger_do_flat_in_breakpoints)
-			Create interrupt_every_n_instructions.make_with_resource 
+			create interrupt_every_n_instructions.make_with_resource 
 					(Current, parameters.interrupt_every_n_instructions)
 
 			resources.extend (debugger_feature_height)
@@ -48,8 +50,8 @@ feature -- Access
 	name: STRING is "Debugger preferences"
 			-- Current's name
 
-	symbol: PIXMAP is
-		once
+	symbol: EV_PIXMAP is
+		do
 			Result := Pixmaps.bm_Preference_project
 		end
 

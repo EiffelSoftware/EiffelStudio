@@ -9,16 +9,17 @@ class
 	EB_SYSTEM_ENTRY_PANEL
 
 inherit
-	NEW_EB_CONSTANTS
+	EB_ENTRY_PANEL
+		redefine
+			make
+		end
+	EB_SYSTEM_TOOL_DATA
 		rename
 			System_resources as parameters
 		export
 			{NONE} all
 		end
-	EB_ENTRY_PANEL
-		redefine
-			make
-		end
+	NEW_EB_CONSTANTS
 
 creation
 	make
@@ -30,11 +31,11 @@ feature {NONE} -- Initialization
 		do
 			Precursor (par, a_tool)
 
-			Create tool_width.make_with_resource (Current, parameters.tool_width)
-			Create tool_height.make_with_resource (Current, parameters.tool_height)
-			Create command_bar.make_with_resource (Current, parameters.command_bar)
-			Create parse_ace_after_saving.make_with_resource (Current, parameters.parse_ace_after_saving)
-			--Create arr_hidden_clusters.make (parameters.hidden_clusters)
+			create tool_width.make_with_resource (Current, parameters.tool_width)
+			create tool_height.make_with_resource (Current, parameters.tool_height)
+			create command_bar.make_with_resource (Current, parameters.command_bar)
+			create parse_ace_after_saving.make_with_resource (Current, parameters.parse_ace_after_saving)
+			--create arr_hidden_clusters.make (parameters.hidden_clusters)
 
 			resources.extend (tool_width)
 			resources.extend (tool_height)
@@ -49,10 +50,10 @@ feature -- Access
 	name: STRING is "System tool preferences"
 			-- Current's name
 
-	symbol: PIXMAP is
-		once
+	symbol: EV_PIXMAP is
+		do
 			Result := Pixmaps.bm_System
-		end;
+		end
 
 feature {NONE} -- Implementation
 

@@ -40,6 +40,9 @@ feature -- Properties
 			-- Sorted list of features based on export clauses
 			-- with same comments
 
+	order: INTEGER;
+			-- Predefined order in class
+
 feature -- Access
 
 	empty: BOOLEAN is
@@ -69,26 +72,28 @@ feature -- Setting
 			-- Set comment to all clauses to `c'.
 		do
 			comments := c;
-			from
-				clauses.start
-			until
-				clauses.after
-			loop
-				clauses.item.set_comments (c);
-				clauses.forth
-			end;
+		end;
+
+	set_order (o: like order) is
+			-- Set `order' to `o'.
+		require
+			valid_o: o > 0
+		do
+			order := o
 		end;
 
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is Current less than `other' comment?
-			--| to be fixed-> order should be configurable
 		do
-			Result := 
-				(comments = Void and then other.comments /= Void)
-				or else (other.comments /= void
-					and then comments < other.comments)
+			Result := (order < other.order);
+			if not Result and then order = other.order then
+				Result := 
+					((comments = Void and then other.comments /= Void)
+					or else (other.comments /= void
+						and then comments < other.comments))
+			end
 		end;
 
 feature -- Element change
@@ -191,7 +196,7 @@ feature -- Context output
 			until
 				clauses.after
 			loop
-				clauses.item.format (ctxt);
+				clauses.item.format (ctxt, comments);
 				clauses.forth
 			end;
 		end;

@@ -7,7 +7,7 @@ mkdir %INSTALL_DIR\dotnet_binaries
 remtrace Compiling .NET runtime
 cd %EIFFEL_SRC\Eiffel\eiffel\com_il_generation\core\run-time
 call nmake
-copy ISE.Runtime.dll %INSTALL_DIR\dotnet_binaries
+copy EiffelSoftware.Runtime.dll %INSTALL_DIR\dotnet_binaries
 
 remtrace Compiling Eiffel Assembly Cache
 cdd %EIFFEL_SRC\dotnet\consumer\ace

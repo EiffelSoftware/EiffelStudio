@@ -1,5 +1,9 @@
-
--- Implementation toolkit.
+indexing
+	
+	description: "Implementation toolkit";
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class 
 	WIDGET_RESOURCE

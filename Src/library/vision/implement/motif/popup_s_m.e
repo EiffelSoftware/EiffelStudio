@@ -1,8 +1,6 @@
-
--- POPUP_S_M: implementation of popup shell.
-
 indexing
 
+	description: "Implementation of popup shell";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

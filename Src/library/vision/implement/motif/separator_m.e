@@ -1,8 +1,6 @@
-
--- SEPARATOR_M: Motif implementation of separator.
-
 indexing
 
+	description: "Motif implementation of separator";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

@@ -1,4 +1,3 @@
-
 indexing
 
 	status: "See notice at end of class";

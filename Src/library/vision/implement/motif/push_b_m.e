@@ -1,8 +1,6 @@
-
--- PUSH_B_M: implementation of push button.
-
 indexing
 
+	description: "Implementation of push button";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

@@ -1,6 +1,3 @@
-
--- ROW_COLUMN_M:
-
 indexing
 
 	status: "See notice at end of class";

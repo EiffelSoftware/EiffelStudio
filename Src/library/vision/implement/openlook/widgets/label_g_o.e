@@ -1,8 +1,6 @@
-
--- OpenLook label gadget implementation
-
 indexing
 
+	description: "OpenLook label gadget implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

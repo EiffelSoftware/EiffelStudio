@@ -1,8 +1,7 @@
-
--- Button with a border shadow.
-
 indexing
 
+	description: "Button with a border shadow";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

@@ -1,9 +1,8 @@
-
--- Information given by ArchiVision when the pointer leaves a window.
--- X event associated: `LeaveNotify'.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when the pointer leaves a window. %
+		%X event associated: `LeaveNotify'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

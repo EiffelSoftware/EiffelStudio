@@ -1,12 +1,11 @@
-
--- A tasking manager.
--- This class should be used for executing long tasks whithout interfering
--- with events system (otherwise the events will be put in a stack and wait
--- until the task is finished, windows will not be redrawn for instance).
--- This can be used for background tasks too.
-
 indexing
 
+	description:
+		"A tasking manager. %
+		%This class should be used for executing long tasks whithout interfering %
+		%with events system (otherwise the events will be put in a stack and wait %
+		%until the task is finished, windows will not be redrawn for instance). %
+		%This can be used for background tasks too";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

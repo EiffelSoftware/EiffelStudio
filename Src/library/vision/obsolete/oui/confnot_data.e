@@ -1,10 +1,9 @@
-
--- Information given by ArchiVision when a window's configuration
--- changes (size, position, border, stacking order).
--- X event associated: `ConfigureNotify'.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when a window's configuration %
+		%changes (size, position, border, stacking order). %
+		%X event associated: `ConfigureNotify'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

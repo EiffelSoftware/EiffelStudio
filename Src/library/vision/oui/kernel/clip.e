@@ -1,8 +1,7 @@
-
--- CLIP: Description of a clip.
-
 indexing
 
+	description: "Description of a clip";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

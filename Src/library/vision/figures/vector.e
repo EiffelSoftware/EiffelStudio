@@ -1,8 +1,6 @@
-
--- VECTOR: Description of vector.
-
 indexing
 
+	description: "Description of vector";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

@@ -1,8 +1,6 @@
-
--- OpenLook dialog shell implementation.
-
 indexing
 
+	description: "OpenLook dialog shell implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

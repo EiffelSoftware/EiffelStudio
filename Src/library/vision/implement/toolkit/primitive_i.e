@@ -1,8 +1,6 @@
-
--- General primitive implementation.
-
 indexing
 
+	description: "General primitive implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

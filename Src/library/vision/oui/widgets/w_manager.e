@@ -1,8 +1,7 @@
-
--- EiffelVision widget manager.
-
 indexing
 
+	description: "EiffelVision widget manager";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

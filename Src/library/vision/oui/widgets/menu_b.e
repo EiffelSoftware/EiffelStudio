@@ -1,9 +1,9 @@
-
--- Rectangle which display a submenu when armed, and also
--- changes its visuals from a 2-D to a 3-D look.
-
 indexing
 
+	description:
+		"Rectangle which displays a submenu when armed, and also %
+		%changes its visuals from a 2-D to a 3-D look";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

@@ -1,11 +1,10 @@
-
--- Ancestors of user commands for a history based on a linear list.
--- This command will create an history of class HISTORY_LIST
---
--- Deferred features : is_error, n_ame, redo, undo, work
-
 indexing
 
+	description:
+		"Ancestors of user commands for a history based on a linear list. %
+		%This command will create an history of class HISTORY_LIST. %
+		%Deferred features : is_error, n_ame, redo, undo, work";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

@@ -1,8 +1,9 @@
-
--- PUSH_B_O implementation of push button.
-
 indexing
-	status: "See notice at end of class"
+
+	description: "Implementation of push button";
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class PUSH_B_O 
 

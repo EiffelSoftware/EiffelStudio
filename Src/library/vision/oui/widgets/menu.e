@@ -1,8 +1,7 @@
-
--- General notion of menu.
-
 indexing
 
+	description: "General notion of menu";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

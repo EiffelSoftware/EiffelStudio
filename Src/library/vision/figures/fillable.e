@@ -1,8 +1,6 @@
-
--- Fillable figure.
-
 indexing
 
+	description: "Fillable figure";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

@@ -1,9 +1,9 @@
-
--- WMShell contains information that are required by the window
--- manager (e.g. size, its icon).
-
 indexing
 
+	description:
+		"WMShell contains information that is required by the window %
+		%manager (e.g. size, its icon)";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

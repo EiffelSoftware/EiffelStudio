@@ -1,9 +1,8 @@
-
--- Information given by ArchiVision when the selection's owner changes.
--- X event associated: `SelectionClear'.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when the selection's owner changes. %
+		%X event associated: `SelectionClear'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

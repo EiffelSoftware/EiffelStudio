@@ -1,8 +1,6 @@
-
--- Motif dialog shell implementation.
-
 indexing
 
+	description: "Motif dialog shell implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

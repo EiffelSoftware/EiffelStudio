@@ -1,8 +1,6 @@
-
--- OpenLook frame implementation.
-
 indexing
 
+	description: "OpenLook frame implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

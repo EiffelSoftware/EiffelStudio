@@ -1,8 +1,6 @@
-
--- LABEL_M: Motif label implementation.
-
 indexing
 
+	description: "Motif label implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

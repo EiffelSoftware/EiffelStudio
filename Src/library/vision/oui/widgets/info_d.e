@@ -1,10 +1,10 @@
-
--- Box with a specific information symbol to give
--- the user information such as the status of an action.
--- A dialog shell is automatically created as its parent.
-
 indexing
 
+	description:
+		"Box with a specific information symbol to give %
+		%the user information such as the status of an action. %
+		%A dialog shell is automatically created as its parent";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

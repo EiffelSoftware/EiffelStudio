@@ -1,8 +1,6 @@
-
--- A timer manager implementation for X.
-
 indexing
 
+	description: "A timer manager implementation for X";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

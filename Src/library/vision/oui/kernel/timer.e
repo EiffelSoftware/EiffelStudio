@@ -1,11 +1,10 @@
-
--- A timer manager.
--- This class should be used for real-time tasks (like in games).
--- The times given are a millisecond and are of course real-time and not
--- process-time (in multi-tasking environments).
-
 indexing
 
+	description:
+		"A timer manager. %
+		%This class should be used for real-time tasks (like in games). %
+		%The times given are a millisecond and are of course real-time and not %
+		%process-time (in multi-tasking environments)";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

@@ -1,8 +1,7 @@
-
--- Simple label Gadget
-
 indexing
 
+	description: "Simple label Gadget";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

@@ -1,8 +1,6 @@
-
--- Motif frame implementation.
-
 indexing
 
+	description: "Motif frame implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

@@ -1,8 +1,9 @@
-
--- SEGMENT: Description of segements (implementation for X).
-
 indexing
-	status: "See notice at end of class"
+
+	description: "Description of segments (implementation for X)";
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class SEGMENT 
 

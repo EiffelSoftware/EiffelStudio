@@ -1,9 +1,8 @@
-
--- Information given by ArchiVision when a window has a new child.
--- X event associated: `CreateNotify'.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when a window has a new child. %
+		%X event associated: `CreateNotify'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

@@ -1,8 +1,6 @@
-
--- OpenLook menu bar implementation.
-
 indexing
 
+	description: "OpenLook menu bar implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -12,7 +10,6 @@ class BAR_O
 inherit
 
 	BAR_I
-		
 		export
 			{NONE} all
 		end;

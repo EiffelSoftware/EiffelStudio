@@ -1,8 +1,7 @@
-
--- PAINTER: Set of routines for drawing.
-
 indexing
 
+	description: "Set of routines for drawing";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

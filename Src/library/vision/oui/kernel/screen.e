@@ -1,12 +1,12 @@
-
--- Screen. An object of this class must be created before any other
--- operation of this screen. It will parent of TOP_SHELL or BASE.
--- The screen is also a drawing and thus can be used for a world.
--- Warning: used screen as a drawing can be non-portable. It will work
--- fin one X window version but the other platforms may not accept it.
-
 indexing
 
+	description:
+		"Screen. An object of this class must be created before any other %
+		%operation of this screen. It will be parent of TOP_SHELL or BASE. %
+		%The screen is also a drawing and thus can be used for a world. %
+		%Warning: used screen as a drawing can be non-portable. It will work %
+		%fin one X window version but the other platforms may not accept it";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

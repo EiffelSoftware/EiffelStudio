@@ -1,8 +1,6 @@
-
--- OpenLook label implementation.
-
 indexing
 
+	description: "OpenLook label implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

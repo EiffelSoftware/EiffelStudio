@@ -1,8 +1,6 @@
-
--- CHILD_CLIP: Figure able to be clipped by its window's children.
-
 indexing
 
+	description: "Figure able to be clipped by its window's children";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

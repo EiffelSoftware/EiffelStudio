@@ -1,8 +1,9 @@
-
--- Widget with its attachments in a form
-
 indexing
-	status: "See notice at end of class"
+
+	description: "Widget with its attachments in a form";
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class FORM_CHILD
 

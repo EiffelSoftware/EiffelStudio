@@ -1,8 +1,6 @@
-
--- General notion of command history.
-
 indexing
 
+	description: "General notion of command history";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

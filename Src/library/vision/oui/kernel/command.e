@@ -1,10 +1,9 @@
-
--- General notion of command (semantic unity).
--- To write an actual command inherit from this
--- class and implement the `execute' feature.
-
 indexing
 
+	description:
+		"General notion of command (semantic unity). %
+		%To write an actual command inherit from this %
+		%class and implement the `execute' feature";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

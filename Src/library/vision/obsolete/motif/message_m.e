@@ -1,8 +1,6 @@
-
--- MESSAGE_M: implementation of message box.
-
 indexing
 
+	description: "Implementation of message box";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

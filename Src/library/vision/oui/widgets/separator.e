@@ -1,8 +1,7 @@
-
--- Simple vertical or horizontal line to be used as separator.
-
 indexing
 
+	description: "Simple vertical or horizontal line to be used as separator";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

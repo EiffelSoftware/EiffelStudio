@@ -1,8 +1,6 @@
-
--- JOINABLE: Joinable figure (polyline...).
-
 indexing
 
+	description: "Joinable figure (polyline...)";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

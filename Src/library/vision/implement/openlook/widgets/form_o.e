@@ -1,8 +1,6 @@
-
--- FORM_O: implementation of form.
-
 indexing
 
+	description: "Implementation of form";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

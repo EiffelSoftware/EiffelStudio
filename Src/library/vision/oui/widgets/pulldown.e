@@ -1,10 +1,10 @@
-
--- Menu which is part of a menu system.  
--- It has to be attached to a menu button which will make appear 
--- it when armed.
-
 indexing
 
+	description:
+		"Menu which is part of a menu system. % 
+		%It has to be attached to a menu button which will make appear %
+		%it when armed";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

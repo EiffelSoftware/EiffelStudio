@@ -1,8 +1,7 @@
-
--- Simple frame which can only contain one child.
-
 indexing
 
+	description: "Simple frame which can only contain one child";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

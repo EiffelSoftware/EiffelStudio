@@ -1,8 +1,6 @@
-
--- FORM_M: implementation of form.
-
 indexing
 
+	description: "Motif implementation of form";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

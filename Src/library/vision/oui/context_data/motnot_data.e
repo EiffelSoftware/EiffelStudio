@@ -1,9 +1,8 @@
-
--- Information given by ArchiVision when the pointer moves.
--- X event associated: `MotionNotify'.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when the pointer moves. %
+		%X event associated: `MotionNotify'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

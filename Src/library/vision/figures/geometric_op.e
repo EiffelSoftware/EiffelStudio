@@ -1,8 +1,6 @@
-
--- GEOMETRIC_OP: Figures implementation for X.
-
 indexing
 
+	description: "Figures implementation for X";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

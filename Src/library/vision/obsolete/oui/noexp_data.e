@@ -1,11 +1,10 @@
-
--- Information given by ArchiVision when `NoExpose' event is triggered.
--- Not implemented because ArchiVision doesn't yet give any features
--- to copy areas of window and so this event should never be triggered.
--- X event associated: `NoExpose'.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when `NoExpose' event is triggered. %
+		%Not implemented because EiffelVision doesn't yet give any features %
+		%to copy areas of window and so this event should never be triggered. %
+		%X event associated: `NoExpose'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

@@ -1,11 +1,11 @@
-
--- Message box with a specific working symbol to inform
--- the user that there is a time-consuming operation in progress and
--- allow him to cancel the operation.
--- A dialog shell is automatically created as its parent.
-
 indexing
 
+	description:
+		"Message box with a specific working symbol to inform %
+		%the user that there is a time-consuming operation in progress and %
+		%to allow him to cancel the operation. %
+		%A dialog shell is automatically created as its parent";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

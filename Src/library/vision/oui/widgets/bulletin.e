@@ -1,8 +1,7 @@
-
--- Area for free-form placement on any of its children.
-
 indexing
 
+	description: "Area for free-form placement on any of its children";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

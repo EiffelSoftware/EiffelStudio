@@ -1,8 +1,6 @@
-
--- RESOURCE_X: A resource X.
-
 indexing
 
+	description: "A resource X";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

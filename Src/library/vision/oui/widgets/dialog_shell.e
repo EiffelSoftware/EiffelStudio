@@ -1,8 +1,7 @@
-
--- Special shell which can be poped up or poped down at any time.
-
 indexing
 
+	description: "Special shell which can be popped up or popped down at any time";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

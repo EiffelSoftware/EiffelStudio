@@ -1,10 +1,10 @@
-
--- Area for free-form placement on any of its children and built
--- on a dialog shell which can be poped up or poped down on the screen at
--- any time.
-
 indexing
 
+	description:
+		"Area for free-form placement on any of its children and built %
+		%on a dialog shell which can be popped up or popped down on the screen at %
+		%any time";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

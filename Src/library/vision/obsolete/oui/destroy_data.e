@@ -1,10 +1,9 @@
-
--- Information given by ArchiVision when a child of a window has been
--- destroyed.
--- X event associated: `DestroyNotify'.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when a child of a window has been %
+		%destroyed. %
+		%X event associated: `DestroyNotify'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

@@ -1,8 +1,9 @@
-
--- INF_LINE: Description of infinited lines (implementation for X).
-
 indexing
-	status: "See notice at end of class"
+
+	description: "Description of infinited lines (implementation for X)";
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class INF_LINE 
 

@@ -1,10 +1,9 @@
-
--- Information given by ArchiVision when a selection has been converted and
--- stored as a property or when a selection conversion could not be performed.
--- X event associated: `SelectionNotify'.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when a selection has been converted and %
+		%stored as a property or when a selection conversion could not be performed. %
+		%X event associated: `SelectionNotify'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

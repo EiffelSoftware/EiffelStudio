@@ -1,8 +1,6 @@
-
--- General definitions for drawable elements.
-
 indexing
 
+	description: "General definitions for drawable elements";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

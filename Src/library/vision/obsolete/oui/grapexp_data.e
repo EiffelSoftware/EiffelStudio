@@ -1,11 +1,10 @@
-
--- Information given by ArchiVision when a `GraphicsExpose' is triggered.
--- Not implemented because ArchiVision doesn't yet give any features
--- to copy areas of window and so this event should never be triggered.
--- X event associated: `GraphicsExpose'.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when a `GraphicsExpose' is triggered. %
+		%Not implemented because EiffelVision doesn't yet give any features %
+		%to copy areas of window and so this event should never be triggered. %
+		%X event associated: `GraphicsExpose'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

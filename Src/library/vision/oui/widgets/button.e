@@ -1,8 +1,7 @@
-
--- General button.
-
 indexing
 
+	description: "General button";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

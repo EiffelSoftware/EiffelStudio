@@ -1,8 +1,7 @@
-
--- Override shell which is not managed by current window manager.
-
 indexing
 
+	description: "Override shell which is not managed by current window manager";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

@@ -1,10 +1,10 @@
-
--- Graphic history based on a linear list of undoable commands, represented on
--- screen with a popup containing a scroll list to show the previous commands
--- names, and buttons to undo and redo commands.
-
 indexing
 
+	description:
+		"Graphic history based on a linear list of undoable commands, represented on %
+		%screen with a popup containing a scroll list to show the previous commands %
+		%names, and buttons to undo and redo commands";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

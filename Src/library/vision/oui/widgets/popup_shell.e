@@ -1,8 +1,7 @@
-
--- General popup shell.
-
 indexing
 
+	description: "General popup shell";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

@@ -1,9 +1,8 @@
-
--- Information given by ArchiVision when a window's property changes.
--- X event associated: `PropertyNotify'.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when a window's property changes. %
+		%X event associated: `PropertyNotify'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

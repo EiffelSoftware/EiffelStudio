@@ -1,9 +1,8 @@
-
--- Closed figures (e.g. circles, polygons)
--- Such figures may be filled with a fill pattern.
-
 indexing
 
+	description: 
+		"Closed figures (e.g. circles, polygons). % 
+		%Such figures may be filled with a fill pattern";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

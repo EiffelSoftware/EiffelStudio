@@ -1,10 +1,9 @@
-
---  Modification notification
---  Instances either notify `notified` or keep modification in
---  `modified`, depending on the `notify` boolean value.
-
 indexing
 
+	description:
+		"Modification notification. %
+		%Instances either notify `notified` or keep modification in %
+		%`modified`, depending on the `notify` boolean value";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

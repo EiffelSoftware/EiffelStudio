@@ -1,8 +1,6 @@
-
--- OpenLook form dialog implementaiton.
-
 indexing
 
+	description: "OpenLook form dialog implementaiton";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

@@ -1,5 +1,8 @@
 indexing
-	status: "See notice at end of class"
+
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class ERROR_D_O
 

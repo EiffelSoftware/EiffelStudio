@@ -1,8 +1,6 @@
-
--- Parent of any graphic application based on openlook implementation.
-
 indexing
 
+	description: "Parent of any graphic application based on openlook implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

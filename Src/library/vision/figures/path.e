@@ -1,8 +1,9 @@
-
--- PATH: Description of a path.
-
 indexing
-	status: "See notice at end of class"
+
+	description: "Description of a path";
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class PATH 
 

@@ -1,9 +1,9 @@
-
--- State of the keyboard: Key and modifiers.
--- (Shift, Control, Lock and five others).
-
 indexing
 
+	description:
+		"State of the keyboard: Key and modifiers. %
+		%(Shift, Control, Lock and five others)";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

@@ -1,8 +1,9 @@
-
--- REG_POLYGON: Description of a regular polygon (square, pentagon,...).
-
 indexing
-	status: "See notice at end of class"
+
+	description: "Description of a regular polygon (square, pentagon,...)";
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class REG_POLYGON 
 

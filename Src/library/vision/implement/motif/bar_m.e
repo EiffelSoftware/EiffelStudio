@@ -1,8 +1,6 @@
-
--- Motif menu bar implementation.
-
 indexing
 
+	description: "Motif menu bar implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

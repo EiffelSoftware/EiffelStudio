@@ -1,9 +1,9 @@
-
--- Top level shell which is used in an application that needs
--- more than one root shell.
-
 indexing
 
+	description:
+		"Top level shell which is used in an application that needs %
+		%more than one root shell";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

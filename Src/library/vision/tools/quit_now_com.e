@@ -1,5 +1,9 @@
+indexing
 
--- Command to quit immediatly the application.
+	description: "Command to quit the application immediately";
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class QUIT_NOW_COM 
 

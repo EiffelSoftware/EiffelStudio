@@ -1,8 +1,6 @@
-
--- MENU_PULL_M: implementation of pulldown for menu buttons.
-
 indexing
 
+	description: "Implementation of pulldown for menu buttons";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

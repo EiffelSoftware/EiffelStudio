@@ -1,8 +1,9 @@
-
--- SLICE: Description of slice.
-
 indexing
-	status: "See notice at end of class"
+
+	description: "Description of slice";
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class SLICE 
 

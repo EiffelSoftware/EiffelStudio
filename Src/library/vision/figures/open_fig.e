@@ -1,8 +1,6 @@
-
--- Open figures.
-
 indexing
 
+	description: "Open figures";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

@@ -1,8 +1,6 @@
-
--- OpenLook drawing area implementation.
-
 indexing
 
+	description: "OpenLook drawing area implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

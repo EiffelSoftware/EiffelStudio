@@ -1,10 +1,9 @@
-
--- Information given by ArchiVision when an event is send by another
--- client.
--- X event associated: ClientMessage.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when an event is sent by another %
+		%client. %
+		%X event associated: `ClientMessage'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

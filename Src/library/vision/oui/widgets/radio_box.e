@@ -1,8 +1,7 @@
-
--- Area which enables alternate way of choosing a setting.
-
 indexing
 
+	description: "Area which enables alternate way of choosing a setting";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

@@ -1,8 +1,6 @@
-
--- DASHABLE: Dashable figure (line, arc,...).
-
 indexing
 
+	description: "Dashable figure (line, arc,...)";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

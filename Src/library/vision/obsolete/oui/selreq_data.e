@@ -1,10 +1,9 @@
-
--- Information given by ArchiVision when the selection's owner is asked
--- to change.
--- X event associated: `SelectionRequest'.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when the selection's owner is asked %
+		%to change. %
+		%X event associated: `SelectionRequest'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

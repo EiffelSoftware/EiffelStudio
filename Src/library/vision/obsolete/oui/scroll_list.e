@@ -1,9 +1,9 @@
-
--- Rectangle (with or without scrollbars) which contains a list of
--- selectable strings.
-
 indexing
 
+	description:
+		"Rectangle (with or without scrollbars) which contains a list of %
+		%selectable strings";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

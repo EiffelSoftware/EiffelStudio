@@ -1,10 +1,10 @@
-
--- A I/O handler manager.
--- This class should be used to monitor I/O mechanism without interfering
--- with events mechanism (like scanning a UNIX pipe or socket).
-
 indexing
 
+	description:
+		"A I/O handler manager. %
+		%This class should be used to monitor I/O mechanism without interfering %
+		%with events mechanism (like scanning a UNIX pipe or socket)";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

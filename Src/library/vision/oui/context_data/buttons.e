@@ -1,10 +1,10 @@
-
--- State of the mouse buttons. 
--- The number of buttons is five,
--- by convention.
-
 indexing
 
+	description:
+		"State of the mouse buttons. %
+		%The number of buttons is five, %
+		%by convention";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

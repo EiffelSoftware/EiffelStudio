@@ -1,10 +1,9 @@
-
--- Information given by ArchiVision when a window gains the keyboard
--- focus.
--- X event associated: `FocusIn'.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when a window gains the keyboard %
+		%focus. %
+		%X event associated: `FocusIn'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

@@ -1,8 +1,7 @@
-
--- Rectangle with two arrows placed at each end and a slider.
-
 indexing
 
+	description: "Rectangle with two arrows placed at each end and a slider";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

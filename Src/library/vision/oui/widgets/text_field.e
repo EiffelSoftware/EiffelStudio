@@ -1,12 +1,12 @@
-
--- A text editor for one line of text.
--- The position in the text are not the characters but the space between
--- the characters: the first position is null and located before the text,
--- the position `i' is located after the `i'-th character of text.
--- When the text is empty, the only valid position is null.
-
 indexing
 
+	description:
+		"A text editor for one line of text. %
+		%The position in the text is not the characters but the space between %
+		%the characters: the first position is null and located before the text, %
+		%the position `i' is located after the `i'-th character of text. %
+		%When the text is empty, the only valid position is null"; 
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

@@ -1,9 +1,9 @@
-
--- Elongated rectangular region similar to a scrollbar with
--- a slider that indicates an analog value.
-
 indexing
 
+	description:
+		"Elongated rectangular region similar to a scrollbar with %
+		%a slider that indicates an analog value";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

@@ -1,8 +1,6 @@
-
--- Information given by ArchiVision when a callback is triggered.
-
 indexing
 
+	description: "Information given by EiffelVision when a callback is triggered";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

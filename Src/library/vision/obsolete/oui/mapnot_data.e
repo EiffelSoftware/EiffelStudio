@@ -1,9 +1,8 @@
-
--- Information given by ArchiVision when a window is mapped.
--- X event associated: `MapNotify'
-
 indexing
 
+	description:
+		"Information given by EiffelVision when a window is mapped. %
+		%X event associated: `MapNotify'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

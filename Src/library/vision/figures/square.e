@@ -1,8 +1,9 @@
-
--- SQUARE: Description of a square.
-
 indexing
-	status: "See notice at end of class"
+
+	description: "Description of a square";
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class SQUARE 
 

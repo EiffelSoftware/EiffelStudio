@@ -1,11 +1,9 @@
-
--- Buttons defines
-
 indexing
 
+	description: "Buttons defines";
 	status: "See notice at end of class";
-		date: "$Date$";
-		revision: "$Revision$"
+	date: "$Date$";
+	revision: "$Revision$"
 
 class  BUTTON_R_O
 

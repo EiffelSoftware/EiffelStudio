@@ -1,9 +1,9 @@
-
--- Pulldown menu of a menu button, it is attached to a menu button 
--- which is automaticaly created. It can contain all kinds of button.
-
 indexing
 
+	description:
+		"Pulldown menu of a menu button, it is attached to a menu button %
+		%which is automatically created. It can contain all kinds of buttons";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

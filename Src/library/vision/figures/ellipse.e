@@ -1,8 +1,9 @@
-
--- ELLIPSE: Description of ellipse.
-
 indexing
-	status: "See notice at end of class"
+
+	description: "Description of ellipse";
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class ELLIPSE
 

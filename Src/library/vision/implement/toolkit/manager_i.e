@@ -1,8 +1,6 @@
-
--- General manager implementation.
-
 indexing
 
+	description: "General manager implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

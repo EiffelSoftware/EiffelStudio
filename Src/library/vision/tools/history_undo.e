@@ -1,8 +1,7 @@
-
--- Undo button.
-
 indexing
 
+	description: "Undo button";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

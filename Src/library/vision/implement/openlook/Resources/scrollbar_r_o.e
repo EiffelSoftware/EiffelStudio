@@ -1,14 +1,11 @@
-
--- Scrollbar defines
-
 indexing
 
+	description: "Scrollbar defines";
 	status: "See notice at end of class";
-        date: "$Date$";
-        revision: "$Revision$"
+	date: "$Date$";
+	revision: "$Revision$"
 
 class  SCROLLBAR_R_O
-
         
 feature {NONE}
 

@@ -1,8 +1,6 @@
-
--- X implementation of the notion of color.
-
 indexing
 
+	description: "X implementation of the notion of color";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

@@ -1,8 +1,7 @@
-
--- Button represented with a pixmap.
-
 indexing
 
+	description: "Button represented with a pixmap";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

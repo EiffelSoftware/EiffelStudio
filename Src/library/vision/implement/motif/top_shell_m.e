@@ -1,9 +1,8 @@
-
--- TOP_SHELL_M: shell top level which is used in an application that needs
--- more than one shell root.
-
 indexing
 
+	description:
+		"Shell top level which is used in an application that needs %
+		%more than one shell root";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

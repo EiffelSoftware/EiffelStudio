@@ -1,8 +1,6 @@
-
--- 
-
 indexing
 
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

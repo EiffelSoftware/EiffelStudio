@@ -1,8 +1,7 @@
-
--- Toggle button. Gadget.
-
 indexing
 
+	description: "Toggle button. Gadget";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

@@ -1,8 +1,6 @@
-
--- OPT_PULL_M: implementation of pulldown menu for an option button.
-
 indexing
 
+	description: "Implementation of pulldown menu for an option button";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

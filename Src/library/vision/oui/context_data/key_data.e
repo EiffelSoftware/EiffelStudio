@@ -1,9 +1,8 @@
-
--- Informations given by ArchiVision when a key is pressed or released.
--- Parent of KYPRESS_DATA and KEYREL_DATA
-
 indexing
 
+	description:
+		"Informations given by EiffelVision when a key is pressed or released. %
+		%Parent of KYPRESS_DATA and KEYREL_DATA";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

@@ -1,5 +1,9 @@
+indexing
 
--- Implementation toolkit.
+	description: "Implementation toolkit";
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class 
 	WIDGET_RESOURCE_X
@@ -76,7 +80,6 @@ feature 	-- Status setting
 
 
 end -- class WIDGET_RESOURCE
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

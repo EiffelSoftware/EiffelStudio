@@ -1,10 +1,8 @@
-
--- Information given by ArchiVision when a window looses the keyboard
--- focus.
--- X event associated: `FocusOut'.
-
 indexing
 
+	description:
+		"Information given by EiffelVision when a window looses the keyboard focus. %
+		%X event associated: `FocusOut'";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

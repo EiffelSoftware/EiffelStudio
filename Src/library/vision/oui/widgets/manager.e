@@ -1,8 +1,7 @@
-
--- General parent widget.
-
 indexing
 
+	description: "General parent widget";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

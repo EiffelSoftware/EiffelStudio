@@ -1,8 +1,6 @@
-
--- MANAGER_O: implementation of manager
-
 indexing
 
+	description: "Implementation of manager";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

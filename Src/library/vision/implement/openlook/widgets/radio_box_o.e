@@ -1,8 +1,6 @@
-
--- RADIO_BOX_O: implementation of radio box.
-
 indexing
 
+	description: "Implementation of radio box";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

@@ -1,8 +1,7 @@
-
--- Text in Scrolled Window
-
 indexing
 
+	description: "Text in Scrolled Window";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 

@@ -1,8 +1,6 @@
-
--- SEPARATO_G_M: Motif implementation of separator gadget.
-
 indexing
 
+	description: "Motif implementation of separator gadget";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

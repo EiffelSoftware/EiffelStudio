@@ -134,7 +134,7 @@ feature {EV_ANY_IMP} -- Access
 			dimension_tuple.put (a_1, 1)
 			dimension_tuple.put (a_2, 2)
 			dimension_tuple.put (a_3, 3)
-			dimension_tuple.put (a_4, 4)			
+			dimension_tuple.put (a_4, 4)	
 		end
 		
 feature {EV_ANY_IMP, EV_APPLICATION_IMP}
@@ -153,87 +153,87 @@ feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 			gdk_event := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args)
 			Result := empty_tuple
 			if feature {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event) < 100000 then
-			event_type := feature {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event)
-
-			if event_type = feature {EV_GTK_ENUMS}.Gdk_motion_notify_enum
-			then
-				set_motion_tuple (
-					feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x (gdk_event).truncated_to_integer,
-					feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y (gdk_event).truncated_to_integer,
-					0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_xtilt (gdk_event),
-					0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_ytilt (gdk_event),
-					0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_pressure (gdk_event),
-					feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
-					feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
-				)
-				Result := motion_tuple
-			elseif event_type = feature {EV_GTK_ENUMS}.Gdk_configure_enum then
-				set_dimension_tuple (
-					feature {EV_GTK_EXTERNALS}.gdk_event_configure_struct_x (gdk_event),
-					feature {EV_GTK_EXTERNALS}.gdk_event_configure_struct_y (gdk_event),
-					feature {EV_GTK_EXTERNALS}.gdk_event_configure_struct_width (gdk_event),
-					feature {EV_GTK_EXTERNALS}.gdk_event_configure_struct_height (gdk_event)
-				)
-				Result := dimension_tuple	
---			when
---				Gdk_nothing_enum,
---				Gdk_delete_enum,
---				Gdk_destroy_enum,
---				Gdk_focus_change_enum,
---				Gdk_map_enum,
---				Gdk_unmap_enum,
---				Gdk_enter_notify_enum,
---				Gdk_leave_notify_enum,
---				Gdk_proximity_in_enum,
---				Gdk_proximity_out_enum
---			then
---				Result := Void  -- This used to be empty_tuple but now 'call' can take Void values.
-
-			elseif event_type = feature {EV_GTK_ENUMS}.Gdk_expose_enum
-			then
-				p := feature {EV_GTK_EXTERNALS}.gdk_event_expose_struct_area (gdk_event)
-				set_dimension_tuple (
-					feature {EV_GTK_EXTERNALS}.gdk_rectangle_struct_x (p),
-					feature {EV_GTK_EXTERNALS}.gdk_rectangle_struct_y (p),
-					feature {EV_GTK_EXTERNALS}.gdk_rectangle_struct_width (p),
-					feature {EV_GTK_EXTERNALS}.gdk_rectangle_struct_height (p)
-				)
-				Result := dimension_tuple
-			elseif (event_type = feature {EV_GTK_ENUMS}.Gdk_button_press_enum or else event_type = feature {EV_GTK_ENUMS}.Gdk_2button_press_enum or else event_type = feature {EV_GTK_ENUMS}.Gdk_3button_press_enum)
-			then
-				Result := [
-					feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_type (gdk_event),
-					feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_x (gdk_event).truncated_to_integer,
-					feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer,
-					feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event),
-					0.5,
-					0.5,
-					0.5,
-					feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
-					feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
-				]
-
-			elseif event_type = feature {EV_GTK_ENUMS}.Gdk_button_release_enum
-			then
-					-- gdk_event type GdkEventButton
-				Result := [
-					feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_x (gdk_event).truncated_to_integer,
-					feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer,
-					feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event),
-					0.5,
-					0.5,
-					0.5,
-					feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
-					feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
-				]
-			elseif (event_type = feature {EV_GTK_ENUMS}.Gdk_key_press_enum or else event_type = feature {EV_GTK_ENUMS}.Gdk_key_release_enum)
-			then
-				keyval := feature {EV_GTK_EXTERNALS}.gdk_event_key_struct_keyval (gdk_event)
-				if valid_gtk_code (keyval) then
-					create key.make_with_code (key_code_from_gtk (keyval))
+				event_type := feature {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event)
+	
+				if event_type = feature {EV_GTK_ENUMS}.Gdk_motion_notify_enum
+				then
+					set_motion_tuple (
+						feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x (gdk_event).truncated_to_integer,
+						feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y (gdk_event).truncated_to_integer,
+						0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_xtilt (gdk_event),
+						0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_ytilt (gdk_event),
+						0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_pressure (gdk_event),
+						feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
+						feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
+					)
+					Result := motion_tuple
+				elseif event_type = feature {EV_GTK_ENUMS}.Gdk_configure_enum then
+					set_dimension_tuple (
+						feature {EV_GTK_EXTERNALS}.gdk_event_configure_struct_x (gdk_event),
+						feature {EV_GTK_EXTERNALS}.gdk_event_configure_struct_y (gdk_event),
+						feature {EV_GTK_EXTERNALS}.gdk_event_configure_struct_width (gdk_event),
+						feature {EV_GTK_EXTERNALS}.gdk_event_configure_struct_height (gdk_event)
+					)
+					Result := dimension_tuple	
+	--			when
+	--				Gdk_nothing_enum,
+	--				Gdk_delete_enum,
+	--				Gdk_destroy_enum,
+	--				Gdk_focus_change_enum,
+	--				Gdk_map_enum,
+	--				Gdk_unmap_enum,
+	--				Gdk_enter_notify_enum,
+	--				Gdk_leave_notify_enum,
+	--				Gdk_proximity_in_enum,
+	--				Gdk_proximity_out_enum
+	--			then
+	--				Result := Void  -- This used to be empty_tuple but now 'call' can take Void values.
+	
+				elseif event_type = feature {EV_GTK_ENUMS}.Gdk_expose_enum
+				then
+					p := feature {EV_GTK_EXTERNALS}.gdk_event_expose_struct_area (gdk_event)
+					set_dimension_tuple (
+						feature {EV_GTK_EXTERNALS}.gdk_rectangle_struct_x (p),
+						feature {EV_GTK_EXTERNALS}.gdk_rectangle_struct_y (p),
+						feature {EV_GTK_EXTERNALS}.gdk_rectangle_struct_width (p),
+						feature {EV_GTK_EXTERNALS}.gdk_rectangle_struct_height (p)
+					)
+					Result := dimension_tuple
+				elseif (event_type = feature {EV_GTK_ENUMS}.Gdk_button_press_enum or else event_type = feature {EV_GTK_ENUMS}.Gdk_2button_press_enum or else event_type = feature {EV_GTK_ENUMS}.Gdk_3button_press_enum)
+				then
+					Result := [
+						feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_type (gdk_event),
+						feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_x (gdk_event).truncated_to_integer,
+						feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer,
+						feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event),
+						0.5,
+						0.5,
+						0.5,
+						feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
+						feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
+					]
+	
+				elseif event_type = feature {EV_GTK_ENUMS}.Gdk_button_release_enum
+				then
+						-- gdk_event type GdkEventButton
+					Result := [
+						feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_x (gdk_event).truncated_to_integer,
+						feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer,
+						feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event),
+						0.5,
+						0.5,
+						0.5,
+						feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
+						feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
+					]
+				elseif (event_type = feature {EV_GTK_ENUMS}.Gdk_key_press_enum or else event_type = feature {EV_GTK_ENUMS}.Gdk_key_release_enum)
+				then
+					keyval := feature {EV_GTK_EXTERNALS}.gdk_event_key_struct_keyval (gdk_event)
+					if valid_gtk_code (keyval) then
+						create key.make_with_code (key_code_from_gtk (keyval))
+					end
+					Result := [key]
 				end
-				Result := [key]
-			end
 			end
 		end
 

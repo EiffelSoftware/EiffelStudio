@@ -159,7 +159,7 @@ feature -- Initialization
 			dle_array_optimization_on :=
 					array_optimization_on and not remover_off;
 			!! dle_finalized_nobid_table.make (50);
-			dle_finalized_nobid_table.set_threshold (body_id_counter.value);
+			dle_finalized_nobid_table.set_threshold (body_id_counter.total_count);
 			dle_type_set := clone (type_set);
 			dle_max_dr_type_id := type_id_counter.value;
 			dle_max_topo_id := max_class_id;
@@ -250,7 +250,7 @@ feature -- Recompilation
 					-- to ensure that the object remains the same troughout 
 					-- a session. If you want to change it, think thoroughly
 					-- before! (Dino, that's an allusion to you, -- FRED)
-				original_body_index_table.copy (clone (body_index_table));
+				original_body_index_table.copy (body_index_table);
 				melted_set.wipe_out
 			end
 		end;

@@ -21,7 +21,6 @@ feature -- Basic Operations
 			consumer: ASSEMBLY_CONSUMER
 			cr: CACHE_READER
 			dir: DIRECTORY
-			assemblies: LINKED_LIST [CLI_CELL [ASSEMBLY_NAME]]
 			names: NATIVE_ARRAY [ASSEMBLY_NAME]
 			i: INTEGER
 			name: ASSEMBLY_NAME
@@ -48,7 +47,6 @@ feature -- Basic Operations
 					info := cr.info
 	 				info.add_assembly (create {CONSUMED_ASSEMBLY}.make_from_name (aname))
 					update_info (info)
-					create assemblies.make
 					names := assembly.get_referenced_assemblies
 					from
 						i := 0
@@ -57,17 +55,9 @@ feature -- Basic Operations
 					loop
 						name := names.item (i)
 						if not cr.is_assembly_in_cache (name) then
-							assemblies.extend (create {CLI_CELL [ASSEMBLY_NAME]}.put (name))
+							add_assembly (name)
 						end
 						i := i + 1
-					end
-					from
-						assemblies.start
-					until
-						assemblies.after
-					loop
-						add_assembly (assemblies.item.item)
-						assemblies.forth
 					end
 				end
 			else

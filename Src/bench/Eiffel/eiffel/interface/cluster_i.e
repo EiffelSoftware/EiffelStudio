@@ -429,10 +429,12 @@ end;				-- Check if the path is valid
 				loop
 					i := file_name.count;
 	
-					if i > 2 and then
+					if
+						i > 2
+					and then
 						(file_name.item (i - 1) = Dot
-							and
-							file_name.item (i) = Eiffel_suffix)
+						and
+						eif_valid_class_file_extension (file_name.item (i)))
 					then
 						found := False;
 						if exclude_list /= Void then
@@ -1056,6 +1058,12 @@ feature {NONE} -- Externals
 
 	eif_directory_has_changed (cluster_path: POINTER; old_date: INTEGER): BOOLEAN is
 			-- Does the directory have new entries?
+		external
+			"C"
+		end;
+
+	eif_valid_class_file_extension (c: CHARACTER): BOOLEAN is
+			-- Is `c' a valid class file extension?
 		external
 			"C"
 		end;

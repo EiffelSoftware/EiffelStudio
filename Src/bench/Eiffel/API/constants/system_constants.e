@@ -82,11 +82,6 @@ feature {NONE}
 
 	Eiffelgen: STRING is "EIFGEN"
 
-	Eiffel_suffix: CHARACTER is
-		once
-			Result := Platform_constants.Eiffel_suffix
-		end;
-
 	Einit: STRING is "einit"
 
 	Emain: STRING is "emain"

@@ -25,6 +25,11 @@ inherit
 
 	SHARED_EIFFEL_PARSER
 
+	SHARED_ENV
+		export
+			{NONE} all
+		end
+
 feature -- Initialization
 
 	make (project_dir: PROJECT_DIRECTORY) is
@@ -428,7 +433,7 @@ feature -- Status setting
 		do
 			if not f_path.is_equal (filter_path) then
 				filter_path.make_from_string (clone 
-						(interpreted_string (f_path)))
+						(environ.interpreted_string (f_path)))
 			end
 		end
 
@@ -439,7 +444,7 @@ feature -- Status setting
 		do
 			if not p_path.is_equal (profile_path) then
 				profile_path.make_from_string (clone 
-					(interpreted_string (p_path)))
+					(environ.interpreted_string (p_path)))
 			end
 		end
 
@@ -450,7 +455,7 @@ feature -- Status setting
 		do
 			if not t_path.is_equal (tmp_directory) then
 				tmp_directory.wipe_out
-				tmp_directory.make_from_string (interpreted_string (t_path))
+				tmp_directory.make_from_string (environ.interpreted_string (t_path))
 			end
 		end
 

@@ -100,17 +100,17 @@ feature -- Default cursors
 
 --			create pix_array.make_from_array (busy_cursor_bits)
 --			create mask_array.make_from_array (busy_cursor_mask)
---			
+--
 --			a_pix := feature {EV_GTK_EXTERNALS}.gdk_bitmap_create_from_data (pixmap_imp.app_implementation.default_gdk_window, pix_array.item, 32, 32)
 --			a_mask := feature {EV_GTK_EXTERNALS}.gdk_bitmap_create_from_data (pixmap_imp.app_implementation.default_gdk_window, mask_array.item, 32, 32)
---			
+--
 --			pixmap_imp.set_pixmap (a_pix, a_mask)
 --			Result.set_x_hotspot (2)
 --			Result.set_y_hotspot (2)
 		end
 
 --	busy_cursor_bits: ARRAY [INTEGER_8] is
---			-- 
+--			--
 --		do
 --			Result := <<0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x04,0x00,0x00,0x00,0x0c,
 --                0x00,0x00,0x00,0x1c,0x00,0x00,0x00,0x3c,0x00,0x00,0x00,0x7c,0x00,
@@ -125,7 +125,7 @@ feature -- Default cursors
 --		end
 --
 --	busy_cursor_mask: ARRAY [INTEGER_8] is
---			-- 
+--			--
 --		do
 --			Result := <<0x00,0x00,0x00,0x00,0x06,0x00,0x00,0x00,0x0e,0x00,0x00,0x00,0x1e,
 --                0x00,0x00,0x00,0x3e,0x00,0x00,0x00,0x7e,0x00,0x00,0x00,0xfe,0x00,
@@ -281,7 +281,7 @@ feature -- Default cursors
 
 feature {NONE} -- Implementation
 
-	pixmap_from_stock_id (a_stock_id: STRING): EV_PIXMAP is
+	pixmap_from_stock_id (a_stock_id: EV_GTK_C_STRING): EV_PIXMAP is
 			-- Retrieve pixmap from gtk stock id
 		local
 			a_cs: EV_GTK_C_STRING

@@ -90,7 +90,6 @@ feature
 			class_set: class_c /= Void
 		local
 			first_format: LOCAL_FORMAT;
-			ast: CLASS_AS;
 			name: STRING;
 		do
 			if not rescued then

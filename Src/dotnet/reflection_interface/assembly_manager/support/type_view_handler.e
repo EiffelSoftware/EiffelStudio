@@ -584,7 +584,8 @@ feature {NONE} -- Implementation
 			build_inheritance_clauses (parent_name)
 			if not has_rename_clause (old_name) and then (is_in_list (undefine_clauses, old_name) or is_in_list (redefine_clauses, old_name) or is_in_list (select_clauses, old_name)) then
 				create a_rename_clause.make_renameclause
-				a_rename_clause.make_from_info (old_name, new_name)
+				a_rename_clause.set_source_name (old_name)
+				a_rename_clause.set_target_name (new_name)
 				added := rename_clauses.extend (a_rename_clause)
 			end
 			intern_update_inheritance_clauses (old_name, new_name)
@@ -618,19 +619,19 @@ feature {NONE} -- Implementation
 			if is_in_list (undefine_clauses, old_name) then
 				undefine_clauses.prune_i_th (index_in_list)
 				create an_undefine_clause.make_undefineclause
-				an_undefine_clause.make (new_name)
+				an_undefine_clause.set_source_name (new_name)
 				added := undefine_clauses.extend (an_undefine_clause)
 			end
 			if is_in_list (redefine_clauses, old_name) then
 				redefine_clauses.prune_i_th (index_in_list)
 				create a_redefine_clause.make_redefineclause
-				a_redefine_clause.make (new_name)				
+				a_redefine_clause.set_source_name (new_name)				
 				added := redefine_clauses.extend (a_redefine_clause)			
 			end
 			if is_in_list (select_clauses, old_name) then
 				select_clauses.prune_i_th (index_in_list)
 				create a_select_clause.make_selectclause
-				a_select_clause.make (new_name)
+				a_select_clause.set_source_name (new_name)
 				added := select_clauses.extend (a_select_clause)			
 			end
 		ensure

@@ -397,7 +397,7 @@ feature -- changing breakpoints for a feature
 		do
 			error_in_bkpts := False
 
-			create bp.make (f, 1)
+			create bp.make (f, 1 + f.number_of_precondition_slots)
 			if not bp.is_corrupted then
 				breakpoints.add_breakpoint (bp)
 			else
@@ -1034,7 +1034,7 @@ feature {APPLICATION_EXECUTION, FAILURE_HDLR}
 			non_void_result: Result /= Void
 		end
 
-feature {EWB_REQUEST}
+feature {EWB_REQUEST, SHARED_DEBUG}
 
 	breakpoints: BREAK_LIST
 			-- list of all breakpoints set, disabled and recently switched.

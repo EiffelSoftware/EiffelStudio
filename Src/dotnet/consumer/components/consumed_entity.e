@@ -140,6 +140,53 @@ feature -- Status report
 		do
 		end
 
+	is_access_type: BOOLEAN is
+			-- Is current entity an 'Access' type?
+		do
+			if 
+				is_field or 
+				(eiffel_name.substring (1, 4).is_equal ("get_") and arguments.is_empty)
+			then
+				Result := True
+			end
+		end	
+		
+	is_status_setting_type: BOOLEAN is
+			-- Is current entity a 'Status Setting' type?
+		do
+			if
+				eiffel_name.substring (1, 4).is_equal ("set_") and arguments.count = 1
+			then
+				Result := True
+			end
+		end
+		
+	is_query_type: BOOLEAN is
+			-- Is current entity a 'Status Setting' type?
+		do
+			if has_return_value and then not is_access_type then
+				Result := True
+			end
+		end
+		
+	is_command_type: BOOLEAN is
+			-- Is current entity a 'Status Setting' type?
+		do
+			Result := not has_return_value and then not is_status_setting_type
+		end
+		
+	is_event_type: BOOLEAN is
+			-- Is current entity a 'Status Setting' type?
+		do
+			Result := is_event
+		end
+		
+	is_hidden_type: BOOLEAN is
+			-- Is current entity a 'Status Setting' type?
+		do
+			Result := not is_public
+		end
+
 feature -- Settings
 
 	set_is_public (pub: like is_public) is

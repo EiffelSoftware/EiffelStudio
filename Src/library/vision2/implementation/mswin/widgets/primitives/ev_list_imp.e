@@ -90,6 +90,13 @@ inherit
 			{NONE} all
 		end
 
+	WEL_LVS_EX_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_WINDOWS_VERSION
+
 creation
 	make
 	
@@ -350,6 +357,9 @@ feature {EV_ANY_I} -- Implementation
 			-- Default extended style of the list.
 		do
 			Result := Ws_ex_clientedge
+			if comctl32_version >= version_470 then
+				Result := Result + Lvs_ex_fullrowselect
+			end
 		end
 
 	on_lvn_itemchanged (info: WEL_NM_LIST_VIEW) is
@@ -550,6 +560,10 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.75  2000/04/21 01:22:16  pichery
+--| Added flag to EV_LIST_IMP in order
+--| to select the full row.
+--|
 --| Revision 1.74  2000/04/20 01:24:53  pichery
 --| Changed the inheritance to take into
 --| account EV_COMBO_BOX_IMP.

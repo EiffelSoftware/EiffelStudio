@@ -17,8 +17,7 @@ inherit
 	EV_TOGGLE_BUTTON_IMP
 		undefine
 			default_process_message,
-			default_style,
-			on_bn_clicked
+			default_style
 		redefine
 			make,
 			make_with_text,
@@ -50,8 +49,7 @@ inherit
 			on_mouse_move,
 			on_char,
 			on_key_down,
-			on_key_up
-		redefine
+			on_key_up,
 			on_bn_clicked
 		end	
 
@@ -106,15 +104,6 @@ feature -- Status setting
 			-- opposite
 		do
 			set_state (not state)
-		end
-
-feature {NONE} -- Implementation
-
-	on_bn_clicked is
-			-- Only event available
-		do
-			execute_command (Cmd_click, Void)
-			execute_command (Cmd_toggle, Void)
 		end
 
 end -- class EV_CHECK_BUTTON_IMP

@@ -104,7 +104,7 @@ feature {EV_ANY_I} -- Implementation
 
 	avoid_reselection: BOOLEAN
 
-	gslist: POINTER is
+	radio_group: POINTER is
 		do
 			if parent_imp /= Void then
 				Result := parent_imp.radio_group
@@ -136,6 +136,9 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/04/25 18:44:47  king
+--| gslist->radio_group
+--|
 --| Revision 1.21  2000/04/20 16:34:37  king
 --| Prevented action sequence from being called on initialization
 --|

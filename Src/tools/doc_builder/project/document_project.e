@@ -61,6 +61,8 @@ feature -- Initialize
 			if shared_constants.application_constants.is_gui_mode then				
 				Application_window.document_selector.wipe_out
 			end
+			filter_manager.filters.clear_all
+			filter_manager.initialize
 		end
 
 feature -- Access
@@ -465,9 +467,5 @@ feature {ARGUMENTS_PARSER} -- Retrieval
 				preferences.write	
 			end
 		end
-
-invariant
-	has_preferences: preferences /= Void
-	gui_initialized: document_map /= Void
 
 end -- class DOCUMENT_PROJECT

@@ -14,9 +14,9 @@ feature {DOCUMENT_EDITOR} -- Creation
 	make (a_editor: like editor) is
 			-- Make
 		require
-			editor_not_void: a_editor /= Void			
+			editor_not_void: a_editor /= Void
 		do
-			editor := a_editor
+			editor := a_editor			
 		ensure
 			editor_set: editor = a_editor
 		end		
@@ -57,6 +57,5 @@ feature {NONE} -- Implementation
 
 invariant
 	has_editor: editor /= void
-	has_font: font /= Void
 
 end -- class DOCUMENT_EDITOR_PREFERENCES

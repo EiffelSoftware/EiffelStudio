@@ -48,6 +48,16 @@ feature {DOCUMENT_PROJECT_PREFERENCES} -- Access
 	
 	output_filter_description_tag: STRING is "filter_description"
 	
+	output_filter_primary_flag_tag: STRING is "filter_primary_flag"
+	
+	output_filter_highlight_red_tag: STRING is "filter_highlight_color_red"
+	
+	output_filter_highlight_green_tag: STRING is "filter_highlight_color_green"
+	
+	output_filter_highlight_blue_tag: STRING is "filter_highlight_color_blue"
+	
+	output_filter_highlight_enabled_tag: STRING is "filter_highlight_on"
+	
 	output_filter_tag_tag: STRING is "tag"
 	
 	shortcut_tag: STRING is "shortcut"

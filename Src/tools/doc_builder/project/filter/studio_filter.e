@@ -35,6 +35,9 @@ feature -- Creation
 			create output_flags.make (1)
 			output_flags.compare_objects
 			description := a_description
+			set_color ((create {EV_STOCK_COLORS}).white)
+			can_output_stack.wipe_out
+			can_output_stack.extend (True)
 		ensure
 			has_description: description /= Void
 		end
@@ -46,13 +49,11 @@ feature -- Creation
 			description_not_void: a_description /= Void
 		do
 			make_basic_filter
-			create output_flags.make (1)
-			output_flags.compare_objects
+			make (a_description)
 			add_output_flag (unfiltered_flag)
 			if not a_output_flag.is_empty then
-				add_output_flag (a_output_flag)					
+				add_output_flag (a_output_flag)				
 			end
-			description := a_description
 			primary_output_flag := a_output_flag
 		ensure
 			has_description: description /= Void
@@ -66,6 +67,14 @@ feature -- Access
 	output_flags: ARRAYED_LIST [STRING]
 			-- Output determinants
 
+	color: EV_COLOR
+			-- Display color, if any		
+
+feature -- Query
+
+	highlighting_enabled: BOOLEAN
+			-- Is highlighting enabled?
+
 feature -- Status Setting
 
 	add_output_flag (a_flag: STRING) is
@@ -77,7 +86,37 @@ feature -- Status Setting
 			if not output_flags.has (a_flag) then
 				output_flags.extend (a_flag)
 			end
+		end	
+		
+	set_color (a_color: EV_COLOR) is
+			-- Set the display color
+		require
+			color_not_void: a_color /= Void
+		do
+			color := a_color
+		ensure
+			color_set: color = a_color
 		end		
+
+	enable_highlighting (a_flag: BOOLEAN) is
+			-- Set `highlighting_enabled'
+		require
+			flag_not_void: a_flag /= Void
+		do
+			highlighting_enabled := a_flag
+		ensure
+			highlighting_set: highlighting_enabled = a_flag
+		end
+	
+	set_primary_output_flag (a_flag: STRING) is
+			-- Set `primary_output_flag '
+		require
+			flag_not_void: a_flag /= Void
+		do
+			primary_output_flag := a_flag
+		ensure
+			primary_output_flag_set: primary_output_flag = a_flag
+		end	
 
 feature -- Tag
 
@@ -114,10 +153,7 @@ feature -- Processing
 		require
 			e_not_void: e/= Void
 		do			
-			last := e
-			if not in_filterable_element then
-				can_output := True
-			end			
+			last := e			
 		
 			if filterable_elements.has (e) then
 				last_was_filterable := True					
@@ -125,19 +161,19 @@ feature -- Processing
 				if is_start then
 					filter_depth := filter_depth + 1				
 				else
+					if can_output then				
+						write_tag (e, is_start)
+					end
 					filter_depth := filter_depth - 1
+					can_output_stack.go_i_th (can_output_stack.count)
+					can_output_stack.remove
 				end
 			else
-				last_was_filterable := False
-			end
-			
-			if can_output then
-				if last_was_filterable and then	not last_was_start then
-					write_tag (e, is_start)
-				elseif not last_was_filterable then
+				if can_output then
 					write_tag (e, is_start)
 				end
-			end
+				last_was_filterable := False
+			end			
 		end
 
 	process_attribute (a_name, a_value: STRING) is
@@ -146,14 +182,14 @@ feature -- Processing
 			name_not_void: a_name /= Void
 			value_not_void: a_value /= Void
 		local
-			l_string: STRING
-		do
+			l_string: STRING		
+		do			
 					-- Determine if current is in filterable mode
 			if in_filterable_element then
 				if a_name.is_equal ("output") and then (output_flags.has (a_value)) then
-					can_output := True
-				elseif a_name.is_equal ("output") and then not (output_flags.has (a_value)) then					
-					can_output := False
+					can_output_stack.extend (can_output_stack.i_th (can_output_stack.count))
+				elseif last_was_filterable and a_name.is_equal ("output") and then not (output_flags.has (a_value)) then					
+					can_output_stack.extend (False)
 				end
 			end
 			
@@ -184,8 +220,18 @@ feature {NONE} -- Implementation
 	last: STRING
 			-- Last element name			
 
-	can_output: BOOLEAN
+	can_output_stack: ARRAYED_LIST [BOOLEAN] is
+			-- Can current node be output stack
+		once
+			create Result.make (1)
+			Result.extend (True)
+		end
+
+	can_output: BOOLEAN is
 			-- Can current node be output?	
+		do
+			Result := can_output_stack.i_th (can_output_stack.count)
+		end
 
 	attribute_write_position: INTEGER
 			-- Index position to write attribute at in `output_string'	
@@ -217,5 +263,6 @@ feature {NONE} -- Implementation
 
 invariant
 	has_description: description /= Void
+	has_color: color /= Void
 
 end -- class STUDIO_FILTER

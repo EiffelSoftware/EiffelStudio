@@ -447,8 +447,8 @@ feature {NONE} -- Implementation
 						end
 					else
 						x := x - column_position
-						new_x := x + half_grid_size - ((x + half_grid_size) \\ grid_size)
-						new_column := (new_x // grid_size).min (first.columns - first.item_column_position (selected_item) + 1).max (1)
+						new_x := x + half_grid_size - ((x + half_grid_size) \\ grid_size)						
+						new_column := ((new_x // grid_size) - first.item_column_position (selected_item) + 1).min (first.columns - first.item_column_position (selected_item) + 1).max (1)--.min (first.columns - first.item_column_position (selected_item))
 						if first.item_column_span (selected_item)/= new_column and first.area_clear_excluding_widget (selected_item, first.item_column_position (selected_item), first.item_row_position (selected_item), new_column, first.item_row_span (selected_item)) then --new_column.max (1).min (first.columns - first.item_column_position (selected_item) + 1), first.item_row_span (selected_item)) then
 							set_item_span (selected_item, new_column, first.item_row_span (selected_item))
 						end
@@ -469,7 +469,7 @@ feature {NONE} -- Implementation
 					else
 						y := y - row_position
 						new_y := y + half_grid_size - ((y + half_grid_size) \\ grid_size)
-						new_row := (new_y // grid_size).min (first.rows - first.item_row_position (selected_item) + 1).max (1)
+						new_row := ((new_y // grid_size) - first.item_row_position (selected_item) + 1).min (first.rows - first.item_row_position (selected_item) + 1).max (1)
 						if first.item_row_span (selected_item) /= new_row and first.area_clear_excluding_widget (selected_item, first.item_column_position (selected_item), first.item_row_position (selected_item), first.item_column_span (selected_item), new_row) then --.max (1).min (first.rows - first.item_row_position (selected_item) + 1)) then
 							set_item_span (selected_item, first.item_column_span (selected_item), new_row)
 						end

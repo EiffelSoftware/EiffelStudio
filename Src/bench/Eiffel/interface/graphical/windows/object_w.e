@@ -281,11 +281,8 @@ feature -- Commands
 
 feature {NONE} -- Properties; Forms And Holes
 
-	hole: OBJECT_CMD;
+	hole: OBJECT_HOLE;
 			-- Hole charaterizing Current.
-
-	hole_button: OBJECT_HOLE;
-			-- Hole to represent Current.
 
 	command_bar: FORM;
 			-- Bar with the command buttons
@@ -307,7 +304,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			search_menu_entry: EB_MENU_ENTRY;
 		do
 				-- Creation of all the commands, holes, buttons, and menu entries
-			!! hole.make (text_window);
+			!! hole.make (Current);
 			!! hole_button.make (hole, edit_bar);
 			!! hole_holder.make_plain (hole);
 			hole_holder.set_button (hole_button);
@@ -471,7 +468,7 @@ feature {NONE} -- Implementation; Graphical Interface
 				-- Here we create all objects needed for the attachments.
 			!! slice_cmd.make (format_bar, Current);
 			!! slice_button.make (slice_cmd, format_bar);
-			slice_button.add_button_press_action (3, slice_cmd, Void);
+			slice_button.add_third_button_action;
 			if show_menus then
 				!! slice_menu_entry.make_button_only (slice_cmd, special_menu);
 				slice_menu_entry.add_activate_action (slice_cmd, Void);

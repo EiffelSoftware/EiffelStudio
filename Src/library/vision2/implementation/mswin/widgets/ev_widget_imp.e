@@ -538,7 +538,8 @@ feature {NONE} -- Implementation, mouse button events
 feature {NONE} -- Implementation, mouse move, enter and leave events
 
 	client_to_screen (a_x, a_y: INTEGER): WEL_POINT is
-			-- 
+			-- `Result' is absolute screen coordinates in pixels
+			-- of coordinates `a_x', a_y_' on `Current'.
 		local
 			ww: WEL_WINDOW
 		do
@@ -927,6 +928,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.66  2000/04/10 17:04:19  rogers
+--| Commented client to screen.
+--|
 --| Revision 1.65  2000/04/03 17:52:25  rogers
 --| Fixed initialize so windows are no longer shown as default.
 --|

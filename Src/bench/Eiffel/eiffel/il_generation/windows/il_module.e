@@ -632,7 +632,10 @@ feature -- Metadata description
 								l_type_token := md_emit.define_type (uni_string, l_attributes, 0,
 									last_parents)
 							end
-							class_type.set_last_type_token (l_type_token)
+							
+							if not System.in_final_mode then
+								class_type.set_last_type_token (l_type_token)
+							end
 						end
 						class_mapping.put (l_type_token, class_type.static_type_id)
 						il_code_generator.external_class_mapping.put (class_type.type, name)
@@ -673,10 +676,12 @@ feature -- Metadata description
 						l_type_token := md_emit.define_type (uni_string, l_attributes,
 							single_inheritance_token, last_parents)
 
-						if not (class_c.is_frozen or class_c.is_single) then
-							class_type.set_last_implementation_type_token (l_type_token)
-						else
-							class_type.set_last_type_token (l_type_token)
+						if not System.in_final_mode then
+							if not (class_c.is_frozen or class_c.is_single) then
+								class_type.set_last_implementation_type_token (l_type_token)
+							else
+								class_type.set_last_type_token (l_type_token)
+							end
 						end
 						
 						if

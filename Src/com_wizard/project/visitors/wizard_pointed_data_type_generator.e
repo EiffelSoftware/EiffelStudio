@@ -768,12 +768,11 @@ feature {NONE} -- Implementation
 			Result.append (Open_parenthesis)
 			Result.append ("eif_object")
 			Result.append (Close_parenthesis)
+			Result.append (Close_parenthesis)
 			if element_writable then
 				Result.append (Comma_space)
 				Result.append (Null)
 			end
-			Result.append (Close_parenthesis)
-			Result.append (Close_parenthesis)
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)

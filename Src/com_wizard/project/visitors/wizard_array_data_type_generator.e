@@ -178,8 +178,8 @@ feature -- Basic operations
 				ec_function_signature.append (Old_keyword)
 
 				ec_function_body := ec_array_function_body_automation 
-						(vartype_namer.ec_array_function_name (element_visitor.vt_type),
-						dimension_count, element_visitor.need_generate_ec)
+					(vartype_namer.ec_array_function_name (element_visitor.vt_type),
+					dimension_count, element_visitor.need_generate_ec)
 
 				ec_function_return_type.append (element_visitor.c_type)
 				ec_function_return_type.append (Asterisk)

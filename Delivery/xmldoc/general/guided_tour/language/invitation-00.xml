@@ -13,8 +13,7 @@
 		</paragraph>
 		<output output="studio">
 			<note>
-				This is <bold>not</bold> an introduction to the EiffelStudio development environment.
-				See the
+				This is <bold>not</bold> an introduction to the EiffelStudio development environment. See the
 				<link>
 					<url>../index.xml</url>
 					<label> list of introductory documents </label>

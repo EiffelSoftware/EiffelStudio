@@ -11,12 +11,43 @@ inherit
 	EV_QUESTION_DIALOG_I
 
 	EV_MESSAGE_DIALOG_IMP
-		undefine
-			set_default
+		redefine
+			make, 
+			make_default,
+			make_with_text
 		end
 
 creation
-	make
+	make,
+	make_default,
+	make_with_text
+
+feature {NONE} -- Initialization
+
+	make (par: EV_CONTAINER) is
+			-- Create a message dialog with `par' as parent.
+		do
+			{EV_MESSAGE_DIALOG_IMP} Precursor (par)
+			dialog_style := Mb_iconquestion
+		end
+
+	make_with_text (par: EV_CONTAINER; a_title, a_msg: STRING) is
+			-- Create a message box with `par' as parent, `a_title' as
+			-- title and `a_msg' as message.
+		do
+			{EV_MESSAGE_DIALOG_IMP} Precursor (par, a_title, a_msg)
+			dialog_style := Mb_iconquestion
+		end
+
+	make_default (par: EV_CONTAINER; a_title, a_msg: STRING) is
+			-- Create the default message dialog with `par' as
+			-- parent, `a_title' as title and `a_msg' as message
+			-- and displays it.
+		do
+			{EV_MESSAGE_DIALOG_IMP} Precursor (par, a_title, a_msg)
+			dialog_style := Mb_iconquestion + Mb_yesno
+			show
+		end
 
 end -- class EV_QUESTION_DIALOG_IMP
 

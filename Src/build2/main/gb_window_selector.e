@@ -322,6 +322,24 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 			count_increased: count = old count + 1
 		end
 		
+feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
+
+	update_class_files_location (window_item: GB_WINDOW_SELECTOR_ITEM; current_directory, new_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM) is
+			-- Update generated classes of object associated with `window_item' for a move from `current_directory' to `new_directory'.
+		require
+			window_item_not_void: window_item /= Void
+			-- `current_directory' and `new_directory' area allowed be Void if moving to/from the root.
+		local
+			original, new: FILE_NAME
+		do
+			create original.make_from_string (generated_path.string)
+			original.extend (current_directory.text)
+			create new.make_from_string (generated_path.string)
+			new.extend (new_directory.text)
+			move_file_between_directories (original, new, window_item.object.name.as_lower + ".e")
+			move_file_between_directories (original, new, (window_item.object.name + Class_implementation_extension).as_lower + ".e")
+		end
+
 feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 
 	generated_path: FILE_NAME is

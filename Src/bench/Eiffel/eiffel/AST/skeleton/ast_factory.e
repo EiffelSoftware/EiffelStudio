@@ -1139,17 +1139,6 @@ feature -- Access
 			position_set: Result.position = p
 		end
 
-	new_id_as (s: STRING): ID_AS is
-			-- New ID AST node
-		require
-			s_not_void: s /= Void
-			s_not_empty: not s.is_empty
-		do
-			create Result.initialize (s)
-		ensure
-			id_as_not_void: Result /= Void
-		end
-
 	new_if_as (cnd: EXPR_AS; cmp: EIFFEL_LIST [INSTRUCTION_AS];
 		ei: EIFFEL_LIST [ELSIF_AS]; e: EIFFEL_LIST [INSTRUCTION_AS];
 		l: TOKEN_LOCATION): IF_AS is

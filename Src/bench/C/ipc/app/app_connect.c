@@ -18,10 +18,8 @@
 #include <errno.h>
 #include <stdio.h>
 
-#ifdef HAS_SOCKET
 #ifdef I_SYS_SOCKET
-#include "sys/socket.h"
-#endif
+#include <sys/socket.h>
 #include <netdb.h>
 #endif
 
@@ -29,11 +27,7 @@
 #include <sys/un.h>
 #endif
 
-#ifdef I_STRING
 #include <string.h>
-#else
-#include <strings.h>
-#endif
 
 #define MAXPATH	108				/* Maximum path length */
 

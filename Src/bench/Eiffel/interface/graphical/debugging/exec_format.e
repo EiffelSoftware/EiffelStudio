@@ -24,15 +24,25 @@ feature -- Execution
 
 	execute (argument: ANY) is
 			-- Execute the command.
+		local
+			f: FOCUSABLE
 		do
-			if last_warner /= Void then
-				last_warner.popdown
+			if is_sensitive then
+				if holder /= Void then
+					f ?= holder.associated_button
+				end
+				if f /= Void then
+					f.popdown
+				end;
+				if last_warner /= Void then
+					last_warner.popdown
+				end;
+				format (Void);
+				if argument = Format_and_run then
+					tool.debug_run_cmd_holder.associated_command.execute (Void)
+				end;
+				tool.set_last_format (holder)
 			end
-			format (Void);
-			if argument = Format_and_run then
-				tool.debug_run_cmd_holder.associated_command.execute (Void)
-			end;
-			tool.set_last_format (holder)
 		end;
 
 feature -- Formatting

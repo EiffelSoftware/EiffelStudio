@@ -17,7 +17,6 @@ inherit
 		redefine
 			process_notification_info,
 			insert_string_at,
-			default_style,
 			find_string,
 			add_string,
 			class_name,

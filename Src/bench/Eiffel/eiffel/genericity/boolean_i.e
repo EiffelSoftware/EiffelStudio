@@ -4,10 +4,20 @@ inherit
 	BASIC_I
 		redefine
 			is_boolean,
-			dump,
 			same_as, element_type,
 			description, hash_code, sk_value, generate_cecil_value,
-			generated_id
+			default_create, tuple_code
+		end
+
+create
+	default_create
+
+feature {NONE} -- Initialization
+
+	default_create is
+			-- Initialize new instance of BOOLEAN_I
+		do
+			make (system.boolean_class.compiled_class.class_id)
 		end
 
 feature -- Status report
@@ -16,6 +26,12 @@ feature -- Status report
 			-- Pointer element type
 		do
 			Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_boolean
+		end
+
+	tuple_code: INTEGER_8 is
+			-- Tuple code for class type
+		do
+			Result := feature {SHARED_GEN_CONF_LEVEL}.boolean_tuple_code
 		end
 
 feature
@@ -41,12 +57,6 @@ feature
 			create Result
 		end
 
-	dump (buffer: GENERATION_BUFFER) is
-			-- Debug purpose
-		do
-			buffer.putstring ("EIF_BOOLEAN")
-		end
-
 	generate_cecil_value (buffer: GENERATION_BUFFER) is
 			-- Generate cecil type value
 		do
@@ -55,12 +65,6 @@ feature
 
 	c_string: STRING is "EIF_BOOLEAN"
 			-- String generated for the type.
-
-	c_string_id: INTEGER is
-			-- String ID generated for Current
-		once
-			Result := Names_heap.eif_boolean_name_id
-		end
 		
 	union_tag: STRING is "barg"
 
@@ -68,12 +72,6 @@ feature
 			-- Hash code for current type
 		once
 			Result := Boolean_code
-		end
-
-	associated_reference: CLASS_TYPE is
-			-- Reference class associated with simple type
-		do
-			Result := system.boolean_ref_class.compiled_class.types.first
 		end
 
 	sk_value: INTEGER is
@@ -98,14 +96,6 @@ feature
 			-- to the current C type in `buffer'.
 		do
 			buffer.putstring ("it_char")
-		end
-
-feature -- Generic conformance
-
-	generated_id (final_mode : BOOLEAN) : INTEGER is
-
-		do
-			Result := Boolean_type
 		end
 
 feature

@@ -10,12 +10,11 @@ inherit
 		rename
 			make as base_make
 		redefine
-			dump,
 			is_long,
 			is_numeric,
 			same_as, element_type, il_convert_from,
 			description, sk_value, generate_cecil_value, hash_code,
-			generate_byte_code_cast, generated_id, heaviest
+			generate_byte_code_cast, heaviest, tuple_code
 		end
 
 	BYTE_CONST
@@ -39,6 +38,13 @@ feature -- Initialization
 			valid_n: n = 8 or n = 16 or n = 32 or n = 64
 		do
 			size := n.to_integer_8
+			inspect
+				n
+			when 8 then base_make (system.integer_8_class.compiled_class.class_id)
+			when 16 then base_make (system.integer_16_class.compiled_class.class_id)
+			when 32 then base_make (system.integer_32_class.compiled_class.class_id)
+			when 64 then base_make (system.integer_64_class.compiled_class.class_id)
+			end
 		ensure
 			size_set: size = n
 		end
@@ -58,6 +64,18 @@ feature -- Status report
 			when 16 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_i2
 			when 32 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_i4
 			when 64 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_i8
+			end
+		end
+
+	tuple_code: INTEGER_8 is
+			-- Tuple code for class type
+		do
+			inspect
+				size
+			when 8 then Result := feature {SHARED_GEN_CONF_LEVEL}.integer_8_tuple_code
+			when 16 then Result := feature {SHARED_GEN_CONF_LEVEL}.integer_16_tuple_code
+			when 32 then Result := feature {SHARED_GEN_CONF_LEVEL}.integer_32_tuple_code
+			when 64 then Result := feature {SHARED_GEN_CONF_LEVEL}.integer_64_tuple_code
 			end
 		end
 
@@ -110,13 +128,6 @@ feature -- Access
 			end
 		end
 
-	dump (buffer: GENERATION_BUFFER) is
-			-- Debug purpose
-		do
-			buffer.putstring ("EIF_INTEGER_")
-			buffer.putint (size)
-		end
-
 	same_as (other: TYPE_I): BOOLEAN is
 			-- Is `other' the equal to Current ?
 		local
@@ -152,17 +163,6 @@ feature -- Access
 			end
 		end
 
-	c_string_id: INTEGER is
-			-- String generated for the type.
-		do
-			inspect size
-			when 8 then Result := String_integer_8_id
-			when 16 then Result := String_integer_16_id
-			when 32 then Result := String_integer_32_id
-			when 64 then Result := String_integer_64_id
-			end
-		end
-
 	union_tag: STRING is
 			-- Union name to specify type for Agents
 		do
@@ -182,17 +182,6 @@ feature -- Access
 			when 16 then Result := Integer16_code
 			when 32 then Result := Integer32_code
 			when 64 then Result := Integer64_code
-			end
-		end
-
-	associated_reference: CLASS_TYPE is
-			-- Reference class associated with simple type
-		do
-			inspect size
-			when 8 then Result := system.integer_8_ref_class.compiled_class.types.first
-			when 16 then Result := system.integer_16_ref_class.compiled_class.types.first
-			when 32 then Result := system.integer_32_ref_class.compiled_class.types.first
-			when 64 then Result := system.integer_64_ref_class.compiled_class.types.first
 			end
 		end
 
@@ -225,19 +214,6 @@ feature -- Access
 	type_a: INTEGER_A is
 		do
 			create Result.make (size)
-		end
-
-feature -- Generic conformance
-
-	generated_id (final_mode : BOOLEAN) : INTEGER is
-
-		do
-			inspect size
-			when 8 then Result := Integer_8_type
-			when 16 then Result := Integer_16_type
-			when 32 then Result := Integer_32_type
-			when 64 then Result := Integer_64_type
-			end
 		end
 
 feature -- IL code generation

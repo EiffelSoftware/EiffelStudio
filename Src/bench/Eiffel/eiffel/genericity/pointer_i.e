@@ -3,11 +3,21 @@ class POINTER_I
 inherit
 	BASIC_I
 		redefine
-			dump,
 			is_feature_pointer,
 			same_as,
 			description, sk_value, hash_code, generate_cecil_value,
-			generated_id, element_type
+			element_type, default_create, tuple_code
+		end
+
+create
+	default_create
+
+feature {NONE} -- Initialization
+
+	default_create is
+			-- Initialize new instance of BOOLEAN_I
+		do
+			make (system.pointer_class.compiled_class.class_id)
 		end
 
 feature -- Status report
@@ -17,7 +27,13 @@ feature -- Status report
 		do
 			Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_i
 		end
-		
+
+	tuple_code: INTEGER_8 is
+			-- Tuple code for class type
+		do
+			Result := feature {SHARED_GEN_CONF_LEVEL}.pointer_tuple_code
+		end
+	
 feature
 
 	level: INTEGER is
@@ -29,16 +45,13 @@ feature
 	is_feature_pointer: BOOLEAN is True
 			-- Is the type a feature pointer type ?
 
-	dump (buffer: GENERATION_BUFFER) is
-			-- Debug purpose
-		do
-			buffer.putstring ("EIF_POINTER")
-		end
-
 	same_as (other: TYPE_I): BOOLEAN is
 			-- Is `other' the equal to Current ?
+		local
+			l_ptr: POINTER_I
 		do
-			Result := other.is_feature_pointer
+			l_ptr ?= other
+			Result := l_ptr /= Void
 		end
 
 	description: POINTER_DESC is
@@ -55,12 +68,6 @@ feature
 
 	c_string: STRING is "EIF_POINTER"
 			-- String generated for the type.
-
-	c_string_id: INTEGER is
-			-- String ID generated for Current
-		once
-			Result := Names_heap.eif_pointer_name_id
-		end
 		
 	union_tag: STRING is "parg"
 
@@ -68,12 +75,6 @@ feature
 			-- Hash code for current type
 		once
 			Result := Pointer_code
-		end
-
-	associated_reference: CLASS_TYPE is
-			-- Reference class associated with simple type
-		do
-			Result := system.pointer_ref_class.compiled_class.types.first
 		end
 
 	sk_value: INTEGER is
@@ -100,13 +101,6 @@ feature
 			create Result
 		end
 
-feature -- Generic conformance
-
-	generated_id (final_mode : BOOLEAN) : INTEGER is
-
-		do
-			Result := Pointer_type
-		end
 feature
 
 	make_default_byte_code (ba: BYTE_ARRAY) is

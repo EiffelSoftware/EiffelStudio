@@ -5,11 +5,9 @@ inherit
 		rename
 			make as base_make
 		redefine
-			dump,
 			is_char,
-			same_as, element_type,
-			description, sk_value, generate_cecil_value, hash_code,
-			generated_id
+			same_as, element_type, tuple_code,
+			description, sk_value, generate_cecil_value, hash_code
 		end
 
 create
@@ -20,8 +18,21 @@ feature -- Initialization
 	make (w: BOOLEAN) is
 			-- Create instance of CHAR_I. If `w' a normal character.
 			-- Otherwise a wide character.
+		require
+			has_compiled_character_class:
+				not w implies (System.character_class /= Void and then
+					System.character_class.is_compiled)
+			has_compiled_wide_character_class:
+				not System.il_generation implies (
+					w implies (System.wide_char_class /= Void and then
+						System.wide_char_class.is_compiled))
 		do
 			is_wide := w
+			if w then
+				base_make (System.wide_char_class.compiled_class.class_id)
+			else
+				base_make (System.character_class.compiled_class.class_id)
+			end
 		ensure
 			is_wide_set: is_wide = w
 		end
@@ -40,6 +51,16 @@ feature -- Property
 			Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_char
 		end
 
+	tuple_code: INTEGER_8 is
+			-- Tuple code for class type
+		do
+			if is_wide then
+				Result := feature {SHARED_GEN_CONF_LEVEL}.wide_character_tuple_code
+			else	
+				Result := feature {SHARED_GEN_CONF_LEVEL}.character_tuple_code
+			end
+		end
+		
 feature -- Access
 
 	level: INTEGER is
@@ -69,16 +90,6 @@ feature -- Access
 			create Result.make (is_wide)
 		end
 
-	dump (buffer: GENERATION_BUFFER) is
-			-- Debug purpose
-		do
-			if is_wide then
-				buffer.putstring ("EIF_WIDE_CHARACTER")
-			else
-				buffer.putstring ("EIF_CHARACTER")
-			end
-		end
-
 	generate_cecil_value (buffer: GENERATION_BUFFER) is
 			-- Generate cecil type value
 		do
@@ -99,16 +110,6 @@ feature -- Access
 			end
 		end
 
-	c_string_id: INTEGER is
-			-- String ID generated for the type.
-		do
-			if is_wide then
-				Result := Wide_char_string_id
-			else
-				Result := Character_string_id
-			end
-		end
-
 	union_tag: STRING is
 		do
 			if is_wide then
@@ -125,16 +126,6 @@ feature -- Access
 				Result := Wide_char_code
 			else
 				Result := Character_code
-			end
-		end
-
-	associated_reference: CLASS_TYPE is
-			-- Reference class associated with simple type
-		do
-			if is_wide then
-				Result := system.wide_char_ref_class.compiled_class.types.first
-			else
-				Result := system.character_ref_class.compiled_class.types.first
 			end
 		end
 
@@ -174,17 +165,6 @@ feature -- Access
 			end
 		end
 
-feature -- Generic conformance
-
-	generated_id (final_mode : BOOLEAN) : INTEGER is
-
-		do
-			if is_wide then
-				Result := Wide_char_type
-			else
-				Result := Character_type
-			end
-		end
 feature
 
 	make_default_byte_code (ba: BYTE_ARRAY) is

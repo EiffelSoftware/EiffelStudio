@@ -4,30 +4,50 @@ class
 inherit
 	BASIC_I
 		redefine
-			dump,
 			is_double,
 			is_numeric,
 			same_as, element_type, il_convert_from,
 			description, sk_value, generate_cecil_value, hash_code,
-			generate_byte_code_cast, generated_id
+			generate_byte_code_cast, default_create, tuple_code
 		end
 
 	BYTE_CONST
 		export
 			{NONE} all
+		redefine
+			default_create
 		end
 		
 	SHARED_IL_CODE_GENERATOR
 		export
 			{NONE} all
+		redefine
+			default_create
 		end
 
+create
+	default_create
+
+feature {NONE} -- Initialization
+
+	default_create is
+			-- Initialize new instance of DOUBLE_I.
+		do
+			make (system.double_class.compiled_class.class_id)
+		end
+		
 feature -- Status report
 
 	element_type: INTEGER_8 is
 			-- Pointer element type
 		do
 			Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_r8
+		end
+
+	tuple_code: INTEGER_8 is
+			-- Tuple code for class type
+		do
+			Result := feature {SHARED_GEN_CONF_LEVEL}.double_tuple_code
 		end
 
 feature
@@ -56,12 +76,6 @@ feature
 			Result := other.is_double
 		end
 
-	dump (buffer: GENERATION_BUFFER) is
-			-- Debug purpose
-		do
-			buffer.putstring ("EIF_DOUBLE")
-		end
-
 	description: DOUBLE_DESC is
 			-- Type description for skeleton
 		do
@@ -76,12 +90,6 @@ feature
 
 	c_string: STRING is "EIF_DOUBLE"
 			-- String generated for the type.
-			
-	c_string_id: INTEGER is
-			-- String ID generated for Current
-		once
-			Result := Names_heap.eif_double_name_id
-		end
 		
 	union_tag: STRING is "darg"
 
@@ -89,12 +97,6 @@ feature
 			-- Hash code for current type
 		once
 			Result := Double_code
-		end
-
-	associated_reference: CLASS_TYPE is
-			-- Reference class associated with simple type
-		do
-			Result := system.double_ref_class.compiled_class.types.first
 		end
 
 	sk_value: INTEGER is
@@ -119,14 +121,6 @@ feature
 	type_a: DOUBLE_A is
 		do
 			create Result
-		end
-
-feature -- Generic conformance
-
-	generated_id (final_mode : BOOLEAN) : INTEGER is
-
-		do
-			Result := Double_type
 		end
 
 feature -- IL code generation

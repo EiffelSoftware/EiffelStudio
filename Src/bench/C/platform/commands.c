@@ -22,9 +22,8 @@
 #include "file.h"	/* for PATH_MAX */
 
 #ifdef EIF_WINDOWS
-#define WIN32
 #include <windows.h>
-#include "..\extra\win32\ipc\shared\stream.h"
+#include "stream.h"
 #endif
 
 #ifdef EIF_OS2

@@ -34,6 +34,7 @@ feature -- Access
 			Result := implementation.character_format (caret_index)
 		ensure
 			result_not_void: Result /= Void
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
@@ -50,6 +51,7 @@ feature -- Access
 			Result := implementation.selected_character_format
 		ensure
 			result_not_void: Result /= Void
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
@@ -64,6 +66,7 @@ feature -- Access
 			Result := implementation.paragraph_format (caret_index)
 		ensure
 			result_not_void: Result /= Void
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
@@ -80,6 +83,7 @@ feature -- Access
 			Result := implementation.selected_paragraph_format
 		ensure
 			result_not_void: Result /= Void
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
@@ -94,6 +98,7 @@ feature -- Access
 		do
 			Result := implementation.character_format_contiguous (start_index, end_index)
 		ensure
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
@@ -108,6 +113,7 @@ feature -- Access
 		do
 			Result := implementation.paragraph_format_contiguous (start_position, end_position)
 		ensure
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end	
@@ -127,6 +133,7 @@ feature -- Access
 			Result := implementation.character_format_range_information (start_index, end_index)
 		ensure
 			result_not_void: Result /= Void
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end	
@@ -146,6 +153,7 @@ feature -- Access
 			Result := implementation.paragraph_format_range_information (start_position, end_position)
 		ensure
 			result_not_void: Result /= Void
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end	
@@ -161,6 +169,7 @@ feature -- Access
 			Result := implementation.buffer_locked_in_format_mode
 		ensure
 			caret_not_moved: caret_position = old caret_position
+			text_not_changed: text.is_equal (old text)
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
 		end
@@ -174,6 +183,7 @@ feature -- Access
 		do
 			Result := implementation.buffer_locked_in_append_mode
 		ensure
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
@@ -189,6 +199,7 @@ feature -- Access
 			Result := implementation.index_from_position (an_x_position, a_y_position)
 		ensure
 			index_valid: Result >= 1 and Result <= text_length
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
@@ -205,6 +216,7 @@ feature -- Access
 		ensure
 			position_valid: Result.x >= 0 and Result.x <= width and
 				Result.y >= 0 and Result.y <= height
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
@@ -218,6 +230,7 @@ feature -- Access
 		do
 			Result := implementation.character_displayed (an_index)
 		ensure
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
@@ -233,6 +246,7 @@ feature -- Access
 			Result := implementation.tab_positions
 		ensure
 			result_not_void: Result /= Void
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
@@ -246,6 +260,7 @@ feature -- Access
 			Result := implementation.tab_width
 		ensure
 			result_positive: Result > 0
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end

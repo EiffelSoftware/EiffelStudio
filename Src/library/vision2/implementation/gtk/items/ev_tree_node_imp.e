@@ -35,16 +35,23 @@ inherit
 	EV_TEXTABLE_IMP
 		rename
 			interface as textable_imp_interface
+		redefine
+			set_text,
+			remove_text
 		end
 
-	--EV_TOOLTIPABLE_IMP
+	EV_TOOLTIPABLE_IMP
+		rename
+			interface as tooltipable_imp_interface
+		end
 
 	EV_PIXMAPABLE_IMP
 		rename
 			interface as pixmapable_imp_interface
 		redefine
 			set_pixmap,
-			remove_pixmap
+			remove_pixmap,
+			pixmap
 		end
 		
 	EV_PND_DEFERRED_ITEM
@@ -63,11 +70,9 @@ feature {NONE} -- Initialization
 			-- Create the tree item.
 		do
 			base_make (an_interface)
-			textable_imp_initialize
-			pixmapable_imp_initialize
-
-			-- The following is a hack to ensure destruction of gtkobjects.
-			set_c_object (C.gtk_hbox_new (False, 0))
+			set_c_object (C.gtk_label_new (NULL))
+			-- label used for textable and tooltipable implementations.
+			text_label := c_object
 			create ev_children.make (0)
 		end
 
@@ -76,9 +81,6 @@ feature {NONE} -- Initialization
 			-- create item box to hold label and pixmap.
 		do
 			{EV_ITEM_LIST_IMP} Precursor
-			C.gtk_container_add (c_object, pixmap_box)
-			C.gtk_container_add (c_object, text_label)
-			tooltip := ""
 			is_initialized := True
 		end
 
@@ -130,22 +132,18 @@ feature -- Status setting
 				)
 			end
 		end
-
-feature -- Tooltipable
-
-	--| FIXME IEK Implement either a hack or redo with new tree widget in gtk+ 2.0
-	
-	tooltip: STRING
-
-	set_tooltip (a_string: STRING) is
+		
+	set_text (a_text: STRING) is
+			-- 
 		do
-			tooltip := clone (a_string)
+			Precursor {EV_TEXTABLE_IMP} (a_text)
 		end
-
-	remove_tooltip is
+		
+	remove_text is
+			-- 
 		do
-			tooltip := ""
-		end
+			Precursor {EV_TEXTABLE_IMP}
+		end	
 
 feature -- PND
 
@@ -309,20 +307,19 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			is_leaf, is_expded: INTEGER
 		do
 			C.gtk_label_get (text_label, $text_ptr)
-			if gtk_pixmap /= NULL and then parent_tree_imp /= Void then
-				if pixmap.height > parent_tree_imp.row_height then
-					C.gtk_clist_set_row_height (parent_tree_imp.list_widget, pixmap.height)
+			if gdk_pixmap /= NULL and then parent_tree_imp /= Void then
+				if pix_height > parent_tree_imp.row_height then
+					C.gtk_clist_set_row_height (parent_tree_imp.list_widget, pix_height)
 				end
-				C.gtk_pixmap_get (C.gtk_pixmap_struct_pixmap (gtk_pixmap), $gdkpix, $gdkmask)
 				C.gtk_ctree_set_node_info (
 					parent_tree_imp.list_widget,
 					tree_node_ptr,
 					text_ptr,-- text,
 					3, -- spacing
-					gdkpix,
-					gdkmask,
-					gdkpix,
-					gdkmask,
+					gdk_pixmap,
+					gdk_mask,
+					gdk_pixmap,
+					gdk_mask,
 					is_leaf,
 					is_expded
 				)
@@ -392,8 +389,16 @@ feature {NONE} -- Implementation
 		end
 
 	set_pixmap (a_pixmap: EV_PIXMAP) is
+		local
+			a_pix_imp: EV_PIXMAP_IMP
 		do
-			Precursor {EV_PIXMAPABLE_IMP} (a_pixmap)
+			--| FIXME An intelligent image list needs to be implemented instead of
+			--| just retaining a pointer to passed pixmap.
+			a_pix_imp ?= a_pixmap.implementation
+			gdk_pixmap := a_pix_imp.drawable
+			gdk_mask := a_pix_imp.mask
+			pix_width := a_pix_imp.width
+			pix_height := a_pix_imp.height
 			if tree_node_ptr /= NULL then
 				insert_pixmap
 			end
@@ -401,8 +406,24 @@ feature {NONE} -- Implementation
 
 	remove_pixmap is
 		do
-			Precursor {EV_PIXMAPABLE_IMP}
+			--| FIXME Remove pixmap from tree and reset pix attributes.
 		end
+		
+	pixmap: EV_PIXMAP is
+			-- 
+		local
+			pix_imp: EV_PIXMAP_IMP
+		do
+			if gdk_pixmap /= NULL then
+				create Result
+				pix_imp ?= Result.implementation
+				pix_imp.copy_from_gdk_data (gdk_pixmap, gdk_mask, pix_width, pix_height)				
+			end
+		end
+		
+	
+	gdk_pixmap, gdk_mask: POINTER
+		-- Stored gdk pixmap data.
 
 	count: INTEGER is
 		do

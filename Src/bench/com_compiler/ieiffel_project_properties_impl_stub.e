@@ -30,50 +30,44 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	compilation_type: INTEGER is
-			-- Compilation type.
+	namespace_generation: INTEGER is
+			-- Namespace generation for cluster
 		do
 			-- Put Implementation here.
 		end
 
-	console_application: BOOLEAN is
-			-- Is console application?
+	default_namespace: STRING is
+			-- Default namespace.
 		do
 			-- Put Implementation here.
 		end
 
-	evaluate_require: BOOLEAN is
-			-- Should preconditions be evaluated?
+	project_type: INTEGER is
+			-- Project type
 		do
 			-- Put Implementation here.
 		end
 
-	evaluate_ensure: BOOLEAN is
-			-- Should postconditions be evaluated?
+	dot_net_naming_convention: BOOLEAN is
+			-- .NET Naming convention
 		do
 			-- Put Implementation here.
 		end
 
-	evaluate_check: BOOLEAN is
-			-- Should check assertions be evaluated?
-		do
-			-- Put Implementation here.
-		end
-
-	evaluate_loop: BOOLEAN is
-			-- Should loop assertions be evaluated?
-		do
-			-- Put Implementation here.
-		end
-
-	evaluate_invariant: BOOLEAN is
-			-- Should class invariants be evaluated?
-		do
-			-- Put Implementation here.
-		end
-
-	debug_info: BOOLEAN is
+	generate_debug_info: BOOLEAN is
 			-- Generate debug info?
+		do
+			-- Put Implementation here.
+		end
+
+	precompiled_library: STRING is
+			-- Precompiled file.
+		do
+			-- Put Implementation here.
+		end
+
+	assertions: INTEGER is
+			-- Project assertions
 		do
 			-- Put Implementation here.
 		end
@@ -90,20 +84,8 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	default_namespace: STRING is
-			-- Default namespace.
-		do
-			-- Put Implementation here.
-		end
-
 	assemblies: IEIFFEL_SYSTEM_ASSEMBLIES_INTERFACE is
 			-- Assemblies.
-		do
-			-- Put Implementation here.
-		end
-
-	precompiled: STRING is
-			-- Precompiled file.
 		do
 			-- Put Implementation here.
 		end
@@ -150,14 +132,20 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
+	culture: STRING is
+			-- Asembly culture.
+		do
+			-- Put Implementation here.
+		end
+
 	key_file_name: STRING is
 			-- Asembly signing key file name.
 		do
 			-- Put Implementation here.
 		end
 
-	culture: STRING is
-			-- Asembly culture.
+	working_directory: STRING is
+			-- Project working directory
 		do
 			-- Put Implementation here.
 		end
@@ -185,58 +173,9 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
-	set_compilation_type (return_value: INTEGER) is
-			-- Compilation type.
-			-- `return_value' [in]. See ECOM_X__EIF_COMPILATION_TYPES_ENUM for possible `return_value' values. 
-		do
-			-- Put Implementation here.
-		end
-
-	set_console_application (return_value: BOOLEAN) is
-			-- Is console application?
-			-- `return_value' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	set_evaluate_require (return_value: BOOLEAN) is
-			-- Should preconditions be evaluated?
-			-- `return_value' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	set_evaluate_ensure (return_value: BOOLEAN) is
-			-- Should postconditions be evaluated?
-			-- `return_value' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	set_evaluate_check (return_value: BOOLEAN) is
-			-- Should check assertions be evaluated?
-			-- `return_value' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	set_evaluate_loop (return_value: BOOLEAN) is
-			-- Should loop assertions be evaluated?
-			-- `return_value' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	set_evaluate_invariant (return_value: BOOLEAN) is
-			-- Should class invariants be evaluated?
-			-- `return_value' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	set_debug_info (return_value: BOOLEAN) is
-			-- Generate debug info?
-			-- `return_value' [in].  
+	set_namespace_generation (penu_cluster_namespace_generation: INTEGER) is
+			-- Namespace generation for cluster
+			-- `penu_cluster_namespace_generation' [in]. See ECOM_TAG_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM for possible `penu_cluster_namespace_generation' values. 
 		do
 			-- Put Implementation here.
 		end
@@ -248,9 +187,37 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
-	set_precompiled (return_value: STRING) is
+	set_project_type (penum_project_type: INTEGER) is
+			-- Project type
+			-- `penum_project_type' [in]. See ECOM_TAG_EIF_PROJECT_TYPES_ENUM for possible `penum_project_type' values. 
+		do
+			-- Put Implementation here.
+		end
+
+	set_dot_net_naming_convention (pvb_naming_convention: BOOLEAN) is
+			-- .NET Naming convention
+			-- `pvb_naming_convention' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	set_generate_debug_info (return_value: BOOLEAN) is
+			-- Generate debug info?
+			-- `return_value' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	set_precompiled_library (return_value: STRING) is
 			-- Precompiled file.
 			-- `return_value' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	set_assertions (p_assertions: INTEGER) is
+			-- Project assertions
+			-- `p_assertions' [in].  
 		do
 			-- Put Implementation here.
 		end
@@ -304,6 +271,13 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
+	set_culture (return_value: STRING) is
+			-- Asembly culture.
+			-- `return_value' [in].  
+		do
+			-- Put Implementation here.
+		end
+
 	set_key_file_name (return_value: STRING) is
 			-- Asembly signing key file name.
 			-- `return_value' [in].  
@@ -311,9 +285,9 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
-	set_culture (return_value: STRING) is
-			-- Asembly culture.
-			-- `return_value' [in].  
+	set_working_directory (pbstr_working_directory: STRING) is
+			-- Project working directory
+			-- `pbstr_working_directory' [in].  
 		do
 			-- Put Implementation here.
 		end

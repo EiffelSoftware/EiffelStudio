@@ -10,6 +10,20 @@ inherit
 
 feature -- Status Report
 
+	retrieve_eiffel_project_user_precondition (a_project_file_name: STRING): BOOLEAN is
+			-- User-defined preconditions for `retrieve_eiffel_project'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	create_eiffel_project_user_precondition (a_ace_file_name: STRING; a_project_directory_path: STRING): BOOLEAN is
+			-- User-defined preconditions for `create_eiffel_project'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	retrieve_project_user_precondition (a_project_file_name: STRING): BOOLEAN is
 			-- User-defined preconditions for `retrieve_project'.
 			-- Redefine in descendants if needed.
@@ -54,6 +68,13 @@ feature -- Status Report
 
 	last_error_message_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `last_error_message'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	last_exception_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `last_exception'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -110,8 +131,27 @@ feature -- Status Report
 
 feature -- Basic Operations
 
+	retrieve_eiffel_project (a_project_file_name: STRING) is
+			-- Retrieve Eiffel Project
+			-- `a_project_file_name' [in].  
+		require
+			retrieve_eiffel_project_user_precondition: retrieve_eiffel_project_user_precondition (a_project_file_name)
+		deferred
+
+		end
+
+	create_eiffel_project (a_ace_file_name: STRING; a_project_directory_path: STRING) is
+			-- Create new Eiffel project.
+			-- `a_ace_file_name' [in].  
+			-- `a_project_directory_path' [in].  
+		require
+			create_eiffel_project_user_precondition: create_eiffel_project_user_precondition (a_ace_file_name, a_project_directory_path)
+		deferred
+
+		end
+
 	retrieve_project (a_project_file_name: STRING) is
-			-- Retrieve project.
+			-- Retrieve project. Obsolete
 			-- `a_project_file_name' [in].  
 		require
 			retrieve_project_user_precondition: retrieve_project_user_precondition (a_project_file_name)
@@ -162,9 +202,17 @@ feature -- Basic Operations
 		end
 
 	last_error_message: STRING is
-			-- Last error message.
+			-- Last error message
 		require
 			last_error_message_user_precondition: last_error_message_user_precondition
+		deferred
+
+		end
+
+	last_exception: IEIFFEL_EXCEPTION_INTERFACE is
+			-- Last exception raised
+		require
+			last_exception_user_precondition: last_exception_user_precondition
 		deferred
 
 		end

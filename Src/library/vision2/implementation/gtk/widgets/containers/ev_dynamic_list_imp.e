@@ -13,14 +13,6 @@ inherit
 		redefine
 			interface
 		end
-
-	EV_ANY_IMP
-		undefine
-			needs_event_box
-		redefine
-			interface,
-			initialize
-		end
 		
 feature -- Initialization
 
@@ -61,20 +53,6 @@ feature {NONE} -- Implementation
 	remove_i_th (i: INTEGER) is
 			-- Remove item at `i'-th position.
 		deferred
-		end
-
-feature {EV_ANY_I} -- Implementation
-
-	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
-			-- Move `a_child' to `a_position' in `a_container'.
-			--| Do nothing more than calling gtk-reorder.
-		deferred
-		end
-
-	list_widget: POINTER is
-			-- GtkWidget that holds the list.
-		do
-			Result := c_object
 		end
 
 feature {NONE} -- Implementation

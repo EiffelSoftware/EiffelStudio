@@ -44,6 +44,15 @@ inherit
 			is_equal
 		end
 
+	WIZARD_SETTINGS_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create,
+			copy,
+			is_equal
+		end
+
 feature {NONE} -- Initialization
 	
 	user_initialization is
@@ -52,6 +61,8 @@ feature {NONE} -- Initialization
 			-- could not be performed in `initialize',
 			-- (due to regeneration of implementation class)
 			-- can be added here.
+		local
+			l_accel: EV_ACCELERATOR
 		do
 			initialize_checker
 			close_request_actions.extend (agent on_exit)
@@ -68,14 +79,23 @@ feature {NONE} -- Initialization
 			project_box.set_default_text (Profile_manager.Default_profile)
 			project_box.set_save_on_return (False)
 			project_box.setup ("Current project:", Profile_manager.Profiles_key, agent on_project_change, agent on_project_enter, agent on_project_select)
+			project_box.initialize_focus
 			Profile_manager.active_profile_save_actions.extend (agent project_type_profile_item)
 			Profile_manager.active_profile_save_actions.extend (agent component_type_profile_item)
 			Profile_manager.active_profile_save_actions.extend (agent compile_target_profile_item)
 			Profile_manager.active_profile_save_actions.extend (agent backup_profile_item)
 			Profile_manager.active_profile_save_actions.extend (agent overwrite_profile_item)
+			Profile_manager.active_profile_save_actions.extend (agent marshaller_profile_item)
 			Profile_manager.active_profile_change_actions.extend (agent update_buttons)
 			update_buttons
 			initialize_generate_button
+			
+			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code (feature {EV_KEY_CONSTANTS}.Key_tab), True, False, False)
+			l_accel.actions.extend (agent on_next)
+			accelerators.extend (l_accel)
+			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code (feature {EV_KEY_CONSTANTS}.Key_tab), True, False, True)
+			l_accel.actions.extend (agent on_previous)
+			accelerators.extend (l_accel)
 		end
 
 feature -- Basic Operations
@@ -110,6 +130,16 @@ feature {NONE} -- Implementation
 	on_help is
 			-- Called by `select_actions' of `help_menu_item'.
 		do
+		end
+
+	on_about is
+			-- Called by `select_actions' of `about_menu_item'.
+			-- Show about dialog box
+		local
+			l_about_dialog: WIZARD_ABOUT_DIALOG
+		do
+			create l_about_dialog
+			l_about_dialog.show_modal_to_window (Current)
 		end
 
 	on_project_change (a_project_name: STRING): BOOLEAN is
@@ -202,6 +232,7 @@ feature {NONE} -- Implementation
 		do
 			eiffel_project_box.hide
 			com_project_box.show
+			com_project_box.show_marshaller
 			initialize_generate_button
 			environment.set_is_new_component
 			Profile_manager.save_active_profile
@@ -214,6 +245,7 @@ feature {NONE} -- Implementation
 		do
 			eiffel_project_box.hide
 			com_project_box.show
+			com_project_box.hide_marshaller
 			initialize_generate_button
 			environment.set_is_client
 			Profile_manager.save_active_profile
@@ -324,14 +356,28 @@ feature {NONE} -- Implementation
 
 	on_previous is
 			-- Select first notebook page
+		local
+			l_index: INTEGER
 		do
-			notebook.select_item (settings_box)
+			l_index := notebook.selected_item_index
+			l_index := l_index - 1
+			if l_index < 1 then
+				l_index := notebook.count
+			end
+			notebook.select_item (notebook.i_th (l_index))
 		end
 		
 	on_next is
 			-- Select second notebook page
+		local
+			l_index: INTEGER
 		do
-			notebook.select_item (generation_options_outter_box)
+			l_index := notebook.selected_item_index
+			l_index := l_index + 1
+			if l_index > notebook.count then
+				l_index := 1
+			end
+			notebook.select_item (notebook.i_th (l_index))
 		end
 		
 feature {NONE} -- Implementation
@@ -483,7 +529,20 @@ feature {NONE} -- Implementation
 			end
 			create Result.make (Overwrite_key, l_overwrite)
 		end
-		
+	
+	marshaller_profile_item: WIZARD_PROFILE_ITEM is
+			-- Profile item for compilation target
+		local
+			l_use_marshaller: STRING
+		do
+			if com_project_box.marshaller_check_button.is_selected then
+				l_use_marshaller := True_code
+			else
+				l_use_marshaller := None_code
+			end
+			create Result.make (Marshaller_key, l_use_marshaller)
+		end
+
 	update_buttons is
 			-- Initialize check and radio buttons
 		local
@@ -556,33 +615,6 @@ feature {NONE} -- Private Access
 	in_delete_mode: BOOLEAN
 			-- Is project button in delete mode?
 
-	Eiffel_project_code: STRING is "Eiffel"
-			-- String encoding for Eiffel project
-	
-	Server_project_code: STRING is "Server"
-			-- String encoding for COM Server project
-	
-	Client_project_code: STRING is "Client"
-			-- String encoding for COM client project
-
-	In_process_code: STRING is "InProcess"
-			-- String encoding for in-process component
-
-	Out_of_process_code: STRING is "OutOfProc"
-			-- String encoding for out-of-process component
-
-	Both_compile_code: STRING is "Both"
-			-- String encoding for not compiling C nor Eiffel code
-
-	Eiffel_compile_code: STRING is "Eiffel"
-			-- String encoding for not compiling Eiffel code
-
-	None_code: STRING is "None"
-			-- String encoding for compiling C and Eiffel code
-
-	True_code: STRING is "True"
-			-- String encoding for backuping overwritten files
-
 	is_running: BOOLEAN
 			-- Is wizard currently running?
 
@@ -607,20 +639,16 @@ feature {NONE} -- Private Access
 			Result := (create {EV_ENVIRONMENT}).application
 		end
 	
-	Project_type_key: STRING is "Project_type_key"
-			-- Project type key used to store project type settings
-	
-	Component_type_key: STRING is "Component_type_key"
-			-- Component type key used to store component type settings
-
-	Compile_target_key: STRING is "Compile_target_key"
-			-- Compile target key used to store compile target settings
-	
-	Backup_key: STRING is "Backup_key"
-			-- Key to store whether EiffelCOM wizard should backup overwritten files
-
-	Overwrite_key: STRING is "Overwrite_key"
-			-- Key to store whether EiffelCOM wizard should overwrite generated files
-
 end -- class WIZARD_MAIN_WINDOW
+
+--+----------------------------------------------------------------
+--| EiffelCOM Wizard
+--| Copyright (C) 1999-2005 Eiffel Software. All rights reserved.
+--| Eiffel Software Confidential
+--| Duplication and distribution prohibited.
+--|
+--| Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| http://www.eiffel.com
+--+----------------------------------------------------------------
 

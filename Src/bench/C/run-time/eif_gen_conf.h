@@ -51,6 +51,11 @@ extern char eif_gen_typecode (char *obj, int pos);
 
 extern char eif_gen_is_uniform (char *obj, char code);
 
+/* ROUTINEs */
+
+/* Target and argument type codes as STRING object */
+extern char *eif_gen_typecode_str (char *obj);
+
 /* Parent tables */
 
 extern struct eif_par_types **eif_par_table;
@@ -63,7 +68,7 @@ extern int eif_par_table2_size;
 /* Type map: compound->compiler generated id */
 extern int16 *eif_cid_map;
 
-/* Inverse RTUD Table to reverse the effect of RTUD */ 
+/* Inverse RTUD Table to reverse the effect of RTUD */
 extern int16 *rtud_inv;
 
 /* Maximum nr. of entries in a compound typeid array */

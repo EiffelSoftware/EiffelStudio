@@ -260,10 +260,11 @@ feature -- Access
 		end
 		
 	show_hide_empty_directories_button: EV_TOOL_BAR_TOGGLE_BUTTON is
-			--
+			-- A button used to show/hide all empty directories within `Current'.
 		once
 			create Result
-			Result.set_pixmap (pixmap_by_name ("directory_search_small"))
+			
+			Result.set_pixmap (pixmap_by_name ("icon_show_hide_directory_color"))
 			Result.select_actions.extend (agent show_hide_all_empty_directories)
 			Result.set_tooltip ("Show/Hide all empty directories")
 		end

@@ -19,7 +19,30 @@ creation {ERROR_HANDLER}
 
 	init
 
+creation
+
+	make
+
 feature {NONE} -- Initialization
+
+	make (s, e: INTEGER; f: like file_name; c: INTEGER; m: STRING) is
+			-- Create a new SYNTAX_ERROR.
+		require
+			f_not_void: f /= Void
+			m_not_void: m /= Void
+		do
+			start_position := s
+			end_position := e
+			file_name := f
+			error_code := c
+			error_message := m
+		ensure
+			start_position_set: start_position = s
+			end_position_set: end_position = e
+			file_name_set: file_name = f
+			error_code_set: error_code = c
+			error_message_set: error_message = m
+		end
 
 	init is
 			-- Initialize `start_position' and `end_position'.

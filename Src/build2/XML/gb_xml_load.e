@@ -223,6 +223,10 @@ feature {NONE} -- Implementation
 				end
 				application_element.forth
 			end
+				-- Building the project causes the project to be marked as
+				-- modified. We do not want this, as it should only
+				-- be marked as so when the user does something.
+			system_status.disable_project_modified
 		end
 
 	load_and_parse_xml_file (a_filename:STRING) is

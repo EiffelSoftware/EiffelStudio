@@ -659,7 +659,6 @@ feature -- Inlining
 			-- Make final portion of the standard byte code.
 		local
 			my_code: CHARACTER;
-			class_type: CL_TYPE_I;
 		do
 			if  is_first or flag then
 				my_code := code_first;
@@ -667,24 +666,6 @@ feature -- Inlining
 				my_code := code_next;
 			end;
 			ba.append (my_code);
-			if my_code = Bc_sep_extern or my_code = Bc_sep_extern_inv then
-			-- "Bc_sep_extern" is impossible, delete it later.
-					-- keep parameter number
-				if parameters /= Void then
-					ba.append_short_integer (parameters.count);
-				else
-					ba.append_short_integer (0);
-				end;
-					-- keep the class name of the target of the feature call
-				class_type ?= context_type; -- Can't fail
-				ba.append_raw_string (class_type.base_class.name_in_upper);
-					-- keep the feature name of the feature call
-				ba.append_raw_string (feature_name);
-					-- keep the return value's type;
-				ba.append_uint32_integer (Context.real_type (type).sk_value);
-					-- keep if the acknowledgement for the proc. is necessary
-				ba.append ('%/000/');
-			end
 			if  my_code = Bc_extern_inv then
 					-- Generate feature name for test of void reference
 				ba.append_raw_string (feature_name);
@@ -701,7 +682,6 @@ feature -- Inlining
 			-- for a precompiled call.
 		local
 			my_code: CHARACTER;
-			class_type: CL_TYPE_I;
 		do
 			if  is_first or flag then
 				my_code := precomp_code_first;
@@ -709,24 +689,6 @@ feature -- Inlining
 				my_code := precomp_code_next;
 			end;
 			ba.append (my_code);
-			if my_code = Bc_sep_pextern or my_code = Bc_sep_pextern_inv then
-			-- Bc_sep_pfeature is impossible, delete it later.
-					-- keep parameter number
-				if parameters /= Void then
-					ba.append_short_integer (parameters.count);
-				else
-					ba.append_short_integer (0);
-				end;
-					-- keep the class name of the target of the feature call
-				class_type ?= context_type; -- Can't fail
-				ba.append_raw_string (class_type.base_class.name_in_upper);
-					-- keep the feature name of the feature call
-				ba.append_raw_string (feature_name);
-					-- keep the return value's type;
-				ba.append_uint32_integer (Context.real_type (type).sk_value);
-					-- keep if the acknowledgement for the proc. is necessary
-				ba.append ('%/000/');
-			end
 			if  my_code = Bc_pextern_inv  then
 					-- Generate feature name for test of void reference
 				ba.append_raw_string (feature_name);

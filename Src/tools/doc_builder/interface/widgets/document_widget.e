@@ -78,7 +78,7 @@ feature -- Commands
 			l_filename: STRING
 			l_xml: PLAIN_TEXT_FILE
 		do
-			create l_filename.make_from_string (temporary_xml_location (document, True))
+			create l_filename.make_from_string (temporary_xml_location (document.name, True))
 			create l_xml.make_create_read_write (l_filename)
 			l_xml.putstring (document.text)
 			l_xml.close
@@ -94,7 +94,7 @@ feature -- Commands
 			l_target_dir: DIRECTORY
 		do
 			create l_generator
-			create l_target_dir.make (temporary_html_location (document, False))
+			create l_target_dir.make (temporary_html_location (document.name, False))
 			l_generator.generate_file (document, l_target_dir)		
 			internal_html_widget.load_document_html (document.name, l_generator.last_generated_file.name)			
 			view_box.wipe_out

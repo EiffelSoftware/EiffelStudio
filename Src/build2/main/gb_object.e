@@ -90,6 +90,7 @@ feature {GB_OBJECT_HANDLER} -- Initialization
 			create events.make (0)
 			create constants.make (0)
 			create instance_referers.make (0)
+			create all_client_representations.make (0)
 			create edited_name.make (0)
 			expanded_in_box := True
 			create children.make (0)
@@ -113,6 +114,7 @@ feature {GB_OBJECT_HANDLER} -- Initialization
 			create constants.make (0)
 			create edited_name.make (0)
 			create children.make (0)
+			create all_client_representations.make (0)
 			expanded_in_box := True
 			id := new_id
 		ensure
@@ -150,6 +152,9 @@ feature -- Access
 		
 	window_selector_item: GB_WINDOW_SELECTOR_ITEM
 		-- Representation of `Current' in `window_selector'.
+		
+	all_client_representations: ARRAYED_LIST [EV_TREE_ITEM]
+		-- All representations of `Current' in the client hierarchy of the `window_selector'.
 
 	object: EV_ANY
 		-- The vision2 object that `Current' represents.
@@ -234,7 +239,10 @@ feature -- Access
 			-- `a_list'.
 		require
 			a_list_not_void: a_list /= Void
+		local
+			cursor: CURSOR
 		do
+			cursor := children.cursor
 			from
 				children.start
 			until
@@ -244,6 +252,9 @@ feature -- Access
 				children.item.all_children_recursive (a_list)
 				children.forth
 			end
+			children.go_to (cursor)
+		ensure
+			children_index_not_changed: old children.index = children.index
 		end
 
 	flatten is
@@ -469,15 +480,19 @@ feature -- Access
 			layout_item.wipe_out
 			layout_item.set_data ("Represents a top level object, so no children may be added.")
 		ensure
+			chidren_index_not_changed: old children.index = children.index
 			layout_item_empty: layout_item.count = 0
 			layout_item_has_data: layout_item.data /= Void
 		end
 		
 	represent_as_non_locked_instance is
 			-- Ensure pixmap representation of `Current' is not that of a locked type.
+		local
+			cursor: CURSOR
 		do
 			layout_item.set_pixmap ((create {GB_SHARED_PIXMAPS}).pixmap_by_name (type.as_lower).twin)
 			layout_item.set_data (Void)
+			cursor := children.cursor
 			from
 				children.start
 			until
@@ -488,7 +503,9 @@ feature -- Access
 				end
 				children.forth
 			end
+			children.go_to (cursor)
 		ensure
+			chidren_index_not_changed: old children.index = children.index
 			layout_item_children_set: layout_item.count = children.count
 			layout_item_has_not_data: layout_item.data = Void
 		end
@@ -817,7 +834,7 @@ feature {GB_LAYOUT_CONSTRUCTOR_ITEM, GB_OBJECT_HANDLER, GB_WINDOW_SELECTOR, GB_C
 		do
 			layout_item ?= a_layout_item
 			layout_item.set_object (Current)
-			build_drop_actions_for_layout_item
+			build_drop_actions_for_layout_item (layout_item)
 		ensure
 			layout_item_set: layout_item = a_layout_item
 			layout_item_object_set: layout_item.object = Current
@@ -828,12 +845,14 @@ feature {GB_LAYOUT_CONSTRUCTOR_ITEM, GB_OBJECT_HANDLER, GB_WINDOW_SELECTOR, GB_C
 		require
 			object_not_void: an_object /= Void
 			contained: children.has (an_object)
-		do
+		do				
 			unparent_ev_object (an_object.object)
 			unparent_ev_object (an_object.display_object)
 	
 			layout_item.prune_all (an_object.layout_item)
 			remove_child_from_children (an_object)
+			
+			
 			
 				-- Notify the system that we have modified something.
 			system_status.enable_project_modified
@@ -841,7 +860,6 @@ feature {GB_LAYOUT_CONSTRUCTOR_ITEM, GB_OBJECT_HANDLER, GB_WINDOW_SELECTOR, GB_C
 		ensure
 			not_contained: not children.has (an_object)
 		end
-		
 		
 feature {GB_OBJECT_HANDLER, GB_ID_COMPRESSOR} -- Status setting
 
@@ -983,7 +1001,9 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WINDOW_SELECTOR_ITE
 			dependents_not_void: dependents /= Void
 		local
 			current_object, dependent_object: GB_OBJECT
+			cursor: CURSOR
 		do
+			cursor := an_object.children.cursor
 			from
 				an_object.children.start
 			until
@@ -1004,6 +1024,9 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WINDOW_SELECTOR_ITE
 				end
 				an_object.children.forth
 			end
+			an_object.children.go_to (cursor)
+		ensure
+			children_index_not_changed: old an_object.children.index = an_object.children.index
 		end		
 
 	create_layout_item is
@@ -1012,7 +1035,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WINDOW_SELECTOR_ITE
 			no_layout_item_associated: layout_item = Void
 		do
 			create layout_item.make (Current)
-			build_drop_actions_for_layout_item
+			build_drop_actions_for_layout_item (layout_item)
 		ensure
 			lyout_item_initialized: layout_item /= Void
 			layout_item_not_parented: layout_item.parent = Void
@@ -1210,9 +1233,17 @@ feature {GB_COMMAND_NAME_CHANGE, GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_CHANGE
 					-- Update the window selector item name.
 				window_selector_item.update_to_reflect_name_change
 			end
+			from
+				all_client_representations.start
+			until
+				all_client_representations.off
+			loop
+				all_client_representations.item.set_text (name_and_type)
+				all_client_representations.forth
+			end
 		end
 
-feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT, GB_OBJECT} -- Implementation
+feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT, GB_OBJECT, GB_LAYOUT_CONSTRUCTOR_ITEM} -- Implementation
 
 	build_display_object is
 			-- Build `display_object' from type of `Current'
@@ -1414,18 +1445,18 @@ feature {GB_CODE_GENERATOR} -- Implementation
 			result_not_void: Result /= Void
 		end
 		
-feature {GB_LAYOUT_CONSTRUCTOR, GB_OBJECT_HANDLER} -- Implementation
+feature {GB_LAYOUT_CONSTRUCTOR, GB_OBJECT_HANDLER, GB_OBJECT} -- Implementation
 
-	build_drop_actions_for_layout_item is
+	build_drop_actions_for_layout_item (tree_item: EV_TREE_ITEM) is
 			-- Build the drop actions for the layout item.
 			-- Wipe out any existing actions.
 		require
-			layout_item_not_void: layout_item /= Void
+			tree_item_not_void: tree_item /= Void
 		do
-			layout_item.drop_actions.wipe_out
-			layout_item.drop_actions.extend (agent add_new_object_wrapper (?))
-			layout_item.drop_actions.extend (agent add_new_component_wrapper (?))
-			layout_item.drop_actions.set_veto_pebble_function (agent can_add_child (?))
+			tree_item.drop_actions.wipe_out
+			tree_item.drop_actions.extend (agent add_new_object_wrapper (?))
+			tree_item.drop_actions.extend (agent add_new_component_wrapper (?))
+			tree_item.drop_actions.set_veto_pebble_function (agent can_add_child (?))
 		end
 		
 feature {GB_BUILDER_WINDOW} -- Implementation
@@ -1558,6 +1589,165 @@ feature {GB_WINDOW_SELECTOR_ITEM, GB_OBJECT_HANDLER} -- Implementation
 			window_selector_item_object_set: window_selector_item.object = Current
 		end
 		
+feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_ADD_OBJECT, GB_COMMAND_DELETE_WINDOW_OBJECT} -- Implementation
+
+	add_client_representation (client_object: GB_OBJECT) is
+			-- Add a client representation for `client_object' to the `window_selector_item'
+			-- which it is a representation.
+		require
+			is_top_level_object: is_top_level_object
+			client_object_not_void: client_object /= void
+			client_object_is_instance_of_current: client_object.associated_top_level_object = id
+			parented_correctly: client_object.top_level_parent_object /= client_object
+		local
+			tree_item: EV_TREE_ITEM
+			pixmap, l_pixmap: EV_PIXMAP
+			client_item: EV_TREE_ITEM
+			parent_item: EV_TREE_ITEM
+			top_object: GB_OBJECT
+		do
+			if window_selector_item.tree_item.is_empty then
+				create client_item.make_with_text ("Clients")
+				client_item.set_pixmap ((create {GB_SHARED_PIXMAPS}).pixmap_by_name ("icon_format_clients_color"))
+				window_selector_item.tree_item.extend (client_item)
+			else
+				client_item ?= window_selector_item.tree_item.first
+			end
+			top_object := client_object.top_level_parent_object
+			parent_item ?= client_item.retrieve_item_by_data (top_object.id, True)
+			if parent_item = Void then
+				create parent_item.make_with_text (name_and_type_from_object (top_object))
+				top_object.all_client_representations.extend (parent_item)
+				parent_item.set_pixmap ((create {GB_SHARED_PIXMAPS}).pixmap_by_name (top_object.type.as_lower).twin)
+				parent_item.set_data (top_object.id)
+				parent_item.select_actions.extend (agent select_client_object (top_object))
+				parent_item.set_pebble_function (agent top_object.retrieve_pebble)
+				top_object.build_drop_actions_for_layout_item (parent_item)
+				add_to_tree_node_alphabetically (client_item, parent_item)
+			end
+			check
+				not_already_contained: parent_item.retrieve_item_by_data (client_object.id, True) = Void
+			end
+			pixmap := (create {GB_SHARED_PIXMAPS}).pixmap_by_name ("icon_locked_color")
+			l_pixmap := (create {GB_SHARED_PIXMAPS}).pixmap_by_name (type.as_lower).twin
+			l_pixmap.draw_sub_pixmap (0, 0, pixmap, create {EV_RECTANGLE}.make (0, 0, pixmap.width, pixmap.height))
+			create tree_item.make_with_text (client_object.actual_type)
+			client_object.all_client_representations.extend (tree_item)
+			tree_item.set_data (client_object.id)
+			tree_item.set_pixmap (l_pixmap)
+			tree_item.set_pebble_function (agent client_object.retrieve_pebble)
+			tree_item.select_actions.extend (agent select_client_object (client_object))
+			client_object.build_drop_actions_for_layout_item (tree_item)
+			parent_item.extend (tree_item)
+			if client_item.is_expanded then
+				check
+					parent_item_is_expandable: parent_item.is_expandable
+				end
+				parent_item.expand
+			end
+		end
+		
+	select_client_object (client_object: GB_OBJECT) is
+			-- Select `client_object' within `layout_constructor'.
+		require
+			client_object_not_void: client_object /= Void
+		local
+			client_top_level_parent: GB_OBJECT
+		do
+			if not client_object.layout_item.is_selectable then
+				client_top_level_parent := client_object.top_level_parent_object
+				layout_constructor.set_root_window (client_top_level_parent)				
+				window_selector.update_display_and_builder_windows (client_top_level_parent)
+			end
+			client_object.layout_item.enable_select
+		end
+
+	remove_client_representation_recursively is
+			-- Remove all client representations from `Current' and all children
+			-- recursively.
+		local
+			cursor: CURSOR
+		do
+			if is_instance_of_top_level_object then
+				object_handler.deep_object_from_id (associated_top_level_object).remove_client_representation (Current)
+			else
+				cursor := children.cursor				
+				from
+					children.start
+				until
+					children.off
+				loop
+					children.item.remove_client_representation_recursively
+					children.forth
+				end
+				children.go_to (cursor)
+			end
+		ensure
+			children_index_not_changed: old children.index = children.index
+		end
+		
+	add_client_representation_recursively is
+			-- Add all client representations for  `Current' and all children
+			-- recursively.
+		local
+			cursor: CURSOR
+		do
+			if is_instance_of_top_level_object then
+				object_handler.deep_object_from_id (associated_top_level_object).add_client_representation (Current)
+			else
+				cursor := children.cursor
+				from
+					children.start
+				until
+					children.off
+				loop
+					children.item.add_client_representation_recursively
+					children.forth
+				end
+				children.go_to (cursor)
+			end
+		ensure
+			children_index_not_changed: old children.index = children.index
+		end
+		
+	remove_client_representation (client_object: GB_OBJECT) is
+			-- Remove a client representation for `client_object' from the `window_selector_item'
+			-- which it is a representation.
+		require
+			is_top_level_object: is_top_level_object
+			client_object_not_void: client_object /= Void
+			client_object_is_instance_of_current: client_object.associated_top_level_object = id
+		local
+			tree_item: EV_TREE_ITEM
+			client_item: EV_TREE_ITEM
+			parent_item: EV_TREE_ITEM
+			top_object: GB_OBJECT
+		do
+			client_item ?= window_selector_item.tree_item.first
+			if client_item /= Void then
+				top_object := client_object.top_level_parent_object
+				parent_item ?= client_item.retrieve_item_by_data (top_object.id, True)
+				if parent_item /= Void then
+					tree_item ?= parent_item.retrieve_item_by_data (client_object.id, True)
+					parent_item.prune_all (tree_item)
+					check
+						representation_contained: client_object.all_client_representations.has (tree_item)
+					end
+					client_object.all_client_representations.prune_all (tree_item)
+					if parent_item.is_empty then
+						client_item.prune_all (parent_item)
+						check
+							representation_contained: top_object.all_client_representations.has (parent_item)
+						end
+						top_object.all_client_representations.prune_all (parent_item)
+						if client_item.is_empty then
+							window_selector_item.tree_item.prune_all (client_item)
+						end
+					end
+				end
+			end
+		end
+
 feature -- Contract Support
 
 	type_matches_object (a_type: STRING; an_object: ANY): BOOLEAN is
@@ -1666,7 +1856,7 @@ feature {NONE} -- Implementation
 					temp_name := original_name + counter.out
 					counter := counter + 1
 				end
-				an_object.set_name (temp_name)	
+				an_object.set_name (temp_name)
 			end
 		end
 		
@@ -1681,6 +1871,7 @@ feature {NONE} -- Implementation
 		local
 			current_object_children, associated_object_children: ARRAYED_LIST [GB_OBJECT]
 			current_item, current_associated_item: GB_OBJECT
+			associated_cursor, current_cursor: CURSOR
 		do
 			if current_object.associated_top_level_object /= 0 then
 				current_object.remove_associated_top_level_object
@@ -1691,7 +1882,9 @@ feature {NONE} -- Implementation
 			associated_object.instance_referers.remove (current_object.id)
 			
 			current_object_children := current_object.children
+			current_cursor := current_object_children.cursor
 			associated_object_children := associated_object.children
+			associated_cursor := associated_object_children.cursor
 			from
 				current_object_children.start
 				associated_object_children.start
@@ -1716,8 +1909,12 @@ feature {NONE} -- Implementation
 				associated_object_children.forth
 				current_object_children.forth
 			end
+			associated_object_children.go_to (associated_cursor)
+			current_object_children.go_to (current_cursor)
 		ensure
 			current_object_is_not_top_level_instance: not current_object.is_instance_of_top_level_object
+			current_object_children_index_not_changed: old current_object.children.index = current_object.children.index
+			associated_object_children_index_not_changed: old associated_object.children.index = associated_object.children.index
 		end
 		
 feature {GB_OBJECT_HANDLER} -- Implementation
@@ -1792,7 +1989,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 					all_children.item.unconnect_display_object_pick_events
 					all_children.forth
 				end
-				
+				l_object.add_client_representation (Current)
 			end
 		ensure
 			associated_object_set: old associated_top_level_object_on_loading > 0 implies associated_top_level_object = old associated_top_level_object_on_loading
@@ -1899,6 +2096,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR} -- Implementation
 invariant
 	children_not_void: children /= Void
 	instance_referers_not_void: instance_referers /= Void
+	all_client_representations_not_void: all_client_representations /= Void
 	constants_not_void: constants /= Void
 	events_not_void: events /= Void
 	top_level_object_has_window_selector_item: is_top_level_object implies (window_selector_item /= Void)

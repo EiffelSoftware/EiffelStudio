@@ -104,10 +104,8 @@ feature -- Initialization
 		local
 			f: FONT
 		do
-			set_foreground_color 
-				(Graphical_resources.text_foreground_color.actual_value);
-			set_scrolled_text_background_color (implementation, 
-				Graphical_resources.text_background_color.actual_value)
+			set_foreground_color (Graphical_resources.text_foreground_color.actual_value);
+			set_scrolled_text_background_color (implementation, Graphical_resources.text_background_color.actual_value)
 			f := Graphical_resources.text_font.actual_value;
 			if f /= Void then
 				set_text_font (f)

@@ -1186,7 +1186,7 @@ end;
 			l_feat_name_id: INTEGER
 			l_depend_unit: DEPEND_UNIT
 		do
-			if not a_old_convert.is_equal (a_new_convert) then
+			if a_new_convert = Void or else not a_old_convert.is_equal (a_new_convert) then
 					-- Old convert clause is different from new one. For each routines previously
 					-- specified in `a_old_convert' and not specified in `a_new_convert',
 					-- we need to progagate to the classes that were using those routines

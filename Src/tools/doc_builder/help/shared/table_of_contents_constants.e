@@ -58,36 +58,6 @@ feature -- Pixmaps
 			Result.set_with_named_file (l_file.string)
 		end	
 			
-	cluster_icon: STRING is
-			-- Cluster icon
-		local
-			l_file: FILE_NAME
-		once
-			create l_file.make_from_string (Constants.Icon_resources_directory)
-			l_file.extend ("icon_code_cluster.ico")
-			Result := l_file.string
-		end	
-		
-	class_icon: STRING is
-			-- Class icon
-		local
-			l_file: FILE_NAME
-		once
-			create l_file.make_from_string (Constants.Icon_resources_directory)
-			l_file.extend ("icon_code_class.ico")
-			Result := l_file.string
-		end	
-		
-	feature_icon: STRING is
-			-- Feature icon
-		local
-			l_file: FILE_NAME
-		once
-			create l_file.make_from_string (Constants.Icon_resources_directory)
-			l_file.extend ("icon_code_feature.ico")
-			Result := l_file.string
-		end	
-			
 feature -- XML tags			
 			
 	id_string: STRING is "id"

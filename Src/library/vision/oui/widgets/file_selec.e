@@ -41,7 +41,7 @@ feature {NONE} -- Creation
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier:= clone (a_name);
-			implementation:= toolkit.file_selec (Current, man);
+			implementation:= toolkit.file_selec (Current, man, a_parent);
 			set_default
 		end;
 
@@ -177,20 +177,20 @@ feature
 		end;
 
    	set_file_selection is
-       	    -- Sets selection to files (default value). 
+	   		-- Sets selection to files (default value). 
 		require
 			exists: not destroyed
-       	do
+	   	do
    			implementation.set_file_selection
-       	end;
+	   	end;
 
    	set_all_selection is
-       	    -- Sets selection to files and directories.
+	   		-- Sets selection to files and directories.
 		require
 			exists: not destroyed
-       	do
-     		implementation.set_all_selection
-       	end;
+	   	do
+	 		implementation.set_all_selection
+	   	end;
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 

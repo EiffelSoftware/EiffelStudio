@@ -62,7 +62,7 @@ feature {NONE} -- Creation
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			implementation := toolkit.arrow_b (Current, man);
+			implementation := toolkit.arrow_b (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
 		end;
@@ -160,17 +160,17 @@ feature {NONE}
 	set_left_alignment is
 			--  Set text alignment to left.
 		do
-		end; -- set_text
+		end;
  
 	set_center_alignment is
 			--  Set text alignment to center.
 		do
-		end; -- set_text
+		end;
 
 	set_right_alignment is
 			--  Set text alignment to right.
 		do
-		end; -- set_text
+		end
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 

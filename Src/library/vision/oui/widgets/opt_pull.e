@@ -58,7 +58,7 @@ feature {NONE} -- Creation
 			depth := a_parent.depth+1;
 			identifier:= clone (a_name);
 			widget_manager.new (Current, a_parent);
-			implementation := toolkit.opt_pull (Current, man);
+			implementation := toolkit.opt_pull (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
 		end;
@@ -67,12 +67,12 @@ feature -- Option Menu
 
 	parent: COMPOSITE is
 			-- Parent of pulldown menu
-        do
-            Result ?= widget_manager.parent (Current)
-        end;
+		do
+			Result ?= widget_manager.parent (Current)
+		end;
 
 	selected_button: BUTTON is
-            		-- Current Push Button selected in the option menu
+					-- Current Push Button selected in the option menu
 		require
 			exists: not destroyed
 		do
@@ -80,7 +80,7 @@ feature -- Option Menu
 		end;
 
    	set_selected_button (a_button: BUTTON) is
-            		-- Set `selected_button' to `a_button'
+					-- Set `selected_button' to `a_button'
 		require
 			exists: not destroyed
 		do

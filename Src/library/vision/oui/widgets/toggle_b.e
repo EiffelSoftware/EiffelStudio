@@ -57,7 +57,7 @@ feature {NONE} -- Creation
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier:= clone (a_name);
-			implementation:= toolkit.toggle_b (Current, man);
+			implementation:= toolkit.toggle_b (Current, man, a_parent);
 			implementation.set_widget_default
 			set_default
 		end; 
@@ -76,10 +76,10 @@ feature -- Calllbacks (adding and removing)
 			implementation.add_value_changed_action (a_command, argument)
 		end;
 
-    add_activate_action (a_command: COMMAND; argument: ANY) is
+	add_activate_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to be executed when 
-            -- arrow button is activated.
-            -- `argument' will be passed to `a_command' whenever it is
+			-- arrow button is activated.
+			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 			-- (Synonym for add_value_changed_action)
 		do
@@ -96,9 +96,9 @@ feature -- Calllbacks (adding and removing)
 			implementation.remove_value_changed_action (a_command, argument)
 		end; 
 
-    remove_activate_action (a_command: COMMAND; argument: ANY) is
+	remove_activate_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' to the list of action to be executed when 
-            -- arrow button is activated.
+			-- arrow button is activated.
 		do
 			remove_value_changed_action (a_command, argument)
 		end;

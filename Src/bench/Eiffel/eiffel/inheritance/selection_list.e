@@ -214,7 +214,7 @@ end;
 			to_compair		: TYPE_A
 			written_actual_type: TYPE_A
 			written_class	: CLASS_C
-			feature_name	: STRING
+			feature_name_id	: INTEGER
 			r_id_set		: ROUT_ID_SET
 			i				: INTEGER
 			nb				: INTEGER
@@ -233,13 +233,13 @@ end;
 			a_feature := a_feature.unselected (id);
 				-- Process new routine id set
 			!!rout_id_set.make (1);
-			feature_name := a_feature.feature_name;	
+			feature_name_id := a_feature.feature_name_id;	
 debug ("REPLICATION", "ACTUAL_REPLICATION")
 	io.error.putstring ("unselecting :");
-	io.error.putstring (feature_name);
+	io.error.putstring (a_feature.feature_name);
 	io.error.new_line;
 end;
-			old_feature := old_t.item (feature_name);
+			old_feature := old_t.item_id (feature_name_id);
 				-- Process a new routine id
 			if 	old_feature /= Void and then
 				old_feature.is_attribute = a_feature.is_attribute and then
@@ -279,7 +279,7 @@ end;
 			a_feature.set_is_selected (False);
 			a_feature.set_is_origin (True);
 			select_table.put (a_feature, new_rout_id);
-			new_t.replace (a_feature, feature_name);
+			new_t.replace_id (a_feature, feature_name_id);
 
 				-- Remove unselection
 			remove;

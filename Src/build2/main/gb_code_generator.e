@@ -34,7 +34,7 @@ feature -- Basic operation
 			directory: DIRECTORY
 			directory_file_name: FILE_NAME
 		do
-				-- Note that the geenration of the XML file used internally,
+				-- Note that the generation of the XML file used internally,
 				-- is not performed until `build_main_window_implementation' is called.
 			create directory_file_name.make_from_string (project_settings.project_location)
 			create directory.make (directory_file_name)
@@ -190,16 +190,29 @@ feature {NONE} -- Implementation
 				window_template_file, window_output_file: RAW_FILE
 				window_file_name, window_template: FILE_NAME
 				store: GB_XML_STORE
+				generation_settings: GB_GENERATION_SETTINGS
+				document_info: GB_GENERATED_INFO
 			do
 				set_progress (0.3)
 				create store
 					-- Generate an XML representation of the current project.
 					-- We will build our class text directly from this XML.
-				store.generate_document (True)
+				create generation_settings
+				generation_settings.enable_generate_names
+				store.generate_document (generation_settings)
 				current_document := store.document
 				check
 					current_document_not_void: current_document/= Void
 				end
+				
+					-- We must now parse the generated file, and build a representation
+					-- that is contained within. This is then used by the generator,
+					-- to find paticular information regarding the structure.
+				create document_info.make_root
+				create generated_info_by_id.make (50)
+				create id_by_name.make (50)
+				create all_ids.make (50)
+				prepass_xml (current_document.root_element, document_info, 1)
 				
 				set_progress (0.6)
 					-- Retrieve the template for a class file to generate.
@@ -227,7 +240,7 @@ feature {NONE} -- Implementation
 				generate_declarations (current_document.root_element, 1)
 				
 					-- Create storage for all parent child name pairs.
-				create parent_child.make (0)
+				create parent_child.make (50)
 				
 					-- Create storage for all generated feature names.
 				create all_generated_events.make (0)
@@ -373,6 +386,63 @@ feature {NONE} -- Implementation
 			a_name.to_upper
 			class_text.replace_substring_all (inherited_class_name_tag, a_name)
 		end
+		
+	prepass_xml (element: XML_ELEMENT; info: GB_GENERATED_INFO; depth: INTEGER) is
+			-- With information in element, build information into `info'.
+		local
+			current_element: XML_ELEMENT
+			current_name: STRING
+			current_type: STRING
+			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
+			element_info: ELEMENT_INFORMATION
+		do
+			info.set_element (element)
+			if element.has_attribute_by_name (type_string) then
+				current_type := element.attribute_by_name (type_string).value.to_utf8
+				info.set_type (current_type)
+			end
+			from
+				element.start
+			until
+				element.off
+			loop
+				current_element ?= element.item_for_iteration
+				if current_element /= Void then
+					current_name := current_element.name.to_utf8
+					if current_name.is_equal (Item_string) then
+						prepass_xml (current_element, info.new_child, depth + 1)
+					else
+						if current_name.is_equal (Internal_properties_string) and depth > 1 then
+							full_information := get_unique_full_info (current_element)
+							element_info := full_information @ (name_string)
+							check
+								name_exists: element_info /= Void
+							end
+							if info.parent /= Void then
+								info.parent.set_actual_child_name (element_info.data)
+							end
+							if current_type.is_equal (Ev_titled_window_string) then
+								info.set_name ("")
+							else
+								info.set_name (element_info.data)
+							end
+							element_info := full_information @ (id_string)
+							info.set_id (element_info.data.to_integer)
+							generated_info_by_id.put (info, info.id)
+							id_by_name.put (info.id, info.name)
+							all_ids.extend (info.id)
+						elseif current_name.is_equal (Events_string) then
+								-- Do nothing
+						else
+							info.supported_types.extend (current_name)
+							info.supported_type_elements.extend (current_element)
+						end
+					end
+				end
+				element.forth
+			end
+		end
+		
 
 	generate_declarations (element: XML_ELEMENT; depth: INTEGER) is
 			-- With information in `element', generate code which includes the
@@ -408,7 +478,6 @@ feature {NONE} -- Implementation
 									add_local_on_single_line (current_type, element_info.data)
 								end
 								create_local (element_info.data)
-						else
 						end
 					end
 				end
@@ -498,52 +567,37 @@ feature {NONE} -- Implementation
 			current_type: STRING
 			gb_ev_any: GB_EV_ANY
 			current_iterative_name: STRING
+			generated_info: GB_GENERATED_INFO
+			supported_types: ARRAYED_LIST [STRING]
 		do
-			if element.has_attribute_by_name (type_string) then
-				current_type := element.attribute_by_name (type_string).value.to_utf8
-			end
 			from
-				element.start
+				all_ids.start
 			until
-				element.off
+				all_ids.off
 			loop
-				current_element ?= element.item_for_iteration
-				if current_element /= Void then
-					current_name := current_element.name.to_utf8
-					if current_name.is_equal (Item_string) then
-						generate_setting (current_element, depth + 1)
-					else
-						if current_name.is_equal (Internal_properties_string) then
-							full_information := get_unique_full_info (current_element)
-							element_info := full_information @ (name_string)
-							current_iterative_name := element_info.data
-						elseif current_name.is_equal (Events_string) then
-							-- Do nothing if we have found events.
-							-- There is no setting to be generated for these.
-							-- This will be performed in `generate_events'.
-						else
-							gb_ev_any ?= new_instance_of (dynamic_type_from_string ("GB_" + current_name))
-						
+				generated_info := generated_info_by_id.item (all_ids.item)
+				supported_types := generated_info.supported_types
+				from
+					supported_types.start
+				until
+					supported_types.off
+				loop
+					gb_ev_any ?= new_instance_of (dynamic_type_from_string ("GB_" + supported_types.item))
 								-- Call default_create on `gb_ev_any'
 							gb_ev_any.default_create
-						
 							-- Ensure that the new class exists.
 						check
 							new_instance_exists: gb_ev_any /= Void
 						end
-							-- Add the appropriate objects to `objects'.
-						if current_type.is_equal (Ev_titled_window_string) then
-							add_set (gb_ev_any.generate_code (current_element, "", current_type,  Void))
-						else
-							add_set (gb_ev_any.generate_code (current_element, current_iterative_name, current_type, child_names (current_iterative_name)))
-						end
-						end
-					end
+						
+						add_set (gb_ev_any.generate_code (generated_info.supported_type_elements @ (supported_types.index), generated_info))
+					supported_types.forth
 				end
-				element.forth
+
+				all_ids.forth
 			end
 		end
-		
+
 	generate_events (element: XML_ELEMENT; depth: INTEGER) is
 			-- With information in `element', generate code which will
 			-- set_all_objects.
@@ -920,7 +974,16 @@ feature {NONE} -- Implementation
 			-- Cannot be a once, as the settings may change.
 		do
 			Result := system_status.current_project_settings
-		end		
+		end
+		
+	generated_info_by_id: HASH_TABLE [GB_GENERATED_INFO, INTEGER]
+		-- All objects of type GB_GENERATED_INFO created during prepass, referenced by id.
+		
+	id_by_name: HASH_TABLE [INTEGER, STRING]
+		-- All ids found during prepass, referenced by name.
+		
+	all_ids: ARRAYED_LIST [INTEGER]
+		-- All ids found during prepass. One for each object that is being generated.
 	
 	parent_child: ARRAYED_LIST [STRING]
 		-- A list of all parent attribute names and associated child names in the following format:

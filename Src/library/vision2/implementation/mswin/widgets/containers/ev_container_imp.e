@@ -16,8 +16,15 @@ deferred class
 inherit
 	EV_CONTAINER_I
 
+	EV_SIZEABLE_CONTAINER_IMP
+
 	EV_WIDGET_IMP
+		undefine
+			internal_resize,
+			minimum_width,
+			minimum_height
 		redefine
+			move_and_resize,
 			widget_make
 		end
 
@@ -32,6 +39,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	client_x: INTEGER is
+			-- Left of the client area.
+		do
+			Result := client_rect.x
+		end
+
+	client_y: INTEGER is
+			-- Top of the client area.
+		do
+			Result := client_rect.y
+		end
+
 	client_width: INTEGER is
 			-- Width of the client area of container
 		do
@@ -43,12 +62,6 @@ feature -- Access
 		do
 			Result := client_rect.height
 		end
-
-	already_displayed: BOOLEAN
-			-- The behavior before and after displaying
-			-- the container is different to gain some
-			-- speed before the first displaying of the
-			-- container.
 
 feature -- Element change
 
@@ -71,11 +84,6 @@ feature -- Element change
 				end
 				set_top_level_window_imp (par_imp.top_level_window_imp)
 				par_imp.add_child (Current)
-				if par_imp.already_displayed then
-					on_first_display
-				else
-					already_displayed := False
-				end
 			elseif parent_imp /= Void then
 				parent_imp.remove_child (Current)
 				wel_set_parent (default_parent.item)
@@ -88,22 +96,6 @@ feature -- Assertion test
 			-- Has `a_child' been added properly?
 		do
 			Result := is_child (a_child)
-		end
-
-feature {EV_SIZEABLE_IMP} -- Implementation for automatic size compute
-
-	child_minwidth_changed (value: INTEGER; the_child: EV_SIZEABLE_IMP) is
-			-- Change the minimum width of the container because
-			-- the child changed his own minimum width.
-		do
-			set_minimum_width (value)
-		end
-
-	child_minheight_changed (value: INTEGER; the_child: EV_SIZEABLE_IMP) is
-			-- Change the minimum width of the container because
-			-- the child changed his own minimum width.
-		do
-			set_minimum_height (value)
 		end
 
 feature {EV_MENU_HOLDER_IMP, EV_MENU_ITEM_HOLDER_IMP} -- Implementation
@@ -142,7 +134,7 @@ feature {NONE} -- WEL Implementation
    			-- requested by the WM_ERASEBKGND windows message.
    			-- By default there is no background  
 		do
- 			if exists and background_color_imp /= void then
+ 			if exists and background_color_imp /= Void then
  				!! Result.make_solid (background_color_imp)
  			end
  		end

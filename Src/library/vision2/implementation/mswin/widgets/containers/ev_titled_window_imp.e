@@ -11,7 +11,7 @@ class
 
 inherit
 	EV_WINDOW_I
-					
+	
 	EV_SINGLE_CHILD_CONTAINER_IMP
 		export
 			{NONE} set_expand
@@ -25,13 +25,13 @@ inherit
 			set_parent,
 			set_size,
 			client_height,
-			set_minimum_width,
-			set_minimum_height,
-			child_minwidth_changed,
-			child_minheight_changed,
+			internal_set_minimum_width,
+			internal_set_minimum_height,
 			parent_ask_resize,
 			dimensions_set,
-			set_default_minimum_size
+			set_default_minimum_size,
+			compute_minimum_width,
+			compute_minimum_height
 		end
 
 	WEL_FRAME_WINDOW
@@ -40,6 +40,7 @@ inherit
 			set_parent as wel_set_parent,
 			destroy as wel_destroy
 		undefine
+			window_process_message,
 			remove_command,
 			on_left_button_down,
 			on_right_button_down,
@@ -127,8 +128,8 @@ feature  -- Access
 			-- application is iconified
 		do
 			check
-           		not_yet_implemented: False
-    		end
+       	    		not_yet_implemented: False
+	    		end
 		end
 
 	icon_mask: EV_PIXMAP is
@@ -137,8 +138,8 @@ feature  -- Access
 			-- icon nonrectangular 
 		do
 			check
-                not_yet_implemented: False
-            end
+				not_yet_implemented: False
+			end
 		end
 
 	icon_pixmap: EV_PIXMAP is
@@ -146,8 +147,8 @@ feature  -- Access
 			-- as the application's icon
 		do
 			check
-	            not_yet_implemented: False
-            end
+				not_yet_implemented: False
+			end
 		end
 
 	widget_group: EV_WIDGET is
@@ -158,8 +159,8 @@ feature  -- Access
 			-- iconify them together
 		do
 			check
-                not_yet_implemented: False
-	        end
+				not_yet_implemented: False
+			end
 		end 
 
 	top_level_window_imp: EV_WINDOW_IMP is
@@ -177,8 +178,8 @@ feature -- Status report
 			-- Does application start in iconic state?
 		do
 			check
-                not_yet_implemented: False
-            end
+				not_yet_implemented: False
+			end
 		end
 
 feature -- Status setting
@@ -196,8 +197,8 @@ feature -- Status setting
 	set_default_minimum_size is
 			-- Initialize the size of the widget.
 		do
-			set_minimum_width (system_metrics.window_minimum_width)
-			set_minimum_height (system_metrics.window_minimum_height)
+			internal_set_minimum_width (system_metrics.window_minimum_width)
+			internal_set_minimum_height (system_metrics.window_minimum_height)
 			set_maximum_width (system_metrics.screen_width)
 			set_maximum_height (system_metrics.screen_height)
 		end
@@ -311,28 +312,6 @@ feature -- Element change
 			-- Resize the widget and don't notify the parent.
 		do
 			resize (minimum_width.max(new_width), minimum_height.max (new_height))
-		end
-
-	set_minimum_width (value: INTEGER) is
-			-- Make `value' the new `minimum_width'.
-			-- If the Current size is smaller, the size
-			-- change.
-		do
-			minimum_width := value 
-			if value > width then
-				resize (value, height)
-			end
-		end
-
-	set_minimum_height (value: INTEGER) is
-			-- Make `value' the new `minimum_height'.
-			-- If the Current size is smaller, the size
-			-- change.
-		do
-			minimum_height := value
-			if value > height then
-				resize (width, value)
-			end
 		end
 
 	set_maximum_width (value: INTEGER) is
@@ -467,23 +446,79 @@ feature -- Assertion features
 				  (height = new_height or else height = minimum_height.max (system_metrics.window_minimum_height))
 		end
 
-feature {EV_WIDGET_IMP} -- Implementation
+feature {EV_STATIC_MENU_BAR_IMP} -- Implementation
 
-	child_minwidth_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Resize the container according to the 
-			-- resize of the child
+	set_menu (a_menu: WEL_MENU) is
+			-- Set `menu' with `a_menu'.
 		do
-			set_minimum_width (value + 2*system_metrics.window_frame_width)
-		end
-
-	child_minheight_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Resize the container according to the 
-			-- resize of the child
-		do
+			{WEL_FRAME_WINDOW} Precursor (a_menu)
 			update_minimum_size
 		end
 
 feature {NONE} -- Implementation
+
+	update_minimum_size is
+			-- Update the minimum_size of the window according
+			-- to the component inside the window.
+		local
+			value: INTEGER
+		do
+			-- For the width first
+			value := 2 * window_frame_width
+			if child /= Void then
+				value := value + child.minimum_width
+			end
+			internal_set_minimum_width (value)
+
+			-- For the height then
+			value := title_bar_height + window_border_height + 2 * window_frame_height
+			if child /= Void then
+				value := value + child.minimum_height
+			end
+			if has_menu then
+				value := value + menu_bar_height
+			end
+			if status_bar /= Void then
+				value := value + status_bar.height
+			end
+			internal_set_minimum_height (value)
+		end
+
+	internal_set_minimum_width (value: INTEGER) is
+			-- Make `value' the new `minimum_width'.
+			-- If the Current size is smaller, the size
+			-- change.
+		do
+			{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor (value)
+			if value > width then
+				resize (value, height)
+			end
+		end
+
+	internal_set_minimum_height (value: INTEGER) is
+			-- Make `value' the new `minimum_height'.
+			-- If the Current size is smaller, the size
+			-- change.
+		do
+			{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor (value)
+			if value > height then
+				resize (width, value)
+			end
+		end
+
+	compute_minimum_width is
+			-- Recompute the minimum_width of the object.
+		do
+			update_minimum_size
+		end
+
+	compute_minimum_height is
+			-- Recompute the minimum_width of the object.
+		do
+			update_minimum_size
+		end
+
+feature {NONE} -- WEL Implementation
 
 	default_style: INTEGER is
 		-- Set with the option `Ws_clipchildren' to avoid flashing.
@@ -505,17 +540,16 @@ feature {NONE} -- Implementation
 			-- And it send the message to the child because wel
 			-- don't
 		do
-			if child /= Void and not already_displayed then
-				child.on_first_display
-				set_size (child.minimum_width + 2*system_metrics.window_frame_width,
-					child.minimum_height + system_metrics.title_bar_height
-					+ system_metrics.window_border_height 
-					+ 2 * system_metrics.window_frame_height)
+			if child /= Void and (bit_set (internal_changes, 1) or bit_set (internal_changes, 2)) then
+				internal_resize (x, y, child.minimum_width + 2*system_metrics.window_frame_width,
+						child.minimum_height + system_metrics.title_bar_height
+						+ system_metrics.window_border_height + 2 * system_metrics.window_frame_height)
+				internal_changes := set_bit (internal_changes, 1, False)
+				internal_changes := set_bit (internal_changes, 2, False)
 			end
 			if has_menu then
 				draw_menu
 			end
-			already_displayed := True
 		end
 
 	on_size (size_type, a_width, a_height: INTEGER) is
@@ -592,42 +626,6 @@ feature {NONE} -- Implementation
 			-- window_frame_width
 		once
 			!!Result
-		end
-
-feature {EV_STATIC_MENU_BAR_IMP} -- Implementation
-
-	set_menu (a_menu: WEL_MENU) is
-			-- Set `menu' with `a_menu'.
-		do
-			{WEL_FRAME_WINDOW} Precursor (a_menu)
-			update_minimum_size
-		end
-
-	update_minimum_size is
-			-- Update the minimum_size of the window according
-			-- to the component inside the window.
-		local
-			value: INTEGER
-		do
-			-- For the width first
-			value := 2*window_frame_width
-			if child /= Void then
-				value := value + child.minimum_width
-			end
-			set_minimum_width (value)
-
-			-- For the height then
-			value := title_bar_height + window_border_height + 2 * window_frame_height
-			if child /= Void then
-				value := value + child.minimum_height
-			end
-			if has_menu then
-				value := value + menu_bar_height
-			end
-			if status_bar /= Void then
-				value := value + status_bar.height
-			end
-			set_minimum_height (value)
 		end
 
 feature {NONE} -- Inapplicable

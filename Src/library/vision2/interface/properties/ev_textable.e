@@ -10,19 +10,13 @@ indexing
 deferred class
 
 	EV_TEXT_CONTAINER
-	
-inherit
-	
-	EV_FONTABLE
-		redefine
-			implementation
-		end
+
 	
 feature {NONE} -- Initialization
 
-        make (par: EV_CONTAINER) is
-                        -- Create a text container with, `par' as
-                        -- parent
+	make (par: EV_CONTAINER) is
+			-- Create a text container with, `par' as
+			-- parent
 		do
 			make_with_text (par, "")
 		end
@@ -35,61 +29,65 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-        text: STRING is
-                        -- Text of current label
-                require
-                        exists: not destroyed
-                do
-                        Result:= implementation.text
-                end 
+	text: STRING is
+			-- Text of current label
+		require
+			exists: not destroyed
+		do
+			Result:= implementation.text
+		end 
 	
 
 feature -- Status setting
 
-        set_center_alignment is
-                        -- Set text alignment of current label to center.
-                require
-                        exists: not destroyed
-                do
-                        implementation.set_center_alignment
-                end
+	set_center_alignment is
+			-- Set text alignment of current label to center.
+		require
+			exists: not destroyed
+		do
+			implementation.set_center_alignment
+		end
 
-        set_right_alignment is
-                        -- Set text alignment of current label to right.
-                require
-                        exists: not destroyed
-                do
-                        implementation.set_right_alignment
-                end
+	set_right_alignment is
+			-- Set text alignment of current label to right.
+		require
+			exists: not destroyed
+		do
+			implementation.set_right_alignment
+		end
         
-        set_left_alignment is
-                        -- Set text alignment of current label to left.
-                require
-                        exists: not destroyed
-                do
-                        implementation.set_left_alignment
-                end
+	set_left_alignment is
+			-- Set text alignment of current label to left.
+		require
+			exists: not destroyed
+		do
+			implementation.set_left_alignment
+		end
 
-feature -- Element chnage
+	destroyed: BOOLEAN is
+			-- Is current object destroyed
+		deferred
+		end
 
-        set_text (txt: STRING) is
-                        -- Set text of current label to `txt'.
-                require
-                        exists: not destroyed
-                        not_a_text_void: txt /= Void
-                do
-                        implementation.set_text (txt)
-                ensure
-                        text_set: text.is_equal (txt)
-                end
+feature -- Element change
+
+	set_text (txt: STRING) is
+			-- Set text of current label to `txt'.
+		require
+			exists: not destroyed
+			not_a_text_void: txt /= Void
+		do
+			implementation.set_text (txt)
+		ensure
+			text_set: text.is_equal (txt)
+		end
 
 feature {NONE} -- Implementation
 
-        implementation: EV_TEXT_CONTAINER_I
-                        -- Implementation of text container
+	implementation: EV_TEXT_CONTAINER_I
+			-- Implementation of text container
 
-
-end
+end -- class EV_TEXT_CONTAINER
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 				$s
 			)
 			C.gtk_container_add (list_widget, imp.c_object)
-			imp.set_combo_parent_imp (Current)
+			imp.set_parent_imp (Current)
 		end
 
 	remove_item_from_position (a_position: INTEGER) is
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 		do
 			imp ?= interface.i_th (a_position).implementation
 			Precursor (a_position)
-			imp.set_combo_parent_imp (Void)
+			imp.set_parent_imp (Void)
 			if count = 0 then
 				set_text ("")
 			end
@@ -216,6 +216,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/03/08 22:27:38  king
+--| Accounted for name change of set_combo_parent_imp
+--|
 --| Revision 1.25  2000/03/08 21:37:53  king
 --| Removed useless redefinition of entry widget functions
 --|

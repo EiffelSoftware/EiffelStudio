@@ -11,7 +11,10 @@ inherit
 			unselected, replicated, transfer_to, set_type, is_function, type,
 			new_api_feature
 		end
-	
+
+create
+	make
+
 feature 
 
 	type: TYPE;

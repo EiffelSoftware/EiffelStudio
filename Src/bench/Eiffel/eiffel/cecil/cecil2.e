@@ -43,10 +43,12 @@ feature
 			i: INTEGER
 			a_class: CLASS_C
 			local_values: like values
+			buffer: GENERATION_BUFFER
 		do
-			generate_keys
+			buffer := generation_buffer
+			generate_keys (buffer)
 
-			Cecil_file.putstring ("static uint32 type_val[] = {%N")
+			buffer.putstring ("static uint32 type_val[] = {%N")
 			from
 				local_values := values
 				i := lower
@@ -55,34 +57,34 @@ feature
 			loop
 				a_class := local_values.item (i)
 				if a_class = Void then
-					Cecil_file.putstring ("(uint32) 0")
+					buffer.putstring ("(uint32) 0")
 				else
 					a_class.generate_cecil_value
 				end
-				Cecil_file.putstring (",%N"); 
+				buffer.putstring (",%N"); 
 				i := i + 1
 			end
-			Cecil_file.putstring ("};%N%N")
+			buffer.putstring ("};%N%N")
 			
-			Cecil_file.putstring ("struct ctable egc_ce_type_init = {(int32) ")
-			Cecil_file.putint (count)
-			Cecil_file.putstring (", sizeof(uint32),")
-			Cecil_file.putstring (key_name)
-			Cecil_file.putstring (", (char *) type_val};%N%N")
+			buffer.putstring ("struct ctable egc_ce_type_init = {(int32) ")
+			buffer.putint (count)
+			buffer.putstring (", sizeof(uint32),")
+			buffer.putstring (key_name)
+			buffer.putstring (", (char *) type_val};%N%N")
 			
 			wipe_out
 		end
 
-	generate_keys is
+	generate_keys (buffer: GENERATION_BUFFER) is
 			-- Table keys generation
 		local
 			i: INTEGER
 			cl_name: STRING
 			local_copy: like Current
 		do
-			Cecil_file.putstring ("static char *")
-			Cecil_file.putstring (key_name)
-			Cecil_file.putstring ("[] = {%N")
+			buffer.putstring ("static char *")
+			buffer.putstring (key_name)
+			buffer.putstring ("[] = {%N")
 			from
 				local_copy := Current
 				i := lower
@@ -91,16 +93,16 @@ feature
 			loop
 				cl_name := local_copy.array_item (i)
 				if cl_name = Void then
-					Cecil_file.putstring ("(char *) 0")
+					buffer.putstring ("(char *) 0")
 				else
-					Cecil_file.putchar ('"')
-					Cecil_file.putstring (cl_name)
-					Cecil_file.putchar ('"')
+					buffer.putchar ('"')
+					buffer.putstring (cl_name)
+					buffer.putchar ('"')
 				end
-				Cecil_file.putstring (",%N")
+				buffer.putstring (",%N")
 				i := i + 1
 			end
-			Cecil_file.putstring ("};%N%N")
+			buffer.putstring ("};%N%N")
 		end
 
 	key_name: STRING is

@@ -22,8 +22,10 @@ feature
 			gen_type: GEN_TYPE_I
 			types: TYPE_LIST
 			local_values: like values
+			buffer: GENERATION_BUFFER
 		do
-			generate_keys
+			buffer := generation_buffer
+			generate_keys (buffer)
 			local_values := values
 
 			from
@@ -38,9 +40,9 @@ feature
 					check
 						a_class.generics /= Void
 					end
-					Cecil_file.putstring ("static int32 patterns")
-					Cecil_file.putint (a_class.id.id)
-					Cecil_file.putstring (" [] = {%N")
+					buffer.putstring ("static int32 patterns")
+					buffer.putint (a_class.id.id)
+					buffer.putstring (" [] = {%N")
 					from
 						types := a_class.types
 						types.start
@@ -48,30 +50,30 @@ feature
 						types.after
 					loop
 						gen_type ?= types.item.type
-						gen_type.meta_generic.generate_cecil_values(Cecil_file)
+						gen_type.meta_generic.generate_cecil_values(buffer)
 						types.forth
 					end
-					Cecil_file.putstring ("SK_INVALID%N};%N%N")
+					buffer.putstring ("SK_INVALID%N};%N%N")
 					
-					Cecil_file.putstring ("static int16 dyn_types")
-					Cecil_file.putint (a_class.id.id)
-					Cecil_file.putstring (" [] = {%N")
+					buffer.putstring ("static int16 dyn_types")
+					buffer.putint (a_class.id.id)
+					buffer.putstring (" [] = {%N")
 					from
 						types.start
 					until
 						types.after
 					loop
-						Cecil_file.putint (types.item.type_id - 1)
-						Cecil_file.putstring (",%N")
+						buffer.putint (types.item.type_id - 1)
+						buffer.putstring (",%N")
 						types.forth
 					end
-					Cecil_file.putstring ("};%N%N")
+					buffer.putstring ("};%N%N")
 
 				end
 				i := i + 1
 			end
 
-			Cecil_file.putstring ("static struct gt_info gtype_val[] = {%N")
+			buffer.putstring ("static struct gt_info gtype_val[] = {%N")
 			from
 				i := lower
 			until
@@ -79,26 +81,26 @@ feature
 			loop
 				a_class := local_values.item (i)
 				if (a_class = Void) or else not a_class.has_types then
-					Cecil_file.putstring ("{(int) 0, (int32 *) 0, (int16 *) 0}")
+					buffer.putstring ("{(int) 0, (int32 *) 0, (int16 *) 0}")
 				else
-					Cecil_file.putstring ("{(int) ")
-					Cecil_file.putint (a_class.generics.count)
-					Cecil_file.putstring (", patterns")
-					Cecil_file.putint (a_class.id.id)
-					Cecil_file.putstring (", dyn_types")
-					Cecil_file.putint (a_class.id.id)
-					Cecil_file.putchar ('}')
+					buffer.putstring ("{(int) ")
+					buffer.putint (a_class.generics.count)
+					buffer.putstring (", patterns")
+					buffer.putint (a_class.id.id)
+					buffer.putstring (", dyn_types")
+					buffer.putint (a_class.id.id)
+					buffer.putchar ('}')
 				end
-				Cecil_file.putstring (",%N")
+				buffer.putstring (",%N")
 				i := i + 1
 			end
-			Cecil_file.putstring ("};%N%N")
+			buffer.putstring ("};%N%N")
 
-			Cecil_file.putstring ("struct ctable egc_ce_gtype_init = {(int32) ")
-			Cecil_file.putint (count)
-			Cecil_file.putstring (", sizeof(struct gt_info),")
-			Cecil_file.putstring (key_name)
-			Cecil_file.putstring (", (char *) gtype_val};%N%N")
+			buffer.putstring ("struct ctable egc_ce_gtype_init = {(int32) ")
+			buffer.putint (count)
+			buffer.putstring (", sizeof(struct gt_info),")
+			buffer.putstring (key_name)
+			buffer.putstring (", (char *) gtype_val};%N%N")
 
 			wipe_out
 		end

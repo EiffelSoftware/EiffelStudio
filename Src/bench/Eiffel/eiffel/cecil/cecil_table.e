@@ -18,6 +18,10 @@ inherit
 		undefine
 			copy, setup, consistent, is_equal
 		end;
+	SHARED_GENERATION
+		undefine
+			copy, setup, consistent, is_equal
+		end
 	COMPILER_EXPORTER
         undefine
             copy, setup, consistent, is_equal
@@ -89,11 +93,6 @@ feature
 				position := (position + increment) \\ hash_size;
 				try := try + 1;
 			end;
-		end;
-
-	cecil_file: INDENT_FILE is
-		do
-			Result := System.cecil_file;
 		end;
 
 end

@@ -728,8 +728,6 @@ feature {NONE} -- Drawing implementation
 		require
 			a_width_non_negative: a_width >= 0
 			a_height_non_negative: a_height >= 0
-		local
-			l_total_header_width: INTEGER
 		do
 			if viewport.item.width < viewport.width or viewport.item.height < viewport.height then
 					-- If the item contained in `viewport' is smaller than the viewport, enlarge it
@@ -737,22 +735,12 @@ feature {NONE} -- Drawing implementation
 				viewport.set_item_size (viewport.width, viewport.height)
 			end	
 			if not header.is_empty then
-					-- If there is at least a single header item
-				l_total_header_width := total_header_width
-					-- If the width of the item contained in the viewport is greater
-				if viewport.item.width > l_total_header_width.max (viewport.width) or
-					l_total_header_width.max (viewport.width) > viewport.item.width then
-						
-					viewport.set_item_width (l_total_header_width.max (viewport.width))
-				end
-			end
-			if not header.is_empty then
 					-- Update horizontal scroll bar settings.
 				header_item_resizing (header.last)
 			end
-			if (viewport.item.width - viewport.x_offset) < viewport.width then
-				viewport.set_x_offset ((viewport.width - viewport.item.width).abs)
-			end
+		ensure
+			viewport_item_at_least_as_big_as_viewport: viewport.item.width >= viewport.width and
+				viewport.item.height >= viewport.height
 		end		
 		
 	vertical_scroll_bar: EV_VERTICAL_SCROLL_BAR

@@ -6,18 +6,14 @@ indexing
 class ROOT_SD
 
 inherit
-
 	AST_LACE
 		redefine
 			adapt
-		end;
-	SHARED_SERVER;
-	SHARED_ERROR_HANDLER;
-	CLICKABLE_AST
-		redefine
-			associated_eiffel_class,
-			valid_reference_class, is_class
 		end
+		
+	SHARED_SERVER
+
+	SHARED_ERROR_HANDLER
 
 create
 	initialize
@@ -84,20 +80,6 @@ feature -- Setting
 			creation_procedure_name := cp
 		ensure
 			creation_procedure_name_set: creation_procedure_name = cp
-		end
-
-feature -- Access
-
-	is_class: BOOLEAN is True
-
-	valid_reference_class (reference_class: CLASS_C): BOOLEAN is
-		do
-			Result := True
-		end;
-
-	associated_eiffel_class (reference_class: CLASS_C): CLASS_C is
-		do
-			Result := System.root_class.compiled_class
 		end
 
 feature -- Duplication

@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- Initialize object.  Set 'name' to 'r_name'.
 		require
 			non_void_name: r_name /= Void
-			valid_name: not r_name.empty
+			valid_name: not r_name.is_empty
 		do
 			name := clone (r_name)
 			create parameters.make
@@ -56,7 +56,7 @@ feature -- Element change
 			-- Set 'name' to 'f_name'.
 		require
 			non_void_name: f_name /= Void
-			valid_name: not f_name.empty
+			valid_name: not f_name.is_empty
 		do
 			name := clone (f_name)
 		ensure
@@ -67,7 +67,7 @@ feature -- Element change
 			-- Set 'comment' to 'new_comment'.
 		require
 			non_void_comment: new_comment /= Void
-			valid_comment: not new_comment.empty
+			valid_comment: not new_comment.is_empty
 		do
 			comment := clone (new_comment)
 		ensure
@@ -78,7 +78,7 @@ feature -- Element change
 			-- Set 'result_type' to 'new_result_type'.
 		require
 			non_void_type: new_result_type /= Void
-			valid_result_type: not new_result_type.empty
+			valid_result_type: not new_result_type.is_empty
 		do
 			result_type := clone (new_result_type)
 		ensure
@@ -96,7 +96,7 @@ feature -- Element change
 		end
 
 invariant
-	valid_name: name /= Void and then not name.empty
+	valid_name: name /= Void and then not name.is_empty
 	non_void_comment: comment /= Void
 
 end -- class EI_FEATURE

@@ -46,7 +46,7 @@ feature -- Status report
 		require
 			non_void_component: a_component /= Void
 			non_void_component_name: a_component.name /= Void
-			valid_component_name: not a_component.name.empty
+			valid_component_name: not a_component.name.is_empty
 		do
 			if coclass_eiffel_names.has (a_component.name) then
 				Result := clone (coclass_eiffel_names.item (a_component.name))
@@ -55,7 +55,7 @@ feature -- Status report
 			end
 		ensure
 			non_void_name: Result /= Void
-			valid_name: not Result.empty
+			valid_name: not Result.is_empty
 		end
 
 feature -- Transformation
@@ -144,9 +144,9 @@ feature -- Basic operations
 			-- with key `a_coclass_name'
 		require
 			non_void_eiffel_name: an_eiffel_name /= Void
-			valid_eiffel_name: not an_eiffel_name.empty
+			valid_eiffel_name: not an_eiffel_name.is_empty
 			non_void_coclass_name: a_coclass_name /= Void
-			valid_coclass_name: not a_coclass_name.empty
+			valid_coclass_name: not a_coclass_name.is_empty
 			not_has: not coclass_eiffel_names.has (a_coclass_name)
 		do
 			coclass_eiffel_names.extend (an_eiffel_name, a_coclass_name)
@@ -156,21 +156,21 @@ feature -- Basic operations
 	set_interface_eiffel_name (a_name: STRING) is
 			-- Set `eiffel_name' with `a_name'.
 		require
-			valid_name: a_name /= Void and then not a_name.empty
+			valid_name: a_name /= Void and then not a_name.is_empty
 		do
 			interface_eiffel_name := clone (a_name)
 		ensure
-			valid_name: interface_eiffel_name /= Void and then not interface_eiffel_name.empty and interface_eiffel_name.is_equal (a_name)
+			valid_name: interface_eiffel_name /= Void and then not interface_eiffel_name.is_empty and interface_eiffel_name.is_equal (a_name)
 		end
 
 	set_name (a_name: STRING) is
 			-- Set `name' with `a_name'.
 		require
-			valid_name: a_name /= Void and then not a_name.empty
+			valid_name: a_name /= Void and then not a_name.is_empty
 		do
 			name := clone (a_name)
 		ensure
-			valid_name: name /= Void and then not name.empty and name.is_equal (a_name)
+			valid_name: name /= Void and then not name.is_empty and name.is_equal (a_name)
 		end
 
 feature {NONE} -- Implementation

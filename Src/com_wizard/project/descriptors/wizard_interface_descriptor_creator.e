@@ -132,7 +132,7 @@ feature -- Basic operations
 			type_library_descriptor := system_descriptor.library_descriptor (tmp_guid)
 			add_type_lib_description (type_library_descriptor)
 
-			if name = Void or else name.empty then
+			if name = Void or else name.is_empty then
 				create name.make (100)
 				name.append ("interface_")
 				name.append (type_library_descriptor.name)

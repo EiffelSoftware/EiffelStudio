@@ -30,7 +30,7 @@ feature -- Basic operations
 
 			midl_interface.set_description (str_buffer)
 
-			if not eiffel_class.features.empty then
+			if not eiffel_class.features.is_empty then
 				produce_interface_feature (eiffel_class.features)
 			end
 
@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 			-- Produce features for interface from 'l_features'.
 		require
 			non_void_input: l_features /= Void
-			valid_input: not l_features.empty
+			valid_input: not l_features.is_empty
 			non_void_midl_interface: midl_interface /= Void
 		local
 			feature_creator: EI_MIDL_FEATURE_CREATOR

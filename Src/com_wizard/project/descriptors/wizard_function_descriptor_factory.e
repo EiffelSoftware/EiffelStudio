@@ -80,7 +80,7 @@ feature -- Basic operations
 				a_func_desc.return_type.type_desc, system_descriptor)
 			tmp_names := a_type_info.names (member_id, a_count + 1)
 			name := clone (tmp_names.item (1))
-			if name = Void or else name.empty then
+			if name = Void or else name.is_empty then
 				tmp_type_lib := a_type_info.containing_type_lib
 				tmp_guid := tmp_type_lib.library_attributes.guid
 				tmp_lib_descriptor := system_descriptor.library_descriptor (tmp_guid)
@@ -106,7 +106,7 @@ feature -- Basic operations
 			argument_count := a_count
 			create Result.make (Current)
 		ensure
-			valid_name: name /= Void and then not name.empty
+			valid_name: name /= Void and then not name.is_empty
 			valid_arguments: arguments /= Void and then arguments.count = a_func_desc.total_param_count
 			valid_reurn_type: return_type /= Void
 		end
@@ -136,7 +136,7 @@ feature -- Basic operations
 				i > count + 1
 			loop
 				arg_name := clone (some_names.item (i))
-				if arg_name = Void or else arg_name.empty then
+				if arg_name = Void or else arg_name.is_empty then
 					create arg_name.make (100)
 					arg_name.append ("arg_")
 					arg_name.append_integer (i - 1)

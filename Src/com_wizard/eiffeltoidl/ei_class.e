@@ -15,7 +15,7 @@ feature {NONE} -- Initialization
 			-- Initialize and set 'name' to 'c_name'.
 		require
 			non_void_name: c_name /= Void
-			valid_name: not c_name.empty
+			valid_name: not c_name.is_empty
 		do
 			name := clone (c_name)
 			create description.make (0)
@@ -39,7 +39,7 @@ feature -- Basic operations
 	set_name (c_name: STRING) is
 			-- Set 'name' to 'c_name'.
 		require
-			valid_name: c_name /= Void and then not c_name.empty
+			valid_name: c_name /= Void and then not c_name.is_empty
 		do
 			name := clone (c_name)
 		ensure
@@ -49,7 +49,7 @@ feature -- Basic operations
 	set_description (desc: STRING) is
 			-- Set 'description' to 'desc'.
 		require
-			valid_description: desc /= Void and then not desc.empty
+			valid_description: desc /= Void and then not desc.is_empty
 		do
 			description := clone (desc)
 		ensure
@@ -68,7 +68,7 @@ feature -- Basic operations
 
 invariant
 	non_void_name: name /= Void
-	valid_name: not name.empty
+	valid_name: not name.is_empty
 	non_void_description: description /= Void
 	non_void_features: features /= Void
 

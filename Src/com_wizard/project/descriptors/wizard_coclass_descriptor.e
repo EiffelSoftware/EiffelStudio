@@ -47,7 +47,7 @@ feature -- Access
 
 	source_interface_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]
 			-- Interfaces to call back on client implementations,
-			-- not empty implies that coclass supports IConnectionPointConteiner.
+			-- not is_empty implies that coclass supports IConnectionPointConteiner.
 
 	lcid: INTEGER
 			-- Locale of member names and doc strings.
@@ -116,24 +116,24 @@ feature -- Element Change
 			-- Set `default_dispinterface_name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		do
 			default_dispinterface_name := a_name
 		ensure
 			non_void_default_dispinterface: default_dispinterface_name /= Void
-			valid_default_dispinterface: not default_dispinterface_name.empty and default_dispinterface_name.is_equal (a_name)
+			valid_default_dispinterface: not default_dispinterface_name.is_empty and default_dispinterface_name.is_equal (a_name)
 		end
 
 	set_default_source_dispinterface_name (a_name: STRING) is
 			-- Set `default_source_dispinterface_name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		do
 			default_source_dispinterface_name := a_name
 		ensure
 			non_void_default_source_dispinterface: default_source_dispinterface_name /= Void
-			valid_default_source_dispinterface: not default_source_dispinterface_name.empty and default_source_dispinterface_name.is_equal (a_name)
+			valid_default_source_dispinterface: not default_source_dispinterface_name.is_empty and default_source_dispinterface_name.is_equal (a_name)
 		end
 
 	set_default_interface (a_interface: WIZARD_INTERFACE_DESCRIPTOR) is

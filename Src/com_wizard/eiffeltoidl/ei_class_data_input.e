@@ -45,7 +45,7 @@ feature -- Basic operations
 			loop
 				input_file.read_line
 
-				if not input_file.last_string.empty then
+				if not input_file.last_string.is_empty then
 					if input_file.last_string.substring_index (Class_header_indicator,1) > 0 then
 						class_not_found := False  
 
@@ -62,8 +62,8 @@ feature -- Basic operations
 						loop
 							input_file.read_line
 
-							if not input_file.last_string.empty then
-								if input_file.last_string.substring_index (Feature_indicator, 1) > 0 then									if raw_features /= Void and not raw_features.empty then
+							if not input_file.last_string.is_empty then
+								if input_file.last_string.substring_index (Feature_indicator, 1) > 0 then									if raw_features /= Void and not raw_features.is_empty then
 										create feature_parser
 										feature_parser.parse_routine (raw_features)
 										if feature_parser.succeed then
@@ -81,7 +81,7 @@ feature -- Basic operations
 								end
 							end
 						end
-						if raw_features /= Void and not raw_features.empty then
+						if raw_features /= Void and not raw_features.is_empty then
 							create feature_parser
 							feature_parser.parse_routine (raw_features)
 							if feature_parser.succeed then
@@ -97,7 +97,7 @@ feature -- Basic operations
 			input_file.close
 
 			if not class_not_found then
-				if eiffel_class /= Void and l_description /= Void and not l_description.empty then
+				if eiffel_class /= Void and l_description /= Void and not l_description.is_empty then
 					eiffel_class.set_description (l_description)
 				end
 				parse_eiffel_type
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 			parameter_list: LINKED_LIST[EI_PARAMETER]
 		do
 			-- Put type name to 'like ' type.
-			if not eiffel_class.features.empty then
+			if not eiffel_class.features.is_empty then
 				from
 					eiffel_class.features.start
 				until
@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 					parameter_list := eiffel_class.features.item_for_iteration.parameters
 	
 					-- Check parameter for 'like' type
-					if not parameter_list.empty then
+					if not parameter_list.is_empty then
 						from
 							parameter_list.start
 						until
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 			-- Description parsed from 'desc'
 		require
 			non_void_input: desc /= Void
-			valid_desc : not desc.empty
+			valid_desc : not desc.is_empty
 		local
 			s_pos, e_pos: INTEGER
 		do

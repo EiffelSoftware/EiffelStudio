@@ -85,7 +85,7 @@ feature -- Status report
 			-- Whether Eiffel 'l_type' is supported?
 		require
 			non_void_type: l_type /= Void
-			valid_type: not l_type.empty
+			valid_type: not l_type.is_empty
 		do
 			if in_types.has (l_type) or inout_types.has (l_type) then
 				Result := True
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 			-- Is CELL?
 		require
 			non_void_type: l_type /= Void
-			valid_type: not l_type.empty
+			valid_type: not l_type.is_empty
 		do
 			Result := l_type.substring (1, 4).is_equal (Cell_type) 
 		end
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 			-- Is array?
 		require
 			non_void_type: l_type /= Void
-			valid_type: not l_type.empty
+			valid_type: not l_type.is_empty
 		do
 			Result := l_type.substring (1, 10).is_equal (Ecom_array_type)
 		end
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 			-- Com Safearray type equavalent of Eiffel 'l_type'
 		require
 			non_void_type: l_type /= Void
-			valid_type: not l_type.empty
+			valid_type: not l_type.is_empty
 		local
 			g_type: STRING
 		do
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 			-- Com pointer type of Eiffel 'l_type'
 		require
 			non_void_type: l_type /= Void
-			valid_type: not l_type.empty
+			valid_type: not l_type.is_empty
 		local
 			g_type: STRING
 		do

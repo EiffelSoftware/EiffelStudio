@@ -38,7 +38,7 @@ feature -- Output
 			Result.append (name)
 			Result.append (Space_open_parenthesis)
 
-			if not parameters.empty then
+			if not parameters.is_empty then
 
 				from
 					parameters.start
@@ -50,14 +50,14 @@ feature -- Output
 					parameters.forth
 				end
 
-				if result_type.empty then
+				if result_type.is_empty then
 					Result.remove (Result.count)
 					Result.remove (Result.count)
 				end
 
 			end
 
-			if not result_type.empty then
+			if not result_type.is_empty then
 				Result.append (Open_bracket)
 				Result.append (Out_retval)
 				Result.append (Close_bracket)
@@ -70,7 +70,7 @@ feature -- Output
 			Result.append (Semicolon)
 		ensure
 			non_void_result: Result /= Void
-			valid_result: not Result.empty
+			valid_result: not Result.is_empty
 		end
 
 end -- class EI_MIDL_FEATURE

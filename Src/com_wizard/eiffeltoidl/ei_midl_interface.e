@@ -86,7 +86,7 @@ feature -- Output
 			Result.append (l_name)
 			Result.append (": IDispatch%N{%N")
 
-			if not features.empty then
+			if not features.is_empty then
 				from
 					features.start
 				until

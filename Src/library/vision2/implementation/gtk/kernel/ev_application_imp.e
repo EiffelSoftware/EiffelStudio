@@ -158,10 +158,10 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 						check
 							imp_not_void: row_imp /= Void
 						end
-						if row_imp.pebble_over_widget (a_gdk_window, a_x, a_y) then
+						if row_imp.pointer_over_widget (a_gdk_window, a_x, a_y) then
 							Result := trg
 						end
-					elseif imp.pebble_over_widget (a_gdk_window, a_x, a_y) then
+					elseif imp.pointer_over_widget (a_gdk_window, a_x, a_y) then
 						Result := trg
 					end				
 				end
@@ -359,6 +359,9 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/03/31 19:09:08  king
+--| Rename pebble_over_widget -> pointer_over_widget
+--|
 --| Revision 1.21  2000/03/30 19:32:36  king
 --| Temporarily removed prelight support from PND as mcl row is not a widget
 --|

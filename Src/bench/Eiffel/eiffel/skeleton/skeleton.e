@@ -327,7 +327,7 @@ feature -- Status
 				i > nb or else current_area.item (i).level /= Bits_level
 			loop
 				bit_desc ?= current_area.item (i)
-				buffer.putstring (" + OVERHEAD + BITOFF(");
+				buffer.putstring (" + OVERHEAD + @BITOFF(");
 				buffer.putint (bit_desc.value);
 				buffer.putchar (')');
 				i := i + 1;
@@ -556,7 +556,7 @@ feature -- Status
 					until
 						i >= index
 					loop
-						buffer.putstring (" + OVERHEAD + BITOFF(");
+						buffer.putstring (" + OVERHEAD + @BITOFF(");
 						bit_desc ?= current_area.item (i);
 						buffer.putint (bit_desc.value);
 						buffer.putchar (')');
@@ -570,7 +570,7 @@ feature -- Status
 					until
 						current_area.item(i).level > Bits_level
 					loop
-						buffer.putstring (" + OVERHEAD + BITOFF(");
+						buffer.putstring (" + OVERHEAD + @BITOFF(");
 						bit_desc ?= current_area.item (i);
 						buffer.putint (bit_desc.value);
 						buffer.putchar (')');
@@ -589,6 +589,9 @@ feature -- Status
 					buffer.putstring (" + OVERHEAD");
 				end;
 			end;
+
+				-- Restore previous position
+			position := index
 		end;
 
 	workbench_offset: INTEGER is

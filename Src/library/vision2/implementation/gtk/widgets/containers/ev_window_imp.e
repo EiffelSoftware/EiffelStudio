@@ -232,7 +232,8 @@ feature -- Status setting
 		do
 			if is_show_requested then
 				C.gtk_window_set_position (c_object, C.Gtk_win_pos_none_enum)
-				C.gtk_widget_set_uposition (c_object, x_position, y_position)
+			--	C.gtk_widget_set_uposition (c_object, x_position, y_position)
+				-- This line causes gdk error with preferences windows on item selection
 				Precursor		
 			end
 		end
@@ -415,7 +416,7 @@ feature {EV_WIDGET_IMP} -- Position retrieval
 		do
 				--| The following piece of code works fine with kwn (RH7.1 KDE2.1)
 				--| It should be test with other window managers
-			if is_displayed then
+			if is_show_requested then
 				
 			C.gdk_window_get_position (
 				C.gtk_widget_struct_window (c_object),

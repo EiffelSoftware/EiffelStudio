@@ -98,14 +98,4 @@ feature
 		deferred
 		end;
 
-feature -- DLE
-
-	was_used: BOOLEAN is
-			-- Was the entry used in the extendible system?
-		require
-			dynamic_system: System.is_dynamic;
-			final_mode: System.in_final_mode
-		deferred
-		end;
-
 end

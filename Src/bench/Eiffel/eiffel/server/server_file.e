@@ -107,14 +107,14 @@ end;
 		end;
 		
 	open is
-			-- Open file in read mode if precompiled or part of the static
-			-- system (DLE), in read-write otherwise.
+			-- Open file in read mode if precompiled
+			-- in read-write otherwise.
 		require
 			is_closed: not is_open
 		do
 			if Eiffel_project.is_read_only then
 				open_read
-			elseif precompiled or is_static then
+			elseif precompiled then
 				open_read
 			else
 				open_read_write
@@ -134,7 +134,7 @@ end;
 		require else
 			is_open: is_open
 		do
-			{RAW_FILE} precursor
+			{RAW_FILE} Precursor
 			is_open := False
 debug ("SERVER")
 	io.error.put_string ("Closing file ");
@@ -171,24 +171,10 @@ feature -- Status report
 			Result := id.is_precompiled
 		end
 
-	is_dynamic: BOOLEAN is
-			-- Does the current server file contain 
-			-- dynamic classes' information?
-		do
-			Result := id.is_dynamic
-		end
-
-	is_static: BOOLEAN is
-			-- Does the current server file contain static classes' information
-			-- during the Dynamic Class Set construction?
-		do
-			Result := System.is_dynamic and not is_dynamic
-		end;
-
 	need_purging: BOOLEAN is
 			-- Does the file need purging?
 		do
-			Result := not (precompiled or is_static) and then
+			Result := not (precompiled) and then
 				(occurence = 0 or else
 				occurence / number_of_objects < .25)
 debug ("SERVER")

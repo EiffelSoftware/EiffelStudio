@@ -3,7 +3,6 @@
 class SHARED_GENERATOR
 
 inherit
-
 	SHARED_WORKBENCH
 	
 feature {NONE}
@@ -11,21 +10,13 @@ feature {NONE}
 	Attr_generator: ATTR_GENERATOR is
 			-- Generator of attribute tables
 		once
-			if System.extendible or System.is_dynamic then
-				!DLE_ATTR_GENERATOR! Result
-			else
-				!! Result
-			end
+			!! Result
 		end;
 
 	Rout_generator: ROUT_GENERATOR is
 			-- Generator of routine tables
 		once
-			if System.extendible or System.is_dynamic then
-				!DLE_ROUT_GENERATOR! Result
-			else
-				!! Result
-			end
+			!! Result
 		end;
 
 end

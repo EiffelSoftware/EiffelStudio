@@ -20,8 +20,6 @@ feature -- Initialization
 		do
 			if Compilation_modes.is_precompiling then
 				!P_FEATURE_AS_SUBCOUNTER! Result.make (compilation_id)
-			elseif Compilation_modes.is_extending then
-				!DLE_FEATURE_AS_SUBCOUNTER! Result.make
 			else
 				!FEATURE_AS_SUBCOUNTER! Result.make
 			end

@@ -832,11 +832,7 @@ feature -- Byte code computation
 		do
 			bid := body_id
 			if bid /= Void then
-				if bid.is_dynamic then
-					Result := bid.id > System.dle_frozen_level
-				else
-					Result := bid.id > System.frozen_level
-				end
+				Result := bid.id > System.frozen_level
 			end
 		end
 
@@ -1784,21 +1780,16 @@ feature -- Debugging
 		local
 			wc: CLASS_C
 		do
-			if not is_dynamic then
-					-- DLE temporary constraint:
-					-- Cannot debug routines from the DC-set.
-
-				if (not is_external)
-					and then (not is_attribute)
-					and then (not is_constant)
-					and then (not is_deferred)
-					and then (not is_unique)
-				then
-					wc := written_class
-					Result := (not wc.is_basic)
-						and then (not wc.is_special)
-						and then (wc.has_types)
-				end
+			if (not is_external)
+				and then (not is_attribute)
+				and then (not is_constant)
+				and then (not is_deferred)
+				and then (not is_unique)
+			then
+				wc := written_class
+				Result := (not wc.is_basic)
+					and then (not wc.is_special)
+					and then (wc.has_types)
 			end
 		end
 
@@ -2063,23 +2054,6 @@ feature -- Inlining
 			end
 		end
 
-feature -- DLE
-
-	is_dynamic: BOOLEAN is
-			-- Is the feature part of the DC-set?
-		do
-			Result := valid_body_id and then real_body_id.is_dynamic
-		end
-
-	was_used: BOOLEAN is
-			-- Was the feature used in the static system?
-		require
-			dynamic_system: System.is_dynamic
-			final_mode: System.in_final_mode
-		do
-			Result := System.was_used (Current)
-		end
-
 feature -- Api creation
 
 	api_feature (associated_class_id: CLASS_ID): E_FEATURE is
@@ -2100,12 +2074,6 @@ feature -- Api creation
 			Result.set_export_status (export_status)
 			Result.set_is_frozen (is_frozen)
 			Result.set_is_infix (is_infix)
-			-- Result.set_is_dynamic (is_dynamic)
-			-- FIXME can't set this at this point since
-			-- creating the api can be done at any time
-			-- and is_dynamic has the nasty side effect of
-			-- real_body_id which I do not really want to
-			-- invoke.
 			Result.set_is_prefix (is_prefix)
 			Result.set_rout_id_set (rout_id_set)
 		end		

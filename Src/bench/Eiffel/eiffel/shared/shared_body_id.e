@@ -3,7 +3,6 @@
 class SHARED_BODY_ID
 
 inherit
-
 	SHARED_WORKBENCH
 	
 feature {NONE}
@@ -16,11 +15,6 @@ feature {NONE}
 	Initialization_body_id: BODY_ID is
 		once
 			Result := System.body_id_counter.initialization_body_id
-		end
-
-	Dle_make_body_id: BODY_ID is
-		once
-			Result := System.body_id_counter.dle_make_body_id
 		end
 
 	Dispose_body_id: BODY_ID is

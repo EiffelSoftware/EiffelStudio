@@ -47,14 +47,4 @@ feature
 		deferred
 		end;
 
-feature -- DLE
-
-	generate_dle (file: INDENT_FILE; id: CLASS_ID) is
-			-- Generate assertion value in `file'.
-		require
-			good_argument: file /= Void;
-			is_open: file.is_open_write
-		deferred
-		end;
-
 end

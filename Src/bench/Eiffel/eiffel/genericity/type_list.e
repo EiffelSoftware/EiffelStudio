@@ -115,7 +115,7 @@ feature -- Traversals
 			loop
 					--| We need to save the position of the cursor, because
 					--| within pass4 we are also doing some traversal (like
-					--| `generate_poly_table' or `generate_dle_poly_table'.
+					--| `generate_poly_table').
 				old_cursor := cursor
 				item.pass4
 				go_to (old_cursor)
@@ -212,28 +212,6 @@ feature -- Traversals
 			end
 		end
 
-	generate_dle_poly_table (unit: POLY_UNIT; poly_table: POLY_TABLE [ENTRY]) is
-			-- Generate the polymorphic table in final mode
-		require
-			unit_exits: unit /= Void
-			poly_table_exists: poly_table /= Void
-		local
-			ct: CLASS_TYPE
-		do
-			from
-				start
-			until
-				after
-			loop
-				ct := item
-				if ct.is_static then
-						-- Generate only what was in the static system.
-					poly_table.extend (unit.entry (ct))
-				end
-				forth
-			end
-		end
-		
 feature -- Merging
 
 	append (other: like Current) is

@@ -23,7 +23,6 @@ feature -- Initialization
 			old_make;
 			invariant_body_id := current_subcounter.next_id;
 			initialization_body_id := current_subcounter.next_id;
-			dle_make_body_id := current_subcounter.next_id;
 			dispose_body_id := current_subcounter.next_id
 		end
 
@@ -32,8 +31,6 @@ feature -- Initialization
 		do
 			if Compilation_modes.is_precompiling then
 				!P_BODY_ID_SUBCOUNTER! Result.make (compilation_id)
-			elseif Compilation_modes.is_extending then
-				!DLE_BODY_ID_SUBCOUNTER! Result.make
 			else
 				!BODY_ID_SUBCOUNTER! Result.make
 			end
@@ -49,7 +46,6 @@ feature -- Access
 
 	invariant_body_id: BODY_ID;
 	initialization_body_id: BODY_ID;
-	dle_make_body_id: BODY_ID;
 	dispose_body_id: BODY_ID;
             -- Predefined body ids
 

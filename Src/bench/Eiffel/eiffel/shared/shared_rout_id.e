@@ -17,11 +17,6 @@ feature
 			Result := System.routine_id_counter.initialization_rout_id
 		end;
 
-	Dle_make_rout_id: ROUTINE_ID is
-		once
-			Result := System.routine_id_counter.dle_make_rout_id
-		end;
-
 	Dispose_rout_id: ROUTINE_ID is
 		once
 			Result := System.routine_id_counter.dispose_rout_id

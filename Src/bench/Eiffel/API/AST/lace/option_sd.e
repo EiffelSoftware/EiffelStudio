@@ -79,16 +79,6 @@ feature -- Free options properties
 			-- Do nothing
 		end;
 
-	is_extending: BOOLEAN is
-		do
-			-- Do nothing
-		end;
-
-	is_extendible: BOOLEAN is
-		do
-			-- Do nothing
-		end;
-
 feature {COMPILER_EXPORTER} -- Update
 
 	process_system_level_options (value: OPT_VAL_SD) is

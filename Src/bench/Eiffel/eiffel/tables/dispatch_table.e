@@ -78,15 +78,6 @@ feature -- Refreezing
 			frozen_level := level
 		end
 
-	dle_frozen_level: INTEGER
-			-- Melted/Frozen limit in the DC-set
-
-	set_dle_frozen_level (level: INTEGER) is
-			-- Set `dle_frozen_level' to `level'.
-		do
-			dle_frozen_level := level
-		end
-
 feature -- Merging
 
 	append (other: like Current) is
@@ -95,7 +86,6 @@ feature -- Merging
 		do
 			{CENTRAL_TABLE} precursor (other)
 			frozen_level := counter.total_count
-			dle_frozen_level := frozen_level
 		end
 
 feature	-- Melting and C Generation
@@ -194,68 +184,6 @@ end
 				i := i + 1
 			end
 			file.putstring ("};%N")
-		end
-
-feature -- DLE
-
-	set_levels is
-			-- Keep track of the different levels after each compilation
-		do
-			if not System.is_dynamic then
-                dle_frozen_level := counter.total_count
-            end
-        end
-
-	generate_dle (file: INDENT_FILE) is
-			-- Generate the DC-set dispatch units in `file'.
-		require
-			good_argument: file /= Void
-			is_open: file.is_open_write
-			dynamic_system: System.is_dynamic
-		local
-			values: ARRAY [INTEGER]
-			unit: DISPATCH_UNIT
-			i, nb: INTEGER
-		do
-			from
-				nb := counter.total_count
-				!!values.make (1, nb)
-				start
-			until
-				after
-			loop
-				unit := item_for_iteration
-				if unit.is_valid then
-					values.put (unit.real_body_id.id - 1, unit.real_body_index.id)
-				end
-				forth
-			end
-			from
-				i := nb - counter.current_count + 1
-				file.putstring ("#include %"eif_struct.h%"")
-				file.new_line
-				file.putstring ("#include %"eif_portable.h%"")
-				file.new_line
-				file.new_line
-				file.putstring ("void dle_edisptch(void)")
-				file.new_line
-				file.putchar ('{')
-				file.new_line
-				file.indent
-			until
-				i > nb
-			loop
-				file.putstring ("dispatch [")
-				file.putint (i - 1)
-				file.putstring ("] = (uint32) ")
-				file.putint (values.item (i))
-				file.putchar (';')
-				file.new_line
-				i := i + 1
-			end
-			file.exdent
-			file.putchar ('}')
-			file.new_line
 		end
 
 feature {NONE} -- External features

@@ -5,9 +5,6 @@ class
 
 inherit
 	EXTEND_TABLE [BODY_ID, BODY_INDEX]
-		redefine
-			force, put
-		end;
 
 	SHARED_WORKBENCH
 		undefine
@@ -15,52 +12,9 @@ inherit
 		end
 
 creation
-
 	make
 	
 feature -- Element change
-
-	put (body_id: BODY_ID; body_index: BODY_INDEX) is
-			-- Associated `body_id' with `body_index'. If `body_index'
-			-- was already used (i.e. we are changing the body id of
-			-- an already existing feature), keep track of the old
-			-- body id in special correspondance table for DLE purposes
-			-- (correspondance between "static" body id and "dynamic"
-			-- body id for generation of encoded feature name among other
-			-- things).
-		local
-			old_body_id: BODY_ID
-		do
-			if has (body_index) then
-				old_body_id := found_item
-				System.dle_frozen_nobid_table.put (old_body_id, body_id);
-				if System.is_dynamic then
-					System.dle_finalized_nobid_table.put (old_body_id, body_id)
-				end
-			end;
-			{EXTEND_TABLE} Precursor (body_id, body_index)
-		end;
-
-	force (body_id: BODY_ID; body_index: BODY_INDEX) is
-			-- Associated `body_id' with `body_index'. If `body_index'
-			-- was already used (i.e. we are changing the body id of
-			-- an already existing feature), keep track of the old
-			-- body id in special correspondance table for DLE purposes
-			-- (correspondance between "static" body id and "dynamic"
-			-- body id for generation of encoded feature name among other
-			-- things).
-		local
-			old_body_id: BODY_ID
-		do
-			if has (body_index) then
-				old_body_id := found_item
-				System.dle_frozen_nobid_table.put (old_body_id, body_id);
-				if System.is_dynamic then
-					System.dle_finalized_nobid_table.put (old_body_id, body_id)
-				end
-			end;
-			{EXTEND_TABLE} Precursor (body_id, body_index)
-		end;
 
 	append (other: like Current) is
 			-- Add items of `other' to `Current'.

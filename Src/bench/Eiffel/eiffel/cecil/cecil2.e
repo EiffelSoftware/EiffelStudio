@@ -62,11 +62,7 @@ feature
 			end
 			Cecil_file.putstring ("};%N%N")
 			
-			if System.is_dynamic then
-				Cecil_file.putstring ("struct ctable Dce_type = {(int32) ")
-			else
-				Cecil_file.putstring ("struct ctable egc_ce_type_init = {(int32) ")
-			end
+			Cecil_file.putstring ("struct ctable egc_ce_type_init = {(int32) ")
 			Cecil_file.putint (count)
 			Cecil_file.putstring (", sizeof(uint32),")
 			Cecil_file.putstring (key_name)

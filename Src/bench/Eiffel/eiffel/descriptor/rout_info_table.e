@@ -274,53 +274,6 @@ feature -- Trace
 			end
 		end
 
-feature -- DLE
-
-	generate_dle (f: INDENT_FILE) is
-			-- C code of run-time structure representing Current
-		require
-			file_not_void: f /= Void
-			file_exists: f.exists
-			dynamic_syatem: System.is_dynamic
-		local
-			rout_infos: ARRAY [ROUT_INFO]
-			nb_elements: INTEGER
-			i: INTEGER
-			ri: ROUT_INFO
-		do
-			rout_infos := renumbered_table
-			nb_elements := rout_infos.count
-
-			f.putstring ("#include %"eif_macros.h%"%N%N")
-			f.putstring ("static struct rout_info Dforg_table[] = {%N")
-				-- C tables start at 0, we want to start at 1, to
-				-- that effect we insert a dummy entry.
-			f.putstring ("%T{(int16) -1, (int16) -1},%N")
-				-- Entry for the invariant "routine"
-			f.putstring ("%T{(int16) 0, (int16) 0},%N")
-
-			from
-				i := 2	
-			until
-				i > nb_elements
-			loop
-				ri := rout_infos.item (i)
-				if ri /= Void then
-					f.putstring ("%N%T{(int16) ")
-					f.putint (ri.origin.id)
-					f.putstring (", (int16) ")
-					f.putint (ri.offset)
-					f.putstring ("},")
-				else
-					f.putstring ("%N%T{(int16) -1, (int16) -1},")
-				end
-				i := i + 1
-			end
-			
-			f.putstring ("%N};%N%Nvoid dle_ecall(void)%N%
-					%{%N%Teorg_table = Dforg_table;%N}%N")
-		end
-
 feature -- Merging
 
 	append (other: like Current) is

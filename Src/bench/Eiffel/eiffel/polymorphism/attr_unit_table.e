@@ -3,11 +3,9 @@
 class ATTR_UNIT_TABLE
 
 inherit
-
 	POLY_UNIT_TABLE [ATTR_UNIT]
 
 creation
-
 	make
 
 feature
@@ -24,13 +22,7 @@ feature {NONE}
 	Poly_table_template: ATTR_TABLE is
 			-- Polymorphic table template
 		once
-			if System.is_dynamic then
-				!DYN_ATTR_TABLE! Result.make
-			elseif System.extendible then
-				!STAT_ATTR_TABLE! Result.make
-			else
-				!! Result.make
-			end
+			!! Result.make
 		end;
 
 end

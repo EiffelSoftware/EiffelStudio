@@ -109,10 +109,7 @@ feature {COMPILER_EXPORTER} -- Lace recompilation
 			cluster_of_path := Universe.cluster_of_path (path);
 			old_cluster := Lace.old_universe.cluster_of_path (path);
 			if cluster_of_name /= Void then
-				if
- 					cluster_of_name.is_precompiled or
-					(System.is_dynamic and then cluster_of_name.is_static)
-				then
+				if cluster_of_name.is_precompiled then
 						-- Precompiled clusters may be moved without
 						-- forcing a precompilation,
 					if 

@@ -20,8 +20,6 @@ feature -- Initialization
 		do
 			if Compilation_modes.is_precompiling then
 				!P_PATTERN_ID_SUBCOUNTER! Result.make (compilation_id)
-			elseif Compilation_modes.is_extending then
-				!DLE_PATTERN_ID_SUBCOUNTER! Result.make
 			else
 				!PATTERN_ID_SUBCOUNTER! Result.make
 			end

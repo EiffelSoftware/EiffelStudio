@@ -103,14 +103,8 @@ feature -- Access
 					and then project_file.is_writable
 			if initialized then
 				Result := Result and then System.server_controler.is_writable
-				if System.is_dynamic then
-					Result := Result and then 
-						(not Update_dle_file.exists or else 
-						Update_dle_file.is_writable)
-				else
-					Result := Result and then 
+				Result := Result and then 
 						(not Update_file.exists or else Update_file.is_writable)
-				end
 			end
 		end;
 

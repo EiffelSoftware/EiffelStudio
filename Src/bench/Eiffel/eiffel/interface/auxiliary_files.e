@@ -95,9 +95,7 @@ feature -- Plug and Makefile file
 			cl_type: CLASS_TYPE
 			final_mode: BOOLEAN
 			Plug_file: INDENT_FILE
-			table_prefix: STRING
 		do
-			table_prefix := System.table_prefix
 			final_mode := Context.final_mode
 
 			Plug_file := plug_f (final_mode)
@@ -162,7 +160,7 @@ feature -- Plug and Makefile file
 			Plug_file.putstring ("();%N")
 
 			if final_mode and then System.array_optimization_on then
-				System.remover.array_optimizer.generate_plug_declarations (Plug_file, table_prefix)
+				System.remover.array_optimizer.generate_plug_declarations (Plug_file)
 			else
 				Plug_file.putstring ("%Nlong *eif_area_table = (long *)0;%N%
 									%long *eif_lower_table = (long *)0;%N")
@@ -182,11 +180,9 @@ feature -- Plug and Makefile file
 				dispose_name := system.routine_id_counter.dispose_rout_id.table_name
 
 				Plug_file.putstring ("extern char *(*")
-				Plug_file.putstring (table_prefix)
 				Plug_file.putstring (init_name)
 				Plug_file.putstring ("[])();%N%
 									%extern char *(*")
-				Plug_file.putstring (table_prefix)
 				Plug_file.putstring (dispose_name)
 				Plug_file.putstring ("[])();%N%N")
 			end
@@ -280,14 +276,12 @@ feature -- Plug and Makefile file
 					-- Initialization routines
 				Plug_file.putstring ("%Tegc_ecreate = ")
 				Plug_file.putstring ("(char *(**)()) ")
-				Plug_file.putstring (table_prefix)
 				Plug_file.putstring (init_name)
 				Plug_file.putstring (";%N")
 
 					-- Dispose routines
 				Plug_file.putstring ("%Tegc_edispose = ")
 				Plug_file.putstring ("(void (**)()) ")
-				Plug_file.putstring (table_prefix)
 				Plug_file.putstring (dispose_name)
 				Plug_file.putstring (";%N")
 

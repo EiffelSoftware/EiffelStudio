@@ -9,7 +9,6 @@ class
 feature -- Properties
 
 	is_freezing, is_finalizing,
-	is_extendible, is_extending, 
 	is_precompiling, is_quick_melt: BOOLEAN
 			-- Type of compilation.
 
@@ -42,18 +41,6 @@ feature -- Update
 			is_finalizing := True
 		end
 
-	set_is_extendible (b: BOOLEAN) is
-			-- Set `is_extendible' to `b'
-		do
-			is_extendible := b
-		end
-
-	set_is_extending (b: BOOLEAN) is
-			-- Set `is_extending' to `b'
-		do
-			is_extending := b
-		end
-
 	set_is_precompiling (b: BOOLEAN) is
 			-- Set `is_precompiling' to `b'
 		do
@@ -68,8 +55,6 @@ feature -- Setting
 			is_quick_melt := False
 			is_freezing := False
 			is_finalizing := False
-			is_extendible := False
-			is_extending := False
 			is_precompiling := False
 		end
 

@@ -89,20 +89,4 @@ feature
 									(body_index, written_class_type)
 		end;
 
-feature -- DLE
-
-	was_used: BOOLEAN is
-			-- Was the entry used in the extendible system?
-		local
-			remover: REMOVER;
-			old_body_id: BODY_ID
-		do
-			if type_id < System.min_type_id then
-				remover := System.dle_remover;
-				old_body_id := System.dle_finalized_nobid_table.item (body_id);
-				Result := 	remover = Void or else
-							remover.was_body_alive (old_body_id)
-			end
-		end;
-
 end

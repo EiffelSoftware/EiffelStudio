@@ -111,10 +111,8 @@ end
 			-- Build the universe using the AST
 		local
 			precomp_r: PRECOMP_R
-			extendible_r: EXTENDIBLE_R
 			old_system: SYSTEM_I
 			precompiled_options: HASH_TABLE [D_PRECOMPILED_SD, STRING]
-			extendible_project_name: STRING
 			sys: SYSTEM_I
 		do
 			if root_ast /= Void then
@@ -124,12 +122,7 @@ end
 
 				if not_first_parsing = False then
 					precompiled_options := root_ast.precompiled_options
-					extendible_project_name := root_ast.extendible_project_name
-					if extendible_project_name /= Void then
-							-- DLE: retrieve the dynamically extendible project.
-						!!extendible_r
-						extendible_r.retrieve_extendible (extendible_project_name)
-					elseif not precompiled_options.empty then
+					if not precompiled_options.empty then
 						Degree_output.put_string ("Retrieving precompile...")
 						!!precomp_r
 						precomp_r.retrieve_precompiled (precompiled_options)
@@ -139,16 +132,8 @@ end
 						Eiffel_project.init_system
 						sys.make
 					end
-				else
-						-- This is just for validity check wrt DLE.
-					extendible_project_name := root_ast.extendible_project_name
 				end
-				System.set_extendible (Compilation_modes.is_extendible)
 				not_first_parsing := True
-
-					-- When finalizing a DC-set, the DR-set must
-					-- have been finalized as well.
-				System.check_dle_finalize
 
 				old_universe := clone (Universe)
 				old_system := clone (System)
@@ -173,11 +158,7 @@ end
 					-- Reset `Workbench'
 				if old_system /= Void then
 					Universe.copy (old_universe)
-					if System.is_dynamic then
-						Universe.reset_dle_clusters
-					else
-						Universe.reset_clusters
-					end
+					Universe.reset_clusters
 					System.copy (old_system)
 				end
 				old_universe := Void

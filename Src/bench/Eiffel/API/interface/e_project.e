@@ -84,7 +84,6 @@ feature -- Initialization
 			prev_read_write_error: not read_write_error
 		local
 			precomp_r: PRECOMP_R
-			extendible_r: EXTENDIBLE_R
 			temp: STRING
 			e_project: like Current
 			retried: BOOLEAN
@@ -115,8 +114,6 @@ feature -- Initialization
 					system := e_project.system
 					Workbench.copy (e_project.saved_workbench)
 					Workbench.init
-					Compilation_modes.set_is_extendible (Comp_system.extendible)
-					Compilation_modes.set_is_extending (Comp_system.is_dynamic)
 					if Comp_system.is_precompiled then
 						precomp_dirs := Workbench.precompiled_directories
 						from
@@ -137,10 +134,6 @@ feature -- Initialization
 						if Comp_system.uses_precompiled then
 							!! precomp_r
 							precomp_r.set_precomp_dir
-						end
-						if Comp_system.is_dynamic then
-							!! extendible_r
-							extendible_r.set_extendible_dir
 						end
 					end
 
@@ -201,12 +194,9 @@ feature -- Access
 	successful: BOOLEAN is
 			-- Was the last compilation successful?
 		do
-			Result := Workbench.successful and then
-				error_status /= Dle_error_status
+			Result := Workbench.successful
 		ensure
-			not_successful_means_dle_or_wb: Result implies
-				(Workbench.successful or else
-				(error_status /= Dle_error_status)) 
+			not_successful_means_wb: Result implies Workbench.successful
 		end
 
 	initialized: BOOLEAN is
@@ -260,8 +250,7 @@ feature -- Access
 			-- (if not, more optimal code is generated from
 			-- a new project and do not use precompilation).
 		do
-			Result := not Comp_system.poofter_finalization or else
-				Comp_system.is_dynamic
+			Result := not Comp_system.poofter_finalization
 		end
 
 	lace_has_assertions: BOOLEAN is
@@ -485,9 +474,6 @@ feature -- Update
 
 			if successful then
 				save_project
-				if Comp_system.is_dynamic then
-					dle_link_system
-				end
 
 				if not freezing_occurred then
 					link_driver
@@ -552,41 +538,22 @@ feature -- Update
 			-- optimize C code for workbench mode).
 		require
 			able_to_compile: able_to_compile
-		local 
-			retried: BOOLEAN
 		do
-			if not retried then
-				Compilation_modes.set_is_finalizing
-				melt
-				if
-					successful and then
-					not comp_system.lace.compile_all_classes
-				then
-					set_error_status (Ok_status)
-					is_compiling_ref.set_item (True)
-					comp_system.finalize_system (keep_assertions)
-					if Comp_system.extendible then
-						save_project
-					end
-					is_compiling_ref.set_item (False)
-				end
+			Compilation_modes.set_is_finalizing
+			melt
+			if
+				successful and then
+				not comp_system.lace.compile_all_classes
+			then
+				set_error_status (Ok_status)
+				is_compiling_ref.set_item (True)
+				comp_system.finalize_system (keep_assertions)
+				is_compiling_ref.set_item (False)
 			end
 		ensure
 			was_saved: successful and then not
 				error_occurred implies was_saved
 			error_implies: error_occurred implies save_error
-		rescue
-			if Rescue_status.is_error_exception then
-					-- A validity error has been detected during the
-					-- finalization. This happens with DLE dealing
-					-- with statically bound feature calls.
-				error_status_mode.set_item (Dle_error_status)
-				Rescue_status.set_is_error_exception (false)
-				Comp_system.set_current_class (Void)
-				retried := true
-				Error_handler.trace
-				retry
-			end
 		end
 
 	call_finish_freezing (workbench_mode: BOOLEAN) is
@@ -794,7 +761,6 @@ feature {NONE} -- Implementation
 	Incomplete_project_status: INTEGER is 5
 
 	Corrupt_status: INTEGER is 6
-	Dle_error_status: INTEGER is 7
 	Retrieve_corrupt_error_status: INTEGER is 8
 	Retrieve_incompatible_error_status: INTEGER is 9
 	Retrieve_interrupt_error_status: INTEGER is 10
@@ -856,14 +822,14 @@ feature {NONE} -- Implementation
 			set: file_status = status
 		end
 
-feature {PRECOMP_R, EXTENDIBLE_R} -- Implementation
+feature {PRECOMP_R} -- Implementation
 
 	set_system (s: like system) is
 		do
 			system := s
 		end
 
-feature {E_PROJECT, PRECOMP_R, EXTENDIBLE_R} -- Implementation
+feature {E_PROJECT, PRECOMP_R} -- Implementation
 
 	saved_workbench: WORKBENCH_I
 
@@ -897,7 +863,7 @@ feature {NONE} -- Implementation
 			app_name: STRING
 			file_name: FILE_NAME
 		do
-			if Comp_system.uses_precompiled and then not Comp_system.is_dynamic then
+			if Comp_system.uses_precompiled then
 -- FIXME: check Makefile.SH
 -- FIXME: check Makefile.SH
 -- FIXME: check Makefile.SH
@@ -919,38 +885,6 @@ feature {NONE} -- Implementation
 							Precompilation_driver)
 					end
 				end
-			end
-		end
-
-	dle_link_system is
-			-- Link executable and melted.eif files from the static system.
-		require
-			dynamic_system: Comp_system.is_dynamic
-		local
-			uf: PLAIN_TEXT_FILE
-			app_name: STRING
-			file_name: FILE_NAME
-		do
-			!!file_name.make_from_string (Workbench_generation_path)
-			app_name := clone (system.name)
-			app_name.append (Executable_suffix)
-			file_name.set_file_name (app_name)
-			!!uf.make (file_name)
-			if not uf.exists then
-				!! file_name.make_from_string (Extendible_W_code)
-				app_name := clone (Comp_system.dle_system_name)
-				app_name.append (Executable_suffix)
-				file_name.set_file_name (app_name)
-				link_eiffel_driver (Workbench_generation_path,
-					System.name,
-					Prelink_command_name,
-					file_name)
-				!! file_name.make_from_string (Extendible_W_code)
-				file_name.set_file_name (Updt)
-				link_eiffel_driver (Workbench_generation_path,
-					Updt, 
-					Prelink_command_name, 
-					file_name)
 			end
 		end
 

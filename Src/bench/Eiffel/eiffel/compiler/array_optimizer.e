@@ -386,14 +386,14 @@ feature -- Contexts
 			end
 		end
 
-	generate_plug_declarations (plug_file: INDENT_FILE; table_prefix: STRING) is
+	generate_plug_declarations (plug_file: INDENT_FILE) is
 		do
-			generate_feature_table (plug_file, "eif_lower_table", lower_rout_id, table_prefix)
-			generate_feature_table (plug_file, "eif_area_table", area_rout_id, table_prefix)
+			generate_feature_table (plug_file, "eif_lower_table", lower_rout_id)
+			generate_feature_table (plug_file, "eif_area_table", area_rout_id)
 		end
 
 	generate_feature_table (plug_file: INDENT_FILE; table_name: STRING
-			rout_id: ROUTINE_ID; table_prefix: STRING) is
+			rout_id: ROUTINE_ID) is
 		local
 			entry: POLY_TABLE [ENTRY]
 			temp: STRING
@@ -401,12 +401,10 @@ feature -- Contexts
 			entry := Eiffel_table.poly_table (rout_id)
 			temp := rout_id.table_name
 			Plug_file.putstring ("extern long ")
-			Plug_file.putstring (table_prefix)
 			Plug_file.putstring (temp)
 			Plug_file.putstring ("[];%Nlong *")
 			Plug_file.putstring (table_name)
 			Plug_file.putstring (" = ")
-			Plug_file.putstring (table_prefix)
 			Plug_file.putstring (temp)
 			Plug_file.putstring (" - ")
 			Plug_file.putint (entry.min_type_id - 1)
@@ -536,58 +534,6 @@ end
 				end
 				depend_list.forth
 			end
-		end
-
-feature -- DLE
-
-	generate_dle_plug_extern (plug_file: INDENT_FILE) is
-			-- Generate extern declarations in `plug_file'.
-		require
-			dynamic_system: System.is_dynamic
-		local
-			entry: POLY_TABLE [ENTRY]
-			temp: STRING
-		do
-			entry := Eiffel_table.poly_table (lower_rout_id)
-			temp := lower_rout_id.table_name
-			plug_file.putstring ("extern long *")
-			plug_file.putstring (temp)
-			plug_file.putchar (';')
-			plug_file.new_line
-			entry := Eiffel_table.poly_table (area_rout_id)
-			temp := area_rout_id.table_name
-			plug_file.putstring ("extern long *")
-			plug_file.putstring (temp)
-			plug_file.putchar (';')
-			plug_file.new_line
-		end
-
-	generate_dle_plug (plug_file: INDENT_FILE) is
-			-- Generate code in `plug_file'. This part of the code will
-			-- have to be called after the routine and attribute tables
-			-- have been initialized.
-		require
-			dynamic_system: System.is_dynamic
-		local
-			entry: POLY_TABLE [ENTRY]
-			temp: STRING
-		do
-			entry := Eiffel_table.poly_table (lower_rout_id)
-			temp := lower_rout_id.table_name
-			plug_file.putstring ("eif_lower_table = ")
-			plug_file.putstring (temp)
-			plug_file.putstring (" - ")
-			plug_file.putint (entry.min_type_id - 1)
-			plug_file.putchar (';')
-			plug_file.new_line
-			entry := Eiffel_table.poly_table (area_rout_id)
-			temp := area_rout_id.table_name
-			plug_file.putstring ("eif_area_table = ")
-			plug_file.putstring (temp)
-			plug_file.putstring (" - ")
-			plug_file.putint (entry.min_type_id - 1)
-			plug_file.putchar (';')
-			plug_file.new_line
 		end
 
 end

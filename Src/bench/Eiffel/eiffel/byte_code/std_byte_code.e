@@ -664,7 +664,7 @@ feature
 					-- mode assertion level of the current object.
 				f.putstring ("RTDA;")
 				f.new_line
-				if rescue_clause /= void then
+				if rescue_clause /= Void then
 					f.putstring ("RTDT;")
 					f.new_line
 				end

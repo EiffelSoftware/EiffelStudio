@@ -36,8 +36,6 @@ feature {BODY_ID} -- Implementation
 			if p_type_id /= Void then
 				Result := A_buffer
 				eif011 ($Result, type_id.compilation_id)
-			elseif type_id.is_dynamic then
-				Result := "ND"
 			else
 				Result := ""
 			end

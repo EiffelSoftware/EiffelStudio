@@ -24,7 +24,6 @@ feature {NONE} -- Initialization
 			-- Make font named `a_face_name'.
 		require
 			a_face_name_not_void: a_face_name /= Void
-			a_face_name_not_empty: not a_face_name.empty
 		local
 			a: ANY
 		do

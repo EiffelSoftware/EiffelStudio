@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"Table hashed on internal_name of features to give%
 		%corresponding feature_name to be displayed.";
@@ -40,7 +39,7 @@ feature
 	name (operator: STRING): STRING is
 			-- What's the name of operator?
 		do
-			Result := operator_table @ operator;
+			Result := operator_table.item (operator);
 			if Result = void then
 				Result := operator;
 			end;

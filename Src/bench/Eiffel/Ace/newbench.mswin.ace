@@ -249,6 +249,7 @@ external
 		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
 		"$(EIFFEL_SRC)\library\vision2\spec\include",
 		"$(EIFFEL_SRC)\C\bench",
+		"$(EIFFEL_SRC)\C\platform",
 		"$(EIFFEL_SRC)\C_library\expat\xmlparse",
 		"$(EIFFEL_SRC)\C_library\zlib",
 		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\Core\Clib",

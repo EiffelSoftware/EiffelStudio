@@ -94,6 +94,13 @@ typedef char *          EIF_REFERENCE;
 typedef char *          EIF_POINTER;
 typedef unsigned char   EIF_BOOLEAN;
 
+	/* previously in eif_globals.h */
+#define MTC_NOARG           
+#define MTC                 /* MTC_NOARG, */
+#define EIF_CONTEXT_NOARG   void /* eif_global_context_t    *MTC_NOARG */
+#define EIF_CONTEXT         /* EIF_CONTEXT_NOARG, */
+#define EIF_STATIC_OPT
+
 #ifdef __cplusplus
 }
 #endif

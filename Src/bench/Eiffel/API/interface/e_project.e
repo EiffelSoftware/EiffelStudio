@@ -97,6 +97,8 @@ feature -- Initialization
 				system := e_project.system;
 				!! init_work.make (e_project.saved_workbench);
 				Workbench.init;
+				Compilation_modes.set_is_extendible (Comp_system.extendible);
+				Compilation_modes.set_is_extending (Comp_system.is_dynamic);
 				if Comp_system.uses_precompiled then
 					!! precomp_r;
 					precomp_r.set_precomp_dir
@@ -286,10 +288,22 @@ feature -- Error status
 	save_error: BOOLEAN is
 			-- Was the last attempt to save the project not successful?
 		do
-			Result := error_status = save_error_status
+			Result := error_status = save_error_status or
+					error_status = precomp_save_error_status
 		ensure
 			saved_implies: Result implies 
-						error_status = save_error_status 
+						(error_status = save_error_status or
+						error_status = precomp_save_error_status)
+		end;
+
+	precomp_save_error: BOOLEAN is
+			-- Was the last attempt to save the precompilation information
+			-- not successful?
+		do
+			Result := error_status = Precomp_save_error_status
+		ensure
+			saved_implies: Result implies 
+						error_status = Precomp_save_error_status 
 		end;
 
 	retrieval_error: BOOLEAN is
@@ -434,6 +448,9 @@ feature -- Update
 			if successful then
 				Comp_system.save_precompilation_info;
 				save_project;
+				if not save_error then
+					save_precomp
+				end
 			end;
 		ensure
 			was_saved: successful and then not
@@ -473,6 +490,37 @@ feature -- Output
 			saved_workbench := Void
 		ensure
 			error_implies: error_occurred implies save_error
+		rescue
+			retried := True;
+			retry
+		end;
+
+	save_precomp is
+			-- Save precompilation information to disk.
+		require
+			initialized: initialized;
+			compilation_successful: successful
+		local
+			retried: BOOLEAN;
+			file: RAW_FILE;
+			precomp_info: PRECOMP_INFO
+		do
+			if not retried then
+				error_status_mode.put (Ok_status);
+				!! precomp_info.make (Precompilation_directories);
+				!! file.make (Precompilation_file_name);
+				file.open_write;
+				precomp_info.independent_store (file);
+				file.close
+			else
+				if file /= Void and then not file.is_closed then
+					file.close
+				end;
+				retried := False;
+				set_error_status (Precomp_save_error_status);
+			end
+		ensure
+			error_implies: error_occurred implies precomp_save_error
 		rescue
 			retried := True;
 			retry
@@ -532,6 +580,7 @@ feature {NONE} -- Implementation
 	Dle_error_status: INTEGER is UNIQUE;
 	Retrieve_error_status: INTEGER is UNIQUE;
 	Save_error_status: INTEGER is UNIQUE;
+	Precomp_save_error_status: INTEGER is UNIQUE;
 	
 	error_status: INTEGER is
 		do

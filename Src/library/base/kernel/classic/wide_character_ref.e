@@ -94,9 +94,11 @@ feature -- Conversion
 feature {NONE} -- Implementation
 
 	chcode (c: like item): INTEGER is
-			-- Associated integer value
+			-- Character associated with integer value `i'
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C inline use %"eif_eiffel.h%""
+		alias
+			"((EIF_INTEGER) ($c))"
 		end
 
 indexing

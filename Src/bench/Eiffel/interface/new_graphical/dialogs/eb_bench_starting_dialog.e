@@ -365,15 +365,11 @@ feature {NONE} -- Execution
 			file_dialog: EV_FILE_OPEN_DIALOG
 			success: BOOLEAN
 			create_project_dialog: EB_CREATE_PROJECT_DIALOG
-			default_project_directory: STRING
 		do
 			create file_dialog
 			file_dialog.set_title (Interface_names.t_Choose_ace_file)
-			file_dialog.set_filter ("*.ace")
-			default_project_directory := Eiffel_projects_directory
-			if default_project_directory /= Void then
-				file_dialog.set_start_directory (default_project_directory.twin)
-			end
+			file_dialog.filters.extend (["*.ace", "Ace files (*.ace)"])
+			file_dialog.filters.extend (["*.*", "All files"])
 			file_dialog.show_modal_to_window (Current)
 
 			success := file_dialog.selected_button.is_equal(ev_open)

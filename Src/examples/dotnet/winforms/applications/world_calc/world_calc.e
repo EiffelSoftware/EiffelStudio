@@ -1,6 +1,5 @@
 indexing
-	description: "Really simple calculator. %
-				% Show how to use external assemblies."
+	description: "Really simple calculator. Demonstrates how to reuse a .NET type."
 
 class
 	WORLD_CALC
@@ -26,11 +25,8 @@ feature {NONE} -- Initialization
 	make is
 			--| Call `initialize_components'.
 			-- Entry point.
-		local
-			dummy: SYSTEM_OBJECT
 		do
 			initialize_components
-
 			feature {WINFORMS_APPLICATION}.run_form (Current)
 		end
 
@@ -70,130 +66,131 @@ feature -- Implementation
 			create btn_numbers.make (10)
 			create btn_ops.make (4)
 
-			set_text (("Math_Greeting").to_cil)
-			l_size.make_from_width_and_height (5, 13)
+			set_text ("Math Greeting")
+			-- no need for the keyword `create' as DRAWING_SIZE is an expanded class (.NET value type)
+			l_size.make (5, 13) 
 			set_auto_scale_base_size (l_size)
-			l_size.make_from_width_and_height (250, 230)
+			l_size.make (250, 230)
 			set_client_size (l_size)
 
-			l_point.make_from_x_and_y (8, 10)
+			l_point.make (8, 10)
 			lbl_formula.set_location (l_point)
-			lbl_formula.set_text (("Formula:").to_cil)
-			l_size.make_from_width_and_height (155, 20)
+			lbl_formula.set_text ("Formula:")
+			l_size.make (155, 20)
 			lbl_formula.set_size (l_size)
 
-			l_point.make_from_x_and_y (8, 28)
+			l_point.make (8, 28)
 			txt_formula.set_location (l_point)
 			txt_formula.set_tab_index (0)
-			l_size.make_from_width_and_height (150, 25)
+			l_size.make (150, 25)
 			txt_formula.set_size (l_size)
 			txt_formula.set_read_only (True)
 
-			l_point.make_from_x_and_y (165, 28)
+			l_point.make (165, 28)
 			btn_clear.set_location (l_point)
-			l_size.make_from_width_and_height (80, 25)
+			l_size.make (80, 25)
 			btn_clear.set_size (l_size)
-			btn_clear.set_text (("Clear").to_cil)
+			btn_clear.set_text ("Clear")
 			btn_clear.add_click (create {EVENT_HANDLER}.make (Current, $on_btn_clear_clicked))
 
 			btn_numbers.put (0, create {WINFORMS_BUTTON}.make)
-			l_point.make_from_x_and_y (8, 180)
+			l_point.make (8, 180)
 			btn_numbers.item (0).set_location (l_point)
-			btn_numbers.item (0).set_text (("0").to_cil)
+			btn_numbers.item (0).set_text ("0")
 
 			btn_numbers.put (1, create {WINFORMS_BUTTON}.make)
-			l_point.make_from_x_and_y (8, 60)
+			l_point.make (8, 60)
 			btn_numbers.item (1).set_location (l_point)
-			btn_numbers.item (1).set_text (("1").to_cil)
+			btn_numbers.item (1).set_text ("1")
 
 			btn_numbers.put (2, create {WINFORMS_BUTTON}.make)
-			l_point.make_from_x_and_y (48, 60)
+			l_point.make (48, 60)
 			btn_numbers.item (2).set_location (l_point)
-			btn_numbers.item (2).set_text (("2").to_cil)
+			btn_numbers.item (2).set_text ("2")
 
 			btn_numbers.put (3, create {WINFORMS_BUTTON}.make)
-			l_point.make_from_x_and_y (88, 60)
+			l_point.make (88, 60)
 			btn_numbers.item (3).set_location (l_point)
-			btn_numbers.item (3).set_text (("3").to_cil)
+			btn_numbers.item (3).set_text ("3")
 
 			btn_numbers.put (4, create {WINFORMS_BUTTON}.make)
-			l_point.make_from_x_and_y (8, 100)
+			l_point.make (8, 100)
 			btn_numbers.item (4).set_location (l_point)
-			btn_numbers.item (4).set_text (("4").to_cil)
+			btn_numbers.item (4).set_text ("4")
 
 			btn_numbers.put (5, create {WINFORMS_BUTTON}.make)
-			l_point.make_from_x_and_y (48, 100)
+			l_point.make (48, 100)
 			btn_numbers.item (5).set_location (l_point)
-			btn_numbers.item (5).set_text (("5").to_cil)
+			btn_numbers.item (5).set_text ("5")
 
 			btn_numbers.put (6, create {WINFORMS_BUTTON}.make)
-			l_point.make_from_x_and_y (88, 100)
+			l_point.make (88, 100)
 			btn_numbers.item (6).set_location (l_point)
-			btn_numbers.item (6).set_text (("6").to_cil)
+			btn_numbers.item (6).set_text ("6")
 
 			btn_numbers.put (7, create {WINFORMS_BUTTON}.make)
-			l_point.make_from_x_and_y (8, 140)
+			l_point.make (8, 140)
 			btn_numbers.item (7).set_location (l_point)
-			btn_numbers.item (7).set_text (("7").to_cil)
+			btn_numbers.item (7).set_text ("7")
 
 			btn_numbers.put (8, create {WINFORMS_BUTTON}.make)
-			l_point.make_from_x_and_y (48, 140)
+			l_point.make (48, 140)
 			btn_numbers.item (8).set_location (l_point)
-			btn_numbers.item (8).set_text (("8").to_cil)
+			btn_numbers.item (8).set_text ("8")
 
 			btn_numbers.put (9, create {WINFORMS_BUTTON}.make)
-			l_point.make_from_x_and_y (88, 140)
+			l_point.make (88, 140)
 			btn_numbers.item (9).set_location (l_point)
-			btn_numbers.item (9).set_text (("9").to_cil)
+			btn_numbers.item (9).set_text ("9")
 
 			from
 				i := 0
 			until
 				i = 10
 			loop
-				l_size.make_from_width_and_height (30, 30)
+				l_size.make (30, 30)
 				btn_numbers.item (i).set_size (l_size)
 				btn_numbers.item (i).add_click (create {EVENT_HANDLER}.make (Current, $on_btn_numbers_clicked))
 				i := i + 1
 			end
 
 			btn_ops.put (0, create {WINFORMS_BUTTON}.make)
-			l_point.make_from_x_and_y (128, 60)
+			l_point.make (128, 60)
 			btn_ops.item (0).set_location (l_point)
-			btn_ops.item (0).set_text (("+").to_cil)
+			btn_ops.item (0).set_text ("+")
 
 			btn_ops.put (1, create {WINFORMS_BUTTON}.make)
-			l_point.make_from_x_and_y (128, 100)
+			l_point.make (128, 100)
 			btn_ops.item (1).set_location (l_point)
-			btn_ops.item (1).set_text (("-").to_cil)
+			btn_ops.item (1).set_text ("-")
 
 			btn_ops.put (2, create {WINFORMS_BUTTON}.make)
-			l_point.make_from_x_and_y (128, 140)
+			l_point.make (128, 140)
 			btn_ops.item (2).set_location (l_point)
-			btn_ops.item (2).set_text (("*").to_cil)
+			btn_ops.item (2).set_text ("*")
 
 			btn_ops.put (3, create {WINFORMS_BUTTON}.make)
-			l_point.make_from_x_and_y (128, 180)
+			l_point.make (128, 180)
 			btn_ops.item (3).set_location (l_point)
-			btn_ops.item (3).set_text (("/").to_cil)
+			btn_ops.item (3).set_text ("/")
 
 			from
 				i := 0
 			until
 				i = 4
 			loop
-				l_size.make_from_width_and_height (30, 30)
+				l_size.make (30, 30)
 				btn_ops.item (i).set_size (l_size)
 				btn_ops.item (i).add_click (create {EVENT_HANDLER}.make (Current, $on_btn_op_clicked))
 				i := i + 1
 			end
 
-			l_point.make_from_x_and_y (48, 180)
+			l_point.make (48, 180)
 			btn_equals.set_location (l_point)
-			l_size.make_from_width_and_height (70, 30)
+			l_size.make (70, 30)
 			btn_equals.set_size (l_size)
 			btn_equals.set_tab_index (1)
-			btn_equals.set_text (("Calculate").to_cil)
+			btn_equals.set_text ("Calculate")
 			btn_equals.add_click (create {EVENT_HANDLER}.make (Current, $on_btn_equals_clicked))
 
 			controls.add (txt_formula)
@@ -225,7 +222,6 @@ feature -- Implementation
 	dispose_boolean (a_disposing: BOOLEAN) is
 			-- method called when form is disposed.
 		local
-			dummy: WINFORMS_DIALOG_RESULT
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -242,31 +238,39 @@ feature -- Implementation
 	on_btn_clear_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
 			-- Feature performed when button `btn_clear' is clicked.
 		do
-			 txt_formula.set_text (("").to_cil)
+			 txt_formula.set_text ("")
 		end
 
 	on_btn_numbers_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
 			-- Feature performed when button `btn_numbers' is clicked.
 		local
 			btn: WINFORMS_BUTTON
+			l_text: STRING
 		do
 			btn ?= sender
 			check
 				non_void_btn: btn /= Void
 			end
-			txt_formula.set_text ((("").to_cil).concat_string_string (txt_formula.text, btn.text))
+			l_text := txt_formula.text
+			l_text.append (btn.text)
+			txt_formula.set_text (l_text)
 		end
 
 	on_btn_op_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
 			-- Feature performed when button `btn_op' is clicked.
 		local
 			btn: WINFORMS_BUTTON
+			l_text: STRING
 		do
 			btn ?= sender
 			check
 				non_void_btn: btn /= Void
 			end
-			txt_formula.set_text ((("").to_cil).concat_string_string_string_string (txt_formula.text, (" ").to_cil, btn.text, (" ").to_cil))
+			l_text := txt_formula.text
+			l_text.append (" ")
+			l_text.append (btn.text)
+			l_text.append (" ")
+			txt_formula.set_text (l_text)
 		end
 
 	on_btn_equals_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
@@ -279,18 +283,16 @@ feature -- Implementation
 			l_int_math: INTEGER_MATH
 		do
 			if not retried then
-				if not txt_formula.text.equals (("").to_cil) then
+				if not txt_formula.text.equals ("") then
 						-- parse the formula and get the arguments
 					create my_parse.make
 					l_args := my_parse.parse (txt_formula.text)
 					create l_int_math.make
-					txt_formula.set_text (l_int_math.get_result 
-						(feature {SYSTEM_CONVERT}.to_int_32_string (l_args.arg_1),
-						l_args.op, 
-						feature {SYSTEM_CONVERT}.to_int_32_string (l_args.arg_2)))
+					txt_formula.set_text (l_int_math.get_result (feature {SYSTEM_CONVERT}.to_int_32 (l_args.arg_1),
+											l_args.op, feature {SYSTEM_CONVERT}.to_int_32 (l_args.arg_2)))
 				end
 			else
-				res := feature {WINFORMS_MESSAGE_BOX}.show (("Invalid calculation entered.%N%N  Enter 'num1' 'op' 'num2'%N%N").to_cil)
+				res := feature {WINFORMS_MESSAGE_BOX}.show ("Invalid calculation entered.%N%N  Enter 'num1' 'op' 'num2'%N%N")
 			end
 		rescue
 			retried := True

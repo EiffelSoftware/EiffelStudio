@@ -6,7 +6,8 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class FONT_BOX_M
+class 
+	FONT_BOX_M
 
 inherit
 
@@ -31,19 +32,24 @@ feature {NONE} -- Creation
 	make (a_font_box: FONT_BOX; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif font box.
 		local
-			ext_name: ANY
+			ext_name: ANY;
+			form_button: MEL_FORM
 		do
+			parent ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_font_box.identifier.to_c;
 			data := font_box_create ($ext_name,
-					parent_screen_object (a_font_box, widget_index),
+					parent.screen_object,
 					False, man);
 			screen_object := font_box_form (data);
-				--| Need redefinition of default_exec_callback
-				--| in order to remove callbacks correctly.
-			!! ok_b.make_from_existing (font_box_ok_button (data));
-			!! cancel_b.make_from_existing (font_box_cancel_button (data));
-			!! apply_b.make_from_existing (font_box_apply_button (data));
+			Mel_widgets.add (Current);
+			!! form_button.make_from_existing (xt_parent (font_box_ok_button (data)), Current);
+			!! ok_b.make_from_existing (font_box_ok_button (data), form_button);
+			!! cancel_b.make_from_existing (font_box_cancel_button (data), form_button);
+			!! apply_b.make_from_existing (font_box_apply_button (data), form_button);
+			if man then	
+				manage
+			end
 		end;
 
 feature -- Access
@@ -100,7 +106,7 @@ feature  -- Element change
 			-- Add `a_command' to the list of action to execute when
 			-- ok button is activated.
 		do
-			cancel_b.add_activate_callback (mel_vision_callback (a_command), argument)
+			ok_b.add_activate_callback (mel_vision_callback (a_command), argument)
 		end;
 
 feature -- Display
@@ -172,55 +178,7 @@ feature -- Removal
 			data_freed: data = default_pointer
 		end;
 
-feature {NONE} -- Implementation
-
-	update_text_font (f_ptr: POINTER) is
-		do
-			fb_set_text_font (data, f_ptr)
-		end;
-
-	update_label_font (f_ptr: POINTER) is
-		do
-		end;
-
-	update_button_font (f_ptr: POINTER) is
-		do
-			fb_set_button_font (data, f_ptr)
-		end;
-
-	update_other_fg_color (pixel: POINTER) is
-		do
-			xm_set_children_fg_color (pixel, font_box_form (data));
-			fb_set_button_fg_color (data, pixel);
-		end;
-
-	update_other_bg_color (pixel: POINTER) is
-		do
-			xm_set_children_bg_color (pixel, font_box_form (data));
-			fb_set_button_bg_color (data, pixel);
-		end;
-
 feature {NONE} -- External features
-
-	fb_set_button_fg_color (value: POINTER; pix: POINTER) is
-		external
-			"C"
-		end;
-
-	fb_set_button_bg_color (value: POINTER; pix: POINTER) is
-		external
-			"C"
-		end;
-
-	fb_set_button_font (value: POINTER; pix: POINTER) is
-		external
-			"C"
-		end;
-
-	fb_set_text_font (value: POINTER; pix: POINTER) is
-		external
-			"C"
-		end;
 
 	font_box_set_font (resource: POINTER; value: POINTER) is
 		external
@@ -295,8 +253,11 @@ feature {NONE} -- External features
 			"xfree"
 		end
 
-end
+invariant
 
+	buttons_not_void: cancel_b /= Void and then ok_b /= Void and then apply_b /= Void
+
+end -- class FONT_BOX_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

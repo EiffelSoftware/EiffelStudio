@@ -15,7 +15,8 @@ inherit
 	EV_PRIMITIVE
 		redefine
 			implementation,
-			create_action_sequences
+			create_action_sequences,
+			make_for_test
 		end
 
 	EV_ITEM_LIST [EV_TREE_ITEM]
@@ -27,6 +28,48 @@ inherit
 create
 	default_create,
 	make_for_test
+
+feature {EV_ANY} -- Contract support
+
+	make_for_test is
+		local
+			t_item: EV_TREE_ITEM
+			a_counter1, a_counter2, a_counter3: INTEGER
+		do
+			Precursor
+			set_background_color (create {EV_COLOR}.make_with_rgb (1, 0, 0))
+			from
+				a_counter1 := 1
+			until
+				a_counter1 > 5
+			loop
+				create t_item
+				extend (t_item)
+				t_item.set_text ("Tree item " + a_counter1.out)
+				from
+					a_counter2 := 1
+				until
+					a_counter2 > 5
+				loop
+					t_item.extend (create {EV_TREE_ITEM})
+					t_item.go_i_th (a_counter2)
+					t_item.item.set_text ("Sub tree item " + a_counter2.out)
+					from
+						a_counter3 := 1
+					until
+						a_counter3 > 5
+					loop
+						t_item.item.extend (create {EV_TREE_ITEM})
+						t_item.item.go_i_th (a_counter3)
+						t_item.item.item.set_text ("Sub tree's sub tree item " + a_counter3.out)
+						a_counter3 := a_counter3 + 1
+					end
+					a_counter2 := a_counter2 + 1
+				end
+				t_item.expand 
+				a_counter1 := a_counter1 + 1
+			end
+		end
 
 feature -- Access
 
@@ -135,6 +178,9 @@ end -- class EV_TREE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/03/02 17:47:40  king
+--| Initial make_for_test added, needs more features though
+--|
 --| Revision 1.24  2000/03/01 23:44:50  king
 --| Changed selected_item post-condition to use lists_equal
 --|

@@ -18,7 +18,8 @@ inherit
 			make,
 			interface,
 			initialize,
-			dispose
+			dispose,
+			menu_item_type
 		end
 
 create
@@ -51,6 +52,14 @@ feature {NONE} -- Initialization
 			box := C.gtk_hbox_new (False, 0)
 			C.gtk_box_pack_start (box, text_label, True, True, 0)
 			C.gtk_box_pack_start (box, pixmap_box, True, True, 0)
+		end
+		
+		
+feature {EV_MENU_IMP} -- Implementation
+
+	menu_item_type: INTEGER is
+		once
+			Result := Separator_type
 		end
 
 feature {EV_MENU_ITEM_LIST_IMP} -- Implementation

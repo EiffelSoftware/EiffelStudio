@@ -40,7 +40,7 @@ feature -- Access
 			check
 				imp_not_void: imp /= Void
 			end
-			Result := imp_to_int (imp)
+			Result := attempt (imp.interface)
 			check
 				Result_not_void: Result /= Void
 			end

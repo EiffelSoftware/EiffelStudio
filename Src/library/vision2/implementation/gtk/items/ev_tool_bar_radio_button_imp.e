@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 					a_peers.forth
 				end
 				if select_actions_internal /= Void then
-					select_actions_internal.call ([])
+					select_actions_internal.call (empty_tuple)
 				end
 			end
 

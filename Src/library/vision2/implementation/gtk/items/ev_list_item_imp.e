@@ -137,14 +137,16 @@ feature -- Element change
 			-- Set current button text to `txt'.
 		local
 			combo_par: EV_COMBO_BOX_IMP
+			a_text: ANY
 		do
 			Precursor (txt)
+			a_text := txt.to_c
 			-- the gtk part if the parent is a combo_box
 			combo_par ?= parent_imp
 			if (combo_par /= Void) then
 				C.gtk_combo_set_item_string (
 					combo_par.c_object,
-					c_object, eiffel_to_c (txt)
+					c_object, $a_text
 				)
 			end
 		end

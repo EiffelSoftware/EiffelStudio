@@ -57,7 +57,7 @@ feature {EV_WINDOW_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	insert_menu_item (an_item_imp: EV_ITEM_IMP; pos: INTEGER) is
+	insert_menu_item (an_item_imp: EV_MENU_ITEM_IMP; pos: INTEGER) is
 			-- Generic menu item insertion.
 		do
 			an_item_imp.set_item_parent_imp (Current)

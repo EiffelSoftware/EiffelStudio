@@ -113,6 +113,16 @@ feature -- Element change
 			C.gtk_label_set_text (text_label, NULL)
 			C.gtk_widget_hide (text_label)
 		end
+		
+feature {EV_MENU_ITEM_LIST_IMP} -- Assignment optimization
+
+	Radio_type, Check_type, Separator_type, Item_type, Menu_type: INTEGER is Unique
+	
+	menu_item_type: INTEGER is
+			-- 
+		do
+			Result := Item_type
+		end
 
 feature {EV_ANY_I} -- Implementation
 
@@ -194,7 +204,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 			C.gtk_menu_item_deselect (c_object)
 			if select_actions_internal /= Void then
-				select_actions_internal.call ([])
+				select_actions_internal.call (empty_tuple)
 			end
 		end
 		

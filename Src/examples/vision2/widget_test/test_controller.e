@@ -76,16 +76,6 @@ feature -- Status setting
 				-- Build tests corresponding to `test_widget_type'.
 			retrieve_texts (test_widget_type)
 			
-				-- Insert first entry in `class_texts' to `text_control'
-			if not class_texts.is_empty then
-				class_texts.start
-				class_text_output.set_text (class_texts.item_for_iteration)
-				class_texts.start
-				build_interface
-			else
-				hide_interface
-			end
-			build_tests
 			
 		end
 		
@@ -115,7 +105,7 @@ feature {NONE} -- Implementation
 		do
 			wipe_out
 			extend (test_notebook)
-			disable_item_expand (test_notebook)
+			--disable_item_expand (test_notebook)
 			test_notebook.position_tabs_bottom
 		end
 
@@ -135,7 +125,6 @@ feature {NONE} -- Implementation
 			-- contained in `class_names'.
 		local
 			common_test: COMMON_TEST
-			container: EV_CONTAINER
 			temp: BOOLEAN
 			test_scrollable_area: EV_SCROLLABLE_AREA
 			temp_h_box: EV_HORIZONTAL_BOX
@@ -170,7 +159,6 @@ feature {NONE} -- Implementation
 				create temp_frame
 				temp_h_box.extend (temp_frame)
 				temp_frame.extend (test_scrollable_area)
-				temp_h_box.disable_item_expand (temp_frame)
 				test_notebook.extend (temp_h_box)
 				
 				test_notebook.set_item_text (temp_h_box, test_name_from_class (class_names.item))
@@ -239,6 +227,15 @@ feature {NONE} -- Implementation
 	retrieve_texts (a_type: STRING) is
 			-- Retrieve all test class files, and
 			-- store them in `class_texts'.
+		do
+			application.idle_actions.extend (agent real_load_texts (a_type))
+				-- We defer this so that it is executed on the idle actions of EV_APPLICATION.
+				-- This speeds up the appearence of the type change to a user, as they are not
+				-- waiting for the file to load before being able to interact with the interface.
+		end
+		
+	real_load_texts (a_type: STRING) is
+			-- Actually perform the loading of the file.
 		local
 			directory: DIRECTORY
 			directory_name: DIRECTORY_NAME
@@ -246,6 +243,7 @@ feature {NONE} -- Implementation
 			filenames: ARRAYED_LIST [STRING]
 			current_file_name:  STRING
 		do
+			application.idle_actions.prune (application.idle_actions.first)
 			create directory_name.make_from_string (".")
 			directory_name.extend ("tests")
 			directory_string := a_type.substring (4, a_type.count)
@@ -260,12 +258,28 @@ feature {NONE} -- Implementation
 			loop
 				current_file_name := filenames.item
 					-- 5 is an arbitary value to ensure that we ignore "." and ".." files.
+					-- No valid test will have a name that is shorter than 5 characters.
 				if current_file_name.count > 5 then 
 					store_text (current_file_name, directory)
 				end
 				filenames.forth
 			end
+				-- Construct each test, and add to `test_notebook'.
+			build_tests
+			
+				-- Insert first entry in `class_texts' to `text_control'
+			if not class_names.is_empty then
+				class_names.start
+				class_text_output.set_text (class_texts.item (class_names.item))
+				--class_texts.start
+				--class_text_output.set_text (class_texts.item_for_iteration)
+				--class_texts.start
+				build_interface
+			else
+				hide_interface
+			end
 		end
+		
 		
 	class_texts: HASH_TABLE [STRING, STRING]
 		-- All texts of classes associated with each class filename.

@@ -358,7 +358,7 @@ feature {NONE} -- Cluster display and saving
 					loop
 						create l_item.make_with_text (incl.item.file__name)
 						l_item.select_actions.extend (
-							(include_list.text_field)~set_text(incl.item.file__name))
+							agent (include_list.text_field).set_text(incl.item.file__name))
 						include_list.list.extend (l_item)
 						incl.forth
 					end
@@ -373,7 +373,7 @@ feature {NONE} -- Cluster display and saving
 					loop
 						create l_item.make_with_text (excl.item.file__name)
 						l_item.select_actions.extend (
-							(exclude_list.text_field)~set_text(excl.item.file__name))
+							agent (exclude_list.text_field).set_text(excl.item.file__name))
 						exclude_list.list.extend (l_item)
 						excl.forth
 					end
@@ -388,7 +388,7 @@ feature {NONE} -- Cluster display and saving
 					loop
 						create l_item.make_with_text (visib.item.class_name)
 						l_item.select_actions.extend (
-							(visible_list.text_field)~set_text(visib.item.class_name))
+							agent (visible_list.text_field).set_text(visib.item.class_name))
 						visible_list.list.extend (l_item)
 						visib.forth
 					end
@@ -771,11 +771,11 @@ feature {NONE} -- Initialization
 			hbox.set_padding (5)
 			hbox.extend (create {EV_CELL})
 
-			create button.make_with_text_and_action ("Add", ~add_cluster)
+			create button.make_with_text_and_action ("Add", agent add_cluster)
 			hbox.extend (button)
 			hbox.disable_item_expand (button)
 
-			create button.make_with_text_and_action ("Remove", ~delete_cluster)
+			create button.make_with_text_and_action ("Remove", agent delete_cluster)
 			hbox.extend (button)
 			hbox.disable_item_expand (button)
 			
@@ -822,14 +822,14 @@ feature {NONE} -- Initialization
 	
 			create hbox
 			override_cluster_check := new_check_button (hbox, "override", False)
-			override_cluster_check.select_actions.extend (~select_current_for_override)
+			override_cluster_check.select_actions.extend (agent select_current_for_override)
 
 			hbox.extend (create {EV_CELL})
 			library_check := new_check_button (hbox, "library", False)
-			library_check.select_actions.extend (~select_for_library)
+			library_check.select_actions.extend (agent select_for_library)
 			hbox.extend (create {EV_CELL})
 			all_check := new_check_button (hbox, "all", False)
-			all_check.select_actions.extend (~select_for_all)
+			all_check.select_actions.extend (agent select_for_all)
 			
 			vbox.extend (hbox)
 			vbox.disable_item_expand (hbox)
@@ -881,10 +881,10 @@ feature {NONE} -- Initialization
 -- 			create type
 -- 			type.disable_edit
 -- 			create l_item.make_with_text ("Default")
--- 			l_item.select_actions.extend (~fill_default_options)
+-- 			l_item.select_actions.extend (agent fill_default_options)
 -- 			type.extend (l_item)
 -- 			create l_item.make_with_text ("Optional")
--- 			l_item.select_actions.extend (~fill_optional_options)
+-- 			l_item.select_actions.extend (agent fill_optional_options)
 -- 			type.extend (l_item)
 -- 			hbox.extend (type)
 -- 			
@@ -904,7 +904,7 @@ feature {NONE} -- Initialization
 				-- Set up exclusive between `override_default_assertions' and other
 				-- assertion checks.
 			assertions_list.do_all (agent {EV_CHECK_BUTTON}.disable_sensitive)
-			override_default_assertions.select_actions.extend (~list_desactivation_action
+			override_default_assertions.select_actions.extend (agent list_desactivation_action
 				(override_default_assertions, assertions_list))
 
 			create vbox
@@ -916,7 +916,7 @@ feature {NONE} -- Initialization
 			override_default_trace := new_check_button (trace_box, "override trace", False)
 			trace_check := new_check_button (trace_box, "trace", False)
 			trace_check.disable_sensitive
-			override_default_trace.select_actions.extend (~desactivation_action
+			override_default_trace.select_actions.extend (agent desactivation_action
 				(override_default_trace, trace_check))
 			vbox.extend (trace_box)
 
@@ -927,7 +927,7 @@ feature {NONE} -- Initialization
 			override_default_profile := new_check_button (profile_box, "override profile", False)
 			profile_check := new_check_button (profile_box, "profile", False)
 			profile_check.disable_sensitive
-			override_default_profile.select_actions.extend (~desactivation_action
+			override_default_profile.select_actions.extend (agent desactivation_action
 				(override_default_profile, profile_check))
 			if Has_profiler then
 				vbox.extend (profile_box)
@@ -1213,8 +1213,8 @@ feature {NONE} -- Cluster addition implementation
 		do
 			create Result.make_with_text (cl_name)
 			Result.set_pixmap (Pixmaps.Icon_cluster_symbol @ 1)
-			Result.select_actions.extend (~display_cluster (Result))
-			Result.deselect_actions.extend (~store_cluster (Result))
+			Result.select_actions.extend (agent display_cluster (Result))
+			Result.deselect_actions.extend (agent store_cluster (Result))
 		end
 
 feature {NONE} -- List filling

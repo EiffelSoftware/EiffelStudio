@@ -67,7 +67,7 @@ feature -- Measurement
 	frozen count, frozen capacity: INTEGER is
 			-- Count of the special area
 		do
-			Result := sp_count ($Current)
+			Result := feature {ISE_RUNTIME}.sp_count ($Current)
 		end
 
 feature -- Status report
@@ -186,12 +186,6 @@ feature -- Removal
 		end
 
 feature {NONE} -- Implementation
-
-	frozen sp_count (sp_obj: POINTER): INTEGER is
-			-- Count of the special object
-		external
-			"C use %"eif_plug.h%""
-		end
 
 	frozen spclearall (p: POINTER) is
 			-- Reset all items to default value.

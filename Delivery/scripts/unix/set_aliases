@@ -189,7 +189,7 @@ if [ ! -d F_code ]; then
 	CANCEL
 fi
 cd F_code
-finish_freezing -silent >> $INSTALL_LOG
+$INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/finish_freezing -silent >> $INSTALL_LOG
 if [ ! -f $1 ]; then
 	remtrace Couldnt generate $1
 	CANCEL
@@ -204,7 +204,7 @@ fff ()
 {
 if [ -d EIFGEN/F_code ]; then
 cd EIFGEN/F_code
-finish_freezing -silent >> $INSTALL_LOG
+$INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/finish_freezing -silent >> $INSTALL_LOG
 cd ../..
 fi
 }
@@ -213,14 +213,14 @@ wff ()
 {
 if [ -d EIFGEN/W_code ]; then
 cd EIFGEN/W_code
-finish_freezing -silent
+$INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/finish_freezing -silent >> $INSTALL_LOG
 cd ../..
 fi
 }
 # Finalize at the Eiffel level only
 finalize ()
 {
-ec -batch -finalize -ace $* >> $INSTALL_LOG
+$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -batch -finalize -ace $* >>$INSTALL_LOG
 }
 # Move up the generated finalized exe (its name is the parameter) and delete the compiled files
 cleanup_eiffel ()

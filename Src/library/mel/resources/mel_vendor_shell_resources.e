@@ -190,7 +190,7 @@ feature -- Implementation
 	MWM_DECOR_ALL: INTEGER is
 			-- Core constant value
 		external
-			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER"
+			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
 		alias
 			"MWM_DECOR_ALL"
 		end;
@@ -198,7 +198,7 @@ feature -- Implementation
 	MWM_DECOR_BORDER: INTEGER is
 			-- Core constant value
 		external
-			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER"
+			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
 		alias
 			"MWM_DECOR_BORDER"
 		end;
@@ -206,7 +206,7 @@ feature -- Implementation
 	MWM_DECOR_RESIZEH: INTEGER is
 			-- Core constant value
 		external
-			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER"
+			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
 		alias
 			"MWM_DECOR_RESIZEH"
 		end;
@@ -214,7 +214,7 @@ feature -- Implementation
 	MWM_DECOR_TITLE: INTEGER is
 			-- Core constant value
 		external
-			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER"
+			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
 		alias
 			"MWM_DECOR_TITLE"
 		end;
@@ -222,7 +222,7 @@ feature -- Implementation
 	MWM_DECOR_MENU: INTEGER is
 			-- Core constant value
 		external
-			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER"
+			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
 		alias
 			"MWM_DECOR_MENU"
 		end;
@@ -230,7 +230,7 @@ feature -- Implementation
 	MWM_DECOR_MINIMIZE: INTEGER is
 			-- Core constant value
 		external
-			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER"
+			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
 		alias
 			"MWM_DECOR_MINIMIZE"
 		end;
@@ -238,7 +238,7 @@ feature -- Implementation
 	MWM_DECOR_MAXIMIZE: INTEGER is
 			-- Core constant value
 		external
-			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER"
+			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
 		alias
 			"MWM_DECOR_MAXIMIZE"
 		end;
@@ -246,7 +246,7 @@ feature -- Implementation
 	MWM_FUNC_ALL: INTEGER is
 			-- Core constant value
 		external
-			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER"
+			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
 		alias
 			"MWM_FUNC_ALL"
 		end;
@@ -254,7 +254,7 @@ feature -- Implementation
 	MWM_FUNC_RESIZE: INTEGER is
 			-- Core constant value
 		external
-			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER"
+			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
 		alias
 			"MWM_FUNC_RESIZE"
 		end;
@@ -262,7 +262,7 @@ feature -- Implementation
 	MWM_FUNC_MOVE: INTEGER is
 			-- Core constant value
 		external
-			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER"
+			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
 		alias
 			"MWM_FUNC_MOVE"
 		end;
@@ -270,7 +270,7 @@ feature -- Implementation
 	MWM_FUNC_MINIMIZE: INTEGER is
 			-- Core constant value
 		external
-			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER"
+			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
 		alias
 			"MWM_FUNC_MINIMIZE"
 		end;
@@ -278,7 +278,7 @@ feature -- Implementation
 	MWM_FUNC_MAXIMIZE: INTEGER is
 			-- Core constant value
 		external
-			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER"
+			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
 		alias
 			"MWM_FUNC_MAXIMIZE"
 		end;
@@ -286,7 +286,7 @@ feature -- Implementation
 	MWM_FUNC_CLOSE: INTEGER is
 			-- Core constant value
 		external
-			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER"
+			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
 		alias
 			"MWM_FUNC_CLOSE"
 		end;
@@ -294,7 +294,7 @@ feature -- Implementation
 	MWM_INPUT_APPLICATION_MODAL: INTEGER is
 			-- Core constant value
 		external
-			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER"
+			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
 		alias
 			"MWM_INPUT_APPLICATION_MODAL"
 		end;
@@ -302,7 +302,7 @@ feature -- Implementation
 	MWM_INPUT_SYSTEM_MODAL: INTEGER is
 			-- Core constant value
 		external
-			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER"
+			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
 		alias
 			"MWM_INPUT_SYSTEM_MODAL"
 		end;

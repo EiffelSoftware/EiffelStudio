@@ -49,28 +49,23 @@ feature -- Access
 
 feature {CLASS_TYPE_AS} -- Actual class type
 
-	partial_actual_type (gen: ARRAY [TYPE_A]; is_ref: BOOLEAN; is_exp: BOOLEAN; is_sep: BOOLEAN): CL_TYPE_A is
+	partial_actual_type (gen: ARRAY [TYPE_A]; is_exp: BOOLEAN; is_sep: BOOLEAN): CL_TYPE_A is
 			-- Actual type of `current depending on the context in which it is declared
 			-- in CLASS_TYPE_AS. That is to say, it could have generics `gen' but not
-			-- be a generic class. Or it could be a reference even though it is an
-			-- expanded class. It simplifies creation of `CL_TYPE_A' instances in
+			-- be a generic class. It simplifies creation of `CL_TYPE_A' instances in
 			-- CLASS_TYPE_AS when trying to resolve types, by using dynamic binding
 			-- rather than if statements.
 		do
 			if is_typed_pointer then
 				if gen /= Void then
-					if is_ref then
-						create {GEN_TYPE_A} Result.make (class_id, gen)
-					else
-						create {TYPED_POINTER_A} Result.make (class_id, gen)
-					end
+					create {TYPED_POINTER_A} Result.make (class_id, gen)
 				else
 					create Result.make (class_id)
 				end
-					-- Note that basic types are expanded by default.
-				Result.set_is_expanded (is_exp or not is_ref)
+					-- Basic types are expanded by default
+				Result.set_is_expanded (True)
 			else
-				Result := Precursor {CLASS_B} (gen, is_ref, is_exp, is_sep)
+				Result := Precursor {CLASS_B} (gen, is_exp, is_sep)
 			end
 		end
 

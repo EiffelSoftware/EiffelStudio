@@ -82,7 +82,9 @@ feature -- Basic operations
 				end
 				found_position := search_text.substring_index (search_string, 1)
 			else
-				found_position := found_position + caret_position
+					-- One less, as the caret position when between position1 and position2
+					-- will always be position2.
+				found_position := found_position + caret_position - 1
 			end
 			if found_position /= 0 then
 				text_control.select_region (found_position, found_position + a_string.count - 1)

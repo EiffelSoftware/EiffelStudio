@@ -20,7 +20,9 @@ inherit
 		end
 	
 	EV_BAR_ITEM
-	
+		redefine
+			implementation
+		end
 	
 feature -- Access
 
@@ -85,13 +87,13 @@ feature -- Status setting
 			implementation.set_position (pos)
 		end
 	
-	set_maximum_line_lenght (len: INTEGER) is
+	set_maximum_line_length (len: INTEGER) is
 			-- Make `len' the new number of characters on a line.
 			-- If `len' < `text.cout' then the text is truncated
 		require
 			exist: not destroyed			
 		do
-			implementation.set_maximum_line_lenght (len)
+			implementation.set_maximum_line_length (len)
 		end
 	
 	select_region (start_pos, end_pos: INTEGER) is

@@ -58,9 +58,9 @@ feature -- Status Setting
 		local
 			added: INTEGER
 		do
-			added := add_observers.Add (an_observer)
+			added := add_observers.extend (an_observer)
 		ensure
-			observer_added: add_observers.Contains (an_observer)
+			observer_added: add_observers.has (an_observer)
 		end
 
 	add_remove_observer (an_observer: SYSTEM_DELEGATE) is
@@ -72,9 +72,9 @@ feature -- Status Setting
 		local
 			added: INTEGER
 		do
-			added := remove_observers.Add (an_observer)
+			added := remove_observers.extend (an_observer)
 		ensure
-			observer_added: remove_observers.Contains (an_observer)
+			observer_added: remove_observers.has (an_observer)
 		end
 
 	add_replace_observer (an_observer: SYSTEM_DELEGATE) is
@@ -86,9 +86,9 @@ feature -- Status Setting
 		local
 			added: INTEGER
 		do
-			added := replace_observers.Add (an_observer)
+			added := replace_observers.extend (an_observer)
 		ensure
-			observer_added: replace_observers.Contains (an_observer)
+			observer_added: replace_observers.has (an_observer)
 		end
 		
 feature -- Basic Operations

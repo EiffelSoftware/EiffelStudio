@@ -259,6 +259,32 @@ feature -- Access
 		ensure
 			children_index_not_changed: old children.index = children.index
 		end
+		
+	new_copy: GB_OBJECT is
+			-- `Result' is a copy of `Current' with no link to the original.
+		local
+			xml_store: GB_XML_STORE
+			a_list: ARRAYED_LIST [GB_OBJECT]
+		do
+			create xml_store
+			xml_store.store_individual_object (Current)
+			Result := new_object (xml_store.last_stored_individual_object, True)
+					-- Modify id of `Result' so that it is not the same as that of `Current'.
+			create a_list.make (20)
+			Result.all_children_recursive (a_list)
+			Result.set_id (new_id)
+			object_handler.add_object_to_objects (Result)
+			from
+				a_list.start
+			until
+				a_list.off
+			loop
+				a_list.item.set_id (new_id)
+				object_handler.add_object_to_objects (a_list.item)
+
+				a_list.forth
+			end
+		end
 
 	new_top_level_representation: GB_OBJECT is
 			-- `Result' is a copy of `Current' with a new set of id's, representing

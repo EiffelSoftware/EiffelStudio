@@ -797,21 +797,19 @@ feature {NONE} -- Implementation, focus event
 			notebooks: ARRAY[EV_NOTEBOOK_IMP]
 			counter: INTEGER
 		do
-			focus_on_widget.put (Current)
-			execute_command (Cmd_get_focus, Void)
-			notebooks := notebook_parent
-			if notebooks /= Void then
-				from
-					counter := 1
-				until
-					counter = notebooks.count + 1
-				loop
-					--if notebooks.item (counter) /= Void then
+				focus_on_widget.put (Current)
+				execute_command (Cmd_get_focus, Void)
+				notebooks := notebook_parent
+				if notebooks /= Void then
+					from
+						counter := 1
+					until
+						counter = notebooks.count + 1
+					loop
 						notebooks.item (counter).set_ex_style (Ws_ex_controlparent)
-					--end
-					counter := counter + 1
+						counter := counter + 1
+					end
 				end
-			end
 		end
 
 	on_kill_focus is
@@ -828,9 +826,7 @@ feature {NONE} -- Implementation, focus event
 				until
 					counter = notebooks.count + 1
 				loop
-					if notebooks.item (counter) /= Void then
-						notebooks.item (counter).set_ex_style (0)
-					end
+					notebooks.item (counter).set_ex_style (0)
 					counter := counter + 1
 				end
 			end

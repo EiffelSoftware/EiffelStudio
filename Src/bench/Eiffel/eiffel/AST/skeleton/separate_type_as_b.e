@@ -9,7 +9,6 @@ indexing
 class SEPARATE_TYPE_AS_B
 
 inherit
-
 	SEPARATE_TYPE_AS
 		undefine
 			same_as, associated_eiffel_class, append_to
@@ -19,22 +18,10 @@ inherit
 		end
 
 	CLASS_TYPE_AS_B
-		rename
-			actual_type as basic_actual_type,
-			solved_type as basic_solved_type
-		undefine
-			set, dump, simple_format
-		redefine
-			class_name, generics
-		end
-
-	CLASS_TYPE_AS_B
 		undefine
 			set, dump, simple_format
 		redefine
 			actual_type, solved_type, class_name, generics
-		select
-			actual_type, solved_type
 		end
 
 feature -- Properties
@@ -59,7 +46,7 @@ feature
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): CL_TYPE_A is
 		do
-			Result := basic_solved_type (feat_table, f);
+			Result := {CLASS_TYPE_AS_B} Precursor (feat_table, f);
 			Result.set_is_separate (True);
 			record_separate_dependance (Result.associated_class);		
 		end;
@@ -67,7 +54,7 @@ feature
 	actual_type: CL_TYPE_A is
 			-- Separate actual class type
 		do
-			Result := basic_actual_type;
+			Result := {CLASS_TYPE_AS_B} Precursor
 			Result.set_is_separate (True);
 		end;
 

@@ -44,7 +44,6 @@ feature -- Basic Operation
 		do
 			Precursor
 			proceed_with_new_state(create {WIZARD_FINAL_STATE}.make(wizard_information))
-			first_window.set_size (dialog_unit_to_pixels(503).max (first_window.width), dialog_unit_to_pixels(385))
 			main_window.hide_all_floating_tools
 		end
 		

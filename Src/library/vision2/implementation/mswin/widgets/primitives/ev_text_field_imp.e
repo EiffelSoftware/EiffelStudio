@@ -108,9 +108,6 @@ feature {EV_ANY_I} -- Status report
 			-- Text of `Current'
 		do
 			Result := wel_text
-			if Result.count = 0 then
-				Result := Void
-			end
 		end
 
 feature {NONE} -- WEL Implementation

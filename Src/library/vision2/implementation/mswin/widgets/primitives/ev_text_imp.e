@@ -136,9 +136,6 @@ feature -- Access
 		do
 			Result := wel_text
 			Result.prune_all ('%R')
-			if Result.count = 0 then
-				Result := Void
-			end
 		end
 
 	set_text (a_text: STRING) is

@@ -1,5 +1,6 @@
 // EOLE_SELECT_PICTURE structure
 
+#include "eifole.h"
 #include "eif_cecil.h"
 #include "selectpicture.h"
 

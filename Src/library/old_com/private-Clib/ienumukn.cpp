@@ -8,6 +8,10 @@
 //   external_name: "$RCSfile$";
 //---------------------------------------------------------------------------
 //-- $Log$
+//-- Revision 1.4  1998/01/27 00:25:13  raphaels
+//-- Added `clone' method on enumerators.
+//-- More corrections to support Borland Compiler.
+//--
 //-- Revision 1.3  1998/01/20 23:48:00  raphaels
 //-- Removed obsolete files.
 //--
@@ -42,7 +46,7 @@ STDMETHODIMP E_IEnumUnknown::Next
 //---------------------------------------------------------------------------
 
 STDMETHODIMP E_IEnumUnknown::Skip (  ULONG celt )
-{
+{	
      return E_IEnumUnknown_Skip
                          ( GetEiffelCurrentPointer(),
                            TRUE,
@@ -210,6 +214,7 @@ extern "C" void eole2_enum_unknown_reset (EIF_POINTER ptr) {
 extern "C" EIF_POINTER eole2_enum_unknown_clone (EIF_POINTER ptr) {
 	IEnumUnknown __RPC_FAR *__RPC_FAR *ppenum;
 
+	ppenum = (IEnumUnknown __RPC_FAR *__RPC_FAR *)malloc (sizeof (IEnumUnknown __RPC_FAR *));
 	g_hrStatusCode = E_IEnumUnknown_Clone ((void *)ptr, FALSE, ppenum);
 	return (EIF_POINTER)*ppenum;
 	}

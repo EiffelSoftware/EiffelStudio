@@ -6,7 +6,7 @@ CFLAGS = -c -Ox -I$(EIFFEL4)\library\wel\spec\windows\include -I$(EIFFEL4)\bench
 .cpp.obj:
 	$(CC) $(CFLAGS) $<
 
-OBJ = Eautostr.obj Eoccstr.obj Eoleauto.obj Eolemisc.obj iclsfact.obj iconpnt.obj iconptc.obj ieconpnt.obj ienumcon.obj ienumukn.obj Ifont.obj ipersist.obj ipict.obj iprclinf.obj istorage.obj Iunknown.obj Ocxcecil.obj ocxmain.obj
+OBJ = Eautostr.obj Eoccstr.obj Eoleauto.obj Eolemisc.obj iclsfact.obj iconpnt.obj iconptc.obj ieconpnt.obj ienumcon.obj ienumukn.obj Ifont.obj ipersist.obj ipict.obj iprclinf.obj istorage.obj Iunknown.obj Ocxcecil.obj ocxmain.obj selectpicture.obj large_integer.obj safearray.obj safearraybound.obj
 
 eifole.lib: $(OBJ)
 	if exist $@ del $@

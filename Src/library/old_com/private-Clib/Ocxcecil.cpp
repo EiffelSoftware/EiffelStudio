@@ -296,18 +296,21 @@ EIF_FN_POINTER 	Ocxdisp_ConnectionPointEnumConnections;
 EIF_FN_POINTER Ocxdisp_EnumConnPointNext;
 EIF_PROC Ocxdisp_EnumConnPointSkip;
 EIF_PROC Ocxdisp_EnumConnPointReset;
+EIF_FN_POINTER Ocxdisp_EnumConnPointClone;
 
 // IEnumConnections
 
 EIF_FN_POINTER Ocxdisp_EnumConnectionsNext;
 EIF_PROC Ocxdisp_EnumConnectionsSkip;
 EIF_PROC Ocxdisp_EnumConnectionsReset;
+EIF_FN_POINTER Ocxdisp_EnumConnectionsClone;
 
 // IEnumUnknown
 
 EIF_FN_POINTER	Ocxdisp_EnumUnknownNext;
 EIF_PROC		Ocxdisp_EnumUnknownSkip;
 EIF_PROC		Ocxdisp_EnumUnknownReset;
+EIF_FN_POINTER Ocxdisp_EnumUnknownClone;
 
 // ITypeInfo
 

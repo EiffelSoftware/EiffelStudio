@@ -9,6 +9,10 @@
 //   external_name: "$RCSfile$";
 //---------------------------------------------------------------------------
 // $Log$
+// Revision 1.3  1998/01/27 00:25:09  raphaels
+// Added `clone' method on enumerators.
+// More corrections to support Borland Compiler.
+//
 // Revision 1.2  1998/01/20 00:25:55  raphaels
 // Modified sources to be compatible with Borland compiler.
 //
@@ -22,6 +26,9 @@
 //---------------------------------------------------------------------------
 
 #include "eifole.h"
+#ifdef EIF_BORLAND
+#	include "olectl.h"
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -340,7 +347,7 @@ extern "C" EIF_INTEGER eole2_get_text_color (EIF_INTEGER hWnd)
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// eole2_create_ole_font
+// eole2_create_ole_font (not used)
 //
 // Purpose:
 //
@@ -352,6 +359,8 @@ extern "C" EIF_INTEGER eole2_get_text_color (EIF_INTEGER hWnd)
 //
 //
 
+/*
+
 extern "C" EIF_POINTER eole2_create_ole_font (EIF_INTEGER hWnd) {
 
    HFONT      hfontSys;
@@ -361,7 +370,6 @@ extern "C" EIF_POINTER eole2_create_ole_font (EIF_INTEGER hWnd) {
    hFont = (HFONT)SendMessage ((HWND)hWnd, WM_GETFONT, 0, 0L);
 
    if (hFont == NULL) {
-      // no font was provided, so use the system font
       if ((hfontSys = GetStockObject (DEFAULT_GUI_FONT)) != NULL ||
          (hfontSys = GetStockObject (SYSTEM_FONT)) != NULL) {
          hFont = hfontSys;
@@ -377,7 +385,7 @@ extern "C" EIF_POINTER eole2_create_ole_font (EIF_INTEGER hWnd) {
    FONTDESC fd;
    fd.cbSizeofstruct = sizeof(FONTDESC);
 
-   fd.lpstrName = Eif2OleString (logfont.lfFaceName); // ;-)
+   fd.lpstrName = Eif2OleString (logfont.lfFaceName);
    fd.sWeight = (short)logfont.lfWeight;
    fd.sCharset = logfont.lfCharSet;
    fd.fItalic = logfont.lfItalic;
@@ -398,14 +406,13 @@ extern "C" EIF_POINTER eole2_create_ole_font (EIF_INTEGER hWnd) {
 #else
    fd.cySize.Lo = lfHeight * 720000 / ppi;
    fd.cySize.Hi = 0;
-#endif /* EIF_BORLAND */
-
-   //RELEASE(m_pOleFont); ?????
+#endif
 
    if (FAILED(OleCreateFontIndirect(&fd, IID_IFontDisp, (void**)&pOleFont)))
       return (EIF_POINTER)0;
    return (EIF_POINTER)pOleFont;
 }
+*/
 
 /////////////////////////////////////////////////////////////////////////////
 //

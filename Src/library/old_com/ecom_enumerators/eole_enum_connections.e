@@ -25,7 +25,7 @@ feature -- Element change
 		local
 			wel_string: WEL_STRING
 		do
-			!! wel_string.make (Iid_enum_connection_points)
+			!! wel_string.make (Iid_enum_connections)
 			ole_interface_ptr := ole2_create_interface_pointer ($Current, wel_string.item)
 		end
 
@@ -58,13 +58,22 @@ feature -- Message Transmission
 			ole2_enum_connections_reset (ole_interface_ptr)
 		end
 
+	ole_clone: like Current is
+			-- Create a clone of Current.
+		require
+			valid_interface: ole_interface_ptr /= default_pointer
+		do
+			!! Result.make
+			Result.attach_ole_interface_ptr (ole2_enum_connections_clone (ole_interface_ptr))
+		end
+		
 feature {EOLE_CALL_DISPATCHER} -- Callback
 
 	on_query_interface (iid: STRING): POINTER is
 			-- Query `iid' interface.
 			-- Return Void if interface is not supported.
 		do
-			if iid.is_equal (Iid_enum_connection_points) or iid.is_equal (Iid_unknown) then
+			if iid.is_equal (Iid_enum_connections) or iid.is_equal (Iid_unknown) then
 				Current.add_ref
 				Result := Current.ole_interface_ptr
 				set_last_hresult (S_ok)
@@ -96,7 +105,25 @@ feature {EOLE_CALL_DISPATCHER} -- Callback
 		do
 			set_last_hresult (E_notimpl)
 		end
+
+	on_clone: POINTER is
+			-- Create a clone of Current.
+		do
+			Result := create_new_ole_interface_ptr
+		end
 		
+feature {NONE} -- Implementation
+
+	create_new_ole_interface_ptr: POINTER is
+			-- Create a new OLE interface associated
+			-- to Current.
+		local
+			wel_string: WEL_STRING
+		do
+			!! wel_string.make (Iid_enum_unknown)
+			Result := ole2_create_interface_pointer ($Current, wel_string.item)
+		end
+				
 feature {NONE} -- Externals
 
 	ole2_enum_connections_next (ptr: POINTER; count: INTEGER): ARRAY [EOLE_CONNECTDATA] is
@@ -120,6 +147,13 @@ feature {NONE} -- Externals
 			"eole2_enum_connections_reset"
 		end
 
+	ole2_enum_connections_clone (ptr: POINTER): POINTER is
+		external
+			"C"
+		alias
+			"eole2_enum_connections_clone"
+		end
+		
 end -- class EOLE_ENUM_CONNECTIONS
 
 --|-------------------------------------------------------------------------

@@ -32,16 +32,6 @@ feature -- Access
  	ev_children: ARRAYED_LIST [EV_MENU_ITEM_IMP]
  			-- List of the children.
 
-feature -- Element change
-
-	clear_items is
-			-- Clear all the items of the list.
-		do
-			check
-				To_be_implemented: False
-			end
-		end
-
 end -- class EV_MENU_ITEM_HOLDER_IMP
 
 --|----------------------------------------------------------------

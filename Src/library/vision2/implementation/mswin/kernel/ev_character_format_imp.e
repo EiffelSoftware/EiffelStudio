@@ -245,7 +245,7 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 			elseif l_family = ff_roman then
 				Result := family_roman
 			elseif l_family = ff_swiss then
-				Result := family_sanS
+				Result := family_sans
 			elseif l_family = ff_modern then
 				if l_pitch = variable_pitch then
 					Result := family_modern
@@ -310,12 +310,16 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 		
 	fcolor: INTEGER is
 			-- foreground color RGB packed into 24 bit.
+			-- Blue is the high part of the 24bits, with each color taking 8 bytes.
+			-- Blue, Green, Red
 		do
 			Result := text_color.item
 		end
-		
+
 	bcolor: INTEGER is
 			-- background color RGB packed into 24 bit.
+			-- Blue is the high part of the 24bits, with each color taking 8 bytes.
+			-- Blue, Green, Red
 		do
 			Result := wel_background_color.item
 		end

@@ -26,7 +26,7 @@ inherit
 creation
 	make,
 	make_by_code,
-	make_by_pixmap
+	make_by_filename
 
 feature {NONE} -- Initialization
 
@@ -46,41 +46,16 @@ feature {NONE} -- Initialization
 			make_by_predefined_id (cwel_integer_to_pointer (code))
 		end
 
-	make_by_pixmap (pix: EV_PIXMAP) is
-			-- Create a cursor with `pix' as appearance
--- 		require
--- 			valid_width: pix.width <= 32
--- 			valid_height: pix.height <= 32
+
+	make_by_filename (filename: STRING) is
+			-- Create a cursor from the given file name
 		local
-			pix_imp: EV_PIXMAP_IMP
-			list, mask: ARRAY [CHARACTER]
-			i: INTEGER
-			c: CHARACTER
+			temp_filepath : FILE_NAME
 		do
--- 			pix_imp ?= pix.implementation
--- 			list := pix_imp.character_representation
--- 			c := '%/255/'
--- 			from
--- 				i := 1
--- 			until
--- 				i = list.count
--- 			loop
--- 				list.put (c, i)
--- 				i := i + 1
--- 			end
--- 
--- 			create mask.make (1, list.count)
--- 			from
--- 				i := 1
--- 			until
--- 				i = mask.count
--- 			loop
--- 				mask.put ('%U', i)
--- 				i := i + 1
--- 			end
--- 			-- Mask first, then pixmap
--- 			make_by_bitmask (0, 0, list, mask)
+			!!temp_filepath.make_from_string(filename)
+			make_by_file(temp_filepath)
 		end
+			
 
 feature -- Status report
 

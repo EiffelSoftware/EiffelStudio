@@ -313,8 +313,11 @@ feature -- Generic conformance
 		do
 			!!Result.make (0)
 
-			if use_info and then (cr_info /= Void) then
-				-- It's an ancored type 
+			if
+				use_info and then (cr_info /= Void)
+				and then not (is_expanded or is_basic)
+			then
+				-- It's an anchored type 
 				Result.append (cr_info.gen_type_string (final_mode))
 			end
 			Result.append_integer (generated_id (final_mode))
@@ -323,8 +326,11 @@ feature -- Generic conformance
 
 	make_gen_type_byte_code (ba : BYTE_ARRAY; use_info : BOOLEAN) is
 		do
-			if use_info and then (cr_info /= Void) then
-				-- It's an ancored type 
+			if
+				use_info and then (cr_info /= Void)
+				and then not (is_expanded or is_basic)
+			then
+				-- It's an anchored type 
 				cr_info.make_gen_type_byte_code (ba)
 			end
 			ba.append_short_integer (generated_id (False))

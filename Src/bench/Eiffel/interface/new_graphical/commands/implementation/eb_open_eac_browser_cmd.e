@@ -40,6 +40,7 @@ feature -- Access
 	menu_name: STRING is
 			-- Menu name identifier (empty since not in menu)
 		do
+			Result := Interface_names.m_Open_eac_browser
 		end
 
 	pixmap: ARRAY [EV_PIXMAP] is

@@ -38,8 +38,6 @@ inherit
 			selected_item as wel_selected_item,
 			height as wel_height
 		undefine
-			-- We undefine the features redefined by EV_WIDGET_IMP,
-			-- EV_PRIMITIVE_IMP and EV_TEXT_CONTAINER_IMP.
 			remove_command,
 			set_width,
 			set_height,
@@ -126,11 +124,11 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_maximum_line_length (length: INTEGER) is
-			-- Maximum number of charachters on line
+	set_text_limit (value: INTEGER) is
+			-- Make `value' the new maximal length of the text.
 		do
 			if is_editable then
-				cwin_send_message (item, Cb_limittext, length, 0)
+				cwin_send_message (item, Cb_limittext, value, 0)
 			end
 		end
 
@@ -194,13 +192,6 @@ feature -- Event : command association
 			add_command (Cmd_activate, cmd, arg)
 		end
 
-	add_change_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'cmd' to the list of commands to be executed 
-			-- when the text of the widget have changed.
-		do
-			add_command (Cmd_change, cmd, arg)
-		end
-
 feature -- Event -- removing command association
 
 	remove_selection_commands is	
@@ -218,13 +209,6 @@ feature -- Event -- removing command association
 			remove_command (Cmd_activate)
 		end
 
-	remove_change_commands is
-			-- Empty the list of commands to be executed
-			-- when the text of the widget have changed.
-		do
-			remove_command (Cmd_change)
-		end
-
 feature {NONE} -- Inapplicable
 
 	caret_position: INTEGER is
@@ -237,95 +221,6 @@ feature {NONE} -- Inapplicable
 
 	set_caret_position (a_position: INTEGER) is
 			-- Set the caret position with `position'.
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
-	set_selection (start_position, end_position: INTEGER) is
-			-- Set the selection between `start_position'
-			-- and `end_position'.
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
-	select_all is
-			-- Select all the text.
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
-	deselect_all is
-			-- Unselect the current selection.
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
-	delete_selection is
-			-- Delete the current selection.
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
-	has_selection: BOOLEAN is
-			-- Is something selected?
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
-	selection_start: INTEGER is
-			-- Index of the first character selected
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
-	selection_end: INTEGER is
-			-- Index of the last character selected
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
-	make_with_text (txt: STRING) is
-			-- Create a text area with `par' as
-			-- parent and `txt' as text.
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
-	copy_selection is
-			-- Copy the `selected_region' in the Clipboard
-			-- to paste it later.
-			-- If the `selected_region' is empty, it does
-			-- nothing.
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
-	cut_selection is
-			-- Cut the `selected_region' by erasing it from
-			-- the text and putting it in the Clipboard 
-			-- to paste it later.
-			-- If the `selectd_region' is empty, it does
-			-- nothing.
 		do
 			check
 				Inapplicable: False

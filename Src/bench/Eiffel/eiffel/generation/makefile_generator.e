@@ -68,7 +68,7 @@ feature -- Initialization
 			basket: LINKED_LIST [STRING]
 		do
 			if System.in_final_mode then
-				basket_nb := 1 + System.static_type_id_counter.current_count // Final_packet_number
+				basket_nb := 1 + System.static_type_id_counter.total_count // Final_packet_number
 				system_basket_nb := (Rout_generator.file_counter - 1) // System_packet_number + 2
 			else
 				basket_nb := 1 + System.static_type_id_counter.current_count // Packet_number

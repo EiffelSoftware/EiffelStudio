@@ -36,6 +36,7 @@
 
 #ifdef EIF_WIN32
 #include "eif_econsole.h"
+#include <winbase.h>	/* To call `ExitProcess' */
 #endif
 
 #ifdef CONCURRENT_EIFFEL
@@ -1726,7 +1727,11 @@ rt_public void esdie(int code)
 	 */
 
 	reclaim();					/* Collect all currently alive objects */
+#ifdef EIF_WIN32
+	ExitProcess (code);			/* Return to OS and forward final status */
+#else
 	exit(code);					/* Return to OS and forward final status */
+#endif
 
 	/* NOTREACHED */
 }

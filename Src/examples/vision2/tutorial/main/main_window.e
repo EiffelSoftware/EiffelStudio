@@ -34,6 +34,8 @@ feature --Access
 	case_class: CASE_CLASS
 			-- A class to include all the classes in the system.
 
+	test_wind : TEST_WINDOW
+
 feature -- Initialization
 
 	make_top_level is
@@ -61,7 +63,7 @@ feature -- Initialization
 			-- We set the status bar
 			!! sbar.make (Current)
 			!! sitem.make_with_text (sbar, "Processing...")
-			sitem.set_width (150)
+			sitem.set_width (200)
 			!! sitem.make_with_text (sbar, "Here is some information")
 			sitem.set_width (-1)
 
@@ -84,6 +86,8 @@ feature -- Initialization
 			notebook.append_page (item.text_page, "Documentation")
 			item.class_page.set_parent (notebook)
 			notebook.append_page (item.class_page, "Class text")
+			item.example_page.set_parent (notebook)
+			notebook.append_page (item.example_page, "Example text")
 			item.destroy
 			notebook.set_minimum_size (250, 250)
 		end
@@ -97,7 +101,9 @@ feature -- Menu Features
 		local
 			menu: EV_MENU
 			menu_item: EV_MENU_ITEM
+			
 			check_item: EV_CHECK_MENU_ITEM
+			radio_item: EV_RADIO_MENU_ITEM
 		do
 			!! menu.make_with_text (mbar, "Categories")
 			!! menu_item.make_with_text (menu, "Widgets")
@@ -105,9 +111,9 @@ feature -- Menu Features
 			!! menu_item.make_with_text (menu, "Properties")
 
 			!! menu.make_with_text (mbar, "View")
-			!! check_item.make_with_text (menu, "Demo")
-			!! check_item.make_with_text (menu, "Documentation")
-			!! check_item.make_with_text (menu, "Text")
+			!! radio_item.make_with_text (menu, "Demo")
+			!! radio_item.make_with_text (menu, "Documentation")
+			!! radio_item.make_with_text (menu, "Text")
 			!! check_item.make_with_text (menu, "Control Window")
 		end
 
@@ -115,9 +121,16 @@ feature -- Tree features
 
 	fill_tree is
 		local
+			-- Root tree items
 			kernel, properties, items, figures, widgets: EV_TREE_ITEM
+
+			-- Sub items for widgets node
 			primitive, container, dialog, uncommon: EV_TREE_ITEM
-			demo,gauges: EV_TREE_ITEM
+
+			-- Sub items for items node
+			-- simple, composed, separator: EV_TREE_ITEM
+			
+			demo: EV_TREE_ITEM
 		do
 			-- The main topics
 			!! figures.make_with_text (tree, "figures")
@@ -125,19 +138,27 @@ feature -- Tree features
 			!! properties.make_with_text (tree, "properties")
 			!! items.make_with_text (tree, "items")
 			!! widgets.make_with_text (tree, "widgets")
+		
 
-			-- The sub topics
+			-- The sub topics for widget root node
 			!! container.make_with_text (widgets, "containers")
 			!! primitive.make_with_text (widgets, "primitives")
 			!! dialog.make_with_text (widgets, "common dialogs")
 			!! uncommon.make_with_text (widgets, "uncommon widgets")
 
+			-- The sub topics for item root node
+			--!! simple.make_with_text (items, "EV_SIMPLE_ITEM")
+			--!! composed.make_with_text (items, "EV_COMPOSED_ITEM")
+			--!! separator.make_with_text (items, "EV_SEPARATOR_ITEM")		
 
 			-- The demos
 			!ACCELERATOR_ITEM! demo.make (kernel)
 			!CURSOR_ITEM! demo.make (kernel)
 			!TIMEOUT_ITEM! demo.make (kernel)
 
+		
+		--	!NEW_ITEM! demo.make(figures)
+			
 			!PIXEL_ITEM! demo.make (figures)
 			!SEGMENT_ITEM! demo.make (figures)
 			!STRAIGHT_LINE_ITEM! demo.make (figures)
@@ -153,13 +174,8 @@ feature -- Tree features
 			!SLICE_ITEM! demo.make (figures)
 			!TEXT_FIGURE_ITEM! demo.make (figures)
 -- Do not work
---			!PICTURE_ITEM! demo.make (figures)
-			
+--			--!PICTURE_ITEM! demo.make (figures)
 
-			!GAUGE_ITEM! gauges.make (primitive)
-			!RANGE_ITEM! demo.make (gauges)
-			!SPIN_BUTTON_ITEM! demo.make (gauges)
-			!SCROLL_BAR_ITEM! demo.make (gauges)
 			!BUTTON_ITEM! demo.make (primitive)
 			!OPTION_ITEM! demo.make (primitive)
 			!MULTI_COLUMN_LIST_ITEM! demo.make (primitive)
@@ -200,6 +216,12 @@ feature -- Tree features
 			!DIRECTORY_ITEM! demo.make (dialog)
 			!COLOR_SELECTION_ITEM! demo.make (dialog)
 			!ACCELERATOR_SELECTION_ITEM! demo.make (dialog)
+
+--	Demos for item node
+			--!MULTI_COLUMN_LIST_ROW_ITEM! items.make (composed,"MULTI_COLUMN_LIST_ROW_ITEM",test_wind)
+			--!MULTI_COLUMN_LIST_ROW_ITEM! items.make (composed)
+			--!TOOL_BAR_SEPARATOR! items.make (composed)
+			--!MENU_SEPARATOR! items.make (composed)
 		end
 
 feature -- Temp

@@ -13,7 +13,7 @@ deferred class
 	EV_FIXED_I
 	
 inherit
-	EV_INVISIBLE_CONTAINER_I
+	EV_CONTAINER_I
 	
 end -- class EV_FIXED_I
 
@@ -38,6 +38,9 @@ end -- class EV_FIXED_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/03/21 16:52:26  oconnor
+--| removed invisible container
+--|
 --| Revision 1.5  2000/02/22 18:39:43  oconnor
 --| updated copyright date and formatting
 --|

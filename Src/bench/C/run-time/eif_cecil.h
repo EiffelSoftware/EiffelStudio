@@ -61,7 +61,6 @@ typedef EIF_BIT	(*EIF_BIT_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Bi
 
 
 #define eif_create			eifcreate		/* Object creation */
-#define eif_expand			eifexp			/* Force expanded class ID */
 
 
 /* Macros returning the address of an Eiffel routine. If it fails,
@@ -270,9 +269,6 @@ RT_LNK  void eifvisex (void);          /* Enable the visible exception (in curre
 RT_LNK void eifuvisex (void);          /* Disable visible exception (in current thread) */
 RT_LNK int eifattrtype (char *attr_name, EIF_TYPE_ID cid);
 										/* Type of `attr_name' from class id `cid' */
-RT_LNK EIF_TYPE_ID eifcid(char *class_name);		     /* Get a class ID */
-RT_LNK EIF_TYPE_ID eifexp(EIF_TYPE_ID id);			/* Force expansion */
-
 RT_LNK EIF_OBJECT eifcreate(EIF_TYPE_ID cid);				/* Object creation */
 
 RT_LNK EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid);				/* Eiffel function returning ANY */

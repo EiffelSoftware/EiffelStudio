@@ -143,9 +143,9 @@ rt_private void rec_write(register char *object, int tab)
 	char *o_ref;
 	register7 char **names;				 /* Attribute names */
 	char *reference;						/* Reference attribute */
-	char *refptr;
-	union overhead *zone;
-	long i,nb_old, nb_reference;
+	/* char *refptr;*/ /* %%ss removed */
+	/* union overhead *zone;*/ /* %%ss removed */
+	long i; /* %%ss removed , nb_old, nb_reference; */
 	uint32 type, ref_flags;
 
 	dyn_type = Dtype(object);
@@ -282,7 +282,7 @@ rt_private void rec_swrite(register char *object, int tab)
 	register3 long count;		/* Element count */
 	register4 long elem_size;	/* Element size */
 	char *o_ref;
-	char *reference, *bit;
+	char *reference; /* %%ss removed , *bit; */
 	long old_count;
 	int dt_type;
 

@@ -50,7 +50,7 @@ rt_public char *argarr(int argc, char **argv)
 	 * `argv'
 	 */
 	char *array, *sp;
-	char *str;
+	/* char *str; */ /* %%ss removed */
 	int i;
 
 	/*
@@ -89,7 +89,7 @@ rt_public char *striparr(register char *curr, register int dtype, register char 
 	 */
 
 	char *array, *sp, *o_ref; 
-	char *new_obj , *new_attr;
+	char *new_obj; /* %%ss removed, *new_attr; */
 	long nbr_attr, offset, stripped_nbr;
 	struct cnode *obj_desc;
 #ifndef WORKBENCH
@@ -299,7 +299,7 @@ rt_public void chkinv (char *obj, int where)
 
 	union overhead *zone = HEADER(obj);
 	int dtype = Dtype(obj);
-	int i;
+	/* int i; */ /* %%ss removed */
 
 	if (inv_mark_table == (char *) 0)
 		if ((inv_mark_table = (char *) cmalloc (scount * sizeof(char))) == (char *) 0)
@@ -329,11 +329,10 @@ rt_private void recursive_chkinv(int dtype, char *obj, int where)
 
 	struct cnode *node = esystem + dtype;
 	int *cn_parents;
-	void (*cn_inv)();
 	int p_type;
-#ifdef WORKBENCH
-	int32 inv_body_id;			/* Invariant body id */
-#endif
+/* #ifdef WORKBENCH */
+	/* int32 inv_body_id; */ /* Invariant body id */ /* %%ss removed */
+/* #endif */
 
 	if (dtype <= 2) return;		/* ANY, GENERAL and PLATFORM do not have invariants */
 
@@ -354,9 +353,12 @@ rt_private void recursive_chkinv(int dtype, char *obj, int where)
 
 	/* Invariant check */
 #ifndef WORKBENCH
-	cn_inv = node->cn_inv;
-	if (cn_inv != (void (*)()) 0)
-		(cn_inv)(obj, where);
+	{
+		void (*cn_inv)(); /* %%ss moved from above */
+		cn_inv = node->cn_inv;
+		if (cn_inv != (void (*)()) 0)
+			(cn_inv)(obj, where);
+	}
 #else
 	{
 		uint32 body_id;
@@ -455,7 +457,7 @@ void wstdinit(char *obj, char *parent)
 
 	int dtype;						/* Dunamic type of `obj' */
 	union overhead *zone = HEADER(obj);
-	long i, nb;
+	long i; /* %%ss removed , nb; */
 	long nb_exp = 0L;
 	long nb_ref;					/* Number of references in `obj' */
 	uint32 type;
@@ -486,7 +488,7 @@ void wstdinit(char *obj, char *parent)
 		case SK_EXP:						/* Found an expanded attribute */
 			{
 			struct cnode *exp_desc;			/* Expanded object description */
-			char *OLD_IC;
+			/* char *OLD_IC; */ /* %%ss removed */
 			long offset;					/* Attribute offset */
 			int exp_dtype;					/* Expanded dynamic type */
 

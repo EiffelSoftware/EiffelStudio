@@ -186,7 +186,7 @@ rt_public int spiso(register char *target, register char *source)
 	union overhead *s_zone;				/* Source header */
 	union overhead *t_zone;				/* Target header */
 	uint32 s_flags;						/* Source flags */
-	uint32 t_flags;						/* Target flags */
+	/*uint32 t_flags;*/					/* Target flags */
 	uint32 s_size;						/* Source size */
 	uint32 t_size;						/* Target size */
 	register3 char *s_ref;

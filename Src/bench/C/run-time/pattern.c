@@ -51,7 +51,7 @@ rt_public int str_str(EIF_OBJ text, EIF_OBJ pattern, int tlen, int plen, int sta
 	 * give us protected addresses.
 	 */
 
-	int i;				/* Index of found substring */
+	/* int i;*/				/* %%ss Index of found substring */
 	char *p;			/* Returned address from quick search algorithm */
 
 	if (fuzzy < 0)		/* Invalid fuzzy parameter */

@@ -2384,8 +2384,8 @@ rt_private int exend(void)
 {
 	/* Returns true if the end of the Eiffel trace stack has been reached */
 
-	register1 struct ex_vect *item;		/* Next item pushed */
-	register2 struct stxchunk *next;	/* Next chunk */
+	/* register1 struct ex_vect *item;*/ /* Next item pushed */ /* %%ss removed */
+	/* register2 struct stxchunk *next;*/ /* Next chunk */ /* %%ss removed */
 
 	/* If we already reached the end of the stack, return immediately */
 	if (eif_trace.st_bot == eif_trace.st_top)

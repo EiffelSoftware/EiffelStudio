@@ -165,10 +165,9 @@ rt_public EIF_INTEGER eif_system (char *s)
 #ifdef __VMS
 	char * run_command;
 #endif
-
+#ifdef SIGCLD
 	Signal_t (*old_signal_hdlr)();
 
-#ifdef SIGCLD
 	old_signal_hdlr = signal (SIGCLD, SIG_IGN);
 #endif
 #ifdef EIF_WIN_31
@@ -204,12 +203,10 @@ rt_public EIF_INTEGER eif_putenv (EIF_OBJ v, EIF_OBJ k)
 			referenced in the environment and the eiffel string can
 			be garbage collected ... */
 
-	char *new_string;
-	int l1, l2;
-	char *s1;
+	/* char *s1; */ /* %%ss removed */
 
 #ifdef EIF_WIN32
-	char *key, *lower_k, *value, buf[1024];
+	char *key, *lower_k; /* %%ss removed *value, buf[1024] */
 	int appl_len, key_len;
 	char modulename [MAX_PATH];
 	HKEY hkey;
@@ -268,6 +265,9 @@ rt_public EIF_INTEGER eif_putenv (EIF_OBJ v, EIF_OBJ k)
 	free (ini);
 	return (result ? 0 : -1);  /* Non zero indicate ok - yuk */
 #else
+	char *new_string; /* %%ss moved from above */
+	int l1, l2; /* %%ss moved from above */
+
 	l1 = strlen(eif_access(k));
 	l2 = strlen(eif_access(v));
 
@@ -285,7 +285,7 @@ rt_public EIF_INTEGER eif_putenv (EIF_OBJ v, EIF_OBJ k)
 rt_public EIF_OBJ eif_getenv (EIF_OBJ k)
 {
 #ifdef EIF_WIN32
-	char *key, *lower_k, *value;
+	char *key, *lower_k; /* %%ss removed *value */
 	static char buf[1024];
 	int appl_len, key_len;
 	char modulename [MAX_PATH];

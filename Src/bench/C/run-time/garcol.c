@@ -13,6 +13,7 @@
 	executable.
 */
 
+#include "misc.h"	/* %%ss added for eif_free_dlls */
 #include "config.h"
 #include "size.h"
 #include "malloc.h"
@@ -34,6 +35,10 @@
 
 #ifdef WORKBENCH
 #include "interp.h"
+#endif
+
+#ifdef EIF_WIN32
+extern void eif_cleanup(void); /* %%ss added. In extra/win32/console/argcargv.c */
 #endif
 
 /* Algorithm used by the GC to mark the objects. Select one of the following.
@@ -756,7 +761,7 @@ rt_public void reclaim(void)
 	 */
 
 #ifdef EIF_WINDOWS
-	struct chunk *c, *cn;
+	/* struct chunk *c, *cn;*/ /* %%ss removed  since lines below are commented */
 #endif
 
 #ifdef DEBUG

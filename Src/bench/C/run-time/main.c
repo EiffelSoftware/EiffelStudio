@@ -19,6 +19,7 @@
 #include "sig.h"
 
 #ifdef WORKBENCH
+#include "wbench.h"		/* %%ss added for create_desc */
 #include "interp.h"
 #include "update.h"
 #ifdef EIF_WIN_31						/* for winit() */
@@ -105,8 +106,8 @@ rt_public unsigned TIMEOUT;     /* Time out for interprocess communications */
 
 rt_public void eif_rtinit(int argc, char **argv, char **envp)
 {
-	struct ex_vect *exvect;				/* Execution vector for main */
-	jmp_buf exenv;						/* Jump buffer for rescue */
+	/* struct ex_vect *exvect;*/ /* Execution vector for main */ /* %%ss removed */
+	/* jmp_buf exenv;*/	/* Jump buffer for rescue */ /* %%ss removed */
 #ifndef EIF_WIN_31
 	char *eif_timeout;
 #endif

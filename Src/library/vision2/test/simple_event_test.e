@@ -39,11 +39,11 @@ feature -- Access
 				(x+(w/2)).truncated_to_integer,
 				(y+(h/2)).truncated_to_integer
 			)
-			sleep (1)
+			sleep (1000)
 			s.fake_pointer_button_press (1)
-			sleep (1)
+			sleep (1000)
 			s.fake_pointer_button_release (1)
-			sleep (2)
+			sleep (2000)
 			if
 				selected and
 				pressed and
@@ -63,11 +63,11 @@ feature -- Access
 			create t
 			create b.make_with_text ("Test button")
 			b.select_actions.extend (~on_select)
-			b.pointer_button_press_actions.extend (~on_press)
-			b.pointer_button_release_actions.extend (~on_release)
+			b.pointer_button_press_actions.force_extend (~on_press)
+			b.pointer_button_release_actions.force_extend (~on_release)
 			first_window.extend (b)
-			t.actions.extend (~do_test)
-			t.set_interval (5000)
+			t.actions.extend (~do_test (b))
+			t.set_interval (10000)
 		end
 
     exit_one is

@@ -103,7 +103,7 @@ feature -- Access
 		require
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_COLUMN_I.width")
+			Result := header_item.width
 		ensure
 			Result_non_negative: Result >= 0
 		end
@@ -187,7 +187,7 @@ feature -- Element change
 			width_non_negative: a_width >= 0
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_COLUMN_I.set_width")
+			header_item.set_width (a_width)
 		ensure
 			width_set: width = a_width
 		end

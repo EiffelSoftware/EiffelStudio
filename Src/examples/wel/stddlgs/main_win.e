@@ -95,9 +95,10 @@ feature {NONE} -- Implementation
 				if print_dialog.selected then
 					printer_dc := print_dialog.dc
 					printer_dc.start_document ("WEL Print Test")
+					printer_dc.start_page
 					!! rect.make (0, 0, x_resolution, y_resolution)
-					draw (print_dialog.dc, rect)
-					printer_dc.new_frame
+					draw (printer_dc, rect)
+					printer_dc.end_page
 					printer_dc.end_document
 				else
 					printer_dc := Void

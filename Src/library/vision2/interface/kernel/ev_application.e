@@ -147,7 +147,7 @@ feature -- Event handling
 
 	--| FIXME is `destroy_actions' needed?
 
-feature {EV_WINDOW, EV_PICK_AND_DROPABLE, EV_PICK_AND_DROPABLE_I}
+feature {EV_WINDOW, EV_PICK_AND_DROPABLE, EV_ANY_I}
 		-- Implementation
 	
 	implementation: EV_APPLICATION_I
@@ -207,6 +207,9 @@ end -- class EV_APPLICATION
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/05/01 19:31:46  pichery
+--| Changed export clause for a group of features.
+--|
 --| Revision 1.26  2000/04/20 18:20:42  brendel
 --| Added note.
 --|

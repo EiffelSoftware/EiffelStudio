@@ -147,14 +147,14 @@ feature {GB_OBJECT_EDITOR} -- Implementation
 					constants_combo_box.selected_item.text.is_equal (constant.name) then
 					constants_button.disable_select
 				end
-				list_item := list_item_with_matching_text (constants_combo_box, constant.name)
-				check
-					list_item_not_void: list_item /= Void
-				end
-				constants_combo_box.prune_all (list_item)
 			end
+			list_item := list_item_with_matching_text (constants_combo_box, constant.name)
+			check
+				list_item_not_void: list_item /= Void
+			end
+			constants_combo_box.prune_all (list_item)
 		ensure
-			list_count_increased: constants_combo_box.count = old constants_combo_box.count - 1
+			list_count_decreased: constants_combo_box.count = old constants_combo_box.count - 1
 		end
 
 	constant_added (constant: GB_INTEGER_CONSTANT) is

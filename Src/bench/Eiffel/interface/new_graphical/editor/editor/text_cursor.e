@@ -1,17 +1,15 @@
 indexing
-	description: "Item of a 2-3-4 tree"
-	author: "Christophe Bonnard"
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: " Objects that represents the cursor of an %
+				  % editor window "
+	author		: "Christophe Bonnard  / Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	TEXT_CURSOR
 
 inherit
-	TREE_ITEM
-		rename
-			make as shnoggle
-		end
+	CURSOR
 
 create
 	make, make_from_string
@@ -99,12 +97,20 @@ feature -- Cursor movement
 			y_in_lines := line.index
 		end
 
-	go_up_line
+	go_up_line is
+		do
+		end
 
-	go_down_line
+	go_down_line is
+		do
+		end
 
-	go_start_line
+	go_start_line is
+		do
+		end
 
-	go_end_line
+	go_end_line is
+		do
+		end
 
 end -- class TEXT_CURSOR

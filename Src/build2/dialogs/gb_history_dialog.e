@@ -24,9 +24,6 @@ inherit
 		end
 		
 	GB_ACCESSIBLE_COMMAND_HANDLER
-		undefine
-			default_create, copy
-		end
 
 create
 	default_create

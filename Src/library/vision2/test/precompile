@@ -24,6 +24,7 @@ then
 fi
 
 # Check out base, event, the platform library and vision2.
+#cvs -d :pserver:$USER@cvs:/home/cvs co -r dev46_manu_new_base base > /dev/null 2>&1
 cvs -d :pserver:$USER@cvs:/home/cvs co base > /dev/null 2>&1
 cvs -d :pserver:$USER@cvs:/home/cvs co event > /dev/null 2>&1
 cvs -d :pserver:$USER@cvs:/home/cvs co $platform_lib > /dev/null 2>&1
@@ -53,6 +54,7 @@ echo "  exclude" >> Ace.ace
 echo "    \"mswin\";" >> Ace.ace
 echo "    \"new_figures\";" >> Ace.ace
 echo "    \"obsolete\";" >> Ace.ace
+echo "    \"components\";" >> Ace.ace
 echo "    \"test\";" >> Ace.ace
 echo "    \"release\";" >> Ace.ace
 echo "  end" >> Ace.ace
@@ -81,8 +83,8 @@ fi
 #===============================================================================
 #
 # $Log$
-# Revision 1.3  2000/03/09 22:28:57  oconnor
-# added tail of successful output
+# Revision 1.4  2000/03/17 17:13:24  oconnor
+# change to trunk of Eiffel Base
 #
 # Revision 1.2  2000/03/09 17:05:10  oconnor
 # added comments

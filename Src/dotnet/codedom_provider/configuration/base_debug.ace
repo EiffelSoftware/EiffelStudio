@@ -1,0 +1,61 @@
+system
+	"ISE.Base"
+
+root
+	"none"
+
+default
+	assertion (require)
+	assertion (ensure)
+	assertion (check)
+	assertion (loop)
+	assertion (invariant)
+	debug (no)
+	msil_generation (yes)
+	msil_clr_version ("v1.1.4322")
+	il_verifiable (yes)
+	cls_compliant (yes)
+	console_application (no)
+	msil_generation_type ("dll")
+	dotnet_naming_convention (yes)
+	use_cluster_name_as_namespace (yes)
+	use_all_cluster_name_as_namespace (no)
+	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
+	line_generation (yes)
+	title ("Eiffel Base Library")
+	description ("Basic Eiffel Classes Precompiled Library")
+	company ("Eiffel Software")
+	product ("Eiffel Base Library")
+	copyright ("(C) Eiffel Software 2001-2004")
+	trademark ("Eiffel Software")
+	version ("2.0.0.0")
+
+
+--+--------------------------------------------------------------------
+--| Eiffel CodeDOM Provider
+--| Copyright (C) 2001-2004 Eiffel Software
+--| Eiffel Software Confidential
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| http://www.eiffel.com
+--+--------------------------------------------------------------------	
+
+cluster
+	all base:		"$ISE_EIFFEL\library\base"
+		exclude
+			"table_eiffel3"; "desc"; "classic"; 
+		default
+			assertion (no)
+			assertion (require)
+		end
+
+	all base_net:		"$ISE_EIFFEL\library.net\base"
+		default
+			assertion (no)
+			assertion (require)
+		end
+
+
+end

@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 				l_assembly_location := clone (Local_assembly_path)
 			else
 					-- Look in EAC.
-				l_assembly_location := clone (l_env.Assemblies_path)
+				l_assembly_location := clone (l_env.Assemblies_path (System.clr_runtime_version))
 			end
 			l_assembly_location.extend (l_assembly_directory)
 			create dollar_path.make_from_string (l_assembly_location)
@@ -132,7 +132,7 @@ feature {NONE} -- Initialization
 				l_assembly_location := clone (Local_assembly_path)
 			else
 					-- Look in EAC.
-				l_assembly_location := clone (l_env.Assemblies_path)
+				l_assembly_location := clone (l_env.Assemblies_path (System.clr_runtime_version))
 			end
 			l_assembly_location.extend (l_assembly_directory)
 			create dollar_path.make_from_string (l_assembly_location)
@@ -302,7 +302,7 @@ feature -- Initialization
 				i > nb
 			loop
 				l_cons_assembly := l_referenced_assemblies.assemblies.item (i)
-				l_assembly_location := clone (l_env.Assemblies_path)
+				l_assembly_location := clone (l_env.Assemblies_path (System.clr_runtime_version))
 				l_assembly_location.extend (build_assembly_path (
 					l_cons_assembly.name, l_cons_assembly.version,
 					l_cons_assembly.culture, l_cons_assembly.key))

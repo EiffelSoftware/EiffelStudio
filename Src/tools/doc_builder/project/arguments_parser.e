@@ -178,20 +178,20 @@ feature -- Commands
 			l_toc: TABLE_OF_CONTENTS		
 			l_filter: DOCUMENT_FILTER
 			l_date_time: DATE_TIME
+			l_toc_files: ARRAYED_LIST [STRING]
 		do
 			generation_data.set_generating (True)
 			l_constants := Shared_constants.Application_constants								
-				
-			output_file.open_append
-			output_file.put_string ("Starting generation for project with the following options:%N")
+
+			report ("Starting generation for project with the following options:%N")
 			if file_generation then
-				output_file.put_string ("%TFile generation type: " + file_generation_type + "%N")
+				report ("%TFile generation type: " + file_generation_type + "%N")
 			end
 			if help_generation then
-				output_file.put_string ("%THelp generation type: " + help_generation_type + "%N")
+				report ("%THelp generation type: " + help_generation_type + "%N")
 			end
 			if output_filtered then
-				output_file.put_string ("%TFiltered for: " + output_filter_type + "%N")
+				report ("%TFiltered for: " + output_filter_type + "%N")
 			end
 			
 				-- Load project
@@ -255,7 +255,10 @@ feature -- Commands
 		
 					-- Generate HTML from written documentation files
 				report ("Generating HTML written documentation...")
-				create l_html_generator.make (l_toc.files (True), create {DIRECTORY_NAME}.make_from_string (l_html_directory.name))
+				report ("%N%TRetrieving recursive list of filenames of children for toc...")
+				l_toc_files := l_toc.files (True)
+				report ("complete%N")
+				create l_html_generator.make (l_toc_files, create {DIRECTORY_NAME}.make_from_string (l_html_directory.name))
 				l_html_generator.generate
 				report ("success%N")
 				
@@ -291,7 +294,7 @@ feature -- Commands
 			
 			generation_data.set_generating (False)
 			create l_date_time.make_now
-			report ("%NGeneration completed.  Review information above in case of errors.  Generation completed at: " + l_date_time.date.out + " " + l_date_time.time.out)
+			report ("%NGeneration completed.  Review information above in case of errors.  Generation completed at: " + l_date_time.date.out + " " + l_date_time.time.out + "%N")
 		end
 
 feature {NONE} -- Implementation

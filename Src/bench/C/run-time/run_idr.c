@@ -370,7 +370,7 @@ rt_public bool_t run_ulong(IDR *idrs, long unsigned int *lp, int len, int size)
 #else
 						/* rejoin the upper and lower parts */ 
 
-				*(lp + (i++)) = (lower & 0x00000000ffffffff) | 
+				*(lp + (i++)) = (((unsigned long) ntohl(value)) & 0x00000000ffffffff) | 
 								(((unsigned long) ntohl(value)) << 32);
 #endif
 			}

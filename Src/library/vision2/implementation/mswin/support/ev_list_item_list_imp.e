@@ -66,6 +66,21 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 
 feature {EV_LIST_ITEM_IMP} -- Implementation
 
+	set_pointer_style (c: EV_CURSOR) is
+			-- Assign `c' to `parent_imp' pointer style.
+		deferred
+		end
+
+	top_index: INTEGER is
+			-- Index of item at displayed at top of list.
+		deferred
+		end
+
+	item_height: INTEGER is
+			-- Height in pixels of each list item.
+		deferred
+		end
+
 	internal_copy_list is
 			-- Take an empty list and initialize all the children with
 			-- the contents of `ev_children'.
@@ -152,6 +167,10 @@ end -- class EV_LIST_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.2  2000/03/30 18:10:32  brendel
+--| Added deferred features `top_index', `item_height' and
+--| `set_pointer_style'.
+--|
 --| Revision 1.1  2000/03/30 17:31:58  brendel
 --| New class as common list ancestor for EV_LIST_IMP and EV_COMBO_BOX_IMP.
 --|

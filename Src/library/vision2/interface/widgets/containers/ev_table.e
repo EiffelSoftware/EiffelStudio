@@ -115,7 +115,7 @@ feature -- Access
 			Result := implementation.item_list
 		ensure
 			Result_not_void: Result /= Void
-			count_matches_widget_count: Result.count = widget_count
+			count_matches_widget_count: Result.count = count
 		end
 
 feature -- Status report
@@ -125,8 +125,6 @@ feature -- Status report
 		require
 			not_destroyed: not is_destroyed
 			a_column_positive: a_column >= 1
-		local
-			a_column_index: INTEGER
 		do
 			Result := implementation.columns_resizable_to (a_column)
 		end
@@ -136,8 +134,6 @@ feature -- Status report
 		require
 			not_destroyed: not is_destroyed
 			a_row_positive: a_row >= 1
-		local
-			a_row_index: INTEGER
 		do
 			Result := implementation.rows_resizable_to (a_row)
 		end
@@ -148,8 +144,6 @@ feature -- Status report
 			not_destroyed: not is_destroyed
 			a_column_positive: a_column >= 1
 			a_column_in_table: a_column <= columns
-		local
-			a_row_index: INTEGER
 		do
 			Result := implementation.column_clear (a_column)
 		end
@@ -160,8 +154,6 @@ feature -- Status report
 			not_destroyed: not is_destroyed
 			a_row_positive: a_row >= 1
 			a_row_in_table: a_row <= rows
-		local
-			a_column_index: INTEGER
 		do
 			Result := implementation.row_clear (a_row)
 		end
@@ -258,8 +250,6 @@ feature -- Status report
 			not_destroyed: not is_destroyed
 			table_wide_enough: a_column + (column_span - 1) <= columns
 			table_tall_enough: a_row + (row_span - 1) <= rows
-		local
-			a_col_ctr, a_row_ctr: INTEGER
 		do
 			Result := implementation.area_clear_excluding_widget (v, a_column, a_row, column_span, row_span)
 		end
@@ -349,9 +339,6 @@ feature -- Status settings
 			a_row_positive: a_row >= 1
 			columns_resizeable: columns_resizable_to (a_column)
 			rows_resizeable: rows_resizable_to (a_row)
-		local
-			new: ARRAY [EV_WIDGET]
-			col_index, row_index, column_max, row_max: INTEGER
 		do
 			implementation.resize (a_column, a_row)
 		ensure
@@ -457,8 +444,6 @@ feature -- Element change
 	prune (v: EV_WIDGET) is
 			-- Remove `v' if present. Do not move cursor, except if
 			-- cursor was on `v', move to right neighbor.
-		local
-			item_index: INTEGER
 		do
 			implementation.remove (v)
 		ensure
@@ -466,7 +451,7 @@ feature -- Element change
 			had_item_implies_parent_void:
 				old has (v) implies v.parent = Void
 			had_item_implies_count_decreased:
-				old has (v) implies widget_count = old widget_count - 1
+				old has (v) implies count = old count - 1
 		end
 		
 feature -- Iteration.
@@ -483,13 +468,12 @@ feature -- Iteration.
 			Result := implementation.count
 		end
 		
-		
 	full: BOOLEAN is
 			-- Is structure filled to capacity?
 		do
 			Result := implementation.full
 		end
-
+		
 	wipe_out is
 			-- Remove all items.
 		do

@@ -11,13 +11,13 @@
 */
 
 #include "eif_portable.h"	/* Must be first include (gets eif_config.h) */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <assert.h>
 
 #include "eif_project.h"
-#include "eif_config.h"
 #ifdef I_STRING
 #include <string.h>
 #else

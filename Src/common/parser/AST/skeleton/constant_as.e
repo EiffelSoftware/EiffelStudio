@@ -12,9 +12,12 @@ inherit
 			is_unique, is_constant, is_equivalent
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	make
 
-	initialize (v: like value) is
+feature {NONE} -- Initialization
+
+	make (v: like value) is
 			-- Create a new CONSTANT AST node.
 		require
 			v_not_void: v /= Void

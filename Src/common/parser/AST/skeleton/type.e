@@ -30,6 +30,12 @@ feature -- Properties
 			-- Do nothing
 		end
 
+	actual_type: TYPE_A is
+			-- 
+		do
+			
+		end
+		
 --feature -- Access
 --
 --	frozen is_deep_equal (other: TYPE_AS): BOOLEAN is

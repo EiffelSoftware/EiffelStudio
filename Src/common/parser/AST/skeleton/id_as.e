@@ -76,7 +76,7 @@ feature -- {AST_EIFFEL, AST_VISITOR} -- Output
 
 	string_value: STRING is
 		do
-			Result := clone (Current)
+			Result := twin
 		end
 
 end -- class ID_AS

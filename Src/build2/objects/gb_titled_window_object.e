@@ -13,7 +13,8 @@ inherit
 			{GB_WINDOW_SELECTOR_ITEM} output_name
 		redefine
 			object, display_object, is_full, build_display_object, build_drop_actions_for_layout_item,
-			add_new_object_wrapper, add_new_component_wrapper, can_add_child, add_child_object, accepts_child
+			add_new_object_wrapper, add_new_component_wrapper, can_add_child, add_child_object, accepts_child,
+			generate_xml, modify_from_xml
 		end
 		
 	GB_PARENT_OBJECT
@@ -271,6 +272,34 @@ feature -- Access
 				-- Now we expand the layout item.
 			if not layout_item.is_expanded then
 				layout_item.expand
+			end
+		end
+		
+feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER} -- Basic operation
+		
+	generate_xml (element: XML_ELEMENT) is
+			-- Generate an XML representation of specific attributes of `Current'
+			-- in `element'. For now, only a name needs to be stored.
+			-- (export status {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER})
+		do
+			Precursor {GB_CELL_OBJECT} (element)
+			if object_handler.root_window_object = Current then
+				add_element_containing_boolean (element, root_window_string, True)
+			end
+		end
+		
+	modify_from_xml (element: XML_ELEMENT) is
+			-- Update `Current' based on information held in `element'.
+		local
+			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
+			element_info: ELEMENT_INFORMATION
+		do
+			Precursor {GB_CELL_OBJECT} (element)
+			full_information := get_unique_full_info (element)
+			element_info := full_information @ (Root_window_string)
+				-- Note that only one window will have this setting.
+			if element_info /= Void then
+				set_as_root_window
 			end
 		end
 		

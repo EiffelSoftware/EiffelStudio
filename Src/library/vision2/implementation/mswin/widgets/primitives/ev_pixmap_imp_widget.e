@@ -182,7 +182,7 @@ feature -- Loading/Saving
 				internal_mask_bitmap.decrement_reference
 				internal_mask_bitmap := Void	
 			end
-			Precursor (file_name)
+			Precursor {EV_PIXMAP_IMP_DRAWABLE} (file_name)
 			update_display
 		end
 
@@ -192,7 +192,7 @@ feature -- Loading/Saving
 			--
 			-- Exceptions "Unable to retrieve icon information", 
 		do
-			Precursor
+			Precursor {EV_PIXMAP_IMP_DRAWABLE}
 			update_display
 		end
 
@@ -202,7 +202,7 @@ feature -- Status setting
 			-- Stretch `Current' to fit in size 
 			-- `new_width' by `new_height'.
 		do
-			Precursor (new_width, new_height)
+			Precursor {EV_PIXMAP_IMP_DRAWABLE} (new_width, new_height)
 			update_display
 		end
 
@@ -220,7 +220,7 @@ feature -- Clearing and drawing operations
 	clear is
 			-- Erase `Current' with `background_color'.
 		do
-			Precursor
+			Precursor {EV_PIXMAP_IMP_DRAWABLE}
 			update_display
 		end
 
@@ -228,7 +228,7 @@ feature -- Clearing and drawing operations
 			-- Draw rectangle with upper-left corner on (`x', `y')
 			-- with size `a_width' and `a_height' in `background_color'.
 		do
-			Precursor (x1, y1, a_width, a_height)
+			Precursor {EV_PIXMAP_IMP_DRAWABLE} (x1, y1, a_width, a_height)
 			update_display
 		end
 
@@ -244,28 +244,28 @@ feature -- Drawing operations
 	draw_point (x, y: INTEGER) is
 			-- Draw point at (`x', `y').
 		do
-			Precursor (x, y)
+			Precursor {EV_PIXMAP_IMP_DRAWABLE} (x, y)
 			update_display
 		end
 
 	draw_text (x, y: INTEGER; a_text: STRING) is
 			-- Draw `a_text' at (`x', `y') using `font'.
 		do
-			Precursor (x, y, a_text)
+			Precursor {EV_PIXMAP_IMP_DRAWABLE} (x, y, a_text)
 			update_display
 		end
 
 	draw_segment (x1, y1, x2, y2: INTEGER) is
 			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
 		do
-			Precursor (x1, y1, x2, y2)
+			Precursor {EV_PIXMAP_IMP_DRAWABLE} (x1, y1, x2, y2)
 			update_display
 		end
 
 	draw_straight_line (x1, y1, x2, y2: INTEGER) is
 			-- Draw infinite straight line through (`x1','y1') and (`x2','y2').
 		do
-			Precursor (x1, y1, x2, y2)
+			Precursor {EV_PIXMAP_IMP_DRAWABLE} (x1, y1, x2, y2)
 			update_display
 		end
 
@@ -280,7 +280,7 @@ feature -- Drawing operations
 			-- + `an_aperture'.
 			-- Angles are measured in radians.
 		do
-			Precursor (
+			Precursor {EV_PIXMAP_IMP_DRAWABLE} (
 				x, y, 
 				a_vertical_radius, a_horizontal_radius, 
 				a_start_angle, 
@@ -292,7 +292,7 @@ feature -- Drawing operations
 	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP) is
 			-- Draw `a_pixmap' with upper-left corner on (`x', `y').
 		do
-			Precursor (x, y, a_pixmap)
+			Precursor {EV_PIXMAP_IMP_DRAWABLE} (x, y, a_pixmap)
 			update_display
 		end
 
@@ -300,7 +300,7 @@ feature -- Drawing operations
 			-- Draw rectangle with upper-left corner on (`x', `y')
 			-- with size `a_width' and `a_height'.
 		do
-			Precursor (x, y, a_width, a_height)
+			Precursor {EV_PIXMAP_IMP_DRAWABLE} (x, y, a_width, a_height)
 			update_display
 		end
 
@@ -308,7 +308,7 @@ feature -- Drawing operations
 			-- Draw an ellipse centered on (`x', `y') with
 			-- size `a_vertical_radius' and `a_horizontal_radius'.
 		do
-			Precursor (x, y, a_vertical_radius, a_horizontal_radius)
+			Precursor {EV_PIXMAP_IMP_DRAWABLE} (x, y, a_vertical_radius, a_horizontal_radius)
 			update_display
 		end
 
@@ -317,7 +317,7 @@ feature -- Drawing operations
 			-- `points'. If `is_closed' draw line segment between first
 			-- and last point in `points'.
 		do
-			Precursor (points, is_closed)
+			Precursor {EV_PIXMAP_IMP_DRAWABLE} (points, is_closed)
 			update_display
 		end
 
@@ -333,7 +333,7 @@ feature -- Drawing operations
 			-- The arc is then closed by two segments through (`x', `y').
 			-- Angles are measured in radians.
 		do
-			Precursor (
+			Precursor {EV_PIXMAP_IMP_DRAWABLE} (
 				x, 
 				y, 
 				a_vertical_radius, 
@@ -350,7 +350,7 @@ feature -- Filling operations
 			-- Draw rectangle with upper-left corner on (`x', `y')
 			-- with size `a_width' and `a_height'. Fill with `foreground_color'.
 		do
-			Precursor (x, y, a_width, a_height)
+			Precursor {EV_PIXMAP_IMP_DRAWABLE} (x, y, a_width, a_height)
 			update_display
 		end 
 
@@ -359,7 +359,7 @@ feature -- Filling operations
 			-- size `a_vertical_radius' and `a_horizontal_radius'.
 			-- Fill with `background_color'.
 		do
-			Precursor (
+			Precursor {EV_PIXMAP_IMP_DRAWABLE} (
 				x, y, 
 				a_vertical_radius, a_horizontal_radius
 				)
@@ -370,7 +370,7 @@ feature -- Filling operations
 			-- Draw line segments between subsequent points in `points'.
 			-- Fill all enclosed area's with `foreground_color'.
 		do
-			Precursor (points)
+			Precursor {EV_PIXMAP_IMP_DRAWABLE} (points)
 		end
 
 	fill_pie_slice (
@@ -385,7 +385,7 @@ feature -- Filling operations
 			-- The arc is then closed by two segments through (`x', `y').
 			-- Angles are measured in radians.
 		do
-			Precursor (
+			Precursor {EV_PIXMAP_IMP_DRAWABLE} (
 				x, y, 
 				a_vertical_radius, a_horizontal_radius, 
 				a_start_angle, 

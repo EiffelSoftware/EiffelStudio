@@ -73,22 +73,7 @@ feature -- Access
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.parent_tree
-		end
-
-	find_item_recursively_by_data (v: ANY): EV_TREE_NODE is
-			-- An item at any level in tree that has `data'.
-		require
-			not_destroyed: not is_destroyed
-		do
-			Result := implementation.find_item_recursively_by_data (v)
-		end
-		
-	has_recursively (an_item: like item): BOOLEAN is
-			-- Does `Current' contain `an_item' at any level?
-		do
-			Result := implementation.has_recursively (an_item)
-		end
-		
+		end		
 
 feature -- Status report
 
@@ -100,15 +85,6 @@ feature -- Status report
 			if parent_tree /= Void then
 				Result := implementation.is_expanded	
 			end
-		end
-		
-feature -- Basic operation
-
-	recursive_do_all (action: PROCEDURE [ANY, TUPLE [EV_TREE_NODE]]) is
-			-- Apply `action' to every item.
-			-- Semantics not guaranteed if `action' changes the structure;
-		do
-			implementation.recursive_do_all (action)
 		end
 
 feature -- Status setting
@@ -162,7 +138,6 @@ feature -- Obsolete
 			not_destroyed: not is_destroyed
 		do
 		end
-		
 
 feature -- Contract support
 
@@ -173,7 +148,7 @@ feature -- Contract support
 		deferred
 		end
 		
-feature {EV_TREE_NODE}
+feature {EV_TREE_NODE} -- Contract support
 
 	is_parent_recursive (a_list: EV_TREE_NODE): BOOLEAN is
 			-- Is `a_list' `parent' or recursively `parent' of `parent'?

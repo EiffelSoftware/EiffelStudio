@@ -83,6 +83,7 @@ inherit
 			set_column_title,
 			on_lvn_columnclick,
 			on_lvn_itemchanged,
+			on_size,
 			default_style,
 			process_message
 		end
@@ -755,6 +756,13 @@ feature {NONE} -- WEL Implementation
 			process_tab_key (virtual_key)
 		end
 
+	on_size (size_type, a_height, a_width: INTEGER) is
+			-- List resized.
+		do
+			Precursor (size_type, a_height, a_width)
+			interface.resize_actions.call ([screen_x, screen_y, a_width, a_height])
+		end
+
 feature {EV_PND_TRANSPORTER_IMP}
 
 	child_y (child: EV_MULTI_COLUMN_LIST_ROW_IMP): INTEGER is
@@ -845,6 +853,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.47  2000/03/07 18:31:37  rogers
+--| Redefined on_size from WEL_LIST_VIEW, so the resize_actions can be called.
+--|
 --| Revision 1.46  2000/03/06 23:29:30  rogers
 --| Corrected formatting in set_columns, interface.select_actions and interface.deselect_Actions have been connected. Removed commented out make which is redundent.
 --|

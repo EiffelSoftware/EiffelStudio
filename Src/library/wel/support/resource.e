@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 		do
 			load_item (main_args.current_instance.item,
 				cwin_make_int_resource (id))
-                ensure
+		ensure
 			not_shared: not shared
 		end
 

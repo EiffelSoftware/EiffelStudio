@@ -76,14 +76,14 @@ feature -- Status report
 			-- Width of window frame for a window
 			-- that can be resized
 		do
-			Result :=  cwin_get_system_metrics (Sm_cxframe)
+			Result := cwin_get_system_metrics (Sm_cxframe)
 		end
 
 	window_frame_height: INTEGER is
 			-- Height of window frame for a window
 			-- that can be resized
 		do
-			Result :=  cwin_get_system_metrics (Sm_cyframe)
+			Result := cwin_get_system_metrics (Sm_cyframe)
 		end
 
 	full_screen_client_area_width: INTEGER is

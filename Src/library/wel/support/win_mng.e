@@ -40,7 +40,7 @@ feature -- Basic operations
 			windows.remove (window.item)
 		ensure
 			unregistered: not registered (window)
-                end
+		end
 
 feature -- Status report
 

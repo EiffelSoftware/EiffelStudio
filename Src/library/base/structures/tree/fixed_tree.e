@@ -92,7 +92,8 @@ class FIXED_TREE [G] inherit
 		end
 
 create
-	make
+	make,
+	make_filled
 
 feature -- Initialization
 
@@ -107,6 +108,19 @@ feature -- Initialization
 		ensure
 			node_item: item = v
 			node_arity: arity = 0
+		end
+
+	make_filled (n: INTEGER; v: G) is
+			-- Create node with `n' void children and item `v'.
+		require
+			valid_number_of_children: n >= 0
+		do
+			arity := n
+			fl_make_filled (n)
+			replace (v)
+		ensure
+			node_item: item = v
+			node_arity: arity = n
 		end
 
 feature -- Access
@@ -393,7 +407,7 @@ feature {FIXED_TREE} -- Implementation
 	cut_off_node is
 			-- Cut off all links from current node.
 		do
-			make (capacity, item)
+			array_make (1, capacity)
 		end
 
 feature {NONE} -- Implementation

@@ -62,7 +62,8 @@ feature {NONE} -- Initialization
 				-- tree construction
 
 			create tree.make (panels_box)
-			tree.set_minimum_size (100, 300)
+			tree.set_minimum_size (150, 300)
+--			tree.set_expand (False)
 			create leaves.make (1, panel_list.number_of_tree_items)
 			from
 				ijk := 1
@@ -104,16 +105,16 @@ feature {NONE} -- Initialization
 			exit_button.set_vertical_resize (False)
 
 				-- commands linking with buttons
-			ok_button.add_click_command (ok_cmd, void)
-			apply_button.add_click_command (apply_cmd, void)
-			exit_button.add_click_command (close_cmd, void)
+			ok_button.add_click_command (ok_cmd, Void)
+			apply_button.add_click_command (apply_cmd, Void)
+			exit_button.add_click_command (close_cmd, Void)
 
 		end
 
 	init_commands is
 			-- Initialize basic commands
 		do
-			precursor
+			Precursor
 			create ok_cmd.make (Current)
 			create apply_cmd.make (Current)
 			create save_cmd.make (Current)
@@ -132,7 +133,7 @@ feature {EB_RAISE_ENTRY_PANEL_COMMAND}
 			if last_selected /= a_panel then
 				valid := True
 					--| Assume valid is true:
-					--| a) if `last_selected' is void => valid is true => page switch
+					--| a) if `last_selected' is Void => valid is true => page switch
 					--| b) if `last_selected' is not Void => valid then reflects `last_selected.is_valid'
 
 				if last_selected /= Void then

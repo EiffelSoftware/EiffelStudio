@@ -9,9 +9,6 @@ class
 inherit
  	INHERITANCE_CLAUSE
  
- create
- 	make
-
 feature -- Access
 
 	eiffel_keyword: STRING is

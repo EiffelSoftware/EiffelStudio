@@ -47,14 +47,12 @@ feature {NONE}
 		do
 			if main_panel.project_initialized then
                 if armed then
-					if main_panel.history_window.realized then
-						main_panel.history_window.show
-					else
-						main_panel.history_window.realize
+					if not main_panel.history_window.is_popped_up then
+						main_panel.history_window.popup
 					end
                 else
-					if main_panel.history_window.realized then
-						main_panel.history_window.hide
+					if main_panel.history_window.is_popped_up then
+						main_panel.history_window.popdown
 					end
                 end
 			end

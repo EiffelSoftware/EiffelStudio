@@ -3,28 +3,13 @@ class GROUP_STORER
 
 inherit
 
-	GROUP_SHARED
-		export
-			{NONE} all
-		end;
-
-	STORAGE_INFO
-		export
-			{NONE} all
-		end;
-
-	STORABLE_HDL
-		export
-			{NONE} all
-		end
-	
-
-
+	SHARED_STORAGE_INFO;
+	STORABLE_HDL;
+	SHARED_CONTEXT
 	
 feature {GROUP_STORER}
 
 	stored_data: LINKED_LIST [GROUP];
-
 	
 feature 
 
@@ -32,7 +17,7 @@ feature
 
 	store (file_name: STRING) is
 		do
-			stored_data := group_list;
+			stored_data := Shared_group_list;
 			store_by_name (file_name);
 			stored_data := Void
 		end;

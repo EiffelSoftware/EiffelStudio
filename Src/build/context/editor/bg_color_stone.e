@@ -49,7 +49,7 @@ feature {NONE}
 		do
 			color_name := editor.edited_context.bg_color_name;
 			new_context.set_bg_color_name (color_name);
-			context_catalog.update_editors (new_context, color_form_number);
+			context_catalog.update_editors (new_context, Context_const.color_form_nbr);
 		end;
 end
 

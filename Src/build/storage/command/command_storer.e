@@ -4,21 +4,9 @@ class COMMAND_STORER
 
 inherit
 
-	STORABLE_HDL
-		export
-			{NONE} all
-		end;
-	WINDOWS
-		export
-			{NONE} all
-		end;
-	STORAGE_INFO
-		export
-			{NONE} all
-		end
-
-
-
+	STORABLE_HDL;
+	WINDOWS;
+	SHARED_STORAGE_INFO;
 	
 feature {COMMAND_STORER}
 

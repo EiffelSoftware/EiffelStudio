@@ -4,14 +4,11 @@ class TRANSLATION
 inherit
 
 	EVENT
-		export
-			{ANY} all
 		redefine
 			label, original_stone
 		end;
 	EV_PIXMAPS;
 	EVENT_LABELS;
-	TRANSL_SHARED;
 	REMOVABLE;
 	WINDOWS
 

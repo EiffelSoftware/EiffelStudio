@@ -3,23 +3,18 @@ deferred class CONTEXT_CMD
 
 inherit
 
-	WINDOWS
-		export
-			{NONE} all
-		end;
+	CONSTANTS;
+	WINDOWS;
 	UNDOABLE
 		redefine
 			is_template
 		end
 
-
-
-	
 feature 
 
 	is_template: BOOLEAN is true;
 
-feature {NONE}
+feature 
 
 	context: CONTEXT;
 
@@ -86,7 +81,7 @@ feature
 			context_undo;
 			editor := context_catalog.editor (context, associated_form);
 			if editor /= Void then
-				editor.current_form.reset_form
+				editor.current_form.reset
 			end;
 		end;
 

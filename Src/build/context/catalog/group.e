@@ -6,37 +6,22 @@ inherit
 	EB_TABLE [S_CONTEXT]
 		rename
 			make as table_create
-		export
-			{NONE} all
 		end;
-
 	WINDOWS
-		export
-			{NONE} all
 		undefine
 			is_equal, copy, consistent, setup
 		end;
-
-	GROUP_SHARED
-		export
-			{NONE} all
+	SHARED_CONTEXT
 		undefine
 			is_equal, copy, consistent, setup
 		end;
-
-	APP_SHARED
-		export
-			{NONE} all
+	SHARED_APPLICATION
 		undefine
 			is_equal, copy, consistent, setup
 		end;
-
-
-	STORAGE_INFO
+	SHARED_STORAGE_INFO
 		rename
 			clear_all as storage_clear_all
-		export
-			{NONE} all
 		undefine
 			is_equal, copy, consistent, setup
 		end;
@@ -75,7 +60,8 @@ feature
 			if is_bulletin then
 				a_context := context_list.first;
 				!!container.make (a_context);
-				container.save_group_attributes (a_context.width, a_context.height, a_context.arity);
+				container.save_group_attributes 
+						(a_context.width, a_context.height, a_context.arity);
 				context_list.wipe_out;
 				from
 					a_context.child_start;
@@ -124,8 +110,8 @@ feature
 				context_list.forth
 			end;
 			trim;
-			group_list.finish;
-			group_list.put_right (Current);
+			Shared_group_list.finish;
+			Shared_group_list.put_right (Current);
 	
 				-- Creation of the first instance
 				-- to replace the grouped contexts
@@ -278,20 +264,22 @@ feature {NONE}
 
 	generated_name: STRING is
 		local
-			found: BOOLEAN
+			found: BOOLEAN;
+			e_name: STRING
 		do
 			local_namer.next;
 			Result := local_namer.Value;
 			from
-				group_list.start
+				Shared_group_list.start
 			until
-				group_list.after or found
+				Shared_group_list.after or found
 			loop
-				if Result.is_equal (group_list.item.entity_name) then
+				e_name := Shared_group_list.item.entity_name;
+				if Result.is_equal (e_name) then
 					found := True;
 					Result := generated_name
 				else
-					group_list.forth;
+					Shared_group_list.forth;
 				end;
 			end;
 		end;
@@ -303,22 +291,26 @@ feature
 		local
 			found: BOOLEAN;
 			different: BOOLEAN;
+			e_name: STRING
 		do
 			from
-				group_list.start
+				Shared_group_list.start
 			until
-				group_list.after or found
+				Shared_group_list.after or found
 			loop
-				if entity_name.is_equal (group_list.item.entity_name) then
+				e_name := Shared_group_list.item.entity_name;
+				if entity_name.is_equal (e_name) then
 					found := True;
-					if not (eiffel_text = Void) and then
-						eiffel_text.is_equal (group_list.item.eiffel_text) then
-							Result := group_list.item.identifier
+					if eiffel_text /= Void and then
+						eiffel_text.is_equal 
+							(Shared_group_list.item.eiffel_text) 
+					then
+						Result := Shared_group_list.item.identifier
 					else
 						different := True;
 					end;
 				end;
-				group_list.forth;
+				Shared_group_list.forth;
 			end;
 			if different then
 				eiffel_text := Void;
@@ -328,8 +320,8 @@ feature
 				integer_generator.next;
 				identifier := integer_generator.value;
 				Result := identifier;
-				group_list.finish;
-				group_list.put_right (Current);
+				Shared_group_list.finish;
+				Shared_group_list.put_right (Current);
 			end;
 		end;
 
@@ -391,6 +383,7 @@ feature
             loop
                 a_context := create_context_tree (group_c);
                 a_context.retrieve_oui_widget;
+				a_context.widget.manage;
                 identifier := identifier + 1;
                 group_c.add_group_child (a_context);
             end;
@@ -433,16 +426,16 @@ feature
 			used: BOOLEAN;
 		do
 			from
-				group_list.start
+				Shared_group_list.start
 			until
-				group_list.after or used
+				Shared_group_list.after or used
 			loop
-				if group_list.item /= Current then
-					used := group_list.item.use_group (identifier);
+				if Shared_group_list.item /= Current then
+					used := Shared_group_list.item.use_group (identifier);
 				end;
-				group_list.forth
+				Shared_group_list.forth
 			end;
-			Result := (counter = 0) and not used
+			Result := (counter = 0) and  then not used;
 		end;
 
 	

@@ -9,8 +9,6 @@ inherit
 			{ANY} execute
 		undefine
 			continue_after_popdown
-		redefine
-			make_backup
 		end;
 
 creation
@@ -36,10 +34,5 @@ feature {NONE}
 				caller.continue_after_error;
 			end;
 		end;
-
-	make_backup is
-		do
-		end;
-
 
 end

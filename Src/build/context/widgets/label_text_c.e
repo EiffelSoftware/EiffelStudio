@@ -5,7 +5,6 @@ inherit
 
 	PRIMITIVE_C
 		rename
-			option_list as old_list,
 			copy_attributes as old_copy_attributes,
 			reset_modified_flags as old_reset_modified_flags
 		redefine
@@ -16,14 +15,13 @@ inherit
 	PRIMITIVE_C
 		redefine
 			reset_modified_flags, copy_attributes, 
-			option_list,
 			is_fontable, context_initialization, 
 			set_visual_name 
 		select
-			option_list, copy_attributes, reset_modified_flags
+			copy_attributes, reset_modified_flags
 		end
 
-feature {NONE}
+feature
 
 	reset_modified_flags is
 		do
@@ -53,22 +51,6 @@ feature {NONE}
 			Result := True
 		end;
  
-	option_list: ARRAY [INTEGER] is
-		local
-			i: INTEGER
-		do
-			Result := old_list;
-			i := Result.upper+2;
-			Result.force (label_text_form_number, Result.upper+1);
-			from
-			until
-				i > Result.upper
-			loop
-				Result.put (-1, i);
-				i := i + 1
-			end
-		end;
-
 feature
 
 	resize_policy_disabled: BOOLEAN;
@@ -150,6 +132,14 @@ feature {NONE}
     widget_set_left_alignment is
 		deferred
         end;
+
+	add_to_option_list (opt_list: ARRAY [INTEGER]) is
+		do
+			opt_list.put (Context_const.geometry_form_nbr,
+						Context_const.Geometry_format_nbr);
+			opt_list.put (Context_const.label_text_att_form_nbr,
+						Context_const.Attribute_format_nbr);
+		end;
 
 feature {CONTEXT}
 

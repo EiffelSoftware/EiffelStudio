@@ -3,10 +3,7 @@ class COLOR_SET
 
 inherit
 
-	UNIX_ENV
-		export
-			{NONE} all
-		end;
+	CONSTANTS;
 	FORM
 		rename
 			make as form_create
@@ -37,9 +34,8 @@ feature {NONE}
 			temp: STRING;
 			top_widget, left_widget: EB_COLOR;
 		do
-			temp := clone (EiffelBuild_directory);
-			temp.append ("/Bitmaps/color_names");
-			!!file_name.make (0);
+			temp := Environment.color_names_file;
+			!! file_name.make (0);
 			file_name.from_string (temp);
 			if file_name.exists and file_name.readable then
 				from

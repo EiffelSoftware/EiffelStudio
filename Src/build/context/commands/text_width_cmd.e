@@ -6,27 +6,18 @@ inherit
 	CONTEXT_CMD
 		redefine
 			context
-		
-		end;
-	EDITOR_FORMS
-		export
-			{NONE} all
-		end;
-	COMMAND_NAMES
-		rename
-			T_ext_width_cmd_name as c_name
-		export
-			{NONE} all
 		end
 
-
-
-	
 feature {NONE}
 
 	associated_form: INTEGER is
 		do
-			Result := text_form_number
+			Result := Context_const.text_att_form_nbr
+		end;
+
+	c_name: STRING is
+		do
+			Result := Context_const.text_width_cmd_name
 		end;
 
 	context: TEXT_C;

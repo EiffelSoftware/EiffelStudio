@@ -32,20 +32,13 @@ creation
 
 	make
 
-	
 feature 
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
-		local
-			temp: STRING;
-			temp1: ANY		
 		do
 			bulletin_d_create (a_name, a_parent);
+			forbid_recompute_size;
 			!!widget_coordinates.make;
-			temp := "resizePolicy";
-			temp1 := temp.to_c;
-			eb_bulletin_set_int (implementation.screen_object, 0, $temp1);
-
 				-- Callback
 			set_action ("<Configure>", Current, Current);
 		end;
@@ -183,15 +176,6 @@ feature
 				old_height := height
 			end;
 		end;
-
-feature {NONE} -- External features
-
-	eb_bulletin_set_int (a_w: POINTER; a_val: INTEGER; a_res: POINTER)  is
-		external
-			"C"
-		alias
-			"set_int"
-		end; -- eb_bulletin_set_int
 
 end
 

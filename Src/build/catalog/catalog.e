@@ -3,20 +3,13 @@ deferred class CATALOG [T->STONE]
 
 inherit
 
+	CONSTANTS;
 	FORM
 		rename
 			make as form_create
-		export
-			{NONE} all
 		end;
-	COMMAND
-		export
-			{NONE} all
-		end;
+	COMMAND;
 	WIDGET_NAMES
-		export
-			{NONE} all
-		end
 
 feature 
 

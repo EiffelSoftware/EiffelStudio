@@ -1,4 +1,4 @@
-
+-- Submenu type
 
 class MENU_PULL_C 
 
@@ -31,9 +31,6 @@ inherit
 			create_context, full_name
 		end
 
-
-
-	
 feature 
 
 	context_type: CONTEXT_TYPE is
@@ -76,7 +73,7 @@ feature
 
 	create_oui_widget (a_parent: MENU) is
 		do
-			!!widget.make (entity_name, a_parent);
+			!!widget.make_unmanaged (entity_name, a_parent);
 		end;
 
 	widget: MENU_PULL;
@@ -105,11 +102,6 @@ feature
 	
 feature {NONE}
 
-	editor_form_cell: CELL [INTEGER] is
-		once
-			!!Result.put (0)
-		end;
-
 	namer: NAMER is
 		once
 			!!Result.make ("Submenu");
@@ -125,7 +117,7 @@ feature
 			menu_c: MENU_C
 		do
 			menu_c ?= a_parent;
-			if not (menu_c = Void) then
+			if menu_c /= Void then
 				Result := old_create_context (menu_c);
 				shake_parent (menu_c);
 			end;

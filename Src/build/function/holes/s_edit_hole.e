@@ -7,7 +7,6 @@ inherit
 		rename
 			make as func_edit_make,
 			identifier as oui_identifier,
-			button as source,
 			make_visible as make_icon_visible
 		export
 			{ANY} all
@@ -15,12 +14,10 @@ inherit
 			stone, function_editor, 
 			process_stone, compatible
 		end;
-
 	FUNC_EDIT_HOLE
 		rename
 			make as func_edit_make,
-			identifier as oui_identifier,
-			button as source
+			identifier as oui_identifier
 		export
 			{ANY} all
 		redefine
@@ -30,14 +27,10 @@ inherit
 		select
 			make_visible
 		end;
-
-
-
 	PIXMAPS
 		export
 			{NONE} all
 		end;
-
 	STATE_STONE
 		redefine
 			transportable
@@ -60,7 +53,6 @@ feature
 			set_symbol (State_pixmap)
 		end;
 
-
 	make_visible (a_parent: COMPOSITE) is
 		do
 			make_icon_visible (a_parent);
@@ -69,10 +61,15 @@ feature
 			
 	original_stone: STATE;
 
+	source: WIDGET is
+		do
+			Result := Current
+		end;
+
 	transportable: BOOLEAN is
 		do
 			Result := original_stone /= Void;
-	end;
+		end;
 
 	identifier: INTEGER is
 		do

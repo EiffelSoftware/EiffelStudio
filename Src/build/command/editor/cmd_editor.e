@@ -23,16 +23,14 @@ inherit
 		select
 			realize, make
 		end
-
 	WIDGET_NAMES
 	COMMAND
-	WINDOWS
-
+	WINDOWS;
+	CONSTANTS;
 	ERROR_POPUPER
 		undefine
 			continue_after_popdown
 		end
-
 	WARN_POPUPER
 		undefine
 			continue_after_popdown
@@ -328,7 +326,7 @@ feature {NONE}
 			-- (currently only context stones)
 			-- may be dropped
 
-	label_name: TEXT_FIELD
+	label_name: LABEL_TEXT_FIELD
 			-- Text field used to specify
 			-- labels of currently edited
 			-- command

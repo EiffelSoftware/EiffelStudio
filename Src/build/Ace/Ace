@@ -2,92 +2,101 @@ system ebuild
 
 root
 
-	ebuild (root_cluster): "make"
+	ebuild_motif (root_cluster): "make"
 
 default
 
-	assertion (no);
+	assertion (require);
+	exception_stack_managed(yes);
+
 cluster
 
-	root_cluster: 	"$EIFFELSRC/Main";
+	root_cluster:	   "$BUILD/Main";
+	kernel:			 "$BUILD/../library/base/kernel";
+	support:			"$BUILD/../library/base/support";
+	access:			 "$BUILD/../library/base/structures/access";
+	cursors:			"$BUILD/../library/base/structures/cursors";
+	dispenser:		  "$BUILD/../library/base/structures/dispenser";
+	list:			   "$BUILD/../library/base/structures/list";
+	sort:			   "$BUILD/../library/base/structures/sort";
+	storage:			"$BUILD/../library/base/structures/storage";
+	traversing:		 "$BUILD/../library/base/structures/traversing";
+	table:			  "$BUILD/../library/base/structures/table";
 
-	kernel:			"$EIFFELBASE/kernel";
-	support:		"$EIFFELBASE/support";
-	access:			"$EIFFELBASE/structures/access";
-	cursors:		"$EIFFELBASE/structures/cursors";
-	dispenser:		"$EIFFELBASE/structures/dispenser";
-	list:			"$EIFFELBASE/structures/list";
-	sort:			"$EIFFELBASE/structures/sort";
-	storage:		"$EIFFELBASE/structures/storage";
-	traversing:		"$EIFFELBASE/structures/traversing";
-
-	abs_kernel:		"$EV3/oui/kernel";
-	abs_commands:	"$EV3/oui/commands";
-	abs_widgets:	"$EV3/oui/widgets";
-	tools:			"$EV3/tools";
-	x:				"$EV3/implement/X";
-	toolkit:		"$EV3/implement/toolkit";
-	motif_res:		"$EV3/implement/motif/Resources";
-	motif_widgets:	"$EV3/implement/motif/widgets";
-	figures: 		"$EV3/figures";
-
-	c1:				"$EIFFELSRC/Catalog";
-	c2:				"$EIFFELSRC/Catalog/Commands";
-	c3:				"$EIFFELSRC/Utility";
-	c4:				"$EIFFELSRC/Constants";
-	c5:				"$EIFFELSRC/Icon";
-	c6:				"$EIFFELSRC/Structures";
-	c7:				"$EIFFELSRC/Windows";
-	c8:				"$EIFFELSRC/WindowMgr";
-
-	c9:				"$EIFFELSRC/Storage/Command";
-	c10:			"$EIFFELSRC/Storage/Context";
-	c11:			"$EIFFELSRC/Storage/Control";
-	c12:			"$EIFFELSRC/Storage/Function";
-	c13:			"$EIFFELSRC/Storage/Application";
+	graph_kernel:	   "$BUILD/../library/vision/oui/kernel";
+	graph_commands:	 "$BUILD/../library/vision/oui/commands";
+	graph_oui_widgets:  "$BUILD/../library/vision/oui/widgets";
+	tools:			  "$BUILD/../library/vision/tools";
+	graph_X:			"$BUILD/../library/vision/implement/X";
+	graph_toolkit:	  "$BUILD/../library/vision/implement/toolkit";
+	graph_resources:	"$BUILD/../library/vision/implement/motif/Resources";
+	graph_widgets:	  "$BUILD/../library/vision/implement/motif/widgets";
+	graph_figures:	  "$BUILD/../library/vision/figures";
 
 
-	c14:			"$EIFFELSRC/Generation";
-
-	c15:			"$EIFFELSRC/Transport";
-
-	c16:			"$EIFFELSRC/Context/Commands";
-	c17:			"$EIFFELSRC/Context/Editor";
-	c18:			"$EIFFELSRC/Context/Catalog";
-	c20:			"$EIFFELSRC/Context/Widgets";
-	c21:			"$EIFFELSRC/Context/NewWidgets";
-	c22:			"$EIFFELSRC/Context/Tree";
+	catalog:			"$BUILD/Catalog";
+	catalog_commands:   "$BUILD/Catalog/Commands";
+	utility:			"$BUILD/Utility";
+	constants:		  "$BUILD/Constants";
+	icon:			   "$BUILD/Icon";
+	structures:		 "$BUILD/Structures";
+	windows:			"$BUILD/Windows";
+	windowMgr:		  "$BUILD/WindowMgr";
 
 
-	c23:			"$EIFFELSRC/Application/Control";
-	c24:			"$EIFFELSRC/Application/Commands";
+	storage_command:	"$BUILD/Storage/Command";
+	storage_context:	"$BUILD/Storage/Context";
+	storage_control:	"$BUILD/Storage/Control";
+	storage_function:   "$BUILD/Storage/Function";
+	storage_app:		"$BUILD/Storage/Application";
 
 
-	c25:			"$EIFFELSRC/Event";
+	generation:		 "$BUILD/Generation";
+
+	transport_common:	"$BUILD/Transport/common";
+	transport_specific:	"$BUILD/Transport/$TOOLKIT";
+
+	context_commands:   "$BUILD/Context/Commands";
+	context_editor:	 "$BUILD/Context/Editor";
+	context_catalog:	"$BUILD/Context/Catalog";
+	context_widgets:	"$BUILD/Context/Widgets";
+	context_newWidgets: "$BUILD/Context/NewWidgets";
+	context_tree:	   "$BUILD/Context/Tree";
 
 
-	c26:			"$EIFFELSRC/Function/Commands";
-	c27:			"$EIFFELSRC/Function/Editor";
-	c28:			"$EIFFELSRC/Function/Functions";
-	c29:			"$EIFFELSRC/Function/Holes";
-	c30:			"$EIFFELSRC/Function/Stones";
-	c31:			"$EIFFELSRC/Function/IconBox";
+	app_control:		"$BUILD/Application/Control";
+	app_commands:	   "$BUILD/Application/Commands";
+
+	event:			  "$BUILD/Event";
+
+	function_commands:  "$BUILD/Function/Commands";
+	function_editor:	"$BUILD/Function/Editor";
+	function_functions: "$BUILD/Function/Functions";
+	function_holes:	 "$BUILD/Function/Holes";
+	function_stones:	"$BUILD/Function/Stones";
+	function_iconbox:   "$BUILD/Function/IconBox";
 
 
-	c32:			"$EIFFELSRC/Command/Catalog";
-	c33:			"$EIFFELSRC/Command/Commands";
-	c34:			"$EIFFELSRC/Command/Editor";
-	c35:			"$EIFFELSRC/Command/Predef";
-	c36:			"$EIFFELSRC/Command/Stones";
-	c37:			"$EIFFELSRC/Command/Instance";
+	command_catalog:	"$BUILD/Command/Catalog";
+	command_commands:   "$BUILD/Command/Commands";
+	command_editor:	 "$BUILD/Command/Editor";
+	command_predef:	 "$BUILD/Command/Predef";
+	command_stone:	  "$BUILD/Command/Stones";
+	command_instance:   "$BUILD/Command/Instance";
+
+
+	liman_common:	   "$BUILD/liman/common";
+	liman_build:		"$BUILD/liman/build";
 
 external
 
 	object:
-		"$(VISION)/figures/Clib/xwindow.a";
-		"$(VISION)/implement/X/Clib/Xt.a";
-		"$(VISION)/implement/motif/Clib/motif_Clib.a";
-    	"$(EIFFELSRC)/Clib/Motif/efb.a";
-		"-lXm -lXt -lX11";
+		"$(EIFFEL3)/library/vision/spec/$(PLATFORM)/lib/Xt.a";
+		"$(EIFFEL3)/library/vision/spec/$(PLATFORM)/lib/motif_Clib.a";
+		"$(BUILD)/Clib/Motif/efb.a";
+		"$(BENCH)/C/liman/client/libliman.a";
+		"$(BENCH)/C/liman/shared/libshared.a";
+		"$(BENCH)/C/idrs/libidr.a";
+		"-lXm -lXt -lX11"
 
 end

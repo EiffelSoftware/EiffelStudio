@@ -29,14 +29,14 @@ feature {NONE}
 			text: TEXT_FIELD;
 		do
 			!!group_hole.make (Current);
-			!!scrolled_w.make (S_crolledwindow, Current);
-			!!icon_box.make (I_con_box, scrolled_w);
+			!!scrolled_w.make (Widget_names.scrolledwindow, Current);
+			!!icon_box.make (Widget_names.icon_box, scrolled_w);
 
-			!!group_name.make (G_roup_name, Current);
+			!!group_name.make (Context_const.group_name, Current);
 
-			!!text.make (T_extfield, Current);
+			!!text.make (Widget_names.textfield, Current);
 			text.set_size (60, 33);
-			text.set_action ("<Key>Return", group_hole, text);
+			text.add_activate_action (group_hole, text);
 
 			attach_top (scrolled_w, 1);
 			attach_left (scrolled_w, 1);

@@ -25,21 +25,7 @@ feature
 			!!Result.make (B_ase, eb_screen)
 		end
 
-	
 feature
-
-	eb_cursor_type: INTEGER is
-			-- Cursor type of the EiffelBuild session
-		once
-			Result := eb_cursor.Top_left_arrow
-		end
-
-	eb_cursor: SCREEN_CURSOR is
-			-- Cursor of the EiffelBuild session
-		once
-			!!Result.make
-			Result.set_type (Result.Top_left_arrow)
-		end
 
 	context_catalog: CONTEXT_CATALOG  is
 		once
@@ -48,15 +34,14 @@ feature
 
 	init_windowing is
 		do
-			if (init_toolkit = Void) then end
 			if (toolkit = Void) then end
-			if (eb_cursor = Void) then end
 		end
 
 	init_project is
 		do
-			if (main_panel = Void) then end
-			main_panel.realize
+			if (main_panel = Void) then end;
+			init_session;
+			main_panel.realize;
 		end
 
 	init_session is
@@ -85,7 +70,7 @@ feature
 
 	history_window: HISTORY_WND is
 		once
-			!!Result.make (H_istorywindow, eb_screen)
+			!!Result.make (H_istorywindow, main_panel.base)
 		end
 
 	tree: CONTEXT_TREE is

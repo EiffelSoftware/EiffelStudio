@@ -24,8 +24,6 @@ inherit
 			make_visible as make_icon_visible,
 			identifier as oui_identifier,
 			make as icon_stone_make
-		export
-			{ANY} deselect, select_icon
 		undefine
 			init_toolkit, stone_cursor
 		redefine
@@ -105,9 +103,6 @@ feature
 		do
 			old_set_original_stone (arg);
 			original_stone.set_icon_stone (Current);
-			if not instantiated 
-			then select_icon
-			else deselect end;
 		end;
 
 -- *************

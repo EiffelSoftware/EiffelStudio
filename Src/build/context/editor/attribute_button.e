@@ -1,7 +1,12 @@
 class ATTRIBUTE_BUTTON
 
 inherit
+
 	FORMAT_BUTTON
+		redefine
+			set_form_number,
+			valid_form_nbr
+		end
 
 creation
 
@@ -9,16 +14,34 @@ creation
 
 feature 
 
-	symb_pixmap: PIXMAP is
+	symbol: PIXMAP is
 		once
 			Result := symbol_file_content ("attrib.symb")
 		end
 
-	make (owner: ROW_COLUMN editor: CONTEXT_EDITOR) is
+	form_number: INTEGER;
+
+	focus_string: STRING is "";
+
+	set_form_number (nbr: INTEGER) is
 		do
-			owner_form := owner
-			owner_editor := editor
-			this_form := perm_wind_form_number
-			make_visible (owner)
-		end
+			form_number := nbr
+		end;
+
+	valid_form_nbr (nbr: INTEGER): BOOLEAN is
+		do
+			Result := 
+				nbr = Context_const.label_text_att_form_nbr or else
+				nbr = Context_const.perm_wind_att_form_nbr or else
+				nbr = Context_const.separator_att_form_nbr or else
+				nbr = Context_const.text_att_form_nbr or else
+				nbr = Context_const.scale_att_form_nbr or else
+				nbr = Context_const.pict_color_att_form_nbr or else
+				nbr = Context_const.arrow_b_att_form_nbr or else
+				nbr = Context_const.scroll_l_att_form_nbr or else
+				nbr = Context_const.text_field_att_form_nbr or else
+				nbr = Context_const.temp_wind_att_form_nbr or else
+				nbr = Context_const.drawing_box_att_form_nbr
+		end;
+
 end

@@ -4,12 +4,9 @@ class APP_CUT_LABEL
 inherit 
 
 	APP_COMMAND;
-
 	APP_CMD_NAMES
 		rename
 			App_cut_label_cmd_name as c_name
-		export
-			{NONE} all
 		end
 
 feature 
@@ -64,7 +61,7 @@ feature {NONE}
 			-- Remove cmd_label from selected_figure transitions.
 		local
 			temp_trans: HASH_TABLE [GRAPH_ELEMENT, STRING];
-			graph: APP_GRAPH;
+			graph:APP_GRAPH
 		do
 			graph := application_editor.transitions.graph;
 			temp_trans := graph.item (source_element);

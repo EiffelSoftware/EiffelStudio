@@ -3,41 +3,45 @@ class SCROLL_L_FORM
 
 inherit
 
-	CONTEXT_CMDS
-		export
-			{NONE} all
-		end;
 	EDITOR_FORM
 		redefine
 			context
 		end;
-	SCROLL_L_CONST
-
 
 creation
 
 	make
 
-	
 feature {NONE}
 
 	visible_item_count: INTEGER_TEXT_FIELD;
 	
-feature 
-
-	make (a_parent: CONTEXT_EDITOR) is
+	context: SCROLL_LIST_C is
 		do
-			a_parent.form_list.put (Current, scroll_l_form_number);
+			Result ?= editor.edited_context
 		end;
 
-	make_visible (a_parent: CONTEXT_EDITOR) is
+	form_number: INTEGER is
+		do
+			Result := Context_const.scroll_l_att_form_nbr
+		end;
+
+	List_count_cmd: LIST_COUNT_CMD is
+		once
+			!!Result
+		end;
+
+feature
+
+	make_visible (a_parent: COMPOSITE) is
 		local
 			visible_label: LABEL_G;
 		do
-			initialize (Scroll_list_form_name, a_parent);
+			initialize (Context_const.scroll_list_form_name, a_parent);
 
-			!!visible_label.make (V_isible_items, Current);
-			!!visible_item_count.make (T_extfield, Current, list_count_cmd, a_parent);
+			!!visible_label.make (Context_const.visible_items_name, Current);
+			!!visible_item_count.make (Widget_names.textfield, 
+					Current, List_count_cmd, editor);
 			visible_item_count.set_width (50);
 
 			attach_left (visible_label, 10);
@@ -46,11 +50,10 @@ feature
 
 			attach_top (visible_label, 10);
 			attach_top (visible_item_count, 10);
+			show_current
 		end;
 
 feature {NONE}
-
-	context: SCROLL_LIST_C;
 
 	reset is
 		do

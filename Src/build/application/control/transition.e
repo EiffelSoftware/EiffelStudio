@@ -3,11 +3,8 @@ class TRANSITION
 
 inherit
 	
-	APP_SHARED
-		export
-			{ANY} all
-		end
-	
+	SHARED_APPLICATION
+
 feature 
 
 	init_element (element: GRAPH_ELEMENT) is

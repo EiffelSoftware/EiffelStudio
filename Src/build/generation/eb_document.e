@@ -3,27 +3,17 @@ class EB_DOCUMENT
 
 inherit
 
-	UNIX_ENV
-		export
-			{NONE} all
-		end;
-
+	CONSTANTS;
 	WINDOWS;
-
 	ERROR_POPUPER
-
-
-
 	
+
 feature {NONE}
 
-	Template_directory: STRING is
-		once
-			Result := clone (Generated_directory);
-			Result.append ("/.templates");
-		end;
+	document_name: STRING;
 
-	
+	directory_name: STRING;
+
 feature 
 
 	set_document_name (s: STRING) is
@@ -32,25 +22,11 @@ feature
 			document_name.to_lower
 		end;
 
-	
-feature {NONE}
-
-	document_name: STRING;
-
-	
-feature 
-
 	set_directory_name (s: STRING) is
 		do
 			directory_name := clone(s);
 		end;
 
-	
-feature {NONE}
-
-	directory_name: STRING;
-
-	
 feature 
 
 	update (s: STRING) is
@@ -63,12 +39,12 @@ feature
 			unix_command: STRING;
 			msg: STRING;
 		do
-			template_file_name := clone (Template_directory);
-			template_file_name.append ("/");
+			template_file_name := clone (Environment.templates_directory);
+			template_file_name.extend (Environment.directory_separator);
 			template_file_name.append (document_name);
 
 			class_file_name := clone (directory_name);
-			class_file_name.append ("/");
+			class_file_name.extend (Environment.directory_separator);
 			class_file_name.append (document_name);
 			class_file_name.append (".e");
 
@@ -79,16 +55,18 @@ feature
 			file.close;
 
 			!!unix_command.make (0);
-			unix_command.append (EiffelBuild_bin);
-			unix_command.append ("/bin/merge1 ");
+			unix_command.append (Environment.eiffelBuild_bin);
+			unix_command.extend (Environment.directory_separator);
+			unix_command.append (Environment.merge1_file_name);
+			unix_command.extend (' ');
 			unix_command.append (class_file_name);
-			unix_command.append (" ");
+			unix_command.extend (' ');
 			unix_command.append (template_file_name);
-			unix_command.append (" ");
+			unix_command.extend (' ');
 			unix_command.append (new_template_file_name);
 
-			system (unix_command);
-			if return_code < 0 then
+			Environment.system (unix_command);
+			if Environment.return_code < 0 then
 				!!msg.make (0);
 				msg.append ("System call failed%N");
 				msg.append ("%NCould not update ");
@@ -105,7 +83,7 @@ feature
 		do
 
 			class_file_name := clone (directory_name);
-			class_file_name.append ("/");
+			class_file_name.extend (Environment.directory_separator);
 			class_file_name.append (document_name);
 			class_file_name.append (".e");
 			!!file.make_open_read (class_file_name);
@@ -120,8 +98,6 @@ feature
 				file.readline;
 			end;
 			file.close;
-
 	end;
 
-	
 end	

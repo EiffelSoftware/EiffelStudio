@@ -4,7 +4,7 @@ class TRANSL_ADD
 inherit
 
 	TRANSL_COMMAND;
-	TRANSL_SHARED
+	SHARED_TRANSLATIONS
 	
 feature 
 
@@ -14,7 +14,7 @@ feature {NONE}
 
 	trans_work is
 		do
-			translation_list.extend (translation);
+			Shared_translation_list.extend (translation);
 			context_catalog.update_translation_page
 		end;
 
@@ -22,10 +22,10 @@ feature
 
 	undo is
 		do
-			translation_list.start;
-			translation_list.search (translation);
-			if not translation_list.after then
-				translation_list.remove;
+			Shared_translation_list.start;
+			Shared_translation_list.search (translation);
+			if not Shared_translation_list.after then
+				Shared_translation_list.remove;
 				context_catalog.update_translation_page;
 				if translation.edited then
 					translation.editor.reset

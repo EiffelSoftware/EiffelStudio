@@ -3,31 +3,24 @@ class EBUILD
 
 inherit
 
+	CONSTANTS;
 	ARGUMENTS;
-
-	WINDOWS
-		export
-			{NONE} all
-		end;
-	AUTO_SAVE
-		rename
-			command_line as exec_command_line
-		export
-			{NONE} all
-		end;
+	WINDOWS;
 	SHARED_LICENSE
 
 feature 
 
 	make is
+		local
+			init: INIT_CHECK;
 		do
+			init_windowing;
 			!!init;
 			init.perform_initial_check;
 			if init.error then
 				io.error.putstring ("EiffelBuild stopped%N");
 				exit
 			elseif init_licence then
-				init_windowing;
 				init_project;
 				read_command_line;
 				iterate;
@@ -35,21 +28,21 @@ feature
 			end;
 		rescue
 			discard_licence;
-			save_rescue
+			rescue_project
 		end;
 	
 feature {NONE}
+
+	Application_name: STRING is "eiffelbuild";
 
 	init_licence: BOOLEAN is
 		do
 			licence.get_registration_info;
 			licence.set_version (3);
-			licence.set_application_name ("eiffelbuild");
+			licence.set_application_name (Application_name);
 			Result := licence.connected
 		end;
 
-	init: INIT_CHECK;
-	
 	read_command_line is
 		local
 			cmd: OPEN_PROJECT
@@ -61,16 +54,19 @@ feature {NONE}
 		end;
 
 	retried: BOOLEAN;
-	temp:INTEGER;
 
-	save_rescue is
+	rescue_project is
+		local
+			storer: STORER
 		do
 			-- no_message_on_failure;
 			if not retried then
 				history_window.wipe_out;
 				-- Force garbage collection
 				if main_panel.project_initialized then
-					auto_save;
+					!! storer.make;
+					storer.store (Environment.restore_directory);
+					storer := Void;
 				end
 			else
 				io.error.putstring ("EiffelBuild: internal error%N");	

@@ -58,7 +58,7 @@ feature {NONE}
 			if (not (fg_color_name = Void) and then not fg_color_name.empty) then
 				new_context.set_fg_color_name (fg_color_name);
 			end;
-			context_catalog.update_editors (new_context, color_form_number);
+			context_catalog.update_editors (new_context, Context_const.color_form_nbr);
 		end;
 
 end

@@ -3,55 +3,49 @@ class PICT_COLOR_FORM
 
 inherit
 
-	COMMAND
-		export
-			{NONE} all
-		end;
-	CONTEXT_CMDS
-		export
-			{NONE} all
-		end;
+	COMMAND;
 	EDITOR_FORM
 		redefine
 			context
 		end
 
-
 creation
 
 	make
 
-	
 feature {NONE}
 
 	pixmap_name: EB_TEXT_FIELD;
 
-	
-feature 
-
-	make (a_parent: CONTEXT_EDITOR) is
-		do
-			a_parent.form_list.put (Current, pict_color_form_number);
-		end;
-
-	
-feature {NONE}
-
 	pixmap_selection_box: PIXMAP_FILE_BOX;
 
-	
+	context: PICT_COLOR_C is
+		do
+			Result ?= editor.edited_context
+		end;
+
+	form_number: INTEGER is
+		do
+			Result := Context_const.pict_color_att_form_nbr
+		end;
+
+	Pict_clr_cmd: PICT_CLR_CMD is
+		once
+			!!Result
+		end;
+
 feature 
 
-	make_visible (a_parent: CONTEXT_EDITOR) is
+	make_visible (a_parent: COMPOSITE) is
 		local
 			label: LABEL_G;
 			pixmap_open_b: PUSH_BG;
-			Nothing: ANY
 		do
-			initialize (Pict_color_form_name, a_parent);
-			!!label.make (P_ixmap_name, Current);
-			!!pixmap_name.make (T_extfield, Current, pict_clr_cmd, a_parent);
-			!!pixmap_open_b.make (P_Cbutton, Current);
+			initialize (Context_const.pict_color_form_name, a_parent);
+			!!label.make (Context_const.pixmap_name, Current);
+			!!pixmap_name.make (Widget_names.textfield, 
+					Current, Pict_clr_cmd, editor);
+			!!pixmap_open_b.make (Context_const.open_pixmap_name, Current);
 			attach_top (label, 10);
 			attach_left (label, 10);
 			attach_left (pixmap_name, 10);
@@ -59,27 +53,24 @@ feature
 			attach_left (pixmap_open_b, 10);
 			attach_top_widget (pixmap_name, pixmap_open_b, 5);
 
-			pixmap_open_b.add_activate_action (Current, Nothing);
-			pixmap_open_b.set_text ("open pixmap");
+			pixmap_open_b.add_activate_action (Current, Void);
+			show_current
 		end;
-
 	
 feature {NONE}
-
-	context: PICT_COLOR_C;
 
 	execute (argument: ANY) is
 		do
 			if (pixmap_selection_box = Void) then
-				!!pixmap_selection_box.make 
-					(pixmap_name, Current, pict_clr_cmd, editor);
+				!! pixmap_selection_box.make 
+					(pixmap_name, Current, Pict_clr_cmd, editor);
 			end;
 			pixmap_selection_box.popup
 		end;
 
 	reset is
 		do
-			if not (context.pixmap_name = Void) then
+			if context.pixmap_name /= Void then
 				pixmap_name.set_text (context.pixmap_name);
 			else
 				pixmap_name.set_text ("");

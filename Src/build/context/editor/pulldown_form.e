@@ -8,48 +8,62 @@ inherit
 			apply as old_apply,
 			reset as old_reset
 		redefine
-			make, context, make_visible
+			context, make_visible,
+			form_number
 		end;
-
 	MENU_FORM
 		redefine
-			apply, reset, make, context,
-			make_visible
+			apply, reset, context, 
+			make_visible, form_number
 		select
 			apply, reset
 		end
 
-
 creation
 
 	make
-
 	
 feature {NONE}
 
 	text: EB_TEXT_FIELD;
 
-	
 	forbid_recomp: EB_TOGGLE_B;
 
-feature 
-
-	make (a_parent: CONTEXT_EDITOR) is
+	context: PULLDOWN_C is
 		do
-			a_parent.form_list.put (Current, pulldown_form_number);
+			Result ?= editor.edited_context
 		end;
 
-	make_visible (a_parent: CONTEXT_EDITOR) is
+	form_number: INTEGER is
+		do
+			Result := Context_const.pulldown_sm_form_nbr
+		end;
+
+	pulldown_cmd: PULLDOWN_CMD is
+		once
+			!!Result
+		end;
+
+	pulldown_resize_cmd: PULLDOWN_RESIZE_CMD is
+		once
+			!!Result;
+		end;
+
+feature
+
+	make_visible (a_parent: COMPOSITE) is
 		local
 			label_text: LABEL_G;
 			label: LABEL_G;
 		do
-			initialize (Pulldown_form_name, a_parent);
+			initialize (Context_const.pulldown_form_name, a_parent);
 
-			!!label_text.make (B_utton_text, Current);
-			!!label.make (T_itle, Current);
-			!!text.make (T_extfield, Current, pulldown_cmd, a_parent);
-			!!forbid_recomp.make (F_orbid_auto_recomp_size, Current, pulldown_resize_cmd, a_parent);
+			!!label_text.make (Context_const.button_text_name, Current);
+			!!label.make (Context_const.title_name, Current);
+			!!text.make (Widget_names.textfield, Current, 
+					Pulldown_cmd, editor);
+			!!forbid_recomp.make (Context_const.forbid_auto_recomp_size_name, 
+					Current, Pulldown_resize_cmd, editor);
 			create_buttons;
 
 			attach_left (label_text, 10);
@@ -66,12 +80,10 @@ feature
 			attach_top_widget (add_button, add_submenu, 10);
 			attach_top_widget (add_submenu, forbid_recomp, 10);
 			detach_top (forbid_recomp);
+			show_current
 		end;
 
-	
 feature {NONE}
-
-	context: PULLDOWN_C;
 
 	reset is
 		do

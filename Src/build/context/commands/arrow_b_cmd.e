@@ -6,27 +6,18 @@ inherit
 	CONTEXT_CMD
 		redefine
 			context
-		
 		end;
-	EDITOR_FORMS
-		export
-			{NONE} all
-		end;
-	COMMAND_NAMES
-		rename
-			A_rrow_cmd_name as c_name
-		export
-			{NONE} all
-		end
-
-
-
 	
 feature {NONE}
 
 	associated_form: INTEGER is
 		do
-			Result := arrow_b_form_number
+			Result := Context_const.arrow_b_att_form_nbr
+		end;
+
+	c_name: STRING is
+		do
+			Result := Context_const.arrow_cmd_name
 		end;
 
 	context: ARROW_B_C;
@@ -45,6 +36,27 @@ feature {NONE}
 			new_direction := context.direction;
 			context.set_direction (old_direction);
 			old_direction := new_direction
+		end;
+
+feature {CONTEXT_TREE, SELECTION_MANAGER}
+
+	move_context (d_x, d_y: INTEGER) is
+		local
+			a_group: LINKED_LIST  [CONTEXT]
+		do
+			if context.grouped then
+				a_group := context.group;
+				from
+					a_group.start
+				until
+					a_group.after
+				loop
+					a_group.item.set_x_y (a_group.item.x+d_x, a_group.item.y+d_y);
+					a_group.forth;
+				end;
+			else
+				context.set_x_y (context.x + d_x, context.y + d_y);
+			end;
 		end;
 
 end

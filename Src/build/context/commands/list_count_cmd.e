@@ -6,27 +6,18 @@ inherit
 	CONTEXT_CMD
 		redefine
 			context
-		
 		end;
-	EDITOR_FORMS
-		export
-			{NONE} all
-		end;
-	COMMAND_NAMES
-		rename
-			l_ist_count_cmd_name as c_name
-		export
-			{NONE} all
-		end
-
-
-
 	
 feature {NONE}
 
 	associated_form: INTEGER is
 		do
-			Result := scroll_l_form_number
+			Result := Context_const.scroll_l_att_form_nbr
+		end;
+
+	c_name: STRING is
+		do
+			Result := Context_const.list_count_cmd_name
 		end;
 
 	context: SCROLL_LIST_C;

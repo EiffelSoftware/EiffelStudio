@@ -15,9 +15,6 @@ inherit
 			widget, stored_node
 		
 		end
-
-
-
 	
 feature 
 
@@ -28,7 +25,7 @@ feature
 
 	create_oui_widget (a_parent: COMPOSITE) is
 		do
-			!!widget.make (entity_name, a_parent);
+			!! widget.make_unmanaged (entity_name, a_parent);
 		end;
 
 	widget: RADIO_BOX;
@@ -36,16 +33,16 @@ feature
 	
 feature {NONE}
 
-	editor_form_cell: CELL [INTEGER] is
-		once
-			!!Result.put (0)
-		end;
-
 	namer: NAMER is
 		once
 			!!Result.make ("RadioBox");
 		end;
 
+	add_to_option_list (opt_list: ARRAY [INTEGER]) is
+		do
+			opt_list.put (Context_const.geometry_form_nbr,
+					Context_const.Geometry_format_nbr);
+		end
 	
 feature 
 

@@ -43,10 +43,9 @@ feature
 	reset_context is 
 		do
 			context := Void;
-			if not (associated_icon_stone = Void) then
+			if associated_icon_stone /= Void then
 				associated_icon_stone.set_symbol (type.symbol);
 				associated_icon_stone.set_label (type.label);
-				associated_icon_stone.select_icon
 			end
 		end;
 
@@ -65,12 +64,9 @@ feature
 			not_void_other: not (other = Void)
 		do
 			context := other;
-			if not (associated_icon_stone = Void) then
+			if associated_icon_stone /= Void then
 				associated_icon_stone.set_symbol (context.symbol);
 				associated_icon_stone.set_label (context.label);
-				if associated_icon_stone.instantiated then
-					associated_icon_stone.deselect
-				end
 			end
 		end;
 

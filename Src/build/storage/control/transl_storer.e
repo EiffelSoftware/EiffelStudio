@@ -4,23 +4,9 @@ class TRANSL_STORER
 
 inherit
 
-	STORABLE_HDL
-		export
-			{NONE} all
-		end;
-
-	TRANSL_SHARED
-		export
-			{NONE} all
-		end;
-
-	STORAGE_INFO
-		export
-			{NONE} all
-		end
-
-
-
+	STORABLE_HDL;
+	SHARED_TRANSLATIONS;
+	SHARED_STORAGE_INFO
 	
 feature {TRANSL_STORER}
 
@@ -48,13 +34,13 @@ feature {NONE}
 		do
 			!!stored_data.make;
 			from
-				translation_list.start
+				Shared_translation_list.start
 			until
-				translation_list.after
+				Shared_translation_list.after
 			loop
-				!!s.make (translation_list.item);
+				!!s.make (Shared_translation_list.item);
 				stored_data.extend (s);
-				translation_list.forth;
+				Shared_translation_list.forth;
 			end;
 		end;
 

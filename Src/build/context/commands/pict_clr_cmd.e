@@ -6,24 +6,17 @@ inherit
 		redefine
 			context
 		end
-
-	EDITOR_FORMS
-		export
-			{NONE} all
-		end
-
-	COMMAND_NAMES
-		rename
-			P_ict_clr_cmd_name as c_name
-		export
-			{NONE} all
-		end
 	
 feature {NONE}
 
 	associated_form: INTEGER is
 		do
-			Result := pict_color_form_number
+			Result := Context_const.pict_color_att_form_nbr
+		end;
+
+	c_name: STRING is
+		do
+			Result := Context_const.pict_clr_cmd_name
 		end;
 
 	context: PICT_COLOR_C;
@@ -32,25 +25,27 @@ feature {NONE}
 
 	pixmap_value: POINTER;
 
-	old_pixmap: PIXMAP
+	old_width, old_height: INTEGER;
 
 	context_work is
 		do
-			old_pixmap_name := context.pixmap_name
-			if old_pixmap_name = Void then
-				old_pixmap := context.widget.background_pixmap
-			end
+			old_pixmap_name := context.pixmap_name;
+			old_width := context.width;
+			old_height := context.height;
 		end
 
 	context_undo is
 		local 
-			new_name: STRING
+			new_name: STRING;
+			new_w, new_h: INTEGER
 		do
 			new_name := context.pixmap_name
+			new_w := context.width;
+			new_h := context.height;
 			context.set_pixmap_name (old_pixmap_name)
-			if old_pixmap_name = Void then
-				context.widget.set_background_pixmap (old_pixmap)
-			end
+			context.set_size (old_width, old_height);
+			old_width := new_w;
+			old_height := new_h;
 			old_pixmap_name := new_name
 		end
 

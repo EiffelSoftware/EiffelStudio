@@ -23,13 +23,16 @@ feature {NONE}
 			temp_wind_c: TEMP_WIND_C;
 		do
 			!!perm_wind_c;
-			perm_wind_type := create_type (P_erm_wind_name, perm_wind_c, Cat_perm_wind_pixmap);
+			perm_wind_type := create_type (Context_const.perm_wind_name, 
+					perm_wind_c, Cat_perm_wind_pixmap);
 
 			!!temp_wind_c;
-			temp_wind_type := create_type (T_emp_wind_name, temp_wind_c, Cat_temp_wind_pixmap);
+			temp_wind_type := create_type (Context_const.temp_wind_name, 
+					temp_wind_c, Cat_temp_wind_pixmap);
 
 			attach_left (perm_wind_type.source, 1);
-			attach_left_widget (perm_wind_type.source, temp_wind_type.source, 10);
+			attach_left_widget (perm_wind_type.source, 
+					temp_wind_type.source, 10);
 
 			attach_top (perm_wind_type.source, 1);
 			attach_top (temp_wind_type.source, 1);

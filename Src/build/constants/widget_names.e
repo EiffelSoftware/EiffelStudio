@@ -1,9 +1,6 @@
 
 class WIDGET_NAMES 
 
-
-
-	
 feature {NONE}
 
 	B_ase: STRING is "base";
@@ -99,6 +96,7 @@ feature {NONE}
 	T_oggle7: STRING is "toggle7";
 	T_opshell: STRING is "topshell"; 
 	S_crolledwindow: STRING is "scrolledwindow";
+	S_cale: STRING is "Scale";
 
 	F_ile: String is "File";
 	S_ave: String is "Save";
@@ -111,15 +109,10 @@ feature {NONE}
 	E_rror: STRING is "Error";
 	Q_uestion: STRING is "Question";
 
-
-	C_ontexttool: STRING is "Context Tool";
-	C_ontexttree: STRING is "Context Tree";
-	C_ontextcatalog: STRING is "Context Catalog";
 	C_ommandcatalog: STRING is "Command Catalog";
 	S_tatetool: STRING is "State Tool";
 	C_ommandtypetool: STRING is "Command Type Tool";
 	C_mdinstancetool: STRING is "Command Instance Tool";
-	XeiffelBuild: STRING is "XeiffelBuild";
 	H_istorywindow: STRING is "History Window";
 
 end -- class WIDGET_NAMES

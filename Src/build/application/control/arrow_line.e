@@ -3,10 +3,7 @@ class ARROW_LINE
 
 inherit
 
-	APP_SHARED
-		export
-			{NONE} all
-		end;
+	SHARED_APPLICATION;
 	SEGMENT
 		rename 
 			draw as segment_draw,
@@ -14,8 +11,6 @@ inherit
 			attach_drawing as segment_attach_drawing,
 			attach_drawing_imp as segment_attach_drawing_imp,
 			set_line_width as segment_set_line_width
-		export
-			{NONE} all
 		end;
 	SEGMENT
 		rename

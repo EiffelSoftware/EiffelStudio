@@ -6,27 +6,18 @@ inherit
 	CONTEXT_CMD
 		redefine
 			work
-		
-		end;
-	EDITOR_FORMS
-		export
-			{NONE} all
-		end;
-	COMMAND_NAMES
-		rename
-			G_eometry_cmd_name as c_name
-		export
-			{NONE} all
 		end
-
-
-
 	
 feature {NONE}
 
 	associated_form: INTEGER is
 		do
-			Result := geometry_form_number
+			Result := Context_const.geometry_form_nbr
+		end;
+
+	c_name: STRING is
+		do
+			Result := Context_const.geometry_cmd_name
 		end;
 
 	old_x: INTEGER;

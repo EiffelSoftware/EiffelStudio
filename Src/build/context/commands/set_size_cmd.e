@@ -4,26 +4,17 @@ class SET_SIZE_CMD
 inherit
 
 	CONTEXT_CMD
-		;
-	EDITOR_FORMS
-		export
-			{NONE} all
-		end;
-	COMMAND_NAMES
-		rename
-			S_et_size_cmd_name as c_name
-		export
-			{NONE} all
-		end
 
-
-
-	
 feature {NONE}
 
 	associated_form: INTEGER is
 		do
-			Result := geometry_form_number
+			Result := Context_const.geometry_form_nbr
+		end;
+
+	c_name: STRING is
+		do
+			Result := Context_const.set_size_cmd_name
 		end;
 
 	old_width: INTEGER;

@@ -15,12 +15,9 @@ inherit
 		select
 			make_visible
 		end;
-	PIXMAPS
-		export
-			{NONE} all
-		end;
+	PIXMAPS;
 	WINDOWS;
-	APP_SHARED;
+	SHARED_APPLICATION;
 	COMMAND
 
 creation

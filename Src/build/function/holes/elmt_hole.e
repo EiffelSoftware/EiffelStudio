@@ -28,9 +28,9 @@ feature {NONE}
 	make (a_parent: COMPOSITE; func: FUNC_EDITOR) is
 		do
 			associated_function := func;
+			make_visible (a_parent);
 			set_label (associated_label);
 			set_symbol (associated_symbol);
-			make_visible (a_parent);
 		end;
 
 	associated_function: FUNC_EDITOR;

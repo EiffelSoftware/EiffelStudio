@@ -5,17 +5,7 @@ deferred class PREDEF_CMD
 inherit
 
 	CMD;
-	STORAGE_INFO
-		export
-			{NONE} all
-		end;
-	UNIX_ENV
-		export
-			{NONE} all
-		end
-
-
-
+	SHARED_STORAGE_INFO;
 	
 feature 
 
@@ -28,8 +18,8 @@ feature
 			fn, full_path: STRING;	
 			f: UNIX_FILE
 		do
-			full_path := clone (Commands_directory);
-			full_path.append ("/");
+			full_path := clone (Environment.Commands_directory);
+			full_path.extend (Environment.directory_separator);
 				fn := clone (eiffel_type);
 				fn.to_lower;
 				fn.append (".e");
@@ -40,7 +30,6 @@ feature
 			Result := f.laststring;
 			f.close;
 		end;
-
 
 	remove_class is do end;
 

@@ -5,22 +5,13 @@ class S_COMMAND
 
 inherit
 
-	STORAGE_INFO
-		export
-			{NONE} all
-		end;
-
-	GROUP_SHARED
-		export
-			{NONE} all
-		end
-
+	SHARED_STORAGE_INFO;
+	CONSTANTS
 
 creation
 
 	make
 
-	
 feature 
 
 	make (c: USER_CMD) is
@@ -99,7 +90,7 @@ feature
 				labs.extend (lab);
 				labels.forth
 			end;
-			if for_import.value then
+			if for_import.item then
 				in := "";
 			else
 				in := internal_name;
@@ -143,7 +134,10 @@ feature
 			cmd_file_name := cmd_file_name.path_name;
 			cmd_file_name.put (' ', cmd_file_name.count);
 			cmd_file_name := cmd_file_name.path_name;
-			cmd_file_name.append ("Classes/Commands/");
+			cmd_file_name.append (Environment.classes_name);
+			cmd_file_name.extend (Environment.directory_separator);
+			cmd_file_name.append (Environment.Commands_name);
+			cmd_file_name.extend (Environment.directory_separator);
 			s := clone (internal_name);
 			s.to_lower;
 			cmd_file_name.append (s);

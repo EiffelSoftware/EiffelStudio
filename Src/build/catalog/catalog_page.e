@@ -3,6 +3,7 @@ class CAT_PAGE [T -> STONE]
 
 inherit
 	
+	CONSTANTS;
 	CATALOG_BOX [T]
 		rename
 			make as cat_create
@@ -11,9 +12,6 @@ inherit
 			manage, unmanage, managed, associated_catalog
 		end;
 	WIDGET_NAMES
-		export
-			{NONE} all
-		end;
 
 creation
 

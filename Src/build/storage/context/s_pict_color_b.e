@@ -39,7 +39,7 @@ feature
 
 	set_context_attributes (a_context: PICT_COLOR_C) is
 		do
-			if not (pixmap_name = Void) then
+			if pixmap_name /= Void then
 				a_context.set_pixmap_name (pixmap_name)
 			end;
 			button_set_context_attributes (a_context);

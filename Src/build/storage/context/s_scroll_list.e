@@ -29,10 +29,8 @@ feature
 
 	set_context_attributes (a_context: SCROLL_LIST_C) is
 		do
-			if count_modified then
-				a_context.set_visible_item_count (visible_item_count);
-			end;
 			set_attributes (a_context);
+			a_context.set_visible_item_count (visible_item_count);
 		end;
 	
 feature {NONE}

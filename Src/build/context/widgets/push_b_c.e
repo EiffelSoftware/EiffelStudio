@@ -12,7 +12,8 @@ inherit
 
 	BUTTON_C
 		redefine
-			stored_node, widget
+			stored_node, widget,
+			set_bg_pixmap_name
 		end
 	
 feature 
@@ -24,7 +25,8 @@ feature
 
 	create_oui_widget (a_parent: COMPOSITE) is
 		do
-			!!widget.make (entity_name, a_parent);
+			!!widget.make_unmanaged (entity_name, a_parent);
+			widget.forbid_recompute_size
 		end;
 
 	widget: PUSH_B;
@@ -32,14 +34,37 @@ feature
 	
 feature {NONE}
 
-	editor_form_cell: CELL [INTEGER] is
-        once
-            !!Result.put (0)
-        end;
-
 	namer: NAMER is
 		once
 			!!Result.make ("Push_b");
+		end;
+
+	set_bg_pixmap_name (a_string: STRING) is
+		local
+			a_pixmap: PIXMAP;
+			cloned_current: like Current;
+			p: COMPOSITE
+		do
+			bg_pixmap_name := a_string;
+			bg_pixmap_modified := False;
+			if (a_string = Void) then
+				widget.hide;
+				cloned_current := clone (Current);
+				p := widget.parent;
+				!! widget.make_unmanaged (entity_name, p);
+				cloned_current.copy_attributes (Current);
+				widget.set_x_y (cloned_current.widget.x, cloned_current.widget.y);
+				cloned_current.widget.destroy;
+				add_widget_callbacks;
+				widget.manage
+			else
+				 !!a_pixmap.make;
+				 a_pixmap.read_from_file (a_string);
+				 if a_pixmap.is_valid then
+					  widget.set_background_pixmap (a_pixmap);
+					  bg_pixmap_modified := True;
+				 end;
+			end;
 		end;
 
 feature 

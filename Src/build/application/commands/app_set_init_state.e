@@ -4,15 +4,10 @@ class APP_SET_INIT_STATE
 inherit
 
 	APP_COMMAND; 
-	APP_SHARED
-		export
-			{NONE} all
-		end;
+	SHARED_APPLICATION;
 	APP_CMD_NAMES
 		rename
 			App_set_initial_state_cmd_name as c_name
-		export
-			{NONE} all
 		end
 
 feature 

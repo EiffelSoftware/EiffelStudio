@@ -12,15 +12,10 @@ inherit
 		undefine
 			init_toolkit
 		end;
-	WIDGET_NAMES
-		export
-			{NONE} all
-		end;
-	WINDOWS
-		export
-			{NONE} all
-		end;
-	COMMAND
+	WIDGET_NAMES;
+	WINDOWS;
+	COMMAND;
+	CONSTANTS
 
 creation
 

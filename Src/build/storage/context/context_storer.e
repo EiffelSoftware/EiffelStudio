@@ -8,40 +8,13 @@ class CONTEXT_STORER
 
 inherit
 
-	STORABLE_HDL
-		export
-			{NONE} all
-		end;
-
-	CONTEXT_SHARED
-		export
-			{NONE} all
-		end;
-
-	STORAGE_INFO
-		export
-			{NONE} all
-		end;
-
-
-
-	
-feature {CONTEXT_STORER}
-
-	stored_contexts: LINKED_LIST [EB_TABLE [S_CONTEXT]];
-
+	STORABLE_HDL;
+	SHARED_CONTEXT;
+	SHARED_STORAGE_INFO
 	
 feature 
 
 	retrieved_data: LINKED_LIST [CONTEXT];
-
-	
-feature {NONE}
-
-	current_table: EB_TABLE [S_CONTEXT];
-
-	
-feature 
 
 	store (file_name: STRING) is
 		do
@@ -52,27 +25,31 @@ feature
 			stored_contexts := Void;
 		end;
 
+feature {CONTEXT_STORER}
+
+	stored_contexts: LINKED_LIST [EB_TABLE [S_CONTEXT]];
 	
 feature {NONE}
 
+	current_table: EB_TABLE [S_CONTEXT];
+
 	build_stored_contexts is
 		local
-			old_pos: INTEGER
+			old_cursor: CURSOR
 		do
 			!!stored_contexts.make;
 			from
-				old_pos := window_list.index;
-				window_list.start
+				old_cursor := Shared_window_list.cursor;
+				Shared_window_list.start
 			until
-				window_list.after
+				Shared_window_list.after
 			loop
 				!!current_table.make (100);
 				stored_contexts.extend (current_table);
-				build_stored_context (window_list.item);
-				--****current_table.trim;
-				window_list.forth
+				build_stored_context (Shared_window_list.item);
+				Shared_window_list.forth
 			end;
-			window_list.go_i_th (old_pos)
+			Shared_window_list.go_to (old_cursor)
 		end;
 
 	build_stored_context (node: CONTEXT) is

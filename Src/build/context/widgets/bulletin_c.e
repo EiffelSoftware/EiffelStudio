@@ -13,7 +13,6 @@ inherit
 		redefine
 			widget, stored_node, is_bulletin,
 			original_stone, intermediate_name
-		
 		end
 	
 feature 
@@ -26,24 +25,24 @@ feature
 	create_oui_widget (a_parent: COMPOSITE) is
 		local
 		do
-			!!widget.make (entity_name, a_parent)
-			select_widget
+			!! widget.make_unmanaged (entity_name, a_parent)
 			set_size (40, 40)
 		end
 
-	widget: EB_BULLETIN
+	widget: EBUILD_BULLETIN
 
 feature {NONE}
-
-	editor_form_cell: CELL [INTEGER] is
-		once
-			!!Result.put (0)
-		end
 
 	namer: NAMER is
 		once
 			!!Result.make ("Bulletin")
-		end
+		end;
+
+	add_to_option_list (opt_list: ARRAY [INTEGER]) is
+		do
+			opt_list.put (Context_const.geometry_form_nbr,
+							Context_const.Geometry_format_nbr);
+		end;
 
 feature 
 
@@ -60,7 +59,7 @@ feature
 			else
 				Result := parent.full_name
 			end
-		end
+		end;
 
 	is_bulletin: BOOLEAN is
 		do

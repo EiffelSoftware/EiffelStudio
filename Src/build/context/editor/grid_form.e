@@ -2,53 +2,42 @@ class GRID_FORM
 
 inherit
 
-	CONTEXT_CMDS
-		export
-			{NONE} all
-		end
-
-	EDITOR_FORM
-		redefine
-			context, form_name
-		end
-
-	COMMAND
-	COMMAND_ARGS
+	EDITOR_FORM;
+	COMMAND;
+	COMMAND_ARGS;
 	PIXMAPS
 
 creation
 	make
 	
-feature 
+feature {NONE}
 
-	form_name: STRING is
+	form_number: INTEGER is
 		do
-			Result := grid_form_name
-		end
+			Result := Context_const.grid_form_nbr
+		end;
 
-	make (a_parent: CONTEXT_EDITOR) is
-		do
-			a_parent.form_list.put (Current, grid_form_number)
-		end
+	no_grid: TOGGLE_B
+	grid5: TOGGLE_B
+	grid10: TOGGLE_B
+	grid15: TOGGLE_B
+	grid20: TOGGLE_B
 
-	make_visible (a_parent: CONTEXT_EDITOR) is
+feature -- Interface
+
+	make_visible (a_parent: COMPOSITE) is
 		local
 			grid_title: LABEL_G
 			grids: RADIO_BOX
-			no_grid: TOGGLE_B
-			grid5: TOGGLE_B
-			grid10: TOGGLE_B
-			grid15: TOGGLE_B
-			grid20: TOGGLE_B
 		do	
-			initialize (grid_form_name, a_parent)
-			!!grid_title.make (T_itle, Current)
-			!!grids.make (R_adio_box, Current)
-			!!no_grid.make (T_oggle, grids)
-			!!grid5.make (T_oggle1, grids)
-			!!grid10.make (T_oggle2, grids)
-			!!grid15.make (T_oggle3, grids)
-			!!grid20.make (T_oggle4, grids)
+			initialize (Context_const.grid_form_name, a_parent)
+			!!grid_title.make (Context_const.grid_options_name, Current)
+			!!grids.make (Widget_names.radio_box, Current)
+			!!no_grid.make (Context_const.no_grid_name, grids)
+			!!grid5.make (Context_const.grid5_name, grids)
+			!!grid10.make (Context_const.grid10_name, grids)
+			!!grid15.make (Context_const.grid15_name, grids)
+			!!grid20.make (Context_const.grid20_name, grids)
 
 			attach_top (grid_title, 10)
 			attach_left (grid_title, 10)
@@ -61,26 +50,30 @@ feature
 			grid10.add_arm_action (Current, Third)
 			grid15.add_arm_action (Current, Fourth)
 			grid20.add_arm_action (Current, Fifth)
-			grid_title.set_text ("Grid Options")
-			no_grid.set_text ("off")
-			grid5.set_text ("5 pixels")
-			grid10.set_text ("10 pixels")
-			grid15.set_text ("15 pixels")
-			grid20.set_text ("20 pixels")
 			grids.set_always_one (True)
+			show_current
 		end
 
 	apply is
 		do
-			reset
 		end
 
 feature {NONE}
 
-	context: WINDOW_C
-
 	reset is
+		local
+			bg_pixmap: PIXMAP
 		do
+			bg_pixmap := context.widget.background_pixmap;
+			if (bg_pixmap = grid5_pixmap) then
+				grid5.set_toggle_on
+			elseif (bg_pixmap = grid10_pixmap) then
+				grid10.set_toggle_on
+			elseif (bg_pixmap = grid15_pixmap) then
+				grid15.set_toggle_on
+			elseif (bg_pixmap = grid20_pixmap) then
+				grid20.set_toggle_on
+			end
 		end
 	
 	execute (argument: ANY) is

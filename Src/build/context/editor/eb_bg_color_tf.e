@@ -9,18 +9,11 @@ inherit
 		undefine
 			init_toolkit
 		end;
-
-	EDITOR_FORMS
-		export
-			{NONE} all
-		end;
-
 	HOLE
-		export
-			{NONE} all
 		redefine
 			stone, compatible
 		end;
+	CONSTANTS
 
 creation
 
@@ -66,7 +59,7 @@ feature {NONE}
 			!!cmd;
 			cmd.execute (a_context);
 			a_context.set_bg_color_name (stone.color_name);
-			context_catalog.update_editors (a_context, color_form_number);
+			context_catalog.update_editors (a_context, Context_const.color_form_nbr);
 		end;
 
 end

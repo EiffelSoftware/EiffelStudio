@@ -13,14 +13,9 @@ inherit
 
 	MENU_C
 		redefine
-			--add_widget_callbacks,
-			widget, option_list, stored_node
-		
+			widget, stored_node, add_to_option_list
 		end
 
-
-
-	
 feature 
 
 	context_type: CONTEXT_TYPE is
@@ -30,7 +25,7 @@ feature
 
 	create_oui_widget (a_parent: COMPOSITE) is
 		do
-			!!widget.make (entity_name, a_parent);
+			!!widget.make_unmanaged (entity_name, a_parent);
 			forbid_recompute_size;
 			set_size (40, 40);
 			allow_recompute_size;
@@ -38,37 +33,25 @@ feature
 
 	widget: BAR;
 
---	add_widget_callbacks is
---			-- For a bar the callbacks for the selection
---			-- manager are not valid
---		do
---			initialize_transport;
---		end;
-
-	
 feature {NONE}
-
-	editor_form_cell: CELL [INTEGER] is
-		once
-			!!Result.put (0)
-		end;
 
 	namer: NAMER is
 		once
 			!!Result.make ("Bar");
 		end;
 
-	
+	add_to_option_list (opt_list: ARRAY [INTEGER]) is
+		do
+			opt_list.put (Context_const.geometry_form_nbr,
+						Context_const.Geometry_format_nbr);
+			opt_list.put (Context_const.bar_sm_form_nbr,
+						Context_const.Submenu_format_nbr);
+		end;
+
 feature 
 
 	eiffel_type: STRING is "BAR";
 
-	option_list: ARRAY [INTEGER] is
-		do
-			!!Result.make (1, 2);
-			Result.put (geometry_form_number, 1);
-			Result.put (bar_form_number, 2);
-		end;
 
 	forbid_recompute_size is
 		do

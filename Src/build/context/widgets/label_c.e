@@ -26,11 +26,6 @@ feature {NONE}
 			!!Result.make ("Label");
 		end;
 
-	editor_form_cell: CELL [INTEGER] is
-        once
-            !!Result.put (0)
-        end;
-
 feature 
 
 	eiffel_type: STRING is "LABEL";
@@ -42,7 +37,8 @@ feature
 
 	create_oui_widget (a_parent: COMPOSITE) is
         do
-            !!widget.make (entity_name, a_parent);
+            !!widget.make_unmanaged (entity_name, a_parent);
+			widget.forbid_recompute_size;
         end;
 
     text: STRING is

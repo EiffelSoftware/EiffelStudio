@@ -5,6 +5,7 @@ inherit
 	BULLETIN
 		rename
 			make as bulletin_create,
+			make_unmanaged as bulletin_create_unmanaged,
 			set_width as old_set_width,
 			set_height as old_set_height,
 			set_size as old_set_size
@@ -12,6 +13,7 @@ inherit
 
 	BULLETIN
 		rename
+			make_unmanaged as bulletin_create_unmanaged,
 			make as bulletin_create
 		redefine
 			set_size, set_height, set_width
@@ -35,16 +37,19 @@ creation
 feature 
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
-		local
-			temp: STRING;
-			temp1: ANY		
 		do
 			bulletin_create (a_name, a_parent);
 			!!widget_coordinates.make;
-			temp := "resizePolicy";
-			temp1 := temp.to_c;
-			eb_bulletin_set_int (implementation.screen_object, 0, $temp1);
+			forbid_recompute_size;
+			-- Callback
+			set_action ("<Configure>", Current, Current);
+		end;
 
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+		do
+			bulletin_create_unmanaged (a_name, a_parent);
+			!!widget_coordinates.make;
+			forbid_recompute_size;
 			-- Callback
 			set_action ("<Configure>", Current, Current);
 		end;
@@ -132,6 +137,8 @@ feature {PERM_WIND_C} -- only exported for ebuild. Not needed for generated appl
 	old_width, old_height: INTEGER;
 
 	execute (argument: ANY) is
+		local
+			widget_ratio: WIDGET_RATIO
 		do
 			if argument = Current then
 				if old_width /= width or old_height /= height then
@@ -141,8 +148,13 @@ feature {PERM_WIND_C} -- only exported for ebuild. Not needed for generated appl
 						until
 							widget_coordinates.after
 						loop
-							widget_coordinates.item.update_widget (width, height);
-							widget_coordinates.forth
+							widget_ratio := widget_coordinates.item;
+							if widget_ratio.widget.destroyed then
+								widget_coordinates.remove
+							else
+								widget_ratio.update_widget (width, height);
+								widget_coordinates.forth
+							end;
 						end;
 					end;
 					old_width := width;
@@ -182,15 +194,6 @@ feature
 				old_height := height
 			end;
 		end;
-
-feature {NONE} -- External features
-
-	eb_bulletin_set_int (a_w: POINTER; a_val: INTEGER; a_res: POINTER)  is
-		external
-			"C"
-		alias
-			"set_int"
-		end; -- eb_bulletin_set_int
 
 end
 

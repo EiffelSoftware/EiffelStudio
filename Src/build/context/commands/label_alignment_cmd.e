@@ -7,25 +7,17 @@ inherit
 		redefine
 			context
 		end;
-	EDITOR_FORMS
-		export
-			{NONE} all
-		end;
-	COMMAND_NAMES
-		rename
-			L_abel_alignment_cmd_name as c_name
-		export
-			{NONE} all
-		end
 
-
-
-	
 feature {NONE}
 
 	associated_form: INTEGER is
 		do
-			Result :=  label_text_form_number
+			Result :=  Context_const.label_text_att_form_nbr
+		end;
+
+	c_name: STRING is
+		do
+			Result := Context_const.label_alignment_cmd_name
 		end;
 
 	context: LABEL_TEXT_C;

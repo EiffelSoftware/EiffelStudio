@@ -4,11 +4,7 @@ class S_CONTEXT_ELMT
 
 inherit
 
-	STORAGE_INFO
-		export
-			{NONE} all
-		end
-
+	SHARED_STORAGE_INFO
 
 creation
 
@@ -40,7 +36,7 @@ feature
 				identifier := identifier_changed_table.item (full_name);
 			end;
 
-			if for_import.value and then name_changed_table.has (full_name) then
+			if for_import.item and then name_changed_table.has (full_name) then
 				full_name := name_changed_table.item (full_name);
 			end;
 			Result := context_table.item (identifier);

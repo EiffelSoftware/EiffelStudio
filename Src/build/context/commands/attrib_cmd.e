@@ -7,17 +7,11 @@ inherit
 		redefine
 			work
 		end;
-	EDITOR_FORMS
-		export
-			{NONE} all
-		end
-
 
 creation
 
 	make
 
-	
 feature 
 
 	make (a_cmd: CONTEXT_CMD) is
@@ -25,7 +19,6 @@ feature
 			command := a_cmd;
 			c_name := a_cmd.c_name;
 		end;
-
 	
 feature {NONE}
 
@@ -35,7 +28,6 @@ feature {NONE}
 		do
 			Result := 0
 		end;
-
 	
 feature 
 

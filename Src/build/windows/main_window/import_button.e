@@ -31,11 +31,6 @@ inherit
 		export
 			{NONE} all
 		end
-	UNIX_ENV
-		export
-			{NONE} all
-		end
-
 
 creation
 

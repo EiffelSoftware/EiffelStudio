@@ -4,10 +4,7 @@ deferred class CMD
 inherit
 
 	CMD_STONE;
-	APP_SHARED
-		export
-			{NONE} all
-		end;
+	SHARED_APPLICATION;
 	WINDOWS;
 	EDITABLE
 	

@@ -2,7 +2,6 @@ class TEXT_FORM
 
 inherit
 
-	CONTEXT_CMDS;
 	EDITOR_FORM
 		redefine
 			context
@@ -12,7 +11,7 @@ creation
 
 	make
 
-feature
+feature {NONE}
 
 	width_text_field: INTEGER_TEXT_FIELD;
 
@@ -28,44 +27,86 @@ feature
 
 	--enable_height_resize: EB_TOGGLE_B;
 
-	make (a_parent: CONTEXT_EDITOR) is
+	form_number: INTEGER is
 		do
-			a_parent.form_list.put (Current, text_form_number);
+			Result := Context_const.text_att_form_nbr
 		end;
 
-	make_visible (a_parent: CONTEXT_EDITOR) is
+	context: TEXT_C is
+		do
+			Result ?= editor.edited_context
+		end;
+
+	text_h_resize_cmd: TEXT_H_RESIZE_CMD is
+		once
+			!!Result
+		end;
+
+	text_height_cmd: TEXT_HEIGHT_CMD is
+		once
+			!!Result
+		end;
+
+	text_max_cmd: TEXT_MAX_CMD is
+		once
+			!!Result
+		end;
+
+	text_read_cmd: TEXT_READ_CMD is
+		once
+			!!Result
+		end;
+
+	text_w_resize_cmd: TEXT_W_RESIZE_CMD is
+		once
+			!!Result
+		end;
+
+	text_width_cmd: TEXT_WIDTH_CMD is
+		once
+			!!Result
+		end;
+
+	text_wrap_cmd: TEXT_WRAP_CMD is
+		once
+			!!Result
+		end;
+
+feature
+
+	make_visible (a_parent: COMPOSITE) is
 		local
 			size_l: LABEL_G;
 			width_l, height_l: LABEL_G;
 		do
-			initialize (Text_form_name, a_parent);
+			initialize (Context_const.text_form_name, a_parent);
 
-			!!width_l.make (M_argin_width, Current);
-			!!height_l.make (M_argin_height, Current);
-			!!width_text_field.make (T_extfield, Current, text_width_cmd, a_parent);
-			!!height_text_field.make (T_extfield, Current, text_height_cmd, a_parent);
+			!!width_l.make (Context_const.margin_width_name, Current);
+			!!height_l.make (Context_const.margin_height_name, Current);
+			!!width_text_field.make (Widget_names.textfield, Current, 
+				Text_width_cmd, editor);
+			!!height_text_field.make (Widget_names.textfield, Current, 
+				Text_height_cmd, editor);
 
 			width_text_field.set_width (50);
 			height_text_field.set_width (50);
 
-			!!maximum_size.make (M_aximum_size, Current, text_max_cmd, a_parent);
-			!!size_l.make (M_aximum_size, Current);
+			!!maximum_size.make (Context_const.maximum_size_name, 
+					Current, Text_max_cmd, editor);
+			!!size_l.make (Context_const.maximum_size_name, Current);
 			maximum_size.set_width (50);
 
-			!!read_only.make (R_ead_only, Current, text_read_cmd, a_parent);
+			!!read_only.make (Context_const.read_only_name, 
+					Current, Text_read_cmd, editor);
 
-			!!enable_word_wrap.make (E_nable_word_wrap, Current, text_wrap_cmd, a_parent);
-			--!!enable_width_resize.make (W_idth_resizable, Current, text_w_resize_cmd, a_parent);
-			--!!enable_height_resize.make (H_eight_resizable, Current, text_h_resize_cmd, a_parent);
-
+			!!enable_word_wrap.make (Context_const.enable_word_wrap_name, 
+					Current, Text_wrap_cmd, editor);
 			attach_left (size_l, 10);
 			attach_left (maximum_size, 200);
 			attach_right (maximum_size, 10);
 			attach_left (read_only, 10);
 
 			attach_left (enable_word_wrap, 10);
-			--attach_left (enable_width_resize, 10);
-			--attach_left (enable_height_resize, 10);
 
 			attach_left (width_l, 10);
 			attach_left (width_text_field, 200);
@@ -76,21 +117,18 @@ feature
 
 			attach_top (size_l, 15);
 			attach_top (maximum_size, 10);
-			--attach_top_widget (read_only, size_l, 10);
-			--attach_top_widget (read_only, maximum_size, 10);
 			attach_top_widget (maximum_size, width_l, 10);
 			attach_top_widget (maximum_size, width_text_field, 10);
 			attach_top_widget (width_text_field, height_l, 10);
 			attach_top_widget (width_text_field, height_text_field, 10);
 			attach_top_widget (height_text_field, read_only, 10);
 			attach_top_widget (read_only, enable_word_wrap, 10);
-			--attach_top_widget (enable_word_wrap, enable_width_resize, 10);
-			--attach_top_widget (enable_width_resize, enable_height_resize, 10);
-			--detach_bottom (enable_height_resize);
 			detach_bottom (enable_word_wrap);
+			show_current
 		end;
 
-	context: TEXT_C;
+
+feature
 
 	reset is
 			-- reset the content of the form

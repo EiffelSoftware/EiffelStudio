@@ -18,13 +18,14 @@ inherit
 			eiffel_color as old_eiffel_color,
 			set_modified_flags as button_set_modified_flags
 		redefine
-			stored_node, option_list, widget
+			stored_node, widget, set_bg_pixmap_name, add_to_option_list
 		end;
 
 	BUTTON_C
 		redefine
 			stored_node, reset_modified_flags, copy_attributes, 
-			eiffel_color, option_list, widget, set_modified_flags
+			eiffel_color, widget, set_modified_flags,
+			set_bg_pixmap_name, add_to_option_list
 		select
 			copy_attributes, reset_modified_flags, eiffel_color,
 			set_modified_flags
@@ -39,8 +40,9 @@ feature
 
 	create_oui_widget (a_parent: COMPOSITE) is
 		do
-			!!widget.make (entity_name, a_parent);
-			widget.set_size (20, 20);
+			!!widget.make_unmanaged (entity_name, a_parent);
+			widget.forbid_recompute_size;
+			set_size (20, 20);
 		end;
 
 	widget: PICT_COLOR_B;
@@ -53,6 +55,14 @@ feature {NONE}
 			!!Result.make ("Pict_color_b");
 		end;
 	
+	add_to_option_list (opt_list: ARRAY [INTEGER]) is
+		do
+			opt_list.put (Context_const.geometry_form_nbr,
+					Context_const.Geometry_format_nbr);
+			opt_list.put (Context_const.pict_color_att_form_nbr,
+					Context_const.Attribute_format_nbr);
+		end;
+
 feature 
 
 	eiffel_type: STRING is "PICT_COLOR_B";
@@ -61,34 +71,12 @@ feature
 	-- * specific attributes *
 	-- ***********************
 
-	option_list: ARRAY [INTEGER] is
-		local
-			i: INTEGER
-		do
-			Result := old_list;
-			i := Result.upper+2;
-			Result.force (pict_color_form_number, Result.upper+1);
-			from
-			until
-				i > Result.upper
-			loop
-				Result.put (-1, i);
-				i := i + 1
-			end
-		end;
-
 	pixmap_name: STRING;
 			-- Name of the file containing the pixmap definition
-
 	
-feature {NONE}
-
-	editor_form_cell: CELL [INTEGER] is
-        once
-            !!Result.put (0)
-        end;
- 
 feature 
+
+	pixmap_name_modified: BOOLEAN;
 
 	set_modified_flags is
 		do
@@ -98,24 +86,61 @@ feature
 			end;
 		end;
 
-
-	pixmap_name_modified: BOOLEAN;
+	set_bg_pixmap_name (a_string: STRING) is
+		local
+			a_pixmap: PIXMAP;
+			cloned_current: like Current;
+			p: COMPOSITE
+		do
+			bg_pixmap_name := a_string;
+			bg_pixmap_modified := False;
+			if (a_string = Void) then
+				widget.hide;
+				cloned_current := clone (Current);
+				p := widget.parent;
+				!! widget.make_unmanaged (entity_name, p);
+				cloned_current.copy_attributes (Current);
+				widget.set_x_y (cloned_current.widget.x, cloned_current.widget.y);
+				cloned_current.widget.destroy;
+				add_widget_callbacks;
+				widget.manage;
+			else
+				 !!a_pixmap.make;
+				 a_pixmap.read_from_file (a_string);
+				 if a_pixmap.is_valid then
+					  widget.set_background_pixmap (a_pixmap);
+					  bg_pixmap_modified := True;
+				 end;
+			end;
+		end;
 
 	set_pixmap_name (a_name: STRING) is
 			-- Set the pixmap name to `a_name' and load the content
 			-- of the file
 		local
 			a_pixmap: PIXMAP;
+			cloned_current: like Current;
+			p: COMPOSITE
 		do
 			pixmap_name_modified := False;
 			pixmap_name := a_name;
-			if pixmap_name /= Void then
+			if pixmap_name = Void then
+				widget.hide;
+				cloned_current := clone (Current);
+				p := widget.parent;
+				!! widget.make_unmanaged (entity_name, p);
+				cloned_current.copy_attributes (Current);
+				widget.set_x_y (cloned_current.widget.x, cloned_current.widget.y);
+				cloned_current.widget.destroy;
+				add_widget_callbacks;
+				widget.manage;
+			else
 				!!a_pixmap.make;
 				a_pixmap.read_from_file (a_name);
 				if a_pixmap.is_valid then
-					widget.set_managed (False);
+					widget.unmanage;
 					widget.set_pixmap (a_pixmap);
-					widget.set_managed (True);
+					widget.manage;
 					pixmap_name_modified := True;
 				end;
 			end
@@ -128,7 +153,7 @@ feature
 		end;
 
 	
-feature {NONE}
+feature 
 
 	copy_attributes (other_context: like Current) is
 		do
@@ -137,17 +162,6 @@ feature {NONE}
 			end;
 			button_copy_attributes (other_context);
 		end;
-
---	context_initialization (context_name: STRING): STRING is
---		do
---			Result := old_context_initialization (context_name);
---			if pixmap_name_modified then
---				function_string_to_string (Result, context_name, "set_pixmap_by_name", pixmap_name)
---			end;
---		end;
-
-	-- if set_pixmap_by_name is not implemented in EiffelVision
-	-- then redefine eiffel_color
 
 	
 feature {CONTEXT}

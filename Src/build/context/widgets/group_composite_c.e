@@ -18,12 +18,8 @@ inherit
 		select
 			create_context
 		end
-
-
-
 	
 feature 
-
 
 	full_name: STRING is
 			-- full name of the context i.e. with root, group, ...
@@ -125,6 +121,7 @@ feature
 				child_forth
 			end;
 			retrieved_node.set_context_attributes (Current);
+			widget.manage;
 			retrieved_node := Void;
 		end;
 
@@ -148,6 +145,7 @@ feature
 				child_forth
 			end;
 			retrieved_node.set_context_attributes (Current);
+			widget.manage;
 			retrieved_node := Void
 		end;
 

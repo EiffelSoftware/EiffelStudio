@@ -2,7 +2,6 @@ class TEXT_FIELD_FORM
 
 inherit
 
-	CONTEXT_CMDS;
 	EDITOR_FORM
 		redefine
 			context
@@ -12,23 +11,36 @@ creation
 
 	make
 
-feature
+feature {NONE}
 
 	maximum_size: INTEGER_TEXT_FIELD;
 
-	make (a_parent: CONTEXT_EDITOR) is
+	context: TEXT_FIELD_C is
 		do
-			a_parent.form_list.put (Current, text_field_form_number);
+			Result ?= editor.edited_context
 		end;
 
-	make_visible (a_parent: CONTEXT_EDITOR) is
+	form_number: INTEGER is
+		do
+			Result := Context_const.text_field_att_form_nbr
+		end;
+
+	text_field_cmd: TEXT_F_CMD is
+		once
+			!!Result
+		end;
+
+feature
+
+	make_visible (a_parent: COMPOSITE) is
 		local
 			size_l: LABEL_G;
 		do
-			initialize (Text_field_form_name, a_parent);
+			initialize (Context_const.text_field_form_name, a_parent);
 
-			!!maximum_size.make (M_aximum_size, Current, text_field_cmd, a_parent);
-			!!size_l.make (M_aximum_size, Current);
+			!!maximum_size.make (Context_const.maximum_size_name, 
+					Current, Text_field_cmd, editor);
+			!!size_l.make (Context_const.maximum_size_name, Current);
 			maximum_size.set_width (50);
 
 			attach_left (size_l, 10);
@@ -39,9 +51,8 @@ feature
 			attach_top (maximum_size, 10);
 			detach_bottom (maximum_size);
 			detach_bottom (size_l);
+			show_current
 		end;
-
-	context: TEXT_FIELD_C;
 
 	reset is
 			-- reset the content of the form

@@ -13,7 +13,6 @@ inherit
 
 	PRIMITIVE_C
 		rename
-			option_list as old_list,
 			copy_attributes as old_copy_attributes,
 			reset_modified_flags as old_reset_modified_flags
 		redefine
@@ -23,10 +22,10 @@ inherit
 
 	PRIMITIVE_C
 		redefine
-			stored_node, option_list, reset_modified_flags, 
+			stored_node, reset_modified_flags, 
 			copy_attributes, context_initialization, is_fontable, widget
 		select
-			option_list, copy_attributes, reset_modified_flags
+			copy_attributes, reset_modified_flags
 		end
 	
 feature 
@@ -38,7 +37,7 @@ feature
 
 	create_oui_widget (a_parent: COMPOSITE) is
 		do
-			!!widget.make (entity_name, a_parent);
+			!!widget.make_unmanaged (entity_name, a_parent);
 		end;
 
 	widget: TEXT_FIELD;
@@ -46,35 +45,22 @@ feature
 	
 feature {NONE}
 
-	editor_form_cell: CELL [INTEGER] is
-		once
-			!!Result.put (0)
-		end;
-
 	namer: NAMER is
 		once
 			!!Result.make ("Text_field");
 		end;
 	
+	add_to_option_list (opt_list: ARRAY [INTEGER]) is
+		do
+			opt_list.put (Context_const.geometry_form_nbr,
+					Context_const.Geometry_format_nbr);
+			opt_list.put (Context_const.text_field_att_form_nbr,
+					Context_const.Attribute_format_nbr);
+		end;
+
 feature 
 
 	eiffel_type: STRING is "TEXT_FIELD";
-
-	option_list: ARRAY [INTEGER] is
-		local
-			i: INTEGER
-		do
-			Result := old_list;
-			i := Result.upper+2;
-			Result.force (text_field_form_number, Result.upper+1);
-			from
-			until
-				i > Result.upper
-			loop
-				Result.put (-1, i);
-				i := i + 1
-			end
-		end;
 
 	-- ***********************
 	-- * specific attributes *

@@ -12,89 +12,81 @@ inherit
 	WINDOW_C
 		rename
 			remove_yourself as wind_remove_yourself,
-			cut as old_cut,
-			undo_cut as old_undo_cut,
-			option_list as old_list,
 			copy_attributes as old_copy_attributes,
 			reset_modified_flags as old_reset_modified_flags,
 			add_widget_callbacks as window_add_widget_callbacks
 		redefine
 			creation_procedure_text, stored_node,
-			context_initialization, widget
+			context_initialization, widget, is_perm_window
 		end;
 	WINDOW_C
 		redefine
 			creation_procedure_text, stored_node, 
 			reset_modified_flags, copy_attributes, 
-			context_initialization, option_list, 
-			widget, undo_cut, cut, add_widget_callbacks,
-			remove_yourself
+			context_initialization, 
+			widget, add_widget_callbacks,
+			remove_yourself, is_perm_window
 		select
-			cut, undo_cut, option_list, copy_attributes, 
-			reset_modified_flags, add_widget_callbacks,
-			 remove_yourself
+			copy_attributes, reset_modified_flags, 
+			add_widget_callbacks, remove_yourself
 		end
 
-feature 
+feature -- Widget type
+
+	widget: PERM_WIND;
+
+feature
 
 	context_type: CONTEXT_TYPE is
 		do
 			Result := context_catalog.perm_wind_type
 		end;
 
-	widget: PERM_WIND;
-
 	create_oui_widget (a_parent: COMPOSITE) is
 		local
 			contin_command: WINDOW_ITERATOR_COMMAND;
 		do
 			!!widget.make (entity_name, eb_screen);
-			widget_set_title (entity_name);
 			title := entity_name;
-			set_size (400, 500);
-			set_default_pixmap;
-			add_window_geometry_action;
+			set_default_bg_pixmap;
 			!!contin_command.make (Current);
 			widget.top_shell.set_delete_command (contin_command);
+				-- For x_offset and y_offset initialization
+			if retrieved_node = Void then
+					-- Not retrieving widget from project
+				widget_set_title (entity_name);
+				set_size (400, 500);
+				old_x := eb_screen.x + 10;
+				old_y := eb_screen.y + 10;
+				set_x_y (old_x, old_y);
+			end;
+			widget.top_shell.set_action ("<Map>,<Prop>", Current, Current)
+			add_to_window_list
 		end;
 
-	add_window_geometry_action is 
-		do
-			widget.top_shell.set_action ("<Configure>", Current, Fourth);
-		 end;
+feature -- Adding/removing callbacks
 
-	remove_window_geometry_action is 
+	add_window_geometry_action is
+		do
+			widget.top_shell.set_action ("<Configure>", Current, Void)
+		end;
+
+	remove_popup_action is
+		do
+			widget.top_shell.remove_action ("<Map>,<Prop>");
+		end;
+
+	remove_window_geometry_action is
 		do
 			widget.top_shell.remove_action ("<Configure>");
- 		end;
-		
-	skip_configure_action is
-		do
-			remove_window_geometry_action;
-			widget.top_shell.set_action ("<Configure>", Current, Fifth);
 		end;
 
-
-	skip_two_configure_action is
-		do
-			remove_window_geometry_action;
-			widget.top_shell.set_action ("<Configure>", Current, sixth);
-		end;
-
-
-	
 feature {NONE}
 
 	add_widget_callbacks is
 			-- Define the general behavior of perm window.
 		do
-			--widget.set_action ("<ConfigureRequest>", Current, First);
 			window_add_widget_callbacks;
-		end;
-
-	editor_form_cell: CELL [INTEGER] is
-		once
-			!!Result.put (0)
 		end;
 
 	namer: NAMER is
@@ -102,68 +94,50 @@ feature {NONE}
 			!!Result.make ("Perm_wind");
 		end;
 
-	
 feature 
 
 	eiffel_type: STRING is "PERM_WIND";
 
 	remove_yourself is
 		local
-			child_temp_wind: TEMP_WIND_C;
+			window_c: WINDOW_C;
 		do
 			from 
-				window_list.start
+				Shared_window_list.start
 			until
-				window_list.after
+				Shared_window_list.after
 			loop
-				child_temp_wind ?= window_list.item;
-				if child_temp_wind /= Void then
-					if child_temp_wind.parent = Current then
-						child_temp_wind.remove_yourself;
-						if not window_list.before then
-							window_list.start;
-						end;
+				window_c := Shared_window_list.item;
+				if window_c.parent = Current then
+						-- Remove all children popups
+					window_c.remove_yourself;
+					if not Shared_window_list.before then
+						Shared_window_list.start;
 					end;
 				end;	
-				window_list.forth;
+				Shared_window_list.forth;
 			end;
 			wind_remove_yourself;
 		end;
 
-	cut is
+	is_perm_window: BOOLEAN is
 		do
-			widget.hide;
-			old_cut;
-		end;
-
-	undo_cut is
-		do
-			skip_configure_action;
-			widget.show;
-			old_undo_cut
+			Result := True
 		end;
 
 	-- ***********************
 	-- * specific attributes *
 	-- ***********************
 
-	option_list: ARRAY [INTEGER] is
-		local
-			i: INTEGER
-		do
-			Result := old_list;
-			i := Result.upper+2;
-			Result.force (perm_wind_form_number, Result.upper+1);
-			from
-			until
-				i > Result.upper
-			loop
-				Result.put (-1, i);
-				i := i + 1
-			end
-		end;
-
 feature {NONE}
+
+	add_to_option_list (opt_list: ARRAY [INTEGER]) is
+		do
+			opt_list.put (Context_const.geometry_form_nbr,
+					Context_const.geometry_format_nbr);
+			opt_list.put (Context_const.perm_wind_att_form_nbr,
+					Context_const.attribute_format_nbr);
+		end;
 
 	widget_set_title (new_title: STRING) is
 			-- Set`title' to `new_title'
@@ -175,9 +149,9 @@ feature {NONE}
 	widget_forbid_resize is
 		do
 			widget.forbid_resize
-        end;
+		end;
  
-    widget_allow_resize is
+	widget_allow_resize is
 		do
 			widget.allow_resize
 		end;
@@ -235,10 +209,7 @@ feature
 			old_reset_modified_flags;
 			icon_name_modified := False;
 			iconic_state_modified := False;
-			start_hidden_modified := False;
-			start_hidden := False;
 		end;
-
 	
 feature {NONE}
 
@@ -259,9 +230,7 @@ feature {NONE}
 			if icon_pixmap_modified then
 				other_context.set_icon_pixmap (icon_pixmap_name);
 			end;
-			if start_hidden_modified then
-				other_context.set_start_hidden (start_hidden)
-			end;
+			other_context.set_start_hidden (start_hidden)
 			old_copy_attributes (other_context);
 		end;
 

@@ -3,34 +3,13 @@ class CUT_GROUP_CMD
 
 inherit
 
-	WINDOWS
-		export
-			{NONE} all
-		end;
-	GROUP_SHARED
-		export
-			{NONE} all
-		end;
+	WINDOWS;
+	SHARED_CONTEXT;
 	CONTEXT_CMD
 		redefine
 			work, undo, redo, n_ame
 		end;
-	EDITOR_FORMS
-		rename
-			geometry_form_number as associated_form
-		export
-			{NONE} all
-		end;
-	COMMAND_NAMES
-		rename
-			C_ut_group_type_cmd_name as c_name
-		export
-			{NONE} all
-		end
 
-
-
-	
 feature {NONE}
 
 	group_type: CONTEXT_GROUP_TYPE;
@@ -43,6 +22,16 @@ feature {NONE}
 			Result.append (group_type.label);
 			Result.append (" )");
 		end;
+
+	c_name: STRING is
+		do
+			Result := Context_const.cut_group_type_cmd_name
+		end;
+
+	associated_form: INTEGER is
+		do
+			Result := Context_const.geometry_form_nbr
+		end
 	
 feature 
 
@@ -59,8 +48,7 @@ feature
 	undo is
 		do
 			context_catalog.append_group_type (group_type);
-			group_list.finish;
-			group_list.put_right (group_type.group);
+			Shared_group_list.extend (group_type.group);
 		end;
 
 	redo is

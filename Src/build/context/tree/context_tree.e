@@ -3,17 +3,9 @@ class CONTEXT_TREE
 
 inherit
 
-	BASIC_ROUTINES
-		export
-			{NONE} all
-		end;
-	CONTEXT_SHARED
-		export
-			{NONE} all
-		end;
+	CONSTANTS;
+	SHARED_CONTEXT;
 	CONTEXT_STONE
-		export
-			{NONE} all
 		redefine
 			transportable
 		end;
@@ -22,9 +14,6 @@ inherit
 			make as dr_area_create,
 			identifier as dr_area_identifier,
 			cursor as drawing_cursor
-		export
-			{NONE} all;
-			{ANY} clear
 		undefine
 			init_toolkit
 		redefine
@@ -50,8 +39,6 @@ inherit
 			append
 		end;
 	HOLE
-		export
-			{NONE} all
 		redefine
 			stone, compatible
 		end;
@@ -157,8 +144,8 @@ feature
 		local
 			contin_command: ITER_COMMAND;
 		do
-			!!top_shell.make (C_ontexttree, a_screen);
-			!!scrolled_w.make (S_crolledwindow, top_shell);
+			!!top_shell.make (Widget_names.context_tree, a_screen);
+			!!scrolled_w.make (Widget_names.scrolledwindow, top_shell);
 			dr_area_create (D_rawingarea, scrolled_w);
 			!!current_position;
 			drawing_box_create (Current);
@@ -173,10 +160,12 @@ feature
 			set_action ("<Btn1Down>", Current, select_action);
 			set_action ("Shift<Btn1Down>", Current, Nineth);
 			set_action ("Ctrl<Btn1Down>", Current, Fourth);
-			set_action ("<Key>Left", Current, Fifth);
-			set_action ("<Key>Right", Current, Sixth);
-			set_action ("<Key>Up", Current, Seventh);
-			set_action ("<Key>Down", Current, Eighth);
+
+				-- Callbacks for arrow keys
+			set_action ("<Key>osfLeft", Current, Fifth);
+			set_action ("<Key>osfRight", Current, Sixth);
+			set_action ("<Key>osfUp", Current, Seventh);
+			set_action ("<Key>osfDown", Current, Eighth);
 
 			!!positions.make;
 			register;
@@ -185,12 +174,10 @@ feature
 			top_shell.set_delete_command (contin_command);
 		end;
 
-	
 feature {TREE_ELEMENT}
 
 	current_position: COORD_XY_FIG;
 
-	
 feature {NONE}
 
 	positions: LINKED_LIST [COORD_XY_FIG];
@@ -209,12 +196,12 @@ feature
 			i: INTEGER;
 		do
 			if not drawing_disabled then
-				if positions.count < window_list.count then
+				if positions.count < Shared_window_list.count then
 					from
 						positions.finish;
 						i := positions.count
 					until
-						i > window_list.count
+						i > Shared_window_list.count
 					loop
 						positions.put_right (current_position);
 						i := i + 1;
@@ -228,28 +215,28 @@ feature
 				max_x := 0; max_y := 0;
 				set_new_position (10, 10, 10);
 				from
-					window_list.start;
+					Shared_window_list.start;
 					positions.start
 				until
-					window_list.after
+					Shared_window_list.after
 				loop
-					if window_list.item = root_context then
+					if Shared_window_list.item = root_context then
 						real_draw := True;
 					end;
 					if real_draw then
-						saved_position := window_list.item.tree_element.coord_calc;
+						saved_position := Shared_window_list.item.tree_element.coord_calc;
 						saved_position.set (max_x, max_y);
 						positions.put (saved_position);
 						set_new_position (10, max_y + 40, 10);
 					else
-						max_x :=  max (max_x, positions.item.x);
+						max_x :=  max_x.max (positions.item.x);
 						set_new_position (10, positions.item.y + 40, 10);
 					end;
-					window_list.forth;
+					Shared_window_list.forth;
 					positions.forth;
 				end;
-				set_size (max (max_x+20, scrolled_w.width),
-					  	max (max_y+20, scrolled_w.height));
+				set_size (scrolled_w.width.max (max_x+20),
+					  	scrolled_w.height.max (max_y+20));
 				draw;
 			end
 		end;
@@ -265,8 +252,8 @@ feature {TREE_ELEMENT}
 	set_new_position (new_x, new_y, maxi_x: INTEGER) is
 		do
 			current_position.set (new_x, new_y);
-			max_x := max (max_x, maxi_x);
-			max_y := max (max_y, new_y);
+			max_x := max_x.max (maxi_x);
+			max_y := max_y.max (new_y);
 		end;
 
 	
@@ -312,21 +299,12 @@ feature {NONE}
 					end;
 					display (a_context);
 				elseif (argument = Nineth) then
-					wind_c ?= element.original_stone;
-					if wind_c /= Void  then
-						wind_c.skip_configure_action;
-						if not wind_c.shown then
-							wind_c.skip_two_configure_action;
-							wind_c.show;
-						end;
-						wind_c.raise;
-					else
-						element.original_stone.raise
-					end;
+					element.original_stone.raise
 				else
 					a_context := element.original_stone;
 					if (a_context.parent = Void) or else
-					   a_context.parent.is_bulletin then
+					   a_context.parent.is_bulletin 
+					then
 						!!cmd;
 						cmd.execute (a_context);
 						if (argument = Fifth) then
@@ -338,19 +316,7 @@ feature {NONE}
 						elseif (argument = Eighth) then
 							d_y := 1;
 						end;
-						if a_context.grouped then
-							a_group := a_context.group;
-							from
-								a_group.start
-							until
-								a_group.after
-							loop
-								a_group.item.set_x_y (a_group.item.x+d_x, a_group.item.y+d_y);
-								a_group.forth;
-							end;
-						else
-							a_context.set_x_y (a_context.x + d_x, a_context.y + d_y);
-						end;
+						cmd.move_context (d_x, d_y)
 					end;
 				end;
 			end;
@@ -451,7 +417,7 @@ feature {NONE}
 							end;
 						end;
 					end;
-			elseif not (window_c = Void) then
+			elseif window_c /= Void then
 				temp_w_context ?= window_c;
 				if temp_w_context /= Void then
 					find;
@@ -486,23 +452,11 @@ feature {NONE}
 					end
 				end
 			end;
-			if not (new_context = Void) then
-				if (a_composite_c = Void) then
-					perm_w_context ?= new_context;
-					temp_w_context ?= new_context;
-					if perm_w_context /= Void then
-						new_context.set_position (10, 300);
-					elseif temp_w_context /= Void then
-						--temp_w_context.popup;
-						temp_w_context.set_position (150, 300);
-					else
-						new_context.set_position (0, 0);
-					end;
-				else
-					new_context.set_position (a_composite_c.real_x, a_composite_c.real_y);
-				end;
+			if new_context /= Void then
 				new_context.realize;
+				new_context.widget.manage;
 				if temp_w_context /= Void then
+					temp_w_context ?= new_context;
 					temp_w_context.popup;
 				end;
 				display (new_context);

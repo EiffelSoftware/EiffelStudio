@@ -3,30 +3,12 @@ class GEOMETRY_FORM
 
 inherit
 
-	CONTEXT_CMDS
-		export
-			{NONE} all
-		end;
 	EDITOR_FORM
-		redefine
-			form_name
-		end
-
 
 creation
 
 	make
 
-	
-feature 
-
-	form_name: STRING is
-			-- Name of the form in the menu
-		do
-			Result := G_eometry_form_name;
-		end;
-
-	
 feature {NONE}
 
 	text_field_x: INTEGER_TEXT_FIELD;
@@ -37,7 +19,21 @@ feature {NONE}
 
 	text_field_height: INTEGER_TEXT_FIELD;
 
-	
+	form_number: INTEGER is
+		do
+			Result := Context_const.geometry_form_nbr
+		end;
+
+	Set_position_cmd: SET_POSITION_CMD is
+		once
+			!!Result
+		end;
+
+	Set_size_cmd: SET_SIZE_CMD is
+		once
+			!!Result
+		end;
+
 feature 
 
 	context_width: INTEGER is
@@ -60,29 +56,29 @@ feature
 			Result := text_field_y.int_value;
 		end;
 
-	make (a_parent: CONTEXT_EDITOR) is
-		do
-			a_parent.form_list.put (Current, geometry_form_number);
-		end;
+	label_height: LABEL_G;
 
-	make_visible (a_parent: CONTEXT_EDITOR) is
+	make_visible (a_parent: COMPOSITE) is
 		local
 			label_x: LABEL_G;
 			label_y: LABEL_G;
 			label_width: LABEL_G;
-			label_height: LABEL_G;
 		do
-			initialize (G_eometry_form_name, a_parent);
+			initialize (Context_const.geometry_form_name, a_parent);
 
-			!!label_x.make (X_string, Current);
-			!!label_y.make (Y_string, Current);
-			!!label_width.make (W_idth, Current);
-			!!label_height.make (H_eight, Current);
+			!!label_x.make (Context_const.X_string_name, Current);
+			!!label_y.make (Context_const.Y_string_name, Current);
+			!!label_width.make (Context_const.width_name, Current);
+			!!label_height.make (Context_const.height_name, Current);
 
-			!!text_field_x.make (T_extfield, Current, set_position_cmd, a_parent);
-			!!text_field_y.make (T_extfield, Current, set_position_cmd, a_parent);
-			!!text_field_width.make (T_extfield, Current, set_size_cmd, a_parent);
-			!!text_field_height.make (T_extfield, Current, set_size_cmd, a_parent);
+			!!text_field_x.make (Widget_names.textfield, 
+					Current, Set_position_cmd, editor);
+			!!text_field_y.make (Widget_names.textfield, 
+					Current, Set_position_cmd, editor);
+			!!text_field_width.make (Widget_names.textfield, 
+					Current, Set_size_cmd, editor);
+			!!text_field_height.make (Widget_names.textfield, 
+					Current, Set_size_cmd, editor);
 
 			text_field_x.set_width (50);
 			text_field_y.set_width (50);
@@ -119,25 +115,34 @@ feature
 			attach_top_widget (text_field_width, label_height, 10);
 			detach_bottom (text_field_height);
 			detach_bottom (label_height);
+			show_current
 		end;
 
 	
 feature {NONE}
 
 	reset is
+		local
+			scroll_list: SCROLL_LIST_C
 		do
+			scroll_list ?= context;
 			text_field_x.set_int_value (context.x);
 			text_field_y.set_int_value (context.y);
 			text_field_width.set_int_value (context.width);
-			text_field_height.set_int_value (context.height);
+			if scroll_list = Void then
+				text_field_height.show;
+				label_height.manage;
+				text_field_height.set_int_value (context.height);
+			else
+				label_height.unmanage;
+				text_field_height.hide
+			end;
 		end;
 
 	
 feature 
 
 	apply is
---		local
---			attach: FORM_ATTACHMENTS;
 		do
 			if not text_field_x.same_value (context.x) or else
 				not text_field_y.same_value (context.y) then
@@ -147,10 +152,6 @@ feature
 				not text_field_height.same_value (context.height) then
 				context.set_size (text_field_width.int_value, text_field_height.int_value);
 			end;
---			attach := context.attachments;
---			if not attach.Void then
---				attach.attach_top (attach.top_context, attach.top_offset);
---			end;
 		end;
 
 end

@@ -3,46 +3,15 @@
 class STORER 
 
 inherit
-	MEMORY
-		export
-			{NONE} all
-		end;
 
-	STORAGE_INFO
-		export
-			{NONE} all
-		end;
-
-	WINDOWS
-		export
-			{NONE} all
-		end;
-
-	CONTEXT_SHARED
-		export
-			{NONE} all
-		end;
-
-	GROUP_SHARED
-		export
-			{NONE} all
-		end;
-
-	NAMER_SHARED
-		export
-			{NONE} all
-		end;
-
-	APP_SHARED
-		export
-			{NONE} all
-		end;
-
-	TRANSL_SHARED
-		export
-			{NONE} all
-		end;
-
+	MEMORY;
+	CONSTANTS;
+	SHARED_STORAGE_INFO;
+	WINDOWS;
+	SHARED_CONTEXT;
+	SHARED_NAMER;
+	SHARED_APPLICATION;
+	SHARED_TRANSLATIONS
 
 creation
 
@@ -102,26 +71,28 @@ feature
 		local
 			fn: STRING;	
 		do
+			file_name.extend (Environment.directory_separator);
+
 				fn := clone (file_name);
-				fn.append ("/interface");
+				fn.append (Environment.interface_file_name);
 			context_storer.store (fn);
 				fn := clone (file_name);
-				fn.append ("/groups");
+				fn.append (Environment.groups_file_name);
 			group_storer.store (fn);
 				fn := clone (file_name);
-				fn.append ("/translations");
+				fn.append (Environment.translations_file_name);
 			translation_storer.store (fn);
 				fn := clone (file_name);
-				fn.append ("/commands");
+				fn.append (Environment.commands_file_name);
 			command_storer.store (fn);
 				fn := clone (file_name);
-				fn.append ("/states");
+				fn.append (Environment.states_file_name);
 			state_storer.store (fn);
 				fn := clone (file_name);
-				fn.append ("/application");
+				fn.append (Environment.application_file_name);
 			application_storer.store (fn);
 				fn := clone (file_name);
-				fn.append ("/namer");
+				fn.append (Environment.namer_file_name);
 			namer_storer.store (fn);
 		end;
 
@@ -134,16 +105,18 @@ feature
 		do
 			old_gc_status := collecting;
 			collection_off;
-			for_save.set_value (True);
+			for_save.set_item (True);
 			clear_all;
+			file_name.extend (Environment.directory_separator);
+
 				fn := clone (file_name);
-				fn.append ("/groups");
+				fn.append (Environment.groups_file_name);
 			group_storer.retrieve (fn);
-			group_list.wipe_out;
-			group_list.merge_right (group_storer.retrieved_data);
+			Shared_group_list.wipe_out;
+			Shared_group_list.merge_right (group_storer.retrieved_data);
 			context_catalog.update_groups;
 				fn := clone (file_name);
-				fn.append ("/interface");
+				fn.append (Environment.interface_file_name);
 			context_storer.retrieve (fn);
 			contexts := context_storer.retrieved_data;
 			from
@@ -154,33 +127,27 @@ feature
 			loop
 				a_context := contexts.item;
 				a_context.retrieve_oui_widget;
-				window_list.finish;
-				window_list.put_right (a_context);
 				contexts.forth
 			end;
 			tree.enable_drawing;
 				fn := clone (file_name);
-				fn.append ("/translations");
+				fn.append (Environment.translations_file_name);
 			translation_storer.retrieve (fn);
-			translation_list.merge_right (translation_storer.retrieved_data);
+			Shared_translation_list.merge_right (translation_storer.retrieved_data);
 				fn := clone (file_name);
-				fn.append ("/commands");
+				fn.append (Environment.commands_file_name);
 			command_storer.retrieve (fn);
 			commands := command_storer.retrieved_data;
 			command_catalog.merge (commands);
-			--	fn := clone (file_name);
-			--	fn.append ("/behaviors");
-			--behavior_storer.retrieve (fn);
-			--behaviors := behavior_storer.retrieved_data;
 				fn := clone (file_name);
-				fn.append ("/states");
+				fn.append (Environment.states_file_name);
 			state_storer.retrieve (fn);
 			states := state_storer.retrieved_data;
 				fn := clone (file_name);
-				fn.append ("/application");
+				fn.append (Environment.application_file_name);
 			application_storer.retrieve (fn);
 				fn := clone (file_name);
-				fn.append ("/namer");
+				fn.append (Environment.namer_file_name);
 			namer_storer.retrieve (fn);
 			application_storer.rebuild_graph;
 			if (application_storer.has_initial_circle) then
@@ -193,24 +160,30 @@ feature
 				app_editor.set_default_selected;
 			end;
 			clear_uneeded;
-			for_save.set_value (False);
+			for_save.set_item (False);
 			if old_gc_status then
 				collection_on;
 			end;
 		end;
 
 	display_retrieved_windows is
+		local
+			window_c: WINDOW_C
 		do
-			if not window_list.empty then
-				tree.display (window_list.first)
+			if not Shared_window_list.empty then
+				tree.display (Shared_window_list.first)
 			end;
 			from
-				window_list.start;
+				Shared_window_list.start;
 			until
-				window_list.after
+				Shared_window_list.after
 			loop
-				window_list.item.realize;
-				window_list.forth
+				window_c := Shared_window_list.item;
+				window_c.realize;
+				if not window_c.is_perm_window then
+					window_c.show
+				end;
+				Shared_window_list.forth
 			end;
 		end;
 

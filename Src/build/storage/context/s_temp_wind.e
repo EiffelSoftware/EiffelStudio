@@ -50,11 +50,8 @@ feature
 		end;
 
 	
-	set_attributes (c: CONTEXT) is
-		local
-			twc: TEMP_WIND_C;
+	set_attributes (c: WINDOW_C) is
 		do
-			twc ?= c;
 			if not (visual_name = Void) then
 				c.set_visual_name (visual_name);
 			end;
@@ -76,12 +73,9 @@ feature
 			if not (resize_policy = Void) then
 				c.set_resize_policy (resize_policy.resize_policy (c))
 			end;
-			if twc /= Void then
-				--twc.popup;
-			end;
-			if position_modified then
-				c.set_x_y (x, y);
-			end;
+                -- Set x and y regardless if position is not modified
+            c.set_x_y (x, y);
+            c.set_default_position (position_modified)
 		end;
 
 

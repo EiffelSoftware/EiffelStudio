@@ -13,29 +13,24 @@ inherit
 
 	CONTEXT
 		rename
-			option_list as old_list,
 			copy_attributes as old_copy_attributes,
 			reset_modified_flags as old_reset_modified_flags,
 			initialize_transport as old_initialize_transport,
 			remove_widget_callbacks as old_remove_widget_callbacks
 		redefine
-				add_widget_callbacks, stored_node, context_initialization, widget
+			add_widget_callbacks, stored_node, context_initialization, widget
 		end;
 
 	CONTEXT
 		redefine
 			remove_widget_callbacks, initialize_transport, 
-			option_list, reset_modified_flags, copy_attributes,
+			reset_modified_flags, copy_attributes,
 			add_widget_callbacks, stored_node, context_initialization, widget
 		select
-			option_list, reset_modified_flags, copy_attributes,
+			reset_modified_flags, copy_attributes,
 			remove_widget_callbacks, initialize_transport
 		end
 
-
-
-
-	
 feature 
 
 	context_type: CONTEXT_TYPE is
@@ -45,8 +40,7 @@ feature
 
 	create_oui_widget (a_parent: COMPOSITE) is
 		do
-			!!widget.make (entity_name, a_parent);
-			select_widget;
+			!! widget.make_unmanaged (entity_name, a_parent);
 			set_size (80, 80);
 			set_drawing_area_size (1000, 1000);
 		end;
@@ -81,17 +75,19 @@ feature {NONE}
 			widget.scrolled_window.add_button_press_action (3, transport_command, Current);
 		end;
 
-	editor_form_cell: CELL [INTEGER] is
-		once
-			!!Result.put (0)
-		end;
-
 	namer: NAMER is
 		once
 			!!Result.make ("Drawing_box");
 		end;
-
 	
+	add_to_option_list (opt_list: ARRAY [INTEGER]) is
+		do
+			opt_list.put (Context_const.geometry_form_nbr,
+					Context_const.Geometry_format_nbr); 
+			opt_list.put (Context_const.drawing_box_att_form_nbr,
+					Context_const.Attribute_format_nbr)
+		end;
+
 feature 
 
 	eiffel_type: STRING is "DRAWING_BOX";
@@ -99,22 +95,6 @@ feature
 	-- ***********************
 	-- * specific attributes *
 	-- ***********************
-
-	option_list: ARRAY [INTEGER] is
-		local
-			i: INTEGER
-		do
-			Result := old_list;
-			i := Result.upper+2;
-			Result.force (drawing_box_form_number, Result.upper + 1);
-			from
-			until
-				i > Result.upper
-			loop
-				Result.put (-1, i);
-				i := i + 1;
-			end
-		end;
 
 	set_fg_color_name (a_name: STRING) is
 		local

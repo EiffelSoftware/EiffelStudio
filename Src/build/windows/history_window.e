@@ -3,53 +3,25 @@ class HISTORY_WND
 
 inherit
 
-	HISTORY
-		export
-			{NONE} all
-		end;
-
-	TOP_SHELL
+	HISTORY;
+	FORM_D
 		rename
-			make as top_shell_create
+			make as form_d_make
 		export
 			{NONE} all;
-			{ANY} hide, show, shown, realize, realized
+			{ANY} is_popped_up, popup, popdown
 		undefine
 			init_toolkit
 		end;
-
-	WIDGET_NAMES
-		export
-			{NONE} all
-		end;
-
-	COMMAND
-		export
-			{NONE} all
-		end;
-
+	WIDGET_NAMES;
+	COMMAND;
+	CONSTANTS;
 	COMMAND_ARGS
-		export
-			{NONE} all
-		end;
-
-	WINDOWS
-		export
-			{NONE} all
-		end;
-
-	WARN_POPUPER
-		export
-			{NONE} all
-		undefine
-			continue_after_popdown
-		end
-
+	WINDOWS;
 
 creation
 
 	make
-
 	
 feature 
 
@@ -176,11 +148,33 @@ feature {NONE}
 	
 feature 
 
+	history_count: INTEGER is 5;
+
 	record (cmd: like item) is
 			-- Put `cmd' in history list
 			-- and highlight the corresponding
 			-- item. Remove all commands bellow.
+		local
+			cut_cmd: CONTEXT_CUT_CMD;
+			grp_cmd: GROUP_CMD
 		do
+			remove_tail;
+			if history_list.count = history_count then
+				history_list.start;
+					-- Special case (destroy widgets)
+				cut_cmd ?= history_list.item;
+				grp_cmd ?= history_list.item;
+				if cut_cmd /= Void then
+					cut_cmd.destroy_widgets
+				elseif grp_cmd /= Void then
+					grp_cmd.destroy_widgets
+				end;
+				list.start;
+				list.remove;
+				list.finish;
+				history_list.remove;
+				history_list.finish
+			end;
 			history_list.put_right (cmd);
 			history_list.forth;
 			if cmd.n_ame /= Void then
@@ -190,7 +184,6 @@ feature
 			end;
 			list.forth;
 			saved_application := False;
-			remove_tail;
 			select_item
 		end;
 
@@ -199,25 +192,28 @@ feature {NONE}
 
 	remove_tail is
 		local
-			pos: INTEGER
+			create_cont: CONTEXT_CREATE_CMD
 		do
-			pos := history_list.index;
-			if (history_list.count - pos) /= 0 then
+			if (not history_list.islast) and then
+				(not history_list.empty)
+			then
 				from
-					history_list.forth;
-					if not list.after then
-						list.remove_right (history_list.count - pos);
-					end;
+					list.forth
+					history_list.forth
 				until
 					history_list.after
 				loop
+					create_cont ?= history_list.item;
+					if create_cont /= Void then
+						create_cont.destroy_widgets
+					end;
+					list.remove;
 					history_list.remove
 				end;
-				history_list.go_i_th (pos);
-				list.go_i_th (pos);
-			end;
+				history_list.back;
+				list.back;
+			end
 		end;
-
 	
 feature 
 
@@ -235,32 +231,6 @@ feature
 
 	history_list: TWO_WAY_LIST [like item];
 
-	set_history_list (hl: like history_list) is
-		local
-			pos: INTEGER;
-			temp_list: LINKED_LIST [STRING]
-		do
-			history_list := hl;
-			list.wipe_out;
-			from
-				pos := history_list.index;
-				history_list.start;
-				!!temp_list.make;
-			until
-				history_list.after
-			loop
-				temp_list.put_right (history_list.item.n_ame);
-				temp_list.forth;
-				history_list.forth
-			end;
-			history_list.go_i_th (pos);
-			list.merge_right (temp_list);
-			list.go_i_th (pos);
-			if not list.off then
-				select_item;
-			end
-		end;
-
 	select_item is
 			-- Select current element in the list
 		do
@@ -272,59 +242,52 @@ feature
 -- EGL section
 --************
 
-	make (a_name: STRING; a_screen: SCREEN) is
+	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create history window.
-		local
-			contin_command: ITER_COMMAND;
 		do
 				-----------------
 				-- Create widgets
 				-----------------
-			top_shell_Create (a_name, a_screen);
-			!!form.make (F_orm, Current);
-			!!list.make (L_ist, form);
-			!!row_column.make (R_ow_column, form);
+			form_d_make (a_name, a_parent);
+			!!list.make (L_ist, Current);
+			!!row_column.make (R_ow_column, Current);
 			!!undo_button.make ("Undo", row_column);
 			!!redo_button.make ("Redo", row_column);
-			!!forget_button.make ("Forget", row_column);
 
 				----------------------
 				-- Perform attachments
 				----------------------
-			form.attach_top (list, 0);
-			form.attach_left (list, 0);
-			form.attach_right (list, 0);
-			form.attach_bottom (row_column, 0);
-			form.attach_left (row_column, 0);
-			form.attach_right (row_column, 0);
-			form.attach_bottom_widget (row_column, list, 0);
+			attach_top (list, 0);
+			attach_left (list, 0);
+			attach_right (list, 0);
+			attach_bottom (row_column, 0);
+			attach_left (row_column, 0);
+			attach_right (row_column, 0);
+			attach_bottom_widget (row_column, list, 0);
 
 				-----------------
 				-- Set properties
 				-----------------
-            list.set_single_selection;
+			list.set_single_selection;
 			row_column.set_row_layout;
 
 			undo_button.add_activate_action (Current, First);
 			redo_button.add_activate_action (Current, Second);
-			forget_button.add_activate_action (Current, Third);
 			list.add_single_action (Current, Fourth);
 			!!history_list.make;
 			saved_application := True;
 
-			!!contin_command;
-			set_delete_command (contin_command);
+			list.set_visible_item_count (10);
+			set_title (a_name);
 		end;
 
 	
 feature {NONE}
 
-	form: FORM;
 	list: SCROLL_LIST;
 	row_column: ROW_COLUMN;
 	undo_button: PUSH_B;
 	redo_button: PUSH_B;
-	forget_button: PUSH_B;
 
 	execute (argument: ANY) is
 		do
@@ -332,21 +295,9 @@ feature {NONE}
 				back
 			elseif argument = Second then
 				forth
-			elseif argument = Third then
-				if not list.empty then
-					warning_box.popup (Current, "Do you really want to%N%
-												% erase the history?");
-				end
 			elseif argument = Fourth then
 				play
 			end
-		end;
-
-	continue_after_popdown (box: ERROR_BOX; ok: BOOLEAN) is
-		do
-			if ok then
-				wipe_out
-			end;
 		end;
 
 end

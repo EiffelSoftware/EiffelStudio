@@ -13,26 +13,25 @@ inherit
 
 	PRIMITIVE_C
 		rename
-			option_list as old_list,
 			copy_attributes as old_copy_attributes,
 			reset_modified_flags as old_reset_modified_flags
 		redefine
 			stored_node, is_fontable, context_initialization,
-			widget
+			widget, set_size, eiffel_creation
 		end;
 
 	PRIMITIVE_C
 		redefine
 			stored_node, reset_modified_flags, copy_attributes, 
-			is_fontable, context_initialization, option_list, widget
+			is_fontable, context_initialization, widget,
+			set_size, eiffel_creation
 		select
-			option_list, copy_attributes, reset_modified_flags
+			copy_attributes, reset_modified_flags
 		end
-
-
-
 	
 feature 
+
+	widget: SCROLLED_T;
 
 	context_type: CONTEXT_TYPE is
 		do
@@ -41,35 +40,31 @@ feature
 
 	create_oui_widget (a_parent: COMPOSITE) is
 		do
-			!!widget.make (entity_name, a_parent);
-			set_size (100, 100);
+			!! widget.make (entity_name, a_parent);
+			size_modified := True;
+			widget.set_size (110, 100)
 		end;
 
-	widget: SCROLLED_T;
-
-	option_list: ARRAY [INTEGER] is
-		local
-			i: INTEGER
+	add_to_option_list (opt_list: ARRAY [INTEGER]) is
 		do
-			Result := old_list;
-			i := Result.upper+2;
-			Result.force (text_form_number, Result.upper+1);
-			from
-			until
-				 i > Result.upper
-			loop
-				 Result.put (-1, i);
-				 i := i + 1
-			end
+			opt_list.put (Context_const.geometry_form_nbr,
+					Context_const.Geometry_format_nbr);
+			opt_list.put (Context_const.text_att_form_nbr,
+					Context_const.Attribute_format_nbr);
 		end;
 
-	
+	set_size (new_w, new_h: INTEGER) is
+			-- Set new size of widget
+		local
+			eb_bulletin: SCALABLE;
+		do
+			size_modified := True;
+			widget.set_size (new_w, new_h);
+			eb_bulletin ?= parent.widget;
+			eb_bulletin.update_ratios (widget);
+		end;
+
 feature {NONE}
-
-	editor_form_cell: CELL [INTEGER] is
-		once
-			!!Result.put (0)
-		end;
 
 	namer: NAMER is
 		once
@@ -167,13 +162,25 @@ feature
 
 	enable_word_wrap (flag: BOOLEAN) is
 			-- enable wordwrap if flag
+		local
+			p: COMPOSITE;
+			new_widget: like widget;
+			cloned_current: like Current
 		do
-			word_wrap_modified := true;
-			if flag then
-				widget.enable_word_wrap
-			else
-				widget.disable_word_wrap
+			p := widget.parent;
+			if widget.realized then
+				widget.hide;
 			end;
+			cloned_current := clone (Current);
+			if flag then
+				!! widget.make_word_wrapped (entity_name, p);
+			else
+				!! widget.make (entity_name, p);
+			end;
+			cloned_current.copy_attributes (Current);
+			widget.set_x_y (cloned_current.widget.x, cloned_current.widget.y);
+			cloned_current.widget.destroy;
+			add_widget_callbacks
 		end;
 
 	is_height_resizable: BOOLEAN is
@@ -227,7 +234,7 @@ feature
 		end;
  
 	
-feature {NONE}
+feature {NONE, TEXT_C}
 
 	copy_attributes (other_context: like Current) is
 		do
@@ -242,9 +249,6 @@ feature {NONE}
 			end;
 			if read_only_modified then
 				other_context.set_read_only (is_read_only);
-			end;
-			if word_wrap_modified then
-				other_context.enable_word_wrap (is_word_wrap_enable);
 			end;
 			if height_resizable_modified then
 				other_context.enable_resize_height (is_height_resizable);
@@ -273,15 +277,36 @@ feature {CONTEXT}
 			if read_only_modified then
 				cond_f_to_string (Result, is_read_only, context_name, "set_read_only", "set_editable")
 			end;
-			if word_wrap_modified then
-				cond_f_to_string (Result, is_word_wrap_enable, context_name, "enable_word_wrap", "disable_word_wrap")
-			end;
 			if height_resizable_modified then
 				cond_f_to_string (Result, is_height_resizable, context_name, "enable_resize_height", "disable_resize_height")
 			end;
 			if width_resizable_modified then
 				cond_f_to_string (Result, is_width_resizable, context_name, "enable_resize_width", "disable_resize_width")
 			end;
+		end;
+
+	eiffel_creation (parent_name: STRING): STRING is
+			-- Generated string for the creation of current context
+			-- and all its children
+		do
+			!!Result.make (0);
+			Result.append ("%T%T%T!!");
+			Result.append (entity_name);
+			if is_word_wrap_enable then
+				Result.append (".make_word_wrapped (%"");
+			else
+				Result.append (".make (%"");
+			end;
+			Result.append (entity_name);
+			Result.append ("%", ");
+			Result.append (parent_name);
+			Result.append (");");
+			if not (visual_name = Void) then
+				Result.append ("%T-- ");
+				Result.append (visual_name);
+			end;
+			Result.append ("%N");
+			Result.append (children_creation (entity_name))
 		end;
 
 -- ****************

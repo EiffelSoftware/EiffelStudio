@@ -12,32 +12,24 @@ inherit
 
 	WINDOW_C
 		rename
-			option_list as old_list,
-			copy_attributes as old_copy_attributes,
-			cut as old_cut,
-			undo_cut as old_undo_cut,
-			create_context as window_create_context
+			copy_attributes as old_copy_attributes
 		redefine
-			show, hide, stored_node, widget,
+			stored_node, widget,
 			context_initialization, 
 			position_initialization, shown,
-			realize
+			hide, show, create_context
 		end;
 
 	WINDOW_C
 		redefine
-			show, hide, stored_node, widget, 
-			copy_attributes, context_initialization, option_list,
-			cut, undo_cut, create_context, position_initialization,
-			shown, realize
+			stored_node, widget, 
+			copy_attributes, context_initialization, 
+			create_context, position_initialization,
+			shown, hide, show
 		select
-			option_list, copy_attributes, cut, undo_cut,
-			create_context
+			copy_attributes
 		end
 
-
-
-	
 feature 
 
 	context_type: CONTEXT_TYPE is
@@ -46,37 +38,25 @@ feature
 		end;
 
 	create_oui_widget (a_parent: COMPOSITE) is
+		local
+			x1, y1: INTEGER
 		do
 			!!widget.make (entity_name, a_parent);
 			widget.set_default_position (False);
-			disable_resize_policy (False);
-			widget_set_title (entity_name);
-			widget.set_size (300, 300);
-			set_default_pixmap;
+			if retrieved_node = Void then
+				disable_resize_policy (False);
+				widget_set_title (entity_name);
+				set_size (300, 300);
+				default_position := True;
+				x1 := a_parent.real_x + a_parent.width // 2 
+							- widget.width //2;
+				y1 := a_parent.real_y + a_parent.height // 2 
+							- widget.height //2;
+				set_x_y (x1, y1);
+				set_start_hidden (True);
+			end;
 			add_window_geometry_action;
-		end;
-
-	add_window_geometry_action is 
-		do
-			widget.set_parent_action ("<Configure>", Current, Fourth);
-		 end;
-
-	remove_window_geometry_action is 
-		do
-			widget.remove_parent_action ("<Configure>");
- 		end;
-
-		
-	skip_configure_action is
-		do
-			remove_window_geometry_action;
-			widget.set_parent_action ("<Configure>", Current, Fifth);
-		end;
-
-	skip_two_configure_action is
-		do
-			remove_window_geometry_action;
-			widget.set_parent_action ("<Configure>", Current, Sixth);
+			add_to_window_list
 		end;
 
 	widget: TEMP_WIND;
@@ -91,6 +71,20 @@ feature
 			widget.popdown;
 		end;
 
+	add_window_geometry_action is
+		do
+			widget.set_parent_action ("<Configure>", Current, Void)
+		end;
+
+	remove_window_geometry_action is
+		do
+			widget.remove_parent_action ("<Configure>");
+		end;
+
+	remove_popup_action is
+		do
+			widget.remove_parent_action ("<Map>,<Prop>");
+		end;
 
 	create_context (a_parent: COMPOSITE_C): like Current is
 			-- Create a context of the same type
@@ -99,11 +93,11 @@ feature
 			create_command: CONTEXT_CREATE_CMD;
 		do
 			Result := New;
-			Result.link_to_parent;
 			Result.set_parent (a_parent);
 			Result.generate_internal_name;
 			Result.oui_create (a_parent.widget);
-			if not (widget = Void) then
+				-- Void widget if context created for context catalog
+			if widget /= Void then
 				Result.set_size (width, height);
 				copy_attributes (Result);
 			end;
@@ -116,30 +110,26 @@ feature {NONE}
 
 	find_parent (parent_name: STRING): COMPOSITE_C is
 		local
-			position: INTEGER;
+			cursor: CURSOR;
 			found_parent: CONTEXT;
+			e_name: STRING
 		do
-			position := window_list.index;
+			cursor := Shared_window_list.cursor;
 			from
-				window_list.start
+				Shared_window_list.start
 			until
-				window_list.after or
+				Shared_window_list.after or
 				Result /= Void
 			loop
-				if window_list.item.entity_name.is_equal (parent_name) then
-					found_parent := window_list.item;
-					Result ?= found_parent;
+				e_name := Shared_window_list.item.entity_name;
+				if e_name.is_equal (parent_name) then
+					Result := Shared_window_list.item;
 				end;
-				window_list.forth;
+				Shared_window_list.forth;
 			end;
-			window_list.go_i_th (position);
+			Shared_window_list.go_to (cursor);
 		end;
 
-
-	editor_form_cell: CELL [INTEGER] is
-		once
-			!!Result.put (0)
-		end;
 
 	namer: NAMER is
 		once
@@ -163,28 +153,21 @@ feature {NONE}
 			widget.allow_resize
 		end;
  
+	add_to_option_list (opt_list: ARRAY [INTEGER]) is
+		do
+			opt_list.put (Context_const.geometry_form_nbr,
+						Context_const.Geometry_format_nbr);
+			opt_list.put (Context_const.temp_wind_att_form_nbr,
+						Context_const.Geometry_format_nbr);
+		end;
+
 feature 
 
 	eiffel_type: STRING is "TEMP_WIND";
 
-	cut is 
-		require else
-			no_parent: True;
-		do
-			widget.hide;
-			old_cut;
-		end;
-
-	undo_cut is
-		do
-			skip_configure_action;
-			widget.show;
-			old_undo_cut;
-		end;
-
 	hide is
 		do
-			widget.popdown
+			widget.popdown;
 		end;
 
 	show is
@@ -195,33 +178,6 @@ feature
 	shown: BOOLEAN is
 		do
 			Result := widget.is_poped_up;
-		end;
-
-	realize is
-			-- This is a do end as temp windows are realized
-			-- when the parent perm window is realized
-		do
-		end;
-
-
-	-- ***********************
-	-- * specific attributes *
-	-- ***********************
-
-	option_list: ARRAY [INTEGER] is
-		local
-			i: INTEGER
-		do
-			Result := old_list;
-			i := Result.upper+2;
-			Result.force (temp_wind_form_number, Result.upper+1);
-			from
-			until
-				i > Result.upper
-			loop
-				Result.put (-1, i);
-				i := i + 1
-			end
 		end;
 
 feature {NONE}
@@ -235,6 +191,7 @@ feature {NONE}
 				other_context.disable_resize_policy (resize_policy_disabled)
 			end;
 			old_copy_attributes (other_context);
+			other_context.set_start_hidden (start_hidden)
 		end;
 
 	
@@ -258,8 +215,9 @@ feature {NONE}
 			-- depending on the type of its parent
 		do
 			!!Result.make (0);
-			widget.set_default_position (False)
-			if position_modified then
+			if not default_position then
+				function_bool_to_string (Result, "", 
+					"set_default_position", False);
 				function_int_int_to_string (Result, "", "set_x_y", x, y);
 			end;
 			if size_modified then

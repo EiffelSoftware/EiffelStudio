@@ -12,29 +12,19 @@ inherit
 	EXTEND_TABLE [CLBK, CONTEXT]
 		rename
 			make as extend_table_create
-		export
-			{NONE} all;
-			{ANY} has, clear_all
 		end;
-
-	APP_SHARED
-		export
-			{NONE} all
+	SHARED_APPLICATION
 		undefine
 			copy, is_equal
 		end
-
 
 creation
 
 	make
 
-	
 feature 
 
 	eiffel_text (c: CONTEXT): STRING is
---		require
---			Context_has_callbacks: has (c)
 		local
 			pre_fix: STRING;
 			full_name: STRING;
@@ -42,7 +32,7 @@ feature
 		do
 			!!Result.make (0);
 			Result.append ("%N%Tset_");
-			if not c.is_root then
+			if not c.is_window then
 				con_group ?= c.parent;
 				if con_group = Void then
 					full_name := clone (c.entity_name);
@@ -59,7 +49,7 @@ feature
 			if has (c) then			
 				Result.append (item (c).eiffel_text (pre_fix));
 			end;
-			if c.is_root then
+			if c.is_window then
 				if not has (c) then
 					Result.append ("%T%Tdo%N");
 				end;

@@ -6,31 +6,16 @@ inherit
 	FORM
 		rename
 			make as form_create
-		export
-			{NONE} all
 		end;
-
-	WIDGET_NAMES
-		export
-			{NONE} all
-		end;
-
-	LABELS
-		export
-			{NONE} all
-		end;
-
-	PIXMAPS
-		export
-			{NONE} all
-		end;
-
+	WIDGET_NAMES;
+	LABELS;
+	PIXMAPS;
+	CONSTANTS
 
 creation
 
 	make
 
-	
 feature {NONE}
 
 	edit_hole: FUNC_EDIT_HOLE;

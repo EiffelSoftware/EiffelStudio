@@ -14,15 +14,9 @@ inherit
 			original_stone
 		end;
 	TYPE_STONE;
-	WINDOWS
-		export
-			{NONE} all
-		end;
-	EDITOR_FORMS
-		export
-			{NONE} all
-		end;
+	WINDOWS;
 	PIXMAPS
+	CONSTANTS
 	
 feature 
 

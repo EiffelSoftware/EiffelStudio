@@ -261,7 +261,7 @@ feature {NONE}
 			input_form.attach_top (input_hole, 1);
 			input_form.attach_top (input_stone, 1);
 			input_form.attach_bottom (input_frame, 3);
-			--input_form.attach_top_widget (input_stone, input_frame, 3);
+			input_form.attach_top_widget (input_stone, input_frame, 3);
 			input_form.attach_top_widget (input_hole, input_frame, 3);
 			input_form.attach_left_widget (input_hole, input_stone, 3);
 			input_form.attach_right (input_frame, 3);
@@ -271,7 +271,7 @@ feature {NONE}
 			output_form.attach_top (output_hole, 1);
 			output_form.attach_top (output_stone, 1);
 			output_form.attach_bottom (output_frame, 3);
-			--output_form.attach_top_widget (output_stone, output_frame, 3);
+			output_form.attach_top_widget (output_stone, output_frame, 3);
 			output_form.attach_top_widget (output_hole, output_frame, 3);
 			output_form.attach_left_widget (output_hole, output_stone, 3);
 			output_form.attach_right (output_frame, 3);

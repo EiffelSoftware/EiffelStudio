@@ -4,26 +4,17 @@ class RESIZE_CMD
 inherit
 
 	CONTEXT_CMD
-		;
-	EDITOR_FORMS
-		export
-			{NONE} all
-		end;
-	COMMAND_NAMES
-		rename
-			R_esize_cmd_name as c_name
-		export
-			{NONE} all
-		end
 
-
-
-	
 feature {NONE}
 
 	associated_form: INTEGER is
 		do
-			Result := bulletin_resize_form_number
+			Result := Context_const.bulletin_resize_form_nbr
+		end;
+	
+	c_name: STRING is
+		do
+			Result := Context_const.resize_cmd_name
 		end;
 
 	old_resize_policy: RESIZE_POLICY;

@@ -59,6 +59,9 @@ feature -- Basic operations
 
 	quick_release is
 			-- Release the device context
+			-- Call this feature only if you are sure
+			-- that no object is selected in the device
+			-- context. Otherwise, use `release' instead.
 		do
 			check
 				window_not_void: window /= Void

@@ -13,6 +13,7 @@
 #include "config.h"
 #include "portable.h"
 #include <sys/types.h>
+#include <sys/wait.h>
 #include "proto.h"
 #include "select.h"
 #include "com.h"
@@ -471,12 +472,19 @@ public void dead_app()
 	 * option--RAM.
 	 */
 
+	pid_t child_pid;				/* pid of the dead application */
+	int status;						/* Exit status of the application */
 	Request rqst;					/* Request to send */
 	int s = writefd(d_data.d_cs);	/* "socket" to contact ewb */
 
 #ifdef USE_ADD_LOG
 	add_log(12, "app is dead");
 #endif
+
+	/* Eliminate the <defunct> process of the just terminated
+	 * application to avoid the process table to go out of range.
+	 */
+	child_pid = wait(&status);
 
 	rqst.rq_type = DEAD;			/* Application is dead */
 	send_packet(s, &rqst);			/* Notify workbench */

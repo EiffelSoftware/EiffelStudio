@@ -53,6 +53,7 @@
 #define IN_RESULT		4		/* Result */
 #define IN_H_ADDR		5		/* Object at given hector address */
 #define IN_BIT_ADDR		6		/* Bit object at given address */
+#define IN_STRING_ADDR	7		/* String object at given address */
 
 /* Once inspection types */
 #define OUT_CALLED		0		/* Check whether once routine has been called */

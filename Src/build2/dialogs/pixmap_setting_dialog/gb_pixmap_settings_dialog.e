@@ -555,7 +555,9 @@ feature {NONE} -- Implementation
 				dialog.show_modal_to_window (Current)
 				if not dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
 					pixmap_list.wipe_out
-					reset_labels
+					if not mode_is_modify then
+						reset_labels
+					end
 				end
 				if not dialog.file_name.is_empty and then valid_file_extension (dialog.file_name.substring (dialog.file_name.count -2, dialog.file_name.count)) then
 					create new_pixmap

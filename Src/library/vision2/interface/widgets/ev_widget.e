@@ -154,7 +154,7 @@ feature -- Status setting
 			-- Do nothing if the widget has no parent.
 		require
 			exists: not destroyed
-			has_parent: parent /= Void
+			has_parent: implementation.has_parent
 		do
 			implementation.show
 		ensure
@@ -685,16 +685,16 @@ feature -- Event -- removing command association
 			implementation.remove_get_focus_commands
 		end
 
-	remove_loose_focus_commands is
+	remove_lose_focus_commands is
 			-- Empty the list of commands to be executed when
-			-- the widget loose the focus.
+			-- the widget lose the focus.
 		require
 			exists: not destroyed
 		do
-			implementation.remove_loose_focus_commands
+			implementation.remove_lose_focus_commands
 		end
 	
-feature {EV_ANY_I, EV_ANY, EV_EVENT_DATA_I} -- Implementation
+feature -- Implementation
 
 	implementation: EV_WIDGET_I
 			-- Implementation of Current widget

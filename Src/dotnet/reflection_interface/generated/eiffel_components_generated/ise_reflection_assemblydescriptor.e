@@ -29,18 +29,18 @@ feature -- Access
 			"Version"
 		end
 
-	frozen name: STRING is
-		external
-			"IL field signature :System.String use ISE.Reflection.AssemblyDescriptor"
-		alias
-			"Name"
-		end
-
 	frozen culture: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.AssemblyDescriptor"
 		alias
 			"Culture"
+		end
+
+	frozen name: STRING is
+		external
+			"IL field signature :System.String use ISE.Reflection.AssemblyDescriptor"
+		alias
+			"Name"
 		end
 
 	frozen public_key: STRING is
@@ -59,18 +59,11 @@ feature -- Basic Operations
 			"GetHashCode"
 		end
 
-	a_invariant is
+	frozen a_invariant (current_object: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
 		external
-			"IL signature (): System.Void use ISE.Reflection.AssemblyDescriptor"
+			"IL static signature (ISE.Reflection.AssemblyDescriptor): System.Void use ISE.Reflection.AssemblyDescriptor"
 		alias
 			"_invariant"
-		end
-
-	make_from_assembly (a_dot_net_assembly: SYSTEM_REFLECTION_ASSEMBLY) is
-		external
-			"IL signature (System.Reflection.Assembly): System.Void use ISE.Reflection.AssemblyDescriptor"
-		alias
-			"MakeFromAssembly"
 		end
 
 	make (a_name: STRING; a_version: STRING; a_culture: STRING; a_public_key: STRING) is
@@ -78,6 +71,13 @@ feature -- Basic Operations
 			"IL signature (System.String, System.String, System.String, System.String): System.Void use ISE.Reflection.AssemblyDescriptor"
 		alias
 			"Make"
+		end
+
+	make_from_assembly (a_dot_net_assembly: SYSTEM_REFLECTION_ASSEMBLY) is
+		external
+			"IL signature (System.Reflection.Assembly): System.Void use ISE.Reflection.AssemblyDescriptor"
+		alias
+			"MakeFromAssembly"
 		end
 
 end -- class ISE_REFLECTION_ASSEMBLYDESCRIPTOR

@@ -33,18 +33,18 @@ feature -- Basic Operations
 			"Space"
 		end
 
-	as_keyword: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ConversionSupport"
-		alias
-			"AsKeyword"
-		end
-
 	target_from_text (a_text: STRING): STRING is
 		external
 			"IL signature (System.String): System.String use ISE.Reflection.ConversionSupport"
 		alias
 			"TargetFromText"
+		end
+
+	empty_string: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ConversionSupport"
+		alias
+			"EmptyString"
 		end
 
 	opening_curl_bracket: STRING is
@@ -68,18 +68,18 @@ feature -- Basic Operations
 			"RenameClauseFromText"
 		end
 
+	as_keyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ConversionSupport"
+		alias
+			"AsKeyword"
+		end
+
 	source_from_text (a_text: STRING): STRING is
 		external
 			"IL signature (System.String): System.String use ISE.Reflection.ConversionSupport"
 		alias
 			"SourceFromText"
-		end
-
-	empty_string: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ConversionSupport"
-		alias
-			"EmptyString"
 		end
 
 	export_clause_from_text (a_text: STRING): ISE_REFLECTION_EXPORTCLAUSE is

@@ -70,13 +70,6 @@ feature -- Basic Operations
 			"CreateFolder"
 		end
 
-	generate_parents is
-		external
-			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
-		alias
-			"GenerateParents"
-		end
-
 	generate_class_header is
 		external
 			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
@@ -152,6 +145,13 @@ feature -- Basic Operations
 			"IL signature (System.String): ISE.Reflection.EiffelClass use ISE.Reflection.CodeGenerationSupport"
 		alias
 			"EiffelClassFromXml"
+		end
+
+	generate_parents is
+		external
+			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"GenerateParents"
 		end
 
 	has_write_lock (a_folder_name: STRING): BOOLEAN is

@@ -84,6 +84,13 @@ feature -- Basic Operations
 			"EiffelType"
 		end
 
+	eiffel_assembly (xml_filename: STRING): ISE_REFLECTION_EIFFELASSEMBLY is
+		external
+			"IL signature (System.String): ISE.Reflection.EiffelAssembly use ISE.Reflection.ReflectionInterface"
+		alias
+			"EiffelAssembly"
+		end
+
 	type (a_type: SYSTEM_TYPE): ISE_REFLECTION_EIFFELCLASS is
 		external
 			"IL signature (System.Type): ISE.Reflection.EiffelClass use ISE.Reflection.ReflectionInterface"
@@ -105,20 +112,6 @@ feature -- Basic Operations
 			"HasWriteLockCode"
 		end
 
-	assembly_descriptor_from_type (a_type: SYSTEM_TYPE): ISE_REFLECTION_ASSEMBLYDESCRIPTOR is
-		external
-			"IL signature (System.Type): ISE.Reflection.AssemblyDescriptor use ISE.Reflection.ReflectionInterface"
-		alias
-			"AssemblyDescriptorFromType"
-		end
-
-	eiffel_assembly (xml_filename: STRING): ISE_REFLECTION_EIFFELASSEMBLY is
-		external
-			"IL signature (System.String): ISE.Reflection.EiffelAssembly use ISE.Reflection.ReflectionInterface"
-		alias
-			"EiffelAssembly"
-		end
-
 	support: ISE_REFLECTION_CODEGENERATIONSUPPORT is
 		external
 			"IL signature (): ISE.Reflection.CodeGenerationSupport use ISE.Reflection.ReflectionInterface"
@@ -133,11 +126,18 @@ feature -- Basic Operations
 			"RemoveAssembly"
 		end
 
-	a_invariant is
+	frozen a_invariant (current_object: ISE_REFLECTION_REFLECTIONINTERFACE) is
 		external
-			"IL signature (): System.Void use ISE.Reflection.ReflectionInterface"
+			"IL static signature (ISE.Reflection.ReflectionInterface): System.Void use ISE.Reflection.ReflectionInterface"
 		alias
 			"_invariant"
+		end
+
+	assembly_descriptor_from_type (a_type: SYSTEM_TYPE): ISE_REFLECTION_ASSEMBLYDESCRIPTOR is
+		external
+			"IL signature (System.Type): ISE.Reflection.AssemblyDescriptor use ISE.Reflection.ReflectionInterface"
+		alias
+			"AssemblyDescriptorFromType"
 		end
 
 	read_lock_creation_failed_code: INTEGER is

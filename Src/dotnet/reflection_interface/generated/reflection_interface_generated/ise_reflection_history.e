@@ -67,13 +67,6 @@ feature -- Basic Operations
 			"MaximumCount"
 		end
 
-	add_assembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY) is
-		external
-			"IL signature (ISE.Reflection.AssemblyDescriptor, ISE.Reflection.EiffelAssembly): System.Void use ISE.Reflection.History"
-		alias
-			"AddAssembly"
-		end
-
 	search_for_type (a_type: SYSTEM_TYPE) is
 		external
 			"IL signature (System.Type): System.Void use ISE.Reflection.History"
@@ -95,6 +88,13 @@ feature -- Basic Operations
 			"HasType"
 		end
 
+	has_assembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): BOOLEAN is
+		external
+			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Boolean use ISE.Reflection.History"
+		alias
+			"HasAssembly"
+		end
+
 	add_type (a_type: SYSTEM_TYPE; an_eiffel_class: ISE_REFLECTION_EIFFELCLASS) is
 		external
 			"IL signature (System.Type, ISE.Reflection.EiffelClass): System.Void use ISE.Reflection.History"
@@ -109,18 +109,18 @@ feature -- Basic Operations
 			"SearchForAssembly"
 		end
 
-	a_invariant is
+	frozen a_invariant (current_object: ISE_REFLECTION_HISTORY) is
 		external
-			"IL signature (): System.Void use ISE.Reflection.History"
+			"IL static signature (ISE.Reflection.History): System.Void use ISE.Reflection.History"
 		alias
 			"_invariant"
 		end
 
-	has_assembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): BOOLEAN is
+	add_assembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY) is
 		external
-			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Boolean use ISE.Reflection.History"
+			"IL signature (ISE.Reflection.AssemblyDescriptor, ISE.Reflection.EiffelAssembly): System.Void use ISE.Reflection.History"
 		alias
-			"HasAssembly"
+			"AddAssembly"
 		end
 
 end -- class ISE_REFLECTION_HISTORY

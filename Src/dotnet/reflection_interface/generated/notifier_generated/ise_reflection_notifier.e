@@ -74,9 +74,9 @@ feature -- Basic Operations
 			"NotifyAdd"
 		end
 
-	a_invariant is
+	frozen a_invariant (current_object: ISE_REFLECTION_NOTIFIER) is
 		external
-			"IL signature (): System.Void use ISE.Reflection.Notifier"
+			"IL static signature (ISE.Reflection.Notifier): System.Void use ISE.Reflection.Notifier"
 		alias
 			"_invariant"
 		end

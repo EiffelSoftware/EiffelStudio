@@ -200,9 +200,9 @@ feature -- Basic Operations
 			"SetCreationRoutine"
 		end
 
-	a_invariant is
+	frozen a_invariant (current_object: ISE_REFLECTION_EIFFELFEATURE) is
 		external
-			"IL signature (): System.Void use ISE.Reflection.EiffelFeature"
+			"IL static signature (ISE.Reflection.EiffelFeature): System.Void use ISE.Reflection.EiffelFeature"
 		alias
 			"_invariant"
 		end

@@ -56,9 +56,9 @@ feature -- Basic Operations
 			"Types"
 		end
 
-	a_invariant is
+	frozen a_invariant (current_object: ISE_REFLECTION_EIFFELASSEMBLY) is
 		external
-			"IL signature (): System.Void use ISE.Reflection.EiffelAssembly"
+			"IL static signature (ISE.Reflection.EiffelAssembly): System.Void use ISE.Reflection.EiffelAssembly"
 		alias
 			"_invariant"
 		end

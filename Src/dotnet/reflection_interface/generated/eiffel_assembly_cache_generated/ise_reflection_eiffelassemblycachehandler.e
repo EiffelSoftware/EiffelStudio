@@ -40,11 +40,11 @@ feature -- Access
 			"LastWriteSuccessful"
 		end
 
-	frozen last_error: ISE_REFLECTION_ERRORINFO is
+	frozen assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR is
 		external
-			"IL field signature :ISE.Reflection.ErrorInfo use ISE.Reflection.EiffelAssemblyCacheHandler"
+			"IL field signature :ISE.Reflection.AssemblyDescriptor use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
-			"last_error"
+			"AssemblyDescriptor"
 		end
 
 	frozen eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLYFACTORY is
@@ -61,11 +61,11 @@ feature -- Access
 			"LastRemovalSuccessful"
 		end
 
-	frozen assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR is
+	frozen last_error: ISE_REFLECTION_ERRORINFO is
 		external
-			"IL field signature :ISE.Reflection.AssemblyDescriptor use ISE.Reflection.EiffelAssemblyCacheHandler"
+			"IL field signature :ISE.Reflection.ErrorInfo use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
-			"AssemblyDescriptor"
+			"last_error"
 		end
 
 feature -- Basic Operations

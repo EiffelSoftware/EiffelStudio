@@ -35,11 +35,11 @@ feature -- Access
 
 feature -- Basic Operations
 
-	support: ISE_REFLECTION_CODEGENERATIONSUPPORT is
+	eiffel_delivery_path: STRING is
 		external
-			"IL signature (): ISE.Reflection.CodeGenerationSupport use ISE.Reflection.ReflectionSupport"
+			"IL signature (): System.String use ISE.Reflection.ReflectionSupport"
 		alias
-			"Support"
+			"EiffelDeliveryPath"
 		end
 
 	xml_elements: ISE_REFLECTION_XMLELEMENTS is
@@ -77,13 +77,6 @@ feature -- Basic Operations
 			"EiffelKey"
 		end
 
-	eiffel_delivery_path: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ReflectionSupport"
-		alias
-			"EiffelDeliveryPath"
-		end
-
 	assembly_description_filename: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionSupport"
@@ -105,18 +98,18 @@ feature -- Basic Operations
 			"CleanAssemblies"
 		end
 
+	support: ISE_REFLECTION_CODEGENERATIONSUPPORT is
+		external
+			"IL signature (): ISE.Reflection.CodeGenerationSupport use ISE.Reflection.ReflectionSupport"
+		alias
+			"Support"
+		end
+
 	clean_assembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
 		external
 			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Void use ISE.Reflection.ReflectionSupport"
 		alias
 			"CleanAssembly"
-		end
-
-	xml_assembly_filename (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): STRING is
-		external
-			"IL signature (ISE.Reflection.AssemblyDescriptor): System.String use ISE.Reflection.ReflectionSupport"
-		alias
-			"XmlAssemblyFilename"
 		end
 
 	key: STRING is
@@ -131,6 +124,13 @@ feature -- Basic Operations
 			"IL signature (ISE.Reflection.AssemblyDescriptor, System.String): System.String use ISE.Reflection.ReflectionSupport"
 		alias
 			"XmlTypeFilename"
+		end
+
+	xml_assembly_filename (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): STRING is
+		external
+			"IL signature (ISE.Reflection.AssemblyDescriptor): System.String use ISE.Reflection.ReflectionSupport"
+		alias
+			"XmlAssemblyFilename"
 		end
 
 end -- class ISE_REFLECTION_REFLECTIONSUPPORT

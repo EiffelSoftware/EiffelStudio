@@ -100,11 +100,18 @@ feature -- Access
 			"UnaryOperatorsFeatures"
 		end
 
-	frozen creation_routines: SYSTEM_COLLECTIONS_ARRAYLIST is
+	frozen implementation_features: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
 			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
 		alias
-			"CreationRoutines"
+			"ImplementationFeatures"
+		end
+
+	frozen initialization_features: SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
+		alias
+			"InitializationFeatures"
 		end
 
 	frozen attribute: ISE_REFLECTION_EIFFELFEATURE is
@@ -128,11 +135,11 @@ feature -- Access
 			"Modified"
 		end
 
-	frozen implementation_features: SYSTEM_COLLECTIONS_ARRAYLIST is
+	frozen enum_type: STRING is
 		external
-			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
+			"IL field signature :System.String use ISE.Reflection.EiffelClass"
 		alias
-			"ImplementationFeatures"
+			"EnumType"
 		end
 
 	frozen is_frozen: BOOLEAN is
@@ -170,18 +177,11 @@ feature -- Access
 			"EiffelName"
 		end
 
-	frozen initialization_features: SYSTEM_COLLECTIONS_ARRAYLIST is
+	frozen creation_routines: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
 			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
 		alias
-			"InitializationFeatures"
-		end
-
-	frozen enum_type: STRING is
-		external
-			"IL field signature :System.String use ISE.Reflection.EiffelClass"
-		alias
-			"EnumType"
+			"CreationRoutines"
 		end
 
 feature -- Basic Operations
@@ -249,9 +249,9 @@ feature -- Basic Operations
 			"SetParents"
 		end
 
-	a_invariant is
+	frozen a_invariant (current_object: ISE_REFLECTION_EIFFELCLASS) is
 		external
-			"IL signature (): System.Void use ISE.Reflection.EiffelClass"
+			"IL static signature (ISE.Reflection.EiffelClass): System.Void use ISE.Reflection.EiffelClass"
 		alias
 			"_invariant"
 		end

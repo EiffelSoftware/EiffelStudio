@@ -39,9 +39,9 @@ feature -- Access
 
 feature -- Basic Operations
 
-	a_invariant is
+	frozen a_invariant (current_object: ISE_REFLECTION_ERRORINFO) is
 		external
-			"IL signature (): System.Void use ISE.Reflection.ErrorInfo"
+			"IL static signature (ISE.Reflection.ErrorInfo): System.Void use ISE.Reflection.ErrorInfo"
 		alias
 			"_invariant"
 		end

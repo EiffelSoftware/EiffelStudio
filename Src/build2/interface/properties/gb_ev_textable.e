@@ -58,7 +58,6 @@ feature {GB_XML_STORE} -- Output
 			if element_info /= Void and then element_info.data.count /= 0 then
 				for_all_objects (agent {EV_TEXTABLE}.set_text (element_info.data))
 			end
-			full_information := get_unique_full_info (element)
 		end
 		
 feature {GB_CODE_GENERATOR} -- Output

@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 			cmd: EV_ROUTINE_COMMAND
 		do
 			ev_make (par)
+			value := 0
 			set_title (a_title)
 			!! label.make_with_text (display_area, question)
 			!! cmd.make (~ok_execute)

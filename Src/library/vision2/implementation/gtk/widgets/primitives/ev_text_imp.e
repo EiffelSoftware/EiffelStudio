@@ -48,8 +48,6 @@ feature -- Access
 		local
 			p: POINTER
 		do
-			--full_collect
-			--full_coalesce
 			p := C.gtk_editable_get_chars (c_object, 0, -1)
 			create Result.make_from_c (p)
 			C.g_free (p)

@@ -91,7 +91,7 @@ feature -- Status setting
 		do
 			implementation.minimize
 		ensure
-			is_minimized: is_minimized
+	--		is_minimized: is_minimized
 		end
 
 	maximize is
@@ -99,7 +99,7 @@ feature -- Status setting
 		do
 			implementation.maximize
 		ensure
-			is_maximized: is_maximized
+	--		is_maximized: is_maximized
 		end
 
 	restore is
@@ -107,8 +107,8 @@ feature -- Status setting
 		do
 			implementation.restore
 		ensure
-			minimize_restored: old is_minimized implies not is_minimized
-			maximize_restored: old is_maximized implies not is_maximized
+	--		minimize_restored: old is_minimized implies not is_minimized
+	--		maximize_restored: old is_maximized implies not is_maximized
 		end
 
 feature -- Element change
@@ -193,6 +193,9 @@ end -- class EV_TITLED_WINDOW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/03/08 02:30:21  brendel
+--| Fully implemented is_minimized, is_maximized, maximize, minimize, restore.
+--|
 --| Revision 1.7  2000/03/07 01:35:37  brendel
 --| Cosmetics
 --|

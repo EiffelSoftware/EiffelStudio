@@ -195,7 +195,7 @@ feature -- Status setting
 				resize_shell_children (width, maximal_height.min (new_height + shell_height))
 			end
 		ensure then
-			correct_client_height: exists implies client_height = new_height
+			correct_client_height: exists implies client_height = new_height.min (maximal_height - shell_height)
 		end
 
 	set_size (new_width, new_height: INTEGER) is
@@ -216,8 +216,8 @@ feature -- Status setting
 					, maximal_height.min (new_height + shell_height))
 			end
 		ensure then
-			correct_width: exists implies client_width = new_width
-			correct_height: exists implies client_height = new_height
+			correct_width: exists implies client_width = new_width.min (maximal_width - shell_width)
+			correct_height: exists implies client_height = new_height.min (maximal_height - shell_height)
 		end
 
 	set_width (new_width: INTEGER) is
@@ -234,7 +234,7 @@ feature -- Status setting
 				resize_shell_children (maximal_width.min (new_width + shell_width), height)
 			end
 		ensure then
-			correct_width: exists implies client_width = new_width
+			correct_width: exists implies client_width = new_width.min (maximal_width - shell_width)
 		end
 
 	set_override (flag: BOOLEAN)  is

@@ -495,7 +495,7 @@ feature {EV_TREE_IMP} -- Implementation
 			end
 			child_array.go_i_th (i)
 			child_array.put_left (v)
-			if count = 1 then
+			if count = 1 and then par_t_imp /= Void then
 				set_expand (expanded_on_last_item_removal)
 			end
 		end

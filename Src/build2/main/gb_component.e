@@ -131,19 +131,21 @@ feature -- Access
 			temp_name, original_name: STRING
 			counter: INTEGER
 		do
-			from
-				original_name := an_object.name
-				temp_name := original_name
-				counter := 1
-			until
-				not object_handler.string_is_feature_name (temp_name, an_object) and
-				not object_handler.string_is_object_name (temp_name, an_object)
-			loop
-				temp_name := original_name + counter.out
-				counter := counter + 1
+			if not an_object.name.is_empty then
+				from
+					original_name := an_object.name
+					temp_name := original_name
+					counter := 1
+				until
+					not object_handler.string_is_feature_name (temp_name, an_object) and
+					not object_handler.string_is_object_name (temp_name, an_object)
+				loop
+					temp_name := original_name + counter.out
+					counter := counter + 1
+				end
+				an_object.set_name (temp_name)	
+				an_object.layout_item.set_text (an_object.name + ": " + an_object.type.substring (4, an_object.type.count))			
 			end
-			an_object.set_name (temp_name)	
-			an_object.layout_item.set_text (an_object.name + ": " + an_object.type.substring (4, an_object.type.count))			
 		end
 		
 

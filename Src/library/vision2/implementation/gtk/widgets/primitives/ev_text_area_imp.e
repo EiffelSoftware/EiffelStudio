@@ -35,9 +35,14 @@ feature -- Access
 		local
 			p: POINTER
 		do
-			p := gtk_editable_get_chars (widget, 0, -1)
+			p := gtk_editable_get_chars (GTK_EDITABLE(widget), 0, -1)
 			!!Result.make (0)
 			Result.from_c (p)
+		end
+
+	text_length: INTEGER is
+		do
+			Result := gtk_text_get_length (widget)
 		end
 
 feature -- Status setting
@@ -47,7 +52,7 @@ feature -- Status setting
 			a: ANY
 		do
 			a ?= txt.to_c
-			gtk_text_insert (widget, Default_pointer, Default_pointer, Default_pointer, $a, -1)
+			c_gtk_text_insert (widget, $a)
 		end
 	
 	set_text (txt: STRING) is
@@ -55,7 +60,8 @@ feature -- Status setting
 			a: ANY
 		do
 			a ?= txt.to_c
-			gtk_entry_set_text (widget, $a)
+			delete_text (0, text_length)
+			insert_text (text)
 		end
 	
 	append_text (txt: STRING) is
@@ -71,6 +77,14 @@ feature -- Status setting
 			insert_text (txt)
 		end
 	
+	delete_text (start, finish: INTEGER) is
+			-- Delete the text between `start' and `finish' index
+			-- both sides include.
+		do
+			set_position (start)
+			gtk_text_backward_delete (widget, finish - start + 1)
+		end
+
 	set_position (pos: INTEGER) is
 			-- set current insertion position
 		do

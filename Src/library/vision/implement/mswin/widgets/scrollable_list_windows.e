@@ -32,6 +32,8 @@ inherit
 
 	FONTABLE_WINDOWS
 
+	SIZEABLE_WINDOWS
+
 	WEL_LIST_BOX
 		rename
 			add_string as wel_add_string,
@@ -102,7 +104,7 @@ feature -- Initialization
 			private_attributes.set_width (100)
 			private_attributes.set_height (100)
 			private_visible_item_count := 6
-			fixed_size := is_fixed
+			fixed_size_flag := is_fixed
 		end
 
 	realize is
@@ -633,9 +635,6 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	private_fixed_size_flag: BOOLEAN
-			-- Is the width of the list box fixed?
-
 	private_visible_item_count: INTEGER
 			-- Count of visible items
 
@@ -694,8 +693,8 @@ feature {NONE} -- Implementation
 			a_font_windows: FONT_WINDOWS
 		do
 			if realized then
-				a_font_windows ?= font.implementation
-				if fixed_size then
+				if fixed_size_flag then
+					a_font_windows ?= font.implementation
 					if a_font_windows.string_width (Current, s) >= private_scroll_width then
 						private_scroll_width := a_font_windows.string_width (Current, s)
 						set_horizontal_extent (private_scroll_width + 10)
@@ -720,9 +719,9 @@ feature {NONE} -- Implementation
 			s := clone (i_th_text (pos))
 			wel_delete_string (pos)
 			if realized then
-				a_font_windows ?= font.implementation
-				if fixed_size then
+				if fixed_size_flag then
 					if private_scroll_width > wel_width then
+						a_font_windows ?= font.implementation
 						if not (a_font_windows.string_width (Current, s) < private_scroll_width) then
 							a_width := longest_string_width
 							set_horizontal_extent (a_width)
@@ -854,9 +853,6 @@ feature {NONE} -- Implementation
 	has_height: BOOLEAN
 			-- Is the default height overruled?
 
-	fixed_size: BOOLEAN
-			-- Is the size of the list fixed?
-
 	Border_height: INTEGER is
 			-- Height of the border
 		once
@@ -881,11 +877,11 @@ feature {NONE} -- Implementation
 			if multiple_selection then
 				Result := Ws_visible + Ws_child + Ws_group +
 					Ws_tabstop + Ws_border + Ws_vscroll +
-					Lbs_notify + Lbs_multiplesel
+					Lbs_notify + Lbs_multiplesel + Ws_hscroll
 			else
 				Result := Ws_visible + Ws_child + Ws_group +
 					Ws_tabstop + Ws_border + Ws_vscroll +
-					Lbs_notify
+					Lbs_notify + Ws_hscroll
 			end
 		end
 

@@ -254,22 +254,28 @@ feature {NONE} -- Implementation
 			l_last_str: STRING
 			l_key_member: STRING
 			l_parser: XM_EIFFEL_PARSER
+			l_xml_members: HASH_TABLE [XML_MEMBER, STRING]
+			l_xml_member: XML_MEMBER
 		do
 			if a_member_signature.is_empty then
 				l_key_member := a_full_dotnet_type
 			else
-				l_key_member := a_full_dotnet_type + "." + a_member_signature
+				create l_key_member.make (a_full_dotnet_type.count + a_member_signature.count + 1)
+				l_key_member.append (a_full_dotnet_type)
+				l_key_member.append_character ('.')
+				l_key_member.append (a_member_signature)
 			end
-			if member_parser.Xml_members.has (l_key_member) then
+			l_xml_members := member_parser.Xml_members
+			l_xml_members.search (l_key_member)
+			if l_xml_members.found then
 				create f.make_open_read (xml_file_path)
-
-				f.go (member_parser.Xml_members.item (l_key_member).pos_in_file)
-				f.read_stream (member_parser.Xml_members.item (l_key_member).number_of_char)
+				l_xml_member := l_xml_members.found_item
+				f.go (l_xml_member.pos_in_file)
+				f.read_stream (l_xml_member.number_of_char)
 				if f.last_string /= Void then
 					l_last_str := f.last_string
 					l_last_str.prepend ("<THE_MEMBER>")
 					l_last_str.append ("%N</THE_MEMBER>%N")
-					--l_last_str.replace_substring_all ("%R%N", "%N")
 
 					create l_parser.make
 					create l_feature_filter.make

@@ -1,5 +1,10 @@
 indexing
-	description: "Common routines for XML extraction"
+	description: "[
+			Common routines for XML extraction
+			
+		FIXME: inheritance of XM_EIFFEL_PARSER is here only because
+		XM_ELEMENT.`add_attribute' is not exported to ANY in gobo 3.1
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,6 +20,19 @@ inherit
 
 	XM_CALLBACKS_FILTER_FACTORY
 		export {NONE} all end
+
+	XM_EIFFEL_PARSER
+		rename
+			make as make_xm_eiffel_parser,
+			name as name_xm_eiffel_parser,
+			clear_all as clear_all_xm_eiffel_parser,
+			reset as reset_xm_eiffel_parser,
+			source as source_xm_eiffel_parser,
+			line as line_xm_eiffel_parser,
+			eq as eq_xm_eiffel_parser
+		export
+			{NONE} all
+		end
 
 feature {SHARED_XML_ROUTINES} -- Status report
 

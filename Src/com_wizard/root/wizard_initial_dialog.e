@@ -22,6 +22,11 @@ inherit
 			{NONE} all
 		end
 
+	OPERATING_ENVIRONMENT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -70,6 +75,9 @@ feature -- Behavior
 			elseif file_name = Void or file_name.empty then
 				msg_box.error_message_box (Current, "Definition file empty!", "Initialization Error")
 			else
+				if folder_name.item (folder_name.count) = Directory_separator then
+					folder_name.head (folder_name.count -1)
+				end
 				create a_file.make (folder_name)
 				if not a_file.exists then
 					msg_box.error_message_box (Current, "Destination folder not valid!", "Wizard Error")

@@ -331,7 +331,7 @@ feature {NONE} -- Implementation
 					str @ (str.count - 1) /= '.'
 				then
 					dotpos := str.index_of ('.', 1) - 1
-					str.head (dotpos.max (0))
+					str.keep_head (dotpos.max (0))
 					create Result.make_from_string (str)
 					Result.add_extension ("e")
 				else

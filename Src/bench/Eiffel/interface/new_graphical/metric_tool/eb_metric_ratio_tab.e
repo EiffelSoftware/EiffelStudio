@@ -470,7 +470,7 @@ feature -- Ratio action.
 		do
 			if not first_metric_combobox.text.is_empty then
 				old_num := formula @ 1
-				displayed_metric.tail (displayed_metric.count - old_num.count)
+				displayed_metric.keep_tail (displayed_metric.count - old_num.count)
 				formula.put_i_th (first_metric_combobox.text, 1)
 				displayed_metric := first_metric_combobox.text + displayed_metric
 				text_field.set_text (displayed_metric)
@@ -487,7 +487,7 @@ feature -- Ratio action.
 		do
 			if not second_metric_combobox.text.is_empty then
 				old_den := formula @ 3
-				displayed_metric.head (displayed_metric.count - old_den.count)
+				displayed_metric.keep_head (displayed_metric.count - old_den.count)
 				formula.put_i_th (second_metric_combobox.text, 3)
 				displayed_metric := displayed_metric + second_metric_combobox.text
 				text_field.set_text (displayed_metric)

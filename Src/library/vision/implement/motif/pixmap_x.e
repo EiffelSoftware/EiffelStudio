@@ -50,14 +50,14 @@ feature
 			height_positive: p_height > 0;
 			right_edge_in_a_widget: x+p_width <= a_widget.width;
 			bottom_edge_in_a_widget: y+p_height <= a_widget.height
-		
 		local
 			new_arx_pixmap: POINTER;
 			a_resource: RESOURCE_X;
-			void_pointer: POINTER
+			null_pointer: POINTER
 		do
-			new_arx_pixmap := c_copy_from (a_widget.screen_object, x, y, p_width, p_height);
-			if new_arx_pixmap /= void_pointer then
+			new_arx_pixmap := c_copy_from (a_widget.screen_object, 
+								x, y, p_width, p_height);
+			if new_arx_pixmap /= null_pointer then
 				free_resources;
 				arx_pixmap := new_arx_pixmap;
 				last_operation_correct := true;
@@ -95,11 +95,11 @@ feature {NONE}
 	dispose is
 			-- Called when the pixmap is garbaged
 		local
-			void_pointer: POINTER
+			null_pointer: POINTER
 		do
-			if arx_pixmap /= void_pointer then
+			if arx_pixmap /= null_pointer then
 				c_free_pixmap (arx_pixmap)
-				arx_pixmap := void_pointer;
+				arx_pixmap := null_pointer;
 			end
 		end; 
 
@@ -124,7 +124,8 @@ feature {NONE}
 				bitmaps.after
 			loop
 				if bitmaps.item.is_allocated then
-					x_free_pixmap (bitmaps.item.screen.screen_object, bitmaps.item.identifier);
+					x_free_pixmap (bitmaps.item.screen.screen_object, 
+							bitmaps.item.identifier);
 					bitmaps.item.set_allocated (False);
 				end;
 				bitmaps.forth
@@ -181,9 +182,9 @@ feature
 	is_valid: BOOLEAN is
 			-- Is the pixmap valid and usable ?
 		local
-			void_pointer: POINTER
+			null_pointer: POINTER
 		do
-			Result := arx_pixmap /= void_pointer
+			Result := arx_pixmap /= null_pointer
 		end;
 
 	last_operation_correct: BOOLEAN;
@@ -193,16 +194,15 @@ feature
 			-- Load the bitmap described in `a_file_name'.
 			-- `a_file_name' must be a X11 bitmap file.
 		require else
-			a_file_name_exists: not (a_file_name = Void)
-		
+			a_file_name_exists: a_file_name /= Void
 		local
 			new_arx_pixmap: POINTER;
 			ext_name: ANY;
-			void_pointer: POINTER
+			null_pointer: POINTER
 		do
 			ext_name := a_file_name.to_c;		
 			new_arx_pixmap := pix_read_from_file ($ext_name);
-			if new_arx_pixmap /= void_pointer then
+			if new_arx_pixmap /= null_pointer then
 				free_resources;
 				arx_pixmap := new_arx_pixmap;
 				last_operation_correct := true;
@@ -264,11 +264,11 @@ feature
 		local
 			new_arx_pixmap: POINTER;
 			ext_name: ANY;
-			void_pointer: POINTER
+			null_pointer: POINTER
 		do
 			ext_name := a_file_name.to_c;		
 			new_arx_pixmap := c_retrieve ($ext_name);
-			if new_arx_pixmap /= void_pointer then
+			if new_arx_pixmap /= null_pointer then
 				free_resources;
 				arx_pixmap := new_arx_pixmap;
 				wipe_out;

@@ -173,7 +173,6 @@ feature {NONE}
 			Result := root_window_object
 		end;
 
-	
 feature 
 
 	x: INTEGER is

@@ -179,7 +179,7 @@ feature -- Basic Operations
 			if parent_name /= Void and then not parent_name.is_empty then
 				parent_id := new_id_sd (parent_name, False)
 			end
-			cluster_sd := new_cluster_sd (new_id_sd (cluster_name, False), 
+			create cluster_sd.initialize (new_id_sd (cluster_name, False), 
 										parent_id,
 										new_id_sd (cluster_path, True),
 										Void, False, False)

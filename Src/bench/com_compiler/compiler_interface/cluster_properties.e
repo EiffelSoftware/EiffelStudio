@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			id_sd: ID_SD
 		do
 			id_sd := new_id_sd (a_name, False)
-			cluster_sd := new_cluster_sd (id_sd, Void, Void, Void, False, False)
+			create cluster_sd.initialize (id_sd, Void, Void, Void, False, False)
 			create ace_dictionary
 		ensure
 			non_void_cluster_sd: cluster_sd /= Void
@@ -323,7 +323,7 @@ feature -- Access
 		local
 			res: ARRAYED_LIST [STRING]
 			cl_prop: CLUST_PROP_SD
-			l_ex: LACE_LIST [EXCLUDE_SD]
+			l_ex: LACE_LIST [FILE_NAME_SD]
 		do
 			cl_prop := cluster_sd.cluster_properties
 			create res.make (0)
@@ -488,7 +488,7 @@ feature -- Element change
 			cl_prop ?= cluster_sd.cluster_properties
 
 			if cl_prop = Void then
-				cl_prop := new_clust_prop_sd (Void, Void, Void, Void, Void, Void, Void, Void)
+				create cl_prop
 				cluster_sd.set_cluster_properties (cl_prop)
 			end
 			
@@ -513,16 +513,16 @@ feature -- Element change
 					end
 				end
 			else
-				defaults := new_lace_list_d_option_sd(0);
+				create defaults.make (0)
 				cluster_sd.cluster_properties.set_default_option (defaults)
 			end
 
 			-- only add the namespace if it not empty.
 			-- if namespace exists then it is removed
 			if not namespace.is_empty then
-				free_opt := new_free_option_sd (new_id_sd (ace_dictionary.namespace_keyword, False))
-				v := new_name_sd (new_id_sd (namespace, True))
-				defaults.extend (new_d_option_sd (free_opt, v))
+				create free_opt.make (feature {FREE_OPTION_SD}.Namespace)
+				create v.make (new_id_sd (namespace, True))
+				defaults.extend (create {D_OPTION_SD}.initialize (free_opt, v))
 			end
 	end
 		
@@ -575,7 +575,7 @@ feature -- Element change
 		do
 			cl_prop := cluster_sd.cluster_properties
 			if cl_prop = Void and not flag then
-				cl_prop := new_clust_prop_sd (Void, Void, Void, Void, Void, Void, Void, Void)
+				create cl_prop
 				cluster_sd.set_cluster_properties (cl_prop)
 			end
 			if cl_prop /= Void then
@@ -609,7 +609,7 @@ feature -- Element change
 		do
 			cl_prop := cluster_sd.cluster_properties
 			if cl_prop = Void then
-				cl_prop := new_clust_prop_sd (Void, Void, Void, Void, Void, Void, Void, Void)
+				create cl_prop
 				cluster_sd.set_cluster_properties (cl_prop)
 			end
 			new_defaults := cl_prop.default_option
@@ -631,33 +631,33 @@ feature -- Element change
 			end
 
 			if evaluate_invariant then
-				v := new_invariant_sd (new_id_sd ("invariant", False))
-				ass := new_assertion_sd
-				d_option := new_d_option_sd (ass, v)
+				create v.make_invariant
+				create ass
+				create d_option.initialize (ass, v)
 				new_defaults.put_front (d_option)
 			end			
 			if evaluate_loop then
-				v := new_loop_sd (new_id_sd ("loop", False))
-				ass := new_assertion_sd
-				d_option := new_d_option_sd (ass, v)
+				create v.make_loop
+				create ass
+				create d_option.initialize (ass, v)
 				new_defaults.put_front (d_option)	
 			end
 			if evaluate_ensure then
-				v := new_ensure_sd (new_id_sd ("ensure", False))
-				ass := new_assertion_sd
-				d_option := new_d_option_sd (ass, v)
+				create v.make_ensure
+				create ass
+				create d_option.initialize (ass, v)
 				new_defaults.put_front (d_option)	
 			end
 			if evaluate_require then
-				v := new_require_sd (new_id_sd ("require", False))
-				ass := new_assertion_sd
-				d_option := new_d_option_sd (ass, v)
+				create v.make_require
+				create ass
+				create d_option.initialize (ass, v)
 				new_defaults.put_front (d_option)	
 			end	
 			if evaluate_check then
-				v := new_check_sd (new_id_sd ("check", False))
-				ass := new_assertion_sd
-				d_option := new_d_option_sd (ass, v)
+				create v.make_check
+				create ass
+				create d_option.initialize (ass, v)
 				new_defaults.put_front (d_option)	
 			end
 		end
@@ -680,11 +680,11 @@ feature -- Element change
 			-- Add a directory to exclude.
 		local
 			cl_prop: CLUST_PROP_SD
-			l_ex: LACE_LIST [EXCLUDE_SD]
+			l_ex: LACE_LIST [FILE_NAME_SD]
 		do
 			cl_prop := cluster_sd.cluster_properties
 			if cl_prop = Void then
-				cl_prop := new_clust_prop_sd (Void, Void, Void, Void, Void, Void, Void, Void)
+				create cl_prop
 				cluster_sd.set_cluster_properties (cl_prop)
 			end
 			l_ex := cl_prop.exclude_option
@@ -692,14 +692,14 @@ feature -- Element change
 				create l_ex.make (10)
 				cl_prop.set_exclude_option (l_ex)
 			end
-			l_ex.extend (new_exclude_sd (new_id_sd (dir_name, True)))
+			l_ex.extend (create {FILE_NAME_SD}.initialize (new_id_sd (dir_name, True)))
 		end
 
 	remove_exclude (dir_name: STRING) is
 			-- Remove a directory to exclude.
 		local
 			cl_prop: CLUST_PROP_SD
-			l_ex: LACE_LIST [EXCLUDE_SD]
+			l_ex: LACE_LIST [FILE_NAME_SD]
 		do
 			cl_prop := cluster_sd.cluster_properties
 			if cl_prop /= Void then

@@ -14,18 +14,21 @@ inherit
 			origin_text as normal_origin_text,
 			is_valid as fs_valid
 		redefine
-			synchronized_stone, invalid_stone_message
+			synchronized_stone, invalid_stone_message, same_as,
+			history_name
 		end;
 	FILED_STONE
 		redefine
-			origin_text, is_valid, synchronized_stone, invalid_stone_message
+			origin_text, is_valid, synchronized_stone, invalid_stone_message,
+			history_name, same_as
 		select
 			origin_text, is_valid
 		end;
 	SHARED_EIFFEL_PROJECT;
 	HASHABLE_STONE
 		redefine
-			origin_text, is_valid, synchronized_stone, header, invalid_stone_message
+			origin_text, is_valid, synchronized_stone, header, 
+			invalid_stone_message, history_name, same_as
 		end;
 	INTERFACE_W;
 	WARNING_MESSAGES;
@@ -81,7 +84,38 @@ feature -- Access
 			Result.append (" Class: ");
 			Result.append (e_class.signature);
 		end;
+
+	history_name: STRING is
+			-- Name used in the history list
+		do
+			!! Result.make (0);
+			Result.append (e_feature.name);
+			Result.append (" from ");
+			Result.append (e_class.name_in_upper)
+		end;
  
+	same_as (other: like Current): BOOLEAN is
+			-- Is `other' the same stone?
+			-- Ie: does `other' represent the same feature?
+		local
+			fns: FEATURE_NAME_STONE
+		do
+			if e_feature /= Void then
+				fns ?= other;
+				if fns /= Void then
+					Result := e_feature.name.is_equal (fns.feature_name)
+				else
+					if other /= void and then other.e_feature /= Void then
+						Result := e_feature.name.is_equal (other.e_feature.name)
+					end
+				end
+			end;
+			Result := Result and then
+				e_class = other.e_class and then
+				start_position = other.start_position and then
+				end_position = other.end_position
+		end
+
 feature -- dragging
 
 	origin_text: STRING is
@@ -266,7 +300,7 @@ feature -- Update
 			if is_valid then
 				hole.process_feature (Current)
 			else
-				warner (hole.target).gotcha_call (invalid_stone_message)
+				warner (hole.target.top).gotcha_call (invalid_stone_message)
 			end
 		end;
 

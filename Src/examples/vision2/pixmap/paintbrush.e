@@ -9,13 +9,8 @@ class
 
 inherit
 	EV_APPLICATION
-
-	EV_DRAWABLE_CONSTANTS
-		undefine
-			default_create
-		end
-
-	EV_FONT_CONSTANTS
+	
+	PAINTBRUSH_CONSTANTS
 		export
 			{NONE} all
 		undefine
@@ -45,74 +40,74 @@ feature -- Initialization
 			a_menu_item: EV_MENU_ITEM
 			a_menu_separator: EV_MENU_SEPARATOR
 			a_toolbar_button: EV_TOOL_BAR_BUTTON
-			a_toolbar_separator: EV_TOOL_BAR_SEPARATOR
 			a_icon: EV_PIXMAP
-			a_gray_icon: EV_PIXMAP
-			
-			a_color: EV_COLOR
 		do
-			create a_color
-			a_color.set_rgb (1.0, 0.0, 0.0)
-
 				-- create Menus & menu items
 			create a_menu_bar
 			create a_menu.make_with_text ("File")
-			create a_menu_item.make_with_text ("Load")
-			a_menu_item.select_actions.extend (agent on_menu_file_load)
+			create a_menu_item.make_with_text ("New")
+			a_menu_item.select_actions.extend (agent on_file_new)
 			a_menu.extend (a_menu_item)
-			create a_menu_item.make_with_text ("Close")
-			a_menu_item.select_actions.extend (agent on_menu_file_close)
+			create a_menu.make_with_text ("File")
+			create a_menu_item.make_with_text ("Open")
+			a_menu_item.select_actions.extend (agent on_file_open)
+			a_menu.extend (a_menu_item)
+			create a_menu_item.make_with_text ("Save")
+			a_menu_item.select_actions.extend (agent on_file_save)
 			a_menu.extend (a_menu_item)
 			create a_menu_separator
 			a_menu.extend (a_menu_separator)
 			create a_menu_item.make_with_text ("Exit")
-			a_menu_item.select_actions.extend (agent on_menu_file_exit)
+			a_menu_item.select_actions.extend (agent on_file_exit)
 			a_menu.extend (a_menu_item)
 			a_menu_bar.extend (a_menu)
 			first_window.set_menu_bar (a_menu_bar)
 
 				-- create the toolbar
 			create my_toolbar
-
-			create a_icon
-			a_icon.set_with_named_file ("blue.ico")
-			create a_gray_icon
-			a_gray_icon.set_with_named_file ("gray.ico")
-			create a_toolbar_button
-			a_toolbar_button.set_pixmap (a_icon)
-			a_toolbar_button.set_gray_pixmap (a_gray_icon)
-			a_toolbar_button.set_text ("ICO")
-			my_toolbar.extend (a_toolbar_button)
-
-			create a_toolbar_separator
-			my_toolbar.extend (a_toolbar_separator)
-			
-			create a_icon
-			a_icon.set_with_named_file ("magenta.png")
-			create a_gray_icon
-			a_gray_icon.set_with_named_file ("gray.png")
-			create a_toolbar_button
-			a_toolbar_button.set_pixmap (a_icon)
-			a_toolbar_button.set_gray_pixmap (a_gray_icon)
-			a_toolbar_button.set_text ("PNG")
-			my_toolbar.extend (a_toolbar_button)
+			add_toolbar_button (my_toolbar, "new.png", agent on_file_new)
+			add_toolbar_button (my_toolbar, "open.png", agent on_file_open)
+			add_toolbar_button (my_toolbar, "save.png", agent on_file_save)
 
 			first_window.upper_bar.extend (create {EV_HORIZONTAL_SEPARATOR})
 			first_window.upper_bar.extend (my_toolbar)
 			first_window.upper_bar.extend (create {EV_HORIZONTAL_SEPARATOR})
 
 				-- Create the pixmap
-			create my_container
+			create my_pixmap
+			my_pixmap.set_size (128, 128)
+			my_pixmap.set_background_color ((create {EV_STOCK_COLORS}).White)
+			my_pixmap.clear
 
 				-- Create the pixmap
-			new_bitmap
+			create my_container
+			my_container.extend (my_pixmap)
 
 				-- Add widgets to our window
 			first_window.extend (my_container)
-			first_window.close_request_actions.extend (agent on_menu_file_exit)
+			
+				-- Request that close actions emulate "File menu / Exit"
+				-- (close actions are fired when the user click on the small
+				-- cross in the title bar for example)
+			first_window.close_request_actions.extend (agent on_file_exit)
 
 				-- Start the program.
 			my_pixmap.disable_sensitive
+		end
+
+	add_toolbar_button (a_toolbar: EV_TOOL_BAR; pixmap_name: STRING; command: PROCEDURE [ANY, TUPLE]) is
+			-- Add a button to the toolbar `a_toolbar' with the pixmap `pixmap_name' and the action
+			-- `command'.
+		local
+			a_toolbar_button: EV_TOOL_BAR_BUTTON
+			a_icon: EV_PIXMAP
+		do
+			create a_icon
+			a_icon.set_with_named_file (pixmap_name)
+			create a_toolbar_button
+			a_toolbar_button.set_pixmap (a_icon)
+			a_toolbar_button.select_actions.extend (command)
+			a_toolbar.extend (a_toolbar_button)
 		end
 
 	first_window: EV_TITLED_WINDOW is
@@ -146,7 +141,7 @@ feature -- Process Vision2 events
 			create my_pixmap
 		end
 
-	on_menu_file_load is
+	on_file_open is
 			-- Feature executed when the user select file/load
 			-- in the menu. Open the dialog box and let the
 			-- user choose its file to load.
@@ -158,18 +153,36 @@ feature -- Process Vision2 events
 			ofd.show_modal_to_window (first_window)
 		end
 	
-	on_menu_file_close is
+	on_file_new is
+			-- Feature executed when the user select file/new
+			-- in the menu. 
+		local
+			create_new_pixmap_dialog: PAINTBRUSH_CREATE_NEW_PIXMAP_DIALOG
+		do
+			create create_new_pixmap_dialog.make
+			create_new_pixmap_dialog.show_modal_to_window (first_window)
+			if create_new_pixmap_dialog.ok_selected then
+				my_pixmap.set_size (create_new_pixmap_dialog.desired_width, create_new_pixmap_dialog.desired_height)
+				my_pixmap.set_background_color (create_new_pixmap_dialog.desired_background_color)
+				my_pixmap.clear
+			end
+		end
+	
+	on_file_save is
 			-- Feature executed when the user select file/close
 			-- in the menu.
 		do
-			new_bitmap
 		end
 	
-	on_menu_file_exit is
+	on_file_exit is
 			-- Feature executed when the user select file/exit
 			-- in the menu.
 		do
+				-- Destroy the main window
 			first_window.destroy;
+			
+				-- Stop the message loop causing the application
+				-- to exit.
 			(create {EV_ENVIRONMENT}).application.destroy
 		end
 
@@ -182,10 +195,6 @@ feature {NONE} -- Load/Save File handling
 				-- Read and parse the file.
 			file_name := file_d.file_name
 			my_pixmap.set_with_named_file (file_name)
-
-				-- Enable actions.
-			my_pixmap.enable_sensitive
-			my_pixmap.draw_text (5, 5, "toto")
 		end
 
 feature {NONE} -- Initialisations and File status

@@ -89,42 +89,42 @@ feature {NONE} -- External features
 
 	mel_font_id (a_font: POINTER): POINTER is
 		external
-			"C [macro <X11/Xlib.h>] (XFontStruct *): EIF_POINTER"
+			"C (XFontStruct *): EIF_POINTER | %"font.h%""
 		alias
 			"mel_font_id"
 		end;
 
 	mel_font_descent (a_font: POINTER): INTEGER is
 		external
-			"C [macro <font.h>] (XFontStruct *): EIF_INTEGER"
+			"C (XFontStruct *): EIF_INTEGER | %"font.h%""
 		alias
 			"mel_font_descent"
 		end;
 
 	mel_font_ascent (a_font: POINTER): INTEGER is
 		external
-			"C [macro <font.h>] (XFontStruct *): EIF_INTEGER"
+			"C (XFontStruct *): EIF_INTEGER | %"font.h%""
 		alias
 			"mel_font_ascent"
 		end;
 
 	x_free_font (a_display: POINTER; a_font: POINTER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, XFontStruct *)"
+			"C [macro <X11/Xlib.h>] (Display *, XFontStruct *) | <X11/Xlib.h>"
 		alias
 			"XFreeFont"
 		end;
 
 	x_load_query_font (a_display: POINTER; font_name: POINTER): POINTER is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, char *): EIF_POINTER"
+			"C (Display *, char *): EIF_POINTER | <X11/Xlib.h>"
 		alias
 			"XLoadQueryFont"
 		end;
 
 	x_text_width (a_font: POINTER; a_string: POINTER; count: INTEGER): INTEGER is
 		external
-			"C [macro <X11/Xlib.h>] (XFontStruct *, char *, int): EIF_INTEGER"
+			"C (XFontStruct *, char *, int): EIF_INTEGER | <X11/Xlib.h>"
 		alias
 			"XTextWidth"
 		end;

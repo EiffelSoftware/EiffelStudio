@@ -54,12 +54,12 @@ feature {NONE} -- Implementation
 
 	c_click_count (a_callback_struct_ptr: POINTER): INTEGER is
 		external
-			"C [macro <callback_struct.h>] (XmDrawnButtonCallbackStruct *): EIF_INTEGER"
+			"C [macro %"callback_struct.h%"] (XmDrawnButtonCallbackStruct *): EIF_INTEGER"
 		end;
 
 	c_window (a_callback_struct_ptr: POINTER): POINTER is
 		external
-			"C [macro <callback_struct.h>] (XmDrawnButtonCallbackStruct *): EIF_POINTER"
+			"C [macro %"callback_struct.h%"] (XmDrawnButtonCallbackStruct *): EIF_POINTER"
 		end;
 
 end -- class MEL_DRAWN_BUTTON_CALLBACK_STRUCT

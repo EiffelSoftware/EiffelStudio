@@ -156,52 +156,52 @@ feature {NONE} -- Implementation
 
 	c_event_root (event_ptr: POINTER): POINTER is
 		external
-			"C [macro <events.h>] (XButtonEvent *): EIF_POINTER"
+			"C [macro %"events.h%"] (XButtonEvent *): EIF_POINTER"
 		end;
 
 	c_event_subwindow (event_ptr: POINTER): POINTER is
 		external
-			"C [macro <events.h>] (XButtonEvent *): EIF_POINTER"
+			"C [macro %"events.h%"] (XButtonEvent *): EIF_POINTER"
 		end;
 
 	c_event_time (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XButtonEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XButtonEvent *): EIF_INTEGER"
 		end;
 
 	c_event_x (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XButtonEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XButtonEvent *): EIF_INTEGER"
 		end;
 
 	c_event_y (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XButtonEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XButtonEvent *): EIF_INTEGER"
 		end;
 
 	c_event_x_root (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XButtonEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XButtonEvent *): EIF_INTEGER"
 		end;
 
 	c_event_y_root (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XButtonEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XButtonEvent *): EIF_INTEGER"
 		end;
 
 	c_event_state (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XButtonEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XButtonEvent *): EIF_INTEGER"
 		end;
 
 	c_event_button (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XButtonEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XButtonEvent *): EIF_INTEGER"
 		end;
 
 	c_event_same_screen (event_ptr: POINTER): BOOLEAN is
 		external
-			"C [macro <events.h>] (XButtonEvent *): EIF_BOOLEAN"
+			"C [macro %"events.h%"] (XButtonEvent *): EIF_BOOLEAN"
 		end;
 
 end -- class MEL_BUTTON_EVENT

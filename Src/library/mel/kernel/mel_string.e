@@ -241,105 +241,105 @@ feature {NONE} -- Implementation
 
 	xm_string_baseline (a_font_list, a_compound_string: POINTER): INTEGER is
 		external
-			"C [macro <Xm/Xm.h>] (XmFontList, XmString): EIF_INTEGER"
+			"C (XmFontList, XmString): EIF_INTEGER | <Xm/Xm.h>"
 		alias
 			"XmStringBaseline"
 		end;
 
 	xm_string_concat (compound_string1, compound_string2: POINTER): POINTER is
 		external
-			"C [macro <Xm/Xm.h>] (XmString, XmString): EIF_POINTER"
+			"C (XmString, XmString): EIF_POINTER | <Xm/Xm.h>"
 		alias
 			"XmStringConcat"
 		end;
 
 	xm_string_copy (a_compound_string: POINTER): POINTER is
 		external
-			"C [macro <Xm/Xm.h>] (XmString): EIF_POINTER"
+			"C (XmString): EIF_POINTER | <Xm/Xm.h>"
 		alias
 			"XmStringCopy"
 		end;
 
 	xm_string_create (a_c_string, a_c_tag_string: POINTER): POINTER is
 		external
-			"C [macro <Xm/Xm.h>] (char *, char *): EIF_POINTER"
+			"C (char *, char *): EIF_POINTER | <Xm/Xm.h>"
 		alias
 			"XmStringCreate"
 		end;
 
 	xm_string_create_localized (a_c_string: POINTER): POINTER is
 		external
-			"C [macro <Xm/Xm.h>] (char *): EIF_POINTER"
+			"C (char *): EIF_POINTER | <Xm/Xm.h>"
 		alias
 			"XmStringCreateLocalized"
 		end;
 
 	xm_string_create_l_to_r (a_c_string, a_c_tag_string: POINTER): POINTER is
 		external
-			"C [macro <Xm/Xm.h>] (char *, char *): EIF_POINTER"
+			"C (char *, char *): EIF_POINTER | <Xm/Xm.h>"
 		alias
 			"XmStringCreateLtoR"
 		end;
 
 	xm_string_empty (a_compound_string: POINTER): BOOLEAN is
 		external
-			"C [macro <Xm/Xm.h>] (XmString): EIF_BOOLEAN"
+			"C (XmString): EIF_BOOLEAN | <Xm/Xm.h>"
 		alias
 			"XmStringEmpty"
 		end;
 
 	xm_string_free (a_compound_string: POINTER) is
 		external
-			"C [macro <Xm/Xm.h>] (XmString)"
+			"C (XmString) | <Xm/Xm.h>"
 		alias
 			"XmStringFree"
 		end;
 
 	xm_string_has_substring (compound_string1, compound_string2: POINTER): BOOLEAN is
 		external
-			"C [macro <Xm/Xm.h>] (XmString, XmString): EIF_BOOLEAN"
+			"C (XmString, XmString): EIF_BOOLEAN | <Xm/Xm.h>"
 		alias
 			"XmStringHasSubstring"
 		end;
 
 	xm_string_height (a_font_list, a_compound_string: POINTER): INTEGER is
 		external
-			"C [macro <Xm/Xm.h>] (XmFontList, XmString): EIF_INTEGER"
+			"C (XmFontList, XmString): EIF_INTEGER | <Xm/Xm.h>"
 		alias
 			"XmStringHeight"
 		end;
 
 	xm_string_length (a_compound_string: POINTER): INTEGER is
 		external
-			"C [macro <Xm/Xm.h>] (XmString): EIF_INTEGER"
+			"C (XmString): EIF_INTEGER | <Xm/Xm.h>"
 		alias
 			"XmStringLength"
 		end;
 
 	xm_string_line_count (a_compound_string: POINTER): INTEGER is
 		external
-			"C [macro <Xm/Xm.h>] (XmString): EIF_INTEGER"
+			"C (XmString): EIF_INTEGER | <Xm/Xm.h>"
 		alias
 			"XmStringLineCount"
 		end;
 
 	xm_string_width (a_font_list, a_compound_string: POINTER): INTEGER is
 		external
-			"C [macro <Xm/Xm.h>] (XmFontList, XmString): EIF_INTEGER"
+			"C (XmFontList, XmString): EIF_INTEGER | <Xm/Xm.h>"
 		alias
 			"XmStringWidth"
 		end;
 
 	xm_string_byte_compare (a_compound_string: POINTER; another_compound_string: POINTER): BOOLEAN is
 		external
-			"C [macro <Xm/Xm.h>] (XmString, XmString): EIF_BOOLEAN"
+			"C (XmString, XmString): EIF_BOOLEAN | <Xm/Xm.h>"
 		alias
 			"XmStringByteCompare"
 		end;
 
 	xm_string_compare (a_compound_string: POINTER; another_compound_string: POINTER): BOOLEAN is
 		external
-			"C [macro <Xm/Xm.h>] (XmString, XmString): EIF_BOOLEAN"
+			"C (XmString, XmString): EIF_BOOLEAN | <Xm/Xm.h>"
 		alias
 			"XmStringCompare"
 		end;

@@ -396,21 +396,21 @@ feature {NONE} -- Implementation
 
 	xm_toggle_button_set_state (scr_obj: POINTER; value1, value2: BOOLEAN) is
 		external
-			"C [macro <Xm/ToggleBG.h>] (Widget, Boolean, Boolean)"
+			"C (Widget, Boolean, Boolean) | <Xm/ToggleBG.h>"
 		alias
 			"XmToggleButtonSetState"
 		end;
 
 	xm_toggle_button_get_state (scr_obj: POINTER): BOOLEAN is
 		external
-			"C [macro <Xm/ToggleBG.h>] (Widget): EIF_BOOLEAN"
+			"C (Widget): EIF_BOOLEAN | <Xm/ToggleBG.h>"
 		alias
 			"XmToggleButtonGetState"
 		end;
 
 	xm_create_toggle_button_gadget (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
 		external
-			"C [macro <Xm/ToggleBG.h>] (Widget, String, ArgList, Cardinal): EIF_POINTER"
+			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/ToggleBG.h>"
 		alias
 			"XmCreateToggleButtonGadget"
 		end;

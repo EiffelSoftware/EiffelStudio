@@ -58,12 +58,12 @@ feature {NONE} -- Implementation
 
 	c_traversal_destination (a_callback_struct_ptr: POINTER): POINTER is
 		external
-			"C [macro <callback_struct.h>] (XmTraverseObscuredCallbackStruct *): EIF_POINTER"
+			"C [macro %"callback_struct.h%"] (XmTraverseObscuredCallbackStruct *): EIF_POINTER"
 		end;
 
 	c_direction (a_callback_struct_ptr: POINTER): INTEGER is
 		external
-			"C [macro <callback_struct.h>] (XmTraverseObscuredCallbackStruct *): EIF_INTEGER"
+			"C [macro %"callback_struct.h%"] (XmTraverseObscuredCallbackStruct *): EIF_INTEGER"
 		end;
 
 end -- class MEL_TRAVERSE_OBSCURED_CALLBACK_STRUCT

@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 
 	c_event_state (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XVisibilityEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XVisibilityEvent *): EIF_INTEGER"
 		end;
 
 end -- class MEL_VISIBILITY_EVENT

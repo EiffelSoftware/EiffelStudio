@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 
 	xm_create_scrolled_list (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
 		external
-			"C [macro <Xm/List.h>] (Widget, String, ArgList, Cardinal): EIF_POINTER"
+			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/List.h>"
 		alias
 			"XmCreateScrolledList"
 		end;

@@ -65,27 +65,27 @@ feature {NONE} -- Implementation
 
 	c_event_event (event_ptr: POINTER): POINTER is
 		external
-			"C [macro <events.h>] (XReparentEvent *): EIF_POINTER"
+			"C [macro %"events.h%"] (XReparentEvent *): EIF_POINTER"
 		end;
 
 	c_event_parent (event_ptr: POINTER): POINTER is
 		external
-			"C [macro <events.h>] (XReparentEvent *): EIF_POINTER"
+			"C [macro %"events.h%"] (XReparentEvent *): EIF_POINTER"
 		end;
 
 	c_event_x (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XReparentEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XReparentEvent *): EIF_INTEGER"
 		end;
 
 	c_event_y (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XReparentEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XReparentEvent *): EIF_INTEGER"
 		end;
 
 	c_event_override_redirect (event_ptr: POINTER): BOOLEAN is
 		external
-			"C [macro <events.h>] (XReparentEvent *): EIF_BOOLEAN"
+			"C [macro %"events.h%"] (XReparentEvent *): EIF_BOOLEAN"
 		end;
 
 end -- class MEL_REPARENT_EVENT

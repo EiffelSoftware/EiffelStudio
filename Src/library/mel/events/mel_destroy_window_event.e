@@ -36,7 +36,7 @@ feature {NONE} -- Implementation
 
 	c_event_event (event_ptr: POINTER): POINTER is
 		external
-			"C [macro <events.h>] (XDestroyWindowEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XDestroyWindowEvent *): EIF_INTEGER"
 		end
 
 end -- class MEL_DESTROY_WINDOW_EVENT

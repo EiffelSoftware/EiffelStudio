@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 
 	c_click_count (a_callback_struct_ptr: POINTER): INTEGER is
 		external
-			"C [macro <callback_struct.h>] (XmPushButtonCallbackStruct *): EIF_INTEGER"
+			"C [macro %"callback_struct.h%"] (XmPushButtonCallbackStruct *): EIF_INTEGER"
 		end;
 
 end -- class MEL_PUSH_BUTTON_CALLBACK_STRUCT

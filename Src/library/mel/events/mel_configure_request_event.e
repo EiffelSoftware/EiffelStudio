@@ -116,47 +116,47 @@ feature {NONE} -- Implementation
 
 	c_event_parent (event_ptr: POINTER): POINTER is
 		external
-			"C [macro <events.h>] (XConfigureRequestEvent *): EIF_POINTER"
+			"C [macro %"events.h%"] (XConfigureRequestEvent *): EIF_POINTER"
 		end;
 
 	c_event_x (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XConfigureRequestEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XConfigureRequestEvent *): EIF_INTEGER"
 		end;
 
 	c_event_y (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XConfigureRequestEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XConfigureRequestEvent *): EIF_INTEGER"
 		end;
 
 	c_event_width (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XConfigureRequestEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XConfigureRequestEvent *): EIF_INTEGER"
 		end;
 
 	c_event_height (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XConfigureRequestEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XConfigureRequestEvent *): EIF_INTEGER"
 		end;
 
 	c_event_border_width (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XConfigureRequestEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XConfigureRequestEvent *): EIF_INTEGER"
 		end;
 
 	c_event_above (event_ptr: POINTER): POINTER is
 		external
-			"C [macro <events.h>] (XConfigureRequestEvent *): EIF_POINTER"
+			"C [macro %"events.h%"] (XConfigureRequestEvent *): EIF_POINTER"
 		end;
 
 	c_event_detail (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XConfigureRequestEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XConfigureRequestEvent *): EIF_INTEGER"
 		end;
 
 	c_event_value_mask (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XConfigureRequestEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XConfigureRequestEvent *): EIF_INTEGER"
 		end;
 
 end -- class MEL_CONFIGURE_REQUEST_EVENT

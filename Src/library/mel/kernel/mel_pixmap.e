@@ -108,15 +108,15 @@ feature {NONE} -- External features
 	x_create_pixmap (a_display: POINTER; a_pixmap: POINTER; 
 				a_width, a_height, a_depth: INTEGER): POINTER is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Drawable, %
-				%unsigned int, unsigned int, unsigned int): EIF_POINTER"
+			"C (Display *, Drawable, %
+				%unsigned int, unsigned int, unsigned int): EIF_POINTER | <X11/Xlib.h>"
 		alias
 			"XCreatePixmap"
 		end;
 
 	x_free_pixmap (a_display: POINTER; a_pixmap: POINTER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Pixmap)"
+			"C (Display *, Pixmap) | <X11/Xlib.h>"
 		alias
 			"XFreePixmap"
 		end;
@@ -124,9 +124,9 @@ feature {NONE} -- External features
 	x_get_geometry (dspl_pointer, a_drawable, a_root: POINTER; a_x, a_y,
 					a_width, a_hght, a_b_width, a_depth: POINTER): BOOLEAN is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Drawable, Window *, %
+			"C (Display *, Drawable, Window *, %
 				%int *, int *, unsigned int *, unsigned int *,%
-				%unsigned int *, unsigned int *): EIF_BOOLEAN"
+				%unsigned int *, unsigned int *): EIF_BOOLEAN | <X11/Xlib.h>"
 		alias
 			"XGetGeometry"
 		end;

@@ -810,14 +810,14 @@ feature {NONE} -- Implementation
 
 	xm_create_text_field (w, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
 		external
-			"C [macro <Xm/TextF.h>] (Widget, String, ArgList, Cardinal): EIF_POINTER"
+			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/TextF.h>"
 		alias
 			"XmCreateTextField"
 		end;
 
 	xm_text_set_string (w: POINTER; a_string: POINTER) is
 		external
-			"C [macro <Xm/Text.h>] (Widget, char *)"
+			"C (Widget, char *) | <Xm/Text.h>"
 		alias
 			"XmTextSetString"
 		end;
@@ -825,7 +825,7 @@ feature {NONE} -- Implementation
 	xm_text_get_string (w: POINTER): POINTER is
 			-- Returns pointer to C string (need to free it)
 		external
-			"C [macro <Xm/Text.h>] (Widget): EIF_POINTER"
+			"C (Widget): EIF_POINTER | <Xm/Text.h>"
 		alias
 			"XmTextGetString"
 		end;
@@ -834,7 +834,7 @@ feature {NONE} -- Implementation
 			-- Copy the primary selection to the clipboard
 			-- and remove the selected text.
 		external
-			"C [macro <Xm/Text.h>] (Widget, Time)"
+			"C (Widget, Time) | <Xm/Text.h>"
 		alias
 			"XmTextCut"
 		end;
@@ -842,7 +842,7 @@ feature {NONE} -- Implementation
 	xm_text_copy (w: POINTER; a_time: INTEGER) is
 			-- Copy the primary selection to the clipboard.
 		external
-			"C [macro <Xm/Text.h>] (Widget, Time)"
+			"C (Widget, Time) | <Xm/Text.h>"
 		alias
 			"XmTextCopy"
 		end;
@@ -850,35 +850,35 @@ feature {NONE} -- Implementation
 	xm_text_paste (w: POINTER) is
 			-- Insert the clipboard selection.
 		external
-			"C [macro <Xm/Text.h>] (Widget)"
+			"C (Widget) | <Xm/Text.h>"
 		alias
 			"XmTextPaste"
 		end;
 
 	xm_text_insert (w: POINTER; a_pos: INTEGER; a_text: POINTER) is
 		external
-			"C [macro <Xm/Text.h>] (Widget, XmTextPosition, char *)"
+			"C (Widget, XmTextPosition, char *) | <Xm/Text.h>"
 		alias
 			"XmTextInsert"
 		end;
 
 	xm_text_replace (w: POINTER; spos, epos: INTEGER; a_text: POINTER) is
 		external
-			"C [macro <Xm/Text.h>] (Widget, XmTextPosition, XmTextPosition, char *)"
+			"C (Widget, XmTextPosition, XmTextPosition, char *)"
 		alias
 			"XmTextReplace"
 		end;
 
 	xm_text_get_insertion_position (w: POINTER): INTEGER is
 		external
-			"C [macro <Xm/Text.h>] (Widget): EIF_INTEGER"
+			"C (Widget): EIF_INTEGER | <Xm/Text.h>"
 		alias
 			"XmTextGetInsertionPosition"
 		end;
 
 	xm_text_set_insertion_position (w: POINTER; pos: INTEGER) is
 		external
-			"C [macro <Xm/Text.h>] (Widget, XmTextPosition)"
+			"C (Widget, XmTextPosition) | <Xm/Text.h>"
 		alias
 			"XmTextSetInsertionPosition"
 		end;
@@ -904,42 +904,42 @@ feature {NONE} -- Implementation
 
 	xm_text_set_selection (w: POINTER; spos, epos, time: INTEGER) is
 		external
-			"C [macro <Xm/Text.h>] (Widget, XmTextPosition, XmTextPosition, Time)"
+			"C (Widget, XmTextPosition, XmTextPosition, Time) | <Xm/Text.h>"
 		alias
 			"XmTextSetSelection"
 		end;
 
 	xm_text_clear_selection (w: POINTER; time: INTEGER) is
 		external
-			"C [macro <Xm/Text.h>] (Widget, Time)"
+			"C (Widget, Time) | <Xm/Text.h>"
 		alias
 			"XmTextClearSelection"
 		end;
 
 	xm_text_get_max_length (w: POINTER): INTEGER is
 		external
-			"C [macro <Xm/Text.h>] (Widget): EIF_INTEGER"
+			"C (Widget): EIF_INTEGER | <Xm/Text.h>"
 		alias
 			"XmTextGetMaxLength"
 		end;
 
 	xm_text_set_max_length (w: POINTER; a_len: INTEGER) is
 		external
-			"C [macro <Xm/Text.h>] (Widget, int)"
+			"C (Widget, int) | <Xm/Text.h>"
 		alias
 			"XmTextSetMaxLength"
 		end;
 
 	xm_text_xy_to_pos (w: POINTER; x0, y0: INTEGER): INTEGER is
 		external
-			"C [macro <Xm/Text.h>] (Widget, Position, Position): EIF_INTEGER"
+			"C (Widget, Position, Position): EIF_INTEGER | <Xm/Text.h>"
 		alias
 			"XmTextXYToPos"
 		end;
 
 	xm_text_get_last_position (w: POINTER): INTEGER is
 		external
-			"C [macro <Xm/Text.h>] (Widget): EIF_INTEGER"
+			"C (Widget): EIF_INTEGER | <Xm/Text.h>"
 		alias
 			"XmTextGetLastPosition"
 		end;

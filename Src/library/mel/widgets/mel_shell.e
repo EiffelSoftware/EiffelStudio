@@ -325,35 +325,35 @@ feature {NONE} -- External features
 
 	xt_popup (a_popup_shell: POINTER; grab_kind: INTEGER) is
 		external
-			"C [macro <X11/Intrinsic.h>] (Widget, XtGrabKind)"
+			"C (Widget, XtGrabKind) | <X11/Intrinsic.h>"
 		alias
 			"XtPopup"
 		end;
 
 	xt_popdown (a_popup_shell: POINTER) is
 		external
-			"C [macro <X11/Intrinsic.h>] (Widget)"
+			"C (Widget) | <X11/Intrinsic.h>"
 		alias
 			"XtPopdown"
 		end;
 
 	XtGrabNone: INTEGER is
 		external
-			"C [macro <X11/Intrinsic.h>]: EIF_INTEGER"
+			"C : EIF_INTEGER | <X11/Intrinsic.h>"
 		alias
 			"XtGrabNone"
 		end;
 
 	XtGrabNonexclusive: INTEGER is
 		external
-			"C [macro <X11/Intrinsic.h>]: EIF_INTEGER"
+			"C : EIF_INTEGER | <X11/Intrinsic.h>"
 		alias
 			"XtGrabNonexclusive"
 		end;
 
 	XtGrabExclusive: INTEGER is
 		external
-			"C [macro <X11/Intrinsic.h>]: EIF_INTEGER"
+			"C : EIF_INTEGER | <X11/Intrinsic.h>"
 		alias
 			"XtGrabExclusive"
 		end;

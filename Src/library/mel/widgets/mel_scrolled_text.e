@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 
 	xm_create_scrolled_text (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
 		external
-			"C [macro <Xm/Text.h>] (Widget, String, ArgList, Cardinal): EIF_POINTER"
+			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/Text.h>"
 		alias
 			"XmCreateScrolledText"
 		end;

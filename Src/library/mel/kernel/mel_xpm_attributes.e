@@ -141,8 +141,7 @@ feature {NONE} -- Externals
 	c_malloc (a_size: INTEGER): POINTER is
 			-- C malloc
 		external
-			--"C (unsigned int): EIF_POINTER | %"eiffel.h%""
-			"C"
+			"C (unsigned int): EIF_POINTER | %"eiffel.h%""
 		alias
 			"cmalloc"
 		end;
@@ -150,8 +149,7 @@ feature {NONE} -- Externals
 	c_free (ptr: POINTER) is
 			-- C free
 		external
-			"C"
-			--"C (Malloc_t) | %"eiffel.h%""
+			"C (Malloc_t) | %"eiffel.h%""
 		alias
 			"cfree"
 		end;
@@ -167,20 +165,19 @@ feature {NONE} -- Externals
 
 	xpm_free_attributes (ptr: POINTER) is
 		external
-			"C [macro <xpm.h>] (XpmAttributes *)"
+			"C (XpmAttributes *) | %"xpm.h%""
 		alias
 			"XpmFreeAttributes"
 		end;
 
 	set_xpm_attributes_valuemask (ptr: POINTER; a_mask: INTEGER) is
 		external
-			"C [macro <pixel.h>] (XpmAttributes *, unsigned long)"
+			"C [macro %"pixel.h%"] (XpmAttributes *, unsigned long)"
 		end;
 
 	xpm_attributes_size: INTEGER is
 		external
-			"C"
-			--"C : EIF_INTEGER"
+			"C : EIF_INTEGER | %"xpm.h%""
 		alias
 			"XpmAttributesSize"
 		end;
@@ -188,7 +185,7 @@ feature {NONE} -- Externals
 	xpm_attributes_colormap (h: POINTER): POINTER is
 			-- Colormap used
 		external
-			"C [macro <pixel.h>] (XpmAttributes *): EIF_POINTER"
+			"C [macro %"pixel.h%"] (XpmAttributes *): EIF_POINTER"
 		alias
 			"xpm_attributes_colormap"
 		end;
@@ -196,31 +193,31 @@ feature {NONE} -- Externals
 	xpm_attributes_ncolors (h: POINTER): INTEGER is
 			-- Number of colors
 		external
-			"C [macro <pixel.h>] (XpmAttributes *): EIF_INTEGER"
+			"C [macro %"pixel.h%"] (XpmAttributes *): EIF_INTEGER"
 		end;
 
 	xpm_attributes_x_hotspot (h: POINTER): INTEGER is
 			-- X hotspot coordinate of created pixmap
 		external
-			"C [macro <pixel.h>] (XpmAttributes *): EIF_INTEGER"
+			"C [macro %"pixel.h%"] (XpmAttributes *): EIF_INTEGER"
 		end;
 
 	xpm_attributes_y_hotspot (h: POINTER): INTEGER is
 			-- Y hotspot coordinate of created pixmap
 		external
-			"C [macro <pixel.h>] (XpmAttributes *): EIF_INTEGER"
+			"C [macro %"pixel.h%"] (XpmAttributes *): EIF_INTEGER"
 		end;
 
 	xpm_attributes_height (h: POINTER): INTEGER is
 			-- Height of created pixmap
 		external
-			"C [macro <pixel.h>] (XpmAttributes *): EIF_INTEGER"
+			"C [macro %"pixel.h%"] (XpmAttributes *): EIF_INTEGER"
 		end;
 
 	xpm_attributes_width (h: POINTER): INTEGER is
 			-- Height of created pixmap
 		external
-			"C [macro <pixel.h>] (XpmAttributes *): EIF_INTEGER"
+			"C [macro %"pixel.h%"] (XpmAttributes *): EIF_INTEGER"
 		end;
 
 	xpm_attributes_value_mask (h: POINTER): INTEGER is
@@ -228,7 +225,7 @@ feature {NONE} -- Externals
 		require
 			is_valid: is_valid
 		external
-			"C [macro <pixel.h>] (XpmAttributes *): EIF_INTEGER"
+			"C [macro %"pixel.h%"] (XpmAttributes *): EIF_INTEGER"
 		alias
 			"xpm_attributes_value_mask"
 		end;

@@ -72,14 +72,14 @@ feature {NONE} -- Implementation
 
 	xm_create_popup_menu (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
 		external
-			"C [macro <Xm/RowColumn.h>] (Widget, String, ArgList, Cardinal): EIF_POINTER"
+			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/RowColumn.h>"
 		alias
 			"XmCreatePopupMenu"
 		end;
 
 	xm_menu_position (a_widget: POINTER; an_event: POINTER) is
 		external
-			"C [macro <Xm/RowColumn.h>] (Widget, XButtonPressedEvent *)"
+			"C (Widget, XButtonPressedEvent *) | <Xm/RowColumn.h>"
 		alias
 			"XmMenuPosition"
 		end;

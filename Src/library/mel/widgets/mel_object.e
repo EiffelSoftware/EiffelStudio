@@ -412,14 +412,14 @@ feature {NONE} -- Implementation
 
 	xm_process_traversal (a_target: POINTER; dir: INTEGER): BOOLEAN is
 		external
-			"C [macro <Xm/Xm.h>] (Widget, XmTraversalDirection): EIF_BOOLEAN"
+			"C (Widget, XmTraversalDirection): EIF_BOOLEAN | <Xm/Xm.h>"
 		alias
 			"XmProcessTraversal"
 		end;
 
 	xm_update_display (a_target: POINTER) is
 		external
-			"C [macro <Xm/Xm.h>] (Widget)"
+			"C (Widget) | <Xm/Xm.h>"
 		alias
 			"XmUpdateDisplay"
 		end;

@@ -110,15 +110,15 @@ feature {NONE} -- External features
 	xm_font_list_entry_load (a_display, a_name, a_font_type, 
 			a_tag: POINTER): POINTER is
 		external
-			"C [macro <Xm/Xm.h>] (Display *, char *,%
-				%XmFontType, char *): EIF_POINTER"
+			"C (Display *, char *,%
+				%XmFontType, char *): EIF_POINTER | <Xm/Xm.h>"
 		alias
 			"XmFontListEntryLoad"
 		end;
 
 	xm_font_list_entry_create (a_tag, a_font_type, a_font: POINTER): POINTER is
 		external
-			"C [macro <Xm/Xm.h>] (char *, XmFontType, XtPointer): EIF_POINTER"
+			"C (char *, XmFontType, XtPointer): EIF_POINTER | <Xm/Xm.h>"
 		alias
 			"XmFontListEntryCreate"
 		end;
@@ -130,7 +130,7 @@ feature {NONE} -- External features
 
 	xm_font_list_entry_get_tag (an_entry: POINTER): POINTER is
 		external
-			"C [macro <Xm/Xm.h>] (XmFontListEntry): EIF_POINTER"
+			"C (XmFontListEntry): EIF_POINTER | <Xm/Xm.h>"
 		alias
 			"XmFontListEntryGetTag"
 		end;
@@ -138,7 +138,7 @@ feature {NONE} -- External features
 	xm_font_list_entry_get_font (an_entry: POINTER; 
 				a_f_type: POINTER): POINTER is
 		external
-			"C [macro <Xm/Xm.h>] (XmFontListEntry, XmFontType  *): EIF_POINTER"
+			"C (XmFontListEntry, XmFontType  *): EIF_POINTER | <Xm/Xm.h>"
 		alias
 			"XmFontListEntryGetFont"
 		end;
@@ -166,7 +166,7 @@ feature {NONE} -- External features
 
 	xt_free (obj: POINTER) is
 		external
-			"C [macro <X11/Intrinsic.h>] (XtPointer)"
+			"C (XtPointer) | <X11/Intrinsic.h>"
 		alias
 			"XtFree"
 		end;

@@ -250,49 +250,49 @@ feature {NONE} -- Implementation
 
 	xm_create_text (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
 		external
-			"C [macro <Xm/Text.h>] (Widget, String, ArgList, Cardinal): EIF_POINTER"
+			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/Text.h>"
 		alias
 			"XmCreateText"
 		end;
 
 	xm_text_enable_redisplay (w: POINTER) is
 		external
-			"C [macro <Xm/Text.h>] (Widget)"
+			"C (Widget) | <Xm/Text.h>"
 		alias
 			"XmTextEnableRedisplay"
 		end;
 
 	xm_text_disable_redisplay (w: POINTER) is
 		external
-			"C [macro <Xm/Text.h>] (Widget)"
+			"C (Widget) | <Xm/Text.h>"
 		alias
 			"XmTextDisableRedisplay"
 		end;
 
 	xm_text_get_top_character (w: POINTER): INTEGER is
 		external
-			"C [macro <Xm/Text.h>] (Widget): EIF_INTEGER"
+			"C (Widget): EIF_INTEGER | <Xm/Text.h>"
 		alias
 			"XmTextGetTopCharacter"
 		end;
 
 	xm_text_set_top_character (w: POINTER; char_pos: INTEGER) is
 		external
-			"C [macro <Xm/Text.h>] (Widget, XmTextPosition)"
+			"C (Widget, XmTextPosition) | <Xm/Text.h>"
 		alias
 			"XmTextSetTopCharacter"
 		end;
 
 	xm_text_get_source (w: POINTER): POINTER is
 		external
-			"C [macro <Xm/Text.h>] (Widget): EIF_POINTER"
+			"C (Widget): EIF_POINTER | <Xm/Text.h>"
 		alias
 			"XmTextGetSource"
 		end;
 
 	xm_text_set_source (w: POINTER; s: POINTER; top_c, cur_p: INTEGER) is
 		external
-			"C [macro <Xm/Text.h>] (Widget, XmTextSource, XmTextPosition, XmTextPosition) "
+			"C (Widget, XmTextSource, XmTextPosition, XmTextPosition) | <Xm/Text.h>"
 		alias
 			"XmTextSetSource"
 		end;

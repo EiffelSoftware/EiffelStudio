@@ -525,7 +525,7 @@ feature {NONE} -- Implementation
 
 	xm_create_label_gadget (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
 		external
-			"C [macro <Xm/LabelG.h>] (Widget, String, ArgList, Cardinal): EIF_POINTER"
+			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/LabelG.h>"
 		alias
 			"XmCreateLabelGadget"
 		end

@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 
 	xm_create_dialog_shell (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
 		external
-			"C [macro <Xm/DialogS.h>] (Widget, String, ArgList, Cardinal): EIF_POINTER"
+			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/DialogS.h>"
 		alias
 			"XmCreateDialogShell"
 		end

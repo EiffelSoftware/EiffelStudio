@@ -121,14 +121,14 @@ feature {NONE} -- Implementation
 
 	xm_option_button_gadget (a_parent: POINTER): POINTER is
 		external
-			"C [macro <Xm/RowColumn.h>] (Widget): EIF_POINTER"
+			"C (Widget): EIF_POINTER | <Xm/RowColumn.h>"
 		alias
 			"XmOptionButtonGadget"
 		end;
 
 	xm_option_label_gadget (a_parent: POINTER): POINTER is
 		external
-			"C [macro <Xm/RowColumn.h>] (Widget): EIF_POINTER"
+			"C (Widget): EIF_POINTER | <Xm/RowColumn.h>"
 		alias
 			"XmOptionLabelGadget"
 		end

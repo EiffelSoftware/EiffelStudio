@@ -78,32 +78,32 @@ feature {NONE} -- Implementation
 
 	c_event_owner (event_ptr: POINTER): POINTER is
 		external
-			"C [macro <events.h>] (XSelectionRequestEvent *): EIF_POINTER"
+			"C [macro %"events.h%"] (XSelectionRequestEvent *): EIF_POINTER"
 		end;
 
 	c_event_requestor (event_ptr: POINTER): POINTER is
 		external
-			"C [macro <events.h>] (XSelectionRequestEvent *): EIF_POINTER"
+			"C [macro %"events.h%"] (XSelectionRequestEvent *): EIF_POINTER"
 		end;
 
 	c_event_time (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XSelectionRequestEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XSelectionRequestEvent *): EIF_INTEGER"
 		end;
 
 	c_event_selection (event_ptr: POINTER): POINTER is
 		external
-			"C [macro <events.h>] (XSelectionRequestEvent *): EIF_POINTER"
+			"C [macro %"events.h%"] (XSelectionRequestEvent *): EIF_POINTER"
 		end;
 
 	c_event_target (event_ptr: POINTER): POINTER is
 		external
-			"C [macro <events.h>] (XSelectionRequestEvent *): EIF_POINTER"
+			"C [macro %"events.h%"] (XSelectionRequestEvent *): EIF_POINTER"
 		end;
 
 	c_event_property (event_ptr: POINTER): POINTER is
 		external
-			"C [macro <events.h>] (XSelectionRequestEvent *): EIF_POINTER"
+			"C [macro %"events.h%"] (XSelectionRequestEvent *): EIF_POINTER"
 		end;
 
 end -- class MEL_SELECTION_REQUEST_EVENT

@@ -72,42 +72,42 @@ feature {NONE} -- Implementation
 
 	c_event_drawable (event_ptr: POINTER): POINTEr is
 		external
-			"C [macro <events.h>] (XGraphicsExposeEvent *): EIF_POINTER"
+			"C [macro %"events.h%"] (XGraphicsExposeEvent *): EIF_POINTER"
 		end;
 
 	c_event_x (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XGraphicsExposeEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XGraphicsExposeEvent *): EIF_INTEGER"
 		end;
 
 	c_event_y (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XGraphicsExposeEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XGraphicsExposeEvent *): EIF_INTEGER"
 		end;
 
 	c_event_width (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XGraphicsExposeEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XGraphicsExposeEvent *): EIF_INTEGER"
 		end;
 
 	c_event_height (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XGraphicsExposeEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XGraphicsExposeEvent *): EIF_INTEGER"
 		end;
 
 	c_event_count (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XGraphicsExposeEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XGraphicsExposeEvent *): EIF_INTEGER"
 		end;
 
 	c_event_major_code (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XGraphicsExposeEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XGraphicsExposeEvent *): EIF_INTEGER"
 		end;
 
 	c_event_minor_code (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XGraphicsExposeEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XGraphicsExposeEvent *): EIF_INTEGER"
 		end;
 
 end -- class MEL_GRAPHICS_EXPOSE_EVENT

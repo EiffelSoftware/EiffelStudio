@@ -52,27 +52,27 @@ feature {NONE} -- Implementation
 
 	c_event_x (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XExposeEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XExposeEvent *): EIF_INTEGER"
 		end;
 
 	c_event_y (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XExposeEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XExposeEvent *): EIF_INTEGER"
 		end;
 
 	c_event_width (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XExposeEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XExposeEvent *): EIF_INTEGER"
 		end;
 
 	c_event_height (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XExposeEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XExposeEvent *): EIF_INTEGER"
 		end;
 
 	c_event_count (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XExposeEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XExposeEvent *): EIF_INTEGER"
 		end;
 
 end -- class MEL_EXPOSE_EVENT

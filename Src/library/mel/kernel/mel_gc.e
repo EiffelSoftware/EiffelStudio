@@ -289,15 +289,15 @@ feature {NONE} -- External features
 	x_create_gc (a_display: POINTER; drawable: POINTER; 
 			value_mask: INTEGER; values: POINTER): POINTER is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Drawable, %
-				%unsigned long, XGCValues *): EIF_POINTER"
+			"C (Display *, Drawable, %
+				%unsigned long, XGCValues *): EIF_POINTER | <X11/Xlib.h>"
 		alias
 			"XCreateGC"
 		end;
 
 	x_free_gc (a_display: POINTER; a_pointer: POINTER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, GC)"
+			"C (Display *, GC) | <X11/Xlib.h>"
 		alias
 			"XFreeGC"
 		end;
@@ -305,22 +305,22 @@ feature {NONE} -- External features
 	x_set_line_attributes (a_display: POINTER; a_gc: POINTER; 
 			line_width, line_style, cap_style, join_style: INTEGER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, GC, unsigned int, %
-					%int, int, int)"
+			"C (Display *, GC, unsigned int, %
+					%int, int, int) | <X11/Xlib.h>"
 		alias
 			"XSetLineAttributes"
 		end;
 
 	x_set_function (a_display: POINTER; a_gc: POINTER; a_funt: INTEGER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, GC, int)"
+			"C (Display *, GC, int) | <X11/Xlib.h>"
 		alias
 			"XSetFunction"
 		end;
 
 	x_set_arc_mode (a_display, a_gc: POINTER; a_mode: INTEGER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, GC, int)"
+			"C (Display *, GC, int) | <X11/Xlib.h>"
 		alias
 			"XSetArcMode"
 		end;
@@ -333,21 +333,21 @@ feature {NONE} -- External features
 	x_set_dashes (a_display, a_gc: POINTER; 
 				offset: INTEGER; name: POINTER; count: INTEGER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, GC, int, char *, int)"
+			"C (Display *, GC, int, char *, int) | <X11/Xlib.h>"
 		alias
 			"XSetDashes"
 		end;
 
 	x_set_foreground (a_display, a_gc, value: POINTER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, GC, unsigned long)"
+			"C (Display *, GC, unsigned long) | <X11/Xlib.h>"
 		alias
 			"XSetForeground"
 		end;
 
 	x_set_background (a_display, a_gc, value: POINTER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, GC, unsigned long)"
+			"C (Display *, GC, unsigned long) | <X11/Xlib.h>"
 		alias
 			"XSetBackground"
 		end;
@@ -369,35 +369,35 @@ feature {NONE} -- External features
 
 	x_set_no_clip (a_display, a_gc, a_pixmap: POINTER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, GC, Pixmap)"
+			"C (Display *, GC, Pixmap) | <X11/Xlib.h>"
 		alias
 			"XSetClipMask"
 		end;
 
 	x_set_subwindow_mode (dspl_pointer, gc: POINTER; mode: INTEGER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, GC, int)"
+			"C (Display *, GC, int) | <X11/Xlib.h>"
 		alias
 			"XSetSubwindowMode"
 		end;
 
 	x_set_stipple (a_display, a_gc, a_pixmap: POINTER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, GC, Pixmap)"
+			"C (Display *, GC, Pixmap) | <X11/Xlib.h>"
 		alias
 			"XSetStipple"
 		end;
 
 	x_set_tile (a_display, a_gc, a_pixmap: POINTER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, GC, Pixmap)"
+			"C(Display *, GC, Pixmap) | <X11/Xlib.h>"
 		alias
 			"XSetTile"
 		end;
 
 	x_set_fill_style (a_display, a_gc: POINTER; a_style: INTEGER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, GC, int)"
+			"C (Display *, GC, int) | <X11/Xlib.h>"
 		alias
 			"XSetFillStyle"
 		end;
@@ -410,7 +410,7 @@ feature {NONE} -- External features
 
 	x_set_font (a_display, a_gc: POINTER; a_font_id: POINTER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, GC, Font)"
+			"C (Display *, GC, Font) | <X11/Xlib.h>"
 		alias
 			"XSetFont"
 		end;

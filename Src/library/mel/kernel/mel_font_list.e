@@ -53,14 +53,14 @@ feature {NONE} -- External features
 
 	xm_font_list_append_entry (a_font_list, an_entry: POINTER): POINTER is
 		external
-			"C [macro <Xm/Xm.h>] (XmFontList, XmFontListEntry): EIF_POINTER"
+			"C (XmFontList, XmFontListEntry): EIF_POINTER | <Xm/Xm.h>"
 		alias
 			"XmFontListAppendEntry"
 		end;
 
 	xm_font_list_free (a_font_list: POINTER) is
 		external
-			"C [macro <Xm/Xm.h>] (XmFontList)"
+			"C (XmFontList) | <Xm/Xm.h>"
 		alias
 			"XmFontListFree"
 		end;

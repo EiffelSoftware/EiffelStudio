@@ -84,42 +84,42 @@ feature {NONE} -- Implementation
 
 	c_event_event (event_ptr: POINTER): POINTER is
 		external
-			"C [macro <events.h>] (XConfigureEvent *): EIF_POINTER"
+			"C [macro %"events.h%"] (XConfigureEvent *): EIF_POINTER"
 		end;
 
 	c_event_x (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XConfigureEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XConfigureEvent *): EIF_INTEGER"
 		end;
 
 	c_event_y (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XConfigureEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XConfigureEvent *): EIF_INTEGER"
 		end;
 
 	c_event_width (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XConfigureEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XConfigureEvent *): EIF_INTEGER"
 		end;
 
 	c_event_height (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XConfigureEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XConfigureEvent *): EIF_INTEGER"
 		end;
 
 	c_event_border_width (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XConfigureEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XConfigureEvent *): EIF_INTEGER"
 		end;
 
 	c_event_above (event_ptr: POINTER): POINTER is
 		external
-			"C [macro <events.h>] (XConfigureEvent *): EIF_POINTER"
+			"C [macro %"events.h%"] (XConfigureEvent *): EIF_POINTER"
 		end;
 
 	c_event_override_redirect (event_ptr: POINTER): BOOLEAN is
 		external
-			"C [macro <events.h>] (XConfigureEvent *): EIF_BOOLEAN"
+			"C [macro %"events.h%"] (XConfigureEvent *): EIF_BOOLEAN"
 		end;
 
 end -- class MEL_CONFIGURE_EVENT

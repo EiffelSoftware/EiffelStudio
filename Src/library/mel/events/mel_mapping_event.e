@@ -40,17 +40,17 @@ feature {NONE} -- Implementation
 
 	c_event_count (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XMappingEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XMappingEvent *): EIF_INTEGER"
 		end;
 
 	c_event_request (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XMappingEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XMappingEvent *): EIF_INTEGER"
 		end;
 
 	c_event_first_keycode (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XMappingEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XMappingEvent *): EIF_INTEGER"
 		end;
 
 end -- class MEL_MAPPING_EVENT

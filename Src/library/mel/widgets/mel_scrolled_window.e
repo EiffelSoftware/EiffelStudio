@@ -399,14 +399,14 @@ feature {NONE} -- Implementation
 
 	xm_create_scrolled_window (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
 		external
-			"C [macro <Xm/ScrolledW.h>] (Widget, String, ArgList, Cardinal): EIF_POINTER"
+			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/ScrolledW.h>"
 		alias
 			"XmCreateScrolledWindow"
 		end
 
 	xm_scroll_visible (scr, widget: POINTER; lm, rm: INTEGER) is
 		external
-			"C [macro <Xm/ScrolledW.h>] (Widget, Widget, Dimension, Dimension)"
+			"C (Widget, Widget, Dimension, Dimension) | <Xm/ScrolledW.h>"
 		alias
 			"XmScrollVisible"
 		end

@@ -94,12 +94,12 @@ feature {NONE} -- Implementation
 
 	c_reason (a_callback_struct_ptr: POINTER): INTEGER is
 		external
-			"C [macro <callback_struct.h>] (XmAnyCallbackStruct *): EIF_INTEGER"
+			"C [macro %"callback_struct.h%"] (XmAnyCallbackStruct *): EIF_INTEGER"
 		end;
 
 	c_event (a_callback_struct_ptr: POINTER): POINTER is
 		external
-			"C [macro <callback_struct.h>] (XmAnyCallbackStruct *): EIF_POINTER"
+			"C [macro %"callback_struct.h%"] (XmAnyCallbackStruct *): EIF_POINTER"
 		end;
 
 invariant

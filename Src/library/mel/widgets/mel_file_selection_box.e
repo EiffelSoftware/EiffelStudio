@@ -523,14 +523,14 @@ feature -- Implementation
 
 	xm_create_file_selection_box (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
 		external
-			"C [macro <Xm/FileSB.h>] (Widget, String, ArgList, Cardinal): EIF_POINTER"
+			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/FileSB.h>"
 		alias
 			"XmCreateFileSelectionBox"
 		end;
 
 	xm_file_selection_box_get_child (scr_obj: POINTER; value: INTEGER): POINTER is
 		external
-			"C [macro <Xm/FileSB.h>] (Widget, unsigned char): EIF_POINTER"
+			"C (Widget, unsigned char): EIF_POINTER | <Xm/FileSB.h>"
 		alias
 			"XmFileSelectionBoxGetChild"
 		end;

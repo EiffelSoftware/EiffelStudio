@@ -160,7 +160,7 @@ feature -- Miscellaneous
 feature -- Removal
 
 	close is
-			-- Colse the display.
+			-- Close the display.
 			-- ie. close the connection with
 			-- an X server.
 		require
@@ -179,28 +179,29 @@ feature {NONE} -- Implementation
 			options: POINTER; num_options: INTEGER; 
 			a_argc, a_argv: POINTER): POINTER is
 		external
-			"C [macro <X11/Intrinsic.h>] (XtAppContext, String, String, String, XrmOptionDescRec *, Cardinal, Cardinal *, String *): EIF_POINTER"
+			"C (XtAppContext, String, String, String, XrmOptionDescRec *, %
+				% Cardinal, Cardinal *, String *): EIF_POINTER |<X11/Intrinsic.h>"
 		alias
 			"XtOpenDisplay"
 		end;
 
 	xt_close_display (display_ptr: POINTER) is
 		external
-			"C [macro <X11/Intrinsic.h>] (Display *)"
+			"C (Display *) | <X11/Intrinsic.h>"
 		alias
 			"XtCloseDisplay"
 		end;
 
 	x_max_request_size (display_ptr: POINTER): INTEGER is
 		external
-			"C [macro <X11/Xlib.h>] (Display *): EIF_INTEGER"
+			"C (Display *): EIF_INTEGER | <X11/Xlib.h>"
 		alias
 			"XMaxRequestSize"
 		end;
 
 	x_flush (dsp_ptr: POINTER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *)"
+			"C (Display *) | <X11/Xlib.h> "
 		alias
 			"XFlush"
 		end;
@@ -224,14 +225,14 @@ feature {NONE} -- Implementation
 	argc: POINTER is
 			-- Here we need to give the address of the argc value to XtOpenDisplay.
 		external
-			"C [macro <argv.h>]: EIF_POINTER"
+			"C : EIF_POINTER | %"argv.h%""
 		alias
 			"&eif_argc"
 		end;
 
 	argv: POINTER is
 		external
-			"C [macro <argv.h>]: EIF_POINTER"
+			"C : EIF_POINTER | %"argv.h%""
 		alias
 			"eif_argv"
 		end;

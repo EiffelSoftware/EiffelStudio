@@ -579,7 +579,7 @@ feature {NONE} -- Implementation
 
 	xm_create_scroll_bar (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
 	   external
-			"C [macro <Xm/ScrollBar.h>] (Widget, String, ArgList, Cardinal): EIF_POINTER"
+			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/ScrollBar.h>"
 		alias
 			"XmCreateScrollBar"
 		end

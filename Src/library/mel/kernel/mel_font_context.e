@@ -61,19 +61,19 @@ feature {NONE} -- External features
 
 	xm_font_list_next_entry (a_font_context: POINTER): POINTER is
 		external
-			"C [macro <Xm/Xm.h>] (XmFontContext): EIF_POINTER"
+			"C (XmFontContext): EIF_POINTER | <Xm/Xm.h>"
 		alias
 			"XmFontListNextEntry"
 		end;
 
 	xm_font_list_free_font_context (a_font_context: POINTER) is
 		external
-			"C [macro <Xm/Xm.h>] (XmFontContext)"
+			"C (XmFontContext) | <Xm/Xm.h>"
 		alias
 			"XmFontListFreeFontContext"
 		end;
 
-end -- class MEL_RESOURCE
+end -- class MEL_FONT_CONTEXT
 
 --|-----------------------------------------------------------------------
 --| Motif Eiffel Library: library of reusable components for ISE Eiffel 3.

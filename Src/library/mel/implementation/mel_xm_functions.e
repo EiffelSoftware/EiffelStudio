@@ -15,7 +15,7 @@ feature {NONE} -- Implementation
 			-- Change all of the colors for the specified widget
 			-- based on the new background color.
 		external
-			"C [macro <Xm/Xm.h>] (Widget, Pixel)"
+			"C (Widget, Pixel) | <Xm/Xm.h>"
 		alias
 			"XmChangeColor"
 		end;

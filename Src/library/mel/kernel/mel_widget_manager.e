@@ -100,7 +100,7 @@ feature -- Miscellaneous
 
     xt_window_to_widget (a_display, a_window: POINTER): POINTER is
         external
-            "C [macro <X11/Intrinsic.h>] (Display *, Window): EIF_POINTER"
+            "C (Display *, Window): EIF_POINTER | <X11/Intrinsic.h>"
         alias
             "XtWindowToWidget"
         end;

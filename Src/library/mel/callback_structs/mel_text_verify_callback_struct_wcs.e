@@ -109,42 +109,42 @@ feature {NONE} -- Implementation
 
 	c_doit (a_callback_struct_ptr: POINTER): BOOLEAN is
 		external
-			"C [macro <callback_struct.h>] (XmTextVerifyCallbackStructWcs *): EIF_BOOLEAN"
+			"C [macro %"callback_struct.h%"] (XmTextVerifyCallbackStructWcs *): EIF_BOOLEAN"
 		end;
 
 	c_current_insert (a_callback_struct_ptr: POINTER): INTEGER is
 		external
-			"C [macro <callback_struct.h>] (XmTextVerifyCallbackStructWcs *): EIF_INTEGER"
+			"C [macro %"callback_struct.h%"] (XmTextVerifyCallbackStructWcs *): EIF_INTEGER"
 		end;
 
 	c_new_insert (a_callback_struct_ptr: POINTER): INTEGER is
 		external
-			"C [macro <callback_struct.h>] (XmTextVerifyCallbackStructWcs *): EIF_INTEGER"
+			"C [macro %"callback_struct.h%"] (XmTextVerifyCallbackStructWcs *): EIF_INTEGER"
 		end;
 
 	c_start_pos (a_callback_struct_ptr: POINTER): INTEGER is
 		external
-			"C [macro <callback_struct.h>] (XmTextVerifyCallbackStructWcs *): EIF_INTEGER"
+			"C [macro %"callback_struct.h%"] (XmTextVerifyCallbackStructWcs *): EIF_INTEGER"
 		end;
 
 	c_end_pos (a_callback_struct_ptr: POINTER): INTEGER is
 		external
-			"C [macro <callback_struct.h>] (XmTextVerifyCallbackStructWcs *): EIF_INTEGER"
+			"C [macro %"callback_struct.h%"] (XmTextVerifyCallbackStructWcs *): EIF_INTEGER"
 		end;
 
 	c_text (a_callback_struct_ptr: POINTER): POINTER is
 		external
-			"C [macro <callback_struct.h>] (XmTextVerifyCallbackStructWcs *): EIF_POINTER"
+			"C [macro %"callback_struct.h%"] (XmTextVerifyCallbackStructWcs *): EIF_POINTER"
 		end;
 
 	c_text_length (ptr: POINTER): INTEGER is
 		external
-			"C [macro <callback_struct.h>] (XmTextBlock): EIF_INTEGER"
+			"C [macro %"callback_struct.h%"] (XmTextBlock): EIF_INTEGER"
 		end;
 
 	c_text_wcsptr (ptr: POINTER): POINTER is
 		external
-			"C [macro <callback_struct.h>] (XmTextBlockWcs): EIF_POINTER"
+			"C [macro %"callback_struct.h%"] (XmTextBlockWcs): EIF_POINTER"
 		end;
 
 	makestr (ptr: POINTER; l: INTEGER): STRING is
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 
 	c_text_wcs_set_do_it (b: BOOLEAN; ptr: POINTER) is
 		external
-			"C [macro <callback_struct.h>] %
+			"C [macro %"callback_struct.h%"] %
 					%(EIF_BOOLEAN, XmTextVerifyCallbackStruct *)"
 		end;
 

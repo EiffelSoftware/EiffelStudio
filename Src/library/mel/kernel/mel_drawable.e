@@ -82,8 +82,8 @@ feature {NONE} -- External features
 	x_copy_area (dspl_pointer, src_d, target_d, gc: POINTER; val1, val2,
 					bm_wdth, bm_hght, x_val, y_val: INTEGER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Drawable, Drawable, %
-				%GC, int, int, unsigned int, unsigned int, int, int)"
+			"C (Display *, Drawable, Drawable, %
+				%GC, int, int, unsigned int, unsigned int, int, int) | <X11/Xlib.h>"
 		alias
 			"XCopyArea"
 		end;
@@ -91,8 +91,8 @@ feature {NONE} -- External features
 	x_copy_plane (dspl_pointer, res_x, wndw_obj, gc: POINTER; val1, val2,
 					bm_wdth, bm_hght, x_val, y_val, val3: INTEGER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Drawable, Drawable, %
-				%GC, int, int, unsigned int, unsigned int, int, int, unsigned long)"
+			"C (Display *, Drawable, Drawable, %
+				%GC, int, int, unsigned int, unsigned int, int, int, unsigned long) | <X11/Xlib.h>"
 		alias
 			"XCopyPlane"
 		end;

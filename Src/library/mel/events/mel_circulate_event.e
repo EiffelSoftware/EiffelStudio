@@ -52,12 +52,12 @@ feature {NONE} -- Implementation
 
 	c_event_event (event_ptr: POINTER): POINTER is
 		external
-			"C [macro <events.h>] (XCirculateEvent *): EIF_POINTER"
+			"C [macro %"events.h%"] (XCirculateEvent *): EIF_POINTER"
 		end;
 
 	c_event_place (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XCirculateEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XCirculateEvent *): EIF_INTEGER"
 		end;
 
 end -- class MEL_CIRCULATE_EVENT

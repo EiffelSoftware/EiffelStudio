@@ -33,7 +33,7 @@ feature -- Callbacks
 			res: BOOLEAN
 		do
 			if Eiffel_dynamic_lib.file_name /= Void then
-				!! f.make_open_read (Eiffel_dynamic_lib.file_name)
+				create f.make_open_read (Eiffel_dynamic_lib.file_name)
 
 				Res:= Eiffel_dynamic_lib.parse_exports_from_file(f)
 				Eiffel_dynamic_lib.set_modified(False)
@@ -67,9 +67,9 @@ feature {NONE} -- Implementation
 			chooser: NAME_CHOOSER_W
 		do
 			if argument /= Void and then argument = last_name_chooser then
-				!! fn.make_from_string (last_name_chooser.selected_file)
+				create fn.make_from_string (last_name_chooser.selected_file)
 				if not fn.empty then
-					!! f.make (fn)
+					create f.make (fn)
 					if
 						f.exists and then 
 						f.is_readable and then 

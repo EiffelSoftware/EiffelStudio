@@ -44,6 +44,13 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_RESOURCES
+		rename
+			initialize as initialize_resources
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -56,6 +63,8 @@ feature {NONE} -- Initialization
 			eifgen_init: INIT_SERVERS
 			memory: MEMORY
 			new_resources: TTY_RESOURCES
+			pref_strs: RESOURCES_STRING_CONSTANTS
+			fn: FILE_NAME
 			--| uncomment the following line when profiling 
 			--prof_setting: PROFILING_SETTING
 		do
@@ -73,6 +82,21 @@ feature {NONE} -- Initialization
 				--| back to the values which permits the compiler to access correctly the EIFGEN
 				--| directory
 			create eifgen_init.make
+
+				--| Initialization of global resources.
+			initialize_resources (System_general, Eiffel_preferences)
+			create pref_strs
+			if Platform_constants.is_windows then
+				pref_strs.Pixmaps_extension_cell.put ("ico")
+				create fn.make_from_string (Bitmaps_path)
+				fn.extend ("ico")
+				pref_strs.Pixmaps_path_cell.put (fn)
+			else
+				pref_strs.Pixmaps_extension_cell.put ("png")
+				create fn.make_from_string (Bitmaps_path)
+				fn.extend ("png")
+				pref_strs.Pixmaps_path_cell.put (fn)
+			end
 
 				-- Initialization of compiler resources.
 			create new_resources.initialize

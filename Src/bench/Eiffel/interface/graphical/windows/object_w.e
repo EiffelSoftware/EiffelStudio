@@ -390,6 +390,8 @@ feature {NONE} -- Implementation; Graphical Interface
 		end;
 
 	build_widgets is
+		local
+			sep: SEPARATOR
 		do
 			if eb_shell /= Void then
 				set_default_size
@@ -402,6 +404,7 @@ feature {NONE} -- Implementation; Graphical Interface
 				build_menus
 			end
 			!! edit_bar.make (l_Command_bar_name, toolbar_parent);
+			!! sep.make ("", toolbar_parent);
 			build_bar;
 			!! format_bar.make (l_Format_bar_name, toolbar_parent);
 			build_format_bar;

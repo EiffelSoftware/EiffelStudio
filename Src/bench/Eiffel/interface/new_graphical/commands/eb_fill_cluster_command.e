@@ -20,37 +20,20 @@ feature -- Basic operations
 	execute is
 			-- Perform on center cluster.
 		local
-			cluster_fig: EG_CLUSTER_FIGURE
-			port_x, port_y: INTEGER
-			old_count: INTEGER
+			cluster_fig: EIFFEL_CLUSTER_FIGURE
 		do
 			check
 				only_aviable_in_cluster_graph: tool.cluster_graph /= Void
 			end
 			cluster_fig ?= tool.cluster_view.figure_from_model (tool.cluster_graph.center_cluster)
-			port_x := cluster_fig.port_x
-			port_y := cluster_fig.port_y
-			
-			old_count := tool.cluster_graph.center_cluster.flat_linkables.count
-			tool.cluster_graph.include_all_classes (tool.cluster_graph.center_cluster)
-			if not tool.cluster_graph.last_included_classes.is_empty then
-				tool.layout.layout_cluster_only (cluster_fig)
-				tool.world.update
-				
-				cluster_fig.set_port_position (port_x, port_y)
-				tool.restart_force_directed
-				tool.reset_history
-				tool.projector.full_project
-			end
+			include_all_classes (cluster_fig)
 		end
 
 	execute_with_cluster_stone (a_stone: CLUSTER_STONE) is
 			-- Add all classes of `a_stone'.
 		local
 			es_cluster: ES_CLUSTER
-			cluster_fig: EG_CLUSTER_FIGURE
-			port_x, port_y: INTEGER
-			old_count: INTEGER
+			cluster_fig: EIFFEL_CLUSTER_FIGURE
 		do
 			check
 				only_aviable_in_cluster_graph: tool.cluster_graph /= Void
@@ -58,22 +41,7 @@ feature -- Basic operations
 			es_cluster := tool.cluster_graph.cluster_from_interface (a_stone.cluster_i)
 			if es_cluster /= Void then
 				cluster_fig ?= tool.cluster_view.figure_from_model (es_cluster)
-				port_x := cluster_fig.port_x
-				port_y := cluster_fig.port_y
-				
-				old_count := es_cluster.flat_linkables.count
-				tool.cluster_graph.include_all_classes (es_cluster)
-				
-				if not tool.cluster_graph.last_included_classes.is_empty then
-					
-					tool.layout.layout_cluster_only (cluster_fig)
-					tool.world.update
-					
-					cluster_fig.set_port_position (port_x, port_y)
-					tool.restart_force_directed
-					tool.reset_history
-					tool.projector.full_project
-				end
+				include_all_classes (cluster_fig)
 			end
 		end
 
@@ -85,6 +53,34 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Implementation
+
+	include_all_classes (a_cluster_fig: EIFFEL_CLUSTER_FIGURE) is
+			-- Include all classes into `a_cluster'.
+		require
+			a_cluster_exists: a_cluster_fig /= Void
+		local
+			port_x, port_y: INTEGER
+			old_count: INTEGER
+		do
+			port_x := a_cluster_fig.port_x
+			port_y := a_cluster_fig.port_y
+			
+			old_count := a_cluster_fig.model.flat_linkables.count
+			tool.cluster_graph.include_all_classes (a_cluster_fig.model)
+			
+			if not tool.cluster_graph.last_included_classes.is_empty then
+				a_cluster_fig.reset_user_size
+				tool.world.update
+				tool.layout.set_spacing (40, 40)
+				tool.layout.layout_cluster_only (a_cluster_fig)
+				
+				a_cluster_fig.set_port_position (port_x, port_y)
+				tool.restart_force_directed
+				tool.reset_history
+				tool.projector.full_project
+			end
+		end
+		
 
 	pixmap: ARRAY [EV_PIXMAP] is
 			-- Pixmaps representing the command (one for the

@@ -13,16 +13,13 @@
 	executable.
 */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #include "eif_project.h" /* for egc_prof_enabled */
 #include "eif_config.h"
 #include "eif_once.h"
 #include "eif_eiffel.h"		/* For bcopy/memcpy */
 #include "eif_globals.h"
-#include "eif_misc.h"	/* %%ss added for eif_free_dlls */
+#include "eif_misc.h"	
 #include "eif_size.h"
 #include "eif_malloc.h"
 #include "eif_garcol.h"
@@ -64,6 +61,10 @@ extern "C" {
 
 #ifdef WORKBENCH
 #include "eif_interp.h"
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 #ifdef EIF_WIN32

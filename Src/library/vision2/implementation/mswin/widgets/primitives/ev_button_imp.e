@@ -135,7 +135,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			wel_make (default_parent, "", 0, 0, 0, 0, 0)
 			extra_width := 20
-			text_alignment := Text_alignment_left
+			text_alignment := Text_alignment_center
 		end
 
 	initialize is

@@ -141,20 +141,36 @@ feature -- Status report
 			index: INTEGER
 			result_count: INTEGER
 		do
-			from
+			if selected_count > 0 then
 				create Result.make (0, selected_count - 1)
-				result_count := 0
-				index := cwin_send_message_result (item, Lvm_getnextitem, - 1, Lvni_selected)
-			until
-				index = -1
-			loop
-				Result.put (index, result_count)
-				index := cwin_send_message_result (item, Lvm_getnextitem,
-							index, Lvni_selected)
-				result_count := result_count + 1
+				from
+					result_count := 0
+					index := cwin_send_message_result (item, Lvm_getnextitem, - 1, Lvni_selected)
+				until
+					index = -1
+				loop
+					Result.put (index, result_count)
+					index := cwin_send_message_result (item, Lvm_getnextitem,
+								index, Lvni_selected)
+					result_count := result_count + 1
+				end
+			else
+				create Result.make (1,0)
 			end
 		ensure
 			result_not_void: Result /= Void
+			result_valid: result.count = selected_count
+		end
+
+	selected_item: INTEGER is
+			-- Contains the top most selected index.
+			-- -1 if no item is selected.
+		require
+			exists: exists
+		do
+			Result := cwin_send_message_result (item, Lvm_getnextitem, - 1, Lvni_selected)
+		ensure
+			result_valid: selected_count > 0 implies Result >= 0
 		end
 
 	get_column_width (column: INTEGER): INTEGER is

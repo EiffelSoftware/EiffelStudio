@@ -1088,7 +1088,7 @@ feature {NONE} -- Implementation
 			in_put: INTEGER;
 			set, old_set: FIXED_INTEGER_SET
 		do
-			create set_tree.make (nb_states, 0);
+			create set_tree.make_filled (nb_states, 0);
 			create categories_table.make (-1, last_character_code);
 			create old_set.make (nb_states);
 			from

@@ -12,7 +12,7 @@ inherit
 		undefine
 			copy, setup, consistent, is_equal
 		redefine
-			is_multi_type
+			is_multi_type, deep_actual_type
 		end
 
 	ARRAY [TYPE_A]
@@ -153,6 +153,26 @@ feature {COMPILER_EXPORTER}
 			end
 		end
 
+	deep_actual_type : MULTI_TYPE_A is
+
+		local
+			i: INTEGER
+			type_a: TYPE_A
+			local_copy: like Current
+		do
+			from
+				local_copy := Current
+				i := 1
+				!!Result.make (count)
+			until
+				i > count
+			loop
+				type_a := local_copy.item (i)
+				Result.put (type_a.deep_actual_type, i)
+				i := i + 1
+			end
+		end
+
 	array_type_a: TYPE_A is
 		once
 			Result := System.instantiator.Array_type_a
@@ -169,7 +189,8 @@ feature {COMPILER_EXPORTER}
 			check
 				last_type_exists: last_type /= Void
 			end
-			Result := last_type.type_i
+			-- We must resolve anchors here!
+			Result := last_type.deep_actual_type.type_i
 		end
 
 	create_info: CREATE_INFO is

@@ -1159,8 +1159,8 @@ feature {NONE} -- Implementation: Properties dialog
 			if for_modification then
 				class_field.disable_edit
 			else
-				class_field.return_actions.extend (agent new_class_name)
-				class_field.focus_out_actions.extend (agent new_class_name)
+				class_field.return_actions.extend (agent new_class_name (True))
+				class_field.focus_out_actions.extend (agent new_class_name (False))
 				class_field.change_actions.extend (agent may_enable_ok_button)
 			end
 			class_field.set_minimum_width (f.string_width ("A_LONG_CLASS_NAME"))
@@ -1536,7 +1536,7 @@ feature {NONE} -- Implementation: Properties dialog
 			end
 		end
 
-	new_class_name is
+	new_class_name (is_enter_pressed: BOOLEAN) is
 			-- A new class name was entered in `class_field'.
 			-- Update the creation routines list if possible.
 		require
@@ -1578,7 +1578,9 @@ feature {NONE} -- Implementation: Properties dialog
 						creation_combo.extend (cit)
 						available_creation_routines.forth
 					end
-					feature_field.set_focus
+					if is_enter_pressed then
+						feature_field.set_focus
+					end
 				else
 						-- The entered class has no valid creation routine.
 					create cit.make_with_text (Warning_messages.W_no_valid_creation_routine)

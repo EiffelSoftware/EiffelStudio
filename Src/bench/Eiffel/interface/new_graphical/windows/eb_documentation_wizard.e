@@ -373,31 +373,39 @@ feature {NONE} -- Implementation
 				previous_button.disable_sensitive
 				next_button.enable_sensitive
 				set_default_push_button (next_button)
+				if is_displayed then
+					next_button.set_focus
+				end
 				show_filter_selection
 			when 2 then
 				previous_button.enable_sensitive
 				next_button.enable_sensitive
 				set_default_push_button (next_button)
+				next_button.set_focus
 				show_cluster_selection
 			when 3 then
 				previous_button.enable_sensitive
 				next_button.enable_sensitive
 				set_default_push_button (next_button)
+				next_button.set_focus
 				show_indexing_selection
 			when 4 then
 				previous_button.enable_sensitive
 				next_button.enable_sensitive
 				set_default_push_button (next_button)
+				next_button.set_focus
 				show_option_selection
 			when 5 then
 				previous_button.enable_sensitive
 				next_button.enable_sensitive
 				set_default_push_button (next_button)
+				next_button.set_focus
 				show_view_selection
 			when 6 then
 				previous_button.enable_sensitive
 				next_button.disable_sensitive
 				finish_button.enable_sensitive
+				finish_button.set_focus
 				set_default_push_button (finish_button)
 				show_directory_selection
 			end

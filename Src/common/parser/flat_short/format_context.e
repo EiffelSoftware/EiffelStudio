@@ -363,7 +363,7 @@ feature -- text construction
 		local
 			item: BEFORE_CLASS;
 		do
-			!!item.make (upper_name);
+			!!item.make (class_c);
 			text.add (item);
 		end;
 
@@ -372,7 +372,7 @@ feature -- text construction
 		local
 			item: AFTER_CLASS
 		do
-			!!item.make (upper_name);
+			!!item.make (class_c);
 			text.add (item);
 		end;
 

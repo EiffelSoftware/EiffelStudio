@@ -44,20 +44,28 @@ feature -- Analyze
 	analyze is
 			-- Analyze creation node
 		do
-			info.analyze
-			get_register
-			if call /= Void then
-				call.set_register (register)
-				call.set_need_invariant (False)
-				call.analyze_on (register)
+			if not type.is_basic then
+				info.analyze
+				get_register
+				if call /= Void then
+					call.set_parent (nested_b)
+					call.set_register (register)
+					call.set_need_invariant (False)
+					call.analyze_on (register)
+					call.set_parent (Void)
+				end
+			else
+				create {REGISTER} register.make (type.c_type)
 			end
 		end
 
 	unanalyze is
 		do
-			Precursor {ACCESS_B}
-			if call /= Void then
-				call.unanalyze
+			if not type.is_basic then
+				Precursor {ACCESS_B}
+				if call /= Void then
+					call.unanalyze
+				end
 			end
 		end
 
@@ -150,14 +158,12 @@ feature -- IL code generation
 	generate_il is
 			-- Generate IL code for creation instruction
 		local
-			is_external_class: BOOLEAN
 			cl_type: CL_TYPE_I
 			ext_call: EXTERNAL_B
 		do
 			cl_type ?= type
-			is_external_class := cl_type /= Void and then cl_type.base_class.is_external
 
-			if is_external_class then
+			if cl_type.is_external then
 					-- Creation call on external class.
 
 				check
@@ -193,33 +199,40 @@ feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a creation instruction
+		local
+			l_basic_type: BASIC_I
 		do
-				-- Since we have forbidden creation of basic type in
-				-- the corresponding Eiffel classes, there is nothing special
-				-- that needs to be done.
-			ba.append (Bc_create)
-			
-				-- If there is a call, we need to duplicate newly created object
-				-- after its creation. This information is used by the runtime
-				-- to do this duplication.
-			if call /= Void then
-				ba.append ('%/001/')
+			l_basic_type ?= type
+			if l_basic_type /= Void then
+					-- Special cases for basic types where nothing needs to be created, we
+					-- simply need to push a default value as their creation procedure
+					-- is `default_create' and it does nothing.
+				l_basic_type.make_default_byte_code (ba)
 			else
-				ba.append ('%/000/')
+				ba.append (Bc_create)
+				
+					-- If there is a call, we need to duplicate newly created object
+					-- after its creation. This information is used by the runtime
+					-- to do this duplication.
+				if call /= Void then
+					ba.append ('%/001/')
+				else
+					ba.append ('%/000/')
+				end
+				
+					-- Create associated object.
+				info.make_byte_code (ba)
+				
+					-- Call creation procedure if any.
+				if call /= Void then
+					call.set_parent (nested_b)
+					call.make_creation_byte_code (ba)
+					call.set_parent (Void)
+				end
+					-- Runtime is in charge to make sure that newly created object
+					-- has been duplicated so that we can check the invariant.
+				ba.append (Bc_create_inv)
 			end
-			
-				-- Create associated object.
-			info.make_byte_code (ba)
-			
-				-- Call creation procedure if any.
-			if call /= Void then
-				call.set_parent (nested_b)
-				call.make_creation_byte_code (ba)
-				call.set_parent (Void)
-			end
-				-- Runtime is in charge to make sure that newly created object
-				-- has been duplicated so that we can check the invariant.
-			ba.append (Bc_create_inv)
 		end
 
 feature -- Comparisons
@@ -244,35 +257,45 @@ feature -- Generation
 			-- Generate C code for creation expression
 		local
 			buf: GENERATION_BUFFER
+			l_basic_type: BASIC_I
 		do
 			generate_line_info
-			info.generate_start (Current)
-			info.generate_gen_type_conversion (Current)
+			l_basic_type ?= type
+			if l_basic_type = Void then
+				info.generate_start (Current)
+				info.generate_gen_type_conversion (Current)
+			end
 			register.print_register
 			buf := buffer
 			buf.putstring (" = ")
-			info.generate
-			buf.putchar (';')
-			buf.new_line
-			info.generate_end (Current)
-
-			if call /= Void then
-				call.set_parent (nested_b)
-				call.generate_parameters (register)
-				call.generate_on (register)
-				call.set_parent (Void)
+			if l_basic_type /= Void then
+				l_basic_type.generate_default_value (buf)
 				buf.putchar (';')
-				buf.new_line				
-				generate_frozen_debugger_hook_nested
-			end
-			if
-				context.workbench_mode
-				or else context.assertion_level.check_invariant
-			then
-				buf.putstring ("RTCI(")
-				register.print_register
-				buf.putstring (gc_rparan_semi_c)
 				buf.new_line
+			else
+				info.generate
+				buf.putchar (';')
+				buf.new_line
+				info.generate_end (Current)
+	
+				if call /= Void then
+					call.set_parent (nested_b)
+					call.generate_parameters (register)
+					call.generate_on (register)
+					call.set_parent (Void)
+					buf.putchar (';')
+					buf.new_line				
+					generate_frozen_debugger_hook_nested
+				end
+				if
+					context.workbench_mode
+					or else context.assertion_level.check_invariant
+				then
+					buf.putstring ("RTCI(")
+					register.print_register
+					buf.putstring (gc_rparan_semi_c)
+					buf.new_line
+				end
 			end
 		end
 

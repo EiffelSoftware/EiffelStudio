@@ -94,6 +94,13 @@ feature -- Access
 			create Result.make
 		end
 		
+	generation_command: GB_GENERATION_COMMAND is
+			-- Command representing code generation.
+		once
+			create Result.make
+		end
+		
+		
 
 feature -- Basic operation
 
@@ -138,6 +145,7 @@ feature {GB_MAIN_WINDOW} -- Implementation
 			Result.extend (object_editor_command)
 			Result.extend (undo_command)
 			Result.extend (redo_command)
+			Result.extend (generation_command)
 		end
 		
 

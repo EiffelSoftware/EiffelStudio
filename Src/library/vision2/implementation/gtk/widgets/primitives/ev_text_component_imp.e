@@ -74,7 +74,8 @@ feature {NONE} -- Implementation
 			if a_has_focus then
 				top_level_window_imp.set_focus_widget (Current)
 			else
-				top_level_window_imp.set_focus_widget (Void)		
+				top_level_window_imp.set_focus_widget (Void)
+				deselect_all
 			end
 			Precursor {EV_PRIMITIVE_IMP} (a_has_focus)
 		end

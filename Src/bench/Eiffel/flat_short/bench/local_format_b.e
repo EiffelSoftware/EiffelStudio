@@ -39,6 +39,9 @@ feature
 	indent_between_tokens: BOOLEAN;
 		-- must insert new_line and indent between EIFFEL_LIST token?
 
+	space_between_tokens: BOOLEAN;
+		-- Must insert a space character between EIFFEL_LIST token?
+
 	new_line_before_separator: BOOLEAN;
 		-- must insert new_line and indent before a separator?
 
@@ -100,6 +103,11 @@ feature
 	set_must_indent(b : BOOLEAN) is
 		do
 			indent_between_tokens := b;
+		end;
+
+	set_space_between_tokens (b: BOOLEAN) is
+		do
+			space_between_tokens := b
 		end;
 
 	set_must_abort (b: BOOLEAN) is

@@ -35,10 +35,11 @@ feature -- Initialization
 			ctxt.begin;
 			if tag /= Void then
 				tag.format (ctxt);
-				ctxt.put_special(": ");
+				ctxt.put_special(":");
+				ctxt.put_string (" ")
 			end;
-			ctxt.no_new_line_between_tokens;
-			ctxt.set_separator(", ");
+			ctxt.space_between_tokens;
+			ctxt.set_separator(",");
 			ctxt.separator_is_special;
 			index_list.format (ctxt);
 			ctxt.commit;

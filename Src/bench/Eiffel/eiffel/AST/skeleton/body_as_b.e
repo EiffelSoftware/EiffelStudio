@@ -303,14 +303,17 @@ feature -- formatter
 		do
 			ctxt.begin;
 			if arguments /= void and then not arguments.empty then
-				ctxt.put_special (" (");
-				ctxt.set_separator ("; ");
-				ctxt.no_new_line_between_tokens;
+				ctxt.put_string (" ");
+				ctxt.put_special ("(");
+				ctxt.set_separator (";");
+				ctxt.separator_is_special;
+				ctxt.space_between_tokens;
 				arguments.format (ctxt);
 				ctxt.put_special (")");
 			end;
 			if type /= void then
-				ctxt.put_special (": ");
+				ctxt.put_special (":");
+				ctxt.put_string (" ");
 				if type.has_like then
 					ctxt.new_expression;
 				end;

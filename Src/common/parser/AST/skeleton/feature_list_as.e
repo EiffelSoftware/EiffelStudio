@@ -57,7 +57,8 @@ feature -- Export status computing
 		do
 			ctxt.begin;
 			ctxt.set_separator(",");
-			ctxt.no_new_line_between_tokens;
+			ctxt.separator_is_special;
+			ctxt.space_between_tokens;
 			ctxt.continue_on_failure;
 			features.format (ctxt);
 			ctxt.commit;

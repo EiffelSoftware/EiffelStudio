@@ -210,9 +210,9 @@ feature
 			until
 				after
 			loop
-				ctxt.put_string ("{");
+				ctxt.put_special ("{");
 				item.format (ctxt);
-				ctxt.put_string ("}");
+				ctxt.put_special ("}");
 				forth;
 			end;
 		end;

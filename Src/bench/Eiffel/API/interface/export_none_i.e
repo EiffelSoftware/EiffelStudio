@@ -62,6 +62,8 @@ feature
 
 	format (ctxt: FORMAT_CONTEXT) is
 		do
-			ctxt.put_string ("{NONE}")
+			ctxt.put_special ("{");
+			ctxt.put_string ("NONE");
+			ctxt.put_special ("}")
 		end;
 end

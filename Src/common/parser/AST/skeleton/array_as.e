@@ -78,10 +78,10 @@ feature -- Type check, byte code, dead code removal and formatter
 		do
 			ctxt.begin;
 			ctxt.put_special ("<<");
-			ctxt.set_separator (", ");
+			ctxt.set_separator (",");
 			ctxt.separator_is_special;
 			ctxt.abort_on_failure;
-			ctxt.no_new_line_between_tokens;
+			ctxt.space_between_tokens;
 			expressions.format (ctxt);
 			if ctxt.last_was_printed then
 				ctxt.put_special(">>");

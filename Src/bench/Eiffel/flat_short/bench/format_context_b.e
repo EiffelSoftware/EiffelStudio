@@ -7,6 +7,7 @@ inherit
 	SHARED_INST_CONTEXT;
 	SHARED_RESCUE_STATUS;
 	SHARED_ERROR_HANDLER;
+	SHARED_FILTER
 
 creation
 
@@ -94,6 +95,7 @@ feature
 			name: STRING;
 		do
 			if not rescued then
+				execution_error := false;
 				Error_handler.wipe_out;
 				!!previous.make;
 				!!text.make;
@@ -108,13 +110,15 @@ feature
 				flat_struct.fill (current_class_only);
 				System.set_current_class (class_c);
 				if flat_struct.ast /= void then
-					prepare_class_text;
 					Inst_context.set_cluster (class_c.cluster);
 					flat_struct.ast.format (Current);
 					Inst_context.set_cluster (Void);
+				else
+					execution_error := true
 				end;
 				System.set_current_class (Void);
 			else
+				execution_error := true;
 				rescued := False
 			end
 		rescue
@@ -126,11 +130,20 @@ feature
 			end
 		end;
 
+	execution_error: BOOLEAN;
+			-- Did an error occur during `execute'?
+
 	flat_struct: FLAT_STRUCT;
 
 	current_class_only: BOOLEAN;
 			-- Is Current only processing `class_c' and not
 			-- its ancestors?
+
+	is_clickable_format: BOOLEAN is
+			-- Is the generated format the "clickable" format?
+		do
+			Result := current_class_only and not is_short
+		end;
 
 	troff_format: BOOLEAN;
 			-- Is Current going to be a troff format? (Used 
@@ -309,23 +322,25 @@ feature -- text construction
 	put_separator is
 			-- append the separator
 		local
-			sep_item: BASIC_TEXT;
-			line_item: NEW_LINE_TEXT;
+			tmp_separator, separator: STRING;
+			tmp_count, old_count: INTEGER;
 		do
 			if format.new_line_before_separator then
 				next_line;
 			end;
 			if format.separator /= void then
-				!!sep_item.make (format.separator);
 				if format.is_separator_special then
-					sep_item.set_is_special
+					put_special (format.separator)
 				elseif format.is_separator_keyword then
-					sep_item.set_is_keyword
-				end;
-				text.add (sep_item);
+					put_keyword (format.separator)
+				else
+					put_string (format.separator)
+				end
 			end;
-			if format.indent_between_tokens then
-				next_line;
+			if format.space_between_tokens then
+				put_string (" ")
+			elseif format.indent_between_tokens then
+				next_line
 			end;
 		end;
 
@@ -338,6 +353,226 @@ feature -- text construction
 			text.add (item)
 		end;
 
+	put_before_class_declaration is
+			-- Mark the beginning of class declaration.
+		local
+			item: FILTER_ITEM
+		do
+			!!item.make (f_Class_declaration);
+			item.set_before;
+			text.add (item)
+		end;
+			
+	put_after_class_declaration is
+			-- Mark the end of class declaration.
+		local
+			item: FILTER_ITEM
+		do
+			!!item.make (f_Class_declaration);
+			item.set_after;
+			text.add (item)
+		end;
+			
+	put_before_class_header is
+			-- Mark the beginning of class header.
+		local
+			item: FILTER_ITEM
+		do
+			!!item.make (f_Class_header);
+			item.set_before;
+			text.add (item)
+		end;
+			
+	put_after_class_header is
+			-- Mark the end of class header.
+		local
+			item: FILTER_ITEM
+		do
+			!!item.make (f_Class_header);
+			item.set_after;
+			text.add (item)
+		end;
+			
+	put_before_generics is
+			-- Mark the beginning of formal generics.
+		local
+			item: FILTER_ITEM
+		do
+			!!item.make (f_Formal_generics);
+			item.set_before;
+			text.add (item)
+		end;
+			
+	put_after_generics is
+			-- Mark the end of formal generics.
+		local
+			item: FILTER_ITEM
+		do
+			!!item.make (f_Formal_generics);
+			item.set_after;
+			text.add (item)
+		end;
+			
+	put_before_obsolete is
+			-- Mark the beginning of obsolete.
+		local
+			item: FILTER_ITEM
+		do
+			!!item.make (f_Obsolete);
+			item.set_before;
+			text.add (item)
+		end;
+			
+	put_after_obsolete is
+			-- Mark the end of obsolete.
+		local
+			item: FILTER_ITEM
+		do
+			!!item.make (f_Obsolete);
+			item.set_after;
+			text.add (item)
+		end;
+			
+	put_before_inheritance is
+			-- Mark the beginning of inheritance.
+		local
+			item: FILTER_ITEM
+		do
+			!!item.make (f_Inheritance);
+			item.set_before;
+			text.add (item)
+		end;
+			
+	put_after_inheritance is
+			-- Mark the end of inheritance.
+		local
+			item: FILTER_ITEM
+		do
+			!!item.make (f_Inheritance);
+			item.set_after;
+			text.add (item)
+		end;
+			
+	put_before_creators is
+			-- Mark the beginning of creators.
+		local
+			item: FILTER_ITEM
+		do
+			!!item.make (f_Creators);
+			item.set_before;
+			text.add (item)
+		end;
+			
+	put_after_creators is
+			-- Mark the end of creators.
+		local
+			item: FILTER_ITEM
+		do
+			!!item.make (f_Creators);
+			item.set_after;
+			text.add (item)
+		end;
+			
+	put_before_features is
+			-- Mark the beginning of Features.
+		local
+			item: FILTER_ITEM
+		do
+			!!item.make (f_Features);
+			item.set_before;
+			text.add (item)
+		end;
+			
+	put_after_features is
+			-- Mark the end of Features.
+		local
+			item: FILTER_ITEM
+		do
+			!!item.make (f_Features);
+			item.set_after;
+			text.add (item)
+		end;
+			
+	put_before_invariant is
+			-- Mark the beginning of Invariant.
+		local
+			item: FILTER_ITEM
+		do
+			!!item.make (f_Invariant);
+			item.set_before;
+			text.add (item)
+		end;
+			
+	put_after_invariant is
+			-- Mark the end of Invariant.
+		local
+			item: FILTER_ITEM
+		do
+			!!item.make (f_Invariant);
+			item.set_after;
+			text.add (item)
+		end;
+			
+	put_before_class_end is
+			-- Mark the beginning of class end.
+		local
+			item: FILTER_ITEM
+		do
+			!!item.make (f_Class_end);
+			item.set_before;
+			text.add (item)
+		end;
+			
+	put_after_class_end is
+			-- Mark the end of class end.
+		local
+			item: FILTER_ITEM
+		do
+			!!item.make (f_Class_end);
+			item.set_after;
+			text.add (item)
+		end;
+			
+	put_before_feat_clause is
+			-- Mark the beginnig of feature clause.
+		local
+			item: FILTER_ITEM
+		do
+			!!item.make (f_Feature_clause);
+			item.set_before;
+			text.add (item)
+		end;
+			
+	put_after_feat_clause is
+			-- Mark the end of feature clause.
+		local
+			item: FILTER_ITEM
+		do
+			!!item.make (f_Feature_clause);
+			item.set_after;
+			text.add (item)
+		end;
+			
+	put_before_feat_decl is
+			-- Mark the beginning of feature declaration.
+		local
+			item: FILTER_ITEM
+		do
+			!!item.make (f_Feature_declaration);
+			item.set_before;
+			text.add (item)
+		end;
+			
+	put_after_feat_decl is
+			-- Mark the end of feature declaration.
+		local
+			item: FILTER_ITEM
+		do
+			!!item.make (f_Feature_declaration);
+			item.set_after;
+			text.add (item)
+		end;
+			
 	prepare_class_text is
 			-- append standard text before class 
 		local
@@ -437,11 +672,21 @@ feature -- local_control
 	new_line_between_tokens is
 		do
 			format.set_must_indent (true);
+			format.set_space_between_tokens (false)
+		end;
+
+	space_between_tokens is
+			-- Add a space character after the separator.
+		do
+			format.set_must_indent (false);
+			format.set_space_between_tokens (true)
 		end;
 
 	no_new_line_between_tokens is
+			-- Neither new_line nor space between token.
 		do
 			format.set_must_indent (false);
+			format.set_space_between_tokens (false);
 			format.set_is_special (true);
 		end;
 
@@ -630,8 +875,10 @@ end;
 				if arg /= void then
 					begin;
 					set_separator(",");
-					no_new_line_between_tokens;
-					put_special (" (");
+					separator_is_special;
+					space_between_tokens;
+					put_string (" ");
+					put_special ("(");
 					abort_on_failure;
 					arguments.format (Current);
 					put_special (")");
@@ -668,9 +915,11 @@ end;
 			f_name := format.local_types.final_name;
 			if print_fix_keyword then
 				if format.local_types.is_prefix then
-					put_keyword ("prefix ")
+					put_keyword ("prefix");
+					put_string (" ")
 				else
-					put_keyword ("infix "); 
+					put_keyword ("infix"); 
+					put_string (" ")
 				end
 			end;
 			if feature_i /= Void and then in_bench_mode then
@@ -698,7 +947,8 @@ end;
 					item.set_is_keyword
 				end;
 				text.add (item);	
-				put_special ("%")");
+				put_special ("%"");
+				put_special (")");
 			else
 				feature_i := format.local_types.target_feature;
 				f_name := format.local_types.final_name;
@@ -713,7 +963,7 @@ end;
 				end;
 					-- careful: stone + keyword or special
 				if not dot_needed then
-					put_keyword ("Current");
+					put_string ("Current");
 				end;
 				keep_types;
 				last_was_printed := true;
@@ -735,13 +985,14 @@ end;
 				put_string (" ");
 				put_string ("%"");
 				put_string (format.local_types.final_name);
-				put_special ("%")");
+				put_special ("%"");
+				put_special (")");
 				last_was_printed := true;
 			else
 				feature_i := format.local_types.target_feature;
 				f_name := format.local_types.final_name;
 				if not dot_needed then
-					put_keyword ("Current");
+					put_string ("Current");
 				end;
 				put_string(" ");
 				if feature_i /= Void and then in_bench_mode then
@@ -750,7 +1001,7 @@ end;
 					item.set_is_special;
 					text.add (item);
 				else	
-					put_special (format.local_types.final_name);
+					put_string (format.local_types.final_name);
 				end;
 				put_string(" ");
 				old_priority := format.local_types.priority;

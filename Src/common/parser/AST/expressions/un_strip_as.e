@@ -120,7 +120,8 @@ feature -- Type check, byte code and dead code removal
 			first_printed: BOOLEAN;
 		do
 			ctxt.begin;
-			ctxt.put_keyword("strip ");
+			ctxt.put_keyword("strip");
+			ctxt.put_string (" ");
 			ctxt.put_special("(");
 			
 			from

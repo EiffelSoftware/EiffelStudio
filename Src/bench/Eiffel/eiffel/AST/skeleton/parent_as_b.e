@@ -5,6 +5,9 @@ class PARENT_AS
 inherit
 
 	AST_EIFFEL
+		redefine
+			format
+		end
 
 feature -- Attributes
 
@@ -155,5 +158,94 @@ feature -- Compiled parent computation
 	Redef: INTEGER is 1;
 	Undef: INTEGER is 2;
 	Selec: INTEGER is 3;
+
+feature -- formatter
+
+	format (ctxt : FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		local
+			end_to_print: BOOLEAN
+		do
+			ctxt.begin;
+			type.format (ctxt);
+			if renaming /= Void then
+				ctxt.indent_one_more;
+				ctxt.next_line;
+				ctxt.put_keyword ("rename");
+				ctxt.indent_one_more;
+				ctxt.next_line;
+				ctxt.set_separator(",");
+				ctxt.separator_is_special;
+				ctxt.new_line_between_tokens;
+				renaming.format (ctxt)
+				ctxt.indent_one_less;
+				ctxt.indent_one_less;
+				end_to_print := true
+			end;
+			if exports /= Void then
+				ctxt.indent_one_more;
+				ctxt.next_line;
+				ctxt.put_keyword ("export");
+				ctxt.indent_one_more;
+				ctxt.next_line;
+				ctxt.set_separator(";");
+				ctxt.separator_is_special;
+				ctxt.new_line_between_tokens;
+				exports.format (ctxt)
+				ctxt.indent_one_less
+				ctxt.indent_one_less
+				end_to_print := true
+			end;
+			if undefining /= Void then
+				ctxt.indent_one_more;
+				ctxt.next_line;
+				ctxt.put_keyword ("undefine");
+				ctxt.indent_one_more;
+				ctxt.next_line;
+				ctxt.set_separator(",");
+				ctxt.separator_is_special;
+				ctxt.space_between_tokens;
+				undefining.format (ctxt)
+				ctxt.indent_one_less;
+				ctxt.indent_one_less;
+				end_to_print := true
+			end;
+			if redefining /= Void then
+				ctxt.indent_one_more;
+				ctxt.next_line;
+				ctxt.put_keyword ("redefine");
+				ctxt.indent_one_more;
+				ctxt.next_line;
+				ctxt.set_separator(",");
+				ctxt.separator_is_special;
+				ctxt.space_between_tokens;
+				redefining.format (ctxt)
+				ctxt.indent_one_less;
+				ctxt.indent_one_less;
+				end_to_print := true
+			end;
+			if selecting /= Void then
+				ctxt.indent_one_more;
+				ctxt.next_line;
+				ctxt.put_keyword ("select");
+				ctxt.indent_one_more;
+				ctxt.next_line;
+				ctxt.set_separator(",");
+				ctxt.separator_is_special;
+				ctxt.space_between_tokens;
+				selecting.format (ctxt)
+				ctxt.indent_one_less;
+				ctxt.indent_one_less;
+				end_to_print := true
+			end;
+			if end_to_print then
+				ctxt.indent_one_more;
+				ctxt.next_line;
+				ctxt.put_keyword ("end");
+				ctxt.indent_one_less
+			end
+			ctxt.indent_one_less;
+			ctxt.commit
+		end;
 
 end

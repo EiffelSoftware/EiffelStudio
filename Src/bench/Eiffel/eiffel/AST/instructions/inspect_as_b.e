@@ -124,13 +124,14 @@ feature -- Formatter
 		do
 			ctxt.begin;
 			ctxt.put_breakable;	
-			ctxt.put_keyword ("inspect ");
+			ctxt.put_keyword ("inspect");
+			ctxt.put_string (" ");
 			ctxt.indent_one_more;
 			switch.format (ctxt);
 			ctxt.indent_one_less;
 			ctxt.next_line;
 			if case_list /= void then
-				ctxt.set_separator("");
+				ctxt.set_separator (Void);
 				ctxt.separator_is_normal;
 				ctxt.new_line_between_tokens;
 				case_list.format (ctxt);

@@ -70,6 +70,7 @@ feature -- Format
 				ctxt.indent_one_more; 
 				ctxt.next_line;
 				ctxt.set_separator (";");
+				ctxt.separator_is_special;
 				ctxt.new_line_between_tokens;
 				ctxt.continue_on_failure;
 				format_assertions (ctxt);

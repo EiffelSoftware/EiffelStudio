@@ -16,6 +16,7 @@ feature
 			if not empty then
 				ctxt.set_in_assertion;
 				ctxt.begin;
+				ctxt.put_before_invariant;
 				ctxt.next_line;
 				ctxt.put_keyword ("invariant");
 				ctxt.indent_one_more;
@@ -48,7 +49,8 @@ feature
 					forth
 				end;
 				if is_not_first then
-					ctxt.commit
+					ctxt.commit;
+					ctxt.put_after_invariant
 				else
 					ctxt.rollback
 				end

@@ -32,10 +32,12 @@ feature -- Initialization
 			-- Reconstitute text.
 		do
 			ctxt.begin;
-			ctxt.set_separator(", ");
-			ctxt.no_new_line_between_tokens;
+			ctxt.set_separator(",");
+			ctxt.separator_is_special;
+			ctxt.space_between_tokens;
 			id_list.format (ctxt);
-			ctxt.put_special(": ");
+			ctxt.put_special(":");
+			ctxt.put_string (" ");
 			type.format(ctxt);
 			ctxt.commit;
 		end;

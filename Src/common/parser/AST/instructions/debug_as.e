@@ -94,18 +94,21 @@ feature -- Formatter
 		do
 			ctxt.begin;
 			ctxt.put_breakable;
-			ctxt.put_keyword ("debug ");
+			ctxt.put_keyword ("debug");
+			ctxt.put_string (" ");
 			if keys /= void and then not keys.empty then
-				ctxt.put_string ("(");
+				ctxt.put_special ("(");
 				ctxt.set_separator(",");
+				ctxt.separator_is_special;
 				ctxt.no_new_line_between_tokens;
 				keys.format (ctxt);
-				ctxt.put_string (")")
+				ctxt.put_special (")")
 			end;
 			if compound /= void then
 				ctxt.indent_one_more;
 				ctxt.next_line;
 				ctxt.set_separator(";");
+				ctxt.separator_is_special;
 				ctxt.new_line_between_tokens;
 				compound.format (ctxt);
 				ctxt.put_breakable;

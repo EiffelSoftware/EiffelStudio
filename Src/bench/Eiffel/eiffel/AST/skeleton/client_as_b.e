@@ -46,16 +46,46 @@ feature -- Initialization
 		end;
 
 	format (ctxt : FORMAT_CONTEXT) is
+		local
+			temp: STRING;
+			cluster: CLUSTER_I;
+			client_classc: CLASS_C;
+			client_classi: CLASS_I
 		do
+			cluster := System.class_of_id (ctxt.class_c.id).cluster;
 			ctxt.begin;
 			ctxt.put_special("{");
-			ctxt.set_separator(", ");
+			ctxt.set_separator(",");
 			ctxt.separator_is_special;
-			ctxt.no_new_line_between_tokens;
-			if 	(ctxt.client /= Void) and then 
-				export_status.valid_for (ctxt.client) 
+			ctxt.space_between_tokens;
+			if 	
+				ctxt.client = Void or else 
+				export_status.valid_for (ctxt.client)
 			then
-				clients.format(ctxt);
+				from
+					clients.start
+				until
+					clients.after
+				loop
+					temp := clone (clients.item)
+					client_classi := Universe.class_named (temp, cluster);
+					if client_classi /= Void then
+						client_classc := client_classi.compiled_class;
+						if client_classc /= Void then
+							ctxt.put_class_name (client_classc)
+						else
+							ctxt.put_classi_name (client_classi)
+						end
+					else
+						temp.to_upper;
+						ctxt.put_string (temp);
+					end
+					clients.forth;
+					if not clients.after then
+						ctxt.put_special (",");
+						ctxt.put_string (" ");
+					end
+				end;
 				ctxt.put_special("}");
 				ctxt.commit
 			else

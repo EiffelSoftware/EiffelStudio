@@ -141,11 +141,13 @@ feature
 			end;
 			if is_infix then
 				ctxt.put_keyword ("infix");
-				ctxt.put_special (" %"");
+				ctxt.put_string (" ");
+				ctxt.put_special ("%"");
 				ctxt.prepare_for_infix (internal_name, void);
 			else
 				ctxt.put_keyword ("prefix");
-				ctxt.put_special (" %"");
+				ctxt.put_string (" ");
+				ctxt.put_special ("%"");
 				ctxt.prepare_for_prefix (internal_name);
 			end;
 			ctxt.put_string (ctxt.new_types.final_name);
@@ -158,13 +160,16 @@ feature
 		do
 			ctxt.begin;
 			if is_frozen then
-				ctxt.put_keyword ("frozen ");
+				ctxt.put_keyword ("frozen");
+				ctxt.put_string (" ");
 			end;
 			if is_infix then
-				--ctxt.put_keyword ("infix ");
+				--ctxt.put_keyword ("infix");
+				--ctxt.put_string (" ");
 				ctxt.prepare_for_main_infix;
 			else
-				--ctxt.put_keyword ("prefix ");
+				--ctxt.put_keyword ("prefix");
+				--ctxt.put_string (" ");
 				ctxt.prepare_for_main_prefix;
 			end;
 			ctxt.put_main_fix;

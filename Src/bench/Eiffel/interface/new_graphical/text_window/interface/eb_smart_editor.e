@@ -31,7 +31,8 @@ inherit
 			file_loading_setup,
 			key_not_handled_action,
 			on_text_saved,
-			on_text_back_to_its_last_saved_state
+			on_text_back_to_its_last_saved_state,
+			string_loading_setup
 		end	
 
 create
@@ -82,7 +83,7 @@ feature -- Status report
 	click_and_complete_is_active: BOOLEAN is
 			-- If in the basic text format, is the text clickable?
 		do
-			Result := text_displayed.current_class_is_clickable and then allow_edition and then not open_backup
+			Result := text_displayed.click_and_complete_is_active and then allow_edition and then not open_backup
 		end
 
 	syntax_is_correct: BOOLEAN is
@@ -186,13 +187,14 @@ feature -- Autocomplete
 
 feature {NONE} -- Text loading
 
-	file_loading_setup is
-			-- Setup editor just before file loading begins.
+	string_loading_setup, file_loading_setup is
+			-- Setup editor just before file/string loading begins.
 		do
 			text_displayed.enable_click_tool
 			text_displayed.setup_click_tool (dev_window.stone, not is_unix_file)
 			process_click_tool_error
 		end
+
 
 	reset is
 			-- Make the editor ready to load a new content.

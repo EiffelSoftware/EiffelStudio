@@ -1,5 +1,5 @@
 CC = bcc32
-CFLAGS = -O2 -c -WC -g0 -w- -DEIF_BORLAND -Ie:\bc5\include\mfc
+CFLAGS = -O2 -c -WC -g0 -w- -DEIF_BORLAND -I$(EIFFEL4)\bench\spec\$(PLATFORM)\include
 
 OBJ = odbc.obj
 

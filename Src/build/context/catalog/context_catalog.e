@@ -420,6 +420,7 @@ feature -- Context_editor list
 			editor_list: LINKED_LIST [CONTEXT_EDITOR]
 		do
 			editor_list := window_mgr.context_editors
+			editor_list.extend (main_panel.context_editor)
 			from
 				editor_list.start
 			until

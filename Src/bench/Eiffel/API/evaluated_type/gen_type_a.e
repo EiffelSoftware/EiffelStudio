@@ -10,7 +10,7 @@ inherit
 			valid_expanded_creation as basic_valid_expanded_creation,
 			is_valid as basic_is_valid,
 			dump as old_dump,
-			append_clickable_signature as old_append_clickable_signature
+			append_to as old_append_to
 		redefine
 			generics,
 			valid_generic,
@@ -38,7 +38,7 @@ inherit
 			valid_generic,
 			parent_type,
 			dump,
-			append_clickable_signature,
+			append_to,
 			has_like,
 			duplicate,
 			solved_type,
@@ -60,13 +60,44 @@ inherit
 			storage_info_with_name
 		select
 			dump, expanded_deferred, valid_expanded_creation,
-			is_valid, append_clickable_signature
+			is_valid, append_to
 		end;
 
 feature -- Property
 
 	generics: ARRAY [TYPE_A];
 			-- Actual generical parameter
+
+feature -- Access
+
+	same_as (other: TYPE_A): BOOLEAN is
+			-- Is the current type the same as `other' ?
+		local
+			other_gen_type: GEN_TYPE_A;
+			i, nb: INTEGER;
+			other_generics: like generics;
+		do
+			other_gen_type ?= other;
+			if 	other_gen_type /= Void
+				and then
+				other_gen_type.base_type = base_type
+				and then
+				is_expanded = other_gen_type.is_expanded
+			then
+				from
+					i := 1;
+					nb := generics.count;
+					other_generics := other_gen_type.generics;
+					Result := nb = other_generics.count
+				until
+					i > nb or else not Result
+				loop
+					Result := generics.item (i).same_as
+												(other_generics.item (i));
+					i := i + 1;
+				end;
+			end;
+		end;
 
 feature -- Output
 
@@ -92,28 +123,28 @@ feature -- Output
 			Result.append ("]");
 		end;
 
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+	append_to (ow: OUTPUT_WINDOW) is
 		local
 			i, count: INTEGER;
 		do
-			old_append_clickable_signature (a_clickable);
-			a_clickable.put_string (" [");
+			old_append_to (ow);
+			ow.put_string (" [");
 			from
 				i := 1;
 				count := generics.count;
 			until
 				i > count
 			loop
-				generics.item (i).append_clickable_signature (a_clickable);
+				generics.item (i).append_to (ow);
 				if i /= count then
-					a_clickable.put_string (", ");
+					ow.put_string (", ");
 				end;
 				i := i + 1;
 			end;
-			a_clickable.put_string ("]");
+			ow.put_string ("]");
 		end;
 
-feature -- Primitives
+feature {COMPILER_EXPORTER} -- Primitives
 
 	set_generics (g: like generics) is
 			-- Assign `g' to `generics'.
@@ -466,35 +497,6 @@ feature -- Primitives
 			end;
 		end;
 		
-	same_as (other: TYPE_A): BOOLEAN is
-			-- Is the current type the same as `other' ?
-		local
-			other_gen_type: GEN_TYPE_A;
-			i, nb: INTEGER;
-			other_generics: like generics;
-		do
-			other_gen_type ?= other;
-			if 	other_gen_type /= Void
-				and then
-				other_gen_type.base_type = base_type
-				and then
-				is_expanded = other_gen_type.is_expanded
-			then
-				from
-					i := 1;
-					nb := generics.count;
-					other_generics := other_gen_type.generics;
-					Result := nb = other_generics.count
-				until
-					i > nb or else not Result
-				loop
-					Result := generics.item (i).same_as
-												(other_generics.item (i));
-					i := i + 1;
-				end;
-			end;
-		end;
-
 	is_deep_equal (other: TYPE_B): BOOLEAN is
 		local
 			other_gen_type: GEN_TYPE_A;
@@ -617,7 +619,7 @@ feature -- Primitives
 			ctxt.put_text_item (ti_R_bracket)
 		end;
 
-feature -- Storage information for EiffelCase
+feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 
 	storage_info (classc: CLASS_C): S_GEN_TYPE_INFO is
 			-- Storage info for Current type in class `classc'

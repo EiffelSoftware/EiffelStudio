@@ -18,6 +18,7 @@
 
 */
 
+#include "config.h"
 #include "eiffel.h"
 #include "eif_threads.h"
 #include "eif_globals.h"
@@ -25,15 +26,6 @@
 #include "hector.h"      /* for efreeze() and eufreeze() */
 
 #ifdef EIF_THREADS
-
-/* Structure used to give two arguments to a new thread,
-   with only one used -- the pointer on this structure.
-   This structure is only needed locally */
-
-typedef struct {
-	EIF_OBJ current;
-	EIF_PROC routine;
-} start_routine_ctxt_t;
 
 rt_public void eif_thr_panic(char *);
 rt_public void eif_thr_init_root(void);
@@ -68,7 +60,7 @@ rt_public void eif_thr_register(void) {
 
 	eif_global_context_t *eif_globals;
 
-	eif_globals = (eif_global_context_t *)malloc(sizeof(eif_global_context_t));
+	eif_globals = (eif_global_context_t *) malloc (sizeof(eif_global_context_t));
 	if (!eif_globals)
 		eif_thr_panic("No more memory for thread context");
 
@@ -79,7 +71,6 @@ rt_public void eif_thr_register(void) {
 		/* Allocate room for once values for all threads but the initial */
 		/* because we do not have the number of onces yet */
 		EIF_once_values = (char **) cmalloc ( EIF_once_count * sizeof (char *) );
-
 		if (EIF_once_values == (char **) 0)
 			/* Out of memory */
 			enomem();
@@ -113,7 +104,7 @@ rt_public void eif_thr_create (EIF_OBJ thr_root_obj, EIF_PROC init_func)
 	start_routine_ctxt_t *routine_ctxt;
 	EIF_THR_TYPE tid;
 
-	routine_ctxt = (start_routine_ctxt_t *)malloc(sizeof(start_routine_ctxt_t));
+	routine_ctxt = (start_routine_ctxt_t *) malloc (sizeof(start_routine_ctxt_t));
 	if (!routine_ctxt)
 		eif_thr_panic("No more memory to launch new thread\n");
 	routine_ctxt->current = eif_adopt(thr_root_obj);
@@ -137,6 +128,7 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry(EIF_THR_ENTRY_ARG_TYPE arg)
 		struct ex_vect *exvect;
 		jmp_buf exenv;
 
+		eif_thr_context = routine_ctxt;
 		EIF_MUTEX_LOCK(eif_rmark_mutex,
 			"problem while trying to lock mutex on context buffer");
 		initsig();
@@ -164,17 +156,20 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry(EIF_THR_ENTRY_ARG_TYPE arg)
 		root_obj = (char *)0;
 		EIF_END_GET_CONTEXT
 	}
-	plsc();
-	free(routine_ctxt);
+	eif_thr_exit ();
 }
 
 
 rt_public void eif_thr_exit(void) {
+	EIF_GET_CONTEXT
+	free (eif_thr_context);
+	reclaim ();
 	EIF_THR_EXIT(0);
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void eif_thr_yield(void) {
-    EIF_THR_YIELD;
+/*     EIF_THR_YIELD; */
 }
 
 rt_public void eif_thr_join_all(void) {

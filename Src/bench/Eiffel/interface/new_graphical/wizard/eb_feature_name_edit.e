@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 	initialize is
 		do
 			Precursor
+			set_minimum_width (100)
 			change_actions.extend (agent on_text_change)
 		end
 

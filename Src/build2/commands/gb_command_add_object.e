@@ -90,6 +90,7 @@ feature -- Basic Operation
 			if previous_parent_layout_item /= Void then
 				object_handler.add_object (previous_parent_layout_item.object, child_layout_item.object, previous_position_in_parent)
 			end
+			command_handler.update
 		end
 		
 	textual_representation: STRING is

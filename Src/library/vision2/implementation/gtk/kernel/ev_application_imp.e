@@ -30,7 +30,6 @@ feature {NONE} -- Initialization
 			check
 				valid_main_window: w /= Void
 			end
-			iterate
 		end
 	
 	

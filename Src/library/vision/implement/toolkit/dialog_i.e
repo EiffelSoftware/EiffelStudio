@@ -101,6 +101,13 @@ feature
 		deferred
 		end
 
+	remove_parent_action (action: STRING) is
+			-- Remove `action' from the dialog shell
+		require
+			action_exists: action /= Void
+		deferred
+		end
+
 	dialog_command_target is
 			-- set the command target to the dialog_shell
 		deferred

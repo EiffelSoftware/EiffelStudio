@@ -578,7 +578,7 @@ feature -- Element change
 			ll_replace (an_item)
 			if realized then
 				private_delete (index - 1)
-				private_add (an_item.value, index - 1)
+				private_add (an_item.value, index )
 			end
 		end
 

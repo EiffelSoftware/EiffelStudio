@@ -291,7 +291,7 @@ feature {NONE}
 			change_class_form.attach_bottom (change_class_command, 0);
 			edit_bar.attach_top (change_class_form, 0);
 			edit_bar.attach_left_position (change_class_form, 7);
-			edit_bar.attach_right_position (change_class_form, 13);
+			edit_bar.attach_right_widget (open_command, change_class_form, 2);
 			edit_bar.attach_right (quit_command, 0);
 			edit_bar.attach_top (quit_command, 0);
 			edit_bar.attach_top (change_font_command, 0);

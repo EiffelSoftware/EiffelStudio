@@ -25,6 +25,21 @@ feature {NONE} -- Initialization
 			create {LINKED_LIST [WIZARD_COCLASS_DESCRIPTOR]} coclasses.make
 			create {LINKED_LIST [STRING]} eiffel_names.make
 			eiffel_names.compare_objects
+
+			eiffel_names.force ("FONT_AUTO_INTERFACE")
+			eiffel_names.force ("FONT_EVENTS_AUTO_INTERFACE")
+			eiffel_names.force ("FONT_EVENTS_IMPL_PROXY")
+			eiffel_names.force ("FONT_IMPL_PROXY")
+			eiffel_names.force ("IENUM_VARIANT_INTERFACE")
+			eiffel_names.force ("IENUM_VARIANT_IMPL_PROXY")
+			eiffel_names.force ("IFONT_IMPL_PROXY")
+			eiffel_names.force ("IFONT_INTERFACE")
+			eiffel_names.force ("IPICTURE_INTERFACE")
+			eiffel_names.force ("PICTURE_AUTO_INTERFACE")
+			eiffel_names.force ("PICTURE_IMPL_PROXY")
+			eiffel_names.force ("STD_FONT_PROXY")
+			eiffel_names.force ("STD_PICTURE_PROXY")
+
 			create {LINKED_LIST [WIZARD_WRITER_VISIBLE_CLAUSE]} visible_classes_component.make
 			create {LINKED_LIST [WIZARD_WRITER_VISIBLE_CLAUSE]} visible_classes_common.make
 			create c_types.make (20)

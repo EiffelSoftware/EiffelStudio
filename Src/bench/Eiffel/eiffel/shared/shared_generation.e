@@ -6,7 +6,7 @@ feature {NONE}
 
 	gc_comma: STRING is ", "
 
-	gc_rparan_comma: STRING is ");"
+	gc_rparan_comma: STRING is "), "
 
 	gc_rparan_semi_c: STRING is ");"
 

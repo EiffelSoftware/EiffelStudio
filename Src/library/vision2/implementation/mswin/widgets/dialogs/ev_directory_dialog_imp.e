@@ -18,6 +18,8 @@ inherit
 			dispose as destroy
 		end
 
+	WEL_WINDOWS_VERSION
+
 create
 	make
 
@@ -31,7 +33,17 @@ feature {NONE} -- Initialization
 		end
 
 	initialize is
+			-- Set new UI style for dialog if supported.
 		do
+			-- We want to be able to create folders and stuff in the dialog
+			-- so we choose the new UI style if the system supports it.
+			-- Systems that have lower than Shell32.dll version 5.00: too bad!
+			-- We use BIF_USENEWUI (see MSDN) which is not in shlobj.h yet.
+
+			if shell32_version >= version_500 then
+				add_flag (64)
+			end
+
 			is_initialized := True
 		end
 
@@ -84,6 +96,10 @@ end -- class EV_DIRECTORY_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/14 23:51:43  brendel
+--| Added step to initialization that takes advantage of new choose folder
+--| dialogs in version 5.00 of shell32.dll, if present.
+--|
 --| Revision 1.6  2000/03/07 01:53:25  brendel
 --| Released
 --|

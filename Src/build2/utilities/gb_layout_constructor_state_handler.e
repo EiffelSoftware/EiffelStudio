@@ -1,6 +1,6 @@
 indexing
 	description: "[
-			Objects that allow you to store and retrieve the exanded state of all items in the
+			Objects that allow you to temporarily store and retrieve the exanded state of all items in the
 			GB_LAYOUT_CONSTRUCTOR.
 				]"
 	author: ""
@@ -20,7 +20,6 @@ feature -- Access
 		local
 			tree_item: GB_BOOLEAN_TREE_ITEM
 			layout_constructor_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-			child_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
 			create state_tree
 			create tree_item

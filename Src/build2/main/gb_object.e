@@ -383,7 +383,6 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 		local
 			environment: EV_ENVIRONMENT
 		do
-			io.putstring ("Calling retrieve pebble%N")
 			create environment
 				-- If the ctrl key is pressed, then we must
 				-- start a new object editor for `Current', instead

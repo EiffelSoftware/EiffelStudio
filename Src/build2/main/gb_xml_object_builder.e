@@ -113,7 +113,6 @@ feature {NONE} -- Implementation
 				current_element ?= element.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name.to_utf8
-					io.putstring (current_name + "%N")
 					if current_name.is_equal (Item_string) then
 						-- The element represents an item, so we must add new objects.
 						build_new_object (current_element, a_new_object)

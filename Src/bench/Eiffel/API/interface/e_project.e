@@ -24,8 +24,7 @@ inherit
 	SHARED_MELT_ONLY;
 	SHARED_RESCUE_STATUS;
 	SHARED_ERROR_HANDLER;
-	SHARED_APPLICATION_EXECUTION;
-	STORABLE
+	SHARED_APPLICATION_EXECUTION
 
 feature -- Initialization
 
@@ -115,6 +114,8 @@ feature -- Initialization
 					end;
 					Precompilation_directories.copy (precomp_dirs);
 					!! remote_dir.make (project_dir.name);
+					remote_dir.set_licensed (Comp_system.licensed_precompilation)
+					remote_dir.set_system_name (Comp_system.system_name)
 					Precompilation_directories.force
 							(remote_dir, Comp_system.compilation_id);
 				else
@@ -592,6 +593,7 @@ feature -- Update
 			Compilation_modes.set_is_freezing (True);	
 			Workbench.recompile;
 			if successful then
+				Comp_system.set_licensed_precompilation (licensed);
 				Comp_system.save_precompilation_info;
 				save_project;
 				if not save_error then
@@ -646,10 +648,7 @@ feature -- Output
 				Comp_system.server_controler.wipe_out;
 				file.open_write;
 				saved_workbench := workbench;
-					-- ******** FIXME remove inheritance to STORABLE
-					-- use Project_directory.project_eif.store
-					-- with new version of base
-				basic_store (file);
+				file.basic_store (Current);
 				file.close;
 			else
 				if file /= Void and then not file.is_closed then
@@ -681,7 +680,7 @@ feature -- Output
 				!! precomp_info.make (Precompilation_directories, licensed);
 				!! file.make (Precompilation_file_name);
 				file.open_write;
-				precomp_info.independent_store (file);
+				file.independent_store (precomp_info);
 				file.close;
 				set_file_status (read_only_status);
 			else

@@ -35,7 +35,7 @@ feature
 			--  Create one of each Vision widget in a notebook.
 		local
 			box: EV_BOX
-			--|scroll: EV_SCROLLABLE_AREA
+			scroll: EV_SCROLLABLE_AREA
 			menu_bar: EV_MENU_BAR
 			object_menu: EV_MENU
 			menu_item: EV_MENU
@@ -49,16 +49,15 @@ feature
 			menu_bar.extend (object_menu)
 			create {EV_VERTICAL_BOX} box
 			first_window.extend (box)
-			--|create scroll
-			--|scroll.set_minimum_size (700,500)
-			--|box.extend (scroll)
-			--|scroll.extend (widgets_frame)
-			box.extend (widgets_frame)
+			create scroll
+			scroll.set_minimum_size (700,500)
+			box.extend (scroll)
+			scroll.extend (widgets_frame)
 			create description_frame.make_with_text ("Description")
 			box.extend (description_frame)
 			widget_label.align_text_left
 			description_frame.extend (widget_label)
-			box.disable_child_expand (description_frame)
+			box.disable_item_expand (description_frame)
 
 			menu_bar.extend (decendants (first_window))
 
@@ -127,7 +126,7 @@ feature
 					l.set_background_color (create {EV_COLOR}.make_with_rgb (0.7, 0.7, 1.0))
 					wbox.extend (l)
 					wbox.extend (widgets.item)
-					wbox.disable_child_expand (l)
+					wbox.disable_item_expand (l)
 					widgets.forth
 					i := i + 1
 				end
@@ -149,10 +148,10 @@ feature
 			Result.extend (create {EV_HORIZONTAL_BOX}.make_for_test)
 			Result.extend (create {EV_HORIZONTAL_SPLIT_AREA}.make_for_test)
 			Result.extend (create {EV_NOTEBOOK}.make_for_test)
---|FIXME		Result.extend (create {EV_SCROLLABLE_AREA}.make_for_test)
+			Result.extend (create {EV_SCROLLABLE_AREA}.make_for_test)
 			Result.extend (create {EV_VERTICAL_BOX}.make_for_test)
 			Result.extend (create {EV_VERTICAL_SPLIT_AREA}.make_for_test)
---|FIXME		Result.extend (create {EV_VIEWPORT}.make_for_test)
+			Result.extend (create {EV_VIEWPORT}.make_for_test)
 			Result.extend (create {EV_BUTTON}.make_for_test)
 			Result.extend (create {EV_CHECK_BUTTON}.make_for_test)
 			Result.extend (create {EV_DRAWING_AREA}.make_for_test)
@@ -164,11 +163,11 @@ feature
 			Result.extend (create {EV_LIST}.make_for_test)
 			Result.extend (create {EV_MULTI_COLUMN_LIST}.make_for_test)
 			Result.extend (create {EV_OPTION_BUTTON}.make_for_test)
---|FIXME (win)	Result.extend (create {EV_SPIN_BUTTON}.make_for_test)
+			Result.extend (create {EV_SPIN_BUTTON}.make_for_test)
 			Result.extend (create {EV_TEXT_FIELD}.make_for_test)
 			Result.extend (create {EV_TOGGLE_BUTTON}.make_for_test)
 			Result.extend (create {EV_TOOL_BAR}.make_for_test)
---|FIXME			Result.extend (create {EV_TREE}.make_for_test)
+			Result.extend (create {EV_TREE}.make_for_test)
 			Result.extend (create {EV_VERTICAL_PROGRESS_BAR}.make_for_test)
 			Result.extend (create {EV_VERTICAL_RANGE}.make_for_test)
 			Result.extend (create {EV_VERTICAL_SCROLL_BAR}.make_for_test)
@@ -226,9 +225,9 @@ feature
 			Result.extend (create {EV_LIST_ITEM})
 			Result.extend (create {EV_MENU_ITEM})
 			Result.extend (create {EV_MENU_SEPARATOR})
---FXIME			Result.extend (create {EV_STATUS_BAR_ITEM})
+			Result.extend (create {EV_STATUS_BAR_ITEM})
 			Result.extend (create {EV_TOOL_BAR_BUTTON})
-			Result.extend (create {EV_TOOL_BAR_SEPARATOR})
+--FIXME			Result.extend (create {EV_TOOL_BAR_SEPARATOR})
 			Result.extend (create {EV_TOOL_BAR_TOGGLE_BUTTON})
 			Result.extend (create {EV_TOOL_BAR_RADIO_BUTTON})
 			Result.extend (create {EV_TOOL_BAR_RADIO_BUTTON})
@@ -248,7 +247,7 @@ feature
 			Result.extend (create {EV_MENU})
 			Result.extend (create {EV_MENU_BAR})
 			Result.extend (create {EV_SCREEN})
---FXIME			Result.extend (create {EV_STATUS_BAR})
+			Result.extend (create {EV_STATUS_BAR})
 		end
 
 --|	features: LINKED_LIST [EV_PROCEDURE_WIDGET [ANY, TUPLE]] is
@@ -349,6 +348,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/04/13 19:37:00  oconnor
+--| more tests
+--|
 --| Revision 1.14  2000/03/29 01:23:00  brendel
 --| Commented out EV_SPIN_BUTTON.
 --|

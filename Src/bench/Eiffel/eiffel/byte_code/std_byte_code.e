@@ -442,7 +442,7 @@ feature
 									f.putstring (" = RTLX(typres")
 								else
 									f.putstring (" = RTLX(RTUD(")
-									f.putstring (cl_type_i.associated_expanded_class_type.id.generated_id)
+									f.putstring (cl_type_i.associated_class_type.id.generated_id)
 									f.putchar (')')
 								end
 							else
@@ -507,7 +507,7 @@ feature
 							f.putstring (" = RTLX(typres")
 						else
 							f.putstring (" = RTLX(RTUD(")
-							f.putstring (cl_type_i.associated_expanded_class_type.id.generated_id)
+							f.putstring (cl_type_i.associated_class_type.id.generated_id)
 							f.putchar (')')
 						end
 					else

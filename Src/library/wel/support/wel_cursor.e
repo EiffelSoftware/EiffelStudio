@@ -70,37 +70,50 @@ feature -- Access
 			Result := get_icon_info.y_hotspot
 		end
 
-	previous_cursor: WEL_CURSOR
+	previous_cursor: WEL_CURSOR is
 			-- Previously assigned cursor
+		do
+			if internal_previous_cursor /= default_pointer then
+				create Result.make_by_pointer (internal_previous_cursor)
+			end
+		end
 
 feature -- Basic operations
 
 	set is
-			-- Set the current cursor for the entire application and
-			-- save the old one in `previous_cursor' if there was
+			-- Set current cursor for entire application and
+			-- save old one in `previous_cursor' if there was
 			-- one.
 		require
 			exists: exists
-		local
-			p: POINTER
 		do
-			p := cwin_set_cursor (item)
-			if p /= default_pointer then
-				create previous_cursor.make_by_pointer (p)
-			end
+			internal_previous_cursor := cwin_set_cursor (item)
 		end
 
 	restore_previous is
-			-- Restore the `previous_cursor'.
+			-- Restore `previous_cursor'.
 		require
 			previous_cursor_not_void: previous_cursor /= Void
 		local
 			p: POINTER
 		do
-			p := cwin_set_cursor (previous_cursor.item)
-			previous_cursor := Void
+			p := cwin_set_cursor (internal_previous_cursor)
+			internal_previous_cursor := default_pointer
 		ensure
 			previous_cursor_void: previous_cursor = Void
+		end
+
+feature -- Removal
+
+	delete is
+			-- Delete cursor object.
+		local
+			p: POINTER
+		do
+			if item /= p then
+				cwin_destroy_cursor (item)
+				item := p
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -111,12 +124,8 @@ feature {NONE} -- Implementation
 			item := cwin_load_cursor (hinstance, id)
 		end
 
-	destroy_item is
-			-- Destroy cursor.
-		do
-			cwin_destroy_cursor (item)
-			item := default_pointer
-		end
+	internal_previous_cursor: POINTER
+			-- Pointer on previous cursor
 
 feature {NONE} -- Externals
 

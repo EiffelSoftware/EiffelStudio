@@ -26,11 +26,17 @@ feature {NONE} -- Implementation
 			item := cwin_load_icon (hinstance, id)
 		end
 
-	destroy_item is
-			-- Destroy icon.
+feature -- Removal
+
+	delete is
+			-- Delete icon object.
+		local
+			p: POINTER
 		do
-			cwin_destroy_icon (item)
-			item := default_pointer
+			if item /= p then
+				cwin_destroy_icon (item)
+				item := p
+			end
 		end
 
 feature {NONE} -- Externals

@@ -54,20 +54,45 @@ feature {NONE} -- Initialization
 				main_args.current_instance.item,
 				x_hot_spot, y_hot_spot, cursor_width,
 				cursor_height, a1.item, a2.item)
+
+			references_number := 1
+			increase_gdi_objects_count
 		end
 
 feature -- Access
 
 	x_hotspot: INTEGER is
-			-- Specifies the x-coordinate of a cursor's hot spot. 
+			-- X-coordinate of `Current's hot spot. 
+		local
+			icon_info: WEL_ICON_INFO
 		do
-			Result := get_icon_info.x_hotspot
+			icon_info := get_icon_info
+			if icon_info /= Void then
+				Result := icon_info.x_hotspot
+	
+					-- Destroy `icon_info' structure
+				icon_info.enable_reference_tracking_on_bitmaps
+				icon_info.dispose
+			else
+				Result := 0
+			end
 		end
 	
-	Y_hotspot: INTEGER is
-			-- Specifies the y-coordinate of a cursor's hot spot. 
+	y_hotspot: INTEGER is
+			-- Y-coordinate of a `Current's hot spot. 
+		local
+			icon_info: WEL_ICON_INFO
 		do
-			Result := get_icon_info.y_hotspot
+			icon_info := get_icon_info
+			if icon_info /= Void then
+				Result := icon_info.y_hotspot
+	
+					-- Destroy `icon_info' structure
+				icon_info.enable_reference_tracking_on_bitmaps
+				icon_info.dispose
+			else
+				Result := 0
+			end
 		end
 
 	previous_cursor: WEL_CURSOR is
@@ -103,19 +128,6 @@ feature -- Basic operations
 			previous_cursor_void: previous_cursor = Void
 		end
 
-feature -- Removal
-
-	delete is
-			-- Delete cursor object.
-		local
-			p: POINTER
-		do
-			if item /= p then
-				cwin_destroy_cursor (item)
-				item := p
-			end
-		end
-
 feature {NONE} -- Implementation
 
 	load_item (hinstance, id: POINTER) is
@@ -126,6 +138,12 @@ feature {NONE} -- Implementation
 
 	internal_previous_cursor: POINTER
 			-- Pointer on previous cursor
+
+	destroy_resource: BOOLEAN is
+			-- SDK DestroyIcon/DestroyCursor
+		do
+			Result := cwin_destroy_cursor (item)
+		end
 
 feature {NONE} -- Externals
 
@@ -145,10 +163,10 @@ feature {NONE} -- Externals
 			"LoadCursor"
 		end
 
-	cwin_destroy_cursor (hcursor: POINTER) is
+	cwin_destroy_cursor (hcursor: POINTER): BOOLEAN is
 			-- SDK DestroyCursor
 		external
-			"C [macro <wel.h>] (HCURSOR)"
+			"C [macro <wel.h>] (HCURSOR): BOOL"
 		alias
 			"DestroyCursor"
 		end

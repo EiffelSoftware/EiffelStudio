@@ -26,17 +26,12 @@ feature {NONE} -- Implementation
 			item := cwin_load_icon (hinstance, id)
 		end
 
-feature -- Removal
+feature {NONE} -- Implementation
 
-	delete is
-			-- Delete icon object.
-		local
-			p: POINTER
+	destroy_resource: BOOLEAN is
+			-- SDK DestroyIcon/DestroyCursor
 		do
-			if item /= p then
-				cwin_destroy_icon (item)
-				item := p
-			end
+			Result := cwin_destroy_icon (item)
 		end
 
 feature {NONE} -- Externals
@@ -49,10 +44,10 @@ feature {NONE} -- Externals
 			"LoadIcon"
 		end
 
-	cwin_destroy_icon (hicon: POINTER) is
+	cwin_destroy_icon (hicon: POINTER): BOOLEAN is
 			-- SDK DestroyIcon
 		external
-			"C [macro <wel.h>] (HICON)"
+			"C [macro <wel.h>] (HICON): BOOL"
 		alias
 			"DestroyIcon"
 		end

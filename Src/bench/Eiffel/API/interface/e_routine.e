@@ -13,7 +13,8 @@ inherit
 		redefine
 			has_postcondition, has_precondition,
 			argument_names, arguments, is_once,
-			is_deferred, locals, obsolete_message
+			is_deferred, locals, obsolete_message,
+			is_external
 		end
 
 feature -- Properties
@@ -35,6 +36,9 @@ feature -- Properties
 			-- Is the routine deferred?
 
 	is_once: BOOLEAN;
+			-- Is the routine declared as a once?
+
+	is_external: BOOLEAN;
 			-- Is the routine declared as a once?
 
 feature -- Access
@@ -67,6 +71,12 @@ feature {FEATURE_I} -- Setting
 			-- Set `is_once' to `b'.
 		do
 			is_once := b;
+		end;
+
+	set_external (b: like is_external) is
+			-- Set `is_external' to `b'.
+		do
+			is_external := b
 		end;
 
 	set_arguments (args: like arguments) is

@@ -88,6 +88,7 @@ feature
 			!!creation_types.make;
 			!!parameters.make;
 			!!supplier_ids.make;
+			!! instruction_line.make
 		end;
 
 	set_a_class (cl: CLASS_C) is
@@ -301,6 +302,7 @@ feature
 			interval_line.start;
 			creation_types.start;
 			parameters.start;
+			instruction_line.start
 		end;
 
 	clear1 is
@@ -323,6 +325,7 @@ feature
 			interval_line.wipe_out;
 			creation_types.wipe_out;
 			parameters.wipe_out;
+			instruction_line.wipe_out;
 			level1 := False;
 			level2 := False;
 			level3 := False;
@@ -346,5 +349,10 @@ feature
 				i := i - 1;
 			end;
 		end;
+
+feature -- Debugger
+
+	instruction_line: LINE [AST_EIFFEL];
+			 -- List of instructions encountered sequentially in the compound.
 
 end

@@ -4,12 +4,10 @@ inherit
 
 	EXTERNAL_LANG_AS
 		redefine
-			language_name, extension,
-			c_extension, cpp_extension,
-			dll_extension, macro_extension
+			language_name, extension
 		end;
 
-	AST_EIFFEL_B;
+	AST_EIFFEL_B
 
 	EXTERNAL_CONSTANTS
 
@@ -40,30 +38,4 @@ feature
 			end
 		end
 
-feature
-
-	c_extension: C_EXTENSION_AS_B is
-			-- AST for parsed standard C extension
-		do
-			!! Result
-		end
- 
-	cpp_extension: CPP_EXTENSION_AS_B is
-			-- AST for parsed C++ extension
-		do
-			!! Result
-		end
- 
-	dll_extension: C_DLL_EXTENSION_AS_B is
-			-- AST for parsed DLL extension
-		do
-			!! Result
-		end
- 
-	macro_extension: C_MACRO_EXTENSION_AS_B is
-			-- AST for parsed macro extension
-		do
-			!! Result
-		end
- 
 end -- class EXTERNAL_LANG_AS_B

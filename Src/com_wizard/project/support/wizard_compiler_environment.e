@@ -24,30 +24,10 @@ feature -- Access
 	Common_linker_options:STRING is " /DLL  /WARN:0 /RELEASE %"/INCREMENTAL:NO%""
 			-- Linker options
 
-	Common_standard_c_compiler_options: STRING is 
+	Generated_standard_c_compiler_options: STRING is 
 			-- C compiler options to compile generated code (Client and Server folders)
 		once
-			Result := "/W0 /Ox /D %"_WIN32_DCOM%" /c /I..\include /I..\..\common\include /I"
-			Result.append (Eiffel4_location)
-			Result.append ("\bench\spec\windows\include /I")
-			Result.append (Eiffel4_location)
-			Result.append ("\library\com\spec\windows\include ")
-		end
-
-	Client_standard_c_compiler_options: STRING is 
-			-- C compiler options to compile generated code (Common folders for client)
-		once
-			Result := "/W0 /Ox /D %"_WIN32_DCOM%" /c /I..\include /I..\..\client\include /I"
-			Result.append (Eiffel4_location)
-			Result.append ("\bench\spec\windows\include /I")
-			Result.append (Eiffel4_location)
-			Result.append ("\library\com\spec\windows\include ")
-		end
-
-	Server_standard_c_compiler_options: STRING is 
-			-- C compiler options to compile generated code (Common folders for server)
-		once
-			Result := "/W0 /Ox /D %"_WIN32_DCOM%" /c /I..\include /I..\..\server\include /I"
+			Result := "/W0 /Ox /D %"_WIN32_DCOM%" /c /I..\..\client\include /I..\..\server\include /I..\..\common\include /I"
 			Result.append (Eiffel4_location)
 			Result.append ("\bench\spec\windows\include /I")
 			Result.append (Eiffel4_location)

@@ -90,8 +90,14 @@ feature -- Typing
 
 	new_type (data: CL_TYPE_I): SPECIAL_CLASS_TYPE is
 			-- New class type for class SPECIAL
+		local
+			l_data: GEN_TYPE_I
 		do
-			create Result.make (data)
+			l_data ?= data
+			check
+				l_data_not_void: l_data /= Void
+			end
+			create Result.make (l_data)
 				-- Unlike the parent version, each time a new SPECIAL derivation
 				-- is added we need to freeze so that we call the right version of
 				-- `put' and `item'.

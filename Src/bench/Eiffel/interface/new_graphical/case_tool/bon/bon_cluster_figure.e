@@ -21,20 +21,23 @@ inherit
 
 	EV_MOVE_HANDLE
 		rename
-			initialize as initialize_mover
+			initialize as initialize_mover,
+			world as cluster_diagram
 		undefine
 			default_create,
 			wipe_out,
 			position_on_figure,
 			set_origin,
 			real_pebble,
-			is_equal
-		select
-			world
+			is_equal,
+			cluster_diagram
 		end
 
 create
 	make_with_cluster
+
+create {BON_CLUSTER_FIGURE}
+	make_filled
 
 feature -- Initialization
 
@@ -405,8 +408,8 @@ feature -- Status setting
 		do
 			name_w := name_area.point_b.x
 			name_h := name_area.point_b.y
-			w_scale_x := world.point.scale_x
-			w_scale_y := world.point.scale_y
+			w_scale_x := cluster_diagram.point.scale_x
+			w_scale_y := cluster_diagram.point.scale_y
 			max_left := a_left - left -- EA: - right + a_right
 			max_top := a_top - top --EA: - bottom + a_bottom
 
@@ -478,8 +481,8 @@ feature -- Status setting
 --					((new_y - parent_fig.top) / scy).rounded)
 --			else
 --				point.set_position (
---					((new_x - world.point.x) / scx).rounded,
---					((new_y - world.point.y) / scy).rounded)
+--					((new_x - cluster_diagram.point.x) / scx).rounded,
+--					((new_y - cluster_diagram.point.y) / scy).rounded)
 --			end
 			point.set_position (((new_x - body.point_a.x_abs) / scx).rounded + point.x,
 			((new_y - body.point_a.y_abs) / scx).rounded + point.y)
@@ -537,8 +540,10 @@ feature -- Status setting
 			d: DOUBLE
 			resize_needed: BOOLEAN
 			clf: CLUSTER_FIGURE
+			l_world: like cluster_diagram
 		do
-			if world /= Void then
+			l_world := cluster_diagram
+			if l_world /= Void then
     			rec := bounds
     			if rec.width /= 0 and then rec.height /= 0 then
 	    			resize_needed := False
@@ -551,27 +556,27 @@ feature -- Status setting
 	    			r := rec.width + l + 2
 	    			b := rec.height + t + 2
 	    			if r > new_right  then
-	    				d := world.grid_x
+	    				d := l_world.grid_x
 	    				d := (r - new_right) / d
-	    				new_right := new_right + d.ceiling * world.grid_x
+	    				new_right := new_right + d.ceiling * l_world.grid_x
 	    				resize_needed := True
 	    			end
 	    			if b > new_bottom then
-	    				d := world.grid_y
+	    				d := l_world.grid_y
 	    				d := (b - new_bottom) / d
-	    				new_bottom := new_bottom + d.ceiling * world.grid_y
+	    				new_bottom := new_bottom + d.ceiling * l_world.grid_y
 	    				resize_needed := True
 	    			end
 	    			if l < new_left then
-	    				d := world.grid_x
+	    				d := l_world.grid_x
 	    				d := (new_left - l) / d
-	    				new_left := new_left - d.ceiling * world.grid_x
+	    				new_left := new_left - d.ceiling * l_world.grid_x
 	    				resize_needed := True
 	    			end
 	    			if t < new_top then
-	    				d := world.grid_y
+	    				d := l_world.grid_y
 	    				d := (new_top - t) / d
-	    				new_top := new_top - d.ceiling * world.grid_y
+	    				new_top := new_top - d.ceiling * l_world.grid_y
 	    				resize_needed := True
 	    			end
 	    			if resize_needed then
@@ -586,8 +591,8 @@ feature -- Status setting
     			if clf /= Void then
     				clf.update_minimum_size
     			else
-    				if cluster_diagram.context_editor /= Void then
-	    				cluster_diagram.context_editor.update_bounds (cluster_diagram)
+    				if l_world.context_editor /= Void then
+	    				l_world.context_editor.update_bounds (l_world)
     				end
     			end
 			end
@@ -1253,6 +1258,5 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-
 
 end -- class BON_CLUSTER_FIGURE

@@ -9,14 +9,8 @@ class
 
 inherit
 	ICOR_EXPORTER
-		export
-			{NONE} all
-		end
 
 	DEBUG_VALUE_EXPORTER
-		export
-			{NONE} all
-		end
 		
 	SHARED_EIFNET_DEBUG_VALUE_FORMATTER		
 		export

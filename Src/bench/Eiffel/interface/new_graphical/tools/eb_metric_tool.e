@@ -11,9 +11,6 @@ inherit
 	SHARED_WORKBENCH
 
 	SHARED_XML_ROUTINES
-		export
-			{NONE} all
-		end
 
 	EB_CONSTANTS
 		export

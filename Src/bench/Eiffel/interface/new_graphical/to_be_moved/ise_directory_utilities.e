@@ -8,6 +8,8 @@ class
 	ISE_DIRECTORY_UTILITIES
 
 inherit
+	ANY
+
 	EXCEPTIONS
 		export
 			{NONE} all

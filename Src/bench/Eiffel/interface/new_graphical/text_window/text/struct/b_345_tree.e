@@ -104,9 +104,11 @@ feature -- Removal
 
 		wipe_out is
 				-- Erase data.
+			local
+				l_default: G
 			do
-				set_first_data (Void)
-				set_last_data (Void)
+				set_first_data (l_default)
+				set_last_data (l_default)
 				create root_node.make
 			end
 			

@@ -9,6 +9,8 @@ deferred class
 
 inherit
 	ARRAYED_LIST [EB_FAVORITES_ITEM]
+		undefine
+			new_filled_list
 		redefine
 			remove,
 			extend,

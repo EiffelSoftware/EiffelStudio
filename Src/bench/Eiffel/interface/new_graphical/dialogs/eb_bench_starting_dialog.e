@@ -9,8 +9,6 @@ class
 
 inherit
 	EV_DIALOG
-		export
-			{NONE} all
 		redefine
 			show_modal_to_window,
 			destroy

@@ -8,6 +8,8 @@ class
 	MD_IMPORT
 
 inherit
+	ANY
+
 	COM_OBJECT
 		export
 			{NONE} all;

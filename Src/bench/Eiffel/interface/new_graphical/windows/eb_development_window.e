@@ -1024,7 +1024,7 @@ feature -- Graphical Interface
 			project_toolbar.extend (hbox)
 		end
 
-feature -- Menu Building
+feature {NONE} -- Menu Building
 
 	build_file_menu is
 			-- Build the file menu.

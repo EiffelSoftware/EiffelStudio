@@ -22,8 +22,9 @@ inherit
 		rename
 			interface as dialog_interface,
 			make as dialog_make
-		export {NONE}
-			all
+		export
+			{EB_PRINTER_IMP} item
+			{NONE} all
 		end
 
 	EB_CONSTANTS

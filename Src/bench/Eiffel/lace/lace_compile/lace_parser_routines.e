@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 			create Result.put (Void)
 		end
 
-	parse_lace (a_file: FILE) is
+	parse_lace (a_file: KL_BINARY_INPUT_FILE) is
 			-- Call lace parser with a source file.
 		require
 			a_file_not_void: a_file /= Void

@@ -35,6 +35,9 @@ create {EB_FAVORITES_ITEM_LIST}
 create
 	make, make_from_class_stone
 
+create {EB_FAVORITES_CLASS}
+	make_filled
+
 feature {NONE} -- Access
 
 	make_from_string (a_analyzed_string: STRING; a_parent: EB_FAVORITES_ITEM_LIST) is

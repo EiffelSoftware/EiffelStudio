@@ -15,7 +15,8 @@ inherit
 			set_foreground_color as set_pixmap_foreground_color,
 			set_background_color as set_pixmap_background_color
 		export
-			{NONE} all
+			{EB_PERCENT_PROGRESS_BAR} all
+			{ANY} is_destroyed
 		redefine
 			initialize,
 			enable_sensitive,

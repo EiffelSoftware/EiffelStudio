@@ -24,7 +24,7 @@ inherit
 create
 	make
 
-feature {NONE} -- Implementation
+feature {EV_ANY} -- Implementation
 
 	create_implementation is
 			-- See `{EV_ANY}.create_implementation'.
@@ -32,7 +32,7 @@ feature {NONE} -- Implementation
 			create {EV_TOOL_BAR_TOGGLE_BUTTON_IMP} implementation.make (Current)
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_TOOL_BAR_TOGGLE_BUTTON_I
 			-- Responsible for interaction with the native graphics toolkit.

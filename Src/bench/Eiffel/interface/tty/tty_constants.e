@@ -8,6 +8,8 @@ indexing
 class TTY_CONSTANTS
 
 inherit
+	ANY
+
 	EB_GENERAL_DATA
 		export
 			{NONE} all

@@ -16,18 +16,27 @@ inherit
 create
 	make
 	
+feature -- Access
+
+	executable: BOOLEAN is
+			-- Is `operate' possible (i.e. can we go back)?
+		do
+			Result := history_manager.is_back_possible
+		end
+
+	mini_pixmap: ARRAY [EV_PIXMAP] is
+			-- Mini pixmaps representing the command (one for the
+			-- gray version, one for the color version).
+		do
+			Result := Pixmaps.Icon_mini_back
+		end
+
 feature {NONE} -- Implementation
 
 	operate is
 			-- Move backward in the history.
 		do
 			history_manager.back
-		end
-
-	executable: BOOLEAN is
-			-- Is `operate' possible (i.e. can we go back)?
-		do
-			Result := history_manager.is_back_possible
 		end
 
 	menu_name: STRING is
@@ -41,13 +50,6 @@ feature {NONE} -- Implementation
 			-- gray version, one for the color version).
 		do
 			Result := Pixmaps.Icon_back
-		end
-
-	mini_pixmap: ARRAY [EV_PIXMAP] is
-			-- Mini pixmaps representing the command (one for the
-			-- gray version, one for the color version).
-		do
-			Result := Pixmaps.Icon_mini_back
 		end
 
 	tooltip: STRING is

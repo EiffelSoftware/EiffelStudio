@@ -9,10 +9,7 @@ deferred class
 	
 inherit
 	ICOR_EXPORTER
-		export
-			{NONE} all
-		end
-	
+
 feature -- Synchro Initialization
 
 	init_dbg_synchronisation is

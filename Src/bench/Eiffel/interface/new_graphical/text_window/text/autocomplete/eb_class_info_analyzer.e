@@ -8,6 +8,8 @@ deferred class
 	EB_CLASS_INFO_ANALYZER
 
 inherit
+	ANY
+
 	SHARED_WORKBENCH
 		export
 			{NONE} all

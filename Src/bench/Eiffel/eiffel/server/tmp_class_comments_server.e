@@ -8,11 +8,11 @@ class TMP_CLASS_COMMENTS_SERVER
 inherit
 	COMPILER_SERVER [CLASS_COMMENTS]
 		export
-			{NONE} all;
+			{TMP_CLASS_COMMENTS_SERVER} all;
 			{ANY} put, flush, start, after, forth,
 			item_for_iteration, key_for_iteration,
 			clear_all, file_ids, current_file_id,
-			set_current_file_id, remove, has
+			set_current_file_id, remove, has, off
 		redefine
 			put, remove
 		end

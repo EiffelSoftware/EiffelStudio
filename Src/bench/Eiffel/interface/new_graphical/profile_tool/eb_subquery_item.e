@@ -12,6 +12,9 @@ inherit
 create
 	make_normal, make_first
 
+create {EB_SUBQUERY_ITEM}
+	make_filled
+
 feature -- Creation
 
 	make_first (a_subquery: STRING) is

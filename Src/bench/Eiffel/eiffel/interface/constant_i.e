@@ -64,7 +64,7 @@ feature
 			type := t
 		end
 
-	set_value (v: VALUE_I) is
+	set_value (v: like value) is
 			-- Assign `v' to `value'.
 		require
 			good_argument: v /= Void

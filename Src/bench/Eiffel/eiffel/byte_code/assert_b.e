@@ -132,7 +132,7 @@ feature -- Line number setting
 			expr.unanalyze
 		end
 
-	enlarged: like Current is
+	enlarged: ASSERT_B is
 			-- Tree enlarging
 		local
 			inv_assert: INV_ASSERT_B

@@ -15,6 +15,9 @@ inherit
 
 create
 	make_from_string 
+	
+create {SEARCH_BUFFER}
+	make
 		
 feature -- Initialization
 

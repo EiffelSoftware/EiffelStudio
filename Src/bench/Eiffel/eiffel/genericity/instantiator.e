@@ -34,6 +34,9 @@ inherit
 create
 	make
 	
+create {INSTANTIATOR}
+	make_filled
+	
 feature -- Attributes
 
 	dispatch (a_type: TYPE_A; a_class: CLASS_C) is

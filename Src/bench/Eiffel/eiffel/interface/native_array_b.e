@@ -108,8 +108,14 @@ feature -- Generic derivation
 
 	new_type (data: CL_TYPE_I): NATIVE_ARRAY_CLASS_TYPE is
 			-- New class type for class NATIVE_ARRAY.
+		local
+			l_data: NATIVE_ARRAY_TYPE_I
 		do
-			create Result.make (data)
+			l_data ?= data
+			check
+				l_data_not_void: l_data /= Void
+			end
+			create Result.make (l_data)
 			if already_compiled then
 					-- Melt all the code written in the associated class of the new class type
 				melt_all

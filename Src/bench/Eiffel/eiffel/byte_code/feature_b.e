@@ -640,21 +640,19 @@ feature -- Inlining
 
 	pre_inlined_code: CALL_B is
 		local
-			nested_b: NESTED_B
 			inlined_current_b: INLINED_CURRENT_B
 		do
 			if parent /= Void then
 				Result := Current
 			else
-				create nested_b
+				create parent
 				create inlined_current_b
-				nested_b.set_target (inlined_current_b)
-				inlined_current_b.set_parent (nested_b)
+				parent.set_target (inlined_current_b)
+				inlined_current_b.set_parent (parent)
 
-				nested_b.set_message (Current)
-				parent := nested_b
+				parent.set_message (Current)
 
-				Result := nested_b
+				Result := parent
 			end
 			type := real_type (type)
 			if precursor_type /= Void then
@@ -665,7 +663,7 @@ feature -- Inlining
 			end
 		end
 
-	inlined_byte_code: like Current is
+	inlined_byte_code: FEATURE_B is
 		local
 			inlined_feat_b: INLINED_FEAT_B
 			inline: BOOLEAN

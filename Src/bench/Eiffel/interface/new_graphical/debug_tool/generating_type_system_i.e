@@ -8,6 +8,8 @@ class
 	GENERATING_TYPE_SYSTEM_I
 
 inherit
+	ANY
+
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all

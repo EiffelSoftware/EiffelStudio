@@ -9,8 +9,6 @@ deferred class
 
 inherit
 	EB_WIZARD_INITIAL_STATE_WINDOW
-		export
-			{NONE} all
 		redefine
 			display,
 			proceed_with_current_info,

@@ -16,7 +16,7 @@ create
 	
 feature	{NONE} -- Initialization
 
-	make (t: TYPE_I) is
+	make (t: like type) is
 			-- Assign `t' to `type'.
 		require
 			t_not_void: t /= Void

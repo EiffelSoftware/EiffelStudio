@@ -36,6 +36,9 @@ inherit
 create
 	make
 	
+create {SELECTION_LIST}
+	make_sublist
+
 feature -- Access
 
 	selected_rout_id_set: ROUT_ID_SET

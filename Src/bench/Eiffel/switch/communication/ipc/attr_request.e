@@ -3,11 +3,7 @@
 class ATTR_REQUEST
 
 inherit
-
 	DEBUG_VALUE_EXPORTER
-		export 
-			{NONE} all
-		end	
 
 	SHARED_ABSTRACT_DEBUG_VALUE_SORTER
 

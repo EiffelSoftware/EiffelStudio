@@ -27,8 +27,10 @@ inherit
 		end
 
 create {RUN_INFO, APPLICATION_STATUS_CLASSIC}
-
 	make, dummy_make
+
+create {EIFFEL_CALL_STACK_CLASSIC}
+	list_make, make_sublist
 
 feature -- Properties
 

@@ -382,7 +382,7 @@ feature -- Trace
 			Result := lower.out
 		end
 	
-feature {COMPILER_EXPORTER}
+feature -- Type check
 
 	good_integer: BOOLEAN is
 			-- Is the atomic a good integer bound for multi-branch ?

@@ -21,6 +21,12 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Initialize the resource table.
+		do
+			internal_initialize
+		end
+		
+	internal_initialize is
+			-- Initialize the resource table.
 			-- (By default, resources will be looked the `eifinit'
 			-- directory in $ISE_EIFFEL, $HOME, and $ISE_DEFAULTS looking
 			-- for file general and for platform specific files).

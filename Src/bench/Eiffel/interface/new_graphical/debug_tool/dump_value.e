@@ -8,7 +8,8 @@ class
 	DUMP_VALUE
 
 inherit
-	
+	ANY
+
 	DUMP_VALUE_CONSTANTS
 		export
 			{NONE} all

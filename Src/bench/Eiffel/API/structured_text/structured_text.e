@@ -12,13 +12,14 @@ inherit
 		rename
 			make as list_make
 		export
-			{NONE}
+			{STRUCTURED_TEXT}
 				all
 			{ANY}
 				cursor, start, forth, back, after, off, item, is_empty,
 				finish, wipe_out, islast, last, append,
 				index, put_right, put_left, put_front, go_to, before,
-				search, exhausted
+				search, exhausted, extendible, prunable, valid_index, readable,
+				valid_cursor
 		redefine
 			extend, put_right, put_left, put_front, wipe_out
 		end
@@ -38,8 +39,10 @@ inherit
 		end
 
 create
-
 	make
+	
+create {STRUCTURED_TEXT}
+	make_filled
 
 feature {NONE} -- Initialization
 

@@ -12,17 +12,14 @@ inherit
 		rename
 			make as table_make
 		export
-			{NONE} all;
-			{ANY} put, clear_all, remove, item, is_empty
+			{CLASS_COMMENTS} all;
+			{ANY} put, clear_all, remove, item, is_empty, valid_key
 		end
 
 	IDABLE
 		rename
 			id as class_id,
 			set_id as set_class_id
-		export
-			{NONE} all
-			{ANY} class_id, set_class_id
 		undefine
 			is_equal, copy
 		end

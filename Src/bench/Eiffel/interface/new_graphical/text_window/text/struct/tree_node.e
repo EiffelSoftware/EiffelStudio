@@ -522,12 +522,13 @@ feature -- Conversion
 			-- Add `other' at the right of Current.
 		local
 			dummy		: like item
+			l_default: G
 			current_node: like Current
 			child		: like Current
 			pos			: INTEGER
 			i			: INTEGER
 		do
-			create dummy.make (Void)
+			create dummy.make (l_default)
 			child := other.children @ 1
 			insert_key_and_right_child (dummy, child, arity)
 			from
@@ -559,8 +560,9 @@ feature -- Conversion
 			child		: like Current
 			pos			: INTEGER
 			i			: INTEGER
+			l_default: G
 		do
-			create dummy.make (Void)
+			create dummy.make (l_default)
 			child := other.children @ arity
 			insert_key_and_left_child (dummy, child, 1)
 			from

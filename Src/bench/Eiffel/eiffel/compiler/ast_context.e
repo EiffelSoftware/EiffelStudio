@@ -11,7 +11,8 @@ inherit
 		rename
 			make as stack_make
 		export
-			{ACCESS_FEAT_AS, PRECURSOR_AS} i_th
+			{ARRAYED_STACK, ACCESS_FEAT_AS, PRECURSOR_AS} array_valid_index
+			{ACCESS_FEAT_AS, PRECURSOR_AS, AST_CONTEXT} i_th
 		end
 
 	SHARED_SERVER
@@ -33,6 +34,9 @@ inherit
 
 create
 	make
+	
+create {AST_CONTEXT}
+	make_filled
 
 feature {NONE} -- Initialization
 

@@ -1,14 +1,13 @@
 class LINE [T -> ANY] 
 
 inherit
-
 	ARRAY [T]
 		rename
 			make as basic_make,
 			wipe_out as array_wipe_out,
 			item as array_item
 		export
-			{NONE} all
+			{LINE} all
 		end
 
 create
@@ -59,8 +58,10 @@ feature
 		require
 			valid_cursor: cursor >0
 			not_after: not after
+		local
+			l_default: T
 		do
-			put (Void, cursor)
+			put (l_default, cursor)
 			cursor := cursor - 1
 		end
 		

@@ -9,6 +9,7 @@ indexing
 deferred class APPLICATION_STATUS
 
 inherit
+	ANY
 
 	SHARED_DEBUG
 		export

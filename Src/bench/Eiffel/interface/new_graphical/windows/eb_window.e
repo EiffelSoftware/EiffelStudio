@@ -8,6 +8,8 @@ deferred class
 	EB_WINDOW
 
 inherit
+	ANY
+
 	SHARED_CONFIGURE_RESOURCES
 		export
 			{NONE} all
@@ -282,12 +284,14 @@ feature -- Window management / Status Setting
 			-- Destroy Current window.
 		local
 			cd: EV_CONFIRMATION_DIALOG
+			l_window: EB_WINDOW
 		do
 			if not destroyed then
 				Exit_application_cmd.set_already_confirmed (False)
+				l_window := Current
 				if
 					application.is_running and then
-					debugger_manager.debugging_window = Current
+					debugger_manager.debugging_window = l_window
 				then
 					Exit_application_cmd.set_already_confirmed (True)
 					if Window_manager.development_windows_count > 1 then

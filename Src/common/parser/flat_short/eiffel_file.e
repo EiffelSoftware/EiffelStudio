@@ -18,6 +18,9 @@ inherit
 create
 	make, make_with_positions
 
+create {EIFFEL_FILE}
+	make_filled
+
 feature -- Initialization
 
 	make (a_file_name: STRING; end_f_pos: INTEGER) is

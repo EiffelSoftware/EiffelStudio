@@ -53,7 +53,7 @@ feature -- Initialization
 			create click_list.make (1)
 		end
 
-feature -- Parsing
+feature {NONE} -- Parsing
 
 	parse_lace (a_file: KL_BINARY_INPUT_FILE) is
 			-- Parse Lace class text from `a_file'.

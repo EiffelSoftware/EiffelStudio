@@ -30,6 +30,9 @@ inherit
 create
 	make_with_name
 
+create {EB_NAME_FOR_COMPLETION}
+	make
+
 feature -- Initialization
 
 	make_with_name (a_name: STRING) is

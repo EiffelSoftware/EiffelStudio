@@ -8,6 +8,8 @@ class
 	ES_TOOLBAR_PREFERENCE
 
 inherit
+	ANY
+
 	SHARED_RESOURCES
 		rename
 			initialize as initialize_resources,

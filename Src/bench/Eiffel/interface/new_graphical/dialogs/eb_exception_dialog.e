@@ -9,10 +9,6 @@ class
 
 inherit
 	EV_DIALOG
-		export
-			{NONE} all
-			{ANY} show_modal_to_window
-		end
 		
 	EB_CONSTANTS
 		export

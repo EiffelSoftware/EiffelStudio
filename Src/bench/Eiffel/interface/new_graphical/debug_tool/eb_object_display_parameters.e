@@ -8,6 +8,8 @@ deferred class
 	EB_OBJECT_DISPLAY_PARAMETERS
 
 inherit
+	ANY
+
 	SHARED_DEBUG
 		export
 			{NONE} all

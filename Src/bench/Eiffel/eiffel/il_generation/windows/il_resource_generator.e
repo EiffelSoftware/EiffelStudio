@@ -7,6 +7,8 @@ class
 	IL_RESOURCE_GENERATOR
 
 inherit
+	ANY
+
 	SHARED_WORKBENCH
 		export
 			{NONE} all

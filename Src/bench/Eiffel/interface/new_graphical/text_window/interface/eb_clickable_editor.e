@@ -685,6 +685,11 @@ feature {EB_EDITOR_TOOL} -- Update
 			end
 		end
 
+feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_SEARCH_PERFORMER} -- Access
+
+	text_displayed: CLICKABLE_TEXT
+			-- Text displayed in the editor.
+
 feature {NONE} -- Implementation
 
 	customizable_commands: ARRAY [PROCEDURE [like Current, TUPLE]]
@@ -695,9 +700,6 @@ feature {NONE} -- Implementation
 
 	after_reading_text_actions: LINKED_LIST [PROCEDURE [EB_CLICKABLE_EDITOR, TUPLE]]
 			-- Procedures to be applied when the text is completely loaded.
-
-	text_displayed: CLICKABLE_TEXT
-			-- Text displayed in the editor.
 
 	hidden_breakpoints: BOOLEAN
 			-- Are brekpoints hidden ?

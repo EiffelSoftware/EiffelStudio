@@ -7,12 +7,16 @@ inherit
 			search as list_search,
 			make as list_make
 		export
-			{NONE} all
-			{ANY} start, item, forth, after, extend, cursor, go_to
+			{ANY} start, item, forth, after, extend, cursor, go_to, extendible,
+				readable, valid_cursor, valid_index, index, off, is_equal
+			{FILTER_LIST} all
 		end
 
 create
 	make
+	
+create {FILTER_LIST}
+	make_filled
 
 feature -- Initialization
 

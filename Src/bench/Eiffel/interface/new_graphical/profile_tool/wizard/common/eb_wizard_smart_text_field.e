@@ -8,6 +8,8 @@ class
 	EB_WIZARD_SMART_TEXT_FIELD
 
 inherit
+	ANY
+
 	EV_LAYOUT_CONSTANTS
 		export
 			{NONE} all

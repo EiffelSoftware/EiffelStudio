@@ -14,15 +14,11 @@ inherit
 		end
 	
 	EIFNET_EXPORTER
-		export
-			{NONE} all
 		undefine
 			is_equal
 		end			
 
 	DEBUG_VALUE_EXPORTER
-		export
-			{NONE} all
 		undefine
 			is_equal
 		end				

@@ -8,6 +8,7 @@ indexing
 class SYSTEM_STATISTICS
 
 inherit
+	ANY
 
 	SHARED_EIFFEL_PROJECT
 		export

@@ -24,6 +24,9 @@ inherit
 
 create
 	make
+	
+create {EB_FAVORITES_FOLDER}
+	make_filled
 
 feature {NONE} -- Initialization
 
@@ -97,6 +100,14 @@ feature -- Graphical interface
 			-- mouse pointer representing a class.
 		once
 			Result := Cursors.cur_X_Favorites_folder
+		end
+
+feature {NONE} -- Implementation
+
+	new_filled_list (n: INTEGER): like Current is
+			-- New list with `n' elements.
+		do
+			create Result.make_filled (n)
 		end
 
 end -- class EB_FAVORITES_FOLDER

@@ -265,7 +265,7 @@ end
 			info, old_info: SERVER_INFO
 			an_id: INTEGER
 			other_file_ids: LINKED_SET [INTEGER]
-			other_cache: CACHE [T]
+			other_cache: like cache
 			old_server_file: SERVER_FILE
 		do
 			flush
@@ -298,7 +298,10 @@ end
 			file_ids.merge (other_file_ids)
 			other_file_ids.wipe_out
 
-			other_cache := other.cache
+			other_cache ?= other.cache
+			check
+				other_cache_not_void: other_cache /= Void
+			end
 			cache.copy (other_cache)
 			other_cache.make
 

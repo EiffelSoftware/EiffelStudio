@@ -36,6 +36,9 @@ inherit
 create
 	make_with_class
 
+create {BON_CLASS_FIGURE}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	initialize is

@@ -19,6 +19,9 @@ inherit
 
 create
 	make
+	
+create {USE_LIST_AS}
+	make_filled
 
 feature -- Array representaion
 

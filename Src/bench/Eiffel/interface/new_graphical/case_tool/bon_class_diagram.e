@@ -18,6 +18,9 @@ inherit
 
 create
 	make
+	
+create {BON_CLASS_DIAGRAM}
+	make_filled
 
 feature -- Factory
 
@@ -28,6 +31,14 @@ feature -- Factory
 			Result.set_drawable_cell (drawable_cell)
 			Result.set_drawable_position (drawable_position)
 			projector.register_figure (Result, draw_bon_class_figure_agent)
+		end
+
+feature {NONE} -- Implementation
+
+	new_filled_list (n: INTEGER): like Current is
+			-- New list with `n' elements.
+		do
+			create Result.make_filled (n)
 		end
 
 end -- class BON_CLASS_DIAGRAM

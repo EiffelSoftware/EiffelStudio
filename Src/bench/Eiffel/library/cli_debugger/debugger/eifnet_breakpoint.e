@@ -20,8 +20,6 @@ inherit
 		end
 	
 	ICOR_EXPORTER
-		export
-			{NONE} all
 		redefine
 			is_equal
 		end

@@ -8,6 +8,8 @@ class
 	EB_EDITOR_COMMAND_CONTROLLER
 
 inherit
+	ANY
+
 	TEXT_OBSERVER
 		export
 			{NONE} all

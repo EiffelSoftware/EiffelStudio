@@ -8,6 +8,8 @@ class
 	EB_EXPRESSION_DEFINITION_DIALOG
 
 inherit
+	ANY
+
 	EB_CONSTANTS
 		export
 			{NONE} all

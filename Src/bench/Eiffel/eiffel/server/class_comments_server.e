@@ -9,7 +9,7 @@ class
 inherit
 	COMPILER_SERVER [CLASS_COMMENTS]
 		export
-			{NONE} all;
+			{CLASS_COMMENTS_SERVER} all
 			{ANY} has, disk_item, clear, take_control
 		redefine
 			clear, take_control, remove

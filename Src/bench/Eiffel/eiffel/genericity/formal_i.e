@@ -118,7 +118,7 @@ feature -- Status report
 
 feature -- Comparison
  
-	same_as (other: like Current): BOOLEAN is
+	same_as (other: TYPE_I): BOOLEAN is
 			-- Is `other' equal to Current ?
 		local
 			other_formal: FORMAL_I

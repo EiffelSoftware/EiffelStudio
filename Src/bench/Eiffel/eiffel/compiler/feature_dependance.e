@@ -9,10 +9,10 @@ class
 inherit
 	TWO_WAY_SORTED_SET [DEPEND_UNIT]
 		export
-			{NONE} all
+			{FEATURE_DEPENDANCE} all
 			{ANY} cursor, go_to, start, before, after, forth, item, active,
 				count, first_element, last_element, object_comparison, sublist,
-				extend
+				extend, prunable, off, readable, valid_cursor, extendible
 		redefine
 			make, wipe_out, copy, is_equal
 		end
@@ -36,6 +36,9 @@ inherit
 
 create
 	make
+
+create {FEATURE_DEPENDANCE}
+	make_sublist
 
 feature {NONE} -- Initialization
 

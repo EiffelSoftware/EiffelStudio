@@ -9,6 +9,8 @@ indexing
 class IL_SPECIAL_FEATURES
 
 inherit
+	ANY
+
 	SHARED_WORKBENCH
 		export
 			{NONE} all

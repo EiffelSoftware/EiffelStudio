@@ -11,7 +11,8 @@ inherit
 		redefine
 			feature_editor,
 			set_default_editor,
-			feature_type
+			feature_type,
+			on_proc_select
 		end
 
 feature {NONE} -- Initialization
@@ -62,5 +63,13 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	feature_editor: EB_QUERY_EDITOR
+
+	on_proc_select is
+			-- User selected "procedure".
+		do
+			check
+				should_not_be_called: False
+			end
+		end
 
 end -- class EB_QUERY_COMPOSITION_WIZARD

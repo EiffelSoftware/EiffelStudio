@@ -15,7 +15,9 @@ inherit
 		undefine
 			format
 		redefine
-			classes, copy_old_cluster, is_assembly
+			classes, sub_clusters, old_cluster, parent_cluster,
+			copy_old_cluster, is_assembly, class_anchor,
+			insert_class_from_file, process_overrides
 		end
 
 	ASSEMBLY_INFO
@@ -169,6 +171,13 @@ feature -- Access
 			-- List all classes available in current assembly
 			-- indexed by their Eiffel names.
 
+	parent_cluster: ASSEMBLY_I
+			-- Parent cluster of Current cluster
+			-- (Void implies it is a top level cluster)
+
+	sub_clusters: ARRAYED_LIST [ASSEMBLY_I]
+			-- List of sub clusters for Current cluster
+
 	dotnet_classes: HASH_TABLE [EXTERNAL_CLASS_I, STRING]
 			-- List all classes available in current assemblly
 			-- Indexed by theit Dotnet names.
@@ -192,6 +201,11 @@ feature -- Access
 
 	is_assembly: BOOLEAN is True
 			-- Is current an instance of ASSEMBLY_I?
+
+feature {ASSEMBLY_I} -- Access
+
+	old_cluster: ASSEMBLY_I
+			-- Old version of the cluster
 
 feature -- Copy
 
@@ -364,6 +378,25 @@ feature -- Initialization
 			end
 		end
 
+feature {COMPILER_EXPORTER} -- Element change
+
+	insert_class_from_file (file_name: STRING) is
+		do
+				-- Not applicable
+				-- FIXME: Turn this check into precondition
+			check
+				not_applicable: False
+			end
+		end
+		
+	process_overrides (ovc: CLUSTER_I) is
+			-- Check if some classes have been overriden
+			-- and remove them from the system
+		do
+				-- Do nothing, because one cannot override .NET classes.
+		end
+
+
 feature {NONE} -- Implementation
 
 	initialize_from_assembly is
@@ -436,6 +469,13 @@ feature {NONE} -- Constants
 	referenced_assemblies_file_name: STRING is "referenced_assemblies.xml"
 			-- String constants specific to layout of EAC.
 
+feature {NONE} -- Type anchors
+
+	class_anchor: EXTERNAL_CLASS_I is
+			-- Type of classes one can insert in Current
+		do
+		end
+		
 invariant
 	cluster_name_not_void: cluster_name /= Void
 	assembly_name_not_void: assembly_name /= Void

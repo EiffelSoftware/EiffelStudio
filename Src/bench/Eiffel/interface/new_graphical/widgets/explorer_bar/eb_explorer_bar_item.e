@@ -9,6 +9,8 @@ class
 	EB_EXPLORER_BAR_ITEM
 
 inherit
+	ANY
+
 	EB_CONSTANTS
 		export
 			{NONE} all

@@ -24,10 +24,12 @@ inherit
 create
 	make
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_CHECK_MENU_ITEM_I
 			-- Responsible for interaction with the native graphics toolkit.
+
+feature {EV_ANY} -- Implementation
 
 	create_implementation is
 			-- See `{EV_ANY}.create_implementation'.

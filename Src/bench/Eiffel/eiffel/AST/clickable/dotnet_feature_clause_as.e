@@ -17,6 +17,9 @@ inherit
 
 create
 	make
+	
+create {DOTNET_FEATURE_CLAUSE_AS}
+	make_list
 
 feature -- Initialization
 

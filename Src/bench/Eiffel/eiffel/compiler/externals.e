@@ -13,9 +13,8 @@ class
 inherit
 	HASH_TABLE [SEARCH_TABLE [INTEGER], INTEGER]
 		export
-			{NONE} all
-			{EXTERNALS} search, found, found_item, put
-			{ANY} has, remove, count
+			{EXTERNALS} all
+			{ANY} has, remove, count, valid_key
 		end
 	
 	SHARED_WORKBENCH

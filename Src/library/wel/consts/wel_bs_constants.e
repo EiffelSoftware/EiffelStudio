@@ -93,12 +93,105 @@ feature -- Access
 			"BS_LEFTTEXT"
 		end
 
+	Bs_text: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"BS_TEXT"
+		end
+
+	Bs_icon: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"BS_ICON"
+		end
+
+	Bs_bitmap: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"BS_BITMAP"
+		end
+
+	Bs_left: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"BS_LEFT"
+		end
+
+	Bs_right: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"BS_RIGHT"
+		end
+
+	Bs_center: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"BS_CENTER"
+		end
+
+	Bs_top: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"BS_TOP"
+		end
+
+	Bs_bottom: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"BS_BOTTOM"
+		end
+
+	Bs_vcenter: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"BS_VCENTER"
+		end
+
+
 	Bs_pushlike: INTEGER is
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"BS_PUSHLIKE"
 		end
+
+	Bs_multiline: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"BS_MULTILINE"
+		end
+
+	Bs_notify: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"BS_NOTIFY"
+		end
+
+	Bs_flat: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"BS_FLAT"
+		end
+
+	Bs_rightbutton: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"BS_RIGHTBUTTON"
+		end
+
 
 end -- class WEL_BS_CONSTANTS
 

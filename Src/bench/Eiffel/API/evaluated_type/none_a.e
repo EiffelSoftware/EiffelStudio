@@ -9,8 +9,7 @@ class
 inherit
 	TYPE_A
 		redefine
-			is_none, dump, type_i, same_as,
-			internal_conform_to
+			is_none, dump, type_i, same_as
 		end
 
 feature -- Comparison
@@ -63,8 +62,8 @@ feature {COMPILER_EXPORTER}
 			Result := None_c_type
 		end
 
-	internal_conform_to (other: TYPE_A in_generics: BOOLEAN): BOOLEAN is
-			-- Does `other' conform to Current ?
+	conform_to (other: TYPE_A): BOOLEAN is
+			-- Does Current conform to `other'?
 		do
 				-- If `other' is a basic, a BIT or an expanded type, it is not
 				-- conform to NONE.
@@ -73,7 +72,7 @@ feature {COMPILER_EXPORTER}
 -- FIXME: This test needs to be done, but since it's causing to much trouble for now
 -- we just desactivated it and we are back to the previous implementation
 --			Result := not (other.is_basic or else other.is_expanded)
-			Result := not other.is_void
+			Result := not other.actual_type.is_void
 		end
 
 end -- class NONE_A

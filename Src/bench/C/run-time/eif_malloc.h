@@ -36,9 +36,7 @@ extern "C" {
 #define ov_fwd		ov_head.ovu.ovu_fwd
 #define ov_size		ov_head.ovs_size
 #ifdef EIF_TID
-#ifdef EIF_THREADS
 #define ovs_tid     ov_head.ovs_tid
-#endif EIF_THREADS /* EIF_TID */
 #endif /* EIF_TID */
 /*
  * Masks used on the ovs_size field.

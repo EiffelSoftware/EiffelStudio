@@ -29,6 +29,9 @@ extern "C" {
 
 #include "eif_portable.h"
 #include "eif_constants.h"
+#ifdef EIF_TID 
+#include "eif_threads.h"
+#endif	/* EIF_TID */
 
 /* Organized on a per-file basis - the following
  * definitions come from the mentioned files */

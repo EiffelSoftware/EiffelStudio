@@ -143,7 +143,7 @@ feature -- Type check, byte code and dead code removal
 			Precursor {ACCESS_FEAT_AS}
 		end
 
-	report_error_for_feature (a_feature: FEATURE_I) is
+	report_error_for_feature (a_feature: FEATURE_I; a_feature_name: like feature_name) is
 			-- Report error during `type_check' because `a_feature'
 			-- was not valid for a static access.
 		local
@@ -154,7 +154,7 @@ feature -- Type check, byte code and dead code removal
 					-- Not a valid feature name.
 				create veen
 				context.init_error (veen)
-				veen.set_identifier (feature_name)
+				veen.set_identifier (a_feature_name)
 				error_handler.insert_error (veen)
 				error_handler.raise_error
 			else

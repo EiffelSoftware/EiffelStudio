@@ -42,7 +42,7 @@ feature -- Access
 			c_t ?= item_array ((2 * i) - 1)
 			frac_sec ?= item_array (2 * i)
 			!! Result.make_by_compact_time (c_t.item)
-			Result.set_fractionnals (frac_sec.item)
+			Result.set_fractionals (frac_sec.item)
 		end
 
 	last: INTEGER
@@ -61,7 +61,7 @@ feature -- Element change
 			last := last + 1
 			i := 2 * last
 			force (d.compact_time, i - 1)
-			force (d.fractionnal_second, i)
+			force (d.fractional_second, i)
 		ensure
 			inserted: item (last).is_equal (d);
 		end

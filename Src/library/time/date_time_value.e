@@ -18,12 +18,12 @@ feature -- Access
 	time: TIME_VALUE
 			-- Time of the current object
 			 
-	fractionnal_second: DOUBLE is 
+	fractional_second: DOUBLE is 
 			-- Decimal part of second 
 		do 
 			Result := time.fractional_second
 		ensure
-			same_fractionnal: Result = time.fractional_second
+			same_fractional: Result = time.fractional_second
 		end
 
 end -- class DATE_TIME_VALUE

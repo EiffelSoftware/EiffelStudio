@@ -363,7 +363,7 @@ feature -- Basic operations
 
 	fine_second_add (s: DOUBLE) is
 			-- Add `s' seconds to the current object.
-			-- if `s' has decimals, `fractionnal_second' from `time' is modified.
+			-- if `s' has decimals, `fractional_second' from `time' is modified.
 		local
 			total_second: DOUBLE
 		do

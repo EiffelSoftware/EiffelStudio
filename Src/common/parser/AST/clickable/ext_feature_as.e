@@ -43,9 +43,6 @@ feature {COMPILER_EXPORTER, AST_EIFFEL} -- Output
 		do
 			c := comments
 			ctxt.set_feature_comments (c);
-				--%%% FORMAT_CONTEXT could be modified (optim) 
-				--%%% to use the comments in the AST....
-
 			if feature_names /= Void then
 				ctxt.set_separator (ti_Comma);
 				ctxt.set_space_between_tokens;

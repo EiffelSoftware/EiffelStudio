@@ -10,7 +10,7 @@ inherit
 		undefine
 			is_equal
 		end;
-	SHARED_DEBUG
+	SHARED_APPLICATION_EXECUTION
 		undefine
 			is_equal
 		end;
@@ -18,10 +18,6 @@ inherit
 		undefine
 			is_equal
 		end;
-	SHARED_SLICE
-		undefine
-			is_equal
-		end
 
 creation {RECV_VALUE, ATTR_REQUEST}
 
@@ -71,7 +67,6 @@ feature -- Access
 
 	dynamic_class: E_CLASS is
 		local
-			type: CLASS_TYPE;
 			class_i: CLASS_I;
 			type_name: STRING
 		do
@@ -86,46 +81,43 @@ feature -- Access
 						private_dynamic_class := Result
 					end
 				elseif Eiffel_system.valid_dynamic_id (dynamic_type_id + 1) then
-					-- Extra safe test. The dynamic type should be known
-					-- from the system, but somehow Dino managed to crash
-					-- ebench here. This is very weird!!!
-					type := Eiffel_system.class_type_of_dynamic_id (dynamic_type_id + 1)
-					if type /= Void then
-						Result := type.associated_eclass;
-						private_dynamic_class := Result
-					end
+					--| Extra safe test. The dynamic type should be known
+					--| from the system, but somehow Dino managed to crash
+					--| ebench here. This is very weird!!!
+					Result := Eiffel_system.class_of_dynamic_id (dynamic_type_id + 1)
+					private_dynamic_class := Result
 				end
 			end;
 		end;
 
 feature -- Output
 
-	append_type_and_value (cw: CLICK_WINDOW) is 
+	append_type_and_value (ow: OUTPUT_WINDOW) is 
 		local
-			os: OBJECT_STONE;
-			ec: E_CLASS
+			ec: E_CLASS;
+			status: APPLICATION_STATUS
 		do 
 			if address = Void then
-				cw.put_string ("NONE = Void")
+				ow.put_string ("NONE = Void")
 			else
 				ec := dynamic_class;
 				if ec /= Void then
-					ec.append_clickable_name (cw);
-					cw.put_string (" [");
-					if Run_info.is_running and Run_info.is_stopped then
-						!! os.make (address, ec);
-						cw.put_clickable_string (os, address)
+					ec.append_name (ow);
+					ow.put_string (" [");
+					status := Application.status;
+					if status /= Void and status.is_stopped then
+						ow.put_address (address, ec)
 					else
-						cw.put_string (address)
+						ow.put_string (address)
 					end;
-					cw.put_string ("]");
+					ow.put_string ("]");
 					if string_value /= Void then
-						cw.put_string (" = ");
-						cw.put_string (string_value)
+						ow.put_string (" = ");
+						ow.put_string (string_value)
 					end
 				else
-					Any_class.append_clickable_name (cw);
-					cw.put_string (" = Unknown")
+					Any_class.append_name (ow);
+					ow.put_string (" = Unknown")
 				end
 			end
 		end;
@@ -143,9 +135,6 @@ feature -- Output
 		do
 			if address /= Void then
 				address := hector_addr (address);
-					-- Extra safe test. The dynamic type should be known
-					-- from the system, but somehow Dino managed to crash
-					-- ebench here. This is very weird!!!
 				ec := dynamic_class;
 				if 
 					ec /= Void and then
@@ -159,13 +148,13 @@ feature -- Output
 					from
 						value_area := value.area
 					until
-						i >= value_count or i >= Default_slice
+						i >= value_count or i >= Application.displayed_string_size
 					loop
 						string_value.append (char_text (value_area.item (i)));
 						i := i + 1
 					end;
 					string_value.extend ('%"');
-					if value_count > Default_slice then
+					if value_count > Application.displayed_string_size then
 						string_value.append (" ...")
 					end
 				end

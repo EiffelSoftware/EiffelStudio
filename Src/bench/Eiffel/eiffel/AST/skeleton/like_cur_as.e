@@ -36,11 +36,11 @@ feature -- Properties
 feature
 
 	actual_type: LIKE_TYPE_A is
-			-- Useless
+			-- Called when `like current' is used for a formal generic parameter
+			-- or when used to evaluate a type in a class that had not yet gone
+			-- through DEGREE 4.
 		do
-			check
-				not_called: False
-			end
+			create {UNEVALUATED_LIKE_TYPE} Result.make_current
 		end
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): LIKE_CURRENT is

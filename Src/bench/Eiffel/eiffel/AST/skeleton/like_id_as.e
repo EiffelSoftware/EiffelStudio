@@ -47,11 +47,11 @@ feature -- Access
 feature -- Implementation of inherited deferred features
 
 	actual_type: LIKE_TYPE_A is
-			-- Not called.
+			-- Called when `like anchor' is used for a formal generic parameter
+			-- or when used to evaluate a type in a class that had not yet gone
+			-- through DEGREE 4.
 		do
-			check
-				not_called: False
-			end
+			create {UNEVALUATED_LIKE_TYPE} Result.make (anchor)
 		end
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): TYPE_A is

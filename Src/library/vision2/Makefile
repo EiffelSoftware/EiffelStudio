@@ -5,6 +5,7 @@
 #===============================================================================
 
 all:
+	make -C Clib
 	make -C interface/events
 	make -C interface/kernel
 	make -C implementation/gtk/Clib

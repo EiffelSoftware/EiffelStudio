@@ -4,8 +4,10 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class FIND_SEPARATOR_FACILITY inherit
+class
+	FIND_SEPARATOR_FACILITY
 
+inherit
 	BASIC_ROUTINES
 		export
 			{NONE} all
@@ -15,6 +17,8 @@ class FIND_SEPARATOR_FACILITY inherit
 		export
 			{NONE} all
 		end
+		
+	ANY
 
 feature {NONE} -- Constants
 

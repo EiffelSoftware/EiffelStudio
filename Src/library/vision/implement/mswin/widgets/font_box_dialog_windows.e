@@ -1,8 +1,8 @@
 indexing 
 	description: "Dialog for choosing fonts for Windows"
 	status: "See notice at end of class"; 
-	date: "$Date$"; 
-	revision: "$Revision$" 
+	date: "$Date$";
+	revision: "$Revision$"
  
 class
 	FONT_BOX_DIALOG_WINDOWS
@@ -33,8 +33,9 @@ inherit
 		redefine
 			is_popped_up,
 			popdown,
-			dialog_realize,
+			popup,
 			realize,
+			realized,
 			unrealize,
 			class_name,
 			default_style,
@@ -89,12 +90,17 @@ feature -- Status setting
 			set_log_font (fontw.wel_log_font)	
 		end
 
+	realize is
+			-- Realize current widget.
+		do
+			realized := True
+		end
+
 	dialog_realize is
 			-- Display a file selection dialog box
 		local
 			wc: WEL_COMPOSITE_WINDOW
 		do
-			realized := True
 			is_popped_up := True
 			wc ?= parent
 			activate (wc)
@@ -111,18 +117,27 @@ feature -- Status setting
 			is_popped_up := False
 		end
  
-	realize is
-			-- Realize widget
-		do
-			realized := true
-		end
-
 	unrealize is
 			-- Unrealizes the font dialog, no effect under Windows.
 		do
 			realized := False
 		end
 
+	popup is
+			-- Popup a popup shell.
+		do
+			if exists then
+				show
+			else
+				dialog_realize
+			end
+		end
+
+feature -- Status report
+
+	realized: BOOLEAN
+			-- Is this widget realized?
+	
 	is_popped_up: BOOLEAN 
 			-- Is this widget popped up?
 

@@ -111,6 +111,11 @@ feature
 			global_types.set_target_type(target_class.actual_type);
 		end;
 
+	set_context_features (source, target: FEATURE_I) is
+		do
+			global_types.set_context_features (source, target);
+		end;
+
 	set_global_types (f: FEAT_ADAPTATION) is
 			-- set global_types to f
 		do

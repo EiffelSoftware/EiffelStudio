@@ -22,6 +22,23 @@ feature -- Conveniences
 			Result := True;
 		end; -- is_infix
 
+	infix "<" (other: FEATURE_NAME): BOOLEAN is
+		local
+			infix_feature: INFIX_AS;
+			normal_feature: FEAT_NAME_ID_AS;
+		do
+			normal_feature ?= other;
+			infix_feature ?= other;
+			if infix_feature /= void then
+				Result := fix_operator < infix_feature.fix_operator
+			else
+				check
+					normal_feature /= void
+				end;
+				Result := false;
+			end;
+		end;
+
 feature -- Initialization
 
 	set is
@@ -33,7 +50,14 @@ feature -- Initialization
 			is_frozen := yacc_bool_arg (0);
 		ensure then
 			fix_operator_exists: fix_operator /= Void
-		end
+		end;
+
+
+	set_name (s: STRING) is
+		do
+			!!fix_operator;
+			fix_operator.set_value (s);
+		end;
 
 feature
 

@@ -1572,4 +1572,16 @@ feature -- Debugging
 			Context.clear2
 		end;
 
+feature -- Didier stuff
+
+	compatible (other: like Current): BOOLEAN is
+		do
+			Result := false;
+			-- body_id are the same
+			-- predecessors are the sames
+			-- for each matching predecessors,
+			-- body id are the same
+			io.putstring ("implement feature_i.compatible%N");
+		end;
+
 end

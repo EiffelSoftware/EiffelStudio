@@ -40,10 +40,16 @@ feature
 			Result := other.is_none
 		end;
 
+
 	trace is
 			-- Debug purpose
 		do
 			io.error.putstring ("NONE");
 		end;
 
+	infix "<" (other: EXPORT_I): BOOLEAN is
+			-- is Current less restrictive than other
+		do
+			-- never true
+		end;
 end

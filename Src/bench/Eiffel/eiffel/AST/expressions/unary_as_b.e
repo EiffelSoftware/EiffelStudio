@@ -124,13 +124,17 @@ feature -- Type check, byte code and dead code removal
 		do
 			ctxt.begin;
 			expr.format (ctxt);
-			ctxt.need_dot;
-			ctxt.prepare_for_prefix (prefix_feature_name);
-			ctxt.put_current_feature;
-			if ctxt.last_was_printed then
-				ctxt.commit
-			else
+			if not ctxt.last_was_printed then
 				ctxt.rollback
+			else
+				ctxt.need_dot;
+				ctxt.prepare_for_prefix (prefix_feature_name);
+				ctxt.put_current_feature;
+				if ctxt.last_was_printed then
+					ctxt.commit
+				else
+					ctxt.rollback
+				end
 			end
 		end;
 

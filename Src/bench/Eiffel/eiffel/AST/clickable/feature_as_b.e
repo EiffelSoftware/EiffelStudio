@@ -13,7 +13,8 @@ inherit
 		rename
 			id as body_id
 		end;
-	STONABLE
+	STONABLE;
+	COMPARABLE
 
 feature -- Attributes
 
@@ -48,6 +49,22 @@ feature -- Initialization
 			body /= Void;
 		end;
 
+
+	set_names (names: like feature_names) is
+		do
+			feature_names := names;
+		end;
+
+	set_content (other: like Current) is
+		require
+			good_argument: other /= void
+		do
+			body := other.body;
+			start_position := other.start_position;
+			end_position := other.end_position;
+			id := other.id;
+		end;
+
 feature -- Conveniences
 
 	set_body_id (i: INTEGER) is
@@ -60,6 +77,11 @@ feature -- Conveniences
 			-- Is the current object an instance of FEATURE_AS ?
 		do
 			Result := True;
+		end;
+
+	infix "<" (other: like Current): BOOLEAN is
+		do	
+			Result := feature_names.first < other.feature_names.first;
 		end;
 
 feature -- Incrementality

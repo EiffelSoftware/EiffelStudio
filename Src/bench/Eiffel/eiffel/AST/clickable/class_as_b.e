@@ -136,6 +136,7 @@ feature -- formatting
 			s: STRING;
 		do
 			ctxt.begin;
+			ctxt.flat_struct.format_comments (ctxt);			
 			if indexes /= void and not indexes.empty then
 				ctxt.put_keyword ("indexing");
 				ctxt.next_line;
@@ -182,16 +183,9 @@ feature -- formatting
 --				ctxt.next_line;
 --			end;
 			ctxt.begin;
-			!!flat.make (ctxt.format.global_types.source_type.
-					associated_class);
-			flat.format (ctxt);
+			ctxt.flat_struct.format (ctxt);	
 			ctxt.commit;	
-			if invariant_part /= void then
-				invariant_part.format (ctxt);
-				if ctxt.last_was_printed then
-					ctxt.next_line;
-				end;
-			end;
+			ctxt.next_line;
 			ctxt.put_keyword ("end");
 			ctxt.commit;
 		end;

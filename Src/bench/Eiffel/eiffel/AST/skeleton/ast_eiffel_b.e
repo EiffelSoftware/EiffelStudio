@@ -63,4 +63,12 @@ feature -- formatter
 			-- should do nothing. Now put AST class name
 			ctxt.put_string (generator);
 		end;
+		
+	position: INTEGER is
+			-- position of the item in text
+		do
+			Result := -1;
+				-- treated as unknown
+		end;
+		
 end

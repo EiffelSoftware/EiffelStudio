@@ -43,7 +43,7 @@ feature -- Type check, byte code, dead code removal and formatter
 		do
 			ctxt.begin;
 			if assertions /= void then
-				ctxt.put_keyword (clause_name);
+				ctxt.put_keyword (clause_name (ctxt));
 				ctxt.indent_one_more; 
 				ctxt.next_line;
 				ctxt.set_separator (";");
@@ -51,6 +51,7 @@ feature -- Type check, byte code, dead code removal and formatter
 				ctxt.continue_on_failure;
 				assertions.format (ctxt);
 				if ctxt.last_was_printed then
+					ctxt.set_first_assertion (false);
 					ctxt.commit;
 				else
 					ctxt.rollback;
@@ -63,13 +64,11 @@ feature -- Type check, byte code, dead code removal and formatter
 	
 feature {}
 	
-	clause_name: STRING is
+	clause_name (ctxt: FORMAT_CONTEXT): STRING is
 			-- name of the assertion: require, require else, ensure, 
 			-- ensure then, invariant
 		do
 		end;
-
-
 
 
 end

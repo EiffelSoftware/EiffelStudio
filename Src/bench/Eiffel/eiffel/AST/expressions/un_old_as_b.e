@@ -4,7 +4,7 @@ inherit
 
 	UNARY_AS
 		redefine
-			type_check, byte_node, operator_is_keyword
+			type_check, byte_node, operator_is_keyword, format
 		end;
 
 feature -- Type check
@@ -54,6 +54,26 @@ feature -- Type check, byte code and dead code removal
 			Result.add_old_expression;
 		end;
 
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text
+		do
+			ctxt.begin;
+			expr.format (ctxt);
+			if not ctxt.last_was_printed then
+				ctxt.rollback
+			else
+				ctxt.need_dot;
+				ctxt.prepare_for_prefix ("_prefix_old");
+				ctxt.put_current_feature;
+				if ctxt.last_was_printed then
+					ctxt.commit;
+				else
+					ctxt.rollback;
+				end;
+			end;
+		end; 
+			
 	operator_name: STRING is "old";
 	
 	operator_is_keyword: BOOLEAN is true;

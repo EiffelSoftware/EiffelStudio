@@ -4,6 +4,12 @@
 # Configured by: manuelt
 # Target system: unix_sv emc 4.2mp 2.1 i386 x86at 
 
+#added by ET: use default sigwaiting in MT-mode
+d_dfltsigwaiting='define'
+
+sharedlink='ld'
+ldsharedflags='-G'
+lngpad_2='LNGPAD(2)'
 command_makefile='make'
 shared_suffix='.so'
 shared_prefix='lib'
@@ -107,13 +113,12 @@ cc='cc'
 gccversion=''
 
 ccflags=''
-mtccflags='-Kthread -DEIF_THREADS -DUNIXWARE_THREADS'
-
+mtccflags='-Kthread -D_REENTRANT -DEIF_THREADS -DUNIXWARE_THREADS'
 
 cppflags=''
 ldflags=''
 lkflags=''
-optimize='-O'
+optimize=''
 cf_by='manuelt'
 cf_time='Fri Jan 23 19:57:51 EST 1998'
 charsize='1'
@@ -189,7 +194,7 @@ d_getgrgid='define'
 d_getpwuid='define'
 d_index='undef'
 d_strchr='define'
-d_strctcpy='undef'
+d_strctcpy='define'
 d_strdup='define'
 d_strerrm='strerror(e)'
 d_strerror='define'

@@ -203,9 +203,7 @@ feature -- Cursor movement
 	start is
 			-- Move cursor to first position.
 		do
-			if not empty then
-				index := 1
-			end
+			index := 1
 		end
 
 feature -- Element change
@@ -214,10 +212,7 @@ feature -- Element change
 			-- Put `an_item' to the left of cursor position.
 			-- Do not move cursor.
 		do
-			private_list.go_i_th (index)
-			if before then
-				private_list.start
-			end
+			private_list.go_i_th (index+1)
 			private_list.put_left (an_item)
 			if exists then
 				insert_item (an_item, index)

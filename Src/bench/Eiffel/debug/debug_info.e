@@ -379,6 +379,8 @@ feature -- Breakpoints setting
 
 	set_routine_breakpoints (fi: FEATURE_I) is
 			-- Set the user-defined breakpoints in `fi'.
+			-- If `fi' has no user-defined breakpoints set, 
+			-- set internally the first one (i.e. routine entrance).
 		require
 			fi_exists: fi /= Void;
 			has_feature (fi);
@@ -399,21 +401,32 @@ feature -- Breakpoints setting
 				until
 					d_list.after
 				loop
-					from
-						breakable_points := d_list.item.breakable_points;
-						r_body_id := d_list.item.real_body_id;
-						breakable_points.start
-					until
-						breakable_points.after
-					loop
-						if breakable_points.item.is_set then
-							!! bp;
-							bp.set_stop;
-							bp.set_offset (breakable_points.item.position);
-							bp.set_real_body_id	(r_body_id);
-							new_breakpoints.extend (bp);
+					breakable_points := d_list.item.breakable_points;
+					r_body_id := d_list.item.real_body_id;
+					if not d_list.item.has_breakpoint_set then
+							-- If the routine has no user-defined breakpoint
+							-- set, set internally the first one (i.e. routine
+							-- entrance).
+						!! bp;
+						bp.set_stop;
+						bp.set_offset (breakable_points.i_th (1).position);
+						bp.set_real_body_id	(r_body_id);
+						new_breakpoints.extend (bp);
+					else
+						from
+							breakable_points.start
+						until
+							breakable_points.after
+						loop
+							if breakable_points.item.is_set then
+								!! bp;
+								bp.set_stop;
+								bp.set_offset (breakable_points.item.position);
+								bp.set_real_body_id	(r_body_id);
+								new_breakpoints.extend (bp);
+							end;
+							breakable_points.forth
 						end;
-						breakable_points.forth
 					end;
 					d_list.forth
 				end

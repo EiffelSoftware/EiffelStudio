@@ -8,9 +8,6 @@ class
 
 inherit
 	BINARY_AS
-		redefine
-			bit_balanced
-		end
 
 	PREFIX_INFIX_NAMES
 
@@ -24,10 +21,6 @@ feature -- Visitor
 
 feature -- Properties
 
-	bit_balanced: BOOLEAN is True
-            -- Is the current binary operation subject to the
-            -- balancing rule proper to bit types ?
-	
 	byte_anchor: BIN_OR_B is
 			-- Byte code type
 		do

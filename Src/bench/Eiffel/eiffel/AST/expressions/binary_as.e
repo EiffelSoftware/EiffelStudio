@@ -28,14 +28,6 @@ feature {AST_FACTORY} -- Initialization
 			right_set: right = r
 		end
 
---feature -- Visitor
---
---	process (v: AST_VISITOR) is
---			-- process current element.
---		do
---			v.process_binary_as (Current)
---		end
-
 feature -- Attributes
 
 	left: EXPR_AS
@@ -45,20 +37,6 @@ feature -- Attributes
 			-- Right opernad
 
 feature -- Properties
-
-	balanced: BOOLEAN is
-			-- Is the current binary operation subject to the balancing
-			-- rule proper to simple numeric types ?
-		do
-			-- Do nothing
-		end
-
-	bit_balanced: BOOLEAN is
-			-- Is the current binary operation subject to the
-			-- balancing rule proper to bit types ?
-		do
-			-- Do nothing
-		end
 
 	infix_function_name: STRING is
 			-- Internal name of the infix feature associated to the
@@ -86,25 +64,129 @@ feature -- Comparison
 		end
 
 feature -- Type check, byte code and dead code removal
+	
+	is_infix_valid (a_left_type, a_right_type: TYPE_A; a_name: STRING): BOOLEAN is
+			-- Does infix routine `a_name' exists in `a_left_type' and if so is
+			-- it valid for `a_right_type'?
+		require
+			a_left_type_not_void: a_left_type /= Void
+			a_right_type_not_void: a_right_type /= Void
+			a_name_not_void: a_name /= Void
+		local
+			l_infix: FEATURE_I
+			l_class: CLASS_C
+			l_vwoe: VWOE
+			l_vwoe1: VWOE1
+			l_vuex: VUEX
+			l_vape: VAPE
+			l_arg_type: TYPE_A
+			l_formal: FORMAL_A
+			l_left_constrained: TYPE_A
+		do
+			last_error := Void
+			if a_left_type.is_formal then
+				l_formal ?= a_left_type
+				l_left_constrained := context.current_class.constraint (l_formal.position)
+				l_class := l_left_constrained.associated_class
+			else
+				l_class := a_left_type.associated_class
+			end
+			l_infix := l_class.feature_table.item (a_name)
+			if l_infix = Void then
+				create l_vwoe
+				context.init_error (l_vwoe)
+				l_vwoe.set_other_class (a_left_type.associated_class)
+				l_vwoe.set_op_name (a_name)
+				last_error := l_vwoe
+			else
+					-- Export validity
+				last_infix := l_infix
+				if not l_infix.is_exported_for (l_class) then
+					create l_vuex
+					context.init_error (l_vuex)
+					l_vuex.set_static_class (l_class)
+					l_vuex.set_exported_feature (l_infix)
+					last_error := l_vuex
+				else
+					if
+						not System.do_not_check_vape and then
+						context.level4 and then context.check_for_vape and then
+						not context.current_feature.export_status.is_subset (l_infix.export_status) 
+					then
+							-- In precondition and checking for vape
+						create l_vape
+						context.init_error (l_vape)
+						l_vape.set_exported_feature (context.current_feature)
+						last_error := l_vape
+					else
+							-- Conformance initialization
+						Argument_types.init2 (l_infix)
+							-- Argument conformance: infix feature must have one argument
+						l_arg_type ?= l_infix.arguments.i_th (1)
+						l_arg_type := l_arg_type.conformance_type
+							-- Instantiation
+						if a_left_type.is_formal then
+							l_arg_type := l_arg_type.instantiation_in (l_left_constrained,
+								l_class.class_id).actual_type
+						else
+							l_arg_type := l_arg_type.instantiation_in (a_left_type,
+								l_class.class_id).actual_type
+						end
+
+						if not a_right_type.conform_to (l_arg_type) then
+							if
+								(a_right_type.convert_to (context.current_class, l_arg_type)) or
+								(a_right_type.is_expanded and then
+									a_right_type.convert_to (context.current_class,
+										a_right_type.reference_actual_type) and then
+									a_right_type.reference_actual_type.conform_to (l_arg_type))
+							then
+								last_argument_conversion_info := context.last_conversion_info
+								last_arg_type := l_arg_type
+							else
+									-- No conformance on argument of infix 
+								create l_vwoe1
+								context.init_error (l_vwoe1)
+								l_vwoe1.set_other_class (l_class)
+								l_vwoe1.set_op_name (a_name)
+								l_vwoe1.set_formal_type (l_arg_type)
+								l_vwoe1.set_actual_type (a_right_type)
+								last_error := l_vwoe1
+							end
+						else
+							last_arg_type := l_arg_type
+						end
+					end
+				end
+			end
+			if last_error /= Void then
+				last_infix := Void
+				last_argument_conversion_info := Void
+			else
+				Result := True
+			end
+		end
+
+	last_error: ERROR
+	last_infix: FEATURE_I
+	last_arg_type: TYPE_A
+	last_argument_conversion_info: CONVERSION_INFO
+	last_target_conversion_info: CONVERSION_INFO
+			-- Helpers to perform type check and byte_node generation.
+			-- FIXME: Manu: 03/04/2004: we should remove them from BINARY_AS
+			-- and put them in another abstraction.
 
 	type_check is
 			-- Type check a binary expression
 		local
-			bit_balance_in_effect: BOOLEAN
-			balance_in_effect: BOOLEAN
-			infix_function: FEATURE_I
-			infix_arg_type: TYPE_A
 			infix_type: TYPE_A
 			left_type, right_type: TYPE_A
 			right_constrained, left_constrained: TYPE_A
-			infix_constrained: TYPE_A
+			l_target_type: TYPE_A
 			left_id: INTEGER
-			last_class: CLASS_C
 			depend_unit: DEPEND_UNIT
-			vwoe: VWOE
-			vwoe1: VWOE1
 			vuex: VUEX
-			vape: VAPE
+			l_error: ERROR
 		do
 				-- First type check the left operand
 			left.type_check
@@ -127,100 +209,78 @@ feature -- Type check, byte code and dead code removal
 			right_type := context.item
 			right_constrained := context.last_constrained_type
 
-				-- Process of the balancing rule
-			balance_in_effect := numeric_balance (left_constrained, right_constrained)
-			bit_balance_in_effect := bit_balance (left_constrained, right_constrained)
-
-			if balance_in_effect or bit_balance_in_effect then
-				infix_constrained := left_constrained.heaviest (right_constrained)
-				if infix_constrained = right_constrained then
-						-- Make sure that if right hand side is heavier then default_type
-						-- is the one from expression.
-					left_type := right_type
+			if is_infix_valid (left_type, right_type, infix_function_name) then
+			else
+				l_error := last_error
+				if
+					(left_type.convert_to (context.current_class, right_type)) or
+					(left_type.is_expanded and then
+						left_type.convert_to (context.current_class,
+							left_type.reference_actual_type) and then
+						left_type.reference_actual_type.conform_to (right_type))
+				then
+					last_target_conversion_info := context.last_conversion_info
+					if not is_infix_valid (right_type, right_type, infix_function_name) then
+						last_target_conversion_info := Void
+					end
 				end
+			end
+
+			if last_infix = Void then
+					-- Raise error here
+				Error_handler.insert_error (l_error)
+				Error_handler.raise_error
 			else
-				infix_constrained := left_constrained
+					-- Process conversion if any.
+				if last_target_conversion_info /= Void then
+					left_id := right_constrained.associated_class.class_id
+					if parameters_convert_info = Void then
+						create parameters_convert_info.make (0, 1)
+					end
+					parameters_convert_info.put (last_target_conversion_info, 0)
+					context.supplier_ids.extend (last_target_conversion_info.depend_unit)
+					l_target_type := last_target_conversion_info.target_type
+				else
+					left_id := left_constrained.associated_class.class_id
+					l_target_type := left_type
+				end
+
+				if last_argument_conversion_info /= Void then
+					if parameters_convert_info = Void then
+						create parameters_convert_info.make (0, 1)
+					end
+					parameters_convert_info.put (last_argument_conversion_info, 1)
+					context.supplier_ids.extend (last_argument_conversion_info.depend_unit)
+				end
+
+					-- Suppliers update
+				create depend_unit.make (left_id, last_infix)
+				context.supplier_ids.extend (depend_unit)
+
+
+					-- Add type to `parameters' in case we will need it later.
+				attachment := last_arg_type
+
+					-- Update the type stack: instantiate result type of the
+					-- infixed feature
+				infix_type ?= last_infix.type
+				if
+					l_target_type.is_bits and then right_constrained.is_bits and then
+					infix_type.is_like_current
+				then
+						-- For non-balanced features of symbolic class BIT_REF
+						-- like infix "^" or infix "#"
+					infix_type := l_target_type
+				else
+						-- Usual case
+					infix_type := infix_type.conformance_type
+					infix_type := infix_type.instantiation_in (l_target_type, left_id).actual_type
+				end
+
+				context.pop (2)
+				context.put (infix_type)
+				context.access_line.insert (last_infix.access (infix_type.type_i))
 			end
-
-				-- Check if we have then an infixed function
-			last_class := infix_constrained.associated_class
-			left_id := last_class.class_id
-			infix_function := last_class.feature_table.item (infix_function_name)
-			if infix_function = Void then
-					-- Error
-				create vwoe
-				context.init_error (vwoe)
-				vwoe.set_other_class (last_class)
-				vwoe.set_op_name (infix_function_name)
-				Error_handler.insert_error (vwoe)
-				Error_handler.raise_error
-			end
-
-				-- Export validity
-			if not infix_function.is_exported_for (last_class) then
-				create vuex
-				context.init_error (vuex)
-				vuex.set_static_class (last_class)
-				vuex.set_exported_feature (infix_function)
-				Error_handler.insert_error (vuex)
-				Error_handler.raise_error
-			end
-
-			if
-				not System.do_not_check_vape and then
-				context.level4 and then context.check_for_vape and then
-				not context.current_feature.export_status.is_subset (infix_function.export_status) 
-			then
-					-- In precondition and checking for vape
-				create vape
-				context.init_error (vape)
-				vape.set_exported_feature (context.current_feature)
-				Error_handler.insert_error (vape)
-				Error_handler.raise_error
-			end
-
-				-- Suppliers update
-			create depend_unit.make (left_id, infix_function)
-			context.supplier_ids.extend (depend_unit)
-
-				-- Conformance initialization
-			Argument_types.init2 (infix_function)
-				-- Argument conformance: infix feature must have one argument
-			infix_arg_type ?= infix_function.arguments.i_th (1)
-			infix_arg_type := infix_arg_type.conformance_type
-				-- Instantiation
-			infix_arg_type := infix_arg_type.instantiation_in (left_type, left_id).actual_type
-
-			if not right_type.conform_to (infix_arg_type) then
-					-- No conformance on argument of infix 
-				create vwoe1
-				context.init_error (vwoe1)
-				vwoe1.set_other_class (last_class)
-				vwoe1.set_op_name (infix_function_name)
-				vwoe1.set_formal_type (infix_arg_type)
-				vwoe1.set_actual_type (right_type)
-				Error_handler.insert_error (vwoe1)
-			end
-
-				-- Add type to `parameters' in case we will need it later.
-			attachment := infix_arg_type
-
-				-- Update the type stack: instantiate result type of the
-				-- infixed feature
-			infix_type ?= infix_function.type
-			if right_constrained.is_bits and then infix_type.is_like_current then
-					-- For non-balanced features of symbolic class BIT_REF
-					-- like infix "^" or infix "#"
-				infix_type := left_type
-			else
-					-- Usual case
-				infix_type := infix_type.conformance_type
-				infix_type := infix_type.instantiation_in (left_type, left_id).actual_type
-			end
-
-			context.pop (2)
-			context.put (infix_type)
-			context.access_line.insert (infix_function.access (infix_type.type_i))
 		end
 
 	byte_node: BINARY_B is
@@ -228,10 +288,27 @@ feature -- Type check, byte code and dead code removal
 		local
 			access_line: ACCESS_LINE
 			call_access_b: CALL_ACCESS_B
+			l_info: CONVERSION_INFO
 		do
 			Result := byte_anchor
-			Result.set_left (left.byte_node)
-			Result.set_right (right.byte_node)
+
+			if parameters_convert_info /= Void then
+				l_info := parameters_convert_info.item (0)
+			end
+			if l_info /= Void then
+				Result.set_left (l_info.byte_node (left.byte_node))
+			else
+				Result.set_left (left.byte_node)
+			end
+
+			if parameters_convert_info /= Void then
+				l_info := parameters_convert_info.item (1)
+			end
+			if l_info /= Void then
+				Result.set_right (l_info.byte_node (right.byte_node))
+			else
+				Result.set_right (right.byte_node)
+			end
 
 			access_line := context.access_line
 			call_access_b ?= access_line.access
@@ -244,24 +321,6 @@ feature -- Type check, byte code and dead code removal
 		deferred
 		end
 
-	bit_balance (left_type, current_context: TYPE_A): BOOLEAN is
-			-- Is the bit balance in effect ?
-		require
-			good_argument: not (left_type = Void or else current_context = Void)
-			consistency: not (left_type.is_formal or else current_context.is_formal)
-		do
-			Result := bit_balanced and then left_type.is_bits and then current_context.is_bits
-		end
-
-	numeric_balance (left_type, current_context: TYPE_A): BOOLEAN is
-			-- Is the numeric balancing rule in effect ?
-		require
-			good_argument: not (left_type = Void or else current_context = Void)
-			consistency: not (left_type.is_formal or else current_context.is_formal)
-		do
-			Result := balanced and then left_type.is_numeric and then current_context.is_numeric
-		end
-	
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
@@ -295,6 +354,12 @@ feature {BINARY_AS}	-- Replication
 
 	attachment: TYPE_A
 			-- Type of right expression as defined in Eiffel source.
+
+feature {NONE} -- Implementation: convertibility
+
+	parameters_convert_info: ARRAY [CONVERSION_INFO]
+			-- For each parameters that need a conversion call, we store info used in `byte_node'
+			-- to generate conversion call.
 
 end -- class BINARY_AS
 

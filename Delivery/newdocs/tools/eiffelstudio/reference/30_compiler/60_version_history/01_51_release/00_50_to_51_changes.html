@@ -89,7 +89,7 @@
         <p>&nbsp;</p>
         
         <ul>
-          <li>Fixed VAPE errors that were not previously reported. Now VAPE 
+          <li>Fixed <span class="eerror">VAPE</span> errors that were not previously reported. Now <span class="eerror">VAPE</span> 
           errors are checked against arguments of a feature used in a 
           precondition and are also checked for a qualified call.</li>
           <li>Fixed a conformance bug that made a manifest array not conform 
@@ -100,7 +100,7 @@
           case:<p>In a system that has a generic class CLIENT with constraint `G 
           -&gt; SUPPLIER create make end', where the creation procedure of SUPPLIER 
           is exported to {CLIENT}. If another class has an attribute `x: CLIENT 
-          [SUPPLIER]' the compiler reports a VTCG error, though it should accept 
+          [SUPPLIER]' the compiler reports a <span class="eerror">VTCG</span> error, though it should accept 
           the classes.</li>
           <li>Fixed a crash when one of the following command lines was used in a 
           directory with no existing project that contains a file named &quot;Ace&quot;:<br>
@@ -130,7 +130,7 @@ bar</pre>
           <pre>bar
 foo</pre>
           </li>
-          <li>Fixed a non reported VTEC or VTCG error when an invalid type used 
+          <li>Fixed a non reported <span class="eerror">VTEC</span> or <span class="eerror">VTCG</span> error when an invalid type used 
           as actual generic parameters in an explicit type in a creation 
           instruction.</li>
         </ul>

@@ -55,9 +55,11 @@
         <li>.NET generation now supports assembly signing in enterprise edition.</li>
         <li>.NET generation now supports precompiled libraries.</li>
         <li>Supports for manifest integer constants of different sizes, i.e. you 
-        can now assign for example the value `8' to a location of type INTEGER_8, 
-        INTEGER_16, INTEGER or INTEGER_64, however you can only assign the value 
-        `254' to a location of type INTEGER_16, INTEGER or INTEGER_64.</li>
+        can now assign for example the value `8' to a location of type <span class="eclass">INTEGER_8</span>, 
+        <span class="eclass">INTEGER_16</span>, <span class="eclass">INTEGER</span> or <span class="eclass">INTEGER_64</span>,
+         however you can only assign the value 
+        `254' to a location of type <span class="eclass">INTEGER_16</span>, <span class="eclass">INTEGER</span>
+         or <span class="eclass">INTEGER_64</span>.</li>
         </UL>
         
         <H2>Improvements</H2>
@@ -69,15 +71,30 @@
         10-20% faster than 5.1</UL>
         
         
+        <h2>Changes</h2>
+        
+        
+        <ul>
+          <li>One cannot create an instance of a basic expanded class (<span class="eclass">BOOLEAN</span>, 
+          <span class="eclass">CHARACTER</span>, <span class="eclass">INTEGER_8</span>, <span class="eclass">INTEGER_16</span>,
+          <span class="eclass">INTEGER</span>, <span class="eclass">INTEGER_64</span>, <span class="eclass">POINTER</span>,
+          <span class="eclass">REAL</span>, <span class="eclass">DOUBLE</span>),
+           you will now get a <span class="eerror">VGCC(6)</span> error. Instead 
+          directly assign to it, or create an instance of its corresponding _REF 
+          class.</li>
+</ul>
+        
+        
         <h2>Bug fixes</h2>
         
         
         <ul>
-          <li>Fixed memory corruption issue when trying to access an INTEGER_64 
+          <li>Fixed memory corruption issue when trying to access an <span class="eclass">INTEGER_64</span>
           value.</li>
-          <li>Fixed a problem with manifest INTEGER_64 constants whose values 
+          <li>Fixed a problem with manifest <span class="eclass">INTEGER_64</span> constants whose values 
           were incorrectly interpreted.</li>
-          <li>Fixed VAPE errors that were not previously reported in 5.1. Now VAPE 
+          <li>
+          Fixed VAPE errors that were not previously reported in 5.1. Now <span class="eerror">VAPE </span>
           errors are checked against call to infix and prefix features.</li>
 </ul>
         

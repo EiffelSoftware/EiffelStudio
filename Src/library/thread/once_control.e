@@ -19,7 +19,7 @@ feature	-- Externals
 			-- pointed by `once_proc'. Put `Current' as 
 			-- the first argument.
 		external
-			"C [macro %"eif_once.h%"]"
+			"C %"eif_once.h%""
 		alias
 			"eif_global_procedure"	
 		end
@@ -30,14 +30,11 @@ feature	-- Externals
 			-- evaluated once per process. Put `Current' as 
 			-- the first argument.
 		external
-			"C [macro %"eif_once.h%"]"
+			"C %"eif_once.h%""
 		alias
 			"eif_global_function"
 		end
-
-
  
-
 end -- class ONCE_CONTROL
 
 --|----------------------------------------------------------------

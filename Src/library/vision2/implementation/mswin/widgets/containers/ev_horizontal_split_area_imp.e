@@ -41,7 +41,7 @@ feature {NONE} -- Status Setting
 			first_imp.set_parent (interface)
 			notify_change (2 + 1, Current)
 			if second_visible then
-				splitter_width := visible_splitter_width
+				internal_splitter_width := splitter_width
 				set_split_position (minimum_split_position)
 			else
 				set_split_position (maximum_split_position)
@@ -58,9 +58,9 @@ feature {NONE} -- Status Setting
 			second_imp.set_parent (interface)
 			notify_change (Nc_minsize, Current)
 			if first_visible then
-				splitter_width := visible_splitter_width
-				set_split_position (width - splitter_width - second.minimum_width.min
-					(width - minimum_split_position - splitter_width))
+				internal_splitter_width := splitter_width
+				set_split_position (width - internal_splitter_width - second.minimum_width.min
+					(width - minimum_split_position - internal_splitter_width))
 			else
 				set_split_position (0)
 			end
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 				mh := first.minimum_height
 			end
 			if second_visible then
-				mw := mw + second.minimum_width + splitter_width
+				mw := mw + second.minimum_width + internal_splitter_width
 				mh := mh.max (second.minimum_height)
 			end
 			ev_set_minimum_size (mw, mh)
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 				mw := first.minimum_width
 			end
 			if second_visible then
-				mw := mw + second.minimum_width + splitter_width
+				mw := mw + second.minimum_width + internal_splitter_width
 			end
 			ev_set_minimum_width (mw)
 		end
@@ -166,20 +166,20 @@ feature {NONE} -- Implementation
 				if originator then
 					first_imp.set_move_and_size (0, 0, split_position, height)
 					second_imp.set_move_and_size
-						(split_position + splitter_width, 0, width -
-						split_position - splitter_width, height)
+						(split_position + internal_splitter_width, 0, width -
+						split_position - internal_splitter_width, height)
 				else
 					first_imp.ev_apply_new_size (0, 0, split_position, height,
 						True)
 					second_imp.ev_apply_new_size
-						(split_position + splitter_width, 0, width -
-						split_position - splitter_width, height, True)
+						(split_position + internal_splitter_width, 0, width -
+						split_position - internal_splitter_width, height, True)
 				end
 			end
 
 				-- Invalidate separator.
 			create rect.make (split_position, 0, split_position +
-				splitter_width, height)
+				internal_splitter_width, height)
 			invalidate_rect (rect, True)
 		end	
 
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 			-- Invert the split on `a_dc'.
 		do
 			invert_rectangle (a_dc, split_position, -1, split_position +
-				splitter_width, height)
+				internal_splitter_width, height)
 		end
 
 	on_mouse_move (keys, x_pos, y_pos: INTEGER) is

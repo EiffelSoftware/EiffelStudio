@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 			flat_separator := False
 				-- The splitter is not displayed until `Current' contains
 				-- two widgets, so setting the width to 0 hides it.
-			splitter_width := 0
+			internal_splitter_width := 0
 		end
 
 feature {EV_ANY_I} -- Status Setting
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			-- as flat.
 		do
 			flat_separator := True
-			splitter_width := visible_splitter_width
+			internal_splitter_width := splitter_width
 			layout_widgets (True)
 		end
 
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 			-- as raised.
 		do
 			flat_separator := False
-			splitter_width := visible_splitter_width
+			internal_splitter_width := splitter_width
 			layout_widgets (True)
 		end
 
@@ -172,14 +172,14 @@ feature {NONE} -- Implementation
 					second_expandable := True
 					first_expandable := True
 						-- Hide the splitter as `Current' only 
-					splitter_width := 0
+					internal_splitter_width := 0
 					set_split_position (0)
 				elseif v = second then
 					v_imp := second_imp
 					second := Void
 					first_expandable := True
 					second_expandable := True
-					splitter_width := 0 
+					internal_splitter_width := 0 
 					set_split_position (maximum_split_position)
 				end
 					-- If `v_imp' not Void (meaning `v' is being removed).
@@ -375,12 +375,12 @@ feature {NONE} -- Implementation
 		-- For a vertical split_area, this contains the last
 		-- height of `Current'.
 
-	splitter_width: INTEGER
+	internal_splitter_width: INTEGER
 			-- Current width of splitter in pixels.
 			-- Should be either `normal_separator_width',
 			-- `flat_separator_width' or 0 if splitter is hidden.
 
-	visible_splitter_width: INTEGER is
+	splitter_width: INTEGER is
 			-- `Result' is width the visible separator should occupy.
 			-- if `flat_separator' then `Result' is `flat_separator_width'.
 			-- if not `flat_separator' then `Result' is

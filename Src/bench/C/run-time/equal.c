@@ -539,6 +539,11 @@ uint32 s_flags;
 		default:
 			if ((target_type & SK_HEAD) == SK_BIT) {
 				/* BITS attribute */
+				/* All we have to do here is call the routine for bit comparison
+				 * as we have the references for the source and the target
+				 * -- Fabrice */
+				if (!b_equal(s_ref, t_ref))
+					return FALSE;
 			} else if ((target_type & SK_HEAD) == SK_EXP) {
 				/* Source and target attribute are expanded of the same type.
 				 * Block comparison if the attribute type is not composite

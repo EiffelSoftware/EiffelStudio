@@ -66,7 +66,7 @@ feature -- Access
 			else
 				Result := ":::"
 			end
-		end; -- sign
+		end; 
 
 	origin_text: STRING is ":::";
 

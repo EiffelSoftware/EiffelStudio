@@ -15,7 +15,7 @@ inherit
 	
 	EV_SCROLLABLE_AREA_I
 		
-	EV_INVISIBLE_CONTAINER_IMP
+	EV_CONTAINER_IMP
 	
 creation
 	

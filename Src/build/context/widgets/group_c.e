@@ -157,7 +157,6 @@ feature {NONE}
 			!!Result.make ("Group");
 		end;
 
-	
 feature 
 
 	eiffel_type: STRING is 

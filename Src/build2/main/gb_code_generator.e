@@ -12,8 +12,6 @@ class
 	
 inherit
 	
-	GB_CONSTANTS
-	
 	GB_XML_UTILITIES
 	
 	GB_SHARED_OBJECT_HANDLER
@@ -554,6 +552,7 @@ feature {NONE} -- Implementation
 			local_name: STRING
 			comment_object_name, parameters: STRING
 			feature_implementation: STRING
+			renamed_action_sequence_name: STRING
 		do
 			if element.has_attribute_by_name (type_string) then
 				stored_current_type := element.attribute_by_name (type_string).value.to_utf8
@@ -604,11 +603,15 @@ feature {NONE} -- Implementation
 									else
 										local_name := last_name + "."
 									end
+									
+										-- Adjust event names that have been renamed in Vision2 interface
+									renamed_action_sequence_name := modified_action_sequence_name (stored_current_type, action_sequence_info)
+									
 										-- If there are no arguments to the action sequence then generate no open arguments.
 									if action_sequence.count = 0 then
-										add_event_connection (local_name + action_sequence_info.name + ".extend (agent " + action_sequence_info.feature_name + ")")
+										add_event_connection (local_name + renamed_action_sequence_name + ".extend (agent " + action_sequence_info.feature_name + ")")
 									else
-										add_event_connection (local_name + action_sequence_info.name + ".extend (agent " + action_sequence_info.feature_name + " (" + action_sequence.open_arguments + "))") --current_iterative_name)
+										add_event_connection (local_name + renamed_action_sequence_name + ".extend (agent " + action_sequence_info.feature_name + " (" + action_sequence.open_arguments + "))") --current_iterative_name)
 									end
 									
 										-- Use `Current' in comment if the event is connected to the window.

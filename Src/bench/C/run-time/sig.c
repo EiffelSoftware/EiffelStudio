@@ -807,10 +807,10 @@ long sig;
 	 * status of this signal means that profiling stops.
 	 */
 
-	#ifdef SIGPROF
+#ifdef SIGPROF
 	if (sig == SIGPROF)
 		return;
-	#endif
+#endif
 
 	sig_ign[sig] = 0;
 #ifdef SIGTTIN
@@ -866,10 +866,10 @@ long sig;
 	 * status of this signal means that profiling stops.
 	 */
 
-	#ifdef SIGPROF
+#ifdef SIGPROF
 	if (sig == SIGPROF)
 		return;
-	#endif
+#endif
 
 	sig_ign[sig] = 1;
 #ifdef SIGTTIN
@@ -947,10 +947,10 @@ void esigresall()
 
 	int sig;
 	for (sig = 1; sig < NSIG; sig++)
-		#ifdef SIGPROF
+#ifdef SIGPROF
 		if (sig != SIGPROF)
 			sig_ign[sig] = osig_ign[sig];
-		#endif
+#endif
 	
 #ifdef SIGTTIN
 	(void) signal(SIGTTIN, SIG_IGN);/* Ignore background input signal */
@@ -985,10 +985,10 @@ long sig;
 	 * status of this signal means that profiling stops.
 	 */
 
-	#ifdef SIGPROF
+#ifdef SIGPROF
 	if (sig == SIGPROF)
 		return;
-	#endif
+#endif
 
 	sig_ign[sig] = osig_ign[sig];
 #ifdef SIGTTIN

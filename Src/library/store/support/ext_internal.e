@@ -15,7 +15,7 @@ inherit
 
 	BASIC_ROUTINES
 
-	DEFAULT_NULL_VALUE
+	NUMERIC_NULL_VALUE
 
 feature -- Basic operations
 
@@ -141,11 +141,11 @@ feature -- Basic operations
 			Result := True
 
 			if ftype = Integer_type then
-				set_integer_field (i, object, default_null_value.truncated_to_integer)
+				set_integer_field (i, object, numeric_null_value.truncated_to_integer)
 			elseif ftype = Real_type then
-				set_real_field (i, object, default_null_value.truncated_to_real)
+				set_real_field (i, object, numeric_null_value.truncated_to_real)
 			elseif ftype = Double_type then
-				set_double_field (i, object, default_null_value)
+				set_double_field (i, object, numeric_null_value)
 			elseif ftype = Character_type then
 				set_character_field (i, object, ' ')
 			elseif ftype = Boolean_type then

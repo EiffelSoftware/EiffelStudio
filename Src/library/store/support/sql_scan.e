@@ -85,21 +85,21 @@ feature -- Basic operations
 			else
 				if is_integer (obj) then
 					r_int ?= obj
-					if r_int.item = default_null_value.truncated_to_integer then
+					if r_int.item = numeric_null_value.truncated_to_integer then
 						str.append (Null_string)
 					else
 						str.append (r_int.out)
 					end
 				elseif is_double (obj) then
 					r_double ?= obj
-					if r_double.item = default_null_value then
+					if r_double.item = numeric_null_value then
 						str.append (Null_string)
 					else
 						str.append (r_double.out)
 					end
 				elseif is_real (obj) then
 					r_real ?= obj
-					if r_real.item = default_null_value.truncated_to_real then
+					if r_real.item = numeric_null_value.truncated_to_real then
 						str.append (Null_string)
 					else
 						str.append (r_real.out)

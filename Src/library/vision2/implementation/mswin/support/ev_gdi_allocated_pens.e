@@ -40,6 +40,9 @@ feature -- Access
 				-- Create a fake pen with the same hash code as the one we
 				-- want to retrieve.
 			create fake_object.make_with_values(a_dashed_mode, a_width, a_color)
+			if allocated_objects.count > Max_allocated_pens then
+				allocated_objects.clear_all
+			end
 
 			if allocated_objects.has(fake_object) then
 					-- Requested pen has been already allocated. We return the
@@ -55,8 +58,8 @@ feature -- Access
 				create Result.make(a_dashed_mode, a_width, a_color)
 
 					-- ..and we add it in our table.
-				fake_object.set_item(Result)
-				allocated_objects.put(fake_object, fake_object)
+				fake_object.set_item (Result)
+				allocated_objects.put (fake_object, fake_object)
 				debug("GDIObjectsCreation")
 					io.putstring("created %
 						%("+successful_cache.out+"/"+total_cache.out+")%N")
@@ -65,5 +68,7 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
+
+	Max_allocated_pens: INTEGER is 50
 
 end -- class EV_GDI_ALLOCATED_PENS

@@ -166,7 +166,7 @@ feature {NONE} -- Initialization
 			internal_arrows_control.set_buddy_window (internal_text_field)
 			internal_arrows_control.set_range (0, 100)
 			Precursor {EV_GAUGE_IMP}
-			last_value := 0
+			last_change_value := 0
 		ensure then
 			text_field_not_void: internal_text_field /= Void
 			arrows_not_void: internal_arrows_control /= Void
@@ -305,7 +305,7 @@ feature {EV_SPIN_BUTTON_I} -- Status setting.
 		do
 			internal_arrows_control.set_position (i)
 				-- We must now store the value
-			last_value := i
+			last_change_value := i
 		end
 
 	wel_set_range (i, j: INTEGER) is
@@ -639,12 +639,12 @@ feature {EV_TEXT_FIELD_IMP} -- Implementation
 				internal_text_field.set_caret_position (1)
 				translate_text
 				interface.return_actions.call ([])
-				if last_value /= value then
+				if last_change_value /= value then
 					if change_actions_internal /= Void then
+						last_change_value := value
 						change_actions_internal.call ([value])	
 					end
 				end
-				last_value := value
 			end
 		end
 		
@@ -684,22 +684,16 @@ feature {NONE} -- Implementation
 			if info.code = Udn_deltapos then
 				create up_down.make_by_pointer (info.item)
 				if up_down.delta < 0 then
-						-- Adjust value of `Current' by `step'.
-					up_down.set_delta (-step)
-						-- We must ensure `last_value' never becomes less
-						-- than minimum.
-					last_value := (value - step).max (minimum)
-				else
-						-- Adjust value of `Current' by `step'.
-					up_down.set_delta (step)
-						-- We must make ensure `last_value' never becomes
-						-- greater than `maximum'.
-					last_value := (value + step).min (maximum)
+							-- Adjust value of `Current' by `step'.
+						up_down.set_delta (-step)
+					else
+							-- Adjust value of `Current' by `step'.
+						up_down.set_delta (step)
 				end
 			end
 		end
 
-	last_value: INTEGER
+	last_change_value: INTEGER
 		-- Holds the last `value' of `Current' as seen from the interface.
 		-- We need this as windows sends `on_wm_vscroll' even if the value is
 		-- not changing, ie reached its maximum. We only want to call the
@@ -733,8 +727,9 @@ feature {NONE} -- Implementation
 					check
 						up_down_has_buddy: up_down.buddy_window /= Void
 					end
-					if last_value /= value then
+					if last_change_value /= value then
 						if change_actions_internal /= Void then
+							last_change_value := value
 							change_actions_internal.call ([value])
 						end
 					end

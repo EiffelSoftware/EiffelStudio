@@ -226,6 +226,7 @@ feature -- Basic operations
 									create test_file.make (filename)
 									if test_file.exists then
 										xml_handler.load
+										add_project_to_recent_projects
 										main_window.show_tools
 										command_handler.update
 											-- Compress all used ids.
@@ -245,7 +246,6 @@ feature -- Basic operations
 					error_dialog.show_modal_to_window (main_window)
 					system_status.close_current_project
 				end
-				add_project_to_recent_projects
 			end
 			
 feature {NONE} -- Implementation

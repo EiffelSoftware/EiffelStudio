@@ -27,6 +27,26 @@ feature -- Attributes
 	content: CONTENT_AS_B;
 			-- Content of the body: constant or regular body
 
+feature -- empty body
+
+	empty : BOOLEAN is
+				-- Is body empty?
+		do
+			Result := (content = Void) or else (content.empty)
+		end
+
+feature -- default rescue
+
+	create_default_rescue (def_resc_name : STRING) is
+				-- Create default rescue if necessary
+		require
+			valid_feature_name : def_resc_name /= Void
+		do
+			if content /= Void then
+				content.create_default_rescue (def_resc_name)
+			end
+		end
+
 feature -- Type check, byte code and dead code removal
 
 	type_check is
@@ -95,6 +115,8 @@ feature -- New feature description
 				end;
 				attr.set_type (type);
 				Result := attr;
+				Result.set_empty_body (True)
+
 			elseif content.is_constant then
 					-- It is a constant feature
 				constant ?= content;
@@ -125,6 +147,8 @@ feature -- New feature description
 				end;
 				const.set_type (type);
 				Result := const;
+				Result.set_empty_body (True)
+
 			elseif type = Void then
 				routine ?= content;
 				check
@@ -166,6 +190,7 @@ feature -- New feature description
 					proc.set_obsolete_message (routine.obsolete_message.value);
 				end;
 				Result := proc;
+				Result.set_empty_body (content.empty)
 			else
 				routine ?= content;
 				check
@@ -214,6 +239,7 @@ feature -- New feature description
 					func.set_obsolete_message (routine.obsolete_message.value);
 				end;
 				Result := func;
+				Result.set_empty_body (content.empty)
 			end;
 		end;
 				

@@ -25,7 +25,7 @@ inherit
 		redefine
 			type_check, byte_node, find_breakable, 
 			fill_calls_list, replicate, local_table, format,
-			local_table_for_format
+			local_table_for_format, create_default_rescue, empty
 		end;
 
 	SHARED_INSTANTIATOR;
@@ -54,6 +54,34 @@ feature -- Attributes
 
 	rescue_clause: EIFFEL_LIST_B [INSTRUCTION_AS_B];
 			-- Rescue compound
+
+feature -- test for empty body
+
+	empty : BOOLEAN is
+		do
+			Result := (routine_body = Void) or else (routine_body.empty)
+		end
+
+feature -- default rescue
+
+	create_default_rescue (def_resc_name : STRING) is
+		local
+			def_resc_id   : ID_AS_B
+			def_resc_call : ACCESS_ID_AS_B
+			def_resc_instr: INSTR_CALL_AS_B
+		do
+			if rescue_clause = Void and then
+			   not (routine_body.is_deferred or routine_body.is_external) then
+				!!def_resc_id.make (1)
+				def_resc_id.load (def_resc_name)
+				!!def_resc_call
+				def_resc_call.set_feature_name (def_resc_id)
+				!!def_resc_instr
+				def_resc_instr.set_call (def_resc_call)
+				!!rescue_clause.make (1)
+				rescue_clause.put_i_th (def_resc_instr, 1)
+			end
+		end
 
 feature -- Type check, byte code and dead code removal
 
@@ -89,6 +117,8 @@ feature -- Type check, byte code and dead code removal
 					-- Reset the level
 				context.set_level1 (False);
 			end;
+
+
 				-- Check rescue-clause
 			if rescue_clause /= Void then
 					-- A deferred or external feature cannot have a rescue

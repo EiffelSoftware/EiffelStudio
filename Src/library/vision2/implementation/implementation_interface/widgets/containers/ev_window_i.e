@@ -12,6 +12,15 @@ deferred class
 inherit
 	EV_UNTITLED_WINDOW_I
 
+feature {NONE} -- Initialization
+
+	make_with_owner (par: EV_WINDOW) is
+			-- Create a window with `par' as parent.
+			-- The life of the window will depend on
+			-- the one of `par'.
+		deferred
+		end
+
 feature  -- Access
 
 	icon_name: STRING is

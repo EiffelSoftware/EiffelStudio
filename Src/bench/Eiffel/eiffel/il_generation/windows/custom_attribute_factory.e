@@ -57,7 +57,6 @@ feature -- Settings
 			a_class_token_valid: a_class_token /= 0
 		local
 			attributes: EIFFEL_LIST [CREATION_EXPR_AS]
-			l_ca: MD_CUSTOM_ATTRIBUTE
 			l_class_type: CLASS_TYPE
 		do
 			check

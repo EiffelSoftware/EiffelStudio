@@ -3,34 +3,11 @@
 class DLE_SYSTEM_I 
 
 inherit
-
-	SYSTEM_I
-		rename
-			make_update_descriptors as make_update_dynamic_descriptors,
-			reset_type_id as dle_reset_type_id
-		redefine
-			sorter, is_dynamic, make_update,
-			change_classes, check_static_calls,
-			generate_pattern_table, remove_dynamic_class_id,
-			generate_empty_update_file, generate_skeletons,
-			generate_conformance_table, generate_dispatch_table,
-			generate_main_file, generate_dle_file, generate_init_file, 
-			generate_rout_info_table, generate_option_file,
-			generate_cecil, generate_exec_table, shake_tables,
-			generate_reference_table, degree_minus_4, degree_minus_5,
-			generate_size_table, clear_dle_finalization_data,
-			dle_type_set, generate_plug, mark_dynamic_descendant_used,
-			dle_finalized_nobid_table, generate_dle_make_table,
-			mark_dynamic_classes, check_dle_finalize, dle_system_name,
-			dle_max_topo_id, dynamic_class_ids, min_type_id
-		end
-
 	SYSTEM_I
 		redefine
 			sorter, is_dynamic, make_update, check_static_calls,
-			change_classes, reset_type_id, freeze_system,
-			remove_dynamic_class_id, generate_pattern_table,
-			generate_empty_update_file, generate_skeletons,
+			change_classes, reset_type_id, remove_dynamic_class_id,
+			generate_pattern_table, generate_skeletons,
 			generate_conformance_table, generate_dispatch_table,
 			generate_main_file, generate_dle_file, generate_init_file, 
 			generate_rout_info_table, generate_option_file,
@@ -42,8 +19,6 @@ inherit
 			mark_dynamic_classes, make_update_descriptors,
 			check_dle_finalize, dle_system_name, dle_max_topo_id,
 			dynamic_class_ids, min_type_id
-		select
-			make_update_descriptors, reset_type_id
 		end
 
 feature -- Initialization
@@ -270,7 +245,7 @@ feature -- Recompilation
 			-- keeping the static system type ids unchanged.
 		do
 			if class_type.is_dynamic then
-				dle_reset_type_id (class_type)
+				{SYSTEM_I} precursor (class_type)
 			end
 		end
 
@@ -304,50 +279,72 @@ feature -- Recompilation
 
 feature -- Melting
 
-	make_update is
+	make_update (empty: BOOLEAN) is
 			-- Produce the file containing melted information of the
 			-- Dynamic Class Set.
 		local
 			a_class: CLASS_C;
 			file_pointer: POINTER
+			melted_file: RAW_FILE
 		do
 debug ("ACTIVITY")
 	io.error.putstring ("Creating melted.dle%N");
 end;
-			Melted_dle_file.open_write;
-			file_pointer := Melted_dle_file.file_pointer;
+			melted_file := Update_dle_file
+			melted_file.open_write;
+			file_pointer := melted_file.file_pointer
+
+			if empty then
+				has_been_frozen := true
+			end
 
 			if has_been_frozen then
 					-- The system has been frozen.
-				Melted_dle_file.putchar ('%/001/')
+				melted_file.putchar ('%/001/')
 			else
-				Melted_dle_file.putchar ('%U')
+				melted_file.putchar ('%U')
 			end;
+
 				-- The DC-set is melted.
-			Melted_dle_file.putchar ('%/001/');
+			if empty then
+				melted_file.putchar ('%U');
+			else
+				melted_file.putchar ('%/001/')
+			end
 
 				-- Write first the number of class types now available
 			write_int (file_pointer, type_id_counter.value);
+
 				-- Write the number of classes now available
 			write_int (file_pointer, class_counter.total_count);
+
 				-- Write DYNAMIC dtype
 			write_int (file_pointer, dynamic_dtype - 1);
+
 				-- Write first the new size of the dispatch table
-			dispatch_table.write_dispatch_count (Melted_dle_file);
-			make_update_feature_tables (Melted_dle_file);
-			make_update_rout_id_arrays (Melted_dle_file);
-				-- Update the dispatch table
-			Dispatch_table.make_update (Melted_dle_file);
-				-- Open the file for reading byte code for melted features
-				-- Update the execution table
-			execution_table.make_melted_dle (Melted_dle_file);
-			make_conformance_table_byte_code (Melted_dle_file);
-			make_option_table (Melted_dle_file);
-			make_rout_info_table (Melted_dle_file);
-			make_update_descriptors (Melted_dle_file);
+			dispatch_table.write_dispatch_count (melted_file);
+
+			if not empty then
+				make_update_feature_tables (melted_file);
+				make_update_rout_id_arrays (melted_file);
+
+					-- Update the dispatch table
+				Dispatch_table.make_update (melted_file);
+
+					-- Open the file for reading byte code for melted features
+					-- Update the execution table
+				execution_table.make_melted_dle (melted_file);
+				make_conformance_table_byte_code (melted_file);
+				make_option_table (melted_file);
+				make_rout_info_table (melted_file);
+				make_update_descriptors (melted_file);
+			else
+				make_update_static_descriptors (melted_file);
+			end
+
 				-- End mark
 			write_int (file_pointer, -1);
-			Melted_dle_file.close
+			melted_file.close
 		end;
 
 	make_update_descriptors (file: RAW_FILE) is
@@ -358,7 +355,7 @@ end;
 				-- Write melted descriptors from the DR-system.
 			make_update_static_descriptors (file);
 				-- Write melted descriptors from the DC-set.
-			make_update_dynamic_descriptors (file)
+			{SYSTEM_I} precursor (file)
 		end
 
 	make_update_static_descriptors (file: RAW_FILE) is
@@ -550,40 +547,6 @@ feature -- Generation
 		do
 			pattern_table.generate_dle
 		end
-
-	generate_empty_update_file is
-			-- Produce the file containing melted information of the
-			-- static system when freezing the Dynamic Class Set.
-		local
-			file_pointer: POINTER
-		do
-debug ("DLE ACTIVITY")
-	io.error.putstring ("Creating melted.dle%N");
-end;
-			Melted_dle_file.open_write;
-			file_pointer := Melted_dle_file.file_pointer;
-
-				-- The system has been frozen.
-			has_been_frozen := true;
-			Melted_dle_file.putchar ('%/001/');
-				-- The DC-set is not melted.
-			Melted_dle_file.putchar ('%U');
-				-- Write first the number of class types now available
-			write_int (file_pointer, type_id_counter.value);
-				-- Write the number of classes now available
-			write_int (file_pointer, class_counter.total_count);
-				-- Write DYNAMIC dtype
-			write_int (file_pointer, dynamic_dtype - 1);
-				-- Write first the new size of the dispatch table
-			Dispatch_table.write_dispatch_count (Melted_dle_file);
-
-				-- Write melted descriptors from the DR-system.
-			make_update_static_descriptors (Melted_dle_file);
-				-- End mark
-			write_int (file_pointer, -1);
-
-			Melted_dle_file.close
-		end;
 
 	generate_skeletons is
 			-- Generate skeletons of class types of the DC-set.

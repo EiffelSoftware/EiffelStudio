@@ -14,23 +14,23 @@ feature -- Access
 
 	horizontal_step: INTEGER is
 			-- Number of pixels scrolled up or down when user clicks
-			-- an arrow on the horizontal scrollbar.
+			-- an arrow on the horizontal scroll bar.
 		deferred
 		end
 
 	vertical_step: INTEGER is
 			-- Number of pixels scrolled left or right when user clicks
-			-- an arrow on the vertical scrollbar.
+			-- an arrow on the vertical scroll bar.
 		deferred
 		end
 
-	is_horizontal_scrollbar_visible: BOOLEAN is
-			-- Should horizontal scrollbar be displayed?
+	is_horizontal_scroll_bar_visible: BOOLEAN is
+			-- Should horizontal scroll bar be displayed?
 		deferred
 		end
 
-	is_vertical_scrollbar_visible: BOOLEAN is
-			-- Should vertical scrollbar be displayed?
+	is_vertical_scroll_bar_visible: BOOLEAN is
+			-- Should vertical scroll bar be displayed?
 		deferred
 		end
 
@@ -54,32 +54,32 @@ feature -- Element change
 			assigned: vertical_step = a_step
 		end
 
-	show_horizontal_scrollbar is
-			-- Display horizontal scrollbar.
+	show_horizontal_scroll_bar is
+			-- Display horizontal scroll bar.
 		deferred
 		ensure
-			shown: is_horizontal_scrollbar_visible
+			shown: is_horizontal_scroll_bar_visible
 		end
 
-	hide_horizontal_scrollbar is
-			-- Do not display horizontal scrollbar.
+	hide_horizontal_scroll_bar is
+			-- Do not display horizontal scroll bar.
 		deferred
 		ensure
-			hidden: not is_horizontal_scrollbar_visible
+			hidden: not is_horizontal_scroll_bar_visible
 		end
 
-	show_vertical_scrollbar is
-			-- Display vertical scrollbar.
+	show_vertical_scroll_bar is
+			-- Display vertical scroll bar.
 		deferred
 		ensure
-			shown: is_vertical_scrollbar_visible
+			shown: is_vertical_scroll_bar_visible
 		end
 
-	hide_vertical_scrollbar is
-			-- Do not display vertical scrollbar.
+	hide_vertical_scroll_bar is
+			-- Do not display vertical scroll bar.
 		deferred
 		ensure
-			hidden: not is_vertical_scrollbar_visible
+			hidden: not is_vertical_scroll_bar_visible
 		end
 
 end -- class EV_SCROLLABLE_AREA_I
@@ -105,6 +105,9 @@ end -- class EV_SCROLLABLE_AREA_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/04/21 23:07:58  brendel
+--| scrollbar -> scroll_bar.
+--|
 --| Revision 1.6  2000/02/22 18:39:43  oconnor
 --| updated copyright date and formatting
 --|

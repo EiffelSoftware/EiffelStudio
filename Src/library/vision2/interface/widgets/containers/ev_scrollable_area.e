@@ -31,7 +31,7 @@ feature -- Access
 
 	horizontal_step: INTEGER is
 			-- Number of pixels scrolled up or down when user clicks
-			-- an arrow on the horizontal scrollbar.
+			-- an arrow on the horizontal scroll bar.
 		do
 			Result := implementation.horizontal_step
 		ensure
@@ -40,27 +40,27 @@ feature -- Access
 
 	vertical_step: INTEGER is
 			-- Number of pixels scrolled left or right when user clicks
-			-- an arrow on the vertical scrollbar.
+			-- an arrow on the vertical scroll bar.
 		do
 			Result := implementation.vertical_step
 		ensure
 			bridge_ok: Result = implementation.vertical_step
 		end
 
-	is_horizontal_scrollbar_visible: BOOLEAN is
-			-- Should horizontal scrollbar be displayed?
+	is_horizontal_scroll_bar_visible: BOOLEAN is
+			-- Should horizontal scroll bar be displayed?
 		do
-			Result := implementation.is_horizontal_scrollbar_visible
+			Result := implementation.is_horizontal_scroll_bar_visible
 		ensure
-			bridge_ok: Result = implementation.is_horizontal_scrollbar_visible
+			bridge_ok: Result = implementation.is_horizontal_scroll_bar_visible
 		end
 
-	is_vertical_scrollbar_visible: BOOLEAN is
-			-- Should vertical scrollbar be displayed?
+	is_vertical_scroll_bar_visible: BOOLEAN is
+			-- Should vertical scroll bar be displayed?
 		do
-			Result := implementation.is_vertical_scrollbar_visible
+			Result := implementation.is_vertical_scroll_bar_visible
 		ensure
-			bridge_ok: Result = implementation.is_vertical_scrollbar_visible
+			bridge_ok: Result = implementation.is_vertical_scroll_bar_visible
 		end
 
 feature -- Element change
@@ -85,36 +85,36 @@ feature -- Element change
 			assigned: vertical_step = a_step
 		end
 
-	show_horizontal_scrollbar is
-			-- Display horizontal scrollbar.
+	show_horizontal_scroll_bar is
+			-- Display horizontal scroll bar.
 		do
-			implementation.show_horizontal_scrollbar
+			implementation.show_horizontal_scroll_bar
 		ensure
-			shown: is_horizontal_scrollbar_visible
+			shown: is_horizontal_scroll_bar_visible
 		end
 
-	hide_horizontal_scrollbar is
-			-- Do not display horizontal scrollbar.
+	hide_horizontal_scroll_bar is
+			-- Do not display horizontal scroll bar.
 		do
-			implementation.hide_horizontal_scrollbar
+			implementation.hide_horizontal_scroll_bar
 		ensure
-			hidden: not is_horizontal_scrollbar_visible
+			hidden: not is_horizontal_scroll_bar_visible
 		end
 
-	show_vertical_scrollbar is
-			-- Display vertical scrollbar.
+	show_vertical_scroll_bar is
+			-- Display vertical scroll bar.
 		do
-			implementation.show_vertical_scrollbar
+			implementation.show_vertical_scroll_bar
 		ensure
-			shown: is_vertical_scrollbar_visible
+			shown: is_vertical_scroll_bar_visible
 		end
 
-	hide_vertical_scrollbar is
-			-- Do not display vertical scrollbar.
+	hide_vertical_scroll_bar is
+			-- Do not display vertical scroll bar.
 		do
-			implementation.hide_vertical_scrollbar
+			implementation.hide_vertical_scroll_bar
 		ensure
-			hidden: not is_vertical_scrollbar_visible
+			hidden: not is_vertical_scroll_bar_visible
 		end
 
 feature {NONE} -- Implementation
@@ -155,6 +155,9 @@ end -- class EV_SCROLLABLE_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/04/21 23:07:59  brendel
+--| scrollbar -> scroll_bar.
+--|
 --| Revision 1.16  2000/04/21 00:38:35  brendel
 --| removed make_for_test.
 --|

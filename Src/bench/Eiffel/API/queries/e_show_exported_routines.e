@@ -23,11 +23,9 @@ feature -- Access
 	criterium (f: E_FEATURE): BOOLEAN is
 			-- Criterium for feature `f'
 		do
-			Result := any_criterium (f) and f.is_exported_to (any_class)
+			Result := f.is_exported_to (any_class)
 		ensure then
-			good_criterium: Result implies
-					any_criterium (f) and then
-					f.is_exported_to (Any_class)
+			good_criterium: Result = f.is_exported_to (Any_class)
 		end
 
 	display_feature (f: E_FEATURE; st: STRUCTURED_TEXT) is

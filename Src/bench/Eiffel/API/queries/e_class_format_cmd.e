@@ -20,21 +20,6 @@ feature -- Access
 		deferred 
 		end;
 
-	any_criterium (f: E_FEATURE): BOOLEAN is
-			-- True if:
-			--	`f' is written in a descendant of ANY
-			--	 or if formatted class is a parent of ANY
-		do
-			Result :=
-				 f.written_class > Any_class;
-			Result := Result or
-				(current_class <= Any_class);
-		ensure
-			valid_result: Result implies 
-				f.written_class > Any_class or else
-					current_class <= Any_class
-		end;
-
 	display_feature (f: E_FEATURE; st: STRUCTURED_TEXT) is
 			-- Display feature `f' defined in class `c'
 			-- to `st'.

@@ -20,11 +20,9 @@ feature -- Access
 	criterium (f: E_FEATURE): BOOLEAN is
 			-- Criterium for feature `f'
 		do
-			Result := any_criterium (f);
-			Result := Result and f.is_deferred
+			Result := f.is_deferred
 		ensure then
-			good_criterium: Result implies
-						any_criterium (f) and then f.is_deferred
+			good_criterium: Result = f.is_deferred
 		end
 
 end -- class E_SHOW_DEFERRED_ROUTINES

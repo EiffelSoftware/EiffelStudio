@@ -272,6 +272,7 @@ feature -- Status setting
 		do
 			implementation.set_current_format (format)
 		ensure
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
@@ -288,6 +289,7 @@ feature -- Status setting
 		do
 			implementation.format_paragraph (start_position, end_position, format)
 		ensure
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
@@ -430,6 +432,7 @@ feature -- Status setting
 			implementation.set_tab_width (a_width)
 		ensure
 			tab_width_set: tab_width = a_width
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
@@ -443,6 +446,7 @@ feature -- Status setting
 		do
 			implementation.save_to_named_file (a_filename)
 		ensure
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end

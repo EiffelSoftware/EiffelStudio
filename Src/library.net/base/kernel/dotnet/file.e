@@ -1456,7 +1456,8 @@ feature {FILE} -- Implementation
 			-- Stream reader used to read in `Current' (if possible).
 		do
 			if internal_sread = Void and internal_stream.can_read then
-				create {STREAM_READER} internal_sread.make_from_stream (internal_stream)
+				create {STREAM_READER} internal_sread.make_from_stream_and_encoding (
+					internal_stream, feature {ENCODING}.default)
 			end
 			Result := internal_sread
 		end
@@ -1465,7 +1466,8 @@ feature {FILE} -- Implementation
 			-- Stream writer used to write in `Current' (if possible).
 		do
 			if internal_swrite = Void and internal_stream.can_write then
-				create {STREAM_WRITER} internal_swrite.make_from_stream (internal_stream)
+				create {STREAM_WRITER} internal_swrite.make_from_stream_and_encoding (
+					internal_stream, feature {ENCODING}.default)
 			end
 			Result := internal_swrite
 		end

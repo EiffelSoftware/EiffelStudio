@@ -1,0 +1,51 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<html>
+
+<head>
+<TITLE>External commands editor dialog</TITLE>
+<META NAME="MS-HKWD" CONTENT="external commands">
+<LINK REL=StyleSheet HREF="../../../../../../default.css">
+</head>
+
+<body>
+<h1>External commands editor</h1>
+<p>
+From EiffelStudio, you can define up to 10 external commands. Those commands 
+will have their output redirected in the output pane of the context tool. You 
+can execute them through the Tools menu. A typical usage is to use those 
+external commands to integrate with your source control management solution 
+(e.g. CVS, Visual Source Safe,...)</p>
+<p>
+To define your own command, select &quot;External commands...&quot; in the Tools menu. 
+Then the following dialog will appear:</p>
+<p align="center">
+<img border="0" src="../../../../../../images/eiffelstudio/dialogs_and_wizards/external_commands_dialog.png" width="300" height="224"></p>
+<p>With this dialog you can:</p>
+<ul>
+  <li>add new commands</li>
+  <li>edit existing commands</li>
+  <li>delete existing commands</li>
+</ul>
+<p>To add your first command, simply click on the &quot;Add...&quot; button and the 
+following command editor will appear:</p>
+<p align="center">
+<img border="0" src="../../../../../../images/eiffelstudio/dialogs_and_wizards/external_commands_dialog_editor.png" width="255" height="223"></p>
+<p>In this dialog you can give a name to the command, this name will be 
+displayed in the Tools menu. The index is the position among the external 
+commands of the command in the Tools menu. The command line is the command you 
+want to execute. In order to execute correctly, the application you will execute 
+needs to be in your PATH environment variable or if it is not you must provide 
+an absolute path to the external command.</p>
+<p>In addition to the external command name, you can pass as many options as you 
+want plus the following three that will be translated before calling the 
+external command:</p>
+<ul>
+  <li>$class_name: this will be replaced by the name in lower case of the 
+  targeted class in editor</li>
+  <li>$file_name: this will be replaced by the path to the targeted class in 
+  editor</li>
+  <li>$directory_name: this will be replaced by the directory location of the 
+  targeted class in editor</li>
+</ul>
+</body>
+</html>

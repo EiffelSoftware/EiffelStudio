@@ -1,7 +1,7 @@
 indexing
 
 	description: 
-		"Like types that have not been evaluated (has not gone pass Degree 4).";
+		"Like types that have not been evaluated (has not gone past Degree 4).";
 	date: "$Date$";
 	revision: "$Revision $"
 

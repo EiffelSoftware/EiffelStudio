@@ -187,6 +187,17 @@ feature -- Status setting
 		do
 			cwin_send_message (item, Em_limittext, limit, 0)
 		end
+	
+	get_text_limit: INTEGER is
+			-- Get the maximum length of text that the user
+			-- can enter into the edit control.
+		require
+			exisits: exists
+		do
+			Result := cwin_send_message_result (item, Em_getlimittext, 0, 0)
+		ensure
+			positive_result: Result >= 0
+		end
 
 	set_selection (start_position, end_position: INTEGER) is
 			-- Set the selection between `start_position'

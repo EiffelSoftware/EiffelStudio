@@ -681,15 +681,15 @@ case 17:
 break;
 case 18:
 #line 138 "lace_y.y"
-{xxval.node = create_node3 (CLUSTER_SD,xxvsp[-3].node,xxvsp[0].node,NULL,xxvsp[-2].node);}
+{xxval.node = create_node4 (CLUSTER_SD,xxvsp[-3].node,xxvsp[0].node,NULL,xxvsp[-2].node);}
 break;
 case 19:
 #line 140 "lace_y.y"
-{xxval.node = create_node3 (CLUSTER_SD,xxvsp[-4].node,xxvsp[-1].node,NULL,xxvsp[-3].node);}
+{xxval.node = create_node4 (CLUSTER_SD,xxvsp[-4].node,xxvsp[-1].node,NULL,xxvsp[-3].node);}
 break;
 case 20:
 #line 142 "lace_y.y"
-{xxval.node = create_node3 (CLUSTER_SD,xxvsp[-5].node,xxvsp[-2].node,xxvsp[-1].node,xxvsp[-4].node);}
+{xxval.node = create_node4 (CLUSTER_SD,xxvsp[-5].node,xxvsp[-2].node,xxvsp[-1].node,xxvsp[-4].node);}
 break;
 case 21:
 #line 146 "lace_y.y"

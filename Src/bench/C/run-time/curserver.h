@@ -39,6 +39,7 @@ EIF_INTEGER _concur_alt_para_num=0;
 
 /* from SERVER */
 char _concur_hostname[constant_max_host_name_len+1];
+EIF_INTEGER _concur_hostaddr;
 EIF_INTEGER _concur_pid=0;
 EIF_INTEGER _concur_sock=-1;
 
@@ -149,13 +150,10 @@ Timeval  _concur_begin_tms;
 
 char _concur_error_msg[constant_errno_text_len+1];
 
-char **_concur_ptr_to_root_obj=NULL;
 char _concur_root_of_the_application=1;
 
 char _concur_is_creating_sep_child = 0;
-#ifdef WORKBENCH
 char _concur_invariant_checked = 1;
-#endif
 
 CONCUR_RESC_DECLARE;
 int _concur_sys_mask = constant_invalid_signal_mask;
@@ -196,7 +194,6 @@ extern EIF_POINTER get_c_format_of_eif_string();
 extern void make_server();
 
 /* utilities for client */
-extern EIF_BOOLEAN on_same_processor();
 extern EIF_BOOLEAN on_local_processor();
 extern CONNECTION  *setup_connection();
 extern EIF_OBJ  create_child();
@@ -249,8 +246,6 @@ extern CHILD *take_head_from_child_list();
 extern void wait_scoop_daemon();
 extern void default_rescue();
 extern void print_run_time_error_message();
-extern void process_request_from_parent();
-extern void process_request_from_child();
 extern void release_child_list();
 extern void release_system_lists_in_rescue();
 extern void sig_def_resc();
@@ -274,7 +269,7 @@ extern CLIENT *take_head_from_blocked_client_list();
 extern EIF_INTEGER c_get_oid_from_addr();
 extern EIF_INTEGER get_oid_from_address();
 extern void change_ref_table_and_exported_obj_list();
-extern EIF_INTEGER get_proxy_oid_of_inported_object();
+extern EIF_INTEGER get_proxy_oid_of_imported_object();
 extern void insert_into_imported_object_table();
 extern void c_clear_proxy();
 extern void cleanup_proxy();
@@ -308,6 +303,8 @@ extern EIF_INTEGER longtoa();
 extern EIF_INTEGER rtoa();
 extern EIF_INTEGER dtoa();
 extern void c_get_host_name();
+extern char * c_get_name_from_addr();
+extern EIF_INTEGER c_get_addr_from_name();
 extern char *c_get_current_directory();
 extern int c_get_pid();
 extern void set_block();

@@ -97,9 +97,6 @@ char *config_file;
 #endif
 #endif
 
-	if (_concur_parent) {
-		set_mask(_concur_parent->sock);
-	}
 	_concur_sock = c_concur_make_server(_concur_pid);
 	set_mask(_concur_sock);
 	for(; _concur_sock < 0; ) {
@@ -125,47 +122,26 @@ char *config_file;
 /*                                                                       */
 /*-----------------------------------------------------------------------*/
 
-EIF_BOOLEAN on_same_processor(s1, s2)
+EIF_BOOLEAN NOUSEon_same_processor(s1, s2)
 EIF_OBJ s1;
 EIF_OBJ s2;
 {
 /* is the two separate objects on the same processor? */
-	EIF_INTEGER so_id;
-	EIF_POINTER str1, str2;
-	EIF_INTEGER pid1, pid2;
 	
-	so_id = eif_type_id("SEP_OBJ");
-	str1 =(eif_strtoc)(eif_field((s1), "hostname", EIF_REFERENCE));
-	str2 =(eif_strtoc)(eif_field((s2), "hostname", EIF_REFERENCE));
-	pid1 =eif_field((s1), "pid", EIF_INTEGER);
-	pid2 =eif_field((s2), "pid", EIF_INTEGER);
-
-	return !memcmp(str1, str2, strlen(str1)) && pid1 == pid2;
+	return hostaddr_of_sep_obj(s1) == hostaddr_of_sep_obj(s2)  && pid_of_sep_obj(s1) == pid_of_sep_obj (s2);
+ 
 }
 
 EIF_BOOLEAN on_local_processor(s1)
 EIF_OBJ s1;
 {
 /* is the separate object on the local processor? */
-	EIF_INTEGER so_id;
-	EIF_POINTER str1;
-	EIF_INTEGER pid1;
 	
 	if (!s1) {
 		sprintf(crash_info, "    Try to apply feature/attribute to Void separate object.");
 		c_raise_concur_exception(exception_void_separate_object);
 	}
-	so_id = eif_type_id("SEP_OBJ");
-	str1 =(eif_strtoc)(eif_field((s1), "hostname", EIF_REFERENCE));
-	pid1 =eif_field((s1), "pid", EIF_INTEGER);
-#ifdef SEP_OBJ
-	if (so_id <= 0 || !str1 || pid1<=0) {
-		sprintf(crash_info, "    %d How can type_id(SEP_OBJ) = %d and hostname=%s, pid=%d!", _concur_pid, so_id, str1==NULL?"NULL":str1, pid1);
-		c_raise_concur_exception(exception_sep_obj_not_visible);
-	}
-#endif
-
-	return !memcmp(str1, _concur_hostname, strlen(str1)) && pid1 == _concur_pid;
+	return hostaddr_of_sep_obj(s1) == _concur_hostaddr && pid_of_sep_obj(s1) == _concur_pid;
 }
 
 
@@ -187,11 +163,11 @@ EIF_INTEGER port;
 	else {
 		ret = (CONNECTION *)malloc(sizeof(CONNECTION));
 		valid_memory(ret);
-		strcpy(ret->hostname, hostn);
+		ret->hostaddr = c_get_addr_from_name(hostn);
 		ret->pid = port;
 		ret->count = 0;
 		ret->reservation = -1;
-		ret->sock = c_concur_make_client(port, hostn);
+		ret->sock = c_concur_make_client(port, ret->hostaddr);
 		return ret;
 	}
 }
@@ -229,7 +205,7 @@ EIF_OBJ  create_child() {
 }
 
 EIF_OBJ  create_sep_obj(hostn, port, o_id)
-char *hostn;
+EIF_INTEGER hostn;
 EIF_INTEGER port;
 EIF_INTEGER o_id;
 {
@@ -245,7 +221,6 @@ EIF_INTEGER o_id;
  * located on the local processor or not.
 */
 	EIF_REFERENCE ret;
-	char * host_obj;
 	EIF_INTEGER sep_obj_id;
 	EIF_PROC c_make_without_connection, c_make, c_set_host_port, c_set_sock, c_set_proxy_id;
 
@@ -254,7 +229,6 @@ EIF_INTEGER o_id;
 	EIF_INTEGER para_num_bak;
 	PARAMETER *paras_bak;
 	EIF_INTEGER paras_size_bak;
-	EIF_REFERENCE my_str;
 
 	EIF_INTEGER proxy_id;
 
@@ -264,11 +238,11 @@ EIF_INTEGER o_id;
 	if (port < 0 || o_id < 0) 
 		return NULL;
 	else {
-		proxy_id = get_proxy_oid_of_inported_object(hostn, port, o_id);
+		proxy_id = get_proxy_oid_of_imported_object(hostn, port, o_id);
 		if (proxy_id) {
 		/* The object has been imported before(exist in IMPORTED OBJECT TABLE)*/
 #ifdef nDISP_LIST
-printf("******** The object(%s, %d, %d) has been imported before.!\n", hostn, port, o_id);
+printf("******** The object(%s, %d, %d) has been imported before.!\n", c_get_name_from_addr(hostn), port, o_id);
 /*print_ref_table_and_exported_object();*/
 #endif
 			return eif_id_object(proxy_id); 
@@ -299,12 +273,10 @@ printf("******** The object(%s, %d, %d) has been imported before.!\n", hostn, po
 		c_set_sock = eif_proc("set_sock", sep_obj_id);
 		c_set_proxy_id = eif_proc("set_proxy_id", sep_obj_id);
 		(c_set_proxy_id)(eif_access(ret), proxy_id);
-		host_obj = makestr(hostn, strlen(hostn));
-		my_str = henter(host_obj);	/* protect the string in hector */
-		if (!memcmp(hostn, _concur_hostname, strlen(hostn)) && port == _concur_pid ) {
+		if (hostn == _concur_hostaddr && port == _concur_pid ) {
 		/* the object is actually a local object */
 			(c_make_without_connection)(eif_access(ret), o_id);
-			(c_set_host_port)(eif_access(ret), eif_access(my_str), port);
+			(c_set_host_port)(eif_access(ret), hostn, port);
 			/* initialize the SEP_OBJ proxy. At this time, its sock is negative. */
 			if (exist_in_server_list(hostn, port))  {
 				sock = get_sock_from_server_list(hostn, port);
@@ -315,8 +287,7 @@ printf("******** The object(%s, %d, %d) has been imported before.!\n", hostn, po
 				sock = eif_field(eif_access(ret), "sock", EIF_INTEGER);
 				add_to_server_list(hostn, port, sock);
 			}
-			host_obj = eif_wean(my_str); /* free the string from hector */
-			change_ref_table_and_exported_obj_list(_concur_hostname, _concur_pid, o_id, 1); 
+			change_ref_table_and_exported_obj_list(_concur_hostaddr, _concur_pid, o_id, 1); 
 			/* The local object is inported from the local processor itself,
 			 * so we don't send REGISTER request, we directly  change the 
 			 * REFERENCE TABLE and EXPORTED OBJECT LIST.
@@ -328,12 +299,12 @@ printf("******** The object(%s, %d, %d) has been imported before.!\n", hostn, po
 		/* the object resides on another processor */
 			if (exist_in_server_list(hostn, port)) {
 				(c_make_without_connection)(eif_access(ret), o_id);
-				(c_set_host_port)(eif_access(ret), eif_access(my_str), port);
+				(c_set_host_port)(eif_access(ret), hostn, port);
 				sock = get_sock_from_server_list(hostn, port);
 				(c_set_sock)(eif_access(ret), sock);
 			}
 			else {
-				(c_make)(eif_access(ret), eif_access(my_str), port, o_id);	
+				(c_make)(eif_access(ret), hostn, port, o_id);	
 				sock = eif_field(eif_access(ret), "sock", EIF_INTEGER);
 				add_to_server_list(hostn, port, sock);
 			}
@@ -356,14 +327,9 @@ printf("******** The object(%s, %d, %d) has been imported before.!\n", hostn, po
 			_concur_paras_size = 0L;
 			adjust_parameter_array(3);
 			
-			_concur_paras[0].type = String_type;
-			set_str_val_into_parameter(_concur_paras, _concur_hostname);
-
-			_concur_paras[1].type = Integer_type;
-			_concur_paras[1].uval.int_val = _concur_pid;
-
-			_concur_paras[2].type = Integer_type;
-			_concur_paras[2].uval.int_val = o_id; 
+			CURPI(_concur_hostaddr, 0);
+			CURPI(_concur_pid, 1);
+			CURPI(o_id, 2);
 
 			_concur_command = constant_register;
 			_concur_para_num = 3;
@@ -387,7 +353,6 @@ printf("******** The object(%s, %d, %d) has been imported before.!\n", hostn, po
 			_concur_paras_size = paras_size_bak;
 			_concur_para_num = para_num_bak;
 			
-			host_obj = eif_wean(my_str); /* free the string from hector */ 
 			return eif_wean(ret);
 			/* return direct address and free the object from hector */
 		}
@@ -413,7 +378,7 @@ EIF_OBJ obj;
 		protected_obj = henter(obj);
 */
 		
-		ret = create_sep_obj(get_c_format_of_eif_string(obj, "hostname"), eif_field(obj, "pid", EIF_INTEGER), eif_field(obj, "oid", EIF_INTEGER));
+		ret = create_sep_obj(hostaddr_of_sep_obj(obj), pid_of_sep_obj(obj), oid_of_sep_obj(obj));
 		return ret;
 	}
 }
@@ -428,15 +393,12 @@ EIF_OBJ sep_obj;
  * will only be accessed by the
  * current processor until it's freed by "free_sep_obj".
 */
-	char *hostn;
 	EIF_INTEGER sock;
-	EIF_INTEGER ret;
 	int timeout, timeoutm;
 
 	if ((sep_obj) == NULL || on_local_processor(sep_obj)) {
 		return 0;
 	}
-	hostn = get_c_format_of_eif_string((sep_obj), "hostname");
 	_concur_command = constant_reserve;
 	_concur_para_num = 0;
 	sock = eif_field((sep_obj), "sock", EIF_INTEGER);
@@ -446,7 +408,6 @@ EIF_OBJ sep_obj;
 		return 0;
 	else
 	if (_concur_command == constant_reserve_fail) {	
-		c_concur_select(ret, 1, NULL, NULL, NULL, 0, (_concur_pid % 2) * 10000 + (_concur_pid % 10) * 4000);
 		return 1;
 	}
 	else {
@@ -463,12 +424,10 @@ EIF_OBJ sep_obj;
  * after the function, the separate object is free to be accessed by other
  * separate object.
 */
-	char *hostn;
 	EIF_INTEGER sock;
 
 	if ((sep_obj) == NULL || on_local_processor(sep_obj))
 		return;
-	hostn = get_c_format_of_eif_string((sep_obj), "hostname");
 	_concur_command = constant_end_of_request;
 	_concur_para_num = 0;
 	sock = eif_field((sep_obj), "sock", EIF_INTEGER);
@@ -517,12 +476,6 @@ EIF_INTEGER cmd;
 		return _concur_command_text;
 	case constant_middle_result_of_importation:
 		strcpy(_concur_command_text, " MIDDLE_RESULT_OF_IMPORTATION "); 
-		return _concur_command_text;
-	case constant_release_sep_obj:
-		strcpy(_concur_command_text, " RELEASE_SEP_OBJ "); 
-		return _concur_command_text;
-	case constant_release_processor:
-		strcpy(_concur_command_text, " RELEASE_PROCESSOR "); 
 		return _concur_command_text;
 	case constant_create_sep_obj:
 		strcpy(_concur_command_text, " CREATE_SEP_OBJ "); 
@@ -593,8 +546,6 @@ EIF_INTEGER cmd;
 	case constant_query_result:
 	case constant_ack_for_procedure:
 	case constant_middle_result_of_importation:
-	case constant_release_sep_obj:
-	case constant_release_processor:
 	case constant_create_sep_obj:
 	case constant_creation_feature_parameter:
 	case constant_end_of_request:
@@ -718,15 +669,16 @@ EIF_INTEGER s;
 			memcpy(&tmp_read_mask, &_concur_mask, sizeof(fd_set));
 			memcpy(&tmp_except_mask, &_concur_mask, sizeof(fd_set));
 			c_concur_select(ready_nb, _concur_mask_limit.up+1, &tmp_read_mask, NULL, &tmp_except_mask, -1, 0);
+			if (!_concur_is_creating_sep_child) 
 #ifndef STOP_GC
 #ifdef GC_ON_CPU_TIME
-			if (c_wait_time() >= constant_cpu_period) {
+				if (c_wait_time() >= constant_cpu_period) {
 #else
-			if (c_wait_time() >= constant_absolute_period) {
+				if (c_wait_time() >= constant_absolute_period) {
 #endif
-				plsc();
-				c_reset_timer();
-			}
+					plsc();
+					c_reset_timer();
+				}
 #endif
 		}
 
@@ -741,20 +693,6 @@ EIF_INTEGER s;
 	
 		if (ready_nb) {
 			tmp_count = process_exception(&tmp_except_mask);
-			ready_nb -= tmp_count;
-		}
-		if (ready_nb) {
-			tmp_count = has_msg_from_pc(&tmp_read_mask);
-			if (tmp_count) {
-			/* There is message from the current processor's child or parent */
-			/* the following statements are used to process crash.
-			 * They will causes the execution of the processor terminate.
-			 * so whenever the execution comes here, the following statements
-			 * beyond the "if" statement will not be executed any more.
-			*/
-				process_request_from_parent();
-				process_request_from_child(1);
-			}
 			ready_nb -= tmp_count;
 		}
 			
@@ -784,7 +722,7 @@ EIF_INTEGER s;
 	EIF_BOOLEAN has_sep_obj=0;
 	EIF_INTEGER idx;
 	EIF_INTEGER para_item_length;
-	char tmp_hname[constant_max_host_name_len+1];
+	EIF_INTEGER tmp_haddr;
 	EIF_INTEGER tmp_pid, tmp_oid, tmp_type;
 
 	char *get_buf;
@@ -804,6 +742,12 @@ EIF_INTEGER s;
 		printf(GET_DATA_MSG1, _concur_pid, s, _concur_paras[idx].type, para_item_length);
 #endif
 		switch (_concur_paras[idx].type) {
+			case Pointer_type:
+				memcpy(&(_concur_paras[idx].uval.pointer_val), c_concur_read_stream(s, constant_sizeofpointer), constant_sizeofpointer);
+#ifdef DISP_MSG
+				printf("  VAL: 0x%x", _concur_paras[idx].uval.pointer_val);
+#endif
+				break;
 			case Integer_type:
 				_concur_paras[idx].uval.int_val = c_concur_read_int(s);
 #ifdef DISP_MSG
@@ -857,17 +801,20 @@ EIF_INTEGER s;
 				}
 				break;
 			case Separate_reference:
-				/* Read hostname */
-				strcpy(tmp_hname, c_concur_read_stream(s, para_item_length));
-				/* Read pid */
+				get_buf = c_concur_read_stream(s, 5*constant_sizeofint);
+				tmp_haddr = ntohl(*(EIF_INTEGER *)get_buf);
+				tmp_pid = ntohl(*(EIF_INTEGER *)(get_buf+2*constant_sizeofint));
+				tmp_oid = ntohl(*(EIF_INTEGER *)(get_buf+4*constant_sizeofint));
+/*
+				tmp_haddr = c_concur_read_int(s);
+
 				tmp_pid = c_concur_read_int(s);
 				tmp_pid = c_concur_read_int(s);
-				/* Read data type */
-/*				tmp_type = c_concur_read_int(s); */
-				/* Read OID */
+
 				tmp_oid = c_concur_read_int(s);
 				tmp_oid = c_concur_read_int(s);
-				_concur_paras[idx].uval.s_obj = henter(create_sep_obj(tmp_hname,tmp_pid, tmp_oid));
+*/
+				_concur_paras[idx].uval.s_obj = henter(create_sep_obj(tmp_haddr,tmp_pid, tmp_oid));
 				/* protect the object in hector */	
 				if (eif_access(_concur_paras[idx].uval.s_obj) != NULL)
 					has_sep_obj = 1;
@@ -915,7 +862,7 @@ EIF_INTEGER s;
 	*(EIF_INTEGER *)(send_buf+3*constant_sizeofint) = htonl(constant_sizeofint);
 	*(EIF_INTEGER *)(send_buf+4*constant_sizeofint) = htonl(root_oid);
 	c_concur_put_stream(s, send_buf, 5*constant_sizeofint);
-	change_ref_table_and_exported_obj_list(_concur_paras[0].str_val, _concur_paras[1].uval.int_val, root_oid, 1);
+	change_ref_table_and_exported_obj_list(CURGI(0), CURGI(1), root_oid, 1);
 #ifdef tSTOP_GC
 	gc_run();
 #endif
@@ -992,6 +939,7 @@ EIF_INTEGER s;
 	EIF_INTEGER send_data_len=0;
 	EIF_INTEGER tmp_len;
 
+	c_concur_set_blocking(s);
 	gc_stop();
 #ifdef DISP_MSG
 	printf("\n%d/%d Send Command %s ", _concur_pid, s, command_text(_concur_command));
@@ -1036,6 +984,15 @@ EIF_INTEGER s;
 		printf("%d/%d Para type: %d, ", _concur_pid, s, _concur_paras[tmp].type);
 #endif
 		switch (_concur_paras[tmp].type) {
+			case Pointer_type:
+				/* to send the EIF_POINTER parameter's data length */
+				fill_buf_with_int(s, send_buf, send_data_len, constant_sizeofpointer);
+				/* to send the EIF_POINTER parameter's value */
+				fill_buf(s, send_buf, send_data_len, &(_concur_paras[tmp].uval.pointer_val), constant_sizeofpointer);
+#ifdef DISP_MSG
+		printf(" len: %d, VAL: 0x%x\n", constant_sizeofpointer, _concur_paras[tmp].uval.pointer_val);
+#endif
+				break;
 			case Integer_type:
 				/* to send the EIF_INTEGER parameter's data length */
 				fill_buf_with_int(s, send_buf, send_data_len, constant_sizeofint);
@@ -1097,10 +1054,10 @@ EIF_INTEGER s;
 			case Separate_reference:
 				if (eif_access(_concur_paras[tmp].uval.s_obj) != NULL) {
 					has_sep_obj = 1;
-					tmp_str = get_c_format_of_eif_string((EIF_POINTER)eif_access(_concur_paras[tmp].uval.s_obj), "hostname");
-					/* to send the separate object's HOST NAME: length and value */
-					fill_buf_with_int(s, send_buf, send_data_len, strlen(tmp_str));
-					fill_buf(s, send_buf, send_data_len, tmp_str, (int)strlen(tmp_str));
+					/* to send the separate object's HOST ADDRESS: length and value */
+					fill_buf_with_int(s, send_buf, send_data_len, constant_sizeofint);
+					tmp_len = eif_field(eif_access(_concur_paras[tmp].uval.s_obj), "hostaddr", EIF_INTEGER);
+					fill_buf_with_int(s, send_buf, send_data_len, tmp_len);
 					/* to send the separate object's PID: length and value */
 					fill_buf_with_int(s, send_buf, send_data_len, constant_sizeofint);
 					tmp_len = eif_field(eif_access(_concur_paras[tmp].uval.s_obj), "pid", EIF_INTEGER);
@@ -1176,8 +1133,7 @@ EIF_INTEGER s;
 /*                                                                       */
 /*-----------------------------------------------------------------------*/
 
-void server_execute(case_process)
-EIF_PROC case_process;
+void server_execute()
 {
 /* perform server function for the local processor.
  * Whenever it get a request from a client, it servers it.
@@ -1205,10 +1161,10 @@ EIF_PROC case_process;
 	*/
 
 
+
 #ifndef STOP_GC
 			plsc();
 #endif
-
 
 	if (_concur_terminatable && _concur_cli_list_count == 0)
 		stop = 1;
@@ -1247,21 +1203,7 @@ EIF_PROC case_process;
 			tmp_count = process_exception(&tmp_except_mask);
 			ready_nb -= tmp_count;
 		}
-		if (ready_nb) {
-			tmp_count = has_msg_from_pc(&tmp_read_mask);
-			if (tmp_count) {
-			/* There is message from the current processor's child or parent */
-			/* the following statements are used to process crash.
-			 * They will causes the execution of the processor terminate.
-			 * so whenever the execution comes here, the following statements
-			 * beyond the "if" statement will not be executed any more.
-			*/
-				process_request_from_parent();
-				process_request_from_child(1);
-			}
-			ready_nb -= tmp_count;
-		}
-                                                      
+
 		if (ready_nb) {
 			if (_concur_current_client) {
 				if (FD_ISSET(_concur_current_client->sock, &tmp_read_mask)) {
@@ -1273,22 +1215,9 @@ EIF_PROC case_process;
 				 * requests.
 				*/
 					directly_get_cmd_data(_concur_current_client->sock);
-#ifdef WORKBENCH
-					if (_concur_command>=0 && !_concur_invariant_checked) {
-					/* the condition means that the current request is a 
-					 * application request for the initialization of the 
-					 * separate object. So after the initialization, 
-					 * we should check the object's 
-					 * invariants.
+					/* The following statement will check the Invarient if applicable.
 					*/
-						(case_process)();
-						RTCI(root_obj);
-					}
-					else
-						(case_process)();
-#else
-					(case_process)();
-#endif
+					separate_call();
 					/* If this is the last request of the application
 					 * operation, we should try to get another client as
 					 * the current and server it.
@@ -1312,7 +1241,7 @@ EIF_PROC case_process;
 					            sprintf(crash_info, CURIMPERR2, "RESERVE_SEP_OBJ", command_text(_concur_command), "server_exec1");
 						        c_raise_concur_exception(exception_unexpected_request);
 							}
-							(case_process)();					
+							separate_call();
 						}
 						else
 							if (ready_nb)
@@ -1350,7 +1279,7 @@ EIF_PROC case_process;
 					    sprintf(crash_info, CURIMPERR2, "RESERVE_SEP_OBJ", command_text(_concur_command), "server_exec2");
 				        c_raise_concur_exception(exception_unexpected_request);
 			        }
-					(case_process)();					
+					separate_call();
 				}
 			}
 		}
@@ -1364,7 +1293,7 @@ EIF_PROC case_process;
 	*/
 
 /*
-printf("\n\n\n%d(%s) We have no client to server again, so to release %d servers\n", _concur_pid, _concur_class_name_of_root_obj, _concur_ser_list_count);
+printf("\n\n\n * %d(%s) We have no client to server again, so to release %d servers\n", _concur_pid, _concur_class_name_of_root_obj, _concur_ser_list_count);
 */
 
 #ifndef STOP_GC
@@ -1377,23 +1306,39 @@ printf("\n\n\n%d(%s) We have no client to server again, so to release %d servers
 	/* the following statements are used to process crash. 
 	 * so that we can exit gracefully when crash happens.
 	*/
+/*
+	{
+		int tyc;
+		printf(" * %d(%s)LOCAL SERVER(%d) mask=", _concur_pid, _concur_class_name_of_root_obj, _concur_sock);
+		for (tyc=_concur_mask_limit.low; tyc <= _concur_mask_limit.up+1; tyc++) 
+		if (FD_ISSET(tyc, &_concur_mask))
+			printf("  %d", tyc);
+		printf("\n"); 
+	}
+*/
 	for(; _concur_child_list_count>0; ) {
 		memcpy(&tmp_read_mask, &_concur_mask, sizeof(fd_set));
 		memcpy(&tmp_except_mask, &_concur_mask, sizeof(fd_set));
 		c_concur_select(ready_nb, _concur_mask_limit.up+1, &tmp_read_mask, NULL, &tmp_except_mask, -1, 0);
-		process_request_from_parent();
-		process_request_from_child(1);
+		if (FD_ISSET(_concur_sock, &tmp_read_mask))
+			process_connection();
 	}
 	if (_concur_parent != NULL) {
+		if (_concur_parent->sock == constant_alive_socket) 
+			_concur_parent->sock =  c_concur_make_client(_concur_parent->pid, _concur_parent->hostaddr);
 		_concur_command = constant_exit_ok;
-		_concur_para_num = 0;
+		_concur_para_num = 2;
+		adjust_parameter_array(2);
+		CURPI(_concur_hostaddr, 0);
+		CURPI(_concur_pid, 1);
 		send_command(_concur_parent->sock);
 		c_concur_close_socket(_concur_parent->sock);
-		_concur_parent->sock = -1;
+		free(_concur_parent);
 	}
 
 	/* Close current processor's server socket. */
 	c_concur_close_socket(_concur_sock);
+	_concur_sock = -1;
 	/* free the memory resource used by the parameter array. */
 	free_parameter_array(_concur_paras, _concur_paras_size);
 	
@@ -1416,16 +1361,15 @@ EIF_INTEGER port;
 */
 
     EIF_REFERENCE ret;
-    char * host_obj;
     EIF_INTEGER sep_obj_id;
     EIF_PROC c_make_without_connection, c_make, c_set_host_port, c_set_sock, c_set_proxy_id, c_set_oid;
+	EIF_INTEGER hostaddr;
 
 
     EIF_INTEGER command_bak;
     EIF_INTEGER para_num_bak;
     PARAMETER *paras_bak;
     EIF_INTEGER paras_size_bak;
-    EIF_REFERENCE my_str;
 
     EIF_INTEGER proxy_id;
 
@@ -1435,7 +1379,8 @@ EIF_INTEGER port;
     if (port < 0)
         return NULL;
     else {
-        proxy_id = get_proxy_oid_of_inported_object(hostn, port, constant_root_oid);
+		hostaddr = c_get_addr_from_name(hostn);
+        proxy_id = get_proxy_oid_of_imported_object(hostaddr, port, constant_root_oid);
         if (proxy_id) {
 #ifdef DISP_LIST
 printf("The REMOTE SERVER(%s, %d)'s root object has been imported before.!\n", hostn, port);
@@ -1457,21 +1402,19 @@ print_ref_table_and_exported_object();
         c_set_oid = eif_proc("set_oid", sep_obj_id);
 
         (c_set_proxy_id)(eif_access(ret), proxy_id);
-        host_obj = makestr(hostn, strlen(hostn));
-        my_str = henter(host_obj);  /* protect the string in hector */
 
 		/* set up the network connection to the remote server */
-        if (exist_in_server_list(hostn, port)) {
+        if (exist_in_server_list(hostaddr, port)) {
 		/* if there is a connection to the remote server, use it */
             (c_make_without_connection)(eif_access(ret), constant_root_oid);
-            (c_set_host_port)(eif_access(ret), eif_access(my_str), port);
-            sock = get_sock_from_server_list(hostn, port);
+            (c_set_host_port)(eif_access(ret), hostaddr, port);
+            sock = get_sock_from_server_list(hostaddr, port);
             (c_set_sock)(eif_access(ret), sock);
         }
         else {
-            (c_make)(eif_access(ret), eif_access(my_str), port, constant_root_oid);
+            (c_make)(eif_access(ret), hostaddr, port, constant_root_oid);
             sock = eif_field(eif_access(ret), "sock", EIF_INTEGER);
-            add_to_server_list(hostn, port, sock);
+            add_to_server_list(hostaddr, port, sock);
         }
 
 		/* now, get the real OID for the root object */
@@ -1484,14 +1427,9 @@ print_ref_table_and_exported_object();
         _concur_paras_size = 0L;
         adjust_parameter_array(3);
 
-        _concur_paras[0].type = String_type;
-        set_str_val_into_parameter(_concur_paras, _concur_hostname);
-
-        _concur_paras[1].type = Integer_type;
-        _concur_paras[1].uval.int_val = _concur_pid;
-
-        _concur_paras[2].type = Integer_type;
-        _concur_paras[2].uval.int_val = constant_root_oid;
+		CURPI(_concur_hostaddr, 0);
+		CURPI(_concur_pid, 1);
+		CURPI(constant_root_oid, 2);
 
         _concur_command = constant_register;
         _concur_para_num = 3;
@@ -1510,11 +1448,11 @@ print_ref_table_and_exported_object();
 		*/
 		real_root_oid = _concur_paras[0].uval.int_val;
 		/* we use negative value for the root OID of remote server so 
-		 * that function get_proxy_oid_of_inported_object() can
+		 * that function get_proxy_oid_of_imported_object() can
 		 * distinguish it.
 		*/ 
         (c_set_oid)(eif_access(ret), -real_root_oid);
-		insert_into_imported_object_table(hostn, port, -real_root_oid, proxy_id);		
+		insert_into_imported_object_table(hostaddr, port, -real_root_oid, proxy_id);		
 
         free_parameter_array(_concur_paras, _concur_paras_size);
         _concur_command = command_bak;
@@ -1522,7 +1460,6 @@ print_ref_table_and_exported_object();
         _concur_paras_size = paras_size_bak;
         _concur_para_num = para_num_bak;
 
-        host_obj = eif_wean(my_str); /* free the string from hector */
         return eif_wean(ret);
         /* return direct address and free the object from hector */
     }
@@ -1585,7 +1522,7 @@ EIF_BOOLEAN end_request;
 
 	(_concur_current_client->count)++;
 	send_register_ack(_concur_current_client->sock);
-	change_ref_table_and_exported_obj_list(_concur_current_client->hostname, _concur_current_client->pid, id, 1);
+	change_ref_table_and_exported_obj_list(_concur_current_client->hostaddr, _concur_current_client->pid, id, 1);
 	if (end_request) {
 		add_to_client_queue(_concur_current_client);
 		_concur_current_client = NULL;
@@ -1594,12 +1531,9 @@ EIF_BOOLEAN end_request;
 	return;
 }
 
-void unregister_from_local_processor(EIF_REFERENCE hostn, EIF_INTEGER pid, EIF_INTEGER oid) {
-	char host_in_c[constant_max_host_name_len+1];
+void unregister_from_local_processor(EIF_INTEGER hostaddr, EIF_INTEGER pid, EIF_INTEGER oid) {
 
-	strcpy(host_in_c, (eif_strtoc)(eif_access(hostn)));
-	
-	change_ref_table_and_exported_obj_list(host_in_c, pid, oid, -1);
+	change_ref_table_and_exported_obj_list(hostaddr, pid, oid, -1);
 /*
 printf(" Unregister_from_local_processor (host:%s, pid:%d, oid:%d)\n", host_in_c, pid,oid);
 */
@@ -1612,7 +1546,7 @@ EIF_INTEGER flag;
 EIF_INTEGER id;
 {
 	if (flag == constant_release_one) {
-		change_ref_table_and_exported_obj_list(_concur_current_client->hostname, _concur_current_client->pid, id, -1);
+		change_ref_table_and_exported_obj_list(_concur_current_client->hostaddr, _concur_current_client->pid, id, -1);
 		(_concur_current_client->count)--;
 		if (_concur_current_client->count == 0) {
 			if (!_concur_current_client_reserved) {
@@ -1635,7 +1569,7 @@ EIF_INTEGER id;
 			}
 	}
 	else {
-		change_ref_table_and_exported_obj_list(_concur_current_client->hostname, _concur_current_client->pid, constant_not_defined, constant_release_all);
+		change_ref_table_and_exported_obj_list(_concur_current_client->hostaddr, _concur_current_client->pid, constant_not_defined, constant_release_all);
 		unset_mask(_concur_current_client->sock);
 		c_concur_close_socket(_concur_current_client->sock);
 		_concur_current_client->sock = -2;
@@ -1666,15 +1600,13 @@ EIF_INTEGER parent_pid;
 	_concur_para_num = 3;
 	adjust_parameter_array(3);
 
-	_concur_paras[0].type = String_type;
-	set_str_val_into_parameter(_concur_paras, _concur_hostname);
+	CURPI(_concur_hostaddr, 0);
+	CURPI(_concur_pid, 1);
+	CURPI(get_oid_from_address(root_obj), 2);
 
-	_concur_paras[1].type = Integer_type;
-	_concur_paras[1].uval.int_val = _concur_pid;
-
-	_concur_paras[2].type = Integer_type;
-	_concur_paras[2].uval.int_val = get_oid_from_address(root_obj);
 	send_command(_concur_parent->sock);
+	c_close_socket(_concur_parent->sock);
+	_concur_parent->sock = constant_alive_socket;
 
 	return;
 }
@@ -1689,8 +1621,6 @@ EIF_OBJ direct_sep;
 	CLIENT *recv=NULL, *child=NULL;
 	EIF_INTEGER sep_obj_id;
 	EIF_PROC c_set_oid, c_set_host_port, c_set_sock, c_set_proxy_id;
- 	EIF_INTEGER tmp_sock;
-	EIF_POINTER my_eif_str;
 	EIF_REFERENCE sep;
 	EIF_INTEGER proxy_id;
 
@@ -1698,6 +1628,7 @@ EIF_OBJ direct_sep;
 	EIF_INTEGER tmp_para_num, tmp_command;
 
 	int rc;
+	EIF_INTEGER new_sock;
 
 
 	sep = henter(direct_sep);
@@ -1707,7 +1638,7 @@ EIF_OBJ direct_sep;
 	c_set_oid = eif_proc("set_oid", sep_obj_id);	
 	c_set_proxy_id = eif_proc("set_proxy_id", sep_obj_id);
 
-/*	c_concur_set_blocking(_concur_sock);*/
+	c_concur_set_non_blocking(_concur_sock);
 	for(_concur_command=constant_not_defined; _concur_command!=constant_sep_child_info; ) {
 		_concur_command = constant_not_defined;
 		if (child) {
@@ -1750,18 +1681,10 @@ EIF_OBJ direct_sep;
 		 * fail to get SEP_CHILD_INFO from the child, process clients' 
 		 * requests if any. 
 		*/
-			process_request_from_parent();
-			process_request_from_child(1);
-			rc = c_concur_accept(_concur_sock);
-			if (rc>0) {
-				recv = (CLIENT *)(malloc(sizeof(CLIENT)));
-				valid_memory(recv);
-				recv->type = constant_normal_client;
-				recv->count = 1;
-				recv->reservation = 0;
-				recv->sock = rc;
-				c_concur_set_blocking(recv->sock);
-				get_cmd_data(recv->sock);
+			new_sock = c_concur_accept(_concur_sock);
+			if (new_sock>0) {
+				c_concur_set_blocking(new_sock);
+				directly_get_cmd_data(new_sock);
 			}
 		}
 
@@ -1769,14 +1692,76 @@ EIF_OBJ direct_sep;
 		switch (_concur_command) {
 			case constant_not_defined:
 				break;
+			case constant_stop_execution:
+				/* come from parent, and ask the execution on the local processor to
+				 * terminate.
+				 */
+				c_close_socket(new_sock);
+				_concur_parent->sock  = -5;
+				if (!_concur_exception_has_happened) {
+					add_nl;
+					sprintf(crash_info, "    The parent processor asked the local processor to terminate.");
+					default_rescue();
+				}
+				break;
+			case constant_report_error:
+				/* come from child */
+				{   CHILD *cur_child, *bak_child;
+					c_close_socket(new_sock);
+					for (bak_child=NULL, cur_child=_concur_child_list; cur_child && (cur_child->hostaddr!=CURGI(0) || cur_child->pid!=CURGI(1)); bak_child=cur_child , cur_child=cur_child->next);
+					if (!cur_child) {
+						add_nl;
+						sprintf(crash_info, "    Got REPORT_ERROR message from <%s, %d> but there is no entry in child list.", c_get_name_from_addr(CURGI(_concur_para_num-2)), CURGI(_concur_para_num-1));
+						c_raise_concur_exception(exception_implementation_error);
+					}
+					if (!bak_child)
+						_concur_child_list = cur_child->next;
+					else
+						bak_child->next = cur_child->next;
+					if (!(cur_child->next))
+						_concur_end_of_child_list = bak_child;
+					free(cur_child);
+					(_concur_child_list_count)--;
+	
+					add_nl;
+					strcat(_concur_crash_info, CURAPPERR11);
+					default_rescue();
+				}
+				break;
+			case constant_exit_ok:
+				/* come from child */
+				{   CHILD *cur_child, *bak_child;
+					c_close_socket(new_sock);
+					for (bak_child=NULL, cur_child=_concur_child_list; cur_child && (cur_child->hostaddr!=CURGI(0) || cur_child->pid!=CURGI(1)); bak_child=cur_child , cur_child=cur_child->next);
+					if (!cur_child) {
+						add_nl;
+						sprintf(crash_info, "    Got EXIT_OK message from <%s, %d> but there is no entry in child list.", c_get_name_from_addr(CURGI(0)), CURGI(1));
+						c_raise_concur_exception(exception_implementation_error);
+					}
+					if (!bak_child)
+						_concur_child_list = cur_child->next;
+					else
+						bak_child->next = cur_child->next;
+					if (!(cur_child->next))
+						_concur_end_of_child_list = bak_child;
+					free(cur_child);
+					(_concur_child_list_count)--;
+				}
+				break;
 			case constant_register:
 			case constant_register_first_from_parent:
 #ifdef DISP_LIST
 		            printf("%d Before %s(on %s from <%s, %d, %d>):\n", _concur_pid,command_text(_concur_command), _concur_class_name_of_root_obj, CURGS(0), CURGI(1), CURGI(2));
 		            print_ref_table_and_exported_object();
 #endif
-				strcpy(recv->hostname, _concur_paras[0].str_val);
-				recv->pid = _concur_paras[1].uval.int_val;
+				recv = (CLIENT *)(malloc(sizeof(CLIENT)));
+				valid_memory(recv);
+				recv->type = constant_normal_client;
+				recv->count = 1;
+				recv->reservation = 0;
+				recv->sock = new_sock;
+				recv->hostaddr = CURGI(0);
+				recv->pid = CURGI(1);
 				(recv->req_buf).command = constant_not_defined;
 				add_to_client_queue(recv);
 				if (_concur_paras[2].uval.int_val==constant_root_oid) {
@@ -1790,7 +1775,7 @@ EIF_OBJ direct_sep;
 					_concur_terminatable = 1;
 					if (_concur_command == constant_register)
 						send_register_ack(recv->sock);
-					change_ref_table_and_exported_obj_list(_concur_paras[0].str_val, _concur_paras[1].uval.int_val, _concur_paras[2].uval.int_val, 1);
+					change_ref_table_and_exported_obj_list(CURGI(0), CURGI(1), CURGI(2), 1);
 				}
 #ifdef DISP_LIST
 		        printf("%d After %s(on %s)\n", _concur_pid, command_text(_concur_command), _concur_class_name_of_root_obj);
@@ -1799,8 +1784,14 @@ EIF_OBJ direct_sep;
 				recv = NULL;
 				break;
 			case constant_sep_child:
-				child = recv;
-				recv = NULL;
+				child = (CHILD *)(malloc(sizeof(CHILD)));
+				valid_memory(child);
+				child->type = constant_normal_client;
+				child->count = 1;
+				child->reservation = 0;
+				child->sock = new_sock;
+				child->hostaddr = CURGI(0);
+				child->pid = CURGI(1);
 #ifdef COMBINE_CREATION_WITH_INIT
 				/* keep the PARAMETER ARRAY's environment */
 				tmp_command = _concur_command;
@@ -1823,17 +1814,17 @@ EIF_OBJ direct_sep;
 #endif
 				break;
 			case constant_sep_child_info:
-				c_concur_set_blocking(child->sock);
+				c_close_socket(child->sock);
+				child->sock = constant_alive_socket;
 				add_to_child_list(child);
-				strcpy(child->hostname, _concur_paras[0].str_val);
-				child->pid = _concur_paras[1].uval.int_val;
+				child->hostaddr = CURGI(0);
+				child->pid = CURGI(1);
 				
-				my_eif_str = makestr(_concur_paras[0].str_val, strlen(_concur_paras[0].str_val));
-				(c_set_host_port)(eif_access(sep), my_eif_str, _concur_paras[1].uval.int_val);
-				(c_set_oid)(eif_access(sep), _concur_paras[2].uval.int_val);
+				(c_set_host_port)(eif_access(sep), CURGI(0), CURGI(1));
+				(c_set_oid)(eif_access(sep), CURGI(2));
 				proxy_id = eif_general_object_id(sep);
 				(c_set_proxy_id)(eif_access(sep), proxy_id);
-				insert_into_imported_object_table(_concur_paras[0].str_val, _concur_paras[1].uval.int_val, _concur_paras[2].uval.int_val, proxy_id);
+				insert_into_imported_object_table(CURGI(0), CURGI(1), CURGI(2), proxy_id);
 				break;
 			default:
 				add_nl;
@@ -1843,40 +1834,34 @@ EIF_OBJ direct_sep;
 		
 	}
 /*	c_concur_set_non_blocking(_concur_sock);*/
-	tmp_sock = c_concur_make_client(_concur_paras[1].uval.int_val, _concur_paras[0].str_val);
-	(c_set_sock)(eif_access(sep), tmp_sock);
-	add_to_server_list(_concur_paras[0].str_val, _concur_paras[1].uval.int_val, tmp_sock);	
-	to_register(constant_register_first_from_parent, tmp_sock, _concur_hostname, _concur_pid, _concur_paras[2].uval.int_val);
+	new_sock = c_concur_make_client(CURGI(1), CURGI(0));
+	(c_set_sock)(eif_access(sep), new_sock);
+	add_to_server_list(CURGI(0), CURGI(1), new_sock);	
+	to_register(constant_register_first_from_parent, new_sock, _concur_hostaddr, _concur_pid, CURGI(2));
 
-	my_eif_str = eif_wean(sep);/* free the separate object from hector */
-	c_concur_set_blocking(child->sock);
+	sep = eif_wean(sep);/* free the separate object from hector */
 
 /*
-printf("%d Exit from Wait_sep_child after setting up <%s, %d, %d>\n", _concur_pid, child->hostname, child->pid, child->sock);
+printf("%d Exit from Wait_sep_child after setting up <%s, %d, %d>\n", _concur_pid, c_get_name_from_addr(child->hostaddr), child->pid, child->sock);
 */
 	return;
 }
 
 
-void to_register(reg_type, s, hname, port, id)
+void to_register(reg_type, s, haddr, port, id)
 EIF_INTEGER reg_type;
 EIF_INTEGER s;
-char * hname;
+EIF_INTEGER haddr;
 EIF_INTEGER port;
 EIF_INTEGER id;
 {
 	_concur_command = reg_type;
 	_concur_para_num = 3;
 	adjust_parameter_array(3);
-	
-	_concur_paras[0].type = String_type;
-	set_str_val_into_parameter(_concur_paras, hname);
 
-	_concur_paras[1].type = Integer_type;
-	_concur_paras[1].uval.int_val = port;
-
-	_concur_paras[2].type = Integer_type;
-	_concur_paras[2].uval.int_val = id;
+	CURPI(haddr, 0);
+	CURPI(port, 1);
+	CURPI(id, 2);
 
 	send_command(s);
 	return;
@@ -1899,7 +1884,7 @@ CLIENT *cli;
 		_concur_end_of_blk_cli_list->next = cli;
 	_concur_end_of_blk_cli_list = cli;
 	(_concur_blk_cli_list_count)++;
-	c_concur_set_non_blocking(cli->sock);
+/*	c_concur_set_non_blocking(cli->sock);*/
 	unset_mask(cli->sock);
 	return;
 }
@@ -1936,7 +1921,7 @@ CLIENT *cli;
 		_concur_end_of_cli_list->next = cli;
 	_concur_end_of_cli_list = cli;
 	(_concur_cli_list_count)++;
-	c_concur_set_non_blocking(cli->sock);
+/*	c_concur_set_non_blocking(cli->sock); */
 	if (!(FD_ISSET(cli->sock, &_concur_mask))) {
 		set_mask(cli->sock);
 	}
@@ -1957,7 +1942,7 @@ CLIENT *take_head_from_client_list() {
 	return ret;
 }
 
-void read_from_client_queue() {
+void NOUSEread_from_client_queue() {
 	EIF_INTEGER client_num;
 	EIF_INTEGER tmp;
 	EIF_INTEGER sockid;
@@ -2048,8 +2033,8 @@ printf(" Para#=%d\n", _concur_para_num);
 /*                   Utilities for server_list                           */
 /*                                                                       */
 /*-----------------------------------------------------------------------*/
-void add_to_server_list(hname, port, sock)
-char *hname;
+void add_to_server_list(haddr, port, sock)
+EIF_INTEGER haddr;
 EIF_INTEGER port;
 EIF_INTEGER sock;
 {
@@ -2058,7 +2043,7 @@ EIF_INTEGER sock;
 
 	ser = (SERVER *)(malloc(sizeof(SERVER)));
 	valid_memory(ser);
-	strcpy(ser->hostname, hname);
+	ser->hostaddr = haddr;
 	ser->pid = port;
 	ser->sock = sock;
 	ser->count = 1;
@@ -2071,6 +2056,10 @@ EIF_INTEGER sock;
 		_concur_end_of_ser_list->next = ser;
 	_concur_end_of_ser_list = ser;
 	(_concur_ser_list_count)++;
+/*
+printf("=======  After Adding server <%s, %d, %d> =======\n", c_get_name_from_addr(haddr), port, sock);
+ print_server_list();
+*/
 	return;
 }
 
@@ -2097,7 +2086,7 @@ void release_server_list() {
 #endif
 	for(; _concur_ser_list != NULL; ) {
 #ifdef DISP_MSG
-		printf("<host=[%s], port=%d, count=%d, sock=%d>\n", _concur_ser_list->hostname, _concur_ser_list->pid, _concur_ser_list->count, _concur_ser_list->sock);	
+		printf("<host=[%s], port=%d, count=%d, sock=%d>\n", c_get_name_from_addr(_concur_ser_list->hostaddr), _concur_ser_list->pid, _concur_ser_list->count, _concur_ser_list->sock);	
 #endif
 		/* first, cleanup all proxiies of the objects imported from 
 		 * the server. But we don't free imported-objects one
@@ -2122,7 +2111,7 @@ void release_server_list() {
 		/* the server is itself, so just cleanup the exported objects to
 		 * itself.
 		*/
-			change_ref_table_and_exported_obj_list(_concur_ser_list->hostname, _concur_ser_list->pid, constant_not_defined, constant_release_all);
+			change_ref_table_and_exported_obj_list(_concur_ser_list->hostaddr, _concur_ser_list->pid, constant_not_defined, constant_release_all);
 
 		/* then, close the network connection to the server and 
 		 * delete it from the server list
@@ -2255,7 +2244,6 @@ void wait_scoop_daemon() {
 		strcat(_concur_crash_info, CURAPPERR9);
 		c_raise_concur_exception(exception_fail_creating_sep_obj);
 	}
-	
 	return;	
 }
 
@@ -2283,20 +2271,18 @@ void default_rescue() {
 	RTEA("RT-Concur1", 0, root_obj);
 	RTEJ;
 #endif
-#ifdef nDISP_MSG
-if (_concur_parent)
-	printf("%d Enter DEFAULT_RESC with parent: %d\n", _concur_pid, _concur_parent->sock);
-else
-	printf("%d Enter DEFAULT_RESC with parent: Void\n", _concur_pid);
-#endif
+
 
 #ifdef ERROR_STACK
 failure();
 #endif
 	_concur_exception_has_happened = 1;
-	process_request_from_parent();
-	process_request_from_child(0);
-	release_child_list();
+	if (_concur_sock > 0) {
+		process_connection();
+		release_child_list();
+		c_concur_close_socket(_concur_sock);
+		_concur_sock = -1;
+	}
 #ifdef SIGNAL
 #ifdef SIGPIPE
 	signal(SIGPIPE, sig_def_resc);
@@ -2318,13 +2304,14 @@ failure();
 		strcpy(err_msg, "Detected Crash Happened Here: \n    ");	
 	}	
 	else {
+		_concur_para_num -= 2;
 		if (_concur_parent == NULL) 
 			strcpy(err_msg, "Called From(root): \n    ");
 		else 
 			strcpy(err_msg, "Called From: \n    ");
 	}
 	if (strlen(_concur_class_name_of_root_obj)) {
-		strcat(err_msg, "separate object '");
+		strcat(err_msg, "separate object from class `");
 		strcat(err_msg, _concur_class_name_of_root_obj);
 		strcat(err_msg, "' ");
 	}
@@ -2360,11 +2347,12 @@ failure();
 	(_concur_para_num)++;	
 
 	if (_concur_parent != NULL) {
+		if (_concur_parent->sock == constant_alive_socket) 
+			_concur_parent->sock = c_concur_make_client(_concur_parent->pid, _concur_parent->hostaddr);
 		if (_concur_parent->sock >= 0) {
-/*
-printf("\n%d %s send message to its parents:\n", _concur_pid, _concur_class_name_of_root_obj);
-print_run_time_error_message();
-*/
+			_concur_para_num += 2;
+			CURPI(_concur_hostaddr, _concur_para_num-2);
+			CURPI(_concur_pid, _concur_para_num-1);
 			send_command(_concur_parent->sock);
 			c_close_socket(_concur_parent->sock);
 			_concur_parent->sock = -2;
@@ -2394,7 +2382,6 @@ print_run_time_error_message();
 	RTOK;
 #endif
 	
-printf("%d $$$$$$$$$$$$$$$$To exit from DEFAULT_RESCUE\n", _concur_pid);
 	return;
 
 rescue:
@@ -2403,6 +2390,8 @@ rescue:
 	RTEU;
 	RTXS(0);
 #endif
+	if (_concur_parent->sock == constant_alive_socket) 
+		_concur_parent->sock = -3;
 	if (_concur_parent && _concur_parent->sock>=0) {
 		c_close_socket(_concur_parent->sock);
 		_concur_parent->sock = -3;
@@ -2425,156 +2414,6 @@ void print_run_time_error_message() {
 	
 	return;
 }
-
-void process_request_from_parent() {
-	EIF_INTEGER rc;
-
-
-	if (_concur_parent != NULL) 
-
-		if (_concur_parent->sock >= 0) {
-			rc = c_try_to_get_command(_concur_parent->sock);
-			switch (rc) {
-				case -1:
-					break;
-				case -3:
-					c_close_socket(_concur_parent->sock);
-					_concur_parent->sock = -4;
-					if (!_concur_exception_has_happened)
-						default_rescue();
-					break;
-				default:
-				/* the request from parent must be STOP_EXECUTION */
-					_concur_command = c_get_command_code();
-#ifdef DISP_MSG
-					printf("%d/%d Got command from parent: %s", _concur_pid, _concur_parent->sock, command_text(_concur_command));
-#endif
-					_concur_para_num = c_get_para_num();
-#ifdef DISP_MSG
-					printf(" PARA#:%d\n", _concur_para_num);
-#endif
-					c_close_socket(_concur_parent->sock);
-					_concur_parent->sock  = -5;
-					if (!_concur_exception_has_happened) {
-						add_nl;
-						sprintf(crash_info, "    The parent processor asked the local processor to terminate.");
-						default_rescue();
-					}
-			}
-		}
-
-	return;
-}
-
-
-void process_request_from_child(no_error_before) 
-EIF_BOOLEAN no_error_before;
-{
-	EIF_INTEGER child_num;
-	EIF_INTEGER tmp;
-	EIF_INTEGER rc;
-	CHILD *current_child;
-	EIF_INTEGER tmp_cmd, tmp_para_num;
-
-	char tmp_info[300];
-
-#ifdef SIGNAL
-	CONCUR_RESC_START2;
-#ifdef SIGPIPE
-	signal(SIGPIPE, sig_proc_child);
-#else
-#endif
-#else
-	RTED;
-	RTEX;
-    RTSN;
-/*
-    RTDA;
-*/
-	int as_level;
-    RTXD;
-	RTXI(0);
-	RTEA("RT-Concur2", 0, root_obj);
-	RTEJ;
-#endif
-
-
-	child_num = _concur_child_list_count;
-	tmp=0; 
-	for(; tmp < child_num && _concur_child_list_count > 0; tmp++) {
-		current_child = take_head_from_child_list();
-		rc = c_try_to_get_command(current_child->sock);
-		switch (rc) {
-			case -1:
-				add_to_child_list(current_child);
-				current_child = NULL;
-				break;
-			case -3:
-				if (!_concur_exception_has_happened) {
-					add_nl;
-					sprintf(crash_info, CURAPPERR10, error_info());
-					default_rescue();
-				}
-				break;
-			default:
-				tmp_cmd = c_get_command_code();
-#ifdef DISP_MSG
-				printf("%d/%d Got command from child queue %s ", _concur_pid, current_child->sock, command_text(tmp_cmd));
-#endif
-				tmp_para_num = c_get_para_num();
-#ifdef DISP_MSG
-				printf(" PARA#:%d\n", tmp_para_num);
-#endif
-				if (_concur_command != constant_report_error) {
-					_concur_command = tmp_cmd;
-					_concur_para_num = tmp_para_num;
-					sprintf(tmp_info, "    Error happened on separate processor <%s, %d>, but\nerror happened again when the local processor(%d) try to read error message\nfrom the previous processor.", current_child->hostname, current_child->pid, _concur_pid);
-					set_str_val_into_parameter(_concur_paras, tmp_info);
-					get_data(current_child->sock);
-
-				}
-				switch (tmp_cmd) {
-					case constant_report_error:
-						if (no_error_before) {
-							add_nl;
-							strcat(_concur_crash_info, CURAPPERR11);
-							default_rescue();
-						}
-						break;
-					case constant_exit_ok:
-						break;
-					default:
-						printf(" Expect REPORT_ERROR/EXIT_OK but got %s.\n", command_text(tmp_cmd));
-				}
-				c_close_socket(current_child->sock);
-				current_child->sock  = -2;
-				free(current_child);
-		}
-	}
-
-#ifdef SIGNAL
-	if(!_concur_exception_has_happened)
-#ifdef SIGPIPE
-		signal(SIGPIPE, def_res);
-#else
-#endif
-#else
-	RTXE;
-	RTEE;
-	RTOK;
-#endif
-
-	return;
-rescue:
-#ifdef SIGNAL
-	CONCUR_RESC_RETRY;
-#else
-	RTEU;
-	RTXS(0);
-	RTER;
-#endif
-}
-
 
 void release_system_lists_in_rescue() {
     SERVER *tmp;
@@ -2643,6 +2482,8 @@ printf("%d Now to free clients \n", _concur_pid);
         free(tmp);
 
 		send_command(sock);
+		/* the request sent out by the command is prepared by `default_rescue'.
+		 */
 
         c_concur_close_socket(sock);
     }
@@ -2668,6 +2509,7 @@ rescue:
 #endif
 }
 
+
 void release_child_list() {
 	CHILD *current_child;
 	EIF_INTEGER rc;
@@ -2689,34 +2531,19 @@ void release_child_list() {
 	RTEJ;
 #endif
 
-#ifdef DISP_MSG1
-printf("%d Enter RELEASE_CHILD #: %d\n", _concur_pid, _concur_child_list_count);
-#endif
 	tmp_cmd = _concur_command;
 	tmp_para_num = _concur_para_num;
 	
 	for(; _concur_child_list != NULL; ) {
 		current_child = take_head_from_child_list();
-		rc = c_try_to_get_command(current_child->sock);
-		switch (rc) {
-			case -1:
-				_concur_command = constant_stop_execution;
-				_concur_para_num = 0;
-				send_command(current_child->sock);
-				break;
-			case -3:
-				if (!_concur_exception_has_happened) {
-					add_nl;
-					sprintf(crash_info, CURAPPERR10, error_info());
-					default_rescue();
-				}
-				break;
-			default:
-				/* The child must be reporting errors or exit_ok, ignore the request. */
-				;
+		if (current_child->sock == constant_alive_socket) 
+			current_child->sock = c_concur_make_client(current_child->pid, current_child->hostaddr);
+		if (current_child->sock >= 0) {
+			_concur_command = constant_stop_execution;
+			_concur_para_num = 0;
+			send_command(current_child->sock);
+			c_close_socket(current_child->sock);
 		}
-		c_close_socket(current_child->sock);
-		current_child->sock = -2;
 		free(current_child);
 	}
 	
@@ -2986,7 +2813,7 @@ cli1=cli1->next) {
 					 * the client list and clean up the info in reference
 					 * table and exported object list.
 					*/
-						change_ref_table_and_exported_obj_list(cli1->hostname, cli1->pid, constant_not_defined, constant_release_all);
+						change_ref_table_and_exported_obj_list(cli1->hostaddr, cli1->pid, constant_not_defined, constant_release_all);
 						cli1->sock = -2;
 						free(cli1);
 						cli1 = NULL;
@@ -3016,6 +2843,7 @@ cli1=cli1->next) {
 				add_nl;
 				sprintf(crash_info, "    Network exception happened on the local processor.");
 				c_concur_close_socket(_concur_sock);
+				_concur_sock = -1;
 				c_raise_concur_exception(exception_network_connection_crash);	
 			}
 			if (_concur_parent)
@@ -3025,7 +2853,7 @@ cli1=cli1->next) {
 			*/
 				add_nl;
 				sprintf(crash_info, "    Network exception happened on the parent of the local processor.");
-				c_concur_close_socket(_concur_sock);
+				c_concur_close_socket(_concur_parent->sock);
 				_concur_parent->sock = -2;
 				c_raise_concur_exception(exception_network_connection_crash);	
 			}
@@ -3043,57 +2871,100 @@ cli1=cli1->next) {
 
 
 
-EIF_INTEGER has_msg_from_pc(read_mask) 
-fd_set *read_mask;
-{
-	EIF_INTEGER ret=0;
-	int i;
-	CHILD *tmp;
-
-	if (_concur_parent)
-	if (FD_ISSET(_concur_parent->sock, read_mask))
-		ret++;
-	for(tmp=_concur_child_list; tmp; tmp=tmp->next) 
-		if (FD_ISSET(tmp->sock, read_mask))
-			ret++;
-	return ret;
-}
-
-
 void process_connection() {
+	EIF_INTEGER new_sock;
     CLIENT * recv;
 
-	recv = (CLIENT *)(malloc(sizeof(CLIENT)));
-	valid_memory(recv);
-	recv->type = constant_normal_client;
-	recv->count = 1;
-	recv->reservation = 0;
-	recv->sock = c_concur_accept(_concur_sock);
+	c_concur_set_non_blocking(_concur_sock);
+	new_sock = c_concur_accept(_concur_sock);
+	while (new_sock >= 0) {
 	/* we got a connection.  so get the first
 	 * request from the new Client
 	*/
-	if (recv->sock <= 0) {
-		add_nl;
-		sprintf(crash_info, "Inpossible, accepted socket is %d\n", _concur_pid, recv->sock);
-		c_raise_concur_exception(exception_implementation_error);
-	}
-	c_concur_set_blocking(recv->sock);
-	directly_get_cmd_data(recv->sock);
+	c_concur_set_blocking(new_sock);
+	directly_get_cmd_data(new_sock);
 	switch (_concur_command) {
+		case constant_stop_execution:
+			/* come from parent, and ask the execution on the local processor to
+			 * terminate.
+			 */
+			c_close_socket(new_sock);
+			_concur_parent->sock  = -5;
+			if (!_concur_exception_has_happened) {
+				add_nl;
+				sprintf(crash_info, "    The parent processor asked the local processor to terminate.");
+				default_rescue();
+			}
+			break;
+		case constant_report_error:
+			/* come from child */
+			{ 	CHILD *cur_child, *bak_child;
+				c_close_socket(new_sock);
+				for (bak_child=NULL, cur_child=_concur_child_list; cur_child && (cur_child->hostaddr!=CURGI(0) || cur_child->pid!=CURGI(1)); bak_child=cur_child, cur_child=cur_child->next);
+				if (!cur_child) {
+					add_nl;
+					sprintf(crash_info, "    Got REPORT_ERROR message from <%s, %d> but there is no entry in child list.", c_get_name_from_addr(CURGI(_concur_para_num-2)), CURGI(_concur_para_num-1));
+					c_raise_concur_exception(exception_implementation_error);
+				}
+				if (!bak_child)
+					_concur_child_list = cur_child->next;
+				else
+					bak_child->next = cur_child->next;
+				if (!(cur_child->next))
+					_concur_end_of_child_list = bak_child;
+				free(cur_child);
+				(_concur_child_list_count)--;
+
+				if (!_concur_exception_has_happened) {
+					add_nl;
+					strcat(_concur_crash_info, CURAPPERR11);
+					default_rescue();
+				}
+			}
+			break;
+		case constant_exit_ok:
+			/* come from child */
+			{ 	CHILD *cur_child, *bak_child;
+				c_close_socket(new_sock);
+				for (bak_child=NULL, cur_child=_concur_child_list; cur_child && (cur_child->hostaddr!=CURGI(0) || cur_child->pid!=CURGI(1)); bak_child=cur_child, cur_child=cur_child->next);
+				if (!cur_child) {
+					add_nl;
+					sprintf(crash_info, "    Got EXIT_OK message from <%s, %d> but there is no entry in child list.", c_get_name_from_addr(CURGI(0)), CURGI(1));
+					c_raise_concur_exception(exception_implementation_error);
+				}
+				if (!bak_child)
+					_concur_child_list = cur_child->next;
+				else
+					bak_child->next = cur_child->next;
+				if (!(cur_child->next))
+					_concur_end_of_child_list = bak_child;
+				free(cur_child);
+				(_concur_child_list_count)--;
+			}
+			break;
 		case constant_register:
 		case constant_register_first_from_parent:
 		/* we add the new client into the client list, and send
 		 * back the acknowledgement for the REGISTR request
 	    */
+			recv = (CLIENT *)(malloc(sizeof(CLIENT)));
+			valid_memory(recv);
+			recv->type = constant_normal_client;
+			recv->count = 1;
+			recv->reservation = 0;
+			recv->sock = new_sock;
+			/* we got a connection.  so get the first
+			 * request from the new Client
+			*/
 #ifdef DISP_LIST
-			printf("%d Before %s(on %s from <%s, %d, %d>):\n", _concur_pid ,command_text(_concur_command), _concur_class_name_of_root_obj, CURGS(0), CURGI(1), CURGI(2));
+			printf("%d Before %s(on %s from <%s, %d, %d>):\n", _concur_pid ,command_text(_concur_command), _concur_class_name_of_root_obj, c_get_name_from_addr(CURGI(0)), CURGI(1), CURGI(2));
 			print_ref_table_and_exported_object();
 #endif
-			strcpy(recv->hostname, _concur_paras[0].str_val);
-			recv->pid = _concur_paras[1].uval.int_val;
+			recv->hostaddr = CURGI(0);
+			recv->pid = CURGI(1);
 			(recv->req_buf).command = constant_not_defined;
 			add_to_client_queue(recv);
-			if (_concur_paras[2].uval.int_val==constant_root_oid) {
+			if (CURGI(2)==constant_root_oid) {
 			/* the register is sent from a "remote client"
 			* at first time
 			*/
@@ -3104,7 +2975,7 @@ void process_connection() {
 				if (_concur_command == constant_register)
 					send_register_ack(recv->sock);
 				_concur_terminatable = 1;
-				change_ref_table_and_exported_obj_list(_concur_paras[0].str_val, _concur_paras[1].uval.int_val, _concur_paras[2].uval.int_val, 1);
+				change_ref_table_and_exported_obj_list(CURGI(0), CURGI(1), CURGI(2), 1);
 			}
 #ifdef DISP_LIST
 			printf("%d After %s(on %s)\n", _concur_pid, command_text(_concur_command), _concur_class_name_of_root_obj);
@@ -3115,6 +2986,8 @@ void process_connection() {
 			add_nl;
 			sprintf(crash_info, CURAPPERR4, command_text(_concur_command), _concur_para_num);
 			c_raise_concur_exception(exception_network_connection_crash);
+	}
+	new_sock = c_concur_accept(_concur_sock);
 	}
 }
 

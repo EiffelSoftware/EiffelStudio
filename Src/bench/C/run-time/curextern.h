@@ -34,6 +34,7 @@ extern EIF_INTEGER _concur_alt_para_num;
 
 /* from SERVER */
 extern char _concur_hostname[constant_max_host_name_len+1];
+extern EIF_INTEGER _concur_hostaddr;
 extern EIF_INTEGER _concur_pid;
 extern EIF_INTEGER _concur_sock;
 
@@ -152,17 +153,10 @@ extern Timeval _concur_begin_tms;
 
 extern char _concur_error_msg[100];
 
-extern char **_concur_ptr_to_root_obj;
-/* the address of a cell in "loc_set" which store the root object's
- * address on the local processor. The address will be used in several
- * places, so we keep it with a global variable.
-*/
 extern char _concur_root_of_the_application;
 
 extern char _concur_is_creating_sep_child;
-#ifdef WORKBENCH
 extern char _concur_invariant_checked;
-#endif
 
 extern jmp_buf _concur_exenv1;
 extern jmp_buf _concur_exenv2;
@@ -206,7 +200,6 @@ extern EIF_POINTER get_c_format_of_eif_string();
 extern void make_server();
 
 /* utilities for client */
-extern EIF_BOOLEAN on_same_processor();
 extern EIF_BOOLEAN on_local_processor();
 extern CONNECTION  *setup_connection();
 extern EIF_OBJ  create_child();
@@ -224,6 +217,7 @@ extern void send_register_ack();
 extern void send_command();
 
 extern void server_execute();
+extern void separate_call();
 
 /* utilities for "remote_server" */
 extern EIF_OBJ remote_server_by_name();
@@ -259,8 +253,6 @@ extern CHILD *take_head_from_child_list();
 extern void wait_scoop_daemon();
 extern void default_rescue();
 extern void print_run_time_error_message();
-extern void process_request_from_parent();
-extern void process_request_from_child();
 extern void release_child_list();
 extern void release_system_lists_in_rescue();
 extern void sig_def_resc();
@@ -276,7 +268,7 @@ extern void release_exported_objects();
 extern EIF_INTEGER c_get_oid_from_addr();
 extern EIF_INTEGER get_oid_from_address();
 extern void change_ref_table_and_exported_obj_list();
-extern EIF_INTEGER get_proxy_oid_of_inported_object();
+extern EIF_INTEGER get_proxy_oid_of_imported_object();
 extern void insert_into_imported_object_table();
 extern void c_clear_proxy();
 extern void cleanup_proxy();
@@ -310,6 +302,8 @@ extern EIF_INTEGER longtoa();
 extern EIF_INTEGER rtoa();
 extern EIF_INTEGER dtoa();
 extern void c_get_host_name();
+extern char * c_get_name_from_addr();
+extern EIF_INTEGER c_get_addr_from_name();
 extern char *c_get_current_directory();
 extern int c_get_pid();
 extern void set_block();

@@ -108,11 +108,14 @@ char *error_info() {
 		case EREMOTE:
 			strcpy(_concur_error_msg, "Too many levels of remote in path.");
 			break;
+		case EMFILE:
+			strcpy(_concur_error_msg, "Too many open files.");
+			break;
 		case 0:
 			_concur_error_msg[0] = '\0';
 			break;
 		default:
-			sprintf(_concur_error_msg, "Error code:%d.", errno);
+			sprintf(_concur_error_msg, "ErrorNo:%d.", errno);
 	}
 #ifdef EIF_WIN32
 	sprintf(_concur_error_msg+strlen(_concur_error_msg), " WSAError = %d."), WSAGetLastError());

@@ -208,6 +208,9 @@ extern int *dle_fpatidtab;		/* Table of pattern id's indexed by body id's */
  */
 extern struct p_interface *pattern;
 extern struct p_interface fpattern[];
+#ifdef CONCURRENT_EIFFEL
+extern fnptr separate_pattern[];
+#endif
 
 #endif
 

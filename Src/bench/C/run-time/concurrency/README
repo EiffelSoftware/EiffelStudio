@@ -5,6 +5,8 @@
     The difference between the version and the previous version is:
 	here, we use "htonl"/"ntohl" whenever we send/get data to/from network.
 
+    Here, we only setup network connection(s) when it's used.
+
                             INFORMATION IN THE DIRECTORY
                             ============================
 

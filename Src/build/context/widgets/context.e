@@ -49,6 +49,18 @@ inherit
 --		end
 	--endof samik
 	
+feature -- Guillaume
+
+	set_insensitive is
+		do
+			widget.set_insensitive
+		end
+
+	set_sensitive is
+		do
+			widget.set_sensitive
+		end
+
 feature -- Editable
 
 	create_editor is

@@ -1476,7 +1476,7 @@
 							<Directory Id="model" Name="model">
 								<Component Id="model" Guid="F2E11F2E-8763-4ce7-AE3E-224F02DE7227">
 									<File Id="ev_coordinate_array.e" Name="EV_COO~1.E" LongName="ev_coordinate_array.e" />
-									<File Id="ev_double_value_change_action_sequence.e" Name="EV_DOU~1.E" LongName="ev_double_value_change_action_sequence.e" />
+									<File Id="ev_double_value_change.e1" Name="EV_DOU~1.E" LongName="ev_double_value_change_action_sequence.e" />
 									<File Id="ev_identified_font.e" Name="EV_IDE~1.E" LongName="ev_identified_font.e" />
 									<File Id="ev_identified_pixmap.e" Name="EV_IDE~2.E" LongName="ev_identified_pixmap.e" />
 									<File Id="ev_model.e" Name="ev_model.e" />

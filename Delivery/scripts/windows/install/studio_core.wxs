@@ -363,9 +363,9 @@
 								<File Id="icon_bpslot_stopped.png" Name="IC5FE8~1.PNG" LongName="icon_bpslot_stopped.png" />
 								<File Id="icon_bpslot_top.png" Name="ICE12E~1.PNG" LongName="icon_bpslot_top.png" />
 								<File Id="icon_close_color.png" Name="ICE840~1.PNG" LongName="icon_close_color.png" />
-								<File Id="icon_degree-1.png" Name="ICF329~1.PNG" LongName="icon_degree-1.png" />
-								<File Id="icon_degree-2.png" Name="ICF729~1.PNG" LongName="icon_degree-2.png" />
-								<File Id="icon_degree-3.png" Name="ICFB29~1.PNG" LongName="icon_degree-3.png" />
+								<File Id="icon_degree_minus_1.png" Name="ICF329~1.PNG" LongName="icon_degree-1.png" />
+								<File Id="icon_degree_minus_2.png" Name="ICF729~1.PNG" LongName="icon_degree-2.png" />
+								<File Id="icon_degree_minus_3.png" Name="ICFB29~1.PNG" LongName="icon_degree-3.png" />
 								<File Id="icon_degree0.png" Name="IC9131~1.PNG" LongName="icon_degree0.png" />
 								<File Id="icon_degree1.png" Name="IC9135~1.PNG" LongName="icon_degree1.png" />
 								<File Id="icon_degree2.png" Name="ICA139~1.PNG" LongName="icon_degree2.png" />
@@ -395,7 +395,7 @@
 								<File Id="icon_new_feature_small_color.png" Name="ICE3CF~1.PNG" LongName="icon_new_feature_small_color.png" />
 								<File Id="icon_new_small_color.png" Name="IC5909~1.PNG" LongName="icon_new_small_color.png" />
 								<File Id="icon_nothing.png" Name="IC9C4B~1.PNG" LongName="icon_nothing.png" />
-								<File Id="icon_numeric_format_very_small_color.png" Name="IC5D1C~1.PNG" LongName="icon_numeric_format_very_small_color.png" />
+								<File Id="icon_numeric_format.png1" Name="IC5D1C~1.PNG" LongName="icon_numeric_format_very_small_color.png" />
 								<File Id="icon_on_off_very_small_color.png" Name="ICA322~1.PNG" LongName="icon_on_off_very_small_color.png" />
 								<File Id="icon_open_project.png" Name="ICON_O~4.PNG" LongName="icon_open_project.png" />
 								<File Id="icon_pin_closed_color.png" Name="ICON_P~1.PNG" LongName="icon_pin_closed_color.png" />
@@ -411,7 +411,7 @@
 								<File Id="icon_slice_limits_vsmall_color.png" Name="IC0E02~1.PNG" LongName="icon_slice_limits_vsmall_color.png" />
 								<File Id="icon_toggle_force_color.png" Name="ICON_T~1.PNG" LongName="icon_toggle_force_color.png" />
 								<File Id="icon_toggle_quality_color.png" Name="IC5026~1.PNG" LongName="icon_toggle_quality_color.png" />
-								<File Id="icon_toggle_signature_vsmall_color.png" Name="ICON_T~4.PNG" LongName="icon_toggle_signature_vsmall_color.png" />
+								<File Id="icon_toggle_signature.png1" Name="ICON_T~4.PNG" LongName="icon_toggle_signature_vsmall_color.png" />
 								<File Id="icon_tool_color.png" Name="ICON_T~2.PNG" LongName="icon_tool_color.png" />
 								<File Id="icon_uml_color.png" Name="ICON_U~3.PNG" LongName="icon_uml_color.png" />
 								<File Id="icon_view_measure_color.png" Name="ICON_V~1.PNG" LongName="icon_view_measure_color.png" />

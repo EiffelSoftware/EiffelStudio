@@ -8,14 +8,20 @@
 			</Component>
 			<Directory Id="ProgramMenuFolder" Name="Redist">
 				<Directory Id="EiffelStudio" Name="EIFFEL~5" LongName="EiffelStudio 5.6">
+					<Component Id="EiffelStudio" Guid="9549FFD8-507E-4AA4-A48C-F0EB5077E166">
+						<CreateFolder />
+						<RemoveFolder Id="EiffelStudio" On="uninstall"/>
+					</Component>
 					<Directory Id="Documentation" Name="DOCUME~5" LongName="Documentation">
-						<Component Id="Documentation" Guid="34749585-99BD-4328-9C8D-21310D66A542" KeyPath="yes">
+						<Component Id="Documentation" Guid="34749585-99BD-4328-9C8D-21310D66A542">
 							<CreateFolder />
+							<RemoveFolder Id="Documentation" On="uninstall"/>
 						</Component>
 					</Directory>
-					<Directory Id="Tools6" Name="Tools">
-						<Component Id="Tools6" Guid="2077AB8F-11BE-4527-9EE7-4AF6AA764FF1" KeyPath="yes">
+					<Directory Id="Tools" Name="Tools">
+						<Component Id="Tools" Guid="2077AB8F-11BE-4527-9EE7-4AF6AA764FF1">
 							<CreateFolder />
+							<RemoveFolder Id="Tools" On="uninstall"/>
 						</Component>
 					</Directory>
 				</Directory>
@@ -184,7 +190,7 @@
 					<Directory Id="com3" Name="com">
 						<Component Id="COM_WI2.EXE" Guid="1F39F603-A697-424F-B59F-FF50E4FDD1E0">
 							<File Id="com_wizard_cmd.exe" Name="COM_WI~2.EXE" LongName="com_wizard_cmd.exe" KeyPath="yes">
-								<Shortcut Id="com_wizard.exe" Directory="Tools6" Name="COMWIZ~1" LongName="COM Wizard" Description="A wizard that helps you use and create COM components with Eiffel" Hotkey="0" Show="normal" />
+								<Shortcut Id="com_wizard.exe" Directory="Tools" Name="COMWIZ~1" LongName="COM Wizard" Description="A wizard that helps you use and create COM components with Eiffel" Hotkey="0" Show="normal" />
 							</File>
 						</Component>
 						<Component Id="com3" Guid="44AAE90D-433C-4148-838D-9D6B7AA44651">

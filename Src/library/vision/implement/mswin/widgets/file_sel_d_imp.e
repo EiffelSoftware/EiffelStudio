@@ -134,7 +134,7 @@ feature -- Status setting
 			-- Popdown widget
 		do
 			is_popped_up := false
-			if directory_selection then
+			if directory_selection and then directory_dialog.exists then
 				directory_dialog.terminate (0)
 			end
 		end
@@ -148,7 +148,9 @@ feature -- Status setting
 			is_popped_up := true
 			wc ?= parent
 			if directory_selection then
-				!! directory_dialog.make (wc, Current)
+				if directory_dialog = Void then
+					!! directory_dialog.make (wc, Current)
+				end
 				directory_dialog.set_title (title)
 				directory_dialog.set_search_directory (directory)
 				directory_dialog.set_no_selection_made

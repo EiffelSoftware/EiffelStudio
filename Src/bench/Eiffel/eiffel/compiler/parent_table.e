@@ -72,15 +72,17 @@ feature
 			valid_file: buffer /= Void
 		local
 			i, j, n : INTEGER;
+			l_type_id: INTEGER
 		do
 			buffer.putstring ("static int16 ptf");
 
-			if type_id <= -256 then
+			l_type_id := type_id
+			if l_type_id <= -256 then
 				-- expanded
-				buffer.putint (-256-type_id);
-			else
-				buffer.putint (type_id);
+				l_type_id := -256 - l_type_id
 			end
+
+			buffer.putint (l_type_id);
 
 			buffer.putstring ("[] = {%N");
 
@@ -91,12 +93,12 @@ feature
 			until
 				i >= n
 			loop
-				item (i).generate_cid (buffer, final_mode, false);
+				item (i).generate_cid (buffer, final_mode, False);
 
 				i := i + 1;
 				j := j + 1;
 
-				if (j \\ 8) = 0 then
+				if (j \\ 16) = 0 then
 					buffer.new_line
 				end
 			end;
@@ -104,30 +106,24 @@ feature
 			buffer.putint (-1);
 			buffer.putstring ("};%N%Nstatic struct eif_par_types par");
 
-			if type_id <= -256 then
-				-- expanded
-				buffer.putint (-256-type_id);
-			else
-				buffer.putint (type_id);
-			end
+			buffer.putint (l_type_id);
 
-			buffer.putstring (" = {(int16) ");
-			buffer.putint (generic_count);
-			buffer.putstring (", %"");
-			buffer.putstring (classname);
+			buffer.putstring (" = {%"")
+			buffer.putstring (classname)
+			buffer.putstring ("%", ptf")
+
+			buffer.putint (l_type_id);
+
+			buffer.putstring (", (int16) ")
+			buffer.putint (generic_count)
+			buffer.putstring (", (char) ")
 
 			if is_expanded then
-				buffer.putstring ("%", (char)1, ptf");
+				buffer.putstring ("1")
 			else
-				buffer.putstring ("%", (char)0, ptf");
+				buffer.putstring ("0")
 			end
 
-			if type_id <= -256 then
-				-- expanded
-				buffer.putint (-256-type_id);
-			else
-				buffer.putint (type_id);
-			end
 			buffer.putstring ("};%N%N");
 		end;
 
@@ -160,7 +156,7 @@ feature
 			until
 				i >= n
 			loop
-				item (i).make_gen_type_byte_code (ba, false);
+				item (i).make_gen_type_byte_code (ba, False);
 				i := i + 1
 			end;
 

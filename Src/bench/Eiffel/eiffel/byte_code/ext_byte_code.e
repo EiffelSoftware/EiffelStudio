@@ -188,6 +188,8 @@ feature -- Byte code generation
 				(System.class_type_of_id (context.current_type.type_id).id,
 				body_id);
 
+				add_in_log (internal_name);
+
 					-- Generate function name
 				generated_file.putstring (internal_name);
 				generated_file.putchar ('(');
@@ -222,6 +224,8 @@ feature -- Byte code generation
 				
 			elseif encapsulated then
 				old_generate;
+			else
+				add_in_log (external_name)
 			end;
 		end;
 
@@ -500,7 +504,7 @@ feature -- Byte code generation
 					generated_file.putint (i);
 					i := i + 1;
 					if i <= count then
-						generated_file.putstring (", ");
+						generated_file.putstring (gc_comma);
 					end;
 				end;
 			end;

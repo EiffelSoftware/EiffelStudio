@@ -413,6 +413,9 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 					command_move_window.execute
 				end
 			end
+				-- Update project so it may be saved.
+			system_status.enable_project_modified
+			command_handler.update
 		ensure
 			count_increased: old an_object.layout_item = Void implies count = old count + 1
 				-- Only if we were not moving internally as determined by whether the layout item

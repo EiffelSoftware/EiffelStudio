@@ -87,9 +87,7 @@ feature -- Externals
 			--	return (GtkArg*)(args_array + index);
 			-- }
 		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"(GtkArg*) ((GtkArg**) $args_array + (int) $an_index )"
+			"C | %"ev_c_util.h%""
 		end
 
 	frozen c_gtk_menu_popup (menu: POINTER; x, y: INTEGER) is
@@ -127,13 +125,17 @@ feature -- Externals
 	frozen gtk_value_pointer (arg: POINTER): POINTER is
 			-- Pointer to the value of a GtkArg.
 		external
-			"C | %"ev_gtk_callback_marshal.h%""
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_VALUE_POINTER (*(GtkArg*) $arg )"
 		end
 		
 	frozen gtk_value_int (arg: POINTER): INTEGER is
 			-- Integer value from a GtkArg.
 		external
-			"C | %"ev_gtk_callback_marshal.h%""
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_VALUE_INT (*(GtkArg*) $arg )"
 		end
 
 	frozen gtk_value_uint (arg: POINTER): INTEGER is

@@ -583,7 +583,7 @@ feature -- Explorer bar handling.
 			if left_panel.parent = Void and left_panel.count /= 0 then
 				display_bar (left_panel)
 			end
-			if right_panel.parent = Void then
+			if right_panel.parent = Void and right_panel.count /= 0 then
 				display_bar (right_panel)
 			end
 		end

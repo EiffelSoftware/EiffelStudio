@@ -21,11 +21,11 @@ inherit
 			output_value
 		end
 
-create {ATTR_REQUEST}
+create {DEBUG_VALUE_EXPORTER}
 
 	make_attribute
 
-feature {ATTR_REQUEST}
+feature {DEBUG_VALUE_EXPORTER}
 
 	make_attribute (attr_name: like name; a_class: like e_class; 
 			type: like dynamic_type_id) is
@@ -80,6 +80,20 @@ feature -- Output
 			end
 		end;
 
+feature {ABSTRACT_DEBUG_VALUE} -- Output
+
+	append_type_and_value (st: STRUCTURED_TEXT) is
+		local
+			ec: CLASS_C;
+		do
+			ec := dynamic_class
+			if ec /= Void then
+				ec.append_name (st)
+			end
+		end;
+
+feature {NONE} -- Output
+
 	append_value (st: STRUCTURED_TEXT) is
 			-- Append value of `Current' to `st' with `indent' tabs the left margin.
 		local
@@ -106,16 +120,6 @@ feature -- Output
 			end
 		end;
 
-	append_type_and_value (st: STRUCTURED_TEXT) is
-		local
-			ec: CLASS_C;
-		do
-			ec := dynamic_class
-			if ec /= Void then
-				ec.append_name (st)
-			end
-		end;
-
 	output_value: STRING is "Expanded object"
 			-- Return a string representing `Current'.
 
@@ -135,7 +139,7 @@ feature -- Output
 			end
 		end
 
-	Expanded_label: STRING is " (expanded)"
+feature -- Output
 
 	expandable: BOOLEAN is
 			-- Does `Current' have sub-items? (Is it a non void reference, a special object, ...)
@@ -158,6 +162,10 @@ feature -- Output
 		do
 			Result := Expanded_value
 		end
+
+feature {NONE} -- Constants
+
+	Expanded_label: STRING is " (expanded)"
 
 feature {NONE} -- Implementation
 

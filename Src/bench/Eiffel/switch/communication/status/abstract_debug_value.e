@@ -11,12 +11,19 @@ deferred class ABSTRACT_DEBUG_VALUE
 inherit
 
 	SHARED_EIFFEL_PROJECT
+		export
+			{NONE} all
 		undefine
 			is_equal
 		end;
 	COMPARABLE
+		export
+			{NONE} all
+		end		
 
 	VALUE_TYPES
+		export
+			{NONE} all
 		undefine
 			is_equal
 		end;
@@ -26,13 +33,20 @@ feature -- Properties
 	is_attribute: BOOLEAN;
 			-- Is current value an attribute
 
+	name: STRING
+			-- Name of attribute or argument or local
+			
+	is_external_type: BOOLEAN
+			-- Is this value an instance of an external type ?
+			-- which means whose information are not completly known 
+			-- by the compiler
+
+feature {NONE} -- Internal Properties
+
 	e_class: CLASS_C;
 			-- Class where attribute is defined
 			-- (Void for if not attribute)
-
-	name: STRING
-			-- Name of attribute or argument or local
-
+			
 feature -- Access
 
 	dynamic_class: CLASS_C is
@@ -90,6 +104,8 @@ feature -- Output
 			st.add_new_line
 		end;
 
+feature {ABSTRACT_DEBUG_VALUE} -- Output
+
 	append_type_and_value (st: STRUCTURED_TEXT) is 
 			-- Append type and value of Current to `st'.
 		require
@@ -97,6 +113,8 @@ feature -- Output
 			valid_name: name /= Void
 		deferred 
 		end;
+		
+feature {NONE}
 
 	append_value (st: STRUCTURED_TEXT) is
 			-- Append only the value of Current to `st'.
@@ -112,6 +130,8 @@ feature -- Output
 			-- Return a string representing `Current'.
 		deferred
 		end
+
+feature -- Output
 
 	expandable: BOOLEAN is
 			-- Does `Current' have sub-items? (Is it a non void reference, a special object, ...)
@@ -135,7 +155,7 @@ feature -- Output
 			-- Used to display the corresponding icon.
 		deferred
 		ensure
-			valid_kind: Result >= Immediate_value and then Result <= Special_value
+			valid_kind: Result >= Immediate_value and then Result <= External_reference_value
 		end
 
 feature {CALL_STACK_ELEMENT, DEBUG_DYNAMIC_EVAL_HOLE, SHARED_DEBUG}
@@ -159,7 +179,7 @@ feature {ATTR_REQUEST, CALL_STACK_ELEMENT} -- Setting
 			item_number = n
 		end
 
-feature {RECV_VALUE} -- Setting
+feature {RECV_VALUE, CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER} -- Setting
 
 	set_name (n: like name) is
 			-- Set `name' to `n'.
@@ -205,6 +225,18 @@ feature {NONE} -- Implementation
 		once
 			Result := Eiffel_system.any_class.compiled_class
 		end
+		
+feature {NONE} -- Constants
+
+	NONE_representation: STRING is "NONE = Void"
+
+	Left_square_bracket: STRING is " ["
+
+	Right_square_bracket: STRING is "]"
+
+	Equal_sign_str: STRING is " = "
+
+	Is_unknown: STRING is " = Unknown"		
 
 invariant
 

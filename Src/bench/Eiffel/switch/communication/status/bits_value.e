@@ -37,7 +37,7 @@ inherit
 			is_equal
 		end
 
-create {RECV_VALUE, ATTR_REQUEST}
+create {DEBUG_VALUE_EXPORTER}
 
 	make, make_attribute
 
@@ -82,7 +82,7 @@ feature -- Access
 		do
 		end
 
-feature -- Output
+feature {ABSTRACT_DEBUG_VALUE} -- Output
 
 	append_type_and_value (st: STRUCTURED_TEXT) is
 		do 
@@ -92,6 +92,8 @@ feature -- Output
 			st.add_string (Equal_sign);
 			st.add_string (value)
 		end;
+
+feature {NONE} -- Output
 
 	output_value: STRING is
 			-- Return a string representing `Current'.
@@ -112,15 +114,13 @@ feature -- Output
 			Result.append (value)
 		end
 
-	Equal_sign: STRING is " = "
-
-	Bit_label: STRING is "BIT "
-
 	append_value (st: STRUCTURED_TEXT) is
 			-- Append the value of `Current' to `st'. (Useful for pretty print).
 		do
 			st.add_string (value)
 		end
+		
+feature -- Output
 
 	expandable: BOOLEAN is False
 			-- Does `Current' have sub-items? (Is it a non void reference, a special object, ...)
@@ -138,6 +138,13 @@ feature -- Output
 		do
 			Result := Immediate_value
 		end
+
+
+feature {NONE} -- Constants
+
+	Equal_sign: STRING is " = "
+
+	Bit_label: STRING is "BIT "
 
 feature {NONE} -- Implementation
 

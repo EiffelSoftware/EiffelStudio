@@ -14,7 +14,7 @@ inherit
 			is_equal
 		end
 	
-create {RECV_VALUE, ATTR_REQUEST}
+create {RECV_VALUE, ATTR_REQUEST,CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER}
 	make, make_attribute
 	
 feature {NONE} -- Initialization
@@ -159,7 +159,7 @@ feature -- Access
 			end
 		end
 
-feature -- Output
+feature {ABSTRACT_DEBUG_VALUE} -- Output
 
 	append_type_and_value (st: STRUCTURED_TEXT) is 
 		do 
@@ -167,12 +167,14 @@ feature -- Output
 			st.add_string (Equal_sign_str);
 			st.add_string (value.out)
 		end;
+		
+feature {NONE} -- Output
 
 	append_value (st: STRUCTURED_TEXT) is 
 		do 
 			st.add_string (value.out)
 		end;
-
+		
 	output_value: STRING is
 			-- Return a string representing `Current'.
 		do
@@ -188,6 +190,8 @@ feature -- Output
 			Result.append (value.out)
 		end
 
+feature -- ouput 
+
 	expandable: BOOLEAN is False
 			-- Does `Current' have sub-items? (Is it a non void reference, a special object, ...)
 
@@ -197,8 +201,6 @@ feature -- Output
 		do
 			Result := Void
 		end
-
-	Equal_sign_str: STRING is " = "
 
 	kind: INTEGER is
 			-- Actual type of `Current'. cf possible codes underneath.

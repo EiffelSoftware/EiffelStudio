@@ -18,7 +18,7 @@ inherit
 			is_equal
 		end
 
-create {RECV_VALUE, ATTR_REQUEST}
+create {DEBUG_VALUE_EXPORTER}
 	make, make_attribute
 
 feature -- Access
@@ -36,7 +36,7 @@ feature -- Access
 			end
 		end
 
-feature -- Output
+feature {ABSTRACT_DEBUG_VALUE} -- Output
 
 	append_type_and_value (st: STRUCTURED_TEXT) is 
 		do 
@@ -46,6 +46,8 @@ feature -- Output
 			st.add_string (char_text (value));
 			st.add_char ('%'')
 		end;
+
+feature {NONE} -- Output
 
 	append_value (st: STRUCTURED_TEXT) is 
 		do 
@@ -63,6 +65,8 @@ feature -- Output
 			Result.append (char_text (value))
 			Result.append (Quote)
 		end
+		
+feature {NONE} -- Constants
 
 	Equal_slash: STRING is " = /"
 	Slash_colon: STRING is "/ : %'"

@@ -1,3 +1,10 @@
+indexing
+	description: "External C routines for accessing gtk";
+	status: "See notice at end of class";
+	id: "$Id$";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class EV_GTK_EXTERNALS
 
 feature {NONE} -- GTK macros for casting types

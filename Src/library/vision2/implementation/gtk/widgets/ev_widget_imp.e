@@ -249,6 +249,22 @@ feature -- Event - command association
 			add_command ("delete_event", command, arguments, ev_data)
 		end
 	
+	add_key_press_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		local
+			ev_data: EV_EVENT_DATA
+		do
+			!EV_KEY_EVENT_DATA!ev_data.make
+			add_command ("key_press_event", command, arguments, ev_data)
+		end
+			
+	add_key_release_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		local
+			ev_data: EV_EVENT_DATA
+		do
+			!EV_KEY_EVENT_DATA!ev_data.make
+			add_command ("key_press_event", command, arguments, ev_data)
+		end	
+	
 	add_enter_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 		local
 			ev_data: EV_EVENT_DATA		
@@ -308,13 +324,15 @@ feature {NONE} -- Implementation
 			-- commands. (We should share everything else 
 			-- though, FIX THIS!)
 			
-			if arguments.data /= Void then
-				arg := deep_clone (arguments)
-			else
-				arg := arguments
+			if arguments /= Void then
+				if arguments.data /= Void then
+					arg := deep_clone (arguments)
+				else
+					arg := arguments
+				end
+				arg.set_data (ev_data)
 			end
-			arg.set_data (ev_data)			
-		
+				
 			ev_d_imp ?= ev_data.implementation
 			check
 				valid_event_data_implementation: ev_d_imp /= Void

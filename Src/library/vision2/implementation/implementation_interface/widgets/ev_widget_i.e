@@ -305,6 +305,14 @@ feature -- Event - command association
 		deferred
 		end
 
+	add_key_press_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		deferred
+		end
+	
+	add_key_release_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		deferred
+		end
+	
 	add_enter_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 		deferred
 		end

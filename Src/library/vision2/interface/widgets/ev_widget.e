@@ -429,7 +429,19 @@ feature -- Event - command association
 	add_delete_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 		do
 			implementation.add_delete_command (command, 
-							  arguments)
+							   arguments)
+		end	
+	
+	add_key_press_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		do
+			implementation.add_key_press_command (command, 
+							      arguments)
+		end	
+	
+	add_key_release_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		do
+			implementation.add_key_release_command (command, 
+								arguments)
 		end	
 	
 	add_enter_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is

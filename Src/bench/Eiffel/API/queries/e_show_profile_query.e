@@ -267,7 +267,7 @@ feature {QUERY_EXECUTER} -- Implementation
 			-- Generate the filters used by.
 		local
 			i: INTEGER
-			boolean_filter: FILTER
+			boolean_filter: PROFILE_FILTER
 			last_op: STRING
 		do
 			if prof_query.subquery_operators.count > 0 then
@@ -313,7 +313,7 @@ feature {QUERY_EXECUTER} -- Implementation
 			extend_with_languages
 		end
 
-	generate_filter (i: INTEGER): FILTER is
+	generate_filter (i: INTEGER): PROFILE_FILTER is
 		local
 			col_name: STRING
 		do
@@ -340,7 +340,7 @@ feature {QUERY_EXECUTER} -- Implementation
 			Result.set_operator (prof_query.subquery_at (i).operator)
 		end
 
-	set_filter_value (filter: FILTER; calls: BOOLEAN; i: INTEGER): FILTER is
+	set_filter_value (filter: PROFILE_FILTER; calls: BOOLEAN; i: INTEGER): PROFILE_FILTER is
 			-- Sets the value specified by the user in `filter'.
 			-- `calls' distinguishes between the filter is a 
 			-- CALLS_FILTER (true) or not (false).
@@ -539,8 +539,8 @@ feature {QUERY_EXECUTER} -- Implementation
 	extend_with_languages is
 			-- Creates extra language filters
 		local
-			lang_filt: FILTER
-			new_ff: FILTER
+			lang_filt: PROFILE_FILTER
+			new_ff: PROFILE_FILTER
 			i: INTEGER
 		do
 			if prof_options.language_names.count > 1 then
@@ -565,7 +565,7 @@ feature {QUERY_EXECUTER} -- Implementation
 			end;
 		end;
 
-	generate_language_filter (i: INTEGER): FILTER is
+	generate_language_filter (i: INTEGER): PROFILE_FILTER is
 			-- Generates a filter for a specified
 			-- language
 		local
@@ -623,7 +623,7 @@ feature {NONE} -- Attributes
 	profile_information: PROFILE_INFORMATION
 		-- Retrieved from disk- where it is stored by prof_converter.
 
-	first_filter: FILTER
+	first_filter: PROFILE_FILTER
 		-- Filter of which the `filter'-feature is to be called.
 
 	int_last_output: PROFILE_INFORMATION

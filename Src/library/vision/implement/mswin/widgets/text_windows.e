@@ -52,6 +52,8 @@ inherit
 			table_size as wel_table_size,
 			style as wel_style
 		undefine
+			on_show,
+			on_hide,
 			on_size,
 			on_move,
 			on_right_button_up,
@@ -65,7 +67,8 @@ inherit
 			on_key_down
 		redefine
 			default_style,
-			on_en_change
+			on_en_change,
+			on_char
 		end
 
 	SIZEABLE_WINDOWS
@@ -93,15 +96,6 @@ feature -- Initialization
 			wc: WEL_COMPOSITE_WINDOW
 		do
 			if not realized then
-				default_style := Ws_child + Ws_visible + Ws_border
-					   + Es_nohidesel + Es_left
-					   + Es_multiline + Es_autovscroll
-				if not is_word_wrap_mode then
-					default_style := default_style + Es_autohscroll
-				end
-				if is_read_only then
-					default_style := default_style + Es_readonly
-				end
 				if width = 0 then
 					set_width (200)
 				end
@@ -755,8 +749,32 @@ feature {NONE} -- Implementation
 			modify_actions.execute (Current, Void)
 		end
 
-	default_style: INTEGER
-			-- Default style for window control
+	default_style: INTEGER is
+			-- Default style for window control;
+		do
+			Result := Ws_child + Ws_visible + Ws_border
+				   + Es_nohidesel + Es_left
+				   + Es_multiline + Es_autovscroll
+			if not is_word_wrap_mode then
+				Result := Result + Es_autohscroll
+			end
+			if is_read_only then
+				Result := Result + Es_readonly
+			end
+		end
+
+	on_char (virtual_key, key_data: INTEGER) is
+			-- Wm_char message
+		local
+			kw: KEYBOARD_WINDOWS
+			kpd: KYPRESS_DATA
+		do
+			!! kw.make_from_key_state
+			!! kpd.make (owner, virtual_key, virtual_keys @ virtual_key, kw) 
+			if virtual_key = vk_return or virtual_key = vk_tab then
+				activate_actions.execute (Current, kpd)
+			end
+		end
 
 	windows_position_to_eiffel (pos: INTEGER) : INTEGER is
 			-- Translate a position in a string with %R%N as delimiters 

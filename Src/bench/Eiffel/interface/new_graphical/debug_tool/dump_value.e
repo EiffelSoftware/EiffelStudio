@@ -36,9 +36,9 @@ inherit
 create
 	make_boolean, make_character, make_integer, make_integer_64, make_real,
 	make_double, make_pointer, make_object,	make_manifest_string
-	,
-	make_object_for_dotnet
-
+	,make_string_for_dotnet
+	,make_object_for_dotnet
+	
 feature -- Initialization
 
 	make_boolean(value: BOOLEAN; dtype: CLASS_C) is
@@ -141,6 +141,36 @@ feature -- dotnet
 
 	value_dotnet: ICOR_DEBUG_VALUE
 
+feature -- Object ICorDebugStringValue
+
+	value_string_dotnet: ICOR_DEBUG_STRING_VALUE
+	
+	string_value: STRING
+
+	make_string_for_dotnet (icd_frame: ICOR_DEBUG_FRAME; icd_value: ICOR_DEBUG_VALUE; 
+			icd_string: ICOR_DEBUG_STRING_VALUE; value: STRING; a_string_value: STRING; dclass: CLASS_C; 
+			a_b_is_null: BOOLEAN) is
+			-- make a object item initialized to `value'
+		do
+--			is_dotnet_value := True
+			value_dotnet := icd_value
+			value_frame_dotnet := icd_frame
+			value_string_dotnet := icd_string
+			string_value := a_string_value
+			if a_b_is_null then
+				value_object := Void
+			else
+				value_object := value
+			end
+			type := Type_string_dotnet
+			dynamic_class := dclass
+			is_external_type := True
+		ensure
+			type /= Type_unknown
+		end
+
+feature -- Object ICorDebugObjectValue
+
 	value_object_dotnet: ICOR_DEBUG_OBJECT_VALUE
 	
 	value_class_token: INTEGER
@@ -224,6 +254,8 @@ feature -- Status report
 		do
 			if type = Type_string then
 				Result := True
+			elseif type = Type_string_dotnet then
+				Result := not is_void
 			elseif type = Type_object and not is_void then
 				if Eiffel_system.string_class.is_compiled then
 					if 
@@ -375,6 +407,8 @@ feature -- Status report
 					io.put_string ("Finding output value of constant string")
 				end
 				Result := "%"" + Character_routines.eiffel_string (value_object) + "%""
+			elseif type = Type_string_dotnet then
+				Result := "%"" + Character_routines.eiffel_string (string_value) + "%""			
 			else
 				create Result.make (Application.displayed_string_size + 2)
 				Result.append_character ('%"')
@@ -456,19 +490,20 @@ feature -- Access
 			--| CLASS_NAME = `full_output'
 		do
 			create Result.make (100)
-			if dynamic_class /= Void then
+
+			if is_void then
+				Result.append ("NONE = Void")
+			elseif dynamic_class /= Void then
 				Result.append (dynamic_class.name_in_upper)
-				if type = Type_object then
+				if type = Type_object or type = Type_string_dotnet then
 					Result.append_character (' ')
 				else
 					Result.append_character ('=')
 				end
 				Result.append (full_output)
-				if Application.is_dotnet and then is_external_type then
+				if is_dotnet_value and then is_external_type then
 					Result.append (" -> Token=0x" + value_class_token.to_hex_string)
 				end
-			elseif is_void then
-				Result.append ("NONE = Void")
 			else		
 				Result.append ("ANY ")			
 				Result.append (full_output)
@@ -508,9 +543,7 @@ feature -- Access
 				Result.append_character ('%"')
 				Result.append (value_object)
 				Result.append_character ('%"')
-			when Type_pointer then
-				Result := value_pointer.out
-			when Type_object then
+			when Type_string_dotnet , Type_object then
 				if value_object /= Void then
 					create Result.make (value_object.count + 2)
 					Result.append_character ('[')
@@ -519,6 +552,8 @@ feature -- Access
 				else
 					Result := "Void"
 				end
+			when Type_pointer then
+				Result := value_pointer.out
 			else
 				Result := ""
 			end
@@ -530,7 +565,7 @@ feature -- Access
 			-- If it makes sense, return the address of current object.
 			-- Void if `is_void' or if `Current' does not represent an object.
 		do
-			if type = Type_object then
+			if type = Type_object or type = Type_string_dotnet then
 				Result := value_object
 			end
 		end
@@ -540,18 +575,18 @@ feature -- Access
 			
 	dynamic_class_type: CLASS_TYPE
 			-- Dynamic Class Type of `Current'. Void iff `is_void'.
-			-- Used only in dotnet context (for now)
+			-- Used only in Reference dotnet context (for now)
 	
 	is_void: BOOLEAN is
 			-- Is `Current' a Void reference?
 		do
-			Result := type = Type_object and address = Void
+			Result := (type = Type_object or type = Type_string_dotnet) and address = Void
 		end
 
 	is_basic: BOOLEAN is
 			-- Is `Current' of a basic type?
 		do
-			Result := type /= Type_object and type /= Type_string
+			Result := type /= Type_object and type /= Type_string and type /= Type_string_dotnet
 		end
 
 feature {DUMP_VALUE} -- Implementation
@@ -585,7 +620,8 @@ feature {NONE} -- Private Constants
 	Type_pointer	: INTEGER is 7
 	Type_object		: INTEGER is 8
 	Type_string		: INTEGER is 9
-	Type_integer_64: INTEGER is 10
+	Type_string_dotnet: INTEGER is 10
+	Type_integer_64: INTEGER is 11
 
 	character_routines: CHARACTER_ROUTINES is
 			-- To have a printable output of Eiffel strings that have

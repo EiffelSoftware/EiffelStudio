@@ -452,12 +452,13 @@ feature {EB_SET_SLICE_SIZE_CMD}
 				Result.extend (create {EV_TREE_ITEM}.make_with_text ("Bug"))
 				Result.expand_actions.extend (agent fill_item (Result))
 			end
-			if dv.address /= Void then
+			if dv.address /= Void and not dv.is_external_type then
+					--| For now we don't support this for external type
 				create ost.make (dv.address, dv.name, dv.dynamic_class)
 				ost.set_associated_tree_item (Result)
 				Result.set_pebble (ost)
 				Result.set_accept_cursor (ost.stone_cursor)
-				Result.set_deny_cursor (ost.X_stone_cursor)
+				Result.set_deny_cursor (ost.X_stone_cursor)				
 			end
 		end
 

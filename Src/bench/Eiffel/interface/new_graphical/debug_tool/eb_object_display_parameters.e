@@ -365,7 +365,8 @@ feature {NONE} -- Implementation
 				Result.extend (create {EV_TREE_ITEM}.make_with_text (Interface_names.l_Dummy))
 				Result.expand_actions.extend (agent fill_item (Result))
 			end
-			if dv.address /= Void then
+			if dv.address /= Void and then not dv.is_external_type then
+					--| For now we don't support this for external type
 				create ost.make (dv.address, dv.name, dv.dynamic_class)
 				ost.set_associated_tree_item (Result)
 				Result.set_pebble (ost)

@@ -50,7 +50,7 @@ feature -- Generation
 			copy_directory (l_html_dir, l_help_dir)
 		
 			l_html_help_project ?= project
-			if l_html_help_project /= Void then				
+			if l_html_help_project /= Void and then shared_constants.help_constants.compile then				
 				generate_html_help (l_html_help_project)
 			else
 				l_mshelp_project ?= project

@@ -121,9 +121,10 @@ feature -- Primitives
 			anchor_type: TYPE
 		do
 			if not (System.current_class.class_id = class_id) then
-debug
-	io.error.putstring ("LIKE_FEATURE solved_type origin_table%N")
-end
+				debug
+					io.error.putstring ("LIKE_FEATURE solved_type origin_table%N")
+				end
+				
 				origin_table := feat_table.origin_table
 				orig_feat := System.class_of_id (class_id).feature_table.item_id (feature_name_id)
 				if orig_feat = Void then
@@ -131,32 +132,34 @@ end
 				end
 				routine_id := orig_feat.rout_id_set.first
 				anchor_feature := origin_table.item (routine_id)
-debug
-	if anchor_feature = Void then
-		io.error.putstring ("Void feature%N")
-		feat_table.trace
-		orig_feat.trace
-		f.trace
-	end
-end
+				
+				debug
+					if anchor_feature = Void then
+						io.error.putstring ("Void feature%N")
+						feat_table.trace
+						orig_feat.trace
+						f.trace
+					end
+				end
 			else
-debug
-	io.error.putstring ("LIKE_FEATURE solved_type origin_table%N")
-end
+				debug
+					io.error.putstring ("LIKE_FEATURE solved_type origin_table%N")
+				end
+
 				anchor_feature := feat_table.item_id (feature_name_id)
 				if anchor_feature = Void then
 					raise_veen (f)
 				end
 				routine_id := anchor_feature.rout_id_set.first
-debug
-	if anchor_feature = Void then
-		io.error.putstring ("Void feature%N")
-	end
-end
+				debug
+					if anchor_feature = Void then
+						io.error.putstring ("Void feature%N")
+					end
+				end
 			end
 			anchor_type := anchor_feature.type
 			Like_control.on
-			if Like_control.has (routine_id) then
+			if Like_control.has (routine_id) or else anchor_type.is_void then
 				Like_control.raise_error
 			else
 					-- Update anchored type controler
@@ -164,7 +167,7 @@ end
 					-- Re-processing of the anchored type
 				Result := clone (Current)
 				Result.set_actual_type
-				(anchor_type.solved_type (feat_table, anchor_feature).actual_type)
+					(anchor_type.solved_type (feat_table, anchor_feature).actual_type)
 				check
 					Result_actual_type_exists: Result.actual_type /= Void
 				end

@@ -129,6 +129,13 @@ feature -- Externals
 			"GDK_INTERP_BILINEAR"
 		end
 
+	frozen gdk_interp_hyper: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_INTERP_HYPER"
+		end
+
 	frozen gdk_pixbuf_composite (src, dest: POINTER; dest_x, dest_y, dest_width, dest_height: INTEGER; offset_x, offset_y, scale_x, scale_y: DOUBLE; interp_type, overall_alpha: INTEGER) is
 		external
 			"C signature (GdkPixbuf*, GdkPixbuf*, int, int, int, int, double, double, double, double, GdkInterpType, int) use <gtk/gtk.h>"

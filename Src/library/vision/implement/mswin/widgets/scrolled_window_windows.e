@@ -56,6 +56,7 @@ inherit
 			set_horizontal_position as wel_set_horizontal_position,
 			set_vertical_position as wel_set_vertical_position
 		undefine
+			class_background,
 			on_show,
 			on_hide,
 			on_size,

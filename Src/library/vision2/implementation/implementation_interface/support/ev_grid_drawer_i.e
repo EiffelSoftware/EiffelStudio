@@ -135,7 +135,7 @@ feature -- Basic operations
 				if grid.is_row_height_fixed then
 						-- If row heights are fixed we can calculate instead of searching.
 					first_row_index := ((invalid_y_start) // grid.row_height) + 1
-					last_row_index := ((invalid_y_end) // grid.row_height) + 1
+					last_row_index := (((invalid_y_end) // grid.row_height) + 1).min (grid.row_count)
 				else
 					fixme ("implement using a binary search")
 					from
@@ -224,39 +224,36 @@ feature -- Basic operations
 						column_counter := column_counter + 1
 						current_index_in_row := current_index_in_row + 1
 					end
-				
-					if current_item_x_position  + current_column_width < grid.width or grid.is_horizontal_scrolling_per_item then
-							-- The columns that were drawn did not span to the very edge of
-							-- the grid, so we must fill the remainder in the current grid background color.
-						grid.drawable.set_foreground_color (grid.background_color)
-						rectangle_width := grid.viewport.width - (column_offsets @ (column_offsets.count) - virtual_x_position)
-						if printing_values then
-							print ("rectangle_width : " + rectangle_width.out + "%N")
-						end
-						if rectangle_width >= 0 then
-							grid.drawable.fill_rectangle (current_item_x_position  + current_column_width, current_item_y_position, rectangle_width, current_row_height)
-						end
-					end
 					bool := True
 					row_counter := row_counter + 1
 					current_index_in_column := current_index_in_column + 1
 				end
-				if current_item_y_position + current_row_height < grid.height or grid.is_vertical_scrolling_per_item then
-							-- The rows that were drawn did not span to the very bottom of
-							-- the grid, so we must fill the remainder in the current grid background color.
-						grid.drawable.set_foreground_color (grid.background_color)
-						if grid.is_row_height_fixed then
-							rectangle_height := grid.viewport.height - virtual_y_position + (grid.row_height * grid.row_count)
-						else
-							rectangle_height := grid.viewport.height - virtual_y_position + row_offsets @ (row_offsets.count)
-						end
-						if rectangle_height >= 0 then
-							if printing_values then
-								print ("rectangle_height : " + rectangle_height.out + "%N")
-							end
-							grid.drawable.fill_rectangle (horizontal_buffer_offset, current_item_y_position + current_row_height, horizontal_buffer_offset + grid.viewport.width, rectangle_height)							
-						end
-					end
+				-- Now draw in the background area where no items were displayed if required.
+				-- Note that we perform the vertical and horizontal drawing seperately so there may be overlap if both are
+				-- being drawn at once. This does not matter as it is simpler to implement, has no real performance impact as
+				-- it is simply drawing a rectangle and dows not flicker.
+				
+			if last_column_index = grid.column_count then				
+				rectangle_width := grid.viewport.width - (column_offsets @ (column_offsets.count) - virtual_x_position)
+				if rectangle_width >= 0 then
+						-- Check to see if we must draw the background to the right of the items.
+					grid.drawable.set_foreground_color (grid.background_color)
+					grid.drawable.fill_rectangle (horizontal_buffer_offset + grid.viewport.width - rectangle_width, vertical_buffer_offset, rectangle_width, grid.viewport.height)
+				end
+			end
+			if last_row_index = grid.row_count then
+				if grid.is_row_height_fixed then
+						-- Special handling for fixed row heights as `row_offsets' does not exist.
+					rectangle_height := grid.viewport.height - ((grid.row_height * grid.row_count) - virtual_y_position)
+				else
+					rectangle_height := grid.viewport.height - (row_offsets @ (row_offsets.count) - virtual_y_position)
+				end
+				if rectangle_height >= 0 then
+						-- Check to see if must draw the background below the items.
+					grid.drawable.set_foreground_color (grid.background_color)
+					grid.drawable.fill_rectangle (horizontal_buffer_offset, vertical_buffer_offset + grid.viewport.height - rectangle_height, grid.viewport.width, rectangle_height)
+				end
+			end
 			else
 				grid.drawable.set_foreground_color (grid.background_color)
 				grid.drawable.fill_rectangle (an_x, a_y, a_width, a_height)

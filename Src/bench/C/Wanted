@@ -3,6 +3,7 @@
 >ABORTSIG
 >BSD
 >BYTEORDER
+>CAT2
 >Caddr_t
 >Clock_t
 >DIRNAMLEN
@@ -132,6 +133,7 @@ chmod
 chown
 clocktype
 cp
+cpp_stuff
 d_access
 d_bcmp
 d_bcopy

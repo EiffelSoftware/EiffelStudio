@@ -79,7 +79,7 @@ feature
 			Result := list.selected_item.value
 		end;
 
-	popup (command: COMMAND_W; name_list: LIST [STRING]) is
+	popup (command: COMMAND; name_list: LIST [STRING]) is
 			-- Fill the choice window with `name_list' and
 			-- pop it up at the pointer position.
 		local
@@ -146,7 +146,7 @@ feature {NONE} -- Properties
 	exit_b: PUSH_B;	
 			-- Exit button
 
-	caller: COMMAND_W;
+	caller: COMMAND;
 			-- Command who calls `Current'
 
 	map_widget: WIDGET;

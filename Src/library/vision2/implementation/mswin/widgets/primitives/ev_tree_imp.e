@@ -202,7 +202,9 @@ feature -- Basic operations
 					an_index)
 					c.forth
 				end
-				item_imp.set_internal_children (Void)
+				if item_imp.top_parent_imp /= Void then
+					item_imp.set_internal_children (Void)
+				end
 			end
 
 				-- Then, we redraw the tree

@@ -65,12 +65,18 @@ feature
 		local
 			is_nested: BOOLEAN;
 			r_id: ROUTINE_ID;
-			rout_info: ROUT_INFO	
+			rout_info: ROUT_INFO;
+			is_boolean: BOOLEAN
 		do
 			is_nested := not is_first;
 
-			generated_file.putchar ('(');
-			real_type (type).c_type.generate_function_cast (generated_file);
+			is_boolean :=  type.is_boolean;
+			if is_boolean then
+				generated_file.putstring ("EIF_TEST((");
+			else
+				generated_file.putchar ('(');
+				real_type (type).c_type.generate_function_cast (generated_file);
+			end;
 			if	
 				Compilation_modes.is_precompiling or
 				typ.base_class.is_precompiled

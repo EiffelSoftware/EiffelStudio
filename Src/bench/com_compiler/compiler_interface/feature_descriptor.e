@@ -462,11 +462,10 @@ feature {FEATURE_DESCRIPTOR} -- Implementation
 						list.after
 					loop
 						feat := client.feature_table.item (list.item)
-						check
-							feature_found: feat /= Void
+						if feat /= Void then
+							create feat_desc.make_with_class_i_and_feature_i (client.lace_class, feat)
+							Result.extend (feat_desc)
 						end
-						create feat_desc.make_with_class_i_and_feature_i (client.lace_class, feat)
-						Result.extend (feat_desc)
 						i := i + 1
 						list.forth
 					end

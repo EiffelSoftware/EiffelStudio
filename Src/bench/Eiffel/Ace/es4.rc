@@ -138,7 +138,7 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,102,131,50,14
     RTEXT           "Username:",IDC_STATIC,20,90,36,8
     RTEXT           "Key:",IDC_STATIC,31,109,25,8
-    LTEXT           "To get your ""Username"" and ""Key"", please contact\nISE at:",
+    LTEXT           "To get your ""Username"" and ""Key"",\nplease contact ISE at:",
                     IDC_STATIC,9,8,154,19
     LTEXT           "Interactive Software Engineering\nISE Building, 270 Storke Road, second floor\nGoleta CA 93117 USA",
                     IDC_STATIC,21,32,142,24

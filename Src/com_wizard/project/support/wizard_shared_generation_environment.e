@@ -519,6 +519,13 @@ feature -- Access
 			Result.force ("value", "value")
 			Result.force ("result", "result")
 			Result.force ("IFont1", "IFont1")
+			Result.force ("ITypeInfo", "ITypeInfo")
+			Result.force ("ITypeLib", "ITypeLib")
+			Result.force ("GetTypeInfo", "GetTypeInfo")
+			Result.force ("GetTypeInfoCount", "GetTypeInfoCount")
+			Result.force ("GetIDsOfNames", "GetIDsOfNames")
+			Result.force ("LCID", "LCID")
+
 		end
 		
 	eiffel_runtime_macros: HASH_TABLE [STRING, STRING] is

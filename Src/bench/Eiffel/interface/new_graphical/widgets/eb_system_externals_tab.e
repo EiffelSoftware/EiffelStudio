@@ -41,10 +41,10 @@ feature -- Access
 
 feature -- External access
 
-	include_path_list: EB_ADD_REMOVE_LIST
+	include_path_list: EV_ADD_REMOVE_LIST
 			-- List of include path.
 			
-	object_file_list: EB_ADD_REMOVE_LIST
+	object_file_list: EV_ADD_REMOVE_LIST
 			-- List of object file.
 
 feature -- Store/Retrieve

@@ -113,8 +113,9 @@ feature -- Status setting
 
 feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 
-
 	pnd_target_from_gdk_window (a_gdk_window: POINTER): EV_PICK_AND_DROPABLE is
+		require
+			a_gdk_window_not_void: a_gdk_window /= Default_pointer
 		local
 			cur: CURSOR
 			imp: EV_PICK_AND_DROPABLE_IMP
@@ -122,6 +123,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 		do
 			--| FIXME use this implementation instead!:
 			--| Result := hash_table.item (a_gdk_window)
+			--| FIXME IEK Mclist is comprised of multiple gdk windows.
 			cur := pnd_targets.cursor
 			from
 				pnd_targets.start
@@ -136,9 +138,9 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 					check
 						imp_not_void: imp /= Void
 					end
-					-- if imp has `a_gdk_window' then
-					--		Result := pnd_targets.item
-					-- end
+					if imp.pebble_over_widget (a_gdk_window) then
+						Result := trg
+					end				
 				end
 				pnd_targets.forth
 			end
@@ -322,6 +324,9 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/03/22 21:59:27  king
+--| Added pebble_over_widget functionality
+--|
 --| Revision 1.17  2000/03/21 23:55:48  brendel
 --| c -> cur
 --|

@@ -20,7 +20,8 @@ inherit
 		redefine
 			make,
 			interface,
-			call_close_request_actions
+			call_close_request_actions,
+			set_position
 		end
 
 create
@@ -33,7 +34,6 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_window_new (C.Gtk_window_dialog_enum))
-			C.gtk_object_ref (c_object)
 			C.gtk_widget_realize (c_object)
 			C.gtk_window_set_position (c_object, C.Gtk_win_pos_center_enum)
 			C.gtk_window_set_policy (c_object, 0, 0, 1) -- False, False, True
@@ -63,7 +63,15 @@ feature -- Status Setting
 		do
 			set_closeable (False)
 		end
-		
+	
+	set_position (a_x, a_y: INTEGER) is
+			-- Set horizontal offset to parent to `a_x'.
+			-- Set vertical offset to parent to `a_y'.
+		do
+			C.gtk_window_set_position (c_object, C.Gtk_win_pos_none_enum)
+			Precursor (a_x, a_y)
+		end
+
 feature -- Basic operations
 
 	show_modal_to_window (a_window: EV_WINDOW) is

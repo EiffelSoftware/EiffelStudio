@@ -28,8 +28,8 @@ feature {NONE} -- Initalization
 			a_name_not_void: a_name /= Void
 			an_agent_not_void: an_agent /= Void
 		do
-			name := a_name
-			description := "Test of dynamic list: " + name + "."
+			subject_name := a_name
+			description := "Test of dynamic list: " + a_name + "."
 			list := a_list
 			item_agent := an_agent
 			create {LINKED_LIST [G]} similar_list.make
@@ -39,41 +39,37 @@ feature -- Basic operation
 
 	execute is
 			-- Perform testing.
+		local
+			test_list: LINKED_LIST [TUPLE [STRING, PROCEDURE [ANY, TUPLE []]]]
+			s: STRING
+			p: PROCEDURE [ANY, TUPLE []]
 		do
-			description := "Test results of " + name + ":%N"
+			description := "Test results of " + subject_name + ":%N"
 			test_successful := True
 
-			description.append ("Testing feature `extend'...")
-			test_extend
-			append_result
+			create test_list.make
+			test_list.extend (["extend", ~test_extend])
+			test_list.extend (["put", ~test_put])
+			test_list.extend (["replace", ~test_replace])
+			test_list.extend (["put_left", ~test_put_left])
+			test_list.extend (["put_right", ~test_put_right])
+			test_list.extend (["put_i_th", ~test_put_i_th])
+			test_list.extend (["force", ~test_force])
+			test_list.extend (["put_front", ~test_put_front])
 
-			description.append ("Testing feature `put'...")
-			test_put
-			append_result
-
-			description.append ("Testing feature `replace'...")
-			test_replace
-			append_result
-
-			description.append ("Testing feature `put_left'...")
-			test_put_left
-			append_result
-
-			description.append ("Testing feature `put_right'...")
-			test_put_right
-			append_result
-
-			description.append ("Testing feature `put_i_th'...")
-			test_put_i_th
-			append_result
-
-			description.append ("Testing feature `force'...")
-			test_force
-			append_result
-
-			description.append ("Testing feature `put_front'...")
-			test_put_front
-			append_result
+			from
+				test_list.start
+			until
+				test_list.off
+			loop
+				s ?= test_list.item.entry (1)
+				p ?= test_list.item.entry (2)
+				empty_and_test (p, s)
+				fill_start_and_test (p, s)
+				fill_go_before_and_test (p, s)
+				fill_go_after_and_test (p, s)
+				test_list.forth
+			end
 		rescue
 			test_successful := False
 			if assertion_violation then
@@ -83,12 +79,63 @@ feature -- Basic operation
 			end
 		end
 
+	empty_and_test (test_agent: PROCEDURE [ANY, TUPLE []]; name: STRING) is
+		do
+			list.wipe_out
+			similar_list.wipe_out
+			description.append ("Testing feature `" + name + "'...")
+			test_agent.call ([])
+			append_result
+		end
+
+	fill_start_and_test (test_agent: PROCEDURE [ANY, TUPLE []]; name: STRING) is
+		do
+			list.wipe_out
+			similar_list.wipe_out
+			new_item
+			list.extend (last_item)
+			similar_list.extend (last_item)
+			list.go_i_th (1)
+			similar_list.go_i_th (1)
+			description.append ("Testing feature `" + name + "'...")
+			test_agent.call ([])
+			append_result
+		end
+
+	fill_go_before_and_test (test_agent: PROCEDURE [ANY, TUPLE []]; name: STRING) is
+		do
+			list.wipe_out
+			similar_list.wipe_out
+			new_item
+			list.extend (last_item)
+			similar_list.extend (last_item)
+			list.go_i_th (0)
+			similar_list.go_i_th (0)
+			description.append ("Testing feature `" + name + "'...")
+			test_agent.call ([])
+			append_result
+		end
+
+	fill_go_after_and_test (test_agent: PROCEDURE [ANY, TUPLE []]; name: STRING) is
+		do
+			list.wipe_out
+			similar_list.wipe_out
+			new_item
+			list.extend (last_item)
+			similar_list.extend (last_item)
+			list.go_i_th (0)
+			similar_list.go_i_th (0)
+			description.append ("Testing feature `" + name + "'...")
+			test_agent.call ([])
+			append_result
+		end
+
 feature -- Access
 
 	description: STRING
 			-- Description of the test, its results and other (ir)relevant information.
 
-	name: STRING
+	subject_name: STRING
 			-- The classname of the DYNAMIC_LIST.
 
 	new_item is
@@ -227,8 +274,6 @@ feature {NONE} -- Implementation
 		local
 			n: INTEGER
 		do
-			list.start
-			similar_list.start
 			from
 				n := Magnitude
 			until
@@ -245,8 +290,6 @@ feature {NONE} -- Implementation
 		local
 			n: INTEGER
 		do
-			list.start
-			similar_list.start
 			from
 				n := Magnitude
 			until
@@ -263,8 +306,6 @@ feature {NONE} -- Implementation
 		local
 			n: INTEGER
 		do
-			list.start
-			similar_list.start
 			from
 				n := Magnitude
 			until
@@ -281,8 +322,6 @@ feature {NONE} -- Implementation
 		local
 			n: INTEGER
 		do
-			list.start
-			similar_list.start
 			from
 				n := Magnitude
 			until
@@ -299,8 +338,6 @@ feature {NONE} -- Implementation
 		local
 			n: INTEGER
 		do
-			list.start
-			similar_list.start
 			from
 				n := Magnitude
 			until
@@ -317,8 +354,6 @@ feature {NONE} -- Implementation
 		local
 			n: INTEGER
 		do
-			list.start
-			similar_list.start
 			from
 				n := Magnitude
 			until
@@ -335,8 +370,6 @@ feature {NONE} -- Implementation
 		local
 			n: INTEGER
 		do
-			list.start
-			similar_list.start
 			from
 				n := Magnitude
 			until
@@ -353,8 +386,6 @@ feature {NONE} -- Implementation
 		local
 			n: INTEGER
 		do
-			list.start
-			similar_list.start
 			from
 				n := Magnitude
 			until
@@ -394,8 +425,8 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.5  2000/03/01 17:25:48  brendel
---| Fixed `item' comparison.
+--| Revision 1.6  2000/03/01 19:16:56  brendel
+--| Improved test sequence.
 --|
 --| Revision 1.2  2000/03/01 16:18:17  brendel
 --| Added tests for all single-item-add features.

@@ -31,7 +31,7 @@ inherit
 		select
 			popup
 		end;
-	SET_WINDOW_ATTRIBUTES
+	WINDOW_ATTRIBUTES
 
 creation
 
@@ -112,7 +112,6 @@ feature -- Access
 			last_caller := a_command;
 			set_message (a_message);
 			set_exclusive_grab;
-			remove_button_click_action (1, Current, popdown_action);
 			popup
 		ensure
 			last_caller_recorded: last_caller = a_command
@@ -154,7 +153,6 @@ feature -- Access
 
 			if (a_command /= Void) then
 				set_exclusive_grab;
-				remove_button_click_action (1, Current, popdown_action)
 			end
 			
 			popup;

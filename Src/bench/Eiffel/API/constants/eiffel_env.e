@@ -34,6 +34,15 @@ feature -- Status
 				io.error.putstring (": the environment variable $ISE_PLATFORM is not set%N")
 				(create {EXCEPTIONS}).die (-1)
 			end
+			
+			if Platform_constants.is_windows then
+				temp := Eiffel_c_compiler
+				if (temp = Void) or else temp.is_empty then
+					io.error.putstring (p.Workbench_name)
+					io.error.putstring (": the environment variable $ISE_C_COMPILER is not set%N")
+					(create {EXCEPTIONS}).die (-1)
+				end
+			end
 		end
 
 feature -- Access: environment variable

@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			create_columns
 			create_rows
 			Precursor {EV_CONTAINER_IMP}
-			enable_homogeneous
+			disable_homogeneous
 		end
 
 	create_columns is

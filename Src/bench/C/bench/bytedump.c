@@ -176,8 +176,8 @@ static  char    *names [] = {
 "BC_SEP_FEATURE" ,
 "BC_SEP_PEXTERN" ,
 "BC_SEP_PFEATURE" ,
-"BC_NOTUSED_168",
-"BC_NOTUSED_169",
+"BC_TUPLE",
+"BC_PTUPLE",
 "BC_NOTUSED_170",
 "BC_NOTUSED_171",
 "BC_NOTUSED_172",
@@ -783,6 +783,22 @@ static  void    print_instructions ()
 				else
 					fprintf (ofp, " Array");
 				break;
+
+			case BC_TUPLE:
+			case BC_PTUPLE:
+					/* Dynamic type of tuple */
+				fprintf (ofp, "dtype %ld ", bshort());
+					/* Full dynamic typle of tuple */
+				print_cid ();
+					/* Number of elements in tuple */
+				fprintf (ofp, " #%ld ", blong());
+					/* Is TUPLE atomic? */
+				if (blong()) {
+					fprintf (ofp, "Atomic ");
+				}
+				break;
+
+
 			case  BC_CLONE :
 				break;
 

@@ -50,7 +50,7 @@ feature -- Access
 		end
 		
 	clr_version: STRING
-		-- Version of clr used in geenrated ace files.
+		-- Version of clr used in generated ace files.
 
 feature -- Satus setting
 

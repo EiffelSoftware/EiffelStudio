@@ -37,6 +37,13 @@ feature -- Access
 			"ODT_BUTTON"
 		end
 
+	Odt_static: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"ODT_STATIC"
+		end
+
 end -- class WEL_ODT_CONSTANTS
 
 --|----------------------------------------------------------------

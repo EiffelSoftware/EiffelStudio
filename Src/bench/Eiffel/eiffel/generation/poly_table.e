@@ -292,9 +292,10 @@ feature
 				i > nb or else not Result
 			loop
 				this_type := local_copy.array_item (i).type
-				Result := (first_type = Void and then this_type = Void) or else
-						((first_type /= Void and then this_type /= Void) and then
-						first_type.is_identical (this_type))
+				Result := (first_type = Void and then this_type = Void)
+						or else ((first_type /= Void and then this_type /= Void)
+						and then first_type.is_identical (this_type)
+						and then this_type.is_identical (first_type))
 				i := i + 1
 			end
 		end

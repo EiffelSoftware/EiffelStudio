@@ -281,7 +281,8 @@ feature -- Widget
 	screen (widget: WIDGET): SCREEN is
 			-- Screen of widget
 		require
-			widget_exists: widget /= Void
+			widget_exists: widget /= Void;
+			has_implementation: not widget.destroyed
 		do
 			Result := top (widget).screen
 		ensure
@@ -350,7 +351,8 @@ feature -- Widget
 	top (widget: WIDGET): TOP is
 			-- Top shell or base of the widget
 		require
-			widget_exists: widget /= Void
+			widget_exists: widget /= Void;
+			has_implementation: not widget.destroyed
 		local
 			widget_area: like area;
 			i: INTEGER;

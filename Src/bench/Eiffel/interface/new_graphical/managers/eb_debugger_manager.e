@@ -897,8 +897,9 @@ feature {NONE} -- Implementation
 				debug_cmd.enable_sensitive
 				no_stop_cmd.enable_sensitive
 				if
-					display_dotnet_cmd and then
-					Eiffel_system.System.il_generation
+					display_dotnet_cmd
+					and then Eiffel_project.system_defined
+					and then Eiffel_system.System.il_generation
 				then
 					eac_browser_cmd.enable_sensitive
 				end
@@ -1108,8 +1109,8 @@ feature {NONE} -- MSIL system implementation
 	is_msil_dll_system: BOOLEAN is
 			-- Is a MSIL DLL system ?
 		do
-			Result := Eiffel_project.system_defined
-					and then Eiffel_system.System /= Void 
+			Result := Eiffel_project.initialized 
+					and then Eiffel_project.system_defined
 					and then Eiffel_system.System.il_generation
 					and then Eiffel_system.System.msil_generation_type.is_equal (dll_type)			
 		end

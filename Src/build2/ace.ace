@@ -11,7 +11,6 @@ default
 	arguments (" ")
 	disabled_debug (yes)
 	disabled_debug ("dlg_dispatcher")
-	disabled_debug ("gdi_count")
 	disabled_debug ("vision2_windows")
 	disabled_debug ("vision2_windows_gdi")
 	disabled_debug ("wel")
@@ -42,7 +41,7 @@ default
 cluster
 	all build2:		"D:\work\build2"
 		exclude
-			"object_editor"; "eifgen"; 
+			"object_editor"; "eifgen"; "EIFGEN" "templates"; 
 		end
 
 	dev:		"D:\work\library"
@@ -53,7 +52,7 @@ cluster
 		include
 			"ev_button"; 
 		exclude
-			"new_figures"; "gtk"; "components"; "obsolete"; "release"; "ev_widget.e"; "ev_pixmapable.e"; 
+			"new_figures"; "gtk"; "components"; "obsolete"; "release"; "ev_widget.e"; "ev_pixmapable.e"
 		end
 
 	all base:		"d:\work\library\base"

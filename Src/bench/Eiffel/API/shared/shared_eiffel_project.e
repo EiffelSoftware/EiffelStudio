@@ -1,18 +1,29 @@
 indexing
 
 	description: 
-		"";
+		"Shared instance of an eiffel project.";
 	date: "$Date$";
 	revision: "$Revision $"
 
 class SHARED_EIFFEL_PROJECT
 
-feature
+feature -- Access
 
 	Eiffel_project: E_PROJECT is
 		once
 			!! Result
 		end;	
+
+	Eiffel_ace: E_ACE is
+			-- Eiffel system
+		require
+			initialized: project_initialized
+		once
+			Result := Eiffel_project.ace
+		ensure
+			result_is_sys: Result = Eiffel_project.ace;
+			result_is_not_void: Result /= Void
+		end;
 
 	Eiffel_system: E_SYSTEM is
 			-- Eiffel system

@@ -11,7 +11,7 @@ inherit
 
 	FILTERABLE
 		redefine
-			dark_symbol, tool, display_temp_header
+			tool, display_temp_header
 		end;
 	SHARED_APPLICATION_EXECUTION
 
@@ -28,12 +28,6 @@ feature -- Properties
 			-- Pixmap for the button.
 		once 
 			Result := Pixmaps.bm_Showattributes 
-		end;
-	
-	dark_symbol: PIXMAP is 
-			-- Dark version of `symbol'.
-		once 
-			Result := Pixmaps.bm_Dark_showattributes 
 		end;
 	
 feature {NONE} -- Properties

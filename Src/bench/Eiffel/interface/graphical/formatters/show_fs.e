@@ -13,8 +13,9 @@ inherit
 		rename
 			create_structured_text as flatshort_context_text
 		redefine
-			dark_symbol, display_temp_header, post_fix
-		end;
+			 display_temp_header, post_fix
+		end
+
 	SHARED_FORMAT_TABLES
 
 creation
@@ -26,11 +27,6 @@ feature -- Properties
 	symbol: PIXMAP is 
 		once 
 			Result := Pixmaps.bm_Showfs 
-		end;
- 
-	dark_symbol: PIXMAP is 
-		once 
-			Result := Pixmaps.bm_Dark_showfs 
 		end;
  
 feature {NONE} -- Properties

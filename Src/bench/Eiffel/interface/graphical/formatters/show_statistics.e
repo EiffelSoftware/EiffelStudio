@@ -11,7 +11,7 @@ inherit
 
 	FILTERABLE
 		redefine
-			dark_symbol, display_temp_header, post_fix
+			display_temp_header, post_fix
 		end
 
 creation
@@ -23,11 +23,6 @@ feature -- Properties
 	symbol: PIXMAP is 
 		once 
 			Result := Pixmaps.bm_Showstatistics 
-		end;
- 
-	dark_symbol: PIXMAP is 
-		once 
-			Result := Pixmaps.bm_Dark_showstatistics
 		end;
  
 feature {NONE} -- Properties

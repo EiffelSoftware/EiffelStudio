@@ -13,11 +13,11 @@ inherit
 		rename
 			execute as old_execute	
 		redefine
-			dark_symbol, display_temp_header, make
+			display_temp_header, make
 		end;
 	FILTERABLE
 		redefine
-			dark_symbol, display_temp_header, execute, make
+			display_temp_header, execute, make
 		select
 			execute
 		end;
@@ -47,11 +47,6 @@ feature -- Properties
 			Result := Pixmaps.bm_Showcallers 
 		end;
  
-	dark_symbol: PIXMAP is 
-		once 
-			Result := Pixmaps.bm_Dark_showcallers 
-		end;
-
 feature -- Executions
 
 	execute_apply_action (a_cust_tool: like associated_custom_tool) is

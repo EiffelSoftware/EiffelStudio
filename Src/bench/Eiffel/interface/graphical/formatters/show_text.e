@@ -17,14 +17,14 @@ inherit
 			display_header as format_display_header,
 			class_name as exception_class_name
 		redefine
-			format, file_name, dark_symbol, display_temp_header
+			format, file_name, display_temp_header
 		end;
 	FORMATTER
 		rename
 			init as make,
 			class_name as exception_class_name
 		redefine
-			format, display_header, file_name, dark_symbol, display_temp_header
+			format, display_header, file_name, display_temp_header
 		select
 			display_header
 		end;
@@ -39,11 +39,6 @@ feature -- Properties
 	symbol: PIXMAP is 
 		once 
 			Result := Pixmaps.bm_Showtext 
-		end;
-	
-	dark_symbol: PIXMAP is 
-		once 
-			Result := Pixmaps.bm_Dark_showtext
 		end;
 	
 feature {ROUTINE_WIN_MGR} -- Displaying

@@ -13,9 +13,11 @@ inherit
 		rename
 			create_structured_text as flat_context_text
 		redefine
-			dark_symbol, display_temp_header, post_fix
-		end;
-	SHARED_SERVER;
+			display_temp_header, post_fix
+		end
+
+	SHARED_SERVER
+
 	SHARED_FORMAT_TABLES
 
 creation
@@ -27,11 +29,6 @@ feature -- Properties
 	symbol: PIXMAP is 
 		once 
 			Result := Pixmaps.bm_Showflat 
-		end;
- 
-	dark_symbol: PIXMAP is 
-		once 
-			Result := Pixmaps.bm_Dark_showflat 
 		end;
  
 feature {NONE} -- Properties

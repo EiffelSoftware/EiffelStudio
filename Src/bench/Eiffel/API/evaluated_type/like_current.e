@@ -53,7 +53,7 @@ feature -- Output
 			actual_dump: STRING
 		do
 			actual_dump := actual_type.dump
-			!!Result.make (15 + actual_dump.count)
+			create Result.make (15 + actual_dump.count)
 			Result.append ("[like Current] ")
 			Result.append (actual_dump)
 		end
@@ -75,7 +75,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			-- Calculated type in function of the feature `f' which has
 			-- the type Current and the feautre table `feat_table'
 		do
-			!!Result
+			create Result
 			Result.set_actual_type (feat_table.associated_class.actual_type)
 		end
 
@@ -83,14 +83,14 @@ feature {COMPILER_EXPORTER} -- Primitives
 			-- Instantiation of Current in the context of `class_type',
 			-- assuming that Current is written in class of id `written_id'.
 		do
-			!!Result
+			create Result
 			Result.set_actual_type (type)
 		end
 
 	create_info: CREATE_CURRENT is
 			-- Byte code information for entity type creation
 		once
-			!!Result
+			create Result
 		end
 
 end -- class LIKE_CURRENT

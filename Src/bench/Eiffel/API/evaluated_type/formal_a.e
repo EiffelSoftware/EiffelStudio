@@ -64,7 +64,7 @@ feature -- Output
 	dump: STRING is
 			-- Dumped trace
 		do
-			!!Result.make (10)
+			create Result.make (10)
 			Result.append ("Generic #")
 			Result.append_integer (position)
 		end
@@ -149,7 +149,7 @@ feature {COMPILER_EXPORTER}
 	type_i: FORMAL_I is
 			-- C type
 		do
-			!!Result
+			create Result
 			Result.set_position (position)
 		end
 

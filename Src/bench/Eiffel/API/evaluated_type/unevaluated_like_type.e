@@ -13,7 +13,7 @@ inherit
 			type_i, associated_class, internal_conform_to
 		end
 
-creation
+create
 	make,
 	make_current
 
@@ -87,7 +87,7 @@ feature -- Output
 
 	dump: STRING is
 		do
-			!! Result.make (0)
+			create Result.make (0)
 			Result.append ("like ")
 			Result.append (anchor)
 		end

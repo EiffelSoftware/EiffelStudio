@@ -14,7 +14,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 	
 feature {NONE} -- Initialization
@@ -75,7 +75,7 @@ feature -- Output
 			s: STRING
 		do
 			s := actual_type.dump
-			!!Result.make (18 + s.count)
+			create Result.make (18 + s.count)
 			Result.append ("[like " + feature_name +"] ")
 			Result.append (s)
 		end
@@ -104,7 +104,7 @@ feature -- Primitives
 		local
 			veen: VEEN
 		do
-			!!veen
+			create veen
 			veen.set_class (System.current_class)
 			veen.set_feature (f)
 			veen.set_identifier (feature_name)

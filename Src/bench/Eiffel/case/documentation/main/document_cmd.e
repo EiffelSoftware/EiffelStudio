@@ -13,7 +13,7 @@ inherit
 	
 	SHARED_ERROR_HANDLER
 	
-creation
+create
 	make
 
 feature -- Initialization
@@ -38,7 +38,7 @@ feature -- Execution
 			-- Start documentation wizard.
 		do
 			create wizard
-			wizard.finish_button.select_actions.extend (~generate)
+			wizard.finish_button.select_actions.extend (agent generate)
 			wizard.start
 		end
 

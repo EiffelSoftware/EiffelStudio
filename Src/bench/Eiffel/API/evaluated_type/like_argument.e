@@ -66,7 +66,7 @@ feature -- Output
 			actual_dump: STRING
 		do
 			actual_dump := actual_type.dump
-			!!Result.make (16 + actual_dump.count)
+			create Result.make (16 + actual_dump.count)
 			Result.append ("[like arg #")
 			Result.append_integer (position)
 			Result.append ("] ")
@@ -130,7 +130,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 	create_info: CREATE_ARG is
 			-- Byte code information for entity type creation
 		do
-			!! Result
+			create Result
 			Result.set_position (position)
 		end
 

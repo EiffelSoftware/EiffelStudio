@@ -8,7 +8,7 @@ indexing
 class
 	CONSTRAINT_CHECKING_INFO
 
-creation
+create
 	make
 
 feature -- Initialization

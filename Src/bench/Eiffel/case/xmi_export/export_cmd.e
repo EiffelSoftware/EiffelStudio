@@ -13,7 +13,7 @@ inherit
 	
 	EB_SHARED_INTERFACE_TOOLS
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -38,7 +38,7 @@ feature -- Execution
 			-- Start XMI export wizard.
 		do
 			create wizard
-			wizard.finish_button.select_actions.extend (~generate)
+			wizard.finish_button.select_actions.extend (agent generate)
 			wizard.start
 		end
 

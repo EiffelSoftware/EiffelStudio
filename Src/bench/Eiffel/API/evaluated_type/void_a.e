@@ -59,7 +59,7 @@ feature {COMPILER_EXPORTER}
 	type_i: VOID_I is
 			-- Void type
 		once
-			!!Result
+			create Result
 		end
 
 	create_info: CREATE_INFO is

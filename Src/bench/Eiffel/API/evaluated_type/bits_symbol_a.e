@@ -14,7 +14,7 @@ inherit
 			is_equivalent
 		end
 
-creation {COMPILER_EXPORTER}
+create {COMPILER_EXPORTER}
 	make
 
 feature {NONE} -- Initialization
@@ -49,7 +49,7 @@ feature -- Output
 	dump: STRING is
 			-- Dumped trace
 		do
-			!!Result.make (9)
+			create Result.make (9)
 			Result.append ("BIT ")
 			Result.append (feature_name)
 		end
@@ -84,7 +84,7 @@ feature {COMPILER_EXPORTER}
 				anchor_feature := feat_table.item (feature_name)
 			end
 			if anchor_feature = Void then
-				!!veen
+				create veen
 				veen.set_class (System.current_class)
 				veen.set_feature (f)
 				veen.set_identifier (feature_name)
@@ -102,7 +102,7 @@ feature {COMPILER_EXPORTER}
 					end
 				end
 				if error then
-					!!vtbt
+					create vtbt
 					vtbt.set_class (feat_table.associated_class)
 					vtbt.set_feature (f)
 					if bits_value < 0 then

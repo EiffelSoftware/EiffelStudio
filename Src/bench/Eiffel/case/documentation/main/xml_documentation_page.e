@@ -7,7 +7,7 @@ indexing
 class
 	XML_DOCUMENTATION_PAGE
 
-creation
+create
 	make
 
 feature -- Initialization

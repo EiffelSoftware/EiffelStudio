@@ -1,4 +1,6 @@
-deferred class MATCHER
+deferred class OLD_MATCHER
+
+obsolete "Use MATCHER"
 
 feature -- Status setting
 
@@ -40,4 +42,4 @@ feature {MATCHER} -- Attributes
 			-- String where automaton is build of.
 			-- (Argument of make)
 
-end -- class MATCHER
+end -- class OLD_MATCHER

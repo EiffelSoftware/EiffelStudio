@@ -996,7 +996,6 @@ feature {NONE} -- Actions
 		local
 			node: EV_TREE_ITEM
 			found: BOOLEAN
-			clus_name: STRING
 		do
 			from
 				tree.start

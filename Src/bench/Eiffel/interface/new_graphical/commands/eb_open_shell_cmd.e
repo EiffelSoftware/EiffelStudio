@@ -122,8 +122,6 @@ feature {NONE} -- Implementation
 			-- editor will be able to load the file
 		local
 			target_string: STRING
-			cwd: STRING
-			file: PLAIN_TEXT_FILE
 		do
 			if fn = Void then
 				target_string := ""

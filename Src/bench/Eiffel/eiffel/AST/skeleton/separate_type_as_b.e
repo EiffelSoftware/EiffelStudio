@@ -14,7 +14,7 @@ inherit
 		undefine
 			same_as, associated_eiffel_class, append_to
 		redefine
-			is_deep_equal, record_separate,
+			record_separate,
 			class_name, generics
 		end;
 
@@ -24,13 +24,13 @@ inherit
 			solved_type as basic_solved_type,
 			format as basic_format
 		undefine
-			set, is_deep_equal, dump, simple_format
+			set, dump, simple_format
 		redefine
 			class_name, generics
 		end;
 	CLASS_TYPE_AS_B
 		undefine
-			set, is_deep_equal, dump, simple_format
+			set, dump, simple_format
 		redefine
 			actual_type, solved_type, format, class_name, generics
 		select
@@ -44,14 +44,6 @@ feature -- Properties
 	generics: EIFFEL_LIST_B [TYPE_B]
 
 feature
-
-	is_deep_equal (other: TYPE_B): BOOLEAN is
-		local
-			o: like Current
-		do
-			o ?= other;
-			Result := o /= Void and then basic_is_deep_equal (other)
-		end;
 
 	record_separate is
 			-- Record the use of the separate keyword

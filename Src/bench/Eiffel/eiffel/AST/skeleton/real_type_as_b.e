@@ -10,7 +10,7 @@ inherit
 
 	REAL_TYPE_AS
 		undefine
-			is_deep_equal, same_as, associated_eiffel_class,
+			same_as, associated_eiffel_class,
 			append_to
 		end;
 

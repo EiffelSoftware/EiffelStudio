@@ -10,7 +10,7 @@ inherit
 
 	LIKE_CUR_AS
 		undefine
-			is_deep_equal, same_as
+			same_as
 		end;
 
 	TYPE_B

@@ -12,7 +12,7 @@ inherit
 
 	FORMAL_AS
 		undefine
-			is_deep_equal, same_as
+			same_as
 		redefine
 			associated_eiffel_class
 		select

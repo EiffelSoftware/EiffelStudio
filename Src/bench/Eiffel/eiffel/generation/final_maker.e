@@ -44,6 +44,7 @@ feature
 			i, nb: INTEGER;
 		do
 			add_in_primary_system_basket (Eref);
+			add_in_primary_system_basket (Epoly);
 			add_in_primary_system_basket (Esize);
 
 				-- Routine tables.

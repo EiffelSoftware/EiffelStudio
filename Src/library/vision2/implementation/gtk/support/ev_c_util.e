@@ -18,8 +18,11 @@ feature -- Output
 	safe_print (s: STRING) is
 			-- Use puts to print a string on the console.
 			-- This can safely be used inside `dispose'.
+		local
+			temp_string: ANY
 		do
-			puts (eiffel_to_c (s))
+			temp_string := s.to_c
+			puts ($temp_string)
 		end
 
 	puts (s: POINTER) is
@@ -29,13 +32,6 @@ feature -- Output
 
 feature -- Measurement
 
-	Size_of_pointer: INTEGER is
-		external
-			"C [macro <stdio.h>]"
-		alias
-			"sizeof (void*)"
-		end
-
 	NULL: POINTER is
 		external
 			"C [macro <stdio.h>]"
@@ -44,30 +40,6 @@ feature -- Measurement
 		end
 
 feature -- Conversion
-
-	double_array_i_th (double_array: POINTER; index: INTEGER): REAL is
-			-- EIF_DOUBLE double_array_i_th (double *double_array, int index) {
-			--	return double_array [index];
-			-- }
-		external
-			"C | %"ev_c_util.h%""
-		end
-
-	gtk_args_array_i_th (args_array: POINTER; index: INTEGER): POINTER is
-			-- GtkArg* gtk_args_array_i_th (GtkArg** args_array, int index) {
-			--	return (GtkArg*)(args_array + index);
-			-- }
-		external
-			"C | %"ev_c_util.h%""
-		end
-
-	string_pointer_deref (pointer: POINTER): POINTER is
-			-- char* pointer_deref (cha*** pointer) {
-			--     return *pointer;
-			-- }
-		external
-			"C | %"ev_c_util.h%""
-		end
 
 	pointer_to_integer (pointer: POINTER): INTEGER is
 			-- int pointer_to_integer (void* pointer) {
@@ -120,32 +92,13 @@ feature -- Conversion
 				Result := p2p ($a)
 			end
 		end
+		
+feature {EV_GTK_CALLBACK_MARSHAL}
 
-	gslist_to_eiffel (gslist: POINTER): ARRAYED_LIST [POINTER] is
-			-- Convert `gslist' to Eiffel structure.
-		local
-			cur: POINTER
-		do
-			create Result.make (10)
-			from
-				cur := gslist
-			until
-				cur = NULL
-			loop
-				Result.extend (gslist_struct_data (cur))
-				cur := gslist_struct_next (cur)
-			end
-		ensure
-		--	same_size: Result.count = g_slist_length (gslist)
-		end
-
-	boolean_to_c (a_boolean: BOOLEAN): INTEGER is
-			-- Convert eiffel BOOLEAN to C (int).
-			--| FIXME this should be in BOOLEAN as to_integer
-		do
-			if a_boolean then
-				Result := 1
-			end
+	C: EV_C_EXTERNALS is
+			-- Access to external C functions.
+		once
+			create Result
 		end
 
 feature {NONE} -- Nasty hack
@@ -154,13 +107,6 @@ feature {NONE} -- Nasty hack
 			-- Because Result := $x causes a syntax error.
 		do
 			Result := p
-		end
-
-	sizeof_pointer: INTEGER is
-		external
-			"C [macro <stdio.h>]"
-		alias
-			"sizeof(void*)"
 		end
 
 	calloc (nmemb, size: INTEGER): POINTER is

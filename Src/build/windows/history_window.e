@@ -169,7 +169,10 @@ feature {NONE}
 	
 feature 
 
-	History_count: INTEGER is 10;
+	History_count: INTEGER is 
+		do
+			Result := Resources.history_size
+		end;
 
 	record (cmd: like item) is
 			-- Put `cmd' in history list

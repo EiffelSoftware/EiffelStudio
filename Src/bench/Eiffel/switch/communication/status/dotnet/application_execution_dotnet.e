@@ -618,7 +618,7 @@ feature -- Breakpoints controller
 			end
 
 			debug ("debugger_trace_breakpoint")
-				Eifnet_debugger_info.display_bp_list_status
+				Eifnet_debugger_info.debug_display_bp_list_status
 			end
 		end		
 

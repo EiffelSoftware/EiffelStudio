@@ -21,7 +21,7 @@ feature -- Access
 		local
 			l_bp: EIFNET_BREAKPOINT
 		do
-			create l_bp.make (Void, module_key (a_module_name), a_class_token, a_feature_token, a_line)
+			create l_bp.make (Void, resolved_module_key (a_module_name), a_class_token, a_feature_token, a_line)
 			if breakpoints.has (l_bp) then
 				Result := breakpoints.item (l_bp)
 			end			
@@ -40,7 +40,7 @@ feature -- Access
 				print ("%T FeatureTok = "+ a_feature_token.out + "~0x" + a_feature_token.to_hex_string+" %N")
 				print ("%N")
 			end
-			create l_bp.make (a_bp, module_key (a_module_name), a_class_token, a_feature_token, a_line)
+			create l_bp.make (a_bp, resolved_module_key (a_module_name), a_class_token, a_feature_token, a_line)
 			l_bp.activate
 
 			register_bp_for_addition (l_bp)
@@ -63,7 +63,7 @@ feature -- Access
 				print ("%T FeatureTok = "+ a_feature_token.out + "~0x" + a_feature_token.to_hex_string+" %N")
 				print ("%N")
 			end
-			create l_bp.make (a_bp, module_key (a_module_name), a_class_token, a_feature_token, a_line)
+			create l_bp.make (a_bp, resolved_module_key (a_module_name), a_class_token, a_feature_token, a_line)
 
 			if is_bp_waiting_for_addition (l_bp) then
 				--| The breakpoint has not yet been enabled on the dotnet side
@@ -229,16 +229,18 @@ feature {NONE} -- Notification
 				end
 
 				debug ("DEBUGGER_TRACE_BREAKPOINT")
-					display_bp_list_status
+					debug_display_bp_list_status
 				end
 			end
 		end		
 		
 feature -- module utils
 
-	module_key (a_module_name: STRING): STRING is
+	resolved_module_key (a_module_name: STRING): STRING is
 			-- Key for module_name
 		deferred
+		ensure
+			Result_valid: Result /= Void and then not Result.is_empty		
 		end
 		
 feature {NONE} -- Implementation
@@ -267,9 +269,11 @@ feature {NONE} -- Implementation
 				l_icd_module := loaded_modules.item (l_module_key_name)
 				l_icd_class := l_icd_module.get_class_from_token (l_class_token)
 				if not l_icd_module.last_call_succeed or else l_icd_class = Void then
-					print ("[ERROR] During Breakpoint addition, eStudio got confused with Module ...%N")
-					print ("        class_token is not inside module %N")
-					print ("        " + l_icd_module.module_name + "%N")
+					debug ("debugger_bp_trace")
+						print ("[ERROR] During Breakpoint addition, eStudio got confused with Module ...%N")
+						print ("        class_token is not inside module %N")
+						print ("        " + l_icd_module.module_name + "%N")
+					end
 					l_icd_module := Void
 				end
 			end
@@ -333,7 +337,7 @@ feature {NONE} -- Breakpoints informations
 
 feature -- debug purpose only
 
-	display_bp_list_status is
+	debug_display_bp_list_status is
 			-- Display list of BP showing their status.
 		local
 			l_output: STRING

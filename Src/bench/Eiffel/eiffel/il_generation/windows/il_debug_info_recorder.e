@@ -144,9 +144,7 @@ feature {IL_CODE_GENERATOR} -- Access
 		require
 			is_inside_recording_session: is_recording
 		do
-			
 			if context.workbench_mode then
---|				save (workbench_il_info_file_name)
 				save (il_info_file_name)
 			else
 				save (final_il_info_file_name)				
@@ -757,7 +755,7 @@ feature {IL_CODE_GENERATOR} -- Token recording
 						process_il_feature_info_recording (a_module, a_class_type, a_feat, a_class_token, a_feature_token)
 						if is_entry_point (a_feat) then
 							record_entry_point_token (
-									module_key (a_module.module_file_name)
+									direct_module_key (a_module.module_file_name)
 									, a_class_token
 									, a_feature_token
 								)
@@ -863,7 +861,7 @@ feature {NONE} -- Class Specific info
 			l_info := info_from_module_or_create (a_module_filename, a_module_name)
 			l_info.record_class_type (a_class_type, a_class_token)
 		ensure
-			dbg_info_modules.has (module_key (a_module_filename))
+			dbg_info_modules.has (direct_module_key (a_module_filename))
 		end
 
 feature {IL_CODE_GENERATOR} -- Cleaning
@@ -987,16 +985,16 @@ feature {NONE} -- Debugger Info List Access
 			module_filename_not_empty: a_module_filename /= Void and then not a_module_filename.is_empty
 		local
 			l_module_key: STRING
-			l_internal_mod_key: STRING
 		do
-			l_module_key := module_key (a_module_filename)
-
-			if not a_create_if_not_found then
+			if a_create_if_not_found then
+					--| This means we are recording, so we need to record
+					--| the true computed module name
+				l_module_key := direct_module_key (a_module_filename)
+			else				
 					--| This means we are query data, not recording
-				l_internal_mod_key := internal_module_key (l_module_key)
-				if l_internal_mod_key /= Void then
-					l_module_key := l_internal_mod_key					
-				end
+					--| so we need to resolve the module name
+					--| in case it comes from the GAC from instance (for precomp)
+				l_module_key := resolved_module_key (a_module_filename)
 			end
 			if 
 				last_info_from_module /= Void and then
@@ -1035,7 +1033,6 @@ feature {IL_CODE_GENERATOR, APPLICATION_EXECUTION_DOTNET} -- {SHARED_IL_DEBUG_IN
 	load_workbench_data is
 			-- Load workbench data (mainly for debugging)
 		do
---|			load (workbench_il_info_file_name)
 			load (il_info_file_name)
 			last_loading_is_workbench := True
 		end
@@ -1090,7 +1087,7 @@ feature {NONE}-- Implementation for save and load task
 				else
 					l_project_path := finalized_module_directory_path_name					
 				end
-				l_object_to_save.set_project_path (module_key (l_project_path))
+				l_object_to_save.set_project_path (direct_module_key (l_project_path))
 				l_object_to_save.set_modules_debugger_info (dbg_info_modules)
 				l_object_to_save.set_class_types_debugger_info (dbg_info_class_types)
 				l_object_to_save.set_entry_point_token (entry_point_token)
@@ -1211,7 +1208,7 @@ feature {NONE}-- Implementation for save and load task
 
 						if not is_from_precompiled then
 								--| when we load the project, by default we load as workbench
-							l_current_project_path := module_key (workbench_module_directory_path_name)
+							l_current_project_path := direct_module_key (workbench_module_directory_path_name)
 
 								--| First, we check if the project didn't moved to a new location
 							if 
@@ -1308,7 +1305,7 @@ feature {NONE}-- Implementation for save and load task
 			create l_fn.make_from_string (a_project_path)
 			l_fn.set_file_name (a_info_module.module_name)
 				--| module_name : contains ".dll"
-			a_info_module.update_module_filename (module_key (l_fn))
+			a_info_module.update_module_filename (direct_module_key (l_fn))
 		end
 
 	update_imported_precompilation_info_module (a_system_name: STRING; a_info_module: IL_DEBUG_INFO_FROM_MODULE) is
@@ -1322,19 +1319,35 @@ feature {NONE}-- Implementation for save and load task
 --			else
 				l_mod_fn := workbench_precompilation_module_filename (a_info_module.system_name)
 --			end
-			a_info_module.update_module_filename (module_key (l_mod_fn))			
+			a_info_module.update_module_filename (direct_module_key (l_mod_fn))			
 		end
+
+feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Module indexer implementation
+
+	resolved_module_key (a_mod_filename: STRING): STRING is
+			-- Lowered and resolved Module key for `a_mod_filename' used for indexation
+		require
+			mod_name_valid: a_mod_filename /= Void and then not a_mod_filename.is_empty
+		do
+			Result := a_mod_filename.as_lower -- So this is a twin lowered
+			Result := internal_module_key (Result)
+		ensure
+			Result_valid: Result /= Void and then not Result.is_empty
+			Result_is_lower_case: Result.as_lower.is_equal (Result)			
+		end	
 
 feature {NONE} -- Module indexer implementation
 
-	module_key (a_mod_filename: STRING): STRING is
+	direct_module_key (a_mod_filename: STRING): STRING is
 			-- Module key for `a_mod_filename' used for indexation
+			-- Nota: Only for recording session features
 		require
 			mod_name_valid: a_mod_filename /= Void and then not a_mod_filename.is_empty
 		do
 			Result := a_mod_filename.as_lower -- So this is a twin lowered
 		ensure
 			Result_valid: Result /= Void and then not Result.is_empty
+			Result_is_lower_case: Result.as_lower.is_equal (Result)			
 		end
 
 	internal_module_key (a_mod_key: STRING): STRING is
@@ -1380,7 +1393,6 @@ feature {NONE} -- Module indexer implementation
 						loop
 							l_item := dbg_info_modules.item_for_iteration
 							l_item_mod_id := l_item.module_name
-							l_item_mod_id.to_lower
 							if l_item_mod_id.is_equal (l_module_id) then
 								last_info_from_module := l_item
 								Result := last_info_from_module.module_filename --| Should contain .dll
@@ -1396,7 +1408,8 @@ feature {NONE} -- Module indexer implementation
 				end
 			end
 		ensure
-			result_not_void: Result /= Void
+			Result_valid: Result /= Void and then not Result.is_empty
+			Result_is_lower_case: Result.as_lower.is_equal (Result)			
 		end
 		
 	internal_module_key_table: HASH_TABLE [STRING, STRING]

@@ -31,6 +31,11 @@ inherit
 			{NONE} all
 			{EIFNET_DEBUGGER_INFO_ACCESSOR} Application
 		end
+		
+	SHARED_IL_DEBUG_INFO_RECORDER
+		export
+			{NONE} all
+		end
 
 	EIFNET_DEBUGGER_CONTROL_CONSTANTS
 		export
@@ -40,7 +45,7 @@ inherit
 create
 	make
 
-feature {NONE}
+feature {NONE} -- Initialization
 
 	make is
 			-- Create Current data.
@@ -87,18 +92,10 @@ feature -- Reset
 			last_icd                    := Void
 			last_icd_updated            := True
 			last_p_icd                  := Default_pointer
-				--| AppDomain |--
-			last_icd_app_domain         := Void
-			last_icd_app_domain_updated := True
-			last_p_icd_app_domain       := Default_pointer
 				--| Breakpoint |--
 			last_icd_breakpoint         := Void
 			last_icd_breakpoint_updated := True
 			last_p_icd_breakpoint       := Default_pointer
-				--| Exception |--
-			last_icd_exception          := Void
-			last_icd_exception_updated  := True
-			last_p_icd_exception        := Default_pointer
 				--| Process |--
 			last_icd_process            := Void
 			last_icd_process_updated    := True
@@ -107,6 +104,10 @@ feature -- Reset
 			last_icd_thread             := Void
 			last_icd_thread_updated     := True
 			last_p_icd_thread           := Default_pointer		
+
+				--| AppDomain |--
+			last_p_icd_app_domain       := Default_pointer
+
 				--| StepComplete |--
 			last_step_complete_reason   := 0
 			last_exception_is_handled   := False
@@ -285,13 +286,6 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Access
 			Result := last_icd_thread
 		end
 
-	icd_app_domain: ICOR_DEBUG_APP_DOMAIN is
-			-- Last ICOR_DEBUG_APP_DOMAIN object
-		do
-			update_icd_app_domain
-			Result := last_icd_app_domain
-		end
-
 	icd_breakpoint: ICOR_DEBUG_BREAKPOINT is
 			-- Last ICOR_DEBUG_BREAKPOINT object
 		do
@@ -299,13 +293,6 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Access
 			Result := last_icd_breakpoint
 		end
 
-	icd_exception: ICOR_DEBUG_VALUE is
-			-- Last ICOR_DEBUG_VALUE object
-		do
-			update_icd_exception
-			Result := last_icd_exception
-		end
-		
 	last_step_complete_reason: INTEGER
 			-- Last `reason' from a `step_complete' callback
 			
@@ -342,18 +329,6 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 			end
 		end
 
-	set_last_icd_app_domain (p: POINTER) is 
-			-- Set `last_icd_app_domain' to `p'
-		do
-			if not p.is_equal (last_p_icd_app_domain) then
-				last_p_icd_app_domain := p
-				last_icd_app_domain_updated := False
-				debug ("DEBUGGER_EIFNET_DATA")
-					print ("/// EIFNET_DEBUGGER_INFO:: AppDomain changed%N")
-				end				
-			end
-		end
-
 	set_last_icd_thread (p: POINTER) is 
 			-- Set `last_icd_thread' to `p'
 		do
@@ -363,6 +338,14 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 				debug ("DEBUGGER_EIFNET_DATA")
 					print ("/// EIFNET_DEBUGGER_INFO:: Thread changed%N")
 				end
+			end
+		end		
+
+	set_last_icd_app_domain (p: POINTER) is 
+			-- Set `last_icd_app_domain' to `p'
+		do
+			if not p.is_equal (last_p_icd_app_domain) then
+				last_p_icd_app_domain := p	
 			end
 		end
 
@@ -375,15 +358,6 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 			end
 		end
 
-	set_last_icd_exception (p: POINTER) is 
-			-- Set `last_icd_exception' to `p'
-		do
-			if not p.is_equal (last_p_icd_exception) then
-				last_p_icd_exception := p
-				last_icd_exception_updated := False
-			end
-		end
-		
 	set_last_step_complete_reason (val: INTEGER) is
 			-- Set `last_step_complete_reason' to `val'
 		do
@@ -396,18 +370,6 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 			last_exception_is_handled := val
 		end
 		
-feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Full Update
-
-	update_data is
-		do
-			update_icd
-			update_icd_process
-			update_icd_app_domain
-			update_icd_thread
-			update_icd_exception
---			update_icd_breakpoint
-		end
-
 feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Pointers to COM Objects
 
 	last_p_icd: POINTER --|ICOR_DEBUG
@@ -422,9 +384,6 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Pointers to COM Objects
 	last_p_icd_thread: POINTER --|ICOR_DEBUG_THREAD
 			-- Last ICOR_DEBUG_THREAD object	
 			
-	last_p_icd_exception: POINTER --|ICOR_DEBUG_VALUE
-			-- Last Exception object
-
 	last_p_icd_breakpoint: POINTER --|ICOR_DEBUG_BREAKPOINT
 			-- Last Breakpoint object
 
@@ -437,10 +396,6 @@ feature {NONE} -- Pointers to COM Objects
 	last_icd_process_updated: BOOLEAN
 	last_icd_process: ICOR_DEBUG_PROCESS
 			-- Last ICOR_DEBUG_PROCESS object
-	
-	last_icd_app_domain_updated: BOOLEAN
-	last_icd_app_domain: ICOR_DEBUG_APP_DOMAIN
-			-- Last ICOR_DEBUG_APP_DOMAIN object
 
 	last_icd_thread_updated: BOOLEAN
 	last_icd_thread: ICOR_DEBUG_THREAD
@@ -449,10 +404,6 @@ feature {NONE} -- Pointers to COM Objects
 	last_icd_breakpoint_updated: BOOLEAN
 	last_icd_breakpoint: ICOR_DEBUG_BREAKPOINT
 			-- Last Breakpoint object
-
-	last_icd_exception_updated: BOOLEAN
-	last_icd_exception: ICOR_DEBUG_VALUE
-			-- Last Exception object	
 
 feature {NONE} -- COM Object
 
@@ -483,20 +434,6 @@ feature {NONE} -- COM Object
 				last_icd_process_updated := True
 			end
 		end
-	
-	update_icd_app_domain is
-			-- Last ICOR_DEBUG_APP_DOMAIN object
-		do
-			if not last_icd_app_domain_updated then
-				if last_p_icd_app_domain = Default_pointer then
-					last_icd_app_domain := Void
-				else
-					create last_icd_app_domain.make_by_pointer (last_p_icd_app_domain)
-					last_icd_app_domain.add_ref
-				end
-				last_icd_app_domain_updated := True
-			end
-		end
 
 	update_icd_thread is
 			-- Last ICOR_DEBUG_THREAD object
@@ -523,20 +460,6 @@ feature {NONE} -- COM Object
 					last_icd_breakpoint.add_ref
 				end
 				last_icd_breakpoint_updated := True
-			end
-		end
-			
-	update_icd_exception is
-			-- Last Exception object
-		do
-			if not last_icd_exception_updated then
-				if last_p_icd_exception = Default_pointer then
-					last_icd_exception := Void
-				else
-					create last_icd_exception.make_by_pointer (last_p_icd_exception)
-					last_icd_exception.add_ref
-				end
-				last_icd_exception_updated := True
 			end
 		end
 
@@ -582,13 +505,6 @@ feature -- JIT notification
 			notify_new_module_for_breakpoints (a_mod_key)
 		end
 
---| removed so far, since we do not really need this
---| and for performance reason
---	notify_new_class (a_cls_token: INTEGER; a_mod_key: STRING) is
---		do
---			notify_new_class_for_breakpoints (a_cls_token, a_mod_key)
---		end
-
 feature -- JIT info
 
 	create_jit_info is
@@ -631,7 +547,7 @@ feature -- JIT info
 				a_module.enable_jit_debugging (True, False)
 			end
 			
-			l_module_key_name := module_key (a_module.get_name)
+			l_module_key_name := resolved_module_key (a_module.get_name)
 			if loaded_modules.is_empty then
 					-- We have to deal with the MSCORLIB.DLL module 
 					--| FIXME JFIAT : 2003/12/23 : check if MSCORLIB is really always the first loaded module 
@@ -672,37 +588,18 @@ feature -- JIT info
 			notify_new_module (l_module_key_name)
 		end
 
---| removed so far, since we do not really need this
---| and for performance reason
---	register_new_class (a_class: ICOR_DEBUG_CLASS) is
---			-- Notify system a new class is loaded
---		require
---			a_class /= Void
---		local
---			l_class_token: INTEGER
---			l_module_key_name: STRING
---		do
---			--| Register IcorDebugClass
---			l_module_key_name := module_key (a_class.get_module.get_name)
---			l_class_token := a_class.get_token
---			loaded_classes.put (a_class, [l_module_key_name,l_class_token])
---			if not loaded_classes.inserted then
---				print ("ERROR while inserting new ICorDebugClass %N")
---			end
---			
---			debug ("DEBUGGER_TRACE")
---				print ("Load class [0x" + a_class.get_token.to_hex_string + "]%N")
---			end
---
---			notify_new_class (l_class_token, l_module_key_name)
---		end
-
 feature {NONE} -- JIT info implementation
 
-	module_key (a_module_name: STRING): STRING is
+	resolved_module_key (a_module_name: STRING): STRING is
 			-- module name formatted to be a key
 		do
-			Result := a_module_name.as_lower
+--| NOTA JFIAT: in case module comes from the GAC, we need to identify it
+--| but for performance issue .. this is not very good
+--| and used only for Breakpoint in class contained inside the module from GAC
+			Result := il_debug_info_recorder.resolved_module_key (a_module_name)
+			debug ("debugger_trace_eifnet")
+				print ("Module name key (internal table building):%N (1) " + a_module_name + "%N (2) " + Result + "%N")
+			end
 		end
 
 	loaded_modules: HASH_TABLE [ICOR_DEBUG_MODULE, STRING]
@@ -710,10 +607,6 @@ feature {NONE} -- JIT info implementation
 
 	mscorlid_module: ICOR_DEBUG_MODULE
 			-- MSCORLIB ICorDebugModule
-	
---| removed so far, since we do not really need this
---| and for performance reason
---	loaded_classes: HASH_TABLE [ICOR_DEBUG_CLASS, TUPLE[STRING,INTEGER]]
 
 feature -- JIT Info access
 
@@ -722,7 +615,7 @@ feature -- JIT Info access
 		require
 			mod_name_valid: a_mod_name /= Void and then not a_mod_name.is_empty
 		do
-			Result := loaded_modules.item (module_key (a_mod_name))
+			Result := loaded_modules.item (resolved_module_key (a_mod_name))
 		end
 		
 	icor_debug_module_for_mscorlib: ICOR_DEBUG_MODULE is
@@ -763,23 +656,6 @@ feature -- Stepping
 			last_control_mode := a_mode
 		end
 
-	last_control_mode_is_continue: BOOLEAN is
-			-- Last control was `continue'
-		do
-			Result := last_control_mode = Cst_control_continue
-		end
-
-	last_control_mode_is_stop: BOOLEAN is
-			-- Last control was `stop'
-		do
-			Result := last_control_mode = Cst_control_stop
-		end
-
-	last_control_mode_is_kill: BOOLEAN is
-			-- Last control was `kill'
-		do
-			Result := last_control_mode = Cst_control_kill
-		end
 
 	last_control_mode_is_step_out: BOOLEAN is
 			-- Last control was `step_out'
@@ -806,12 +682,34 @@ feature -- Stepping
 			or else last_control_mode_is_step_out
 			or else last_control_mode_is_step_next
 		end
-
-	last_control_mode_is_nothing: BOOLEAN is
-			-- Last control was not affected
-		do
-			Result := last_control_mode = Cst_control_nothing
-		end		
+	
+--| NOTA JFIAT: those feature are useless for now
+--|				so we comment them to reduce the executable size, and compilation time
+--|				and more important, to clean the interface
+--|				but we keep them as commented lines if we need to implemente them
+--	last_control_mode_is_continue: BOOLEAN is
+--			-- Last control was `continue'
+--		do
+--			Result := last_control_mode = Cst_control_continue
+--		end
+--
+--	last_control_mode_is_stop: BOOLEAN is
+--			-- Last control was `stop'
+--		do
+--			Result := last_control_mode = Cst_control_stop
+--		end
+--
+--	last_control_mode_is_kill: BOOLEAN is
+--			-- Last control was `kill'
+--		do
+--			Result := last_control_mode = Cst_control_kill
+--		end
+--
+--	last_control_mode_is_nothing: BOOLEAN is
+--			-- Last control was not affected
+--		do
+--			Result := last_control_mode = Cst_control_nothing
+--		end		
 
 end -- class EIFNET_DEBUGGER_INFO
 

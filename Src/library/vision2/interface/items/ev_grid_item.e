@@ -60,6 +60,30 @@ feature -- Access
 		ensure
 			row_not_void: Result /= Void
 		end
+		
+	virtual_x_position: INTEGER is
+			-- Horizontal offset of `Current' in relation to the
+			-- the virtual area of `parent' grid in pixels.
+			-- `Result' is 0 if `parent' is `Void'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.virtual_x_position
+--		ensure
+--			valid_result: Result >= 0 and Result <= virtual_width - viewable_width
+		end
+		
+	virtual_y_position: INTEGER is
+			-- Vertical offset of `Current' in relation to the
+			-- the virtual area of `parent' grid in pixels.
+			-- `Result' is 0 if `parent' is `Void'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.virtual_y_position
+--		ensure
+--			valid_result: Result >= 0 and Result <= virtual_height - viewable_height
+		end
 
 feature -- Status report
 

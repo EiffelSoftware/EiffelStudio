@@ -209,6 +209,19 @@ feature {NONE} -- C code generation
 					generated_file.putint (position);
 					generated_file.putchar (')');
 				else
+						-- Generation of the RTAS protection if the array contains references
+					if target_type.is_reference then
+						generated_file.putstring ("RTAS(");
+						if metamorphosed then
+							metamorphose_reg.print_register
+						else
+							expr.print_register;
+						end;
+						generated_file.putstring (", ");
+						array_area_reg.print_register;
+						generated_file.putstring (");");
+						generated_file.new_line;
+					end
 					generated_file.putchar ('*');
 					target_type.c_type.generate_access_cast (generated_file);
 					generated_file.putchar ('(');

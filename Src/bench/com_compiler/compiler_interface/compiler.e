@@ -39,7 +39,12 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
+	EXCEPTIONS
+		export
+			{NONE} all
+		end
+
 	SHARED_PROJECT_PROPERTIES
 		export
 			{NONE} all
@@ -173,9 +178,18 @@ feature -- Access
 			Result := feature {EIFFEL_ENV}.has_signable_generation
 		end
 		
-
 feature -- Basic Operations
 
+	can_run: BOOLEAN is
+			-- Can product be run.
+		local
+			checker: ACTIVATION_CHECKER
+		do
+			create checker
+			checker.check_activation
+			Result := checker.can_run
+		end
+		
 	compile is
 			-- Compile.
 		local
@@ -200,9 +214,10 @@ feature -- Basic Operations
 					end
 				end
 			else
-				event_output_string ("Compilation stopped%N")
+				output_error
 			end
 		rescue
+			last_exception := exception_trace
 			rescued := True
 			retry
 		end
@@ -240,9 +255,10 @@ feature -- Basic Operations
 					end
 				end
 			else
-				event_output_string ("Compilation stopped%N")
+				output_error
 			end
 		rescue
+			last_exception := exception_trace
 			rescued := True
 			retry
 		end
@@ -279,9 +295,10 @@ feature -- Basic Operations
 					end
 				end
 			else
-				event_output_string ("Compilation stopped%N")
+				output_error
 			end
 		rescue
+			last_exception := exception_trace
 			rescued := True
 			retry
 		end
@@ -351,7 +368,7 @@ feature -- Basic Operations
 				Eiffel_system.System.server_controler.wipe_out
 			end
 		end
-		
+
 feature -- Element Change
 
 	set_output_pipe_name (a_name: STRING) is
@@ -365,5 +382,20 @@ feature -- Element Change
 			output_pipe_name_set: output_pipe_name.is_equal (a_name)
 		end
 		
-		
+feature {NONE} -- Implementation
+
+	output_error is
+			-- Report error back to VS.
+		require
+			failed: not is_successful
+		do
+			if last_exception /= Void then
+				event_output_string (last_exception)
+			end
+			event_output_string ("%NCompilation stopped%N")
+		end
+
+	last_exception: STRING
+			-- Last exception trace
+				
 end -- class COMPILER

@@ -1605,7 +1605,7 @@ feature -- Workbench feature and descriptor table generation
 					-- Generation of workbench mode feature table for
 					-- the current class
 				create file.make_c_code_file (feature_table_file_name)
-				file.put_string (buffer)
+				buffer.put_in_file (file)
 				file.close
 			end
 		end
@@ -1731,6 +1731,7 @@ feature -- Skeleton processing
 			-- Fill `old_skeletons' with old skeleton of class types in `types'.
 		require
 			old_skeletons_not_void: old_skeletons /= Void
+			has_skeleton: skeleton /= Void
 		local
 			class_type: CLASS_TYPE
 		do
@@ -1750,6 +1751,7 @@ feature -- Skeleton processing
 			-- it must be re-processed and marked `is_changed'.
 		require
 			old_skeletons_not_void: old_skeletons /= Void
+			has_skeleton: skeleton /= Void
 		local
 			class_type: CLASS_TYPE
 			new_skeleton, old_skeleton: SKELETON

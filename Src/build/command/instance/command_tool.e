@@ -366,12 +366,12 @@ feature
 		do
 			if c /= command_instance then
 				set_instance_only (c)
---				if current_command /= c.associated_command then
+				if current_command /= c.associated_command then
 					command_editor.set_command (c.associated_command)
 					if realized and then command_editor_shown then
 						command_editor.edit_command (c.associated_command)
 					end
---				end	
+				end	
 			end
 		end
 
@@ -616,6 +616,7 @@ feature -- COMMAND features
 			command_editor.edit_command (command_instance.associated_command)
 			command_editor.show
 			bottom_split_form.manage
+			command_editor.update_boxes
 		end
 
 	hide_other_command_editor is

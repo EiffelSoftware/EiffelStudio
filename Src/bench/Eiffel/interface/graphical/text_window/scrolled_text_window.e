@@ -203,13 +203,15 @@ feature -- Search
 			click_stone: CLICK_STONE
 			i: INTEGER
 			stone_found: BOOLEAN
+			local_copy: like Current
 		do
 			from
+				local_copy := Current
 				i := 1
 			until
 				stone_found or i > clickable_count
 			loop
-				click_stone := item (i)
+				click_stone := local_copy.item (i)
 				if a_stone.same_as (click_stone.node) then
 					set_bounds (click_stone.start_position, 
 						click_stone.end_position)
@@ -486,14 +488,16 @@ feature {TOOL_W} -- Objects in Current text area
 		local
 			obj_stone: OBJECT_STONE
 			i: INTEGER
+			local_copy: like Current
 		do
 			!! Result.make
 			from
+				local_copy := Current
 				i := 1
 			until
 				i > clickable_count
 			loop
-				obj_stone ?= item (i).node
+				obj_stone ?= local_copy.item (i).node
 				if obj_stone /= Void then
 					Result.extend (obj_stone.object_address)
 				end
@@ -508,19 +512,21 @@ feature {OBJECT_W} -- Settings
 		local
 			obj_stone: OBJECT_STONE
 			index, last_pos: INTEGER
+			local_copy: like Current
 		do
 			from
+				local_copy := Current
 				index := 1
 			until
 				index > clickable_count
 			loop
-				obj_stone ?= item (index).node
+				obj_stone ?= local_copy.item (index).node
 
 					-- Remove object stone
 				if obj_stone = Void then
 					-- Keep routine and class stones clickable.
 					last_pos := last_pos + 1
-					put (item (index), last_pos)
+					local_copy.put (local_copy.item (index), last_pos)
 				end
 				index := index + 1
 			end

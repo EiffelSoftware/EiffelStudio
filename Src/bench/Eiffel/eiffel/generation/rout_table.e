@@ -44,6 +44,7 @@ feature
 			found: BOOLEAN;
 			is_deferred: BOOLEAN;
 			i, nb, old_position: INTEGER
+			local_copy: like Current
 		do
 			old_position := position
 
@@ -61,13 +62,14 @@ feature
 			nb := upper
 
 			from
+				local_copy := Current
 				is_deferred := True;
 				cl_type := System.class_type_of_id (type_id);
 				first_class := cl_type.associated_class;
 			until
 				Result or else i > nb
 			loop
-				entry := array_item (i);
+				entry := local_copy.array_item (i);
 				second_type_id := entry.type_id;
 				if second_type_id = type_id then
 					is_deferred := False
@@ -101,6 +103,7 @@ feature
 			routine_name: STRING;
 			empty_function_ptr_string: STRING
 			function_ptr_cast_string: STRING
+			local_copy: like Current
 		do
 			from
 				empty_function_ptr_string := "(char *(*)()) 0,%N"
@@ -108,6 +111,7 @@ feature
 				file.putstring ("char *(*");
 				file.putstring (rout_id.table_name);
 				file.putstring ("[])() = {%N");
+				local_copy := Current
 				i := min_used;
 				nb := max_used;
 				goto_used (i);
@@ -115,7 +119,7 @@ feature
 			until
 				i > nb
 			loop
-				entry := array_item (index);
+				entry := local_copy.array_item (index);
 				if i = entry.type_id then
 					if entry.used then
 						routine_name := entry.routine_name;

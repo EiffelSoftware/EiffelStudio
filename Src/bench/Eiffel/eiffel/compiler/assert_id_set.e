@@ -87,13 +87,15 @@ feature
 			-- Is the body id `body_index' present in the set ?
 		local
 			i: INTEGER
+			local_copy: like Current
 		do
 			from
+				local_copy := Current
 				i := 1;
 			until
 				i > count or else Result
 			loop
-				Result := equal (item (i).body_index, assert.body_index);
+				Result := equal (local_copy.item (i).body_index, assert.body_index);
 				i := i + 1;
 			end;
 		end;
@@ -102,13 +104,15 @@ feature
 			-- Is the `assert' in Current? 
 		local
 			i: INTEGER
+			local_copy: like Current
 		do
 			from
+				local_copy := Current
 				i := 1;
 			until
 				i > count or else Result
 			loop
-				Result := (item (i).same_as (assert));
+				Result := (local_copy.item (i).same_as (assert));
 				i := i + 1;
 			end;
 		end;
@@ -135,15 +139,17 @@ feature
 			-- Has `other' the same content than Current ?
 		local
 			i: INTEGER;
+			local_copy: like Current
 		do
 			if (other /= Void) and then count = other.count then
 				from
+					local_copy := Current
 					i := 1;
 					Result := True;
 				until
 					i > count or else not Result
 				loop
-					Result := other.has_assert (item (i));
+					Result := other.has_assert (local_copy.item (i));
 					i := i + 1;
 				end
 			end;

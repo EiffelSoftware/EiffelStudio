@@ -45,6 +45,7 @@ feature
 			cl_type: CLASS_TYPE;
 			first_class: CLASS_C;
 			i, nb, old_position: INTEGER
+			local_copy: like Current
 		do
 			old_position := position;
 
@@ -54,6 +55,7 @@ feature
 				goto_used (type_id);
 				if position <= upper then
 					from
+						local_copy := Current
 						cl_type := System.class_type_of_id (type_id);
 						first_class := cl_type.associated_class;
 						i := position + 1
@@ -61,7 +63,7 @@ feature
 					until
 						Result or else i > nb
 					loop
-						entry := array_item (i)
+						entry := local_copy.array_item (i)
 						cl_type := System.class_type_of_id (entry.type_id);
 						if cl_type.associated_class.conform_to (first_class) then
 							Result := entry.used;
@@ -71,6 +73,7 @@ feature
 				end;
 			else
 				from
+					local_copy := Current
 					cl_type := System.class_type_of_id (type_id);
 					first_class := cl_type.associated_class;
 					i := lower
@@ -78,11 +81,12 @@ feature
 				until
 					Result or else i > nb
 				loop
-					current_type_id := array_item (i).type_id;
+					entry := local_copy.array_item (i)
+					current_type_id := entry.type_id;
 					if current_type_id /= type_id then
 						cl_type := System.class_type_of_id (current_type_id);
 						if cl_type.associated_class.conform_to (first_class) then
-							Result := array_item (i).used
+							Result := entry.used
 						end;
 					end;
 					i := i + 1
@@ -97,12 +101,14 @@ feature
 			class_type: CLASS_TYPE;
 			i, nb, index: INTEGER;
 			attr_entry: ATTR_ENTRY
+			local_copy: like Current
 		do
 			from
 					-- Private table
 				file.putstring ("long ");
 				file.putstring (rout_id.table_name);
 				file.putstring ("[] = {%N");
+				local_copy := Current
 				i := min_type_id;
 				nb := max_type_id;
 				goto (i);
@@ -110,7 +116,7 @@ feature
 			until
 				i > nb
 			loop
-				attr_entry := array_item (index)
+				attr_entry := local_copy.array_item (index)
 				if i = attr_entry.type_id then
 					class_type := System.class_type_of_id (attr_entry.type_id);
 						--| In this instruction, we put `True' as second

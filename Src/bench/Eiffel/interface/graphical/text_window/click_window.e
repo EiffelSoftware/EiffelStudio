@@ -321,14 +321,16 @@ feature {NONE} -- Implementation
 			bid: BODY_ID
 			found: BOOLEAN
 			i: INTEGER
+			local_copy: like Current
 		do
 			from
 				bid := f.body_id
+				local_copy := Current
 				i := 1
 			until
 				i > count or else found
 			loop
-				cb ?= item (i)
+				cb ?= local_copy.item (i)
 				if cb /= Void then
 					b := cb.breakable
 					found := (bid.is_equal (b.routine.body_id) and then

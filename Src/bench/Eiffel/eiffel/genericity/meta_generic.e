@@ -26,15 +26,17 @@ feature
 			-- Is `other' equal to Current ?
 		local
 			i, nb: INTEGER;
+			local_copy: like Current
 		do
 			nb := count;
 			Result := nb = other.count;
 			from
+				local_copy := Current
 				i := 1;
 			until
 				i > nb or else not Result
 			loop
-				Result := item (i).same_as (other.item (i));
+				Result := local_copy.item (i).same_as (other.item (i));
 				i := i + 1;
 			end;
 		end;
@@ -43,15 +45,17 @@ feature
 			-- Are all the types valid ?
 		local
 			i, nb: INTEGER
+			local_copy: like Current
 		do
 			from
 				nb := count;
+				local_copy := Current
 				i := 1;
 				Result := True
 			until
 				i > nb or else not Result
 			loop
-				Result := item (i).is_valid;
+				Result := local_copy.item (i).is_valid;
 				i := i + 1;
 			end;
 		end;
@@ -60,13 +64,15 @@ feature
 			-- Generate Cecil meta-types
 		local
 			i: INTEGER;
+			local_copy: like Current
 		do
 			from
+				local_copy := Current
 				i := lower
 			until
 				i > upper
 			loop
-				item (i).generate_cecil_value (f);
+				local_copy.item (i).generate_cecil_value (f);
 				f.putstring (",%N");
 				i := i + 1;
 			end;
@@ -78,13 +84,15 @@ feature
 			good_argument: ba /= Void
 		local
 			i: INTEGER;
+			local_copy: like Current
 		do
 			from
+				local_copy := Current
 				i := lower
 			until
 				i > upper
 			loop
-				ba.append_int32_integer (item (i).cecil_value);
+				ba.append_int32_integer (local_copy.item (i).cecil_value);
 				i := i + 1
 			end
 		end;

@@ -1,0 +1,302 @@
+indexing
+	description: "Wizard window containing output rich edit"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	WIZARD_OUTPUT_EDIT
+
+inherit
+	WEL_FRAME_WINDOW
+		redefine
+			default_style,
+			on_wm_erase_background,
+			on_size
+		end
+
+	WEL_WS_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_ES_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_BIT_OPERATIONS
+		export
+			{NONE} all
+		end
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_parent: WEL_COMPOSITE_WINDOW; an_offset: INTEGER) is
+			-- Intialize rich edit.
+		require
+			non_void_parent: a_parent /= Void	
+		do
+			make_child (a_parent, Title)
+			set_y (an_offset)
+			set_width (a_parent.width)
+			set_height (a_parent.height - an_offset)
+			setup_output_edit
+			font_height := output_edit.font.log_font.height
+			create scroller.make (Current, 1, 1, font_height, height)
+			hide_horizontal_scroll_bar
+		end
+
+feature -- Access
+
+	output_edit: WIZARD_RICH_EDIT
+			-- Embedded rich edit control
+
+	is_title_format: BOOLEAN
+			-- Should next text added in title format?
+
+	is_warning_format: BOOLEAN
+			-- Should next text added in warning format?
+
+	is_error_format: BOOLEAN
+			-- Should next text added in error format?
+
+	Title: STRING is "Output"
+			-- Window title
+
+	font_height: INTEGER
+			-- Output edit font height
+
+feature -- Element Change
+
+	set_title_format is
+			-- Set `is_title_format' to `True'.
+		do
+			is_title_format := True
+		ensure
+			title_format: is_title_format
+		end
+
+	set_warning_format is
+			-- Set `is_warning_format' to `True'.
+		do
+			is_warning_format := True
+		ensure
+			warning_format: is_warning_format
+		end
+
+	set_error_format is
+			-- Set `is_error_format' to `True'.
+		do
+			is_error_format := True
+		ensure
+			error_format: is_error_format
+		end
+
+feature -- Basic Operations
+
+	add_text (a_text: STRING) is
+			-- Insert `a_text' in rich edit `edit'.
+			-- Set text format according to `title_format', `warning_format' and `error_format'.
+		local
+			retried: BOOLEAN
+			new_height: INTEGER
+		do
+			if not retried then
+				if is_title_format then
+					insert_text (New_line)				
+					output_edit.set_character_format_word (Title_format)
+					is_title_format := False
+					insert_text (a_text)
+					output_edit.set_character_format_word (Text_format)
+				elseif is_warning_format then
+					output_edit.set_character_format_word (Warning_format)		
+					is_warning_format := False
+					insert_text (a_text)
+					output_edit.set_character_format_word (Text_format)
+				elseif is_error_format then
+					insert_text (New_line)				
+					output_edit.set_character_format_word (Error_format)
+					is_error_format := False
+					insert_text (a_text)
+					output_edit.set_character_format_word (Text_format)
+					insert_text (New_line)				
+				else
+					insert_text (a_text)
+				end
+				insert_text (New_line)
+				new_height := output_edit.position_from_character_index (output_edit.count).y
+				if new_height - height > 0 then
+					scroller.set_vertical_range (1,  new_height - height)
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	clear is
+			-- Clear window text.
+		do
+			output_edit.set_text (Empty_text)
+			process_messages
+		end
+
+feature {NONE} -- Behavior
+
+   	on_wm_erase_background (wparam: INTEGER) is
+   			-- Wm_paint message.
+   			-- May be redefined to paint something on
+   			-- the `paint_dc'. `invalid_rect' defines
+   			-- the invalid rectangle of the client area that
+   			-- needs to be repainted.
+   		do
+			disable_default_processing
+		end
+
+	on_size (size_type, a_width, a_height: INTEGER) is
+			-- Wm_size message
+			-- See class WEL_SIZE_CONSTANTS for `size_type' value
+		local
+			new_height: INTEGER
+		do
+			if scroller /= Void then
+				scroller.set_vertical_page (height)
+			end
+		end
+
+	default_style: INTEGER is
+			-- Window style
+		once
+			Result := Ws_child  + Ws_visible + Es_autovscroll
+		end
+
+feature {NONE} -- Implementation
+
+	insert_text (a_text: STRING) is
+			-- Insert `a_text' in rich edit `edit'.
+		do
+			output_edit.insert_text (a_text)
+			--output_edit.set_caret_position (output_edit.count -1)
+			process_messages
+		end
+
+	setup_output_edit is
+			-- Initialize output edit.
+		local
+			a_style: INTEGER
+		do
+			create output_edit.make (Current, Output_edit_name, 0, 0, width, height, -1)
+			output_edit.set_character_format_all (Text_format)
+			output_edit.disable
+			output_edit.enable_scroll_caret_at_selection
+			output_edit.set_height (height)
+			output_edit.set_width (width)
+			output_edit.set_text (Empty_text)
+			output_edit.set_height (4_000_000)
+		end
+
+	process_messages is
+			-- Process messages in queue.
+		do
+			from
+				win_msg.peek_all
+			until
+				not win_msg.last_boolean_result
+			loop
+				if win_msg.last_boolean_result then
+					win_msg.translate
+					win_msg.dispatch
+				end
+				win_msg.peek_all
+			end
+		end
+
+	win_msg: WEL_MSG is
+			-- Used by `process_messages'
+		once
+			!! Result.make
+		end
+
+	Text_format: WEL_CHARACTER_FORMAT is
+			-- Window character format
+		once
+			create Result.make
+			Result.set_face_name ("Tahoma")
+			Result.set_height (160)
+			Result.unset_bold
+			Result.set_text_color (Text_color)
+		end
+
+	Title_format: WEL_CHARACTER_FORMAT is
+			-- Window character format
+		once
+			create Result.make
+			Result.set_face_name ("Tahoma")
+			Result.set_height (200)
+			Result.set_bold
+			Result.set_text_color (Title_color)
+		end
+
+	Warning_format: WEL_CHARACTER_FORMAT is
+			-- Window character format
+		once
+			create Result.make
+			Result.set_face_name ("Tahoma")
+			Result.set_height (160)
+			Result.set_bold
+			Result.set_text_color (Warning_color)
+		end
+
+	Error_format: WEL_CHARACTER_FORMAT is
+			-- Window character format
+		once
+			create Result.make
+			Result.set_face_name ("Tahoma")
+			Result.set_height (160)
+			Result.set_bold
+			Result.set_text_color (Error_color)
+		end
+	
+	Text_color: WEL_COLOR_REF is
+			-- Text output color
+		once
+			create Result.make_rgb (0, 0, 0)
+		end
+
+	Title_color: WEL_COLOR_REF is
+			-- Text output color
+		once
+			create Result.make_rgb (0, 0, 100)
+		end
+
+	Warning_color: WEL_COLOR_REF is
+			-- Text output color
+		once
+			create Result.make_rgb (100, 50, 50)
+		end
+
+	Error_color: WEL_COLOR_REF is
+			-- Text output color
+		once
+			create Result.make_rgb (150, 0, 0)
+		end
+
+	Empty_text: STRING is ""
+			-- Empty string
+
+	Output_edit_name: STRING is "Output"
+			-- Output edit name
+
+	New_line: STRING is "%N"
+			-- New line
+
+invariant
+
+	valid_format: (is_title_format implies (not is_warning_format and not is_error_format)) and
+				(is_warning_format implies (not is_title_format and not is_error_format)) and
+				(is_error_format implies (not is_warning_format and not is_title_format))
+
+end -- class WIZARD_OUTPUT_EDIT

@@ -33,11 +33,6 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_LOGGER
-		export
-			{NONE} all
-		end
-
 create
 	make
 
@@ -135,6 +130,7 @@ feature -- Basic Operations
 			close_log_file
 		rescue
 			shared_wizard_environment.set_abort (10)
+			close_log_file
 			retry
 		end
 

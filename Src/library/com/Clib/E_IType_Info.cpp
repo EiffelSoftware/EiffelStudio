@@ -16,11 +16,22 @@
 //---------------------------------------------------------------------
 E_IType_Info::E_IType_Info(ITypeInfo * p_i)
 {
-	pTypeInfo = p_i;
+	pTypeInfo = p_i;	
+	FuncDescList.first.item = NULL;
+	FuncDescList.current = &(FuncDescList.first);
+	VarDescList.first.item = NULL;
+	VarDescList.current = &(VarDescList.first);
 };
 //---------------------------------------------------------------------
 E_IType_Info::~E_IType_Info ()
 {
+	
+	release_var_descs ();
+	release_func_descs ();
+	if (pTypeAttr != NULL)
+	{
+		ccom_release_type_attr ((EIF_POINTER) pTypeAttr);
+	}
 	if (pTypeInfo != NULL)
 		pTypeInfo->Release();
 };
@@ -206,6 +217,7 @@ FUNCDESC * E_IType_Info::ccom_get_func_desc (EIF_INTEGER an_index)
 		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
+	save_func_desc (p_funcdesc);
 	return p_funcdesc;
 };
 //-----------------------------------------------------------------------
@@ -381,6 +393,7 @@ TYPEATTR * E_IType_Info::ccom_get_type_attr ()
 		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
+	pTypeAttr = p_type_attr;
 	return p_type_attr;
 };
 //--------------------------------------------------------------------------
@@ -415,6 +428,7 @@ VARDESC * E_IType_Info::ccom_get_var_desc (EIF_INTEGER an_index)
 		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
+	save_var_desc (p_var_desc);
 	return p_var_desc;
 };
 //--------------------------------------------------------------------------
@@ -475,3 +489,67 @@ void E_IType_Info::ccom_release_var_desc (EIF_POINTER p_var_desc)
 };
 //-----------------------------------------------------------------------------
 
+void E_IType_Info::save_func_desc (FUNCDESC *pFuncDesc)
+
+// Save pFuncDesc in FuncDescList
+{
+	FuncDescList.current->item = pFuncDesc;
+	FuncDescList.current->next = (FUNCDESCLISTITEM *) malloc (sizeof (FUNCDESCLISTITEM));
+	FuncDescList.current = FuncDescList.current->next;
+	FuncDescList.current->item = NULL;
+	FuncDescList.current->next = NULL;
+};
+//-----------------------------------------------------------------------------
+
+void E_IType_Info::save_var_desc (VARDESC *pVarDesc)
+
+// Save pVarDesc in VarDescList
+{
+	VarDescList.current->item = pVarDesc;
+	VarDescList.current->next = (VARDESCLISTITEM *) malloc (sizeof (VARDESCLISTITEM));
+	VarDescList.current = VarDescList.current->next;
+	VarDescList.current->item = NULL;
+	VarDescList.current->next = NULL;
+};
+//-----------------------------------------------------------------------------
+
+void E_IType_Info::release_func_descs ()
+
+// Release all FUNCDESC structures
+{
+	FUNCDESCLISTITEM * tmp;
+	FuncDescList.current = &(FuncDescList.first);
+	if (FuncDescList.current != NULL)
+	{
+		ccom_release_func_desc (( EIF_POINTER )FuncDescList.current->item);
+		FuncDescList.current = FuncDescList.current->next;
+
+	}
+	while (FuncDescList.current != NULL)
+	{
+		ccom_release_func_desc (( EIF_POINTER )FuncDescList.current->item);
+		tmp = FuncDescList.current;
+		FuncDescList.current = FuncDescList.current->next;
+		free (tmp);
+	}
+}//-----------------------------------------------------------------------------
+
+void E_IType_Info::release_var_descs ()
+
+// Release all VARDESC structures
+{
+	VARDESCLISTITEM * tmp;
+	VarDescList.current = &(VarDescList.first);
+	if (VarDescList.current != NULL)
+	{
+		ccom_release_var_desc (( EIF_POINTER )VarDescList.current->item);
+		VarDescList.current = VarDescList.current->next;
+	}
+	while (VarDescList.current != NULL)
+	{
+		ccom_release_var_desc (( EIF_POINTER )VarDescList.current->item);
+		tmp = VarDescList.current;
+		VarDescList.current = VarDescList.current->next;
+		free (tmp);
+	}
+}

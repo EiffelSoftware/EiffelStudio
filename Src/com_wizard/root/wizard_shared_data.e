@@ -51,6 +51,9 @@ feature -- Access
 
 	concurrency_model: STRING is "COINIT_APARTMENTTHREADED"
 
+	Temporary_input_file_name: STRING is "Input_File"
+			-- Input file
+
 feature -- Element Change
 
 	set_shared_wizard_environment (an_environment: WIZARD_ENVIRONMENT) is

@@ -3,9 +3,8 @@ class INLINED_RESULT_B
 inherit
 	RESULT_B
 		redefine
-			enlarged, propagate, analyze, generate,
-			free_register, print_register, type,
-			Current_register, is_result
+			enlarged, propagate, free_register, print_register, type,
+			Current_register, is_result, generate
 		end
 
 feature
@@ -27,11 +26,6 @@ feature -- Register and code generation
 		end
 
 	propagate (r: REGISTRABLE) is
-			-- Do nothing
-		do
-		end;
-
-	analyze is
 			-- Do nothing
 		do
 		end;

@@ -160,7 +160,7 @@ end
 			class_type ?= type_i
 			is_polymorphic_access := not type_i.is_basic and then
 					class_type /= Void and then
-					Eiffel_table.is_polymorphic (rout_id, class_type.type_id, True) >= 0
+					Eiffel_table.is_polymorphic (routine_id, class_type.type_id, True) >= 0
 			if reg.is_current and is_polymorphic_access then
 				context.add_dt_current
 			end
@@ -186,7 +186,7 @@ end
 			type_i := context_type
 			if not type_i.is_basic then
 				class_type ?= type_i;	-- Cannot fail
-				Result := Eiffel_table.is_polymorphic (rout_id, class_type.type_id, True) >= 0
+				Result := Eiffel_table.is_polymorphic (routine_id, class_type.type_id, True) >= 0
 			end
 		end
 
@@ -199,7 +199,7 @@ end
 			buf: GENERATION_BUFFER
 			array_index: INTEGER
 		do
-			array_index := Eiffel_table.is_polymorphic (rout_id, typ.type_id, True)
+			array_index := Eiffel_table.is_polymorphic (routine_id, typ.type_id, True)
 			buf := buffer
 			if array_index = -2 then
 					-- Call to a deferred feature without implementation
@@ -210,7 +210,7 @@ end
 					-- The call is polymorphic, so generate access to the
 					-- routine table. The dereferenced function pointer has
 					-- to be enclosed in parenthesis.
-				table_name := rout_id.table_name
+				table_name := routine_id.table_name
 				buf.putchar ('(')
 				real_type (type).c_type.generate_function_cast (buf, argument_types)
 				buf.putchar ('(')
@@ -227,7 +227,7 @@ end
 				end
 				buf.putstring ("])")
 					-- Mark routine id used
-				Eiffel_table.mark_used (rout_id)
+				Eiffel_table.mark_used (routine_id)
 					-- Remember extern declaration
 				Extern_declarations.add_routine_table (table_name)
 			else
@@ -236,7 +236,7 @@ end
 					-- deferred feature in which case we have to be careful
 					-- and get the routine name of the first entry in the
 					-- routine table.
-				rout_table ?= Eiffel_table.poly_table (rout_id)
+				rout_table ?= Eiffel_table.poly_table (routine_id)
 
 				if rout_table.is_implemented (typ.type_id) then
 					internal_name := clone (rout_table.feature_name (typ.type_id))
@@ -270,16 +270,22 @@ end
 			para_type: TYPE_I
 			loc_idx: INTEGER
 			buf: GENERATION_BUFFER
+			l_area: SPECIAL [EXPR_B]
+			i, nb: INTEGER
+			p: like parameters
 		do
-			if parameters /= Void then
+			p := parameters
+			if p /= Void then
 				buf := buffer
+				l_area := p.area
+				nb := p.count
+				p := Void
 				if system.has_separate then
 					from
-						parameters.start
 					until
-						parameters.after
+						i = nb
 					loop
-						expr := parameters.item;	-- Cannot fail
+						expr := l_area.item (i);	-- Cannot fail
 						para ?= expr
 						buf.putstring (gc_comma)
 						if para /= Void and then para.stored_register.register_name /= Void then
@@ -295,18 +301,18 @@ end
 						else
 							expr.print_register
 						end
-						parameters.forth
+							i := i + 1
+						i := i + 1
 					end
 				else
 					from
-						parameters.start
 					until
-						parameters.after
+						i = nb
 					loop
-						expr := parameters.item;	-- Cannot fail
 						buf.putstring (gc_comma)
+						expr := l_area.item (i);	-- Cannot fail
 						expr.print_register
-						parameters.forth
+						i := i + 1
 					end
 				end
 				
@@ -321,19 +327,27 @@ end
 			type := f.type
 			parameters := f.parameters
 			precursor_type := f.precursor_type
+			routine_id := f.routine_id
 			enlarge_parameters
 		end
 
 	enlarge_parameters is
+		local
+			i, nb: INTEGER
+			l_area: SPECIAL [EXPR_B]
+			p: like parameters
 		do
-			if parameters /= Void then
+			p := parameters
+			if p /= Void then
 				from
-					parameters.start
+					l_area := p.area
+					nb := p.count
+					p := Void
 				until
-					parameters.after
+					i = nb
 				loop
-					parameters.replace (parameters.item.enlarged)
-					parameters.forth
+					l_area.put (l_area.item (i).enlarged, i)
+					i := i + 1
 				end
 			end
 		end

@@ -9,6 +9,11 @@ deferred class
 inherit
 	IL_CONST
 
+	IL_PREDEFINED_STRINGS
+		export
+			{NONE} all
+		end
+
 	SHARED_IL_CONSTANTS
 
 	SHARED_WORKBENCH
@@ -83,47 +88,76 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_single_class: BOOLEAN
-			-- Can current class only be single inherited?
-
 	current_class_type: CLASS_TYPE
 			-- Currently class type being handled.
 
-	standard_twin_rout_id, internal_finalize_rout_id: INTEGER
-			-- Routine ID of `standard_twin' and `finalize' from ANY.
+feature -- Status report
 
-	last_parents: ARRAY [INTEGER]
-			-- List of parents tokens last described after call to `update_parents'.
+	is_debug_info_enabled: BOOLEAN
+			-- Are we generating debug information?
 
-	single_inheritance_parent_id: INTEGER
-			-- Implementation ID of parent when no interface is being generated:
-			-- either if `is_single_inheritance_implementation' or if class `is_single'.
-
-	single_inheritance_token: INTEGER
-			-- Token of parent class when no interface is being generated:
-			-- either if `is_single_inheritance_implementation' or if class `is_single'.
-
-	output_file_name: FILE_NAME
-			-- File where assembly is stored.
+feature {IL_MODULE} -- Access
 
 	is_single_inheritance_implementation: BOOLEAN is
 			-- Is current generation of type SINGLE_IL_CODE_GENERATOR?
 		deferred
 		end
 
-feature {IL_CODE_GENERATOR} -- Access
-
-	md_emit: MD_EMIT
-			-- Metadata emitter.
-
-	md_dispenser: MD_DISPENSER
-			-- Object used to generate Metadata.
-
-	method_writer: MD_METHOD_WRITER
-			-- To store method bodys.
-
 	method_body: MD_METHOD_BODY
 			-- Body for currently generated routine.
+
+	local_start_offset, local_end_offset, local_count: INTEGER
+			-- Number of locals for current feature.
+
+feature {NONE} -- Access
+
+	main_module: IL_MODULE
+			-- Module containing assembly manifest.
+
+	current_module: IL_MODULE
+			-- Module being used for code generation.
+
+	current_type_id: INTEGER
+			-- Type_id of class being analyzed.
+
+	current_class: CLASS_C
+			-- Current class being treated.
+
+	is_single_class: BOOLEAN
+			-- Can current class only be single inherited?
+
+	standard_twin_rout_id, internal_finalize_rout_id: INTEGER
+			-- Routine ID of `standard_twin' and `finalize' from ANY.
+
+	output_file_name: FILE_NAME
+			-- File where assembly is stored.
+
+	md_dispenser: MD_DISPENSER
+			-- Access to MetaData generator.
+
+	md_emit: MD_EMIT is
+			-- Metadata emitter.
+		do
+			Result := current_module.md_emit
+		ensure
+			md_emit_not_void: Result /= Void
+		end
+
+	method_writer: MD_METHOD_WRITER is
+			-- To store method bodys.
+		do
+			Result := current_module.method_writer
+		ensure
+			method_writer_not_void: Result /= Void
+		end
+
+	type_count: INTEGER is
+			-- Number of generated types in Current system.
+		do
+			Result := (create {SHARED_COUNTER}).static_type_id_counter.count + 8
+		ensure
+			type_count_positive: type_count >= 0
+		end
 
 	done_sig: MD_FIELD_SIGNATURE
 			-- Precomputed signature of `done_token' so that we do not have
@@ -142,20 +176,11 @@ feature {IL_CODE_GENERATOR} -- Access
 	local_sig: MD_LOCAL_SIGNATURE
 			-- Permanent signature for locals.
 
-	local_start_offset, local_end_offset, local_count: INTEGER
-			-- Number of locals for current feature.
-
 	local_types: ARRAYED_LIST [PAIR [TYPE_I, STRING]]
 			-- To store types of local variables.
 
 	uni_string: UNI_STRING
 			-- Buffer for all unicode string conversion.
-
-	one_element_array: ARRAY [INTEGER]
-			-- Array with one element.
-
-	main_module_token: INTEGER
-			-- ID of module being generated.
 
 	is_console_application: BOOLEAN
 			-- Is current a console application?
@@ -166,25 +191,34 @@ feature {IL_CODE_GENERATOR} -- Access
 	is_verifiable: BOOLEAN
 			-- Does code generation has to be verifiable?
 
-	is_debug_info_enabled: BOOLEAN
-			-- Are we generating debug information?
-
 	is_cls_compliant: BOOLEAN
 			-- Does code generation generate CLS compliant code?
 
 	object_type_id, any_type_id: INTEGER
 			-- Type id of SYSTEM_OBJECT and ANY class.
 
-	c_module_name: UNI_STRING
+	assembly_name: STRING
+			-- Name of current assembly.
+
+	c_module_name: STRING
 			-- Name of C generated module containing all C externals.
+
+	location_path: STRING
+			-- Path where assemblies are being generated.
 
 	current_feature_token: INTEGER
 			-- Token of feature being generated in `generate_feature_code'.
 
+	once_generation: BOOLEAN
+			-- Are we currently generating a once feature?
+
 feature {NONE} -- Debug info
 
-	dbg_writer: DBG_WRITER
+	dbg_writer: DBG_WRITER is
 			-- PDB writer.
+		do
+			Result := current_module.dbg_writer
+		end
 
 	dbg_offsets,
 	dbg_start_lines,
@@ -197,12 +231,6 @@ feature {NONE} -- Debug info
 			-- Number of meaningful elements in above arrays.
 
 feature -- Access
-
-	current_type_id: INTEGER
-			-- Type_id of class being analyzed.
-
-	current_class: CLASS_C
-			-- Current class being treated.
 
 	runtime_type_id: INTEGER
 			-- Identifier for class ISE.Runtime.TYPE.
@@ -228,43 +256,10 @@ feature -- Access
 	generic_conformance_type_id: INTEGER
 			-- Identifier for class ISE.Runtime.GENERIC_CONFORMANCE.
 
-	once_generation: BOOLEAN
-			-- Are we currently generating a once feature?
-
 	public_key: MD_PUBLIC_KEY
 			-- Public key if used of current assembly.
 
 feature -- Settings
-
-	set_current_class_type (cl_type: like current_class_type) is
-			-- Set `current_class_type' to `cl_type'.
-		require
-			cl_type_not_void: cl_type /= Void
-		do
-			current_class_type := cl_type
-		ensure
-			current_class_type_set: current_class_type = cl_type
-		end
-
-	set_current_class (cl: like current_class) is
-			-- Set `current_class' to `cl'.
-		require
-			cl_not_void: cl /= Void
-		do
-			current_class := cl
-		ensure
-			current_class_set: current_class = cl
-		end
-
-	set_current_type_id (an_id: like current_type_id) is
-			-- Set `current_type_id' to `an_id'.
-		require
-			valid_id: an_id > 0
-		do
-			current_type_id := an_id
-		ensure
-			current_type_id_set: current_type_id = an_id
-		end
 
 	set_runtime_type_id (an_id: like runtime_type_id) is
 			-- Set `an_id' to `runtime_type_id'.
@@ -374,50 +369,96 @@ feature -- Settings
 			any_type_id_set: any_type_id = an_id
 		end
 
-	set_public_key_token (assembly_info: ASSEMBLY_INFO) is
-			-- Set `public_key_token' of `assembly_info' to
-			-- public key token of current generated assembly.
+	set_current_module_with (a_class_type: CLASS_TYPE) is
+			-- Update `current_module' so that it refers to module in which
+			-- `a_class_type' is generated.
 		require
-			assembly_info_not_void: assembly_info /= Void
+			a_class_type_not_void: a_class_type /= Void
 		do
-			if public_key /= Void then	
-				assembly_info.set_public_key_token (public_key.public_key_token_string)
+			current_module := il_modules (a_class_type)
+				-- Refine so that only classes being generated in current compilation
+				-- unit needs the module to be generated as well.
+			if a_class_type.is_generated and then not current_module.is_generated then
+				current_module.prepare (md_dispenser, type_count)
 			end
+		ensure
+			current_module_set: current_module /= Void
+			associated_current_module: current_module = il_modules (a_class_type)
 		end
-			
+
+feature {NONE} -- Settings
+
+	set_current_class_type (cl_type: like current_class_type) is
+			-- Set `current_class_type' to `cl_type'.
+		require
+			cl_type_not_void: cl_type /= Void
+		do
+			current_class_type := cl_type
+		ensure
+			current_class_type_set: current_class_type = cl_type
+		end
+
+	set_current_class (cl: like current_class) is
+			-- Set `current_class' to `cl'.
+		require
+			cl_not_void: cl /= Void
+		do
+			current_class := cl
+		ensure
+			current_class_set: current_class = cl
+		end
+
+	set_current_type_id (an_id: like current_type_id) is
+			-- Set `current_type_id' to `an_id'.
+		require
+			valid_id: an_id > 0
+		do
+			current_type_id := an_id
+		ensure
+			current_type_id_set: current_type_id = an_id
+		end
+
 feature -- Generation Structure
 
-	start_assembly_generation (assembly_name, a_file_name,
-			a_key_pair_file_name, location: STRING; assembly_info: ASSEMBLY_INFO)
+	start_assembly_generation (
+			a_assembly_name, a_file_name: STRING;
+			a_public_key: like public_key;
+			location: STRING;
+			assembly_info: ASSEMBLY_INFO;
+			debug_mode: BOOLEAN)
 		is
 			-- Create Assembly with `name'.
 		require
-			assembly_name_not_void: assembly_name /= Void
-			assembly_name_not_empty: not assembly_name.is_empty
+			a_assembly_name_not_void: a_assembly_name /= Void
+			a_assembly_name_not_empty: not a_assembly_name.is_empty
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_not_empty: not a_file_name.is_empty
 			location_not_void: location /= Void
 			location_not_empty: not location.is_empty
 		local
-			ass: MD_ASSEMBLY_INFO
 			l_assembly_flags: INTEGER
-			l_version: VERSION
 		do
-			create output_file_name.make_from_string (location)
-			output_file_name.set_file_name (a_file_name)
+			location_path := location
+			assembly_name := a_assembly_name
 
 				-- Create unicode string buffer.
 			create uni_string.make_empty (1024)
 
-				-- Initialize metadata emitter.
-			create md_dispenser.make
-			md_emit := md_dispenser.emitter
+				-- Name of `dll' containing all C externals.
+			create c_module_name.make_from_string ("lib" + a_assembly_name + ".dll")
 
-			create method_writer.make
+			create md_dispenser.make
+
 
 				-- Create signature for `done' in once computation.
 			create done_sig.make
 			done_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
+
+				-- Create default signature.
+			create default_sig.make
+			default_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+			default_sig.set_parameter_count (0)
+			default_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
 				-- Create permanent signature for feature.
 			create method_sig.make
@@ -425,153 +466,180 @@ feature -- Generation Structure
 			create local_sig.make
 			create local_types.make (5)
 
-			create one_element_array.make (0, 1)
-
-				-- Name of `dll' containing all C externals.
-			create c_module_name.make ("lib" + assembly_name + ".dll")
-
-			entry_point_token := 0
 			last_non_recorded_feature_token := 0
 			create override_counter
 
-			remap_external_token
-
-			if a_key_pair_file_name /= Void then
-				if (create {MD_STRONG_NAME}).present then
-					create public_key.make_from_file (a_key_pair_file_name)
-					if public_key.is_valid then
-						l_assembly_flags := feature {MD_ASSEMBLY_FLAGS}.public_key
-					else
-						public_key := Void
-							-- Introduce error saying that public key cannot be read.
-						Error_handler.insert_warning (create {VIIK})
-					end
-				else
-					public_key := Void
-					Error_handler.insert_warning (create {VISM})
-				end
-			else
-				public_key := Void
+			public_key := a_public_key
+			if public_key /= Void then
+				l_assembly_flags := feature {MD_ASSEMBLY_FLAGS}.public_key
 			end
 
-			set_public_key_token (assembly_info)
-
-			create ass.make
-			create l_version
-			if l_version.is_version_valid (assembly_info.version) then
-				l_version.set_version (assembly_info.version)
-				ass.set_major_version (l_version.major.to_integer_16)
-				ass.set_minor_version (l_version.minor.to_integer_16)
-				ass.set_build_number (l_version.build.to_integer_16)
-				ass.set_revision_number (l_version.revision.to_integer_16)
-			end
-			
-			uni_string.set_string (assembly_name)
-			main_module_token := md_emit.define_assembly (uni_string, l_assembly_flags, ass,
-				public_key)
-
-			define_custom_attribute (main_module_token, com_visible_ctor_token,
-				not_com_visible_ca)
-		end
-
-	start_module_generation (name: STRING; debug_mode: BOOLEAN) is
-			-- Create Module `name' within current assembly.
-			-- In debug mode if `debug_mode' is true.
-		require
-			name_not_void: name /= Void
-			name_not_empty: not name.is_empty
-		do
 			is_debug_info_enabled := debug_mode
 
-			if is_debug_info_enabled then
-					-- Create PDB writer
-				uni_string.set_string (output_file_name)
-				create dbg_writer.make (md_emit, uni_string, True)
+			create output_file_name.make_from_string (location)
+			output_file_name.set_file_name (a_file_name)
+
+			create main_module.make (
+				a_assembly_name,
+				output_file_name,
+				c_module_name,
+				a_public_key,
+				Current,
+				assembly_info,
+				1,
+				debug_mode,
+				True -- Main assembly
+				)
+			current_module := main_module
+			if is_console_application then
+				main_module.set_console_application
+			else
+				main_module.set_window_application
 			end
 
-			uni_string.set_string (name)
-			md_emit.set_module_name (uni_string)
+			if is_dll then
+				main_module.set_dll
+			end
+			
+			main_module.prepare (md_dispenser, type_count)
+
+			if System.in_final_mode then
+				internal_il_modules.put (main_module, 1)
+			end
+		ensure
+			assembly_name_set: assembly_name = a_assembly_name
 		end
 
-	define_entry_point (creation_type_id, a_type_id: INTEGER; a_feature_id: INTEGER) is
+	start_module_generation (a_module_id: INTEGER) is
+			-- Create Module `name' within current assembly.
+			-- In debug mode if `debug_mode' is true.
+		do
+			current_module := internal_il_modules.item (a_module_id)
+		end
+
+	define_entry_point
+			(creation_type_id: INTEGER; a_class_type: CLASS_TYPE; a_feature_id: INTEGER)
+		is
 			-- Define entry point for IL component from `a_feature_id' in
 			-- class `a_type_id'.
 		require
 			positive_creation_type_id: creation_type_id > 0
-			positive_type_id: a_type_id > 0
+			a_class_type_not_void: a_class_type /= Void
 			positive_feature_id: a_feature_id > 0
 		local
-			entry_type_token: INTEGER
-			l_meth_token: INTEGER
-			l_sig: like method_sig
+			l_cur_mod: like current_module
 		do
-			entry_type_token := md_emit.define_type (
-				create {UNI_STRING}.make ("MAIN"), feature {MD_TYPE_ATTRIBUTES}.Ansi_class |
-					feature {MD_TYPE_ATTRIBUTES}.Auto_layout | feature {MD_TYPE_ATTRIBUTES}.public,
-				object_type_token, Void)
-
-			l_sig := method_sig
-			l_sig.reset
-			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
-			l_sig.set_parameter_count (0)
-			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-
-			entry_point_token := md_emit.define_method (create {UNI_STRING}.make ("Main"),
-				entry_type_token, feature {MD_METHOD_ATTRIBUTES}.Public |
-				feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
-				feature {MD_METHOD_ATTRIBUTES}.Static, l_sig,
-				feature {MD_METHOD_ATTRIBUTES}.Managed)
-
-				-- Let's retrieve token associated to creation routine.
-			l_meth_token := implementation_feature_token (a_type_id, a_feature_id)
-
-			if is_debug_info_enabled then
-				define_custom_attribute (entry_point_token, debugger_step_through_ctor_token,
-					debugger_step_through_ca)
-				define_custom_attribute (entry_point_token, debugger_hidden_ctor_token,
-					debugger_hidden_ca)
-				dbg_writer.set_user_entry_point (l_meth_token)
-			end
-
-			start_new_body (entry_point_token)
-			method_body.put_call (feature {MD_OPCODES}.Newobj,
-				constructor_token (creation_type_id), 0, True)
-			method_body.put_call (feature {MD_OPCODES}.Call,
-				implementation_feature_token (a_type_id, a_feature_id), 0, False)
-			method_body.put_opcode (feature {MD_OPCODES}.Ret)
-
-			method_writer.write_current_body
+			l_cur_mod := current_module
+			current_module := main_module
+			current_class_type := a_class_type
+			main_module.define_entry_point (creation_type_id, a_class_type, a_feature_id)
+			current_module := l_cur_mod
 		end
 
 	end_assembly_generation is
 			-- Finish creation of current assembly.
+		local
+			l_types: like class_types
+			l_type: CLASS_TYPE
+			l_class: CLASS_C
+			i, nb: INTEGER
+			l_uni_string: UNI_STRING
+			l_module: IL_MODULE
+			l_token, l_file_token: INTEGER
+			l_hash, l_hash_res: MANAGED_POINTER
+			l_result: INTEGER
+			l_size: INTEGER
+			l_alg_id: INTEGER
 		do
 			-- Do nothing
+			current_module := main_module
+
+			if not System.in_final_mode then
+				from
+					l_types := System.class_types
+					i := l_types.lower
+					nb := l_types.upper
+					create l_uni_string.make_empty (0)
+				until
+					i > nb
+				loop
+					l_type := l_types.item (i)
+					if l_type /= Void and then l_type.is_generated then
+						l_module := il_modules (l_type)
+						
+						if file_token.has (l_module) then
+							l_file_token := file_token.item (l_module)
+						else
+							create l_hash.make (1024)
+							l_uni_string.set_string (l_module.module_file_name)
+							l_result := feature {MD_STRONG_NAME}.get_hash_from_file (
+								l_uni_string.item, $l_alg_id, l_hash.item, l_hash.count, $l_size)
+								
+							check
+								l_result_ok: l_result = 0
+							end
+							
+							create l_hash_res.make_from_pointer (l_hash.item, l_size)
+
+							l_uni_string.set_string (l_module.module_name)
+							l_file_token := md_emit.define_file (l_uni_string, l_hash_res)
+							file_token.put (l_file_token, l_module)
+						end
+						
+						l_uni_string.set_string (l_type.full_il_type_name)
+						l_token := md_emit.define_exported_type (l_uni_string, l_file_token,
+							l_type.last_type_token, feature {MD_TYPE_ATTRIBUTES}.Public)
+						
+						if l_type.implementation_id /= l_type.static_type_id then
+							l_uni_string.set_string (l_type.full_il_implementation_type_name)
+							l_token := md_emit.define_exported_type (l_uni_string, l_file_token,
+								l_type.last_implementation_type_token,
+								feature {MD_TYPE_ATTRIBUTES}.Public)
+						end
+
+						l_class := l_type.associated_class	
+						if
+							not l_class.is_deferred and
+							(l_class.creators = Void or else not l_class.creators.is_empty)
+						then
+							l_uni_string.set_string (l_type.full_il_create_type_name)
+							l_token := md_emit.define_exported_type (l_uni_string, l_file_token,
+								l_type.last_create_type_token, feature {MD_TYPE_ATTRIBUTES}.Public)
+						end
+					end
+					i := i + 1
+				end
+			end
+			
+			main_module.save_to_disk
 		end
 
-	end_module_generation is
+	end_module_generation (has_root_class: BOOLEAN) is
 			-- Finish creation of current module.
 		local
-			l_pe_file: CLI_PE_FILE
-			l_debug_info: MANAGED_POINTER
-			l_dbg_directory: CLI_DEBUG_DIRECTORY
+			a_class: CLASS_C
+			root_feat: FEATURE_I
+			l_decl_type: CL_TYPE_I
 		do
-			create l_pe_file.make (output_file_name, is_dll or else is_console_application, is_dll)
-			if is_debug_info_enabled then
-				create l_dbg_directory.make
-				l_debug_info := dbg_writer.debug_info (l_dbg_directory)
-				l_pe_file.set_debug_information (l_dbg_directory, l_debug_info)
-				dbg_writer.close
+			if
+				not System.in_final_mode and then
+				(current_module /= Void and then current_module.is_generated)
+			then
+					-- Mark now entry point for debug information
+				if has_root_class and is_debug_info_enabled then
+					a_class := system.root_class.compiled_class
+					root_feat := a_class.feature_table.item (system.creation_name)
+					l_decl_type := implemented_type (root_feat.origin_class_id,
+						a_class.types.first.type)
+
+					current_module.dbg_writer.set_user_entry_point (
+						current_module.implementation_feature_token (
+							l_decl_type.associated_class_type.static_type_id,
+							root_feat.origin_feature_id))
+				end
+					-- Save module.
+				current_module.save_to_disk
 			end
-			if public_key /= Void then
-				l_pe_file.set_public_key (public_key)
-			end
-			l_pe_file.set_emitter (md_emit)
-			l_pe_file.set_method_writer (method_writer)
-			if entry_point_token /= 0 then
-				l_pe_file.set_entry_point_token (entry_point_token)
-			end
-			l_pe_file.save
 		end
 
 feature -- Generation type
@@ -627,246 +695,84 @@ feature -- Generation Info
 
 feature -- Class info
 
-	start_class_mappings (class_count: INTEGER) is
+	initialize_class_mappings (class_count: INTEGER) is
 			-- Following calls to current will only be `generate_class_mappings'.
 		do
-			create class_mapping.make (0, class_count)
-			create factory_class_mapping.make (0, class_count)
-			create single_parent_mapping.make (0, class_count)
+			create internal_il_modules.make (0, class_count)
+			create file_token.make (10)
 			create external_class_mapping.make (class_count)
-			create external_token_mapping.make (class_count)
-			create internal_constructor_token.make (0, class_count)
-			create internal_invariant_token.make (0, class_count)
-			create internal_assemblies.make (0, class_count)
-			create defined_assemblies.make (10)
-			create internal_features.make (0, class_count)
-			create internal_setters.make (0, class_count)
-			create internal_attributes.make (0, class_count)
-			create internal_implementation_features.make (0, class_count)
+
 			create signatures_table.make (0, class_count)
 			create implementation_signatures_table.make (0, class_count)
 
 				-- Debug data structure.
-			create internal_dbg_documents.make (0, class_count)
-			create method_sequence_points.make (1000)
-			create local_info.make (1000)
 			internal_class_types := Void
-		end
-
-	clean_implementation_class_data is
-			-- Clean current class implementation data.
-		require
-			current_type_id_set: current_type_id > 0
-		do
-			internal_features.put (Void, current_type_id)
 		end
 
 	generate_type_class_mappings is
 			-- Create correspondance between `runtime_type_id' and ISE.Runtime.TYPE.
-		require
-			runtime_type_id_set: runtime_type_id > 0
-		local
-			l_sig: like method_sig
-			l_meth_token: INTEGER
 		do
-			class_mapping.put (ise_type_token, runtime_type_id)
-			class_mapping.put (ise_class_type_token, class_type_id)
-			class_mapping.put (ise_basic_type_token, basic_type_id)
-			class_mapping.put (ise_generic_type_token, generic_type_id)
-			class_mapping.put (ise_formal_type_token, formal_type_id)
-			class_mapping.put (ise_none_type_token, none_type_id)
-			class_mapping.put (ise_eiffel_type_info_type_token, eiffel_type_info_type_id)
-			class_mapping.put (ise_generic_conformance_token, generic_conformance_type_id)
-
-			external_token_mapping.put (ise_type_token, Type_class_name)
-			external_token_mapping.put (ise_class_type_token, Class_type_class_name)
-			external_token_mapping.put (ise_basic_type_token, Basic_type_class_name)
-			external_token_mapping.put (ise_generic_type_token, Generic_type_class_name)
-			external_token_mapping.put (ise_formal_type_token, Formal_type_class_name)
-			external_token_mapping.put (ise_none_type_token, None_type_class_name)
-			external_token_mapping.put (ise_eiffel_type_info_type_token, Type_info_class_name)
-			external_token_mapping.put (ise_generic_conformance_token,
-				Generic_conformance_class_name)
-
-			l_sig := default_sig
-			uni_string.set_string (".ctor")
-
-			l_meth_token := md_emit.define_member_ref (uni_string, ise_type_token, l_sig)
-			internal_constructor_token.put (l_meth_token, runtime_type_id)
-
-			l_meth_token := md_emit.define_member_ref (uni_string, ise_class_type_token, l_sig)
-			internal_constructor_token.put (l_meth_token, class_type_id)
-
-			l_meth_token := md_emit.define_member_ref (uni_string, ise_basic_type_token, l_sig)
-			internal_constructor_token.put (l_meth_token, basic_type_id)
-
-			l_meth_token := md_emit.define_member_ref (uni_string, ise_generic_type_token, l_sig)
-			internal_constructor_token.put (l_meth_token, generic_type_id)
-
-			l_meth_token := md_emit.define_member_ref (uni_string, ise_formal_type_token, l_sig)
-			internal_constructor_token.put (l_meth_token, formal_type_id)
-
-			l_meth_token := md_emit.define_member_ref (uni_string, ise_none_type_token, l_sig)
-			internal_constructor_token.put (l_meth_token, none_type_id)
-
-			l_meth_token := md_emit.define_member_ref (uni_string,
-				ise_eiffel_type_info_type_token, l_sig)
-			internal_constructor_token.put (l_meth_token, eiffel_type_info_type_id)
-		ensure
-			inserted: class_type_token (runtime_type_id) = ise_type_token and
-				class_type_token (class_type_id) = ise_class_type_token and
-				class_type_token (basic_type_id) = ise_basic_type_token and
-				class_type_token (generic_type_id) = ise_generic_type_token and
-				class_type_token (formal_type_id) = ise_formal_type_token and
-				class_type_token (none_type_id) = ise_none_type_token and
-				class_type_token (eiffel_type_info_type_id) = ise_eiffel_type_info_type_token
 		end
 
 	generate_class_mappings (class_type: CLASS_TYPE) is
 			-- Define all types, both external and eiffel one.
 		require
 			class_type_not_void: class_type /= Void
-		local
-			name, impl_name: STRING
-			native_array: NATIVE_ARRAY_CLASS_TYPE
-			l_external_class: EXTERNAL_CLASS_C
-			class_c: CLASS_C
-			l_type_token: INTEGER
-			l_attributes: INTEGER
-			l_type: CL_TYPE_I
-			l_nested_parent_class: CLASS_C
-			l_nested_parent_class_token: INTEGER
 		do
-			class_c := class_type.associated_class
-			update_parents (class_type, class_c)
+			current_module.generate_class_mappings (class_type)
+		end
 
-			native_array ?= class_type
-			if native_array /= Void then
-					-- Generate association with a NATIVE_ARRAY []
-				name := native_array.il_type_name
-				uni_string.set_string (name)
-				l_type_token := md_emit.define_type_ref (uni_string, assembly_token (class_type))
-				class_mapping.put (l_type_token, class_type.static_type_id)
-				external_class_mapping.put (class_type.type, name)
-				external_token_mapping.put (l_type_token, name)
-			else
-				name := class_type.full_il_type_name
-				if not class_c.is_external then
-					impl_name := class_type.full_il_implementation_type_name
+	generate_class_interfaces (class_type: CLASS_TYPE; class_c: CLASS_C) is
+			-- Initialize `class_interface' from `class_type' with info from `class_c'.
+		require
+			class_type_not_void: class_type /= Void
+			class_c_not_void: class_c /= Void
+		local
+			pars: SEARCH_TABLE [CLASS_INTERFACE]
+			class_interface: CLASS_INTERFACE
+			parent_type: CL_TYPE_I
+			parents: FIXED_LIST [CL_TYPE_A]
+			l_class_type: CLASS_TYPE
+			l_native_array: NATIVE_ARRAY_CLASS_TYPE
+			l_type: CL_TYPE_I
+		do
+			l_class_type := byte_context.class_type
+
+			l_native_array ?= class_type
+			if l_native_array /= Void then
+				external_class_mapping.put (class_type.type, l_native_array.il_type_name)
+			elseif class_c.is_external then
+				l_type := class_type.type
+				if l_type.base_class.is_basic then
+					l_type := l_type.base_class.actual_type.type_i
+				elseif l_type.base_class.is_expanded then
+					l_type := clone (l_type)
+					l_type.set_is_true_expanded (True)
 				end
+				external_class_mapping.put (l_type, class_type.full_il_type_name)
+			end
 
-				if class_c.is_external then
-					l_external_class ?= class_c
-					if l_external_class /= Void and then l_external_class.is_nested then
-						l_nested_parent_class := l_external_class.enclosing_class
-						uni_string.set_string (l_nested_parent_class.types.first.full_il_type_name)
-						l_nested_parent_class_token := md_emit.define_type_ref (uni_string,
-							assembly_token (l_nested_parent_class.types.first))
-						uni_string.set_string (name.substring (
-							name.index_of ('+', 1) + 1, name.count))
-						l_type_token := md_emit.define_type_ref (uni_string,
-							l_nested_parent_class_token)
-					else
-						uni_string.set_string (name)
-						l_type_token := md_emit.define_type_ref (uni_string,
-							assembly_token (class_type))
-					end
-					class_mapping.put (l_type_token, class_type.static_type_id)
+			parents := class_c.parents
+			create class_interface.make_from_context (class_c.class_interface, class_type)
+			create pars.make (parents.count)
 
-						-- Fix `class_type.type' as it only contains a valid
-						-- class id, nothing else.
-					l_type := class_type.type
-					if l_type.base_class.is_basic then
-						l_type := l_type.base_class.actual_type.type_i
-					elseif l_type.base_class.is_expanded then
-						l_type := clone (l_type)
-						l_type.set_is_true_expanded (True)
-					end
-					external_class_mapping.put (l_type, name)
-					external_token_mapping.put (l_type_token, name)
-				else
-					if not (class_c.is_frozen or class_c.is_single) then
-							-- Let's define interface class.
-						uni_string.set_string (name)
-						l_attributes := feature {MD_TYPE_ATTRIBUTES}.Public |
-							feature {MD_TYPE_ATTRIBUTES}.Auto_layout |
-							feature {MD_TYPE_ATTRIBUTES}.Ansi_class |
-							feature {MD_TYPE_ATTRIBUTES}.Is_interface |
-							feature {MD_TYPE_ATTRIBUTES}.Abstract
-						if class_type.is_precompiled then
-							l_type_token := md_emit.define_type_ref (uni_string,
-								assembly_token (class_type))
-						else
-							if class_type.static_type_id = any_type_id then
-									-- By default interface of ANY does not implement any other
-									-- interfaces than EIFFEL_TYPE_INFO.
-								l_type_token := md_emit.define_type (uni_string, l_attributes, 0,
-									<< ise_eiffel_type_info_type_token >>)
-							else
-								l_type_token := md_emit.define_type (uni_string, l_attributes, 0,
-									last_parents)
-							end
-						end
-						class_mapping.put (l_type_token, class_type.static_type_id)
-						external_class_mapping.put (class_type.type, name)
-						external_token_mapping.put (l_type_token, name)
-						uni_string.set_string (impl_name)
-					else
-						uni_string.set_string (name)
-					end
+			from
+				parents.start
+			until
+				parents.after
+			loop
+				byte_context.set_class_type (class_type)
+				parent_type ?= byte_context.real_type (parents.item.type_i)
+				pars.force (parent_type.associated_class_type.class_interface)
+				parents.forth
+			end
 
-						-- Let's define implementation class.
-					l_attributes := feature {MD_TYPE_ATTRIBUTES}.Public |
-						feature {MD_TYPE_ATTRIBUTES}.Auto_layout |
-						feature {MD_TYPE_ATTRIBUTES}.Ansi_class |
-						feature {MD_TYPE_ATTRIBUTES}.Is_class |
-						feature {MD_TYPE_ATTRIBUTES}.Serializable
+			class_interface.set_parents (pars)
+			class_type.set_class_interface (class_interface)
 
-					if class_c.is_deferred then
-						l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Abstract
-					end
-
-					if class_type.is_precompiled then
-						l_type_token := md_emit.define_type_ref (uni_string,
-							assembly_token (class_type))
-					else
-						if class_c.is_frozen then
-							l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Sealed
-						elseif not class_c.is_single then
-							one_element_array.put (class_type_token (class_type.static_type_id), 0)
-							last_parents := one_element_array
-						end
-						single_parent_mapping.put (single_inheritance_parent_id,
-							class_type.implementation_id)
-						l_type_token := md_emit.define_type (uni_string, l_attributes,
-							single_inheritance_token, last_parents)
-
-						if
-							is_debug_info_enabled and
-							internal_dbg_documents.item (class_c.class_id) = Void
-						then
-							uni_string.set_string (class_c.file_name)
-							internal_dbg_documents.put (dbg_writer.define_document (uni_string,
-								language_guid, vendor_guid, document_type_guid), class_c.class_id)
-						end
-
-					end
-
-					class_mapping.put (l_type_token, class_type.implementation_id)
-					if class_c.is_frozen or class_c.is_single then
-						class_mapping.put (l_type_token, class_type.static_type_id)
-					end
-					external_class_mapping.put (class_type.type, impl_name)
-					external_token_mapping.put (l_type_token, impl_name)
-
-					if not class_type.is_precompiled then
-						define_default_constructor (class_type)
-					end
-
-					if not class_type.is_precompiled then
-						class_type.set_il_type_name
-					end
-				end
+				-- Restore byte context if any.
+			if l_class_type /= Void then
+				byte_context.set_class_type (l_class_type)
 			end
 		end
 
@@ -911,46 +817,6 @@ feature -- Class info
 			end
 		end
 
-	define_default_constructor (class_type: CLASS_TYPE) is
-			-- Define default constructor for implementation of `class_type'
-		require
-			class_type_not_void: class_type /= Void
-			class_type_can_be_created: not class_type.associated_class.is_interface
-		local
-			l_meth_token: INTEGER
-			l_sig: like method_sig
-			l_ctor_token: INTEGER
-			l_uni_string: like uni_string
-		do
-				-- Do not use `uni_string' as it might be used by `class_type_token'.
-			create l_uni_string.make (".ctor")
-			l_sig := default_sig
-
-			if class_type.is_precompiled or else class_type.associated_class.is_external then
-				l_meth_token := md_emit.define_member_ref (l_uni_string,
-					class_type_token (class_type.implementation_id), l_sig)
-			else
-				l_meth_token := md_emit.define_method (l_uni_string,
-					class_type_token (class_type.implementation_id),
-					feature {MD_METHOD_ATTRIBUTES}.Public |
-					feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
-					feature {MD_METHOD_ATTRIBUTES}.Special_name |
-					feature {MD_METHOD_ATTRIBUTES}.Rt_special_name,
-					l_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
-
-				l_ctor_token := constructor_token (single_parent_mapping.item (
-						class_type.implementation_id))
-
-				start_new_body (l_meth_token)
-				generate_current
-				method_body.put_call (feature {MD_OPCODES}.Call, l_ctor_token, 0, False)
-				generate_return
-				method_writer.write_current_body
-
-			end
-			internal_constructor_token.put (l_meth_token, class_type.implementation_id)
-		end
-
 	define_runtime_features (class_type: CLASS_TYPE) is
 			-- Define all features needed by ISE .NET runtime. It generates
 			-- `____class_name', `$$____type', `____set_type' and `____type'.
@@ -972,8 +838,8 @@ feature -- Class info
 			create l_name_ca.make
 			l_name_ca.put_string (l_class_name)
 			l_name_ca.put_integer_16 (0)
-			define_custom_attribute (l_class_token, ise_eiffel_class_name_attr_ctor_token,
-				l_name_ca)
+			define_custom_attribute (l_class_token,
+				current_module.ise_eiffel_class_name_attr_ctor_token, l_name_ca)
 
 			if is_single_inheritance_implementation then
 				l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.Public |
@@ -998,7 +864,7 @@ feature -- Class info
 				l_class_token, l_meth_attr, l_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
 
 			if is_cls_compliant then
-				define_custom_attribute (l_meth_token, cls_compliant_ctor_token,
+				define_custom_attribute (l_meth_token, current_module.cls_compliant_ctor_token,
 					not_cls_compliant_ca)
 			end
 
@@ -1018,14 +884,14 @@ feature -- Class info
 				l_field_sig := field_sig
 				l_field_sig.reset
 				l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
-					ise_eiffel_derivation_type_token)
+					current_module.ise_eiffel_derivation_type_token)
 				uni_string.set_string ("$$____type")
 				l_type_field_token := md_emit.define_field (uni_string, l_class_token,
 					feature {MD_FIELD_ATTRIBUTES}.Family, l_field_sig)
 
 				if is_cls_compliant then
-					define_custom_attribute (l_type_field_token, cls_compliant_ctor_token,
-						not_cls_compliant_ca)
+					define_custom_attribute (l_type_field_token,
+						current_module.cls_compliant_ctor_token, not_cls_compliant_ca)
 				end
 
 					-- Define `____set_type'.
@@ -1034,14 +900,14 @@ feature -- Class info
 				l_sig.set_parameter_count (1)
 				l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 				l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
-					ise_eiffel_derivation_type_token)
+					current_module.ise_eiffel_derivation_type_token)
 
 				uni_string.set_string ("____set_type")
 				l_meth_token := md_emit.define_method (uni_string,
 					l_class_token, l_meth_attr, l_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
 
 				if is_cls_compliant then
-					define_custom_attribute (l_meth_token, cls_compliant_ctor_token,
+					define_custom_attribute (l_meth_token, current_module.cls_compliant_ctor_token,
 						not_cls_compliant_ca)
 				end
 
@@ -1057,14 +923,14 @@ feature -- Class info
 				l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
 				l_sig.set_parameter_count (0)
 				l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
-					ise_eiffel_derivation_type_token)
+					current_module.ise_eiffel_derivation_type_token)
 
 				uni_string.set_string ("____type")
 				l_meth_token := md_emit.define_method (uni_string,
 					l_class_token, l_meth_attr, l_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
 
 				if is_cls_compliant then
-					define_custom_attribute (l_meth_token, cls_compliant_ctor_token,
+					define_custom_attribute (l_meth_token, current_module.cls_compliant_ctor_token,
 						not_cls_compliant_ca)
 				end
 
@@ -1076,93 +942,14 @@ feature -- Class info
 			end
 		end
 
-	update_parents (class_type: CLASS_TYPE; class_c: CLASS_C) is
-			-- Generate ancestors map of `class_c'.
-			-- (export status {NONE})
-		require
-			class_c_not_void: class_c /= Void
-			class_type_not_void: class_type /= Void
-		local
-			parents: FIXED_LIST [CL_TYPE_A]
-			parent_type: CL_TYPE_I
-			cl_type: CLASS_TYPE
-			l_list: SEARCH_TABLE [INTEGER]
-			id: INTEGER
-			pars: SEARCH_TABLE [CLASS_INTERFACE]
-			class_interface: CLASS_INTERFACE
-			i: INTEGER
-			l_parents: ARRAY [INTEGER]
-			l_parent_class: CLASS_C
-		do
-			parents := class_c.parents
-			create class_interface.make_from_context (class_c.class_interface, class_type)
-			create pars.make (parents.count)
-			from
-				create l_list.make (parents.count)
-				parents.start
-				create l_parents.make (0, parents.count)
-				single_inheritance_parent_id := 0
-			until
-				parents.after
-			loop
-				byte_context.set_class_type (class_type)
-				parent_type ?= byte_context.real_type (parents.item.type_i)
-				cl_type := parent_type.associated_class_type
-				id := cl_type.static_type_id
-				if not l_list.has (id) then
-					l_list.force (id)
-					l_parent_class := cl_type.associated_class
-					if
-						not l_parent_class.is_single and
-						(not l_parent_class.is_external or else l_parent_class.is_interface)
-					then
-							-- Add parent interfaces only.
-						l_parents.put (class_type_token (cl_type.static_type_id), i)
-						i := i + 1
-						if
-							is_single_inheritance_implementation and then
-							not class_c.is_single and then not l_parent_class.is_interface and then
-							single_inheritance_parent_id = 0 and then l_parent_class = class_c.main_parent
-						then
-								-- We arbitrary take the first parent as principal parent if
-								-- it does not inherit already from an external class, in which
-								-- case it goes through a different line of code.
-								-- FIXME: Manu 4/15/2002: To optimize we should take the one
-								-- with the most features
-							single_inheritance_parent_id := cl_type.implementation_id
-						end
-					elseif l_parent_class.is_external or else l_parent_class.is_single then
-						check
-							single_inheritance_parent_id_not_set: single_inheritance_parent_id = 0
-						end
-						single_inheritance_parent_id := cl_type.implementation_id
-							-- Note: We do not add into `pars' as we only store there the
-							-- parents than can be included as interfaces.
-					end
-					pars.force (cl_type.class_interface)
-				end
-				parents.forth
-			end
-			class_interface.set_parents (pars)
-			class_type.set_class_interface (class_interface)
+feature {NONE} -- Class info
 
-				-- Element after last added should be 0.
-			if i = 0 then
-				last_parents := Void
-			else
-				l_parents.put (0, i)
-				last_parents := l_parents
-			end
-			if single_inheritance_parent_id = 0 then
-				single_inheritance_parent_id := object_type_id
-				single_inheritance_token := object_type_token
-			else
-				single_inheritance_token := class_type_token (single_inheritance_parent_id)
-			end
-				-- Restore byte context if any.
-			if current_class_type /= Void then
-				byte_context.set_class_type (current_class_type)
-			end
+	clean_implementation_class_data is
+			-- Clean current class implementation data.
+		require
+			current_type_id_set: current_type_id > 0
+		do
+			current_module.clean_implementation_class_data (current_type_id)
 		end
 
 feature -- Features info
@@ -1272,16 +1059,22 @@ feature -- Features info
 			l_is_c_external: BOOLEAN
 			l_class_token: like current_class_token
 			l_ext: IL_EXTENSION_I
+			l_naming_convention: BOOLEAN
+			l_is_single_class: BOOLEAN
 		do
 			l_class_type := class_types.item (a_type_id)
 			l_class_token := class_type_token (a_type_id)
 			l_feat := l_class_type.associated_class.feature_of_feature_id (a_feature_id)
+			l_is_single_class := l_class_type.associated_class.is_frozen or
+				l_class_type.associated_class.is_single or
+				l_class_type.associated_class.is_external
 
 			byte_context.set_class_type (l_class_type)
 
-			if l_feat.is_il_external then
-				define_external_feature_reference (l_feat, a_type_id)
-			elseif l_feat.feature_name_id /= Names_heap.void_name_id then
+--			if l_feat.is_il_external then
+--				define_external_feature_reference (l_feat, a_type_id)
+--			elseif l_feat.feature_name_id /= Names_heap.void_name_id then
+			if l_feat.feature_name_id /= Names_heap.void_name_id then
 				l_is_attribute := l_feat.is_attribute
 				l_is_c_external := l_feat.is_c_external
 				l_parameter_count := l_feat.argument_count
@@ -1290,7 +1083,7 @@ feature -- Features info
 				l_signature.compare_references
 
 				l_return_type := argument_actual_type (l_feat.type.actual_type.type_i)
-				if (is_single_class or (not in_interface and is_static)) and l_is_attribute then
+				if (l_is_single_class or (not in_interface and is_static)) and l_is_attribute then
 					l_field_sig := field_sig
 					l_field_sig.reset
 					set_signature_type (l_field_sig, l_return_type)
@@ -1315,7 +1108,8 @@ feature -- Features info
 						l_signature.put (l_return_type.static_type_id, 0)
 					elseif l_feat.is_type_feature then
 						l_meth_sig.set_return_type (
-							feature {MD_SIGNATURE_CONSTANTS}.Element_type_class, ise_type_token)
+							feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
+							current_module.ise_type_token)
 					else
 						l_meth_sig.set_return_type (
 							feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
@@ -1342,36 +1136,46 @@ feature -- Features info
 					end
 				end
 
+				if not l_feat.is_type_feature then
+						-- Only for not automatically generated feature do we use the 
+						-- naming convention chosen by user.
+					l_naming_convention := l_class_type.is_dotnet_name
+				end
+
 					-- When we are handling with an external feature, we have to extract its
 					-- real name, not the Eiffel one.
 				l_ext ?= l_feat.extension
 				if l_ext /= Void then
 					l_name := l_ext.alias_name
 				else
-					if is_static then
-						if l_is_c_external then
-							l_name := encoder.feature_name (l_class_type.static_type_id,
-								l_feat.body_index)
-						else
-							if l_is_attribute then
-								l_name := "$$" + il_casing.camel_casing (
-									l_class_type.is_dotnet_name, l_feat.feature_name)
-							else
-								l_name := "$$" + il_casing.pascal_casing (
-									l_class_type.is_dotnet_name, l_feat.feature_name,
-									feature {IL_CASING_CONVERSION}.lower_case)
-							end
-						end
+					if l_feat.is_type_feature then
+						l_name := l_feat.feature_name
 					else
-						l_name := il_casing.pascal_casing (
-							l_class_type.is_dotnet_name, l_feat.feature_name, 
-							feature {IL_CASING_CONVERSION}.lower_case)
+						if is_static then
+							if l_is_c_external then
+								l_name := encoder.feature_name (l_class_type.static_type_id,
+									l_feat.body_index)
+							else
+								if l_is_attribute then
+									l_name := "$$" + il_casing.camel_casing (
+										l_naming_convention, l_feat.feature_name)
+								else
+									l_name := "$$" + il_casing.pascal_casing (
+										l_naming_convention, l_feat.feature_name,
+										feature {IL_CASING_CONVERSION}.lower_case)
+								end
+							end
+						else
+							l_name := il_casing.pascal_casing (
+								l_naming_convention, l_feat.feature_name, 
+								feature {IL_CASING_CONVERSION}.lower_case)
+						end
 					end
 				end
 
 				uni_string.set_string (l_name)
 
-				if (is_single_class or (not in_interface and is_static)) and l_is_attribute then
+				if (l_is_single_class or (not in_interface and is_static)) and l_is_attribute then
 					l_meth_token := md_emit.define_member_ref (uni_string, l_class_token,
 						l_field_sig)
 
@@ -1397,7 +1201,7 @@ feature -- Features info
 					end
 
 					if not is_override then
-						if is_single_class then
+						if l_is_single_class then
 							insert_implementation_feature (l_meth_token, a_type_id,
 								l_feat.feature_id)
 							insert_implementation_signature (l_signature, a_type_id,
@@ -1516,7 +1320,8 @@ feature -- Features info
 						l_signature.put (l_return_type.static_type_id, 0)
 					elseif feat.is_type_feature then
 						l_meth_sig.set_return_type (
-							feature {MD_SIGNATURE_CONSTANTS}.Element_type_class, ise_type_token)
+							feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
+							current_module.ise_type_token)
 					else
 						l_meth_sig.set_return_type (
 							feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
@@ -1545,6 +1350,8 @@ feature -- Features info
 				end
 
 				if not feat.is_type_feature then
+						-- Only for not automatically generated feature do we use the 
+						-- naming convention chosen by user.
 					l_naming_convention := System.dotnet_naming_convention
 				end
 				if is_static then
@@ -1606,7 +1413,8 @@ feature -- Features info
 							feature {MD_METHOD_ATTRIBUTES}.Preserve_sig)
 						md_emit.define_pinvoke_map (l_meth_token,
 							feature {MD_PINVOKE_CONSTANTS}.Charset_ansi |
-							feature {MD_PINVOKE_CONSTANTS}.Stdcall, uni_string, c_module_token)
+							feature {MD_PINVOKE_CONSTANTS}.Stdcall, uni_string,
+							current_module.c_module_token)
 					else
 							-- Normal method
 						l_meth_token := md_emit.define_method (uni_string, current_class_token,
@@ -1614,8 +1422,8 @@ feature -- Features info
 					end
 
 					if is_cls_compliant and (is_static or feat.is_type_feature) then
-						define_custom_attribute (l_meth_token, cls_compliant_ctor_token,
-							not_cls_compliant_ca)
+						define_custom_attribute (l_meth_token,
+							current_module.cls_compliant_ctor_token, not_cls_compliant_ca)
 					end
 
 					if not is_static and l_is_attribute and not is_override_or_c_external then
@@ -1644,8 +1452,8 @@ feature -- Features info
 						insert_setter (l_setter_token, current_type_id, feat.feature_id)
 
 						if is_cls_compliant then
-							define_custom_attribute (l_setter_token, cls_compliant_ctor_token,
-								not_cls_compliant_ca)
+							define_custom_attribute (l_setter_token,
+								current_module.cls_compliant_ctor_token, not_cls_compliant_ca)
 						end
 					end
 
@@ -1726,22 +1534,8 @@ feature -- Features info
 		require
 			valid_sig: a_sig /= Void
 			valid_type: a_type /= Void
-		local
-			l_gen_type: NATIVE_ARRAY_TYPE_I
 		do
-			if a_type.is_basic then
-				a_sig.set_return_type (a_type.element_type, 0)
-			else
-				l_gen_type ?= a_type
-				if l_gen_type /= Void then
-					a_sig.set_return_type (
-						feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
-					set_signature_type (a_sig, l_gen_type.true_generics.item (1))
-				else
-					a_sig.set_return_type (a_type.element_type,
-						class_type_token (a_type.static_type_id))
-				end
-			end
+			current_module.set_method_return_type (a_sig, a_type)
 		end
 
 	set_signature_type (a_sig: MD_SIGNATURE; a_type: TYPE_I) is
@@ -1749,21 +1543,8 @@ feature -- Features info
 		require
 			valid_sig: a_sig /= Void
 			valid_type: a_type /= Void
-		local
-			l_gen_type: NATIVE_ARRAY_TYPE_I
 		do
-			if a_type.is_basic then
-				a_sig.set_type (a_type.element_type, 0)
-			else
-				l_gen_type ?= a_type
-				if l_gen_type /= Void then
-					a_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
-					set_signature_type (a_sig, l_gen_type.true_generics.item (1))
-				else
-					a_sig.set_type (a_type.element_type,
-						class_type_token (a_type.static_type_id))
-				end
-			end
+			current_module.set_signature_type (a_sig, a_type)
 		end
 
 	generate_type_features (feats: HASH_TABLE [TYPE_FEATURE_I, INTEGER]; class_id: INTEGER) is
@@ -1819,8 +1600,9 @@ feature -- IL Generation
 					feature {MD_TYPE_ATTRIBUTES}.Is_class
 				uni_string.set_string (create_name)
 				l_type_token := md_emit.define_type (uni_string, l_attributes,
-					object_type_token, Void)
-				factory_class_mapping.put (l_type_token, class_type.implementation_id)
+					current_module.object_type_token, Void)
+
+				class_type.set_last_create_type_token (l_type_token)
 
 				current_class_token := l_type_token
 				current_class_type := class_type
@@ -1893,7 +1675,7 @@ feature -- IL Generation
 				end
 				if is_generic then
 					l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
-						ise_eiffel_derivation_type_token)
+						current_module.ise_eiffel_derivation_type_token)
 				end
 
 				l_name := il_casing.pascal_casing (System.dotnet_naming_convention,
@@ -1919,7 +1701,7 @@ feature -- IL Generation
 					duplicate_top
 					generate_argument (nb)
 					method_body.put_call (feature {MD_OPCODES}.callvirt,
-						ise_set_type_token, 1, False)
+						current_module.ise_set_type_token, 1, False)
 				end
 				duplicate_top
 				if nb > 0 then
@@ -2014,11 +1796,13 @@ feature -- IL Generation
 
 				if
 					not l_is_external and then not l_class_type.is_precompiled and then
+					il_modules (current_class_type) = il_modules (l_class_type) and then
 					(l_cur_sig = Void or else l_cur_sig.is_equal (l_impl_sig))
 				then
 					if is_debug_info_enabled then
 						dbg_writer.open_method (l_meth_token)
-						l_sequence_point_list := method_sequence_points.item (l_token)
+						l_sequence_point_list :=
+							current_module.method_sequence_points.item (l_token)
 						from
 							l_sequence_point_list.start
 						until
@@ -2044,10 +1828,11 @@ feature -- IL Generation
 				else
 					if is_debug_info_enabled then
 							-- Enable debugger to go through stub definition.
-						define_custom_attribute (l_meth_token, debugger_step_through_ctor_token,
+						define_custom_attribute (l_meth_token,
+							current_module.debugger_step_through_ctor_token,
 							debugger_step_through_ca)
-						define_custom_attribute (l_meth_token, debugger_hidden_ctor_token,
-							debugger_hidden_ca)
+						define_custom_attribute (l_meth_token,
+							current_module.debugger_hidden_ctor_token, debugger_hidden_ca)
 					end
 
 					start_new_body (l_meth_token)
@@ -2096,9 +1881,9 @@ feature -- IL Generation
 
 			if is_debug_info_enabled then
 					-- Enable debugger to go through stub definition.
-				define_custom_attribute (l_meth_token, debugger_step_through_ctor_token,
-					debugger_step_through_ca)
-				define_custom_attribute (l_meth_token, debugger_hidden_ctor_token,
+				define_custom_attribute (l_meth_token,
+					current_module.debugger_step_through_ctor_token, debugger_step_through_ca)
+				define_custom_attribute (l_meth_token, current_module.debugger_hidden_ctor_token,
 					debugger_hidden_ca)
 			end
 
@@ -2154,10 +1939,12 @@ feature -- IL Generation
 						dbg_offsets_count, dbg_offsets, dbg_start_lines, dbg_start_columns,
 						dbg_end_lines, dbg_end_columns)
 					dbg_writer.close_method
-					l_sequence_point_list := method_sequence_points.item (l_meth_token)
+					l_sequence_point_list :=
+						current_module.method_sequence_points.item (l_meth_token)
 					if l_sequence_point_list = Void then
 						create l_sequence_point_list.make
-						method_sequence_points.put (l_sequence_point_list, l_meth_token)
+						current_module.method_sequence_points.put (l_sequence_point_list,
+							l_meth_token)
 					end
 					l_sequence_point_list.extend ([dbg_offsets_count, dbg_offsets, dbg_start_lines,
 						dbg_start_columns, dbg_end_lines, dbg_end_columns, feat.written_in])
@@ -2175,7 +1962,8 @@ feature -- IL Generation
 			l_meth_token := feature_token (current_type_id, feat.feature_id)
 			start_new_body (l_meth_token)
 			generate_current
-			method_body.put_call (feature {MD_OPCODES}.Call, memberwise_clone_token, 0, True)
+			method_body.put_call (feature {MD_OPCODES}.Call, current_module.memberwise_clone_token,
+				0, True)
 			generate_check_cast (Void, current_class_type.type)
 			generate_return
 			method_writer.write_current_body
@@ -2184,7 +1972,8 @@ feature -- IL Generation
 	generate_object_equality_test is
 			-- Generate comparison of two objects.
 		do
-			internal_generate_external_call (ise_runtime_token, 0, runtime_class_name,
+			internal_generate_external_call (current_module.ise_runtime_token, 0,
+				runtime_class_name,
 				"standard_equal", Static_type, <<type_info_class_name, type_info_class_name>>,
 				"System.Boolean", False)
 		end
@@ -2265,6 +2054,7 @@ feature -- IL Generation
 			l_parent_type_id: INTEGER
 			l_name: STRING
 			l_return_type: TYPE_I
+			l_token: like last_non_recorded_feature_token
 		do
 			l_parent_type_id := parent_type.static_type_id
 			l_cur_sig := signatures (current_type_id, cur_feat.feature_id)
@@ -2293,7 +2083,11 @@ feature -- IL Generation
 				l_return_type := argument_actual_type (inh_feat.type.actual_type.type_i)
 				Byte_context.set_class_type (current_class_type)
 
-				start_new_body (last_non_recorded_feature_token)
+					-- We need to restore the name right away.
+				inh_feat.set_feature_name_id (l_name_id)
+
+				l_token := last_non_recorded_feature_token
+				start_new_body (l_token)
 				generate_current
 				from
 					i := 1
@@ -2320,7 +2114,7 @@ feature -- IL Generation
 				generate_return
 				method_writer.write_current_body
 
-				md_emit.define_method_impl (current_class_token, last_non_recorded_feature_token,
+				md_emit.define_method_impl (current_class_token, l_token,
 					feature_token (l_parent_type_id, inh_feat.feature_id))
 
 				if cur_feat.is_attribute and then inh_feat.is_attribute then
@@ -2360,7 +2154,6 @@ feature -- IL Generation
 					md_emit.define_method_impl (current_class_token, l_setter_token,
 						setter_token (l_parent_type_id, inh_feat.feature_id))
 				end
-				inh_feat.set_feature_name_id (l_name_id)
 			end
 		end
 
@@ -2378,7 +2171,7 @@ feature -- IL Generation
 		local
 			l_type_token: INTEGER
 		do
-			l_type_token := external_token_mapping.item (base_name)
+			l_type_token := current_module.external_token_mapping (base_name)
 			internal_generate_external_call (0, l_type_token, Void, name, ext_kind,
 					Names_heap.convert_to_string_array (parameters_type),
 					Names_heap.item (return_type), is_virtual)
@@ -2407,7 +2200,7 @@ feature -- IL Generation
 			l_return_type: STRING
 			l_signature: ARRAY [INTEGER]
 		do
-			l_class_token := external_token_mapping.item (base_name)
+			l_class_token := current_module.external_token_mapping (base_name)
 			l_parameters_string := Names_heap.convert_to_string_array (parameters_type)
 			l_return_type := Names_heap.item (return_type)
 
@@ -2442,7 +2235,7 @@ feature -- IL Generation
 					l_signature.put (l_type.static_type_id, 0)
 				else
 					l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
-						external_token_mapping.item (l_return_type))
+						current_module.external_token_mapping (l_return_type))
 				end
 
 				uni_string.set_string (member_name)
@@ -2473,7 +2266,7 @@ feature -- IL Generation
 					else
 						l_meth_sig.set_return_type (
 							feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
-							external_token_mapping.item (l_return_type))
+							current_module.external_token_mapping (l_return_type))
 					end
 				else
 					l_meth_sig.set_return_type (
@@ -2502,7 +2295,7 @@ feature -- IL Generation
 						l_signature.put (l_type.static_type_id, i)
 					else
 						l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
-							external_token_mapping.item (l_real_type))
+							current_module.external_token_mapping (l_real_type))
 					end
 					i := i + 1
 				end
@@ -2567,7 +2360,7 @@ feature -- IL Generation
 					set_signature_type (l_field_sig, l_type)
 				else
 					l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
-						external_token_mapping.item (return_type))
+						current_module.external_token_mapping (return_type))
 				end
 
 				uni_string.set_string (member_name)
@@ -2607,7 +2400,7 @@ feature -- IL Generation
 					else
 						l_meth_sig.set_return_type (
 							feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
-							external_token_mapping.item (return_type))
+							current_module.external_token_mapping (return_type))
 					end
 				else
 					l_meth_sig.set_return_type (
@@ -2635,7 +2428,7 @@ feature -- IL Generation
 						set_signature_type (l_meth_sig, l_type)
 					else
 						l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
-							external_token_mapping.item (l_real_type))
+							current_module.external_token_mapping (l_real_type))
 					end
 					i := i + 1
 				end
@@ -2715,97 +2508,31 @@ feature -- Local variable info generation
 				"_dummy_" + name_id.out))
 		end
 
-feature {IL_CODE_GENERATOR} -- Local saving
+feature -- Local saving
+
+	reset_local_types is
+			-- Reset `local_types'.
+		do
+			create local_types.make (5)
+		end
 
 	store_locals (a_meth_token: INTEGER) is
 			-- Store `local_types' into `method_body' for routine `a_meth_token'.
-		local
-			l_sig: like local_sig
-			l_locals: like local_types
-			l_count: INTEGER
-			l_loc_token: INTEGER
+		require
+			method_token_valid: a_meth_token & feature {MD_TOKEN_TYPES}.Md_mask =
+				feature {MD_TOKEN_TYPES}.Md_method_def
 		do
-			l_locals := local_types
-			l_count := l_locals.count
-
-			if l_count > 0 then
-				l_sig := local_sig
-				l_sig.reset
-
-				l_sig.set_local_count (l_count)
-
-				from
-					l_locals.start
-				until
-					l_locals.after
-				loop
-					set_signature_type (l_sig, argument_actual_type (l_locals.item.first))
-					l_locals.forth
-				end
-
-				if is_debug_info_enabled then
-					if result_position /= -1 then
-						local_count := local_count + 1
-					end
-					local_info.put ([local_start_offset, local_end_offset, local_count,
-						local_types], a_meth_token)
-					create local_types.make (5)
-				else
-					local_types.wipe_out
-				end
-				local_count := 0
-				local_start_offset := 0
-				local_end_offset := 0
-
-				l_loc_token := md_emit.define_signature (l_sig)
-
-				method_body.set_local_token (l_loc_token)
-			end
+			current_module.store_locals (local_types, a_meth_token)
 		end
 
 	generate_local_debug_info (a_method_token: INTEGER) is
 			-- Generate local information about routine `method_token'.
 		require
 			debug_info_requested: is_debug_info_enabled
-			valid_method_token: a_method_token & feature {MD_TOKEN_TYPES}.Md_mask = feature {MD_TOKEN_TYPES}.Md_method_def
-		local
-			l_locals: like local_types
-			l_sig: MD_TYPE_SIGNATURE
-			l_type: TYPE_I
-			i: INTEGER
-			nb: INTEGER
-			l_start_offset, l_end_offset: INTEGER
-			l_local_info: like local_debug_info
+			method_token_valid: a_method_token & feature {MD_TOKEN_TYPES}.Md_mask =
+				feature {MD_TOKEN_TYPES}.Md_method_def
 		do
-			l_local_info := local_info.item (a_method_token)
-			if l_local_info /= Void then
-				from
-					l_start_offset := l_local_info.integer_item (1)
-					l_end_offset := l_local_info.integer_item (2)
-					nb := l_local_info.integer_item (3)
-					l_locals ?= l_local_info.item (4)
-					dbg_writer.open_scope (l_start_offset)
-					l_locals.start
-					create l_sig.make
-					i := 0
-				until
-					l_locals.after or i >= nb
-				loop
-					l_sig.reset
-					l_type := l_locals.item.first
-					if l_type.is_basic then
-						l_sig.set_type (l_type.element_type, 0)
-					else
-						l_sig.set_type (l_type.element_type,
-							class_type_token (l_type.static_type_id))
-					end
-					uni_string.set_string (l_locals.item.second)
-					dbg_writer.define_local_variable (uni_string, i, l_sig)
-					l_locals.forth
-					i := i +1
-				end
-				dbg_writer.close_scope (l_end_offset)
-			end
+			current_module.generate_local_debug_info (a_method_token)
 		end
 
 feature -- Object creation
@@ -2822,7 +2549,8 @@ feature -- Object creation
 	create_like_object is
 			-- Create object of same type as object on top of stack.
 		do
-			internal_generate_external_call (ise_runtime_token, 0, generic_conformance_class_name,
+			internal_generate_external_call (current_module.ise_runtime_token, 0,
+				generic_conformance_class_name,
 				"create_like_object", Static_type, <<type_info_class_name>>,
 				type_info_class_name,
 				False)
@@ -2831,7 +2559,8 @@ feature -- Object creation
 	load_type is
 			-- Load on stack type of object on top of stack.
 		do
-			internal_generate_external_call (ise_runtime_token, 0, generic_conformance_class_name,
+			internal_generate_external_call (current_module.ise_runtime_token, 0,
+				generic_conformance_class_name,
 				"load_type_of_object", Static_type, <<type_info_class_name>>,
 				type_class_name,
 				False)
@@ -2841,7 +2570,8 @@ feature -- Object creation
 			-- Given info on stack, it will create a new instance of a generic formal
 			-- parameter.
 		do
-			internal_generate_external_call (ise_runtime_token, 0, generic_conformance_class_name,
+			internal_generate_external_call (current_module.ise_runtime_token, 0,
+				generic_conformance_class_name,
 				"create_type", Static_type, <<type_class_name,
 				type_info_class_name>>, type_info_class_name,
 				False)
@@ -2879,21 +2609,30 @@ feature -- Variables access
 			end
 		end
 
-	generate_attribute (type_i: TYPE_I; a_feature_id: INTEGER) is
+	generate_attribute (need_target: BOOLEAN; type_i: TYPE_I; a_feature_id: INTEGER) is
 			-- Generate access to attribute of `a_feature_id' in `type_i'.
 		require
 			type_i_not_void: type_i /= Void
 			positive_feature_id: a_feature_id > 0
 		local
 			cl_type: CL_TYPE_I
+			l_class: CLASS_C
 		do
 			cl_type ?= type_i
+			if cl_type /= Void then
+				l_class := cl_type.base_class
+			end
 			if
-				cl_type /= Void and then
-				(cl_type.base_class.is_frozen or cl_type.base_class.is_single)
+				l_class /= Void and then
+				l_class.is_frozen or l_class.is_single or l_class.is_external
 			then
-				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldfld,
-					attribute_token (cl_type.implementation_id, a_feature_id))
+				if need_target then
+					method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldfld,
+						attribute_token (cl_type.implementation_id, a_feature_id))
+				else
+					method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldsfld,
+						attribute_token (cl_type.implementation_id, a_feature_id))
+				end
 			else
 					-- Attribute are accessed through their feature encapsulation.
 				internal_generate_feature_access (type_i.static_type_id, a_feature_id,
@@ -3208,21 +2947,30 @@ feature -- Assignments
 			end
 		end
 
-	generate_attribute_assignment (type_i: TYPE_I; a_feature_id: INTEGER) is
+	generate_attribute_assignment (need_target: BOOLEAN; type_i: TYPE_I; a_feature_id: INTEGER) is
 			-- Generate assignment to attribute of `a_feature_id' in current class.
 		require
 			type_i_not_void: type_i /= Void
 			positive_feature_id: a_feature_id > 0
 		local
 			cl_type: CL_TYPE_I
+			l_class: CLASS_C
 		do
 			cl_type ?= type_i
+			if cl_type /= Void then
+				l_class := cl_type.base_class
+			end
 			if
-				cl_type /= Void and then
-				(cl_type.base_class.is_frozen or cl_type.base_class.is_single)
+				l_class /= Void and then
+				l_class.is_frozen or l_class.is_single or l_class.is_external
 			then
-				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stfld,
-					attribute_token (type_i.static_type_id, a_feature_id))
+				if need_target then
+					method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stfld,
+						attribute_token (type_i.static_type_id, a_feature_id))
+				else
+					method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld,
+						attribute_token (type_i.static_type_id, a_feature_id))
+				end
 			else
 				method_body.put_call (feature {MD_OPCODES}.Callvirt,
 					setter_token (type_i.static_type_id, a_feature_id), 1, False)
@@ -3392,6 +3140,8 @@ feature -- Once management
 	done_token, result_token: INTEGER
 			-- Token for static fields holding value if once has been computed,
 			-- and its value if computed.
+			-- Ok to use token in a non-module specific code here, because they
+			-- are only local to current feature generation.
 
 	generate_once_done_info (name: STRING) is
 			-- Generate declaration of static `done' variable corresponding
@@ -3563,12 +3313,13 @@ feature -- Exception handling
 		do
 			method_body.put_opcode_label (feature {MD_OPCODES}.Leave, rescue_label)
 			method_body.exception_block.set_catch_position (method_body.count)
-			method_body.exception_block.set_type_token (system_exception_token)
+			method_body.exception_block.set_type_token (current_module.system_exception_token)
 				-- We need to increment stack depth of 1 because CLI runtime automatically
 				-- puts the exception object on top of stack and there is no automatic
 				-- way to add it.
 			method_body.increment_stack_depth (1)
-			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld, ise_last_exception_token)
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld,
+				current_module.ise_last_exception_token)
 		end
 
 	generate_leave_to (a_label: IL_LABEL) is
@@ -3592,13 +3343,15 @@ feature -- Assertions
 	generate_in_assertion_status is
 			-- Generate value of `in_assertion' on stack.
 		do
-			method_body.put_call (feature {MD_OPCODES}.Call, ise_in_assertion_token, 0, True)
+			method_body.put_call (feature {MD_OPCODES}.Call, current_module.ise_in_assertion_token,
+				0, True)
 		end
 
 	generate_set_assertion_status is
 			-- Set `in_assertion' flag with top of stack.
 		do
-			method_body.put_call (feature {MD_OPCODES}.Call, ise_set_in_assertion_token, 1, False)
+			method_body.put_call (feature {MD_OPCODES}.Call,
+				current_module.ise_set_in_assertion_token, 1, False)
 		end
 
 	generate_assertion_check (assert_type: INTEGER; tag: STRING) is
@@ -3631,7 +3384,8 @@ feature -- Assertions
 			put_boolean_constant (False)
 			generate_set_assertion_status
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldstr, l_str_token)
-			method_body.put_call (feature {MD_OPCODES}.Newobj, exception_ctor_token, 1, True)
+			method_body.put_call (feature {MD_OPCODES}.Newobj, current_module.exception_ctor_token,
+				1, True)
 			method_body.put_opcode (feature {MD_OPCODES}.Throw)
 			method_body.mark_label (l_label)
 		end
@@ -3648,7 +3402,8 @@ feature -- Assertions
 			uni_string.set_string ("Precondition violation: " + tag)
 			l_str_token := md_emit.define_string (uni_string)
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldstr, l_str_token)
-			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld, ise_assertion_tag_token)
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld,
+				current_module.ise_assertion_tag_token)
 			method_body.put_opcode_label (feature {MD_OPCODES}.Brfalse, failure_block.id)
 		end
 
@@ -3658,8 +3413,10 @@ feature -- Assertions
 		do
 			put_boolean_constant (False)
 			generate_set_assertion_status
-			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldsfld, ise_assertion_tag_token)
-			method_body.put_call (feature {MD_OPCODES}.Newobj, exception_ctor_token, 1, True)
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldsfld,
+				current_module.ise_assertion_tag_token)
+			method_body.put_call (feature {MD_OPCODES}.Newobj, current_module.exception_ctor_token,
+				1, True)
 			method_body.put_opcode (feature {MD_OPCODES}.Throw)
 		end
 
@@ -3699,7 +3456,8 @@ feature -- Assertions
 				method_writer.write_current_body
 			end
 
-			internal_invariant_token.put (l_invariant_token, current_class_type.implementation_id)
+			current_module.internal_invariant_token.
+				put (l_invariant_token, current_class_type.implementation_id)
 
 				-- Generate invariant feature that calls above static version.
 			uni_string.set_string ("_invariant")
@@ -3754,8 +3512,8 @@ feature -- Assertions
 			a_label_not_void: a_label /= Void
 		do
 			put_type_token (current_class_type.type.static_type_id)
-			method_body.put_call (feature {MD_OPCODES}.Call, ise_is_invariant_checked_for_token,
-				1, True)
+			method_body.put_call (feature {MD_OPCODES}.Call,
+				current_module.ise_is_invariant_checked_for_token, 1, True)
 			branch_on_true (a_label)
 		end
 
@@ -3765,7 +3523,8 @@ feature -- Assertions
 		require
 			type_i_not_void: type_i /= Void
 		do
-			method_body.put_call (feature {MD_OPCODES}.Call, ise_check_invariant_token, 1, False)
+			method_body.put_call (feature {MD_OPCODES}.Call,
+				current_module.ise_check_invariant_token, 1, False)
 		end
 
 feature -- Constants generation
@@ -3978,7 +3737,8 @@ feature -- Binary operator generation
 			when il_gt then method_body.put_opcode (feature {MD_OPCODES}.Cgt)
 			when il_star then method_body.put_opcode (feature {MD_OPCODES}.Mul)
 			when il_power then
-				method_body.put_call (feature {MD_OPCODES}.Call, power_method_token, 2, True)
+				method_body.put_call (
+					feature {MD_OPCODES}.Call, current_module.power_method_token, 2, True)
 			when il_plus then method_body.put_opcode (feature {MD_OPCODES}.Add)
 			when il_mod then method_body.put_opcode (feature {MD_OPCODES}.Rem)
 			when il_minus then method_body.put_opcode (feature {MD_OPCODES}.Sub)
@@ -4030,7 +3790,8 @@ feature -- Basic feature
 			set_signature_type (l_sig, Char_c_type)
 
 			uni_string.set_string ("IsDigit")
-			l_min_token := md_emit.define_member_ref (uni_string, char_type_token, l_sig)
+			l_min_token := md_emit.define_member_ref (uni_string, current_module.char_type_token,
+				l_sig)
 
 			method_body.put_call (feature {MD_OPCODES}.Call, l_min_token, 1, True)
 		end
@@ -4054,7 +3815,8 @@ feature -- Basic feature
 			set_signature_type (l_sig, type)
 
 			uni_string.set_string ("Min")
-			l_min_token := md_emit.define_member_ref (uni_string, math_type_token, l_sig)
+			l_min_token := md_emit.define_member_ref (uni_string, current_module.math_type_token,
+				l_sig)
 
 			method_body.put_call (feature {MD_OPCODES}.Call, l_min_token, 2, True)
 		end
@@ -4078,7 +3840,8 @@ feature -- Basic feature
 			set_signature_type (l_sig, type)
 
 			uni_string.set_string ("Max")
-			l_max_token := md_emit.define_member_ref (uni_string, math_type_token, l_sig)
+			l_max_token := md_emit.define_member_ref (uni_string, current_module.math_type_token,
+				l_sig)
 
 			method_body.put_call (feature {MD_OPCODES}.Call, l_max_token, 2, True)
 		end
@@ -4102,7 +3865,8 @@ feature -- Basic feature
 			set_method_return_type (l_sig, type)
 			set_signature_type (l_sig, type)
 			uni_string.set_string ("Abs")
-			l_abs_token := md_emit.define_member_ref (uni_string, math_type_token, l_sig)
+			l_abs_token := md_emit.define_member_ref (uni_string, current_module.math_type_token,
+				l_sig)
 
 			method_body.put_call (feature {MD_OPCODES}.Call, l_abs_token, 1, True)
 		end
@@ -4110,7 +3874,8 @@ feature -- Basic feature
 	generate_to_string is
 			-- Generate call on `ToString'.
 		do
-			method_body.put_call (feature {MD_OPCODES}.Callvirt, to_string_method_token, 0, True)
+			method_body.put_call (feature {MD_OPCODES}.Callvirt,
+				current_module.to_string_method_token, 0, True)
 		end
 
 	generate_hash_code is
@@ -4200,10 +3965,12 @@ feature -- Line info
 					dbg_offsets_count, dbg_offsets, dbg_start_lines, dbg_start_columns,
 					dbg_end_lines, dbg_end_columns)
 
-				l_sequence_point_list := method_sequence_points.item (current_feature_token)
+				l_sequence_point_list :=
+					current_module.method_sequence_points.item (current_feature_token)
 				if l_sequence_point_list = Void then
 					create l_sequence_point_list.make
-					method_sequence_points.put (l_sequence_point_list, current_feature_token)
+					current_module.method_sequence_points.put (l_sequence_point_list,
+						current_feature_token)
 				end
 				l_sequence_point_list.extend ([dbg_offsets_count, dbg_offsets, dbg_start_lines,
 					dbg_start_columns, dbg_end_lines, dbg_end_columns,
@@ -4275,7 +4042,8 @@ feature -- Generic conformance
 			create_object (l_type_id)
 			duplicate_top
 			put_type_token (cl_type.implementation_id)
-			internal_generate_external_call (ise_runtime_token, 0, class_type_class_name,
+			internal_generate_external_call (current_module.ise_runtime_token, 0,
+				class_type_class_name,
 				"set_type", Normal_type, <<type_handle_class_name>>, Void, True)
 		end
 
@@ -4295,17 +4063,20 @@ feature -- Generic conformance
 		require
 			gen_type_not_void: gen_type /= Void
 		do
-			internal_generate_external_call (ise_runtime_token, 0, generic_type_class_name,
+			internal_generate_external_call (current_module.ise_runtime_token, 0,
+				generic_type_class_name,
 				"set_type_array", Normal_type, <<type_array_class_name>>, Void, True);
 
 			duplicate_top
 			put_type_token (gen_type.implementation_id)
-			internal_generate_external_call (ise_runtime_token, 0, generic_type_class_name,
+			internal_generate_external_call (current_module.ise_runtime_token, 0,
+				generic_type_class_name,
 				"set_type", Normal_type, <<type_handle_class_name>>, Void, True)
 
 			duplicate_top
 			put_integer_32_constant (gen_type.meta_generic.count)
-			internal_generate_external_call (ise_runtime_token, 0, generic_type_class_name,
+			internal_generate_external_call (current_module.ise_runtime_token, 0,
+				generic_type_class_name,
 				"set_nb_generics", Normal_type, <<integer_32_class_name>>, Void, True)
 		end
 
@@ -4324,7 +4095,8 @@ feature -- Generic conformance
 				-- Second object is the array containing the type array.
 				-- Last, we push current object to the stack.
 			generate_current
-			internal_generate_external_call (ise_runtime_token, 0, generic_conformance_class_name,
+			internal_generate_external_call (current_module.ise_runtime_token, 0,
+				generic_conformance_class_name,
 				"compute_type", Static_type, <<type_info_class_name, type_class_name,
 				type_info_class_name>>, Void, False)
 		end
@@ -4400,17 +4172,20 @@ feature {NONE} -- Implementation: generation
 
 			if l_type_id = formal_type_id then
 				put_integer_32_constant (l_formal_type.position)
-				internal_generate_external_call (ise_runtime_token, 0, formal_type_class_name,
+				internal_generate_external_call (current_module.ise_runtime_token, 0,
+					formal_type_class_name,
 					"set_position",
 					Normal_type, <<integer_32_class_name>>, Void, True)
 			elseif l_type_id = class_type_id then
 					-- Non-generic class.
 				put_type_token (l_cl_type.implementation_id)
-				internal_generate_external_call (ise_runtime_token, 0, class_type_class_name,
+				internal_generate_external_call (current_module.ise_runtime_token, 0,
+					class_type_class_name,
 					"set_type", Normal_type, <<type_handle_class_name>>, Void, True)
 			elseif l_type_id = basic_type_id then
 				put_type_token (l_cl_type.implementation_id)
-				internal_generate_external_call (ise_runtime_token, 0, basic_type_class_name,
+				internal_generate_external_call (current_module.ise_runtime_token, 0,
+					basic_type_class_name,
 					"set_type", Normal_type, <<type_handle_class_name>>, Void, True)
 			else
 				duplicate_top
@@ -4434,15 +4209,18 @@ feature {NONE} -- Implementation: generation
 					i := i + 1
 				end
 
-				internal_generate_external_call (ise_runtime_token, 0, generic_type_class_name,
+				internal_generate_external_call (current_module.ise_runtime_token, 0,
+					generic_type_class_name,
 					"set_type_array", normal_type, <<type_array_class_name>>, Void, True)
 				duplicate_top
 				put_type_token (l_gen_type.implementation_id)
-				internal_generate_external_call (ise_runtime_token, 0, generic_type_class_name,
+				internal_generate_external_call (current_module.ise_runtime_token, 0,
+					generic_type_class_name,
 					"set_type", normal_type, <<type_handle_class_name>>, Void, True)
 				duplicate_top
 				put_integer_32_constant (l_gen_type.meta_generic.count)
-				internal_generate_external_call (ise_runtime_token, 0, generic_type_class_name,
+				internal_generate_external_call (current_module.ise_runtime_token, 0,
+					generic_type_class_name,
 					"set_nb_generics", normal_type, <<integer_32_class_name>>, Void, True)
 
 				pop
@@ -4485,7 +4263,7 @@ feature {IL_CODE_GENERATOR} -- Implementation: convenience
 				feature_table.item_id (feature {PREDEFINED_NAMES}.make_from_cil_name_id).feature_id
 		end
 
-feature {IL_CODE_GENERATOR, CUSTOM_ATTRIBUTE_FACTORY} -- Custom attribute definition
+feature {IL_CODE_GENERATOR, IL_MODULE, CUSTOM_ATTRIBUTE_FACTORY} -- Custom attribute definition
 
 	define_custom_attribute (token: INTEGER; ctor_token: INTEGER; data: MD_CUSTOM_ATTRIBUTE) is
 			-- Define a custom attribute on `token' using constructor `ctor_token' with
@@ -4495,9 +4273,6 @@ feature {IL_CODE_GENERATOR, CUSTOM_ATTRIBUTE_FACTORY} -- Custom attribute defini
 			l_ca_token: INTEGER
 		do
 			l_ca_token := md_emit.define_custom_attribute (token, ctor_token, data)
-			check
-				l_ca_token_set: l_ca_token & feature {MD_TOKEN_TYPES}.Md_mask = feature {MD_TOKEN_TYPES}.Md_custom_attribute
-			end
 		end
 
 feature {NONE} -- Predefined custom attributes
@@ -4532,26 +4307,6 @@ feature {NONE} -- Predefined custom attributes
 			Result.put_integer_16 (0)
 		end
 
-feature {NONE} -- Constants
-
-	runtime_namespace: STRING is "ISE.Runtime"
-	runtime_class_name: STRING is "ISE.Runtime.RUN_TIME"
-	type_class_name: STRING is "ISE.Runtime.TYPE"
-	type_array_class_name: STRING is "ISE.Runtime.TYPE[]"
-	generic_type_class_name: STRING is "ISE.Runtime.GENERIC_TYPE"
-	basic_type_class_name: STRING is "ISE.Runtime.BASIC_TYPE"
-	class_type_class_name: STRING is "ISE.Runtime.CLASS_TYPE"
-	formal_type_class_name: STRING is "ISE.Runtime.FORMAL_TYPE"
-	none_type_class_name: STRING is "ISE.Runtime.NONE_TYPE"
-	generic_conformance_class_name: STRING is "ISE.Runtime.GENERIC_CONFORMANCE"
-	type_info_class_name: STRING is "ISE.Runtime.EIFFEL_TYPE_INFO"
-	integer_32_class_name: STRING is "System.Int32"
-	type_handle_class_name: STRING is "System.RuntimeTypeHandle"
-
-	override_prefix: STRING is "__"
-	setter_prefix: STRING is "_set_"
-			-- Prefix for automatically generated features.
-
 feature {NONE} -- Onces
 
 	language_guid: COM_GUID is
@@ -4579,510 +4334,84 @@ feature {NONE} -- Once per type definition
 	current_class_token: INTEGER
 			-- Token of current class being generated.
 
-feature {NONE} -- Once per feature definition
+feature -- Once per feature definition
 
 	result_position: INTEGER
 			-- Position of `Result' local variable.
 
-feature {NONE} -- Once per modules being generated.
+feature -- Mapping between Eiffel compiler and generated tokens
 
-	remap_external_token is
-			-- Recompute all tokens in context of newly created module.
-		do
-			mscorlib_token := 0
-			object_type_token := 0
-			math_type_token := 0
-			system_exception_token := 0
-			compute_mscorlib_token
-			compute_mscorlib_type_tokens
-			compute_power_method_token
-			compute_mscorlib_method_tokens
-			compute_ise_runtime_tokens
-			compute_c_module_token
-		end
-
-	entry_point_token: INTEGER
-			-- Token for `Main' static feature in an assembly generated
-			-- as an `exe'.
-
-	c_module_token: INTEGER
-			-- Token for C module containing all C externals.
-
-	mscorlib_token: INTEGER
-			-- Token for `mscorlib' assembly.
-
-	runtime_type_handle_token: INTEGER
-			-- Token for `System.RuntimeTypeHandle' in `mscorlib'.
-
-	object_type_token: INTEGER
-			-- Token for `System.Object' in `mscorlib'.
-
-	math_type_token: INTEGER
-			-- Token for `System.Math' type in `mscorlib'.
-
-	char_type_token: INTEGER
-			-- Token for `System.Char' type in `mscorlib'.
-
-	system_exception_token: INTEGER
-			-- Token for `System.Exception' type in `mscorlib'.
-
-	to_string_method_token: INTEGER
-			-- Token for `System.Object.ToString' feature in `mscorlib'.
-
-	power_method_token: INTEGER
-			-- Token for `System.Math.Power' feature in `mscorlib'.
-
-	object_ctor_token: INTEGER
-			-- Token for `System.Object' constructor feature in `mscorlib'.
-
-	cls_compliant_ctor_token: INTEGER
-			-- Token for `System.CLSCompliantAttribute' constructor.
-
-	com_visible_ctor_token: INTEGER
-			-- Token for `System.Runtime.InteropServices.ComVisibleAttribute' constructor.
-
-	debugger_hidden_ctor_token, debugger_step_through_ctor_token: INTEGER
-			-- Token for constructor of `System.Diagnostics.DebuggerHiddenAttribute' and
-			-- `System.Diagnostics.DebuggerStepThroughAttribute'.
-
-	exception_ctor_token: INTEGER
-			-- Token for `System.Exception' constructor feature in `mscorlib'.
-
-	memberwise_clone_token: INTEGER
-			-- Token for `MemberwiseClone' of `System.Object'.
-
-	ise_runtime_token: INTEGER
-			-- Token for `ise_runtime' assembly
-
-	ise_last_exception_token: INTEGER
-			-- Token for `ISE.RUNTIME.last_exception' static field that holds
-			-- exception object we got from `catch'.
-
-	ise_in_assertion_token, ise_set_in_assertion_token: INTEGER
-			-- Token for `ISE.RUNTIME.in_assertion' and `ISE.RUNTIME.set_in_assertion'
-			-- static members that holds status of assertion checking.
-
-	ise_assertion_tag_token: INTEGER
-			-- Token for `ISE.RUNTIME.assertion_tag' static field that holds
-			-- message for exception being thrown.
-
-	ise_set_type_token: INTEGER
-			-- Token for `ISE.Runtime.EIFFEL_TYPE_INFO.____set_type' feature that
-			-- assign type information of a class.
-
-	ise_check_invariant_token: INTEGER
-			-- Token for `ISE.Runtime.ise_check_invariant' feature that
-			-- checks a class invariant.
-
-	ise_is_invariant_checked_for_token: INTEGER
-			-- Token for `ISE.RUNTIME.is_invariant_checked_for' feature that
-			-- tells if a class invariant has been checked or not for a given type.
-
-	ise_eiffel_type_info_type_token,
-	ise_runtime_type_token,
-	ise_type_token,
-	ise_generic_conformance_token,
-	ise_class_type_token,
-	ise_generic_type_token,
-	ise_formal_type_token,
-	ise_none_type_token,
-	ise_basic_type_token,
-	ise_eiffel_derivation_type_token,
-	ise_eiffel_class_name_attr_token,
-	ise_eiffel_class_name_attr_ctor_token: INTEGER
-			-- Token for run-time types used in code generation.
-
-	compute_c_module_token is
-			-- Compute `c_module_token'.
-		do
-			c_module_token := md_emit.define_module_ref (c_module_name)
-		end
-
-	compute_mscorlib_token is
-			-- Compute `mscorlib_token'.
+	il_modules (a_class_type: CLASS_TYPE): IL_MODULE is
+			-- Perform lookup for module associated with `a_class_type'. If not
+			-- found then create a module used for reference only.
+		require
+			a_class_type_not_void: a_class_type /= Void
 		local
-			l_ass_info: MD_ASSEMBLY_INFO
-			l_pub_key: MD_PUBLIC_KEY_TOKEN
-			l_system_object: EXTERNAL_CLASS_I
-			l_mscorlib: ASSEMBLY_I
-			l_version: VERSION
+			l_type_id: INTEGER
+			l_output: FILE_NAME
+			l_module_name: STRING
 		do
-				-- To compute it, we simply take the data from `System.Object'. That way our
-				-- code is automatically using the version of `mscorlib' that was specified
-				-- in the Ace file.
-			l_system_object := System.system_object_class
-			l_mscorlib := l_system_object.assembly
-			
-			create l_version
-			check
-				version_valid: l_version.is_version_valid (l_mscorlib.version)
+			if System.in_final_mode then
+				l_type_id := 1
+			else
+				l_type_id := a_class_type.associated_class.class_id
 			end
-			
-			l_version.set_version (l_mscorlib.version)
-			create l_ass_info.make
-			l_ass_info.set_major_version (l_version.major.to_integer_16)
-			l_ass_info.set_minor_version (l_version.minor.to_integer_16)
-			l_ass_info.set_build_number (l_version.build.to_integer_16)
-			l_ass_info.set_revision_number (l_version.revision.to_integer_16)
-
-			create l_pub_key.make_from_string (l_mscorlib.public_key_token)
-
-			mscorlib_token := md_emit.define_assembly_ref (
-				create {UNI_STRING}.make (l_mscorlib.assembly_name), l_ass_info, l_pub_key)
+			Result := internal_il_modules.item (l_type_id)
+			if Result = Void then
+				create l_output.make_from_string (location_path)
+				l_module_name := assembly_name + "_module_" + l_type_id.out + ".dll"
+				l_output.set_file_name (l_module_name)
+				create Result.make (
+					l_module_name,
+					l_output,
+					c_module_name,
+					Void,
+					Current,
+					Void,
+					l_type_id,
+					is_debug_info_enabled,
+					False)
+				internal_il_modules.put (Result, l_type_id)
+			end
 		end
 
-	compute_mscorlib_type_tokens is
-			-- Compute `double_type_token', `math_type_token'.
-		require
-			valid_mscorlib_token: mscorlib_token /= 0
-			object_type_token_not_set: object_type_token = 0
-			math_type_token_not_set: math_type_token = 0
-			system_exception_token_not_set: system_exception_token = 0
-		local
-			l_sig: like method_sig
-			l_cls_compliant_token: INTEGER
-			l_com_visible_token: INTEGER
-			l_debugger_step_through_token: INTEGER
-			l_debugger_hidden_token: INTEGER
-		do
-			object_type_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make ("System.Object"), mscorlib_token)
-			runtime_type_handle_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make (type_handle_class_name), mscorlib_token)
-			math_type_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make ("System.Math"), mscorlib_token)
-			char_type_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make ("System.Char"), mscorlib_token)
-			system_exception_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make ("System.Exception"), mscorlib_token)
-			l_cls_compliant_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make ("System.CLSCompliantAttribute"), mscorlib_token)
-			l_debugger_step_through_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make ("System.Diagnostics.DebuggerHiddenAttribute"),
-				mscorlib_token)
-			l_debugger_hidden_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make ("System.Diagnostics.DebuggerStepThroughAttribute"),
-				mscorlib_token)
-			l_com_visible_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make ("System.Runtime.InteropServices.ComVisibleAttribute"),
-				mscorlib_token)
-			uni_string.set_string (".ctor")
+	internal_il_modules: ARRAY [IL_MODULE]
+			-- Array of IL_MODULE indexed by CLASS_TYPE.packet_number
 
-				-- Define `.ctor' from `System.Exception'.
-			l_sig := method_sig
-			l_sig.reset
-			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
-			l_sig.set_parameter_count (1)
-			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
-			exception_ctor_token := md_emit.define_member_ref (uni_string,
-				system_exception_token, l_sig)
-
-				-- Define `.ctor' from `System.Object'.
-			create default_sig.make
-			default_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
-			default_sig.set_parameter_count (0)
-			default_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-
-			object_ctor_token := md_emit.define_member_ref (uni_string, object_type_token,
-				default_sig)
-
-				-- Define `.ctor' from `System.CLSCompliantAttribute' and
-				-- `System.Runtime.InteropServices.ComVisibleAttribute'.
-			l_sig := method_sig
-			l_sig.reset
-			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
-			l_sig.set_parameter_count (1)
-			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
-
-			cls_compliant_ctor_token := md_emit.define_member_ref (uni_string,
-				l_cls_compliant_token, l_sig)
-
-			com_visible_ctor_token := md_emit.define_member_ref (uni_string,
-				l_com_visible_token, l_sig)
-
-			l_sig.reset
-			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
-			l_sig.set_parameter_count (0)
-			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-
-			debugger_hidden_ctor_token := md_emit.define_member_ref (uni_string,
-				l_debugger_hidden_token, l_sig)
-
-			debugger_step_through_ctor_token := md_emit.define_member_ref (uni_string,
-				l_debugger_step_through_token, l_sig)
-		ensure
-			object_type_token_set: object_type_token /= 0
-			math_type_token_set: math_type_token /= 0
-			system_exception_token_set: system_exception_token /= 0
-		end
-
-	compute_power_method_token is
-			-- Compute `power_method_token'.
-		require
-			valid_math_type_token: math_type_token /= 0
-		local
-			l_sig: like method_sig
-		do
-			l_sig := method_sig
-			l_sig.reset
-			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
-			l_sig.set_parameter_count (2)
-			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_r8, 0)
-			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_r8, 0)
-			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_r8, 0)
-			uni_string.set_string ("Pow")
-			power_method_token := md_emit.define_member_ref (uni_string, math_type_token, l_sig)
-		ensure
-			power_method_token_set: power_method_token /= 0
-		end
-
-	compute_mscorlib_method_tokens is
-			-- Compute `to_string_method_token'.
-		local
-			l_sig: like method_sig
-		do
-			l_sig := method_sig
-			l_sig.reset
-			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
-			l_sig.set_parameter_count (0)
-			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
-			to_string_method_token := md_emit.define_member_ref (
-				create {UNI_STRING}.make ("ToString"), object_type_token, l_sig)
-
-			l_sig.reset
-			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
-			l_sig.set_parameter_count (0)
-			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
-			memberwise_clone_token := md_emit.define_member_ref (
-				create {UNI_STRING}.make ("MemberwiseClone"), object_type_token, l_sig)
-		ensure
-			to_string_method_token: to_string_method_token /= 0
-		end
-
-	compute_ise_runtime_tokens is
-			-- Compute `ise_runtime_token'.
-		local
-			l_ass_info: MD_ASSEMBLY_INFO
-			l_pub_key: MD_PUBLIC_KEY_TOKEN
-			l_excep_man_token: INTEGER
-			l_sig: like field_sig
-			l_meth_sig: like method_sig
-		do
-				-- Define `ise_runtime_token'.
-			create l_ass_info.make
-			l_ass_info.set_major_version (5)
-			l_ass_info.set_minor_version (3)
-
-			create l_pub_key.make_from_array (
-				<<0xDE, 0xF2, 0x6F, 0x29, 0x6E, 0xFE, 0xF4, 0x69>>)
-
-			ise_runtime_token := md_emit.define_assembly_ref (
-				create {UNI_STRING}.make ("ISE.Runtime"), l_ass_info, l_pub_key)
-
-				-- Define `ise_last_exception_token'.
-			l_excep_man_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make ("ISE.Runtime.EXCEPTION_MANAGER"),
-				ise_runtime_token)
-
-			l_sig := field_sig
-			l_sig.reset
-			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
-				system_exception_token)
-
-			ise_last_exception_token := md_emit.define_member_ref (
-				create {UNI_STRING}.make ("last_exception"), l_excep_man_token,
-				l_sig)
-
-				-- Define `ise_in_assertion_token'.
-			ise_runtime_type_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make (runtime_class_name), ise_runtime_token)
-
-			l_meth_sig := method_sig
-			l_meth_sig.reset
-			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
-			l_meth_sig.set_parameter_count (0)
-			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
-
-			ise_in_assertion_token := md_emit.define_member_ref (
-				create {UNI_STRING}.make ("in_assertion"), ise_runtime_type_token, l_meth_sig)
-
-			l_meth_sig.reset
-			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
-			l_meth_sig.set_parameter_count (1)
-			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0) 
-
-			ise_set_in_assertion_token := md_emit.define_member_ref (
-				create {UNI_STRING}.make ("set_in_assertion"), ise_runtime_type_token, l_meth_sig)
-
-				-- Define `ise_assertion_tag_token'.
-			l_sig.reset
-			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
-
-			ise_assertion_tag_token := md_emit.define_member_ref (
-				create {UNI_STRING}.make ("assertion_tag"), ise_runtime_type_token, l_sig)
-
-				-- Define `ise_**_type_token'.
-			ise_eiffel_type_info_type_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make (Type_info_class_name), ise_runtime_token)
-			ise_type_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make (Type_class_name), ise_runtime_token)
-			ise_class_type_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make (Class_type_class_name), ise_runtime_token)
-			ise_generic_type_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make (generic_type_class_name), ise_runtime_token)
-			ise_formal_type_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make (Formal_type_class_name), ise_runtime_token)
-			ise_none_type_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make (None_type_class_name), ise_runtime_token)
-			ise_basic_type_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make (basic_type_class_name), ise_runtime_token)
-			ise_eiffel_derivation_type_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make ("ISE.Runtime.EIFFEL_DERIVATION"), ise_runtime_token)
-			ise_eiffel_class_name_attr_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make ("ISE.Runtime.EIFFEL_CLASS_NAME_ATTRIBUTE"),
-				ise_runtime_token)
-			ise_generic_conformance_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make (Generic_conformance_class_name), ise_runtime_token)
-
-				-- Define `ise_set_type_token'.
-			l_meth_sig.reset
-			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
-			l_meth_sig.set_parameter_count (1)
-			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class, 
-				ise_eiffel_derivation_type_token)
-
-			ise_set_type_token := md_emit.define_member_ref (
-				create {UNI_STRING}.make ("____set_type"),
-				ise_eiffel_type_info_type_token, l_meth_sig)
-
-				-- Define `ise_check_invariant_token'.
-			l_meth_sig.reset
-			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
-			l_meth_sig.set_parameter_count (1)
-			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_object, 0) 
-			ise_check_invariant_token := md_emit.define_member_ref (
-				create {UNI_STRING}.make ("check_invariant"), ise_runtime_type_token, l_meth_sig)
-
-				-- Define `ise_is_invariant_checked_for'.
-			l_meth_sig.reset
-			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
-			l_meth_sig.set_parameter_count (1)
-			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
-			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype,
-				runtime_type_handle_token) 
-			ise_is_invariant_checked_for_token := md_emit.define_member_ref (
-				create {UNI_STRING}.make ("is_invariant_checked_for"),
-				ise_runtime_type_token, l_meth_sig)
-
-				-- Define constructor of custom attribute class that keeps Eiffel
-				-- name classes in their Eiffel formatting.
-			l_meth_sig.reset
-			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
-			l_meth_sig.set_parameter_count (1)
-			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
-
-			uni_string.set_string (".ctor")
-			ise_eiffel_class_name_attr_ctor_token := md_emit.define_member_ref (uni_string,
-				ise_eiffel_class_name_attr_token, l_meth_sig)
-		end
-
-feature {NONE} -- Mapping between Eiffel compiler and generated tokens
-
-	external_class_mapping: HASH_TABLE [TYPE_I, STRING]
+	external_class_mapping: HASH_TABLE [CL_TYPE_I, STRING]
 			-- Quickly find a type given its external name.
-
-	external_token_mapping: HASH_TABLE [INTEGER, STRING]
-			-- Quickly find a type token given its external name.
-
-	factory_class_mapping: ARRAY [INTEGER]
-			-- Array of type token of factory class needed to create Eiffel class
-			-- instances; indexed by their `type_id'.
 
 	class_mapping: ARRAY [INTEGER]
 			-- Array of type token indexed by their `type_id'.
-
-	single_parent_mapping: ARRAY [INTEGER]
-			-- Array of type token showing single inheritance parent for a given `type_id'.
-
-	internal_constructor_token: ARRAY [INTEGER]
-			-- Array of ctor token indexed by their `type_id'.
 
 	constructor_token (a_type_id: INTEGER): INTEGER is
 			-- Token identifier for default constructor of `a_type_id'.
 		require
 			valid_type_id: a_type_id > 0
-		local
-			l_tokens: like internal_constructor_token
 		do
-			l_tokens := internal_constructor_token
-			Result := l_tokens.item (a_type_id)
-			if Result = 0 then
-				check
-					non_generated_class:
-						not class_types.item (a_type_id).is_generated
-				end
-				define_default_constructor (class_types.item (a_type_id))
-				Result := constructor_token (a_type_id)
-			end
+			Result := current_module.constructor_token (a_type_id)
 		ensure
 			constructor_token_valid: Result /= Void
+		end
+
+	class_type_token (a_type_id: INTEGER): INTEGER is
+			-- Given `a_type_id' returns its associated metadata token.
+		require
+			valid_type_id: a_type_id > 0
+		do
+			Result := current_module.class_type_token (a_type_id)
+		ensure
+			class_token_valid: Result /= 0
 		end
 
 	invariant_token (a_type_id: INTEGER): INTEGER is
 			-- Metadata token of invariant feature in class type `a_type_id'.
 		require
 			type_id_valid: a_type_id > 0
-		local
-			l_sig: like method_sig
-			l_class_type: CLASS_TYPE
 		do
-			Result := internal_invariant_token.item (a_type_id)
-			if Result = 0 then
-				l_class_type := class_types.item (a_type_id)
-
-					-- Generate reference to invariant defined in a different assembly.
-				l_sig := method_sig
-				l_sig.reset
-				l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
-				l_sig.set_parameter_count (1)
-				l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-				set_signature_type (l_sig, l_class_type.type)
-
-				Result := md_emit.define_member_ref (create {UNI_STRING}.make ("$$_invariant"),
-					class_type_token (a_type_id), l_sig)
-				internal_invariant_token.put (Result, a_type_id)
-			end
+			Result := current_module.invariant_token (a_type_id)
 		ensure
 			invariant_token_valid: Result /= 0
-		end
-	
-	internal_invariant_token: ARRAY [INTEGER]
-			-- Array of invariant feature indexed by `type_id' of class in
-			-- which they are defined.
-
-	class_type_token (a_type_id: INTEGER): INTEGER is
-			-- Given `a_type_id' returns its associated metadata token.
-		require
-			valid_type_id: a_type_id > 0
-		local
-			l_class_mapping: like class_mapping
-			l_class_types: like class_types
-		do
-			l_class_mapping := class_mapping
-			Result := l_class_mapping.item (a_type_id)
-			if Result = 0 then
-				l_class_types := class_types
-				generate_class_mappings (l_class_types.item (a_type_id))
-				Result := l_class_mapping.item (a_type_id)
-			end
-		ensure
-			class_token_valid: Result /= 0
 		end
 
 	class_types: ARRAY [CLASS_TYPE] is
@@ -5120,17 +4449,10 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 			-- Given a `a_feature_id' in `a_type_id' return associated
 			-- token
 		require
-			internal_features_not_void: internal_features /= Void
 			valid_type_id: a_type_id > 0
 			valid_feature_id: a_feature_id > 0
 		do
-			Result := table_token (internal_features, a_type_id, a_feature_id)
-			if Result = 0 then
-					-- Most likely a feature from a precompiled library, False because
-					-- not in interface, not a static and not an override.
-				define_feature_reference (a_type_id, a_feature_id, False, False, False)
-				Result := feature_token (a_type_id, a_feature_id)
-			end
+			Result := current_module.feature_token (a_type_id, a_feature_id)
 		ensure
 			feature_token_valid: Result /= 0
 		end
@@ -5139,17 +4461,10 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 			-- Given an attribute `a_feature_id' in `a_type_id' return associated
 			-- token that sets it.
 		require
-			internal_setters_not_void: internal_setters /= Void
 			valid_type_id: a_type_id > 0
 			valid_feature_id: a_feature_id > 0
 		do
-			Result := table_token (internal_setters, a_type_id, a_feature_id)
-			if Result = 0 then
-					-- Most likely a feature from a precompiled library, False because
-					-- not in interface, not a static and not an override.
-				define_feature_reference (a_type_id, a_feature_id, False, False, False)
-				Result := setter_token (a_type_id, a_feature_id)
-			end
+			Result := current_module.setter_token (a_type_id, a_feature_id)
 		ensure
 			setter_token_valid: Result /= 0
 		end
@@ -5200,17 +4515,10 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 			-- Given a `a_feature_id' in `a_type_id' return associated
 			-- token
 		require
-			internal_implementation_features_not_void: internal_implementation_features /= Void
 			valid_type_id: a_type_id > 0
 			valid_feature_id: a_feature_id > 0
 		do
-			Result := table_token (internal_implementation_features, a_type_id, a_feature_id)
-			if Result = 0 then
-					-- Most likely a feature from a precompiled library, False because
-					-- not in interface, not a static and not an override.
-				define_feature_reference (a_type_id, a_feature_id, False, True, False)
-				Result := implementation_feature_token (a_type_id, a_feature_id)
-			end
+			Result := current_module.implementation_feature_token (a_type_id, a_feature_id)
 		ensure
 			valid_result: Result /= 0
 		end
@@ -5219,20 +4527,16 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 			-- Given a `a_feature_id' in `a_type_id' return associated
 			-- token
 		require
-			internal_attributes_not_void: internal_attributes /= Void
 			valid_type_id: a_type_id > 0
 			valid_feature_id: a_feature_id > 0
 		do
-			Result := table_token (internal_attributes, a_type_id, a_feature_id)
-			if Result = 0 then
-					-- Most likely a feature from a precompiled library, False because
-					-- not in interface, not a static and not an override.
-				define_feature_reference (a_type_id, a_feature_id, False, False, False)
-				Result := attribute_token (a_type_id, a_feature_id)
-			end
+			Result := current_module.attribute_token (a_type_id, a_feature_id)
 		ensure
 			valid_result: Result /= 0
 		end
+
+	file_token: HASH_TABLE [INTEGER, IL_MODULE]
+			-- File token associated to `a_module' in `main_module'.
 
 	table_token (a_table: ARRAY [HASH_TABLE [INTEGER, INTEGER]];
 			a_type_id, a_feature_id: INTEGER): INTEGER
@@ -5252,9 +4556,6 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 			end
 		end
 
-	internal_assemblies: ARRAY [INTEGER]
-			-- Array indexed by class ID that contains assembly token.
-
 	sequence_point: TUPLE [
 			INTEGER,			-- Offset count
 			ARRAY [INTEGER],	-- Offsets
@@ -5273,52 +4574,15 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 		do
 		end
 
-	local_info: HASH_TABLE [like local_debug_info, INTEGER]
-			-- Table of `method_token' to local definition.
-
-	method_sequence_points: HASH_TABLE [LINKED_LIST [like sequence_point], INTEGER]
-			-- Table of `method_token' to sequence points definition.
-
 	dbg_documents (a_class_id: INTEGER): DBG_DOCUMENT_WRITER is
 			-- Associated document to `a_class_id'.
 		require
 			in_debug_mode: is_debug_info_enabled
-		local
-			l_string: UNI_STRING
-			l_class: CLASS_C
 		do
-			Result := internal_dbg_documents.item (a_class_id)
-			if Result = Void then
-				l_class := System.class_of_id (a_class_id)
-				create l_string.make (l_class.file_name)
-				Result := dbg_writer.define_document (l_string, language_guid,
-					vendor_guid, document_type_guid)
-				internal_dbg_documents.put (Result, a_class_id)
-			end
+			Result := current_module.dbg_documents (a_class_id)
+		ensure
+			dbg_documents_not_void: Result /= Void
 		end
-
-	internal_dbg_documents: ARRAY [DBG_DOCUMENT_WRITER]
-			-- Array indexed by class ID containing all DBG_DOCUMENTS.
-
-	internal_implementation_features: ARRAY [HASH_TABLE [INTEGER, INTEGER]]
-			-- Array of features for implementation indexed by their `type_id'.
-			-- For each type, there is an HASH_TABLE where keys are `feature_id'
-			-- and elements are `token'.
-
-	internal_features: ARRAY [HASH_TABLE [INTEGER, INTEGER]]
-			-- Array of features indexed by their `type_id'.
-			-- For each type, there is an HASH_TABLE where keys are `feature_id'
-			-- and elements are `token'.
-
-	internal_setters: ARRAY [HASH_TABLE [INTEGER, INTEGER]]
-			-- Array of attributes setter indexed by their `type_id'.
-			-- For each type, there is an HASH_TABLE where keys are `feature_id'
-			-- and elements are `token'.
-
-	internal_attributes: ARRAY [HASH_TABLE [INTEGER, INTEGER]]
-			-- Array of attributes indexed by their `type_id'.
-			-- For each type, there is an HASH_TABLE where keys are `feature_id'
-			-- and elements are `token'.
 
 	internal_class_types: ARRAY [CLASS_TYPE]
 			-- Array of CLASS_TYPE in system indexed by `implementation_id' and
@@ -5331,54 +4595,49 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 			-- feature `feature_id' in `type_id'.
 
 	insert_feature (a_token, a_type_id, a_feature_id: INTEGER) is
-			-- Insert `a_token' of `a_feature_id' in `a_type_id' in `internal_features'.
+			-- Insert `a_token' of `a_feature_id' in `a_type_id'.
 		require
-			internal_features_not_void: internal_features /= Void
 			valid_token: a_token /= 0
 			valid_type_id: a_type_id > 0
 			valid_feature_id: a_feature_id > 0
 		do
-			insert_in_table (internal_features, a_token, a_type_id, a_feature_id)
+			current_module.insert_feature (a_token, a_type_id, a_feature_id)
 		ensure
 			inserted: feature_token (a_type_id, a_feature_id) = a_token
 		end
 
 	insert_setter (a_token, a_type_id, a_feature_id: INTEGER) is
-			-- Insert `a_token' of `a_feature_id' in `a_type_id' in `internal_setters'.
+			-- Insert `a_token' of `a_feature_id' in `a_type_id'.
 		require
-			internal_setters_not_void: internal_setters /= Void
 			valid_token: a_token /= 0
 			valid_type_id: a_type_id > 0
 			valid_feature_id: a_feature_id > 0
 		do
-			insert_in_table (internal_setters, a_token, a_type_id, a_feature_id)
+			current_module.insert_setter (a_token, a_type_id, a_feature_id)
 		ensure
 			inserted: setter_token (a_type_id, a_feature_id) = a_token
 		end
 
 	insert_implementation_feature (a_token, a_type_id, a_feature_id: INTEGER) is
-			-- Insert `a_token' of `a_feature_id' in `a_type_id' in
-			-- `internal_implementation_features'.
+			-- Insert `a_token' of `a_feature_id' in `a_type_id'.
 		require
-			internal_implementation_features_not_void: internal_implementation_features /= Void
 			valid_token: a_token /= 0
 			valid_type_id: a_type_id > 0
 			valid_feature_id: a_feature_id > 0
 		do
-			insert_in_table (internal_implementation_features, a_token, a_type_id, a_feature_id)
+			current_module.insert_implementation_feature (a_token, a_type_id, a_feature_id)
 		ensure
 			inserted: implementation_feature_token (a_type_id, a_feature_id) = a_token
 		end
 
 	insert_attribute (a_token, a_type_id, a_feature_id: INTEGER) is
-			-- Insert `a_token' of `a_feature_id' in `a_type_id' in `internal_features'.
+			-- Insert `a_token' of `a_feature_id' in `a_type_id'.
 		require
-			internal_attributes_not_void: internal_attributes /= Void
 			valid_token: a_token /= 0
 			valid_type_id: a_type_id > 0
 			valid_feature_id: a_feature_id > 0
 		do
-			insert_in_table (internal_attributes, a_token, a_type_id, a_feature_id)
+			current_module.insert_attribute (a_token, a_type_id, a_feature_id)
 		ensure
 			inserted: attribute_token (a_type_id, a_feature_id) = a_token
 		end
@@ -5386,7 +4645,7 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 	insert_in_table (a_table: ARRAY [HASH_TABLE [INTEGER, INTEGER]];
 			a_token, a_type_id, a_feature_id: INTEGER)
 		is
-			-- Insert `a_token' of `a_feature_id' in `a_type_id' in `internal_attributes'.
+			-- Insert `a_token' of `a_feature_id' in `a_type_id'.
 		require
 			a_table_not_void: a_table /= Void
 			token_valid: a_token /= 0
@@ -5429,8 +4688,7 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 
 			l_hash.put (a_signature, a_feature_id)
 		ensure
-			inserted: implementation_signatures_table.item (a_type_id).item (a_feature_id) =
-				a_signature
+			inserted: implementation_signatures_table.item (a_type_id).item (a_feature_id).is_equal (a_signature)
 		end
 
 	insert_signature (a_signature: ARRAY [INTEGER]; a_type_id, a_feature_id: INTEGER) is
@@ -5451,135 +4709,8 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 
 			l_hash.put (a_signature, a_feature_id)
 		ensure
-			inserted: signatures_table.item (a_type_id).item (a_feature_id) = a_signature
+			inserted: signatures_table.item (a_type_id).item (a_feature_id).is_equal (a_signature)
 		end
-
-	assembly_token (a_class_type: CLASS_TYPE): INTEGER is
-			-- Given `a_class_type' find its associated assembly token.
-		require
-			a_class_type_not_void: a_class_type /= Void
-		do
-			Result := internal_assemblies.item (a_class_type.implementation_id)
-			if Result = 0 then
-					-- Assembly token has not yet been computed.
-				find_and_insert_assembly_token (a_class_type)
-				Result := internal_assemblies.item (a_class_type.implementation_id)
-			end
-		end
-
-	find_and_insert_assembly_token (a_class_type: CLASS_TYPE) is
-			-- Given `a_class_type' find out which assembly defines it and updates
-			-- `internal_assemblies' accordingly. Create assembly reference
-			-- as they are needed.
-		require
-			a_class_not_void: a_class_type /= Void
-		local
-			l_ass_info: MD_ASSEMBLY_INFO
-			l_indexes: INDEXING_CLAUSE_AS
-			l_info: ARRAY [STRING]
-			l_name, l_key_string, l_culture, l_version_string: STRING
-			l_version: VERSION
-			l_token: INTEGER
-			l_key_token: MD_PUBLIC_KEY_TOKEN
-			l_major, l_minor, l_build, l_revision: INTEGER
-			l_uni_string: UNI_STRING
-			l_external_class: EXTERNAL_CLASS_C
-			l_assembly: ASSEMBLY_I
-			l_precompiled_assembly: ASSEMBLY_INFO
-			l_native_array: NATIVE_ARRAY_CLASS_TYPE
-		do
-			l_native_array ?= a_class_type
-			if l_native_array /= Void then
-				internal_assemblies.put (
-					assembly_token (l_native_array.deep_il_element_type.associated_class_type),
-					a_class_type.implementation_id)
-			elseif a_class_type.is_generated then
-				internal_assemblies.put (main_module_token, a_class_type.implementation_id)
-			else
-				if
-					not a_class_type.associated_class.is_external and then
-					a_class_type.is_precompiled
-				then
-					l_precompiled_assembly := a_class_type.assembly_info
-					l_name := l_precompiled_assembly.assembly_name
-					l_version_string := l_precompiled_assembly.version
-					l_culture := l_precompiled_assembly.culture
-					l_key_string := l_precompiled_assembly.public_key_token
-				else
-					l_external_class ?= a_class_type.associated_class
-					if l_external_class /= Void then
-							-- When it is an XML represented external class.
-						l_assembly := l_external_class.lace_class.assembly
-						l_name := l_assembly.assembly_name
-						l_version_string := l_assembly.version
-						l_culture := l_assembly.culture
-						l_key_string := l_assembly.public_key_token
-					else
-							-- When it is an actual Eiffel class encapsulating
-							-- an external class.
-						l_indexes := a_class_type.associated_class.ast.top_indexes
-						check
-							l_indexes_not_void: l_indexes /= Void
-						end
-						l_info := l_indexes.assembly_name
-						l_name := l_info.item (1)
-						if l_info.valid_index (2) then
-							l_version_string := l_info.item (2)
-						end
-						if l_info.valid_index (4) then
-							l_key_string := l_info.item (4)
-						end
-					end
-				end
-				if defined_assemblies.has (l_name) then
-					internal_assemblies.put (defined_assemblies.found_item,
-						a_class_type.implementation_id)
-				else
-					if l_name.is_equal ("mscorlib") then
-						internal_assemblies.put (mscorlib_token, a_class_type.implementation_id)
-						defined_assemblies.put (mscorlib_token, l_name)
-					elseif l_name.is_equal ("ISE.Runtime") then
-						internal_assemblies.put (ise_runtime_token, a_class_type.implementation_id)
-						defined_assemblies.put (ise_runtime_token, l_name)
-					else
-						create l_ass_info.make
-
-						create l_version
-						if l_version.is_version_valid (l_version_string) then
-							l_version.set_version (l_version_string)
-							l_major := l_version.major
-							l_minor := l_version.minor
-							l_build := l_version.build
-							l_revision := l_version.revision
-
-							l_ass_info.set_major_version (l_major.to_integer_16)
-							l_ass_info.set_minor_version (l_minor.to_integer_16)
-							l_ass_info.set_build_number (l_build.to_integer_16)
-							l_ass_info.set_revision_number (l_revision.to_integer_16)
-						end
-
-						if l_key_string /= Void then
-							create l_key_token.make_from_string (l_key_string)
-						end
-
-							-- NOTE: cannot use `uni_string' buffer as current feature can
-							-- be used with other features that already uses it to define
-							-- some metadata.
-						create l_uni_string.make (l_name)
-
-						l_token := md_emit.define_assembly_ref (l_uni_string, l_ass_info,
-							l_key_token)
-						internal_assemblies.put (l_token, a_class_type.implementation_id)
-						defined_assemblies.put (l_token, l_name)
-					end
-				end
-			end
-		ensure
-			updated: internal_assemblies.item (a_class_type.implementation_id) /= 0
-		end
-
-	defined_assemblies: HASH_TABLE [INTEGER, STRING]
-			-- In order to avoid calling `define_assembly_ref' twice on same assemblies.
 
 feature {NONE} -- Implementation
 

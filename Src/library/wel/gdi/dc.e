@@ -32,6 +32,23 @@ inherit
 			{ANY} valid_stretch_mode_constant
 		end
 
+	WEL_FLOOD_FILL_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_TA_CONSTANTS
+		export
+			{NONE} all
+			{ANY} valid_text_alignement_constant
+		end
+
+	WEL_MM_CONSTANTS
+		export
+			{NONE} all
+			{ANY} valid_map_mode_constant
+		end
+
 	WEL_WORD_OPERATIONS
 		export
 			{NONE} all
@@ -112,6 +129,7 @@ feature -- Status report
 		end
 
 	background_color: WEL_COLOR_REF is
+			-- Current color of the background
 		require
 			exists: exists
 		do
@@ -121,6 +139,7 @@ feature -- Status report
 		end
 
 	text_color: WEL_COLOR_REF is
+			-- Current color of the text
 		require
 			exists: exists
 		do
@@ -135,6 +154,14 @@ feature -- Status report
 			exists: exists
 		do
 			Result := cwin_get_rop2 (item)
+		end
+
+	text_alignment: INTEGER is
+			-- Current text alignement flags
+		require
+			exists: exists
+		do
+			Result := cwin_get_text_align (item)
 		end
 
 	pixel_color (x, y: INTEGER): WEL_COLOR_REF is
@@ -324,6 +351,17 @@ feature -- Status report
 			exists: exists
 		do
 			Result := cwin_get_map_mode (item)
+		ensure
+			valid_map_mode: valid_map_mode_constant (Result)
+		end
+
+	valid_extent_map_mode (mode: INTEGER): BOOLEAN is
+			-- Is `mode' a valid window or viewport extent map mode?
+		require
+			valid_map_mode: valid_map_mode_constant (mode)
+		do
+			Result := mode = Mm_anisotropic or else
+				mode = Mm_isotropic
 		end
 
 	stretch_blt_mode: INTEGER is
@@ -362,14 +400,19 @@ feature -- Status setting
 			-- See class WEL_TA_CONSTANTS for `an_alignement'.
 		require
 			exists: exists
+			valid_alignement: valid_text_alignement_constant (an_alignment)
 		do
 			cwin_set_text_align (item, an_alignment)
+		ensure
+			text_alignment_set: text_alignment = an_alignment
 		end
 
 	set_map_mode (mode: INTEGER) is
 			-- Set the mapping mode `mode' of the device context.
+			-- See class WEL_MM_CONSTANTS for `mode' values.
 		require
 			exists: exists
+			valid_map_mode: valid_map_mode_constant (mode)
 		do
 			cwin_set_map_mode (item, mode)
 		ensure
@@ -381,9 +424,13 @@ feature -- Status setting
 			-- associated with the device context
 		require
 			exists: exists
+			valid_current_map_mode: valid_extent_map_mode (map_mode)
 		do
 			cwin_set_window_ext_ex (item, x_extent, y_extent,
 				default_pointer)
+		ensure
+			x_window_extent_set: window_extent.width = x_extent
+			y_window_extent_set: window_extent.height = y_extent
 		end
 
 	set_window_origin (x_origin, y_origin: INTEGER) is
@@ -392,8 +439,11 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_set_window_ext_ex (item, x_origin, y_origin,
+			cwin_set_window_org_ex (item, x_origin, y_origin,
 				default_pointer)
+		ensure
+			x_window_origin_set: window_origin.x = x_origin
+			y_window_origin_set: window_origin.y = y_origin
 		end
 
 	set_viewport_extent (x_extent, y_extent: INTEGER) is
@@ -401,9 +451,13 @@ feature -- Status setting
 			-- associated with the device context
 		require
 			exists: exists
+			valid_current_map_mode: valid_extent_map_mode (map_mode)
 		do
 			cwin_set_viewport_ext_ex (item, x_extent, y_extent,
 				default_pointer)
+		ensure
+			x_viewport_extent_set: viewport_extent.width = x_extent
+			y_viewport_extent_set: viewport_extent.height = y_extent
 		end
 
 	set_viewport_origin (x_origin, y_origin: INTEGER) is
@@ -414,6 +468,9 @@ feature -- Status setting
 		do
 			cwin_set_viewport_org_ex (item, x_origin, y_origin,
 				default_pointer)
+		ensure
+			x_viewport_origin_set: window_origin.x = x_origin
+			y_viewport_origin_set: window_origin.y = y_origin
 		end
 
 	set_bk_color (color: WEL_COLOR_REF) is
@@ -901,6 +958,29 @@ feature -- Basic operations
 			cwin_fill_rect (item, a_rect.item, a_brush.item)
 		end
 
+	flood_fill_border (x, y: INTEGER; color: WEL_COLOR_REF) is
+			-- Fill an area which is bounded by `color' starting
+			-- at `x', `y'.
+		require
+			exists: exists
+			color_not_void: color /= Void
+		do
+			cwin_ext_flood_fill (item, x, y, color.item,
+				Floodfillborder)
+		end
+
+	flood_fill_surface (x, y: INTEGER; color: WEL_COLOR_REF) is
+			-- Fill an area which is defined by `color' starting
+			-- at `x', `y'. Filling continues outward in all
+			-- directions as long as the color is encountered.
+		require
+			exists: exists
+			color_not_void: color /= Void
+		do
+			cwin_ext_flood_fill (item, x, y, color.item,
+				Floodfillsurface)
+		end
+
 	polygon (points: ARRAY [INTEGER]) is
 			-- Draw a polygon consisting of two or more points
 			-- connected by lines.
@@ -1302,6 +1382,15 @@ feature {NONE} -- Externals
 			"FillRect"
 		end
 
+	cwin_ext_flood_fill (hdc: POINTER; x, y: INTEGER; color: POINTER;
+				type: INTEGER) is
+			-- SDK ExtFloodFill
+		external
+			"C [macro <wel.h>] (HDC, int, int, COLORREF, UINT)"
+		alias
+			"ExtFloodFill"
+		end
+
 	cwin_polygon (hdc, pts: POINTER; num: INTEGER) is
 			-- SDK Polygon
 		external
@@ -1495,6 +1584,14 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (HDC): EIF_INTEGER"
 		alias
 			"GetMapMode"
+		end
+
+	cwin_get_text_align (hdc: POINTER): INTEGER is
+			-- SDK GetTextAlign
+		external
+			"C [macro <wel.h>] (HDC): EIF_INTEGER"
+		alias
+			"GetTextAlign"
 		end
 
 	cwin_get_stretch_blt_mode (hdc: POINTER): INTEGER is

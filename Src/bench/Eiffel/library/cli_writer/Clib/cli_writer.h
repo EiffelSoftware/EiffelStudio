@@ -23,7 +23,7 @@ extern EIF_POINTER new_sym_writer ();
 
 /* Defined an Eiffel specific version of IMAGE_COR20_HEADER in case one does not
  * have the latest version of the platform SDK. */
-typedef struct EIF_IMAGE_COR20_HEADER {
+typedef struct _CLI_IMAGE_COR20_HEADER {
 	// Header versioning
 	DWORD	cb;
 	WORD	MajorRuntimeVersion;
@@ -45,7 +45,7 @@ typedef struct EIF_IMAGE_COR20_HEADER {
 
 	// Precompiled image info (internal use only - set to zero)
 	IMAGE_DATA_DIRECTORY	ManagedNativeHeader;
-} EIF_IMAGE_COR20_HEADER;
+} CLI_IMAGE_COR20_HEADER;
 
 typedef struct _CLI_IMPORT_TABLE {
   DWORD ImportLookupTable;// RVA to ImportLookupTable
@@ -78,6 +78,50 @@ typedef struct _CLI_ENTRY {
   BYTE JumpInstL;   // 0x25
   DWORD IAT_RVA;    // RVA to IAT
 } CLI_ENTRY;
+
+typedef struct _CLI_IMAGE_OPTIONAL_HEADER {
+    //
+    // Standard fields.
+    //
+
+    WORD    Magic;
+    BYTE    MajorLinkerVersion;
+    BYTE    MinorLinkerVersion;
+    DWORD   SizeOfCode;
+    DWORD   SizeOfInitializedData;
+    DWORD   SizeOfUninitializedData;
+    DWORD   AddressOfEntryPoint;
+    DWORD   BaseOfCode;
+    DWORD   BaseOfData;
+
+    //
+    // NT additional fields.
+    //
+
+    DWORD   ImageBase;
+    DWORD   SectionAlignment;
+    DWORD   FileAlignment;
+    WORD    MajorOperatingSystemVersion;
+    WORD    MinorOperatingSystemVersion;
+    WORD    MajorImageVersion;
+    WORD    MinorImageVersion;
+    WORD    MajorSubsystemVersion;
+    WORD    MinorSubsystemVersion;
+    DWORD   Win32VersionValue;
+    DWORD   SizeOfImage;
+    DWORD   SizeOfHeaders;
+    DWORD   CheckSum;
+    WORD    Subsystem;
+    WORD    DllCharacteristics;
+    DWORD   SizeOfStackReserve;
+    DWORD   SizeOfStackCommit;
+    DWORD   SizeOfHeapReserve;
+    DWORD   SizeOfHeapCommit;
+    DWORD   LoaderFlags;
+    DWORD   NumberOfRvaAndSizes;
+    IMAGE_DATA_DIRECTORY DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES];
+} CLI_IMAGE_OPTIONAL_HEADER;
+
 
 #ifdef __cplusplus
 }

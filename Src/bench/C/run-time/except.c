@@ -1441,7 +1441,6 @@ rt_public void exok(EIF_CONTEXT_NOARG)
 rt_public void exclear(EIF_CONTEXT_NOARG)
 {
 	EIF_GET_CONTEXT
-	register1 struct ex_vect *top;		/* Top of calling stack */
 
 	/* If 'echval' is set to zero, then no exception occurred, so return
 	 * immediately. Otherwise, pop off the stack until we reach an execution
@@ -1460,7 +1459,7 @@ rt_public void exclear(EIF_CONTEXT_NOARG)
 	 * "New level" pseudo-vector.
 	 */
 
-	while ((top = extop(&eif_trace)))
+	while (extop(&eif_trace))
 	  expop(&eif_trace);	/* Will panic if we underflow */
 
 	echval = 0;			/* No more pending exception */

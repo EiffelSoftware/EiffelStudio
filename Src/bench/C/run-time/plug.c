@@ -114,12 +114,15 @@ rt_public EIF_REFERENCE striparr(EIF_CONTEXT register EIF_REFERENCE curr, regist
 	EIF_REFERENCE attr;
 	int i;
 	char found;
-	int16 curr_dtype;
 	uint32 type, *types;
 	long offset_bis = 0;					/* offset already taken :-) */
 	int16   typres;
+#ifdef WORKBENCH
+	int16 curr_dtype;
 
 	curr_dtype = Dtype(curr);	/* Dynamic type of current object instance */
+#endif
+
 	obj_desc = &System(dtype); 	/* Dynamic type where strip is defined */
 	nbr_attr = obj_desc->cn_nbattr;
 	attr_names = obj_desc->cn_names;

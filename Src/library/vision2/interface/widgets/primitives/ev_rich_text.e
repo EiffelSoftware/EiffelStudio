@@ -1,7 +1,7 @@
 indexing 
 	description:
 		" EiffelVision text. A text area that contains%
-		% a rich text."
+		%a rich text."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,6 +29,40 @@ feature {NONE} -- Initialization
 			widget_make (par)
 		end
 
+feature -- Access
+
+	character_format: EV_CHARACTER_FORMAT is
+			-- Current character format.
+		require
+			exists: not destroyed
+		do
+			Result := implementation.character_format
+		end
+
+feature -- Status setting
+
+	apply_format (format: EV_TEXT_FORMAT) is
+			-- Apply the given format to the text.
+		require
+			exists: not destroyed
+			valid_format: format /= Void
+		do
+			implementation.apply_format (format)
+		end
+
+feature -- Element change
+
+	set_character_format (format: EV_CHARACTER_FORMAT) is
+			-- Apply `format' to the selection and make it the
+			-- current character format.
+		require
+			exists: not destroyed
+		do
+			implementation.set_character_format (format)
+--		ensure
+--			format_set: character_format = format
+		end
+
 feature -- Basic operation
 
 	index_from_position (value_x, value_y: INTEGER): INTEGER is
@@ -47,6 +81,25 @@ feature -- Basic operation
 			y_large_enough: value_y >= 0
 		do
 			Result := implementation.index_from_position (value_x, value_y)
+		end
+
+	position_from_index (value: INTEGER): EV_COORDINATES is
+			-- Coordinates of a character at `value' in
+			-- the client area.
+			-- A returned coordinate can be negative if the
+			-- character has been scrolled outside the edit
+			-- control's client area.
+			-- The coordinates are truncated to integer values and
+			-- are in screen units relative to the upper-left
+			-- corner of the client area of the control.
+		require
+			exists: not destroyed
+			index_large_enough: value >= 0
+			index_small_enough: value <= text_length + 2
+		do
+			Result := implementation.position_from_index (value)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature -- Implementation

@@ -22,7 +22,8 @@ OBJECTS = \
 	child.obj \
 	listen.obj \
 	main.obj \
-	proto.obj
+	proto.obj \
+	env.obj
 
 .c.obj:
 	$(RM) $@

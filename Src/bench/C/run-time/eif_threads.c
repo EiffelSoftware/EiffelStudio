@@ -18,13 +18,13 @@
 
 */
 
-#include "config.h"
-#include "eiffel.h"
+#include "eif_config.h"
+#include "eif_eiffel.h"
 #include "eif_threads.h"
 #include "eif_globals.h"
-#include "err_msg.h"
-#include "hector.h"      /* for efreeze() and eufreeze() */
-#include "sig.h"
+#include "eif_err_msg.h"
+#include "eif_hector.h"      /* for efreeze() and eufreeze() */
+#include "eif_sig.h"
 
 #ifdef EIF_THREADS
 
@@ -32,16 +32,16 @@ rt_public void eif_thr_panic(char *);
 rt_public void eif_thr_init_root(void);
 rt_public void eif_thr_register(void);
 rt_public unsigned int eif_thr_is_initialized(void);
-rt_public void eif_thr_create(EIF_OBJ, EIF_PROC, EIF_BOOLEAN *);
-rt_public void eif_thr_create_with_args(EIF_OBJ, EIF_PROC, EIF_BOOLEAN *,
-										EIF_INTEGER, EIF_INTEGER, EIF_BOOLEAN);
+rt_public void eif_thr_create(EIF_OBJ, EIF_POINTER);
+rt_public void eif_thr_create_with_args(EIF_OBJ, EIF_POINTER, EIF_INTEGER,
+										EIF_INTEGER, EIF_BOOLEAN);
 rt_public void eif_thr_exit(void);
 
-rt_public EIF_MUTEX_TYPE *eif_thr_mutex_create(void);
-rt_public void eif_thr_mutex_lock(EIF_MUTEX_TYPE *);
-rt_public void eif_thr_mutex_unlock(EIF_MUTEX_TYPE *);
-rt_public EIF_BOOLEAN eif_thr_mutex_trylock(EIF_MUTEX_TYPE *);
-rt_public void eif_thr_mutex_destroy(EIF_MUTEX_TYPE *);
+rt_public EIF_POINTER eif_thr_mutex_create(void);
+rt_public void eif_thr_mutex_lock(EIF_POINTER);
+rt_public void eif_thr_mutex_unlock(EIF_POINTER);
+rt_public EIF_BOOLEAN eif_thr_mutex_trylock(EIF_POINTER);
+rt_public void eif_thr_mutex_destroy(EIF_POINTER);
 
 rt_public EIF_POINTER eif_thr_proxy_set(EIF_REFERENCE);
 rt_public EIF_REFERENCE eif_thr_proxy_access(EIF_POINTER);
@@ -51,7 +51,7 @@ rt_private void eif_init_context(eif_global_context_t *);
 rt_private EIF_THR_ENTRY_TYPE eif_thr_entry(EIF_THR_ENTRY_ARG_TYPE);
 
 rt_public EIF_TSD_TYPE eif_global_key;
-rt_public EIF_MUTEX_TYPE *eif_rmark_mutex;
+/* rt_public EIF_MUTEX_TYPE *eif_rmark_mutex; */
 
 rt_public void eif_thr_init_root(void) 
 {
@@ -68,7 +68,7 @@ rt_public void eif_thr_init_root(void)
 	 */
 
 	EIF_TSD_CREATE(eif_global_key,"Couldn't create global key for root thread");
-	EIF_MUTEX_CREATE(eif_rmark_mutex,"Couldn't create inter-GC mutex");
+/* 	EIF_MUTEX_CREATE(eif_rmark_mutex,"Couldn't create inter-GC mutex"); */
 	eif_thr_register();
 }
 
@@ -105,6 +105,18 @@ rt_public void eif_thr_register(void)
 		bzero((char *) EIF_once_values, EIF_once_count * sizeof (char *));
 	} else 
 		once = 1;
+}
+
+rt_public EIF_BOOLEAN eif_thr_is_root()
+{
+	/*
+	 * Returns True is the calling thread is the Eiffel root thread,
+	 * False otherwise.
+	 */
+
+	EIF_GET_CONTEXT
+	return eif_thr_context ? EIF_FALSE : EIF_TRUE;
+	EIF_END_GET_CONTEXT
 }
 
 rt_public unsigned int eif_thr_is_initialized()
@@ -163,9 +175,7 @@ rt_private void eif_init_context(eif_global_context_t *eif_globals)
 }
 
 
-rt_public void eif_thr_create (EIF_OBJ thr_root_obj,
-							   EIF_PROC init_func,
-							   EIF_BOOLEAN *terminated)
+rt_public void eif_thr_create (EIF_OBJ thr_root_obj, EIF_POINTER init_func)
 {
 	/*
 	 * Creates a new Eiffel thread. This function is only called from
@@ -173,21 +183,18 @@ rt_public void eif_thr_create (EIF_OBJ thr_root_obj,
 	 * - the object (whose class inherits from THREAD) a clone of which
 	 *   will become the root object of the new thread
 	 * - the Eiffel routine it will execute
-	 * - the address of a boolean which will be set to True by the child
-	 *   thread upon its termination. Normally, the thread is frozen and
-	 *   won't move.
 	 *
 	 * These arguments are part of the routine context that will be
 	 * passed to the new thread via the low-level platform-dependant
 	 * thread-creation function.
 	 *
-	 * This context also contains a pointer to the task-id of the new
+	 * This context also contains a pointer to the thread-id of the new
 	 * thread, a pointer to the parent's children-counter `n_children', a
 	 * mutex and a condition variable that are used by eif_thr_join_all()
 	 * and eif_thr_exit()  --PCV
 	 */
 
-	eif_thr_create_with_args (thr_root_obj, init_func, terminated,
+	eif_thr_create_with_args (thr_root_obj, init_func,
 							  (EIF_INTEGER) -1, /* Priority: not used */
 							  (EIF_INTEGER) -1, /* Policy: not used */
 							  (EIF_BOOLEAN) 5); /* -> Don't use args */
@@ -195,8 +202,7 @@ rt_public void eif_thr_create (EIF_OBJ thr_root_obj,
 
 
 rt_public void eif_thr_create_with_args (EIF_OBJ thr_root_obj, 
-										 EIF_PROC init_func,
-										 EIF_BOOLEAN *terminated,
+										 EIF_POINTER init_func,
 										 EIF_INTEGER priority,
 										 EIF_INTEGER policy,
 										 EIF_BOOLEAN detach)
@@ -215,11 +221,11 @@ rt_public void eif_thr_create_with_args (EIF_OBJ thr_root_obj,
 	routine_ctxt = (start_routine_ctxt_t *)malloc(sizeof(start_routine_ctxt_t));
 	if (!routine_ctxt)
 		eif_thr_panic("No more memory to launch new thread\n");
-	routine_ctxt->current = eif_adopt(thr_root_obj);
+	routine_ctxt->current = hector_addr (efreeze (thr_root_obj));
 	routine_ctxt->routine = init_func;
 	routine_ctxt->tid = tid;
-	routine_ctxt->terminated = terminated;
 	routine_ctxt->addr_n_children = &n_children;
+	routine_ctxt->addr_thr_list = &(eif_globals->unfreeze_list);
 
 	if (!eif_children_mutex) {
 	  /* It is the first time this thread creates a subthread (hopefully!), so
@@ -269,30 +275,34 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 		jmp_buf exenv;
 
 		eif_thr_context = routine_ctxt;
-		EIF_MUTEX_LOCK(eif_rmark_mutex, "Couldn't lock GC mutex");
-
+/* 		EIF_MUTEX_LOCK(eif_rmark_mutex, "Couldn't lock GC mutex"); */
+		EIF_MUTEX_LOCK(eif_thr_context->children_mutex, "Locking GC mutex");
 		initsig();
 		initstk();
 		exvect = exset((char *) 0, 0, (char *) 0);
 		exvect->ex_jbuf = (char *) exenv;
+
+#ifdef _CRAY
+		if (setjmp(exenv))
+			failure();
+#else
 		if ((echval = setjmp(exenv)))
 			failure();
+#endif
 
 #ifdef WORKBENCH
 		xinitint();
 #endif
 		root_obj = edclone(eif_access(routine_ctxt->current));
-
-		/*
-		  root_obj = eclone(eif_access(routine_ctxt->current)); 
-		  root_obj = RTLN(eiftype(&(routine_ctxt->current)));
-		  ecopy(routine_ctxt->current, root_obj);
-		  */
-		EIF_MUTEX_UNLOCK(eif_rmark_mutex, "Couldn't unlock GC mutex");
-
-		/* (routine_ctxt->routine)(eif_access (routine_ctxt->current));  */
-
- 		(routine_ctxt->routine)(root_obj);
+/* 		EIF_MUTEX_UNLOCK(eif_rmark_mutex, "Couldn't unlock GC mutex"); */
+		EIF_MUTEX_UNLOCK(eif_thr_context->children_mutex, "Unlocking GC mutex");
+		{
+			/*
+			 * Call the `execute' routine of the thread
+			 */
+			EIF_PROC execute = (EIF_PROC) routine_ctxt->routine;
+			(execute)(root_obj);
+		}
 		root_obj = (char *)0;
 		EIF_END_GET_CONTEXT
 	}
@@ -306,20 +316,50 @@ rt_public void eif_thr_exit(void)
 	 * Function called to terminate a thread launched by Eiffel with
 	 * eif_thr_create() or eif_thr_create_with_args().
 	 * All the memory allocated with malloc() for the thread context is freed
+	 * This function must be called from the thread itself (not the parent).
 	 */
 
 	EIF_GET_CONTEXT
 
-	*(eif_thr_context->terminated) = EIF_TRUE; /* for eif_thr_wait() */
+	thr_list_t *ptr, **thr_list = eif_thr_context->addr_thr_list;
+	char *terminated = 
+		eifaddr (eif_access (eif_thr_context->current), "terminated");
+	
+
 	EIF_MUTEX_LOCK(eif_thr_context->children_mutex, "Lock parent mutex");
-	/* We decrement the number of child threads of the parent */
+
+	/* Set the `terminated' field of the twin thread object to True so that
+	 * it knows the thread is terminated
+	 */
+
+	*terminated = EIF_TRUE;
+
+	/* Add the address of the parent's thread object to its list of
+	 * thread objects to unfreeze.
+	 * NB: this has to be done under the protection of a mutex
+	 */
+
+	if (*thr_list == (thr_list_t *) 0) {
+		*thr_list = (thr_list_t *) malloc (sizeof (thr_list_t));
+		(*thr_list)->thread = eif_thr_context->current;
+		(*thr_list)->next = (thr_list_t *) 0;
+	} else {
+		ptr = *thr_list;
+		while (ptr->next)
+			ptr = ptr->next;
+		ptr->next = (thr_list_t *) malloc (sizeof (thr_list_t));
+		ptr->next->thread = eif_thr_context->current;
+		ptr->next->next = (thr_list_t *) 0;
+	}
+
+	/* Decrement the number of child threads of the parent */
 	*(eif_thr_context->addr_n_children) -= 1;
 #ifndef EIF_NO_CONDVAR
 	EIF_COND_BROADCAST(eif_thr_context->children_cond, "Pbl cond_broadcast");
 #endif
 	EIF_MUTEX_UNLOCK(eif_thr_context->children_mutex, "Unlock parent mutex");
 
-	free (eif_thr_context->tid);	/* Task id of the current thread */
+	free (eif_thr_context->tid);	/* Thread id of the current thread */
 	free (eif_thr_context);			/* Thread context passed by parent */
 	reclaim ();						/* Free all allocated memory chunks */
 
@@ -327,6 +367,32 @@ rt_public void eif_thr_exit(void)
 	EIF_END_GET_CONTEXT
 }
 
+
+rt_private void eif_thr_unfreeze_dead(void)
+{
+	/*
+	 * Unfreezes all the thread objects referenced in the list unfreeze_list
+	 * (every terminating thread adds its corresponding thread object --of
+	 * the parent-- into this list)
+	 * NB: must be called under the protection of a mutex
+	 */
+
+	EIF_GET_CONTEXT
+
+	thr_list_t *ptr, *thr_list = eif_globals->unfreeze_list;
+
+	while (thr_list) {
+		ptr = thr_list;
+		eufreeze (eif_access (thr_list->thread));
+		/* plsc(); */
+		thr_list = thr_list->next;
+		free (ptr);
+	}
+
+	eif_globals->unfreeze_list = (thr_list_t *) 0;
+
+	EIF_END_GET_CONTEXT
+}
 
 rt_public void eif_thr_yield(void)
 {
@@ -366,11 +432,14 @@ rt_public void eif_thr_join_all(void)
 
 	EIF_GET_CONTEXT
 
+#ifdef EIF_NO_CONDVAR
+	int end = 0;
+#endif
+
 	/* If no thread has been launched, the mutex isn't initialized */
 	if (!eif_children_mutex) return;
 
 #ifdef EIF_NO_CONDVAR
-	int end = 0;
 	EIF_THR_YIELD;
 	while (!end) {
 		EIF_MUTEX_LOCK(eif_children_mutex, "Failed lock mutex join_all");
@@ -389,6 +458,9 @@ rt_public void eif_thr_join_all(void)
 	EIF_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join_all");
 #endif
 
+	/* Unfreeze all thread objects whose corresponding threads are dead */
+	eif_thr_unfreeze_dead();
+
 	EIF_END_GET_CONTEXT
 }
 #endif
@@ -404,6 +476,10 @@ rt_public void eif_thr_wait (EIF_BOOLEAN *terminated)
 
 	EIF_GET_CONTEXT
 
+#ifdef EIF_NO_CONDVAR
+	int end = 0;
+#endif
+
 	/* If no thread has been launched, the mutex isn't initialized */
 	if (!eif_children_mutex) return;
 
@@ -414,7 +490,6 @@ rt_public void eif_thr_wait (EIF_BOOLEAN *terminated)
 	 * function can use much of the CPU time.
 	 */
 
-	int end = 0;
 	EIF_THR_YIELD;
 	while (!end) {
 		EIF_MUTEX_LOCK(eif_children_mutex, "Failed lock mutex join()");
@@ -439,6 +514,9 @@ rt_public void eif_thr_wait (EIF_BOOLEAN *terminated)
 	EIF_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join()");
 
 #endif
+
+	/* Unfreeze all thread objects whose corresponding threads are dead */
+	eif_thr_unfreeze_dead();
 
 	EIF_END_GET_CONTEXT
 }
@@ -483,14 +561,17 @@ rt_public EIF_INTEGER eif_thr_max_priority(void) {
 }
 
 /*
- * These two functions each return a pointer to respectively the task-id
- * of the current thread and the task-id of the last created thread.
+ * These two functions each return a pointer to respectively the thread-id
+ * of the current thread and the thread-id of the last created thread.
  * They are used from the class THREAD.--PCV
  */
 
-rt_public EIF_POINTER eif_thr_task_id(void) {
+rt_public EIF_POINTER eif_thr_thread_id(void) {
 	EIF_GET_CONTEXT
-	return (EIF_POINTER) eif_thr_context->tid;
+	if (eif_thr_context)
+		return (EIF_POINTER) eif_thr_context->tid;
+	else
+		return (EIF_POINTER) 0; /* Root thread's id is 0 */
 	EIF_END_GET_CONTEXT
 }
 
@@ -506,14 +587,18 @@ rt_public EIF_POINTER eif_thr_last_thread(void) {
  *   - creation, locking, unlocking, non-blocking locking and destruction
  */
  
-rt_public EIF_MUTEX_TYPE *eif_thr_mutex_create(void) {
+rt_public EIF_POINTER eif_thr_mutex_create(void) {
 	EIF_MUTEX_TYPE *a_mutex_pointer;
 
 	EIF_MUTEX_CREATE(a_mutex_pointer, "cannot create mutex\n");
-	return a_mutex_pointer;
+#ifdef DEBUG
+	printf ("Created mutex %x\n", a_mutex_pointer);
+#endif
+	return (EIF_POINTER) a_mutex_pointer;
 }
 
-rt_public void eif_thr_mutex_lock(EIF_MUTEX_TYPE *a_mutex_pointer) {
+rt_public void eif_thr_mutex_lock(EIF_POINTER mutex_pointer) {
+	EIF_MUTEX_TYPE *a_mutex_pointer = (EIF_MUTEX_TYPE *) mutex_pointer;
 	if (a_mutex_pointer != (EIF_MUTEX_TYPE *) 0) {
 		EIF_MUTEX_LOCK(a_mutex_pointer, "cannot lock mutex\n");
 		/* Don't remove curly braces, macro could be several lines */
@@ -521,7 +606,8 @@ rt_public void eif_thr_mutex_lock(EIF_MUTEX_TYPE *a_mutex_pointer) {
 		eraise("Trying to lock a NULL mutex", EN_EXT);
 }
 
-rt_public void eif_thr_mutex_unlock(EIF_MUTEX_TYPE *a_mutex_pointer) {
+rt_public void eif_thr_mutex_unlock(EIF_POINTER mutex_pointer) {
+	EIF_MUTEX_TYPE *a_mutex_pointer = (EIF_MUTEX_TYPE *) mutex_pointer;
 	if (a_mutex_pointer != (EIF_MUTEX_TYPE *) 0) {
 		EIF_MUTEX_UNLOCK(a_mutex_pointer, "cannot unlock mutex\n");
 		/* Don't remove curly braces, macro could be several lines */
@@ -529,8 +615,9 @@ rt_public void eif_thr_mutex_unlock(EIF_MUTEX_TYPE *a_mutex_pointer) {
 		eraise("Trying to unlock a NULL mutex", EN_EXT);
 }
 
-rt_public EIF_BOOLEAN eif_thr_mutex_trylock(EIF_MUTEX_TYPE *a_mutex_pointer) {
-  int status;
+rt_public EIF_BOOLEAN eif_thr_mutex_trylock(EIF_POINTER mutex_pointer) {
+	int status;
+	EIF_MUTEX_TYPE *a_mutex_pointer = (EIF_MUTEX_TYPE *) mutex_pointer;
 	if (a_mutex_pointer != (EIF_MUTEX_TYPE *) 0) {
 		EIF_MUTEX_TRYLOCK(a_mutex_pointer, status, "cannot trylock mutex\n");
 		/* Don't remove curly braces, macro could be several lines */
@@ -539,28 +626,182 @@ rt_public EIF_BOOLEAN eif_thr_mutex_trylock(EIF_MUTEX_TYPE *a_mutex_pointer) {
 	return ((EIF_BOOLEAN)(!status));
 }
 
-rt_public void eif_thr_mutex_destroy(EIF_MUTEX_TYPE *a_mutex_pointer) {
+rt_public void eif_thr_mutex_destroy(EIF_POINTER mutex_pointer) {
+	EIF_MUTEX_TYPE *a_mutex_pointer = (EIF_MUTEX_TYPE *) mutex_pointer;
+
+#ifdef DEBUG
+	printf ("Destroying mutex %x\n", a_mutex_pointer);
+#endif
 	if (a_mutex_pointer != (EIF_MUTEX_TYPE *) 0) {
-		EIF_MUTEX_DESTROY(a_mutex_pointer, "cannot lock mutex\n");
-		/* Don't remove curly braces, macro could be several lines */
-	} else 
-		eraise("Trying to destroy a NULL mutex", EN_EXT);
+		EIF_MUTEX_DESTROY(a_mutex_pointer, "cannot destroy mutex\n");
+		a_mutex_pointer = (EIF_MUTEX_TYPE *) 0;
+	}
 }
 
-#endif /* EIF_THREADS */
 
-rt_public void eif_thr_panic(char *msg) {
-	print_err_msg(stderr,"Thread panic! Following information may be completely incoherent\n");
+/*
+ * class SEMAPHORE externals
+ */
+
+rt_public EIF_POINTER eif_thr_sem_create (EIF_INTEGER count)
+{
+	EIF_SEM_TYPE *a_sem_pointer;
+
+	EIF_SEM_CREATE(a_sem_pointer, count, "cannot create semaphore\n");
+#ifdef DEBUG
+	printf ("Created semaphore %x\n", a_sem_pointer);
+#endif
+	return (EIF_POINTER) a_sem_pointer;
+}
+
+rt_public void eif_thr_sem_wait (EIF_POINTER sem)
+{
+	EIF_SEM_TYPE *a_sem_pointer = (EIF_SEM_TYPE *) sem;
+	if (a_sem_pointer != (EIF_SEM_TYPE *) 0) {
+		EIF_SEM_WAIT(a_sem_pointer, "cannot lock semaphore");
+	} else 
+		eraise("Trying to lock a NULL semaphore", EN_EXT);
+}
+
+rt_public void eif_thr_sem_post (EIF_POINTER sem)
+{
+	EIF_SEM_TYPE *a_sem_pointer = (EIF_SEM_TYPE *) sem;
+	if (a_sem_pointer != (EIF_SEM_TYPE *) 0) {
+		EIF_SEM_POST(a_sem_pointer, "cannot post semaphore");
+	} else 
+		eraise("Trying to post a NULL semaphore", EN_EXT);
+}
+
+rt_public EIF_BOOLEAN eif_thr_sem_trywait (EIF_POINTER sem)
+{
+	int status;
+	EIF_SEM_TYPE *a_sem_pointer = (EIF_SEM_TYPE *) sem;
+	if (a_sem_pointer != (EIF_SEM_TYPE *) 0) {
+		EIF_SEM_TRYWAIT(a_sem_pointer, status, "cannot trywait semaphore\n");
+	} else
+		eraise("Trying to trywait a NULL semaphore", EN_EXT);
+	return ((EIF_BOOLEAN)(!status));
+}
+
+rt_public void eif_thr_sem_destroy (EIF_POINTER sem)
+{
+	EIF_SEM_TYPE *a_sem_pointer = (EIF_SEM_TYPE *) sem;
+#ifdef DEBUG
+	printf ("Destroying semaphore %x\n", a_sem_pointer);
+#endif
+	if (a_sem_pointer != (EIF_SEM_TYPE *) 0) {
+		EIF_SEM_DESTROY(a_sem_pointer, "cannot destroy semaphore");
+		a_sem_pointer = (EIF_SEM_TYPE *) 0;
+	}
+}
+
+/*
+ * class CONDITION_VARIABLE externals
+ */
+
+#ifndef EIF_NO_CONDVAR
+rt_public EIF_POINTER eif_thr_cond_create (void)
+{
+	EIF_COND_TYPE *cond;
+
+	EIF_COND_CREATE(cond, "cannot create cond. variable");
+#ifdef DEBUG
+	printf ("Created cond. var %x\n", cond);
+#endif
+	return (EIF_POINTER) cond;
+}
+
+rt_public void eif_thr_cond_broadcast (EIF_POINTER cond_ptr)
+{
+	EIF_COND_TYPE *cond = (EIF_COND_TYPE *) cond_ptr;
+
+	if (cond != (EIF_COND_TYPE *) 0) {
+		EIF_COND_BROADCAST(cond, "cannot cond_broadcast");
+	} else
+		eraise ("Trying to cond_broadcast on NULL", EN_EXT);
+}
+
+rt_public void eif_thr_cond_signal (EIF_POINTER cond_ptr)
+{
+	EIF_COND_TYPE *cond = (EIF_COND_TYPE *) cond_ptr;
+
+	if (cond != (EIF_COND_TYPE *) 0) {
+		EIF_COND_SIGNAL(cond, "cannot cond_signal");
+	} else
+		eraise ("Trying to cond_signal on NULL", EN_EXT);
+}
+
+rt_public void eif_thr_cond_wait (EIF_POINTER cond_ptr, EIF_POINTER mutex_ptr)
+{
+	EIF_COND_TYPE *cond = (EIF_COND_TYPE *) cond_ptr;
+	EIF_MUTEX_TYPE *mutex = (EIF_MUTEX_TYPE *) mutex_ptr;
+
+	if (cond != (EIF_COND_TYPE *) 0) {
+		EIF_COND_WAIT(cond, mutex, "cannot cond_wait");
+	} else
+		eraise ("Trying to cond_wait on NULL", EN_EXT);
+}
+
+rt_public void eif_thr_cond_destroy (EIF_POINTER cond_ptr)
+{
+	EIF_COND_TYPE *cond = (EIF_COND_TYPE *) cond_ptr;
+#ifdef DEBUG
+	printf ("Destroying cond. var %x\n", cond);
+#endif
+	EIF_COND_DESTROY(cond, "destroying condition variable");
+}
+#endif /* EIF_NO_CONDVAR */
+
+
+rt_public void eif_thr_panic(char *msg)
+{
+	print_err_msg (stderr, "*** Thread panic! ***\n");
 	panic(msg);
 	exit(0);
 }
 
 
-rt_public void eif_thr_freeze(EIF_OBJ object) {
-	if (!efreeze(object)) {
-		if (!spfreeze(eif_access(object)))
-			eif_thr_panic("cannot freeze\n");
+/*
+ * Class OBJECT_CONTROL externals
+ */
+
+rt_public EIF_POINTER eif_thr_freeze (EIF_OBJ object)
+{
+	/* This function is used by the class PROXY: the item of the proxy is
+	 * frozen so that it can be accessed by any thread any time. It would
+	 * be better to protect the access to the item with a mutex, and also
+	 * not to freeze it (locking a mutex while the parent's GC is on), but
+	 * the performance wouldn't be as good.
+	 *
+	 * When we return the address of the object, an entry in hec_saved must
+	 * point to it (it will be retrieved using hector_addr).
+	 */
+
+ 	char *frozen = efreeze (object);
+
+	if (!object) {
+		/* efreeze() refused to freeze the object (probably because it is
+		 * a special object) so we freeze it on location with spfreeze()
+		 */
+		spfreeze (eif_access (object));
+		object = eif_adopt (object);
+		return (eif_access (object));
+	} else {
+		/* efreeze() successfully froze the object and created an entry in
+		 * the hector saved table.
+		 */
+		return frozen;
 	}
+}
+
+rt_public void eif_thr_unfreeze (EIF_OBJ object)
+{
+	/* This function unfreezes an object frozen with eif_thr_freeze()
+	 * It should work even if the object has been frozen by spfreeze() and
+	 * not efreeze()
+	 */
+
+	eufreeze (eif_access (object));
 }
 
 
@@ -568,25 +809,31 @@ rt_public void eif_thr_freeze(EIF_OBJ object) {
  * class PROXY externals
  */
 
-rt_public EIF_POINTER eif_thr_proxy_set(EIF_REFERENCE object) {
-/* With automatic freezing (to be tested)
-	EIF_OBJ frozen_obj,temp_obj;
+rt_public EIF_POINTER eif_thr_proxy_set(EIF_REFERENCE object)
+{
+	/* 
+	 * Returns a hec_saved entry pointing to the object given as argument
+	 */
 
-	temp_obj = eif_adopt(object);
-	frozen_obj = efreeze(eif_access(temp_obj));
-	if (!frozen_obj) eif_thr_panic ("can not attach proxy to object\n");
-	return eif_access((EIF_OBJ)temp_obj);
-*/
-	return eif_adopt((EIF_OBJ)object);
+	return hector_addr (object);
 }
 
 rt_public EIF_REFERENCE eif_thr_proxy_access(EIF_POINTER proxy)
 {
-/* 	printf ("proxy access(%x)\n", proxy); */
-	return eif_access(proxy);
+	/*
+	 * Returns the address of the actual proxy item.
+	 */
+
+	return eif_access (proxy);
 }
 
-rt_public void eif_thr_proxy_dispose(EIF_POINTER proxy) {
-	EIF_REFERENCE dummy;
-	dummy = eif_wean((EIF_OBJ)proxy);
+rt_public void eif_thr_proxy_dispose(EIF_POINTER proxy)
+{
+	/*
+	 * Unfreezes the proxy item.
+	 */
+
+	eufreeze (proxy);
 }
+
+#endif /* EIF_THREADS */

@@ -190,11 +190,9 @@ feature -- Status report
 			is_parented: parent /= Void
 		do
 			Result := internal_index
-			check
-				indexes_equivalent: parent_grid_i.grid_rows.i_th (internal_index) = Current
-			end
 		ensure
 			index_positive: Result > 0
+			indexes_equivalent: parent_grid_i.grid_rows.i_th (internal_index) = Current
 			index_less_than_row_count: Result <= parent.row_count
 		end
 
@@ -497,7 +495,6 @@ feature {EV_ANY_I, EV_GRID_ROW} -- Implementation
 			
 invariant
 	no_subrows_implies_not_expanded: subrow_count = 0 implies not is_expanded
-	index_same_as_parent_index: parent_grid_i /= Void implies parent_grid_i.grid_rows.index_of (Current, 1) = index
 	selected_item_count_valid: selected_item_count >= 0 and then selected_item_count <= count
 	subrows_not_void: subrows /= Void
 	subnode_count_recursive_zero_when_no_subrows: subrows.count = 0 implies subnode_count_recursive = 0

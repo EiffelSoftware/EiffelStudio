@@ -1,0 +1,129 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>EiffelVision2 Figures</TITLE>
+		<LINK REL=StyleSheet HREF="../../../../default.css">
+	<link rel="stylesheet" type="text/css" href="../../../default.css">
+</HEAD>
+
+	<BODY>
+		<H1>EiffelVision2 Figures</H1>
+
+		<P>The EiffelVision figure cluster can be considered a high-level way of drawing on an <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/properties/ev_drawable.html">EV_DRAWABLE</A> descendant. Here are some advantages:</P>
+
+		<UL>
+			<LI>The model is separated from the representation by using projectors that take a world of figures and project it to any device, not just a drawing area.
+			<LI>Instead of drawing with static API's like draw_line, real figure objects are used that can move, change color or morph.</LI>
+			<LI>For projection devices that allow this, events may be caught and fired through the appropriate figure object.</LI>
+		</UL>
+
+		<H2>Figure classes</H2>
+
+		<P>Every basic figure class inherits from <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_atomic_figure.html">EV_ATOMIC_FIGURE</A>. An atomic figure has the property of having a representation.
+		<A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_figure_group.html">EV_FIGURE_GROUP</A> on the other hand does not but is a collection of figures.
+		On the top of those two stands <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_figure.html">EV_FIGURE</A> as common ancestor.
+		As <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_figure_group.html">EV_FIGURE_GROUP</A> is a collection of <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_figure.html">EV_FIGURE</A>s, it can contain subgroups.</P>
+
+		<P>As top-level group of a world of figures you must use <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_figure_world.html">EV_FIGURE_WORLD</A>. It inherits from <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_figure_group.html">EV_FIGURE_GROUP</A> but adds some features for grid and background color.</P>
+
+		<H3>Figures</H3>
+
+		<TABLE>
+			<TR><TD CLASS="title">class</TD><TD CLASS="title">open/closed</TD><TD CLASS="title">points</TD><TD CLASS="title">description</TD></TR>
+			<TR><TD><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_figure_arc.html">EV_FIGURE_ARC</A></TD><TD>open</TD><TD>2</TD><TD>a segment of an open ellipse</TD></TR>
+			<TR><TD><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_figure_dot.html">EV_FIGURE_DOT</A></TD><TD>open</TD><TD>1</TD><TD>a single point</TD></TR>
+			<TR><TD><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_figure_ellipse.html">EV_FIGURE_ELLIPSE</A></TD><TD>closed</TD><TD>2</TD><TD>ellipse inside imaginary rectangle</TD></TR>
+			<TR><TD><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_figure_equilateral.html">EV_FIGURE_EQUILATERAL</A></TD><TD>closed</TD><TD>2</TD><TD>a figure with any number of sides of the same length</TD></TR>
+			<TR><TD><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_figure_line.html">EV_FIGURE_LINE</A></TD><TD>open</TD><TD>2</TD><TD>a straight line between two points</TD></TR>
+			<TR><TD><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_figure_picture.html">EV_FIGURE_PICTURE</A></TD><TD>open</TD><TD>1</TD><TD>an image positioned by its top-left point</TD></TR>
+			<TR><TD><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_figure_pie_slice.html">EV_FIGURE_PIE_SLICE</A></TD><TD>closed</TD><TD>2</TD><TD>a part of a closed ellipse</TD></TR>
+			<TR><TD><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_figure_polygon.html">EV_FIGURE_POLYGON</A></TD><TD>closed</TD><TD>*</TD><TD>a figure defined by any number of points</TD></TR>
+			<TR><TD><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_figure_polyline.html">EV_FIGURE_POLYLINE</A></TD><TD>open</TD><TD>*</TD><TD>a figure consisting of any number of connecting lines</TD></TR>
+			<TR><TD><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_figure_rectangle.html">EV_FIGURE_RECTANGLE</A></TD><TD>closed</TD><TD>2</TD><TD>figure with four sides</TD></TR>
+			<TR><TD><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_figure_star.html">EV_FIGURE_STAR</A></TD><TD>open</TD><TD>2</TD><TD>any number of lines emerging from a center point</TD></TR>
+			<TR><TD><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_figure_text.html">EV_FIGURE_TEXT</A></TD><TD>open</TD><TD>1</TD><TD>a string positioned by its top-left point displayed in the specified font</TD></TR>
+		</TABLE>
+
+		<P>A closed figure is a figure that has some area enclosed when drawn that can optionally be filled with a color.
+		Closed figures inherit <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_closed_figure.html">EV_CLOSED_FIGURE</A> which gives them the property fill_color.
+		Open figures inherit <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_atomic_figure.html">EV_ATOMIC_FIGURE</A> directly just as <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_closed_figure.html">EV_CLOSED_FIGURE</A>.
+
+		<H3>Points</H3>
+
+		<P>Central in the design of the figures are points. Figures are built up as much from points as possible. For example, an ellipse is not a center point with two radiae, but the biggest fitting ellipse inside an imaginary rectangle, so of two points.</P>
+
+		<P>As you can see in the table above, each figure has a certain number of points. These values can be 1, 2 or * (any number). For each value there is a class the figure inherits from. These classes are:</P>
+
+		<UL>
+			<LI>1 (a figure has one point): <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_single_pointed_figure.html">EV_SINGLE_POINTED_FIGURE</A>.
+			<LI>2 (a figure has two points): <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_double_pointed_figure.html">EV_DOUBLE_POINTED_FIGURE</A>.
+			<LI>* (a figure has zero or more points): <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_multi_pointed_figure.html">EV_MULTI_POINTED_FIGURE</A>.
+		</UL>
+
+		<P>These classes offer features to handle the given number of points. <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_single_pointed_figure.html">EV_SINGLE_POINTED_FIGURE</A> offers the feature:</P>
+
+		<CODE>point: EV_RELATIVE_POINT</CODE>
+
+		<P><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_double_pointed_figure.html">EV_DOUBLE_POINTED_FIGURE</A> inherits <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_single_pointed_figure.html">EV_SINGLE_POINTED_FIGURE</A> for its first point, which is renamed to point_a. It adds point_b, so it has the features:</P>
+
+		<CODE>point_a: EV_RELATIVE_POINT<BR>
+		point_b: EV_RELATIVE_POINT</CODE>
+
+		<P><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_multi_pointed_figure.html">EV_MULTI_POINTED_FIGURE</A> internally holds an array of points. Its most important feature is:</P>
+
+		<CODE>i_th_point (i: INTEGER): EV_RELATIVE_POINT</CODE>
+
+		<H3>Relative point</H3>
+
+		<P>The points that the figures use are of type <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_relative_point.html">EV_RELATIVE_POINT</A>. Each point is relative to another point, which is also relative.
+		Each point is a set of coordinates and a reference point. The absolute coordinates are calculated only when needed by adding the absolute coordinates of the reference point to the relative coordinates.</P>
+
+		<H2>Figure worlds</H2>
+
+		<P>In order to put the figures you want to display in a context, you have to insert them in a figure world object, an instance of <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_figure_world.html">EV_FIGURE_WORLD</A>.
+		This is a descendant of <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_figure_group.html">EV_FIGURE_GROUP</A> and hence works in the same way. This figure world is later associated with one or more projectors.
+
+		<P><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_figure_world.html">EV_FIGURE_WORLD</A> adds a number of features to <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_figure_group.html">EV_FIGURE_GROUP</A>.
+		These extra features are needed for the representation by a projector. One is the background color. This feature will be used to erase the canvas for a graphical projector in the specified color. The other features are to manage the grid.
+
+		<H2>Projectors</H2>
+
+		<P>A projector is an object that knows what a figure world should look like. The figure world itself is not more than a hint towards its representation.
+		For example, if a line is "20" long, this unit might mean pixels, miles, centimeters or whatever. It is up to the projector to interpret units. Also, color might be interpreted as greyscale.
+		Typically, a projector will do the best possible job projecting the world to its device.</P>
+
+		<P>With EiffelVision come these projectors:
+		<UL>
+			<LI><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_postscript_projector.html">EV_POSTSCRIPT_PROJECTOR</A></LI>
+			<LI><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_drawing_area_projector.html">EV_DRAWING_AREA_PROJECTOR</A></LI>
+			<LI><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_pixmap_projector.html">EV_PIXMAP_PROJECTOR</A></LI>
+		</UL>
+		The first one maps figure worlds to a postscript file. The other two are descendants of <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/figures/ev_widget_projector.html">EV_WIDGET_PROJECTOR</A>, and can project on widgets that inherit <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/properties/ev_drawable.html">EV_DRAWABLE</A>: <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/primitives/ev_drawing_area.html">EV_DRAWING_AREA</A> and <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/uncommon_widgets/ev_pixmap.html">EV_PIXMAP</A>, eventually using double-buffering, which results in a more smooth animation but requires fast copying from memory to the video buffer (can be slow for a remote display).
+
+		<H2>Events</H2>
+
+		The other features of drawing area and widget is that they generate pointer events. These events can be translated by projectors to map the figure world. These projectors send the event to the appropriate figure. Every figure has all common pointer action sequences:
+		<UL>
+			<LI><A CLASS="efeature" HREF="/libraries/vision2/reference/interface/figures/ev_figure.html#f_pointer_motion_actions">pointer_motion_actions</A></LI>
+			<LI><A CLASS="efeature" HREF="/libraries/vision2/reference/interface/figures/ev_figure.html#f_pointer_button_press_actions">pointer_button_press_actions</A></LI>
+			<LI><A CLASS="efeature" HREF="/libraries/vision2/reference/interface/figures/ev_figure.html#f_pointer_double_press_actions">pointer_double_press_actions</A></LI>
+			<LI><A CLASS="efeature" HREF="/libraries/vision2/reference/interface/figures/ev_figure.html#f_pointer_button_release_actions">pointer_button_release_actions</A></LI>
+			<LI><A CLASS="efeature" HREF="/libraries/vision2/reference/interface/figures/ev_figure.html#f_pointer_enter_actions">pointer_enter_actions</A></LI>
+			<LI><A CLASS="efeature" HREF="/libraries/vision2/reference/interface/figures/ev_figure.html#f_pointer_leave_actions">pointer_leave_actions</A></LI>
+			<LI><A CLASS="efeature" HREF="/libraries/vision2/reference/interface/figures/ev_figure.html#f_pick_actions">pick_actions</A></LI>
+			<LI><A CLASS="efeature" HREF="/libraries/vision2/reference/interface/figures/ev_figure.html#f_conforming_pick_actions">conforming_pick_actions</A></LI>
+			<LI><A CLASS="efeature" HREF="/libraries/vision2/reference/interface/figures/ev_figure.html#f_drop_actions">drop_actions</A></LI>
+		</UL>
+		There are no events for keyboard focus and no key press events. In case you wish to use these events, use the ones of the pixmap or drawing area.</P>
+
+		<P>When using events, keep the z-order in mind. This is the order in which the figures are stacked in the world. The first item of a figure group is the figure that is the farthest away. This means that the figure is obscured by any figures which are in front of it, and events will also not be propagated to this figure in that case.
+
+		<H2>Rotation and scaling</H2>
+
+		<P>The relative points also support rotation and scaling. These factors work just like coordinates, except scaling, which is multiplied instead of added in the chain of points. This means that when a relative point which is the root of a tree of several points is moved, the entire tree is moved, when it is scaled the entire tree is scaled and same for rotation.</P>
+
+		<P>The scaling factor is divided into a horizontal and vertical component. If the factor is 0.5, everything is displayed at half its size. The rotation factor is in radians.</P>
+
+	</BODY>
+</HTML>

@@ -23,9 +23,7 @@ inherit
 			pixmap_size_ok
 		redefine
 			make,
-			make_with_text,
-			set_parent,
-			set_foreground_color
+			set_parent
 		end
         
 create
@@ -37,19 +35,15 @@ feature {NONE} -- Initialization
         make is
                         -- Create a gtk push button.
 		do
-			widget := gtk_radio_button_new_with_label (default_pointer, default_pointer)
+			widget := gtk_radio_button_new (default_pointer)
    			gtk_object_ref (widget)
-                end
 
-        make_with_text (txt: STRING) is
-                        -- Create a gtk push button.
-                local
-                        a: ANY
-		do
-			a := txt.to_c
-			widget := gtk_radio_button_new_with_label (default_pointer, $a)
-   			gtk_object_ref (widget)
-		end
+			-- Create the `box'.
+			initialize
+
+			-- Create the label with a text set to "".
+			create_text_label ("")
+                end
 
 	set_parent (par: EV_CONTAINER) is
 			-- We need to set the group pf the
@@ -58,14 +52,6 @@ feature {NONE} -- Initialization
 			{EV_CHECK_BUTTON_IMP} Precursor (par)
 			gtk_radio_button_set_group (widget, parent_imp.radio_button_group)
 			parent_imp.set_rbg_pointer (gtk_radio_button_group (Current.widget))
-		end
-
-feature -- Element change
-
-	set_foreground_color (color: EV_COLOR) is
-			-- Make `color' the new `foreground_color'
-		do
-			c_gtk_widget_set_fg_color (widget, color.red, color.green, color.blue)
 		end
 
 end -- class EV_RADIO_BUTTON_IMP

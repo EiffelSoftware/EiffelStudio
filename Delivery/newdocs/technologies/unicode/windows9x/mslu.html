@@ -2,35 +2,41 @@
 <HTML>
 	<HEAD>
 		<TITLE>Sample Linker File</TITLE>
-		<LINK REL=StyleSheet HREF="/default.css">
+		<LINK REL="StyleSheet" HREF="/default.css">
 	</HEAD>
-
 	<BODY>
 		<H1>(Step 1)</H1>
-
-/nodefaultlib:kernel32.lib /nodefaultlib:advapi32.lib /nodefaultlib:user32.lib /nodefaultlib:gdi32.lib
-/nodefaultlib:shell32.lib /nodefaultlib:comdlg32.lib /nodefaultlib:version.lib /nodefaultlib:mpr.lib
-/nodefaultlib:winmm.lib /nodefaultlib:winspool.lib /nodefaultlib:vfw32.lib
-/nodefaultlib:secur32.lib /nodefaultlib:oleacc.lib /nodefaultlib:oledlg.lib
-
-<H1>(Step 2)</H1>
-
-UNICOWS.lib
-
--SUBSYSTEM:WINDOWS -OUT:unicode_demo.exe
-e1\emain.obj
-C:\Eiffel52\studio\spec\windows\lib\msc\wkbench.lib
-C:\Eiffel52\library\wel\spec\msc\lib\wel.lib
-
-<H1>(Step 3)</H1>
-
-KERNEL32.lib ADVAPI32.lib USER32.lib GDI32.lib
-SHELL32.lib COMDLG32.lib VERSION.lib MPR.LIB
-WINMM.lib WINSPOOL.lib VFW32.lib
-OLEACC.lib OLEDLG.lib
-WSOCK32.lib UUID.lib OLE32.lib OLEAUT32.lib COMCTL32.lib
-
-unicode_demo.res
-C1\Cobj1.lib C2\Cobj2.lib C3\Cobj3.lib C4\Cobj4.lib C5\Cobj5.lib C6\Cobj6.lib C7\Cobj7.lib C8\Cobj8.lib C9\Cobj9.lib C10\Cobj10.lib C11\Cobj11.lib C12\Cobj12.lib C13\Cobj13.lib C14\Cobj14.lib C15\Cobj15.lib C16\Cobj16.lib E1\Eobj1.lib
-</BODY>
+		/nodefaultlib:kernel32.lib /nodefaultlib:advapi32.lib /nodefaultlib:user32.lib
+		<br>
+		/nodefaultlib:gdi32.lib /nodefaultlib:shell32.lib /nodefaultlib:comdlg32.lib
+		<br>
+		/nodefaultlib:version.lib /nodefaultlib:mpr.lib /nodefaultlib:winmm.lib
+		<br>
+		/nodefaultlib:winspool.lib /nodefaultlib:vfw32.lib /nodefaultlib:secur32.lib
+		<br>
+		/nodefaultlib:oleacc.lib /nodefaultlib:oledlg.lib
+		<br>
+		<H1>(Step 2)</H1>
+		UNICOWS.lib -SUBSYSTEM:WINDOWS -OUT:unicode_demo.exe e1\emain.obj
+		<br>
+		C:\Eiffel52\studio\spec\windows\lib\msc\wkbench.lib
+		<br>
+		C:\Eiffel52\library\wel\spec\msc\lib\wel.lib
+		<br>
+		<H1>(Step 3)</H1>
+		KERNEL32.lib ADVAPI32.lib USER32.lib GDI32.lib SHELL32.lib COMDLG32.lib
+		<br>
+		VERSION.lib MPR.LIB WINMM.lib WINSPOOL.lib VFW32.lib OLEACC.lib OLEDLG.lib
+		<br>
+		WSOCK32.lib UUID.lib OLE32.lib OLEAUT32.lib COMCTL32.lib unicode_demo.res
+		<br>
+		C1\Cobj1.lib C2\Cobj2.lib C3\Cobj3.lib C4\Cobj4.lib C5\Cobj5.lib C6\Cobj6.lib
+		<br>
+		C7\Cobj7.lib C8\Cobj8.lib C9\Cobj9.lib C10\Cobj10.lib C11\Cobj11.lib
+		<br>
+		C12\Cobj12.lib C13\Cobj13.lib C14\Cobj14.lib C15\Cobj15.lib C16\Cobj16.lib
+		<br>
+		E1\Eobj1.lib
+		<br>
+	</BODY>
 </HTML>

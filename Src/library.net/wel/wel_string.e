@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 		local
 			a_default_pointer: POINTER
 		do
-			item := feature {MARSHAL}.alloc_hglobal_integer_32 (a_length)
+			item := feature {MARSHAL}.alloc_hglobal_integer (a_length)
 			capacity := a_length + 1
 			shared := False
 		end

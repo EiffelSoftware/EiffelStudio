@@ -80,6 +80,8 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
+				--| We must reset the current class type, since there is no feature here.
+			ctxt.set_type_creation (Void)
 			ctxt.format_ast (terminal)
 		end
 

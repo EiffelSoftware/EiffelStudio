@@ -24,6 +24,8 @@ feature -- Status setting
 
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to clipboard.
+		require
+			text_not_void: a_text /= Void
 		deferred
 		ensure
 			text_cloned: text.is_equal (a_text) and then text /= a_text

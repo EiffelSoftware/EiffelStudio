@@ -52,6 +52,7 @@ feature {NONE} -- Initialization
 			create ev_children.make (2)
 			make_track
 			make_id
+			create radio_group.make
 		end
 
 	initialize is

@@ -40,17 +40,6 @@ feature {NONE}
 
 	title_part: STRING is do Result := l_Flat_form_of end;
 
-	old_display_info (i: INTEGER; c: CLASSC_STONE) is
-			-- Display flat form of `c'.
-		local
-			flat_class: FLAT_CLASS;
-		do
-			!!flat_class.make (c.class_c);
-			flat_class.flat;
-			text_window.put_string (flat_class.flat_text);
-			-- text_window.share (flat_class.click_list);
-		end;
-
 	display_info (i: INTEGER; c: CLASSC_STONE) is
 			-- Display flat form pf 'c'.
 		local

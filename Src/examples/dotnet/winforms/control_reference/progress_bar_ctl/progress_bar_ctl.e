@@ -99,7 +99,7 @@ feature -- Implementation
 			label_3.set_size (l_size)
 			label_3.set_tab_index (0)
 
-			l_point.make (128, 56)
+			l_point.make (160, 56)
 			lbl_completed.set_location (l_point)
 			l_size.make (56, 16)
 			lbl_completed.set_size (l_size)
@@ -108,7 +108,7 @@ feature -- Implementation
 			l_point.make (24, 56)
 			label_2.set_location (l_point)
 			label_2.set_text ("Percent Completed:")
-			l_size.make (112, 24)
+			l_size.make (140, 24)
 			label_2.set_size (l_size)
 			label_2.set_tab_index (1)
 
@@ -119,7 +119,7 @@ feature -- Implementation
 			label_1.set_size (l_size)
 			label_1.set_tab_index (6)
 
-			l_point.make (128, 80)
+			l_point.make (160, 80)
 			lbl_value.set_location (l_point)
 			l_size.make (56, 16)
 			lbl_value.set_size (l_size)

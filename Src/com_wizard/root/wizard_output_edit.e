@@ -29,6 +29,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_RESCUABLE
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -102,45 +107,52 @@ feature -- Basic Operations
 			-- Set text format according to `title_format', `warning_format' and `error_format'.
 		local
 			retried: BOOLEAN
-			new_height: INTEGER
+			old_height, new_height: INTEGER
 		do
 			if not retried then
+				old_height := output_edit.position_from_character_index (output_edit.count).y
 				if is_title_format then
-					insert_text (New_line)				
+					output_edit.insert_text (New_line)				
 					output_edit.set_character_format_word (Title_format)
 					is_title_format := False
-					insert_text (a_text)
+					output_edit.insert_text (a_text)
 					output_edit.set_character_format_word (Text_format)
 				elseif is_warning_format then
 					output_edit.set_character_format_word (Warning_format)		
 					is_warning_format := False
-					insert_text (a_text)
+					output_edit.insert_text (a_text)
 					output_edit.set_character_format_word (Text_format)
 				elseif is_error_format then
-					insert_text (New_line)				
+					output_edit.insert_text (New_line)				
 					output_edit.set_character_format_word (Error_format)
 					is_error_format := False
-					insert_text (a_text)
+					output_edit.insert_text (a_text)
 					output_edit.set_character_format_word (Text_format)
-					insert_text (New_line)				
+					output_edit.insert_text (New_line)				
 				else
-					insert_text (a_text)
+					output_edit.insert_text (a_text)
 				end
-				insert_text (New_line)
+				output_edit.insert_text (New_line)
 				new_height := output_edit.position_from_character_index (output_edit.count).y
-				if new_height - height > 0 then
+				if new_height > height then
 					scroller.set_vertical_range (1,  new_height - height)
+					scroller.set_vertical_position (new_height-  height)
+					scroll (0, old_height - new_height)
 				end
+				process_messages
 			end
 		rescue
-			retried := True
-			retry
+			if not failed_on_rescue then
+				retried := True
+				retry
+			end
 		end
 
 	clear is
 			-- Clear window text.
 		do
 			output_edit.set_text (Empty_text)
+			create scroller.make (Current, 1, 1, font_height, height)
 			process_messages
 		end
 
@@ -165,23 +177,18 @@ feature {NONE} -- Behavior
 			if scroller /= Void then
 				scroller.set_vertical_page (height)
 			end
+			if output_edit /= Void then
+				output_edit.set_width (width)
+			end
 		end
 
 	default_style: INTEGER is
 			-- Window style
 		once
-			Result := Ws_child  + Ws_visible + Es_autovscroll
+			Result := Ws_child  + Ws_visible + Es_autovscroll + Ws_clipchildren
 		end
 
 feature {NONE} -- Implementation
-
-	insert_text (a_text: STRING) is
-			-- Insert `a_text' in rich edit `edit'.
-		do
-			output_edit.insert_text (a_text)
-			--output_edit.set_caret_position (output_edit.count -1)
-			process_messages
-		end
 
 	setup_output_edit is
 			-- Initialize output edit.
@@ -191,11 +198,9 @@ feature {NONE} -- Implementation
 			create output_edit.make (Current, Output_edit_name, 0, 0, width, height, -1)
 			output_edit.set_character_format_all (Text_format)
 			output_edit.disable
-			output_edit.enable_scroll_caret_at_selection
-			output_edit.set_height (height)
-			output_edit.set_width (width)
 			output_edit.set_text (Empty_text)
 			output_edit.set_height (4_000_000)
+			output_edit.set_width (width)
 		end
 
 	process_messages is
@@ -225,7 +230,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make
 			Result.set_face_name ("Tahoma")
-			Result.set_height (160)
+			Result.set_height (10)
 			Result.unset_bold
 			Result.set_text_color (Text_color)
 		end
@@ -235,7 +240,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make
 			Result.set_face_name ("Tahoma")
-			Result.set_height (200)
+			Result.set_height (14)
 			Result.set_bold
 			Result.set_text_color (Title_color)
 		end
@@ -245,7 +250,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make
 			Result.set_face_name ("Tahoma")
-			Result.set_height (160)
+			Result.set_height (10)
 			Result.set_bold
 			Result.set_text_color (Warning_color)
 		end
@@ -255,7 +260,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make
 			Result.set_face_name ("Tahoma")
-			Result.set_height (160)
+			Result.set_height (10)
 			Result.set_bold
 			Result.set_text_color (Error_color)
 		end

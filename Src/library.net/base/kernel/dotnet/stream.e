@@ -70,7 +70,7 @@ feature -- Access
 		local
 			l_formatter: BINARY_FORMATTER
 			l_mem: SYSTEM_MEMORY_STREAM
-			l_buf: NATIVE_ARRAY [INTEGER_8]
+			l_buf: NATIVE_ARRAY [NATURAL_8]
 		do
 			create l_buf.make (buffer_size)
 			feature {MARSHAL}.copy (item, l_buf, 0, buffer_size)

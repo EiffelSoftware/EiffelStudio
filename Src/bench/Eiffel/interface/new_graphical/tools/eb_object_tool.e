@@ -692,93 +692,173 @@ feature {NONE} -- Implementation
 			-- Create the tree that contains locals (Result) and parameters.
 		local
 			item: EV_TREE_ITEM
-			list: LIST [ABSTRACT_DEBUG_VALUE]
-			dv: ABSTRACT_DEBUG_VALUE
 			cse: EIFFEL_CALL_STACK_ELEMENT
-
-			tmp: SORTABLE_ARRAY [ABSTRACT_DEBUG_VALUE]
-			i: INTEGER
-			dbg_nb: INTEGER
 		do
 			if not Application.call_stack_is_empty then
 				cse ?= current_stack_element
 				if cse /= Void then
+					create item.make_with_text ("{"	+ cse.dynamic_class.name_in_upper + "}." + cse.routine_name )
+					item.set_pixmap (pixmaps.icon_arrow_empty)
+					-- fixme jfiat
+					a_target_container.extend (item)
+				
 						-- Fill in the arguments, if any.
-					list := cse.arguments
-					if
-						list /= Void and then
-						not list.is_empty
-					then
-						create item
-						item.set_text (Interface_names.l_Arguments)
-						item.set_pixmap (Pixmaps.Icon_feature_clause_any)
+					build_arguments_tree_item (cse)
+					item := internal_arguments_tree_item
+					if item /= Void then
 						a_target_container.extend (item)
-						from
-							list.start
-						until
-							list.after
-						loop
-							item.extend (debug_value_to_tree_item (list.item))
-							list.forth
-						end
 						if expand_args then
 							item.expand
 						end
 					end
 	
 						-- Fill in the locals, if any.
-					list := cse.locals
-					if
-						list /= Void and then
-						not list.is_empty
-					then
-						create item
-						item.set_text (Interface_names.l_Locals)
-						item.set_pixmap (Pixmaps.Icon_feature_clause_any)
+					build_locals_tree_item (cse)
+					item := internal_locals_tree_item
+					if item /= Void then
 						a_target_container.extend (item)
-						dbg_nb := list.count
-						create tmp.make (1, dbg_nb)
-						from
-							list.start
-							i := 1
-						until
-							list.after
-						loop
-							tmp.put (list.item, i)
-							i := i + 1
-							list.forth
-						end
-						tmp.sort
-						from
-							i := 1
-						until
-							i > dbg_nb
-						loop
-							item.extend (debug_value_to_tree_item (tmp @ i))
-							i := i + 1
-						end
-						if expand_locals then
+						if expand_args then
 							item.expand
 						end
 					end
-	
+
 						-- Display the result, if any.
-					dv := cse.result_value
-					if
-						dv /= Void
-					then
-						create item
-						item.set_text (Interface_names.l_Result)
-						item.set_pixmap (Pixmaps.Icon_feature_clause_any)
+					build_result_tree_item (cse)
+					item := internal_result_tree_item
+					if item /= Void then
 						a_target_container.extend (item)
-						item.extend (debug_value_to_tree_item (dv))
-						if expand_result then
+						if expand_args then
 							item.expand
 						end
 					end
 				end
 			end
 		end
+
+	build_result_tree_item (cse: EIFFEL_CALL_STACK_ELEMENT) is
+			-- Create the tree that contains result.
+		require
+			call_stack_not_void: cse /= Void
+		local
+			item: EV_TREE_ITEM
+			dv: ABSTRACT_DEBUG_VALUE
+		do
+				-- Display the result, if any.
+			if cse.has_result then
+				item := internal_result_tree_item
+				if item = Void then
+					create internal_result_tree_item
+					item := internal_result_tree_item
+				else
+					item.wipe_out
+				end
+				item.set_text (Interface_names.l_Result)
+				item.set_pixmap (Pixmaps.Icon_feature_clause_any)
+				
+				dv := cse.result_value
+				if
+					dv /= Void
+				then
+					item.extend (debug_value_to_tree_item (dv))
+				end
+			else
+				internal_result_tree_item := Void
+			end
+		end
+
+	internal_result_tree_item: EV_TREE_ITEM
+
+	build_arguments_tree_item (cse: EIFFEL_CALL_STACK_ELEMENT) is
+			-- Create the tree that contains arguments.
+		require
+			call_stack_not_void: cse /= Void
+		local
+			item: EV_TREE_ITEM
+			list: LIST [ABSTRACT_DEBUG_VALUE]
+		do
+				-- Fill in the arguments, if any.
+			list := cse.arguments
+			if
+				list /= Void and then
+				not list.is_empty
+			then
+				item := internal_arguments_tree_item
+				if item = Void then
+					create internal_arguments_tree_item
+					item := internal_arguments_tree_item
+				else
+					item.wipe_out
+				end
+				item.set_text (Interface_names.l_Arguments)
+				item.set_pixmap (Pixmaps.Icon_feature_clause_any)
+				from
+					list.start
+				until
+					list.after
+				loop
+					item.extend (debug_value_to_tree_item (list.item))
+					list.forth
+				end
+			else
+				internal_arguments_tree_item := Void
+			end
+		end
+
+	internal_arguments_tree_item: EV_TREE_ITEM
+
+	build_locals_tree_item (cse: EIFFEL_CALL_STACK_ELEMENT) is
+			-- Create the tree item that contains locals
+		require
+			call_stack_not_void: cse /= Void
+		local
+			list: LIST [ABSTRACT_DEBUG_VALUE]
+			item: EV_TREE_ITEM
+			tmp: SORTABLE_ARRAY [ABSTRACT_DEBUG_VALUE]
+			i: INTEGER
+			dbg_nb: INTEGER
+		do
+				-- Fill in the locals, if any.
+			list := cse.locals
+			if
+				list /= Void and then
+				not list.is_empty
+			then
+				item := internal_locals_tree_item
+				if item = Void then
+					create internal_locals_tree_item
+					item := internal_locals_tree_item
+				else
+					item.wipe_out
+				end
+				item.set_text (Interface_names.l_Locals)
+				item.set_pixmap (Pixmaps.Icon_feature_clause_any)
+				dbg_nb := list.count
+				create tmp.make (1, dbg_nb)
+				from
+					list.start
+					i := 1
+				until
+					list.after
+				loop
+					tmp.put (list.item, i)
+					i := i + 1
+					list.forth
+				end
+				tmp.sort
+				from
+					i := 1
+				until
+					i > dbg_nb
+				loop
+					item.extend (debug_value_to_tree_item (tmp @ i))
+					i := i + 1
+				end
+			else
+				internal_locals_tree_item := Void
+			end
+		end
+
+	internal_locals_tree_item: EV_TREE_ITEM
 	
 	build_object_tree is
 			-- Create the tree that contains object information.

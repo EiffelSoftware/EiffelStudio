@@ -30,7 +30,7 @@ feature {NONE} -- Basic operation
 			temp_height: INTEGER
 			lchild: ARRAYED_LIST [EV_WIDGET_IMP]
 		do
-			if new_height /= height then
+--			if new_height /= height then
 				lchild := ev_children
 				resize (width, minimum_height.max (new_height))
 				temp_height := minimum_height.max (new_height) - 2 * border_width
@@ -44,7 +44,7 @@ feature {NONE} -- Basic operation
 						lchild.forth
 					end
 				end
-			end
+--			end
 		end
 
 	set_local_width (new_width: INTEGER) is
@@ -61,7 +61,7 @@ feature {NONE} -- Basic operation
 			mark: INTEGER
 			lchild: ARRAYED_LIST [EV_WIDGET_IMP]
 		do
-			if new_width /= width then
+--			if new_width /= width then
 				if already_displayed then
 					temp_width := minimum_width.max (new_width)
 					if not ev_children.empty then
@@ -194,20 +194,20 @@ feature {NONE} -- Basic operation
 							end
 							mark := mark - spacing
 	
-						end
-					index := modulo (index + total_rest, lchild.count)
-					
-					end
-					mark := mark + border_width
-				else
-					-- if there are no children, we simply set the
-					-- given height.
-					mark := temp_width
-				end		
-				-- At the end, we resize the window in both cases
-				-- already displayed or not.
-				resize (mark, height)
-			end
+						end -- is_homogeneous
+						index := modulo (index + total_rest, lchild.count)
+						mark := mark + border_width
+					else
+						-- if there are no children, we simply set the
+						-- given height.
+						mark := temp_width
+					end -- ev_children.empty
+
+					-- At the end, we resize the window in both cases
+					-- already displayed or not.
+					resize (mark, height)
+				end -- already_displayed
+--			end
 		end
 
 	initialize_length_at_minimum is

@@ -41,5 +41,7 @@ extern void hfree();				/* Low-level release from hector table */
 extern char *spfreeze();			/* Freeze special object's address */
 extern void spufreeze();			/* Put frozen spec obj back to GC control */
 
+#define spfrozen(object)	(HEADER(object)->ov_size & B_C) /* Is special object frozen */
+
 #endif
 

@@ -231,6 +231,7 @@ feature -- Widget Names used in context editor and catalog
 	Text_label_name: STRING is "Text";
 	Text_name: STRING is "Text";
 	Title_name: STRING is "Title";
+	Toggle_armed_name: STRING is "Armed";
 	Toggle_b1_name: STRING is "Toggle_b1";
 	Toggle_b2_name: STRING is "Toggle_b2";
 	Toggle_b_name: STRING is "Toggle button";

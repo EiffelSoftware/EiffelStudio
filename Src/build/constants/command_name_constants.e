@@ -75,6 +75,7 @@ feature -- Context commands
 	Cont_text_w_resize_cmd_name: STRING is "Width resizeable";
 	Cont_text_width_cmd_name: STRING is "Margin width";
 	Cont_text_wrap_cmd_name: STRING is "Word wrap";
+	Cont_toggle_arm_cmd_name: STRING is "Toggle arm";
 	Cont_win_position_cmd_name: STRING is "Set default position";
 
 feature -- Function commands

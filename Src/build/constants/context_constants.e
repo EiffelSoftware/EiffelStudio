@@ -39,8 +39,9 @@ feature -- Form numbers in the Context editor
 	drawing_box_att_form_nbr: INTEGER is 19;
 	bulletin_resize_form_nbr: INTEGER is 20;
 	grid_form_nbr: INTEGER is 21;
+	toggle_att_form_nbr: INTEGER is 22;
 
-	total_nbr_of_forms: INTEGER is 21;
+	total_nbr_of_forms: INTEGER is 22;
 		-- Total nbr of different editor forms
 
 feature -- Constants for arrow buttons

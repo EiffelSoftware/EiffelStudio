@@ -823,12 +823,24 @@ feature -- Concrete evaluation
 			lst: LIST [ABSTRACT_DEBUG_VALUE]
 			dobj: DEBUGGED_OBJECT
 			dv: ABSTRACT_DEBUG_VALUE
+			dump: DUMP_VALUE
+			l_address: STRING
 		do
-			if a_addr /= Void then
+			l_address := a_addr
+			if l_address = Void then
+					--| cannot evaluate attribute on manifest value
+					--| (such as "foo", 1 or True .. in the expression)
+					-- but let's try to improve this ...
 				if application.is_dotnet then
-					create {DEBUGGED_OBJECT_DOTNET} dobj.make (a_addr, 0, 1)
+					dump := dbg_evaluator.dotnet_metamorphose_basic_to_value (a_target)
+					l_address := dump.address
+				end
+			end
+			if l_address /= Void then
+				if application.is_dotnet then
+					create {DEBUGGED_OBJECT_DOTNET} dobj.make (l_address, 0, 1)
 				else
-					create {DEBUGGED_OBJECT_CLASSIC} dobj.make (a_addr, 0, 1)
+					create {DEBUGGED_OBJECT_CLASSIC} dobj.make (l_address, 0, 1)
 				end
 				lst := dobj.attributes
 				dv := find_item_in_list (f.name, lst)
@@ -843,10 +855,11 @@ feature -- Concrete evaluation
 					tmp_result_value := dv.dump_value
 				end
 --			elseif f.name.is_equal ("item") then
---				result_object := value
---				result_static_type := value.dynamic_class
+--				result_object := a_target
+--				result_static_type := a_target.dynamic_class
 			else
-				error_message := "Cannot evaluate an attribute ["+ f.name+"] of a basic type"
+
+				error_message := "Cannot evaluate an attribute ["+ f.name+"] of a manifest value"
 			end
 		end
 		
@@ -1336,11 +1349,11 @@ feature {NONE} -- Implementation
 feature {NONE} -- Utility Implementation
 	
 	error_to_string (e: ERROR): STRING is
+			-- Convert Error code to Error description STRING
 		require
 			error_not_void: e /= Void
 		local
-
-			yw: YANK_WINDOW
+			yw: YANK_STRING_WINDOW
 			st: STRUCTURED_TEXT
 		do
 			create st.make

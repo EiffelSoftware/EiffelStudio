@@ -15,7 +15,7 @@ inherit
 			move_and_resize,
 			move,
 			process_message,
-			on_wm_destroy,
+			on_wm_nc_destroy,
 			on_wm_notify,
 			destroy
 		end
@@ -190,6 +190,17 @@ feature -- Status report
 		ensure
 			result_small_enough: Result <= maximal_vertical_position
 		end
+		
+	child_window_from_point (point: WEL_POINT): POINTER is
+			-- `Result' is pointer to child window as position `point'.
+			-- Only checks children and their children and returns a child even
+			-- if over a HTTRANSPARENT area of the child. Corresponds to
+			-- the ChildWindowFromPoint Windows API call.
+		require
+			point_not_void: point /= Void
+		do
+			Result := cwin_child_window_from_point (item, point.item)
+		end
 
 feature -- Status setting
 
@@ -330,10 +341,8 @@ feature -- Basic operations
 	destroy is
 			-- Destroy the window and quit the application
 			-- if `Current' is the application's main window.
-		local
-			l_result: INTEGER
 		do
-			l_result := cwin_destroy_window (item)
+			Precursor {WEL_WINDOW}
 			if application_main_window.is_application_main_window (Current) then
 				cwin_post_quit_message (0)
 			end
@@ -875,7 +884,7 @@ feature {NONE} -- Implementation
 			set_default_processing (closeable)
 		end
 
-	on_wm_destroy is
+	on_wm_nc_destroy is
 			-- Wm_destroy message.
 			-- Quit the application if `Current' is the
 			-- application's main window.
@@ -1136,6 +1145,13 @@ feature {NONE} -- Externals
 		alias
 			"GET_WM_HSCROLL_HWND"
 		end
+		
+	cwin_child_window_from_point (hwnd: POINTER; point: POINTER): POINTER is
+		external
+			"C inline use <windows.h>"
+		alias
+			"ChildWindowFromPoint ((HWND) $hwnd, *(POINT *) $point)"
+		end		
 
 end -- class WEL_COMPOSITE_WINDOW
 

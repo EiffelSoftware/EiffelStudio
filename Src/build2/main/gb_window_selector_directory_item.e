@@ -57,6 +57,7 @@ feature {NONE} -- Initialization
 			tree_item.set_pixmap ((create {GB_SHARED_PIXMAPS}).pixmap_by_name ("icon_cluster_symbol_gray"))
 			tree_item.drop_actions.extend (agent add_object)
 			tree_item.drop_actions.extend (agent add_component)
+			tree_item.drop_actions.extend (agent add_new_directory_via_pick_and_drop)
 			tree_item.drop_actions.set_veto_pebble_function (agent restrict_drop_to_valid_types)
 			tree_item.set_pebble (Current)
 			is_grayed_out := True
@@ -181,6 +182,15 @@ feature -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 			is_empty_implies_parent_is_window_selector: Result.is_empty and parent /= Void implies parent = window_selector
+		end
+		
+	add_new_directory_via_pick_and_drop (directory_pebble: GB_NEW_DIRECTORY_PEBBLE) is
+			-- Add a new directory within `Current' to `window_selector'.
+			-- `directory_pebble' is used to type the agent for pick and drop purposes.
+		require
+			directory_pebble_not_void: directory_pebble /= Void
+		do
+			window_selector.add_new_directory (Current)
 		end
 		
 invariant

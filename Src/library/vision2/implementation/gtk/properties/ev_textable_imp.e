@@ -22,16 +22,13 @@ inherit
 	
 feature {NONE} -- Initialization
 	
-	make (par: EV_CONTAINER) is
- 		do
-			check
-				do_not_call: False
-			end
+	make is
+ 		deferred
  		end
 
-	make_with_text (par: EV_CONTAINER; txt: STRING) is
+	make_with_text (txt: STRING) is
 		do
-			make (par)
+			make
 			create_text_label (txt)
                 end
 	

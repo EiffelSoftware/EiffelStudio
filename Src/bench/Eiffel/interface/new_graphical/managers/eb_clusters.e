@@ -596,8 +596,9 @@ feature -- Element change
 			on_cluster_added (a_cluster.actual_cluster)
 		end
 
-	add_cluster_i (a_cluster: CLUSTER_I; receiver: CLUSTER_I; is_recursive, is_library: BOOLEAN) is
+	add_cluster_i (a_cluster: CLUSTER_I; receiver: CLUSTER_I; ace_path: STRING; is_recursive, is_library: BOOLEAN) is
 			-- Add `a_cluster' to `receiver' and notify observers.
+			-- `ace_path' is the 
 		local
 			new_subcluster, new_supercluster: EB_SORTED_CLUSTER
 			wd: EV_WARNING_DIALOG
@@ -605,7 +606,7 @@ feature -- Element change
 			if a_cluster.parent_cluster /= Void then
 				a_cluster.parent_cluster.sub_clusters.prune_all (a_cluster)
 			end
-			add_cluster_in_ace (a_cluster, receiver, is_recursive, is_library)
+			add_cluster_in_ace (a_cluster, receiver, ace_path, is_recursive, is_library)
 			if not error_in_ace_parsing then
 				new_subcluster := folder_from_cluster (a_cluster)
 				if new_subcluster = Void then
@@ -620,7 +621,7 @@ feature -- Element change
 			end
 		end
 
-	add_top_cluster_i (a_cluster: CLUSTER_I; is_recursive, is_library: BOOLEAN) is
+	add_top_cluster_i (a_cluster: CLUSTER_I; ace_path: STRING; is_recursive, is_library: BOOLEAN) is
 			-- Add `a_cluster' to the root of the universe and notify observers.
 		local
 			new_subcluster: EB_SORTED_CLUSTER
@@ -629,7 +630,7 @@ feature -- Element change
 			if a_cluster.parent_cluster /= Void then
 				a_cluster.parent_cluster.sub_clusters.prune_all (a_cluster)
 			end
-			add_top_cluster_in_ace (a_cluster, is_recursive, is_library)
+			add_top_cluster_in_ace (a_cluster, ace_path, is_recursive, is_library)
 			if not error_in_ace_parsing then
 				new_subcluster := folder_from_cluster (a_cluster)
 				if new_subcluster = Void then
@@ -817,7 +818,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_cluster_in_ace (a_cluster: CLUSTER_I; receiver: CLUSTER_I; is_recursive, is_library: BOOLEAN) is
+	add_cluster_in_ace (a_cluster: CLUSTER_I; receiver: CLUSTER_I; ace_path: STRING; is_recursive, is_library: BOOLEAN) is
 			-- Add an entry for `a_cluster' in the Ace file under `receiver'.
 			-- If `receiver' is a recursive cluster, we set the flag `belongs_to_all'
 			-- in `a_cluster'.
@@ -868,7 +869,7 @@ feature {NONE} -- Implementation
 						not receiver.is_library
 					then
 						ace_clusters := root_ast.clusters
-						new_csd := new_cluster_sd (new_id_sd (a_cluster.cluster_name, False), new_id_sd (receiver.cluster_name, False), new_id_sd (a_cluster.dollar_path, True), Void, is_recursive, is_library)
+						new_csd := new_cluster_sd (new_id_sd (a_cluster.cluster_name, False), new_id_sd (receiver.cluster_name, False), new_id_sd (ace_path, True), Void, is_recursive, is_library)
 						ace_clusters.extend (new_csd)
 						save_content
 					else
@@ -900,7 +901,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	add_top_cluster_in_ace (a_cluster: CLUSTER_I; is_recursive, is_library: BOOLEAN) is
+	add_top_cluster_in_ace (a_cluster: CLUSTER_I; ace_path: STRING; is_recursive, is_library: BOOLEAN) is
 			-- Add an entry for `a_cluster' in the Ace file at the top level.
 		require
 			valid_new_cluster: a_cluster /= Void
@@ -920,7 +921,7 @@ feature {NONE} -- Implementation
 				end
 				if root_ast /= Void then
 					ace_clusters := root_ast.clusters
-					new_csd := new_cluster_sd (new_id_sd (a_cluster.cluster_name, False), Void, new_id_sd (a_cluster.dollar_path, True), Void, is_recursive, is_library)
+					new_csd := new_cluster_sd (new_id_sd (a_cluster.cluster_name, False), Void, new_id_sd (ace_path, True), Void, is_recursive, is_library)
 					ace_clusters.extend (new_csd)
 					save_content
 				else

@@ -1,8 +1,7 @@
 class
 	PARAMETER_INFORMATION
 
-
-creation
+create
 	make
 	
 feature -- Initialization

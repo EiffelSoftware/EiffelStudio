@@ -12,7 +12,7 @@ class
 --			returns
 --		end
 
-creation
+create
 	make
 	
 feature -- Initialization

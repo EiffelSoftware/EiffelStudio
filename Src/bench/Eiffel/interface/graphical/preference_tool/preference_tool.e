@@ -173,6 +173,8 @@ feature -- Display
 			initialize_category_button_rc;
 			initialize_button_form;
 
+			tooltip_initialize (Current)
+
 			from
 				category_list.start
 			until
@@ -189,7 +191,6 @@ feature -- Display
 			set_delete_command (Current);
 
 			initialize_window;
-			tooltip_initialize (Current)
 		ensure
 			created: not destroyed
 		end;

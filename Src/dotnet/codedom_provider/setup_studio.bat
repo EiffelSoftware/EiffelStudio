@@ -4,7 +4,7 @@
 
 IF EXIST build_studio RD /Q /S build_studio
 
-IF "%1"=="release" GOTO RELEASE
+IF "%1"=="/release" GOTO RELEASE
 
 :DEBUG
 MKDIR build_studio_debug

@@ -6,7 +6,7 @@ IF %ISE_EIFFEL% == "" ECHO ISE_EIFFEL is not defined !!
 IF %ISE_EIFFEL% == "" EXIT 1
 SET PATH=%PATH%;%ISE_EIFFEL%\studio\spec\windows\bin
 
-IF "%1"=="release" GOTO CDREL
+IF "%1"=="/release" GOTO CDREL
 IF NOT EXIST build_studio_debug CALL setup_studio.bat %1
 CD build_studio_debug\EiffelSoftware.EiffelBase
 GOTO BASE

@@ -45,19 +45,15 @@
 			<code>
 				<class_name>B</class_name>
 			</code> and any other class listed. Eiffel supports 
-			<bold>multiple</bold> inheritance: a class may have as many parents as it needs. Later sections (
+			<bold>multiple</bold> inheritance: a class may have as many parents as it needs. Later sections (see 
 			<link>
 				<url>tutorial-10.xml</url><anchor_name>21906</anchor_name>
-				<label>"Multiple inheritance and renaming", page 64</label>
-			</link> and 
-			<link>
-				<url>tutorial-10.xml</url><anchor_name>69912</anchor_name>
-				<label>"Repeated inheritance and selection", page 73</label>
+				<label>Chapter 9, "Inheritance"</label>
 			</link>) will explain how to handle possible conflicts between parent features.
 		</paragraph>
-		<note>This discussion will rely on the terminology introduced on page 
+		<note>This discussion will rely on the terminology introduced within 
 			<link>
-				<url>tutorial-06.xml</url><anchor_name>INHERITANCE AND CLIENT TERMS</anchor_name>
+				<url>tutorial-06.xml</url><anchor_name>Chapter 5, "The Static Picture: System Organization</anchor_name>
 				<label>14</label>
 			</link>: 
 			descendants of a class are the class itself, its heirs, the heirs of its heirs and so on. Proper descendants exclude the class itself. The reverse notions are ancestors and proper ancestors.
@@ -190,10 +186,10 @@
 			</code> could redefine 
 			<code>
 				<feature_name>deposits_count</feature_name>
-			</code>, originally a function, as an attribute. The Uniform Access Principle (page 
+			</code>, originally a function, as an attribute. The Uniform Access Principle (see 
 			<link>
 				<url>tutorial-07.xml</url><anchor_name>UNIFORM ACCESS</anchor_name>
-				<label>19</label>
+				<label>Chapter 6, "The Dynamic Structure: Execution Model"</label>
 			</link>) guarantees that the redefinition makes no change for clients, which will continue to use the feature under the form 
 			<code>
 				<local_variable>acc</local_variable>.<feature_name>deposits_count</feature_name>
@@ -286,10 +282,10 @@
 				<class_name>T</class_name>
 			</code> (through the recursive application of the same rules).
 		</paragraph>
-		<note>In addition, it follows from the earlier discussion of tuples (
+		<note>In addition, it follows from the earlier discussion of tuples (see 
 			<link>
 				<url>tutorial-11.xml</url><anchor_name>36752</anchor_name>
-				<label>"Tuple types", page 90</label>
+				<label>Chapter 10,  "Other Mechanisms"</label>
 			</link>), that 
 			<code>
 				<class_name>TUPLE</class_name> <symbol>[</symbol><class_name>X</class_name><symbol>]</symbol>
@@ -369,20 +365,20 @@
 			</code> for 
 			<code>
 				<local_variable>x</local_variable>
-			</code> of any reference type (
+			</code> of any reference type (see 
 			<link>
 				<url>tutorial-07.xml</url><anchor_name>12485</anchor_name>
-				<label>"Basic operations", page 28</label>
+				<label>Chapter 6, "The Dynamic Structure: Execution Model"</label>
 			</link>) is a consequence of the Type Conformance rule, since 
 			<code>
 				<keyword>Void</keyword>
 			</code> is of type 
 			<code>
 				<class_name>NONE</class_name>
-			</code> which by construction (
+			</code> which by construction (see 
 			<link>
 				<url>tutorial-06.xml</url><anchor_name>82680</anchor_name>
-				<label>"The global inheritance structure", page 15</label>
+				<label>Chapter 5, "The Static Picture: System Organization"</label>
 			</link>) conforms to all types.
 		</paragraph>
 		<paragraph>Polymorphism also yields a more precise definition of "instance". A 
@@ -888,10 +884,10 @@
 		</list>
 		</paragraph>
 		<paragraph>These applications make deferred classes a central tool of the Eiffel method's support for seamlessness and reversibility. The last one in particular uses deferred classes and features to model objects from an application domain, without any commitment to implementation, design, or even software (and computers). Deferred classes are the ideal tool here: they express the properties of the domain's abstractions, without any temptation of implementation bias, yet with the precision afforded by type declarations, inheritance structures (to record classifications of the domain concepts), and contracts to express the abstract properties of the objects being described. </paragraph>
-		<paragraph>Rather than using a separate method and notation for analysis and design, this apprroach integrates seamlessly with the subsequent phases (assuming the decision is indeed taken to develop a software system): it suffices to refine the deferred classes progressively by introducing effective elements, either by modifying the classes themselves, or by introducing design- and implementation-oriented descendants. In the resulting system, the classes that played an important role for analysis, and are the most meaningful for customers, will remain important; as we have seen (
+		<paragraph>Rather than using a separate method and notation for analysis and design, this apprroach integrates seamlessly with the subsequent phases (assuming the decision is indeed taken to develop a software system): it suffices to refine the deferred classes progressively by introducing effective elements, either by modifying the classes themselves, or by introducing design- and implementation-oriented descendants. In the resulting system, the classes that played an important role for analysis, and are the most meaningful for customers, will remain important; as we have seen (see 
 			<link>
 				<url>tutorial-04.xml</url><anchor_name>24218</anchor_name>
-				<label>"Seamlessness and reversibility", page 9</label>
+				<label>Chapter 3, "The Software Process in Eiffel"</label>
 			</link>) this 
 			direct mapping property is a great help for extendibility.
 		</paragraph>
@@ -1032,11 +1028,7 @@
 			<code>
 				<keyword>like</keyword> 
 				<keyword>Current</keyword>
-			</code> will be explained in 
-			<link>
-				<url>tutorial-10.xml</url><anchor_name>46019</anchor_name>
-				<label>"Covariance and anchored declarations", page 79</label>
-			</link>; you may understand it, in the following class, as equivalent to 
+			</code> will be explained below; you may understand it, in the following class, as equivalent to 
 			<code>
 				<class_name>COMPARABLE</class_name>
 			</code>.
@@ -1435,11 +1427,7 @@
 			</code> and 
 			<code>
 				<string>forth</string>
-			</code> in 
-			<link>
-				<url>tutorial-10.xml</url><anchor_name>41757</anchor_name>
-				<label>"Deferred features and classes", page 57</label>
-			</link>, would be almost useless -- wishful thinking; the rule makes them binding on all effectings in descendants.
+			</code>, would be almost useless -- wishful thinking; the rule makes them binding on all effectings in descendants.
 		</paragraph>
 		<paragraph>From the Assertion Redeclaration rule follows an interesting technique: 
 			<bold>abstract preconditions</bold>. What needs to be weakened for a precondition (or strengthened for a postcondition) is not the assertion's concrete semantics but its abstract specification as seen by the client. A descendant can change the 
@@ -1449,11 +1437,7 @@
 			</code> in the deferred class 
 			<code>
 				<class_name>LIST</class_name>
-			</code> provided an example. We wrote the routine (page 
-			<link>
-				<url>tutorial-10.xml</url><anchor_name>17380</anchor_name>
-				<label>58</label>
-			</link>) as
+			</code> provided an example. We wrote the routine as
 		</paragraph>
 <code_block>
 <feature_name>extend</feature_name> <symbol>(</symbol><local_variable>x</local_variable><symbol>:</symbol> <generics>G</generics><symbol>)</symbol> <keyword>is</keyword>
@@ -1551,11 +1535,7 @@
 		<paragraph>More generally, it is permitted to have any number of deferred features and at most 
 			one effective feature that share the same name: the effective version, if present will effect all the others.
 		</paragraph>
-		<paragraph>All this is not a violation of the Final Name rule (page 
-			<link>
-				<url>tutorial-10.xml</url><anchor_name>25265</anchor_name>
-				<label>65</label>
-			</link>), since the name clashes prohibited by the rule involve two 
+		<paragraph>All this is not a violation of the Final Name rule, since the name clashes prohibited by the rule involve two 
 			different features having the same final name; here the result is just 
 			one feature, resulting from the join of all the inherited versions.
 		</paragraph>
@@ -1728,7 +1708,7 @@
 		<paragraph>As with the Contract Form (
 			<link>
 				<url>tutorial-09.xml</url><anchor_name>78482</anchor_name>
-				<label>"The contract form of a class", page 44</label>
+				<label>Chapter 8, "Design by Contract, Assertions and Exceptions"</label>
 			</link>), producing the Flat Form is the responsibility of tools in the development environment. In EiffelStudio, you will just click the "Flat" icon.
 		</paragraph>
 		<paragraph>The Contract Form of the Flat Form of a class is known as its <bold>Flat-Contract Form</bold>. It gives the complete interface specification, documenting all exported features and assertions -- immediate or inherited -- and hiding implementation aspects. It is the appropriate documentation for a class.</paragraph>
@@ -1953,11 +1933,7 @@
 			<code>
 				<keyword>select</keyword>
 			</code> is only needed in case of replication. If the Repeated Inheritance rule would imply sharing, as with change_address, and one or both of the shared versions has been redeclared, the Final Name rule makes the class invalid, since it now has 
-			<bold>two different features</bold> with the same name. (This is only a problem if both versions are effective; if one or both are deferred there is no conflict but a mere case of feature joining as explained in 
-			<link>
-				<url>tutorial-10.xml</url><anchor_name>61102</anchor_name>
-				<label>"Join and uneffecting", page 70</label>
-			</link>.) The two possible solutions follow from the previous discussions:
+			<bold>two different features</bold> with the same name. (This is only a problem if both versions are effective; if one or both are deferred there is no conflict but a mere case of feature joining.) The two possible solutions follow from the previous discussions:
 		</paragraph>
 		<paragraph>If you do want sharing, one of the two versions must take precedence over the other. It suffices to 
 			<bold>undefine</bold> the other, and everything gets back to order. Alternatively, you can redefine both into a new version, which takes precedence over both.
@@ -2095,16 +2071,12 @@
 			<size>2</size>
 			<content>Assignment attempt</content>
 		</heading>
-		<paragraph>The Type Conformance rule (
-			<link>
-				<url>tutorial-10.xml</url><anchor_name>65123</anchor_name>
-				<label>"Polymorphism", page 53</label>
-			</link>) ensures type safety by requiring all assignments to be from a more specific source to a more general target.
+		<paragraph>The Type Conformance rule ensures type safety by requiring all assignments to be from a more specific source to a more general target.
 		</paragraph>
-		<paragraph>Sometimes you can't be sure of the source object's type. This happens for example when the object comes from the outside -- a file, a database, a network. The persistence storage mechanism(
+		<paragraph>Sometimes you can't be sure of the source object's type. This happens for example when the object comes from the outside -- a file, a database, a network. The persistence storage mechanism(see 
 			<link>
 				<url>tutorial-07.xml</url><anchor_name>35815</anchor_name>
-				<label>"Deep operations and persistence", page 30</label>
+				<label>Chapter 6, "The Dynamic Structure: Execution Model"</label>
 			</link>) includes, along with the procedure 
 			<code>
 				<feature_name>store</feature_name>
@@ -2354,11 +2326,7 @@
 			</code> as anchor; the declaration 
 			<code>
 				<keyword>like</keyword> <keyword>Current</keyword>
-			</code> denotes a type based on the current class (with the same generic parameters if any). This is in fact a common case; we saw in 
-			<link>
-				<url>tutorial-10.xml</url>
-				<label>"Structural property classes", page 62</label>
-			</link>, that it applies in class 
+			</code> denotes a type based on the current class (with the same generic parameters if any). This is in fact a common case; we saw earlier, that it applies in class 
 			<code>
 				<class_name>COMPARABLE</class_name>
 			</code> to features such as
@@ -2411,10 +2379,10 @@
 			</code> is the feature 
 			<code>
 				<feature_name>merge</feature_name>
-			</code> posited in an earlier example (page 
+			</code> posited in an earlier example (see 
 			<link>
 				<url>tutorial-07.xml</url>
-				<label>13</label>
+				<label>Chapter 6, "The Dynamic Structure: Execution Model"</label>
 			</link>) with the signature 
 			<code>
 				<feature_name>merge</feature_name> <symbol>(</symbol><local_variable>other</local_variable><symbol>:</symbol> <class_name>ACCOUNT</class_name><symbol>)</symbol>

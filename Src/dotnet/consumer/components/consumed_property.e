@@ -20,7 +20,8 @@ inherit
 		end
 
 create
-	make
+	make,
+	my_make
 
 feature {NONE} -- Initialization
 
@@ -63,7 +64,31 @@ feature {NONE} -- Initialization
 			setter_set: has_setter implies setter /= Void
 			valid_setter: has_setter implies setter.is_property_or_event
 		end
-		
+
+	my_make (dn: STRING; pub, stat: BOOLEAN; decl_type: CONSUMED_REFERENCED_TYPE; cp_getter: CONSUMED_FUNCTION; cp_setter: CONSUMED_PROCEDURE) is
+			-- Initialize event.
+		require
+--			non_void_property_name: pn /= Void
+			non_void_dotnet_name: dn /= Void
+--			valid_property_name: not pn.is_empty
+			valid_dotnet_name: not dn.is_empty
+			non_void_declaring_type: decl_type /= Void
+			getter_or_setter: cp_getter = Void implies cp_setter /= Void
+			getter_or_setter: cp_setter = Void implies cp_getter /= Void
+		do
+			dotnet_name := dn
+			is_public := pub
+			is_static := stat
+			entity_make (dn, pub, decl_type)
+			getter := cp_getter
+			setter := cp_setter
+		ensure
+			dotnet_name_set: dotnet_name = dn
+			getter_set: getter = cp_getter
+			setter_set: setter = cp_setter
+		end
+
+	
 feature -- ConsumerWrapper functions
 
 	is_property: BOOLEAN is

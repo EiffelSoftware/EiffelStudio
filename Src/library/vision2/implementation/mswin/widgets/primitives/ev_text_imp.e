@@ -10,6 +10,9 @@ class
 
 inherit
 	EV_TEXT_AREA_I
+		undefine
+			build
+		end
 		
 	EV_TEXT_COMPONENT_IMP
 
@@ -66,7 +69,7 @@ feature -- Initialization
 		end
 
 feature {NONE} -- Implementation
-
+ 
 	default_style: INTEGER is
 			-- Default style used to create the control
 		once

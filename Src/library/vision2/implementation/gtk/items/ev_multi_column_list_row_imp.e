@@ -22,15 +22,11 @@ inherit
 			count as columns,
 			set_count as set_columns
 		undefine
-			destroy,
+			--destroy,
 			parent
 		redefine
 			parent_imp,
-			interface,
-			set_foreground_color,
-			set_background_color,
-			foreground_color,
-			background_color
+			interface
 		end
 
 create
@@ -42,9 +38,12 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 			-- Create a row with one empty column.
 		do
-
 			base_make (an_interface)
+		end
 
+	initialize is
+			-- Create the linked lists
+		do
 			-- create the arrayed_list where the text will be stored.
 			create internal_text.make (0)
 			internal_text.extend ("")
@@ -52,6 +51,7 @@ feature {NONE} -- Initialization
 			-- create the arrayed_list where the pixmaps will be stored.
 			create internal_pixmaps.make (0)
 			internal_pixmaps.extend (Void)
+			is_initialized := True
 		end
 
 	make_with_text (txt: ARRAY [STRING]) is
@@ -220,7 +220,7 @@ feature -- Element Change
 		do
 			-- Prepare the pixmap and the text.
 			txt := a_text.to_c
-			pix_imp := (internal_pixmaps @ column)
+			--pix_imp := (internal_pixmaps @ column)
 
 			-- Set the pixmap and the text in the given column.
 			if (pix_imp /= void) then
@@ -343,6 +343,12 @@ feature -- Event -- removing command association
 
 feature {EV_ANY_I} -- Implementation
 
+	C: EV_C_EXTERNALS is
+			-- Access to external C functions.
+		once
+			create Result
+		end	
+
 	interface: EV_MULTI_COLUMN_LIST_ROW
 
 	parent_imp: EV_MULTI_COLUMN_LIST_IMP
@@ -371,6 +377,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/02/16 20:23:46  king
+--| Corrected inheritence, add C feature
+--|
 --| Revision 1.24  2000/02/15 19:21:50  king
 --| Made compilable
 --|

@@ -677,7 +677,7 @@ feature -- Action
 					error_dialog.show_modal_to_window (archive_dialog)
 				elseif not transfer_manager_builder.last_added_target_correct then
 					create error_dialog.make_with_text ("Unable to load remote file in:%N" + file_name +
-											"Please make sure file does not exist or is writtable.")
+											"Please make sure file does not exist or is writable.")
 					error_dialog.show_modal_to_window (archive_dialog)
 				else
 					transfer_manager_builder.build_manager

@@ -79,7 +79,7 @@ feature -- Status report
 			-- Can the application be run?
 			-- (True by default)
 			-- The user may want to return False if the application
-			-- can not be executed for any reason.
+			-- cannot be executed for any reason.
 		do
 			Result := True
 		end

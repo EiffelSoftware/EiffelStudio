@@ -85,7 +85,7 @@ feature -- Access
 	get_icon_info: WEL_ICON_INFO is
 			-- Retrieve information about a icon/cusor
 			--
-			-- Return Void if an error occured while retrieving
+			-- Return Void if an error occurred while retrieving
 			-- the information.
 		local
 			icon_info: WEL_ICON_INFO

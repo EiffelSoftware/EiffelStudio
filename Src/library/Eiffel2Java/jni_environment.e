@@ -61,7 +61,7 @@ feature
 feature -- Exception mechanism
 
 	check_for_exceptions is
-			-- Check if a Java exception occured, raise Java exception occured
+			-- Check if a Java exception occurred, raise Java exception occurred
 		do
 			c_check_for_exceptions (envp)
 		end

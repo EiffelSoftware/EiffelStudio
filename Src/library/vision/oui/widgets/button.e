@@ -79,7 +79,7 @@ feature -- Status setting
 			-- The comparison has to be done without
 			-- ampersands, because X version will change
 			-- the position of ampersand to the first 
-			-- occurence of the letter. (For ex. "Save 
+			-- occurrence of the letter. (For ex. "Save 
 			-- &as" becomes "S&ave as"
 		end 
 

@@ -72,7 +72,7 @@ feature -- Access
 		end
 
 	position: WEL_POINT is
-			-- Location at which the event occured.
+			-- Location at which the event occurred.
 			-- valid argument only for the Lvn_begindrag and
 			-- Lvn_beginrdrag notification messages.
 		do

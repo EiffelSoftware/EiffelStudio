@@ -157,7 +157,7 @@ feature -- Status setting
 
 	set_output_only (flag: BOOLEAN) is
 			-- Set scale mode to output only if `flag'. The user
-			-- can not modify the current scale interactively.
+			-- cannot modify the current scale interactively.
 		require
 			exists: not destroyed;
 		do

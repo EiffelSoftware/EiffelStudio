@@ -62,7 +62,7 @@ feature -- Access
 			-- Does `Current' have a parent?
 			-- `Current' is parented if it has been placed in the
 			-- accelerator list of a window.
-			-- key combination of `Current' can not be modified if True.
+			-- key combination of `Current' cannot be modified if True.
 		require
 			not_destroyed: not is_destroyed
 		do

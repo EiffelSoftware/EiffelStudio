@@ -245,7 +245,7 @@ feature -- Access
 		end
 
 	last_index_of (c: CHARACTER; start_index_from_end: INTEGER): INTEGER is
-			-- Position of last occurence of `c'.
+			-- Position of last occurrence of `c'.
 			-- 0 if none
 		require
 			start_index_small_enough: start_index_from_end <= count
@@ -564,7 +564,7 @@ feature -- Element change
 		end
 
 	replace_substring_all (original, new: like Current) is
-			-- Replace every occurence of `original' with `new'.
+			-- Replace every occurrence of `original' with `new'.
 		require
 			original_exists: original /= Void
 			new_exists: new /= Void

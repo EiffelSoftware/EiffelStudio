@@ -19,10 +19,10 @@ inherit
 			container, cursor
 		end
 
-feature {NONE} -- Anchor types
+feature {NONE} -- Anchored types
 
 	container: DS_ARRAYED_LIST [G] is do end
 	cursor: DS_ARRAYED_LIST_CURSOR [G] is do end
-			-- Anchor types
+			-- Anchored types
 
 end -- class DS_ARRAYED_LIST_SEARCHER

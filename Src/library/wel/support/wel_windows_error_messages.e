@@ -5179,7 +5179,7 @@ feature -- Access
 	Error_no_sitename_value: INTEGER is 1919
 
 	Error_cant_access_file_text: STRING is
-			"The file can not be accessed by the system."
+			"The file cannot be accessed by the system."
 
 	Error_cant_access_file_value: INTEGER is 1920
 
@@ -5429,7 +5429,7 @@ feature -- Access
 	Error_wins_internal_value: INTEGER is 4000
 
 	Error_can_not_del_local_wins_text: STRING is
-			"The local WINS can not be deleted."
+			"The local WINS cannot be deleted."
 
 	Error_can_not_del_local_wins_value: INTEGER is 4001
 
@@ -7829,7 +7829,7 @@ feature -- Access
 	Error_ds_dst_domain_not_native_value: INTEGER is 8496
 
 	Error_ds_missing_infrastructure_container_text: STRING is
-			"The operation can not be performed because the server does not have an infrastructure container in the domain of interest."
+			"The operation cannot be performed because the server does not have an infrastructure container in the domain of interest."
 
 	Error_ds_missing_infrastructure_container_value: INTEGER is 8497
 

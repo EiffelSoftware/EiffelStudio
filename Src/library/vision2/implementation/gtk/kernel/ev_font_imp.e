@@ -314,7 +314,7 @@ feature {EV_FONT_DIALOG_IMP} -- Implementation
 		require
 			s_not_void: s /= Void
 			index_bigger_than_zero: index > 0
-			index_not_bigger_than_dash_occurences: index <= s.occurrences ('-')
+			index_not_bigger_than_dash_occurrences: index <= s.occurrences ('-')
 		local
 			cur_index, next_index, str_pos: INTEGER
 		do

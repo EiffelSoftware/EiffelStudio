@@ -321,7 +321,7 @@ feature -- Execution
 					-- Application is stopped. Continue execution.
 debug("DEBUGGER")
 	io.error.putstring (generator)
-	io.error.putstring (": Contine execution%N")
+	io.error.putstring (": Continue execution%N")
 end
 						-- Ask the application to wean objects the
 						-- debugger doesn't need anymore.

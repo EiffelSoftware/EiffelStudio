@@ -32,7 +32,7 @@ extern "C" {
 /* ARGS: - pszFileName: name of the graphical file to load.                  */
 /*---------------------------------------------------------------------------*/
 /* Return a pointer onto raw graphical data (4 bytes/pixels: R/G/B/Alpha)    */
-/* NULL if an error occured while reading the file or if the file format is  */
+/* NULL if an error occurred while reading the file or if the file format is  */
 /* not recognized.                                                           */
 /*---------------------------------------------------------------------------*/
 void c_ev_load_pixmap(

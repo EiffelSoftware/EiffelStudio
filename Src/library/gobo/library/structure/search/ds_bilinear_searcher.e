@@ -32,10 +32,10 @@ feature -- Search
 		deferred
 		end
 
-feature {NONE} -- Anchor types
+feature {NONE} -- Anchored types
 
 	container: DS_BILINEAR [G] is do end
 	cursor: DS_BILINEAR_CURSOR [G] is do end
-			-- Anchor types
+			-- Anchored types
 
 end -- class DS_BILINEAR_SEARCHER

@@ -185,10 +185,10 @@ feature {NONE} -- Implementation
 					end
 					a_font_list.destroy
 				else
-					io.error.putstring ("Warning can not allocate font%N");
+					io.error.putstring ("Warning cannot allocate font%N");
 				end;
 			else
-				io.error.putstring ("Warning can not allocate font%N");
+				io.error.putstring ("Warning cannot allocate font%N");
 			end;
 		end;
 

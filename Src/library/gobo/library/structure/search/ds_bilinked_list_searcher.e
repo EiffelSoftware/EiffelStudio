@@ -19,11 +19,11 @@ inherit
 			container, cursor, cell
 		end
 
-feature {NONE} -- Anchor types
+feature {NONE} -- Anchored types
 
 	container: DS_BILINKED_LIST [G] is do end
 	cursor: DS_BILINKED_LIST_CURSOR [G] is do end
 	cell: DS_BILINKABLE [G] is do end
-			-- Anchor types
+			-- Anchored types
 
 end -- class DS_BILINKED_LIST_SEARCHER

@@ -1,6 +1,6 @@
 indexing
 	description: "Information about message Wm_notify which informs the %
-		%parent window of a control that an event has occured in the %
+		%parent window of a control that an event has occurred in the %
 		%control or that the control requires some kind of information."
 	status: "See notice at end of class."
 	date: "$Date$"

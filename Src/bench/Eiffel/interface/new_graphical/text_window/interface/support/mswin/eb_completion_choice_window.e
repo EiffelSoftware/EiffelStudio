@@ -32,25 +32,49 @@ inherit
 		end
 
 create
-	make_with_editor
+	make_for_features,
+	make_for_classes
 
 feature {NONE}-- Initialization
 
-	make_with_editor (an_editor: EB_SMART_EDITOR; feature_name: STRING; completion_possibilities: SORTABLE_ARRAY [EB_FEATURE_NAME_FOR_COMPLETION]) is
+	make_for_features (an_editor: EB_SMART_EDITOR; feature_name: STRING; completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]) is
 			-- create the window and associate it with `an_editor'
+		do
+			feature_mode := True
+			editor := an_editor
+			if editor.exploring_current_class then
+				point_if_needed := ""
+			else
+				point_if_needed := "."
+			end
+			before_complete := feature_name
+			sorted_names := completion_possibilities
+			common_initialization
+		end
+
+	make_for_classes (an_editor: EB_SMART_EDITOR; class_name: STRING; completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]) is
+			-- create the window and associate it with `an_editor'
+		do
+			feature_mode := False
+			editor := an_editor
+			point_if_needed := ""
+			before_complete := class_name
+			sorted_names := completion_possibilities
+			common_initialization
+		end
+
+	common_initialization is
+			-- initilize fields common to class and feature choice window.
 		local
 			vbox: EV_VERTICAL_BOX
 		do
-			editor := an_editor
-			before_complete := feature_name
-			sorted_names := completion_possibilities
-			sorted_names.compare_objects
+ 			sorted_names.compare_objects
 			create choice_list
-			build_displayed_list (feature_name)
-			
+			build_displayed_list (before_complete)
+
 				-- if there is only one possibility, we insert it without displaying the window
 			show_needed := choice_list.count /= 1
-			if show_needed then			
+			if show_needed then
 				make_with_title (Interface_names.t_Autocomplete_window)
 				set_minimum_size (200,150)
 				create vbox
@@ -78,10 +102,9 @@ feature {NONE}-- Initialization
 				choice_list.first.enable_select
 			end
 			if not show_needed then
-				close_and_complete				
+				close_and_complete
 			end
 		end
-		
 
 feature -- Access
 
@@ -94,17 +117,18 @@ feature -- Access
 	choice_list: EV_LIST
 			-- list displaying possible feature signatures
 
-	sorted_names: SORTABLE_ARRAY[EB_FEATURE_NAME_FOR_COMPLETION]
+	sorted_names: SORTABLE_ARRAY[EB_NAME_FOR_COMPLETION]
 			-- list of possible feasture signatures sorted alphabetically
 
 	before_complete: STRING
-
 
 feature -- Status report
 
 	show_needed: BOOLEAN
 			-- Should the window be displayed ?
 
+	feature_mode: BOOLEAN
+			-- Is `Current' used to select feature names ?
 
 feature -- Events handling
 
@@ -256,7 +280,7 @@ feature {NONE} -- Implementation
 	build_displayed_list (name: STRING) is
 			--  
 		local
-			for_search: EB_FEATURE_NAME_FOR_COMPLETION
+			for_search: EB_NAME_FOR_COMPLETION
 			displayed_count: INTEGER
 		do
 			if name= Void or else name.is_empty then
@@ -292,37 +316,58 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	point_if_needed: STRING is
-		do
-			if editor.exploring_current_class then
-				Result := ""
-			else
-				Result := "."
-			end
-		end
+	point_if_needed: STRING
 
 	close_and_complete is
 			-- close the window and perform completion with selected item
+		do
+			is_closing := True
+			if feature_mode then
+				complete_feature
+			else
+				complete_class
+			end
+			if show_needed then
+				if has_capture then
+					disable_capture
+				end
+				destroy
+			end
+			editor.set_focus
+		end
+
+	complete_feature is
+			--
 		local
 			ix: INTEGER
 		do
-			is_closing := True
 			if choice_list.selected_item /= Void then
 				ix:= choice_list.index_of (choice_list.selected_item,1) + index_offset
 				if sorted_names.item (ix).has_dot then
-					editor.complete_from_window (point_if_needed + sorted_names.item (ix), True)
+					editor.complete_feature_from_window (point_if_needed + sorted_names.item (ix), True)
 				else
-					editor.complete_from_window (" " + sorted_names.item (ix), True)
+					editor.complete_feature_from_window (" " + sorted_names.item (ix), True)
 				end
 			else
 				if to_be_inserted.text /= void then
-					editor.complete_from_window (point_if_needed + to_be_inserted.text, False)
+					editor.complete_feature_from_window (point_if_needed + to_be_inserted.text, False)
 				end
 			end
-			if show_needed then
-				destroy	
+		end
+
+	complete_class is
+			--
+		local
+			ix: INTEGER
+		do
+			if choice_list.selected_item /= Void then
+				ix:= choice_list.index_of (choice_list.selected_item, 1) + index_offset
+				editor.complete_class_from_window (sorted_names.item (ix))
+			else
+				if to_be_inserted.text /= void then
+					editor.complete_class_from_window (to_be_inserted.text)
+				end
 			end
-			editor.set_focus
 		end
 
 	exit is
@@ -331,13 +376,22 @@ feature {NONE} -- Implementation
 			if not is_closing then
 				is_closing := True
 				if before_complete /= void then
-					editor.complete_from_window (point_if_needed + before_complete, False)
+					if feature_mode then
+						editor.complete_feature_from_window (point_if_needed + before_complete, False)
+					else
+						editor.complete_class_from_window (before_complete)
+					end
+				end
+				if has_capture then
+					disable_capture
 				end
 				destroy
-				editor.exit_complete_mode
+				if feature_mode then
+					editor.exit_complete_mode
+				end
 			end
 		end
-		
+  
 	is_closing: BOOLEAN
 			-- is the window being closed ?
 
@@ -346,7 +400,7 @@ feature {NONE} -- Implementation
 			Result := <<ev_application.ctrl_pressed, ev_application.alt_pressed, ev_application.shift_pressed>>
 		end
 
-	pos_of_first_greater (table: SORTABLE_ARRAY [EB_FEATURE_NAME_FOR_COMPLETION]; a_name:EB_FEATURE_NAME_FOR_COMPLETION): INTEGER is
+	pos_of_first_greater (table: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]; a_name:EB_NAME_FOR_COMPLETION): INTEGER is
 			--
 		local
 			low, up, mid: INTEGER

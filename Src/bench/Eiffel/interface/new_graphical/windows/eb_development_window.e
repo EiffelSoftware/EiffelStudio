@@ -1259,7 +1259,7 @@ feature -- Menu Building
 			cmd.set_menu_name (Interface_names.m_Complete_word + "%T" + Editor_preferences.shorcut_name_for_action (1))
 			command_menu_item := cmd.new_menu_item
 			editor_tool.text_area.add_edition_observer(cmd)
-			cmd.add_agent (editor~complete_word)
+			cmd.add_agent (editor~complete_feature_name)
 
 			add_recyclable (command_menu_item)
 			sub_menu.extend (command_menu_item)

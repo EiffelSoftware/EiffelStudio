@@ -70,9 +70,6 @@ feature -- Basic operations
 				-- Execute `Current'.
 			local
 				layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-				cut_object: GB_OBJECT
-				global_status: GB_GLOBAL_STATUS
-				layout_constructor_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 				command_add: GB_COMMAND_ADD_OBJECT
 				parent_object: GB_PARENT_OBJECT
 			do

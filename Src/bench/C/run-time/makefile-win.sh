@@ -12,8 +12,7 @@ RM = del
 	$(RM) $@
 	$(CC) -c $(JCFLAGS) $<
 
-CFLAGS = /I. /I$(TOP) /I$(TOP)/idrs /I$(TOP)/extra/win32/console /I$(TOP)/ipc/app
-DPFLAGS = /I$(TOP)
+CFLAGS = -I. -I$(TOP) -I$(TOP)/idrs -I$(TOP)/console -I$(TOP)/ipc/app
 
 NETWORK = $(TOP)\ipc\app\network.lib
 
@@ -24,7 +23,7 @@ OBJECTS = math.obj malloc.obj garcol.obj local.obj except.obj store.obj \
 	misc.obj pattern.obj error.obj umain.obj memory.obj argv.obj \
 	boolstr.obj search.obj main.obj dle.obj option.obj \
 	console.obj run_idr.obj  $(TOP)\ipc\shared\networku.obj \
-	path_name.obj object_id.obj $(TOP)\extra\win32\console\econsole.lib \
+	path_name.obj object_id.obj $(TOP)\console\econsole.lib \
 	compress.obj eif_threads.obj $extra_object_files
 
 WOBJECTS = $(NETWORK) wmath.obj wmalloc.obj wgarcol.obj wlocal.obj wexcept.obj \
@@ -35,7 +34,7 @@ WOBJECTS = $(NETWORK) wmath.obj wmalloc.obj wgarcol.obj wlocal.obj wexcept.obj \
 	wumain.obj wmemory.obj wargv.obj wboolstr.obj wsearch.obj wmain.obj \
 	debug.obj interp.obj woption.obj update.obj wbench.obj  \
 	wconsole.obj wrun_idr.obj wdle.obj $(TOP)\idrs\idr.lib wpath_name.obj \
-	wobject_id.obj $(TOP)\extra\win32\console\econsole.lib \
+	wobject_id.obj $(TOP)\console\econsole.lib \
 	compress.obj weif_threads.obj $extra_object_files
 
 EOBJ = wmath.obj wmalloc.obj wgarcol.obj wlocal.obj bexcept.obj wstore.obj \
@@ -46,7 +45,7 @@ EOBJ = wmath.obj wmalloc.obj wgarcol.obj wlocal.obj bexcept.obj wstore.obj \
 	wargv.obj wboolstr.obj wsearch.obj bmain.obj debug.obj interp.obj \
 	woption.obj update.obj wbench.obj wconsole.obj wrun_idr.obj \
 	$(TOP)\ipc\shared\networku.obj wdle.obj \
-	wpath_name.obj wobject_id.obj $(TOP)\extra\win32\console\econsole.lib \
+	wpath_name.obj wobject_id.obj $(TOP)\console\econsole.lib \
 	compress.obj weif_threads.obj
 
 all:: size.h
@@ -63,10 +62,10 @@ wkbench.lib: $(WOBJECTS)
 	$(RM) $@
 	$link_wline
 
-..\extra\win32\console\econsole.lib: ..\extra\win32\console\econsole.c ..\extra\win32\console\argcargv.c
-	cd ..\extra\win32\console
+..\console\econsole.lib: ..\console\econsole.c ..\console\argcargv.c
+	cd ..\console
 	$(MAKE)
-	cd ..\..\..\run-time
+	cd ..\run-time
 
 ..\idrs\idr.lib:
 	cd ..\idrs

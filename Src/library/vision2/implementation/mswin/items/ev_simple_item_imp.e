@@ -40,6 +40,7 @@ inherit
 			interface as textable_interface
 		end
 
+	--| FIXME Menu items and separators are not PND-able
 	EV_PICK_AND_DROPABLE_IMP
 		redefine
 			interface
@@ -72,6 +73,9 @@ end -- class EV_SIMPLE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/03/28 00:05:27  brendel
+--| Added FIXME about not all items being PND able.
+--|
 --| Revision 1.20  2000/03/21 01:23:36  rogers
 --| set pointer_style is no longer undefined.
 --|

@@ -1105,6 +1105,30 @@ feature -- Resizing
 
 feature -- Conversion
 
+	as_lower: like Current is
+			-- New object with all letters in lower case.
+		do
+			Result := clone (Current)
+			Result.to_lower
+		ensure
+			length: Result.count = count
+			anchor: count > 0 implies Result.item (1) = item (1).as_lower
+			recurse: count > 1 implies Result.substring (2, count).
+				is_equal (substring (2, count).as_lower)
+		end
+
+	as_upper: like Current is
+			-- New object with all letters in upper case
+		do
+			Result := clone (Current)
+			Result.to_upper
+		ensure
+			length: Result.count = count
+			anchor: count > 0 implies Result.item (1) = item (1).as_upper
+			recurse: count > 1 implies Result.substring (2, count).
+				is_equal (substring (2, count).as_upper)
+		end
+
 	left_justify is
 			-- Left justify the string using
 			-- the capacity as the width

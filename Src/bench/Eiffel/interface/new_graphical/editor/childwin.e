@@ -84,6 +84,9 @@ feature -- Initialization
 
 				-- Setup the scroll bars.
 			set_vertical_range(1,vertical_range_max)
+
+				-- Get the focus
+			set_focus
 		end
 
 	read_and_analyse_file (a_name: STRING) is
@@ -245,24 +248,24 @@ feature -- Basic operations
 				invalidate_cursor_rect(True)
 
 			elseif  virtual_key = Vk_delete then
-				invalidate_cursor_rect(False)
 				cursor.delete_char
-				invalidate_cursor_rect(True)
+				invalidate
+				update
 
 			elseif  virtual_key = Vk_Back then
-				invalidate_cursor_rect(False)
 				cursor.delete_previous
-				invalidate_cursor_rect(True)
+				invalidate
+				update
 
 			elseif  virtual_key = Vk_Insert then
 				insert_mode := not insert_mode
-				invalidate_cursor_rect(True)
+				invalidate
+				update
 
 			elseif virtual_key = Vk_Return then
-				invalidate_cursor_rect(False)
 				cursor.insert_eol (insert_mode)
-				invalidate_cursor_rect(True)
-
+				invalidate
+				update
 			else
 				-- Key not handled, do nothing
 			end

@@ -47,7 +47,11 @@ rt_public int    eif_par_table2_size = 0;
 /* Result   : RTUD(no)                                              */
 /*------------------------------------------------------------------*/
 
+#ifdef EIF_THREADS
+rt_private int16 *rtud_inv = (int16 *) 0;
+#else
 rt_public int16 *rtud_inv = (int16 *) 0;
+#endif
 
 /*------------------------------------------------------------------*/
 /* Compound id map. Maps compiler generated ids to themselves and   */

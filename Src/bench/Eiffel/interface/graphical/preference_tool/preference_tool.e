@@ -44,10 +44,16 @@ feature {NONE} -- Initialization
 			menu_form.attach_left (menu_bar, 0);
 			menu_form.attach_right (menu_bar, 0);
 
-			!! file_menu.make ("File", menu_bar);
-			!! category_menu.make ("Category", menu_bar);
-			!! help_menu.make ("Help", menu_bar);
+			!! file_menu.make ("&File", menu_bar);
+			!! category_menu.make ("&Category", menu_bar);
+			!! help_menu.make ("&Help", menu_bar);
 			menu_bar.set_help_button (help_menu.menu_button);
+
+			!! validate_cmd.make (Current);
+			!! menu_entry.make (validate_cmd, file_menu);
+
+			!! save_cmd.make (Current);
+			!! menu_entry.make (save_cmd, file_menu);
 
 			!! ok_cmd.make (Current);
 			!! menu_entry.make (ok_cmd, file_menu);
@@ -57,12 +63,8 @@ feature {NONE} -- Initialization
 
 			!! cancel_cmd.make (Current);
 			!! menu_entry.make (cancel_cmd, file_menu);
+			menu_entry.set_text ("Exit")
 
-			!! save_cmd.make (Current);
-			!! menu_entry.make (save_cmd, file_menu);
-
-			!! validate_cmd.make (Current);
-			!! menu_entry.make (validate_cmd, file_menu);
 		end;
 
 	initialize_category_button_rc is
@@ -96,7 +98,7 @@ feature {NONE} -- Initialization
 			!! button_form.make ("Button Form", global_form);
 			button_form.set_fraction_base (3);
 
-			!! ok_button.make ("Save", button_form);
+			!! ok_button.make ("Ok", button_form);
 			ok_button.add_activate_action (ok_cmd, Void);
 			!! apply_button.make ("Apply", button_form);
 			apply_button.add_activate_action (apply_cmd, Void);
@@ -110,12 +112,12 @@ feature {NONE} -- Initialization
 			button_form.attach_top (cancel_button, 0);
 			button_form.attach_bottom (cancel_button, 0);
 
-			button_form.attach_left_position (ok_button, 0);
+			button_form.attach_left (ok_button, 0);
 			button_form.attach_right_position (ok_button, 1);
 			button_form.attach_left_position (apply_button, 1);
 			button_form.attach_right_position (apply_button, 2);
 			button_form.attach_left_position (cancel_button, 2);
-			button_form.attach_right_position (cancel_button, 3)
+			button_form.attach_right (cancel_button, 0)
 		end;
 
 	attach_forms is
@@ -134,13 +136,13 @@ feature {NONE} -- Initialization
 			global_form.attach_bottom_widget (button_form, category_form, 5);
 
 			global_form.attach_bottom (button_form, 5);
-			global_form.attach_left (button_form, 0);
-			global_form.attach_right (button_form, 0);
-		end
+			global_form.attach_left (button_form, 5);
+			global_form.attach_right (button_form, 5);
+		end;
 
 feature -- Display
 
-	display is
+	build_interface is
 			-- Create the widgets and show Current on the screen.
 		require
 			not_created: destroyed;
@@ -170,11 +172,17 @@ feature -- Display
 
 			category_list.start;
 			category_list.forth;
-			execute (category_list.item.name);
-
-			realize
+			set_delete_command (Current);
 		ensure
 			created: not destroyed
+		end;
+
+	display is
+			-- Display the preference tool.
+		do
+			execute (category_list.item.name);
+			realize;
+			raise
 		end;
 
 	display_category (a_category: PREFERENCE_CATEGORY) is
@@ -258,16 +266,21 @@ feature -- Access
 	apply_changes is
 			-- Apply all changes.
 		local
-			cats: like category_list
+			cats: like category_list;
+			mp: MOUSE_PTR
 		do
-			from
-				cats := category_list;
-				cats.start
-			until
-				cats.after
-			loop
-				cats.item.update;
-				cats.forth
+			cats := category_list;
+			if not cats.empty then
+				from
+					!! mp.set_watch_cursor;
+					cats.start
+				until
+					cats.after
+				loop
+					cats.item.update;
+					cats.forth
+				end;
+				mp.restore
 			end
 		end
 
@@ -283,7 +296,7 @@ feature {NONE} -- Properties
 			-- Form where the category is displayed on
 
 	button_form,
-			-- Form for the `Ok', `Apply', and `Cancel' buttons
+			-- Form for the `Save', `Apply', and `Cancel' buttons
 
 	global_form: FORM;
 			-- Form serving as parents for all te above forms
@@ -304,7 +317,7 @@ feature {NONE} -- Properties
 			-- The help menu
 
 	ok_button,
-			-- Button for OK action
+			-- Button for Ok action
 
 	apply_button,
 			-- Button fo Apply action
@@ -321,7 +334,7 @@ feature {NONE} -- Properties
 feature {PREFERENCE_COMMAND} -- Commands
 
 	ok_cmd: OK_PREF_CMD
-			-- Holder for the Ok command
+			-- Holder for the Ok command (which applies and Save the resources)
 
 	apply_cmd: APPLY_PREF_CMD
 			-- Holder for the Apply command
@@ -345,20 +358,24 @@ feature {PREFERENCE_CATEGORY} -- Execution
 			cat: PREFERENCE_CATEGORY;
 			cat_list: like category_list
 		do
-			str ?= arg;
-			if str /= Void then
-				from
-					cat_list := category_list;
-					cat_list.start
-				until
-					cat_list.after or done
-				loop
-					cat := cat_list.item
-					if cat.name = str then
-						display_category (cat);
-						done := True
-					else
-						cat_list.forth
+			if arg = Void then
+				close
+			else
+				str ?= arg;
+				if str /= Void then
+					from
+						cat_list := category_list;
+							cat_list.start
+					until
+						cat_list.after or done
+					loop
+						cat := cat_list.item
+						if cat.name = str then
+							display_category (cat);
+							done := True
+						else
+							cat_list.forth
+						end
 					end
 				end
 			end

@@ -73,8 +73,97 @@ feature -- Access
 	childvisible_nb: INTEGER
 			-- Number of children which are visible
 
-	childexpand_nb: INTEGER
+	childexpand_nb: INTEGER is
 			-- Number of children, which are expanded and visible
+		do
+			if children_expandable = Void then
+				Result := childvisible_nb
+			else
+				Result := childvisible_nb - children_expandable.count
+			end
+		end
+
+	children_expandable: ARRAYED_LIST [INTEGER]
+			-- Position of the non expandable children in growing order.
+
+feature -- Status report
+
+	is_child_expandable (child: EV_WIDGET): BOOLEAN is
+			-- Is the child corresponding to `index' expandable. ie: does it
+			-- accept the parent to resize or move it.
+		local
+			child_imp: EV_WIDGET_IMP
+		do
+			if children_expandable = Void then
+				Result := True
+			else
+				child_imp ?= child.implementation
+				check
+					valid_cast: child_imp /= Void
+				end
+				Result := not children_expandable.has (ev_children.index_of (child_imp, 1))
+			end
+		end
+
+feature -- Status setting
+
+	set_child_expandable (child: EV_WIDGET; flag: BOOLEAN) is
+			-- Make the child corresponding to `index' expandable if `flag',
+			-- not expandable otherwise.
+		local
+			list: ARRAYED_LIST [INTEGER]
+			child_imp: EV_WIDGET_IMP
+			value, index: INTEGER
+			placed: BOOLEAN
+		do
+			-- First, we find the index of the child.
+			child_imp ?= child.implementation
+			check
+				valid_cast: child_imp /= Void
+			end
+			index := ev_children.index_of (child_imp, 1)
+
+			-- Then, we set the information
+			if flag then
+				if children_expandable /= Void then
+					children_expandable.prune_all (index)
+					if children_expandable.empty then
+						children_expandable := Void
+					end
+				end
+			else
+				if children_expandable = Void then
+					create children_expandable.make (1)
+					children_expandable.extend (index)
+				else
+					from
+						list := children_expandable
+						placed := False
+						list.start
+					until
+						placed
+					loop
+						if list.after then
+							list.extend (index)
+							placed := True
+						else
+							value := list.item
+							if index < value then
+								list.put_right (index)
+								placed := True
+							elseif index > value then
+								list.forth
+							else
+								placed := True
+							end
+						end
+					end
+				end
+			end
+
+			-- Need to be redefine
+			-- Notify the changes here
+		end
 
 feature -- Element change
 

@@ -327,6 +327,7 @@ feature {NONE} -- Implementation
 			-- Display all controls of the window.
 		local
 			sep: EV_HORIZONTAL_SEPARATOR
+			f: EV_FRAME
 		do
 			create widget
 			create formatter_container
@@ -338,10 +339,10 @@ feature {NONE} -- Implementation
 			widget.disable_item_expand (sep)
 			widget.extend (output_line)
 			widget.disable_item_expand (output_line)
-			create sep
-			widget.extend (sep)
-			widget.disable_item_expand (sep)
-			widget.extend (formatter_container)
+			create f
+			f.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_lowered)
+			f.extend (formatter_container)
+			widget.extend (f)
 			output_line.set_text (Interface_names.l_No_feature)
 		end
 

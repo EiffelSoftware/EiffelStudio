@@ -25,7 +25,7 @@ creation
 	make_by_system_name,
 	make_by_wel
 
-feature {EV_FONTABLE_IMP} -- Initialization
+feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 
 	make is
 			-- Create a font

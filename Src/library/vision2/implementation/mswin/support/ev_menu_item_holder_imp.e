@@ -14,20 +14,34 @@ inherit
 	EV_ITEM_CONTAINER_IMP
 		export {EV_MENU_ITEM_IMP}
 			set_name
-		redefine
-			ev_children
 		end
 
 	EV_ITEM_EVENTS_CONSTANTS_IMP
 
 feature -- Access
 
-	ev_children: LINKED_LIST [EV_MENU_ITEM_IMP]
+	ev_children: HASH_TABLE [EV_MENU_ITEM_IMP, INTEGER]
 
 	position: INTEGER
 		-- Position of the item in the menu.
 
+	submenu: WEL_MENU is
+			-- Wel menu used when the item is a sub-menu.
+		deferred
+		end
+
+	parent_container: EV_MENU_CONTAINER_IMP
+			-- Top parent container of the menu.
+			-- Used by EV_MENU_CONTAINER_IMP and
+			-- EV_MENU_ITEM_CONTAINER_IMP
+
 feature -- Element change
+
+	set_parent_container (con: EV_MENU_CONTAINER_IMP) is
+			-- Make `con' the new parent_container.
+		do
+			parent_container := con
+		end
 
 	set_position (pos: INTEGER) is
 			-- Make `pos' the new position of the item.
@@ -39,34 +53,38 @@ feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
 
 	add_item (an_item: EV_MENU_ITEM) is
 			-- Add `an_item' into container.
-		deferred
+		local
+			item_imp: EV_MENU_ITEM_IMP
+			iid: INTEGER
+		do
+			item_imp ?= an_item.implementation
+			check
+				valid_item: item_imp /= Void
+			end
+			if not ev_children.empty then
+				iid := ev_children.current_keys @ ev_children.count + 1
+			else
+				iid := 1
+			end
+			ev_children.extend (item_imp, iid)
+			submenu.append_string (item_imp.text, ev_children.count)
+			item_imp.set_id (iid)
+			item_imp.set_position (submenu.count - 1)
+			item_imp.set_parent_container (parent_container)
 		end
 
 	insert_item (wel_menu: WEL_MENU; pos: INTEGER; label: STRING) is
 			-- Insert a new menu-item whixh is a menu into
 			-- container.
-		deferred
+		do
+			submenu.insert_popup (wel_menu, pos, label)
 		end
 
 	remove_item (an_id: INTEGER) is
 			-- Remove the item with `id' as identification
-		deferred
-		end
-
---	remove_menu (menu: EV_MENU_IMP) is
-			-- Remove `menu' from the container.
-			-- In fact, the destroy fonction destroy the wel_item
-			-- then here, we must only remove the menu and its
-			-- item from `ev_children'.
---require
---	menu_exists: not menu.destroyed
---		do
-			-- Pas forcement vrai tout ca, a faire.
---		end
-
-	uncheck_radio_items is
-			-- Uncheck all the radio-items of the container.
-		deferred
+		do
+			submenu.delete_item (an_id)
+			ev_children.remove (an_id)
 		end
 
 end -- class EV_MENU_ITEM_CONTAINER_IMP

@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 			a_message.append (language)
 			a_message.append (Space)
 			a_message.append (module_type)
-			add_message (Current, a_message)
+			message_output.add_message (Current, a_message)
 		end
 
 	language: STRING is

@@ -71,8 +71,6 @@ feature {NONE} -- Implementation
 	update_attribute_editor is
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
-		local
-			constant_context: GB_CONSTANT_CONTEXT
 		do
 			text_entry.update_constant_display (first.text)
 		end

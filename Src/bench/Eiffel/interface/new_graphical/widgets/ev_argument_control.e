@@ -135,8 +135,9 @@ feature {NONE} -- Retrieval
 			if not arguments_file.exists then
 				-- Create new arguments file.
 				arguments_file.create_read_write
+			else
+				arguments_file.open_read
 			end
-			arguments_file.open_read
 			if not arguments_file.is_empty then
 				from
 					arguments_file.start
@@ -407,7 +408,7 @@ feature {NONE} -- GUI
 			
 				-- Argument text actions.
 			ace_current_arg_text.key_release_actions.extend (agent arg_text_changed)
-			user_current_arg_text.change_actions.extend (agent arg_text_changed)
+			user_current_arg_text.key_release_actions.extend (agent arg_text_changed)
 		end
 
 	populate_by_template (a_vbox: EV_VERTICAL_BOX) is
@@ -708,6 +709,11 @@ feature {NONE} -- Actions
 		local
 			l_text: STRING
 			l_caret_pos: INTEGER
+--			l_dialog: EB_ARGUMENT_DIALOG
+--			l_system_win: EB_SYSTEM_WINDOW
+--			l_list: SPECIAL [ANY]
+--			l_counter: INTEGER
+--			mem: MEMORY
 		do
 			if key.code = feature {EV_KEY_CONSTANTS}.key_enter then				
 				l_caret_pos := current_argument.caret_position
@@ -720,6 +726,31 @@ feature {NONE} -- Actions
 					current_argument.set_text (l_text)
 					current_argument.set_caret_position (l_caret_pos + 1)
 				end
+--				create mem
+--				create l_dialog
+--				l_list := mem.objects_instance_of (l_dialog)
+--				from
+--					l_counter := 1
+--				until
+--					l_counter > l_list.count
+--				loop
+--					if not (l_list.item (l_counter) = l_dialog) then
+--						l_dialog.run_button.set_focus
+--					end
+--					l_counter := l_counter + 1
+--				end
+--				create l_system_win
+--				l_list := mem.objects_instance_of (l_system_win)
+--				from
+--					l_counter := 1
+--				until
+--					l_counter > l_list.count
+--				loop
+--					if l_list.item (l_counter) /= l_system_win then
+--						--l_system_win.run_button.set_focus
+--					end
+--					l_counter := l_counter + 1
+--				end
 			end
 			
 		end		

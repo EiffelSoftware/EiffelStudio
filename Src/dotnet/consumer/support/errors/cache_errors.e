@@ -22,6 +22,8 @@ feature -- Access
 	Not_in_eac_error: INTEGER is 0x02000004
 	
 	Update_error: INTEGER is 0x02000005
+	
+	Assembly_dependancies_not_found_error: INTEGER is 0x02000006
 
 feature {NONE} -- Implementation
 
@@ -29,11 +31,12 @@ feature {NONE} -- Implementation
 			-- Error messages
 		once
 			create Result.make (2)
-			Result.put ("Assembly not found", Assembly_not_found_error)
-			Result.put ("Could not import assembly", Consume_error)
-			Result.put ("Could not remove assembly from EAC", Remove_error)
-			Result.put ("Assembly is not in the EAC", Not_in_eac_error)
+			Result.put ("Could not find assembly", Assembly_not_found_error)
+			Result.put ("Could not fully import assembly", Consume_error)
+			Result.put ("Could not remove assembly from Eiffel Assembly Cache", Remove_error)
+			Result.put ("Could not find assembly in Eiffel Assembly Cache", Not_in_eac_error)
 			Result.put ("Could not update assembly", Update_error)
+			Result.put ("Could not load one or more of assemblies dependancies", Assembly_dependancies_not_found_error)
 		end
 		
 end -- class CACHE_ERRORS

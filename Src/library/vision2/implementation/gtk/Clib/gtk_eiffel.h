@@ -338,6 +338,11 @@ EIF_INTEGER c_gtk_table_columns     (GtkWidget *widget            );
 /* Routine to know if a tree item is expanded */
 EIF_BOOLEAN c_gtk_tree_item_expanded (GtkWidget *widget);
 
+/* Routine to know if a tree item is selected */
+EIF_BOOLEAN c_gtk_tree_item_is_selected (GtkWidget *tree, GtkWidget *treeItem);
+
+/* Routine to set the selection mode of the tree to SINGLE */
+void c_gtk_tree_set_single_selection_mode (GtkWidget *tree);
 
 /*==============================================================================
  gtk_text functions

@@ -13,7 +13,7 @@ inherit
 			parent_imp, interface
 		end
 
-	EV_ITEM_IMP
+	EV_TOOL_BAR_ITEM_IMP
 		undefine
 			parent
 		redefine
@@ -36,8 +36,6 @@ inherit
 		end
 
 	WEL_ILC_CONSTANTS
-
-	EV_ID_IMP
 
 	EV_TOOL_BAR_BUTTON_ACTION_SEQUENCES_IMP
 
@@ -302,8 +300,6 @@ feature -- Element change
 	set_pixmap_in_parent is
 			-- Add the pixmap to the parent by updating the 
 			-- parent's image list.
-		require
-			button_has_pixmap: has_pixmap
 		local
 			default_imagelist: EV_IMAGE_LIST_IMP
 			hot_imagelist: EV_IMAGE_LIST_IMP

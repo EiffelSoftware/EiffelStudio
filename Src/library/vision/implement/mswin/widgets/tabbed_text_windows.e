@@ -11,9 +11,12 @@ inherit
 	TABBED_TEXT_I
 
 	SCROLLED_TEXT_WINDOWS
+		rename
+			make as make_text
 		redefine
 			realize,
-			default_style
+			default_style,
+			tab_length
 		end
 
 creation

@@ -107,16 +107,8 @@ feature {NONE} -- Initialization
 			wd: WEL_DIALOG
 		do
 			wc ?= parent
-			if wc = void then
-				io.putstring ("SHIT")
-				io.read_line
-			end
 			make_by_id (wc, Idd_replacedialog)
 			wd ?= Current
-			if wd = void then
-				io.putstring ("SHIT")
-				io.read_line
-			end
 			!! find_next_button.make_by_id (wd, Id_findnext)
 			!! replace_button.make_by_id (wd, Id_replace)
 			!! replace_all_button.make_by_id (wd, Id_replaceall)

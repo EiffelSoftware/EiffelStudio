@@ -24,6 +24,11 @@
 #include "eif_bits.h"
 #include "eif_globals.h"
 #include "x2c.header"		/* For macro LNGPAD */
+#ifdef I_STRING
+#include <string.h>
+#else
+#include <strings.h>
+#endif
 
 /*
  * Private declarations

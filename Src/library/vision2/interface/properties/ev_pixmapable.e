@@ -37,7 +37,7 @@ feature -- Element change
 		do
 			implementation.set_pixmap (a_pixmap)
 		ensure
-			pixmap_assigned: pixmap.is_equal (a_pixmap) and pixmap /= a_pixmap
+			pixmap_assigned: a_pixmap.is_equal (pixmap) and pixmap /= a_pixmap
 		end
 
 	remove_pixmap is
@@ -77,6 +77,9 @@ end -- class EV_PIXMAPABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/03/03 01:44:01  oconnor
+--| fixed call on void problem in PC of set_pixmap
+--|
 --| Revision 1.15  2000/03/01 22:30:26  oconnor
 --| corrected postconditions
 --|

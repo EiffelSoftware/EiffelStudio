@@ -7,6 +7,9 @@ indexing
 
 class SYSTEM_CONSTANTS
 
+inherit
+	SHARED_PLATFORM_CONSTANTS
+
 feature {NONE}
 
 	Backup: STRING is "BACKUP";
@@ -159,22 +162,12 @@ feature {NONE}
 
 	W_code: STRING is "W_code"
 
-	Pixmap_suffix: STRING is
-			-- Suffix for pixmaps (bmp for windows - xpm for motif).
-		once
-			if Platform_constants.is_windows then
-				Result := "bmp"
-			else
-				Result := "xpm"
-			end
-		end
-
 feature {NONE} -- Versioning
 
 	Precompilation_id_tag: STRING is "precompilation_id"
-	Version_number: STRING is "4.2 a"
+	Version_number: STRING is "4.2 b"
 	Version_number_tag: STRING is "eiffelbench_version_number"
-	Storable_version_number: STRING is "4.2 a"
+	Storable_version_number: STRING is "4.2 b"
 	Storable_version_number_tag: STRING is "storable_version_number"
 
 feature {NONE}
@@ -183,12 +176,5 @@ feature {NONE}
 		-- Maximum number of non encrypted characters during
 		-- code generation
 		--| The class FEATURE_I will be generated in the file 'fe<n>.c'
-
-feature {NONE}
-
-	Platform_constants: PLATFORM_CONSTANTS is
-		once
-			!! Result
-		end;
 
 end -- class SYSTEM_CONSTANTS

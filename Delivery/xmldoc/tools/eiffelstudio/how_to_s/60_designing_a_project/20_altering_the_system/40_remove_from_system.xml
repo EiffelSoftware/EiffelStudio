@@ -35,4 +35,6 @@
 			<bold>Tip</bold>: Turn on 
 			<bold>Automatic backups</bold>.  EiffelStudio will make a copy of each class file every time a compilation is done.
 		</tip>
-	</paragraph></document>
+		<seealso><bold>See also</bold><line_break></line_break><link><url>../40_modifying_the_display/30_remove_from_view.html</url><label>Removing items from the view only</label></link></seealso>
+	</paragraph>
+	</document>

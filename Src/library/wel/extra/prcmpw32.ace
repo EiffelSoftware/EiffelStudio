@@ -34,6 +34,9 @@ cluster
 	traversing:		"$EIFFEL3\library\base\structures\traversing";
 	tree:			"$EIFFEL3\library\base\structures\tree";
 
+	desc_general:		"$EIFFEL3\library\base\desc\general";
+	desc_win32:		"$EIFFEL3\library\base\desc\spec\win32";
+
 external
 	include_path:		"$(EIFFEL3)\library\wel\spec\windows\include";
 	object: 		"$(EIFFEL3)\library\wel\spec\$(PLATFORM)\lib\wel.lib"

@@ -41,6 +41,7 @@ feature -- Element change
 
 	initialize (server_type: INTEGER) is
 			-- Initialize Automation by creating new dispatcher.
+			-- See EOLE_CLSCTX for `server_type' values
 		require
 			valid_server_type: is_valid_clsctx (server_type)
 		local
@@ -58,9 +59,7 @@ feature -- Element change
 			class_factory_ptr := co_get_class_object (class_id, 
 					server_type, Iid_class_factory)
 			if status.succeeded then
-				print("co_get_class_object succeeded %N")
 				class_factory.link_ole_interface_ptr (class_factory_ptr)
-				print("calling class_factory.create_instance %N")
 				unknown_ptr := class_factory.create_instance (default_pointer, Iid_unknown)
 				if class_factory.status.succeeded then
 					!! unknown.make

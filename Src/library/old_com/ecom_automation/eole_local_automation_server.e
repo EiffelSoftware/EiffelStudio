@@ -48,15 +48,18 @@ feature -- Initialization
 			-- Initialize server.
 		local
 			exception: EXCEPTIONS
+			local_string: STRING
 		do
 			default_show_cmd := Sw_shownormal
 			if argument_count /= 0 then
-				if argument (1).is_equal ("-Embedding") or argument (1).is_equal ("/Embedding") then
+				local_string := argument (1)
+				local_string.to_lower
+				if local_string.is_equal ("-embedding") or local_string.is_equal ("/embedding") then
 					default_show_cmd := Sw_hide
 					run
-				elseif argument (1).is_equal ("-RegServer") or argument (1).is_equal ("/Regserver") then
+				elseif local_string.is_equal ("-regserver") or local_string.is_equal ("/regserver") then
 					register_server
-				elseif argument (1).is_equal ("-UnregServer") or argument (1).is_equal ("/UnregServer") then
+				elseif local_string.is_equal ("-unregserver") or local_string.is_equal ("/unregserver") then
 					unregister_server
 				else
 					!! exception

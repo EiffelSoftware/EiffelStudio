@@ -191,14 +191,21 @@ cd $EXPORT_DIR
 safe_md $EXPORT_DIR/ecs
 
 remtrace Enterprise edition
-cp ec.gz $EXPORT_DIR/ecs/ec_enterprise.gz
+cp ec.tar.gz ec.tar.gz.old
 untgz_ccode ec
+gzip ec
+move ec.gz $EXPORT_DIR/ecs/ec_enterprise.gz
 
-if [ "$MULTIPLE_EDITIONS" ]; then
+if [ -z "$MULTIPLE_EDITIONS" ]; then
+	gunzip ec.gz
+	move ec $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
+else
 	remtrace Free edition
-	cp ecfree.tar.gz $EXPORT_DIR/ecs/ec_free.gz
+	cp ecfree.tar.gz ecfree.tar.gz.old
 	move ecfree.tar.gz ec.tar.gz
 	untgz_ccode ec
+	gzip ec
+	move ec.gz $EXPORT_DIR/ecs/ec_free.gz
 fi
 
 cd $EXPORT_DIR

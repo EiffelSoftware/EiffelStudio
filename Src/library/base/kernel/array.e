@@ -82,7 +82,6 @@ feature -- Access
 			Result := area.item (i - lower);
 		end;
 
-
 	has (v: G): BOOLEAN is
 			-- Does `v' appear in array?
  			-- (Reference or object equality,
@@ -114,10 +113,8 @@ feature -- Access
 			Result := not (i > upper);
 		end;
 
-
 feature -- Measurement
 
-	
 	lower: INTEGER;
 			-- Minimum index
 
@@ -149,7 +146,7 @@ feature -- Measurement
 					end
 				end
 			else
-				from	
+				from
 					i := lower
 				until
 					i > upper
@@ -209,7 +206,6 @@ feature -- Status report
 			Result := (lower <= i) and then (i <= upper)
 		end;
 
-
 	extendible: BOOLEAN is
 			-- May items be added?
 			-- (Answer: no, although array may be resized.)
@@ -237,7 +233,7 @@ feature -- Element change
 			-- currently defined bounds; preserve existing items.
 		do
 			if upper < lower then
-				resize (i, i);	
+				resize (i, i);
 			elseif i < lower then
 				auto_resize (i, upper);
 			elseif i > upper then
@@ -276,7 +272,6 @@ feature -- Removal
 		ensure
 			all_cleared: all_cleared
 		end;
-
  
 feature -- Resizing
 
@@ -329,9 +324,8 @@ feature -- Resizing
 		ensure
 			no_low_lost: lower = minindex.min (old lower);
 			no_high_lost: upper = maxindex.max (old upper)
-		end;	
-				
-				
+		end;
+
 feature -- Conversion
 
 	to_pointer: POINTER is
@@ -347,7 +341,7 @@ feature -- Conversion
 		do
 			Result := area
 		end;
-		
+
 	linear_representation: LINEAR [G] is
 			-- Representation as a linear structure
 		local
@@ -456,7 +450,7 @@ feature {NONE} -- Implementation
 			lower := new_lower;
 			upper := new_upper
 		end;
-	
+
 	empty_area: BOOLEAN is
 		do
 			Result := area = Void or else area.count = 0

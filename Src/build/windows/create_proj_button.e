@@ -44,10 +44,15 @@ feature {NONE}
 					popup_window
 				else
 					question_box.popup (Current, 
-						Messages.create_project_qu, Void)
+						app_not_save_qu, Void)
 				end
 			end
 		end
+
+	app_not_save_qu: STRING is
+		do
+			Result := Messages.create_project_qu
+		end;
 
 feature {NONE}
 
@@ -55,7 +60,12 @@ feature {NONE}
 		do
 		end;
 
-	question_ok_action, popup_window is
+	question_ok_action is
+		do
+			popup_window
+		end;
+
+	popup_window is
 		local
 			pw: CREATE_PROJ_WIN;
 		do

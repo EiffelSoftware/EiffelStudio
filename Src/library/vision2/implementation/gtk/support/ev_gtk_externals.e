@@ -111,12 +111,12 @@ feature {NONE} -- GTK C functions for label
 		end
 
 feature {NONE} -- GTK C functions for toolbars
-
-	gtk_toolbar_new (o, s: INTEGER): POINTER is
+	
+	c_gtk_toolbar_new_horizontal: POINTER is
 		external
-			"C | <gtk/gtk.h>"
+			"C | %"gtk_eiffel.h%""
 		end
-
+	
 	gtk_toolbar_append_space (t: POINTER) is
 		external
 			"C | <gtk/gtk.h>"
@@ -748,6 +748,49 @@ feature {NONE} -- GTK C functions for progress bar
 			"C (gfloat, gfloat, gfloat, gfloat, gfloat): EIF_POINTER | <gtk/gtk.h>"
 		end
 
+	gtk_progress_get_value (bar: POINTER): REAL is
+		external
+			"C | <gtk/gtk.h>"
+		end
+
+	gtk_progress_set_value (pbar: POINTER; val: REAL) is
+			-- Make 'val' then new current value
+		external
+			"C | <gtk/gtk.h>"
+		end
+
+	c_gtk_progressbar_set_step (val: REAL) is
+			-- Make 'val' the new step.
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_progressbar_set_minimum (val: REAL) is
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_progressbar_get_minimum (bar: POINTER): REAL is
+		external
+			"C | <gtk/gtk.h>"
+		end
+
+	c_gtk_progressbar_set_maximum (val: REAL) is
+			-- Make 'val' the new step.
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_progressbar_get_maximum (bar: POINTER): REAL is
+		external
+			"C | <gtk/gtk.h>"
+		end
+
+	c_gtk_progressbar_get_step (bar: POINTER): REAL is
+		external
+			"C | <gtk/gtk.h>"
+		end
+
 	gtk_progress_bar_set_bar_style (progressbar: POINTER; style: INTEGER) is
 		external
 			"C | <gtk/gtk.h>"
@@ -904,9 +947,11 @@ feature {NONE} -- GTK C functions for spin buttons
 			"C (GtkSpinButton *, gfloat) | <gtk/gtk.h>"
 		end
 
-	gtk_spin_button_get_adjustment (spinButton: POINTER): POINTER is
- 		external
-			"C (GtkSpinButton *): EIF_POINTER | <gtk/gtk.h>"
+	c_gtk_spin_button_adjustment (spinButton: POINTER): POINTER is
+		external
+			"C [struct <gtk/gtkspinbutton.h>] (GtkSpinButton) : EIF_POINTER"
+		alias
+			"adjustment"
 		end
 
 	c_gtk_spin_button_step (spinButton: POINTER): INTEGER is
@@ -966,9 +1011,11 @@ feature {NONE} -- GTK C functions for gtk_range (EV_RANGE or EV_SCROLL_BAR)
 		external "C [macro %"gtk_eiffel.h%"]"
 		end
 
-	c_gtk_range_adjustment (scroll: POINTER): POINTER is
+	c_gtk_range_adjustment (p: POINTER): POINTER is
 		external
-			"C [macro %"gtk_eiffel.h%"]"
+			"C [struct <gtk/gtkrange.h>] (GtkRange) : EIF_POINTER"
+		alias
+			"adjustment"
 		end
 
 feature {NONE} -- GTK C functions for gtk_scale (EV_RANGE)
@@ -1107,18 +1154,18 @@ feature {NONE} -- Implementation
 		end
 end
 
---|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|---------------------------------------------------------------
+--!----------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!---------------------------------------------------------------

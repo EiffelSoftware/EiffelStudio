@@ -237,9 +237,10 @@ feature -- Status report
 				end
 			else
 				f := debug_output_feature.ancestor_version (dynamic_type)
-				create expr.make_with_object (create {DEBUGGED_OBJECT}.make (value_object, 0, 1), f.name)
+				create expr.make_with_object (
+					create {DEBUGGED_OBJECT}.make (value_object, 0, 1), f.name)
 				expr.evaluate
-				if expr.error_message = Void then
+				if expr.error_message = Void and then not expr.final_result_value.is_void then
 					Result := expr.final_result_value.string_representation (min, max)
 				else
 					Result := expr.error_message

@@ -53,12 +53,25 @@ int32 feature_id;
 	body_id = dispatch[body_index];
 
 	if (body_id < zeroc) {
-		return frozen[body_id];		 /* Frozen feature */
+		return frozen[body_id];			 /* Frozen feature */
 	}
-	else {
-		IC = melt[body_id];	 /* Position byte code to interpret */
+	else 
+#ifndef DLE
+	{
+		IC = melt[body_id];				 /* Position byte code to interpret */
 		return pattern[MPatId(body_id)].toi;
 	}
+#else
+	if (body_id < dle_level) {
+		IC = melt[body_id];				 /* Position byte code to interpret */
+		return pattern[MPatId(body_id)].toi;
+	} else if (body_id < dle_zeroc) {
+		return dle_frozen[body_id];		 /* Frozen feature in the DC-set */
+	} else {
+		IC = dle_melt[body_id];			 /* Position byte code to interpret */
+		return pattern[DLEMPatId(body_id)].toi;
+	}
+#endif
 }
 
 public char *(*wfeat_inv(static_type, feature_id, name, object))()
@@ -93,10 +106,26 @@ char *name;
 
 	if (body_id < zeroc)
 		return frozen[body_id];
-	else {
+	else 
+#ifndef DLE
+	{
 		IC = melt[body_id];	
 		return pattern[MPatId(body_id)].toi;
 	}
+#else
+	if (body_id < dle_level) {
+			/* Static melted routine */
+		IC = melt[body_id];	
+		return pattern[MPatId(body_id)].toi;
+	} else if (body_id < dle_zeroc) {
+			/* Dynamic frozen routine */
+		return dle_frozen[body_id];
+	} else {
+			/* Dynamic melted routine */
+		IC = dle_melt[body_id];	
+		return pattern[DLEMPatId(body_id)].toi;
+	}
+#endif
 }
 
 
@@ -124,11 +153,30 @@ char *object;
 	if (body_id < zeroc) 
 		((void (*)()) (frozen[body_id])) (object);	/* Frozen feature */
 									/* Call frozen creation routine */
-	else {
+	else 
+#ifndef DLE
+	{
 		IC = melt[body_id];	 		/* Position byte code to interpret */
 		((void (*)()) (pattern[MPatId(body_id)].toi)) (object);
 									/* Call melted creation routine */
 	}
+#else
+	if (body_id < dle_level) {
+			/* Static melted routine */
+		IC = melt[body_id];	 		/* Position byte code to interpret */
+		((void (*)()) (pattern[MPatId(body_id)].toi)) (object);
+									/* Call melted creation routine */
+	} else if (body_id < dle_zeroc) {
+			/* Dynamic frozen routine */
+		((void (*)()) (dle_frozen[body_id])) (object);	/* Frozen feature */
+									/* Call frozen creation routine */
+	} else {
+			/* Dynamic melted routine */
+		IC = dle_melt[body_id];	 		/* Position byte code to interpret */
+		((void (*)()) (pattern[DLEMPatId(body_id)].toi)) (object);
+									/* Call melted creation routine */
+	}
+#endif
 	IC = OLD_IC;					/* Restore old IC.
 									 * This was needed if expanded objects
 									 * had expanded objects (which has a
@@ -161,7 +209,17 @@ int32 feature_id;
 		/* Frozen feature */
 		return frozen[body_id];
 	else
+#ifndef DLE
 		xraise(EN_DOL);
+#else
+	if (body_id < dle_level)
+		xraise(EN_DOL);
+	else if (body_id < dle_zeroc)
+			/* Dynamic frozen feature */
+		return dle_frozen[body_id];
+	else
+		xraise(EN_DOL);
+#endif	
 }
 
 public long wattr(static_type, feature_id, dyn_type)
@@ -256,10 +314,26 @@ int dyn_type;
 	if (body_id < zeroc) {
 		return frozen[body_id];		 /* Frozen feature */
 	}
-	else {
+	else 
+#ifndef DLE
+	{
 		IC = melt[body_id];	 /* Position byte code to interpret */
 		return pattern[MPatId(body_id)].toi;
 	}
+#else
+	if (body_id < dle_level) {
+			/* Static melted routine */
+		IC = melt[body_id];	 /* Position byte code to interpret */
+		return pattern[MPatId(body_id)].toi;
+	} else if (body_id < dle_zeroc) {
+			/* Dynamic frozen feature */
+		return dle_frozen[body_id];
+	} else {
+			/* Dynamic melted routine */
+		IC = dle_melt[body_id];	 /* Position byte code to interpret */
+		return pattern[DLEMPatId(body_id)].toi;
+	}
+#endif
 }
 
 /*

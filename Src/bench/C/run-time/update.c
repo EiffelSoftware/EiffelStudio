@@ -27,24 +27,16 @@
 #include "misc.h"
 #include "file.h"
 #include "err_msg.h"
+#include "dle.h"
 
-private void cnode_updt();			/* Update a cnode structure */
-private void routid_updt();			/* Update routine id array */
-private void conform_updt();		/* Update a conformance table */
-private void option_updt();			/* Update the option table */
 private void cecil_updt();			/* Cecil update */
 private char **names_updt();		/* String array */
 private void root_class_updt();		/* Update the root class info */
-private void routinfo_updt();		/* Update the rout info table */
-private void desc_updt();			/* Update the descriptors */
-
 public long melt_count;				/* Size of melting table */
 
 /* For debugging */
 #define dprintf(n)	  if (DEBUG & (n)) printf
 /*#define DEBUG 3		/**/
-
-extern void wread();
 
 /* TEMPORARY */
 FILE *fil;
@@ -63,7 +55,6 @@ char ignore_updt;
 	long body_id;							/* Last body id */
 	char *bcode;							/* Last byte code */
 	long bsize;								/* Last byte code size */
-	long new_count;							/* New system size */
 	char c;
 	char *meltpath = (char *) 0;			/* directory of .UPDT */
 	char *filename;							/* .UPDT complet path */
@@ -157,11 +148,13 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 	root_class_updt ();
 
 	count = wlong();			/* Read the count of class types */
-	new_count = count;
 	ccount = wlong();			/* Read the count of classes */
 #ifdef DEBUG
 	dprintf(1)("New class type count: %ld\n", count);
 #endif
+	dle_level = wlong();		/* DLE: Read the new value of DLE level */
+	dle_zeroc = dle_level;		/* DLE: New value of DLE frozen level */
+
 	/* Allocation of variable `esystem' */
 	esystem = (struct cnode *) cmalloc(count * sizeof(struct cnode));
 	if (esystem == (struct cnode *) 0)
@@ -173,6 +166,18 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 	if (ecall == (int32 **) 0)
 		enomem();
 	bcopy(fcall, ecall, scount * sizeof(int32 *));
+
+	/* FIX ME: `ecall' is indexed by original (static) type id, not by dynamic type
+	 * id. Therefore it should be resized using `scount' which is the number of
+	 * dynamic types in the system, but rather by the updated value of `fcount'
+	 * which is the number of static types (if some types have been removed
+	 * abd the type system has been recomputed, then scount < fcount).
+	 * This remark also applies to `fdtype' which is an array converting static
+	 * types to dynamic types. This table should be updated when melting the
+	 * system. Now it assumes that the number of static and dynamic types are
+	 * equal and that static and dynamic types for melted types are equal.
+	 * See also the FIXMEs in class SYSTEM_I and dle.c
+	 */
 
 	scount = count;
 	/* Feature table update */
@@ -199,6 +204,7 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 
 	/* Copy of the frozen dispatch table into `dispatch' */
 	bcopy(fdispatch, dispatch, dcount * sizeof(uint32));
+	dcount = count;
 
 	/* Update of the dispatch table */
 	while ((body_index = wlong()) != -1) {
@@ -257,11 +263,14 @@ if (body_id >= 0)
 #ifdef DEBUG
 	dprintf(1)("updating conformance table\n");
 #endif
-	conform_updt(new_count);
-
+	conform_updt();
 	}
+
 	/* Option table */
-	option_updt(new_count);
+	eoption = (struct eif_opt *)cmalloc(scount * sizeof(struct eif_opt));
+	if (eoption == (struct eif_opt *) 0)
+		enomem();
+	option_updt();
 
 	/* Routine info table */
 	routinfo_updt();
@@ -318,7 +327,7 @@ private void root_class_updt ()
 #endif
 }
 
-private void cnode_updt()
+public void cnode_updt()
 {
 	/* Update a cnode structure */
 
@@ -470,7 +479,7 @@ private void cnode_updt()
 #endif
 }
 
-private void routid_updt()
+public void routid_updt()
 {
 	/* Update routine id arrays */
 
@@ -527,8 +536,7 @@ private void routid_updt()
 	}
 }
 
-private void conform_updt(new_count)
-long new_count;		/* New system size */
+public void conform_updt()
 {
 	/* Update conformance table */
 
@@ -539,9 +547,8 @@ long new_count;		/* New system size */
 	register3 char *area;				/* Area of `new' */
 	register4 short area_size;			/* Size of `area' */
 
-	/* Allocation of the conformance table */
-	co_table =
-		(struct conform **) cmalloc(new_count * sizeof(struct conform *));
+		/* Allocation of the conformance table */
+	co_table = (struct conform **) cmalloc(scount*sizeof(struct conform *));
 	if (co_table == (struct conform **) 0)
 		enomem();
 
@@ -650,8 +657,7 @@ short count;
 	return result;
 }
 		
-private void option_updt(new_count)
-long new_count;
+public void option_updt()
 {
 	/* Update of the option table */
 
@@ -667,10 +673,6 @@ long new_count;
 	short dtype;
 	int i;
 	
-	eoption = (struct eif_opt *) cmalloc(new_count * sizeof(struct eif_opt));
-	if (eoption == (struct eif_opt *) 0)
-		enomem();
-
 	while ((dtype = wshort()) != -1) {	/* Get a dynamic type */
 		current = eoption + dtype;
 		bzero(current, sizeof(struct eif_opt));
@@ -721,7 +723,7 @@ long new_count;
 	}
 }
 
-private void routinfo_updt()
+public void routinfo_updt()
 {
 
 	/* Update the routine information table */
@@ -742,7 +744,7 @@ private void routinfo_updt()
 	}
 }
 
-private void desc_updt()
+public void desc_updt()
 {
 	
 	long count;

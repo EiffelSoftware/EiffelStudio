@@ -522,6 +522,22 @@ feature -- Status report
 					is_byref (a_var_type)
 		end
 
+	is_basic (a_type: INTEGER): BOOLEAN is
+			-- Is `a_type' basic type?
+		do
+			Result := a_type = Vt_i2 or
+					a_type = Vt_i4 or
+					a_type = Vt_r4 or
+					a_type = Vt_r8 or
+					a_type = Vt_bool or
+					a_type = Vt_i1 or
+					a_type = Vt_ui1 or
+					a_type = Vt_ui2 or
+					a_type = Vt_ui4 or
+					a_type = Vt_int or
+					a_type = Vt_uint
+		end
+
 end -- class ECOM_VAR_TYPE
 
 --|----------------------------------------------------------------

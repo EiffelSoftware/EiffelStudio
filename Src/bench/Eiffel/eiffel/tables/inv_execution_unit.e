@@ -6,7 +6,7 @@ inherit
 
 	EXECUTION_UNIT
 		redefine
-			is_valid, make
+			is_valid, make, real_pattern_id
 		end
 
 creation
@@ -15,6 +15,8 @@ creation
 
 	
 feature 
+
+	real_pattern_id: INTEGER is do end;
 
 	make (cl_type: CLASS_TYPE; f: INVARIANT_FEAT_I) is
 			-- Initialization

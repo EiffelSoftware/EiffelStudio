@@ -34,6 +34,10 @@ inherit
 
 feature 
 
+	rout_info_table: ROUT_INFO_TABLE;
+			-- Global routine info table
+			-- rout_id --> (origin/offset)			
+
 	sorter: CLASS_SORTER;
 			-- Topological sorter on classes
 
@@ -94,8 +98,12 @@ feature
 	m_rout_id_server: M_ROUT_ID_SERVER;
 			-- Server for  routine id array byte code
 
+	m_desc_server: M_DESC_SERVER;
+			-- Server for class type descriptors
+
 	poly_server: POLY_SERVER;
 			-- Server of polymorphic unit tables
+			--|SHOULD eventually be removed.
 
 	id_array: ARRAY [CLASS_C];
 			-- Array of classes indexed by their class ids
@@ -118,6 +126,7 @@ feature
 
 	history_control: HISTORY_CONTROL;
 			-- Routine table controler
+			-- Only used for final mode code generation.
 
 	externals: EXTERNALS;
 			-- Table of external names currently used by the system
@@ -251,9 +260,8 @@ feature
 			!!depend_server.make;
 			!!m_feat_tbl_server.make;
 			!!m_feature_server.make;
-			!!m_rout_tbl_server.make;
 			!!m_rout_id_server.make;
-			!!poly_server.make;
+			!!m_desc_server.make;
 				-- Counter creation
 			!!class_counter;
 			!!feature_id_counter;
@@ -280,6 +288,7 @@ feature
 			!!dispatch_table.init;
 			!!execution_table.init;
 			!!melted_set.make;
+			!!rout_info_table.make;
 		end;
 
 	init is
@@ -442,6 +451,7 @@ end;
 			Tmp_inv_ast_server.remove (id);
 			Tmp_depend_server.remove (id);
 			Tmp_m_rout_id_server.remove (id);
+			Tmp_m_desc_server.remove (id);
 
 			freeze_set1.remove_item (id);
 			freeze_set2.remove_item (id);
@@ -572,6 +582,9 @@ feature -- Recompilation
 				-- Syntax analysis: This maybe add new classes to
 				-- the system
 			process_pass (pass1_controler);
+
+				-- Initialize the routine info table
+			Rout_info_table.init;
 
 				-- Check generic validity on old classes
 				-- generic parameters cannot be new classes
@@ -865,43 +878,6 @@ end;
 				local_cursor := local_cursor.right;
 			end;
 
-				-- Trigger recomputing off attribute offset tables of
-				-- classes which skeleton has changed
-			from
-			until
-				changed_skeletons.empty
-			loop
-				changed_skeletons.start;
-				a_class := changed_skeletons.item;
-					-- Change all attribute offset tables of `a_class'
-				from
-					skeleton := a_class.types.first.skeleton;
-					skeleton.start
-				until
-					skeleton.after
-				loop
-					history_control.change_rout_id (skeleton.item.rout_id);
-					skeleton.forth
-				end;
-					-- Remove all ancestors of `a_class' in `changed_skeletons'
-				from
-					changed_skeletons.remove
-				until
-					changed_skeletons.after
-				loop
-					check
-						reverse_topo_order: 	a_class.topological_id
-												>
-												changed_skeletons.item.topological_id
-					end;
-					if a_class.conform_to (changed_skeletons.item) then
-						changed_skeletons.remove;
-					else
-						changed_skeletons.forth
-					end;
-				end;
-			end;
-					
 				-- Check expanded client relation
 			check_expanded;
 
@@ -944,7 +920,8 @@ end;
 		end;
 
 	melt is
-			-- Melt the changed features and feature tables in the system.
+			-- Melt the changed features and feature and
+			-- descriptor tables in the system.
 		require
 			no_error: not Error_handler.has_error
 		local
@@ -985,11 +962,9 @@ end;
 					io.error.putstring (a_class.class_name);
 					io.error.new_line;
 					a_class.melt_feature_table;
+					a_class.melt_descriptor_tables;
 					id_cursor := id_cursor.right;
 				end;
-			
-					-- Melt routine tables
-				history_control.melt;
 			end;
 			melted_set.wipe_out;
 		end;
@@ -1144,11 +1119,24 @@ end;
 				-- Update the execution table
 			execution_table.make_update (Update_file);
 
-				-- Update the routine tables
-			history_control.make_update (Update_file);
 			make_conformance_table_byte_code;
 
 			make_option_table;
+
+			make_rout_info_table;
+
+				-- Melted descriptors
+			from
+				M_desc_server.start
+			until
+				M_desc_server.offright
+			loop
+				class_id := M_desc_server.key_for_iteration;
+				M_desc_server.item (class_id).store (Update_file);
+				M_desc_server.forth
+			end;
+				-- End mark
+			write_int (file_pointer, -1);
 
 			Update_file.close;
 		end;
@@ -1234,6 +1222,13 @@ end;
 			Byte_array.character_array.store (Update_file);
 		end;
 
+	make_rout_info_table is
+			-- Generate byte code for the routine info table
+			-- and store it to disk.
+		do
+			Rout_info_table.melted.store (Update_file)
+		end;
+
 	finalize is
 			-- Finalize a successfull recompilation and update the
 			-- compilation files.
@@ -1274,8 +1269,8 @@ end;
 			Byte_server.take_control (Tmp_byte_server);
 			Inv_byte_server.take_control (Tmp_inv_byte_server);
 			Depend_server.take_control (Tmp_depend_server);
-			Poly_server.take_control (Tmp_poly_server);
 			M_rout_id_server.take_control (Tmp_m_rout_id_server);
+			M_desc_server.take_control (Tmp_m_desc_server);
 
 				-- Clear the instantiator
 			Instantiator.wipe_out;
@@ -1308,9 +1303,8 @@ feature  -- Freeezing
 				-- Clear the melted byte code servers
 			m_feat_tbl_server.clear;
 			m_feature_server.clear;
-			m_rout_tbl_server.clear;
 			m_rout_id_server.clear;
-			history_control.freeze;
+			m_desc_server.clear;
 
 				-- Rebuild the dispatch table and the execution tables
 			shake;
@@ -1366,6 +1360,7 @@ end;
 				io.error.new_line;
 
 				a_class.generate_feature_table;
+				a_class.generate_descriptor_tables;
 
 				id_cursor := id_cursor.right
 			end;
@@ -1376,8 +1371,6 @@ end;
 
 			freeze_set1.wipe_out;
 			freeze_set2.wipe_out;
-
-			generate_routine_table;
 
 			generate_skeletons;
 
@@ -1392,6 +1385,8 @@ end;
 			generate_main_file;
 
 			generate_option_file;
+
+			generate_rout_info_table;
 
 			pattern_table.generate;
 
@@ -1476,6 +1471,29 @@ feature -- Final mode generation
 			byte_context.set_final_mode;
 			Eiffel_table.init;
 
+			from
+				i := 1;
+				nb := class_counter.value;
+			until
+				i > nb
+			loop
+				a_class := id_array.item (i);
+					-- Since a clas can be removed, test if `a_class' is
+					-- not Void.
+				if a_class /= Void then
+						-- Verbose
+					io.error.putstring ("Processing polymorphism of class ");
+					io.error.putstring (a_class.class_name);
+					io.error.new_line;
+
+					a_class.process_polymorphism;
+					History_control.check_overload;
+				end;
+
+				i := i + 1;
+			end;
+			History_control.transfer;
+
 				-- Verbose
 			io.error.putstring ("Pass 5 on system%N");
 
@@ -1514,6 +1532,7 @@ feature -- Final mode generation
 
 				-- Clean Eiffel table
 			Eiffel_table.wipe_out;
+			Tmp_poly_server.clear;
 
 				-- Generate main file
 			generate_main_file;
@@ -1682,7 +1701,6 @@ end;
 	generate_routine_table is
 			-- Generate routine tables
 		local
-			array_ids1, array_ids2: ARRAY [INTEGER];
 			final_mode: BOOLEAN;
 			rout_id: INTEGER;
 			table: POLY_TABLE [ENTRY];
@@ -1691,125 +1709,25 @@ end;
 			Attr_generator.init;
 			Rout_generator.init;
 
-			if not final_mode then
-				!!array_ids1.make (0, routine_id_counter.value);
-				!!array_ids2.make (0, routine_id_counter.value);
-			end;
-			from
-				poly_server.start
-			until
-				poly_server.offright
-			loop
-				rout_id := poly_server.key_for_iteration;
-				if final_mode then
+			if final_mode then
+				from
+					Tmp_poly_server.start
+				until
+					Tmp_poly_server.offright
+				loop
+					rout_id := Tmp_poly_server.key_for_iteration;
 					if Eiffel_table.is_used (rout_id) then
-						table := poly_server.item (rout_id).poly_table;
+						table := Tmp_poly_server.item (rout_id).poly_table;
 						table.write;
 					end;
-				else
-					table := poly_server.item (rout_id).poly_table;
-					table.write_workbench;
-					if table.is_routine_table then
-						array_ids1.put (1, rout_id);
-					else
-						array_ids1.put (-1, rout_id);
-					end;
-					array_ids2.put (table.min_type_id - 1, rout_id);
+					Tmp_poly_server.forth;
 				end;
-				poly_server.forth;
-			end;
-
-			if final_mode then
 				generate_initialization_table;
 				generate_dispose_table;
-			else
-				generate_history_table (array_ids1, array_ids2);
 			end;
 
 			Attr_generator.finish;
 			Rout_generator.finish;
-		end;
-
-	generate_history_table (desc1, desc2: ARRAY [INTEGER]) is
-			-- Generate history table.
-		local
-			i, nb, kind: INTEGER;
-			file: FILE;
-		do
-			file := History_file;
-			History_file.open_write;
-			History_file.putstring ("%
-				%#include %"macros.h%"%N%
-				%#include %"struct.h%"%N%N");
-
-			from
-				i := desc1.lower;
-				nb := desc1.upper;
-			until
-				i > nb
-			loop
-				kind := desc1.item (i);
-				if kind /= 0 then
-					if kind = 1 then
-						file.putstring ("extern struct ca_info");
-					else
-						file.putstring ("extern long");
-					end;
-					file.putstring (" r");
-					file.putint (i);
-					file.putstring ("[];%N");
-					if type_set.has (i) then
-						file.putstring ("extern int16 t");
-						file.putint (i);
-						file.putstring ("[];%N");
-					end;
-				end;
-				i := i + 1
-			end;
-
-			file.putstring ("%Nchar *ftable[] = {%N");
-			from
-				i := desc1.lower;
-				nb := desc1.upper;
-			until
-				i > nb
-			loop
-				kind := desc1.item (i);
-				if kind /= 0 then
-					file.putstring ("(char *) (r");
-					file.putint (i);
-					file.putstring (" - ");
-					file.putint (desc2.item (i));
-					file.putstring ("),%N");
-				else
-					file.putstring ("(char *) 0,%N");
-				end;
-				i := i + 1
-			end;
-			file.putstring ("};%N");
-			
-			file.putstring ("%Nint16 *ftypes[] = {%N");
-			from
-				i := desc1.lower;
-				nb := desc1.upper;
-			until
-				i > nb
-			loop
-				kind := desc1.item (i);
-				if kind /= 0 and then type_set.has (i) then
-					file.putstring ("(int16 *) (t");
-					file.putint (i);
-					file.putstring (" - ");
-					file.putint (desc2.item (i));
-					file.putstring ("),%N");
-				else
-					file.putstring ("(int16 *) 0,%N");
-				end;
-				i := i + 1
-			end;
-			file.putstring ("};%N");
-
-			file.close;
 		end;
 
 	generate_size_table is
@@ -2452,6 +2370,7 @@ feature -- Main file generation
 			static_type: INTEGER;
 			feature_id: INTEGER;
 			has_argument: BOOLEAN;
+			i: INTEGER
 		do
 
 			final_mode := byte_context.final_mode;
@@ -2542,10 +2461,27 @@ feature -- Main file generation
 
 			Main_file.putstring ("}%N");
 
-			-- Generation of einit(). Only for workbench
+			-- Generation of einit() and tabinit(). Only for workbench
 			-- mode.
 
 			if not final_mode then
+
+				Main_file.putstring ("%Nvoid tabinit()%N{%N");
+				from
+					i := class_types.lower
+				until
+					i > class_types.upper
+				loop
+					cl_type := class_types.item (i);
+					if cl_type /= Void then
+						Main_file.putstring ("%TInit");
+						Main_file.putint (cl_type.id);
+						Main_file.putstring ("();%N")
+					end;
+					i := i + 1
+				end;
+				Main_file.putstring ("}%N");
+
 				Main_file.putstring ("%Nvoid einit()%N{%N");
 
 					-- Set C variable `scount'.
@@ -2557,14 +2493,24 @@ feature -- Main file generation
 					-- Set the frozen level
 				Main_file.putstring (";%N%Tzeroc = ");
 				Main_file.putint (frozen_level);
-					-- Set the history table size
-				Main_file.putstring (";%N%Ttbcount = ");
-				Main_file.putint (routine_id_counter.value);	
-
-				Main_file.putstring (";%N}");
+				Main_file.putstring (";%N}%N");
 			end;
 
 			Main_file.close;
+		end;
+
+feature -- Workbench routine info table file generation
+
+	generate_rout_info_table is
+		local
+			f: UNIX_FILE
+		do
+			if not byte_context.final_mode then
+				f := Rout_info_file;
+				f.open_write;
+				f.putstring (Rout_info_table.C_string);
+				f.close;	
+			end;
 		end;
 
 feature --Workbench option file generation
@@ -2681,10 +2627,8 @@ feature -- Purge of compilation files
 			ast_server.purge;
 			m_feat_tbl_server.purge;
 			m_feature_server.purge;
-			m_rout_tbl_server.purge;
-			poly_server.purge;
 			m_rout_id_server.purge;
-
+			m_desc_server.purge;
 		end;
 	
 feature -- Conveniences
@@ -2803,25 +2747,21 @@ feature -- Conveniences
 feature -- Debug purpose
 
 	trace is
-			-- Trace the list `changed_classes'.
 		local
 			a_class: CLASS_C;
-			changed_classes: LINKED_LIST [PASS_C];
+			i: INTEGER
 		do
 			from
-				changed_classes := current_pass.changed_classes;
-				changed_classes.start
+				i := 1;
 			until
-				changed_classes.offright
+				i > id_array.count
 			loop
-				a_class := changed_classes.item.associated_class;
-				io.error.putstring (a_class.class_name);
-				io.error.putstring ("%N%Tchanged = ");
-				io.error.putbool (a_class.changed);
-				io.error.putstring ("%N%Tchanged2 = ");
-				io.error.putbool (a_class.changed2);
-				io.error.new_line;
-				changed_classes.forth;
+				a_class := id_array.item (i);
+				if a_class /= Void then
+					-- Do nothing. Specific debug
+					-- code can be inserted here.
+				end;
+				i := i + 1;
 			end;
 		end;
 

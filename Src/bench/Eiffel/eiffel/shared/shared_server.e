@@ -81,11 +81,17 @@ feature {NONE}
 		once
 			Result := System.m_rout_id_server;
 		end;
+
+	M_desc_server: M_DESC_SERVER is
+		once
+			Result := System.m_desc_server;
+		end;
  
 	Poly_server: POLY_SERVER is
 			-- Server of polymorphic unit tables
 		once
-			Result := System.poly_server;
+			io.error.putstring ("SHARED_SERVER:Poly_server ");
+			io.error.putstring ("Should not be used anymore%N")
 		end;
 
 end

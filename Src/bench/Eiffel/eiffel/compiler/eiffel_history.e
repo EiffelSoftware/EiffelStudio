@@ -45,10 +45,10 @@ feature
 			-- Routine table of id `rout_id'
 		do
 			Result := cache_item_id (rout_id);
-			if Result = Void and then Poly_server.has (rout_id) then
+			if Result = Void and then Tmp_poly_server.has (rout_id) then
 					-- Not in cache and the routine id is not associated to a routine
 					-- table of deferred features only.
-				Result := Poly_server.item (rout_id).poly_table;
+				Result := Tmp_poly_server.item (rout_id).poly_table;
 				if full then
 					remove;
 				end;

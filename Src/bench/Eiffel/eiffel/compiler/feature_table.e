@@ -363,18 +363,6 @@ end;
 			end;
 		end;
 
-	process_polymorphism (old_feature_table: FEATURE_TABLE) is
-		   -- Process polymorphic changes
-	   require
-		   good_argument: old_feature_table /= Void;
-	   local
-		   old_origin_table: SELECT_TABLE;
-	   do
-		   old_origin_table := old_feature_table.origin_table;
-		   old_origin_table.check_obsolete_units (origin_table, feat_tbl_id);
-		   origin_table.check_changed_units (old_origin_table, feat_tbl_id);
-	   end;
-
 	skeleton: GENERIC_SKELETON is
 			-- Skeleton of the associated class
 		local

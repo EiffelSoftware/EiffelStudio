@@ -39,6 +39,23 @@ feature
 		deferred
 		end;
 
+	static_feature_type_id: INTEGER is
+			-- Type id of the Result type
+		local
+			class_type: CL_TYPE_I;
+		do
+			class_type ?= type;
+			if not (
+				class_type = Void
+				or else
+				class_type.is_basic
+				--or else
+				--class_type.is_expanded
+			) then
+				Result := class_type.associated_class_type.id;
+			end;
+		end;
+
 	feature_type_id: INTEGER is
 			-- Type id of the Result type
 		local

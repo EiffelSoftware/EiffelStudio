@@ -105,6 +105,16 @@ feature
 			ca_copy ($area, $other_area, position - 1, 0);
 		end;
 
+	melted_descriptor: MELTED_DESC is
+			-- Melted descriptor
+		local
+			other_area: like area
+		do
+			!!Result.make (position - 1);
+			other_area := Result.area;
+			ca_copy ($area, $other_area, position - 1, 0);
+		end;
+
 	melted_routine_table: MELTED_ROUT_TABLE is
 			-- Melted routine table
 		local

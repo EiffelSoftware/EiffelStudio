@@ -4,7 +4,6 @@ class PASS2
 inherit
 
 	SHARED_WORKBENCH;
-	SHARED_HISTORY_CONTROL;
 	SORTED_PASS
 		rename
 			execute as old_execute
@@ -42,9 +41,6 @@ feature
 			-- sort in order to take advantage of it.
 		do
 			old_execute;
-
-				-- Transfer history controler data on disk
-			History_control.transfer;
 		end;
 
 	set_expanded_modified (a_class: CLASS_C) is

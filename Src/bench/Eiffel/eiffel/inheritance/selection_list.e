@@ -6,7 +6,7 @@ inherit
 	SHARED_WORKBENCH;
 	SHARED_ERROR_HANDLER;
 	SHARED_SELECTED;
-	SHARED_ORIGIN_TABLE;
+	SHARED_ORIGIN_TABLE
 
 creation
 
@@ -204,6 +204,8 @@ feature
 					-- Attribute routine id
 				new_rout_id := - new_rout_id;
 			end;
+				-- Insertion into thwe routine info table
+			System.rout_info_table.put (new_rout_id, System.current_class);	
 			a_feature.set_rout_id_set (rout_id_set);
 			a_feature.set_is_selected (False);
 			a_feature.set_is_origin (True);

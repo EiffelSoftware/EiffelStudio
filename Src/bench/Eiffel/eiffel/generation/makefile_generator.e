@@ -54,10 +54,10 @@ feature
 			final_mode := byte_context.final_mode;
 			if final_mode then
 				add_final_mode_objects;
+				add_table_objects;
 			else
 				add_workbench_mode_objects;
 			end;
-			add_table_objects;
 			add_common_objects;
 				-- Insert all the objects in the basket, so that we may
 				-- count them.
@@ -153,20 +153,28 @@ feature
 						types.offright
 					loop
 						cl_type := types.item;
+							-- C code
 						object_name := cl_type.base_file_name;
 						!!file_name.make (16);
 						file_name.append (object_name);
 						file_name.append (".o");
 						object_basket.put (file_name);
+							-- Descriptor file
+						if workbench_mode then
+							!!file_name.make (16);
+							file_name.append (object_name);
+							file_name.append ("D.o");
+							object_basket.put (file_name);
+						end;
 						types.forth;
 					end;
 					if workbench_mode then
+							-- Feature table
 						object_name := a_class.base_file_name;
 						!!file_name.make (16);
 						file_name.append (object_name);
-						file_name.append ("T");
 						file_name.append_integer (i);
-						file_name.append (".o");
+						file_name.append ("F.o");
 						object_basket.put (file_name);
 					end;
 				end;
@@ -223,7 +231,8 @@ feature
 			object_basket.put ("Epattern.o");
 			object_basket.put ("Efrozen.o");
 			object_basket.put ("Edispatch.o");
-			object_basket.put ("Ehisto.o");
+			object_basket.put ("Ecall.o");
+			--object_basket.put ("Ehisto.o");
 		end;
 
 	add_common_objects is

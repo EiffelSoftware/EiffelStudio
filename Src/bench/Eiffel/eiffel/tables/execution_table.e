@@ -55,6 +55,8 @@ feature
 						(file.file_pointer, real_body_id - frozen_level - 1);
 						-- Write the size
 					write_int (file.file_pointer, melted_feature.size);
+						-- Write the pattern id
+					write_int (file.file_pointer, e.real_pattern_id);
 						-- Write the byte code
 					melted_feature.store (file);
 
@@ -76,6 +78,7 @@ feature
 			values: ARRAY [EXECUTION_UNIT];
 			unit: EXECUTION_UNIT;
 			i, nb: INTEGER;
+			temp: STRING
 		do
 			from
 				nb := count;
@@ -102,14 +105,22 @@ feature
 			from
 				i := 1;
 				file.new_line;
+				!!temp.make (0);
+				temp.append ("%Nint fpatidtab[] = {%N");
 				file.putstring ("fnptr frozen[] = {%N");
 			until
 				i > nb
 			loop
 				values.item (i).generate (file);
+				temp.append_integer (values.item (i).real_pattern_id);
+				temp.append (",%N");
 				i := i + 1;
 			end;
 			file.putstring ("};%N");
+			temp.put ('%N', temp.count - 1);
+			temp.put ('}', temp.count);
+			temp.append (";%N");
+			file.putstring (temp);
 		end;
 
 feature -- Debugging
@@ -141,5 +152,5 @@ feature {NONE} -- External features
 		external
 			"C"
 		end;
-		
+
 end

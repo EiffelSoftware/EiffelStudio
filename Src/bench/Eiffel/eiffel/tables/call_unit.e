@@ -24,7 +24,10 @@ inherit
 		redefine
 			is_equal
 		end;
-
+	SHARED_PATTERN_TABLE
+		redefine
+			is_equal
+		end;
 	
 feature 
 

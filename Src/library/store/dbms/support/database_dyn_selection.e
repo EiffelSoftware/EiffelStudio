@@ -8,6 +8,9 @@ class
 
 inherit
 	DATABASE_SELECTION [G]
+		redefine
+			replacement_string
+		end
 
 creation
 
@@ -17,60 +20,41 @@ feature
 
 	prepare (s: STRING) is
 			-- Parse of the sql statement `s'
+		require
+			not_void: s /= Void
+			meaning_full_statement: s.count > 0
 		local
 			parsed_s: STRING
 			parsed: BOOLEAN
-			ArgNum, i, j, k: INTEGER
+			ArgNum: INTEGER
 		do
-			sql_string := s
+			sql_string := clone (s)
+
+			s.wipe_out
+			s.append (parse (sql_string))
+
 			ArgNum := s.occurrences('?')
 
-			if s.has(':') then
-				from
---					i := 0
-					i := 1
-					k := 1
-				until
-					i=s.count
-				loop
-					i := s.index_of (':', i)					
-					j := s.index_of (',', i)
-
---					i := s.index_of (':', 1)					
---					j := s.index_of (',', 1)
-					if j=0 then
-						j := s.count
-					end
-----					parameters.put(s.substring (i+1, j-1), k)
---					parameters.force (s.substring (i+1, j-1), k)
-					parameters.force (s.substring (i+1, j), k)
-
-					i := j
-					k := k + 1
-				end
-			end
 			descriptor := db_spec.new_descriptor
 			if not db_spec.normal_parse then
---				parsed := db_spec.parse_dyn (descriptor,parameters, ht, handle, s)	
 				parsed := db_spec.parse (descriptor, ht, handle, s)	
 			end
 			if not parsed then
-				parsed_s := parse (s)
+--				parsed_s := parse (s)
+				parsed_s := s
 				if is_ok then
 					handle.status.set (db_spec.init_order (descriptor, parsed_s))
 				end
-
 				if is_ok then
 					handle.status.set (db_spec.pre_immediate (descriptor, ArgNum))
 				end
-		
 			end
 		end
 
 	bind_parameter is
 			-- Bind of the prarameters of the sql statement 
 		do
-			db_spec.bind_parameter (parameters_value, parameters, descriptor, handle, sql_string)	
+			db_spec.bind_parameter (parameters_value, parameters_value, descriptor, handle, "")	
 		end
 
 	execute is
@@ -79,14 +63,24 @@ feature
 			if is_ok then
 				handle.status.set (db_spec.unset_catalog_flag(descriptor))
 			end
-
 			if is_ok then
 				handle.status.set (db_spec.start_order (descriptor))
 			end	
+			if is_ok then
+				handle.status.set (db_spec.result_order (descriptor))
+			end
+
+			next
+
+--			if is_ok then
+--				handle.status.set (db_spec.pre_immediate (descriptor, last))
+--			end
 		end
 
 	set_value (v: ANY) is
 			-- Set the values of the parameters
+		require
+			value_exists: v /= Void
 		do
 			last := last + 1
 			parameters_value.force (v, last)
@@ -110,14 +104,21 @@ feature {NONE} -- Implementation
 			!! Result.make (1, 0)
 		end
 	
-	parameters: ARRAY [ANY] is
-			-- Parameters of the sql statement
-		once
-			!! Result.make (1, 0)
-		end
-		
-	location_of_question_marks: LINKED_LIST [INTEGER]
-			-- Location of the question marks
+	replacement_string (key, destination: STRING) is
+			-- Replace object associated with `key' by a '?' in `destination'.
+			-- and, fill chronologically, the parameters_value array.
+		local
+			object: ANY
+		do
+			object := ht.item (key);
+			if object /= void then
+				destination.append ("?")
+				parameters_value.force (object, last)
+				last := last + 1
+			else
+				destination.append (null_string)
+			end
+		end;
 
 	last: INTEGER
 			-- Last value added

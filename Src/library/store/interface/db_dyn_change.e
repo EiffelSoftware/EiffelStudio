@@ -55,12 +55,12 @@ feature -- Element change
 			implementation.set_value (v)
 		end
 
-	put (table: ARRAY [ANY]) is
-			-- Execute the sql statement with `table' as 
-			-- the array of values for the parameters
-		do
-			implementation.put (table)
-		end
+--	put (table: ARRAY [ANY]) is
+--			-- Execute the sql statement with `table' as 
+--			-- the array of values for the parameters
+--		do
+--			implementation.put (table)
+--		end
 
 feature {NONE} -- Implementation
 

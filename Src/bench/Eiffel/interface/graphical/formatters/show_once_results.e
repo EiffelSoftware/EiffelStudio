@@ -100,7 +100,7 @@ feature {NONE} -- Properties
 				loop
 					Result.add_indent;
 					e_feature := once_func_list.item;
-					e_feature.append_name (Result, dynamic_class);
+					e_feature.append_name (Result);
 					arguments := e_feature.arguments;
 					if arguments /= Void then
 						Result.add_string (" (");

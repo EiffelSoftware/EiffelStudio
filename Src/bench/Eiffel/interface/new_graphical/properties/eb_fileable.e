@@ -172,11 +172,12 @@ feature -- "Save command" related features
 		local
 			cst: CLASSC_STONE
 		do
+			save_cmd.execute
 			cst ?= stone
 			if cst /= Void then
 				Eiffel_project.Workbench.change_class (cst.class_i)
+				cst.class_i.set_date
 			end
-			save_cmd.execute
 		end
 
 	perform_check_before_save is

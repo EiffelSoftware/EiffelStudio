@@ -46,7 +46,7 @@ feature -- Output
 			end
 			st.add_string ("Class ")
 			class_c.append_signature (st, False)
-			st.add_string (" inherit multiply from classes that cannot be multiply inherited:")
+			st.add_string (" inherits multiply from classes that cannot be multiply inherited:")
 			st.add_new_line
 			from
 				parent_classes.start

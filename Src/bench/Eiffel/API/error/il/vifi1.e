@@ -45,7 +45,7 @@ feature -- Output
 			end
 			st.add_string ("Class ")
 			class_c.append_signature (st, False)
-			st.add_string (" inherit from frozen class ")
+			st.add_string (" inherits from frozen class ")
 			parent_class.append_signature (st, False)			
 			st.add_new_line
 		end

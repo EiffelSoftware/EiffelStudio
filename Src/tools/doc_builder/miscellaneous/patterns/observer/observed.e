@@ -41,20 +41,28 @@ feature -- Query
 			Result := observers.has (o)
 		end		
 
+	has_observers: BOOLEAN is
+			-- Has any observers?
+		do
+			Result := observers /= Void and then not observers.is_empty	
+		end		
+
 feature {NONE} -- Implementation
 
 	notify_observers is
 			-- Notify observers of change
 		do
-			from
-				observers.start
-			until
-				observers.after
-			loop
-				if observers.item.should_update then
-					observers.item.update	
+			if has_observers then
+				from
+					observers.start
+				until
+					observers.after
+				loop
+					if observers.item.should_update then
+						observers.item.update	
+					end
+					observers.forth
 				end
-				observers.forth
 			end
 		end
 

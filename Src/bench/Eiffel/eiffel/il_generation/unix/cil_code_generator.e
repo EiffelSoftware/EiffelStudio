@@ -649,7 +649,7 @@ feature -- IL Generation
 	override_counter: COUNTER
 			-- Number of generated override methods.
 
-	generate_method_impl (cur_feat: FEATURE_I; parent_type: CLASS_TYPE; inh_feat: FEATURE_I) is
+	generate_method_impl (cur_feat: FEATURE_I; parent_type: CLASS_TYPE; inh_feat: FEATURE_I; is_from_implementation: BOOLEAN) is
 			-- Generate a MethodImpl from `parent_type' and `inh_feat'
 			-- to `current_class_type' and `cur_feat'.
 		require

@@ -10,26 +10,20 @@ class
 
 feature -- Access
 
-	Tvsil_normal: INTEGER is
+	Tvsil_normal: INTEGER is 0
 			-- Indicates the normal image list, which contains 
 			-- selected, nonselected, and overlay images for the
 			-- items of a tree view control. 
-		external
-			"C [macro %"commctrl.h%"]"
-		alias
-			"TVSIL_NORMAL"
-		end
+			--
+			-- Declared in Windows as TVSIL_NORMAL
 
-	Tvsil_state: INTEGER is
+	Tvsil_state: INTEGER is 2
 			-- Indicates the state image list. You can use state 
 			-- images to indicate application-defined item states. 
 			-- A state image is displayed to the left of an item's
 			-- selected or nonselected image.
-		external
-			"C [macro %"commctrl.h%"]"
-		alias
-			"TVSIL_STATE"
-		end
+			--
+			-- Declared in Windows as TVSIL_STATE
 
 end -- class WEL_TVSIL_CONSTANTS
 

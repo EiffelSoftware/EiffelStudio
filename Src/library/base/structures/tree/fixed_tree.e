@@ -29,66 +29,7 @@ class FIXED_TREE [G] inherit
 			child_off, child_after, child_before,
 			child_item
 		redefine
-			parent, attach_to_parent
-		select
-			linear_representation,
-			changeable_comparison_criterion,
-			object_comparison,
-			is_leaf, has
-		end
-
-	FIXED_LIST [FIXED_TREE [G]]
-		rename
-			make as fl_make,
-			make_filled as fl_make_filled,
-			item as child,
-			i_th as array_item,
-			last as last_child,
-			first as first_child,
-			search as search_child,
-			has as fl_has,
-			readable as fl_readable,
-			put as fl_put,
-			replace as fl_replace,
-			fill as fl_fill,
-			writable as fl_writable,
-			extendible as fl_extendible,
-			remove as fl_remove,
-			linear_representation as fl_lin_rep,
-			count as arity,
-			empty as fl_empty,
-			is_empty as is_leaf,
-			full as fl_full,
-			start as child_start,
-			finish as child_finish,
-			forth as child_forth,
-			back as child_back,
-			go_i_th as child_go_i_th,
-			index as child_index,
-			off as child_off,
-			after as child_after,
-			before as child_before,
-			isfirst as child_isfirst,
-			islast as child_islast,
-			cursor as child_cursor,
-			go_to as child_go_to,
-			object_comparison as fl_object_comparison,
-			changeable_comparison_criterion as fl_changeable_object_criterion
-		export
-			{NONE}
-				fl_put, fl_replace,
-				fl_writable, fl_extendible,
-				fl_remove, fl_make, fl_make_filled, fl_has, fl_readable,
-				fl_lin_rep, fl_empty,
-				fl_fill, fl_full
-			{FIXED_TREE}
-				copy, array_item
-		undefine
-			is_leaf, child_isfirst, child_islast,
-			valid_cursor_index, compare_references,
-			compare_objects, fl_empty, copy, is_equal
-		redefine
-			duplicate, first_child
+			parent, attach_to_parent, child_capacity, clone_node
 		end
 
 create
@@ -103,6 +44,7 @@ feature -- Initialization
 			valid_number_of_children: n >= 0
 		do
 			arity := 0
+			create fixed_list.make_filled (n)
 			fl_make (n)
 			replace (v)
 		ensure
@@ -116,6 +58,7 @@ feature -- Initialization
 			valid_number_of_children: n >= 0
 		do
 			arity := n
+			create fixed_list.make_filled (n)
 			fl_make_filled (n)
 			replace (v)
 		ensure
@@ -127,12 +70,6 @@ feature -- Access
 
 	parent: FIXED_TREE [G]
 			-- Parent of current node
-
-	first_child: like parent is
-			-- Leftmost child
-		do
-			Result := array_item (1)
-		end
 
 	child_item: like item is
 			-- Item of active child
@@ -208,6 +145,8 @@ feature -- Element change
 
 	put_child (n: like parent) is
 			-- Make `n' the node's child.
+		require else
+			not_full: arity < capacity
 		do
 			if object_comparison then
 				n.compare_objects
@@ -215,8 +154,7 @@ feature -- Element change
 				n.compare_references
 			end
 			arity := arity + 1
-			child_index := arity
-			force_i_th (n, arity)
+			put_i_th (n, arity) 
 			n.attach_to_parent (Current)
 		ensure then
 			child_replaced: n.parent = Current
@@ -407,7 +345,7 @@ feature {FIXED_TREE} -- Implementation
 	cut_off_node is
 			-- Cut off all links from current node.
 		do
-			array_make (1, capacity)
+			fixed_list.array_make (1, capacity)
 		end
 
 feature {NONE} -- Implementation
@@ -417,6 +355,226 @@ feature {NONE} -- Implementation
 
 	extendible: BOOLEAN is False;
 			-- May new items be added?
+
+feature {FIXED_TREE} -- Implementation
+
+	fixed_list: FIXED_LIST [FIXED_TREE [G]]
+
+	set_fixed_list (a_list: like fixed_list) is
+			-- Set `fixed_list' with `a_list'
+		require
+			non_void_list: a_list /= Void
+		do
+			fixed_list := a_list
+		ensure
+			fixed_list_set: fixed_list = a_list
+		end
+		
+feature -- Redefinition
+
+	child_capacity: INTEGER is
+			-- Maximal number of children
+		do
+			Result := fixed_list.count
+		end
+
+	clone_node (n: like Current): like Current is
+			-- Clone node `n'.
+		local
+			a_list: like fixed_list
+		do
+			Result := standard_clone (n)
+			create a_list.make_filled (n.capacity)
+			Result.set_fixed_list (a_list)
+			Result.attach_to_parent (Void)
+		end
+
+feature -- Access
+
+	child: like parent is
+		do
+			Result := fixed_list.item
+		end
+
+	array_item (n: INTEGER): FIXED_TREE [G] is
+		do
+			Result := fixed_list.i_th (n)
+		end
+
+	last_child: like first_child is
+		do
+			Result := fixed_list.last
+		end
+
+	first_child: like parent is
+		do
+			Result := fixed_list.first
+		end
+
+	search_child (v: FIXED_TREE [like item]) is
+		do
+			fixed_list.search (v)
+		end
+
+	arity: INTEGER
+
+	child_start is
+		do
+			fixed_list.start
+		end
+
+	child_finish is
+		do
+			fixed_list.finish
+		end
+
+	child_forth is
+		do
+			fixed_list.forth
+		end
+
+	child_back is
+		do
+			fixed_list.back
+		end
+
+	child_go_i_th (i: INTEGER) is
+		do
+			fixed_list.go_i_th (i)
+		end
+
+	child_index: INTEGER is
+		do
+			Result := fixed_list.index
+		end
+
+	child_off: BOOLEAN is
+		do
+			Result := fixed_list.off
+		end
+
+	child_after: BOOLEAN is
+		do
+			Result := fixed_list.after
+		end
+
+	child_before: BOOLEAN is
+		do
+			Result := fixed_list.before
+		end
+
+	child_cursor: CURSOR is
+		do
+			Result := fixed_list.cursor
+		end
+
+	child_go_to (p: CURSOR) is
+		do
+			fixed_list.go_to (p)
+		end
+
+	index_of (v: FIXED_TREE [like item]; i: INTEGER): INTEGER is
+		do
+			Result := fixed_list.index_of (v, i)
+		end
+
+	prune (n: like parent) is
+		do
+			--fixed_list.prune (n)
+		end
+	
+	wipe_out is
+		do
+			fixed_list.wipe_out
+			--fixed_list.discard_items
+		end
+
+--	force_i_th (v: FIXED_TREE [like item]; n: INTEGER) is
+--		do
+--			fixed_list.force_i_th (v, n)
+--		end
+
+	put_i_th (v: FIXED_TREE [like item]; n: INTEGER) is
+		do
+			fixed_list.put_i_th (v, n)
+		end
+
+	array_make (min_index: INTEGER; max_index: INTEGER) is
+		do
+			fixed_list.array_make (min_index, max_index)
+		end
+
+	capacity: INTEGER is
+		do
+			Result := fixed_list.capacity
+		end
+		
+feature {NONE} -- private access fixed_list
+
+	fl_make (n: INTEGER)is
+		do
+			fixed_list.make (n)
+		end
+
+	fl_make_filled (n: INTEGER) is
+		do
+			fixed_list.make (n)
+		end
+		
+	fl_extend (v: FIXED_TREE [like item]) is
+		do
+			fixed_list.extend (v)
+		end
+
+	fl_duplicate (n: INTEGER): FIXED_LIST [like Current] is
+		do
+			Result := fixed_list.duplicate (n)
+		end
+
+	fl_remove is
+		do
+			fixed_list.remove
+		end
+
+	fl_object_comparison: BOOLEAN is
+		do
+			Result := fixed_list.object_comparison
+		end
+
+	fl_full: BOOLEAN is
+		do
+			Result := fixed_list.full
+		end
+
+	fl_extendible: BOOLEAN is
+		do
+			Result := fixed_list.extendible
+		end
+
+	fl_put (v: FIXED_TREE [like item]) is
+		do
+			fixed_list.put (v)
+		end
+
+	fl_replace (v: FIXED_TREE [G]) is
+		do
+			fixed_list.replace (v)
+		end
+
+	fl_fill (other: CONTAINER [FIXED_TREE [G]]) is
+		do
+			--fixed_list.fill (other)
+		end
+
+	fl_lin_rep: LINEAR [FIXED_TREE [G]] is
+		do
+			Result := fixed_list.linear_representation
+		end
+
+	fl_has (v: FIXED_TREE [like item]): BOOLEAN is
+		do
+			Result := fixed_list.has (v)
+		end
 
 indexing
 

@@ -119,8 +119,8 @@ feature {NONE} -- Initialization
 			create image_list.make (16, 16, Ilc_color24, True)
 				-- Create image list with all images 16 by 16 pixels
 			set_image_list(image_list)
-
 				-- Associate the image list with the tree.
+			create current_image_list_images.make (4)
 			is_initialized := True
 		end
 
@@ -581,6 +581,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.53  2000/03/24 17:14:22  rogers
+--| Added creation of current_image_list_images.
+--|
 --| Revision 1.52  2000/03/24 00:19:34  rogers
 --| Added initialize which creates and sets the image list of the tree. Added image_list and current_image_list which is a record of images in the list.
 --|

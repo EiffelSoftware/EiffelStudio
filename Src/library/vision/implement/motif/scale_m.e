@@ -21,14 +21,14 @@ inherit
 			set_size as p_set_size,
 			set_width as p_set_width,
 			set_height as p_set_height,
-			height as p_height,
-			width as p_width,
 			clean_up as primitive_clean_up
 		export
 			{NONE} all
 		redefine
 			action_target, set_background_color,
-			update_background_color
+			update_background_color, width, height, 
+			x, y, real_x, real_y, set_x, set_y,
+			set_x_y
 		end;
 
 	PRIMITIVE_M
@@ -37,18 +37,18 @@ inherit
 		redefine
 			set_size, set_width, set_height, action_target,
 			set_background_color,
-			update_background_color, width, height,
-			clean_up
+			update_background_color, 
+			clean_up, width, height, x, y,
+			real_x, real_y, set_x, set_y,
+			set_x_y
 		select
-			set_size, set_width, set_height, width, height,
+			set_size, set_width, set_height, 
 			clean_up
 		end;
 	
 	FONTABLE_M
 		rename
 			resource_name as MfontList
-		export
-			{NONE} all
 		end
 
 creation
@@ -401,7 +401,7 @@ feature
 			if (text = Void or else text.empty) and not is_value_shown then
 				p_set_width (nw);
 			elseif is_horizontal then
-					p_set_width (nw);
+				p_set_width (nw);
 			else
 				!!vas.make(0);
 				if is_value_shown and (text = Void or else text.empty) then
@@ -435,30 +435,82 @@ feature
 					p_set_height (nh + (2 * text_height));
 				end;
 			else
-					p_set_height (nh);
+				p_set_height (nh);
 			end;
 			set_scale_height (nh);
 		end;
 
+	real_x: INTEGER is
+		do
+			Result := xt_real_x (slide_widget);
+		end;
+
+	real_y: INTEGER is
+		do
+			Result := xt_real_y (slide_widget);
+		end;
+
+	x: INTEGER is
+		local
+			ext_name: ANY
+		do
+			ext_name := Mx.to_c;
+			Result := get_position (slide_widget, $ext_name);
+			Result := Result + get_position (screen_object, $ext_name);
+		end;
+
+	y: INTEGER is
+		local
+			ext_name: ANY
+		do
+			ext_name := My.to_c;
+			Result := get_position (slide_widget, $ext_name);
+			Result := Result + get_position (screen_object, $ext_name);
+		end;
+
 	height: INTEGER is
 		local
-			temp_p: POINTER;
+			ext_name: ANY
 		do
-			temp_p := screen_object;
-			screen_object := slide_widget;
-			Result := p_height;
-			screen_object := temp_p;
+			ext_name := Mheight.to_c;
+			Result := get_position (slide_widget, $ext_name)
 		end;
 
 	width: INTEGER is
 		local
-			temp_p: POINTER;
+			ext_name: ANY
 		do
-			temp_p := screen_object;
-			screen_object := slide_widget;
-			Result := p_width;
-			screen_object := temp_p;
+			ext_name := Mwidth.to_c;
+			Result := get_position (slide_widget, $ext_name);
 		end;
+
+	set_x (new_x: INTEGER) is
+		local
+			ext_name: ANY;
+			nx: INTEGER
+		do
+			ext_name := Mx.to_c;
+			nx := new_x - get_position (slide_widget, $ext_name);
+			set_posit (screen_object, nx, $ext_name)
+		end;
+
+	set_y (new_y: INTEGER) is
+		local
+			ext_name: ANY;
+			ny: INTEGER
+		do
+			ext_name := My.to_c;
+			ny := new_y - get_position (slide_widget, $ext_name);
+			set_posit (screen_object, ny, $ext_name)
+		end;
+
+	set_x_y (new_x, new_y: INTEGER) is
+		do
+			set_x (new_x);
+			set_y (new_y)
+		end;
+
+feature -- Color
 
 	set_background_color (a_color: COLOR) is
 			-- Set background_color to `a_color'.

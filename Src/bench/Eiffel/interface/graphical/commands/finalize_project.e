@@ -190,8 +190,7 @@ feature {NONE} -- Implementation
 				error_window.new_line;
 				error_window.new_line;
 			end;
-			error_window.put_string ("System recompiled");
-			error_window.new_line;
+			process_end_compilation
 		end;
  
 end -- class FINALIZE_PROJECT

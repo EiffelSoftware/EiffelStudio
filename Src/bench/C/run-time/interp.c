@@ -229,9 +229,9 @@ rt_public void xinitint(void);			/* Initialization of the interpreter */
 rt_private void interpret(int flag, int where);	/* Run the interpreter */
 
 /* Feature call and/or access  */
-rt_public struct item *dynamic_eval(int fid, int stype, int is_extern, int is_precompiled, int is_basic_type, struct item* previous_otop);
-rt_private int icall(int fid, int stype, int is_extern, int ptype);					/* Interpreter dispatcher (in water) */
-rt_private int ipcall(int32 origin, int32 offset, int is_extern, int ptype);					/* Interpreter precomp dispatcher */
+rt_public struct item *dynamic_eval(int fid, int stype, int is_precompiled, int is_basic_type, struct item* previous_otop);
+rt_private int icall(int fid, int stype, int ptype);					/* Interpreter dispatcher (in water) */
+rt_private int ipcall(int32 origin, int32 offset, int ptype);					/* Interpreter precomp dispatcher */
 rt_private void interp_access(int fid, int stype, uint32 type);			/* Access to an attribute */
 rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type);			/* Access to a precompiled attribute */
 rt_private void address(int32 fid, int stype, int for_rout_obj);					/* Address of a routine */
@@ -512,7 +512,6 @@ rt_private void interpret(int flag, int where)
 	struct stchunk * volatile h_cur;		/* Current hector stack chunk */
 #endif
 	int volatile assert_type;				/* Assertion type */
-	int volatile is_extern = 0;				/* External flag for feature call */
 	char volatile pre_success;				/* Flag for precondition success */ 
 	long volatile rtype;					/* Result type */
 	void * volatile PResult = NULL;			/* Result address for once */
@@ -839,8 +838,6 @@ rt_private void interpret(int flag, int where)
 				exvect->ex_jbuf = &exenv;	/* Longjmp address */
 				if (setjmp(exenv)) {
 					IC = rescue;				/* Jump to rescue clause */
-						/* Reset calling convention flags */
-					is_extern = 0;
 				}
 			}
 		}
@@ -1896,78 +1893,40 @@ rt_private void interpret(int flag, int where)
 
 	/*
 	 * Calling an external function.
-	 */
-	case BC_EXTERN:
-#ifdef DEBUG
-		dprintf(2)("BC_EXTERN\n");
-#endif
-		is_extern = 1;
-		/* Fall through */
-
-	/*
 	 * Calling an Eiffel feature.
 	 */
+	case BC_EXTERN:
 	case BC_FEATURE:
-#ifdef DEBUG
-		if (!is_extern)
-			dprintf(2)("BC_FEATURE\n");
-#endif
 		offset = get_long();				/* Get the feature id */
 		code = get_short();					/* Get the static type */
 		nstcall = 0;						/* Invariant check turned off */
-		if (icall(MTC (int)offset, code, is_extern, GET_PTYPE))
+		if (icall(MTC (int)offset, code, GET_PTYPE))
 			sync_registers(MTC scur, stop);
-		is_extern = 0;
 		break;
 
 	/*
 	 * Calling a precompiled external function.
-	 */
-	case BC_PEXTERN:
-#ifdef DEBUG
-		dprintf(2)("BC_PEXTERN\n");
-#endif
-		is_extern = 1;
-		/* Fall through */
-
-	/*
 	 * Calling a precompiled Eiffel feature.
 	 */
+	case BC_PEXTERN:
 	case BC_PFEATURE:
-#ifdef DEBUG
-		if (!is_extern)
-			dprintf(2)("BC_PFEATURE\n");
-#endif
 		{
 			int32 origin, offset;
 
 			origin = get_long();			/* Get the origin class id */
 			offset = get_long();			/* Get the offset in origin */
 			nstcall = 0;					/* Invariant check turned off */
-			if (ipcall(MTC origin, offset, is_extern, GET_PTYPE))
+			if (ipcall(MTC origin, offset, GET_PTYPE))
 				sync_registers(MTC scur, stop);
-			is_extern = 0;
 			break;
 		}
 
 	/*
 	 * Calling an external in a nested expression (invariant check needed).
-	 */
-	case BC_EXTERN_INV:
-#ifdef DEBUG
-		dprintf(2)("BC_EXTERN_INV");
-#endif
-		is_extern = 1;
-		/* Fall through */
-
-	/*
 	 * Calling an Eiffel feature in a nested expression (invariant check).
 	 */
+	case BC_EXTERN_INV:
 	case BC_FEATURE_INV:
-#ifdef DEBUG
-		if (!is_extern)
-			dprintf(2)("BC_FEATURE_INV\n");
-#endif
 		string = IC;					/* Get the feature name */
 		IC += strlen((char *) IC) + 1;
 		if (otop()->it_ref == (char *) 0)	/* Called on a void reference? */
@@ -1976,30 +1935,16 @@ rt_private void interpret(int flag, int where)
 		code = get_short();					/* Get the static type */
 
 		nstcall = 1;					/* Invariant check turned on */
-		if (icall(MTC (int)offset, code, is_extern, GET_PTYPE))
+		if (icall(MTC (int)offset, code, GET_PTYPE))
 			sync_registers(MTC scur, stop);
-		is_extern = 0;						/* No side effect */
 		break;
 
 	/*
 	 * Calling a precompiled external in a nested expression (invariant check needed).
+	 * Calling a precompiled Eiffel feature in a nested expression (invariant check).
 	 */
 	case BC_PEXTERN_INV:
-#ifdef DEBUG
-		dprintf(2)("BC_PEXTERN_INV");
-#endif
-		is_extern = 1;
-		/* Fall through */
-
-	/*
-	 * Calling a precompiled Eiffel feature in a nested expression
-	 * (invariant check).
-	 */
 	case BC_PFEATURE_INV:
-#ifdef DEBUG
-		if (!is_extern)
-			dprintf(2)("BC_PFEATURE_INV\n");
-#endif
 		{
 			int32 offset, origin;
 
@@ -2010,9 +1955,8 @@ rt_private void interpret(int flag, int where)
 			origin = get_long();			/* Get the origin class id */
 			offset = get_long();			/* Get the offset in origin */
 			nstcall = 1;					/* Invariant check turned on */
-			if (ipcall(MTC origin, offset, is_extern, GET_PTYPE))
+			if (ipcall(MTC origin, offset, GET_PTYPE))
 				sync_registers(MTC scur, stop);
-			is_extern = 0;						/* No side effect */
 			break;
 		}
 
@@ -3155,12 +3099,9 @@ rt_private void interpret(int flag, int where)
 		break;
 
 	/* to perform a separate external feature call */
+	/* to perform a separate feature call */
 	case BC_SEP_EXTERN:
 	case BC_SEP_PEXTERN:
-		is_extern = 1;
-		/* Fall Through */
-
-	/* to perform a separate feature call */
 	case BC_SEP_FEATURE:
 	case BC_SEP_PFEATURE:
 		{
@@ -3224,10 +3165,10 @@ rt_private void interpret(int flag, int where)
 				/* get the current object on the local processor */
 				otop()->it_ref = CURPROXY_OBJ(otop()->it_ref); 
 				if (tyc_command == BC_SEP_FEATURE || tyc_command == BC_SEP_EXTERN) {
-					if (icall(MTC (int)offset, code, is_extern, GET_PTYPE))
+					if (icall(MTC (int)offset, code, GET_PTYPE))
 						sync_registers(MTC scur, stop);
 				} else if (tyc_command == BC_SEP_PFEATURE || tyc_command == BC_SEP_PEXTERN) {
-					if (ipcall(origin, offset, is_extern, GET_PTYPE))
+					if (ipcall(origin, offset, GET_PTYPE))
 						sync_registers(MTC scur, stop);
 				}
 				/* if the return value's type is REFERENCE object, change it 
@@ -3330,17 +3271,13 @@ rt_private void interpret(int flag, int where)
 				}
 			}
 		}	
-		is_extern = 0;
 		break;
 
 
 	/* to perform a separate external feature call */
+	/* to perform a separate feature call */
 	case BC_SEP_EXTERN_INV:
 	case BC_SEP_PEXTERN_INV:
-		is_extern = 1;
-		/* Fall Through */
-
-	/* to perform a separate feature call */
 	case BC_SEP_FEATURE_INV:
 	case BC_SEP_PFEATURE_INV:
 		{
@@ -3401,10 +3338,10 @@ rt_private void interpret(int flag, int where)
 				/* get the current object on the local processor */
 				otop()->it_ref = CURPROXY_OBJ(otop()->it_ref); 
 				if (tyc_command == BC_SEP_FEATURE_INV || tyc_command == BC_SEP_EXTERN_INV) {
-					if (icall(MTC (int)offset, code, is_extern, GET_PTYPE))
+					if (icall(MTC (int)offset, code, GET_PTYPE))
 						sync_registers(MTC scur, stop);
 				} else if (tyc_command == BC_SEP_PFEATURE_INV || tyc_command == BC_SEP_PEXTERN_INV) {
-					if (ipcall(origin, offset, is_extern, GET_PTYPE))
+					if (ipcall(origin, offset, GET_PTYPE))
 						sync_registers(MTC scur, stop);
 				}
 				/* if the return value's type is REFERENCE object, change it 
@@ -3507,7 +3444,6 @@ rt_private void interpret(int flag, int where)
 				}
 			}
 		}	
-		is_extern = 0;
 		break;
 
 	/* to perform a separate attribute call */
@@ -4983,7 +4919,7 @@ rt_private void eif_interp_bit_operations (void)
  * Function calling routines
  */
 
-rt_public struct item *dynamic_eval(int fid, int stype, int is_extern, int is_precompiled, int is_basic_type, struct item* previous_otop)
+rt_public struct item *dynamic_eval(int fid, int stype, int is_precompiled, int is_basic_type, struct item* previous_otop)
 						/* Feature ID or offset if the feature is precompiled */
 						/* Static type (entity where feature is applied) */
 						/* Is it an external or an Eiffel feature */
@@ -5060,7 +4996,7 @@ rt_public struct item *dynamic_eval(int fid, int stype, int is_extern, int is_pr
 
 	if (egc_frozen [body_id]) {		/* We are below zero Celsius, i.e. ice */
 		pid = (uint32) FPatId(body_id);
-		(pattern[pid].toc)(egc_frozen[body_id], is_extern); /* Call pattern */
+		(pattern[pid].toc)(egc_frozen[body_id]); /* Call pattern */
 		if (tagval != stagval)		/* Interpreted function called */
 			sync_needed = 1;				/* Resynchronize registers */
 	} else {
@@ -5093,7 +5029,7 @@ rt_public struct item *dynamic_eval(int fid, int stype, int is_extern, int is_pr
 	return result;
 }
 
-rt_private int icall(int fid, int stype, int is_extern, int ptype)
+rt_private int icall(int fid, int stype, int ptype)
 						/* Feature ID */
 						/* Static type (entity where feature is applied) */
 						/* Is it an external or an Eiffel feature */
@@ -5127,7 +5063,7 @@ rt_private int icall(int fid, int stype, int is_extern, int ptype)
 	OLD_IC = IC;				/* IC back up */
 	if (egc_frozen [body_id]) {		/* We are below zero Celsius, i.e. ice */
 		pid = (uint32) FPatId(body_id);
-		(pattern[pid].toc)(egc_frozen[body_id], is_extern); /* Call pattern */
+		(pattern[pid].toc)(egc_frozen[body_id]); /* Call pattern */
 		if (tagval != stagval)		/* Interpreted function called */
 			result = 1;				/* Resynchronize registers */
 	} else {
@@ -5148,7 +5084,7 @@ rt_private int icall(int fid, int stype, int is_extern, int ptype)
 	return result;
 }
 
-rt_private int ipcall(int32 origin, int32 offset, int is_extern, int ptype)
+rt_private int ipcall(int32 origin, int32 offset, int ptype)
 						/* Origin class ID of the feature.*/
 						/* offset of the feature in the origin class */
 						/* Is it an external or an Eiffel feature */
@@ -5177,7 +5113,7 @@ rt_private int ipcall(int32 origin, int32 offset, int is_extern, int ptype)
 	OLD_IC = IC;				/* IC back up */
 	if (egc_frozen [body_id]) {		/* We are below zero Celsius, i.e. ice */
 		pid = (uint32) FPatId(body_id);
-		(pattern[pid].toc)(egc_frozen[body_id], is_extern); /* Call pattern */
+		(pattern[pid].toc)(egc_frozen[body_id]); /* Call pattern */
 		if (tagval != stagval)		/* Interpreted function called */
 			result = 1;				/* Resynchronize registers */
 	} else {

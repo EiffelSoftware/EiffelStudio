@@ -93,8 +93,8 @@ rt_private void modify_object_attribute(long arg_addr, long arg_attr_number, str
 rt_private void opush_dmpitem(struct item *item);
 rt_private struct item *previous_otop = NULL;
 rt_private unsigned char otop_recorded = 0;
-rt_private void dynamic_evaluation(eif_stream s, int fid, int stype, int is_extern, int is_precompiled, int is_basic_type);
-extern struct item *dynamic_eval(int fid, int stype, int is_extern, int is_precompiled, int is_basic_type, struct item* previous_otop); /* dynamic evaluation of a feature (while debugging) */
+rt_private void dynamic_evaluation(eif_stream s, int fid, int stype, int is_precompiled, int is_basic_type);
+extern struct item *dynamic_eval(int fid, int stype, int is_precompiled, int is_basic_type, struct item* previous_otop); /* dynamic evaluation of a feature (while debugging) */
 extern uint32 critical_stack_depth;	/* Call stack depth at which a warning is sent to the debugger to prevent stack overflows. */
 extern int already_warned; /* Have we already warned the user concerning a possible stack overflow? */
 
@@ -191,9 +191,9 @@ static int curr_modify = NO_CURRMODIF;
 		break;
 	case DYNAMIC_EVAL: /* arg_1 = feature_id / arg2=static_type / arg3=is_external / arg4=is_precompiled / arg5=is_basic_type*/
 #ifdef EIF_WIN32
-		dynamic_evaluation(sp, arg_1, arg_2, arg_3 & 1, (arg_3 >> 1) & 1, (arg_3 >> 2) & 1);
+		dynamic_evaluation(sp, arg_1, arg_2, (arg_3 >> 1) & 1, (arg_3 >> 2) & 1);
 #else
-		dynamic_evaluation(writefd (sp), arg_1, arg_2, arg_3 & 1, (arg_3 >> 1) & 1, (arg_3 >> 2) & 1);
+		dynamic_evaluation(writefd (sp), arg_1, arg_2, (arg_3 >> 1) & 1, (arg_3 >> 2) & 1);
 #endif
 		break;
 	case MODIFY_LOCAL:				/* modify the value of a local variable, an argument or the result */
@@ -1457,9 +1457,9 @@ rt_private void opush_dmpitem(struct item *item)
 	}
 
 #ifdef EIF_WIN32
-rt_private void dynamic_evaluation(STREAM *s, int fid, int stype, int is_extern, int is_precompiled, int is_basic_type)
+rt_private void dynamic_evaluation(STREAM *s, int fid, int stype, int is_precompiled, int is_basic_type)
 #else
-rt_private void dynamic_evaluation(int s, int fid, int stype, int is_extern, int is_precompiled, int is_basic_type)
+rt_private void dynamic_evaluation(int s, int fid, int stype, int is_precompiled, int is_basic_type)
 #endif
 	{
 	struct item *ip;
@@ -1469,7 +1469,7 @@ rt_private void dynamic_evaluation(int s, int fid, int stype, int is_extern, int
 	Request_Clean (rqst);
 	rqst.rq_type = DUMPED;			/* A dumped stack item */
 
-	ip = dynamic_eval(fid,stype, is_extern, is_precompiled, is_basic_type, previous_otop);
+	ip = dynamic_eval(fid,stype, is_precompiled, is_basic_type, previous_otop);
 	if (ip == (struct item *) 0)
 		{
 		dumped.dmp_type = DMP_VOID;		/* Tell ebench there are no more */

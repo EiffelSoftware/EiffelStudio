@@ -98,6 +98,12 @@ feature {NONE} -- Implementation
 			file_location := get ("ISE_VISION2_TOUR")
 			if file_location = Void then
 				file_location := get ("ISE_EIFFEL")
+				if file_location /= Void then
+					create filename.make_from_string (file_location)
+					filename.extend ("vision2_tour")
+				end
+			else
+				create filename.make_from_string (file_location)
 			end
 			if (create {EV_ENVIRONMENT}).supported_image_formats.has ("ICO") then
 				extension := "ico"
@@ -105,9 +111,7 @@ feature {NONE} -- Implementation
 				extension := "png"
 			end
 			if file_location /= Void then
-				create filename.make_from_string (file_location)
 				filename.extend ("bitmaps")
-				
 				filename.extend (extension)
 				filename.extend (a_type.as_lower + "." + extension)
 				create Result

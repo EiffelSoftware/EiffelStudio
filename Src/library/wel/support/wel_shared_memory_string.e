@@ -11,7 +11,20 @@ inherit
 	WEL_SHARED_MEMORY
 
 creation
-	make_from_handle
+	make_from_handle,
+	make_from_string
+
+feature -- Initialization
+
+	make_from_string (a_string: STRING) is
+		-- Create `Current' from `a_string'.
+	do
+		make_from_handle (global_alloc (gmem_moveable, a_string.count + 1))
+		lock
+		item.memory_copy ((create {WEL_STRING}.make (a_string)).item,
+			a_string.count + 1)
+		unlock
+	end	
 
 feature -- Access
 

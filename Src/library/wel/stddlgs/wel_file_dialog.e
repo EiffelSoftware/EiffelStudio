@@ -221,7 +221,8 @@ feature -- Element change
 				s.extend ('%U')
 				i := i + 1
 			end
-			s.append ("%U%U")
+			s.extend ('%U')
+			s.extend ('%U')
 			!! str_filter.make (s)
 			cwel_open_file_name_set_lpstrfilter (item,
 				str_filter.item)

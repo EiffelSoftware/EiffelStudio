@@ -13,10 +13,16 @@ inherit
 		end
 	
 	HOST_WINDOW_IMPL
+		redefine
+			make
+		end
 
 	IOLE_CLIENT_SITE_IMPL
 
 	IOLE_IN_PLACE_SITE_WINDOWLESS_IMPL
+		redefine
+			make
+		end
 
 	IOLE_CONTROL_SITE_IMPL
 		undefine
@@ -52,24 +58,18 @@ inherit
 	ECOM_STUB
 
 creation
-	make,
-	make_from_pointer
+	make
 
-feature {NONE}  -- Initialization
+feature {NONE} -- Initialization
 
-	make is
-			-- Creation. Implement if needed.
+	make (a_parent: WEL_COMPOSITE_WINDOW; a_name: STRING) is
+			-- Make the window as a child of `a_parent' and
+			-- `a_name' as a title.
 		do
+			Precursor {HOST_WINDOW_IMPL} (a_parent, a_name)
 			m_allow_context_menu := True
-			m_doc_host_flags := DOCHOSTUIFLAG_NO3DBORDER
-			m_doc_host_double_click_flags := DOCHOSTUIDBLCLK_DEFAULT
-		end
-
-	make_from_pointer (cpp_obj: POINTER) is
-			-- Creation.
-		do
-			set_item (cpp_obj)
-			make
+			m_doc_host_flags := Dochostuiflag_no3dborder
+			m_doc_host_double_click_flags := Dochostuidblclk_default
 		end
 
 feature -- Basic Operations
@@ -78,20 +78,6 @@ feature -- Basic Operations
 			-- Initialize `item'
 		do
 			item := ccom_create_item (Current)
-		end
-		
-feature {NONE} -- Implementation
-
-	default_style: INTEGER is
-			-- Child and visible style
-		once
-			Result := Ws_child + Ws_visible
-		end
-
-	wel_class_name: STRING is
-			-- Window class name to create
-		once
-			Result := "WELActiveXControlSiteClass"
 		end
 		
 feature {NONE} -- Externals

@@ -55,7 +55,7 @@ feature -- Access
 			end;
 		end;
 
-	creation_table (feat_table: FEATURE_TABLE): EXTEND_TABLE [EXPORT_I, STRING] is
+	creation_table (feat_table: FEATURE_TABLE): HASH_TABLE [EXPORT_I, STRING] is
 			-- Creators table
 		require
 			good_argument: feat_table /= Void;

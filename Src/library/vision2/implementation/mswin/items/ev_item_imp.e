@@ -23,8 +23,9 @@ feature -- Status setting
 		do
 			if parent_imp /= Void then
 				parent_imp.prune (interface)
---				parent_imp := Void
 			end
+			destroy_just_called := True
+			is_destroyed := True
 		end
 
 	set_parent (a_parent: like parent) is
@@ -83,6 +84,9 @@ end -- class EV_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/02/29 22:38:25  rogers
+--| Removed redundent code from destroy, and added destroy_just_called := True and is_destroyed := True into destroy.
+--|
 --| Revision 1.12  2000/02/24 01:43:55  brendel
 --| Changed postcondition on `set_parent' to be exactly the same, but without
 --| using the function `parent_set'.

@@ -66,9 +66,17 @@ feature -- Implementation
 		is
 			-- Filter out double click events.
 		do
-            if a_type = C.Gdk_button_press_enum then
-				start_transport (a_x, a_y, a_button,
-					 a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+			if a_type = C.Gdk_button_press_enum then
+				start_transport (
+					a_x,
+					a_y,
+					a_button,
+					a_x_tilt,
+					a_y_tilt,
+					a_pressure,
+					a_screen_x,
+					a_screen_y
+				)
 			end
 		end
 
@@ -177,7 +185,7 @@ feature -- Implementation
 	end_transport_filter (a_type, a_x, a_y, a_button: INTEGER) is
 			-- Filter out double click events.
 		do
-            if a_type = C.Gdk_button_press_enum then
+			if a_type = C.Gdk_button_press_enum then
 				end_transport (a_x, a_y, a_button)
 			end
 		end
@@ -430,8 +438,6 @@ feature {NONE} -- Implementation
 			"GTK_WIDGET_NO_WINDOW"
 		end
 
-
-
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_PICK_AND_DROPABLE
@@ -459,6 +465,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/10 01:24:08  king
+--| Indented start_transport_filter
+--|
 --| Revision 1.12  2000/02/22 18:39:35  oconnor
 --| updated copyright date and formatting
 --|

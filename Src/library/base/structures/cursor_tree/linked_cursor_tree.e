@@ -60,22 +60,6 @@ feature -- Status report
 
 feature -- Element change
 
-	extend (v: G) is
-		-- Add node of value `v' at extreme right of level of current node if
-		-- it exists and is not root.
-		local
-			pos: CURSOR;
-		do
-			pos := cursor;
-			go_last_child;
-			put_right (v);
-			go_to (pos);
-			if below then
-				below := false;
-				down (0);
-			end;
-		end;
-
 	put_right (v: G) is
 			-- Add `v' to the right of cursor position.
 		do

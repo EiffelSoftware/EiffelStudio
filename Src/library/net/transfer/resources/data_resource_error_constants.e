@@ -27,6 +27,8 @@ feature {NONE} -- Constants
 
 	Transfer_failed: INTEGER is 8
 	
+	Transmission_error: INTEGER is 9
+	
 feature -- Status report
 
 	error_text (code: INTEGER): STRING is
@@ -52,6 +54,8 @@ feature -- Status report
 				Result := "Permission denied"
 			when Transfer_failed then
 				Result := "Transfer failed"
+			when Transmission_error then
+				Result := "Transmission error"
 			end
 		end
 

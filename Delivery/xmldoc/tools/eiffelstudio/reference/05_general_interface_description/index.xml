@@ -33,5 +33,8 @@
 					<label>Key shortcuts</label>
 				</link>
 			</item>
+			<item>
+				Docking<link><url>../../../eiffelbuild/reference/10_general_interface_description/50_docking.xml</url><label> (See EiffelBuild documentation on docking mechanism for more details)</label></link>
+			</item>
 		</list>
 	</paragraph></document>

@@ -43,7 +43,6 @@ feature
 			-- modified message from that answer, and print it.
 		local
 			our_list, our_new_list: OUR_MESSAGE
-			i: INTEGER
 		do
 			create our_list.make
 			our_list.extend ("This ")

@@ -139,13 +139,15 @@ rt_public void eif_system_asynchronous (char *cmd)
 	siStartInfo.lpDesktop = NULL;
 	siStartInfo.dwFlags = STARTF_FORCEONFEEDBACK;
 
+		/* We do not used DETACHED_PROCESS below because it won't work when
+		 * launching interactive console application such as `cmd.exe'. */
 	result = CreateProcess (
 		NULL,
 		cmd,
 		NULL,
 		NULL,
 		TRUE,
-		DETACHED_PROCESS,
+		CREATE_NEW_CONSOLE,
 		NULL,
 		current_dir,
 		&siStartInfo,

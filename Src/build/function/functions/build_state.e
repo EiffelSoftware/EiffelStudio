@@ -234,9 +234,11 @@ feature -- Editing
 			drop_pair_command: FUNC_DROP;
 		do
 			if pair_is_valid then
-				add (input_data, output_data);
-				!!drop_pair_command;
-				drop_pair_command.execute (Current);
+				if not has_input (input_data) then
+					add (input_data, output_data);
+					!!drop_pair_command;
+					drop_pair_command.execute (Current);
+				end
 				func_editor.reset_stones;
 			elseif
 				output_set and then output_data.context /= Void and then

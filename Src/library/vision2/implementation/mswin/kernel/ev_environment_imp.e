@@ -10,6 +10,11 @@ class
 
 inherit
 	EV_ENVIRONMENT_I
+	
+	WEL_SYSTEM_PARAMETERS_INFO
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -43,6 +48,13 @@ feature {NONE} -- Implementation
 			res.extend ("ICO")
 			res.compare_objects
 			Result := res
+		end
+		
+	mouse_wheel_scroll_lines: INTEGER is
+			-- Default number of lines to scroll in response to
+			-- a mouse wheel scroll event.
+		do
+			Result := get_wheel_scroll_lines
 		end
 
 end -- class EV_ENVIRONMENT_IMP

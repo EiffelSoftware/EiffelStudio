@@ -74,7 +74,7 @@ feature -- Basic Operations
 	pixmap_location: STRING is
 			-- Pixmap location
 		once
-			Result := "eiffel_wizard_icon" + pixmap_extension
+			Result := "eiffel_wizard" + pixmap_extension
 		end
 
 	pixmap_icon_location: STRING is

@@ -2208,9 +2208,11 @@ rt_private void dump_stack(void (*append_trace)(char *))
 	 * current bottom of the stack, which appears to be the topmost exception
 	 * to be printed by this dumping routine...
 	 */
-	eif_trace.st_bot = eif_trace.st_hd->sk_arena;	/* Very first item */
-	eif_trace.st_cur = eif_trace.st_hd;				/* Is now where bottom is */
-	eif_trace.st_end = eif_trace.st_cur->sk_end;
+	if (eif_trace.st_hd) {
+		eif_trace.st_bot = eif_trace.st_hd->sk_arena;	/* Very first item */
+		eif_trace.st_cur = eif_trace.st_hd;				/* Is now where bottom is */
+		eif_trace.st_end = eif_trace.st_cur->sk_end;
+	}
 
 	/* Print header of history table */
 	

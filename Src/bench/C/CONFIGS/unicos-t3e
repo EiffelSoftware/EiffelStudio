@@ -1,14 +1,7 @@
 #!/bin/sh
 #
-# This file was produced by running the Configure script. It holds all the
-# definitions figured out by Configure. Should you modify one of these values,
-# do not forget to propagate your changes by running "Configure -der". You may
-# instead choose to run each of the .SH files by yourself, or "Configure -S".
-#
-
-# Configuration time: Mon Jun  9 13:39:50 EDT 1997
-# Configured by: pnc
-# Target system: sn4605 sequoia 9.0.2.1 gbu.5 cray c90 
+# Target:CRAY UNICOS-T3E
+# ISE EIFFEL 4.5
 
 ar='ar'
 ld='ar'

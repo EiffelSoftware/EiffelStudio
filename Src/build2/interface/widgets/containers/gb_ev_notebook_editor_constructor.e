@@ -221,7 +221,6 @@ feature {NONE} -- Implementation
 			-- If `a_pixmap' is Void, remove the pixmap.
 		require
 			an_object_not_void: an_object /= Void
-			a_pixmap_not_void: a_pixmap /= Void
 			index_valid: an_object.children /= Void implies index >= 1 and index <= an_object.children.count
 		local
 			notebook_tab: EV_NOTEBOOK_TAB

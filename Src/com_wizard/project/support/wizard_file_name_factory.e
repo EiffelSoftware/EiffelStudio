@@ -233,7 +233,7 @@ feature {NONE} -- Implementation
 		do
 			last_created_file_name := clone (shared_wizard_environment.destination_folder)
 			last_created_file_name.append (Common)
-			process_c (False)
+			process_c (False, False)
 		end
 
 	process_c_client  is
@@ -244,7 +244,7 @@ feature {NONE} -- Implementation
 		do
 			last_created_file_name := clone (shared_wizard_environment.destination_folder)
 			last_created_file_name.append (Client)
-			process_c (True)
+			process_c (True, True)
 		end
 
 	process_c_server  is
@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 		do
 			last_created_file_name := clone (shared_wizard_environment.destination_folder)
 			last_created_file_name.append (Server)
-			process_c (True)
+			process_c (True, False)
 		end
 
 	process_eiffel_interface is
@@ -322,7 +322,7 @@ feature {NONE} -- Implementation
 			process_component
 		end
 
-	process_c (is_cpp: BOOLEAN) is
+	process_c (is_cpp: BOOLEAN; is_client: BOOLEAN) is
 			-- Set `last_created_file_name' with file name for `a_generator'.
 			-- Set `last_created_header_file_name' with header file name for `a_generator'.
 		local
@@ -336,7 +336,7 @@ feature {NONE} -- Implementation
 			check
 				non_void_c_writer: a_c_writer /= Void
 			end
-			last_created_file_name.append (header_to_c_file_name (a_c_writer.header_file_name, is_cpp))
+			last_created_file_name.append (header_to_c_file_name (a_c_writer.header_file_name, is_cpp, is_client))
 			last_created_header_file_name.append (Include)
 			last_created_header_file_name.append_character (Directory_separator)
 			last_created_header_file_name.append (a_c_writer.header_file_name)
@@ -375,7 +375,7 @@ feature {NONE} -- Implementation
 			last_created_file_name.append (Definition_file_extension)
 		end
 
-	header_to_c_file_name (a_filename: STRING; is_cpp: BOOLEAN): STRING is
+	header_to_c_file_name (a_filename: STRING; is_cpp: BOOLEAN; is_client: BOOLEAN): STRING is
 			-- Map header file name into C file name
 		require
 			non_void_file_name: a_filename /= Void
@@ -384,6 +384,9 @@ feature {NONE} -- Implementation
 		do
 			Result := clone (a_filename)
 			Result.head (Result.count - 2)
+			if is_client then
+				Result.append ("_proxy")
+			end
 			if is_cpp then
 				Result.append (Cpp_file_extension)
 			else

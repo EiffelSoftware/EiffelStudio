@@ -190,7 +190,7 @@ feature -- Basic operation
 				-- calculate sums wherever possible outside the loops.
 			search_text := text
 			searched_for_text := str
-			if searched_for_text <= search_text then
+			if searched_for_text.count <= search_text.count then
 				-- Is the string to be searched larger than the text to be found.
 				searched_for_text_count := searched_for_text.count
 				positions_to_search := search_text.count - searched_for_text_count + 1

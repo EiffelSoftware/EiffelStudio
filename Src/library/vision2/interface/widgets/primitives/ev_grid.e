@@ -107,6 +107,14 @@ feature -- Access
 		do
 			Result := implementation.is_header_displayed
 		end
+		
+	is_resizing_divider_enabled: BOOLEAN is
+			-- Is a vertical divider displayed during column resizing?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.is_resizing_divider_enabled
+		end
 
 feature -- Status setting
 
@@ -250,6 +258,26 @@ feature -- Status setting
 		ensure
 			-- Enough following rows implies `first_visible_row' = a_row.
 			-- Can be calculated from `height' of `Current' and row heights.
+		end
+		
+	enable_resizing_divider is
+			-- Ensure a vertical divider is displayed during column resizing.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_resizing_divider
+		ensure
+			resizing_divider_enabled: is_resizing_divider_enabled
+		end
+		
+	disable_resizing_divider is
+			-- Ensure no vertical divider is displayed during column resizing.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.disable_resizing_divider
+		ensure
+			resizing_divider_disabled: not is_resizing_divider_enabled
 		end
 
 feature -- Status report

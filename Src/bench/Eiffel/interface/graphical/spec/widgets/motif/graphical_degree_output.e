@@ -57,12 +57,7 @@ feature -- Start output features
 		local
 			i_name: STRING
 		do
-			if is_destroyed then	
-				create_window
-			else
-				parent.set_title (Interface_names.d_Compilation_progress)
-				icon_name := Project_tool.icon_name
-			end
+			create_window
 			total_number := total_nbr
 			current_degree := 6
 			processed := 0
@@ -209,9 +204,7 @@ feature -- Start output features
 		do
 			total_number := total_num
 			processed := 0
-			if is_destroyed then	
-				create_window
-			end
+			create_window
 			parent.set_title (Interface_names.d_Documentation) 
 			icon_name := Project_tool.icon_name	
 			total_number := total_num

@@ -22,7 +22,6 @@ feature {NONE} -- Implementation
 
 feature -- Event handling
 
-
 	post_launch_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed just after application `launch'.
 		do
@@ -30,7 +29,6 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
-
 
 	idle_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when the application is otherwise idle.
@@ -40,7 +38,6 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-
 	pick_actions: EV_PND_ACTION_SEQUENCE is
 			-- Actions to be performed when any "pick" occurs.
 		do
@@ -48,7 +45,6 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
-
 
 	drop_actions: EV_PND_ACTION_SEQUENCE is
 			-- Actions to be performed when any "drop" occurs.
@@ -65,7 +61,6 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
-		
 		
 	pnd_motion_actions: EV_PND_MOTION_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer is moved,

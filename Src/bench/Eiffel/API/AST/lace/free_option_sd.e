@@ -49,21 +49,24 @@ feature {NONE}
 
 	dead_code, exception_stack_managed, collect, precompilation,
 	code_replication, fail_on_rescue, check_vape,
-	array_optimization, inlining: INTEGER is UNIQUE;
+	array_optimization, inlining, inlining_size,
+	server_file_size: INTEGER is UNIQUE;
 
 	valid_options: HASH_TABLE [INTEGER, STRING] is
 			-- Possible values for free operators
 		once
-			!!Result.make (6);
+			!!Result.make (11);
 			Result.force (dead_code, "dead_code_removal");
 			Result.force (array_optimization, "array_optimization");
 			Result.force (inlining, "inlining");
+			Result.force (inlining_size, "inlining_size");
 			Result.force (check_vape, "check_vape");
 			Result.force (collect, "collect");
 			Result.force (exception_stack_managed, "exception_stack_managed");
 			Result.force (precompilation, "precompiled");
 			Result.force (code_replication, "code_replication");
 			Result.force (fail_on_rescue, "fail_on_rescue");
+			Result.force (server_file_size, "server_file_size");
 		end;
 
 feature
@@ -84,6 +87,7 @@ feature
 		local
 			error_found: BOOLEAN;
 			vd37: VD37;
+			i: INTEGER
 		do
 			inspect
 				valid_options.item (option_name)
@@ -114,6 +118,32 @@ feature
 					System.set_inlining_on (False)
 				elseif value.is_yes then
 					System.set_inlining_on (True)
+				else
+					error_found := True;
+				end;
+			when inlining_size then
+				if value = Void then
+					error_found := True
+				elseif value.is_name then
+					i := value.value.to_integer
+					if i <= 0 then
+						error_found := True;
+					else
+						System.set_inlining_size (i)
+					end
+				else
+					error_found := True;
+				end;
+			when server_file_size then
+				if value = Void then
+					error_found := True
+				elseif value.is_name then
+					i := value.value.to_integer
+					if i <= 0 then
+						error_found := True;
+					else
+						System.server_controler.set_chunk_size (i)
+					end
 				else
 					error_found := True;
 				end;

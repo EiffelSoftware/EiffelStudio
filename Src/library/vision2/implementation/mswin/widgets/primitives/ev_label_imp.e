@@ -208,8 +208,8 @@ feature {NONE} -- WEL Implementation
    	default_style: INTEGER is
    			-- Default style used to create `Current'.
    		do
- 			Result := Ws_visible + Ws_child + Ss_notify + Ss_ownerdraw
- 				+ Ws_clipchildren + Ws_clipsiblings
+ 			Result := Ws_visible | Ws_child | Ss_notify | Ss_ownerdraw
+ 				| Ws_clipchildren | Ws_clipsiblings
  		end
  		
 feature {EV_CONTAINER_IMP} -- WEL Implementation

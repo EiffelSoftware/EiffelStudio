@@ -38,19 +38,19 @@ create
 feature {NONE} -- Initialization
 
 	make (id: INTEGER) is
-			-- Create new instance of `Current' with `base_id'
+			-- Create new instance of `Current' with `class_id'
 			-- assigned with `id'.
 		require
 			valid_id: id > 0
 		do
-			base_id := id
+			class_id := id
 		ensure
-			base_id_set: base_id = id
+			class_id_set: class_id = id
 		end
 		
 feature -- Access
 
-	base_id: INTEGER
+	class_id: INTEGER
 			-- Base class id of the type class
 
 	meta_generic: META_GENERIC is
@@ -72,15 +72,14 @@ feature -- Access
 	base_class: CLASS_C is
 			-- Base class associated to the class type
 		do
-			Result := System.class_of_id (base_id)
+			Result := System.class_of_id (class_id)
 		end
 
 	type_a: CL_TYPE_A is
 		do
-			create Result
+			create Result.make (class_id)
 			Result.set_is_true_expanded (is_true_expanded)
 			Result.set_is_separate (is_separate)
-			Result.set_base_class_id (base_id)
 		end
 
 	il_type_name: STRING is
@@ -201,14 +200,14 @@ feature -- Access
 			if not is_true_expanded then
 				Result := Sk_dtype
 			else
-				Result := Sk_exp + base_id
+				Result := Sk_exp + class_id
 			end
 		end
 
 	hash_code: INTEGER is
 			-- Hash code for current type
 		do
-			Result := Other_code + base_id
+			Result := Other_code + class_id
 		end
 
 feature -- Status
@@ -278,7 +277,7 @@ feature -- Status
 		do
 			other_cl_type ?= other
 			Result := other_cl_type /= Void -- FIXME
-					and then other_cl_type.base_id = base_id
+					and then other_cl_type.class_id = class_id
 					and then other_cl_type.is_true_expanded = is_true_expanded
 					and then other_cl_type.is_separate = is_separate
 					and then other_cl_type.meta_generic = Void
@@ -336,7 +335,7 @@ feature -- C generation
 				buffer.putstring ("SK_DTYPE")
 			else
 				buffer.putstring ("SK_EXP + (uint32) ")
-				buffer.putint (base_id)
+				buffer.putint (class_id)
 			end
 		end
 

@@ -51,8 +51,8 @@ feature {NONE} -- Implementation
 		do
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
-			enable_vertical_button_style
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_show_arrow (list_widget, False)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_tooltips (list_widget, False)
 		end
 		
 	visual_widget: POINTER is
@@ -63,24 +63,25 @@ feature {NONE} -- Implementation
 		
 feature -- Status report
 
-	has_vertical_button_style: BOOLEAN
+	has_vertical_button_style: BOOLEAN is
 			-- Is the `pixmap' displayed vertically above `text' for
 			-- all buttons contained in `Current'? If `False', then
 			-- the `pixmap' is displayed to left of `text'.
+		do
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_get_style (list_widget) /= feature {EV_GTK_EXTERNALS}.gtk_toolbar_both_horiz_enum
+		end
 		
 feature -- Status setting
 
 	enable_vertical_button_style is
 			-- Ensure `has_vertical_button_style' is `True'.
 		do
-			has_vertical_button_style := True
-			feature {EV_GTK_EXTERNALS}.gtk_toolbar_set_style (visual_widget, feature {EV_GTK_EXTERNALS}.gtk_toolbar_both_enum)
+			feature {EV_GTK_EXTERNALS}.gtk_toolbar_unset_style (visual_widget)
 		end
 		
 	disable_vertical_button_style is
 			-- Ensure `has_vertical_button_style' is `False'.
 		do
-			has_vertical_button_style := False
 			feature {EV_GTK_EXTERNALS}.gtk_toolbar_set_style (visual_widget, feature {EV_GTK_EXTERNALS}.gtk_toolbar_both_horiz_enum)
 		end
 		
@@ -116,10 +117,33 @@ feature -- Implementation
 			-- Insert `v' at position `i'.
 		local
 			v_imp: EV_ITEM_IMP
+			a_pixmapable: EV_PIXMAPABLE_IMP
+			a_textable: EV_TEXTABLE_IMP
+			a_style: INTEGER
 		do
 			v_imp ?= v.implementation
 			v_imp.set_item_parent_imp (Current)
-			feature {EV_GTK_EXTERNALS}.gtk_toolbar_insert (c_object, v_imp.c_object, i - 1)
+			feature {EV_GTK_EXTERNALS}.gtk_toolbar_insert (visual_widget, v_imp.c_object, i - 1)
+			if count = 0 then
+				a_pixmapable ?= v_imp
+				a_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_get_style (visual_widget)
+				if a_pixmapable /= Void and then a_pixmapable.pixmap /= Void then
+					a_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_icons_enum
+				end
+				a_textable ?= v_imp
+				if a_textable /= Void and then not a_textable.text.is_equal ("") then
+					if a_style = feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_icons_enum  then
+						if has_vertical_button_style then
+							a_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_both_enum
+						else
+							a_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_both_horiz_enum
+						end
+					else
+						a_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_text_enum
+					end
+				end
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_style (visual_widget, a_style)
+			end	
 			add_radio_button (v)
 			child_array.go_i_th (i)
 			child_array.put_left (v)
@@ -155,23 +179,10 @@ feature -- Implementation
 			end
 		end
 
-	remove_radio_button (w: EV_TOOL_BAR_ITEM) is
-			-- Called every time a widget is removed from the container.
-		require
-			w_not_void: w /= Void
-		local
-			r: EV_TOOL_BAR_RADIO_BUTTON_IMP
-		do
-			--| FIXME IEK Implement removal feature to call this feature.
-			r ?= w.implementation
-			if r /= Void then
-				feature {EV_GTK_EXTERNALS}.gtk_radio_tool_button_set_group (r.visual_widget, NULL)
-			end
-		end
-
 feature {EV_TOOL_BAR_RADIO_BUTTON_IMP} -- Implementation
 
 	radio_group: POINTER
+		-- GSList containing the radio peers held within `Current'
 
 feature {EV_ANY_I} -- Implementation
 

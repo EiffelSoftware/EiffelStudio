@@ -42,10 +42,7 @@ feature -- Basic Operations
 			non_void_path: path /= Void
 			valid_path: (create {RAW_FILE}.make (path)).exists
 		local
-			b, retried: BOOLEAN
-			name: STRING
-			dt: INTEGER
-			name_att: SYSTEM_STRING
+			retried: BOOLEAN
 			bin_des: EIFFEL_BINARY_DESERIALIZER
 			ser: EIFFEL_BINARY_SERIALIZER
 		do
@@ -102,7 +99,6 @@ feature {NONE} -- Implementation
 			non_void_reader: xml_reader /= Void
 			valid_reader: xml_reader.node_type = feature {XML_XML_NODE_TYPE}.element and xml_reader.name.equals (Reference_node)
 		local
-			done: BOOLEAN
 			i, ft: INTEGER
 			f_table: HASH_TABLE [INTEGER, STRING]
 		do

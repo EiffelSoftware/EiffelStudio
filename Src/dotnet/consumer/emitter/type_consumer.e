@@ -164,11 +164,10 @@ feature -- Basic Operation
 			not_initialized: not initialized
 		local
 			rescued: BOOLEAN
-			i, nb, arg_count, index: INTEGER
+			i, nb: INTEGER
 			l_fields: ARRAYED_LIST [CONSUMED_FIELD]
 			l_functions, l_other_functions: ARRAYED_LIST [CONSUMED_FUNCTION]
 			l_procedures: ARRAYED_LIST [CONSUMED_PROCEDURE]
-			cf: CONSUMED_FIELD
 			cons: CONSTRUCTOR_INFO
 			l_field: FIELD_INFO
 			l_meth: METHOD_INFO
@@ -434,7 +433,6 @@ feature {NONE} -- Implementation
 		require
 			non_void_info: info /= Void
 		local
-			l_arguments: ARRAYED_LIST [CONSUMED_ARGUMENT]
 			l_unique_eiffel_name: STRING
 			l_dotnet_name: STRING
 		do
@@ -501,8 +499,7 @@ feature {NONE} -- Implementation
 			dotnet_name: STRING
 			l_getter: CONSUMED_FUNCTION
 			l_setter: CONSUMED_PROCEDURE
-			l_info, l_info_setter: METHOD_INFO
-			l_eiffel_getter_property_name, l_eiffel_setter_property_name: STRING
+			l_info: METHOD_INFO
 		do
 			create dotnet_name.make_from_cil (info.name)
 			if info.can_read then
@@ -537,11 +534,8 @@ feature {NONE} -- Implementation
 			non_void_event_info: info /= Void
 		local
 			l_add_method, l_remove_method, l_raise_method: METHOD_INFO
-			l_eiffel_raiser_event_name, l_eiffel_adder_event_name, l_eiffel_remover_event_name: STRING
 			dotnet_name: STRING
 			l_raiser, l_adder, l_remover: CONSUMED_PROCEDURE
-			i, nb: INTEGER
-			l_parameter_type: CONSUMED_REFERENCED_TYPE
 		do
 			l_add_method := info.get_add_method_boolean (True)
 			l_remove_method := info.get_remove_method_boolean (True)
@@ -577,7 +571,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_constructors: tc /= Void
 		local
-			arg, name: STRING
+			name: STRING
 			i, j, nb: INTEGER
 			args: ARRAY [CONSUMED_ARGUMENT]
 			l_reserved: like reserved_names
@@ -774,7 +768,6 @@ feature {NONE} -- Status Setting.
 		require
 			non_void_info: info /= Void
 		local
-			i, nb: INTEGER
 			l_key: SYSTEM_STRING
 			l_dotnet_name: SYSTEM_STRING
 		do
@@ -795,11 +788,9 @@ feature {NONE} -- Status Setting.
 		require
 			non_void_info: info /= Void
 		local
-			i, nb: INTEGER
+			i: INTEGER
 			l_key: SYSTEM_STRING
 			l_dotnet_name: SYSTEM_STRING
-			l_method: METHOD_INFO
-			l_method_list: NATIVE_ARRAY [METHOD_INFO]
 			l_index: INTEGER
 		do
 			l_dotnet_name := info.name
@@ -1187,7 +1178,6 @@ feature {NONE} -- Added features for ENUM types.
 		local
 			d: DOUBLE
 			r: REAL
-			a: NATIVE_ARRAY [INTEGER_8]
 		do
 			if val.get_type.equals_type (Double_type) then
 				d ?= val

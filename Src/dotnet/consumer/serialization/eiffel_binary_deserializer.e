@@ -21,9 +21,6 @@ feature -- Basic Operation
 			valid_path: (create {RAW_FILE}.make (path)).exists
 		local
 			retried: BOOLEAN
-			name: STRING
-			dt: INTEGER
-			name_att: SYSTEM_STRING
 			binary_path: STRING
 			f: RAW_FILE
 		do

@@ -439,8 +439,9 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 			bkstn: BREAKABLE_STONE
 			cur: EDITOR_CURSOR
 		do
-			if button = 1 and then pick_n_drop_status /= pnd_drop then
+			if button = 1 then
 				Precursor {EB_EDITOR} (x_pos, y_pos, button, a_screen_x, a_screen_y)
+				set_pick_and_drop_status (no_pnd)
 			elseif button = 3 then
 				mouse_right_button_down := True
 				if x_pos <= 0 then
@@ -536,8 +537,9 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 			old_offset	: INTEGER
 		do
 			if not (ctrled_key or else mouse_copy_cut) then
-				if not text_displayed.is_empty then
+				if not text_displayed.is_empty then					
 					x_pos := x_pos_with_margin - left_margin_width + offset
+
 						-- Compute the line number pointed by the mouse cursor
 						-- and asdjust it if its over the number of lines in the text.
 					l_number := (y_pos // line_height) + first_line_displayed
@@ -574,7 +576,8 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 								if Result.x_stone_cursor /= Void then
 									editor_area.set_deny_cursor (Result.x_stone_cursor)
 								end
-								pick_n_drop_status := pnd_pick
+								set_pick_and_drop_status (pnd_pick)								
+								
 								invalidate_line (l_number, True)
 							else
 								Result := Void
@@ -587,10 +590,22 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 			end
 		end
 
+	set_pick_and_drop_status (a_status: INTEGER) is
+			-- Set status of pick and drop
+		require
+			status_valid: a_status = pnd_pick or a_status = no_pnd
+		do		
+			if a_status = pnd_pick then
+				stop_cursor_blinking
+			else
+				resume_cursor_blinking
+			end
+		end		
+
 	pick_n_drop_status: INTEGER
 			-- Step of the pick n drop where the editor is.
 
-	pnd_pick, pnd_drop, no_pnd: INTEGER is unique
+	pnd_pick, no_pnd: INTEGER is unique
 
 feature {NONE} -- Text Loading
 

@@ -89,7 +89,6 @@ feature -- Element change
 		do
 			r ?= w.implementation
 			if r /= Void then
-				io.put_string (r.text + "%N")
 				if radio_group /= Default_pointer then
 					C.gtk_radio_button_set_group (r.c_object, radio_group)
 				else
@@ -174,6 +173,9 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/02/26 02:20:04  brendel
+--| Removed annoying put_string.
+--|
 --| Revision 1.24  2000/02/26 01:28:06  brendel
 --| Implemented radio button add/remove functions.
 --| Added new_item_actions and remove_item_actions.

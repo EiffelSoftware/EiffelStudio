@@ -1,0 +1,271 @@
+indexing
+	description: "Description of a table."
+	author: "Cedric Reduron"
+	date: "$Date$"
+	revision: "$Revision$"
+
+deferred class
+	DB_TABLE_DESCRIPTION
+
+inherit
+	DB_TABLES_ACCESS_USE
+
+feature -- Initialization
+
+	make is
+			-- Enable to ensure unicity of object.
+		do
+		end
+
+feature -- Access
+
+	Table_name: STRING is
+			-- Database table name.
+		deferred
+		end
+
+	Table_code: INTEGER is
+			-- Eiffel table code, matches IDs definition in LOG_TABLE.
+		deferred
+		end
+
+	Attribute_number: INTEGER is
+			-- Number of attributes in the table.
+		deferred
+		end
+
+	attribute_code_list: ARRAYED_LIST [INTEGER] is
+			-- Feature code list.
+		deferred
+		end
+
+	description_list: ARRAYED_LIST [STRING] is
+			-- Feature name list. Can be interpreted as a list
+			-- or a hash-table.
+		deferred
+		end
+
+	to_delete_fkey_from_table: HASH_TABLE [INTEGER, INTEGER] is
+			-- List of tables depending on this one and their
+			-- foreign key for this table.
+			-- Deletion on this table may imply deletions on
+			-- depending tables. 
+		do
+		--should be deferred
+		end
+
+	to_create_fkey_from_table: HASH_TABLE [INTEGER, INTEGER] is
+			-- List of associated necessary tables and the  
+			-- linking foreign keys.
+			-- Creation on this table may imply creations on
+			-- associated necessary tables.
+		do
+		--should be deferred
+		end
+
+	attribute (code: INTEGER): ANY is
+			-- Value of attribute with `code'.
+		require
+			valid_code: valid (code)
+		deferred
+		end
+
+	printable_attribute (code: INTEGER): STRING is
+			-- String value of attribute with `code'.
+		require
+			valid_code: valid (code)
+		do
+			Result := attribute (code).out
+		end
+
+	set_attribute (code: INTEGER; value: ANY) is
+			-- Set attribute with `code' to `value'.
+			-- `value' must be of type STRING, INTEGER, BOOLEAN, CHARACTER,
+			-- DOUBLE or DATE_TIME. References are made automatically from
+			-- expanded types.
+		require
+			valid_code: valid (code)
+		deferred
+		end
+
+	id_name: STRING is
+			-- Table ID attribute name.
+		do
+			Result := description_list.i_th (Id_code)
+		end
+
+	Id_code: INTEGER is 1
+--			-- Table ID attribute code.
+--			--| 1 in general.
+--		deferred
+--		end
+
+	new_parameter_list: ARRAYED_LIST [STRING] is
+			-- Feature parameter name list: a parameter name
+			-- consists in the feature name with a "N_" prefix.
+		do
+			if npl_impl = Void then
+				create npl_impl.make (Attribute_number)
+				from
+					description_list.start
+				until
+					description_list.after
+				loop
+					npl_impl.extend ("N_" + description_list.item)
+					description_list.forth
+				end
+			end
+			Result := npl_impl
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	mapped_list (s_prefix, s_suffix: STRING; action: PROCEDURE [STRING, TUPLE [STRING]]): ARRAYED_LIST [STRING] is
+			-- Feature list mapped with `s_prefix' and `s_suffix'.
+			-- This can be useful to create tags. `action' enables
+			-- to change attributes description case for instance.
+		local
+			tmp: STRING
+		do
+			create Result.make (Attribute_number)
+			from
+				description_list.start
+			until
+				description_list.after
+			loop
+				tmp := s_prefix + description_list.item + s_suffix
+				action.call ([tmp])
+				Result.extend (tmp)
+				description_list.forth
+			end
+		end
+
+	id: ANY is
+			-- Get ID of table row.
+		do
+			Result := attribute (Id_code)
+		end
+
+	selected_attribute_list (list: ARRAYED_LIST [INTEGER]): ARRAYED_LIST [ANY] is
+			-- Table row attribute values which codes are in `list'.
+		require
+			not_void: list /= Void
+		do
+			create Result.make (list.count)
+			from
+				list.start
+			until
+				list.after
+			loop
+				Result.extend (attribute (list.item))
+				list.forth
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
+	selected_printable_attribute_list (list: ARRAYED_LIST [INTEGER]): ARRAYED_LIST [STRING] is
+			-- Table row attribute values which codes are in `list'.
+		require
+			not_void: list /= Void
+		do
+			create Result.make (list.count)
+			from
+				list.start
+			until
+				list.after
+			loop
+				Result.extend (printable_attribute (list.item))
+				list.forth
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
+	attribute_list: ARRAYED_LIST [ANY] is
+			-- Table row attribute values.
+		do
+			create Result.make (Attribute_number)
+			from
+				feature_list.start
+			until
+				feature_list.after
+			loop
+				Result.extend (attribute (feature_list.item))
+				feature_list.forth
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
+	printable_attribute_list: ARRAYED_LIST [STRING] is
+			-- Table row attribute string values.
+		do
+			create Result.make (Attribute_number)
+			from
+				feature_list.start
+			until
+				feature_list.after
+			loop
+				Result.extend (printable_attribute (feature_list.item))
+				feature_list.forth
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
+	set_id_value (value: ANY) is
+			-- Set ID of table row to `value'.
+			-- `value' must be of type STRING, INTEGER
+			-- (reference created automatically) or DATE_TIME.
+		do
+			set_feature_value (Id_code, value)
+		end
+
+	update_from (other: DB_TABLE) is
+			-- Update `Current' with not Void attributes
+			-- of `other'.
+		local
+			tmp: ANY
+			other_description: DB_TABLE_DESCRIPTION
+		do
+			other_description := other.table_description
+			from
+				feature_list.start
+			until
+				feature_list.after
+			loop
+				tmp := other_description.get_feature_value (feature_list.item)
+				if tmp /= Void then
+					set_feature_value (feature_list.item, tmp)
+				end
+				feature_list.forth
+			end
+		end
+
+	replace (new_object: DB_TABLE) is
+			-- Replace every attribute value.
+		do
+		end
+
+	valid (code: INTEGER): BOOLEAN is
+			-- Is `code' a valid attribute code?
+		do
+			Result := code > 0 and then code <= Attribute_number
+		end
+
+feature -- Status report
+
+	has_warning: BOOLEAN
+			-- has set_feature_values been completed
+			-- without warnings?
+
+	warning_message: STRING
+			-- Warning message.
+
+feature {NONE} -- Implementation
+
+	npl_impl: ARRAYED_LIST [STRING]
+			-- Backup of new_parameter_list.
+
+end -- class DB_TABLE_DESCRIPTION

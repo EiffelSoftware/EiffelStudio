@@ -7,7 +7,6 @@ inherit
 
 	SHARED_STORAGE_INFO;
 	CONSTANTS
-	SHARED_INSTANTIATOR
 
 creation
 
@@ -107,7 +106,6 @@ feature
 			if not internal_name.is_equal (c.eiffel_type) then
 				update_text (c.eiffel_type, new_text);
 			end;
-			command_instantiator_generator.add_command (c)
 		end;
 
 	update_text (s, nt: STRING) is

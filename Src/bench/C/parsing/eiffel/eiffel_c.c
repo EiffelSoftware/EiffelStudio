@@ -21,7 +21,6 @@
  */
 
 static char *id_string;	/* Eiffel string buffer (instance of ID_AS) */
-static char *id_object;	/* Eiffel instance od ID_AS */
 static char *id_pchar;		/* Pointer associated to `id_string' */
 
 fnptr c_set_put;			/* Pointer on Eiffel feature `put' of class
@@ -63,8 +62,6 @@ void eif_init()
 	/* Allocation of an Eiffel ID */
 	id_string = create_node(ID_AS);
 	id_string = eif_freeze(&id_string);	/* Object shouldn't move */
-	id_object = create_node(ID_AS);
-	id_object = eif_freeze(&id_object);	/* Object shouldn't move */
 
 	/* Initialization of the buffer with Eiffel routine 'Create' of
 	 * class ID_AS.
@@ -168,12 +165,6 @@ void generic_inc()
 {
 	/* Increment the number of formal generic parameter found. */
 	generic_count++;
-}
-
-void generic_init()
-{
-	/* Initializa the formal generic parameter counter. */
-	generic_count = 0;
 }
 
 /*
@@ -362,14 +353,6 @@ printf("Generic #%d recognized\n", i);
 	/* NOTREACHED */
 }
 
-char *create_parent_type(id, generics)
-char *id, *generics;
-{
-	/* Create an class type. Update supplier list `suppliers'. */
-
-	return create_node2(CLASS_TYPE_AS,id,generics);
-}
-
 char *create_feature_as(names, declaration, start_position, end_position)
 char *names, *declaration;
 int start_position, end_position;
@@ -468,27 +451,6 @@ char s[];
 	/* Return pointer on Eiffel instance of STRING_AS */
 
 	return create_node1(STRING_AS, RTMS(s));
-}
-
-char *create_routine(precond,external,local,compound,postcond,rescue,mark)
-char *precond,*external,*local,*compound,*postcond,*rescue;
-long mark;
-{
-	/* Return an instance of ROUTINE_AS */
-
-	char *result;
-	object_arg[0] = precond;
-	object_arg[1] = external;
-	object_arg[2] = local;
-	object_arg[3] = compound;
-	object_arg[4] = postcond;
-	object_arg[5] = rescue;
-	int_arg[0] = mark;
-	
-	result = create_node(ROUTINE_AS);
-	(*init_array[ROUTINE_AS])(result);
-
-	return result;
 }
 
 char *create_feature_name(dyn_type,name,is_frozen)

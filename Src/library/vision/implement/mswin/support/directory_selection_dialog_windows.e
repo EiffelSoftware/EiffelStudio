@@ -75,6 +75,7 @@ feature {NONE} -- Initialization
 			end
 			update_directories
 			selection_made := True
+			ok_button.set_focus
 		end
 
 feature -- Access

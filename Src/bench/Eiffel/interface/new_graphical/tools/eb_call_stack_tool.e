@@ -336,16 +336,18 @@ feature {NONE} -- Implementation
 			s: STRING
 		do
 			create Result.make (100)
-			Result.append ("Code: ")
-			Result.append (Application.status.exception_code.out)
-			Result.append (" (")
-			create e
-			s := e.meaning (Application.status.exception_code)
-			if s = Void then
-				s := "Undefined"
+			if not Application.is_dotnet then
+				Result.append ("Code: ")
+				Result.append (Application.status.exception_code.out)
+				Result.append (" (")
+				create e
+				s := e.meaning (Application.status.exception_code)
+				if s = Void then
+					s := "Undefined"
+				end
+				Result.append (s)
+				Result.append (")")				
 			end
-			Result.append (s)
-			Result.append (")")
 			Result.append (" Tag: ")
 			Result.append (Application.status.exception_tag)
 		ensure

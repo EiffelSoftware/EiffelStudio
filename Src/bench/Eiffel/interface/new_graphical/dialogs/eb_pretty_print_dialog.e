@@ -109,8 +109,21 @@ feature -- Status setting
 	set_stone (st: OBJECT_STONE) is
 			-- Give a new object to `Current' and refresh the display.
 		require
-			stone_valid: is_stone_valid (st)	
+			stone_valid: is_stone_valid (st)
+		local
+			l_tree_item: EV_TREE_ITEM
+			l_dv: ABSTRACT_DEBUG_VALUE
 		do
+			if Application.is_dotnet then
+				--| FIXME: JFIAT
+				l_tree_item := st.tree_item
+				if l_tree_item /= Void then
+					l_dv ?= l_tree_item.data
+					if l_dv /= Void then
+						Application.imp_dotnet.keep_object (l_dv)
+					end
+				end		
+			end
 			current_object := st
 			parent.tool.debugger_manager.kept_objects.extend (st.object_address)
 			slice_cmd.enable_sensitive
@@ -122,11 +135,32 @@ feature -- Status setting
 			-- Recompute the displayed text.
 		local
 			dmp: DUMP_VALUE
+			l_dlg: EV_WARNING_DIALOG
+			dv: ABSTRACT_DEBUG_VALUE
 		do
-			if Application.status.is_stopped and has_object then
-				create dmp.make_object (current_object.object_address, current_object.dynamic_class)
-				editor.load_basic_text (
-					dmp.string_representation (slice_cmd.slice_min, slice_cmd.slice_max))
+			if Application.status.is_stopped then
+				if has_object then
+					if Application.is_dotnet then
+						dv := Application.imp_dotnet.kept_object_item (current_object.object_address)
+						if dv /= Void then
+							dmp := dv.dump_value
+						end
+						--| FIXME: JFIAT
+					else
+						create dmp.make_object (current_object.object_address, current_object.dynamic_class)
+					end
+					if dmp /= Void then
+						editor.load_basic_text (
+							dmp.string_representation (slice_cmd.slice_min, slice_cmd.slice_max)
+						)
+					else
+						editor.clear_window						
+						create l_dlg.make_with_text ("Sorry a problem occured, %Nwe are not able to show you the value ...%N")
+						l_dlg.show_modal_to_window (dialog)						
+					end
+				else
+					editor.clear_window
+				end
 			else
 				editor.clear_window
 			end

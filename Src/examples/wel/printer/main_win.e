@@ -14,11 +14,6 @@ inherit
 			{NONE} all
 		end
 
-	WEL_CAPABILITIES_CONSTANTS
-		export
-			{NONE} all
-		end
-
 creation
 	make
 
@@ -46,7 +41,7 @@ feature {NONE} -- Implementation
 				if printer_dc.exists then
 					printer_dc.start_document ("WEL Print Test")
 					printer_dc.start_page
-					!! rect.make (0, 0, x_resolution, y_resolution)
+					!! rect.make (0, 0, printer_dc.width, printer_dc.height)
 					draw (printer_dc, rect)
 					printer_dc.end_page
 					printer_dc.end_document
@@ -76,18 +71,6 @@ feature {NONE} -- Implementation
 
 	printer_dc: WEL_DEFAULT_PRINTER_DC
 			-- DC used to print
-
-	x_resolution: INTEGER is
-			-- Horizontal printer resolution 
-		do
-			Result := printer_dc.device_caps (Horizontal_resolution)
-		end
-
-	y_resolution: INTEGER is
-			-- Vertical printer resolution 
-		do
-			Result := printer_dc.device_caps (Vertical_resolution)
-		end
 
 	class_icon: WEL_ICON is
 			-- Window's icon

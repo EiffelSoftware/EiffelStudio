@@ -1,12 +1,23 @@
 /*
+--|----------------------------------------------------------------
+--| Eiffel runtime header file
+--| Copyright (C) 1985-2004 Eiffel Software. All rights reserved.
+--| Duplication and distribution prohibited.  May be used only with
+--| ISE Eiffel, under terms of user license.
+--| Contact Eiffel Software for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| dba Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Contact us at: http://www.eiffel.com/general/email.html
+--| Customer support: http://support.eiffel.com
+--| For latest info on our award winning products, visit:
+--|     http://www.eiffel.com
+--|----------------------------------------------------------------
+*/
 
- #    #    ##    #       #        ####    ####           #    #
- ##  ##   #  #   #       #       #    #  #    #          #    #
- # ## #  #    #  #       #       #    #  #               ######
- #    #  ######  #       #       #    #  #        ###    #    #
- #    #  #    #  #       #       #    #  #    #   ###    #    #
- #    #  #    #  ######  ######   ####    ####    ###    #    #
-
+/*
 	Private declarations for malloc routines
 */
 
@@ -105,7 +116,7 @@ extern int	eif_scavenge_size;				/* Size of GSZ. */
 extern int	eif_tenure_max;					/* Maximum tenuring age. */
 extern int	eif_gs_limit;					/* Maximum size of object in GSZ. */
 extern int	eif_stack_chunk;				/* Size of local stack chunk. */
-extern int	eif_chunk_size;					/* Size of chunk. */
+extern size_t	eif_chunk_size;					/* Size of chunk. */
 
 #ifdef ISE_GC
 extern struct emallinfo m_data;		/* Accounting info from malloc */
@@ -115,8 +126,8 @@ extern struct ck_list cklst;		/* Head and tail of chunck list */
 extern struct sc_zone sc_from;		/* Scavenging 'from' zone */
 extern struct sc_zone sc_to;		/* Scavenging 'to' zone */
 extern uint32 gen_scavenge;			/* Is Generation Scavenging running ? */
-extern long eiffel_usage;			/* For memory statistics */
-extern int eif_max_mem;				/* Maximum memory that can be allocated */
+extern rt_uint_ptr eiffel_usage;			/* For memory statistics */
+extern size_t eif_max_mem;				/* Maximum memory that can be allocated */
 
 #ifdef EIF_THREADS
 extern EIF_LW_MUTEX_TYPE *eif_gc_gsz_mutex;
@@ -127,11 +138,11 @@ extern EIF_LW_MUTEX_TYPE *trigger_gc_mutex;
 
 #endif
 
-extern EIF_REFERENCE eif_rt_xmalloc(unsigned int nbytes, int type, int gc_flag);	/* Low level allocation routine */
-extern EIF_REFERENCE eif_rt_xcalloc(unsigned int nelem, unsigned int elsize);		/* Calloc */
+extern EIF_REFERENCE eif_rt_xmalloc(size_t nbytes, int type, int gc_flag);	/* Low level allocation routine */
+extern EIF_REFERENCE eif_rt_xcalloc(size_t nelem, size_t elsize);		/* Calloc */
 extern void eif_rt_xfree(register EIF_REFERENCE ptr);				/* Free */
-extern char *crealloc(char *ptr, unsigned int nbytes);			/* Reallocate a C object */
-extern EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned int nbytes, int gc_flag);			/* Reallocate with GC turned on/off */
+extern char *crealloc(char *ptr, size_t nbytes);			/* Reallocate a C object */
+extern EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int gc_flag);			/* Reallocate with GC turned on/off */
 
 #ifdef ISE_GC
 extern EIF_REFERENCE malloc_from_eiffel_list_no_gc (unsigned int nbytes);				/* Garbage collector's allocation */
@@ -140,11 +151,11 @@ extern struct emallinfo *meminfo(int type);	/* Memory statistics */
 /*
  * Shared routines
  */
-extern int eif_rt_split_block(register union overhead *selected, register uint32 nbytes);			/* Block spliting */
+extern int eif_rt_split_block(register union overhead *selected, register rt_uint_ptr nbytes);			/* Block spliting */
 extern void lxtract(union overhead *next);				/* Extraction from free list */
 extern void rel_core(void);				/* Give memory back to kernel */
 extern int chunk_coalesc(struct chunk *c);			/* Coalescing to reduce fragmentation */
-extern char *get_to_from_core(unsigned int nbytes);	/* Get to_space from core for partial scavenging */
+extern EIF_REFERENCE get_to_from_core(size_t nbytes);	/* Get to_space from core for partial scavenging */
 extern void memck(unsigned int max_dt);
 
 extern void mem_diagnose(int sig);			/* Memory usage dump */

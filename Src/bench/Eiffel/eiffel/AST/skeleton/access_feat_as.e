@@ -768,7 +768,9 @@ feature {NONE} -- Implementation: overloading
 								-- at only one place, ie here.
 							open_type ?= l_arg_type
 							if
-								open_type /= Void or else not current_item.conform_to (l_arg_type)
+								open_type /= Void or else
+								not (current_item.conform_to (l_arg_type) or
+								current_item.convert_to (context.current_class, l_arg_type))
 							then
 									-- Error, we cannot continue. Let's check the next feature.
 								l_done := True
@@ -951,18 +953,37 @@ feature {NONE} -- Implementation: overloading
 			target1_not_void: target1 /= Void
 			target2_not_void: target2 /= Void
 			target1_different_from_target2: not target1.same_as (target2)
-			source_conforms_to_targets: source_type.conform_to (target1) and
-				source_type.conform_to (target2)
+		local
+			conform1, conform2: BOOLEAN
+			convert1, convert2: BOOLEAN
 		do
 			if source_type.same_as (target1) then
 				Result := target1
 			elseif source_type.same_as (target2) then
 				Result := target2
 			else
-				if target1.conform_to (target2) then
+					-- First process conformance.
+				conform1 := source_type.conform_to (target1)
+				conform2 := source_type.conform_to (target2)
+				if conform1 and conform2 then
+					if target1.conform_to (target2) then
+						Result := target1
+					elseif target2.conform_to (target1) then
+						Result := target2
+					end
+				elseif conform1 then
 					Result := target1
-				elseif target2.conform_to (target1) then
+				elseif conform2 then
 					Result := target2
+				else
+						-- Conformance failed, so let's check conversion.
+					convert1 := source_type.convert_to (Context.current_class, target1)
+					convert2 := source_type.convert_to (Context.current_class, target2)
+					if convert1 and not convert2 then
+						Result := target1
+					elseif convert2 and not convert1 then
+						Result := target2
+					end
 				end
 			end
 		ensure

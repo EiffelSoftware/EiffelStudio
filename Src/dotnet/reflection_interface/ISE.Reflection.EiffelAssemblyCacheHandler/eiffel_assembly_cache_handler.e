@@ -272,15 +272,19 @@ feature -- Basic Operations
 			end
 		end
 	
-	replace_type (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; an_eiffel_class: ISE_REFLECTION_EIFFELCLASS): TYPE_STORER is
+	type_storer_from_class (an_eiffel_class: ISE_REFLECTION_EIFFELCLASS): TYPE_STORER is
 		indexing
-			description: "Replace type corresponding to `an_eiffel_class' in assembly corresponding to `an_assembly_descriptor'."
-			external_name: "ReplaceType"
+			description: "Type storer for class `an_eiffel_class' (First check there is no lock in assembly folder corresponding to `an_eiffel_class.get_assembly_descriptor'.)"
+			external_name: "TypeStorerFromClass"
 		require
-			non_void_assembly_descriptor: an_assembly_descriptor /= Void
+			non_void_assembly_descriptor: an_eiffel_class.get_assembly_descriptor /= Void
 			non_void_eiffel_class: an_eiffel_class /= Void
 		do
-			prepare_type_storage (an_assembly_descriptor)
+			prepare_type_storage (an_eiffel_class.get_assembly_descriptor)
+			check
+				non_void_assembly_folder_path: assembly_folder_path /= Void
+				not_empty_assembly_folder_path: assembly_folder_path.get_length > 0
+			end
 			create Result.make_type_storer (assembly_folder_path)
 			assembly_folder_path := Void
 		ensure

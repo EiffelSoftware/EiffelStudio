@@ -224,50 +224,52 @@ feature {NONE} -- Basic operation
 
 			-- In case the box is homogeneous, we don't care about the expand
 			-- attribute of the child.
-			if is_homogeneous then
-				from
-					childvisible_nb := 0
-					lchild.start
-					mark := border_width
-				until
-					lchild.after
-				loop
-					if lchild.item.shown or else not shown then
-						childvisible_nb := childvisible_nb + 1
-						lchild.item.set_move_and_size (border_width, mark, client_width, child.minimum_height)
-						mark := mark + lchild.item.child_cell.height + spacing
-					end
-					lchild.forth
-				end
-
-				-- In case it is not homegeneous, we must count the number of 
-				-- expand children to distribute the extra-space later.
-			else
-				from
-					childexpand_nb := 0
-					lchild.start
-					mark := border_width
-				until
-					lchild.after
-				loop
-					if lchild.item.shown or else not shown then
-						if lchild.item.expandable then
-							childexpand_nb := childexpand_nb + 1
+			if not lchild.empty then
+				if is_homogeneous then
+					from
+						childvisible_nb := 0
+						lchild.start
+						mark := border_width
+					until
+						lchild.after
+					loop
+						if lchild.item.shown or else not shown then
+							childvisible_nb := childvisible_nb + 1
+							lchild.item.set_move_and_size (border_width, mark, client_width, child.minimum_height)
+							mark := mark + lchild.item.child_cell.height + spacing
 						end
-						lchild.item.set_move_and_size (border_width, mark, client_width, lchild.item.minimum_height)
-						mark := mark + lchild.item.child_cell.height + spacing
+						lchild.forth
 					end
-					lchild.forth
-				end
-			end
-			-- To have the final size of the box, we need
-			-- to remove one spacing and to had a border.
-			mark := mark - spacing + border_width
 
-			-- Then, we resize and set the minimum size of the widget. The order
-			-- is very important.
-			resize (width, mark)
-			set_minimum_height (mark)
+					-- In case it is not homegeneous, we must count the number of 
+					-- expand children to distribute the extra-space later.
+				else
+					from
+						childexpand_nb := 0
+						lchild.start
+						mark := border_width
+					until
+						lchild.after
+					loop
+						if lchild.item.shown or else not shown then
+							if lchild.item.expandable then
+								childexpand_nb := childexpand_nb + 1
+							end
+							lchild.item.set_move_and_size (border_width, mark, client_width, lchild.item.minimum_height)
+							mark := mark + lchild.item.child_cell.height + spacing
+						end
+						lchild.forth
+					end
+				end
+				-- To have the final size of the box, we need
+				-- to remove one spacing and to had a border.
+				mark := mark - spacing + border_width
+
+				-- Then, we resize and set the minimum size of the widget. The order
+				-- is very important.
+				resize (width, mark)
+				set_minimum_height (mark)
+			end
 		end
 
 	add_children_minimum_height: INTEGER is
@@ -297,6 +299,9 @@ feature {NONE} -- Child changing
 			-- Add a child to the box, it also resize the box
    		do
 			ev_children.extend (child_imp)
+			if child = Void then
+				child := child_imp
+			end
    		end
 
 feature {NONE} -- Implementation for automatic size compute

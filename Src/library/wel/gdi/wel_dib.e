@@ -36,18 +36,18 @@ feature {NONE} -- Initialization
 			s: STRING
 			a_wel_string1, a_wel_string2: WEL_STRING
 		do
-			!! bitmap_file_header.make
-			!! info_header.make
+			create bitmap_file_header.make
+			create info_header.make
 			file.read_stream (bitmap_file_header.structure_size)
 			s := file.last_string
-			!! a_wel_string1.make (s)
+			create a_wel_string1.make (s)
 			bitmap_file_header.memory_copy (a_wel_string1.item,
 				bitmap_file_header.structure_size)
 			structure_size := bitmap_file_header.size - bitmap_file_header.structure_size
 			structure_make
 			file.read_stream (structure_size)
 			s := file.last_string
-			!! a_wel_string2.make (s)
+			create a_wel_string2.make (s)
 					--| !!FIXME!!
 					--| In the next line, we should use `structure_size' that is
 					--| the size read in the header of the bitmap, instead

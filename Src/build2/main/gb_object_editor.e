@@ -37,6 +37,11 @@ inherit
 		undefine
 			default_create, copy, is_equal
 		end
+		
+	GB_ACCESSIBLE_COMMAND_HANDLER
+		undefine
+			default_create, copy, is_equal
+		end
 
 feature -- Initialization
 
@@ -55,13 +60,7 @@ feature -- Initialization
 			create tool_bar
 			vertical_box1.extend (tool_bar)
 			vertical_box1.disable_item_expand (tool_bar)
-			create tool_bar_button
-			tool_bar_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).icon_object_symbol)
-			tool_bar_button.drop_actions.extend (agent set_object (?))
-				-- We must now set up `veto' actions so we can override the drop
-				-- When the object being transported is still a type.
-			tool_bar_button.drop_actions.set_veto_pebble_function (agent do_not_allow_object_type (?))
-			tool_bar.extend (tool_bar_button)
+			tool_bar.extend (command_handler.object_editor_command.new_toolbar_item (True, False))
 			create separator
 			vertical_box1.extend (separator)
 			vertical_box1.disable_item_expand (separator)

@@ -81,7 +81,9 @@ feature -- Access
 	wel_text: STRING is
 			-- Text of `Current'
 		do
-			Result := clone (real_text)
+			if real_text /= Void then
+				Result := real_text.twin
+			end
 		end
 
 	text_length: INTEGER is
@@ -212,7 +214,7 @@ feature -- Status setting
 	set_tooltip (a_tooltip: STRING) is
 			-- Assign `a_tooltip' to `internal_tooltip_string'.
 		do
-			internal_tooltip_string := clone (a_tooltip)
+			internal_tooltip_string := a_tooltip.twin
 		end
 
 
@@ -221,7 +223,9 @@ feature -- Element change
 	wel_set_text (txt: STRING) is
 			-- Make `txt' the new label of `Current'.
 		do
-			real_text := clone (txt)
+			if txt /= Void then
+				real_text := txt.twin
+			end
 			if parent_imp /= Void then
 				parent_imp.internal_reset_button (Current)
 				parent_imp.auto_size
@@ -237,7 +241,7 @@ feature -- Element change
 				private_pixmap.destroy
 				private_pixmap := Void
 			end
-			private_pixmap := clone (p)
+			private_pixmap := p.twin
 			has_pixmap := True
 
 				-- If the item is currently contained in the toolbar then

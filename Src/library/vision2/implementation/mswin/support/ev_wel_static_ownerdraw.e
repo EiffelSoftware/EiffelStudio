@@ -38,7 +38,7 @@ feature -- Access
 			-- Window text
 		do
 			if internal_text /= Void then
-				Result := clone (internal_text)
+				Result := internal_text.twin
 			else
 				Result := ""
 			end
@@ -50,7 +50,7 @@ feature -- Element change
 			-- Set the window text
 		do
 			if a_new_text /= Void then
-				internal_text := clone (a_new_text)
+				internal_text := a_new_text.twin
 			else
 				internal_text := Void
 			end

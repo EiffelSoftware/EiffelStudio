@@ -266,7 +266,7 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Access
 			family := convert_font_family(Wel_log_font.family,
 				Wel_log_font.pitch)
 			preferred_families.wipe_out
-			preferred_families.extend (clone(Wel_log_font.face_name))
+			preferred_families.extend (Wel_log_font.face_name.twin)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -343,7 +343,7 @@ feature {EV_ANY_I} -- Implementation
 				until
 					found or preferred_families.after
 				loop
-					lower_face := clone(preferred_families.item)
+					lower_face := preferred_families.item.twin
 					lower_face.to_lower
 					found := Font_enumerator.font_faces.has (lower_face)
 					preferred_families.forth
@@ -368,7 +368,7 @@ feature {EV_ANY_I} -- Implementation
 			Wel_log_font.update_by_font(wel_font)
 
 				-- Update internal attributes.
-			internal_face_name := clone(Wel_log_font.face_name)
+			internal_face_name := Wel_log_font.face_name.twin
 			update_internal_is_proportional(Wel_log_font)
 		end
 

@@ -38,7 +38,7 @@ feature {NONE} -- Implementation
 			-- `text' with doubled ampersands.
 		do
 			if s /= Void then
-				Result := clone (s)
+				Result := s.twin
 				escape_ampersands (Result)
 			end
 		end
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			ampersand_occurrences_doubled: s.occurrences ('&') =
-				(old clone (s)).occurrences ('&') * 2
+				(old s.twin).occurrences ('&') * 2
 		end
 
 	unescape_ampersands (s: STRING) is
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		ensure
-			ampersand_occurrences_halved: (old clone (s)).occurrences ('&') =
+			ampersand_occurrences_halved: (old s.twin).occurrences ('&') =
 				s.occurrences ('&') * 2
 		end
 

@@ -24,9 +24,10 @@ feature -- Initialization
 	tooltip: STRING is
 			-- Text of tooltip assigned to `Current'.
 		do
-			Result := clone (internal_tooltip_string)
-			if Result = Void then
+			if internal_tooltip_string = Void then
 				Result := ""
+			else
+				Result := internal_tooltip_string.twin	
 			end
 		end
 
@@ -83,7 +84,7 @@ feature -- Element change
 			end
 			
 				-- Assign `a_tooltip' to `tooltip'.
-			internal_tooltip_string := clone (a_tooltip)
+			internal_tooltip_string := a_tooltip.twin
 		end
 
 feature {NONE} -- Implementation

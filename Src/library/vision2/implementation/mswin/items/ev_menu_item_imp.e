@@ -167,7 +167,9 @@ feature {NONE} -- Implementation
 			--| Does not return internal toolkit string because it is possible
 			--| to set the string without parent.
 		do
-			Result := clone (real_text)
+			if real_text /= Void then
+				Result := real_text.twin
+			end
 		end
 
 	real_text: STRING
@@ -175,7 +177,9 @@ feature {NONE} -- Implementation
 	wel_set_text (a_text: STRING) is
 			-- Set `text' to `a_txt'. See `wel_text'.
 		do
-			real_text := clone (a_text)
+			if a_text /= Void then
+				real_text := a_text.twin
+			end
 			
 				-- Force the menu bar to be recomputed.
 			if parent_imp /= Void then
@@ -319,8 +323,8 @@ feature {NONE} -- WEL Implementation
 		local
 			tab_index: INTEGER
 		do
-			Result := clone (text)
-			if Result /= Void then
+			if text /= Void then
+				Result := text.twin
 				tab_index := Result.index_of ('%T', 1)
 				if tab_index /= 0 then
 					Result := Result.substring (1, tab_index - 1)
@@ -695,7 +699,7 @@ feature {NONE} -- WEL Implementation
 				end
 				
 					-- Draw the text
-				drawn_text := clone (plain_text)
+				drawn_text := plain_text.twin
 				drawn_text.append_character (' ')
 				drawn_text.append (accelerator_text)
 				if disabled_state then

@@ -32,7 +32,7 @@ feature {EV_FONT_IMP} -- Basic operations
 		local
 			search_face: STRING
 		do
-			search_face := clone (a_face_name)
+			search_face := a_face_name.twin
 			search_face.to_lower
 			Result := font_faces.has (a_face_name)
 		end
@@ -67,7 +67,7 @@ feature {NONE} -- Basic operations
 		local
 			face_found: STRING
 		do
-			face_found := clone (elf.log_font.face_name)
+			face_found := elf.log_font.face_name.twin
 			face_found.to_lower
 			if not internal_font_faces.has (face_found) then
 				internal_font_faces.extend (face_found)

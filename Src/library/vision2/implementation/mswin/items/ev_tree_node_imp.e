@@ -234,7 +234,9 @@ feature {EV_ANY_I} -- Element change
 	wel_text: STRING is
 			-- Text of `Current'.
 		do
-			Result := clone (real_text)
+			if real_text /= Void then
+				Result := real_text.twin
+			end
 		end
 
 	text_length: INTEGER is
@@ -251,7 +253,7 @@ feature {EV_ANY_I} -- Element change
 		local
 			tree: EV_TREE_IMP
 		do
-			real_text := clone (txt)
+			real_text := txt.twin
 			set_mask (Tvif_text)
 			Precursor (txt)
 			tree := top_parent_imp
@@ -389,7 +391,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 				private_pixmap.destroy
 				private_pixmap := Void
 			end
-			private_pixmap := clone (p)
+			private_pixmap := p.twin
 			has_pixmap := True
 
 				-- If the item is currently contained in the tree then
@@ -480,7 +482,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 	set_tooltip (a_tooltip: STRING) is
 			-- Assign `a_tooltip' to `internal_tooltip_string'.
 		do
-			internal_tooltip_string := clone (a_tooltip)
+			internal_tooltip_string := a_tooltip.twin
 		end
 
 feature {EV_TREE_IMP} -- Implementation, pick and drop

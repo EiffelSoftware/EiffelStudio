@@ -330,7 +330,7 @@ feature -- Element change
 				menu_bar.after
 			loop
 				menu_imp ?= menu_bar.item.implementation
-				if menu_imp.key /= 0 then
+				if menu_imp /= Void and then menu_imp.key /= 0 then
 					C.gtk_widget_add_accelerator (menu_imp.c_object,
 						eiffel_to_c ("activate_item"),
 						accel_group,
@@ -355,7 +355,7 @@ feature -- Element change
 					menu_bar.after
 				loop
 					menu_imp ?= menu_bar.item.implementation
-					if menu_imp.key /= 0 then
+					if menu_imp /= Void and then menu_imp.key /= 0 then
 						C.gtk_widget_remove_accelerator (menu_imp.c_object,
 							accel_group,
 							menu_imp.key,

@@ -23,7 +23,17 @@
           set was used even if new ones have been set afterwards.</li>
           <li>Fixed issue where generating documentation for all/library cluster 
           would stop during generation without completing.</li>
+          <li>Fixed crash in diagram tool when moving label on client/supplier 
+          link between two classes.</li>
           <li>Fixed resource leak on Windows 98 and Windows Me.</li>
+          <li>Fixed issue in projects where clusters are specified with relative 
+          path would not compile after adding a local assembly.</li>
+          <li>Fixed problem with cluster tool management where moving classes 
+          around or looking up a class will generate an error box instead of 
+          performing the requested operation.</li>
+          <li>Fixed incorrect Ace file specification for EiffelVision2 examples 
+          and wizards on Unix platforms where application could be linked 
+          dynamically with `libpng' but should not.</li>
         </ul>
 		<h2>Compiler</h2>
         <ul>
@@ -57,15 +67,45 @@
 	s.<span class="efeature">copy</span> (t)
 <span class="ekeyword">end</span></pre>
           <li>
+          Added support for storable in .NET. However .NET and classic 
+          implementation are completely different and <span class="efeature">independent_store</span> will 
+          not be able to retrieve a storable file if not made using the same 
+          code generation.<li>
+          Fixed a bug in <span class="efeature">is_equal</span> from <span class="eclass">LIST</span> where comparing two lists of 
+          different counts could break the comparison:<br>
+<pre><span class="efeature">make</span> <span class="ekeyword">is</span>
+	<span class="ekeyword">local</span>
+		a, b: <span class="eclass">LIST</span> [<span class="eclass">INTEGER</span>]
+	<span class="ekeyword">do</span>
+		create {<span class="eclass">ARRAYED_LIST</span> [<span class="eclass">INTEGER</span>]} a.<span class="efeature">make</span> (2)
+		a.<span class="efeature">extend</span> (10)
+
+		create {<span class="eclass">ARRAYED_LIST</span> [<span class="eclass">INTEGER</span>]} b.<span class="efeature">make</span> (2)
+		b.<span class="efeature">extend</span> (10)
+		b.<span class="efeature">extend</span> (11)
+
+		<span class="efeature">print</span> (<span class="efeature">equal</span> (b, a))
+	<span class="ekeyword">end</span>
+</pre><li>
           &nbsp;</ul>
         <h3>Eiffel2Java</h3>
         <ul>
-          <li>Update library so that it works both in classic and dotnet mode.</li>
+          <li>Updated library so that it works both in classic and dotnet mode.</li>
         </ul>
         <h3>EiffelNet</h3>
         <ul>
           <li>Fixed assertion violation of call to <span class="efeature">to_integer</span> in feature <span class="efeature">get_content_length</span> from <span class="eclass">HTTP_PROTOCOL</span> 
           if assertions are enabled on EiffelBase.</li>
+        </ul>
+        <h3>EiffelStore</h3>
+        <ul>
+          <li>Updated library so that it works both in classic and dotnet mode.</li>
+          <li>Fixed issue with oracle handle which did not work with the 
+          included Borland C compiler.</li>
+          <li>Removed <span class="efeature">nb_classes</span> from <span class="eclass">EXT_INTERNAL</span>.</li>
+          <li>Removed need for additional object file (`support.lib' on windows 
+          and `libsupport.a' on Unix platforms), so make sure to remove it from 
+          your project configurations.</li>
         </ul>
         <h3>EiffelVision2</h3>
         <ul>

@@ -39,16 +39,19 @@ feature {NONE} -- Initialization
 			gtk_scrolled_window_set_policy (gtk_scrolled_window (widget), gtk_policy_automatic, gtk_policy_automatic)
 
 			-- Creating the gtk_tree, pointed by `tree_widget':
-			tree_widget := gtk_tree_new
-			c_gtk_tree_set_single_selection_mode (tree_widget)
+			tree_widget := gtk_ctree_new (2, 1)
+			c_gtk_ctree_set_single_selection_mode (tree_widget)
 			gtk_widget_show (tree_widget)
 			gtk_scrolled_window_add_with_viewport (widget, tree_widget)
 
 			-- Creating the array which will contain the tree_items.
 			create ev_children.make (0)
 
-			-- Set the `tree_parent_imp' to Current as this
-			-- the tree that will contain all the tree items.
+-- To be modified and optimized XXX
+			-- Creating the array which will contain the tree_items.
+			create all_children.make (0)
+
+			-- Set the `tree_parent_imp' to Current.
 			set_tree_parent_imp (Current)
 		end
 
@@ -61,41 +64,43 @@ feature -- Access
 			local_tree_item_imp: EV_TREE_ITEM_IMP
 			items_array: ARRAYED_LIST [EV_TREE_ITEM_IMP]
 			tree_item_found: BOOLEAN
+			pos: INTEGER
 		do
-			check
-				To_be_tested: False
-			end
+			selected_item_p := c_gtk_ctree_selected_item (tree_widget)
+--			pos := 1 + c_gtk_ctree_index_of_node (tree_widget, selected_item_p)
+-- To be optimised XX
 
-			selected_item_p := c_gtk_tree_selected_item (tree_widget)
-			from
-				items_array := ev_children
-				tree_item_found := False
-				items_array.start
-			until
-				items_array.after or tree_item_found
-			loop
-				local_tree_item_imp := items_array.item
-				if (local_tree_item_imp.widget = selected_item_p) then
-					tree_item_found := True
+--			if (pos > 0) then
+				from
+					items_array := all_children
+					tree_item_found := False
+					items_array.start
+				until
+					items_array.after or tree_item_found
+				loop
+					local_tree_item_imp := items_array.item
+					if (local_tree_item_imp.widget = selected_item_p) then
+						tree_item_found := True
+					end
+					items_array.forth
 				end
-				items_array.forth
-			end
-			if tree_item_found then
-				Result ?= local_tree_item_imp.interface
-			else
-				Result := Void
-			end
-			
+
+				if tree_item_found then
+					Result ?= local_tree_item_imp.interface
+				else
+					Result := Void
+				end
+--			else
+--				Result := Void
+--			end
 		end
 
 feature -- Status report
 
 	selected: BOOLEAN is
-			-- Is at least one item selected ?
+			-- Is one item selected ?
 		do
-			check
-				not_yet_implemented: False
-			end
+			Result := (selected_item /= Void)
 		end
 
 	destroyed: BOOLEAN is
@@ -122,9 +127,15 @@ feature -- Event : command association
 
 	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is	
 			-- Make `command' executed when an item is
-			-- selected.
+			-- selected or unselected.
+--		local
+--			ev_data: EV_EVENT_DATA
 		do
-			add_command (tree_widget, "selection_changed", a_command, arguments)
+--			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
+--			add_command_with_event_data (tree_widget, "tree_select_row", a_command, arguments, ev_data, 0, False, default_pointer)
+--			add_command_with_event_data (tree_widget, "tree_unselect_row", a_command, arguments, ev_data, 0, False, default_pointer)
+			add_command (tree_widget, "tree_select_row", a_command, arguments, default_pointer)
+			add_command (tree_widget, "tree_unselect_row", a_command, arguments, default_pointer)
 		end
 
 feature -- Event -- removing command association
@@ -133,16 +144,29 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed
 			-- when the selection has changed.
 		do
-			remove_commands (tree_widget, selection_changed_id)
+			remove_commands (tree_widget, tree_select_row_id)
+			remove_commands (tree_widget, tree_unselect_row_id)
+		end
+feature -- Basic operations
+
+	has_tree_item (item: EV_TREE_ITEM_IMP): BOOLEAN is
+			-- Is `item' an item of the tree?
+		do
+			Result := all_children.has (item)
 		end
 
 feature {NONE} -- Implementation
 
 	add_item (item_imp: EV_TREE_ITEM_IMP) is
 			-- Add `item' to the list
+		local
+			a: ANY
+			p: POINTER
 		do
-			-- Append the item_imp to the `tree_widget':
-			gtk_tree_append (tree_widget, item_imp.widget)
+			-- Create a GtkCTreeNode (the root tree item) and insert it.
+			a ?= item_imp.text.to_c
+			p := c_gtk_ctree_insert_node (tree_widget, default_pointer, default_pointer, $a, 2, default_pointer, default_pointer, False, False)
+			item_imp.set_widget (p)
 
 			-- Set the `tree_parent_widget' of the tree item:
 			item_imp.set_tree_parent_imp (Current)
@@ -150,13 +174,21 @@ feature {NONE} -- Implementation
 			-- We need to update the array:
 			-- `ev_children' by adding the new tree_item:
 			ev_children.force (item_imp)
+
+-- To be modified and optimized XXX
+			-- We need to update the array:
+			-- `all_children' by adding the new tree_item:
+			all_children.force (item_imp)
 		end
 
 	remove_item (item_imp: EV_TREE_ITEM_IMP) is
 			-- Remove `item' to the list
 		do
-			-- remove the gtk_tree_item of the gtk_tree:
-			gtk_tree_remove_item (tree_widget, item_imp.widget)
+			-- Remove the node from the gtk_ctree:
+			gtk_ctree_remove_node (tree_widget, item_imp.widget)
+
+			-- There is no more GtkCTreeNode.
+			item_imp.set_widget (default_pointer)
 
 			-- Set the `tree_parent_widget' of the tree item to Void:
 			item_imp.set_tree_parent_imp (Void)
@@ -164,12 +196,12 @@ feature {NONE} -- Implementation
 			-- Remove the item from the array `ev_children'.
 			ev_children.search (item_imp)
 			ev_children.remove
+
+-- To be modified and optimized XXX
+			-- Remove the item from the array `all_children'.
+			all_children.search (item_imp)
+			all_children.remove
 		end
-
-feature {EV_TREE_ITEM_IMP} -- Implementation
-
-	ev_children: ARRAYED_LIST [EV_TREE_ITEM_IMP]
-			-- We need to store the children.
 
 feature {EV_TREE_ITEM_IMP} -- Implementation
 
@@ -178,6 +210,11 @@ feature {EV_TREE_ITEM_IMP} -- Implementation
 			-- is made of a gtk_scrolled_window (pointed by `widget')
 			-- and a gtk_tree (pointed by `tree_widget').
 			-- Exported to EV_TREE_ITEM_IMP. 
+
+feature {EV_TREE_ITEM_HOLDER_IMP} -- Implementation
+
+	all_children: ARRAYED_LIST [EV_TREE_ITEM_IMP]
+			-- List of all the children of the tree.
 
 end -- class EV_TREE_IMP
 

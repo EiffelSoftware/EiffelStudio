@@ -36,11 +36,14 @@ feature {NONE}-- Initialization
 			create l_ev_label_1
 			create l_ev_horizontal_box_2
 			create l_ev_label_2
+			create summary_label
+			create l_ev_horizontal_box_3
+			create l_ev_label_3
 			create excpt_type_label
 			create l_ev_vertical_box_2
-			create l_ev_label_3
+			create l_ev_label_4
 			create excpt_trace_text
-			create l_ev_horizontal_box_3
+			create l_ev_horizontal_box_4
 			create l_ev_cell_1
 			create okay_button
 			create l_ev_cell_2
@@ -51,45 +54,54 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.extend (l_ev_label_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_2)
 			l_ev_horizontal_box_2.extend (l_ev_label_2)
-			l_ev_horizontal_box_2.extend (excpt_type_label)
-			l_ev_vertical_box_1.extend (l_ev_vertical_box_2)
-			l_ev_vertical_box_2.extend (l_ev_label_3)
-			l_ev_vertical_box_2.extend (excpt_trace_text)
+			l_ev_horizontal_box_2.extend (summary_label)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_3)
-			l_ev_horizontal_box_3.extend (l_ev_cell_1)
-			l_ev_horizontal_box_3.extend (okay_button)
-			l_ev_horizontal_box_3.extend (l_ev_cell_2)
+			l_ev_horizontal_box_3.extend (l_ev_label_3)
+			l_ev_horizontal_box_3.extend (excpt_type_label)
+			l_ev_vertical_box_1.extend (l_ev_vertical_box_2)
+			l_ev_vertical_box_2.extend (l_ev_label_4)
+			l_ev_vertical_box_2.extend (excpt_trace_text)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_box_4)
+			l_ev_horizontal_box_4.extend (l_ev_cell_1)
+			l_ev_horizontal_box_4.extend (okay_button)
+			l_ev_horizontal_box_4.extend (l_ev_cell_2)
 			
 			set_minimum_width (dialog_width)
 			set_minimum_height (dialog_height)
-			disable_user_resize
-			set_maximum_width (400)
-			set_maximum_height (500)
+			set_maximum_width (4000)
+			set_maximum_height (5000)
 			set_title ("Exception Report")
 			l_ev_vertical_box_1.set_padding_width (padding_width)
 			l_ev_vertical_box_1.set_border_width (border_width)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_3)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_4)
 			l_ev_horizontal_box_1.set_padding_width (padding_width)
 			l_ev_horizontal_box_1.set_border_width (border_width)
 			l_ev_label_1.set_text ("An exception has occured.  Please send the trace to neilc@eiffel.com")
 			l_ev_label_1.align_text_left
-			l_ev_horizontal_box_2.set_padding_width (padding_width)
-			l_ev_horizontal_box_2.set_border_width (border_width)
+			l_ev_horizontal_box_2.set_padding_width (5)
+			l_ev_horizontal_box_2.set_border_width (2)
 			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_2)
-			l_ev_label_2.set_text ("Exception Type: ")
+			l_ev_label_2.set_text ("Exception Summary: ")
 			l_ev_label_2.align_text_left
+			summary_label.align_text_left
+			l_ev_horizontal_box_3.set_padding_width (padding_width)
+			l_ev_horizontal_box_3.set_border_width (border_width)
+			l_ev_horizontal_box_3.disable_item_expand (l_ev_label_3)
+			l_ev_label_3.set_text ("Exception Type: ")
+			l_ev_label_3.align_text_left
 			excpt_type_label.align_text_left
 			l_ev_vertical_box_2.set_padding_width (padding_width)
 			l_ev_vertical_box_2.set_border_width (border_width)
-			l_ev_vertical_box_2.disable_item_expand (l_ev_label_3)
-			l_ev_label_3.set_text ("Exception Trace:")
-			l_ev_label_3.align_text_left
+			l_ev_vertical_box_2.disable_item_expand (l_ev_label_4)
+			l_ev_label_4.set_text ("Exception Trace:")
+			l_ev_label_4.align_text_left
 			excpt_trace_text.disable_edit
-			l_ev_horizontal_box_3.set_padding_width (padding_width)
-			l_ev_horizontal_box_3.set_border_width (border_width)
-			l_ev_horizontal_box_3.disable_item_expand (okay_button)
+			l_ev_horizontal_box_4.set_padding_width (padding_width)
+			l_ev_horizontal_box_4.set_border_width (border_width)
+			l_ev_horizontal_box_4.disable_item_expand (okay_button)
 			okay_button.set_text ("OK")
 			okay_button.set_minimum_width (button_width)
 			
@@ -104,8 +116,8 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	l_ev_vertical_box_1, l_ev_vertical_box_2: EV_VERTICAL_BOX
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
-	l_ev_label_1, l_ev_label_2, excpt_type_label, l_ev_label_3: EV_LABEL
+	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4: EV_HORIZONTAL_BOX
+	l_ev_label_1, l_ev_label_2, summary_label, l_ev_label_3, excpt_type_label, l_ev_label_4: EV_LABEL
 	excpt_trace_text: EV_TEXT
 	l_ev_cell_1, l_ev_cell_2: EV_CELL
 	okay_button: EV_BUTTON

@@ -31,8 +31,9 @@ feature -- Status Report
 		do
 			Result := get_xt_pixel (Current, XmNbottomShadowColor)
 		ensure
-			valid_result: Result /= Void and then Result.is_valid;
-			result_has_same_display: Result.same_display (display)
+			valid_Result: Result /= Void and then Result.is_valid;
+			Result_has_same_display: Result.same_display (display);
+			Result_is_shared: Result.shared
 		end;
 
 	top_shadow_color: MEL_PIXEL is
@@ -43,8 +44,9 @@ feature -- Status Report
 		do
 			Result := get_xt_pixel (Current, XmNtopShadowColor)
 		ensure
-			valid_result: Result /= Void and then Result.is_valid;
-			result_has_same_display: Result.same_display (display)
+			valid_Result: Result /= Void and then Result.is_valid;
+			Result_has_same_display: Result.same_display (display);
+			Result_is_shared: Result.shared
 		end;
 
 	highlight_color: MEL_PIXEL is
@@ -54,8 +56,9 @@ feature -- Status Report
 		do
 			Result := get_xt_pixel (Current, XmNhighlightColor)
 		ensure
-			valid_result: Result /= Void and then Result.is_valid;
-			result_has_same_display: Result.same_display (display)
+			valid_Result: Result /= Void and then Result.is_valid;
+			Result_has_same_display: Result.same_display (display);
+			Result_is_shared: Result.shared
 		end;
 
 	is_highlighted_on_entry: BOOLEAN is

@@ -27,7 +27,8 @@ feature -- Access
 		do
 			Result := get_xm_font_list (screen_object, XmNFontList)
 		ensure
-			font_list_is_valid: Result /= Void and then Result.is_valid
+			Result_is_valid: Result /= Void and then Result.is_valid;
+			Result_is_shared: Result.shared
 		end;
 
 feature -- Status setting

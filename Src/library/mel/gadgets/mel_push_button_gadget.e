@@ -51,8 +51,9 @@ feature -- Status report
 		do
 			Result := get_xt_pixel (Current, XmNarmColor)
 		ensure
-			valid_result: Result /= Void and then Result.is_valid;
-			result_has_same_display: Result.same_display (display) 
+			valid_Result: Result /= Void and then Result.is_valid;
+			Result_has_same_display: Result.same_display (display);
+			Result_is_shared: Result.shared
 		end;
 
 	arm_pixmap: MEL_PIXMAP is
@@ -60,10 +61,11 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_pixmap (Current, XmNarmPixmap);
+			Result := get_xt_pixmap (Current, XmNarmPixmap)
 		ensure
-			valid_result: Result /= Void and then Result.is_valid;
-			result_has_same_display: Result.same_display (display) 
+			valid_Result: Result /= Void and then Result.is_valid;
+			Result_has_same_display: Result.same_display (display);
+			Result_is_shared: Result.shared
 		end;
 
 	default_button_shadow_thickness: INTEGER is

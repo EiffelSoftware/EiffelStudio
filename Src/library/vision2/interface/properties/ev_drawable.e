@@ -17,7 +17,14 @@ deferred class
 	EV_DRAWABLE
 
 inherit
-	EV_ANY
+
+	EV_COLORIZABLE
+		redefine
+			implementation,
+			is_in_default_state
+		end
+
+	EV_FONTABLE
 		redefine
 			implementation,
 			is_in_default_state
@@ -30,18 +37,6 @@ inherit
 		undefine
 			default_create,
 			copy
-		end
-
-	EV_COLORIZABLE
-		redefine
-			implementation,
-			is_in_default_state
-		end
-
-	EV_FONTABLE
-		redefine
-			implementation,
-			is_in_default_state
 		end
 
 feature -- Access

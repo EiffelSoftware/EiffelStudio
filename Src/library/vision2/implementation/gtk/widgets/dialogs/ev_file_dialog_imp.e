@@ -5,10 +5,10 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EV_FILE_SELECTION_DIALOG_IMP
+	EV_FILE_DIALOG_IMP
 
 inherit
-	EV_FILE_SELECTION_DIALOG_I
+	EV_FILE_DIALOG_I
 
 	EV_SELECTION_DIALOG_IMP
 
@@ -177,7 +177,7 @@ feature -- Event -- removing command association
 			add_dialog_close_command (ok_widget)
 		end
 
-end -- class EV_FILE_SELECTION_DIALOG_IMP
+end -- class EV_FILE_DIALOG_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

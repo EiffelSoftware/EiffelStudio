@@ -21,10 +21,16 @@ inherit
 		undefine
 			is_equal
 		end
+		
+	SHARED_WORKBENCH
 
-	SHARED_BENCH_LICENSES
+	EXCEPTIONS
 		rename
-			class_name as except_class_name
+			die as lic_die,
+			class_name as except_class_name,
+			raise as raise_exception
+		export
+			{NONE} all
 		end
 
 feature -- Properties

@@ -20,6 +20,7 @@
 
 #include "eif_dir.h"
 #include "eif_file.h"	/* for PATH_MAX */
+#include "eif_error.h"
 
 #ifdef EIF_WIN32
 #include <windows.h>
@@ -67,7 +68,6 @@ void eif_call_finish_freezing(EIF_OBJ c_code_dir, EIF_OBJ freeze_cmd_name)
 #ifdef EIF_WIN32
 	STARTUPINFO				siStartInfo;
 	PROCESS_INFORMATION		procinfo;
-	char					buf[1000];
 	char *cmd, *current_dir, *eiffel_dir;
 
 	current_dir = (char *) getcwd(NULL, PATH_MAX);
@@ -217,11 +217,11 @@ void eif_gr_call_finish_freezing(EIF_OBJ request, EIF_OBJ c_code_dir, EIF_OBJ fr
 void eif_link_driver (EIF_OBJ c_code_dir, EIF_OBJ system_name, EIF_OBJ prelink_command_name, EIF_OBJ driver_name)
 {
 #if defined EIF_WIN32 || defined EIF_OS2
-	char *src, *eiffel_dir, *eiffel_plt, *system_exe;
+	char *src, *eiffel_dir, *system_exe;
 	FILE *fi, *fo;
 	char buffer[4096];
-	char *start_dir, *i;
-	int amount;
+	char *start_dir;
+	size_t amount;
 
 		/* Given abc\EIFGEN\W_code */
 		/* The starting directory is abc or abc\EIFGEN\W_code - 14 characters */

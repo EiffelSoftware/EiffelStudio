@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	ECD_COMPILER_OUTPUT_PARSER
+	CODE_COMPILER_OUTPUT_PARSER
 
 create
 	make
@@ -144,7 +144,7 @@ invariant
 	non_void_error_text: error_text /= Void
 	non_void_what_to_do_text: what_to_do_text /= Void
 
-end -- class ECD_COMPILER_OUTPUT_PARSER
+end -- class CODE_COMPILER_OUTPUT_PARSER
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider

@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	ECD_EIFFEL_SOURCE_FILES_GENERATOR
+	CODE_EIFFEL_SOURCE_FILES_GENERATOR
 
 inherit
 	OPERATING_ENVIRONMENT
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 	last_index_suffix: INTEGER
 			-- Last suffix used in `unique_file_name'
 
-end -- class ECD_EIFFEL_SOURCE_FILES_GENERATOR
+end -- class CODE_EIFFEL_SOURCE_FILES_GENERATOR
 
 --+--------------------------------------------------------------------
 --| Prepare Utility

@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	ECD_COMPILATION_CONTEXT
+	CODE_COMPILATION_CONTEXT
 
 feature -- Access
 
@@ -38,7 +38,7 @@ feature -- Element Settings
 			root_creation_routine_name_set: root_creation_routine_name = a_name
 		end
 		
-end -- class ECD_COMPILATION_CONTEXT
+end -- class CODE_COMPILATION_CONTEXT
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider

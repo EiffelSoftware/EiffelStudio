@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"EiffelVision label"
 	status: "See notice at end of class"
@@ -11,7 +10,6 @@ class
 	EV_LABEL
 
 inherit
-
 	EV_PRIMITIVE
 		redefine
 			make, implementation
@@ -19,7 +17,7 @@ inherit
 	
 	EV_BAR_ITEM
 		redefine
-			make, implementation
+			implementation
 		end
 	
 	EV_TEXT_CONTAINER

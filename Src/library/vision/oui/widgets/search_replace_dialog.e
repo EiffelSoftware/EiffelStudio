@@ -251,7 +251,7 @@ feature -- Element change
 			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
-			implementation.add_find_action (a_command, argument)
+			implementation.add_replace_all_action (a_command, argument)
 		end;
 
 feature -- Removal

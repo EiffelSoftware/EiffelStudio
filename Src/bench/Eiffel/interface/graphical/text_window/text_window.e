@@ -3,8 +3,9 @@ class TEXT_WINDOW
 
 inherit
 
-	SCROLLED_T
+	TAB_TEXT
 		rename
+			execute as tab_execute,
 			count as size,
 			make as text_create,
 			lower as lower_window
@@ -17,8 +18,10 @@ inherit
 		end;
 	COMMAND_W
 		undefine
-			copy, setup, consistent, is_equal
+			copy, setup, consistent, is_equal, context_data_useful
 		redefine
+			execute
+		select
 			execute
 		end
 
@@ -34,14 +37,15 @@ feature
 			temp: SCROLLED_T_M
 		do
 			text_create (a_name, a_parent);
+			!! history.make (10);
 			tool := a_tool;
 			add_callbacks;
-			temp ?= implementation;
-			c_widget := temp.action_target;
 			upper := -1 			-- Init clickable array.
 		end;
 
 	last_format: FORMATTER;
+
+	history: STONE_HISTORY;
 
 	set_mode_for_editing is
 			-- Set edit mode for text modification (set to read only)
@@ -56,11 +60,16 @@ feature
 		require	
 			format_exists: f /= Void
 		do
-			if last_format /= Void then
-				last_format.darken (False)
-			end;
-			last_format := f;
-			last_format.darken (True)
+			if last_format /= f then
+				if not history.islast then
+					history.extend (root_stone)
+				end;
+				if last_format /= Void then
+					last_format.darken (False)
+				end;
+				last_format := f;
+				last_format.darken (True)
+			end
 		ensure
 			last_format = f
 		end;
@@ -173,7 +182,13 @@ feature
 			a_stone_not_void: a_stone /= Void
 		do
 			if compatible (a_stone) then
-				last_format.execute (a_stone)
+				if a_stone.is_valid then 
+					history.extend (a_stone);
+					last_format.execute (a_stone)
+				else
+					warner.set_window (Current);
+					warner.gotcha_call ("Pebble is not valid")
+				end
 			end
 		ensure
 			updated: root_stone = a_stone;
@@ -183,18 +198,58 @@ feature
 	synchronize is
 			-- Synchronize clickable elements with text, if possible.
 		do
-			if root_stone /= Void then
-				synchronise_stone;
-			end;
-			last_format.execute (Current)
+			synchronise_stone
 		end;
 
 	synchronise_stone is
-			-- Synchronise the root stone of the window
-		require
-			valid_root_stone: root_stone /= Void
+			-- Synchronize the root stone of the window
+			-- and the history's stones.
 		do
-			-- Do nothing
+			history.extend (root_stone);
+			history.synchronize;
+			if 
+				root_stone /= Void and then 
+				root_stone.synchronized_stone /= Void 
+			then
+					-- The root stone is still valid.
+				last_format.set_do_format (true);
+				last_format.execute (history.item);
+				last_format.set_do_format (false)
+			else
+					-- The root stone is not valid anymore.
+				history.forth;
+				check history.after end;
+				tool.set_default_format;
+				set_cursor_position (0);
+				clean;
+				clear;
+				show_image;
+				set_changed (False);
+				tool.set_title (tool.tool_name);
+				if tool.hole /= Void then
+					tool.hole.set_empty_symbol
+				end;
+			end
+		end;
+
+	kept_objects: LINKED_SET [STRING] is
+			-- Hector addresses of displayed clickable objects
+		local
+			obj_stone: OBJECT_STONE;
+			i: INTEGER
+		do
+			!! Result.make;
+			from
+				i := 1
+			until
+				i > clickable_count
+			loop
+				obj_stone ?= item (i).node;
+				if obj_stone /= Void then
+					Result.extend (obj_stone.object_address)
+				end;
+				i := i + 1
+			end
 		end;
 
 	highlight_focus is
@@ -202,8 +257,8 @@ feature
 			-- from `focus_start' to `focus_end'.
 			-- Put cursor on the focus if not already done.
 		do
-			set_cursor_position (focus_start);
 			highlight_selected (focus_start, focus_end);
+			set_cursor_position (focus_start);
 		end;
 
 	deselect_all is
@@ -237,6 +292,7 @@ feature
 
 	clear_window is
 		do
+			history.wipe_out;
 			set_cursor_position (0);
 			clean;
 			clear;
@@ -252,21 +308,8 @@ feature
 	
 feature {NONE}
 
-	init_callback_values is
-		do
-			if modifier /= Void then end;
-			if grabber /= Void then end;
-			if new_tooler /= Void then end;
-			if raise_proj_window /= Void then end;
-			if raise_class_w /= Void then end;
-			if raise_routine_w /= Void then end;
-			if raise_object_w /= Void then end;
-			if raise_explain_w /= Void then end;
-		end;
-
 	add_callbacks is
 		do
-			add_modify_action (Current, modifier);
 			set_action ("<Btn3Down>", Current, grabber);
 			set_action ("!c<Btn3Down>", Current, new_tooler);
 			set_action ("Alt<Key>p", Current, raise_proj_window);
@@ -275,9 +318,6 @@ feature {NONE}
 			set_action ("Alt<Key>o", Current, raise_object_w);
 			set_action ("Alt<Key>e", Current, raise_explain_w);
 		end;
-
-	c_widget: POINTER;
-			-- C pointer to the associated text widget.
 
 	highlight_selected (a, b: INTEGER) is
 			-- Highlight between `a' and `b' using reverse video.
@@ -295,7 +335,7 @@ feature
 		local
 			cur_pos: INTEGER
 		do
-			cur_pos := text_window_cur_pos (c_widget, screen.x - real_x, screen.y - real_y);
+			cur_pos := unexpanded_position (text_window_cur_pos (c_widget, screen.x - real_x, screen.y - real_y));
 			update_focus (cur_pos);
 			highlight_focus
 		end;
@@ -313,7 +353,6 @@ feature
 			search_sub: STRING;
 			c_pos: INTEGER;
 			start_position: INTEGER;
-			s1, s2: ANY;
 			temp: STRING
 		do
 			c_pos := cursor_position;
@@ -328,22 +367,22 @@ feature
 				start_position := search_sub.substring_index (temp, 1) - 1;
 				if start_position >= 0 then
 					start_position := start_position + c_pos;
-					set_cursor_position (start_position + s.count);
 					highlight_selected (start_position, start_position + temp.count);
+					set_cursor_position (start_position + s.count);
 					found := true
 				else
 					if (c_pos > 0) then
 						search_sub := text.substring (1, c_pos);
 						search_sub.to_lower;
 						temp := clone (s);
-						temp.to_lower;	
+						temp.to_lower;
 						start_position := 
 							search_sub.substring_index (temp, 1) - 1;
 						if start_position >= 0 then
 							start_position := start_position;
-							set_cursor_position (start_position + temp.count);
 							highlight_selected 
 								(start_position, start_position + temp.count);
+							set_cursor_position (start_position + temp.count);
 							found := true
 						end;	
 					end;
@@ -373,14 +412,19 @@ feature {NONE}
 			clicked_type: INTEGER;
 			cursor_x, cursor_y: INTEGER;
 		do
+			tab_execute (argument);
 			if not changed then
-				if argument = modifier then
+				if argument = modify_event then
+					if history.islast then
+						history.extend (root_stone);
+					end;
 					set_changed (true)
 				elseif argument = grabber then
+					warner.popdown;
 					if clickable_count /= 0 then
 						change_focus;
-						cursor_x  := text_window_x_pos (c_widget, focus_start, real_x, real_y);
-						cursor_y := text_window_y_pos (c_widget, focus_start, real_x, real_y);
+						cursor_x  := text_window_x_pos (c_widget, expanded_position (focus_start), real_x, real_y);
+						cursor_y := text_window_y_pos (c_widget, expanded_position (focus_start), real_x, real_y);
 						tool.transport (focus, current, cursor_x, cursor_y)
 					end
 				elseif argument = new_tooler then
@@ -407,10 +451,6 @@ feature {NONE}
 
 feature {NONE} -- Callback values
 
-	modifier: ANY is
-		once
-			!! Result
-		end;
 	grabber: ANY is
 		once
 			!! Result
@@ -461,6 +501,10 @@ feature {NONE} -- External features
 			"C"
 		alias
 			"cur_pos"
-		end
+		end;
+
+invariant
+
+	history_exists: history /= Void
 
 end

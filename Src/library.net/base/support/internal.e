@@ -43,8 +43,11 @@ feature -- Creation
 			class_type_not_void: class_type /= Void
 		local
 			t: TYPE
+			l_class_type: SYSTEM_STRING
 		do
-			t := feature {TYPE}.get_type_string (class_type.to_cil)
+			l_class_type := class_type.to_cil
+			l_class_type := l_class_type.insert (0, ("Implementation.").to_cil)
+			t := feature {TYPE}.get_type_string (l_class_type)
 			Result := get_type_index (t)
 		ensure
 			valid_result: Result = -1 or else Result >= 0
@@ -57,7 +60,7 @@ feature -- Creation
 		local
 			c: CONSTRUCTOR_INFO
 		do
-			if not known_types.valid_index (type_id) then
+			if known_types.valid_index (type_id) then
 				c := known_types.i_th (type_id).item.get_constructor (feature {TYPE}.empty_types)
 				if c /= Void then
 					Result ?= c.invoke_array_object (Void)

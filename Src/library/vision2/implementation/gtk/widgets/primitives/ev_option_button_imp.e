@@ -11,6 +11,9 @@ inherit
 	EV_OPTION_BUTTON_I
 
 	EV_MENU_HOLDER_IMP
+		undefine
+			set_foreground_color
+		end
 
 	EV_BUTTON_IMP
 		rename
@@ -28,7 +31,8 @@ inherit
 		redefine
 			make,
 			add_popup_command,
-			text			
+			text,
+			set_foreground_color			
 		end
 
 creation
@@ -139,6 +143,12 @@ feature {EV_MENU_ITEM_HOLDER} -- Element change
 			-- Remove menu from option button. 
 		do
 			gtk_option_menu_remove_menu (widget)
+		end
+
+	set_foreground_color (color: EV_COLOR) is
+			-- Make `color' the new `foreground_color'.
+		do
+			c_gtk_widget_set_fg_color (widget, color.red, color.green, color.blue)
 		end
 
 feature -- Event - command association

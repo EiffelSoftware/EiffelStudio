@@ -24,7 +24,8 @@ inherit
 		redefine
 			make,
 			make_with_text,
-			set_parent
+			set_parent,
+			set_foreground_color
 		end
         
 creation
@@ -58,7 +59,15 @@ feature {NONE} -- Initialization
 			gtk_radio_button_set_group (widget, parent_imp.radio_button_group)
 			parent_imp.set_rbg_pointer (gtk_radio_button_group (Current.widget))
 		end
-	
+
+feature -- Element change
+
+	set_foreground_color (color: EV_COLOR) is
+			-- Make `color' the new `foreground_color'
+		do
+			c_gtk_widget_set_fg_color (widget, color.red, color.green, color.blue)
+		end
+
 end -- class EV_RADIO_BUTTON_IMP
 
 --|----------------------------------------------------------------

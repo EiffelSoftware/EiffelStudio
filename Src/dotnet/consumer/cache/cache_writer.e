@@ -479,7 +479,7 @@ feature {NONE} -- Implementation
 					l_is_in_gac := True
 				end
 				
-				if concervative_mode then
+				if conservative_mode then
 					folder_name := a_id.twin
 				else
 					create folder_name.make (l_name.name.length + a_id.count + 1)

@@ -34,7 +34,7 @@ feature {NONE} -- Useless
 			end
 		end
 
-feature {NONE} -- Execution
+feature {PREFERENCE_COMMAND} -- Execution
 
 	execute (argument: ANY) is
 			-- Execute Current

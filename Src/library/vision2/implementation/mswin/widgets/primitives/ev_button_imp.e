@@ -244,14 +244,12 @@ feature -- Status setting
 	enable_default_push_button is
 			-- Set the style "default_push_button" of `Current'.
 		do
-		--	put_bold_border
 			is_default_push_button := True
 		end
 
 	disable_default_push_button is
 			-- Remove the style "default_push_button"  of `Current'. 
 		do
-		--	remove_bold_border
 			is_default_push_button := False
 		end
 
@@ -641,6 +639,12 @@ feature {EV_ANY_I} -- Drawing implementation
 
 				-- If `Current' has the focus, then we must draw the focus rectangle.
 			if flag_set (state, feature {WEL_ODS_CONSTANTS}.Ods_focus) then
+					-- If `is_default_push_button' then `Current' is being
+					-- drawn as the focused button in a dialog. We must move
+					-- `focus_rect' away from the extra thick border.
+				if is_default_push_button then
+					focus_rect.inflate (-1, -1)
+				end
 				draw_focus_rect (memory_dc, focus_rect)
 			end
 

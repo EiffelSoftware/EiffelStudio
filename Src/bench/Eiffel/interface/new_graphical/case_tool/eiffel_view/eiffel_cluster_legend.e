@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			
 			create pin_button
 			open_pin.set_point_position (pin_button.point_x, pin_button.point_y)
-			pin_button.extend (open_pin)
+			pin_button.extend (closed_pin)
 				
 			extend (border)
 			pin_button.pointer_button_press_actions.extend (agent on_pin)
@@ -84,15 +84,13 @@ feature {NONE} -- Initialization
 			update_position
 			extend (colorize_button)
 			extend (pin_button)
+			is_pined := True
 		ensure
 			set: display_world = a_world
 		end
 		
 feature -- Status report
 
-	was_moved_by_user: BOOLEAN
-			-- Was `Current' moved by user?
-			
 	is_pined: BOOLEAN
 			-- Is `Current' pined.
 		
@@ -282,7 +280,6 @@ feature {NONE} -- Implementation
 	on_start_move is
 			-- User started to move `Current'.
 		do
-			was_moved_by_user := True
 			display_world.bring_to_front (Current)
 		end
 		

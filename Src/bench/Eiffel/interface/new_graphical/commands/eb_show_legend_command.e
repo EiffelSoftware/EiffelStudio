@@ -1,6 +1,6 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Objects that toggle visibility of cluster legend"
+	author: "Benno Baumgartner"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -28,6 +28,7 @@ feature -- Basic operations
 				tool.projector.full_project
 			elseif current_button.is_selected then
 				tool.world.show_legend
+				tool.on_cluster_legend_pin
 				current_button.set_tooltip (tooltip)
 				tool.projector.full_project
 			end	

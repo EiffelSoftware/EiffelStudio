@@ -332,15 +332,8 @@ feature {NONE} -- Initialization
 			view_selector.select_all
 			view_selector.set_focus
 		end
-		
 
 feature -- Status report
-
-	is_resize_enabled: BOOLEAN is
-			-- 
-		do
-			Result := world_cell.is_resize_enabled
-		end
 
 	is_rebuild_world_needed: BOOLEAN
 			-- Is a rebuild of the world needed when a stone is dropped?
@@ -772,18 +765,19 @@ feature -- Element change
 				else
 					reset_tool_bar_for_class_view
 				end
+				if was_legend_shown then
+					world.show_legend
+				end
 				reset_view_selector
 				reset_tool_bar_toggles
 				world.figure_change_end_actions.extend (agent on_figure_change_end)
 				world.figure_change_start_actions.extend (agent on_figure_change_start)
 				world.cluster_legend.move_actions.extend (agent on_cluster_legend_move)
 				world.cluster_legend.pin_actions.extend (agent on_cluster_legend_pin)
+				on_cluster_legend_pin
 				
 				if world.is_right_angles then
 					world.apply_right_angles
-				end
-				if was_legend_shown then
-					world.show_legend
 				end
 			end
 		rescue
@@ -911,16 +905,17 @@ feature -- Element change
 				else
 					reset_tool_bar_for_cluster_view
 				end
+				if world.is_right_angles then
+					world.apply_right_angles
+				end
 				reset_view_selector
 				reset_tool_bar_toggles
 				world.figure_change_end_actions.extend (agent on_figure_change_end)
 				world.figure_change_start_actions.extend (agent on_figure_change_start)
 				world.cluster_legend.move_actions.extend (agent on_cluster_legend_move)
 				world.cluster_legend.pin_actions.extend (agent on_cluster_legend_pin)
-				
-				if world.is_right_angles then
-					world.apply_right_angles
-				end
+				on_cluster_legend_pin
+
 				if was_legend_shown then
 					world.show_legend
 				end
@@ -1030,6 +1025,7 @@ feature {EB_TOGGLE_UML_COMMAND} -- UML/BON toggle.
 			world.figure_change_start_actions.extend (agent on_figure_change_start)
 			world.cluster_legend.move_actions.extend (agent on_cluster_legend_move)
 			world.cluster_legend.pin_actions.extend (agent on_cluster_legend_pin)
+			on_cluster_legend_pin
 		end
 		
 	is_uml: BOOLEAN is
@@ -1472,6 +1468,7 @@ feature {NONE} -- Events
 				world.figure_change_start_actions.extend (agent on_figure_change_start)
 				world.cluster_legend.move_actions.extend (agent on_cluster_legend_move)
 				world.cluster_legend.pin_actions.extend (agent on_cluster_legend_pin)
+				on_cluster_legend_pin
 
 				if world.is_right_angles then
 					world.apply_right_angles
@@ -1585,6 +1582,15 @@ feature {EB_FIT_TO_SCREEN_COMMAND} -- Implementation
 
 	world_cell: EIFFEL_FIGURE_WORLD_CELL
 			-- Cell showing the graph.
+			
+feature {EB_SHOW_LEGEND_COMMAND} -- Implementation
+
+	on_cluster_legend_pin is
+			-- User pined `world'.`cluster_legend'.
+		do
+			cluster_legend_x := world.cluster_legend.point_x - projector.area_x
+			cluster_legend_y := world.cluster_legend.point_y - projector.area_y
+		end
 		
 feature {NONE} -- Implementation
 
@@ -1662,14 +1668,6 @@ feature {NONE} -- Implementation
 			cluster_legend_x := world.cluster_legend.point_x - projector.area_x
 			cluster_legend_y := world.cluster_legend.point_y - projector.area_y
 		end
-		
-	on_cluster_legend_pin is
-			-- User pined `world'.`cluster_legend'.
-		do
-			cluster_legend_x := world.cluster_legend.point_x - projector.area_x
-			cluster_legend_y := world.cluster_legend.point_y - projector.area_y
-		end
-		
 
 	has_diagram_edited_class: BOOLEAN
 			-- Was a class edited through the Diagram.

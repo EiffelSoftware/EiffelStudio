@@ -215,62 +215,62 @@ feature -- Cecil
 			make_file.new_line
 		end
 
-feature -- Generate DLL
+feature -- Generate Dynalic Library
 
-	generate_dll is
+	generate_dynamic_lib is
 		local
 			i, nb: INTEGER
-			edll_file: STRING
-			egc_dll_file: STRING
+			edynlib_file: STRING
+			egc_dynlib_file: STRING
 		do
-			-- Generate the line concerning edll.o and egc_dll.o
-			egc_dll_file := "egc_dll.template"
+			-- Generate the line concerning edynlib.o and egc_dynlib.o
+			egc_dynlib_file := "egc_dynlib.template"
 
-			-- Generate SYSTEM_IN_DLL...
-			make_file.putstring ("%NSYSTEM_IN_DLL= ")
+			-- Generate SYSTEM_IN_DYNAMIC_LIB...
+			make_file.putstring ("%NSYSTEM_IN_DYNAMIC_LIB= ")
 			make_file.putstring (system_name)
 			make_file.putstring (".so %N")
-			make_file.putstring ("dll: $(SYSTEM_IN_DLL) ")
+			make_file.putstring ("dynlib: $(SYSTEM_IN_DYNAMIC_LIB) ")
 
-			-- Generate "E1/egc_dll.o"
+			-- Generate "E1/egc_dynlib.o"
 			make_file.putstring ("%N")
 			make_file.putstring (System_object_prefix)
 			make_file.putint (1)
-			make_file.putstring ("/egc_dll.o: Makefile $(EIFFEL4)/bench/spec/$(PLATFORM)/templates/")
-			make_file.putstring (egc_dll_file)
+			make_file.putstring ("/egc_dynlib.o: Makefile $(EIFFEL4)/bench/spec/$(PLATFORM)/templates/")
+			make_file.putstring (egc_dynlib_file)
 			make_file.putstring ("%N%T$(MV) $(EIFFEL4)/bench/spec/$(PLATFORM)/templates/")
-			make_file.putstring (egc_dll_file)
+			make_file.putstring (egc_dynlib_file)
 			make_file.putstring (" ")
 			make_file.putstring (System_object_prefix)
 			make_file.putint (1)
-			make_file.putstring ("/egc_dll.c") 
+			make_file.putstring ("/egc_dynlib.c") 
 
 			make_file.putstring ("%N%T cd ")
 			make_file.putstring (System_object_prefix)
 			make_file.putint (1)
-			make_file.putstring ("%N%T$(MAKE) egc_dll.o")
+			make_file.putstring ("%N%T$(MAKE) egc_dynlib.o")
 			make_file.putstring ("%N%T cd ..")
 
-			-- Generate "E1/edll.o"
+			-- Generate "E1/edynlib.o"
 			make_file.putstring ("%N")
 			make_file.putstring (System_object_prefix)
 			make_file.putint (1)
-			make_file.putstring ("/edll.o: Makefile ")
+			make_file.putstring ("/edynlib.o: Makefile ")
 			make_file.putstring (System_object_prefix)
 			make_file.putint (1)
-			make_file.putstring ("/edll.c ")
+			make_file.putstring ("/edynlib.c ")
 			make_file.putstring ("%N%T cd ")
 			make_file.putstring (System_object_prefix)
 			make_file.putint (1)
-			make_file.putstring ("%N%T$(MAKE) edll.o")
+			make_file.putstring ("%N%T$(MAKE) edynlib.o")
 			make_file.putstring ("%N%T cd ..")
 
-			-- Continue the declaration for the SYSTEM_IN_DLL
-			make_file.putstring ("%NSYSTEM_IN_DLL_OBJ= $(OBJECTS) $(EXTERNALS) $(EOBJECTS) $(EIFLIB) %"E1/edll.o%" %"E1/egc_dll.o%" $precompilelibs %N")
-			make_file.putstring ("DLLSHAREDFLAGS= $(LDSHAREDFLAGS) %N");
-			make_file.putstring ("%"$(SYSTEM_IN_DLL)%" : $(SYSTEM_IN_DLL_OBJ) %N")
-			make_file.putstring ("%T$(RM) %"$(SYSTEM_IN_DLL)%" %N")
-			make_file.putstring ("%T$(SHAREDLINK) $(DLLSHAREDFLAGS) $(SYSTEM_IN_DLL_OBJ) $(SHAREDLIBS) %N")
+			-- Continue the declaration for the SYSTEM_IN_DYNAMIC_LIB
+			make_file.putstring ("%NSYSTEM_IN_DYNAMIC_LIB_OBJ= $(OBJECTS) $(EXTERNALS) $(EOBJECTS) $(EIFLIB) %"E1/edynlib.o%" %"E1/egc_dynlib.o%" $precompilelibs %N")
+			make_file.putstring ("DYNLIBSHAREDFLAGS= $(LDSHAREDFLAGS) %N");
+			make_file.putstring ("%"$(SYSTEM_IN_DYNAMIC_LIB)%" : $(SYSTEM_IN_DYNAMIC_LIB_OBJ) %N")
+			make_file.putstring ("%T$(RM) %"$(SYSTEM_IN_DYNAMIC_LIB)%" %N")
+			make_file.putstring ("%T$(SHAREDLINK) $(DYNLIBSHAREDFLAGS) $(SYSTEM_IN_DYNAMIC_LIB_OBJ) $(SHAREDLIBS) %N")
 			
 			make_file.new_line
 			make_file.new_line
@@ -324,8 +324,8 @@ feature -- Actual generation
 				-- Generate Cecil rules
 			generate_cecil
 
-				-- Generate DLLs rules
-			generate_dll
+				-- Generate Dynamic Lib rules
+			generate_dynamic_lib
 
 				-- Generate cleaning rules
 			generate_main_cleaning

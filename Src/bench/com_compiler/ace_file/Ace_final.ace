@@ -197,6 +197,8 @@ cluster
 				end
 			parameter_descriptor
 				end
+			completion_feature
+				end
 		end
 
 	all base:		"$EIFFEL_SRC\library\base"

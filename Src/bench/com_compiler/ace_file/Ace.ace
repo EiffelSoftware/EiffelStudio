@@ -194,6 +194,8 @@ cluster
 				end
 			parameter_descriptor
 				end
+			completion_feature
+				end
 		end
 
 	all base:		"$EIFFEL_SRC\library\base"
@@ -271,12 +273,6 @@ cluster
 			ecom_queriable
 				end
 		end
-
-	liman:		"$EIFFEL_SRC\Eiffel\limand"
-
-	liman_bench (liman):		"$\bench"
-
-	liman_abstract (liman):		"$\abstract"
 
 	beurk:		"$EIFFEL_SRC\Eiffel\beurk"
 
@@ -370,7 +366,15 @@ cluster
 
 	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
 
-	activation_checker:		"$EIFFEL_SRC\Eiffel\library\activation\free"
+	all activation_checker:		"$EIFFEL_SRC\Eiffel\library\activation"
+		exclude
+			"enterprise"; "free"; "unix"; "CVS"; 
+		end
+
+	all keygen:		"$EIFFEL_SRC\library\keygen"
+		exclude
+			"eiffel_studio_52"; "unix"; "CVS"; 
+		end
 
 	all assembly_info:		"$EIFFEL_SRC\dotnet\eac_browser\src"
 		exclude

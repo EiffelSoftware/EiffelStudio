@@ -291,8 +291,8 @@ feature -- To compiler world
 	class_name_for_class_token_and_module (a_class_token: INTEGER; a_module_name: STRING): STRING is
 			-- Class name for CLASS_C identified by `class_token' and `a_module_name'
 		require
-			class_token_valid: a_class_token > 0
-			module_name_valid: a_module_name /= Void and then not a_module_name.is_empty 
+			class_token_positive: a_class_token > 0
+			module_name_not_empty: a_module_name /= Void and then not a_module_name.is_empty 
 		local
 			l_class_c: CLASS_C
 		do
@@ -337,6 +337,8 @@ feature {NONE} -- entry point token
 
 	is_entry_point (a_feat: FEATURE_I): BOOLEAN is
 			-- Is `a_feat' the entry point ?
+		require
+			feat_not_void: a_feat /= Void
 		local
 			l_creation_name: STRING
 		do
@@ -357,6 +359,7 @@ feature -- line debug recording
 	record_line_info (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_il_line: INTEGER; a_eiffel_line: INTEGER;) is
 			-- Record IL information regarding breakable line
 		require
+			class_type_not_void: a_class_type /= Void
 			feat_not_void: a_feat /= Void
 		local
 			l_info_from_class_type: IL_DEBUG_INFO_FROM_CLASS_TYPE
@@ -392,6 +395,7 @@ feature -- line debug exploitation
 	feature_breakable_il_offsets (a_class_type: CLASS_TYPE; a_feat: FEATURE_I): ARRAYED_LIST [INTEGER] is
 			-- List of breakable IL Offset for `a_feat'
 		require
+			class_type_not_void: a_class_type /= Void
 			feat_not_void: a_feat /= Void
 		local
 			l_info_from_class_type: IL_DEBUG_INFO_FROM_CLASS_TYPE
@@ -405,6 +409,7 @@ feature -- line debug exploitation
 	feature_eiffel_breakable_line_for_il_offset (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_il_offset: INTEGER): INTEGER is
 			-- Corresponding Eiffel Line for `a_il_offset' offset
 		require
+			class_type_not_void: a_class_type /= Void
 			feat_not_void: a_feat /= Void
 		local
 			l_list: ARRAYED_LIST [INTEGER]
@@ -427,6 +432,7 @@ feature -- line debug exploitation
 			-- IL offset for the Eiffel line number `a_line'
 			-- Return -1 if index out of range
 		require
+			class_type_not_void: a_class_type /= Void
 			feat_not_void: a_feat /= Void
 		local
 			l_index: INTEGER
@@ -448,6 +454,7 @@ feature -- line debug exploitation
 	is_il_offset_related_to_eiffel_line (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_il_offset: INTEGER): BOOLEAN is
 			-- is a_il_offset related to an Eiffel line index ?
 		require
+			class_type_not_void: a_class_type /= Void
 			feat_not_void: a_feat /= Void
 		local
 			l_list: LIST [INTEGER]
@@ -459,6 +466,7 @@ feature -- line debug exploitation
 	next_feature_breakable_il_offset_for (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_il_offset: INTEGER): INTEGER is
 			-- Next IL offset for the il offset `a_current_il_offset'
 		require
+			class_type_not_void: a_class_type /= Void
 			feat_not_void: a_feat /= Void
 		local
 			l_list: ARRAYED_LIST [INTEGER]
@@ -477,6 +485,9 @@ feature -- line debug exploitation
 
 	next_feature_breakable_il_range_for (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_current_il_offset: INTEGER): ARRAY [TUPLE [INTEGER, INTEGER]] is
 			-- IL range offset for the Eiffel line `a_line' in the step next
+		require
+			class_type_not_void: a_class_type /= Void
+			feat_not_void: a_feat /= Void
 		local
 			l_list: ARRAYED_LIST [INTEGER]			
 			l_inf, l_sup: INTEGER		
@@ -527,15 +538,10 @@ feature -- Recorder Once
 		local
 			l_info_from_class_type: IL_DEBUG_INFO_FROM_CLASS_TYPE
 		do
-
 			l_info_from_class_type := info_from_class_type (a_class_type, False)
 			if l_info_from_class_type /= Void then
 				Result := l_info_from_class_type.once_tokens (a_feat)
 			end
---			if Result = Void then
---				Result := [0,0]
---				print ("[!] ERROR : IL_DEBUG_INFO_RECORDER.once_feature_tokens_for %N")			
---			end
 --		ensure
 --			Result /= Void
 		end
@@ -601,10 +607,13 @@ feature -- Recorder feature and attribute
 feature {NONE} -- Record processing
 
 	last_class_type_recorded: CLASS_TYPE
+			-- Last recorded class type
 
 	ignore_feature (a_feat: FEATURE_I): BOOLEAN is
 			-- Ignore non Eiffel feature name 
 			-- for now, ignore all '^_.*' feature_name
+		require
+			a_feat_not_void: a_feat /= Void
 		do
 			Result := a_feat.feature_name.item(1).is_equal ('_')
 		end
@@ -641,36 +650,238 @@ feature {NONE} -- Record processing
 			end
 		end
 
+feature {NONE} -- Class Specific info
+
+	internal_record_class_token (a_module: IL_MODULE; a_class_type: CLASS_TYPE; a_class_token: INTEGER) is
+			-- Record class information regarding token
+		require
+			module_not_void: a_module /= Void
+			class_type_not_void: a_class_type /= Void
+			class_token_positive: a_class_token > 0
+		do
+			internal_record_class_type (a_module.module_file_name, a_class_type, a_class_token)
+		end
+		
+	internal_record_class_type (a_module_name: STRING; a_class_type: CLASS_TYPE; a_class_token: INTEGER) is
+				--| New mecanism
+		require
+			module_name_not_empty: a_module_name /= Void and then not a_module_name.is_empty
+			class_type_not_void: a_class_type /= Void
+			class_token_positive: a_class_token > 0
+		local
+			l_info: IL_DEBUG_INFO_FROM_MODULE
+		do
+			l_info := info_from_module (a_module_name, True)
+			l_info.record_class_type (a_class_type, a_class_token)
+		ensure
+			modules_debugger_info.has (module_key (a_module_name))
+		end		
+
+feature {NONE} -- Internal access
+
+	module_key (a_mod_name: STRING): STRING is
+			-- Module key for `a_mod_name' used for indexation
+		require
+			mod_name_valid: a_mod_name /= Void and then not a_mod_name.is_empty
+		do
+			Result := clone (a_mod_name)
+			Result.to_lower
+		ensure
+			Result_valid: Result /= Void and then not Result.is_empty
+		end
+
+feature {IL_CODE_GENERATOR} -- Cleaning
+
+	clean_class_type_info_for (a_class_type: CLASS_TYPE) is
+		require
+			class_type_not_void: a_class_type /= Void
+		local
+			l_class_type: CLASS_TYPE
+			l_class_c: CLASS_C
+			l_info_from_class_type: IL_DEBUG_INFO_FROM_CLASS_TYPE
+			l_info_from_module: IL_DEBUG_INFO_FROM_MODULE
+			l_feat_token: INTEGER
+			l_feat_table: FEATURE_TABLE
+			l_feat_cursor: CURSOR
+			l_feat_i: FEATURE_I
+		do
+			l_class_type := a_class_type
+			l_class_c := l_class_type.associated_class
+
+			l_feat_table := l_class_type.associated_class.feature_table
+			l_feat_cursor := l_feat_table.cursor
+			from
+				l_feat_table.start
+			until
+				l_feat_table.after
+			loop
+				l_feat_i := l_feat_table.item_for_iteration
+
+				if l_feat_i.written_class = l_class_c then
+					debug ("debugger_il_info_trace")
+						print ("Cleaning for " + l_class_c.name_in_upper + "." + l_feat_i.feature_name + "%N")
+					end
+			
+					l_feat_token := feature_token_for_feat_and_class_type (l_feat_i, l_class_type)
+					if l_feat_token > 0 then
+							--| Otherwise this means this is a new feature
+
+						l_info_from_module := info_from_module (module_file_name_for_class (l_class_type), False)
+						if l_info_from_module /= Void then
+
+								--| CLEAN class_type_impl_id_by_token_and_module
+								--|		HashTable[class_type_id, class_token ] <= module_name
+								-- No Need to clean the CLASS info
+
+								--| CLEAN feature_id_by_token
+								--|		[class_id, root_id] <= [module_name, feature_token]
+
+							if l_info_from_module.know_feature_from_token (l_feat_token) then
+								l_info_from_module.clean_feature_token (l_feat_token)
+							end
+						end
+
+						l_info_from_class_type := info_from_class_type (l_class_type, False)
+						if l_info_from_class_type /= Void then
+								--| CLEAN feature_token_by_id
+								--|		[feature_token] <= [class_id, rout_id]
+							if l_info_from_class_type.know_feature_token_from_feature (l_feat_i) then
+								l_info_from_class_type.clean_feature_token (l_feat_i)
+							end
+
+								--| CLEAN once_feature_tokens_by_id
+								--|		feature_tokens[_done|_result] <= [class_id, rout_id]
+							if l_info_from_class_type.know_once_tokens_from_feature (l_feat_i) then
+								l_info_from_class_type.clean_once_tokens (l_feat_i)
+							end
+
+								--| CLEAN feature_breakable_il_line_by_id
+								--|		[List [Line IL] ] <= [class_id, rout_id]
+							if l_info_from_class_type.know_il_offset_from_feature (l_feat_i) then
+								l_info_from_class_type.clean_breakable_il_offset (l_feat_i)
+							end
+						end
+					end
+				end
+				l_feat_table.forth
+			end
+			l_feat_table.go_to (l_feat_cursor)
+		end
+
+--	clean_info_for (a_class_c: CLASS_C) is
+--			-- Clean stored info about `a_class_c'
+--		require
+--			class_c_not_void: a_class_c /= Void
+--		local
+--			l_class_types: TYPE_LIST
+--			l_class_type: CLASS_TYPE
+--			l_class_cursor: CURSOR
+--		do
+--			l_class_types := a_class_c.types
+--			l_class_cursor := l_class_types.cursor
+--			from
+--				l_class_types.start
+--			until
+--				l_class_types.after
+--			loop
+--				l_class_type := l_class_types.item
+--				clean_class_type_info_for (l_class_type)
+--				l_class_types.forth
+--			end
+--			l_class_types.go_to (l_class_cursor)
+--		end
+
+feature {NONE} -- Debugger Info List Access
+
+	last_info_from_class_type: like info_from_class_type
+			-- Last IL_DEBUG_INFO_FROM_CLASS_TYPE used
+	
+	info_from_class_type (a_class_type: CLASS_TYPE; a_create_if_not_found: BOOLEAN): IL_DEBUG_INFO_FROM_CLASS_TYPE is
+			-- Info from Class_type
+		require
+			class_type_not_void: a_class_type /= Void
+		local
+			l_class_static_type_id: INTEGER
+		do
+			l_class_static_type_id := a_class_type.static_type_id
+			if 
+				last_info_from_class_type /= Void and then
+				last_info_from_class_type.static_type_id = l_class_static_type_id
+			then
+				Result := last_info_from_class_type
+			else
+				Result := class_types_debugger_info.item (l_class_static_type_id)
+				if a_create_if_not_found and Result = Void then
+					create Result.make (l_class_static_type_id)
+					class_types_debugger_info.put (Result, l_class_static_type_id)
+				end
+				last_info_from_class_type := Result
+			end
+		ensure
+			(Result = Void) implies (not a_create_if_not_found)
+		end
+
+	last_info_from_module: like info_from_module
+ 			-- Last IL_DEBUG_INFO_FROM_MODULE used
+
+	info_from_module (a_module_name: STRING; a_create_if_not_found: BOOLEAN): IL_DEBUG_INFO_FROM_MODULE is
+			-- Info from Module_name
+		require
+			module_name_not_empty: a_module_name /= Void and then not a_module_name.is_empty
+		local
+			l_module_key: STRING
+		do
+			l_module_key := module_key (a_module_name)
+			if 
+				last_info_from_module /= Void and then
+				last_info_from_module.module_name.is_equal (l_module_key)
+			then
+				Result := last_info_from_module
+			else			
+				Result := modules_debugger_info.item (l_module_key)
+				if a_create_if_not_found and Result = Void then
+					create Result.make (l_module_key)
+					modules_debugger_info.put (Result, l_module_key)
+				end
+				last_info_from_module := Result
+			end
+		ensure
+			(Result = Void) implies (not a_create_if_not_found)
+		end
+
+feature {NONE} -- Debugger Info List
+
+	modules_debugger_info: HASH_TABLE [IL_DEBUG_INFO_FROM_MODULE, STRING]
+			-- [module_key] => [IL_DEBUG_INFO_FROM_MODULE]
+
+	class_types_debugger_info: HASH_TABLE [IL_DEBUG_INFO_FROM_CLASS_TYPE, INTEGER]
+			-- [CLASS_TYPE.static_type_id] => [IL_DEBUG_INFO_FROM_CLASS_TYPE]
+
 feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 
 	save is
 			-- Save info into file.
 		local
 			l_il_info_file: RAW_FILE	
---			l_data_to_save: TUPLE [ANY, ANY, INTEGER]
 			l_object_to_save: IL_DEBUG_INFO_STORAGE
 		do
 			if is_debug_info_enabled then
 				debug ("debugger_il_info_trace")
 					print ("Saving IL Tokens %N")
 				end
-				
-					--| class_token : feature_token -- classname : feature_name
-				create l_il_info_file.make_create_read_write (Il_info_file_name)
---				l_data_to_save := [
---									modules_debugger_info, 
---									class_types_debugger_info,
---									entry_point_token
---								]
+
 					--| Prepare object to be saved
 				create l_object_to_save.make
+
 				l_object_to_save.set_modules_debugger_info (modules_debugger_info)
 				l_object_to_save.set_class_types_debugger_info (class_types_debugger_info)
 				l_object_to_save.set_entry_point_token (entry_point_token)
 
---				l_il_info_file.independent_store (l_data_to_save)
+					--| Save into file
+--				create l_il_info_file.make_create_read_write (Il_info_file_name)
+				create l_il_info_file.make (Il_info_file_name)
+				l_il_info_file.open_write
 				l_il_info_file.independent_store (l_object_to_save)
-
 				l_il_info_file.close
 			end
 		end
@@ -802,202 +1013,5 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 			Result.add_extension (Il_info_extension)	
 		end	
 
-feature {NONE} -- Class Specific info
-
-	internal_record_class_token (a_module: IL_MODULE; a_class_type: CLASS_TYPE; a_class_token: INTEGER) is
-			-- Record class information regarding token
-		require
-			module_not_void: a_module /= Void
-			class_type_not_void: a_class_type /= Void
-			class_token_positive: a_class_token > 0
-		do
-			internal_record_class_type (a_module.module_file_name, a_class_type, a_class_token)
-		end
-		
-	internal_record_class_type (a_module_name: STRING; a_class_type: CLASS_TYPE; a_class_token: INTEGER) is
-				--| New mecanism
-		local
-			l_info: IL_DEBUG_INFO_FROM_MODULE
-		do
-			l_info := info_from_module (a_module_name, True)
-			l_info.record_class_type (a_class_type, a_class_token)
-		ensure
-			modules_debugger_info.has (module_key (a_module_name))
-		end		
-
-feature {NONE} -- Internal access
-
-	module_key (a_mod_name: STRING): STRING is
-			-- Module key for `a_mod_name' used for indexation
-		require
-			mod_name_valid: a_mod_name /= Void and then not a_mod_name.is_empty
-		do
-			Result := clone (a_mod_name)
-			Result.to_lower
-		ensure
-			Result_valid: Result /= Void and then not Result.is_empty
-		end
-
-feature {IL_CODE_GENERATOR} -- Cleaning
-
-	clean_class_type_info_for (a_class_type: CLASS_TYPE) is
-		local
-			l_class_type: CLASS_TYPE
-			l_class_c: CLASS_C
-			l_info_from_class_type: IL_DEBUG_INFO_FROM_CLASS_TYPE
-			l_info_from_module: IL_DEBUG_INFO_FROM_MODULE
-			l_feat_token: INTEGER
-			l_feat_table: FEATURE_TABLE
-			l_feat_cursor: CURSOR
-			l_feat_i: FEATURE_I
-		do
-			l_class_type := a_class_type
-			l_class_c := l_class_type.associated_class
-
-			l_feat_table := l_class_type.associated_class.feature_table
-			l_feat_cursor := l_feat_table.cursor
-			from
-				l_feat_table.start
-			until
-				l_feat_table.after
-			loop
-				l_feat_i := l_feat_table.item_for_iteration
-
-				if l_feat_i.written_class = l_class_c then
-					debug ("debugger_il_info_trace")
-						print ("Cleaning for " + l_class_c.name_in_upper + "." + l_feat_i.feature_name + "%N")
-					end
-			
-					l_feat_token := feature_token_for_feat_and_class_type (l_feat_i, l_class_type)
-					if l_feat_token > 0 then
-							--| Otherwise this means this is a new feature
-
-						l_info_from_module := info_from_module (module_file_name_for_class (l_class_type), False)
-						if l_info_from_module /= Void then
-
-								--| CLEAN class_type_impl_id_by_token_and_module
-								--|		HashTable[class_type_id, class_token ] <= module_name
-								-- No Need to clean the CLASS info
-
-								--| CLEAN feature_id_by_token
-								--|		[class_id, root_id] <= [module_name, feature_token]
-
-							if l_info_from_module.know_feature_from_token (l_feat_token) then
-								l_info_from_module.clean_feature_token (l_feat_token)
-							end
-						end
-
-						l_info_from_class_type := info_from_class_type (l_class_type, False)
-						if l_info_from_class_type /= Void then
-								--| CLEAN feature_token_by_id
-								--|		[feature_token] <= [class_id, rout_id]
-							if l_info_from_class_type.know_feature_token_from_feature (l_feat_i) then
-								l_info_from_class_type.clean_feature_token (l_feat_i)
-							end
-
-
-								--| CLEAN once_feature_tokens_by_id
-								--|		feature_tokens[_done|_result] <= [class_id, rout_id]
-							if l_info_from_class_type.know_once_tokens_from_feature (l_feat_i) then
-								l_info_from_class_type.clean_once_tokens (l_feat_i)
-							end
-
-								--| CLEAN feature_breakable_il_line_by_id
-								--|		[List [Line IL] ] <= [class_id, rout_id]
-							if l_info_from_class_type.know_il_offset_from_feature (l_feat_i) then
-								l_info_from_class_type.clean_breakable_il_offset (l_feat_i)
-							end
-						end
-					end
-				end
-				l_feat_table.forth
-			end
-			l_feat_table.go_to (l_feat_cursor)
-		end
-
---	clean_info_for (a_class_c: CLASS_C) is
---			-- Clean stored info about `a_class_c'
---		require
---			class_c_not_void: a_class_c /= Void
---		local
---			l_class_types: TYPE_LIST
---			l_class_type: CLASS_TYPE
---			l_class_cursor: CURSOR
---		do
---			l_class_types := a_class_c.types
---			l_class_cursor := l_class_types.cursor
---			from
---				l_class_types.start
---			until
---				l_class_types.after
---			loop
---				l_class_type := l_class_types.item
---				clean_class_type_info_for (l_class_type)
---				l_class_types.forth
---			end
---			l_class_types.go_to (l_class_cursor)
---		end
-
-feature {NONE} -- Debugger Info List Access
-
-	last_info_from_class_type: like info_from_class_type
-			-- Last IL_DEBUG_INFO_FROM_CLASS_TYPE used
-	
-	info_from_class_type (a_class_type: CLASS_TYPE; a_create_if_not_found: BOOLEAN): IL_DEBUG_INFO_FROM_CLASS_TYPE is
-			-- Info from Class_type
-		local
-			l_class_static_type_id: INTEGER
-		do
-			l_class_static_type_id := a_class_type.static_type_id
-			if 
-				last_info_from_class_type /= Void and then
-				last_info_from_class_type.static_type_id = l_class_static_type_id
-			then
-				Result := last_info_from_class_type
-			else
-				Result := class_types_debugger_info.item (l_class_static_type_id)
-				if a_create_if_not_found and Result = Void then
-					create Result.make (l_class_static_type_id)
-					class_types_debugger_info.put (Result, l_class_static_type_id)
-				end
-				last_info_from_class_type := Result
-			end
-		ensure
-			(Result = Void) implies (not a_create_if_not_found)
-		end
-
-	last_info_from_module: like info_from_module
- 			-- Last IL_DEBUG_INFO_FROM_MODULE used
-
-	info_from_module (a_module_name: STRING; a_create_if_not_found: BOOLEAN): IL_DEBUG_INFO_FROM_MODULE is
-			-- Info from Module_name
-		local
-			l_module_key: STRING
-		do
-			l_module_key := module_key (a_module_name)
-			if 
-				last_info_from_module /= Void and then
-				last_info_from_module.module_name.is_equal (l_module_key)
-			then
-				Result := last_info_from_module
-			else			
-				Result := modules_debugger_info.item (l_module_key)
-				if a_create_if_not_found and Result = Void then
-					create Result.make (l_module_key)
-					modules_debugger_info.put (Result, l_module_key)
-				end
-				last_info_from_module := Result
-			end
-		ensure
-			(Result = Void) implies (not a_create_if_not_found)
-		end
-
-feature {NONE} -- Debugger Info List
-
-	modules_debugger_info: HASH_TABLE [IL_DEBUG_INFO_FROM_MODULE, STRING]
-			-- [module_key] => [IL_DEBUG_INFO_FROM_MODULE]
-
-	class_types_debugger_info: HASH_TABLE [IL_DEBUG_INFO_FROM_CLASS_TYPE, INTEGER]
-			-- [CLASS_TYPE.static_type_id] => [IL_DEBUG_INFO_FROM_CLASS_TYPE]
 
 end -- class IL_DEBUG_INFO_RECORDER

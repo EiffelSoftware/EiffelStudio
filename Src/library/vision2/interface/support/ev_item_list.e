@@ -143,8 +143,8 @@ feature {EV_ANY_I} -- Implementation
 			-- toolkit.
 
 invariant
-	parent_of_items_is_current: is_usable implies parent_of_items_is_current
-	items_unique: is_usable implies items_unique
+	parent_of_items_is_current: is_usable and then not is_empty implies parent_of_items_is_current
+	items_unique: is_usable and not is_empty implies items_unique
 	
 end -- class EV_ITEM_LIST
 

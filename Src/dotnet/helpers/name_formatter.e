@@ -101,6 +101,7 @@ feature -- Basic Operations
 			else
 				Result := formatted_variable_name (name)
 			end
+			Result := clone (Result)
 		ensure
 			non_void_result: Result /= Void
 		end	
@@ -267,15 +268,6 @@ feature {NONE} -- Implementation
 		once
 			-- Features in ANY Eiffel class
 			create Result.make (200)
-			Result.put ("copy_", "copy")
-			Result.put ("clone_", "clone")
-			Result.put ("is_equal_", "is_equal")
-			Result.put ("is_equal_", "isequal")
-			Result.put ("equal_", "equal")
-			Result.put ("default_", "default")
-			Result.put ("default_create_", "default_create")
-			Result.put ("default_create_", "defaultcreate")
-			Result.put ("out_", "out")
 
 			-- Eiffel keywords
 			Result.put ("current_", "current")

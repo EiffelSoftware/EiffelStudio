@@ -16,16 +16,23 @@ void init_rt (void)
 	if (is_rt_initialized == 0) {
 		is_rt_initialized = 1;
 		eif_alloc_init();
-		egc_init_plug(); 
-		initsig(); 
-		initstk(); 
-		exvect = exset((char *) 0, 0, (char *) 0); 
-		exvect->ex_jbuf = (char *) exenv; 
-		if (echval = setjmp(exenv)) 
-			failure(); 
-		eif_rtinit(argc, argv, (char **)0);  
-		if (root_obj == (char *)0) 
-			root_obj = cmalloc(1);
+#ifdef EIF_THREADS
+		eif_thr_init_root ();
+#endif
+		{
+			GTCX
+			egc_init_plug(); 
+			initsig(); 
+			initstk(); 
+			exvect = exset((char *) 0, 0, (char *) 0); 
+			exvect->ex_jbuf = (char *) exenv; 
+			if (setjmp(exenv)) 
+				failure(); 
+
+			eif_rtinit(argc, argv, (char **)0);  
+			if (root_obj == (char *)0) 
+				root_obj = cmalloc(1);
+		}
 	}
 }
 

@@ -14,6 +14,7 @@ extern "C" {
 #endif
 
 #define cwel_tv_item_set_mask(_ptr_, _value_) (((TV_ITEM *) _ptr_)->mask = (UINT) (_value_))
+#define cwel_tv_item_add_mask(_ptr_, _mask_, _value_) (((TV_ITEM *) _ptr_)->mask = (UINT) (_mask_)|(_value_))
 #define cwel_tv_item_set_hitem(_ptr_, _value_) (((TV_ITEM *) _ptr_)->hItem = (HTREEITEM) (_value_))
 #define cwel_tv_item_set_state(_ptr_, _value_) (((TV_ITEM *) _ptr_)->state = (UINT) (_value_))
 #define cwel_tv_item_set_statemask(_ptr_, _value_) (((TV_ITEM *) _ptr_)->stateMask = (UINT) (_value_))

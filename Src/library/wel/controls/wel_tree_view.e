@@ -50,6 +50,21 @@ inherit
 			{NONE} all
 		end
 
+	WEL_TVSIL_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_ILC_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_COLOR_CONSTANTS
+		export
+			{NONE} all
+		end
+
 creation
 	make,
 	make_by_id
@@ -84,7 +99,7 @@ feature -- Access
 		do
 			handle := cwel_integer_to_pointer (cwin_send_message_result (item, Tvm_getnextitem, Tvgn_parent, cwel_pointer_to_integer (an_item.h_item)))
 			if handle /= default_pointer then
-				!! Result.make
+				create Result.make
 				Result.set_h_item (handle)
 				Result := get_item_with_data (Result)
 			else
@@ -261,11 +276,23 @@ feature -- Status report
 		do
 			handle := cwel_integer_to_pointer (cwin_send_message_result (item, Tvm_getnextitem,
 				Tvgn_caret, 0))
-			!! Result.make
+			create Result.make
 			Result.set_h_item (handle)
 			Result := get_item_with_data (Result)
 		ensure
 			item_valid: Result.exists
+		end
+
+	get_image_list: WEL_IMAGE_LIST is
+			-- Get the image list associated with this treeview.
+			-- Returns Void if none.
+		local
+			handle: POINTER
+		do
+			handle := cwel_integer_to_pointer ( cwin_send_message_result (item, Tvm_getimagelist, Tvsil_normal, 0) )
+			if handle /= default_pointer then
+				create Result.make_by_pointer(handle)
+			end
 		end
 
 feature -- Status setting
@@ -357,6 +384,20 @@ feature -- Status setting
 			cwin_send_message (item, Tvm_setindent, an_indent, 0)
 		end
 
+	set_image_list(an_imagelist: WEL_IMAGE_LIST) is
+			-- Set the current image list to `an_imagelist'.
+			-- If `an_imagelist' is set to Void, it removes
+			-- the current associated image list (if any).
+		do
+				-- Then, associate the image list to the tree view.
+			if an_imagelist /= Void then
+				cwin_send_message (item, Tvm_setimagelist, Tvsil_normal, cwel_pointer_to_integer (an_imagelist.item))
+			else
+				cwin_send_message (item, Tvm_setimagelist, Tvsil_normal, 0) -- 0 correspond to NULL.
+			end
+		end
+
+
 feature -- Element change
 
 	insert_item (an_item: WEL_TREE_VIEW_INSERT_STRUCT) is
@@ -389,6 +430,7 @@ feature -- Element change
 				item_deleted: msg_result /= 0
 			end
 		end
+
 
 feature -- Notifications
 
@@ -497,40 +539,40 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 		do
 			code := notification_info.code 
 			if code = Tvn_begindrag then
-				!! nm_info.make_by_nmhdr (notification_info)
+				create nm_info.make_by_nmhdr (notification_info)
 				on_tvn_begindrag (nm_info)
 			elseif code = Tvn_beginlabeledit then
-				!! disp_info.make_by_nmhdr (notification_info)
+				create disp_info.make_by_nmhdr (notification_info)
 				on_tvn_beginlabeledit (disp_info.tree_item)
 			elseif code = Tvn_beginrdrag then
-				!! nm_info.make_by_nmhdr (notification_info)
+				create nm_info.make_by_nmhdr (notification_info)
 				on_tvn_beginrdrag (nm_info)
 			elseif code = Tvn_deleteitem then
-				!! nm_info.make_by_nmhdr (notification_info)
+				create nm_info.make_by_nmhdr (notification_info)
 				on_tvn_deleteitem (nm_info)
 			elseif code = Tvn_endlabeledit then
-				!! disp_info.make_by_nmhdr (notification_info)
+				create disp_info.make_by_nmhdr (notification_info)
 				on_tvn_endlabeledit (disp_info.tree_item)
 			elseif code = Tvn_getdispinfo then
-				!! disp_info.make_by_nmhdr (notification_info)
+				create disp_info.make_by_nmhdr (notification_info)
 				on_tvn_getdispinfo (disp_info.tree_item)
 			elseif code = Tvn_itemexpanded then
-				!! nm_info.make_by_nmhdr (notification_info)
+				create nm_info.make_by_nmhdr (notification_info)
 				on_tvn_itemexpanded (nm_info)
 			elseif code = Tvn_itemexpanding then
-				!! nm_info.make_by_nmhdr (notification_info)
+				create nm_info.make_by_nmhdr (notification_info)
 				on_tvn_itemexpanding (nm_info)
 			elseif code = Tvn_keydown then
-				!! keydown_info.make_by_nmhdr (notification_info)
+				create keydown_info.make_by_nmhdr (notification_info)
 				on_tvn_keydown (keydown_info.virtual_key)
 			elseif code = Tvn_selchanged then
-				!! nm_info.make_by_nmhdr (notification_info)
+				create nm_info.make_by_nmhdr (notification_info)
 				on_tvn_selchanged (nm_info)
 			elseif code = Tvn_selchanging then
-				!! nm_info.make_by_nmhdr (notification_info)
+				create nm_info.make_by_nmhdr (notification_info)
 				on_tvn_selchanging (nm_info)
 			elseif code = Tvn_setdispinfo then
-				!! disp_info.make_by_nmhdr (notification_info)
+				create disp_info.make_by_nmhdr (notification_info)
 				on_tvn_setdispinfo (disp_info.tree_item)
 			end
 		end
@@ -569,7 +611,7 @@ feature {NONE} -- Implementation
 	class_name: STRING is
 			-- Window class name to create
 		once
-			!! Result.make (0)
+			create Result.make (0)
 			Result.from_c (cwin_wc_treeview)
 		end
 

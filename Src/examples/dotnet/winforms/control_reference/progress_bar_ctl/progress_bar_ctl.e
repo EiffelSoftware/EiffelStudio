@@ -8,16 +8,12 @@ inherit
 	WINFORMS_FORM
 		rename
 			make as make_form
-		undefine
-			to_string, finalize, equals, get_hash_code
 		redefine
 			on_load,
 			dispose_boolean
 		end
 
 	EXCEPTIONS
-
-	ANY
 
 create
 	make
@@ -247,7 +243,7 @@ feature {NONE} -- Implementation
 				prog_bar.perform_step
 			end
 	
-			lbl_value.set_text (prog_bar.value.to_string)
+			lbl_value.set_text (prog_bar.value.out)
 	
 			min := prog_bar.minimum 
 			numerator := prog_bar.value - min 

@@ -101,9 +101,12 @@ feature -- Basic operation
 		local
 			a_file_name: FILE_NAME
 			initial_selection: GB_WINDOW_SELECTOR_ITEM
+			global_status: GB_GLOBAL_STATUS
 		do
 			create import_dialog
 			system_status.enable_loading_project
+			create global_status
+			global_status.block
 			initial_selection := Window_selector.selected_window
 				-- Disable item in `main_window' so that a user may not modify anything while
 				-- an import is taking place.
@@ -133,6 +136,9 @@ feature -- Basic operation
 			end
 			
 			system_status.disable_loading_project
+			global_status.resume
+			global_status.mark_as_dirty
+			
 			
 			if import_dialog.change_list.text.is_empty then
 				remove_load_output	

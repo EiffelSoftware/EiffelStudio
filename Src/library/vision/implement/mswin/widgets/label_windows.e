@@ -183,15 +183,20 @@ feature {NONE} -- Implementation
 			-- Resize the label according to `text' or
 			-- user-defined values.
 		local
-			windows_font: FONT_WINDOWS
+			f: FONT
+			fw: FONT_WINDOWS
 		do
 			if not fixed_size_flag then
-				windows_font ?= font.implementation
-				set_size (windows_font.string_width (Current, text) + 24,
-					windows_font.string_height (Current, text) * 7 // 4)
-			end
-			if exists then
-				invalidate
+				if private_font /= Void then
+					f := private_font
+				else
+					f := font
+				end
+				fw ?= f.implementation
+				set_size (f.width_of_string (text), fw.string_height (Current, text))
+				if exists then
+					invalidate
+				end
 			end
 		end
 

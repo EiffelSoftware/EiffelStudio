@@ -7,99 +7,85 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<table>
-			<row>
-				<cell>
-					<paragraph>The Advanced Property Page contains all of the more advanced options used to  modifiy how the compiler compiles your project.
-						<line_break/>
-					</paragraph>
-					<heading>
-						<size>2</size>Code Generation
-					</heading>
-					<paragraph>
-						<bold>Optimize Code</bold>
-					</paragraph>
-					<paragraph>When set to true the compiler will finalize your projects code. The overall  process reduces the size and speeds up execution of the compiled project. It is  recommeded that this option is set to true for release configurations and set  to false for all debugging configurations. </paragraph>
-					<paragraph>
-						<bold>.NET Naming Convention</bold>
-					</paragraph>
-					<paragraph>When set to True the compiler will convert and emit namespace, class and  features names in to Pascal case, mirroring that of the Microsoft .NET  Foundation Classes. When false all namespace, class and feature names will  remain as is. </paragraph>
-					<paragraph>
-						<bold>Cluster Namespace</bold>
-					</paragraph>
-					<paragraph>The Cluster Namespace property defines the way the compiler handles the  generation of namespaces for your project's clusters.</paragraph>
-					<list ordered="false">
-						<item>
-							<bold>No Namespace</bold>: All classes are placed in the root namespace
-						</item>
-						<item>
-							<bold>Cluster Name</bold>: Only those clusters specified in the Cluster  Property Page have namespaces emitted for their containing classes. If a  cluster has the All or Library set then all classes located in subdirectories  of that cluster will be under the specified cluster's namespace.
-						</item>
-						<item>
-							<bold>Full Cluster Name</bold>: Similar to Cluster Name. However, if a  cluster has the All or Library set then all classes located in subdirectories  of that cluster will extend thespecified cluster's namespace.
-						</item>
-					</list>
-					<paragraph>
-						<bold>Target CLR Version</bold>
-					</paragraph>
-					<paragraph>If both version 1.0 and 1.1 of the .NET framework are installed then this option  becomes available for use. Setting to 
-						<bold>v1.0.3705</bold> willforce  the compiler totarget your project for version 1.0 of the CLR. Setting to 
-						<bold>  v1.1.4322</bold> will force the compiler to target your project for  version 1.1 of the CLR. The 
-						<bold>Automatic </bold>option will  automatically select the a version of the CLR depending upong what version of  Visual Studio .NET your project is loaded in. Visual Studio .NET 2002 will  target version 1.0 and Visual Studio .NET 2003 will target version 1.1 of the  CLR.
-					</paragraph>
-					<paragraph>NB. All referenced assemblies that reside in  %SystemRoot%\Microsoft.NET\Framework\&lt;any version&gt; folder will be  automatically changed to the correctversion corresponding to the  targetted version of the CLR.</paragraph>
-					<warning>
-						<bold>Warning:</bold> If you are using a precompiled  library, ensure that it was compiled targetting the same version of the CLR.
-					</warning>
-					<line_break/>
-					<paragraph>
-						<bold>Support CLR Version</bold>
-					</paragraph>
-					<paragraph>Supportting a version of the CLR creates an application configuration file for  your project. Itcontains all ofthe required information for  demoting or premoting it's referenced assemblies, at runtime, to an alternative  version. Setting to 
-						<bold>v1.0.3705</bold> will ensure that the CLR will  only load version 1.0of the referenced Microsoft .NET Base Class  Libraries. Setting to 
-						<bold>v1.1.4322</bold> will ensure that the CLR will  only load version 1.1of the referenced Microsoft .NET Base Class  Libraries. Setting to 
-						<bold>Both</bold> will support both version of  the CLR. The 
-						<bold>Automatic </bold>option will automatically select the a  version of the CLR depending upong what version of Visual Studio .NET your  project is loaded in. Visual Studio .NET 2002 will target version 1.0 and  Visual Studio .NET 2003 will target version 1.1 of the CLR.
-						<line_break/>
-						<line_break/>
-					</paragraph>
-					<heading>
-						<size>2</size>Compiler Warnings
-					</heading>
-					<paragraph>
-						<bold>Show Compiler Warnings</bold>
-					</paragraph>
-					<paragraph>When set to True all compiler warnings the compiler raises are shown in the  Build Output pane. When False all compiler related warnings such as obsolete  call, syntax warnings etc. are omitted from the output.
-						<line_break/>
-						<line_break/>
-					</paragraph>
-					<heading>
-						<size>2</size>COM Interop
-					</heading>
-					<paragraph>
-						<bold>Register for COM Interop</bold>
-					</paragraph>
-					<paragraph>On a successful compilation you project will be registered for COM  interopability, when set to True, post a successful compilation.</paragraph>
-					<warning>Note: The Microsoft .NET Framework SDK must be installed for use  with this option.</warning>
-					<seealso>
-						<bold>See Also</bold>
-						<line_break/>
-						<link>
-							<url>project_configuration.htm</url>
-							<label>Property Page Overview</label>
-						</link>
-						<line_break/>
-						<link>
-							<url>externals_ppg.htm</url>
-							<label>Externals Property Page</label>
-						</link>
-						<line_break/>
-						<link>
-							<url>debugging_ppg.htm</url>
-							<label>DebuggingProperty Page</label>
-						</link>
-					</seealso>
-				</cell>
-			</row>
-		</table>
+		<paragraph>The Advanced Property Page contains all of the more advanced options used to  modifiy how the compiler compiles your project.</paragraph>
+		<heading>
+			<size>2</size>Code Generation
+		</heading>
+		<heading>
+			<size>3</size>Optimize Code
+		</heading>
+		<paragraph>When set to true the compiler will finalize your projects code. The overall  process reduces the size and speeds up execution of the compiled project. It is  recommeded that this option is set to true for release configurations and set  to false for all debugging configurations. </paragraph>
+		<heading>
+			<size>3</size>.NET Naming Convention
+		</heading>
+		<paragraph>When set to True the compiler will convert and emit namespace, class and  features names in to Pascal case, mirroring that of the Microsoft .NET  Foundation Classes. When false all namespace, class and feature names will  remain as is. </paragraph>
+		<heading>
+			<size>3</size>Cluster Namespace
+		</heading>
+		<paragraph>The Cluster Namespace property defines the way the compiler handles the  generation of namespaces for your project's clusters.</paragraph>
+		<list ordered="false">
+			<item>
+				<bold>No Namespace</bold>: All classes are placed in the root namespace
+			</item>
+			<item>
+				<bold>Cluster Name</bold>: Only those clusters specified in the Cluster  Property Page have namespaces emitted for their containing classes. If a  cluster has the All or Library set then all classes located in subdirectories  of that cluster will be under the specified cluster's namespace.
+			</item>
+			<item>
+				<bold>Full Cluster Name</bold>: Similar to Cluster Name. However, if a  cluster has the All or Library set then all classes located in subdirectories  of that cluster will extend thespecified cluster's namespace.
+			</item>
+		</list>
+		<heading>
+			<size>3</size>Target CLR Version
+		</heading>
+		<paragraph>If both version 1.0 and 1.1 of the .NET framework are installed then this option  becomes available for use. Setting to 
+			<bold>v1.0.3705</bold> willforce  the compiler totarget your project for version 1.0 of the CLR. Setting to 
+			<bold>  v1.1.4322</bold> will force the compiler to target your project for  version 1.1 of the CLR. The 
+			<bold>Automatic </bold>option will  automatically select the a version of the CLR depending upong what version of  Visual Studio .NET your project is loaded in. Visual Studio .NET 2002 will  target version 1.0 and Visual Studio .NET 2003 will target version 1.1 of the  CLR.
+		</paragraph>
+		<paragraph>NB. All referenced assemblies that reside in  %SystemRoot%\Microsoft.NET\Framework\&lt;any version&gt; folder will be  automatically changed to the correctversion corresponding to the  targetted version of the CLR.</paragraph>
+		<warning>
+			<bold>Warning:</bold> If you are using a precompiled  library, ensure that it was compiled targetting the same version of the CLR.
+		</warning>
+		<heading>
+			<size>3</size>Support CLR Version
+		</heading>
+		<paragraph>Supportting a version of the CLR creates an application configuration file for  your project. Itcontains all ofthe required information for  demoting or premoting it's referenced assemblies, at runtime, to an alternative  version. Setting to 
+			<bold>v1.0.3705</bold> will ensure that the CLR will  only load version 1.0of the referenced Microsoft .NET Base Class  Libraries. Setting to 
+			<bold>v1.1.4322</bold> will ensure that the CLR will  only load version 1.1of the referenced Microsoft .NET Base Class  Libraries. Setting to 
+			<bold>Both</bold> will support both version of  the CLR. The 
+			<bold>Automatic </bold>option will automatically select the a  version of the CLR depending upong what version of Visual Studio .NET your  project is loaded in. Visual Studio .NET 2002 will target version 1.0 and  Visual Studio .NET 2003 will target version 1.1 of the CLR.
+		</paragraph>
+		<heading>
+			<size>2</size>Compiler Warnings
+		</heading>
+		<heading>
+			<size>3</size>Show Compiler Warnings
+		</heading>
+		<paragraph>When set to True all compiler warnings the compiler raises are shown in the  Build Output pane. When False all compiler related warnings such as obsolete  call, syntax warnings etc. are omitted from the output.</paragraph>
+		<heading>
+			<size>2</size>COM Interop
+		</heading>
+		<heading>
+			<size>3</size>Register for COM Interop
+		</heading>
+		<paragraph>On a successful compilation you project will be registered for COM  interopability, when set to True, post a successful compilation.</paragraph>
+		<note>Note: The Microsoft .NET Framework SDK must be installed for use  with this option.</note>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/>
+			<link>
+				<url>project_configuration.htm</url>
+				<label>Property Page Overview</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>externals_ppg.htm</url>
+				<label>Externals Property Page</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>debugging_ppg.htm</url>
+				<label>DebuggingProperty Page</label>
+			</link>
+		</seealso>
 	</paragraph></document>

@@ -7,46 +7,41 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<table>
-			<row>
-				<cell>
-					<paragraph>  The Break Point Window provides you control of all your 
-						<link>
-							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/70_Debugging_Projects/breakpoints.htm</url>
-							<label>Break Points</label>
-						</link> from one convenient location. From within this window, you may add, remove or modify breakpoints.
-					</paragraph>
-					<paragraph>
-						<image>
-							<alt_text>BreakPointsDebuggingWindow</alt_text>
-							<url>BreakPointsDebuggingWindow.png</url>
-						</image>
-					</paragraph>
-					<seealso>
-						<bold>See also</bold>
-						<line_break/>
-						<link>
-							<url>./index.xml</url>
-							<label>Debugging</label>
-						</link>
-						<line_break/>
-						<link>
-							<url>./CallStackWindow.htm</url>
-							<label>Call Stack Window</label>
-						</link>
-						<line_break/>
-						<link>
-							<url>./LocalsWindow.htm</url>
-							<label>Locals Window</label>
-						</link>
-						<line_break/>
-						<link>
-							<url>./WatchWindow.htm</url>
-							<label>Watch Window</label>
-						</link>
-						<line_break/>
-					</seealso>
-				</cell>
-			</row>
-		</table>
+		<paragraph>  The Break Point Window provides you control of all your 
+			<link>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/70_Debugging_Projects/breakpoints.htm</url>
+				<label>Break Points</label>
+			</link> from one convenient location. From within this window, you may add, remove or modify breakpoints.
+		</paragraph>
+		<paragraph>
+			<image>
+				<alt_text>BreakPointsDebuggingWindow</alt_text>
+				<url>BreakPointsDebuggingWindow.png</url>
+			</image>
+		</paragraph>
+		<line_break/>
+		<seealso>
+			<bold>See also</bold>
+			<line_break/>
+			<link>
+				<url>./index.xml</url>
+				<label>Debugging</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>./CallStackWindow.htm</url>
+				<label>Call Stack Window</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>./LocalsWindow.htm</url>
+				<label>Locals Window</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>./WatchWindow.htm</url>
+				<label>Watch Window</label>
+			</link>
+			<line_break/>
+		</seealso>
 	</paragraph></document>

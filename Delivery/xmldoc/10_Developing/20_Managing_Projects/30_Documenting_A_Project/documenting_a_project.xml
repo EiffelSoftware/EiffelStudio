@@ -13,8 +13,7 @@
 		<heading>
 			<size>2</size>Documentation Checklist
 		</heading>
-		<paragraph>
-			<line_break/> Before choosing to document your ENViSioN! project please use this checklist to ensure that your project can be documented successfully. Ensure that...
+		<paragraph>Before choosing to document your ENViSioN! project please use this checklist to ensure that your project can be documented successfully. Ensure that...
 		</paragraph>
 		<list ordered="false">
 			<item>  The ENViSioN! project have been successfully compiled</item>
@@ -22,8 +21,7 @@
 		<heading>
 			<size>2</size>Visual Studio.NET Help Projects
 		</heading>
-		<paragraph>
-			<line_break/> The HTML Report Project Wizard creates a new Visual Studio.NET Help project when it is completed. From this you can add or remove items at your discretion and even modify the default Cascading Style Sheet (CSS) to present the project documentation differently from the default. A Help project can then be complied and distributed as a Microsoft Help Collection.
+		<paragraph>The HTML Report Project Wizard creates a new Visual Studio.NET Help project when it is completed. From this you can add or remove items at your discretion and even modify the default Cascading Style Sheet (CSS) to present the project documentation differently from the default. A Help project can then be complied and distributed as a Microsoft Help Collection.
 		</paragraph>
 		<seealso>
 			<bold>See Also:</bold>

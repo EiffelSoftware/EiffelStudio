@@ -7,55 +7,50 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<table>
-			<row>
-				<cell>
-					<paragraph>  During debugging, the Call Stack Window will be available, from which you may view the current call stack of the system. Below is a screenshot of the Call Stack Window: </paragraph>
-					<paragraph>
-						<image>
-							<alt_text>CallStackDebuggingWindow</alt_text>
-							<url>CallStackDebuggingWindow.png</url>
-						</image>
-					</paragraph>
-					<paragraph>  This screenshot corresponds to system that has stopped in the creation 
-						<link>
-							<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#feature</url>
-							<label>feature</label>
-						</link> of the 
-						<link>
-							<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#root class</url>
-							<label>Root Class</label>
-						</link>  as the Result of a 
-						<link>
-							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/70_Debugging_Projects/breakpoints.htm</url>
-							<label>Break point</label>
-						</link>  being reached. This is why there is only one entry in the list.
-					</paragraph>
-					<seealso>
-						<bold>See also</bold>
-						<line_break/>
-						<link>
-							<url>./index.htm</url>
-							<label>Debugging</label>
-						</link>
-						<line_break/>
-						<link>
-							<url>./LocalsWindow.htm</url>
-							<label>Locals Window</label>
-						</link>
-						<line_break/>
-						<link>
-							<url>./BreakPointWindow.htm</url>
-							<label>Break Point Window</label>
-						</link>
-						<line_break/>
-						<link>
-							<url>./WatchWindow.htm</url>
-							<label>Watch Window</label>
-						</link>
-						<line_break/>
-					</seealso>
-				</cell>
-			</row>
-		</table>
+		<paragraph>  During debugging, the Call Stack Window will be available, from which you may view the current call stack of the system. Below is a screenshot of the Call Stack Window: </paragraph>
+		<paragraph>
+			<image>
+				<alt_text>CallStackDebuggingWindow</alt_text>
+				<url>CallStackDebuggingWindow.png</url>
+			</image>
+		</paragraph>
+		<paragraph>  This screenshot corresponds to system that has stopped in the creation 
+			<link>
+				<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#feature</url>
+				<label>feature</label>
+			</link> of the 
+			<link>
+				<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#root class</url>
+				<label>Root Class</label>
+			</link>  as the Result of a 
+			<link>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/70_Debugging_Projects/breakpoints.htm</url>
+				<label>Break point</label>
+			</link>  being reached. This is why there is only one entry in the list.
+		</paragraph>
+		<line_break/>
+		<seealso>
+			<bold>See also</bold>
+			<line_break/>
+			<link>
+				<url>./index.htm</url>
+				<label>Debugging</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>./LocalsWindow.htm</url>
+				<label>Locals Window</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>./BreakPointWindow.htm</url>
+				<label>Break Point Window</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>./WatchWindow.htm</url>
+				<label>Watch Window</label>
+			</link>
+			<line_break/>
+		</seealso>
 	</paragraph></document>

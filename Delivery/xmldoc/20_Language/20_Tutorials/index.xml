@@ -6,7 +6,10 @@
 			</toc>
 		</help>
 	</meta_data>
-	<paragraph>The following two tutorial style documents are available:
+	<paragraph>
+		<paragraph>	
+		The following two tutorial style documents are available:
+		</paragraph>
 		<list ordered="false">
 			<item>
 				<link>
@@ -24,17 +27,17 @@
 		<paragraph> Both these documents refer to features of classic Eiffel, and although similar, no specific Eiffel for .NET syntax or features are described. For more information regarding the 
 			<link>
 				<url>/20_Language/10_Eiffel_NET/10_Eiffel_for_NET.htm</url>
-				<label> Eiffel for .Net Language</label>
+				<label>Eiffel for .Net Language</label>
 			</link>, click 
 			<link>
 				<url>/20_Language/10_Eiffel_NET/10_Eiffel_for_NET.htm</url>
-				<label> Here</label>
+				<label>here</label>
 			</link>. 
 		</paragraph>
-		<paragraph>To become truly proficient in the method, read the book 
+		<paragraph>To become truly proficient in the methodology, read the book 
 			<link>
 				<url>http://www.eiffel.com/doc/oosc/</url>
-				<label> Object-Oriented Software Construction, 2nd edition</label>
+				<label>Object-Oriented Software Construction, 2nd edition</label>
 			</link>; for a full description of the language, get the book 
 			<link>
 				<url>http://www.eiffel.com/doc/#etl</url>

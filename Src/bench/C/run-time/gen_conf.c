@@ -519,8 +519,7 @@ rt_public int16 *eif_gen_cid (int16 dftype)
 
 	if (dftype < first_gen_id)
 	{
-		/* Compiler generated id - undo 'RTUD' */
-		cid_array [1] = RTUD_INV(dftype);
+		cid_array [1] = dftype;
 		return cid_array;
 	}
 
@@ -558,6 +557,87 @@ rt_public int16 *eif_gen_cid (int16 dftype)
 	eif_put_gen_seq (dftype, gdp->gen_seq, &len);
 
 	return gdp->gen_seq;
+}
+/*------------------------------------------------------------------*/
+/* Create an id from a type array 'cidarr'. If 'dtype_map' is not   */
+/* NULL, use it to map old to new dtypes ('retrieve')               */
+/* Format:                                                          */
+/* First entry: count                                               */
+/* Then 'count' type ids, then -1                                   */
+/*------------------------------------------------------------------*/
+
+rt_public int16 eif_gen_id_from_cid (int16 *cidarr, int *dtype_map)
+
+{
+	int16   dftype;
+	int16   count, i, dtype;
+
+	if (cidarr == (int16 *) 0)
+	{
+		eif_panic ("Invalid cid array");
+	}
+
+	count   = *cidarr;
+	*cidarr = -10;
+
+	if (dtype_map != (int *) 0)
+	{
+		/* We need to map old dtypes to new dtypes */
+
+		for (i = count; i; --i)
+		{
+			dtype = cidarr [i];
+
+			if (dtype <= -256)
+			{
+				/* expanded */
+
+				dtype = -256 - (int16) (dtype_map [-256-dtype]);
+				dtype = RTUD_INV(dtype);
+			}
+			else
+			{
+				if (dtype >= 0)
+				{
+					dtype = (int16) dtype_map [dtype];
+					dtype = RTUD_INV(dtype);
+				}
+			}
+
+			cidarr [i] = dtype;
+		}
+	}
+
+	cidarr [count+1] = -1;
+	dftype  = eif_compound_id ((int16 *)0, (char *)0, *(cidarr+1), cidarr);
+	*cidarr = count;
+
+	return dftype;
+}
+/*------------------------------------------------------------------*/
+/* Create an object from a type array.                              */
+/* Format:                                                          */
+/* First entry: count                                               */
+/* Then 'count' type ids, then -1                                   */
+/*------------------------------------------------------------------*/
+
+rt_public char *eif_gen_create_from_cid (int16 *cidarr)
+
+{
+	int16   dftype;
+	int16   count;
+
+	if (cidarr == (int16 *) 0)
+	{
+		eif_panic ("Invalid cid array");
+	}
+
+	count   = *cidarr;
+	*cidarr = -10;
+	dftype  = eif_compound_id ((int16 *)0, (char *)0, *(cidarr+1), cidarr);
+	*cidarr = count;
+
+	return emalloc(dftype);
 }
 /*------------------------------------------------------------------*/
 /* Conformance test. Does `stype' conform to `ttype'?               */
@@ -1683,21 +1763,34 @@ rt_private int16 eif_gen_seq_len (int16 dftype)
 rt_private void eif_put_gen_seq (int16 dftype, int16 *typearr, int16 *idx)
 {
 	EIF_GEN_DER *gdp;
-	int16       i;
+	int16 i, dtype;
 	long len;
+	char is_expanded = (char) 0;
+
+	dtype = dftype;
+
+	if (dtype <= -256)
+	{
+		/* expanded */
+		dtype = -256 - dtype;
+		is_expanded = '1';
+	}
 
 	/* Simple id */
 
-	if (dftype < first_gen_id)
+	if (dtype < first_gen_id)
 	{
-		typearr [*idx] = dftype;
+		if (dtype < 0)
+			typearr [*idx] = dtype;
+		else
+			typearr [*idx] = RTUD(dtype);
 		(*idx)++;
 		return;
 	}
 
 	/* Generic or BIT id */
 
-	gdp = eif_derivations[dftype];
+	gdp = eif_derivations[dtype];
 
 	/* Is it a BIT type? */
 
@@ -1722,7 +1815,10 @@ rt_private void eif_put_gen_seq (int16 dftype, int16 *typearr, int16 *idx)
 
 	/* It's a generic type */
 
-	typearr [*idx] = gdp->base_id;
+	if (is_expanded)
+		typearr [*idx] = -256 - RTUD(gdp->base_id);
+	else
+		typearr [*idx] = RTUD(gdp->base_id);
 	(*idx)++;
 
 	len = gdp->size;
@@ -1751,12 +1847,6 @@ rt_private void eif_compute_ctab (int16 dftype, int invert_rtud, int indent)
 
 	dtype = Deif_bid(dftype);
 
-/*
-	if (invert_rtud)
-		pt = parent_of (RTUD_INV(dtype));
-	else
-		pt = parent_of (dtype);
-*/
 	pt = parent_of (RTUD_INV(dtype));
 
 	is_expanded = pt->is_expanded;
@@ -1959,12 +2049,6 @@ rt_private void eif_compute_anc_id_map (int16 dftype, int invert_rtud, int inden
 
 	dtype = Deif_bid(dftype);
 
-/*
-	if (invert_rtud)
-		pt = parent_of (RTUD_INV(dtype));
-	else
-		pt = parent_of (dtype);
-*/
 	pt = parent_of (RTUD_INV(dtype));
 
 	/* Compute the range of the id map */

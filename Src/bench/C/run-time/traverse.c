@@ -139,7 +139,31 @@ rt_shared void traversal(char *object, int p_accounting)
 	}
 #if !defined CUSTOM || defined NEED_STORE_H
 	if (p_accounting & TR_ACCOUNT)	/* Possible accounting */
-		account[Deif_bid(flags & EO_TYPE)] = (char) 1;	/* This type is present */
+	{
+		int16  *cidarr, dtype, i;
+		uint32 dftype;
+
+		dftype = flags & EO_TYPE;   /* Full type info */
+		account[Deif_bid(dftype)] = (char) 1;	/* This type is present */
+
+		/* Now insert generics */
+
+		cidarr = eif_gen_cid (dftype);
+		i = *(cidarr++); /* count */
+
+		while (i--)
+		{
+			dtype = *(cidarr++);
+
+			if (dtype <= -256)
+				dtype = -256-dtype; /* expanded parameter */
+
+			if (dtype >= 0)
+			{
+				account [dtype] = (char) 1;
+			}
+		}
+	}
 #endif
 	zone->ov_flags = flags;			/* Mark the object */
 

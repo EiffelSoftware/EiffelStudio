@@ -1,14 +1,24 @@
 /*
+--|----------------------------------------------------------------
+--| Eiffel runtime header file
+--| Copyright (C) 1985-2004 Eiffel Software. All rights reserved.
+--| Duplication and distribution prohibited.  May be used only with
+--| ISE Eiffel, under terms of user license.
+--| Contact Eiffel Software for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| dba Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Contact us at: http://www.eiffel.com/general/email.html
+--| Customer support: http://support.eiffel.com
+--| For latest info on our award winning products, visit:
+--|     http://www.eiffel.com
+--|----------------------------------------------------------------
+*/
 
- #    #     #     ####    ####           #    #
- ##  ##     #    #       #    #          #    #
- # ## #     #     ####   #               ######
- #    #     #         #  #        ###    #    #
- #    #     #    #    #  #    #   ###    #    #
- #    #     #     ####    ####    ###    #    #
-
+/*
 	Declarations for miscellenaous externals
-
 */
 
 #ifndef _eif_misc_h_
@@ -79,7 +89,7 @@ RT_LNK EIF_INTEGER upintdiv(EIF_INTEGER n1, EIF_INTEGER n2);
 #define eif_bit_not(i)				(~(i))
 #define eif_bit_shift_left(i,n)		((i)<<(n))
 #define eif_bit_shift_right(i,n)	((i)>>(n))
-#define eif_bit_test(i,n)			(EIF_TEST((i)&(1 << n)))
+#define eif_bit_test(t,i,n)	(EIF_TEST((i)&((t)1 << n)))
 
 RT_LNK EIF_INTEGER eif_system (char *s);
 RT_LNK void eif_system_asynchronous (char *s);

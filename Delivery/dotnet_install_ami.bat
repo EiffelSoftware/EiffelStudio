@@ -1,31 +1,15 @@
 @echo off
 
-copy test.txt c:\
-
-cd dotnet
-cd assembly_manager
+cd dotnet\assembly_manager
 call install.bat
-cd ..
-cd ..
+cd ..\..
 
-cd wizards
-cd dotnet
-gacutil -u ISE.AssemblyManager
-gacutil -i ISE.AssemblyManager.exe
-cd ..
-cd ..
+cd wizards\dotnet
+call gacutil -silent -nologo -u ISE.AssemblyManager
+call gacutil -silent -nologo -i ISE.AssemblyManager.exe
+cd ..\..
 
-cd bench
-cd wizards
-cd new_projects
-cd dotnet
-cd spec
-cd windows
+cd bench\wizards\new_projects\dotnet\spec\windows
 call install.bat
-cd ..
-cd ..
-cd ..
-cd ..
-cd ..
-cd ..
+cd ..\..\..\..\..\..
 

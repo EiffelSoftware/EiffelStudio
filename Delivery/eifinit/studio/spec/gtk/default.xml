@@ -39,6 +39,7 @@
 				<TEXT DESCRIPTION="Show clients of a class up to a level of">client_depth<INTEGER>0</INTEGER></TEXT>
 				<TEXT DESCRIPTION="Show superclusters of a cluster up to a level of">supercluster_depth<INTEGER>1</INTEGER></TEXT>
 				<TEXT DESCRIPTION="Show subclusters of a cluster down to a level of">subcluster_depth<INTEGER>1</INTEGER></TEXT>
+				<TEXT DESCRIPTION="Autoscroll speed in percent (0% no scroll, 100% fast scroll)">diagram_auto_scroll_speed<INTEGER>50</INTEGER></TEXT>
 
 	<TOPIC TOPIC_ID="BON_Diagrams" ICON="icon_preferences_folder">
 					<HEAD>BON Diagrams</HEAD>

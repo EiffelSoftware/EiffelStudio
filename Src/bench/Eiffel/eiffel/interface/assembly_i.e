@@ -7,7 +7,6 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-
 class
 	ASSEMBLY_I
 	
@@ -195,7 +194,10 @@ feature -- Access
 			-- Is current assembly located in GAC?
 			
 	assembly_path: STRING
-			-- Path of current assembly if it is a local assembly.
+			-- Path of current assembly (without environment variables).
+			
+	dollar_assembly_path: STRING
+			-- Path of current assembly (with environment variables).
 			
 	consumed_folder_name: STRING
 			-- name of consumed assembly folder in EAC
@@ -225,6 +227,7 @@ feature -- Copy
 			is_in_gac := old_assembly.is_in_gac
 			has_gac_specification := old_assembly.has_gac_specification
 			assembly_path := old_assembly.assembly_path
+			dollar_assembly_path := old_assembly.dollar_assembly_path
 			consumed_folder_name := old_assembly.consumed_folder_name
 		end
 		
@@ -433,8 +436,8 @@ feature {COMPILER_EXPORTER} -- Conveniences
 			l_path: STRING
 			l_assembly_location: PATH_NAME
 		do
-			if assembly_path /= Void then
-				l_path := environ.interpreted_string (assembly_path)
+			if dollar_assembly_path /= Void then
+				l_path := environ.interpreted_string (dollar_assembly_path)
 				il_emitter.retrieve_assembly_info (l_path)
 				l_path := il_emitter.relative_folder_name_from_path (l_path)
 				if l_path /= Void then
@@ -443,7 +446,23 @@ feature {COMPILER_EXPORTER} -- Conveniences
 					l_path := environ.interpreted_string (l_assembly_location)
 					consumed_folder_name := l_path.twin
 					set_dollar_path (l_path)
+					set_dollar_assembly_path (dollar_assembly_path)
+					is_in_gac := il_emitter.is_in_gac
 				end
+			end
+		end
+
+	set_dollar_assembly_path (s: STRING) is
+			-- Assign `s' to `assembly_path'.
+		do
+			dollar_assembly_path := s
+			update_assembly_path
+		end
+		
+	update_assembly_path is
+		do
+			if dollar_assembly_path /= Void then
+				assembly_path := Environ.interpreted_string (dollar_assembly_path)
 			end
 		end
 
@@ -490,7 +509,7 @@ feature {NONE} -- Implementation
 						Error_handler.insert_error (l_vd65)
 					else
 							-- Initialize current with data.
-						assembly_path := environ.interpreted_string (an_assembly)
+						set_dollar_assembly_path (an_assembly)
 						assembly_name := l_emitter.name
 						version := l_emitter.version
 						culture := l_emitter.culture

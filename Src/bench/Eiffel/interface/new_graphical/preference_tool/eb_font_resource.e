@@ -97,15 +97,9 @@ feature -- Status report
 		end
 
 	is_default: BOOLEAN is
-			-- Has the resource changed from the default value?
+			-- Has the resource not changed from the default value?
 		do
-			Result := not equal (default_value, actual_value)
-		end
-
-	has_changed: BOOLEAN is
-			-- Has the resource changed from the default value?
-		do
-			Result := not equal (default_value, actual_value)
+			Result := equal (default_value, actual_value)
 		end
 
 feature -- Status Setting

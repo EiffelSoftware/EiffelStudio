@@ -27,13 +27,15 @@ inherit
 		redefine
 			process_notification_info,
 			resize,
-			move_and_resize
+			move_and_resize,
+			on_erase_background
 		end
 
 	WEL_COMPOSITE_WINDOW
 		undefine
 			destroy,
 			on_wm_destroy,
+			on_wm_erase_background,
 			set_default_window_procedure,
 			call_default_window_procedure,
 			minimal_width,
@@ -42,7 +44,8 @@ inherit
 		redefine
 			on_wm_paint,
 			resize,
-			move_and_resize
+			move_and_resize,
+			on_erase_background
 		end
 
 	WEL_TCM_CONSTANTS
@@ -58,6 +61,11 @@ inherit
 	WEL_TCN_CONSTANTS
 		export
 			{NONE} all
+		end
+
+	WEL_RGN_CONSTANTS
+		export {NONE}
+			all
 		end
 
 creation
@@ -349,6 +357,95 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 		do
 			{WEL_CONTROL} Precursor (a_x, a_y, a_width, a_height, repaint)
 			adjust_items
+		end
+
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+			-- Wm_erasebkgnd message.
+			-- May be redefined to paint something on
+			-- the `paint_dc'. `invalid_rect' defines
+			-- the invalid rectangle of the client area that
+			-- needs to be repainted.
+		local
+			main_region, tmp_region, new_region: WEL_REGION
+			bk_brush: WEL_BRUSH
+			i, a_count, sel, cur_style: INTEGER
+			r: WEL_RECT
+			is_vertical, is_bottom, is_right: BOOLEAN
+			r_addr: INTEGER
+			l_item: POINTER
+		do
+				--| Disable the default windows processing and return correct
+				--| value to Windows, i.e. nonzero value.
+			disable_default_processing
+			set_message_return_value (1)
+
+				-- Find out where tabs are located.
+			cur_style := style
+			is_bottom := flag_set (cur_style, Tcs_bottom)
+			is_vertical := flag_set (cur_style, Tcs_vertical)
+			is_right := flag_set (cur_style, Tcs_right)
+
+				-- Create the region as the invalid area of `Current' that
+				-- needs to be redrawn.
+			create main_region.make_rect_indirect (invalid_rect)
+			create r.make (0, 0, 0, 0)
+			r_addr := r.to_integer
+
+				-- Remove from region the area corresponding to tabs.
+				-- For a non selected tab, the area returned is too big, we need
+				-- to make it smaller because only the text will be updated,
+				-- not the part that is close to the notebook area.
+				-- For a selected tab, the area returned is too small, we need
+				-- to make it bigger to avoid the tab of flickering.
+			from
+				i := 0
+				a_count := count
+				sel := current_selection
+				l_item := item
+			until
+				i = a_count
+			loop
+				cwin_send_message (l_item, Tcm_getitemrect, i, r_addr)
+				if i /= sel then
+					if is_bottom then
+						r.set_top (r.top + 2)
+					elseif is_vertical then
+						if is_right then
+							r.set_left (r.left + 2)
+						else
+							r.set_right (r.right - 2)
+						end
+					else
+						r.set_bottom (r.bottom - 2)
+					end
+				else
+					if is_bottom then
+						r.set_bottom (r.bottom + 2)
+					elseif is_vertical then
+						if is_right then
+							r.set_right (r.right + 2)
+						else
+							r.set_left (r.left - 2)
+						end
+					else
+						r.set_top (r.top - 2)
+					end
+				end
+				create tmp_region.make_rect_indirect (r)
+				new_region := main_region.combine (tmp_region, Rgn_diff)
+				tmp_region.delete
+				main_region.delete
+				main_region := new_region
+				i := i + 1
+			end
+
+				-- Fill the remaining region, `main_region'.
+			bk_brush := background_brush
+			paint_dc.fill_region (main_region, bk_brush)
+
+				-- Clean up GDI objects
+			bk_brush.delete
+			main_region.delete
 		end
 
 feature {NONE} -- Implementation

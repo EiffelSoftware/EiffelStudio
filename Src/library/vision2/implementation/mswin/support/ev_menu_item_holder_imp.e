@@ -12,9 +12,6 @@ inherit
 	EV_MENU_ITEM_CONTAINER_I
 
 	EV_ITEM_CONTAINER_IMP
-		export {EV_MENU_ITEM_IMP}
-			set_name
-		end
 
 	EV_ITEM_EVENTS_CONSTANTS_IMP
 
@@ -30,6 +27,7 @@ feature -- Access
 		deferred
 		end
 
+	-- A remplacer par parent_widget
 	parent_container: EV_MENU_CONTAINER_IMP
 			-- Top parent container of the menu.
 			-- Used by EV_MENU_CONTAINER_IMP and
@@ -74,7 +72,7 @@ feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
 		end
 
 	insert_item (wel_menu: WEL_MENU; pos: INTEGER; label: STRING) is
-			-- Insert a new menu-item whixh is a menu into
+			-- Insert a new menu-item which is a menu into
 			-- container.
 		do
 			submenu.insert_popup (wel_menu, pos, label)

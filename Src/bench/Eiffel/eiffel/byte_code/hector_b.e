@@ -95,7 +95,7 @@ feature -- Byte code generation
 			-- Generate the operator
 		do
 			if expr.type.is_basic then
-				buffer.putstring ("(char *)&");
+				buffer.putstring ("(EIF_POINTER)&");
 			end
 		end
 
@@ -106,7 +106,7 @@ feature -- Byte code generation
 		do
 			if expr.type.is_basic and not expr.type.is_bit then
 				buf := buffer
-				buf.putstring ("(char *)&(");
+				buf.putstring ("(EIF_POINTER)&(");
 				if expr.is_attribute then
 					expr.generate_access
 				else

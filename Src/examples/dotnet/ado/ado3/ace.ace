@@ -1,0 +1,52 @@
+system
+	"app"
+
+root
+	ADO_OVERVIEW3 : make
+
+default
+	assertion (no)
+	msil_generation (yes)
+	arguments (" ")
+	disabled_debug (yes)
+	debug (no)
+	line_generation (yes)
+	il_verifiable (yes)
+	msil_generation_type ("exe")
+	check_vape (yes)
+	console_application (yes)
+
+
+cluster
+	root_cluster:		"$ISE_EIFFEL\examples\dotnet\ado\ado3"
+
+	all base:		"$ISE_EIFFEL\library\base"
+		exclude
+			"table_eiffel3"; "classic"; 
+		end
+
+	all base_net:		"$ISE_EIFFEL\library.net\base"
+
+	all system_:		"$ISE_EIFFEL\library.net\system"
+
+	all drawing:		"$ISE_EIFFEL\library.net\drawing"
+
+	all forms:		"$ISE_EIFFEL\library.net\winforms"
+
+	all accessibility:		"$ISE_EIFFEL\library.net\accessibility"
+
+	all data:		"$ISE_EIFFEL\library.net\data"
+
+	all xml:		"$ISE_EIFFEL\library.net\xml"
+
+external
+
+	assembly:
+		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.dll",
+		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.Web.dll",
+		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.Web.Services.dll",
+		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\Accessibility.dll",
+		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.xml.dll",
+		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.Data.dll"
+
+end

@@ -33,12 +33,14 @@ feature -- Callbacks
 		local
 			mp: MOUSE_PTR
 		do
-			!! mp.set_watch_cursor;
-			mp.restore
 			if Application.is_running then
 				Application.kill;
 			end;
 			discard_licenses;
+
+			if Project_tool.initialized then
+				Project_tool.save_environment
+			end
 			exit
 		end;
 
@@ -65,18 +67,15 @@ feature {NONE} -- Implementation
 	work (argument: ANY) is
 			-- Quit project after saving.
 		do
-			if project_tool.initialized then
+			if Project_tool.initialized then
 				-- Project_file is not void
-				if 
-					do_exit or else
-					(last_confirmer /= Void and argument = last_confirmer)
-				then
+				if do_exit or else (last_confirmer /= Void and then argument = last_confirmer) then
 					exit_anyway
 				elseif
 					window_manager.class_win_mgr.changed or else
 					(is_system_tool_created and then system_tool.changed)
 				then
-					do_exit := true;
+					do_exit := True;
 					warner (popup_parent).custom_call (Current,
 						"Some files have not been saved.",
 						"Don't exit", "Exit anyway", Void)
@@ -85,9 +84,13 @@ feature {NONE} -- Implementation
 						"Do you really want to exit?", "Exit");
 				end
 			else
-				discard_licenses;
-				exit
-			end;
+				if do_exit or else (last_confirmer /= Void and then argument = last_confirmer) then
+					exit_anyway
+				else
+					confirmer (popup_parent).call (Current, 
+						"Do you really want to exit?", "Exit");
+				end
+			end
 		end;
 
 feature {NONE} -- Attributes

@@ -1,6 +1,6 @@
 indexing
-	description: "Command to retrieve a stored project.";
-	date: "$Date$";
+	description: "Command to retrieve a stored project."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class OPEN_PROJECT 
@@ -12,11 +12,13 @@ inherit
 
 	PROJECT_CONTEXT
 
-	COMMAND_W
-
-	BENCH_LICENSED_COMMAND
+	PIXMAP_COMMAND
 		rename
-			parent_window as Project_tool
+			init as make,
+			tool as project_tool
+		redefine
+			license_checked,
+			project_tool
 		end
 
 	WARNER_CALLBACKS
@@ -25,13 +27,26 @@ inherit
 			execute_warner_ok as open_project
 		end
 
+creation
+	make,
+	make_from_project_file
+
+feature -- Initialization
+
+	make_from_project_file (a_tool: like project_tool; file_name: STRING) is
+			-- Initialize a command with the `symbol' icon,
+			-- `a_tool' is passed as argument to the activation action.
+		do
+			make (a_tool)
+			project_file_name := file_name
+			has_project_name := True
+		end
+
 feature -- Callbacks
 
 	exit_bench is
 			-- Exit from EiffelBench
 		do
-			discard_licenses
-			exit
 		end
 
 	open_project (argument: ANY) is
@@ -43,154 +58,113 @@ feature -- Callbacks
 				if choose_again then
 					last_name_chooser.set_window (Project_tool)
 					last_name_chooser.call (Current)
+					choose_again := False
 				elseif redo_project then
-					create_project
+					-- create_project
+				elseif has_project_name then
 				else
 					retrieve_project
 				end
 			end
-		end;
+		end
+
+feature -- License managment
+	
+	license_checked: BOOLEAN is True
+			-- Is the license checked.
+
+feature -- Properties
+
+	symbol: PIXMAP is 
+			-- Pixmap for the button.
+		once 
+			Result := Pixmaps.bm_Open 
+		end
 
 feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 			-- Popup and let the user choose what he wants.
 		local
-			last_char: CHARACTER;
-			dir_name: STRING;
-			expiration: INTEGER;
+			last_char: CHARACTER
+			file_name: STRING
+			expiration: INTEGER
 			new_name_chooser: NAME_CHOOSER_W
+			file: RAW_FILE
 		do
 			if not project_tool.initialized then
-				if argument = project_tool then
-					new_name_chooser := name_chooser (Project_tool);
-					new_name_chooser.set_directory_selection;
-					new_name_chooser.hide_file_selection_list;
-					new_name_chooser.hide_file_selection_label;
-					new_name_chooser.set_title (Interface_names.t_Select_a_directory)
-
-					if not has_limited_license then
-						last_name_chooser.set_window (Project_tool);
-						last_name_chooser.call (Current)
-					else
-						choose_again := True
+				if has_project_name then
+					!! file.make (project_file_name)
+					if not file.exists then
 						warner (Project_tool).custom_call (Current,
-							expiration_message, Interface_names.b_Ok, Void, Void);
+								Warning_messages.w_file_not_exist (project_file_name), 
+								Interface_names.b_Ok, Void, Void)
+					else
+						open_project_file (project_file_name)
 					end
 				else
-					dir_name := clone (last_name_chooser.selected_file);
-					if dir_name.empty then
-						choose_again := True
-						warner (Project_tool).custom_call (Current,
-							Warning_messages.w_Directory_not_exist (dir_name), 
-							Interface_names.b_Ok, Void, Void);
+					if argument = project_tool then
+						new_name_chooser := name_chooser (Project_tool)
+						new_name_chooser.set_title (Interface_names.t_Select_a_file)
+
+						new_name_chooser.set_pattern ("*.epr")
+						new_name_chooser.set_pattern_name ("Eiffel Project File (*.epr)")
+
+						if not has_limited_license then
+							last_name_chooser.set_window (Project_tool)
+							last_name_chooser.call (Current)
+						else
+							choose_again := True
+							warner (Project_tool).custom_call (Current,
+								expiration_message, Interface_names.b_Ok, Void, Void)
+						end
 					else
-						if dir_name.count > 1 then
-							last_char := dir_name.item (dir_name.count); 
-							if last_char = Directory_separator then
-								dir_name.remove (dir_name.count)
+						file_name := clone (last_name_chooser.selected_file)
+						if file_name.empty then
+							choose_again := True
+							warner (Project_tool).custom_call (Current,
+								Warning_messages.w_file_not_exist (file_name), 
+								Interface_names.b_Ok, Void, Void)
+						else
+							!! file.make (file_name)
+							if not file.exists then
+								choose_again := True
+								warner (Project_tool).custom_call (Current,
+									Warning_messages.w_file_not_exist (file_name), 
+									Interface_names.b_Ok, Void, Void)
+							else
+								open_project_file (file_name)
 							end
-						end;
-						!! project_dir.make (dir_name);
-						Project_directory.set_directory (dir_name)
-						make_project
-						if project_tool.initialized then
-							last_name_chooser.set_file_selection;
-							last_name_chooser.set_title (Interface_names.t_Select_a_file);
-							last_name_chooser.show_file_selection_list;
-							last_name_chooser.show_file_selection_label;
 						end
 					end
 				end
 			end
-		end;
+		end
 
 feature -- Project Initialization
 
-	make_project is
+	open_project_file (file_name: STRING) is
 			-- Initialize project as a new one or retrieving
 			-- existing data in the valid directory `project_dir'.
 		require
 			project_directory_exist: project_dir /= Void
 		local
-			project_eif_file: RAW_FILE;
-			ok: BOOLEAN;
-			msg: STRING;
-			read_only: BOOLEAN
+			dir_name: STRING
 		do
-			ok := True;
-			if not project_dir.base_exists then
-				msg := Warning_messages.w_Directory_not_exist (project_dir.name);
-				choose_again := True
-				ok := False;
-			elseif project_dir.is_new then
-					-- Create a new project.
-				if not project_dir.has_base_full_access then
-					msg := Warning_messages.w_Cannot_create_project_directory (project_dir.name)
-					choose_again := True
-					ok := False
-				else
-					create_project
-				end
-
-			elseif not project_dir.exists then
-				msg := Warning_messages.w_Project_directory_not_exist (project_dir.name)
-				ok := False
-				choose_again := True
+			if has_project_name then
+				dir_name := file_name.substring (1, file_name.last_index_of
+							(directory_separator, file_name.count) - 1)
 			else
-					-- Retrieve existing project
-				project_eif_file := project_dir.project_eif_file;
-				if not project_eif_file.is_readable then
-					msg := Warning_messages.w_Not_readable (project_eif_file.name);
-					ok := False
-					choose_again := True
-				elseif not project_eif_file.is_plain then
-					msg := Warning_messages.w_Not_a_file (project_eif_file.name);
-					ok := False
-					choose_again := True
-				else
-					if project_dir.is_readable and then not project_dir.is_writable then
-						msg := Warning_messages.w_Read_only_project
-						read_only := True
-						warner (Project_tool).custom_call (Current, msg, Interface_names.b_Ok, Interface_names.b_Exit, Void)
-					else
-						retrieve_project
-					end
-				end;
-			end;
-
-			if not read_only and then not ok then
-				warner (Project_tool).custom_call (Current, msg, " OK ", Void, Void);
+				dir_name := clone (last_name_chooser.directory)
 			end
-		end;
 
+				--| Retrieve existing project
+			!! project_file.make (file_name)
+			!! project_dir.make (dir_name, project_file)
+			Project_directory_name.set_directory (dir_name)
 
-	create_project is
-			-- Create a new project directory
-		local
-			msg: STRING
-			retried: BOOLEAN
-		do
-			if not retried then
-				if redo_project then
-					project_dir.forget_old_project
-				end
-
-				Eiffel_project.make (project_dir)
-				init_project
-				msg := clone (Interface_names.t_New_project)
-				msg.append (": ")
-				msg.append (project_dir.name)
-				project_tool.set_title (msg)
-				project_tool.set_initialized
-			else
-				msg := Warning_messages.w_cannot_backup_project (project_dir.name)
-				warner (Project_tool).custom_call (Current, 
-						msg, Void, Interface_names.b_Exit_now, Void)
-			end
-		rescue
-			retried := True
-			retry
+			Eiffel_project.make (project_dir)
+			retrieve_project
 		end
 
 	retrieve_project is
@@ -199,20 +173,29 @@ feature -- Project Initialization
 			project_directory_exists: project_dir /= Void
 		local
 			msg: STRING
-			title: STRING;
+			title: STRING
 			mp: MOUSE_PTR
+			old_title: STRING
 		do	
-			project_tool.set_title ("Retrieving project...");
+			old_title := project_tool.title
+			project_tool.set_title ("Retrieving project...")
 
-				-- These 2 lines will updatae effectively the project tool.
-			!! mp.do_nothing;
+				-- These 2 lines will update effectively the project tool.
+			!! mp.do_nothing
 			mp.restore
 
 				-- Put the cursor in the wait state.
 			mp.set_watch_cursor
 
-			Eiffel_project.retrieve (project_dir);
+				-- Retrieve the project
+			Eiffel_project.retrieve
+
 			if Eiffel_project.retrieval_error then
+				Project_tool.set_title (old_title)
+					-- These 2 lines will update effectively the project tool.
+				!! mp.do_nothing
+				mp.restore
+				
 				if Eiffel_project.is_incompatible then
 					msg := Warning_messages.w_Project_incompatible 
 						(project_dir.name, 
@@ -230,46 +213,70 @@ feature -- Project Initialization
 					warner (Project_tool).custom_call (Current, 
 							msg, Void, Interface_names.b_Exit_now, Void)
 				end
+			elseif Eiffel_project.incomplete_project then
+				Project_tool.set_title (old_title)
+					-- These 2 lines will update effectively the project tool.
+				!! mp.do_nothing
+				mp.restore
+				
+				msg := Warning_messages.w_Project_directory_not_exist (project_file.name, project_dir.name)
+				warner (Project_tool).custom_call (Current, msg, Void, Interface_names.b_Exit, Void)
 			elseif Eiffel_project.read_write_error then
+				Project_tool.set_title (old_title)
+					-- These 2 lines will update effectively the project tool.
+				!! mp.do_nothing
+				mp.restore
+				
 				msg := Warning_messages.w_Cannot_open_project
 				warner (Project_tool).custom_call (Current, msg, Void, Interface_names.b_Exit, Void)
-			end;
+			end
 
 			if not Eiffel_project.error_occurred then
-				init_project;
-				title := clone (Interface_names.t_Project);
-				title.append (": ");
-				title.append (project_dir.name);
+				init_project
+				title := clone (Interface_names.t_Project)
+				title.append (": ")
+				title.append (project_dir.name)
 				if Eiffel_system.is_precompiled then
-					title.append ("  (precompiled)");
+					title.append ("  (precompiled)")
 				end
-				project_tool.set_title (title);
+				project_tool.set_title (title)
 				project_tool.set_initialized
-				project_tool.set_icon_name (Eiffel_system.name);
-			end;
+				project_tool.set_icon_name (Eiffel_system.name)
+				project_tool.save_environment
+			end
 
 			mp.restore
-		end;
+		end
 
 	init_project is
 			-- Initialize project.
 		local
-			e_displayer: BENCH_ERROR_DISPLAYER;
-			g_degree_output: GRAPHICAL_DEGREE_OUTPUT;
+			e_displayer: BENCH_ERROR_DISPLAYER
+			g_degree_output: GRAPHICAL_DEGREE_OUTPUT
 		do
-			!! e_displayer.make (Error_window);
-			Eiffel_project.set_error_displayer (e_displayer);
-			Application.set_interrupt_number (Project_resources.interrupt_every_n_instructions.actual_value);
+			!! e_displayer.make (Error_window)
+			Eiffel_project.set_error_displayer (e_displayer)
+			Application.set_interrupt_number (Project_resources.interrupt_every_n_instructions.actual_value)
 			if not Project_resources.graphical_output_disabled.actual_value then
 				!! g_degree_output
 				Project_tool.set_progress_dialog (g_degree_output)
 			end
-		end;
+		end
 
 feature -- Project directory access
 
 	project_dir: PROJECT_DIRECTORY
 			-- Location of the project directory.
+
+	project_file: PROJECT_EIFFEL_FILE
+			-- Location of the file where all the information 
+			-- about the current project are saved.
+
+	project_file_name: STRING
+			-- Name of project file name when `has_project_name'
+
+	has_project_name: BOOLEAN
+			-- Has the project file name been specified?
 
 	choose_again: BOOLEAN
 			-- Do we have to display the project directory dialog box again?
@@ -277,5 +284,34 @@ feature -- Project directory access
 	redo_project: BOOLEAN
 			-- The previous EIFGEN is not compatible with the current version,
 			-- we do need to rename the old EIFGEN and build a new one.
+
+	project_tool: PROJECT_W
+			-- Project tool window
+
+feature {NONE} -- Attributes
+
+	name: STRING is
+			-- Name of the command.
+		do
+			Result := Interface_names.f_Open_project
+		end
+ 
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			if has_project_name then
+				Result := project_file_name 
+			else
+				Result := Interface_names.m_Open_project
+			end
+		end
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+			if not has_project_name then
+				Result := Interface_names.a_Open_project
+			end
+		end
 
 end -- class OPEN_PROJECT

@@ -14,9 +14,9 @@
 */
 
 /*#define MEMCHK /**/
-/* #define MEM_STAT /**/
+/*#define MEM_STAT /**/
 
-#include "timer.h"			/* %%ss added for getcputime */
+#include "timer.h"			/* For getcputime */
 #include "config.h"
 #include <errno.h>			/* For system calls error report */
 #include <sys/types.h>		/* For caddr_t */
@@ -91,13 +91,13 @@
 #ifndef EIF_THREADS
 /* The main data-structures for malloc are filled-in statically at
  * compiled time, so that no special initialization routine is
- * necessary.
+ * necessary. (Except in MT mode --ZS)
  */
 
 /* This structure records some general information about the memory, the number
  * of chunck, etc... These informations are available via the meminfo() routine.
  */
-rt_shared struct emallinfo m_data = { /* %%ss mt */
+rt_shared struct emallinfo m_data = {
 	0,		/* ml_chunk */
 	0,		/* ml_total */
 	0,		/* ml_used */
@@ -108,14 +108,14 @@ rt_shared struct emallinfo m_data = { /* %%ss mt */
  * enables us to pilot the garbage collector correctly or to call coalescing
  * over the memory only if it is has a chance to succeed.
  */
-rt_shared struct emallinfo c_data = { /* Informations on C memory */ /* %%ss mt */
+rt_shared struct emallinfo c_data = { /* Informations on C memory */
 	0,		/* ml_chunk */
 	0,		/* ml_total */
 	0,		/* ml_used */
 	0,		/* ml_over */
 };
 	
-rt_shared struct emallinfo e_data = { /* Informations on Eiffel memory */ /* %%ss mt */
+rt_shared struct emallinfo e_data = { /* Informations on Eiffel memory */
 	0,		/* ml_chunk */
 	0,		/* ml_total */
 	0,		/* ml_used */
@@ -123,7 +123,7 @@ rt_shared struct emallinfo e_data = { /* Informations on Eiffel memory */ /* %%s
 };	
 
 /* Record head and tail of the chunk list */
-rt_shared struct ck_list cklst = {	/* %%ss mt */
+rt_shared struct ck_list cklst = {
 	(struct chunk *) 0,			/* ck_head */
 	(struct chunk *) 0,			/* ck_tail */
 	(struct chunk *) 0,			/* cck_head */
@@ -139,32 +139,32 @@ rt_shared struct ck_list cklst = {	/* %%ss mt */
  * As an exception, index 0 holds block with a size of zero, and as
  * there cannot be blocks of size 1 (OVERHEAD > 1 anyway), it's ok--RAM.
  */
-rt_private union overhead *c_hlist[NBLOCKS];	/* H list for C blocks */ /* %%ss mt */
-rt_private union overhead *e_hlist[NBLOCKS];	/* H list for Eiffel blocks */ /* %%ss mt */
+rt_private union overhead *c_hlist[NBLOCKS];	/* H list for C blocks */
+rt_private union overhead *e_hlist[NBLOCKS];	/* H list for Eiffel blocks */
 
 /* The following arrays act as a buffer cache for every operation in the
  * free list. They simply record the address of the last access. Whenever we
  * wish to insert/find an element in the list, we first look at the buffer
  * cache value to see if we can start the traversing from that point.
  */
-rt_private union overhead *c_buffer[NBLOCKS];	/* Buffer cache for C list */ /* %%ss mt */
-rt_private union overhead *e_buffer[NBLOCKS];	/* Buffer cache for Eiffel list */ /* %%ss mt */
+rt_private union overhead *c_buffer[NBLOCKS];	/* Buffer cache for C list */
+rt_private union overhead *e_buffer[NBLOCKS];	/* Buffer cache for Eiffel list */
 
 /* The sc_from and sc_to zone are the scavenge zone used by the generation
  * scavenging garbage collector. They are shared with the garbage collector.
  * These zones may be put back into the free list in case we are low in RAM.
  */
-rt_shared struct sc_zone sc_from;		/* Scavenging 'from' zone */ /* %%ss mt */
-rt_shared struct sc_zone sc_to;		/* Scavenging 'to' zone */ /* %%ss mt */
+rt_shared struct sc_zone sc_from;		/* Scavenging 'from' zone */
+rt_shared struct sc_zone sc_to;		/* Scavenging 'to' zone */
 
 /* General malloc/GC flag */
-rt_shared uint32 gen_scavenge = GS_SET;	/* Generation scavenging to be set */ /* %%ss mt */
+rt_shared uint32 gen_scavenge = GS_SET;	/* Generation scavenging to be set */
 
 /* Each time an Eiffel object is created in the free-list (via emalloc or
  * tenuring), we record its size in eiffel_usage variable. Then, once the amount
  * of allocated data goes beyond th_alloc, a cycle of acollect() is run.
  */
-rt_public long eiffel_usage = 0;		/* Monitor Eiffel memory usage */ /* %%ss mt */
+rt_public long eiffel_usage = 0;		/* Monitor Eiffel memory usage */
 
 #endif /* EIF_THREADS */
 
@@ -227,7 +227,7 @@ rt_private int cc_for_speed = 1;	/* Optimized for speed */
 #define References(type)	2		/* Number of references in object */
 #define Size(type)			40		/* Size of the object */
 #define Disp_rout(type)		0		/* No dispose procedure */
-#define XCreate(type)		 0		 /* No creation procedure */
+#define XCreate(type)		0		/* No creation procedure */
 char *(**ecreate)();
 
 #ifndef DEBUG
@@ -1279,7 +1279,7 @@ rt_private int free_last_chunk(void)
 #ifdef HAS_SMART_MMAP
 	if (munmap (last_chk, nbytes) == -1) {
 		if (i != -1)
-			connect_free_list (arena, i); /* %%ss i was 1 */
+			connect_free_list (arena, i);
 		SIGRESUME;
 		return -1;
 	}
@@ -3341,8 +3341,8 @@ rt_public eif_mem_info(EIF_BOOLEAN flag)
 
 
 #ifndef EIF_THREADS
-rt_private uint32 *type_use = 0;   /* Object usage table by dynamic type */ /* %%ss mt */
-rt_private uint32 c_mem = 0;		/* C memory used (bytes) */ /* %%ss mt */
+rt_private uint32 *type_use = 0;   /* Object usage table by dynamic type */
+rt_private uint32 c_mem = 0;		/* C memory used (bytes) */
 #endif /* EIF_THREADS */
 
 rt_private void inspect();
@@ -3382,7 +3382,6 @@ rt_private void inspect_chunk(register char *chunk, register char *arena, int ty
 	register1 union overhead *zone;		/* Malloc info zone */
 	register2 uint32 size;				/* Object's size in bytes */
 	register3 char *end;				/* First address beyond chunk */
-	/*register4 uint32 flags;*/	/* Eiffel flags */ /* %%ss removed unused */
 
 	switch (type) {
 	case CHUNK_T:

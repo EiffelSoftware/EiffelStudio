@@ -21,7 +21,8 @@ inherit
 			--|undefined below.
 			last_call_was_destroy
 		redefine
-			interface
+			interface,
+			initialize
 		end
 
 	EV_WINDOW_IMP
@@ -39,7 +40,8 @@ inherit
 			compute_minimum_height,
 			compute_minimum_size,
 			restore,
-			interface
+			interface,
+			initialize
 		end
 
 creation
@@ -55,8 +57,18 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			title := ""
 			make_top ("EV_TITLED_WINDOW")
+		end
+
+	initialize is
+			-- Initialize Window
+		local
+			e: EV_ENVIRONMENT
+		do
+			{EV_WINDOW_IMP} Precursor
 			create e
 			e.application.add_root_window (interface)
+			interface.close_actions.extend (interface~destroy)
+			is_initialized := True
 		end
 
 feature {EV_TITLED_WINDOW} -- Accelerators
@@ -365,6 +377,9 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.55  2000/02/29 22:18:27  rogers
+--| Redefined initialize, to add the window to the root windows list and to also extend the close_actions with destroy.
+--|
 --| Revision 1.54  2000/02/29 17:55:24  rogers
 --| Undefined last_call_was_destroy  inherited from EV_TITLED_WINDOW_I as last_call_from_destroy is now re-defined in EV_WINDOW_IMP. Needs fixing.
 --|

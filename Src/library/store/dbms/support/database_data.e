@@ -114,13 +114,14 @@ feature -- Element change
 				create value_type.make (1, count)
 				create select_name.make (1, count)
 				get_metadata := True --PGC
-			elseif value.count < count then
+			elseif metadata_to_update or else value.count /= count then
 				value.resize (1, count)
 				value_size.resize (1, count)
 				value_max_size.resize (1, count)
 				value_type.resize (1, count)
 				select_name.resize (1, count)
 				get_metadata := True --PGC
+				metadata_to_update := False
 			end
 			from
 				ind := 1
@@ -161,6 +162,29 @@ feature -- Element change
 						f_string.wipe_out
 					end
 					f_string.append (database_string)
+
+				-- DATE type
+				elseif value_type.item (ind) = Date_type_database then
+					if f_any = Void then
+						create f_date.make_now
+						value.put (f_date, ind)
+					else
+						f_date ?= f_any
+						if f_date = Void then
+							create f_date.make_now
+							value.put (f_date, ind)
+						end
+					end
+					if db_spec.get_date_data (no_descriptor, ind) = 1 then
+						create time.make (db_spec.get_hour (no_descriptor, ind), db_spec.get_min (no_descriptor, ind), db_spec.get_sec (no_descriptor, ind))
+						create date.make_month_day_year (db_spec.get_month (no_descriptor, ind), db_spec.get_day (no_descriptor, ind), db_spec.get_year (no_descriptor, ind))
+						f_date.set_time (time)
+						f_date.set_date (date)
+					else
+						value.put (Void, ind)
+				--		f_date.copy (db_default_null_value.datetime_value)
+					end
+
 				elseif not db_spec.is_null_data (no_descriptor, ind) then
 
 					-- INTEGER type
@@ -206,7 +230,7 @@ feature -- Element change
 						f_real.set_item (db_spec.get_real_data (no_descriptor, ind))
 
 					-- BOOLEAN type
-					elseif value_type.item (ind) = Boolean_type_database then
+					else--if value_type.item (ind) = Boolean_type_database then
 						if f_any = Void then
 							create f_boolean
 							value.put (f_boolean, ind)
@@ -218,25 +242,6 @@ feature -- Element change
 							end
 						end
 						f_boolean.set_item (db_spec.get_boolean_data(no_descriptor, ind))
-
-					-- DATE type
-					else--if value_type.item (ind) = Date_type_database then
-						if f_any = Void then
-							create f_date.make_now
-							value.put (f_date, ind)
-						else
-							f_date ?= f_any
-							if f_date = Void then
-								create f_date.make_now
-								value.put (f_date, ind)
-							end
-						end
-						if db_spec.get_date_data (no_descriptor, ind) = 1 then
-							create time.make (db_spec.get_hour (no_descriptor, ind), db_spec.get_min (no_descriptor, ind), db_spec.get_sec (no_descriptor, ind))
-							create date.make_month_day_year (db_spec.get_month (no_descriptor, ind), db_spec.get_day (no_descriptor, ind), db_spec.get_year (no_descriptor, ind))
-							f_date.set_time (time)
-							f_date.set_date (date)
-						end
 					end
 				else
 					value.put (Void, ind)

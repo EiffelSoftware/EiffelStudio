@@ -36,9 +36,12 @@ feature {NONE} -- Initialization
 			-- Initialize current.
 		do
 			!! debug_info.make;
-			displayed_string_size := 50
+			displayed_string_size := 50;
+			current_execution_stack_number := 1
 		ensure
-			displayed_string_size: displayed_string_size = 50
+			displayed_string_size: displayed_string_size = 50;
+			current_execution_stack_number_is_one:
+					current_execution_stack_number = 1
 		end;
 
 feature -- Properties
@@ -74,6 +77,9 @@ feature -- Properties
 			-- Size of string to be retrieved from the application
 			-- when debugging (size of `string_value' in REFERENCE_VALUE)
 			-- (Default value is 50)
+
+	current_execution_stack_number: INTEGER;
+			-- Stack number currently displaying the locals and arguments
 
 	debugged_routines: LINKED_LIST [E_FEATURE] is
 			-- Routines that are currently debugged
@@ -171,6 +177,16 @@ feature -- Access
 			-- generated for feature `f'?
 		do
 			Result := debug_info.has_feature (f)
+		end;
+
+	number_of_stack_elements: INTEGER is
+			-- Total number of the call stack elements in
+			-- exception stack
+		require
+			is_running: is_running;
+			is_stopped: is_stopped
+		do	
+			Result := status.where.count
 		end;
 
 feature -- Element change
@@ -391,6 +407,22 @@ feature -- Setting
 			set: displayed_string_size = i
 		end;
 
+	set_current_execution_stack (i: INTEGER) is
+			-- Set the `current_execution_stack_number' to `i'.
+			--| If `current_execution_stack_number' is greater than
+			--| the number of stack elements then 
+			--| `current_execution_stack_number' will be set
+			--| to the last element.
+		require
+			is_stopped: is_stopped;
+			positive_i: i > 0;
+			small_enough: i <= number_of_stack_elements
+		do
+			current_execution_stack_number := i
+		ensure
+			set: current_execution_stack_number = i
+		end;
+
 feature {UPDATE_PROJECT, DEAD_HDLR, RUN_REQUEST} -- Setting
 
 	set_status (s: like status) is
@@ -415,12 +447,15 @@ feature {DEAD_HDLR} -- Implemenation
 			if termination_command /= Void then
 				termination_command.execute
 			end;
-			status := Void
+			status := Void;
+			current_execution_stack_number := 1;
 if enabled_debug_trace then
 	io.error.putstring ("terminating project%N")
 end
 		ensure
-			not_running: not is_running
+			not_running: not is_running;
+			reset_current_execution_stack_number:
+					current_execution_stack_number = 1
 		end;
 
 feature {RUN_REQUEST} -- Implementation

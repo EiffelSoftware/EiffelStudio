@@ -63,6 +63,11 @@ cluster
 
 	library assembly_retriver:		"$EIFFEL_SRC\Eiffel\eiffel\il_generation\windows"
 
+	all gobo:		"$EIFFEL_SRC\library\gobo\library"
+		exclude
+			"hact"; "se"; "ve"; "base"; "CVS"; "other";
+		end
+
 external
 
 	include_path:

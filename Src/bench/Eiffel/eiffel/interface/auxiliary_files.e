@@ -199,7 +199,7 @@ feature -- Plug and Makefile file
 			Plug_file.putstring ("void egc_init_plug (void)%N{%N")
 
 				-- Do we need to collect GC data for the profiler?
-			Plug_file.putstring ("%TEIF_INTEGER egc_prof_enabled = (EIF_INTEGER) ")
+			Plug_file.putstring ("%Tegc_prof_enabled = (EIF_INTEGER) ")
 			if system.lace.ace_options.has_profile then
 				Plug_file.putstring ("3;%N")
 			else

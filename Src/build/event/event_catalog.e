@@ -49,7 +49,6 @@ feature
 			first_separator, second_separator: THREE_D_SEPARATOR	
 		do
 			!! button_rc.make (Widget_names.row_column, Current)
---			button_rc.set_preferred_count (1)
 			button_rc.set_column_layout
 			!! first_separator.make ("", Current)
 			!! second_separator.make ("", Current)
@@ -81,10 +80,6 @@ feature
 			attach_left (second_separator, 0)
 			define_event_pages
 			update_interface
-			if not current_page.empty then
-				current_page.go_i_th (1)
-				current_page.update_display
-			end
 			button_events.hide_button
 			text_events.hide_button
 			text_f_events.hide_button

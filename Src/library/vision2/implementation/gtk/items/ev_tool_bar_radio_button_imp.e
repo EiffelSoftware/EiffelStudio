@@ -16,17 +16,14 @@ inherit
 			interface
 		end
 
-	EV_RADIO [EV_TOOL_BAR_BUTTON]
-		redefine
-			interface
-		end
-
 	EV_TOOL_BAR_SELECT_BUTTON_IMP
 		redefine
 			make,
 			interface,
 			connect_signals
 		end
+
+	--| FIXME EV_RADIO_PEER!
 
 create
 	make
@@ -92,14 +89,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_unselect (an_item: EV_RADIO [EV_TOOL_BAR_RADIO_BUTTON]) is
-			-- Button's selected state set to flag.
-		do
-			--if is_selected and not group.just_selected (Current) then
-			--	set_selected(False)
-			--end	
-		end
-
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TOOL_BAR_RADIO_BUTTON
@@ -127,6 +116,9 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/04/11 17:07:26  brendel
+--| Removed references to obsolete EV_RADIO.
+--|
 --| Revision 1.14  2000/04/10 17:38:29  king
 --| Made compilable
 --|

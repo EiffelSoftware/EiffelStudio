@@ -2,12 +2,12 @@ indexing
 	description: "[
 			Preferences.  This class should be used for creating a preference system for an application.
 			Briefly, preferences and their related attributes and values are stored at run-time in an appropriate
-			RESOURCE object.  They must be created through the helper class PREFERENCE_RESOURCE_MANAGER.
+			PREFERENCE object.  They must be created through the helper class PREFERENCE_MANAGER.
 			
 			In between sessions
 			the preference will be saved in an underlying data store.  To such data store implementation are provided by default,
 			one for saving to the Windows Registry and one for saving to an XML file on disk.  To use a different store, such as 
-			a database one must create a new class which implements the methods in RESOURCE_STRUCTURE_I.  
+			a database one must create a new class which implements the methods in PREFERENCE_STRUCTURE_I.  
 			
 			Regardless of the underlying data store used the preferences are managed in the same way.  There are 3 levels of control
 			provided for such management:
@@ -28,8 +28,8 @@ indexing
 			Once preferences they may be modified programmatically or through an user interface conforming to PREFERENCE_VIEW.  A default 
 			interface is provided in PREFERENCES_TREE_WINDOW.  You may implement your own style interface by implementing PREFERENCE_VIEW.
 			
-			You may also add your own application specific resources by implementing RESOURCE, and may provide a graphical widget to view or
-			edit this resource by implementing RESOURCE_WIDGET and then registering this widget to the PREFERENCES through the
+			You may also add your own application specific resources by implementing PREFERENCE, and may provide a graphical widget to view or
+			edit this resource by implementing PREFERENCE_WIDGET and then registering this widget to the PREFERENCES through the
 			`register_resource_widget' procedure.
 		]"
 	author: ""
@@ -113,7 +113,7 @@ feature -- Access
 
 feature -- Manager
 
-	new_manager (a_namespace: STRING): PREFERENCE_RESOURCE_MANAGER is
+	new_manager (a_namespace: STRING): PREFERENCE_MANAGER is
 			-- Create a new resource manager with namespace `a_namespace'.
 		require
 			namespace_not_void: a_namespace /= Void
@@ -127,7 +127,7 @@ feature -- Manager
 			manager_added: managers.has (a_namespace)
 		end
 		
-	manager (a_namespace: STRING): PREFERENCE_RESOURCE_MANAGER is
+	manager (a_namespace: STRING): PREFERENCE_MANAGER is
 			-- Associated manager to `a_namespace'.
 		require
 			namespace_not_void: a_namespace /= Void
@@ -148,9 +148,9 @@ feature -- Manager
 			Result := managers.has (a_namespace)
 		end		
 
-feature {PREFERENCE_RESOURCE_MANAGER} -- Element change
+feature {PREFERENCE_MANAGER} -- Element change
 
-	add_manager (a_manager: PREFERENCE_RESOURCE_MANAGER) is
+	add_manager (a_manager: PREFERENCE_MANAGER) is
 			-- Add manager.
 		require
 			manager_not_void: a_manager /= Void
@@ -163,7 +163,7 @@ feature {PREFERENCE_RESOURCE_MANAGER} -- Element change
 
 feature -- Resource
 
-	get_resource (a_name: STRING): RESOURCE is
+	get_resource (a_name: STRING): PREFERENCE is
 			-- Fetch the resource with `a_name'.
 		require
 			name_not_void: a_name /= Void
@@ -181,11 +181,9 @@ feature -- Resource
 			name_not_void: a_name /= Void
 		do
 			Result := resources.has (a_name)
-		ensure
-			result_not_void_if_known: resources.has (a_name) implies Result /= Void
 		end			
 
-	save_resource (a_resource: RESOURCE) is
+	save_resource (a_resource: PREFERENCE) is
 			-- Save `a_resource' to underlying data store.
 		require
 			resource_not_void: a_resource /= Void
@@ -205,7 +203,7 @@ feature -- Resource
 	restore_defaults is
 			-- Restore all resources which have associated default values to their default values.
 		local
-			l_resource: RESOURCE
+			l_resource: PREFERENCE
 		do
 			from
 				resources.start
@@ -223,21 +221,21 @@ feature -- Resource
 			all_resources_default: True
 		end		
 		
-	register_resource_widget (a_resource_widget: RESOURCE_WIDGET) is
+	register_resource_widget (a_resource_widget: PREFERENCE_WIDGET) is
 			-- Register `a_resource_widget'.
 		require
 			resource_widget_not_void: a_resource_widget /= Void
 		do
 			if not resource_widgets.has (a_resource_widget.graphical_type) then				
-				resource_widgets.extend (a_resource_widget, a_resource_widget.graphical_type)	
+				resource_widgets.put (a_resource_widget, a_resource_widget.graphical_type)	
 			end
 		ensure
 			is_registered: resource_widgets.has (a_resource_widget.graphical_type)
 		end	
 		
-feature {RESOURCE, PREFERENCE_VIEW} -- Graphical
+feature {PREFERENCE, PREFERENCE_VIEW} -- Graphical
 
-	resource_widget (a_resource: RESOURCE): RESOURCE_WIDGET is
+	resource_widget (a_resource: PREFERENCE): PREFERENCE_WIDGET is
 			-- Return the widget required to display `a_resource'.
 		require
 			resource_not_void: a_resource /= Void
@@ -250,7 +248,7 @@ feature {RESOURCE, PREFERENCE_VIEW} -- Graphical
 			has_result_if_known: resource_widgets.has (a_resource.generating_resource_type) implies Result /= Void
 		end
 		
-feature {RESOURCE_FACTORY, RESOURCE_MANAGER, PREFERENCE_VIEW} -- Implementation
+feature {PREFERENCE_FACTORY, PREFERENCE_MANAGER, PREFERENCE_VIEW} -- Implementation
 
 	default_values: HASH_TABLE [TUPLE [STRING, STRING], STRING] is
 			-- Hash table of known preference default values.  [[Description, Value], Name].
@@ -264,7 +262,7 @@ feature {RESOURCE_FACTORY, RESOURCE_MANAGER, PREFERENCE_VIEW} -- Implementation
 			-- Hash table of user-defined values retrieved from the underlying data store.
 			-- Depending upon the chosen implementation this will be the Windows registry or an XML file.
 		
-	resources: HASH_TABLE [RESOURCE, STRING] is
+	resources: HASH_TABLE [PREFERENCE, STRING] is
 			-- Resources part of Current.
 		once
 			create Result.make (2)
@@ -277,7 +275,7 @@ feature {NONE} -- Implementation
 	defaults_file_name: STRING
 			-- File containing default values, if any.
 
-	managers: HASH_TABLE [PREFERENCE_RESOURCE_MANAGER, STRING] is
+	managers: HASH_TABLE [PREFERENCE_MANAGER, STRING] is
 			-- Managers.
 		once
 			create Result.make (2)
@@ -286,18 +284,19 @@ feature {NONE} -- Implementation
 			managers_not_void: Result /= Void
 		end
 	
-	resource_structure: RESOURCE_STRUCTURE	
+	resource_structure: PREFERENCE_STRUCTURE	
 			-- Underlying resource structure.
 		
-	resource_widgets: HASH_TABLE [RESOURCE_WIDGET, STRING] is
+	resource_widgets: HASH_TABLE [PREFERENCE_WIDGET, STRING] is
 			-- Hash table of resource widgets identified by the type of resource associated with the widget.
 		local
-			l_brw: BOOLEAN_RESOURCE_WIDGET
-			l_srw: STRING_RESOURCE_WIDGET
-			l_frw: FONT_RESOURCE_WIDGET
-			l_crw: COLOR_RESOURCE_WIDGET
+			l_brw: BOOLEAN_PREFERENCE_WIDGET
+			l_srw: STRING_PREFERENCE_WIDGET
+			l_frw: FONT_PREFERENCE_WIDGET
+			l_crw: COLOR_PREFERENCE_WIDGET
 		once			
 			create Result.make (4)
+			Result.compare_objects
 			create l_brw.make
 			create l_srw.make
 			create l_frw.make
@@ -356,39 +355,45 @@ feature {NONE} -- Implementation
 			pref_name, 
 			pref_description,
 			pref_value: STRING
+			retried: BOOLEAN
 		do
-			from
-				xml_elem.start
-			until
-				xml_elem.after
-			loop
-				node ?= xml_elem.item_for_iteration
-				if node /= Void then
-					if node.name.is_equal ("PREF") then
-							-- Found preference
-						attribute := node.attribute_by_name ("NAME")
-						if attribute /= Void then
-							pref_name := attribute.value
-							attribute := node.attribute_by_name ("DESCRIPTION")
+			if not retried then				
+				from
+					xml_elem.start
+				until
+					xml_elem.after
+				loop
+					node ?= xml_elem.item_for_iteration
+					if node /= Void then
+						if node.name.is_equal ("PREF") then
+								-- Found preference
+							attribute := node.attribute_by_name ("NAME")
 							if attribute /= Void then
-								pref_description := attribute.value
-							else
-									-- No description specified
-								pref_description := ""
-							end
-							if node.elements /= Void then								
-								sub_node := node.elements.item (1)	
-							end
-							if sub_node /= Void then
-									-- Found preference default value								
-								pref_value := sub_node.text									
-								default_values.put ([pref_description, pref_value], pref_name)
+								pref_name := attribute.value
+								attribute := node.attribute_by_name ("DESCRIPTION")
+								if attribute /= Void then
+									pref_description := attribute.value
+								else
+										-- No description specified
+									pref_description := ""
+								end
+								if node.elements /= Void and then not node.elements.is_empty then								
+									sub_node := node.elements.item (1)	
+								end
+								if sub_node /= Void then
+										-- Found preference default value								
+									pref_value := sub_node.text									
+									default_values.put ([pref_description, pref_value], pref_name)
+								end
 							end
 						end
 					end
+					xml_elem.forth
 				end
-				xml_elem.forth
 			end
+		rescue
+			retried := True
+			retry
 		end	
 		
 invariant

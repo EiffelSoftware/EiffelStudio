@@ -13,14 +13,14 @@ indexing
 				the value specified in a default file will be used.  If there is no default file or the resource does appear in the
 				specified default file the value passed to the `new_*_resource_value' will be used.					
 				
-		To add custom resources inherit PREFERENCE_RESOURCE_MANAGER and implement a custom manager with a feature like 'new_custom_resource_value'.
+		To add custom resources inherit PREFERENCE_MANAGER and implement a custom manager with a feature like 'new_custom_resource_value'.
 				
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	PREFERENCE_RESOURCE_MANAGER
+	PREFERENCE_MANAGER
 
 create {PREFERENCES}
 	make
@@ -62,40 +62,37 @@ feature -- Query
 
 feature -- Status Setting
 
-	new_boolean_resource_value (a_name: STRING; a_value: BOOLEAN): BOOLEAN_RESOURCE is
+	new_boolean_resource_value (a_name: STRING; a_value: BOOLEAN): BOOLEAN_PREFERENCE is
 			-- Add a new boolean resource with name `a_name' and `a_value'.
 		require
 			name_valid: a_name /= Void 
 			name_not_empty: not a_name.is_empty
-			value_not_void: a_value /= Void
 			not_has_resource: not known_resource (a_name)
 		do		
-			Result := (create {RESOURCE_FACTORY [BOOLEAN, BOOLEAN_RESOURCE]}).
-				new_resource (preferences, Current, a_name, namespace, a_value)
+			Result := (create {PREFERENCE_FACTORY [BOOLEAN, BOOLEAN_PREFERENCE]}).
+				new_resource (preferences, Current, a_name, a_value)
 		ensure
 			has_result: Result /= Void
 			resource_name_set: Result.name.is_equal (a_name)
-			resource_value_set: Result.value.is_equal (a_value)
-			resource_added: preferences.has_resource (namespace + "." + a_name)
+			resource_added: preferences.has_resource (a_name)
 		end		
 		
-	new_integer_resource_value (a_name: STRING; a_value: INTEGER): INTEGER_RESOURCE is
+	new_integer_resource_value (a_name: STRING; a_value: INTEGER): INTEGER_PREFERENCE is
 			-- Add a new integer resource with name `a_name' and `a_value'.
 		require
 			name_valid: a_name /= Void 
 			name_not_empty: not a_name.is_empty
-			value_not_void: a_value /= Void
 			not_has_resource: not known_resource (a_name)
 		do		
-			Result := (create {RESOURCE_FACTORY [INTEGER, INTEGER_RESOURCE]}).
-				new_resource (preferences, Current, a_name, namespace, a_value)
+			Result := (create {PREFERENCE_FACTORY [INTEGER, INTEGER_PREFERENCE]}).
+				new_resource (preferences, Current, a_name, a_value)
 		ensure
 			has_result: Result /= Void
 			resource_name_set: Result.name.is_equal (a_name)
-			resource_added: preferences.has_resource (namespace + "." + a_name)
+			resource_added: preferences.has_resource (a_name)
 		end	
 		
-	new_string_resource_value (a_name: STRING; a_value: STRING): STRING_RESOURCE is
+	new_string_resource_value (a_name: STRING; a_value: STRING): STRING_PREFERENCE is
 			-- Add a new string resource with name `a_name' and `a_value'.
 		require
 			name_valid: a_name /= Void 
@@ -103,15 +100,15 @@ feature -- Status Setting
 			value_not_void: a_value /= Void
 			not_has_resource: not known_resource (a_name)
 		do		
-			Result := (create {RESOURCE_FACTORY [STRING, STRING_RESOURCE]}).
-				new_resource (preferences, Current, a_name, namespace, a_value)
+			Result := (create {PREFERENCE_FACTORY [STRING, STRING_PREFERENCE]}).
+				new_resource (preferences, Current, a_name, a_value)
 		ensure
 			has_result: Result /= Void
 			resource_name_set: Result.name.is_equal (a_name)
-			resource_added: preferences.has_resource (namespace + "." + a_name)
+			resource_added: preferences.has_resource (a_name)
 		end	
 		
-	new_array_resource_value (a_name: STRING; a_value: ARRAY [STRING]): ARRAY_RESOURCE is
+	new_array_resource_value (a_name: STRING; a_value: ARRAY [STRING]): ARRAY_PREFERENCE is
 			-- Add a new array resource with name `a_name' and `a_value'.
 		require
 			name_valid: a_name /= Void 
@@ -119,15 +116,15 @@ feature -- Status Setting
 			value_not_void: a_value /= Void
 			not_has_resource: not known_resource (a_name)
 		do		
-			Result := (create {RESOURCE_FACTORY [ARRAY [STRING], ARRAY_RESOURCE]}).
-				new_resource (preferences, Current, a_name, namespace, a_value)
+			Result := (create {PREFERENCE_FACTORY [ARRAY [STRING], ARRAY_PREFERENCE]}).
+				new_resource (preferences, Current, a_name, a_value)
 		ensure
 			has_result: Result /= Void
 			resource_name_set: Result.name.is_equal (a_name)
-			resource_added: preferences.has_resource (namespace + "." + a_name)
+			resource_added: preferences.has_resource (a_name)
 		end	
 		
-	new_color_resource_value (a_name: STRING; a_value: EV_COLOR): COLOR_RESOURCE is
+	new_color_resource_value (a_name: STRING; a_value: EV_COLOR): COLOR_PREFERENCE is
 			-- Add a new color resource with name `a_name' and `a_value'.
 		require
 			name_valid: a_name /= Void 
@@ -135,15 +132,15 @@ feature -- Status Setting
 			value_not_void: a_value /= Void
 			not_has_resource: not known_resource (a_name)
 		do		
-			Result := (create {RESOURCE_FACTORY [EV_COLOR, COLOR_RESOURCE]}).
-				new_resource (preferences, Current, a_name, namespace, a_value)
+			Result := (create {PREFERENCE_FACTORY [EV_COLOR, COLOR_PREFERENCE]}).
+				new_resource (preferences, Current, a_name, a_value)
 		ensure
 			has_result: Result /= Void
 			resource_name_set: Result.name.is_equal (a_name)
-			resource_added: preferences.has_resource (namespace + "." + a_name)
+			resource_added: preferences.has_resource (a_name)
 		end	
 		
-	new_font_resource_value (a_name: STRING; a_value: EV_FONT): FONT_RESOURCE is
+	new_font_resource_value (a_name: STRING; a_value: EV_FONT): FONT_PREFERENCE is
 			-- Add a new font resource with name `a_name' and `a_value'.
 		require
 			name_valid: a_name /= Void 
@@ -151,12 +148,12 @@ feature -- Status Setting
 			value_not_void: a_value /= Void
 			not_has_resource: not known_resource (a_name)
 		do		
-			Result := (create {RESOURCE_FACTORY [EV_FONT, FONT_RESOURCE]}).
-				new_resource (preferences, Current, a_name, namespace, a_value)
+			Result := (create {PREFERENCE_FACTORY [EV_FONT, FONT_PREFERENCE]}).
+				new_resource (preferences, Current, a_name, a_value)
 		ensure
 			has_result: Result /= Void
 			resource_name_set: Result.name.is_equal (a_name)
-			resource_added: preferences.has_resource (namespace + "." + a_name)
+			resource_added: preferences.has_resource (a_name)
 		end	
 		
 feature {NONE} -- Implementation
@@ -169,4 +166,4 @@ invariant
 	has_namespace: namespace /= Void
 	namesapce_valid: not namespace.is_empty
 
-end -- class RESOURCE_MANAGER
+end -- class PREFERENCE_MANAGER

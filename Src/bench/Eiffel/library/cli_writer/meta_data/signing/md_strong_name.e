@@ -102,11 +102,24 @@ feature -- C externals
 		alias
 			"StrongNameSignatureGeneration"
 		end
-			
+	
+	strong_name_token_from_public_key (public_key: POINTER; key_length: INTEGER;
+			token, token_lenght: POINTER): INTEGER
+		is
+			-- Create a strong name token from a public key blob.
+		external
+			"[
+				C macro signature (BYTE *, ULONG, BYTE **, ULONG *): EIF_INTEGER
+				use <StrongName.h>
+			]"
+		alias
+			"StrongNameTokenFromPublicKey"
+		end
+		
 	get_hash_from_assembly_file (a_file_path: POINTER; a_hash_alg_id: POINTER;
 			a_hash_buffer: POINTER; a_hash_buffer_size: INTEGER; computed_size: POINTER): INTEGER
 		is
-				-- Compute hash of `a_blob' using `a_hash_alg_id'.
+			-- Compute hash of `a_blob' using `a_hash_alg_id'.
 		external
 			"[
 				C macro signature (LPCWSTR, unsigned int *, BYTE *, DWORD, DWORD *): EIF_INTEGER

@@ -20,6 +20,7 @@ feature {NONE} -- Initialization
 			l_key_size: INTEGER
 			l_result: INTEGER
 			l_ptr: POINTER
+			l_raw_file: RAW_FILE
 		do
 				-- Read key pair data from `a_file_name'
 			key_pair := read_key_pair_from_file (a_file_name)
@@ -32,8 +33,17 @@ feature {NONE} -- Initialization
 					-- Initializes `item' with retrieved data.		
 				create item.make (l_key_size)
 				item.item.memory_copy (l_ptr, l_key_size)
-				
-					-- Free allocated data from call to `c_strong_name_get_public_key'.
+
+					-- Free allocated data from call to `strong_name_get_public_key'.
+				feature {MD_STRONG_NAME}.strong_name_free_buffer (l_ptr)
+
+					-- Get public key token.
+				l_result := feature {MD_STRONG_NAME}.strong_name_token_from_public_key (item.item,
+					item.count, $l_ptr, $l_key_size)
+				create public_key_token.make (l_key_size)
+				public_key_token.item.memory_copy (l_ptr, l_key_size)
+
+					-- Free allocated data from call to `strong_name_token_from_public_key'.
 				feature {MD_STRONG_NAME}.strong_name_free_buffer (l_ptr)
 			else
 					-- Dummy empty key.
@@ -48,10 +58,34 @@ feature -- Access
 			
 	key_pair: MANAGED_POINTER
 			-- Key pair that generated Current.
+			
+	public_key_token: MANAGED_POINTER
+			-- Public key token of Current.
 
 	error_occurred: BOOLEAN
 			-- Did an error occurred in `read_key_pair_from_file'?
 
+	public_key_token_string: STRING is
+			-- String representation of `public_key_token'.
+		require
+			public_key_token_not_void: public_key_token /= Void
+			public_key_token_not_empty: public_key_token.count > 0
+		local
+			i, nb: INTEGER
+		do
+			from
+				i := 0
+				nb := public_key_token.count - 1
+				create Result.make (2 * (nb + 1))
+			until
+				i > nb
+			loop
+				Result.append (public_key_token.read_integer_8 (i).to_hex_string)
+				i := i + 1
+			end
+			Result.to_lower
+		end
+		
 feature {NONE} -- Implementation
 
 	read_key_pair_from_file (a_file_name: STRING): MANAGED_POINTER is

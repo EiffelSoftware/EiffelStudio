@@ -1,26 +1,28 @@
 /* XPM */
-static char *noname[] = {
-/* width height ncolors chars_per_pixel */
-"16 16 3 1",
+static char *open[] = {
+/* width height num_colors chars_per_pixel */
+"    16    16        5            1",
 /* colors */
-"` c #000000",
-"a c #C0C0C0",
-"b c #FFFF00",
+". c #000000",
+"# c #bfbf00",
+"a c #c0c0c0",
+"b c #ffff00",
+"c c #ffffff",
 /* pixels */
-"aaaaaaaaaaa```aa",
-"aaaaaaaaaa`bbb`a",
-"aaaaaaaaaa`bbb`a",
-"aaa````````bbb`a",
-"aa`bbbbbbbbbbb`a",
-"aa`bbbbbbbbbbb`a",
-"aa`bbbbbbbbbbb`a",
-"aa`bbbbbbbbbbb`a",
-"aa`bbbbbbbbbbb`a",
-"aa`````````````a",
 "aaaaaaaaaaaaaaaa",
-"aaaaa```````aaaa",
-"aaaaa```````aaaa",
-"aaaaaa`````aaaaa",
-"aaaaaaa```aaaaaa",
-"aaaaaaaa`aaaaaaa"
+"aaaaaaaaaaaaaaaa",
+"aaaaaaaaaa...aaa",
+"aaaaaaaaa.aaa.a.",
+"aaaaaaaaaaaaaa..",
+"aa...aaaaaaaa...",
+"a.cbc.......aaaa",
+"a.bcbcbcbcb.aaaa",
+"a.cbcbcbcbc.aaaa",
+"a.bcbc..........",
+"a.cbc.#########.",
+"a.bc.#########.a",
+"a.c.#########.aa",
+"a..#########.aaa",
+"a...........aaaa",
+"aaaaaaaaaaaaaaaa"
 };

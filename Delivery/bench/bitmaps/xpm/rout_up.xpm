@@ -1,26 +1,28 @@
 /* XPM */
-static char *noname[] = {
-/* width height ncolors chars_per_pixel */
-"16 16 3 1",
+static char *rout_up[] = {
+/* width height num_colors chars_per_pixel */
+"    16    16        5            1",
 /* colors */
-"` c #000000",
-"a c #C0C0C0",
-"b c #FF0000",
+". c #000000",
+"# c #808080",
+"a c #c0c0c0",
+"b c #5151fb",
+"c c #ffffff",
 /* pixels */
-"a```````````````",
-"a```````````````",
-"aa`````bbb`````a",
-"aa`````bbb`````a",
-"aaa```bbbbb```aa",
-"aaa```bbbbb```aa",
-"aaaa```bbb```aaa",
-"aaaa```bbb```aaa",
-"aaaaa```````aaaa",
-"aaaaa```````aaaa",
-"aaaaaa`````aaaaa",
-"aaaaaa`````aaaaa",
-"aaaaaaa```aaaaaa",
-"aaaaaaa```aaaaaa",
-"aaaaaaaa`aaaaaaa",
+"a###############",
+"a#####ccccc#####",
+"aa####cbbbc####.",
+"aa##cccbbbccc##.",
+"aaa#cbbbbbbbc#..",
+"aaa#cbbbbbbbc#.a",
+"aaaacccbbbccc..a",
+"aaaa##cbbbc##.aa",
+"aaaaa#ccccc#..aa",
+"aaaaa#######.aaa",
+"aaaaaa#####..aaa",
+"aaaaaa#####.aaaa",
+"aaaaaaa###..aaaa",
+"aaaaaaa###.aaaaa",
+"aaaaaaaa#..aaaaa",
 "aaaaaaaaaaaaaaaa"
 };

@@ -114,6 +114,7 @@ feature -- Basic operation
 		require
 			component_not_void: a_component /= Void
 		do
+			(create {GB_GLOBAL_STATUS}).block
 			-- We have to handle all items seperately. There may be a better
 			-- way to do this at some point.
 			
@@ -132,6 +133,7 @@ feature -- Basic operation
 			system_status.disable_project_modified
 			update
 			unlock_update
+			;(create {GB_GLOBAL_STATUS}).resume
 		ensure
 			objects_not_changed: object_handler.objects.is_equal (old object_handler.objects)
 		end

@@ -2,20 +2,14 @@
 	<meta_data/>
 	<paragraph>
 					<paragraph>The EiffelVision2 Dialog item is a new Eiffel Class, 
-						<code>
-							<class_name>DIALOG</class_name>
-						</code> that  represents a EiffelVision 2 dialog, inheriting  
-						<code>
-							<class_name>EV_DIALOG</class_name>
-						</code>
+						<class_name>DIALOG</class_name> that  represents a EiffelVision 2 dialog, inheriting  
+						<class_name>EV_DIALOG</class_name>
 					</paragraph>
 					<paragraph>  Default feature clauses are contained within the class text, and two  pre-defined features are contained:
 						<line_break/>
 						<list ordered="false">
 							<item>initialize - Redefined from  
-								<code>
-									<class_name>EV_DIALOG</class_name>
-								</code>, this feature performs the initialization of the dialog, and  any custom initialization required for your dialog, can be added here.  initialize is executed as a result of calling default_create  on the dialog. 
+								<class_name>EV_DIALOG</class_name>, this feature performs the initialization of the dialog, and  any custom initialization required for your dialog, can be added here.  initialize is executed as a result of calling default_create  on the dialog. 
 							</item>
 							<item>is_in_default_state - Is the dialog in the correct  default state after initialization? If you wish to check the default state of  your dialog, add code to perform this here. </item>
 						</list>
@@ -31,12 +25,8 @@
 						</link>
 					</paragraph>
 					<paragraph>Appearance of an  
-						<code>
-							<class_name>EV_DIALOG</class_name>
-						</code> displayed modally to an  
-						<code>
-							<class_name>EV_TITLED_WINDOW</class_name>
-						</code>:
+						<class_name>EV_DIALOG</class_name> displayed modally to an  
+						<class_name>EV_TITLED_WINDOW</class_name>:
 					</paragraph>
 					<paragraph>
 						<image>

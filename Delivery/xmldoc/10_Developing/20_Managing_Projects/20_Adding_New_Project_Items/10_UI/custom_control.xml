@@ -3,15 +3,9 @@
 	<paragraph>
 					<paragraph>  The Custom Control item adds a class for creating a user-drawn Windows Form control.This item when added will open in the  Visual Studio .NET Windows Form designer. </paragraph>
 					<paragraph>Please ensure that the 
-						<code>
-							<class_name>Accessibility</class_name>
-						</code>, 
-						<code>
-							<class_name>System.Windows.Forms</class_name>
-						</code> and  
-						<code>
-							<class_name>System.Drawing</class_name>
-						</code> assemblies have been added to your project before adding a  Windows Form item to your project.
+						<class_name>Accessibility</class_name>, 
+						<class_name>System.Windows.Forms</class_name> and  
+						<class_name>System.Drawing</class_name> assemblies have been added to your project before adding a  Windows Form item to your project.
 					</paragraph>
 					<seealso>
 						<bold>See Also</bold>

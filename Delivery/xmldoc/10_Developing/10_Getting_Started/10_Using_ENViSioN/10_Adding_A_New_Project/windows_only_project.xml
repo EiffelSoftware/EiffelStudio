@@ -59,19 +59,13 @@
 		</heading>
 		<list ordered="false">
 			<item>
-				<code>
-					<class_name>ROOT_CLASS</class_name>
-				</code>: The root class of the system which inherits WEL_APPLICATION. There is a  single feature, `main_window' which returns the main window of the system  (class MAIN_WINDOW) which will be displayed when the application is launched.
+				<class_name>ROOT_CLASS</class_name>: The root class of the system which inherits WEL_APPLICATION. There is a  single feature, `main_window' which returns the main window of the system  (class MAIN_WINDOW) which will be displayed when the application is launched.
 			</item>
 			<item>
-				<code>
-					<class_name>MAIN_WINDOW</class_name>
-				</code>: The main window of the system.
+				<class_name>MAIN_WINDOW</class_name>: The main window of the system.
 			</item>
 			<item>
-				<code>
-					<class_name>APPLICATION_IDS</class_name>
-				</code>: Contains application constants.
+				<class_name>APPLICATION_IDS</class_name>: Contains application constants.
 			</item>
 		</list>
 		<heading>

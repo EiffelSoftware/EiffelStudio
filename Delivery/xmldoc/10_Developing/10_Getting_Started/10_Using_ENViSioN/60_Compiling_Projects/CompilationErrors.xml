@@ -9,9 +9,7 @@
 			</image>
 		</paragraph>
 		<paragraph>  In this case, the compilation failed in class 
-			<code>
-				<class_name>ROOT_CLASS</class_name>
-			</code> during degree 3. This  however, does not provide enough explicit information to quickly fix the  problem. For more information regarding the error, you need to view the Task  List, as demonstrated below:
+			<class_name>ROOT_CLASS</class_name> during degree 3. This  however, does not provide enough explicit information to quickly fix the  problem. For more information regarding the error, you need to view the Task  List, as demonstrated below:
 		</paragraph>
 		<paragraph>
 			<image>

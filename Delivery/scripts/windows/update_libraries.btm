@@ -23,6 +23,8 @@ remtrace gobo
 copy %INSTALL_DIR\free_add_ons\gobo\gobo_33_win.tgz .
 tar xvfz gobo_33_win.tgz
 fullrf gobo_33_win.tgz
+remtrace graph
+exprt -r %DEFAULT_CVS_TAG -d event "Src/library/graph"
 remtrace helpers
 exprt -r %DEFAULT_CVS_TAG -d helpers "Src/library/helpers"
 remtrace keygen

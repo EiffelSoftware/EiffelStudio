@@ -181,6 +181,13 @@ feature {EV_SIZEABLE_IMP} -- Implementation
 			parent_ask_resize (a_width, a_height)
 		end
 
+	split_move_and_size (a_x, a_y, a_width, a_height: INTEGER) is
+			-- Move and resize the widget when the parent is a split area.
+		do
+			child_cell.move (a_x, a_y)
+			split_ask_resize (a_width, a_height)
+		end
+
 	parent_ask_resize (a_width, a_height: INTEGER) is
 			-- When the parent asks the resize, it's not 
 			-- necessary to send him back the information
@@ -198,6 +205,31 @@ feature {EV_SIZEABLE_IMP} -- Implementation
 				move_and_resize (cc.x, (cc.height - minimum_height)//2 + cc.y, cc.width, minimum_height, True)
 			else
 				move_and_resize ((cc.width - minimum_width)//2 + cc.x, (cc.height - minimum_height)//2 + cc.y, minimum_width, minimum_height, True)
+			end
+		end
+
+	split_ask_resize (a_width, a_height: INTEGER) is
+			-- When the parent is a splitter, the children is
+			-- always resized.
+		local
+			cc: EV_CHILD_CELL_IMP
+			w: INTEGER
+			h: INTEGER
+		do
+			cc := child_cell
+			cc.resize (a_width, a_height)
+			if resize_type = 3 then
+				move_and_resize (cc.x, cc.y, a_width, a_height, True)
+			elseif resize_type = 2 then
+				w := minimum_width.min (a_width)
+				move_and_resize ((a_width - w)//2 + cc.x, cc.y, w, a_height, True)
+			elseif resize_type = 1 then
+				h := minimum_height.min (a_height)
+				move_and_resize (cc.x, (a_height - h)//2 + cc.y, a_width, h, True)
+			else
+				w := minimum_width.min (a_width)
+				h := minimum_height.min (a_height)
+				move_and_resize ((a_width - w)//2 + cc.x, (a_height - h)//2 + cc.y, w, h, True)
 			end
 		end
 

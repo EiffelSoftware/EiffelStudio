@@ -6,7 +6,7 @@ system
 	<PROJECT_NAME>
 
 root 
-	<TEST_APPLICATION> (root_cluster): "make_and_launch"
+	TEST_APPLICATION (root_cluster): "make_and_launch"
 
 default
 	assertion (require)

@@ -157,14 +157,6 @@ feature -- Basic operations
 		do
 			implementation.dialog_key_press_action (a_key)
 		end
-		
-feature {EV_DIALOG} -- Constants
-
-	Key_constants: EV_KEY_CONSTANTS is
-			-- Instance of `EV_KEY_CONSTANTS'.
-		once
-			create Result
-		end
 
 feature {EV_ANY_I} -- Implementation
 

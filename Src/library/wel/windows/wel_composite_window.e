@@ -627,7 +627,7 @@ feature {NONE} -- Implementation
 			on_notify (wparam, info)
 			control ?= info.window_from
 			if control /= Void and then control.exists then
-				control.process_notification (info.code)
+				control.process_notification_info (info)
 			end
 		end
 

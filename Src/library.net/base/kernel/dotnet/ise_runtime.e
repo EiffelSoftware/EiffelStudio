@@ -13,44 +13,44 @@ inherit
 
 feature -- Equality
 
-	frozen deep_equal (target, source: ANY): BOOLEAN is
+	frozen deep_equal (target, source: SYSTEM_OBJECT): BOOLEAN is
 			-- Copy `source' onto `target'.
 		external
-			"IL static signature (ISE.Runtime.EIFFEL_TYPE_INFO, ISE.Runtime.EIFFEL_TYPE_INFO): System.Boolean use ISE.Runtime.RUN_TIME"
+			"IL static signature (System.Object, System.Object): System.Boolean use ISE.Runtime.RUN_TIME"
 		alias
 			"deep_equal"
 		end
 
-	frozen standard_equal (target, source: ANY): BOOLEAN is
+	frozen standard_equal (target, source: SYSTEM_OBJECT): BOOLEAN is
 			-- Is `target' attached to an object of the same type
 			-- as `source', and field-by-field identical to it?
 		external
-			"IL static signature (ISE.Runtime.EIFFEL_TYPE_INFO, ISE.Runtime.EIFFEL_TYPE_INFO): System.Boolean use ISE.Runtime.RUN_TIME"
+			"IL static signature (System.Object, System.Object): System.Boolean use ISE.Runtime.RUN_TIME"
 		alias
 			"standard_equal"
 		end
 
 feature -- Duplication
 
-	frozen standard_copy (target, source: ANY) is
+	frozen standard_copy (target, source: SYSTEM_OBJECT) is
 			-- Copy `source' onto `target'.
 		external
-			"IL static signature (ISE.Runtime.EIFFEL_TYPE_INFO, ISE.Runtime.EIFFEL_TYPE_INFO) use ISE.Runtime.RUN_TIME"
+			"IL static signature (System.Object, System.Object) use ISE.Runtime.RUN_TIME"
 		alias
 			"standard_copy"
 		end
 
-	frozen standard_clone (o: ANY): SYSTEM_OBJECT is
+	frozen standard_clone (o: SYSTEM_OBJECT): SYSTEM_OBJECT is
 			-- Create a new instance of same type as `o'.
 		external
-			"IL static signature (ISE.Runtime.EIFFEL_TYPE_INFO): ISE.Runtime.EIFFEL_TYPE_INFO use ISE.Runtime.GENERIC_CONFORMANCE"
+			"IL static signature (System.Object): System.Object use ISE.Runtime.RUN_TIME"
 		alias
-			"create_like_object"
+			"standard_clone"
 		end
 
-	frozen deep_clone (o: ANY): SYSTEM_OBJECT is
+	frozen deep_clone (o: SYSTEM_OBJECT): SYSTEM_OBJECT is
 		external
-			"IL static signature (ISE.Runtime.EIFFEL_TYPE_INFO): ISE.Runtime.EIFFEL_TYPE_INFO use ISE.Runtime.RUN_TIME"
+			"IL static signature (System.Object): System.Object use ISE.Runtime.RUN_TIME"
 		alias
 			"deep_clone"
 		end
@@ -77,7 +77,7 @@ feature -- Externals
 			-- Generating type name of object `o'.
 			-- (type of which it is a direct instance)
 		external
-			"IL static signature (System.Object, System.Object): System.Boolean use ISE.Runtime.GENERIC_CONFORMANCE"
+			"IL static signature (System.Object, System.Object): System.Boolean use ISE.Runtime.RUN_TIME"
 		alias
 			"conforms_to"
 		end

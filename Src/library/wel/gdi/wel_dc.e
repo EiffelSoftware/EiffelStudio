@@ -915,6 +915,14 @@ feature -- Basic operations
 			cwin_select_clip_rgn (item, a_region.item)
 		end
 
+	remove_clip_region is
+			-- Remove the current clipping region
+		require
+			exists: exists
+		do
+			cwin_select_clip_rgn (item, Default_pointer)
+		end
+
 	text_out (x, y: INTEGER; string: STRING) is
 			-- Write `string' on `x' and `y' position
 		require

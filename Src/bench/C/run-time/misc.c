@@ -205,11 +205,11 @@ rt_public EIF_INTEGER eif_putenv (char *v, char *k)
 	appl_len = strlen (egc_system_name);
 	key_len = strlen (k);
 	if ((key = (char *) eif_calloc (appl_len + 46 + key_len, 1)) == NULL)
-		return (EIF_INTEGER) -1;
+		return eif_safe_putenv(v, k);
 
 	if ((lower_k = (char *) eif_calloc (key_len + 1, 1)) == NULL) {
 		eif_free (key);
-		return (EIF_INTEGER) -1;
+		return eif_safe_putenv(v, k);
 	}
 
 	strcpy (lower_k, k);
@@ -221,23 +221,23 @@ rt_public EIF_INTEGER eif_putenv (char *v, char *k)
 	if (RegCreateKeyEx (HKEY_CURRENT_USER, key, 0, "REG_SZ", REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hkey, &disp) != ERROR_SUCCESS) {
 		eif_free (key);
 		eif_free (lower_k);
-		return (EIF_INTEGER) -1;
+		return eif_safe_putenv(v, k);
 	}
 	if (RegSetValueEx (hkey, lower_k, 0, REG_SZ, v, strlen(v)+1) != ERROR_SUCCESS) {
 		eif_free (key);
 		eif_free (lower_k);
 		RegCloseKey (hkey);
-		return (EIF_INTEGER) -1;
+		return eif_safe_putenv(v, k);
 	}
 
 	eif_free (key);
 	eif_free (lower_k);
 	if ((disp = RegFlushKey (hkey)) != ERROR_SUCCESS)
-		return 0;
+		return eif_safe_putenv(v, k);
 	if ((disp = RegCloseKey (hkey)) != ERROR_SUCCESS)
-		return 0;;
-	return (EIF_INTEGER) 0;
+		return eif_safe_putenv(v, k);
 
+	return eif_safe_putenv (v, k);
 #else
 
 	return eif_safe_putenv (v, k);	/* Use a safe Eiffel putenv using environment variables */
@@ -281,11 +281,11 @@ rt_public char * eif_getenv (char * k)
 	appl_len = strlen (egc_system_name);
 	key_len = strlen (k);
 	if ((key = (char *) eif_calloc (appl_len + 46 +key_len, 1)) == NULL)
-		return (EIF_OBJECT) 0;
+		return getenv(k);
 
 	if ((lower_k = (char *) eif_calloc (key_len+1, 1)) == NULL) {
 		eif_free (key);
-		return (EIF_OBJECT) 0;
+		return getenv(k);
 	}
 
 	strcpy (lower_k, k);
@@ -297,7 +297,7 @@ rt_public char * eif_getenv (char * k)
 	if (RegOpenKeyEx (HKEY_CURRENT_USER, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS) {
 		eif_free (key);
 		eif_free (lower_k);
-		return (EIF_OBJECT) 0;
+		return getenv(k);
 	}
 
 	bsize = 1024;

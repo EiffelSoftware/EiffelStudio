@@ -15,7 +15,8 @@ class
 inherit
 	EV_ITEM
 		redefine
-			implementation
+			implementation,
+			parent
 		end
 
 	EV_TREE_ITEM_HOLDER
@@ -70,10 +71,8 @@ feature -- Access
 
 	parent: EV_TREE_ITEM_HOLDER is
 			-- Parent of the current item.
-		require
-			exists: not destroyed
 		do
-			Result := implementation.parent
+			Result ?= {EV_ITEM} Precursor
 		end
 
 feature -- Status report

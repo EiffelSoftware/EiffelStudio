@@ -197,36 +197,37 @@ feature -- Pngs
 						-- For quick retrieval.
 					pixmaps_by_name.put (Result, a_name)
 				else
+					update_warning_dialog_text (pixmap_file_name (a_name))
+					warning_dialog.show
 					Result := icon_delete_small @ 1
 				end
 			end
 		ensure
 			result_not_void: Result /= Void
 		end
+		
+		
 
 feature {NONE} -- Update
 
 	pixmap_file_content (fn: STRING): EV_PIXMAP is
 		local
 			retried: BOOLEAN
-			warning_dialog: EV_WARNING_DIALOG
+			file_name: FILE_NAME
+			file: RAW_FILE
 		do
 				-- Create the pixmap
 			create Result
 
-			if not retried then
+			file_name := pixmap_file_name (fn)
+			create file.make (file_name)
+			if file.exists then
 					-- load the file
 				Result.set_with_named_file (pixmap_file_name (fn))
 			else
-				create warning_dialog.make_with_text (
-					"Cannot read pixmap file:%N" + pixmap_file_name (fn) + ".%N%
-					%Please make sure the installation is not corrupted.")
-				warning_dialog.show
+				update_warning_dialog_text (pixmap_file_name (fn))
 				Result.set_size (16, 16) -- Default pixmap size
 			end
-		rescue
-			retried := True
-			retry
 		end
 
 	pixmaps_by_name: HASH_TABLE [EV_PIXMAP, STRING] is
@@ -327,5 +328,25 @@ feature {NONE} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 		end
+		
+	warning_dialog: EV_WARNING_DIALOG is
+			-- Dialog to be displayed, when a pixmap is
+			-- missing from the installation.
+		once
+			create Result.make_with_text ("Cannot read pixmap files:%NPlease make sure the installation is not corrupted.")
+			Result.show
+		end
+		
+	update_warning_dialog_text (new_text: STRING) is
+			-- Add `new_text' to text of warning dialog, one
+			-- line before the end.
+		local
+			new_line_index: INTEGER 
+		do
+			new_line_index := warning_dialog.text.last_index_of ('%N', warning_dialog.text.count)
+			warning_dialog.set_text (warning_dialog.text.substring (1, new_line_index - 1) + "%N" +
+				new_text + warning_dialog.text.substring (new_line_index, warning_dialog.text.count))
+		end
+		
 
 end -- Class GB_SHARED_PIXMAPS

@@ -76,6 +76,9 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
+	destroyed: BOOLEAN
+			-- Is object destroy? Yes, only if the user call it.
+
 	selected_button: STRING
 			-- Return the label of the selected button.
 			-- Can be any string in :
@@ -356,9 +359,6 @@ feature {NONE} -- Implementation
 
 	title: STRING
 			-- Title of the dialog box
-
-	destroyed: BOOLEAN
-			-- Is object destroy? Yes, only if the user call it.
 
 feature {NONE} -- Inapplicable
 

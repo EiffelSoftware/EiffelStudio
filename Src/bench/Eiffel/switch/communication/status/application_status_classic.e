@@ -37,7 +37,6 @@ feature {STOPPED_HDLR} -- Initialization
 		do
 			object_address := obj
 			reason := reas
-
 			if (reason /= Pg_new_breakpoint) then
 					-- Compute class type.
 				dynamic_class := Eiffel_system.class_of_dynamic_id (dt)
@@ -71,10 +70,9 @@ feature {STOPPED_HDLR} -- Initialization
 				set_is_stopped (False)
 				cont_request.send_rqst_3 (Rqst_resume, Resume_cont, Application.interrupt_number, application.critical_stack_depth)
 			end
-
 		ensure
-			valid_break_index: break_index > 0
-			valid_efeature: e_feature /= Void
+			valid_break_index: (break_index = 0 implies (reason = Pg_new_breakpoint or reason = Pg_raise)) or (break_index > 0)
+			valid_efeature: e_feature = Void implies (reason = Pg_new_breakpoint)
 		end
 
 feature {NONE} -- CallStack Impl

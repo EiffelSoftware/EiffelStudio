@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			current_execution_stack_number := 1
 			critical_stack_depth := -1
 		ensure
-			displayed_string_size: displayed_string_size = 50
+			displayed_string_size: displayed_string_size = default_displayed_string_size
 			current_execution_stack_number_is_one: current_execution_stack_number = 1
 		end
 		

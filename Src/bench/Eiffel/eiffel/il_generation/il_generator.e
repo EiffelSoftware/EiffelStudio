@@ -183,10 +183,8 @@ feature -- Generation
 			-- copy configuration file to load local assemblies.
 		local
 			l_assembly: ASSEMBLY_I
-			l_assembly_path: STRING
 			l_source, l_target: RAW_FILE
 			l_source_name, l_target_name: FILE_NAME
-			l_pos: INTEGER
 			l_file_name: STRING
 			l_has_local, retried: BOOLEAN
 			l_precomp: REMOTE_PROJECT_DIRECTORY
@@ -201,41 +199,16 @@ feature -- Generation
 					l_assembly ?= Universe.clusters.item
 					if l_assembly /= Void and then l_assembly.is_local then
 						l_has_local := True
-						l_assembly_path := l_assembly.assembly_path;
-						create_local_assemblies_directory
-						l_pos := l_assembly_path.last_index_of (
-							Platform_constants.Directory_separator, l_assembly_path.count)
-							
-						create l_source.make (l_assembly_path)
-						if System.in_final_mode then
-							create l_target_name.make_from_string (Final_bin_generation_path)
-						else
-							create l_target_name.make_from_string (Workbench_bin_generation_path)
-						end
-						if l_pos > 0 then
-							l_target_name.set_file_name (l_assembly_path.substring (l_pos,
-								l_assembly_path.count))
-						else
-							l_target_name.set_file_name (l_assembly_path)
-						end
-						create l_target.make (l_target_name)
-						
-							-- Only copy the file if it is not already there or if the original
-							-- file is more recent.
-						if not l_target.exists or else l_target.date < l_source.date then
-							l_source.open_read
-							l_target.open_write
-							l_source.copy_to (l_target)
-							l_source.close
-							l_target.close
-							l_target.set_date (l_source.date)
-						end
+						copy_to_local (l_assembly.assembly_path)
 					end
 					Universe.clusters.forth
 				end
 
 					-- Copy precompiled assemblies.
-				if Workbench.Precompilation_directories /= Void then
+				if
+					Workbench.Precompilation_directories /= Void and then
+					not Workbench.Precompilation_directories.is_empty
+				then
 					from
 						Workbench.Precompilation_directories.start
 						create_local_assemblies_directory
@@ -244,35 +217,11 @@ feature -- Generation
 						Workbench.Precompilation_directories.after
 					loop
 						l_precomp := Workbench.Precompilation_directories.item_for_iteration
-						l_assembly_path := l_precomp.assembly_driver
+							-- Copy assembly file
+							-- Copy associated libXXX.dll file if any.
+						copy_to_local (l_precomp.assembly_driver)
+						copy_to_local (l_precomp.assembly_helper_driver)
 
-						l_pos := l_assembly_path.last_index_of (
-							Platform_constants.Directory_separator, l_assembly_path.count)
-							
-						create l_source.make (l_assembly_path)
-						if System.in_final_mode then
-							create l_target_name.make_from_string (Final_bin_generation_path)
-						else
-							create l_target_name.make_from_string (Workbench_bin_generation_path)
-						end
-						if l_pos > 0 then
-							l_target_name.set_file_name (l_assembly_path.substring (l_pos,
-								l_assembly_path.count))
-						else
-							l_target_name.set_file_name (l_assembly_path)
-						end
-						create l_target.make (l_target_name)
-						
-							-- Only copy the file if it is not already there or if the original
-							-- file is more recent.
-						if not l_target.exists or else l_target.date < l_source.date then
-							l_source.open_read
-							l_target.open_write
-							l_source.copy_to (l_target)
-							l_source.close
-							l_target.close
-							l_target.set_date (l_source.date)
-						end
 						Workbench.Precompilation_directories.forth
 					end
 				end	
@@ -283,7 +232,7 @@ feature -- Generation
 						-- where `xxx' is either `exe' or `dll'.
 					l_file_name := System.name + "." + System.msil_generation_type + ".config"
 					
-					l_source_name := (create {EIFFEL_ENV}).Generation_templates_path
+					l_source_name := clone ((create {EIFFEL_ENV}).Generation_templates_path)
 					l_source_name.set_file_name ("assembly_config.xml")
 		
 					if System.in_final_mode then
@@ -624,6 +573,53 @@ feature {NONE} -- Sort
 		ensure
 			Result_not_void: Result /= Void
 			-- classes_sorted: Result.is_topologically_sorted
+		end
+
+feature {NONE} -- File copying
+
+	copy_to_local (a_source: STRING) is
+			-- Copy `a_source' into `Assemblies' directory.
+		require
+			a_source_not_void: a_source /= Void
+			a_source_not_empty: not a_source.is_empty
+		local
+			l_path: STRING
+			l_source, l_target: RAW_FILE
+			l_target_name: FILE_NAME
+			l_pos: INTEGER
+		do
+			create_local_assemblies_directory
+			l_path := a_source
+
+			l_pos := l_path.last_index_of (
+				Platform_constants.Directory_separator, l_path.count)
+				
+			create l_source.make (l_path)
+			if System.in_final_mode then
+				create l_target_name.make_from_string (Final_bin_generation_path)
+			else
+				create l_target_name.make_from_string (Workbench_bin_generation_path)
+			end
+
+			if l_pos > 0 then
+				l_target_name.set_file_name (l_path.substring (l_pos,
+					l_path.count))
+			else
+				l_target_name.set_file_name (l_path)
+			end
+	
+			create l_target.make (l_target_name)
+			
+				-- Only copy the file if it is not already there or if the original
+				-- file is more recent.
+			if not l_target.exists or else l_target.date < l_source.date then
+				l_source.open_read
+				l_target.open_write
+				l_source.copy_to (l_target)
+				l_source.close
+				l_target.close
+				l_target.set_date (l_source.date)
+			end
 		end
 
 feature {NONE} -- Progression

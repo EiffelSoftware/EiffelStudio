@@ -117,6 +117,18 @@ feature {NONE, CONTEXT}
 			tree.display (data);
 			context_catalog.update_name_in_editors (Current);
 		end;
+
+feature
+
+	select_tree_element_if_parent_selected is
+		do
+			if parent /= Void and then
+				parent.tree_element.selected and then
+				not tree_element.selected
+			then
+				tree_element.select_figure
+			end
+		end;
 	
 feature -- Namable
 
@@ -770,6 +782,7 @@ feature -- Background color
 	set_bg_color_name (a_color_name: STRING) is
 		local
 			a_color: COLOR;
+			bg_pix: PIXMAP
 		do
 			if a_color_name = Void or else a_color_name.empty then
 				bg_color_name := Void
@@ -788,7 +801,9 @@ feature -- Background color
 			end;
 			if a_color /= Void then
 				if previous_bg_color = Void then
+					bg_pix := widget.background_pixmap;
 					widget.set_background_color (a_color);
+					widget.set_background_pixmap (bg_pix);
 				else
 					previous_bg_color := a_color
 				end;
@@ -1084,6 +1099,9 @@ feature
 				set_grouped (False)
 			end;
 			tree.cut (tree_element);
+			if tree_element.selected then
+				tree_element.deselect
+			end;
 			context_catalog.clear_editors (Current);
 			widget.set_managed (False);
 		ensure
@@ -1122,6 +1140,12 @@ feature
 				link_to_parent;
 			end;
 			tree.append (tree_element);
+			if parent /= Void and then
+				parent.tree_element.selected and then
+				not tree_element.selected
+			then
+				tree_element.select_figure
+			end;
 			if not widget.managed then
 				widget.set_managed (True);
 			end;

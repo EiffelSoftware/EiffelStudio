@@ -1,17 +1,28 @@
 class SHARED_BENCH_LICENSES
 
 inherit
-	SHARED_LICENSE
-		redefine
-			new_license,
-			lic_die
-		end
-
 	SHARED_WORKBENCH
 
 	SHARED_ERROR_HANDLER
 
 	COMPILER_EXPORTER
+
+	EXCEPTIONS
+		rename
+			raise as raise_exception
+		end
+
+feature
+
+	license: LICENSE is
+		once
+			Result := new_license
+		end;
+
+	discard_license is
+		do
+			license.discard
+		end
 
 feature {NONE}
 

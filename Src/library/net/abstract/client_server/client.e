@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class CLIENT
+deferred class
+
+	CLIENT
 
 inherit
 
@@ -17,20 +19,20 @@ inherit
 
 feature -- Access
 
-	in_out: SOCKET
-			-- Receive and send sockets.
+	in_out: SOCKET;
+			-- Receive and send socket.
 
-	received : STORABLE
+	received : STORABLE;
 			-- message received on `in'
 
 	cleanup is
 		deferred
-		end
+		end;
 
 	send (msg : STORABLE) is
 		do
 			msg.general_store (in_out)
-		end
+		end;
 
 	receive is
 		do

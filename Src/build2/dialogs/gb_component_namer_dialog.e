@@ -118,14 +118,14 @@ feature {NONE} -- Implementation
 				temp_string := name_field.text
 				temp_string.to_lower
 				if all_existing_names.has (temp_string) then
-					create warning.make_with_text ("'" + name_field.text + "'" + invalid_message)--Component_identical_name_warning)
+					create warning.make_with_text ("'" + name_field.text + "'" + invalid_message)
 					warning.show_modal_to_window (Current)
 				else
 					hide
 					name := name_field.text
 				end
 			else
-				create warning.make_with_text ("'" + name_field.text + "'" + invalid_message)--Component_invalid_name_warning)
+				create warning.make_with_text ("'" + name_field.text + "'" + invalid_message)
 				warning.show_modal_to_window (Current)
 			end
 		end

@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 					
 					other_cl_type_i ?= other_type
 					Result := Result and then deep_equal (cl_type_i.class_id, other_cl_type_i.class_id)
-					Result := Result and then (cl_type_i.is_true_expanded = other_cl_type_i.is_true_expanded)
+					Result := Result and then (cl_type_i.is_expanded = other_cl_type_i.is_expanded)
 					Result := Result and then (cl_type_i.is_separate = other_cl_type_i.is_separate)
 
 					gen_type_i ?= first_type

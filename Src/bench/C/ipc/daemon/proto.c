@@ -28,7 +28,7 @@
 #include <stdlib.h>
 
 #define OTHER(x)	\
-	((x) == readfd(d_data.d_cs) ? d_data.d_as : d_data.d_cs)
+	((x) == readfd(daemon_data.d_cs) ? daemon_data.d_as : daemon_data.d_cs)
 
 rt_public void drqsthandle(int s);			/* General request processor */
 rt_public void send_packet(int s, Request *dans);			/* Send an asnwer to client */
@@ -113,9 +113,9 @@ rt_private void dprocess_request(int s, Request *rqst)
 		break;
 	case APP_INTERRUPT:		/* Application wondering if it has to stop */
 		if (interrupted)
-			send_info(writefd(d_data.d_as), INTERRUPT_OK);
+			send_info(writefd(daemon_data.d_as), INTERRUPT_OK);
 		else
-			send_info(writefd(d_data.d_as), INTERRUPT_NO);
+			send_info(writefd(daemon_data.d_as), INTERRUPT_NO);
 		interrupted = FALSE;
 		break;
 	case RESUME:			/* Debugger asking to resume application */
@@ -203,7 +203,7 @@ rt_public void send_packet(int s, Request *dans)
 		add_log(1, "SYSERR send: %m (%e)");
 		add_log(2, "ERROR while sending answer %d", dans->rq_type);
 #endif
-		if (s == writefd(d_data.d_cs))	/* Talking to the workbench? */
+		if (s == writefd(daemon_data.d_cs))	/* Talking to the workbench? */
 			dexit(1);					/* Can't allow this stream to break */
 		(void) rem_input(readfd(sp));	/* Stop listening to that channel */
 	}
@@ -447,8 +447,8 @@ rt_private void start_app(int s)
 #endif
 	cp = spawn_child(cmd, &pid);			/* Start up children */
 	if (cp != (STREAM *) 0) {
-		d_data.d_app = (int) pid;			/* Record its pid */
-		d_data.d_as = cp;					/* Set-up stream to talk to child */
+		daemon_data.d_app = (int) pid;			/* Record its pid */
+		daemon_data.d_as = cp;					/* Set-up stream to talk to child */
 		if (-1 == add_input(readfd(cp), drqsthandle)) {
 #ifdef USE_ADD_LOG
 			add_log(4, "add_input: %s (%s)", s_strerror(), s_strname());
@@ -473,8 +473,8 @@ rt_private void kill_app (void)
 {
 	/* Kill the application brutally */
 
-	if (d_data.d_app != 0)		/* Check the application is still running */
-		kill((Pid_t) d_data.d_app, SIGKILL);
+	if (daemon_data.d_app != 0)		/* Check the application is still running */
+		kill((Pid_t) daemon_data.d_app, SIGKILL);
 }
 
 rt_public void dead_app(void)
@@ -488,7 +488,7 @@ rt_public void dead_app(void)
 	Pid_t child_pid;				/* pid of the dead application */
 	int status;						/* Exit status of the application */
 	Request rqst;					/* Request to send */
-	int s = writefd(d_data.d_cs);	/* "socket" to contact ewb */
+	int s = writefd(daemon_data.d_cs);	/* "socket" to contact ewb */
 
 #ifdef USE_ADD_LOG
 	add_log(12, "app is dead");
@@ -501,7 +501,7 @@ rt_public void dead_app(void)
 	 * of `waitpid' to be suspended if the child process is still 
 	 * running (just in case!)).
 	 */
-	child_pid = waitpid((Pid_t) d_data.d_app, &status, WNOHANG);
+	child_pid = waitpid((Pid_t) daemon_data.d_app, &status, WNOHANG);
 
 	rqst.rq_type = DEAD;			/* Application is dead */
 	send_packet(s, &rqst);			/* Notify workbench */

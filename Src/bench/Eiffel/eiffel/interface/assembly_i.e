@@ -33,6 +33,10 @@ feature {NONE} -- Initialization
 				-- Initialize assembly info.
 			cluster_name := a.cluster_name
 			assembly_name := a.assembly_name
+			prefix_name := a.prefix_name
+			if prefix_name /= Void then
+				prefix_name := prefix_name.as_lower
+			end
 			version := a.version
 			culture := a.culture
 			public_key_token := a.public_key_token
@@ -40,6 +44,9 @@ feature {NONE} -- Initialization
 			is_recursive := True
 			hide_implementation := True
 			
+				-- Add it to top cluster list of system.
+			Eiffel_system.add_sub_cluster (Current)
+
 				-- Initialize location of XML files representing classes
 				-- of current assembly.
 			create l_env
@@ -70,6 +77,7 @@ feature -- Comparison
 			other_not_void: other /= Void
 		do
 			Result := assembly_name.is_equal (other.assembly_name) and then
+				equal (prefix_name, other.prefix_name) and then
 				equal (version, other.version) and then
 				equal (culture, other.culture) and then
 				equal (public_key_token, other.public_key_token)
@@ -79,6 +87,9 @@ feature -- Access
 
 	assembly_name: STRING
 			-- Assembly name or file location of assembly if local assembly.
+
+	prefix_name: STRING
+			-- Prefix to all class names in current assembly.
 
 	version, culture, public_key_token: STRING
 			-- Specification of current assembly.
@@ -148,6 +159,9 @@ feature -- Initialization
 				l_class_name := l_types.eiffel_names.item (i)
 				if l_class_name /= Void then
 					l_class_name := l_class_name.as_lower
+					if prefix_name /= Void then
+						l_class_name.prepend (prefix_name)
+					end
 					l_external_name := l_types.dotnet_names.item (i)
 					create l_location.make_from_string (clone (path))
 					l_location.extend (classes_directory)

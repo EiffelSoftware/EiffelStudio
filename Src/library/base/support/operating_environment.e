@@ -14,6 +14,7 @@ feature
 
 	Directory_separator: CHARACTER is
 			-- Character used to separate subdirectories in a path name on this platform.
+			--| To build portable path names, use PATH_NAME and its descendants.
 		once
 			Result := c_dir_separator
 		end

@@ -53,7 +53,7 @@ feature -- Access
 
 	flags: INTEGER
 			-- Argument flags
-			-- See class WIZARD_PARAM_FLAGS for values
+			-- See class ECOM_PARAM_FLAGS for values
 
 	description: STRING is
 			-- Type description

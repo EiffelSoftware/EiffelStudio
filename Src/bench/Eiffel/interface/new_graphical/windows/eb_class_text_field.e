@@ -38,8 +38,8 @@ feature -- Initialization
 
 feature -- Properties
 
-	new_class_win: EB_NEW_CLASS_TOOL_DIALOG
-			-- New window for a class tool.
+	new_class_win: EB_CREATE_CLASS_DIALOG
+			-- New dialog for a class tool.
 
 	tool: EB_CLASS_TOOL
 			-- Class tool
@@ -70,9 +70,9 @@ feature {NONE} -- Execution
 			end
 		end
 
-feature {EB_CHOICE_WINDOW} -- Execution
+feature {EB_CHOICE_DIALOG} -- Execution
 
-	execute (arg: EV_ARGUMENT1 [EB_CHOICE_WINDOW]; data: EV_EVENT_DATA) is
+	execute (arg: EV_ARGUMENT1 [EB_CHOICE_DIALOG]; data: EV_EVENT_DATA) is
 			-- Execute the command.
 			--| The KMP commented lines are for the futur when the class
 			--| KMP_WILD will be fully functional
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 		require
 			class_list_not_void: class_list /= Void
 		local
-			choice: EB_CHOICE_WINDOW
+			choice: EB_CHOICE_DIALOG
 			class_names: ARRAYED_LIST [STRING]
 			class_i, last_class: CLASS_I
 			cname, last_name: STRING

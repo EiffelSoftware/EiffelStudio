@@ -18,4 +18,4 @@ call make_precompile_wizard.btm
 echo *****************************************************************
 echo *                    Compiling .NET Wizard                      *
 echo *****************************************************************
-call make_dotnet_wizard
+call make_dotnet_wizard.btm

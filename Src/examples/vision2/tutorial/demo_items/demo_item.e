@@ -5,8 +5,8 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class
-	DEMO_ITEM
+class
+	DEMO_ITEM [G -> DEMO_WINDOW create make end]
 
 inherit
 	EV_TREE_ITEM
@@ -16,87 +16,119 @@ inherit
 
 	FILE_PATHS
 
+creation
+	make_with_title
+
 feature {NONE} -- Initialization
 
-	make_with_title (par:EV_TREE_ITEM_HOLDER; txt: STRING) is
+	make_with_title (par:EV_TREE_ITEM_HOLDER; classs, example: STRING) is
 			-- Create the item and the demo that
 			-- goes with it.
 		local
 			cmd: EV_ROUTINE_COMMAND
-			type: EV_PND_TYPE
 		do
-			make_with_text (par, txt)
+			make_with_text (par, classs)
 			!! cmd.make (~activate)
 			add_select_command (cmd, Void)
-			activate_pick_and_drop (Void, Void)
-			create type.make
-			set_data_type (type)
-			set_transported_data ("Bonjour")
+			class_name := classs
+			example_name := example
 		end
 
 	create_demo is
 			-- Create the demo_window.
-		deferred
+		do
+			if demo_window = Void then
+				create demo_window.make (demo_page)
+			end
 		end
 
 feature -- Access
 
+	demo_window: G
+		-- Demo window associated to the item
 
-	
-	read_text (path: STRING) : STRING is
-			-- reads text information from file for use in text area
+	action_button: EV_BUTTON is
+			-- An action button to display he action window.
 		local
-			
-			file: PLAIN_TEXT_FILE
-		do
-			!!file.make(path)
-			file.open_read
-			file.start
-			file.readstream(file.count)
-			result:=file.laststring
+			cmd: EV_ROUTINE_COMMAND
+		once
+			create Result.make_with_text (Void, "Actions")
+			create cmd.make (~action_activate)
+			Result.add_click_command (cmd, Void)
 		end
-
+	
 	demo_page: EV_VERTICAL_BOX is
 			-- A HOLDER for the demo of the widget.
 		once
-			!! Result.make (Void)
+			create Result.make (Void)
 		end
 
 	text_page: EV_RICH_TEXT is
 			-- The documentation about the widget
+		local
+			color: EV_BASIC_COLORS
 		once
-			!! Result.make (Void)
+			create Result.make (Void)
+			Result.set_editable (False)
+			create color
+			Result.set_background_color (color.white)
 		end
 
 	class_page: EV_RICH_TEXT is
 			-- The class text of the widget (short_form)
+		local
+			color: EV_BASIC_COLORS
 		once
-			!! Result.make (Void)
+			create Result.make (Void)
+			Result.set_editable (False)
+			create color
+			Result.set_background_color (color.white)
 		end
 
 	example_page: EV_RICH_TEXT is
 			-- The class text of the current demo window
+		local
+			color: EV_BASIC_COLORS
 		once
-			!! Result.make (Void)
+			create Result.make (Void)
+			Result.set_editable (False)
+			create color
+			Result.set_background_color (color.white)
 		end
 
-	event_box: EV_LIST is
-			-- A list to display the events that occurs
-		once
-			!! Result.make (Void)
-		end
+--	event_box: EV_LIST is
+--			-- A list to display the events that occurs
+--		once
+--			!! Result.make (Void)
+--		end
 
-	current_demo: CELL [EV_WIDGET] is
+	current_demo: CELL [DEMO_WINDOW] is
 			-- Demo currently in action
 		once
 			!! Result.put (Void)
 		end
 
-	demo_window: EV_WIDGET
-		-- Demo window associated to the item
+feature -- Basic operation
 
-	control_window: CONTROL_WINDOW
-		-- Window to control the options of the widgets.
+	display_text (window: EV_TEXT; path: STRING) is
+			-- reads text information from file for use in text area
+		local
+			file: PLAIN_TEXT_FILE
+			warning: EV_WARNING_DIALOG
+			str: STRING
+		do
+			create file.make (path)
+			if not file.exists then
+				str := "Could not open file : "
+				str.append (path)
+				create warning.make_default (demo_page, "File not found", str)
+			else
+				file.open_read
+				file.start
+				file.readstream (file.count)
+				window.set_text(file.laststring)
+			end
+		end
 
 feature {DEMO_ITEM} -- Execution commands
 
@@ -105,35 +137,51 @@ feature {DEMO_ITEM} -- Execution commands
 			-- window and the options. The previous demo
 			-- get a Void parent
 		local
-			cur: EV_WIDGET
-
-			dem_win: DEMO_WINDOW
+			demo: DEMO_WINDOW
+			action_shown: BOOLEAN
 		do
 			-- First, we set the demo on the first page.
-			cur := current_demo.item
-
-			if cur /= Void then
-				cur.set_parent (Void)
-				dem_win ?= cur
---				dem_win.clear_notebook
-				dem_win.hide_action_window
+			demo := current_demo.item
+			if demo /= Void then
+				demo.set_parent (Void)
+				action_shown := demo.action_window_shown
+				if action_shown then
+--					dem_win.clear_notebook
+					demo.hide_action_window
+				end
 			end
+
+			-- Then, we set the new demo
 			if demo_window = Void then
 				create_demo
 			else
 				demo_window.set_parent (demo_page)
-
-				dem_win ?= demo_window
-				dem_win.show_action_window
-				
-
 			end
 			current_demo.put (demo_window)
-			example_page.set_text(clone(read_text(example_path)))
-			class_page.set_text(clone(read_text(class_path)))	
-			text_page.set_text(clone(read_text(docs_path)))
+
+			-- Finally, we set the button and the action
+			-- window depending on what is necessary.
+			if demo_window.has_action_window then
+				action_button.set_insensitive (False)
+				if action_shown then
+					demo_window.show_action_window
+				end
+			else
+				action_button.set_insensitive (True)
+			end
+
+			-- And we set the diverse documentations.
+			display_text (example_page, example_file)
+			display_text (class_page, class_file)
+			display_text (text_page, documentation_file)
 		end
  
+	action_activate (arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA) is
+				-- Activate feature of the button
+		do
+			current_demo.item.show_action_window
+		end
+
 end -- class DEMO_ITEM
 
 --|----------------------------------------------------------------

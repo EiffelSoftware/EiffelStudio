@@ -827,12 +827,7 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 				original_position := parent_object.layout_item.index_of (an_object.layout_item, 1)
 				an_object.unparent
 				
-					-- We must now remove `an_object' from `objects' as it will be replaced with
-					-- the new version. If we leave it there, then we will have two objects with the
-					-- same id. When we reset an object, the old object is never used again, it is completely
-					-- replaced with the new. This is not an undoable command, as it will always be silent to
-					-- the user.
-				objects.prune_all (an_object)
+				
 				
 				
 				create store
@@ -842,6 +837,15 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 				
 				store.output_attributes (an_object, element, create {GB_GENERATION_SETTINGS})
 					-- Generate an XML representation of `an_object' in `element'.
+					
+					-- We must now remove `an_object' from `objects' as it will be replaced with
+					-- the new version. If we leave it there, then we will have two objects with the
+					-- same id. When we reset an object, the old object is never used again, it is completely
+					-- replaced with the new. This is not an undoable command, as it will always be silent to
+					-- the user.
+					-- We do this after we generate using `output_attributes' as some widget types may
+					-- need the object contained within `objects'
+				objects.prune_all (an_object)
 					
 				new_object := load.retrieve_new_object (element, parent_object, original_position)
 					-- construct `new_object' from `element.

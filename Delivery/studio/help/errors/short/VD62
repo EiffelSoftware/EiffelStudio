@@ -1,0 +1,4 @@
+Lace error: Missing Eiffel representation of class specified in assembly.
+What to do: re-run the ISE Eiffel Metadata Consumer tool on consumed assembly
+   to regenerate missing files.
+

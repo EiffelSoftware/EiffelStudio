@@ -13,21 +13,10 @@ inherit
 	TEXT_FORMATTER
 		rename
 			process_text as old_process_text
-		redefine
-			process_filter_item, process_after_class,
-			process_class_name_text, process_comment_text,
-			process_operator_text, process_keyword_text,
-			process_symbol_text, process_quoted_text, process_new_line,
-			process_basic_text, process_indentation
 		end;
 	TEXT_FORMATTER
 		redefine
-			process_filter_item, process_after_class,
-			process_class_name_text, process_text,
-			process_comment_text, process_operator_text, 
-			process_keyword_text, process_symbol_text,
-			process_quoted_text, process_new_line,
-			process_basic_text, process_indentation
+			process_text
 		select
 			process_text
 		end;
@@ -92,6 +81,8 @@ feature -- Text processing
 		end;
 
 feature {NONE} -- Text processing
+
+	structured_text: STRUCTURED_TEXT;
 
 	process_symbol_text (text: SYMBOL_TEXT) is
 			-- Process symbol text.
@@ -374,6 +365,47 @@ feature {NONE} -- Text processing
 					i := i + 1
 				end
 			end
+		end;
+
+
+	process_cl_syntax (text: CL_SYNTAX_ITEM) is
+			-- Process class syntax text.
+		do
+		end;
+
+	process_ace_syntax (text: ACE_SYNTAX_ITEM) is
+			-- Process Ace syntax text.
+		do
+		end;
+
+	process_address_text (text: ADDRESS_TEXT) is
+			-- Process address text.
+		do
+		end;
+
+	process_padded is
+			-- Process padded item at start of non breakpoint line.
+		do
+		end;
+
+	process_feature_name_text (text: FEATURE_NAME_TEXT) is
+			-- Process feature name text `t'.
+		do
+		end;
+
+	process_breakpoint is
+			-- Process breakpoint.
+		do
+		end;
+
+	process_error_text (text: ERROR_TEXT) is
+			-- Process error text.
+		do
+		end;
+
+	process_before_class (text: BEFORE_CLASS) is
+			-- Process before class `t'.
+		do
 		end;
 
 invariant

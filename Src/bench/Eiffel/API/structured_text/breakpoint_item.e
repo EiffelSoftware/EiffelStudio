@@ -42,7 +42,7 @@ feature {TEXT_FORMATTER} -- Implementation
     append_to (text: TEXT_FORMATTER) is
             -- Append Current debug new line text to `text'.
         do
-			text.process_breakpoint (Current);
+			text.process_breakpoint;
         end
 
 end -- class BREAKPOINT_ITEM

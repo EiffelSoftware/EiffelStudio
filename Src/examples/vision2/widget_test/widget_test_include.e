@@ -70,11 +70,12 @@ feature {NONE} -- Implementation
 			tree_expand_test: TREE_EXPAND_TEST
 			tree_dynamic_test: TREE_DYNAMIC_TEST
 			tree_pixmap_test: TREE_PIXMAP_TEST
+			multi_column_list_basic_test: MULTI_COLUMN_LIST_BASIC_TEST
 			
 			
 			
 			--| FIXME remove
-			--table_testing_test: TABLE_TESTING_TEST
+			table_testing_test: TABLE_TESTING_TEST
 		do
 		end
 

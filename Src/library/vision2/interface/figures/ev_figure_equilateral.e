@@ -1,9 +1,10 @@
 indexing
 	description:
-		"EiffelVision2 Equilateral figure. Has a center and one%
-		% corner point. The rest of the corner points are calculated%
-		% through the number of sides."
+		"Figure that is equilateral (i.e. all its sides have the same size)%N%
+		%Defined by a center point and one corner point. The rest of the%N%
+		%corner points are calculated through the number of sides."
 	status: "See notice at end of class"
+	keywords: "figure, equilateral, hexagon, octagon"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -192,3 +193,38 @@ invariant
 	side_count_bigger_than_two: side_count > 2
 
 end -- class EV_FIGURE_EQUILATERAL
+
+--!-----------------------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.5  2000/04/26 15:56:34  brendel
+--| Added CVS Log.
+--| Added copyright notice.
+--| Improved description.
+--| Added keywords.
+--| Formatted for 80 columns.
+--| Added make_for_test.
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------
+

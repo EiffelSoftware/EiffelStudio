@@ -1,10 +1,10 @@
 indexing
 	description:
-		"EiffelVision2 pie slice figure. Represented by two points: %N%
-		%one is the center of the circle and one is the starting point %N%
-		%of the circle. Then there is the aperture, an angle specifying %N%
-		%the size of the slice."
+		"A figure that is a part of circle enclosed by two lines from its%N%
+		%center. Defined by a center point, one of the corner points and an%N%
+		%aperture."
 	status: "See notice at end of file"
+	keywords: "figure, slice, pizza, pie"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -57,8 +57,9 @@ feature -- Initialization
 			get_point_by_index (1).set_y (130)
 			get_point_by_index (2).set_x (90)
 			get_point_by_index (2).set_y (30)
-			set_foreground_color (create {EV_COLOR}.make_with_rgb (0.5, 1.0, 0.5))
-			set_foreground_color (create {EV_COLOR}.make_with_rgb (0.0, 0.0, 0.0))
+			set_foreground_color (create {EV_COLOR}.make_with_rgb (
+				0.5, 1.0, 0.5))
+			set_fill_color (create {EV_COLOR}.make_with_rgb (0.0, 0.0, 0.0))
 			set_line_width (1)
 		end
 
@@ -133,3 +134,37 @@ invariant
 	aperture_within_bounds: aperture >= -2 * Pi and then aperture <= 2 * Pi
 
 end -- class EV_FIGURE_PIE_SLICE
+
+--!-----------------------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.5  2000/04/26 15:56:34  brendel
+--| Added CVS Log.
+--| Added copyright notice.
+--| Improved description.
+--| Added keywords.
+--| Formatted for 80 columns.
+--| Added make_for_test.
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

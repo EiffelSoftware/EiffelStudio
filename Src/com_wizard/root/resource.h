@@ -14,6 +14,10 @@
 #define Wizard_Final_Dialog             104
 #define Wizard_Output_Dialog            105
 #define Toolbar_Bitmap                  113
+#define Wizard1_Bitmap                  114
+#define Wizard2_Bitmap                  115
+#define Wizard3_Bitmap                  116
+#define Wizard4_Bitmap                  117
 #define Wizard_Bitmap                   1006
 #define Definition_File_Edit            1007
 #define IDL_Static                      1008

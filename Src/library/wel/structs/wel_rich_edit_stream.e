@@ -22,20 +22,11 @@ feature {NONE} -- Initialization
 			-- Make the structure
 		do
 			structure_make
-			set_cookie (cwel_pointer_to_integer (ceif_adopt (Current)))
+			record_current_in_cookie
 			set_error (0)
 		end
 
 feature -- Access
-
-	cookie: INTEGER is
-			-- Application-defined value that is passed to the
-			-- callback function.
-			--| Contains Current, so the C callback function knows
-			--| which object to call.
-		do
-			Result := cwel_editstream_get_dwcookie (item)
-		end
 
 	error: INTEGER is
 			-- Error encountered while streaming. If there was no
@@ -49,16 +40,6 @@ feature -- Access
 			-- the read or write operation was successful.
 
 feature -- Element change
-
-	set_cookie (a_cookie: INTEGER) is
-			-- Set `cookie' with `a_cookie'.
-			--| Contains Current, so the C callback function knows
-			--| which object to call.
-		do
-			cwel_editstream_set_dwcookie (item, a_cookie)
-		ensure
-			cookie_set: cookie = a_cookie
-		end
 
 	set_error (an_error: INTEGER) is
 			-- Set `error' with `an_error'.
@@ -86,8 +67,7 @@ feature -- Basic operations
 			-- In order to avoid a memory leak when using a WEL_RICH_EDIT_STREAM
 			-- descendant, this need to be called.
 		do
-			-- cwel_release_editstream_object
-			ceif_wean (cookie)
+			free_current_from_cookie
 		end
 
 feature -- Measurement
@@ -96,6 +76,66 @@ feature -- Measurement
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_editstream
+		end
+
+feature {NONE} -- Cookie access and settings
+
+	record_current_in_cookie is
+			-- Record protected reference on Current object in `cookie'
+		require
+			valid_cookie: cookie = default_pointer
+		local
+			ptr: POINTER
+		do
+			ptr := c_protect_cookie (Current)
+			set_cookie (ptr)
+		ensure
+			cookie_set: cookie /= default_pointer
+		end
+
+	free_current_from_cookie is
+			-- Free protected reference on Current
+		require
+			valid_cookie: cookie /= default_pointer
+		local
+			a: ANY
+		do
+			a := c_free_cookie (cookie)
+			set_cookie (default_pointer)
+		ensure
+			cookie_set: cookie = default_pointer
+		end
+
+	cookie: POINTER is
+			-- Current protected object passed to callback function.
+		do
+			Result := cwel_integer_to_pointer (cwel_editstream_get_dwcookie (item))
+		end
+
+	set_cookie (a_cookie: POINTER) is
+			-- Set `cookie' with `a_cookie'.
+			--| Contains Current, so the C callback function knows
+			--| which object to call.
+		do
+			cwel_editstream_set_dwcookie (item, cwel_pointer_to_integer (a_cookie))
+		ensure
+			cookie_set: cookie = a_cookie
+		end
+
+	c_protect_cookie (a: ANY): POINTER is
+			-- Protect `a'.
+		external
+			"C [macro %"estream.h%"] (EIF_REFERENCE): EIF_OBJECT"
+		alias
+			"eif_adopt"
+		end
+
+	c_free_cookie (ptr: POINTER): ANY is
+			-- Remove protection on `ptr'.
+		external
+			"C [macro %"estream.h%"] (EIF_OBJECT): EIF_REFERENCE"
+		alias
+			"eif_wean"
 		end
 
 feature {NONE} -- Removal
@@ -134,22 +174,6 @@ feature {NONE} -- Externals
 	cwel_editstream_get_dwerror (ptr: POINTER): INTEGER is
 		external
 			"C [macro %"estream.h%"]"
-		end
-
-	ceif_adopt (object: ANY): POINTER is
-			-- Eiffel macro to adopt an object
-		external
-			"C [macro <eif_eiffel.h>] (EIF_OBJ): EIF_POINTER"
-		alias
-			"eif_adopt"
-		end
-
-	ceif_wean (object: ANY) is
-			-- Eiffel macro to wean an object
-		external
-			"C [macro <eif_eiffel.h>] (EIF_OBJ)"
-		alias
-			"eif_wean"
 		end
 
 end -- class WEL_RICH_EDIT_STREAM

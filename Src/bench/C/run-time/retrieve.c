@@ -596,6 +596,7 @@ rt_private void set_mismatch_information (
 rt_private void correct_object_mismatch (
 		EIF_REFERENCE object, EIF_REFERENCE values, type_table *conversions)
 {
+	EIF_GET_CONTEXT
 	EIF_BOOLEAN asserting;
 	EIF_BOOLEAN collecting;
 

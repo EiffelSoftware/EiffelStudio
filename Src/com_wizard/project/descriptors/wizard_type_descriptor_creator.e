@@ -27,6 +27,20 @@ inherit
 
 feature -- Basic Operations
 
+	add_c_type is
+			-- Add `c_type_name' to system's list.
+			-- Modify it to avoid name clashes in system.
+		do
+			from
+			until
+				not system_descriptor.c_types.has (name) and
+				not is_forbidden_c_word (name)
+			loop
+				name.append (One)
+			end
+			system_descriptor.add_c_type (name)
+		end
+
 	add_type_lib_description (a_type_lib: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is
 			-- Add Type Library description to type descriptor.
 		require

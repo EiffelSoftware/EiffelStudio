@@ -54,4 +54,10 @@ feature {NONE} -- Externals
 			"C"
 		end;
 
-end
+    yacc_position: INTEGER is
+			-- Recorded position of Current AST
+        external
+            "C [macro %"yacc.h%"]: EIF_INTEGER"
+        end
+
+end -- class AST_YACC

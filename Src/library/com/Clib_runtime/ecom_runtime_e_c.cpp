@@ -3043,7 +3043,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_bstr (EIF_REFERENCE a_ref)
 		an_element = ccom_ec_bstr ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
 				(eif_access (eif_safe_array), eif_access (eif_index)));
 
-		hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
+		hr = SafeArrayPutElement(c_safe_array, c_index, an_element);
 		if (FAILED (hr))
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));

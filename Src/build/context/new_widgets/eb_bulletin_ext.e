@@ -9,15 +9,19 @@ inherit
 			make_unmanaged as eb_bull_create,
 			set_width as bull_set_width,
 			set_height as bull_set_height,
-			set_size as bull_set_size
+			set_size as bull_set_size,
+			add_pointer_motion_action as bull_add_pointer_motion_action,
+			set_action as bull_set_action
 		end;
 	EB_BULLETIN
 		rename
 			make_unmanaged as eb_bull_create
 		redefine
-			set_width, set_height, set_size
+			set_width, set_height, set_size,
+			add_pointer_motion_action, set_action
 		select
-			set_width, set_height, set_size
+			set_width, set_height, set_size,
+			add_pointer_motion_action, set_action
 		end
 
 creation
@@ -111,5 +115,29 @@ feature -- Setting sizes
 			sepv2.manage;
 			sepv1.manage;
 		end;
+
+feature -- Redefinition of callbacks
+
+	add_pointer_motion_action (a_command: COMMAND; argument: ANY) is
+		do
+			bull_add_pointer_motion_action (a_command, argument);
+			if seph1 /= Void then
+				seph1.add_pointer_motion_action (a_command, argument);
+				seph2.add_pointer_motion_action (a_command, argument);
+				sepv1.add_pointer_motion_action (a_command, argument);
+				sepv2.add_pointer_motion_action (a_command, argument);
+			end
+		end
+
+	set_action (action: STRING; a_command: COMMAND; argument: ANY) is
+		do
+			bull_set_action (action, a_command, argument);
+			if seph1 /= Void then
+				seph1.set_action (action, a_command, argument);
+				seph2.set_action (action, a_command, argument);
+				sepv1.set_action (action, a_command, argument);
+				sepv2.set_action (action, a_command, argument);
+			end
+		end
 
 end

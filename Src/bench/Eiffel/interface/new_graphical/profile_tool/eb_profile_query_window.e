@@ -140,7 +140,6 @@ feature {NONE} -- Initialization
 
 				--| Result display
 			create editor_window.make (Void)
-			editor_window.set_tabulation_size (12)
 			editor_window.disable_editable
 			text_window := editor_window
 			create text_frame

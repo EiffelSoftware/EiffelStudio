@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_menu_item_new)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, False)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, -1, 8)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, -1, 4)
 		end
 
 	initialize is

@@ -608,7 +608,7 @@ feature -- IL Generation
 		deferred
 		end
 
-	generate_feature_il (feat, orig: FEATURE_I; a_type_id, code_feature_id: INTEGER) is
+	generate_feature_il (feat: FEATURE_I; a_type_id, code_feature_id: INTEGER) is
 			-- Specifies for which feature `feat' of `feat.feature_id' written in class of
 			-- `a_type_id' IL code will be generated. If `a_type_id' is different from current
 			-- type id, it means that `a_feature_id' is simply a delegation to a call on

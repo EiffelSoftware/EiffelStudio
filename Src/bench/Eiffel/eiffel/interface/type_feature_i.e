@@ -37,7 +37,7 @@ inherit
 				set_origin_feature_id, set_feature_name_id,
 				instantiate, duplicate, new_rout_id
 		redefine
-			new_entry, is_type_feature
+			new_entry, is_type_feature, check_expanded
 		end
 	
 feature -- Access
@@ -60,6 +60,57 @@ feature -- Status report
 		do
 			l_formal ?= type
 			Result := l_formal /= Void
+		end
+
+feature -- Checking
+
+	check_expanded (class_c: CLASS_C) is
+			-- Check expanded validity rules
+		local
+			solved_type: TYPE_A
+			vtec1: VTEC1
+			vtec2: VTEC2
+			vlec: VLEC
+		do
+			if class_c.class_id = written_in then
+					-- Check validity of an expanded in a formal generic parameter.
+
+					-- `type' has been evaluated and therefore
+					-- the assignment attempt is valid.
+				solved_type ?= type
+				check
+					solved_type_not_void: solved_type /= Void
+				end
+				if solved_type.has_expanded then
+					if solved_type.expanded_deferred then
+						create vtec1
+						vtec1.set_class (written_class)	
+						vtec1.set_feature (Current)
+						vtec1.set_entity_name (feature_name)
+						Error_handler.insert_error (vtec1)
+					elseif not solved_type.valid_expanded_creation (class_c) then
+						create vtec2
+						vtec2.set_class (written_class)	
+						vtec2.set_feature (Current)
+						vtec2.set_entity_name (feature_name)
+						Error_handler.insert_error (vtec2)
+					elseif
+						solved_type.is_true_expanded and then
+						solved_type.associated_class = class_c
+					then
+						create vlec
+						vlec.set_class (solved_type.associated_class)
+						vlec.set_client (class_c)
+						Error_handler.insert_error (vlec)
+					end
+				end
+				if solved_type.has_generics then
+					system.expanded_checker.check_actual_type (solved_type)
+				end
+				if arguments /= Void then
+					arguments.check_expanded (class_c, Current)
+				end
+			end
 		end
 
 feature -- Settings

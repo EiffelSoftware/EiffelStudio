@@ -55,6 +55,9 @@ feature
 		do
 			add_in_system_basket (Eref);
 			add_in_system_basket (Esize);
+			if System.has_separate then
+				add_in_system_basket (Epattern);
+			end;
 
 				-- Routine tables.
 			from

@@ -9,9 +9,6 @@ class
 
 inherit
 	EV_WINDOW
-		rename
-			make as window_make
-		end
 
 	EB_PROFILE_TOOL_DATA
 
@@ -21,24 +18,20 @@ inherit
 
 	EV_COMMAND
 
---	WINDOW_ATTRIBUTES
-
---	WINDOWS
-
 creation
-	make
+	make_default
 	
 
 feature {NONE} -- Initialization
 
-	make (a_tool: EB_PROFILE_TOOL) is
+	make_default (a_tool: EB_PROFILE_TOOL) is
 			-- Create Current with `a_tool' as `tool'.
 		require
 			a_tool_not_void: a_tool /= Void
 			a_tool_exists: not a_tool.destroyed
 		do
 			tool := a_tool
-			window_make (tool.parent_window)
+			make_top_level
 			set_title (Interface_names.t_Profile_query_window)
 
 			create all_subqueries.make
@@ -60,7 +53,7 @@ feature {NONE} -- Initialization
 			container.set_spacing (4)
 			container.set_border_width (4)
 
-				-- query manager
+				--| Query manager
 			create query_box.make (container)
 			container.set_child_expandable (query_box, False)
 			query_box.set_spacing (4)
@@ -104,13 +97,13 @@ feature {NONE} -- Initialization
 			create inactive_subqueries_window.make (inactive_subqueries_frame)
 			inactive_subqueries_window.set_multiple_selection
 
-				-- result display
+				--| Result display
 			create text_frame.make_with_text (container, Interface_names.l_Results)
 			!EB_CLICKABLE_RICH_TEXT! text_window.make (text_frame)
 			text_window.init_resource_values
 			text_window.set_editable (False)
 
-				-- subsquery frame
+				--| Subsquery frame
 			create subquery_frame.make_with_text (container, Interface_names.l_Subquery)
 			container.set_child_expandable (subquery_frame, False)
 
@@ -318,10 +311,10 @@ feature {NONE} -- Attributes
 			-- Frame for the subquery
 
 	subquery_box: EV_VERTICAL_BOX
-			-- box for `subquery_text'
+			-- Box for `subquery_text'
 
 	button_box: EV_HORIZONTAL_BOX
-			-- box for the buttons
+			-- Box for the buttons
 
 	change_operator_label: EV_LABEL
 			-- Label for 'change_operator_button'
@@ -373,7 +366,7 @@ feature {NONE} -- Attributes
 			-- Button to inactivate one or more subqueries
 
 	active_subqueries: INTEGER
-			-- number of active subqueries in all_subqueries
+			-- Number of active subqueries in all_subqueries
 
 feature {EB_CHANGE_OPERATOR_CMD} -- Attributes
 
@@ -390,10 +383,10 @@ feature {EB_ADD_SUBQUERY_CMD, EB_CHANGE_OPERATOR_CMD} -- Attributes
 
 
 	all_subqueries: LINKED_LIST[SUBQUERY]
-			-- all the subqueries typed
+			-- All the subqueries typed
 
 	all_operators: LINKED_LIST[SUBQUERY_OPERATOR]
-			-- all the subquery operators typed
+			-- All the subquery operators typed
 
 feature {EB_RUN_QUERY_CMD} -- Attributes
 
@@ -451,6 +444,7 @@ feature {NONE} -- Implementation
 		end
 
 	count_active_subqueries is
+			-- Number of active subqueries
 		do
 			from
 				all_subqueries.start
@@ -466,9 +460,9 @@ feature {NONE} -- Implementation
 		end
 	
 	inactivate is
-		-- copy all the selected 'scrollable_subqueries' from 'active_query_window'
-		-- into 'inactive_subqueries_window', activate the corresponding subqueries
-		-- and operators in 'all_subqueries' and 'all_operators'
+		-- copy all the selected subqueries from `active_query_window'
+		-- into `inactive_subqueries_window', inactivate the corresponding subqueries
+		-- and operators in `all_subqueries' and `all_operators'
 		local
 			selected_subqueries: LINKED_LIST [EV_LIST_ITEM]
 			selected_subquery: EB_SUBQUERY_ITEM
@@ -507,9 +501,9 @@ feature {NONE} -- Implementation
 		end
 
 	reactivate is
-		-- copy all the selected 'scrollable_subqueries' from 'inactive_subqueries_window'
-		-- into 'active_query_window', activate the corresponding subqueries
-		-- and operators in 'all_subqueries' and 'all_operators'
+		-- copy all the selected subqueries from `inactive_subqueries_window'
+		-- into `active_query_window', activate the corresponding subqueries
+		-- and operators in `all_subqueries' and `all_operators'
 		local
 			selected_subqueries: LINKED_LIST [EV_LIST_ITEM]
 			selected_subquery: EB_SUBQUERY_ITEM
@@ -569,6 +563,7 @@ feature {NONE} -- Execution arguments
 feature {NONE} -- execution
 
 	execute (arg: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
+			-- activate or not queries, depending on `arg'.
 		do
 			if arg = reactivate_subqueries then
 				reactivate

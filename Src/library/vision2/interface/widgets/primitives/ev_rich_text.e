@@ -10,7 +10,7 @@ class
 	EV_RICH_TEXT
 
 inherit
-	EV_TEXT
+	EV_SCROLLABLE_TEXT
 		redefine
 			implementation,
 			make
@@ -21,11 +21,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER; hscroll, vscroll: BOOLEAN) is
 			-- Create an empty text area with `par' as
 			-- parent.
 		do
-			create {EV_RICH_TEXT_IMP} implementation.make
+			create {EV_RICH_TEXT_IMP} implementation.make (hscroll, vscroll)
 			widget_make (par)
 		end
 

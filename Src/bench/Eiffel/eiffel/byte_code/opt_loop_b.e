@@ -55,7 +55,7 @@ feature -- Inlining
 		do
 				-- Inlining will not be done if the feature
 				-- optimizes array access
-			Result := 100000
+			Result := 2147483647	-- Maximum INTEGER representation
 		end
 
 	pre_inlined_code: like Current is

@@ -24,22 +24,31 @@ inherit
 	
 	GB_NAMING_UTILITIES
 	
+	GB_SHARED_OBJECT_HANDLER
+	
+	GB_SHARED_STATUS_BAR
+	
 feature -- Basic operation
 
 	store is
 			-- Store `display_window' and contents in XML format in file `filename'.
 		local
 			formater: XML_FORMATER
+			generation_settings: GB_GENERATION_SETTINGS
 		do
+			create generation_settings
+			generation_settings.enable_is_saving
 				-- Generate an XML representation of the system in `document'.
-			generate_document (create {GB_GENERATION_SETTINGS})
+			generate_document (generation_settings)
+			
 			create formater.make
 				-- Process the document ready for output
 			formater.process_document (document)
 				-- Save our XML ouput to disk in `filename'.
 			write_file_to_disk (formater.last_string.to_utf8)
+			set_timed_status_text ("Saved.")
 		end
-		
+
 feature {NONE} -- Basic operation.
 	
 	write_file_to_disk (xml_text: STRING) is
@@ -98,6 +107,14 @@ feature {GB_XML_HANDLER} -- Implementation
 			new_name: STRING
 			events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
 		do
+				-- Only output saving information if performing a real store.
+				-- We also use `Current' to generate XML, ready for code generation.
+			if generation_settings.is_saving then
+				objects_written := objects_written + 1
+				set_status_text ("Saving : " + (((objects_written / object_count) * 95).truncated_to_integer.out) + "%%")
+				environment.application.process_events	
+				io.putstring (status_bar_label.text)
+			end
 			create handler
 				-- We must store the name and other attributes
 				-- which are used internallly. These are not in the
@@ -156,6 +173,14 @@ feature {GB_XML_HANDLER} -- Implementation
 		end
 		
 feature {GB_CODE_GENERATOR} -- Implementation
+
+	object_count: INTEGER
+		-- Number of objects to be written.
+		-- Used for calculating percentage of save.
+	
+	objects_written: INTEGER
+		-- Number of objects currently written.
+		-- Used for calculating percentage of save.
 		
 	generate_document (generation_settings: GB_GENERATION_SETTINGS) is
 			-- Generate an XML representation of the
@@ -169,6 +194,8 @@ feature {GB_CODE_GENERATOR} -- Implementation
 			window_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			window_element: XML_ELEMENT
 		do
+			object_count := object_handler.objects.count
+			objects_written := 0
 				-- If we are adding names, then we must ensure that the list of
 				-- names is empty when we being generating.
 			if generation_settings.generate_names then

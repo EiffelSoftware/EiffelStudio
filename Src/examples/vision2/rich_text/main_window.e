@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			list_item: EV_LIST_ITEM
 			counter: INTEGER
 			font: EV_FONT
-			format, format2: EV_CHARACTER_FORMAT
+			format: EV_CHARACTER_FORMAT
 			tab_positioner: EV_RICH_TEXT_TAB_POSITIONER
 		do
 				-- Initialize color display to black.
@@ -111,7 +111,8 @@ feature {NONE} -- Initialization
 				-- Initialize a test that checks the contents of each line.
 			create timer.make_with_interval (2000)
 			timer.actions.extend (agent check_line_positions)
-			show_actions.extend (agent window_shown)			
+			show_actions.extend (agent window_shown)
+
 		end
 		
 	
@@ -739,9 +740,9 @@ feature {NONE} -- Implementation
 						-- consistently bold.
 					bold_button.select_actions.block
 					if formatting.font_weight and format.font.weight = (create {EV_FONT_CONSTANTS}).weight_bold then
-						bold_button.select_actions.resume
+						bold_button.enable_select
 					else
-						bold_button.select_actions.block
+						bold_button.disable_select
 					end
 					bold_button.select_actions.resume
 					
@@ -1173,7 +1174,6 @@ feature {NONE} -- To be removed
 ----			end
 --		--	format := rich_text.paragraph_format (10)
 		end
-		
 	
 	offset: INTEGER
 	

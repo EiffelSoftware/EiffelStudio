@@ -8,7 +8,6 @@ indexing
 class PROJECT_W
 
 inherit
-
 	TOOLTIP_INITIALIZER;
 	TOOL_W
 		rename
@@ -40,6 +39,9 @@ inherit
 		end;
 	WIDGET_ROUTINES
 
+creation
+	make, make_empty
+
 feature -- Initialization
 
 	make (a_screen: SCREEN) is
@@ -69,10 +71,16 @@ feature -- Initialization
 			Application.set_after_stopped_command (app_stopped_cmd);
 			set_default_position;
 			set_composite_attributes (Current);
+			tooltip_initialize (Current)
 			realize;
 			focus_label.initialize_focusables (Current);
 			init_text_window;
 		end;
+
+	make_empty is
+		do
+			!! history.make
+		end
 
 feature -- Resource Update
 
@@ -208,12 +216,6 @@ feature -- Access
 	resources: like Project_resources is
 		do
 			Result := Project_resources
-		end;
-
-	tooltip_parent: COMPOSITE is
-			-- Tooltip parent is the project tool
-		do
-			Result := Current
 		end;
 
 	split_window: SPLIT_WINDOW;
@@ -843,8 +845,12 @@ feature -- Graphical Interface
 			stop_points_status_menu_entry: EB_MENU_ENTRY;
 			show_pref_cmd: SHOW_PREFERENCE_TOOL;
 			show_pref_menu_entry: EB_MENU_ENTRY;
+
 			-- FIXME profile tool will be impl in 4.1 show_prof_cmd: SHOW_PROFILE_TOOL;
 			-- FIXME profile tool will be impl in 4.1 show_prof_menu_entry: EB_MENU_ENTRY;
+			show_prof_cmd: SHOW_PROFILE_TOOL
+			show_prof_menu_entry: EB_MENU_ENTRY
+
 			sep: SEPARATOR;
 			display_feature_cmd: DISPLAY_ROUTINE_PORTION;
 			display_feature_button: EB_BUTTON;
@@ -925,6 +931,8 @@ feature -- Graphical Interface
 
 			-- FIXME !! show_prof_cmd;
 			-- FIXME !! show_prof_menu_entry.make_default (show_prof_cmd, window_menu);
+			!! show_prof_cmd;
+			!! show_prof_menu_entry.make_default (show_prof_cmd, window_menu);
 
 			!! sep.make (Interface_names.t_Empty, window_menu);
 			!! show_pref_cmd.make (Project_resources);

@@ -155,9 +155,15 @@ feature {NONE, AUXILIARY_FILES} -- Versioning
 			Result.append_character ('.')
 			Result.append_integer (Minor_version_number)
 			Result.append_character ('.')
-			Result.append_string ("0817")
+			Result.append_string ("0901")
+			Result.append_character (' ')
+			Result.append_string (version_type_name)
 		end
 
 	Version_tag: INTEGER is 0x00000026
 
+	Version_type_name: STRING is "Enterprise Edition"
+			-- Name of version, e.g. Free edition, Enterprise Edition,...
+			-- Default: "Enterprise Edition"
+		
 end -- class SYSTEM_CONSTANTS

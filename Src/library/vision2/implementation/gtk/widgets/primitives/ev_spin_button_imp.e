@@ -28,8 +28,7 @@ inherit
 		redefine
 			make,
 			interface,
-			initialize,
-			set_text
+			initialize
 		end
 
 create
@@ -51,17 +50,6 @@ feature {NONE} -- Implementation
 		do
 			{EV_TEXT_FIELD_IMP} Precursor
 			ev_gauge_imp_initialize --| {EV_GAUGE} Precursor
-		end
-
-feature {EV_ANY_I} -- Status setting
-
--- Version from class: EV_TEXT_FIELD_IMP
-
-	set_text (a_text: STRING) is
-			-- Assign `a_text' to `text'.
-		do
-			Precursor (a_text)
-			C.gtk_spin_button_update (entry_widget)
 		end
 
 feature {EV_ANY_I} -- Implementation

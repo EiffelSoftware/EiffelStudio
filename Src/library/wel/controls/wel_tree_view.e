@@ -45,6 +45,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_TVIS_CONSTANTS
+		export
+			{NONE} all
+		end
+
 creation
 	make,
 	make_by_id
@@ -120,6 +125,62 @@ feature -- Status report
 		do
 			Result := cwin_send_message_result (item,
 				Tvm_getindent, 0, 0)
+		end
+
+	is_selected (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
+			-- Is `an_item' selected?
+		require
+			exists: exists
+			valid_item: -- To find
+		do
+			an_item.set_statemask (Tvis_selected)
+			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
+			Result := flag_set (an_item.state, Tvis_selected)
+		end
+
+	is_expanded (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
+			-- Is `an_item' expanded?
+		require
+			exists: exists
+			valid_item: -- To find
+		do
+			an_item.set_statemask (Tvis_expanded)
+			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
+			Result := flag_set (an_item.state, Tvis_expanded)
+		end
+
+	is_cut (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
+			-- Is `an_item' selected as part of a cut and paste
+			-- operation?
+		require
+			exists: exists
+			valid_item: -- To find
+		do
+			an_item.set_statemask (Tvis_cut)
+			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
+			Result := flag_set (an_item.state, Tvis_cut)
+		end
+
+	is_bold (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
+			-- Is `an_item' bold?
+		require
+			exists: exists
+			valid_item: -- To find
+		do
+			an_item.set_statemask (Tvis_bold)
+			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
+			Result := flag_set (an_item.state, Tvis_bold)
+		end
+
+	is_drophilited (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
+			-- Is `an_item' selected as a drag ans drop target?
+		require
+			exists: exists
+			valid_item: -- To find
+		do
+			an_item.set_statemask (Tvis_drophilited)
+			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
+			Result := flag_set (an_item.state, Tvis_drophilited)
 		end
 
 feature -- Status setting

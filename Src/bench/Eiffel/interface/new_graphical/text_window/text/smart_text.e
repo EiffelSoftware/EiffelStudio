@@ -366,7 +366,7 @@ feature -- Completion-clickable initialization / update
 			-- Use `click_tool' to determine whether there is some
 			-- name to be completed at `cursor' position and set
 			-- `auto_complete_is_possible' accordingly.
-			-- If it is, strings that can possibly used for completion
+			-- If it is, strings that can possibly be used for completion
 			-- are available in `completion_possibilities'.
 		require
 			click_and_complete_is_active
@@ -404,15 +404,53 @@ feature -- Completion-clickable initialization / update
 				history.remove_last_redo							
 			end
 		end
+		
+	prepare_class_name_complete is
+			-- Use `click_tool' to determine whether there is some
+			-- name to be completed at `cursor' position.
+			-- If it is, strings that can possibly be used for completion
+			-- are available in `class_completion_possibilities'.
+		local
+			i: INTEGER
+		do
+			history.record_move
+			auto_complete_possible := False
+			click_tool.build_class_completion_list (cursor)
+			if click_tool.class_completion_possibilities /= Void then
+				if click_tool.insertion_count > 0 then
+						-- there is a word before `cursor' that can be
+						-- completed.
+						-- Let's wipe it out and display proposals
+					from
+						i := 1
+					until
+						i > click_tool.insertion_count
+					loop 
+						i := i + 1
+						back_delete_char
+					end
+					history.bind_current_item_to_next
+				end
+				auto_complete_possible := True
+			end
+		end
 
 	auto_complete_possible: BOOLEAN
 			-- Did `prepare_auto_complete' manage to find a list of completion proposals?
 
-	completion_possibilities: SORTABLE_ARRAY [EB_FEATURE_NAME_FOR_COMPLETION] is
+	completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION] is
 			-- Completions proposals found by `prepare_auto_complete'
 		do
 			if click_tool /= Void and then auto_complete_possible then
 				Result := click_tool.completion_possibilities
+			end
+		end
+
+class_completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION] is
+			-- Completions proposals found by `prepare_auto_complete'
+		do
+			if click_tool /= Void and then auto_complete_possible then
+				Result := click_tool.class_completion_possibilities
 			end
 		end
 

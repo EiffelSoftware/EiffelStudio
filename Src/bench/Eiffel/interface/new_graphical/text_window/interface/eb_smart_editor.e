@@ -130,23 +130,37 @@ feature -- Search
 
 feature {EB_COMMAND} -- Commands
 
-	complete_word is
+	complete_feature_name is
 			-- Autocomplete feature name before cursor.
 		local
 			add_point: BOOLEAN
 		do
-			switch_auto_point  := False
+			switch_auto_point := False
 			if click_and_complete_is_active and then not has_selection then
 				add_point := auto_point and then auto_point_token = text_displayed.cursor.token and then text_displayed.cursor.pos_in_token = 1
 				text_displayed.prepare_auto_complete (add_point)
 				if text_displayed.completion_possibilities /= Void then
 					completion_mode := completion_mode + 1
-					show_completion_list
+					show_completion_list (True)
 				end
 			end
 			check_cursor_position			
 		end
-
+	
+	complete_class_name is
+			-- Autocomplete class name before cursor.
+		local
+			i: INTEGER
+		do
+			if not has_selection then
+				text_displayed.prepare_class_name_complete
+				if text_displayed.class_completion_possibilities /= Void then
+					show_completion_list (False)
+				end
+			end
+			check_cursor_position			
+		end
+		
 	embed_in_block (keyword: STRING; pos_in_keyword: INTEGER) is
 			-- Embed selection or current line in block formed by `keyword' and "end".
 			-- Cursor is positioned to the `pos_in_keyword'-th caracter of `keyword'.
@@ -442,7 +456,7 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 			completion_mode := (completion_mode - 1).max (0)
 		end
 
-	complete_from_window (completed: STRING; is_feature_signature: BOOLEAN) is
+	complete_feature_from_window (completed: STRING; is_feature_signature: BOOLEAN) is
 			-- Insert `completed' in the editor and switch to completion mode.
 		do
 			auto_point := False
@@ -468,9 +482,18 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 			refresh
 		end
 
+	complete_class_from_window (completed: STRING) is
+			-- Insert `completed' in the editor.
+		do
+			if not completed.is_empty then
+				text_displayed.insert_string (completed)
+			end
+			refresh
+		end
+
 feature {NONE} -- Autocomplete implementation
 
-	show_completion_list is
+	show_completion_list (feature_completion: BOOLEAN) is
 			-- Show list of possible features after a point.
 		local
 			choices: EB_COMPLETION_CHOICE_WINDOW
@@ -480,7 +503,11 @@ feature {NONE} -- Autocomplete implementation
 			tok: EDITOR_TOKEN
 			cursor: EDITOR_CURSOR
 		do
-			create choices.make_with_editor (Current, text_displayed.feature_name_part_to_be_completed, text_displayed.completion_possibilities)
+			if feature_completion then
+				create choices.make_for_features (Current, text_displayed.feature_name_part_to_be_completed, text_displayed.completion_possibilities)
+			else
+				create choices.make_for_classes (Current, text_displayed.feature_name_part_to_be_completed, text_displayed.class_completion_possibilities)
+			end
 			if choices.show_needed then
 				cursor := text_displayed.cursor
 				tok := cursor.token
@@ -627,16 +654,17 @@ feature {NONE} -- Implementation
 	initialize_customizable_commands is
 			-- Create array of customizable commands.
 		do
-			create customizable_commands.make (1, 9)
-			customizable_commands.put (~complete_word, 1)
-			customizable_commands.put (~search, 2)
-			customizable_commands.put (~replace, 3)
-			customizable_commands.put (~find_selection, 4)
-			customizable_commands.put (~find_next, 5)
-			customizable_commands.put (~find_previous, 6)
-			customizable_commands.put (~insert_customized_string (1), 7)
-			customizable_commands.put (~insert_customized_string (2), 8)
-			customizable_commands.put (~insert_customized_string (3), 9)
+			create customizable_commands.make (1, 10)
+			customizable_commands.put (~complete_feature_name, 1)
+			customizable_commands.put (~complete_class_name, 2)
+			customizable_commands.put (~search, 3)
+			customizable_commands.put (~replace, 4)
+			customizable_commands.put (~find_selection, 5)
+			customizable_commands.put (~find_next, 6)
+			customizable_commands.put (~find_previous, 7)
+			customizable_commands.put (~insert_customized_string (1), 8)
+			customizable_commands.put (~insert_customized_string (2), 9)
+			customizable_commands.put (~insert_customized_string (3), 10)
 		end
 
 	insert_customized_string (index: INTEGER) is

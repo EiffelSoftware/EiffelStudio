@@ -142,7 +142,6 @@ feature -- Analysis preparation
 			is_ready := True
 		end
 
-
 feature -- Reinitialization
 
 	reset_setup_lines_variables is
@@ -155,6 +154,7 @@ feature -- Reinitialization
 			split_string := False
 			features_position.start
 		end
+
 feature -- Status
 
 	file_standard_is_windows: BOOLEAN
@@ -190,7 +190,6 @@ feature {NONE} -- Retrieve information from text
 				features_index := invariant_index
 			end
 		end
-
 		
 feature -- Retrieve information from ast
 
@@ -624,6 +623,116 @@ feature -- Basic Operations
 			reset_after_search
 		end
 
+feature -- Class names completion
+
+	build_class_completion_list (cursor: TEXT_CURSOR) is
+			-- create the list of completion possibilities for the position
+			-- associated with `cursor'
+		require
+			cursor_not_void: cursor /= Void
+		local
+			cname: STRING
+			clusters: LINKED_LIST [CLUSTER_I]
+			class_list: LINKED_LIST [EB_NAME_FOR_COMPLETION]
+			matcher: KMP_WILD
+			classes: EXTEND_TABLE [CLASS_I, STRING]
+			token				: EDITOR_TOKEN
+			complete, show_all	: BOOLEAN
+			class_name: EB_NAME_FOR_COMPLETION
+			cnt, i: INTEGER
+		do
+			create insertion.make (1,2)
+			insertion.put ("", 1)
+			insertion.put ("", 2)
+			is_create := False
+			class_completion_possibilities := Void
+			if
+				workbench.is_already_compiled 
+					and then
+				(not workbench.is_compiling)
+					and then
+				cursor.token /= Void
+			then
+				token := cursor.token.previous
+				if 
+					is_beginning_of_expression (token)
+				then
+					complete := True
+					show_all := True
+				elseif token /= Void and then token.is_text then
+					if not token_image_is_in_array (token, Feature_call_separators) then
+						insertion.put (token.image.out, 2)
+						token := token.previous
+						if is_beginning_of_expression (token) then
+							-- token is beginning of class name
+							complete := True
+						end
+					end
+				end
+			end
+			if complete then
+				if not show_all then
+					cname := clone (insertion @ 2)
+					if cname /= Void then
+						cname.left_adjust
+						cname.right_adjust
+					end
+					cname.to_lower
+					cname.append_character ('*')
+					create matcher.make_empty
+					matcher.set_pattern (cname)
+				end
+				from
+					create class_list.make
+					clusters := Universe.clusters
+					clusters.start
+				until
+					clusters.after
+				loop
+					from
+						classes := clusters.item.classes
+						classes.start
+					until
+						classes.after
+					loop
+						if show_all then
+							create class_name.make_with_name (clone (classes.key_for_iteration))
+							class_name.to_upper
+						 	class_list.extend (class_name)
+						else
+							matcher.set_text (classes.key_for_iteration)
+							if matcher.pattern_matches then
+								create class_name.make_with_name (clone (classes.key_for_iteration))
+								class_name.to_upper
+							 	class_list.extend (class_name)
+							end
+						end
+						classes.forth
+					end
+					clusters.forth
+				end
+				cnt := class_list.count
+				if cnt > 0 then
+					create class_completion_possibilities.make (1, cnt)
+					from
+						class_list.start
+						i := 1
+					until
+						i > cnt
+					loop
+						class_completion_possibilities.put (class_list.item, i)
+						i := i + 1
+						class_list.forth
+					end
+					class_completion_possibilities.sort
+				end
+				reset_after_search
+			end
+		end
+
+	class_completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]
+			-- completion possibilities for the class name at current position in the editor.
+
 feature -- Private Access : position tables & ast
 
 	features_position: ARRAYED_LIST [INTEGER]
@@ -659,7 +768,7 @@ feature -- Completion access
 	exploring_current_class: BOOLEAN
 			-- was automatic completion called after a blank space ?
 
-	completion_possibilities: SORTABLE_ARRAY [EB_FEATURE_NAME_FOR_COMPLETION]
+	completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]
 			-- completion possibilities for the current position in the editor
 
 feature {NONE} -- Private Status
@@ -862,7 +971,7 @@ feature {NONE} -- Completion implementation
 	add_names_to_completion_list (name_list: LIST [STRING]) is
 			-- 
 		local
-			name: EB_FEATURE_NAME_FOR_COMPLETION
+			name: EB_NAME_FOR_COMPLETION
 		do
 			from
 				name_list.start
@@ -881,7 +990,7 @@ feature {NONE} -- Completion implementation
 			completion_possibilities_not_void: completion_possibilities /= Void
 			feat_is_not_void: feat /= Void
 		local
-			name	: EB_FEATURE_NAME_FOR_COMPLETION
+			name	: EB_NAME_FOR_COMPLETION
 			found	: BOOLEAN
 		do
 			if feat.is_infix then
@@ -913,7 +1022,7 @@ feature {NONE} -- Completion implementation
 
 feature {NONE}-- Implementation
 
-	insert_in_completion_possibilities (name: EB_FEATURE_NAME_FOR_COMPLETION) is
+	insert_in_completion_possibilities (name: EB_NAME_FOR_COMPLETION) is
 			--
 		require
 			name /= Void

@@ -17,10 +17,10 @@ inherit
 			implementation
 		end
 
---	EV_PIXMAP_CONTAINER
---		redefine
---			implementation
---		end
+	EV_PIXMAP_CONTAINER
+		redefine
+			implementation
+		end
 	
 creation
 	make_with_text,

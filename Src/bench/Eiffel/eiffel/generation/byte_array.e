@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class BYTE_ARRAY 
+class BYTE_ARRAY
 
 inherit
 	CHARACTER_ARRAY
@@ -71,7 +71,7 @@ feature -- Removal
 			area.clear_all
 		end
 
-feature -- 
+feature --
 
 	character_array: CHARACTER_ARRAY is
 			-- Simple character array
@@ -160,6 +160,36 @@ feature -- Element change
 
 	append_integer (i: INTEGER) is
 			-- Append long integer `i' in the array
+		do
+			append_int32_integer (i)
+		end
+
+	append_short_integer (i: INTEGER) is
+			-- Append short integer `i' in the array
+		require
+			valid_short_integer: i >= feature {INTEGER_16}.Min_value and
+				i <= feature {INTEGER_16}.Max_value
+		local
+			new_position: INTEGER
+			l_val: INTEGER_16
+		do
+			new_position := position + Int16_size
+			if new_position >= count then
+				resize (count + Chunk)
+			end
+			l_val := i.to_integer_16;
+			($area + position).memory_copy ($l_val, Int16_size)
+			position := new_position
+		end
+
+	append_uint32_integer (i: INTEGER) is
+			-- Append unsigned 32 bits integer in the array
+		do
+			append_int32_integer (i)
+		end
+
+	append_int32_integer (i: INTEGER) is
+			-- Append signed 32 bits integer in the array
 		local
 			new_position: INTEGER
 		do
@@ -167,47 +197,7 @@ feature -- Element change
 			if new_position >= count then
 				resize (count + Chunk)
 			end
-			ca_wlong ($area, i, position)
-			position := new_position
-		end
-
-	append_short_integer (i: INTEGER) is
-			-- Append short integer `i' in the array
-		local
-			new_position: INTEGER
-		do  
-			new_position := position + Short_size
-			if new_position >= count then
-				resize (count + Chunk)
-			end
-			ca_wshort ($area, i, position)
-			position := new_position
-		end
-
-	append_uint32_integer (i: INTEGER) is
-			-- Append unsigned 32 bits integer in the array
-		local
-			new_position: INTEGER
-		do 
-			new_position := position + Uint32_size
-			if new_position >= count then
-				resize (count + Chunk)
-			end
-			ca_wuint32 ($area, i, position)
-			position := new_position
-		end
-
-	append_int32_integer (i: INTEGER) is
-			-- Append signed 32 bits integer in the array
-		
-		local
-			new_position: INTEGER
-		do 
-			new_position := position + Int32_size
-			if new_position >= count then
-				resize (count + Chunk)
-			end
-			ca_wint32 ($area, i, position)
+			($area + position).memory_copy ($i, Int32_size)
 			position := new_position
 		end
 
@@ -220,12 +210,12 @@ feature -- Element change
 			if new_position >= count then
 				resize (count + Chunk)
 			end
-			ca_int64 ($area, i, position)
+			($area + position).memory_copy ($i, Int64_size)
 			position := new_position
 		end
 
-	append_double (r: DOUBLE) is
-			-- Append real value `r'.
+	append_double (d: DOUBLE) is
+			-- Append real value `d'.
 		local
 			new_position: INTEGER
 		do
@@ -233,7 +223,7 @@ feature -- Element change
 			if new_position >= count then
 				resize (count + Chunk)
 			end
-			ca_wdouble ($area, r, position)
+			($area + position).memory_copy ($d, Double_size)
 			position := new_position
 		end
 
@@ -407,7 +397,7 @@ feature -- Forward and backward jump managment
 
 	forward_marks4: ARRAYED_STACK [INTEGER]
 			-- Forward jump stack
- 
+
 	mark_forward4 is
 			-- Mark a forward offset
 		do
@@ -508,37 +498,29 @@ feature -- Debugger
 		end
 
 feature -- Concurrent Eiffel
- 
-       sep_backward_marks: ARRAYED_STACK [INTEGER]
-		      -- Backward jump stack
- 
-       sep_mark_backward is
-		       -- Mark a backward offset
-	       do
-		      sep_backward_marks.put (position)
-	       end
- 
-       sep_write_backward is
-		       -- Write a backward jump
-	       do
-		       append_integer (- position - Int32_size + sep_backward_marks.item)
-		       sep_backward_marks.remove
-			end
+
+	sep_backward_marks: ARRAYED_STACK [INTEGER]
+			-- Backward jump stack
+
+	sep_mark_backward is
+			-- Mark a backward offset
+		do
+			sep_backward_marks.put (position)
+		end
+
+	sep_write_backward is
+			-- Write a backward jump
+		do
+			append_integer (- position - Int32_size + sep_backward_marks.item)
+			sep_backward_marks.remove
+		end
 
 feature {BYTE_ARRAY} -- Access
 
 	position: INTEGER
-			-- Posiiton of the cursor in the array
+			-- Position of the cursor in the array
 
 feature {NONE} -- Externals
-
-	Short_size: INTEGER is
-			-- Size of a short integer
-		external
-			"C [macro %"eif_eiffel.h%"]"
-		alias
-			"sizeof(short)"
-		end
 
 	Uint32_size: INTEGER is
 			-- Size of uint32 type
@@ -546,36 +528,6 @@ feature {NONE} -- Externals
 			"C [macro %"eif_eiffel.h%"]"
 		alias
 			"sizeof(uint32)"
-		end
-
-	ca_wint32 (ptr: POINTER; val: INTEGER; pos: INTEGER) is
-		external
-			"C"
-		end
-
-	ca_wuint32 (ptr: POINTER; val: INTEGER; pos: INTEGER) is
-		external
-			"C"
-		end
-
-	ca_wshort (ptr: POINTER; val: INTEGER; pos: INTEGER) is
-		external
-			"C"
-		end
-
-	ca_wlong (ptr: POINTER; val: INTEGER; pos: INTEGER) is
-		external
-			"C"
-		end
-
-	ca_int64 (ptr: POINTER; val: INTEGER_64; pos: INTEGER) is
-		external
-			"C"
-		end
-
-	ca_wdouble (ptr: POINTER; val: DOUBLE; pos: INTEGER) is
-		external
-			"C"
 		end
 
 	ca_bsize (bit_count: INTEGER): INTEGER is
@@ -595,5 +547,6 @@ feature {NONE} -- Externals
 invariant
 	position_greater_than_zero: position >= 0
 	position_less_than_size: position < count
+	integer_32_valid: Int32_size = Uint32_size
 
 end

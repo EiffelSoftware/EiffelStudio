@@ -14,8 +14,6 @@
 			<TEXT>filter_command<STRING>none</STRING></TEXT>
 			<TEXT>print_shell_command<STRING>lpr $target</STRING></TEXT>
 			<TEXT>web_browser<STRING>netscape</STRING></TEXT>
-			<TEXT>confirm_on_exit<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT>show_starting_dialog<BOOLEAN>True</BOOLEAN></TEXT>
 		</TOPIC>
 		<TOPIC TOPIC_ID="tools" ICON="icon_preferences_folder">
 			<HEAD>Tool Preferences</HEAD>
@@ -494,13 +492,6 @@
 			<TEXT>object_tool_height<INTEGER>500</INTEGER></TEXT>
 			<TEXT>object_tool_bar<BOOLEAN>True</BOOLEAN></TEXT>
 		</TOPIC>
-		<TOPIC TOPIC_ID="Profile_tool_preferences" ICON="icon_preferences_folder">
-			<HEAD>Profile tool preferences</HEAD>
-			<TEXT>profile_tool_width<INTEGER>250</INTEGER></TEXT>
-			<TEXT>profile_tool_height<INTEGER>490</INTEGER></TEXT>
-			<TEXT>profile_query_window_width<INTEGER>500</INTEGER></TEXT>
-			<TEXT>profile_query_window_height<INTEGER>500</INTEGER></TEXT>
-		</TOPIC>
 		<TOPIC TOPIC_ID="Dynamic_Lib_tool_preferences" ICON="icon_preferences_folder">
 			<HEAD>Dynamic Library tool preferences</HEAD>
 			<TEXT>dynamic_lib_tool_width<INTEGER>440</INTEGER></TEXT>
@@ -510,6 +501,12 @@
 			<HEAD>Diagram tool preferences</HEAD>
 			<TEXT>excluded_class_figures<LIST_STRING>INTEGER;BOOLEAN;STRING;CHARACTER;REAL;DOUBLE</LIST_STRING></TEXT>
 			<TEXT>ignore_excluded_class_figures<BOOLEAN>False</BOOLEAN></TEXT>
+		</TOPIC>
+		<TOPIC TOPIC_ID="Dialog_preferences" ICON="icon_preferences_folder">
+			<HEAD>Dialog preferences</HEAD>
+			<TEXT DESCRIPTION="Display New/Open project dialog at startup">show_starting_dialog<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Display confirmation dialog on exit">confirm_on_exit<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Display confirmation dialog on freeze operation">confirm_freeze<BOOLEAN>True</BOOLEAN></TEXT>
 		</TOPIC>
 	</TOPIC>
 	<TOPIC TOPIC_ID="Graphics" ICON="icon_preferences_folder">

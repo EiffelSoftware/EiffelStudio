@@ -24,19 +24,12 @@ feature -- Access
 			Result := arg_option (i)
 		end
 
-	Argument_array: ARRAY [STRING] is
+	argument_array: ARRAY [STRING] is
 			-- Array containing command name (position 0) and arguments
-		local
-			i: INTEGER
 		once
-			create Result.make (0, argument_count)
-			from
-			until
-				i > argument_count
-			loop
-				Result.put (arg_option (i), i)
-				i := i + 1
-			end
+			Result := internal_argument_array
+		ensure
+			argument_array_not_void: Result /= Void
 		end
 
 	Command_line: STRING is
@@ -343,6 +336,23 @@ feature {NONE} -- Implementation
 			elseif arg.item (1) = option_sign then
 				Result := arg.substring (2, arg.count).has (c)
 			end
+		end
+
+	internal_argument_array: ARRAY [STRING] is
+			-- Array containing command name (position 0) and arguments
+		local
+			i: INTEGER
+		do
+			create Result.make (0, argument_count)
+			from
+			until
+				i > argument_count
+			loop
+				Result.put (arg_option (i), i)
+				i := i + 1
+			end
+		ensure
+			internal_argument_array_not_void: Result /= Void
 		end
 
 indexing

@@ -111,26 +111,6 @@ feature -- Position
 			move (new_x, new_y)
 		end
 
---feature -- Status report
-
---	fixed_size_flag: BOOLEAN
---			-- Flag to indicate if this widget can have
---			-- its size changed
-
---feature -- Status setting
-
---	allow_recompute_size is
---			-- Allow resizing of the children.
---		do
---			fixed_size_flag := False
---	        end
-
---	forbid_recompute_size is
---			-- Forbid resizing of the children.
---		do
---			fixed_size_flag := True
---		end
-
 feature -- Assertion features
 
 	dimensions_set (new_width, new_height: INTEGER): BOOLEAN is

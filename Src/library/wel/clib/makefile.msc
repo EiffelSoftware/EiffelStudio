@@ -6,7 +6,7 @@ CFLAGS = -c -Ox -I$(EIFFEL4)\library\wel\spec\windows\include -I$(EIFFEL4)\bench
 .c.obj:
 	$(CC) $(CFLAGS) $<
 
-OBJ = disptchr.obj enumfont.obj estream.obj msgboxpa.obj registry.obj wel_string.obj
+OBJ = disptchr.obj enumfont.obj estream.obj msgboxpa.obj registry.obj
 
 wel.lib: $(OBJ)
 	if exist $@ del $@

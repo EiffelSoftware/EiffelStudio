@@ -1,0 +1,39 @@
+system
+	"EiffelBase"
+
+root
+	ANY
+
+default
+ 	assertion (no)
+ 	msil_generation (yes)
+ 	il_verifiable (yes)
+ 	cls_compliant (yes)
+ 	dotnet_naming_convention (no)
+ 	msil_generation_type ("dll")
+	msil_clr_version ("v1.1.4322")
+ 	use_all_cluster_name_as_namespace (yes)
+ 	use_cluster_name_as_namespace (yes)
+ 
+cluster 
+ 
+ 	all base_net:		"$ISE_EIFFEL\library.net\base"
+ 
+ 	all base:		"$ISE_EIFFEL\library\base"
+ 		exclude
+ 			"table_eiffel3"; "desc"; "classic";
+ 		end
+ 
+assembly
+	mscorlib:   "mscorlib",   "1.0.5000.0", "neutral", "b77a5c561934e089"
+
+	system_:    "System",     "1.0.5000.0", "neutral", "b77a5c561934e089"
+		prefix
+			"SYSTEM_DLL_"
+		end
+	system_xml: "System.Xml", "1.0.5000.0", "neutral", "b77a5c561934e089"
+		prefix
+			"XML_"
+		end
+
+end -- system base

@@ -1257,7 +1257,7 @@ feature {NONE} -- Externals
 	bitoff (bit_val: INTEGER): INTEGER is
 			-- Size of a bit object of size `bit_val'
 		external
-			"C [macro %"eif_eiffel.h%"]"
+			"C macro use %"eif_eiffel.h%""
 		alias
 			"BITOFF"
 		end;
@@ -1265,7 +1265,7 @@ feature {NONE} -- Externals
 	chracs (n: INTEGER): INTEGER is
 			-- Size of `n' characters
 		external
-			"C [macro %"eif_eiffel.h%"]"
+			"C macro use %"eif_eiffel.h%""
 		alias
 			"CHRACS"
 		end;
@@ -1273,7 +1273,7 @@ feature {NONE} -- Externals
 	refacs (n: INTEGER): INTEGER is
 			-- Size of `n' references
 		external
-			"C [macro %"eif_eiffel.h%"]"
+			"C macro use %"eif_eiffel.h%""
 		alias
 			"REFACS"
 		end;
@@ -1281,7 +1281,7 @@ feature {NONE} -- Externals
 	i16acs (n: INTEGER): INTEGER is
 			-- size of `n' integers 16 bits.
 		external
-			"C [macro %"eif_eiffel.h%"]"
+			"C macro use %"eif_eiffel.h%""
 		alias
 			"I16ACS"
 		end
@@ -1289,7 +1289,7 @@ feature {NONE} -- Externals
 	i32acs (n: INTEGER): INTEGER is
 			-- Size of `n' integers 32 bits
 		external
-			"C [macro %"eif_eiffel.h%"]"
+			"C macro use %"eif_eiffel.h%""
 		alias
 			"LNGACS"
 		end;
@@ -1297,7 +1297,7 @@ feature {NONE} -- Externals
 	i64acs (n: INTEGER): INTEGER is
 			-- Size of `n' integers 64 bits
 		external
-			"C [macro %"eif_eiffel.h%"]"
+			"C macro use %"eif_eiffel.h%""
 		alias
 			"I64ACS"
 		end;
@@ -1305,7 +1305,7 @@ feature {NONE} -- Externals
 	fltacs (n: INTEGER): INTEGER is
 			-- Size of `n' reals
 		external
-			"C [macro %"eif_eiffel.h%"]"
+			"C macro use %"eif_eiffel.h%""
 		alias
 			"FLTACS"
 		end;
@@ -1313,7 +1313,7 @@ feature {NONE} -- Externals
 	ptracs (n: INTEGER): INTEGER is
 			-- Size of `n' pointers
 		external
-			"C [macro %"eif_eiffel.h%"]"
+			"C macro use %"eif_eiffel.h%""
 		alias
 			"PTRACS"
 		end;
@@ -1321,7 +1321,7 @@ feature {NONE} -- Externals
 	dblacs (n: INTEGER): INTEGER is
 			-- Size of `n' doubles
 		external
-			"C [macro %"eif_eiffel.h%"]"
+			"C macro use %"eif_eiffel.h%""
 		alias
 			"DBLACS"
 		end;
@@ -1329,7 +1329,7 @@ feature {NONE} -- Externals
 	ovhsiz: INTEGER is
 			-- Size of the object header
 		external
-			"C [macro %"eif_eiffel.h%"]"
+			"C macro use %"eif_eiffel.h%""
 		alias
 			"OVERHEAD"
 		end;

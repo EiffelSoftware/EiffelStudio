@@ -3909,7 +3909,7 @@ feature {NONE} -- External features
 			-- If `p /= default_pointer' result will be stored in memory pointed
 			-- by `p'.
 		external
-			"C (time_t *): EIF_INTEGER | <time.h>"
+			"C signature (time_t *): EIF_INTEGER use <time.h>"
 		alias
 			"time"
 		end

@@ -1,8 +1,8 @@
 indexing
 	description: "Objects that ..."
 	author: ""
-	date: "$Date: 1999/01/12 01:57:05 $"
-	revision: "$Revision: 1.3 $"
+	date: "$Date: 1999/09/07 03:00:42 $"
+	revision: "$Revision: 1.4 $"
 
 class
 	$classname
@@ -67,6 +67,6 @@ feature -- Inapplicable
 feature {NONE} -- Implementation
 
 invariant
-	invariant_clause: -- Your invariant here
+	invariant_clause: True -- Your invariant here
 
 end -- class $classname

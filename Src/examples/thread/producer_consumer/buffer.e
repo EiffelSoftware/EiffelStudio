@@ -38,14 +38,6 @@ feature
 	make (size, i: INTEGER; finish: BOOLEAN_REF) is 
 			-- Initialize customizable parameters
 			-- and internal structures.
-			-- We need to freeze data because in the Eiffel4 implementation
-			-- the nested references of a object put into a proxy can
-			-- be collected even if they are still referenced.
-			-- Normally, only flat object should be shared between
-			-- threads.
-			-- `Freeze' protects it and prevent from any collection.
-			-- Other references like basic expanded types and synchronization
-			-- objects are by definition not collectable.
 		do
 
 			finished := finish

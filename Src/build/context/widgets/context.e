@@ -1748,7 +1748,6 @@ feature
 			-- and initialization
 		local
 			class_name: STRING
---			creation_procedure: STRING
 			color_text: STRING
 		do
 			!!Result.make (0)

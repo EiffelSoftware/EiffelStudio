@@ -7,7 +7,7 @@ class TMP_AST_SERVER
 inherit
 	COMPILER_SERVER [CLASS_AS_B, CLASS_ID]
 		redefine
-			put, make_index, need_index, make, init_file
+			put, make_index, need_index, make
 		end
 
 creation
@@ -34,7 +34,7 @@ feature
 			-- Initialization
 		do
 			{COMPILER_SERVER} Precursor
-			!!index.make (50)
+			!!index.make (100)
 		end
 
 	Cache: AST_CACHE is
@@ -58,14 +58,6 @@ feature
 			{COMPILER_SERVER} Precursor (t)
 		end
 
-	init_file (server_file: SERVER_FILE) is
-			-- Initialize server file `server_file' before writing in
-			-- it.
-		do
-			{COMPILER_SERVER} Precursor (server_file)
-			last_offset := server_file.position
-		end
-
 	make_index (obj: ANY; file_position, object_count: INTEGER) is
 			-- Store object `obj' and track the instances
 			-- of FEATURE_AS and INVARIANT_AS
@@ -75,7 +67,7 @@ feature
 		do
 				-- Put `obj' in the index.
 			!!read_info
-			read_info.set_offset (file_position - last_offset)
+			read_info.set_position (file_position)
 			read_info.set_class_id (last_id)
 			read_info.set_object_count (object_count)
 			if is_feature_as ($obj) then

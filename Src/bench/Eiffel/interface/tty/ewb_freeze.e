@@ -38,7 +38,7 @@ feature
 	execute is
 		do
 			init;
-			if not error_occurred then
+			if not error_occurred and then Lace.file_name /= Void then
 				System.set_freeze (True);
 				compile;
 				if Workbench.successfull then

@@ -61,7 +61,7 @@ feature
 	execute is
 		do
 			init;
-			if not error_occurred then
+			if not error_occurred and then Lace.file_name /= Void then
 				compile;
 				if Workbench.successfull then
 						-- Save the project before the finalization in order to

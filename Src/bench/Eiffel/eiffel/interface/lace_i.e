@@ -29,6 +29,15 @@ feature
 	set_file_name (s: STRING) is
 			-- Assign `s' to `file_name'.
 		do
+debug
+	if s = Void then
+		io.error.putstring ("LACE.file_name: void%N");
+	else
+		io.error.putstring ("LACE.file_name: ");
+		io.error.putstring (s);
+		io.error.new_line;
+	end
+end;
 			file_name := s
 		end;
 

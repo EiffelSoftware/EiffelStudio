@@ -8,9 +8,20 @@ inherit
 			name as loop_cmd_name,
 			help_message as loop_help,
 			abbreviation as loop_abb
+		redefine
+			work
 		end;
 
 feature
+
+	work (pn, an: STRING) is
+		do
+				-- We don't want to check
+				-- the Ace file now
+			project_name := pn;
+			Ace_name := an;
+			execute
+		end;
 
 	execute is
 		do

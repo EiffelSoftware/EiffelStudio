@@ -148,6 +148,7 @@ void eif_net_check_recv (int r) {
 	if (r == SOCKET_ERROR) {
 		eif_net_check(r);
 	} else if (r == 0) {
+		errno = WSAGetLastError();
 		eraise ("Connection closed", EN_PROG);
 	}
 #else

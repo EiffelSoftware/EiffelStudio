@@ -241,9 +241,11 @@ feature -- Properties
 			-- New classes in the system
 			-- Used during the time check
 
-	removed_classes: SEARCH_TABLE [CLASS_C]
-			-- List of removed classes from system. Filled during degree 6, processed
-			-- after degree 5
+	removed_classes: HASH_TABLE [BOOLEAN, CLASS_C]
+			-- List of removed classes from system. If entry is True, it means that
+			-- the class is physically not present anymore, otherwise it is simply
+			-- not in the universe anymore.
+			-- Filled during degree 6, processed after degree 5
 
 	missing_classes: HASH_TABLE [SEARCH_TABLE [CLASS_C], STRING]
 			-- Table indexed by missing classnames where elements are
@@ -594,7 +596,7 @@ end
 			if removed_classes = Void then
 				create removed_classes.make (10)
 			end
-			removed_classes.put (a_class)
+			removed_classes.put (True, a_class)
 		end
 		
 	record_potential_vtct_error (a_class: CLASS_C; a_name: STRING) is
@@ -626,9 +628,17 @@ end
 			l_class: CLASS_C
 			l_table: SEARCH_TABLE [CLASS_C]
 			l_has_error: BOOLEAN
+			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [VTCT]
+			l_sorter: DS_QUICK_SORTER [VTCT]
+			l_list: DS_ARRAYED_LIST [VTCT]
 		do
 			if missing_classes /= Void then
 				from
+						-- `l_list' is used to display errors in alphabetical order
+						-- This is mostly interesting for eweasel as the compiler does
+						-- not always give you the same order depending on the way
+						-- classes are written.
+					create l_list.make (missing_classes.count)
 					missing_classes.start
 				until
 					missing_classes.after
@@ -654,7 +664,7 @@ end
 							create l_vtct
 							l_vtct.set_class (l_class)
 							l_vtct.set_class_name (l_name)
-							Error_handler.insert_error (l_vtct)
+							l_list.force_last (l_vtct)
 							
 								-- But since it is an invalid class, then we need to force
 								-- a compilation again to check for the VTCT error again.
@@ -669,6 +679,17 @@ end
 				missing_classes := Void
 			
 				if l_has_error then
+					create l_agent_sorter.make (agent {VTCT}.less_than)
+					create l_sorter.make (l_agent_sorter)
+					l_sorter.sort (l_list)
+					from
+						l_list.start
+					until
+						l_list.after
+					loop
+						Error_handler.insert_error (l_list.item_for_iteration)
+						l_list.forth
+					end
 						-- Cannot go on here
 					Error_handler.raise_error
 				end
@@ -783,6 +804,20 @@ end
 			internal_default_rescue_id := -1
 			internal_default_create_id := -1
 			internal_special_make_id := - 1
+
+				-- Wipe out faked removed classes.
+			if removed_classes /= Void then
+				from
+					removed_classes.start
+				until
+					removed_classes.after
+				loop
+					if not removed_classes.item_for_iteration then
+						removed_classes.remove (removed_classes.key_for_iteration)
+					end
+					removed_classes.forth
+				end
+			end
 		end
 
 feature -- ANY.default_rescue routine id
@@ -983,7 +1018,7 @@ end
 						-- before the recompilation
 				end
 				new_class := False
-				
+
 				if
 					not Compilation_modes.is_precompiling and
 					not Lace.compile_all_classes
@@ -1266,7 +1301,7 @@ end
 				until
 					removed_classes.after
 				loop
-					internal_remove_class (removed_classes.item_for_iteration, 0)
+					internal_remove_class (removed_classes.key_for_iteration, 0)
 					removed_classes.forth
 				end
 				removed_classes := Void
@@ -1362,6 +1397,9 @@ end
 				-- Remove all the classes that cannot be reached if they are
 				-- not protected
 			from
+				if removed_classes = Void then
+					create removed_classes.make (10)
+				end
 				i := 1
 			until
 				i > nb
@@ -1378,7 +1416,7 @@ io.error.put_string (a_class.name)
 io.error.put_new_line
 end
 						-- Recursively remove `a_class' from system.
-					remove_class (a_class)
+					removed_classes.put (False, a_class)
 				end
 				i := i + 1
 			end

@@ -3,7 +3,7 @@ class SHARED_WORKBENCH
 inherit
 	SHARED_COMPILATION_MODES
 	
-feature
+feature -- Access
 
 	Workbench: WORKBENCH_I is
 			-- Shared access to the workbench

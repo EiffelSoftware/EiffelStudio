@@ -93,7 +93,7 @@ feature -- Initialization
 			reset_dbg_evaluator
 			eifnet_debugger_info.reset
 			Eifnet_debugger_info.set_controller (Current)
-			exit_process_occured := False
+			exit_process_occurred := False
 			
 				-- not required
 			last_stepper := Void
@@ -149,8 +149,8 @@ feature -- Initialization
 	is_debugging: BOOLEAN
 			-- Is current process in debugging session ?
 
-	exit_process_occured: BOOLEAN
-			-- Does Call back "ExitProcess" occured ?
+	exit_process_occurred: BOOLEAN
+			-- Does Call back "ExitProcess" occurred ?
 			--| This could be during evaluation ...
 			
 feature -- Termination ...
@@ -187,10 +187,10 @@ feature -- Termination ...
 			not is_debugging
 		end
 
-	notify_exit_process_occured is
-			-- Notify callback `ExitProcess' occured
+	notify_exit_process_occurred is
+			-- Notify callback `ExitProcess' occurred
 		do
-			exit_process_occured := True			
+			exit_process_occurred := True			
 		end
 		
 feature -- Status
@@ -235,7 +235,7 @@ feature -- Interaction with .Net Debugger
 		require
 			process_exists: icor_debug_process /= Void
 		do
-			if exit_process_occured or else icor_debug_process = Void then
+			if exit_process_occurred or else icor_debug_process = Void then
 				on_exit_process
 			else
 				icor_debug_process.stop (infinite_time)
@@ -252,7 +252,7 @@ feature -- Interaction with .Net Debugger
 		local
 			l_controller: ICOR_DEBUG_CONTROLLER		
 		do	
-			if exit_process_occured or else icor_debug_process = Void then
+			if exit_process_occurred or else icor_debug_process = Void then
 				on_exit_process
 			else
 				l_controller := icor_debug_process

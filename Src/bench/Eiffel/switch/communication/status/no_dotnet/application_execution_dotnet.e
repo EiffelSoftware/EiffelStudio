@@ -50,7 +50,7 @@ feature -- Trigger eStudio done
 	
 feature -- Bridge to Debugger
 
-	exception_occured: BOOLEAN is
+	exception_occurred: BOOLEAN is
 			-- Last callback is about exception ?
 		do
 		end

@@ -148,7 +148,15 @@ feature {APPLICATION_EXECUTION} -- Properties
 
 feature -- Bridge to Debugger
 
-	exception_occured: BOOLEAN is
+	exit_process_occurred: BOOLEAN is
+			-- Did the exit_process occurred ?
+		require
+			eifnet_debugger_exists: eifnet_debugger /= Void			
+		do
+			Result := eifnet_debugger.exit_process_occurred
+		end
+
+	exception_occurred: BOOLEAN is
 			-- Last callback is about exception ?
 		require
 			eifnet_debugger_exists: eifnet_debugger /= Void
@@ -169,7 +177,7 @@ feature -- Bridge to Debugger
 	exception_details: TUPLE [STRING, STRING] is
 			-- class details , module details
 		require
-			exception_occured: exception_occured
+			exception_occurred: exception_occurred
 		local
 			l_class_details: STRING
 			l_module_details: STRING
@@ -194,7 +202,7 @@ feature -- Bridge to Debugger
 	exception_to_string: STRING is
 			-- Exception "ToString" output
 		require
-			exception_occured: exception_occured
+			exception_occurred: exception_occurred
 		local
 			retried: BOOLEAN
 			l_icd_exception: ICOR_DEBUG_VALUE
@@ -217,7 +225,7 @@ feature -- Bridge to Debugger
 	exception_message: STRING is
 			-- Exception "GetMessage" output
 		require
-			exception_occured: exception_occured
+			exception_occurred: exception_occurred
 		local
 			retried: BOOLEAN
 			l_icd_exception: ICOR_DEBUG_VALUE
@@ -852,7 +860,7 @@ feature {NONE} -- Events on notification
 			--| Already "stopped" but let's be sure ..
 	
 			status.set_is_stopped (True)
-			eifnet_debugger.notify_exit_process_occured
+			eifnet_debugger.notify_exit_process_occurred
 			eifnet_debugger.on_exit_process
 		end
 		
@@ -902,7 +910,7 @@ feature {NONE} -- Events on notification
 				need_to_continue := not do_stop_on_breakpoint				
 			elseif Eifnet_debugger_info.last_managed_callback_is_exception then
 				status.set_reason_as_raise				
-				status.set_exception (0, "Exception occured .. waiting for information")
+				status.set_exception (0, "Exception occurred .. waiting for information")
 			end
 --| not true in case of empty stack .. when exception occurs during launching
 --			set_current_execution_stack (1)
@@ -1136,6 +1144,8 @@ feature -- Object Keeper
 
 	kept_object_item (a_address: STRING): ABSTRACT_DEBUG_VALUE is
 			-- Keep this object addressed by `a_address'
+		require
+			know_about_object: know_about_kept_object (a_address)
 		do
 			Result := Debug_value_keeper.item (a_address)
 		end

@@ -61,7 +61,7 @@ feature -- Access
 			-- from `objects.first'.
 		do
 			if first.pixmap_exists then
-				add_pixmap_to_pixmap_container (clone (first))
+				add_pixmap_to_pixmap_container (first.twin)
 				for_all_objects (agent {EV_PIXMAP}.enable_pixmap_exists)
 			elseif first.pixmap_path = Void then 
 				-- `pixmap_path' is Void when we have not assigned a path yet,
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 					for_all_objects (agent {EV_PIXMAP}.set_with_named_file (dialog.file_name))
 					for_all_objects (agent {EV_PIXMAP}.set_pixmap_path (dialog.file_name))
 					for_all_objects (agent {EV_PIXMAP}.enable_pixmap_exists)
-					add_pixmap_to_pixmap_container (clone (new_pixmap))
+					add_pixmap_to_pixmap_container (new_pixmap.twin)
 					opened_file := True
 				elseif not dialog.file_name.is_empty then
 					create error_dialog

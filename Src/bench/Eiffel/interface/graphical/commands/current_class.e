@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 					-- Show the current routine in that class.
 				e_class := status.origin_class;
 				!! st.make (status.e_feature, e_class);
-				text_window.receive (st)
+				text_window.tool.process_feature (st)
 			end
 		end;
 

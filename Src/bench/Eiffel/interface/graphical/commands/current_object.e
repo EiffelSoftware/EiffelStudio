@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 				else
 					e_class := status.dynamic_class;
 					!! stone.make (address, e_class);
-					text_window.receive (stone)
+					text_window.tool.process_object (stone)
 				end
 			end
 		end;

@@ -31,7 +31,7 @@ feature -- Basic Operations
 			-- be started, `False' otherwise.
 		do
 			check_license
-			a_next_action.call ([])
+			a_next_action.call (Void)
 		end
 
 	check_license is

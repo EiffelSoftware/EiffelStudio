@@ -18,7 +18,7 @@ creation
 	
 feature {NONE}
 
-	command: FG_COLOR_CMD is
+	command: FG_STONE_CMD is
 		once
 			!!Result
 		end;
@@ -71,7 +71,7 @@ feature -- Hole
 		do
 			associated_tf.set_text (dropped.color_name);
 			!!cmd;
-			cmd.execute (editor);
+			cmd.execute (editor.edited_context);
 		end;
 
 feature {NONE}

@@ -48,11 +48,14 @@ feature {NONE}
 
 	process_color (dropped: COLOR_STONE) is
 		local
-			cmd: like Bg_color_cmd
+			cmd: BG_STONE_CMD;
+			a_context: CONTEXT;
 		do
-			set_text (dropped.color_name);
+			a_context := editor.edited_context;
 			!! cmd;
-			cmd.execute (editor);
+			cmd.execute (a_context);
+			a_context.set_bg_color_name (dropped.color_name);
+			context_catalog.update_editors (a_context, Context_const.color_form_nbr);
 		end;
 
 end

@@ -18,7 +18,7 @@ creation
 	
 feature {NONE}
 
-	command: BG_COLOR_CMD is
+	command: BG_STONE_CMD is
 		once
 			!!Result
 		end;
@@ -46,11 +46,11 @@ feature {NONE} -- Hole
 
 	process_color (dropped: COLOR_STONE) is
 		local
-			cmd: BG_COLOR_CMD;
+			cmd: BG_STONE_CMD;
 		do
 			associated_tf.set_text (dropped.color_name);
 			!!cmd;
-			cmd.execute (editor);
+			cmd.execute (editor.edited_context);
 		end;
 
 feature 

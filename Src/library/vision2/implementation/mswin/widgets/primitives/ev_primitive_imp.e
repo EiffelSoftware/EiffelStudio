@@ -17,6 +17,9 @@ inherit
 	EV_WIDGET_IMP
 
 	WEL_VK_CONSTANTS
+		export
+			{NONE} all
+		end
 
 feature -- Access
 

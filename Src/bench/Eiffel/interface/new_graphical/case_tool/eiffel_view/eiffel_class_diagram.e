@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 			drop_y := context_editor.pointer_position.y
 			create dial.make_default (context_editor.development_window)
 			dial.preset_cluster (model.center_class.class_i.cluster)
-			dial.call ("New_class")
+			dial.call_default
 			include_new_dropped_class (dial, drop_x, drop_y)
 		end
 		

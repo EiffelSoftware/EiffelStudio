@@ -569,7 +569,7 @@ feature {NONE} -- Implementation
 			if clf /= Void then
 				dial.preset_cluster (clf.model.cluster_i)
 			end
-			dial.call ("New_class")
+			dial.call_default
 			include_new_dropped_class (dial, drop_x, drop_y)
 		end
 		

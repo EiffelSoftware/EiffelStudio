@@ -43,9 +43,9 @@ feature {NONE}
 			-- the current stone may be dragged and
 			-- dropped.
 		do	
-			source.set_action ("!<Btn3Down>", transport_command, Current)
-			source.set_action ("!Shift<Btn3Down>", namer_command, Current)
-			source.set_action ("!Ctrl<Btn3Down>", create_editor_command, Current)
+			source.set_action ("<Btn3Down>", transport_command, Current)
+			source.set_action ("Shift<Btn3Down>", namer_command, Current)
+			source.set_action ("Ctrl<Btn3Down>", create_editor_command, Current)
 		end;
 
 	namer_command: RENAME_COMMAND is

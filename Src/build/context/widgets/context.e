@@ -487,7 +487,7 @@ feature {NONE}
 			-- General callbacks forall types of contexts
 		do
 				-- Move and resize actions
-			a_widget.set_action ("!<Btn1Down>", Eb_selection_mgr, third);
+			a_widget.set_action ("<Btn1Down>", Eb_selection_mgr, third);
 			a_widget.set_action ("<Btn1Up>", Eb_selection_mgr, second_arg);
 				-- Shift actions
 			a_widget.set_action ("Shift<Btn1Down>", Eb_selection_mgr, fourth);

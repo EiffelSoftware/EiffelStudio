@@ -63,12 +63,11 @@ feature -- Interface
 			font_text_form.attach_bottom (font_text, 1);
 
 			attach_bottom_position (font_b, 75);
-			attach_top_position (font_text_form, 75);
+			attach_top_position (font_text_form, 76);
 			attach_right (font_text_form, 10);
 			attach_left (font_text_form, 10);
 			attach_bottom_widget (separator, font_text_form, 1);
 			attach_bottom (reset_button, 10);
-			attach_right (reset_button, 10);
 			attach_bottom_widget (reset_button, separator, 5);
 			attach_left_position (reset_button, 52);
 			attach_right (reset_button, 10);

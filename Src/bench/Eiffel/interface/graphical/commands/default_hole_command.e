@@ -23,9 +23,9 @@ feature -- Initialization
 	init_other_button_actions (a_button: EB_BUTTON_HOLE) is
 			-- Initialize other button actions
 		do
-			a_button.set_action ("!c<Btn3Down>", 
+			a_button.set_action ("c<Btn3Down>", 
 				Current, control_button_three_action);
-			a_button.set_action ("!Shift<Btn3Down>", 
+			a_button.set_action ("Shift<Btn3Down>", 
 				Current, shift_button_three_action);
 		end;
 

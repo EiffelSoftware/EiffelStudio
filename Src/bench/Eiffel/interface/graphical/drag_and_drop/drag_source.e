@@ -84,8 +84,8 @@ feature {NONE} -- Transport
 		require
 			valid_source: source /= Void
 		do	
-			source.set_action ("!<Btn3Down>", transport_command, Current);
-			source.set_action ("!<Btn1Down>", open_command, Current);
+			source.set_action ("<Btn3Down>", transport_command, Current);
+			source.set_action ("<Btn1Down>", open_command, Current);
 		end;
 	
 	transport_command: TRANSPORT is

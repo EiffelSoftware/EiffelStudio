@@ -32,7 +32,7 @@ feature -- Initialization
 			-- (click requires a confirmation, control-click doesn't).
 		do
 			formatter_make (a_tool);
-			set_action ("!c<Btn1Down>", Current, control_click)
+			set_action ("c<Btn1Down>", Current, control_click)
 		end;
 
 feature -- Properties

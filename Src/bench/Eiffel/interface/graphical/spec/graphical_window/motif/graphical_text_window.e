@@ -72,8 +72,8 @@ feature {NONE} -- Initialization
 			old_make (a_name, a_parent);
 			initialize_transport;
 			list_make (30);
-			set_action ("!c<Btn3Down>", Current, new_tooler_action)
-			set_action ("!Shift<Btn3Down>", Current, super_melt_action)
+			set_action ("c<Btn3Down>", Current, new_tooler_action)
+			set_action ("Shift<Btn3Down>", Current, super_melt_action)
 			highlighted_line := Void;
 			selected_clickable_text := Void;
 			!! text.make (0);

@@ -25,6 +25,7 @@ default
 	disabled_debug ("cecil")
 	disabled_debug ("check_expanded")
 	disabled_debug ("class_of_id")
+	disabled_debug ("com_object")
 	disabled_debug ("comments")
 	disabled_debug ("count")
 	disabled_debug ("dead_code")
@@ -35,7 +36,7 @@ default
 	disabled_debug ("debugger_hook")
 	disabled_debug ("debugger_interface")
 	disabled_debug ("debugger_trace")
-	debug ("disable_assertions")
+	disabled_debug ("disable_assertions")
 	disabled_debug ("display_exception_trace")
 	disabled_debug ("dle topo")
 	disabled_debug ("dlg_dispatcher")
@@ -122,6 +123,8 @@ cluster
 	common:		"$EIFFEL_SRC\Eiffel\common"
 
 	common_parser (common):		"$\parser"
+
+	ast_visitor(common_parser):	"$\AST\visitor"
 
 	common_eiffel_parser (common_parser):		"$\parser"
 

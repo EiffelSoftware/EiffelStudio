@@ -20,19 +20,20 @@ inherit
 
 feature -- Status report
 
-	is_dragable: BOOLEAN is		
-			-- Is `Current' dragable
+	is_dockable: BOOLEAN is		
+			-- Is `Current' dockable
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := implementation.is_dragable
+			Result := implementation.is_dockable
 		ensure
-			bridge_ok: Result = implementation.is_dragable
+			bridge_ok: Result = implementation.is_dockable
 		end
 		
 	real_source: EV_DOCKABLE_SOURCE is
-			-- `Result' is EV_CONTAINER which should be
-			-- dragged when a drag starts on `Current'.
+			-- `Result' is source to be dragged
+			--  when a docking drag occurs on `Current'.
+			-- If `Void', `Current' is dragged.
 		require
 			not_destroyed: not is_destroyed
 			-- has current
@@ -40,44 +41,43 @@ feature -- Status report
 			Result := implementation.real_source
 		end
 		
-	is_externally_dockable: BOOLEAN is
+	is_external_docking_enabled: BOOLEAN is
 			-- Is `Current' able to be docked into an EV_DOCKABLE_DIALOG
 			-- When there is no valid EV_DRAGABLE_TARGET upon completion
 			-- of the transport?
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := implementation.is_externally_dockable
+			Result := implementation.is_external_docking_enabled
 		end
 
 feature -- Status setting
 
-	enable_drag is
-			-- Allow `Current' to be dragable.
+	enable_dockable is
+			-- Ensure `Current' is dockable.
 		require
 			not_destroyed: not is_destroyed
 		do
-			implementation.enable_drag
+			implementation.enable_dockable
 		ensure
-			is_dragable: is_dragable
+			is_dockable: is_dockable
 		end
 		
-	disable_drag is
-			-- Ensure `Current' is not dragable.
+	disable_dockable is
+			-- Ensure `Current' is not dockable.
 		require
 			not_destroyed: not is_destroyed
 		do
-			implementation.disable_drag
+			implementation.disable_dockable
 		ensure
-			not_is_dragable: not is_dragable
+			not_is_dockable: not is_dockable
 		end
 
 	set_real_source (dockable_source: EV_DOCKABLE_SOURCE) is
-			-- Set `dockable_source' to be the widget moved when a
-			-- drag begins on `Current'.
+			-- Assign `dockable_source' to `real_source'.
 		require
 			not_destroyed: not is_destroyed
-			is_dragable: is_dragable
+			is_dockable: is_dockable
 			dockable_source_not_void: dockable_source /= Void
 			dockable_source_is_parent_recursive: source_has_current_recursive (dockable_source)
 		do
@@ -90,37 +90,36 @@ feature -- Status setting
 			-- Ensure `real_source' is `Void'.
 		require
 			not_destroyed: not is_destroyed
-			is_dragable: is_dragable
 		do
 			implementation.remove_real_source
 		ensure
 			no_parent_container: real_source = Void
 		end
 		
-	enable_externally_dockable is
+	enable_external_docking is
 			-- Allow `Current' to be docked into an EV_DOCKABLE_DIALOG
 			-- When there is no valid EV_DRAGABLE_TARGET upon completion
-			-- of the transport?
+			-- of the transport.
 		require
 			not_destroyed: not is_destroyed
-			is_dragable: is_dragable
+			is_dockable: is_dockable
 		do
-			implementation.enable_externally_dockable
+			implementation.enable_external_docking
 		ensure
-			is_externally_dockable: not is_externally_dockable
+			is_externally_dockable: not is_external_docking_enabled
 		end
 		
-	disable_externally_dockable is
+	disable_external_docking is
 			-- Forbid `Current' to be docked into an EV_DOCKABLE_DIALOG
 			-- When there is no valid EV_DRAGABLE_TARGET upon completion
-			-- of the transport?
+			-- of the transport.
 		require
 			not_destroyed: not is_destroyed
-			is_dragable: is_dragable
+			is_dockable: is_dockable
 		do
-			implementation.disable_externally_dockable
+			implementation.disable_external_docking
 		ensure
-			not_externally_dockable: not is_externally_dockable
+			not_externally_dockable: not is_external_docking_enabled
 		end
 
 feature -- Contract support
@@ -128,6 +127,7 @@ feature -- Contract support
 	source_has_current_recursive (source: EV_DOCKABLE_SOURCE): BOOLEAN is
 			-- Does `source' recursively contain `Current'.
 		require
+			not_destroyed: not is_destroyed
 			source_not_void: source /= Void
 		local
 			widget: EV_WIDGET

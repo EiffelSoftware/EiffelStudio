@@ -19,7 +19,8 @@ inherit
 
 	EIFFEL_SCANNER
 		rename
-			make as make_eiffel_scanner
+			make as make_eiffel_scanner,
+			make_with_factory as make_eiffel_scanner_with_factory
 		redefine
 			reset
 		end
@@ -27,69 +28,94 @@ inherit
 	SHARED_PARSER_FILE_BUFFER
 		export {NONE} all end
 
-	AST_FACTORY
-		export {NONE} all end
-
-	REFACTORING_HELPER
-		export {NONE} all end
-
 feature {NONE} -- Initialization
 
 	make is
 			-- Create a new pure Eiffel parser.
+		local
+			l_factory: AST_FACTORY
 		do
-			make_eiffel_scanner
+			create l_factory
+			make_with_factory (l_factory)
+		end
+
+	make_with_factory (a_factory: AST_FACTORY) is
+		require
+			a_factory_not_void: a_factory /= Void
+		do
+			make_eiffel_scanner_with_factory (a_factory)
 			make_parser_skeleton
-			create click_list.make (Initial_click_list_capacity)
 			create suppliers.make
 			create formal_parameters.make (Initial_formal_parameters_capacity)
 			formal_parameters.compare_objects
 			id_level := Normal_level
+			create counters.make (Initial_counters_capacity)
 		end
 
-	make_il_parser is
+feature -- Parser type setting
+
+	set_il_parser is
 			-- Create a new IL Eiffel parser.
+		require
+			parsing_type_not_set: not has_parsing_type
 		do
 			il_parser := True
-			make
 		ensure
 			il_parser: il_parser
+			parsing_type_set: has_parsing_type
 		end
 
-	make_type_parser is
+	set_type_parser is
 			-- Create a new Eiffel type parser.
+		require
+			parsing_type_not_set: not has_parsing_type
 		do
 			type_parser := True
-			make
 		ensure
 			type_parser: type_parser
+			parsing_type_set: has_parsing_type
 		end
 		
-	make_expression_parser is
+	set_expression_parser is
 			-- Create a new Eiffel expression parser.
+		require
+			parsing_type_not_set: not has_parsing_type
 		do
 			expression_parser := True
-			make
 		ensure
 			expression_parser: expression_parser
+			parsing_type_set: has_parsing_type
 		end
 
-	make_indexing_parser is
+	set_indexing_parser is
 			-- Create a new Eiffel indexing clause parser.
+		require
+			parsing_type_not_set: not has_parsing_type
 		do
 			indexing_parser := True
-			make
 		ensure
 			indexing_parser: indexing_parser
+			parsing_type_set: has_parsing_type
 		end
 
-	make_entity_declaration_parser is
+	set_entity_declaration_parser is
 			-- Create a new Eiffel entity decalration parser.
+		require
+			parsing_type_not_set: not has_parsing_type
 		do
 			entity_declaration_parser := True
-			make
 		ensure
 			entity_declaration_parser: entity_declaration_parser
+			parsing_type_set: has_parsing_type
+		end
+
+feature -- STatus report
+
+	has_parsing_type: BOOLEAN is
+			-- Has parsing type been specified?
+		do
+			Result := not il_parser and not type_parser and not expression_parser and
+				not indexing_parser and not entity_declaration_parser
 		end
 
 feature -- Initialization
@@ -100,13 +126,12 @@ feature -- Initialization
 			-- another input buffer.)
 		do
 			Precursor
-			create click_list.make (Initial_click_list_capacity)
 			create suppliers.make
 			formal_parameters.wipe_out
 			id_level := Normal_level
-			real_class_end_position := 0
 			has_externals := False
 			once_manifest_string_count := 0
+			counters.wipe_out
 		end
 
 feature -- Status report
@@ -185,12 +210,6 @@ feature -- Access: result nodes
 
 feature -- Access
 
-	yacc_position: INTEGER
-			-- Position recorded in AST
-
-	yacc_line_number: INTEGER
-			-- Line number recorded in AST
-
 	suppliers: SUPPLIERS_AS
 			-- Suppliers of class being parsed
 
@@ -198,36 +217,21 @@ feature -- Access
 			-- Name of formal generic parameters
 			-- of class being parsed
 
-	click_list: CLICK_LIST
-			-- List of clickable elements read so far
-
-	real_class_end_position: INTEGER
-			-- When `inherit_context' becomes `True', when an
-			-- empty parent specification is encountered, the
-			-- position is saved in this variable.
-			-- If this was the last token, this position is used
-			-- for the insertion positions in `root_node'.
-
-	formal_generics_start_position: INTEGER
-			-- Start of formal generics, if present.
-
 	formal_generics_end_position: INTEGER
-			-- End of formal generics, if present.
+			-- End of formal generics, if present
+
+	inheritance_end_position: INTEGER
+			-- End of inheritance clause
+
+	features_end_position: INTEGER
+			-- End of feature clauses
+
+	invariant_end_position: INTEGER
+			-- End of invariant
 
 	once_manifest_string_count: INTEGER
 			-- Number of once manifest strings in current feature declaration
 			-- or in an invariant
-
-feature -- Setting
-
-	set_position (l: TOKEN_LOCATION) is
-			-- Set `yacc_position' and `yacc_line_number'.
-		require
-			l_not_void: l /= Void
-		do
-			yacc_position := l.start_position
-			yacc_line_number := l.line_number
-		end
 
 feature -- Removal
 
@@ -244,7 +248,7 @@ feature -- Removal
 			type_node_void: type_node = Void
 			expression_node_void: expression_node = Void
 			indexing_node_void: indexing_node = Void
-			local_node_void: entity_declaration_node = Void
+			entity_declaration_node_void: entity_declaration_node = Void
 		end
 
 	wipe_out is
@@ -256,6 +260,7 @@ feature -- Removal
 			root_node_void: root_node = Void
 			type_node_void: type_node = Void
 			expression_node_void: expression_node = Void
+			indexing_node_void: indexing_node = Void
 			entity_declaration_node_void: entity_declaration_node = Void
 		end
 
@@ -296,7 +301,7 @@ feature {NONE} -- Implementation
 	initial_has_old_verbatim_strings_warning: BOOLEAN
 			-- Value of `has_old_verbatim_strings_warning' when parser was started
 
-	fclause_pos: TOKEN_LOCATION
+	fclause_pos: LOCATION_AS
 			-- To memorize the beginning of a feature clause
 
 	fbody_pos: INTEGER
@@ -306,43 +311,65 @@ feature {NONE} -- Implementation
 			-- Indexing clause for an Eiffel feature.
 			-- IL only
 
+feature {NONE} -- Counters
+
+	counter_value: INTEGER is
+			-- Value of the last counter registered
+		require
+			counters_not_empty: not counters.is_empty
+		do
+			Result := counters.item
+		ensure
+			value_positive: Result >= 0
+		end
+
+	add_counter is
+			-- Register a new counter.
+		do
+			counters.force (0)
+		ensure
+			one_more: counters.count = old counters.count + 1
+			value_zero: counter_value = 0
+		end
+
+	remove_counter is
+			-- Unregister last registered counter.
+		require
+			counters_not_empty: not counters.is_empty
+		do
+			counters.remove
+		ensure
+			one_less: counters.count = old counters.count - 1
+		end
+
+	increment_counter is
+			-- Increment `counter_value'.
+		require
+			counters_not_empty: not counters.is_empty
+		local
+			a_value: INTEGER
+		do
+			a_value := counters.item
+			counters.replace (a_value + 1)
+		ensure
+			same_counters_count: counters.count = old counters.count
+			one_more: counter_value = old counter_value + 1
+		end
+
+	counters: DS_ARRAYED_STACK [INTEGER]
+			-- Counters currently in use by the parser
+			-- to build lists of AST nodes with the right size.
+
 feature {NONE} -- Actions
 
-	add_to_assertion_list (a_list: LIST [TAGGED_AS]; an_assertion: TAGGED_AS) is
-			-- Add `an_assertion' at end of `a_list' if not void.
-		require
-			a_list_not_void: a_list /= Void
-		do
-			if an_assertion /= Void then
-				a_list.extend (an_assertion)
-			end
-		end
-
-	add_to_feature_clause_list (a_list: LIST [FEATURE_CLAUSE_AS]; a_clause: FEATURE_CLAUSE_AS) is
-			-- Add `a_clause' at end of `a_list' if not void.
-		require
-			a_list_not_void: a_list /= Void
-		do
-			if a_clause /= Void then
-				a_list.extend (a_clause)
-			end
-		end
-
-	new_class_description (n: PAIR [ID_AS, CLICK_AST]; n2: STRING_AS;
+	new_class_description (n: ID_AS; n2: STRING_AS;
 		is_d, is_e, is_s, is_fc, is_ex: BOOLEAN;
 		first_ind, last_ind: INDEXING_CLAUSE_AS; g: EIFFEL_LIST [FORMAL_DEC_AS];
 		p: EIFFEL_LIST [PARENT_AS]; c: EIFFEL_LIST [CREATE_AS]; co: EIFFEL_LIST [CONVERT_FEAT_AS];
 		f: EIFFEL_LIST [FEATURE_CLAUSE_AS]; inv: INVARIANT_AS;
-		s: SUPPLIERS_AS; o: STRING_AS; cl: CLICK_LIST): CLASS_AS is
+		s: SUPPLIERS_AS; o: STRING_AS; ed: LOCATION_AS): CLASS_AS is
 			-- New CLASS AST node;
 			-- Update the clickable list.
-		require
-			n_not_void: n /= Void
-			class_name_not_void: n.first /= Void
-			click_ast_not_void: n.second /= Void
-			s_not_void: s /= Void
-			cl_not_void: cl /= Void
-			co_valid: co /= Void implies not co.is_empty
 		local
 			ext_name: STRING
 		do
@@ -354,529 +381,187 @@ feature {NONE} -- Actions
 					ext_name := n2.value
 				end
 			end
-			Result := new_class_as (n.first, ext_name, is_d, is_e, is_s, is_fc, is_ex, first_ind,
-				last_ind, g, p, c, co, f, inv, s, o, cl, has_externals)
-			n.second.set_node (Result)
-		ensure
-			class_description_not_void: Result /= Void
-			class_name_set: Result.class_name = n.first
-			external_class_name_set: (n2 /= Void and then Result.external_class_name = n2.value)
-							or else (Result.external_class_name = Void)
-			is_deferred_set: Result.is_deferred = is_d
-			is_expanded_set: Result.is_expanded = is_e
-			is_separate_set: Result.is_separate = is_s
-			is_frozen_set: Result.is_frozen = is_fc
-			is_external_set: Result.is_external = is_ex
-			first_indexes_set: Result.top_indexes = first_ind
-			last_indexes_set: Result.bottom_indexes = last_ind
-			generics_set: Result.generics = g
-			parents_set: Result.parents = p
-			creators_set: Result.creators = c
-			convertors_set: Result.convertors = co
-			features_set: Result.features = f
-			empty_invariant_part: Result.invariant_part = Void implies inv = Void or else inv.assertion_list = Void
-			invariant_part_set: Result.invariant_part /= Void implies Result.invariant_part = inv
-			suppliers_set: Result.suppliers = s
-			obsolete_message_set: Result.obsolete_message = o
-			click_list_set: Result.click_list = cl
-			click_ast_updated: n.second.node = Result
-		end
-
-	new_declaration_body (args: EIFFEL_LIST [TYPE_DEC_AS]; type: TYPE_AS; content: CONTENT_AS): BODY_AS is
-			-- New declaration body AST node;
-			-- Report syntax error if necessary
-		local
-			constant_as: CONSTANT_AS
-			routine_as: ROUTINE_AS
-		do
-			Result := new_body_as (args, type, content)
-				-- Validity test for feature declaration:
-			constant_as ?= content
-			routine_as ?= content
-			if args = Void and type = Void and content = Void then
-					-- Either arguments or type or body
-				raise_error
-			elseif constant_as /= Void and (args /= Void or type = Void) then
-					-- constant implies no argument but type
-				raise_error
-			elseif args /= Void and (routine_as = Void or content = Void) then
-					-- arguments implies non-void routine
-				raise_error
-			end
-		ensure
-			body_not_void: Result /= Void
-			arguments_set: Result.arguments = args
-			type_set: Result.type = type
-			content_set: Result.content = content
-		end
-
-	new_feature_declaration (f: PAIR [EIFFEL_LIST [FEATURE_NAME], CLICK_AST]; b: BODY_AS; i: INDEXING_CLAUSE_AS ): FEATURE_AS is
-			-- New FEATURE AST node;
-			-- Update the clickable list.
-		require
-			f_not_void: f /= Void
-			feature_names_not_void: f.first /= Void
-			feature_names_not_empty: not f.first.is_empty
-			click_ast_not_void: f.second /= Void
-			can_have_indexing_clause: i /= Void implies f.first.count = 1
-		local
-			click_ast: CLICK_AST
-		do
-			click_ast := f.second
-			Result := new_feature_as (f.first, b, i, click_ast.start_line_number,
-				click_ast.start_position, current_position.start_position)
-			click_ast.set_node (Result)
-		ensure
-			feature_declaration_not_void: Result /= Void
-			feature_names_set: Result.feature_names = f.first
-			body_set: Result.body = b
-			indexes_set: Result.indexes = i
-			click_ast_updated: f.second.node = Result
-		end
-
-	new_parent_clause (n: PAIR [ID_AS, CLICK_AST]; g: EIFFEL_LIST [TYPE_AS];
-		rn: EIFFEL_LIST [RENAME_AS]; e: EIFFEL_LIST [EXPORT_ITEM_AS];
-		u: EIFFEL_LIST [FEATURE_NAME]; rd: EIFFEL_LIST [FEATURE_NAME];
-		s: EIFFEL_LIST [FEATURE_NAME]): PARENT_AS is
-			-- New PARENT AST node;
-			-- Update the clickable list.
-		require
-			n_not_void: n /= Void
-			type_name_not_void: n.first /= Void
-			click_ast_not_void: n.second /= Void
-		local
-			class_type: CLASS_TYPE_AS
-		do
-				-- Class type appearing in a parent clause does
-				-- not hold any qualifier.
-			class_type := new_class_type_as (n.first, g, False, False)
-			n.second.set_node (class_type)
-			Result := new_parent_as (class_type, rn, e, u, rd, s)
-		ensure
-			parent_clause_not_void: Result /= Void
-			renaming_set: Result.renaming = rn
-			exports_set: Result.exports = e
-			undefining_set: Result.undefining = u
-			redefininig_set: Result.redefining = rd
-			selecting_set: Result.selecting = s
-		end
-
-	new_precursor (n: PAIR [ID_AS, CLICK_AST]; args: EIFFEL_LIST [EXPR_AS]; old_syntax_location: TOKEN_LOCATION): PRECURSOR_AS is
-			-- New precursor AST node;
-			-- Update the clickable list.
-		require
-			class_name_not_void: n /= Void implies n.first /= Void
-			click_ast_not_void: n /= Void implies n.second /= Void
-		do
-			if n = Void then
-				Result := new_precursor_as (Void, args)
-			else
-				Result := new_precursor_as (n.first, args)
-				n.second.set_node (Result)
-			end
-			if old_syntax_location /= Void and has_syntax_warning then
-				Error_handler.insert_warning (
-					create {SYNTAX_WARNING}.make (old_syntax_location.start_position,
-					old_syntax_location.end_position, filename, 0,
-					"Put type specification after `Precursor' keyword"))
-			end
-		ensure
-			precursor_not_void: Result /= Void
-			parent_name_set: Result.parent_name = n.first
-			parameters_set: Result.parameters = args
-			click_ast_updated: n.second.node = Result
-		end
-
-	new_rename_pair (o, n: PAIR [FEATURE_NAME, CLICK_AST]): RENAME_AS is
-			-- New RENAME_PAIR AST node;
-			-- Update the clickable list.
-		require
-			o_not_void: o /= Void
-			old_name_not_void: o.first /= Void
-			old_click_ast_not_void: o.second /= Void
-			n_not_void: n /= Void
-			new_name_not_void: n.first /= Void
-			new_click_ast_not_void: n.second /= Void
-		do
-			Result := new_rename_as (o.first, n.first)
-			o.second.set_node (n.first)
-		ensure
-			rename_pair_not_void: Result /= Void
-			old_name_set: Result.old_name = o.first
-			new_name_set: Result.new_name = n.first
+			Result := ast_factory.new_class_as (n, ext_name, is_d, is_e, is_s, is_fc, is_ex, first_ind,
+				last_ind, g, p, c, co, f, inv, s, o, has_externals, ed)
 		end
 
 feature {NONE} -- ID factory
 
-	new_none_id_as: ID_AS is
+	new_none_id: ID_AS is
 			-- New ID AST node for "NONE"
 		do
-			create Result.initialize (None_classname)
-		ensure
-			id_as_not_void: Result /= Void
+			Result := ast_factory.new_filled_id_as (line, column, position, None_classname.count)
+			if Result /= Void then
+				Result.append (None_classname)
+			end
 		end
 
 feature {NONE} -- String factory
 
-	new_lt_string_as: STRING_AS is
+	new_string (v: STRING): STRING_AS is
+			-- New string AST node for `v'.
+		require
+			v_not_void: v /= Void
+		do
+			Result := ast_factory.new_string_as (v, line, column, position)
+		end
+
+	new_lt_string: STRING_AS is
 			-- New string AST node for "<"
 		do
-			Result := new_string_as ("<")
-		ensure
-			string_as_not_void: Result /= Void
+			Result := new_string ("<")
 		end
 
-	new_le_string_as: STRING_AS is
+	new_le_string: STRING_AS is
 			-- New string AST node for "<="
 		do
-			Result := new_string_as ("<=")
-		ensure
-			string_as_not_void: Result /= Void
+			Result := new_string ("<=")
 		end
 
-	new_gt_string_as: STRING_AS is
+	new_gt_string: STRING_AS is
 			-- New string AST node for ">"
 		do
-			Result := new_string_as (">")
-		ensure
-			string_as_not_void: Result /= Void
+			Result := new_string (">")
 		end
 
-	new_ge_string_as: STRING_AS is
+	new_ge_string: STRING_AS is
 			-- New string AST node for ">="
 		do
-			Result := new_string_as (">=")
-		ensure
-			string_as_not_void: Result /= Void
+			Result := new_string (">=")
 		end
 
-	new_minus_string_as: STRING_AS is
+	new_minus_string: STRING_AS is
 			-- New string AST node for "-"
 		do
-			Result := new_string_as ("-")
-		ensure
-			string_as_not_void: Result /= Void
+			Result := new_string ("-")
 		end
 
-	new_plus_string_as: STRING_AS is
+	new_plus_string: STRING_AS is
 			-- New string AST node for "+"
 		do
-			Result := new_string_as ("+")
-		ensure
-			string_as_not_void: Result /= Void
+			Result := new_string ("+")
 		end
 
-	new_star_string_as: STRING_AS is
+	new_star_string: STRING_AS is
 			-- New string AST node for "*"
 		do
-			Result := new_string_as ("*")
-		ensure
-			string_as_not_void: Result /= Void
+			Result := new_string ("*")
 		end
 
-	new_slash_string_as: STRING_AS is
+	new_slash_string: STRING_AS is
 			-- New string AST node for "/"
 		do
-			Result := new_string_as ("/")
-		ensure
-			string_as_not_void: Result /= Void
+			Result := new_string ("/")
 		end
 
-	new_power_string_as: STRING_AS is
+	new_power_string: STRING_AS is
 			-- New string AST node for "^"
 		do
-			Result := new_string_as ("^")
-		ensure
-			string_as_not_void: Result /= Void
+			Result := new_string ("^")
 		end
 
-	new_div_string_as: STRING_AS is
+	new_div_string: STRING_AS is
 			-- New string AST node for "//"
 		do
-			Result := new_string_as ("//")
-		ensure
-			string_as_not_void: Result /= Void
+			Result := new_string ("//")
 		end
 
-	new_mod_string_as: STRING_AS is
+	new_mod_string: STRING_AS is
 			-- New string AST node for "\\"
 		do
-			Result := new_string_as ("\\")
-		ensure
-			string_as_not_void: Result /= Void
+			Result := new_string ("\\")
 		end
 
-	new_and_string_as: STRING_AS is
+	new_and_string: STRING_AS is
 			-- New string AST node for "and"
 		do
-			Result := new_string_as ("and")
-		ensure
-			string_as_not_void: Result /= Void
+			Result := new_string ("and")
 		end
 
-	new_and_then_string_as: STRING_AS is
+	new_and_then_string: STRING_AS is
 			-- New string AST node for "and then"
 		do
-			Result := new_string_as ("and then")
-		ensure
-			string_as_not_void: Result /= Void
+			Result := new_string ("and then")
 		end
 
-	new_implies_string_as: STRING_AS is
+	new_implies_string: STRING_AS is
 			-- New string AST node for "implies"
 		do
-			Result := new_string_as ("implies")
-		ensure
-			string_as_not_void: Result /= Void
+			Result := new_string ("implies")
 		end
 
-	new_or_string_as: STRING_AS is
+	new_or_string: STRING_AS is
 			-- New string AST node for "or"
 		do
-			Result := new_string_as ("or")
-		ensure
-			string_as_not_void: Result /= Void
+			Result := new_string ("or")
 		end
 
-	new_or_else_string_as: STRING_AS is
+	new_or_else_string: STRING_AS is
 			-- New string AST node for "or else"
 		do
-			Result := new_string_as ("or else")
-		ensure
-			string_as_not_void: Result /= Void
+			Result := new_string ("or else")
 		end
 
-	new_xor_string_as: STRING_AS is
+	new_xor_string: STRING_AS is
 			-- New string AST node for "xor"
 		do
-			Result := new_string_as ("xor")
-		ensure
-			string_as_not_void: Result /= Void
+			Result := new_string ("xor")
 		end
 
-	new_not_string_as: STRING_AS is
+	new_not_string: STRING_AS is
 			-- New string AST node for "not"
 		do
-			Result := new_string_as ("not")
-		ensure
-			string_as_not_void: Result /= Void
-		end
-
-	new_empty_string_as: STRING_AS is
-			-- New string AST node for ""
-		do
-			Result := new_string_as ("")
-		ensure
-			string_as_not_void: Result /= Void
-		end
-
-	new_empty_verbatim_string_as (marker: STRING; is_indentable: BOOLEAN): VERBATIM_STRING_AS is
-			-- New verbatim string AST node for ""
-		require
-			marker_not_void: marker /= Void
-		do
-			Result := new_verbatim_string_as ("", marker, is_indentable)
-		ensure
-			verbatim_string_as_not_void: Result /= Void
-			value_set: Result.value /= Void and then Result.value.is_empty
-			marker_set: Result.verbatim_marker = marker
-			is_indentable_set: Result.is_indentable = is_indentable
-		end
-
-feature {NONE} -- Clickable factory
-
-	new_clickable_id (an_id: ID_AS): PAIR [ID_AS, CLICK_AST] is
-			-- New clickable node for `an_id';
-			-- Register it in `click_list'
-		require
-			an_id_not_void: an_id /= Void
-		local
-			click_ast: CLICK_AST
-		do
-			click_ast := new_click_ast (Dummy_clickable_as, current_position.line_number,
-				current_position.start_position, current_position.end_position)
-			click_list.extend (click_ast)
-			create Result
-			Result.set_first (an_id)
-			Result.set_second (click_ast)
-		ensure
-			clickable_id_not_void: Result /= Void
-			id_set: Result.first = an_id
-			click_ast_not_void: Result.second /= Void
-		end
-
-	new_clickable_string (a_string: STRING_AS): PAIR [STRING_AS, CLICK_AST] is
-			-- New clickable node for `a_string';
-			-- Register it in `click_list'
-		require
-			a_string_not_void: a_string /= Void
-		local
-			click_ast: CLICK_AST
-		do
-			click_ast := new_click_ast (Dummy_clickable_as, current_position.line_number,
-				current_position.start_position, current_position.end_position)
-			click_list.extend (click_ast)
-			create Result
-			Result.set_first (a_string)
-			Result.set_second (click_ast)
-		ensure
-			clickable_id_not_void: Result /= Void
-			string_set: Result.first = a_string
-			click_ast_not_void: Result.second /= Void
-		end
-
-	new_clickable_feature_name (ci: PAIR [ID_AS, CLICK_AST]): PAIR [FEATURE_NAME, CLICK_AST] is
-			-- New clickable feature_name
-		require
-			ci_not_void: ci /= Void
-			id_not_void: ci.first /= Void
-			click_ast_not_void: ci.second /= Void
-		local
-			feature_name: FEATURE_NAME
-			click_ast: CLICK_AST
-		do
-			click_ast := ci.second
-			feature_name := new_feature_name_id_as (ci.first, is_frozen)
-			click_ast.set_node (feature_name)
-			create Result
-			Result.set_first (feature_name)
-			Result.set_second (click_ast)
-		ensure
-			clickable_feature_name_not_void: Result /= Void
-			feature_name_not_void: Result.first /= Void
-			click_ast_not_void: Result.second /= Void
-		end
-
-	new_clickable_infix (cs: PAIR [STRING_AS, CLICK_AST]): PAIR [FEATURE_NAME, CLICK_AST] is
-			-- New clickable infix feature_name
-		require
-			cs_not_void: cs /= Void
-			string_not_void: cs.first /= Void
-			click_ast_not_void: cs.second /= Void
-		local
-			feature_name: FEATURE_NAME
-			click_ast: CLICK_AST
-		do
-			click_ast := cs.second
-			feature_name := new_infix_as (cs.first, is_frozen)
-			click_ast.set_node (feature_name)
-			create Result
-			Result.set_first (feature_name)
-			Result.set_second (click_ast)
-		ensure
-			clickable_feature_name_not_void: Result /= Void
-			feature_name_not_void: Result.first /= Void
-			click_ast_not_void: Result.second /= Void
-		end
-
-	new_clickable_prefix (cs: PAIR [STRING_AS, CLICK_AST]): PAIR [FEATURE_NAME, CLICK_AST] is
-			-- New clickable prefix feature_name
-		require
-			cs_not_void: cs /= Void
-			string_not_void: cs.first /= Void
-			click_ast_not_void: cs.second /= Void
-		local
-			feature_name: FEATURE_NAME
-			click_ast: CLICK_AST
-		do
-			click_ast := cs.second
-			feature_name := new_prefix_as (cs.first, is_frozen)
-			click_ast.set_node (feature_name)
-			create Result
-			Result.set_first (feature_name)
-			Result.set_second (click_ast)
-		ensure
-			clickable_feature_name_not_void: Result /= Void
-			feature_name_not_void: Result.first /= Void
-			click_ast_not_void: Result.second /= Void
-		end
-
-	new_clickable_feature_name_list (fn: PAIR [FEATURE_NAME, CLICK_AST]; n: INTEGER): PAIR [EIFFEL_LIST [FEATURE_NAME], CLICK_AST] is
-			-- New clickable feature_name list
-		require
-			fn_not_void: fn /= Void
-			feature_name_not_void: fn.first /= Void
-			click_ast_not_void: fn.second /= Void
-			n_positive: n >= 0
-		local
-			feature_name_list: EIFFEL_LIST [FEATURE_NAME]
-		do
-			feature_name_list := new_eiffel_list_feature_name (n)
-			feature_name_list.extend (fn.first)
-			create Result
-			Result.set_first (feature_name_list)
-			Result.set_second (fn.second)
-		ensure
-			clickable_feature_name_list_not_void: Result /= Void
-			feature_name_list_not_void: Result.first /= Void
-			feature_name_added: Result.first.has (fn.first)
-			click_ast_set: Result.second = fn.second
+			Result := new_string ("not")
 		end
 
 feature {NONE} -- Type factory
 
-	new_class_type (ci: PAIR [ID_AS, CLICK_AST]; generics: EIFFEL_LIST [TYPE_AS]; is_exp, is_sep: BOOLEAN): TYPE_AS is
+	new_class_type (an_id: ID_AS; generics: EIFFEL_LIST [TYPE_AS]; is_exp, is_sep: BOOLEAN): TYPE_AS is
 			-- New class type (Take care of formal generics);
 			-- Update the clickable list and register the resulting
 			-- type as a supplier of the class being parsed.
-		require
-			ci_not_void: ci /= Void
-			class_name_not_void: ci.first /= Void
-			click_ast_not_void: ci.second /= Void
 		local
 			class_name: ID_AS
-			click_ast: CLICK_AST
-			formal_type: FORMAL_AS
+			formal_type, l_new_formal: FORMAL_AS
 			class_type: CLASS_TYPE_AS
 		do
-			class_name := ci.first
-			click_ast := ci.second
-			if none_classname.is_equal (class_name) then
-				Result := new_none_type (click_ast, generics /= Void)
-			else
-				if generics = Void then
-					from formal_parameters.start until formal_parameters.after loop
-						formal_type := formal_parameters.item
-						if class_name.is_equal (formal_type.name) then
-								-- Shouldn't we just remove the formal type
-								-- name from the clickable list instead? (ericb)
-							formal_type := formal_type.twin
-							click_ast.set_node (formal_type)
-							Result := formal_type
-								-- Jump out of the loop.
-							formal_parameters.finish
+			if an_id /= Void then
+				class_name := an_id
+				if none_classname.is_equal (class_name) then
+					if generics /= Void then
+						report_basic_generic_type_error
+					end
+					Result := ast_factory.new_none_type_as
+				else
+					if generics = Void then
+						from
+							formal_parameters.start
+						until
+							formal_parameters.after
+						loop
+							formal_type := formal_parameters.item
+							if class_name.is_equal (formal_type.name) then
+									-- Shouldn't we just remove the formal type
+									-- name from the clickable list instead? (ericb)
+								l_new_formal := ast_factory.new_formal_as (an_id, formal_type.is_reference,
+									formal_type.is_expanded)
+								l_new_formal.set_position (formal_type.position)
+								Result := l_new_formal
+									-- Jump out of the loop.
+								formal_parameters.finish
+							end
+							formal_parameters.forth
 						end
-						formal_parameters.forth
+					end
+					if Result = Void then
+							-- It is a common class type.
+						class_type := ast_factory.new_class_type_as (class_name, generics, is_exp, is_sep)
+							-- Put the supplier in `suppliers'.
+						suppliers.insert_supplier_id (class_name)
+						Result := class_type
 					end
 				end
-				if Result = Void then
-						-- It is a common class type.
-					class_type := new_class_type_as (class_name, generics, is_exp, is_sep)
-						-- Put the supplier in `suppliers'.
-					suppliers.insert_supplier_id (class_name)
-					click_ast.set_node (class_type)
-					Result := class_type
-				end
 			end
-		ensure
-			type_not_void: Result /= Void
-		end
-
-	new_none_type (click_ast: CLICK_AST; is_generic: BOOLEAN): NONE_TYPE_AS is
-			-- New none class type;
-			-- Update the clickable list and report
-			-- error if `is_generic' is true.
-		require
-			click_ast_not_void: click_ast /= Void
-		do
-			if is_generic then
-				report_basic_generic_type_error
-			end
-			Result := new_none_type_as
-			click_ast.set_node (Result)
-		ensure
-			type_not_void: Result /= Void
-			click_ast_updated: click_ast.node = Result
 		end
 
 feature {NONE} -- Basic type factory
@@ -923,6 +608,7 @@ feature {NONE} -- Basic type factory
 			if not Result.is_initialized then
 				report_integer_too_large_error (buffer)
 			end
+			Result.set_position (line, column, position, buffer.count)
 		end
 
 	new_real_value (is_signed: BOOLEAN; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING): REAL_AS is
@@ -944,6 +630,7 @@ feature {NONE} -- Basic type factory
 				buffer.precede ('-')
 			end
 			create Result.make (l_type, buffer)
+			Result.set_position (line, column, position, buffer.count)
 		end
 		
 feature {NONE} -- Error handling
@@ -953,7 +640,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: BASIC_GEN_TYPE_ERR
 		do
-			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (line, column, filename, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
@@ -966,8 +653,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: SYNTAX_ERROR
 		do
-			create an_error.make (
-				current_position.start_position, current_position.end_position, filename, 0,
+			create an_error.make (line, column, filename,
 				"Specified type %"" + a_type.dump +
 					"%" is not a valid type for real constant %"" + a_real + "%"", False)
 			Error_handler.insert_error (an_error)
@@ -982,8 +668,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: SYNTAX_ERROR
 		do
-			create an_error.make (
-				current_position.start_position, current_position.end_position, filename, 0,
+			create an_error.make (line, column, filename,
 				"Specified type %"" + a_type.dump +
 					"%" is not a valid type for integer constant %"" + an_int + "%"", False)
 			Error_handler.insert_error (an_error)
@@ -999,7 +684,7 @@ feature {NONE} -- Error handling
 			an_error: SYNTAX_ERROR
 		do
 			fixme ("Change plain syntax error to Integer_too_large error when the corresponding validity rule is available.")
-			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (line, column, filename, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
@@ -1013,7 +698,7 @@ feature {NONE} -- Error handling
 			an_error: SYNTAX_ERROR
 		do
 			fixme ("Change plain syntax error to Integer_too_small error when the corresponding validity rule is available.")
-			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (line, column, filename, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
@@ -1024,21 +709,12 @@ feature {NONE} -- Error handling
 		local
 			an_error: SYNTAX_ERROR
 		do
-			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (line, column, filename, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
 
 feature {NONE} -- Constants
-
-	Dummy_clickable_as: CLICKABLE_AST is
-			-- Dummy CLICKABLE_AST used to temporarily
-			-- fill `node' in CLICK_AST
-		once
-			Result := new_none_type_as
-		ensure
-			dummy_clicable_as_not_void: Result /= Void
-		end
 
 	Integer_8_classname: STRING is "INTEGER_8"
 	Integer_16_classname: STRING is "INTEGER_16"
@@ -1052,39 +728,12 @@ feature {NONE} -- Constants
 	Pointer_classname: STRING is "POINTER"
 	Real_classname: STRING is "REAL"
 
+	Initial_counters_capacity: INTEGER is 20
+			-- Initial capacity for `counters'
+
 	Initial_formal_parameters_capacity: INTEGER is 8
 				-- Initial capacity for `formal_parameters'
 				-- (See `eif_rtlimits.h')
-
-	Initial_click_list_capacity: INTEGER is 100
-				-- Initial capacity for `click_list'
-
-	Initial_assertion_list_size: INTEGER is 8
-	Initial_choices_size: INTEGER is 2
-	Initial_class_list_size: INTEGER is 4
-	Initial_compound_size: INTEGER is 25
-	Initial_convert_list_size: INTEGER is 2
-	Initial_creation_clause_list_size: INTEGER is 2
-	Initial_debug_key_list_size: INTEGER is 2
-	Initial_elseif_list_size: INTEGER is 5
-	Initial_entity_declaration_list_size: INTEGER is 10
-	Initial_expression_list_size: INTEGER is 8
-	Initial_feature_clause_list_size: INTEGER is 10
-	Initial_feature_declaration_list_size: INTEGER is 20
-	Initial_feature_list_size: INTEGER is 11
-	Initial_formal_generic_list_size: INTEGER is 4
-	Initial_identifier_list_size: INTEGER is 6
-	Initial_index_list_size: INTEGER is 10
-	Initial_index_terms_size: INTEGER is 5
-	Initial_new_export_list_size: INTEGER is 3
-	Initial_new_feature_list_size: INTEGER is 4
-	Initial_operand_list_size: INTEGER is 8
-	Initial_parameter_list_size: INTEGER is 9
-	Initial_parent_list_size: INTEGER is 10
-	Initial_rename_list_size: INTEGER is 10
-	Initial_type_list_size: INTEGER is 4
-	Initial_when_part_list_size: INTEGER is 3
-			-- Initial capacity for lists
 
 	Normal_level: INTEGER is 0
 	Assert_level: INTEGER is 1
@@ -1092,7 +741,6 @@ feature {NONE} -- Constants
 
 invariant
 
-	click_list_not_void: click_list /= Void
 	suppliers_not_void: suppliers /= Void
 	formal_parameters_not_void: formal_parameters /= Void
 	no_void_formal_parameter: not formal_parameters.has (Void)

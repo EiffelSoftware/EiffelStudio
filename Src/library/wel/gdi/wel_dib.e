@@ -64,8 +64,6 @@ feature {NONE} -- Initialization
 		end
 
 	make_by_content_pointer (bits_ptr: POINTER; size: INTEGER) is
-		local
-			bitmap_file_header: WEL_BITMAP_FILE_HEADER						
 		do
 			create info_header.make
 

@@ -305,8 +305,6 @@ feature -- Status setting
 		require
 			a_tile_exists: a_tile /= Void
 			a_tile_valid: a_tile.is_valid
-		local
-			a_color: WEL_COLOR_REF
 		do
 			set_stipple (a_tile)
 		end
@@ -378,7 +376,6 @@ feature -- Output
 			background_brush, old_brush: WEL_BRUSH
 			background_pen, old_pen: WEL_PEN
 			a_rect: WEL_RECT
-			local_color: WEL_COLOR_REF
 			old_rop2: INTEGER
 		do
 			if is_drawable then
@@ -653,7 +650,6 @@ feature -- Implementation
 		local
 			left, top, right, bottom, x_start_arc, y_start_arc,
 			x_end_arc, y_end_arc: INTEGER
-			null_brush: WEL_NULL_BRUSH
 			local_arc_points: ARRAY [INTEGER]
 		do
 			left := center.x - radius1

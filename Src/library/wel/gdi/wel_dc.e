@@ -1368,7 +1368,6 @@ feature -- Basic operations
 			size: INTEGER
 			rgb_quad: WEL_RGB_QUAD
 			rf: RAW_FILE
-			a: ANY
 		do
 			create rgb_quad.make
 			create bmi.make_by_dc (Current, a_bitmap, Dib_rgb_colors)

@@ -198,7 +198,7 @@ feature -- Status setting
 						push_b ?= button
 						if push_b /= Void then
 							if push_b.has_accelerator then
-								menu_id := 10000 + push_b.private_text.hash_code \\ 50000
+								menu_id := new_menu_id (10000 + push_b.private_text.hash_code \\ 50000)
 								push_b.new_accelerator_id (menu_id)
 								associated_root.add_with_id (button, menu_id)
 							else
@@ -278,7 +278,7 @@ feature -- Element change
 				push_b ?= b
 				if push_b /= Void then
 					if push_b.has_accelerator then
-						menu_id := 10000 + push_b.private_text.hash_code \\ 50000
+						menu_id := new_menu_id (10000 + push_b.private_text.hash_code \\ 50000)
 						push_b.new_accelerator_id (menu_id)
 						associated_root.add_with_id (b, menu_id)
 					else
@@ -495,6 +495,17 @@ feature {NONE} -- Implementation
 		do
 			if id_children /= Void then
 				Result := id_children.item (w)
+			end
+		end
+
+	new_menu_id (new_id: INTEGER): INTEGER is
+			-- Starting from `new_id' find closest non used id.
+			-- By default returns `new_id' if no already used.
+		do
+			if item_exists (new_id) then
+				Result := new_menu_id (new_id + 1)
+			else
+				Result := new_id
 			end
 		end
 

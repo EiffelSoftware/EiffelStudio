@@ -10,6 +10,7 @@
 # Configured by: pnc
 # Target system: sn4605 sequoia 9.0.2.1 gbu.5 cray c90 
 
+d_bsdsig='undef'
 ccflags='-h stdc'
 mtccflags='-h stdc -DEIF_THREADS -DEIF_POSIX_THREADS'
 

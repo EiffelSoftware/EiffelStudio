@@ -3,6 +3,7 @@
 # Configured by: manuelt
 
 d_bsd='undef'
+d_bsdsig='define'
 d_eunice='undef'
 d_xenix='undef'
 eunicefix=':'

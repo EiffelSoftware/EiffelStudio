@@ -10,6 +10,7 @@
 # Configured by: eiffel 
 # Target system: hp-ux rio a.09.05 a 9000712 2005001273 two-user license 
 
+d_bsdsig='undef'
 sh='/bin/sh'
 cc='gcc'
 cpp='/lib/cpp'

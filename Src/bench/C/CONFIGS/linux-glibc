@@ -5,6 +5,7 @@
 # You should use the  run-time mt-libraries in 
 # $EIFFEL4/bench/spec/linux/lib/glibc/.
 
+d_bsdsig='undef'
 ar='ar'
 concurrent_prefix='c'
 eiflib='finalized'

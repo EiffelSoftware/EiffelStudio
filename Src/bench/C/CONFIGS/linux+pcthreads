@@ -2,6 +2,7 @@
 # Configured by: paulv
 # Target system: Linux with PC Threads
 
+d_bsdsig='undef'
 ar='ar'
 concurrent_prefix='c'
 eiflib='finalized'

@@ -10,6 +10,7 @@
 # Configured by: ise
 # Target system: osf1 arctos.bowdoin.edu v3.2 148 alpha 
 
+d_bsdsig='undef'
 d_bsd='undef'
 d_eunice='undef'
 d_xenix='undef'

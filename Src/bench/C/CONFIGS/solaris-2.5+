@@ -10,6 +10,7 @@
 # Target system: sunos dakar 5.6 sparc 
 
 
+d_bsdsig='undef'
 sh='sh'
 cc='gcc'
 cpp='/usr/ccs/lib/cpp'

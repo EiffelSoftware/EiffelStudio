@@ -174,9 +174,14 @@ feature -- Element change
 			-- invoked as a callback.
 		do
 			left_button_press_actions.add (Current, a_command, arg)
+			left_button_release_actions.add (Current, a_command, arg)
 			right_button_press_actions.add (Current, a_command, arg)
+			right_button_release_actions.add (Current, a_command, arg)
 			middle_button_press_actions.add (Current, a_command, arg)
-			character_actions.add (Current, a_command, arg)
+			middle_button_release_actions.add (Current, a_command, arg)
+
+			key_press_actions.add (Current, a_command, arg)
+			key_release_actions.add (Current, a_command, arg)
 		end
 
 feature -- Removal
@@ -187,9 +192,14 @@ feature -- Removal
 			-- is pressed.
 		do
 			left_button_press_actions.remove (Current, a_command, arg)
+			left_button_release_actions.remove (Current, a_command, arg)
 			right_button_press_actions.remove (Current, a_command, arg)
+			right_button_release_actions.remove (Current, a_command, arg)
 			middle_button_press_actions.remove (Current, a_command, arg)
-			character_actions.remove (Current, a_command, arg)
+			middle_button_release_actions.remove (Current, a_command, arg)
+	
+			key_press_actions.remove (Current, a_command, arg)
+			key_release_actions.remove (Current, a_command, arg)
 		end
 
 feature -- Basic operations

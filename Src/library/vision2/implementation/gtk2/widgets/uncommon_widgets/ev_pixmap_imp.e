@@ -73,6 +73,7 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_EXTERNALS}.gdk_gc_set_function (gc, feature {EV_GTK_EXTERNALS}.GDK_COPY_ENUM)
 			initialize_graphical_context
 			init_default_values
+			pixmap_filename := ""
 		end
 		
 	draw_full_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; x_src, y_src, src_width, src_height: INTEGER) is
@@ -134,14 +135,15 @@ feature -- Element change
 			g_error: POINTER
 			pixbuf: POINTER
 		do
+			pixmap_filename := file_name.twin
 			a_cs := file_name
-			pixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_new_from_file (a_cs.item, $g_error)
+			filepixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_new_from_file (a_cs.item, $g_error)
 			if g_error /= default_pointer then
 				-- We could not load the image so raise an exception
 				(create {EXCEPTIONS}).raise ("Could not load image file.")
 			else
-				set_pixmap_from_pixbuf (pixbuf)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (pixbuf)
+				set_pixmap_from_pixbuf (filepixbuf)
+				--feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (pixbuf)
 			end
 		end
 
@@ -169,18 +171,23 @@ feature -- Element change
 		local
 			a_pix, mask_pixbuf1, mask_pixbuf2: POINTER
 		do
-			a_pix := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (Result, drawable, default_pointer, 0, 0, 0, 0, -1, -1)
-			if mask /= default_pointer then
-				mask_pixbuf1 := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (default_pointer, mask, default_pointer, 0, 0, 0, 0, -1, -1)
-				mask_pixbuf2 := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_add_alpha (mask_pixbuf1, True, '%/255/', '%/255/', '%/255/')
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_composite (mask_pixbuf2, a_pix, 0, 0, width, height, 0, 0, 1, 1, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear, 254)
-				Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_add_alpha (a_pix, False, '%/0/', '%/0/', '%/0/')
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (a_pix)
-				draw_mask_on_pixbuf (Result, mask_pixbuf2)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (mask_pixbuf1)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (mask_pixbuf2)
+			if filepixbuf /= default_pointer then
+				Result := filepixbuf
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (filepixbuf)
 			else
-				Result := a_pix
+				a_pix := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (Result, drawable, default_pointer, 0, 0, 0, 0, -1, -1)
+				if mask /= default_pointer then
+					mask_pixbuf1 := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (default_pointer, mask, default_pointer, 0, 0, 0, 0, -1, -1)
+					mask_pixbuf2 := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_add_alpha (mask_pixbuf1, True, '%/255/', '%/255/', '%/255/')
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_composite (mask_pixbuf2, a_pix, 0, 0, width, height, 0, 0, 1, 1, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear, 254)
+					Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_add_alpha (a_pix, False, '%/0/', '%/0/', '%/0/')
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (a_pix)
+					draw_mask_on_pixbuf (Result, mask_pixbuf2)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (mask_pixbuf1)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (mask_pixbuf2)
+				else
+					Result := a_pix
+				end
 			end
 		end
 
@@ -217,7 +224,6 @@ feature -- Element change
 				}
 			]"
 		end
-		
 
 	pixbuf_from_drawable_with_size (a_width, a_height: INTEGER): POINTER is
 			-- Return a GdkPixbuf object from the current Gdkpixbuf structure with dimensions `a_width' * `a_height'
@@ -383,6 +389,8 @@ feature -- Duplication
 		do
 			other_imp ?= other.implementation
 			copy_from_gdk_data (other_imp.drawable, other_imp.mask, other_imp.width, other_imp.height)
+			pixmap_filename := other_imp.pixmap_filename
+			filepixbuf := other_imp.filepixbuf
 		end
 		
 feature {EV_ANY_I} -- Implementation
@@ -563,6 +571,12 @@ feature {NONE} -- Constants
 			-- Black and White color depth (for mask).
 
 feature {EV_ANY_I} -- Implementation
+
+	pixmap_filename: STRING
+		-- File name used to construct `Current' (if any)
+
+	filepixbuf: POINTER
+		-- GdkPixbuf created from `read_from_named_file'
 
 	interface: EV_PIXMAP
 

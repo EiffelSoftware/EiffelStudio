@@ -5,9 +5,7 @@ root
 	vision2_application: make_and_launch
 
 default
-	assertion (check)
-	assertion (require)
-	assertion (ensure)
+	assertion (no)
 	disabled_debug (yes)
 	disabled_debug ("dlg_dispatcher")
 	disabled_debug ("vision2_windows")
@@ -16,18 +14,18 @@ default
 	disabled_debug ("wel_gdi_count")
 	disabled_debug ("wel_gdi_references")
 	disabled_debug ("win_dispatcher")
-	debug (no)
 	line_generation (no)
 	profile (no)
 	trace (no)
-	override_cluster ("root_cluster")
 	check_vape (yes)
 	console_application (no)
+	syntax_warning (no)
 	array_optimization (no)
 	dead_code_removal (yes)
+	dynamic_runtime (no)
 	exception_trace (yes)
 	inlining (no)
-
+	multithreaded (no)
 
 -------------------------------------------------
 -- This ace file has been generated for you by --
@@ -41,9 +39,8 @@ default
 cluster
 	all root_cluster:		"."
 		exclude
-			"templates";
+			"templates"; "CVS"
 		end
-
 
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
@@ -54,7 +51,7 @@ cluster
 
 	all vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
-			"gtk"; "ev_pixmap.e"; "ev_pixmapable.e";
+			"gtk"; "ev_pixmap.e"; "ev_pixmapable.e"; 
 		end
 
 external

@@ -20,7 +20,6 @@ default
 	line_generation (no)
 	profile (no)
 	trace (no)
-	override_cluster ("root_cluster")
 	check_vape (yes)
 	console_application (no)
 	array_optimization (no)

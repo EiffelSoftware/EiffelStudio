@@ -10,20 +10,34 @@ class
 inherit
 	
 	GB_SYSTEM_TAB
+		export
+			{NONE} all
+		end
 	
 	GB_NAMING_UTILITIES
+		export
+			{NONE} all
 		undefine
 			is_equal, copy, default_create
 		end
 	
 	GB_SHARED_TOOLS
+		export
+			{NONE} all
 		undefine
 			is_equal, copy, default_create
 		end
 		
 	GB_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			is_equal, copy, default_create
+		end	
 	
 	EIFFEL_RESERVED_WORDS
+		export
+			{NONE} all
 		undefine
 			is_equal, copy, default_create
 		end

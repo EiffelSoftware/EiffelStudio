@@ -33,9 +33,15 @@ inherit
 		end
 		
 	GB_SHARED_OBJECT_EDITORS
+		undefine
+			copy, default_create, is_equal
+		end
 		
 	GB_CONSTANTS
-	
+		undefine
+			copy, default_create, is_equal
+		end
+
 create
 	{GB_OBJECT_HANDLER, GB_OBJECT, GB_WINDOW_SELECTOR} make
 

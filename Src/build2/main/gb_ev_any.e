@@ -17,6 +17,8 @@ inherit
 	GB_SHARED_OBJECT_EDITORS
 		export
 			{NONE} all
+		undefine
+			default_create
 		end
 		
 	INTERNAL
@@ -30,6 +32,8 @@ inherit
 		export
 			{NONE} all
 			{ANY} Ev_titled_window_string
+		undefine
+			default_create
 		end
 
 	GB_WIDGET_UTILITIES

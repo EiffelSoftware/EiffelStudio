@@ -40,6 +40,9 @@ inherit
 		end
 
 	GB_CONSTANTS
+		undefine
+			default_create, is_equal, copy
+		end
 
 create
 	make_with_text

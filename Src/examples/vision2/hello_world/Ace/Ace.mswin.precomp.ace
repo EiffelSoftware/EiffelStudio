@@ -1,0 +1,18 @@
+system
+	hello_world
+
+root
+
+	hello_world (ROOT_CLUSTER): "make"
+
+default
+
+	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\vision2")
+	assertion (all)
+
+cluster
+
+--	ROOT_CLUSTER: "$EIFFEL4\examples\vision2\hello_world"
+	ROOT_CLUSTER: "."
+
+end

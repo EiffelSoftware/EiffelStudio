@@ -8,7 +8,7 @@ default
 	assertion (all)
 
 cluster
-	root_cluster:	"$ISE_EIFFEL/examples/vision/test_all_widgets"
+	root_cluster:	"$ISE_EIFFEL\examples\vision\test_all_widgets"
 
 	-- EiffelBase
 	all base: 		"$ISE_EIFFEL\library\base"

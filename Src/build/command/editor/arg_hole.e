@@ -48,14 +48,10 @@ feature {NONE}
 		local
 			c: GROUP_C
 			t: CONTEXT_GROUP_TYPE
-			app_obj: APPLICATION_OBJECT [ANY]
 		do
 			c ?= dropped.data
 			t ?= dropped.data
-			app_obj ?= dropped.data
-			if app_obj /= Void then
-				io.put_string ("Has to work in ARG_HOLE.process_type")
-			elseif (c = Void) and (t = Void) then
+			if (c = Void) and (t = Void) then
 				command_editor.add_argument (dropped)
 			end
 		end

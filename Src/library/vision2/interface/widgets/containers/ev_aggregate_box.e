@@ -1,7 +1,7 @@
 indexing
 	description: 
-		"Eiffel Vision horizontal box for use in EV_AGGREGATE_WIDGET only.%N%
-		%`parent' is always Void to isolate components of the aggregate%N%
+		"Horizontal box for use in EV_AGGREGATE_WIDGET only.%N%
+		%`parent' is always Void to isolate components of the aggregate%
 		%widget from the rest of the system."
 	status: "See notice at end of class"
 	keywords: "container, horizontal, box"
@@ -32,11 +32,10 @@ feature -- Access
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_AGGREGATE_BOX_I
-			-- 	Responsible for interaction with the underlying
-			-- native graphics toolkit.
+			-- Responsible for interaction with the native graphics toolkit.
 
 	create_implementation is
-			-- Create implmentation of aggregate box.
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_AGGREGATE_BOX_IMP} implementation.make (Current)
 		end
@@ -67,11 +66,15 @@ end -- class EV_AGGREGATE_BOX
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/03/17 18:33:39  oconnor
+--| formatting comments
+--|
 --| Revision 1.4  2000/02/22 18:39:50  oconnor
 --| updated copyright date and formatting
 --|
 --| Revision 1.3  2000/02/15 19:18:31  rogers
---| There is now an EV_AGGREGATE_BOX_IMP so create_implementation has been changed accordingly.
+--| There is now an EV_AGGREGATE_BOX_IMP so create_implementation has been
+--| changed accordingly.
 --|
 --| Revision 1.2  2000/02/14 12:05:13  oconnor
 --| added from prerelease_20000214

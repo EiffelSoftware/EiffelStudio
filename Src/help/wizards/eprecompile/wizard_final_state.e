@@ -21,11 +21,6 @@ inherit
 			default_create as ex_create
 		end
 
-	PRECOMPILE_WIZARD_CONSTANT
-		undefine
-			default_create
-		end
-
 create
 	make
 
@@ -37,12 +32,12 @@ feature -- Basic Operations
 			cell: EV_CELL
 		do
 			choice_box.wipe_out
-			choice_box.set_border_width (10)
-			choice_box.set_padding (10)
+			choice_box.set_border_width (Default_border_size)
+			choice_box.set_padding (Small_padding_size)
 
 			create progress 
-			progress.set_minimum_height(20)
-			progress.set_minimum_width(100)
+			progress.set_minimum_height (Dialog_unit_to_pixels(20))
+			progress.set_minimum_width (Dialog_unit_to_pixels(100))
 			create progress_text
 			progress_text.align_text_left
 			progress.set_background_color (white_color)
@@ -50,8 +45,8 @@ feature -- Basic Operations
 			progress_text.set_background_color (white_color)
 
 			create progress_2
-			progress_2.set_minimum_height(20)
-			progress_2.set_minimum_width(100)
+			progress_2.set_minimum_height(Dialog_unit_to_pixels(20))
+			progress_2.set_minimum_width(Dialog_unit_to_pixels(100))
 			create progress_text_2
 			progress_text_2.align_text_left
 			progress_2.set_background_color (white_color)
@@ -371,6 +366,8 @@ feature -- Access
 
 	pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"
 			-- Icon for the Eiffel Wizard
+
+	Progress_filename: STRING is "progress.eif"
 
 	progress_text_2: EV_LABEL
 			-- 2nd progress text (For each library)

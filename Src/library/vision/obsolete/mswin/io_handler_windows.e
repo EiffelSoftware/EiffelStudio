@@ -28,7 +28,7 @@ feature
 
 	call_back is
 			-- Call the command.
-              local
+		local
                       command_clone: COMMAND
                       context_data: CONTEXT_DATA
               do
@@ -92,6 +92,25 @@ feature
 		do
 		end
 
+<<<<<<< io_handler_windows.e
+feature {NONE} -- Implmentation
+
+	win_ioh_make_client (cb: POINTER; obj: IO_HANDLER_WINDOWS): POINTER is
+			-- Make the io handler function
+		external
+			"C"
+		end
+
+	cwin_destroy_window (hwnd: POINTER) is
+			-- SDK DestroyWindow
+		external
+			"C [macro <wel.h>] (HWND)"
+		alias
+			"DestroyWindow"
+		end
+
+=======
+>>>>>>> 1.4
 end -- class IO_HANDLER_WINDOWS
 
 --|----------------------------------------------------------------

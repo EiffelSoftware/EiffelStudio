@@ -446,22 +446,6 @@ feature -- Access
 			widget_exists: Result /= Void
 		end;
 
-	tabbed_text (a_text: TABBED_TEXT; managed: BOOLEAN; 
-		oui_parent: COMPOSITE): TABBED_TEXT_I is
-			-- Toolkit implementation of `a_text'
-		deferred
-		ensure
-			widget_exists: Result /= Void
-		end;
-
-	tabbed_text_word_wrapped (a_text: TABBED_TEXT; managed: BOOLEAN; 
-		oui_parent: COMPOSITE): TABBED_TEXT_I is
-			-- Toolkit implementation of `a_text'
-		deferred
-		ensure
-			widget_exists: Result /= Void
-		end;
-
 	text (a_text: TEXT; managed: BOOLEAN; oui_parent: COMPOSITE): TEXT_I is
 			-- Toolkit implementation of `a_text'
 		deferred

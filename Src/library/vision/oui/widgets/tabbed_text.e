@@ -1,16 +1,13 @@
 indexing
-
 	description: "Text in Scrolled Window which can have tabs set";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
 class
-
 	TABBED_TEXT
 
 inherit
-
 	SCROLLED_T
 		redefine
 			create_ev_widget, create_ev_widget_ww,

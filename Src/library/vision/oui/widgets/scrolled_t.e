@@ -1,16 +1,13 @@
 indexing
-
-	description: "Text in Scrolled Window";
-	status: "See notice at end of class";
-	date: "$Date$";
+	description: "Text in Scrolled Window"
+	status: "See notice at end of class"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
-
 	SCROLLED_T 
 
 inherit
-
 	TEXT
 		redefine
 			make, make_word_wrapped, make_unmanaged, 
@@ -25,58 +22,58 @@ creation
 	
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING a_parent: COMPOSITE) is
 			-- Create a scrolled text with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
 			create_ev_widget (a_name, a_parent, True)
-		end;
+		end
 
-	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_unmanaged (a_name: STRING a_parent: COMPOSITE) is
 			-- Create an unmanaged scrolled text with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
 			create_ev_widget (a_name, a_parent, False)
-		end;
+		end
 
-	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget (a_name: STRING a_parent: COMPOSITE; man: BOOLEAN) is
 			-- Create a scrolled text with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
-			depth := a_parent.depth+1;
-			widget_manager.new (Current, a_parent);
-			identifier := clone (a_name);
-			implementation := toolkit.scrolled_t (Current, man, a_parent);
-			implementation.set_widget_default;
+			depth := a_parent.depth+1
+			widget_manager.new (Current, a_parent)
+			identifier := clone (a_name)
+			implementation := toolkit.scrolled_t (Current, man, a_parent)
+			implementation.set_widget_default
 			set_default
-		end;
+		end
 
-	make_word_wrapped (a_name: STRING; a_parent: COMPOSITE) is
+	make_word_wrapped (a_name: STRING a_parent: COMPOSITE) is
 			-- Create a scrolled text with `a_name' as identifier, 
 			-- `a_parent' as parent, enable word wrap and then
 			-- call `set_default'.
 		do
 			create_ev_widget_ww (a_name, a_parent, True)
-		end;
+		end
 
-	make_word_wrapped_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_word_wrapped_unmanaged (a_name: STRING a_parent: COMPOSITE) is
 			-- Create an unmanaged scrolled text with `a_name' as identifier, 
 			-- `a_parent' as parent, enable word wrap and then
 			-- call `set_default'.
 		do
 			create_ev_widget_ww (a_name, a_parent, False)
-		end;
+		end
 
-	create_ev_widget_ww (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget_ww (a_name: STRING a_parent: COMPOSITE; man: BOOLEAN) is
 			-- Create a scrolled text with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
-			depth := a_parent.depth+1;
-			widget_manager.new (Current, a_parent);
-			identifier := clone (a_name);
-			implementation := toolkit.scrolled_t_word_wrapped (Current, man, a_parent);
+			depth := a_parent.depth+1
+			widget_manager.new (Current, a_parent)
+			identifier := clone (a_name)
+			implementation := toolkit.scrolled_t_word_wrapped (Current, man, a_parent)
 			set_default
-		end;
+		end
 
 feature -- Status report
 
@@ -86,7 +83,7 @@ feature -- Status report
 			exists: not destroyed
 		do
 			Result := implementation.is_vertical_scrollbar
-		end;
+		end
 
 	is_horizontal_scrollbar: BOOLEAN is
 			-- Is horizontal scrollbar visible?
@@ -94,6 +91,12 @@ feature -- Status report
 			exists: not destroyed
 		do
 			Result := implementation.is_horizontal_scrollbar
+		end
+
+	tab_length: INTEGER is
+			-- Size of a tabulation.
+		do
+			Result := implementation.tab_length
 		end
 
 feature -- Status setting
@@ -104,7 +107,7 @@ feature -- Status setting
 			exists: not destroyed
 		do
 			implementation.show_vertical_scrollbar
-		end;
+		end
 
 	hide_vertical_scrollbar is
 			-- Make vertical scrollbar invisible.
@@ -112,7 +115,7 @@ feature -- Status setting
 			exists: not destroyed
 		do
 			implementation.hide_vertical_scrollbar
-		end;
+		end
 
 	show_horizontal_scrollbar is
 			-- Make horizontal scrollbar visible.
@@ -120,7 +123,7 @@ feature -- Status setting
 			exists: not destroyed
 		do
 			implementation.show_horizontal_scrollbar
-		end;
+		end
 
 	hide_horizontal_scrollbar is
 			-- Make horizontal scrollbar invisible.
@@ -128,11 +131,21 @@ feature -- Status setting
 			exists: not destroyed
 		do
 			implementation.hide_horizontal_scrollbar
-		end;
+		end
+
+	set_tab_length (new_length: INTEGER) is
+			-- Set `tab_length' to `new_length'.
+		require
+			valid_new_length: new_length > 1
+		do
+			implementation.set_tab_length (new_length)
+		ensure
+			set: tab_length = new_length
+		end
 
 feature -- Implementation
 
-	implementation: SCROLLED_T_I;
+	implementation: SCROLLED_T_I
 			-- Implementation of current text
 
 end -- class SCROLLED_T

@@ -85,46 +85,6 @@ feature -- Generation
 			has_last_generated_file: last_generated_file /= Void
 		end
 
-	generate_code_file (a_doc: DOCUMENT; target: DIRECTORY) is
-			-- Generate HTML file from `a_doc' in `target'.  Resulting file stored in `last_generated_file'
-		require
-			document_not_void: a_doc /= Void
-			target_not_void: target /= Void
-		local
-			l_html: STRING			
-			retried: BOOLEAN
-			l_string: STRING
-			l_filename: FILE_NAME
-			l_parser: XM_EIFFEL_PARSER
-			l_code_filter: CODE_HTML_FILTER
-
-		do	
-			if not retried then
-				l_string := a_doc.text
-				if not l_string.is_empty then					
-					create l_code_filter.make
-					create l_parser.make
-					l_parser.set_callbacks (l_code_filter)
-					l_parser.parse_from_string (l_string)
-					check
-						ok_parsing: l_parser.is_correct
-					end
-					l_html := l_code_filter.output_string						
-				end
-				create l_filename.make_from_string (target.name)
-				l_filename.extend (file_no_extension (short_name (a_doc.name)))
-				l_filename.add_extension ("html")
-				create last_generated_file.make_create_read_write (l_filename)
-				last_generated_file.put_string (l_html)
-				last_generated_file.close
-			end
-		ensure
-			has_last_generated_file: last_generated_file /= Void
-		rescue
-			retried := True
-			retry		
-		end
-
 feature {NONE} -- Implementation
 
 	generate_directory (a_dir, target: DIRECTORY) is
@@ -162,10 +122,8 @@ feature {NONE} -- Implementation
 								create doc_file.make (l_filename)
 								create l_doc.make_from_file (doc_file)								
 							end
-							if l_doc.file.exists and then l_doc.can_transform then 
-								--generate_file (l_doc, target)
-								generate_code_file (l_doc, target)
-								progress_generator.update_progress_report
+							if l_doc.can_transform then 
+								generate_file (l_doc, target)											
 							end
 						elseif file_types.has (file_type (l_filename.string)) then
 									-- Not XML but does need copying
@@ -177,10 +135,12 @@ feature {NONE} -- Implementation
 						end		
 					else
 						create l_filename.make_from_string (target.name)
-						l_filename.extend (a_dir.lastentry)
-						create sub_dir.make (l_filename)
-						sub_dir.create_dir
-						generate_directory (src_sub_dir, sub_dir)
+						l_filename.extend (a_dir.lastentry)						
+						if not excluded_directories.has (l_filename.string)  then
+							create sub_dir.make (l_filename)
+							sub_dir.create_dir
+							generate_directory (src_sub_dir, sub_dir)
+						end						
 					end
 				end
 				cnt := cnt + 1				
@@ -226,6 +186,20 @@ feature {NONE} -- Implementation
 			Result.extend ("jpg")
 			Result.extend ("png")
 		end
+		
+	excluded_directories: ARRAYED_LIST [STRING] is
+			-- Directories to be excluded from generation
+		local
+			l_exclude: FILE_NAME
+		once
+			create Result.make (10)
+			Result.compare_objects
+			create l_exclude.make_from_string (location.string)
+			l_exclude.extend ("libraries")
+			l_exclude.extend ("base")
+			l_exclude.extend ("reference")
+			Result.extend (l_exclude.string)
+		end		
 		
 invariant
 	has_files: files /= Void

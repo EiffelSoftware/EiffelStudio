@@ -19,6 +19,10 @@
 #include <windows.h>
 #endif
 
+#ifdef EIF_OS2
+#include <direct.h>
+#endif
+
 #include "macros.h"
 #include "struct.h"
 #include "hashin.h"

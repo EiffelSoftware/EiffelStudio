@@ -103,9 +103,9 @@ feature {EV_ANY_I, EV_ANY} -- Implementation
 				called_by_replace_implementation_only: false
 					-- replace_implementation calls turns assertions off.
 			end
-			interface := new_interface
+			interface := an_interface
 		ensure
-			interface_assigned: interface = new_interface
+			interface_assigned: interface = an_interface
 		end
 
 	set_initialized is
@@ -175,6 +175,9 @@ end -- class EV_ANY_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/04/11 17:46:18  oconnor
+--| typo
+--|
 --| Revision 1.9  2000/04/11 17:29:43  oconnor
 --| added set_interface and set_initialized
 --|

@@ -15,8 +15,6 @@ class
 
 inherit
 	EV_TEXT_FIELD
-		export
-			{NONE} position, set_position
 		redefine
 			implementation,
 			make
@@ -43,7 +41,7 @@ feature {NONE} -- Initialization
 			widget_make (par)
 		end
 
-feature -- Measurement
+feature -- Access
 
 	extended_height: INTEGER is
 			-- height of the combo-box when the children are
@@ -52,6 +50,17 @@ feature -- Measurement
 			exists: not destroyed
 		do
 			Result := implementation.extended_height
+		end
+
+feature -- Element change
+
+	set_extended_height (value: INTEGER) is
+			-- Make `value' the new extended-height of the box.
+		require
+			exists: not destroyed
+			valid_value: value >= 0
+		do
+			implementation.set_extended_height (value)
 		end
 
 feature -- Implementation

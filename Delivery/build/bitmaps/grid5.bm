@@ -1,0 +1,4 @@
+#define grid5_width 5
+#define grid5_height 5
+static char grid5_bits[] = {
+   0x1f, 0x01, 0x01, 0x01, 0x01};

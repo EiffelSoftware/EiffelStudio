@@ -6,31 +6,47 @@
 		<link rel="stylesheet" href="../../../default.css" type="text/css">
 	</head>
 	<body>
-		<h1>Introduction</h1>
+		<h2>Introduction</h2>
 		<p>The Java interface allows you to call Java routines or attributes from your Eiffel
 			code. It uses the Java Native Interface (JNI) provided by the Java Development Kit
-			(JDK) 1.1.4. You can get more information about the JNI at:
+			(JDK) 1.1.8. You can get more information about the JNI at:
 
 		</p>
 		<p>
 			<a href="http://java.sun.com/products/jdk/1.1/docs/guide/jni/index.html">http://java.sun.com/products/jdk/1.1/docs/guide/jni/index.html</a>
 		</p>
-		<h2>Requirements</h2>
+		<h3>Requirements</h3>
 		<ul>
-		  <li>JDK 1.1.4 correctly set (download it at <a href="http://java.sun.com/products/jdk/1.1/index.html">http://java.sun.com/products/jdk/1.1/index.html</a>)</li>
-		  <li>the Java classes you want to use must be in the environment variable CLASSPATH</li>
+		  <li>JDK 1.1.8 should be correctly set up (download it at <a href="http://java.sun.com/products/jdk/1.1/index.html">http://java.sun.com/products/jdk/1.1/index.html</a>)</li>
+		  <li>The environment variable CLASSPATH should defined (check with 
+  the JDK documentation on how to do so) and that it contains the Java classes 
+          you want to access.</li>
+  <li>The environment variable JDK_HOME should be set to the installation 
+  directory of the JDK (e.g. <a href="file:///D:/apps/jdk1.1.8">D:\apps\jdk1.1.8</a>).</li>
 		</ul>
-		<h2> Limitations</h2>
+		<h3>Borland users</h3>
+        <p>On Windows, the JDK includes a set of C libraries which have been 
+        compiled for the Microsoft C compiler. Before being able to use the JDK 
+        from Eiffel you need to perform the following operation:</p>
+        <ol>
+          <li>In $JDK_HOME\lib, rename javai.lib into javai.lib.microsoft</li>
+          <li>From the DOS command prompt and in the directory $JDK_HOME\lib, 
+          launch the following command<br>
+          <pre>%ISE_EIFFEL%\bcc55\bin\implib javai.lib..\bin\javai.dll         </pre>
+          </li>
+        </ol>
+		<h3> Limitations</h3>
 		<ul>
 		  <li>In this version, you can only use one JNI environment.</li>
 		  <li>Only one thread can interact with the Java Virtual Machine (JVM).</li>
 		  <li>It is not possible to call Eiffel features from Java program.</li>
-		  <li>The Eiffel side cannot deal with 'long' integer (64 bits)</li>
-		  <li>The Eifffel feature `destroy_vm' of `JAVA_VM' calls a C function of the Java Native&nbsp;Interface that is not fully implemented in jdk 1.1.4.
-		    This function, called&nbsp;DestroyJavaVM, always returns -1 in jdk 1.1.4. For further information, go on the&nbsp;JNI pages at the address
+		  <li>The Eifffel feature `destroy_vm' of `JAVA_VM' calls a C function of the Java Native&nbsp;Interface that is not fully implemented in jdk 
+          1.1.8.
+		    This function, called&nbsp;DestroyJavaVM, always returns -1 in jdk 
+          1.1.8. For further information, go on the&nbsp;JNI pages at the address
 		    above.&nbsp;</li>
 	    </ul>
-		<h1>Interface classes</h1>
+		<h2>Interface classes</h2>
 		<h3>JNI_ENVIRONMENT</h3>
 		  <p>Holds information about JNI environment. Potentially many JNI environments can exists at once, but more than one was never tested. This class provide the facilities to interact with the JVM:</p>
 		  <ul>
@@ -95,8 +111,12 @@
 				  <td width="50%">CHARACTER</td>
 				</tr>
 				<tr>
-				  <td width="50%">short, int, long</td>
+				  <td width="50%">short, int</td>
 				  <td width="50%">INTEGER</td>
+				</tr>
+				<tr>
+				  <td width="50%">long</td>
+				  <td width="50%">INTEGER_64</td>
 				</tr>
 				<tr>
 				  <td width="50%">float</td>
@@ -198,82 +218,5 @@
 			(ILjava/lang/String;)V
 		</code><br>
 		</p>
-		<h1>An example</h1>
-	    <p class="code">
-			## Java ##<br>
-		<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="eclass">test</SPAN> <SPAN CLASS="esymbol">{</SPAN><br>
-		&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">test</SPAN> <SPAN CLASS="esymbol">() {}</SPAN><br>
-		&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">public</SPAN> <SPAN CLASS="eclass">int</SPAN> <SPAN CLASS="elocal">my_integer</SPAN><SPAN CLASS="esymbol">;</SPAN><br>
-		&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">public static</SPAN> <SPAN CLASS="eclass">int</SPAN> <SPAN CLASS="elocal">my_static_integer</SPAN><SPAN CLASS="esymbol">;</SPAN><br>
-		&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">public</SPAN> <SPAN CLASS="eclass">void</SPAN> <SPAN CLASS="efeature">my_method</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="eclass">int</SPAN> <SPAN CLASS="elocal">arg_int</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="eclass">String</SPAN> <SPAN CLASS="elocal">arg_string</SPAN><SPAN CLASS="esymbol">) {</SPAN><br>
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="esymbol">...</SPAN><br>
-	&nbsp;&nbsp;&nbsp;<SPAN CLASS="esymbol">}</SPAN><br>
-	&nbsp;&nbsp;&nbsp;<SPAN CLASS="esymbol">...</SPAN><br>
-	<SPAN CLASS="esymbol">}</SPAN></p>
-<p class="code">
-			## Eiffel ##<br>
-<SPAN CLASS="ekeyword">class</SPAN><br>
-&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">EIFFEL_TO_JAVA</SPAN><br>
-<br>
-<SPAN CLASS="ekeyword">inherit</SPAN><br>
-&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">SHARED_JNI_ENVIRONMENT</SPAN><br>
-<br>
-<SPAN CLASS="ekeyword">creation</SPAN><br>
-&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">make</SPAN><br>
-<br>
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">-- Creation</SPAN><br>
-<br>
-&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">make</SPAN> <SPAN CLASS="ekeyword">is</SPAN><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">local</SPAN><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">class_test</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">JAVA_CLASS</SPAN><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">instance_of_class_test</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">JAVA_OBJECT</SPAN><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">fid</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">POINTER</SPAN><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">value</sPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">INTEGER</SPAN><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">j_args</sPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">JAVA_ARGS</SPAN><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">--| Creation of the Java object</SPAN><br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">class_test</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">jni</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">find_class</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">&quot;test&quot;</SPAN><SPAN CLASS="esymbol">)</SPAN><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">instance_of_class_test.create_instance</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">class_test</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="estring">&quot;()V&quot;</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="eclass">Void</SPAN><SPAN CLASS="esymbol">)</SPAN><br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">--| Access to a public attribute</SPAN><br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">fid</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">instance_of_class_test</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">field_id</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">&quot;my_integer&quot;</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="estring">&quot;I&quot;</SPAN><SPAN CLASS="esymbol">)</SPAN><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- 'fid' contains the id of the field 'my_integer'</SPAN><br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">value</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">instance_of_class_test</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">integer_attribute</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">fid</SPAN><SPAN CLASS="esymbol">)</SPAN><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- 'value' contains the value of the field referenced</SPAN><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- by 'fid'</SPAN><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="esymbol">...</SPAN><br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">--| Access to a static attribute using directly the JAVA_CLASS</SPAN><br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">fid</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">class_test</SPAN><SPAN CLASS="ekeyword">.</SPAN><SPAN CLASS="efeature">field_id</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">&quot;my_static_integer&quot;</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="estring">&quot;I&quot;</SPAN><SPAN CLASS="esymbol">)</SPAN><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">value</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">class_test</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">integer_attribute</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">fid</SPAN><SPAN CLASS="esymbol">)</SPAN><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="esymbol">...</SPAN><br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">--| Access to a static attribute using the attribute 'jclass'</SPAN><br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">fid</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">instance_of_class_test</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">jclass</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">field_id</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">&quot;my_static_integer&quot;</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="estring">&quot;I&quot;</SPAN><SPAN CLASS="esymbol">)</SPAN><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">value</SPAN> <SPAN CLASS="estring">:=</SPAN> <SPAN CLASS="elocal">instance_of_class_test</sPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">jclass</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">integer_attribute</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">fid</SPAN><SPAN CLASS="esymbol">)</SPAN><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="esymbol">...</SPAN><br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">--| Access to the method 'my_method'</sPAN><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">fid</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">instance_of_class_test</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">method_id</SPAN> <SPAN CLASS="esymbol">(</sPAN><SPAN CLASS="estring">&quot;my_method&quot;</sPAN><SPAN CLASS="ekeyword">,</SPAN> <SPAN CLASS="estring">&quot;(ILjava/lang/String;)V&quot;</SPAN><SPAN CLASS="esymbol">)</SPAN><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Get the id of 'my_method'</SPAN><br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">j_args</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">make</sPAN><SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">2</sPAN><SPAN CLASS="esymbol">)</SPAN><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">j_args</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">push_int</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">2</SPAN><SPAN CLASS="esymbol">)</SPAN><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">j_args</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">push_string</SPAN><SPAN CLASS="esymbol">(</SPaN><SPAN CLASS="estring">&quot;String test&quot;</SPAN><SPAN CLASS="esymbol">)</SPAN><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Create the set of arguments for 'my_method'</SPAN><br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">instance_of_class_test</SPAN><SPAN CLASS="esymbol">.<SPAN><SPAN CLASS="efeature">void_method</SPAN> <SPAN CLASS="esymbol">(</sPAN><SPAN CLASS="elocal">fid</SPAN><SPAN CLASS="esymbol">,</sPAN> <SPAN CLASS="elocal">j_args</sPAN><SPAN CLASS="esymbol">)</SPAN><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Call to the void method referenced by 'fid'</SPAN><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="esymbol">...</SPAN><br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN> <SPAN CLASS="ecomment">-- make</SPAN><br>
-<br>
-<SPAN CLASS="ekeyword">end</SPAN> <SPAN CLASS="ecomment">-- class EIFFEL_TO_JAVA</sPAN>
-</p>
-</body>
+		</body>
 </html>

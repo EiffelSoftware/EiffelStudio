@@ -1031,21 +1031,18 @@ feature -- Possible commands to instanciate
 
 	default_commands_list: LINKED_LIST [CMD] is
 			-- List of possible command instances.
---		local
---			predefined_cmds: SHARED_PREDEF_COMS
 		do
---			!! predefined_cmds
 			!! Result.make
---			Result.extend (predefined_cmds.command_cmd)
---			Result.extend (predefined_cmds.undoable_cmd)
 		end
 	
-feature {NONE} 
+feature {CONTEXT_TREE}
 
 	default_event: EVENT is
 			-- Default event.
 		deferred
 		end
+
+feature {NONE} 
 
 	copy_attributes (other_context: like Current) is
 			-- Copy the attributes of Current to `other_context'.

@@ -355,8 +355,8 @@ feature -- Label texts
 
 feature -- Widget names
 
-	n_Command_bar_name: STRING is		"Command bar";
-	n_Format_bar_name: STRING is		"Format bar";
+	n_Command_bar_name: STRING is		"Standard toolbar";
+	n_Format_bar_name: STRING is		"Formatting toolbar";
 	n_Tool_bar_name: STRING is			"Toolbar";
 	n_X_resource_name: STRING is		"ebench";
 

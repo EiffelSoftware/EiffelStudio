@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 		do
 			create f_n1.make_from_string (template_path)
 			f_n1.set_file_name (template_name)
-			create fi.make_open_read_write(f_n1)
+			create fi.make_open_read (f_n1)
 			fi.read_stream (fi.count)
 			s:= clone (fi.last_string)
 			if map_list /= Void then

@@ -16,6 +16,10 @@ interface IEiffelClassDescriptor;
 interface IEiffelFeatureDescriptor;
 interface IEiffelProjectProperties;
 interface IEiffelClusterProperties;
+interface IEiffelSystemExternals;
+interface IEiffelSystemAssemblies;
+interface IEiffelAssemblyProperties;
+interface IEiffelSystemClusters;
 interface IEnumEiffelClass;
 interface IEnumCluster;
 interface IEnumFeature;
@@ -23,8 +27,8 @@ interface IEnumClusterProp;
 interface IEnumClusterExcludes;
 interface IEnumIncludePaths;
 interface IEnumObjectFiles;
-interface IEnumImportedAssemblies;
-interface IEiffelSystemClusters;
+interface IEnumAssembly;
+
 
 typedef enum __EIF_COMPILATION_TYPES
 {
@@ -97,6 +101,9 @@ interface IEiffelCompiler: IUnknown
 
   [helpstring ("Compiler version.")]
   HRESULT compiler_version ([out, retval] BSTR * return_value);
+
+  [helpstring ("Return ISE_EIFFEL environment var.")]
+  HRESULT ise_eiffel ([out, retval] BSTR * return_value);
 
   [helpstring ("Eiffel Freeze command name")]
   HRESULT freeze_command_name ([out, retval] BSTR * return_value);
@@ -258,6 +265,31 @@ interface IEnumClusterExcludes : IUnknown
 
 [
     oleautomation,
+    uuid(67297abc-a19a-4985-8f7e-90ac1f66ee6e),
+    helpstring ("Eiffel Assembly Enumeration.")
+]
+interface IEnumAssembly : IUnknown
+{
+    HRESULT Next(
+        [out] IEiffelAssemblyProperties ** rgelt,
+        [out] ULONG *pceltFetched);
+
+    HRESULT Skip(
+        [in] ULONG celt);
+
+    HRESULT Reset();
+
+    HRESULT Clone(
+        [out] IEnumAssembly ** ppenum);
+
+    HRESULT ith_item ([in] ULONG an_index, [out] IEiffelAssemblyProperties ** rgelt);
+
+    HRESULT count ([out, retval] ULONG *return_value);
+};
+//---------------------------------------------------------------------
+
+[
+    oleautomation,
     uuid(DB65539C-1C71-4a59-B548-22DA96BF0D13),
     helpstring ("Include Path Enumeration.")
 ]
@@ -301,32 +333,6 @@ interface IEnumObjectFiles : IUnknown
 
     HRESULT Clone(
         [out] IEnumObjectFiles ** ppenum);
-
-    HRESULT ith_item ([in] ULONG an_index, [out] BSTR *rgelt);
-
-    HRESULT count ([out, retval] ULONG *return_value);
-};
-//---------------------------------------------------------------------
-
-[
-    oleautomation,
-    uuid(29532371-D58E-42c1-97FC-5FDA6535EBA9),
-    helpstring ("Imported Assemblies Enumeration.")
-]
-
-interface IEnumImportedAssemblies : IUnknown
-{
-    HRESULT Next(
-        [out] BSTR *rgelt,
-        [out] ULONG *pceltFetched);
-
-    HRESULT Skip(
-        [in] ULONG celt);
-
-    HRESULT Reset();
-
-    HRESULT Clone(
-        [out] IEnumImportedAssemblies ** ppenum);
 
     HRESULT ith_item ([in] ULONG an_index, [out] BSTR *rgelt);
 
@@ -681,32 +687,17 @@ interface IEiffelProjectProperties: IDispatch
   [id (112), propget, helpstring ("Project Clusters.")]
   HRESULT clusters ([out, retval] IEiffelSystemClusters ** return_value);
 
-  [id (116), propget, helpstring ("Imported assemblies.")]
-  HRESULT assemblies ([out, retval] IEnumImportedAssemblies ** return_value);
+  [id (117), propget, helpstring ("Externals.")]
+  HRESULT externals ([out, retval] IEiffelSystemExternals ** return_value);
 
-  [id (117), helpstring ("Add an assembly to the project.")]
-  HRESULT add_assembly ([in] BSTR assembly_path);
+  [id (118), propget, helpstring ("Default namespace.")]
+  HRESULT default_namespace ([out, retval] BSTR * return_value);
 
-  [id (118), helpstring ("Remove an assembly from the project.")]
-  HRESULT remove_assembly ([in] BSTR assembly_path);
+  [id (118), propput, helpstring ("Default namespace.")]
+  HRESULT default_namespace ([in] BSTR a_namespace);
 
-  [id (123), propget, helpstring ("Included Paths.")]
-  HRESULT include_paths ([out, retval] IEnumIncludePaths ** return_value);
-
-  [id (124), helpstring ("Add an include path to the project.")]
-  HRESULT add_include_path ([in] BSTR include_path);
-
-  [id (125), helpstring ("Remove an include path from the project.")]
-  HRESULT remove_include_path ([in] BSTR include_path);
-
-  [id (126), propget, helpstring ("Object Files.")]
-  HRESULT object_files ([out, retval] IEnumObjectFiles ** return_value);
-
-  [id (127), helpstring ("Add an object file to the project.")]
-  HRESULT add_object_file ([in] BSTR object_file);
-
-  [id (128), helpstring ("Remove an object file from the project.")]
-  HRESULT remove_object_file ([in] BSTR object_file);
+  [id (119), propget, helpstring ("Assemblies.")]
+  HRESULT assemblies ([out, retval] IEiffelSystemAssemblies ** return_value);
 
   [id (131), helpstring ("Update the project Ace file according to the current settings.")]
   HRESULT update_project_ace_file ([in] BSTR project_ace_file_name);
@@ -748,6 +739,55 @@ interface IEiffelSystemClusters: IDispatch
 
   [helpstring ("Change cluster name.")]
   HRESULT change_cluster_name ([in] BSTR a_name, [in] BSTR a_new_name);
+
+  [helpstring ("Checks to see if a cluster name is valid")]
+  HRESULT is_valid_name ([in] BSTR cluster_name, [out, retval] VARIANT_BOOL * return_value);
+};
+
+//---------------------------------------------------------------------
+
+[
+  dual, object,
+  uuid (85662941-227e-42cb-bc91-f4c17d4107e2),
+  helpstring ("Eiffel System Assemblies.")
+]
+interface IEiffelSystemAssemblies: IDispatch
+{
+  [helpstring ("Save changes.")]
+  HRESULT store ();
+
+  [helpstring ("Add a signed assembly to the project.")]
+  HRESULT add_signed_assembly ([in] BSTR assembly_identifier, [in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey);
+
+  [helpstring ("Add a unsigned (local) assembly to the project.")]
+  HRESULT add_unsigned_assembly ([in] BSTR assembly_identifier, [in] BSTR a_path);
+
+  [helpstring ("Remove an assembly from the project.")]
+  HRESULT remove_assembly ([in] BSTR assembly_identifier);
+
+  [helpstring ("Cluster properties.")]
+  HRESULT assembly_properties ([in] BSTR assembly_identifier, [out, retval] IEiffelAssemblyProperties ** return_value);
+
+  [helpstring ("Checks to see if a assembly identifier is valid")]
+  HRESULT is_valid_identifier ([in] BSTR assembly_identifier, [out, retval] VARIANT_BOOL * return_value);
+
+  [helpstring ("Checks to see if a assembly identifier has already been added to the project")]
+  HRESULT contains_assembly ([in] BSTR assembly_identifier, [out, retval] VARIANT_BOOL * return_value);
+
+  [helpstring ("Checks to see if a signed assembly has already been added to the project")]
+  HRESULT contains_signed_assembly ([in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey, [out, retval] VARIANT_BOOL * return_value);
+
+  [helpstring ("Checks to see if a unsigned assembly has already been added to the project")]
+  HRESULT contains_unsigned_assembly ([in] BSTR a_path, [out, retval] VARIANT_BOOL * return_value);
+
+  [helpstring ("Retrieves the identifier for a signed assembly in the project")]
+  HRESULT identifier_from_signed_assembly ([in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey, [out, retval] BSTR * return_value);
+
+  [helpstring ("Retrieves the identifier for a unsigned assembly in the project")]
+  HRESULT identifier_from_unsigned_assembly ([in] BSTR a_path, [out, retval] BSTR * return_value);
+
+  [id (200), propget, helpstring ("Return all of the assemblies in an enumerator")]
+  HRESULT assemblies ([out, retval] IEnumAssembly ** return_value);
 };
 
 //---------------------------------------------------------------------
@@ -841,7 +881,91 @@ interface IEiffelClusterProperties: IDispatch
   [id (218), propget, helpstring ("Cluster identifier.")]
   HRESULT cluster_id ([out, retval] ULONG * return_value);
 
+  [id (219), helpstring ("Is the cluster in the Eiffel library")]
+  HRESULT is_eiffel_library ([out, retval] VARIANT_BOOL * return_value);
+
+  [id (220), propget, helpstring ("Full path to cluster with ISE_EIFFEL env var expanded.")]
+  HRESULT expanded_cluster_path ([out, retval] BSTR * path);
+
+  [id (221), helpstring ("Does the path to the cluster exsit")]
+  HRESULT cluster_path_exists ([out, retval] VARIANT_BOOL * exists);
+
+  [id (222), helpstring ("Create the cluster path if it doesnt exist")]
+  HRESULT create_cluster_path ([out, retval] VARIANT_BOOL * exists);
+
+  [id (223), helpstring ("Does parent cluster have all set and does the cluster path extend upon the parents")]
+  HRESULT all_cluster_path_not_excluded ([out, retval] VARIANT_BOOL * exists);
+
+  [id (224), propget, helpstring ("Cluster namespace.")]
+  HRESULT cluster_namespace ([out, retval] BSTR * a_namespace);
+
+  [id (224), propput, helpstring ("Cluster namespace.")]
+  HRESULT cluster_namespace ([in] BSTR a_namespace);
+
 };
+//---------------------------------------------------------------------
+
+[
+  dual, object,
+  uuid (c7650dc8-cdb5-4fa3-a1e4-e7ebd8a16be9),
+  helpstring ("Eiffel Assembly Properties (for Ace file).")
+]
+interface IEiffelAssemblyProperties: IDispatch
+{
+  [id (200), propget, helpstring ("Assembly name.")]
+  HRESULT assembly_name ([out, retval] BSTR * return_value);
+
+  [id (201), propget, helpstring ("Assembly version.")]
+  HRESULT assembly_version ([out, retval] BSTR * path);
+
+  [id (202), propget, helpstring ("Assembly culture.")]
+  HRESULT assembly_culture ([out, retval] BSTR *path);
+
+  [id (203), propget, helpstring ("Assembly public key token")]
+  HRESULT assembly_public_key ([out, retval] BSTR * return_value);
+
+  [id (204), propget, helpstring ("Assembly public key token")]
+  HRESULT assembly_path ([out, retval] BSTR * return_value);
+
+  [id (205), propget, helpstring ("Is the assembly local")]
+  HRESULT is_local ([out, retval] VARIANT_BOOL * a_bool);
+
+  [id (206), propget, helpstring ("Assembly identifier.")]
+  HRESULT assembly_identifier ([out, retval] BSTR * return_value);
+
+};
+//---------------------------------------------------------------------
+
+[
+  dual, object,
+  uuid (3B9EFC39-F565-4b15-9067-DB7C96A7FFD8),
+  helpstring ("Eiffel System Externals.")
+]
+interface IEiffelSystemExternals: IDispatch
+{
+  [helpstring ("Save changes.")]
+  HRESULT store ();
+
+  [helpstring ("Add a include path to the project.")]
+  HRESULT add_include_path ([in] BSTR include_path);
+
+  [helpstring ("Remove a include path from the project.")]
+  HRESULT remove_include_path ([in] BSTR include_path);
+
+  [helpstring ("Include paths.")]
+  HRESULT include_paths ([out, retval] IEnumIncludePaths ** return_value);
+
+  [helpstring ("Add a object file to the project.")]
+  HRESULT add_object_file ([in] BSTR object_file);
+
+  [helpstring ("Remove a object file from the project.")]
+  HRESULT remove_object_file ([in] BSTR object_file);
+
+  [helpstring ("Object files.")]
+  HRESULT object_files ([out, retval] IEnumObjectFiles ** return_value);
+
+};
+
 //---------------------------------------------------------------------
 
 [
@@ -859,7 +983,11 @@ library eiffel_compiler
   interface IEiffelClassDescriptor;
   interface IEiffelFeatureDescriptor;
   interface IEiffelProjectProperties;
+  interface IEiffelSystemClusters;
   interface IEiffelClusterProperties;
+  interface IEiffelSystemExternals;
+  interface IEiffelSystemAssemblies;
+  interface IEiffelAssemblyProperties;
   interface IEnumEiffelClass;
   interface IEnumCluster;
   interface IEnumFeature;
@@ -867,8 +995,8 @@ library eiffel_compiler
   interface IEnumClusterExcludes;
   interface IEnumIncludePaths;
   interface IEnumObjectFiles;
-  interface IEnumImportedAssemblies;
-  interface IEiffelSystemClusters;
+  interface IEnumAssembly;
+
 
   [
     uuid (28F511DB-0CCE-44c5-9DD5-E93066C0B00F)

@@ -12,7 +12,8 @@ RM = del
 LINK32 = $link32
 DLLFLAGS = $dllflags
 
-CFLAGS = -I. -I$(TOP)/run-time 
+CFLAGS = -I. -I$(TOP) -I$(TOP)\run-time $ccflags $optimize
+
 
 OBJECTS = special_tables.obj
 

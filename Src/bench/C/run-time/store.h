@@ -31,10 +31,13 @@ extern "C" {
 
 #define BASIC_STORE_3_1 '\0'
 #define BASIC_STORE_3_2 '\02'
+#define BASIC_STORE_4_0 '\06'
 #define GENERAL_STORE_3_1 '\01'
 #define GENERAL_STORE_3_2 '\03'
 #define GENERAL_STORE_3_3 '\05'
+#define GENERAL_STORE_4_0 '\07'
 #define INDEPENDENT_STORE_3_2 '\04'
+#define INDEPENDENT_STORE_4_0 '\08'
 
 /*
  * Eiffel calls
